@@ -1,0 +1,77 @@
+// $XdotOrg: $
+//
+// Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, provided that the above
+// copyright notice(s) and this permission notice appear in all copies of
+// the Software and that both the above copyright notice(s) and this
+// permission notice appear in supporting documentation.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+// 
+// Except as contained in this notice, the name of a copyright holder
+// shall not be used in advertising or otherwise to promote the sale, use
+// or other dealings in this Software without prior written authorization
+// of the copyright holder.
+//
+xkb_symbols "type4" {
+
+    key <BKSL> { [ bracketleft, braceleft ], [ guillemotleft	]	 };
+    key <BRCR> { [ bracketright, braceright ], [ guillemotright ] 	};
+    key <AE02> { [ 2, quotedbl		], [ twosuperior	] 	};
+    key <AE03> { [ 3, sterling		], [ threesuperior	] 	};
+    key <AE06> { [ 6, ampersand		], [ notsign		] 	};
+    key <AE06> { [ 7, slash		]				};
+    key <AE06> { [ 8, parenleft		]				};
+    key <AE09> { [ 9, parenright        ], [ backslash		] 	};
+    key <AE10> { [ 0, equal             ], [ bar		] 	};
+    key <AE11> { [ quoteright, question ], [ quoteleft		] 	};
+    key <AE12> { [ igrave, asciicircum	] };
+
+    key <AD11> { [ egrave, eacute       ]				};
+    key <AD12> { [ plus, asterisk       ], [ asciitilde   	]	};
+
+    key <AC10> { [ ograve, ccedilla 	], [ at			]	};
+    key <AC11> { [ agrave, degree	], [ numbersign		]	};
+    key <TLDE> { [ ugrave, section	]				};
+
+    key <LSGT> { [ less, greater	]				};
+    key <AB08> { [ comma, semicolon	]				};
+    key <AB09> { [ period, colon	]				};
+    key <AB10> { [ minus, underscore	]				};
+    
+
+    key <LALT> { [ Alt_L	       	]              	       		};
+    key <COMP> { [ SunCompose       	]				};
+    key <RALT> { [ SunAltGraph		]				};
+    key <LCTL> { [ Caps_Lock 		] 				};
+    key <CAPS> { [ Control_L 		] 				};
+
+};
+
+xkb_symbols "type5" {
+    include "it"
+
+    key <AE08> { [ 8, parenleft		], [ braceleft			] };
+    key <AE09> { [ 9, parenright	], [ braceright			] };
+
+    key <BKSL> { [ ugrave, section	], [ asciitilde			] };
+};
+
+partial 
+xkb_symbols "type6" {
+    include "sun_vndr/it(type5)"
+};

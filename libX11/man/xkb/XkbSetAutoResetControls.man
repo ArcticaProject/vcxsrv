@@ -1,0 +1,116 @@
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbSetAutoResetControls __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbSetAutoResetControls \- Changes the current values of the AutoReset control 
+attributes
+.SH SYNOPSIS
+.B Bool XkbSetAutoResetControls
+(
+.I dpy,
+.I changes,
+.I auto_ctrls,
+.I auto_values
+)
+.br
+      Display *\fI dpy \fP\^;
+.br
+      unsigned int \fI changes \fP\^;
+.br
+      unsigned int *\fI auto_ctrls \fP\^;
+.br
+      unsigned int *\fI auto_values \fP\^;
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I \- dpy
+connection to X server
+.TP
+.I \- changes
+controls for which to change auto-reset values
+.TP
+.I \- auto_ctrls
+controls from changes that should auto reset 
+.TP
+.I \- auto_values
+1 bit => auto-reset on
+.SH DESCRIPTION
+.LP
+.I XkbSetAutoResetControls 
+changes the auto-reset status and associated auto-reset values for the controls 
+selected by 
+.I changes. 
+For any control selected by 
+.I changes, 
+if the corresponding bit is set in 
+.I auto_ctrls, 
+the control is configured to auto-reset when the client exits. If the 
+corresponding bit in 
+.I auto_values 
+is on, the control is turned on when the client exits; if zero, the control is 
+turned off when the client exits. For any control selected by 
+.I changes, 
+if the corresponding bit is not set in 
+.I auto_ctrls, 
+the control is configured to not reset when the client exits. 
+
+For example:
+
+.nf
+To leave the auto-reset controls for StickyKeys the way they are:
+
+	ok = XkbSetAutoResetControls(dpy, 0, 0, 0);
+	
+To change the auto-reset controls so that StickyKeys are unaffected when the 
+client exits:
+
+	ok = XkbSetAutoResetControls(dpy, XkbStickyKeysMask, 0, 0);
+	
+To change the auto-reset controls so that StickyKeys are turned off when the 
+client exits:
+
+	ok = XkbSetAutoResetControls(dpy, XkbStickyKeysMask, XkbStickyKeysMask, 0);
+	
+To change the auto-reset controls so that StickyKeys are turned on when the 
+client exits:
+
+	ok = XkbSetAutoResetControls(dpy, XkbStickyKeysMask, XkbStickyKeysMask, 
+XkbStickyKeysMask);
+
+.fi
+.I XkbSetAutoResetControls 
+backfills 
+.I auto_ctrls 
+and 
+.I auto_values 
+with the auto-reset controls for this particular client. Note that all of the 
+bits are valid in the returned values, not just the ones selected in the 
+.I changes 
+mask.

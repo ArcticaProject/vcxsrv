@@ -1,0 +1,18 @@
+// $XKeyboardConfig$
+
+// these variants assign various XKB keycodes to ISO_Level5_Shift so that
+// the third shift level can be reached
+//
+// $XFree86: xc/programs/xkbcomp/symbols/level3,v 1.7 2003/09/08 14:25:32 eich Exp $
+//
+
+// using the level(switch) map, the right Control key temporarily
+// chooses the fifth shift level (until it is released).
+partial modifier_keys
+xkb_symbols "rctrl_switch" {
+  key <RCTL> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift ]
+    };
+  modifier_map Mod3   { ISO_Level5_Shift };
+};

@@ -1,0 +1,40 @@
+#define S(x, y)  y##x
+
+Please contact S(south.rr.com, wt@mid) and jim.gettys@hp.com before doing
+any commits on this module.
+
+This is the libX11 from XFree86.
+
+The goal of this project are (1) to get libX11 out of the huge
+XF86 hunk of code, (2) to make it buildable with autotools, and
+(3) keep the ability to easily merge bug fixes from libX11 in
+XF86 into this code, (4) make it possible for people to work with
+Xlib without having to deal with the entire XFree86 distribution,
+so that bugs can get detected and fixed, (5) provide a place to
+move the X library forward.
+
+1 and 2 are related in that a new build system will need to be
+developed to get libX11 building outside of the XF86 tree.
+Autotools was chosen for a variety of reasons, not the least
+of which was that it is very common in the open source community.
+
+For 3, notice that the directory structure of the src subdirectory
+is congruant to the directory structure of xc/lib/X11 in the
+XFree86 tree. Absolutely, do not break this unless this becomes
+the dominant libX11. This allows easier incorporation of patches
+from the XFree86 libX11.
+
+For 4, notice that the library can be built without having to build
+everything else, so you can build and test enhancements without
+replacing your entire X distribution.
+
+For 5, see the xlibs@pdx.freedesktop.org mailing list.  For example,
+lots of "stuff" was pushed into Xlib that should have been stand-alone
+libraries, since they are not of universal interest and touch the X
+wire protocol.  (Mea culpa; a mistake I made 15 years ago that didn't
+matter much in the days before shared libraries has been amplified for
+aeons- jg).  And Xlib does not tolerate loss of its connection well,
+and so on...
+
+Thanks for checking this package out, Warren Turkal and Jim Gettys.
+

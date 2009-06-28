@@ -1,0 +1,19 @@
+// $Xorg: bg,v 1.3 2000/08/17 19:54:40 cpqbld Exp $
+default xkb_keymap "indy" {
+    xkb_keycodes	{ include "sgi_vndr/indy(universal)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols  { 
+	include "us(pc_universal)+bg+group(shifts_toggle)"
+    };
+    xkb_geometry	{ include "sgi_vndr/indy(pc102)"	};
+};
+xkb_keymap "indigo" {
+    xkb_keycodes	{ include "sgi_vndr/indigo(pc102)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols { 
+	include "us(pc102)+bg+group(shifts_toggle)"
+    };
+    xkb_geometry	{ include "sgi_vndr/indigo(pc102)"	};
+};

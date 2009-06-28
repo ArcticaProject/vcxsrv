@@ -1,0 +1,190 @@
+commit 963c88d67500b581fd4d44d4f561089c66bf7c56
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Apr 24 20:04:39 2007 -0700
+
+    Fix sparse warning: Using plain integer as NULL pointer
+
+commit 7206fb39a668384dfba3c8436222722123f4c9ff
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Apr 24 20:03:51 2007 -0700
+
+    Add target for checking code with sparse/lint/etc.
+
+commit c42df278513724e3236eecda859f069c34f78508
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Apr 24 20:01:40 2007 -0700
+
+    Replace static ChangeLog with disthook to generate from git log
+
+commit 608915a471c5a7a1cc3ecca19fc1b516480f439f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Apr 24 19:31:40 2007 -0700
+
+    Sun bug 6509763: bdftopcf crashes when bad font passed on stdin
+    
+    When printing corrupt font error message, make sure file name reported is
+    not NULL.
+
+commit a498f77133c4a6df5a192133528a846bd9e88d7c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Apr 24 19:30:13 2007 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit ebb668bf17f019813cc9615269d28da8205f1d00
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:01 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 8e3cd1b0e5c443c3c93565343c6721a3345c085e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:15 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit a61fd8c9f26b1defde1bf45ba5b938c197951d3f
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:14 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 148db4c885a1adebf21e21d8f505b0148763cc00
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:01:36 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit a8afffe03349e74fbec823dd074b0c65bcc579c4
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Mon Nov 21 10:34:54 2005 +0000
+
+    Another pass at .cvsignores for apps.
+
+commit 1f9a92c950da572b246a5ee354617c7628539e9b
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Nov 20 22:08:47 2005 +0000
+
+    Add/improve .cvsignore files for apps.
+
+commit f4d3c5288e31356b794253afb48c3691779b1cc2
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:35 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit ebac4be33d3b439772212d35934f2753f03f42fe
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Nov 9 21:09:19 2005 +0000
+
+    Update package version number for X11R7 RC2 release.
+
+commit 95833b04ce5ee998bcf2aaea03718157566ec671
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 1 15:05:18 2005 +0000
+
+    Update pkgcheck depedencies to work with separate build roots.
+
+commit 4358112e4b8c7433001c682de59b896df446d0f1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:47:47 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 3079b683034b5ca45182df15e420041377aff190
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 17 23:56:18 2005 +0000
+
+    Use @APP_MAN_SUFFIX@ instead of $(APP_MAN_SUFFIX) in macro substitutions to
+        work better with BSD make
+
+commit 3cf12f8bb84f6c7f48d21372026ed90cfbb448a4
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Oct 14 00:25:40 2005 +0000
+
+    Use sed to fill in variables in man page
+
+commit 1367d1093078bb49e4f1b5f1453fea41ae6f2b25
+Author: Kristian Høgsberg <krh@redhat.com>
+Date:   Fri Sep 23 20:39:52 2005 +0000
+
+    Fill these in.
+
+commit fc73e4a7408f73006267c4f9dbbd8edfadda17d6
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:28 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 4641ea0102ddccbe57de71dba7d31993b4f0d5fe
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Jul 20 19:31:48 2005 +0000
+
+    Use a unique token for PKG_CHECK_MODULES. Otherwise, if you use a global
+        configure cache, you cache it, and the cached value is probably wrong.
+
+commit a1714821678853a349cfeb735e5cc2c05d7d7e10
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sun Jul 3 21:38:43 2005 +0000
+
+    Install publicly used headers in X11/fonts.
+    Change source files that use these headers to get them via <X11/fonts/*.h>.
+
+commit 054583b047ea55cf8788ca94849f28c1fd601ee0
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Jul 2 21:42:05 2005 +0000
+
+    Add build system for bdftopcf, mkfontdir and mkfontscale
+
+commit b19c10fc3e619fba0dfc0a93a79c3368fcc5ef8c
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 19:54:31 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 3dc306ac1d27de0c20faaef7d0094131783fd294
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:34:49 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit c3b089ed758a0c74682256430bcbbb805b30e5ba
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:12:50 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit a455d7e899f248a6333c1435aaefa79a998fc9b3
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:36:15 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 74b7fe4751a5a37fa6c42b236038ed8f6109a5bd
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:23:53 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit 0ec9383c6314fbe7eb4b153a5b931cdced8e78a5
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:57 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit f51be8ca0daef86a6f0b10383ca84f42fc1b9a74
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:52 2003 +0000
+
+    R6.6 is the Xorg base-line

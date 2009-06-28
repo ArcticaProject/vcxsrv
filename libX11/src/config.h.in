@@ -1,0 +1,187 @@
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if `struct sockaddr_in' has a `sin_len' member */
+#undef BSD44SOCKETS
+
+/* Include compose table cache support */
+#undef COMPOSECACHE
+
+/* Has getresuid() & getresgid() functions */
+#undef HASGETRESUID
+
+/* Has issetugid() function */
+#undef HASSETUGID
+
+/* Has shm*() functions */
+#undef HAS_SHM
+
+/* Define to 1 if you have the `authdes_create' function. */
+#undef HAVE_AUTHDES_CREATE
+
+/* Define to 1 if you have the `authdes_seccreate' function. */
+#undef HAVE_AUTHDES_SECCREATE
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Use dlopen to load shared libraries */
+#undef HAVE_DLOPEN
+
+/* Define to 1 if you have the <dl.h> header file. */
+#undef HAVE_DL_H
+
+/* Define to 1 if you have the `getpagesize' function. */
+#undef HAVE_GETPAGESIZE
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* launchd support available */
+#undef HAVE_LAUNCHD
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have a working `mmap' system call. */
+#undef HAVE_MMAP
+
+/* Use shl_load to load shared libraries */
+#undef HAVE_SHL_LOAD
+
+/* Define to 1 if the system has the type `socklen_t'. */
+#undef HAVE_SOCKLEN_T
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strtol' function. */
+#undef HAVE_STRTOL
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Support IPv6 for TCP connections */
+#undef IPv6
+
+/* Support os-specific local connections */
+#undef LOCALCONN
+
+/* Disable XLOCALEDIR environment variable */
+#undef NO_XLOCALEDIR
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Major version of this package */
+#undef PACKAGE_VERSION_MAJOR
+
+/* Minor version of this package */
+#undef PACKAGE_VERSION_MINOR
+
+/* Patch version of this package */
+#undef PACKAGE_VERSION_PATCHLEVEL
+
+/* Define as the return type of signal handlers (`int' or `void'). */
+#undef RETSIGTYPE
+
+/* Support Secure RPC ("SUN-DES-1") authentication for X11 clients */
+#undef SECURE_RPC
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Support TCP socket connections */
+#undef TCPCONN
+
+/* launchd support available */
+#undef TRANS_REOPEN
+
+/* Support UNIX socket connections */
+#undef UNIXCONN
+
+/* Split some i18n functions into loadable modules */
+#undef USE_DYNAMIC_LC
+
+/* Use the X cursor library to load cursors */
+#undef USE_DYNAMIC_XCURSOR
+
+/* poll() function is available */
+#undef USE_POLL
+
+/* Use XCB for low-level protocol implementation */
+#undef USE_XCB
+
+/* Version number of package */
+#undef VERSION
+
+/* Location of libX11 data */
+#undef X11_DATADIR
+
+/* Location of libX11 library data */
+#undef X11_LIBDIR
+
+/* Include support for XCMS */
+#undef XCMS
+
+/* Location of error message database */
+#undef XERRORDB
+
+/* Enable XF86BIGFONT extension */
+#undef XF86BIGFONT
+
+/* Use XKB */
+#undef XKB
+
+/* Location of keysym database */
+#undef XKEYSYMDB
+
+/* support for X Locales */
+#undef XLOCALE
+
+/* Location of libX11 locale data */
+#undef XLOCALEDATADIR
+
+/* Location of libX11 locale data */
+#undef XLOCALEDIR
+
+/* Location of libX11 locale libraries */
+#undef XLOCALELIBDIR
+
+/* Whether libX11 is compiled with thread support */
+#undef XTHREADS
+
+/* Whether libX11 needs to use MT safe API's */
+#undef XUSE_MTSAFE_API
+
+/* Enable GNU and other extensions to the C environment for glibc */
+#undef _GNU_SOURCE

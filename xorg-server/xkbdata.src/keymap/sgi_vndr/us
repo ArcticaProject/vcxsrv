@@ -1,0 +1,43 @@
+// $Xorg: us,v 1.3 2000/08/17 19:54:41 cpqbld Exp $
+default xkb_keymap "indy" {
+    xkb_keycodes	{ include "sgi_vndr/indy(universal)"		};
+    xkb_types		{ include "default"			};
+    xkb_compatibility	{ include "default"			};
+    xkb_symbols 	{ include "us(pc_universal)"		};
+    xkb_geometry	{ include "sgi_vndr/indy(pc101)"		};
+};
+xkb_keymap "indy101_euro" {
+    xkb_keycodes	{ include "sgi_vndr/indy(universal)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{ include "us(pc_universal)"	};
+    xkb_geometry	{ include "sgi_vndr/indy(pc101)"	};
+};
+xkb_keymap "indy_compose" {
+    xkb_keycodes	{ include "sgi_vndr/indy(universal)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{ include "us(pc_universal)"	};
+    xkb_geometry	{ include "sgi_vndr/indy(pc101)"	};
+};
+xkb_keymap "indigo" {
+    xkb_keycodes	{ include "sgi_vndr/indigo(pc101)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{ include "us(pc101)"		};
+    xkb_geometry	{ include "sgi_vndr/indigo(pc101)"	};
+};
+xkb_keymap "indigo_compose" {
+    xkb_keycodes	{ include "sgi_vndr/indigo(pc101)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{ include "us(pc101compose)"	};
+    xkb_geometry	{ include "sgi_vndr/indigo(pc101)"	};
+};
+xkb_keymap "indigo101_compose" {
+    xkb_keycodes	{ include "sgi_vndr/indigo(pc101)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{ include "us(pc101euro)"	};
+    xkb_geometry	{ include "sgi_vndr/indigo(pc101)"	};
+};

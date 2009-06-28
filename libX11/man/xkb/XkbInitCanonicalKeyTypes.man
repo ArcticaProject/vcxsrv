@@ -1,0 +1,98 @@
+'\" t
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbInitCanonicalKeyTypes __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbInitCanonicalKeyTypes \- Set the definitions of the canonical key types in a 
+client map to their default values
+.SH SYNOPSIS
+.B Status XkbInitCanonicalKeyTypes
+(
+.I xkb,
+.I which,
+.I keypadVMod
+)
+.br
+      XkbDescPtr \fIxkb\fP\^;
+.br
+      unsigned int \fIwhich\fP\^;
+.br
+      int \fIkeypadVMod\fP\^;
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I \- xkb
+keyboard description containing client map to initialize
+.TP
+.I \- which
+mask of types to initialize
+.TP
+.I \- keypadVMod
+index of NumLock virtual modifier
+.SH DESCRIPTION
+.LP
+.I XkbInitCanonicalKeyTypes 
+initializes the first XkbNumRequiredTypes key types of the keyboard specified by 
+the 
+.I xkb 
+parameter to their default values. The 
+.I which 
+parameter specifies what canonical key types to initialize and is a bitwise 
+inclusive OR of the following masks: XkbOneLevelMask, XkbTwoLevelMask, 
+XkbAlphabeticMask, and XkbKeypadMask. Only those canonical types specified by 
+the 
+.I which 
+mask are initialized.
+
+If XkbKeypadMask is set in the 
+.I which 
+parameter, 
+.I XkbInitCanonicalKeyTypes 
+looks up the NumLock named virtual modifier to determine which virtual modifier 
+to use when initializing the KEYPAD key type. If the NumLock virtual modifier 
+does not exist, 
+.I XkbInitCanonicalKeyTypes 
+creates it.
+
+.I XkbInitCanonicalKeyTypes 
+normally returns Success. It returns BadAccess if the Xkb extension has not been 
+properly initialized, and BadAccess if the 
+xkb parameter is not valid.
+.SH "RETURN VALUES"
+.TP 15
+Success
+The 
+.I XkbInitCanonicalKeyTypes 
+funtion return Success if the Xkb extension has been properly initialized and 
+the xkb parameter is valid.
+.SH DIAGNOSTICS
+.TP 15
+.B BadAccess
+The Xkb extension has not been properly initialized

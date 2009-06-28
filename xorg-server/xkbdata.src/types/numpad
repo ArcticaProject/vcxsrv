@@ -1,0 +1,40 @@
+
+partial default xkb_types "pc" {
+    type "KEYPAD" {
+	modifiers = Shift+NumLock;
+	map[None] = Level1;
+	map[Shift] = Level2;
+	map[NumLock] = Level2;
+	map[Shift+NumLock] = Level1;
+	level_name[Level1] = "Base";
+	level_name[Level2] = "Number";
+    };
+    include "extra(keypad)"
+};
+
+// On Mac keypads, level 1 and 2 are swapped
+partial xkb_types "mac" {
+    type "KEYPAD" {
+	modifiers = Shift+NumLock;
+	map[None] = Level2;
+	map[Shift] = Level1;
+	map[NumLock] = Level1;
+	map[Shift+NumLock] = Level2;
+	level_name[Level2] = "Base";
+	level_name[Level1] = "Number";
+    };
+    include "extra(mac_keypad)"
+};
+
+partial xkb_types "microsoft" {
+    type "KEYPAD" {
+        modifiers = Shift+NumLock;
+        map[None] = Level1;
+        preserve[Shift] = Shift;
+        map[NumLock] = Level2;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Number";
+    };
+    include "extra(keypad)"
+};
+

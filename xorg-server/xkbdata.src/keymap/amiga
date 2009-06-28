@@ -1,0 +1,22 @@
+// $Xorg: amiga,v 1.3 2000/08/17 19:54:40 cpqbld Exp $
+
+
+
+
+// $XFree86: xc/programs/xkbcomp/keymap/amiga,v 3.2 1997/10/26 13:25:36 dawes Exp $
+
+default xkb_keymap "usa1" {
+    xkb_keycodes	{ include "amiga(usa1)"		};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols		{ include "amiga(usa1)"		};
+    xkb_geometry	{ include "amiga(usa1)"		};
+};
+
+xkb_keymap "de" {
+    xkb_keycodes	{ include "amiga(de)"		};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols		{ include "amiga(de)"		};
+    xkb_geometry	{ include "amiga(de)"		};
+};

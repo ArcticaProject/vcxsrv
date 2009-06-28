@@ -1,0 +1,39 @@
+# $Xprint.org: HPLJ4family model-config,v 1.4 2002/11/07 19:48:04 gisburn Exp $
+# This is the configuration file for the HP LaserJet 4 Printers.
+#
+# Though not a deliverable for the CDEnext SI, the XP-PCL-MONO
+# driver should be able to support the LaserJet 4 printers.
+#
+*content-orientations-supported: portrait landscape
+*descriptor: Hewlett-Packard LaserJet 4 Series
+*document-formats-supported: {PCL 5} {PostScript 2}
+*input-trays-supported:
+# 1/4" unprintable margins
+*medium-source-sizes-supported:\
+{ '' \
+    {na-letter			FALSE {6.35 209.55 6.35 273.05}}\
+    {executive			FALSE {6.35 177.75 6.35 260.35}}\
+    {na-legal			FALSE {6.35 209.55 6.35 349.25}}\
+    {iso-a3			FALSE {6.35 290.65 6.35 413.35}}\
+    {iso-a4			FALSE {6.35 203.65 6.35 290.65}}\
+    {jis-b4			FALSE {6.35 251.65 6.35 367.65}}\
+    {jis-b5			FALSE {6.35 175.65 6.35 250.65}}\
+    {monarch-envelope		FALSE {6.35  91.94 6.35 184.15}}\
+    {iso-designated-long	FALSE {6.35 103.65 6.35 213.65}}\
+    {iso-c5			FALSE {6.35 155.65 6.35 222.65}}\
+    {na-number-10-envelope	FALSE {6.35  98.45 6.35 234.95}}\
+    {hp-tabloid			FALSE {6.35 273.05 6.35 425.45}}\
+    {ledger			FALSE {6.35 273.05 6.35 425.45}}\
+    {b				FALSE {6.35 273.05 6.35 425.45}}\
+    {hp-japanese-postcard	FALSE {6     94	   6	142   }}\
+    {hp-japanese-doublepostcard FALSE {6    142	   6	194   }}\
+}
+*plexes-supported: simplex duplex
+*printer-model: "Hewlett-Packard LaserJet 4 Series"
+*printer-resolutions-supported: 300 600
+*xp-ddx-identifier: XP-PCL-MONO
+*xp-listfonts-modes-supported: xp-list-internal-printer-fonts xp-list-glyph-fonts
+*xp-embedded-formats-supported: { PCL 5 } { PostScript 2 }
+*xp-raw-formats-supported: { PCL 5 }
+*xp-setup-proviso: setup-optional
+# EOF.

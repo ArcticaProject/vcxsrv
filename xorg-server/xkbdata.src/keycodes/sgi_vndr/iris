@@ -1,0 +1,11 @@
+// $Xorg: iris,v 1.3 2000/08/17 19:54:39 cpqbld Exp $
+default xkb_keycodes "iris" {
+    include "sgi_vndr/indigo(pc101)"
+    indicator 1 = "L1";
+    indicator 2 = "L2";
+    indicator 3 = "L3";
+    indicator 4 = "L4";
+    indicator 5 = "Caps Lock";
+    indicator 6 = "Num Lock";
+    indicator 7 = "Scroll Lock";
+};

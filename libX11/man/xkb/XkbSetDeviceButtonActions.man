@@ -1,0 +1,112 @@
+'\" t
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbSetDeviceButtonActions 3Xkb "Release 6.1" "X Version 11" "XKBLIB FUNCTION"
+.SH NAME
+XkbSetDeviceButtonActions \- Change only the button actions for an input extension device
+.SH SYNTAX
+.B Bool XkbSetDeviceButtonActions
+(
+.I dpy,
+.I device,
+.I first_button,
+.I num_buttons,
+.I actions
+)
+.br
+      Display * \fIdpy\fP\^;
+.br
+      XkbDeviceInfoPtr \fIdevice\fP\^;
+.br
+      unsigned int \fIfirst_button\fP\^;
+.br
+      unsigned int \fInum_buttons\fP\^;
+.br
+      *** MISSING *** \fIactions\fP\^;
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I \- dpy
+connection to X server
+.TP
+.I \- device
+structure defining the device and modifications
+.TP
+.I \- first_button
+number of first button to update, 0 relative
+.TP
+.I \- num_buttons
+number of buttons to update
+.TP
+.I \- actions
+*** MISSING ***
+.SH DESCRIPTION
+.LP
+.I XkbSetDeviceButtonActions 
+assigns actions to the buttons of the device specified in 
+.I device_info->device_spec. 
+Actions are assigned to 
+.I num_buttons 
+buttons beginning with 
+.I first_button 
+and are taken from the actions specified in 
+.I device_info->btn_acts.
+
+If the server does not support assignment of Xkb actions to extension device buttons,
+.I XkbSetDeviceButtonActions 
+has no effect and returns False. If the device has no buttons or if 
+.I first_button 
+or 
+.I num_buttons 
+specify buttons outside of the valid range as determined by 
+.I device_info->num_btns, 
+the function has no effect and returns False. Otherwise, 
+.I XkbSetDeviceButtonActions 
+sends a request to the server to change the actions for the specified buttons and returns 
+True.
+
+If the actual request sent to the server involved illegal button numbers, a BadValue protocol 
+error is generated. If an invalid device identifier is specified in 
+.I device_info->device_spec, 
+a BadKeyboard protocol error results. If the actual device specified in
+.I device_info->device_spec 
+does not contain buttons and a request affecting buttons is made, a BadMatch protocol error is 
+generated.
+.SH DIAGNOSTICS
+.TP 15
+.B BadKeyboard
+The device specified was not a valid core or input extension device
+.TP 15
+.B BadMatch
+A compatible version of Xkb was not available in the server or an argument has correct type 
+and range, but is otherwise invalid
+.TP 15
+.B BadValue
+An argument is out of range

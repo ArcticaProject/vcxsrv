@@ -1,0 +1,244 @@
+// $XKeyboardConfig$
+
+// based on a keyboard map from an 'xkb/symbols/am' file
+//
+// $XFree86: xc/programs/xkbcomp/symbols/am,v 1.4 2003/05/29 12:41:58 pascal Exp $
+
+partial default alphanumeric_keys 
+xkb_symbols "basic" {
+
+    name[Group1]= "Armenia";
+
+    // Alphanumeric section
+    key <TLDE> {	[ 0x100055d, 0x100055c	]	};
+    key	<LSGT> {	[  question,  0x100058a	]	};
+    key <BKSL> {        [ guillemotright, guillemotleft ] };
+
+    key <AE01> {	[ 0x1000586,  0x1000556	]	};
+    key <AE02> {	[ 0x1000571,  0x1000541	]	};
+    key <AE03> {	[ 0x1002013,  0x1002014 ]	};
+    key <AE04> {	[     comma,  dollar	]	};
+    key <AE05> {	[ 0x1000589,  0x1002026	] 	};
+    key <AE06> {	[ 0x100055e,  percent	]	};
+    key <AE07> {	[ 0x1002024,  0x1000587	] 	};
+    key <AE08> {	[ 0x100055b,  0x10002bc	] 	};
+    key <AE09> {	[ parenright, parenleft ] 	};
+    key <AE10> {	[ 0x1000585,  0x1000555	]	};
+    key <AE11> {	[ 0x1000567,  0x1000537	]	};
+    key <AE12> {	[ 0x1000572,  0x1000542	]	};
+
+
+    key <AD01> {	[ 0x1000573, 0x1000543	]       };
+    key <AD02> {	[ 0x1000583, 0x1000553	]	};
+    key <AD03> {	[ 0x1000562, 0x1000532	]       };
+    key <AD04> {	[ 0x100057d, 0x100054d	]	};
+    key <AD05> {	[ 0x1000574, 0x1000544	]       };
+    key <AD06> {	[ 0x1000578, 0x1000548	]       };
+    key <AD07> {	[ 0x1000582, 0x1000552	]       };
+    key <AD08> {	[ 0x100056f, 0x100053f	]       };
+    key <AD09> {	[ 0x1000568, 0x1000538	]       };
+    key <AD10> {	[ 0x1000569, 0x1000539	]       };
+    key <AD11> {	[ 0x100056e, 0x100053e	]       };
+    key <AD12> {	[ 0x1000581, 0x1000551	]       };
+
+    key <AC01> {	[ 0x100057b, 0x100054b	]       };
+    key <AC02> {	[ 0x100057e, 0x100054e	]	};
+    key <AC03> {	[ 0x1000563, 0x1000533	]       };
+    key <AC04> {	[ 0x1000565, 0x1000535	]       };
+    key <AC05> {	[ 0x1000561, 0x1000531	]       };
+    key <AC06> {	[ 0x1000576, 0x1000546	]	};
+    key <AC07> {	[ 0x100056b, 0x100053b	]       };
+    key <AC08> {	[ 0x100057f, 0x100054f	]       };
+    key <AC09> {	[ 0x1000570, 0x1000540	]       };
+    key <AC10> {	[ 0x100057a, 0x100054a	]       };
+    key <AC11> {	[ 0x1000580, 0x1000550	]       };
+
+    key <AB01> {	[ 0x100056a, 0x100053a	]       };
+    key <AB02> {	[ 0x1000564, 0x1000534	]       };
+    key <AB03> {	[ 0x1000579, 0x1000549	]       };
+    key <AB04> {	[ 0x1000575, 0x1000545	]       };
+    key <AB05> {	[ 0x1000566, 0x1000536	]       };
+    key <AB06> {	[ 0x100056c, 0x100053c	]       };
+    key <AB07> {	[ 0x1000584, 0x1000554	]       };
+    key <AB08> {	[ 0x100056d, 0x100053d	]       };
+    key <AB09> {	[ 0x1000577, 0x1000547	]       };
+    key <AB10> {	[ 0x100057c, 0x100054c	]       };
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "olpc" {
+    include "am(basic)"
+    name[Group1]= "Armenia";
+
+    include "group(olpc)"
+};
+
+xkb_symbols "phonetic" {
+    include "am(basic)"
+    name[Group1]= "Armenia - Phonetic";
+	
+    key <BKSL> {	[ 0x1000577,  0x1000547 ]	};
+	
+    key <AE01> {	[ 0x1000567,  0x1000537 ]	};
+    key <AE02> {	[ 0x1000569,  0x1000539 ]	};
+    key <AE03> {	[ 0x1000583,  0x1000553 ]	};
+    key <AE04> {	[ 0x1000571,  0x1000541 ]       };
+    key <AE05> {	[ 0x100057b,  0x100054b ]	};
+    key <AE06> {	[ 0x1000582,  0x1000552 ]	};
+    key <AE07> {	[ 0x1000587,  0x1000587 ]	};
+    key <AE08> {	[ 0x100057c,  0x100054c ]	};
+    key <AE09> {	[ 0x1000579,  0x1000549 ]	};
+    key <AE10> {	[ 0x1000573,  0x1000543 ]	};
+    key <AE11> {	[ 0x100002D,  0x1002015 ]       };
+    key <AE12> {	[ 0x100056a,  0x100053a ]	};
+
+    key <LatQ> {	[ 0x1000584,  0x1000554 ]	};
+    key <LatW> {	[ 0x1000578,  0x1000548 ]	};
+    key <LatE> {	[ 0x1000565,  0x1000535 ]	};
+    key <LatR> {	[ 0x1000580,  0x1000550 ]	};
+    key <LatT> {	[ 0x100057f,  0x100054f ]	};
+    key <LatY> {	[ 0x1000568,  0x1000538 ]	};
+    key <LatU> {	[ 0x1000582,  0x1000552 ]	};
+    key <LatI> {	[ 0x100056b,  0x100053b ]	};
+    key <LatO> {	[ 0x1000585,  0x1000555 ]	};
+    key <LatP> {	[ 0x100057a,  0x100054a ]	};
+    key <AD11> {	[ 0x100056d,  0x100053d ]	};
+    key <AD12> {	[ 0x100056e,  0x100053e ]	};
+
+    key <LatA> {	[ 0x1000561,  0x1000531 ]	};
+    key <LatS> {	[ 0x100057d,  0x100054d ]	};
+    key <LatD> {	[ 0x1000564,  0x1000534 ]	};
+    key <LatF> {	[ 0x1000586,  0x1000556 ]	};
+    key <LatG> {	[ 0x1000563,  0x1000533 ]	};
+    key <LatH> {	[ 0x1000570,  0x1000540 ]	};
+    key <LatJ> {	[ 0x1000575,  0x1000545 ]	};
+    key <LatK> {	[ 0x100056f,  0x100053f ]	};
+    key <LatL> {	[ 0x100056c,  0x100053c ]	};
+    key <AC10> {	[ semicolon,  0x1000589 ]	};
+    key <AC11> {	[ 0x100055b,  0x1000022 ]	};
+
+    key <LatZ> {	[ 0x1000566,  0x1000536 ]	};
+    key <LatX> {	[ 0x1000572,  0x1000542 ]	};
+    key <LatC> {	[ 0x1000581,  0x1000551 ]	};
+    key <LatV> {	[ 0x100057e,  0x100054e ]	};
+    key <LatB> {	[ 0x1000562,  0x1000532 ]	};
+    key <LatN> {	[ 0x1000576,  0x1000546 ]	};
+    key <LatM> {	[ 0x1000574,  0x1000544 ]	};
+    key <AB08> {	[ 0x100002C,  0x10000AB ]       };
+    key <AB09> {	[ 0x1002024,  0x10000BB ]       };
+    key <AB10> {	[ 0x100002F,  0x100055e ]	};
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "phonetic-alt" {
+    include "am(phonetic)"
+    name[Group1]= "Armenia - Alternative Phonetic";
+
+    key <AE08> {	[ 0x1000580,  0x1000550 ]	};
+    key <LatR> {	[ 0x100057c,  0x100054c ]	};
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "eastern" {
+
+    name[Group1]="Armenia - Eastern";
+
+    // This is the closer phonetic transliteration for Eastern Armenian
+    // than the Windows XP layout for Eastern Armenian, which seems
+    // to have contained a bug, with the reversal of 'g' for keh and 'c' for gim
+    // Also, AE01 (the colon) has been replaced with the Armenian_full_stop and
+    // capital AE07 (ken) with the Armenian ligature ew
+
+    key <TLDE> {	[ Armenian_separation_mark,  Armenian_exclam ]	};
+//  key <AE01> {	[ colon,  		KP_1 ]	};
+    key <AE01> {	[ Armenian_full_stop,  	KP_1 ]	};
+    key <AE02> {	[ Armenian_dza,  	Armenian_DZA ]	};
+    key <AE03> {	[ Armenian_hi,  	Armenian_HI ]	};
+    key <AE04> {	[ Armenian_accent,  	KP_3 ]       };
+    key <AE05> {	[ comma,  		KP_4 ]	};
+    key <AE06> {	[ minus,  		KP_9 ]	};
+    key <AE07> {	[ period,  		Armenian_ligature_ew ]	};
+    key <AE08> {	[ guillemotleft,  	parenleft ]	};
+    key <AE09> {	[ guillemotright,  	parenright ]	};
+    key <AE10> {	[ Armenian_o,  		Armenian_O ]	};
+    key <AE11> {	[ Armenian_ra,  	Armenian_RA ]       };
+    key <AE12> {	[ Armenian_zhe,  	Armenian_ZHE ]	};
+
+    key <LatQ> {	[ Armenian_khe,  	Armenian_KHE ]	};
+    key <LatW> {	[ Armenian_vyun,  	Armenian_VYUN ]	};
+    key <LatE> {	[ Armenian_e,  		Armenian_E ]	};
+    key <LatR> {	[ Armenian_re,  	Armenian_RE ]	};
+    key <LatT> {	[ Armenian_tyun,  	Armenian_TYUN ]	};
+    key <LatY> {	[ Armenian_yech,  	Armenian_YECH ]	};
+    key <LatU> {	[ Armenian_at,  	Armenian_AT ]	};
+    key <LatI> {	[ Armenian_ini,  	Armenian_INI ]	};
+    key <LatO> {	[ Armenian_vo,  	Armenian_VO ]	};
+    key <LatP> {	[ Armenian_pe,  	Armenian_PE ]	};
+    key <AD11> {	[ Armenian_cha,  	Armenian_CHA ]	};
+    key <AD12> {	[ Armenian_je,  	Armenian_JE ]	};
+    key <BKSL> {	[ apostrophe,  		Armenian_question ]	};
+
+    key <LatA> {	[ Armenian_ayb,  	Armenian_AYB ]	};
+    key <LatS> {	[ Armenian_se,  	Armenian_SE ]	};
+    key <LatD> {	[ Armenian_da,  	Armenian_DA ]	};
+    key <LatF> {	[ Armenian_fe,  	Armenian_FE ]	};
+    key <LatG> {	[ Armenian_gim,  	Armenian_GIM ]	};
+    key <LatH> {	[ Armenian_ho,  	Armenian_HO ]	};
+    key <LatJ> {	[ Armenian_tche,  	Armenian_TCHE ]	};
+    key <LatK> {	[ Armenian_ken,  	Armenian_KEN ]	};
+    key <LatL> {	[ Armenian_lyun,  	Armenian_LYUN ]	};
+    key <AC10> {	[ Armenian_to,  	Armenian_TO ]	};
+    key <AC11> {	[ Armenian_pyur,  	Armenian_PYUR ]	};
+
+    key <LatZ> {	[ Armenian_za,  	Armenian_ZA ]	};
+    key <LatX> {	[ Armenian_tso,  	Armenian_TSO ]	};
+    key <LatC> {	[ Armenian_ke,  	Armenian_KE ]	};
+    key <LatV> {	[ Armenian_vev,  	Armenian_VEV ]	};
+    key <LatB> {	[ Armenian_ben,  	Armenian_BEN ]	};
+    key <LatN> {	[ Armenian_nu,  	Armenian_NU ]	};
+    key <LatM> {	[ Armenian_men,  	Armenian_MEN ]	};
+    key <AB08> {	[ Armenian_sha,  	Armenian_SHA ]       };
+    key <AB09> {	[ Armenian_ghat,  	Armenian_GHAT ]       };
+    key <AB10> {	[ Armenian_tsa,  	Armenian_TSA ]	};
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "western" {
+    include "am(eastern)"
+    name[Group1]="Armenia - Western";
+
+    // This is exactly the same layout for Western Armenian
+    // as in Windows XP, except:
+    // AE01 (the colon) has been replaced with the Armenian_full_stop and
+    // capital AE07 (ken) with the Armenian ligature ew
+
+    key <LatW> {	[ Armenian_vev,  	Armenian_VEV ]	};
+    key <LatT> {	[ Armenian_da,  	Armenian_DA ]	};
+    key <LatP> {	[ Armenian_ben,  	Armenian_BEN ]	};
+    key <LatD> {	[ Armenian_tyun,  	Armenian_TYUN ]	};
+    key <LatG> {	[ Armenian_ken,  	Armenian_KEN ]	};
+    key <LatK> {	[ Armenian_ke,  	Armenian_KE ]	};
+    key <LatC> {	[ Armenian_gim,  	Armenian_GIM ]	};
+    key <LatV> {	[ Armenian_vyun,  	Armenian_VYUN ]	};
+    key <LatB> {	[ Armenian_pe,  	Armenian_PE ]	};
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "eastern-alt" {
+    include "am(eastern)"
+    name[Group1]="Armenia - Alternative Eastern";
+
+	// This replicates the Windows XP keyboard layout for Eastern
+	// Armenian exactly (including the bug), except:
+ 	// AE01 (the colon) has been replaced with the Armenian_full_stop and
+	// capital AE07 (ken) with the Armenian ligature ew
+
+    key <LatG> {	[ Armenian_ke,  	Armenian_KE ]	};
+    key <LatC> {	[ Armenian_gim,  	Armenian_GIM ]	};
+
+};

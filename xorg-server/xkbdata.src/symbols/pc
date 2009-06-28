@@ -1,0 +1,150 @@
+// $XKeyboardConfig$
+
+//
+// $XFree86: xc/programs/xkbcomp/symbols/pc,v 1.9 2003/06/09 19:59:46 dawes Exp $
+
+default partial alphanumeric_keys modifier_keys 
+xkb_symbols "pc105" {
+
+    key <ESC>  {	[ Escape			]	};
+
+    // the extra key on most European keyboards
+    key <LSGT> {	[      less,    greater,          bar,    brokenbar ]	};
+
+    // these keys are common to all layouts
+    key <BKSL> {	[ backslash,	bar		]	};
+    key <SPCE> {	[ 	 space			]	};
+
+    include "pc(function)"
+    include "pc(editing)"
+    include "keypad(x11)"
+
+    key <BKSP> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ BackSpace,   Terminate_Server ]
+    };
+
+    key  <TAB> {	[ Tab,	ISO_Left_Tab	]	};
+    key <RTRN> {	[ Return	]	};
+
+    key <CAPS> {	[ Caps_Lock	]	};
+
+    key <NMLK> {	[ Num_Lock, Pointer_EnableKeys		]	};
+
+    key <LFSH> {	[ Shift_L	]	};
+    key <LCTL> {	[ Control_L	]	};
+
+    key <LWIN> {	[ Super_L			]	};
+
+    key <RTSH> {	[ Shift_R	]	};
+    key <RCTL> {	[ Control_R	]	};
+
+    key <RWIN> {	[ Super_R			]	};
+
+    key <MENU> {	[ Menu			]	};
+
+    // begin modifier mappings
+    modifier_map Shift  { Shift_L, Shift_R };
+    modifier_map Lock   { Caps_Lock, ISO_Lock };
+    modifier_map Control{ Control_L, Control_R };
+    modifier_map Mod2   { Num_Lock };
+
+    //  Fake keys for virtual<->real modifiers mapping 
+    key <LVL3> {	[ ISO_Level3_Shift	]	};
+    key <MDSW> {	[ Mode_switch 		]	};
+    modifier_map Mod5   { <LVL3>, <MDSW> };
+
+    key <ALT>  {	[ NoSymbol, Alt_L	]	};
+    include "altwin(meta_alt)"
+
+    key <META> {	[ NoSymbol, Meta_L	]	};
+    modifier_map Mod1   { <META> };
+
+    key <SUPR> {	[ NoSymbol, Super_L	]	};
+    modifier_map Mod4   { <SUPR> };
+
+    key <HYPR> {	[ NoSymbol, Hyper_L	]	};
+    modifier_map Mod4   { <HYPR> };
+
+    key <OUTP> { [ XF86Display ] };
+    key <KITG> { [ XF86KbdLightOnOff ] };
+    key <KIDN> { [ XF86KbdBrightnessDown ] };
+    key <KIUP> { [ XF86KbdBrightnessUp ] };
+};
+
+partial hidden alphanumeric_keys
+xkb_symbols "function" {
+    key <FK01> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F1,	XF86_Switch_VT_1 ]
+    };
+    key <FK02> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F2,	XF86_Switch_VT_2 ]
+    };
+    key <FK03> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F3,	XF86_Switch_VT_3 ]
+    };
+    key <FK04> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F4,	XF86_Switch_VT_4 ]
+    };
+    key <FK05> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F5,	XF86_Switch_VT_5 ]
+    };
+    key <FK06> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F6,	XF86_Switch_VT_6 ]
+    };
+    key <FK07> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F7,	XF86_Switch_VT_7 ]
+    };
+    key <FK08> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F8,	XF86_Switch_VT_8 ]
+    };
+    key <FK09> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F9,	XF86_Switch_VT_9 ]
+    };
+    key <FK10> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F10,	XF86_Switch_VT_10 ]
+    };
+    key <FK11> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F11,	XF86_Switch_VT_11 ]
+    };
+    key <FK12> {
+        type="CTRL+ALT",
+        symbols[Group1]= [ F12,	XF86_Switch_VT_12 ]
+    };
+};
+
+partial hidden alphanumeric_keys
+xkb_symbols "editing" {
+    key <PRSC> {
+	type= "PC_ALT_LEVEL2",
+	symbols[Group1]= [ Print, Sys_Req ]
+    };
+    key <SCLK> {  [  Scroll_Lock	]	};
+    key <PAUS> {
+	type= "PC_CONTROL_LEVEL2",
+	symbols[Group1]= [ Pause, Break ]
+    };
+    key  <INS> {	[  Insert		]	};
+    key <HOME> {	[  Home			]	};
+    key <PGUP> {	[  Prior		]	};
+    key <DELE> {	[  Delete		]	};
+    key  <END> {	[  End			]	};
+    key <PGDN> {	[  Next			]	};
+
+    key   <UP> {	[  Up			]	};
+    key <LEFT> {	[  Left			]	};
+    key <DOWN> {	[  Down			]	};
+    key <RGHT> {	[  Right		]	};
+};
+

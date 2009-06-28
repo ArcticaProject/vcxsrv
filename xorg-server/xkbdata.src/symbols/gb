@@ -1,0 +1,137 @@
+// $XKeyboardConfig$
+
+// based on a keyboard map from an 'xkb/symbols/gb' file
+//
+// $XFree86: xc/programs/xkbcomp/symbols/gb,v 1.6 2003/10/04 10:25:14 pascal Exp $
+
+partial default alphanumeric_keys
+xkb_symbols "basic" {
+
+    // Describes the differences between a very simple en_US
+    // keyboard and a very simple U.K. keyboard layout defined by
+    // the SVR4 European Language Supplement and sometimes also
+    // known as the IBM 166 layout.
+
+    include "latin"
+
+    name[Group1]="United Kingdom";
+
+    key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
+    key <AE03>	{ [         3,   sterling, threesuperior,    sterling ]	};
+    key <AE04>	{ [         4,     dollar,     EuroSign,   onequarter ]	};
+
+    key <AC11>	{ [apostrophe,         at, dead_circumflex, dead_caron]	};
+    key <TLDE>	{ [     grave,    notsign,          bar,          bar ]	};
+
+    key <BKSL>	{ [numbersign, asciitilde,   dead_grave,   dead_breve ]	};
+    key <LSGT>	{ [ backslash,        bar,          bar,    brokenbar ]	};
+
+    include "level3(ralt_switch_multikey)"
+};
+
+partial alphanumeric_keys 
+xkb_symbols "intl" { 
+
+    // Describes the differences between a very simple en_US 
+    // keyboard and a very simple U.K. keyboard layout with 
+    // dead keys. By Phil Jones (philjones1@blueyonder.co.uk) 
+
+    // Includes the following keys: 
+    // dead_grave 
+    // dead_acute 
+    // dead_circumflex 
+    // dead_tilde 
+    // dead_diaeresis 
+
+    include "latin" 
+
+    name[Group1]="United Kingdom - International (with dead keys)"; 
+
+    key <AE02>  { [   2,  dead_diaeresis,      twosuperior,     onehalf ] };
+    key <AE03>  { [   3,        sterling,    threesuperior,    onethird ] };
+    key <AE04>  { [   4,          dollar,         EuroSign,  onequarter ] };
+    key <AE06>  { [   6, dead_circumflex,         NoSymbol,    onesixth ] };
+
+    key <AC11>  { [ dead_acute,         at,     apostrophe,         bar ] };
+    key <TLDE>  { [ dead_grave,    notsign,            bar,         bar ] };
+
+    key <BKSL>  { [ numbersign, dead_tilde,            bar,         bar ] };
+    key <LSGT>  { [  backslash,        bar,            bar,         bar ] };
+
+    include "level3(ralt_switch)"
+};
+
+// Describe the differences between the US Colemak layout
+// and a UK variant. By Andy Buckley (andy@insectnation.org)
+
+partial alphanumeric_keys
+xkb_symbols "colemak" {
+    include "us(colemak)"
+
+    name[Group1]="United Kingdom - Colemak";
+
+    key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
+    key <AE03>	{ [         3,   sterling, threesuperior,    sterling ]	};
+    key <AE04>	{ [         4,     dollar,     EuroSign,   onequarter ]	};
+
+    key <AC11>	{ [apostrophe,         at, dead_circumflex, dead_caron]	};
+    key <TLDE>	{ [     grave,    notsign,          bar,          bar ]	};
+
+    key <BKSL>	{ [numbersign, asciitilde,   dead_grave,   dead_breve ]	};
+    key <LSGT>	{ [ backslash,        bar,          bar,    brokenbar ]	};
+
+    include "level3(ralt_switch_multikey)"
+};
+
+
+// Dvorak (UK) keymap (by odaen) allowing the usage of
+// the £ and ? key and swapping the @ and " keys.
+
+partial alphanumeric_keys
+xkb_symbols "dvorak" {
+    include "us(dvorak-intl)"
+
+    name[Group1]="United Kingdom - Dvorak";
+
+    key <BKSL> { [ numbersign,	asciitilde	] };
+    key <AE02> { [	    2,	quotedbl,  twosuperior,   NoSymbol	] };
+    key <AE03> { [	    3,	sterling,  threesuperior, NoSymbol	] };
+    key <LSGT> { [  backslash,	bar		] };
+    key <AD01> { [ apostrophe,	at		] };
+};
+
+// Dvorak letter positions, but punctuation all in the normal UK positions.
+partial alphanumeric_keys
+xkb_symbols "dvorakukp" {
+    include "gb(dvorak)"
+
+    name[Group1]="United Kingdom - Dvorak (UK Punctuation)";
+
+    key <AE11> {        [     minus,    underscore      ]       };
+    key <AE12> {        [     equal,    plus            ]       };
+    key <AD11> {        [ bracketleft,  braceleft       ]       };
+    key <AD12> {        [ bracketright, braceright      ]       };
+    key <AD01> {        [ slash,        question        ]       };
+    key <AC11> {        [apostrophe,    at,         dead_circumflex, dead_caron] };
+};
+
+// Copied from macintosh_vndr/gb
+partial alphanumeric_keys 
+xkb_symbols "mac" {
+
+    // Describes the differences between a very simple en_US
+    // keyboard and a very simple U.K. keyboard layout
+
+    include "latin"
+
+    name[Group1]= "United Kingdom - Macintosh";
+
+    key <AE02> {	[               2,              at,         EuroSign	]	};
+    key <AE03> {	[               3,        sterling,       numbersign	]	};
+
+    // End alphanumeric section
+    
+    include "level3(ralt_switch)"
+};
+
+

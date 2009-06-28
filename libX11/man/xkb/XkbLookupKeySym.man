@@ -1,0 +1,89 @@
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbLookupKeySym __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbLookupKeySym \- Find the symbol associated with a key for a particular state
+.SH SYNOPSIS
+.B Bool XkbLookupKeySym
+(
+.I dpy,
+.I key,
+.I state,
+.I mods_rtrn,
+.I sym_rtrn
+)
+.br
+      Display *\fIdpy\fP\^;
+.br
+      KeyCode \fIkey\fP\^;
+.br
+      unsigned int \fIstate\fP\^;
+.br
+      unsigned int *\fImods_rtrn\fP\^;
+.br
+      KeySym *\fIsym_rtrn\fP\^;
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I \- dpy
+connection to X server
+.TP
+.I \- key
+key for which symbols are to be found
+.TP
+.I \- state
+state for which symbol should be found
+.TP
+.I \- mods_rtrn
+backfilled with unconsumed modifiers
+.TP
+.I \- sym_rtrn
+backfilled with symbol associated with key + state
+.SH DESCRIPTION
+.LP
+.I XkbLookupKeySym 
+is the equivalent of the core 
+.I XLookupKeySym 
+function. For the core keyboard, given a keycode 
+.I key 
+and an Xkb state 
+.I state, XkbLookupKeySym 
+returns the symbol associated with the key in 
+.I sym_rtrn 
+and the list of modifiers that should still be applied in 
+.I mods_rtrn. 
+The 
+.I state 
+parameter is the state from a KeyPress or KeyRelease event. 
+.I XkbLookupKeySym 
+returns True if it succeeds.
+.SH "SEE ALSO"
+.BR XLookupKeySym (3X11)
+

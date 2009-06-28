@@ -1,0 +1,18 @@
+// $Xorg: pc,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
+default partial xkb_compatibility "pc"  {
+
+    // Sets the "Alt" virtual modifier
+
+    virtual_modifiers	Alt;
+
+    setMods.clearLocks= True;
+    interpret Alt_L+Any     { 
+	virtualModifier= Alt;
+	action = SetMods(modifiers=modMapMods);
+    };
+
+    interpret Alt_R+Any	{
+	virtualModifier= Alt;
+	action = SetMods(modifiers=modMapMods);
+    };
+};

@@ -1,0 +1,15 @@
+Neomagic KDrive driver for xserver
+
+This is a very simple implementation for Neomagic based cards.
+Almost all functions are handled by the VESA driver, and
+only solid drawing and bitblt are done with acceleration,
+
+This driver has been tested in MagicGraph 256AV+(NM2230) card
+but it should work on other cards as well.
+
+The only warning is to choose a working mode.  You can ask
+for supported modes using -listmodes.  I use -mode 0x117.
+
+--
+Franco Catrin L.
+fcatrin@tuxpan.com

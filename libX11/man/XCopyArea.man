@@ -1,0 +1,308 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+.\" $XFree86: xc/doc/man/X11/XCopyArea.man,v 1.3 2001/02/09 03:47:45 tsi Exp $
+.\"
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XCopyArea __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XCopyArea, XCopyPlane \- copy areas
+.SH SYNTAX
+.HP
+int XCopyArea\^(\^Display *\fIdisplay\fP\^, Drawable \fIsrc\fP\^, Drawable
+\fIdest\fP\^, GC \fIgc\fP\^, int \fIsrc_x\fP\^, int \fIsrc_y\fP\^, unsigned
+int \fIwidth\fP\^, unsigned \fIheight\fP\^, int \fIdest_x\fP\^, int
+\fIdest_y\fP\^);
+.HP
+int XCopyPlane\^(\^Display *\fIdisplay\fP\^, Drawable \fIsrc\fP\^, Drawable
+\fIdest\fP\^, GC \fIgc\fP\^, int \fIsrc_x\fP\^, int \fIsrc_y\fP\^, unsigned
+\fIwidth\fP\^, int \fIheight\fP\^, int \fIdest_x\fP\^, int \fIdest_y\fP\^,
+unsigned long \fIplane\fP\^); 
+.SH ARGUMENTS
+.ds Dx , which are relative to the origin of the destination rectangle \
+and specify its upper-left corner
+.IP \fIdest_x\fP 1i
+.br
+.ns
+.IP \fIdest_y\fP 1i
+Specify the x and y coordinates\*(Dx. 
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIplane\fP 1i
+Specifies the bit plane.
+You must set exactly one bit to 1.
+.IP \fIsrc\fP 1i
+.br
+.ns
+.IP \fIdest\fP 1i
+Specify the source and destination rectangles to be combined. 
+.IP \fIsrc_x\fP 1i
+.br
+.ns
+.IP \fIsrc_y\fP 1i
+Specify the x and y coordinates, 
+which are relative to the origin of the source rectangle
+and specify its upper-left corner.
+.ds Wh , which are the dimensions of both the source and destination rectangles
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.SH DESCRIPTION
+The
+.ZN XCopyArea
+function combines the specified rectangle of src with the specified rectangle 
+of dest.
+The drawables must have the same root and depth,
+or a
+.ZN BadMatch
+error results.
+.LP
+If regions of the source rectangle are obscured and have not been
+retained in backing store 
+or if regions outside the boundaries of the source drawable are specified, 
+those regions are not copied. 
+Instead, the 
+following occurs on all corresponding destination regions that are either
+visible or are retained in backing store.  
+If the destination is a window with a background other than 
+.ZN None , 
+corresponding regions
+of the destination are tiled with that background
+(with plane-mask of all ones and
+.ZN GXcopy 
+function).
+Regardless of tiling or whether the destination is a window or a pixmap,
+if graphics-exposures is 
+.ZN True ,
+then
+.ZN GraphicsExpose
+events for all corresponding destination regions are generated.
+If graphics-exposures is 
+.ZN True 
+but no
+.ZN GraphicsExpose
+events are generated, a
+.ZN NoExpose 
+event is generated.
+Note that by default graphics-exposures is
+.ZN True
+in new GCs.
+.LP
+This function uses these GC components: function, plane-mask, 
+subwindow-mode, graphics-exposures, clip-x-origin,
+clip-y-origin, and clip-mask.
+.LP
+.ZN XCopyArea
+can generate
+.ZN BadDrawable ,
+.ZN BadGC ,
+and
+.ZN BadMatch 
+errors.
+.LP
+The
+.ZN XCopyPlane
+function uses a single bit plane of the specified source rectangle
+combined with the specified GC to modify the specified rectangle of dest.
+The drawables must have the same root but need not have the same depth.
+If the drawables do not have the same root, a
+.ZN BadMatch
+error results.
+If plane does not have exactly one bit set to 1 and the value of plane
+is not less than %2 sup n%, where \fIn\fP is the depth of src, a
+.ZN BadValue
+error results.
+.LP
+Effectively, 
+.ZN XCopyPlane
+forms a pixmap of the same depth as the rectangle of dest and with a
+size specified by the source region. 
+It uses the foreground/background pixels in the GC (foreground
+everywhere the bit plane in src contains a bit set to 1,
+background everywhere the bit plane in src contains a bit set to 0)
+and the equivalent of a 
+.ZN CopyArea
+protocol request is performed with all the same exposure semantics.
+This can also be thought of as using the specified region of the source 
+bit plane as a stipple with a fill-style of
+.ZN FillOpaqueStippled
+for filling a rectangular area of the destination.
+.LP
+This function uses these GC components: function, plane-mask, foreground,
+background, subwindow-mode, graphics-exposures, clip-x-origin, clip-y-origin,
+and clip-mask.
+.LP
+.ZN XCopyPlane
+can generate
+.ZN BadDrawable ,
+.ZN BadGC ,
+.ZN BadMatch ,
+and
+.ZN BadValue 
+errors.
+.SH DIAGNOSTICS
+.TP 1i
+.ZN BadDrawable
+A value for a Drawable argument does not name a defined Window or Pixmap.
+.TP 1i
+.ZN BadGC
+A value for a GContext argument does not name a defined GContext.
+.TP 1i
+.ZN BadMatch
+An
+.ZN InputOnly
+window is used as a Drawable.
+.TP 1i
+.ZN BadMatch
+Some argument or pair of arguments has the correct type and range but fails
+to match in some other way required by the request.
+.TP 1i
+.ZN BadValue
+Some numeric value falls outside the range of values accepted by the request.
+Unless a specific range is specified for an argument, the full range defined
+by the argument's type is accepted.  Any argument defined as a set of
+alternatives can generate this error.
+.SH "SEE ALSO"
+XClearArea(3X11)
+.br
+\fIXlib \- C Language X Interface\fP

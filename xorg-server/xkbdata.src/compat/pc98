@@ -1,0 +1,62 @@
+// $Xorg: pc98,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
+
+
+
+
+// $XFree86: xc/programs/xkbcomp/compat/pc98,v 3.1 1997/10/26 13:25:33 dawes Exp $
+
+// Minimal set of symbol interpretations to provide 
+// reasonable default behavior (Num lock, shift and 
+// caps lock and mode switch) and set up the 
+// automatic updating of common keyboard LEDs.
+
+default xkb_compatibility "basic"  {
+    virtual_modifiers NumLock,AltGr;
+
+    interpret.repeat= False;
+    setMods.clearLocks= True;
+    latchMods.clearLocks= True;
+    latchMods.latchToLock= True;
+
+    interpret Shift_Lock+AnyOf(Shift+Lock) {
+	action= LockMods(modifiers=Shift);
+    };
+
+//    interpret Any+Lock {
+//	action= LockMods(modifiers=Lock);
+//   }; 
+
+    interpret Num_Lock+Any {
+	virtualModifier= NumLock;
+	action= LockMods(modifiers=NumLock);
+    };
+
+    interpret Mode_switch {
+	useModMapMods= level1;
+	virtualModifier= AltGr;
+	action= SetGroup(group=2,clearLocks);
+    };
+
+    interpret Any + Any {
+	action= SetMods(modifiers=modMapMods);
+    };
+
+    group 2 = AltGr;
+    group 3 = AltGr;
+    group 4 = AltGr;
+
+    indicator.allowExplicit= False;
+    indicator "Caps Lock" { 
+	whichModState= Locked;
+	modifiers= Lock;
+    };
+    indicator "Num Lock" {
+	whichModState= Locked;
+	modifiers= NumLock;
+    };
+    indicator "Shift Lock" {
+	whichModState= Locked;
+	modifiers= Shift;
+    };
+    indicator.allowExplicit= True;
+};

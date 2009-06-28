@@ -1,0 +1,93 @@
+// $XKeyboardConfig$
+
+// X Keyboard Extension file for Sinhala (Sri Lanka) (2004-04-22)
+// Maintainer  : Harshula Jayasuriya <harshula@gmail.com>
+// Last Updated: 2007-06-29
+// This is a static phonetic mapping for a standard US-English keyboard
+// (qwerty)
+// http://www.nongnu.org/sinhala/doc/keymaps/sinhala-keyboard_3.html
+
+// Repaya, Rakaransaya and Yansaya aren't inserted with A-r, R and Y,
+// respectively. The problem lies with the XKB infrastructure which
+// only allows a one-to-one mapping of keycodes to Unicode codepoints.
+// Unfortunately, the 3 mentioned glyphs actually consists of 3
+// Unicode codepoints each. The result is that the user must
+// manually construct the glyph by typing each of the 3 codepoints.
+// ALT-, represents the 'JOIN' key, it requires
+// two codepoints, hence it also has to be manually constructed.
+// Similarly, ALT-/ representing the 'TOUCH' key requires
+// two codepoints.
+
+// Repaya = rayanna,AL,ZWJ
+// Rakaransaya = AL,ZWJ,rayanna
+// Yansaya = AL,ZWJ,yayanna
+// JOIN = AL,ZWJ
+// TOUCH = ZWJ,AL
+
+// Where,
+// AL = Al Lakuna = ALT-a
+// ZWJ = Zero Width Joiner = ALT-/
+// rayanna = r
+// yayanna = y
+
+partial default alphanumeric_keys
+xkb_symbols "sin_phonetic" {
+
+  include "us"
+// it is default - no details in the name
+  name[Group1] = "Sri Lanka";
+  key.type[Group1] = "FOUR_LEVEL";
+
+  // q - p
+  key <AD01> { [ 0x01000d8d, 0x01000d8e, 0x01000dd8, 0x01000df2 ] };
+  key <AD02> { [ 0x01000d87, 0x01000d88, 0x01000dd0, 0x01000dd1 ] };
+  key <AD03> { [ 0x01000d91, 0x01000d92, 0x01000dd9, 0x01000dda ] };
+  key <AD04> { [ 0x01000dbb, 0x01000dca, 0x01000dbb, NoSymbol ] };
+  key <AD05> { [ 0x01000dad, 0x01000dae, 0x01000da7, 0x01000da8 ] };
+  key <AD06> { [ 0x01000dba, 0x01000dca, NoSymbol, NoSymbol ] };
+  key <AD07> { [ 0x01000d8b, 0x01000d8c, 0x01000dd4, 0x01000dd6 ] };
+  key <AD08> { [ 0x01000d89, 0x01000d8a, 0x01000dd2, 0x01000dd3 ] };
+  key <AD09> { [ 0x01000d94, 0x01000d95, 0x01000ddc, 0x01000ddd ] };
+  key <AD10> { [ 0x01000db4, 0x01000db5, NoSymbol, NoSymbol ] };
+
+  // a - l
+  key <AC01> { [ 0x01000d85, 0x01000d86, 0x01000dca, 0x01000dcf ] };
+  key <AC02> { [ 0x01000dc3, 0x01000dc1, 0x01000dc2, NoSymbol ] };
+  key <AC03> { [ 0x01000daf, 0x01000db0, 0x01000da9, 0x01000daa ] };
+  key <AC04> { [ 0x01000dc6, NoSymbol, 0x01000ddb, 0x01000d93 ] };
+  key <AC05> { [ 0x01000d9c, 0x01000d9d, 0x01000d9f, NoSymbol ] };
+  key <AC06> { [ 0x01000dc4, 0x01000d83, 0x01000dde, 0x01000d96 ] };
+  key <AC07> { [ 0x01000da2, 0x01000da3, 0x01000da6, NoSymbol ] };
+  key <AC08> { [ 0x01000d9a, 0x01000d9b, 0x01000d8f, 0x01000d90 ] };
+  key <AC09> { [ 0x01000dbd, 0x01000dc5, 0x01000ddf, 0x01000df3 ] };
+
+  // z - ?
+  key <AB01> { [ 0x01000da4, 0x01000da5, NoSymbol, NoSymbol ] };
+  key <AB02> { [ 0x01000db3, 0x01000dac, NoSymbol, NoSymbol ] };
+  key <AB03> { [ 0x01000da0, 0x01000da1, NoSymbol, NoSymbol ] };
+  key <AB04> { [ 0x01000dc0, NoSymbol, NoSymbol, NoSymbol ] };
+  key <AB05> { [ 0x01000db6, 0x01000db7, NoSymbol, NoSymbol ] };
+  key <AB06> { [ 0x01000db1, 0x01000dab, 0x01000d82, 0x01000d9e ] };
+  key <AB07> { [ 0x01000db8, 0x01000db9, NoSymbol, NoSymbol ] };
+  key <AB08> { [ any, any, 0x01000dca, NoSymbol ] };
+  key <AB09> { [ any, any, 0x01000df4, NoSymbol ] };
+  key <AB10> { [ any, any, 0x0100200d, NoSymbol ] };
+
+  // Space
+  key <SPCE> { [ space, nobreakspace, 0x0100200c, NoSymbol ] };
+
+  include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "tam_unicode" {
+    include "in(tam_unicode)"
+    name[Group1]= "Sri Lanka - Tamil Unicode";
+};
+
+partial alphanumeric_keys
+xkb_symbols "tam_TAB" {
+    include "in(tam_TAB)"
+    name[Group1]= "Sri Lanka - Tamil TAB Typewriter";
+};
+

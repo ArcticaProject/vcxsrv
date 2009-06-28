@@ -1,0 +1,124 @@
+// $XKeyboardConfig$
+
+// based on a keyboard map from an 'xkb/symbols/dev' file
+//
+// $XFree86: xc/programs/xkbcomp/symbols/pc/dev,v 1.2 2002/11/22 04:03:28 dawes Exp $
+
+partial default alphanumeric_keys 
+xkb_symbols "basic" {
+
+      name[Group1]= "Nepal";
+
+// `,1,2,3,4,5,6,7,8,9,0,-,=
+
+      key <TLDE> { [      0x100093D,0x100093C ]	};
+      key <AE01> { [      0x1000967	 		]	};
+      key <AE02> { [      0x1000968			]	};
+      key <AE03> { [      0x1000969 	 		]	};
+      key <AE04> { [      0x100096A  	 		]	};
+      key <AE05> { [      0x100096B  	 		]	};
+      key <AE06> { [      0x100096C  	 		]	};
+      key <AE07> { [      0x100096D                     ]	};
+      key <AE08> { [      0x100096e  	 		]	};
+      key <AE09> { [      0x100096F	 		]	};
+      key <AE10> { [      0x1000966,0x1000970		]	};
+      key <AE11> { [      minus, 0x1000952 		]	};
+      key <AE12> { [      equal, 0x100200C 		]	};
+
+// q,w,e,r,t,y,u,i,o,p,[,]
+
+      key <AD01> { [      0x100091F,  0x1000920       	]	};
+      key <AD02> { [      0x100094C,  0x1000914       	]	};
+      key <AD03> { [      0x1000947,  0x1000948       	]	};
+      key <AD04> { [      0x1000930,  0x1000943       	]	};
+      key <AD05> { [      0x1000924,  0x1000925       	]	};
+      key <AD06> { [      0x100092F,  0x100091E 	]	};
+      key <AD07> { [      0x1000941,  0x1000942 	]	};
+      key <AD08> { [      0x100093F,  0x1000940 	]	};
+      key <AD09> { [      0x100094B,  0x1000913		]	};
+      key <AD10> { [      0x100092A,  0x100092B 	]	};
+      key <AD11> { [      0x1000907,  0x1000908		]	};
+      key <AD12> { [      0x100090F,  0x1000910		]	};
+
+// a,s,d,f,g,h,j,k,l,;,',Backslash 
+      key <AC01> { [      0x100093E,  0x1000906       	]	};
+      key <AC02> { [      0x1000938,  0x1000936       	]	};
+      key <AC03> { [      0x1000926,  0x1000927       	]	};
+      key <AC04> { [      0x1000909,  0x100090A       	]	};
+      key <AC05> { [      0x1000917,  0x1000918       	]	};
+      key <AC06> { [      0x1000939,  0x1000905 	]	};
+      key <AC07> { [      0x100091C,  0x100091D 	]	};
+      key <AC08> { [      0x1000915,  0x1000916 	]	};
+      key <AC09> { [      0x1000932,  0x1000933 	]	};
+      key <AC10> { [      semicolon,  colon 		]	};
+      key <AC11> { [      quoteright, quotedbl 		]	};
+      key <BKSL> { [      0x1000950,  0x1000903 	]	};
+
+
+// z,x,c,v,b,n,m,,,.,/ 
+      key <AB01> { [      0x1000937,  0x100090B		]	};
+      key <AB02> { [      0x1000921,  0x1000922		]	};
+      key <AB03> { [      0x100091B,  0x100091A         ]       };
+      key <AB04> { [      0x1000935,  0x1000901		]       };
+      key <AB05> { [      0x100092C,  0x100092D		]       };
+      key <AB06> { [      0x1000928,  0x1000923         ]       };
+      key <AB07> { [      0x100092E,  0x1000902         ]       };
+      key <AB08> { [      comma,      0x1000919         ]       };
+      key <AB09> { [      0x1000964,  0x1000965		]       };
+      key <AB10> { [      0x100094D,  question		]       };
+};
+
+partial alphanumeric_keys
+xkb_symbols "olpc" {
+
+// Contact: Walter Bender <walter@laptop.org>
+
+  include "np"
+      key <TLDE> { [      grave,     asciitilde 	]	};
+      key <AE01> { [      0x1000967	 		]	}; // Nepali digit one
+      key <AE02> { [      0x1000968			]	}; // Nepali digit two
+      key <AE03> { [      0x1000969 	 		]	}; // Nepali digit three
+      key <AE04> { [      0x100096A  	 		]	}; // Nepali digit four
+      key <AE05> { [      0x100096B  	 		]	}; // Nepali digit five
+      key <AE06> { [      0x100096C,  sterling 	 	]	}; // Nepali digit six
+      key <AE07> { [      0x100096D,  eurosign 	 	]	}; // Nepali digit seven
+      key <AE08> { [      0x100096e  	 		]	}; // Nepali digit eight
+      key <AE09> { [      0x100096F	 		]	}; // Nepali digit nine
+      key <AE10> { [      0x1000966			]	}; // Nepali digit zero
+      key <AE12> { [      0x1000950,  0x1000903 	]	}; // OM, SIGN VISARGA
+
+      key <AD01> { [      0x100091C,  0x100091D 	]	}; // JA, JHA
+      key <AD02> { [      0x1000917,  0x1000918       	]	}; // GA, GHA
+      key <AD03> { [      0x100092F,  0x100091E 	]	}; // YA, YNA
+      key <AD04> { [      0x1000938,  0x1000936       	]	}; // SA, SHA
+      key <AD05> { [      0x100090F,  0x1000910		]	}; // E, AI
+      key <AD06> { [      0x100091B,  0x100091A         ]       }; // CHHA, CHA
+      key <AD07> { [      0x100092A,  0x100092B 	]	}; // PA, PHA
+      key <AD08> { [      0x1000947,  0x1000948       	]	}; // VOWEL SIGN E, VOWEL SIGN AI
+      key <AD09> { [      0x100094B,  0x100093E		]	}; // VOWEL SIGN O, VOWEL SIGN AA
+      key <AD10> { [      0x1000924,  0x1000925       	]	}; // TA, THA
+      key <AD11> { [      0x1000909,  0x100090A 	]	}; // HRSHWA U, DIRGHA UU
+      key <AD12> { [      0x100093F,  0x1000940 	]	}; // VOWEL SIGN HRSHWA I, VOWEL SIGN DIRGHA II
+
+      key <AC01> { [      0x100092E,  0x1000902         ]       }; // MA, SIGN ANUSVARA
+      key <AC02> { [      0x1000907,  0x1000908		]	}; // HRSHWA I, DIRGHA II
+      key <AC03> { [      0x1000928,  0x1000923         ]       }; // NA, NNA
+      key <AC04> { [      0x100094D,  0x1000921		]       }; // VIRAMA (HALANTA?), DDA
+      key <AC05> { [      0x100091F,  0x1000920       	]	}; // TTA, TTHA
+      key <AC06> { [      0x1000926,  0x1000927       	]	}; // DA, DHA
+      key <AC07> { [      0x100093E,  0x1000901       	]	}; // SIGN AA, SIGN CANDRABINDU
+      key <AC08> { [      0x1000930,  0x1000943       	]	}; // RA, VOWEL SIGN VOCALIC R
+      key <AC09> { [      0x1000915,  0x1000916 	]	}; // KA, KHA
+
+      key <AB01> { [      0x1000937,  0x100090B		]	}; // SSA, VOCALIC R (RRI)
+      key <AB02> { [      0x100092C,  0x100092D		]       }; // BA, BHA
+      key <AB03> { [      0x1000941,  0x1000942       	]	}; // VOWEL SIGN HRSHWA U, VOWEL SIGN DIRGHA U (UU)
+      key <AB04> { [      0x1000939,  0x1000922 	]	}; // HA, DDHA
+      key <AB05> { [      0x1000913,  0x1000914		]	}; // O, AU
+      key <AB06> { [      0x1000905,  0x1000906		]	}; // A, AA
+      key <AB07> { [      0x1000932,  0x1000919 	]	}; // LA, NGA
+      key <AB08> { [      comma,  0x1000935		]       }; // VA
+      key <AB09> { [      0x1000964,  0x1000965		]       }; // PURNA VIRAM, DIRGHA VIRAM
+
+      include "group(olpc)"
+};

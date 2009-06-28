@@ -1,0 +1,25 @@
+libXfont provides the core of the legacy X11 font system, handling the
+index files (fonts.dir, fonts.alias, fonts.scale), the various font file
+formats, and rasterizing them.   It is used by the X servers, the
+X Font Server (xfs), and some font utilities (bdftopcf for instance),
+but should not be used by normal X11 clients.  X11 clients access fonts
+via either the new API's in libXft, or the legacy API's in libX11.
+
+Please submit bugs & patches to the Xorg bugzilla:
+
+	https://bugs.freedesktop.org/enter_bug.cgi?product=xorg
+
+All questions regarding this software should be directed at the
+Xorg mailing list:
+
+	http://lists.freedesktop.org/mailman/listinfo/xorg
+
+The master development code repository can be found at:
+
+	git://anongit.freedesktop.org/git/xorg/lib/libXfont
+
+	http://cgit.freedesktop.org/xorg/lib/libXfont
+
+For more information on the git code manager, see:
+
+	http://wiki.x.org/wiki/GitPage

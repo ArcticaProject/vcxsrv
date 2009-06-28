@@ -1,0 +1,12 @@
+// $Xorg: cancel,v 1.3 2000/08/17 19:54:48 cpqbld Exp $
+partial default xkb_types "Shift_Cancels_Caps" {
+
+override type "TWO_LEVEL" {
+    modifiers = Shift+Lock;
+    map[Shift] = Level2;
+    preserve[Lock]= Lock;
+    level_name[Level1] = "Base";
+    level_name[Level2] = "Shift";
+};
+
+};

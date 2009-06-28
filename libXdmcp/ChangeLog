@@ -1,0 +1,353 @@
+commit f876004608f8a4737f66e1fc0e83ff7e7d6d150b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 11 14:43:15 2006 -0700
+
+    Version bump -> 1.0.2
+
+commit 55f64a8a29094905b9f49be95ee576de4a2e1a46
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 11 14:41:42 2006 -0700
+
+    Require xorg-macros 1.1.0 or later for XORG_WITH_LINT & XORG_LINT_LIBRARY macros
+
+commit ae43ecfcb85ad238b2a513d3caf400028b951019
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 11 14:26:26 2006 -0700
+
+    Add lint library to CLEANFILES
+
+commit a106f489a69246f24535acd8bdac96e273df7334
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 11 14:22:42 2006 -0700
+
+    Replace static ChangeLog with dist-hook to generate from git-log
+
+commit 644ff9232d48a32dcc16a1eeba2b51c8686eb33e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Aug 10 15:58:18 2006 -0700
+
+    Use AC_CHECK_FUNCS instead of #ifdef SYSV to check for srand48 & lrand48
+
+commit 048d2bb6b48dce7b2afea39cd429f3253d8e77ca
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Aug 10 15:43:31 2006 -0700
+
+    Add *~ to .gitignore to ignore emacs droppings
+
+commit 1f3fadd3a0f8226fb19f94d6a6344e144e031bba
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 18:01:01 2006 -0700
+
+    Add lint checking & library targets
+
+commit 0b7f0333fe6384598e78f6e0dc61dfbf3636c1c8
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 17:52:46 2006 -0700
+
+    Fix sparse warnings for using 0 instead of NULL
+    
+    RA8.c:50:17: warning: Using plain integer as NULL pointer
+    RA16.c:50:16: warning: Using plain integer as NULL pointer
+    RA32.c:50:16: warning: Using plain integer as NULL pointer
+    RAofA8.c:50:16: warning: Using plain integer as NULL pointer
+
+commit bfcde07215512ea5153700bc57ef8baa8d3e9ef2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 14:58:52 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit f204a3d32500eb8c6ec7a694a21440fc330ab834
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu Apr 27 00:07:09 2006 +0000
+
+    Bump to 1.0.1
+
+commit b7de07f180407a1597ee74cc570311d7eb808637
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Mar 20 19:51:32 2006 +0000
+
+    Bug #6243: Fix build on Cygwin, and when srcdir != objdir. (Yaakov
+        Selkowitz)
+
+commit aaee3f658482018c622d8cbb926bbfa14df64eea
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu Jan 12 23:36:41 2006 +0000
+
+    static -> static const
+
+commit 9f8e330eff571cc0c525fd42c4ef8a34cac2eb0d
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:29 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 9cd3a3746077c2d6a8fcf2c2c125237d9207e2fb
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:43 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit da0e8c8bbdfe6cef0225960b204eb9878897cb9b
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:41 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit cbd6a80c320d7d02ca3bb6d1ca036c0eff27d2c3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:09 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 0609d6f55136698cb7120b62244d44423e6f0945
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 5 19:24:07 2005 +0000
+
+    Add missing files to EXTRA_DIST
+
+commit b0c00126bad965f526ef13fa041248e8379a4a53
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 30 07:44:09 2005 +0000
+
+    Add missing library dependencies: Xdmcp: -lsocket (if needed for recvfrom,
+        such as on Solaris) lbxutil: -lz xkbui: -lm
+
+commit 19ca07e4c538a6f8b46b3bbcdacd39afc1fdede0
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:51 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 7242946c1cac1ecb97ea0cc312a8ea08707ca945
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jul 16 06:41:57 2005 +0000
+
+    Use -version-number instead of -version-info.
+
+commit ce57d6479026168ab4839dc8d93f8c13c7ee6356
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu Jul 14 15:12:44 2005 +0000
+
+    typo fixes (Matthieu Herrb)
+
+commit d5c88f476d6d263b9e80640c1acd3ec784c7184b
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 06:15:32 2005 +0000
+
+    Add .cvsignore files Switch _la_CFLAGS for AM_CFLAGS to clean up directory
+
+commit 1df326ab00b3ca1faf44d81ce53f6b66076ad0cf
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 07:00:56 2005 +0000
+
+    Add Xtrans definitions (FONT_t, TRANS_CLIENT) to clean up warnings.
+    Add XSERV_t, TRANS_SERVER, TRANS_REOPEN to quash warnings.
+    Add #include <dix-config.h> or <xorg-config.h>, as appropriate, to all
+        source files in the xserver/xorg tree, predicated on defines of
+        HAVE_{DIX,XORG}_CONFIG_H. Change all Xfont includes to
+        <X11/fonts/foo.h>.
+
+commit 77283d94174d18791e230b4800641242c1767e87
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:22:32 2005 +0000
+
+    revert last change, didn't do right thing at all, sorry for the noise
+
+commit daefb98f4437af90dcff3853ec23b8a1f0864018
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:10:07 2005 +0000
+
+    Require automake 1.7 in AM_INIT_AUTOMAKE
+
+commit 2f31285482451b8ed44b0b61969a7f324dbe905a
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue May 17 14:43:47 2005 +0000
+
+    Tue May 17 10:38:30 2005 Søren Sandmann <sandmann@redhat.com>
+    Remove Xdmcpconf.h and references to it, since it is not needed.
+    Delete entries from the xlibs tree since they are not relevant
+
+commit 83b3f8f9fcb08348d28dbdb19e07a2c41b9f8bf2
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Sat May 14 08:03:04 2005 +0000
+
+    Add Xdmcpconf.h.in from xlibs tree.
+
+commit ceec4744a2906539154007edf1ec3b865fef1991
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Sat May 14 07:58:43 2005 +0000
+
+    Add configure.ac for Xdmcp from xlibs tree.
+
+commit d5d1fb73e5c8c0b2a5b2704ec6b8394fc8a425b4
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Sat May 14 07:46:48 2005 +0000
+
+    Move includes in Xau and Xdmcp into include/X11 subdirectories so that the
+        source can reference them with <X11/...>.
+
+commit 0ea8a9fde966a2fbdc075e4cfc47235d3c899022
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Thu May 12 16:27:25 2005 +0000
+
+    Thu May 12 12:24:16 2005 Søren Sandmann <sandmann@redhat.com>
+    Conditionally include config.h
+    add Makefile.am
+
+commit 845dff36906d99a80ea920a8d0efb73bd0b88d56
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Thu May 12 16:12:34 2005 +0000
+
+    Make xtrans install in $(includedir)/X11/Xtrans. Remove all references to
+        Xtransdef.
+    Add Xdmcp build files
+    Add Wrap.h to lib/dmcp part of symlink script.
+
+commit 2e5c59efc9df61d84f81af0f9a100672d096bac6
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Mon Nov 15 15:06:55 2004 +0000
+
+    Bufzilla #1802, http://freedesktop.org/bugzilla/show_bug.cgi?id=1802 Added
+        mingw (Win32) port
+
+commit 5cd56c90f05d05c19c484f606b70d17873b507b5
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Aug 24 18:33:32 2004 +0000
+
+    Replace 'uint32_t' with 'CARD32' and 'uint8_t' with 'CARD8'. Add #include
+        <X11/Xmd.h>
+    reviewed by: Stuart Kreitman <Stuart.Kreitman@Sun.COM>
+
+commit 874e5e8b17f111f07c2c4e9167b4940365cc1421
+Author: Stuart Kreitman <stuart.kreitman@sun.com>
+Date:   Mon Aug 23 17:06:37 2004 +0000
+
+    Modified Files: Wraphelp.c
+    Coding standard recommended by C99 standards body:
+    http://www.oreillynet.com/pub/a/network/2003/10/07/michael_barr.html
+
+commit 7acd9ecff911e900deb03767f283d59fc90f550c
+Author: Jim Gettys <jg@freedesktop.org>
+Date:   Sun Aug 22 01:02:25 2004 +0000
+
+    Matthieu Herrb <matthieu.herrb@laas.fr> points out:
+    Hmm, this version doesn't work on LP64 big endian machines (like
+    *BSD/sparc64). The problems were fixed in OpenBSD. May I suggest to switch
+        to this version (it's the same origin, with the LP64 problems fixed):
+        <http://www.openbsd.org/cgi-bin/cvsweb.cgi/XF4/xc/lib/Xdmcp/Wraphelp.c>
+
+commit faf433b79417ef801ed3c62fdf9bbc8edf1b6ba3
+Author: Jim Gettys <jg@freedesktop.org>
+Date:   Sat Aug 21 02:06:44 2004 +0000
+
+    Add Wraphelp.c to lib/Xdmcp, at long last, along with the U.S. government
+        required notifications. The website notification went up first.
+    Clean up Wraphelp.c so that it compiles cleanly.
+    I chose the version Australian version written for R5 written by Eric
+        Eay@psych.psy.uq.oz.au, as I don't know where the original one was, and
+        didn't want to touch XFree86.
+    Make HasXdmAuth YES for xorg.
+
+commit 4a01be711a72d99e054a83e9a00a27b2fc420601
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Aug 7 19:22:01 2004 +0000
+
+    Check to see if array->data is NULL before we dereference it, instead of
+        after. (Prevents segfault when array->data is initialized to NULL, but
+        array->length is not set to 0.)
+    Always initialize both data & length in ARRAYs.
+
+commit 54c91c33da46e67a4efce0dd43def29c65677ed4
+Author: Egbert Eich <eich@suse.de>
+Date:   Tue Jul 6 14:37:47 2004 +0000
+
+    Separated Intel drivers from default DriDrivers to avoid building them on
+        IA64 (Egbert Eich).
+    Fixed wrong function prototype (Egbert Eich).
+    Don't test for generic VGA on IA64 (Egbert Eich).
+    Fixed a segfault when accessing a structure before verifying the pointer
+        exists (Egbert Eich).
+    Added a showcache option for debugging (Egbert Eich).
+    Increase default video RAM size to 16MB when DRI is enabled and more than
+        128MB are available (Egbert Eich). Fixed lockups during mode switch.
+        Problem was introduced when attempting to copy the behavior during
+        LeaveVT()/EnterVT() but but forgetting to call I810DRILeave() before
+        I810DRIEnter(). The entire DRILeave()/Enter() scenario has been
+        commented out as it didn't seem to be necessary (Egbert Eich).
+    Fix TweakMemorySize() (tested with i855/i865) (Egbert Eich).
+    increased MAX_DEVICES to 128 (Egbert Eich).
+    Use OS provided PCI config space access as default method (Egbert Eich).
+    Added support for Linux 2.6 proc file format.
+    Fixed unaligned accesses to pieces of the VBE info block. VESA did not
+        align elements to size (Egbert Eich).
+
+commit 11ce0b3adae5dac23d95fae62570d0a7e872055f
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:41 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit d1291a78bebace4d4ccef4b552bbfd145961ee44
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:32:05 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit ca6d962126b1d876851293d9c0a407ff733b5558
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:11:28 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 3132e3a51c671fc95ee2b88802ae30abcb177320
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:33 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 47d1195510762af8efce38806dc75adc0bdc09cc
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:42 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit 8ecf5d371806b603b64f257e4caa1d9cbc19556d
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:54:35 2003 +0000
+
+    XFree86 4.3.99.902 (RC 2)
+
+commit 9cfba0fa56ff1ebae9aaccf1e63049759dbd37f5
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Thu Dec 4 22:02:56 2003 +0000
+
+    XFree86 4.3.99.901 (RC 1)
+
+commit c95e0de1641abf24792dcafc5a98a95986183f53
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:09 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 0200b5d9bb6a599aefbb05a2217e243ea0da387b
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:48 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit d1eb0ee78fbb0c109f9fa8e1bc05907608fc4299
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:38 2003 +0000
+
+    R6.6 is the Xorg base-line

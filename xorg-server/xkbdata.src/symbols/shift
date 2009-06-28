@@ -1,0 +1,19 @@
+// $XKeyboardConfig$
+
+partial modifier_keys 
+xkb_symbols "breaks_caps" {
+    key <LFSH> {
+	type = "ALPHABETIC",
+    	actions [Group1] = [
+	    SetMods(modifiers=Shift),
+	    SetMods(modifiers=Shift+Lock,clearLocks)
+	]
+    };
+    key <RTSH> {
+	type = "ALPHABETIC",
+	actions [Group1] = [
+	    SetMods(modifiers=Shift),
+	    SetMods(modifiers=Shift+Lock,clearLocks)
+	]
+    };
+};

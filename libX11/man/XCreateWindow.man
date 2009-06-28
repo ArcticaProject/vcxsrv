@@ -1,0 +1,498 @@
+'\" t
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+.\" $XFree86: xc/doc/man/X11/XCreWin.man,v 1.5 2003/04/28 22:17:54 herrb Exp $
+.\" $XdotOrg: lib/X11/man/XCreateWindow.man,v 1.3 2005-08-17 01:27:08 alanc Exp $
+.\"
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+'\" t
+.TH XCreateWindow __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XCreateWindow, XCreateSimpleWindow, XSetWindowAttributes \- create windows and window attributes structure
+.SH SYNTAX
+.HP
+Window XCreateWindow\^(\^Display *\fIdisplay\fP\^, Window \fIparent\fP\^, int \fIx\fP\^, int \fIy\fP\^, unsigned int \fIwidth\fP\^, unsigned int \fIheight\fP\^, unsigned int \fIborder_width\fP\^, int \fIdepth\fP\^, unsigned int \fIclass\fP\^, Visual *\fIvisual\fP\^, unsigned long \fIvaluemask\fP\^, XSetWindowAttributes *\fIattributes\fP\^); 
+.HP
+Window XCreateSimpleWindow\^(\^Display *\fIdisplay\fP\^, Window \fIparent\fP\^, int \fIx\fP\^, int \fIy\fP\^, unsigned int \fIwidth\fP\^, unsigned int \fIheight\fP\^, unsigned int \fIborder_width\fP\^, unsigned long \fIborder\fP\^, unsigned long \fIbackground\fP\^); 
+.SH ARGUMENTS
+.IP \fIattributes\fP 1i
+Specifies the structure from which the values (as specified by the value mask)
+are to be taken.
+The value mask should have the appropriate bits
+set to indicate which attributes have been set in the structure.
+.IP \fIbackground\fP 1i
+Specifies the background pixel value of the window.
+
+.IP \fIborder\fP 1i
+Specifies the border pixel value of the window.
+.IP \fIborder_width\fP 1i
+Specifies the width of the created window's border in pixels.
+.IP \fIclass\fP 1i
+Specifies the created window's class.
+You can pass
+.ZN InputOutput , 
+.ZN InputOnly , 
+or 
+.ZN CopyFromParent .
+A class of 
+.ZN CopyFromParent
+means the class
+is taken from the parent.
+.IP \fIdepth\fP 1i
+Specifies the window's depth.
+A depth of 
+.ZN CopyFromParent
+means the depth is taken from the parent.
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIparent\fP 1i
+Specifies the parent window.
+.IP \fIvaluemask\fP 1i
+Specifies which window attributes are defined in the attributes
+argument.
+This mask is the bitwise inclusive OR of the valid attribute mask bits.
+If valuemask is zero,
+the attributes are ignored and are not referenced.
+.IP \fIvisual\fP 1i
+Specifies the visual type.
+A visual of 
+.ZN CopyFromParent 
+means the visual type is taken from the 
+parent.
+.ds Wh , which are the created window's inside dimensions \
+and do not include the created window's borders
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.ds Xy , which are the top-left outside corner of the window's \
+borders and are relative to the inside of the parent window's borders
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.SH DESCRIPTION
+The
+.ZN XCreateWindow
+function creates an unmapped subwindow for a specified parent window, 
+returns the window ID of the created window, 
+and causes the X server to generate a
+.ZN CreateNotify
+event.
+The created window is placed on top in the stacking order 
+with respect to siblings.
+.LP
+The coordinate system has the X axis horizontal and the Y axis vertical
+with the origin [0, 0] at the upper-left corner.
+Coordinates are integral,
+in terms of pixels,
+and coincide with pixel centers.
+Each window and pixmap has its own coordinate system.
+For a window, 
+the origin is inside the border at the inside, upper-left corner.
+.LP
+The border_width for an
+.ZN InputOnly
+window must be zero, or a
+.ZN BadMatch
+error results.
+For class
+.ZN InputOutput ,
+the visual type and depth must be a combination supported for the screen,
+or a
+.ZN BadMatch
+error results.
+The depth need not be the same as the parent,
+but the parent must not be a window of class 
+.ZN InputOnly ,
+or a
+.ZN BadMatch
+error results.
+For an
+.ZN InputOnly
+window,
+the depth must be zero, and the visual must be one supported by the screen.
+If either condition is not met,
+a
+.ZN BadMatch
+error results.
+The parent window, however, may have any depth and class.
+If you specify any invalid window attribute for a window, a
+.ZN BadMatch
+error results.
+.LP
+The created window is not yet displayed (mapped) on the user's display.
+To display the window, call
+.ZN XMapWindow .
+The new window initially uses the same cursor as
+its parent. 
+A new cursor can be defined for the new window by calling
+.ZN XDefineCursor .
+.IN "Cursor" "Initial State"
+.IN "XDefineCursor" 
+The window will not be visible on the screen unless it and all of its
+ancestors are mapped and it is not obscured by any of its ancestors.
+.LP
+.ZN XCreateWindow
+can generate
+.ZN BadAlloc
+.ZN BadColor ,
+.ZN BadCursor ,
+.ZN BadMatch ,
+.ZN BadPixmap ,
+.ZN BadValue ,
+and
+.ZN BadWindow 
+errors.
+.LP
+The
+.ZN XCreateSimpleWindow
+function creates an unmapped
+.ZN InputOutput
+subwindow for a specified parent window, returns the
+window ID of the created window, and causes the X server to generate a
+.ZN CreateNotify
+event.
+The created window is placed on top in the stacking order with respect to 
+siblings.
+Any part of the window that extends outside its parent window is clipped.
+The border_width for an
+.ZN InputOnly
+window must be zero, or a
+.ZN BadMatch
+error results.
+.ZN XCreateSimpleWindow
+inherits its depth, class, and visual from its parent.
+All other window attributes, except background and border, 
+have their default values.
+.LP
+.ZN XCreateSimpleWindow
+can generate
+.ZN BadAlloc ,
+.ZN BadMatch ,
+.ZN BadValue ,
+and
+.ZN BadWindow 
+errors.
+.SH STRUCTURES
+The
+.ZN XSetWindow Attributes
+structure contains:
+.LP
+.LP
+/\&* Window attribute value mask bits */
+.TS
+lw(.5i) lw(2.5i) lw(.8i).
+T{
+\&#define
+T}	T{
+.ZN CWBackPixmap
+T}	T{
+(1L<<0)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWBackPixel
+T}	T{
+(1L<<1)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWBorderPixmap
+T}	T{
+(1L<<2)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWBorderPixel
+T}	T{
+(1L<<3)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWBitGravity
+T}	T{
+(1L<<4)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWWinGravity
+T}	T{
+(1L<<5)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWBackingStore
+T}	T{
+(1L<<6)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWBackingPlanes
+T}	T{
+(1L<<7)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWBackingPixel
+T}	T{
+(1L<<8)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWOverrideRedirect
+T}	T{
+(1L<<9)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWSaveUnder
+T}	T{
+(1L<<10)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWEventMask
+T}	T{
+(1L<<11)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWDontPropagate
+T}	T{
+(1L<<12)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWColormap
+T}	T{
+(1L<<13)
+T}
+T{
+\&#define
+T}	T{
+.ZN CWCursor
+T}	T{
+(1L<<14)
+T}
+.TE
+.IN "XSetWindowAttributes" "" "@DEF@"
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+/\&* Values */
+
+typedef struct {
+	Pixmap background_pixmap;	/\&* background, None, or ParentRelative */
+	unsigned long background_pixel;	/\&* background pixel */
+	Pixmap border_pixmap;		/\&* border of the window or CopyFromParent */
+	unsigned long border_pixel;	/\&* border pixel value */
+	int bit_gravity;	/\&* one of bit gravity values */
+	int win_gravity;	/\&* one of the window gravity values */
+	int backing_store;	/\&* NotUseful, WhenMapped, Always */
+	unsigned long backing_planes;	/\&* planes to be preserved if possible */
+	unsigned long backing_pixel;	/\&* value to use in restoring planes */
+	Bool save_under;	/\&* should bits under be saved? (popups) */
+	long event_mask;	/\&* set of events that should be saved */
+	long do_not_propagate_mask;	/\&* set of events that should not propagate */
+	Bool override_redirect;	/\&* boolean value for override_redirect */
+	Colormap colormap;	/\&* color map to be associated with window */
+	Cursor cursor;		/\&* cursor to be displayed (or None) */
+} XSetWindowAttributes;
+.De
+.LP
+For a detailed explanation of the members of this structure,
+see \fI\*(xL\fP\^.
+.SH DIAGNOSTICS
+.TP 1i
+.ZN BadAlloc
+The server failed to allocate the requested resource or server memory.
+.TP 1i
+.ZN BadColor
+A value for a Colormap argument does not name a defined Colormap.
+.TP 1i
+.ZN BadCursor
+A value for a Cursor argument does not name a defined Cursor.
+.TP 1i
+.ZN BadMatch
+The values do not exist for an
+.ZN InputOnly
+window.
+.TP 1i
+.ZN BadMatch
+Some argument or pair of arguments has the correct type and range but fails
+to match in some other way required by the request.
+.TP 1i
+.ZN BadPixmap
+A value for a Pixmap argument does not name a defined Pixmap.
+.TP 1i
+.ZN BadValue
+Some numeric value falls outside the range of values accepted by the request.
+Unless a specific range is specified for an argument, the full range defined
+by the argument's type is accepted.  Any argument defined as a set of
+alternatives can generate this error.
+.TP 1i
+.ZN BadWindow
+A value for a Window argument does not name a defined Window.
+.SH "SEE ALSO"
+XChangeWindowAttributes(3X11),
+XConfigureWindow(3X11), 
+XDefineCursor(3X11),
+XDestroyWindow(3X11), 
+XMapWindow(3X11), 
+XRaiseWindow(3X11),
+XUnmapWindow(3X11)
+.br
+\fI\*(xL\fP

@@ -1,0 +1,106 @@
+'\" t
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbGetKeyboard __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbGetKeyboard \-   Retrieves one or more components of a keyboard device 
+description
+.SH SYNOPSIS
+.B Bool XkbGetKeyboard
+(
+.I display,
+.I which,
+.I device_spec
+)
+.br
+      Display * \fIdisplay\fP\^;
+.br
+      unsigned int \fIwhich\fP\^;
+.br
+      unsigned int \fIdevice_spec\fP\^;
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I display
+connection to the X server 
+.TP
+.I device_spec
+device ID, or XkbUseCoreKbd
+.TP
+.I bits_to_change
+determines events to be selected / deselected
+.TP
+.I values_for_bits
+1=>select, 0->deselect; for events in bits_to_change
+.SH DESCRIPTION
+.LP
+.I XkbGetKeyboard 
+allocates and returns a pointer to a keyboard description. It queries the server for those 
+components specified in the 
+.I which 
+parameter for device 
+.I device_spec 
+and copies the results to the XkbDescRec it allocated. The remaining fields in the keyboard 
+description are set to NULL. The valid masks for 
+.I which 
+are those listed in Table 1.
+
+.TS
+c s s
+l l l
+l l l.
+Table 1 Mask Bits for XkbDescRec
+_
+Mask Bit	XkbDescRec Field	Value
+_
+XkbControlsMask	ctrls	(1L<<0)
+XkbServerMapMask	server	(1L<<1)
+XkbIClientMapMask	map	(1L<<2)
+XkbIndicatorMapMask	indicators	(1L<<3)
+XkbNamesMask	names	(1L<<4)
+XkbCompatMapMask	compat	(1L<<5)
+XkbGeometryMask	geom	(1L<<6)
+XkbAllComponentsMask	All Fields	(1L<<7)
+.TE
+
+.I XkbGetKeyboard 
+is used to read the current description for one or more components of a keyboard device. It calls
+.I XkbGetKeyboardByName 
+as follows:
+
+.I XkbGetKeyboardByName(dpy, device_spec, 
+NULL, 
+.I which, which, 
+False).
+.SH DIAGNOSTICS
+.TP 15
+.SM BadAlloc
+Unable to allocate storage
+

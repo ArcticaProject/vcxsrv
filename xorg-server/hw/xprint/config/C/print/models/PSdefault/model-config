@@ -1,0 +1,136 @@
+# $Xprint.org: PSdefault model-config,v 1.2 2002/11/07 19:48:04 gisburn Exp $
+# Generic default model-config for the PostScript DDX
+#
+# DO NOT MODIFY THIS FILE!!
+#
+# If you want to make customisations for your printer create a copy
+# of this printer model.
+# Example (for creating a model config "MYCOMPANYlaserxx"):
+# 1. Create model config dir:
+#    % mkdir MYCOMPANYlaserxx
+# 2. Link (or copy) the PMF (printer font metrics) for the
+#    printer buildin fonts:
+#    % ln -s PSdefault/fonts MYCOMPANYlaserxx/.
+# 3. Copy the model config file:
+#    % cp PSdefault/model-config MYCOMPANYlaserxx/.
+# 4. Customize MYCOMPANYlaserxx/model-config to match your needs.
+#
+
+# Attributes supported for this printer model
+# You may want to cut the lists here down to the attributes supported
+# by your printer.
+*content-orientations-supported: portrait landscape reverse-portrait reverse-landscape
+*descriptor: PostScript default model
+*document-formats-supported: {POSTSCRIPT 2}
+*input-trays-supported:
+*medium-source-sizes-supported: \
+{ '' \
+    {na-letter                  FALSE {6.35 209.55 6.35 273.05}}\
+    {na-legal                   FALSE {6.35 209.55 6.35 349.25}}\
+    {executive                  FALSE {6.35 177.80 6.35 260.35}}\
+    {folio                      FALSE {6.35 204.47 6.35 323.85}}\
+    {invoice                    FALSE {6.35 133.35 6.35 209.55}}\
+    {ledger                     FALSE {6.35 273.05 6.35 425.45}}\
+    {quarto                     FALSE {6.35 209.55 6.35 268.732}}\
+    {a                          FALSE {6.35 209.55 6.35 273.05}}\
+    {b                          FALSE {6.35 273.05 6.35 425.45}}\
+    {c                          FALSE {6.35 425.45 6.35 552.45}}\
+    {d                          FALSE {6.35 552.45 6.35 857.25}}\
+    {e                          FALSE {6.35 857.25 6.35 1111.25}}\
+    {na-6x9-envelope            FALSE {6.35 146.05 6.35 222.25}}\
+    {na-10x15-envelope          FALSE {6.35 247.65 6.35 374.65}}\
+    {monarch-envelope           FALSE {6.35 91.948 6.35 184.15}}\
+    {na-10x13-envelope          FALSE {6.35 247.65 6.35 323.85}}\
+    {na-9x12-envelope           FALSE {6.35 222.25 6.35 298.45}}\
+    {na-number-10-envelope      FALSE {6.35 98.425 6.35 234.95}}\
+    {na-7x9-envelope            FALSE {6.35 171.45 6.35 222.25}}\
+    {na-9x11-envelope           FALSE {6.35 222.25 6.35 273.05}}\
+    {na-10x14-envelope          FALSE {6.35 247.65 6.35 349.25}}\
+    {na-number-9-envelope       FALSE {6.35 92.075 6.35 219.075}}\
+    {iso-a0                     FALSE {6.35 834.65 6.35 1182.65}}\
+    {iso-a1                     FALSE {6.35 587.65 6.35 834.65}}\
+    {iso-a2                     FALSE {6.35 413.65 6.35 587.65}}\
+    {iso-a3                     FALSE {6.35 290.65 6.35 413.65}}\
+    {iso-a4                     FALSE {6.35 203.65 6.35 290.65}}\
+    {iso-a5                     FALSE {6.35 141.65 6.35 203.65}}\
+    {iso-a6                     FALSE {6.35 98.65 6.35 141.65}}\
+    {iso-a7                     FALSE {6.35 67.65 6.35 98.65}}\
+    {iso-a8                     FALSE {6.35 45.65 6.35 67.65}}\
+    {iso-a9                     FALSE {6.35 30.65 6.35 45.65}}\
+    {iso-a10                    FALSE {6.35 19.65 6.35 30.65}}\
+    {iso-b1                     FALSE {6.35 700.65 6.35 993.65}}\
+    {iso-b2                     FALSE {6.35 493.65 6.35 700.65}}\
+    {iso-b3                     FALSE {6.35 346.65 6.35 493.65}}\
+    {iso-b4                     FALSE {6.35 243.65 6.35 346.65}}\
+    {iso-b5                     FALSE {6.35 169.65 6.35 243.65}}\
+    {iso-b6                     FALSE {6.35 118.65 6.35 169.65}}\
+    {iso-b7                     FALSE {6.35 81.65 6.35 118.65}}\
+    {iso-b8                     FALSE {6.35 55.65 6.35 81.65}}\
+    {iso-b9                     FALSE {6.35 37.65 6.35 55.65}}\
+    {iso-b10                    FALSE {6.35 24.65 6.35 37.65}}\
+    {jis-b1                     FALSE {6.35 721.65 6.35 1023.65}}\
+    {jis-b2                     FALSE {6.35 508.65 6.35 721.65}}\
+    {jis-b3                     FALSE {6.35 357.65 6.35 508.65}}\
+    {jis-b4                     FALSE {6.35 250.65 6.35 357.65}}\
+    {jis-b5                     FALSE {6.35 175.65 6.35 250.65}}\
+    {jis-b6                     FALSE {6.35 121.65 6.35 175.65}}\
+    {jis-b7                     FALSE {6.35 84.65 6.35 121.65}}\
+    {jis-b8                     FALSE {6.35 57.65 6.35 84.65}}\
+    {jis-b9                     FALSE {6.35 38.65 6.35 57.65}}\
+    {jis-b10                    FALSE {6.35 25.65 6.35 38.65}}\
+    {iso-c3                     FALSE {6.35 317.65 6.35 451.65}}\
+    {iso-c4                     FALSE {6.35 222.65 6.35 317.65}}\
+    {iso-c5                     FALSE {6.35 155.65 6.35 222.65}}\
+    {iso-c6                     FALSE {6.35 107.65 6.35 155.65}}\
+    {iso-designated-long        FALSE {6.35 103.65 6.35 213.65}}\
+    {hp-2x-postcard             FALSE {6.35 141.65 6.35 193.65}}\
+    {hp-european-edp            FALSE {6.35 298.45 6.35 349.25}}\
+    {hp-mini                    FALSE {6.35 133.35 6.35 209.55}}\
+    {hp-postcard                FALSE {6.35 93.65  6.35 141.65}}\
+    {hp-tabloid                 FALSE {6.35 273.05 6.35 425.45}}\
+    {hp-us-edp                  FALSE {6.35 273.05 6.35 349.25}}\
+    {hp-us-government-legal     FALSE {6.35 196.85 6.35 323.85}}\
+    {hp-us-government-letter    FALSE {6.35 196.85 6.35 247.65}}\
+}
+# If you have more than one tray use the following example:
+# 1. List the supported trays
+#*input-trays-supported: main manual
+# 2. Define each tray and it's paper sizes
+#*medium-source-sizes-supported: \
+#{ main \
+#	{na-letter		FALSE	{6.35	209.55	6.35	273.05}} \
+#	{na-legal		FALSE	{6.35	209.55	6.35	349.25}} \
+#	{iso-a4			FALSE	{6.35	203.65	6.35	290.65}} \
+#} \
+#{ manual \
+#	{iso-a5			FALSE	{6.35	141.65	6.35	203.65}} \
+#	{iso-c5			FALSE	{6.35	155.65	6.35	222.65}} \
+#	{iso-designated-long	FALSE	{6.35	103.65	6.35	213.65}} \
+#	{jis-b5			FALSE	{6.35	175.65	6.35	250.65}} \
+#	{monarch-envelope	FALSE	{6.35	91.948	6.35	184.15}} \
+#	{na-legal		FALSE	{6.35	209.55	6.35	349.25}} \
+#	{na-number-10-envelope	FALSE	{6.35	98.425	6.35	234.95}} \
+#	{executive		FALSE	{6.35	177.8	6.35	260.35}} \
+#	{iso-a3			FALSE	{6.35   290.65  6.35    413.65}} \
+#       {iso-a0                 FALSE   {6.35   834.65  6.35   1182.65}} \
+#}
+*plexes-supported: simplex duplex tumble
+*printer-model: "PostScript default model"
+# 75, 100, 120, 150, 180, 200, 240, 300, 360, 400, 600, 720,
+# 940, 1200 and 2440 are supported DPI values, we limit it here
+# to some common values:
+*printer-resolutions-supported: 300 360 400 600
+*xp-ddx-identifier: XP-POSTSCRIPT
+*xp-listfonts-modes-supported: xp-list-internal-printer-fonts xp-list-glyph-fonts
+*xp-embedded-formats-supported: {POSTSCRIPT 2}
+*xp-raw-formats-supported: {POSTSCRIPT 2}
+*xp-setup-proviso: setup-optional
+
+# NOTE: xp-psddx-* attributes are EXPERIMENTAL for now.
+# xp-psddx-download-fonts defines which fonts should be downloaded as outlines
+# (valid types are "pfa", "pfb", "ttf", "ttc", "otf", "otc")
+*xp-psddx-download-fonts: pfa pfb ttf ttc otf otc
+# xp-psddx-download-font-type defines which font type is used to download outlines 
+# (valid values are "bitmap", "pstype1" and "pstype3")
+*xp-psddx-download-font-type: pstype1
+# EOF.

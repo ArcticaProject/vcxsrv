@@ -1,0 +1,101 @@
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbGetIndicatorMap __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbGetIndicatorMap \- Gets the map for one or more indicators, using a mask to 
+specify the indicators
+.SH SYNOPSIS
+.B Status XkbGetIndicatorMap
+(
+.I dpy,
+.I which,
+.I desc
+)
+.br
+      Display *\fIdpy\fP\^;
+.br
+      unsigned int \fIwhich\fP\^;
+.br
+      XkbDescPtr \fIdesc\fP\^;
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I \- dpy
+connection to the X server
+.TP
+.I \- which
+mask of indicators for which maps should be returned
+.TP
+.I \- desc
+keyboard description to be updated
+.SH DESCRIPTION
+.LP
+Xkb allows applications to obtain information about indicators using two 
+different methods. The first method, which is similar to the core X 
+implementation, uses a mask to specify the indicators. The second method, which 
+is more suitable for applications concerned with interoperability, uses 
+indicator names. The correspondence between the indicator name and the bit 
+position in masks is as follows: one of the parameters returned from
+.I XkbGetNamedIndicators 
+is an index that is the bit position to use in any function call that requires a 
+mask of indicator bits, as well as the indicator's index into the 
+XkbIndicatorRec array of indicator maps.
+
+
+.I XkbGetIndicatorMap 
+obtains the maps from the server for only those indicators specified by the 
+.I which 
+mask and copies the values into the keyboard description specified by 
+.I desc. 
+If the 
+.I indicators 
+field of the 
+.I desc 
+parameter is NULL, 
+.I XkbGetIndicatorMap 
+allocates and initializes it.
+
+To free the indicator maps, use 
+.I XkbFreeIndicatorMaps.
+.SH DIAGNOSTICS
+.TP 15
+.B BadAlloc
+Unable to allocate storage
+.TP 15
+.B BadMatch
+A compatible version of Xkb was not available in the server or an argument has 
+correct type and range, but is otherwise invalid
+.TP 15
+.B BadImplementation
+Invalid reply from server
+.SH "SEE ALSO"
+.BR XkbFreeIndicatorMaps (__libmansuffix__),
+.BR XkbGetNamedIndicators (__libmansuffix__)
+

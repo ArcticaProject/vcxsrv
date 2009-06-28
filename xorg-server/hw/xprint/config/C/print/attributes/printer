@@ -1,0 +1,96 @@
+# $Xorg: printer,v 1.3 2000/08/17 19:48:03 cpqbld Exp $
+# Printer DPA-Object initial attribute values
+
+# Attribute IDs must be qualified by using one of the following
+# (listed in order of precedence):
+#
+#   printer-name
+#	Set this attribute for a specific printer.
+#	Example: "dj_1.document-formats-ready: {pcl 5}"
+#
+#   printer-model
+#	Set this attribute for all printers of a specific model.
+#	Example: "HPDJ1600C.document-formats-ready: {pcl 5}"
+#
+#   '*'
+#	Set this attribute for all printers.
+#	Example: "*.document-formats-ready: {pcl 5}"
+
+# Remove this line and replace them with per printer settings
+# if you want to use more than one DDX!!
+*xp-model-identifier: PSdefault
+
+
+# Sample entry for the "PSspooldir" model
+# Just add a printer called "xp_ps_spooldir_tmp_Xprintjobs" to "Xprinters"
+# and you will get an extra printer which files the PostScript jobs
+# in the "/tmp/Xprintjobs/" directory.
+xp_ps_spooldir_tmp_Xprintjobs.xp-model-identifier: PSspooldir
+
+# Sample entry for the "PS2PDFspooldir-GS" model
+# Just add a printer called "xp_pdf_spooldir_tmp_Xprintjobs" to "Xprinters"
+# and you will get an extra printer which convertes the PostScript jobs
+# to PDF using "ps2pdf" and files them into the "/tmp/Xprintjobs/" directory.
+# NOTE: Future versions of Xprint will use the PDF DDX instead directly
+# instead of relying on GhostScript/ps2pdf...
+xp_pdf_spooldir_tmp_Xprintjobs.xp-model-identifier: PS2PDFspooldir-GS
+
+
+# IMPORTANT EXAMPLES
+#
+# The following are examples of how a printer name is bound
+# to a model-config file and ddx driver.
+#
+# Warning: most X-Servers have a hard limit on the number of ddx
+# drivers (ie, screens) they can support at runtime (usually 3 or
+# 4).  Whatever the number of printers, they cannot create a
+# dependency for more than the limit on ddx drivers.  Assuming
+# "Xprinters" listed all four xp*pr printers below, X-Servers
+# with a limit of 3 would not work.
+#
+# xppspr.xp-model-identifier: HPDJ1600C
+# xppspr.xp-ddx-identifier: XP-POSTSCRIPT
+# xppspr.document-formats-ready: { PostScript 2 }
+#
+# xppclpr.xp-model-identifier: HPDJ1600C
+# xppclpr.xp-ddx-identifier: XP-PCL-COLOR
+# xppclpr.document-formats-ready: { PCL 5 }
+#
+# xppclmonopr.xp-model-identifier: HPDJ1600C
+# xppclmonopr.xp-ddx-identifier: XP-PCL-MONO
+# xppclmonopr.document-formats-ready: { PCL 5 }
+#
+# xprasterpr.xp-model-identifier: HPDJ1600C
+# xprasterpr.xp-ddx-identifier: XP-RASTER
+
+
+# MORE EXAMPLES of items often configured in this file
+#
+# *descriptor: This printer has not been given a name
+# *dt-pdm-command: dtpdm
+# *input-trays-medium: {top na-letter} {bottom iso-a4}
+# *xp-model-identifier: HPDJ1600C
+# *xp-spooler-command: /opt/mystuff/bin/mylp -p %printer-name% -c %copy-count% \
+#      -j %job-name% -o %options%
+
+
+# USUALLY SET BY THE ddx driver
+#
+# *content-orientations-supported: portrait landscape reverse-portrait reverse-landscape
+
+
+# USUALLY SET BY THE model-config FILE
+#
+# *document-formats-supported: {PCL 5}
+# *medium-source-sizes-supported: \
+#      { top {iso-a4 FALSE {10 200 10 287}} {iso-a5 FALSE {10 138 10 200}} } \
+#      { bottom {iso-a4 FALSE {10 200 10 287}} {iso-a5 FALSE {10 138 10 200}} }
+# *plexes-supported: simplex duplex tumble
+# *printer-model: Hewlett-Packard LaserJet IV
+# *printer-resolutions-supported: 300
+# *xp-ddx-identifier: XP-PCL-COLOR
+# *xp-embedded-formats-supported: {PCL 5} {HPGL 2}
+# *xp-listfonts-modes-supported: xp-list-internal-printer-fonts
+# *xp-raw-formats-supported: {PCL 5}
+# *xp-setup-proviso: xp-setup-optional
+

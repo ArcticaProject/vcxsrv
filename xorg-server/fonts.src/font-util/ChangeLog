@@ -1,0 +1,48 @@
+2006-05-15  Adam Jackson  <ajax@freedesktop.org>
+
+	* configure.ac:
+	Bump to 1.0.1
+
+2006-02-17  Alan Coopersmith  <alan.coopersmith@sun.com>
+
+	* ucs2any.c: 
+	* COPYING:
+	Sync license statement with NetBSD, which has removed advertising 
+	clause from original NetBSD license.   (See
+	http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/xsrc/xfree/xc/fonts/util/ucs2any.c?rev=1.9&content-type=text/plain and
+	http://www.mail-archive.com/devel%40xfree86.org/msg07685.html )
+
+2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version number for final X11R7 release candidate.
+
+2005-12-09  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* Makefile.am:
+	* configure.ac:
+	* fontutil.pc.in:
+	Bug #5175: Make mapdir configurable (David Coulthart and Donnie
+	Berkholz).
+
+2005-12-06  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* Makefile.am:
+	Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version number for X11R7 RC3 release.
+
+2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* Makefile.am:
+	* fontutil.m4:
+	Add configure option macro to disable ISO8859-* fonts.
+
+2005-10-18  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version number for RC1 release.
+

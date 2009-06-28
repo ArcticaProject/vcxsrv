@@ -1,0 +1,49 @@
+########################################################################
+#
+# $Xorg: Xprinters,v 1.3 2000/08/17 19:48:02 cpqbld Exp $
+#
+# X*printers sample configuration file
+#
+#
+# This file belongs in /usr/lib/X11/X*printers, where the "*" is the
+# display number of the server.  For example, if the server is
+# invoked using the command X :0, then the X0printers file is used.
+########################################################################
+
+########################################################################
+# Use lpstat to augment the list of printers managed by the
+# server. (This is the default behavior if the X*printers file does
+# not exist, or if an "Augment_Printer_List" line is not specified.)
+########################################################################
+#Augment_Printer_List %(default)%
+
+########################################################################
+# Use the specified command pipeline to augment the list of printers
+# managed by the server.
+########################################################################
+#Augment_Printer_List lpstat -a | cut -d " " -f 1	# equivalent to default
+
+########################################################################
+# Do not augment the list of printers managed by the server.
+########################################################################
+#Augment_Printer_List %none%
+
+########################################################################
+# Preconfigured entry for the PSspooldir model
+# (which sends jobs to /tmp/Xprintjobs instead to a physical printer)
+########################################################################
+#Printer xp_pdf_spooldir_tmp_Xprintjobs
+Printer xp_ps_spooldir_tmp_Xprintjobs
+
+########################################################################
+# Add individual printers to the list of printers managed by the
+# server.  These are aliases, determined by driver name.
+########################################################################
+
+
+# EXAMPLES
+#
+# Printer xppspr
+# Printer xppclpr
+# Printer xppclmonopr
+# Printer xprasterpr

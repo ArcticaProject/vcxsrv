@@ -1,0 +1,4 @@
+  pc98		=	evdev(pc98)
+  abnt2		=	evdev(abnt2)
+  jp106		=	evdev(jp106)
+  *		=	evdev

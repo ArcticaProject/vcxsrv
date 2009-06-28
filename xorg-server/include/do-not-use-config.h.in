@@ -1,0 +1,788 @@
+/* include/do-not-use-config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
+
+/* Build AIGLX loader */
+#undef AIGLX
+
+/* Default base font path */
+#undef BASE_FONT_PATH
+
+/* Support BigRequests extension */
+#undef BIGREQS
+
+/* Define to 1 if `struct sockaddr_in' has a `sin_len' member */
+#undef BSD44SOCKETS
+
+/* Builder address */
+#undef BUILDERADDR
+
+/* Builder string */
+#undef BUILDERSTRING
+
+/* Use only built-in fonts */
+#undef BUILTIN_FONTS
+
+/* Default font path */
+#undef COMPILEDDEFAULTFONTPATH
+
+/* Support Composite Extension */
+#undef COMPOSITE
+
+/* Use the D-Bus input configuration API */
+#undef CONFIG_DBUS_API
+
+/* Use the HAL hotplug API */
+#undef CONFIG_HAL
+
+/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
+   systems. This function is required for `alloca.c' support on those systems.
+   */
+#undef CRAY_STACKSEG_END
+
+/* System is BSD-like */
+#undef CSRG_BASED
+
+/* Simple debug messages */
+#undef CYGDEBUG
+
+/* Debug window manager */
+#undef CYGMULTIWINDOW_DEBUG
+
+/* Debug messages for window handling */
+#undef CYGWINDOWING_DEBUG
+
+/* Define to 1 if using `alloca.c'. */
+#undef C_ALLOCA
+
+/* Support Damage extension */
+#undef DAMAGE
+
+/* Support DBE extension */
+#undef DBE
+
+/* Use ddxBeforeReset */
+#undef DDXBEFORERESET
+
+/* Use OsVendorFatalError */
+#undef DDXOSFATALERROR
+
+/* Use OsVendorInit */
+#undef DDXOSINIT
+
+/* Use OsVendorVErrorF */
+#undef DDXOSVERRORF
+
+/* Use GetTimeInMillis */
+#undef DDXTIME
+
+/* Enable debugging code */
+#undef DEBUG
+
+/* Default library install path */
+#undef DEFAULT_LIBRARY_PATH
+
+/* Default log location */
+#undef DEFAULT_LOGPREFIX
+
+/* Default module search path */
+#undef DEFAULT_MODULE_PATH
+
+/* Support DGA extension */
+#undef DGA
+
+/* Support DPMS extension */
+#undef DPMSExtension
+
+/* Build DRI2 extension */
+#undef DRI2
+
+/* Default DRI driver path */
+#undef DRI_DRIVER_PATH
+
+/* Build Extended-Visual-Information extension */
+#undef EVI
+
+/* Build FontCache extension */
+#undef FONTCACHE
+
+/* Build GLX extension */
+#undef GLXEXT
+
+/* Support XDM-AUTH*-1 */
+#undef HASXDMAUTH
+
+/* System has /dev/xf86 aperture driver */
+#undef HAS_APERTURE_DRV
+
+/* Cygwin has /dev/windows for signaling new win32 messages */
+#undef HAS_DEVWINDOWS
+
+/* Have the 'getdtablesize' function. */
+#undef HAS_GETDTABLESIZE
+
+/* Have the 'getifaddrs' function. */
+#undef HAS_GETIFADDRS
+
+/* Have the 'getpeereid' function. */
+#undef HAS_GETPEEREID
+
+/* Have the 'getpeerucred' function. */
+#undef HAS_GETPEERUCRED
+
+/* Have the 'mmap' function. */
+#undef HAS_MMAP
+
+/* Define to 1 if NetBSD built-in MTRR support is available */
+#undef HAS_MTRR_BUILTIN
+
+/* MTRR support available */
+#undef HAS_MTRR_SUPPORT
+
+/* Support SHM */
+#undef HAS_SHM
+
+/* Have the 'strlcpy' function */
+#undef HAS_STRLCPY
+
+/* Use Windows sockets */
+#undef HAS_WINSOCK
+
+/* Define to 1 if you have `alloca', as a function or macro. */
+#undef HAVE_ALLOCA
+
+/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
+   */
+#undef HAVE_ALLOCA_H
+
+/* Define to 1 if you have the <asm/mtrr.h> header file. */
+#undef HAVE_ASM_MTRR_H
+
+/* Define to 1 if you have the `authdes_create' function. */
+#undef HAVE_AUTHDES_CREATE
+
+/* Define to 1 if you have the `authdes_seccreate' function. */
+#undef HAVE_AUTHDES_SECCREATE
+
+/* Has backtrace support */
+#undef HAVE_BACKTRACE
+
+/* Define to 1 if you have the <byteswap.h> header file. */
+#undef HAVE_BYTESWAP_H
+
+/* Have the 'cbrt' function */
+#undef HAVE_CBRT
+
+/* Define to 1 if you have the `clock_gettime' function. */
+#undef HAVE_CLOCK_GETTIME
+
+/* Define to 1 if you have the <dbm.h> header file. */
+#undef HAVE_DBM_H
+
+/* Have D-Bus support */
+#undef HAVE_DBUS
+
+/* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_DIRENT_H
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
+#undef HAVE_DOPRNT
+
+/* Have execinfo.h */
+#undef HAVE_EXECINFO_H
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define to 1 if you have the `geteuid' function. */
+#undef HAVE_GETEUID
+
+/* Define to 1 if you have the `getisax' function. */
+#undef HAVE_GETISAX
+
+/* Define to 1 if you have the `getopt' function. */
+#undef HAVE_GETOPT
+
+/* Define to 1 if you have the `getopt_long' function. */
+#undef HAVE_GETOPT_LONG
+
+/* Define to 1 if you have the `getuid' function. */
+#undef HAVE_GETUID
+
+/* Define to 1 if you have the `getzoneid' function. */
+#undef HAVE_GETZONEID
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* launchd support available */
+#undef HAVE_LAUNCHD
+
+/* Define to 1 if you have the `audit' library (-laudit). */
+#undef HAVE_LIBAUDIT
+
+/* Define to 1 if you have the <libaudit.h> header file. */
+#undef HAVE_LIBAUDIT_H
+
+/* Has version 2.2 (or newer) of the drm library */
+#undef HAVE_LIBDRM_2_2
+
+/* Define to 1 if you have the `m' library (-lm). */
+#undef HAVE_LIBM
+
+/* Define to 1 if you have the `selinux' library (-lselinux). */
+#undef HAVE_LIBSELINUX
+
+/* Define to 1 if you have the `link' function. */
+#undef HAVE_LINK
+
+/* Define to 1 if you have the <linux/agpgart.h> header file. */
+#undef HAVE_LINUX_AGPGART_H
+
+/* Define to 1 if you have the <linux/apm_bios.h> header file. */
+#undef HAVE_LINUX_APM_BIOS_H
+
+/* Define to 1 if you have the <linux/fb.h> header file. */
+#undef HAVE_LINUX_FB_H
+
+/* Define to 1 if you have the <machine/mtrr.h> header file. */
+#undef HAVE_MACHINE_MTRR_H
+
+/* Define to 1 if you have the `memmove' function. */
+#undef HAVE_MEMMOVE
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `memset' function. */
+#undef HAVE_MEMSET
+
+/* Define to 1 if you have the `mkstemp' function. */
+#undef HAVE_MKSTEMP
+
+/* Define to 1 if you have the <ndbm.h> header file. */
+#undef HAVE_NDBM_H
+
+/* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
+#undef HAVE_NDIR_H
+
+/* Define to 1 if you have the `pci_device_enable' function. */
+#undef HAVE_PCI_DEVICE_ENABLE
+
+/* Define to 1 if you have the `pci_system_init_dev_mem' function. */
+#undef HAVE_PCI_SYSTEM_INIT_DEV_MEM
+
+/* Define to 1 if you have the <rpcsvc/dbm.h> header file. */
+#undef HAVE_RPCSVC_DBM_H
+
+/* Define to 1 if you have the <SDL/SDL.h> header file. */
+#undef HAVE_SDL_SDL_H
+
+/* Define to 1 if you have the <selinux/avc.h> header file. */
+#undef HAVE_SELINUX_AVC_H
+
+/* Define to 1 if you have the <selinux/selinux.h> header file. */
+#undef HAVE_SELINUX_SELINUX_H
+
+/* Define to 1 if you have the `shmctl64' function. */
+#undef HAVE_SHMCTL64
+
+/* Define to 1 if the system has the type `socklen_t'. */
+#undef HAVE_SOCKLEN_T
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strcasestr' function. */
+#undef HAVE_STRCASESTR
+
+/* Define to 1 if you have the `strchr' function. */
+#undef HAVE_STRCHR
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strrchr' function. */
+#undef HAVE_STRRCHR
+
+/* Define to 1 if you have the `strtol' function. */
+#undef HAVE_STRTOL
+
+/* Define to 1 if SYSV IPC is available */
+#undef HAVE_SYSV_IPC
+
+/* Define to 1 if you have the <sys/agpio.h> header file. */
+#undef HAVE_SYS_AGPIO_H
+
+/* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_DIR_H
+
+/* Define to 1 if you have the <sys/io.h> header file. */
+#undef HAVE_SYS_IO_H
+
+/* Define to 1 if you have the <sys/linker.h> header file. */
+#undef HAVE_SYS_LINKER_H
+
+/* Define to 1 if you have the <sys/memrange.h> header file. */
+#undef HAVE_SYS_MEMRANGE_H
+
+/* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_NDIR_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/vm86.h> header file. */
+#undef HAVE_SYS_VM86_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Has /dev/urandom */
+#undef HAVE_URANDOM
+
+/* Define to 1 if you have the `vprintf' function. */
+#undef HAVE_VPRINTF
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#undef HAVE_VSNPRINTF
+
+/* Define to 1 if you have the `walkcontext' function. */
+#undef HAVE_WALKCONTEXT
+
+/* Support IPv6 for TCP connections */
+#undef IPv6
+
+/* Build kdrive ddx */
+#undef KDRIVEDDXACTIONS
+
+/* Build fbdev-based kdrive server */
+#undef KDRIVEFBDEV
+
+/* Build Kdrive X server */
+#undef KDRIVESERVER
+
+/* Build VESA-based kdrive servers */
+#undef KDRIVEVESA
+
+/* Support os-specific local connections */
+#undef LOCALCONN
+
+/* Support MIT Misc extension */
+#undef MITMISC
+
+/* Support MIT-SHM extension */
+#undef MITSHM
+
+/* Have monotonic clock from clock_gettime() */
+#undef MONOTONIC_CLOCK
+
+/* Build Multibuffer extension */
+#undef MULTIBUFFER
+
+/* Disable some debugging code */
+#undef NDEBUG
+
+/* Do not have 'strcasecmp'. */
+#undef NEED_STRCASECMP
+
+/* Do not have 'strcasestr'. */
+#undef NEED_STRCASESTR
+
+/* Do not have 'strncasecmp'. */
+#undef NEED_STRNCASECMP
+
+/* Need XFree86 helper functions */
+#undef NEED_XF86_PROTOTYPES
+
+/* Need XFree86 typedefs */
+#undef NEED_XF86_TYPES
+
+/* Avoid using a font server */
+#undef NOFONTSERVERACCESS
+
+/* Define to 1 if modules should avoid the libcwrapper */
+#undef NO_LIBCWRAPPER
+
+/* Use an empty root cursor */
+#undef NULL_ROOT_CURSOR
+
+/* Operating System Name */
+#undef OSNAME
+
+/* Operating System Vendor */
+#undef OSVENDOR
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Major version of this package */
+#undef PACKAGE_VERSION_MAJOR
+
+/* Minor version of this package */
+#undef PACKAGE_VERSION_MINOR
+
+/* Patch version of this package */
+#undef PACKAGE_VERSION_PATCHLEVEL
+
+/* Internal define for Xinerama */
+#undef PANORAMIX
+
+/* System has PC console */
+#undef PCCONS_SUPPORT
+
+/* Default PCI text file ID path */
+#undef PCI_TXT_IDS_PATH
+
+/* System has PC console */
+#undef PCVT_SUPPORT
+
+/* Overall prefix */
+#undef PROJECTROOT
+
+/* Support RANDR extension */
+#undef RANDR
+
+/* Make PROJECT_ROOT relative to the xserver location */
+#undef RELOCATE_PROJECTROOT
+
+/* Support RENDER extension */
+#undef RENDER
+
+/* Support X resource extension */
+#undef RES
+
+/* Define as the return type of signal handlers (`int' or `void'). */
+#undef RETSIGTYPE
+
+/* Build Rootless code */
+#undef ROOTLESS
+
+/* Support MIT-SCREEN-SAVER extension */
+#undef SCREENSAVER
+
+/* Support Secure RPC ("SUN-DES-1") authentication for X11 clients */
+#undef SECURE_RPC
+
+/* Use a lock to prevent multiple servers on a display */
+#undef SERVER_LOCK
+
+/* Server miscellaneous config path */
+#undef SERVER_MISC_CONFIG_PATH
+
+/* Support SHAPE extension */
+#undef SHAPE
+
+/* The size of `unsigned long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG
+
+/* Include time-based scheduler */
+#undef SMART_SCHEDULE
+
+/* If using the C implementation of alloca, define if you know the
+   direction of stack growth for your system; otherwise it will be
+   automatically deduced at runtime.
+	STACK_DIRECTION > 0 => grows toward higher addresses
+	STACK_DIRECTION < 0 => grows toward lower addresses
+	STACK_DIRECTION = 0 => direction of growth unknown */
+#undef STACK_DIRECTION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 on systems derived from System V Release 4 */
+#undef SVR4
+
+/* System has syscons console */
+#undef SYSCONS_SUPPORT
+
+/* Support TCP socket connections */
+#undef TCPCONN
+
+/* Build TOG-CUP extension */
+#undef TOGCUP
+
+/* Have tslib support */
+#undef TSLIB
+
+/* Support UNIX socket connections */
+#undef UNIXCONN
+
+/* NetBSD PIO alpha IO */
+#undef USE_ALPHA_PIO
+
+/* BSD AMD64 iopl */
+#undef USE_AMD64_IOPL
+
+/* BSD /dev/io */
+#undef USE_DEV_IO
+
+/* BSD i386 iopl */
+#undef USE_I386_IOPL
+
+/* Define to use byteswap macros from <sys/endian.h> */
+#undef USE_SYS_ENDIAN_H
+
+/* Version number of package */
+#undef VERSION
+
+/* Building vgahw module */
+#undef WITH_VGAHW
+
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
+
+/* System has wscons console */
+#undef WSCONS_SUPPORT
+
+/* Build X-ACE extension */
+#undef XACE
+
+/* Build APPGROUP extension */
+#undef XAPPGROUP
+
+/* Build XCalibrate extension */
+#undef XCALIBRATE
+
+/* Support XCMisc extension */
+#undef XCMISC
+
+/* Build Security extension */
+#undef XCSECURITY
+
+/* Support XDM Control Protocol */
+#undef XDMCP
+
+/* enable DRI extension in xephyr */
+#undef XEPHYR_DRI
+
+/* Build XEvIE extension */
+#undef XEVIE
+
+/* Support XF86 Big font extension */
+#undef XF86BIGFONT
+
+/* Name of configuration file */
+#undef XF86CONFIGFILE
+
+/* Build DRI extension */
+#undef XF86DRI
+
+/* Support XFree86 miscellaneous extensions */
+#undef XF86MISC
+
+/* Support XFree86 Video Mode extension */
+#undef XF86VIDMODE
+
+/* Support XFixes extension */
+#undef XFIXES
+
+/* Building loadable XFree86 server */
+#undef XFree86LOADER
+
+/* Building XFree86 server */
+#undef XFree86Server
+
+/* Build XDGA support */
+#undef XFreeXDGA
+
+/* Use loadable XGL modules */
+#undef XGL_MODULAR
+
+/* Default XGL module search path */
+#undef XGL_MODULE_PATH
+
+/* Support Xinerama extension */
+#undef XINERAMA
+
+/* Support X Input extension */
+#undef XINPUT
+
+/* Build XKB */
+#undef XKB
+
+/* Path to XKB data */
+#undef XKB_BASE_DIRECTORY
+
+/* Path to XKB bin dir */
+#undef XKB_BIN_DIRECTORY
+
+/* Disable XKB per default */
+#undef XKB_DFLT_DISABLED
+
+/* Build XKB server */
+#undef XKB_IN_SERVER
+
+/* Path to XKB output dir */
+#undef XKM_OUTPUT_DIR
+
+/* Building Xorg server */
+#undef XORGSERVER
+
+/* Vendor release */
+#undef XORG_DATE
+
+/* Vendor man version */
+#undef XORG_MAN_VERSION
+
+/* Building Xorg server */
+#undef XORG_SERVER
+
+/* Current Xorg version */
+#undef XORG_VERSION_CURRENT
+
+/* Build Print extension */
+#undef XPRINT
+
+/* Support FreeType rasterizer in Xprint for nearly all font file formats */
+#undef XP_USE_FREETYPE
+
+/* Have Quartz */
+#undef XQUARTZ
+
+/* Support Record extension */
+#undef XRECORD
+
+/* Build registry module */
+#undef XREGISTRY
+
+/* Build XRes extension */
+#undef XResExtension
+
+/* Build Xsdl server */
+#undef XSDLSERVER
+
+/* Build SELinux extension */
+#undef XSELINUX
+
+/* Define to 1 if the DTrace Xserver provider probes should be built in. */
+#undef XSERVER_DTRACE
+
+/* Use libpciaccess for all pci manipulation */
+#undef XSERVER_LIBPCIACCESS
+
+/* Support XSync extension */
+#undef XSYNC
+
+/* Support XTest extension */
+#undef XTEST
+
+/* Support XTrap extension */
+#undef XTRAP
+
+/* Support Xv extension */
+#undef XV
+
+/* Vendor name */
+#undef XVENDORNAME
+
+/* Short vendor name */
+#undef XVENDORNAMESHORT
+
+
+/* Deal with multiple architecture compiles on Mac OS X */
+#ifndef __APPLE_CC__
+#define X_BYTE_ORDER _X_BYTE_ORDER
+#else
+#ifdef __BIG_ENDIAN__
+#define X_BYTE_ORDER X_BIG_ENDIAN
+#else
+#define X_BYTE_ORDER X_LITTLE_ENDIAN
+#endif
+#endif
+
+
+/* Build Xv extension */
+#undef XvExtension
+
+/* Build XvMC extension */
+#undef XvMCExtension
+
+/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
+   `char[]'. */
+#undef YYTEXT_POINTER
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#undef _FILE_OFFSET_BITS
+
+/* Enable GNU and other extensions to the C environment for glibc */
+#undef _GNU_SOURCE
+
+/* Define for large files, on AIX-style hosts. */
+#undef _LARGE_FILES
+
+/* Define to 1 if unsigned long is 64 bits. */
+#undef _XSERVER64
+
+/* Endian order */
+#undef _X_BYTE_ORDER
+
+/* Solaris 8 or later */
+#undef __SOL8__
+
+/* Vendor web address for support */
+#undef __VENDORDWEBSUPPORT__
+
+/* Name of configuration file */
+#undef __XCONFIGFILE__
+
+/* Default XKB rules */
+#undef __XKBDEFRULES__
+
+/* Name of X server */
+#undef __XSERVERNAME__
+
+/* Define to 16-bit byteswap macro */
+#undef bswap_16
+
+/* Define to 32-bit byteswap macro */
+#undef bswap_32
+
+/* Define to 64-bit byteswap macro */
+#undef bswap_64
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef pid_t

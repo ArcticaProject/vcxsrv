@@ -1,0 +1,115 @@
+.\" $Xorg: bdftopcf.man,v 1.4 2001/02/09 02:05:28 xorgcvs Exp $
+.\" Copyright 1993, 1994, 1998  The Open Group
+.\" 
+.\" Permission to use, copy, modify, distribute, and sell this software and its
+.\" documentation for any purpose is hereby granted without fee, provided that
+.\" the above copyright notice appear in all copies and that both that
+.\" copyright notice and this permission notice appear in supporting
+.\" documentation.
+.\" 
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of The Open Group shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from The Open Group.
+.\"
+.\" $XFree86: xc/programs/bdftopcf/bdftopcf.man,v 1.7 2001/01/27 18:21:00 dawes Exp $
+.\"
+.TH BDFTOPCF 1 __xorgversion__
+.SH NAME
+bdftopcf \- convert X font from Bitmap Distribution Format to Portable
+Compiled Format
+.SH SYNOPSIS
+.B bdftopcf
+[
+.BI \-p n
+] [
+.BI \-u n
+] [
+.B \-m
+] [
+.B \-l
+] [
+.B \-M
+] [
+.B \-L
+] [
+.B \-t
+] [
+.B \-i
+] [
+.B \-o
+.I outputfile
+] fontfile.bdf
+.SH DESCRIPTION
+.I Bdftopcf
+is a font compiler for the X server and font server.
+Fonts in Portable Compiled Format can be
+read by any architecture, although the file is structured to allow one
+particular architecture to read them directly without reformatting.  This
+allows fast reading on the appropriate machine, but the files are still
+portable (but read more slowly) on other machines.
+.SH OPTIONS
+.TP 8
+.B \-p\fIn\fP
+Sets the font glyph padding.  Each glyph in the font will have each scanline
+padded in to a multiple of \fIn\fP bytes, where \fIn\fP is 1, 2, 4 or 8.
+.TP 8
+.B \-u\fIn\fP
+Sets the font scanline unit.  When the font bit order is different from the
+font byte order, the scanline unit \fIn\fP describes what unit of data (in
+bytes) are to be swapped; the unit \fIi\fP can be 1, 2 or 4 bytes.
+.TP 8
+.B \-m
+Sets the font bit order to MSB (most significant bit) first.  Bits for each
+glyph will be placed in this order; i.e., the left most bit on the screen
+will be in the highest valued bit in each unit.
+.TP 8
+.B \-l
+Sets the font bit order to LSB (least significant bit) first.  The left most
+bit on the screen will be in the lowest valued bit in each unit.
+.TP 8
+.B \-M
+Sets the font byte order to MSB first.  All multi-byte data in the file
+(metrics, bitmaps and everything else) will be written most significant byte
+first.
+.TP 8
+.B \-L
+Sets the font byte order to LSB first.  All multi-byte data in the file
+(metrics, bitmaps and everything else) will be written least significant
+byte first.
+.TP 8
+.B \-t
+When this option is specified,
+.I bdftopcf
+will convert fonts into "terminal" fonts when possible.  A terminal font has
+each glyph image padded to the same size; the X server can usually render
+these types of fonts more quickly.
+.TP 8
+.B \-i
+This option inhibits the normal computation of ink metrics.  When a font has
+glyph images which do not fill the bitmap image (i.e., the "on" pixels don't
+extend to the edges of the metrics)
+.I bdftopcf
+computes the actual ink metrics and places them in the .pcf file; the \-t
+option inhibits this behaviour.
+.TP 8
+.BI "\-o " output-file-name
+By default
+.I bdftopcf
+writes the pcf file to standard output; this option gives the name of a file
+to be used instead.
+.SH "SEE ALSO"
+X(__miscmansuffix__)
+.SH AUTHOR
+Keith Packard, MIT X Consortium

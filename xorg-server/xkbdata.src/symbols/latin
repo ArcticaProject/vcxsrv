@@ -1,0 +1,180 @@
+// $XKeyboardConfig$
+
+// Common Latin alphabet layout
+//
+// $XFree86: xc/programs/xkbcomp/symbols/latin,v 1.3 2002/12/20 20:18:34 paulo Exp $
+
+default partial
+xkb_symbols "basic" {
+
+    key <AE01>	{ [         1,     exclam,  onesuperior,   exclamdown ]	};
+    key <AE02>	{ [         2,         at,  twosuperior,    oneeighth ]	};
+    key <AE03>	{ [         3, numbersign, threesuperior,    sterling ]	};
+    key <AE04>	{ [         4,     dollar,   onequarter,       dollar ]	};
+    key <AE05>	{ [         5,    percent,      onehalf, threeeighths ]	};
+    key <AE06>	{ [         6, asciicircum, threequarters, fiveeighths ] };
+    key <AE07>	{ [         7,  ampersand,    braceleft, seveneighths ]	};
+    key <AE08>	{ [         8,   asterisk,  bracketleft,    trademark ]	};
+    key <AE09>	{ [         9,  parenleft, bracketright,    plusminus ]	};
+    key <AE10>	{ [         0, parenright,   braceright,       degree ]	};
+    key <AE11>	{ [     minus, underscore,    backslash, questiondown ]	};
+    key <AE12>	{ [     equal,       plus, dead_cedilla,  dead_ogonek ]	};
+
+    key <AD01>	{ [         q,          Q,           at,  Greek_OMEGA ]	};
+    key <AD02>	{ [         w,          W,      lstroke,      Lstroke ]	};
+    key <AD03>	{ [         e,          E ]	};
+    key <AD04>	{ [         r,          R,    paragraph,   registered ]	};
+    key <AD05>	{ [         t,          T,       tslash,       Tslash ]	};
+    key <AD06>	{ [         y,          Y,    leftarrow,          yen ]	};
+    key <AD07>	{ [         u,          U,    downarrow,      uparrow ]	};
+    key <AD08>	{ [         i,          I,   rightarrow,     idotless ]	};
+    key <AD09>	{ [         o,          O,       oslash,     Ooblique ]	};
+    key <AD10>	{ [         p,          P,        thorn,        THORN ]	};
+    key <AD11>	{ [bracketleft,  braceleft, dead_diaeresis, dead_abovering ] };
+    key <AD12>	{ [bracketright, braceright, dead_tilde,  dead_macron ]	};
+
+    key <AC01>	{ [         a,          A,           ae,           AE ]	};
+    key <AC02>	{ [         s,          S,       ssharp,      section ]	};
+    key <AC03>	{ [         d,          D,          eth,          ETH ]	};
+    key <AC04>	{ [         f,          F,      dstroke,  ordfeminine ]	};
+    key <AC05>	{ [         g,          G,          eng,          ENG ]	};
+    key <AC06>	{ [         h,          H,      hstroke,      Hstroke ]	};
+    key <AC07>	{ [         j,          J ]	};
+    key <AC08>	{ [         k,          K,          kra,    ampersand ]	};
+    key <AC09>	{ [         l,          L,      lstroke,      Lstroke ]	};
+    key <AC10>	{ [ semicolon,    colon, dead_acute, dead_doubleacute ]	};
+    key <AC11>	{ [apostrophe, quotedbl, dead_circumflex,  dead_caron ]	};
+    key <TLDE>	{ [     grave, asciitilde,      notsign,      notsign ]	};
+
+    key <BKSL>	{ [ backslash,        bar,   dead_grave,   dead_breve ]	};
+    key <AB01>	{ [         z,          Z, guillemotleft,        less ]	};
+    key <AB02>	{ [         x,          X, guillemotright,    greater ]	};
+    key <AB03>	{ [         c,          C,         cent,    copyright ]	};
+    key <AB04>	{ [         v,          V, leftdoublequotemark, leftsinglequotemark ]	};
+    key <AB05>	{ [         b,          B, rightdoublequotemark, rightsinglequotemark ] };
+    key <AB06>	{ [         n,          N ]	};
+    key <AB07>	{ [         m,          M,           mu,    masculine ]	};
+    key <AB08>	{ [     comma,       less, horizconnector,   multiply ]	};
+    key <AB09>	{ [    period,    greater, periodcentered,   division ]	};
+    key <AB10>	{ [     slash,   question, dead_belowdot, dead_abovedot ] };
+
+};
+
+// Northern Europe ( Danish, Finnish, Norwegian, Swedish) common layout
+
+partial
+xkb_symbols "type2" {
+
+    include "latin"
+
+    key <AE01>	{ [         1,     exclam,   exclamdown,  onesuperior ]	};
+    key <AE02>	{ [         2,   quotedbl,           at,  twosuperior ]	};
+    key <AE03>	{ [         3, numbersign,     sterling, threesuperior]	};
+    key <AE04>	{ [         4,   currency,       dollar,   onequarter ]	};
+    key <AE05>	{ [         5,    percent,      onehalf,         cent ]	};
+    key <AE06>	{ [         6,  ampersand,          yen,  fiveeighths ]	};
+    key <AE07>	{ [         7,      slash,    braceleft,     division ]	};
+    key <AE08>	{ [         8,  parenleft,  bracketleft, guillemotleft]	};
+    key <AE09>	{ [         9, parenright, bracketright, guillemotright] };
+    key <AE10>	{ [         0,      equal,   braceright,       degree ]	};
+
+    key <AD03>	{ [         e,          E,     EuroSign,         cent ]	};
+    key <AD04>	{ [         r,          R,   registered,   registered ]	};
+    key <AD05>	{ [         t,          T,        thorn,        THORN ]	};
+    key <AD09>	{ [         o,          O,           oe,           OE ]	};
+    key <AD11>	{ [     aring,  Aring, dead_diaeresis, dead_abovering ]	};
+    key <AD12>	{ [dead_diaeresis, dead_circumflex, dead_tilde, dead_caron ] };
+
+    key <AC01>	{ [         a,          A,  ordfeminine,    masculine ]	};
+
+    key <AB03>	{ [         c,          C,    copyright,    copyright ]	};
+    key <AB08>	{ [     comma,  semicolon, dead_cedilla,  dead_ogonek ]	};
+    key <AB09>	{ [    period,   colon, periodcentered, dead_abovedot ]	};
+    key <AB10>	{ [     minus, underscore, dead_belowdot, dead_abovedot ] };
+};
+
+// Slavic Latin ( Albanian, Croatian, Polish, Slovene, Yugoslav)
+// common layout
+
+partial
+xkb_symbols "type3" {
+
+    include "latin"
+
+    key <AD01>	{ [         q,          Q,    backslash,  Greek_OMEGA ]	};
+    key <AD02>	{ [         w,          W,          bar,      Lstroke ]	};
+    key <AD06>	{ [         z,          Z,    leftarrow,          yen ]	};
+
+    key <AC04>	{ [         f,          F,  bracketleft,  ordfeminine ]	};
+    key <AC05>	{ [         g,          G, bracketright,          ENG ]	};
+    key <AC08>	{ [         k,          K,      lstroke,    ampersand ]	};
+
+    key <AB01>	{ [         y,          Y, guillemotleft,         less ]	};
+    key <AB04>	{ [         v,          V,           at,        grave ]	};
+    key <AB05>	{ [         b,          B,    braceleft,   apostrophe ]	};
+    key <AB06>	{ [         n,          N,   braceright,   braceright ]	};
+    key <AB07>	{ [         m,          M,      section,    masculine ]	};
+    key <AB08>	{ [     comma,  semicolon,         less,     multiply ]	};
+    key <AB09>	{ [    period,      colon,      greater,     division ]	};
+};
+
+// Another one Latin common layout
+// (German, Estonian, Spanish, Icelandic, Italian, Latin American, Portuguese)
+ 
+partial
+xkb_symbols "type4" {
+
+    include "latin"
+
+    key <AE02>	{ [         2,   quotedbl,           at,    oneeighth ]	};
+    key <AE06>	{ [         6,  ampersand,      notsign,  fiveeighths ]	};
+    key <AE07>	{ [         7,      slash,    braceleft, seveneighths ]	};
+    key <AE08>	{ [         8,  parenleft,  bracketleft,    trademark ]	};
+    key <AE09>	{ [         9, parenright, bracketright,    plusminus ]	};
+    key <AE10>	{ [         0,      equal,   braceright,       degree ]	};
+
+    key <AD03>	{ [         e,          E,     EuroSign,         cent ]	};
+
+    key <AB08>	{ [   comma,  semicolon, horizconnector,     multiply ]	};
+    key <AB09>	{ [  period,      colon, periodcentered,     division ]	};
+    key <AB10>	{ [   minus, underscore, dead_belowdot, dead_abovedot ]	};
+};
+
+partial
+xkb_symbols "nodeadkeys" {
+
+    key <AE12>	{ [     equal,       plus,     cedilla,        ogonek ]	};
+    key <AD11>	{ [bracketleft,  braceleft,  diaeresis,        degree ]	};
+    key <AD12>	{ [bracketright, braceright, asciitilde,       macron ]	};
+    key <AC10>	{ [ semicolon,      colon,       acute,   doubleacute ]	};
+    key <AC11>	{ [apostrophe,   quotedbl, asciicircum,         caron ]	};
+    key <BKSL>	{ [ backslash,        bar,       grave,         breve ]	};
+    key <AB10>	{ [     slash,   question, dead_belowdot,    abovedot ]	};
+};
+
+partial
+xkb_symbols "type2_nodeadkeys" {
+ 
+    include "latin(nodeadkeys)"
+
+    key <AD11>	{ [     aring,      Aring,   diaeresis,        degree ]	};
+    key <AD12>	{ [ diaeresis, asciicircum, asciitilde,         caron ]	};
+    key <AB08>	{ [     comma,  semicolon,     cedilla,        ogonek ]	};
+    key <AB09>	{ [    period,   colon, periodcentered,      abovedot ]	};
+    key <AB10>	{ [   minus, underscore, dead_belowdot,      abovedot ]	};
+};
+
+partial
+xkb_symbols "type3_nodeadkeys" {
+ 
+    include "latin(nodeadkeys)"
+};
+
+partial
+xkb_symbols "type4_nodeadkeys" {
+ 
+    include "latin(nodeadkeys)"
+
+    key <AB10>	{ [   minus, underscore, dead_belowdot,      abovedot ]	};
+};
+

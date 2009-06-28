@@ -1,0 +1,53 @@
+.\" $Xorg: kbd_mode.man,v 1.4 2001/02/09 02:04:43 xorgcvs Exp $
+.\" Copyright 1987 Sun Microsystems, Inc.
+.\" Copyright 1993, 1998  The Open Group
+.\" 
+.\" Permission to use, copy, modify, distribute, and sell this software and its
+.\" documentation for any purpose is hereby granted without fee, provided that
+.\" the above copyright notice appear in all copies and that both that
+.\" copyright notice and this permission notice appear in supporting
+.\" documentation.
+.\" 
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of The Open Group shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from The Open Group.
+.\"
+.\" $XFree86: xc/programs/Xserver/hw/sun/kbd_mode.man,v 1.6 2001/01/27 18:20:41 dawes Exp $
+.\"
+.TH KBD_MODE 1 __xorgversion__
+.SH NAME
+kbd_mode \- recover the Sun console keyboard
+.SH SYNOPSIS
+.B kbd_mode
+[ -a -e -n -u ]
+.SH DESCRIPTION
+.I Kbd_mode
+resets the Sun console keyboard to a rational state.
+.SH OPTIONS
+The following options are supported, see \fIkb(4S)\fP for details:
+.TP 8
+.B \-a
+Causes ASCII to be reported.
+.TP 8
+.B \-e
+Causes \fIFirm_events\fP to be reported.
+.TP 8
+.B \-n
+Causes up/down key codes to be reported.
+.TP 8
+.B \-u
+Causes undecoded keyboard values to be reported.
+.SH SEE ALSO
+kb(4S)

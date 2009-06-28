@@ -1,0 +1,318 @@
+
+                     --------------------------------------
+                        The X Print Service - The Basics
+                     --------------------------------------
+
+Index
+   - 1.0 X Print Service Overview
+
+   - 2.0 How the X Print Service Works
+
+   - 3.0 Using the X Print Service
+        - 3.1 X Print Server Configuration
+        - 3.2 Starting the X Print Service
+        - 3.3 Configuring the environment
+        - 3.4 General End-User Sequence
+
+
+1.0  X Print Service Overview
+=============================
+
+The "X Print Service" technology allows X rendering to devices such as
+printers and fax.  Most of the service is available in the X11
+technology stack as Xp, with the remainder in the CDE technology stack
+as DtPrint.  Modifications have also been made to the Motif technology
+stack to support Xp and DtPrint.
+
+The Xp portion consists of:
+   * Xp Extension for the X-Server (included in the X-Server Xprt)
+   * Xp Extension API for the client side (libXp)
+   * PCL ddx driver that converts core X to native PCL
+   * Postscript ddx driver that converts core X to native Postscript
+   * Raster ddx driver that generates xwd rasters which can be
+     converted to PCL or Postscript rasters
+
+The DtPrint portion consists of:
+   * A collection of print GUIs (libDtPrint)
+   * A Print Dialog Manager that can assist a client in
+     setting printing options (dtpdm, dtpdmd)
+
+From an X clients perspective, it can attach to one of two nearly
+identical X-Servers, a "Video" X-Server, and a "Print" X-Server
+which has the additional Xp capability but otherwise looks and
+behaves the same.
+
+
+
+2.0  How the X Print Service Works
+==================================
+
+The X Print Service expands on the traditional X-Server and Xlib world
+in four ways.
+
+1. Most obvious is the use of "print ddx drivers" instead of
+   "video ddx drivers".  While a video ddx driver modifies pixels
+   in a video frame buffer, a print ddx driver generates "page
+   description language (PDL)" output such as PCL or Postscript.
+
+   Once a print ddx driver generates PDL output, it can be sent to
+   a spooler such as lp(1) or retrieved by the client.
+
+   Though not currently done, a single X-Server can support both
+   print and video ddx drivers.
+
+2. Since printers support "paged" output, unlike video, a portion
+   of the Xp Extension supports APIs to delineate printed output.
+   For example, XpStartPage and XpEndPage tell the X-Server where
+   a physical page starts and ends in an otherwise continuous
+   stream of X rendering primitives.  Likewise, XpStartJob and
+   XpEndJob determine when a collection of pages starts and ends.
+   XpEndJob typically causes the generated PDL to be submitted to
+   a spooler, such as lp(1).
+
+3. Since printers have extensive capabilities, another portion of
+   the Xp Extension supports APIs to manipulate "print contexts".
+
+   Once a printer is selected using the Xp Extension API, a print
+   context to represent it can be created.  A print context
+   embodies the printer selected - it contains the printer's
+   default capabilities, selectable range of capabilities,
+   printer state, and generated output.  Some "attributes" within
+   the print context can be modified by the user, and the
+   X-Server and print ddx driver will react accordingly.  For
+   example, the attribute "content-orientation" can be set to
+   "landscape" or "portrait".
+
+4. Since printers can have "built in" fonts, the Xp Extension in
+   the X-Server works with the print ddx drivers to make
+   available (for printing only) additional fonts on a per print
+   context basis.
+
+   When a print context is created and set for a given printer,
+   the X font calls may be able to access additional printer
+   fonts.  To do this (typically), the X-Server must have access
+   to "printer metric files" (.pmf) that describe at minimum the
+   metrics of the built in fonts.
+
+
+
+3.0  Using the X Print Service
+==============================
+
+There are three tasks to start the X Print Service:  1) configuring the
+X Print Server, 2) starting the X Print Service, 3) configuring the user
+session so that clients can find the running X Print Service.
+
+The tasks are described in detail below.
+
+
+3.1  X Print Server Configuration
+---------------------------------
+
+The X Print Server (Xprt) can read a number of configuration files which
+control its behavior and support for printers.  Each vendor platform has
+a default location for this information.  Xprt can also read the
+environment variable XPCONFIGDIR to locate alternate configuration
+directories.  Common settings include:
+
+   * export XPCONFIGDIR=/X11/lib/X11/XpConfig/
+
+   * export XPCONFIGDIR=/proj/x11/xc/programs/Xserver/XpConfig/
+
+Xprt has many built-in defaults, and lacking any configuration files,
+will immediately try to support all printers visible via lpstat(1).
+
+In order of importance for configuration by a system administrator, the
+configuration files for a "C" locale are as follows.
+
+   ${XPCONFIGDIR}/C/print/Xprinters
+
+	`Xprinters' is the top most configuration file.  It tells
+	Xprt which specific printer names (e.g.  mylaser) should
+	be supported, and whether lpstat(1) or other commands
+	should be used to automatically supplement the list of
+        printers.
+
+   ${XPCONFIGDIR}/C/print/attributes/printer
+
+	The `printer' file maps printer names to model
+	configurations (see `model-config' below).  For example,
+	"mylaser" could be mapped to a "HPDJ1600C", and all other
+	arbitrary printers could be mapped to a default, such as
+	"HPLJ4SI".  When depending on lpstat(1) in the Xprinters
+	file, setting up defaults in `printer' becomes all the
+        more important.
+
+   ${XPCONFIGDIR}/C/print/attributes/document
+
+	The `document' file specifies the initial document values
+	for any print jobs.  For example, which paper tray to
+	use, what default resolution, etc.
+
+   ${XPCONFIGDIR}/C/print/attributes/job
+
+	The `job' file specifies the initial job values for any
+	print jobs.  For example, "notification-profile" can be
+	set so that when a print job is successfully sent to a
+	printer, e-mail is sent to the user.
+
+   ${XPCONFIGDIR}/C/print/models/HPDJ1600C/model-config
+   ${XPCONFIGDIR}/C/print/models/HPDJ1600C/fonts/fonts.dir
+   ${XPCONFIGDIR}/C/print/models/HPDJ1600C/fonts/9nb00051.pmf
+   ${XPCONFIGDIR}/C/print/models/HPDJ1600C/fonts/9nb00093.pmf
+
+	The `model-config' file has attributes that describe the
+	printer model's capabilities and default settings.
+	Printer model fonts may also be present.  The model-config
+        file also identifies the print ddx driver to be used.
+
+	For each printer model supported, a complete hierarchy of
+	files should exist.  In most cases, these files do not
+	need to be modified.
+
+   ${XPCONFIGDIR}/C/print/ddx-config/raster/pcl
+   ${XPCONFIGDIR}/C/print/ddx-config/raster/postscript
+
+	The print ddx drivers can have highly specific
+	configuration files to control their behavior.  In most
+	cases, these files do not need to be modified.
+
+
+3.2  Starting the X Print Service
+---------------------------------
+
+The summary checklist for starting the X Print Service is as follows:
+
+1. Choose an execution model for the X Print Service.  The X
+   Print Service can be run on a per-user session basis, per
+   machine basis, or can be run on a few machines globally
+   available to a number of users.
+
+2. If print jobs are to be submitted to a spooler (almost always
+   the case), make sure all needed printers are available to the
+   spooler subsystem (most often lp(1)) on the same machine
+   running the X Print Service.
+
+3. Configure the X Print Server.  See ``X Print Server
+   Configuration''.
+
+4. Depending on #1, start the X Print Server process "Xprt", and
+   then the Print Dialog Manager Daemon process "dtpdmd" at the
+   appropriate times.
+
+The details are described below.
+
+Because the X Print Service is based on X, it can be easily distributed.
+The most significant factors in which execution model to choose will be
+driven by:
+
+   * how many printers will be accessable through the printer
+     subsystem on any given machine.  A system administrator may
+     choose to cluster printers on a few given machines, or
+     scatter them across an organization and possibly make
+     extensive use of remote spoolers to make them globally
+     available.
+
+   * how many machines will need a copy of the X Print Server
+     configuration files.  The files have been architected so
+     that one super-set version of them can be maintained and
+     distributed (e.g.  via NFS), and a per-machine or per-user
+     version of the `Xprinters' is all that is needed to have the
+     appropriate information in them utilized or ignored.
+
+   * how many users can demand services from a given X Print
+     Service.
+
+With the above in mind, some obvious execution models include:
+
+   * Global - in this model, the system administrator is choosing
+     to run the X Print Service on a *few* select machines with
+     appropriate printers configured, and allow clients access to
+     the global resource.  This can centralize the administration
+     of printers and configuration files, but may have to be
+     monitored for performance loading.
+
+     Startup would likely be done by boot-up scripts.
+
+   * Per-machine - every machine with potential X Print Service
+     users would run the service.  Printer and configuration file
+     administration is decentralized, and usage would be limited
+     to the users on the machine.
+
+     Startup would likely be done by boot-up scripts.
+
+   * Per-user session - every user would run an entire X Print
+     Service for themselves.  In the future, the Video X Server
+     normally started may contain Print X Server capability, so
+     this model becomes very natural.
+
+     Startup would likely be done at session login or by
+     launching actions or processes manually once the user
+     logs in.  Note: the dtpdmd must be started after Xprt.
+
+Starting of the processes is straight forward.  In strict order:
+
+   [machineA] % Xprt [-XpFile <Xprinters file>] [:dispNum] &
+
+      Note that Xprt will look for configuration files in either
+      a default location or where XPCONFIGDIR points.
+
+      -XpFile specifies an alternate `Xprinters' file, rather
+      than the default one or `${XPCONFIGDIR}/C/print/Xprinters'.
+
+   [machineA] % dtpdmd -d machineA[:dispNum] [-l /tmp/dtpdmd.log] &
+
+      The dtpdmd will maintain an X-Selection on the X-Server,
+      and will start dtpdm's as required to service requests.
+
+In all but the per-user session model, the machine running the dtpdmd
+(thus dtpdm's) will need display authorization to the users video
+display.
+
+
+
+3.3  Configuring the environment
+--------------------------------
+
+Once a X Print Server and dtpdmd have been started -- many of them
+in some cases -- clients will need to find and use them.  There are
+two mechanisms that allow clients to discover X Print Servers and
+printers.
+
+   * "X Print Specifier" - assuming usage of the DtPrint print
+     dialogs, the following notation is understood:
+
+          printer_name@machine[:dispNum]
+
+     For example:
+
+          colorlj7@printhub:2
+
+     In the above example, the X Print Server running at `printhub:2'
+     is assumed to support the printer named `colorlj7'.
+
+   * "XPSERVERLIST" - assuming usage of the DtPrint print dialogs,
+     the environment variable "XPSERVERLIST" can contain a list
+     of X Print Servers.  For example:
+
+          XPSERVERLIST="printhub:2 printhub:3 otherdept:0"
+
+     Then in the dialogs, only a printer name needs to be entered.
+     The dialog will then search the X Print Servers in XPSERVERLIST
+     for a server than supports the printer, and then establish
+     contact.
+
+3.4  General End-User Sequence
+------------------------------
+
+From most CDEnext applications, printing is accomplished by bringing
+down the <File> menu and selecting <Print...>.  This will result in
+the DtPrintSetupBox dialog, which will request the name of a printer,
+and offer limited capability to configure print options (e.g. number
+of copies).  If the user wishes, they can select <Setup...>, which
+will start a dtpdm capable of modifying additional print options.
+Finally, the user should select <Print>.
+
+
+
+$Xorg: README,v 1.3 2000/08/17 19:48:02 cpqbld Exp $

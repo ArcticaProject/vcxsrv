@@ -1,0 +1,119 @@
+// $XdotOrg: $
+//
+// Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, provided that the above
+// copyright notice(s) and this permission notice appear in all copies of
+// the Software and that both the above copyright notice(s) and this
+// permission notice appear in supporting documentation.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+// 
+// Except as contained in this notice, the name of a copyright holder
+// shall not be used in advertising or otherwise to promote the sale, use
+// or other dealings in this Software without prior written authorization
+// of the copyright holder.
+//
+xkb_symbols "basic" {
+   include "sun_vndr/tr(type6Q)"
+};
+
+xkb_symbols "type6Q" {
+
+   key <TLDE> { [ quotedbl, eacute	], [ asciitilde			]};
+   key <AE02> { [ 2, quoteright		]				};
+   key <AE03> { [ 3, asciicircum	], [ numbersign			]};
+   key <AE04> { [ 4, plus		], [ dollar			]};
+   key <AE06> { [ 6, ampersand		]				};
+   key <AE07> { [ 7, slash		], [ braceleft			]};
+   key <AE08> { [ 8, parenleft		], [ bracketright		]};
+   key <AE09> { [ 9, parenright		], [ bracketright		]};
+   key <AE10> { [ 0, equal		], [ braceright			]};
+   key <AE11> { [ asterisk, question	], [ backslash			]};
+   key <AE12> { [ minus, underscore	]				};
+
+   key <AD01> { [ q, Q			], [ at				]};
+   key <AD11> { [ gbreve, Gbreve	], [ gbreve, Gbreve		]};
+   key <AD12> { [ udiaeresis, Udiaeresis], [ asciitilde, Udiaeresis	]};
+
+   key <AC10> { [ scedilla, Scedilla	], [ comma			]};
+   key <AC11> { [ Iabovedot, Iabovedot	], [ Iabovedot, Iabovedot	]};
+   key <BKSL> { [ comma, semicolon	], [ quoteleft			]};
+
+   key <LSGT> { [ less, greater		], [ bar			]};
+   key <AB08> { [ odiaeresis, Odiaeresis], [ odiaeresis, Odiaeresis	]};
+   key <AB09> { [ ccedilla, Ccedilla	], [ ccedilla, Ccedilla		]};
+   key <AB10> { [ period, colon		], [ quotedbl			]};
+   
+};
+
+xkb_symbols "type6F" {
+
+
+   key	<TLDE> { [ plus     ,asterisk		],  [plusminus     ]};
+   key	<AE01> { [ 1	    ,exclam		],  [onesuperior   ]};
+   key	<AE02> { [ 2	    ,quotedbl		],  [twosuperior   ]};
+   key	<AE03> { [ 3	    ,asciicircum  	],  [numbersign    ]};
+   key	<AE04> { [ 4	    ,dollar		],  [onequarter    ]};
+   key	<AE05> { [ 5	    ,percent		],  [onehalf       ]};
+   key	<AE06> { [ 6	    ,ampersand		],  [threequarters ]};
+   key	<AE07> { [ 7	    ,quoteright   	],  [braceleft     ]};
+   key	<AE08> { [ 8	    ,parenleft		],  [bracketleft   ]};
+   key	<AE09> { [ 9	    ,parenright		],  [bracketright  ]};
+   key	<AE10> { [ 0	    ,equal		],  [braceright    ]};
+   key	<AE11> { [ slash    ,question    	],  [backslash     ]};
+   key	<AE12> { [ minus    ,underscore   	],  [bar           ]};
+
+   key  <AD01> { [ f         ,F            ],  [at		]};
+   key  <AD02> { [ g         ,G            ]};
+   key  <AD03> { [ gbreve    ,Gbreve       ],  [gbreve, Gbreve	]};
+   key  <AD04> { [ idotless  ,I            ],  [paragraph	]};
+   key  <AD05> { [ o         ,O            ]};
+   key  <AD06> { [ d         ,D            ],  [yen		]};
+   key  <AD07> { [ r         ,R            ]};
+   key  <AD08> { [ n         ,N            ]};
+   key  <AD09> { [ h         ,H            ],  [degree		]};
+   key  <AD10> { [ p         ,P            ],  [sterling	]};
+   key  <AD11> { [ q         ,Q            ],  [diaeresis	]};
+   key  <AD12> { [ w         ,W            ],  [asciitilde	]};
+   key  <BKSL> { [ x         ,X            ],  [quoteleft	]};
+
+   key  <AC01> { [ u         ,U        	],	[AE			]};
+   key  <AC02> { [ i	     ,Iabovedot	],	[ssharp			]};
+   key  <AC03> { [ e	     ,E  	]};
+   key  <AC04> { [ a	     ,A  	]};
+   key  <AC05> { [ udiaeresis,Udiaeresis]}; 
+   key  <AC06> { [ t	     ,T  	]};
+   key  <AC07> { [ k	     ,K  	]};
+   key  <AC08> { [ m	     ,M  	]};
+   key  <AC10> { [ y         ,Y		],	[quoteright		]};
+   key  <AC11> { [ scedilla  ,Scedilla	],	[numbersign,   Scedilla	]};
+
+   key  <LSGT> { [ less, greater           ],  [bar		]};
+   key  <AB01> { [ j           ,J          ],  [less		]};
+   key  <AB02> { [ odiaeresis  ,Odiaeresis ],  [greater		]};
+   key  <AB03> { [ v           ,V          ],  [cent		]};
+   key  <AB04> { [ c	       ,C          ]};
+   key  <AB05> { [ ccedilla    ,Ccedilla   ],  [ccedilla, Ccedilla	]};
+   key  <AB06> { [ z	       ,Z          ]};
+   key  <AB07> { [ s           ,S          ],  [mu		]};
+   key  <AB08> { [ b           ,B          ],  [multiply	]};
+   key  <AB09> { [ period      ,colon      ],  [division	]};
+   key  <AB10> { [ comma       ,semicolon  ]};
+
+
+};
+

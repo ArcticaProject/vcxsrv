@@ -1,0 +1,291 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+.\" $XFree86: xc/doc/man/X11/XDrText.man,v 1.4 2003/04/28 22:17:54 herrb Exp $
+.\" $XdotOrg: lib/X11/man/XDrawText.man,v 1.3 2005-08-17 01:27:08 alanc Exp $
+.\"
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XDrawText __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XDrawText, XDrawText16, XTextItem, XTextItem16 \- draw polytext text and text drawing structures
+.SH SYNTAX
+.HP
+int XDrawText\^(\^Display *\fIdisplay\fP\^, Drawable \fId\fP\^, GC \fIgc\fP\^,
+int \fIx\fP\^, int \fIy\fP\^, XTextItem *\fIitems\fP\^, int \fInitems\fP\^); 
+.HP
+int XDrawText16\^(\^Display *\fIdisplay\fP\^, Drawable \fId\fP\^, GC
+\fIgc\fP\^, int \fIx\fP\^, int \fIy\fP\^, XTextItem16 *\fIitems\fP\^, int
+\fInitems\fP\^); 
+.SH ARGUMENTS
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIitems\fP 1i
+Specifies an array of text items.
+.IP \fInitems\fP 1i
+Specifies the number of text items in the array.
+.ds Xy , which are relative to the origin of the specified drawable \
+and define the origin of the first character
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.SH DESCRIPTION
+The
+.ZN XDrawText16
+function is similar to
+.ZN XDrawText 
+except that it uses 2-byte or 16-bit characters.
+Both functions allow complex spacing and font shifts between counted strings.
+.LP
+Each text item is processed in turn.
+A font member other than 
+.ZN None
+in an item causes the font to be stored in the GC
+and used for subsequent text.  
+A text element delta specifies an additional change
+in the position along the x axis before the string is drawn. 
+The delta is always added to the character origin
+and is not dependent on any characteristics of the font.
+Each character image, as defined by the font in the GC, is treated as an
+additional mask for a fill operation on the drawable.
+The drawable is modified only where the font character has a bit set to 1.
+If a text item generates a
+.ZN BadFont
+error, the previous text items may have been drawn.
+.LP
+For fonts defined with linear indexing rather than 2-byte matrix indexing,
+each 
+.ZN XChar2b
+structure is interpreted as a 16-bit number with byte1 as the 
+most significant byte.
+.LP
+Both functions use these GC components:
+function, plane-mask, fill-style, font, subwindow-mode, 
+clip-x-origin, clip-y-origin, and clip-mask.
+They also use these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+and tile-stipple-y-origin.
+.LP
+.ZN XDrawText
+and
+.ZN XDrawText16
+can generate
+.ZN BadDrawable ,
+.ZN BadFont ,
+.ZN BadGC ,
+and
+.ZN BadMatch 
+errors.
+.SH STRUCTURES
+The
+.ZN XTextItem
+and
+.ZN XTextItem16
+structures contain:
+.LP
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	char *chars;	/\&* pointer to string */
+	int nchars;	/\&* number of characters */
+	int delta;	/\&* delta between strings */
+	Font font;	/\&* Font to print it in, None don't change */
+} XTextItem;
+.De
+.LP
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	XChar2b *chars;	/\&* pointer to two-byte characters */
+	int nchars;	/\&* number of characters */
+	int delta;	/\&* delta between strings */
+	Font font;	/\&* font to print it in, None don't change */
+} XTextItem16;
+.De
+.LP
+If the font member is not
+.ZN None ,
+the font is changed before printing and also is stored in the GC.
+If an error was generated during text drawing,
+the previous items may have been drawn.
+The baseline of the characters are drawn starting at the x and y
+coordinates that you pass in the text drawing functions.
+.LP
+For example, consider the background rectangle drawn by
+.ZN XDrawImageString .
+If you want the upper-left corner of the background rectangle
+to be at pixel coordinate (x,y), pass the (x,y + ascent)
+as the baseline origin coordinates to the text functions.
+The ascent is the font ascent, as given in the
+.ZN XFontStruct
+structure.
+If you want the lower-left corner of the background rectangle
+to be at pixel coordinate (x,y), pass the (x,y \- descent + 1)
+as the baseline origin coordinates to the text functions.
+The descent is the font descent, as given in the
+.ZN XFontStruct
+structure.
+.SH DIAGNOSTICS
+.TP 1i
+.ZN BadDrawable
+A value for a Drawable argument does not name a defined Window or Pixmap.
+.TP 1i
+.ZN BadFont
+A value for a Font or GContext argument does not name a defined Font.
+.TP 1i
+.ZN BadGC
+A value for a GContext argument does not name a defined GContext.
+.TP 1i
+.ZN BadMatch
+An
+.ZN InputOnly
+window is used as a Drawable.
+.SH "SEE ALSO"
+XDrawImageString(3X11),
+XDrawString(3X11),
+XLoadFont(3X11)
+.br
+\fI\*(xL\fP

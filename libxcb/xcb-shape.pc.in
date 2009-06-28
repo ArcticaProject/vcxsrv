@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: XCB Shape
+Description: XCB Shape Extension
+Version: @PACKAGE_VERSION@
+Requires: xcb
+Libs: -L${libdir} -lxcb-shape
+Cflags: -I${includedir}

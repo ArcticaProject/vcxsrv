@@ -1,0 +1,194 @@
+This code originally hails from IBM.  It was ported to an early XFree86 by
+Gertjan Akkerman, whose BUGS file I append here.
+
+In turn, this is a port of Gertjan's work to the new server design.  Among the
+changes are:
+
+- The removal of almost all unreferenced code.
+- The removal of this code's own copy of mfb (xf1bpp is used instead).
+- The removal of banking support (mibank is used instead).
+- External symbols were made static where this was sufficient.
+- The remaining external names were renamed to xf4bpp*.
+- Several minor cleanups too many to mention here.
+
+To understate the matter, this code is >UGLY<.  This seems inherent in IBM's
+corporate culture.  Be that as it may, it *does* survive X11R4's xtest
+(whatever that means these days...).  For now, this is sufficient for 4bpp
+support in the new design, but at some point, I'll have to sit down and
+rewrite this from scratch.  A more technical justification for a rewrite is
+that the pixmap format is 8bpp, instead of 4bpp, which is causing me to
+pepper the rest of the server with unclean accomodations.
+
+Marc.
+
+===============================================================================
+Section 1: From IBM's X11R4 contribution towards XFree86.
+
+This section describes what I did to obtain a 16 colour vga server.
+
+I started with the SYSV, ppc, vga and common directories from IBM's X11R4
+contribution. Those directories have the following function:
+1. SYSV implements the mouse and keyboard.
+2. ppc is a generic layer implementing ddx in terms of drawing operations
+   through rectangles. (With spans as a boundary case: height = 1.)
+3. vga implements a layer of operations drawing through rectangles.
+4. common implements ddx initialization and quitting, and screen saving.
+
+I eliminated SYSV and common since the functionality provided therein is
+already provided in XFree86. Since XFree86 is actively being ported to
+new operating systems, while X11R4 is out of date, I preferred the XFree86
+code here above the SYSV and common code.
+Whatever functionality was still needed from common (default colormap
+initialization -- not much code) was moved into ppc.
+
+Since XFree86 uses the mi-provided software cursor code, IBM's software
+cursor code was deleted from ppc and vga. This is a pity, since it is
+expected that it is more efficient than mi's code, but the XFree86 mouse and
+keyboard code directly call mi, and I do not want to maintain the XFree86
+mouse and keyboard code.
+
+Since we cannot support a monolithic multi-screen server using all of the
+x11r4 contributed code yet, all multi screen code was deleted. This includes
+one header file containing a nasty copyright statement.
+
+Since glyph handling has changed between X11R4 and X11R5, the code handling
+glyphs was replaced by appropriate calls to mi.
+I hope it can be modified and put back one day.
+
+Provisionally, some code was added (viz. file vga/offscreen.c) to intercept
+calls to the rectangle drawing code when we are switched out of the VT.
+I hope this can be replaced by some window tree invalidation and GC validation
+scheme.
+
+
+Section 2: BUGS
+
+This section describes fixed and still unfixed bugs in this code.
+All bugs not labeled otherwise also occur in IBM's X11R4 code, and may be of
+interest to anybody using that code.
+
+1. (Fixed.)
+I found (and provisionally fixed) a bug in the IBM bitblit code:
+In file ddx/ibm/vga/vgaImages.c a function vgaReadColorImage is defined.
+When this function is used to read less than 8 pixels starting on a byte
+boundary it will always read precisely 8 pixels.
+Thus, when space is allocated for 4 or less pixels, it will write beyond
+the allocated space.
+Since the code is rather convoluted, this may not be apparent at first sight,
+but going through the code with an example shows the error.
+
+2. (Fixed.)
+In ppcPixmapFS.c, function ppcStipplePixmapFS there was a bug
+regarding the stipple origin: The horizontal origin is added while
+the vertical one is subtracted. The horizontal origin should be subtracted
+instead of added here.
+This bug gets visible when backing-store is enabled and one uses twm:
+the submenu icons get truncated on their left hand side.
+(In case you wonder why this bug appears: under those circumstances
+twm prepares its menus by drawing into an unmapped window. 
+The miCopyPlane function uses the ppcStipplePixmap (and many others)
+to get the plane copied.)
+I also fixed this bug in the other routines (ppcOpStipplePixmapFS,
+ppcTilePixmapFS) in this file, although I had no visible clues for this.
+I hope this is appropriate.
+
+3. (Fixed.)
+I find it suspect that ppcSetSpans gives different output when one
+claims that an actually sorted list of spans is unsorted.
+The unsorted code is wrong, and should be made to look more like the sorted
+code. I.e., use ( xStart - ppt->x ) instead of ( xStart - pbox->x1 )
+
+4. (Fixed.)
+There used to be another bug that became visible when using twm and backing
+store: popping up a submenu, and moving the cursor upwards til it leaves the
+submenu, the submenu would disappears, as it should.
+But the submenu icon would not get restored, while it should be.
+10b. By replacing the clip-computing code in ppcValidateGC by that in
+cfbValidateGC, I *finally* fixed the disappearing twm menu icon problem.
+
+5. Added mfbRegisterCopyplaneProc call. [Its omission was an error on my
+   part.]
+   Fixing a server core dump in XTest.
+
+6. Fixed not-very-high tile bug in function ppcTileRect, file emulTile.c
+   (I.e., if the tile was higher than the area to be tiled, far too much
+   was drawn, causing server core dumps in XTest.)
+   Actually, "savey" ought to be used to determine the height of the tiles in
+   the top line to be tiled, instead of "pTile->drawable.height".
+7. A use of height where width was intended was fixed in ppcTileRect:
+   "savehcount = w / pTile->drawable.height;" should use "... .width" and
+   "savehcount = ( x + w - htarget ) / pTile->drawable.height;" too.
+
+8. Deleted overly clever code in ppcCReduce.c
+   (All code that tried to pre-compute how alu's could be replaced by
+    other alu's with inverted colors, etc. was deleted. I think it is
+   at least wrong for FillSolid.)
+
+9. Looked at suspicious code in ppcSetSp.c
+   "tmpx = *pdst;" was never updated during the loop. We took it out of the
+   initialization position of the for and moved it into the loop.
+
+10. Add xSrc := GC->patOrg.x + pDrawable.x and ySrc := ... in ppcPixmapFS.c,
+   functions ppcStipplePixmapFS, ppcOpStipplePixmapFS, and ppcTilePixmapFS.
+   This because stipple and tile origins are taken relative to the drawable.
+   Also use a "modulo" function that gets the cases of a negative stipple
+   or tile offset right. (When the stipple origin is to the right of or
+   below the origin of the drawable.)
+
+11. File vgaSolid.c, function vgaFillSolid:
+   Inverting is XORing with all ones. Not with the color we want to AND/OR
+   later. So we'll have to set the color to VGA_ALLPLANES
+   whenever we want to invert existing data, and reset it before the
+   AND/OR is done.
+   Also we replaced an outb( 0x3CF, tmp2 ) by the SetVideoGraphicsData( tmp2 )
+   it is representing. (Just a cosmetic replacement.)
+
+12. File vgaImages, function vgaDrawColorImage.
+   Moved a line "invert_existing_data = TRUE;" two lines down, past a case
+   label. Now it is also part of the code executed for GXorReverse, as it
+   should be.
+
+13. The pixmap FillSpans routines (file ppcPixmapFS.c) got somewhat better
+   after importing some code from ddx/ibm/vga. (A getbits function that does
+   wrapping.)
+   They were wrong for the FillStippled and FillOpaqueStippled modes.
+   I don't understand the old code. How could it handle stipples of a size not
+   an exact multiple of 32? (or 8, for that matter.)
+
+14. In function vgaBitBlt file vgaBitBlt.c, in the shortcuts for
+    GXSet, GXClear and GXInvert, the source (x0,y0) is accidentally operated
+    upon by vgaFillSolid, instead of the destination (x1,y1).
+
+15. Notice that in DoMonoSingle and DoMonoMany in file vgaStipple.c, the left
+   edge of the square to be stippled is treated wrong.
+   Correct would be to get the bits with getbits using offset xshift, and
+   to shift them right (x & 07) places. 
+   [One might wish to use the variable tmp1 at this place, since it had been
+    set to (x & 07) at this place; but that is already re-used at this point.]
+   Also note that NeedValX is set wrong: The implicit assumption was that
+   stipples are more than 8 wide.
+   This only fixes the problem when miPushPixel is used instead of ppcPushPixel.
+   I think I should look some more into this.
+   
+16. I took out some code of the CopyArea function, in which a no-op function
+   was called while a real one was needed. My fix does not completely work,
+   although it improved the behaviour of GetImage somewhat.
+
+17.  After finding three kinds of errors in this single function,
+   -- the new kinds being the right side not being always written due to
+   an incorrect if scope, and the lower end not always being written due
+   to variables being updated at the wrong place --
+   (requiring modifications to be made at at least 10 places,
+   I decided to REWRITE the body of the ppcTileRect function from scratch.
+   This version simply computes all relevant margins in advance, and does
+   not try to reuse temporary variables. I leave that to the compiler.
+   (This was a maintenance and robustness nightmare anyway.)
+
+MORE NOTES:
+   It is funny that there are two files in mi that require compilation
+   with the proper #defines ( -DXF86VGA16  in my case ):
+   Besides the obvious mibitblt.c, there is also mipushpxl.c.
+
+
+
+$XFree86: xc/programs/Xserver/hw/xfree86/xf4bpp/NOTES,v 1.1.2.2 1998/06/27 15:15:45 dawes Exp $

@@ -1,0 +1,83 @@
+// $XKeyboardConfig$
+//
+
+// Let space provide nobreakspace for the desired level.
+
+partial
+xkb_symbols "none" {
+  key <SPCE> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1]= [ space ]
+  };
+};
+
+partial
+xkb_symbols "level2" {
+  key <SPCE> {
+    type[Group1]="TWO_LEVEL",
+    symbols[Group1]= [ space, nobreakspace ]
+  };
+};
+
+
+// level3 & level3ns provide no-breaking spaces starting from level3
+// This is good for typographers but experience shows many users accidently
+// type no-breaking spaces on the CLI (resulting in errors)
+// Used by fr(latin9)
+partial
+xkb_symbols "level3" {
+  key <SPCE> {
+    type[Group1]="FOUR_LEVEL",
+    symbols[Group1]= [ space, space, nobreakspace ]
+  };
+};
+
+// level3s kills fourth level
+// Used by ca(multix)
+partial
+xkb_symbols "level3s" {
+  key <SPCE> {
+    type[Group1]="FOUR_LEVEL",
+    symbols[Group1]= [ space, space, nobreakspace, NoSymbol ]
+  };
+};
+
+// level3n provides narrow no-breaking space in addition to the normal one
+partial
+xkb_symbols "level3n" {
+  key <SPCE> {
+    type[Group1]="FOUR_LEVEL",
+    symbols[Group1]= [ space, space, nobreakspace, 0x100202F ]
+  };
+};
+
+
+// for this reason pushing no-breaking spaces to level4 is the safe default nowadays
+partial
+xkb_symbols "level4" {
+  key <SPCE> {
+    type[Group1]="FOUR_LEVEL",
+    symbols[Group1]= [ space, space, space, nobreakspace ]
+  };
+};
+
+// level4n provides narrow no-breaking space in addition to the normal one
+partial
+xkb_symbols "level4n" {
+ key <SPCE> {
+   type[Group1]="EIGHT_LEVEL",
+   symbols[Group1]= [ space, space, space, nobreakspace, space, 0x100202F, NoSymbol, NoSymbol ]
+ };
+};
+
+// level4nl provides narrow no-breaking space in addition to the normal one
+// without forcing the use of level5 for mostly four-level layouts
+// Used by fr(oss), be(oss)…
+partial
+xkb_symbols "level4nl" {
+ key <SPCE> {
+   type[Group1]="LOCAL_EIGHT_LEVEL",
+   symbols[Group1]= [ space, space, space, nobreakspace, space, 0x100202F, NoSymbol, NoSymbol ]
+ };
+};
+

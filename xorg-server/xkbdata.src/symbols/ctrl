@@ -1,0 +1,41 @@
+// $XKeyboardConfig$
+
+// $XFree86: xc/programs/xkbcomp/symbols/ctrl,v 3.2 2003/10/24 20:38:20 tsi Exp $
+//
+// eliminate the caps lock key completely (replace with control)
+partial modifier_keys 
+xkb_symbols "nocaps" {
+    key <CAPS>	{  symbols[Group1]= [ Control_L, Control_L ] };
+    modifier_map  Control { <CAPS>, <LCTL> };
+};
+
+// swap the caps lock key with the left control key
+partial modifier_keys 
+xkb_symbols "swapcaps" {
+    key <CAPS>	{  symbols[Group1]= [ Control_L ] };
+    key <LCTL>	{  symbols[Group1]= [ Caps_Lock ] };
+};
+
+// moves the control key to the middle row and the caps lock
+// to the bottom row.  Only works if the geometry or keycodes
+// file has defined appropriate aliases for the keys in question.
+partial modifier_keys 
+xkb_symbols "ctrl_ac" {
+    key <AC00>	{  symbols[Group1]= [ Control_L ] };
+    key <AA00>	{  symbols[Group1]= [ Caps_Lock ] };
+};
+
+// Moves the control key to the bottom row and the caps lock
+// to the middle row.  Only works if the geometry or keycodes
+// file has defined appropriate aliases for the keys in question.
+partial modifier_keys 
+xkb_symbols "ctrl_aa" {
+    key <AA00>	{  symbols[Group1]= [ Control_L ] };
+    key <AC00>	{  symbols[Group1]= [ Caps_Lock ] };
+};
+
+// Right Ctrl works as Right Alt
+partial modifier_keys 
+xkb_symbols "ctrl_ra" {
+    key <RCTL>	{  symbols[Group1]= [ Alt_R ] };
+};

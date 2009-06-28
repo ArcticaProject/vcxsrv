@@ -1,0 +1,275 @@
+// $XKeyboardConfig$
+
+// Georgian Keyboard Layouts by Aiet Kolkhi <aietkolkhi@gmail.com>
+// Full layout descriptions available at http://www.gakartuleba.org/layouts/
+//
+// This includes the following keyboard layouts: Georgian QWERTY; Georgian Ergonomic;
+// Georgian MESS; Georgian AZERTY Tskapo; Georgian Russian.
+//
+// Layouts include Georgian Mkhedruli alphabeth; most layouts also include some special
+// and ancient characters (like Fi, Yn, Elifi, Turned Gan and Ain). Layouts do not
+// include Georgian Asomtavruli or Georgian Khutsuri alphabeths which are also present
+// in Unicode.
+//
+// Georgian Typewriter no longer supported, as it is no longer used in Georgia.
+//
+// some layouts based on Georgian keyboard map, in the so called "latin" layout.
+// 1999, Pablo Saratxaga <srtxg@chanae.alphanet.ch>
+//
+
+partial default alphanumeric_keys
+xkb_symbols "basic" {
+
+    name[Group1]= "Georgia";
+
+    key <TLDE> { [ 0x0100201e, 0x0100201c, 0x0100201e, asciitilde ] };
+    key <AE01> { [ 1, exclam, apostrophe ] };
+    key <AE02> { [ 2, at, 0x0100201e ] };
+    key <AE03> { [ 3, numbersign, 0x0100201c ] };
+    key <AE04> { [ 4, dollar, 0x01002116 ] };
+    key <AE05> { [ 5, percent, EuroSign ] };
+    key <AE06> { [ 6, asciicircum ] };
+    key <AE07> { [ 7, ampersand, section ] };
+    key <AE08> { [ 8, asterisk,	degree ] };
+    key <AE09> { [ 9, parenleft ] };
+    key <AE10> { [ 0, parenright ] };
+    key <AE11> { [ minus, underscore, 0x01002014 ] };
+    key <AE12> { [ equal, plus, 0x01002013 ] };
+
+    key <AD01> { [ 0x010010e5,  Q               ]       };
+    key <AD02> { [ 0x010010ec,  0x010010ed      ]       };
+    key <AD03> { [ 0x010010d4,  E, 0x010010f1   ]       };
+    key <AD04> { [ 0x010010e0,  0x010010e6, 0x010000ae ] };
+    key <AD05> { [ 0x010010e2,  0x010010d7 ] };
+    key <AD06> { [ 0x010010e7,  Y, 0x010010f8   ]       };
+    key <AD07> { [ 0x010010e3,  U               ]       };
+    key <AD08> { [ 0x010010d8,  I, 0x010010f2   ]       };
+    key <AD09> { [ 0x010010dd,  O               ]       };
+    key <AD10> { [ 0x010010de,  P               ]       };
+    key <AD11> { [ bracketleft, braceleft       ]       };
+    key <AD12> { [ bracketright,braceright      ]       };
+
+    key <AC01> { [ 0x010010d0,  A, 0x010010fa   ]       };
+    key <AC02> { [ 0x010010e1,  0x010010e8      ]       };
+    key <AC03> { [ 0x010010d3,  D               ]       };
+    key <AC04> { [ 0x010010e4,  F, 0x010010f6   ]       };
+    key <AC05> { [ 0x010010d2,  G, 0x010010f9   ]       };
+    key <AC06> { [ 0x010010f0,  H, 0x010010f5   ]       };
+    key <AC07> { [ 0x010010ef, 0x010010df, 0x010010f7 ] };
+    key <AC08> { [ 0x010010d9,  K               ]       };
+    key <AC09> { [ 0x010010da,  L               ]       };
+    key <AC10> { [ semicolon, colon             ]       };
+    key <AC11> { [ apostrophe, quotedbl         ]       };
+    key <BKSL> { [ backslash, bar, asciitilde, asciitilde ]  };
+
+    key <LSGT> { [ guillemotleft,guillemotright ]       };
+    key <AB01> { [ 0x010010d6,  0x010010eb      ]       };
+    key <AB02> { [ 0x010010ee,  X, 0x010010f4   ]       };
+    key <AB03> { [ 0x010010ea, 0x010010e9, 0x010000a9 ] };
+    key <AB04> { [ 0x010010d5,  V, 0x010010f3   ]       };
+    key <AB05> { [ 0x010010d1,  B               ]       };
+    key <AB06> { [ 0x010010dc,  N, 0x010010fc   ]       };
+    key <AB07> { [ 0x010010db,  M               ]       };
+    key <AB08> { [ comma, less, guillemotleft   ]       };
+    key <AB09> { [ period, greater, guillemotright    ] };
+    key <AB10> { [ slash, question, 0x010010fb  ]       };
+
+    include "level3(ralt_switch)"
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "qwerty" {
+    include "ge(basic)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "ergonomic" {
+    include "ge(basic)"
+
+    name[Group1]= "Georgia - Ergonomic";
+
+    key <TLDE> { [ 0x0100201e, apostrophe, 0x0100201e, asciitilde ] };
+    key <AE01> { [ exclam, 1, exclam      ] };
+    key <AE02> { [ 0x01002116, 2, at      ] };
+    key <AE03> { [ comma, 3, numbersign, section ] };
+    key <AE04> { [ semicolon, 4, dollar   ] };
+    key <AE05> { [ percent, 5, EuroSign	 ] };
+    key <AE06> { [ colon, 6, asciicircum  ] };
+    key <AE07> { [ question, 7, ampersand ] };
+    key <AE08> { [ period, 8, asterisk, degree ] };
+    key <AE09> { [ parenleft, 9, parenleft, guillemotleft ] };
+    key <AE10> { [ parenright, 0, parenright, guillemotright ] };
+    key <AE11> { [ minus, plus, 0x01002014, underscore ] };
+    key <AE12> { [ 0x0100201c, equal, equal ] };
+
+    key <AD01> { [ 0x010010e9, noSymbol      ]       };
+    key <AD02> { [ 0x010010de, noSymbol      ]       };
+    key <AD03> { [ 0x010010e3, noSymbol      ]       };
+    key <AD04> { [ 0x010010eb, noSymbol, noSymbol, 0x010000ae ] };
+    key <AD05> { [ 0x010010ed, noSymbol, noSymbol, 0x010010d7 ] };
+    key <AD06> { [ 0x010010e2, noSymbol, noSymbol, 0x010010f8 ] };
+    key <AD07> { [ 0x010010d7, noSymbol      ]       };
+    key <AD08> { [ 0x010010dc, noSymbol, 0x010010fc, I ] };
+    key <AD09> { [ 0x010010d5, noSymbol, 0x010010f3    ] };
+    key <AD10> { [ 0x010010e8, noSymbol                ] };
+    key <AD11> { [ 0x010010d9, noSymbol, bracketleft, braceleft  ] };
+    key <AD12> { [ 0x010010e5, noSymbol, bracketright,braceright ] };
+
+    key <AC01> { [ 0x010010ee, noSymbol, 0x010010f4    ] };
+    key <AC02> { [ 0x010010d8, noSymbol, 0x010010f2    ] };
+    key <AC03> { [ 0x010010d0, noSymbol, 0x010010fa, D ] };
+    key <AC04> { [ 0x010010d4, noSymbol, 0x010010f1    ] };
+    key <AC05> { [ 0x010010dd, noSymbol     ]       };
+    key <AC06> { [ 0x010010d3, noSymbol     ]       };
+    key <AC07> { [ 0x010010db, noSymbol     ]       };
+    key <AC08> { [ 0x010010e1, noSymbol     ]       };
+    key <AC09> { [ 0x010010e0, noSymbol, L  ]       };
+    key <AC10> { [ 0x010010d1, noSymbol, colon         ] }; 
+    key <AC11> { [ 0x010010d2, noSymbol, 0x010010f9, quotedbl ] };
+    key <BKSL> { [ slash, section, backslash, bar ] };
+
+    key <LSGT> { [ guillemotleft,guillemotright   ] };
+    key <AB01> { [ 0x010010ef, noSymbol      ]      };
+    key <AB02> { [ 0x010010f0, noSymbol, 0x010010f5, X ] };
+    key <AB03> { [ 0x010010e7, noSymbol, 0x010010f8, C ] };
+    key <AB04> { [ 0x010010e6, noSymbol, 0x010010f7, V ] };
+    key <AB05> { [ 0x010010df, noSymbol                ] };
+    key <AB06> { [ 0x010010d6, noSymbol                ] };
+    key <AB07> { [ 0x010010ea, noSymbol, noSymbol, M   ] };
+    key <AB08> { [ 0x010010da, noSymbol, guillemotleft, less ] };
+    key <AB09> { [ 0x010010e4, noSymbol, 0x010010f6, guillemotright ] };
+    key <AB10> { [ 0x010010ec, noSymbol, 0x010010fb    ] };
+
+    include "level3(ralt_switch)"
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "mess" {
+    include "ge(basic)"
+
+    name[Group1]= "Georgia - MESS";
+
+    key <TLDE> { [ 0x010010ed, backslash, quoteleft ] };
+    key <AE01> { [ 1, exclam, apostrophe ] };
+    key <AE02> { [ 2, at, asciitilde ] };
+    key <AE03> { [ 3, 0x01002116, numbersign ]	};
+    key <AE04> { [ 4, dollar, EuroSign ] };
+    key <AE05> { [ 5, percent ]	};
+    key <AE06> { [ 6, asciicircum ] };
+    key <AE07> { [ 7, ampersand, section ] };
+    key <AE08> { [ 8, asterisk, degree ] };
+    key <AE09> { [ 9, parenleft ] };
+    key <AE10> { [ 0, parenright, 0x01002014 ] };
+    key <AE11> { [ minus, underscore, 0x01002013 ] };
+    key <AE12> { [ 0x010010df,	plus, bar   ]  };
+    key <AD01> { [ 0x010010e5,	Q ] };
+    key <AD02> { [ 0x010010ec,	W ] };
+    key <AD03> { [ 0x010010d4,	E ] };
+    key <AD04> { [ 0x010010e0,	R ] };
+    key <AD05> { [ 0x010010e2,	T ] };
+    key <AD06> { [ 0x010010e7,	Y ] };
+    key <AD07> { [ 0x010010e3,	U ] };
+    key <AD08> { [ 0x010010d8,	I, 0x010010f2 ] };
+    key <AD09> { [ 0x010010dd,	O ] };
+    key <AD10> { [ 0x010010de,	P ] };
+    key <AD11> { [ 0x010010e8,	bracketleft,  guillemotleft  ] };
+    key <AD12> { [ 0x010010e6,	bracketright, guillemotright ] };
+    key <AC01> { [ 0x010010d0,	A, 0x010010fa ] };
+    key <AC02> { [ 0x010010e1,	S ] };
+    key <AC03> { [ 0x010010d3,	D ] };
+    key <AC04> { [ 0x010010e4,	F, 0x010010f6 ] };
+    key <AC05> { [ 0x010010d2,	G, 0x010010f9 ] };
+    key <AC06> { [ 0x010010f0,	H, 0x010010f1 ]	};
+    key <AC07> { [ 0x010010ef,	J, 0x010010f7 ] };
+    key <AC08> { [ 0x010010d9,	K ] };
+    key <AC09> { [ 0x010010da,	L ] };
+    key <AC10> { [ 0x010010d7,0x0100201e ] };
+    key <AC11> { [ 0x010010e9,0x0100201c ] };
+    key <BKSL> { [ equal, slash, bar ]	};
+
+    key <LSGT> { [ guillemotleft, guillemotright ] };
+    key <AB01> { [ 0x010010d6, Z, 0x010010f5 ] };
+    key <AB02> { [ 0x010010ee, X, 0x010010f4 ]	};
+    key <AB03> { [ 0x010010ea,	C ] };
+    key <AB04> { [ 0x010010d5,	V, 0x010010f3 ]	};
+    key <AB05> { [ 0x010010d1,	B ] };
+    key <AB06> { [ 0x010010dc,	N, 0x010010fc ] };
+    key <AB07> { [ 0x010010db,	M ] };
+    key <AB08> { [ comma, semicolon, less ] };
+    key <AB09> { [ period, colon, greater ] };
+    key <AB10> { [ 0x010010eb, question, 0x010010fb ] };
+
+    include "level3(ralt_switch)"
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "ru" {
+
+    name[Group1]= "Georgia - Russian";
+
+    key <TLDE> { [ asciicircum, asciitilde      ]       };
+    key <AE01> { [         1,    exclam         ]       };
+    key <AE02> { [         2,    at             ]       };
+    key <AE03> { [         3,    numbersign     ]       };
+    key <AE04> { [         4,    semicolon      ]       };
+    key <AE05> { [         5,    colon          ]       };
+    key <AE06> { [         6,    comma          ]       };
+    key <AE07> { [         7,    period         ]       };
+    key <AE08> { [         8,    asterisk       ]       };
+    key <AE09> { [         9,    parenleft      ]       };
+    key <AE10> { [         0,    parenright     ]       };
+    key <AE11> { [     minus,    underscore     ]       };
+    key <AE12> { [ numbersign,   bar            ]       };
+
+    key <AD01> { [ 0x010010e6,  q               ]       };
+    key <AD02> { [ 0x010010ea,  w               ]       };
+    key <AD03> { [ 0x010010e3,  e               ]       };
+    key <AD04> { [ 0x010010d9,  r               ]       };
+    key <AD05> { [ 0x010010d4,  t               ]       };
+    key <AD06> { [ 0x010010dc,  y               ]       };
+    key <AD07> { [ 0x010010d2,  u               ]       };
+    key <AD08> { [ 0x010010e8,  i               ]       };
+    key <AD09> { [ 0x010010ec,  o               ]       };
+    key <AD10> { [ 0x010010d6,  p               ]       };
+    key <AD11> { [ 0x010010ee,  bracketleft     ]       };
+    key <AD12> { [ 0x010010ef,  bracketright    ]       };
+
+    key <AC01> { [ 0x010010e4,  a               ]       };
+    key <AC02> { [ 0x010010d7,  s               ]       };
+    key <AC03> { [ 0x010010d5,  d               ]       };
+    key <AC04> { [ 0x010010d0,  f               ]       };
+    key <AC05> { [ 0x010010de,  g               ]       };
+    key <AC06> { [ 0x010010e0,  h               ]       };
+    key <AC07> { [ 0x010010dd,  j               ]       };
+    key <AC08> { [ 0x010010da,  k               ]       };
+    key <AC09> { [ 0x010010d3,  l               ]       };
+    key <AC10> { [ 0x010010df,  semicolon       ]       };
+    key <AC11> { [ 0x010010eb,  percent         ]       };
+    key <BKSL> { [ backslash,    bar            ]       };
+
+    key <LSGT> { [ guillemotleft,guillemotright ]       };
+    key <AB01> { [ 0x010010ed,  z               ]       };
+    key <AB02> { [ 0x010010e9,  x               ]       };
+    key <AB03> { [ 0x010010e1,  c               ]       };
+    key <AB04> { [ 0x010010db,  v               ]       };
+    key <AB05> { [ 0x010010d8,  b               ]       };
+    key <AB06> { [ 0x010010e2,  n               ]       };
+    key <AB07> { [ 0x010010e5,  m               ]       };
+    key <AB08> { [ 0x010010d1,  less            ]       };
+    key <AB09> { [ 0x010010e7,  greater         ]       };
+    key <AB10> { [ 0x010010f0,  question        ]       };
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "os" {
+
+    include "ru(os_legacy)"
+
+    name[Group1]= "Georgia - Ossetian";
+
+};
+

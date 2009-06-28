@@ -1,0 +1,348 @@
+commit 7f6275300243fd15ce974d1b5e478b47f7758485
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 26 14:19:19 2008 -0700
+
+    Version bump: 1.0.4
+
+commit 753bf38ceca4a0c8d6c6c1845b4387e4b3c9e4f0
+Author: Damien Th?bault <damien.thebault@gmail.com>
+Date:   Tue Aug 26 14:16:44 2008 -0700
+
+    Bug 17314: libXau's Makefile.am should have proper man creation rules
+    
+    X.Org Bugzilla #17314 <http://bugs.freedesktop.org/show_bug.cgi?id=17314>
+    Patch #18528 <http://bugs.freedesktop.org/attachment.cgi?id=18528>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit a0b2aac596ea2cbe4d0ec1ef8c406ad98f0c499d
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jul 8 15:08:35 2008 -0700
+
+    SVR4 (including Solaris) puts gethostbyname_r in libnsl instead of libc
+
+commit 1bc9f04963a8a236cc190e75e32282774b556932
+Author: Daniel Drake <ddrake@brontes3d.com>
+Date:   Tue May 29 14:06:00 2007 -0800
+
+    Bug #11097: libXau COPYING fix (add missing copyright dates)
+    
+    X.Org Bugzilla #11097 <https://bugs.freedesktop.org/show_bug.cgi?id=11097>
+
+commit 45d137fdbb9b21513aff68e945e19cdfdcbc28b1
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Dec 16 01:18:20 2006 +0200
+
+    bump to 1.0.3
+
+commit fefdba6ed5ef56abf0da9caaca64af5a5e7895b0
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Dec 6 18:53:29 2006 +0200
+
+    Makefile.am: make ChangeLog hook safer
+    Make ChangeLog hook as safe as possible.
+
+commit 90e34a4aa471b6e446345ba8095990e360a41570
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jul 28 13:47:44 2006 -0700
+
+    Version bump -> 1.0.2
+
+commit fab8b091936874b4a8077f490ec80abf7b092049
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jul 24 13:14:04 2006 -0700
+
+    Require xorg-macros 1.1.0 or later for XORG_WITH_LINT & XORG_LINT_LIBRARY macros
+
+commit 3399e7bed20680520b39ade782d7a33966d477ae
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jul 24 13:12:57 2006 -0700
+
+    Add lint library to CLEANFILES
+
+commit aa4f35661022f3f1c1b94284b34a531381d3a7f1
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Jul 16 10:57:36 2006 +0200
+
+    set GIT_DIR=${srcdir}/.git for git-log
+
+commit 881115413a7c157c9aab8fba39c8929692baaacc
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 17:01:49 2006 -0700
+
+    Generate lint library for checking programs that call functions in libXau
+    
+    (Disabled by default, enable with --enable-lint-library)
+
+commit f25155b03b9fa866d522714ad64e92bf7f2b95fa
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 15:16:11 2006 -0700
+
+    renamed: include/.cvsignore -> include/.gitignore
+
+commit 9062a6da402d416f21d4365d3c3a29ceea707e77
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 12 23:53:14 2006 -0700
+
+    Replace static ChangeLog with dist-hook to generate from git-log
+
+commit 9b5a14e6de65658fdb712e737b292568a69dc3ee
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 12 19:27:52 2006 -0700
+
+    Rename XORG_ENABLE_LINT to XORG_WITH_LINT
+
+commit d3f7a679fce893782774e97c0718393295d0773e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 12 19:26:53 2006 -0700
+
+    Move --with-lint handling to XORG_ENABLE_LINT() in xorg-macros.m4
+
+commit 1abf440a6a54fb0624915f9ac975f3074252c422
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 12 19:25:38 2006 -0700
+
+    Add *~ to .gitignore to ignore emacs droppings
+
+commit 43b8275be56151bf0e29ce22795afbef24de0f9c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 12 17:00:16 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 385d7fa4f151425539d613c9665b5e862f3ef614
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Jun 28 22:53:36 2006 +0000
+
+    Add "--with-lint" configure flag and "make lint" Makefile target to check
+        source code with lint, sparse or similar tools.
+
+commit 21ea069c9078edd386e96e038e1a71e041e32cf5
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Jun 28 22:49:36 2006 +0000
+
+    Changelog for last commit:
+    Remove prototype for XauGetAuthByName to clear lint warning: name declared
+        but never used or defined
+    Fix sparse warnings:
+    -warning: Using plain integer as NULL pointer
+    -warning: non-ANSI definition of function
+
+commit 8274b8e4b121c3dc3bfd5d0fa4f85bc23f5c09a0
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Jun 28 22:26:50 2006 +0000
+
+    Remove prototype for XauGetAuthByName to clear lint warning: name declared
+        but never used or defined
+    Fix sparse warnings:
+    -warning: Using plain integer as NULL pointer
+    -warning: non-ANSI definition of function
+
+commit 7f6f90cfce51806340f25b80a87b147d8a743b27
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jun 10 01:27:06 2006 +0000
+
+    Clean up existing Autest test program and use to provide simple (and very
+        incomplete) "make check" test case.
+
+commit e214cc19e1d599f16a69e86b1d8b247ad40a9ed7
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Fri May 12 16:05:48 2006 +0000
+
+    Bump to 1.0.1
+
+commit b92b597d7d597dd223371fe0ff60d1b2dad38fda
+Author: Kevin E Martin <kem@kem.org>
+Date:   Mon May 8 19:47:10 2006 +0000
+
+    Bug #5628 <https://bugs.freedesktop.org/show_bug.cgi?id=5628> Shadow pages
+        not created correctly when MANDIR & MANSUFFIX don't match.
+
+commit 253a3e1c94642ccee9a3ed694eecb5382aa22b1e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:28 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit c7648c97a5da8824d2871f528da89dedc98e2598
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:42 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit c0fbe656693cab8fdf8776fb4d0fa85d0efc4e20
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:42 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit d6d0baef6dd91cc1c3d3d701ad83ec095f02630c
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:03:05 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit 1272a96ff8c6ee8c1ff5fc23c421b79ea4c15f92
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Nov 20 23:17:40 2005 +0000
+
+    Add/improve libs .cvsignores.
+
+commit 08bef4712fc1e9194db9c8910f461873b7065063
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:40 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit 307ff4cf91c1331c29470a9654d9d18293b45389
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:09 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 913ed232278b0673a763eb46e97aea0f78348b5a
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Oct 18 00:00:08 2005 +0000
+
+    Use @LIB_MAN_SUFFIX@ instead of $(LIB_MAN_SUFFIX) in macro substitutions to
+        work better with BSD make
+
+commit ce3af1f6d302e3b7adaba7e166f6f594aa13c310
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 17 21:13:15 2005 +0000
+
+    Rename .shadows.DONE to shadows.DONE to avoid some make's thinking it's a
+        suffix rule (reported by Matthieu Herrb)
+
+commit 86f92c112c22604824d2044b566b8cbee81cb397
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Oct 12 00:39:36 2005 +0000
+
+    Use sed to put version number in man page Add shadow man pages for man
+        pages that document multiple functions.
+
+commit bd48f668b3c8d5de53e42b73ef4e4136d384672d
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Thu Sep 22 01:40:07 2005 +0000
+
+    Set needed flags for MT-safe API's called from libXau
+
+commit 82affd3fdeafe063406d80e439c16b5d7ee66020
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:50 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 2edd5e132ac2d1ca1a5631fb1e54970012b33f85
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 06:06:57 2005 +0000
+
+    Add .cvsignore files
+
+commit 2527a93c7ba785499c52de48da9b60d02eb4722d
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:22:32 2005 +0000
+
+    revert last change, didn't do right thing at all, sorry for the noise
+
+commit fe846da148f3dd15e13e34216853d700cd2c51fd
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:10:07 2005 +0000
+
+    Require automake 1.7 in AM_INIT_AUTOMAKE
+
+commit 9607573553c23bcdfb1c3eaec3571aa52fdeb5ee
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Sat May 14 07:46:48 2005 +0000
+
+    Move includes in Xau and Xdmcp into include/X11 subdirectories so that the
+        source can reference them with <X11/...>.
+
+commit 56a655e717c5de6d91c890fdc6f9b0469ad1dd1a
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed May 11 22:44:53 2005 +0000
+
+    lib/Xau:
+    - Update AUTHORS, COPYING from Keith's tree
+    - Don't use gcc specific "-include config.h"
+    - Add autogen.sh
+    lib/xtrans:
+    - Add AUTHORS, COPYING, ChangeLog, Makefile.am, NEWS, README, autogen.sh,
+        configure.ac, xtrans.pc.in
+    xc/lib/Xau:
+    - Add conditionalized #include <config.h>
+    util/modular/symlink.sh
+    - Add functions symlink_lib_xau() and symlink_lib_xtrans()
+    util/modular/addconfig.h
+    - New script that adds #include <config.h> to files
+
+commit 60177d823918d9ef7575da27870796c1285a2032
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Mon May 9 22:04:21 2005 +0000
+
+    Add Xau library to lib/ and symlink.sh
+
+commit 62b6efa4e0012fc499d2c70bff7b99b468a0458f
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Mon Nov 15 15:06:55 2004 +0000
+
+    Bufzilla #1802, http://freedesktop.org/bugzilla/show_bug.cgi?id=1802 Added
+        mingw (Win32) port
+
+commit 05ed20614e85180684d5b8e663dcc2fe57851447
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:36 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 0b934581a8612148d70ecf84df72f6a69ca6c5c2
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:32:01 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit 1a9fc5ef22e3bdd719fc0f991512b6a1d88faaad
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:11:20 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 494e0315dcd701302bb81f2b68f759917ad401dd
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:30 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 690d8700431f1afcb585897e7cc49b4fd7c9cf46
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:39 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit bca26a7b7c4c4f58d65462ffd3f1b0eaef2d5d4c
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:09 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 1be3101aeab9b6136c32a91c23799724a7fe7797
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:47 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit dcc3fc52f917603df94ef4207f1dec9238dce23b
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:38 2003 +0000
+
+    R6.6 is the Xorg base-line

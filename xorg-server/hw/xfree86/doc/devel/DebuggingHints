@@ -1,0 +1,192 @@
+
+                        Xserver Debugging
+                        =================
+
+This file is  intended to collect helpful hints  on Xserver debugging.
+I merely outline my experiences  here. Somebody else might have better
+methods on  doing it. This person  is therefore invited  to share this
+experience with the rest of the world by adding it here.
+
+Paul Flinders has made some patches to gdb to add support for loadable
+modules.  This version  of gdb  is currently  available as  binary for
+Linux/x86 on Paul's web site:
+
+         www.dawa.demon.co.uk/xfree-gdb
+
+This web-site also contains the patches to gdb 4.18 so you may port it
+to other platforms.
+
+It  loads  the module  symbols  and  supports  all gdb  features  like
+breakpointing, disassembling  and single  stepping. It also  shows the
+exact location of a signal 11. Paul  has fixed the code so that all of
+this is  working even  if using modules  compiled without -g.  You can
+find his latest version on his web site.
+
+If no module aware gdb is available the following hints might help:
+
+1. Use remote  login. This  can be done  thru a network  connection or
+   simply by  connecting a serial  console. This enables you  to watch
+   the  Xservers output while  running set  breakpoints with  gdb etc.
+   Don't even try  to run the Xserver from  a system console. Whenever
+   something  happens gdb  waits for  input. However  the  Xserver has
+   locked the system console  including the keyboard, therefore you'll
+   never  be able  to send  any  input to  gdb. Even  if your  process
+   doesn't crash or you haven't set any breakpoints a vt switch can be
+   hazardous: When doing vt switching a signal is sent; unless you did
+         
+   gdb> handle SIGUSR1 nostop
+
+   gdb waits  for you to continue  the program which  cannot happen as
+   you don't have access to gdb's console.
+
+2. You can  compile any source  file with debugging symbols  to obtain
+   more information  about where an  error occurred. Simply go  to the
+   directory which holds the corresponding object file and do:
+            
+   # rm <file>.o
+   # xc/config/util/makeg.sh <file>.o
+
+   After  relinking the server  or module  gdb is  able to  obtain the
+   necessary debugging information and will show the exact line in the
+   source  where the error ccurred. See also:
+   xc/config/util/makeg.man.
+
+3. In some cases it might be  useful to have the assembler output of a
+   compiled source file. This can be obtained by doing:
+    
+   # make <file>.s
+   
+   or 
+ 
+   # xc/config/util/makeg.sh <file>.s
+
+   Make will use exactly the same rules it uses for building *.o files.
+
+4. In some cases it might be useful to set breakpoints in modules.  If
+   no module  aware gdb is available you  should add a call  to one of
+   the three dummy breakpoint functions
+
+   xf86Break1(), xf86Break2() and xf86Break3()
+
+   to the source  file and recompile the module. You  now just have to
+   set  a  breakpoint  onto  the appropriate  dummy  functions.  These
+   functions are located in the  core part of the server and therefore
+   will be available any time.
+
+5. Without module support gdb is  not able to print the function where
+   an error occurred in a module.
+
+     If you get a line like:
+
+   (gdb) bt
+   #0  0x823b4f5 in ?? ()
+   ....
+
+   You may obtain the function the address belongs to by calling 
+   LoaderPrintSymbol():
+
+   (gdb) call LoaderPrintSymbol(0x823b4f5)
+
+   The symbol  returned might not always  be the name  of the function
+   which contains the address. In  case of static functions the symbol
+   is not known to  the loader. However LoaderPrintSymbol() will print
+   the nearest known  function and the offset from  its start. You may
+   easily find the exact location of the address if you do:
+
+   # objdump --disassemble <file>.o
+
+   <file>.o is the name of the object file containing the symbol printed.
+
+6. Locating static  symbols in modules is  simpler if the  module is a
+   single object  file instead  of a library.  Such a object  file can
+   easily  be build  from  a  library: #  mkdir  tmp #  cd  tmp; ar  x
+   module-path/<libname>.a # ld -r *.o -o module-path/<name>.o
+   
+   When calling  LoaderPrintSymbol() the closes public  symbol will be
+   printed together with  the offset from the symbol's  address.  If a
+   static symbol comes before the  first public symbol in a module The
+   following trick may help:
+
+   create a file 1-<name>.c in tmp/
+   containing:
+   void Dummy-<name>() {}
+    
+   Compile it:
+
+   # gcc -c 1-<name>.c
+
+   and do the link step above.
+
+   This way  Dummy-<name>() will be  the first public function  in the
+   module.   All  addresses in  static  function  can  now be  printed
+   relatively to this address if no other public function comes before
+   this static one.
+
+7. In some situations it is  quite helpful to add debugging symbols to
+   the binary.  This can  be done per  object file. Simply  remove the
+   object file and do
+
+   # makeg
+
+   When looking  for a bug  in a module  these debugging infos  can be
+   very helpful:  Calling LoaderPrintSymbol() as  described above will
+   return a  function and an offset  giving the exact  location of the
+   address  with   respect  to   this  function  entry   point.   When
+   disassembling an  object file with debugging symbols:  # objdump -d
+   -l <file>.o one will  receive a disassembled output containing line
+   number  information. Thus  one can  locate the  exact line  of code
+   where the error occurred.
+
+8. To quickly trace the value of a variable declared in a module three
+   dummy variables have been added to the core part:
+
+   CARD32 xf86DummyVar1;
+   CARD32 xf86DummyVar2;
+   CARD32 xf86DummyVar3;
+
+   The variable can  be assigned to one of them. One  can then use gdb
+   to return the value of this variable:
+
+   gdb> p /x xf86DummyVar1
+
+9. Sometimes it might be useful to check how the preprocessor replaced
+   symbols. One can  obtain a preprocessed version of  the source file
+   by doing:
+
+   make <filename>.i
+
+   This will generate a preprocessed source in <filename>.i.
+
+10. xfree() can catch  if one tries to free a  memory range twice. You
+    will get the message:
+
+       Xalloc error: range already freed in Xrealloc() :-(
+
+  To  find  the  location  from  which  xfree()  was  called  one  can
+  breakpoint on XfreeTrap(). The backtrace should show the origin of the
+  call this call. 
+
+11. To access mapped physical  memory the following functions might be
+    useful.  
+
+    These may be used to  access physical memory that was mapped using
+    the flags VIDMEM_FRAMEBUFFER or VIDMEM_MMIO32:
+
+      CARD8  xf86PeekFb8(CARD8  *p);
+      CARD16 xf86PeekFb16(CARD16 *p);
+      CARD32 xf86PeekFb32(CARD32 *p);
+      void xf86PokeFb8(CARD8  *p, CARD8  v);
+      void xf86PokeFb16(CARD16 *p, CARD16 v);
+      void xf86PokeFb32(CARD16 *p, CARD32 v);
+
+    Physical memory which was  mapped by setting VIDMEM_MMIO should be
+    accessed using the following.  Here  the base address to which the
+    memory is mapped and the offset are required separately.
+
+      CARD8  xf86PeekMmio8(pointer Base, unsigned long Offset);
+      CARD16 xf86PeekMmio16(pointer Base, unsigned long Offset);
+      CARD32 xf86PeekMmio32(pointer Base, unsigned long Offset);
+      void xf86PokeMmio8(pointer Base, unsigned long Offset, CARD8  v);
+      void xf86PokeMmio16(pointer Base, unsigned long Offset, CARD16 v);
+      void xf86PokeMmio32(pointer Base, unsigned long Offset, CARD32 v);
+

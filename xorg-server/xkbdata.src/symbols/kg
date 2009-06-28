@@ -1,0 +1,28 @@
+// $XKeyboardConfig$
+
+// based on
+// russian standard keyboard
+// Yury Fedorov <yury-fedorov@prime-task.com>
+// Last Changes 2004/10/25 by Yury Fedorov <yury-fedorov@prime-task.com>
+//
+// $XFree86: xc/programs/xkbcomp/symbols/pc/kg,v 0.0 Exp $
+
+partial default alphanumeric_keys 
+xkb_symbols "basic" {
+
+    include "ru(winkeys)"
+
+    name[Group1]= "Kyrgyzstan";
+
+    key.type[group1]="FOUR_LEVEL_ALPHABETIC";
+
+    key	<AC07> { [ 	Cyrillic_o,		Cyrillic_O,		
+			Cyrillic_o_bar,  	Cyrillic_O_bar	] };
+    key	<AD03> { [ 	Cyrillic_u,		Cyrillic_U,
+			Cyrillic_u_straight,	Cyrillic_U_straight	] };
+    key	<AD06> { [ 	Cyrillic_en, 		Cyrillic_EN,	
+			Cyrillic_en_descender,	Cyrillic_EN_descender	] };		
+
+    include "level3(ralt_switch)"
+};
+

@@ -1,0 +1,10 @@
+		Damage
+	  X Damage Extension
+	    Version 1.1
+	      2007-01-08
+
+This package contains header files and documentation for the X Damage
+extension.  Library and server implementations are separate.
+
+Keith Packard
+keithp@keithp.com

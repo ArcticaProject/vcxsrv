@@ -1,0 +1,154 @@
+// $XKeyboardConfig$
+//
+
+//
+// Default Chinise is the same as American
+//
+partial default alphanumeric_keys 
+xkb_symbols "basic" {
+    include "us(basic)"
+
+    name[Group1]= "China";
+};
+
+// Tibetan Standard Keyboard map for XKB/X.org
+//
+// Based on the CNS Tibetan keyboard as supported by Windows Vista
+// using information published by Tashi Tsering:
+// http://www.yalasoo.com/English/docs/yalasoo_en_MStbKb.html
+//
+// XKB version by Rich Felker <dalias@aerifal.cx>.
+//
+// The CNS Tibetan keyboard standard specifies 5 keyboards worth of keys,
+// but apparently makes no requirements about how each is accessed. Only
+// the first 2 are needed for native Tibetan text; the remainder are
+// filled with special symbols and letters for transliterating foreign
+// text. Further, CNS leaves the level of support of keyboards 2-5 as an
+// option to the implementor (despite the fact that #2 is absolutely
+// essential...). Windows Vista maps them as follows:
+//
+// 1. Unshifted
+// 2. "m"-key-prefixed
+// 3. Shift-modified
+// 4. Ctrl+Alt+Shift-modified
+// 5. "M"-key-prefixed
+//
+// I roughly copy the Windows Vista mapping, which was intended by the
+// designer of the keyboard, with the following exceptions:
+//
+// The fifth keyboard is almost empty and contains only precomposed forms
+// of subjoined letter characters whose use is strongly discouraged, and
+// is not implemented at all in this XKB map. The fourth is implemented,
+// but is accessed by an "m"-prefix (or "M"-prefix, for convenience)
+// followed by a Shift-modified key. This avoids stealing the Ctrl and Alt
+// keys, which belong to applications on *nix and not to the keyboard or
+// input method. Aside from enterring rare special symbols and
+// foreign-word-transliteration letters, these differences should not
+// affect users.
+//
+// Implementation notes:
+//
+// A latching ISO Level3 shift is used for the "m"-prefix modifier. In
+// principle moving it to other keys (e.g. AltGr) would be possible
+// according to user preference, but this is not practical for typing
+// Tibetan, since the subjoined consonants, of which Tibetan has 0-2 per
+// syllable, are accessed via this mechanism.
+//
+// One annoyance is that the latching Level3 shift fails to work if the
+// previous key is not yet released when "m" is pressed (the key release
+// event kills the latch). I consider this a bug in X and don't know an
+// easy way to work around it. Complain to the maintainers if it bothers
+// you and maybe they'll find a fix. You won't notice it unless you're
+// fast at typing Tibetan anyway.
+
+partial alphanumeric_keys 
+xkb_symbols "tib" {
+
+    name[Group1]= "China - Tibetan";
+
+    key <TLDE> { [ 0x1000f68, 0x1000f01, 0x1000fb8, 0x1000f00 ] }; # ཨ ༁ ྸ ༀ
+    key <AE01> { [ 0x1000f21, 0x1000f2a, 0x1000f04, 0x1000f76 ] }; # ༡ ༪ ༄ ྲྀ
+    key <AE02> { [ 0x1000f22, 0x1000f2b, 0x1000f05, 0x1000f77 ] }; # ༢ ༫ ༅ ཷ
+    key <AE03> { [ 0x1000f23, 0x1000f2c, 0x1000f7e, 0x1000f78 ] }; # ༣ ༬ ཾ ླྀ
+    key <AE04> { [ 0x1000f24, 0x1000f2d, 0x1000f83, 0x1000f79 ] }; # ༤ ༭ ྃ ཹ
+    key <AE05> { [ 0x1000f25, 0x1000f2e, 0x1000f37, 0x1000f81 ] }; # ༥ ༮ ༷ ཱྀ
+    key <AE06> { [ 0x1000f26, 0x1000f2f, 0x1000f35, 0x1000f09 ] }; # ༦ ༯ ༵ ༉
+    key <AE07> { [ 0x1000f27, 0x1000f30, 0x1000f7f, 0x1000f0a ] }; # ༧ ༰ ཿ ༊
+    key <AE08> { [ 0x1000f28, 0x1000f31, 0x1000f14, 0x1000f0f ] }; # ༨ ༱ ༔ ༏
+    key <AE09> { [ 0x1000f29, 0x1000f32, 0x1000f11, 0x1000f10 ] }; # ༩ ༲ ༑ ༐
+    key <AE10> { [ 0x1000f20, 0x1000f33, 0x1000f08, 0x1000f12 ] }; # ༠ ༳ ༈ ༒
+    key <AE11> { [ 0x1000f67, 0x1000f3c, 0x1000fb7, 0x1000f0c ] }; # ཧ ༼ ྷ ༌
+    key <AE12> { [ 0x1000f5d, 0x1000f3d, 0x1000fba, 0x1000f13 ] }; # ཝ ༽ ྺ ༓
+
+    key <AD01> { [ 0x1000f45, 0x1000f15, 0x1000f95, 0x1000f89 ] }; # ཅ ༕ ྕ ྉ
+    key <AD02> { [ 0x1000f46, 0x1000f16, 0x1000f96, 0x1000f88 ] }; # ཆ ༖ ྖ ྈ
+    key <AD03> { [ 0x1000f7a, 0x1000f17, 0x1000f7b, 0x1000fbe ] }; # ེ ༗ ཻ ྾
+    key <AD04> { [ 0x1000f62, 0x1000fbc, 0x1000fb2, 0x1000f6a ] }; # ར ྼ ྲ ཪ
+    key <AD05> { [ 0x1000f4f, 0x1000f4a, 0x1000f9f, 0x1000f9a ] }; # ཏ ཊ ྟ ྚ
+    key <AD06> { [ 0x1000f61, 0x1000fbb, 0x1000fb1, 0x1000fbf ] }; # ཡ ྻ ྱ ྿
+    key <AD07> { [ 0x1000f74, 0x1000f18, 0x1000fad, 0x1000f75 ] }; # ུ ༘ ྭ ཱུ
+    key <AD08> { [ 0x1000f72, 0x1000f19, 0x1000f80, 0x1000f73 ] }; # ི ༙ ྀ ཱི
+    key <AD09> { [ 0x1000f7c, 0x1000f1a, 0x1000f7d, 0x1000fc0 ] }; # ོ ༚ ཽ ࿀
+    key <AD10> { [ 0x1000f55, 0x1000f1b, 0x1000fa5, 0x1000fc1 ] }; # ཕ ༛ ྥ ࿁
+    key <AD11> { [ 0x1000f59, 0x1000f1c, 0x1000fa9, 0x1000fc2 ] }; # ཙ ༜ ྩ ࿂
+    key <AD12> { [ 0x1000f5a, 0x1000f1d, 0x1000faa, 0x1000fc3 ] }; # ཚ ༝ ྪ ࿃
+    key <BKSL> { [ 0x1000f5b, 0x1000f1e, 0x1000fab, 0x1000f5c ] }; # ཛ ༞ ྫ ཛྷ
+
+    key <AC01> { [ 0x1000f60, 0x1000f71, 0x1000fb0, 0x1000fc4 ] }; # འ ཱ ྰ ࿄
+    key <AC02> { [ 0x1000f66, 0x1000f1f, 0x1000fb6, 0x1000fc5 ] }; # ས ༟ ྶ ࿅
+    key <AC03> { [ 0x1000f51, 0x1000f4c, 0x1000fa1, 0x1000f9c ] }; # ད ཌ ྡ ྜ
+    key <AC04> { [ 0x1000f56, 0x1000f3e, 0x1000fa6, 0x1000f57 ] }; # བ ༾ ྦ བྷ
+    key <AC05> { [ 0x1000f44, 0x1000f3f, 0x1000f94, 0x1000fc6 ] }; # ང ༿ ྔ ࿆
+    key <AC06> { [ 0x1000f58, 0x1000fcf, 0x1000fa8, 0x1000fc7 ] }; # མ ࿏ ྨ ࿇
+    key <AC07> { [ 0x1000f0b, 0x1000f02, 0x1000f84, 0x1000fc8 ] }; # ་ ༂ ྄ ࿈
+    key <AC08> { [ 0x1000f42, 0x1000f03, 0x1000f92, 0x1000f43 ] }; # ག ༃ ྒ གྷ
+    key <AC09> { [ 0x1000f63, 0x1000f06, 0x1000fb3, 0x1000fc9 ] }; # ལ ༆ ླ ࿉
+    key <AC10> { [ 0x1000f5e, 0x1000f07, 0x1000fae, 0x1000fca ] }; # ཞ ༇ ྮ ࿊
+    key <AC11> { [ 0x1000f0d, 0x1000f38, 0x1000f0e, 0x1000fcb ] }; # ། ༸ ༎ ࿋
+
+    key <AB01> { [ 0x1000f5f, 0x1000f34, 0x1000faf, 0x1000fcc ] }; # ཟ ༴ ྯ ࿌
+    key <AB02> { [ 0x1000f64, 0x1000f65, 0x1000fb4, 0x1000fb5 ] }; # ཤ ཥ ྴ ྵ
+    key <AB03> { [ 0x1000f40, 0x1000f69, 0x1000f90, 0x1000fb9 ] }; # ཀ ཀྵ ྐ ྐྵ
+    key <AB04> { [ 0x1000f41, 0x1000f87, 0x1000f91, 0x1000f36 ] }; # ཁ ྇ ྑ ༶
+    key <AB05> { [ 0x1000f54, 0x1000f86, 0x1000fa4, 0x1000f82 ] }; # པ ྆ ྤ ྂ
+    key <AB06> { [ 0x1000f53, 0x1000f4e, 0x1000fa3, 0x1000f9e ] }; # ན ཎ ྣ ྞ
+    key <AB07> { [ ISO_Level3_Latch, ISO_Level3_Latch, 0x1000f85, 0x1000f52 ] }; # -བཏགས་ ྅ དྷ
+    key <AB08> { [ 0x1000f50, 0x1000f4b, 0x1000fa0, 0x1000f9b ] }; # ཐ ཋ ྠ ྛ
+    key <AB09> { [ 0x1000f47, 0x1000f3a, 0x1000f97, 0x1000f8b ] }; # ཇ ༺ ྗ ྋ
+    key <AB10> { [ 0x1000f49, 0x1000f3b, 0x1000f99, 0x1000f8a ] }; # ཉ ༻ ྙ ྊ
+ 
+};
+
+// Tibetan Standard Keyboard with ASCII numerals
+//
+// Users may prefer that the numeral keys enter ASCII numerals instead of
+// Tibetan numerals, since the latter are not in modern use in Tibet.
+// This is especially an issue for laptop users who do not have a numeric
+// keypad by which to access the ASCII numerals, and who need to type
+// numbers to be interpreted by applications.
+//
+// In this mapping, the Shift-modified numeral keys generate Tibetan
+// numerals, since it was unclear to me that the standard Latin punctuation
+// keys would be any use without Latin letters. (One can imagine wanting to
+// type an email address using the @ sign, but as of present non-ASCII
+// email addresses are not possible.) This mapping may change in the future
+// if a clearly better use for the shifted numerals is pointed out by users.
+
+partial alphanumeric_keys 
+xkb_symbols "tib_asciinum" {
+    include "cn(tib)"
+
+    name[Group1]= "China - Tibetan (with ASCII numerals)";
+
+    key <AE01> { [ 1, 0x1000f21, 0x1000f04, 0x1000f76 ] }; # 1 ༡ ༄ ྲྀ
+    key <AE02> { [ 2, 0x1000f22, 0x1000f05, 0x1000f77 ] }; # 2 ༢ ༅ ཷ
+    key <AE03> { [ 3, 0x1000f23, 0x1000f7e, 0x1000f78 ] }; # 3 ༣ ཾ ླྀ
+    key <AE04> { [ 4, 0x1000f24, 0x1000f83, 0x1000f79 ] }; # 4 ༤ ྃ ཹ
+    key <AE05> { [ 5, 0x1000f25, 0x1000f37, 0x1000f81 ] }; # 5 ༥ ༷ ཱྀ
+    key <AE06> { [ 6, 0x1000f26, 0x1000f35, 0x1000f09 ] }; # 6 ༦ ༵ ༉
+    key <AE07> { [ 7, 0x1000f27, 0x1000f7f, 0x1000f0a ] }; # 7 ༧ ཿ ༊
+    key <AE08> { [ 8, 0x1000f28, 0x1000f14, 0x1000f0f ] }; # 8 ༨ ༔ ༏
+    key <AE09> { [ 9, 0x1000f29, 0x1000f11, 0x1000f10 ] }; # 9 ༩ ༑ ༐
+    key <AE10> { [ 0, 0x1000f20, 0x1000f08, 0x1000f12 ] }; # 0 ༠ ༈ ༒
+};
+

@@ -1,0 +1,146 @@
+// $XKeyboardConfig$
+
+// these variants assign various XKB keycodes to ISO_Level3_Shift so that
+// the third shift level can be reached
+//
+// $XFree86: xc/programs/xkbcomp/symbols/level3,v 1.7 2003/09/08 14:25:32 eich Exp $
+//
+
+// the default behavior is for the right Alt key (AltGr) to generate the
+// third engraved symbol
+default partial modifier_keys
+xkb_symbols "ralt_switch" {
+  key <RALT> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+    };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+// Right Alt key never chooses 3rd level.
+// This option attempts to undo the effect of a layout's
+// including ralt_switch.  You may also want to select another
+// level3 option that maps the level3 shift to some other key.
+partial modifier_keys
+xkb_symbols "ralt_alt" {
+  key <RALT> { 
+    type[Group1]="TWO_LEVEL",
+    type[Group2]="TWO_LEVEL",
+    type[Group3]="TWO_LEVEL",
+    type[Group4]="TWO_LEVEL",
+    symbols[Group1] = [ Alt_R, Meta_R ], 
+    symbols[Group2] = [ Alt_R, Meta_R ], 
+    symbols[Group3] = [ Alt_R, Meta_R ], 
+    symbols[Group4] = [ Alt_R, Meta_R ]
+    };
+  modifier_map Mod1    { <RALT> };
+};
+
+partial modifier_keys
+xkb_symbols "ralt_switch_multikey" {
+  key <RALT> {
+    type[Group1]="TWO_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift, Multi_key ]
+    };
+};
+
+// special case or right Alt switch - for use with grp:alts_toggle
+//
+partial hidden modifier_keys
+xkb_symbols "ralt_switch_for_alts_toggle" {
+ virtual_modifiers LAlt, AlGr;
+  key <LALT> {
+    type[Group1]="PC_RALT_LEVEL2",
+    symbols[Group1] = [ Alt_L,  ISO_Prev_Group,  ISO_Prev_Group ],
+    virtualMods= LAlt
+  };
+  key <RALT> {
+    type[Group1]="PC_ALT_LEVEL2",
+    symbols[Group1] = [ ISO_Level3_Shift, ISO_Next_Group ],
+    virtualMods= AltGr
+  };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+// using the level(alt_switch) map, either Alt key temporarily chooses
+// the third shift level.  (Mostly be used to imitate Mac OS functionality.)
+partial modifier_keys
+xkb_symbols "alt_switch" {
+  include "level3(lalt_switch)"
+  include "level3(ralt_switch)"
+};
+
+partial modifier_keys
+xkb_symbols "lalt_switch" {
+  key <LALT> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+    };
+  modifier_map Mod5   { <LALT> };
+};
+
+// using the level(switch) map, the right Control key temporarily
+// chooses the third shift level (until it is released).
+partial modifier_keys
+xkb_symbols "switch" {
+  key <RCTL> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+    };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+// using the level(menu_switch) map, the Menu key temporarily
+// chooses the third shift level (until it is released).
+partial modifier_keys
+xkb_symbols "menu_switch" {
+  key <MENU> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+    };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+// using the level3(win_switch) map, the either Windows' logo key
+// temporarily chooses the third shift level.
+partial modifier_keys
+xkb_symbols "win_switch" {
+  include "level3(lwin_switch)"
+  include "level3(rwin_switch)"
+};
+
+// using the level3(lwin_switch) map, the left Windows' logo key
+// temporarily chooses the third shift level.
+partial modifier_keys
+xkb_symbols "lwin_switch" {
+  key <LWIN> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+    };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+// using the level(rwin_switch) map, the right Windows' logo key
+// temporarily chooses the third shift level.  If you use this map,
+// you should define your keyboard as pc101 or pc102 instead of pc104
+// or pc105.
+partial modifier_keys
+xkb_symbols "rwin_switch" {
+  key <RWIN> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+    };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+// using the level3(enter_switch) map, the Enter key on the keypad
+// temporarily chooses the third shift level.  This is especially
+// useful for Mac laptops which miss the right Alt key.
+partial hidden modifier_keys
+xkb_symbols "enter_switch" {
+  key <KPEN> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+    };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};

@@ -1,0 +1,92 @@
+// $XdotOrg: $
+//
+// Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, provided that the above
+// copyright notice(s) and this permission notice appear in all copies of
+// the Software and that both the above copyright notice(s) and this
+// permission notice appear in supporting documentation.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+// 
+// Except as contained in this notice, the name of a copyright holder
+// shall not be used in advertising or otherwise to promote the sale, use
+// or other dealings in this Software without prior written authorization
+// of the copyright holder.
+//
+// NOTE:
+// These are the French keyboard symbols
+// French Swiss symbols are in sw
+
+xkb_symbols "type4" {
+    include "sun_vndr/us(type4basic)"
+
+    key <BKSL> { [ bracketleft, braceleft ]			};
+    key <BRCR> { [ bracketright, braceright ]			};
+    key <DELE> { [ Delete               ]                       };
+
+    key <AE01> { [ ampersand, 1		], [			]	};
+    key <AE02> { [ eacute, 2		], [ twosuperior	]	};
+    key <AE03> { [ quotedbl, 3		], [ threesuperior	]	};
+    key <AE04> { [ quoteright, 4	]				};
+    key <AE05> { [ parenleft, 5		]				};
+    key <AE06> { [ section, 6		], [ asciicircum	]	};
+    key <AE07> { [ egrave, 7		]				};
+    key <AE08> { [ exclam, 8		], [ sterling		]	};
+    key <AE09> { [ ccedilla, 9		], [ backslash		]	};
+    key <AE10> { [ agrave, 0		] 				};
+    Key <AE11> { [ parenright, degree	], [ asciitilde		]	};
+    key <AE12> { [ minus, underscore 	], [ numbersign		]  	};
+
+    key <AD01> { [ a, A			]				};
+    key <AD02> { [ z, Z			] 				};
+    key <AD03> { [ e, E			], [EuroSign	]		};
+    key <AD11> { [ SunFA_Circum, SunFA_Diaeresis	]		};
+    key <AD12> { [ quoteleft, dollar	], [ at		]		};
+ 
+    key <AC01> { [ q, Q			]				};
+    key <AC10> { [ m, M			], [ mu		]		};
+    key <AC11> { [ ugrave, percent	]				};
+    key <TLDE> { [ asterisk, bar	], [ currency	]		};
+
+    key <LSGT> { [ less, greater	]				};
+    key <AB01> { [ w, W			]			};
+
+    key <AB07> { [ comma, question	]			};
+    key <AB08> { [ semicolon, period	]			};
+    key <AB09> { [ colon, slash		]			};
+    key <AB10> { [ equal, plus		]			};
+
+    key <CAPS> { [ SunAltGraph		]			};
+    key <ALGR> { [ Caps_Lock		]			}; 
+
+
+
+};
+
+xkb_symbols "type5" {
+    include "fr"
+
+    key <LSGT> { [ less, greater	]				};
+};
+
+xkb_symbols "type6" {
+    include "sun_vndr/us(type6)"
+    include "fr"
+
+    key <LSGT> { [ less, greater	]				};
+};
+

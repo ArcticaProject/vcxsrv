@@ -1,0 +1,773 @@
+commit 33a7de5cdacb59503b26c6523ffb33dba118faed
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Thu Oct 23 22:41:01 2008 +1030
+
+    Bump to 7.0.14.
+
+commit 1cf41088ff751e60071a519466b5a51b65c7626a
+Author: Bastien Nocera <bnocera@redhat.com>
+Date:   Wed Oct 15 14:20:45 2008 +1030
+
+    Keysyms needed for some HID remote controls to work under X. #16519
+    
+    In particular, this enables Sony Ericsson phones and PS3 BD remotes.
+    
+    X.Org Bug 16519 <https://bugs.freedesktop.org/show_bug.cgi?id=16519>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@redhat.com>
+
+commit 0b541b3fa282531c97c6ecee574c8b92b1489bfc
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Tue Oct 14 21:56:14 2008 +1030
+
+    Fix typos in comments (UP/DOWN TACK and LEFT/RIGHT TACK wrong way round).
+    
+    Spotted by Erik Streb and Julien Cristau.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@redhat.com>
+
+commit c94477f16356790741ebc139d2d0b15d79c83e28
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Tue Oct 14 21:54:16 2008 +1030
+
+    Revert "Fix typos in comments (UP/DOWN TACK and LEFT/RIGHT TACK wrong way round)."
+    
+    Codepoints should have moved with the comments. See next commit for correct
+    patch.
+    
+    This reverts commit 2945d2f97c264783e4050a8f6c3016290014b9e2.
+
+commit 2945d2f97c264783e4050a8f6c3016290014b9e2
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Tue Oct 14 21:04:08 2008 +1030
+
+    Fix typos in comments (UP/DOWN TACK and LEFT/RIGHT TACK wrong way round).
+    
+    Spotted by Erik Streb.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@redhat.com>
+
+commit 610eb9698316b7cdfe378ce7776c4520f8b061ff
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Oct 13 12:01:16 2008 +1030
+
+    Add keysyms for XF86XK_Battery, XF86XK_Bluetooth, XF86XK_WLAN, XF86XK_UWB.
+
+commit 0846d7adfe790897e879c5ed53d4f81db459a20d
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sun Jul 13 17:57:09 2008 -0400
+
+    Add dead_perispomeni to keysymdef.h
+    
+    Make the dead_perispomeni keysym an alias to dead_tilde
+    (which is currently used for entering characters with
+    perispomeni).
+    
+    Cf: https://bugs.freedesktop.org/show_bug.cgi?id=14013
+
+commit 38edd9839fa8495602378af36c67b2477b24eca2
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sun Jul 13 17:54:47 2008 -0400
+
+    fix typo in commit 40ed4eef
+
+commit 53859ee4e431c21000e282971894dbe9384ed205
+Author: Peter Hutterer <peter@cs.unisa.edu.au>
+Date:   Wed May 28 17:17:38 2008 +0930
+
+    Bump to 7.0.13.
+
+commit 44e458285bb2e7771963a9ab9b5f03d2fb48e611
+Author: Peter Hutterer <peter@cs.unisa.edu.au>
+Date:   Tue May 15 16:41:08 2007 +0930
+
+    Add GenericEvent and xGenericEvent definitions.
+    (cherry picked from commit 8a96cdca08db2563e8c4c7c9a110a3ab6d973fcc)
+
+commit 22878c30d21580146200c00070478f88d969bcaa
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu May 8 15:02:41 2008 -0700
+
+    Apple: Added a comment to explain _DARWIN_C_SOURCE
+
+commit e3035a7e6e56e01eb79478ea5342e032ec67a190
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu May 8 12:16:15 2008 -0700
+
+    Apple: Define _DARWIN_C_SOURCE otherwise _XOPEN_SOURCE, _POSIX_SOURCE, or _POSIX_C_SOURCE will cause fd_mask to not be defined due to the strict namespace
+
+commit 05b119d78e1c6a4db563b2a976cee0173489f9b6
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu May 8 11:36:03 2008 -0700
+
+    Apple: Cleaned up some Apple definitions
+
+commit c879dab58f82f4789f27933c22706c84015f8684
+Author: Alan Hourihane <alanh@tungstengraphics.com>
+Date:   Tue Apr 29 00:37:28 2008 +0100
+
+    avoid checking for fds_bits on mingw
+
+commit 8642ec676db0dd875f4d3a97d8a3cdbf6843a985
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Sat Apr 26 18:21:41 2008 +0100
+
+    Use Sleep() instead of sleep() on windows
+    
+    (was already done in Xwindows.h, just not Xw32defs.h)
+
+commit a893a6ac5d9fdfe9a420d1812402a01904e6482b
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Sat Apr 26 08:52:29 2008 +0100
+
+    Use winsock2.h
+
+commit c705bab0f6efcb6937b7ccc2fb415e701878fddb
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Mon Apr 21 21:27:26 2008 +0100
+
+    Added comment to slightly discourage the definition of ever more Unicode keysyms
+
+commit 44e24a27bca023cf7b799f191fe6d52e12efbe5f
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Apr 12 15:48:46 2008 -0400
+
+    Add more dead key syms
+    Add dead keys to support input of the precomposed latin characters in
+    ISO 10747 which have ring, line, circumflex, tilde, breve or diaeresis
+    below.
+    
+    This addresses:  https://bugs.freedesktop.org/show_bug.cgi?id=15446
+
+commit 07e83988ec0b1c9577646daca3943badd5dcc0d1
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Mar 6 11:34:17 2008 -0500
+
+    Fix typo in XF86Keysym.h
+    
+    Fix typo reported in https://bugs.freedesktop.org/show_bug.cgi?id=11193
+    thereby making XF86Keysym.h match libX11’s XKeysymDB.
+
+commit d34310efef11264ddff79320b8c6f03705b1208a
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Mar 5 22:09:16 2008 -0500
+
+    x11proto 7.0.12
+
+commit e4ad7a8080e4ac0b868fa7cf39bc5ad9a6e0bee1
+Author: Jeremy Huddleston <jeremy@tifa.local>
+Date:   Sun Feb 10 19:07:49 2008 -0800
+
+    Fixed #ifdef checks that were using i386 to use __i386__
+    
+    """
+    It's simply obsolete, sloppy, compiler namespace pollution.  The
+    compiler is not allowed to predefine symbols that might conflict with
+    ordinary identifiers.  For backwards compatibility gcc currently
+    predefines i386 when compiling for x86 32-bit (but not 64-bit), but that
+    will go away.  It is also not defined if you specify -ansi when invoking
+    the compiler, because then it is seriously standards compliant.  Other
+    compilers shouldn't define it either.  Correct code shouldn't rely on it
+    being defined.  However __i386__ is safe and proper.
+    """
+
+commit e49280c1c33622dbf288b0ac4f8324b01ff9b4aa
+Author: Jeremy Huddleston <jeremy@yuffie.local>
+Date:   Mon Dec 10 21:33:01 2007 -0800
+
+    Changed __DARWIN__ to __APPLE__
+
+commit 5ae4d304ecb5fb4af0435c9f2efde3d2da5905d1
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 30 18:44:49 2007 -0700
+
+    Make Xalloca.h work with Sun C++ compiler
+
+commit 5ccc71161283fdb2c42da1eeb4049650f6a2f429
+Author: Ben Byer <bbyer@bbyer.apple.com>
+Date:   Tue Oct 30 18:40:47 2007 -0700
+
+    fd_mask needs to be defined on OS X, too
+
+commit 8be48ca399c3efd0e5d59f53da1b37d02647f33b
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Mon Sep 24 12:28:25 2007 +0300
+
+    Check headers before testing for fds_bits access method (bug #8442)
+    
+    HP-UX doesn't have sys/select.h, so make sure we don't overzealously include
+    headers when we try to find out how to use fds_bits.
+
+commit 68e841fb4bf489531635e6bee70f041d2c3cb87c
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Sep 8 08:30:17 2007 -0400
+
+    bump to 7.0.11
+
+commit 11fd082a384499c38065e06065bf80f244e9909a
+Author: Eric Anholt <eric@anholt.net>
+Date:   Tue Aug 28 14:54:44 2007 -0700
+
+    Describe what XF86XK_Display does (or now is meant to do).
+
+commit 40ed4eef92e31fcf7ea0a436e1a00cdf49484c1b
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Wed Aug 22 21:10:47 2007 -0400
+
+    Add dead_abovecomma and dead_abovereversedcomma
+    
+    Also added aliases dead_psili and dead_dasia.
+    
+    The UCS unifies Combining Psili and Combining Dasia with
+    Combining Comma Above and Combining Reversed Comma Above.
+    These two aliases mirror that unification.
+
+commit ab74d270c76b17926504815ba43ee35b8b18d3be
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Wed Aug 22 21:01:48 2007 -0400
+
+    Comment on the new locations of the files referenced in keysymdef.h
+    keysymdef.h has a comment from the monolithic days suggesting that
+    the file be kept in sync with mappings inxc/lib/X11/KeyBind.c and
+    the protocol specication in xc/doc/specs/XProtocol/X11.keysyms.
+    
+    This commit adds pointers to the new locations of those two files.
+
+commit 1edcfdb7f5c51e5c8014c56c4d5937337b7d4302
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Tue Aug 21 00:10:08 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit d8a49874bbd05a927c42102c0c5c147cf72cb1dd
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Wed May 9 16:46:25 2007 +0100
+
+    bcopy needs definition in Xfuncs.h for Xming
+
+commit 7505880329d6b81f0c77d6aaa3995390659d5c63
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Tue May 1 14:54:27 2007 +0200
+
+    Added some more files to .gitignore.
+
+commit 0c55a57dca2e888ba089e280f62e1c5bb55db7d7
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Tue May 1 14:52:57 2007 +0200
+
+    Enable GCC's visibility attributes on GCC 4 or greater only.
+
+commit 30f5eedf800f6683161fca9fc3e2d6ddc9ce0ac3
+Author: Zephaniah E. Hull <warp@agamemnon.b5>
+Date:   Fri Feb 2 15:11:26 2007 -0500
+
+    Add keysym definitions from Jim Gettys.
+
+commit 5951f0355c6b1c591241bccb2023e6c4d493e701
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Dec 16 01:09:50 2006 +0200
+
+    bump to 7.0.10
+
+commit 0422755ef9373fbb6f69fbb599d791331837f747
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Dec 16 01:09:44 2006 +0200
+
+    don't distribute Xfuncproto.h and Xpoll.h
+    Don't distribute these two files, as they're generated during the build.
+
+commit cf44526713681ccfb6ef929a9c25ea650c5d1a32
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Dec 6 19:02:19 2006 +0200
+
+    Makefile.am: make ChangeLog hook safer
+    Make ChangeLog hook as safe as possible.
+
+commit 528e313fd1f1ae6f2303d3963afe41545f55ef88
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Oct 26 00:45:44 2006 +0300
+
+    bump to 7.0.9
+
+commit ab484c934301a61edc66dc1e4f554ec97b53aaf8
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Oct 26 00:45:36 2006 +0300
+
+    Xfuncproto: add _X_LIKELY and _X_UNLIKELY
+    Add gcc branch hinting annotations.
+
+commit 178cae180bc8b2e8feaaeda6d7c0317cf2715e14
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Sep 21 18:43:06 2006 +0300
+
+    Xfuncproto: define _X_INLINE for older compilers
+
+commit 241e9dfd400aa21919d06fb7c78b5730eee12aab
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Sep 21 14:51:00 2006 +0300
+
+    bump to 7.0.8
+
+commit e51b21e316a5a1b9442a5d972b4ffa03455aca6e
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Sep 21 14:50:45 2006 +0300
+
+    XF86keysym: add keyboard/monitor brightness controls (Bug #8120)
+    Add XF86{Kbd,Mon}Brightness{Up,Down}, and XF86KbdLightOnOff.
+
+commit c3f56593f776e7f9e3e0d220c6bcf8be38a16839
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Sep 20 21:11:30 2006 +0300
+
+    Xfuncproto: add _X_INLINE
+
+commit 4fb2e257ae6de38971be8005283402226aea1ee5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jul 14 17:59:19 2006 -0700
+
+    Replace manual ChangeLog with dist-hook to generate from git log
+
+commit 2153ef4b7c2a93cba39ae08352ea2c46e5f0eefb
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jul 14 17:54:38 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 0b76eb310307cd16e55d0c0792b54a2c6774fb88
+Author: Dan McNichol <mcnichol@austin.ibm.com>
+Date:   Fri Jul 14 17:53:34 2006 -0700
+
+    Bug #7458: AIX changes to Xmd.h
+    
+    Bugzilla Bug #7458 <https://bugs.freedesktop.org/show_bug.cgi?id=7458>
+    Patch #6179 <https://bugs.freedesktop.org/attachment.cgi?id=6179>
+
+commit bb7584b5c88236c59c4e3040bc7c28c150abf048
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jun 10 15:33:50 2006 +0000
+
+    Add ISO_Level5_{Shift,Latch,Lock}.
+
+commit e9aebeae3661d4c464c7aa53722d0a6bf915101a
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Jun 1 23:31:20 2006 +0000
+
+    Bug #6887: Add dead_stroke, bump to 7.0.7. (Troy Korjuslommi)
+
+commit f3886640d29026359ffc4add39b66b8ff48472d3
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Jun 1 23:00:34 2006 +0000
+
+    Bump to 7.0.6.
+
+commit d10d0302be37adb22804270926332e9d701935bb
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Jun 1 23:00:03 2006 +0000
+
+    Bug #6296: Add support for Braille. (Samuel Thibault)
+
+commit 0471bfcce2787d2f1ff0fc2d019840e2bae8bc49
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Apr 26 23:26:49 2006 +0000
+
+    Bump to 7.0.5
+
+commit 2a2b6db1f78f94c8f3690f675f0c032401fb2541
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Apr 26 00:00:02 2006 +0000
+
+    Fix more comment typos.
+
+commit 33cea539618d58d64efb6a5c0465d14a471256cd
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Thu Apr 20 01:24:25 2006 +0000
+
+    On Solaris, #include <sys/isa_defs.h> to be sure _LP64 is defined in 64-bit
+        builds.
+    Fix some comment typos.
+
+commit 5e7d5cbf21c33f883ab508a51422775f59c4da00
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:39 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 1827a78f3a23c77dbcddfc8227d85c5add59d819
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:47 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 45811c86eb34e9f09e7d807ba4633107513f0d52
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 01:13:36 2005 +0000
+
+    Automatically generate FUNCPROTO and NARROWPROTO defines in Xfuncproto.h.
+
+commit c03cc7739b37ca504a2b56a73945755c41c68b2a
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Mon Nov 21 10:51:15 2005 +0000
+
+    Ignore Xpoll.h, which is generated now.
+
+commit 54c8ddf303053fb398e00fc8a35df712a7f3d47d
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 21 02:47:21 2005 +0000
+
+    Change values of XK_MATHEMATICAL symbols to use 0x1000000 + Unicode value,
+        as Xorg Architecture Task Force agreed last year should be done for all
+        new keysyms mapped to Unicode characters.
+
+commit f13eca1bc0feba2476f87e019a4ef40693a61ed8
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Nov 9 21:20:33 2005 +0000
+
+    Update package version number for X11R7 RC2 release.
+
+commit 448763bde4a31cb012ad17cd6c5159411102432b
+Author: Kean Johnson <kean@armory.com>
+Date:   Tue Nov 8 06:33:25 2005 +0000
+
+    See ChangeLog entry 2005-11-07 for details.
+
+commit 59a5a5ebb6781d417d7a4d5905999da5fc76a083
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:15 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 3f74cc5e8309b2a4ac7671ca3c52c304ec5aa57f
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Oct 15 00:48:27 2005 +0000
+
+    Remove duplicate keysyms accidentally added to XK_MATHEMATICAL section.
+
+commit eaffdc0d593b94d9036033911535371e73698573
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Oct 9 15:37:29 2005 +0000
+
+    Bug #4688: Add various mathematical keysyms (all Unicode).
+
+commit 40b6e64fb1084f7b0270c279ac7132e52886c912
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Aug 21 15:27:27 2005 +0000
+
+    define CSRG_BASED here on systems that used to define it in Imake
+        configuration. For use in the modular tree.
+
+commit 04f9f7fd17cab16e5b0b135409011c0d284b002c
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Aug 2 19:19:40 2005 +0000
+
+    Add basic .cvsignore files for proto modules.
+
+commit cd0400eeda5d7818232844d93343877ef0ff8168
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Tue Aug 2 18:36:30 2005 +0000
+
+    Fix the fds_bits test on OSX and maybe others. OSX defines fd_set in
+        <sys/types.h> just to be perverse.
+
+commit a475adb523a4d24cd53d436ba8c98ac7c8d37934
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 30 21:07:25 2005 +0000
+
+    Add prototypes of Xalloc/free functions.
+    Export ImUtil.h to match modular tree install.
+    Define SVR4 to 1 to avoid warning about redefining to different values.
+    Include missing headers to clear more compiler warnings.
+
+commit f6bd2288d3630ff7cb864e54cc7ebab1b3069067
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:57 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 74a3f7f77830e4417a4bc4145114030dfaef6f4e
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jul 23 02:53:32 2005 +0000
+
+    Remove all _XOPEN_SOURCE definitions from Xos.h, as Xpoll.h.in now deals
+        with this by using which of fds_bits or __fds_bits we have.
+
+commit f97e34e65e403140dde00d260be0fd7f853ac8f0
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jul 22 08:01:39 2005 +0000
+
+    Add includex11dir as a path to the includes, sans X11/.
+    Turn Xpoll.h into a generated file. In the modular tree, substitute in
+        whichever of fds_bits or __fds_bits is being used for the member of
+        fd_set on the system; in the monolithic tree, substitute in fds_bits
+        unconditionally, as that's the way it was before thanks to
+        _XOPEN_SOURCE being defined.
+
+commit 7a9ce57163172557d6ba41119a5a3b2837dbbc8e
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 16 20:54:13 2005 +0000
+
+    Guard INCLUDE_ALLOCA_H define to end redefinition warnings.
+
+commit 825b6ae347b3896b8ea38e6021170d45ae3bfd65
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Thu Jul 14 22:08:38 2005 +0000
+
+    Don't define _XOPEN_SOURCE on SVR4, because it will REMOVE required
+        definitions.
+
+commit acc0551fb1af1152c1b630ff5e82f023f11751e2
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Jul 13 23:43:08 2005 +0000
+
+    #define INCLUDE_ALLOCA_H when building with Sun compilers. (Imake *.cf
+        files define this for a number of platforms in the monolith, but these
+        will need to be translated into #ifdef's or similar mechanism to work
+        in a world without Imake.)
+
+commit b8301067b6e962a3dc786dd909726b7e6cb81085
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Wed Jul 13 20:12:13 2005 +0000
+
+    include <X11/Xwindows.h> instead of <windows.h>. Several namespace
+        conflicts are worked around in Xwindows.h
+
+commit ec7a156bcdbe8e4bddf232d4a03f47d426096736
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Jul 13 07:23:56 2005 +0000
+
+    Make some minor source adjustments so that we don not need to use
+        -D_XOPEN_SOURCE -D_BSD_SOURCE everywhere as this will leak out of the
+        modular environment and into application build processes, potentially
+        foulling up their compiles.
+
+commit 2a0445903d06c332acf70cfd18ba57ddbbeada32
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 07:55:00 2005 +0000
+
+    Move misc.h and os.h from proto/X11 to xserver/xorg/include.
+
+commit ef6f542053b30af29b8045ffa6ce26386aab7bba
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue Jun 28 13:15:27 2005 +0000
+
+    - Remove xfixes.pc.in from lib/lbxutil
+    - Add missing backslash in proto/X11/Makefile.am
+    Both pointed out by ISHIKAWA Mutsumi
+
+commit 4cf89be7baf8a79d2d399abd17c4e23279cca364
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Mon Jun 27 17:41:09 2005 +0000
+
+    - Add os.h and misc.h to proto/X11
+    - In symlink.sh move os.h and misc.h from xserver/include to proto/X11
+    - in xc/lib/lbxutil/ do some include-with-<>-instead-of-with-""
+
+commit e575c5104a8627428dd18c4040d4ad787655164a
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed May 25 22:12:21 2005 +0000
+
+    - Use XTRANS_CONNECTION_FLAGS macro in lib/FS/configure.ac
+    - Don't symlink transport.c, which is a generated file
+    - instead add a new file fs_transport.c that include Xtrans/X11/transport.c
+
+commit 207e3f82011d5f83db0eca318a1de50f0c1da0dc
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed May 25 21:47:56 2005 +0000
+
+    - Add FSlib to symlink.sh
+    - Change Xtrans includedir back to be X11/Xtrans, so that users of it can
+        continue to include <X11/*>
+    - Add build system for FSlib
+    - Conditionally include config.h in xc/lib/FS
+    - Remove redundant include of FSproto.h in xc/lib/FS
+    - Add check to proto/X11/configure.ac whether -D_XOPEN_SOURCE is needed.
+
+commit a5a4bfe9b432e7d8238f9a02d80be4ce6bb64978
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Mon May 23 01:22:10 2005 +0000
+
+    The macros in Xpoll.h poke at the guts of struct fd_set in ways that only
+        work if _XOPEN_SOURCE is defined, so define it in Cflags in the
+        pkg-config file.
+
+commit 2f4c3aa871a047359f8121e6401be1ba4cf0b8e0
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:22:40 2005 +0000
+
+    revert last change, didn't do right thing at all, sorry for the noise
+
+commit 4809dd9150599a9e88f64cd1b82737872b7b1b94
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:10:19 2005 +0000
+
+    Require automake 1.7 in AM_INIT_AUTOMAKE
+
+commit 6ff17c33f0773e152122d66cbaffaa54e53e086c
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Sat May 14 07:56:49 2005 +0000
+
+    Add AUTHORS file for X11 from xlibs tree.
+
+commit 3f8b0ba6071dcdd62ea424cab0bddb39db2ebe6a
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Sat May 14 07:55:10 2005 +0000
+
+    Add some COPYING files.
+
+commit 803c8ecaba2f8c703bbb46c0d740bfa349ce0245
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri May 6 01:46:31 2005 +0000
+
+    Initial build system files for proto module.
+
+commit a870c60741273ebd6cb1e69b4e535ce3a6bc76bf
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Thu Apr 28 22:04:12 2005 +0000
+
+    Don't define X_NOT_STDC_ENV on Solaris x86. Bugzilla #3158:
+        https://bugs.freedesktop.org/show_bug.cgi?id=3158 Patch #2588:
+        https://bugs.freedesktop.org/attachment.cgi?id=2588 (Henry Zhao, Sun
+        Microsystems)
+
+commit 372f37171ba3875ea4bf7f60150d92869e06010f
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Wed Apr 20 13:58:17 2005 +0000
+
+    check for define PATH_MAX before referencing it
+
+commit e489ec65b4b2ab0a050d8dbf7ec0658e6decb8b3
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Mar 2 19:29:31 2005 +0000
+
+    Patch #2007 <https://bugs.freedesktop.org/attachment.cgi?id=2007>
+    1) Fix Solaris #ifdefs to choose between UI/SVR4 (early POSIX draft) and
+        POSIX standard thread API's correctly.
+    2) Fix calls to POSIX standard versions to check errors correctly. (POSIX
+        defines a return value of 0 on success, errno value on error, but the
+        macros were checking for -1 on error.)
+
+commit d761e87224d3e60c5355ac3e3468835fc3b4be92
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Wed Mar 2 11:20:29 2005 +0000
+
+    xc/config/cf/DragonFly.cf
+    xc/config/cf/Imake.cf
+    xc/config/cf/Imakefile
+    xc/config/imake/imake.c
+    xc/config/imake/imakemdep.h
+    xc/extras/drm/shared/drm.h
+    xc/include/Xos_r.h
+    xc/lib/xtrans/Xtranssock.c
+    xc/programs/Xserver/hw/xfree86/os-support/xf86_OSlib.h
+    xc/programs/Xserver/hw/xfree86/os-support/xf86_libc.h
+    xc/programs/Xserver/hw/xfree86/os-support/linux/lnx_agp.c
+    //bugs.freedesktop.org/show_bug.cgi?id=1712) attachment #2004
+        (https://bugs.freedesktop.org/attachment.cgi?id=2004): Add support for
+        DragonFly/BSD platform. Patch by Jeroen Ruigrok <asmodai@tendra.org>
+        and Mike Verona <firedragonfly@gmail.com>.
+
+commit 1cae0cb4b1442b34d76ee5623fb2a17ed2353c50
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Sun Jan 9 15:06:04 2005 +0000
+
+    Make sure PATH_MAX is at least 1024
+
+commit 9df4ffce552a0f6eca47764a3f79b466629e8bab
+Author: Egbert Eich <eich@suse.de>
+Date:   Mon Jan 3 18:03:49 2005 +0000
+
+    gcc 4 doesn't like predeffines line 'linux' any more. To muffle the
+        compiler replace them with __linux__ (Bugzilla #2207).
+
+commit dd82af84ed67f439444e75ea1d032c082e15db51
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Mon Nov 15 15:06:53 2004 +0000
+
+    Bufzilla #1802, http://freedesktop.org/bugzilla/show_bug.cgi?id=1802 Added
+        mingw (Win32) port
+
+commit 618956f1f783a8c330aab8eac425937f0b8e50e1
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Sun Sep 26 20:46:18 2004 +0000
+
+    The big keysym cleanup, to bring implementation in line with the recent
+        revision of Appendix A of the protocol spec. (Markus Kuhn)
+
+commit 7cb1490d8932d745b3a5e2b3370a000da064306f
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Aug 11 21:14:16 2004 +0000
+
+    Apply PPC64 build patch (Bug #303, Mike A. Harris, Alan Coopersmith).
+
+commit 5b67de2bce0e33a4a85439ebcf7b726a6da24545
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:05 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit e88a09c1df46637979c4d131a8e41af923ff4d45
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:31:34 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit 9259b43390c50d330f557390cc4576f5315c3f53
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:10:53 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 99bbbc3fcaf67b02a50e4ff4007225b1b64beb36
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:11 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 82d7bb39bc84eb16134e931263f53bc88d1788ac
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:24 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit 0700ff31a84abc06fdf4b05c2328ff2329dc909c
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Jan 29 08:07:54 2004 +0000
+
+    Importing vendor version xf86-012804-2330 on Thu Jan 29 00:06:33 PST 2004
+
+commit ad76b5cc436937d9fb945bd43d9356651fe182ca
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:54:20 2003 +0000
+
+    XFree86 4.3.99.902 (RC 2)
+
+commit 376f9efdab6ef2dce267caa0a0228892e768e390
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:01 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 5ec315b967cb1ae519f514896f0b48fb5407f863
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit f2001f5bd5316842106a98b23f09400688575fa3
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    Initial revision
+
+commit ee0a1a43dc707f960e637fdf2118723e4de0a55d
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:35 2003 +0000
+
+    R6.6 is the Xorg base-line

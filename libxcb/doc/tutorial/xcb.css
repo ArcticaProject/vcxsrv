@@ -1,0 +1,123 @@
+body
+{ 
+  background-color: #dddddd;
+  color: #000000;
+  padding: 8px;
+  margin: 0px;
+}
+div.title
+{
+  text-align: center;
+  font-weight: bold;
+  font-size: 28px;
+}
+div.emph
+{
+  text-align: left;
+  font-weight: bold;
+}
+div.section li.title
+{
+  font-weight: bold;
+  font-size: 22px;
+}
+div.section li.title p
+{
+  font-weight: normal;
+  font-size: 16px;
+}
+div.section li.title ul
+{
+  font-weight: normal;
+  font-size: 16px;
+}
+div.section li.title ol
+{
+  font-weight: normal;
+  font-size: 16px;
+}
+div.section li.subtitle
+{
+  font-weight: bold;
+  font-size: 18px;
+}
+div.section li.subsubtitle
+{
+  font-weight: bold;
+  font-size: 16px;
+}
+div.comp
+{
+  border: thin solid #000000;
+  color: #000000;
+  background-color: #ffffe0;
+  padding: 14px;
+}
+div.comp div.title
+{
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
+div.comp div.xlib ul li
+{
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  width: 49%;
+  margin-left: 0px; 
+  margin-top: 10px;
+}
+div.comp div.xcb ul li
+{
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: bold;
+  position: relative;
+  margin-left: 51%;
+  margin-top: 10px;
+}
+pre.code
+{
+  border: thin solid #000000;
+  color: #000000;
+  background-color: #efefef;
+  padding: 4px;
+  text-align: left;
+  font-size: 10px;
+}
+pre.text
+{
+  border: thin solid #000000;
+  color: #000000;
+  background-color: #efefef;
+  padding: 4px;
+  text-align: left;
+  font-size: 10px;
+}
+span.code
+{
+  font-family: monospace;
+  font-size: 12px;
+}
+pre.code .type
+{
+  color: #44bb44;
+}
+pre.code .function
+{
+  color: #449fb7;
+}
+pre.code .include
+{
+  color: #7d93ae;
+}
+pre.code .string
+{
+  color: #ef6e4b;
+}
+pre.code .keyword
+{
+  color: #00bbbb;
+}

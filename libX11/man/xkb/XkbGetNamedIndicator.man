@@ -1,0 +1,138 @@
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbGetNamedIndicator __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbGetNamedIndicator \- Look up the indicator map and other information for an 
+indicator by name
+.SH SYNOPSIS
+.B Bool XkbGetNamedIndicator
+(
+.I dpy,
+.I dev_spec,
+.I name,
+.I ndx_rtrn,
+.I state_rtrn,
+.I map_rtrn,
+.I real_rtrn
+)
+.br
+      Display *\fIdpy\fP\^;
+.br
+      unsigned int \fIdev_spec\fP\^;
+.br
+      Atom \fIname\fP\^;
+.br
+      int *\fIndx_rtrn\fP\^;
+.br
+      Bool *\fIstate_rtrn\fP\^;
+.br
+      XkbIndicatorMapPtr \fImap_rtrn\fP\^;
+.br
+      Bool *\fIreal_rtrn\fP\^;                        
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I \- dpy
+connection to the X server 
+.TP
+.I \- dev_spec
+keyboard device ID, or XkbUseCoreKbd
+.TP
+.I \- name
+name of the indicator to be retrieved
+.TP
+.I \- ndx_rtrn
+backfilled with the index of the retrieved indicator
+.TP
+.I \- state_rtrn
+backfilled with the current state of the retrieved indicator
+.TP
+.I \- map_rtrn
+ backfilled with the mapping for the retrieved indicator 
+.TP
+.I \- real_rtrn
+backfilled with True if the named indicator is real (physical)
+.SH DESCRIPTION
+.LP
+Xkb also allows applications to refer to indicators by name. Use 
+.I XkbGetNames 
+to get the indicator names. Using names eliminates the need for hard-coding 
+bitmask values for particular keyboards. For example, instead of using 
+vendor-specific constants such as WSKBLed_ScrollLock mask on Digital 
+workstations or XLED_SCROLL_LOCK on Sun workstations, you can instead use
+.I XkbGetNamedIndicator 
+to look up information on the indicator named "Scroll Lock." 
+
+If the device specified by 
+.I device_spec 
+has an indicator named 
+.I name, XkbGetNamedIndicator 
+returns True and populates the rest of the parameters with information about the 
+indicator. Otherwise, 
+.I XkbGetNamedIndicator 
+returns False.
+
+The 
+.I ndx_rtrn 
+field returns the zero-based index of the named indicator. This index is the bit 
+position to use in any function call that requires a mask of indicator bits, as 
+well as the indicator's index into the XkbIndicatorRec array of indicator maps. 
+.I state_rtrn 
+returns the current state of the named indicator (True = on, False = off). 
+.I map_rtrn 
+returns the indicator map for the named indicator. In addition, if the indicator 
+is mapped to a physical LED, the 
+.I real_rtrn 
+parameter is set to True.
+
+Each of the "
+.I _rtrn
+" arguments is optional; you can pass NULL for any unneeded "
+.I _rtrn
+" arguments.
+.SH "RETURN VALUES"
+.TP 15
+True
+The 
+.I XkbGetNamedIndicator 
+function returns True if the device specified by 
+.I device_spec 
+has an indicator named 
+.I name.
+.TP 15
+False
+The 
+.I XkbGetNamedIndicator 
+function returns False if the device specified by 
+.I device_spec 
+does not have an indicator named 
+.I name.
+.SH "SEE ALSO"
+.BR XkbGetNames (__libmansuffix__)

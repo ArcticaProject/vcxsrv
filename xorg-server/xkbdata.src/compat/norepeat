@@ -1,0 +1,11 @@
+// $Xorg: norepeat,v 1.3 2000/08/17 19:54:34 cpqbld Exp $
+
+// Put any otherwise normal keys that you don't want to repeat in
+// this file
+
+default partial xkb_compatibility "norepeat"  {
+    interpret Return {
+	action= NoAction();
+	repeat= False;
+    };
+};

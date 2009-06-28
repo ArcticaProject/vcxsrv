@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: XCB XFixes
+Description: XCB XFixes Extension
+Version: @PACKAGE_VERSION@
+Requires: xcb xcb-render xcb-shape
+Libs: -L${libdir} -lxcb-xfixes
+Cflags: -I${includedir}

@@ -1,0 +1,74 @@
+.TH ucs2any __appmansuffix__ __vendorversion__
+.SH NAME
+ucs2any \- generate BDF fonts containing subsets of ISO 10646-1 codepoints
+.SH SYNOPSIS
+.B ucs2any
+[
+.B +d
+|
+.B -d
+]
+.I source-name
+{
+.I mapping-file
+.I registry-encoding
+}
+\&.\|.\|.
+.SH DESCRIPTION
+.B ucs2any
+allows one to generate from an ISO 10646-1 encoded BDF font other BDF fonts
+in any possible encoding.  This way, one can derive from a single
+ISO 10646-1 master font a whole set of 8-bit fonts in all ISO 8859 and
+various other encodings.
+.SH OPTIONS
+.TP
+.B +d
+puts DEC VT100 graphics characters in the C0 range (default for upright,
+character-cell fonts).
+.TP
+.B \-d
+omits DEC VT100 graphics characters from the C0 range (default for all
+font types except upright, character-cell fonts).
+.SH OPERANDS
+.TP
+.I source-name
+is the name of an ISO 10646-1 encoded BDF file.
+.TP
+.I mapping-file
+is the name of a character set table like those at
+.BR <ftp://ftp.unicode.org/Public/MAPPINGS/> .
+These files can also typically be found installed in the
+.I /usr/X11R6/lib/X11/fonts/util/
+directory.
+.TP
+.I registry-encoding
+are the CHARSET_REGISTRY and CHARSET_ENCODING field values for the font
+name (XLFD) of the target font, separated by a hyphen.
+.PP
+Any number of
+.I mapping-file
+and
+.I registry-encoding
+operand pairs may be specified.
+.SH EXAMPLE
+The command
+.RS
+ucs2any 6x13.bdf 8859-1.TXT iso8859-1 8859-2.TXT iso8859-2
+.RE
+will generate the files
+.I 6x13-iso8859-1.bdf
+and
+.IR 6x13-iso8859-2.bdf .
+.SH FUTURE DIRECTIONS
+Hopefully a future release will have a facility similar to
+.B ucs2any
+built into the server, and reencode ISO 10646-1 on the fly, because
+storing the same fonts in many different encodings is clearly a waste of
+storage capacity.
+.SH "SEE ALSO"
+.BR bdftruncate (1)
+.SH AUTHOR
+.B ucs2any
+was written by Markus Kuhn.
+.PP
+Branden Robinson wrote this manual page, originally for the Debian Project.

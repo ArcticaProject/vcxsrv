@@ -1,0 +1,29 @@
+//
+//  Rules for resolving XKB components for use with XFree86
+//  Copyright 1996 by Joseph Moss
+//
+//  $XFree86: xc/programs/xkbcomp/rules/xfree86,v 3.5 1996/12/17 21:03:59 dawes Exp $
+//
+
+! model 	=	keycodes	geometry
+  pc98		=	xfree98(pc98)	nec(pc98)
+  jp106		=	xfree98(jp106)	pc(jp106)
+
+! model		layout		=	symbols
+  pc98		nec_vndr/jp	=	nec_vndr/jp(pc98)
+  jp106		jp		=	jp
+
+! model		layout	=	compat		types
+  *		*	=	complete	complete
+
+! option		=	symbols
+  grp:switch		=	+group(switch)
+  grp:toggle		=	+group(toggle)
+  grp:shift_toggle	=	+group(shifts_toggle)
+  grp:ctrl_shift_toggle	=	+group(ctrl_shift_toggle)
+  grp:ctrl_alt_toggle	=	+group(ctrl_alt_toggle)
+  ctrl:nocaps		=	+ctrl(nocaps)
+  ctrl:swapcaps		=	+ctrl(swapcaps)
+  ctrl:ctrl_ac		=	+ctrl(ctrl_ac)
+  ctrl:ctrl_aa		=	+ctrl(ctrl_aa)
+

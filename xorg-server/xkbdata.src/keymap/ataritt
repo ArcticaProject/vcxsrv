@@ -1,0 +1,21 @@
+// $Xorg: ataritt,v 1.3 2000/08/17 19:54:40 cpqbld Exp $
+
+
+
+
+// $XFree86: xc/programs/xkbcomp/keymap/ataritt,v 3.1 1997/10/26 13:25:37 dawes Exp $
+
+default xkb_keymap "us" {
+    xkb_keycodes	{ include "ataritt(us)"		};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols		{ include "ataritt(us)"		};
+    xkb_geometry	{ include "ataritt(us)"		};
+};
+xkb_keymap "de" {
+    xkb_keycodes	{ include "ataritt(de)"		};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols		{ include "ataritt(de)"		};
+    xkb_geometry	{ include "ataritt(de)"		};
+};

@@ -1,0 +1,13 @@
+# $Xorg: document,v 1.2 2002/11/30 22:10:03 gisburn Exp $
+# Document DPA-Object initial attribute values for en_US(-like) locales
+#
+# Note that the defaults (for all locales) are set in
+# ${XPCONFIGDIR}/C/print/attributes/document
+# Values in ${XPCONFIGDIR}/${LANG}/print/attributes/document are used to
+# set/override these defaults for a specific locale on demand
+
+# US and some other countries use US-Letter as default paper size
+# ("C"-locale default is "ISO-A4")
+*default-medium: na-letter
+
+# EOF.

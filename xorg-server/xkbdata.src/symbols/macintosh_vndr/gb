@@ -1,0 +1,21 @@
+// $XConsortium: gb /main/3 1996/08/31 12:19:51 kaleb $
+// $XFree86: xc/programs/xkbcomp/symbols/gb,v 3.3 1996/12/23 07:13:25 dawes Exp $
+partial default alphanumeric_keys 
+xkb_symbols "basic" {
+
+    // Describes the differences between a very simple en_US
+    // keyboard and a very simple U.K. keyboard layout
+
+    include "latin"
+
+    name[Group1]= "United Kingdom - Mac";
+
+    key <AE02> {	[               2,              at,         EuroSign	]	};
+    key <AE03> {	[               3,        sterling,       numbersign	]	};
+
+    // End alphanumeric section
+    
+    include "level3(ralt_switch)"
+};
+
+

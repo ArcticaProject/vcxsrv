@@ -1,0 +1,185 @@
+commit db08133016b421ef12c65db9c4a2819078f01b06
+Author: Peter Hutterer <peter@cs.unisa.edu.au>
+Date:   Wed May 28 17:18:14 2008 +0930
+
+    Bump to 7.0.3.
+
+commit 801650f0d15b4497c63d056559ad98a8ca82f271
+Author: Peter Hutterer <peter@cs.unisa.edu.au>
+Date:   Mon May 12 17:26:02 2008 +0930
+
+    Xge: replace copyrights with standard format from xserver COPYING.
+
+commit 9dc48efe2b3136756613ae00afd706f9a52d6f10
+Merge: 69356e4... a07a30f...
+Author: Peter Hutterer <peter@cs.unisa.edu.au>
+Date:   Mon May 12 17:22:14 2008 +0930
+
+    Merge branch 'master' into xge
+
+commit a07a30f9922e9768e2cf00cc2e479978242c58a8
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:39:10 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit 087c2ccc7e348e530422a578059173c959aa5a78
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:54:25 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit 69356e4165f11f3ed4b377d29df038549191a91e
+Author: Peter Hutterer <peter@cs.unisa.edu.au>
+Date:   Thu May 17 19:40:15 2007 +0930
+
+    Add XGE header files and protocol description.
+
+commit 88c24404b44def76a56f52a216a8cf2e0991c3e6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jul 14 18:56:41 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit a63b4a9d7ebc5929ce9172b10743396cd36addb8
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Jun 27 16:25:22 2006 +0000
+
+    Remove Xserver API for appgroup extension [Will break Xorg server builds
+        prior to 2006-06-21 / git commit
+    77c947b900faf34f425eef1549d8210c475e093b]
+
+commit 7bcd3400a8043dee6399680ddc6592747b30f599
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Jun 21 21:20:22 2006 +0000
+
+    Remove Xserver API for security extension (#ifdef _SECURITY_SERVER) [Will
+        break Xorg server builds prior to 2006-06-20 / git commit
+        d44b2a0a57fb89741173c31676af0ccc822387dc]
+
+commit cb67dc36362b018f3a9faa5c4558ce99dbfb2334
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:39 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 9f8dd222022cfafe3ca6467e02232af7d4d7934b
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:15 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit cba4432f0d088517f2475881e93cf4dda96a7f94
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Aug 2 19:19:40 2005 +0000
+
+    Add basic .cvsignore files for proto modules.
+
+commit 790de7da644c6f9114a715b99789253a9c79b0a5
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:57 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit cf67142f46ec2f754f2b3347b21139b66b7167cf
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Fri Jun 10 04:01:14 2005 +0000
+
+    Bug #2799: Input shape. (Keith Packard)
+
+commit b855e49cf845cf814fa1d8a9abcd65cb14356644
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:22:40 2005 +0000
+
+    revert last change, didn't do right thing at all, sorry for the noise
+
+commit 1e1659043f908d2e648d0ee73f7f33f5fc79813b
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:10:19 2005 +0000
+
+    Require automake 1.7 in AM_INIT_AUTOMAKE
+
+commit 1d316d39381cf0981b2f9687cd2f0200c92961ea
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Wed May 18 08:09:13 2005 +0000
+
+    Add COPYING file for XExt. Note that there are several similar but
+        subtly-different licenses included; in particular, there are some
+        copyright holders with multiple slightly-different licenses included.
+
+commit f3c7759e6dc671ab6db160e739d00133e9996296
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Mon May 9 18:20:06 2005 +0000
+
+    Change all the protonames from <extension>Ext to <extension>Proto.
+
+commit 474a31667a8addb29a0f115790df2910400c4081
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri May 6 01:46:32 2005 +0000
+
+    Initial build system files for proto module.
+
+commit be09530f849ec00001fc0575816030b7a5dde05c
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Tue Dec 7 23:37:37 2004 +0000
+
+    //bugs.freedesktop.org/show_bug.cgi?id=830): Get DPMS header file
+        (include/extensions/dpms.h) working with C++ applications. Patch by
+        Kevin DeKorte <kdekorte@yahoo.com> and Roland Mainz
+        <roland.mainz@nrubsig.org>.
+
+commit da24110547ed45c08d707dbffb2972f043dbc1b1
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:06 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 8fc2a0fd8ac1b777a35b01d65934ee100b304d20
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:31:36 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit e7af2a9e4c47a46b3a68a2efebb171dc7872c341
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:10:54 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit abb02cac08ca1d7d3a64b361df5d1be6f15c6440
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:14 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit c9d6200d559e57f4ca67291213cd282c7437c3c7
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:28 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit 023a09fe640f876478157e5b4cd9cfec1452da4b
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:02 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 343e78e15048e6a25791449bfc7566c07ccddf28
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:43 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 9a41c9c6452753ac1911a585e59982e8e5186c6b
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:35 2003 +0000
+
+    R6.6 is the Xorg base-line

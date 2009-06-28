@@ -1,0 +1,312 @@
+commit 1b4ca41a58016053220047b9f77a2eec812c03a0
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Dec 16 01:19:45 2006 +0200
+
+    bump to 1.0.4
+
+commit 38855c00c9efe88af97a5f8208c2e6aef0e9e93f
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Dec 6 18:57:29 2006 +0200
+
+    Makefile.am: make ChangeLog hook safer
+    Make ChangeLog hook as safe as possible.
+
+commit 111a9501c2c01d4b4f00ed221035953bfb256898
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Fri Oct 13 15:20:48 2006 -0400
+
+    Bump to 1.0.3
+
+commit fc19e19275c213f5122b120e7b45f63c302916a1
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Thu Oct 12 18:35:04 2006 -0400
+
+    Fix ChangeLog hook to distcheck.
+
+commit 2de626b53827fa1365c149c3fd2e1e280f8691e2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 4 19:31:23 2006 -0700
+
+    Mark character mapping data tables as const
+
+commit 2daccee698507b27113e89b07af371905aa2bcd4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 4 19:13:17 2006 -0700
+
+    Clear sparse warnings: Using plain integer as NULL pointer
+
+commit b00dcc90e490454fdd983b4bf6d0fa92ab91d0be
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 4 18:50:44 2006 -0700
+
+    Add XORG_WITH_LINT support for checking source code with lint/sparse/etc.
+
+commit 5d18f978c9085c3c9d9a44c90e73055125e11a68
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 4 18:50:07 2006 -0700
+
+    Clear sparse warning: non-ANSI function declaration of function 'FontEncDirectory'
+
+commit 1dc8867f53a81d6e1c413d393039747668d27bd4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 4 18:34:20 2006 -0700
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit 81b27280717dc7e06a9ebbd196fae03a9e719db3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 4 18:32:38 2006 -0700
+
+    Add *~ to .gitignore to skip over emacs droppings
+
+commit 187ec5a0cd96c3b6b13b9ccae51e2828db7c6d3e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 4 18:32:07 2006 -0700
+
+    Copy copyright notice/license from source to COPYING
+
+commit 1a9f5d7cb1aba4d65b28b5cdcaa7b68053b733ee
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 14:59:16 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 2c2f63d0f17106964c808f8f0ec5bb58f35b4fe5
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jun 3 06:33:40 2006 +0000
+
+    Coverity #1523: Dereferencing freed pointer "mapping"
+
+commit f991560c0f599d82b23380de4a681b0d218f5cef
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Apr 26 23:55:31 2006 +0000
+
+    Bump to 1.0.2
+
+commit a9604c242f7f53a8cd26a2764c1a96e25ea2e1a7
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Apr 10 16:15:12 2006 +0000
+
+    Fix another file descriptor leak (related to previous Coverity #544)
+
+commit d86b38b96854bc60d4a2c4595e73cf53aa36d85c
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Fri Apr 7 00:35:36 2006 +0000
+
+    Coverity #544: File a file descriptor leak.
+
+commit 78f355698128454370590040699c2141ae69d7d9
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Dec 21 02:30:06 2005 +0000
+
+    Update package version for X11R7 release.
+
+commit c7a14086fbe226169f7ea5df80c4d885082fb732
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Dec 19 16:28:28 2005 +0000
+
+    Stub COPYING files
+
+commit 55035bfbae0ca22399623d78411cc50bfdee2705
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:36 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit d146b3a17228204ce0fe3bcca72de53cedebf5fb
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Dec 9 06:07:14 2005 +0000
+
+    Bug #5175: Make encodingsdir configurable (David Coulthart and Kevin E.
+        Martin)
+
+commit acb0d67e5f0293f960a923cda6eb359a82f7036e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:46 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit c2e139f8726cde5bbae609865b609f087b3f651b
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:44 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit 21b115927640683b90fc1304f7b921da51aabf64
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Nov 9 21:19:14 2005 +0000
+
+    Update package version number for X11R7 RC2 release.
+
+commit d9ece44e76f0c2dcfacb5ff00e59cae2741e3c96
+Author: Kean Johnson <kean@armory.com>
+Date:   Tue Nov 8 06:33:26 2005 +0000
+
+    See ChangeLog entry 2005-11-07 for details.
+
+commit 632f53206e104b372db255c5171c3479d87b683b
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:12 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 49e4c36c1bf2ccc3af576c489abf76bea4bf64b1
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Aug 3 03:28:03 2005 +0000
+
+    Do PKG_CHECK_MODULES on a unique token instead of on "DEP", so builds with
+        a global configure cache don't get confused.
+
+commit 8a6fb4344eb5c13198125996e43a0898a19818f8
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:54 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 9e8be492f61095813f5e9b01c8d54ffb1550f339
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jul 16 07:51:05 2005 +0000
+
+    Set soversion to 1.0 using -version-number.
+
+commit 11b206733618d73946a8c298d2d5f2183075657f
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Jul 13 16:51:34 2005 +0000
+
+    Update INCLUDES to find <X11/fonts/fontenc.h>
+
+commit 85094af610ba990c6bc2377eff1f6f31dffd48e2
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue Jul 12 21:05:28 2005 +0000
+
+    Remove encodings build system from libfontenc
+
+commit 8deaa94831b1a5926db928a68a6acbbe3ee9a904
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 23:31:40 2005 +0000
+
+    Switch from monolithic configuration symbols to modular ones, add backward
+        compatibility for monolithic symbols
+
+commit ec602c9639e4eedb36a570943999fea0a07b5f8c
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 21:15:50 2005 +0000
+
+    Add .cvsignore files
+    Depend on xproto, not x11 so we do not link against -X11
+
+commit 0767d4880359983cbe83a4ea396d81efb5d6882b
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 07:01:00 2005 +0000
+
+    Add Xtrans definitions (FONT_t, TRANS_CLIENT) to clean up warnings.
+    Add XSERV_t, TRANS_SERVER, TRANS_REOPEN to quash warnings.
+    Add #include <dix-config.h> or <xorg-config.h>, as appropriate, to all
+        source files in the xserver/xorg tree, predicated on defines of
+        HAVE_{DIX,XORG}_CONFIG_H. Change all Xfont includes to
+        <X11/fonts/foo.h>.
+
+commit f6c6acf593686015fa639e3583f70cc6d5f5d7b3
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Thu Jun 30 13:21:11 2005 +0000
+
+    Check for zlib
+
+commit 092271385632708fb5dd53dca3dcfc3ead06ef6c
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue Jun 28 15:40:27 2005 +0000
+
+    modularizeapp.sh: initialize LAST to "" symlink.sh: Add bitmaps for oclock,
+        and an extra textfile for pclcomp
+
+commit 21e552451c095c5668a57765c2eb941750e00ecd
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue Jun 28 14:48:02 2005 +0000
+
+    Add generation of encodings.dir
+
+commit a18d9ec0c4bfa36460d5e3eba1c5fb8a90086500
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue Jun 28 14:17:12 2005 +0000
+
+    Add encodings to fontenc build system, plus various fixes to make it
+        distcheck.
+
+commit bcdcaebcd2127f4e7e1c368f341a781b4cf8af6b
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Mon Jun 27 16:09:14 2005 +0000
+
+    - Remove fontenc from Xfont
+    - Add a dependency from Xfont on libfontenc
+    - Add build system for lib/fontenc
+    - xc/lib/font: Change #include "fontenc.h" to #include
+        <X11/fonts/fontenc.h> in some places.
+    - Remove dpsinfo and dpsexec from the app section of symlink.sh
+    - Fix xp.pc.in to add XPRINT_LIBS/CFLAGS instead of X_LIBS/CFLAGS
+
+commit e80fd1617092d128d54a9400a4974ffafbb3083e
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:44:23 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 072f90aeb09035953b966233059139d161d3a5f0
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:32:36 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit 7fb87aa305856f07d7a57b3296ade04b1f012f1a
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:11:43 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 993a15d0255a72bdfbc6c2c43e9c164f0919e682
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:35 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit eec99218eac07b50f0d25c2789abb5dfcc8f6c9d
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:53 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit faa2a922a0dbd16844055f83a159dab92a383376
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Mon Feb 23 20:34:43 2004 +0000
+
+    Import most of XFree86 4.4RC3. This import excludes files which have the
+        new license. If we want to, later we can import 4.4RC3 again and pick
+        up the files that have the new license, but for now the vendor branch
+        is "pure."
+
+commit 7ea6ca71ac6825b9a28510f23c35d8b480752c41
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:54:44 2003 +0000
+
+    XFree86 4.3.99.902 (RC 2)
+
+commit f431cd8bc5d7fb3a385609c9ac99deabb79ab023
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:50 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit f1b010ee7ae89b23af8fe4c92103db775ae35aed
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:50 2003 +0000
+
+    Initial revision

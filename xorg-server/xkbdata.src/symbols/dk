@@ -1,0 +1,77 @@
+
+// based on a keyboard map from an 'xkb/symbols/dk' file
+//
+// $XKeyboardConfig$
+// $XFree86: xc/programs/xkbcomp/symbols/dk,v 1.3 2002/12/19 01:07:56 dawes Exp $
+
+partial default alphanumeric_keys
+xkb_symbols "basic" {
+
+    include "latin(type2)"
+
+    name[Group1]="Denmark";
+
+    key <AE11>	{ [      plus,   question,    plusminus, questiondown ]	};
+    key <AE12>	{ [dead_acute, dead_grave,          bar,    brokenbar ]	};
+
+
+    key <AC10>	{ [        ae,        AE,   dead_acute, dead_doubleacute ] };
+    key <AC11>	{ [    oslash,  Ooblique, dead_circumflex, dead_caron ]	};
+    key <TLDE>	{ [   onehalf,   section, threequarters,    paragraph ]	};
+
+    key <BKSL>	{ [apostrophe,   asterisk, dead_doubleacute, multiply ]	};
+
+    key <LSGT>	{ [      less,    greater,    backslash,      notsign ]	};
+
+    include "kpdl(comma)"
+
+    include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "nodeadkeys" {
+
+    include "dk(basic)"
+
+    name[Group1]="Denmark - Eliminate dead keys";
+
+    key <AE12>	{ [     acute,      grave,          bar,       ogonek ]	};
+    key <AD11>	{ [     aring,      Aring,    diaeresis,       degree ]	};
+    key <AD12>	{ [ diaeresis, asciicircum,  asciitilde,       macron ]	};
+    key <AC10>	{ [        ae,         AE,        acute,  doubleacute ]	};
+    key <AC11>	{ [    oslash,   Ooblique,  asciicircum,        caron ]	};
+    key <BKSL>	{ [apostrophe,   asterisk,  doubleacute,     multiply ]	};
+    key <AB08>	{ [     comma,  semicolon,      cedilla,       ogonek ]	};
+    key <AB09>	{ [    period,      colon, periodcentered,   abovedot ]	};
+
+};
+
+// Copied from macintosh_vndr/dk
+partial alphanumeric_keys 
+xkb_symbols "mac" {
+
+    include "dk"
+    name[Group1]= "Denmark - Macintosh";
+
+    key <SPCE>	{ [    space,       space, nobreakspace, nobreakspace ]	};
+    key <AB10>	{ [    minus,  underscore,       hyphen,       macron ]	};
+    include "kpdl(dot)"
+};
+
+
+partial alphanumeric_keys 
+xkb_symbols "mac_nodeadkeys" {
+    include "dk(mac)"
+    name[Group1]= "Denmark - Macintosh, eliminate dead keys";
+
+    key <AE12>	{ [    acute,       grave,          bar,       ogonek ]	};
+    key <AD12>	{ [diaeresis, asciicircum,   asciitilde,  dead_macron ]	};
+};
+
+partial alphanumeric_keys 
+xkb_symbols "dvorak" {
+    include "no(dvorak)"
+
+    name[Group1]= "Denmark - Dvorak";
+};
+

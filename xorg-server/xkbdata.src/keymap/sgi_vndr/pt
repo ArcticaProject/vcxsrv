@@ -1,0 +1,34 @@
+// $Xorg: pt,v 1.3 2000/08/17 19:54:41 cpqbld Exp $
+default xkb_keymap "indy" {
+    xkb_keycodes	{ include "sgi_vndr/indy(universal)"		};
+    xkb_types		{ include "default"			};
+    xkb_compatibility	{ include "default"			};
+    xkb_symbols 	{ include "en_US(pc_universal)+pt"	};
+    xkb_geometry	{ include "sgi_vndr/indy(pc102)"		};
+};
+xkb_keymap "indy_nodeadkeys" {
+    xkb_keycodes	{ include "sgi_vndr/indy(universal)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{
+	include "en_US(pc_universal_nodeadkeys)+pt(nodeadkeys)"
+    };
+    xkb_geometry	{ include "sgi_vndr/indy(pc102)"	};
+};
+xkb_keymap "indigo" {
+    xkb_keycodes	{ include "sgi_vndr/indigo(pc102)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{ include "en_US(pc102)+pt"	};
+    xkb_geometry	{ include "sgi_vndr/indigo(pc102)"	};
+};
+xkb_keymap "indigo_nodeadkeys" {
+    xkb_keycodes	{ include "sgi_vndr/indigo(pc102)"	};
+    xkb_types		{ include "default"		};
+    xkb_compatibility	{ include "default"		};
+    xkb_symbols 	{
+	include "en_US(pc102_nodeadkeys)+pt(nodeadkeys)"
+    };
+    xkb_geometry	{ include "sgi_vndr/indigo(pc102)"	};
+};
+

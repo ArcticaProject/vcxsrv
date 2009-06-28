@@ -1,0 +1,14 @@
+# Common rules for building *.dir files in all xkb subdirectories
+# Replaces Imake's MakeXkbDir() rule
+# svu: taken from xkbdata
+
+dist_dir_DATA = $(subdir).dir
+
+dirdir = $(xkb_base)
+
+$(subdir).dir: $(dir_data)
+	-rm -f $@
+	here=$$(pwd); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
+
+CLEANFILES = $(subdir).dir
+

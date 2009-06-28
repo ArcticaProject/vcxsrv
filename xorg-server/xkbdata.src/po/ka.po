@@ -1,0 +1,2274 @@
+# translation of xkeyboard-config.po to Georgian
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Vladimer Sichinava <vlsichinava@gmail.com>, 2006.
+msgid ""
+msgstr ""
+"Project-Id-Version: xkeyboard-config\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-09-17 21:37+0100\n"
+"PO-Revision-Date: 2006-09-20 22:48+0200\n"
+"Last-Translator: Vladimer Sichinava <vlsichinava@gmail.com>\n"
+"Language-Team: Georgian <www.gia.ge>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: ../rules/base.xml.in.h:1
+msgid "(F)"
+msgstr "(F)"
+
+#: ../rules/base.xml.in.h:2
+msgid "101/104 key Compatible"
+msgstr "101/104 ღილაკიანი თავსებადი"
+
+#: ../rules/base.xml.in.h:3
+msgid "101/qwerty/comma/Dead keys"
+msgstr ""
+"pc101, qwerty, მძიმე, სპეც კლავიშები "
+"(dead keys)"
+
+#: ../rules/base.xml.in.h:4
+msgid "101/qwerty/comma/Eliminate dead keys"
+msgstr ""
+"pc101, qwerty, მძიმე, სპეც კლავიშების "
+"(dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:5
+msgid "101/qwerty/dot/Dead keys"
+msgstr ""
+"pc101, qwerty, წერტილი, სპეც "
+"კლავიშები (dead keys)"
+
+#: ../rules/base.xml.in.h:6
+msgid "101/qwerty/dot/Eliminate dead keys"
+msgstr ""
+"pc101, qwerty, წერტილი, სპეც "
+"კლავიშები (dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:7
+msgid "101/qwertz/comma/Dead keys"
+msgstr ""
+"pc101, qwertz, მძიმე, სპეც კლავიშები "
+"(dead keys)"
+
+#: ../rules/base.xml.in.h:8
+msgid "101/qwertz/comma/Eliminate dead keys"
+msgstr ""
+"pc101, qwertz, მძიმე, სპეც კლავიშების "
+"(dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:9
+msgid "101/qwertz/dot/Dead keys"
+msgstr ""
+"pc101, qwertz, წერტილი, სპეც "
+"კლავიშები (dead keys)"
+
+#: ../rules/base.xml.in.h:10
+msgid "101/qwertz/dot/Eliminate dead keys"
+msgstr ""
+"pc101, qwertz, წერტილი, სპეც "
+"კლავიშების (dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:11
+msgid "102/qwerty/comma/Dead keys"
+msgstr ""
+"pc102, qwerty, მძიმე, სპეც კლავიშები "
+"(dead keys)"
+
+#: ../rules/base.xml.in.h:12
+msgid "102/qwerty/comma/Eliminate dead keys"
+msgstr ""
+"pc102, qwerty, მძიმე, სპეც კლავიშების "
+"(dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:13
+msgid "102/qwerty/dot/Dead keys"
+msgstr ""
+"pc102, qwertz, წერტილი, სპეც "
+"კლავიშები (dead keys)"
+
+#: ../rules/base.xml.in.h:14
+msgid "102/qwerty/dot/Eliminate dead keys"
+msgstr ""
+"pc102, qwerty, წერტილი, სპეც "
+"კლავიშების (dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:15
+msgid "102/qwertz/comma/Dead keys"
+msgstr ""
+"pc102, qwertz, მძიმე, სპეც კლავიშები "
+"(dead keys)"
+
+#: ../rules/base.xml.in.h:16
+msgid "102/qwertz/comma/Eliminate dead keys"
+msgstr ""
+"pc102, qwertz, მძიმე, სპეც კლავიშების "
+"(dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:17
+msgid "102/qwertz/dot/Dead keys"
+msgstr ""
+"pc102, qwertz, წერტილი, სპეც "
+"კლავიშები (dead keys)"
+
+#: ../rules/base.xml.in.h:18
+msgid "102/qwertz/dot/Eliminate dead keys"
+msgstr ""
+"pc102, qwertz, წერტილი, სპეც "
+"კლავიშების (dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:19
+msgid "A4Tech KB-21"
+msgstr "A4Tech KB-21"
+
+#: ../rules/base.xml.in.h:20
+msgid "A4Tech KBS-8"
+msgstr "A4Tech KBS-8"
+
+#: ../rules/base.xml.in.h:21
+msgid "A4Tech Wireless Desktop RFKB-23"
+msgstr "A4Tech Wireless Desktop RFKB-23"
+
+#: ../rules/base.xml.in.h:22
+msgid "ACPI Standard"
+msgstr "სტანდარტული ACPI"
+
+#: ../rules/base.xml.in.h:23
+msgid "Acer AirKey V"
+msgstr "Acer AirKey V"
+
+#: ../rules/base.xml.in.h:24
+msgid "Acer C300"
+msgstr "Acer C300"
+
+#: ../rules/base.xml.in.h:25
+msgid "Acer Ferrari 4000"
+msgstr "Acer Ferrari 4000"
+
+#: ../rules/base.xml.in.h:26
+msgid "Acer TravelMate 800"
+msgstr "Acer TravelMate 800"
+
+#: ../rules/base.xml.in.h:27
+msgid "Add the EuroSign to the 2 key."
+msgstr ""
+"ევროს ნიშნის 2იანის კლავიშზე "
+"დამატება."
+
+#: ../rules/base.xml.in.h:28
+msgid "Add the EuroSign to the 5 key."
+msgstr ""
+"ევროს ნიშნის 5იანის კლავიშზე "
+"დამატება."
+
+#: ../rules/base.xml.in.h:29
+msgid "Add the EuroSign to the E key."
+msgstr ""
+"ევროს ნიშნის E ასოს კლავიშზე "
+"დამატება."
+
+#: ../rules/base.xml.in.h:30
+msgid "Add the standard behavior to Menu key."
+msgstr ""
+"მენიუს კლავიშისთვის "
+"სტანდარტული ქცევის "
+"მინიჭება."
+
+#: ../rules/base.xml.in.h:31
+msgid "Adding the EuroSign to certain keys"
+msgstr ""
+"ევროს ნიშნის ზოგიერთ "
+"კლავიშებზე დამატება"
+
+#: ../rules/base.xml.in.h:32
+msgid "Advance Scorpius KI"
+msgstr "Advance Scorpius KI"
+
+#: ../rules/base.xml.in.h:33
+msgid "Afg"
+msgstr "ავღ"
+
+#: ../rules/base.xml.in.h:34
+msgid "Afghanistan"
+msgstr "ავღანეთი"
+
+#: ../rules/base.xml.in.h:35
+msgid "Akan"
+msgstr "აკანი"
+
+#: ../rules/base.xml.in.h:36
+msgid "Alb"
+msgstr "ალბ"
+
+#: ../rules/base.xml.in.h:37
+msgid "Albania"
+msgstr "ალბანეთი"
+
+#: ../rules/base.xml.in.h:38
+msgid "Alt and Meta are on the Alt keys (default)."
+msgstr ""
+"Alt და Meta, Alt ღილაკზე "
+"(ნაგულისხმევია)."
+
+#: ../rules/base.xml.in.h:39
+msgid "Alt is mapped to the right Win-key and Super to Menu."
+msgstr ""
+"Alt შეესაბამება მარჯვენა Win "
+"ღილაკს, Super   კი Menu-ს."
+
+#: ../rules/base.xml.in.h:40
+msgid "Alt+CapsLock changes group."
+msgstr "Alt + CapsLock ცვლის ჯგუფს."
+
+#: ../rules/base.xml.in.h:41
+msgid "Alt+Ctrl changes group."
+msgstr "Alt + Ctrl ცვლის ჯგუფს."
+
+#: ../rules/base.xml.in.h:42
+msgid "Alt+Shift changes group."
+msgstr "Alt + Shift ცვლის ჯგუფს."
+
+#: ../rules/base.xml.in.h:43
+msgid "Alt-Q"
+msgstr "Alt-Q"
+
+#: ../rules/base.xml.in.h:44
+msgid "Alt/Win key behavior"
+msgstr "Alt/Win კლავიშთა ქცევა"
+
+#: ../rules/base.xml.in.h:45
+msgid "Alternative"
+msgstr "ალტერნატიული"
+
+#: ../rules/base.xml.in.h:46
+msgid "Alternative international (former us_intl)"
+msgstr ""
+"ალტერნატიული "
+"ინტერნაციონალური"
+
+#: ../rules/base.xml.in.h:47
+msgid "Alternative, Sun dead keys"
+msgstr ""
+"ალტერნატიული, Sun სპეც "
+"კლავიშებით (dead keys)"
+
+#: ../rules/base.xml.in.h:48
+msgid "Alternative, eliminate dead keys"
+msgstr ""
+"ალტერნატიული, სპეც "
+"კლავიშების (dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:49
+msgid "And"
+msgstr "ანდ"
+
+#: ../rules/base.xml.in.h:50
+msgid "Andorra"
+msgstr "ანდორა"
+
+#: ../rules/base.xml.in.h:51
+msgid "Apostrophe (') variant"
+msgstr "(') აპოსტროფიანი ვარიანტი"
+
+#: ../rules/base.xml.in.h:52
+msgid "Apple"
+msgstr "Apple"
+
+#: ../rules/base.xml.in.h:53
+msgid "Apple Laptop"
+msgstr "Apple ლეპტოპი"
+
+#: ../rules/base.xml.in.h:54
+msgid "Ara"
+msgstr "არა"
+
+#: ../rules/base.xml.in.h:55
+msgid "Arabic"
+msgstr "არაბული"
+
+#: ../rules/base.xml.in.h:56
+msgid "Arm"
+msgstr "სომხ"
+
+#: ../rules/base.xml.in.h:57
+msgid "Armenia"
+msgstr "სომხეთი"
+
+#: ../rules/base.xml.in.h:58
+msgid "Aze"
+msgstr "აზერ"
+
+#: ../rules/base.xml.in.h:59
+msgid "Azerbaijan"
+msgstr "აზერბაიჯანი"
+
+#: ../rules/base.xml.in.h:60
+msgid "Azona RF2300 wireless Internet Keyboard"
+msgstr "Azona RF2300 wireless Internet Keyboard"
+
+#: ../rules/base.xml.in.h:61
+msgid "BTC 5090"
+msgstr "BTC 5090"
+
+#: ../rules/base.xml.in.h:62
+msgid "BTC 5113RF Multimedia"
+msgstr "BTC 5113RF Multimedia"
+
+#: ../rules/base.xml.in.h:63
+msgid "BTC 5126T"
+msgstr "BTC 5126T"
+
+#: ../rules/base.xml.in.h:64
+msgid "BTC 9000"
+msgstr "BTC 9000"
+
+#: ../rules/base.xml.in.h:65
+msgid "BTC 9000A"
+msgstr "BTC 9000A"
+
+#: ../rules/base.xml.in.h:66
+msgid "BTC 9001AH"
+msgstr "BTC 9001AH"
+
+#: ../rules/base.xml.in.h:67
+msgid "BTC 9019U"
+msgstr "BTC 9019U"
+
+#: ../rules/base.xml.in.h:68
+msgid "Ban"
+msgstr "ბან"
+
+#: ../rules/base.xml.in.h:69
+msgid "Bangladesh"
+msgstr "ბანგლადეში"
+
+#: ../rules/base.xml.in.h:70
+msgid "Bel"
+msgstr "ბელ"
+
+#: ../rules/base.xml.in.h:71
+msgid "Belarus"
+msgstr "ბელორუსია"
+
+#: ../rules/base.xml.in.h:72
+msgid "Belgium"
+msgstr "ბელგია"
+
+#: ../rules/base.xml.in.h:73
+msgid "Bengali"
+msgstr "ბენგალი"
+
+#: ../rules/base.xml.in.h:74
+msgid "Bengali Probhat"
+msgstr "ბენგალის პრობატი"
+
+#: ../rules/base.xml.in.h:75
+msgid "Bgr"
+msgstr "ბოლგ"
+
+#: ../rules/base.xml.in.h:76
+msgid "Bhu"
+msgstr "ბუტ"
+
+#: ../rules/base.xml.in.h:77
+msgid "Bhutan"
+msgstr "ბუტანი"
+
+#: ../rules/base.xml.in.h:78
+msgid "Bih"
+msgstr "ბოსნ"
+
+#: ../rules/base.xml.in.h:79
+msgid "Blr"
+msgstr "ბელ"
+
+#: ../rules/base.xml.in.h:80
+msgid "Bosnia and Herzegovina"
+msgstr "ბოსნია და ჰერცოგოვინა"
+
+#: ../rules/base.xml.in.h:81
+msgid "Both Alt keys together change group."
+msgstr ""
+"ორივე Alt ღილაკი ერთად ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:82
+msgid "Both Ctrl keys together change group."
+msgstr ""
+"ორივე Ctrl ღილაკი ერთად ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:83
+msgid "Both Shift keys together change group."
+msgstr ""
+"ორივე Shift ღილაკი ერთად ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:84
+msgid "Both Win-keys switch group while pressed."
+msgstr ""
+"ორივე Win ღილაკი ერთად ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:85
+msgid "Bra"
+msgstr "ბრაზ"
+
+#: ../rules/base.xml.in.h:86
+msgid "Brazil"
+msgstr "ბრაზილია"
+
+#: ../rules/base.xml.in.h:87
+msgid "Brazilian ABNT2"
+msgstr "ბრაზილიური ABNT2"
+
+#: ../rules/base.xml.in.h:88
+msgid "Brother Internet Keyboard"
+msgstr "Brother Internet Keyboard"
+
+#: ../rules/base.xml.in.h:89
+msgid "Bulgaria"
+msgstr "ბულგარეთი"
+
+#: ../rules/base.xml.in.h:90
+msgid "Cambodia"
+msgstr "კამბოჯა"
+
+#: ../rules/base.xml.in.h:91
+msgid "Can"
+msgstr "კან"
+
+#: ../rules/base.xml.in.h:92
+msgid "Canada"
+msgstr "კანადა"
+
+#: ../rules/base.xml.in.h:93
+msgid "Caps Lock is Compose."
+msgstr ""
+"ღილაკი 	Caps Lock შეესაბამება Compose-ს."
+
+#: ../rules/base.xml.in.h:94
+msgid "CapsLock LED shows alternative group."
+msgstr ""
+"CapsLock-ის ინდიკატორი აჩვენებს "
+"დამატებით ჯგუფებს."
+
+#: ../rules/base.xml.in.h:95
+msgid "CapsLock acts as Shift with locking. Shift \"pauses\" CapsLock."
+msgstr ""
+"მუშაობს როგორც დაბლოკილი Shift, "
+"ის აყოვნებს CapsLock-ის "
+"მოქმედებას."
+
+#: ../rules/base.xml.in.h:96
+msgid "CapsLock acts as Shift with locking. Shift doesn't affect CapsLock."
+msgstr ""
+"მუშაობს როგორც დაბლოკილი Shift, "
+"ის არ აყოვნებს CapsLock-ის "
+"მოქმედებას."
+
+#: ../rules/base.xml.in.h:97
+msgid "CapsLock just locks the Shift modifier."
+msgstr ""
+"CapsLock-ი ბლოკავს Shift "
+"მოდიფიკატორს."
+
+#: ../rules/base.xml.in.h:98
+msgid "CapsLock key behavior"
+msgstr "CapsLock ღილაკის ქცევა"
+
+#: ../rules/base.xml.in.h:99
+msgid "CapsLock key changes group."
+msgstr "CapsLock ღილაკი ცვლის ჯგუფს."
+
+#: ../rules/base.xml.in.h:100
+msgid "CapsLock toggles Shift so all keys are affected."
+msgstr ""
+"CapsLock რთავს Shift-ს, ეხება ყველა "
+"ღილაკს."
+
+#: ../rules/base.xml.in.h:101
+msgid "CapsLock toggles normal capitalization of alphabetic characters."
+msgstr ""
+"CapsLock რთავს ალფავიტის "
+"სიმბოლოების უბრალო "
+"კაპიტალიზაციას."
+
+#: ../rules/base.xml.in.h:102
+msgid "CapsLock uses internal capitalization. Shift \"pauses\" CapsLock."
+msgstr ""
+"რთავს შიდა კაპიტალიზაციას. "
+"Shift აყოვნებს CapsLock-ს. "
+
+#: ../rules/base.xml.in.h:103
+msgid "CapsLock uses internal capitalization. Shift doesn't affect CapsLock."
+msgstr ""
+"რთავს შიდა კაპიტალიზაციას. "
+"Shift არ ეხება CapsLock-ს. "
+
+#: ../rules/base.xml.in.h:104
+msgid "Catalan variant with middle-dot L"
+msgstr "კატალანური საშუალო L-ით"
+
+#: ../rules/base.xml.in.h:105
+msgid "Che"
+msgstr "შვეიც"
+
+#: ../rules/base.xml.in.h:106
+msgid "Cherry Blue Line CyBo@rd"
+msgstr "Cherry Blue Line CyBo@rd"
+
+#: ../rules/base.xml.in.h:107
+msgid "Cherry Blue Line CyBo@rd (alternate option)"
+msgstr ""
+"Cherry Blue Line CyBo@rd (ალტერნატიული "
+"ვარიანტი)"
+
+#: ../rules/base.xml.in.h:108
+msgid "Cherry CyBo@rd USB-Hub"
+msgstr "Cherry CyBo@rd USB-Hub"
+
+#: ../rules/base.xml.in.h:109
+msgid "Cherry CyMotion Master Linux"
+msgstr "Cherry CyMotion Master Linux"
+
+#: ../rules/base.xml.in.h:110
+msgid "Chicony Internet Keyboard"
+msgstr "Chicony Internet Keyboard"
+
+#: ../rules/base.xml.in.h:111
+msgid "Chicony KB-9885"
+msgstr "Chicony KB-9885"
+
+#: ../rules/base.xml.in.h:112
+msgid "Classic Dvorak"
+msgstr "კლასიკური Dvorak"
+
+#: ../rules/base.xml.in.h:113
+msgid "CloGaelach"
+msgstr "CloGaelach"
+
+#: ../rules/base.xml.in.h:114
+msgid "Compaq Easy Access Keyboard"
+msgstr "Compaq Easy Access Keyboard"
+
+#: ../rules/base.xml.in.h:115
+msgid "Compaq Internet Keyboard (13 keys)"
+msgstr "Compaq Internet Keyboard (13 ღილაკიანი)"
+
+#: ../rules/base.xml.in.h:116
+msgid "Compaq Internet Keyboard (18 keys)"
+msgstr "Compaq Internet Keyboard (18 ღილაკიანი)"
+
+#: ../rules/base.xml.in.h:117
+msgid "Compaq Internet Keyboard (7 keys)"
+msgstr "Compaq Internet Keyboard (7 ღილაკიანი)"
+
+#: ../rules/base.xml.in.h:118
+msgid "Compaq iPaq Keyboard"
+msgstr "Compaq iPaq Keyboard"
+
+#: ../rules/base.xml.in.h:119
+msgid "Compose key position"
+msgstr "Compose კლავიშის პოზიცია"
+
+#: ../rules/base.xml.in.h:120
+msgid "Congo, Democratic Republic of the"
+msgstr ""
+"კონგოს დემოკრატიული "
+"რესპუბლიკა"
+
+#: ../rules/base.xml.in.h:121
+msgid "Croatia"
+msgstr "ხორვატია"
+
+#: ../rules/base.xml.in.h:122
+msgid "Ctrl key at bottom left"
+msgstr "Ctrl ღილაკი ქვემოთ მარცხნივ"
+
+#: ../rules/base.xml.in.h:123
+msgid "Ctrl key at left of 'A'"
+msgstr "Ctrl ღილაკი A ასოს მარცხნივ"
+
+#: ../rules/base.xml.in.h:124
+msgid "Ctrl key position"
+msgstr ""
+"Ctrl ღილაკის ადგილმდებარეობა"
+
+#: ../rules/base.xml.in.h:125
+msgid "Ctrl+Shift changes group."
+msgstr "Ctrl Shift ცვლის ჯგუფს."
+
+#: ../rules/base.xml.in.h:126
+msgid "Cyrillic"
+msgstr "კირილიცა"
+
+#: ../rules/base.xml.in.h:127
+msgid "Cze"
+msgstr "ჩეხ"
+
+#: ../rules/base.xml.in.h:128
+msgid "Czechia"
+msgstr "ჩეხეთი"
+
+#: ../rules/base.xml.in.h:129
+msgid "DRC"
+msgstr "DRC"
+
+#: ../rules/base.xml.in.h:130
+msgid "DTK2000"
+msgstr "DTK2000"
+
+#: ../rules/base.xml.in.h:131
+msgid "Dead acute"
+msgstr "სპეც. სიმბოლო Dead acute"
+
+#: ../rules/base.xml.in.h:132
+msgid "Dead grave acute"
+msgstr "სპეც. სიმბოლო Dead grave acute"
+
+#: ../rules/base.xml.in.h:133
+msgid "Default numpad keys."
+msgstr ""
+"სტანდარტული ციფრული "
+"კლავიშები"
+
+#: ../rules/base.xml.in.h:134
+msgid "Dell"
+msgstr "Dell"
+
+#: ../rules/base.xml.in.h:135
+msgid "Dell 101-key PC"
+msgstr "Dell 101-კლავიშიანი PC"
+
+#: ../rules/base.xml.in.h:136
+msgid "Dell Latitude series laptop"
+msgstr "Dell Latitude series laptop"
+
+#: ../rules/base.xml.in.h:137
+msgid "Dell USB Multimedia Keybard"
+msgstr "Dell USB Multimedia Keybard"
+
+#: ../rules/base.xml.in.h:138
+msgid "Denmark"
+msgstr "დანია"
+
+#: ../rules/base.xml.in.h:139
+msgid "Deu"
+msgstr "გერ"
+
+#: ../rules/base.xml.in.h:140
+msgid "Dexxa Wireless Desktop Keyboard"
+msgstr "Dexxa Wireless Desktop Keyboard"
+
+#: ../rules/base.xml.in.h:141
+msgid "Diamond 9801 / 9802 series"
+msgstr "მოდელები Diamond 9801 / 9802 series"
+
+#: ../rules/base.xml.in.h:142
+msgid "Dnk"
+msgstr "დან"
+
+#: ../rules/base.xml.in.h:143
+msgid "Dvorak"
+msgstr "დვორაკული"
+
+#: ../rules/base.xml.in.h:144
+msgid "Dvorak, Polish quotes on key \"1/!\""
+msgstr ""
+"Dvorak, პოლონური ფრჩხილები \"1/!\" "
+"ღილაკზეა"
+
+#: ../rules/base.xml.in.h:145
+msgid "Dvorak, Polish quotes on quotemark key"
+msgstr ""
+"Dvorak, პოლონური ფრჩხილები, "
+"ფრჩხილების კლავიშზე"
+
+#: ../rules/base.xml.in.h:146
+msgid "Eliminate dead keys"
+msgstr ""
+"სპეც ღილაკების (dead keys) გამორთვა"
+
+#: ../rules/base.xml.in.h:147
+msgid "Ennyah DKB-1008"
+msgstr "Ennyah DKB-1008"
+
+#: ../rules/base.xml.in.h:148
+msgid "Epo"
+msgstr "ეპო"
+
+#: ../rules/base.xml.in.h:149
+msgid "Esp"
+msgstr "ესპ"
+
+#: ../rules/base.xml.in.h:150
+msgid "Esperanto"
+msgstr "ესპერანტო"
+
+#: ../rules/base.xml.in.h:151
+msgid "Est"
+msgstr "ესტ"
+
+#: ../rules/base.xml.in.h:152
+msgid "Estonia"
+msgstr "ესტონეთი"
+
+#: ../rules/base.xml.in.h:153
+msgid "Evdev-managed keyboard"
+msgstr "Evdev-managed keyboard"
+
+#: ../rules/base.xml.in.h:154
+msgid "Everex STEPnote"
+msgstr "Everex STEPnote"
+
+#: ../rules/base.xml.in.h:155
+msgid "Ewe"
+msgstr "ივი"
+
+#: ../rules/base.xml.in.h:156
+msgid "Extended"
+msgstr "გაფართოებული"
+
+#: ../rules/base.xml.in.h:157
+msgid "Extended Backslash"
+msgstr ""
+"Backslash გაფართოებული ფუნქციები"
+
+#: ../rules/base.xml.in.h:158
+msgid "F-letter (F) variant"
+msgstr "F-ს ვარიანტი"
+
+#: ../rules/base.xml.in.h:159
+msgid "Fao"
+msgstr "ფარ"
+
+#: ../rules/base.xml.in.h:160
+msgid "Faroe Islands"
+msgstr "ფარერის კუნძულები"
+
+#: ../rules/base.xml.in.h:161
+msgid "Fin"
+msgstr "ფინ"
+
+#: ../rules/base.xml.in.h:162
+msgid "Finland"
+msgstr "ფინეთი"
+
+#: ../rules/base.xml.in.h:163
+msgid "Fra"
+msgstr "ფრა"
+
+#: ../rules/base.xml.in.h:164
+msgid "France"
+msgstr "საფრანგეთი"
+
+#: ../rules/base.xml.in.h:165
+msgid "French"
+msgstr "ფრანგული"
+
+#: ../rules/base.xml.in.h:166
+msgid "French (Macintosh)"
+msgstr "ფრანგული (Macintosh)"
+
+#: ../rules/base.xml.in.h:167
+msgid "French (legacy)"
+msgstr "ფრანგული (legacy)"
+
+#: ../rules/base.xml.in.h:168
+msgid "French Dvorak"
+msgstr "ფრანგული Dvorak"
+
+#: ../rules/base.xml.in.h:169
+msgid "French, Sun dead keys"
+msgstr "ფრანგული, Sun dead keys"
+
+#: ../rules/base.xml.in.h:170
+msgid "French, eliminate dead keys"
+msgstr "ფრანგული, dead keys გარეშე"
+
+#: ../rules/base.xml.in.h:171
+msgid "Fula"
+msgstr "ფულა"
+
+#: ../rules/base.xml.in.h:172
+msgid "GBr"
+msgstr "ბრიტ"
+
+#: ../rules/base.xml.in.h:173
+msgid "Ga"
+msgstr "გა"
+
+#: ../rules/base.xml.in.h:174
+msgid "Generic 101-key PC"
+msgstr "სტანდარტული 101-ღილაკიანი PC"
+
+#: ../rules/base.xml.in.h:175
+msgid "Generic 102-key (Intl) PC"
+msgstr ""
+"სტანდარტული 102-ღილაკიანი (Intl) PC"
+
+#: ../rules/base.xml.in.h:176
+msgid "Generic 104-key PC"
+msgstr "სტანდარტული 104-ღილაკიანი PC"
+
+#: ../rules/base.xml.in.h:177
+msgid "Generic 105-key (Intl) PC"
+msgstr ""
+"სტანდარტული 105-ღილაკიანი (Intl) PC"
+
+#: ../rules/base.xml.in.h:178
+msgid "Genius Comfy KB-12e"
+msgstr "Genius Comfy KB-12e"
+
+#: ../rules/base.xml.in.h:179
+msgid "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
+msgstr "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
+
+#: ../rules/base.xml.in.h:180
+msgid "Genius Comfy KB-21e-Scroll"
+msgstr "Genius Comfy KB-21e-Scroll"
+
+#: ../rules/base.xml.in.h:181
+msgid "Genius KB-19e NB"
+msgstr "Genius KB-19e NB"
+
+#: ../rules/base.xml.in.h:182
+msgid "Geo"
+msgstr "ქართ"
+
+#: ../rules/base.xml.in.h:183
+msgid "Georgia"
+msgstr "საქართველო"
+
+#: ../rules/base.xml.in.h:184
+msgid "German (Macintosh)"
+msgstr "გერმანული (Macintosh)"
+
+#: ../rules/base.xml.in.h:185
+msgid "German, Sun dead keys"
+msgstr "გერმანული, Sun dead keys"
+
+#: ../rules/base.xml.in.h:186
+msgid "German, eliminate dead keys"
+msgstr "გერმანული, სპეც dead keys გარეშე"
+
+#: ../rules/base.xml.in.h:187
+msgid "Germany"
+msgstr "გერმანია"
+
+#: ../rules/base.xml.in.h:188
+msgid "Gha"
+msgstr "გან"
+
+#: ../rules/base.xml.in.h:189
+msgid "Ghana"
+msgstr "განა"
+
+#: ../rules/base.xml.in.h:190
+msgid "Gre"
+msgstr "საბ"
+
+#: ../rules/base.xml.in.h:191
+msgid "Greece"
+msgstr "საბერძნეთი"
+
+#: ../rules/base.xml.in.h:192
+msgid "Group Shift/Lock behavior"
+msgstr ""
+"განლაგების შეცვლის ფუნქცია"
+
+#: ../rules/base.xml.in.h:193
+msgid "Gujarati"
+msgstr "გუჯარათი"
+
+#: ../rules/base.xml.in.h:194
+msgid "Gurmukhi"
+msgstr "გურმუხი"
+
+#: ../rules/base.xml.in.h:195
+msgid "Gyration"
+msgstr "გირაშნ"
+
+#: ../rules/base.xml.in.h:196
+msgid "Hausa"
+msgstr "ჰაუსა"
+
+#: ../rules/base.xml.in.h:197
+msgid "Hewlett-Packard Internet Keyboard"
+msgstr "Hewlett-Packard Internet Keyboard"
+
+#: ../rules/base.xml.in.h:198
+msgid "Hewlett-Packard Omnibook 500 FA"
+msgstr "Hewlett-Packard Omnibook 500 FA"
+
+#: ../rules/base.xml.in.h:199
+msgid "Hewlett-Packard Omnibook 5xx"
+msgstr "Hewlett-Packard Omnibook 5xx"
+
+#: ../rules/base.xml.in.h:200
+msgid "Hewlett-Packard Omnibook 6000/6100"
+msgstr "Hewlett-Packard Omnibook 6000/6100"
+
+#: ../rules/base.xml.in.h:201
+msgid "Hewlett-Packard Omnibook XE3 GC"
+msgstr "Hewlett-Packard Omnibook XE3 GC"
+
+#: ../rules/base.xml.in.h:202
+msgid "Hewlett-Packard Omnibook XE3 GF"
+msgstr "Hewlett-Packard Omnibook XE3 GF"
+
+#: ../rules/base.xml.in.h:203
+msgid "Hewlett-Packard Omnibook XT1000"
+msgstr "Hewlett-Packard Omnibook XT1000"
+
+#: ../rules/base.xml.in.h:204
+msgid "Hewlett-Packard Pavilion ZT11xx"
+msgstr "Hewlett-Packard Pavilion ZT11xx"
+
+#: ../rules/base.xml.in.h:205
+msgid "Hewlett-Packard SK-2501 Multimedia Keyboard"
+msgstr "Hewlett-Packard SK-2501 Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:206
+msgid "Hewlett-Packard SK-2505 Internet Keyboard"
+msgstr "Hewlett-Packard SK-2505 Internet Keyboard"
+
+#: ../rules/base.xml.in.h:207
+msgid "Honeywell Euroboard"
+msgstr "Honeywell Euroboard"
+
+#: ../rules/base.xml.in.h:208
+msgid "Hrv"
+msgstr "ხორ"
+
+#: ../rules/base.xml.in.h:209
+msgid "Hun"
+msgstr "უნგ"
+
+#: ../rules/base.xml.in.h:210
+msgid "Hungary"
+msgstr "უნგრეთი"
+
+#: ../rules/base.xml.in.h:211
+msgid "Hyper is mapped to the Win-keys."
+msgstr "Hyper შეესაბამება Win ღილაკებს."
+
+#: ../rules/base.xml.in.h:212
+msgid "IBM (LST 1205-92)"
+msgstr "IBM (LST 1205-92)"
+
+#: ../rules/base.xml.in.h:213
+msgid "IBM Rapid Access"
+msgstr "IBM Rapid Access"
+
+#: ../rules/base.xml.in.h:214
+msgid "IBM Rapid Access II"
+msgstr "IBM Rapid Access II"
+
+#: ../rules/base.xml.in.h:215
+msgid "IBM Rapid Access II (alternate option)"
+msgstr ""
+"IBM Rapid Access II (ალტერნატიული "
+"ვარიანტი)"
+
+#: ../rules/base.xml.in.h:216
+msgid "IBM ThinkPad 560Z/600/600E/A22E"
+msgstr "IBM ThinkPad 560Z/600/600E/A22E"
+
+#: ../rules/base.xml.in.h:217
+msgid "IBM ThinkPad 560Z/600/600E/A22E, Intl"
+msgstr "IBM ThinkPad 560Z/600/600E/A22E, Intl"
+
+#: ../rules/base.xml.in.h:218
+msgid "ISO Alternate"
+msgstr "დამატებითი ISO"
+
+#: ../rules/base.xml.in.h:219
+msgid "Iceland"
+msgstr "ისლანდია"
+
+#: ../rules/base.xml.in.h:220
+msgid "Ind"
+msgstr "ინდ"
+
+#: ../rules/base.xml.in.h:221
+msgid "India"
+msgstr "ინდოეთი"
+
+#: ../rules/base.xml.in.h:222
+msgid "International (with dead keys)"
+msgstr ""
+"საერთაშორისო, სპეც "
+"ღილაკებით (dead keys)"
+
+#: ../rules/base.xml.in.h:223
+msgid "Inuktitut"
+msgstr "ინუკტიტუტი"
+
+#: ../rules/base.xml.in.h:224
+msgid "Iran"
+msgstr "ირანი"
+
+#: ../rules/base.xml.in.h:225
+msgid "Iraq"
+msgstr "ერაყი"
+
+#: ../rules/base.xml.in.h:226
+msgid "Ireland"
+msgstr "ირლანდია"
+
+#: ../rules/base.xml.in.h:227
+msgid "Irl"
+msgstr "ირლ"
+
+#: ../rules/base.xml.in.h:228
+msgid "Irn"
+msgstr "ირა"
+
+#: ../rules/base.xml.in.h:229
+msgid "Irq"
+msgstr "ერა"
+
+#: ../rules/base.xml.in.h:230
+msgid "Isl"
+msgstr "ისლ"
+
+#: ../rules/base.xml.in.h:231
+msgid "Isr"
+msgstr "ებრ"
+
+#: ../rules/base.xml.in.h:232
+msgid "Israel"
+msgstr "ისრაელი"
+
+#: ../rules/base.xml.in.h:233
+msgid "Ita"
+msgstr "იტა"
+
+#: ../rules/base.xml.in.h:234
+msgid "Italy"
+msgstr "იტალია"
+
+#: ../rules/base.xml.in.h:235
+msgid "Japan"
+msgstr "იაპონია"
+
+#: ../rules/base.xml.in.h:236
+msgid "Japan (PC-98xx Series)"
+msgstr "Japan (PC-98xx Series)"
+
+#: ../rules/base.xml.in.h:237
+msgid "Japanese 106-key"
+msgstr "იაპონია 106-ღილაკიანი"
+
+#: ../rules/base.xml.in.h:238
+msgid "Jpn"
+msgstr "იაპ"
+
+#: ../rules/base.xml.in.h:239
+msgid "Kannada"
+msgstr "კანნადა"
+
+#: ../rules/base.xml.in.h:240
+msgid "Kashubian"
+msgstr "კაშუბიანი"
+
+#: ../rules/base.xml.in.h:241
+msgid "Kaz"
+msgstr "ყაზ"
+
+#: ../rules/base.xml.in.h:242
+msgid "Kazakh with Russian"
+msgstr "ყაზახური რუსულთან"
+
+#: ../rules/base.xml.in.h:243
+msgid "Kazakhstan"
+msgstr "ყაზახეთი"
+
+#: ../rules/base.xml.in.h:244
+msgid "Keypad"
+msgstr "დამატებითი პანელით"
+
+#: ../rules/base.xml.in.h:245
+msgid "Keytronic FlexPro"
+msgstr "Keytronic FlexPro"
+
+#: ../rules/base.xml.in.h:246
+msgid "Khm"
+msgstr "კხმ"
+
+#: ../rules/base.xml.in.h:247
+msgid "Kor"
+msgstr "კორ"
+
+#: ../rules/base.xml.in.h:248
+msgid "Korea, Republic of"
+msgstr "კორეა, რესპუბლიკა"
+
+#: ../rules/base.xml.in.h:249
+msgid "Korean 106-key"
+msgstr "კორეული 106-ღილაკიანი"
+
+#: ../rules/base.xml.in.h:250
+msgid "Kotoistus"
+msgstr "Kotoistus"
+
+#: ../rules/base.xml.in.h:251
+msgid "Kurdish, (F)"
+msgstr "ქურთული, (F)"
+
+#: ../rules/base.xml.in.h:252
+msgid "Kurdish, Arabic-Latin"
+msgstr "ქურთული, არაბულ-ლათინური"
+
+#: ../rules/base.xml.in.h:253
+msgid "Kurdish, Latin Alt-Q"
+msgstr "ქურთული, ლათინური Alt-Q"
+
+#: ../rules/base.xml.in.h:254
+msgid "Kurdish, Latin Q"
+msgstr "ქურთული, ლათინური Q"
+
+#: ../rules/base.xml.in.h:255
+msgid "Kyr"
+msgstr "ყირ"
+
+#: ../rules/base.xml.in.h:256
+msgid "Kyrgyzstan"
+msgstr "ყირღიზეთი"
+
+#: ../rules/base.xml.in.h:257
+msgid "LAm"
+msgstr "ლათამ"
+
+#: ../rules/base.xml.in.h:258
+msgid "Lao"
+msgstr "ლაოსური"
+
+#: ../rules/base.xml.in.h:259
+msgid "Laos"
+msgstr "ლაოსი"
+
+#: ../rules/base.xml.in.h:260
+msgid "Laptop/notebook Compaq (eg. Armada) Laptop Keyboard"
+msgstr ""
+"Compaq ლეპტოპ/ნოუთბუქის "
+"კლავიატურა (მაგ. Armada)"
+
+#: ../rules/base.xml.in.h:261
+msgid "Laptop/notebook Compaq (eg. Presario) Internet Keyboard"
+msgstr ""
+"Compaq ლეპტოპ/ნოუთბუქის "
+"კლავიატურა (მაგ. Presario)"
+
+#: ../rules/base.xml.in.h:262
+msgid "Laptop/notebook Dell Inspiron 6xxx/8xxx"
+msgstr "ლეპტოპ/ნოუთბუქი Dell Inspiron 6xxx/8xxx"
+
+#: ../rules/base.xml.in.h:263
+msgid "Laptop/notebook eMachines m68xx"
+msgstr "ლეპტოპ/ნოუთბუქი eMachines m68xx"
+
+#: ../rules/base.xml.in.h:264
+msgid "Latin"
+msgstr "ლათინური"
+
+#: ../rules/base.xml.in.h:265
+msgid "Latin American"
+msgstr "ლათინურ ამერიკული"
+
+#: ../rules/base.xml.in.h:266
+msgid "Latin Unicode"
+msgstr "ლათინური უნიკოდი"
+
+#: ../rules/base.xml.in.h:267
+msgid "Latin Unicode qwerty"
+msgstr "ლათინური უნიკოდი qwerty"
+
+#: ../rules/base.xml.in.h:268
+msgid "Latin qwerty"
+msgstr "ლათინური qwerty"
+
+#: ../rules/base.xml.in.h:269
+msgid "Latin with guillemets"
+msgstr ""
+"ლათინური ფრანგული "
+"ბრჭყალებით"
+
+#: ../rules/base.xml.in.h:270
+msgid "Latvia"
+msgstr "ლატვია"
+
+#: ../rules/base.xml.in.h:271
+msgid "Left Alt is swapped with left Win-key."
+msgstr ""
+"მარცხენა Alt-ი შეცვლილია Win "
+"ღილაკით"
+
+#: ../rules/base.xml.in.h:272
+msgid "Left Alt key changes group."
+msgstr ""
+"მარცხენა Alt ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:273
+msgid "Left Alt key switches group while pressed."
+msgstr ""
+"მარცხენა Alt ღილაკი ცვლის "
+"ჯგუფს დაჭერის დროს."
+
+#: ../rules/base.xml.in.h:274
+msgid "Left Ctrl key changes group."
+msgstr ""
+"მარცხენა Alt ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:275
+msgid "Left Shift key changes group."
+msgstr ""
+"მარცხენა Shift ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:276
+msgid "Left Win-key changes group."
+msgstr ""
+"მარცხენა Win ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:277
+msgid "Left Win-key is Compose."
+msgstr ""
+"მარცხენა Win ღილაკი "
+"შეესაბამება Compose-ს."
+
+#: ../rules/base.xml.in.h:278
+msgid "Left Win-key switches group while pressed."
+msgstr ""
+"მარცხენა Win ღილაკი ცვლის "
+"ჯგუფს დაჭერის დროს."
+
+#: ../rules/base.xml.in.h:279
+msgid "Left handed Dvorak"
+msgstr "Dvorak ცაციებისთვის"
+
+#: ../rules/base.xml.in.h:280
+msgid "Lithuania"
+msgstr "ლიტვა"
+
+#: ../rules/base.xml.in.h:281
+msgid "Logitech Access Keyboard"
+msgstr "Logitech Access Keyboard"
+
+#: ../rules/base.xml.in.h:282
+msgid "Logitech Cordless Desktop"
+msgstr "Logitech Cordless Desktop"
+
+#: ../rules/base.xml.in.h:283
+msgid "Logitech Cordless Desktop LX-300"
+msgstr "Logitech Cordless Desktop LX-300"
+
+#: ../rules/base.xml.in.h:284
+msgid "Logitech Cordless Desktop Navigator"
+msgstr "Logitech Cordless Desktop Navigator"
+
+#: ../rules/base.xml.in.h:285
+msgid "Logitech Cordless Desktop Optical"
+msgstr "Logitech Cordless Desktop Optical"
+
+#: ../rules/base.xml.in.h:286
+msgid "Logitech Cordless Desktop Pro"
+msgstr "Logitech Cordless Desktop Pro"
+
+#: ../rules/base.xml.in.h:287
+msgid "Logitech Cordless Desktop Pro (alternate option)"
+msgstr ""
+"Logitech Cordless Desktop Pro (ალტერნატიული "
+"ვარიანტი)"
+
+#: ../rules/base.xml.in.h:288
+msgid "Logitech Cordless Desktop Pro (alternate option2)"
+msgstr ""
+"Logitech Cordless Desktop Pro (ალტერნატიული "
+"ვარიანტი2)"
+
+#: ../rules/base.xml.in.h:289
+msgid "Logitech Cordless Desktop iTouch"
+msgstr "Logitech Cordless Desktop iTouch"
+
+#: ../rules/base.xml.in.h:290
+msgid "Logitech Cordless Freedom/Desktop Navigator"
+msgstr "Logitech Cordless Freedom/Desktop Navigator"
+
+#: ../rules/base.xml.in.h:291
+msgid "Logitech Internet Keyboard"
+msgstr "Logitech Internet Keyboard"
+
+#: ../rules/base.xml.in.h:292
+msgid "Logitech Internet Navigator Keyboard"
+msgstr "Logitech Internet Navigator Keyboard"
+
+#: ../rules/base.xml.in.h:293
+msgid "Logitech Ultra-X Keyboard"
+msgstr "Logitech Ultra-X Keyboard"
+
+#: ../rules/base.xml.in.h:294
+msgid "Logitech diNovo Keyboard"
+msgstr "Logitech diNovo Keyboard"
+
+#: ../rules/base.xml.in.h:295
+msgid "Logitech iTouch"
+msgstr "Logitech iTouch"
+
+#: ../rules/base.xml.in.h:296
+msgid "Logitech iTouch Cordless Keyboard (model Y-RB6)"
+msgstr "Logitech iTouch Cordless Keyboard (model Y-RB6)"
+
+#: ../rules/base.xml.in.h:297
+msgid "Logitech iTouch Internet Navigator Keyboard SE"
+msgstr "Logitech iTouch Internet Navigator Keyboard SE"
+
+#: ../rules/base.xml.in.h:298
+msgid "Logitech iTouch Internet Navigator Keyboard SE (USB)"
+msgstr "Logitech iTouch Internet Navigator Keyboard SE (USB)"
+
+#: ../rules/base.xml.in.h:299
+msgid "Ltu"
+msgstr "ლიტ"
+
+#: ../rules/base.xml.in.h:300
+msgid "Lva"
+msgstr "ლატვ"
+
+#: ../rules/base.xml.in.h:301
+msgid "Macedonia"
+msgstr "მაკედონია"
+
+#: ../rules/base.xml.in.h:302
+msgid "Macintosh"
+msgstr "Macintosh"
+
+#: ../rules/base.xml.in.h:303
+msgid "Macintosh Old"
+msgstr "Macintosh ძველი"
+
+#: ../rules/base.xml.in.h:304
+msgid "Macintosh layout"
+msgstr "Macintosh-ის განლაგება"
+
+#: ../rules/base.xml.in.h:305
+msgid "Macintosh layout, eliminate dead keys"
+msgstr ""
+"Macintosh-ის განლაგება, სპეც "
+"კლავიშების (dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:306
+msgid "Make CapsLock an additional Ctrl."
+msgstr ""
+"გამოიყენე CapsLock როგორც "
+"დამატებითი Ctrl კლავიში."
+
+#: ../rules/base.xml.in.h:307
+msgid "Mal"
+msgstr "მალ"
+
+#: ../rules/base.xml.in.h:308
+msgid "Malayalam"
+msgstr "მალაური"
+
+#: ../rules/base.xml.in.h:309
+msgid "Maldives"
+msgstr "მალდივები"
+
+#: ../rules/base.xml.in.h:310
+msgid "Malta"
+msgstr "მალტა"
+
+#: ../rules/base.xml.in.h:311
+msgid "Maltese keyboard with US layout"
+msgstr ""
+"მალტის კლავიატურა აშშ-ს "
+"განლაგებით"
+
+#: ../rules/base.xml.in.h:312
+msgid "Mao"
+msgstr "მაო"
+
+#: ../rules/base.xml.in.h:313
+msgid "Maori"
+msgstr "მაორი"
+
+#: ../rules/base.xml.in.h:314
+msgid "Memorex MX1998"
+msgstr "Memorex MX1998"
+
+#: ../rules/base.xml.in.h:315
+msgid "Memorex MX2500 EZ-Access Keyboard"
+msgstr "Memorex MX2500 EZ-Access Keyboard"
+
+#: ../rules/base.xml.in.h:316
+msgid "Memorex MX2750"
+msgstr "Memorex MX2750"
+
+#: ../rules/base.xml.in.h:317
+msgid "Menu is Compose."
+msgstr ""
+"Menu ღილაკი შეესაბამება Compose-ის "
+"ღილაკს."
+
+#: ../rules/base.xml.in.h:318
+msgid "Menu key changes group."
+msgstr "Menu-ს ღილაკი ცვლის ჯგუფს."
+
+#: ../rules/base.xml.in.h:319
+msgid "Meta is mapped to the Win-keys."
+msgstr ""
+"Мета შეესაბამება Win ღილაკებს."
+
+#: ../rules/base.xml.in.h:320
+msgid "Meta is mapped to the left Win-key."
+msgstr ""
+"Мета შეესაბამება მარცხენა Win "
+"ღილაკს."
+
+#: ../rules/base.xml.in.h:321
+msgid "Microsoft Internet Keyboard"
+msgstr "Microsoft Internet Keyboard"
+
+#: ../rules/base.xml.in.h:322
+msgid "Microsoft Internet Keyboard Pro, Swedish"
+msgstr "Microsoft Internet Keyboard Pro, შვედური"
+
+#: ../rules/base.xml.in.h:323
+msgid "Microsoft Natural"
+msgstr "Microsoft Natural"
+
+#: ../rules/base.xml.in.h:324
+msgid "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
+msgstr "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
+
+#: ../rules/base.xml.in.h:325
+msgid "Microsoft Natural Keyboard Pro OEM"
+msgstr "	Microsoft Natural Keyboard Pro OEM"
+
+#: ../rules/base.xml.in.h:326
+msgid "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
+msgstr "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
+
+#: ../rules/base.xml.in.h:327
+msgid "Microsoft Office Keyboard"
+msgstr "Microsoft Office Keyboard"
+
+#: ../rules/base.xml.in.h:328
+msgid "Microsoft Wireless Multimedia Keyboard 1.0A"
+msgstr "Microsoft Wireless Multimedia Keyboard 1.0A"
+
+#: ../rules/base.xml.in.h:329
+msgid "Miscellaneous compatibility options"
+msgstr ""
+"თავსებადობის სხვადასხვა "
+"პარამეტრი"
+
+#: ../rules/base.xml.in.h:330
+msgid "Mkd"
+msgstr "მაკ"
+
+#: ../rules/base.xml.in.h:331
+msgid "Mlt"
+msgstr "მალტ"
+
+#: ../rules/base.xml.in.h:332
+msgid "Mmr"
+msgstr "მიან"
+
+#: ../rules/base.xml.in.h:333
+msgid "Mng"
+msgstr "მონღ"
+
+#: ../rules/base.xml.in.h:334
+msgid "Mongolia"
+msgstr "მონღოლეთი"
+
+#: ../rules/base.xml.in.h:335
+msgid "Multilingual"
+msgstr "მრავალენოვანი"
+
+#: ../rules/base.xml.in.h:336
+msgid "Multilingual, first part"
+msgstr ""
+"მრავალენოვანი, პირველი "
+"ნაწილი"
+
+#: ../rules/base.xml.in.h:337
+msgid "Multilingual, second part"
+msgstr ""
+"მრავალენოვანი, მეორე ნაწილი"
+
+#: ../rules/base.xml.in.h:338
+msgid "Myanmar"
+msgstr "მიანმა"
+
+#: ../rules/base.xml.in.h:339
+msgid "Neostyle"
+msgstr "Neostyle"
+
+#: ../rules/base.xml.in.h:340
+msgid "Nep"
+msgstr "ნეპ"
+
+#: ../rules/base.xml.in.h:341
+msgid "Nepal"
+msgstr "ნეპალი"
+
+#: ../rules/base.xml.in.h:342
+msgid "Netherlands"
+msgstr "ნიდერლანდები"
+
+#: ../rules/base.xml.in.h:343
+msgid "Nld"
+msgstr "ჰოლ"
+
+#: ../rules/base.xml.in.h:344
+msgid "Nor"
+msgstr "ნორ"
+
+#: ../rules/base.xml.in.h:345
+msgid "Northern Saami"
+msgstr "ჩრდილოეთ საამური"
+
+#: ../rules/base.xml.in.h:346
+msgid "Northern Saami, eliminate dead keys"
+msgstr ""
+"ჩრდილოეთ საამური, სპეც "
+"ღილაკების (dead keys) გარეშე"
+
+#: ../rules/base.xml.in.h:347
+msgid "Northgate OmniKey 101"
+msgstr "Northgate OmniKey 101"
+
+#: ../rules/base.xml.in.h:348
+msgid "Norway"
+msgstr "ნორვეგია"
+
+#: ../rules/base.xml.in.h:349
+msgid "NumLock LED shows alternative group."
+msgstr ""
+"NumLock-ის ინდიკატორი აჩვენებს "
+"დამატებით ჯგუფს."
+
+#: ../rules/base.xml.in.h:350
+msgid "Numpad keys work as with Mac."
+msgstr ""
+"ციფრული ღილაკები "
+"მოქმედებენ როგორც Mac-ის "
+"კლავიატურაში."
+
+#: ../rules/base.xml.in.h:351
+msgid "Ogham"
+msgstr "ოგხამი"
+
+#: ../rules/base.xml.in.h:352
+msgid "Ogham IS434"
+msgstr "Ogham IS434"
+
+#: ../rules/base.xml.in.h:353
+msgid "Oretec MCK-800 MM/Internet keyboard"
+msgstr "Oretec MCK-800 MM/Internet keyboard"
+
+#: ../rules/base.xml.in.h:354
+msgid "Oriya"
+msgstr "ორია"
+
+#: ../rules/base.xml.in.h:355
+msgid "Ossetian"
+msgstr "ოსური"
+
+#: ../rules/base.xml.in.h:356
+msgid "Ossetian, Winkeys"
+msgstr "ოსური, Windows კლავიატურა"
+
+#: ../rules/base.xml.in.h:357
+msgid "PC-98xx Series"
+msgstr "PC-98xx Series"
+
+#: ../rules/base.xml.in.h:358
+msgid "Pak"
+msgstr "პაკ"
+
+#: ../rules/base.xml.in.h:359
+msgid "Pakistan"
+msgstr "პაკისტანი"
+
+#: ../rules/base.xml.in.h:360
+msgid "Pashto"
+msgstr "პაშტო"
+
+#: ../rules/base.xml.in.h:361
+msgid "Pattachote"
+msgstr "პატაჩოტი"
+
+#: ../rules/base.xml.in.h:362
+msgid "Phonetic"
+msgstr "ფონეტიკური"
+
+#: ../rules/base.xml.in.h:363
+msgid "Pol"
+msgstr "პოლ"
+
+#: ../rules/base.xml.in.h:364
+msgid "Poland"
+msgstr "პოლონეთი"
+
+#: ../rules/base.xml.in.h:365
+msgid "Polytonic"
+msgstr "პოლიფონიური"
+
+#: ../rules/base.xml.in.h:366
+msgid "Portugal"
+msgstr "პორტუგალია"
+
+#: ../rules/base.xml.in.h:367
+msgid "PowerPC PS/2"
+msgstr "PowerPC PS/2"
+
+#: ../rules/base.xml.in.h:368
+msgid "Press Left Alt key to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის "
+"ამორჩევისთვის, დააჭირეთ "
+"მარცხენა Alt-ს"
+
+#: ../rules/base.xml.in.h:369
+msgid "Press Left Win-key to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის "
+"ამორჩევისთვის, დააჭირეთ "
+"მარცხენა Win ღილაკს."
+
+#: ../rules/base.xml.in.h:370
+msgid "Press Menu key to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის "
+"ამორჩევისთვის, დააჭირეთ Menu "
+"ღილაკს."
+
+#: ../rules/base.xml.in.h:371
+msgid ""
+"Press Right Alt key to choose 3rd level, Shift+Right Alt key is Multi_Key."
+msgstr ""
+"მე-3 საფეხურის "
+"ამორჩევისთვის, დააჭირეთ "
+"მარჯვენა Alt ღილაკს. "
+"Shift+მარჯვენა Alt ღილაკი "
+"იმოქმედებენ როგორც Multi_Key."
+
+#: ../rules/base.xml.in.h:372
+msgid "Press Right Alt key to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის "
+"ამორჩევისთვის, დააჭირეთ "
+"მარჯვენა Alt ღილაკს."
+
+#: ../rules/base.xml.in.h:373
+msgid "Press Right Ctrl to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის "
+"ამორჩევისთვის, დააჭირეთ "
+"მარჯვენა Ctrl-ს."
+
+#: ../rules/base.xml.in.h:374
+msgid "Press Right Win-key to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის ამორჩევა "
+"მარჯვენა Win ღილაკის დაჭერით."
+
+#: ../rules/base.xml.in.h:375
+msgid "Press any of Alt keys to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის ამორჩევა "
+"ნებისმიერი Alt ღილაკის "
+"დაჭერით."
+
+#: ../rules/base.xml.in.h:376
+msgid "Press any of Win-keys to choose 3rd level."
+msgstr ""
+"მე-3 საფეხურის ამორჩევა "
+"ნებისმიერი Win ღილაკის "
+"დაჭერით."
+
+#: ../rules/base.xml.in.h:377
+msgid "Pro"
+msgstr "Pro"
+
+#: ../rules/base.xml.in.h:378
+msgid "Pro Keypad"
+msgstr "Pro დამატებ. პანელით"
+
+#: ../rules/base.xml.in.h:379
+msgid "Probhat"
+msgstr "პრობატი"
+
+#: ../rules/base.xml.in.h:380
+msgid "Propeller Voyager (KTEZ-1000)"
+msgstr "Propeller Voyager (KTEZ-1000)"
+
+#: ../rules/base.xml.in.h:381
+msgid "Prt"
+msgstr "პორტ"
+
+#: ../rules/base.xml.in.h:382
+msgid "QTronix Scorpius 98N+"
+msgstr "QTronix Scorpius 98N+"
+
+#: ../rules/base.xml.in.h:383
+msgid "R-Alt switches group while pressed."
+msgstr ""
+"მარჯვენა Alt კლავიში ცვლის "
+"ჯგუფს დაჭერილ "
+"მდგომარეობაში."
+
+#: ../rules/base.xml.in.h:384
+msgid "Right Alt is Compose."
+msgstr ""
+"მარჯვენა Alt ღილაკი "
+"შეესაბამება Compose-ს."
+
+#: ../rules/base.xml.in.h:385
+msgid "Right Alt key changes group."
+msgstr ""
+"მარჯვენა Alt ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:386
+msgid "Right Ctrl is Compose."
+msgstr ""
+"მარჯვენა Ctrl ღილაკი "
+"შეესაბამება Compose-ს."
+
+#: ../rules/base.xml.in.h:387
+msgid "Right Ctrl key changes group."
+msgstr ""
+"მარჯვენა Ctrl ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:388
+msgid "Right Ctrl key switches group while pressed."
+msgstr ""
+"მარჯვენა Ctrl ღილაკი ცვლის "
+"ჯგუფს დაჭერილ "
+"მდგომარეობაში."
+
+#: ../rules/base.xml.in.h:389
+msgid "Right Ctrl key works as Right Alt."
+msgstr ""
+"მარჯვენა Ctrl ღილაკი მოქმედებს "
+"როგორც მარჯვენა Alt."
+
+#: ../rules/base.xml.in.h:390
+msgid "Right Shift key changes group."
+msgstr ""
+"მარჯვენა Shift ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:391
+msgid "Right Win-key changes group."
+msgstr ""
+"მარჯვენა Win ღილაკი ცვლის "
+"ჯგუფს."
+
+#: ../rules/base.xml.in.h:392
+msgid "Right Win-key is Compose."
+msgstr ""
+"მარჯვენა Win ღილაკი "
+"შეესაბამება Compose-ს."
+
+#: ../rules/base.xml.in.h:393
+msgid "Right Win-key switches group while pressed."
+msgstr ""
+"მარჯვენა Win ღილაკი ცვლის "
+"ჯგუფს დაჭერილ "
+"მდგომარეობაში."
+
+#: ../rules/base.xml.in.h:394
+msgid "Right handed Dvorak"
+msgstr ""
+"Dvorak კლავიატურა "
+"არა-ცაციებისთვის"
+
+#: ../rules/base.xml.in.h:395
+msgid "Romania"
+msgstr "რუმინეთი"
+
+#: ../rules/base.xml.in.h:396
+msgid "Romanian keyboard with German letters"
+msgstr ""
+"რუმინული კლავიატურა "
+"გერმანული ასოებით"
+
+#: ../rules/base.xml.in.h:397
+msgid "Romanian keyboard with German letters, eliminate dead keys"
+msgstr ""
+"რუმინული კლავიატურა "
+"გერმანული ასოებით, dead keys "
+"გარეშე. "
+
+#: ../rules/base.xml.in.h:398
+msgid "Rou"
+msgstr "რუმ"
+
+#: ../rules/base.xml.in.h:399
+msgid "Rus"
+msgstr "რუს"
+
+#: ../rules/base.xml.in.h:400
+msgid "Russia"
+msgstr "რუსეთი"
+
+#: ../rules/base.xml.in.h:401
+msgid "Russian"
+msgstr "რუსული"
+
+#: ../rules/base.xml.in.h:402
+msgid "Russian phonetic"
+msgstr "რუსული ფონეტიკური"
+
+#: ../rules/base.xml.in.h:403
+msgid "Russian phonetic, eliminate dead keys"
+msgstr ""
+"რუსული ფონეტიკური, სპეც (dead keys) "
+"კლავიშების გარეშე"
+
+#: ../rules/base.xml.in.h:404
+msgid "Russian with Kazakh"
+msgstr "რუსული ყაზახურთან ერთად"
+
+#: ../rules/base.xml.in.h:405
+msgid "SCG"
+msgstr "SCG"
+
+#: ../rules/base.xml.in.h:406
+msgid "SILVERCREST Multimedia Wireless Keyboard"
+msgstr "SILVERCREST Multimedia Wireless Keyboard"
+
+#: ../rules/base.xml.in.h:407
+msgid "SK-1300"
+msgstr "SK-1300"
+
+#: ../rules/base.xml.in.h:408
+msgid "SK-2500"
+msgstr "SK-2500"
+
+#: ../rules/base.xml.in.h:409
+msgid "SK-6200"
+msgstr "SK-6200"
+
+#: ../rules/base.xml.in.h:410
+msgid "SK-7100"
+msgstr "SK-7100"
+
+#: ../rules/base.xml.in.h:411
+msgid "SVEN Ergonomic 2500"
+msgstr "SVEN Ergonomic 2500"
+
+#: ../rules/base.xml.in.h:412
+msgid "Samsung SDM 4500P"
+msgstr "Samsung SDM 4500P"
+
+#: ../rules/base.xml.in.h:413
+msgid "Samsung SDM 4510P"
+msgstr "Samsung SDM 4510P"
+
+#: ../rules/base.xml.in.h:414
+msgid "ScrollLock LED shows alternative group."
+msgstr ""
+"ScrollLock ინდიკატორი ანახებს "
+"ალტერ. ჯგუფს."
+
+#: ../rules/base.xml.in.h:415
+msgid "Serbia and Montenegro"
+msgstr "სერბია და მონტენეგრო"
+
+#: ../rules/base.xml.in.h:416
+msgid "Shift with numpad keys works as in MS Windows."
+msgstr ""
+"Shift ღილაკი ციფრულ "
+"კლავიატურასთან, მუშაობენ "
+"როგორც MS Window-ში."
+
+#: ../rules/base.xml.in.h:417
+msgid "Shift+CapsLock changes group."
+msgstr "Shift+CapsLock ცვლიან ჯგუფს."
+
+#: ../rules/base.xml.in.h:418
+msgid "Slovakia"
+msgstr "სლოვაკეთი"
+
+#: ../rules/base.xml.in.h:419
+msgid "Slovenia"
+msgstr "სლოვენია"
+
+#: ../rules/base.xml.in.h:420
+msgid "South Africa"
+msgstr "სამხრეთ აფრიკა"
+
+#: ../rules/base.xml.in.h:421
+msgid "Southern Uzbek"
+msgstr "სამხრეთ-უზბეკური"
+
+#: ../rules/base.xml.in.h:422
+msgid "Spain"
+msgstr "ესპანეთი"
+
+#: ../rules/base.xml.in.h:423
+msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server."
+msgstr ""
+"სპეც კლავიშებს (Ctrl+Alt+&lt;клв&gt;) "
+"სერვერი ამუშავებთ."
+
+#: ../rules/base.xml.in.h:424
+msgid "SrL"
+msgstr "შრლ"
+
+#: ../rules/base.xml.in.h:425
+msgid "Sri Lanka"
+msgstr "შრი-ლანკა"
+
+#: ../rules/base.xml.in.h:426
+msgid "Standard"
+msgstr "სტანდარტული"
+
+#. RSTU 2019-91
+#: ../rules/base.xml.in.h:428
+msgid "Standard RSTU"
+msgstr "სტანდარტული RSTU"
+
+#. RSTU 2019-91
+#: ../rules/base.xml.in.h:430
+msgid "Standard RSTU on Russian layout"
+msgstr ""
+"სტანდარტული RSTU რუსულ "
+"განლაგებაზე"
+
+#: ../rules/base.xml.in.h:431
+msgid "Sun dead keys"
+msgstr "სპეც ღილაკები (dead keys) Sun"
+
+#: ../rules/base.xml.in.h:432
+msgid "Super Power Multimedia Keyboard"
+msgstr "Super Power Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:433
+msgid "Super is mapped to the Win-keys (default)."
+msgstr ""
+"Super შეესაბამება Win "
+"ღილაკებს.(ნაგულისმევია)"
+
+#: ../rules/base.xml.in.h:434
+msgid "Svk"
+msgstr "სლოვკ"
+
+#: ../rules/base.xml.in.h:435
+msgid "Svn"
+msgstr "სლოვენ"
+
+#: ../rules/base.xml.in.h:436
+msgid "Swap Ctrl and CapsLock."
+msgstr "CapsLock ის Ctrl-ით შეცვლა."
+
+#: ../rules/base.xml.in.h:437
+msgid "Swe"
+msgstr "შვედ"
+
+#: ../rules/base.xml.in.h:438
+msgid "Sweden"
+msgstr "შვედეთი"
+
+#: ../rules/base.xml.in.h:439
+msgid "Switzerland"
+msgstr "შვეიცარია"
+
+#: ../rules/base.xml.in.h:440
+msgid "Symplon PaceBook (tablet PC)"
+msgstr "Symplon PaceBook (tablet PC)"
+
+#: ../rules/base.xml.in.h:441
+msgid "Syr"
+msgstr "სირ"
+
+#: ../rules/base.xml.in.h:442
+msgid "Syria"
+msgstr "სირია"
+
+#: ../rules/base.xml.in.h:443
+msgid "Syriac"
+msgstr "სირიული"
+
+#: ../rules/base.xml.in.h:444
+msgid "Syriac phonetic"
+msgstr "სირიის ფონეტიკური"
+
+#: ../rules/base.xml.in.h:445
+msgid "TIS-820.2538"
+msgstr "TIS-820.2538"
+
+#: ../rules/base.xml.in.h:446
+msgid "Tajikistan"
+msgstr "ტაჯიკეთი"
+
+#: ../rules/base.xml.in.h:447
+msgid "Tamil"
+msgstr "თამილური"
+
+#: ../rules/base.xml.in.h:448
+msgid "Tamil TAB Typewriter"
+msgstr ""
+"თამილური TAB საბეჭდი მანქანა"
+
+#: ../rules/base.xml.in.h:449
+msgid "Tamil TSCII Typewriter"
+msgstr ""
+"თამილური TSCII საბეჭდი მანქანა"
+
+#: ../rules/base.xml.in.h:450
+msgid "Tamil Unicode"
+msgstr "ტამილური უნიკოდი"
+
+#: ../rules/base.xml.in.h:451
+msgid "Tatar"
+msgstr "თათრული"
+
+#: ../rules/base.xml.in.h:452
+msgid "Telugu"
+msgstr "თელუგუ"
+
+#: ../rules/base.xml.in.h:453
+msgid "Tha"
+msgstr "ტაი"
+
+#: ../rules/base.xml.in.h:454
+msgid "Thailand"
+msgstr "ტაილანდი"
+
+#: ../rules/base.xml.in.h:455
+msgid "Third level choosers"
+msgstr "მე-3 საფეხურის ამორჩევა"
+
+#: ../rules/base.xml.in.h:456
+msgid "Tilde (~) variant"
+msgstr "ვარიანტი (~)-ით"
+
+#: ../rules/base.xml.in.h:457
+msgid "Tjk"
+msgstr "ტაჯ"
+
+#: ../rules/base.xml.in.h:458
+msgid "Toshiba Satellite S3000"
+msgstr "Toshiba Satellite S3000"
+
+#: ../rules/base.xml.in.h:459
+msgid "Trust Direct Access Keyboard"
+msgstr "Trust Direct Access Keyboard"
+
+#: ../rules/base.xml.in.h:460
+msgid "Trust Wireless Keyboard Classic"
+msgstr "Trust Wireless Keyboard Classic"
+
+#: ../rules/base.xml.in.h:461
+msgid "Tur"
+msgstr "თურქ"
+
+#: ../rules/base.xml.in.h:462
+msgid "Turkey"
+msgstr "თურქეთი"
+
+#: ../rules/base.xml.in.h:463
+msgid "Typewriter"
+msgstr "საბეჭდი მანქანა"
+
+#: ../rules/base.xml.in.h:464
+msgid "U.S. English"
+msgstr "ინგლისუარი ა.შ.შ"
+
+#: ../rules/base.xml.in.h:465
+msgid "US keyboard with Bosnian digraphs"
+msgstr ""
+"აშშ-ს კლავიატურა ბოსნიური "
+"დიგრაფებით"
+
+#: ../rules/base.xml.in.h:466
+msgid "US keyboard with Bosnian letters"
+msgstr ""
+"აშშ-ს კლავიატურა ბოსნიური "
+"ასოებით"
+
+#: ../rules/base.xml.in.h:467
+msgid "US keyboard with Croatian digraphs"
+msgstr ""
+"აშშ-ს კლავიატურა ხორვატიული "
+"დიგრაფებით"
+
+#: ../rules/base.xml.in.h:468
+msgid "US keyboard with Croatian letters"
+msgstr ""
+"აშშ-ს კლავიატურა ხორვატიული "
+"ასოებით"
+
+#: ../rules/base.xml.in.h:469
+msgid "US keyboard with Lithuanian letters"
+msgstr ""
+"აშშ-ს კლავიატურა ლიტვური "
+"ასოებით"
+
+#: ../rules/base.xml.in.h:470
+msgid "US keyboard with Slovenian digraphs"
+msgstr ""
+"აშშ-ს კლავიატურა სლოვაკური "
+"დიგრაფებით"
+
+#: ../rules/base.xml.in.h:471
+msgid "US keyboard with Slovenian letters"
+msgstr ""
+"აშშ-ს კლავიატურა სლოვაკური "
+"ასოებით"
+
+#: ../rules/base.xml.in.h:472
+msgid "USA"
+msgstr "აშშ"
+
+#: ../rules/base.xml.in.h:473
+msgid "Ukr"
+msgstr "უკრ"
+
+#: ../rules/base.xml.in.h:474
+msgid "Ukraine"
+msgstr "უკრაინა"
+
+#: ../rules/base.xml.in.h:475
+msgid "UnicodeExpert"
+msgstr "UnicodeExpert"
+
+#: ../rules/base.xml.in.h:476
+msgid "United Kingdom"
+msgstr "დიდი ბრიტანეთი"
+
+#: ../rules/base.xml.in.h:477
+msgid "Urdu"
+msgstr "ურდუ"
+
+#: ../rules/base.xml.in.h:478
+msgid "Use Bosnian digraphs"
+msgstr ""
+"ბოსნიური დიგრაფების "
+"გამოყენება"
+
+#: ../rules/base.xml.in.h:479
+msgid "Use Croatian digraphs"
+msgstr ""
+"ხორვატიული დიგრაფების "
+"გამოყენება"
+
+#: ../rules/base.xml.in.h:480
+msgid "Use Slovenian digraphs"
+msgstr ""
+"სლოვენური დიგრაფების "
+"გამოყენება"
+
+#: ../rules/base.xml.in.h:481
+msgid "Use guillemets for quotes"
+msgstr ""
+"ფრანგული ბრჭყალების, "
+"ბრჭყალებად გამოყენება"
+
+#: ../rules/base.xml.in.h:482
+msgid "Use keyboard LED to show alternative group."
+msgstr ""
+"დამატებითი ჯგუფის "
+"საჩვენებლად, კლავიატურის "
+"ინდიკატორის გამოყენება."
+
+#: ../rules/base.xml.in.h:483
+msgid "Uzb"
+msgstr "უზბ"
+
+#: ../rules/base.xml.in.h:484
+msgid "Uzbekistan"
+msgstr "უზბეკეთი"
+
+#: ../rules/base.xml.in.h:485
+msgid "Vietnam"
+msgstr "ვიეტნამი"
+
+#: ../rules/base.xml.in.h:486
+msgid "Vnm"
+msgstr "ვიეტ"
+
+#: ../rules/base.xml.in.h:487
+msgid "Wang model 724 azerty"
+msgstr "Wang model 724 azerty"
+
+#: ../rules/base.xml.in.h:488
+msgid "Winbook Model XP5"
+msgstr "Winbook Model XP5"
+
+#: ../rules/base.xml.in.h:489
+msgid "Winkeys"
+msgstr "Windows კლავიატურა"
+
+#: ../rules/base.xml.in.h:490
+msgid "With &lt;\\|&gt; key"
+msgstr "კლავიშებით &lt;\\|&gt;"
+
+#: ../rules/base.xml.in.h:491
+msgid "With guillemets"
+msgstr "გრანგული ბრჭყალებით"
+
+#: ../rules/base.xml.in.h:492
+msgid "Yahoo! Internet Keyboard"
+msgstr "Yahoo! Internet Keyboard"
+
+#: ../rules/base.xml.in.h:493
+msgid "Z and ZHE swapped"
+msgstr "Z და ZHE გადატანილია"
+
+#: ../rules/base.xml.in.h:494
+msgid "Zar"
+msgstr "უარი"
+
+#: ../rules/base.xml.in.h:495
+msgid "azerty"
+msgstr "azerty"
+
+#: ../rules/base.xml.in.h:496
+msgid "azerty/digits"
+msgstr "zerty/ციფრები"
+
+#: ../rules/base.xml.in.h:497
+msgid "digits"
+msgstr "ციფრები"
+
+#: ../rules/base.xml.in.h:498
+msgid "lyx"
+msgstr "lyx"
+
+#: ../rules/base.xml.in.h:499
+msgid "qwerty"
+msgstr "qwerty"
+
+#: ../rules/base.xml.in.h:500
+msgid "qwerty, extended Backslash"
+msgstr ""
+"qwerty, და Backslash-ის დამატებითი "
+"ფუნქციები"
+
+#: ../rules/base.xml.in.h:501
+msgid "qwerty/digits"
+msgstr "qwerty/ციფრები"
+
+#: ../rules/base.xml.in.h:502
+msgid "qwertz"
+msgstr "qwertz"
+

@@ -1,0 +1,3 @@
+virtual a {
+    param a b; # comment
+}

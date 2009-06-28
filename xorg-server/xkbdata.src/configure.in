@@ -1,0 +1,100 @@
+AC_INIT(xkeyboard-config, 1.4)
+AC_CONFIG_SRCDIR(rules/base.xml.in)
+AM_INIT_AUTOMAKE([dist-bzip2])
+AM_MAINTAINER_MODE
+
+AC_SUBST(VERSION)
+
+AC_PATH_PROG([XKBCOMP], [xkbcomp], [not_found])
+if test x$XKBCOMP = xnot_found ; then
+        AC_ERROR([xkbcomp is required to install the xkb data files])
+fi
+
+AC_ARG_WITH( xkb_base,
+             [AS_HELP_STRING([--with-xkb-base=DIR],[XKB base path @<:@DATADIR/X11/xkb@:>@])],
+             xkb_base="$withval", 
+             xkb_base="\$(datadir)/X11/xkb" )
+
+AC_ARG_WITH( xkb_rules_symlink,
+             [  --with-xkb-rules-symlink=NAME1(,NAME2)*        create symlink(s) to "old style" rules files (xfree86 and/or xorg)],
+             xkb_rules_symlink="$withval" )
+
+AC_ARG_ENABLE( xkbcomp_symlink,
+               [  --enable-xkbcomp-symlink      create xkbcomp symlink to $(xkb_base)../../../bin/xkbcomp],
+               enable_xkbcomp_symlink="$enableval",
+               enable_xkbcomp_symlink="yes" )
+
+AC_ARG_ENABLE( compat_rules,
+               [  --enable-compat-rules      create compatibility rules],
+               enable_compat_rules="$enableval",
+               enable_compat_rules="yes" )
+
+AM_CONDITIONAL(CREATE_RULES_SYMLINK, test "x$xkb_rules_symlink" != "x")
+
+AM_CONDITIONAL(CREATE_XKBCOMP_SYMLINK, test "x$enable_xkbcomp_symlink" = "xyes")
+
+AM_CONDITIONAL(USE_COMPAT_RULES, test "x$enable_compat_rules" = "xyes")
+
+# ****
+# i18n
+# ****
+AC_PROG_INTLTOOL(0.30)
+
+GETTEXT_PACKAGE=xkeyboard-config
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+
+AM_GLIB_GNU_GETTEXT
+
+ALL_LINGUAS="af az bg cs da el en_GB es fi fr hu it ka ko nl ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_TW"
+
+AC_SUBST(xkb_base)
+AC_SUBST(xkb_rules_symlink)
+
+AC_OUTPUT([ po/Makefile.in
+Makefile
+compat/Makefile
+geometry/Makefile
+geometry/digital_vndr/Makefile
+geometry/sgi_vndr/Makefile
+keycodes/Makefile
+keycodes/digital_vndr/Makefile
+keycodes/sgi_vndr/Makefile
+keymap/Makefile
+keymap/digital_vndr/Makefile
+keymap/sgi_vndr/Makefile
+keymap/sun_vndr/Makefile
+semantics/Makefile
+rules/Makefile
+rules/compat/Makefile
+symbols/Makefile
+symbols/digital_vndr/Makefile
+symbols/fujitsu_vndr/Makefile
+symbols/hp_vndr/Makefile
+symbols/macintosh_vndr/Makefile
+symbols/nec_vndr/Makefile
+symbols/sgi_vndr/Makefile
+symbols/sony_vndr/Makefile
+symbols/sun_vndr/Makefile
+symbols/xfree68_vndr/Makefile
+types/Makefile
+xkeyboard-config.spec
+docs/Makefile
+])
+
+echo '***********************************************************'
+echo "  $PACKAGE_NAME is configured with the following parameters:"
+echo "    XKB base directory: $xkb_base"
+if test -z "$xkb_rules_symlink" ; then
+  echo "    Symbolic link(s) to legacy rules are not created"
+else
+  echo "    Symbolic link(s) to legacy rules: $xkb_rules_symlink"
+fi
+
+if test "$enable_compat_rules" == "yes" ; then
+  echo "    Compatibility rules are included"
+else
+  echo "    Compatibility rules are not included"
+fi
+echo '***********************************************************'
+

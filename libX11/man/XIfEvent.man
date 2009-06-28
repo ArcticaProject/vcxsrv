@@ -1,0 +1,252 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+.\" $XFree86: xc/doc/man/X11/XIfEvent.man,v 1.3 2003/04/28 22:17:55 herrb Exp $
+.\"
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XIfEvent __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XIfEvent, XCheckIfEvent, XPeekIfEvent \- check the event queue with a predicate procedure
+.SH SYNTAX
+.HP
+int XIfEvent\^(\^Display *\fIdisplay\fP\^, XEvent *\fIevent_return\fP\^, Bool
+(\^*\fIpredicate\fP\^)\^(\^)\^, XPointer \fIarg\fP\^); 
+.HP
+Bool XCheckIfEvent\^(\^Display *\fIdisplay\fP\^, XEvent *\fIevent_return\fP\^,
+Bool (\^*\fIpredicate\fP\^)\^(\^)\^, XPointer \fIarg\fP\^); 
+.HP
+int XPeekIfEvent\^(\^Display *\fIdisplay\fP\^, XEvent *\fIevent_return\fP\^,
+Bool (\^*\fIpredicate\fP\^)\^(\^)\^, XPointer \fIarg\fP\^); 
+.SH ARGUMENTS
+.IP \fIarg\fP 1i
+Specifies the user-supplied argument that will be passed to the predicate procedure.
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Ev \ either a copy of or 
+.IP \fIevent_return\fP 1i
+Returns\*(Ev the matched event's associated structure.
+.IP \fIpredicate\fP 1i
+Specifies the procedure that is to be called to determine
+if the next event in the queue matches what you want.
+.SH DESCRIPTION
+The
+.ZN XIfEvent
+function completes only when the specified predicate
+procedure returns 
+.ZN True 
+for an event, 
+which indicates an event in the queue matches.
+.ZN XIfEvent
+flushes the output buffer if it blocks waiting for additional events.
+.ZN XIfEvent
+removes the matching event from the queue 
+and copies the structure into the client-supplied
+.ZN XEvent
+structure.
+.LP
+When the predicate procedure finds a match,
+.ZN XCheckIfEvent
+copies the matched event into the client-supplied
+.ZN XEvent
+structure and returns 
+.ZN True .
+(This event is removed from the queue.)
+If the predicate procedure finds no match,
+.ZN XCheckIfEvent
+returns
+.ZN False ,
+and the output buffer will have been flushed.
+All earlier events stored in the queue are not discarded.
+.LP
+The
+.ZN XPeekIfEvent
+function returns only when the specified predicate
+procedure returns 
+.ZN True
+for an event.
+After the predicate procedure finds a match,
+.ZN XPeekIfEvent
+copies the matched event into the client-supplied
+.ZN XEvent
+structure without removing the event from the queue.
+.ZN XPeekIfEvent
+flushes the output buffer if it blocks waiting for additional events.
+.LP
+Each of these functions requires you to pass a predicate procedure that 
+determines if an event matches what you want.
+Your predicate procedure must decide if the event is useful
+without calling any Xlib functions.
+If the predicate directly or indirectly causes the state of the event queue
+to change, the result is not defined.
+If Xlib has been initialized for threads, the predicate is called with
+the display locked and the result of a call by the predicate to any
+Xlib function that locks the display is not defined unless the caller
+has first called
+.ZN XLockDisplay .
+.LP
+The predicate procedure and its associated arguments are:
+.HP
+Bool (\^*\fIpredicate\fP\^)\^(\^Display *\fIdisplay\fP, XEvent *\fIevent\fP, XPointer \fIarg\fP\^)
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent\fP 1i
+Specifies the
+.ZN XEvent
+structure.
+.IP \fIarg\fP 1i
+Specifies the argument passed in from the 
+.ZN XIfEvent ,
+.ZN XCheckIfEvent ,
+or
+.ZN XPeekIfEvent 
+function.
+.LP
+The predicate procedure is called once for each
+event in the queue until it finds a match. 
+After finding a match, the predicate procedure must return 
+.ZN True .
+If it did not find a match, it must return
+.ZN False .
+.SH "SEE ALSO"
+XAnyEvent(3X11),
+XNextEvent(3X11),
+XPutBackEvent(3X11)
+XSendEvent(3X11)
+.br
+\fI\*(xL\fP

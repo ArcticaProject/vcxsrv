@@ -1,0 +1,218 @@
+'\" t
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbSetServerInternalMods __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbSetServerInternalMods \- Sets the modifiers that are consumed by the server 
+before events are delivered to the client
+.SH SYNOPSIS
+.B Bool XkbSetServerInternalMods
+(
+.I display,
+.I device_spec,
+.I affect_real,
+.I real_values,
+.I affect_virtual,
+.I virtual_values
+)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned int \fIdevice_spec\fP\^;
+.br
+      unsigned int \fIaffect_real\fP\^;
+.br
+      unsigned int \fIreal_values\fP\^;
+.br
+      unsigned int \fIaffect_virtual\fP\^;
+.br
+      unsigned int \fIvirtual_values\fP\^;
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I \- display
+connection to the X server
+.TP
+.I \- device_spec
+device ID, or XkbUseCoreKbd
+.TP
+.I \- affect_real
+mask of real modifiers affected by this call
+.TP
+.I \- real_values
+values for affected real modifiers (1=>set, 0=>unset) 
+.TP
+.I \- affect_virtual
+mask of virtual modifiers affected by this call 
+.TP
+.I \- virtual_values
+values for affected virtual modifiers (1=>set, 0=>unset) 
+.SH DESCRIPTION
+.LP
+The core protocol does not provide any means to prevent a modifier from being 
+reported in events sent to clients; Xkb, however makes this possible via the 
+InternalMods control. It specifies modifiers that should be consumed by the 
+server and not reported to clients. When a key is pressed and a modifier that 
+has its bit set in the InternalMods control is reported to the server, the 
+server uses the modifier when determining the actions to apply for the key. The 
+server then clears the bit, so it is not actually reported to the client. In 
+addition, modifiers specified in the InternalMods control are not used to 
+determine grabs and are not used to calculate core protocol compatibility state.
+
+Manipulate the InternalMods control via the 
+.I internal 
+field in the XkbControlsRec structure, using 
+.I XkbSetControls 
+and 
+.I XkbGetControls. 
+Alternatively, use 
+.I XkbSetServerInternalMods.
+
+.I XkbSetServerInternalMods 
+sends a request to the server to change the internal modifiers consumed by the 
+server. 
+.I affect_real 
+and 
+.I real_values 
+are masks of real modifier bits indicating which real modifiers are to be added 
+and removed from the server's internal modifiers control. Modifiers selected by 
+both 
+.I affect_real 
+and 
+.I real_values 
+are added to the server's internal modifiers control; those selected by
+.I affect_real 
+but not by 
+.I real_values 
+are removed from the server's internal modifiers mask. Valid values for
+.I affect_real 
+and 
+.I real_values 
+consist of any combination of the eight core modifier bits: ShiftMask, LockMask, 
+ControlMask, Mod1Mask - Mod5Mask. 
+.I affect_virtual 
+and 
+.I virtual_values 
+are masks of virtual modifier bits indicating which virtual modifiers are to be 
+added and removed from the server's internal modifiers control. Modifiers 
+selected by both 
+.I affect_virtual 
+and 
+.I virtual_values 
+are added to the server's internal modifiers control; those selected by
+.I affect_virtual 
+but not by 
+.I virtual_values 
+are removed from the server's internal modifiers control. See below for a 
+discussion of virtual modifier masks to use in 
+.I affect_virtual 
+and 
+.I virtual_values. XkbSetServerInternalMods 
+does not wait for a reply from the server. It returns True if the request was 
+sent and False otherwise.
+
+Virtual modifiers are named by converting their string name to an X Atom and 
+storing the Atom in the 
+.I names.vmods 
+array in an XkbDescRec structure. The position of a name Atom in the 
+.I names.vmods 
+array defines the bit position used to represent the virtual modifier and also 
+the index used when accessing virtual modifier information in arrays: the name 
+in the i-th (0 relative) entry of 
+.I names.vmods 
+is the i-th virtual modifier, represented by the mask (1<<i). Throughout Xkb, 
+various functions have a parameter that is a mask representing virtual modifier 
+choices. In each case, the i-th bit (0 relative) of the mask represents the i-th 
+virtual modifier.
+
+To set the name of a virtual modifier, use 
+.I XkbSetNames, 
+using XkbVirtualModNamesMask in 
+.I which 
+and the name in the 
+.I xkb 
+argument; to retrieve indicator names, use 
+.I XkbGetNames.
+.SH STRUCTURES
+.LP
+The complete description of an Xkb keyboard is given by an XkbDescRec. The 
+component structures in the XkbDescRec represent the major Xkb components 
+outlined in Figure 1.1.
+.nf
+
+typedef struct {
+    struct _XDisplay * display;      /\(** connection to X server */
+    unsigned short     flags;        /\(** private to Xkb, do not modify */
+    unsigned short     device_spec;  /\(** device of interest */
+    KeyCode            min_key_code; /\(** minimum keycode for device */
+    KeyCode            max_key_code; /\(** maximum keycode for device */
+    XkbControlsPtr     ctrls;        /\(** controls */
+    XkbServerMapPtr    server;       /\(** server keymap */
+    XkbClientMapPtr    map;          /\(** client keymap */
+    XkbIndicatorPtr    indicators;   /\(** indicator map */
+    XkbNamesPtr        names;        /\(** names for all components */
+    XkbCompatMapPtr    compat;       /\(** compatibility map */
+    XkbGeometryPtr     geom;         /\(** physical geometry of keyboard */
+} XkbDescRec, *XkbDescPtr;
+
+.fi
+The display field points to an X display structure. The flags field is private 
+to the library: modifying flags may yield unpredictable results. The device_spec 
+field specifies the device identifier of the keyboard input device, or 
+XkbUseCoreKeyboard, which specifies the core keyboard device. The min_key_code 
+and max_key_code fields specify the least and greatest keycode that can be 
+returned by the keyboard.
+ 
+Each structure component has a corresponding mask bit that is used in function 
+calls to indicate that the structure should be manipulated in some manner, such 
+as allocating it or freeing it. These masks and their relationships to the 
+fields in the XkbDescRec are shown in Table 1.
+
+.TS
+c s s
+l l l
+l l l.
+Table 1 Mask Bits for XkbDescRec
+_
+Mask Bit	XkbDescRec Field	Value
+_
+XkbControlsMask	ctrls	(1L<<0)
+XkbServerMapMask	server	(1L<<1)
+XkbIClientMapMask	map	(1L<<2)
+XkbIndicatorMapMask	indicators	(1L<<3)
+XkbNamesMask	names	(1L<<4)
+XkbCompatMapMask	compat	(1L<<5)
+XkbGeometryMask	geom	(1L<<6)
+XkbAllComponentsMask	All Fields	(0x7f)
+.SH "SEE ALSO"
+.BR XkbGetControls (__libmansuffix__),
+.BR XkbGetNames (__libmansuffix__),
+.BR XkbSetControls (__libmansuffix__),
+.BR XkbSetNames (__libmansuffix__)

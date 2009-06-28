@@ -1,0 +1,81 @@
+// $XdotOrg: $
+//
+// Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, provided that the above
+// copyright notice(s) and this permission notice appear in all copies of
+// the Software and that both the above copyright notice(s) and this
+// permission notice appear in supporting documentation.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+// 
+// Except as contained in this notice, the name of a copyright holder
+// shall not be used in advertising or otherwise to promote the sale, use
+// or other dealings in this Software without prior written authorization
+// of the copyright holder.
+//
+// $TOG: hu /main/2 1997/06/13 06:25:05 kaleb $
+default partial alphanumeric_keys 
+xkb_symbols "type5" {
+
+    // Describes the differences between a very simple US/ASCII
+    // keyboard and a very simple Hungarian keyboard.
+
+    // Alphanumeric section
+
+    name[group1]="Lithuanian";
+
+    key <TLDE> {	[	quoteright,	asciitilde	],
+			[	quoteleft,	caron		]	};
+    key <AE02> {	[	2,		quotedbl	],
+			[	at				]	};
+    key <AE03> {	[	3,		slash		],
+			[	numbersign			]	};
+    key <AE04> {	[	4,		semicolon	],
+			[	dollar				]	};
+    key <AE05> {	[	5,		colon		],
+			[	percent				]	};
+    key <AE06> {	[	6,		comma		],
+			[	asciicircum			]	};
+    key <AE07> {	[	7,		period		],
+			[	ampersand			]	};
+    key <AE08> {	[	8,		question	],
+			[	asterisk			]	};
+    key <AE09> {	[	9,		parenleft	],
+			[	bracketleft,	braceleft	]	};
+    key <AE10> {	[	0,		parenright	],
+			[	bracketright,	braceright 	]	};
+    key <AD01> {	[	aogonek,	Aogonek		],
+			[	q,		Q		]	};
+    key <AD02> {	[	zcaron,		Zcaron		],
+			[	w,		W		]	};
+    key <AD11> {	[	iogonek,	Iogonek		]	};
+    key <AD12> {	[	ogonek				]	};
+    key <AC10> {	[	uogonek,	Uogonek		]	};
+    key <AC11> {	[	eabovedot,	Eabovedot	]	};
+    key <BKSL> {	[	asciicircum,	quoteright	]	};
+    key <LSGT> {	[	backslash,	bar		]	};
+    key <AB02> {	[	umacron,	Umacron		],
+			[	x,		X		]	};
+    key <AB08> {	[	ccaron,		Ccaron		],
+			[	less				]	};
+    key <AB09> {	[	scaron,		Scaron		],
+			[	greater				]	};
+    key <AB10> {	[	eogonek,	Eogonek		]	};
+
+    // End alphanumeric section
+};
+

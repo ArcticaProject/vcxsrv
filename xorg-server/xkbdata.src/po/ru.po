@@ -1,0 +1,2447 @@
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Sergey V. Udaltsov<svu@users.sourceforge.net>
+# Sergey E Kvyato <kvantos@plotinka.ru>, 2006.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: xfree86_xkb_xml 0.1\n"
+"Report-Msgid-Bugs-To: svu@users.sourceforge.net\n"
+"POT-Creation-Date: 2006-11-28 00:34+0300\n"
+"PO-Revision-Date: 2006-11-28 16:17+0000\n"
+"Last-Translator: Nickolay V. Shmyrev <nshmyrev@yandex.ru>\n"
+"Language-Team: <gnome-cyr@gnome.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../rules/base.xml.in.h:1
+msgid "(F)"
+msgstr "(F)"
+
+#: ../rules/base.xml.in.h:2
+msgid "(Legacy) Alternative"
+msgstr "(Устарело) Альтернативная"
+
+#: ../rules/base.xml.in.h:3
+msgid "(Legacy) Alternative, Sun dead keys"
+msgstr "(Устарело) Альтернативная, специальные клавиши (dead keys) Sun"
+
+#: ../rules/base.xml.in.h:4
+msgid "(Legacy) Alternative, eliminate dead keys"
+msgstr "(Устарело) Альтернативная, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:5
+msgid "(Legacy) Dvorak"
+msgstr "(Устарело) Dvorak"
+
+#: ../rules/base.xml.in.h:6
+msgid "101/104 key Compatible"
+msgstr "Cовместимая c 101/104 кнопочной"
+
+#: ../rules/base.xml.in.h:7 ../rules/sun.xml.in.h:2
+msgid "101/qwerty/comma/Dead keys"
+msgstr "pc101, qwerty, запятая, специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:8 ../rules/sun.xml.in.h:3
+msgid "101/qwerty/comma/Eliminate dead keys"
+msgstr "pc101, qwerty, запятая, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:9 ../rules/sun.xml.in.h:4
+msgid "101/qwerty/dot/Dead keys"
+msgstr "pc101, qwerty, точка, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:10 ../rules/sun.xml.in.h:5
+msgid "101/qwerty/dot/Eliminate dead keys"
+msgstr "pc101, qwerty, точка, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:11 ../rules/sun.xml.in.h:6
+msgid "101/qwertz/comma/Dead keys"
+msgstr "pc101, qwertz, запятая, специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:12
+msgid "101/qwertz/comma/Eliminate dead keys"
+msgstr "pc101, qwertz, запятая, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:13 ../rules/sun.xml.in.h:7
+msgid "101/qwertz/dot/Dead keys"
+msgstr "pc101, qwertz, точка, специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:14 ../rules/sun.xml.in.h:8
+msgid "101/qwertz/dot/Eliminate dead keys"
+msgstr "pc101, qwertz, точка, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:15 ../rules/sun.xml.in.h:9
+msgid "102/qwerty/comma/Dead keys"
+msgstr "pc102, qwerty, запятая, специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:16 ../rules/sun.xml.in.h:10
+msgid "102/qwerty/comma/Eliminate dead keys"
+msgstr "pc102, qwerty, запятая, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:17 ../rules/sun.xml.in.h:11
+msgid "102/qwerty/dot/Dead keys"
+msgstr "pc102, qwerty, точка, специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:18 ../rules/sun.xml.in.h:12
+msgid "102/qwerty/dot/Eliminate dead keys"
+msgstr "pc102, qwerty, точка, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:19 ../rules/sun.xml.in.h:13
+msgid "102/qwertz/comma/Dead keys"
+msgstr "pc102, qwertz, запятая, специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:20 ../rules/sun.xml.in.h:14
+msgid "102/qwertz/comma/Eliminate dead keys"
+msgstr "pc102, qwertz, запятая, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:21 ../rules/sun.xml.in.h:15
+msgid "102/qwertz/dot/Dead keys"
+msgstr "pc102, qwertz, точка, специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:22 ../rules/sun.xml.in.h:16
+msgid "102/qwertz/dot/Eliminate dead keys"
+msgstr "pc102, qwertz, точка, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:23
+msgid "A4Tech KB-21"
+msgstr "A4Tech KB-21"
+
+#: ../rules/base.xml.in.h:24
+msgid "A4Tech KBS-8"
+msgstr "A4Tech KBS-8"
+
+#: ../rules/base.xml.in.h:25
+msgid "A4Tech Wireless Desktop RFKB-23"
+msgstr "A4Tech Wireless Desktop RFKB-23"
+
+#: ../rules/base.xml.in.h:26
+msgid "ACPI Standard"
+msgstr "Стандартная ACPI"
+
+#: ../rules/base.xml.in.h:27
+msgid "Acer AirKey V"
+msgstr "Acer AirKey V"
+
+#: ../rules/base.xml.in.h:28
+msgid "Acer C300"
+msgstr "Acer C300"
+
+#: ../rules/base.xml.in.h:29
+msgid "Acer Ferrari 4000"
+msgstr "Acer Ferrari 4000"
+
+#: ../rules/base.xml.in.h:30
+msgid "Acer TravelMate 800"
+msgstr "Acer TravelMate 800"
+
+#: ../rules/base.xml.in.h:31
+msgid "Add the EuroSign to the 2 key."
+msgstr "Добавить знак Евро к клавише 2."
+
+#: ../rules/base.xml.in.h:32
+msgid "Add the EuroSign to the 5 key."
+msgstr "Добавить знак Евро к клавише 5."
+
+#: ../rules/base.xml.in.h:33
+msgid "Add the EuroSign to the E key."
+msgstr "Добавить знак Евро к клавише E."
+
+#: ../rules/base.xml.in.h:34
+msgid "Add the standard behavior to Menu key."
+msgstr "Назначить обыкновенное поведение на клавишу Menu"
+
+#: ../rules/base.xml.in.h:35
+msgid "Adding the EuroSign to certain keys"
+msgstr "Добавить знак Евро к некоторым клавишам"
+
+#: ../rules/base.xml.in.h:36
+msgid "Adding the nobreakspace keysym to space key"
+msgstr "Добавить код запрета разрыва к коду пробела"
+
+#: ../rules/base.xml.in.h:37
+msgid "Advance Scorpius KI"
+msgstr "Advance Scorpius KI"
+
+#: ../rules/base.xml.in.h:38
+msgid "Afg"
+msgstr "Афг"
+
+#: ../rules/base.xml.in.h:39
+msgid "Afghanistan"
+msgstr "Афганистан"
+
+#: ../rules/base.xml.in.h:40
+msgid "Akan"
+msgstr "Акан"
+
+#: ../rules/base.xml.in.h:41
+msgid "Alb"
+msgstr "Алб"
+
+#: ../rules/base.xml.in.h:42
+msgid "Albania"
+msgstr "Албания"
+
+#: ../rules/base.xml.in.h:43
+msgid "Alt and Meta are on the Alt keys (default)."
+msgstr "Alt и Meta на клавишах Alt (по умолчанию)."
+
+#: ../rules/base.xml.in.h:44
+msgid "Alt is mapped to the right Win-key and Super to Menu."
+msgstr "Alt соответствует правой клавише Win, а Super - Menu."
+
+#: ../rules/base.xml.in.h:45
+msgid "Alt+CapsLock changes group."
+msgstr "Клавиши Alt и Caps Lock, нажатые вместе, меняют группу."
+
+#: ../rules/base.xml.in.h:46
+msgid "Alt+Ctrl changes group."
+msgstr "Alt+Ctrl меняют группу."
+
+#: ../rules/base.xml.in.h:47
+msgid "Alt+Shift changes group."
+msgstr "Alt+Shift меняют группу."
+
+#: ../rules/base.xml.in.h:48
+msgid "Alt-Q"
+msgstr "Alt-Q"
+
+#: ../rules/base.xml.in.h:49
+msgid "Alt/Win key behavior"
+msgstr "Клавиши Alt/Win"
+
+#: ../rules/base.xml.in.h:50
+msgid "Alternative"
+msgstr "Альтернативная"
+
+#: ../rules/base.xml.in.h:51
+msgid "Alternative Eastern"
+msgstr "Альтернативная Восточная"
+
+#: ../rules/base.xml.in.h:52
+msgid "Alternative international (former us_intl)"
+msgstr "Альтернативная международная (бывшая us_intl)"
+
+#: ../rules/base.xml.in.h:53
+msgid "Alternative, Sun dead keys"
+msgstr "Альтернативная, специальные клавиши (dead keys) Sun"
+
+#: ../rules/base.xml.in.h:54
+msgid "Alternative, eliminate dead keys"
+msgstr "Альтернативная, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:55
+msgid "Alternative, latin-9 only"
+msgstr "Альтернативная, только latin-9"
+
+#: ../rules/base.xml.in.h:56
+msgid "And"
+msgstr "Анд"
+
+#: ../rules/base.xml.in.h:57
+msgid "Andorra"
+msgstr "Андорра"
+
+#: ../rules/base.xml.in.h:58
+msgid "Apostrophe (') variant"
+msgstr "Вариант с апострофом (')"
+
+#: ../rules/base.xml.in.h:59
+msgid "Apple"
+msgstr "Apple"
+
+#: ../rules/base.xml.in.h:60
+msgid "Apple Laptop"
+msgstr "Ноутбук Apple"
+
+#: ../rules/base.xml.in.h:61
+msgid "Ara"
+msgstr "Ара"
+
+#: ../rules/base.xml.in.h:62
+msgid "Arabic"
+msgstr "Арабская"
+
+#: ../rules/base.xml.in.h:63
+msgid "Arm"
+msgstr "Арм"
+
+#: ../rules/base.xml.in.h:64
+msgid "Armenia"
+msgstr "Армения"
+
+#: ../rules/base.xml.in.h:65
+msgid "Aze"
+msgstr "Азер"
+
+#: ../rules/base.xml.in.h:66
+msgid "Azerbaijan"
+msgstr "Азербайджан"
+
+#: ../rules/base.xml.in.h:67
+msgid "Azona RF2300 wireless Internet Keyboard"
+msgstr "Azona RF2300 беспроводная \"интернет\" клавиатура"
+
+#: ../rules/base.xml.in.h:68
+msgid "BTC 5090"
+msgstr "BTC 5090"
+
+#: ../rules/base.xml.in.h:69
+msgid "BTC 5113RF Multimedia"
+msgstr "BTC 5113RF Multimedia"
+
+#: ../rules/base.xml.in.h:70
+msgid "BTC 5126T"
+msgstr "BTC 5126T"
+
+#: ../rules/base.xml.in.h:71
+msgid "BTC 9000"
+msgstr "BTC 9000"
+
+#: ../rules/base.xml.in.h:72
+msgid "BTC 9000A"
+msgstr "BTC 9000A"
+
+#: ../rules/base.xml.in.h:73
+msgid "BTC 9001AH"
+msgstr "BTC 9001AH"
+
+#: ../rules/base.xml.in.h:74
+msgid "BTC 9019U"
+msgstr "BTC 9019U"
+
+#: ../rules/base.xml.in.h:75
+msgid "Ban"
+msgstr "Бан"
+
+#: ../rules/base.xml.in.h:76
+msgid "Bangladesh"
+msgstr "Бангладеш"
+
+#: ../rules/base.xml.in.h:77 ../rules/sun.xml.in.h:22
+msgid "Bel"
+msgstr "Бельг"
+
+#: ../rules/base.xml.in.h:78
+msgid "Belarus"
+msgstr "Белоруссия"
+
+#: ../rules/base.xml.in.h:79
+msgid "Belgium"
+msgstr "Бельгия"
+
+#: ../rules/base.xml.in.h:80
+msgid "BenQ X-Touch 730"
+msgstr "BenQ X-Touch 730"
+
+#: ../rules/base.xml.in.h:81
+msgid "BenQ X-Touch 800"
+msgstr "BenQ X-Touch 800"
+
+#: ../rules/base.xml.in.h:82
+msgid "Bengali"
+msgstr "Бенгальская"
+
+#: ../rules/base.xml.in.h:83
+msgid "Bengali Probhat"
+msgstr "Бенгальская Пробат"
+
+#: ../rules/base.xml.in.h:84
+msgid "Bepo, ergonomic, Dvorak way"
+msgstr "Бепо, эргономичная, похожая на Dvorak"
+
+#: ../rules/base.xml.in.h:85
+msgid "Bepo, ergonomic, Dvorak way, latin-9 only"
+msgstr "Бепо, эргономичная, похожая на Dvorak, только latin-9"
+
+#: ../rules/base.xml.in.h:86 ../rules/sun.xml.in.h:24
+msgid "Bgr"
+msgstr "Болг"
+
+#: ../rules/base.xml.in.h:87
+msgid "Bhu"
+msgstr "Бут"
+
+#: ../rules/base.xml.in.h:88
+msgid "Bhutan"
+msgstr "Бутан"
+
+#: ../rules/base.xml.in.h:89
+msgid "Biblical Hebrew (Tiro)"
+msgstr "Библейский иврит (Tiro)"
+
+#: ../rules/base.xml.in.h:90
+msgid "Bih"
+msgstr "Босн"
+
+#: ../rules/base.xml.in.h:91
+msgid "Blr"
+msgstr "Бел"
+
+#: ../rules/base.xml.in.h:92
+msgid "Bosnia and Herzegovina"
+msgstr "Босния и Герцеговина"
+
+#: ../rules/base.xml.in.h:93
+msgid "Both Alt keys together change group."
+msgstr "Обе клавиши Alt, нажатые вместе, меняют группу."
+
+#: ../rules/base.xml.in.h:94
+msgid "Both Ctrl keys together change group."
+msgstr "Обе клавиши Ctrl, нажатые вместе, меняют группу."
+
+#: ../rules/base.xml.in.h:95
+msgid "Both Shift keys together change group."
+msgstr "Обе клавиши Shift, нажатые вместе, меняют группу."
+
+#: ../rules/base.xml.in.h:96
+msgid "Both Win-keys switch group while pressed."
+msgstr "Каждая из Win клавиш переключает группу на время нажатия."
+
+#: ../rules/base.xml.in.h:97
+msgid "Bra"
+msgstr "Браз"
+
+#: ../rules/base.xml.in.h:98
+msgid "Brazil"
+msgstr "Бразилия"
+
+#: ../rules/base.xml.in.h:99
+msgid "Brazilian ABNT2"
+msgstr "ABNT2"
+
+#: ../rules/base.xml.in.h:100
+msgid "Brother Internet Keyboard"
+msgstr "Brother Internet Keyboard"
+
+#: ../rules/base.xml.in.h:101
+msgid "Buckwalter"
+msgstr "Buckwalter"
+
+#: ../rules/base.xml.in.h:102
+msgid "Bulgaria"
+msgstr "Болгария"
+
+#: ../rules/base.xml.in.h:103
+msgid "Cambodia"
+msgstr "Камбоджа"
+
+#: ../rules/base.xml.in.h:104 ../rules/sun.xml.in.h:29
+msgid "Can"
+msgstr "Кан"
+
+#: ../rules/base.xml.in.h:105
+msgid "Canada"
+msgstr "Канада"
+
+#: ../rules/base.xml.in.h:106
+msgid "Caps Lock is Compose."
+msgstr "Клавиша Caps Lock соответствует клавише Compose."
+
+#: ../rules/base.xml.in.h:107
+msgid "CapsLock LED shows alternative group."
+msgstr "Индикатор CapsLock отображает другую группу."
+
+#: ../rules/base.xml.in.h:108
+msgid "CapsLock acts as Shift with locking. Shift \"pauses\" CapsLock."
+msgstr ""
+"Действует как Shift с блокировкой. Shift приостанавливает действие CapsLock."
+
+#: ../rules/base.xml.in.h:109
+msgid "CapsLock acts as Shift with locking. Shift doesn't affect CapsLock."
+msgstr "Действует как Shift с блокировкой. Shift не влияет на CapsLock."
+
+#: ../rules/base.xml.in.h:110
+msgid "CapsLock just locks the Shift modifier."
+msgstr "Просто блокирует модификатор Shift."
+
+#: ../rules/base.xml.in.h:111 ../rules/sun.xml.in.h:33
+msgid "CapsLock key behavior"
+msgstr "Клавиша Caps Lock"
+
+#: ../rules/base.xml.in.h:112
+msgid "CapsLock key changes group."
+msgstr "Клавиша CapsLock меняет группу."
+
+#: ../rules/base.xml.in.h:113
+msgid "CapsLock toggles Shift so all keys are affected."
+msgstr ""
+"CapsLock включает Shift, таким образом что, он действует сразу на все "
+"клавиши."
+
+#: ../rules/base.xml.in.h:114
+msgid "CapsLock toggles normal capitalization of alphabetic characters."
+msgstr "Включает обычную капитализацию символов алфавита."
+
+#: ../rules/base.xml.in.h:115
+msgid "CapsLock uses internal capitalization. Shift \"pauses\" CapsLock."
+msgstr ""
+"Включает внутреннюю капитализацию. Shift приостанавливает действие CapsLock."
+
+#: ../rules/base.xml.in.h:116
+msgid "CapsLock uses internal capitalization. Shift doesn't affect CapsLock."
+msgstr "Включает внутреннюю капитализацию. Shift не влияет на CapsLock."
+
+#: ../rules/base.xml.in.h:117
+msgid "Catalan variant with middle-dot L"
+msgstr "Каталонский вариант со средней L"
+
+#: ../rules/base.xml.in.h:118
+msgid "Che"
+msgstr "Швейц."
+
+#: ../rules/base.xml.in.h:119
+msgid "Cherry Blue Line CyBo@rd"
+msgstr "Cherry Blue Line CyBo@rd"
+
+#: ../rules/base.xml.in.h:120
+msgid "Cherry Blue Line CyBo@rd (alternate option)"
+msgstr "Cherry Blue Line CyBo@rd (альтернативный вариант)"
+
+#: ../rules/base.xml.in.h:121
+msgid "Cherry CyBo@rd USB-Hub"
+msgstr "Cherry CyBo@rd USB-Hub"
+
+#: ../rules/base.xml.in.h:122
+msgid "Cherry CyMotion Master Linux"
+msgstr "Cherry CyMotion Master Linux"
+
+#: ../rules/base.xml.in.h:123
+msgid "Chicony Internet Keyboard"
+msgstr "Chicony Internet Keyboard"
+
+#: ../rules/base.xml.in.h:124
+msgid "Chicony KB-9885"
+msgstr "Chicony KB-9885"
+
+#: ../rules/base.xml.in.h:125
+msgid "Classic Dvorak"
+msgstr "Классическая Dvorak"
+
+#: ../rules/base.xml.in.h:126
+msgid "CloGaelach"
+msgstr "CloGaelach"
+
+#: ../rules/base.xml.in.h:127
+msgid "Compaq Easy Access Keyboard"
+msgstr "Compaq Easy Access Keyboard"
+
+#: ../rules/base.xml.in.h:128
+msgid "Compaq Internet Keyboard (13 keys)"
+msgstr "Compaq Internet Keyboard (13 клавиш)"
+
+#: ../rules/base.xml.in.h:129
+msgid "Compaq Internet Keyboard (18 keys)"
+msgstr "Compaq Internet Keyboard (18 клавиш)"
+
+#: ../rules/base.xml.in.h:130
+msgid "Compaq Internet Keyboard (7 keys)"
+msgstr "Compaq Internet Keyboard (7 клавиш)"
+
+#: ../rules/base.xml.in.h:131
+msgid "Compaq iPaq Keyboard"
+msgstr "Compaq iPaq Keyboard"
+
+#: ../rules/base.xml.in.h:132
+msgid "Compose key position"
+msgstr "Положение клавиши Compose"
+
+#: ../rules/base.xml.in.h:133
+msgid "Congo, Democratic Republic of the"
+msgstr "Конго, Демократическая республика"
+
+#: ../rules/base.xml.in.h:134
+msgid "Control is mapped to the Win-keys (and the usual Ctrl keys)."
+msgstr "Control используется в качестве клавиш Win (и как обычный Control)."
+
+#: ../rules/base.xml.in.h:135
+msgid "Croatia"
+msgstr "Хорватия"
+
+#: ../rules/base.xml.in.h:136
+msgid "Ctrl key at bottom left"
+msgstr "Клавиша Ctrl снизу слева"
+
+#: ../rules/base.xml.in.h:137
+msgid "Ctrl key at left of 'A'"
+msgstr "Клавиша Ctrl слева от 'Ф'"
+
+#: ../rules/base.xml.in.h:138
+msgid "Ctrl key position"
+msgstr "Положение клавиши Ctrl"
+
+#: ../rules/base.xml.in.h:139
+msgid "Ctrl+Shift changes group."
+msgstr "Ctrl+Shift меняют группу."
+
+#: ../rules/base.xml.in.h:140
+msgid "Cyrillic"
+msgstr "Кириллица"
+
+#: ../rules/base.xml.in.h:141 ../rules/sun.xml.in.h:39
+msgid "Cze"
+msgstr "Чех"
+
+#: ../rules/base.xml.in.h:142
+msgid "Czechia"
+msgstr "Чехия"
+
+#: ../rules/base.xml.in.h:143
+msgid "DRC"
+msgstr "ДРК"
+
+#: ../rules/base.xml.in.h:144
+msgid "DTK2000"
+msgstr "DTK2000"
+
+#: ../rules/base.xml.in.h:145 ../rules/sun.xml.in.h:42
+msgid "Dead acute"
+msgstr "Спец. символ Dead acute"
+
+#: ../rules/base.xml.in.h:146 ../rules/sun.xml.in.h:43
+msgid "Dead grave acute"
+msgstr "Спец. символ Dead grave acute"
+
+#: ../rules/base.xml.in.h:147
+msgid "Default numpad keys."
+msgstr "Клавиши цифровой клавиатуры по умолчанию"
+
+#: ../rules/base.xml.in.h:148
+msgid "Dell"
+msgstr "Dell"
+
+#: ../rules/base.xml.in.h:149
+msgid "Dell 101-key PC"
+msgstr "Dell 101-клавишный PC"
+
+#: ../rules/base.xml.in.h:150
+msgid "Dell Laptop/notebook Inspiron 6xxx/8xxx"
+msgstr "Ноутбуки Dell Inspiron серий 6xxx/8xxx"
+
+#: ../rules/base.xml.in.h:151
+msgid "Dell Latitude series laptop"
+msgstr "Ноутбук Dell серии Latitude"
+
+#: ../rules/base.xml.in.h:152
+msgid "Dell USB Multimedia Keybard"
+msgstr "Dell USB Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:153
+msgid "Denmark"
+msgstr "Дания"
+
+#: ../rules/base.xml.in.h:154 ../rules/sun.xml.in.h:44
+msgid "Deu"
+msgstr "Нем"
+
+#: ../rules/base.xml.in.h:155
+msgid "Dexxa Wireless Desktop Keyboard"
+msgstr "Dexxa Wireless Desktop Keyboard"
+
+#: ../rules/base.xml.in.h:156
+msgid "Diamond 9801 / 9802 series"
+msgstr "Модели Diamond 9801/9802"
+
+#: ../rules/base.xml.in.h:157 ../rules/sun.xml.in.h:46
+msgid "Dnk"
+msgstr "Дат"
+
+#: ../rules/base.xml.in.h:158 ../rules/sun.xml.in.h:48
+msgid "Dvorak"
+msgstr "Dvorak"
+
+#: ../rules/base.xml.in.h:159
+msgid "Dvorak, Polish quotes on key \"1/!\""
+msgstr "Dvorak, польские кавычки на клавише \"1/!\""
+
+#: ../rules/base.xml.in.h:160
+msgid "Dvorak, Polish quotes on quotemark key"
+msgstr "Dvorak, польские кавычки на клавишах с кавычками"
+
+#: ../rules/base.xml.in.h:161
+msgid "Eastern"
+msgstr "Восточный"
+
+#: ../rules/base.xml.in.h:162 ../rules/sun.xml.in.h:49
+msgid "Eliminate dead keys"
+msgstr "Исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:163
+msgid "Ennyah DKB-1008"
+msgstr "Ennyah DKB-1008"
+
+#: ../rules/base.xml.in.h:164
+msgid "Epo"
+msgstr "Эсп"
+
+#: ../rules/base.xml.in.h:165 ../rules/sun.xml.in.h:50
+msgid "Esp"
+msgstr "Исп"
+
+#: ../rules/base.xml.in.h:166
+msgid "Esperanto"
+msgstr "Эсперанто"
+
+#: ../rules/base.xml.in.h:167
+msgid "Est"
+msgstr "Эст"
+
+#: ../rules/base.xml.in.h:168
+msgid "Estonia"
+msgstr "Эстония"
+
+#: ../rules/base.xml.in.h:169
+msgid "Evdev-managed keyboard"
+msgstr "Клавиатура управляемая посредством Evdev"
+
+#: ../rules/base.xml.in.h:170
+msgid "Everex STEPnote"
+msgstr "Everex STEPnote"
+
+#: ../rules/base.xml.in.h:171
+msgid "Ewe"
+msgstr "Эве"
+
+#: ../rules/base.xml.in.h:172
+msgid "Extended"
+msgstr "Расширенная"
+
+#: ../rules/base.xml.in.h:173
+msgid "Extended Backslash"
+msgstr "Расширенные функции Backslash"
+
+#: ../rules/base.xml.in.h:174
+msgid "F-letter (F) variant"
+msgstr "Вариант с F"
+
+#: ../rules/base.xml.in.h:175
+msgid "Fao"
+msgstr "Фар"
+
+#: ../rules/base.xml.in.h:176
+msgid "Faroe Islands"
+msgstr "Острова Фаро"
+
+#: ../rules/base.xml.in.h:177 ../rules/sun.xml.in.h:51
+msgid "Fin"
+msgstr "Фин"
+
+#: ../rules/base.xml.in.h:178
+msgid "Finland"
+msgstr "Финляндия"
+
+#: ../rules/base.xml.in.h:179 ../rules/sun.xml.in.h:53
+msgid "Fra"
+msgstr "Фр"
+
+#: ../rules/base.xml.in.h:180
+msgid "France"
+msgstr "Франция"
+
+#: ../rules/base.xml.in.h:181 ../rules/sun.xml.in.h:55
+msgid "French"
+msgstr "Французская"
+
+#: ../rules/base.xml.in.h:182
+msgid "French (Macintosh)"
+msgstr "Французская (Macintosh)"
+
+#: ../rules/base.xml.in.h:183 ../rules/sun.xml.in.h:56
+msgid "French (legacy)"
+msgstr "Французская (унаследованная)"
+
+#: ../rules/base.xml.in.h:184
+msgid "French Dvorak"
+msgstr "Французская Dvorak"
+
+#: ../rules/base.xml.in.h:185
+msgid "French, Sun dead keys"
+msgstr "Французская, специальные клавиши (dead keys) Sun"
+
+#: ../rules/base.xml.in.h:186
+msgid "French, eliminate dead keys"
+msgstr "Французская, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:187
+msgid "Fula"
+msgstr "Фула"
+
+#: ../rules/base.xml.in.h:188
+msgid "GBr"
+msgstr "Брит"
+
+#: ../rules/base.xml.in.h:189
+msgid "Ga"
+msgstr "Га"
+
+#: ../rules/base.xml.in.h:190
+msgid "Generic 101-key PC"
+msgstr "Обычный 101-клавишный PC"
+
+#: ../rules/base.xml.in.h:191
+msgid "Generic 102-key (Intl) PC"
+msgstr "Обычный 102-клавишный PC"
+
+#: ../rules/base.xml.in.h:192
+msgid "Generic 104-key PC"
+msgstr "Обычный 104-клавишный PC"
+
+#: ../rules/base.xml.in.h:193
+msgid "Generic 105-key (Intl) PC"
+msgstr "Обычный 105-клавишный (Инт.) РС"
+
+#: ../rules/base.xml.in.h:194
+msgid "Genius Comfy KB-12e"
+msgstr "Genius Comfy KB-12e"
+
+#: ../rules/base.xml.in.h:195
+msgid "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
+msgstr "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
+
+#: ../rules/base.xml.in.h:196
+msgid "Genius Comfy KB-21e-Scroll"
+msgstr "Genius Comfy KB-21e-Scroll"
+
+#: ../rules/base.xml.in.h:197
+msgid "Genius KB-19e NB"
+msgstr "Genius KB-19e NB"
+
+#: ../rules/base.xml.in.h:198
+msgid "Geo"
+msgstr "Груз"
+
+#: ../rules/base.xml.in.h:199
+msgid "Georgia"
+msgstr "Грузия"
+
+#: ../rules/base.xml.in.h:200
+msgid "German (Macintosh)"
+msgstr "Немецкая (Macintosh)"
+
+#: ../rules/base.xml.in.h:201
+msgid "German, Sun dead keys"
+msgstr "Немецкая, специальные клавиши (dead keys) Sun"
+
+#: ../rules/base.xml.in.h:202
+msgid "German, eliminate dead keys"
+msgstr "Немецкая, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:203
+msgid "Germany"
+msgstr "Германия"
+
+#: ../rules/base.xml.in.h:204
+msgid "Gha"
+msgstr "Ган"
+
+#: ../rules/base.xml.in.h:205
+msgid "Ghana"
+msgstr "Гана"
+
+#: ../rules/base.xml.in.h:206
+msgid "Gre"
+msgstr "Гре"
+
+#: ../rules/base.xml.in.h:207
+msgid "Greece"
+msgstr "Греция"
+
+#: ../rules/base.xml.in.h:208 ../rules/sun.xml.in.h:58
+msgid "Group Shift/Lock behavior"
+msgstr "Функция смены раскладки"
+
+#: ../rules/base.xml.in.h:209
+msgid "Gujarati"
+msgstr "Гуджарати"
+
+#: ../rules/base.xml.in.h:210
+msgid "Gurmukhi"
+msgstr "Гурмукхи"
+
+#: ../rules/base.xml.in.h:211
+msgid "Gyration"
+msgstr "Гирашн"
+
+#: ../rules/base.xml.in.h:212
+msgid "Hausa"
+msgstr "Хауза"
+
+#: ../rules/base.xml.in.h:213
+msgid "Hewlett-Packard Internet Keyboard"
+msgstr "Hewlett-Packard Internet Keyboard"
+
+#: ../rules/base.xml.in.h:214
+msgid "Hewlett-Packard Omnibook 500 FA"
+msgstr "Hewlett-Packard Omnibook 500 FA"
+
+#: ../rules/base.xml.in.h:215
+msgid "Hewlett-Packard Omnibook 5xx"
+msgstr "Hewlett-Packard Omnibook 5xx"
+
+#: ../rules/base.xml.in.h:216
+msgid "Hewlett-Packard Omnibook 6000/6100"
+msgstr "Hewlett-Packard Omnibook 6000/6100"
+
+#: ../rules/base.xml.in.h:217
+msgid "Hewlett-Packard Omnibook XE3 GC"
+msgstr "Hewlett-Packard Omnibook XE3 GC"
+
+#: ../rules/base.xml.in.h:218
+msgid "Hewlett-Packard Omnibook XE3 GF"
+msgstr "Hewlett-Packard Omnibook XE3 GF"
+
+#: ../rules/base.xml.in.h:219
+msgid "Hewlett-Packard Omnibook XT1000"
+msgstr "Hewlett-Packard Omnibook XT1000"
+
+#: ../rules/base.xml.in.h:220
+msgid "Hewlett-Packard Pavilion ZT11xx"
+msgstr "Hewlett-Packard Pavilion ZT11xx"
+
+#: ../rules/base.xml.in.h:221
+msgid "Hewlett-Packard SK-2501 Multimedia Keyboard"
+msgstr "Hewlett-Packard SK-2501 Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:222
+msgid "Hewlett-Packard SK-2505 Internet Keyboard"
+msgstr "Hewlett-Packard SK-2505 Internet Keyboard"
+
+#: ../rules/base.xml.in.h:223
+msgid "Honeywell Euroboard"
+msgstr "Honeywell Euroboard"
+
+#: ../rules/base.xml.in.h:224
+msgid "Hrv"
+msgstr "Хорв"
+
+#: ../rules/base.xml.in.h:225 ../rules/sun.xml.in.h:59
+msgid "Hun"
+msgstr "Венг"
+
+#: ../rules/base.xml.in.h:226
+msgid "Hungary"
+msgstr "Венгрия"
+
+#: ../rules/base.xml.in.h:227
+msgid "Hyper is mapped to the Win-keys."
+msgstr "Hyper соответствует клавишам Win"
+
+#: ../rules/base.xml.in.h:228
+msgid "IBM (LST 1205-92)"
+msgstr "IBM (LST 1205-92)"
+
+#: ../rules/base.xml.in.h:229
+msgid "IBM Rapid Access"
+msgstr "IBM Rapid Access"
+
+#: ../rules/base.xml.in.h:230
+msgid "IBM Rapid Access II"
+msgstr "IBM Rapid Access II"
+
+#: ../rules/base.xml.in.h:231
+msgid "IBM Rapid Access II (alternate option)"
+msgstr "IBM Rapid Access II (альтернативный вариант)"
+
+#: ../rules/base.xml.in.h:232
+msgid "IBM ThinkPad 560Z/600/600E/A22E"
+msgstr "IBM ThinkPad 560Z/600/600E/A22E"
+
+#: ../rules/base.xml.in.h:233
+msgid "IBM ThinkPad 560Z/600/600E/A22E, Intl"
+msgstr "IBM ThinkPad 560Z/600/600E/A22E, Intl"
+
+#: ../rules/base.xml.in.h:234 ../rules/sun.xml.in.h:61
+msgid "ISO Alternate"
+msgstr "Дополнительная ISO"
+
+#: ../rules/base.xml.in.h:235
+msgid "Iceland"
+msgstr "Исландия"
+
+#: ../rules/base.xml.in.h:236
+msgid "Igbo"
+msgstr "Igbo"
+
+#: ../rules/base.xml.in.h:237
+msgid "Ind"
+msgstr "Инд"
+
+#: ../rules/base.xml.in.h:238
+msgid "India"
+msgstr "Индия"
+
+#: ../rules/base.xml.in.h:239 ../rules/sun.xml.in.h:62
+msgid "International (with dead keys)"
+msgstr "Международная, со спец. клавишами (dead keys)"
+
+#: ../rules/base.xml.in.h:240
+msgid "Inuktitut"
+msgstr "Иннуитская"
+
+#: ../rules/base.xml.in.h:241
+msgid "Iran"
+msgstr "Иран"
+
+#: ../rules/base.xml.in.h:242
+msgid "Iraq"
+msgstr "Ирак"
+
+#: ../rules/base.xml.in.h:243
+msgid "Ireland"
+msgstr "Ирландия"
+
+#: ../rules/base.xml.in.h:244
+msgid "Irl"
+msgstr "Ирл"
+
+#: ../rules/base.xml.in.h:245
+msgid "Irn"
+msgstr "Перс"
+
+#: ../rules/base.xml.in.h:246
+msgid "Irq"
+msgstr "Ирк"
+
+#: ../rules/base.xml.in.h:247
+msgid "Isl"
+msgstr "Исл"
+
+#: ../rules/base.xml.in.h:248
+msgid "Isr"
+msgstr "Ивр"
+
+#: ../rules/base.xml.in.h:249
+msgid "Israel"
+msgstr "Израиль"
+
+#: ../rules/base.xml.in.h:250 ../rules/sun.xml.in.h:63
+msgid "Ita"
+msgstr "Ит"
+
+#: ../rules/base.xml.in.h:251
+msgid "Italy"
+msgstr "Италия"
+
+#: ../rules/base.xml.in.h:252
+msgid "Japan"
+msgstr "Япония"
+
+#: ../rules/base.xml.in.h:253
+msgid "Japan (PC-98xx Series)"
+msgstr "Japan (PC-98xx Series)"
+
+#: ../rules/base.xml.in.h:254
+msgid "Japanese 106-key"
+msgstr "Японская 106-клавишная"
+
+#: ../rules/base.xml.in.h:255 ../rules/sun.xml.in.h:66
+msgid "Jpn"
+msgstr "Яп"
+
+#: ../rules/base.xml.in.h:256
+msgid "Kana"
+msgstr "Кана"
+
+#: ../rules/base.xml.in.h:257
+msgid "Kannada"
+msgstr "Каннада"
+
+#: ../rules/base.xml.in.h:258
+msgid "Kashubian"
+msgstr "Кашубский"
+
+#: ../rules/base.xml.in.h:259
+msgid "Kaz"
+msgstr "Каз"
+
+#: ../rules/base.xml.in.h:260
+msgid "Kazakh with Russian"
+msgstr "Казахский с Русским"
+
+#: ../rules/base.xml.in.h:261
+msgid "Kazakhstan"
+msgstr "Казахстан"
+
+#: ../rules/base.xml.in.h:262
+msgid "Keypad"
+msgstr "С доп. панелью"
+
+#: ../rules/base.xml.in.h:263
+msgid "Keytronic FlexPro"
+msgstr "Keytronic FlexPro"
+
+#: ../rules/base.xml.in.h:264
+msgid "Khm"
+msgstr "Кхм"
+
+#: ../rules/base.xml.in.h:265
+msgid "Kor"
+msgstr "Кор"
+
+#: ../rules/base.xml.in.h:266
+msgid "Korea, Republic of"
+msgstr "Республика Корея"
+
+#: ../rules/base.xml.in.h:267
+msgid "Korean 106-key"
+msgstr "Корейская 106-клавишная"
+
+#: ../rules/base.xml.in.h:268
+msgid "Kotoistus"
+msgstr "Котоистус"
+
+#: ../rules/base.xml.in.h:269
+msgid "Kurdish, (F)"
+msgstr "Курдская, (F)"
+
+#: ../rules/base.xml.in.h:270
+msgid "Kurdish, Arabic-Latin"
+msgstr "Курдская, Арабско-латинская"
+
+#: ../rules/base.xml.in.h:271
+msgid "Kurdish, Latin Alt-Q"
+msgstr "Курдская, Латиница Alt-Q"
+
+#: ../rules/base.xml.in.h:272
+msgid "Kurdish, Latin Q"
+msgstr "Курдская, Латиница Q"
+
+#: ../rules/base.xml.in.h:273
+msgid "Kyr"
+msgstr "Кыр"
+
+#: ../rules/base.xml.in.h:274
+msgid "Kyrgyzstan"
+msgstr "Киргизия"
+
+#: ../rules/base.xml.in.h:275
+msgid "LAm"
+msgstr "ЛатАм"
+
+#: ../rules/base.xml.in.h:276
+msgid "LCtrl+LShift changes group."
+msgstr "LCtrl+LShift меняют группу."
+
+#: ../rules/base.xml.in.h:277
+msgid "Lao"
+msgstr "Лао"
+
+#: ../rules/base.xml.in.h:278
+msgid "Laos"
+msgstr "Лаос"
+
+#: ../rules/base.xml.in.h:279
+msgid "Laptop/notebook Compaq (eg. Armada) Laptop Keyboard"
+msgstr "Клавиатура для ноутбуков Compaq (например Armada)"
+
+#: ../rules/base.xml.in.h:280
+msgid "Laptop/notebook Compaq (eg. Presario) Internet Keyboard"
+msgstr "\"Интернет\" клавиатура для ноутбуков Compaq (например Presario)"
+
+#: ../rules/base.xml.in.h:281
+msgid "Laptop/notebook eMachines m68xx"
+msgstr "Ноутбуки eMachines m68xx"
+
+#: ../rules/base.xml.in.h:282
+msgid "Latin"
+msgstr "Латинская"
+
+#: ../rules/base.xml.in.h:283
+msgid "Latin American"
+msgstr "Латиноамериканская"
+
+#: ../rules/base.xml.in.h:284
+msgid "Latin Unicode"
+msgstr "Латинская Unicode"
+
+#: ../rules/base.xml.in.h:285
+msgid "Latin Unicode qwerty"
+msgstr "Латинская Unicode qwerty"
+
+#: ../rules/base.xml.in.h:286
+msgid "Latin qwerty"
+msgstr "Латинская qwerty"
+
+#: ../rules/base.xml.in.h:287
+msgid "Latin with guillemets"
+msgstr "Латинская с французскими кавычками"
+
+#: ../rules/base.xml.in.h:288
+msgid "Latvia"
+msgstr "Латвия"
+
+#: ../rules/base.xml.in.h:289
+msgid "Left Alt is swapped with left Win-key."
+msgstr "Левый Alt поменян местами с левой клавишей Win"
+
+#: ../rules/base.xml.in.h:290
+msgid "Left Alt key changes group."
+msgstr "Левая клавиша Alt меняет группу."
+
+#: ../rules/base.xml.in.h:291
+msgid "Left Alt key switches group while pressed."
+msgstr "Левая клавиша Alt переключает группу на время нажатия."
+
+#: ../rules/base.xml.in.h:292
+msgid "Left Ctrl key changes group."
+msgstr "Левая клавиша Ctrl меняет группу."
+
+#: ../rules/base.xml.in.h:293
+msgid "Left Shift key changes group."
+msgstr "Левая клавиша Shift меняет группу."
+
+#: ../rules/base.xml.in.h:294
+msgid "Left Win-key changes group."
+msgstr "Левая клавиша Win меняет группу."
+
+#: ../rules/base.xml.in.h:295
+msgid "Left Win-key is Compose."
+msgstr "Левая клавиша Win соответствует клавише Compose."
+
+#: ../rules/base.xml.in.h:296
+msgid "Left Win-key switches group while pressed."
+msgstr "Левая клавиша Win переключает группу на время нажатия."
+
+#: ../rules/base.xml.in.h:297
+msgid "Left handed Dvorak"
+msgstr "Dvorak для левшей"
+
+#: ../rules/base.xml.in.h:298
+msgid "Lithuania"
+msgstr "Литва"
+
+#: ../rules/base.xml.in.h:299
+msgid "Logitech Access Keyboard"
+msgstr "Logitech Access Keyboard"
+
+#: ../rules/base.xml.in.h:300
+msgid "Logitech Cordless Desktop"
+msgstr "Logitech Cordless Desktop"
+
+#: ../rules/base.xml.in.h:301
+msgid "Logitech Cordless Desktop LX-300"
+msgstr "Logitech Cordless Desktop LX-300"
+
+#: ../rules/base.xml.in.h:302
+msgid "Logitech Cordless Desktop Navigator"
+msgstr "Logitech Cordless Desktop Navigator"
+
+#: ../rules/base.xml.in.h:303
+msgid "Logitech Cordless Desktop Optical"
+msgstr "Logitech Cordless Desktop Optical"
+
+#: ../rules/base.xml.in.h:304
+msgid "Logitech Cordless Desktop Pro"
+msgstr "Logitech Cordless Desktop Pro"
+
+#: ../rules/base.xml.in.h:305
+msgid "Logitech Cordless Desktop Pro (alternate option)"
+msgstr "Logitech Cordless Desktop Pro (альтернативный вариант)"
+
+#: ../rules/base.xml.in.h:306
+msgid "Logitech Cordless Desktop Pro (alternate option2)"
+msgstr "Logitech Cordless Desktop Pro (альтернативный вариант 2)"
+
+#: ../rules/base.xml.in.h:307
+msgid "Logitech Cordless Desktop iTouch"
+msgstr "Logitech Cordless Desktop iTouch"
+
+#: ../rules/base.xml.in.h:308
+msgid "Logitech Cordless Freedom/Desktop Navigator"
+msgstr "Logitech Cordless Freedom/Desktop Navigator"
+
+#: ../rules/base.xml.in.h:309
+msgid "Logitech G15 extra keys via G15daemon"
+msgstr "Дополнительные клавиши Logitech G15 с помощью демона G15"
+
+#: ../rules/base.xml.in.h:310
+msgid "Logitech Internet Keyboard"
+msgstr "Logitech Internet Keyboard"
+
+#: ../rules/base.xml.in.h:311
+msgid "Logitech Internet Navigator Keyboard"
+msgstr "Logitech Internet Navigator Keyboard"
+
+#: ../rules/base.xml.in.h:312
+msgid "Logitech Ultra-X Keyboard"
+msgstr "Logitech Ultra-X Keyboard"
+
+#: ../rules/base.xml.in.h:313
+msgid "Logitech diNovo Keyboard"
+msgstr "Logitech diNovo Keyboard"
+
+#: ../rules/base.xml.in.h:314
+msgid "Logitech iTouch"
+msgstr "Logitech iTouch"
+
+#: ../rules/base.xml.in.h:315
+msgid "Logitech iTouch Cordless Keyboard (model Y-RB6)"
+msgstr "Logitech iTouch Cordless Keyboard (модель Y-RB6)"
+
+#: ../rules/base.xml.in.h:316
+msgid "Logitech iTouch Internet Navigator Keyboard SE"
+msgstr "Logitech iTouch Internet Navigator Keyboard SE"
+
+#: ../rules/base.xml.in.h:317
+msgid "Logitech iTouch Internet Navigator Keyboard SE (USB)"
+msgstr "Logitech iTouch Internet Navigator Keyboard SE (USB)"
+
+#: ../rules/base.xml.in.h:318
+msgid "Ltu"
+msgstr "Лит"
+
+#: ../rules/base.xml.in.h:319
+msgid "Lva"
+msgstr "Латв"
+
+#: ../rules/base.xml.in.h:320
+msgid "Macedonia"
+msgstr "Македония"
+
+#: ../rules/base.xml.in.h:321
+msgid "Macintosh"
+msgstr "Macintosh"
+
+#: ../rules/base.xml.in.h:322
+msgid "Macintosh Old"
+msgstr "Старый Macintosh"
+
+#: ../rules/base.xml.in.h:323
+msgid "Macintosh, Sun dead keys"
+msgstr "Macintosh, специальные клавиши (dead keys) Sun"
+
+#: ../rules/base.xml.in.h:324
+msgid "Macintosh, eliminate dead keys"
+msgstr "Macintosh, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:325
+msgid "Make CapsLock an additional Ctrl."
+msgstr "Использовать CapsLock как дополнительную клавишу Ctrl."
+
+#: ../rules/base.xml.in.h:326
+msgid "Mal"
+msgstr "Мал"
+
+#: ../rules/base.xml.in.h:327
+msgid "Malayalam"
+msgstr "Малайaлам"
+
+#: ../rules/base.xml.in.h:328
+msgid "Maldives"
+msgstr "Мальдивы"
+
+#: ../rules/base.xml.in.h:329
+msgid "Malta"
+msgstr "Мальта"
+
+#: ../rules/base.xml.in.h:330
+msgid "Maltese keyboard with US layout"
+msgstr "Мальтийская клавиатура с раскладкой US"
+
+#: ../rules/base.xml.in.h:331
+msgid "Mao"
+msgstr "Мао"
+
+#: ../rules/base.xml.in.h:332
+msgid "Maori"
+msgstr "Маори"
+
+#: ../rules/base.xml.in.h:333
+msgid "Memorex MX1998"
+msgstr "Memorex MX1998"
+
+#: ../rules/base.xml.in.h:334
+msgid "Memorex MX2500 EZ-Access Keyboard"
+msgstr "Memorex MX2500 EZ-Access Keyboard"
+
+#: ../rules/base.xml.in.h:335
+msgid "Memorex MX2750"
+msgstr "Memorex MX2750"
+
+#: ../rules/base.xml.in.h:336
+msgid "Menu is Compose."
+msgstr "Клавиша Menu соответствует клавише Compose."
+
+#: ../rules/base.xml.in.h:337
+msgid "Menu key changes group."
+msgstr "Клавиша Menu меняет группу."
+
+#: ../rules/base.xml.in.h:338
+msgid "Meta is mapped to the Win-keys."
+msgstr "Meta соответствует клавишам Win"
+
+#: ../rules/base.xml.in.h:339
+msgid "Meta is mapped to the left Win-key."
+msgstr "Meta соответствует левой клавише Win"
+
+#: ../rules/base.xml.in.h:340
+msgid "Microsoft Internet Keyboard"
+msgstr "Microsoft Internet Keyboard"
+
+#: ../rules/base.xml.in.h:341
+msgid "Microsoft Internet Keyboard Pro, Swedish"
+msgstr "Microsoft Internet Keyboard Pro, шведская"
+
+#: ../rules/base.xml.in.h:342
+msgid "Microsoft Natural"
+msgstr "Microsoft Natural"
+
+#: ../rules/base.xml.in.h:343
+msgid "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
+msgstr "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
+
+#: ../rules/base.xml.in.h:344
+msgid "Microsoft Natural Keyboard Pro OEM"
+msgstr "Microsoft Natural Keyboard Pro OEM"
+
+#: ../rules/base.xml.in.h:345
+msgid "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
+msgstr "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
+
+#: ../rules/base.xml.in.h:346
+msgid "Microsoft Office Keyboard"
+msgstr "Microsoft Office Keyboard"
+
+#: ../rules/base.xml.in.h:347
+msgid "Microsoft Wireless Multimedia Keyboard 1.0A"
+msgstr "Microsoft Wireless Multimedia Keyboard 1.0A"
+
+#: ../rules/base.xml.in.h:348 ../rules/sun.xml.in.h:72
+msgid "Miscellaneous compatibility options"
+msgstr "Разные параметры совместимости"
+
+#: ../rules/base.xml.in.h:349
+msgid "Mkd"
+msgstr "Мак"
+
+#: ../rules/base.xml.in.h:350
+msgid "Mlt"
+msgstr "Мальт"
+
+#: ../rules/base.xml.in.h:351
+msgid "Mmr"
+msgstr "Мьянм"
+
+#: ../rules/base.xml.in.h:352
+msgid "Mng"
+msgstr "Монг"
+
+#: ../rules/base.xml.in.h:353
+msgid "Mongolia"
+msgstr "Монголия"
+
+#: ../rules/base.xml.in.h:354 ../rules/sun.xml.in.h:73
+msgid "Multilingual"
+msgstr "Многоязычная"
+
+#: ../rules/base.xml.in.h:355
+msgid "Multilingual, first part"
+msgstr "Многоязычная, первая часть"
+
+#: ../rules/base.xml.in.h:356 ../rules/sun.xml.in.h:74
+msgid "Multilingual, second part"
+msgstr "Многоязычная, вторая часть"
+
+#: ../rules/base.xml.in.h:357
+msgid "Myanmar"
+msgstr "Мьянмар"
+
+#: ../rules/base.xml.in.h:358
+msgid "Neostyle"
+msgstr "Neostyle"
+
+#: ../rules/base.xml.in.h:359
+msgid "Nep"
+msgstr "Неп"
+
+#: ../rules/base.xml.in.h:360
+msgid "Nepal"
+msgstr "Непал"
+
+#: ../rules/base.xml.in.h:361
+msgid "Netherlands"
+msgstr "Нидерланды"
+
+#: ../rules/base.xml.in.h:362
+msgid "Nigeria"
+msgstr "Нигерия"
+
+#: ../rules/base.xml.in.h:363
+msgid "Nld"
+msgstr "Флам"
+
+#: ../rules/base.xml.in.h:364 ../rules/sun.xml.in.h:75
+msgid "Nor"
+msgstr "Нор"
+
+#: ../rules/base.xml.in.h:365
+msgid "Northern Saami"
+msgstr "Северная Саамская"
+
+#: ../rules/base.xml.in.h:366
+msgid "Northern Saami, eliminate dead keys"
+msgstr "Северная Саамская, исключая специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:367
+msgid "Northgate OmniKey 101"
+msgstr "Northgate OmniKey 101"
+
+#: ../rules/base.xml.in.h:368
+msgid "Norway"
+msgstr "Норвегия"
+
+#: ../rules/base.xml.in.h:369
+msgid "NumLock LED shows alternative group."
+msgstr "Индикатор NumLock отображает доп. группу."
+
+#: ../rules/base.xml.in.h:370
+msgid "Numpad keys work as with Mac."
+msgstr "Клавиши цифровой клавиатуры работают как в Mac."
+
+#: ../rules/base.xml.in.h:371
+msgid "OADG 109A"
+msgstr "OADG 109A"
+
+#: ../rules/base.xml.in.h:372
+msgid "Ogham"
+msgstr "Огхам (древнеирланская)"
+
+#: ../rules/base.xml.in.h:373
+msgid "Ogham IS434"
+msgstr "Огхам IS434"
+
+#: ../rules/base.xml.in.h:374
+msgid "Oretec MCK-800 MM/Internet keyboard"
+msgstr "Oretec MCK-800 MM/Internet keyboard"
+
+#: ../rules/base.xml.in.h:375
+msgid "Oriya"
+msgstr "Орийя"
+
+#: ../rules/base.xml.in.h:376
+msgid "Ossetian"
+msgstr "Осетинская"
+
+#: ../rules/base.xml.in.h:377
+msgid "Ossetian, Winkeys"
+msgstr "Осетинская клавиатура Windows"
+
+#: ../rules/base.xml.in.h:378
+msgid "PC-98xx Series"
+msgstr "PC-98xx"
+
+#: ../rules/base.xml.in.h:379
+msgid "Pak"
+msgstr "Пак"
+
+#: ../rules/base.xml.in.h:380
+msgid "Pakistan"
+msgstr "Пакистан"
+
+#: ../rules/base.xml.in.h:381
+msgid "Pashto"
+msgstr "Пуштунская"
+
+#: ../rules/base.xml.in.h:382
+msgid "Pattachote"
+msgstr "Паттачот"
+
+#: ../rules/base.xml.in.h:383 ../rules/sun.xml.in.h:78
+msgid "Phonetic"
+msgstr "Фонетическая"
+
+#: ../rules/base.xml.in.h:384 ../rules/sun.xml.in.h:79
+msgid "Pol"
+msgstr "Польск"
+
+#: ../rules/base.xml.in.h:385
+msgid "Poland"
+msgstr "Польша"
+
+#: ../rules/base.xml.in.h:386
+msgid "Polytonic"
+msgstr "Полифоническая"
+
+#: ../rules/base.xml.in.h:387
+msgid "Portugal"
+msgstr "Португалия"
+
+#: ../rules/base.xml.in.h:388
+msgid "Press Left Alt key to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием левой клавиши Alt."
+
+#: ../rules/base.xml.in.h:389
+msgid "Press Left Win-key to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием левой клавиши Win."
+
+#: ../rules/base.xml.in.h:390
+msgid "Press Menu key to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием клавиши Menu."
+
+#: ../rules/base.xml.in.h:391
+msgid ""
+"Press Right Alt key to choose 3rd level, Shift+Right Alt key is Multi_Key."
+msgstr ""
+"Выбор 3-го уровня нажатием правой клавиши Alt. Shift и правый Alt вместе "
+"работают как Multi_Key."
+
+#: ../rules/base.xml.in.h:392
+msgid "Press Right Alt key to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием правой клавиши Alt."
+
+#: ../rules/base.xml.in.h:393
+msgid "Press Right Ctrl to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием правой клавиши Ctrl."
+
+#: ../rules/base.xml.in.h:394
+msgid "Press Right Win-key to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием правой клавиши Win."
+
+#: ../rules/base.xml.in.h:395
+msgid "Press any of Alt keys to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием любой клавиши Alt."
+
+#: ../rules/base.xml.in.h:396
+msgid "Press any of Win-keys to choose 3rd level."
+msgstr "Выбор 3-го уровня нажатием любой клавиши Win."
+
+#: ../rules/base.xml.in.h:397
+msgid "Pro"
+msgstr "Pro"
+
+#: ../rules/base.xml.in.h:398
+msgid "Pro Keypad"
+msgstr "Pro с доп. панелью"
+
+#: ../rules/base.xml.in.h:399
+msgid "Probhat"
+msgstr "Пробат"
+
+#: ../rules/base.xml.in.h:400
+msgid "Propeller Voyager (KTEZ-1000)"
+msgstr "Propeller Voyager (KTEZ-1000)"
+
+#: ../rules/base.xml.in.h:401 ../rules/sun.xml.in.h:88
+msgid "Prt"
+msgstr "Порт"
+
+#: ../rules/base.xml.in.h:402
+msgid "QTronix Scorpius 98N+"
+msgstr "QTronix Scorpius 98N+"
+
+#: ../rules/base.xml.in.h:403
+msgid "R-Alt switches group while pressed."
+msgstr "Правая клавиша Alt переключает группу на время нажатия."
+
+#: ../rules/base.xml.in.h:404
+msgid "Right Alt is Compose."
+msgstr "Правая клавиша Alt соответствует клавише Alt."
+
+#: ../rules/base.xml.in.h:405
+msgid "Right Alt key changes group."
+msgstr "Правая клавиша Alt меняет группу."
+
+#: ../rules/base.xml.in.h:406
+msgid "Right Ctrl is Compose."
+msgstr "Правая клавиша Ctrl соответствует клавише Compose."
+
+#: ../rules/base.xml.in.h:407
+msgid "Right Ctrl key changes group."
+msgstr "Правая клавиша Ctrl меняет группу."
+
+#: ../rules/base.xml.in.h:408
+msgid "Right Ctrl key switches group while pressed."
+msgstr "Правая клавиша Ctrl переключает группу на время нажатия."
+
+#: ../rules/base.xml.in.h:409
+msgid "Right Ctrl key works as Right Alt."
+msgstr "Правая клавиша Ctrl работает как правая клавиша Alt."
+
+#: ../rules/base.xml.in.h:410
+msgid "Right Shift key changes group."
+msgstr "Правая клавиша Shift меняет группу."
+
+#: ../rules/base.xml.in.h:411
+msgid "Right Win-key changes group."
+msgstr "Правая клавиша Win меняет группу."
+
+#: ../rules/base.xml.in.h:412
+msgid "Right Win-key is Compose."
+msgstr "Правая клавиша Win соответствует клавише Compose."
+
+#: ../rules/base.xml.in.h:413
+msgid "Right Win-key switches group while pressed."
+msgstr "Правая клавиша Win переключает группу на время нажатия."
+
+#: ../rules/base.xml.in.h:414
+msgid "Right handed Dvorak"
+msgstr "Dvorak для правшей"
+
+#: ../rules/base.xml.in.h:415
+msgid "Romania"
+msgstr "Румыния"
+
+#: ../rules/base.xml.in.h:416
+msgid "Romanian keyboard with German letters"
+msgstr "Румынская клавиатура с немецкими буквами"
+
+#: ../rules/base.xml.in.h:417
+msgid "Romanian keyboard with German letters, eliminate dead keys"
+msgstr ""
+"Румынская клавиатура с немецкими буквами, исключить специальные клавиши "
+"(dead keys)"
+
+#: ../rules/base.xml.in.h:418
+msgid "Rou"
+msgstr "Рум"
+
+#: ../rules/base.xml.in.h:419 ../rules/sun.xml.in.h:94
+msgid "Rus"
+msgstr "Рус"
+
+#: ../rules/base.xml.in.h:420
+msgid "Russia"
+msgstr "Россия"
+
+#: ../rules/base.xml.in.h:421 ../rules/sun.xml.in.h:95
+msgid "Russian"
+msgstr "Русская"
+
+#: ../rules/base.xml.in.h:422
+msgid "Russian phonetic"
+msgstr "Русская фонетическая"
+
+#: ../rules/base.xml.in.h:423
+msgid "Russian phonetic, eliminate dead keys"
+msgstr "Русская фонетическая, исключить специальные клавиши (dead keys)"
+
+#: ../rules/base.xml.in.h:424
+msgid "Russian with Kazakh"
+msgstr "Русский с Казахским"
+
+#: ../rules/base.xml.in.h:425
+msgid "SCG"
+msgstr "СМН"
+
+#: ../rules/base.xml.in.h:426
+msgid "SILVERCREST Multimedia Wireless Keyboard"
+msgstr "SILVERCREST Multimedia Wireless Keyboard"
+
+#: ../rules/base.xml.in.h:427
+msgid "SK-1300"
+msgstr "SK-1300"
+
+#: ../rules/base.xml.in.h:428
+msgid "SK-2500"
+msgstr "SK-2500"
+
+#: ../rules/base.xml.in.h:429
+msgid "SK-6200"
+msgstr "SK-6200"
+
+#: ../rules/base.xml.in.h:430
+msgid "SK-7100"
+msgstr "SK-7100"
+
+#: ../rules/base.xml.in.h:431
+msgid "SVEN Ergonomic 2500"
+msgstr "SVEN Ergonomic 2500"
+
+#: ../rules/base.xml.in.h:432
+msgid "Samsung SDM 4500P"
+msgstr "Samsung SDM 4500P"
+
+#: ../rules/base.xml.in.h:433
+msgid "Samsung SDM 4510P"
+msgstr "Samsung SDM 4510P"
+
+#: ../rules/base.xml.in.h:434
+msgid "ScrollLock LED shows alternative group."
+msgstr "Индикатор ScrollLock отображает доп. группу."
+
+#: ../rules/base.xml.in.h:435
+msgid "Serbia and Montenegro"
+msgstr "Сербия и Черногория"
+
+#: ../rules/base.xml.in.h:436
+msgid "Shift with numpad keys works as in MS Windows."
+msgstr ""
+"Клавиша Shift с клавишами цифровой клавиатуры работают также как в MS "
+"Windows."
+
+#: ../rules/base.xml.in.h:437
+msgid "Shift+CapsLock changes group."
+msgstr "Клавиши Shift и Caps Lock, нажатые вместе, меняют группу."
+
+#: ../rules/base.xml.in.h:438
+msgid "Slovakia"
+msgstr "Словакия"
+
+#: ../rules/base.xml.in.h:439
+msgid "Slovenia"
+msgstr "Словения"
+
+#: ../rules/base.xml.in.h:440
+msgid "South Africa"
+msgstr "Южная Африка"
+
+#: ../rules/base.xml.in.h:441
+msgid "Southern Uzbek"
+msgstr "Южно-узбекская"
+
+#: ../rules/base.xml.in.h:442
+msgid "Space key output nobreakspace at fourth level."
+msgstr "Пробел выдаёт неразделяемый пробел на четвёртом уровне."
+
+#: ../rules/base.xml.in.h:443
+msgid "Space key output nobreakspace at second level."
+msgstr "Пробел выдаёт неразделяемый пробел на втором уровне."
+
+#: ../rules/base.xml.in.h:444
+msgid "Space key output nobreakspace at third level."
+msgstr "Пробел выдаёт неразделяемый пробел на третьем уровне."
+
+#: ../rules/base.xml.in.h:445
+msgid "Space key output space at any level."
+msgstr "Пробел выдаёт пробел на каждом уровне."
+
+#: ../rules/base.xml.in.h:446
+msgid "Spain"
+msgstr "Испания"
+
+#: ../rules/base.xml.in.h:447 ../rules/sun.xml.in.h:102
+msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server."
+msgstr "Специальные клавиши (Ctrl+Alt+&lt;клв&gt;) обрабатываются сервером."
+
+#: ../rules/base.xml.in.h:448
+msgid "SrL"
+msgstr "ШрЛ"
+
+#: ../rules/base.xml.in.h:449
+msgid "Sri Lanka"
+msgstr "Шри Ланка"
+
+#: ../rules/base.xml.in.h:450 ../rules/sun.xml.in.h:103
+msgid "Standard"
+msgstr "Стандартная"
+
+#. RSTU 2019-91
+#: ../rules/base.xml.in.h:452
+msgid "Standard RSTU"
+msgstr "Стандартная RSTU"
+
+#. RSTU 2019-91
+#: ../rules/base.xml.in.h:454
+msgid "Standard RSTU on Russian layout"
+msgstr "Стандартная RSTU, русская"
+
+#: ../rules/base.xml.in.h:455 ../rules/sun.xml.in.h:111
+msgid "Sun dead keys"
+msgstr "Специальные клавиши (dead keys) Sun"
+
+#: ../rules/base.xml.in.h:456
+msgid "Super Power Multimedia Keyboard"
+msgstr "Super Power Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:457
+msgid "Super is mapped to the Win-keys (default)."
+msgstr "Super соответствует клавишам Win (по умолчанию)"
+
+#: ../rules/base.xml.in.h:458 ../rules/sun.xml.in.h:112
+msgid "Svk"
+msgstr "Слов"
+
+#: ../rules/base.xml.in.h:459
+msgid "Svn"
+msgstr "Cловен"
+
+#: ../rules/base.xml.in.h:460
+msgid "Swap Ctrl and CapsLock."
+msgstr "Поменять местами клавиши Ctrl и CapsLock."
+
+#: ../rules/base.xml.in.h:461
+msgid "Swap keycodes of two keys when Mac keyboards are misdetected by kernel."
+msgstr ""
+"Переставить коды двух клавиш когда клавиатура Mac неправильно определяется "
+"ядром."
+
+#: ../rules/base.xml.in.h:462 ../rules/sun.xml.in.h:114
+msgid "Swe"
+msgstr "Швед"
+
+#: ../rules/base.xml.in.h:463
+msgid "Sweden"
+msgstr "Швеция"
+
+#: ../rules/base.xml.in.h:464
+msgid "Switzerland"
+msgstr "Швейцария"
+
+#: ../rules/base.xml.in.h:465
+msgid "Symplon PaceBook (tablet PC)"
+msgstr "Symplon PaceBook (карманный ПК)"
+
+#: ../rules/base.xml.in.h:466
+msgid "Syr"
+msgstr "Асс"
+
+#: ../rules/base.xml.in.h:467
+msgid "Syria"
+msgstr "Сирийская"
+
+#: ../rules/base.xml.in.h:468
+msgid "Syriac"
+msgstr "Сирийская"
+
+#: ../rules/base.xml.in.h:469
+msgid "Syriac phonetic"
+msgstr "Сирийская фонетическая"
+
+#: ../rules/base.xml.in.h:470
+msgid "TIS-820.2538"
+msgstr "TIS-820.2538"
+
+#: ../rules/base.xml.in.h:471
+msgid "Tajikistan"
+msgstr "Таджикистан"
+
+#: ../rules/base.xml.in.h:472
+msgid "Tamil"
+msgstr "Тамильская"
+
+#: ../rules/base.xml.in.h:473
+msgid "Tamil TAB Typewriter"
+msgstr "Тамильская \"Печатная машинка\" TAB"
+
+#: ../rules/base.xml.in.h:474
+msgid "Tamil TSCII Typewriter"
+msgstr "Тамильская \"Печатная машинка\" TSCII"
+
+#: ../rules/base.xml.in.h:475
+msgid "Tamil Unicode"
+msgstr "Тамильская Unicode"
+
+#: ../rules/base.xml.in.h:476
+msgid "Tatar"
+msgstr "Татарская"
+
+#: ../rules/base.xml.in.h:477
+msgid "Telugu"
+msgstr "Телугу"
+
+#: ../rules/base.xml.in.h:478
+msgid "Tha"
+msgstr "Таи"
+
+#: ../rules/base.xml.in.h:479
+msgid "Thailand"
+msgstr "Таиланд"
+
+#: ../rules/base.xml.in.h:480 ../rules/sun.xml.in.h:118
+msgid "Third level choosers"
+msgstr "Выбор 3-го уровня"
+
+#: ../rules/base.xml.in.h:481
+msgid "Tilde (~) variant"
+msgstr "Вариант с тильдой (~)"
+
+#: ../rules/base.xml.in.h:482
+msgid "Tjk"
+msgstr "Тадж"
+
+#: ../rules/base.xml.in.h:483
+msgid "Toshiba Satellite S3000"
+msgstr "Toshiba Satellite S3000"
+
+#: ../rules/base.xml.in.h:484
+msgid "Trust Direct Access Keyboard"
+msgstr "Trust Direct Access Keyboard"
+
+#: ../rules/base.xml.in.h:485
+msgid "Trust Wireless Keyboard Classic"
+msgstr "Trust Wireless Keyboard Classic"
+
+#: ../rules/base.xml.in.h:486 ../rules/sun.xml.in.h:119
+msgid "Tur"
+msgstr "Тур"
+
+#: ../rules/base.xml.in.h:487
+msgid "Turkey"
+msgstr "Турция"
+
+#: ../rules/base.xml.in.h:488
+msgid "Typewriter"
+msgstr "Печатная машинка"
+
+#: ../rules/base.xml.in.h:489 ../rules/sun.xml.in.h:123
+msgid "U.S. English"
+msgstr "Английская (США)"
+
+#: ../rules/base.xml.in.h:490
+msgid "US keyboard with Bosnian digraphs"
+msgstr "Клавиатура США с боснийскими диграфами"
+
+#: ../rules/base.xml.in.h:491
+msgid "US keyboard with Bosnian letters"
+msgstr "Клавиатура США с боснийскими буквами"
+
+#: ../rules/base.xml.in.h:492
+msgid "US keyboard with Croatian digraphs"
+msgstr "Клавиатура США с хорватскими диграфами"
+
+#: ../rules/base.xml.in.h:493
+msgid "US keyboard with Croatian letters"
+msgstr "Клавиатура США с хорватскими буквами"
+
+#: ../rules/base.xml.in.h:494
+msgid "US keyboard with Lithuanian letters"
+msgstr "Клавиатура США с литовскими буквами"
+
+#: ../rules/base.xml.in.h:495
+msgid "US keyboard with Slovenian digraphs"
+msgstr "Клавиатура США со словенскими диграфами"
+
+#: ../rules/base.xml.in.h:496
+msgid "US keyboard with Slovenian letters"
+msgstr "Клавиатура США со словенскими буквами"
+
+#: ../rules/base.xml.in.h:497 ../rules/sun.xml.in.h:125
+msgid "USA"
+msgstr "США"
+
+#: ../rules/base.xml.in.h:498
+msgid "Ukr"
+msgstr "Укр"
+
+#: ../rules/base.xml.in.h:499
+msgid "Ukraine"
+msgstr "Украина"
+
+#: ../rules/base.xml.in.h:500
+msgid "UnicodeExpert"
+msgstr "UnicodeExpert"
+
+#: ../rules/base.xml.in.h:501 ../rules/sun.xml.in.h:126
+msgid "United Kingdom"
+msgstr "Английская (Великобритания)"
+
+#: ../rules/base.xml.in.h:502
+msgid "Urdu"
+msgstr "Урду"
+
+#: ../rules/base.xml.in.h:503
+msgid "Use Bosnian digraphs"
+msgstr "Использовать боснийские диграфы"
+
+#: ../rules/base.xml.in.h:504
+msgid "Use Croatian digraphs"
+msgstr "Использовать хорватские диграфы"
+
+#: ../rules/base.xml.in.h:505
+msgid "Use Slovenian digraphs"
+msgstr "Использовать словенские диграфы"
+
+#: ../rules/base.xml.in.h:506
+msgid "Use guillemets for quotes"
+msgstr "Использовать французские кавычки как кавычки"
+
+#: ../rules/base.xml.in.h:507
+msgid "Use keyboard LED to show alternative group."
+msgstr "Использование клавиатурных индикаторов для отображения доп. групп."
+
+#: ../rules/base.xml.in.h:508
+msgid "Uzb"
+msgstr "Узб"
+
+#: ../rules/base.xml.in.h:509
+msgid "Uzbekistan"
+msgstr "Узбекистан"
+
+#: ../rules/base.xml.in.h:510
+msgid "Vietnam"
+msgstr "Вьетнам"
+
+#: ../rules/base.xml.in.h:511
+msgid "Vnm"
+msgstr "Вьет"
+
+#: ../rules/base.xml.in.h:512
+msgid "Wang model 724 azerty"
+msgstr "Wang model 724 azerty"
+
+#: ../rules/base.xml.in.h:513
+msgid "Western"
+msgstr "Западная"
+
+#: ../rules/base.xml.in.h:514
+msgid "Winbook Model XP5"
+msgstr "Winbook Model XP5"
+
+#: ../rules/base.xml.in.h:515
+msgid "Winkeys"
+msgstr "Клавиатура Windows"
+
+#: ../rules/base.xml.in.h:516
+msgid "With &lt;\\|&gt; key"
+msgstr "С клавишей &lt;\\|&gt;"
+
+#: ../rules/base.xml.in.h:517
+msgid "With guillemets"
+msgstr "С французскими кавычками"
+
+#: ../rules/base.xml.in.h:518
+msgid "Yahoo! Internet Keyboard"
+msgstr "Yahoo! Internet Keyboard"
+
+#: ../rules/base.xml.in.h:519
+msgid "Yoruba"
+msgstr "Йоруба"
+
+#: ../rules/base.xml.in.h:520
+msgid "Z and ZHE swapped"
+msgstr "З и Ж переставлены"
+
+#: ../rules/base.xml.in.h:521
+msgid "Zar"
+msgstr "ЮАР"
+
+#: ../rules/base.xml.in.h:522
+msgid "azerty"
+msgstr "azerty"
+
+#: ../rules/base.xml.in.h:523
+msgid "azerty/digits"
+msgstr "azerty/цифры"
+
+#: ../rules/base.xml.in.h:524
+msgid "digits"
+msgstr "цифры"
+
+#: ../rules/base.xml.in.h:525
+msgid "lyx"
+msgstr "lyx"
+
+#: ../rules/base.xml.in.h:526 ../rules/sun.xml.in.h:131
+msgid "qwerty"
+msgstr "qwerty"
+
+#: ../rules/base.xml.in.h:527
+msgid "qwerty, extended Backslash"
+msgstr "qwerty, расширенные функции Backslash"
+
+#: ../rules/base.xml.in.h:528
+msgid "qwerty/digits"
+msgstr "qwerty/цифры"
+
+#: ../rules/base.xml.in.h:529
+msgid "qwertz"
+msgstr "qwertz"
+
+#: ../rules/sun.xml.in.h:1
+msgid "\"Typewriter\""
+msgstr "Печатная машинка"
+
+#: ../rules/sun.xml.in.h:17
+msgid "Acts as Shift with locking. Shift cancels Caps."
+msgstr ""
+"Действует как Shift с блокировкой. Shift приостанавливает действие Caps."
+
+#: ../rules/sun.xml.in.h:18
+msgid "Acts as Shift with locking. Shift doesn't cancel Caps."
+msgstr "Действует как Shift с блокировкой. Shift не влияет на Caps."
+
+#: ../rules/sun.xml.in.h:19
+msgid "Alt+Control changes group"
+msgstr "Alt+Control меняют группу"
+
+#: ../rules/sun.xml.in.h:20
+msgid "Alt+Shift changes group"
+msgstr "Alt+Shift меняют группу"
+
+#: ../rules/sun.xml.in.h:21
+msgid "Basic"
+msgstr "Основные"
+
+#: ../rules/sun.xml.in.h:23
+msgid "Belgian"
+msgstr "Бельгийская"
+
+#: ../rules/sun.xml.in.h:25
+msgid "Both Alt keys together change group"
+msgstr "Обе клавиши Alt, нажатые вместе, меняют группу"
+
+#: ../rules/sun.xml.in.h:26
+msgid "Both Ctrl keys together change group"
+msgstr "Обе клавиши Ctrl, нажатые вместе, меняют группу"
+
+#: ../rules/sun.xml.in.h:27
+msgid "Both Shift keys together change group"
+msgstr "Обе клавиши Shift, нажатые вместе, меняют группу"
+
+#: ../rules/sun.xml.in.h:28
+msgid "Bulgarian"
+msgstr "Болгарская"
+
+#: ../rules/sun.xml.in.h:30
+msgid "Canadian"
+msgstr "Канадская"
+
+#: ../rules/sun.xml.in.h:31
+msgid "Caps Lock is Compose"
+msgstr "Клавиша Caps Lock соответствует клавише Compose"
+
+#: ../rules/sun.xml.in.h:32
+msgid "Caps Lock key changes group"
+msgstr "Клавиша Caps Lock меняет группу"
+
+#: ../rules/sun.xml.in.h:34
+msgid "Caps_Lock LED shows alternative group"
+msgstr "Индикатор Caps_Lock отображает другую группу"
+
+#: ../rules/sun.xml.in.h:35
+msgid "Control Key Position"
+msgstr "Положение клавиши Control"
+
+#: ../rules/sun.xml.in.h:36
+msgid "Control key at bottom left"
+msgstr "Клавиша Control снизу слева"
+
+#: ../rules/sun.xml.in.h:37
+msgid "Control key at left of 'A'"
+msgstr "Клавиша Control слева от 'Ф'"
+
+#: ../rules/sun.xml.in.h:38
+msgid "Control+Shift changes group"
+msgstr "Control+Shift меняют группу"
+
+#: ../rules/sun.xml.in.h:40
+msgid "Czech"
+msgstr "Чешский"
+
+#: ../rules/sun.xml.in.h:41
+msgid "Danish"
+msgstr "Датский"
+
+#: ../rules/sun.xml.in.h:45
+msgid "DeuCH"
+msgstr "НемШВ"
+
+#: ../rules/sun.xml.in.h:47
+msgid "Dvo"
+msgstr "Dvo"
+
+#: ../rules/sun.xml.in.h:52
+msgid "Finnish"
+msgstr "Финская"
+
+#: ../rules/sun.xml.in.h:54
+msgid "FraCH"
+msgstr "ФраШВ"
+
+#: ../rules/sun.xml.in.h:57
+msgid "German"
+msgstr "Немецкая"
+
+#: ../rules/sun.xml.in.h:60
+msgid "Hungarian"
+msgstr "Венгерская"
+
+#: ../rules/sun.xml.in.h:64
+msgid "Italian"
+msgstr "Итальянская"
+
+#: ../rules/sun.xml.in.h:65
+msgid "Japanese"
+msgstr "Японская"
+
+#: ../rules/sun.xml.in.h:67
+msgid "Left Alt key changes group"
+msgstr "Левая клавиша Alt меняет группу"
+
+#: ../rules/sun.xml.in.h:68
+msgid "Left Alt key switches group while pressed"
+msgstr "Левая клавиша Alt переключает группу на время нажатия"
+
+#: ../rules/sun.xml.in.h:69
+msgid "Left Ctrl key changes group"
+msgstr "Левая клавиша Ctrl меняет группу"
+
+#: ../rules/sun.xml.in.h:70
+msgid "Left Shift key changes group"
+msgstr "Левая клавиша Shift меняет группу"
+
+#: ../rules/sun.xml.in.h:71
+msgid "Make CapsLock an additional Control"
+msgstr "Использовать CapsLock как дополнительную клавишу Control"
+
+#: ../rules/sun.xml.in.h:76
+msgid "Norwegian"
+msgstr "Норвежская"
+
+#: ../rules/sun.xml.in.h:77
+msgid "Num_Lock LED shows alternative group"
+msgstr "Индикатор Num_Lock отображает дополнительную группу"
+
+#: ../rules/sun.xml.in.h:80
+msgid "Polish"
+msgstr "Польская"
+
+#: ../rules/sun.xml.in.h:81
+msgid "Polish with Polish quotes on key \"1/!\""
+msgstr "Польская с польскими кавычками на клавишах \"1/!\""
+
+#: ../rules/sun.xml.in.h:82
+msgid "Portuguese"
+msgstr "Португальская"
+
+#: ../rules/sun.xml.in.h:83
+msgid "Press Left Alt key to choose 3rd level"
+msgstr "Выбор 3-го уровня нажатием левой клавиши Alt"
+
+#: ../rules/sun.xml.in.h:84
+msgid "Press Right Alt key to choose 3rd level"
+msgstr "Выбор 3-го уровня нажатием правой клавиши Alt"
+
+#: ../rules/sun.xml.in.h:85
+msgid ""
+"Press Right Alt-key to choose 3rd level, Shift+Right Alt-key is Multi_Key"
+msgstr ""
+"Выбор 3-го уровня нажатием правой клавиши Alt. Shift и правый Alt вместе "
+"работают как Multi_Key"
+
+#: ../rules/sun.xml.in.h:86
+msgid "Press Right Control to choose 3rd level"
+msgstr "Выбор 3-го уровня нажатием правой клавиши Control"
+
+#: ../rules/sun.xml.in.h:87
+msgid "Press any of Alt keys to choose 3rd level"
+msgstr "Выбор 3-го уровня нажатием любой клавиши Alt"
+
+#: ../rules/sun.xml.in.h:89
+msgid "Right Alt key changes group"
+msgstr "Правая клавиша Alt меняет группу"
+
+#: ../rules/sun.xml.in.h:90
+msgid "Right Alt switches group while pressed"
+msgstr "Правая клавиша Alt переключает группу на время нажатия"
+
+#: ../rules/sun.xml.in.h:91
+msgid "Right Control key works as Right Alt"
+msgstr "Правая клавиша Control работает как правая клавиша Alt"
+
+#: ../rules/sun.xml.in.h:92
+msgid "Right Ctrl key changes group"
+msgstr "Правая клавиша Ctrl меняет группу"
+
+#: ../rules/sun.xml.in.h:93
+msgid "Right Shift key changes group"
+msgstr "Правая клавиша Shift меняет группу"
+
+#: ../rules/sun.xml.in.h:96
+msgid "Scroll Lock changes group"
+msgstr "Scroll Lock меняет группу"
+
+#: ../rules/sun.xml.in.h:97
+msgid "Scroll_Lock LED shows alternative group"
+msgstr "Индикатор Scroll_Lock отображает дополнительную группу"
+
+#: ../rules/sun.xml.in.h:98
+msgid "Shift with numpad keys works as in MS Windows"
+msgstr ""
+"Клавиша Shift с клавишами цифровой клавиатуры работают также как в MS Windows"
+
+#: ../rules/sun.xml.in.h:99
+msgid "Shift+CapsLock changes group"
+msgstr "Клавиши Shift и Caps Lock, нажатые вместе, меняют группу"
+
+#: ../rules/sun.xml.in.h:100
+msgid "Slovak"
+msgstr "Словацкая"
+
+#: ../rules/sun.xml.in.h:101
+msgid "Spanish"
+msgstr "Испанская"
+
+#: ../rules/sun.xml.in.h:104
+msgid "Sun Type 4"
+msgstr "Sun Type 4"
+
+#: ../rules/sun.xml.in.h:105
+msgid "Sun Type 5"
+msgstr "Sun Type 5"
+
+#: ../rules/sun.xml.in.h:106
+msgid "Sun Type 5 European"
+msgstr "Sun Type 5 Европейская"
+
+#: ../rules/sun.xml.in.h:107
+msgid "Sun Type 5 Unix"
+msgstr "Sun Type 5 для Unix"
+
+#: ../rules/sun.xml.in.h:108
+msgid "Sun Type 6"
+msgstr "Sun Type 6"
+
+#: ../rules/sun.xml.in.h:109
+msgid "Sun Type 6 Unix"
+msgstr "Sun Type 6 для Unix"
+
+#: ../rules/sun.xml.in.h:110
+msgid "Sun Type 6 with Euro key"
+msgstr "Sun Type 6 со знаком евро"
+
+#: ../rules/sun.xml.in.h:113
+msgid "Swap Control and Caps Lock"
+msgstr "Поменять местами клавиши Control и Caps Lock"
+
+#: ../rules/sun.xml.in.h:115
+msgid "Swedish"
+msgstr "Шведская"
+
+#: ../rules/sun.xml.in.h:116
+msgid "Swiss French"
+msgstr "Швейцарская французская"
+
+#: ../rules/sun.xml.in.h:117
+msgid "Swiss German"
+msgstr "Швейцарская немецкая"
+
+#: ../rules/sun.xml.in.h:120
+msgid "Turkish"
+msgstr "Турецкая"
+
+#: ../rules/sun.xml.in.h:121
+msgid "Turkish (F)"
+msgstr "Турецкая с (F)"
+
+#: ../rules/sun.xml.in.h:122
+msgid "Turkish Alt-Q Layout"
+msgstr "Турецкая раскладка с Alt-Q"
+
+#: ../rules/sun.xml.in.h:124
+msgid "U.S. English w/ ISO9995-3"
+msgstr "Английская (США) с ISO9995-3"
+
+#: ../rules/sun.xml.in.h:127
+msgid "Use keyboard LED to show alternative group"
+msgstr ""
+"Использование клавиатурных индикаторов для отображения дополнительных групп"
+
+#: ../rules/sun.xml.in.h:128
+msgid "Uses internal capitalization. Shift cancels Caps."
+msgstr ""
+"Включает внутреннюю расстановку заглавных. Shift приостанавливает действие "
+"CapsLock."
+
+#: ../rules/sun.xml.in.h:129
+msgid "Uses internal capitalization. Shift doesn't cancel Caps."
+msgstr ""
+"Включает внутреннюю расстановку заглавных. Shift не влияет на CapsLock."
+
+#: ../rules/sun.xml.in.h:130
+msgid "bksl"
+msgstr "bksl"
+
+#: ../rules/sun.xml.in.h:132
+msgid "type4"
+msgstr "type4"

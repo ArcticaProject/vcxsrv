@@ -1,0 +1,369 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+.\" $XFree86: xc/doc/man/X11/XCreCmap.man,v 1.4 2003/04/28 22:17:54 herrb Exp $
+.\" $XdotOrg: lib/X11/man/XCreateColormap.man,v 1.2 2004-04-23 18:42:09 eich Exp $
+.\"
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XCreateColormap __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XCreateColormap, XCopyColormapAndFree, XFreeColormap, XColor \- create, copy, or destroy colormaps and color structure
+.SH SYNTAX
+.HP
+Colormap XCreateColormap\^(\^Display *\fIdisplay\fP\^, Window \fIw\fP\^,
+Visual *\fIvisual\fP\^, int \fIalloc\fP\^,); 
+.HP
+Colormap XCopyColormapAndFree\^(\^Display *\fIdisplay\fP\^, Colormap
+\fIcolormap\fP\^); 
+.HP
+int XFreeColormap\^(\^Display *\fIdisplay\fP\^, Colormap \fIcolormap\fP\^); 
+.SH ARGUMENTS
+.IP \fIalloc\fP 1i
+Specifies the colormap entries to be allocated.
+You can pass 
+.ZN AllocNone 
+or 
+.ZN AllocAll .
+.ds Cm that you want to create, copy, set, or destroy
+.IP \fIcolormap\fP 1i
+Specifies the colormap \*(Cm.
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIvisual\fP 1i
+Specifies a visual type supported on the screen.
+If the visual type is not one supported by the screen, 
+a
+.ZN BadMatch
+error results.
+.ds Wi on whose screen you want to create a colormap
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.SH DESCRIPTION
+The
+.ZN XCreateColormap
+function creates a colormap of the specified visual type for the screen 
+on which the specified window resides and returns the colormap ID 
+associated with it.
+Note that the specified window is only used to determine the screen.
+.LP
+The initial values of the colormap entries are undefined for the 
+visual classes
+.ZN GrayScale ,
+.ZN PseudoColor ,
+and
+.ZN DirectColor .
+For
+.ZN StaticGray ,
+.ZN StaticColor ,
+and
+.ZN TrueColor ,
+the entries have defined values,
+but those values are specific to the visual and are not defined by X.
+For
+.ZN StaticGray ,
+.ZN StaticColor ,
+and
+.ZN TrueColor ,
+alloc must be
+.ZN AllocNone ,
+or a
+.ZN BadMatch
+error results.
+For the other visual classes,
+if alloc is
+.ZN AllocNone ,
+the colormap initially has no allocated entries,
+and clients can allocate them.
+For information about the visual types,
+see section 3.1.
+.LP
+If alloc is
+.ZN AllocAll ,
+the entire colormap is allocated writable.
+The initial values of all allocated entries are undefined.
+For
+.ZN GrayScale
+and
+.ZN PseudoColor ,
+the effect is as if an
+.ZN XAllocColorCells
+call returned all pixel values from zero to N \- 1,
+where N is the colormap entries value in the specified visual.
+For
+.ZN DirectColor ,
+the effect is as if an
+.ZN XAllocColorPlanes
+call returned a pixel value of zero and red_mask, green_mask, 
+and blue_mask values containing the same bits as the corresponding
+masks in the specified visual.
+However, in all cases,
+none of these entries can be freed by using
+.ZN XFreeColors .
+.LP
+.ZN XCreateColormap
+can generate
+.ZN BadAlloc ,
+.ZN BadMatch ,
+.ZN BadValue ,
+and
+.ZN BadWindow 
+errors.
+.LP
+The
+.ZN XCopyColormapAndFree
+function creates a colormap of the same visual type and for the same screen
+as the specified colormap and returns the new colormap ID.
+It also moves all of the client's existing allocation from the specified
+colormap to the new colormap with their color values intact 
+and their read-only or writable characteristics intact and frees those entries 
+in the specified colormap.
+Color values in other entries in the new colormap are undefined.
+If the specified colormap was created by the client with alloc set to
+.ZN AllocAll ,
+the new colormap is also created with 
+.ZN AllocAll ,
+all color values for all entries are copied from the specified colormap,
+and then all entries in the specified colormap are freed.
+If the specified colormap was not created by the client with
+.ZN AllocAll ,
+the allocations to be moved are all those pixels and planes
+that have been allocated by the client using
+.ZN XAllocColor ,
+.ZN XAllocNamedColor ,
+.ZN XAllocColorCells ,
+or
+.ZN XAllocColorPlanes
+and that have not been freed since they were allocated.
+.LP
+.ZN XCopyColormapAndFree
+can generate
+.ZN BadAlloc
+and
+.ZN BadColor 
+errors.
+.LP
+The
+.ZN XFreeColormap
+function deletes the association between the colormap resource ID 
+and the colormap and frees the colormap storage.
+However, this function has no effect on the default colormap for a screen.
+If the specified colormap is an installed map for a screen,
+it is uninstalled (see
+.ZN XUninstallColormap ).
+If the specified colormap is defined as the colormap for a window (by
+.ZN XCreateWindow ,
+.ZN XSetWindowColormap ,
+or
+.ZN XChangeWindowAttributes ),
+.ZN XFreeColormap
+changes the colormap associated with the window to
+.ZN None 
+and generates a
+.ZN ColormapNotify
+event.
+X does not define the colors displayed for a window with a colormap of
+.ZN None .
+.LP
+.ZN XFreeColormap
+can generate a
+.ZN BadColor 
+error.
+.SH STRUCTURES
+The
+.ZN XColor
+structure contains:
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	unsigned long pixel;	/\&* pixel value */
+	unsigned short red, green, blue;	/\&* rgb values */
+	char flags;	/\&* DoRed, DoGreen, DoBlue */	
+	char pad;
+} XColor;
+.De
+.LP
+The red, green, and blue values are always in the range 0 to 65535
+inclusive, independent of the number of bits actually used in the
+display hardware.
+The server scales these values down to the range used by the hardware.
+Black is represented by (0,0,0), 
+and white is represented by (65535,65535,65535).
+.IN "Color"
+In some functions,
+the flags member controls which of the red, green, and blue members is used 
+and can be the inclusive OR of zero or more of
+.ZN DoRed ,
+.ZN DoGreen ,
+and 
+.ZN DoBlue .
+.SH DIAGNOSTICS
+.TP 1i
+.ZN BadAlloc
+The server failed to allocate the requested resource or server memory.
+.TP 1i
+.ZN BadColor
+A value for a Colormap argument does not name a defined Colormap.
+.TP 1i
+.ZN BadMatch
+An
+.ZN InputOnly
+window is used as a Drawable.
+.TP 1i
+.ZN BadMatch
+Some argument or pair of arguments has the correct type and range but fails
+to match in some other way required by the request.
+.TP 1i
+.ZN BadValue
+Some numeric value falls outside the range of values accepted by the request.
+Unless a specific range is specified for an argument, the full range defined
+by the argument's type is accepted.  Any argument defined as a set of
+alternatives can generate this error.
+.TP 1i
+.ZN BadWindow
+A value for a Window argument does not name a defined Window.
+.SH "SEE ALSO"
+XAllocColor(3X11),
+XChangeWindowAttributes(3X11),
+XCreateWindow(3X11),
+XQueryColor(3X11),
+XStoreColors(3X11)
+.br
+\fI\*(xL\fP

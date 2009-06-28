@@ -1,0 +1,6 @@
+STARTENCODING ascii-0
+SIZE 0x100
+STARTMAPPING unicode
+# the identity mapping
+ENDMAPPING
+ENDENCODING

@@ -1,0 +1,48 @@
+The IBM Rapid Access keyboard have some extra buttons
+on it to launch programs, control a cd-player and so on.
+
+These buttons is not functional when the computer is turned
+on but have to be activated by sending the codes 0xea 0x71
+to it.
+
+I've written the following hack to send codes to the keyboard:
+
+--------------------------------------------------------------
+/* gcc -O2 -s -Wall -osend_to_keyboard send_to_keyboard.c */
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/io.h>
+
+int main( int argc, char *argv[] )
+{
+  int i;
+
+  ioperm( 0x60, 3, 1 );
+
+  for( i = 1; i < argc; i++ ) {
+    int x = strtol( argv[i], 0, 16 );
+
+    usleep( 300 );
+    outb( x, 0x60 );
+  }
+
+  return 0;
+}
+--------------------------------------------------------------
+
+As root you can then call this program (in your boot scripts)
+as "send_to_keyboard ea 71" to turn on the extra buttons.
+
+It's not a good idea to run several instances of this program
+at the same time. It is a hack but it works. If you try to
+send other codes to the keyboard it probably will lock up.
+For other codes see:
+
+http://www.win.tue.nl/~aeb/linux/kbd/scancodes-2.html#ss2.22
+
+--
+Dennis Björklund <db@zigo.dhs.org>
+
+
+
+$XFree86$

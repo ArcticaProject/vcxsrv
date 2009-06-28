@@ -1,0 +1,30 @@
+// $XKeyboardConfig$
+//
+
+default  alphanumeric_keys
+xkb_symbols "kr106" {
+    name[Group1]= "Korea, Republic of";
+    include "us"
+    include "kr(koreankeys)"
+};
+
+alphanumeric_keys
+xkb_symbols "kr104" {
+    name[Group1]= "Korea, Republic of - 101/104 key Compatible";
+    include "us"
+    include "kr(koreankeys)"
+    include "kr(koreankeys_raltctl)"
+};
+
+partial hidden function_keys
+xkb_symbols "koreankeys" {
+    key <K72> { [ Hangul ] };
+    key <K71> { [ Hangul_Hanja ] };    
+};
+
+partial hidden function_keys
+xkb_symbols "koreankeys_raltctl" {
+    key <RALT> { [ Hangul ] };
+    key <RCTL> { [ Hangul_Hanja ] };    
+};
+

@@ -1,0 +1,458 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		527F24190B5D938C007840A7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */; };
+		527F241A0B5D938C007840A7 /* main.nib in Resources */ = {isa = PBXBuildFile; fileRef = 02345980000FD03B11CA0E72 /* main.nib */; };
+		527F241B0B5D938C007840A7 /* X11.icns in Resources */ = {isa = PBXBuildFile; fileRef = 50459C5F038587C60ECA21EC /* X11.icns */; };
+		527F241D0B5D938C007840A7 /* bundle-main.c in Sources */ = {isa = PBXBuildFile; fileRef = 50EE2AB703849F0B0ECA21EC /* bundle-main.c */; };
+		527F241F0B5D938C007840A7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F4F0A7039D6ACA0E82C0CB /* CoreFoundation.framework */; };
+		527F24200B5D938C007840A7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570C5748047186C400ACF82F /* SystemConfiguration.framework */; };
+		527F24370B5D9D89007840A7 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 527F24260B5D938C007840A7 /* Info.plist */; };
+		52D9C0ED0BCDDF6B00CD2AFC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D9C0EB0BCDDF6B00CD2AFC /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0867D6ABFE840B52C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1870340FFE93FCAF11CA0CD7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E460D1B6C05005958A5 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E470D1B6C05005958A5 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E480D1B6C05005958A5 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E490D1B6C05005958A5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E4A0D1B6C05005958A5 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E4B0D1B6C05005958A5 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E4C0D1B6C05005958A5 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E4D0D1B6C05005958A5 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E4E0D1B6C05005958A5 /* no */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = no; path = no.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E4F0D1B6C05005958A5 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E500D1B6C05005958A5 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E510D1B6C05005958A5 /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_PT; path = pt_PT.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E520D1B6C05005958A5 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E530D1B6C05005958A5 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E540D1B6C05005958A5 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E550D1B6C05005958A5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E560D1B6C05005958A5 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3FB03E570D1B6C17005958A5 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E580D1B6C17005958A5 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E590D1B6C17005958A5 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E5A0D1B6C17005958A5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E5B0D1B6C17005958A5 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E5C0D1B6C17005958A5 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Italian.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E5D0D1B6C17005958A5 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Japanese.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E5E0D1B6C17005958A5 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E5F0D1B6C17005958A5 /* no */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = no; path = no.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E600D1B6C17005958A5 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E610D1B6C17005958A5 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E620D1B6C17005958A5 /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_PT; path = pt_PT.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E630D1B6C17005958A5 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E640D1B6C17005958A5 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Spanish.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E650D1B6C17005958A5 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E660D1B6C17005958A5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E670D1B6C17005958A5 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3FB03E680D1B6C34005958A5 /* da */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = da; path = da.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E690D1B6C34005958A5 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Dutch.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E6A0D1B6C34005958A5 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = fi.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E6B0D1B6C34005958A5 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = French.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E6C0D1B6C34005958A5 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = German.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E6D0D1B6C34005958A5 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Italian.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E6E0D1B6C34005958A5 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Japanese.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E6F0D1B6C34005958A5 /* ko */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ko; path = ko.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E700D1B6C34005958A5 /* no */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = no; path = no.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E710D1B6C34005958A5 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = pl.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E720D1B6C34005958A5 /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = pt.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E730D1B6C34005958A5 /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = pt_PT.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E740D1B6C34005958A5 /* ru */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ru; path = ru.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E750D1B6C34005958A5 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Spanish.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E760D1B6C34005958A5 /* sv */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sv; path = sv.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E770D1B6C34005958A5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = zh_CN.lproj/main.nib; sourceTree = "<group>"; };
+		3FB03E780D1B6C34005958A5 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = zh_TW.lproj/main.nib; sourceTree = "<group>"; };
+		50459C5F038587C60ECA21EC /* X11.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = X11.icns; sourceTree = "<group>"; };
+		50EE2AB703849F0B0ECA21EC /* bundle-main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "bundle-main.c"; sourceTree = "<group>"; };
+		50F4F0A7039D6ACA0E82C0CB /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
+		527F24260B5D938C007840A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		527F24270B5D938C007840A7 /* X11.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = X11.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		52D9C0EC0BCDDF6B00CD2AFC /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		570C5748047186C400ACF82F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		527F241E0B5D938C007840A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				527F241F0B5D938C007840A7 /* CoreFoundation.framework in Frameworks */,
+				527F24200B5D938C007840A7 /* SystemConfiguration.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		195DF8CFFE9D517E11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				527F24270B5D938C007840A7 /* X11.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		20286C29FDCF999611CA2CEA /* X11 */ = {
+			isa = PBXGroup;
+			children = (
+				20286C2AFDCF999611CA2CEA /* Sources */,
+				20286C2CFDCF999611CA2CEA /* Resources */,
+				20286C32FDCF999611CA2CEA /* External Frameworks and Libraries */,
+				195DF8CFFE9D517E11CA2CBB /* Products */,
+				527F24260B5D938C007840A7 /* Info.plist */,
+			);
+			name = X11;
+			sourceTree = "<group>";
+		};
+		20286C2AFDCF999611CA2CEA /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				50EE2AB703849F0B0ECA21EC /* bundle-main.c */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		20286C2CFDCF999611CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				52D9C0EB0BCDDF6B00CD2AFC /* Localizable.strings */,
+				50459C5F038587C60ECA21EC /* X11.icns */,
+				0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */,
+				02345980000FD03B11CA0E72 /* main.nib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		20286C32FDCF999611CA2CEA /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				50F4F0A7039D6ACA0E82C0CB /* CoreFoundation.framework */,
+				570C5748047186C400ACF82F /* SystemConfiguration.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		527F24170B5D938C007840A7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		527F24160B5D938C007840A7 /* X11 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 527F24220B5D938C007840A7 /* Build configuration list for PBXNativeTarget "X11" */;
+			buildPhases = (
+				527F24170B5D938C007840A7 /* Headers */,
+				527F24180B5D938C007840A7 /* Resources */,
+				527F241C0B5D938C007840A7 /* Sources */,
+				527F241E0B5D938C007840A7 /* Frameworks */,
+				527F24210B5D938C007840A7 /* Rez */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = X11;
+			productName = X11;
+			productReference = 527F24270B5D938C007840A7 /* X11.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		20286C28FDCF999611CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 527F24080B5D8FFC007840A7 /* Build configuration list for PBXProject "X11" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				da,
+				Dutch,
+				fi,
+				Italian,
+				ko,
+				no,
+				pl,
+				pt,
+				pt_PT,
+				ru,
+				Spanish,
+				sv,
+				zh_CN,
+				zh_TW,
+			);
+			mainGroup = 20286C29FDCF999611CA2CEA /* X11 */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				527F24160B5D938C007840A7 /* X11 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		527F24180B5D938C007840A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				527F24370B5D9D89007840A7 /* Info.plist in Resources */,
+				527F24190B5D938C007840A7 /* InfoPlist.strings in Resources */,
+				527F241A0B5D938C007840A7 /* main.nib in Resources */,
+				527F241B0B5D938C007840A7 /* X11.icns in Resources */,
+				52D9C0ED0BCDDF6B00CD2AFC /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXRezBuildPhase section */
+		527F24210B5D938C007840A7 /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		527F241C0B5D938C007840A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				527F241D0B5D938C007840A7 /* bundle-main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		02345980000FD03B11CA0E72 /* main.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1870340FFE93FCAF11CA0CD7 /* English */,
+				3FB03E680D1B6C34005958A5 /* da */,
+				3FB03E690D1B6C34005958A5 /* Dutch */,
+				3FB03E6A0D1B6C34005958A5 /* fi */,
+				3FB03E6B0D1B6C34005958A5 /* French */,
+				3FB03E6C0D1B6C34005958A5 /* German */,
+				3FB03E6D0D1B6C34005958A5 /* Italian */,
+				3FB03E6E0D1B6C34005958A5 /* Japanese */,
+				3FB03E6F0D1B6C34005958A5 /* ko */,
+				3FB03E700D1B6C34005958A5 /* no */,
+				3FB03E710D1B6C34005958A5 /* pl */,
+				3FB03E720D1B6C34005958A5 /* pt */,
+				3FB03E730D1B6C34005958A5 /* pt_PT */,
+				3FB03E740D1B6C34005958A5 /* ru */,
+				3FB03E750D1B6C34005958A5 /* Spanish */,
+				3FB03E760D1B6C34005958A5 /* sv */,
+				3FB03E770D1B6C34005958A5 /* zh_CN */,
+				3FB03E780D1B6C34005958A5 /* zh_TW */,
+			);
+			name = main.nib;
+			sourceTree = "<group>";
+		};
+		0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0867D6ABFE840B52C02AAC07 /* English */,
+				3FB03E570D1B6C17005958A5 /* da */,
+				3FB03E580D1B6C17005958A5 /* Dutch */,
+				3FB03E590D1B6C17005958A5 /* fi */,
+				3FB03E5A0D1B6C17005958A5 /* French */,
+				3FB03E5B0D1B6C17005958A5 /* German */,
+				3FB03E5C0D1B6C17005958A5 /* Italian */,
+				3FB03E5D0D1B6C17005958A5 /* Japanese */,
+				3FB03E5E0D1B6C17005958A5 /* ko */,
+				3FB03E5F0D1B6C17005958A5 /* no */,
+				3FB03E600D1B6C17005958A5 /* pl */,
+				3FB03E610D1B6C17005958A5 /* pt */,
+				3FB03E620D1B6C17005958A5 /* pt_PT */,
+				3FB03E630D1B6C17005958A5 /* ru */,
+				3FB03E640D1B6C17005958A5 /* Spanish */,
+				3FB03E650D1B6C17005958A5 /* sv */,
+				3FB03E660D1B6C17005958A5 /* zh_CN */,
+				3FB03E670D1B6C17005958A5 /* zh_TW */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		52D9C0EB0BCDDF6B00CD2AFC /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52D9C0EC0BCDDF6B00CD2AFC /* English */,
+				3FB03E460D1B6C05005958A5 /* da */,
+				3FB03E470D1B6C05005958A5 /* Dutch */,
+				3FB03E480D1B6C05005958A5 /* fi */,
+				3FB03E490D1B6C05005958A5 /* French */,
+				3FB03E4A0D1B6C05005958A5 /* German */,
+				3FB03E4B0D1B6C05005958A5 /* Italian */,
+				3FB03E4C0D1B6C05005958A5 /* Japanese */,
+				3FB03E4D0D1B6C05005958A5 /* ko */,
+				3FB03E4E0D1B6C05005958A5 /* no */,
+				3FB03E4F0D1B6C05005958A5 /* pl */,
+				3FB03E500D1B6C05005958A5 /* pt */,
+				3FB03E510D1B6C05005958A5 /* pt_PT */,
+				3FB03E520D1B6C05005958A5 /* ru */,
+				3FB03E530D1B6C05005958A5 /* Spanish */,
+				3FB03E540D1B6C05005958A5 /* sv */,
+				3FB03E550D1B6C05005958A5 /* zh_CN */,
+				3FB03E560D1B6C05005958A5 /* zh_TW */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		527F24090B5D8FFC007840A7 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INSTALL_MODE_FLAG = "a+rX";
+			};
+			name = Development;
+		};
+		527F240A0B5D8FFC007840A7 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INSTALL_MODE_FLAG = "a+rX";
+			};
+			name = Deployment;
+		};
+		527F240B0B5D8FFC007840A7 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INSTALL_MODE_FLAG = "a+rX";
+			};
+			name = Default;
+		};
+		527F24230B5D938C007840A7 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /usr/X11/include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /usr/X11;
+				LIBRARY_SEARCH_PATHS = /usr/X11/lib;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lXau",
+					"-lxcb",
+					"-lX11",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = X11;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Development;
+		};
+		527F24240B5D938C007840A7 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /usr/X11/include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /usr/X11;
+				LIBRARY_SEARCH_PATHS = /usr/X11/lib;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lXau",
+					"-lxcb",
+					"-lX11",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = X11;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Deployment;
+		};
+		527F24250B5D938C007840A7 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /usr/X11/include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /usr/X11;
+				LIBRARY_SEARCH_PATHS = /usr/X11/lib;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lXau",
+					"-lxcb",
+					"-lX11",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = X11;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		527F24080B5D8FFC007840A7 /* Build configuration list for PBXProject "X11" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				527F24090B5D8FFC007840A7 /* Development */,
+				527F240A0B5D8FFC007840A7 /* Deployment */,
+				527F240B0B5D8FFC007840A7 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		527F24220B5D938C007840A7 /* Build configuration list for PBXNativeTarget "X11" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				527F24230B5D938C007840A7 /* Development */,
+				527F24240B5D938C007840A7 /* Deployment */,
+				527F24250B5D938C007840A7 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 20286C28FDCF999611CA2CEA /* Project object */;
+}

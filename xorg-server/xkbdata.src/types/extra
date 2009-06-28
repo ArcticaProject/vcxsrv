@@ -1,0 +1,185 @@
+// $XFree86: xc/programs/xkbcomp/types/extra,v 1.3 2002/11/26 02:14:02 dawes Exp $
+
+partial default xkb_types "default" {
+    // Definition for a key type used for the czech keymap, for instance.
+    // Defines style a with four level shift. It is similar to three_level
+    // type used for iso9995 but it lets the shift key behave "normally".
+
+    virtual_modifiers LevelThree;
+
+    type "FOUR_LEVEL" {
+        modifiers = Shift+LevelThree;
+	map[None] = Level1;
+	map[Shift] = Level2;
+	map[LevelThree] = Level3;
+	map[Shift+LevelThree] = Level4;
+	level_name[Level1] = "Base";
+	level_name[Level2] = "Shift";
+	level_name[Level3] = "Alt Base";  
+	level_name[Level4] = "Shift Alt";  
+    };
+
+    type "FOUR_LEVEL_ALPHABETIC" {
+	modifiers = Shift+Lock+LevelThree;
+	map[None] = Level1;
+	map[Shift] = Level2;
+	map[Lock]  = Level2;
+	map[LevelThree] = Level3;
+	map[Shift+LevelThree] = Level4;
+	map[Lock+LevelThree] =  Level4;
+	map[Lock+Shift+LevelThree] =  Level3;
+	level_name[Level1] = "Base";
+	level_name[Level2] = "Shift";
+	level_name[Level3] = "Alt Base";
+	level_name[Level4] = "Shift Alt";
+    };
+
+    type "FOUR_LEVEL_SEMIALPHABETIC" {
+	modifiers = Shift+Lock+LevelThree;
+	map[None] = Level1;
+	map[Shift] = Level2;
+	map[Lock]  = Level2;
+	map[LevelThree] = Level3;
+	map[Shift+LevelThree] = Level4;
+	map[Lock+LevelThree] =  Level3;
+        map[Lock+Shift+LevelThree] = Level4;
+	preserve[Lock+LevelThree] = Lock;
+	preserve[Lock+Shift+LevelThree] = Lock;
+	level_name[Level1] = "Base";
+	level_name[Level2] = "Shift";
+	level_name[Level3] = "Alt Base";
+	level_name[Level4] = "Shift Alt";
+    };
+
+    // Another four level keypad variant
+    // First two levels are controled by NumLock (with active Shift-ing like
+    // in KEYPAD). LevelThree overrides this mode, with two additional
+    // Shift-ed levels
+    // NumLock state is intentionnaly ignored when LevelThree is active
+    type "FOUR_LEVEL_MIXED_KEYPAD" {
+        modifiers = Shift+NumLock+LevelThree;
+        map[None] = Level1;
+        map[Shift+NumLock] = Level1;
+        map[NumLock] = Level2;
+        map[Shift] = Level2;
+        map[LevelThree] = Level3;
+	map[NumLock+LevelThree] = Level3;
+        map[Shift+LevelThree] = Level4;
+	map[Shift+NumLock+LevelThree] = Level4;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Number";
+        level_name[Level3] = "Alt Base";
+        level_name[Level4] = "Shift Alt";
+    };
+
+    // Base level, two Shift-ed LevelThree levels, one Ctrl+Alt command level
+    type "FOUR_LEVEL_X" {
+        modifiers = Shift+LevelThree+Control+Alt;
+        map[None] = Level1;
+        map[LevelThree] = Level2;
+	map[Shift+LevelThree] = Level3;
+	map[Control+Alt] = Level4;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Alt Base";
+        level_name[Level3] = "Shift Alt";
+	level_name[Level4] = "Ctrl+Alt";
+    };
+
+// Special type for keys used in Serbian Latin Unicode map
+// It makes it possible to use all three forms of latin letters 
+// present in Unicode that are made up of two separate letters 
+// (forms like LJ, Lj, and lj; NJ, Nj, and nj; etc)
+
+    type "SEPARATE_CAPS_AND_SHIFT_ALPHABETIC" {
+        modifiers = Shift+Lock+LevelThree;
+        map[None] = Level1;
+        map[Shift] = Level2;
+        map[Lock] = Level4;
+        map[LevelThree] = Level3;
+        map[Shift+LevelThree] = Level4;
+        map[Lock+LevelThree] =  Level3;
+        map[Lock+Shift+LevelThree] = Level3;
+        preserve[Lock]= Lock;
+        preserve[Lock+LevelThree]= Lock;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Shift";
+        level_name[Level3] = "AltGr Base";
+        level_name[Level4] = "Shift AltGr";
+    };
+
+// type for e.g. german ssharp which is capitalized SS.
+// CHARACTERISTICS:
+// It is FOUR_LEVEL with the exception that the fifth level
+// is mapped to the Lock modifier.
+// If other modifiers are used, the Lock state is ignored.
+// DETAILS ABOUT GERMAN:
+// The capital form of ssharp (called sharp s) only exists for
+// completely capitalized Text, not at the beginning of sentences
+// or nouns (nouns have a captial letter at the beginning in german).
+// The ssharp key, to the right of the zero key, takes this into
+// account and has a questionmark mapped on shift-ssharp since
+// normally no capital version is needed.
+// When typing with active capsLock, this key type is needed to
+// output two capital letters S because this is the only german key
+// whose capital letter is not the same as the one typed with shift.
+
+    type "FOUR_LEVEL_PLUS_LOCK" {
+        modifiers = Shift+Lock+LevelThree;
+        map[None] = Level1;
+        map[Shift] = Level2;
+        map[LevelThree] = Level3;
+        map[Shift+LevelThree] = Level4;
+        map[Lock]  = Level5;
+        map[Lock+Shift] = Level2;
+        map[Lock+LevelThree] = Level3;
+        map[Lock+Shift+LevelThree] = Level4;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Shift";
+        level_name[Level3] = "Alt Base";
+        level_name[Level4] = "Shift Alt";
+        level_name[Level5] = "Lock";
+    };
+};
+
+// This enables the four level shifting also for the keypad.
+partial xkb_types "keypad" {
+    virtual_modifiers LevelThree;
+
+    type "FOUR_LEVEL_KEYPAD" {
+	modifiers = Shift+NumLock+LevelThree;
+	map[None] = Level1;
+	map[Shift] = Level2;
+	map[NumLock] = Level2;
+	map[Shift+NumLock] = Level1;
+	map[LevelThree] = Level3;
+	map[Shift+LevelThree] = Level4;
+	map[NumLock+LevelThree] = Level4;
+	map[Shift+NumLock+LevelThree] = Level3;
+	level_name[Level1] = "Base";
+	level_name[Level2] = "Number";
+	level_name[Level3] = "Alt Base";
+	level_name[Level4] = "Alt Number";
+    };       
+};
+
+// This enables the four level shifting also for the keypad,
+// but levels 1 and 2, and 3 and 4 are swapped on Mac keypads.
+partial xkb_types "mac_keypad" {
+    virtual_modifiers LevelThree;
+
+    type "FOUR_LEVEL_KEYPAD" {
+	modifiers = Shift+NumLock+LevelThree;
+	map[None] = Level2;
+	map[Shift] = Level1;
+	map[NumLock] = Level1;
+	map[Shift+NumLock] = Level2;
+	map[LevelThree] = Level4;
+	map[Shift+LevelThree] = Level3;
+	map[NumLock+LevelThree] = Level3;
+	map[Shift+NumLock+LevelThree] = Level4;
+	level_name[Level2] = "Base";
+	level_name[Level1] = "Number";
+	level_name[Level4] = "Alt Base";
+	level_name[Level3] = "Alt Number";
+    };       
+};

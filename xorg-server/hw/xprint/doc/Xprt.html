@@ -1,0 +1,115 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Xprt</title><meta name="generator" content="DocBook XSL Stylesheets V1.62.4"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" lang="en"><a name="Xprt"></a><div class="titlepage"><div></div><div></div></div><div class="refnamediv"><h2>Name</h2><p>Xprt &#8212; Print server for X Version 11</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="cmdsynopsis"><p><tt class="command">Xprt</tt>  [<tt class="option">-ac</tt>] [<tt class="option">-audit <i class="replaceable"><tt>level</tt></i></tt>] [<tt class="option">-pn</tt>] [<tt class="option">-fp <i class="replaceable"><tt>fontpath</tt></i></tt>] [<tt class="option">-XpFile <i class="replaceable"><tt>file</tt></i></tt>] [<tt class="option">-XpSpoolerType <i class="replaceable"><tt>spoolername</tt></i></tt>] [<tt class="option">:<i class="replaceable"><tt>display</tt></i></tt>]</p></div></div><div class="refsect1" lang="en"><a name="id2804962"></a><h2>DESCRIPTION</h2><p><span><b class="command">Xprt</b></span> is the Xprint print server
+      for version 11 of the X Window system for non display devices
+      such as printers and fax machines.</p><p>Xprint is an advanced printing system which enables X11
+      applications to use devices like printers, FAX or create
+      documents in formats like PostScript, PCL or PDF.  It may be used by
+      clients such as <span class="application">mozilla</span>.
+    </p><p>Xprint is a very flexible, extensible, scalable, client/server
+     print system based on ISO 10175 (and some other specs) and the X11        
+     rendering protocol.                                                       
+     Using Xprint an application can search, query and use devices like        
+     printers, FAX machines or create documents in formats like PDF.           
+     In particular, an application can seek a printer, query supported         
+     attributes (like paper size, trays, fonts etc.), configure the printer    
+     device to match it's needs and print on it like on any other X device     
+     reusing parts of the code which is used for the video card Xserver.
+    </p></div><div xmlns:ns1="" class="refsect1" lang="en"><a name="id2805117"></a><h2>USAGE</h2><p>
+      Although Xprt may be invoked from the command line, it is
+      preferable to run it as a daemon via the init script
+      <tt class="filename">/etc/init.d/xprint</tt> (where this script exists).
+    </p><p>Client programs such as mozilla will require environment
+      variable <tt class="envar">${XPSERVERLIST}</tt> to be set, identifying the
+      &quot;display&quot; on which Xprt is running.  This variable may be set
+      for all users via <tt class="filename">/etc/profile</tt> (or similar), using
+      <b class="userinput"><tt>/etc/init.d/xprint get_xpserverlist</tt></b>:
+      </p><div class="informalexample"><pre class="programlisting">export XPSERVERLIST=`/etc/init.d/xprint get_xpserverlist`</pre></div></div><div class="refsect1" lang="en"><a name="id2805150"></a><h2>OPTIONS</h2><p>Many of Xprt's command line options are shared in common
+    with the usual X servers (see <span class="citerefentry"><span class="refentrytitle">Xserver</span>(1x)</span>).
+    Commonly used options include:</p><div class="variablelist"><dl><dt><span class="term"><tt class="option">:<i class="replaceable"><tt>display</tt></i></tt></span></dt><dd><p> The X server runs on the given display. If multiple X
+               servers are to run simultaneously on a host, each must
+               have a unique display number.  Note that the standard X
+               server (for video displays) typically runs on display
+               :0.  If <tt class="filename">/etc/init.d/xprint</tt> is used
+               to invoke Xprt, it may be configured to automatically assign an available
+               display number.</p></dd><dt><span class="term"><tt class="option">-ac</tt></span></dt><dd><p>disables host-based access control mechanisms.  Enables  access
+               by  any host, and permits any host to modify the access control
+               list.  Use with extreme caution.  This option exists  primarily
+               for running test suites remotely.</p></dd><dt><span class="term"><tt class="option">-audit <i class="replaceable"><tt>level</tt></i></tt></span></dt><dd><p>sets  the  audit  trail level.  The default level is 1, meaning
+               only connection rejections are reported.  Level 2  additionally
+               reports  all  successful  connections and disconnects.  Level 4
+               enables messages  from  the  SECURITY  extension,  if  present,
+               including  generation  and  revocation  of  authorizations  and
+               violations of the security policy.  Level 0 turns off the audit
+               trail.  Audit lines are sent as standard error output.</p></dd><dt><span class="term"><tt class="option">-fp <i class="replaceable"><tt>fontpath</tt></i></tt></span></dt><dd><p>sets the search path for fonts.  This path is a comma
+               separated list of directories which Xprt searches for
+               font databases.</p></dd><dt><span class="term"><tt class="option">-pn</tt></span></dt><dd><p>permits the server to continue running if it fails to
+               establish all of its well-known sockets (connection
+               points for clients), but establishes at least
+               one.</p></dd><dt><span class="term"><tt class="option">-XpFile <i class="replaceable"><tt>file</tt></i></tt></span></dt><dd><p>Sets an alternate Xprinters file (see section FILES).</p></dd><dt><span class="term"><tt class="option">-XpSpoolerType <i class="replaceable"><tt>spoolername</tt></i></tt></span></dt><dd xmlns:ns2=""><p>
+            Defines the spooler system to be used for print job spooling.
+            Supported values in xprint.mozdev.org release 009 are:
+            </p><table class="simplelist" border="0" summary="Simple list"><tr><td>aix</td></tr><tr><td>aix4</td></tr><tr><td>bsd</td></tr><tr><td>osf</td></tr><tr><td>solaris</td></tr><tr><td>sysv</td></tr><tr><td>uxp</td></tr><tr><td>cups</td></tr><tr><td>lprng</td></tr><tr><td>other</td></tr><tr><td>none</td></tr></table><p>
+            (multiple values can be specified, separated by ':', the first active spooler will be chosen).
+            The default value is platform-specific and can be obtained via
+            </p><pre class="programlisting">Xprt -h</pre><p>.
+          </p></dd></dl></div></div><div xmlns:ns3="" class="refsect1" lang="en"><a name="id2805336"></a><h2>ENVIRONMENT</h2><p>
+      The following environment variables are recognized by the X print server
+      (environment variables recognized by Xprint clients are described in 
+      <span class="citerefentry"><span class="refentrytitle">Xprint</span>(7)</span>):
+
+      </p><div class="variablelist"><dl><dt><span class="term"><tt class="envar">${XPCONFIGDIR}</tt></span></dt><dd><p> This environment variable points to the  root
+	      of  the Xprint server configuration directory hierarchy.
+	      If the variable is not defined,  the  default
+	      path  is be assumed.  The default path may be
+              <tt class="filename">/usr/X11R6/lib/X11/xserver/</tt>, 
+              <tt class="filename">/usr/lib/X11/xserver/</tt>,
+              <tt class="filename">/usr/share/Xprint/xserver/</tt> or
+              <tt class="filename">/usr/openwin/server/etc/XpConfig</tt>, depending on the
+	      system, and may be configured in <tt class="filename">/etc/init.d/xprint</tt>.</p></dd><dt><span class="term"><tt class="envar">${LANG}</tt></span></dt><dd><p>
+              This environment variable selects the locale settings used by the Xprint server.
+              Xprt allows language-specific settings (stored in <tt class="filename">${XPCONFIGDIR}/${LANG}/print/</tt>)
+              which will override the default settings (stored in <tt class="filename">${XPCONFIGDIR}/C/print/</tt>).
+              If <tt class="envar">${LANG}</tt> is not set &quot;C&quot; is assumed.
+            </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2805421"></a><h2>FILES</h2><div class="variablelist"><dl><dt><span class="term"><tt class="filename">${XPCONFIGDIR}/${LANG}/print/Xprinters</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/Xprinters</tt></span></dt><dd><p>
+            `Xprinters' is the top most configuration file.  It tells
+            Xprt which specific printer names (e.g.  mylaser) should
+            be supported, and whether <span class="citerefentry"><span class="refentrytitle">lpstat</span>(1)</span> or other commands
+            should be used to automatically supplement the list of
+            printers.
+          </p></dd><dt><span class="term"><tt class="filename">${XPCONFIGDIR}/${LANG}/print/attributes/printer</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/attributes/printer</tt></span></dt><dd><p>
+            The `printer' file maps printer names to model
+            configurations (see `model-config' below).  For example,
+            &quot;mylaser&quot; could be mapped to a &quot;HPDJ1600C&quot;, and all other
+            arbitrary printers could be mapped to a default, such as
+            &quot;HPLJ4SI&quot;.  When depending on <span class="citerefentry"><span class="refentrytitle">lpstat</span>(1)</span> in the Xprinters
+            file, setting up defaults in `printer' becomes all the
+            more important.
+          </p></dd><dt><span class="term"><tt class="filename">${XPCONFIGDIR}/${LANG}/print/attributes/document</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/attributes/document</tt></span></dt><dd><p>
+            The `document' file specifies the initial document values
+            for any print jobs.  For example, which paper tray to
+            use, what default resolution, etc.
+          </p></dd><dt><span class="term"><tt class="filename">${XPCONFIGDIR}/${LANG}/print/attributes/job</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/attributes/job</tt></span></dt><dd><p>
+            The `job' file specifies the initial job values for any
+            print jobs.  For example, &quot;notification-profile&quot; can be
+            set so that when a print job is successfully sent to a
+            printer, e-mail is sent to the user.
+          </p></dd><dt><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/models/PSdefault/model-config</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/models/PSdefault/fonts/fonts.dir</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/models/PSdefault/fonts/9nb00051.pmf</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/models/PSdefault/fonts/9nb00093.pmf</tt></span></dt><dd><p>
+            The `model-config' file has attributes that describe the
+            printer model's capabilities and default settings.
+            Printer model fonts may also be present.  The model-config
+            file also identifies the print ddx driver to be used.
+
+            For each printer model supported, a complete hierarchy of
+            files should exist.  In most cases, these files do not
+            need to be modified.
+          </p></dd><dt><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/ddx-config/raster/pdf</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/ddx-config/raster/pcl</tt>, </span><span class="term"><tt class="filename">${XPCONFIGDIR}/C/print/ddx-config/raster/postscript</tt></span></dt><dd><p>
+            The print ddx drivers can have highly specific
+            configuration files to control their behavior.  In most
+            cases, these files do not need to be modified.
+          </p></dd></dl></div></div><div class="refsect1" lang="en"><a name="id2805584"></a><h2>SEE ALSO</h2><p><span class="simplelist"><span class="citerefentry"><span class="refentrytitle">Xprint</span>(7)</span>, <span class="citerefentry"><span class="refentrytitle">X11</span>(7)</span>, <span class="citerefentry"><span class="refentrytitle">xplsprinters</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">xprehashprinterlist</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">xphelloworld</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">xpxmhelloworld</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">xpawhelloworld</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">xpxthelloworld</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">xpsimplehelloworld</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">Xserver</span>(1x)</span>, <span class="citerefentry"><span class="refentrytitle">libXp</span>(3x)</span>, <span class="citerefentry"><span class="refentrytitle">libXprintUtils</span>(3x)</span>, <span class="citerefentry"><span class="refentrytitle">libXprintAppUtils</span>(3x)</span>, <span class="citerefentry"><span class="refentrytitle">XmPrintShell</span>(3x)</span>, <span class="citerefentry"><span class="refentrytitle">XawPrintShell</span>(3x)</span>, Xprint FAQ (<a href="http://xprint.mozdev.org/docs/Xprint_FAQ.html" target="_top">http://xprint.mozdev.org/docs/Xprint_FAQ.html</a>), Xprint main site (<a href="http://xprint.mozdev.org/" target="_top">http://xprint.mozdev.org/</a>)</span></p></div><div class="refsect1" lang="en"><a name="id2805757"></a><h2>AUTHORS</h2><p>
+      This manual page was written by 
+      Drew Parsons <tt class="email">&lt;<a href="mailto:dparsons@debian.org">dparsons@debian.org</a>&gt;</tt> and
+      Roland Mainz <tt class="email">&lt;<a href="mailto:roland.mainz@nrubsig.org">roland.mainz@nrubsig.org</a>&gt;</tt>,
+      with some help from the man page at
+      <a href="http://www.sins.com.au/unix/manpages/Xprt.html" target="_top">http://www.sins.com.au/unix/manpages/Xprt.html</a> and the XFree86
+      man page for <span class="citerefentry"><span class="refentrytitle">Xserver</span>(1)</span>.
+    </p></div></div></body></html>

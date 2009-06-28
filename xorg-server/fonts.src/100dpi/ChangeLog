@@ -1,0 +1,33 @@
+2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version number for final X11R7 release candidate.
+
+2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Add m4 magic to allow AS_HELP_STRING to work with older versions
+	of autoconf 2.57.
+
+2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version number for X11R7 RC3 release.
+
+2005-11-23  Eric Anholt  <anholt@FreeBSD.org>
+
+	* Makefile.am:
+	Use $< instead of $^ to be portable to FreeBSD's make.
+
+2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* Makefile.am:
+	* configure.ac:
+	Add configure options to change the installed font dir and
+	disable ISO8859-* fonts.
+
+2005-10-18  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version number for RC1 release.
+

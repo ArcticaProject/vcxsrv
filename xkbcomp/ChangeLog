@@ -1,0 +1,344 @@
+commit 1aecdffaa0db7bbf85bc0aae9043e9437b25c30d
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Apr 17 00:52:29 2008 +0300
+
+    Don't scan paths which make NO SENSE WHATSOEVER TO SCAN
+    
+    Hey, I wonder if we have XKB files in our directory! I wonder if we
+    haven't bothered with a structure, and let's try to open a file called
+    'misc' in someone's home directory! What a surprise, it's not a valid
+    XKB file! Let's fail miserably!
+    
+    SURPRISINGLY, THIS IS NOT USEFUL BEHAVIOUR.
+
+commit a3a05fd489a9a35942a4419c537634e796dbebd1
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Apr 17 00:50:07 2008 +0300
+
+    xkbcomp: Take a device ID argument
+    
+    Allows the user to set maps (or whatever) on arbitrary devices.
+
+commit be084fbeba28312fc5102e98d64726464032c3e8
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Mar 6 17:13:42 2008 -0500
+
+    xkbcomp 1.0.4
+
+commit c1cc023fc50ce3a4a23f4682ebefd2301fd13170
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Fri Feb 29 15:30:34 2008 -0500
+
+    Bug #7645: Fix a conditional that always evaluates to FALSE.
+    
+    Since it's if (0 || foo), simplify to if (foo).
+
+commit 3f8bd7e68d0028bce5075124a32cc004166486c6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jan 22 16:05:14 2008 -0800
+
+    Bug 14185: MAINTAINERCLEANFILES multiply defined in Makefile.am
+    
+    <http://bugs.freedesktop.org/show_bug.cgi?id=14185>
+
+commit 2421069a3686f7bff702383675fdb77be108021e
+Author: Matthieu Herrb <matthieu@bluenote.herrb.com>
+Date:   Sun Jan 6 11:40:30 2008 +0100
+
+    Revert "Also mark xkbparse.h as a generated file."
+    Apparently only yacc generates it.
+    
+    This reverts commit 3e5b0d615b94c66a2b5a8b3d2e4a04713a442002.
+
+commit 3e5b0d615b94c66a2b5a8b3d2e4a04713a442002
+Author: Matthieu Herrb <matthieu@bluenote.herrb.com>
+Date:   Sun Jan 6 11:17:07 2008 +0100
+
+    Also mark xkbparse.h as a generated file.
+
+commit 686e8b6d33602f5fb7de7a768e532a4ac8090c26
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:37:18 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit 6aae208fe5bd8f71757c294a441d7c599a1ec4a1
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Sun Sep 23 20:15:47 2007 +0200
+
+    Ignore *.o and ylwrap.
+
+commit 829cb75130d1edd88fa1d33e277f49167daedacf
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Sun Sep 23 20:15:13 2007 +0200
+
+    Fixed a bunch of const correctness bugs.
+
+commit e8ffa513a109209849b11a3c608356cc28314a8e
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Sun Sep 23 17:50:41 2007 +0200
+
+    Fixed an invalid memory access.
+    
+    Some keynames are less than 3 characters long (not counting the
+    terminator). We're now also initializing all of the keyName array.
+
+commit dfa65b0c8df6a6aab4f86c32a0acb41f44201e7c
+Author: Daniel Drake <ddrake@brontes3d.com>
+Date:   Mon May 21 13:41:00 2007 -0800
+
+    Bug #11025: xkbcomp COPYING file
+    
+    X.Org Bugzilla #11025 <https://bugs.freedesktop.org/show_bug.cgi?id=11025>
+
+commit 3ca028cf767258fd62fb7a1b0eb22d13d333a3ae
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:51:25 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit b00e474ca8dbbb0166f2108e4b08cc3f9c36c735
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:24:52 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 313a2748d3dff872e067d515d6deabe1bbd56fbe
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Nov 8 16:30:57 2006 +0200
+
+    bump to 1.0.3
+
+commit 337ed258a1cd3f5a16fa69ef15e98781e76f63a1
+Author: Etsushi Kato <ek.kato@gmail.com>
+Date:   Wed Nov 8 16:29:16 2006 +0200
+
+    compat: avoid use of uninitialised variable (bug #8846)
+    si.interp.match may be unused, so just clobber it, which means we don't
+    end up with stuff like LevelOneOnlyMask wandering in.
+
+commit d920bbadb94684287f70e50ded2a35d65186c188
+Author: Andriy Gapon <avg@icyb.net.ua>
+Date:   Sun Oct 29 02:59:53 2006 +0300
+
+    parser: accept negative numbers in geometry co-ordinates (bug #8763)
+    Accept negative co-ordinates for geometry, per the spec.
+
+commit 0e8fd676de161ba52bb4544f8641be756bc580a1
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Apr 26 23:41:58 2006 +0000
+
+    Bump to 1.0.2
+
+commit 58c77c8db1bfdc739fac7b100fb813028d0449c7
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Mon Apr 3 11:28:43 2006 +0000
+
+    Bug #4851: Fix up have-no-file test.
+
+commit 02d32f8dbc79116d33ef428d5b064009cdd6a06e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Dec 21 02:29:51 2005 +0000
+
+    Update package version for X11R7 release.
+
+commit 836db774d1f08a050af8717c4c8501f337f36281
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Dec 19 16:22:44 2005 +0000
+
+    Stub COPYING files
+
+commit e9f680c5654cd93d30b16bc4b626ae5b25f84e87
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:08 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit b158f550fce661d67604f4a23d33a9f3b7bc22a1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:22 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit f1370c50b199c3c8b2760ebf0228d741855390d7
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:24 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 8eb3737f5bce19b89c80d9ab256204f0fa62529b
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:01:43 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit f19c3028c34a0dba4ffb9ae19c13421e7ff0ff12
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Mon Nov 21 10:35:01 2005 +0000
+
+    Another pass at .cvsignores for apps.
+
+commit 3ada747f1cb5400404e4b63430f7a817dbf0c4cb
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Nov 20 22:08:53 2005 +0000
+
+    Add/improve .cvsignore files for apps.
+
+commit 4eeb611f17bdc01f7a6cb4db3f0997ce5ecc6361
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:47:54 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 958d09064c96cb50df6f92bfb8d4754c87451920
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 17 23:56:23 2005 +0000
+
+    Use @APP_MAN_SUFFIX@ instead of $(APP_MAN_SUFFIX) in macro substitutions to
+        work better with BSD make
+
+commit 950fba3262905c58891773a8795305e685dc1cb3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Oct 15 19:32:52 2005 +0000
+
+    Have generated files be cleaned by maintainer in order to pass
+        check-tarball test.
+
+commit a83e4bb777d6f9b1b42a7fb3ff84a5e0d7e123c7
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Oct 14 00:25:46 2005 +0000
+
+    Use sed to fill in variables in man page
+
+commit 8c0d310c1acccc424dae29554a5075f9b339e95f
+Author: Kristian Høgsberg <krh@redhat.com>
+Date:   Thu Sep 1 19:37:02 2005 +0000
+
+    Define DFLT_XKB_CONFIG_ROOT to $(datadir)/X11/xkb so we look in the right
+        place.
+
+commit fabda6a820bdccae85a7c22ad0b30f089952606b
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Aug 2 18:03:01 2005 +0000
+
+    Mark generated files as BUILT_SOURCES and CLEANFILES to ensure they are
+        regenerated after 'make clean' and to make parallel builds work right.
+
+commit 35e0b7ef41ffe1f17ad8f21dbda10267961231ea
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:35 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit e447fee50a8014b5281a5abfcc5e468f8cc130ca
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jul 22 15:08:19 2005 +0000
+
+    Use YACC to compile xkbparse.y.
+
+commit 34cd161f5947b4dc185356bc65653717f56ced00
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Jul 20 19:31:57 2005 +0000
+
+    Use a unique token for PKG_CHECK_MODULES. Otherwise, if you use a global
+        configure cache, you cache it, and the cached value is probably wrong.
+
+commit 8335e5fa471e25675c6a369ec2348883953fcdd0
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Sat Jul 16 20:56:47 2005 +0000
+
+    Add xkbcomp data to symlink.sh. Some fixes to xkbcomp/Makefile.am
+
+commit d7b3354575f31caa9044b6c5f7aee4f010f6192a
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri Jul 15 18:02:35 2005 +0000
+
+    Build system for xkbcomp
+
+commit 59e48918e7c252926bb5e51a077bcbc8a7eec829
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Mon Nov 15 15:06:52 2004 +0000
+
+    Bufzilla #1802, http://freedesktop.org/bugzilla/show_bug.cgi?id=1802 Added
+        mingw (Win32) port
+
+commit 0336e043fab6f2a8828d90bc9eef2e23878f6dd1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Sep 3 23:41:22 2004 +0000
+
+    Update formatted docs.
+
+commit 20240438ef9d3a6c66443ca9f095a2766ef6ed4e
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 19:54:50 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit a3729a9f9fcda07b233f434266148c8751684347
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:35:25 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit 37a1152a4024fb799fe1272ce378e6c7c97ee951
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:13:08 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 55f40d0286d0e2e4b1602f983b749352188c3ec4
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:36:25 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 2a95cda1d358fc309c78dc5201a1dbacaba9d0bf
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:24:08 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit dbba2cffbc57e5bbdec8f24417a8a5dcfef7c2a2
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Jan 29 08:09:12 2004 +0000
+
+    Importing vendor version xf86-012804-2330 on Thu Jan 29 00:06:33 PST 2004
+
+commit 8aa5bcfe58d3776746d7b0d627f2fb8744fb0817
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:55:58 2003 +0000
+
+    XFree86 4.3.99.902 (RC 2)
+
+commit 37ebbbe7b11febaf548006a9b73db0eebf79881a
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:29:13 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 287ac4c6af61d8f9f95cd3b3219c979e1329a2fe
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:49:22 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 262961d88faf67f69f4630acb8234a4f2c5a6e80
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:49:22 2003 +0000
+
+    Initial revision
+
+commit 2af3aabf0e7eb1514d39b29a6b58fcd0d4de41d1
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:54 2003 +0000
+
+    R6.6 is the Xorg base-line

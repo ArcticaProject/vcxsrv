@@ -1,0 +1,57 @@
+/* $XFree86$ */
+
+/* Port I/O functions for platforms with no inlining. */
+
+#include "assyntax.h"
+
+	FILE("PortIO.s")
+
+	AS_BEGIN
+
+	GLOBL	GLNAME(outb)
+	GLOBL	GLNAME(outw)
+	GLOBL	GLNAME(outl)
+	GLOBL	GLNAME(inb)
+	GLOBL	GLNAME(inw)
+	GLOBL	GLNAME(inl)
+
+	SEG_TEXT
+	ALIGNTEXT4
+GLNAME(outb):
+	MOV_L	(REGOFF(4,ESP), EDX)
+	MOV_L	(REGOFF(8,ESP), EAX)
+	OUT_B
+	RET
+
+	ALIGNTEXT4
+GLNAME(outw):
+	MOV_L	(REGOFF(4,ESP), EDX)
+	MOV_L	(REGOFF(8,ESP), EAX)
+	OUT_W
+	RET
+
+	ALIGNTEXT4
+GLNAME(outl):
+	MOV_L	(REGOFF(4,ESP), EDX)
+	MOV_L	(REGOFF(8,ESP), EAX)
+	OUT_L
+	RET
+
+	ALIGNTEXT4
+GLNAME(inb):
+	MOV_L	(REGOFF(4,ESP), EDX)
+	IN_B
+	RET
+
+	ALIGNTEXT4
+GLNAME(inw):
+	MOV_L	(REGOFF(4,ESP), EDX)
+	IN_L
+	RET
+
+	ALIGNTEXT4
+GLNAME(inl):
+	MOV_L	(REGOFF(4,ESP), EDX)
+	IN_L
+	RET
+

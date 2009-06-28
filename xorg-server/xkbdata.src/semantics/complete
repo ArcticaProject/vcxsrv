@@ -1,0 +1,7 @@
+// $Xorg: complete,v 1.3 2000/08/17 19:54:42 cpqbld Exp $
+default xkb_semantics "complete" {
+
+xkb_types		{ include "complete" 	};
+xkb_compatibility	{ include "complete"	};
+
+};

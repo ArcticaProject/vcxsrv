@@ -1,0 +1,245 @@
+/* xorg-server.h.in						-*- c -*-
+ *
+ * This file is the template file for the xorg-server.h file which gets
+ * installed as part of the SDK.  The #defines in this file overlap
+ * with those from config.h, but only for those options that we want
+ * to export to external modules.  Boilerplate autotool #defines such
+ * as HAVE_STUFF and PACKAGE_NAME is kept in config.h
+ *
+ * It is still possible to update config.h.in using autoheader, since
+ * autoheader only creates a .h.in file for the first
+ * AM_CONFIG_HEADER() line, and thus does not overwrite this file.
+ *
+ * However, it should be kept in sync with this file.
+ */
+
+#ifndef _XORG_SERVER_H_
+#define _XORG_SERVER_H_
+
+/* Support BigRequests extension */
+#undef BIGREQS
+
+/* Default font path */
+#undef COMPILEDDEFAULTFONTPATH
+
+/* Support Composite Extension */
+#undef COMPOSITE
+
+/* Use OsVendorInit */
+#undef DDXOSINIT
+
+/* Build DPMS extension */
+#undef DPMSExtension
+
+/* Build GLX extension */
+#undef GLXEXT
+
+/* Include handhelds.org h3600 touchscreen driver */
+#undef H3600_TS
+
+/* Support XDM-AUTH*-1 */
+#undef HASXDMAUTH
+
+/* Support SHM */
+#undef HAS_SHM
+
+/* Support IPv6 for TCP connections */
+#undef IPv6
+
+/* Support MIT Misc extension */
+#undef MITMISC
+
+/* Support MIT-SHM Extension */
+#undef MITSHM
+
+/* Disable some debugging code */
+#undef NDEBUG
+
+/* Need XFree86 helper functions */
+#undef NEED_XF86_PROTOTYPES
+
+/* Need XFree86 typedefs */
+#undef NEED_XF86_TYPES
+
+/* Internal define for Xinerama */
+#undef PANORAMIX
+
+/* Support RANDR extension */
+#undef RANDR
+
+/* Support RENDER extension */
+#undef RENDER
+
+/* Support X resource extension */
+#undef RES
+
+/* Support MIT-SCREEN-SAVER extension */
+#undef SCREENSAVER
+
+/* Use a lock to prevent multiple servers on a display */
+#undef SERVER_LOCK
+
+/* Support SHAPE extension */
+#undef SHAPE
+
+/* Include time-based scheduler */
+#undef SMART_SCHEDULE
+
+/* Define to 1 on systems derived from System V Release 4 */
+#undef SVR4
+
+/* Support TCP socket connections */
+#undef TCPCONN
+
+/* Enable touchscreen support */
+#undef TOUCHSCREEN
+
+/* Support tslib touchscreen abstraction library */
+#undef TSLIB
+
+/* Support UNIX socket connections */
+#undef UNIXCONN
+
+/* unaligned word accesses behave as expected */
+#undef WORKING_UNALIGNED_INT
+
+/* Support XCMisc extension */
+#undef XCMISC
+
+/* Support Xdmcp */
+#undef XDMCP
+
+/* Build XFree86 BigFont extension */
+#undef XF86BIGFONT
+
+/* Support XFree86 miscellaneous extensions */
+#undef XF86MISC
+
+/* Support XFree86 Video Mode extension */
+#undef XF86VIDMODE
+
+/* Build XDGA support */
+#undef XFreeXDGA
+
+/* Support Xinerama extension */
+#undef XINERAMA
+
+/* Support X Input extension */
+#undef XINPUT
+
+/* Build XKB */
+#undef XKB
+
+/* Enable XKB per default */
+#undef XKB_DFLT_DISABLED
+
+/* Build XKB server */
+#undef XKB_IN_SERVER
+
+/* Support loadable input and output drivers */
+#undef XLOADABLE
+
+/* Build DRI extension */
+#undef XF86DRI
+
+/* Build DRI2 extension */
+#undef DRI2
+
+/* Build Xorg server */
+#undef XORGSERVER
+
+/* Vendor release */
+#undef XORG_RELEASE
+
+/* Current Xorg version */
+#undef XORG_VERSION_CURRENT
+
+/* Build Xv Extension */
+#undef XvExtension
+
+/* Build XvMC Extension */
+#undef XvMCExtension
+
+/* Build XRes extension */
+#undef XResExtension
+
+/* Support XSync extension */
+#undef XSYNC
+
+/* Support XTest extension */
+#undef XTEST
+
+/* Support XTrap extension */
+#undef XTRAP
+
+/* Support Xv Extension */
+#undef XV
+
+/* Vendor name */
+#undef XVENDORNAME
+
+/* Endian order */
+#undef _X_BYTE_ORDER
+/* Deal with multiple architecture compiles on Mac OS X */
+#ifndef __APPLE_CC__
+#define X_BYTE_ORDER _X_BYTE_ORDER
+#else
+#ifdef __BIG_ENDIAN__
+#define X_BYTE_ORDER X_BIG_ENDIAN
+#else
+#define X_BYTE_ORDER X_LITTLE_ENDIAN
+#endif
+#endif
+
+/* BSD-compliant source */
+#undef _BSD_SOURCE
+
+/* POSIX-compliant source */
+#undef _POSIX_SOURCE
+
+/* X/Open-compliant source */
+#undef _XOPEN_SOURCE
+
+/* Vendor web address for support */
+#undef __VENDORDWEBSUPPORT__
+
+/* Location of configuration file */
+#undef __XCONFIGFILE__
+
+/* XKB default rules */
+#undef __XKBDEFRULES__
+
+/* Name of X server */
+#undef __XSERVERNAME__
+
+/* Define to 1 if unsigned long is 64 bits. */
+#undef _XSERVER64
+
+/* Building vgahw module */
+#undef WITH_VGAHW
+
+/* System is BSD-like */
+#undef CSRG_BASED
+
+/* Solaris 8 or later? */
+#undef __SOL8__
+
+/* System has PC console */
+#undef PCCONS_SUPPORT
+
+/* System has PCVT console */
+#undef PCVT_SUPPORT
+
+/* System has syscons console */
+#undef SYSCONS_SUPPORT
+
+/* System has wscons console */
+#undef WSCONS_SUPPORT
+
+/* Loadable XFree86 server awesomeness */
+#undef XFree86LOADER
+
+/* Use libpciaccess */
+#undef XSERVER_LIBPCIACCESS
+
+#endif /* _XORG_SERVER_H_ */

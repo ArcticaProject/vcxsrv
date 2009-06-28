@@ -1,0 +1,212 @@
+STARTENCODING adobe-standard
+STARTMAPPING postscript
+32 space
+33 exclam
+34 quotedbl
+35 numbersign
+36 dollar
+37 percent
+38 ampersand
+39 quoteright
+40 parenleft
+41 parenright
+42 asterisk
+43 plus
+44 comma
+45 hyphen
+46 period
+47 slash
+48 zero
+49 one
+50 two
+51 three
+52 four
+53 five
+54 six
+55 seven
+56 eight
+57 nine
+58 colon
+59 semicolon
+60 less
+61 equal
+62 greater
+63 question
+64 at
+65 A
+66 B
+67 C
+68 D
+69 E
+70 F
+71 G
+72 H
+73 I
+74 J
+75 K
+76 L
+77 M
+78 N
+79 O
+80 P
+81 Q
+82 R
+83 S
+84 T
+85 U
+86 V
+87 W
+88 X
+89 Y
+90 Z
+91 bracketleft
+92 backslash
+93 bracketright
+94 asciicircum
+95 underscore
+96 quoteleft
+97 a
+98 b
+99 c
+100 d
+101 e
+102 f
+103 g
+104 h
+105 i
+106 j
+107 k
+108 l
+109 m
+110 n
+111 o
+112 p
+113 q
+114 r
+115 s
+116 t
+117 u
+118 v
+119 w
+120 x
+121 y
+122 z
+123 braceleft
+124 bar
+125 braceright
+126 asciitilde
+161 exclamdown
+162 cent
+163 sterling
+164 fraction
+165 yen
+166 florin
+167 section
+168 currency
+169 quotesingle
+170 quotedblleft
+171 guillemotleft
+172 guilsinglleft
+173 guilsinglright
+174 fi
+175 fl
+177 endash
+178 dagger
+179 daggerdbl
+180 periodcentered
+182 paragraph
+183 bullet
+184 quotesinglbase
+185 quotedblbase
+186 quotedblright
+187 guillemotright
+188 ellipsis
+189 perthousand
+191 questiondown
+193 grave
+194 acute
+195 circumflex
+196 tilde
+197 macron
+198 breve
+199 dotaccent
+200 dieresis
+202 ring
+203 cedilla
+205 hungarumlaut
+206 ogonek
+207 caron
+208 emdash
+225 AE
+227 ordfeminine
+232 Lslash
+233 Oslash
+234 OE
+235 ordmasculine
+241 ae
+245 dotlessi
+248 lslash
+249 oslash
+250 oe
+251 germandbls
+ENDMAPPING
+STARTMAPPING unicode
+UNDEFINE 0x80 0xFF
+0xC1 0x0060    # SPACING GRAVE
+0xA1 0x00A1    # INVERTED EXCLAMATION MARK
+0xA2 0x00A2    # CENT SIGN
+0xA3 0x00A3    # POUND SIGN
+0xA8 0x00A4    # CURRENCY SIGN
+0xA5 0x00A5    # YEN SIGN
+0xA7 0x00A7    # SECTION SIGN
+0xC8 0x00A8    # SPACING DIAERESIS
+0xE3 0x00AA    # FEMININE ORDINAL INDICATOR
+0xAB 0x00AB    # LEFT POINTING GUILLEMET
+0xC5 0x00AF    # SPACING MACRON
+0xC2 0x00B4    # SPACING ACUTE
+0xB6 0x00B6    # PARAGRAPH SIGN
+0xB4 0x00B7    # MIDDLE DOT
+0xCB 0x00B8    # SPACING CEDILLA
+0xEB 0x00BA    # MASCULINE ORDINAL INDICATOR
+0xBB 0x00BB    # RIGHT POINTING GUILLEMET
+0xBF 0x00BF    # INVERTED QUESTION MARK
+0xE1 0x00C6    # LATIN CAPITAL LETTER A E
+0xE9 0x00D8    # LATIN CAPITAL LETTER O SLASH
+0xFB 0x00DF    # LATIN SMALL LETTER SHARP S
+0xF1 0x00E6    # LATIN SMALL LETTER A E
+0xF9 0x00F8    # LATIN SMALL LETTER O SLASH
+0xF5 0x0131    # LATIN SMALL LETTER DOTLESS I
+0xE8 0x0141    # LATIN CAPITAL LETTER L SLASH
+0xF8 0x0142    # LATIN SMALL LETTER L SLASH
+0xEA 0x0152    # LATIN CAPITAL LETTER O E
+0xFA 0x0153    # LATIN SMALL LETTER O E
+0xA6 0x0192    # LATIN SMALL LETTER SCRIPT F
+0xC3 0x02C6    # MODIFIER LETTER CIRCUMFLEX
+0xCF 0x02C7    # MODIFIER LETTER HACEK
+0xC6 0x02D8    # SPACING BREVE
+0xC7 0x02D9    # SPACING DOT ABOVE
+0xCA 0x02DA    # SPACING RING ABOVE
+0xCE 0x02DB    # SPACING OGONEK
+0xC4 0x02DC    # SPACING TILDE
+0xCD 0x02DD    # SPACING DOUBLE ACUTE
+0xB1 0x2013    # EN DASH
+0xD0 0x2014    # EM DASH
+0x60 0x2018    # SINGLE TURNED COMMA QUOTATION MARK
+0x27 0x2019    # SINGLE COMMA QUOTATION MARK
+0xA9 0x2019    # SINGLE COMMA QUOTATION MARK
+0xB8 0x201A    # LOW SINGLE COMMA QUOTATION MARK
+0xAA 0x201C    # DOUBLE TURNED COMMA QUOTATION MARK
+0xBA 0x201D    # DOUBLE COMMA QUOTATION MARK
+0xB9 0x201E    # LOW DOUBLE COMMA QUOTATION MARK
+0xB2 0x2020    # DAGGER
+0xB3 0x2021    # DOUBLE DAGGER
+0xB7 0x2022    # BULLET
+0xBC 0x2026    # HORIZONTAL ELLIPSIS
+0xBD 0x2030    # PER MILLE SIGN
+0xAC 0x2039    # LEFT POINTING SINGLE GUILLEMET
+0xAD 0x203A    # RIGHT POINTING SINGLE GUILLEMET
+0xA4 0x2044    # FRACTION SLASH
+0xAE 0xFB01    # LATIN SMALL LIGATURE FI
+0xAF 0xFB02    # LATIN SMALL LIGATURE FL
+ENDMAPPING
+ENDENCODING

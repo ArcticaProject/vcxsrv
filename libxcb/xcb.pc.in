@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: XCB
+Description: X-protocol C Binding
+Version: @PACKAGE_VERSION@
+Requires.private: @NEEDED@
+Libs: -L${libdir} -lxcb
+Libs.private: @LIBS@
+Cflags: -I${includedir}

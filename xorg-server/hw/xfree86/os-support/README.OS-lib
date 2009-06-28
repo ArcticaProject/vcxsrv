@@ -1,0 +1,505 @@
+
+			README for XFree86 OS-support Layer
+			-----------------------------------
+
+Contents
+--------
+    1) Overview
+    2) Directory Layout
+    3) Adding a new OS
+    4) OS Support API
+
+1 - Overview
+------------
+  This directory contains the OS support layer functions for the XFree86
+servers.  In addition, some miscellaneous server support functions (not
+OS-dependent) are included here, to take advantage of the fact that this
+library comes last in the linking order.
+
+Most of the functionality required to support a new OS is encapsulated in
+this library.  It is hoped that all OS-specific details can be encapsulated,
+but that is not likely ever to be completely possible.  Hence some minor
+changes will wind up being made in other parts of the server.  The major
+design principles for this library are maintainability, readability, and
+portability.  Sometimes these goals conflict; some somewhat arbitrary choices
+have been made in implementation.
+
+2 - Directory Layout
+--------------------
+	os-support/	Contains headers and documentation; no code
+		misc/	Non-OS-specific miscellaneous functions that
+			fit best into the link architecture this way.
+		shared/	Contains files with functions used by more than one
+			OS.  These are symlinked into the OS subdirectories
+			at build time via Imakefile rules.  This is alway
+			preferable to reproducing functions in more than one
+			OS library.
+		bsd/	OS support for the 386BSD/NetBSD/FreeBSD operating 
+			systems.
+		bsdi/	OS support for the BSD/386 operating system.
+		linux/	OS support for the Linux operating system.
+		sco/	OS support for the SCO SVR3.x operating system.
+		solx86/	OS support for the Solaris x86 operating system.
+		sysv/	OS support for all SVR4.0 and SVR4.2, and for
+			ISC and AT&T SVR3.2 operating systems.
+
+3 - Adding A New OS
+-------------------
+  Adding a support for a new operating system entails implementing all of
+the functions described in the API below.  Many of these functions are no-ops
+for many operating systems, and appropriate files with dummy declarations are
+available in the 'shared' subdirectory.
+
+If your OS is sufficiently similar to an existing OS, you can make use of
+the existing subdirectory.  One of the reasons for implementing this OS
+library was the unmaintainability of the spagetti-#ifdef code that existed
+before.  You should try to avoid cluttering the code with #ifdef's.  If
+you find that the subdirectory is getting cluttered, split off into a
+seperate subdirectory (e.g. as was done for SCO, rather than cluttering
+the 'sysv' subdirectory).  You can split functions out of an existing
+subdirectory into the 'shared' subdirectory, if that is appropriate.  Just
+remember to update the Imakefile for the old subdirectory.
+
+You will still likely have to make some small changes to other parts of
+the server.  You should not put OS-specific #define's or #include's anywhere
+else in the server.  These should all go in the "xf86_OSlib.h" header file
+in this directory.
+
+4 - OS Support API
+-----------------
+void xf86OpenConsole(void)
+{
+	/*
+	 * Open console device, activate VTs, etc, etc.  Fill in requisite
+	 * pieces of xf86Info.  Most of this code comes from xf86Init.c
+	 */
+}
+
+void xf86CloseConsole(void)
+{
+	/*
+	 * Close console at server exit.
+	 */
+}
+
+Bool xf86VTSwitchPending(void)
+{
+	 /*
+	  * Returns TRUE iff there is a VT switch operation pending for
+	  * the server.  In the USL VT model, this is indicated via a
+	  * signal handler.  Should return FALSE always for OSs without
+	  * VTs.
+	  */
+}
+
+Bool xf86VTSwitchAway(void)
+{
+	/*
+	 * Handles the OS-specific action for switching away from the active
+	 * VT.  Returns FALSE if the switch away fails.  Should return
+	 * FALSE always for OSs without VTs (then again, this function
+	 * should never be called in that case).
+	 */
+}
+
+Bool xf86VTSwitchTo(void)
+{
+	/*
+	 * Handles the OS-specific action for switching to the active VT.
+	 * Returns FALSE if the switch to fails.  Should return TRUE
+	 * always for OSs without VTs (then again, this function should
+	 * never be called in that case).
+	 */
+}
+
+Bool xf86LinearVidMem(void)
+{
+	/*
+	 * Returns TRUE if the OS supports mapping linear frame buffers
+	 * (ie memory at addresses above physical memory).
+	 */
+}
+
+pointer xf86MapVidMem(int ScreenNum, pointer Base, unsigned long Size)
+{
+	/*
+	 * Handle mapping the video memory.  Returns (pointer *)0 for
+	 * failure; causes server exit.  It is allowable to call FatalError()
+	 * from inside this function and exit directly.
+	 */
+}
+
+void xf86UnMapVidMem(int ScreenNum, pointer Base, unsigned long Size)
+{
+	/*
+	 * Handle unmapping the video memory.  This should undo what
+	 * xf86MapVidMem() does.  Base is a pointer obtained from
+	 * a previous call to xf86MapVidMem().
+	 */
+}
+
+void xf86MapDisplay(int ScreenNum, int Region)
+{
+	/*
+	 * For OSs that require the screen be mapped when entering a VT.
+	 * A dummy function will be defined for OSs that don't require
+	 * this (or don't have VTs at all).
+	 */
+}
+
+void xf86UnMapDisplay(int ScreenNum, int Region)
+{
+	/*
+	 * For Os that require that the screen be unmapped when leaving a
+	 * VT.  A dummy function will be defined for OSs that don't require
+	 * this (or don't have VTs at all).
+	 */
+}
+
+int xf86ReadBIOS(unsigned long Base, unsigned long Offset, 
+		  unsigned char *Buf, int Len)
+{
+	/*
+	 * Read Len bytes from the BIOS at address Base, offset Offset,
+	 * into buffer Buf.  Returns -1 for failure or if the OS does 
+	 * not support reading the BIOS.  This causes a driver probe 
+	 * to fail, but does not cause the server to abort.
+	 */
+}
+
+
+void xf86EnableIOPorts(int ScreenNum)
+{
+        /*
+	 * Enables I/O permissions.  The OS layer should 
+	 * enable all I/O port access.
+	 */
+}
+
+void xf86DisableIOPorts(int ScreenNum)
+{
+        /*
+	 * Disables I/O permissions. 
+	 */
+}
+
+Bool xf86DisableInterrupts(void)
+{
+	/*
+	 * Disable interrupts if allowed for this OS.  Returns FALSE if
+	 * this is not allowed or if the attempt fails for some reason.
+	 */
+}
+
+void xf86EnableInterrupts(void)
+{
+	/*
+	 * Reenable interrupts
+	 */
+}
+
+int xf86ProcessArgument(int argc, char *argv[], int i)
+{
+	/*
+	 * Process OS-specific command-line arguments.  See 
+	 * ddxProcessArgument() for more info.
+	 */
+}
+
+void xf86UseMsg(void)
+{
+	/*
+	 * Print list of OS-specific command-line arguments.  See 
+	 * ddxUseMsg() for more info.
+	 */
+}
+
+void xf86SoundKbdBell(int loudness, int pitch, int duration)
+{
+	/*
+	 * Sound the keyboard bell.  pitch is in Hz, duration in ms,
+	 * loudness is in the range 0-100 (0 -> off).  For systems
+	 * where the loudness can't be controlled, scale the duration
+	 * by loudness/50.
+	 */
+}
+
+void xf86SetKbdLeds(int leds)
+{
+	/*
+	 * Set the keyboard LEDs to the state indicated in leds
+	 */
+}
+
+int xf86GetKbdLeds(void)
+{
+	/*
+	 * Return the state of the keyboard LEDs.  If the OS doesn't
+	 * support this, return 0.
+	 */
+}
+
+void xf86SetKbdRepeat(char rad)
+{
+	/*
+	 * Set the keyboard repeat rate and delay according the
+	 * the rad value.  The lower 5 bits determine the repeat
+	 * rate (lower value -> higher rate).  The next 2 bits
+	 * determine the delay.
+	 * This should possibly be changed to take separate rate and
+	 * delay parameters.
+	 */
+}
+
+void xf86KbdInit(void)
+{
+	/*
+	 * Save initial keyboard state.  This is called at the start of
+	 * each server generation.
+	 */
+}
+
+int xf86KbdOn(void)
+{
+	/*
+	 * Set the keyboard up for use with X.  This is called whenever
+	 * the server becomes active (ie at the start of each generation and
+	 * whenever its VT becomes active).  Return the file descriptor
+	 * for keyboard input.  Return -1 if there is no file descriptor
+	 * to add as an input device.  If there are errors encountered,
+	 * call FatalError().  A return value of -1 is not considered an
+	 * error condition.
+	 */
+}
+
+int xf86KbdOff(void)
+{
+	/*
+	 * Return the keyboard to the state saved by xf86KbdInit().  This is
+	 * called at the end of a server generation, and also when the
+	 * server's VT ceases being active.  Returns the keyboard file
+	 * descriptor.  Returns -1 if there is no file descriptor to be
+	 * removed as an input device.  Errors should be handled the same
+	 * way as in xf86KbdOn().
+	 */
+}
+
+void xf86KbdEvents(void)
+{
+	/*
+	 * Read characters from the keyboard device, and post the events
+	 * by calling xf86PostKbdEvent().  Read as much as is available
+	 * without waiting.
+	 */
+}
+
+void xf86SetMouseSpeed(int old, int new, unsigned cflag)
+{
+	/*
+	 * Set the speed of the mouse port.  old is the previous speed,
+	 * new is the new speed, and cflag is the value of the termio[s]
+	 * c_cflag field.  For mice that have programmable speed operation,
+	 * this should send the appropriate commands to the mouse.
+	 */
+}
+
+void xf86MouseInit(void)
+{
+	/*
+	 * This is called at the start of each server generation.  In most
+	 * cases this is a noop.  If the mouse must not be opened/closed
+	 * when VT switching, the open should be done here.
+	 */
+}
+
+int xf86MousedOn(void)
+{
+	/*
+	 * Set the mouse up for use with X.  This is called whenever
+	 * the server becomes active (ie at the start of each generation and
+	 * whenever its VT becomes active).  This function normally opens
+	 * the mouse device, and may call xf86SetupMouse() to initialise
+	 * the mouse parameters.  Return the file descriptor for mouse input.
+	 * Return -1 if there is no file descriptor to add as an input
+	 * device.  If there are errors encountered, call FatalError().
+	 * A return value of -1 is not considered an error condition.
+	 */
+}
+
+int xf86MouseOff(Bool doclose)
+{
+	/*
+	 * Release the mouse from use with X.  This is called at the end
+	 * of a server generation (with doclose==TRUE), and also when the
+	 * server's VT ceases being active (with doclose==FALSE).  If the
+	 * mouse should not be opened/closed when VT switching, the close
+	 * should be done here when doclose==TRUE.  For other systems, the
+	 * mouse device should be closed regardless of the doclose value.
+	 * Returns the mouse file descriptor.  Returns -1 if there is no
+	 * file descriptor to be removed as an input device.  Errors
+	 * should be handled the same way as in xf86MouseOn().
+	 */
+}
+
+void xf86MouseEvents(void)
+{
+	/*
+	 * Read characters from the mouse device, and post the events
+	 * by calling xf86PostMseEvent().  Read as much as is available
+	 * without waiting.  If the OS doesn't handle the mouse protocol
+	 * translation, xf86MouseProtocol() may be called to do the
+	 * translation and event posting.  If the OS does handle the protocol
+	 * translation, MOUSE_PROTOCOL_IN_KERNEL should be #define'd in
+	 * xf86_OSlib.h.
+	 */
+}
+
+int xf86OsMouseProc(DevicePtr pPointer, int what)
+{
+	/*
+	 * Implements the device-proc for the pointer device when an
+	 * OS-based mouse driver is being used (as opposed to the
+	 * server's internal mouse driver).  Implemented as any other
+	 * device-proc in the server.
+	 *
+	 * This function only needs to be implemented if USE_OSMOUSE is
+	 * defined for the OS.
+	 */
+}
+
+int xf86OsMouseEvents(void)
+{
+	/*
+	 * When supporting an OS-based mouse driver (as opposed to the
+	 * server's internal mouse driver), read some events from the device
+	 * and post them to the DIX layer through xf86PostMseEvent().
+	 *
+	 * This function only needs to be implemented if USE_OSMOUSE is
+	 * defined for the OS.
+	 */
+}
+
+void xf86OsMouseOption(int token, pointer lex_ptr)
+{
+	/*
+	 * Used in parsing an OsMouse keyword from the Xconfig file.
+	 * Passed the token type and a pointer to the token value.
+	 * The function should do whatever is appropriate for the OS's
+	 * mouse driver.
+	 *
+	 * This function only needs to be implemented if USE_OSMOUSE is
+	 * defined for the OS.
+	 */
+}
+
+/*
+ * The following functions are simply wrappers around the OS specific
+ * libc functions
+ */
+
+void *
+xf86memmove(void * dest, const void * src, INT32 n)
+{
+	return(memmove(dest,src,n));
+}
+
+void *
+xf86memset(void * s, int c, INT32 n)
+{
+	return(memset(s,c,n));
+}
+
+void *
+xf86memcpy(void * dest, const void * src, INT32 n)
+{
+	return(memcpy(dest,src,n));
+}
+
+int
+xf86memcmp(const void * s1, const void * s2, INT32 n)
+{
+	return(memcmp(s1,s2,n));
+}
+
+char *
+xf86strcat(char * dest, const char * src)
+{
+	return(strcat(dest,src));
+}
+
+char *
+xf86strcpy(char * dest, const char * src)
+{
+	return(strcpy(dest,src));
+}
+
+int
+xf86strcmp(const char * s1, const char * s2)
+{
+	return(strcmp(s1,s2));
+}
+
+int
+xf86strncmp(const char * s1, const char * s2, INT32 n)
+{
+	return(strncmp(s1,s2,n));
+}
+
+size_t
+xf86strlen(const char * s)
+{
+	return(strlen(s));
+}
+
+void
+xf86getsecs(INT32 * secs, INT32 * usecs)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	*secs = tv.tv_sec;
+	*usecs= tv.tv_usec;
+
+	return;
+}
+
+double 
+xf86exp(double x)
+{
+	return(exp(x));
+}
+
+double 
+xf86log(double x)
+{
+	return(log(x));
+}
+
+double 
+xf86pow(double x, double y)
+{
+	return(pow(x,y));
+}
+
+double 
+xf86sqrt(double x)
+{
+	return(sqrt(x));
+}
+
+double 
+xf86cos(double x)
+{
+	return(cos(x));
+}
+
+
+
+
+$XFree86: xc/programs/Xserver/hw/xfree86/os-support/README.OS-lib,v 3.10 2001/12/17 20:00:45 dawes Exp $
+
+
+
+
+
+$XConsortium: README.OS-lib /main/5 1996/02/21 17:50:28 kaleb $

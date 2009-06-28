@@ -1,0 +1,356 @@
+
+// based on a keyboard map from an 'xkb/symbols/de' file
+//
+// $XKeyboardConfig$
+// $XFree86: xc/programs/xkbcomp/symbols/de,v 1.6 2003/09/08 13:12:51 pascal Exp $
+
+default
+xkb_symbols "basic" {
+
+    include "latin(type4)"
+
+    name[Group1]="Germany";
+
+    key <AE02>	{ [         2,   quotedbl,  twosuperior,    oneeighth ]	};
+    key <AE03>	{ [         3,    section, threesuperior,    sterling ]	};
+    key <AE04>	{ [         4,     dollar,   onequarter,     currency ]	};
+
+    key <AE11> {type[Group1]="FOUR_LEVEL_PLUS_LOCK",  symbols[Group1]=
+                  [ssharp, question, backslash, questiondown, 0x1001E9E ]};
+// The unicode capital letter sharp s U+1E9E is transformed to "SS"
+// to match the rules for capitalizing sharp s in german.
+// If the capital sharp s is needed, delete the line
+// starting with <U1E9C> from /usr/share/X11/locale/iso8859-15/Compose.
+// If both doubled S and capital sharp s are needed, use  0x1001E9E
+// for capital sharp s and some free unicode codepoint like 0x1001E9C
+// for doubled S. Don`t forget to change this in the Compose file, too.
+
+    key <AE12>	{ [dead_acute, dead_grave, dead_cedilla,  dead_ogonek ]	};
+
+    key <AD03>	{ [         e,          E,     EuroSign,     EuroSign ]	};
+    key <AD06>	{ [         z,          Z,    leftarrow,          yen ]	};
+    key <AD11>	{ [udiaeresis, Udiaeresis, dead_diaeresis, dead_abovering ] };
+    key <AD12>	{ [      plus,   asterisk,   dead_tilde,  dead_macron ]	};
+
+    key <AC10>	{ [odiaeresis, Odiaeresis, dead_doubleacute, dead_doubleacute ] };
+    key <AC11>	{ [adiaeresis, Adiaeresis, dead_circumflex, dead_caron]	};
+    key <TLDE>	{ [dead_circumflex, degree,     notsign,      notsign ]	};
+
+    key <BKSL>	{ [numbersign, apostrophe,   dead_grave,   dead_breve ]	};
+    key <AB01>	{ [         y,          Y, guillemotleft,        less ]	};
+
+    include "kpdl(comma)"
+
+    include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "nodeadkeys" {
+
+    // modify the basic German layout to not have any dead keys
+
+    include "de(basic)"
+    name[Group1]="Germany - Eliminate dead keys";
+
+    key <TLDE>	{ [asciicircum,    degree,      notsign,      notsign ]	};
+    key <AE12>	{ [apostrophe,      grave,      cedilla,      cedilla ]	};
+    key <AD11>	{ [udiaeresis, Udiaeresis,    diaeresis,    diaeresis ]	};
+    key <AD12>	{ [      plus,   asterisk,   asciitilde,       macron ]	};
+    key <AC10>	{ [odiaeresis, Odiaeresis,  doubleacute,  doubleacute ]	};
+    key <AC11>	{ [adiaeresis, Adiaeresis,  asciicircum,  asciicircum ]	};
+    key <BKSL>	{ [numbersign, apostrophe,        grave,        grave ]	};
+    key <AB10>	{ [     minus, underscore, dead_belowdot,    abovedot ]	};
+};
+
+partial alphanumeric_keys
+xkb_symbols "deadgraveacute" {
+    // modify the basic German layout to have only acute and grave
+    // as dead keys (tilde and circumflex are needed as spacing characters
+    // in many programming languages)
+
+    include "de(basic)"
+    name[Group1]="Germany - Dead grave acute";
+
+    key <TLDE>	{ [asciicircum,    degree,      notsign,      notsign ]	};
+    key <AD12>	{ [      plus,   asterisk,   asciitilde,  dead_macron ]	};
+    key <BKSL>	{ [numbersign, apostrophe,        grave,        grave ]	};
+};
+
+partial alphanumeric_keys
+xkb_symbols "deadacute" {
+    // modify the basic German layout to have only acute as
+    // dead keys (ASCII grave, tilde and circumflex are needed as
+    // spacing characters in many programming languages and text formatters)
+
+    include "de(deadgraveacute)"
+
+    name[Group1]="Germany - Dead acute";
+
+    key <AE12>	{ [dead_acute,      grave, dead_cedilla,  dead_ogonek ]	};
+    key <BKSL>	{ [numbersign, apostrophe,   dead_grave,   dead_grave ]	};
+};
+
+partial alphanumeric_keys
+xkb_symbols "ro" {
+    // add romanian-specific letters to the basic German layout.
+    // Romanian symbols are accessible with combination of <AltGr> and
+    // 'a', 's', 't', 'i', 'ä (&auml)' (+<Shift> for capital letters).
+    // To view romanian-specific symbols, add "export LC_CTYPE=ro_RO"
+    // or "export LC_CTYPE=de_DE.utf8" to your .profile.
+
+    include "de(basic)"
+
+    name[Group1]="Germany - Romanian keyboard with German letters";
+
+    key <AD05> { [         t,    T,           tcedilla,     Tcedilla    ] };
+    key <AD08> { [         i,    I,        icircumflex,  Icircumflex    ] };
+    key <AC01> { [         a,    A,        acircumflex,  Acircumflex    ] };
+    key <AC02> { [         s,    S,           scedilla,     Scedilla    ] };
+    key <AC11> { [ adiaeresis,   Adiaeresis,    abreve,       Abreve    ] };
+};
+
+partial alphanumeric_keys
+xkb_symbols "ro_nodeadkeys" {
+    // add romanian-specific letters to the German nodeadkeys layout.
+    // Read the comment for de_ro !
+
+    include "de(nodeadkeys)"
+    name[Group1]="Germany - Romanian keyboard with German letters, eliminate dead keys";
+
+    key <AD05> { [         t,    T,           tcedilla,     Tcedilla    ] };
+    key <AD08> { [         i,    I,        icircumflex,  Icircumflex    ] };
+    key <AC01> { [         a,    A,        acircumflex,  Acircumflex    ] };
+    key <AC02> { [         s,    S,           scedilla,     Scedilla    ] };
+    key <AC11> { [ adiaeresis,   Adiaeresis, abreve,       Abreve       ] };
+};
+
+// German Dvorak keymap by Thorsten Staerk (www.staerk.de/thorsten)
+// Have acute and grave as dead keys, tilde and circumflex alive as they are needed 
+// in many programming languages.
+// to use this keymap, use a 105-key-keyboard and the command setxkbmap -model pc105 -layout dvorak -variant de
+// source: http://www-lehre.informatik.uni-osnabrueck.de/~rfreund/dvorak.php
+partial alphanumeric_keys 
+xkb_symbols "dvorak" {
+    include "us(dvorak)"
+
+    name[Group1]="Germany - Dvorak";
+
+    key <TLDE> { [ asciicircum, degree ] };
+
+    key <AE01> { [ 1, exclam, onesuperior ] };
+    key <AE02> { [ 2, quotedbl, twosuperior ] };
+    key <AE03> { [ 3, section, threesuperior ] };
+    key <AE04> { [ 4, dollar, bar ] };
+    key <AE05> { [ 5, percent, bar ] };
+    key <AE06> { [ 6, ampersand, brokenbar ] };
+    key <AE07> { [ 7, slash, braceleft ] };
+    key <AE08> { [ 8, parenleft, bracketleft ] };
+    key <AE09> { [ 9, parenright, bracketright ] };
+    key <AE10> { [ 0, equal, braceright ] };
+    key <AE11> { [ plus, asterisk, asciitilde ] };
+    key <AE12> { [ less, greater, dead_grave ] };
+
+    key <AD01> { [ udiaeresis, Udiaeresis, at ] };
+    key <AD02> { [ comma, semicolon, dead_diaeresis ] };
+    key <AD03> { [ period, colon ] };
+    key <AD08> { [ c, C, copyright, Cacute ] };
+    key <AD09> { [ t, T, trademark ] };
+    key <AD10> { [ z, Z, zabovedot, Zabovedot ] };
+    key <AD11> { [ question, ssharp ] };
+    key <AD12> { [ slash, backslash, dead_acute ] };
+
+    key <AC01> { [ a, A, at, aogonek ] };
+    key <AC02> { [ o, O, oacute, Oacute ] };
+    key <AC03> { [ e, E, EuroSign, eogonek ] };
+    key <AC04> { [ i, I ] };
+    key <AC05> { [ u, U ] };
+    key <AC06> { [ h, H ] };
+    key <AC07> { [ d, D ] };
+    key <AC08> { [ r, R, registered ] };
+    key <AC09> { [ n, N, nacute, Nacute ] };
+    key <AC10> { [ s, S, sacute, Sacute] };
+    key <AC11> { [ l, L, lstroke, Lstroke ] };
+
+    key <AB01> { [ odiaeresis, Odiaeresis ] };
+    key <AB02> { [ q, Q, at ] };
+    key <AB07> { [ m, M, mu ] };
+    key <AB10> { [ numbersign, apostrophe ] };
+
+    key <BKSL> { [ minus, underscore, hyphen, diaeresis] };
+
+    key <LSGT> { [ adiaeresis, Adiaeresis, bar ] };
+
+    include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "Sundeadkeys" {
+
+    // For naming consistency
+
+    include "de(basic)"
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "sundeadkeys" {
+
+    // For naming consistency
+
+    include "de(Sundeadkeys)"
+
+    name[Group1]="Germany - Sun dead keys";
+};
+
+
+// German NEO Eurokeys-Style
+// adopted 2004 by Hanno Behrens <Hanno.Behrens@gmx.de>
+// inspired by Dvorak/de-ergo  http://www.goebel-consult.de/de-ergo/
+
+partial alphanumeric_keys 
+xkb_symbols "neo" {
+
+    include "us(dvorak)"
+
+    name[Group1]= "Germany - Neostyle";
+
+    key <TLDE> { [ dead_circumflex, degree, notsign, paragraph	] };
+
+    key <AE01> { [	    1,	exclam, exclamdown, onesuperior	] };
+    key <AE02> { [	    2,	quotedbl,   dead_diaeresis, twosuperior ] };
+    key <AE03> { [	    3,	paragraph, sterling, threesuperior ] };
+    key <AE04> { [	    4,	dollar,    currency, onequarter	] };
+    key <AE05> { [	    5,	percent,    bar,	onehalf	] };
+    key <AE06> { [	    6,	ampersand,  brokenbar, threequarters ] };
+    key <AE07> { [	    7,	slash,      braceleft, division	] };
+    key <AE08> { [	    8,	parenleft,  bracketleft, guillemotleft ] };
+    key <AE09> { [	    9,	parenright, bracketright, guillemotright ] };
+    key <AE10> { [	    0,	equal,	    braceright		] };
+    key <AE11> { [	minus,	underscore, hyphen, diaeresis	 ] };
+    key <AE12> { [ dead_acute,dead_grave,   dead_cedilla, dead_ogonek  ] };
+
+    key <AD01> { [ 	    q,  Q,	at			 ] };
+    key <AD02> { [	    v,	V,	masculine, ordfeminine   ] };
+    key <AD03> { [	    l,	L,      lstroke, Lstroke	 ] };
+    key <AD04> { [	    c,	C,      ccedilla,copyright	 ] };
+    key <AD05> { [	    w,	W,	Greek_omega, Greek_OMEGA ] };
+    key <AD06> { [	    k,	K,	Greek_kappa, Greek_KAPPA ] };
+    key <AD07> { [	    h,	H,      Greek_epsilon, Greek_EPSILON ] };
+    key <AD08> { [	    g,	G, 	Greek_gamma, Greek_GAMMA ] };
+    key <AD09> { [	    f,	F,      ordfeminine		 ] };
+    key <AD10> { [	    j,	J,	Greek_iota, Greek_IOTA	 ] };
+    key <AD11> { [  ssharp, question, 	backslash, questiondown  ] };
+    key <AD12> { [	 plus,	asterisk,   dead_tilde,	plusminus ] };
+
+    key <AC01> { [	    u,	U,	Greek_delta, Greek_DELTA ] };
+    key <AC02> { [	    i,	I,      idotless, Iabovedot	 ] };
+    key <AC03> { [	    a,	A,      at, Greek_alpha		 ] };
+    key <AC04> { [	    e,	E,      EuroSign,	cent	 ] };
+    key <AC05> { [	    o,	O,	oslash,	Ooblique	 ] };
+    key <AC06> { [	    s,	S,      Greek_sigma, Greek_SIGMA ] };
+    key <AC07> { [	    n,	N,	Greek_nu, Greek_NU	 ] };
+    key <AC08> { [	    r,	R,      registered,trademark	 ] };
+    key <AC09> { [	    t,	T,      thorn,          THORN	 ] };	//Greek_theta, Greek_THETA/tcedilla, Tcedilla
+    key <AC10> { [	    d,	D,      eth,		ETH	 ] };
+    key <AC11> { [	    y,	Y,      yen			 ] };
+    key <BKSL> { [ numbersign, apostrophe, grave		 ] };
+
+    
+    key <LSGT> { [  less, greater, 	guillemotleft, guillemotright	] };
+    key <AB01> { [ odiaeresis, Odiaeresis, oe, OE		 ] };
+    key <AB02> { [ udiaeresis,Udiaeresis, apostrophe, asciitilde ] };  
+    key <AB03> { [ adiaeresis, Adiaeresis, ae, AE		 ] };
+    key <AB04> { [	    p,	P,      thorn,	THORN		 ] };
+    key <AB05> { [	    z,	Z,	Greek_zeta, Greek_ZETA	 ] };
+    key <AB06> { [	    b,	B,	Greek_beta, Greek_BETA	 ] };
+    key <AB07> { [	    m,	M,	mu, Greek_MU			 ] };
+    key <AB08> { [	comma,	semicolon, dead_cedilla, cedilla ] };
+    key <AB09> { [      period,	colon,  periodcentered		 ] };
+    key <AB10> { [	    x,	X,      multiply		 ] };
+
+    key <SPCE> { [	 space,	space, nobreakspace, nobreakspace ] };
+
+    
+    // End "Editing" section, begin "Keypad"
+//    key <NMLK> {	[  Num_Lock, Pointer_EnableKeys		]	};
+
+// Ungrab cancels server/keyboard/pointer grabs
+//    key <KPDV> {  [KP_Divide, KP_Divide, division]  };
+
+// ClsGrb kills whichever client has a grab in effect
+//    key <KPMU> {  [KP_Multiply, KP_Multiply, periodcentered]  };
+
+// -VMode switches to the previous video mode
+//    key <KPSU> { [ KP_Subtract, KP_Subtract, notsign]   };
+
+    key  <KP7> {	[  KP_Home,	KP_7, seveneighths, oneeighth	]	};
+    key  <KP8> {	[  KP_Up,	KP_8, uparrow, fiveeighths	]	};
+    key  <KP9> {	[  KP_Prior,	KP_9, threeeighths, threeeighths ]	};
+
+// +VMode switches to the next video mode
+//    key <KPAD> {	[  KP_Add, KP_Add, plusminus ]    };
+
+    key  <KP4> {	[  KP_Left,	KP_4, leftarrow, onequarter		]	};
+    key  <KP5> {	[  KP_Begin,	KP_5, dagger, onehalf 			]	};
+    key  <KP6> {	[  KP_Right,	KP_6, rightarrow, threequarters	]	};
+
+    key  <KP1> {	[  KP_End,	KP_1, onesuperior, onesuperior		]	};
+    key  <KP2> {	[  KP_Down,	KP_2, downarrow, twosuperior		]	};
+    key  <KP3> {	[  KP_Next,	KP_3, threesuperior, threesuperior	]	};
+    key <KPEN> {	[  	KP_Enter	]	};
+    key <KPEQ> {	[  	KP_Equal	]	};
+
+    key  <KP0> {	[  KP_Insert,	KP_0, percent, degree			]	};
+    key <KPDL> {  	[  KP_Delete,	KP_Decimal, periodcentered, comma  ]	};
+    // End "Keypad" section
+
+    include "level3(ralt_switch)"
+};
+ 
+// Copied from macintosh_vndr/de
+// olh@suse.de   very close to MacOS map
+
+partial alphanumeric_keys 
+xkb_symbols "mac" {
+
+    include "de"
+    name[Group1]= "Germany - Macintosh";
+
+    // Alphanumeric section
+    key <AE01>	{ [         1,     exclam,   exclamdown,           at ]	};
+    key <AE05>	{ [         5,    percent,  bracketleft       ]	};
+    key <AE06>	{ [         6,  ampersand, bracketright       ]	};
+    key <AE07>	{ [         7,      slash,          bar,    backslash ]	};
+    key <AE08>	{ [         8,  parenleft,    braceleft,   asciitilde ]	};
+    key <AE09>	{ [         9, parenright,   braceright       ]	};
+    key <AD01>	{ [         q,          Q, guillemotleft, guillemotright ]	};
+    key <AD04>	{ [         r,          R,   registered       ]	};
+    key <AD07>	{ [         u,          U,    diaeresis,       Aacute ]	};
+    key <AD08>	{ [         i,          I,        slash,  Ucircumflex ]	};
+    key <AD11>	{ [ udiaeresis, Udiaeresis, periodcentered,    degree ]	};
+    key <AD12>	{ [      plus,   asterisk,   asciitilde       ]	}; 
+    key <AC01>	{ [         a,          A,        aring,        Aring ]	};
+    key <AC05>	{ [         g,          G,    copyright       ]	};
+    key <AC06>	{ [         h,          H,  ordfeminine       ]	};
+    key <AC09>	{ [         l,          L,           at       ]	};
+    key <AC10>	{ [ odiaeresis, Odiaeresis,  dead_acute       ]	};
+    key <AB06>	{ [         n,          N,   asciitilde       ]	};
+
+};
+
+partial alphanumeric_keys 
+xkb_symbols "mac_nodeadkeys" {
+    // modify the standard German mac layout to not have any dead keys
+    include "de(mac)"
+    name[Group1]= "Germany - Macintosh, eliminate dead keys";
+    key <AE04>	{ [         4,     dollar,   onequarter,     currency ]	};
+
+    key <TLDE>	{ [ asciicircum,    degree,     notsign       ]	};
+    key <AE12>	{ [      acute,      grave,     cedilla       ]	};
+    key <AD11>	{ [ udiaeresis, Udiaeresis,   diaeresis       ]	};
+    key <AD12>	{ [       plus,   asterisk,  asciitilde,       macron ]	};
+    key <AC10>	{ [ odiaeresis, Odiaeresis,       acute       ]	};
+    key <AC11>	{ [ adiaeresis, Adiaeresis, asciicircum       ]	};
+
+    key <BKSL>	{ [ numbersign, apostrophe,       grave       ]	};
+};

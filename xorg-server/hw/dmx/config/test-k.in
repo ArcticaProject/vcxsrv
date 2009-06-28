@@ -1,0 +1,3 @@
+virtual a {
+    option +xinerama -syncbatch 0;
+}

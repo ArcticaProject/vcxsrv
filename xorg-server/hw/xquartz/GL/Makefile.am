@@ -1,0 +1,13 @@
+noinst_LTLIBRARIES = libCGLCore.la
+AM_CFLAGS = $(XSERVER_CFLAGS) $(DIX_CFLAGS)
+AM_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/glx \
+	-I$(top_srcdir)/GL/include \
+	-I$(top_srcdir)/GL/mesa/glapi \
+	-I$(top_srcdir)/hw/xquartz \
+	-I$(top_srcdir)/hw/xquartz/xpr \
+	-I$(top_srcdir)/miext/damage
+
+libCGLCore_la_SOURCES = \
+	indirect.c

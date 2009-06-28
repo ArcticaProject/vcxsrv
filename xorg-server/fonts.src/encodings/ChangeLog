@@ -1,0 +1,243 @@
+commit 1963f4ab3ce7625ff687cbd4a94605aef86c7c03
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Mon Nov 6 19:55:15 2006 +0100
+
+    Remove the ansi-1251 encoding, it's called microsoft-cp1251.
+
+commit 4ae411795bfc452cac09c7bc6f084a02b128d6f8
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Mon Nov 6 19:53:29 2006 +0100
+
+    Simplify some encodings to avoid stating the obvious.
+
+commit 85a15b53b7d50b8e022809a4fe0ef7fe44dedb59
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Sun Nov 5 23:58:27 2006 +0100
+
+    Limit UNDEFINE line to en encoding's declared SIZE (bug 1248).
+    This is not needed with libfontenc (used by the X server and mkfontscale),
+    which will ignore out-of-range entries, but apparently caused ttmkfdir to
+    crash.  Thanks to Donnie Berkholtz.
+
+commit e7daa21ab093d6758ed66cc6e7865e50ba22a6f3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 20 15:10:18 2006 -0700
+
+    Version bump to 1.0.1
+
+commit 3ca18a61a69b41185d8d92873cffdf3a0216ed0e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 20 15:03:27 2006 -0700
+
+    Add COPYING file with generic XFree86 notices from hw/xfree86/doc/LICENSE
+
+commit 018b3e3ccceb266ce32351ef1a71a499e149422b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 20 14:51:51 2006 -0700
+
+    Add --disable-gzip-{small,large}-encoding flags to configure
+
+commit 1826bdeed2a06857179a3d4dce516d9d91bd22bc
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 20 14:15:08 2006 -0700
+
+    Update message printed when mkfontscale not found to point to modular package
+
+commit 2f8d3be79639df05e892619a338d6e76de1161f6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 20 14:12:52 2006 -0700
+
+    Replace static changelog with dist-hook to generate from git log
+
+commit 2341bcabed186bb97e999f759ffbc4599d9a15aa
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 20 14:12:20 2006 -0700
+
+    Add *~ to .gitignore to skip patch/emacs backup files
+
+commit f8bc7acfe65a6d0d629ab290c53a281dbdefb356
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 20 14:07:12 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 553fd4eec1838ec869b8b485d6da6cbb0383935a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:24 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 734f3d8f353f4f840ae02eb46af4430f2bbc9225
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Dec 9 05:48:44 2005 +0000
+
+    Bug #5292: Make encodingsdir configurable (Donnie Berkholz).
+
+commit c9c84cc31bebb09d619369ee7c02ee7c69aafe80
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:20 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit a0ceece0e7ccaedaae571e6cab145edbdd8c732e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:07 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 89db68f6d75396954be48e52a453ede24a128c67
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Thu Oct 6 23:16:10 2005 +0000
+
+    Use syntax compatible with non-GNU make
+
+commit 200fbc2d2031af9d36a335fc8229ae8a08bb46b9
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:48 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit c9b1f243c82c35f5a01b4f930afd149236ad387d
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue Jul 12 21:03:09 2005 +0000
+
+    Move encodings here.
+
+commit f3ecf5cf0d965eed180ad827674ad07ba326ba2e
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Fri Nov 5 05:01:52 2004 +0000
+
+    xc/fonts/encodings/Imakefile
+    xc/fonts/encodings/ascii-0.enc
+    Adding ascii-0 font encoding which helps in cases where a font has all
+        ASCII chars populated but not enougth glyphs to match the requirements
+        for ISO8859-1 (and to add backwards compatibility to ttmkfdir).
+
+commit ad2e4eb4a71e6d726a12225f08d4fa4001885298
+Author: Egbert Eich <eich@suse.de>
+Date:   Mon Oct 18 18:54:22 2004 +0000
+
+    Added file that was missing from last commit.
+
+commit 580ba8be5132921329ef69eb59a3747c223b3de3
+Author: Egbert Eich <eich@suse.de>
+Date:   Mon Oct 18 17:29:03 2004 +0000
+
+    Correcting font encodings for GB18030, GBK and BIG5-HKSCS. Adding nls
+        support for those encodings (Bugzilla 1573, James Su).
+
+commit 213cc72c35763c200d82dbc333d359acbcf85dea
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:04 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 1056b2951e33c9cb6d9b5b9db36487b39ca3a932
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:31:12 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit f313fedfc661b47258aaf240ea19fff51cd61355
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Sun Mar 14 01:49:18 2004 +0000
+
+    file cns11643-3.enc was initially added on branch XORG-CURRENT.
+
+commit b381d01c43f1929134122df8353d496ea2457bce
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Sun Mar 14 01:49:18 2004 +0000
+
+    file cns11643-2.enc was initially added on branch XORG-CURRENT.
+
+commit ef2efb5cd355fe19c4b3ada7327ecadc0b1900b9
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Sun Mar 14 01:49:18 2004 +0000
+
+    file cns11643-1.enc was initially added on branch XORG-CURRENT.
+
+commit 184c25f7cf869ac500832c45c9f1c351fa38c104
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Sun Mar 14 01:49:17 2004 +0000
+
+    file suneu-greek.enc was initially added on branch XORG-CURRENT.
+
+commit e6e279bbff14ed13bf5824008910c53d3df9cf28
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:10:51 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 38b3b4cff3e72da08a00a34e67fa62a535311495
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:10 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit fa83e2450142b96a7731ebfdf8d51735579e6355
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:23 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit fb8d4e764ae8ec41ee85ee6c8ec03449430ac58b
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Jan 29 08:07:51 2004 +0000
+
+    Importing vendor version xf86-012804-2330 on Thu Jan 29 00:06:33 PST 2004
+
+commit dacaa0a653b4b0329f6851c61e6e3d027de1e778
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:54:16 2003 +0000
+
+    XFree86 4.3.99.902 (RC 2)
+
+commit 7a443e5404ad119fac7ec401fb4e7ebc0e4faad8
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:54:16 2003 +0000
+
+    Initial revision
+
+commit 0ffdd0e7758f89c09e3c3765c69830d97e1226a8
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Thu Dec 4 22:02:45 2003 +0000
+
+    XFree86 4.3.99.901 (RC 1)
+
+commit 31a0bae6b76433ecb25b412758e689cc54f4b480
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Thu Dec 4 22:02:43 2003 +0000
+
+    Initial revision
+
+commit 447ef634a83a71e50e23c2ebec8264c53c82834b
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:27:57 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 7f3cad2f2ac0b72edeece66eb635fbb4e359dcf7
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:27:57 2003 +0000
+
+    Initial revision
+
+commit 196a06e197074294459430e4ef4a7cca08e8e1e7
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 6463ac82bda1da0a4fee067e36582ba8eea9de8d
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    Initial revision

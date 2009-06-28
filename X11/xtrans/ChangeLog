@@ -1,0 +1,867 @@
+commit 1185dd2966521e1a19474dfd4206306cb383fc89
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Oct 7 09:55:22 2008 -0400
+
+    Finish removing OS/2 support
+
+commit 51b2e85aeb172f4a058d8ceceec91021ffd0b2a5
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Oct 7 09:51:27 2008 -0400
+
+    Remove DECNET support.
+    
+    This hasn't been consumed in the server or libs since 7.0.
+
+commit 892ec928da3a0653ae54c321e4c3b1aa06c4e678
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Aug 7 10:32:11 2008 -0400
+
+    Drastically simplify TRANS_OPEN_MAX.
+    
+    If your OS doesn't have sysconf(3), then life is already hard for you.
+
+commit 339ddc413559d4cb117a72f87b2a70dae6911c32
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Aug 7 10:23:19 2008 -0400
+
+    Massive ifdef cleanup, dropping a ton of unsupported platform code.
+
+commit a78b9819cbbbddccb4a6bf364b88ec4f27d25c1f
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Aug 5 17:46:37 2008 -0700
+
+    Added a flag to enable "The OS already took care of securing this, please skip checking xauth" for use with Apple launchd sockets.
+
+commit 3db805979b476d233baa881e83950ef1d2731841
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Jul 15 16:56:12 2008 -0700
+
+    Apple: Allow Xquartz to provide an additional fd to xtrans since the dynamic addition code in the server isn't bulletproof yet.
+
+commit 81d8bdced6b45ab2ab3d3a0bc164ddbf1659fea1
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Jul 2 15:24:20 2008 -0400
+
+    xtrans 1.2.1
+
+commit 302af17c4d5f0293a9af4d6c1097ab57a57d3f0f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jun 24 15:45:38 2008 -0700
+
+    Clear some pointer type mismatch warnings
+
+commit 4d184e41d30a8fe27380e04beb24f775d4a40782
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jun 24 15:45:18 2008 -0700
+
+    LocalClose() takes a ConnInfoPtr, not an fd
+
+commit 177c2fd41727bd0110b493933dcbdbf21878fe09
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri May 23 09:48:59 2008 -0700
+
+    Launchd: This functionality has been moved into xorg-server
+
+commit 02fcb08803dca5bb2df4f8be490a845659bd7ed3
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Mon May 12 17:49:41 2008 -0400
+
+    Connection failure for abstract socket is ECONNREFUSED, not ENOENT.
+    
+    Apropos of bug #15884.
+
+commit 906294025573d07c739894fa3b2eedc82813a379
+Author: Bill Nottingham <notting@redhat.com>
+Date:   Mon May 12 17:43:36 2008 -0400
+
+    Ignore mkdir() errors when creating the abstract socket.
+    
+    Red Hat bug #445303.
+
+commit 08134c2ce72bc43c172b6ae134d8a94a40b45c9b
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat May 10 07:02:09 2008 -0400
+
+    Remove extraneous execute bit from .c file
+
+commit e75b9dad0ae4bc0869af81652d8259675a3c5cac
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Thu May 8 16:27:29 2008 +0200
+
+    Bump to 1.2
+
+commit 962ad4d3f8096f5ffa14b32b3ee094f250790c77
+Author: Alan Hourihane <alanh@tungstengraphics.com>
+Date:   Mon Apr 28 23:46:05 2008 +0100
+
+    disable UNIXCONN on MINGW
+
+commit 9e8c0e3356bc6359368b7655d3a717d6c000387e
+Author: Alan Hourihane <alanh@tungstengraphics.com>
+Date:   Sat Apr 26 16:23:19 2008 +0100
+
+    fix build for MAKEWORD
+
+commit 568c5ea02ee1de437833ee0b53a7b3fd7ece084f
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Sat Apr 26 08:53:13 2008 +0100
+
+    Update to winsock2
+
+commit 960902584a3ef125946beb5ebe331b54d697e9d9
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Fri Apr 25 15:53:20 2008 -0400
+
+    Fix length calculation for the path for abstract unix domain sockets
+    
+    Since the struct has a fixed-lenght char[] its sizeof() contains
+    trailing NUL octets which results in corrupt abstract sockets.
+    
+    Instead, take the strlen(3) of the path, plus the single NUL octet
+    (which identifies the path as an abstract path rather than a file-
+    system path) plus the offset from the start of the struct to the
+    start of the char array.
+    
+    This fixes:
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=15677
+
+commit 3a2a5375b8aab85697b4f2644ab99c3ccf79e658
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Wed Apr 23 10:39:30 2008 +0100
+
+    Only call WSAGetLastError() if there has been an
+    error condition.
+
+commit ac13a1a34b61247a21da130f0ba9922f35d3dc3b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Apr 15 12:32:35 2008 -0700
+
+    Sun bug #6688467: _X11TransConvertAddress: Unknown family type on 64-bit SPARC
+    
+    Check for socklen_t definition and if found use it instead of size_t or
+    int for the length argument to getpeername/getsockname/etc.
+    
+    <http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6688467>
+
+commit 556a351de83fc6f401b02213dae95731553c216d
+Author: Loïc Minier <lool@dooz.org>
+Date:   Mon Mar 24 15:38:27 2008 -0400
+
+    Bug #10489: Don't retry unix socket connect()s on ENOENT.
+    
+    If the socket isn't there, it's not gonna magically appear.  Either it's
+    a server socket and you should have just waited for the SIGUSR1 from the
+    server, or it's a stale reference to an ICE socket.
+    
+    However, do retry once, so fallback from abstract to filesystem namespace
+    works.
+    
+    Originally Debian bug #385976.
+
+commit 3de3e666e0653d4e8ae23fc3e6e31864ddad4059
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sun Mar 23 19:43:32 2008 +0100
+
+    BSD44SOCKETS is the wrong check for SOCK_MAXADDRLEN
+    
+    GNU/kFreeBSD defines BSD44SOCKETS, but doesn't have SOCK_MAXADDRLEN.
+    Check for the latter directly.
+
+commit 662994b9096181117cec4cae88f24bf6da806159
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Mar 5 21:02:28 2008 -0500
+
+    xtrans 1.1
+
+commit 2afe206ec9569e0d62caa6d91c3fb057b0efa23d
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Mar 5 20:48:59 2008 -0500
+
+    Add support for the abstract socket namespace under Linux.
+    
+    Unlike normal unix sockets, the abstract namespace is not bound to the
+    filesystem.  This has some notable advantages; /tmp need not exist, the
+    socket directory need not have magic permissions, etc.  xtrans servers
+    will listen on both the normal and abstract socket endpoints; clients
+    will attempt to connect to the abstract socket before connecting to the
+    corresponding filesystem socket.
+    
+    Based on a patch by Bill Crawford.
+
+commit c8ed67f16f71042ef134a4d2189c20dd200a0648
+Author: Jeremy Huddleston <jeremy@tifa.local>
+Date:   Sun Feb 10 19:04:40 2008 -0800
+
+    Fixed #ifdef checks that were using i386 to use __i386__
+    
+    """
+    
+    It's simply obsolete, sloppy, compiler namespace pollution.  The
+    compiler is not allowed to predefine symbols that might conflict with
+    ordinary identifiers.  For backwards compatibility gcc currently
+    predefines i386 when compiling for x86 32-bit (but not 64-bit), but that
+    will go away.  It is also not defined if you specify -ansi when invoking
+    the compiler, because then it is seriously standards compliant.  Other
+    compilers shouldn't define it either.  Correct code shouldn't rely on it
+    being defined.  However __i386__ is safe and proper.
+    
+    """
+
+commit 9970b5b6f8237685267b7972282319cf266661ea
+Author: Ben Byer <bbyer@bbyer.local>
+Date:   Sun Dec 2 07:36:51 2007 -0800
+
+    make launchd error messages less scary
+
+commit cd1da5cec49fb7fe6238a00d9ba550b3ed78fa08
+Author: Ben Byer <bbyer@bbyer.local>
+Date:   Wed Nov 14 03:57:57 2007 -0800
+
+    Fix for incorrect processing of recycled launchd socket on OS X
+
+commit 3da4d6c1dc05f9e1291b023a97535eb67f0830e2
+Author: Ben Byer <bbyer@bbyer.local>
+Date:   Wed Nov 14 03:55:42 2007 -0800
+
+    removed cvs tags
+
+commit 496cf2c46d2123c3bed3e6878f8f9a62e87ce559
+Author: Dodji Seketeli <dodji@seketeli.org>
+Date:   Tue Sep 11 12:52:44 2007 +0200
+
+    libxtrans: fixed a typo in my last commit
+    
+            * Xtranssock.c: (SocketReopen): oops fix a typo in my last commit.
+
+commit 88e141225113fcc4ebe5e8fe361e75673cdbf9ff
+Author: Dodji Seketeli <dodji@seketeli.org>
+Date:   Tue Sep 11 08:48:03 2007 +0200
+
+    libxtrans: fix linux compilation breakage
+    
+            * Xtranssock.c:
+              (SocketReopen): protect use of BSD4.4 socket with BSD44SOCKETS macro.
+              protect use of strlcnpy with HAVE_STRLCPY macro.
+              That one is defined (or not) by the xserver configure.
+
+commit 6217f34977bfa17b66b89df5d45420774abedcb3
+Author: Ben Byer <bbyer@bbyer.apple.com>
+Date:   Wed Sep 5 18:29:44 2007 -0700
+
+    changes to support launchd on OS X
+
+commit 4d0cfe491046df26027db291530b247b7f24df5b
+Author: Ben Byer <bbyer@bbyer.apple.com>
+Date:   Wed Sep 5 18:04:01 2007 -0700
+
+    suppress warning about socket directory ownership on OS X
+    
+    We don't need to warn the user about the fact that the socket
+    directory is not owned by root under OS X; on that platform,
+    it's never owned by root, as the X server runs as the normal user.
+
+commit de93d67f6d48c7c08f2554cb85515bcf7dfbffb2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 21 17:54:23 2007 -0700
+
+    Version bump: 1.0.4
+
+commit 5e16b0ebccb233f7aeaf3928a853ee966b7cbb39
+Author: Kean Johnston <kean@armory.com>
+Date:   Wed Jul 18 09:27:06 2007 -0700
+
+    Fix typo in Xtranslcl.c (sprintf with size argument should be snprintf)
+
+commit 1abc981349140260d6fb643d29cf2b851fc06ac9
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Dec 16 01:15:21 2006 +0200
+
+    bump to 1.0.3
+
+commit 8172528bb894856aa5b133f61444294dc5a347e6
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Dec 6 18:51:59 2006 +0200
+
+    Makefile.am: make ChangeLog hook safer
+    Make ChangeLog hook as safe as possible.
+
+commit 5ffb704b1df9ec44a448d53d4c20b9d4c5d825d4
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Fri Oct 13 17:01:59 2006 -0400
+
+    Bump to 1.0.2
+
+commit ae3b57953f5c1fa875d19fb42a2178d7e594ea44
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Thu Oct 12 20:36:52 2006 -0400
+
+    Fix the ChangeLog hook to distcheck.
+
+commit 4a2f176da3e2171f4feea2e6c8787e24fdf204f3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 15 14:59:15 2006 -0700
+
+    Remove GIT_DIR setting from git log command
+
+commit ec3abba0e351278876909bb5250d490b807d904a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 15 13:54:18 2006 -0700
+
+    Copy additional copyright/license statements from source to COPYING
+
+commit b4c6bd92b3a8bed746da641c59a9f040e1d83768
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Sep 13 14:09:22 2006 -0700
+
+    Bug 728: RUI in _X11TransSocketINETGetAddr in file "Xtranssock.c"
+    
+    Bug #728: <https://bugs.freedesktop.org/show_bug.cgi?id=728>
+    Patch #3527: <https://bugs.freedesktop.org/attachment.cgi?id=3527>
+    bzero sockaddr structures before passing to kernel to convince memory
+    checkers that they are initialized before use
+
+commit 5d006baadf213e91f131ffedc53c88a973fb1cba
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Aug 24 17:40:24 2006 -0700
+
+    Use SUN_LEN if it is defined on non-BSD44SOCKETS systems
+
+commit 2495789d6c290e2037b2836f28b027786ea5b605
+Author: Petr Salinger <petr.salinger@t-systems.cz>
+Date:   Sun Apr 23 01:31:00 2006 -0700
+
+    Bug 4982: use offsetof for manipulating struct sockaddr_un
+    
+    X.Org Bugzilla #4982 <https://bugs.freedesktop.org/show_bug.cgi?id=4982>
+    Patch #5424 <https://bugs.freedesktop.org/attachment.cgi?id=5424>
+
+commit 2633eaf8824828433a0eb9c9f3c4263b50342473
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Aug 24 16:53:08 2006 -0700
+
+    Try to capture the insanity of xtrans in a short README document
+
+commit 02ffb657b023d9b2a2c6c1d2417da8dcb96aa4b2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Aug 24 14:46:42 2006 -0700
+
+    More sprintf -> snprintf conversions
+
+commit 3d5e7dd18c8836065c4835740211c10747b18abd
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Aug 23 19:14:35 2006 -0700
+
+    Replace static ChangeLog with dist-hook to generate from git-log
+
+commit 92807fe90aad2303cec4b54bec40ce6edf671654
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Aug 23 16:59:33 2006 -0700
+
+    Add ResetListener for named pipe transport
+    
+    (more merging of Xtrans code from Solaris xtrans)
+
+commit e11b861fcf3a295e5cb390cbac3a44d8ce4fad4f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 22 11:29:46 2006 -0700
+
+    Merge more fixes from Solaris xtrans
+    
+    Convert sprintf -> snprintf
+    Don't use fake readv/writev on Solaris x86.
+
+commit 049932c0171855aa6d55222947f4d47495b6f173
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 21 19:08:19 2006 -0700
+
+    Merge Solaris named pipe transport support into LOCALCONN
+    
+    Also clean up #ifdefs in Xtranslcl for which transport types are supported
+    Add "pipe" alias for named pipe transport on Solaris to match Solaris Xlib.
+
+commit 11391a1ffe4c633507406d2a1ed5abe57c8698db
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 21 19:05:49 2006 -0700
+
+    Add --enable-local-transport and set it on by default on SVR4 OS'es
+
+commit c0ebfcde0dd3f82c0e5712764e4403b2837e09b5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 21 19:04:54 2006 -0700
+
+    Add *~ to .gitignore to skip emacs droppings
+
+commit fe7054f2f5ce74ce9b8c1704899894bc1c9f32b7
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 14:59:21 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 0eea51ea11381ba07d5e6953c7bf6519a3ded829
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Fri Jun 30 04:05:45 2006 +0000
+
+    Bump to 1.0.1.
+
+commit 8d37f63810fc12f113bfcf37065ac9da09702b46
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Tue Jun 20 19:11:16 2006 +0000
+
+    Check setuild() return value. Bugzilla #7116.
+
+commit f9a47b508a89c647829266aacb19a0fc2dbb6158
+Author: Jeremy C. Reed <reed@reedmedia.net>
+Date:   Thu May 25 20:20:54 2006 +0000
+
+    No code change. Just fix comment that said SOCKCONN to become TCPCONN.
+        (This dates back to 1994 or before.)
+
+commit 2b7124954f5bedc8625c2f144bbbab4bbba7701c
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:36 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 3d3228a24513ea75c73f6d58ba50097f32b297a1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Nov 9 21:19:14 2005 +0000
+
+    Update package version number for X11R7 RC2 release.
+
+commit 2cac02b2fe1ceaec2a2f1cd601d9ab4afcf3cb66
+Author: Kean Johnson <kean@armory.com>
+Date:   Tue Nov 8 06:33:26 2005 +0000
+
+    See ChangeLog entry 2005-11-07 for details.
+
+commit 063a39b0e1e615387fd7baa570265ed71ca87c22
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:13 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 21a498d25f567ada296d0321f65536dfc816482b
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 3 17:45:28 2005 +0000
+
+    Bug #3813 <https://bugs.freedesktop.org/show_bug.cgi?id=3813> GNU/kFreeBSD
+        fix for xtrans (Robert Millan)
+
+commit e41835b4b2fe03d8a1997bd8e8eabab2a94bccd5
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun Oct 2 21:01:35 2005 +0000
+
+    //bugs.freedesktop.org/show_bug.cgi?id=4256> Patch #3046
+        <https://bugs.freedesktop.org/attachment.cgi?id=3046> Define
+        MAXHOSTNAMELEN if platform doesn't (Michael Banck)
+
+commit 4683f28f0c9d1a1ee0338a32011219ed1fb3c565
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Aug 19 23:53:22 2005 +0000
+
+    Bugzilla #3957 <https://bugs.freedesktop.org/show_bug.cgi?id=3957> Patch
+        #2924 <https://bugs.freedesktop.org/attachment.cgi?id=2924> xtrans
+        changes for AIX (Dan McNichol, IBM)
+    Bugzilla #3957 <https://bugs.freedesktop.org/show_bug.cgi?id=3957> Patch
+        #2925 <https://bugs.freedesktop.org/attachment.cgi?id=2925> xtrans
+        changes for AIX (Dan McNichol, IBM)
+
+commit 79db37c65905823b66411533152ab54407f04004
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Wed Aug 17 19:10:49 2005 +0000
+
+    On FreeBSD, some of the symbols necessary for secure RPC support are in
+        librpcsvc, so check for their presence in rpcsvc so that the library
+        will be added.
+
+commit 5165ebdb8144cd5be706e49957f5c8b51b762821
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Aug 16 02:23:41 2005 +0000
+
+    Define BSD44SOCKETS if struct sockaddr_in has a sin_len member
+
+commit 4ce01dc794022e74b01aac7b902acbbfebc74ed1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:54 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 4ddee2d488f8bdcee624be96fa52ca03a7e64b83
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Jul 26 18:59:11 2005 +0000
+
+    Use AC_TYPE_SIGNAL to replace Imake's SIGNAL_DEFINES (used in Xtransutil.c)
+
+commit 0a80fbc1eb80343eaff27c48f9531f5ba709b6ef
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Jul 26 18:55:41 2005 +0000
+
+    Add config.h includes for modularization Use RETSIGTYPE if defined by
+        autoconf in addition to Imake's SIGNALRETURNSINT. Use
+        HAVE_WORKING_VFORK if defined by autoconf in addition to Imake's
+        HAS_VFORK
+
+commit 9a44d60cb031f1779c228f13697fb17e17df10d5
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sat Jul 23 19:52:56 2005 +0000
+
+    typo
+
+commit 65ca78f15fe7f1640f3610245957eac9bca0bf04
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun Jul 17 02:01:55 2005 +0000
+
+    Move AC_MSG_RESULT so it shows up in the right place, not after other tests
+        are executed
+
+commit f1d56df5736087eafa3db255437c918f6b9075a1
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Thu Jul 14 22:44:31 2005 +0000
+
+    Split out TCP library/IPv6 support checks into XTRANS_TCP_FLAGS for sharing
+        with code like xdm that doesn't use Xtrans but accesses TCP sockets
+        directly. Clean up --enable flags and report settings in configure
+        output.
+
+commit 9552877bf0a7be02c781ef8fb2f271573a55e297
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 21:22:30 2005 +0000
+
+    Add .cvsignore files
+
+commit 586cc58eff6d3c68313e5c8aedb8ec2464069f2f
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 23:51:24 2005 +0000
+
+    Change <X11/os.h> to "os.h".
+
+commit 926367f82972bd94a64ef76c8e036f27ca61fb14
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 07:01:01 2005 +0000
+
+    Add Xtrans definitions (FONT_t, TRANS_CLIENT) to clean up warnings.
+    Add XSERV_t, TRANS_SERVER, TRANS_REOPEN to quash warnings.
+    Add #include <dix-config.h> or <xorg-config.h>, as appropriate, to all
+        source files in the xserver/xorg tree, predicated on defines of
+        HAVE_{DIX,XORG}_CONFIG_H. Change all Xfont includes to
+        <X11/fonts/foo.h>.
+
+commit 40b7e438e4b441204ff47e1e25755162921d7c3e
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jul 2 18:00:50 2005 +0000
+
+    Make includedir=@includedir@ in xtrans.pc.in, not with /X11/Xtrans.
+
+commit b413f4c1dddc467014adf16bfe31627e65508c12
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed Jun 22 22:46:39 2005 +0000
+
+    Apply these patches from Theo van Klaveren:
+    lib-dmx.patch lib-FS.patch lib-X11.patch lib-XRes.patch
+        lib-XScrnSaver.patch lib-xtrans.patch
+    to make the libraries distcheck.
+
+commit 57aac0006e27624a41f04c5d0c458b9f0108a084
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Jun 22 22:36:51 2005 +0000
+
+    Add the rest of my patch from bugzilla #1605 to define INADDR_NONE on
+        platforms that don't define it in the system headers.
+
+commit f5a6a188407cec6e567070d192aac2db72cacd92
+Author: Kristian Høgsberg <krh@redhat.com>
+Date:   Wed Jun 22 01:21:24 2005 +0000
+
+    Apply patch by Alan Coopersmith from #1605 to fix address resolution of
+        hostnames starting with a digit for 64 bit architechtures.
+
+commit 5bad61831b1c06888d80d92a0bf34acbeecda026
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jun 18 07:48:43 2005 +0000
+
+    Move Secure RPC flags from X11/configure.ac to xtrans/xtrans.m4 since
+        multiple modules will need them
+
+commit 62438b14130e0f8de6939767a108ef12558653a3
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Thu Jun 9 15:56:48 2005 +0000
+
+    Use $(includedir)/X11/Xtrans for Xtransincludedir
+
+commit 7c8e397ddcbd0ae998cc4f23868726022d1aa47b
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Wed Jun 8 06:24:53 2005 +0000
+
+    Install the xtrans.m4 to the directory returned by aclocal --print-ac-dir,
+        so that the aclocal calls in other modules will pick it up if this
+        prefix's aclocal dir is not in a default path for system aclocal.
+
+commit 58c7263ca5b64a21dc101bb4b24201ba67a8d068
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed May 25 21:47:56 2005 +0000
+
+    - Add FSlib to symlink.sh
+    - Change Xtrans includedir back to be X11/Xtrans, so that users of it can
+        continue to include <X11/*>
+    - Add build system for FSlib
+    - Conditionally include config.h in xc/lib/FS
+    - Remove redundant include of FSproto.h in xc/lib/FS
+    - Add check to proto/X11/configure.ac whether -D_XOPEN_SOURCE is needed.
+
+commit b2e662de63948928e4cbc7e3ba90631f150c5137
+Author: Josh Triplett <josh@speakeasy.net>
+Date:   Mon May 23 01:53:21 2005 +0000
+
+    Change xtransincludedir in pkg-config file to match change in Makefile.am.
+
+commit 83d29f6e0c1587c8ad008672e7ae5631942559eb
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat May 21 23:07:48 2005 +0000
+
+    xtrans:
+    Create autoconf macro XTRANS_CONNECTION_FLAGS to provide standard set of
+        --enable flags for which transports to support and common place to
+        update for required libraries for platforms that need certain libs for
+        certain transports
+    ICE:
+    Add ICE_t #define required by Xtrans headers. Replace static defines of
+        LOCALCONN & UNIXCONN with new XTRANS_CONNECTION_FLAGS macro.
+    X11:
+    Moved transport type checks to new macro XTRANS_CONNECTION_FLAGS in
+        xtrans.m4 in xtrans module so they can be shared by all modules using
+        xtrans.
+
+commit bd79d86fb50233e0cd41a57b553f12b6d490ac7e
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:22:33 2005 +0000
+
+    revert last change, didn't do right thing at all, sorry for the noise
+
+commit 10776fa562c060d74fdd4434a16408fe4bd34ab9
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:10:08 2005 +0000
+
+    Require automake 1.7 in AM_INIT_AUTOMAKE
+
+commit daa7168e9e0cdff5eb06b0c9a7155f8880681fff
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri May 13 22:53:43 2005 +0000
+
+    - For now put xtrans in X11/Xtrans/X11, since libX11 is looking for it in
+        <X11/...>
+    - For Xcomposite and Xdamage, don't link the build system out of the xc
+        tree
+    - Link the public X11 headers into their own directory
+    - Add links to XKeysymDB and XErrorDB
+    - Add links to all the Xlib man pages
+    - Add links to the lcUniConv subdirectory
+    - Conditionally include config.h in Xlib source
+
+commit d11d95fa4faec21655625b7de27d8a71c08ffe2d
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri May 13 15:16:43 2005 +0000
+
+    Dummy changes to ChangeLog/configure.ac to see if that fixes group
+        permissions
+
+commit b8a8c31f63a543d1c1c6bb4ae26a4019b4400edc
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri May 13 15:04:52 2005 +0000
+
+    Re-adding ChangeLog and configure.ac files
+
+commit 798c08054ce5a8238f35fee3e69218ece74441fa
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri May 13 15:02:19 2005 +0000
+
+    Temporarily remove ChangeLog configure.ac
+
+commit b3da86ae588df14dde916674a4f6593edf1964f7
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri May 13 14:43:37 2005 +0000
+
+    Dummy commit to see if that fixes the group execute permissions
+
+commit ea04267da780c2c3f08a710d15468565897420c4
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Thu May 12 16:12:34 2005 +0000
+
+    Make xtrans install in $(includedir)/X11/Xtrans. Remove all references to
+        Xtransdef.
+    Add Xdmcp build files
+    Add Wrap.h to lib/dmcp part of symlink script.
+
+commit f25791629f3f443d2552bdb05bea1a960b530342
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu May 12 02:49:16 2005 +0000
+
+    Add Xtransdef.h.in as an AM_CONFIG_HEADER.
+
+commit d628bf24f2bf0d017394b6961784d7ac5b33f46b
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed May 11 22:44:52 2005 +0000
+
+    lib/Xau:
+    - Update AUTHORS, COPYING from Keith's tree
+    - Don't use gcc specific "-include config.h"
+    - Add autogen.sh
+    lib/xtrans:
+    - Add AUTHORS, COPYING, ChangeLog, Makefile.am, NEWS, README, autogen.sh,
+        configure.ac, xtrans.pc.in
+    xc/lib/Xau:
+    - Add conditionalized #include <config.h>
+    util/modular/symlink.sh
+    - Add functions symlink_lib_xau() and symlink_lib_xtrans()
+    util/modular/addconfig.h
+    - New script that adds #include <config.h> to files
+
+commit c814f30e9a5dc48a24c20517334cf5f9c37e066a
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Wed Mar 2 11:20:29 2005 +0000
+
+    xc/config/cf/DragonFly.cf
+    xc/config/cf/Imake.cf
+    xc/config/cf/Imakefile
+    xc/config/imake/imake.c
+    xc/config/imake/imakemdep.h
+    xc/extras/drm/shared/drm.h
+    xc/include/Xos_r.h
+    xc/lib/xtrans/Xtranssock.c
+    xc/programs/Xserver/hw/xfree86/os-support/xf86_OSlib.h
+    xc/programs/Xserver/hw/xfree86/os-support/xf86_libc.h
+    xc/programs/Xserver/hw/xfree86/os-support/linux/lnx_agp.c
+    //bugs.freedesktop.org/show_bug.cgi?id=1712) attachment #2004
+        (https://bugs.freedesktop.org/attachment.cgi?id=2004): Add support for
+        DragonFly/BSD platform. Patch by Jeroen Ruigrok <asmodai@tendra.org>
+        and Mike Verona <firedragonfly@gmail.com>.
+
+commit 92e80a5a67273fc60623b17a5f34c239f1ed6947
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Mon Nov 15 15:06:56 2004 +0000
+
+    Bufzilla #1802, http://freedesktop.org/bugzilla/show_bug.cgi?id=1802 Added
+        mingw (Win32) port
+
+commit d92a9d31416a8366cd065886d7ff352fefce646d
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Aug 27 22:47:45 2004 +0000
+
+    Set the define XtransFailSoft to restore the old behavior to fail softly
+        when socket directory cannot chowned/chmod to correct user/group. This
+        should be added on a per OS basis which hasn't been done.
+
+commit 48ffd91cff9a07c68194f6d0b380dd2acd46a8ca
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Jul 30 21:00:20 2004 +0000
+
+    fail hard if socket directories cannot be chowned to root or chmod'ed to
+        the requested mode if 'sticky' bit is requested for this directory
+        instead of just print a warning that will remain unnoticed most of the
+        times.
+
+commit c3e50fa69ea7a2d08a298866e8a63c0f07c8248d
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Jul 30 18:40:36 2004 +0000
+
+    Fixed typo in a comment.
+    Deleted bogus comment.
+    Added debugging support.
+
+commit 79d38d618406ecc5228730a57ad406b280a5a189
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 17 01:13:31 2004 +0000
+
+    Fix typo in debug message in MakeAllCLTSServerListeners
+    Add $(GETPEER_DEFINES) to DEPEND_DEFINES for makedepend
+    Add "localuser" and "localgroup" access types to server-interpreted
+        authentication scheme.
+
+commit 8d0820e2058545e27f95d9fdc581262822799193
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:44:27 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit c594d3393cd355f52545b05bcc27ee8a2c533caa
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:32:40 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit 2d51220fae172d2b8d28b971a853605b41038533
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:11:46 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 6e2cb92d192171961165c8e5a24b00f35f56aaeb
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:36 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 93f13d69958cb9c9adfe1244e478521269f9258b
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:54 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit 7a10db6531003055886e0e994c2ef8e46a010eb2
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Mon Feb 23 20:34:44 2004 +0000
+
+    Import most of XFree86 4.4RC3. This import excludes files which have the
+        new license. If we want to, later we can import 4.4RC3 again and pick
+        up the files that have the new license, but for now the vendor branch
+        is "pure."
+
+commit 871b8c33f2ab8c98b95aa3324bb70055f5207c61
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Jan 29 08:08:15 2004 +0000
+
+    Importing vendor version xf86-012804-2330 on Thu Jan 29 00:06:33 PST 2004
+
+commit 352e5de72e125d7d474907f354462cc1442e0989
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:54:45 2003 +0000
+
+    XFree86 4.3.99.902 (RC 2)
+
+commit d223c1bb16c503e58f07dfef14b8e79fe7c358ff
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Thu Dec 4 22:03:05 2003 +0000
+
+    XFree86 4.3.99.901 (RC 1)
+
+commit 6c36ea2d54ea6b6f0cbece06d867d0b884783d0c
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:21 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 3b0d3a905e39624abe9ddd1ce20542097601e4c2
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:21 2003 +0000
+
+    Initial revision
+
+commit 3bd236a07c0ebaabb7337dd5d56bc57a028a9c0e
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:50 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 26781c4f009a4b448dca3ab4912cbf01182e3d92
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:40 2003 +0000
+
+    R6.6 is the Xorg base-line

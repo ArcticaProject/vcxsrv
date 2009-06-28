@@ -1,0 +1,23 @@
+# $Xprint.org: CANONBJ10E-GS model-config,v 1.4 2003/02/10 14:48:04 gisburn Exp $
+
+*content-orientations-supported: portrait landscape
+*descriptor: Canon BJ-10e (GhostScript)
+*document-formats-supported: {POSTSCRIPT 2}
+*input-trays-supported:
+*medium-source-sizes-supported: \
+{ '' \
+    {iso-b5                     FALSE {6.35 169.65 6.35 243.65}}\
+    {iso-a4                     FALSE {6.35 203.65 6.35 290.65}}\
+    {na-letter                  FALSE {6.35 209.55 6.35 273.05}}\
+    {na-legal                   FALSE {6.35 209.55 6.35 349.25}}\
+}
+
+*plexes-supported: simplex
+*printer-model: "Canon BJ-10e (GhostScript)"
+*printer-resolutions-supported: 360
+*xp-ddx-identifier: XP-POSTSCRIPT
+*xp-listfonts-modes-supported: xp-list-internal-printer-fonts xp-list-glyph-fonts
+*xp-embedded-formats-supported: {POSTSCRIPT 2}
+*xp-raw-formats-supported: {POSTSCRIPT 2}
+*xp-setup-proviso: setup-optional
+# EOF.

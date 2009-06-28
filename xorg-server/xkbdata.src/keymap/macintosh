@@ -1,0 +1,17 @@
+// $XConsortium: macintosh /main/11 1996/03/07 13:42:13 kaleb $
+// $XFree86: xc/programs/xkbcomp/keymap/macintosh,v 1.1 1999/05/23 05:27:51 dawes Exp $
+default xkb_keymap "macintosh" {
+    xkb_keycodes	{ include "macintosh"				};
+    xkb_types		{ include "default"				};
+    xkb_compatibility	{ include "default"				};
+    xkb_symbols		{ include "macintosh_vndr/us(extended)"		};
+    xkb_geometry	{ include "macintosh"				};
+};
+
+xkb_keymap "macintosh_old" {
+    xkb_keycodes	{ include "macintosh(old)"				};
+    xkb_types		{ include "default"				};
+    xkb_compatibility	{ include "default"				};
+    xkb_symbols		{ include "macintosh_vndr/us(extended)"		};
+    xkb_geometry	{ include "macintosh"				};
+};

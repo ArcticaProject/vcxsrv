@@ -1,0 +1,280 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+.\" $XFree86: xc/doc/man/X11/XInternA.man,v 1.2 2001/01/27 18:20:01 dawes Exp $
+.\"
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XInternAtom __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XInternAtom, XInternAtoms, XGetAtomName, XGetAtomNames \- create or return atom names
+.SH SYNTAX
+.HP
+Atom XInternAtom\^(\^Display *\fIdisplay\fP\^, char *\fIatom_name\fP\^, Bool
+\fIonly_if_exists\fP\^); 
+.HP
+Status XInternAtoms\^(\^Display *\fIdisplay\fP\^, char **\fInames\fP\^, int
+\fIcount\fP\^, Bool \fIonly_if_exists\fP\^, Atom *\fIatoms_return\fP\^); 
+.HP
+char *XGetAtomName\^(\^Display *\fIdisplay\fP\^, Atom \fIatom\fP\^); 
+.HP
+Status XGetAtomNames\^(\^Display *\fIdisplay\fP\^, Atom *\fIatoms\fP\^, int
+\fIcount\fP\^, char **\fInames_return\fP\^); 
+.SH ARGUMENTS
+.IP \fIatom\fP 1i
+Specifies the atom for the property name you want returned.
+.IP \fIatoms\fP 1i
+Specifies the array of atoms.
+.IP \fIatom_name\fP 1i
+Specifies the name associated with the atom you want returned.
+.IP \fIatoms_return\fP 1i
+Returns the atoms.
+.ds Cn atom names in the array
+.IP \fIcount\fP 1i
+Specifies the number of \*(Cn.
+.ds Cn atoms in the array
+.IP \fIcount\fP 1i
+Specifies the number of \*(Cn.
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fInames\fP 1i
+Specifies the array of atom names.
+.IP \fInames_return\fP 1i
+Returns the atom names.
+.IP \fIonly_if_exists\fP 1i
+Specifies a Boolean value that indicates whether the atom must be created.
+.SH DESCRIPTION
+The
+.ZN XInternAtom
+function returns the atom identifier associated with the specified atom_name
+string.
+If only_if_exists is 
+.ZN False ,
+the atom is created if it does not exist.
+Therefore,
+.ZN XInternAtom
+can return
+.ZN None .
+If the atom name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Uppercase and lowercase matter;
+the strings ``thing'', ``Thing'', and ``thinG'' 
+all designate different atoms.  
+The atom will remain defined even after the client's connection closes.
+It will become undefined only when the last connection to
+the X server closes.
+.LP
+.ZN XInternAtom
+can generate
+.ZN BadAlloc 
+and
+.ZN BadValue 
+errors.
+.LP
+The
+.ZN XInternAtoms
+function returns the atom identifiers associated with the specified names.
+The atoms are stored in the atoms_return array supplied by the caller.
+Calling this function is equivalent to calling
+.ZN XInternAtom
+for each of the names in turn with the specified value of only_if_exists,
+but this function minimizes the number of round-trip protocol exchanges
+between the client and the X server.
+.LP
+This function returns a nonzero status if atoms are returned for
+all of the names;
+otherwise, it returns zero.
+.LP
+.ZN XInternAtoms
+can generate
+.ZN BadAlloc 
+and
+.ZN BadValue 
+errors.
+.LP
+The
+.ZN XGetAtomName
+function returns the name associated with the specified atom.
+If the data returned by the server is in the Latin Portable Character Encoding,
+then the returned string is in the Host Portable Character Encoding.
+Otherwise, the result is implementation-dependent.
+To free the resulting string,
+call
+.ZN XFree .
+.LP
+.ZN XGetAtomName
+can generate a
+.ZN BadAtom 
+error.
+.LP
+The
+.ZN XGetAtomNames
+function returns the names associated with the specified atoms.
+The names are stored in the names_return array supplied by the caller.
+Calling this function is equivalent to calling
+.ZN XGetAtomName
+for each of the atoms in turn,
+but this function minimizes the number of round-trip protocol exchanges
+between the client and the X server.
+.LP
+This function returns a nonzero status if names are returned for
+all of the atoms;
+otherwise, it returns zero.
+.LP
+.ZN XGetAtomNames
+can generate a
+.ZN BadAtom 
+error.
+.SH DIAGNOSTICS
+.TP 1i
+.ZN BadAlloc
+The server failed to allocate the requested resource or server memory.
+.TP 1i
+.ZN BadAtom
+A value for an Atom argument does not name a defined Atom.
+.TP 1i
+.ZN BadValue
+Some numeric value falls outside the range of values accepted by the request.
+Unless a specific range is specified for an argument, the full range defined
+by the argument's type is accepted.  Any argument defined as a set of
+alternatives can generate this error.
+.SH "SEE ALSO"
+XFree(3X11),
+XGetWindowProperty(3X11)
+.br
+\fI\*(xL\fP

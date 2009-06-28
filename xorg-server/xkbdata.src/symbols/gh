@@ -1,0 +1,96 @@
+// $XKeyboardConfig$
+//
+partial default alphanumeric_keys  
+xkb_symbols "basic" {
+
+    include "us"
+
+    name[Group1]= "Ghana";
+
+    key <AE04> { [          4, 0x010020B5,     dollar,       cent ] };
+    include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "akan" {
+    include "gh(basic)"
+
+    name[Group1]= "Ghana - Akan";
+
+    key <AD01> { [ 0x0100025B, 0x01000190,          q,          Q ] };
+    key <AB02> { [ 0x01000254, 0x01000186,          x,          X ] }; 
+};
+
+partial alphanumeric_keys
+xkb_symbols "ga" {
+    include "gh(basic)"
+
+    name[Group1]= "Ghana - Ga";
+
+    key <AD01> { [ 0x0100025B, 0x01000190,          q,          Q ] };
+    key <AB02> { [ 0x01000254, 0x01000186,          x,          X ] }; 
+    key <AB03> { [ 0x0100014B, 0x0100014A,          c,          C ] }; 
+};
+
+partial alphanumeric_keys
+xkb_symbols "ewe" {
+    include "gh(basic)"
+
+    name[Group1]= "Ghana - Ewe";
+
+    key <AD01> { [ 0x0100025B, 0x01000190,          q,          Q ] };
+    key <AB03> { [ 0x0100014B, 0x0100014A,          c,          C ] }; 
+    key <AD11> { [ 0x01000254, 0x01000186,  braceleft,  braceleft ] }; 
+    key <AD12> { [ 0x0100028B, 0x010001B2, braceright, braceright ] }; 
+    key <AD13> { [ 0x01000256, 0x01000189,  backslash,  backslash ] };
+    key <AC07> { [ 0x01000192, 0x01000191,          j,          J ] };
+    key <AC05> { [          g,          G, 0x01000263, 0x01000194 ] };
+ 
+};
+
+partial alphanumeric_keys
+xkb_symbols "fula" {
+    include "gh(basic)"
+
+    name[Group1]= "Ghana - Fula";
+
+    key <AD01> { [ 0x01000071, 0x01000051,          q,          Q ] };
+    key <AD02> { [ udiaeresis, Udiaeresis,          w,          W ] };
+    key <AD03> { [          e,          E,   EuroSign,	     cent ] };
+    key <AD11> { [ 0x010001B4, 0x010001B3,bracketleft,  braceleft ] };
+    key <AD12> { [     gcaron,     Gcaron,bracketright, braceright] };
+    key <AC03> { [ 0x01000257, 0x0100018A,         d,           D ] };
+    key <AC10> { [ 0x01000131, 0x01000130, semicolon,       colon ] };
+    key <AC11> { [ 0x010001DD, 0x0100018E,apostrophe,    quotedbl ] };
+    key <AB01> { [ 0x01000272, 0x0100019D,         z,           Z ] };
+    key <AB07> { [     ntilde,     Ntilde,         m,           M ] };
+    key <AB09> { [   ccedilla,   Ccedilla,    period,     greater ] };
+    key <AB10> { [   scedilla,   Scedilla,     slash,    question ] };
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "hausa" {
+    include "gh(fula)"
+
+    name[Group1]= "Ghana - Hausa";
+};
+
+partial alphanumeric_keys
+xkb_symbols "generic" {
+    include "gh(basic)"
+
+    name[Group1]= "Ghana - Multilingual";
+
+    key <AD03> { [          e,	        E, 0x0100025b, 0x01000190 ] };
+    key <AB03> { [          c,          C, 0x01000254, 0x01000186 ] };
+    key <AC03> { [          d,          D, 0x01000256, 0x01000189 ] };
+    key <AC04> { [          f,          F, 0x01000192, 0x01000191 ] };
+    key <AC05> { [          g,          G, 0x01000263, 0x01000194 ] };
+    key <AB06> { [          n,          N, 0x0100014b, 0x0100014a ] };
+    key <AB01> { [          z,          Z, 0x010001B6, 0x010001B5 ] };
+    key <AB04> { [          v,          V, 0x0100028B, 0x010001B2 ] };
+	key <AE04> { [          4,     dollar, 0x010020B5,       cent ] };
+    include "level3(ralt_switch)"
+
+};

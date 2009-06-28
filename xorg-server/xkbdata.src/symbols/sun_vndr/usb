@@ -1,0 +1,26 @@
+// Additional keys for Sun USB keyboard
+
+xkb_symbols "sun_usb" {
+
+    key <STOP> { [ Cancel	],	[ F11	]	};
+    key <AGAI> { [ Redo		],	[ F12	]	};
+    key <PROP> { [ SunProps	],	[ F13	]	};
+    key <UNDO> { [ Undo		],	[ F14	]	};
+    key <FRNT> { [ SunFront	],	[ F15	]	};
+    key <COPY> { [ SunCopy	],	[ F16	]	};
+    key <OPEN> { [ SunOpen	],	[ F17	]	};
+    key <PAST> { [ SunPaste	],	[ F18	]	};
+    key <FIND> { [ Find		],	[ F19	]	};
+    key <CUT>  { [ SunCut	],	[ F20	]	};
+    key <HELP> { [ Help		]	};
+
+    key <MUTE> { [  SunAudioMute,	SunVideoDegauss		]	};
+    key <VOL-> { [  SunAudioLowerVolume,SunVideoLowerBrightness ]	};
+    key <VOL+> { [  SunAudioRaiseVolume,SunVideoRaiseBrightness	]	};
+    key <POWR> { [  SunPowerSwitch,	SunPowerSwitchShift	]	};
+
+    key <LMTA> { [	Meta_L		]	};
+    key <RMTA> { [	Meta_R		]	};
+    key <COMP> { [	Multi_key	]	};
+};
+

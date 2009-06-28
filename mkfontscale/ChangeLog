@@ -1,0 +1,360 @@
+commit a34031ea9074a453aee217b5845d07333019f26c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 18 16:56:12 2008 -0800
+
+    Version 1.0.6
+
+commit 95c7da3a2717a0352cdd08830fdd1dd1a4024dda
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 18 16:55:56 2008 -0800
+
+    man page typo fix
+
+commit 0d1a2b7970c0eadb834fc2a6c3a68a09691b84ea
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Dec 17 19:29:54 2008 -0800
+
+    Add hooks for checking sources with lint/sparse/etc.
+
+commit 3ae585a3f08cb660c6ce6838557c94f88821b7a5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Dec 17 19:22:27 2008 -0800
+
+    Add basic README with URL's of git, bugzilla & mailing list
+
+commit 03f6a08c503ff12e2457a9ccc13bfbb801e2161d
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Dec 17 19:19:03 2008 -0800
+
+    Use XORG_CWARNFLAGS & XORG_CHANGELOG from xorg-macros 1.2
+
+commit 0ca983a6bac03489fb0d2ad158114a811eb276a2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Nov 5 10:07:33 2008 -0800
+
+    Add support for bzip2 compressed fonts if configured --with-bzip2
+
+commit 8126d2b694f48cc8137be05705a125f7d02e7e12
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sun May 11 00:03:44 2008 +0200
+
+    Bump to 1.0.5
+
+commit f131ff40d2b46692c393346110df2567cfa67c29
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Sat May 10 23:58:55 2008 +0200
+
+    Update copyright date.
+
+commit c322c79c2b9b8d6075b6782d572033cc50799a49
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Sat May 10 23:56:33 2008 +0200
+
+    Fix handling of OpenType/CFF fonts with embedded bitmaps.
+    The old workaround would trigger with CFF fonts with embedded bitmaps.
+    We now explicitly check for the font format being TrueType.
+    Reported by Andrey V. Panov.
+
+commit 5db9e13aafbed8c0562838005147ebefb12d08ac
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Sat May 10 23:37:14 2008 +0200
+
+    Remove doubly included header.
+
+commit b0860282c3229d088840fa0758d8473ea6d8813b
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Mon Apr 28 19:53:11 2008 +0200
+
+    Add bdf and pcf to font priority table.
+    This mirrors the behaviour of the old mkfontdir, which prefers pcf to
+    bdf fonts.
+
+commit 9c5594ad13e9143e86a7fd94f90858795ae2970b
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Mon Apr 28 19:15:05 2008 +0200
+
+    Fix typo in mkfontscale.c.
+    This spurious break statement disabled checking for Apple and ISO Unicode
+    CMaps in SFNT fonts.  Thanks to Alan Coopersmith and Stefan Dirsch.
+
+commit 5ca409f025fb35a20ab1ef4742a9034a36e3d959
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Sat Mar 15 18:44:06 2008 -0300
+
+    Compile warning fixes.
+    
+    Include headers for proper prototypes and "ansify" makeHashTable.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 47ec1e2697eb856f823cc1b488c6b5a1d2077df9
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Mar 6 16:40:41 2008 -0500
+
+    mkfontscale 1.0.4
+
+commit 1cb9c0074c5075bbce63ff3601712f34bbb74ca1
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Sun Feb 24 21:34:00 2008 -0500
+
+    Bug #11337: Use strcasecmp() instead of broken open-coded version.
+    
+    Also, use tolower() instead of broken open-coded version.
+
+commit 11651914cb1700528524bd3aabe2372629ce86c8
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jan 7 14:28:30 2008 -0800
+
+    Fix typo in man page
+
+commit 963552c24bf90610f2b3e2e77277ad77e2b21210
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jan 7 14:26:56 2008 -0800
+
+    Convert (1) to (__appmansuffix__) in man page
+
+commit 3e8bfcc4d87cd26b9426be1ab8941e1a8d709d3c
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:37:03 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit d59c58bc3e09fd4adf773cd2e0a8c8c0e6018b08
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:51:05 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit 73e8b8696e09c2502c2b3f66cbe364a8de14198e
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:24:29 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 08cf5e3544be3a64725e5aacd6209bae32185ff0
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Nov 8 16:29:43 2006 +0200
+
+    bump to 1.0.3
+
+commit b155ad1329e193987ed4102384b7996d6dd45088
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Tue Oct 31 16:48:18 2006 +0100
+
+    Allow SemiBold weight for Type 1 fonts.
+    Thanks to Andrey Panov.
+
+commit b849af72d7b564f7c09ee480f7496a741063b2a8
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Tue Oct 31 01:35:27 2006 +0100
+
+    Fix typos in manual page, update author's address, update COPYING.
+
+commit 65908e9db4457af1a896d82d5d153655096afb4e
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Fri Oct 13 17:45:45 2006 -0400
+
+    Bump to 1.0.2
+
+commit 72d7891bba975dc637dfcc4df068da4a0afae40c
+Author: Alan Hourihane <alanh@fairlite.demon.co.uk>
+Date:   Wed Jul 19 09:47:10 2006 +0100
+
+    open files in binary mode. fixes cygwin issues.
+
+commit 74743bd788dc7d9f65e151142a594dd5dd3679fb
+Author: Jeremy C. Reed <reed@reedmedia.net>
+Date:   Thu May 25 23:18:01 2006 +0000
+
+    Check for xproto not x11 (libX11 is not needed).
+
+commit 300ead104133e0967dd2edfd8ef000768e5b2ec5
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Dec 21 02:29:43 2005 +0000
+
+    Update package version for X11R7 release.
+
+commit 749ba16c39f2787823d65677c46dd0df10210127
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Dec 19 16:22:41 2005 +0000
+
+    Stub COPYING files
+
+commit f6c3c20921a741d1b8aca31ae4c29105c62e6eb0
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:03 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit db2fd6b3063b161726303f469510edae5552506a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:17 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit 36de3963aaeca770500ca1a0c1677a2a087506d3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:16 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 35101f83cc13a9989a0a505afbe1557e2eb2b431
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:01:37 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit 7494ff7b73b4bf0b3d01703f2b8d9bcbcb032c89
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Mon Nov 21 10:34:56 2005 +0000
+
+    Another pass at .cvsignores for apps.
+
+commit 818a45cd26343f5a90b5861ee3eacaeb7f1b02d9
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Nov 20 22:08:49 2005 +0000
+
+    Add/improve .cvsignore files for apps.
+
+commit ff0494da73f7375ef051621c72f6ce91a101574a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:35 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit cf92d3afb96be73691967875a1e659bfaf47bd5d
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:47:49 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit c1e504c4af80f9b55d766eeab7f8a76e1043f1f8
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 17 23:56:20 2005 +0000
+
+    Use @APP_MAN_SUFFIX@ instead of $(APP_MAN_SUFFIX) in macro substitutions to
+        work better with BSD make
+
+commit 8abe389feee29a21ad92277f0a9bc54143102b0b
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Oct 14 00:25:42 2005 +0000
+
+    Use sed to fill in variables in man page
+
+commit d2ef439ebff65d9507e8409c32ce83ed24f81c77
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 30 19:32:32 2005 +0000
+
+    Add -D flags to clear more compiler warnings (Stefan Dirsch)
+
+commit d84b476fa167fe34d827f36c0a5e35bca7884136
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:29 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 4ae6c4a84f601196a4cf67dd6f1269c239c757b1
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Jul 20 19:31:49 2005 +0000
+
+    Use a unique token for PKG_CHECK_MODULES. Otherwise, if you use a global
+        configure cache, you cache it, and the cached value is probably wrong.
+
+commit bdd6bc86322d8769390ce81e74a9c2da103e3533
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Jul 15 00:50:30 2005 +0000
+
+    Add dependency on zlib
+
+commit 30441ee004c0c23d42b76af09e58314aa2218fa3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Jul 2 21:42:05 2005 +0000
+
+    Add build system for bdftopcf, mkfontdir and mkfontscale
+
+commit 3748201b7bbae3a0c0d20001651430245beab335
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Fri Nov 5 05:01:52 2004 +0000
+
+    xc/fonts/encodings/Imakefile
+    xc/fonts/encodings/ascii-0.enc
+    Adding ascii-0 font encoding which helps in cases where a font has all
+        ASCII chars populated but not enougth glyphs to match the requirements
+        for ISO8859-1 (and to add backwards compatibility to ttmkfdir).
+
+commit 55185f35a75e6aad933e6faedd68bc14dfb94ccc
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 19:54:36 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 8e877ebe858657d8de7b5757a6b1d371dbfa6c88
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:34:54 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit ef2e82cd947202294f2c6cf8e503512bac1452b5
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:12:53 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit a641a5d0ebd81e83fd6d61cef460b9013229a279
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:36:15 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 0bd86c8568761556a0841afff463a2aa5e3f682b
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:23:56 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit 8b2ffc7720361ca3dd61bda16e384e8258aae803
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Dec 19 20:55:45 2003 +0000
+
+    XFree86 4.3.99.902 (RC 2)
+
+commit c76578dc7395126605b9282f8453f1c54f38e61e
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Thu Dec 4 22:03:44 2003 +0000
+
+    XFree86 4.3.99.901 (RC 1)
+
+commit 324cfb1744c2c3cc253dd0f63c2252206eb72249
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:29:02 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 632e8a138dd16efe41384a4335ec46530da4a04b
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:29:02 2003 +0000
+
+    Initial revision
+
+commit 7b08fca9270b3735a66f0cf9ce898336a33ea1d6
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:57 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 7d6e5e7aefebf361afb149d7243d09ab6cf54c2f
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:57 2003 +0000
+
+    Initial revision

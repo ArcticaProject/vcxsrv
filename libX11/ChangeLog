@@ -1,0 +1,3429 @@
+commit 5b7f3b98079ab730b037b33893521dbaa61f5234
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Sep 5 00:39:01 2008 +0300
+
+    Update to 1.1.5
+    
+    Small bugfix and i18n-improvement release.
+
+commit 8c1dfc976a29f981f601503b9768d3414a70ba50
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Jul 17 21:01:42 2008 -0400
+
+    Add more <Multi_key> <cedilla> Compose tuples
+    
+    The last commit missed the el_GR UTF-8 Compose.pre as well as
+    the various ISO 8859 locales which have compose sequences
+    generating ‘WITH CEDILLA’ characters.
+    
+    (Interestingly, some of the 8859 locales already supported
+    <Multi_key> <cedilla> for some CEDILLA characters, but not
+    for Ç or ç.)
+    
+    This is further work on bug 10397.
+    (cherry picked from commit 55248e5c84c3fd8c349a3bb4cb15a1ec86989d74)
+
+commit b11ea7ab3a436745e5244599048516600e47ab5d
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Jul 17 17:16:50 2008 -0400
+
+    Work on making the en_US and pt_BR UTF-8 Compose as similar as possible.
+    
+    The eventual goal here is to have a single primary UTF-8 Compose
+    file which the locale-specific UTF-8 Compose.pre files can #include.
+    (cherry picked from commit 4ba091255bb953d53078ba5619d6751052c739f7)
+
+commit 04828f15866aa7cf43a03b399ac12a393f14f4f7
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Jul 17 17:13:36 2008 -0400
+
+    Add <Multi_key> <cedilla> Compose tuples
+    
+    The en_US and pt_BR UTF-8 Compose tables had support for using <comma>
+    with <Multi_key> to enter CEDILLA characters.  Bug 10397 requests
+    support for using <cedilla> instead of <comma> in said sequences.
+    
+    This commit makes both styles work.
+    (cherry picked from commit 254522d3c24e0590732fc03cdd61ff4564819d94)
+
+commit 685933616eb0d80644d26f092fd0a82339fe23da
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Jun 28 15:25:23 2008 -0400
+
+    Fix commit 21e464ec682ab23ba20ddf6bd72c6db214cfbe01
+    
+    The new block was added twice to the en_US.UTF-8 Compose.pre;
+    delete the duplicate.
+    (cherry picked from commit 7dc907f6032e1d5cbe4da0e414bdf2c569c04b44)
+
+commit 692f6ecc691e83c2601b90e32b1dc395e9dbe8c6
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Thu Jun 19 18:26:11 2008 -0400
+
+    NLS: Add Arabic Lam-Alef ligature compose sequences (bug #16426)
+    
+    Add some Arabic digraphs to utf-8 locales with a Compose.pre
+    
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+    (cherry picked from commit 21e464ec682ab23ba20ddf6bd72c6db214cfbe01)
+
+commit 9b2ab1130e273f6e25cb58d5a2aa7a87e909759e
+Author: Jens Herden <jens@khmeros.info>
+Date:   Tue Jun 10 20:07:30 2008 +0300
+
+    NLS: Add Khmer compose sequences (bug #5706)
+    
+    Add some Khmer digraphs to all locales with a Compose.pre.
+    (cherry picked from commit fca0b0ba3f72b7284601d4690bba99fc80a92614)
+
+commit 30f37e249d148c5dd557f114c9b44616a0b12b32
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Mon May 19 19:22:31 2008 +0300
+
+    gitignore: Update with loads more bits from server
+    (cherry picked from commit 19802ccd3909145e3ba2f6c073271cb5f3701685)
+
+commit a7f85567a3e850fba0c44571453d2852ab1a09be
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue May 13 10:28:39 2008 -0400
+
+    Bug #15884: Remove useless sleep()'s from the connection code.
+    
+    For network transports, there's enough delay in the network layer
+    already without adding more.  For local transports, just hurry up
+    and fail if the server isn't there.
+
+commit 9129057bdbff0ec9cd8bb780cf7f85f134a291eb
+Author: Teemu Likonen <tlikonen@iki.fi>
+Date:   Wed May 7 21:44:22 2008 +0300
+
+    Change <dead_belowdot> to <dead_belowring> for U+1E00 and U+U1E01
+    
+    Commit 6b6caeea830a977bdb54688cfb648d879821e752 added <dead_belowdot>
+    <A> and <dead_belowdot> <a> compose sequences for letters U+1E00 and
+    U+U1E01 (LATIN CAPITAL/SMALL LETTER A WITH RING BELOW). This caused
+    duplicate compose sequences since these have already been defined. Also,
+    using <dead_belowring> is more logical since the diacritic is indeed
+    a "RING BELOW".
+
+commit 01a9cb58888d290cc3d319feec4ee4a0297a844c
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed May 7 20:04:44 2008 +0300
+
+    NLS: Make UTF-8 the default for Russian
+    
+    No-one uses 8859-5 anymore, so make the default for Russian UTF-8; the
+    only other possible answer would be KOI8-R.
+    
+    Signed-off-by: Sergey V. Udaltsov <sergey.udaltsov@gmail.com>
+
+commit 407b81bfbbabf6feb565d6da22f9ef9a69016ab8
+Author: Ross Burton <ross@burtonini.com>
+Date:   Tue Apr 29 13:38:10 2008 +0300
+
+    NLS: Add interrobang to UTF-8 compose tables (bug #15653)
+    
+    It is what it says on the box.
+
+commit 0b6682303e9c61fefc3818acfda616b1e3691abf
+Author: Theppitak Karoonboonyanan <thep@linux.thai.net>
+Date:   Mon Apr 28 11:51:25 2008 +0300
+
+    IM: Respect XMODIFIERS for Thai locale (bug #15719)
+    
+    When looking at Thai input methods, make sure XMODIFIERS is checked
+    before jumping straight into built-in Thai processing, so external XIM
+    servers such as SCIM can be used with Thai.
+
+commit c13aded1b2f830ba5004abb0ec5518f9ea16087e
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Sat Apr 26 18:56:05 2008 +0100
+
+    Fix missing error condition
+
+commit f5c5ffc175cb383c92ea0fa8c08cfb087c5f3083
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Mon Apr 21 17:24:33 2008 +0100
+
+    Xlib warning fixes
+
+commit 6b6caeea830a977bdb54688cfb648d879821e752
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Fri Apr 18 02:50:55 2008 -0400
+
+    Add some dead_key sequences to en_US.UTF-8 Compose table
+    
+    Make use of the new dead key symbols added to x11proto’s
+    commit 44e24a27bca023cf7b799f191fe6d52e12efbe5f (which
+    was in responce to bug #15446).
+
+commit 8f9b039580deaf658e464b7d6254064fcf183df6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Apr 14 19:09:42 2008 -0700
+
+    Update ac_define_dir macro in acinclude.m4 to 2008-04-12 version
+
+commit 9f5e96eb91ab55dd441c3e94b75caf48c588778f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Apr 14 18:21:14 2008 -0700
+
+    Fix mismatched brace indenting
+
+commit a19f9c65ee9e5e5d783feaa84998c36439b0288b
+Author: Bart Massey <bart@cs.pdx.edu>
+Date:   Fri Apr 4 18:58:45 2008 -0700
+
+    added error check in Xcms color file parser; closes bug #15305
+
+commit 12e8d0d01dd72ce98e7683ddb1bde181b7ed246f
+Author: Christian Weisgerber <naddy@mips.inka.de>
+Date:   Tue Mar 18 07:30:05 2008 +0100
+
+    ConnDis: properly cast 'addr' before accessing it as a byte array.
+    
+    If you use XDM-AUTHORIZATION-1 authorization keys for remote X11
+    clients over IPv6, the clients are liable to segfaults.
+
+commit 64325f38bab082a8e0e9ce779a8e582de5c8588e
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Sat Mar 15 12:29:33 2008 -0700
+
+    Fix fd.o bug 15023: make Xlib sync correctly given many void requests
+    
+    If given many requests without replies, Xlib may not sync until it flushes
+    the output buffer.  Thus, if Xlib can fit enough requests in the buffer to
+    pass by the number of requests it would normally sync after (65536 -
+    BUFSIZE/sizeof(xReq)), it will sync too late.  The test case in bug 15023
+    demonstrated this by issuing a request with a reply (ListExtensions) at
+    just the right time to get confused with the GetInputFocus reply issued in
+    response to the sync 65,536 requests later; the test case used an async
+    handler to watch the replies, since otherwise it could not issue a request
+    without waiting for the response.  When the test case failed, Xlib's sync
+    handler would eat the ListExtensions reply, and the test case's async
+    handler would see the GetInputFocus reply.
+    
+    Fix this by replacing SEQLIMIT with a function sync_hazard() that uses the
+    buffer size to figure out when the sequence numbers could potentially wrap
+    before the next flush.
+    
+    With this commit, the test case consistently passed, and the async reply
+    handler always saw the ListExtensions reply.
+    
+    Commit by Jamey Sharp and Josh Triplett.
+
+commit a5395563bbee15fabe1e8fd7aa86f9f314d8d30e
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Sat Mar 15 13:39:13 2008 -0400
+
+    Fix typo
+    
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+
+commit f07585ca27a8487bc66dfe41486c823f0fdcea7d
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Mar 15 17:32:57 2008 +0200
+
+    configure.ac: Don't search for legacy X11 headers
+    
+    This can actually break cross-compiles, so don't do it anymore.
+
+commit bf69541238c7df6606340c0f389e5c47149b29c7
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Mar 9 09:08:07 2008 +0100
+
+    nuke RCS Ids
+
+commit 5e98aed13e529638df744e45893c471d5f2014fb
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Mar 6 16:10:33 2008 -0500
+
+    libX11 1.1.4
+
+commit 8e085971dc661da9f80ff6b67747459c0fb15c08
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Feb 28 20:17:41 2008 -0800
+
+    Man page typo fixes
+
+commit 1a1a42a3ca1dfaf42f1094936b71c140fc030fcb
+Author: Søren Sandmann Pedersen <sandmann@redhat.com>
+Date:   Sun Feb 24 20:03:35 2008 -0500
+
+    XIM: Fix a hand when switching input context.
+    
+    Red Hat bug #201284.
+
+commit e02e4ccafcaf3eb8993152dfcbfbee0240ea2db2
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Sun Feb 24 20:00:43 2008 -0500
+
+    Bug #14029: Don't LockDisplay() recursively.
+    
+    See also Red Hat bugzilla #326461.
+
+commit e5892467ae3308c8651be76e06db322dcbc08522
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Feb 15 17:27:53 2008 -0800
+
+    Add support for building lint library with --enable-lint-library
+
+commit e3eb83ec6a9bffa63cdffd94f077c12f85ad7240
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Feb 11 20:11:43 2008 -0800
+
+    Spell out number in XkbGetKeyVirtualModMap man page to avoid cpp errors from #
+
+commit d5ceed7a73a6b61758ddb6ff4e194955fbd5c185
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Feb 8 16:46:46 2008 -0800
+
+    Add WM_LOCALE_NAME to list of properties set in XSetWMProperties comment
+
+commit 416a812200f24d19149dcc497e5c51a0608120f6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Feb 8 15:31:31 2008 -0800
+
+    XErrorDB updates for Render 0.9 & XFixes 4.0
+
+commit 16a76091cd632e5a3708e235ff864b58f3e4613e
+Author: Kim Woelders <kim@woelders.dk>
+Date:   Sat Dec 22 21:45:23 2007 +0100
+
+    Fix bs_BA entries in locale.dir.pre
+    
+    X.Org bug#13786 <http://bugs.freedesktop.org/show_bug.cgi?id=13786>
+
+commit 32115c563b87d2f37e3f9de70fbd0f4d9e424aea
+Merge: 8f0bd3f... e8d4cef...
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Fri Dec 14 22:43:47 2007 -0500
+
+    Merge branch 'master' of ssh://git.freedesktop.org/git/xorg/lib/libX11
+
+commit 8f0bd3f445cbdcc67650f6e8e3baf2ed89cb3695
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Fri Dec 14 22:42:59 2007 -0500
+
+    add a comment to en_US.UTF-8/Compose
+
+commit 4d6c45e60ed13d3b0fea10413873d6a74f9d6a3b
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Fri Dec 14 22:40:13 2007 -0500
+
+    Add <dead_stroke> compose sequences
+    
+    The added sequences match the existing <Multi_key> <slash> sequences.
+    
+    This is related to bug #12765¹.
+    
+    1] https://bugs.freedesktop.org/show_bug.cgi?id=12765
+
+commit e8d4cefa0837afa149a10e981528b368485a9e38
+Author: Jeremy Huddleston <jeremy@yuffie.local>
+Date:   Mon Dec 10 23:00:44 2007 -0800
+
+    Added launchd support.
+
+commit 13ac80469f6958cabac596834e203bd9cb6d4c94
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Wed Dec 5 20:14:03 2007 -0500
+
+    Update the currency symbols block of en_US.UTF-8/Compose.pre
+    Add XCOMM lines a la the existing NEW SHEQEL SIGN entry for
+    the KIP, TUGRIK, DRACHMA. GERMAN PENNY, PESO, GUARANI,
+    AUSTRAL, HRYVNIA and CEDI SIGNs.
+
+commit b0a8f2ec4ba698841683f8ce389f9d72e6bce53e
+Author: Anton Zinoviev <anton@lml.bas.bg>
+Date:   Wed Dec 5 19:56:03 2007 -0500
+
+    Additions to the Compose file for UTF-8
+    From bug #5371¹
+    
+    Commit 5cf5bc76642bfece7cb5b76faf414bf445f14489 left out this change
+    from those in attachment #4122².  The post³ on xorg resulted in only
+    a positive reply⁴ from Daniel, so this block is now also commited.
+    
+    1] https://bugs.freedesktop.org/show_bug.cgi?id=5371
+    2] https://bugs.freedesktop.org/attachment.cgi?id=4122
+    3] http://article.gmane.org/gmane.comp.freedesktop.xorg/20628
+    4] http://article.gmane.org/gmane.comp.freedesktop.xorg/23966
+    
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+    Acked-by:  Daniel Stone <daniel@fooishbar.org>
+
+commit 438d02ebc08ee171cf1d3936f4c81050d428ab92
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Tue Dec 4 17:25:39 2007 -0500
+
+    Fix the <U\x+> keysyms in the en_US.UTF-8 Compose file
+    
+    Based on src/KeysymStr.c and src/StrKeysym.c and comments in
+    bugs #11930¹ and #5129² it is clear that <U100XXXXX> is invalid;
+    those should be in the form U plus the hex of the UCS Code Point.
+    
+    The 0x01000000 is ORed in by the code.
+    
+    This update fixes all of those.
+    
+    1] https://bugs.freedesktop.org/show_bug.cgi?id=11930
+    2] https://bugs.freedesktop.org/show_bug.cgi?id=5129
+
+commit 02e04059c89e175f51647e3b031344f743286b34
+Merge: 1254c57... b57129e...
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Tue Dec 4 06:55:04 2007 -0500
+
+    Merge branch 'master' of ssh://git.freedesktop.org/git/xorg/lib/libX11
+
+commit 1254c57dd3a8d6ea87041b2f63024f99094f290f
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Tue Dec 4 06:53:55 2007 -0500
+
+    Use the new dead_psili and dead_dasia keysyms added to proto/x11proto 7.0.11
+    Inspired by bug 11930¹:
+    
+    Commit 40ed4eef92e31fcf7ea0a436e1a00cdf49484c1b to x11proto added dead_psili
+    and dead_dasia keysyms.  Make use of them in the en_US.UTF-8 and el_GR.UTF-8
+    Compose files.
+    
+    This was done with a pair of perl scripts based on the one quoted in the
+    log for commit c76d30253f1483ac8200ad5c032a818907e65030.
+    
+    1] https://bugs.freedesktop.org/show_bug.cgi?id=11930
+
+commit b57129ef324c73ee91c2a796b800c4b45f4d4855
+Author: Jeremy Huddleston <jeremy@yuffie.local>
+Date:   Mon Dec 3 20:04:19 2007 -0800
+
+    Use __APPLE__ instead of __DARWIN__
+
+commit b9c032e1d5ed08510863dfb91b8bda588e6c8c9e
+Author: Jeremy Huddleston <jeremy@yuffie.local>
+Date:   Wed Nov 28 16:43:49 2007 -0800
+
+    Define __DARWIN__ when host_os == darwin* as needed in SetLocale.c
+
+commit 4b91ed099554626f1ec17d5bdf7bd77ce1a70037
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Nov 21 16:50:04 2007 -0800
+
+    X.Org Bug #4312: incorrect comment asterisk in XAnyEvent.3x man page
+    
+    X.Org Bugzilla #4312 <http://bugs.freedesktop.org/show_bug.cgi?id=4312>
+    
+    Protect /* sequences from cpp pre-processor removal without transforming
+    to Unicode mathematical asterisk character
+
+commit 2af660c2fcd15c86c66459bfc074c190ea1462e6
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Mon Oct 29 10:46:20 2007 -0700
+
+    Two threads can request sequence sync and XID fetch simultaneously.
+    
+    So don't assert that they can't.
+    
+    This makes the Xlib/XCB implementation of _XAllocID more closely
+    resemble the traditional Xlib version.
+
+commit 6e5485e0a5e3ab738becad12193e760c5fee83a4
+Author: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Date:   Sun Oct 28 04:44:00 2007 -0800
+
+    X.Org Bug #12983: Typos in ./man/XChangeKeyboardControl.man
+    
+    <http://bugs.freedesktop.org/show_bug.cgi?id=12983>
+
+commit 24527c92fd1f433ea135e85ec876a94a529fe500
+Author: Yann Droneaud <ydroneaud@mandriva.com>
+Date:   Wed Oct 24 19:26:07 2007 +0300
+
+    XIM: Properly initialise client event
+    
+    Make sure all ClientMessage fields are initialised to 0 before we send it.
+
+commit e41477f37b0d9b74a056d22dbf0073a94eecb9d6
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Oct 24 19:22:22 2007 +0300
+
+    Colours: Fix --disable-xcms
+    
+    Disable large tracts of colour management code when passing
+    --disable-xcms.
+
+commit 11ea09745efa8de7dc82fe30ebd2393f08390957
+Author: Eric Anholt <eric@anholt.net>
+Date:   Fri Aug 31 17:30:33 2007 -0700
+
+    Bug #2081: Note the range limitation of XSetScreenSaver arguments.
+
+commit 31540f1438ec63faf37044f2fd654b335ddf80f0
+Author: Kristian Høgsberg <krh@redhat.com>
+Date:   Wed Aug 29 19:50:57 2007 -0400
+
+    Add GLX 1.4 requests and errors.
+
+commit 7c996f78914c77fe17e9f4feede980d895d9df51
+Author: Eric Anholt <eric@anholt.net>
+Date:   Tue Aug 28 15:15:11 2007 -0700
+
+    Add XF86 keyboard/monitor brightness keysyms to the keysymbdb.
+
+commit fa4effe82759f864a22a2dc6c920fa72ddb175a8
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Sun Jan 14 10:48:00 2007 -0800
+
+    Bug #9658: Bad markup on XIfEvent.3x
+    
+    X.Org Bugzilla #9658 <https://bugs.freedesktop.org/show_bug.cgi?id=9658>
+
+commit 74cba78daa738ef4d92096107d95c1a585933666
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Sun Jan 14 10:43:00 2007 -0800
+
+    Bug #9655: Bad markup in XrmUniqueQuark.3x
+    
+    X.Org Bugzilla #9655 <https://bugs.freedesktop.org/show_bug.cgi?id=9655>
+
+commit 4341d1a34b2a2e460b58131b6fd81935f3355bbc
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Sun Jan 14 10:43:00 2007 -0800
+
+    Bug #9654: Bad markup in XrmGetFileDatabase.3x
+    
+    X.Org Bugzilla #9654 <https://bugs.freedesktop.org/show_bug.cgi?id=9654>
+
+commit 2db713252090cae08f0200fecad4fc25fb64c8b1
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Sun Jan 14 10:40:00 2007 -0800
+
+    Bug #9653: Bad markup in XQueryColor.3x
+    
+    X.Org Bugzilla #9653 <https://bugs.freedesktop.org/show_bug.cgi?id=9653>
+
+commit 9d3ceea4b902e0471824c1e07ad64342b9a1114e
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Sun Jan 14 10:40:00 2007 -0800
+
+    Bug #9652: Bad markup in XDrawArc.3x
+    
+    X.Org Bugzilla #9652 <https://bugs.freedesktop.org/show_bug.cgi?id=9652>
+
+commit 2e7e0748d353d7f53bbd65ec6bf0df8758528ddc
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Sun Jan 14 10:39:00 2007 -0800
+
+    Bug #9651: Bad markup in XcmsColor.3x
+    
+    X.Org Bugzilla #9651 <https://bugs.freedesktop.org/show_bug.cgi?id=9651>
+
+commit c316aaf0aab06951db9dc5c9c1148bfea835d885
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Sun Jan 14 10:38:00 2007 -0800
+
+    Bug #9650: Bad markup in XLoadFont.3x manual page
+    
+    X.Org Bugzilla #9650 <https://bugs.freedesktop.org/show_bug.cgi?id=9650>
+
+commit ca5d9a625ea0965853fa9e74a448b8c29c78ec95
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Tue Jan 2 10:18:00 2007 -0800
+
+    Bug 9523: Markup problems in XQueryExtension.3x
+    
+    X.Org Bugzilla #9523 <https://bugs.freedesktop.org/show_bug.cgi?id=9523>
+
+commit fe713c616e29ba19c179b43c18eca1035079ce18
+Author: Ian Romanick <idr@us.ibm.com>
+Date:   Tue Aug 21 14:56:33 2007 -0700
+
+    Make sure nls/am_ET.UTF-8/Makefile is created by configure.
+
+commit e3430616f26b68e1439143cbe10732f3fc329d20
+Author: Eric S. Raymond <esr@thyrsus.com>
+Date:   Tue Jan 2 08:40:00 2007 -0800
+
+    Bug #9516: Markup error in XAllocWMHints.3x
+    
+    X.Org Bugzilla #9516 <https://bugs.freedesktop.org/show_bug.cgi?id=9516>
+
+commit d8fe979fc929833e8c754aed32641786d5a0622b
+Merge: 21ca953... 4ec1723...
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Aug 20 15:34:50 2007 -0400
+
+    Merge branch 'master' of ssh://git.freedesktop.org/git/xorg/lib/libX11
+
+commit 21ca953337fb221b85345bf35ce1a98a0dcb2bf2
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Aug 20 15:34:03 2007 -0400
+
+    Fix typo
+    The code <U1000000D> was used where <U10000DC> was obviously intended.
+    
+    It is possible that <Udiaeresis> should be used instead, if that will
+    not break anyone’s setup.
+
+commit 4ec1723fff729440cd3349c1f95d87d2a6ba89cf
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Aug 20 15:25:48 2007 -0400
+
+    Add compose file for Ethiopic to match new keyboard in xkeyboard-config
+    From bug report:
+    
+      https://bugs.freedesktop.org/show_bug.cgi?id=11307
+
+commit eff33ae525337ce2026be135a26464c7b1237113
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Aug 18 17:58:23 2007 -0400
+
+    Patch for Catalan locales
+    From bugzilla bug 10943¹:
+    
+      There are several Catalan locale codes which presently can
+      be used in X11 systems; especially after they were accepted
+      in belocs-locale-data².
+    
+      In the following patches, I³ add ca_AD, ca_FR and ca_IT Catalan
+      locale codes.  For instance, without this, using ca_AD (actually
+      a quite used locale⁴) some applications (eg. Emacs or Skype)
+      cannot display Catalan diacritic marks as you type them.
+    
+    1] https://bugs.freedesktop.org/show_bug.cgi?id=10943
+    2] http://lists.debian.org/debian-devel-changes/2005/07/msg01429.html
+    3] Toni Hermoso Pulido <toniher@softcatala.org>
+    4] https://launchpad.net/~ubuntu.cat/+members
+
+commit 1f980cb7d022f53d0aee9e793b08203fb888e86e
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Aug 18 17:47:04 2007 -0400
+
+    Add additional Euro signs to compose
+    Inspired by bug 7419¹ make all of:
+    
+        C=, =C, c=, =c, E=, =E, e=, E=
+    
+    after <Multi_key> generate € U+20AC EURO SIGN.
+    
+    1] https://bugs.freedesktop.org/show_bug.cgi?id=7419
+
+commit 4b0a14521449dfce8b4347bd17243efd1d3eae2d
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Aug 18 17:29:08 2007 -0400
+
+    Compose fix for Latin-1 (from Debian)
+    The description from bugzilla bug 7417¹ is:
+    
+      We've been shipping this patch for some time in Debian now. The
+      problem description from the patch header is reproduced below. You
+      may want to note the licensing issue mentioned below, but we've been
+      shipping it because the method by which this particular patch was
+      generated and updated was also given below.
+    
+      This patch by Denis Barbier.
+    
+      The X11 protocol states that Unicode keysyms are in the range
+      0x01000100 - 0x0110FFFF.  If the result of composing characters is a
+      Unicode codepoint, X returns the corresponding Unicode keysym, which
+      is its Unicode codepoint augmented by 0x01000000.  Latin-1
+      characters must not appear with their Unicode codepoints in compose
+      files, otherwise the returned composed character lies in the range
+      0x01000000 - 0x010000FF which is not valid.
+    
+      There are two solutions: either fix composing routines to return
+      0xZZ instead of 0x010000ZZ (where Z is an hexadecimal digit), or
+      replace U00ZZ by their corresponding keysyms in compose files.  The
+      latter is more logical and less error prone, so compose files will
+      be patched.  Many applications accept these invalid Unicode keysyms,
+      but few of them don't, most notably xemacs.  Only UTF-8 locales are
+      affected.
+    
+      This has been fixed very recently in XFree86 CVS (but not xorg), but
+      for licensing reasons, this patch is not grabbed.  Instead automatic
+      conversion is performed by:
+    
+        sed -e '/XK_LATIN1/,/XK_LATIN1/!d' /usr/include/X11/keysymdef.h \
+        | grep -v deprecated | grep 0x0 \
+        | sed -e 's/0x0/U0/' -e 's/XK_//' \
+        | awk '{ printf "s/\\b%s\\b/%s/ig\n", $3, $2; }' > sedfile
+        for f in nls/*.UTF-8/Compose.pre
+        do
+          sed -f sedfile $f > $f.tmp && mv $f.tmp $f
+        done
+    
+    [I edited the quoted script to update it for the current location of
+    the installed keysymdef.h and the current layout of the libX11
+    repo. -JimC]
+    
+    I applied the script, not the patch attached to the bugreport.
+    
+    1] https://bugs.freedesktop.org/show_bug.cgi?id=7417
+
+commit 5cf5bc76642bfece7cb5b76faf414bf445f14489
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Aug 18 17:13:41 2007 -0400
+
+    Add some compose sequences
+    
+    Add some compose sequences from the patch in bug 5371 (attachment 4122).
+    
+    Cf:
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=5371
+    https://bugs.freedesktop.org/attachment.cgi?id=4122
+
+commit d4002e389dd69780dfc7c2f7bd3cb0c57f05d4f8
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Aug 18 13:57:31 2007 -0400
+
+    Fix SMP Compose targets
+    The compose targets from the SMP (plane 1) were incorrect.
+    
+    At some point the 0x10000 bit had been lost.
+
+commit f1ed3da9a30a1f0264fdc7d1c6466f27fe2a3d7d
+Author: Jeremy C. Reed <reed@glacier.reedmedia.net>
+Date:   Thu Aug 16 17:37:22 2007 -0500
+
+    Fix a mutex reference-counting bug.
+    
+    I was told that some systems have a much more permissive libpthread.
+    I was asked to commit this. This is from NetBSD's X source.
+    (I didn't receive any feedback on xorg list for over two weeks
+    about this.)
+
+commit ac00a44b4875de70382da5a40dd87f976e5b9327
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed Aug 1 20:36:03 2007 +0200
+
+    Bumped version to 1.1.3.
+
+commit 76fae9cba1e9bdf7f0eb2ff2b90153d622136cf0
+Author: Joerg Sonnenberger <joerg@netbsd.org>
+Date:   Fri Jul 27 11:15:47 2007 -0700
+
+    Fail properly on errors in recursive make.
+
+commit 1a18319b3bde08dd9ef69c7cd735a76000cf3177
+Author: Brice Goglin <Brice.Goglin@ens-lyon.org>
+Date:   Thu Jul 26 23:31:15 2007 +0200
+
+    Add missing override parameter in XrmCombineDatabase prototype in the manpage
+    
+    Reported by Arnaud Giersch <arnaud.giersch@iut-bm.univ-fcomte.fr>
+    in http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=393434
+    and https://bugs.freedesktop.org/show_bug.cgi?id=9948
+    
+    Also add the type of the second argument in XrmMergeDatabases.
+
+commit 6f0764d4b56f64786b4980839ca262f10a51af6f
+Author: Brice Goglin <Brice.Goglin@ens-lyon.org>
+Date:   Thu Jul 26 22:53:52 2007 +0200
+
+    Clarify return value of XGetCommand in case of error in the manpage
+    
+    Reported by Sean Perry <shalehperry@attbi.com>
+    in http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=133348
+    and https://bugs.freedesktop.org/show_bug.cgi?id=9828
+
+commit b8bef57342632cc2d25580bb7daa3839bae04d89
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 25 17:44:06 2007 -0700
+
+    Include comment/copyright/license for AC_DEFINE_DIR in acinclude.m4
+
+commit 590cde811a79375231c59ed8583e02b111ed567c
+Author: Kean Johnston <kean@armory.com>
+Date:   Thu Jul 19 16:44:20 2007 -0700
+
+    Reset hostname when falling back from :0 to hostname/localhost:0 as well
+
+commit d334665e619e9db657a2ea2764a8b852401d4a3f
+Author: Kean Johnston <kean@armory.com>
+Date:   Tue Jul 17 16:34:30 2007 -0700
+
+    LOCALCONN fallback changes DisplayString() output, breaks KDE
+    
+    See <http://lists.freedesktop.org/archives/xorg/2007-July/026443.html>
+
+commit 8e76bcf3cafda85058ce5f35f1f81929f4772f72
+Author: Olivier Blin <blino@mandriva.org>
+Date:   Mon Jun 11 18:32:09 2007 +1000
+
+    fix XGetMotionEvents arguments order - Fixes bug 11222
+
+commit c2f88cdf5cd9c94b77e5bfdac572b5ac06ab4aa8
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Jun 10 16:19:59 2007 -0700
+
+    Fix locking in _XimGetWindowEventmask.
+    
+    Now that XFilterEvent drops the Display lock before invoking callback
+    functions, _XimGetWindowEventmask is called without the lock held. So
+    when it called _XGetWindowAttributes, a variant of XGetWindowAttributes
+    that does not lock the Display, Xlib/XCB would assert:
+    
+    xcb_xlib.c:50: xcb_xlib_unlock: Assertion `c->xlib.lock' failed.
+    
+    Should fix Gentoo #156367, Ubuntu #87947, Debian #427296. And others?
+
+commit 65f0ab5d46d80d55fc04d4eb14fa05f130eb8b9c
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Jun 3 21:41:47 2007 -0700
+
+    Move security fixes to the top of NEWS, and fix spacing.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit a549a258b8fcb1ba9d0c1b01b72967e385f67cab
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Jun 3 21:29:40 2007 -0700
+
+    Add NEWS item for bugfix in commit e2c1d788d1fe7bd2d34756493951552441e59b8c.
+    
+    Commit by Josh Triplett and Jamey Sharp
+
+commit 5123b77a3d32d3ad479462f319762c328278aed9
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Jun 3 21:24:54 2007 -0700
+
+    Xlib/XCB: Inline and simplify handle_event, since only process_responses calls it now.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit 582ca690ea4f3ffd2b94826c4db97229bd3c7238
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Jun 3 20:59:12 2007 -0700
+
+    Xlib/XCB: Fix _XReadEvents to always enqueue a new event, even if an error occurs
+    
+    Commit c337f9de7cfd89f983f83956b7457a274dd412f3 broke the invariant that
+    _XReadEvents always enqueues at least one event even if an error occurred,
+    because the one call to xcb_wait_for_event would then return an error, not an
+    event, and nothing else ensured that process_responses would obtain an event.
+    Fix this by reverting most of c337f9de7cfd89f983f83956b7457a274dd412f3 and
+    f417570735aac865eb6b576d1ea76b5bfcd8573b and implementing the correct fix.  In
+    process_responses, wait_for_first_event now serves as a flag, cleared when
+    actually handling an event.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit e2c1d788d1fe7bd2d34756493951552441e59b8c
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Jun 3 17:33:23 2007 -0700
+
+    Xlib/XCB: Only remove pending_requests when there are provably no more responses.
+
+commit 7a6dbd4b07ca0a49c30ca7a1d2437eafb2e15eab
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Sun Jun 3 15:39:39 2007 -0700
+
+    Bump version number to 1.1.2, and add NEWS entry for 1.1.2
+    
+    Signed-off-by: Josh Triplett <josh@freedesktop.org>
+
+commit 416f38f2e67ee1979b3d2feac6f06b3670238804
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Sun Jun 3 12:13:44 2007 -0700
+
+    Revert "Revert "include: don't distribute XlibConf.h""
+    
+    This reverts commit 79fa3d8070d95b960ba486f2439225872471dadd.
+    
+    Re-revert the XlibConf.h change, which prevented distribution, not
+    installation.
+
+commit 79fa3d8070d95b960ba486f2439225872471dadd
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Sat Jun 2 22:05:16 2007 -0700
+
+    Revert "include: don't distribute XlibConf.h"
+    
+    This reverts commit c9e28e05ae01ce8a29bea09df759b6271865b44c.
+    
+    The installed XlibInt.h includes XlibConf.h , so libX11 should ship
+    XlibConf.h.  (Commit c9e28e05ae01ce8a29bea09df759b6271865b44c didn't actually
+    prevent automake from shipping XlibConf.h, because it used
+    nodist_x11include_HEADERS rather than nodist_HEADERS.)
+
+commit f417570735aac865eb6b576d1ea76b5bfcd8573b
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Jun 2 17:59:15 2007 -0700
+
+    Xlib/XCB: inline wait_or_poll_for_event, which now had only one caller.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit c337f9de7cfd89f983f83956b7457a274dd412f3
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Jun 2 17:46:41 2007 -0700
+
+    Xlib/XCB: Ensure _XReadEvents reads at least one new event and blocks for exactly one event.
+    
+    Commit by Jamey Sharp and Josh Triplett.
+
+commit 7f66c897f04806b75e574b55b48921b48045e3f9
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Jun 2 16:43:39 2007 -0700
+
+    Update _XReply's copy of _XCBUnlockDisplay's guts.
+    
+    We introduced this bug in 6b81cbbedfb521ce046b77ee3cc54e884a1dc0c5.
+    
+    Also add a comment in _XCBUnlockDisplay to discourage this problem from
+    respawning.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit 740ead23512f8d2eaafaa69e514f1ebafad475b9
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Jun 2 16:01:01 2007 -0700
+
+    Xlib/XCB: Avoid re-crashing after _XIOError.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit 6b81cbbedfb521ce046b77ee3cc54e884a1dc0c5
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Jun 2 12:30:30 2007 -0700
+
+    Hold XCB's Xlib lock even when only the user lock (XLockDisplay) is held.
+    
+    An Xlib client can query Display state, such as with NextRequest, while
+    it holds only the Xlib user lock (between XLockDisplay and
+    XUnlockDisplay), so XCB requests in other threads should be blocked when
+    the Xlib user lock is held.
+    
+    We acquire the lock even when XInitThreads was not called, so that pure
+    XCB code can use multiple threads even in an otherwise single-threaded
+    Xlib application.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit 95523387d619af5b400748898d722e080b5ce1a6
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Jun 2 11:57:39 2007 -0700
+
+    Allow re-entrant Xlib calls from _XIOError.
+    
+    Some libraries try to clean up X resources from atexit handlers, _fini,
+    or C++ destructors. To make these work, the Display lock should be
+    downgraded to a user lock (as in XLockDisplay) before calling exit(3).
+    This blocks Xlib calls from threads other than the one calling exit(3)
+    while still allowing the exit handlers to call Xlib.
+    
+    This assumes that the thread calling exit will call any atexit handlers.
+    If this does not hold, then an alternate solution would involve
+    registering an atexit handler to take over the lock, which would only
+    assume that the same thread calls all the atexit handlers.
+    
+    Commit by Josh Triplett and Jamey Sharp.
+
+commit 91b02b8064f4e0bcc56019f0722914850008a597
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Thu May 17 19:07:34 2007 +0200
+
+    More constification.
+
+commit a4f3841940158351f9424c3f59b305cce877177d
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Thu May 17 00:29:43 2007 +0200
+
+    Constified composite text charset table.
+
+commit 0581c0aa6039e6b2abb9f7b0a4f9904d8e01f00e
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed May 16 23:19:22 2007 +0200
+
+    Have the compiler fill in hexTable so we don't have to do it at runtime.
+
+commit 0e8d9ca47dab0d069e305d5784d05f2ade04f0a8
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed May 16 19:36:23 2007 +0200
+
+    More constification.
+
+commit 6d2bed8f04942b4de086a519ac693e729c9fdeea
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed May 16 19:18:20 2007 +0200
+
+    Constify and clean up token table.
+
+commit 6c508eab5df5d517f7e4cbe6087308cd53a564b2
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed May 16 18:24:42 2007 +0200
+
+    Constified more tables.
+
+commit e699c4231c205ef00d687b6412308d031b99806b
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed May 16 18:01:23 2007 +0200
+
+    Constified error list.
+
+commit c76d30253f1483ac8200ad5c032a818907e65030
+Author: Jan Willem Stumpel <jstumpel@planet.nl>
+Date:   Fri May 4 12:00:49 2007 -0700
+
+    Update el_GR.UTF-8/Compose.pre to match changes in xkeyboard-config cvs
+    
+    Cf:
+    
+      https://bugs.freedesktop.org/show_bug.cgi?id=10851
+      https://bugs.freedesktop.org/show_bug.cgi?id=10824
+      http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=386385
+    
+    The greek keyboard definition was changed to replace dead_horn and
+    dead_ogonek with U0313 COMBINING COMMA ABOVE (aka Psili) and U0314
+    COMBINING REVERSED COMMA ABOVE (aka Dasia).
+    
+    This patch modifies the Greek Compose.pre to match.
+    
+    It is generated by the script Jan Willem Stumpel <jstumpel@planet.nl>
+    posted to 386385@bugs.debian.org:
+    
+    #!/usr/bin/perl
+    while (<>) {
+      print $_;
+      if (/dead_horn/) {
+        s/dead_horn/U0313/;
+        print $_;
+      }
+      elsif (/dead_ogonek/) {
+        s/dead_ogonek/U0314/;
+        print $_;
+      }
+    }
+
+commit a48386ce6b5f8fd2d9dc11a966c9bf5da59f3831
+Author: Magnus Kessler <Magnus.Kessler@gmx.net>
+Date:   Tue May 1 15:20:08 2007 +0200
+
+    Switched function definitions from K&R to ANSI style.
+
+commit 605d357074d556a05a3fba2e85cbea36a3204248
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Tue May 1 14:47:03 2007 +0200
+
+    Tweaked configure output about the man pages suffix.
+
+commit 9824b40d2af4ca2376512c1be7743da0d5065900
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Apr 28 00:42:18 2007 -0700
+
+    Fix typo in nroff macro in XkbAddGeomOverlayKey.man
+
+commit f93849dcc68bd5042ea0884e5190dc7c35b31d68
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Apr 28 00:30:55 2007 -0700
+
+    Protect C comments and #defines in XKB man pages from being mangled by cpp
+
+commit f2f27d4763c7665e422fab10b96b4cf5ad6c0a6f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Apr 28 00:14:50 2007 -0700
+
+    Add Makefile to process/install XKB man pages
+
+commit d9954c6f6f3a8c406b946acd0d034ff83c656156
+Author: Dennis Arellano <Dennis.Arellano@Sun.COM>
+Date:   Thu Aug 19 00:00:00 1999 -0700
+
+    Add man pages for XKB API's
+    
+    Man pages originally written for X11R6.4 integration to Solaris 7 11/99
+    Sun bug id 4258344: Add new XKB API manpages for 6.4 upgrade
+    <http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=4258344>
+    
+    (Volunteer needed to convert prototypes in man pages to ANSI C style...)
+
+commit f640a49b5e2ebf29f9d655df544c63bf826f619a
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Fri Apr 20 18:39:59 2007 +0200
+
+    Markup tweak for XOpenIM.
+
+commit e972b0bb255af4f3258217852542faf5afa60b28
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri Apr 20 18:35:09 2007 +0200
+
+    Bug #9695: Fixed a few argument types in the XOpenIM manpage.
+
+commit b4e2276f329fa42397cb8609cfcd34ebafd3d96b
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri Apr 20 18:28:52 2007 +0200
+
+    Bug #9697: Fixed documentation of XVisualInfo struct.
+    
+    The "depth" member was said to be unsigned int, but it's signed.
+
+commit 4068f3dae01c630f825002673b1d3a047ad61863
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri Apr 20 16:41:21 2007 +0200
+
+    Bug #9696: refer to XDefineCursor() instead of XDefineCusor().
+
+commit 603c2f88d4e57ce1a3c16e8b6246866e6edd8fa8
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Sat Apr 7 14:42:55 2007 +0200
+
+    Use unistd.h to get getresuid() and friends.
+    
+    This works since we now have _GNU_SOURCE defined.
+
+commit 0300f295bbd3a0c7c46baac8e0a27aeaf53c9d9b
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Sat Apr 7 14:27:12 2007 +0200
+
+    Bug #10562: Define _GNU_SOURCE on glibc systems.
+
+commit a225a0be48770beb689d5ac5da97073634f7deab
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Fri Apr 6 12:46:25 2007 +0200
+
+    For nls/*.pre, allow people to comment lines by starting them with '##'.
+    
+    This fixes a bunch of cpp warnings from nls/en_US.UTF-8/Compose.pre.
+    Fixing that file would have been a larger diff, and using ## may be
+    nicer to use anyway.
+
+commit 1c75a9479011e5f1ad01c950628d0ef5a302d8b6
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Fri Apr 6 11:59:31 2007 +0200
+
+    Bug #10475: Fixed lots of char*/const char* mixups.
+    
+    I didn't fix all of them, as that would require touching
+    public headers.
+
+commit 680dd50193b5b3fcabdd3f1fcbd6a889d5a95c54
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Thu Apr 5 11:53:18 2007 +0200
+
+    Fix 64bit issues with reallocation.
+
+commit 4d38aeaca42d0bdfe34a833a142ee4d895de03bf
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed Apr 4 18:41:18 2007 +0200
+
+    Fixed a few warnings.
+
+commit 7dc7ef398b6ad90ccd1680ed9cd1cfdd47312f5a
+Author: Matthieu Herrb <matthieu@roadrock.(none)>
+Date:   Tue Apr 3 15:39:52 2007 +0200
+
+    Multiple integer overflows in the XGetPixel() and XInitImage functions
+    
+    CVE-2007-1667
+
+commit 0284b144340a455a4b5b5011d81ac5a610372291
+Author: David Baron <dbaron@dbaron.org>
+Date:   Fri Mar 30 17:07:46 2007 +0200
+
+    Bug #7703: Fixed XSetSizeHints() et al wrt use of uninitialized data.
+    
+    Now only those fields of the respective hint struct are set that
+    are actually valid in the input data.
+    The changed functions are:
+    XSetSizeHints(), XSetWMHints() and XSetWMSizeHints().
+
+commit 0994faa0c76c45b106442db461b8a30a3e1c9395
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Thu Mar 29 17:31:25 2007 +0200
+
+    Fixed the change from the previous SendEvent commit.
+    
+    Testing a different patch than the one you commit is bad, right?
+
+commit 398d75528a84f4b8414eb0e363cf53b1b16f6fdf
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Wed Mar 28 22:23:44 2007 +0200
+
+    Bug #10292: Fixed a memory leak related to XOpenDisplay() in the XCB code.
+
+commit ab0bcd07957cecc8e7c0e75d5160a625e91264fe
+Author: David Baron <dbaron@dbaron.org>
+Date:   Wed Mar 28 22:21:40 2007 +0200
+
+    Bug #7713: Initialize all of the event's fields before sending it.
+
+commit bc80f9fe3ccce40ee41246b97470c4f0519756ad
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sun Mar 18 13:14:48 2007 +0100
+
+    Bug #9279: Fixed a file descriptor leak.
+
+commit c9e28e05ae01ce8a29bea09df759b6271865b44c
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Dec 16 00:45:19 2006 +0200
+
+    include: don't distribute XlibConf.h
+    
+    Since XlibConf.h is built by configure, don't distribute it.
+
+commit dd1705ced2cac6b4b6b21e79272fcf9bed4bf376
+Merge: 129bbb9... 769b985...
+Author: Jeremy C. Reed <reed@glacier.reedmedia.net>
+Date:   Thu Dec 14 14:23:20 2006 -0600
+
+    Merge branch 'master' of git+ssh://git.freedesktop.org/git/xorg/lib/libX11
+
+commit 129bbb9f9114a571556fa3a24f15ba58a5cdb2de
+Author: Jeremy C. Reed <reed@glacier.reedmedia.net>
+Date:   Thu Dec 14 14:21:19 2006 -0600
+
+    For NetBSD, define the XTHREADLIB and XTHREAD_CFLAGS.
+
+commit 769b9854f7eb1d6d20dd0b4a1c1215ad8e1b77b6
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Dec 6 18:53:00 2006 +0200
+
+    Makefile.am: make ChangeLog hook safer
+    
+    Make ChangeLog hook as safe as possible.
+    (cherry picked from f5d6a3d24095c7ffed86705995d0874c885e7676 commit)
+
+commit 8a8185a649e93b90ffa820387ffdca831227f5a9
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Thu Nov 30 18:33:13 2006 -0800
+
+    Add autogen.sh to EXTRA_DIST.
+
+commit efe817f95ef8d05e863c83147e903140bc860de4
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Nov 30 17:58:35 2006 -0800
+
+    Release libX11 1.1.1.
+
+commit f637a5b03164263a3af2e644cf655e52b015f1bb
+Author: Ross Combs <rocombs@cs.nmsu.edu>
+Date:   Sat Nov 25 14:45:17 2006 -0800
+
+    Debian bug #354315: Clarify return value in XGetWindowAttributes man page
+    
+    This man page does not discuss the actual return values of the
+    function, but says they are of type "Status".  One might assume
+    that this means you could compare it with the "Success" macro.
+    One would be wrong.
+    
+    The X functions seem to have two three types representing status.
+    If it is an "int" there are a number of error codes or "Success"
+    which can be compared against.  If it is a bool, the result can be
+    compared with "True" or "False".  If the return type is "Status" it
+    appears that the return type is either 0 or 1.  Unfortunately the
+    value for Success is zero, so it is important to distinguish
+    between the first two types of return values and the third;
+    otherwise the conditional will be inverted.
+    
+    XGetWindowAttributes() is one of the functions which returns zero
+    for failure.  The man page should make this clear.
+
+commit c6a0b0f18ed1242eeb908f5cf767ab8381edd456
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Nov 25 14:23:45 2006 -0800
+
+    Bug #9154: Always process an event for _XReadEvents, even if an error occurs
+    
+    Previously, process_responses (in the wait_for_first_event case called
+    from _XReadEvents) considered any return from xcb_wait_for_event
+    sufficient to think it had processed an event. If xcb_wait_for_event
+    returned an error, and no more events occurred before process_responses
+    called xcb_poll_for_event, process_responses would try to return with
+    dpy->head NULL, and would fail an assertion for the _XReadEvents
+    postcondition. Now, process_responses continues using xcb_wait_for_event
+    until it gets an event.
+
+commit d56e78acce9b2aa1dd1bf172afedaa3bccd5e1c8
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Sat Nov 25 05:29:31 2006 -0800
+
+    Bug #9153: Fix access to freed memory.
+    
+    The fix for bug #8622 introduced a smaller bug where _XReply would
+    read memory shortly after freeing it. This patch caches the needed
+    value in a stack-allocated variable before the heap-allocated memory
+    is freed.
+
+commit 934ca763bbc0dd7ae460469bfc000ba101602bcc
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Nov 24 19:57:58 2006 -0800
+
+    libx11 doesn't use inputproto in public headers; don't require it in x11.pc
+    
+    Based on a Debian patch.
+
+commit 4255997ef2d92740d51f6e63e9eabcfa089683f0
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Thu Nov 23 07:19:32 2006 -0800
+
+    Release libX11 1.1
+
+commit a1168e11ec9377307c51a7271faec3bf88a63a66
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Nov 21 17:52:34 2006 -0800
+
+    Add note in man-page that XListFontsWithInfo is not thread-safe.
+    
+    _XReply drops the Display lock, so the value of dpy->request may change
+    before _XReply is called again.
+    
+    I discovered this by inspection a year or two ago. I'm pretty confident
+    in the claim, and nobody has come up with an argument for why it's safe
+    despite appearances.
+
+commit 67abe024268c6b1fdee516e5d3a046ccffd7e80a
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Nov 18 15:39:26 2006 -0800
+
+    Bug #8622: Fix response processing order for threaded apps
+    
+    Previously, process_responses (the common code for _XReply,
+    _XReadEvents, and _XEventsQueued) took the current request sequence
+    number as an argument, and did some highly complicated processing to
+    attempt to process responses in order across threads.  This didn't
+    actually work.
+    
+    Now, process_responses handles responses in order, by adding condition
+    variables to the list of outstanding requests in
+    dpy->xcb->pending_requests, and blocking on them when those requests
+    should get processed to allow _XReply to process them; if actually
+    called from _XReply, it returns when _XReply's request should get
+    processed.  _XReply broadcasts on the condition variable after it has
+    read its reply and re-acquired the display lock.
+    
+    Another great commit brought to you by Jamey Sharp, Josh Triplett, the
+    Gobby collaborative text editor, conspy, and ridiculous amounts of SSH
+    forwarding.
+    
+    Signed-off-by: Josh Triplett <josh@freedesktop.org>
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+
+commit 941f02ede63baa46f93ed8abccebe76fb29c0789
+Author: Lars Knoll <lars@trolltech.com>
+Date:   Wed Nov 8 12:17:41 2006 -0800
+
+    Don't hold the display lock around callbacks to the application.
+    
+    This fixes an XCB locking assertion failure, particularly with emacs.
+
+commit e494ecaac1ec8a22bd9a85f800fca74d02e9d358
+Author: Diego 'Flameeyes' Pettenò <flameeyes@gentoo.org>
+Date:   Tue Nov 7 09:32:00 2006 -0800
+
+    Add xcb-xlib dependency to x11.pc when built against XCB.
+
+commit 2302008a3793eb4df8ede777d54fe06505c47eaf
+Author: Eric Anholt <eric@anholt.net>
+Date:   Mon Nov 6 17:11:42 2006 -0800
+
+    XCB: Allocate the right amount of memory for dpy->lock_fns.
+    
+    Fixes a crash I was experiencing on startup of anything using gdk.
+
+commit 5f860655be88108b03ccd97470a0814819254bf0
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Nov 2 17:55:31 2006 -0800
+
+    Release libX11 1.1 RC2 (1.0.99.2).
+
+commit a6f4bbf7b1d725b0f04bd660f57b861a76b19831
+Author: Benno Schulenberg <bensberg@justemail.net>
+Date:   Sun Oct 29 03:10:30 2006 +0300
+
+    nls (en_US): remove long compositions that override shorter (bug #2286)
+    Remove long compositions that override (or get overriden by) later shorter
+    compositions, e.g. a four-key compose sequence that gets overriden by a
+    later three-key compose sequence.
+
+commit 0280bf11ef88673a9b5bba3a91a599260f1f0949
+Author: Benno Schulenberg <bensberg@justemail.net>
+Date:   Sun Oct 29 03:08:36 2006 +0300
+
+    nls: remove shadowed compose entries (bug #2286)
+    Remove compose entries shadowed by others later on.
+
+commit d118f2b1ef10997194b281524177dea7396da7dd
+Author: Benno Schulenberg <bensberg@justemail.net>
+Date:   Sun Oct 29 03:07:15 2006 +0300
+
+    nls: remove duplicate compose entries (bug #2286)
+    Remove a bunch of duplicate entries from various Compose files.
+
+commit 5e1cc2fe20e5904ca1e05a4cb7be13d450a593bb
+Author: Caolan McNamara <caolanm@redhat.com>
+Date:   Sun Oct 29 02:46:15 2006 +0300
+
+    XKB geometry: fix leaks in GetKeyboardByName (bug #8099)
+    Don't leak the name and value of every property we parse, as well as the
+    name of every colour.
+
+commit 686bb8b35acf6cecae80fe89b2b5853f5816ce19
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Wed Oct 18 14:25:04 2006 +0200
+
+    Fix double open of compose file.
+    
+    Issue found by Kees Cook <kees@canonical.com>.
+
+commit d3e65cb8cddf08913d83c9df2bb9b1517f2ad3a8
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Oct 14 21:25:10 2006 -0700
+
+    XCB: check for and handle I/O errors in _XGetXCBBuffer.
+
+commit 256eba6b40c5f811a03b04abf5f85f728ee3ab5d
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 11 00:06:50 2006 -0700
+
+    XKB bugfix: SyncHandle must be called after UnlockDisplay, not before.
+
+commit 1eedf1bd033e496843cfde42ae4ae5a119298605
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Oct 10 23:03:28 2006 -0700
+
+    Add correct Display locking to XKB functions.
+    
+    Some XKB functions didn't correctly call LockDisplay or UnlockDisplay.
+    This patch fixes at least some instances of that problem.
+    
+    Thanks to Magnus Kessler <Magnus.Kessler@gmx.net> for finding these bugs
+    and proposing a fix, which this patch is based on.
+
+commit e17c2cbe9fbaa1600d4b9463ec800a874b0d87cd
+Author: David Nusinow <dnusinow@debian.org>
+Date:   Tue Oct 10 22:11:05 2006 -0400
+
+    Dynamically generate internal manpage section using __libmanpagesuffix__ so that it actually matches the section if you don't use 3X11
+
+commit e53557da969b706dbc843f6fde3db31ffe382e0f
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Oct 7 21:00:36 2006 -0700
+
+    Release libX11 1.1 RC1 (1.0.99.1).
+
+commit bf237409c5fce32c557d298f62f44d456c2b5bc8
+Merge: ba47719... 2d426d1...
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Oct 7 21:07:16 2006 -0700
+
+    As XCB support is about to be released in libX11, stable is now subsumed by master.
+
+commit ba477191c67ce93e61423cc1abe35275704cce50
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sat Oct 7 03:48:13 2006 -0700
+
+    XCB: Don't rely on having the definition of struct xcb_setup_t available.
+
+commit 117b55cbd0b0ce51362df88363ed83d44a493ac7
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Fri Oct 6 16:27:31 2006 -0700
+
+    xcb_poll_for_event no longer takes an 'int *error' out-parameter.
+
+commit caaa8e8a55e837b3585c1dee7bef194fc4c79d16
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 16:26:11 2006 -0700
+
+    Actually ship Xxcbint.h
+
+commit 7b027e53b5e393082f4f515c8ba18077eb97163f
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 16:25:50 2006 -0700
+
+    Clean ChangeLog only in "make maintainer-clean", not "make clean"
+    
+    ChangeLog requires a git repo to generate; make clean and make distclean
+    shouldn't get rid of it.
+
+commit cab22e02e78b3e5b8a73d1cd55cf6686426b47e0
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 16:24:58 2006 -0700
+
+    Add ChangeLog and "make dist"-generated files to .gitignore
+
+commit e4c7cfdee4a40e466c0c6b370cabd432e9e855a0
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 15:53:27 2006 -0700
+
+    Add manual pages for XGetXCBConnection and XSetEventQueueOwner
+
+commit 688224cea95e453f94c5a602dc6fce84bc93dfc0
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 13:41:16 2006 -0700
+
+    Remove unnecessary prototype for _XFreeDisplayStructure in xcb_disp.c
+
+commit ab728ca372288d0db1b486c265e34c1376f29104
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 12:36:39 2006 -0700
+
+    XCL is dead; long live Xlib/XCB
+    
+    Rename all instances of "XCL" to Xlib/XCB-derived names.
+    
+    The only user-visible change: rename the include file <X11/xcl.h> to
+    <X11/Xlib-xcb.h>; programs will need to change their #include lines to match.
+    
+    Remove the XCL cast inlines from Xlib-xcb.h.
+
+commit 5b73093203039d307eb7ab3845c3ced207e9e26c
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 11:33:49 2006 -0700
+
+    Add XCB developers to AUTHORS
+
+commit 1cb71ff139276a0a58c60ea5f261f64b94706b9b
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 11:21:28 2006 -0700
+
+    Fix email addresses in README
+
+commit 12f038669278019594ca0ed53dadcf4e84092422
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Fri Oct 6 02:13:05 2006 -0700
+
+    XCB: Handle all responses in order of monotonically increasing sequence number.
+
+commit f392680273278b43079302206897f794e60f3c70
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Fri Oct 6 01:11:08 2006 -0700
+
+    Actually install x11-xcb.pc, and ship x11-xcb.pc.in
+
+commit f1fcad2e3fd17aaf1294f1d8e9f406fd5b32a863
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Oct 5 18:32:29 2006 -0700
+
+    XCB: correctly handle failure to connect to X server.
+
+commit e754b3b078d556c7861da56aad47d244e9199e06
+Author: Josh Triplett <josh@freedesktop.org>
+Date:   Thu Oct 5 17:44:22 2006 -0700
+
+    Split public Xlib/XCB functions into libX11-xcb
+    
+    We can never change the libX11 soname, and we don't want to commit to never
+    changing the public Xlib/XCB functions, so split them into a separate library
+    libX11-xcb.  This also means that a program linked solely against libX11
+    should work with either Xlib or Xlib/XCB, which will make life easier for
+    package maintainers.
+    
+    Signed-off-by: Josh Triplett <josh@freedesktop.org>
+    Acked-by: Jamey Sharp <jamey@minilop.net>
+
+commit ffd367f708b295abaedf3a23a1bfd4710d171d6f
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 4 17:16:46 2006 -0700
+
+    No longer #include Xmd from xcl.h: we do not need it.
+
+commit 3aff149d42ba8ed620091971b3766bdf96c62aaf
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 4 16:58:32 2006 -0700
+
+    XCB: Revert locking to simple wrapper around libX11's normal locks.
+    
+    No more recursive mutexes, no more banging XCB's I/O lock in-place, and
+    reduces the differences between the previous stable release and an
+    XCB-enabled one. Sadly, Xlib's pluggable thread functions work again
+    too, now. I apologize to the world.
+
+commit 8ff122fb529bdb1c2b9a86b12d06b6da1b35d708
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Mon Sep 25 04:54:52 2006 -0700
+
+    Link explicitly against XCB's Xlib compatibility functions.
+
+commit bde3cd123d65a2f36ee0c417f5f231b7e01d0671
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Mon Sep 25 04:13:20 2006 -0700
+
+    libxcb now installs header files in <xcb>, not <X11/XCB>.
+
+commit 87d00207f5a1f25a45a153618739cd6481814f89
+Author: Ian Osgood <iano@quirkster.com>
+Date:   Sun Sep 24 23:39:01 2006 -0700
+
+    Track XCB's "Great Renaming".
+
+commit 85a5e98dff9b7752fae157fad9b8c9825cb0efab
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Sep 12 23:02:42 2006 -0700
+
+    Quit using XCBGetQueuedRequestRead.
+
+commit a61936fc4e9bd93b108764bbacd5b8f786e51915
+Author: Tollef Fog Heen <tfheen@err.no>
+Date:   Wed Aug 30 00:05:54 2006 +0300
+
+    nls: use _XlcUtf8Loader for en_US (bug #7982)
+    Use _XlcUtf8Loader instead of _XlcUnicodeLoade,r bringing it into line with
+    every other locale.
+
+commit abcc7e1865cdfbd591f6520cfe4257f0b0b1c03e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Aug 23 18:49:30 2006 -0700
+
+    When opening display, if LOCALCONN fails, fall back to UNIXCONN, then TCPCONN
+    
+    Port to X11R7 of Sun bug fix 4061225 by Alex Chen for X11R6 - when failing to
+    connect on a named pipe, try a Unix socket first, to better support people who
+    replace their X servers with ones that don't support named pipe transport.
+    <http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=4061225>
+
+commit 1ddc44c1cada7e926bd4787406444ce7c36b61e1
+Author: Mark Brown <mark.brown@sun.com>
+Date:   Thu Jul 27 19:17:10 2006 -0700
+
+    Sun bug 1149809: Document event delivery when grab is terminated.
+
+commit 171107b03ac89d94f9006c7cda242aeefb9ecd16
+Author: Dennis Arellano <Dennis.Arellano@Sun.COM>
+Date:   Thu Jul 27 18:47:06 2006 -0700
+
+    Sun bug 4091271: XGetWindowProperty is missing a crucial prop_return description
+    
+    Document that 32-bit format properties are always returned in arrays of type
+    long, even on systems where long is 64-bits.
+    <http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=4091271>
+
+commit 8309efe6550877cd0bf22979904b3f6bd3e6cffa
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jul 24 15:52:00 2006 -0700
+
+    Add support for "make lint" to check code with lint/sparse/etc.
+
+commit 931e02fbd1acd09aae2b0954c34342c86c72dff6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jul 24 15:50:52 2006 -0700
+
+    ANSIfy some static function definitions
+
+commit 20b7abcaac324d90454de63f32f4a2b398e69e63
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jul 24 15:01:40 2006 -0700
+
+    Fix sparse warning: Using plain integer as NULL pointer
+
+commit d158ab29930513c4097f5b67e7bea08ed2bfd62c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jul 24 14:00:24 2006 -0700
+
+    Remove unused variable
+
+commit 30377000375bdb958042dcb1f38503c94ef21eaf
+Author: Eric Anholt <anholt@FreeBSD.org>
+Date:   Fri Jul 21 18:55:36 2006 -0400
+
+    Bug #7188: Fix the documentation of XUrgencyHint (not UrgencyHint).
+
+commit 4eba45879aea4e415ab550ee56b900d060099110
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Jul 16 10:55:39 2006 +0200
+
+    set GIT_DIR=${srcdir}/.git for git-log
+
+commit 2d426d1f2608fedb77bd7d010dabece76b8d4a60
+Author: Aaron Plattner <aplattner@nvidia.com>
+Date:   Tue Jul 11 13:27:49 2006 -0700
+
+    Add a .PHONY to ensure the ChangeLog isn't stale.
+    
+    Setting the ChangeLog rule as phony forces it to be re-run even when the
+    ChangeLog file already exists. Research indicates .PHONY is portable to BSD and
+    Solaris make.
+    (cherry picked from b8a98809ed81e1226775e6447ef219ffc01334b5 commit)
+
+commit b8a98809ed81e1226775e6447ef219ffc01334b5
+Author: Aaron Plattner <aplattner@nvidia.com>
+Date:   Tue Jul 11 13:27:49 2006 -0700
+
+    Add a .PHONY to ensure the ChangeLog isn't stale.
+    
+    Setting the ChangeLog rule as phony forces it to be re-run even when the
+    ChangeLog file already exists. Research indicates .PHONY is portable to BSD and
+    Solaris make.
+
+commit 8f2be66089b88e4ed6acb0211ea107f4bb910bd3
+Author: Mayank Jain <majain@redhat.com>
+Date:   Tue Jul 11 19:42:47 2006 +0100
+
+    add Indian language locales
+    Add as, kn, ml, or, ur, and te locales.
+
+commit a92eb6785699bbc9c6c3813f6af3bb9431a3f6b0
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Tue Jul 4 12:16:30 2006 +0200
+
+    Fix for autoconf 2.60 issue.
+    
+    Updated AC_DEFINE_DIR.
+    Reverted datarootdir change.
+
+commit 644f4828b15bce42b597eb123ba0bbc372c46c03
+Author: Keith Packard <keithp@neko.keithp.com>
+Date:   Sat Jul 1 21:31:23 2006 -0700
+
+    Work around recent autoconf (2.59?) changes in directory expansion.
+    
+    Recent autoconf versions have changed how directory names are managed in the
+    configure.ac script; automatic 'eval' invocations now occur as a part of the
+    AC_DEFINE_DIR macro which make it imperative that AC_DEFINE_DIR be executed
+    before the variables are used in further macro definitions. Also, ${datadir}
+    is apparantly an old name for ${datarootdir} as ${datadir} doesn't get
+    expanded correctly by AC_DEFINE_DIR. This looks like an autoconf bug, but it
+    is easy to work around by just using ${datarootdir} instead of ${datadir}.
+
+commit be70a31229aa106aff0a09d78c00812682cd3475
+Author: Keith Packard <keithp@neko.keithp.com>
+Date:   Sat Jul 1 01:56:05 2006 -0700
+
+    Xlib/XCB: handle 32-bit sequence wrap.
+    
+    Replace broken sequence compares with XCB_SEQUENCE_COMPARE (copied from
+    XCB).
+    Account for XCB sequence 0 handling.
+
+commit 99c711707ad08e1396e123b1c7df687c560a489a
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Thu Jun 29 19:43:20 2006 -0700
+
+    Bump version to 1.0.3.
+
+commit cde3c0dd72af2b490e80cffca962e3487dd31be4
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Thu Jun 29 19:39:36 2006 -0700
+
+    Bug #7349: Missed one of the setuid fixes.
+    (cherry picked from e9614c963b532f46a7932c2305a4b177a996a222 commit)
+
+commit df3fef8983d96c59d481c4cdaf1f271d54a116d2
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Thu Jun 29 18:59:57 2006 +0200
+
+    Update to final Compose cache directory location.
+    (cherry picked from abda4d223e9cce9ac6e7b5d82a5680d9a502e52a commit)
+
+commit 912ef198292d3053daa810f842510e5d62ded0f0
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Thu Jun 29 17:41:41 2006 +0200
+
+    Fix alignment of trees and wide chars in the cache.
+    (cherry picked from 40a64c61f8bc33d497e1224e02c41dea2d424d97 commit)
+
+commit 2ece832118b3ee5d8ed19f1ee9b1c822b70ec6e9
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Wed Jun 28 19:17:03 2006 +0200
+
+    First (dummy) entry of compose caches was not initialized and thus contained varying garbage.
+    (cherry picked from f442dcaa56f8ecb7443e8e51c88ed97e10dbdba3 commit)
+
+commit e9614c963b532f46a7932c2305a4b177a996a222
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Thu Jun 29 19:39:36 2006 -0700
+
+    Bug #7349: Missed one of the setuid fixes.
+
+commit abda4d223e9cce9ac6e7b5d82a5680d9a502e52a
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Thu Jun 29 18:59:57 2006 +0200
+
+    Update to final Compose cache directory location.
+
+commit 40a64c61f8bc33d497e1224e02c41dea2d424d97
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Thu Jun 29 17:41:41 2006 +0200
+
+    Fix alignment of trees and wide chars in the cache.
+
+commit f442dcaa56f8ecb7443e8e51c88ed97e10dbdba3
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Wed Jun 28 19:17:03 2006 +0200
+
+    First (dummy) entry of compose caches was not initialized and thus contained varying garbage.
+
+commit bdbe464d774e01d317f67c63ebbda2fd0edbbdd1
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Thu Jun 22 23:59:03 2006 -0700
+
+    Delete ChangeLog, and add a rule to autogenerate it for distribution. Also
+    add 'foreign' to AM_INIT_AUTOMAKE to make autotools happy with not having a
+    ChangeLog.
+    (cherry picked from b0edfb8df16ab8c9959b83a4c966d55a59c4e295 commit)
+
+commit b0edfb8df16ab8c9959b83a4c966d55a59c4e295
+Author: Donnie Berkholz <donnie@comet.(none)>
+Date:   Thu Jun 22 23:47:38 2006 -0700
+
+    Delete ChangeLog, and add a rule to autogenerate it for distribution. Also
+    add 'foreign' to AM_INIT_AUTOMAKE to make autotools happy with not having a
+    ChangeLog.
+
+commit dd54981aa76e9dfdc4c3302d6105b4b229447c84
+Author: Donnie Berkholz <donnie@comet.(none)>
+Date:   Thu Jun 22 15:47:38 2006 -0700
+
+    Bump version to 1.0.2.
+
+commit c93539d974a67f596a5eb5b65042d26602546c72
+Author: Matthieu Herrb <matthieu@deville.herrb.com>
+Date:   Tue Jun 20 21:04:03 2006 +0200
+
+    Check setuid() return value.
+    (cherry picked from 5169d0e08ff6acb350a6ea768623f5ff0b85b05f commit)
+
+commit 605533f814ab7892991578706a6458f61a89ca4d
+Author: Derek Wang <derek.wang@sun.com>
+Date:   Mon Jun 19 11:05:37 2006 -0700
+
+    Sun bug 6209243: XExtentsOfFontSet causes segfault when font set not loaded
+    (cherry picked from eff50c94a07194297e705da53d9fbb3a40fb9ad4 commit)
+
+commit 5bbd0822c5a926de0ed293437fb9f2b75cf3c4f4
+Author: Scott Revelt <scott.revelt@sun.com>
+Date:   Fri Jun 16 19:11:13 2006 -0700
+
+    Sun bug 4022903: Xcms routines may fail if sscanf() is looking for separators
+    based on locale that doesn't match those used in the Xcms.txt
+    (cherry picked from 94f3213fc4bd6ec49bfb68e8b4a4fddea2bf3baa commit)
+
+commit 0b05cd4da6134df527fb010384a9fd569bd5d6a3
+Author: Alan Coopersmith <alanc@alf.(none)>
+Date:   Fri Jun 16 18:53:33 2006 -0700
+
+    Add *~ to ignore emacs droppings
+    (cherry picked from c33d7b8282ac196b36229be26442296768c16f3e commit)
+
+commit 214658b76b56768f69c3959a11525aae7813f448
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Fri Jun 16 15:36:40 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts.
+    (cherry picked from 1f4c9893ade08bad30c9bd12a36bee57d30b001e commit)
+
+commit 13968a23aaea838ba4b69e42e8900f803499e091
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Tue Jun 13 20:23:46 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts.
+    (cherry picked from 4fe22647e6010a2886c2f3a7093adeaeb6678faa commit)
+
+commit e7f8bca08f5476d0ca262097639ac7d424bb4d10
+Author: Lubos Lunak <llunak@suse.de>
+Date:   Mon Jun 12 18:48:08 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts.
+    (cherry picked from 1d28a655629a11ea7fd1e5df4c7b77dd4b63e3be commit)
+
+commit f506aaf8ac9aae1ee8daaef6cde34ee85aecd641
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Fri Jun 9 18:24:02 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts. Part 1: Pointerless compose data structure, using indices instead of pointers, needed for mmap()ing data structure.
+    (cherry picked from 9354351fcb8baeaab85250d14409cfb4fa50f3e9 commit)
+
+commit 0e6d5e979aacb0c295ce79369ecc5f22ffa7922c
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Jun 7 20:29:05 2006 -0700
+
+    Fix bug #7035: unnecessary memmove in XOpenDisplay.
+    Using memmove on the connection setup data causes a problem for XCB, but making
+    Xlib stop doing that should be harmless for non-XCB as well.
+    (cherry picked from b18713ec3f36a10b3cdb1e16f9550e1d2e05dff0 commit)
+
+commit cd7328c46ae72903ed02832828891b2dab4d5ee0
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Sat Jun 3 13:51:51 2006 +0300
+
+    Fix threading support on GNU/kFreeBSD systems.  (Robert Millan)
+    (cherry picked from e3acee88cfcc4ef0fa8a7db39763a5ebe2e985cb commit)
+
+commit c336eb6b80a6f91da1d0b3d28634a2cfde324670
+Merge: 33556ca... ad9ebbd...
+Author: Donnie Berkholz <donnie@comet.(none)>
+Date:   Thu Jun 22 14:25:35 2006 -0700
+
+    Merge branch 'stable' of http://people.freedesktop.org/~jamey/libX11 into stable
+
+commit 213dacad21740466e7ab31b01d3fc513fe4b3e74
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Jun 22 17:20:59 2006 +0300
+
+    Bump to 1.0.99.0 to avoid confusion.
+
+commit efedfd68e31bcee2d21ac340be8dc9e1825ec890
+Merge: e3acee8... 4b8eb5d...
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Jun 22 16:53:45 2006 +0300
+
+    Merge branch 'master' of git+ssh://git.freedesktop.org/srv/git.freedesktop.org/git/xorg/lib/libX11
+
+commit 4b8eb5d4a1da73a94b5a6ab12e34784aae4c79c5
+Merge: 5169d0e... eff50c9...
+Author: Matthieu Herrb <matthieu@deville.herrb.com>
+Date:   Tue Jun 20 21:05:15 2006 +0200
+
+    Merge branch 'master' of git+ssh://herrb@git.freedesktop.org/git/xorg/lib/libX11
+
+commit 5169d0e08ff6acb350a6ea768623f5ff0b85b05f
+Author: Matthieu Herrb <matthieu@deville.herrb.com>
+Date:   Tue Jun 20 21:04:03 2006 +0200
+
+    Check setuid() return value.
+
+commit eff50c94a07194297e705da53d9fbb3a40fb9ad4
+Author: Derek Wang <derek.wang@sun.com>
+Date:   Mon Jun 19 11:05:37 2006 -0700
+
+    Sun bug 6209243: XExtentsOfFontSet causes segfault when font set not loaded
+
+commit 94f3213fc4bd6ec49bfb68e8b4a4fddea2bf3baa
+Author: Scott Revelt <scott.revelt@sun.com>
+Date:   Fri Jun 16 19:11:13 2006 -0700
+
+    Sun bug 4022903: Xcms routines may fail if sscanf() is looking for separators
+    based on locale that doesn't match those used in the Xcms.txt
+
+commit c33d7b8282ac196b36229be26442296768c16f3e
+Author: Alan Coopersmith <alanc@alf.(none)>
+Date:   Fri Jun 16 18:53:33 2006 -0700
+
+    Add *~ to ignore emacs droppings
+
+commit 1f4c9893ade08bad30c9bd12a36bee57d30b001e
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Fri Jun 16 15:36:40 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts.
+
+commit 4fe22647e6010a2886c2f3a7093adeaeb6678faa
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Tue Jun 13 20:23:46 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts.
+
+commit 1d28a655629a11ea7fd1e5df4c7b77dd4b63e3be
+Author: Lubos Lunak <llunak@suse.de>
+Date:   Mon Jun 12 18:48:08 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts.
+
+commit 9354351fcb8baeaab85250d14409cfb4fa50f3e9
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Fri Jun 9 18:24:02 2006 +0200
+
+    Bug #3104: Compose table cache for faster X11 application starts. Part 1: Pointerless compose data structure, using indices instead of pointers, needed for mmap()ing data structure.
+
+commit b18713ec3f36a10b3cdb1e16f9550e1d2e05dff0
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Jun 7 20:29:05 2006 -0700
+
+    Fix bug #7035: unnecessary memmove in XOpenDisplay.
+    Using memmove on the connection setup data causes a problem for XCB, but making
+    Xlib stop doing that should be harmless for non-XCB as well.
+
+commit ad9ebbd2424bc2699944ffdf4e19e13f9dd8ab84
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Sat Jun 3 12:57:55 2006 +0300
+
+    Bug #2186: Add cs_CZ.iso8859-2 alias.
+
+commit 9e7765e0b1cbaae6643072d91066ba1201b36227
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 02:46:29 2006 +0300
+
+    nls: Serbian (sr_CS) update (#5575)
+    
+    Bug #5575: 'Yugoslavia' has changed to Serbia & Montenegro, along with a
+    corresponding locale change.  Update compose.dir.pre, locale.alias.pre,
+    and locale.dir.pre.  (Milos Komarcevic)
+
+commit a4ac2242b588da23044a20aa999ae84d4de7b2d8
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 02:24:25 2006 +0300
+
+    im: add Braille input method (#6296)
+    
+    Bug #6296: Add a Braille input method.  (Samuel Thibault)
+
+commit 90de1e2e141ec591048a76cb695579ef809a28d3
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 02:22:17 2006 +0300
+
+    xkb support: small typo
+
+commit 4c3e34bece7402f08139d34d1ef5834e3cf533c7
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:50:24 2006 +0300
+
+    en_US.UTF-8 Compose.pre: updates from Simos (#5129)
+    
+    Bug #5129: Numerous updates from Simos Xenitellis, fixing Unicode keysyms,
+    adding Unicode character names, removing duplicate entries, et al.
+
+commit 0c6473dd329c7334ae511884bcb6e73e632c784f
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:44:53 2006 +0300
+
+    nls: fix use of non-keysym dead_space (#5107)
+    
+    Bug #5107: Change users of dead_space to space.
+
+commit 6f99f6349de5120f1cb7e02fbc97849341bc48e8
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:41:18 2006 +0300
+
+    optional XKB support fix
+    
+    Fix compilation with --disable-xkb.
+
+commit 217d43ed44ced901122093af3ef1294e1736bb77
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:39:12 2006 +0300
+
+    i18n: separate data and lib directories
+    
+    Break out locale data into separate data and library directories, under
+    $(datadir) and $(libdir), respectively, by default.
+
+commit 92fa7fcde8df22830fca7c0275ab201033f7909c
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Thu May 11 14:04:48 2006 -0400
+
+    libXcursor.so.1, not libXcursor.so
+
+commit 135b4df13ed7c35dbae8975f302fc1fb8412d7c0
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Wed May 10 18:06:03 2006 +0300
+
+    XKBMisc.c: use Xfree, not xfree
+    
+    Use Xfree() instead of xfree() when freeing interps.
+
+commit 3518d772b08e3433bc28b4d8d293fa53ca25f0ee
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Wed May 10 14:51:37 2006 +0300
+
+    locale.alias.pre: bg_BG typo fix
+    
+    Fix typo (be_BG.UTF-8 rather than bg_BG.UTF-8) in locale.alias.pre.
+
+commit cc533db60cb64dc163c66451933a9bf77c519062
+Author: Daniel Stone <daniels@endtroducing.localdomain>
+Date:   Sun Apr 9 22:22:03 2006 +0300
+
+    Coverity #203, #204: Fix potential NULL dereferences.
+
+commit b83adf7dfd6157694fe4f232012fef36cd9666da
+Author: Daniel Stone <daniels@endtroducing.localdomain>
+Date:   Sun Apr 9 22:20:25 2006 +0300
+
+    Coverity #205: Fix potential NULL dereference.
+
+commit 2d0cd10ad907864d0136739eaac459779c9a5332
+Author: Daniel Stone <daniels@endtroducing.localdomain>
+Date:   Sun Apr 9 22:18:20 2006 +0300
+
+    Coverity #209: Fix potential NULL dereference. (Alan Coopersmith)
+
+commit dc2f3966068d66a564aa452cab9f0c26657fa1df
+Author: Daniel Stone <daniels@preemptive.research.nokia.com>
+Date:   Fri Apr 7 18:11:52 2006 +0300
+
+    Coverity #826: Fix potential memory leak.
+
+commit 23df609ec451a01c77e8f31ecc85c5af7c62efed
+Author: Daniel Stone <daniels@preemptive.research.nokia.com>
+Date:   Fri Apr 7 17:49:41 2006 +0300
+
+    Bug #1625: Include keysym.h from Xutil.h.
+
+commit 5262a1945c543a3419ed626e1deb09ef5b4584c1
+Author: Eric Anholt <anholt@leguin.anholt.net>
+Date:   Wed Apr 5 17:12:15 2006 -0700
+
+    Check if visualList == NULL, not nVisualsMatched == 0. NULL happens in more
+    
+    cases (allocation failure) than nVisualsMatched == 0.  Noticed from inspection
+    of Coverity #599, #600.
+
+commit 8b42635f577468bb143ca593cdd9fb3450ad712c
+Author: Eric Anholt <anholt@leguin.anholt.net>
+Date:   Wed Apr 5 16:42:26 2006 -0700
+
+    Coverity #558: Free newly-allocated Database in error path.
+
+commit 6d06e41d1f431b3f1a1fcf69161e0af411325e9f
+Author: Eric Anholt <anholt@leguin.anholt.net>
+Date:   Wed Apr 5 16:38:52 2006 -0700
+
+    Coverity #582: Free newly-allocated region in error path.
+
+commit 5fd8f79ad3e38df74d9a6cb573617542c101df1a
+Author: Daniel Stone <daniels@preemptive.research.nokia.com>
+Date:   Fri Mar 17 15:58:39 2006 +0200
+
+    Properly clip bounds when only one point is defining an outline.
+
+commit 1e1572eb7f8394ce152e99d96f711ccf9083baf9
+Author: Matthieu Herrb <matthieu@bluenote.herrb.com>
+Date:   Sat Mar 11 15:39:15 2006 +0100
+
+    Fix prototype of XConfigureWindow(). Bugzilla #6023.
+
+commit 1da8bd904f1fc79d63d368473531b438d08bfe37
+Author: Jeremy C. Reed <reed@reedmedia.net>
+Date:   Tue Feb 21 14:10:22 2006 -0800
+
+    Set XTHREADLIB correctly for dragonfly platforms.
+
+commit c9768133e3f65ac4bb64e3941e2d6ae36897ec9c
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Feb 19 12:29:27 2006 -0800
+
+    Update .gitignores for *.o and nls/locale.dir*.
+
+commit efcbde6ba0b770bb0d4c7818e307712161011f10
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Feb 19 12:28:41 2006 -0800
+
+    Move .cvsignore to .gitignore.
+
+commit e3acee88cfcc4ef0fa8a7db39763a5ebe2e985cb
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Sat Jun 3 13:51:51 2006 +0300
+
+    Fix threading support on GNU/kFreeBSD systems.  (Robert Millan)
+
+commit f1bd3152359ddfadd0d043006036c239f3e2907b
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Sat Jun 3 12:57:55 2006 +0300
+
+    Bug #2186: Add cs_CZ.iso8859-2 alias.
+
+commit 2b1b79d90db1d7f0472718b8c010c36275994195
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 02:46:29 2006 +0300
+
+    nls: Serbian (sr_CS) update (#5575)
+    Bug #5575: 'Yugoslavia' has changed to Serbia & Montenegro, along with a
+    corresponding locale change.  Update compose.dir.pre, locale.alias.pre,
+    and locale.dir.pre.  (Milos Komarcevic)
+
+commit d6fba1f44d404362d3be1b421f57d7ccc3c8cdac
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 02:24:25 2006 +0300
+
+    im: add Braille input method (#6296)
+    Bug #6296: Add a Braille input method.  (Samuel Thibault)
+
+commit 0fed7d3185addd610e917dcdaa0676f0256c0ec5
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 02:22:17 2006 +0300
+
+    xkb support: small typo
+
+commit cf7d9f9e46f3ce01ac04a95978918d5c0f3f3cf9
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:50:24 2006 +0300
+
+    en_US.UTF-8 Compose.pre: updates from Simos (#5129)
+    Bug #5129: Numerous updates from Simos Xenitellis, fixing Unicode keysyms,
+    adding Unicode character names, removing duplicate entries, et al.
+
+commit 332d45fce9fdbf59168d90a133af1f580a589e54
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:44:53 2006 +0300
+
+    nls: fix use of non-keysym dead_space (#5107)
+    Bug #5107: Change users of dead_space to space.
+
+commit 34f59ce3d1e2eb2971b732d11871c6fff8a1c75b
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:41:18 2006 +0300
+
+    optional XKB support fix
+    Fix compilation with --disable-xkb.
+
+commit c5940a0b85edec4003f91a59fc3c44f538accfe1
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 2 01:39:12 2006 +0300
+
+    i18n: separate data and lib directories
+    Break out locale data into separate data and library directories, under
+    $(datadir) and $(libdir), respectively, by default.
+
+commit 33556ca81db2419b9d2a37664c4cea2069414b37
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Fri May 12 14:49:17 2006 -0400
+
+    Bump to 1.0.1
+
+commit 80d88557626fae9debc404de33d7fb5d69a6049d
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Thu May 11 14:06:28 2006 -0400
+
+    libXcursor.so.1, not libXcursor.so
+
+commit 5384f27dfe3c94c462c137ab3540eaa5646ca4c6
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Thu May 11 14:04:48 2006 -0400
+
+    libXcursor.so.1, not libXcursor.so
+
+commit 01f4d433eed6b70c6e9636157acac022054fdeb6
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed May 10 17:02:52 2006 -0700
+
+    Count any partial request towards the current Xlib sequence number.
+
+commit 770cfbd1fcc80a83a9be0c4f68727b8af2c8f4a4
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Wed May 10 18:06:03 2006 +0300
+
+    XKBMisc.c: use Xfree, not xfree
+    Use Xfree() instead of xfree() when freeing interps.
+
+commit 22a5255b80b80772612279bc840a953edd0e3442
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Wed May 10 14:51:37 2006 +0300
+
+    locale.alias.pre: bg_BG typo fix
+    Fix typo (be_BG.UTF-8 rather than bg_BG.UTF-8) in locale.alias.pre.
+
+commit 9cac8c9824874ca7d835f001a4efa910b7fdd822
+Merge: 19b8840... e514bc8...
+Author: Daniel Stone <daniels@preemptive.fooishbar.org>
+Date:   Wed May 10 14:50:37 2006 +0300
+
+    Merge branch 'master' of git+ssh://git.freedesktop.org/srv/git.freedesktop.org/git/xorg/lib/libX11
+
+commit e514bc875f27f4bf197b06b8315eeca526195915
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue May 9 12:41:59 2006 -0700
+
+    Assert that dpy->request does not go backwards. Catches #5839 earlier.
+
+commit fc1159137365a599bf611ee001f439416952c4e0
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun May 7 17:40:01 2006 -0700
+
+    In _XPutXCBBuffer, set aside any trailing partial request until the last byte is available.
+
+commit c394480a4247213239822808e3f6e7c6cd6decd9
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun May 7 16:58:13 2006 -0700
+
+    Update for XCB ConnSetupSuccessRep name change.
+
+commit 7672bf93bc1200905461aeb0a2dc2c2696410b93
+Author: Daniel Stone <daniels@endtroducing.localdomain>
+Date:   Sun Apr 9 22:22:03 2006 +0300
+
+    Coverity #203, #204: Fix potential NULL dereferences.
+
+commit cfcafbe48d22d9a0cd50eb9454ce0ff88f0129d3
+Author: Daniel Stone <daniels@endtroducing.localdomain>
+Date:   Sun Apr 9 22:20:25 2006 +0300
+
+    Coverity #205: Fix potential NULL dereference.
+
+commit b6771501feea98d037032f82117b6d4f15779f07
+Author: Daniel Stone <daniels@endtroducing.localdomain>
+Date:   Sun Apr 9 22:18:20 2006 +0300
+
+    Coverity #209: Fix potential NULL dereference.  (Alan Coopersmith)
+
+commit 19b8840af241087bb17b1edabcaa9b28fdd0a1dc
+Author: Daniel Stone <daniels@preemptive.research.nokia.com>
+Date:   Fri Apr 7 18:11:52 2006 +0300
+
+    Coverity #826: Fix potential memory leak.
+
+commit 3a16f262abe48b44ed641525e894bc22e13bf72a
+Author: Daniel Stone <daniels@preemptive.research.nokia.com>
+Date:   Fri Apr 7 17:49:41 2006 +0300
+
+    Bug #1625: Include keysym.h from Xutil.h.
+
+commit 2481b767ae96e2f2503c0390545932c8397b090f
+Author: Eric Anholt <anholt@leguin.anholt.net>
+Date:   Wed Apr 5 17:12:15 2006 -0700
+
+    Check if visualList == NULL, not nVisualsMatched == 0.  NULL happens in more
+    cases (allocation failure) than nVisualsMatched == 0.  Noticed from inspection
+    of Coverity #599, #600.
+
+commit 152b17e47d878c2d928eb74581aa69d925a29123
+Author: Eric Anholt <anholt@leguin.anholt.net>
+Date:   Wed Apr 5 16:42:26 2006 -0700
+
+    Coverity #558: Free newly-allocated Database in error path.
+
+commit bc62b99ef36edb34035911c42104be7f6f9d2333
+Author: Eric Anholt <anholt@leguin.anholt.net>
+Date:   Wed Apr 5 16:38:52 2006 -0700
+
+    Coverity #582: Free newly-allocated region in error path.
+
+commit d47f0b3cec1388f7ce60ab2af91df0dea0f221c5
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Fri Mar 31 22:53:07 2006 -0800
+
+    Fix buggy interaction with XCB when running out of XIDs.
+
+commit e3f452571824d6a875bbf582946de185de9e01e9
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Fri Mar 31 22:52:14 2006 -0800
+
+    Add explicit include of Xmd.h to work around bug including both xcb.h and Xmd.h simultaneously.
+
+commit 2363b74ca795c1b3a73c9e572532ba5191adec5b
+Author: Daniel Stone <daniels@preemptive.research.nokia.com>
+Date:   Fri Mar 17 15:58:39 2006 +0200
+
+    Properly clip bounds when only one point is defining an outline.
+
+commit e876efb8aa410f2f5c87aaaa7042f847c4ff96f7
+Merge: be266b2... f71ea0b...
+Author: Matthieu Herrb <matthieu@bluenote.herrb.com>
+Date:   Sat Mar 11 15:40:35 2006 +0100
+
+    Merge branch 'master' of git+ssh://herrb@git.freedesktop.org/git/xorg/lib/libX11
+
+commit be266b201dc13530a302a7572283ccd3f32aad87
+Author: Matthieu Herrb <matthieu@bluenote.herrb.com>
+Date:   Sat Mar 11 15:39:15 2006 +0100
+
+    Fix prototype of XConfigureWindow(). Bugzilla #6023.
+
+commit f71ea0bc737c5a42e9e022b86e7ec3b4f846d31c
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Fri Mar 3 11:08:41 2006 -0800
+
+    Update for XCBSendRequest sequence number API changes.
+
+commit a11d1b0ae674320cf9897f6a83ec08c65eca8d9b
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Fri Mar 3 01:42:49 2006 -0800
+
+    Use the full_sequence from XCBGenericError/Event for setting last_request_read, and quit replacing _XSetLastRequestRead with an XCB-specific version.
+
+commit d8ba4ae7045b227f8b675628b9094dded02f1c08
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Mar 2 23:43:26 2006 -0800
+
+    Bugfix: Rely on XCBSendRequest to leave iov in a well-defined state, and place the spare iovecs at the beginning of the array.
+
+commit f9afb5a54435c30961306080e9358d4240ecb844
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Mar 2 23:34:19 2006 -0800
+
+    assert() that we will not infinite loop or read uninitialized memory.
+
+commit d3512ef3aae5b036a8ce6579318108f1ec20ee22
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Mar 2 15:58:52 2006 -0800
+
+    Quit relying on XCBSendRequest to pad to 4-byte boundaries and do it ourselves.
+
+commit fb590c15a740264ee867d15a2547072e43b21eed
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Mar 2 12:06:04 2006 -0800
+
+    Handle errors correctly when Xlib owns the event queue and XCB has the checked error feature.
+
+commit 8356ba37d307a9eda895a6bf41ef727bbfc9a695
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Mon Feb 27 11:51:47 2006 -0800
+
+    Use the new XCBSendRequest flag, XCB_REQUEST_RAW, to hand a bag-o-bytes down uninterpreted.
+
+commit 07bdf1fbbf2418f866df1a2140d514dd3f035139
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Feb 26 15:46:01 2006 -0800
+
+    Update for new XCBSendRequest API.
+
+commit 409a08cff8347d39e0e6c53c9f380d21f221f5ac
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Feb 23 18:12:31 2006 -0800
+
+    Performance fix: Replace calls to XCBGetRequestRead with the new XCBGetQueuedRequestRead. Cuts a lot of syscalls.
+
+commit ec30a27341b97620b07dd886f98d1d7664a67685
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Feb 23 18:01:46 2006 -0800
+
+    Minor performance fix: Access dpy->xcl->connection directly instead of calling XCBConnectionOfDisplay. It happens a lot.
+
+commit 53c471c6a835d5cedeca99f2c97058d196a3fd7e
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Feb 23 11:46:09 2006 -0800
+
+    XCBFlush used to return non-positive on failure, and this test did not catch 0. Now it returns boolean: 0 or 1. Testing <= 0 covers both cases. I probably want to switch to a boolean test eventually.
+
+commit 41c0121a8718b530feaf7fe315b673d9b8defce2
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 21 21:25:41 2006 -0800
+
+    Refactor the code that passes requests down to XCB into a separate issue_complete_request function.
+
+commit 67d06e0fe468dca22847aa14d3f917128f89f9cf
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 21 15:33:05 2006 -0800
+
+    If we have not actually put the buffer back, deferred invariants may not hold. This is OK.
+
+commit 434bf80b4053ff1ba82adf65de1f76b4d3731bf1
+Author: Jeremy C. Reed <reed@reedmedia.net>
+Date:   Tue Feb 21 14:10:22 2006 -0800
+
+    Set XTHREADLIB correctly for dragonfly platforms.
+
+commit b24834762e975bd319f9ab5c7cf790b2a02a9474
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 21 14:03:26 2006 -0800
+
+    Sometimes functions other than _XUnlockDisplay call _XPutXCBBuffer. Some invariants appropriate for Unlock are not appropriate otherwise: move them to _XUnlockDisplay.
+
+commit 99b8defd0d5e6993071e21638128c9de2574b37d
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 21 13:04:21 2006 -0800
+
+    Execute BeforeFlush hooks on complete buffers, not request-at-a-time.
+    Traditional Xlib worked this way; I dunno why I changed it.
+
+commit 9b01e7849775749182052fe324df9d8e6ceeee99
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 21 12:51:44 2006 -0800
+
+    Factor the XCBSendRequest call out of the conditional in _XPutXCBBuffer.
+
+commit 7ce7ac882de128955751a5307889db9d712d8a72
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 21 12:44:30 2006 -0800
+
+    Quit using a triple-pointer. Almost as if I were a sensible person.
+
+commit 35a858be218cdbfa4593d44a67663d5c25297016
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 21 12:21:01 2006 -0800
+
+    Remove the XCL_PAD macro.
+
+commit e741b70ed2542c5463c57dac44bc37328616733b
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Feb 19 12:29:27 2006 -0800
+
+    Update .gitignores for *.o and nls/locale.dir*.
+
+commit f25b4b00e1683b0d97dba46dac46d65a9c2270a6
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Feb 19 12:28:41 2006 -0800
+
+    Move .cvsignore to .gitignore.
+
+commit c7cda56eebaf6ab11403363be14d4948d7d8be38
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Feb 19 11:49:15 2006 -0800
+
+    Land XCB support on X.org HEAD.
+
+commit 881467b3032261791ef5ec61b3879bb68d0a3d8c
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Sun Feb 19 02:14:11 2006 +0000
+
+    Merge the X11 and BIGREQS package sets: they were used in exactly the same places.
+
+commit 6b0158dfad714db5b89c04dbea3aedeafa0fb146
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Tue Feb 14 19:37:36 2006 +0000
+
+    Refactor _XFlush and _XSend code that sets dpy->synchandler to _XSeqSyncFunction into a new function, _XSetSeqSyncFunction. It makes the patch for XCB cleaner, but is arguably a good idea anyway.
+
+commit 010c3acbb3a6993d39274f42d88c00849acb0fb0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun Feb 12 18:19:17 2006 +0000
+
+    Bug #5628 <https://bugs.freedesktop.org/show_bug.cgi?id=5628> Shadow pages not created correctly when MANDIR & MANSUFFIX don't match.
+
+commit fe8c01c80263457f01b70dc1511b2bd9466b7c96
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Feb 3 23:34:43 2006 +0000
+
+    Fix typo in .TH line
+
+commit b091c217f3c3f60dde78b09a95c150df6c83d7ba
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:28 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit e7c04e0e65a2a0c70c6ad29ec2d6f4350fd81c2a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:41 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit b5c495854d5270e64e6d588388ffa906bfcaac22
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:42 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 9e96dbc343c7f27ff47607acd75378ab23903e2a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 04:41:47 2005 +0000
+
+    Add check and cflags for malloc(0) returning NULL.
+
+commit 649c37b47909620ccafde3e983de8321cddd74ce
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Nov 28 22:03:04 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4 update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit 8d1500df66d796ebff2b0d8c02205e5fa6796d4a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Nov 23 22:33:06 2005 +0000
+
+    Bug #5003 <https://bugs.freedesktop.org/show_bug.cgi?id=5003> Patch #3763 <https://bugs.freedesktop.org/attachment.cgi?id=3763> Xorg code misuses S_IF* macros
+
+commit 93cf3747f9ae8d30bd485b41c5ff10397f68f078
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Nov 20 23:17:39 2005 +0000
+
+    Add/improve libs .cvsignores.
+
+commit fa1f4a08112bfa14d3758f4702733dd3892966c3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:39 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from application build-time dependencies, and update package deps to work with separate build roots.
+
+commit 7012f9b56c594cf40855ba0dbf93af1263417a8c
+Author: Kevin E Martin <kem@kem.org>
+Date:   Mon Nov 14 21:51:07 2005 +0000
+
+    Fix xf86bigfont pkgconfig dep typo.
+
+commit 60a72f47951f46b4e0505d9903a94af3b6bed8ca
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Nov 9 21:19:12 2005 +0000
+
+    Update package version number for X11R7 RC2 release.
+
+commit 6bb0c3796b6e1beddc376a896e865704886e1462
+Author: Kean Johnson <kean@armory.com>
+Date:   Tue Nov 8 06:33:25 2005 +0000
+
+    See ChangeLog entry 2005-11-07 for details.
+
+commit 14be0098ad90c3e68bd2d21b00ffabb76f1fd780
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 1 15:11:50 2005 +0000
+
+    Update pkgcheck dependencies to work with separate build roots.
+
+commit 1bf71462a972e0fc56de63f5c7fd613b37fc70f1
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Fri Oct 28 10:44:03 2005 +0000
+
+    Revert that, it's redundant. But it is worth noting that --disable-xkb is broken, if anyone cares.
+
+commit be627a39fe373e2e81fdc263780e70a271d9e0c5
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Fri Oct 28 08:28:08 2005 +0000
+
+    Add dependency on inputproto for XI.h.
+
+commit 5fae4cb456cb03fb70cd065dbc2ca94c8ed99082
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Fri Oct 21 18:44:24 2005 +0000
+
+    Bug #4736: Error decoding for Damage extension. (Jonathan Lennox)
+
+commit 1171fa9dc77413f0e90933a565ec07068052afb4
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:08 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 2a2d905706308b9d5a1c16af1067fb390f43850c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 18 00:00:08 2005 +0000
+
+    Use @LIB_MAN_SUFFIX@ instead of $(LIB_MAN_SUFFIX) in macro substitutions to work better with BSD make
+
+commit 66d35b6971fb26762392a2a8e2c47db46c11116a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 17 21:13:15 2005 +0000
+
+    Rename .shadows.DONE to shadows.DONE to avoid some make's thinking it's a suffix rule (reported by Matthieu Herrb)
+
+commit a316995a17c084e98ef1b7f25d287c2c08b6d749
+Author: Donnie Berkholz <spyderous@gentoo.org>
+Date:   Sun Oct 16 03:03:35 2005 +0000
+
+    Change '==' to portable '='.
+
+commit b76a072530e884bcbea6ed8fed5aef39361dcfc0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 12 00:04:50 2005 +0000
+
+    configure.ac Use XORG_MAN_SECTIONS instead of custom man section configuration. Add shadow man pages for man pages that document multiple functions.
+
+commit 8ee5c1429af98206e05a0536f87c0f21a529cdf0
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Oct 11 02:18:36 2005 +0000
+
+    Add appropriate pthread libs/flags for FreeBSD, fixing the build of ico and probably others.
+
+commit 41ff3b9d1f194a7b56437b650d5f589225c078c6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun Oct 9 22:28:39 2005 +0000
+
+    Bug #3021 <https://bugs.freedesktop.org/show_bug.cgi?id=3021> Requests and Errors for XFixes are not in XErrorDB (Jonathan Lennox)
+
+commit 91ed79852e790049ab54e68f288afb3c953194c9
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Oct 7 15:00:00 2005 +0000
+
+    Clean up generated files
+    Add missing dist tarball files
+
+commit 440399b470c97b159a530602fff11c315aca8d97
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed Oct 5 18:27:10 2005 +0000
+
+    Add el_GR.UTF-8 compose file
+
+commit 010f0647e25ac617d0f92c8d2b8dda684da545db
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Sep 30 07:52:46 2005 +0000
+
+    Bug #2609: Add Kyrgyz locale (Ilyas Bakirov).
+
+commit 3ef2fb67bd8905b208ad7eb790c3843e14cea7ed
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Sep 30 07:47:55 2005 +0000
+
+    Bug #1640: Kinyarwanda locale support. (Steve Murphy)
+
+commit 4ae0decabe0960870df0ec165f495166c10a053c
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Sep 30 07:40:03 2005 +0000
+
+    Bug #2268: Add South African locales (Dwayne Bailey). Some whitespace cleanups, as the parser is a little touchy.
+
+commit 3f79eb4c99844f618f1889741d1631c2ffe5385f
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Sep 30 07:11:19 2005 +0000
+
+    Generate locale.alias and compose.dir exactly like we do in the monolith, which fixes non-UTF-8 locales in particular (so we get foo: bar, as well as foo bar). Switch to generating locale.dir the same way.
+
+commit d1237d1483ff972c76a0ac344ec97d5280db0007
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Sep 29 21:27:12 2005 +0000
+
+    Add Xcms.txt to lib/X11
+
+commit 4a86f299693f7376cbe98175f0b0c44d691802b3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Sep 24 20:11:06 2005 +0000
+
+    Add XQueryExtension.man
+
+commit a057a66e2041d45198a13a4ece7c07068f76f21b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Sep 24 00:16:32 2005 +0000
+
+    Add XTHREAD_CFLAGS for platforms that need special defines like
+    -D_REENTRANT or -D_POSIX_whatever to get re-entrant function definitions. Set XDMCP_LIBS correctly for later libXdmcp tests.
+
+commit 3e920a65a7c376ad63eae2240fd06904d25d18bf
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 2 23:00:30 2005 +0000
+
+    Issue an error if XTRANS macros were not found when generating configure from configure.ac to flag errors early, instead of when people wonder why libX11 can't talk to an Xserver because it has no transports defined
+
+commit 3eb9f2d693af89d04e2fd92492c8205dce332c9c
+Author: Kristian Høgsberg <krh@redhat.com>
+Date:   Thu Sep 1 19:24:13 2005 +0000
+
+    Use $(X11_LOCALEDATADIR) instead of @X11_LOCALEDATADIR@ so this install destination can be overridden at make install time.
+
+commit 7afa64325183b78d2d6a4862821f8b3e9866105c
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Aug 28 19:45:48 2005 +0000
+
+    OpenBSD needs -lpthread for threaded applications too.
+
+commit 2b2f3d3877cb7927f196d01a5df6a27bf8d0518a
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Aug 26 05:16:46 2005 +0000
+
+    Define ERRORDB/KEYSYMDB to XERRORDB/XKEYSYMDB if the former is undefined but the latter is. (Gerte Hoogewerf)
+
+commit 07066da0902df91c71f2adb81d1a17ec29165553
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Aug 21 15:45:04 2005 +0000
+
+    update
+
+commit de44d8b111f57bd2f015e085fd8298c5f2a15ef3
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Aug 21 15:38:39 2005 +0000
+
+    Threads support for BSD systems:
+    - need to check for gewtpwuid_r to define mtsafeapi
+    - build UIThrstubs if needed.
+
+commit 60217fdb918bafb2082519efe5cba3b13ad3082a
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Aug 17 19:46:08 2005 +0000
+
+    Add xthreadlib variable to x11.pc. Bump to 0.99.1.
+
+commit e1f4c6f5e36c1511f66fa1fac76520fd97eecbad
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Aug 17 01:27:08 2005 +0000
+
+    Fix more broken multi-line .ds macros. Remove extraneous ;'s .
+
+commit 1909786f4a7d686369edcfc05a938df115fab37c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 16 19:23:15 2005 +0000
+
+    Bugzilla #4112 <https://bugs.freedesktop.org/show_bug.cgi?id=4112> Patch #2687 <https://bugs.freedesktop.org/attachment.cgi?id=2897> Fix multi-line macros in XPutImage man page. (Debian bug #323210, fix by David Mart?nez Moreno)
+
+commit 83406d69c62070d2eeef23eb47f1ca887f711ee5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 15 19:53:37 2005 +0000
+
+    Move RAWCPP macro to xorg-macros.m4 so other modules can use it Add check for whether or not RAWCPP needs -traditional instead of hardcoding it, so non-gcc cpp's can be used
+
+commit 5bb43de17de8e71d967488a713bf2b3448533444
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Aug 6 18:59:49 2005 +0000
+
+    Typo fix in output message
+
+commit afe34b95862bb3c06cdbe724cb5ec3001a4a5215
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Aug 4 02:55:49 2005 +0000
+
+    //bugs.freedesktop.org/show_bug.cgi?id=1887> Patch #3005 <https://bugs.freedesktop.org/attachment.cgi?id=3005> libX11 locale defs severely adrift from glibc: adding new aliases (From Debian via Nathanael Nerode)
+
+commit 3979a0b88edf6475ce5cfaa386e18ef980bda13c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Aug 4 02:51:30 2005 +0000
+
+    //bugs.freedesktop.org/show_bug.cgi?id=1887> Patch #3002 <https://bugs.freedesktop.org/attachment.cgi?id=3002> libX11 locale defs severely adrift from glibc: locales bugfix for bs_BA (From Debian via Nathanael Nerode)
+
+commit 34b454df192f4563499c453ccdb8c079f4a20cbe
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jul 30 20:30:46 2005 +0000
+
+    Include config.h so Xtrans knows which transport types to build code for
+
+commit cd9c9936b49c125eda779b99887d7e6ae4cf56cd
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jul 30 19:15:16 2005 +0000
+
+    Add -D flags to clear various warnings (Stefan Dirsch)
+
+commit e7fef67b4531faddd805d8f2157903006d3117ed
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:50 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 2ebb00244928237088e68325b1032b3550455ce9
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sat Jul 23 20:19:31 2005 +0000
+
+    remove orphan TAB at begin of line
+
+commit dd7a9cdecda73e024ca84c5b9a22b18688038d94
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Jul 23 18:09:39 2005 +0000
+
+    Modify modular libs to use Xregion.h instead of region.h
+
+commit 6d635a88d91647b1b63611c3591f74916f88cd1c
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Jul 23 18:06:16 2005 +0000
+
+    lib/Xrender/Picture.c Change region.h to Xregion.h and modify internal references to include <X11/Xregion.h>.
+
+commit 36283f50fd9748733ae84cb7fb52ca8d9e661c15
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jul 16 06:25:35 2005 +0000
+
+    Set soversion to 6.2.0.
+
+commit 75fd5ae6e4683b9b9dcc13bc2f0faf223610a74f
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Jul 15 04:27:32 2005 +0000
+
+    Add missing Makefile.am to lib/X11/modules
+
+commit 6d84a8b1329af1fcfe86b198f1a6e7dd6ff616c3
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Jul 15 04:08:51 2005 +0000
+
+    Move i18n modules to top-level so they can be built in the right order (before xlib for non-loadable, after xlib for loadable).
+    Link i18n modules against xlib to resolve Xlib symbols used by them.
+
+commit 45f40126a73295345bb5eb187b1167874842ab6e
+Author: Alexander Gottwald <ago@freedesktop.org>
+Date:   Thu Jul 14 19:50:00 2005 +0000
+
+    Add $(top_srcdir)/src to include list
+
+commit 0aed7d91f5928d09d541617aad03709b5090658d
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Thu Jul 14 17:04:49 2005 +0000
+
+    Build fix for non-GNU make.
+
+commit b79422ccb02ab44548d1038956ab0cd4e2638645
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu Jul 14 15:12:44 2005 +0000
+
+    typo fixes (Matthieu Herrb)
+
+commit 419304cde2fda19457c667870edefc0b227651b3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 13 02:41:36 2005 +0000
+
+    Add missing backslashes to xlocale_la_SOURCES
+
+commit d14cc5c8964c4539b57c6cb51ef653292e410b79
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Jul 11 20:32:55 2005 +0000
+
+    Ammend AM_CFLAGS with all needed includes; cannot figure out an easy way to automate this.
+
+commit 424c2d8905eb2ad0a2df15b1da2f96140bfbcffb
+Author: Lars Knoll <lars@trolltech.com>
+Date:   Mon Jul 11 15:24:32 2005 +0000
+
+    compile
+
+commit de9784eb1bde46efc316da279e3da27c6cc288a7
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Jul 11 09:26:40 2005 +0000
+
+    Ignore built man page files
+
+commit 0c258c36d1523113790c599b16d2947d7aa6469a
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Jul 11 09:18:31 2005 +0000
+
+    Minor changes to help modular Xlib build i18n modules
+
+commit 6e752ea1203b786423e40f43340bce15ca3de0f0
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Jul 11 08:29:18 2005 +0000
+
+    Enable loadable i18n modules, making them configurable on the configure command line.
+    Clean up conditionals for XKB, XCMS, XLOCALEDIR
+    Create new lib directory for locale modules in ${X11_LIBDIR}/locale/lib. Add this to the default XLOCALEDIR search path.
+    Create separate X11_LOCALEDATADIR variable pointing at ${datadir}/X11/locale for installing locale data.
+    Split out xcms, xkb, xlibi18n sources from main xlib bits so they can be conditionally included more easily. Lots of source files have been moved with this step; the result seems like it might be easier to maintain.
+    Display message at end of configure script with selected options.
+    Fix manual building with cpp to add -traditional in cpprules.in. This isn't conditionalized at all, so it will break on systems not using GNU cpp.
+
+commit b46cf0d879f1dbf92dcf5a0305d18986c766ed84
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 10 22:37:33 2005 +0000
+
+    Fix segfault when _XimProtoCreateIC() fails to create a context; Debian #239991. (Chung-chieh Shan)
+
+commit 6f2132b18e61ca9755e4b45550f3f5097dd1fbb7
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jul 9 20:06:04 2005 +0000
+
+    Set __libmansuffix__ & __xorgversion__ correctly when cpp processing man pages
+
+commit 3939ac4410446b46071c9d714f4270c12bf904fe
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jul 9 18:44:14 2005 +0000
+
+    - Since all but one line of all the nls/*/Makefile.am files are identical, move common bits to nls/localerules.in for easier updating and use automake includes to include in all the nls/*/Makefile.am files
+    - Don't assume $(CPP) can take gcc-only -traditional flag
+    - CPP process man pages as is done in the monolithic tree
+
+commit 19ba9d0df86c688319377467254b9ea9c4b0eccc
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 06:01:49 2005 +0000
+
+    Clean up .cvsignore files
+
+commit f4bba6fa9b9ce637be7662754750054567e9250a
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Sat Jul 9 02:53:29 2005 +0000
+
+    typo fix. i suck.
+
+commit 3305da61a61695e24c1ea11d3f59dddb52873d47
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Sat Jul 9 02:41:18 2005 +0000
+
+    Check for bigfont proto headers via pkgconfig (Arwed von Merkatz)
+
+commit afdae2e8ccb93de2987b5a5e850695af15ece7e0
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Jul 8 07:11:56 2005 +0000
+
+    Create and use XlibConf.h to match modular build which needs XTHREADS defined when building extensions
+
+commit 86fa88dc594ca2093030acf5c84973ee2b33eb4c
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Jul 8 06:57:06 2005 +0000
+
+    Create and install XlibConf.h to provide external users of Xlibint.h the defines necessary to correctly use the library. Xlibint.h should #include this new file.
+    Add a bunch of .cvsignore files
+
+commit 30f6ffedeaf899e699f0c6b14c9471ce9bcc430c
+Author: Chris Less <clee@c133.org>
+Date:   Mon Jul 4 23:01:48 2005 +0000
+
+    Fixing bug #380 - add a man page for XQueryExtension, XListExtensions, and XFreeExtensionList.
+
+commit 55328bb6caabd37885cd19d7a5821ed425daf321
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Jul 3 10:17:38 2005 +0000
+
+    Avoid a gmake-specific construct, and instead just write the name of the current directory into each Makefile.am.
+
+commit 726538ba21b631bfb0b8094a5546acdaf57379ff
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 07:37:33 2005 +0000
+
+    Fix more include paths; add dix-config.h to XKB code.
+
+commit 8c7677138e70e14eca0255f2168583f0ecc21994
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 07:00:55 2005 +0000
+
+    Add Xtrans definitions (FONT_t, TRANS_CLIENT) to clean up warnings.
+    Add XSERV_t, TRANS_SERVER, TRANS_REOPEN to quash warnings.
+    Add #include <dix-config.h> or <xorg-config.h>, as appropriate, to all source files in the xserver/xorg tree, predicated on defines of HAVE_{DIX,XORG}_CONFIG_H. Change all Xfont includes to <X11/fonts/foo.h>.
+
+commit 197697c92a63091a4cc3cc04dcb7fa29d2655758
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jul 1 22:13:35 2005 +0000
+
+    Fix objdir != srcdir, as well as make distcheck.
+    Don't attempt to create Compose.pre files; formatting fixes.
+    Added if not already present.
+
+commit c162d60ad8f124563f94a2a266de59373936266c
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed Jun 22 22:46:31 2005 +0000
+
+    Apply these patches from Theo van Klaveren:
+    lib-dmx.patch lib-FS.patch lib-X11.patch lib-XRes.patch lib-XScrnSaver.patch lib-xtrans.patch
+    to make the libraries distcheck.
+
+commit 9ee8abdab03ea605a6327118ab7dacab6adf8876
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jun 18 07:48:43 2005 +0000
+
+    Move Secure RPC flags from X11/configure.ac to xtrans/xtrans.m4 since multiple modules will need them
+
+commit 12afc57b7d455781eee305e9ed6a899ceec8729e
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Jun 15 16:50:47 2005 +0000
+
+    Typo fix to locale/error/keysym location declarations.
+
+commit 9a895777e30762f61b98d25be3b5d8b1169baa17
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Jun 15 13:37:43 2005 +0000
+
+    Typo in ImUtil.h commit -- I AM CAPTAIN SKILL.
+
+commit add49285663684875ab7a5c58ec7a2cf8b775f67
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Jun 15 13:32:35 2005 +0000
+
+    Define locations for XErrorDB, XKeysymDB, and locale data in configure.ac. Add AC_DEFINE_DIR macro from autoconf-archive.cryp.to towards this end.
+    Move ImUtil.h from src/ to include/X11/.
+
+commit 845dfc6b42b950890866ee4df27761e086f50dca
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Jun 15 13:27:48 2005 +0000
+
+    Move ImUtil.h from src/ to include/X11/. Additionally, copy Cmap.h as a distribution file.
+
+commit bba117f0d98f62cfb060d0fab97b407a3a0bfda9
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri Jun 10 14:11:36 2005 +0000
+
+    Remove pointless include of Xlib.h.
+    Fix #include path to bigreqstr.h.
+
+commit 1a0de49da1274882bab05b0f7240936b37955e5c
+Author: Alexander Gottwald <ago@freedesktop.org>
+Date:   Thu Jun 9 21:30:15 2005 +0000
+
+    Use $(srcdir) for Compose.pre and XLC_LOCALE.pre
+
+commit af4f0f302644ebfbb0ca9f4016a4aee85c973d37
+Author: Alexander Gottwald <ago@freedesktop.org>
+Date:   Thu Jun 9 15:55:33 2005 +0000
+
+    Replace <X11/transport.c> with <X11/Xtrans/transport.c>
+
+commit fd5f58e0baf692e34b9b622286f18762cc2500d3
+Author: Alexander Gottwald <ago@freedesktop.org>
+Date:   Thu Jun 9 15:52:02 2005 +0000
+
+    Replace <X11/Xtrans.h> with <X11/Xtrans/Xtrans.h>
+    Copy Xtrans.h to exports/include/X11/Xtrans only
+
+commit 44538f9940f969d46c0e5e4b201c684cde2ba611
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun Jun 5 03:29:33 2005 +0000
+
+    Port Imake flags to autoconf tests & --enable-* flags: HASSETUGID, HASGETRESUID, NO_XLOCALEDIR, HAS_SHM and XF86BIGFONT
+
+commit 588e30e9ec65fa6205a34be650b79d5e2243edec
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jun 4 22:53:21 2005 +0000
+
+    Add --enable-secure-rpc flag and checks for needed functions for Secure RPC ("SUN-DES-1") authentication method
+
+commit a547afee2ef49cc41bbb67f9cff5a52a283c0854
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jun 4 21:20:20 2005 +0000
+
+    Bug #3436 <https://bugs.freedesktop.org/show_bug.cgi?id=3436> Conndis.c uses incorrect type for args to XdmcpWrap() (Mike Harris - mharris@www.linux.org.uk)
+
+commit ca93c761559ae464189c7ea7cf11c6a6679f2431
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sat May 28 01:02:32 2005 +0000
+
+    Don't use $< in explicit rules. This only works with GNU make. <https://bugs.freedesktop.org/show_bug.cgi?id=3383>
+
+commit 09ebb349359e3dd9131fa2fa8b07559faa173654
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun May 22 19:05:11 2005 +0000
+
+    Convert man pages to long file names in lib/X11, lib/Xt, & lib/Xext
+
+commit 761219b1ef9befc350c8a35b6f96d047e5f008cc
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat May 21 23:07:48 2005 +0000
+
+    xtrans:
+    Create autoconf macro XTRANS_CONNECTION_FLAGS to provide standard set of --enable flags for which transports to support and common place to update for required libraries for platforms that need certain libs for certain transports
+    ICE:
+    Add ICE_t #define required by Xtrans headers. Replace static defines of LOCALCONN & UNIXCONN with new XTRANS_CONNECTION_FLAGS macro.
+    X11:
+    Moved transport type checks to new macro XTRANS_CONNECTION_FLAGS in xtrans.m4 in xtrans module so they can be shared by all modules using xtrans.
+
+commit 4b1ba6eb975b547b808f4d5c8825a3261de5e02a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat May 21 04:26:12 2005 +0000
+
+    Quote $ac_cv_search_* variables to prevent errors from test when they are set to "none required" (as happens on Solaris since dlopen is in libc)
+    Comment out "override CC = gcc" line as it breaks builds with non-GNU makes, and its incorrect to force a specific compiler. Change LINK line from gcc to $(CC).
+
+commit 1d425d5e2092dd18a7dd599b37ed9af61cf59819
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:22:32 2005 +0000
+
+    revert last change, didn't do right thing at all, sorry for the noise
+
+commit 1b0c46c1ae61d751dd3ca96de8e2c3fe21c5f4f2
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:10:07 2005 +0000
+
+    Require automake 1.7 in AM_INIT_AUTOMAKE
+
+commit cd4657c175dbab6aaca36f18a0ca92c95b5567dd
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue May 17 22:32:09 2005 +0000
+
+    - Check for xproto as its CFLAGS are needed in the .pc file
+
+commit 46e8d8a65430dd87c10b066b5cff99a689c22241
+Author: Egbert Eich <eich-at-freedesktop-dot-org>
+Date:   Tue May 17 08:10:10 2005 +0000
+
+    gcc4 allows to check if sentinels are correct (a sentinel is the terminating element in a varargs list). A sentinel needs to be NULL, not 0 - which doesn't make a difference on 32bit but matters on 64bit. Furthermore it can be told that functions have a printf-like format string and argument list so that they can verify that both match. To use these features certain attributes need to be set - which are compiler specific. To do this we define macros which are expanded depending on the compiler version. For now we put those in include/Xfuncproto.h (the XFree86 DDX layer contains a file compiler.h which however is not visible outside the DDX) (Bugzilla #3268).
+
+commit 23198d2bfbf0049b2630235cd4d4a4ffba7ec6c1
+Author:  <ssp@aware-of-vacuity.boston.redhat.com>
+Date:   Mon May 16 22:35:27 2005 +0000
+
+    Make Xdmcp unconditionally required, require various protocol modules.
+    Mon May 16 17:48:03 2005 Søren Sandmann <sandmann@redhat.com>
+    Check for kbproto if using XKB.
+    Require xextproto rather than xextensions
+    Remove the entries from the xlibs tree, as they are not relevant here.
+
+commit 8bd3aea84ce54b8b76a898f3ae00e2b499c14a5e
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Mon May 16 21:48:36 2005 +0000
+
+    Mon May 16 17:48:03 2005 Søren Sandmann <sandmann@redhat.com>
+    Check for kbproto if using XKB.
+
+commit 9b1fa9ca3ed852ed40860f137511683f4bdae6fa
+Author:  <ssp@aware-of-vacuity.boston.redhat.com>
+Date:   Mon May 16 21:27:35 2005 +0000
+
+    Require xextproto rather than xextensions
+    Remove the entries from the xlibs tree, as they are not relevant here.
+
+commit 7eee605e3aeed549d1053325a03027c5e8cbf71b
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri May 13 22:53:36 2005 +0000
+
+    - For now put xtrans in X11/Xtrans/X11, since libX11 is looking for it in <X11/...>
+    - For Xcomposite and Xdamage, don't link the build system out of the xc tree
+    - Link the public X11 headers into their own directory
+    - Add links to XKeysymDB and XErrorDB
+    - Add links to all the Xlib man pages
+    - Add links to the lcUniConv subdirectory
+    - Conditionally include config.h in Xlib source
+
+commit 6769ccda88caf27d1441d335ef2b318a047a612b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Mar 21 04:58:21 2005 +0000
+
+    xc/lib/X11/ErrDes.c
+    //bugs.freedesktop.org/show_bug.cgi?id=132) Patch #2168 (https://bugs.freedesktop.org/attachment.cgi?id=2168) Replace a couple of BUFSIZE uses with better values to check against. Fixes by Stuart Anderson <anderson@netsweng.com>
+
+commit 3b9e8ece93b916c55a82df53e85f097418edf471
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Sat Mar 19 22:04:55 2005 +0000
+
+    xc/nls/Compose/iso8859-2
+    xc/nls/Compose/iso8859-3
+    xc/nls/Compose/iso8859-9
+    //bugs.freedesktop.org/show_bug.cgi?id=2592) attachment #2156 (https://bugs.freedesktop.org/attachment.cgi?id=2156) Fix a couple of typos in ISO8859-* Compose files ("asciicircum" instead "of asciicirum"). Patch by Matthias Hopf <mhopf@suse.de>.
+
+commit 0ce5950a08b9ab23ca8a32effdd40c421e92df84
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Mar 8 02:53:36 2005 +0000
+
+    Bugzilla Bug 2006 (https://bugs.freedesktop.org/show_bug.cgi?id=2006) Patch #2031 (https://bugs.freedesktop.org/attachment.cgi?id=2031) XEmbed client doesn't receive key events from XIM: Use | to set a bit, not &. Patch by Hidetoshi Tajima <hidetoshi.tajima@sun.com>.
+
+commit df341cd2f2f263f13323e8c0936ea8aa0d7fbba1
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Tue Feb 1 03:12:28 2005 +0000
+
+    xc/nls/Compose/pt_BR.UTF-8
+    //bugs.freedesktop.org/show_bug.cgi?id=2400) attachment #1762 (https://bugs.freedesktop.org/attachment.cgi?id=1762): Fix build bustage caused by broken patch for brazillian locale support (see Bugzilla #1896). Patch by Kevin E. Martin <kem@freedesktop.org>.
+
+commit 483d3973f56dda51f9251d3ea808aaf7f3b48c10
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Fri Jan 28 18:31:31 2005 +0000
+
+    cleaned up boundary-case handling for Uxxxx Unicode keysym notation
+
+commit f234188a4c1e6b655aef0e3957ccad20d4c5847f
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Wed Jan 19 01:53:55 2005 +0000
+
+    xc/nls/compose.dir
+    xc/nls/locale.dir
+    xc/nls/Compose/Imakefile
+    xc/nls/Compose/pt_BR.UTF-8
+    xc/nls/XI18N_OBJS/Imakefile
+    xc/nls/XI18N_OBJS/pt_BR.UTF-8
+    xc/nls/XLC_LOCALE/Imakefile
+    xc/nls/XLC_LOCALE/pt_BR.UTF-8
+    //bugs.freedesktop.org/show_bug.cgi?id=1896) attachment #1675 (https://bugs.freedesktop.org/attachment.cgi?id=1675): Add support for pt_BR.UTF-8 locale. Patch by Gustavo Noronha Silva, Branden Robinson, Julien Lafon.
+
+commit 7448ea7ef425d35cfc31eb41d46f4d879774f376
+Author: Egbert Eich <eich-at-freedesktop-dot-org>
+Date:   Fri Jan 14 18:03:09 2005 +0000
+
+    Made some security enhancements:
+    - no writing past end of buffer caused by bogus locale.
+    - explicitely add a \0 character at end of string. (Bugzilla #2262)
+
+commit 5557d47fcf22a6f3adf327691158f2270e3d5094
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Fri Jan 14 04:59:05 2005 +0000
+
+    xc/nls/compose.dir
+    xc/nls/locale.alias
+    xc/nls/locale.dir
+    //bugs.freedesktop.org/show_bug.cgi?id=1830) attachment #1674 (https://bugs.freedesktop.org/attachment.cgi?id=1674): Adding support for the bs_BA (bs, bs_BA, bs_BA.iso88592, bs_BA.ISO-8859-2, bs_BA.ISO_8859-2, bs_BA.UTF-8) locale. Patch by Vedran Ljubovic <vljubovic@smartnet.ba>.
+
+commit 1fa3737f042f798fa11a9ff5b03f3b3ba3529824
+Author: Egbert Eich <eich-at-freedesktop-dot-org>
+Date:   Tue Jan 11 17:37:57 2005 +0000
+
+    'Normalize' locale names (ie. remove any '-' and '_' and convert to lower case after the <language>_<territory> part) before matching against locale.alias (Bugzilla #2262). This needs adequate testing that we don't accidentally introduce undesirable side effects.
+
+commit 642cd269f94a234aa470a1d43385bd42625d89a1
+Author: Egbert Eich <eich-at-freedesktop-dot-org>
+Date:   Tue Dec 14 08:59:20 2004 +0000
+
+    Removed #ifdef'ed out code together with the comment explaining why it was #ifdef'ed out.
+    Fixed typo.
+    Added comment to a changed that's been committed with one of the previous commits.
+
+commit a07ccae36e629741d2e48de7730114d30a975a41
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Dec 12 08:42:50 2004 +0000
+
+    Fix missing XChangeProperty() prototype missing in synopsis section.
+
+commit c73adb1c8ad806c2f9f0ba32f4b449e7a871501c
+Author: Alexander Gottwald <ago at freedesktop dot org>
+Date:   Wed Dec 8 13:42:01 2004 +0000
+
+    Bugzilla #1980 (https://bugs.freedesktop.org/show_bug.cgi?id=1980) Handle XERRORDB only on WIN32 platform
+
+commit d5e7ab194103e22fd6c5094aaa107d90210bb600
+Author: Jim Gettys <jg@freedesktop.org>
+Date:   Thu Dec 2 16:18:16 2004 +0000
+
+    fix comment to indicate additional possible mode. i bug 1756 reported by Owen Taylor.
+
+commit 03940d7330cb1bbf93d49c650aefb19de457da7c
+Author: Alexander Gottwald <ago at freedesktop dot org>
+Date:   Wed Dec 1 13:06:55 2004 +0000
+
+    Bugzilla #1980, https://bugs.freedesktop.org/show_bug.cgi?id=1980 Make location of XErrorDB configurable
+
+commit 11a03ab908bfcfab8a3492684e8e9320e492d552
+Author: Alexander Gottwald <ago at freedesktop dot org>
+Date:   Wed Dec 1 12:42:17 2004 +0000
+
+    Bugzilla #1864, http://freedesktop.org/bugzilla/show_bug.cgi?id=1864 Initialize pointer to NULL to avoid freeing random memory
+
+commit f3d83ee153f42e8899b844377e6b842d93411e62
+Author: Alexander Gottwald <ago@freedesktop.org>
+Date:   Mon Nov 15 15:06:54 2004 +0000
+
+    Bufzilla #1802, http://freedesktop.org/bugzilla/show_bug.cgi?id=1802 Added mingw (Win32) port
+
+commit b798ea11911ac58a8e6e7d15a2a643b023859749
+Author: Alexander Gottwald <ago at freedesktop dot org>
+Date:   Mon Nov 15 13:29:56 2004 +0000
+
+    Bugzilla #1864, http://freedesktop.org/bugzilla/show_bug.cgi?id=1864 Initialize pointer to NULL to avoid freeing random memory
+
+commit 436108cd6c84053698e5ca629096f59b34f50c2a
+Author: Kristian Høgsberg <krh@redhat.com>
+Date:   Thu Nov 11 15:37:01 2004 +0000
+
+    Fix #1818
+
+commit bf2e6ef66ba55f90efa4a4ba8c8b6d3ec0d1531c
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Tue Nov 9 00:56:56 2004 +0000
+
+    xc/nls/compose.dir
+    xc/nls/locale.alias
+    xc/nls/locale.dir
+    //freedesktop.org/bugzilla/show_bug.cgi?id=1544): Adding support for the si_LK (si, sinhala, si_LK, si_LK.UTF-8) locale. Patch by Anuradha Ratnaweera <gnu.slash.linux@gmail.com>.
+
+commit 443890ceefbd6dafe68e30d103ec4f9d316ed655
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Fri Nov 5 00:58:49 2004 +0000
+
+    xc/nls/compose.dir
+    xc/nls/locale.alias
+    xc/nls/locale.dir
+    Adding some of the major indic locales (bn_IN.UTF-8, bn_IN.utf8, gu_IN.UTF-8, gu_IN.utf8, pa_IN.UTF-8, pa_IN.utf8) to X. Patch by Leon Ho <llch@redhat.com>.
+
+commit af7467ec734321f127b957921cce7792902b6794
+Author: Egbert Eich <eich-at-freedesktop-dot-org>
+Date:   Mon Oct 18 17:29:03 2004 +0000
+
+    Correcting font encodings for GB18030, GBK and BIG5-HKSCS. Adding nls support for those encodings (Bugzilla 1573, James Su).
+
+commit 1b900b59cb24fe8be3db0d434b04d462c0eeb206
+Author: Egbert Eich <eich-at-freedesktop-dot-xorg>
+Date:   Mon Oct 18 14:21:45 2004 +0000
+
+    Made handling of DevelDrivers for x86-64 more conformant to other platforms.
+    Compress all font encodings (Stefan Dirsch).
+    Fixed warnings.
+    Turn on forwarding XNSpotLocation event to XIM server in OffTheSpot and Root mode (bugzilla #1580, James Su).
+    Added another compose key combination for the Euro symbol (Stefan Dirsch).
+    Added support for UTF-8 in ja_JP, ko_KR and zh_TW locales (Mike Fabian).
+    Changed default encoding for ru from KOI8-R to ISO8859-5 (Mike Fabian). This is the encoding that is also used by glibc. We may break other libcs - lets see who complains.
+    Added explanation for DESTDIR to install to a different directory than /.
+    Added some early bailouts to atiprobe if PCI structure pointer is NULL to prevent sig11.
+    XV support doesn't depend on 2D acceleration any more. This patch removes this limitation from the NSC driver. This is a patch that I have committed to XFree86 a while ago but never ported over to X.Org. Matthieu Herrb contributed some build fixes.
+    Fixing SetDPMSTimers() so that DPMS*Time == 0 disables the appropriate timer. This takes advantage of the fact that TimerSet() with a timeout argument 0 behaves like TimerCanel().
+    Use /dev/xconsole (named pipe) or devpts for system logger (Werner Fink).
+    Create missing links for backward compatibility to XFree86 (Stefan Dirsch).
+    Changed comment to mention xorg.
+    Changed cursor for the 'kill' action from XC_draped_box to XC_Pirate. If you don't like it we can change it back (original author unkown).
+    Added 'pic' to the man page rendering command pipeline (Werner Fink).
+    Added missing return value (Stefan Dirsch, Roland Mainz)
+
+commit 1ba103c3cad2329db3a31f88d7798b913affc570
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Wed Oct 13 07:38:00 2004 +0000
+
+    Use attributes instead of pragmas for weak symbols on gcc 2.95 as well. Using pragmas may result in the symbols being undefined with big -O. (FreeBSD ports/69708, Masakazu HIGAKI <higamasa@dream.com>)
+
+commit d80237db627bf71ad5615ff4ba05e6ab436aa740
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri Oct 8 22:57:56 2004 +0000
+
+    Fri Oct 8 18:53:11 2004 Soeren Sandmann <sandmann@redhat.com>
+    Move iso10646 last so the "fallback" fonts will actually be used if they are better matches.
+
+commit d1f76d17ecf418396627b1a58319f2b9b255548a
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Sun Sep 26 22:54:57 2004 +0000
+
+    bug fix for previous patch
+
+commit 48932d9b71d10e15812f47d5b842ab6aa8dac625
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Sun Sep 26 20:46:17 2004 +0000
+
+    The big keysym cleanup, to bring implementation in line with the recent revision of Appendix A of the protocol spec. (Markus Kuhn)
+
+commit 2e02a95dcc43dd3ec7bbaf4675ffb94f5074f543
+Author: Egbert Eich <eich@freedesktop.org>
+Date:   Wed Sep 15 09:05:22 2004 +0000
+
+    Unregistering events in XSelectInput() when unregistering IM filter callbacks may be a bad idea as others may be interested in this event. Removed the call to XSelectInput() altogether as we are in root window anyway (Lubos Lunak).
+    Fix size of a variable that gets assigned the value of SmartScheduleTime (long) to long. This should help to prevent smart scheduler lockup on 64 bit systems due to overruns (Andreas Schwab).
+
+commit 2d3afb68a104a80a21ee622b9abb9c95e83505d3
+Author: Egbert Eich <eich@freedesktop.org>
+Date:   Tue Aug 31 11:37:03 2004 +0000
+
+    Fixed some lockups in XIM code when the application is running with multi thread support. These lockups occur deep down in XFilterEvents() which itself locks when another Xlib function gets called that also locks. This fixes two instances by separating those Xlib functions into an internal (non-locking) call and a locking wrapper that is used as an external function. There may be several other such instances therefore another more general patch is eventually required (Bugzilla #1182).
+
+commit e689746c8d0e21e9011e8b91a3071d235d3a2a74
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Aug 19 06:48:06 2004 +0000
+
+    Fix header file to #ifdef the XKB keysyms when they are used. This fixes the X test suite build failure.
+
+commit d558a53a6f57eecfcaadce5141fe3a08860defcb
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Aug 14 07:12:36 2004 +0000
+
+    Use XLIB_SKIP_ARGB_VISUALS environment variable to disable all depth 32 visuals. Necessary to keep Flash from crashing.
+    Must call ValidateGC/ValidatePicture on "real" GC/Picture to ensure pCompositeClip is set correctly.
+    Need to take the composite clip from the "real" GC/Picture and turn it into the clientClip for the backing version.
+    Adjust pixmap screen origin to account for drawable->x/y Change debugging output a bit (disabled by default)
+
+commit 85c2d81f299ed3444658011b7d6fb0a7ab8a6f55
+Author: Alexander Gottwald <ago@freedesktop.org>
+Date:   Fri Aug 13 16:28:19 2004 +0000
+
+    Set most significant bit to be a one. (Bug #1024, Kensuke Matsuzaki)
+    Fix conversion from sjis and euc. (Bug #1024, Toshio Takabe)
+
+commit c4d56e4e288d4e48b84b021a61638f46e9a45e27
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Aug 11 05:25:13 2004 +0000
+
+    Bug #372: Prevent a crash in XPolygonRegion when called with a bogus point count. Reported by Andreas Luik.
+
+commit 92487437173f600f208d825f65756d3ad14a4f7e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Mon Aug 9 22:37:22 2004 +0000
+
+    Fix install problem on platforms not using xorg.cf/xfree86.cf (Bug #339, Harold L. Hunt II, Alexander Gottwald).
+    Fix crash when using X core font in zh_CN.UTF-8 locale (Bug #368, Yu Shao, David Dawes).
+    Fix glXMakeCurrent(Dpy, None, NULL) crash (Bug #719, Adam Jackson).
+    HP-PA build fix (Bug #828, Guy Martin, Paul Anderson).
+    Fix SDK build for GATOS and Wacom driver (Bug #829, Bryan Stine).
+    Fix attempt to read video ROM before enabling it (Bug #843, Ivan Kokshaysky, Mike A. Harris).
+    Fix detection of primary adapter (Bug #843, Ivan Kokshaysky, Mike A. Harris).
+    Clarify xset man page description of how to use the keyboard repeat rate settings (Bug #846, Mike A. Harris).
+    Fix problem where print-screen key would get remapped to sys-req in certain keymaps, which broke GNOME printscreen functionality (Bug #847, Owen Taylor).
+    Fix several render problems:
+    - MMIO mode support
+    - Hang on IGP chips
+    - VT switching hang
+    - 3D render corruption (Bug #922, Hui Yu).
+
+commit 55c2ee568e7d3903258286a13bdf96ce5348ffda
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Tue Jul 27 06:06:05 2004 +0000
+
+    - remove remaining AMOEBA references.
+    - remove unused file.
+
+commit 6e884b12911eedfb003e90a3829ce66f7fc9cf2d
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Tue Jul 20 17:48:09 2004 +0000
+
+    Tue Jul 20 19:38:06 2004 Soeren Sandmann <sandmann@daimi.au.dk>
+    Set font_data->xlfd_data to NULL after XFree(). (#837, patch from Bastien Nocera).
+    Tue Jul 20 18:23:32 2004 Soeren Sandmann <sandmann@daimi.au.dk>
+    Use /dev/urandom on Linux.(#761).
+
+commit 6f0bc97aa4e6de5a4b001f40ac10795cfdf09fc1
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Fri May 28 23:26:44 2004 +0000
+
+    Forced commit to note repocopy from xc/lib/XThrStub, will be connected to the build after this.
+
+commit aa7010c43ae9f39fb84b5ff155f76117c9e527a0
+Author: Egbert Eich <eich@pdx.freedesktop.org>
+Date:   Mon May 24 19:02:11 2004 +0000
+
+    Improve 'uniqueness' of authorization cookie sent by client for XDM-AUTHORIZATION-1. Old 'uniquness' consisted of the PID of the client, a time stamp (in seconds) and a number obtained by starting to count down from 0xffff. When a client did an XOpenDisplay() then execv'ed a child and did XOpenDisplay() again within the same second, the cookie was identical to the previous one (as the PID did not change but the static 'count down' variable was reinitialized) and thus refused by the server.
+
+commit 720702da29769d80ad1254d92edbad5b30f8a8da
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat May 22 03:47:42 2004 +0000
+
+    Bugzilla #658: XStringToKeysym fails for Greek_IOTAdiaeresis (Fixes VSW5 testcase XStringToKeysym-7 failure)
+
+commit 3aed873292424b497d9a7dcee2975b95bf5ac966
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Apr 24 23:39:25 2004 +0000
+
+    XOpenDisplay should try tcp connection if local connections fail (aka Sun bug id #4624183).
+    Also includes fix from NetBSD Problem Report #25098 (Michael van Elst) (Xlib segfaults with IPv6 if compiled with HASXDMAUTH).
+    xc/config/cf/sunLib.tmpl
+    xc/lib/FS/Imakefile Add missing shared library dependencies for Solaris
+
+commit c6349f43193b74a3c09945f3093a871b0157ba47
+Author: Egbert Eich <eich@freedesktop.org>
+Date:   Fri Apr 23 18:42:09 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit c3c4ddc682950a01b80825021f3e2503ab01ea7f
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:07 2003 +0000
+
+    Initial revision
+
+commit dc4268a7dadc8da0d561757a68461246728613d3
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:47 2003 +0000
+
+    Initial revision
+
+commit deae12c6b683898f5213992d561a59d4ea889cca
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:30 2003 +0000
+
+    R6.6 is the Xorg base-line

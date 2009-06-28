@@ -1,0 +1,1453 @@
+/*
+ *Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ *
+ *Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ *"Software"), to deal in the Software without restriction, including
+ *without limitation the rights to use, copy, modify, merge, publish,
+ *distribute, sublicense, and/or sell copies of the Software, and to
+ *permit persons to whom the Software is furnished to do so, subject to
+ *the following conditions:
+ *
+ *The above copyright notice and this permission notice shall be
+ *included in all copies or substantial portions of the Software.
+ *
+ *THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *NONINFRINGEMENT. IN NO EVENT SHALL THE XFREE86 PROJECT BE LIABLE FOR
+ *ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *Except as contained in this notice, the name of the XFree86 Project
+ *shall not be used in advertising or otherwise to promote the sale, use
+ *or other dealings in this Software without prior written authorization
+ *from the XFree86 Project.
+ *
+ * Authors:	Dakshinamurthy Karra
+ *		Suhaib M Siddiqi
+ *		Peter Busch
+ *		Harold L Hunt II
+ *		Kensuke Matsuzaki
+ */
+
+#ifndef _WIN_H_
+#define _WIN_H_
+
+#ifndef NO
+#define NO					0
+#endif
+#ifndef YES
+#define YES					1
+#endif
+
+/* Turn debug messages on or off */
+#ifndef CYGDEBUG
+#define CYGDEBUG				NO
+#endif
+
+/* WM_XBUTTON Messages. They should go into w32api. */
+#ifndef WM_XBUTTONDOWN
+# define WM_XBUTTONDOWN 523
+#endif
+#ifndef WM_XBUTTONUP
+# define WM_XBUTTONUP 524
+#endif
+#ifndef WM_XBUTTONDBLCLK
+# define WM_XBUTTONDBLCLK 525
+#endif
+
+#define NEED_EVENTS
+
+#define WIN_DEFAULT_BPP				0
+#define WIN_DEFAULT_WHITEPIXEL			255
+#define WIN_DEFAULT_BLACKPIXEL			0
+#define WIN_DEFAULT_LINEBIAS			0
+#define WIN_DEFAULT_E3B_TIME			50 /* milliseconds */
+#define WIN_DEFAULT_DPI				75
+#define WIN_DEFAULT_REFRESH			0
+#define WIN_DEFAULT_WIN_KILL			TRUE
+#define WIN_DEFAULT_UNIX_KILL			FALSE
+#define WIN_DEFAULT_CLIP_UPDATES_NBOXES		0
+#ifdef XWIN_EMULATEPSEUDO
+#define WIN_DEFAULT_EMULATE_PSEUDO		FALSE
+#endif
+#define WIN_DEFAULT_USER_GAVE_HEIGHT_AND_WIDTH	FALSE
+
+#define WIN_DIB_MAXIMUM_SIZE	0x08000000 /* 16 MB on Windows 95, 98, Me */
+#define WIN_DIB_MAXIMUM_SIZE_MB (WIN_DIB_MAXIMUM_SIZE / 8 / 1024 / 1024)
+
+/*
+ * Windows only supports 256 color palettes
+ */
+#define WIN_NUM_PALETTE_ENTRIES			256
+
+/*
+ * Number of times to call Restore in an attempt to restore the primary surface
+ */
+#define WIN_REGAIN_SURFACE_RETRIES		1
+
+/*
+ * Build a supported display depths mask by shifting one to the left
+ * by the number of bits in the supported depth.
+ */
+#define WIN_SUPPORTED_BPPS	( (1 << (32 - 1)) | (1 << (24 - 1)) \
+				| (1 << (16 - 1)) | (1 << (15 - 1)) \
+				| (1 << ( 8 - 1)))
+#define WIN_CHECK_DEPTH		YES
+
+/*
+ * Timer IDs for WM_TIMER
+ */
+#define WIN_E3B_TIMER_ID		1
+#define WIN_POLLING_MOUSE_TIMER_ID	2
+
+
+#define WIN_E3B_OFF		-1
+#define WIN_FD_INVALID		-1
+
+#define WIN_SERVER_NONE		0x0L	/* 0 */
+#define WIN_SERVER_SHADOW_GDI	0x1L	/* 1 */
+#define WIN_SERVER_SHADOW_DD	0x2L	/* 2 */
+#define WIN_SERVER_SHADOW_DDNL	0x4L	/* 4 */
+#ifdef XWIN_PRIMARYFB
+#define WIN_SERVER_PRIMARY_DD	0x8L	/* 8 */
+#endif
+#ifdef XWIN_NATIVEGDI
+# define WIN_SERVER_NATIVE_GDI	0x10L	/* 16 */
+#endif
+
+#define AltMapIndex		Mod1MapIndex
+#define NumLockMapIndex		Mod2MapIndex
+#define AltLangMapIndex		Mod3MapIndex
+#define KanaMapIndex		Mod4MapIndex
+#define ScrollLockMapIndex	Mod5MapIndex
+
+#define WIN_MOD_LALT		0x00000001
+#define WIN_MOD_RALT		0x00000002
+#define WIN_MOD_LCONTROL	0x00000004
+#define WIN_MOD_RCONTROL	0x00000008
+
+#define WIN_24BPP_MASK_RED	0x00FF0000
+#define WIN_24BPP_MASK_GREEN	0x0000FF00
+#define WIN_24BPP_MASK_BLUE	0x000000FF
+
+#define WIN_MAX_KEYS_PER_KEY	4
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+
+#include <errno.h>
+#if defined(XWIN_MULTIWINDOWEXTWM) || defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
+#define HANDLE void *
+#include <pthread.h>
+#undef HANDLE
+#endif
+
+#ifdef HAS_MMAP
+#include <sys/mman.h>
+#ifndef MAP_FILE
+#define MAP_FILE 0
+#endif /* MAP_FILE */
+#endif /* HAS_MMAP */
+
+#include <X11/X.h>
+#include <X11/Xproto.h>
+#include <X11/Xos.h>
+#include <X11/Xprotostr.h>
+#include "scrnintstr.h"
+#include "pixmapstr.h"
+#include "pixmap.h"
+#include "region.h"
+#include "gcstruct.h"
+#include "colormap.h"
+#include "colormapst.h"
+#include "miscstruct.h"
+#include "servermd.h"
+#include "windowstr.h"
+#include "mi.h"
+#include "micmap.h"
+#include "mifillarc.h"
+#include "mifpoly.h"
+#include "mibstore.h"
+#include "input.h"
+#include "mipointer.h"
+#include "X11/keysym.h"
+#include "mibstore.h"
+#include "micoord.h"
+#include "dix.h"
+#include "miline.h"
+#include "shadow.h"
+#include "fb.h"
+#include "rootless.h"
+
+#ifdef RENDER
+#include "mipict.h"
+#include "picturestr.h"
+#endif
+
+#ifdef RANDR
+#include "randrstr.h"
+#endif
+
+/*
+ * Windows headers
+ */
+#include "winms.h"
+#include "./winresource.h"
+
+
+/*
+ * Define Windows constants
+ */
+
+#define WM_TRAYICON		(WM_USER + 1000)
+#define WM_INIT_SYS_MENU	(WM_USER + 1001)
+#define WM_GIVEUP		(WM_USER + 1002)
+
+
+/* Local includes */
+#include "winwindow.h"
+#include "winmsg.h"
+
+
+/*
+ * Debugging macros
+ */
+
+#if CYGDEBUG
+#define DEBUG_MSG(str,...) \
+if (fDebugProcMsg) \
+{ \
+  char *pszTemp; \
+  int iLength; \
+  pszTemp = Xprintf (str, ##__VA_ARGS__); \
+  MessageBox (NULL, pszTemp, szFunctionName, MB_OK); \
+  xfree (pszTemp); \
+}
+#else
+#define DEBUG_MSG(str,...)
+#endif
+
+#if CYGDEBUG
+#define DEBUG_FN_NAME(str) PTSTR szFunctionName = str
+#else
+#define DEBUG_FN_NAME(str)
+#endif
+
+#if CYGDEBUG || YES
+#define DEBUGVARS BOOL fDebugProcMsg = FALSE
+#else
+#define DEBUGVARS
+#endif
+
+#if CYGDEBUG || YES
+#define DEBUGPROC_MSG fDebugProcMsg = TRUE
+#else
+#define DEBUGPROC_MSG
+#endif
+
+#define PROFILEPOINT(point,thresh)\
+{\
+static unsigned int PROFPT##point = 0;\
+if (++PROFPT##point % thresh == 0)\
+ErrorF (#point ": PROFILEPOINT hit %u times\n", PROFPT##point);\
+}
+
+
+/* We use xor this macro for detecting toggle key state changes */
+#define WIN_XOR(a,b) ((!(a) && (b)) || ((a) && !(b)))
+
+#define DEFINE_ATOM_HELPER(func,atom_name)			\
+static Atom func (void) {					\
+    static int generation;					\
+    static Atom atom;						\
+    if (generation != serverGeneration) {			\
+	generation = serverGeneration;				\
+	atom = MakeAtom (atom_name, strlen (atom_name), TRUE);	\
+    }								\
+    return atom;						\
+}
+
+/*
+ * Typedefs for engine dependent function pointers
+ */
+
+typedef Bool (*winAllocateFBProcPtr)(ScreenPtr);
+
+typedef void (*winShadowUpdateProcPtr)(ScreenPtr, shadowBufPtr);
+
+typedef Bool (*winCloseScreenProcPtr)(int, ScreenPtr);
+
+typedef Bool (*winInitVisualsProcPtr)(ScreenPtr);
+
+typedef Bool (*winAdjustVideoModeProcPtr)(ScreenPtr);
+
+typedef Bool (*winCreateBoundingWindowProcPtr)(ScreenPtr);
+
+typedef Bool (*winFinishScreenInitProcPtr)(int, ScreenPtr, int, char **);
+
+typedef Bool (*winBltExposedRegionsProcPtr)(ScreenPtr);
+
+typedef Bool (*winActivateAppProcPtr)(ScreenPtr);
+
+typedef Bool (*winRedrawScreenProcPtr)(ScreenPtr pScreen);
+
+typedef Bool (*winRealizeInstalledPaletteProcPtr)(ScreenPtr pScreen);
+
+typedef Bool (*winInstallColormapProcPtr)(ColormapPtr pColormap);
+
+typedef Bool (*winStoreColorsProcPtr)(ColormapPtr pmap, 
+				      int ndef, xColorItem *pdefs);
+
+typedef Bool (*winCreateColormapProcPtr)(ColormapPtr pColormap);
+
+typedef Bool (*winDestroyColormapProcPtr)(ColormapPtr pColormap);
+
+typedef Bool (*winHotKeyAltTabProcPtr)(ScreenPtr);
+
+typedef Bool (*winCreatePrimarySurfaceProcPtr)(ScreenPtr);
+
+typedef Bool (*winReleasePrimarySurfaceProcPtr)(ScreenPtr);
+
+typedef Bool (*winFinishCreateWindowsWindowProcPtr)(WindowPtr pWin);
+
+
+/* Typedef for DIX wrapper functions */
+typedef int (*winDispatchProcPtr) (ClientPtr);
+
+
+/*
+ * GC (graphics context) privates
+ */
+
+typedef struct
+{
+  HDC			hdc;
+  HDC			hdcMem;
+} winPrivGCRec, *winPrivGCPtr;
+
+
+/*
+ * Pixmap privates
+ */
+
+typedef struct
+{
+  HDC			hdcSelected;
+  HBITMAP		hBitmap;
+  BYTE			*pbBits;
+  DWORD			dwScanlineBytes;
+  BITMAPINFOHEADER	*pbmih;
+} winPrivPixmapRec, *winPrivPixmapPtr;
+
+
+/*
+ * Colormap privates
+ */
+
+typedef struct
+{
+  HPALETTE		hPalette;
+  LPDIRECTDRAWPALETTE	lpDDPalette;
+  RGBQUAD		rgbColors[WIN_NUM_PALETTE_ENTRIES];
+  PALETTEENTRY		peColors[WIN_NUM_PALETTE_ENTRIES];
+} winPrivCmapRec, *winPrivCmapPtr;
+
+/*
+ * Windows Cursor handling.
+ */ 
+  
+typedef struct {
+  /* from GetSystemMetrics */
+  int sm_cx;
+  int sm_cy;
+
+  BOOL visible;
+  HCURSOR handle;
+  QueryBestSizeProcPtr QueryBestSize;
+  miPointerSpriteFuncPtr spriteFuncs;
+} winCursorRec;
+
+/*
+ * Screen information structure that we need before privates are available
+ * in the server startup sequence.
+ */
+
+typedef struct
+{
+  ScreenPtr		pScreen;
+  
+  /* Did the user specify a height and width? */
+  Bool			fUserGaveHeightAndWidth;
+
+  DWORD			dwScreen;
+  DWORD			dwUserWidth;
+  DWORD			dwUserHeight;
+  DWORD			dwWidth;
+  DWORD			dwHeight;
+  DWORD			dwWidth_mm;
+  DWORD			dwHeight_mm;
+  DWORD			dwPaddedWidth;
+
+  /* Did the user specify a screen position? */
+  Bool			fUserGavePosition;
+  DWORD                 dwInitialX;
+  DWORD                 dwInitialY;
+
+  /*
+   * dwStride is the number of whole pixels that occupy a scanline,
+   * including those pixels that are not displayed.  This is basically
+   * a rounding up of the width.
+   */
+  DWORD			dwStride;
+
+  /* Offset of the screen in the window when using scrollbars */
+  DWORD			dwXOffset;
+  DWORD			dwYOffset;
+
+  DWORD			dwBPP;
+  DWORD			dwDepth;
+  DWORD			dwRefreshRate;
+  char			*pfb;
+  DWORD			dwEngine;
+  DWORD			dwEnginePreferred;
+  DWORD			dwClipUpdatesNBoxes;
+#ifdef XWIN_EMULATEPSEUDO
+  Bool			fEmulatePseudo;
+#endif
+  Bool			fFullScreen;
+  Bool			fDecoration;
+#ifdef XWIN_MULTIWINDOWEXTWM
+  Bool			fMWExtWM;
+  Bool			fInternalWM;
+  Bool			fAnotherWMRunning;
+#endif
+  Bool			fRootless;
+#ifdef XWIN_MULTIWINDOW
+  Bool			fMultiWindow;
+#endif
+#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
+  Bool			fMultiMonitorOverride;
+#endif
+  Bool                  fMultipleMonitors;
+  Bool			fLessPointer;
+  Bool			fScrollbars;
+  Bool			fNoTrayIcon;
+  int			iE3BTimeout;
+  /* Windows (Alt+F4) and Unix (Ctrl+Alt+Backspace) Killkey */
+  Bool                  fUseWinKillKey;
+  Bool                  fUseUnixKillKey;
+  Bool			fIgnoreInput;
+
+  /* Did the user explicitly set this screen? */
+  Bool			fExplicitScreen;
+} winScreenInfo, *winScreenInfoPtr;
+
+
+/*
+ * Screen privates
+ */
+
+typedef struct _winPrivScreenRec
+{
+  winScreenInfoPtr	pScreenInfo;
+
+  Bool			fEnabled;
+  Bool			fClosed;
+  Bool			fActive;
+  Bool			fBadDepth;
+
+  int			iDeltaZ;
+
+  int			iConnectedClients;
+
+  CloseScreenProcPtr	CloseScreen;
+
+  DWORD			dwRedMask;
+  DWORD			dwGreenMask;
+  DWORD			dwBlueMask;
+  DWORD			dwBitsPerRGB;
+
+  DWORD			dwModeKeyStates;
+
+  /* Handle to icons that must be freed */
+  HICON			hiconNotifyIcon;
+
+  /* Last width, height, and depth of the Windows display */
+  DWORD			dwLastWindowsWidth;
+  DWORD			dwLastWindowsHeight;
+  DWORD			dwLastWindowsBitsPixel;
+
+  /* Palette management */
+  ColormapPtr		pcmapInstalled;
+
+  /* Pointer to the root visual so we only have to look it up once */
+  VisualPtr		pRootVisual;
+
+  /* 3 button emulation variables */
+  int			iE3BCachedPress;
+  Bool			fE3BFakeButton2Sent;
+
+  /* Privates used by shadow fb GDI server */
+  HBITMAP		hbmpShadow;
+  HDC			hdcScreen;
+  HDC			hdcShadow;
+  HWND			hwndScreen;
+  
+  /* Privates used by shadow fb and primary fb DirectDraw servers */
+  LPDIRECTDRAW		pdd;
+  LPDIRECTDRAWSURFACE2	pddsPrimary;
+  LPDIRECTDRAW2		pdd2;
+
+  /* Privates used by shadow fb DirectDraw server */
+  LPDIRECTDRAWSURFACE2	pddsShadow;
+  LPDDSURFACEDESC	pddsdShadow;
+
+  /* Privates used by primary fb DirectDraw server */
+  LPDIRECTDRAWSURFACE2	pddsOffscreen;
+  LPDDSURFACEDESC	pddsdOffscreen;
+  LPDDSURFACEDESC	pddsdPrimary;
+
+  /* Privates used by shadow fb DirectDraw Nonlocking server */
+  LPDIRECTDRAW4		pdd4;
+  LPDIRECTDRAWSURFACE4	pddsShadow4;
+  LPDIRECTDRAWSURFACE4	pddsPrimary4;
+  BOOL			fRetryCreateSurface;
+
+  /* Privates used by both shadow fb DirectDraw servers */
+  LPDIRECTDRAWCLIPPER	pddcPrimary;
+
+#ifdef XWIN_MULTIWINDOWEXTWM
+  /* Privates used by multi-window external window manager */
+  RootlessFrameID	widTop;
+  Bool			fRestacking;
+#endif
+
+#ifdef XWIN_MULTIWINDOW
+  /* Privates used by multi-window */
+  pthread_t		ptWMProc;
+  pthread_t		ptXMsgProc;
+  void			*pWMInfo;
+#endif
+
+#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
+  /* Privates used by both multi-window and rootless */
+  Bool			fRootWindowShown;
+#endif
+
+#if defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
+  /* Privates used for any module running in a seperate thread */
+  pthread_mutex_t	pmServerStarted;
+  Bool			fServerStarted;
+#endif
+  
+  /* Engine specific functions */
+  winAllocateFBProcPtr			pwinAllocateFB;
+  winShadowUpdateProcPtr		pwinShadowUpdate;
+  winCloseScreenProcPtr			pwinCloseScreen;
+  winInitVisualsProcPtr			pwinInitVisuals;
+  winAdjustVideoModeProcPtr		pwinAdjustVideoMode;
+  winCreateBoundingWindowProcPtr	pwinCreateBoundingWindow;
+  winFinishScreenInitProcPtr		pwinFinishScreenInit;
+  winBltExposedRegionsProcPtr		pwinBltExposedRegions;
+  winActivateAppProcPtr			pwinActivateApp;
+  winRedrawScreenProcPtr		pwinRedrawScreen;
+  winRealizeInstalledPaletteProcPtr	pwinRealizeInstalledPalette;
+  winInstallColormapProcPtr		pwinInstallColormap;
+  winStoreColorsProcPtr			pwinStoreColors;
+  winCreateColormapProcPtr		pwinCreateColormap;
+  winDestroyColormapProcPtr		pwinDestroyColormap;
+  winHotKeyAltTabProcPtr		pwinHotKeyAltTab;
+  winCreatePrimarySurfaceProcPtr	pwinCreatePrimarySurface;
+  winReleasePrimarySurfaceProcPtr	pwinReleasePrimarySurface;
+
+#ifdef XWIN_MULTIWINDOW
+  /* Window Procedures for MultiWindow mode */
+  winFinishCreateWindowsWindowProcPtr	pwinFinishCreateWindowsWindow;
+#endif
+
+  /* Window Procedures for Rootless mode */
+  CreateWindowProcPtr			CreateWindow;
+  DestroyWindowProcPtr			DestroyWindow;
+  PositionWindowProcPtr			PositionWindow;
+  ChangeWindowAttributesProcPtr		ChangeWindowAttributes;
+  RealizeWindowProcPtr			RealizeWindow;
+  UnrealizeWindowProcPtr		UnrealizeWindow;
+  ValidateTreeProcPtr			ValidateTree;
+  PostValidateTreeProcPtr		PostValidateTree;
+  WindowExposuresProcPtr		WindowExposures;
+  CopyWindowProcPtr			CopyWindow;
+  ClearToBackgroundProcPtr		ClearToBackground;
+  ClipNotifyProcPtr			ClipNotify;
+  RestackWindowProcPtr			RestackWindow;
+  ReparentWindowProcPtr			ReparentWindow;
+  ResizeWindowProcPtr			ResizeWindow;
+  MoveWindowProcPtr			MoveWindow;
+#ifdef SHAPE
+  SetShapeProcPtr			SetShape;
+#endif
+
+  winCursorRec                          cursor;
+} winPrivScreenRec;
+
+
+#ifdef XWIN_MULTIWINDOWEXTWM
+typedef struct {
+  RootlessWindowPtr	pFrame;
+  HWND			hWnd;
+  int			dwWidthBytes;
+  BITMAPINFOHEADER	*pbmihShadow;
+  HBITMAP		hbmpShadow;
+  HDC			hdcShadow;
+  HDC			hdcScreen;
+  BOOL			fResized;
+  BOOL			fRestackingNow;
+  BOOL			fClose;
+  BOOL			fMovingOrSizing;
+  BOOL			fDestroyed;//for debug
+  char			*pfb;
+} win32RootlessWindowRec, *win32RootlessWindowPtr;
+#endif
+
+
+typedef struct {
+  pointer		value;
+  XID			id;
+} WindowIDPairRec, *WindowIDPairPtr;
+
+
+/*
+ * Extern declares for general global variables
+ */
+
+extern winScreenInfo		g_ScreenInfo[];
+extern miPointerScreenFuncRec	g_winPointerCursorFuncs;
+extern DWORD			g_dwEvents;
+#ifdef HAS_DEVWINDOWS
+extern int			g_fdMessageQueue;
+#endif
+extern DevPrivateKey		g_iScreenPrivateKey;
+extern DevPrivateKey		g_iCmapPrivateKey;
+extern DevPrivateKey		g_iGCPrivateKey;
+extern DevPrivateKey		g_iPixmapPrivateKey;
+extern DevPrivateKey		g_iWindowPrivateKey;
+extern unsigned long		g_ulServerGeneration;
+extern CARD32			g_c32LastInputEventTime;
+extern DWORD			g_dwEnginesSupported;
+extern HINSTANCE		g_hInstance;
+extern int                      g_copyROP[];
+extern int                      g_patternROP[];
+extern const char *		g_pszQueryHost;
+
+
+/*
+ * Extern declares for dynamically loaded libraries and function pointers
+ */
+
+extern HMODULE			g_hmodDirectDraw;
+extern FARPROC			g_fpDirectDrawCreate;
+extern FARPROC			g_fpDirectDrawCreateClipper;
+
+extern HMODULE			g_hmodCommonControls;
+extern FARPROC			g_fpTrackMouseEvent;
+
+
+/*
+ * Screen privates macros
+ */
+
+#define winGetScreenPriv(pScreen) ((winPrivScreenPtr) \
+    dixLookupPrivate(&(pScreen)->devPrivates, g_iScreenPrivateKey))
+
+#define winSetScreenPriv(pScreen,v) \
+    dixSetPrivate(&(pScreen)->devPrivates, g_iScreenPrivateKey, v)
+
+#define winScreenPriv(pScreen) \
+	winPrivScreenPtr pScreenPriv = winGetScreenPriv(pScreen)
+
+
+/*
+ * Colormap privates macros
+ */
+
+#define winGetCmapPriv(pCmap) ((winPrivCmapPtr) \
+    dixLookupPrivate(&(pCmap)->devPrivates, g_iCmapPrivateKey))
+
+#define winSetCmapPriv(pCmap,v) \
+    dixSetPrivate(&(pCmap)->devPrivates, g_iCmapPrivateKey, v)
+
+#define winCmapPriv(pCmap) \
+	winPrivCmapPtr pCmapPriv = winGetCmapPriv(pCmap)
+
+
+/*
+ * GC privates macros
+ */
+
+#define winGetGCPriv(pGC) ((winPrivGCPtr) \
+    dixLookupPrivate(&(pGC)->devPrivates, g_iGCPrivateKey))
+
+#define winSetGCPriv(pGC,v) \
+    dixSetPrivate(&(pGC)->devPrivates, g_iGCPrivateKey, v)
+
+#define winGCPriv(pGC) \
+	winPrivGCPtr pGCPriv = winGetGCPriv(pGC)
+
+
+/*
+ * Pixmap privates macros
+ */
+
+#define winGetPixmapPriv(pPixmap) ((winPrivPixmapPtr) \
+    dixLookupPrivate(&(pPixmap)->devPrivates, g_iPixmapPrivateKey))
+
+#define winSetPixmapPriv(pPixmap,v) \
+    dixLookupPrivate(&(pPixmap)->devPrivates, g_iPixmapPrivateKey, v)
+
+#define winPixmapPriv(pPixmap) \
+	winPrivPixmapPtr pPixmapPriv = winGetPixmapPriv(pPixmap)
+
+
+/*
+ * Window privates macros
+ */
+
+#define winGetWindowPriv(pWin) ((winPrivWinPtr) \
+    dixLookupPrivate(&(pWin)->devPrivates, g_iWindowPrivateKey))
+
+#define winSetWindowPriv(pWin,v) \
+    dixLookupPrivate(&(pWin)->devPrivates, g_iWindowPrivateKey, v)
+
+#define winWindowPriv(pWin) \
+	winPrivWinPtr pWinPriv = winGetWindowPriv(pWin)
+
+/*
+ * wrapper macros 
+ */
+#define _WIN_WRAP(priv, real, mem, func) {\
+    priv->mem = real->mem; \
+    real->mem = func; \
+}
+
+#define _WIN_UNWRAP(priv, real, mem) {\
+    real->mem = priv->mem; \
+}
+
+#define WIN_WRAP(mem, func) _WIN_WRAP(pScreenPriv, pScreen, mem, func) 
+
+#define WIN_UNWRAP(mem) _WIN_UNWRAP(pScreenPriv, pScreen, mem)
+
+/*
+ * BEGIN DDX and DIX Function Prototypes
+ */
+
+
+/*
+ * winallpriv.c
+ */
+
+Bool
+winAllocatePrivates (ScreenPtr pScreen);
+
+Bool
+winInitCmapPrivates (ColormapPtr pCmap, int index);
+
+Bool
+winAllocateCmapPrivates (ColormapPtr pCmap);
+
+
+/*
+ * winauth.c
+ */
+
+#if defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
+# if defined(XCSECURITY)  
+Bool
+winGenerateAuthorization (void);
+# endif
+#endif
+
+
+/*
+ * winblock.c
+ */
+
+void
+winBlockHandler (int nScreen,
+		 pointer pBlockData,
+		 pointer pTimeout,
+		 pointer pReadMask);
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winclip.c
+ */
+
+RegionPtr
+winPixmapToRegionNativeGDI (PixmapPtr pPix);
+#endif
+
+
+#ifdef XWIN_CLIPBOARD
+/*
+ * winclipboardinit.c
+ */
+
+Bool
+winInitClipboard (void);
+
+void
+winFixClipboardChain (void);
+#endif
+
+
+/*
+ * wincmap.c
+ */
+
+void
+winSetColormapFunctions (ScreenPtr pScreen);
+
+Bool
+winCreateDefColormap (ScreenPtr pScreen);
+
+
+/*
+ * wincreatewnd.c
+ */
+
+Bool
+winCreateBoundingWindowFullScreen (ScreenPtr pScreen);
+
+Bool
+winCreateBoundingWindowWindowed (ScreenPtr pScreen);
+
+
+/*
+ * windialogs.c
+ */
+
+void
+winDisplayExitDialog (winPrivScreenPtr pScreenPriv);
+
+void
+winDisplayDepthChangeDialog (winPrivScreenPtr pScreenPriv);
+
+void
+winDisplayAboutDialog (winPrivScreenPtr pScreenPriv);
+
+
+/*
+ * winengine.c
+ */
+
+void
+winDetectSupportedEngines (void);
+
+Bool
+winSetEngine (ScreenPtr pScreen);
+
+Bool
+winGetDDProcAddresses (void);
+
+
+/*
+ * winerror.c
+ */
+
+#ifdef DDXOSVERRORF
+void
+OSVenderVErrorF (const char *pszFormat, va_list va_args);
+#endif
+
+void
+winMessageBoxF (const char *pszError, UINT uType, ...);
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winfillsp.c
+ */
+
+void
+winFillSpansNativeGDI (DrawablePtr	pDrawable,
+		       GCPtr		pGC,
+		       int		nSpans,
+		       DDXPointPtr	pPoints,
+		       int		*pWidths,
+		       int		fSorted);
+#endif
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winfont.c
+ */
+
+Bool
+winRealizeFontNativeGDI (ScreenPtr pScreen, FontPtr pFont);
+
+Bool
+winUnrealizeFontNativeGDI (ScreenPtr pScreen, FontPtr pFont);
+#endif
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * wingc.c
+ */
+
+Bool
+winCreateGCNativeGDI (GCPtr pGC);
+#endif
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * wingetsp.c
+ */
+
+void
+winGetSpansNativeGDI (DrawablePtr	pDrawable, 
+		      int		wMax, 
+		      DDXPointPtr	pPoints, 
+		      int		*pWidths, 
+		      int		nSpans, 
+		      char		*pDst);
+#endif
+
+
+/*
+ * winglobals.c
+ */
+
+void
+winInitializeGlobals (void);
+
+
+/*
+ * winkeybd.c
+ */
+
+void
+winTranslateKey (WPARAM wParam, LPARAM lParam, int *piScanCode);
+
+int
+winKeybdProc (DeviceIntPtr pDeviceInt, int iState);
+
+void
+winInitializeModeKeyStates (void);
+
+void
+winRestoreModeKeyStates (void);
+
+Bool
+winIsFakeCtrl_L (UINT message, WPARAM wParam, LPARAM lParam);
+
+void
+winKeybdReleaseKeys (void);
+
+void
+winSendKeyEvent (DWORD dwKey, Bool fDown);
+
+
+/*
+ * winkeyhook.c
+ */
+
+Bool
+winInstallKeyboardHookLL (void);
+
+void
+winRemoveKeyboardHookLL (void);
+
+
+/*
+ * winmisc.c
+ */
+
+#ifdef XWIN_NATIVEGDI
+void
+winQueryBestSizeNativeGDI (int class, unsigned short *pWidth,
+			   unsigned short *pHeight, ScreenPtr pScreen);
+#endif
+
+CARD8
+winCountBits (DWORD dw);
+
+Bool
+winUpdateFBPointer (ScreenPtr pScreen, void *pbits);
+
+#ifdef XWIN_NATIVEGDI
+BOOL
+winPaintBackground (HWND hwnd, COLORREF colorref);
+#endif
+
+
+/*
+ * winmouse.c
+ */
+
+int
+winMouseProc (DeviceIntPtr pDeviceInt, int iState);
+
+int
+winMouseWheel (ScreenPtr pScreen, int iDeltaZ);
+
+void
+winMouseButtonsSendEvent (int iEventType, int iButton);
+
+int
+winMouseButtonsHandle (ScreenPtr pScreen,
+		       int iEventType, int iButton,
+		       WPARAM wParam);
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winnativegdi.c
+ */
+
+HBITMAP
+winCreateDIBNativeGDI (int iWidth, int iHeight, int iDepth,
+		       BYTE **ppbBits, BITMAPINFO **ppbmi);
+
+Bool
+winSetEngineFunctionsNativeGDI (ScreenPtr pScreen);
+#endif
+
+
+#ifdef XWIN_PRIMARYFB
+/*
+ * winpfbddd.c
+ */
+
+Bool
+winSetEngineFunctionsPrimaryDD (ScreenPtr pScreen);
+#endif
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winpixmap.c
+ */
+
+PixmapPtr
+winCreatePixmapNativeGDI (ScreenPtr pScreen, int width, int height, int depth,
+			  unsigned usage_hint);
+
+Bool
+winDestroyPixmapNativeGDI (PixmapPtr pPixmap);
+
+Bool
+winModifyPixmapHeaderNativeGDI (PixmapPtr pPixmap,
+				int iWidth, int iHeight,
+				int iDepth,
+				int iBitsPerPixel,
+				int devKind,
+				pointer pPixData);
+#endif
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winpolyline.c
+ */
+
+void
+winPolyLineNativeGDI (DrawablePtr	pDrawable,
+		      GCPtr		pGC,
+		      int		mode,
+		      int		npt,
+		      DDXPointPtr	ppt);
+#endif
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winpushpxl.c
+ */
+
+void
+winPushPixels (GCPtr pGC, PixmapPtr pBitMap, DrawablePtr pDrawable,
+	       int dx, int dy, int xOrg, int yOrg);
+#endif
+
+
+/*
+ * winscrinit.c
+ */
+
+Bool
+winScreenInit (int index,
+	       ScreenPtr pScreen,
+	       int argc, char **argv);
+
+Bool
+winFinishScreenInitFB (int index,
+		       ScreenPtr pScreen,
+		       int argc, char **argv);
+
+#if defined(XWIN_NATIVEGDI)
+Bool
+winFinishScreenInitNativeGDI (int index,
+			      ScreenPtr pScreen,
+			      int argc, char **argv);
+#endif
+
+
+#ifdef XWIN_NATIVEGDI
+/*
+ * winsetsp.c
+ */
+
+void
+winSetSpansNativeGDI (DrawablePtr	pDrawable,
+		      GCPtr		pGC,
+		      char		*pSrc,
+		      DDXPointPtr	pPoints,
+		      int		*pWidth,
+		      int		nSpans,
+		      int		fSorted);
+#endif
+
+
+/*
+ * winshaddd.c
+ */
+
+Bool
+winSetEngineFunctionsShadowDD (ScreenPtr pScreen);
+
+
+/*
+ * winshadddnl.c
+ */
+
+Bool
+winSetEngineFunctionsShadowDDNL (ScreenPtr pScreen);
+
+
+/*
+ * winshadgdi.c
+ */
+
+Bool
+winSetEngineFunctionsShadowGDI (ScreenPtr pScreen);
+
+
+/*
+ * winwakeup.c
+ */
+
+void
+winWakeupHandler (int nScreen,
+		  pointer pWakeupData,
+		  unsigned long ulResult,
+		  pointer pReadmask);
+
+
+/*
+ * winwindow.c
+ */
+
+#ifdef XWIN_NATIVEGDI
+Bool
+winCreateWindowNativeGDI (WindowPtr pWin);
+
+Bool
+winDestroyWindowNativeGDI (WindowPtr pWin);
+
+Bool
+winPositionWindowNativeGDI (WindowPtr pWin, int x, int y);
+
+void 
+winCopyWindowNativeGDI (WindowPtr pWin,
+			DDXPointRec ptOldOrg,
+			RegionPtr prgnSrc);
+
+Bool
+winChangeWindowAttributesNativeGDI (WindowPtr pWin, unsigned long mask);
+
+Bool
+winUnmapWindowNativeGDI (WindowPtr pWindow);
+
+Bool
+winMapWindowNativeGDI (WindowPtr pWindow);
+#endif
+
+Bool
+winCreateWindowRootless (WindowPtr pWindow);
+
+Bool
+winDestroyWindowRootless (WindowPtr pWindow);
+
+Bool
+winPositionWindowRootless (WindowPtr pWindow, int x, int y);
+
+Bool
+winChangeWindowAttributesRootless (WindowPtr pWindow, unsigned long mask);
+
+Bool
+winUnmapWindowRootless (WindowPtr pWindow);
+
+Bool
+winMapWindowRootless (WindowPtr pWindow);
+
+#ifdef SHAPE
+void
+winSetShapeRootless (WindowPtr pWindow);
+#endif
+
+
+/*
+ * winmultiwindowicons.c - Used by both multi-window and Win32Rootless
+ */
+
+HICON
+winXIconToHICON (WindowPtr pWin, int iconSize);
+
+
+#ifdef XWIN_MULTIWINDOW
+/*
+ * winmultiwindowshape.c
+ */
+
+# ifdef SHAPE
+void
+winReshapeMultiWindow (WindowPtr pWin);
+
+void
+winSetShapeMultiWindow (WindowPtr pWindow);
+
+void
+winUpdateRgnMultiWindow (WindowPtr pWindow);
+# endif
+#endif
+
+
+#ifdef XWIN_MULTIWINDOW
+/*
+ * winmultiwindowwindow.c
+ */
+
+Bool
+winCreateWindowMultiWindow (WindowPtr pWindow);
+
+Bool
+winDestroyWindowMultiWindow (WindowPtr pWindow);
+
+Bool
+winPositionWindowMultiWindow (WindowPtr pWindow, int x, int y);
+
+Bool
+winChangeWindowAttributesMultiWindow (WindowPtr pWindow, unsigned long mask);
+
+Bool
+winUnmapWindowMultiWindow (WindowPtr pWindow);
+
+Bool
+winMapWindowMultiWindow (WindowPtr pWindow);
+
+void
+winReparentWindowMultiWindow (WindowPtr pWin, WindowPtr pPriorParent);
+
+void
+winRestackWindowMultiWindow (WindowPtr pWin, WindowPtr pOldNextSib);
+
+void
+winReorderWindowsMultiWindow (void);
+
+void
+winResizeWindowMultiWindow (WindowPtr pWin, int x, int y, unsigned int w,
+			    unsigned int h, WindowPtr pSib);
+void
+winMoveWindowMultiWindow (WindowPtr pWin, int x, int y,
+			  WindowPtr pSib, VTKind kind);
+
+void
+winCopyWindowMultiWindow (WindowPtr pWin, DDXPointRec oldpt,
+			  RegionPtr oldRegion);
+
+XID
+winGetWindowID (WindowPtr pWin);
+
+int
+winAdjustXWindow (WindowPtr pWin, HWND hwnd);
+#endif
+
+
+#ifdef XWIN_MULTIWINDOW
+/*
+ * winmultiwindowwndproc.c
+ */
+
+LRESULT CALLBACK
+winTopLevelWindowProc (HWND hwnd, UINT message, 
+		       WPARAM wParam, LPARAM lParam);
+#endif
+
+
+/*
+ * wintrayicon.c
+ */
+
+void
+winInitNotifyIcon (winPrivScreenPtr pScreenPriv);
+
+void
+winDeleteNotifyIcon (winPrivScreenPtr pScreenPriv);
+
+LRESULT
+winHandleIconMessage (HWND hwnd, UINT message,
+		      WPARAM wParam, LPARAM lParam,
+		      winPrivScreenPtr pScreenPriv);
+
+
+/*
+ * winwndproc.c
+ */
+
+LRESULT CALLBACK
+winWindowProc (HWND hWnd, UINT message, 
+	       WPARAM wParam, LPARAM lParam);
+
+
+#ifdef XWIN_MULTIWINDOWEXTWM
+/*
+ * winwin32rootless.c
+ */
+
+Bool
+winMWExtWMCreateFrame (RootlessWindowPtr pFrame, ScreenPtr pScreen,
+			     int newX, int newY, RegionPtr pShape);
+
+void
+winMWExtWMDestroyFrame (RootlessFrameID wid);
+
+void
+winMWExtWMMoveFrame (RootlessFrameID wid, ScreenPtr pScreen, int newX, int newY);
+
+void
+winMWExtWMResizeFrame (RootlessFrameID wid, ScreenPtr pScreen,
+			     int newX, int newY, unsigned int newW, unsigned int newH,
+			     unsigned int gravity);
+
+void
+winMWExtWMRestackFrame (RootlessFrameID wid, RootlessFrameID nextWid);
+
+void
+winMWExtWMReshapeFrame (RootlessFrameID wid, RegionPtr pShape);
+
+void
+winMWExtWMUnmapFrame (RootlessFrameID wid);
+
+void
+winMWExtWMStartDrawing (RootlessFrameID wid, char **pixelData, int *bytesPerRow);
+
+void
+winMWExtWMStopDrawing (RootlessFrameID wid, Bool flush);
+
+void
+winMWExtWMUpdateRegion (RootlessFrameID wid, RegionPtr pDamage);
+
+void
+winMWExtWMDamageRects (RootlessFrameID wid, int count, const BoxRec *rects,
+			     int shift_x, int shift_y);
+
+void
+winMWExtWMRootlessSwitchWindow (RootlessWindowPtr pFrame, WindowPtr oldWin);
+
+void
+winMWExtWMCopyBytes (unsigned int width, unsigned int height,
+			   const void *src, unsigned int srcRowBytes,
+			   void *dst, unsigned int dstRowBytes);
+
+void
+winMWExtWMFillBytes (unsigned int width, unsigned int height, unsigned int value,
+			   void *dst, unsigned int dstRowBytes);
+
+int
+winMWExtWMCompositePixels (unsigned int width, unsigned int height, unsigned int function,
+				 void *src[2], unsigned int srcRowBytes[2],
+				 void *mask, unsigned int maskRowBytes,
+				 void *dst[2], unsigned int dstRowBytes[2]);
+
+void
+winMWExtWMCopyWindow (RootlessFrameID wid, int dstNrects, const BoxRec *dstRects,
+			    int dx, int dy);
+#endif
+
+
+#ifdef XWIN_MULTIWINDOWEXTWM
+/*
+ * winwin32rootlesswindow.c
+ */
+
+void
+winMWExtWMReorderWindows (ScreenPtr pScreen);
+
+void
+winMWExtWMMoveXWindow (WindowPtr pWin, int x, int y);
+
+void
+winMWExtWMResizeXWindow (WindowPtr pWin, int w, int h);
+
+void
+winMWExtWMMoveResizeXWindow (WindowPtr pWin, int x, int y, int w, int h);
+
+void
+winMWExtWMUpdateIcon (Window id);
+
+void
+winMWExtWMUpdateWindowDecoration (win32RootlessWindowPtr pRLWinPriv,
+				  winScreenInfoPtr pScreenInfo);
+
+wBOOL CALLBACK
+winMWExtWMDecorateWindow (HWND hwnd, LPARAM lParam);
+
+Bool
+winIsInternalWMRunning (winScreenInfoPtr pScreenInfo);
+
+void
+winMWExtWMRestackWindows (ScreenPtr pScreen);
+#endif
+
+
+#ifdef XWIN_MULTIWINDOWEXTWM
+/*
+ * winwin32rootlesswndproc.c
+ */
+
+LRESULT CALLBACK
+winMWExtWMWindowProc (HWND hwnd, UINT message, 
+			    WPARAM wParam, LPARAM lParam);
+#endif
+
+
+/*
+ * winwindowswm.c
+ */
+
+void
+winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
+		       Window window, int x, int y, int w, int h);
+
+void
+winWindowsWMExtensionInit (void);
+
+/*
+ * wincursor.c
+ */
+
+Bool
+winInitCursor (ScreenPtr pScreen);
+
+/*
+ * END DDX and DIX Function Prototypes
+ */
+
+#endif /* _WIN_H_ */
+

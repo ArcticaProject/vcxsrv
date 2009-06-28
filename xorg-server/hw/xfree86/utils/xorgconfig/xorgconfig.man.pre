@@ -1,0 +1,22 @@
+.\" $XdotOrg: $
+.\" $XFree86: xc/programs/Xserver/hw/xfree86/xf86config/xorgconfig.man,v 1.5 2001/11/01 23:35:34 dawes Exp $
+.TH xorgconfig 1 __vendorversion__
+.SH NAME
+xorgconfig \- generate an __XCONFIGFILE__ file
+.SH SYNOPSIS
+.B xorgconfig
+.SH DESCRIPTION
+\fIxorgconfig\fP is an interactive program for generating an __XCONFIGFILE__ file
+for use with __XSERVERNAME__ X servers.
+.PP
+Note that the default name used by \fIxorgconfig\fP for the __XCONFIGFILE__ file
+is system-dependent.  For instance, on OS/2, XConfig is used.
+.SH FILES
+.TP
+.I __projectroot__/lib/X11/Cards
+Video cards database
+.SH "SEE ALSO"
+__XSERVERNAME__(1), __XCONFIGFILE__(__filemansuffix__), xorgcfg(1), reconfig(1)
+.SH AUTHOR
+Harm Hanemaayer.
+.\" $TOG: xf86conf.man /main/9 1997/07/19 10:53:08 kaleb $

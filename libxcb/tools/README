@@ -1,0 +1,17 @@
+
+api_conv.pl:
+------------
+
+ Description: used to convert old XCB names in camel case to lower
+              case names.
+
+ Usage:
+
+  * for several files:
+
+perl -i xcb/tools/api_conv.pl xcb/tools/constants <file1> <file2> ...
+
+  * for a directory:
+
+find dir -name '*.[ch]' -exec perl -i xcb/tools/api_conv.pl xcb/tools/constants {} +
+

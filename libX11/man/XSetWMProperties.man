@@ -1,0 +1,391 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\" Copyright \(co 2000  The XFree86 Project, Inc.
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\"
+.\" $XFree86: xc/doc/man/X11/XSeWMProp.man,v 1.4 2001/02/09 03:47:46 tsi Exp $
+.\" 
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XSetWMProperties __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XSetWMProperties, XmbSetWMProperties, Xutf8SetWMProperties \- set standard window properties
+.SH SYNTAX
+.HP
+void XSetWMProperties\^(\^Display *\fIdisplay\fP\^, Window \fIw\fP\^,
+XTextProperty *\fIwindow_name\fP\^, XTextProperty *\fIicon_name\fP\^, char
+**\fIargv\fP\^, int \fIargc\fP\^, XSizeHints *\fInormal_hints\fP\^, XWMHints
+*\fIwm_hints\fP\^, XClassHint *\fIclass_hints\fP\^); 
+.HP
+void XmbSetWMProperties\^(\^Display *\fIdisplay\fP\^, Window \fIw\fP\^, char
+*\fIwindow_name\fP\^, char *\fIicon_name\fP\^, char *\fIargv\fP\^[], int
+\fIargc\fP\^, XSizeHints *\fInormal_hints\fP\^, XWMHints *\fIwm_hints\fP\^,
+XClassHint *\fIclass_hints\fP\^); 
+.HP
+void Xutf8SetWMProperties\^(\^Display *\fIdisplay\fP\^, Window \fIw\fP\^, char
+*\fIwindow_name\fP\^, char *\fIicon_name\fP\^, char *\fIargv\fP\^[], int
+\fIargc\fP\^, XSizeHints *\fInormal_hints\fP\^, XWMHints *\fIwm_hints\fP\^,
+XClassHint *\fIclass_hints\fP\^); 
+.SH ARGUMENTS
+.IP \fIargc\fP 1i
+Specifies the number of arguments.
+.IP \fIargv\fP 1i
+Specifies the application's argument list.
+.IP \fIclass_hints\fP 1i
+Specifies the
+.ZN XClassHint
+structure to be used.
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIicon_name\fP 1i
+Specifies the icon name,
+which should be a null-terminated string.
+.IP \fInormal_hints\fP 1i
+Specifies the size hints for the window in its normal state.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIwindow_name\fP 1i
+Specifies the window name,
+which should be a null-terminated string.
+.IP \fIwm_hints\fP 1i
+Specifies the
+.ZN XWMHints
+structure to be used.
+.SH DESCRIPTION
+The 
+.ZN XSetWMProperties 
+convenience function provides a single programming interface 
+for setting those essential window properties that are used 
+for communicating with other clients (particularly window and session
+managers).
+.LP
+If the window_name argument is non-NULL, 
+.ZN XSetWMProperties
+calls
+.ZN XSetWMName ,
+which in turn, sets the WM_NAME property (see section 14.1.4).
+If the icon_name argument is non-NULL,
+.ZN XSetWMProperties
+calls
+.ZN XSetWMIconName ,
+which sets the WM_ICON_NAME property (see section 14.1.5).
+If the argv argument is non-NULL, 
+.ZN XSetWMProperties
+calls
+.ZN XSetCommand ,
+which sets the WM_COMMAND property (see section 14.2.1).
+Note that an argc of zero is allowed to indicate a zero-length command.
+Note also that the hostname of this machine is stored using
+.ZN XSetWMClientMachine 
+(see section 14.2.2).
+.LP
+If the normal_hints argument is non-NULL, 
+.ZN XSetWMProperties
+calls
+.ZN XSetWMNormalHints ,
+which sets the WM_NORMAL_HINTS property (see section 14.1.7).
+If the wm_hints argument is non-NULL, 
+.ZN XSetWMProperties
+calls
+.ZN XSetWMHints ,
+which sets the WM_HINTS property (see section 14.1.6).
+.LP
+If the class_hints argument is non-NULL, 
+.ZN XSetWMProperties
+calls
+.ZN XSetClassHint ,
+which sets the WM_CLASS property (see section 14.1.8).
+If the res_name member in the
+.ZN XClassHint
+structure is set to the NULL pointer and the RESOURCE_NAME environment 
+variable is set, 
+then the value of the environment variable is substituted for res_name.
+If the res_name member is NULL, 
+the environment variable is not set, 
+and argv and argv[0] are set, 
+then the value of argv[0], stripped of
+any directory prefixes, is substituted for res_name.
+.LP
+The
+.ZN XmbSetWMProperties
+and
+.ZN Xutf8SetWMProperties
+convenience functions provide a simple programming interface 
+for setting those essential window properties that are used 
+for communicating with other clients
+(particularly window and session managers).
+.LP
+If the window_name argument is non-NULL,
+they set the WM_NAME property.
+If the icon_name argument is non-NULL,
+they set the WM_ICON_NAME property.
+The window_name and icon_name arguments are null-terminated strings, for
+.ZN XmbSetWMProperties
+in the encoding of the current locale, for
+.ZN Xutf8SetWMProperties
+in UTF-8 encoding.
+If the arguments can be fully converted to the STRING encoding,
+the properties are created with type ``STRING''; 
+otherwise, the arguments are converted to Compound Text, 
+and the properties are created with type ``COMPOUND_TEXT''.
+.LP
+If the normal_hints argument is non-NULL,
+.ZN XmbSetWMProperties
+and
+.ZN Xutf8SetWMProperties
+call
+.ZN XSetWMNormalHints ,
+which sets the WM_NORMAL_HINTS property (see section 14.1.7).
+If the wm_hints argument is non-NULL, 
+.ZN XmbSetWMProperties
+and
+.ZN Xutf8SetWMProperties
+call
+.ZN XSetWMHints ,
+which sets the WM_HINTS property (see section 14.1.6).
+.LP
+If the argv argument is non-NULL,
+.ZN XmbSetWMProperties
+and
+.ZN Xutf8SetWMProperties
+set the WM_COMMAND property from argv and argc.
+An argc of zero indicates a zero-length command.
+.LP
+The hostname of the machine is stored using 
+.ZN XSetWMClientMachine 
+(see section 14.2.2).
+.LP
+If the class_hints argument is non-NULL,
+.ZN XmbSetWMProperties
+and
+.ZN Xutf8SetWMProperties
+set the WM_CLASS property.
+If the res_name member in the 
+.ZN XClassHint
+structure is set to the NULL pointer and the RESOURCE_NAME
+environment variable is set,
+the value of the environment variable is substituted for res_name.
+If the res_name member is NULL,
+the environment variable is not set, and argv and argv[0] are set,
+then the value of argv[0], stripped of any directory prefixes,
+is substituted for res_name.
+.LP
+It is assumed that the supplied class_hints.res_name and argv,
+the RESOURCE_NAME environment variable, and the hostname of the machine
+are in the encoding of the current locale.
+The corresponding WM_CLASS, WM_COMMAND, and WM_CLIENT_MACHINE properties
+are typed according to the local host locale announcer.
+No encoding conversion is performed for these strings prior to storage
+in the properties.
+.LP
+For clients that need to process the property text in a locale,
+.ZN XmbSetWMProperties
+and
+.ZN Xutf8SetWMProperties
+set the WM_LOCALE_NAME property to be the name of the current locale.
+The name is assumed to be in the Host Portable Character Encoding
+and is converted to STRING for storage in the property.
+.LP
+.ZN XSetWMProperties ,
+.ZN XmbSetWMProperties
+and
+.ZN Xutf8SetWMProperties
+can generate
+.ZN BadAlloc
+and
+.ZN BadWindow
+errors.
+.LP
+The function
+.ZN Xutf8SetWMProperties
+is an extension introduced by The XFree86 Project, Inc. in their 4.0.2
+release. Its presence is
+indicated by the macro
+.ZN X_HAVE_UTF8_STRING .
+.SH PROPERTIES
+.TP 1i
+\s-1WM_CLASS\s+1
+Set by application programs to allow window and session
+managers to obtain the application's resources from the resource database.
+.TP 1i
+\s-1WM_CLIENT_MACHINE\s+1
+The string name of the machine on which the client application is running.
+.TP 1i
+\s-1WM_COMMAND\s+1
+The command and arguments, null-separated, used to invoke the
+application.
+.TP 1i
+\s-1WM_HINTS\s+1
+Additional hints set by the client for use by the window manager.
+The C type of this property is 
+.ZN XWMHints .
+.TP 1i
+\s-1WM_ICON_NAME\s+1
+The name to be used in an icon.
+.TP 1i
+\s-1WM_NAME\s+1
+The name of the application.
+.TP 1i
+\s-1WM_NORMAL_HINTS\s+1
+Size hints for a window in its normal state.
+The C type of this property is
+.ZN XSizeHints .
+.SH DIAGNOSTICS
+.TP 1i
+.ZN BadAlloc
+The server failed to allocate the requested resource or server memory.
+.TP 1i
+.ZN BadWindow
+A value for a Window argument does not name a defined Window.
+.SH "SEE ALSO"
+XAllocClassHint(3X11),
+XAllocIconSize(3X11),
+XAllocSizeHints(3X11),
+XAllocWMHints(3X11),
+XParseGeometry(3X11),
+XSetCommand(3X11),
+XSetTransientForHint(3X11),
+XSetTextProperty(3X11),
+XSetWMClientMachine(3X11),
+XSetWMColormapWindows(3X11),
+XSetWMIconName(3X11),
+XSetWMName(3X11),
+XSetWMProtocols(3X11),
+XStringListToTextProperty(3X11),
+XTextListToTextProperty(3X11)
+.br
+\fI\*(xL\fP

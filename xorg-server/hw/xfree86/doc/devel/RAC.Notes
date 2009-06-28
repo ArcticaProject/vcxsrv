@@ -1,0 +1,696 @@
+I. Abstract 
+===========
+
+Graphics devices are accessed thru ranges in I/O or memory space. While
+most modern graphics  devices allow relocation of such  ranges many of
+them still require the use  of well established interfaces such as VGA
+memory  and IO  ranges or  8514/A  IO ranges.   Up to  version 3.3  of
+XFree86 only a single graphics  device could be driven. Therfore there
+was no need  to address the issue of sharing such  memory or I/O ranges
+among several devices. Starting with version 4.0 XFree86 is capable of
+driving more  than one graphics interface in  a multi-head environment.
+Therefore  a mechanism  needed to  be  designed which  was capable  of
+controlling the sharing  the access to memory and  I/O ranges.  In this
+document  we describe  to use  of  the RAC  (Resource Access  Control)
+system in the XFree86 server which provides the service of controlling
+access to interface resources.
+
+II. Introduction
+================
+
+Terms and definitions:
+
+II.1. Bus
+---------
+
+'Bus' is ambiguous as it is used for different things: It may refer to
+physical incompatible  extension connectors in a  computer system. The
+RAC system  knows two such systems: The  ISA bus and the  PCI bus. (On
+the software  level EISA, MC and  VL buses are  currently treated like
+ISA buses). 'Bus' may always  refer to logically different entities on
+a single bus  system which are connected via bridges.  A PCI system may
+have several  distinct PCI  buses connecting  each other  by PCI-PCI
+bridges or to the host CPU by HOST-PCI bridges.
+
+Systems that host  more than one bus system  link these together using
+bridges. Bridges  are a  concern to  RAC as they  might block  or pass
+specific  resources.  PCI-PCI  bridges  may  be set  up  to  pass  VGA
+resources to the  secondary bus. PCI-ISA buses pass  any resources not
+decoded on the primary PCI bus  to the ISA bus. This way VGA resources
+(although  exclusive on  the ISA  bus) can  be shared  by ISA  and PCI
+cards.  Currently HOST-PCI bridges are not yet handled by RACY as they
+require specific drivers.
+
+II.2. Entity 
+------------
+
+The  smallest  independently  addressable  unit  on a  system  bus  is
+referred to  as an entity. So far  we know ISA and  PCI entities.  PCI
+entities can be  located on the PCI bus by an  unique ID consisting of
+the bus, card and function number.
+
+II.3. Resource
+--------------
+
+ 'Resource' refers to  a range of memory or  I/O addresses an entity
+can decode.
+
+If  a device is  capable of  disabling this  decoding the  resource is
+called  sharable. For  PCI devices  a  generic method  is provided  to
+control resource decoding. Other devices will have to provide a device
+specific function to control decoding.
+
+If  the  entity is  capable  of decoding  this  range  at a  different
+location this resource is considered relocatable. Resource which start
+at a specific address and  occupy a single continuous range are called
+block resources.
+
+Alternatively resource  addresses can  be decoded in  a way  that they
+satisfy the condition: 
+
+			address & mask == base
+
+with  base &  mask ==  base.  Resources  addressed in  such a  way are
+considered sparse resources.
+
+
+II.4. Server States
+------------------
+
+The resource access control system  knows two server states: the SETUP
+and the  OPERATING state. The setup  state is entered  whenever a mode
+change takes place  or the server exits or  does VT switching.  During
+this  state any  entity  resource is  under  resource access  control.
+During  OPERATING  state  only  those entities  are  controlled  which
+actually  have  shared  resources  that  conflict  with  others.   The
+determination which entity is to  be placed under RAC during OPERATING
+state  takes   place  after  ScreenInit()  during   the  first  server
+generation.  This doesn't apply if  only one screen is active: in this
+case no RAC is needed and  the screen is simply left enabled while the
+server is active.
+
+
+III. Theory of operation
+========================
+
+III.1. General
+--------------
+
+The common  level has knowledge  of generic access  control mechanisms
+for devices on certain bus systems  (currently the PCI bus) as well as
+of   methods   to   enable    or   disable   access   to   the   buses
+itself. Furthermore it can  access information on resources decoded by
+these devices and if necessary modify it.
+
+When first  starting the Xserver collects all  this information, saves
+it for restoration checks it for consistency and if necessary corrects
+it.  Finally it disables  all resources  on a  generic level  prior to
+calling any driver function.
+
+ The  user should  provide a  device  section in  XF86Config for  each
+graphics device  installed in  his system. Each  such entity  which is
+never to  be used as X display  device might be marked  as inactive by
+adding the keyword "Inactive" to the device section.
+
+When the Probe() function of each driver is called the device sections
+are matched against  the devices found in the  system.  The driver may
+probe devices at this stage  that cannot be identified by using device
+independent methods. Access to all resources that can be controlled in
+a  device independent way  is disabled.   The Probe()  function should
+register all  non-relocatable resources at  this stage. If  a resource
+conflict  is found between  exclusive resources  the driver  will fail
+immediately.  Optionally  the driver  might  specify an  EntityInit(),
+EntityLeave() and EntityEnter() function.
+
+EntityInit() can be used to  disable any shared resources that are not
+controlled by the generic access control functions. It is called prior
+to the PreInit  phase regardless if an entity is  active or not.  When
+calling  the EntityInit(),  EntityEnter() and  EntityLeave() functions
+the  common level  will  disable access  to  all other  entities on  a
+generic  level. Since  the common  level  has no  knowledge of  device
+specific  methods  to  disable   access  to  resources  it  cannot  be
+guaranteed that certain resources are  not decoded by any other entity
+until  the EntityInit()  or EntityEnter()  phase is  finished.  Device
+drivers should  therefore register all those resources  which they are
+going to  disable.  If  these resources  are never to  be used  by any
+driver  function they may  be flagged  'ResInit' so  that they  can be
+removed  from  the resource  list  after  processing all  EntityInit()
+functions.   EntityEnter() should  disable decoding  of  all resources
+which are not registered as exclusive and which are not handled by the
+generic  access  control  in  the  common level.   The  difference  to
+EntityInit()  is  that the  latter  one  is  only called  once  during
+lifetime of the server.  It can  therefore be used to set up variables
+prior  to  disabling  resources.   EntityLeave()  should  restore  the
+original state when exiting the server or switching to a different vt.
+It also needs to disable device specific access functions if they need
+to be  disabled on server exit or  VT switch. The default  state is to
+enable them before giving up the VT.
+
+In PreInit() phase each driver  should check if any sharable resources
+it has registered during Probe()  has been denied and take appropriate
+action which could simply be to  fail. If it needs to access resources
+it  has disabled during  EntitySetup() it  can do  so provided  it has
+registered  these   and  will  disable  them   before  returning  from
+PreInit(). This  also applies to all other  driver functions.  Several
+functions  are provided  to request  resource ranges,  register these,
+correct PCI config  space and add replacements for  the generic access
+functions.  Resources  may be  marked  'disabled'  or 'unused'  during
+OPERATING  stage.  Although  these steps  could also  be  performed in
+ScreenInit(), this is not desirable.
+
+Following  PreInit() phase  the  common level  determines if  resource
+access control is needed.  This is the case if more than one screen is
+used. If necessary the RAC  wrapper module is loaded.  In ScreenInit()
+the  drivers can  decide  which  operations need  to  be placed  under
+RAC. Available are the frame buffer operations, the pointer operations
+and  the colormap  operations. Any  operation that  requires resources
+which might  be disabled during OPERATING  state should be  set to use
+RAC.  This can be specified separately for memory and IO resources.
+
+When ScreenInit() phase is done  the common level will determine which
+shared resources  are requested  by more than  one driver and  set the
+access functions accordingly.  This is done following these rules:
+
+a. The sharable resources registered  by each entity are compared.  if
+   a resource is registered by more than one entity the entity will be
+   marked to need to share this resources type (IO or MEM).
+
+b. A resource marked 'disabled' during OPERATING state will be ignored
+   entirely.
+
+c. A resource marked 'unused'  will only conflicts with an overlapping
+   resource of an other entity if the second is actually in use during
+   OPERATING state.
+
+d. If  an 'unused' resource was  found to conflict  however the entity
+   does not  use any other resource  of this type  the entire resource
+   type will be disabled for that entity.
+ 
+The driver  has the choice among  different ways to  control access to
+certain resources:
+
+a. It can relay on the  generic access functions. This is probably the
+   most  common case.  Here  the  driver only  needs  to register  any
+   resource it is going to use.
+
+b.  It  can replace  the generic access  functions by  driver specific
+   ones. This  will mostly  be used in  cases where no  generic access
+   functions are available.  In this  case the driver has to make sure
+   these  resources are  disabled when  entering the  PreInit() stage.
+   Since  the replacement  functions are  registered in  PreInit() the
+   driver will  have to enable these  resources itself if  it needs to
+   access  them during  this state.   The  driver can  specify if  the
+   replacement  functions  can  control  memory and/or  I/O  resources
+   separately.
+
+c. The  driver can  enable resources itself  when it needs  them. Each
+   driver function enabling them needs  to disable them before it will
+   return. This should  be used if a resource  which can be controlled
+   in a device dependent way is only required during SETUP state. This
+   way it can be marked 'unused' during OPERATING state.
+
+A  resource which  is  decoded during  OPERATING  state however  never
+accessed by the driver should be marked unused.
+   
+Since  access   switching  latencies  are  an   issue  during  Xserver
+operation,  the  common  level  attempts  to minimize  the  number  of
+entities that  need to  be placed under  RAC control.  When  a wrapped
+operation  is called,  the  EnableAccess() function  is called  before
+control  is passed  on.  EnableAccess()  checks if  a screen  is under
+access control. If not it just establishes bus routing and returns. If
+the screen needs to be under access control, EnableAccess() determines
+which resource  types (MEM,IO)  are required.  Then  it tests  if this
+access is  already established.   If so it  simply returns. If  not it
+disables  the  currently established  access,  fixes  bus routing  and
+enables access to all entities registered for this screen.
+
+Whenever a  mode switch or a  vt-switch is performed  the common level
+will return to SETUP state.
+
+III.3. Resource Types
+---------------------
+
+Resource  have  certain properties.  When  registering resources  each
+range is  accompanied by a flag  consisting of the or'ed  flags of the
+different  properties the  resource has.  Each resource  range  may be
+classified according to 
+
+- its  physical properties ie. if it addresses
+    memory (ResMem)  or 
+    I/O space (ResIo), 
+- if it addresses a 
+    block (ResBlock) or 
+    sparse (ResSparse) 
+  range, 
+- its access properties.  
+
+There are two known access properties: 
+
+- ResExclusive
+  for resources which may not be shared with any other device and 
+- ResShared 
+  for resources which can be disabled and therefore can be shared.  
+
+If  it is  desirable to  test a  resource against  any type  a generic
+access type  'ResAny' is  provided. If this  is set the  resource will
+conflict  with any  resource of  a different  entity  intersecting its
+range.  Further it can be specified that a resource is decoded however
+never  used during  any stage  (ResUnused) or  during  OPERATING state
+(ResUnusedOpr). A resource only visible during the init functions (ie.
+EntityInit(),  EntityEnter() and  EntityLeave()  should be  registered
+with  the  flag  'ResInit'.   A  resource  that  might  conflict  with
+background resource  ranges may be flagged with  'ResBios'. This might
+be useful when registering resources  ranges that were assigned by the
+system Bios.
+
+Several  predefined resource lists  are available  for VGA  and 8514/A
+resources in common/sf86Resources.h.
+
+IV. Available Functions
+=======================
+
+The functions provided for resource management will be listed in order
+of use in the driver.
+
+IV.1. Probe phase
+-----------------
+
+In this stage each driver detects those resources it is able to drive,
+creates an  entity record for each of  them, registers non-relocatable
+resources and allocates screens and adds the resources to screens.
+
+Two helper functions are provided  for matching device sections in the
+XF86Config file to the devices:
+
+   int xf86MatchPciInstances(const char *driverName, int vendorID, 
+ 		             SymTabPtr chipsets, PciChipsets *PCIchipsets,
+		             GDevPtr *devList, int numDevs, DriverPtr drvp,
+		             int **foundEntities);
+
+   int xf86MatchIsaInstances(const char *driverName, SymTabPtr chipsets,
+			     IsaChipsets *ISAchipsets, DriverPtr drvp,
+			     FindIsaDevProc FindIsaDevice, GDevPtr *devList,
+			     int numDevs, int **foundEntities);
+
+Both functions return the number of matched entities and their indices
+in foundEntities list.
+
+They make use of several  sub functions which are also available on the
+driver level:
+
+   Bool xf86ComparePciBusString(const char *busID, int bus, 
+                                int device, int func);
+
+and 
+
+   Bool xf86ParseIsaBusString(const char *busID);
+
+are called to interpret the busID in the device section. The functions:
+
+   int xf86ClaimPciSlot(int bus, int device, int func, DriverPtr drvp,
+		        int chipset, GDevPtr dev, Bool active);
+
+   int xf86ClaimIsaSlot(DriverPtr drvp, int chipset, GDevPtr dev, Bool
+	 	        active);
+
+are  used  to  allocate   the  entities  and  initialize  their  data
+structures.  Both functions  return the  index of  the  newly allocated
+entity record or (-1) should  the function fail. Before probing an ISA
+card
+
+   Bool xf86IsPrimaryIsa();
+
+gets called to determine if the primary card was not detected on the
+PCI bus.
+
+Two helper functions are provided to aid configuring entities:
+
+   Bool xf86ConfigActivePciEntity(ScrnInfoPtr pScrn, int entityIndex,
+			          PciChipsets *p_chip, resList res,
+			          EntityProc init, EntityProc enter,
+			          EntityProc leave, pointer private);
+   Bool xf86ConfigActiveIsaEntity(ScrnInfoPtr pScrn, int entityIndex,
+			          IsaChipsets *i_chip, resList res,
+			          EntityProc init, EntityProc enter,
+			          EntityProc leave, pointer private); 
+
+They  are used  to register  the init/enter/leave  functions described
+above as well as the  non-relocatable resources. Generally the list of
+fixed resources  is obtained from the  Isa/PciChipsets lists.  However
+an additional list  of resources may be passed.  Generally this is not
+required. The init/enter/leave functions have to be of type
+
+  typedef void (*EntityProc)(int entityIndex,pointer private);
+
+They are  passed the entity index  and a pointer to  a private scratch
+area. This  are can be  set up during  Probe() and its address  can be
+passed  to xf86ConfigActiveIsaEntity()  xf86ConfigActivePciEntity() as
+the last argument.
+
+These helper functions use: 
+
+    void xf86ClaimFixedResources(resList list, int entityIndex);
+
+  To register  the non relocatable  resources which cannot  be disabled
+  and which  therefore would cause  the server to fail  immediately if
+  they  were found to  conflict. It  also records  non-relocatable but
+  sharable resources for processing after the Probe() phase.
+
+    Bool xf86SetEntityFuncs(int entityIndex, EntityProc init,
+	 	 	    EntityProc enter, EntityProc leave, pointer);
+
+  This function registers  the init/enter/leave() functions along with
+  the pointer to their private area to the entity.
+
+    void xf86AddEntityToScreen(ScrnInfoPtr pScrn, int entityIndex);
+ 
+  adds the entity to the screen.
+
+These functions are  also available on the driver  level.  A detailed
+Probe() function  is listed below. For  most drivers this  can be used
+with little change.
+
+Please  note  that  VGA  resources  have  to  be  claimed  in  Probe()
+phase. Otherwise they are not routed to the bus.
+
+IV.2. PreInit() phase
+---------------------
+
+During  this  phase  the  remaining  resource  should  be  registered.
+PreInit() should call
+
+  EntityInfoPtr xf86GetEntityInfo(int entityIndex);
+
+To obtain a pointer to an  EntityInfoRec for each entity it is able to
+drive and check if any  resource are listed in 'resources'. These have
+been rejected in  the post-Probe() phase. The driver  should decide if
+it can continue without using these or if it should fail.  The pointer
+to the EntityInfoRec should be freed if not needed any more.
+
+Several functions are provided to simplify resource registration:
+
+  Bool xf86IsEntityPrimary(int entityIndex);
+
+is used to determine if the  entity is the display device that is used
+during boot-up and text mode.
+
+  Bool xf86IsScreenPrimary(int scrnIndex);
+
+finds  out if the  primary entity  is registered  for the  screen with
+specified index.
+
+  pciVideoPtr xf86GetPciInfoForEntity(int entityIndex);
+
+returns a pointer  to the pciVideoRec of the  specified entity. If the
+entity is not a PCI device NULL is returned.
+
+The primary function for registration of resources is
+
+  resPtr xf86RegisterResources(int entityIndex, resList list, int access);
+
+it tries to register the resources in 'list'. If list is NULL it tries
+to determine the resources automatically. This only works for entities
+that  provide a  generic  way to  read  out the  resource ranges  they
+decode. So far  this is only the case for PCI  devices. By default the
+PCI resources are registered as shared (ResShared) if the driver wants
+to set a  different access type it can do so  by specifying the access
+flags in  the third argument.  A value of  0 means to use  the default
+settings.  If  for any  reason  the resource  broker  is  not able  to
+register some  of the requested  resources the function will  return a
+pointer to a list of the failed ones. In this case the driver may move
+the resource to different locations.  In case of PCI bus entities this
+is done by passing the list of failed resources to
+
+  resPtr xf86ReallocatePciResources(int entityIndex, resPtr pRes);
+
+this function returns a list  of reallocated resource. This list needs
+to be  passed to xf86RegisterResources()  again to be  registered with
+the broker.
+
+Two functions are provided to obtain a resource range of a given type:
+
+  resRange xf86GetBlock(long type, memType size,
+		        memType window_start, memType window_end,
+		        memType align_mask, resPtr avoid);
+  resRange xf86GetSparse(long type,  unsigned long fixed_bits,
+		         unsigned long decode_mask, unsigned long address_mask,
+		         resPtr avoid);
+
+The first  one tries  to find a  block range  of size 'size'  and type
+'type'  in a  window bound  by  window_start and  window_end with  the
+alignment specified  in alignment mask. Optionally a  list of resource
+ranges which should  be avoided inside this window  can be passed.  On
+failure it will return a zero range of type 'ResEnd'.
+
+The latter function does the same for sparse resources. A spares range
+is  determined by  to  parameters: the  mask  and the  base value.  An
+address satisfying
+
+			mask & address == base
+
+belongs  to the specific  spares range.  'mask' and  'base' themselves
+have to satisfy:
+
+			 mask & base == base.
+
+Here three values  have to be specified: the  address mask which marks
+all bits of the mask part  of the address, the decode_mask which masks
+out the bits  which are hard coded and are  therefore not available for
+relocation and  the values  of the fixed  bits. The function  tries to
+find a base that satisfies  the given condition. If the function fails
+it will return  a zero range of type 'ResEnd'.  Optionally it might be
+passed a list of resource ranges to avoid.
+
+Certain PCI devices  are broken in the sense  that they return invalid
+size information for  a certain resource. In this  case the driver can
+supply  the  correct  size  and  make sure  that  the  resource  range
+allocated  for the  card is  large enough  to hold  the  address range
+decoded by the card. The function:
+
+  Bool xf86FixPciResource(int entityIndex, unsigned int prt, CARD32 alignment,
+	 		  long type);
+
+is used  for that. The  parameter prt contains  the number of  the PCI
+base register that needs to be  modified. A value of 6 refers to the
+BIOS  base   register.  The  size   is  specified  in   the  alignment
+register. Since  PCI resources need to  span an integral  range of the
+size 2^n  the alignment  also specifies the  number of  addresses that
+will be decoded.  If the driver  specifies a type mask it can override
+the default type for PCI  resources which is 'ResShared'. The resource
+broker needs  to know  that to find  a matching resource  range.  This
+function should be called before calling xf86RegisterResources().
+
+  Bool xf86CheckPciMemBase(pciVideoPtr pPci, unsigned long base);
+
+checks that the memory base value specified in base matches one of the
+PCI base address register values for the given PCI device.
+
+The driver  may replace  the generic access  control functions  for an
+entity by it's own ones.
+
+  void xf86SetAccessFuncs(EntityInfoPtr pEnt, xf86SetAccessFuncPtr funcs,
+			xf86SetAccessFuncPtr oldFuncs);
+
+  with:
+
+  typedef struct {
+      xf86AccessPtr mem;
+      xf86AccessPtr io;
+      xf86AccessPtr io_mem;
+   } xf86SetAccessFuncRec, *xf86SetAccessFuncPtr;
+
+is used  for that. The  driver can pass  three functions: one  for I/O
+access,  one for memory  access and  one for  combined memory  and I/O
+access.   If  the memory  access  and  combined  access functions  are
+identical the  common level assumes  that the memory access  cannot be
+controlled independently of I/O access, if the I/O access function and
+the combined access functions are the  same it is assumed that I/O can
+not  be  controlled independently.   If  memory  and  I/O have  to  be
+controlled together  all three  values should be  the same.  If  a non
+NULL value is passed as third argument it is interpreted as an address
+where to store  the old access records. If the  third argument is NULL
+it will  be assumed that the  generic access should  be enabled before
+replacing the  access functions.  Otherwise  it will be  disabled. The
+driver may enable them itself  using the returned values. It should do
+this from his  replacement access functions as the  generic access may
+be disabled by  the common level on certain  occasions. If replacement
+functions  are  specified  they  must  control all  resources  of  the
+specific type registered for the entity.
+
+To find out if specific resource range is conflicting with another
+resource
+
+  memType xf86ChkConflict(resRange *rgp, int entityIndex);
+
+may be called. If a non-zero value is returned a conflict is found.
+
+  resPtr xf86SetOperatingState(resList list, int entityIndex, int mask);
+
+is used to set the state of a resource during OPERATING state.  'list'
+holds a list  to which 'mask' is to be  applied.  The parameter 'mask'
+may have the value  'ResUnusedOpr' and 'ResDisableOpr'.  The first one
+should be used if a  resource isn't used during OPERATING state however
+decoded by the device while the latter one indicates that the resource
+is not decoded  during OPERATING state. Note that  the resource ranges
+have to match those specified during registration. If a range has been
+specified  starting at A  and ending  at B  and suppose  C us  a value
+satisfying A < C  < B one may not specify the  resource range (A,B) by
+splitting it into two ranges (A,C) and (C,B).
+
+Two functions are provided for special cases:
+
+  void xf86RemoveEntityFromScreen(ScrnInfoPtr pScrn, int entityIndex);
+
+may be used  to remove an entity from a screen.  This only makes sense
+if a screen has  more than one entity assigned or the  screen is to be
+deleted. No test is made if the screen has any entities left.
+
+  void xf86DeallocateResourcesForEntity(int entityIndex, long type);
+
+deallocates all  resources of  a given type  registered for  a certain
+entity from the resource broker list.
+
+IV.3. ScreenInit() phase
+------------------------
+
+Setting up  the rac flags  is all that  remains to do  in ScreenInit()
+phase (Note that these flags might also be set up in PreInit() phase).
+The  ScrnInfoRec  has  separate  flags  for  memory  and  PIO  access:
+racIoFlags and  racMemFlags. They specifies  which graphics operations
+might require  the use of resources  which might be  disabled for some
+reason.  Note that even exclusive  resources might be disabled if they
+are disabled along with shared  resources. For example if a driver has
+registered the  VGA PIO  resources and lets  the common  level disable
+these by disabling PIO access  in PCI config space (the standard way),
+exclusive PCI PIO ranges will  also be disabled.  Therefore the driver
+has to flag any operations  requiring PCI PIO resources in racIoFlags.
+The avaliable flags are defined in rac/xf86RAC.h.  Available are:
+
+ RAC_FB       for framebuffer operations (including hw acceleration)
+ RAC_CURSOR   for Cursor operations
+              (??? I'm not sure if we need this for SW cursor it depends
+              on which level the sw cursor is drawn)
+ RAC_COLORMAP for colormap operations
+ RAC_VIEWPORT for the call to RACAdjustFrame()
+
+The flags are or'ed.
+
+V. Appendix
+===========
+
+A. Sample Probe() Function
+--------------------------
+
+static Bool
+XXXProbe(DriverPtr drv, int flags)
+{
+    Bool foundScreen = FALSE;
+    int numDevSections, numUsed;
+    GDevPtr *devSections;
+    int *usedChips;
+    int i;
+    
+    /*
+     * Find the config file Device sections that match this
+     * driver, and return if there are none.
+     */
+    if ((numDevSections = xf86MatchDevice(CHIPS_DRIVER_NAME,
+					  &devSections)) <= 0) {
+	return FALSE;
+    }
+    /* PCI BUS */
+    /* test if PCI bus present */
+    if (xf86GetPciVideoInfo() ) {
+    /* match PCI instances with ones supported by the driver */
+       	numUsed = xf86MatchPciInstances(XXX_NAME, PCI_VENDOR_XXX,
+					XXXChipsets, XXXPCIchipsets, 
+					devSections,numDevSections, drv,
+					&usedChips);
+	if (numUsed > 0) {
+	    for (i = 0; i < numUsed; i++) {
+	    		    /* Allocate a ScrnInfoRec  */
+                ScrnInfoPtr pScrn = xf86AllocateScreen(drv,0);
+		pScrn->driverVersion = VERSION;
+		pScrn->driverName    = XXX_DRIVER_NAME;
+		pScrn->name          = XXX_NAME;
+		pScrn->Probe         = XXXProbe;
+		pScrn->PreInit       = XXXPreInit;
+		pScrn->ScreenInit    = XXXScreenInit;
+		pScrn->SwitchMode    = XXXSwitchMode;
+		pScrn->AdjustFrame   = XXXAdjustFrame;
+		pScrn->EnterVT       = XXXEnterVT;
+		pScrn->LeaveVT       = XXXLeaveVT;
+		pScrn->FreeScreen    = XXXFreeScreen;
+		pScrn->ValidMode     = XXXValidMode;
+		foundScreen = TRUE;
+                 /* add screen to entity */
+		 xf86ConfigActivePciEntity(pScrn,usedChips[i],XXXPCIchipsets,
+		    		           NULL,NULL,NULL,NULL,NULL);
+	    }
+	}
+    }
+
+    /* Isa Bus */
+    numUsed = xf86MatchIsaInstances(XXX_NAME,XXXChipsets,XXXISAchipsets,
+				     drv,chipsFindIsaDevice,devSections,
+				     numDevSections,&usedChips);
+    if(numUsed >= 0)
+	for (i = 0; i < numUsed; i++) {
+	    ScrnInfoPtr pScrn = xf86AllocateScreen(drv,0);
+	  
+	    pScrn->driverVersion = VERSION;
+	    pScrn->driverName    = XXX_DRIVER_NAME;
+	    pScrn->name          = XXX_NAME;
+	    pScrn->Probe         = XXXProbe;
+	    pScrn->PreInit       = XXXPreInit;
+	    pScrn->ScreenInit    = XXXScreenInit;
+	    pScrn->SwitchMode    = XXXSwitchMode;
+	    pScrn->AdjustFrame   = XXXAdjustFrame;
+	    pScrn->EnterVT       = XXXEnterVT;
+	    pScrn->LeaveVT       = XXXLeaveVT;
+	    pScrn->FreeScreen    = XXXFreeScreen;
+	    pScrn->ValidMode     = XXXValidMode;
+	    foundScreen = TRUE;
+	    xf86ConfigActiveIsaEntity(pScrn,usedChips[i],XXXISAchipsets,
+	   			      NULL,NULL,NULL,NULL,NULL);
+	}
+    xfree(devSections);
+    return foundScreen;
+}
+
+B. Porting Issues
+-----------------
+
+Here are some hints on porting code developed for RAC 1 to RAC 2.
+
+1. a. Initialization of RAC is now entirely done on the common level.
+      Therefore the call to xf86RACInit() can be removed. 
+
+   b. Also there is no need for the racSymbols list. 
+
+   c. LoadSubModule(..,rac) should be removed.
+
+   d. racSymbols should be removed from LoaderRequestSymList(racSymbols,..)
+
+2. a. if the driver uses the predefined resource lists xf86Resources.h
+      needs to be included.
+
+   b. RES_VGA should be changed to RES_EXCLUSIVE_VGA
+
+3. The device list now belongs to the EntityInfoRec. 
+   Change pScrn->device to xxx->pEnt->device.
+
+4. Rewrite the Probe() function. The example given above should work
+   as a guideline.
+
+5. Register all necessary resources in PreInit() by calling 
+   xf86RegisterResources().
+
+6. If applicable set the operating state of the registered resources 
+   by calling xf86SetOperatingState(). This should be done during
+   PreInit(). If necessary it might still be done in ScreenInit()
+
+7. Set up the racIoFlags and racMemFlags.
+
+
+ LocalWords:  ISA

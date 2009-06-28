@@ -1,0 +1,115 @@
+// $XKeyboardConfig$
+
+// based on a keyboard map from an 'xkb/symbols/be' file
+//
+// $XFree86: xc/programs/xkbcomp/symbols/be,v 1.3 2003/04/12 10:53:48 pascal Exp $
+
+partial default alphanumeric_keys
+xkb_symbols "basic" {
+
+    include "latin"
+
+    name[Group1]="Belgium";
+
+    key <AE01>	{ [ ampersand,          1,          bar,   exclamdown ]	};
+    key <AE02>	{ [    eacute,          2,           at,    oneeighth ]	};
+    key <AE03>	{ [  quotedbl,          3,   numbersign,     sterling ]	};
+    key <AE04>	{ [apostrophe,          4,   onequarter,       dollar ]	};
+    key <AE05>	{ [ parenleft,          5,      onehalf, threeeighths ]	};
+    key <AE06>	{ [   section,          6,  asciicircum,  fiveeighths ]	};
+    key <AE07>	{ [    egrave,          7,    braceleft, seveneighths ]	};
+    key <AE08>	{ [    exclam,          8,  bracketleft,    trademark ]	};
+    key <AE09>	{ [  ccedilla,          9,    braceleft,    plusminus ]	};
+    key <AE10>	{ [    agrave,          0,   braceright,       degree ]	};
+    key <AE11>	{ [parenright,     degree,    backslash, questiondown ]	};
+    key <AE12>	{ [     minus, underscore, dead_cedilla,  dead_ogonek ]	};
+
+    key <AD01>	{ [         a,          A,           at,  Greek_OMEGA ]	};
+    key <AD02>	{ [         z,          Z,      lstroke,      Lstroke ]	};
+    key <AD03>	{ [         e,          E,     EuroSign,         cent ]	};
+    key <AD11>	{ [dead_circumflex, dead_diaeresis,  bracketleft, dead_abovering ] };
+    key <AD12>	{ [    dollar,   asterisk, bracketright,  dead_macron ]	};
+
+    key <AC01>	{ [         q,          Q,           ae,           AE ]	};
+    key <AC10>	{ [         m,          M,   dead_acute, dead_doubleacute ] };
+    key <AC11>	{ [    ugrave,    percent,   dead_acute,   dead_caron ]	};
+    key <TLDE>	{ [twosuperior, threesuperior,  notsign,      notsign ]	};
+
+    key <BKSL>	{ [        mu,   sterling,   dead_grave,   dead_breve ]	};
+    key <AB01>	{ [         w,          W, guillemotleft,        less ]	};
+    key <AB07>	{ [     comma,   question, dead_cedilla,    masculine ]	};
+    key <AB08>	{ [ semicolon,     period, horizconnector,   multiply ]	};
+    key <AB09>	{ [     colon,      slash, periodcentered,   division ]	};
+    key <AB10>	{ [     equal,       plus,   dead_tilde, dead_abovedot]	};
+    key <LSGT>  { [      less,    greater,    backslash,    backslash ]	};
+
+    include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "iso-alternate" {
+    include "be(basic)"
+    name[Group1]="Belgium - ISO Alternate";
+
+    key <AD01>	{ [         a,          A,           ae,           AE ]	};
+    key <AD02>	{ [         z,          Z, guillemotleft,        less ]	};
+    key <AC01>	{ [         q,          Q,           at,  Greek_OMEGA ]	};
+    key <AC10>	{ [         m,          M,           mu,    masculine ]	};
+    key <AB01>	{ [         w,          W,      lstroke,      Lstroke ]	};
+    key <AB07>	{ [ comma,   question, dead_cedilla, dead_doubleacute ]	};
+};
+
+partial alphanumeric_keys
+xkb_symbols "sundeadkeys" {
+
+    // Use the Sun dead keys
+
+    include "be(basic)"
+    name[Group1]="Belgium - Sun dead keys";
+
+    key <AD11>	{ [SunFA_Circum, SunFA_Diaeresis, bracketleft, bracketleft] };
+    key <AC11>	{ [    ugrave,    percent,  SunFA_Acute,  SunFA_Acute ]	};
+    key <BKSL>	{ [        mu,   sterling,  SunFA_Grave,  SunFA_Grave ]	};
+    key <AB07>	{ [     comma,  question, SunFA_Cedilla, SunFA_Cedilla]	};
+    key <AB10>	{ [     equal,       plus,  SunFA_Tilde,  SunFA_Tilde ]	};
+};
+
+partial alphanumeric_keys
+xkb_symbols "Sundeadkeys" {
+
+    // Use the Sun dead keys
+
+    include "be(sundeadkeys)"
+
+};
+
+partial alphanumeric_keys
+xkb_symbols "nodeadkeys" {
+
+    // Eliminates dead keys from the basic Belgian layout
+
+    include "be(basic)"
+    name[Group1]="Belgium - Eliminate dead keys";
+
+    key <AE12>	{ [     minus, underscore,      cedilla,       ogonek ]	};
+    key <AD11>	{ [asciicircum,  diaeresis,  bracketleft,  bracketleft]	};
+    key <AD12>	{ [    dollar,   asterisk, bracketright,       macron ]	};
+    key <AC10>	{ [         m,          M,        acute,  doubleacute ]	};
+    key <AC11>	{ [    ugrave,    percent,   quoteright,   quoteright ]	};
+    key <BKSL>	{ [        mu,   sterling,    quoteleft,    quoteleft ]	};
+    key <AB07>	{ [     comma,   question,      cedilla,    masculine ]	};
+    key <AB10>	{ [     equal,       plus,   asciitilde,   asciitilde ]	};
+};
+
+// Wang model 724 azerty Belgium keyboard
+partial alphanumeric_keys
+xkb_symbols "wang" {
+
+    include "be(basic)"
+    include "keypad(legacy_wang)"
+    name[Group1]="Belgium - Wang model 724 azerty";
+
+    // Engravings on Wang 725-3771-ae
+    key <TLDE> { [ twosuperior, threesuperior,   notsign, asciitilde ] };
+    key <LSGT> { [        less,       greater, backslash,  brokenbar ] };
+};

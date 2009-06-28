@@ -1,0 +1,8 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+mapdir=@MAPDIR@
+ 
+Name: FontUtil
+Description: Font utilities dirs
+Version: @PACKAGE_VERSION@

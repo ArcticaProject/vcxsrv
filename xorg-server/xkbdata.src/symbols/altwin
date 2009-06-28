@@ -1,0 +1,76 @@
+// $XKeyboardConfig$
+
+// $XFree86: xc/programs/xkbcomp/symbols/altwin,v 1.5 2003/12/03 14:09:08 pascal Exp $
+
+partial modifier_keys 
+xkb_symbols "meta_alt" {
+    key <LALT> {	[ 	Alt_L,	Meta_L		]	};
+    key <RALT> {	[ 	Alt_R,	Meta_R		]	};
+    modifier_map Mod1	{ Alt_L, Alt_R, Meta_L, Meta_R };
+//  modifier_map Mod4	{};
+};
+
+// Control is mapped to the Win-keys (and the usual Ctrl keys).
+partial modifier_keys 
+xkb_symbols "ctrl_win" {
+    key <LWIN> {	[ 	Control_L		]	};
+    key <RWIN> {	[ 	Control_R		]	};
+    modifier_map Control { <LWIN>, <RWIN> };
+};
+
+partial modifier_keys 
+xkb_symbols "meta_win" {
+    key <LALT> {	[ 	Alt_L,	Alt_L		]	};
+    key <RALT> {	[ 	Alt_R,	Alt_R		]	};
+    key <LWIN> {	[ 	Meta_L			]	};
+    key <RWIN> {	[ 	Meta_R			]	};
+    modifier_map Mod1	{ Alt_L, Alt_R };
+    modifier_map Mod4	{ <META>, Meta_L, Meta_R };
+};
+
+partial modifier_keys 
+xkb_symbols "left_meta_win" {
+    key <LALT> {	[ 	Alt_L,	Alt_L		]	};
+    key <LWIN> {	[ 	Meta_L			]	};
+    modifier_map Mod1	{ Alt_L };
+    modifier_map Mod4	{ <META>, Meta_L };
+};
+
+partial modifier_keys 
+xkb_symbols "super_win" {
+    key <LWIN> {	[ 	Super_L			]	};
+    key <RWIN> {	[ 	Super_R			]	};
+    modifier_map Mod4	{ Super_L, Super_R };
+};
+
+partial modifier_keys 
+xkb_symbols "hyper_win" {
+    key <LWIN> {	[ 	Hyper_L			]	};
+    key <RWIN> {	[ 	Hyper_R			]	};
+    modifier_map Mod4	{ Hyper_L, Hyper_R };
+};
+
+// Use Menu for the menu key
+partial modifier_keys 
+xkb_symbols "menu" {
+    key <MENU> {	[ 	Menu		]	};
+};
+
+// Layout for Tux key caps with additional right Alt key
+partial modifier_keys 
+xkb_symbols "alt_super_win" {
+    key <LALT> {        [       Alt_L,  Meta_L          ]       };
+    key <RWIN> {        [       Alt_R,  Meta_R          ]       };
+    key <LWIN> {        [       Super_L                 ]       };
+    key <MENU> {        [       Super_R                 ]       };
+    modifier_map Mod1   { Alt_L, Alt_R, Meta_L, Meta_R };
+    modifier_map Mod4   { Super_L, Super_R };
+};
+
+partial modifier_keys 
+xkb_symbols "swap_lalt_lwin" {
+    key <LALT> {	[ 	Super_L			]	};
+    key <LWIN> {	[	Alt_L,	Meta_L		]	};
+    modifier_map Mod1 { <LWIN> };
+    modifier_map Mod4 { <LALT> };
+};

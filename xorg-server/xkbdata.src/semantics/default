@@ -1,0 +1,7 @@
+// $Xorg: default,v 1.3 2000/08/17 19:54:42 cpqbld Exp $
+default xkb_semantics "default" {
+
+xkb_types		{ include "default" 	};
+xkb_compatibility	{ include "default"	};
+
+};

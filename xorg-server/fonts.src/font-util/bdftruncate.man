@@ -1,0 +1,32 @@
+.TH bdftruncate __appmansuffix__ __vendorversion__
+.SH NAME
+bdftruncate \- generate truncated BDF font from ISO 10646-1-encoded BDF font
+.SH SYNOPSIS
+.B bdftruncate
+.I threshold
+.B <
+.I source.bdf
+.B >
+.I destination.bdf
+.SH DESCRIPTION
+.B bdftruncate
+allows one to generate from an ISO10646-1 encoded BDF font other ISO10646-1
+BDF fonts in which all characters above a threshold code value are stored
+unencoded.  This is often desirable because the Xlib API and X11 protocol
+data structures used for representing font metric information are extremely
+inefficient when handling sparsely populated fonts.
+.SH EXAMPLE
+The command
+.RS
+bdftruncate 0x3200 < 6x13.bdf > 6x13t.bdf
+.RE
+will generate the file 6x13t.bdf in which all glyphs with codes
+>= 0x3200 will only be stored unencoded (i.e., they are encoded at
+codepoint -1).
+.SH "SEE ALSO"
+.BR ucs2any (1)
+.SH AUTHOR
+.B bdftruncate
+was written by Markus Kuhn.
+.PP
+Branden Robinson wrote this manual page, originally for the Debian Project.

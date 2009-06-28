@@ -1,0 +1,2630 @@
+# translation of xkeyboard-config-1.4-pre1.po to Ukrainian
+# Ukrainian translation to xkeyboard-config
+# Copyright (C) 2002, 2007, 2008 Free Software Foundation, Inc.
+# Sergey V. Udaltsov <svu@users.sourceforge.net>
+#
+# This file is distributed under the same license as the xkeyboard-config package.
+# Maxim V. Dziumanenko <dziumanenko@gmail.com>, 2004-2007.
+# Andriy Rysin <arysin@bcsii.com>, 2007, 2008.
+# Andriy Rysin <arysin@gmail.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: xkeyboard-config-1.4-pre1\n"
+"Report-Msgid-Bugs-To: svu@users.sourceforge.net\n"
+"POT-Creation-Date: 2008-09-15 23:52+0100\n"
+"PO-Revision-Date: 2008-09-16 18:57-0400\n"
+"Last-Translator: Maxim V. Dziumanenko <dziumanenko@gmail.com>\n"
+"Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../rules/base.xml.in.h:1 ../rules/evdev.xml.in.h:1
+msgid "(F)"
+msgstr "(F)"
+
+#: ../rules/base.xml.in.h:2 ../rules/evdev.xml.in.h:2
+msgid "(Legacy) Alternative"
+msgstr "(Застаріла) Альтернативна"
+
+#: ../rules/base.xml.in.h:3 ../rules/evdev.xml.in.h:3
+msgid "(Legacy) Alternative, Sun dead keys"
+msgstr "(Застаріла) Альтернативна, Sun dead keys"
+
+#: ../rules/base.xml.in.h:4 ../rules/evdev.xml.in.h:4
+msgid "(Legacy) Alternative, eliminate dead keys"
+msgstr "(Застаріла) Альтернативна, вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:5 ../rules/evdev.xml.in.h:5
+msgid "101/104 key Compatible"
+msgstr "Сумісна з 101/104 клавішною"
+
+#: ../rules/base.xml.in.h:6 ../rules/evdev.xml.in.h:6
+msgid "101/qwerty/comma/Dead keys"
+msgstr "101/qwerty/comma/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:7 ../rules/evdev.xml.in.h:7
+msgid "101/qwerty/comma/Eliminate dead keys"
+msgstr "101/qwerty/comma/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:8 ../rules/evdev.xml.in.h:8
+msgid "101/qwerty/dot/Dead keys"
+msgstr "101/qwerty/dot/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:9 ../rules/evdev.xml.in.h:9
+msgid "101/qwerty/dot/Eliminate dead keys"
+msgstr "101/qwerty/dot/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:10 ../rules/evdev.xml.in.h:10
+msgid "101/qwertz/comma/Dead keys"
+msgstr "101/qwertz/comma/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:11 ../rules/evdev.xml.in.h:11
+msgid "101/qwertz/comma/Eliminate dead keys"
+msgstr "101/qwertz/comma/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:12 ../rules/evdev.xml.in.h:12
+msgid "101/qwertz/dot/Dead keys"
+msgstr "101/qwertz/dot/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:13 ../rules/evdev.xml.in.h:13
+msgid "101/qwertz/dot/Eliminate dead keys"
+msgstr "101/qwertz/dot/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:14 ../rules/evdev.xml.in.h:14
+msgid "102/qwerty/comma/Dead keys"
+msgstr "102/qwerty/comma/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:15 ../rules/evdev.xml.in.h:15
+msgid "102/qwerty/comma/Eliminate dead keys"
+msgstr "102/qwerty/comma/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:16 ../rules/evdev.xml.in.h:16
+msgid "102/qwerty/dot/Dead keys"
+msgstr "102/qwerty/dot/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:17 ../rules/evdev.xml.in.h:17
+msgid "102/qwerty/dot/Eliminate dead keys"
+msgstr "102/qwerty/dot/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:18 ../rules/evdev.xml.in.h:18
+msgid "102/qwertz/comma/Dead keys"
+msgstr "102/qwertz/comma/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:19 ../rules/evdev.xml.in.h:19
+msgid "102/qwertz/comma/Eliminate dead keys"
+msgstr "102/qwertz/comma/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:20 ../rules/evdev.xml.in.h:20
+msgid "102/qwertz/dot/Dead keys"
+msgstr "102/qwertz/dot/Сліпі клавіші"
+
+#: ../rules/base.xml.in.h:21 ../rules/evdev.xml.in.h:21
+msgid "102/qwertz/dot/Eliminate dead keys"
+msgstr "102/qwertz/dot/Вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:22 ../rules/evdev.xml.in.h:22
+msgid "A4Tech KB-21"
+msgstr "A4Tech KB-21"
+
+#: ../rules/base.xml.in.h:23 ../rules/evdev.xml.in.h:23
+msgid "A4Tech KBS-8"
+msgstr "A4Tech KBS-8"
+
+#: ../rules/base.xml.in.h:24 ../rules/evdev.xml.in.h:24
+msgid "A4Tech Wireless Desktop RFKB-23"
+msgstr "A4Tech Wireless Desktop RFKB-23"
+
+#: ../rules/base.xml.in.h:25 ../rules/evdev.xml.in.h:25
+msgid "ACPI Standard"
+msgstr "Стандартна ACPI"
+
+#: ../rules/base.xml.in.h:26 ../rules/evdev.xml.in.h:26
+msgid "ATM/phone-style hexadecimal keypad"
+msgstr "ATM/phone-style hexadecimal keypad"
+
+#: ../rules/base.xml.in.h:27 ../rules/evdev.xml.in.h:27
+msgid "Acer AirKey V"
+msgstr "Acer AirKey V"
+
+#: ../rules/base.xml.in.h:28 ../rules/evdev.xml.in.h:28
+msgid "Acer C300"
+msgstr "Acer C300"
+
+#: ../rules/base.xml.in.h:29 ../rules/evdev.xml.in.h:29
+msgid "Acer Ferrari 4000"
+msgstr "Acer Ferrari 4000"
+
+#: ../rules/base.xml.in.h:30 ../rules/evdev.xml.in.h:30
+msgid "Acer Laptop"
+msgstr "Acer Laptop"
+
+#: ../rules/base.xml.in.h:31 ../rules/evdev.xml.in.h:31
+msgid "Add the EuroSign to the 2 key."
+msgstr "Призначити знак євро на клавішу 2."
+
+#: ../rules/base.xml.in.h:32 ../rules/evdev.xml.in.h:32
+msgid "Add the EuroSign to the 4 key."
+msgstr "Додати знак євро на клавішу 4."
+
+#: ../rules/base.xml.in.h:33 ../rules/evdev.xml.in.h:33
+msgid "Add the EuroSign to the 5 key."
+msgstr "Призначити знак євро на клавішу 5."
+
+#: ../rules/base.xml.in.h:34 ../rules/evdev.xml.in.h:34
+msgid "Add the EuroSign to the E key."
+msgstr "Призначити знак євро на клавішу E."
+
+#: ../rules/base.xml.in.h:35 ../rules/evdev.xml.in.h:35
+msgid "Add the standard behavior to Menu key."
+msgstr "Надає клавіші Menu типову функцію."
+
+#: ../rules/base.xml.in.h:36 ../rules/evdev.xml.in.h:36
+msgid "Adding the EuroSign to certain keys"
+msgstr "Призначити знак євро певним клавішам"
+
+#: ../rules/base.xml.in.h:37 ../rules/evdev.xml.in.h:37
+msgid "Advance Scorpius KI"
+msgstr "Advance Scorpius KI"
+
+#: ../rules/base.xml.in.h:38 ../rules/evdev.xml.in.h:38
+msgid "Afg"
+msgstr "Афг"
+
+#: ../rules/base.xml.in.h:39 ../rules/evdev.xml.in.h:39
+msgid "Afghanistan"
+msgstr "Афганістан"
+
+#: ../rules/base.xml.in.h:40 ../rules/evdev.xml.in.h:40
+msgid "Akan"
+msgstr "Акан"
+
+#: ../rules/base.xml.in.h:41 ../rules/evdev.xml.in.h:41
+msgid "Alb"
+msgstr "Алб"
+
+#: ../rules/base.xml.in.h:42 ../rules/evdev.xml.in.h:42
+msgid "Albania"
+msgstr "Албанія"
+
+#: ../rules/base.xml.in.h:43 ../rules/evdev.xml.in.h:43
+msgid "Alt and Meta are on the Alt keys."
+msgstr "Alt та Meta на клавішах Alt."
+
+#: ../rules/base.xml.in.h:44 ../rules/evdev.xml.in.h:44
+msgid "Alt is mapped to the right Win-key and Super to Menu."
+msgstr "Клавіша Alt призначена правій клавіші Win а Super клавіші Menu."
+
+#: ../rules/base.xml.in.h:45 ../rules/evdev.xml.in.h:45
+msgid "Alt+CapsLock changes layout."
+msgstr "Alt+CapsLock змінюють розкладку."
+
+#: ../rules/base.xml.in.h:46 ../rules/evdev.xml.in.h:46
+msgid "Alt+Ctrl change layout."
+msgstr "Alt+Ctrl змінюють розкладку."
+
+#: ../rules/base.xml.in.h:47 ../rules/evdev.xml.in.h:47
+msgid "Alt+Shift change layout."
+msgstr "Alt+Shift змінюють розкладку."
+
+#: ../rules/base.xml.in.h:48 ../rules/evdev.xml.in.h:48
+msgid "Alt-Q"
+msgstr "Alt-Q"
+
+#: ../rules/base.xml.in.h:49 ../rules/evdev.xml.in.h:49
+msgid "Alt/Win key behavior"
+msgstr "Поведінка клавіш Alt/Win"
+
+#: ../rules/base.xml.in.h:50 ../rules/evdev.xml.in.h:50
+msgid "Alternative"
+msgstr "Альтернативна"
+
+#: ../rules/base.xml.in.h:51 ../rules/evdev.xml.in.h:51
+msgid "Alternative Eastern"
+msgstr "Альтернативна східна"
+
+#: ../rules/base.xml.in.h:52 ../rules/evdev.xml.in.h:52
+msgid "Alternative Phonetic"
+msgstr "Альтернативна фонетична"
+
+#: ../rules/base.xml.in.h:53 ../rules/evdev.xml.in.h:53
+msgid "Alternative international (former us_intl)"
+msgstr "Альтернативна інтернаціональна (колишня us_intl)"
+
+#: ../rules/base.xml.in.h:54 ../rules/evdev.xml.in.h:54
+msgid "Alternative, Sun dead keys"
+msgstr "Альтернативна, Sun dead keys"
+
+#: ../rules/base.xml.in.h:55 ../rules/evdev.xml.in.h:55
+msgid "Alternative, eliminate dead keys"
+msgstr "Альтернативна, вимикати сліпі клавіші"
+
+#: ../rules/base.xml.in.h:56 ../rules/evdev.xml.in.h:56
+msgid "Alternative, latin-9 only"
+msgstr "Альтернативна, лише latin-9"
+
+#: ../rules/base.xml.in.h:57 ../rules/evdev.xml.in.h:57
+msgid "And"
+msgstr "Анд"
+
+#: ../rules/base.xml.in.h:58 ../rules/evdev.xml.in.h:58
+msgid "Andorra"
+msgstr "Андорра"
+
+#: ../rules/base.xml.in.h:59 ../rules/evdev.xml.in.h:59
+msgid "Apostrophe (') variant"
+msgstr "Варіант з апострофом (')"
+
+#: ../rules/base.xml.in.h:60 ../rules/evdev.xml.in.h:60
+msgid "Apple"
+msgstr "Apple"
+
+#: ../rules/base.xml.in.h:61 ../rules/evdev.xml.in.h:61
+msgid "Apple Laptop"
+msgstr "Apple Laptop"
+
+#: ../rules/base.xml.in.h:62 ../rules/evdev.xml.in.h:62
+msgid "Ara"
+msgstr "Араб"
+
+#: ../rules/base.xml.in.h:63 ../rules/evdev.xml.in.h:63
+msgid "Arabic"
+msgstr "Арабська"
+
+#: ../rules/base.xml.in.h:64 ../rules/evdev.xml.in.h:64
+msgid "Arm"
+msgstr "Вірм"
+
+#: ../rules/base.xml.in.h:65 ../rules/evdev.xml.in.h:65
+msgid "Armenia"
+msgstr "Вірменія"
+
+#: ../rules/base.xml.in.h:66 ../rules/evdev.xml.in.h:66
+msgid "Asturian variant with bottom-dot H and bottom-dot L"
+msgstr "Аструійський варіант, де H та L з нижньою крапкою"
+
+#: ../rules/base.xml.in.h:67 ../rules/evdev.xml.in.h:67
+msgid "Asus Laptop"
+msgstr "Asus Laptop"
+
+#: ../rules/base.xml.in.h:68 ../rules/evdev.xml.in.h:68
+msgid "Aze"
+msgstr "Азер"
+
+#: ../rules/base.xml.in.h:69 ../rules/evdev.xml.in.h:69
+msgid "Azerbaijan"
+msgstr "Азербайджан"
+
+#: ../rules/base.xml.in.h:70 ../rules/evdev.xml.in.h:70
+msgid "Azona RF2300 wireless Internet Keyboard"
+msgstr "Azona RF2300 бездротова Інтернет-клавіатура"
+
+#: ../rules/base.xml.in.h:71 ../rules/evdev.xml.in.h:71
+msgid "BTC 5090"
+msgstr "BTC 5090"
+
+#: ../rules/base.xml.in.h:72 ../rules/evdev.xml.in.h:72
+msgid "BTC 5113RF Multimedia"
+msgstr "BTC 5113RF мультимедійна"
+
+#: ../rules/base.xml.in.h:73 ../rules/evdev.xml.in.h:73
+msgid "BTC 5126T"
+msgstr "BTC 5126T"
+
+#: ../rules/base.xml.in.h:74 ../rules/evdev.xml.in.h:74
+msgid "BTC 6301URF"
+msgstr "BTC 6301URF"
+
+#: ../rules/base.xml.in.h:75 ../rules/evdev.xml.in.h:75
+msgid "BTC 9000"
+msgstr "BTC 9000"
+
+#: ../rules/base.xml.in.h:76 ../rules/evdev.xml.in.h:76
+msgid "BTC 9000A"
+msgstr "BTC 9000A"
+
+#: ../rules/base.xml.in.h:77 ../rules/evdev.xml.in.h:77
+msgid "BTC 9001AH"
+msgstr "BTC 9001AH"
+
+#: ../rules/base.xml.in.h:78 ../rules/evdev.xml.in.h:78
+msgid "BTC 9019U"
+msgstr "BTC 9019U"
+
+#: ../rules/base.xml.in.h:79 ../rules/evdev.xml.in.h:79
+msgid "Baltic+"
+msgstr "Балтійська+"
+
+#: ../rules/base.xml.in.h:80 ../rules/evdev.xml.in.h:80
+msgid "Ban"
+msgstr "Банг"
+
+#: ../rules/base.xml.in.h:81 ../rules/evdev.xml.in.h:81
+msgid "Bangladesh"
+msgstr "Бангладеська"
+
+#: ../rules/base.xml.in.h:82 ../rules/evdev.xml.in.h:82
+msgid "Bel"
+msgstr "Бельг"
+
+#: ../rules/base.xml.in.h:83 ../rules/evdev.xml.in.h:83
+msgid "Belarus"
+msgstr "Білоруська"
+
+#: ../rules/base.xml.in.h:84 ../rules/evdev.xml.in.h:84
+msgid "Belgium"
+msgstr "Бельгія"
+
+#: ../rules/base.xml.in.h:85 ../rules/evdev.xml.in.h:85
+msgid "BenQ X-Touch"
+msgstr "BenQ X-Touch"
+
+#: ../rules/base.xml.in.h:86 ../rules/evdev.xml.in.h:86
+msgid "BenQ X-Touch 730"
+msgstr "BenQ X-Touch 730"
+
+#: ../rules/base.xml.in.h:87 ../rules/evdev.xml.in.h:87
+msgid "BenQ X-Touch 800"
+msgstr "BenQ X-Touch 800"
+
+#: ../rules/base.xml.in.h:88 ../rules/evdev.xml.in.h:88
+msgid "Bengali"
+msgstr "Бенгальська"
+
+#: ../rules/base.xml.in.h:89 ../rules/evdev.xml.in.h:89
+msgid "Bengali Probhat"
+msgstr "Бенгальська (Probhat)"
+
+#: ../rules/base.xml.in.h:90 ../rules/evdev.xml.in.h:90
+msgid "Bepo, ergonomic, Dvorak way"
+msgstr "Bepo, ергономічна, Дворак"
+
+#: ../rules/base.xml.in.h:91 ../rules/evdev.xml.in.h:91
+msgid "Bepo, ergonomic, Dvorak way, latin-9 only"
+msgstr "Bepo, ергономічна, Дворак, лише latin-9"
+
+#: ../rules/base.xml.in.h:92 ../rules/evdev.xml.in.h:92
+msgid "Bgr"
+msgstr "Болг"
+
+#: ../rules/base.xml.in.h:93 ../rules/evdev.xml.in.h:93
+msgid "Bhu"
+msgstr "Бут"
+
+#: ../rules/base.xml.in.h:94 ../rules/evdev.xml.in.h:94
+msgid "Bhutan"
+msgstr "Бутанська"
+
+#: ../rules/base.xml.in.h:95 ../rules/evdev.xml.in.h:95
+msgid "Biblical Hebrew (Tiro)"
+msgstr "Біблейська єврейська (Tiro)"
+
+#: ../rules/base.xml.in.h:96 ../rules/evdev.xml.in.h:96
+msgid "Bih"
+msgstr "Босн"
+
+#: ../rules/base.xml.in.h:97 ../rules/evdev.xml.in.h:97
+msgid "Blr"
+msgstr "Біл"
+
+#: ../rules/base.xml.in.h:98 ../rules/evdev.xml.in.h:98
+msgid "Bosnia and Herzegovina"
+msgstr "Боснія та Герцеговина"
+
+#: ../rules/base.xml.in.h:99 ../rules/evdev.xml.in.h:99
+msgid "Both Alt keys together change layout."
+msgstr "Обидві клавіші Alt разом змінюють розкладку."
+
+#: ../rules/base.xml.in.h:100 ../rules/evdev.xml.in.h:100
+msgid "Both Ctrl keys together change layout."
+msgstr "Обидві клавіші Ctrl разом змінюють розкладку."
+
+#: ../rules/base.xml.in.h:101 ../rules/evdev.xml.in.h:101
+msgid "Both Shift keys together change layout."
+msgstr "Обидві клавіші Shift разом змінюють розкладку."
+
+#: ../rules/base.xml.in.h:102 ../rules/evdev.xml.in.h:102
+msgid "Both Win-keys switch layout while pressed."
+msgstr "Обидві клавіші Win перемикають групу на час натискання."
+
+#: ../rules/base.xml.in.h:103 ../rules/evdev.xml.in.h:103
+msgid "Bra"
+msgstr "Браз"
+
+#: ../rules/base.xml.in.h:104 ../rules/evdev.xml.in.h:104
+msgid "Braille"
+msgstr "Брайля"
+
+#: ../rules/base.xml.in.h:105 ../rules/evdev.xml.in.h:105
+msgid "Brazil"
+msgstr "Бразильська"
+
+#: ../rules/base.xml.in.h:106 ../rules/evdev.xml.in.h:106
+msgid "Brazilian ABNT2"
+msgstr "Бразильська ABTN2"
+
+#: ../rules/base.xml.in.h:107 ../rules/evdev.xml.in.h:107
+msgid "Brl"
+msgstr "Брйл"
+
+#: ../rules/base.xml.in.h:108 ../rules/evdev.xml.in.h:108
+msgid "Brother Internet Keyboard"
+msgstr "Brother Internet Keyboard"
+
+#: ../rules/base.xml.in.h:109 ../rules/evdev.xml.in.h:109
+msgid "Buckwalter"
+msgstr "Buckwalter"
+
+#: ../rules/base.xml.in.h:110 ../rules/evdev.xml.in.h:110
+msgid "Bulgaria"
+msgstr "Болгарія"
+
+#: ../rules/base.xml.in.h:111 ../rules/evdev.xml.in.h:111
+msgid "Cambodia"
+msgstr "Камбоджа"
+
+#: ../rules/base.xml.in.h:112 ../rules/evdev.xml.in.h:112
+msgid "Can"
+msgstr "Кан"
+
+#: ../rules/base.xml.in.h:113 ../rules/evdev.xml.in.h:113
+msgid "Canada"
+msgstr "Канада"
+
+#: ../rules/base.xml.in.h:114 ../rules/evdev.xml.in.h:114
+msgid "Caps Lock is Compose."
+msgstr "Caps Lock відповідає клавіші Compose."
+
+#: ../rules/base.xml.in.h:115 ../rules/evdev.xml.in.h:115
+msgid "CapsLock LED shows alternative layout."
+msgstr "Індикатор Caps Lock показує альтернативну групу."
+
+#: ../rules/base.xml.in.h:116 ../rules/evdev.xml.in.h:116
+msgid "CapsLock acts as Shift with locking. Shift \"pauses\" CapsLock."
+msgstr "CapsLock діє як Shift з блокуванням. Shift \"призупиняє\" CapsLock."
+
+#: ../rules/base.xml.in.h:117 ../rules/evdev.xml.in.h:117
+msgid "CapsLock acts as Shift with locking. Shift doesn't affect CapsLock."
+msgstr "CapsLock діє як Shift з блокуванням. Shift не впливає на CapsLock."
+
+#: ../rules/base.xml.in.h:118 ../rules/evdev.xml.in.h:118
+msgid "CapsLock just locks the Shift modifier."
+msgstr "CapsLock просто фіксує модифікатор Shift"
+
+#: ../rules/base.xml.in.h:119 ../rules/evdev.xml.in.h:119
+msgid "CapsLock key behavior"
+msgstr "Клавіша CapsLock"
+
+#: ../rules/base.xml.in.h:120 ../rules/evdev.xml.in.h:120
+msgid "CapsLock key changes layout."
+msgstr "Клавіша CapsLock змінює розкладку."
+
+#: ../rules/base.xml.in.h:121 ../rules/evdev.xml.in.h:121
+msgid "CapsLock switch to first layout, Shift+CapsLock switch to last layout."
+msgstr "CapsLock перемикає на першу розкладку, Shift+CapsLock — на останню."
+
+#: ../rules/base.xml.in.h:122 ../rules/evdev.xml.in.h:122
+msgid "CapsLock toggles Shift so all keys are affected."
+msgstr "CapsLock перемикає Shift та впливає на усі символи."
+
+#: ../rules/base.xml.in.h:123 ../rules/evdev.xml.in.h:123
+msgid "CapsLock toggles normal capitalization of alphabetic characters."
+msgstr "CapsLock перемикає регістр алфавітних символів."
+
+#: ../rules/base.xml.in.h:124 ../rules/evdev.xml.in.h:124
+msgid "CapsLock uses internal capitalization. Shift \"pauses\" CapsLock."
+msgstr "CapsLock використовує внутрішнє збільшення літер. Shift \"призупиняє\" CapsLock."
+
+#: ../rules/base.xml.in.h:125 ../rules/evdev.xml.in.h:125
+msgid "CapsLock uses internal capitalization. Shift doesn't affect CapsLock."
+msgstr "CapsLock використовує внутрішнє збільшення літер. Shift не впливає на CapsLock."
+
+#: ../rules/base.xml.in.h:126 ../rules/evdev.xml.in.h:126
+msgid "Catalan variant with middle-dot L"
+msgstr "Каталонський варіант з L із середньою точкою"
+
+#: ../rules/base.xml.in.h:127 ../rules/evdev.xml.in.h:127
+msgid "Cedilla"
+msgstr "Седиль"
+
+#: ../rules/base.xml.in.h:128 ../rules/evdev.xml.in.h:128
+msgid "Che"
+msgstr "Шве"
+
+#: ../rules/base.xml.in.h:129 ../rules/evdev.xml.in.h:129
+msgid "Cherokee"
+msgstr "Cherokee"
+
+#: ../rules/base.xml.in.h:130 ../rules/evdev.xml.in.h:130
+msgid "Cherry Blue Line CyBo@rd"
+msgstr "Cherry Blue Line CyBo@rd"
+
+#: ../rules/base.xml.in.h:131 ../rules/evdev.xml.in.h:131
+msgid "Cherry Blue Line CyBo@rd (alternate option)"
+msgstr "Cherry Blue Line CyBo@rd (альтернативний варіант)"
+
+#: ../rules/base.xml.in.h:132 ../rules/evdev.xml.in.h:132
+msgid "Cherry CyBo@rd USB-Hub"
+msgstr "Cherry CyBo@rd USB-Hub"
+
+#: ../rules/base.xml.in.h:133 ../rules/evdev.xml.in.h:133
+msgid "Cherry CyMotion Master Linux"
+msgstr "Cherry CyMotion Master Linux"
+
+#: ../rules/base.xml.in.h:134 ../rules/evdev.xml.in.h:134
+msgid "Cherry CyMotion Master XPress"
+msgstr "Cherry CyMotion Master XPress"
+
+#: ../rules/base.xml.in.h:135 ../rules/evdev.xml.in.h:135
+msgid "Chicony Internet Keyboard"
+msgstr "Інтернет-клавіатура Chicony"
+
+#: ../rules/base.xml.in.h:136 ../rules/evdev.xml.in.h:136
+msgid "Chicony KB-9885"
+msgstr "Chicony KB-9885"
+
+#: ../rules/base.xml.in.h:137 ../rules/evdev.xml.in.h:137
+msgid "Chicony KU-0108"
+msgstr "Chicony KU-0108"
+
+#: ../rules/base.xml.in.h:138 ../rules/evdev.xml.in.h:138
+msgid "China"
+msgstr "Китайська"
+
+#: ../rules/base.xml.in.h:139 ../rules/evdev.xml.in.h:139
+msgid "Chuvash"
+msgstr "Чуваська"
+
+#: ../rules/base.xml.in.h:140 ../rules/evdev.xml.in.h:140
+msgid "Chuvash Latin"
+msgstr "Чуваська латинська"
+
+#: ../rules/base.xml.in.h:141 ../rules/evdev.xml.in.h:141
+msgid "Classic"
+msgstr "Класична"
+
+#: ../rules/base.xml.in.h:142 ../rules/evdev.xml.in.h:142
+msgid "Classic Dvorak"
+msgstr "Класична Дворак"
+
+#: ../rules/base.xml.in.h:143 ../rules/evdev.xml.in.h:143
+msgid "Classmate PC"
+msgstr "Classmate PC"
+
+#: ../rules/base.xml.in.h:144 ../rules/evdev.xml.in.h:144
+msgid "CloGaelach"
+msgstr "CloGaelach"
+
+#: ../rules/base.xml.in.h:145 ../rules/evdev.xml.in.h:145
+msgid "Colemak"
+msgstr "Colemak"
+
+#: ../rules/base.xml.in.h:146 ../rules/evdev.xml.in.h:146
+msgid "Compaq Easy Access Keyboard"
+msgstr "Compaq Easy Access Keyboard"
+
+#: ../rules/base.xml.in.h:147 ../rules/evdev.xml.in.h:147
+msgid "Compaq Internet Keyboard (13 keys)"
+msgstr "Compaq Internet Keyboard (13 клавіш)"
+
+#: ../rules/base.xml.in.h:148 ../rules/evdev.xml.in.h:148
+msgid "Compaq Internet Keyboard (18 keys)"
+msgstr "Compaq Internet Keyboard (18 клавіш)"
+
+#: ../rules/base.xml.in.h:149 ../rules/evdev.xml.in.h:149
+msgid "Compaq Internet Keyboard (7 keys)"
+msgstr "Compaq Internet Keyboard (7 клавіш)"
+
+#: ../rules/base.xml.in.h:150 ../rules/evdev.xml.in.h:150
+msgid "Compaq iPaq Keyboard"
+msgstr "Compaq iPaq Keyboard"
+
+#: ../rules/base.xml.in.h:151 ../rules/evdev.xml.in.h:151
+msgid "Compose key position"
+msgstr "Розташування клавіші Compose"
+
+#: ../rules/base.xml.in.h:152 ../rules/evdev.xml.in.h:152
+msgid "Congo, Democratic Republic of the"
+msgstr "Конго"
+
+#: ../rules/base.xml.in.h:153 ../rules/evdev.xml.in.h:153
+msgid "Control is mapped to the Win-keys (and the usual Ctrl keys)."
+msgstr "Control призначено на Win-клавіші (та звичайні клавіші Ctrl)."
+
+#: ../rules/base.xml.in.h:154 ../rules/evdev.xml.in.h:154
+msgid "Croatia"
+msgstr "Хорватська"
+
+#: ../rules/base.xml.in.h:155 ../rules/evdev.xml.in.h:155
+msgid "Ctrl key at bottom left"
+msgstr "Клавіша Ctrl внизу ліворуч"
+
+#: ../rules/base.xml.in.h:156 ../rules/evdev.xml.in.h:156
+msgid "Ctrl key at left of 'A'"
+msgstr "Клавіша Ctrl ліворуч від 'A'"
+
+#: ../rules/base.xml.in.h:157 ../rules/evdev.xml.in.h:157
+msgid "Ctrl key position"
+msgstr "Розташування клавіші Ctrl"
+
+#: ../rules/base.xml.in.h:158 ../rules/evdev.xml.in.h:158
+msgid "Ctrl+Shift change layout."
+msgstr "Ctrl+Shift змінюють розкладку."
+
+#: ../rules/base.xml.in.h:159 ../rules/evdev.xml.in.h:159
+msgid "Cyrillic"
+msgstr "Кирилічна"
+
+#: ../rules/base.xml.in.h:160 ../rules/evdev.xml.in.h:160
+msgid "Cyrillic with guillemets"
+msgstr "Кирилічна з кутовими лапками"
+
+#: ../rules/base.xml.in.h:161 ../rules/evdev.xml.in.h:161
+msgid "Cyrillic, Z and ZHE swapped"
+msgstr "Кирилічна, Z та ZHE поміняні місцями"
+
+#: ../rules/base.xml.in.h:162 ../rules/evdev.xml.in.h:162
+msgid "Cze"
+msgstr "Чес"
+
+#: ../rules/base.xml.in.h:163 ../rules/evdev.xml.in.h:163
+msgid "Czechia"
+msgstr "Чехія"
+
+#: ../rules/base.xml.in.h:164 ../rules/evdev.xml.in.h:164
+msgid "DRC"
+msgstr "DRC"
+
+#: ../rules/base.xml.in.h:165 ../rules/evdev.xml.in.h:165
+msgid "DTK2000"
+msgstr "DTK2000"
+
+#: ../rules/base.xml.in.h:166 ../rules/evdev.xml.in.h:166
+msgid "Dan"
+msgstr "Дан"
+
+#: ../rules/base.xml.in.h:167 ../rules/evdev.xml.in.h:167
+msgid "Dead acute"
+msgstr "Dead acute"
+
+#: ../rules/base.xml.in.h:168 ../rules/evdev.xml.in.h:168
+msgid "Dead grave acute"
+msgstr "Dead grave acute"
+
+#: ../rules/base.xml.in.h:169 ../rules/evdev.xml.in.h:169
+msgid "Default numeric keypad keys."
+msgstr "Типові клавіші цифрової клавіатури."
+
+#: ../rules/base.xml.in.h:170 ../rules/evdev.xml.in.h:170
+msgid "Dell"
+msgstr "Dell"
+
+#: ../rules/base.xml.in.h:171 ../rules/evdev.xml.in.h:171
+msgid "Dell 101-key PC"
+msgstr "Dell 101-клавішна для ПК"
+
+#: ../rules/base.xml.in.h:172 ../rules/evdev.xml.in.h:172
+msgid "Dell Laptop/notebook Inspiron 6xxx/8xxx"
+msgstr "Dell, ноутбуки Inspiron 6xxx/8xxx"
+
+#: ../rules/base.xml.in.h:173 ../rules/evdev.xml.in.h:173
+msgid "Dell Laptop/notebook Precision M series"
+msgstr "Dell, ноутбуки Precision M"
+
+#: ../rules/base.xml.in.h:174 ../rules/evdev.xml.in.h:174
+msgid "Dell Latitude series laptop"
+msgstr "Dell, ноутбук Latitude"
+
+#: ../rules/base.xml.in.h:175 ../rules/evdev.xml.in.h:175
+msgid "Dell Precision M65"
+msgstr "Dell Precision M65"
+
+#: ../rules/base.xml.in.h:176 ../rules/evdev.xml.in.h:176
+msgid "Dell SK-8125"
+msgstr "Dell SK-8125"
+
+#: ../rules/base.xml.in.h:177 ../rules/evdev.xml.in.h:177
+msgid "Dell SK-8135"
+msgstr "Dell SK-8135"
+
+#: ../rules/base.xml.in.h:178 ../rules/evdev.xml.in.h:178
+msgid "Dell USB Multimedia Keyboard"
+msgstr "Dell USB Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:179 ../rules/evdev.xml.in.h:179
+msgid "Denmark"
+msgstr "Данія"
+
+#: ../rules/base.xml.in.h:180 ../rules/evdev.xml.in.h:180
+msgid "Deu"
+msgstr "Нім"
+
+#: ../rules/base.xml.in.h:181 ../rules/evdev.xml.in.h:181
+msgid "Dexxa Wireless Desktop Keyboard"
+msgstr "Dexxa Wireless Desktop Keyboard"
+
+#: ../rules/base.xml.in.h:182 ../rules/evdev.xml.in.h:182
+msgid "Diamond 9801 / 9802 series"
+msgstr "Моделі Diamond 9801/9802"
+
+#: ../rules/base.xml.in.h:183 ../rules/evdev.xml.in.h:183
+msgid "Dvorak"
+msgstr "Дворак"
+
+#: ../rules/base.xml.in.h:184 ../rules/evdev.xml.in.h:184
+msgid "Dvorak (UK Punctuation)"
+msgstr "Dvorak (UK інтернаціональна)"
+
+#: ../rules/base.xml.in.h:185 ../rules/evdev.xml.in.h:185
+msgid "Dvorak international"
+msgstr "Dvorak (інтернаціональна)"
+
+#: ../rules/base.xml.in.h:186 ../rules/evdev.xml.in.h:186
+msgid "Dvorak, Polish quotes on key \"1/!\""
+msgstr "Дворак, польські лапки на клавіші \"1/!\""
+
+#: ../rules/base.xml.in.h:187 ../rules/evdev.xml.in.h:187
+msgid "Dvorak, Polish quotes on quotemark key"
+msgstr "Дворак, польські лапки на знаку лапки"
+
+#: ../rules/base.xml.in.h:188 ../rules/evdev.xml.in.h:188
+msgid "Eastern"
+msgstr "Східна"
+
+#: ../rules/base.xml.in.h:189 ../rules/evdev.xml.in.h:189
+msgid "Eliminate dead keys"
+msgstr "Вилучити сліпі клавіші"
+
+#: ../rules/base.xml.in.h:190 ../rules/evdev.xml.in.h:190
+msgid "Ennyah DKB-1008"
+msgstr "Ennyah DKB-1008"
+
+#: ../rules/base.xml.in.h:191 ../rules/evdev.xml.in.h:191
+msgid "Epo"
+msgstr "Епо"
+
+#: ../rules/base.xml.in.h:192 ../rules/evdev.xml.in.h:192
+msgid "Ergonomic"
+msgstr "Ергономічна"
+
+#: ../rules/base.xml.in.h:193 ../rules/evdev.xml.in.h:193
+msgid "Esp"
+msgstr "Ісп"
+
+#: ../rules/base.xml.in.h:194 ../rules/evdev.xml.in.h:194
+msgid "Esperanto"
+msgstr "Есперанто"
+
+#: ../rules/base.xml.in.h:195 ../rules/evdev.xml.in.h:195
+msgid "Est"
+msgstr "Ест"
+
+#: ../rules/base.xml.in.h:196 ../rules/evdev.xml.in.h:196
+msgid "Estonia"
+msgstr "Естонська"
+
+#: ../rules/base.xml.in.h:197 ../rules/evdev.xml.in.h:197
+msgid "Eth"
+msgstr "Ефі"
+
+#: ../rules/base.xml.in.h:198 ../rules/evdev.xml.in.h:198
+msgid "Ethiopia"
+msgstr "Ефіопська"
+
+#: ../rules/base.xml.in.h:199 ../rules/evdev.xml.in.h:199
+msgid "Evdev-managed keyboard"
+msgstr "Клавіатура, керована Evdev"
+
+#: ../rules/base.xml.in.h:200 ../rules/evdev.xml.in.h:200
+msgid "Everex STEPnote"
+msgstr "Everex STEPnote"
+
+#: ../rules/base.xml.in.h:201 ../rules/evdev.xml.in.h:201
+msgid "Ewe"
+msgstr "Ewe"
+
+#: ../rules/base.xml.in.h:202 ../rules/evdev.xml.in.h:202
+msgid "Extended"
+msgstr "Розширена"
+
+#: ../rules/base.xml.in.h:203 ../rules/evdev.xml.in.h:203
+msgid "Extended Backslash"
+msgstr "Розширена Backslash"
+
+#: ../rules/base.xml.in.h:204 ../rules/evdev.xml.in.h:204
+msgid "F-letter (F) variant"
+msgstr "Варіант з літерою F"
+
+#: ../rules/base.xml.in.h:205 ../rules/evdev.xml.in.h:205
+msgid "Fao"
+msgstr "Фарер"
+
+#: ../rules/base.xml.in.h:206 ../rules/evdev.xml.in.h:206
+msgid "Faroe Islands"
+msgstr "Фарерські о-ви"
+
+#: ../rules/base.xml.in.h:207 ../rules/evdev.xml.in.h:207
+msgid "Fin"
+msgstr "Фін"
+
+#: ../rules/base.xml.in.h:208 ../rules/evdev.xml.in.h:208
+msgid "Finland"
+msgstr "Фінляндія"
+
+#. This assumes the KP_ abstract symbols are actually useful for some apps
+#. The description needs to be rewritten
+#: ../rules/base.xml.in.h:211 ../rules/evdev.xml.in.h:211
+msgid "Four-level key with abstract separators"
+msgstr "Клавіша четвертого рівня з абстрактним розділювачем "
+
+#: ../rules/base.xml.in.h:212 ../rules/evdev.xml.in.h:212
+msgid "Four-level key with comma"
+msgstr "Клавіша четвертого рівня з комою"
+
+#: ../rules/base.xml.in.h:213 ../rules/evdev.xml.in.h:213
+msgid "Four-level key with dot"
+msgstr "Клавіша четвертого рівня з крапкою"
+
+#: ../rules/base.xml.in.h:214 ../rules/evdev.xml.in.h:214
+msgid "Four-level key with momayyez"
+msgstr "Клавіша четвертого рівня з momayyez"
+
+#: ../rules/base.xml.in.h:215 ../rules/evdev.xml.in.h:215
+msgid "Fra"
+msgstr "Фра"
+
+#: ../rules/base.xml.in.h:216 ../rules/evdev.xml.in.h:216
+msgid "France"
+msgstr "Франція"
+
+#: ../rules/base.xml.in.h:217 ../rules/evdev.xml.in.h:217
+msgid "French"
+msgstr "Французька"
+
+#: ../rules/base.xml.in.h:218 ../rules/evdev.xml.in.h:218
+msgid "French (Macintosh)"
+msgstr "Французька (Macintosh)"
+
+#: ../rules/base.xml.in.h:219 ../rules/evdev.xml.in.h:219
+msgid "French (legacy)"
+msgstr "Французька (застаріла)"
+
+#: ../rules/base.xml.in.h:220 ../rules/evdev.xml.in.h:220
+msgid "French Dvorak"
+msgstr "Французький Дворак"
+
+#: ../rules/base.xml.in.h:221 ../rules/evdev.xml.in.h:221
+msgid "French, Sun dead keys"
+msgstr "Французька, Sun зі сліпими клавішами"
+
+#: ../rules/base.xml.in.h:222 ../rules/evdev.xml.in.h:222
+msgid "French, eliminate dead keys"
+msgstr "Французька, вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:223 ../rules/evdev.xml.in.h:223
+msgid "Fujitsu-Siemens Computers AMILO A1667G laptop"
+msgstr "Fujitsu-Siemens Computers AMILO A1667G laptop"
+
+#: ../rules/base.xml.in.h:224 ../rules/evdev.xml.in.h:224
+msgid "Fula"
+msgstr "Фула"
+
+#: ../rules/base.xml.in.h:225 ../rules/evdev.xml.in.h:225
+msgid "GBr"
+msgstr "Брит"
+
+#: ../rules/base.xml.in.h:226 ../rules/evdev.xml.in.h:226
+msgid "Ga"
+msgstr "Га"
+
+#: ../rules/base.xml.in.h:227 ../rules/evdev.xml.in.h:227
+msgid "Generic 101-key PC"
+msgstr "Звичайна 101-клавішна для ПК"
+
+#: ../rules/base.xml.in.h:228 ../rules/evdev.xml.in.h:228
+msgid "Generic 102-key (Intl) PC"
+msgstr "Звичайна 102-клавішна для ПК"
+
+#: ../rules/base.xml.in.h:229 ../rules/evdev.xml.in.h:229
+msgid "Generic 104-key PC"
+msgstr "Звичайна 104-клавішна для ПК"
+
+#: ../rules/base.xml.in.h:230 ../rules/evdev.xml.in.h:230
+msgid "Generic 105-key (Intl) PC"
+msgstr "Звичайна 105-клавішна для ПК"
+
+#: ../rules/base.xml.in.h:231 ../rules/evdev.xml.in.h:231
+msgid "Genius Comfy KB-12e"
+msgstr "Genius Comfy KB-21e"
+
+#: ../rules/base.xml.in.h:232 ../rules/evdev.xml.in.h:232
+msgid "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
+msgstr "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
+
+#: ../rules/base.xml.in.h:233 ../rules/evdev.xml.in.h:233
+msgid "Genius Comfy KB-21e-Scroll"
+msgstr "Genius Comfy KB-21e-Scroll"
+
+#: ../rules/base.xml.in.h:234 ../rules/evdev.xml.in.h:234
+msgid "Genius KB-19e NB"
+msgstr "Genius KB-19e NB"
+
+#: ../rules/base.xml.in.h:235 ../rules/evdev.xml.in.h:235
+msgid "Geo"
+msgstr "Груз"
+
+#: ../rules/base.xml.in.h:236 ../rules/evdev.xml.in.h:236
+msgid "Georgia"
+msgstr "Грузія"
+
+#: ../rules/base.xml.in.h:237 ../rules/evdev.xml.in.h:237
+msgid "Georgian"
+msgstr "Грузинська"
+
+#: ../rules/base.xml.in.h:238 ../rules/evdev.xml.in.h:238
+msgid "Georgian AZERTY Tskapo"
+msgstr "Грузинська AZERTY Tskapo"
+
+#: ../rules/base.xml.in.h:239 ../rules/evdev.xml.in.h:239
+msgid "German (Macintosh)"
+msgstr "Німецька (Macintosh)"
+
+#: ../rules/base.xml.in.h:240 ../rules/evdev.xml.in.h:240
+msgid "German, Sun dead keys"
+msgstr "Німецька Sun зі сліпими клавішами"
+
+#: ../rules/base.xml.in.h:241 ../rules/evdev.xml.in.h:241
+msgid "German, eliminate dead keys"
+msgstr "Німецька, вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:242 ../rules/evdev.xml.in.h:242
+msgid "Germany"
+msgstr "Німеччина"
+
+#: ../rules/base.xml.in.h:243 ../rules/evdev.xml.in.h:243
+msgid "Gha"
+msgstr "Ган"
+
+#: ../rules/base.xml.in.h:244 ../rules/evdev.xml.in.h:244
+msgid "Ghana"
+msgstr "Гана"
+
+#: ../rules/base.xml.in.h:245 ../rules/evdev.xml.in.h:245
+msgid "Gre"
+msgstr "Гре"
+
+#: ../rules/base.xml.in.h:246 ../rules/evdev.xml.in.h:246
+msgid "Greece"
+msgstr "Греція"
+
+#: ../rules/base.xml.in.h:247 ../rules/evdev.xml.in.h:247
+msgid "Group toggle on multiply/divide key"
+msgstr "Перемикати групу на клавішах «помножити/ділити»"
+
+#: ../rules/base.xml.in.h:248 ../rules/evdev.xml.in.h:248
+msgid "Gui"
+msgstr "Гві"
+
+#: ../rules/base.xml.in.h:249 ../rules/evdev.xml.in.h:249
+msgid "Guinea"
+msgstr "Гвінея"
+
+#: ../rules/base.xml.in.h:250 ../rules/evdev.xml.in.h:250
+msgid "Gujarati"
+msgstr "Гуджараті"
+
+#: ../rules/base.xml.in.h:251 ../rules/evdev.xml.in.h:251
+msgid "Gurmukhi"
+msgstr "Гурмухі"
+
+#: ../rules/base.xml.in.h:252 ../rules/evdev.xml.in.h:252
+msgid "Gurmukhi Jhelum"
+msgstr "Гурмухі Джелум"
+
+#: ../rules/base.xml.in.h:253 ../rules/evdev.xml.in.h:253
+msgid "Gyration"
+msgstr "Gyration"
+
+#: ../rules/base.xml.in.h:254 ../rules/evdev.xml.in.h:254
+msgid "Happy Hacking Keyboard"
+msgstr "Happy Hacking Keyboard"
+
+#: ../rules/base.xml.in.h:255 ../rules/evdev.xml.in.h:255
+msgid "Happy Hacking Keyboard for Mac"
+msgstr "Happy Hacking Keyboard для Mac"
+
+#: ../rules/base.xml.in.h:256 ../rules/evdev.xml.in.h:256
+msgid "Hausa"
+msgstr "Hausa"
+
+#: ../rules/base.xml.in.h:257 ../rules/evdev.xml.in.h:257
+msgid "Hewlett-Packard Internet Keyboard"
+msgstr "Hewlett-Packard Internet Keyboard"
+
+#: ../rules/base.xml.in.h:258 ../rules/evdev.xml.in.h:258
+msgid "Hewlett-Packard Internet Keyboard 5181"
+msgstr "Hewlett-Packard Internet Keyboard 5181"
+
+#: ../rules/base.xml.in.h:259 ../rules/evdev.xml.in.h:259
+msgid "Hewlett-Packard Internet Keyboard 5185"
+msgstr "Hewlett-Packard Internet Keyboard 5185"
+
+#: ../rules/base.xml.in.h:260 ../rules/evdev.xml.in.h:260
+msgid "Hewlett-Packard Omnibook 500 FA"
+msgstr "Hewlett-Packard Omnibook 500 FA"
+
+#: ../rules/base.xml.in.h:261 ../rules/evdev.xml.in.h:261
+msgid "Hewlett-Packard Omnibook 5xx"
+msgstr "Hewlett-Packard Omnibook 5xx"
+
+#: ../rules/base.xml.in.h:262 ../rules/evdev.xml.in.h:262
+msgid "Hewlett-Packard Omnibook 6000/6100"
+msgstr "Hewlett-Packard Omnibook 6000/6100"
+
+#: ../rules/base.xml.in.h:263 ../rules/evdev.xml.in.h:263
+msgid "Hewlett-Packard Omnibook XE3 GC"
+msgstr "Hewlett-Packard Omnibook XE3 GC"
+
+#: ../rules/base.xml.in.h:264 ../rules/evdev.xml.in.h:264
+msgid "Hewlett-Packard Omnibook XE3 GF"
+msgstr "Hewlett-Packard Omnibook XE3 GF"
+
+#: ../rules/base.xml.in.h:265 ../rules/evdev.xml.in.h:265
+msgid "Hewlett-Packard Omnibook XT1000"
+msgstr "Hewlett-Packard Omnibook XT1000"
+
+#: ../rules/base.xml.in.h:266 ../rules/evdev.xml.in.h:266
+msgid "Hewlett-Packard Pavilion ZT11xx"
+msgstr "Hewlett-Packard Pavilion ZT11xx"
+
+#: ../rules/base.xml.in.h:267 ../rules/evdev.xml.in.h:267
+msgid "Hewlett-Packard SK-2501 Multimedia Keyboard"
+msgstr "Hewlett-Packard SK-2501 Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:268 ../rules/evdev.xml.in.h:268
+msgid "Hewlett-Packard SK-2505 Internet Keyboard"
+msgstr "Hewlett-Packard SK-2505 Internet Keyboard"
+
+#: ../rules/base.xml.in.h:269 ../rules/evdev.xml.in.h:269
+msgid "Hewlett-Packard nx9020"
+msgstr "Hewlett-Packard nx9020"
+
+#: ../rules/base.xml.in.h:270 ../rules/evdev.xml.in.h:270
+msgid "Hindi Bolnagri"
+msgstr "Хінді Болнагрі"
+
+#: ../rules/base.xml.in.h:271 ../rules/evdev.xml.in.h:271
+msgid "Homophonic"
+msgstr "Гомофонний"
+
+#: ../rules/base.xml.in.h:272 ../rules/evdev.xml.in.h:272
+msgid "Honeywell Euroboard"
+msgstr "Honeywell Euroboard"
+
+#: ../rules/base.xml.in.h:273 ../rules/evdev.xml.in.h:273
+msgid "Hrv"
+msgstr "Хорв"
+
+#: ../rules/base.xml.in.h:274 ../rules/evdev.xml.in.h:274
+msgid "Hun"
+msgstr "Уго"
+
+#: ../rules/base.xml.in.h:275 ../rules/evdev.xml.in.h:275
+msgid "Hungary"
+msgstr "Угорщина"
+
+#: ../rules/base.xml.in.h:276 ../rules/evdev.xml.in.h:276
+msgid "Hyper is mapped to the Win-keys."
+msgstr "Hyper відповідає клавішам Win"
+
+#: ../rules/base.xml.in.h:277 ../rules/evdev.xml.in.h:277
+msgid "IBM (LST 1205-92)"
+msgstr "IBM (LST 1205-92)"
+
+#: ../rules/base.xml.in.h:278 ../rules/evdev.xml.in.h:278
+msgid "IBM Rapid Access"
+msgstr "IBM Rapid Access"
+
+#: ../rules/base.xml.in.h:279 ../rules/evdev.xml.in.h:279
+msgid "IBM Rapid Access II"
+msgstr "IBM Rapid Access II"
+
+#: ../rules/base.xml.in.h:280 ../rules/evdev.xml.in.h:280
+msgid "IBM Rapid Access II (alternate option)"
+msgstr "IBM Rapid Access II (альтернативний варіант)"
+
+#: ../rules/base.xml.in.h:281 ../rules/evdev.xml.in.h:281
+msgid "IBM Space Saver"
+msgstr "IBM Space Saver"
+
+#: ../rules/base.xml.in.h:282 ../rules/evdev.xml.in.h:282
+msgid "IBM ThinkPad 560Z/600/600E/A22E"
+msgstr "IBM ThinkPad 560Z/600/600E/A22E"
+
+#: ../rules/base.xml.in.h:283 ../rules/evdev.xml.in.h:283
+msgid "IBM ThinkPad 560Z/600/600E/A22E, Intl"
+msgstr "IBM ThinkPad 560Z/600/600E/A22E, Intl"
+
+#: ../rules/base.xml.in.h:284 ../rules/evdev.xml.in.h:284
+msgid "IBM ThinkPad R60/T60/R61/T61"
+msgstr "IBM ThinkPad R60/T60/R61/T61"
+
+#: ../rules/base.xml.in.h:285 ../rules/evdev.xml.in.h:285
+msgid "IBM ThinkPad Z60m/Z60t/Z61m/Z61t"
+msgstr "IBM ThinkPad Z60m/Z60t/Z61m/Z61t"
+
+#: ../rules/base.xml.in.h:286 ../rules/evdev.xml.in.h:286
+msgid "ISO Alternate"
+msgstr "Додаткова ISO"
+
+#: ../rules/base.xml.in.h:287 ../rules/evdev.xml.in.h:287
+msgid "Iceland"
+msgstr "Ісландія"
+
+#: ../rules/base.xml.in.h:288 ../rules/evdev.xml.in.h:288
+msgid "Igbo"
+msgstr "Igbo"
+
+#: ../rules/base.xml.in.h:289 ../rules/evdev.xml.in.h:289
+msgid "Ind"
+msgstr "Інд"
+
+#: ../rules/base.xml.in.h:290 ../rules/evdev.xml.in.h:290
+msgid "India"
+msgstr "Індія"
+
+#: ../rules/base.xml.in.h:291 ../rules/evdev.xml.in.h:291
+msgid "International (AltGr dead keys)"
+msgstr "Інтернаціональна (зі сліпими клавішами AltGr)"
+
+#: ../rules/base.xml.in.h:292 ../rules/evdev.xml.in.h:292
+msgid "International (with dead keys)"
+msgstr "Інтернаціональна (зі сліпими клавішами)"
+
+#: ../rules/base.xml.in.h:293 ../rules/evdev.xml.in.h:293
+msgid "Inuktitut"
+msgstr "Інуктітут"
+
+#: ../rules/base.xml.in.h:294 ../rules/evdev.xml.in.h:294
+msgid "Iran"
+msgstr "Іран"
+
+#: ../rules/base.xml.in.h:295 ../rules/evdev.xml.in.h:295
+msgid "Iraq"
+msgstr "Ірак"
+
+#: ../rules/base.xml.in.h:296 ../rules/evdev.xml.in.h:296
+msgid "Ireland"
+msgstr "Ірландія"
+
+#: ../rules/base.xml.in.h:297 ../rules/evdev.xml.in.h:297
+msgid "Irl"
+msgstr "Ірл"
+
+#: ../rules/base.xml.in.h:298 ../rules/evdev.xml.in.h:298
+msgid "Irn"
+msgstr "Ірн"
+
+#: ../rules/base.xml.in.h:299 ../rules/evdev.xml.in.h:299
+msgid "Irq"
+msgstr "Ірк"
+
+#: ../rules/base.xml.in.h:300 ../rules/evdev.xml.in.h:300
+msgid "Isl"
+msgstr "Ісл"
+
+#: ../rules/base.xml.in.h:301 ../rules/evdev.xml.in.h:301
+msgid "Isr"
+msgstr "Івр"
+
+#: ../rules/base.xml.in.h:302 ../rules/evdev.xml.in.h:302
+msgid "Israel"
+msgstr "Ізраїль"
+
+#: ../rules/base.xml.in.h:303 ../rules/evdev.xml.in.h:303
+msgid "Ita"
+msgstr "Іта"
+
+#: ../rules/base.xml.in.h:304 ../rules/evdev.xml.in.h:304
+msgid "Italy"
+msgstr "Італія"
+
+#: ../rules/base.xml.in.h:305 ../rules/evdev.xml.in.h:305
+msgid "Japan"
+msgstr "Японія"
+
+#: ../rules/base.xml.in.h:306 ../rules/evdev.xml.in.h:306
+msgid "Japan (PC-98xx Series)"
+msgstr "Японська (родина PC-98xx)"
+
+#: ../rules/base.xml.in.h:307 ../rules/evdev.xml.in.h:307
+msgid "Japanese 106-key"
+msgstr "Японська 106-клавішна"
+
+#: ../rules/base.xml.in.h:308 ../rules/evdev.xml.in.h:308
+msgid "Japanese keyboard options"
+msgstr "Параметри японської клавіатури"
+
+#: ../rules/base.xml.in.h:309 ../rules/evdev.xml.in.h:309
+msgid "Jpn"
+msgstr "Япо"
+
+#: ../rules/base.xml.in.h:310 ../rules/evdev.xml.in.h:310
+msgid "Kana"
+msgstr "Кана"
+
+#: ../rules/base.xml.in.h:311 ../rules/evdev.xml.in.h:311
+msgid "Kana Lock key is locking"
+msgstr "Клавіша Kana Lock фіксується"
+
+#: ../rules/base.xml.in.h:312 ../rules/evdev.xml.in.h:312
+msgid "Kannada"
+msgstr "Канадська"
+
+#: ../rules/base.xml.in.h:313 ../rules/evdev.xml.in.h:313
+msgid "Kashubian"
+msgstr "Кашубська"
+
+#: ../rules/base.xml.in.h:314 ../rules/evdev.xml.in.h:314
+msgid "Kaz"
+msgstr "Каз"
+
+#: ../rules/base.xml.in.h:315 ../rules/evdev.xml.in.h:315
+msgid "Kazakh with Russian"
+msgstr "Казахська з російськими"
+
+#: ../rules/base.xml.in.h:316 ../rules/evdev.xml.in.h:316
+msgid "Kazakhstan"
+msgstr "Казахстан"
+
+#: ../rules/base.xml.in.h:317 ../rules/evdev.xml.in.h:317
+msgid "Keypad"
+msgstr "Цифрова клавіатура"
+
+#: ../rules/base.xml.in.h:318 ../rules/evdev.xml.in.h:318
+msgid "Keypad with unicode additions (arrows and math operators)"
+msgstr "Цифрова клавіатура з доповненнями Unicode (стрілки та математичні оператори)"
+
+#: ../rules/base.xml.in.h:319 ../rules/evdev.xml.in.h:319
+msgid "Keypad with unicode additions (arrows and math operators). Math operators on default level."
+msgstr "Цифрова клавіатура з доповненнями Unicode (стрілки та математичні оператори). Математичні оператори на типовому рівні."
+
+#: ../rules/base.xml.in.h:320 ../rules/evdev.xml.in.h:320
+msgid "Keytronic FlexPro"
+msgstr "Keytronic FlexPro"
+
+#: ../rules/base.xml.in.h:321 ../rules/evdev.xml.in.h:321
+msgid "Khm"
+msgstr "Khm"
+
+#: ../rules/base.xml.in.h:322 ../rules/evdev.xml.in.h:322
+msgid "Kir"
+msgstr "Кир"
+
+#: ../rules/base.xml.in.h:323 ../rules/evdev.xml.in.h:323
+msgid "Komi"
+msgstr "Комі"
+
+#: ../rules/base.xml.in.h:324 ../rules/evdev.xml.in.h:324
+msgid "Kor"
+msgstr "Кор"
+
+#: ../rules/base.xml.in.h:325 ../rules/evdev.xml.in.h:325
+msgid "Korea, Republic of"
+msgstr "Корея, республіка"
+
+#: ../rules/base.xml.in.h:326 ../rules/evdev.xml.in.h:326
+msgid "Korean 106-key"
+msgstr "Корейська 106-клавішна"
+
+#: ../rules/base.xml.in.h:327 ../rules/evdev.xml.in.h:327
+msgid "Ktunaxa"
+msgstr "Ktunaxa"
+
+#: ../rules/base.xml.in.h:328 ../rules/evdev.xml.in.h:328
+msgid "Kurdish, (F)"
+msgstr "Курдська, (F)"
+
+#: ../rules/base.xml.in.h:329 ../rules/evdev.xml.in.h:329
+msgid "Kurdish, Arabic-Latin"
+msgstr "Курдська, арабсько-латинська"
+
+#: ../rules/base.xml.in.h:330 ../rules/evdev.xml.in.h:330
+msgid "Kurdish, Latin Alt-Q"
+msgstr "Курдська, Latin Alt-Q"
+
+#: ../rules/base.xml.in.h:331 ../rules/evdev.xml.in.h:331
+msgid "Kurdish, Latin Q"
+msgstr "Курдська, Latin Q"
+
+#: ../rules/base.xml.in.h:332 ../rules/evdev.xml.in.h:332
+msgid "Kyrgyzstan"
+msgstr "Киргизстан"
+
+#: ../rules/base.xml.in.h:333 ../rules/evdev.xml.in.h:333
+msgid "LAm"
+msgstr "ЛатАм"
+
+#: ../rules/base.xml.in.h:334 ../rules/evdev.xml.in.h:334
+msgid "LCtrl+LShift change layout."
+msgstr "Ліві Ctrl+Shift змінюють розкладку."
+
+#: ../rules/base.xml.in.h:335 ../rules/evdev.xml.in.h:335
+msgid "LEKP"
+msgstr "LEKP"
+
+#: ../rules/base.xml.in.h:336 ../rules/evdev.xml.in.h:336
+msgid "LEKPa"
+msgstr "LEKPa"
+
+#: ../rules/base.xml.in.h:337 ../rules/evdev.xml.in.h:337
+msgid "Lao"
+msgstr "Лао"
+
+#: ../rules/base.xml.in.h:338 ../rules/evdev.xml.in.h:338
+msgid "Laos"
+msgstr "Лаос"
+
+#: ../rules/base.xml.in.h:339 ../rules/evdev.xml.in.h:339
+msgid "Laptop/notebook Compaq (eg. Armada) Laptop Keyboard"
+msgstr "Клавіатура для ноутбуків Compaq (напр., Armada)"
+
+#: ../rules/base.xml.in.h:340 ../rules/evdev.xml.in.h:340
+msgid "Laptop/notebook Compaq (eg. Presario) Internet Keyboard"
+msgstr "Інтернет-клавіатура для ноутбуків Compaq (напр., Presario)"
+
+#: ../rules/base.xml.in.h:341 ../rules/evdev.xml.in.h:341
+msgid "Laptop/notebook eMachines m68xx"
+msgstr "Ноутбуки eMachines m68xx"
+
+#: ../rules/base.xml.in.h:342 ../rules/evdev.xml.in.h:342
+msgid "Latin"
+msgstr "Латинська"
+
+#: ../rules/base.xml.in.h:343 ../rules/evdev.xml.in.h:343
+msgid "Latin American"
+msgstr "Латиноамериканська"
+
+#: ../rules/base.xml.in.h:344 ../rules/evdev.xml.in.h:344
+msgid "Latin Unicode"
+msgstr "Латинська Unicode"
+
+#: ../rules/base.xml.in.h:345 ../rules/evdev.xml.in.h:345
+msgid "Latin Unicode qwerty"
+msgstr "Латинська Unicode (qwerty)"
+
+#: ../rules/base.xml.in.h:346 ../rules/evdev.xml.in.h:346
+msgid "Latin qwerty"
+msgstr "Латинська (qwerty)"
+
+#: ../rules/base.xml.in.h:347 ../rules/evdev.xml.in.h:347
+msgid "Latin unicode"
+msgstr "Латинська Unicode"
+
+#: ../rules/base.xml.in.h:348 ../rules/evdev.xml.in.h:348
+msgid "Latin unicode qwerty"
+msgstr "Латинська Unicode (qwerty)"
+
+#: ../rules/base.xml.in.h:349 ../rules/evdev.xml.in.h:349
+msgid "Latin with guillemets"
+msgstr "Латинська з кутовими лапками"
+
+#: ../rules/base.xml.in.h:350 ../rules/evdev.xml.in.h:350
+msgid "Latvia"
+msgstr "Латвія"
+
+#: ../rules/base.xml.in.h:351 ../rules/evdev.xml.in.h:351
+msgid "Lav"
+msgstr "Лат"
+
+#: ../rules/base.xml.in.h:352 ../rules/evdev.xml.in.h:352
+msgid "Layout switching"
+msgstr "Перемикання розкладок"
+
+#: ../rules/base.xml.in.h:353 ../rules/evdev.xml.in.h:353
+msgid "Left Alt is swapped with left Win-key."
+msgstr "Ліва Alt міняється з лівою клавішею Win"
+
+#: ../rules/base.xml.in.h:354 ../rules/evdev.xml.in.h:354
+msgid "Left Alt key changes layout."
+msgstr "Ліва клавіша Alt змінює розкладку."
+
+#: ../rules/base.xml.in.h:355 ../rules/evdev.xml.in.h:355
+msgid "Left Alt key switches layout while pressed."
+msgstr "Ліва клавіша Alt перемикає розкладку при натисканні."
+
+#: ../rules/base.xml.in.h:356 ../rules/evdev.xml.in.h:356
+msgid "Left Ctrl key changes layout."
+msgstr "Ліва клавіша Ctrl змінює розкладку."
+
+#: ../rules/base.xml.in.h:357 ../rules/evdev.xml.in.h:357
+msgid "Left Shift key changes layout."
+msgstr "Ліва клавіша Shift змінює розкладку."
+
+#: ../rules/base.xml.in.h:358 ../rules/evdev.xml.in.h:358
+msgid "Left Win-key changes layout."
+msgstr "Ліва клавіша Win змінює розкладку."
+
+#: ../rules/base.xml.in.h:359 ../rules/evdev.xml.in.h:359
+msgid "Left Win-key is Compose."
+msgstr "Ліва клавіша Win відповідає клавіші Compose."
+
+#: ../rules/base.xml.in.h:360 ../rules/evdev.xml.in.h:360
+msgid "Left Win-key switches layout while pressed."
+msgstr "Ліва клавіша Win перемикає розкладку на час натискання."
+
+#: ../rules/base.xml.in.h:361 ../rules/evdev.xml.in.h:361
+msgid "Left hand"
+msgstr "Для лівші"
+
+#: ../rules/base.xml.in.h:362 ../rules/evdev.xml.in.h:362
+msgid "Left handed Dvorak"
+msgstr "Дворак для лівші"
+
+#: ../rules/base.xml.in.h:363 ../rules/evdev.xml.in.h:363
+msgid "Legacy"
+msgstr "Застаріла"
+
+#: ../rules/base.xml.in.h:364 ../rules/evdev.xml.in.h:364
+msgid "Legacy Wang 724 keypad"
+msgstr "Застаріла цифрова клавіатура Wang 724"
+
+#. Actually, with KP_SEPARATOR, as the old keypad(comma)
+#: ../rules/base.xml.in.h:366 ../rules/evdev.xml.in.h:366
+msgid "Legacy key with comma"
+msgstr "Застаріла клавіша з комою"
+
+#: ../rules/base.xml.in.h:367 ../rules/evdev.xml.in.h:367
+msgid "Legacy key with dot"
+msgstr "Застаріла клавіша з крапкою"
+
+#: ../rules/base.xml.in.h:368 ../rules/evdev.xml.in.h:368
+msgid "Legacy keypad"
+msgstr "Застаріла цифрова клавіатура"
+
+#: ../rules/base.xml.in.h:369 ../rules/evdev.xml.in.h:369
+msgid "Less-than/Greater-than is Compose."
+msgstr "Клавіші «менше/більше» є композитними."
+
+#: ../rules/base.xml.in.h:370 ../rules/evdev.xml.in.h:370
+msgid "Lithuania"
+msgstr "Литовська"
+
+#: ../rules/base.xml.in.h:371 ../rules/evdev.xml.in.h:371
+msgid "Logitech Access Keyboard"
+msgstr "Logitech Access Keyboard"
+
+#: ../rules/base.xml.in.h:372 ../rules/evdev.xml.in.h:372
+msgid "Logitech Cordless Desktop"
+msgstr "Logitech Cordless Desktop"
+
+#: ../rules/base.xml.in.h:373 ../rules/evdev.xml.in.h:373
+msgid "Logitech Cordless Desktop (alternate option)"
+msgstr "Logitech Cordless Desktop (альтернативний варіант)"
+
+#: ../rules/base.xml.in.h:374 ../rules/evdev.xml.in.h:374
+msgid "Logitech Cordless Desktop EX110"
+msgstr "Logitech Cordless Desktop EX110"
+
+#: ../rules/base.xml.in.h:375 ../rules/evdev.xml.in.h:375
+msgid "Logitech Cordless Desktop LX-300"
+msgstr "Logitech Cordless Desktop LX-300"
+
+#: ../rules/base.xml.in.h:376 ../rules/evdev.xml.in.h:376
+msgid "Logitech Cordless Desktop Navigator"
+msgstr "Logitech Cordless Desktop Navigator"
+
+#: ../rules/base.xml.in.h:377 ../rules/evdev.xml.in.h:377
+msgid "Logitech Cordless Desktop Optical"
+msgstr "Logitech Cordless Desktop Optical"
+
+#: ../rules/base.xml.in.h:378 ../rules/evdev.xml.in.h:378
+msgid "Logitech Cordless Desktop Pro (alternate option2)"
+msgstr "Logitech Cordless Desktop Pro (альтернативний варіант 2)"
+
+#: ../rules/base.xml.in.h:379 ../rules/evdev.xml.in.h:379
+msgid "Logitech Cordless Desktop iTouch"
+msgstr "Logitech Cordless Desktop iTouch"
+
+#: ../rules/base.xml.in.h:380 ../rules/evdev.xml.in.h:380
+msgid "Logitech Cordless Freedom/Desktop Navigator"
+msgstr "Logitech Cordless Freedom/Desktop Navigator"
+
+#: ../rules/base.xml.in.h:381 ../rules/evdev.xml.in.h:381
+msgid "Logitech G15 extra keys via G15daemon"
+msgstr "Logitech G15 з додатковими клавішами через G15daemon"
+
+#: ../rules/base.xml.in.h:382 ../rules/evdev.xml.in.h:382
+msgid "Logitech Generic Keyboard"
+msgstr "Logitech Generic Keyboard"
+
+#: ../rules/base.xml.in.h:383 ../rules/evdev.xml.in.h:383
+msgid "Logitech Internet 350 Keyboard"
+msgstr "Logitech Internet 350 Keyboard"
+
+#: ../rules/base.xml.in.h:384 ../rules/evdev.xml.in.h:384
+msgid "Logitech Internet Keyboard"
+msgstr "Logitech Internet Keyboard"
+
+#: ../rules/base.xml.in.h:385 ../rules/evdev.xml.in.h:385
+msgid "Logitech Internet Navigator Keyboard"
+msgstr "Logitech Internet Navigator Keyboard"
+
+#: ../rules/base.xml.in.h:386 ../rules/evdev.xml.in.h:386
+msgid "Logitech Media Elite Keyboard"
+msgstr "Logitech Media Elite Keyboard"
+
+#: ../rules/base.xml.in.h:387 ../rules/evdev.xml.in.h:387
+msgid "Logitech Ultra-X Cordless Media Desktop Keyboard"
+msgstr "Logitech Ultra-X Cordless Media Desktop Keyboard"
+
+#: ../rules/base.xml.in.h:388 ../rules/evdev.xml.in.h:388
+msgid "Logitech Ultra-X Keyboard"
+msgstr "Logitech Ultra-X Keyboard"
+
+#: ../rules/base.xml.in.h:389 ../rules/evdev.xml.in.h:389
+msgid "Logitech diNovo Edge Keyboard"
+msgstr "Logitech diNovo Edge Keyboard"
+
+#: ../rules/base.xml.in.h:390 ../rules/evdev.xml.in.h:390
+msgid "Logitech diNovo Keyboard"
+msgstr "Logitech diNovo Keyboard"
+
+#: ../rules/base.xml.in.h:391 ../rules/evdev.xml.in.h:391
+msgid "Logitech iTouch"
+msgstr "Logitech iTouch"
+
+#: ../rules/base.xml.in.h:392 ../rules/evdev.xml.in.h:392
+msgid "Logitech iTouch Cordless Keyboard (model Y-RB6)"
+msgstr "Logitech iTouch Cordless Keyboard (модель Y-RB6)"
+
+#: ../rules/base.xml.in.h:393 ../rules/evdev.xml.in.h:393
+msgid "Logitech iTouch Internet Navigator Keyboard SE"
+msgstr "Logitech iTouch Internet Navigator Keyboard SE"
+
+#: ../rules/base.xml.in.h:394 ../rules/evdev.xml.in.h:394
+msgid "Logitech iTouch Internet Navigator Keyboard SE (USB)"
+msgstr "Logitech iTouch Internet Navigator Keyboard SE (USB)"
+
+#: ../rules/base.xml.in.h:395 ../rules/evdev.xml.in.h:395
+msgid "Ltu"
+msgstr "Лит"
+
+#: ../rules/base.xml.in.h:396 ../rules/evdev.xml.in.h:396
+msgid "MESS"
+msgstr "MESS"
+
+#: ../rules/base.xml.in.h:397 ../rules/evdev.xml.in.h:397
+msgid "MNE"
+msgstr "MNE"
+
+#: ../rules/base.xml.in.h:398 ../rules/evdev.xml.in.h:398
+msgid "MacBook/MacBook Pro"
+msgstr "MacBook/MacBook Pro"
+
+#: ../rules/base.xml.in.h:399 ../rules/evdev.xml.in.h:399
+msgid "MacBook/MacBook Pro (Intl)"
+msgstr "MacBook/MacBook Pro (Intl)"
+
+#: ../rules/base.xml.in.h:400 ../rules/evdev.xml.in.h:400
+msgid "Macedonia"
+msgstr "Македонська"
+
+#: ../rules/base.xml.in.h:401 ../rules/evdev.xml.in.h:401
+msgid "Macintosh"
+msgstr "Macintosh"
+
+#: ../rules/base.xml.in.h:402 ../rules/evdev.xml.in.h:402
+msgid "Macintosh Old"
+msgstr "Старий Macintosh"
+
+#: ../rules/base.xml.in.h:403 ../rules/evdev.xml.in.h:403
+msgid "Macintosh, Sun dead keys"
+msgstr "Macintosh, Sun зі сліпими клавішами"
+
+#: ../rules/base.xml.in.h:404 ../rules/evdev.xml.in.h:404
+msgid "Macintosh, eliminate dead keys"
+msgstr "Macintosh, вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:405 ../rules/evdev.xml.in.h:405
+msgid "Make CapsLock an additional Ctrl."
+msgstr "Caps Lock як додаткова клавіша Ctrl."
+
+#: ../rules/base.xml.in.h:406 ../rules/evdev.xml.in.h:406
+msgid "Mal"
+msgstr "Мальд"
+
+#: ../rules/base.xml.in.h:407 ../rules/evdev.xml.in.h:407
+msgid "Malayalam"
+msgstr "Малайська"
+
+#: ../rules/base.xml.in.h:408 ../rules/evdev.xml.in.h:408
+msgid "Malayalam Lalitha"
+msgstr "Малайська Лаліта"
+
+#: ../rules/base.xml.in.h:409 ../rules/evdev.xml.in.h:409
+msgid "Maldives"
+msgstr "Мальдиви"
+
+#: ../rules/base.xml.in.h:410 ../rules/evdev.xml.in.h:410
+msgid "Malta"
+msgstr "Мальта"
+
+#: ../rules/base.xml.in.h:411 ../rules/evdev.xml.in.h:411
+msgid "Maltese keyboard with US layout"
+msgstr "Мальтійська клавіатура з розкладкою США"
+
+#: ../rules/base.xml.in.h:412 ../rules/evdev.xml.in.h:412
+msgid "Mao"
+msgstr "Мао"
+
+#: ../rules/base.xml.in.h:413 ../rules/evdev.xml.in.h:413
+msgid "Maori"
+msgstr "Маорі"
+
+#: ../rules/base.xml.in.h:414 ../rules/evdev.xml.in.h:414
+msgid "Memorex MX1998"
+msgstr "Memorex MX1998"
+
+#: ../rules/base.xml.in.h:415 ../rules/evdev.xml.in.h:415
+msgid "Memorex MX2500 EZ-Access Keyboard"
+msgstr "Memorex MX2500 EZ-Access Keyboard"
+
+#: ../rules/base.xml.in.h:416 ../rules/evdev.xml.in.h:416
+msgid "Memorex MX2750"
+msgstr "Memorex MX2750"
+
+#: ../rules/base.xml.in.h:417 ../rules/evdev.xml.in.h:417
+msgid "Menu is Compose."
+msgstr "Клавіша Menu відповідає клавіші Compose"
+
+#: ../rules/base.xml.in.h:418 ../rules/evdev.xml.in.h:418
+msgid "Menu key changes layout."
+msgstr "Клавіша Menu змінює розкладку."
+
+#: ../rules/base.xml.in.h:419 ../rules/evdev.xml.in.h:419
+msgid "Meta is mapped to the Win-keys."
+msgstr "Клавіша Meta відповідає клавішам Win"
+
+#: ../rules/base.xml.in.h:420 ../rules/evdev.xml.in.h:420
+msgid "Meta is mapped to the left Win-key."
+msgstr "Клавіша Meta відповідає лівій клавіші Win"
+
+#: ../rules/base.xml.in.h:421 ../rules/evdev.xml.in.h:421
+msgid "Microsoft Internet Keyboard"
+msgstr "Microsoft Internet Keyboard"
+
+#: ../rules/base.xml.in.h:422 ../rules/evdev.xml.in.h:422
+msgid "Microsoft Internet Keyboard Pro, Swedish"
+msgstr "Microsoft Internet Keyboard Pro, шведська"
+
+#: ../rules/base.xml.in.h:423 ../rules/evdev.xml.in.h:423
+msgid "Microsoft Natural"
+msgstr "Microsoft Natural"
+
+#: ../rules/base.xml.in.h:424 ../rules/evdev.xml.in.h:424
+msgid "Microsoft Natural Keyboard Elite"
+msgstr "Microsoft Natural Keyboard Elite"
+
+#: ../rules/base.xml.in.h:425 ../rules/evdev.xml.in.h:425
+msgid "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
+msgstr "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
+
+#: ../rules/base.xml.in.h:426 ../rules/evdev.xml.in.h:426
+msgid "Microsoft Natural Keyboard Pro OEM"
+msgstr "Microsoft Natural Keyboard Pro OEM"
+
+#: ../rules/base.xml.in.h:427 ../rules/evdev.xml.in.h:427
+msgid "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
+msgstr "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
+
+#: ../rules/base.xml.in.h:428 ../rules/evdev.xml.in.h:428
+msgid "Microsoft Office Keyboard"
+msgstr "Microsoft Office Keyboard"
+
+#: ../rules/base.xml.in.h:429 ../rules/evdev.xml.in.h:429
+msgid "Microsoft Wireless Multimedia Keyboard 1.0A"
+msgstr "Microsoft Wireless Multimedia Keyboard 1.0A"
+
+#: ../rules/base.xml.in.h:430 ../rules/evdev.xml.in.h:430
+msgid "Miscellaneous compatibility options"
+msgstr "Різні параметри сумісності"
+
+#: ../rules/base.xml.in.h:431 ../rules/evdev.xml.in.h:431
+msgid "Mkd"
+msgstr "Мкд"
+
+#: ../rules/base.xml.in.h:432 ../rules/evdev.xml.in.h:432
+msgid "Mlt"
+msgstr "Мальт"
+
+#: ../rules/base.xml.in.h:433 ../rules/evdev.xml.in.h:433
+msgid "Mmr"
+msgstr "М'янм"
+
+#: ../rules/base.xml.in.h:434 ../rules/evdev.xml.in.h:434
+msgid "Mng"
+msgstr "Монг"
+
+#: ../rules/base.xml.in.h:435 ../rules/evdev.xml.in.h:435
+msgid "Mongolia"
+msgstr "Монголія"
+
+#: ../rules/base.xml.in.h:436 ../rules/evdev.xml.in.h:436
+msgid "Montenegro"
+msgstr "Чорногорія"
+
+#: ../rules/base.xml.in.h:437 ../rules/evdev.xml.in.h:437
+msgid "Morocco"
+msgstr "Марокканська"
+
+#: ../rules/base.xml.in.h:438 ../rules/evdev.xml.in.h:438
+msgid "Multilingual"
+msgstr "Багатомовна"
+
+#: ../rules/base.xml.in.h:439 ../rules/evdev.xml.in.h:439
+msgid "Multilingual, first part"
+msgstr "Багатомовна, перша частина"
+
+#: ../rules/base.xml.in.h:440 ../rules/evdev.xml.in.h:440
+msgid "Multilingual, second part"
+msgstr "Багатомовна, друга частина"
+
+#: ../rules/base.xml.in.h:441 ../rules/evdev.xml.in.h:441
+msgid "Myanmar"
+msgstr "М'янма"
+
+#: ../rules/base.xml.in.h:442 ../rules/evdev.xml.in.h:442
+msgid "NICOLA-F style Backspace"
+msgstr "NICOLA-F style Backspace"
+
+#: ../rules/base.xml.in.h:443 ../rules/evdev.xml.in.h:443
+msgid "Neostyle"
+msgstr "Neostyle"
+
+#: ../rules/base.xml.in.h:444 ../rules/evdev.xml.in.h:444
+msgid "Nep"
+msgstr "Неп"
+
+#: ../rules/base.xml.in.h:445 ../rules/evdev.xml.in.h:445
+msgid "Nepal"
+msgstr "Непал"
+
+#: ../rules/base.xml.in.h:446 ../rules/evdev.xml.in.h:446
+msgid "Netherlands"
+msgstr "Нідерландська"
+
+#: ../rules/base.xml.in.h:447 ../rules/evdev.xml.in.h:447
+msgid "Nig"
+msgstr "Ніг"
+
+#: ../rules/base.xml.in.h:448 ../rules/evdev.xml.in.h:448
+msgid "Nigeria"
+msgstr "Нігерія"
+
+#: ../rules/base.xml.in.h:449 ../rules/evdev.xml.in.h:449
+msgid "Nld"
+msgstr "Флам"
+
+#: ../rules/base.xml.in.h:450 ../rules/evdev.xml.in.h:450
+msgid "Nor"
+msgstr "Нор"
+
+#: ../rules/base.xml.in.h:451 ../rules/evdev.xml.in.h:451
+msgid "Northern Saami"
+msgstr "Північне Саамі"
+
+#: ../rules/base.xml.in.h:452 ../rules/evdev.xml.in.h:452
+msgid "Northern Saami, eliminate dead keys"
+msgstr "Північне Саамі, вилучити сліпі клавіші (dead keys)"
+
+#: ../rules/base.xml.in.h:453 ../rules/evdev.xml.in.h:453
+msgid "Northgate OmniKey 101"
+msgstr "Northgate OmniKey 101"
+
+#: ../rules/base.xml.in.h:454 ../rules/evdev.xml.in.h:454
+msgid "Norway"
+msgstr "Норвегія"
+
+#: ../rules/base.xml.in.h:455 ../rules/evdev.xml.in.h:455
+msgid "NumLock LED shows alternative layout."
+msgstr "Індикатор NumLock показує альтернативну розкладку."
+
+#: ../rules/base.xml.in.h:456 ../rules/evdev.xml.in.h:456
+msgid "Numeric keypad delete key behaviour"
+msgstr "Вибір поведінки клавіші del на цифровій клавіатурі"
+
+#: ../rules/base.xml.in.h:457 ../rules/evdev.xml.in.h:457
+msgid "Numeric keypad keys work as with Mac."
+msgstr "Цифрова клавіатура працює як у Mac."
+
+#: ../rules/base.xml.in.h:458 ../rules/evdev.xml.in.h:458
+msgid "Numeric keypad layout selection"
+msgstr "Вибір розкладки цифрової клавіатури"
+
+#: ../rules/base.xml.in.h:459 ../rules/evdev.xml.in.h:459
+msgid "OADG 109A"
+msgstr "OADG 109A"
+
+#: ../rules/base.xml.in.h:460 ../rules/evdev.xml.in.h:460
+msgid "OLPC"
+msgstr "OLPC"
+
+#: ../rules/base.xml.in.h:461 ../rules/evdev.xml.in.h:461
+msgid "OLPC Dari"
+msgstr "OLPC Дарі"
+
+#: ../rules/base.xml.in.h:462 ../rules/evdev.xml.in.h:462
+msgid "OLPC Pashto"
+msgstr "OLPC Пушту"
+
+#: ../rules/base.xml.in.h:463 ../rules/evdev.xml.in.h:463
+msgid "OLPC Southern Uzbek"
+msgstr "OLPC південноузбецька"
+
+#: ../rules/base.xml.in.h:464 ../rules/evdev.xml.in.h:464
+msgid "Ogham"
+msgstr "Огхам (давньоірландська)"
+
+#: ../rules/base.xml.in.h:465 ../rules/evdev.xml.in.h:465
+msgid "Ogham IS434"
+msgstr "Ogham IS434"
+
+#: ../rules/base.xml.in.h:466 ../rules/evdev.xml.in.h:466
+msgid "Oriya"
+msgstr "Орія"
+
+#: ../rules/base.xml.in.h:467 ../rules/evdev.xml.in.h:467
+msgid "Ortek MCK-800 MM/Internet keyboard"
+msgstr "Ortek MCK-800 MM/Internet keyboard"
+
+#: ../rules/base.xml.in.h:468 ../rules/evdev.xml.in.h:468
+msgid "Ossetian"
+msgstr "Осетинська"
+
+#: ../rules/base.xml.in.h:469 ../rules/evdev.xml.in.h:469
+msgid "Ossetian, Winkeys"
+msgstr "Осетинська, Winkeys"
+
+#: ../rules/base.xml.in.h:470 ../rules/evdev.xml.in.h:470
+msgid "Ossetian, legacy"
+msgstr "Осетинська, застаріла"
+
+#: ../rules/base.xml.in.h:471 ../rules/evdev.xml.in.h:471
+msgid "PC-98xx Series"
+msgstr "Моделі PC-98xx"
+
+#: ../rules/base.xml.in.h:472 ../rules/evdev.xml.in.h:472
+msgid "Pak"
+msgstr "Пак"
+
+#: ../rules/base.xml.in.h:473 ../rules/evdev.xml.in.h:473
+msgid "Pakistan"
+msgstr "Пакистан"
+
+#: ../rules/base.xml.in.h:474 ../rules/evdev.xml.in.h:474
+msgid "Pashto"
+msgstr "Пушту"
+
+#: ../rules/base.xml.in.h:475 ../rules/evdev.xml.in.h:475
+msgid "Pattachote"
+msgstr "Тайська (Паттачот)"
+
+#: ../rules/base.xml.in.h:476 ../rules/evdev.xml.in.h:476
+msgid "Phonetic"
+msgstr "Фонетична"
+
+#: ../rules/base.xml.in.h:477 ../rules/evdev.xml.in.h:477
+msgid "Pol"
+msgstr "Пол"
+
+#: ../rules/base.xml.in.h:478 ../rules/evdev.xml.in.h:478
+msgid "Poland"
+msgstr "Польща"
+
+#: ../rules/base.xml.in.h:479 ../rules/evdev.xml.in.h:479
+msgid "Polytonic"
+msgstr "Поліфонічна"
+
+#: ../rules/base.xml.in.h:480 ../rules/evdev.xml.in.h:480
+msgid "Portugal"
+msgstr "Португалія"
+
+#: ../rules/base.xml.in.h:481 ../rules/evdev.xml.in.h:481
+msgid "Press Left Alt key to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням лівої клавіші Alt."
+
+#: ../rules/base.xml.in.h:482 ../rules/evdev.xml.in.h:482
+msgid "Press Left Win-key to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням лівої клавіші Win."
+
+#: ../rules/base.xml.in.h:483 ../rules/evdev.xml.in.h:483
+msgid "Press Menu key to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням клавіші Menu."
+
+#: ../rules/base.xml.in.h:484 ../rules/evdev.xml.in.h:484
+msgid "Press Right Alt key to choose 3rd level, Shift+Right Alt key is Multi_Key."
+msgstr "Вибір 3-го рівня натисненням правої клавіші Alt, Shift+права клавіша Alt діє як Multi_Key."
+
+#: ../rules/base.xml.in.h:485 ../rules/evdev.xml.in.h:485
+msgid "Press Right Alt key to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням правої клавіші Alt."
+
+#: ../rules/base.xml.in.h:486 ../rules/evdev.xml.in.h:486
+msgid "Press Right Ctrl to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням правої клавіші Ctrl."
+
+#: ../rules/base.xml.in.h:487 ../rules/evdev.xml.in.h:487
+msgid "Press Right Win-key to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням правої клавіші Win."
+
+#: ../rules/base.xml.in.h:488 ../rules/evdev.xml.in.h:488
+msgid "Press any of Alt keys to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням довільної клавіші Alt."
+
+#: ../rules/base.xml.in.h:489 ../rules/evdev.xml.in.h:489
+msgid "Press any of Win-keys to choose 3rd level."
+msgstr "Вибір 3-го рівня натисненням довільної клавіші Win."
+
+#: ../rules/base.xml.in.h:490 ../rules/evdev.xml.in.h:490
+msgid "Pro"
+msgstr "Pro"
+
+#: ../rules/base.xml.in.h:491 ../rules/evdev.xml.in.h:491
+msgid "Pro Keypad"
+msgstr "Pro Keypad"
+
+#: ../rules/base.xml.in.h:492 ../rules/evdev.xml.in.h:492
+msgid "Probhat"
+msgstr "Probhat"
+
+#: ../rules/base.xml.in.h:493 ../rules/evdev.xml.in.h:493
+msgid "Programmer Dvorak"
+msgstr "Програмістський Дворак"
+
+#: ../rules/base.xml.in.h:494 ../rules/evdev.xml.in.h:494
+msgid "Propeller Voyager (KTEZ-1000)"
+msgstr "Propeller Voyager (KTEZ-1000)"
+
+#: ../rules/base.xml.in.h:495 ../rules/evdev.xml.in.h:495
+msgid "Prt"
+msgstr "Порт"
+
+#: ../rules/base.xml.in.h:496 ../rules/evdev.xml.in.h:496
+msgid "QTronix Scorpius 98N+"
+msgstr "QTronix Scorpius 98N+"
+
+#: ../rules/base.xml.in.h:497 ../rules/evdev.xml.in.h:497
+msgid "R-Alt switches layout while pressed."
+msgstr "Права клавіша Alt перемикає розкладку на час натиснення."
+
+#: ../rules/base.xml.in.h:498 ../rules/evdev.xml.in.h:498
+msgid "Right Alt is Compose."
+msgstr "Права клавіша Alt відповідає Compose."
+
+#: ../rules/base.xml.in.h:499 ../rules/evdev.xml.in.h:499
+msgid "Right Alt key changes layout."
+msgstr "Права клавіша Alt змінює розкладку."
+
+#: ../rules/base.xml.in.h:500 ../rules/evdev.xml.in.h:500
+msgid "Right Alt key never chooses 3rd level."
+msgstr "Права клавіша Alt ніколи не обирає 3-й рівень."
+
+#: ../rules/base.xml.in.h:501 ../rules/evdev.xml.in.h:501
+msgid "Right Ctrl is Compose."
+msgstr "Права клавіша Ctrl Compose."
+
+#: ../rules/base.xml.in.h:502 ../rules/evdev.xml.in.h:502
+msgid "Right Ctrl key changes layout."
+msgstr "Права клавіша Ctrl змінює розкладку."
+
+#: ../rules/base.xml.in.h:503 ../rules/evdev.xml.in.h:503
+msgid "Right Ctrl key switches layout while pressed."
+msgstr "Права клавіша Ctrl перемикає розкладку на час натискання."
+
+#: ../rules/base.xml.in.h:504 ../rules/evdev.xml.in.h:504
+msgid "Right Ctrl key works as Right Alt."
+msgstr "Права клавіша Ctrl функціонує як права клавіша Alt."
+
+#: ../rules/base.xml.in.h:505 ../rules/evdev.xml.in.h:505
+msgid "Right Shift key changes layout."
+msgstr "Права клавіша Shift змінює розкладку."
+
+#: ../rules/base.xml.in.h:506 ../rules/evdev.xml.in.h:506
+msgid "Right Win-key changes layout."
+msgstr "Права клавіша Win змінює розкладку."
+
+#: ../rules/base.xml.in.h:507 ../rules/evdev.xml.in.h:507
+msgid "Right Win-key is Compose."
+msgstr "Права клавіша Win відповідає клавіші Compose."
+
+#: ../rules/base.xml.in.h:508 ../rules/evdev.xml.in.h:508
+msgid "Right Win-key switches layout while pressed."
+msgstr "Права клавіша Win перемикає розкладку на час натискання."
+
+#: ../rules/base.xml.in.h:509 ../rules/evdev.xml.in.h:509
+msgid "Right hand"
+msgstr "Для правші"
+
+#: ../rules/base.xml.in.h:510 ../rules/evdev.xml.in.h:510
+msgid "Right handed Dvorak"
+msgstr "Дворак для правші"
+
+#: ../rules/base.xml.in.h:511 ../rules/evdev.xml.in.h:511
+msgid "Romania"
+msgstr "Румунія"
+
+#: ../rules/base.xml.in.h:512 ../rules/evdev.xml.in.h:512
+msgid "Romanian keyboard with German letters"
+msgstr "Румунська клавіатура  з німецькими літерами"
+
+#: ../rules/base.xml.in.h:513 ../rules/evdev.xml.in.h:513
+msgid "Romanian keyboard with German letters, eliminate dead keys"
+msgstr "Румунська клавіатура  з німецькими літерами, вимкнути сліпі клавіші"
+
+#: ../rules/base.xml.in.h:514 ../rules/evdev.xml.in.h:514
+msgid "Rou"
+msgstr "Рум"
+
+#: ../rules/base.xml.in.h:515 ../rules/evdev.xml.in.h:515
+msgid "Rus"
+msgstr "Рос"
+
+#: ../rules/base.xml.in.h:516 ../rules/evdev.xml.in.h:516
+msgid "Russia"
+msgstr "Росія"
+
+#: ../rules/base.xml.in.h:517 ../rules/evdev.xml.in.h:517
+msgid "Russian"
+msgstr "Російська"
+
+#: ../rules/base.xml.in.h:518 ../rules/evdev.xml.in.h:518
+msgid "Russian phonetic"
+msgstr "Російська (фонетична)"
+
+#: ../rules/base.xml.in.h:519 ../rules/evdev.xml.in.h:519
+msgid "Russian phonetic Dvorak"
+msgstr "Російський фонетичний Dvorak"
+
+#: ../rules/base.xml.in.h:520 ../rules/evdev.xml.in.h:520
+msgid "Russian phonetic, eliminate dead keys"
+msgstr "Російська фонетична, вилучити сліпі клавіші"
+
+#: ../rules/base.xml.in.h:521 ../rules/evdev.xml.in.h:521
+msgid "Russian with Kazakh"
+msgstr "Російська з казахською"
+
+#: ../rules/base.xml.in.h:522 ../rules/evdev.xml.in.h:522
+msgid "SILVERCREST Multimedia Wireless Keyboard"
+msgstr "SILVERCREST Multimedia Wireless Keyboard"
+
+#: ../rules/base.xml.in.h:523 ../rules/evdev.xml.in.h:523
+msgid "SK-1300"
+msgstr "SK-1300"
+
+#: ../rules/base.xml.in.h:524 ../rules/evdev.xml.in.h:524
+msgid "SK-2500"
+msgstr "SK-2500"
+
+#: ../rules/base.xml.in.h:525 ../rules/evdev.xml.in.h:525
+msgid "SK-6200"
+msgstr "SK-6200"
+
+#: ../rules/base.xml.in.h:526 ../rules/evdev.xml.in.h:526
+msgid "SK-7100"
+msgstr "SK-7100"
+
+#: ../rules/base.xml.in.h:527 ../rules/evdev.xml.in.h:527
+msgid "SRB"
+msgstr "SRB"
+
+#: ../rules/base.xml.in.h:528 ../rules/evdev.xml.in.h:528
+msgid "SVEN Ergonomic 2500"
+msgstr "SVEN Ergonomic 2500"
+
+#: ../rules/base.xml.in.h:529 ../rules/evdev.xml.in.h:529
+msgid "SVEN Slim 303"
+msgstr "SVEN Slim 303"
+
+#: ../rules/base.xml.in.h:530 ../rules/evdev.xml.in.h:530
+msgid "Samsung SDM 4500P"
+msgstr "Samsung SDM 4500P"
+
+#: ../rules/base.xml.in.h:531 ../rules/evdev.xml.in.h:531
+msgid "Samsung SDM 4510P"
+msgstr "Samsung SDM 4510P"
+
+#: ../rules/base.xml.in.h:532 ../rules/evdev.xml.in.h:532
+msgid "ScrollLock LED shows alternative layout."
+msgstr "Індикатор ScrollLock показує альтернативну розкладку."
+
+#: ../rules/base.xml.in.h:533 ../rules/evdev.xml.in.h:533
+msgid "Secwepemctsin"
+msgstr "Secwepemctsin"
+
+#: ../rules/base.xml.in.h:534 ../rules/evdev.xml.in.h:534
+msgid "Serbia"
+msgstr "Сербія"
+
+#: ../rules/base.xml.in.h:535 ../rules/evdev.xml.in.h:535
+msgid "Shift cancels CapsLock."
+msgstr "Shift скасовує Caps Lock."
+
+#: ../rules/base.xml.in.h:536 ../rules/evdev.xml.in.h:536
+msgid "Shift with numeric keypad keys works as in MS Windows."
+msgstr "Shift з цифровою клавіатурою працює як у Microsoft Windows."
+
+#: ../rules/base.xml.in.h:537 ../rules/evdev.xml.in.h:537
+msgid "Shift+CapsLock changes layout."
+msgstr "Shift+CapsLock змінюють розкладку."
+
+#: ../rules/base.xml.in.h:538 ../rules/evdev.xml.in.h:538
+msgid "Simple"
+msgstr "Проста"
+
+#: ../rules/base.xml.in.h:539 ../rules/evdev.xml.in.h:539
+msgid "Slovakia"
+msgstr "Словаччина"
+
+#: ../rules/base.xml.in.h:540 ../rules/evdev.xml.in.h:540
+msgid "Slovenia"
+msgstr "Словенія"
+
+#: ../rules/base.xml.in.h:541 ../rules/evdev.xml.in.h:541
+msgid "South Africa"
+msgstr "Південна Африка"
+
+#: ../rules/base.xml.in.h:542 ../rules/evdev.xml.in.h:542
+msgid "Southern Uzbek"
+msgstr "Південний Узбекистан"
+
+#: ../rules/base.xml.in.h:543 ../rules/evdev.xml.in.h:543
+msgid "Space key outputs non-breakable space character at fourth level, thin non-breakable space character at sixth level"
+msgstr "Клавіша пробіл видає нерозривний пробіл на 4-му рівні, вузький нерозривний пробіл на 6-му рівні"
+
+#: ../rules/base.xml.in.h:544 ../rules/evdev.xml.in.h:544
+msgid "Space key outputs non-breakable space character at fourth level, thin non-breakable space character at sixth level (via Ctrl+Shift"
+msgstr "Клавіша пробіл видає нерозривний пробіл на 4-му рівні, вузький нерозривний пробіл на 6-му рівні (через Ctrl+Shift)"
+
+#: ../rules/base.xml.in.h:545 ../rules/evdev.xml.in.h:545
+msgid "Space key outputs non-breakable space character at fourth level."
+msgstr "Клавіша пробіл на 4-му рівні видає символ нерозривного пробілу."
+
+#: ../rules/base.xml.in.h:546 ../rules/evdev.xml.in.h:546
+msgid "Space key outputs non-breakable space character at second level."
+msgstr "Клавіша пробіл на другому рівні видає символ нерозривного пробілу."
+
+#: ../rules/base.xml.in.h:547 ../rules/evdev.xml.in.h:547
+msgid "Space key outputs non-breakable space character at third level, nothing at fourth level."
+msgstr "Клавіша пробіл на третьому рівні видає символ нерозривного пробілу, на четвертому не дає нічого."
+
+#: ../rules/base.xml.in.h:548 ../rules/evdev.xml.in.h:548
+msgid "Space key outputs non-breakable space character at third level, thin non-breakable space character at fourth level"
+msgstr "Клавіша пробіл видає нерозривний пробіл на 3-му рівні, вузький нерозривний пробіл на 4-му рівні"
+
+#: ../rules/base.xml.in.h:549 ../rules/evdev.xml.in.h:549
+msgid "Space key outputs non-breakable space character at third level."
+msgstr "Клавіша пробіл на третьому рівні видає символ нерозривного пробілу."
+
+#: ../rules/base.xml.in.h:550 ../rules/evdev.xml.in.h:550
+msgid "Space key outputs usual space at any level."
+msgstr "Клавіша пробіл на будь-якому рівні видає звичайний символ пробілу."
+
+#: ../rules/base.xml.in.h:551 ../rules/evdev.xml.in.h:551
+msgid "Spain"
+msgstr "Іспанія"
+
+#: ../rules/base.xml.in.h:552 ../rules/evdev.xml.in.h:552
+msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server."
+msgstr "Сліпі клавіші (Ctrl+Alt+&lt;key&gt;) обробляються на сервері."
+
+#: ../rules/base.xml.in.h:553 ../rules/evdev.xml.in.h:553
+msgid "SrL"
+msgstr "ШріЛ"
+
+#: ../rules/base.xml.in.h:554 ../rules/evdev.xml.in.h:554
+msgid "Sri Lanka"
+msgstr "Шрі-Ланка"
+
+#: ../rules/base.xml.in.h:555 ../rules/evdev.xml.in.h:555
+msgid "Standard"
+msgstr "Стандартна"
+
+#: ../rules/base.xml.in.h:556 ../rules/evdev.xml.in.h:556
+msgid "Standard (Cedilla)"
+msgstr "Стандартна (Седиль)"
+
+#. RSTU 2019-91
+#: ../rules/base.xml.in.h:558 ../rules/evdev.xml.in.h:558
+msgid "Standard RSTU"
+msgstr "Стандартна RSTU"
+
+#. RSTU 2019-91
+#: ../rules/base.xml.in.h:560 ../rules/evdev.xml.in.h:560
+msgid "Standard RSTU on Russian layout"
+msgstr "Стандартна RSTU на російській розкладці"
+
+#: ../rules/base.xml.in.h:561 ../rules/evdev.xml.in.h:561
+msgid "Sun Type 5/6"
+msgstr "Sun Type 5/6"
+
+#: ../rules/base.xml.in.h:562 ../rules/evdev.xml.in.h:562
+msgid "Sun dead keys"
+msgstr "Sun dead keys"
+
+#: ../rules/base.xml.in.h:563 ../rules/evdev.xml.in.h:563
+msgid "Super Power Multimedia Keyboard"
+msgstr "Super Power Multimedia Keyboard"
+
+#: ../rules/base.xml.in.h:564 ../rules/evdev.xml.in.h:564
+msgid "Super is mapped to the Win-keys."
+msgstr "Клавіша Super відповідає клавішам Win."
+
+#: ../rules/base.xml.in.h:565 ../rules/evdev.xml.in.h:565
+msgid "Svdvorak"
+msgstr "Svdvorak"
+
+#: ../rules/base.xml.in.h:566 ../rules/evdev.xml.in.h:566
+msgid "Svk"
+msgstr "Словац"
+
+#: ../rules/base.xml.in.h:567 ../rules/evdev.xml.in.h:567
+msgid "Svn"
+msgstr "Слвн"
+
+#: ../rules/base.xml.in.h:568 ../rules/evdev.xml.in.h:568
+msgid "Swap Ctrl and CapsLock."
+msgstr "Поміняти місцями клавіші Control та Caps Lock."
+
+#: ../rules/base.xml.in.h:569 ../rules/evdev.xml.in.h:569
+msgid "Swap ESC and CapsLock."
+msgstr "Поміняти місцями клавіші ESC та Caps Lock."
+
+#: ../rules/base.xml.in.h:570 ../rules/evdev.xml.in.h:570
+msgid "Swap keycodes of two keys when Mac keyboards are misdetected by kernel."
+msgstr "Міняти місцями дві клавіші, коли Mac-клавіатури неправильно визначаються ядром."
+
+#: ../rules/base.xml.in.h:571 ../rules/evdev.xml.in.h:571
+msgid "Swe"
+msgstr "Швед"
+
+#: ../rules/base.xml.in.h:572 ../rules/evdev.xml.in.h:572
+msgid "Sweden"
+msgstr "Швеція"
+
+#: ../rules/base.xml.in.h:573 ../rules/evdev.xml.in.h:573
+msgid "Switzerland"
+msgstr "Швейцарія"
+
+#: ../rules/base.xml.in.h:574 ../rules/evdev.xml.in.h:574
+msgid "Symplon PaceBook (tablet PC)"
+msgstr "Symplon PaceBook (планшетний ПК)"
+
+#: ../rules/base.xml.in.h:575 ../rules/evdev.xml.in.h:575
+msgid "Syr"
+msgstr "Сир"
+
+#: ../rules/base.xml.in.h:576 ../rules/evdev.xml.in.h:576
+msgid "Syria"
+msgstr "Сирія"
+
+#: ../rules/base.xml.in.h:577 ../rules/evdev.xml.in.h:577
+msgid "Syriac"
+msgstr "Сирійська"
+
+#: ../rules/base.xml.in.h:578 ../rules/evdev.xml.in.h:578
+msgid "Syriac phonetic"
+msgstr "Сирійська фонетична"
+
+#: ../rules/base.xml.in.h:579 ../rules/evdev.xml.in.h:579
+msgid "TIS-820.2538"
+msgstr "TIS-820.2538"
+
+#: ../rules/base.xml.in.h:580 ../rules/evdev.xml.in.h:580
+msgid "Tajikistan"
+msgstr "Таджикистан"
+
+#: ../rules/base.xml.in.h:581 ../rules/evdev.xml.in.h:581
+msgid "Tamil"
+msgstr "Тамільська"
+
+#: ../rules/base.xml.in.h:582 ../rules/evdev.xml.in.h:582
+msgid "Tamil TAB Typewriter"
+msgstr "Тамільська TAB (Машинописна)"
+
+#: ../rules/base.xml.in.h:583 ../rules/evdev.xml.in.h:583
+msgid "Tamil TSCII Typewriter"
+msgstr "Тамільська TSCII (Машинописна)"
+
+#: ../rules/base.xml.in.h:584 ../rules/evdev.xml.in.h:584
+msgid "Tamil Unicode"
+msgstr "Тамільська Unicode"
+
+#: ../rules/base.xml.in.h:585 ../rules/evdev.xml.in.h:585
+msgid "Tatar"
+msgstr "Татарська"
+
+#: ../rules/base.xml.in.h:586 ../rules/evdev.xml.in.h:586
+msgid "Telugu"
+msgstr "Телугу"
+
+#: ../rules/base.xml.in.h:587 ../rules/evdev.xml.in.h:587
+msgid "Tha"
+msgstr "Тай"
+
+#: ../rules/base.xml.in.h:588 ../rules/evdev.xml.in.h:588
+msgid "Thailand"
+msgstr "Таїланд"
+
+#: ../rules/base.xml.in.h:589 ../rules/evdev.xml.in.h:589
+msgid "Third level choosers"
+msgstr "Вибір 3-го рівня"
+
+#: ../rules/base.xml.in.h:590 ../rules/evdev.xml.in.h:590
+msgid "Tibetan"
+msgstr "Тибетська"
+
+#: ../rules/base.xml.in.h:591 ../rules/evdev.xml.in.h:591
+msgid "Tibetan (with ASCII numerals)"
+msgstr "Тибетська (з ASCII числами)"
+
+#: ../rules/base.xml.in.h:592 ../rules/evdev.xml.in.h:592
+msgid "Tifinagh"
+msgstr "Тифіна"
+
+#: ../rules/base.xml.in.h:593 ../rules/evdev.xml.in.h:593
+msgid "Tifinagh Alternative"
+msgstr "Тифіна альтернативна"
+
+#: ../rules/base.xml.in.h:594 ../rules/evdev.xml.in.h:594
+msgid "Tifinagh Alternative Phonetic"
+msgstr "Тифіна альтернативна фонетична"
+
+#: ../rules/base.xml.in.h:595 ../rules/evdev.xml.in.h:595
+msgid "Tifinagh Extended"
+msgstr "Тифіна розширена"
+
+#: ../rules/base.xml.in.h:596 ../rules/evdev.xml.in.h:596
+msgid "Tifinagh Extended Phonetic"
+msgstr "Тифіна розширена фонетична"
+
+#: ../rules/base.xml.in.h:597 ../rules/evdev.xml.in.h:597
+msgid "Tifinagh Phonetic"
+msgstr "Тифіна фонетична"
+
+#: ../rules/base.xml.in.h:598 ../rules/evdev.xml.in.h:598
+msgid "Tilde (~) variant"
+msgstr "Варіант з тильдою (~)"
+
+#: ../rules/base.xml.in.h:599 ../rules/evdev.xml.in.h:599
+msgid "Tjk"
+msgstr "Тдж"
+
+#: ../rules/base.xml.in.h:600 ../rules/evdev.xml.in.h:600
+msgid "Toshiba Satellite S3000"
+msgstr "Toshiba Satellite S3000"
+
+#: ../rules/base.xml.in.h:601 ../rules/evdev.xml.in.h:601
+msgid "Trust Direct Access Keyboard"
+msgstr "Trust Direct Access Keyboard"
+
+#: ../rules/base.xml.in.h:602 ../rules/evdev.xml.in.h:602
+msgid "Trust Wireless Keyboard Classic"
+msgstr "Trust Wireless Keyboard Classic"
+
+#: ../rules/base.xml.in.h:603 ../rules/evdev.xml.in.h:603
+msgid "Tur"
+msgstr "Тур"
+
+#: ../rules/base.xml.in.h:604 ../rules/evdev.xml.in.h:604
+msgid "Turkey"
+msgstr "Туреччина"
+
+#: ../rules/base.xml.in.h:605 ../rules/evdev.xml.in.h:605
+msgid "Typewriter"
+msgstr "Машинописна"
+
+#: ../rules/base.xml.in.h:606 ../rules/evdev.xml.in.h:606
+msgid "UCW layout (accented letters only)"
+msgstr "UCW-розкладка (лише літери з акцентами)"
+
+#: ../rules/base.xml.in.h:607 ../rules/evdev.xml.in.h:607
+msgid "US keyboard with Bosnian digraphs"
+msgstr "Клавіатура США з боснійськими диграфами"
+
+#: ../rules/base.xml.in.h:608 ../rules/evdev.xml.in.h:608
+msgid "US keyboard with Bosnian letters"
+msgstr "Клавіатура США з боснійськими літерами"
+
+#: ../rules/base.xml.in.h:609 ../rules/evdev.xml.in.h:609
+msgid "US keyboard with Croatian digraphs"
+msgstr "Клавіатура США з хорватськими диграфами"
+
+#: ../rules/base.xml.in.h:610 ../rules/evdev.xml.in.h:610
+msgid "US keyboard with Croatian letters"
+msgstr "Клавіатура США з хорватськими літерами"
+
+#: ../rules/base.xml.in.h:611 ../rules/evdev.xml.in.h:611
+msgid "US keyboard with Estonian letters"
+msgstr "Клавіатура США з естонськими літерами"
+
+#: ../rules/base.xml.in.h:612 ../rules/evdev.xml.in.h:612
+msgid "US keyboard with Lithuanian letters"
+msgstr "Клавіатура США з литовськими буквами"
+
+#: ../rules/base.xml.in.h:613 ../rules/evdev.xml.in.h:613
+msgid "US keyboard with Slovenian digraphs"
+msgstr "Клавіатура США із словенськими диграфами"
+
+#: ../rules/base.xml.in.h:614 ../rules/evdev.xml.in.h:614
+msgid "US keyboard with Slovenian letters"
+msgstr "Клавіатура США із словенськими буквами"
+
+#: ../rules/base.xml.in.h:615 ../rules/evdev.xml.in.h:615
+msgid "USA"
+msgstr "США"
+
+#: ../rules/base.xml.in.h:616 ../rules/evdev.xml.in.h:616
+msgid "Udmurt"
+msgstr "Удмуртська"
+
+#: ../rules/base.xml.in.h:617 ../rules/evdev.xml.in.h:617
+msgid "Ukr"
+msgstr "Укр"
+
+#: ../rules/base.xml.in.h:618 ../rules/evdev.xml.in.h:618
+msgid "Ukraine"
+msgstr "Україна"
+
+#: ../rules/base.xml.in.h:619 ../rules/evdev.xml.in.h:619
+msgid "UnicodeExpert"
+msgstr "UnicodeExpert"
+
+#: ../rules/base.xml.in.h:620 ../rules/evdev.xml.in.h:620
+msgid "United Kingdom"
+msgstr "Англійська (Великобританія)"
+
+#: ../rules/base.xml.in.h:621 ../rules/evdev.xml.in.h:621
+msgid "Urdu"
+msgstr "Урду"
+
+#: ../rules/base.xml.in.h:622 ../rules/evdev.xml.in.h:622
+msgid "Use Bosnian digraphs"
+msgstr "З боснійськими диграфами"
+
+#: ../rules/base.xml.in.h:623 ../rules/evdev.xml.in.h:623
+msgid "Use Croatian digraphs"
+msgstr "З хорватськими диграфами"
+
+#: ../rules/base.xml.in.h:624 ../rules/evdev.xml.in.h:624
+msgid "Use Slovenian digraphs"
+msgstr "Зі словенськими диграфами"
+
+#: ../rules/base.xml.in.h:625 ../rules/evdev.xml.in.h:625
+msgid "Use guillemets for quotes"
+msgstr "Кутові лапки у якості лапок"
+
+#: ../rules/base.xml.in.h:626 ../rules/evdev.xml.in.h:626
+msgid "Use keyboard LED to show alternative layout."
+msgstr "Використовувати клавіатурні індикатори для індикації альтернативних розкладок."
+
+#: ../rules/base.xml.in.h:627 ../rules/evdev.xml.in.h:627
+msgid "Using space key to input non-breakable space character"
+msgstr "Клавіша пробіл генерує символ нерозривного пробілу"
+
+#: ../rules/base.xml.in.h:628 ../rules/evdev.xml.in.h:628
+msgid "Uzb"
+msgstr "Узб"
+
+#: ../rules/base.xml.in.h:629 ../rules/evdev.xml.in.h:629
+msgid "Uzbekistan"
+msgstr "Узбекистан"
+
+#: ../rules/base.xml.in.h:630 ../rules/evdev.xml.in.h:630
+msgid "Vietnam"
+msgstr "В'єтнам"
+
+#: ../rules/base.xml.in.h:631 ../rules/evdev.xml.in.h:631
+msgid "ViewSonic KU-306 Internet Keyboard"
+msgstr "ViewSonic KU-306 Internet Keyboard"
+
+#: ../rules/base.xml.in.h:632 ../rules/evdev.xml.in.h:632
+msgid "Vnm"
+msgstr "В'єт"
+
+#: ../rules/base.xml.in.h:633 ../rules/evdev.xml.in.h:633
+msgid "Wang 724 keypad with unicode additions (arrows and math operators)"
+msgstr "Клавіатура Wang 724 з доповненнями Unicode (стрілки та математичні оператори)"
+
+#: ../rules/base.xml.in.h:634 ../rules/evdev.xml.in.h:634
+msgid "Wang 724 keypad with unicode additions (arrows and math operators). Math operators on default level."
+msgstr "Клавіатура Wang 724 з доповненнями Unicode (стрілки та математичні оператори). Математичні операції на типовому рівні."
+
+#: ../rules/base.xml.in.h:635 ../rules/evdev.xml.in.h:635
+msgid "Wang model 724 azerty"
+msgstr "Wang model 724 azerty"
+
+#: ../rules/base.xml.in.h:636 ../rules/evdev.xml.in.h:636
+msgid "Western"
+msgstr "Західна"
+
+#: ../rules/base.xml.in.h:637 ../rules/evdev.xml.in.h:637
+msgid "Winbook Model XP5"
+msgstr "Winbook Model XP5"
+
+#: ../rules/base.xml.in.h:638 ../rules/evdev.xml.in.h:638
+msgid "Winkeys"
+msgstr "Розкладка Windows"
+
+#: ../rules/base.xml.in.h:639 ../rules/evdev.xml.in.h:639
+msgid "With &lt;\\|&gt; key"
+msgstr "З клавішею &lt;\\|&gt;"
+
+#: ../rules/base.xml.in.h:640 ../rules/evdev.xml.in.h:640
+msgid "With EuroSign on 5"
+msgstr "Призначити знак євро на клавішу 5"
+
+#: ../rules/base.xml.in.h:641 ../rules/evdev.xml.in.h:641
+msgid "With guillemets"
+msgstr "З кутовими лапками"
+
+#: ../rules/base.xml.in.h:642 ../rules/evdev.xml.in.h:642
+msgid "Yahoo! Internet Keyboard"
+msgstr "Yahoo! Internet Keyboard"
+
+#: ../rules/base.xml.in.h:643 ../rules/evdev.xml.in.h:643
+msgid "Yakut"
+msgstr "Якутська"
+
+#: ../rules/base.xml.in.h:644 ../rules/evdev.xml.in.h:644
+msgid "Yoruba"
+msgstr "Йоруба"
+
+#: ../rules/base.xml.in.h:645 ../rules/evdev.xml.in.h:645
+msgid "Z and ZHE swapped"
+msgstr "Z та ZHE поміняні місцями"
+
+#: ../rules/base.xml.in.h:646 ../rules/evdev.xml.in.h:646
+msgid "Zar"
+msgstr "Зар"
+
+#: ../rules/base.xml.in.h:647 ../rules/evdev.xml.in.h:647
+msgid "azerty"
+msgstr "azerty"
+
+#: ../rules/base.xml.in.h:648 ../rules/evdev.xml.in.h:648
+msgid "azerty/digits"
+msgstr "azerty/цифри"
+
+#: ../rules/base.xml.in.h:649 ../rules/evdev.xml.in.h:649
+msgid "digits"
+msgstr "цифри"
+
+#: ../rules/base.xml.in.h:650 ../rules/evdev.xml.in.h:650
+msgid "displaced semicolon and quote (obsolete)"
+msgstr "посунута крапка з комою та лапки (застаріло)"
+
+#: ../rules/base.xml.in.h:651 ../rules/evdev.xml.in.h:651
+msgid "lyx"
+msgstr "lyx"
+
+#: ../rules/base.xml.in.h:652 ../rules/evdev.xml.in.h:652
+msgid "qwerty"
+msgstr "qwerty"
+
+#: ../rules/base.xml.in.h:653 ../rules/evdev.xml.in.h:653
+msgid "qwerty, extended Backslash"
+msgstr "qwerty, розширений Backslash"
+
+#: ../rules/base.xml.in.h:654 ../rules/evdev.xml.in.h:654
+msgid "qwerty/digits"
+msgstr "qwerty/цифри"
+
+#: ../rules/base.xml.in.h:655 ../rules/evdev.xml.in.h:655
+msgid "qwertz"
+msgstr "qwertz"
+
+#~ msgid "(Legacy) Dvorak"
+#~ msgstr "(Застаріла) Дворак"

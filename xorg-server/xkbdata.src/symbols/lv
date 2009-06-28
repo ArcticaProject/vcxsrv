@@ -1,0 +1,129 @@
+// $XKeyboardConfig$
+
+// Latvian keymap version 1.1
+// Copyright (C) Dmitry Golubev <lastguru@mail.ru>, 2003-2004
+//
+// Reworked to get rid of dead_keys (use of which in this case
+// is a dirty hack). It is now not dependent on locale settings
+// and GTK_IM_MODULES in Gnome. The map is also providing some of
+// ISO9995-3 alternate characters. Note that this version works
+// correctly under Gnome 2.6. This is to be put into symbols/
+// directory, or somewhere else.
+//
+// Permission to use, copy, modify, distribute, and sell this software and its
+// documentation for any purpose is hereby granted without fee, provided that
+// the above copyright notice appear in all copies and that both that
+// copyright notice and this permission notice appear in supporting
+// documentation, and that the name of the copyright holder(s) not be used in
+// advertising or publicity pertaining to distribution of the software without
+// specific, written prior permission.  The copyright holder(s) makes no
+// representations about the suitability of this software for any purpose.  It
+// is provided "as is" without express or implied warranty.
+//
+// THE COPYRIGHT HOLDER(S) DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+// INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+// EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+// CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+// DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+// TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+// PERFORMANCE OF THIS SOFTWARE.
+
+partial default alphanumeric_keys modifier_keys
+xkb_symbols "basic" {
+
+    name[Group1]= "Latvia";
+
+        key <TLDE>      {[grave, asciitilde, acute, asciitilde]};
+        key <AE01>      {[1, exclam, onesuperior, exclamdown]};
+        key <AE02>      {[2, at, twosuperior, oneeighth]};
+        key <AE03>      {[3, numbersign, threesuperior, sterling]};
+        key <AE04>	{[4, dollar, EuroSign, cent]};
+        key <AE05>      {[5, percent, onehalf, threeeighths]};
+        key <AE06>      {[6, asciicircum, threequarters, fiveeighths]};
+        key <AE07>      {[7, ampersand, braceleft, seveneighths]};
+        key <AE08>      {[8, asterisk, bracketleft, trademark]};
+        key <AE09>      {[9, parenleft, bracketright, plusminus]};
+        key <AE10>      {[0, parenright, braceright, degree]};
+        key <AE11>      {[minus, underscore, backslash, questiondown]};
+        key <AE12>      {[equal, plus, endash, emdash]};
+                                                
+        key <AD01>      {[q, Q, q, Q]};
+        key <AD02>      {[w, W, w, W]};
+	key <AD03>	{[e, E, emacron, Emacron]};
+	key <AD04>	{[r, R, rcedilla, Rcedilla]};
+        key <AD05>      {[t, T, t, T]};
+        key <AD06>      {[y, Y, y, Y]};
+	key <AD07>	{[u, U, umacron, Umacron]};
+	key <AD08>	{[i, I, imacron, Imacron]};
+	key <AD09>	{[o, O, omacron, Omacron]};
+        key <AD10>      {[p, P, p, P]};
+        key <AD11>      {[bracketleft, braceleft, guillemotleft, leftdoublequotemark]};
+        key <AD12>      {[bracketright, braceright, guillemotright, rightdoublequotemark]};
+
+	key <AC01>	{[a, A, amacron, Amacron]};
+	key <AC02>	{[s, S, scaron, Scaron]};
+        key <AC03>      {[d, D, d, D]};
+        key <AC04>      {[f, F, f, F]};
+	key <AC05>	{[g, G, gcedilla, Gcedilla]};
+        key <AC06>      {[h, H, h, H]};
+        key <AC07>      {[j, J, j, J]};
+	key <AC08>	{[k, K, kcedilla, Kcedilla]};
+	key <AC09>	{[l, L, lcedilla, Lcedilla]};
+        key <AC10>      {[semicolon, colon, semicolon, colon]};
+        key <AC11>	{[apostrophe, quotedbl, leftdoublequotemark, doublelowquotemark]};
+
+	key <AB01>	{[z, Z, zcaron, Zcaron]};
+        key <AB02>      {[x, X, x, X]};
+	key <AB03>	{[c, C, ccaron, Ccaron]};
+        key <AB04>      {[v, V, v, V]};
+        key <AB05>      {[b, B, b, B]};
+	key <AB06>	{[n, N, ncedilla, Ncedilla]};
+        key <AB07>      {[m, M, m, M]};
+        key <AB08>      {[comma, less, horizconnector, multiply]};
+        key <AB09>      {[period, greater, periodcentered, division]};
+        key <AB10>      {[slash, question, slash, abovedot]};
+        key <BKSL>      {[backslash, bar, grave, breve]};
+        
+        key <SPCE>	{[space, space, space, space]};
+
+	include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys modifier_keys
+xkb_symbols "apostrophe" {
+
+    include "lv(basic)"
+
+    name[Group1]= "Latvia - Apostrophe (') variant";
+
+	key <AC11>	{[ISO_Level3_Latch, quotedbl, apostrophe, quotedbl]};
+        key <SPCE>      {[space, space, apostrophe]};
+	modifier_map Mod5 { <AC11> };
+
+};
+
+partial alphanumeric_keys modifier_keys
+xkb_symbols "tilde" {
+
+    include "lv(basic)"
+
+    name[Group1]= "Latvia - Tilde (~) variant";
+
+	key <TLDE>	{[ISO_Level3_Latch, asciitilde, grave, acute]}; 
+        key <SPCE>      {[space, space, asciitilde]};
+	modifier_map Mod5 { <TLDE> };
+
+};
+
+partial alphanumeric_keys modifier_keys
+xkb_symbols "fkey" {
+
+    include "lv(basic)"
+
+    name[Group1]= "Latvia - F-letter (F) variant";
+
+        key <AC04>      {[ISO_Level3_Latch, ISO_Level3_Latch, f, F]};
+        key <SPCE>      {[space, space, f, F]};
+	modifier_map Mod5 { <AC04> };
+
+};

@@ -1,0 +1,196 @@
+.\" -*- coding: us-ascii -*-
+.TH Xprt __appmansuffix__ "25 November 2004"  
+.SH NAME
+Xprt \- Print server for X Version 11
+.SH SYNOPSIS
+.ad l
+\fBXprt\fR \kx
+.if (\nxu > (\n(.lu / 2)) .nr x (\n(.lu / 5)
+'in \n(.iu+\nxu
+[\fB\-ac\fR] [\fB\-audit \fBlevel\fR\fR] [\fB\-pn\fR] [\fB\-fp \fBfontpath\fR\fR] [\fB\-XpFile \fBfile\fR\fR] [\fB\-XpSpoolerType \fBspoolername\fR\fR] [\fB:\fBdisplay\fR\fR]
+'in \n(.iu-\nxu
+.ad b
+.SH DESCRIPTION
+Xprt is the Xprint print server
+for version 11 of the X Window system for non display devices
+such as printers and fax machines.
+.PP
+Xprint is an advanced printing system which enables X11
+applications to use devices like printers, FAX or create
+documents in formats like PostScript, PCL or PDF. It may be used by
+clients such as mozilla.
+.PP
+Xprint is a very flexible, extensible, scalable, client/server
+print system based on ISO 10175 (and some other specs) and the X11 
+rendering protocol. 
+Using Xprint an application can search, query and use devices like 
+printers, FAX machines or create documents in formats like PDF. 
+In particular, an application can seek a printer, query supported 
+attributes (like paper size, trays, fonts etc.), configure the printer 
+device to match it's needs and print on it like on any other X device 
+reusing parts of the code which is used for the video card Xserver.
+.SH USAGE
+Although Xprt may be invoked from the command line, it is
+preferable to run it as a daemon via the init script
+\fB/etc/init.d/xprint\fR (where this script exists).
+.PP
+Client programs such as mozilla will require environment
+variable \fB${XPSERVERLIST}\fR to be set, identifying the
+"display" on which Xprt is running. This variable may be set
+for all users via \fB/etc/profile\fR (or similar), using
+\fB/etc/init.d/xprint get_xpserverlist\fR:
+
+.nf
+export XPSERVERLIST=`/etc/init.d/xprint get_xpserverlist`
+.fi
+
+.SH OPTIONS
+Many of Xprt's command line options are shared in common
+with the usual X servers (see \fBXserver\fR(__appmansuffix__)).
+Commonly used options include:
+.TP 
+\fB:\fIdisplay\fB\fR 
+The X server runs on the given display. If multiple X
+servers are to run simultaneously on a host, each must
+have a unique display number. Note that the standard X
+server (for video displays) typically runs on display
+:0. If \fB/etc/init.d/xprint\fR is used
+to invoke Xprt, it may be configured to automatically assign an available
+display number.
+.TP 
+\fB\-ac\fR 
+disables host-based access control mechanisms. Enables access
+by any host, and permits any host to modify the access control
+list. Use with extreme caution. This option exists primarily
+for running test suites remotely.
+.TP 
+\fB\-audit \fIlevel\fB\fR 
+sets the audit trail level. The default level is 1, meaning
+only connection rejections are reported. Level 2 additionally
+reports all successful connections and disconnects. Level 4
+enables messages from the SECURITY extension, if present,
+including generation and revocation of authorizations and
+violations of the security policy. Level 0 turns off the audit
+trail. Audit lines are sent as standard error output.
+.TP 
+\fB\-fp \fIfontpath\fB\fR 
+sets the search path for fonts. This path is a comma
+separated list of directories which Xprt searches for
+font databases.
+.TP 
+\fB\-pn\fR 
+permits the server to continue running if it fails to
+establish all of its well-known sockets (connection
+points for clients), but establishes at least
+one.
+.TP 
+\fB\-XpFile \fIfile\fB\fR 
+Sets an alternate Xprinters file (see section FILES).
+.TP 
+\fB\-XpSpoolerType \fIspoolername\fB\fR 
+Defines the spooler system to be used for print job spooling.
+Supported values in xprint.mozdev.org release 009 are:
+
+aix
+
+aix4
+
+bsd
+
+osf
+
+solaris
+
+sysv
+
+uxp
+
+cups
+
+lprng
+
+other
+
+none
+
+(multiple values can be specified, separated by ':', the first active spooler will be chosen).
+The default value is platform-specific and can be obtained via
+
+.nf
+Xprt \-h
+.fi
+
+\&.
+.SH ENVIRONMENT
+The following environment variables are recognized by the X print server
+(environment variables recognized by Xprint clients are described in 
+\fBXprint\fR(__miscmansuffix__)):
+.TP 
+\fB${XPCONFIGDIR}\fR
+This environment variable points to the root
+of the Xprint server configuration directory hierarchy.
+If the variable is not defined, the default
+path is be assumed. The default path may be
+\fB/usr/X11R6/lib/X11/xserver/\fR, 
+\fB/usr/lib/X11/xserver/\fR,
+\fB/usr/share/Xprint/xserver/\fR or
+\fB/usr/openwin/server/etc/XpConfig\fR, depending on the
+system, and may be configured in \fB/etc/init.d/xprint\fR.
+.TP 
+\fB${LANG}\fR
+This environment variable selects the locale settings used by the Xprint server.
+Xprt allows language-specific settings (stored in \fB${XPCONFIGDIR}/${LANG}/print/\fR)
+which will override the default settings (stored in \fB${XPCONFIGDIR}/C/print/\fR).
+If \fB${LANG}\fR is not set "C" is assumed.
+.PP
+.SH FILES
+.TP 
+\fB${XPCONFIGDIR}/${LANG}/print/Xprinters\fR, \fB${XPCONFIGDIR}/C/print/Xprinters\fR
+`Xprinters' is the top most configuration file. It tells
+Xprt which specific printer names (e.g. mylaser) should
+be supported, and whether \fBlpstat\fR(1) or other commands
+should be used to automatically supplement the list of
+printers.
+.TP 
+\fB${XPCONFIGDIR}/${LANG}/print/attributes/printer\fR, \fB${XPCONFIGDIR}/C/print/attributes/printer\fR
+The `printer' file maps printer names to model
+configurations (see `model-config' below). For example,
+"mylaser" could be mapped to a "HPDJ1600C", and all other
+arbitrary printers could be mapped to a default, such as
+"HPLJ4SI". When depending on \fBlpstat\fR(1) in the Xprinters
+file, setting up defaults in `printer' becomes all the
+more important.
+.TP 
+\fB${XPCONFIGDIR}/${LANG}/print/attributes/document\fR, \fB${XPCONFIGDIR}/C/print/attributes/document\fR
+The `document' file specifies the initial document values
+for any print jobs. For example, which paper tray to
+use, what default resolution, etc.
+.TP 
+\fB${XPCONFIGDIR}/${LANG}/print/attributes/job\fR, \fB${XPCONFIGDIR}/C/print/attributes/job\fR
+The `job' file specifies the initial job values for any
+print jobs. For example, "notification-profile" can be
+set so that when a print job is successfully sent to a
+printer, e-mail is sent to the user.
+.TP 
+\fB${XPCONFIGDIR}/C/print/models/PSdefault/model\-config\fR, \fB${XPCONFIGDIR}/C/print/models/PSdefault/fonts/fonts.dir\fR, \fB${XPCONFIGDIR}/C/print/models/PSdefault/fonts/9nb00051.pmf\fR, \fB${XPCONFIGDIR}/C/print/models/PSdefault/fonts/9nb00093.pmf\fR
+The `model-config' file has attributes that describe the
+printer model's capabilities and default settings.
+Printer model fonts may also be present. The model-config
+file also identifies the print ddx driver to be used.
+For each printer model supported, a complete hierarchy of
+files should exist. In most cases, these files do not
+need to be modified.
+.TP 
+\fB${XPCONFIGDIR}/C/print/ddx\-config/raster/pdf\fR, \fB${XPCONFIGDIR}/C/print/ddx\-config/raster/pcl\fR, \fB${XPCONFIGDIR}/C/print/ddx\-config/raster/postscript\fR
+The print ddx drivers can have highly specific
+configuration files to control their behavior. In most
+cases, these files do not need to be modified.
+.SH "SEE ALSO"
+\fBXprint\fR(__miscmansuffix__), \fBX11\fR(__miscmansuffix__), \fBxplsprinters\fR(__appmansuffix__), \fBxprehashprinterlist\fR(__appmansuffix__), \fBxphelloworld\fR(__appmansuffix__), \fBxpxmhelloworld\fR(__appmansuffix__), \fBxpawhelloworld\fR(__appmansuffix__), \fBxpxthelloworld\fR(__appmansuffix__), \fBxpsimplehelloworld\fR(__appmansuffix__), \fBXserver\fR(__appmansuffix__), \fBlibXp\fR(__libmansuffix__), \fBlibXprintUtils\fR(__libmansuffix__), \fBlibXprintAppUtils\fR(__libmansuffix__), \fBXmPrintShell\fR(__libmansuffix__), \fBXawPrintShell\fR(__libmansuffix__), Xprint FAQ (http://xprint.mozdev.org/docs/Xprint_FAQ.html), Xprint main site (http://xprint.mozdev.org/)
+.SH AUTHORS
+This manual page was written by 
+Drew Parsons <dparsons@debian.org> and
+Roland Mainz <roland.mainz@nrubsig.org>,
+with some help from the man page at
+http://www.sins.com.au/unix/manpages/Xprt.html and the XFree86
+man page for \fBXserver\fR(1).

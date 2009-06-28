@@ -1,0 +1,156 @@
+.\" $XFree86: xc/programs/mkfontscale/mkfontscale.man,v 1.4 2003/06/20 15:49:52 eich Exp $
+.\"
+.TH MKFONTSCALE __appmansuffix__ __vendorversion__
+.SH NAME
+mkfontscale \- create an index of scalable font files for X
+.SH SYNOPSIS
+.B mkfontscale
+[
+.B \-b 
+] [
+.B \-s
+] [
+.B \-o 
+.I filename
+] [
+.B \-x
+.I suffix
+] [
+.B \-a
+.I encoding
+] \|.\|.\|. [
+.B \-f 
+.I fuzz
+] [
+.B \-l
+] [
+.B \-e
+.I directory
+] [
+.B \-p
+.I prefix
+] [
+.B \-r
+.I prefix
+] [
+.B \-n
+.I prefix
+] [
+.B \-\-
+] [
+.I directory
+] \|.\|.\|.
+.SH DESCRIPTION
+For each directory argument,
+.I mkfontscale
+reads all of the scalable font files in the directory.  For every font
+file found, an X11 font name (XLFD) is generated, and is written
+together with the file name to a file
+.B fonts.scale
+in the directory.
+
+The resulting
+.B fonts.scale
+file should be checked and possibly manually edited before being used
+as input for the
+.BR mkfontdir (__appmansuffix__)
+program.
+.SH OPTIONS
+.TP
+.B \-b
+read bitmap fonts.  By default, bitmap fonts are ignored.
+.TP
+.B \-s
+ignore scalable fonts.  By default, scalable fonts are read.  If
+.B \-b
+is set, this flag has the side effect of enabling the reading of
+.B fonts.scale
+files.
+.TP
+.BI \-o " filename"
+send program output to
+.IR filename ;
+default is
+.B fonts.scale 
+if bitmap fonts are not being read, and
+.B fonts.dir
+if they are.  If
+.I filename
+is relative, it is created in the directory being processed.  If it is
+the special value 
+.BR \- ,
+output is written to standard output.
+.TP
+.BI \-x " suffix"
+exclude all files with the specified
+.IR suffix .
+.TP
+.BI \-a " encoding"
+add
+.I encoding
+to the list of encodings searched for.
+.TP
+.BI \-f " fuzz"
+set the fraction of characters that may be missing in large encodings to
+.I fuzz
+percent.  Defaults to 2%.
+.TP
+.B \-l
+Write
+.B fonts.dir
+files suitable for implementations that cannot reencode legacy fonts
+(BDF and PCF).  By default, it is assumed that the implementation can
+reencode Unicode-encoded legacy fonts.
+.TP
+.B -e
+specifies a directory with encoding files.  Every such
+directory is scanned for encoding files, the list of which is then
+written to an "encodings.dir" file in every font directory.
+.TP
+.B -p
+Specifies a prefix that is prepended to the encoding file path names
+when they are written to the "encodings.dir" file.  The prefix is
+prepended literally: if a `/' is required between the prefix and the path
+names, it must be supplied explicitly as part of the prefix.
+.TP
+.B \-r
+Keep non-absolute encoding directories in their relative form when
+writing the "encodings.dir" file.  The default is to convert relative
+encoding directories to absolute directories by prepending the current
+directory.  The positioning of this options is significant, as this
+option only applies to subsequent
+.B \-e
+options.
+.TP
+.B \-n
+do not scan for fonts, do not write font directory files.  This option
+is useful when generating encoding directories only.
+.TP
+.B \-\- 
+end of options.
+.SH SEE ALSO
+X(__miscmansuffix__), Xserver(__appmansuffix__), mkfontdir(__appmansuffix__), ttmkfdir(__appmansuffix__), xfs(__appmansuffix__), xset(__appmansuffix__)
+.SH NOTES
+The format of the
+.BR fonts.scale ,
+.B fonts.dir
+and
+.B encodings.dir
+files is documented in the mkfontdir(__appmansuffix__) manual page.
+
+.B Mkfontscale
+will overwrite any
+.B fonts.scale
+file even if it has been hand-edited.
+
+.B mkfontscale -b -s -l
+is equivalent to
+.BR mkfontdir .
+.SH AUTHOR
+The version of
+.B mkfontscale
+included in this X.Org Foundation release was originally written by
+Juliusz Chroboczek <jch@freedesktop.org> for the XFree86 project.  The
+functionality of this program was inspired by the
+.B ttmkfdir
+utility by Joerg Pommnitz.

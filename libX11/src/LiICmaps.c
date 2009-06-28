@@ -1,0 +1,74 @@
+/* $Xorg: LiICmaps.c,v 1.4 2001/02/09 02:03:34 xorgcvs Exp $ */
+/*
+
+Copyright 1986, 1998  The Open Group
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation.
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of The Open Group shall not be
+used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization from The Open Group.
+
+*/
+/* $XFree86: xc/lib/X11/LiICmaps.c,v 1.3 2001/01/17 19:41:39 dawes Exp $ */
+
+#define NEED_REPLIES
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include "Xlibint.h"
+
+Colormap *XListInstalledColormaps(
+    register Display *dpy,
+    Window win,
+    int *n)  /* RETURN */
+{
+    long nbytes;
+    Colormap *cmaps;
+    xListInstalledColormapsReply rep;
+    register xResourceReq *req;
+
+    LockDisplay(dpy);
+    GetResReq(ListInstalledColormaps, win, req);
+
+    if(_XReply(dpy, (xReply *) &rep, 0, xFalse) == 0) {
+	    UnlockDisplay(dpy);
+	    SyncHandle();
+	    *n = 0;
+	    return((Colormap *) NULL);
+	}
+
+    if (rep.nColormaps) {
+	nbytes = rep.nColormaps * sizeof(Colormap);
+	cmaps = (Colormap *) Xmalloc((unsigned) nbytes);
+	nbytes = rep.nColormaps << 2;
+	if (! cmaps) {
+	    _XEatData(dpy, (unsigned long) nbytes);
+	    UnlockDisplay(dpy);
+	    SyncHandle();
+	    return((Colormap *) NULL);
+	}
+	_XRead32 (dpy, (long *) cmaps, nbytes);
+    }
+    else cmaps = (Colormap *) NULL;
+    
+    *n = rep.nColormaps;
+    UnlockDisplay(dpy);
+    SyncHandle();
+    return(cmaps);
+}
+

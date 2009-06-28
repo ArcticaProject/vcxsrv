@@ -1,0 +1,146 @@
+.\" Copyright (c) 1999 - Sun Microsystems, Inc.
+.\" All rights reserved.
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.TH XkbQueryExtension __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
+.SH NAME
+XkbQueryExtension \-  Determines the compatibility of a library at runtime.
+.SH SYNOPSIS
+.B Bool XkbQueryExtension
+(
+.I dpy,
+.I opcode_rtrn,
+.I event_rtrn,
+.I error_rtrn,
+.I major_in_out,
+.I minor_in_out
+)
+.br
+      Display *\fIdpy\fP\^;
+.br
+      int \fIopcode_rtrn\fP\^;
+.br
+      int \fIevent_rtrn\fP\^;
+.br
+      int *\fIerror_rtrn\fP\^;
+.br
+      int \fImajor_in_out\fP\^;
+.br
+      int \fIminor_in_out\fP\^;            
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.TP
+.I dpy
+connection to the X server
+.TP
+.I opcode_rtrn
+backfilled with the major extension opcode
+.TP
+.I event_rtrn
+backfilled with the extension base event code
+.TP
+.I error_rtrn
+backfilled with the extension base error code
+.TP
+.I major_in_out
+compile time lib major version in, server major version out
+.TP
+.I minor_in_out
+compile time lib min version in, server minor version out 
+.SH DESCRIPTION
+.LP
+Call 
+.I XkbQueryExtension 
+to check for the presence and compatibility of the 
+extension in the server and to initialize the extension. Because of potential 
+version mismatches, you cannot use the generic extension mechanism functions 
+(
+.I XQueryExtension 
+and 
+.I XInitExtension
+) for checking for the presence of, and 
+initializing the Xkb extension.
+ 
+You must call 
+.I XkbQueryExtension 
+or 
+.I XkbOpenDisplay 
+before using any other Xkb 
+library interfaces, unless such usage is explicitly allowed in the interface 
+description in this document. The exceptions are: 
+.I XkbIgnoreExtension, XkbLibraryVersion, 
+and a handful of audible-bell functions. You should not use 
+any other Xkb functions if the extension is not present or is uninitialized. In 
+general, calls to Xkb library functions made prior to initializing the Xkb 
+extension cause BadAccess protocol errors.
+
+.I XkbQueryExtension 
+both determines whether a compatible Xkb extension is present 
+in the X server and initializes the extension when it is present.
+
+The 
+.I XkbQueryExtension 
+function determines whether a compatible version of the X 
+Keyboard Extension is present in the server. If a compatible extension is 
+present, 
+.I XkbQueryExtension 
+returns True; otherwise, it returns False. 
+
+If a compatible version of Xkb is present, 
+.I XkbQueryExtension 
+initializes the 
+extension. It backfills the major opcode for the keyboard extension in
+.I opcode_rtrn, 
+the base event code in 
+.I event_rtrn, 
+the base error code in
+.I error_rtrn, 
+and the major and minor version numbers of the extension in
+.I major_in_out 
+and 
+.I minor_in_out. 
+The major opcode is reported in the 
+.I req_major 
+fields of some Xkb events. For a discussion of the base event code. 
+.SH "RETURN VALUES"
+.TP 15
+True
+The 
+.I XkbQueryExtension 
+function returns True if it determines a compatible version of the X 
+Keyboard Extension is present in the server. 
+.TP 15
+False
+The 
+.I XkbQueryExtension 
+function returns False if it determines a compatible version of the X 
+Keyboard Extension is not present in the server.
+.SH "SEE ALSO"
+.BR XkbIgnoreExtension (__libmansuffix__),
+.BR XkbLibraryVersion (__libmansuffix__),
+.BR XkbOpenDisplay (__libmansuffix__)

@@ -1,0 +1,33 @@
+$XFree86$
+
+o Have code to fetch the SymTabRec chipset list from a video driver.
+  This is mostly useful for the testing tool/interface, so that the
+  Cards file "uptodate" state can also be verified.
+	Probably it is better to forgot about the Cards file, and
+	either parse the output of scanpci, or link libscanpci.a
+	(and whatever else be required) in xorgcfg.
+
+o Check if a module is "certified", there was some talk about a
+  certification process in the past.
+
+o Rewrite mouse driver to use the same code as video drivers, so that
+  it is possible to store all available options in a single place.
+  This would also require rewriting all existing input device modules.
+  (Probably most of this can be made with cpp macros).
+
+o Create a protocol to allow 3rd part xorgcfg modules.
+
+o Write an interface for testing extensions/accel, maybe a frontend to
+  xdpyinfo, x11perf, glxinfo, etc.
+
+o Write a "wizard" mode, as several users find the graphical interface
+  too complicated, but find the text one easier to user.
+
+o Write code to use a Monitors database, either update the old Monitors
+  file or use RedHat MonitorsDB.
+	Chris Morgan is writting code to use MonitorsDB.
+  If xorgcfg could be changed to ddcprobe (in all supported platforms),
+  it would be even be a better solution than using a database.
+
+o Add interface to allow changing comments without the need of editing
+  config file with a text editor.
