@@ -1,0 +1,17 @@
+Building freetype:
+- open freetype\freetype.sln
+  Build configurations Release Multithreaded and Debug Multithreaded
+
+Building openssl:
+- make sure the command prompt is set for compiling with the visual studio compiler (vcvars32.bat)
+- make sure perl is in the path
+- run 'perl Configure VC-WIN32' in the openssl directory
+- run ms\do_masm.bat in the openssl directory
+- run nmake -f ms\nt.mak in the openssl directory
+
+Building pthreads:
+- goto pthreads directory
+- run nmake VC-static
+- run nmake VC-static-debug
+
+
