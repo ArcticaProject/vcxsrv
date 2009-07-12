@@ -27,15 +27,15 @@
 #include "t1afm.h"
 #endif
 
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_STREAM_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
 
 #include FT_SERVICE_MULTIPLE_MASTERS_H
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_XFREE86_NAME_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
-#include FT_SERVICE_POSTSCRIPT_INFO_H
+#include <freetype/internal/services/svpsinfo.h>
 #include FT_SERVICE_KERNING_H
 
 

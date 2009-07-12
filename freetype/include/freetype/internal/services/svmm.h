@@ -19,7 +19,7 @@
 #ifndef __SVMM_H__
 #define __SVMM_H__
 
-#include FT_INTERNAL_SERVICE_H
+#include <freetype/internal/ftserv.h>
 
 
 FT_BEGIN_HEADER

@@ -1,0 +1,52 @@
+2006-06-28  Kristian Høgsberg  <krh@redhat.com>
+
+	* glxproto.h (__GLX_NUMBER_ERRORS): There are 13 GLX errors.
+
+2006-04-30  Adam Jackson  <ajax@freedesktop.org>
+
+	* glxtokens.h:
+	Bump to 1.4.7 for final EXT_tfp tokens.
+
+2006-03-16  Kristian Høgsberg  <krh@redhat.com>
+
+	* configure.ac: Bump to 1.4.6 for FBO opcodes.
+
+2006-03-10  David Reveman  <davidr@novell.com>
+
+	* glxproto.h: Fix typo.
+
+2006-02-24  Brian Paul <brian.paul@tungstengraphics.com>
+
+	* glxproto.h
+	Added GL_EXT_framebuffer_object opcodes for Dave Reveman.
+
+2006-02-20  Adam Jackson  <ajax@freedesktop.org>
+
+	* glxtokens.h:
+	Add GLX_FRONT_LEFT_EXT.
+
+	* configure.ac:
+	Bump to 1.4.5.
+
+2006-02-14  Adam Jackson  <ajax@freedesktop.org>
+
+	* glxproto.h:
+	Add enumerants for EXT_texture_from_pixmap.
+
+	* configure.ac:
+	Bump to 1.4.4.
+
+2005-12-20  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version for X11R7 release.
+
+2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* configure.ac:
+	Update package version number for final X11R7 release candidate.
+
+2005-10-13  Donnie Berkholz  <spyderous@gentoo.org>
+
+	* configure.ac: Bump version to 1.4.1, so xserver can depend on newer
+	  version and not die.

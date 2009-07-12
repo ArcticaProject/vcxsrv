@@ -39,7 +39,9 @@
 # ifdef __va_copy
 #  define va_copy __va_copy
 # else
+#  ifndef _MSC_VER
 #  error "no working va_copy was found"
+#  endif
 # endif
 #endif
     
@@ -48,11 +50,16 @@ Xvprintf(const char *format, va_list va)
 {
     char *ret;
     int size;
+
+#ifdef _MSC_VER
+    size = vsnprintf(NULL, 0, format, va);
+#else
     va_list va2;
 
     va_copy(va2, va);
     size = vsnprintf(NULL, 0, format, va2);
     va_end(va2);
+#endif
 
     ret = (char *)Xalloc(size + 1);
     if (ret == NULL)
@@ -78,11 +85,16 @@ XNFvprintf(const char *format, va_list va)
 {
     char *ret;
     int size;
+
+#ifdef _MSC_VER
+    size = vsnprintf(NULL, 0, format, va);
+#else
     va_list va2;
 
     va_copy(va2, va);
     size = vsnprintf(NULL, 0, format, va2);
     va_end(va2);
+#endif
 
     ret = (char *)XNFalloc(size + 1);
     if (ret == NULL)

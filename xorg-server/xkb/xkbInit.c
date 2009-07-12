@@ -35,7 +35,9 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <math.h>
 #define NEED_EVENTS 1
 #include <X11/X.h>
@@ -95,10 +97,10 @@ typedef struct	_SrvXkmInfo {
 /***====================================================================***/
 
 #ifndef XKB_BASE_DIRECTORY
-#define	XKB_BASE_DIRECTORY	"/usr/lib/X11/xkb"
+#define	XKB_BASE_DIRECTORY	"xkbdata"
 #endif
 #ifndef XKB_BIN_DIRECTORY
-#define	XKB_BIN_DIRECTORY	XKB_BASE_DIRECTORY
+#define	XKB_BIN_DIRECTORY	"."
 #endif
 #ifndef XKB_DFLT_RULES_FILE
 #define	XKB_DFLT_RULES_FILE	"rules"

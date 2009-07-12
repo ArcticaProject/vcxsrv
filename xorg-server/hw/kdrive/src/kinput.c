@@ -110,21 +110,29 @@ KdSigio (int sig)
 static void
 KdBlockSigio (void)
 {
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     sigset_t	set;
     
     sigemptyset (&set);
     sigaddset (&set, SIGIO);
     sigprocmask (SIG_BLOCK, &set, 0);
+#endif
 }
 
 static void
 KdUnblockSigio (void)
 {
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     sigset_t	set;
     
     sigemptyset (&set);
     sigaddset (&set, SIGIO);
     sigprocmask (SIG_UNBLOCK, &set, 0);
+#endif
 }
 
 #ifdef DEBUG_SIGIO
@@ -170,15 +178,22 @@ KdResetInputMachine (void)
 static void
 KdNonBlockFd (int fd)
 {
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     int	flags;
     flags = fcntl (fd, F_GETFL);
     flags |= FASYNC|NOBLOCK;
     fcntl (fd, F_SETFL, flags);
+#endif
 }
 
 static void
 KdAddFd (int fd)
 {
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     struct sigaction	act;
     sigset_t		set;
     
@@ -195,11 +210,15 @@ KdAddFd (int fd)
     sigaction (SIGIO, &act, 0);
     sigemptyset (&set);
     sigprocmask (SIG_SETMASK, &set, 0);
+#endif
 }
 
 static void
 KdRemoveFd (int fd)
 {
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     struct sigaction	act;
     int			flags;
     
@@ -215,6 +234,7 @@ KdRemoveFd (int fd)
 	sigemptyset (&act.sa_mask);
 	sigaction (SIGIO, &act, 0);
     }
+#endif
 }
 
 Bool
@@ -513,11 +533,13 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
     return BadImplementation;
 }
 
+#ifndef _MSC_VER
 Bool
 LegalModifier(unsigned int key, DeviceIntPtr pDev)
 {
     return TRUE;
 }
+#endif
 
 static void
 KdBell (int volume, DeviceIntPtr pDev, pointer arg, int something)
@@ -536,6 +558,7 @@ KdBell (int volume, DeviceIntPtr pDev, pointer arg, int something)
     KdRingBell(ki, volume, ctrl->bell_pitch, ctrl->bell_duration);
 }
 
+#ifndef _MSC_VER
 void
 DDXRingBell(int volume, int pitch, int duration)
 {
@@ -551,7 +574,7 @@ DDXRingBell(int volume, int pitch, int duration)
         }
     }
 }
-
+#endif
 void
 KdRingBell(KdKeyboardInfo *ki, int volume, int pitch, int duration)
 {
@@ -2345,6 +2368,7 @@ miPointerScreenFuncRec kdPointerScreenFuncs =
     KdWarpCursor
 };
 
+#ifndef _MSC_VER
 void
 ProcessInputEvents ()
 {
@@ -2354,6 +2378,7 @@ ProcessInputEvents ()
 	KdProcessSwitch ();
     KdCheckLock ();
 }
+#endif
 
 /* FIXME use XSECURITY to work out whether the client should be allowed to
  * open and close. */

@@ -31,9 +31,10 @@
 
 #include "fb.h"
 
+#include "picturestr.h"
+
 #ifdef RENDER
 
-#include "picturestr.h"
 #include "mipict.h"
 #include "fbpict.h"
 

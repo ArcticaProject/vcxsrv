@@ -34,7 +34,8 @@ in this Software without prior written authorization from The Open Group.
 #endif
 
 #include <sys/types.h>
-#ifndef Lynx
+#if !defined(_MSC_VER)
+#if !defined(Lynx)
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #else
@@ -42,6 +43,7 @@ in this Software without prior written authorization from The Open Group.
 #include <shm.h>
 #endif
 #include <unistd.h>
+#endif
 #include <sys/stat.h>
 #define NEED_REPLIES
 #define NEED_EVENTS
@@ -348,8 +350,10 @@ ProcShmQueryVersion(client)
     rep.pixmapFormat = pixmapFormat;
     rep.majorVersion = SHM_MAJOR_VERSION;
     rep.minorVersion = SHM_MINOR_VERSION;
+#ifndef _MSC_VER
     rep.uid = geteuid();
     rep.gid = getegid();
+#endif
     if (client->swapped) {
     	swaps(&rep.sequenceNumber, n);
     	swapl(&rep.length, n);
@@ -399,6 +403,9 @@ shm_access(ClientPtr client, SHMPERM_TYPE *perm, int readonly)
 	    if (uid == 0) {
 		return 0;
 	    }
+            #ifdef _MSC_VER
+            __asm int 3;
+            #else
 	    /* Check the owner */
 	    if (SHMPERM_UID(perm) == uid || SHMPERM_CUID(perm) == uid) {
 		mask = S_IRUSR;
@@ -407,10 +414,14 @@ shm_access(ClientPtr client, SHMPERM_TYPE *perm, int readonly)
 		}
 		return (SHMPERM_MODE(perm) & mask) == mask ? 0 : -1;
 	    }
+            #endif
 	}
 
 	if (gidset) {
 	    /* Check the group */
+            #ifdef _MSC_VER
+            __asm int 3;
+            #else
 	    if (SHMPERM_GID(perm) == gid || SHMPERM_CGID(perm) == gid) {
 		mask = S_IRGRP;
 		if (!readonly) {
@@ -418,14 +429,20 @@ shm_access(ClientPtr client, SHMPERM_TYPE *perm, int readonly)
 		}
 		return (SHMPERM_MODE(perm) & mask) == mask ? 0 : -1;
 	    }
+            #endif
 	}
     }
+            #ifdef _MSC_VER
+            __asm int 3;
+            return -1;
+            #else
     /* Otherwise, check everyone else */
     mask = S_IROTH;
     if (!readonly) {
 	mask |= S_IWOTH;
     }
     return (SHMPERM_MODE(perm) & mask) == mask ? 0 : -1;
+    #endif
 }
 
 static int
@@ -500,7 +517,9 @@ ShmDetachSegment(value, shmseg)
 
     if (--shmdesc->refcnt)
 	return TRUE;
+#ifndef _MSC_VER
     shmdt(shmdesc->addr);
+#endif
     for (prev = &Shmsegs; *prev != shmdesc; prev = &(*prev)->next)
 	;
     *prev = shmdesc->next;

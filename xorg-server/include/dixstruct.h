@@ -97,7 +97,7 @@ typedef struct _Client {
     Bool        swapped;
     ReplySwapPtr pSwapReplyFunc;
     XID         errorValue;
-    int         sequence;
+    unsigned short sequence;    //MH
     int         closeDownMode;
     int         clientGone;
     int         noClientException;	/* this client died or needs to be

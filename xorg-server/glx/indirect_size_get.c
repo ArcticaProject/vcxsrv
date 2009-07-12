@@ -25,6 +25,13 @@
  * SOFTWARE.
  */
 
+#ifdef HAVE_DIX_CONFIG_H
+#include <dix-config.h>
+#else
+
+#include "glheader.h"
+
+#endif
 
 #include <GL/gl.h>
 #include "indirect_size_get.h"
@@ -877,7 +884,9 @@ __glGetTexLevelParameterfv_size(GLenum e)
     case GL_TEXTURE_INTENSITY_SIZE:
 /*      case GL_TEXTURE_INTENSITY_SIZE_EXT:*/
     case GL_TEXTURE_DEPTH:
+#ifndef _MSC_VER
     case GL_TEXTURE_INDEX_SIZE_EXT:
+#endif
     case GL_TEXTURE_COMPRESSED_IMAGE_SIZE:
 /*      case GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB:*/
     case GL_TEXTURE_COMPRESSED:

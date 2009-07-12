@@ -266,7 +266,7 @@ miChangePictureFilter (PicturePtr pPicture,
 
 #define BOUND(v)	(INT16) ((v) < MINSHORT ? MINSHORT : (v) > MAXSHORT ? MAXSHORT : (v))
 
-static inline pixman_bool_t
+static __inline pixman_bool_t
 miClipPictureReg (pixman_region16_t *	pRegion,
 		  pixman_region16_t *	pClip,
 		  int		dx,

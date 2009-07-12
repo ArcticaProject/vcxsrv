@@ -55,6 +55,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define	XKBSRV_NEED_FILE_FUNCS
 #include <X11/extensions/XKBsrv.h>
 
+#define XkbVirtualModsToReal    SrvXkbVirtualModsToReal
 #endif /* XKB_IN_SERVER */
 
 /***====================================================================***/

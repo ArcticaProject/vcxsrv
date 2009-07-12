@@ -7,6 +7,9 @@
 #include <X11/Xatom.h>
 #include <X11/Xresource.h>
 #include <stdio.h>
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 static xcb_auth_info_t xauth;
 

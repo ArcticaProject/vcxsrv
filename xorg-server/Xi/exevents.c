@@ -55,6 +55,8 @@ SOFTWARE.
 #define	 NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+#define XINPUT
 #endif
 
 #include <X11/X.h>

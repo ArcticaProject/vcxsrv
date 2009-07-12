@@ -22,7 +22,7 @@
 
 #include <ft2build.h>
 #include "cfftypes.h"
-#include FT_SERVICE_POSTSCRIPT_CMAPS_H
+#include <freetype/internal/services/svpscmap.h>
 
 
 FT_BEGIN_HEADER

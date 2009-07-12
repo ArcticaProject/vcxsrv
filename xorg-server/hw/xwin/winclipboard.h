@@ -34,15 +34,20 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #ifdef __CYGWIN__
 #include <sys/select.h>
 #else
-#include "Xwinsock.h"
+#include "X11/Xwinsock.h"
 #define HAS_WINSOCK
 #endif
 #include <fcntl.h>
 #include <setjmp.h>
+#ifdef _MSC_VER
+typedef int pid_t;
+#endif
 #include <pthread.h>
 
 /* X headers */
@@ -60,7 +65,9 @@
 #define ATOM			DWORD
 
 #ifndef __CYGWIN__
+#ifndef sleep
 #define sleep(x) Sleep (1000 * (x))
+#endif
 #endif
 
 /* Windows headers */

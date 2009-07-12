@@ -2145,13 +2145,13 @@ xxPushPixels(
 #define RENDER_ADD_BOX(pScreen,box) {\
     if (BOX_NOT_EMPTY(box)) { \
        RegionRec region; \
-       xxScrPriv(pScreen);\
-       ScreenPtr pScreen = pScreen;\
-       REGION_INIT (pScreen, &region, &box, 1); \
+       ScreenPtr pthisScreen = pScreen;\
+       xxScrPriv(pthisScreen);\
+       REGION_INIT (pthisScreen, &region, &box, 1); \
        PRINT_RECTS(pScrPriv->region);\
-       REGION_UNION(pScreen,&pScrPriv->region,&pScrPriv->region,&region);\
+       REGION_UNION(pthisScreen,&pScrPriv->region,&pScrPriv->region,&region);\
        PRINT_RECTS(pScrPriv->region);\
-       REGION_UNINIT(pScreen,&region);\
+       REGION_UNINIT(pthisScreen,&region);\
    }\
 }
 

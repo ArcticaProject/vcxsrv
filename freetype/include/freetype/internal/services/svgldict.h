@@ -19,7 +19,7 @@
 #ifndef __SVGLDICT_H__
 #define __SVGLDICT_H__
 
-#include FT_INTERNAL_SERVICE_H
+#include <freetype/internal/ftserv.h>
 
 
 FT_BEGIN_HEADER

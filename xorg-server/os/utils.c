@@ -56,6 +56,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #ifdef __CYGWIN__
 #include <stdlib.h>
 #include <signal.h>
+__stdcall unsigned long GetTickCount(void);
 #endif
 
 #if defined(WIN32) && !defined(__CYGWIN__)
@@ -517,7 +518,7 @@ GiveUp(int sig)
     errno = olderrno;
 }
 
-#if defined WIN32 && defined __MINGW32__
+#if (defined WIN32 && defined __MINGW32__) || defined(__CYGWIN__)
 _X_EXPORT CARD32
 GetTimeInMillis (void)
 {
@@ -1504,7 +1505,7 @@ XNFstrdup(const char *s)
 
 #ifdef SMART_SCHEDULE
 
-#ifdef SIGVTALRM
+#if defined(SIGVTALRM) && !defined(__CYGWIN__)
 #define SMART_SCHEDULE_POSSIBLE
 #endif
 
@@ -1943,6 +1944,7 @@ Fclose(pointer iop)
  */
 
 /* Consider LD* variables insecure? */
+#ifndef _MSC_VER
 #ifndef REMOVE_ENV_LD
 #define REMOVE_ENV_LD 1
 #endif
@@ -1950,6 +1952,7 @@ Fclose(pointer iop)
 /* Remove long environment variables? */
 #ifndef REMOVE_LONG_ENV
 #define REMOVE_LONG_ENV 1
+#endif
 #endif
 
 /*

@@ -76,10 +76,8 @@ typedef struct _Pixmap {
     int			refcnt;
     int			devKind;
     DevUnion		devPrivate;
-#ifdef COMPOSITE
     short		screen_x;
     short		screen_y;
-#endif
     unsigned		usage_hint; /* see CREATE_PIXMAP_USAGE_* */
 } PixmapRec;
 

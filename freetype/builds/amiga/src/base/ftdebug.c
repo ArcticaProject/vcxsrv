@@ -67,7 +67,7 @@ extern struct DOSIFace *IDOS;
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include FT_INTERNAL_DEBUG_H
+#include <freetype/internal/ftdebug.h>
 
 
 #if defined( FT_DEBUG_LEVEL_ERROR )

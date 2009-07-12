@@ -107,6 +107,7 @@ static BitmapFileFunctionsRec readers[] = {
 #if XFONT_PCFFORMAT
     { pmfReadFont, pcfReadFontInfo} ,
 #endif
+    { NULL, NULL }
 };
 
 
@@ -238,11 +239,12 @@ static FontRendererRec	renderers[] = {
 #if XFONT_PCFFORMAT
     { ".pmf", 4, BitmapOpenBitmap, BitmapOpenScalable,
 	BitmapGetInfoBitmap, BitmapGetInfoScalable, 0,
-	CAPABILITIES }
+	CAPABILITIES },
 #endif
+    { NULL, 0, NULL, 0, NULL, NULL, 0, 0 }
 };
 
-#define numRenderers	(sizeof renderers / sizeof renderers[0])
+#define numRenderers	(sizeof renderers / sizeof renderers[0] - 1)
 
 void
 BitmapRegisterFontFileFunctions (void)

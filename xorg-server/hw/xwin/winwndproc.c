@@ -762,11 +762,11 @@ winWindowProc (HWND hwnd, UINT message,
 	  g_fCursor = TRUE;
 	  ShowCursor (TRUE);
 	}
-      
+
       /* Deliver absolute cursor position to X Server */
-      miPointerAbsoluteCursor (GET_X_LPARAM(lParam)-s_pScreenInfo->dwXOffset,
-			       GET_Y_LPARAM(lParam)-s_pScreenInfo->dwYOffset,
-			       g_c32LastInputEventTime = GetTickCount ());
+      winEnqueueMotion(GET_X_LPARAM(lParam)-s_pScreenInfo->dwXOffset,
+		       GET_Y_LPARAM(lParam)-s_pScreenInfo->dwYOffset);
+
       return 0;
 
     case WM_NCMOUSEMOVE:
@@ -927,10 +927,9 @@ winWindowProc (HWND hwnd, UINT message,
 	    /* Map from screen (-X, -Y) to root (0, 0) */
 	    point.x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
 	    point.y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
-	    
+
 	    /* Deliver absolute cursor position to X Server */
-	    miPointerAbsoluteCursor (point.x, point.y,
-				     g_c32LastInputEventTime = GetTickCount());
+	    winEnqueueMotion(point.x , point.y);
 
 	    /* Check if a button was released but we didn't see it */
 	    GetCursorPos (&point);

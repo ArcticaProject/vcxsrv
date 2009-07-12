@@ -49,6 +49,9 @@ from The Open Group.
 
 #include <ctype.h>
 
+#ifdef _MSC_VER
+#include <X11\Xwinsock.h>
+#endif
 /*
  * The transport table contains a definition for every transport (protocol)
  * family. All operations that can be made on the transport go through this
@@ -115,9 +118,10 @@ Xtransport_table Xtransports[] = {
     { &TRANS(SCOFuncs),		TRANS_LOCAL_SCO_INDEX },
 #endif /* sun */
 #endif /* LOCALCONN */
+    { NULL, 0}
 };
 
-#define NUMTRANS	(sizeof(Xtransports)/sizeof(Xtransport_table))
+#define NUMTRANS	(sizeof(Xtransports)/sizeof(Xtransport_table)-1)
 
 
 #ifdef WIN32
@@ -728,7 +732,7 @@ TRANS(SetOption) (XtransConnInfo ciptr, int option, int arg)
 #if defined(WIN32) 
 	{
 #ifdef WIN32
-	    u_long arg;
+	    unsigned long arg;
 #else
 	    int arg;
 #endif
@@ -953,7 +957,7 @@ int
 TRANS(IsLocal) (XtransConnInfo ciptr)
 
 {
-    return (ciptr->family == AF_UNIX);
+  return (ciptr->family == AF_UNIX);
 }
 
 

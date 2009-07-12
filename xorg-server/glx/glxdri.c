@@ -29,10 +29,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#ifndef _MSC_VER
 #include <sys/time.h>
 #include <dlfcn.h>
 
 #include <drm.h>
+#endif
+
 #include <GL/gl.h>
 #include <GL/internal/dri_interface.h>
 

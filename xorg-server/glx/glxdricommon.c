@@ -25,6 +25,10 @@
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+
+#include "glheader.h"
+
 #endif
 
 #include <stdint.h>
@@ -47,12 +51,16 @@ getUST(int64_t *ust)
     if (ust == NULL)
 	return -EFAULT;
 
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     if (gettimeofday(&tv, NULL) == 0) {
 	ust[0] = (tv.tv_sec * 1000000) + tv.tv_usec;
 	return 0;
     } else {
 	return -errno;
     }
+    #endif
 }
 
 const __DRIsystemTimeExtension systemTimeExtension = {

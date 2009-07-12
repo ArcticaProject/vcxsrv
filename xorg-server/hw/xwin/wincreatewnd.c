@@ -88,7 +88,9 @@ winCreateBoundingWindowFullScreen (ScreenPtr pScreen)
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE_XDMCP,
-	    g_pszQueryHost); 
+	    g_pszQueryHost,
+	    display,
+	    (int) pScreenInfo->dwScreen);
   else    
     snprintf (szTitle,
 	    sizeof (szTitle),
@@ -331,7 +333,9 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE_XDMCP,
-	    g_pszQueryHost); 
+	    g_pszQueryHost,
+	    display,
+	    (int) pScreenInfo->dwScreen);
   else    
     snprintf (szTitle,
 	    sizeof (szTitle),

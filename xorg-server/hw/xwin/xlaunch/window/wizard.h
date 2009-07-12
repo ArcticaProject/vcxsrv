@@ -29,7 +29,6 @@
 #include "dialog.h"
 #include <vector>
 
-#define _WIN32_IE 0x0500
 #include <prsht.h>
 
 class CWizard : public CBaseDialog

@@ -1,0 +1,76 @@
+OBJS+=$(CSRCS:%.c=$(OBJDIR)$/%$(OBJEXT))
+OBJS:=$(OBJS:%.cc=$(OBJDIR)$/%$(OBJEXT))
+
+RESOBJS:=$(RESOURCES:%.rc=$(OBJDIR)$/%.res)
+
+MANIFESTFILE:=$(MHMAKECONF)\runtime.manifest
+
+### Static library stuff ###
+ifdef LIBRARY
+LIBRARY_DIR := $(LIBRARY:%=$(OBJDIR)\%.lib)
+PDB := $(LIBRARY_DIR:%.lib=%.pdb)
+
+all: $(LIBRARY_DIR)
+
+$(LIBRARY_DIR) : $(OBJS)
+	$(AR) /OUT:$(relpath $@) $(OBJS)
+
+endif # End static library stuff
+
+### WINAPP stuff ###
+ifdef WINAPP
+EXE := $(WINAPP:%=$(OBJDIR)\%.exe)
+PDB := $(EXE:%.exe=%.pdb)
+
+#LINKFLAGS += /SUBSYSTEM:WINDOWS
+
+all: $(EXE)
+
+$(EXE) :  $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) $(MANIFESTFILE)
+	$(LINK) $(LINKFLAGS) /MANIFEST:NO /OUT:$(relpath $@) $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(OBJS) $(RESOBJS)
+	mt -nologo -manifest $(MANIFESTFILE) -outputresource:$(relpath $@);\#1
+
+endif  # End WINAPP stuff
+
+ifeq ($(DEBUG),1)
+COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I"%") -Fo"$(relpath $@)" -Fd"$(PDB)" "$<"
+else
+COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I"%") -Fo"$(relpath $@)" "$<"
+PDB=   # There is no PDB file generated in a release build
+endif
+
+.PHONY: all cleanall clean clean$(OBJDIRPREFIX)
+
+### Implicit rules ###
+CREATEDIR=if not isdir $@ mkdir /s $@
+
+$(OBJDIR) :
+	$(CREATEDIR)
+
+ifneq ($(OBJDIRPREFIX),)
+clean: clean$(OBJDIRPREFIX)
+endif
+
+clean$(OBJDIRPREFIX):
+	del -e $(OBJDIR)
+
+$(OBJDIR)\%$(OBJEXT) : %.c
+	$(CC) $(CCFLAGS) $(COMMONCFLAGS)
+
+$(OBJDIR)\%$(OBJEXT) : %.cc
+	$(CC) $(CCFLAGS) /EHsc $(COMMONCFLAGS)
+
+$(OBJDIR)\%.res : %.rc
+	$(RC) $(RCFLAGS) $(RCDEFINES:%=-d "%") $(RCINCLUDES:%=-i "%") -Fo"$(relpath $@)" "$<"
+
+BDFTOPCF= $(MHMAKECONF)\bdftopcf\$(OBJDIR)\bdftopcf.exe
+load_makefile $(MHMAKECONF)\bdftopcf\makefile MAKESERVER=0 DEBUG=$(DEBUG)
+
+$(DESTDIR)\%.pcf.gz: %.bdf
+	@del -e $@
+	$(BDFTOPCF) -t $< | gzip > $@
+
+$(DESTDIR)\%.enc.gz: %.enc
+	gzip -c < $< > $@
+
+

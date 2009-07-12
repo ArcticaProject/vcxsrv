@@ -945,6 +945,7 @@ FlushClient(ClientPtr who, OsCommPtr oc, char *extraBuf, int extraCount)
 	    /* If we've arrived here, then the client is stuffed to the gills
 	       and not ready to accept more.  Make a note of it and buffer
 	       the rest. */
+		errno=0;
 	    FD_SET(connection, &ClientsWriteBlocked);
 	    AnyClientsWriteBlocked = TRUE;
 

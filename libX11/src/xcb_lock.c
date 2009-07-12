@@ -11,6 +11,7 @@
 #include <xcb/xcbext.h>
 #include <xcb/xcbxlib.h>
 
+#include <X11\Xtrans\Xtrans.h>
 #include <pthread.h>
 
 static void _XCBLockDisplay(Display *dpy)
@@ -97,7 +98,7 @@ static size_t request_length(struct iovec *vec)
     return len << 2;
 }
 
-static inline int issue_complete_request(Display *dpy, int veclen, struct iovec *vec)
+static __inline int issue_complete_request(Display *dpy, int veclen, struct iovec *vec)
 {
     xcb_protocol_request_t xcb_req = { 0 };
     unsigned int sequence;
@@ -163,6 +164,7 @@ static inline int issue_complete_request(Display *dpy, int veclen, struct iovec 
 	req->next = 0;
 	req->waiters = -1;
 	req->sequence = sequence;
+	xcondition_init(&(req->condition)); //MH
 	*dpy->xcb->pending_requests_tail = req;
 	dpy->xcb->pending_requests_tail = &req->next;
     }

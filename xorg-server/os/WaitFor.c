@@ -214,6 +214,12 @@ WaitForSomething(int *pClientsReady)
 		wt = &waittime;
 	    }
 	}
+	if (!wt)
+	{
+		wt = &waittime;
+		waittime.tv_sec = 0;
+		waittime.tv_usec = 100;
+	}
 	XFD_COPYSET(&AllSockets, &LastSelectMask);
 #ifdef SMART_SCHEDULE
 	}

@@ -438,7 +438,8 @@ register int i,tmp;
 		if (warningLevel>8) {
 		    WARN1("Changing root directory to \"%s\"\n",rootDir);
 		}
-		if ((chdir(rootDir)<0) && (warningLevel>0)) {
+		    XkbAddDirectoryToPath(rootDir);
+		    if (!XkbAddDirectoryToPath(rootDir) && (warningLevel>0)) {
 		    WARN1("Couldn't change directory to \"%s\"\n",rootDir);
 		    ACTION("Root directory (-R) option ignored\n");
 		    rootDir= NULL;
@@ -919,8 +920,12 @@ Status		status;
 			break;
 		}
 #endif
+#ifdef _MSC_VER
+		outputFileFd= open(outputFile, O_WRONLY|O_CREAT|O_EXCL|binMode,_S_IREAD | _S_IWRITE);
+#else
 		outputFileFd= open(outputFile, O_WRONLY|O_CREAT|O_EXCL,
 		    S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH|binMode);
+#endif
 		if (outputFileFd<0) {
 		    ERROR1("Cannot open \"%s\" to write keyboard description\n",
 								outputFile);

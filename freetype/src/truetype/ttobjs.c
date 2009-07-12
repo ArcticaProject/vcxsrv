@@ -17,12 +17,12 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_CALC_H
-#include FT_INTERNAL_STREAM_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftstream.h>
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
-#include FT_INTERNAL_SFNT_H
+#include <freetype/internal/sfnt.h>
 
 #include "ttgload.h"
 #include "ttpload.h"

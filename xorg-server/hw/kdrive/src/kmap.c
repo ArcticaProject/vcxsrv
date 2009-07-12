@@ -24,6 +24,7 @@
 #include "kdrive.h"
 
 #include <errno.h>
+#ifndef _MSC_VER
 #include <unistd.h>
 #include <sys/mman.h>
 #ifdef HAVE_ASM_MTRR_H
@@ -31,6 +32,9 @@
 #endif
 
 #include <sys/ioctl.h>
+#else
+#define DRAW_DEBUG(a)
+#endif
 
 void *
 KdMapDevice (CARD32 addr, CARD32 size)
@@ -39,7 +43,8 @@ KdMapDevice (CARD32 addr, CARD32 size)
     void    *a;
     void    *d;
 
-    d = VirtualAlloc (NULL, size, MEM_RESERVE, PAGE_NOACCESS);
+    d = VirtualAlloc (NULL, size, MEM_RESERVE, PAGE_READWRITE|PAGE_NOCACHE);
+/*
     if (!d)
 	return NULL;
     DRAW_DEBUG ((DEBUG_S3INIT, "Virtual address of 0x%x is 0x%x", addr, d));
@@ -53,6 +58,8 @@ KdMapDevice (CARD32 addr, CARD32 size)
 	return NULL;
     }
     DRAW_DEBUG ((DEBUG_S3INIT, "Device mapped successfully"));
+*/
+    __asm int 3; 
     return d;
 #endif
 #ifdef linux

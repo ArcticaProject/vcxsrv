@@ -28,7 +28,7 @@
 
 #include <windows.h>
 #include <stdexcept>
-
+#include <string>  
 
 class win32_error : public std::runtime_error
 {

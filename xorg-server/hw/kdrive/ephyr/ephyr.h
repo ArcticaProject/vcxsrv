@@ -26,9 +26,11 @@
 #ifndef _EPHYR_H_
 #define _EPHYR_H_
 #include <stdio.h>
+#ifndef _MSC_VER
 #include <unistd.h>
-#include <signal.h>
 #include <libgen.h>
+#endif
+#include <signal.h>
 
 #include "os.h"  		/* for OsSignal() */
 #include "kdrive.h"

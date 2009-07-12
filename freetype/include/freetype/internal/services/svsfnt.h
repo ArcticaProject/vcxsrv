@@ -19,7 +19,7 @@
 #ifndef __SVSFNT_H__
 #define __SVSFNT_H__
 
-#include FT_INTERNAL_SERVICE_H
+#include <freetype/internal/ftserv.h>
 #include FT_TRUETYPE_TABLES_H
 
 

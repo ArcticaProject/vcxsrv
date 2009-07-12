@@ -40,7 +40,10 @@ in this Software without prior written authorization from The Open Group.
 #ifdef WIN32
 #include <ctype.h>
 #endif
-
+#ifdef _MSC_VER
+#define BOOL W32BOOL
+#include <windows.h>
+#endif
 /*
  * Map FPE functions to renderer functions
  */
@@ -54,6 +57,32 @@ static int FontFileOpenBitmapNCF (FontPathElementPtr fpe, FontPtr *pFont,
 int
 FontFileNameCheck (char *name)
 {
+#ifdef _MSC_VER
+  WIN32_FIND_DATA FindData;
+  HANDLE hFind;
+  char Tmp;
+  int LenName=strlen(name)-1;
+  Tmp=name[LenName];
+  if (Tmp=='/')
+     name[LenName]=0;
+  hFind=FindFirstFile(name,&FindData);
+  name[LenName]=Tmp;
+
+  if (hFind==INVALID_HANDLE_VALUE)
+  {
+    return 0;
+  }
+  else
+  {
+    FindClose(hFind);
+    if (FindData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)
+    {
+      return 1;
+    }
+    return 0;
+  }
+
+#else
 #ifndef NCD
 #if defined(__UNIXOS2__) || defined(WIN32)
     /* OS/2 uses D:/... as a path name for fonts, so accept this as a valid
@@ -65,6 +94,7 @@ FontFileNameCheck (char *name)
     return *name == '/';
 #else
     return ((strcmp(name, "built-ins") == 0) || (*name == '/'));
+#endif
 #endif
 }
 

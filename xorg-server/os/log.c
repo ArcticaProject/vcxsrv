@@ -95,7 +95,13 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #ifdef WIN32
 #include <process.h>
+#ifndef _MSC_VER
 #define getpid(x) _getpid(x)
+#endif
+#endif
+
+#ifdef _MSC_VER
+#define S_ISREG(m)  (((m)&_S_IFMT) == _S_IFREG)
 #endif
 
 

@@ -60,6 +60,7 @@ winReshapeRootless (WindowPtr pWin);
 Bool
 winCreateWindowNativeGDI (WindowPtr pWin)
 {
+  Bool fResult;
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
@@ -352,7 +353,6 @@ winPositionWindowRootless (WindowPtr pWin, int x, int y)
 {
   Bool			fResult = FALSE;
   ScreenPtr		pScreen = pWin->drawable.pScreen;
-  winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
 
@@ -378,7 +378,6 @@ winChangeWindowAttributesRootless (WindowPtr pWin, unsigned long mask)
 {
   Bool			fResult = FALSE;
   ScreenPtr		pScreen = pWin->drawable.pScreen;
-  winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
 #if CYGDEBUG
@@ -436,7 +435,6 @@ winMapWindowRootless (WindowPtr pWin)
 {
   Bool			fResult = FALSE;
   ScreenPtr		pScreen = pWin->drawable.pScreen;
-  winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
 #if CYGDEBUG
@@ -462,7 +460,6 @@ void
 winSetShapeRootless (WindowPtr pWin)
 {
   ScreenPtr		pScreen = pWin->drawable.pScreen;
-  winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
 #if CYGDEBUG

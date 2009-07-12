@@ -369,6 +369,12 @@ int ddxProcessArgument(int argc, char **argv, int i)
 	return KdProcessArgument(argc, argv, i);
 }
 
+#ifdef DDXBEFORERESET
+void ddxBeforeReset (void)
+{
+}
+#endif
+
 void sdlTimer(void)
 {
 	static int buttonState=0;
@@ -452,4 +458,9 @@ void OsVendorInit (void)
     KdOsInit (&sdlOsFuncs);
 }
 
+#ifdef DDXOSFATALERROR
+void OsVendorFatalError(void)
+{
+}
+#endif
 

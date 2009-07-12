@@ -27,8 +27,11 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <string.h>
+#include <X11/Xtrans/Xtrans.h>
 
 #include "xcb.h"
 #include "xcbext.h"

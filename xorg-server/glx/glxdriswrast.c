@@ -26,6 +26,10 @@
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+
+#include "glheader.h"
+
 #endif
 
 #include <stdint.h>
@@ -54,6 +58,14 @@
 #include "glthread.h"
 #include "dispatch.h"
 #include "extension_string.h"
+
+#ifndef RTLD_LOCAL
+#define RTLD_LOCAL 0
+#endif
+
+#ifdef _MSC_VER
+#define dlerror() "Getting loadlibrary error string not implemented"
+#endif
 
 typedef struct __GLXDRIscreen   __GLXDRIscreen;
 typedef struct __GLXDRIcontext  __GLXDRIcontext;
@@ -252,7 +264,11 @@ __glXDRIscreenDestroy(__GLXscreen *baseScreen)
 
     (*screen->core->destroyScreen)(screen->driScreen);
 
+#ifdef _MSC_VER
+    FreeLibrary(screen->driver);
+#else
     dlclose(screen->driver);
+#endif
 
     __glXScreenDestroy(baseScreen);
 
@@ -473,14 +489,22 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     snprintf(filename, sizeof filename,
 	     "%s/%s_dri.so", dri_driver_path, driverName);
 
+#ifdef _MSC_VER
+    screen->driver = LoadLibrary(filename);
+#else
     screen->driver = dlopen(filename, RTLD_LAZY | RTLD_LOCAL);
+#endif
     if (screen->driver == NULL) {
 	LogMessage(X_ERROR, "AIGLX error: dlopen of %s failed (%s)\n",
 		   filename, dlerror());
         goto handle_error;
     }
 
+#ifdef _MSC_VER
+    extensions = GetProcAddress(screen->driver, __DRI_DRIVER_EXTENSIONS);
+#else
     extensions = dlsym(screen->driver, __DRI_DRIVER_EXTENSIONS);
+#endif
     if (extensions == NULL) {
 	LogMessage(X_ERROR, "AIGLX error: %s exports no extensions (%s)\n",
 		   driverName, dlerror());
@@ -528,7 +552,11 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
  handle_error:
     if (screen->driver)
+#ifdef _MSC_VER
+    FreeLibrary(screen->driver);
+#else
         dlclose(screen->driver);
+#endif
 
     xfree(screen);
 

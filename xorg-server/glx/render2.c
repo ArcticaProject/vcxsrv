@@ -36,6 +36,10 @@
 /* #define NEED_REPLIES */
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+
+#include "glheader.h"
+
 #endif
 
 #include <glxserver.h>

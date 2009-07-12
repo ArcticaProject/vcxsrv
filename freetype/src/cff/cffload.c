@@ -17,12 +17,12 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_INTERNAL_STREAM_H
-#include FT_SERVICE_POSTSCRIPT_CMAPS_H
-#include FT_TRUETYPE_TAGS_H
-#include FT_TYPE1_TABLES_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/services/svpscmap.h>
+#include <freetype/tttags.h>
+#include <freetype/t1tables.h>
 
 #include "cffload.h"
 #include "cffparse.h"

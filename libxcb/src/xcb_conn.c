@@ -28,15 +28,22 @@
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#ifdef _MSC_VER
+#include <X11/Xwinsock.h>
+#define STDERR_FILENO stderr
+#else
+#include <unistd.h>
 #include <netinet/in.h>
 #include <sys/select.h>
+#endif
 #include <fcntl.h>
 #include <errno.h>
 
 #include "xcb.h"
 #include "xcbint.h"
+
+#include <X11/Xtrans/Xtrans.h>
 
 typedef struct {
     uint8_t  status;
@@ -46,8 +53,45 @@ typedef struct {
 
 static const int error_connection = 1;
 
+#ifdef _MSC_VER
+size_t writev(int fildes, const struct iovec *iov, int iovcnt)
+{
+  int i, r;
+  char *p;
+  size_t l, sum;
+
+  /* We should buffer */
+  sum= 0;
+  for (i= 0; i<iovcnt; i++)
+  {
+    p= iov[i].iov_base;
+    l= iov[i].iov_len;
+    while (l > 0)
+    {
+      r= send(fildes, p, l, 0);
+      if (r <= 0)
+      {
+        errno =WSAGetLastError();
+        if(errno == WSAEWOULDBLOCK)
+          errno = EAGAIN;
+        assert(sum == 0);
+        return r;
+      }
+      p += r;
+      l -= r;
+      sum += r;
+    }
+  }
+  return sum;
+}
+#endif
+
 static int set_fd_flags(const int fd)
 {
+#ifdef _MSC_VER
+    unsigned long arg = 1;
+    int ret = ioctlsocket (fd, FIONBIO, &arg);
+#else
     int flags = fcntl(fd, F_GETFL, 0);
     if(flags == -1)
         return 0;
@@ -56,6 +100,7 @@ static int set_fd_flags(const int fd)
         return 0;
     if(fcntl(fd, F_SETFD, FD_CLOEXEC) == -1)
         return 0;
+#endif
     return 1;
 }
 
@@ -338,6 +383,13 @@ int _xcb_conn_wait(xcb_connection_t *c, pthread_cond_t *cond, struct iovec **vec
     _xcb_unlock_io(c);
     do {
 	ret = select(c->fd + 1, &rfds, &wfds, 0, 0);
+	if (ret==SOCKET_ERROR)
+	{
+	   ret=-1;
+           errno = WSAGetLastError();
+	   if (errno == WSAEINTR)
+		   errno=EINTR;
+	}
     } while (ret == -1 && errno == EINTR);
     if (ret < 0)
     {

@@ -35,7 +35,11 @@
 #define EPHYR_DBG(x, a...) \
  fprintf(stderr, __FILE__ ":%d,%s() " x "\n", __LINE__, __func__, ##a)
 #else
+#ifdef _MSC_VER
+#define EPHYR_DBG()
+#else
 #define EPHYR_DBG(x, a...) do {} while (0) 
+#endif
 #endif
 
 typedef struct EphyrHostXVars  EphyrHostXVars;

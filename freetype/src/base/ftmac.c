@@ -69,7 +69,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TRUETYPE_TAGS_H
-#include FT_INTERNAL_STREAM_H
+#include <freetype/internal/ftstream.h>
 #include "ftbase.h"
 
   /* This is for Mac OS X.  Without redefinition, OS_INLINE */

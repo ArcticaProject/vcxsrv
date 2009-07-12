@@ -42,7 +42,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "servermd.h"
 #include "swaprep.h"
 #define _WINDOWSWM_SERVER_
-#include "windowswmstr.h"
+#include <X11/extensions/windowswmstr.h>
 
 static int WMErrorBase;
 

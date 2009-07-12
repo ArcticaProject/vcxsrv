@@ -37,13 +37,9 @@ from The Open Group.
 #include <X11/fonts/bitmap.h>
 #include <X11/fonts/bdfint.h>
 
-#ifndef MAXSHORT
 #define MAXSHORT    32767
-#endif
 
-#ifndef MINSHORT
 #define MINSHORT    -32768
-#endif
 
 static xCharInfo initMinMetrics = {
 MAXSHORT, MAXSHORT, MAXSHORT, MAXSHORT, MAXSHORT, 0xFFFF};

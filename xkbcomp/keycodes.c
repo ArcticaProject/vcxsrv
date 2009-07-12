@@ -264,6 +264,8 @@ InitKeyNamesInfo(KeyNamesInfo *info)
     info->name= NULL;
     info->leds= NULL;
     info->aliases= NULL;
+    info->fileID=-1;
+    info->merge=0;
     ClearKeyNamesInfo(info);
     info->errorCount= 0;
     return;

@@ -40,7 +40,7 @@ in this Software without prior written authorization from The Open Group.
 
 #ifndef KEYSYMDB
 #ifndef XKEYSYMDB
-#define KEYSYMDB "/usr/lib/X11/XKeysymDB"
+#define KEYSYMDB "XKeysymDB"
 #else
 #define KEYSYMDB XKEYSYMDB
 #endif

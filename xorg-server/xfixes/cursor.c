@@ -42,6 +42,8 @@
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+#define XFIXES
 #endif
 
 #include "xfixesint.h"

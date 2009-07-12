@@ -50,9 +50,7 @@ extern Bool PanoramiXExtensionDisabledHack;
 extern Bool noBigReqExtension;
 #endif
 
-#ifdef COMPOSITE
 extern Bool noCompositeExtension;
-#endif
 
 #ifdef DAMAGE
 extern Bool noDamageExtension;

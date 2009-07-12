@@ -21,8 +21,8 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_TRUETYPE_TYPES_H
-#include FT_INTERNAL_VALIDATE_H
+#include <freetype/internal/tttypes.h>
+#include <freetype/internal/ftvalid.h>
 #include FT_SERVICE_TT_CMAP_H
 
 FT_BEGIN_HEADER

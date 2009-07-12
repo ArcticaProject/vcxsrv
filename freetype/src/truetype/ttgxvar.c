@@ -43,10 +43,10 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
+#include <freetype/internal/ftdebug.h>
 #include FT_CONFIG_CONFIG_H
-#include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_SFNT_H
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/sfnt.h>
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_MULTIPLE_MASTERS_H

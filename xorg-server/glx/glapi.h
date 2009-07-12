@@ -46,6 +46,7 @@
 
 
 #include "GL/gl.h"
+#include "GL/glext.h"
 #include "glapitable.h"
 #include "glthread.h"
 

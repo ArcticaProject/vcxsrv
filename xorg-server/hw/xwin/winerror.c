@@ -33,17 +33,17 @@
 #endif
 #ifdef XVENDORNAME
 #define VENDOR_STRING XVENDORNAME
-#define VERSION_STRING XORG_RELEASE
 #define VENDOR_CONTACT BUILDERADDR
 #endif
-
+#include <../xfree86/common/xorgVersion.h>
 #include "win.h"
 
 /* References to external symbols */
 extern char *		g_pszCommandLine;
 extern char *		g_pszLogFile;
 extern Bool		g_fSilentFatalError;
-
+extern Bool		g_fSilentDupError;
+extern Bool		g_fLogInited;
 
 #ifdef DDXOSVERRORF
 /* Prototype */
@@ -61,6 +61,24 @@ OsVendorVErrorF (const char *pszFormat, va_list va_args)
   /* Lock the printing mutex */
   pthread_mutex_lock (&s_pmPrinting);
 #endif
+
+  /*
+     If we want to silence it,
+     detect if we are going to abort due to duplication error
+  */
+  if (g_fSilentDupError)
+    {
+      if ((strcmp(pszFormat,
+		  "InitOutput - Duplicate invocation on display "
+		  "number: %s.  Exiting.\n") == 0)
+	  || (strcmp(pszFormat,
+		     "Server is already active for display %s\n%s %s\n%s\n") == 0)
+	  || (strcmp(pszFormat,
+		     "MakeAllCOTSServerListeners: server already running\n") == 0))
+	{
+	  g_fSilentFatalError = TRUE;
+	}
+    }
 
   /* Print the error message to a log file, could be stderr */
   LogVWrite (0, pszFormat, va_args);
@@ -80,7 +98,6 @@ OsVendorVErrorF (const char *pszFormat, va_list va_args)
  *
  * Attempt to do last-ditch, safe, important cleanup here.
  */
-#ifdef DDXOSFATALERROR
 void
 OsVendorFatalError (void)
 {
@@ -88,12 +105,17 @@ OsVendorFatalError (void)
   if (g_fSilentFatalError)
     return;
 
+  if (!g_fLogInited) {
+    g_fLogInited = TRUE;
+    g_pszLogFile = LogInit (g_pszLogFile, NULL);
+  }
+  LogClose ();
+
   winMessageBoxF (
           "A fatal error has occurred and " PROJECT_NAME " will now exit.\n" \
 		  "Please open %s for more information.\n",
 		  MB_ICONERROR, (g_pszLogFile?g_pszLogFile:"the logfile"));
 }
-#endif
 
 
 /*
@@ -117,13 +139,15 @@ winMessageBoxF (const char *pszError, UINT uType, ...)
 #define MESSAGEBOXF \
 	"%s\n" \
 	"Vendor: %s\n" \
-	"Release: %s\n" \
+	"Release: %d.%d.%d.%d (%d)\n" \
 	"Contact: %s\n" \
 	"XWin was started with the following command-line:\n\n" \
 	"%s\n"
 
   pszMsgBox = Xprintf (MESSAGEBOXF,
-	   pszErrorF, VENDOR_STRING, VERSION_STRING, VENDOR_CONTACT,
+	   pszErrorF, VENDOR_STRING,
+		       XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, BUILD_DATE,
+		       VENDOR_CONTACT,
 	   g_pszCommandLine);
   if (!pszMsgBox)
     goto winMessageBoxF_Cleanup;

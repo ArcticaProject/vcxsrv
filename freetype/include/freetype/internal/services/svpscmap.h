@@ -19,7 +19,7 @@
 #ifndef __SVPSCMAP_H__
 #define __SVPSCMAP_H__
 
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/internal/ftobjs.h>
 
 
 FT_BEGIN_HEADER

@@ -37,6 +37,7 @@ from The Open Group.
 
 #ifdef WIN32
 #define _XLIBINT_
+#include <X11\Xw32defs.h>
 #endif
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -562,6 +563,11 @@ _XWaitForReadable(
     return 0;
 }
 #endif /* !USE_XCB */
+
+#ifdef _MSC_VER
+#undef min
+#define min __min
+#endif
 
 static int sync_hazard(Display *dpy)
 {

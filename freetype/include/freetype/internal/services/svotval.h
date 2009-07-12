@@ -20,7 +20,7 @@
 #define __SVOTVAL_H__
 
 #include FT_OPENTYPE_VALIDATE_H
-#include FT_INTERNAL_VALIDATE_H
+#include <freetype/internal/ftvalid.h>
 
 FT_BEGIN_HEADER
 

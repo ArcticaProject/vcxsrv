@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 
 /* Call internal connection callbacks for any fds that are currently
  * ready to read. This function will not block unless one of the
@@ -160,6 +161,7 @@ static void process_responses(Display *dpy, int wait_for_first_event, xcb_generi
 				dpy->xcb->pending_requests = req->next;
 				if(!dpy->xcb->pending_requests)
 					dpy->xcb->pending_requests_tail = &dpy->xcb->pending_requests;
+				xcondition_clear(&(req->condition));
 				free(req);
 				reply = error;
 			}

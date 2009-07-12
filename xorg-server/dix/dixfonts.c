@@ -127,6 +127,7 @@ SetDefaultFont(char *defaultfontname)
     int         err;
     FontPtr     pf;
     XID         fid;
+    static FontPtr last_pf;
 
     fid = FakeClientID(0);
     err = OpenFont(serverClient, fid, FontLoadAll | FontOpenSync,
@@ -134,9 +135,10 @@ SetDefaultFont(char *defaultfontname)
     if (err != Success)
 	return FALSE;
     pf = (FontPtr) LookupIDByType(fid, RT_FONT);
-    if (pf == (FontPtr) NULL)
+    if (pf != (FontPtr) NULL) last_pf = pf;
+    if (last_pf == (FontPtr) NULL)
 	return FALSE;
-    defaultFont = pf;
+    defaultFont = last_pf;
     return TRUE;
 }
 
@@ -1902,22 +1904,15 @@ InitFonts (void)
 {
     patternCache = MakeFontPatternCache();
 
-#ifndef BUILTIN_FONTS
     if (screenInfo.numScreens > screenInfo.numVideoScreens) {
 	PrinterFontRegisterFpeFunctions();
 	FontFileCheckRegisterFpeFunctions();
 	check_fs_register_fpe_functions();
     } else 
-#endif
     {
-#ifdef BUILTIN_FONTS
         BuiltinRegisterFpeFunctions();
-#else
 	FontFileRegisterFpeFunctions();
-#endif
-#ifndef NOFONTSERVERACCESS
 	fs_register_fpe_functions();
-#endif
     }
 }
 

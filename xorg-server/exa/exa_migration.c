@@ -169,7 +169,7 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 		static Bool firsttime = TRUE;
 
 		if (firsttime) {
-		    ErrorF("%s: Pending damage region empty!\n", __func__);
+		    ErrorF("%s: Pending damage region empty!\n", __FUNCTION__ );
 		    firsttime = FALSE;
 		}
 	    }
@@ -354,8 +354,8 @@ exaDoMoveInPixmap (ExaMigrationPtr migrate)
 void
 exaMoveInPixmap (PixmapPtr pPixmap)
 {
-    static ExaMigrationRec migrate = { .as_dst = FALSE, .as_src = TRUE,
-				       .pReg = NULL };
+    static ExaMigrationRec migrate = { FALSE, TRUE, NULL, 
+				       NULL };
 
     migrate.pPix = pPixmap;
     exaDoMoveInPixmap (&migrate);
@@ -395,8 +395,8 @@ exaDoMoveOutPixmap (ExaMigrationPtr migrate)
 void
 exaMoveOutPixmap (PixmapPtr pPixmap)
 {
-    static ExaMigrationRec migrate = { .as_dst = FALSE, .as_src = TRUE,
-				       .pReg = NULL };
+    static ExaMigrationRec migrate = { FALSE, TRUE, NULL,
+				       NULL };
 
     migrate.pPix = pPixmap;
     exaDoMoveOutPixmap (&migrate);
@@ -589,7 +589,7 @@ exaDoMigration (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 	for (i = 0; i < npixmaps; i++) {
 	    if (!exaPixmapIsDirty (pixmaps[i].pPix) &&
 		!exaAssertNotDirty (pixmaps[i].pPix))
-		ErrorF("%s: Pixmap %d dirty but not marked as such!\n", __func__, i);
+		ErrorF("%s: Pixmap %d dirty but not marked as such!\n", __FUNCTION__ , i);
 	}
     }
     /* If anything is pinned in system memory, we won't be able to

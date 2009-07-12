@@ -29,7 +29,7 @@
 #define __SVGXVAL_H__
 
 #include FT_GX_VALIDATE_H
-#include FT_INTERNAL_VALIDATE_H
+#include <freetype/internal/ftvalid.h>
 
 FT_BEGIN_HEADER
 

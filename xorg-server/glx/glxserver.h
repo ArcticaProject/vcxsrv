@@ -59,6 +59,7 @@
 
 #define GL_GLEXT_PROTOTYPES /* we want prototypes */
 #include <GL/gl.h>
+#include <GL/glext.h>
 #include <GL/glxproto.h>
 #include <GL/glxint.h>
 

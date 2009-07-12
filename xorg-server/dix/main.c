@@ -248,6 +248,7 @@ main(int argc, char *argv[], char *envp[])
     char	*xauthfile;
     HWEventQueueType	alwaysCheckForInput[2];
 
+    ptw32_processInitialize();
     display = "0";
 
     InitGlobals();

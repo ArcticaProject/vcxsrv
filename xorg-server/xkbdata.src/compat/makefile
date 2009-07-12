@@ -1,0 +1,33 @@
+ifeq ($(MAKESERVER),1)
+$(error Please do not specify MAKESERVER=1)
+endif
+
+THISDIR=compat
+
+DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
+$(DESTDIR):
+	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
+
+dist_xkbdata_compat_DATA = \
+	accessx \
+	basic \
+	complete \
+	default \
+	iso9995 \
+	japan \
+	keypad \
+	ledcaps \
+	lednum \
+	ledscroll \
+	misc \
+	mousekeys \
+	norepeat \
+	pc \
+	pc98 \
+	README \
+	xfree86 \
+	xtest
+
+DATA_FILES=$(dist_xkbdata_compat_DATA:%=$(DESTDIR)\%)
+
+include ..\xkbrules.mak

@@ -21,8 +21,8 @@
 #include "ttload.h"
 #include "ttcmap.h"
 #include "ttkern.h"
-#include FT_INTERNAL_SFNT_H
-#include FT_INTERNAL_DEBUG_H
+#include <freetype/internal/sfnt.h>
+#include <freetype/internal/ftdebug.h>
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H

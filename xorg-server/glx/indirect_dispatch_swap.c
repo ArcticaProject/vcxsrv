@@ -24,6 +24,13 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#ifdef HAVE_DIX_CONFIG_H
+#include <dix-config.h>
+#else
+
+#include "glheader.h"
+
+#endif
 
 #include <X11/Xmd.h>
 #include <GL/gl.h>

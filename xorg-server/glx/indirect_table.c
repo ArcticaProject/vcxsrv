@@ -25,6 +25,10 @@
  * SOFTWARE.
  */
 
+#ifndef HAVE_DIX_CONFIG_H
+#include "glheader.h"
+#endif
+
 #include <inttypes.h>
 #include "glxserver.h"
 #include "glxext.h"

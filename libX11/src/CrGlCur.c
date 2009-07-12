@@ -49,7 +49,13 @@ in this Software without prior written authorization from The Open Group.
 #if defined(hpux)
 typedef shl_dt	XModuleType;
 #else
+#ifdef _MSC_VER
+#include <X11/XWindows.h>
+typedef HANDLE XModuleType;
+#define dlsym GetProcAddress
+#else
 typedef void *XModuleType;
+#endif
 #endif
 
 #ifndef LIBXCURSOR
@@ -69,7 +75,11 @@ open_library (void)
 #if defined(hpux)
 	module = shl_load(library, BIND_DEFERRED, 0L);
 #else
+#ifdef _MSC_VER
+	module =  LoadLibrary(library);
+#else
 	module =  dlopen(library, RTLD_LAZY);
+#endif
 #endif
 	if (module)
 	    return module;

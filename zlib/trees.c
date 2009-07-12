@@ -33,6 +33,8 @@
 
 /* #define GEN_TREES_H */
 
+#include <stdio.h>
+
 #include "deflate.h"
 
 #ifdef DEBUG

@@ -34,6 +34,7 @@
 
 #ifdef WIN32
 #define _WILLWINSOCK_
+#include	"X11/Xwinsock.h"
 #include	"X11/Xwindows.h"
 #endif
 

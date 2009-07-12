@@ -1,0 +1,64 @@
+default: all
+.PHONY : default
+
+#define some gnu make functions used in conditional compilation
+EQ =$(if $(subst $(1)_,,$(2)_),0,1)
+NE =$(if $(subst $(1)_,,$(2)_),1,0)
+OR =$(subst 10,1,$(findstring 1,$(1))0)
+AND=$(subst 01,0,$(findstring 0,$(1))1)
+NOT=$(if $(findstring 0,$(1)),1,0)
+
+CC        ?= cl /nologo
+CPP       ?= $(CC)
+CCFLAGS   += -c -GF #-Wall
+
+#CCFLAGS   += -wd4996 -wd4738
+LINK      ?= link /nologo
+LINKFLAGS += /INCREMENTAL:NO /MACHINE:X86
+AR        ?= lib /nologo
+RC        ?= rc
+RCFLAGS   ?= /l 0x409
+
+SKIPHEADERS=string map stdlib.h stddef.h string.h stdio.h windows.h stdarg.h
+
+ifeq ($(MAKESERVER),1)
+OBJDIRPREFIX=serv
+DEFINES += XKB_IN_SERVER XFree86Server HAVE_DIX_CONFIG_H 
+else
+DEFINES += XKB
+endif
+
+ifeq ($(DEBUG),1)
+CCFLAGS   += -MDd -RTCc -RTC1 -Od -GS -GR -Zi
+LINKFLAGS += /DEBUG
+OBJDIR ?= obj\$(OBJDIRPREFIX)debug
+DEFINES += _DEBUG DEBUG
+RCFLAGS += -d "_DEBUG"
+else
+CCFLAGS   += -MD -O2 -Ob2 -Oi -Ox -Oy -Ot
+DEFINES   +=  NDEBUG
+LINKFLAGS += /OPT:REF /OPT:ICF
+OBJDIR ?= obj\$(OBJDIRPREFIX)release
+RCFLAGS += -d "NDEBUG"
+endif
+
+
+
+DEFINES += WIN32 _WIN32 _WINDOWS WINDOWS _MBCS __i386__ __MINGW32__ OPEN_MAX=256 PATH_MAX=256 _TIMEVAL_DEFINED mode_t=int __STDC__ X_LOCALE
+DEFINES += FAKEIT VENDOR_NAME="\"The_MH/X_Project\"" VENDOR_RELEASE="(((1)*10000000)+((5)*100000)+((3)*1000)+0)" HAVE_CONFIG_H _BSD_SOURCE
+
+TOPSRCDIR=$(MHMAKECONF)\xorg-server
+
+INCLUDES += . $(MHMAKECONF)\openssl\inc32 $(MHMAKECONF) $(MHMAKECONF)\pixman-1 $(MHMAKECONF)\pthreads
+INCLUDES += $(TOPSRCDIR)\include $(TOPSRCDIR)\mi $(TOPSRCDIR)\mfb $(TOPSRCDIR)\hw\xfree86\common $(TOPSRCDIR)\render $(TOPSRCDIR)\miext\damage
+INCLUDES += $(TOPSRCDIR)\damageext $(TOPSRCDIR)\randr $(TOPSRCDIR)\xfixes $(TOPSRCDIR)\Xi $(TOPSRCDIR)\fb $(TOPSRCDIR)\miext\cw
+INCLUDES += $(TOPSRCDIR)\miext\shadow $(MHMAKECONF)\zlib
+INCLUDES += $(MHMAKECONF)\include $(TOPSRCDIR)\Xext $(MHMAKECONF)\pixman\pixman
+
+SYSTEMLIBS ?= odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib \
+              oleaut32.lib uuid.lib odbc32.lib odbccp32.lib setupapi.lib winmm.lib ws2_32.lib wmcodecdspuuid.lib comctl32.lib
+
+CPPFLAGS ?= $(CCFLAGS) -EHa
+
+all: $(OBJDIR)
+

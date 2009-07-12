@@ -62,6 +62,10 @@ Sun Microsystems, Inc. or its licensors is granted.
 #define AllocLocalBuf(length)	(length > BUFSIZ ? (char *)Xmalloc(length) : local_buf)
 #define FreeLocalBuf(ptr)	if (ptr != local_buf) Xfree(ptr)
 
+#ifdef _MSC_VER
+typedef long ssize_t;
+#endif
+
 typedef struct _FontDataRec {
     char *name;
 } FontDataRec, *FontData;

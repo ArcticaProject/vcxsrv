@@ -7,6 +7,7 @@
 #include <assert.h>
 #include "xcbext.h"
 #include "xproto.h"
+#include <X11/Xtrans/Xtrans.h>
 
 
 /*****************************************************************************

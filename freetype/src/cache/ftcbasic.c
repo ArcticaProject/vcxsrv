@@ -21,7 +21,7 @@
 #include "ftcglyph.h"
 #include "ftcimage.h"
 #include "ftcsbits.h"
-#include FT_INTERNAL_MEMORY_H
+#include <freetype/internal/ftmemory.h>
 
 #include "ftccback.h"
 #include "ftcerror.h"

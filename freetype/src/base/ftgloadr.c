@@ -17,9 +17,9 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_GLYPH_LOADER_H
-#include FT_INTERNAL_MEMORY_H
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/internal/ftgloadr.h>
+#include <freetype/internal/ftmemory.h>
+#include <freetype/internal/ftobjs.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gloader

@@ -22,6 +22,7 @@
  
 #ifdef HAVE_CONFIG_H
 #include <config.h>
+#include <dix-config.h>
 #endif
 #define FONT_t
 #define TRANS_CLIENT

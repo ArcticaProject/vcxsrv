@@ -20,7 +20,7 @@
 #define __PFRCMAP_H__
 
 #include <ft2build.h>
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/internal/ftobjs.h>
 #include "pfrtypes.h"
 
 

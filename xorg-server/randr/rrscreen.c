@@ -22,6 +22,11 @@
 
 #include "randrstr.h"
 
+/* From render.h */
+#ifndef SubPixelUnknown
+#define SubPixelUnknown 0
+#endif
+
 extern char	*ConnectionInfo;
 
 static int padlength[4] = {0, 3, 2, 1};

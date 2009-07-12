@@ -1,5 +1,6 @@
 /*
  *Copyright (C) 2003-2004 Harold L Hunt II All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2008
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -20,12 +21,13 @@
  *CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  *WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *Except as contained in this notice, the name of Harold L Hunt II
- *shall not be used in advertising or otherwise to promote the sale, use
- *or other dealings in this Software without prior written authorization
- *from Harold L Hunt II.
+ *Except as contained in this notice, the name of the copyright holder(s)
+ *and author(s) shall not be used in advertising or otherwise to promote
+ *the sale, use or other dealings in this Software without prior written
+ *authorization from the copyright holder(s) and author(s).
  *
  * Authors:	Harold L Hunt II
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -51,18 +53,25 @@ winClipboardFlushXEvents (HWND hwnd,
 			  Display *pDisplay,
 			  Bool fUseUnicode)
 {
-  Atom			atomLocalProperty = XInternAtom (pDisplay,
-							 WIN_LOCAL_PROPERTY,
-							 False);
-  Atom			atomUTF8String = XInternAtom (pDisplay,
-						      "UTF8_STRING",
-						      False);
-  Atom			atomCompoundText = XInternAtom (pDisplay,
-							"COMPOUND_TEXT",
-							False);
-  Atom			atomTargets = XInternAtom (pDisplay,
-						   "TARGETS",
-						   False);
+  static Atom atomLocalProperty, atomCompoundText;
+  static Atom atomUTF8String, atomTargets;
+
+  if (atomLocalProperty == None)
+    atomLocalProperty = XInternAtom (pDisplay,
+				     WIN_LOCAL_PROPERTY,
+				     False);
+  if (atomUTF8String == None)
+    atomUTF8String = XInternAtom (pDisplay,
+				  "UTF8_STRING",
+				  False);
+  if (atomCompoundText == None)
+    atomCompoundText = XInternAtom (pDisplay,
+				    "COMPOUND_TEXT",
+				    False);
+  if (atomTargets == None)
+    atomTargets = XInternAtom (pDisplay,
+			       "TARGETS",
+			       False);
 
   /* Process all pending events */
   while (XPending (pDisplay))
@@ -183,6 +192,7 @@ winClipboardFlushXEvents (HWND hwnd,
 	    }
 
 	  /* Check that clipboard format is available */
+	  XLockDisplay (pDisplay);
 	  if (fUseUnicode
 	      && !IsClipboardFormatAvailable (CF_UNICODETEXT))
 	    {
@@ -190,6 +200,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		      "available from Win32 clipboard.  Aborting.\n");
 
 	      /* Abort */
+	      XUnlockDisplay (pDisplay);
 	      fAbort = TRUE;
 	      goto winClipboardFlushXEvents_SelectionRequest_Done;
 	    }
@@ -200,6 +211,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		      "available from Win32 clipboard.  Aborting.\n");
 
 	      /* Abort */
+	      XUnlockDisplay (pDisplay);
 	      fAbort = TRUE;
 	      goto winClipboardFlushXEvents_SelectionRequest_Done;
 	    }
@@ -218,6 +230,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		      GetLastError ());
 
 	      /* Abort */
+	      XUnlockDisplay (pDisplay);
 	      fAbort = TRUE;
 	      goto winClipboardFlushXEvents_SelectionRequest_Done;
 	    }
@@ -259,6 +272,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		      GetLastError ());
 
 	      /* Abort */
+	      XUnlockDisplay (pDisplay);
 	      fAbort = TRUE;
 	      goto winClipboardFlushXEvents_SelectionRequest_Done;
 	    }
@@ -294,6 +308,7 @@ winClipboardFlushXEvents (HWND hwnd,
 
 	  /* Convert DOS string to UNIX string */
 	  winClipboardDOStoUNIX (pszConvertData, strlen (pszConvertData));
+	  XUnlockDisplay (pDisplay);
 
 	  /* Setup our text list */
 	  pszTextList[0] = pszConvertData;
@@ -301,6 +316,7 @@ winClipboardFlushXEvents (HWND hwnd,
 
 	  /* Initialize the text property */
 	  xtpText.value = NULL;
+	  xtpText.nitems = 0;
 
 	  /* Create the text property from the text list */
 	  if (fUseUnicode)
@@ -361,10 +377,13 @@ winClipboardFlushXEvents (HWND hwnd,
 	  /* Release the clipboard data */
 	  GlobalUnlock (hGlobal);
 	  pszGlobalData = NULL;
+	  fCloseClipboard = FALSE;
+	  CloseClipboard ();
 
 	  /* Clean up */
 	  XFree (xtpText.value);
 	  xtpText.value = NULL;
+	  xtpText.nitems = 0;
 
 	  /* Setup selection notify event */
 	  eventSelection.type = SelectionNotify;
@@ -395,7 +414,11 @@ winClipboardFlushXEvents (HWND hwnd,
 	winClipboardFlushXEvents_SelectionRequest_Done:
 	  /* Free allocated resources */
 	  if (xtpText.value)
+	  {
 	    XFree (xtpText.value);
+	    xtpText.value = NULL;
+	    xtpText.nitems = 0;
+	  }
 	  if (pszConvertData)
 	    free (pszConvertData);
 	  if (hGlobal && pszGlobalData)
@@ -436,7 +459,10 @@ winClipboardFlushXEvents (HWND hwnd,
 
 	  /* Close clipboard if it was opened */
 	  if (fCloseClipboard)
+	  {
+	    fCloseClipboard = FALSE;
 	    CloseClipboard ();
+	  }
 	  break;
 
 
@@ -618,11 +644,12 @@ winClipboardFlushXEvents (HWND hwnd,
 	      /* Conversion succeeded or some unconvertible characters */
 	      if (ppszTextList != NULL)
 		{
+		  iReturnDataLen = 0;
 		  for (i = 0; i < iCount; i++)
 		    {
 		      iReturnDataLen += strlen(ppszTextList[i]);
 		    }
-		  pszReturnData = malloc (iReturnDataLen + 1);
+		  pszReturnData = (char *) malloc (iReturnDataLen + 1);
 		  pszReturnData[0] = '\0';
 		  for (i = 0; i < iCount; i++)
 		    {
@@ -633,7 +660,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		{
 		  ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
 			  "X*TextPropertyToTextList list_return is NULL.\n");
-		  pszReturnData = malloc (1);
+		  pszReturnData = (char *) malloc (1);
 		  pszReturnData[0] = '\0';
 		}
 	    }
@@ -653,7 +680,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		  ErrorF ("%d", iReturn);
 		  break;
 		}
-	      pszReturnData = malloc (1);
+	      pszReturnData = (char *) malloc (1);
 	      pszReturnData[0] = '\0';
 	    }
 
@@ -663,9 +690,11 @@ winClipboardFlushXEvents (HWND hwnd,
 	  ppszTextList = NULL;
 	  XFree (xtpText.value);
 	  xtpText.value = NULL;
+	  xtpText.nitems = 0;
 
 	  /* Convert the X clipboard string to DOS format */
-	  winClipboardUNIXtoDOS (&pszReturnData, strlen (pszReturnData));
+	  XLockDisplay (pDisplay);
+	  winClipboardUNIXtoDOS ((unsigned char **)&pszReturnData, strlen (pszReturnData));
 
 	  if (fUseUnicode)
 	    {
@@ -710,6 +739,8 @@ winClipboardFlushXEvents (HWND hwnd,
 	      /* Allocate global memory for the X clipboard data */
 	      hGlobal = GlobalAlloc (GMEM_MOVEABLE, iConvertDataLen);
 	    }
+
+	  free (pszReturnData);
 
 	  /* Check that global memory was allocated */
 	  if (!hGlobal)
@@ -770,11 +801,16 @@ winClipboardFlushXEvents (HWND hwnd,
 	   */
 
 	winClipboardFlushXEvents_SelectionNotify_Done:
+	  XUnlockDisplay (pDisplay);
 	  /* Free allocated resources */
 	  if (ppszTextList)
 	    XFreeStringList (ppszTextList);
 	  if (xtpText.value)
+	  {
 	    XFree (xtpText.value);
+	    xtpText.value = NULL;
+	    xtpText.nitems = 0;
+	  }
 	  if (pszConvertData)
 	    free (pszConvertData);
 	  if (pwszUnicodeStr)

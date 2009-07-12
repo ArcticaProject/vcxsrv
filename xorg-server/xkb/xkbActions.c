@@ -1031,14 +1031,14 @@ _XkbFilterDeviceBtn(	XkbSrvInfoPtr	xkbi,
 DeviceIntPtr	dev;
 int		button;
 
-    if (dev == inputInfo.keyboard)
-        return 0;
-
     if (filter->keycode==0) {		/* initial press */
 	_XkbLookupButtonDevice(&dev, pAction->devbtn.device, serverClient,
 			       DixUnknownAccess, &button);
 	if (!dev || !dev->public.on || dev == inputInfo.pointer)
 	    return 1;
+
+    if (dev == inputInfo.keyboard)
+        return 0;
 
 	button= pAction->devbtn.button;
 	if ((button<1)||(button>dev->button->numButtons))

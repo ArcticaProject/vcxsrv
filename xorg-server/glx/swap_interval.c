@@ -25,6 +25,10 @@
 #define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+
+#include "glheader.h"
+
 #endif
 
 #include "glxserver.h"
@@ -54,7 +58,7 @@ int DoSwapInterval(__GLXclientState *cl, GLbyte *pc, int do_swap)
 
     cx = __glXLookupContextByTag(cl, tag);
 
-    LogMessage(X_ERROR, "%s: cx = %p, GLX screen = %p\n", __func__,
+    LogMessage(X_ERROR, "%s: cx = %p, GLX screen = %p\n", __FUNCTION__ ,
 	       cx, (cx == NULL) ? NULL : cx->pGlxScreen);
     if ((cx == NULL) || (cx->pGlxScreen == NULL)) {
 	client->errorValue = tag;

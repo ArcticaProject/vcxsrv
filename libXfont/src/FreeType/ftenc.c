@@ -38,7 +38,7 @@ THE SOFTWARE.
 
 #include <X11/fonts/fontmisc.h>
 #include <X11/fonts/fontenc.h>
-#include <ft2build.h>
+#include <config/ftheader.h>
 #include FT_FREETYPE_H
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TABLES_H

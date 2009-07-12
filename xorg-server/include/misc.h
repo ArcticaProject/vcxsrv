@@ -164,9 +164,9 @@ typedef struct _xReq *xReqPtr;
 
 #include <math.h>
 #undef MAXSHORT
-#define MAXSHORT SHRT_MAX
+#define MAXSHORT 32767
 #undef MINSHORT
-#define MINSHORT SHRT_MIN
+#define MINSHORT -32768
 #undef MAXINT
 #define MAXINT INT_MAX
 #undef MININT

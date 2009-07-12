@@ -28,6 +28,8 @@ in this Software without prior written authorization from The Open Group.
 #define NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+#define SHAPE
 #endif
 
 #include <stdlib.h>

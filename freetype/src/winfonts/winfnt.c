@@ -20,9 +20,9 @@
 
 #include <ft2build.h>
 #include FT_WINFONTS_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/ftobjs.h>
 
 #include "winfnt.h"
 #include "fnterrs.h"

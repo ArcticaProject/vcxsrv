@@ -28,9 +28,13 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
+#ifndef _MSC_VER
+#include <unistd.h>
 #include <sys/select.h>
+#else
+#include <X11/Xwinsock.h>
+#endif
 #include <errno.h>
 
 #include "xcb.h"
@@ -233,6 +237,37 @@ static void free_reply_list(struct reply_list *head)
 
 static int read_block(const int fd, void *buf, const size_t len)
 {
+#ifdef _MSC_VER
+    int done = 0;
+    while(done < len)
+    {
+	    int Err;
+        int ret = recv(fd, ((char *) buf) + done, len - done,0);
+        if(ret > 0)
+            done += ret;
+	else
+		Err=WSAGetLastError();
+        if(ret < 0 && Err == WSAEWOULDBLOCK)
+        {
+            fd_set fds;
+            FD_ZERO(&fds);
+            FD_SET(fd, &fds);
+	    do {
+		ret = select(fd + 1, &fds, 0, 0, 0);
+	if (ret==SOCKET_ERROR)
+	{
+	   ret=-1;
+           errno = WSAGetLastError();
+	   if (errno == WSAEINTR)
+		   errno=EINTR;
+	}
+	    } while (ret == -1 && errno == EINTR);
+        }
+        if(ret <= 0)
+            return ret;
+    }
+    return len;
+#else
     int done = 0;
     while(done < len)
     {
@@ -252,6 +287,7 @@ static int read_block(const int fd, void *buf, const size_t len)
             return ret;
     }
     return len;
+#endif
 }
 
 static int poll_for_reply(xcb_connection_t *c, unsigned int request, void **reply, xcb_generic_error_t **error)
@@ -495,11 +531,16 @@ int _xcb_in_expect_reply(xcb_connection_t *c, unsigned int request, enum workaro
 
 int _xcb_in_read(xcb_connection_t *c)
 {
-    int n = read(c->fd, c->in.queue + c->in.queue_len, sizeof(c->in.queue) - c->in.queue_len);
+    int n = recv(c->fd, c->in.queue + c->in.queue_len, sizeof(c->in.queue) - c->in.queue_len,0);  //MH
     if(n > 0)
         c->in.queue_len += n;
     while(read_packet(c))
         /* empty */;
+#ifdef _MSC_VER
+    errno=WSAGetLastError();
+    if (errno==WSAEWOULDBLOCK)
+	    errno=EAGAIN;
+#endif
     if((n > 0) || (n < 0 && errno == EAGAIN))
         return 1;
     _xcb_conn_shutdown(c);

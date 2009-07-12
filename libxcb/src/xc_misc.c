@@ -6,6 +6,7 @@
 #include <assert.h>
 #include "xcbext.h"
 #include "xc_misc.h"
+#include <X11/Xtrans/Xtrans.h>
 
 xcb_extension_t xcb_xc_misc_id = { "XC-MISC" };
 

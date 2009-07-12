@@ -49,10 +49,6 @@
 
 static Bool g_winKeyState[NUM_KEYCODES];
 
-/* Stored to get internal mode key states.  Must be read-only.  */
-static unsigned short const *g_winInternalModeKeyStatesPtr = NULL;
-
-
 /*
  * Local prototypes
  */
@@ -83,6 +79,20 @@ winTranslateKey (WPARAM wParam, LPARAM lParam, int *piScanCode)
   int		iKeyFixup = g_iKeyMap[wParam * WIN_KEYMAP_COLS + 1];
   int		iKeyFixupEx = g_iKeyMap[wParam * WIN_KEYMAP_COLS + 2];
   int		iParamScanCode = LOBYTE (HIWORD (lParam));
+
+/* WM_ key messages faked by Vista speech recognition (WSR) don't have a
+ * scan code.
+ *
+ * Vocola 3 (Rick Mohr's supplement to WSR) uses
+ * System.Windows.Forms.SendKeys.SendWait(), which appears always to give a
+ * scan code of 1
+ */
+  if (iParamScanCode <= 1)
+    {
+      iParamScanCode = MapVirtualKeyEx(wParam,
+				       /*MAPVK_VK_TO_VSC*/0,
+				       GetKeyboardLayout(0));
+    }
 
   /* Branch on special extended, special non-extended, or normal key */
   if ((HIWORD (lParam) & KF_EXTENDED) && iKeyFixupEx)
@@ -209,7 +219,6 @@ winKeybdBell (int iPercent, DeviceIntPtr pDeviceInt,
 static void
 winKeybdCtrl (DeviceIntPtr pDevice, KeybdCtrl *pCtrl)
 {
-  g_winInternalModeKeyStatesPtr = &(pDevice->key->state);
 }
 
 
@@ -293,21 +302,23 @@ winKeybdProc (DeviceIntPtr pDeviceInt, int iState)
             {  
               winErrorFVerb (1, "winKeybdProc - Error initializing keyboard AutoRepeat (No XKB)\n");
             }
+
+	  XkbSetExtension(pDeviceInt, ProcessKeyboardEvent);
         }
 #endif
-
-      g_winInternalModeKeyStatesPtr = &(pDeviceInt->key->state);
       break;
       
     case DEVICE_ON: 
       pDevice->on = TRUE;
-      g_winInternalModeKeyStatesPtr = &(pDeviceInt->key->state);
+
+      // immediately copy the state of this keyboard device to the VCK
+      // (which otherwise happens lazily after the first keypress)
+      SwitchCoreKeyboard(pDeviceInt);
       break;
 
     case DEVICE_CLOSE:
     case DEVICE_OFF: 
       pDevice->on = FALSE;
-      g_winInternalModeKeyStatesPtr = NULL;
       break;
     }
 
@@ -369,7 +380,7 @@ winRestoreModeKeyStates ()
   unsigned short	internalKeyStates;
 
   /* X server is being initialized */
-  if (!g_winInternalModeKeyStatesPtr)
+  if (!inputInfo.keyboard)
     return;
 
   /* Only process events if the rootwindow is mapped. The keyboard events
@@ -382,7 +393,9 @@ winRestoreModeKeyStates ()
     mieqProcessInputEvents ();
   
   /* Read the mode key states of our X server */
-  internalKeyStates = *g_winInternalModeKeyStatesPtr;
+  /* (stored in the virtual core keyboard) */
+  internalKeyStates = inputInfo.keyboard->key->state;
+  winDebug("winRestoreModeKeyStates: state %d\n", internalKeyStates);
 
   /* 
    * NOTE: The C XOR operator, ^, will not work here because it is
@@ -580,6 +593,7 @@ winKeybdReleaseKeys ()
 void
 winSendKeyEvent (DWORD dwKey, Bool fDown)
 {
+  DeviceIntPtr pDev;
   xEvent			xCurrentEvent;
 
   /*
@@ -597,7 +611,16 @@ winSendKeyEvent (DWORD dwKey, Bool fDown)
   xCurrentEvent.u.keyButtonPointer.time =
     g_c32LastInputEventTime = GetTickCount ();
   xCurrentEvent.u.u.detail = dwKey + MIN_KEYCODE;
-  mieqEnqueue (&xCurrentEvent);
+
+#if CYGDEBUG
+  ErrorF("winSendKeyEvent: xCurrentEvent.u.u.type: %d, xCurrentEvent.u.u.detail: %d\n",
+          xCurrentEvent.u.u.type, xCurrentEvent.u.u.detail);
+#endif
+  for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+    if ((pDev->coreEvents && pDev != inputInfo.keyboard) && pDev->key)
+      {
+	mieqEnqueue (pDev, &xCurrentEvent);
+      }
 }
 
 BOOL winCheckKeyPressed(WPARAM wParam, LPARAM lParam)

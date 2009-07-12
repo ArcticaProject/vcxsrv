@@ -41,12 +41,8 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/extensions/XKBgeom.h>
 #include <X11/extensions/XKBproto.h>
 
-#ifndef MINSHORT
 #define	MINSHORT	-32768
-#endif
-#ifndef MAXSHORT
 #define	MAXSHORT	32767
-#endif
 
 /***====================================================================***/
 

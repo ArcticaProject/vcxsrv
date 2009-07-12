@@ -38,7 +38,7 @@
 #include "win.h"
 #include <winuser.h>
 #define _WINDOWSWM_SERVER_
-#include "windowswmstr.h"
+#include <X11/extensions/windowswmstr.h>
 #include "dixevents.h"
 #include "winmultiwindowclass.h"
 #include "winprefs.h"
@@ -48,9 +48,6 @@
 /*
  * Constant defines
  */
-
-#define MOUSE_POLLING_INTERVAL		500
-
 #define ULW_COLORKEY	0x00000001
 #define ULW_ALPHA	0x00000002
 #define ULW_OPAQUE	0x00000004

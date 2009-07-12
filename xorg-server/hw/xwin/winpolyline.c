@@ -45,7 +45,7 @@ winPolyLineNativeGDI (DrawablePtr	pDrawable,
     {
     case LineSolid:
       if (pGC->lineWidth == 0)
-	return miZeroLine (pDrawable, pGC, mode, npt, ppt);
+	miZeroLine (pDrawable, pGC, mode, npt, ppt);
       else
 	miWideLine (pDrawable, pGC, mode, npt, ppt);
       break;

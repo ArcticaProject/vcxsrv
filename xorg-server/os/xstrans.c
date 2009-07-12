@@ -5,4 +5,6 @@
 #define TRANS_REOPEN
 #define TRANS_SERVER
 #define XSERV_t
+#define TCPCONN
+
 #include <X11/Xtrans/transport.c>

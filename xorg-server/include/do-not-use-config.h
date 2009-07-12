@@ -643,10 +643,10 @@
 #define XKB 1
 
 /* Path to XKB data */
-#define XKB_BASE_DIRECTORY "/usr/local/share/X11/xkb"
+#define XKB_BASE_DIRECTORY "xkbdata"
 
 /* Path to XKB bin dir */
-#define XKB_BIN_DIRECTORY "/usr/local/bin"
+#define XKB_BIN_DIRECTORY "."
 
 /* Disable XKB per default */
 #define XKB_DFLT_DISABLED 0
@@ -655,7 +655,7 @@
 #define XKB_IN_SERVER 1
 
 /* Path to XKB output dir */
-#define XKM_OUTPUT_DIR "/usr/local/share/X11/xkb/compiled/"
+#define XKM_OUTPUT_DIR "xkbdata/compiled/"
 
 /* Building Xorg server */
 #define XORGSERVER 1

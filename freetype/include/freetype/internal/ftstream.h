@@ -22,7 +22,7 @@
 
 #include <ft2build.h>
 #include FT_SYSTEM_H
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/internal/ftobjs.h>
 
 
 FT_BEGIN_HEADER

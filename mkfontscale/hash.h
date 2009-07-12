@@ -24,6 +24,10 @@
 #ifndef _MKS_HASH_H_
 #define _MKS_HASH_H_ 1
 
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif
+
 typedef struct _HashBucket {
     char *key;
     char *value;

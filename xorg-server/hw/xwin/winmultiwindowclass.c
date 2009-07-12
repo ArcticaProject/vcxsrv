@@ -1,5 +1,6 @@
 /*
  *Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2008
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -26,6 +27,7 @@
  *from the XFree86 Project.
  *
  * Authors:     Earle F. Philhower, III
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -263,7 +265,7 @@ winMultiWindowGetTransientFor (WindowPtr pWin, WindowPtr *ppDaddy)
       if (prop->propertyName == XA_WM_TRANSIENT_FOR)
         {
           if (ppDaddy)
-            memcpy (*ppDaddy, prop->data, sizeof (WindowPtr));
+            memcpy (ppDaddy, prop->data, sizeof (WindowPtr));
           return 1;
         }
       else

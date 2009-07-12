@@ -48,10 +48,12 @@ extern HWND			g_hDlgExit;
  * FIXME: Headers are broken, DEFINE_GUID doesn't work correctly,
  * so we have to redefine it here.
  */
+#ifndef _MSC_VER
 #ifdef DEFINE_GUID
 #undef DEFINE_GUID
 #define DEFINE_GUID(n,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) const GUID n GUID_SECT = {l,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}
 #endif /* DEFINE_GUID */
+#endif
 
 /*
  * FIXME: Headers are broken, IID_IDirectDraw4 has to be defined
@@ -391,7 +393,7 @@ winAllocateFBShadowDDNL (ScreenPtr pScreen)
 	{
 	  winDebug ("winAllocateFBShadowDDNL - Changing video mode\n");
 
-	  /* Change the video mode to the mode requested */
+	  /* Change the video mode to the mode requested, and use the driver default refresh rate on failure */
 	  ddrval = IDirectDraw4_SetDisplayMode (pScreenPriv->pdd4,
 						pScreenInfo->dwWidth,
 						pScreenInfo->dwHeight,
@@ -403,7 +405,20 @@ winAllocateFBShadowDDNL (ScreenPtr pScreen)
 	      ErrorF ("winAllocateFBShadowDDNL - Could not set "
 		      "full screen display mode: %08x\n",
 		      (unsigned int) ddrval);
-	      return FALSE;
+	      ErrorF ("winAllocateFBShadowDDNL - Using default driver refresh rate\n");
+	      ddrval = IDirectDraw4_SetDisplayMode (pScreenPriv->pdd4,
+						    pScreenInfo->dwWidth,
+						    pScreenInfo->dwHeight,
+						    pScreenInfo->dwBPP,
+						    0,
+						    0);
+	      if (FAILED(ddrval))
+		{
+			ErrorF ("winAllocateFBShadowDDNL - Could not set default refresh rate "
+				"full screen display mode: %08x\n",
+				(unsigned int) ddrval);
+			return FALSE;
+		}
 	    }
 	}
       else
@@ -584,7 +599,7 @@ winShadowUpdateDDNL (ScreenPtr pScreen,
 {
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
-  RegionPtr		damage = &pBuf->damage;
+  RegionPtr		damage = shadowDamage(pBuf);
   HRESULT		ddrval = DD_OK;
   RECT			rcDest, rcSrc;
   POINT			ptOrigin;
@@ -1310,7 +1325,7 @@ winStoreColorsShadowDDNL (ColormapPtr pColormap,
 					  + pdefs[0].pixel);
   if (FAILED (ddrval))
     {
-      ErrorF ("winStoreColorsShadowDDNL - SetEntries () failed: %08x\n", ddrval);
+      ErrorF ("winStoreColorsShadowDDNL - SetEntries () failed: %08x\n", (int) ddrval);
       return FALSE;
     }
 

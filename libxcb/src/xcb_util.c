@@ -26,6 +26,10 @@
 /* Utility functions implementable using only public APIs. */
 
 #include <assert.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifndef _MSC_VER
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -35,15 +39,29 @@
 #include <netdnet/dn.h>
 #endif
 #include <netdb.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+
+#else
+#include <X11/Xwinsock.h>
+#include <X11\Xos.h>
+#define snprintf _snprintf
+#define HAVE_GETADDRINFO
+#endif
+
 #include <string.h>
 
 #include "xcb.h"
 #include "xcbext.h"
 #include "xcbint.h"
+
+#ifndef HAVE_GETADDRINFO
+#include "dummyin6.h"
+#include "getaddrinfo.h"
+#else
+#ifdef _MSC_VER
+#include <Ws2tcpip.h>
+#endif
+#endif
 
 static const int error_connection = 1;
 

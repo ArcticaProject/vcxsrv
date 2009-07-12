@@ -66,6 +66,10 @@ SOFTWARE.
 #include "privates.h"
 #include "xace.h"
 
+#ifdef _MSC_VER
+#define UpdateColors thisUpdateColors
+#endif
+
 extern XID clientErrorValue;
 
 static Pixel FindBestPixel(

@@ -1,6 +1,7 @@
 /*
 
 Copyright 1993, 1998  The Open Group
+Copyright (C) Colin Harrison 2005-2008
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
@@ -31,9 +32,9 @@ from The Open Group.
 #endif
 #ifdef XVENDORNAME
 #define VENDOR_STRING XVENDORNAME
-#define VERSION_STRING XORG_RELEASE
 #define VENDOR_CONTACT BUILDERADDR
 #endif
+#include <../xfree86/common/xorgVersion.h>
 #include "win.h"
 #include "winconfig.h"
 #include "winprefs.h"
@@ -57,6 +58,7 @@ extern char *			g_pszLogFile;
 extern Bool			g_fLogFileChanged;
 #endif
 extern Bool			g_fXdmcpEnabled;
+extern Bool			g_fAuthEnabled;
 extern char *			g_pszCommandLine;
 extern Bool			g_fKeyboardHookLL;
 extern Bool			g_fNoHelpMessageBox;                     
@@ -1289,6 +1291,29 @@ ddxProcessArgument (int argc, char *argv[], int i)
     }
 
   /*
+   * Look for the '-auth' argument
+   */
+  if (IS_OPTION ("-auth"))
+    {
+#ifdef  __MINGW32__
+      HANDLE hFile;
+      char * pszFile;
+      CHECK_ARGS (1);
+      pszFile = argv[++i];
+      hFile = CreateFile(pszFile,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+      if (hFile == INVALID_HANDLE_VALUE)
+	winMessageBoxF ("This authorization file for the -auth option could not be opened...\n"
+			"\"%s\"\n"
+			"You should use an \"Xauthority\" file in your HOME directory.\n"
+			"\nIgnoring and continuing.\n",
+			MB_ICONINFORMATION,
+			pszFile);
+#endif
+      g_fAuthEnabled = TRUE;
+      return 0; /* Let DIX parse this again */
+    }
+
+  /*
    * Look for the '-indirect' or '-broadcast' arguments
    */
   if (IS_OPTION ("-indirect")
@@ -1459,13 +1484,13 @@ winLogCommandLine (int argc, char *argv[])
   for (i = 0, iCurrLen = 0; i < argc; ++i)
     if (argv[i])
       {
-	/* Add a character for lines that overflow */
+	/* Adds two characters for lines that overflow */
 	if ((strlen (argv[i]) < CHARS_PER_LINE
 	    && iCurrLen + strlen (argv[i]) > CHARS_PER_LINE)
 	    || strlen (argv[i]) > CHARS_PER_LINE)
 	  {
 	    iCurrLen = 0;
-	    ++iSize;
+	    iSize += 2;
 	  }
 	
 	/* Add space for item and trailing space */
@@ -1525,8 +1550,8 @@ winLogVersionInfo (void)
 
   ErrorF ("Welcome to the XWin X Server\n");
   ErrorF ("Vendor: %s\n", VENDOR_STRING);
-  ErrorF ("Release: %s\n\n", VERSION_STRING);
-  ErrorF ("Contact: %s\n\n", VENDOR_CONTACT);
+  ErrorF ("Release: %d.%d.%d.%d (%d)\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, BUILD_DATE);
+  ErrorF ("Contact: %s\n", VENDOR_CONTACT);
 }
 
 /*

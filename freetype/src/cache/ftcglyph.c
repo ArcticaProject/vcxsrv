@@ -20,8 +20,8 @@
 #include FT_CACHE_H
 #include "ftcglyph.h"
 #include FT_ERRORS_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_INTERNAL_DEBUG_H
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftdebug.h>
 
 #include "ftccback.h"
 #include "ftcerror.h"

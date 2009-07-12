@@ -221,7 +221,11 @@ static int TRANS(SocketINETClose) (XtransConnInfo ciptr);
 #endif
 
 #if defined HAVE_SOCKLEN_T || (defined(IPv6) && defined(AF_INET6))
+#ifdef _MSC_VER
+# define SOCKLEN_T int
+#else
 # define SOCKLEN_T socklen_t
+#endif
 #elif defined(SVR4) || defined(__SCO__)
 # define SOCKLEN_T size_t 
 #else

@@ -23,6 +23,11 @@
 #include "randrstr.h"
 #include "registry.h"
 
+/* From render.h */
+#ifndef SubPixelUnknown
+#define SubPixelUnknown 0
+#endif
+
 RESTYPE	RROutputType;
 
 /*

@@ -68,10 +68,11 @@ _XimLocalMbLookupString(xic, ev, buffer, bytes, keysym, status)
 	    ||(ic->private.local.brl_committed != 0))) {
 	if (ic->private.local.brl_committed != 0) { /* Braille Event */
 	    unsigned char pattern = ic->private.local.brl_committed;
-	    char mb[XLC_PUBLIC(ic->core.im->core.lcd, mb_cur_max)];
+	    char *mb=malloc(XLC_PUBLIC(ic->core.im->core.lcd, mb_cur_max));
 	    ret = _Xlcwctomb(ic->core.im->core.lcd, mb, BRL_UC_ROW | pattern);
 	    if(ret > bytes) {
 		if(status) *status = XBufferOverflow;
+            free(mb);
 		return(ret);
 	    }
 	    if(keysym) {
@@ -80,6 +81,7 @@ _XimLocalMbLookupString(xic, ev, buffer, bytes, keysym, status)
 	    } else
 		if(status) *status = XLookupChars;
 	    memcpy(buffer, mb, ret);
+            free(mb);
 	} else { /* Composed Event */
 	    ret = strlen(&mb[b[ic->private.local.composed].mb]);
 	    if(ret > bytes) {

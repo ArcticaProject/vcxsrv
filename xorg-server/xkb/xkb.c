@@ -5579,6 +5579,8 @@ ProcXkbGetKbdByName(ClientPtr client)
     if (!(client->xkbClientFlags&_XkbClientInitialized))
 	return BadAccess;
 
+    memset(&mrep,0,sizeof(mrep));  //MH
+    
     CHK_KBD_DEVICE(dev, stuff->deviceSpec, client, access_mode);
 
     xkb = dev->key->xkbInfo->desc;

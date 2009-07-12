@@ -34,7 +34,9 @@
 #include "Xlibint.h"
 #include "XlcPubI.h"
 #include <X11/Xos.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 /************************************************************************/
 
@@ -216,7 +218,7 @@ _XlcParsePath(
 }
 
 #ifndef XLOCALEDIR
-#define XLOCALEDIR "/usr/lib/X11/locale"
+#define XLOCALEDIR "locale"
 #endif
 
 static void

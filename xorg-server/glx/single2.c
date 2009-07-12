@@ -36,6 +36,10 @@
 #define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+
+#include "glheader.h"
+
 #endif
 
 #include <string.h>
@@ -340,6 +344,9 @@ int DoGetString(__GLXclientState *cl, GLbyte *pc, GLboolean need_swap)
     name = *(GLenum *)(pc + 0);
     string = (const char *) CALL_GetString( GET_DISPATCH(), (name) );
     client = cl->client;
+
+    if (string == NULL)
+      string = "";
 
     /*
     ** Restrict extensions to those that are supported by both the

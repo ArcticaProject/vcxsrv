@@ -1,5 +1,6 @@
 /*
  *Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2008
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,6 +29,7 @@
  * Authors:	Kensuke Matsuzaki
  *		Earle F. Philhower, III
  *		Harold L Hunt II
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -61,13 +63,6 @@ winUpdateWindowsWindow (WindowPtr pWin);
 
 static void
 winFindWindow (pointer value, XID id, pointer cdata);
-
-/*
- * Constant defines
- */
-
-#define MOUSE_POLLING_INTERVAL		500
-
 
 /*
  * Macros
@@ -486,6 +481,7 @@ winCreateWindowsWindow (WindowPtr pWin)
   int			iWidth;
   int			iHeight;
   HWND			hWnd;
+  HWND			hFore = NULL;
   WNDCLASSEX		wc;
   winWindowPriv(pWin);
   HICON			hIcon;
@@ -496,6 +492,7 @@ winCreateWindowsWindow (WindowPtr pWin)
   static int		s_iWindowID = 0;
   winPrivScreenPtr	pScreenPriv = pWinPriv->pScreenPriv;
   WinXSizeHints         hints;
+  WindowPtr		pDaddy;
 
 #if CYGMULTIWINDOW_DEBUG
   ErrorF ("winCreateWindowsWindow - pWin: %08x\n", pWin);
@@ -504,19 +501,15 @@ winCreateWindowsWindow (WindowPtr pWin)
   iX = pWin->drawable.x + GetSystemMetrics (SM_XVIRTUALSCREEN);
   iY = pWin->drawable.y + GetSystemMetrics (SM_YVIRTUALSCREEN);
 
-  /* Default positions if none specified */
-  if (!winMultiWindowGetWMNormalHints(pWin, &hints))
-    hints.flags = 0;
-  if ( !(hints.flags & (USPosition|PPosition)) &&
-       !winMultiWindowGetTransientFor (pWin, NULL) &&
-       !pWin->overrideRedirect )
-    {
-      iX = CW_USEDEFAULT;
-      iY = CW_USEDEFAULT;
-    }
-
   iWidth = pWin->drawable.width;
   iHeight = pWin->drawable.height;
+
+  /* ensure window actually ends up somewhere visible */
+  if (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN))
+    iX = CW_USEDEFAULT;
+
+  if (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN))
+    iY = CW_USEDEFAULT;
 
   winSelectIcons(pWin, &hIcon, &hIconSmall); 
 
@@ -570,6 +563,28 @@ winCreateWindowsWindow (WindowPtr pWin)
   wc.lpszClassName = pszClass;
   RegisterClassEx (&wc);
 
+  if (!pWin->overrideRedirect)
+  {
+    if (winMultiWindowGetTransientFor (pWin, &pDaddy))
+    {
+      if (pDaddy)
+      {
+        hFore = GetForegroundWindow();
+        if (hFore && (pDaddy != (WindowPtr)GetProp(hFore, WIN_WID_PROP))) hFore = NULL;
+      }
+    }
+    else
+    {
+      /* Default positions if none specified */
+      if (!winMultiWindowGetWMNormalHints(pWin, &hints)) hints.flags = 0;
+      if (!(hints.flags & (USPosition|PPosition)))
+      {
+        iX = CW_USEDEFAULT;
+        iY = CW_USEDEFAULT;
+      }
+    }
+  }
+
   /* Create the window */
   /* Make it OVERLAPPED in create call since WS_POPUP doesn't support */
   /* CW_USEDEFAULT, change back to popup after creation */
@@ -581,7 +596,7 @@ winCreateWindowsWindow (WindowPtr pWin)
 			  iY,			/* Vertical position */
 			  iWidth,		/* Right edge */ 
 			  iHeight,		/* Bottom edge */
-			  (HWND) NULL,		/* No parent or owner window */
+			  hFore,		/* Null or Parent window if transient*/
 			  (HMENU) NULL,		/* No menu */
 			  GetModuleHandle (NULL), /* Instance handle */
 			  pWin);		/* ScreenPrivates */

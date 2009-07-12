@@ -68,7 +68,7 @@ typedef struct _Visual {
     VisualID		vid;
     short		class;
     short		bitsPerRGBValue;
-    short		ColormapEntries;
+    long		ColormapEntries;
     short		nplanes;/* = log2 (ColormapEntries). This does not
 				 * imply that the screen has this many planes.
 				 * it may have more or fewer */
@@ -431,6 +431,10 @@ typedef    void (* MarkUnrealizedWindowProcPtr)(
 	WindowPtr /*pChild*/,
 	WindowPtr /*pWin*/,
 	Bool /*fromConfigure*/);
+
+#ifdef CreateWindow
+#undef CreateWindow
+#endif
 
 typedef struct _Screen {
     int			myNum;	/* index of this instance in Screens[] */

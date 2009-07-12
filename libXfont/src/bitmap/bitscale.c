@@ -138,6 +138,7 @@ static const ScaleFunc scale[] =
 #if XFONT_PCFFORMAT
     PrinterScaleBitmaps,
 #endif
+   NULL
 };
  
 static FontEntryPtr FindBestToScale ( FontPathElementPtr fpe, 
@@ -188,6 +189,7 @@ static const FindToScale find_scale[] =
 #if XFONT_PCFFORMAT
     FindPmfToScale,
 #endif
+    0
 };
 
 static unsigned long bitscaleGeneration = 0;	/* initialization flag */

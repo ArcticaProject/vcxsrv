@@ -56,6 +56,7 @@ from The Open Group.
 #define MAX_SIZE 255
 
 /* shared data for the image read/parse logic */
+/*
 static const short hexTable[256] = {
     ['0'] = 0,  ['1'] = 1,
     ['2'] = 2,  ['3'] = 3,
@@ -73,6 +74,23 @@ static const short hexTable[256] = {
     ['}'] = -1, ['\n'] = -1,
     ['\t'] = -1
 };
+*/
+short hexTable(unsigned char Char)
+{
+  if (Char<'0')
+    return -1;
+  if (Char<='9')
+    return Char-'0';
+ if (Char<'A')
+    return -1;
+  if (Char<='F')
+    return Char-'A'+10;
+ if (Char<'a')
+    return -1;
+  if (Char<='f')
+    return Char-'a'+10;
+  return -1;
+}
 
 /*
  *	read next hex value in the input stream, return -1 if EOF
@@ -98,9 +116,9 @@ NextInt (
 	    /* trim high bits, check type and accumulate */
 	    ch &= 0xff;
 	    if (isascii(ch) && isxdigit(ch)) {
-		value = (value << 4) + hexTable[ch];
+		value = (value << 4) + hexTable(ch);
 		gotone++;
-	    } else if ((hexTable[ch]) < 0 && gotone)
+	    } else if ((hexTable(ch)) < 0 && gotone)
 	      done++;
 	}
     }

@@ -6,6 +6,7 @@
 #include <assert.h>
 #include "xcbext.h"
 #include "bigreq.h"
+#include <X11/Xtrans/Xtrans.h>
 
 xcb_extension_t xcb_big_requests_id = { "BIG-REQUESTS" };
 

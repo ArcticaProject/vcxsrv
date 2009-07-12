@@ -20,7 +20,7 @@
 #define __SVPFR_H__
 
 #include FT_PFR_H
-#include FT_INTERNAL_SERVICE_H
+#include <freetype/internal/ftserv.h>
 
 
 FT_BEGIN_HEADER

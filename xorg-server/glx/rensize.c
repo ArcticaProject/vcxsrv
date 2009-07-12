@@ -35,6 +35,10 @@
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#else
+
+#include "glheader.h"
+
 #endif
 
 #include <GL/gl.h>
@@ -224,7 +228,9 @@ int __glXImageSize( GLenum format, GLenum type, GLenum target,
 	  case GL_422_AVERAGE_EXT:
 	  case GL_422_REV_AVERAGE_EXT:
 	  case GL_DEPTH_STENCIL_NV:
+#ifndef _MSC_VER
 	  case GL_DEPTH_STENCIL_MESA:
+#endif
 	  case GL_YCBCR_MESA:
 	  case GL_LUMINANCE_ALPHA:
 	    elementsPerGroup = 2;
@@ -263,11 +269,13 @@ int __glXImageSize( GLenum format, GLenum type, GLenum target,
 	  case GL_UNSIGNED_SHORT_1_5_5_5_REV:
 	  case GL_UNSIGNED_SHORT_8_8_APPLE:
 	  case GL_UNSIGNED_SHORT_8_8_REV_APPLE:
+#ifndef _MSC_VER
 	  case GL_UNSIGNED_SHORT_15_1_MESA:
 	  case GL_UNSIGNED_SHORT_1_15_REV_MESA:
 	    bytesPerElement = 2;
 	    elementsPerGroup = 1;
 	    break;
+#endif
 	  case GL_INT:
 	  case GL_UNSIGNED_INT:
 	  case GL_FLOAT:
@@ -278,8 +286,10 @@ int __glXImageSize( GLenum format, GLenum type, GLenum target,
 	  case GL_UNSIGNED_INT_10_10_10_2:
 	  case GL_UNSIGNED_INT_2_10_10_10_REV:
 	  case GL_UNSIGNED_INT_24_8_NV:
+#ifndef _MSC_VER
 	  case GL_UNSIGNED_INT_24_8_MESA:
 	  case GL_UNSIGNED_INT_8_24_REV_MESA:
+#endif
 	    bytesPerElement = 4;
 	    elementsPerGroup = 1;
 	    break;

@@ -20,9 +20,9 @@
 #include FT_STROKER_H
 #include FT_TRIGONOMETRY_H
 #include FT_OUTLINE_H
-#include FT_INTERNAL_MEMORY_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/internal/ftmemory.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftobjs.h>
 
 
   /* documentation is in ftstroke.h */

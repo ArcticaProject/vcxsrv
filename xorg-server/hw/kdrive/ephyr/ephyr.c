@@ -61,8 +61,11 @@ Bool   EphyrWantGrayScale = 0;
 Bool
 ephyrInitialize (KdCardInfo *card, EphyrPriv *priv)
 {
+#ifdef _MSC_VER
+  __asm int 3;
+#else
   OsSignal(SIGUSR1, hostx_handle_signal);
-  
+#endif  
   priv->base = 0;
   priv->bytes_per_line = 0;
   return TRUE;
@@ -420,8 +423,6 @@ ephyrRandRGetInfo (ScreenPtr pScreen, Rotation *rotations)
   Rotation		    randr;
   int			    n = 0;
   
-  EPHYR_LOG("mark");
-  
   struct { int width, height; } sizes[] = 
     {
       { 1600, 1200 },
@@ -442,6 +443,8 @@ ephyrRandRGetInfo (ScreenPtr pScreen, Rotation *rotations)
       { 0, 0 }
     };
 
+  EPHYR_LOG("mark");
+  
   *rotations = RR_Rotate_All|RR_Reflect_All;
 
   if (!hostx_want_preexisting_window (screen)
@@ -795,21 +798,29 @@ ephyrUpdateModifierState(unsigned int state)
 static void
 ephyrBlockSigio (void)
 {
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     sigset_t set;
 
     sigemptyset (&set);
     sigaddset (&set, SIGIO);
     sigprocmask (SIG_BLOCK, &set, 0);
+#endif
 }
 
 static void
 ephyrUnblockSigio (void)
 {
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     sigset_t set;
 
     sigemptyset (&set);
     sigaddset (&set, SIGIO);
     sigprocmask (SIG_UNBLOCK, &set, 0);
+#endif
 }
 
 static Bool

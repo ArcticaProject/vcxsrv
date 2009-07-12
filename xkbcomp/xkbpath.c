@@ -37,7 +37,7 @@
 #include "xkbpath.h"
 
 #ifndef DFLT_XKB_CONFIG_ROOT
-#define DFLT_XKB_CONFIG_ROOT	"/usr/lib/X11/xkb"
+#define DFLT_XKB_CONFIG_ROOT	"xkb"
 #endif
 
 #ifndef PATH_MAX

@@ -53,7 +53,7 @@ from The Open Group.
 #include "Xlcint.h"
 
 #ifndef XLOCALEDIR
-#define XLOCALEDIR "/usr/lib/X11/locale"
+#define XLOCALEDIR "locale"
 #endif
 
 #define LCLIBNAME    "xi18n.so"

@@ -19,8 +19,8 @@
 #include <ft2build.h>
 #include "t1afm.h"
 #include "t1errors.h"
-#include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/psaux.h>
 
 
   /*************************************************************************/

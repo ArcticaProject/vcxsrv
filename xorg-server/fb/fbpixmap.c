@@ -323,11 +323,7 @@ fbPixmapToRegion(PixmapPtr pPix)
 
 #ifdef FB_DEBUG
 
-#ifndef WIN32
 #include <stdio.h>
-#else
-#include <dbg.h>
-#endif
 
 static Bool
 fbValidateBits (FbStip *bits, int stride, FbStip data)
@@ -336,12 +332,7 @@ fbValidateBits (FbStip *bits, int stride, FbStip data)
     {
 	if (*bits != data)
 	{
-#ifdef WIN32
-	    NCD_DEBUG ((DEBUG_FAILURE, "fdValidateBits failed at 0x%x (is 0x%x want 0x%x)",
-			bits, *bits, data));
-#else
-	    fprintf (stderr, "fbValidateBits failed\n");
-#endif
+	    fprintf (stderr, "fbValidateBits failed at 0x%x (is 0x%x want 0x%x)\n",bits, *bits, data);
 	    return FALSE;
 	}
 	bits++;

@@ -30,10 +30,8 @@
 #include <xwin-config.h>
 #endif
 #include "win.h"
-#ifdef XWIN_CLIPBOARD
-# include "../../Xext/xf86miscproc.h"
-#endif
 #include "dixstruct.h"
+#include "inputstr.h"
 
 
 /*
@@ -104,6 +102,11 @@ ProcessInputEvents (void)
 #endif
 }
 
+void DDXRingBell(int volume, int pitch, int duration)
+{
+  /* winKeybdBell is used instead */
+  return;
+}
 
 int
 TimeSinceLastInputEvent ()
@@ -147,8 +150,10 @@ InitInput (int argc, char *argv[])
   RegisterPointerDevice (pMouse);
   RegisterKeyboardDevice (pKeyboard);
 
-  miRegisterPointerDevice (screenInfo.screens[0], pMouse);
-  mieqInit ((DevicePtr)pKeyboard, (DevicePtr)pMouse);
+  pMouse->name = strdup("Windows mouse");
+  pKeyboard->name = strdup("Windows keyboard");
+
+  mieqInit ();
 
   /* Initialize the mode key states */
   winInitializeModeKeyStates ();

@@ -62,6 +62,9 @@
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
+#ifdef DEBUG
+#undef DEBUG
+#endif
 # define YYTOKENTYPE
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
@@ -373,14 +376,14 @@ YYID (i)
 #  ifndef YYMALLOC
 #   define YYMALLOC malloc
 #   if ! defined malloc && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+     || defined __cplusplus)
 void *malloc (YYSIZE_T); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 #  ifndef YYFREE
 #   define YYFREE free
 #   if ! defined free && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
-     || defined __cplusplus || defined _MSC_VER)
+     || defined __cplusplus)
 void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif

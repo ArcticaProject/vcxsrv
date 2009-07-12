@@ -1,5 +1,6 @@
 /*
  *Copyright (C) 2003-2004 Harold L Hunt II All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2008
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -20,12 +21,13 @@
  *CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  *WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *Except as contained in this notice, the name of Harold L Hunt II
- *shall not be used in advertising or otherwise to promote the sale, use
- *or other dealings in this Software without prior written authorization
- *from Harold L Hunt II.
+ *Except as contained in this notice, the name of the copyright holder(s)
+ *and author(s) shall not be used in advertising or otherwise to promote
+ *the sale, use or other dealings in this Software without prior written
+ *authorization from the copyright holder(s) and author(s).
  *
  * Authors:	Harold L Hunt II
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -63,7 +65,7 @@ extern HWND		g_hwndClipboard;
  * Local function prototypes
  */
 
-static Bool
+static int
 winProcessXEventsTimeout (HWND hwnd, int iWindow, Display *pDisplay,
 			  Bool fUseUnicode, int iTimeoutSec);
 
@@ -260,11 +262,14 @@ winClipboardWindowProc (HWND hwnd, UINT message,
     case WM_DRAWCLIPBOARD:
       {
 	static Bool s_fProcessingDrawClipboard = FALSE;
+	static Atom atomClipboard;
 	Display	*pDisplay = g_pClipboardDisplay;
 	Window	iWindow = g_iClipboardWindow;
 	int	iReturn;
 
 	winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD: Enter\n");
+
+	if (atomClipboard == None) atomClipboard = XInternAtom (pDisplay, "CLIPBOARD", False);
 
 	/*
 	 * We've occasionally seen a loop in the clipboard chain.
@@ -353,17 +358,13 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 
 	    /* Release CLIPBOARD selection if owned */
 	    iReturn = XGetSelectionOwner (pDisplay,
-					  XInternAtom (pDisplay,
-						       "CLIPBOARD",
-						       False));
+					  atomClipboard);
 	    if (iReturn == g_iClipboardWindow)
 	      {
 		winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 			"CLIPBOARD selection is owned by us.\n");
 		XSetSelectionOwner (pDisplay,
-				    XInternAtom (pDisplay,
-						 "CLIPBOARD",
-						 False),
+				    atomClipboard,
 				    None,
 				    CurrentTime);
 	      }
@@ -383,7 +384,8 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 				      XA_PRIMARY,
 				      iWindow,
 				      CurrentTime);
-	if (iReturn == BadAtom || iReturn == BadWindow)
+	if (iReturn == BadAtom || iReturn == BadWindow ||
+	    XGetSelectionOwner (pDisplay, XA_PRIMARY) != iWindow)
 	  {
 	    winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 		    "Could not reassert ownership of PRIMARY\n");
@@ -396,12 +398,12 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	
 	/* Reassert ownership of the CLIPBOARD */	  
 	iReturn = XSetSelectionOwner (pDisplay,
-				      XInternAtom (pDisplay,
-						   "CLIPBOARD",
-						   False),
+				      atomClipboard,
 				      iWindow,
 				      CurrentTime);
-	if (iReturn == BadAtom || iReturn == BadWindow)
+
+ 	if (iReturn == BadAtom || iReturn == BadWindow ||
+ 	    XGetSelectionOwner (pDisplay, atomClipboard) != iWindow)
 	  {
 	    winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 		    "Could not reassert ownership of CLIPBOARD\n");

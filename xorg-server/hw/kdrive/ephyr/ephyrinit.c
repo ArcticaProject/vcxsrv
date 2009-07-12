@@ -53,6 +53,7 @@ InitCard (char *name)
     KdCardInfoAdd (&ephyrFuncs, &attr, 0);
 }
 
+#ifndef _MSC_VER
 void
 InitOutput (ScreenInfo *pScreenInfo, int argc, char **argv)
 {
@@ -114,6 +115,7 @@ ddxUseMsg (void)
 
   exit(1);
 }
+#endif
 
 void
 processScreenArg (char *screen_size, char *parent_id)
@@ -144,6 +146,7 @@ processScreenArg (char *screen_size, char *parent_id)
     }
 }
 
+#ifndef _MSC_VER
 int
 ddxProcessArgument (int argc, char **argv, int i)
 {
@@ -250,6 +253,13 @@ ddxProcessArgument (int argc, char **argv, int i)
   return KdProcessArgument (argc, argv, i);
 }
 
+#ifdef DDXBEFORERESET
+void
+ddxBeforeReset (void)
+{
+}
+#endif
+
 void
 OsVendorInit (void)
 {
@@ -263,6 +273,15 @@ OsVendorInit (void)
 
   KdOsInit (&EphyrOsFuncs);
 }
+
+#ifdef DDXOSFATALERROR
+void
+OsVendorFatalError(void)
+{
+}
+#endif
+
+#endif
 
 /* 'Fake' cursor stuff, could be improved */
 

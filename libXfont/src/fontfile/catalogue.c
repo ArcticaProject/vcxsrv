@@ -30,8 +30,12 @@
 #include <X11/fonts/fntfilst.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef _MSC_VER
+#include <direct.h>
+#else
 #include <dirent.h>
 #include <unistd.h>
+#endif
 
 static const char CataloguePrefix[] = "catalogue:";
 
@@ -135,19 +139,24 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
     FontPathElementPtr	subfpe;
     struct stat		statbuf;
     const char		*path;
+#ifndef _MSC_VER
     DIR			*dir;
     struct dirent	*entry;
+#endif
     int			len;
     int			pathlen;
 
     path = fpe->name + strlen(CataloguePrefix);
-    if (stat(path, &statbuf) < 0 || !S_ISDIR(statbuf.st_mode))
+    if (stat(path, &statbuf) < 0 || (statbuf.st_mode&_S_IFDIR))
 	return BadFontPath;
 
     if ((forceScan == FALSE) && (statbuf.st_mtime <= cat->mtime))
 	return Successful;
 
-    dir = opendir(path);
+#ifdef _MSC_VER
+__asm int 3;
+#else
+     dir = opendir(path);
     if (dir == NULL)
     {
 	xfree(cat);
@@ -221,7 +230,7 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
     }
 
     closedir(dir);
-
+#endif
     qsort(cat->fpeList,
 	  cat->fpeCount, sizeof cat->fpeList[0], ComparePriority);
 

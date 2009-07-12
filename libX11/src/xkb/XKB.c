@@ -36,6 +36,10 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/extensions/XKBproto.h>
 #include "XKBlibint.h"
 
+#ifdef XKB_IN_SERVER
+#define XkbVirtualModsToReal    SrvXkbVirtualModsToReal
+#endif
+
 XkbInternAtomFunc	_XkbInternAtomFunc= XInternAtom;
 XkbGetAtomNameFunc	_XkbGetAtomNameFunc= XGetAtomName;
 

@@ -52,6 +52,34 @@ from The Open Group.
 #define AllMods (ShiftMask|LockMask|ControlMask| \
 		 Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask)
 
+#ifdef XKB_IN_SERVER
+#define XkbAllocClientMap   SrvXkbAllocClientMap
+#define XkbAllocServerMap   SrvXkbAllocServerMap
+#define XkbChangeTypesOfKey   SrvXkbChangeTypesOfKey
+#define XkbCopyKeyTypes     SrvXkbCopyKeyTypes
+#define XkbFreeClientMap    SrvXkbFreeClientMap
+#define XkbFreeServerMap    SrvXkbFreeServerMap
+#define XkbKeyTypesForCoreSymbols SrvXkbKeyTypesForCoreSymbols
+#define XkbApplyCompatMapToKey    SrvXkbApplyCompatMapToKey
+#define XkbResizeKeyActions   SrvXkbResizeKeyActions
+#define XkbResizeKeySyms    SrvXkbResizeKeySyms
+#define XkbResizeKeyType    SrvXkbResizeKeyType
+#define XkbAllocCompatMap   SrvXkbAllocCompatMap
+#define XkbAllocControls    SrvXkbAllocControls
+#define XkbAllocIndicatorMaps   SrvXkbAllocIndicatorMaps
+#define XkbAllocKeyboard    SrvXkbAllocKeyboard
+#define XkbAllocNames     SrvXkbAllocNames
+#define XkbFreeCompatMap    SrvXkbFreeCompatMap
+#define XkbFreeKeyboard     SrvXkbFreeKeyboard
+#define XkbFreeNames      SrvXkbFreeNames
+#define XkbLatchModifiers   SrvXkbLatchModifiers
+#define XkbLatchGroup     SrvXkbLatchGroup
+#define XkbVirtualModsToReal    SrvXkbVirtualModsToReal
+#define XkbChangeKeycodeRange   SrvXkbChangeKeycodeRange
+#define XkbApplyVirtualModChanges SrvXkbApplyVirtualModChanges
+#endif
+
+                 
 static int _XkbLoadDpy(
     Display *dpy
 );

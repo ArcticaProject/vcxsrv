@@ -48,10 +48,12 @@ extern HWND			g_hDlgExit;
  * FIXME: Headers are broken, DEFINE_GUID doesn't work correctly,
  * so we have to redefine it here.
  */
+#ifndef _MSC_VER
 #ifdef DEFINE_GUID
 #undef DEFINE_GUID
 #define DEFINE_GUID(n,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) const GUID n GUID_SECT = {l,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}
 #endif /* DEFINE_GUID */
+#endif
 
 
 /*
@@ -361,7 +363,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
 	{
 	  ErrorF ("winAllocateFBShadowDD - Changing video mode\n");
 
-	  /* Change the video mode to the mode requested */
+	  /* Change the video mode to the mode requested, and use the driver default refresh rate on failure */
 	  ddrval = IDirectDraw2_SetDisplayMode (pScreenPriv->pdd2,
 						pScreenInfo->dwWidth,
 						pScreenInfo->dwHeight,
@@ -373,7 +375,20 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
 	      ErrorF ("winAllocateFBShadowDD - Could not set "\
 		      "full screen display mode: %08x\n",
 		      (unsigned int) ddrval);
-	      return FALSE;
+	      ErrorF ("winAllocateFBShadowDD - Using default driver refresh rate\n");
+	      ddrval = IDirectDraw2_SetDisplayMode (pScreenPriv->pdd2,
+						    pScreenInfo->dwWidth,
+						    pScreenInfo->dwHeight,
+						    pScreenInfo->dwBPP,
+						    0,
+						    0);
+	      if (FAILED(ddrval))
+		{
+			ErrorF ("winAllocateFBShadowDD - Could not set default refresh rate "
+				"full screen display mode: %08x\n",
+				(unsigned int) ddrval);
+			return FALSE;
+		}
 	    }
 	}
       else
@@ -508,7 +523,7 @@ winShadowUpdateDD (ScreenPtr pScreen,
 {
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
-  RegionPtr		damage = &pBuf->damage;
+  RegionPtr		damage = shadowDamage(pBuf);
   HRESULT		ddrval = DD_OK;
   RECT			rcDest, rcSrc;
   POINT			ptOrigin;
@@ -534,7 +549,7 @@ winShadowUpdateDD (ScreenPtr pScreen,
   ddrval = IDirectDrawSurface2_Unlock (pScreenPriv->pddsShadow, NULL);
   if (FAILED (ddrval))
     {
-      ErrorF ("winShadowUpdateProcDD - Unlock failed\n");
+      ErrorF ("winShadowUpdateDD - Unlock failed\n");
       return;
     }
 
@@ -626,19 +641,20 @@ winShadowUpdateDD (ScreenPtr pScreen,
 				     NULL);
   if (FAILED (ddrval))
     {
-      ErrorF ("winShadowUpdateProcDD - Lock failed\n");
+      ErrorF ("winShadowUpdateDD - Lock failed\n");
       return;
     }
 
   /* Has our memory pointer changed? */
   if (pScreenInfo->pfb != pScreenPriv->pddsdShadow->lpSurface)
     {
-      ErrorF ("winShadowUpdateProcDD - Memory location of the shadow "
+      extern char *g_pszLogFile;
+      ErrorF ("winShadowUpdateDD - Memory location of the shadow "
 	      "surface has changed, trying to update the root window "
 	      "pixmap header to point to the new address.  If you get "
 	      "this message and "PROJECT_NAME" freezes or crashes "
 	      "after this message then send a problem report and your "
-	      "/tmp/XWin.log file to cygwin-xfree@cygwin.com\n");
+	      "%s file to " BUILDERADDR, g_pszLogFile);
 
       /* Location of shadow framebuffer has changed */
       pScreenInfo->pfb = pScreenPriv->pddsdShadow->lpSurface;
@@ -653,7 +669,7 @@ winShadowUpdateDD (ScreenPtr pScreen,
 							 pScreenInfo->dwBPP),
 					  pScreenInfo->pfb))
 	{
-	  ErrorF ("winShadowUpdateProcDD - Bits changed, could not "
+	  ErrorF ("winShadowUpdateDD - Bits changed, could not "
 		  "notify fb.\n");
 	  return;
 	}

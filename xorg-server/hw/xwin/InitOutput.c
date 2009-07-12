@@ -1,6 +1,7 @@
 /*
 
 Copyright 1993, 1998  The Open Group
+Copyright (C) Colin Harrison 2005-2008
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
@@ -45,14 +46,16 @@ from The Open Group.
 #if defined(XKB) && defined(WIN32)
 #include <xkbsrv.h>
 #endif
+
 #ifdef RELOCATE_PROJECTROOT
+#undef Status
 #include <shlobj.h>
-typedef HRESULT (*SHGETFOLDERPATHPROC)(
+typedef HRESULT  (__stdcall *  SHGETFOLDERPATHPROC)(
     HWND hwndOwner,
     int nFolder,
     HANDLE hToken,
     DWORD dwFlags,
-    LPTSTR pszPath
+    LPSTR pszPath
 );
 #endif
 
@@ -73,6 +76,7 @@ extern int			g_iLogVerbose;
 Bool				g_fLogInited;
 
 extern Bool			g_fXdmcpEnabled;
+extern Bool			g_fAuthEnabled;
 #ifdef HAS_DEVWINDOWS
 extern int			g_fdMessageQueue;
 #endif
@@ -131,6 +135,9 @@ winValidateArgs (void);
 const char *
 winGetBaseDir(void);
 #endif
+
+static
+void glx_debugging(void);
 
 /*
  * For the depth 24 pixmap we default to 32 bits per pixel, but
@@ -241,7 +248,7 @@ ddxGiveUp (void)
 #endif
 
   if (!g_fLogInited) {
-    LogInit (g_pszLogFile, NULL);
+    g_pszLogFile = LogInit (g_pszLogFile, NULL);
     g_fLogInited = TRUE;
   }  
   LogClose ();
@@ -424,7 +431,17 @@ winFixupPaths (void)
 #ifdef READ_FONTDIRS
     {
         /* Open fontpath configuration file */
+#if defined WIN32 && defined __MINGW32__
+        static Bool once = False;
+        char buffer[MAX_PATH];
+        snprintf(buffer, sizeof(buffer), "%s\\font-dirs", basedir);
+        buffer[sizeof(buffer)-1] = 0;
+        FILE *fontdirs = fopen(buffer, "rt");
+        if (once) fontdirs = NULL;
+        else once = True;
+#else
         FILE *fontdirs = fopen(ETCX11DIR "/font-dirs", "rt");
+#endif
         if (fontdirs != NULL)
         {
             char buffer[256];
@@ -624,6 +641,14 @@ winFixupPaths (void)
         buffer[sizeof(buffer)-1] = 0;
         putenv(buffer);
     }
+    if (getenv("XHOSTPREFIX") == NULL)
+    {
+        char buffer[MAX_PATH];
+        snprintf(buffer, sizeof(buffer), "XHOSTPREFIX=%s\\X",
+                basedir);
+        buffer[sizeof(buffer)-1] = 0;
+        putenv(buffer);
+    }
     if (getenv("HOME") == NULL)
     {
         HMODULE shfolder;
@@ -661,9 +686,10 @@ winFixupPaths (void)
         if (size && size < sizeof(buffer))
         {
             snprintf(buffer + size, sizeof(buffer) - size, 
-                    "XWin.%s.log", display); 
+                    "VCXSrv.%s.log", display); 
             buffer[sizeof(buffer)-1] = 0;
             g_pszLogFile = buffer;
+            GetLongPathName(buffer, buffer, MAX_PATH);
             winMsg (X_DEFAULT, "Logfile set to \"%s\"\n", g_pszLogFile);
         }
     }
@@ -671,7 +697,7 @@ winFixupPaths (void)
     {
         static char xkbbasedir[MAX_PATH];
 
-        snprintf(xkbbasedir, sizeof(xkbbasedir), "%s\\xkb", basedir);
+        snprintf(xkbbasedir, sizeof(xkbbasedir), "%s\\xkbdata", basedir);
         if (sizeof(xkbbasedir) > 0)
             xkbbasedir[sizeof(xkbbasedir)-1] = 0;
         XkbBaseDirectory = xkbbasedir;
@@ -687,9 +713,6 @@ OsVendorInit (void)
   /* Re-initialize global variables on server reset */
   winInitializeGlobals ();
 
-  LogInit (NULL, NULL);
-  LogSetParameter (XLOG_VERBOSITY, g_iLogVerbose);
-
   winFixupPaths();
 
 #ifdef DDXOSVERRORF
@@ -704,7 +727,7 @@ OsVendorInit (void)
      * avoid the second call 
      */  
     g_fLogInited = TRUE;
-    LogInit (g_pszLogFile, NULL);
+    g_pszLogFile = LogInit (g_pszLogFile, NULL);
   } 
   LogSetParameter (XLOG_FLUSH, 1);
   LogSetParameter (XLOG_VERBOSITY, g_iLogVerbose);
@@ -877,7 +900,7 @@ winUseMsg (void)
 #endif
 
   ErrorF ("-logfile filename\n"
-	  "\tWrite logmessages to <filename> instead of /tmp/Xwin.log.\n");
+	  "\tWrite logmessages to <filename>.\n");
 
   ErrorF ("-logverbose verbosity\n"
 	  "\tSet the verbosity of logmessages. [NOTE: Only a few messages\n"
@@ -907,7 +930,7 @@ ddxUseMsg(void)
 
   /* Log file will not be opened for UseMsg unless we open it now */
   if (!g_fLogInited) {
-    LogInit (g_pszLogFile, NULL);
+    g_pszLogFile = LogInit (g_pszLogFile, NULL);
     g_fLogInited = TRUE;
   }  
   LogClose ();
@@ -915,9 +938,9 @@ ddxUseMsg(void)
   /* Notify user where UseMsg text can be found.*/
   if (!g_fNoHelpMessageBox)
     winMessageBoxF ("The " PROJECT_NAME " help text has been printed to "
-		  "/tmp/XWin.log.\n"
-		  "Please open /tmp/XWin.log to read the help text.\n",
-		  MB_ICONINFORMATION);
+		  "%s.\n"
+		  "Please open %s to read the help text.\n",
+		  MB_ICONINFORMATION, g_pszLogFile, g_pszLogFile);
 }
 
 /* ddxInitGlobals - called by |InitGlobals| from os/util.c */
@@ -965,9 +988,6 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
   if (!winReadConfigfile ())
     winErrorFVerb (1, "InitOutput - Error reading config file\n");
 #else
-  winMsg(X_INFO, "XF86Config is not supported\n");
-  winMsg(X_INFO, "See http://x.cygwin.com/docs/faq/cygwin-x-faq.html "
-         "for more information\n");
   winConfigFiles ();
 #endif
 
@@ -1031,7 +1051,7 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
 
 #if defined(XCSECURITY)
   /* Generate a cookie used by internal clients for authorization */
-  if (g_fXdmcpEnabled)
+  if (g_fXdmcpEnabled || g_fAuthEnabled)
     winGenerateAuthorization ();
 #endif
 
@@ -1043,6 +1063,8 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
        * Apply locale specified in LANG environment variable.
        */
       setlocale (LC_ALL, "");
+
+      glx_debugging();
     }
 #endif
 
@@ -1071,7 +1093,7 @@ winCheckDisplayNumber ()
 
   /* Check display range */
   nDisp = atoi (display);
-  if (nDisp < 0 || nDisp > 65535)
+  if (nDisp < 0 || nDisp > 59535)
     {
       ErrorF ("winCheckDisplayNumber - Bad display number: %d\n", nDisp);
       return FALSE;
@@ -1118,7 +1140,7 @@ winCheckDisplayNumber ()
   if (GetLastError () == ERROR_ALREADY_EXISTS)
     {
       ErrorF ("winCheckDisplayNumber - "
-	      PROJECT_NAME " is already running on display %d\n",
+	      "VCXsrv, Xming or Cygwin/X is already running on display %d\n",
 	      nDisp);
       return FALSE;
     }
@@ -1126,19 +1148,21 @@ winCheckDisplayNumber ()
   return TRUE;
 }
 
-#ifdef DPMSExtension
-Bool DPMSSupported(void)
-{
-  return FALSE;
+/* GLX debugging helpers */
+#include <../glx/glapi.h>
+
+static
+void warn_func(void * p1, const char *format, ...) {
+  va_list v;
+  va_start(v, format);
+  vfprintf(stderr, format, v);
+  va_end(v);
+  fprintf(stderr,"\n");
 }
 
-void DPMSSet(int level)
+static
+void glx_debugging(void)
 {
-  return;
+  _glapi_set_warning_func(warn_func);
+  _glapi_noop_enable_warnings(TRUE);
 }
-
-int DPMSGet(int *plevel)
-{
-  return 0;
-}
-#endif

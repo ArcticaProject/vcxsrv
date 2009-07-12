@@ -43,25 +43,43 @@ Bool
 winClipboardDetectUnicodeSupport (void)
 {
   Bool			fReturn = FALSE;
-  OSVERSIONINFO		osvi = {0};
+  OSVERSIONINFOEX	osvi = {0};
   
   /* Get operating system version information */
   osvi.dwOSVersionInfoSize = sizeof (osvi);
-  GetVersionEx (&osvi);
+  GetVersionEx ((LPOSVERSIONINFO)&osvi);
 
   /* Branch on platform ID */
   switch (osvi.dwPlatformId)
     {
     case VER_PLATFORM_WIN32_NT:
-      /* Unicode supported on NT only */
-      ErrorF ("DetectUnicodeSupport - Windows NT/2000/XP\n");
-      fReturn = TRUE;
+      if (osvi.dwMajorVersion >= 6)
+      {
+	if (osvi.wProductType == VER_NT_WORKSTATION)
+	   ErrorF ("OS: Windows Vista\n");
+	else
+	   ErrorF ("OS: Windows Server 2008\n");
+	fReturn = TRUE;
+      }
+      else if (osvi.dwMajorVersion == 5)
+      {
+	if (osvi.dwMinorVersion == 2)
+	{
+	  ErrorF ("OS: Windows 2003\n");
+	  fReturn = TRUE;
+	}
+	else if (osvi.dwMinorVersion == 1)
+	{
+	  ErrorF ("OS: Windows XP\n");
+	  fReturn = TRUE;
+	}
+	else if (osvi.dwMinorVersion == 0) ErrorF ("OS: Windows 2000\n");
+      }
+      else if (osvi.dwMajorVersion <= 4) ErrorF ("OS: Windows NT\n");
       break;
 
     case VER_PLATFORM_WIN32_WINDOWS:
-      /* Unicode is not supported on non-NT */
-      ErrorF ("DetectUnicodeSupport - Windows 95/98/Me\n");
-      fReturn = FALSE;
+      ErrorF ("OS: Windows 95/98/Me\n");
       break;
     }
 

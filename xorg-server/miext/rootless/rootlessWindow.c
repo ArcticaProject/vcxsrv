@@ -36,13 +36,13 @@
 #include <stddef.h> /* For NULL */
 #include <limits.h> /* For CHAR_BIT */
 #include <assert.h>
+#include <X11/Xatom.h>
+#include <Xplugin.h>
 #ifdef __APPLE__
 //#include <X11/Xlib.h>
-#include <X11/Xatom.h>
 #include "mi.h"
 #include "pixmapstr.h"
 #include "windowstr.h"
-#include <Xplugin.h>
 //#include <X11/extensions/applewm.h>
 extern int darwinMainScreenX, darwinMainScreenY;
 #endif
@@ -93,9 +93,11 @@ static inline int
 configure_window (xp_window_id id, unsigned int mask,
                   const xp_window_changes *values)
 {
+#ifdef __APPLE__
   if (!no_configure_window)
     return xp_configure_window (id, mask, values);
   else
+#endif
     return XP_Success;
 }
 
@@ -116,6 +118,7 @@ rootlessHasRoot (ScreenPtr pScreen)
   return WINREC (WindowTable[pScreen->myNum]) != NULL;
 }
 
+#ifdef __APPLE__
 void
 RootlessNativeWindowStateChanged (xp_window_id id, unsigned int state)
 {
@@ -155,7 +158,11 @@ RootlessNativeWindowMoved (WindowPtr pWin)
   mask = CWX | CWY;
 
   /* pretend we're the owner of the window! */
-  client = LookupClient (pWin->drawable.id, NullClient);
+    err = dixLookupClient(&pClient, pWin->drawable.id, NullClient, DixUnknownAccess);
+    if(err != Success) {
+        ErrorF("RootlessNativeWindowMoved(): Failed to lookup window: 0x%x\n", (unsigned int)pWin->drawable.id);
+        return;
+    }
 
   /* Don't want to do anything to the physical window (avoids 
      notification-response feedback loops) */
@@ -184,6 +191,7 @@ set_screen_origin (WindowPtr pWin)
   dixChangeWindowProperty(serverClient, pWin, xa_native_screen_origin(),
 			  XA_INTEGER, 32, PropModeReplace, 2, data, TRUE);
 }
+#endif /* __APPLE__ */
 
 /*
  * RootlessCreateWindow

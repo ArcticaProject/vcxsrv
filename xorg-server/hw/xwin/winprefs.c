@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ * Copyright (C) Colin Harrison 2005-2008
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -26,6 +27,7 @@
  * from the XFree86 Project.
  *
  * Authors:     Earle F. Philhower, III
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -724,7 +726,7 @@ winIconIsOverride(unsigned hiconIn)
 
 
 /*
- * Try and open ~/.XWinrc and /usr/X11R6/lib/X11/system.XWinrc
+ * Try and open ~/.XWinrc and system.XWinrc
  * Load it into prefs structure for use by other functions
  */
 void
@@ -764,7 +766,7 @@ LoadPreferences ()
 #ifdef RELOCATE_PROJECTROOT
       snprintf(buffer, sizeof(buffer), "%s\\system.XWinrc", winGetBaseDir());
 #else
-      strncpy(buffer, PROJECTROOT"/lib/X11/system.XWinrc", sizeof(buffer));
+      strncpy(buffer, SYSCONFDIR"/X11/system.XWinrc", sizeof(buffer));
 #endif
       buffer[sizeof(buffer)-1] = 0;
       prefFile = fopen (buffer, "r");
@@ -819,4 +821,50 @@ LoadPreferences ()
 	} /* for all menuitems */
     } /* for all menus */
 
+}
+
+
+/*
+ * Check for a match of the window class to one specified in the
+ * STYLES{} section in the prefs file, and return the style type
+ */
+unsigned long
+winOverrideStyle (unsigned long longpWin)
+{
+  WindowPtr pWin = (WindowPtr) longpWin;
+  char *res_name, *res_class;
+  int i;
+  char *wmName;
+
+  if (pWin==NULL)
+    return STYLE_NONE;
+
+  /* If we can't find the class, we can't override from default! */
+  if (!winMultiWindowGetClassHint (pWin, &res_name, &res_class))
+    return STYLE_NONE;
+
+  winMultiWindowGetWMName (pWin, &wmName);
+
+  for (i=0; i<pref.styleItems; i++) {
+    if (!strcmp(pref.style[i].match, res_name) ||
+	!strcmp(pref.style[i].match, res_class) ||
+	(wmName && strstr(wmName, pref.style[i].match)))
+      {
+	free (res_name);
+	free (res_class);
+	if (wmName)
+	  free (wmName);
+
+	if (pref.style[i].type)
+	  return pref.style[i].type;
+      }
+  }
+
+  /* Didn't find the style, fail gracefully */
+  free (res_name);
+  free (res_class);
+  if (wmName)
+    free (wmName);
+
+  return STYLE_NONE;
 }

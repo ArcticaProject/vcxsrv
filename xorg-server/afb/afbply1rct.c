@@ -51,14 +51,14 @@ in this Software without prior written authorization from the X Consortium.
 #endif
 
 #if IMAGE_BYTE_ORDER == MSBFirst
-#define intToCoord(i,x,y)	(((x) = GetHighWord(i)), ((y) = (int)((short) (i))))
+#define intToCoord(i,x,y)	(((x) = GetHighWord(i)), ((y) = (int)((short) ((i)&0xffff))))
 #define coordToInt(x,y)		(((x) << 16) | (y))
 #define intToX(i)				(GetHighWord(i))
-#define intToY(i)				((int)((short) i))
+#define intToY(i)				((int)((short) ((i)&0xffff)))
 #else
-#define intToCoord(i,x,y)	(((x) = (int)((short) (i))), ((y) = GetHighWord(i)))
+#define intToCoord(i,x,y)	(((x) = (int)((short) ((i)&0xffff))), ((y) = GetHighWord(i)))
 #define coordToInt(x,y)		(((y) << 16) | (x))
-#define intToX(i)				((int)((short) (i)))
+#define intToX(i)				((int)((short) ((i)&0xffff)))
 #define intToY(i)				(GetHighWord(i))
 #endif
 

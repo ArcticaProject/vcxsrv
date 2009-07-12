@@ -64,6 +64,10 @@
 #define BUFSIZE 6144 /* 2048*3 */
 #endif
 
+#ifdef _MSC_VER
+typedef long ssize_t;
+#endif
+
 #include <stdio.h>
 
 typedef struct _DatabaseRec {

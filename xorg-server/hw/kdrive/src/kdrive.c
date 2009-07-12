@@ -340,6 +340,7 @@ KdProcessSwitch (void)
 	KdEnableScreens ();
 }
 
+#ifndef _MSC_VER
 void
 AbortDDX(void)
 {
@@ -362,6 +363,7 @@ ddxGiveUp ()
 {
     AbortDDX ();
 }
+#endif
 
 Bool	kdDumbDriver;
 Bool	kdSoftCursor;
@@ -1394,6 +1396,7 @@ KdInitOutput (ScreenInfo    *pScreenInfo,
 }
 
 #ifdef DPMSExtension
+#ifndef _MSC_VER
 int
 DPMSSet(ClientPtr client, int level)
 {
@@ -1411,6 +1414,8 @@ DPMSSupported (void)
     return FALSE;
 }
 #endif
+#endif
 
+#ifndef _MSC_VER
 void ddxInitGlobals(void) { /* THANK YOU XPRINT */ }
-
+#endif

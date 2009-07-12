@@ -43,13 +43,15 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h> 		/* for memset */
 #include <time.h>
 
+#ifndef _MSC_VER
+#include <unistd.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/time.h>
+#endif
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -206,7 +208,11 @@ hostx_add_screen (EphyrScreenInfo screen,
 void
 hostx_set_display_name (char *name)
 {
+#ifdef _MSC_VER
+  __asm int 3;
+#else
   HostX.server_dpy_name = strdup (name);
+#endif
 }
 
 void
@@ -462,6 +468,9 @@ hostx_init (void)
     }
   /* Try to get share memory ximages for a little bit more speed */
 
+#ifdef _MSC_VER
+  __asm int 3;
+#else
   if (!XShmQueryExtension(HostX.dpy) || getenv("XEPHYR_NO_SHM"))
     {
       fprintf(stderr, "\nXephyr unable to use SHM XImages\n");
@@ -492,6 +501,7 @@ hostx_init (void)
         shmdt(shminfo.shmaddr);
         shmctl(shminfo.shmid, IPC_RMID, 0);
 }
+#endif
 
   XFlush(HostX.dpy);
 
@@ -611,7 +621,7 @@ hostx_screen_init (EphyrScreenInfo screen,
   struct EphyrHostScreen *host_screen = host_screen_from_screen_info (screen);
   if (!host_screen)
     {
-      fprintf (stderr, "%s: Error in accessing hostx data\n", __func__ );
+      fprintf (stderr, "%s: Error in accessing hostx data\n", __FUNCTION__ );
       exit(1);
     }
 
@@ -626,10 +636,14 @@ hostx_screen_init (EphyrScreenInfo screen,
 
       if (HostX.have_shm)
 	{
+#ifdef _MSC_VER
+	  __asm int 3;
+#else
 	  XShmDetach(HostX.dpy, &host_screen->shminfo);
 	  XDestroyImage (host_screen->ximg);
 	  shmdt(host_screen->shminfo.shmaddr);
 	  shmctl(host_screen->shminfo.shmid, IPC_RMID, 0);
+#endif
 	}
       else
 	{
@@ -645,6 +659,9 @@ hostx_screen_init (EphyrScreenInfo screen,
 
   if (HostX.have_shm)
     {
+#ifdef _MSC_VER
+__asm int 3;
+#else
       host_screen->ximg = XShmCreateImage (HostX.dpy, HostX.visual, HostX.depth,
                                            ZPixmap, NULL, &host_screen->shminfo,
                                            width, buffer_height );
@@ -670,6 +687,7 @@ hostx_screen_init (EphyrScreenInfo screen,
 	  XShmAttach(HostX.dpy, &host_screen->shminfo);
 	  shm_success = True;
 	}
+#endif
     }
 
   if (!shm_success)
@@ -798,9 +816,13 @@ hostx_paint_rect (EphyrScreenInfo screen,
 
   if (HostX.have_shm)
     {
+#ifdef _MSC_VER
+      __asm int 3;
+#else
       XShmPutImage (HostX.dpy, host_screen->win,
                     HostX.gc, host_screen->ximg,
                     sx, sy, dx, dy, width, height, False);
+#endif
     }
   else
     {
@@ -816,6 +838,9 @@ hostx_paint_debug_rect (struct EphyrHostScreen *host_screen,
                         int x,     int y,
                         int width, int height)
 {
+#ifdef _MSC_VER
+  __asm int 3;
+#else
   struct timespec tspec;
 
   tspec.tv_sec  = HostX.damage_debug_msec / (1000000);
@@ -831,6 +856,7 @@ hostx_paint_debug_rect (struct EphyrHostScreen *host_screen,
 
   /* nanosleep seems to work better than usleep for me... */
   nanosleep(&tspec, NULL);
+#endif
 }
 
 void
@@ -1265,8 +1291,12 @@ hostx_set_window_bounding_rectangles (int a_window,
                    rects[i].width, rects[i].height) ;
     }
     /*this aways returns 1*/
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     XShapeCombineRectangles (dpy, a_window, ShapeBounding, 0, 0,
                              rects, a_num_rects, ShapeSet, YXBanded) ;
+#endif
     is_ok = TRUE ;
 
     if (rects) {
@@ -1302,8 +1332,12 @@ hostx_set_window_clipping_rectangles (int a_window,
                    rects[i].width, rects[i].height) ;
     }
     /*this aways returns 1*/
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     XShapeCombineRectangles (dpy, a_window, ShapeClip, 0, 0,
                              rects, a_num_rects, ShapeSet, YXBanded) ;
+#endif
     is_ok = TRUE ;
 
     if (rects) {
@@ -1318,12 +1352,16 @@ int
 hostx_has_xshape (void)
 {
     int event_base=0, error_base=0 ;
+#ifdef _MSC_VER
+    __asm int 3;
+#else
     Display *dpy=hostx_get_display () ;
     if (!XShapeQueryExtension (dpy,
                                &event_base,
                                &error_base)) {
         return FALSE ;
     }
+#endif
     return TRUE;
 }
 

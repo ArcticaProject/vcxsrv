@@ -276,7 +276,7 @@ typedef unsigned long fd_mask;
 #define NGROUPS 16
 #endif
 
-#if defined(ISC) || defined(__UNIXOS2__) || \
+#if defined(_MSC_VER) || defined(ISC) || defined(__UNIXOS2__) || \
     (defined(__linux__) && !defined(__GLIBC__)) || \
     (defined(__QNX__) && !defined(UNIXCONN))
 /*

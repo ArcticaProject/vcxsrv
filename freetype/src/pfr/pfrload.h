@@ -20,7 +20,7 @@
 #define __PFRLOAD_H__
 
 #include "pfrobjs.h"
-#include FT_INTERNAL_STREAM_H
+#include <freetype/internal/ftstream.h>
 
 
 FT_BEGIN_HEADER

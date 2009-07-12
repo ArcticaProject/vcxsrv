@@ -35,7 +35,7 @@
 #include "win.h"
 #include <winuser.h>
 #define _WINDOWSWM_SERVER_
-#include "windowswmstr.h"
+#include <X11/extensions/windowswmstr.h>
 #include "dixevents.h"
 #include "propertyst.h"
 #include <X11/Xatom.h>
@@ -48,7 +48,6 @@
  * Constant defines
  */
 
-#define MOUSE_POLLING_INTERVAL		500
 #define MOUSE_ACTIVATE_DEFAULT		TRUE
 #define RAISE_ON_CLICK_DEFAULT		FALSE
 
@@ -567,9 +566,9 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 	}
 
       /* Deliver absolute cursor position to X Server */
-      miPointerAbsoluteCursor (ptMouse.x - pScreenInfo->dwXOffset,
-			       ptMouse.y - pScreenInfo->dwYOffset,
-			       g_c32LastInputEventTime = GetTickCount ());
+      winEnqueueMotion(ptMouse.x - pScreenInfo->dwXOffset,
+		       ptMouse.y - pScreenInfo->dwYOffset);
+
       return 0;
       
     case WM_NCMOUSEMOVE:

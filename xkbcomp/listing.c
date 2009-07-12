@@ -78,6 +78,7 @@ SOFTWARE.
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <X11/keysym.h>
+#include <X11/Xwindows.h>
 
 #if defined(sgi)
 #include <malloc.h>
@@ -141,6 +142,14 @@ SOFTWARE.
 #include "misc.h"
 #include "tokens.h"
 #include <X11/extensions/XKBgeom.h>
+
+#ifndef S_ISDIR
+# if defined(_S_IFMT) && defined(_S_IFDIR)
+#  define S_ISDIR(a)	(((a) & _S_IFMT) == _S_IFDIR)
+# else
+#  define S_ISDIR(a)	(((a) & S_IFMT) == S_IFDIR)
+# endif
+#endif
 
 #define	lowbit(x)	((x) & (-(x)))
 

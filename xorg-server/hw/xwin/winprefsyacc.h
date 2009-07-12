@@ -35,6 +35,10 @@
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
+#ifdef DEBUG
+#undef DEBUG
+#endif
+
 # define YYTOKENTYPE
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */

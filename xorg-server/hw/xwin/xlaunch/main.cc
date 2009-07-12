@@ -34,6 +34,10 @@
 
 #include <X11/Xlib.h>
 
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
+
 /// @brief Send WM_ENDSESSION to all program windows.
 /// This will shutdown the started xserver
 BOOL CALLBACK KillWindowsProc(HWND hwnd, LPARAM lParam)
@@ -489,7 +493,7 @@ class CMyWizard : public CWizard
             return NULL;
         }
                
-        /// @brief Do the actual start of Xming and clients
+        /// @brief Do the actual start of VCXsrv and clients
 	void StartUp()
 	{
 	    std::string buffer;
@@ -500,12 +504,12 @@ class CMyWizard : public CWizard
 	    std::string display = "localhost" + display_id + ":0";
 
 #ifdef _DEBUG
-            // Debug only: Switch to Xming installation directory
-	    SetCurrentDirectory("C:\\Programme\\Xming");
+            // Debug only: Switch to VCXsrv installation directory
+	    SetCurrentDirectory("C:\\Programme\\vcxsrv");
 #endif	    
 
-            // Build Xming commandline
-	    buffer = "Xming " + display_id + " ";
+            // Build Xsrv commandline
+	    buffer = "vcxsrv " + display_id + " ";
 	    switch (config.window)
 	    {
 		case CConfig::MultiWindow:
@@ -577,7 +581,7 @@ class CMyWizard : public CWizard
 	    sic.cb = sizeof(sic);
 	    ZeroMemory( &pic, sizeof(pic) );
 
-	    // Start Xming process. 
+	    // Start VCXsrv process. 
 #ifdef _DEBUG
 	    printf("%s\n", buffer.c_str());
 #endif
@@ -627,7 +631,7 @@ class CMyWizard : public CWizard
 #ifdef _DEBUG
 	    printf("killing process!\n");
 #endif
-            // Check if Xming is still running
+            // Check if Xsrv is still running
 	    DWORD exitcode;
 	    GetExitCodeProcess(pi.hProcess, &exitcode);
 	    unsigned counter = 0;
@@ -636,7 +640,7 @@ class CMyWizard : public CWizard
 		if (++counter > 10)
 		    TerminateProcess(pi.hProcess, (DWORD)-1);
 		else
-		    // Shutdown Xming (the soft way!)
+		    // Shutdown Xsrv (the soft way!)
 		    EnumThreadWindows(pi.dwThreadId, KillWindowsProc, 0);
 		Sleep(500);
 		GetExitCodeProcess(pi.hProcess, &exitcode);

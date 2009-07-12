@@ -27,18 +27,29 @@
 
 #include <assert.h>
 #include <X11/Xauth.h>
+#include <X11/Xwinsock.h>
+#include <stdlib.h>
+#ifndef _MSC_VER
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/un.h>
 #include <sys/param.h>
 #include <unistd.h>
-#include <stdlib.h>
+#else
+typedef unsigned in_addr_t;
+#define MAXPATHLEN 255
+#define snprintf _snprintf
+#endif
 
 #include "xcb.h"
 #include "xcbint.h"
 
 #ifdef HASXDMAUTH
 #include <X11/Xdmcp.h>
+#endif
+
+#ifndef HAVE_GETADDRINFO
+#include "dummyin6.h"
 #endif
 
 enum auth_protos {

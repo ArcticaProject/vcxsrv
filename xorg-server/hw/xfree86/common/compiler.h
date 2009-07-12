@@ -66,7 +66,7 @@
 #  endif
 # endif /* __inline__ */
 # ifndef __inline
-#  if defined(__GNUC__)
+#  if defined(__GNUC__) || defined(_MSC_VER)
     /* gcc has __inline */
 #  elif defined(__HIGHC__)
 #   define __inline _Inline
@@ -1529,13 +1529,13 @@ inl(unsigned short port)
 #      define uint_t unsigned int
 #      define uchar_t unsigned char
 #     endif /* __UNIXWARE__ */
-#     if !defined(sgi) && !defined(__SUNPRO_C)
+#     if !defined(sgi) && !defined(__SUNPRO_C) && !defined(_MSC_VER)
 #      include <sys/inline.h>
 #     endif
 #    else
 #     include "scoasm.h"
 #    endif
-#    if (!defined(__HIGHC__) && !defined(sgi) && !defined(__SUNPRO_C)) || \
+#    if (!defined(__HIGHC__) && !defined(sgi) && !defined(__SUNPRO_C) && !defined(_MSC_VER)) || \
 	defined(__USLC__)
 #     pragma asm partial_optimization outl
 #     pragma asm partial_optimization outw

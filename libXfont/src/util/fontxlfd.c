@@ -36,6 +36,7 @@ from The Open Group.
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include <float.h>
 #include	<X11/fonts/fontmisc.h>
 #include	<X11/fonts/fontstruct.h>
 #include	<X11/fonts/fontxlfd.h>
@@ -203,7 +204,6 @@ xlfd_round_double(double x)
     defined(__amd64__) || defined(__amd64) || \
     defined(sgi)
 #if !defined(__UNIXOS2__)
-#include <float.h>
 
 /* if we have IEEE 754 fp, we can round to binary digits... */
 
@@ -243,7 +243,7 @@ xlfd_round_double(double x)
       j = 1 << ((DBL_MANT_DIG-XLFD_NDIGITS_2) & 0x07);
       for (; i<7; i++) {
 	 k = d.b[i] + j;
-	 d.b[i] = k;
+	 d.b[i] = k&0xff;
 	 if (k & 0x100) j = 1;
 	 else break;
       }

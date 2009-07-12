@@ -20,8 +20,8 @@
 #include FT_FREETYPE_H
 #include FT_CACHE_H
 #include "ftcmanag.h"
-#include FT_INTERNAL_MEMORY_H
-#include FT_INTERNAL_DEBUG_H
+#include <freetype/internal/ftmemory.h>
+#include <freetype/internal/ftdebug.h>
 #include FT_TRUETYPE_IDS_H
 
 #include "ftccback.h"

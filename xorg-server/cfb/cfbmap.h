@@ -32,6 +32,10 @@ in this Software without prior written authorization from The Open Group.
 
 /* a losing vendor cpp dumps core if we define CFBNAME in terms of CATNAME */
 
+#ifdef _MSC_VER
+#define PSZ 8
+#endif
+
 #if PSZ != 8
 
 #if PSZ == 32

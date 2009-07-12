@@ -27,7 +27,7 @@
   void*  _af_debug_hints;
 #endif
 
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/internal/ftobjs.h>
 
 
   typedef struct  FT_AutofitterRec_
