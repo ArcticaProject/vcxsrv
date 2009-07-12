@@ -627,7 +627,7 @@ extern void afbOpaqueStippleAreaPPWCopy(
 	BoxPtr /*pbox*/,
 	int /*alu*/,
 	PixmapPtr /*ptile*/,
-	unsigned char */*rropsOS*/,
+	unsigned char * /*rropsOS*/,
 	unsigned long /*planemask*/
 );
 /* afbtileG.c */
@@ -638,7 +638,7 @@ extern void afbOpaqueStippleAreaPPWGeneral(
 	BoxPtr /*pbox*/,
 	int /*alu*/,
 	PixmapPtr /*ptile*/,
-	unsigned char */*rropsOS*/,
+	unsigned char * /*rropsOS*/,
 	unsigned long /*planemask*/
 );
 
@@ -650,7 +650,7 @@ extern void afbOpaqueStippleAreaCopy(
 	PixmapPtr /*ptile*/,
 	int /*xOff*/,
 	int /*yOff*/,
-	unsigned char */*rropsOS*/,
+	unsigned char * /*rropsOS*/,
 	unsigned long /*planemask*/
 );
 /* afbtileG.c */
@@ -663,7 +663,7 @@ extern void afbOpaqueStippleAreaGeneral(
 	PixmapPtr /*ptile*/,
 	int /*xOff*/,
 	int /*yOff*/,
-	unsigned char */*rropsOS*/,
+	unsigned char * /*rropsOS*/,
 	unsigned long /*planemask*/
 );
 
