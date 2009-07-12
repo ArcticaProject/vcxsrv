@@ -35,9 +35,19 @@
 #include <stdint.h>
 #endif
 
+#ifndef _MSC_VER
 #include <sys/uio.h>
+#else
+#define HANDLE void *
+typedef int pid_t;
+#endif
 #include <pthread.h>
 
+#ifdef _MSC_VER
+#undef HANDLE
+typedef unsigned uint32_t;
+typedef int int32_t;
+#endif
 
 #ifdef __cplusplus
 extern "C" {

@@ -31,6 +31,9 @@
 #ifndef __XCBXLIB_H
 #define __XCBXLIB_H
 
+#ifdef _MSC_VER
+typedef int pid_t;
+#endif
 #include <pthread.h>
 #include "xcb.h"
 
