@@ -14,4 +14,7 @@ Building pthreads:
 - run nmake VC-static
 - run nmake VC-static-debug
 
+Building vcxsrv:
+- run mhmake MAKESERVER=1 in xorg-server directory
+
 
