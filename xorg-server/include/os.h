@@ -526,4 +526,8 @@ extern void LogPrintMarkers(void);
 
 extern void xorg_backtrace(void);
 
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
+
 #endif /* OS_H */

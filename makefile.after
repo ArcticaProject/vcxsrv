@@ -5,6 +5,12 @@ RESOBJS:=$(RESOURCES:%.rc=$(OBJDIR)$/%.res)
 
 MANIFESTFILE:=$(MHMAKECONF)\runtime.manifest
 
+ifdef SUBDIRS
+load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG);)
+all: $(SUBDIRS:%=%\all)
+endif
+
+
 ### Static library stuff ###
 ifdef LIBRARY
 LIBRARY_DIR := $(LIBRARY:%=$(OBJDIR)\%.lib)
