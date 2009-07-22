@@ -105,7 +105,17 @@ evdev: $(evdev_parts_no_compat)
 	HDR="$(srcdir)/HDR" $(srcdir)/merge.sh $@ $(evdev_parts)
 
 all_rules_files = $(rules_files) $(lst_files) \
-xkb.dtd README
+xkb.dtd README \
+	sgi \
+	sgi.lst \
+	sun \
+	sun.lst \
+	xfree98 \
+	xfree98.lst \
+	xorg \
+	xorg-it.lst \
+	xorg.lst \
+	xorg.xml 
 
 rules_DATA = $(all_rules_files)
 

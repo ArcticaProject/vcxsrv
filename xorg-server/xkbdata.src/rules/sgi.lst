@@ -1,0 +1,82 @@
+// $Xorg: sgi.lst,v 1.3 2000/08/17 19:54:41 cpqbld Exp $
+
+
+
+
+// $XFree86: xc/programs/xkbcomp/rules/sgi.lst,v 3.6 2001/05/18 23:35:34 dawes Exp $
+
+! model
+  indy			SGI O2, Indigo^2 or Indy
+  indy101		SGI O2, Indigo^2 or Indy (101-key US)
+  indy102		SGI O2, Indigo^2 or Indy (102-key European)
+  indy104               Generic 104-key PC
+  indy105               Generic 105-key PC
+  indy106               SGI O2, Indigo^2 or Indy (106-key Japanese)
+  indigo		SGI Indigo
+  indigo102             SGI Indigo (102-key European)
+  dell101		Dell 101-key PC
+  flexpro		Keytronic FlexPro
+  jp106			Generic 106-key Japanese PC
+  microsoft		Microsoft Natural
+  omnikey101		Northgate OmniKey 101
+  pc101			Generic 101-key PC
+  pc102			Generic 102-key (European) PC
+
+! layout
+  be			Belgian
+  bg			Bulgarian
+  ca			Canadian
+  cz			Czech
+  cz_qwerty		Czech (qwerty)
+  de 			German
+  de_CH			Swiss German
+  dvorak		Dvorak (US)
+  dk			Danish
+  en_US			US/English w/ISO9995-3
+  es			Spanish
+  fi			Finnish
+  fr			French
+  fr_CH			Swiss French
+  gb			United Kingdom
+  hu			Hungarian
+  it			Italian
+  intl			US w/Compose Key
+  jp			Japanese
+  no			Norwegian
+  pl			Polish
+  pt			Portuguese
+  ru			Russian
+  se			Swedish
+  sk			Slovak
+  sk_qwerty		Slovak (qwerty)
+  th			Thai
+  us			US/ASCII
+  tr			Turkish
+
+! variant
+  nodeadkeys		Eliminate dead keys from European keyboards
+  typewriter		Cyrillic layout similar to manual typewriters
+  phonetic		Cyrillic layout similar to US/ASCII layout
+
+! option
+  grp			Group Shift/Lock behavior
+  grp:switch		Right Alt key switches group while held down
+  grp:toggle		Pressing Right Alt key toggles group
+  grp:shift_toggle	Pressing both shift keys together toggles group
+  grp:ctrl_shift_toggle	Pressing shift and control together toggles group
+  grp:ctrl_alt_toggle	Pressing alt and control together toggles group
+  grp:caps_toggle       Caps Lock key toggles group
+  ctrl			Control Key Position
+  ctrl:nocaps		Replace Caps Lock with another control key
+  ctrl:swapcaps		Swap positions of control and Caps Lock
+  ctrl:ctrl_ac		Control key is left of the 'A' key
+  ctrl:ctrl_aa		Control key is at the left of the bottom row
+  keypad		Specify behavior of the numeric keypad
+  keypad:overlay	Use default Overlay instead of modifier for keypad
+  keypad:overlay1	Use Overlay1 instead of modifier for keypad
+  keypad:overlay2	Use Overlay2 instead of modifier for keypad
+  lock			Specify behavior of the lock key
+  lock:shift		Key is shift lock
+  lock:caps		Key is captals lock
+  lock:group		Key is group lock
+

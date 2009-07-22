@@ -1,0 +1,73 @@
+// $Xorg: sgi,v 1.3 2000/08/17 19:54:41 cpqbld Exp $
+
+! option                =   symbols
+  grp:switch            =   +group(switch)
+  grp:toggle            =   +group(toggle)
+  grp:shift_toggle      =   +group(shift_toggle)
+  grp:ctrl_shift_toggle =   +group(ctrl_shift_toggle)
+  grp:ctrl_alt_toggle   =   +group(ctrl_alt_toggle)
+  grp:caps_toggle	=   +group(caps_toggle)
+  ctrl:nocaps           =   +ctrl(nocaps)
+  ctrl:swapcaps         =   +ctrl(swapcaps)
+  ctrl:ctrl_ac          =   +ctrl(ctrl_ac)
+  ctrl:ctrl_aa          =   +ctrl(ctrl_aa)
+  keypad:overlay	=   +keypad(overlay)
+  keypad:overlay1	=   +keypad(overlay)
+  keypad:overlay2	=   +keypad(overlay)
+  lock:shift		=   +lock(shift)
+  pc104:altmeta		=   +pc104(altmeta)
+  pc104:compose		=   +pc104(compose)
+
+! option		=   keycodes
+  lock:shift		=   +sgi/indy(shiftLock)
+
+! option		=   keycodes			compat
+  keypad:overlay	=   +sgi/indy(overlayKeypad)	+keypad(overlay)
+  keypad:overlay1	=   +sgi/indy(overlayKeypad)	+keypad(overlay1)
+  keypad:overlay2	=   +sgi/indy(overlayKeypad)	+keypad(overlay2)
+
+! model   layout   	=    keycodes			geometry
+  indy    us		=    sgi/indy(universal)	sgi/indy(pc101)
+  indy    intl          =    sgi/indy(universal)        sgi/indy(pc101)
+  indy    dvorak	=    sgi/indy(universal)	sgi/indy(pc101)
+  indigo  us		=    sgi/indigo(pc101)      	sgi/indigo(pc101)
+  indigo  intl          =    sgi/indigo(pc101)          sgi/indigo(pc101)
+  indigo  dvorak	=    sgi/indigo(pc101)		sgi/indigo(pc101)
+  indy    jp		=    sgi/indy(jp106)		sgi/indy(jp106)
+
+! model			=    keycodes			geometry
+  indy			=    sgi/indy(universal)	sgi/indy(pc102)
+  indy101		=    sgi/indy(universal)	sgi/indy(pc101)
+  indy102               =    sgi/indy(universal)	sgi/indy(pc102)
+  indy104               =    sgi/indy(universal)	microsoft(natural)
+  indy105               =    sgi/indy(universal)	microsoft(natural)
+  indy106		=    sgi/indy(jp106)		sgi/indy(jp106)
+  indigo		=    sgi/indigo(pc102)		sgi/indigo(pc102)
+  indigo102             =    sgi/indigo(pc102)          sgi/indigo(pc102)
+  microsoft		=    sgi/indy(universal)	microsoft(natural)
+  kinesis		=    sgi/indy(universal)	kinesis
+  dell101		=    sgi/indy(universal)	dell(dell101)
+  flexpro		=    sgi/indy(universal)	keytronic(FlexPro)
+  omnikey101		=    sgi/indy(universal)	northgate(omnikey101)
+  pc101			=    sgi/indy(universal)	pc(pc101)
+  pc102			=    sgi/indy(universal)	pc(pc102)
+  jp106			=    sgi/indy(jp106)		pc(jp106)
+  digital101		=    sgi/indy(universal)	digital/pc(pc101)
+  digital102		=    sgi/indy(universal)	digital/pc(pc102)
+  digitalpcxaj		=    sgi/indy(jp106)		digital/pc(pcxaj)
+
+! model     variant	=  symbols
+  *         nodeadkeys	=  en_US(pc_universal%_v)+%l%(v)
+
+! model     layout   =   symbols
+  *         us       =   us(pc_universal)
+  *	    jp       =   us(pc101)+sgi/%l%(v)
+  *         intl     =   us(pc_universal_compose)
+  *         en_US    =   en_US(pc_universal)
+  *         *        =   en_US(pc_universal)+%l%(v)
+
+! layout	=	compat
+  jp		=	complete+japan
+
+! model   layout   =    compat     types
+  *       *        =    complete   complete
