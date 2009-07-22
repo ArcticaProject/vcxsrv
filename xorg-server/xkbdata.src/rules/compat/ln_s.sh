@@ -1,16 +1,10 @@
-#!/bin/sh
+@echo off
+set variant=%1
 
-variant=$1
+set OUTFILE=base.l%variant%_s.part
 
-INDIR=`dirname $0`
-OUTFILE=base.l${variant}_s.part
+del %OUTFILE%
 
-> $OUTFILE
+gawk "{ printf """  %%s		=	+%%s%%%%(v[%variant%]):%variant%\n""", $1, $2; }" layoutRename.lst >> %OUTFILE%
 
-awk '{ 
-  printf "  %s		=	+%s%%(v['${variant}']):'${variant}'\n", $1, $2; 
-}' < $INDIR/layoutRename.lst >> $OUTFILE
-
-awk '{ 
-  printf "  %s(%s)	=	+%s(%s):'${variant}'\n", $1, $2, $3, $4; 
-}' < $INDIR/variantRename.lst >> $OUTFILE
+gawk "{ printf """  %%s(%%s)	=	+%%s(%%s):%variant%\n""", $1, $2, $3, $4; }" variantRename.lst >> %OUTFILE%

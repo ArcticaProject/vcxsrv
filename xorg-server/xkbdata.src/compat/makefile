@@ -9,24 +9,13 @@ $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 dist_xkbdata_compat_DATA = \
-	accessx \
-	basic \
-	complete \
-	default \
-	iso9995 \
-	japan \
-	keypad \
-	ledcaps \
-	lednum \
-	ledscroll \
-	misc \
-	mousekeys \
-	norepeat \
-	pc \
-	pc98 \
-	README \
-	xfree86 \
-	xtest
+accessx basic complete \
+default iso9995 \
+japan keypad ledcaps \
+lednum ledscroll level5 \
+misc mousekeys norepeat \
+olpc pc pc98 xfree86 \
+xtest README
 
 DATA_FILES=$(dist_xkbdata_compat_DATA:%=$(DESTDIR)\%)
 

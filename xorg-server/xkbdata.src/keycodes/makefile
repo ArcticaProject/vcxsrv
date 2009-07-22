@@ -8,22 +8,22 @@ DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
 $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
-SUBDIRS = digital sgi
+SUBDIRS = digital_vndr sgi_vndr
 
 dist_xkbdata_keycodes_DATA = \
 	aliases \
 	amiga \
 	ataritt \
+	evdev \
 	fujitsu \
 	hp \
 	ibm \
 	macintosh \
-	powerpcps2 \
-	README \
 	sony \
 	sun \
 	xfree86 \
-	xfree98
+	xfree98 \
+	README
 
 DATA_FILES=$(dist_xkbdata_keycodes_DATA:%=$(DESTDIR)\%)
 

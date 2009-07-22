@@ -9,28 +9,16 @@ $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 dist_xkbdata_geometry_DATA = \
-	amiga \
-	ataritt \
-	chicony \
-	dell \
-	everex \
-	fujitsu \
-	hp \
-	keytronic \
-	kinesis \
-	macintosh \
-	microsoft \
-	nec \
-	northgate \
-	pc \
-	README \
-	sony \
-	sun \
-	winbook
+amiga ataritt chicony \
+dell everex fujitsu \
+hhk hp keytronic kinesis \
+macintosh microsoft nec \
+northgate pc sony thinkpad \
+sun winbook README
 
 DATA_FILES=$(dist_xkbdata_geometry_DATA:%=$(DESTDIR)\%)
 
-SUBDIRS = digital ibm sgi
+SUBDIRS = digital_vndr  sgi_vndr
 
 load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=0 DEBUG=$(DEBUG);)
 
