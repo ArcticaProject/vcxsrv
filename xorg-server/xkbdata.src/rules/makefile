@@ -86,7 +86,17 @@ evdev: $(EVDEV_PARTS_NO_COMPAT)
 	merge $@ $(EVDEV_PARTS) 
 
 ALL_RULES_FILES = $(RULES_FILES) $(LST_FILES) \
-                  xkb.dtd README
+xkb.dtd README \
+	sgi \
+	sgi.lst \
+	sun \
+	sun.lst \
+	xfree98 \
+	xfree98.lst \
+	xorg \
+	xorg-it.lst \
+	xorg.lst \
+	xorg.xml 
 
 rules_DATA = $(ALL_RULES_FILES)
 
