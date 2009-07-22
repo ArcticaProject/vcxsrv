@@ -18,6 +18,7 @@ dist_xkbdata_types_DATA = \
 	iso9995 \
 	mousekeys \
 	numpad \
+	level5 \
 	pc \
 	README 
 
