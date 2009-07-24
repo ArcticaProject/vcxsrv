@@ -81,6 +81,9 @@ RESOURCES = XWin.rc
 
 $(OBJDIR)\$(WINAPP).exe: $(LINKLIBS)
 
+XKeysymDB: ..\libX11\src\XKeysymDB
+	copy $< $@
+
 $(WINAPP).exe: $(OBJDIR)\$(WINAPP).exe
 	copy $< $@
 
@@ -94,7 +97,7 @@ load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 xkbcomp.exe: ..\xkbcomp\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\xkbcomp.exe
 	copy $< $@
 
-all: $(WINAPP).exe xlaunch.exe xkbcomp.exe protocol.txt
+all: $(WINAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB
 
 protocol.txt: dix\protocol.txt
 	copy $< $@
