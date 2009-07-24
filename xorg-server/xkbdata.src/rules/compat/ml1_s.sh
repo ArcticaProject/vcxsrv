@@ -6,7 +6,11 @@ OUTFILE=base.ml1_s.part
 > $OUTFILE
 
 awk '{ 
-  printf "  *		%s			=	pc+%s%%(v[1])\n", $1, $2; 
+  if (index($2, "(") == 0) {
+    printf "  *		%s			=	pc+%s%%(v[1])\n", $1, $2; 
+  } else {
+    printf "  *		%s			=	pc+%s\n", $1, $2; 
+  }
 }' < $INDIR/layoutRename.lst >> $OUTFILE
 
 awk '{ 

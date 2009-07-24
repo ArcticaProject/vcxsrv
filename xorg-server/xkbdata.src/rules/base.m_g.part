@@ -2,6 +2,7 @@
  $msmodels	=	microsoft(natural)
   dell101	=	dell(dell101)
   dellm65	=	dell(dellm65)
+  latitude	=	dell(latitude)
   flexpro	=	keytronic(FlexPro)
   hp6000	=	hp(omnibook)
   omnikey101	=	northgate(omnikey101)

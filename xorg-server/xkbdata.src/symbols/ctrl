@@ -5,15 +5,15 @@
 // eliminate the caps lock key completely (replace with control)
 partial modifier_keys 
 xkb_symbols "nocaps" {
-    key <CAPS>	{  symbols[Group1]= [ Control_L, Control_L ] };
+    replace key <CAPS>	{  [ Control_L, Control_L ] };
     modifier_map  Control { <CAPS>, <LCTL> };
 };
 
 // swap the caps lock key with the left control key
 partial modifier_keys 
 xkb_symbols "swapcaps" {
-    key <CAPS>	{  symbols[Group1]= [ Control_L ] };
-    key <LCTL>	{  symbols[Group1]= [ Caps_Lock ] };
+    replace key <CAPS>	{  [ Control_L ] };
+    replace key <LCTL>	{  [ Caps_Lock ] };
 };
 
 // moves the control key to the middle row and the caps lock
@@ -21,8 +21,8 @@ xkb_symbols "swapcaps" {
 // file has defined appropriate aliases for the keys in question.
 partial modifier_keys 
 xkb_symbols "ctrl_ac" {
-    key <AC00>	{  symbols[Group1]= [ Control_L ] };
-    key <AA00>	{  symbols[Group1]= [ Caps_Lock ] };
+    replace key <AC00>	{  [ Control_L ] };
+    replace key <AA00>	{  [ Caps_Lock ] };
 };
 
 // Moves the control key to the bottom row and the caps lock
@@ -30,8 +30,8 @@ xkb_symbols "ctrl_ac" {
 // file has defined appropriate aliases for the keys in question.
 partial modifier_keys 
 xkb_symbols "ctrl_aa" {
-    key <AA00>	{  symbols[Group1]= [ Control_L ] };
-    key <AC00>	{  symbols[Group1]= [ Caps_Lock ] };
+    replace key <AA00>	{  [ Control_L ] };
+    replace key <AC00>	{  [ Caps_Lock ] };
 };
 
 // Right Ctrl works as Right Alt

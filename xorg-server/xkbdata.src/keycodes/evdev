@@ -36,6 +36,7 @@ default xkb_keycodes "evdev" {
 	<AD11> = 34;
 	<AD12> = 35;
 	<BKSL> = 51;
+	alias <AC12> = <BKSL>;
 	<RTRN> = 36;
 
 	<CAPS> = 66;
@@ -145,7 +146,8 @@ default xkb_keycodes "evdev" {
 
 	// Keys that are generated on Japanese keyboards
 
-	<HZTG> =  93;	// Hankaku/Zenkakau toggle
+	//<HZTG> =  93;	// Hankaku/Zenkakau toggle - not actually used
+	alias <HZTG> = <TLDE>;
 	<HKTG> = 101;	// Hiragana/Katakana toggle
 	<AB11> = 97;	// backslash/underscore
 	<HENK> = 100;	// Henkan
@@ -270,7 +272,7 @@ default xkb_keycodes "evdev" {
 	<I244> = 244;	// #define KEY_BATTERY             236
 	<I245> = 245;	// #define KEY_BLUETOOTH           237
 	<I246> = 246;	// #define KEY_WLAN                238
-	<I247> = 247;	// (not defined in input.h)        239
+	<I247> = 247;	// #define KEY_UWB                 239
 	<I248> = 248;	// #define KEY_UNKNOWN             240
 	<I249> = 249;	// #define KEY_VIDEO_NEXT          241
 	<I250> = 250;	// #define KEY_VIDEO_PREV          242
@@ -299,18 +301,9 @@ default xkb_keycodes "evdev" {
 	indicator 11 = "Charging";
 
 	alias <ALGR> = <RALT>;
-};
 
-// For japanese 106 keyboard.
-xkb_keycodes "jp106" {
-    include "evdev(evdev)"
-    <HZTG> = 49;
-    <AC12> = 51;
-};
-
-// For brazilian ABNT2 keyboard.
-xkb_keycodes "abnt2" {
-    include "evdev(evdev)"
+	// For Brazilian ABNT2
+	alias <KPPT> = <I129>;
 };
 
 // PC98

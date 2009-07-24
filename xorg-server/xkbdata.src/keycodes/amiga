@@ -7,7 +7,7 @@
 default xkb_keycodes "usa1" {
 
     minimum= 8;
-    maximum= 111;
+    maximum= 255;
 
     <ESC>  = 77;
     <FK01> = 88;
@@ -119,7 +119,7 @@ default xkb_keycodes "usa1" {
 xkb_keycodes "de" {
 
     minimum= 8;
-    maximum= 111;
+    maximum= 255;
 
     <ESC>  = 77;
     <FK01> = 88;

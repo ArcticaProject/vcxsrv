@@ -19,7 +19,7 @@ xkb_symbols "basic" {
 
   name[Group1]= "Serbia";
 
-  include "rs(level3)"
+  include "rs(cyrlevel3)"
   include "rs(common)"
   include "rs(cyralpha)"
   include "level3(ralt_switch)"
@@ -33,7 +33,7 @@ xkb_symbols "latin" {
 
   include "latin(type3)"
   include "rs(latalpha)"
-  include "rs(level3)"
+  include "rs(latlevel3)"
   include "rs(common)"
   include "level3(ralt_switch)"
 };
@@ -149,7 +149,7 @@ xkb_symbols "twoletter" {
 };
 
 partial hidden alphanumeric_keys
-xkb_symbols "level3" {
+xkb_symbols "latlevel3" {
   key <TLDE> {   [ any,any,     notsign,             notsign     ]   }; // ` ~
   key <AE01> {   [ any,any,     dead_tilde,          asciitilde  ]   }; // 1 !
   key <AE02> {   [ any,any,     dead_caron,          caron 	 ]   }; // 2 @
@@ -201,6 +201,46 @@ xkb_symbols "level3" {
   key <AB09> {   [ any,any,     greater,             division 	      ]   }; // . >
   key <AB10> {   [ any,any,     emdash,              endash   	      ]   }; // / ?
 
+};
+
+partial hidden alphanumeric_keys
+xkb_symbols "cyrlevel3" {
+  key <TLDE> {   [ any,any,     degree,              notsign          ]   }; // ` ~
+  key <AE03> {   [ any,any,     dead_circumflex,     NoSymbol         ]   }; // 3 #
+  key <AE07> {   [ any,any,     dead_grave,          NoSymbol         ]   }; // 7 &
+  key <AE08> {   [ any,any,     dead_doublegrave,    NoSymbol         ]   }; // 8 *
+  key <AE09> {   [ any,any,     dead_acute,          NoSymbol         ]   }; // 9 (
+  key <AE10> {   [ any,any,     dead_invertedbreve,  NoSymbol         ]   }; // 0 )
+  key <AE11> {   [ any,any,     dead_macron,         NoSymbol         ]   }; // - _
+
+  key <AD01> {   [ any,any,     backslash,           NoSymbol         ]   }; // q
+  key <AD02> {   [ any,any,     bar,                 NoSymbol         ]   }; // w
+  key <AD03> {   [ any,any,     EuroSign,            sterling         ]   }; // e
+  key <AD04> {   [ any,any,     paragraph,           registered       ]   }; // r
+  key <AD05> {   [ any,any,     ellipsis,            NoSymbol         ]   }; // t // ALPHABETIC
+  key <AD06> {   [ any,any,     leftarrow,           yen              ]   }; // y
+  key <AD07> {   [ any,any,     downarrow,           uparrow          ]   }; // u
+  key <AD08> {   [ any,any,     rightarrow,          NoSymbol         ]   }; // i
+  key <AD09> {   [ any,any,     section,             NoSymbol         ]   }; // o // ALPHABETIC
+  key <AD11> {   [ any,any,     division,            NoSymbol         ]   }; // [
+  key <AD12> {   [ any,any,     multiply,            NoSymbol         ]   }; // ]
+
+  key <AC02> {   [ any,any,     doublelowquotemark,  guillemotright   ]   }; // s
+  key <AC03> {   [ any,any,     leftdoublequotemark, guillemotleft    ]   }; // d
+  key <AC04> {   [ any,any,     bracketleft,         NoSymbol         ]   }; // f
+  key <AC05> {   [ any,any,     bracketright,        NoSymbol         ]   }; // g
+  key <BKSL> {   [ any,any,     currency,            NoSymbol         ]   }; // \
+
+  key <AB01> {   [ any,any,     leftsinglequotemark, NoSymbol         ]   }; // z
+  key <AB02> {   [ any,any,     rightsinglequotemark,NoSymbol         ]   }; // x
+  key <AB03> {   [ any,any,     cent,                copyright        ]   }; // c
+  key <AB04> {   [ any,any,     at,                  NoSymbol         ]   }; // v
+  key <AB05> {   [ any,any,     braceleft,           NoSymbol         ]   }; // b
+  key <AB06> {   [ any,any,     braceright,          NoSymbol         ]   }; // n
+  key <AB07> {   [ any,any,     asciicircum,         NoSymbol         ]   }; // m
+  key <AB08> {   [ any,any,     less,                NoSymbol         ]   }; // , <
+  key <AB09> {   [ any,any,     greater,             NoSymbol         ]   }; // . >
+  key <AB10> {   [ any,any,     emdash,              endash           ]   }; // / ?
 };
 
 partial alphanumeric_keys

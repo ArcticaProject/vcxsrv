@@ -61,7 +61,7 @@
 default xkb_keycodes "type4" {
 
     minimum= 8;
-    maximum= 132;
+    maximum= 255;
 
     <ESC>  = 36;
     <AE01> = 37;
@@ -192,7 +192,7 @@ default xkb_keycodes "type4" {
 xkb_keycodes "type5" {
 
     minimum= 8;
-    maximum= 132;
+    maximum= 255;
 
     <ESC>  = 36;
     <AE01> = 37;
@@ -379,7 +379,7 @@ xkb_keycodes "type5_euro" {
 xkb_keycodes "type5hobo" {
 
     minimum= 8;
-    maximum= 132;
+    maximum= 255;
 
     <ESC>  = 36;
     <AE01> = 37;
@@ -606,7 +606,7 @@ xkb_keycodes "type6_jp_usb" {
 xkb_keycodes "type5_se" {
 
     minimum= 8;
-    maximum= 132;
+    maximum= 255;
 
     // Row G
     <HELP> = 125;
@@ -788,7 +788,7 @@ xkb_keycodes "type5c_se" {
 xkb_keycodes "type4__se" {
 
     minimum= 8;
-    maximum= 132;
+    maximum= 255;
 
     // Row F
     <STOP> = 8;

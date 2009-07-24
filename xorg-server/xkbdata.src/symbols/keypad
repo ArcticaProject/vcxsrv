@@ -494,47 +494,87 @@ xkb_symbols "ossnumber_wang" {
     key <KP0>  { [ KP_Insert,   KP_0,   apostrophe, 0x1002195 ] }; // <insert> 0 ' ↕
 };
 
-// ATM/phone-style hexadecimal numpad
-// by Roland Kaufmann <rlndkfmn at gmail dot com>
-// License: BSD
+// Standard base "pc" layout only contains cursor keys, and then gets
+// augmented with the digits later. If you define your own layout for
+// the numpad you can inherit the cursors, but you'll have to define
+// the digits yourself. This module can be included in the rules to
+// define math operators; these are the variants used in computer
+// languages that are based on ASCII. NoSymbol doesn't mean that
+// nothing is bound to the key but that no assignment is done here.
+// srvr_ctrl(stdkeypad) and keypad(x11) declare the operator keys to
+// be of type CTRL+ALT in order to assign server control events to
+// them, but it uses the second level which is overwritten if we have
+// more than one definition (shift state) for the key. Instead, here
+// the commands are put at the fourth level.
+partial keypad_keys
+xkb_symbols "ops" {
+    key <KPDV> { [ NoSymbol,  slash,     NoSymbol,  XF86_Ungrab     ] };
+    key <KPMU> { [ NoSymbol,  asterisk,  NoSymbol,  XF86_ClearGrab  ] };
+    key <KPSU> { [ NoSymbol,  minus,     NoSymbol,  XF86_Prev_VMode ] };
+    key <KPAD> { [ NoSymbol,  plus,      NoSymbol,  XF86_Next_VMode ] };
+    key <KPEQ> { [ NoSymbol,  equal      ] };
+};
+
+// Hexadecimal Numpad, by Roland Kaufmann <rlndkfmn at gmail dot com>
+// License: BSD (also covers variant with ATM digit order)
+// Third-level gives the letters used in hexadecimal numbers, or
+// columns in small spreadsheets. As a bonus, having 'e' available at
+// the center of the keyboard makes it easy to enter floating point
+// numbers in scientific notation.
+// Equal is added to start formulas (most numpads on PCs don't have
+// their own equal key), comma as a list separator (as most
+// programming languages wants period as a decimal separator) and
+// colon to enter times and ranges. Someone also may want to represent
+// multiplication and division in prose using x and colon.
+// Two first levels are specified as NoSymbol to not override any
+// previous specification. Combine this with another keypad specifier,
+// e.g. "legacy".
+partial keypad_keys
+xkb_symbols "hex" {
+    key.type[Group1]="FOUR_LEVEL_MIXED_KEYPAD" ;
+
+    //             None       NumLock      AltGr
+    // symbol row
+    key <KPDV> { [ NoSymbol,  NoSymbol,  parenleft  ] };
+    key <KPMU> { [ NoSymbol,  NoSymbol,  parenright ] };
+    key <KPSU> { [ NoSymbol,  NoSymbol,  dollar     ] };
+
+    // upper row
+    key <KP7>  { [ NoSymbol,  NoSymbol,  a          ] };
+    key <KP8>  { [ NoSymbol,  NoSymbol,  b          ] };
+    key <KP9>  { [ NoSymbol,  NoSymbol,  c          ] };
+ 
+    // home row
+    key <KP4>  { [ NoSymbol,  NoSymbol,  d          ] };
+    key <KP5>  { [ NoSymbol,  NoSymbol,  e          ] };
+    key <KP6>  { [ NoSymbol,  NoSymbol,  f          ] };
+    key <KPAD> { [ NoSymbol,  NoSymbol,  comma      ] };
+
+    // lower row
+    key <KP1>  { [ NoSymbol,  NoSymbol,  equal      ] };
+    key <KP2>  { [ NoSymbol,  NoSymbol,  x          ] };
+    key <KP3>  { [ NoSymbol,  NoSymbol,  colon      ] };
+
+    // decimal row
+    key <KP0>  { [ NoSymbol,  NoSymbol,  backslash  ] };
+};
+
 // Main numbers follows the traditions from ATMs and phones with
 // numbers increasing downwards to the right. (It is easier to
 // change the keyboard layout than to reprogram your local ATM;
 // also cell-phones are becoming more common while calculators are
 // becoming more rare).
-// Third-level gives the letters used in hexadecimal numbers, or
-// columns in small spreadsheets. Equal is added to start formulas
-// (most numpads don't have their own equal key), comma as a list
-// separator and colon to enter times and ranges.
+// First level is left unspecified, so it may be combined with another
+// layout, e.g. "legacy".
 partial keypad_keys
-xkb_symbols "phone_hex" {
-    // NumLock, Enter
-    include "keypad(core)"
-
-    key.type[Group1]="FOUR_LEVEL_MIXED_KEYPAD" ;
-
-    //             None          NumLock      AltGr
-    // symbol row
-    key <KPDV> { [ KP_Divide,    slash,       parenleft  ] };
-    key <KPMU> { [ KP_Multiply,  asterisk,    parenright ] };
-    key <KPSU> { [ KP_Subtract,  minus,       dollar     ] };
-
+xkb_symbols "atm" {
     // upper row
-    key <KP7>  { [ KP_Home,      KP_1,        A          ] };
-    key <KP8>  { [ KP_Up,        KP_2,        B          ] };
-    key <KP9>  { [ KP_Prior,     KP_3,        C          ] };
- 
-    // home row
-    key <KP4>  { [ KP_Left,      KP_4,        D          ] };
-    key <KP5>  { [ KP_Begin,     KP_5,        E          ] };
-    key <KP6>  { [ KP_Right,     KP_6,        F          ] };
-    key <KPAD> { [ KP_Add,       plus,        comma      ] };
+    key <KP7>  { [ NoSymbol,  KP_1 ] };
+    key <KP8>  { [ NoSymbol,  KP_2 ] };
+    key <KP9>  { [ NoSymbol,  KP_3 ] };
 
     // lower row
-    key <KP1>  { [ KP_End,       KP_7,        equal      ] };
-    key <KP2>  { [ KP_Down,      KP_8,        x          ] };
-    key <KP3>  { [ KP_Next,      KP_9,        colon      ] };
-
-    // decimal row
-    key <KP0>  { [ KP_Insert,    KP_0,        backslash  ] };
+    key <KP1>  { [ NoSymbol,  KP_7 ] };
+    key <KP2>  { [ NoSymbol,  KP_8 ] };
+    key <KP3>  { [ NoSymbol,  KP_9 ] };
 };

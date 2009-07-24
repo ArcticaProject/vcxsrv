@@ -12,7 +12,7 @@
 ! $msmodels = microsoft microsoft7000 microsoftpro microsoftprousb microsoftprose
 
 // PC geometries - they have special geometry but symbols are mostly pc105
-! $pcgeometries = abnt2 latitude jp106 kr106
+! $pcgeometries = latitude
 
 // Layouts that provide further specializations for the OLPC
 ! $olpclayouts = af am ara br ca es et it kh kz in mn np ru th tr us 
@@ -26,42 +26,44 @@
 ! $azerty = be fr
 ! $qwertz = al cz de hr hu ro si sk 
 
-! $inetkbds = a4techKB21 a4techKBS8 a4_rfkb23 \
-              acer_c300 acer_ferrari4k acer_laptop \
-              acpi airkey \
-              apple armada asus_laptop azonaRF2300 \
+! $inetkbds = acer_c300 acer_ferrari4k acer_laptop \
+              airkey \
+              apple armada azonaRF2300 \
               benqx brother \
-              btc5113rf btc5126t btc6301urf btc9000 btc9000a btc9001ah btc5090 btc9019u \
-              cherryblue cherrybluea cherryblueb cherrycyboard \
-              chicony chicony0108 chicony9885 \
+              btc5113rf btc9000 btc9000a btc9001ah btc5090 btc9019u \
+              cherryblue cherrybluea cherryblueb \
+              cherrycyboard cherrycmexpert \
+              chicony chicony0108 chicony0420 chicony9885 \
+              compalfl90 \
               compaqeak8 compaqik7 compaqik13 compaqik18 \
               cymotionlinux \
-              dell dellm65 inspiron precision_m dellusbmm dtk2000 \
-              emachines ennyah_dkb1008 evdev fscaa1667g \
-              genius geniuscomfy geniuscomfy2 geniuskb19e \
+              dell dellm65 inspiron dellusbmm \
+              emachines ennyah_dkb1008 evdev \
+              genius geniuscomfy2 \
               gyration honeywell_euroboard \
-              hp2501 hp2505 hp5xx hp500fa hp5181 hp5185 \
+              hp250x hp5xx hp500fa hpdv5 \
               hpi6 hpxe3gc hpxe3gf hpxe4xxx hpxt1000 hpzt11xx \
-              ibm_spacesaver ipaq inspiron intel latitude \
+              ibm_spacesaver ipaq inspiron intel \
               logiaccess logicda logicink \
               logiex110 logiclx300 \
               logiinkse logiinkseusb logiitc logiik \
               logitech_base itouch logiultrax \
               logitech_g15 \
 	      logidinovo logidinovoedge \
-              microsoft7000 microsoftinet microsoftpro microsoftprousb microsoftprooem microsoftprose \
+              microsoft7000 microsoftinet microsoftprousb microsoftprooem microsoftprose \
               microsoftoffice microsoftmult \
               mx1998 mx2500 mx2750 \
               oretec \
+              pc105 \
               presario propeller \
               qtronix \
-              rapidaccess rapidaccess2 rapidaccess2a thinkpad thinkpad60 \
+              rapidaccess rapidaccess2 thinkpad60 \
               samsung4500 samsung4510 \
-              scorpius silvercrest \
-              sk1300 sk2500 sk6200 sk7100 sp_inet \
+              silvercrest \
+              sk1300 sk2500 sk6200 sk7100 \
               sven sven303 symplon \
               toshiba_s3000 trust trustda \
-              yahoo
+              unitekkb1925 yahoo
 
 // all layouts with 3rd and 4th groups
 ! $threelevellayouts = al az \
@@ -73,7 +75,6 @@
               gb gr \
               hu \
               ie ir is it \
-              kg \
               latam \
               lk lt \
               mn mt \
@@ -85,4 +86,8 @@
               us \
               vn \
               za
+
+! $evdevkbds = ibm_spacesaver
+
+! $thinkpads = thinkpad thinkpad60 thinkpadz60
 

@@ -3,15 +3,15 @@
 
 default  alphanumeric_keys
 xkb_symbols "kr106" {
-    name[Group1]= "Korea, Republic of";
     include "us"
+    name[Group1]= "Korea, Republic of";
     include "kr(koreankeys)"
 };
 
 alphanumeric_keys
 xkb_symbols "kr104" {
-    name[Group1]= "Korea, Republic of - 101/104 key Compatible";
     include "us"
+    name[Group1]= "Korea, Republic of - 101/104 key Compatible";
     include "kr(koreankeys)"
     include "kr(koreankeys_raltctl)"
 };

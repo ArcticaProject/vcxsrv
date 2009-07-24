@@ -2,19 +2,19 @@
 
 default partial hidden modifier_keys
 xkb_symbols "capslock" {
-    key <CAPS> {	[	Caps_Lock		]	};
+    replace key <CAPS> {	[	Caps_Lock		]	};
     modifier_map Lock { Caps_Lock };
 };
 
 partial hidden modifier_keys
 xkb_symbols "shiftlock" {
-    key <CAPS> {	[	Shift_Lock		]	};
+    replace key <CAPS> {	[	Shift_Lock		]	};
     modifier_map Shift { Shift_Lock };
 };
 
 partial hidden modifier_keys
 xkb_symbols "grouplock" {
-    key <CAPS> {	[	ISO_Next_Group,	Caps_Lock	]	};
+    replace key <CAPS> {	[	ISO_Next_Group,	Caps_Lock	]	};
 };
 
 partial hidden modifier_keys
@@ -29,5 +29,15 @@ xkb_symbols "groupshift" {
        type[Group1]="PC_ALT_LEVEL2",
        [       Mode_switch,    Caps_Lock       ]
     };
+};
+
+partial hidden modifier_keys
+xkb_symbols "escape" {
+    key <CAPS> {        [       Escape  ]       };
+};
+
+partial hidden modifier_keys
+xkb_symbols "backspace" {
+    key <CAPS> {        [       BackSpace  ]       };
 };
 

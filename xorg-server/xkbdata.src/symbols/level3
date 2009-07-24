@@ -136,7 +136,7 @@ xkb_symbols "rwin_switch" {
 // using the level3(enter_switch) map, the Enter key on the keypad
 // temporarily chooses the third shift level.  This is especially
 // useful for Mac laptops which miss the right Alt key.
-partial hidden modifier_keys
+partial modifier_keys
 xkb_symbols "enter_switch" {
   key <KPEN> {
     type[Group1]="ONE_LEVEL",

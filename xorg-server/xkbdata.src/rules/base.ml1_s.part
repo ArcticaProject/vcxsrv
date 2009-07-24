@@ -6,5 +6,5 @@
   macintosh_old	$macvendorlayouts	=	macintosh_vndr/us(oldmac)+macintosh_vndr/%l[1]%(v[1])
   macintosh_old	*			=	macintosh_vndr/us(oldmac)+%l[1]%(v[1])
  $macs		$macvendorlayouts	=	pc+macintosh_vndr/%l[1]%(v[1])
-  thinkpad	br			=	pc+%l[1](thinkpad)
+ $thinkpads	br			=	pc+%l[1](thinkpad)
   *		*			=	pc+%l[1]%(v[1])

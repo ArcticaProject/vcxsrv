@@ -13,11 +13,6 @@ xkb_symbols "xfree86" {
 partial keypad_keys 
 xkb_symbols "stdkeypad" {
 
-    key <BKSP> {
-	type="CTRL+ALT",
-	symbols[Group1]= [ BackSpace,   Terminate_Server ]
-    };
-
 // Ungrab cancels server/keyboard/pointer grabs
     key <KPDV> {
 	type="CTRL+ALT",
@@ -126,8 +121,6 @@ xkb_symbols "no_srvr_keys" {
     key <FK10> { [ F10, F10 ]	};
     key <FK11> { [ F11, F11 ]	};
     key <FK12> { [ F12, F12 ]	};
-
-    key <BKSP> { [ BackSpace,	BackSpace	] };
 
     key <KPDV> { [ KP_Divide,	KP_Divide	] };
     key <KPMU> { [ KP_Multiply,	KP_Multiply	] };

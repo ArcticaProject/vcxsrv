@@ -135,6 +135,26 @@ xkb_symbols "shift_caps_switch" {
     key <CAPS> { [ ISO_First_Group, ISO_Last_Group ] };
 };
 
+// using the group(win_menu_switch) map, pressing:
+// LWIN selects the first group
+// RWIN or MENU selects the last group
+partial modifier_keys
+xkb_symbols "win_menu_switch" {
+    virtual_modifiers AltGr;
+    key <LWIN> {
+        virtualMods= AltGr,
+        symbols[Group1] = [ ISO_First_Group ]
+    };
+    key <MENU> {
+        virtualMods= AltGr,
+        symbols[Group1] = [ ISO_Last_Group ]
+    };
+    key <RWIN> {
+        virtualMods= AltGr,
+        symbols[Group1] = [ ISO_Last_Group ]
+    };
+};
+
 // using the group(ctrl_alt_toggle) map, pressing:
 //     Control_L+Alt_L locks the previous group
 //     Control_R+Alt_R locks the next group
@@ -317,5 +337,24 @@ xkb_symbols "alt_caps_toggle" {
 partial hidden modifier_keys
 xkb_symbols "olpc" {
   key <I219>  { [ ISO_Next_Group, ISO_Prev_Group ] };
+};
+
+partial modifier_keys
+xkb_symbols "alt_space_toggle" {
+    key <SPCE> {
+    type[Group1]="PC_ALT_LEVEL2",
+    symbols[Group1]= [ space,   ISO_Next_Group ]
+    };
+};
+
+// using the group(sclk_toggle) map, pressing the Scroll Lock key
+// toggles groups.
+partial modifier_keys
+xkb_symbols "sclk_toggle" {
+  virtual_modifiers AltGr;
+  key <SCLK> {
+    virtualMods= AltGr,
+    symbols[Group1] = [ ISO_Next_Group ]
+    };
 };
 

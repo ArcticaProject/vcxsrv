@@ -11,11 +11,14 @@ xkb_symbols "basic" {
 
     name[Group1]="Poland";
 
+    key <AD01>  { [         q,          Q ] };
+    key <AD02>  { [         w,          W ] };
     key <AD03>	{ [         e,          E,      eogonek,      Eogonek ]	};
     key <AD09>	{ [         o,          O,       oacute,       Oacute ]	};
 
     key <AC01>	{ [         a,          A,      aogonek,      Aogonek ]	};
     key <AC02>	{ [         s,          S,       sacute,       Sacute ]	};
+    key <AC04>  { [         f,          F ] };
 
     key <AB01>	{ [         z,          Z,    zabovedot,    Zabovedot ]	};
     key <AB02>	{ [         x,          X,       zacute,       Zacute ]	};
@@ -50,12 +53,15 @@ xkb_symbols "qwertz" {
     key <AE11>	{ [      plus,   question, dead_diaeresis, questiondown ] };
     key <AE12>	{ [apostrophe,   asterisk, dead_cedilla,  dead_ogonek ]	};
 
+    key <AD01>  { [         q,          Q ] };
+    key <AD02>  { [         w,          W ] };
     key <AD03>	{ [         e,          E,     EuroSign,         cent ]	};
     key <AD11>	{ [ zabovedot,     nacute,     division, dead_abovering ] };
     key <AD12>	{ [    sacute,     cacute,     multiply,  dead_macron ]	};
 
     key <AC02>	{ [         s,          S,      dstroke,      section ]	};
     key <AC03>	{ [         d,          D,      Dstroke,          ETH ]	};
+    key <AC04>  { [         f,          F ] };
     key <AC08>	{ [         k,          K,          kra,    ampersand ]	};
     key <AC09>	{ [         l,          L,      lstroke,      Lstroke ]	};
     key <AC10>	{ [   lstroke,    Lstroke,       dollar, dead_doubleacute ] };
@@ -124,7 +130,7 @@ partial alphanumeric_keys
 xkb_symbols "dvorak_altquotes" {
     include "pl(dvorak)"
 
-    name[Group1] = "Poland - Dvorak, Polish quotes on key 1/!";
+    name[Group1] = "Poland - Dvorak, Polish quotes on key 1";
 
     key <AE01> { [	    1,	exclam, doublelowquotemark, rightdoublequotemark	]	};
 };
@@ -136,6 +142,8 @@ xkb_symbols "csb" {
 
     name[Group1]="Poland - Kashubian";
 
+    key <AD01>  { [         q,          Q ] };
+    key <AD02>  { [         w,          W ] };
     key <AD03>	{ [         e,          E,      eacute,      Eacute ]	};
     key <AD04>	{ [         r,           R,      ediaeresis,      Ediaeresis ]	};
     key <AD06>      { [         y,          Y,      EuroSign,         cent ]        };
@@ -146,6 +154,7 @@ xkb_symbols "csb" {
 
     key <AC01>	{ [         a,          A,      aogonek,      Aogonek ]	};
     key <AC02>	{ [         s,          S,      atilde,      Atilde ]	      };
+    key <AC04>  { [         f,          F ] };
     key <AC09>	{ [         l,          L,      lstroke,      Lstroke ]      };
 
     key <AB01>	{ [         z,          Z,    zabovedot,    Zabovedot ]	};

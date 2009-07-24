@@ -539,4 +539,107 @@ xkb_geometry "dellm65" {
   };
 };
  
+xkb_geometry "latitude" {
+	description="Dell Latitude";
+	width=304.2; height=219.1;
 
+	baseColor="grey"; labelColor="white";
+
+	alias <AC00> =<CAPS>;
+	alias <AA00> =<LCTL>;
+
+	shape "EXTERNAL" {corner=3,
+		{[0,0], [302,0], [302,154], [174,154], [174,198], [166,216], [107,216], [100,198], [100,154], [0,154]}};
+	solid "external" {shape="EXTERNAL"; top=1.1; left=1.1; color="grey10"; priority=10;};
+
+	shape "INTERNAL" {corner=3,
+		{[0,13], [162.2,13], [162.2,0], [286,0], [286,138], [230,138], [230,124], [163,124], [163,138], [96,138], [96,124], [0,124]}};
+	solid "internal" {shape="INTERNAL"; top=7; left=8.5; color="black"; priority=20;};
+
+	shape "TOUCHPAD" {corner=2, {[68,40]}};
+	solid "touchpad" {shape="TOUCHPAD"; top=153; left=104; color="grey20"; priority=20;};
+
+	shape "TOUCHPADBUTTONS" {corner=1,
+		{[0,0], [33.5,0], [33.5,16], [6,16]},
+		{[34.5,0], [68,0], [61, 16], [34.5,16]}};
+	solid "touchleft" {shape="TOUCHPADBUTTONS"; top=198; left=104; color="grey20"; priority=20;};
+
+	shape "NIPPLE" {corner=3, {[7.5,7.5]}};
+	solid "nipple" {shape="NIPPLE"; top=87; left=134; color="blue"; priority=200;};
+	shape "NIPPLEBUTTONS" {corner=2, {[32.5,13]}, {[33.5,0],[66,13]}};
+	solid "nipplebuttons" {shape="NIPPLEBUTTONS"; top=131; left=105; color="grey20"; priority=20;};
+
+	shape "FILLINGS" {corner=1.5, {[19,15]}, {[38,0],[55,15]}};
+	solid "fillings" {shape="FILLINGS"; top=112; left=238; color="grey"; priority=200;};
+
+	shape "FUNC" {corner=1.5, {[16.3,12]}, {[2,0.5], [14,10]}};
+	shape "ESC" {corner=1.5, {[18,12]}, {[2,0.5], [16,10]}};
+	shape "BKSP" {corner=1.5, {[36.5,18]}, {[3,0.5], [33.5,14]}};
+
+	section "Function" {key.color="grey"; priority=100; top=9; left=10; width=290; height=28;
+	row {top=0; left=161.1; keys {{<MENU>,"FUNC",1.1}, {<PRSC>,"FUNC",1.1}, {<NMLK>,"FUNC",1.1},
+		{<PAUS>,"FUNC",1.1}, {<INS>,"FUNC",2.5}, {<HOME>,"FUNC",1.1}, {<PGUP>,"FUNC",1.1}};};
+	row {top=12.5; left=0; keys {{<ESC>,"ESC",0},
+		{<FK01>,"FUNC",2.7}, {<FK02>,"FUNC",1.1}, {<FK03>,"FUNC",1.1}, {<FK04>,"FUNC",1.1},
+		{<FK05>,"FUNC",2.5}, {<FK06>,"FUNC",1.1}, {<FK07>,"FUNC",1.1}, {<FK08>,"FUNC",1.1},
+		{<FK09>,"FUNC",2.5}, {<FK10>,"FUNC",1.1}, {<FK11>,"FUNC",1.1}, {<FK12>,"FUNC",1.1},
+		{<DELE>,"FUNC",2.5}, {<END>, "FUNC",1.1}, {<PGDN>,"FUNC",1.1}};};
+	}; // End of "Function" section
+
+	shape "NORM" {corner=1.5, {[18,18]}, {[3,0.5], [14.8,14]}};
+	shape "TABK" {corner=1.5, {[28,18]}, {[3,0.5], [25,14]}};
+	shape "CAPS" {corner=1.5, {[32,18]}, {[3,0.5], [22,14]}};
+	shape "LFSH" {corner=1.5, {[23,18]}, {[3,0.5], [20,14]}};
+	shape "RTSH" {corner=1.5, {[50,18]}, {[3,1], [47,14]}};
+	shape "RTRN" {corner=1.5, {[0,0],[26.5,0],[26.5,37],[4,37],[4,18],[0,18]},
+		{[3,0.5], [23.5,0.5], [23.5,33], [7,33], [7,14], [3,14]}};
+	shape "SPCE" {corner=1.5,{[95,18]}, {[3,0.5],[92,14]}};
+	shape "LCTL" {corner=1.5, {[27,18]}, {[3,0.5],[24,14]}};
+	shape "LALT" {corner=1.5, {[22,18]}, {[3,0.5],[19,14]}};
+	shape "WIN" {corner=1.5, {[18,18]}, {[3,0.5],[15,14]}};
+
+	section "Alpha" {key.color="grey"; priority=100; top=36; left=10; width=290; height=18;
+	row {top=0; left=0; keys {{<TLDE>, "NORM", 0}, {<AE01>, "NORM", 1}, {<AE02>, "NORM", 1}, {<AE03>, "NORM", 1},
+		{<AE04>, "NORM", 1}, {<AE05>, "NORM", 1}, {<AE06>, "NORM", 1}, {<AE07>, "NORM", 1}, {<AE08>, "NORM", 1},
+		{<AE09>, "NORM", 1}, {<AE10>, "NORM", 1}, {<AE11>, "NORM", 1}, {<AE12>, "NORM", 1}, {<BKSP>, "BKSP", 1}};};
+	row {top=19; left=0; keys {{<TAB>, "TABK", 0}, {<AD01>, "NORM", 1}, {<AD02>, "NORM", 1}, {<AD03>, "NORM", 1},
+		{<AD04>, "NORM", 1}, {<AD05>, "NORM", 1}, {<AD06>, "NORM", 1}, {<AD07>, "NORM", 1}, {<AD08>, "NORM", 1},
+		{<AD09>, "NORM", 1}, {<AD10>, "NORM", 1}, {<AD11>, "NORM", 1}, {<AD12>, "NORM", 1}, {<RTRN>, "RTRN", 1}};};
+	row {top=38; left=0; keys {{<CAPS>, "CAPS", 0}, {<AC01>, "NORM", 1}, {<AC02>, "NORM", 1}, {<AC03>, "NORM", 1},
+		{<AC04>, "NORM", 1}, {<AC05>, "NORM", 1}, {<AC06>, "NORM", 1}, {<AC07>, "NORM", 1}, {<AC08>, "NORM", 1}, 
+		{<AC09>, "NORM", 1}, {<AC10>, "NORM", 1}, {<AC11>, "NORM", 1}, {<AC12>, "NORM", 1}};};
+	// TODO There's a weird <> key here, check it out:
+	row {top=57; left=0; keys {{<LFSH>, "LFSH", 0}, {<AB01>, "NORM", 1}, {<AB02>, "NORM", 1}, {<AB03>, "NORM", 1},
+		{<AB04>, "NORM", 1}, {<AB05>, "NORM", 1}, {<AB06>, "NORM", 1}, {<AB07>, "NORM", 1}, {<AB08>, "NORM", 1},
+		{<AB09>, "NORM", 1}, {<AB10>, "NORM", 1}, {<AB11>, "NORM", 1}, {<RTSH>, "RTSH", 1}};};
+	row {top=76; left=0; keys {{<LCTL>, "LCTL", 0}, {<FN>, "WIN", 1},{<LWIN>, "WIN", 1}, {<LALT>, "LALT", 1},
+		{<SPCE>, "SPCE", 1}, {<RALT>, "WIN", 1},{<RCTL>, "LALT", 1}};};
+	}; // End of "Alpha" section
+
+	shape "ARROW" {corner=1.5, {[17,15]}, {[2,0.5],[15,13]}};
+	section "Arrows" {key.color="grey"; priority=110; top=112; left=240; width=43; height=31;
+		row {top=0; left=18; keys {{<UP>, "ARROW", 0}};};	
+		row {top=16; left=0; keys {{<LEFT>, "ARROW", 0}, {<DOWN>, "ARROW", 1}, {<RGHT>, "ARROW", 1}};};
+		}; // End of "Arrows" section
+
+	shape "LEDS" {corner=3, {[25,7]}};
+	solid "leds" {shape="LEDS"; top=5.7; left=69; color="grey"; priority=10;};
+	shape "LED" {corner=0, {[0,1.5], [3,4.5]}, {[0.5,1.5], [1,0] , [2,0], [2.5,1.5]}};
+	indicator.onColor="green";
+	indicator.offColor="grey";
+	indicator.top=7;
+	indicator.shape="LED"; 
+	indicator.priority=200;
+	indicator "Num Lock" {left=72;};
+	indicator "Caps Lock" {left=80;};
+	indicator "Scroll Lock" {left=88;};
+
+	text "LATITUDE" {left=10; top=7; text="L A T I T U D E | D620";};
+
+	shape "ROUND" {corner=5, {[10,10]}};
+	shape "POWER" {corner=7, {[15,15]}};
+	section "Topbuttons" {key.color="grey"; priority=110; top=2; left=100;
+		row {top=2; left=0; keys {{<VLUP>, "ROUND", 0}, {<VLDN>, "ROUND", 3}, {<MUTE>, "ROUND", 3}};};	
+		row {top=0; left=45; keys {{<POWR>, "POWER", 0}};};
+		}; // End of "TopButtons" section
+};

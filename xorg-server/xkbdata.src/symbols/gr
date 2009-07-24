@@ -12,10 +12,13 @@
 default partial alphanumeric_keys alternate_group
 xkb_symbols "basic" {
 	name[Group1] = "Greece";
+
 	include "eurosign(e)"
 	include "eurosign(5)"
 	include "gr(simple)"
 	include "kpdl(comma)"
+	include "level3(ralt_switch)"
+
 	key <AB01> { [       NoSymbol,       NoSymbol,          U037D,          U03FF ] };
 	key <AB02> { [       NoSymbol,       NoSymbol,     rightarrow,      leftarrow ] };
 	key <AB03> { [       NoSymbol,       NoSymbol,      copyright                 ] };

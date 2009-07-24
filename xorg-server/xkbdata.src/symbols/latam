@@ -61,3 +61,12 @@ xkb_symbols "nodeadkeys" {
     key <AB10>	{ [     minus, underscore, dead_belowdot,    abovedot ]	};
 };
 
+partial alphanumeric_keys
+xkb_symbols "deadtilde" {
+
+    include "latam(basic)"
+
+    name[Group1]="Latin American - Include dead tilde";
+
+    key <AD12>	{ [      plus,   asterisk,   dead_tilde,  dead_macron ]	};
+};

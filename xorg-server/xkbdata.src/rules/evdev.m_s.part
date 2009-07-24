@@ -1,1 +1,2 @@
-  *     =       +inet(evdev)
+  $evdevkbds    =   +inet(evdev)+inet(%m)
+  *             =   +inet(evdev)

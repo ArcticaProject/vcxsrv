@@ -7,7 +7,7 @@
 default xkb_keycodes "us" {
 
     minimum= 8;
-    maximum= 134;
+    maximum= 255;
 
     <ESC>  =   9;
     <AE01> =  10;

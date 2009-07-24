@@ -193,3 +193,43 @@ xkb_symbols "winkeys" {
     include "level3(ralt_switch)"
 
 };
+
+// Crimean Tatar (Crimean Turkish) layouts.
+partial
+xkb_symbols "crh_f" {
+    include "tr(crh_f)"
+
+    name[Group1]="Romania - Crimean Tatar (Turkish F)";
+};
+
+partial
+xkb_symbols "crh_alt" {
+    include "tr(crh_alt)"
+
+    name[Group1]="Romania - Crimean Tatar (Turkish Alt-Q)";
+};
+
+partial
+xkb_symbols "crh_dobruca1" {
+    include "tr(crh)"
+
+    name[Group1]="Romania - Crimean Tatar (Dobruca-1 Q)";
+
+    key <AD05>	{ [         t,          T,       tcedilla,       Tcedilla ]	};
+    key <AD10>	{ [         p,          P,         abreve,         Abreve ]	};
+
+    key <AC04>	{ [         f,          F,         ibreve,         Ibreve ]	};
+    key <AC07>	{ [    iacute,     Iacute,              j,              J ]	};
+
+    key <AB07>	{ [         m,          M,      trademark,      masculine ]	};
+};
+
+partial
+xkb_symbols "crh_dobruca2" {
+    include "ro(crh_dobruca1)"
+
+    name[Group1]="Romania - Crimean Tatar (Dobruca-2 Q)";
+
+    key <AC04>	{ [         f,          F,          iacute,          Iacute ]	};
+    key <AC07>	{ [    ibreve,     Ibreve,               j,               J ]	};
+};

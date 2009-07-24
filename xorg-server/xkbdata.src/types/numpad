@@ -38,3 +38,35 @@ partial xkb_types "microsoft" {
     include "extra(keypad)"
 };
 
+// Swiss-German style numeric keypad: Shift and NumLock operates as
+// two independent modifiers; however, since we want shift state for
+// the cursor keys, only three levels are used from the key mappings.
+// Closest type is actually FOUR_LEVEL_X, but most numpad layouts uses
+// FOUR_LEVEL_MIXED_KEYPAD so that's the one we are going to override.
+partial xkb_types "shift3" {
+    type "FOUR_LEVEL_MIXED_KEYPAD" {
+        modifiers = Shift+NumLock+Control+Alt;
+
+        // NumLock Off => navigate using cursor keys
+        map[None] = Level1;
+
+        // NumLock Off + Shift pressed => select using cursor keys
+        preserve[Shift] = Shift;
+
+        // NumLock On => decimal digits
+        map[NumLock] = Level2;
+
+        // NumLock On + Shift pressed => auxiliary symbols,
+        // e.g. hexadecimal digits
+        map[Shift+NumLock] = Level3;
+
+        // Ctrl + Alt, regardless of NumLock and Shift => command keys
+        map[Control+Alt] = Level4;
+
+        // reverse map from levels to modifiers
+        level_name[Level1] = "Base";
+        level_name[Level2] = "NumLock";
+        level_name[Level3] = "Shift+NumLock";
+        level_name[Level4] = "Ctrl+Alt";
+    };
+};

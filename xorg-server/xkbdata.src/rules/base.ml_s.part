@@ -3,10 +3,10 @@
   amiga		$nonlatin		=	xfree68_vndr/amiga(usa1)+%l%(v):2
   amiga		*			=	xfree68_vndr/amiga(usa1)+%l%(v)
   classmate	us			=	pc+%l(classmate)
-  sun4		$nonlatin		=	latin+sun_vndr/us(sun4)+%l%(v):2
-  sun4		*			=	latin+sun_vndr/us(sun4)+%l%(v)
-  sun5		$nonlatin		=	latin+sun_vndr/us(sun5)+%l%(v):2
-  sun5		*			=	latin+sun_vndr/us(sun5)+%l%(v)
+  sun4		$nonlatin		=	latin+sun_vndr/us(type4)+%l%(v):2
+  sun4		*			=	latin+sun_vndr/us(type4)+%l%(v)
+  sun5		$nonlatin		=	latin+sun_vndr/us(type5)+%l%(v):2
+  sun5		*			=	latin+sun_vndr/us(type5)+%l%(v)
   sun6		us			=	sun_vndr/us(type6)
   sun6		en_US			=	sun_vndr/us(type6)+iso9995-3(basic)
   sun6		*			=	sun_vndr/us(type6)+%l%(v)
@@ -20,6 +20,6 @@
  $macs		$macvendorlayouts	=	pc+macintosh_vndr/%l%(v)
   olpc		$olpclayouts		=	olpc+%l%(m)
   olpc		*			=	olpc+%l%(v)
-  thinkpad   	br			=	pc+br(thinkpad)
+ $thinkpads   	br			=	pc+br(thinkpad)
   *	   	$nonlatin		=	pc+us+%l%(v):2
   *		*			=	pc+%l%(v)

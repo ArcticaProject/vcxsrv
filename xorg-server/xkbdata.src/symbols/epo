@@ -113,3 +113,29 @@ xkb_symbols "legacy" {
 
   include "level3(ralt_switch)"
 };
+
+// Add Esperanto supersignos to the corresponding key in a Qwerty keyboard.
+// This is a generic "component" that is not used to the other layouts in this
+// file but it is meant to be applied to any layout. If you have any questions
+// ask J. Pablo Fernández <pupeno@pupeno.com>.
+partial
+xkb_symbols "qwerty" {
+    key <AB03> { [ NoSymbol, NoSymbol, ccircumflex, Ccircumflex ] };
+    key <AC05> { [ NoSymbol, NoSymbol, gcircumflex, Gcircumflex ] };
+    key <AC06> { [ NoSymbol, NoSymbol, hcircumflex, Hcircumflex ] };
+    key <AC07> { [ NoSymbol, NoSymbol, jcircumflex, Jcircumflex ] };
+    key <AC02> { [ NoSymbol, NoSymbol, scircumflex, Scircumflex ] };
+    key <AD07> { [ NoSymbol, NoSymbol,      ubreve,      Ubreve ] };
+};
+
+// Add Esperanto supersignos to the corresponding key in a Dvorak keyboard.
+// Same comment as the Qwerty one above applies.
+partial
+xkb_symbols "dvorak" {
+    key <AD08> { [ NoSymbol, NoSymbol, ccircumflex, Ccircumflex ] };
+    key <AD07> { [ NoSymbol, NoSymbol, gcircumflex, Gcircumflex ] };
+    key <AC07> { [ NoSymbol, NoSymbol, hcircumflex, Hcircumflex ] };
+    key <AB03> { [ NoSymbol, NoSymbol, jcircumflex, Jcircumflex ] };
+    key <AC10> { [ NoSymbol, NoSymbol, scircumflex, Scircumflex ] };
+    key <AC04> { [ NoSymbol, NoSymbol,      ubreve,      Ubreve ] };
+};

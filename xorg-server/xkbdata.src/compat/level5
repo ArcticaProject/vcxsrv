@@ -14,34 +14,31 @@ default partial xkb_compatibility "default"  {
     latchMods.clearLocks= True;
     latchMods.latchToLock= True;
 
-    //ISO_Level5_Shift
-    interpret 0xfe11+Any {
+    interpret ISO_Level5_Shift+Any {
 	useModMapMods= level1;
 	virtualModifier= LevelFive;
 	action= SetMods(modifiers=LevelFive);
     };
 
-    interpret 0xfe11 {
+    interpret ISO_Level5_Shift {
 	action= SetMods(modifiers=LevelFive);
     };
 
-    //ISO_Level5_Latch
-    interpret 0xfe12+Any {
+    interpret ISO_Level5_Latch+Any {
 	virtualModifier= LevelFive;
 	action= LatchMods(modifiers=LevelFive);
     };
 
-    interpret 0xfe12 {
+    interpret ISO_Level5_Latch {
 	action= LatchMods(modifiers=LevelFive);
     };
 
-    //ISO_Level5_Lock
-    interpret 0xfe13+Any {
+    interpret ISO_Level5_Lock+Any {
 	virtualModifier= LevelFive;
 	action= LockMods(modifiers=LevelFive);
     };
 
-    interpret 0xfe13 {
+    interpret ISO_Level5_Lock {
 	action= LockMods(modifiers=LevelFive);
     };
 };

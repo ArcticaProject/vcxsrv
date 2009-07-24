@@ -86,3 +86,20 @@ xkb_symbols "kposs" {
 
     key <KPDL> { [ KP_Delete, KP_Decimal, KP_Separator, 0x100202F ] }; // <delete> ? ? ⍽ (narrow no-break space)
 };
+
+// Spreadsheets may be configured to use the dot as decimal
+// punctuation, comma as a thousands separator and then semi-colon as
+// the list separator. Of these, dot and semi-colon is most important
+// when entering data by the keyboard; the comma can then be inferred
+// and added to the presentation afterwards. Using semi-colon as a
+// general separator may in fact be preferred to avoid ambiguities
+// in data files. Most times a decimal separator is hard-coded, it
+// seems to be period, probably since this is the syntax used in
+// (most) programming languages.
+partial keypad_keys
+xkb_symbols "semi" {
+
+    key.type[Group1]="FOUR_LEVEL_MIXED_KEYPAD" ;
+
+    key <KPDL> { [ NoSymbol, NoSymbol, semicolon ] };
+};
