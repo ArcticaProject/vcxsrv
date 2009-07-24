@@ -12,6 +12,7 @@
 default xkb_keycodes "xfree86" {
     include "xfree86(basic)"
     <BKSL> =  51;
+    alias <AC12> = <BKSL>;
     <LSGT> =  94;
 };
 
@@ -255,10 +256,10 @@ xkb_keycodes "basic" {
     // <I53> =   211;	<K73>
     <I54> =   212;
     <I55> =   213;
-    <OUTP> =   214;
-    <KITG> =   215;
-    <KIDN> =   216;
-    <KIUP> =   217;
+    <I56> =   214;
+    <I57> =   215;
+    <I58> =   216;
+    <I59> =   217;
     <I5A> =   218;
     // <I5B> =   219;	<K74>
     // <I5C> =   220;	<K75>
@@ -351,6 +352,10 @@ xkb_keycodes "basic" {
     alias <PAST> = <I18>;
     alias <FIND> = <I19>;
     alias <CUT>  = <I1A>;
+    alias <OUTP> = <I56>;
+    alias <KITG> = <I57>;
+    alias <KIDN> = <I58>;
+    alias <KIUP> = <I59>;
 
     // Other codes never generated.  The XFree86 ddx never generates
     // these codes.
@@ -367,6 +372,9 @@ xkb_keycodes "basic" {
     indicator 3 = "Scroll Lock";
 
     alias <ALGR> = <RALT>;
+
+    // For Brazilian ABNT2
+    alias <KPPT> = <I06>;
 };
 
 // What keyboard is this?
@@ -399,22 +407,6 @@ xkb_keycodes "102" {
     <KPEN> = 124;
 };
 
-
-// For japanese 106 keyboard. by tsuka(tsuka@kawalab.dnj.ynu.ac.jp)
-//
-// All of the keycodes here are now in the basic "xfree86" set.
-//
-xkb_keycodes "jp106" {
-    include "xfree86(basic)"
-    <AC12> = 51;
-};
-
-
-// For brazilian ABNT2 keyboard. by Ricardo Y. Igarashi(iga@that.com.br)
-xkb_keycodes "abnt2" {
-    include "xfree86(xfree86)"
-    <KPPT> = 134;
-};
 
 // IBM ThinkPad Z60m/Z60t/Z61m/Z61t
 xkb_keycodes "thinkpadz60" {

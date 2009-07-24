@@ -969,9 +969,21 @@ xkb_symbols "tel" {
 };
 
 partial alphanumeric_keys 
-xkb_symbols "urd" {
-    include "pk(urd)"
-    name[Group1]= "India - Urdu";
+xkb_symbols "urd-phonetic" {
+    include "pk(urd-phonetic)"
+    name[Group1]= "India - Urdu, Phonetic";
+};
+
+partial alphanumeric_keys 
+xkb_symbols "urd-phonetic3" {
+    include "pk(urd-crulp)"
+    name[Group1]= "India - Urdu, Alternative phonetic";
+};
+
+partial alphanumeric_keys 
+xkb_symbols "urd-winkeys" {
+    include "pk(urd-nla)"
+    name[Group1]= "India - Urdu, Winkeys";
 };
 
 // based on a keyboard map from an 'xkb/symbols/gur' file
@@ -1177,3 +1189,70 @@ xkb_symbols "olpc" {
 
   include "group(olpc)"
 };
+
+partial alphanumeric_keys 
+xkb_symbols "hin-wx" {
+
+    name[Group1]= "India - Hindi Wx";
+
+      key <TLDE> {	 [     grave, asciitilde, 2, 3    ]	};
+
+      key <AE01> {	 [      0x1000967, exclam 		]	};
+      key <AE02> {	 [      0x1000968, at 		]	};
+      key <AE03> {	 [      0x1000969 , numbersign	 		]	};
+      key <AE04> {	 [      0x100096A , dollar		]	};
+      key <AE05> {	 [      0x100096B , percent 	 		]	};
+      key <AE06> {	 [      0x100096C , asciicircum	 		]	};
+      key <AE07> {	 [      0x100096D , ampersand                       ]	};
+      key <AE08> {	 [      0x100096e , asterisk 	 		]	};
+      key <AE09> {	 [      0x100096F, parenleft 		]	};
+      key <AE10> {	 [      0x1000966, parenright 		]	};
+      key <AE11> {	 [      minus, underscore 	 		]	};
+      key <AE12> {	 [      equal, plus 		]	};
+
+
+      key <AD01> {	 [      0x1000943,  0x1000944, 0x100090B, 0x1000960]	};
+      key <AD02> {	 [      0x1000924,  0x1000925       	]	};
+      key <AD03> {	 [      0x1000947,  0x1000948, 0x100090F, 0x1000910]	};
+      key <AD04> {	 [      0x1000930,  0x1000937       	]	};
+      key <AD05> {	 [      0x100091F,  0x1000920       	]	};
+
+
+      key <AD06> {	 [      0x100092F 		]	};
+      key <AD07> {	 [      0x1000941,  0x1000942, 0x1000909, 0x100090A ]	};
+      key <AD08> {	 [      0x100093F,  0x1000940, 0x1000907, 0x1000908 ]	};
+      key <AD09> {	 [      0x100094B,  0x100094C, 0x1000913, 0x1000914]	};
+      key <AD10> {	 [      0x100092A,  0x100092B 		]	};
+      key <AD11> {	 [      bracketleft, braceleft  		]	};
+      key <AD12> {	 [      bracketright, braceright  		]	};
+      key <BKSL> {       [      backslash, bar, 0x1000964, 0x1000965 ] };
+
+      key <AC01> {	 [      0x100094D,  0x100093E, 0x1000905,0x1000906 ] 	};
+      key <AC02> {	 [      0x1000938,  0x1000936       	]	};
+      key <AC03> {	 [      0x1000921,  0x1000922       	]	};
+      key <AC04> {	 [      0x1000919,  0x100091E       	]	};
+      key <AC05> {	 [      0x1000917,  0x1000918       	]	};
+
+
+      key <AC06> {	 [      0x1000939,  0x1000903 		]	};
+      key <AC07> {	 [      0x100091C,  0x100091D 		]	};
+      key <AC08> {	 [      0x1000915,  0x1000916 		]	};
+      key <AC09> {	 [      0x1000932,  0x1000962, 0x1000933, 0x100090C]	};
+      key <AC10> {	 [      semicolon, colon  		]	};
+      key <AC11> {	 [      quoteright, quotedbl 		]	};
+      key <BKSL> {	 [      backslash,         bar  		]	};
+
+      key <AB01> {	 [      0x1000901,   0x100093C, 0x100093D, 0x1000950]   };
+      key <AB02> {       [      0x1000926,   0x1000927      ]       };
+      key <AB03> {       [      0x100091A,   0x100091B         ]       };
+      key <AB04> {       [      0x1000935,   dead_V        ]       };
+      key <AB05> {       [      0x100092C,   0x100092D        ]       };
+      key <AB06> {       [      0x1000928,   0x1000923         ]       };
+      key <AB07> {       [      0x100092E,   0x1000902         ]       };
+      key <AB08> {       [      comma,       less         ]       };
+      key <AB09> {       [      period,      greater       ]       };
+      key <AB10> {       [      slash,      question        ]       };
+
+    include "level3(ralt_switch)"
+};
+

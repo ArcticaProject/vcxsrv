@@ -14,7 +14,7 @@ determine the keyboard behaviour. These five components can combined together
 into a resulting keyboard mapping using the 'rules' component.
 
 The complete specification can be found on
-http://www.x-docs.org/XKB/XKBproto.pdf
+http://xfree86.org/current/XKBproto.pdf
 
 For XKB configuration information see 'docs/README.config' file.
 

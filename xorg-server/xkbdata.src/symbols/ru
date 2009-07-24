@@ -111,18 +111,21 @@ partial alphanumeric_keys
 xkb_symbols "typewriter" {
     include "ru(common)"
     name[Group1]= "Russia - Typewriter";
-    key	<TLDE> {	[      apostrophe,	  quotedbl	] 	};
-    key	<AE01> {	[	   exclam,		 1 	]	};
-    key	<AE02> {	[      numerosign,		 2	]	};
+    key	<TLDE> {	[	      bar,	      plus	] 	};
+    key	<AE01> {	[      numerosign,		 1 	]	};
+    key	<AE02> {	[           minus,		 2	]	};
     key	<AE03> {	[	    slash,		 3	]	};
-    key	<AE04> {	[	semicolon,		 4	]	};
+    key	<AE04> {	[	 quotedbl,		 4	]	};
     key	<AE05> {	[	    colon,		 5	]	};
     key	<AE06> {	[	    comma,		 6	]	};
     key	<AE07> {	[	   period,		 7	]	};
     key	<AE08> {	[      underscore,		 8	]	};
     key	<AE09> {	[	 question,		 9	]	};
     key	<AE10> {	[	  percent,		 0	]	};
-    key	<BKSL> {	[	parenleft,	parenright	]	};
+    key	<AE11> {	[	   exclam,	     equal	]	};
+    key	<AE12> {	[       semicolon,	 backslash	]	};
+
+    key	<BKSL> {	[	parenright,	 parenleft	]	};
 
     key	<AD12> {	[Cyrillic_hardsign,Cyrillic_HARDSIGN	]	};
     key	<AB10> {	[     Cyrillic_io,     Cyrillic_IO	]	};
@@ -143,6 +146,7 @@ xkb_symbols "phonetic" {
     key	<AE08> {	[		8,        asterisk	]	};
     key	<AE09> {	[		9,	 parenleft	]	};
     key	<AE10> {	[		0,	parenright	]	};
+    key <AE11> {	[	    minus,	underscore	]	};
 
     key	<AB09> {	[	   period,	   greater	]	};
     key	<AB10> {	[	    slash,	  question	]	};
@@ -183,6 +187,18 @@ xkb_symbols "phonetic" {
     key	<AE12> {	[    Cyrillic_che,    Cyrillic_CHE	]	};
     key	<AD12> {	[  Cyrillic_shcha,  Cyrillic_SHCHA	]	};
     key	<BKSL> {	[      Cyrillic_e,	Cyrillic_E	]	};
+};
+
+partial alphanumeric_keys
+xkb_symbols "phonetic_winkeys" {
+
+    include "ru(phonetic)"
+    name[Group1]= "Russia - Phonetic Winkeys";
+
+    key	<LatX> {	[     Cyrillic_ha,     Cyrillic_HA	]	};
+    key	<LatH> {	[     Cyrillic_che,     Cyrillic_CHE	]	};
+    key	<AE12> {	[ Cyrillic_softsign, Cyrillic_softsign  ]	};
+
 };
 
 partial alphanumeric_keys
@@ -365,3 +381,60 @@ xkb_symbols "sah" {
 
     include "level3(ralt_switch)"
 };
+
+
+//Kalmyk language layout
+//based on the Kalmyk language layout: http://soft.oyrat.org/
+//Nikolay Korneev <halmg@oyrat.org>
+//Toli Miron <mirontoli@gmail.com>
+        
+partial alphanumeric_keys
+xkb_symbols "xal" {
+    include "ru(winkeys)"
+
+    name[Group1]= "Russia - Kalmyk";
+
+    key.type[group1]="FOUR_LEVEL";
+
+    key <AE01> {        [                     question,                  exclam,               1      ]       };
+    key <AE02> {        [      	            numerosign,                quotedbl,               2      ]       };
+    key <AE03> {        [          Cyrillic_u_straight,     Cyrillic_U_straight,               3      ]       };
+    key <AE04> {        [               Cyrillic_schwa,          Cyrillic_SCHWA,               4      ]       }; 
+    key <AE05> {        [                     asterisk,                 percent,               5      ]       };
+    key <AE06> {        [        Cyrillic_en_descender,   Cyrillic_EN_descender,               6      ]       };
+    key <AE07> {        [               Cyrillic_o_bar,          Cyrillic_O_bar,               7      ]       }; 
+    key <AE08> {        [                Cyrillic_shha,           Cyrillic_SHHA,               8      ]       }; 
+    key <AE09> {        [       Cyrillic_zhe_descender,  Cyrillic_ZHE_descender,               9      ]       };
+    key <AE10> {        [                    semicolon,                   colon,               0      ]       };
+
+    key <TLDE> {        [                    parenleft,               parenright, Cyrillic_io, Cyrillic_IO    ]       };
+
+    key <AD02> {        [                 Cyrillic_tse,             Cyrillic_TSE,         dollar      ]       };
+    key <AD03> {        [                   Cyrillic_u,               Cyrillic_U,       EuroSign      ]       }; 
+    key <AD04> {        [                  Cyrillic_ka,              Cyrillic_KA,     registered      ]       }; 
+    key <AD05> {        [                  Cyrillic_ie,              Cyrillic_IE,      trademark      ]       }; 
+    key <AD11> {        [                  Cyrillic_ha,              Cyrillic_HA,    bracketleft      ]       }; 
+    key <AD12> {        [            Cyrillic_hardsign,        Cyrillic_HARDSIGN,   bracketright      ]       };
+    key <AC11> {        [                   Cyrillic_e,               Cyrillic_E,     apostrophe      ]       };
+    key <AB03> {        [                  Cyrillic_es,              Cyrillic_ES,      copyright      ]       }; 
+    key <AB08> {        [                  Cyrillic_be,              Cyrillic_BE,           less      ]       };
+    key <AB09> {        [                  Cyrillic_yu,              Cyrillic_YU,        greater      ]       };
+
+    include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys
+xkb_symbols "dos" {
+
+    include "ru(common)"
+
+    name[Group1]= "Russia - DOS";
+
+    key        <TLDE> {        [   parenright,  parenleft   ] };
+    key        <AE04> {        [   4,           currency    ] };
+    key        <AE09> {        [   9,           question    ] };
+    key        <AE10> {        [   0,           percent     ] };
+
+    key        <AB10> {        [   Cyrillic_io, Cyrillic_IO ] };
+};
+

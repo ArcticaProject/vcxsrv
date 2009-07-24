@@ -55,11 +55,11 @@ xkb_symbols "olpc" {
     key <AC09>	{ [        0x01001208,  VoidSymbol ]	}; // l
 
     key <AC10>	{ [        0x01001362,  0x01001361 ]	}; // :;
-    key <AC11>	{ [        apostrophe,  quotedbl   ]	}; // '"
+    key <AC11>  { [        0x01001366,  0x01001365 ]    }; // '"
 
     key <AB01>	{ [        0x010012D8,  0x010012E0 ]	}; // z
     key <AB02>	{ [        0x010012A0,  0x010012D0 ]	}; // x
-    key <AB03>	{ [        c,           C          ]	}; // c
+    key <AB03>  { [        0x01001278,  VoidSymbol ]    }; // c
     key <AB04>	{ [        0x01001238,  0x01001268 ]	}; // v
     key <AB05>	{ [        0x01001260,  VoidSymbol ]	}; // b
     key <AB06>	{ [        0x01001290,  0x01001298 ]	}; // n
@@ -67,9 +67,9 @@ xkb_symbols "olpc" {
 
     key <AB08>	{ [        0x01001363,  VoidSymbol ]	}; // <
     key <AB09>	{ [        0x01001364,  VoidSymbol ]	}; // >
-    key <AB10>  { [        VoidSymbol,  question   ]    }; // ?
+    key <AB10>  { [        0x01001367,  VoidSymbol ]    }; // ?
 
-    key <BKSL> {  [        backslash,   VoidSymbol ]    }; // bksl
+    key <BKSL> {  [        VoidSymbol,  0x01002010 ]    }; // bksl
 
     include "group(olpc)"
 };

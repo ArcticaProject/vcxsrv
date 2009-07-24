@@ -1,7 +1,7 @@
 // $Xorg: indigo,v 1.3 2000/08/17 19:54:39 cpqbld Exp $
 default xkb_keycodes "pc101" {
-    minimum= 10;
-    maximum= 118;
+    minimum= 8;
+    maximum= 255;
 
     <TLDE> = 62;
     <AE01> = 15;

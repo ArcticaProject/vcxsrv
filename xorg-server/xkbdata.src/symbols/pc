@@ -19,10 +19,7 @@ xkb_symbols "pc105" {
     include "pc(editing)"
     include "keypad(x11)"
 
-    key <BKSP> {
-        type="CTRL+ALT",
-        symbols[Group1]= [ BackSpace,   Terminate_Server ]
-    };
+    key <BKSP> {	[ BackSpace	]	};
 
     key  <TAB> {	[ Tab,	ISO_Left_Tab	]	};
     key <RTRN> {	[ Return	]	};
@@ -35,11 +32,13 @@ xkb_symbols "pc105" {
     key <LCTL> {	[ Control_L	]	};
 
     key <LWIN> {	[ Super_L			]	};
+    modifier_map Mod4   { <LWIN> };
 
     key <RTSH> {	[ Shift_R	]	};
     key <RCTL> {	[ Control_R	]	};
 
     key <RWIN> {	[ Super_R			]	};
+    modifier_map Mod4   { <RWIN> };
 
     key <MENU> {	[ Menu			]	};
 

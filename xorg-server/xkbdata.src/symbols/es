@@ -193,3 +193,13 @@ xkb_symbols "olpc" {
 
     include "level3(ralt_switch)"
 };
+
+partial alphanumeric_keys
+xkb_symbols "deadtilde" {
+
+    include "es(basic)"
+
+    name[Group1]="Spain - Include dead tilde";
+
+    key <AE04>	{ [         4,     dollar,   dead_tilde,       dollar ]	};
+};

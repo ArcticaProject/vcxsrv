@@ -1,15 +1,15 @@
 # Finnish translations for xkeyboard-config package.
 # Copyright (C) 2005 Free Software Foundation, Inc.
 # This file is distributed under the same license as the xkeyboard-config package.
-# Tommi Vainikainen <Tommi.Vainikainen@iki.fi>, 2005, 2007.
+# Tommi Vainikainen <Tommi.Vainikainen@iki.fi>, 2005, 2007-2009.
 # Ilkka Tuohela <hile@iki.fi>, 2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xkeyboard-config 1.1-pre1\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-11 22:14+0100\n"
-"PO-Revision-Date: 2007-09-13 20:04+0300\n"
+"Project-Id-Version: xkeyboard-config 1.5\n"
+"Report-Msgid-Bugs-To: svu@users.sourceforge.net\n"
+"POT-Creation-Date: 2009-01-13 23:12+0000\n"
+"PO-Revision-Date: 2009-01-16 08:05+0200\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -17,2680 +17,3047 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../rules/base.xml.in.h:1
+#: ../rules/base.xml.in.h:1 ../rules/evdev.xml.in.h:1
 msgid "(F)"
 msgstr "(F)"
 
-#: ../rules/base.xml.in.h:2
+#: ../rules/base.xml.in.h:2 ../rules/evdev.xml.in.h:2
 msgid "(Legacy) Alternative"
 msgstr "(Perinteinen) vaihtoehtoinen"
 
-#: ../rules/base.xml.in.h:3
+#: ../rules/base.xml.in.h:3 ../rules/evdev.xml.in.h:3
 msgid "(Legacy) Alternative, Sun dead keys"
 msgstr "(Perinteinen) vaihtoehtoinen, Sunin kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:4
+#: ../rules/base.xml.in.h:4 ../rules/evdev.xml.in.h:4
 msgid "(Legacy) Alternative, eliminate dead keys"
 msgstr "(Perinteinen) vaihtoehtoinen, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:5
-msgid "(Legacy) Dvorak"
-msgstr "(Perinteinen) dvorak"
-
-#: ../rules/base.xml.in.h:6
+#: ../rules/base.xml.in.h:5 ../rules/evdev.xml.in.h:5
 msgid "101/104 key Compatible"
 msgstr "101/104-näppäiminen tai yhteensopiva"
 
-#: ../rules/base.xml.in.h:7 ../rules/sun.xml.in.h:2
+#: ../rules/base.xml.in.h:6 ../rules/evdev.xml.in.h:6
 msgid "101/qwerty/comma/Dead keys"
 msgstr "101/qwerty/pilkku/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:8 ../rules/sun.xml.in.h:3
+#: ../rules/base.xml.in.h:7 ../rules/evdev.xml.in.h:7
 msgid "101/qwerty/comma/Eliminate dead keys"
 msgstr "101/qwerty/pilkku/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:9 ../rules/sun.xml.in.h:4
+#: ../rules/base.xml.in.h:8 ../rules/evdev.xml.in.h:8
 msgid "101/qwerty/dot/Dead keys"
 msgstr "101/qwerty/piste/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:10 ../rules/sun.xml.in.h:5
+#: ../rules/base.xml.in.h:9 ../rules/evdev.xml.in.h:9
 msgid "101/qwerty/dot/Eliminate dead keys"
 msgstr "101/qwerty/piste/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:11 ../rules/sun.xml.in.h:6
+#: ../rules/base.xml.in.h:10 ../rules/evdev.xml.in.h:10
 msgid "101/qwertz/comma/Dead keys"
 msgstr "101/qwertz/pilkku/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:12
+#: ../rules/base.xml.in.h:11 ../rules/evdev.xml.in.h:11
 msgid "101/qwertz/comma/Eliminate dead keys"
 msgstr "101/qwertz/pilkku/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:13 ../rules/sun.xml.in.h:7
+#: ../rules/base.xml.in.h:12 ../rules/evdev.xml.in.h:12
 msgid "101/qwertz/dot/Dead keys"
 msgstr "101/qwertz/piste/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:14 ../rules/sun.xml.in.h:8
+#: ../rules/base.xml.in.h:13 ../rules/evdev.xml.in.h:13
 msgid "101/qwertz/dot/Eliminate dead keys"
 msgstr "101/qwertz/piste/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:15 ../rules/sun.xml.in.h:9
+#: ../rules/base.xml.in.h:14 ../rules/evdev.xml.in.h:14
 msgid "102/qwerty/comma/Dead keys"
 msgstr "102/qwerty/pilkku/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:16 ../rules/sun.xml.in.h:10
+#: ../rules/base.xml.in.h:15 ../rules/evdev.xml.in.h:15
 msgid "102/qwerty/comma/Eliminate dead keys"
 msgstr "102/qwerty/pilkku/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:17 ../rules/sun.xml.in.h:11
+#: ../rules/base.xml.in.h:16 ../rules/evdev.xml.in.h:16
 msgid "102/qwerty/dot/Dead keys"
 msgstr "102/qwerty/piste/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:18 ../rules/sun.xml.in.h:12
+#: ../rules/base.xml.in.h:17 ../rules/evdev.xml.in.h:17
 msgid "102/qwerty/dot/Eliminate dead keys"
 msgstr "102/qwerty/piste/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:19 ../rules/sun.xml.in.h:13
+#: ../rules/base.xml.in.h:18 ../rules/evdev.xml.in.h:18
 msgid "102/qwertz/comma/Dead keys"
 msgstr "102/qwertz/pilkku/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:20 ../rules/sun.xml.in.h:14
+#: ../rules/base.xml.in.h:19 ../rules/evdev.xml.in.h:19
 msgid "102/qwertz/comma/Eliminate dead keys"
 msgstr "102/qwertz/pilkku/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:21 ../rules/sun.xml.in.h:15
+#: ../rules/base.xml.in.h:20 ../rules/evdev.xml.in.h:20
 msgid "102/qwertz/dot/Dead keys"
 msgstr "102/qwertz/piste/Kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:22 ../rules/sun.xml.in.h:16
+#: ../rules/base.xml.in.h:21 ../rules/evdev.xml.in.h:21
 msgid "102/qwertz/dot/Eliminate dead keys"
 msgstr "102/qwertz/piste/Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:23
+#: ../rules/base.xml.in.h:22 ../rules/evdev.xml.in.h:22
+msgid "2"
+msgstr "2"
+
+#: ../rules/base.xml.in.h:23 ../rules/evdev.xml.in.h:23
+msgid "4"
+msgstr "4"
+
+#: ../rules/base.xml.in.h:24 ../rules/evdev.xml.in.h:24
+msgid "5"
+msgstr "5"
+
+#: ../rules/base.xml.in.h:25 ../rules/evdev.xml.in.h:25
 msgid "A4Tech KB-21"
 msgstr "A4Tech KB-21"
 
-#: ../rules/base.xml.in.h:24
+#: ../rules/base.xml.in.h:26 ../rules/evdev.xml.in.h:26
 msgid "A4Tech KBS-8"
 msgstr "A4Tech KBS-8"
 
-#: ../rules/base.xml.in.h:25
+#: ../rules/base.xml.in.h:27 ../rules/evdev.xml.in.h:27
 msgid "A4Tech Wireless Desktop RFKB-23"
 msgstr "A4Tech-langaton työpöytänäppäimistö RFKB-23"
 
-#: ../rules/base.xml.in.h:26
+#: ../rules/base.xml.in.h:28 ../rules/evdev.xml.in.h:28
 msgid "ACPI Standard"
 msgstr "ACPI-standardi"
 
-#: ../rules/base.xml.in.h:27
-msgid "AZERTY Tskapo"
-msgstr "AZERTY Tskapo"
+#: ../rules/base.xml.in.h:29 ../rules/evdev.xml.in.h:29
+msgid "ATM/phone-style"
+msgstr ""
 
-#: ../rules/base.xml.in.h:28
+#: ../rules/base.xml.in.h:30 ../rules/evdev.xml.in.h:30
 msgid "Acer AirKey V"
 msgstr "Acer AirKey V"
 
-#: ../rules/base.xml.in.h:29
+#: ../rules/base.xml.in.h:31 ../rules/evdev.xml.in.h:31
 msgid "Acer C300"
 msgstr "Acer C300"
 
-#: ../rules/base.xml.in.h:30
+#: ../rules/base.xml.in.h:32 ../rules/evdev.xml.in.h:32
 msgid "Acer Ferrari 4000"
 msgstr "Acer Ferrari 4000"
 
-#: ../rules/base.xml.in.h:31
+#: ../rules/base.xml.in.h:33 ../rules/evdev.xml.in.h:33
 msgid "Acer Laptop"
 msgstr "Acer-kannettava"
 
-#: ../rules/base.xml.in.h:32
-msgid "Add the EuroSign to the 2 key."
-msgstr "Lisää euro-merkki 2-näppäimeen."
+#: ../rules/base.xml.in.h:34 ../rules/evdev.xml.in.h:34
+msgid "Add the standard behavior to Menu key"
+msgstr "Lisää standardi toiminta valikkonäppäimeen"
 
-#: ../rules/base.xml.in.h:33
-msgid "Add the EuroSign to the 5 key."
-msgstr "Lisää euro-merkki 5-näppäimeen."
+# Tulkitsin asiaa pikaisella tutkimuksella siten, että supersigno on 
+# esperantoa ja tarkoittaa noin suunnilleen korkomerkkiä.
+#: ../rules/base.xml.in.h:35 ../rules/evdev.xml.in.h:35
+msgid "Adding Esperanto circumflexes (supersigno)"
+msgstr "Esperanton tarkkeiden lisäys (supersigno)"
 
-#: ../rules/base.xml.in.h:34
-msgid "Add the EuroSign to the E key."
-msgstr "Lisää euro-merkki E-näppäimeen."
-
-#: ../rules/base.xml.in.h:35
-msgid "Add the standard behavior to Menu key."
-msgstr "Lisää standardi toiminta valikkonäppäimeen."
-
-#: ../rules/base.xml.in.h:36
-msgid "Adding the EuroSign to certain keys"
+#: ../rules/base.xml.in.h:36 ../rules/evdev.xml.in.h:36
+msgid "Adding EuroSign to certain keys"
 msgstr "Euro-merkin lisäys haluttuun näppäimeen"
 
-#: ../rules/base.xml.in.h:37
+#: ../rules/base.xml.in.h:37 ../rules/evdev.xml.in.h:37
 msgid "Advance Scorpius KI"
 msgstr "Advance Scorpius KI"
 
-#: ../rules/base.xml.in.h:38
+#: ../rules/base.xml.in.h:38 ../rules/evdev.xml.in.h:38
 msgid "Afg"
 msgstr "Afg"
 
-#: ../rules/base.xml.in.h:39
+#: ../rules/base.xml.in.h:39 ../rules/evdev.xml.in.h:39
 msgid "Afghanistan"
 msgstr "Afganistan"
 
-#: ../rules/base.xml.in.h:40
+#: ../rules/base.xml.in.h:40 ../rules/evdev.xml.in.h:40
 msgid "Akan"
 msgstr "Akan"
 
-#: ../rules/base.xml.in.h:41
+#: ../rules/base.xml.in.h:41 ../rules/evdev.xml.in.h:41
 msgid "Alb"
 msgstr "Alb"
 
-#: ../rules/base.xml.in.h:42
+#: ../rules/base.xml.in.h:42 ../rules/evdev.xml.in.h:42
 msgid "Albania"
 msgstr "Albania"
 
-#: ../rules/base.xml.in.h:43
-msgid "Alt and Meta are on the Alt keys."
-msgstr "Alt ja Meta ovat Alt-näppäimissä."
+#: ../rules/base.xml.in.h:43 ../rules/evdev.xml.in.h:43
+msgid "Alt and Meta are on Alt keys"
+msgstr "Alt ja Meta ovat Alt-näppäimissä"
 
-#: ../rules/base.xml.in.h:44
-msgid "Alt is mapped to the right Win-key and Super to Menu."
-msgstr "Alt tulee oikeasta Win-näppäimestä ja Super valikkonäppäimestä."
+#: ../rules/base.xml.in.h:44 ../rules/evdev.xml.in.h:44
+msgid "Alt is mapped to Right Win, Super to Menu"
+msgstr "Alt tulee oikeasta Win-näppäimestä, Super valikkonäppäimestä"
 
-#: ../rules/base.xml.in.h:45
-msgid "Alt+CapsLock changes layout."
-msgstr "Alt+CapsLock vaihtaa asettelua."
+#: ../rules/base.xml.in.h:45 ../rules/evdev.xml.in.h:45
+msgid "Alt+CapsLock"
+msgstr "Alt+CapsLock"
 
-#: ../rules/base.xml.in.h:46
-msgid "Alt+Ctrl change layout."
-msgstr "Alt+Ctrl vaihtaa asettelua."
+#: ../rules/base.xml.in.h:46 ../rules/evdev.xml.in.h:46
+msgid "Alt+Ctrl"
+msgstr "Alt+Ctrl"
 
-#: ../rules/base.xml.in.h:47
-msgid "Alt+Shift change layout."
-msgstr "Alt+Shift vaihtaa asettelua."
+#: ../rules/base.xml.in.h:47 ../rules/evdev.xml.in.h:47
+msgid "Alt+Shift"
+msgstr "Alt+Shift"
 
-#: ../rules/base.xml.in.h:48
+#: ../rules/base.xml.in.h:48 ../rules/evdev.xml.in.h:48
+msgid "Alt+Space"
+msgstr "Alt+Välilyönti"
+
+#: ../rules/base.xml.in.h:49 ../rules/evdev.xml.in.h:49
 msgid "Alt-Q"
 msgstr "Alt-Q"
 
-#: ../rules/base.xml.in.h:49
+#: ../rules/base.xml.in.h:50 ../rules/evdev.xml.in.h:50
 msgid "Alt/Win key behavior"
 msgstr "Alt- ja Win-näppäinten toiminta"
 
-#: ../rules/base.xml.in.h:50
+#: ../rules/base.xml.in.h:51 ../rules/evdev.xml.in.h:51
 msgid "Alternative"
 msgstr "Vaihtoehtoinen"
 
-#: ../rules/base.xml.in.h:51
+#: ../rules/base.xml.in.h:52 ../rules/evdev.xml.in.h:52
 msgid "Alternative Eastern"
 msgstr "Vaihtoehtoinen itäinen"
 
-#: ../rules/base.xml.in.h:52
+#: ../rules/base.xml.in.h:53 ../rules/evdev.xml.in.h:53
 msgid "Alternative Phonetic"
 msgstr "Vaihtoehtoinen foneettinen"
 
-#: ../rules/base.xml.in.h:53
+#: ../rules/base.xml.in.h:54 ../rules/evdev.xml.in.h:54
 msgid "Alternative international (former us_intl)"
 msgstr "Vaihtoehtoinen kansainvälinen (aiempi us_intl)"
 
-#: ../rules/base.xml.in.h:54
+#: ../rules/base.xml.in.h:55 ../rules/evdev.xml.in.h:55
 msgid "Alternative, Sun dead keys"
 msgstr "Vaihtoehtoinen, Sunin kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:55
+#: ../rules/base.xml.in.h:56 ../rules/evdev.xml.in.h:56
 msgid "Alternative, eliminate dead keys"
 msgstr "Vaihtoehtoinen, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:56
+#: ../rules/base.xml.in.h:57 ../rules/evdev.xml.in.h:57
 msgid "Alternative, latin-9 only"
 msgstr "Vaihtoehtoinen, vain latin-9"
 
-#: ../rules/base.xml.in.h:57
+#: ../rules/base.xml.in.h:58 ../rules/evdev.xml.in.h:58
 msgid "And"
 msgstr "And"
 
-#: ../rules/base.xml.in.h:58
+#: ../rules/base.xml.in.h:59 ../rules/evdev.xml.in.h:59
 msgid "Andorra"
 msgstr "Andorra"
 
-#: ../rules/base.xml.in.h:59
+#: ../rules/base.xml.in.h:60 ../rules/evdev.xml.in.h:60
+msgid "Any Alt key"
+msgstr "Mikä tahansa Alt-näppäin"
+
+#: ../rules/base.xml.in.h:61 ../rules/evdev.xml.in.h:61
+msgid "Any Win key"
+msgstr "Mikä tahansa Win-näppäin"
+
+#: ../rules/base.xml.in.h:62 ../rules/evdev.xml.in.h:62
+msgid "Any Win key (while pressed)"
+msgstr "Mikä tahansa Win-näppäin (painettaessa)"
+
+#: ../rules/base.xml.in.h:63 ../rules/evdev.xml.in.h:63
 msgid "Apostrophe (') variant"
 msgstr "Heittomerkkimuunnos (')"
 
-#: ../rules/base.xml.in.h:60
+#: ../rules/base.xml.in.h:64 ../rules/evdev.xml.in.h:64
 msgid "Apple"
 msgstr "Apple"
 
-#: ../rules/base.xml.in.h:61
+#: ../rules/base.xml.in.h:65 ../rules/evdev.xml.in.h:65
 msgid "Apple Laptop"
 msgstr "Apple-kannettava"
 
-#: ../rules/base.xml.in.h:62
+#: ../rules/base.xml.in.h:66 ../rules/evdev.xml.in.h:66
 msgid "Ara"
 msgstr "Ara"
 
-#: ../rules/base.xml.in.h:63
+#: ../rules/base.xml.in.h:67 ../rules/evdev.xml.in.h:67
 msgid "Arabic"
 msgstr "Arabia"
 
-#: ../rules/base.xml.in.h:64
+#: ../rules/base.xml.in.h:68 ../rules/evdev.xml.in.h:68
 msgid "Arm"
 msgstr "Arm"
 
-#: ../rules/base.xml.in.h:65
+#: ../rules/base.xml.in.h:69 ../rules/evdev.xml.in.h:69
 msgid "Armenia"
 msgstr "Armenia"
 
-#: ../rules/base.xml.in.h:66
+#: ../rules/base.xml.in.h:70 ../rules/evdev.xml.in.h:70
+msgid "Asturian variant with bottom-dot H and bottom-dot L"
+msgstr "Asturia-vaihtoehto keskipilkullisella H-kirjaimella ja alapilkullisella L-kirjaimella"
+
+#: ../rules/base.xml.in.h:71 ../rules/evdev.xml.in.h:71
 msgid "Asus Laptop"
 msgstr "Asus-kannettava"
 
-#: ../rules/base.xml.in.h:67
+#: ../rules/base.xml.in.h:72 ../rules/evdev.xml.in.h:72
+msgid "At bottom left"
+msgstr "Alhaalla vasemmalla"
+
+#: ../rules/base.xml.in.h:73 ../rules/evdev.xml.in.h:73
+msgid "At left of 'A'"
+msgstr "\"A\"-näppäimestä vasemmalla"
+
+#: ../rules/base.xml.in.h:74 ../rules/evdev.xml.in.h:74
 msgid "Aze"
 msgstr "Aze"
 
-#: ../rules/base.xml.in.h:68
+#: ../rules/base.xml.in.h:75 ../rules/evdev.xml.in.h:75
 msgid "Azerbaijan"
 msgstr "Azerbaidzan"
 
-#: ../rules/base.xml.in.h:69
+#: ../rules/base.xml.in.h:76 ../rules/evdev.xml.in.h:76
 msgid "Azona RF2300 wireless Internet Keyboard"
 msgstr "Azona RF2300 -langaton Internet-näppäimistö"
 
-#: ../rules/base.xml.in.h:70
+#: ../rules/base.xml.in.h:77 ../rules/evdev.xml.in.h:77
 msgid "BTC 5090"
 msgstr "BTC 5090"
 
-#: ../rules/base.xml.in.h:71
+#: ../rules/base.xml.in.h:78 ../rules/evdev.xml.in.h:78
 msgid "BTC 5113RF Multimedia"
 msgstr "BTC 5113RF Multimedia"
 
-#: ../rules/base.xml.in.h:72
+#: ../rules/base.xml.in.h:79 ../rules/evdev.xml.in.h:79
 msgid "BTC 5126T"
 msgstr "BTC 5126T"
 
-#: ../rules/base.xml.in.h:73
+#: ../rules/base.xml.in.h:80 ../rules/evdev.xml.in.h:80
+msgid "BTC 6301URF"
+msgstr "BTC 6301URF"
+
+#: ../rules/base.xml.in.h:81 ../rules/evdev.xml.in.h:81
 msgid "BTC 9000"
 msgstr "BTC 9000"
 
-#: ../rules/base.xml.in.h:74
+#: ../rules/base.xml.in.h:82 ../rules/evdev.xml.in.h:82
 msgid "BTC 9000A"
 msgstr "BTC 9000A"
 
-#: ../rules/base.xml.in.h:75
+#: ../rules/base.xml.in.h:83 ../rules/evdev.xml.in.h:83
 msgid "BTC 9001AH"
 msgstr "BTC 9001AH"
 
-#: ../rules/base.xml.in.h:76
+#: ../rules/base.xml.in.h:84 ../rules/evdev.xml.in.h:84
 msgid "BTC 9019U"
 msgstr "BTC 9019U"
 
-#: ../rules/base.xml.in.h:77
+#: ../rules/base.xml.in.h:85 ../rules/evdev.xml.in.h:85
+msgid "BTC 9116U Mini Wireless Internet and Gaming"
+msgstr "BTC 9116U Mini Wireless Internet and Gaming"
+
+#: ../rules/base.xml.in.h:86 ../rules/evdev.xml.in.h:86
 msgid "Ban"
 msgstr "Ban"
 
-#: ../rules/base.xml.in.h:78
+#: ../rules/base.xml.in.h:87 ../rules/evdev.xml.in.h:87
 msgid "Bangladesh"
 msgstr "Bangladesh"
 
-#: ../rules/base.xml.in.h:79 ../rules/sun.xml.in.h:22
+#: ../rules/base.xml.in.h:88 ../rules/evdev.xml.in.h:88
 msgid "Bel"
 msgstr "Bel"
 
-#: ../rules/base.xml.in.h:80
+#: ../rules/base.xml.in.h:89 ../rules/evdev.xml.in.h:89
 msgid "Belarus"
 msgstr "Valko-Venäjä"
 
-#: ../rules/base.xml.in.h:81
+#: ../rules/base.xml.in.h:90 ../rules/evdev.xml.in.h:90
 msgid "Belgium"
 msgstr "Belgia"
 
-#: ../rules/base.xml.in.h:82
+#: ../rules/base.xml.in.h:91 ../rules/evdev.xml.in.h:91
 msgid "BenQ X-Touch"
 msgstr "BenQ X-Touch"
 
-#: ../rules/base.xml.in.h:83
+#: ../rules/base.xml.in.h:92 ../rules/evdev.xml.in.h:92
+msgid "BenQ X-Touch 730"
+msgstr "BenQ X-Touch 730"
+
+#: ../rules/base.xml.in.h:93 ../rules/evdev.xml.in.h:93
+msgid "BenQ X-Touch 800"
+msgstr "BenQ X-Touch 800"
+
+#: ../rules/base.xml.in.h:94 ../rules/evdev.xml.in.h:94
 msgid "Bengali"
 msgstr "Bengali"
 
-#: ../rules/base.xml.in.h:84
+#: ../rules/base.xml.in.h:95 ../rules/evdev.xml.in.h:95
 msgid "Bengali Probhat"
 msgstr "Bengali probhat"
 
-#: ../rules/base.xml.in.h:85
+#: ../rules/base.xml.in.h:96 ../rules/evdev.xml.in.h:96
 msgid "Bepo, ergonomic, Dvorak way"
 msgstr "Bepo, ergonominen, Dvorak-tavalla"
 
-#: ../rules/base.xml.in.h:86
+#: ../rules/base.xml.in.h:97 ../rules/evdev.xml.in.h:97
 msgid "Bepo, ergonomic, Dvorak way, latin-9 only"
 msgstr "Bepo, ergonominen, Dvorak-tavalla, pelkkä latin-9"
 
-#: ../rules/base.xml.in.h:87 ../rules/sun.xml.in.h:24
+#: ../rules/base.xml.in.h:98 ../rules/evdev.xml.in.h:98
 msgid "Bgr"
 msgstr "Bgr"
 
-#: ../rules/base.xml.in.h:88
+#: ../rules/base.xml.in.h:99 ../rules/evdev.xml.in.h:99
 msgid "Bhu"
 msgstr "Bhu"
 
-#: ../rules/base.xml.in.h:89
+#: ../rules/base.xml.in.h:100 ../rules/evdev.xml.in.h:100
 msgid "Bhutan"
 msgstr "Bhutan"
 
-#: ../rules/base.xml.in.h:90
+#: ../rules/base.xml.in.h:101 ../rules/evdev.xml.in.h:101
 msgid "Biblical Hebrew (Tiro)"
 msgstr "Raamatullinen Heprea (Tiro)"
 
-#: ../rules/base.xml.in.h:91
+#: ../rules/base.xml.in.h:102 ../rules/evdev.xml.in.h:102
 msgid "Bih"
 msgstr "Bih"
 
-#: ../rules/base.xml.in.h:92
+#: ../rules/base.xml.in.h:103 ../rules/evdev.xml.in.h:103
 msgid "Blr"
 msgstr "Blr"
 
-#: ../rules/base.xml.in.h:93
+#: ../rules/base.xml.in.h:104 ../rules/evdev.xml.in.h:104
 msgid "Bosnia and Herzegovina"
 msgstr "Bosnia-Hertsegovina"
 
-#: ../rules/base.xml.in.h:94
-msgid "Both Alt keys together change layout."
-msgstr "Molemmat Alt-näppäimet yhdessä vaihtavat asettelua."
+#: ../rules/base.xml.in.h:105 ../rules/evdev.xml.in.h:105
+msgid "Both Alt keys together"
+msgstr "Molemmat Alt-näppäimet"
 
-#: ../rules/base.xml.in.h:95
-msgid "Both Ctrl keys together change layout."
-msgstr "Molemmat Ctrl-näppäimet yhdessä vaihtavat asettelua."
+#: ../rules/base.xml.in.h:106 ../rules/evdev.xml.in.h:106
+msgid "Both Ctrl keys together"
+msgstr "Molemmat Ctrl-näppäimet"
 
-#: ../rules/base.xml.in.h:96
-msgid "Both Shift keys together change layout."
-msgstr "Molemmat Shift-näppäimet yhdessä vaihtavat asettelua."
+#: ../rules/base.xml.in.h:107 ../rules/evdev.xml.in.h:107
+msgid "Both Shift keys together"
+msgstr "Molemmat Shift-näppäimet"
 
-#: ../rules/base.xml.in.h:97
-msgid "Both Win-keys switch layout while pressed."
-msgstr "Molemmat Win-näppäimet vaihtavat asettelua painettaessa."
-
-#: ../rules/base.xml.in.h:98
+#: ../rules/base.xml.in.h:108 ../rules/evdev.xml.in.h:108
 msgid "Bra"
 msgstr "Bra"
 
-#: ../rules/base.xml.in.h:99
+#: ../rules/base.xml.in.h:109 ../rules/evdev.xml.in.h:109
 msgid "Braille"
 msgstr "Braille"
 
-#: ../rules/base.xml.in.h:100
+#: ../rules/base.xml.in.h:110 ../rules/evdev.xml.in.h:110
 msgid "Brazil"
 msgstr "Brasilia"
 
-#: ../rules/base.xml.in.h:101
+#: ../rules/base.xml.in.h:111 ../rules/evdev.xml.in.h:111
 msgid "Brazilian ABNT2"
 msgstr "Brasilialainen ABNT2"
 
-#: ../rules/base.xml.in.h:102
+#: ../rules/base.xml.in.h:112 ../rules/evdev.xml.in.h:112
+msgid "Breton"
+msgstr "Bretoni"
+
+#: ../rules/base.xml.in.h:113 ../rules/evdev.xml.in.h:113
 msgid "Brl"
 msgstr "Brl"
 
-#: ../rules/base.xml.in.h:103
+#: ../rules/base.xml.in.h:114 ../rules/evdev.xml.in.h:114
 msgid "Brother Internet Keyboard"
 msgstr "Brother-Internet-näppäimistö"
 
-#: ../rules/base.xml.in.h:104
+#: ../rules/base.xml.in.h:115 ../rules/evdev.xml.in.h:115
 msgid "Buckwalter"
 msgstr "Buckwalter"
 
-#: ../rules/base.xml.in.h:105
+#: ../rules/base.xml.in.h:116 ../rules/evdev.xml.in.h:116
 msgid "Bulgaria"
 msgstr "Bulgaria"
 
-#: ../rules/base.xml.in.h:106
+#: ../rules/base.xml.in.h:117 ../rules/evdev.xml.in.h:117
+msgid "CRULP"
+msgstr "CRULP"
+
+#: ../rules/base.xml.in.h:118 ../rules/evdev.xml.in.h:118
 msgid "Cambodia"
 msgstr "Kambodža"
 
-#: ../rules/base.xml.in.h:107 ../rules/sun.xml.in.h:29
+#: ../rules/base.xml.in.h:119 ../rules/evdev.xml.in.h:119
 msgid "Can"
 msgstr "Can"
 
-#: ../rules/base.xml.in.h:108
+#: ../rules/base.xml.in.h:120 ../rules/evdev.xml.in.h:120
 msgid "Canada"
 msgstr "Kanada"
 
-#: ../rules/base.xml.in.h:109
-msgid "Caps Lock is Compose."
-msgstr "Caps Lock on Compose."
+#: ../rules/base.xml.in.h:121 ../rules/evdev.xml.in.h:121
+msgid "Caps Lock"
+msgstr "Caps Lock"
 
-#: ../rules/base.xml.in.h:110
-msgid "CapsLock LED shows alternative layout."
-msgstr "CapsLock-ledi näyttää vaihtoehtoista asettelua."
+#: ../rules/base.xml.in.h:122 ../rules/evdev.xml.in.h:122
+msgid "CapsLock"
+msgstr "CapsLock"
 
-#: ../rules/base.xml.in.h:111
-msgid "CapsLock acts as Shift with locking. Shift \"pauses\" CapsLock."
-msgstr "CapsLock toimii lukitsevana Shiftinä. Shift kumoaa CapsLockin."
+#: ../rules/base.xml.in.h:123 ../rules/evdev.xml.in.h:123
+msgid "CapsLock (to first layout), Shift+CapsLock (to last layout)"
+msgstr "CapsLock (ensimmäiselle tasolle), Shift+CapsLock (viimeiselle tasolle)"
 
-#: ../rules/base.xml.in.h:112
-msgid "CapsLock acts as Shift with locking. Shift doesn't affect CapsLock."
-msgstr "CapsLock toimii lukitsevana Shiftinä. Shift ei kumoa CapsLockia."
+#: ../rules/base.xml.in.h:124 ../rules/evdev.xml.in.h:124
+msgid "CapsLock (while pressed), Alt+CapsLock does the original capslock action"
+msgstr "CapsLock (painettaessa), Alt+CapsLock tekee normaalin CapsLock-toiminnon"
 
-#: ../rules/base.xml.in.h:113
-msgid "CapsLock just locks the Shift modifier."
-msgstr "CapsLock vain lukitsee Shift-muunnoksen."
+#: ../rules/base.xml.in.h:125 ../rules/evdev.xml.in.h:125
+msgid "CapsLock acts as Shift with locking. Shift \"pauses\" CapsLock"
+msgstr "CapsLock toimii lukitsevana Shiftinä. Shift kumoaa CapsLockin"
 
-#: ../rules/base.xml.in.h:114 ../rules/sun.xml.in.h:33
+#: ../rules/base.xml.in.h:126 ../rules/evdev.xml.in.h:126
+msgid "CapsLock acts as Shift with locking. Shift doesn't affect CapsLock"
+msgstr "CapsLock toimii lukitsevana Shiftinä. Shift ei kumoa CapsLockia"
+
+#: ../rules/base.xml.in.h:127 ../rules/evdev.xml.in.h:127
 msgid "CapsLock key behavior"
 msgstr "CapsLock-näppäimen toiminta"
 
-#: ../rules/base.xml.in.h:115
-msgid "CapsLock key changes layout."
-msgstr "CapsLock-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:128 ../rules/evdev.xml.in.h:128
+msgid "CapsLock toggles Shift so all keys are affected"
+msgstr "CapsLock vaihtaa Shiftiä vaikuttaen kaikkiin näppäimiin"
 
-#: ../rules/base.xml.in.h:116
-msgid "CapsLock toggles Shift so all keys are affected."
-msgstr "CapsLock vaihtaa Shiftiä vaikuttaen kaikkiin näppäimiin."
+#: ../rules/base.xml.in.h:129 ../rules/evdev.xml.in.h:129
+msgid "CapsLock toggles normal capitalization of alphabetic characters"
+msgstr "CapsLock vaihtaa normaalin suuraakkostuksen aakkosille"
 
-#: ../rules/base.xml.in.h:117
-msgid "CapsLock toggles normal capitalization of alphabetic characters."
-msgstr "CapsLock vaihtaa normaalin suuraakkostuksen aakkosille."
+#: ../rules/base.xml.in.h:130 ../rules/evdev.xml.in.h:130
+msgid "CapsLock uses internal capitalization. Shift \"pauses\" CapsLock"
+msgstr "CapsLock käyttää sisäistä suuraakkostusta. Shift kumoaa CapsLockin"
 
-#: ../rules/base.xml.in.h:118
-msgid "CapsLock uses internal capitalization. Shift \"pauses\" CapsLock."
-msgstr "CapsLock käyttää sisäistä suuraakkostusta. Shift peruu CapsLockin."
+#: ../rules/base.xml.in.h:131 ../rules/evdev.xml.in.h:131
+msgid "CapsLock uses internal capitalization. Shift doesn't affect CapsLock"
+msgstr "CapsLock käyttää sisäistä suuraakkostusta. Shift ei kumoa CapsLockia"
 
-#: ../rules/base.xml.in.h:119
-msgid "CapsLock uses internal capitalization. Shift doesn't affect CapsLock."
-msgstr "CapsLock käyttää sisäistä suuraakkostusta. Shift ei peru CapsLockia."
-
-#: ../rules/base.xml.in.h:120
+#: ../rules/base.xml.in.h:132 ../rules/evdev.xml.in.h:132
 msgid "Catalan variant with middle-dot L"
 msgstr "Katalaani-vaihtoehto keskipilkullisella L-kirjaimella"
 
-#: ../rules/base.xml.in.h:121
+#: ../rules/base.xml.in.h:133 ../rules/evdev.xml.in.h:133
+msgid "Cedilla"
+msgstr "Sedilji"
+
+#: ../rules/base.xml.in.h:134 ../rules/evdev.xml.in.h:134
 msgid "Che"
 msgstr "Che"
 
-#: ../rules/base.xml.in.h:122
+#: ../rules/base.xml.in.h:135 ../rules/evdev.xml.in.h:135
+msgid "Cherokee"
+msgstr "Cherokee"
+
+#: ../rules/base.xml.in.h:136 ../rules/evdev.xml.in.h:136
 msgid "Cherry Blue Line CyBo@rd"
 msgstr "Cherry Blue Line CyBo@rd"
 
-#: ../rules/base.xml.in.h:123
+#: ../rules/base.xml.in.h:137 ../rules/evdev.xml.in.h:137
 msgid "Cherry Blue Line CyBo@rd (alternate option)"
 msgstr "Cherry Blue Line CyBo@rd (vaihtoehtoinen valinta)"
 
-#: ../rules/base.xml.in.h:124
+#: ../rules/base.xml.in.h:138 ../rules/evdev.xml.in.h:138
 msgid "Cherry CyBo@rd USB-Hub"
 msgstr "Cherry CyBo@rd USB-Hub"
 
-#: ../rules/base.xml.in.h:125
+#: ../rules/base.xml.in.h:139 ../rules/evdev.xml.in.h:139
+msgid "Cherry CyMotion Expert"
+msgstr "Cherry CyMotion Expert"
+
+#: ../rules/base.xml.in.h:140 ../rules/evdev.xml.in.h:140
 msgid "Cherry CyMotion Master Linux"
 msgstr "Cherry CyMotion Master Linux"
 
-#: ../rules/base.xml.in.h:126
+#: ../rules/base.xml.in.h:141 ../rules/evdev.xml.in.h:141
 msgid "Cherry CyMotion Master XPress"
 msgstr "Cherry CyMotion Master XPress"
 
-#: ../rules/base.xml.in.h:127
+#: ../rules/base.xml.in.h:142 ../rules/evdev.xml.in.h:142
 msgid "Chicony Internet Keyboard"
 msgstr "Chicony-Internet-näppäimistö"
 
-#: ../rules/base.xml.in.h:128
+#: ../rules/base.xml.in.h:143 ../rules/evdev.xml.in.h:143
 msgid "Chicony KB-9885"
 msgstr "Chicony KB-9885"
 
-#: ../rules/base.xml.in.h:129
+#: ../rules/base.xml.in.h:144 ../rules/evdev.xml.in.h:144
+msgid "Chicony KU-0108"
+msgstr "Chicony KU-0108"
+
+#: ../rules/base.xml.in.h:145 ../rules/evdev.xml.in.h:145
+msgid "Chicony KU-0420"
+msgstr "Chicony KU-0420"
+
+#: ../rules/base.xml.in.h:146 ../rules/evdev.xml.in.h:146
 msgid "China"
 msgstr "Kiina"
 
-#: ../rules/base.xml.in.h:130
+#: ../rules/base.xml.in.h:147 ../rules/evdev.xml.in.h:147
 msgid "Chuvash"
 msgstr "Chuvash"
 
-#: ../rules/base.xml.in.h:131
+#: ../rules/base.xml.in.h:148 ../rules/evdev.xml.in.h:148
 msgid "Chuvash Latin"
 msgstr "Chuvash latinalainen"
 
-#: ../rules/base.xml.in.h:132
+#: ../rules/base.xml.in.h:149 ../rules/evdev.xml.in.h:149
+msgid "Classic"
+msgstr "Perinteinen"
+
+#: ../rules/base.xml.in.h:150 ../rules/evdev.xml.in.h:150
 msgid "Classic Dvorak"
 msgstr "Perinteinen dvorak"
 
-#: ../rules/base.xml.in.h:133
+#: ../rules/base.xml.in.h:151 ../rules/evdev.xml.in.h:151
 msgid "Classmate PC"
 msgstr "Classmate PC"
 
-#: ../rules/base.xml.in.h:134
+#: ../rules/base.xml.in.h:152 ../rules/evdev.xml.in.h:152
 msgid "CloGaelach"
 msgstr "CloGaelach"
 
-#: ../rules/base.xml.in.h:135
+#: ../rules/base.xml.in.h:153 ../rules/evdev.xml.in.h:153
 msgid "Colemak"
 msgstr "Colemak"
 
-#: ../rules/base.xml.in.h:136
-msgid "Commabelow"
-msgstr "Commabelow"
-
-#: ../rules/base.xml.in.h:137
+#: ../rules/base.xml.in.h:154 ../rules/evdev.xml.in.h:154
 msgid "Compaq Easy Access Keyboard"
 msgstr "Compaq Easy Access -näppäimistö"
 
-#: ../rules/base.xml.in.h:138
+#: ../rules/base.xml.in.h:155 ../rules/evdev.xml.in.h:155
 msgid "Compaq Internet Keyboard (13 keys)"
 msgstr "Compaq-Internet-näppäimistö (13 näppäintä)"
 
-#: ../rules/base.xml.in.h:139
+#: ../rules/base.xml.in.h:156 ../rules/evdev.xml.in.h:156
 msgid "Compaq Internet Keyboard (18 keys)"
 msgstr "Compaq-Internet-näppäimistö (18 näppäintä)"
 
-#: ../rules/base.xml.in.h:140
+#: ../rules/base.xml.in.h:157 ../rules/evdev.xml.in.h:157
 msgid "Compaq Internet Keyboard (7 keys)"
 msgstr "Compaq-Internet-näppäimistö (7 näppäintä)"
 
-#: ../rules/base.xml.in.h:141
+#: ../rules/base.xml.in.h:158 ../rules/evdev.xml.in.h:158
 msgid "Compaq iPaq Keyboard"
 msgstr "Compaq iPaq-näppäimistö"
 
-#: ../rules/base.xml.in.h:142
+#: ../rules/base.xml.in.h:159 ../rules/evdev.xml.in.h:159
 msgid "Compose key position"
 msgstr "Compose-näppäimen sijainti"
 
-#: ../rules/base.xml.in.h:143
+#: ../rules/base.xml.in.h:160 ../rules/evdev.xml.in.h:160
 msgid "Congo, Democratic Republic of the"
 msgstr "Kongon tasavalta"
 
-#: ../rules/base.xml.in.h:144
-msgid "Control is mapped to the Win-keys (and the usual Ctrl keys)."
-msgstr "Contol on liitetty Win-näppäimiin (ja Control-näppäimiin)."
+#: ../rules/base.xml.in.h:161 ../rules/evdev.xml.in.h:161
+msgid "Control is mapped to Alt keys, Alt is mapped to Win keys"
+msgstr "Contol on liitetty Alt-näppäimiin, Alt Win-näppäimiin"
 
-#: ../rules/base.xml.in.h:145
+#: ../rules/base.xml.in.h:162 ../rules/evdev.xml.in.h:162
+msgid "Control is mapped to Win keys (and the usual Ctrl keys)"
+msgstr "Contol on liitetty Win-näppäimiin (ja tavalliset Ctrl-näppämet)"
+
+#: ../rules/base.xml.in.h:163 ../rules/evdev.xml.in.h:163
 msgid "Croatia"
 msgstr "Kroatia"
 
-#: ../rules/base.xml.in.h:146
-msgid "Ctrl key at bottom left"
-msgstr "Ctrl-näppäin alhaalla vasemmalla"
-
-#: ../rules/base.xml.in.h:147
-msgid "Ctrl key at left of 'A'"
-msgstr "Ctrl-näppäin \"A\"-näppäimestä vasemmalla"
-
-#: ../rules/base.xml.in.h:148
+#: ../rules/base.xml.in.h:164 ../rules/evdev.xml.in.h:164
 msgid "Ctrl key position"
 msgstr "Ctrl-näppäimen sijainti"
 
-#: ../rules/base.xml.in.h:149
-msgid "Ctrl+Shift change layout."
-msgstr "Ctrl+Shift vaihtaa asettelua."
+#: ../rules/base.xml.in.h:165 ../rules/evdev.xml.in.h:165
+msgid "Ctrl+Shift"
+msgstr "Ctrl+Shift"
 
-#: ../rules/base.xml.in.h:150
+#: ../rules/base.xml.in.h:166 ../rules/evdev.xml.in.h:166
 msgid "Cyrillic"
 msgstr "Kyrillinen"
 
-#: ../rules/base.xml.in.h:151 ../rules/sun.xml.in.h:39
+#: ../rules/base.xml.in.h:167 ../rules/evdev.xml.in.h:167
+msgid "Cyrillic with guillemets"
+msgstr "Kyrillinen guillemot-lainausmerkeillä"
+
+#: ../rules/base.xml.in.h:168 ../rules/evdev.xml.in.h:168
+msgid "Cyrillic, Z and ZHE swapped"
+msgstr "Kyrillinen, Z ja ZHE vaihdettu"
+
+#: ../rules/base.xml.in.h:169 ../rules/evdev.xml.in.h:169
 msgid "Cze"
 msgstr "Cze"
 
-#: ../rules/base.xml.in.h:152
+#: ../rules/base.xml.in.h:170 ../rules/evdev.xml.in.h:170
 msgid "Czechia"
 msgstr "Tšekki"
 
-#: ../rules/base.xml.in.h:153
+#: ../rules/base.xml.in.h:171 ../rules/evdev.xml.in.h:171
 msgid "DRC"
 msgstr "DRC"
 
-#: ../rules/base.xml.in.h:154
+#: ../rules/base.xml.in.h:172 ../rules/evdev.xml.in.h:172
 msgid "DTK2000"
 msgstr "DTK2000"
 
-#: ../rules/base.xml.in.h:155 ../rules/sun.xml.in.h:42
+#: ../rules/base.xml.in.h:173 ../rules/evdev.xml.in.h:173
+msgid "Dan"
+msgstr "Dan"
+
+#: ../rules/base.xml.in.h:174 ../rules/evdev.xml.in.h:174
 msgid "Dead acute"
 msgstr "Kuollut akuutti"
 
-#: ../rules/base.xml.in.h:156 ../rules/sun.xml.in.h:43
+#: ../rules/base.xml.in.h:175 ../rules/evdev.xml.in.h:175
 msgid "Dead grave acute"
 msgstr "Kuollut gravis"
 
-#: ../rules/base.xml.in.h:157
-msgid "Default numeric keypad keys."
-msgstr "Oletussormionäppäimet."
+#: ../rules/base.xml.in.h:176 ../rules/evdev.xml.in.h:176
+msgid "Default numeric keypad keys"
+msgstr "Oletussormionäppäimet"
 
-#: ../rules/base.xml.in.h:158
+#: ../rules/base.xml.in.h:177 ../rules/evdev.xml.in.h:177
 msgid "Dell"
 msgstr "Dell"
 
-#: ../rules/base.xml.in.h:159
+#: ../rules/base.xml.in.h:178 ../rules/evdev.xml.in.h:178
 msgid "Dell 101-key PC"
 msgstr "Dell 101-näppäiminen PC"
 
-#: ../rules/base.xml.in.h:160
+#: ../rules/base.xml.in.h:179 ../rules/evdev.xml.in.h:179
 msgid "Dell Laptop/notebook Inspiron 6xxx/8xxx"
 msgstr "Kannettava Dell Inspiron 6xxx/8xxx"
 
-#: ../rules/base.xml.in.h:161
+#: ../rules/base.xml.in.h:180 ../rules/evdev.xml.in.h:180
 msgid "Dell Laptop/notebook Precision M series"
 msgstr "Kannettava Dell Precision M -sarja"
 
-#: ../rules/base.xml.in.h:162
+#: ../rules/base.xml.in.h:181 ../rules/evdev.xml.in.h:181
 msgid "Dell Latitude series laptop"
 msgstr "Kannettava Dell Latitude-sarja"
 
-#: ../rules/base.xml.in.h:163
+#: ../rules/base.xml.in.h:182 ../rules/evdev.xml.in.h:182
 msgid "Dell Precision M65"
 msgstr "Dell Precision M65"
 
-#: ../rules/base.xml.in.h:164
-msgid "Dell USB Multimedia Keybard"
+#: ../rules/base.xml.in.h:183 ../rules/evdev.xml.in.h:183
+msgid "Dell SK-8125"
+msgstr "Dell SK-8125"
+
+#: ../rules/base.xml.in.h:184 ../rules/evdev.xml.in.h:184
+msgid "Dell SK-8135"
+msgstr "Dell SK-8135"
+
+#: ../rules/base.xml.in.h:185 ../rules/evdev.xml.in.h:185
+msgid "Dell USB Multimedia Keyboard"
 msgstr "Dell USB -multimedianäppäimistö"
 
-#: ../rules/base.xml.in.h:165
+#: ../rules/base.xml.in.h:186 ../rules/evdev.xml.in.h:186
 msgid "Denmark"
 msgstr "Tanska"
 
-#: ../rules/base.xml.in.h:166 ../rules/sun.xml.in.h:44
+#: ../rules/base.xml.in.h:187 ../rules/evdev.xml.in.h:187
 msgid "Deu"
 msgstr "Deu"
 
-#: ../rules/base.xml.in.h:167
+#: ../rules/base.xml.in.h:188 ../rules/evdev.xml.in.h:188
 msgid "Dexxa Wireless Desktop Keyboard"
 msgstr "Dexxa-langaton työpöytänäppäimistö"
 
-#: ../rules/base.xml.in.h:168
+#: ../rules/base.xml.in.h:189 ../rules/evdev.xml.in.h:189
 msgid "Diamond 9801 / 9802 series"
 msgstr "Diamond 9801/9802-sarja"
 
-#: ../rules/base.xml.in.h:169 ../rules/sun.xml.in.h:46
-msgid "Dnk"
-msgstr "Dnk"
-
-#: ../rules/base.xml.in.h:170 ../rules/sun.xml.in.h:48
+#: ../rules/base.xml.in.h:190 ../rules/evdev.xml.in.h:190
 msgid "Dvorak"
 msgstr "Dvorak"
 
-#: ../rules/base.xml.in.h:171
+#: ../rules/base.xml.in.h:191 ../rules/evdev.xml.in.h:191
+msgid "Dvorak (UK Punctuation)"
+msgstr "Dvorak (UK-pilkutus)"
+
+#: ../rules/base.xml.in.h:192 ../rules/evdev.xml.in.h:192
+msgid "Dvorak international"
+msgstr "Dvorak kansainvälinen"
+
+#: ../rules/base.xml.in.h:193 ../rules/evdev.xml.in.h:193
 msgid "Dvorak, Polish quotes on key \"1/!\""
 msgstr "Dvorak, puolalaiset lainausmerkit \"1/!\"-näppäimistä"
 
-#: ../rules/base.xml.in.h:172
+#: ../rules/base.xml.in.h:194 ../rules/evdev.xml.in.h:194
 msgid "Dvorak, Polish quotes on quotemark key"
 msgstr "Dvorak, puolalaiset lainausmerkit lainausmerkkinäppäimestä"
 
-#: ../rules/base.xml.in.h:173
+#: ../rules/base.xml.in.h:195 ../rules/evdev.xml.in.h:195
+msgid "E"
+msgstr "E"
+
+#: ../rules/base.xml.in.h:196 ../rules/evdev.xml.in.h:196
 msgid "Eastern"
 msgstr "Itäinen"
 
-#: ../rules/base.xml.in.h:174 ../rules/sun.xml.in.h:49
+#: ../rules/base.xml.in.h:197 ../rules/evdev.xml.in.h:197
 msgid "Eliminate dead keys"
 msgstr "Ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:175
+#: ../rules/base.xml.in.h:198 ../rules/evdev.xml.in.h:198
+msgid "Enable extra typographic characters"
+msgstr "Ota käyttöön ylimääräiset typografiset merkit"
+
+#: ../rules/base.xml.in.h:199 ../rules/evdev.xml.in.h:199
 msgid "Ennyah DKB-1008"
 msgstr "Ennyah DKB-1008"
 
-#: ../rules/base.xml.in.h:176
+#: ../rules/base.xml.in.h:200 ../rules/evdev.xml.in.h:200
 msgid "Epo"
 msgstr "Epo"
 
-#: ../rules/base.xml.in.h:177
+#: ../rules/base.xml.in.h:201 ../rules/evdev.xml.in.h:201
 msgid "Ergonomic"
 msgstr "ergonominen"
 
-#: ../rules/base.xml.in.h:178 ../rules/sun.xml.in.h:50
+#: ../rules/base.xml.in.h:202 ../rules/evdev.xml.in.h:202
 msgid "Esp"
 msgstr "Esp"
 
-#: ../rules/base.xml.in.h:179
+#: ../rules/base.xml.in.h:203 ../rules/evdev.xml.in.h:203
 msgid "Esperanto"
 msgstr "Esperanto"
 
-#: ../rules/base.xml.in.h:180
+#: ../rules/base.xml.in.h:204 ../rules/evdev.xml.in.h:204
 msgid "Est"
 msgstr "Est"
 
-#: ../rules/base.xml.in.h:181
+#: ../rules/base.xml.in.h:205 ../rules/evdev.xml.in.h:205
 msgid "Estonia"
 msgstr "Viro"
 
-#: ../rules/base.xml.in.h:182
+#: ../rules/base.xml.in.h:206 ../rules/evdev.xml.in.h:206
 msgid "Eth"
 msgstr "Eth"
 
-#: ../rules/base.xml.in.h:183
+#: ../rules/base.xml.in.h:207 ../rules/evdev.xml.in.h:207
 msgid "Ethiopia"
 msgstr "Etiopia"
 
-#: ../rules/base.xml.in.h:184
+#: ../rules/base.xml.in.h:208 ../rules/evdev.xml.in.h:208
 msgid "Evdev-managed keyboard"
 msgstr "Evdev-hallittu näppäimistö"
 
-#: ../rules/base.xml.in.h:185
+#: ../rules/base.xml.in.h:209 ../rules/evdev.xml.in.h:209
 msgid "Everex STEPnote"
 msgstr "Everex STEPnote"
 
-#: ../rules/base.xml.in.h:186
+#: ../rules/base.xml.in.h:210 ../rules/evdev.xml.in.h:210
 msgid "Ewe"
 msgstr "Ewe"
 
-#: ../rules/base.xml.in.h:187
+#: ../rules/base.xml.in.h:211 ../rules/evdev.xml.in.h:211
 msgid "Extended"
 msgstr "Laajennettu"
 
-#: ../rules/base.xml.in.h:188
+#: ../rules/base.xml.in.h:212 ../rules/evdev.xml.in.h:212
 msgid "Extended Backslash"
 msgstr "Laajennettu kenoviiva"
 
-#: ../rules/base.xml.in.h:189
+#: ../rules/base.xml.in.h:213 ../rules/evdev.xml.in.h:213
 msgid "F-letter (F) variant"
 msgstr "F-kirjainmuunnos (F)"
 
-#: ../rules/base.xml.in.h:190
+#: ../rules/base.xml.in.h:214 ../rules/evdev.xml.in.h:214
+msgid "FL90"
+msgstr "FL90"
+
+#: ../rules/base.xml.in.h:215 ../rules/evdev.xml.in.h:215
 msgid "Fao"
 msgstr "Fao"
 
-#: ../rules/base.xml.in.h:191
+#: ../rules/base.xml.in.h:216 ../rules/evdev.xml.in.h:216
 msgid "Faroe Islands"
 msgstr "Färsaaret"
 
-#: ../rules/base.xml.in.h:192 ../rules/sun.xml.in.h:51
+#: ../rules/base.xml.in.h:217 ../rules/evdev.xml.in.h:217
 msgid "Fin"
 msgstr "Fin"
 
-#: ../rules/base.xml.in.h:193
+#: ../rules/base.xml.in.h:218 ../rules/evdev.xml.in.h:218
 msgid "Finland"
 msgstr "Suomi"
 
 #. This assumes the KP_ abstract symbols are actually useful for some apps
 #. The description needs to be rewritten
-#: ../rules/base.xml.in.h:196
+#: ../rules/base.xml.in.h:221 ../rules/evdev.xml.in.h:221
 msgid "Four-level key with abstract separators"
 msgstr ""
 
-#: ../rules/base.xml.in.h:197
+#: ../rules/base.xml.in.h:222 ../rules/evdev.xml.in.h:222
 msgid "Four-level key with comma"
 msgstr ""
 
-#: ../rules/base.xml.in.h:198
+#: ../rules/base.xml.in.h:223 ../rules/evdev.xml.in.h:223
 msgid "Four-level key with dot"
 msgstr ""
 
-#: ../rules/base.xml.in.h:199
+#: ../rules/base.xml.in.h:224 ../rules/evdev.xml.in.h:224
+msgid "Four-level key with dot, latin-9 restriction"
+msgstr ""
+
+#: ../rules/base.xml.in.h:225 ../rules/evdev.xml.in.h:225
 msgid "Four-level key with momayyez"
 msgstr ""
 
-#: ../rules/base.xml.in.h:200 ../rules/sun.xml.in.h:53
+#: ../rules/base.xml.in.h:226 ../rules/evdev.xml.in.h:226
 msgid "Fra"
 msgstr "Fra"
 
-#: ../rules/base.xml.in.h:201
+#: ../rules/base.xml.in.h:227 ../rules/evdev.xml.in.h:227
 msgid "France"
 msgstr "Ranska"
 
-#: ../rules/base.xml.in.h:202 ../rules/sun.xml.in.h:55
+#: ../rules/base.xml.in.h:228 ../rules/evdev.xml.in.h:228
 msgid "French"
 msgstr "Ranskalainen"
 
-#: ../rules/base.xml.in.h:203
+#: ../rules/base.xml.in.h:229 ../rules/evdev.xml.in.h:229
 msgid "French (Macintosh)"
 msgstr "Ranskalainen (Macintosh)"
 
-#: ../rules/base.xml.in.h:204 ../rules/sun.xml.in.h:56
+#: ../rules/base.xml.in.h:230 ../rules/evdev.xml.in.h:230
 msgid "French (legacy)"
 msgstr "Ranskalainen (vanha)"
 
-#: ../rules/base.xml.in.h:205
+#: ../rules/base.xml.in.h:231 ../rules/evdev.xml.in.h:231
 msgid "French Dvorak"
 msgstr "Ranskalainen dvorak"
 
-#: ../rules/base.xml.in.h:206
+#: ../rules/base.xml.in.h:232 ../rules/evdev.xml.in.h:232
 msgid "French, Sun dead keys"
 msgstr "Ranskalainen, Sunin kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:207
+#: ../rules/base.xml.in.h:233 ../rules/evdev.xml.in.h:233
 msgid "French, eliminate dead keys"
 msgstr "Ranskalainen, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:208
+#: ../rules/base.xml.in.h:234 ../rules/evdev.xml.in.h:234
+msgid "Fujitsu-Siemens Computers AMILO laptop"
+msgstr "Fujitsu-Siemens Computers AMILO-kannettava"
+
+#: ../rules/base.xml.in.h:235 ../rules/evdev.xml.in.h:235
 msgid "Fula"
 msgstr "Fula"
 
-#: ../rules/base.xml.in.h:209
+#: ../rules/base.xml.in.h:236 ../rules/evdev.xml.in.h:236
 msgid "GBr"
 msgstr "GBr"
 
-#: ../rules/base.xml.in.h:210
+#: ../rules/base.xml.in.h:237 ../rules/evdev.xml.in.h:237
 msgid "Ga"
 msgstr "Ga"
 
-#: ../rules/base.xml.in.h:211
+#: ../rules/base.xml.in.h:238 ../rules/evdev.xml.in.h:238
 msgid "Generic 101-key PC"
 msgstr "Yleinen 101-näppäiminen PC"
 
-#: ../rules/base.xml.in.h:212
+#: ../rules/base.xml.in.h:239 ../rules/evdev.xml.in.h:239
 msgid "Generic 102-key (Intl) PC"
 msgstr "Yleinen 102-näppäiminen (kansainvälinen) PC"
 
-#: ../rules/base.xml.in.h:213
+#: ../rules/base.xml.in.h:240 ../rules/evdev.xml.in.h:240
 msgid "Generic 104-key PC"
 msgstr "Yleinen 104-näppäiminen PC"
 
-#: ../rules/base.xml.in.h:214
+#: ../rules/base.xml.in.h:241 ../rules/evdev.xml.in.h:241
 msgid "Generic 105-key (Intl) PC"
 msgstr "Yleinen 105-näppäiminen (kansainvälinen) PC"
 
-#: ../rules/base.xml.in.h:215
+#: ../rules/base.xml.in.h:242 ../rules/evdev.xml.in.h:242
 msgid "Genius Comfy KB-12e"
 msgstr "Genius Comfy KB-21e"
 
-#: ../rules/base.xml.in.h:216
+#: ../rules/base.xml.in.h:243 ../rules/evdev.xml.in.h:243
 msgid "Genius Comfy KB-16M / Genius MM Keyboard KWD-910"
 msgstr "Genius Comfy KB-16M / Genius MM-näppäimistö KWD-910"
 
-#: ../rules/base.xml.in.h:217
+#: ../rules/base.xml.in.h:244 ../rules/evdev.xml.in.h:244
 msgid "Genius Comfy KB-21e-Scroll"
 msgstr "Genius Comfy KB-21e-rulla"
 
-#: ../rules/base.xml.in.h:218
+#: ../rules/base.xml.in.h:245 ../rules/evdev.xml.in.h:245
 msgid "Genius KB-19e NB"
 msgstr "Genius KB-19e NB"
 
-#: ../rules/base.xml.in.h:219
+#: ../rules/base.xml.in.h:246 ../rules/evdev.xml.in.h:246
 msgid "Geo"
 msgstr "Geo"
 
-#: ../rules/base.xml.in.h:220
+#: ../rules/base.xml.in.h:247 ../rules/evdev.xml.in.h:247
 msgid "Georgia"
 msgstr "Georgia"
 
-#: ../rules/base.xml.in.h:221
+#: ../rules/base.xml.in.h:248 ../rules/evdev.xml.in.h:248
 msgid "Georgian"
 msgstr "Georgia"
 
-#: ../rules/base.xml.in.h:222
+#: ../rules/base.xml.in.h:249 ../rules/evdev.xml.in.h:249
+msgid "Georgian AZERTY Tskapo"
+msgstr "Georgian AZERTY Tskapo"
+
+#: ../rules/base.xml.in.h:250 ../rules/evdev.xml.in.h:250
 msgid "German (Macintosh)"
 msgstr "Saksalainen (Macintosh)"
 
-#: ../rules/base.xml.in.h:223
+#: ../rules/base.xml.in.h:251 ../rules/evdev.xml.in.h:251
 msgid "German, Sun dead keys"
 msgstr "Saksalainen, Sunin kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:224
+#: ../rules/base.xml.in.h:252 ../rules/evdev.xml.in.h:252
 msgid "German, eliminate dead keys"
 msgstr "Saksalainen, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:225
+#: ../rules/base.xml.in.h:253 ../rules/evdev.xml.in.h:253
 msgid "Germany"
 msgstr "Saksa"
 
-#: ../rules/base.xml.in.h:226
+#: ../rules/base.xml.in.h:254 ../rules/evdev.xml.in.h:254
 msgid "Gha"
 msgstr "Gha"
 
-#: ../rules/base.xml.in.h:227
+#: ../rules/base.xml.in.h:255 ../rules/evdev.xml.in.h:255
 msgid "Ghana"
 msgstr "Ghana"
 
-#: ../rules/base.xml.in.h:228
+#: ../rules/base.xml.in.h:256 ../rules/evdev.xml.in.h:256
 msgid "Gre"
 msgstr "Gre"
 
-#: ../rules/base.xml.in.h:229
+#: ../rules/base.xml.in.h:257 ../rules/evdev.xml.in.h:257
 msgid "Greece"
 msgstr "Kreikka"
 
-#: ../rules/base.xml.in.h:230
+#: ../rules/base.xml.in.h:258 ../rules/evdev.xml.in.h:258
+msgid "Group toggle on multiply/divide key"
+msgstr ""
+
+#: ../rules/base.xml.in.h:259 ../rules/evdev.xml.in.h:259
 msgid "Gui"
 msgstr "Gui"
 
-#: ../rules/base.xml.in.h:231
+#: ../rules/base.xml.in.h:260 ../rules/evdev.xml.in.h:260
 msgid "Guinea"
 msgstr "Guinea"
 
-#: ../rules/base.xml.in.h:232
+#: ../rules/base.xml.in.h:261 ../rules/evdev.xml.in.h:261
 msgid "Gujarati"
 msgstr "Gujarati"
 
-#: ../rules/base.xml.in.h:233
+#: ../rules/base.xml.in.h:262 ../rules/evdev.xml.in.h:262
 msgid "Gurmukhi"
 msgstr "Gurmukhi"
 
-# Lienee merkki
-#: ../rules/base.xml.in.h:234
+#: ../rules/base.xml.in.h:263 ../rules/evdev.xml.in.h:263
+msgid "Gurmukhi Jhelum"
+msgstr "Gurmukhi Jhelum"
+
+# Lienee tuotemerkki
+#: ../rules/base.xml.in.h:264 ../rules/evdev.xml.in.h:264
 msgid "Gyration"
 msgstr "Gyration"
 
-#: ../rules/base.xml.in.h:235
+#: ../rules/base.xml.in.h:265 ../rules/evdev.xml.in.h:265
 msgid "Happy Hacking Keyboard"
 msgstr "Happy Hacking -näppäimistö"
 
-#: ../rules/base.xml.in.h:236
+#: ../rules/base.xml.in.h:266 ../rules/evdev.xml.in.h:266
 msgid "Happy Hacking Keyboard for Mac"
 msgstr "Happy Hacking -näppäimistö, Mac-versio"
 
-#: ../rules/base.xml.in.h:237
+#: ../rules/base.xml.in.h:267 ../rules/evdev.xml.in.h:267
 msgid "Hausa"
 msgstr "Hausa"
 
-#: ../rules/base.xml.in.h:238
+#: ../rules/base.xml.in.h:268 ../rules/evdev.xml.in.h:268
 msgid "Hewlett-Packard Internet Keyboard"
 msgstr "Hewlett-Packard-Internet-näppäimistö"
 
-#: ../rules/base.xml.in.h:239
+#: ../rules/base.xml.in.h:269 ../rules/evdev.xml.in.h:269
 msgid "Hewlett-Packard Omnibook 500 FA"
 msgstr "Hewlett-Packard Omnibook 500 FA"
 
-#: ../rules/base.xml.in.h:240
+#: ../rules/base.xml.in.h:270 ../rules/evdev.xml.in.h:270
 msgid "Hewlett-Packard Omnibook 5xx"
 msgstr "Hewlett-Packard Omnibook 5xx"
 
-#: ../rules/base.xml.in.h:241
+#: ../rules/base.xml.in.h:271 ../rules/evdev.xml.in.h:271
 msgid "Hewlett-Packard Omnibook 6000/6100"
 msgstr "Hewlett-Packard Omnibook 6000/6100"
 
-#: ../rules/base.xml.in.h:242
+#: ../rules/base.xml.in.h:272 ../rules/evdev.xml.in.h:272
 msgid "Hewlett-Packard Omnibook XE3 GC"
 msgstr "Hewlett-Packard Omnibook XE3 GC"
 
-#: ../rules/base.xml.in.h:243
+#: ../rules/base.xml.in.h:273 ../rules/evdev.xml.in.h:273
 msgid "Hewlett-Packard Omnibook XE3 GF"
 msgstr "Hewlett-Packard Omnibook XE3 GF"
 
-#: ../rules/base.xml.in.h:244
+#: ../rules/base.xml.in.h:274 ../rules/evdev.xml.in.h:274
 msgid "Hewlett-Packard Omnibook XT1000"
 msgstr "Hewlett-Packard Omnibook XT1000"
 
-#: ../rules/base.xml.in.h:245
+#: ../rules/base.xml.in.h:275 ../rules/evdev.xml.in.h:275
 msgid "Hewlett-Packard Pavilion ZT11xx"
 msgstr "Hewlett-Packard Pavilion ZT11xx"
 
-#: ../rules/base.xml.in.h:246
-msgid "Hewlett-Packard SK-2501 Multimedia Keyboard"
-msgstr "Hewlett-Packard SK-2501-multimedianäppäimistö"
+#: ../rules/base.xml.in.h:276 ../rules/evdev.xml.in.h:276
+msgid "Hewlett-Packard Pavilion dv5"
+msgstr "Hewlett-Packard Pavilion dv5"
 
-#: ../rules/base.xml.in.h:247
-msgid "Hewlett-Packard SK-2505 Internet Keyboard"
-msgstr "Hewlett-Packard SK-2505-Internet-näppäimistö"
+#: ../rules/base.xml.in.h:277 ../rules/evdev.xml.in.h:277
+msgid "Hewlett-Packard SK-250x Multimedia Keyboard"
+msgstr "Hewlett-Packard SK-250x-multimedianäppäimistö"
 
-#: ../rules/base.xml.in.h:248
+#: ../rules/base.xml.in.h:278 ../rules/evdev.xml.in.h:278
+msgid "Hewlett-Packard nx9020"
+msgstr "Hewlett-Packard nx9020"
+
+#: ../rules/base.xml.in.h:279 ../rules/evdev.xml.in.h:279
+msgid "Hexadecimal"
+msgstr "Heksadesimaali"
+
+#: ../rules/base.xml.in.h:280 ../rules/evdev.xml.in.h:280
 msgid "Hindi Bolnagri"
 msgstr "Hindi Bolnagri"
 
-#: ../rules/base.xml.in.h:249
+#: ../rules/base.xml.in.h:281 ../rules/evdev.xml.in.h:281
+msgid "Homophonic"
+msgstr "Homofoninen"
+
+#: ../rules/base.xml.in.h:282 ../rules/evdev.xml.in.h:282
 msgid "Honeywell Euroboard"
 msgstr "Honeywell Euroboard"
 
-#: ../rules/base.xml.in.h:250
+#: ../rules/base.xml.in.h:283 ../rules/evdev.xml.in.h:283
 msgid "Hrv"
 msgstr "Hrv"
 
-#: ../rules/base.xml.in.h:251 ../rules/sun.xml.in.h:59
+#: ../rules/base.xml.in.h:284 ../rules/evdev.xml.in.h:284
 msgid "Hun"
 msgstr "Hun"
 
-#: ../rules/base.xml.in.h:252
+#: ../rules/base.xml.in.h:285 ../rules/evdev.xml.in.h:285
 msgid "Hungary"
 msgstr "Unkari"
 
-#: ../rules/base.xml.in.h:253
-msgid "Hyper is mapped to the Win-keys."
-msgstr "Hyper tulee Win-näppäimistä."
+#: ../rules/base.xml.in.h:286 ../rules/evdev.xml.in.h:286
+msgid "Hyper is mapped to Win-keys"
+msgstr "Hyper tulee Win-näppäimistä"
 
-#: ../rules/base.xml.in.h:254
+#: ../rules/base.xml.in.h:287 ../rules/evdev.xml.in.h:287
 msgid "IBM (LST 1205-92)"
 msgstr "IMB (LST 1205-92)"
 
-#: ../rules/base.xml.in.h:255
+#: ../rules/base.xml.in.h:288 ../rules/evdev.xml.in.h:288
 msgid "IBM Rapid Access"
 msgstr "IBM Rapid Access"
 
-#: ../rules/base.xml.in.h:256
+#: ../rules/base.xml.in.h:289 ../rules/evdev.xml.in.h:289
 msgid "IBM Rapid Access II"
 msgstr "IBM Rapid Access II"
 
-#: ../rules/base.xml.in.h:257
-msgid "IBM Rapid Access II (alternate option)"
-msgstr "IBM Rapid Access II (vaihtoehtoinen)"
+#: ../rules/base.xml.in.h:290 ../rules/evdev.xml.in.h:290
+msgid "IBM Space Saver"
+msgstr "IBM Space Saver"
 
-#: ../rules/base.xml.in.h:258
+#: ../rules/base.xml.in.h:291 ../rules/evdev.xml.in.h:291
 msgid "IBM ThinkPad 560Z/600/600E/A22E"
 msgstr "IBM ThinkPad 560Z/600/600E/A22E"
 
-#: ../rules/base.xml.in.h:259
+#: ../rules/base.xml.in.h:292 ../rules/evdev.xml.in.h:292
 msgid "IBM ThinkPad 560Z/600/600E/A22E, Intl"
 msgstr "IBM ThinkPad 560Z/600/600E/A22E, kansainvälinen"
 
-#: ../rules/base.xml.in.h:260 ../rules/sun.xml.in.h:61
+#: ../rules/base.xml.in.h:293 ../rules/evdev.xml.in.h:293
+msgid "IBM ThinkPad R60/T60/R61/T61"
+msgstr "IBM ThinkPad R60/T60/R61/T61"
+
+#: ../rules/base.xml.in.h:294 ../rules/evdev.xml.in.h:294
+msgid "IBM ThinkPad Z60m/Z60t/Z61m/Z61t"
+msgstr "IBM ThinkPad Z60m/Z60t/Z61m/Z61t"
+
+#: ../rules/base.xml.in.h:295 ../rules/evdev.xml.in.h:295
 msgid "ISO Alternate"
 msgstr "ISO vaihtoehtoinen"
 
-#: ../rules/base.xml.in.h:261
+#: ../rules/base.xml.in.h:296 ../rules/evdev.xml.in.h:296
 msgid "Iceland"
 msgstr "Islanti"
 
-#: ../rules/base.xml.in.h:262
+#: ../rules/base.xml.in.h:297 ../rules/evdev.xml.in.h:297
 msgid "Igbo"
 msgstr "Igbo"
 
-#: ../rules/base.xml.in.h:263
+#: ../rules/base.xml.in.h:298 ../rules/evdev.xml.in.h:298
+msgid "Include dead tilde"
+msgstr "Sisällytä kuollut tilde"
+
+#: ../rules/base.xml.in.h:299 ../rules/evdev.xml.in.h:299
 msgid "Ind"
 msgstr "Ind"
 
-#: ../rules/base.xml.in.h:264
+#: ../rules/base.xml.in.h:300 ../rules/evdev.xml.in.h:300
 msgid "India"
 msgstr "Intia"
 
-#: ../rules/base.xml.in.h:265
+#: ../rules/base.xml.in.h:301 ../rules/evdev.xml.in.h:301
 msgid "International (AltGr dead keys)"
 msgstr "Kansainvälinen (AltGr -kuolleet näppäimet)"
 
-#: ../rules/base.xml.in.h:266 ../rules/sun.xml.in.h:62
+#: ../rules/base.xml.in.h:302 ../rules/evdev.xml.in.h:302
 msgid "International (with dead keys)"
 msgstr "Kansainvälinen (ilman kuolleita näppäimiä)"
 
-#: ../rules/base.xml.in.h:267
+#: ../rules/base.xml.in.h:303 ../rules/evdev.xml.in.h:303
 msgid "Inuktitut"
 msgstr "Inuktitut"
 
-#: ../rules/base.xml.in.h:268
+#: ../rules/base.xml.in.h:304 ../rules/evdev.xml.in.h:304
 msgid "Iran"
 msgstr "Iran"
 
-#: ../rules/base.xml.in.h:269
+#: ../rules/base.xml.in.h:305 ../rules/evdev.xml.in.h:305
 msgid "Iraq"
 msgstr "Irak"
 
-#: ../rules/base.xml.in.h:270
+#: ../rules/base.xml.in.h:306 ../rules/evdev.xml.in.h:306
 msgid "Ireland"
 msgstr "Irlanti"
 
-#: ../rules/base.xml.in.h:271
+#: ../rules/base.xml.in.h:307 ../rules/evdev.xml.in.h:307
 msgid "Irl"
 msgstr "Irl"
 
-#: ../rules/base.xml.in.h:272
+#: ../rules/base.xml.in.h:308 ../rules/evdev.xml.in.h:308
 msgid "Irn"
 msgstr "Irn"
 
-#: ../rules/base.xml.in.h:273
+#: ../rules/base.xml.in.h:309 ../rules/evdev.xml.in.h:309
 msgid "Irq"
 msgstr "Irq"
 
-#: ../rules/base.xml.in.h:274
+#: ../rules/base.xml.in.h:310 ../rules/evdev.xml.in.h:310
 msgid "Isl"
 msgstr "Isl"
 
-#: ../rules/base.xml.in.h:275
+#: ../rules/base.xml.in.h:311 ../rules/evdev.xml.in.h:311
 msgid "Isr"
 msgstr "Isr"
 
-#: ../rules/base.xml.in.h:276
+#: ../rules/base.xml.in.h:312 ../rules/evdev.xml.in.h:312
 msgid "Israel"
 msgstr "Israel"
 
-#: ../rules/base.xml.in.h:277 ../rules/sun.xml.in.h:63
+#: ../rules/base.xml.in.h:313 ../rules/evdev.xml.in.h:313
 msgid "Ita"
 msgstr "Ita"
 
-#: ../rules/base.xml.in.h:278
+#: ../rules/base.xml.in.h:314 ../rules/evdev.xml.in.h:314
 msgid "Italy"
 msgstr "Italia"
 
-#: ../rules/base.xml.in.h:279
+#: ../rules/base.xml.in.h:315 ../rules/evdev.xml.in.h:315
 msgid "Japan"
 msgstr "Japani"
 
-#: ../rules/base.xml.in.h:280
+#: ../rules/base.xml.in.h:316 ../rules/evdev.xml.in.h:316
 msgid "Japan (PC-98xx Series)"
 msgstr "Japani (PC-98xx-sarja)"
 
-#: ../rules/base.xml.in.h:281
+#: ../rules/base.xml.in.h:317 ../rules/evdev.xml.in.h:317
 msgid "Japanese 106-key"
 msgstr "Japanilainen 106-näppäiminen"
 
-#: ../rules/base.xml.in.h:282
+#: ../rules/base.xml.in.h:318 ../rules/evdev.xml.in.h:318
 msgid "Japanese keyboard options"
 msgstr "japanilaisen näppäimistön valinnat"
 
-#: ../rules/base.xml.in.h:283 ../rules/sun.xml.in.h:66
+#: ../rules/base.xml.in.h:319 ../rules/evdev.xml.in.h:319
 msgid "Jpn"
 msgstr "Jpn"
 
-#: ../rules/base.xml.in.h:284
+#: ../rules/base.xml.in.h:320 ../rules/evdev.xml.in.h:320
+msgid "Kalmyk"
+msgstr ""
+
+#: ../rules/base.xml.in.h:321 ../rules/evdev.xml.in.h:321
 msgid "Kana"
 msgstr "Kana"
 
-#: ../rules/base.xml.in.h:285
+#: ../rules/base.xml.in.h:322 ../rules/evdev.xml.in.h:322
 msgid "Kana Lock key is locking"
 msgstr "Kana, lukitusnäppäin lukitseva"
 
-#: ../rules/base.xml.in.h:286
+#: ../rules/base.xml.in.h:323 ../rules/evdev.xml.in.h:323
 msgid "Kannada"
 msgstr "Kannada"
 
-#: ../rules/base.xml.in.h:287
+#: ../rules/base.xml.in.h:324 ../rules/evdev.xml.in.h:324
 msgid "Kashubian"
 msgstr "Kashubia"
 
-#: ../rules/base.xml.in.h:288
+#: ../rules/base.xml.in.h:325 ../rules/evdev.xml.in.h:325
 msgid "Kaz"
 msgstr "Kaz"
 
-#: ../rules/base.xml.in.h:289
+#: ../rules/base.xml.in.h:326 ../rules/evdev.xml.in.h:326
 msgid "Kazakh with Russian"
 msgstr "Kazakstan venäjän kanssa"
 
-#: ../rules/base.xml.in.h:290
+#: ../rules/base.xml.in.h:327 ../rules/evdev.xml.in.h:327
 msgid "Kazakhstan"
 msgstr "Kazakstan"
 
-#: ../rules/base.xml.in.h:291
+#: ../rules/base.xml.in.h:328 ../rules/evdev.xml.in.h:328
+msgid "Key to choose 3rd level"
+msgstr "Kolmannen tason valintanäppäin"
+
+#: ../rules/base.xml.in.h:329 ../rules/evdev.xml.in.h:329
+msgid "Key(s) to change layout"
+msgstr "Asettelunvaihtonäppäimet"
+
+#: ../rules/base.xml.in.h:330 ../rules/evdev.xml.in.h:330
 msgid "Keypad"
 msgstr "Sormio"
 
-#: ../rules/base.xml.in.h:292
-msgid "Keypad with unicode additions (arrows and math operators)"
-msgstr "Sormio unicode-lisäosilla (nuolet ja matematiikkatoiminnot)"
-
-#: ../rules/base.xml.in.h:293
-msgid "Keypad with unicode additions (arrows and math operators). Math operators on default level."
-msgstr "Sormio unicode-lisäosilla (nuolet ja matematiikkatoiminnot). Matematiikkatoiminnot oletustasolla."
-
-#: ../rules/base.xml.in.h:294
+#: ../rules/base.xml.in.h:331 ../rules/evdev.xml.in.h:331
 msgid "Keytronic FlexPro"
 msgstr "Keytronic FlexPro"
 
-#: ../rules/base.xml.in.h:295
+#: ../rules/base.xml.in.h:332 ../rules/evdev.xml.in.h:332
 msgid "Khm"
 msgstr "Khm"
 
-#: ../rules/base.xml.in.h:296
+#: ../rules/base.xml.in.h:333 ../rules/evdev.xml.in.h:333
+msgid "Kir"
+msgstr "Kir"
+
+#: ../rules/base.xml.in.h:334 ../rules/evdev.xml.in.h:334
+msgid "Komi"
+msgstr "Komi"
+
+#: ../rules/base.xml.in.h:335 ../rules/evdev.xml.in.h:335
 msgid "Kor"
 msgstr "Kor"
 
-#: ../rules/base.xml.in.h:297
+#: ../rules/base.xml.in.h:336 ../rules/evdev.xml.in.h:336
 msgid "Korea, Republic of"
 msgstr "Etelä-Korea"
 
-#: ../rules/base.xml.in.h:298
+#: ../rules/base.xml.in.h:337 ../rules/evdev.xml.in.h:337
 msgid "Korean 106-key"
 msgstr "Korealainen 106-näppäiminen"
 
-#: ../rules/base.xml.in.h:299
-msgid "Kotoistus"
-msgstr "Kotoistus"
+#: ../rules/base.xml.in.h:338 ../rules/evdev.xml.in.h:338
+msgid "Ktunaxa"
+msgstr ""
 
-#: ../rules/base.xml.in.h:300
+#: ../rules/base.xml.in.h:339 ../rules/evdev.xml.in.h:339
 msgid "Kurdish, (F)"
 msgstr "Kurdi, (F)"
 
-#: ../rules/base.xml.in.h:301
+#: ../rules/base.xml.in.h:340 ../rules/evdev.xml.in.h:340
 msgid "Kurdish, Arabic-Latin"
 msgstr "Kurdi, arabia-latinalainen"
 
-#: ../rules/base.xml.in.h:302
+#: ../rules/base.xml.in.h:341 ../rules/evdev.xml.in.h:341
 msgid "Kurdish, Latin Alt-Q"
 msgstr "Kurdi, latinalainen Alt-Q"
 
-#: ../rules/base.xml.in.h:303
+#: ../rules/base.xml.in.h:342 ../rules/evdev.xml.in.h:342
 msgid "Kurdish, Latin Q"
 msgstr "Kurdi, latinalainen Q"
 
-#: ../rules/base.xml.in.h:304
-msgid "Kyr"
-msgstr "Kyr"
-
-#: ../rules/base.xml.in.h:305
+#: ../rules/base.xml.in.h:343 ../rules/evdev.xml.in.h:343
 msgid "Kyrgyzstan"
 msgstr "Kirgisia"
 
-#: ../rules/base.xml.in.h:306
+#: ../rules/base.xml.in.h:344 ../rules/evdev.xml.in.h:344
 msgid "LAm"
 msgstr "LAm"
 
-#: ../rules/base.xml.in.h:307
-msgid "LCtrl+LShift change layout."
-msgstr "LCtrl+LShift vaihtaa ryhmää"
+#: ../rules/base.xml.in.h:345 ../rules/evdev.xml.in.h:345
+msgid "LEKP"
+msgstr ""
 
-#: ../rules/base.xml.in.h:308
+#: ../rules/base.xml.in.h:346 ../rules/evdev.xml.in.h:346
+msgid "LEKPa"
+msgstr ""
+
+#: ../rules/base.xml.in.h:347 ../rules/evdev.xml.in.h:347
 msgid "Lao"
 msgstr "Lao"
 
-#: ../rules/base.xml.in.h:309
+#: ../rules/base.xml.in.h:348 ../rules/evdev.xml.in.h:348
 msgid "Laos"
 msgstr "Laos"
 
-#: ../rules/base.xml.in.h:310
+#: ../rules/base.xml.in.h:349 ../rules/evdev.xml.in.h:349
 msgid "Laptop/notebook Compaq (eg. Armada) Laptop Keyboard"
 msgstr "Kannettava Compaq (esim. Armada) kannettavan näppäimistö "
 
-#: ../rules/base.xml.in.h:311
+#: ../rules/base.xml.in.h:350 ../rules/evdev.xml.in.h:350
 msgid "Laptop/notebook Compaq (eg. Presario) Internet Keyboard"
 msgstr "Kannettava Compaq (esim. Armada) Internet-näppäimistö "
 
-#: ../rules/base.xml.in.h:312
+#: ../rules/base.xml.in.h:351 ../rules/evdev.xml.in.h:351
 msgid "Laptop/notebook eMachines m68xx"
 msgstr "Kannettava eMachines m68xx"
 
-#: ../rules/base.xml.in.h:313
+#: ../rules/base.xml.in.h:352 ../rules/evdev.xml.in.h:352
 msgid "Latin"
 msgstr "Latinalainen"
 
-#: ../rules/base.xml.in.h:314
+#: ../rules/base.xml.in.h:353 ../rules/evdev.xml.in.h:353
 msgid "Latin American"
 msgstr "Latinalainen amerikka"
 
-#: ../rules/base.xml.in.h:315
+#: ../rules/base.xml.in.h:354 ../rules/evdev.xml.in.h:354
 msgid "Latin Unicode"
 msgstr "Latinalainen Unicode"
 
-#: ../rules/base.xml.in.h:316
+#: ../rules/base.xml.in.h:355 ../rules/evdev.xml.in.h:355
 msgid "Latin Unicode qwerty"
 msgstr "Latinalainen Unicode-qwerty"
 
-#: ../rules/base.xml.in.h:317
+#: ../rules/base.xml.in.h:356 ../rules/evdev.xml.in.h:356
 msgid "Latin qwerty"
 msgstr "Latinalainen qwerty"
 
-#: ../rules/base.xml.in.h:318
+#: ../rules/base.xml.in.h:357 ../rules/evdev.xml.in.h:357
+msgid "Latin unicode"
+msgstr "Latinalainen Unicode"
+
+#: ../rules/base.xml.in.h:358 ../rules/evdev.xml.in.h:358
+msgid "Latin unicode qwerty"
+msgstr "Latinalainen Unicode-qwerty"
+
+#: ../rules/base.xml.in.h:359 ../rules/evdev.xml.in.h:359
 msgid "Latin with guillemets"
 msgstr "Latinalainen guillemot-lainausmerkeillä"
 
-#: ../rules/base.xml.in.h:319
+#: ../rules/base.xml.in.h:360 ../rules/evdev.xml.in.h:360
 msgid "Latvia"
 msgstr "Latvia"
 
-#: ../rules/base.xml.in.h:320
-msgid "Layout switching"
-msgstr "Asettelun vaihto"
+#: ../rules/base.xml.in.h:361 ../rules/evdev.xml.in.h:361
+msgid "Lav"
+msgstr "Lav"
 
-#: ../rules/base.xml.in.h:321
-msgid "Left Alt is swapped with left Win-key."
-msgstr "Vaihda vasen Alt-näppän vasemman Win-näppäimen kanssa."
+#: ../rules/base.xml.in.h:362 ../rules/evdev.xml.in.h:362
+msgid "Left Alt"
+msgstr "Vasen Alt"
 
-#: ../rules/base.xml.in.h:322
-msgid "Left Alt key changes layout."
-msgstr "Vasen Alt-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:363 ../rules/evdev.xml.in.h:363
+msgid "Left Alt (while pressed)"
+msgstr "Vasen Alt-näppäin (painettaessa)"
 
-#: ../rules/base.xml.in.h:323
-msgid "Left Alt key switches layout while pressed."
-msgstr "Vasen Alt-näppäin vaihtaa asettelua painettaessa."
+#: ../rules/base.xml.in.h:364 ../rules/evdev.xml.in.h:364
+msgid "Left Alt is swapped with Left Win"
+msgstr "Vaihda vasen Alt-näppän vasemman Win-näppäimen kanssa"
 
-#: ../rules/base.xml.in.h:324
-msgid "Left Ctrl key changes layout."
-msgstr "Vasen Ctrl-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:365 ../rules/evdev.xml.in.h:365
+msgid "Left Ctrl"
+msgstr "Vasen Ctrl"
 
-#: ../rules/base.xml.in.h:325
-msgid "Left Shift key changes layout."
-msgstr "Vasen Shift-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:366 ../rules/evdev.xml.in.h:366
+msgid "Left Ctrl+Left Shift"
+msgstr "Vasen Ctrl+Vasen Shift"
 
-#: ../rules/base.xml.in.h:326
-msgid "Left Win-key changes layout."
-msgstr "Vasen Win-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:367 ../rules/evdev.xml.in.h:367
+msgid "Left Shift"
+msgstr "Vasen Shift"
 
-#: ../rules/base.xml.in.h:327
-msgid "Left Win-key is Compose."
-msgstr "Vasen Win-näppäin on Compose."
+#: ../rules/base.xml.in.h:368 ../rules/evdev.xml.in.h:368
+msgid "Left Win"
+msgstr "Vasen Win"
 
-#: ../rules/base.xml.in.h:328
-msgid "Left Win-key switches layout while pressed."
-msgstr "Vasen Win-näppäin vaihtaa asettelua painettaessa."
+#: ../rules/base.xml.in.h:369 ../rules/evdev.xml.in.h:369
+msgid "Left Win (to first layout), Right Win/Menu (to last layout)"
+msgstr "Vasen Win (ensimmäiselle asettelulle), Oikea Win/valikko (viimeiselle asettelulle)"
 
-#: ../rules/base.xml.in.h:329
+#: ../rules/base.xml.in.h:370 ../rules/evdev.xml.in.h:370
+msgid "Left Win (while pressed)"
+msgstr "Vasen Win (painettaessa)"
+
+#: ../rules/base.xml.in.h:371 ../rules/evdev.xml.in.h:371
 msgid "Left hand"
 msgstr "Vasenkätinen"
 
-#: ../rules/base.xml.in.h:330
+#: ../rules/base.xml.in.h:372 ../rules/evdev.xml.in.h:372
 msgid "Left handed Dvorak"
 msgstr "Vasenkätinen dvorak"
 
-#: ../rules/base.xml.in.h:331
-msgid "Legacy Wang 724 keypad"
-msgstr "Perinteinen Wang 724 -sormio"
+#: ../rules/base.xml.in.h:373 ../rules/evdev.xml.in.h:373
+msgid "Legacy"
+msgstr "Perinteinen"
+
+#: ../rules/base.xml.in.h:374 ../rules/evdev.xml.in.h:374
+msgid "Legacy Wang 724"
+msgstr "Perinteinen Wang 724"
 
 #. Actually, with KP_SEPARATOR, as the old keypad(comma)
-#: ../rules/base.xml.in.h:333
+#: ../rules/base.xml.in.h:376 ../rules/evdev.xml.in.h:376
 msgid "Legacy key with comma"
 msgstr ""
 
-#: ../rules/base.xml.in.h:334
+#: ../rules/base.xml.in.h:377 ../rules/evdev.xml.in.h:377
 msgid "Legacy key with dot"
 msgstr ""
 
-#: ../rules/base.xml.in.h:335
-msgid "Legacy keypad"
-msgstr ""
+#: ../rules/base.xml.in.h:378 ../rules/evdev.xml.in.h:378
+msgid "Less-than/Greater-than"
+msgstr "Pienempi-kuin/suurempi-kuin"
 
-#: ../rules/base.xml.in.h:336
+#: ../rules/base.xml.in.h:379 ../rules/evdev.xml.in.h:379
 msgid "Lithuania"
 msgstr "Liettua"
 
-#: ../rules/base.xml.in.h:337
+#: ../rules/base.xml.in.h:380 ../rules/evdev.xml.in.h:380
 msgid "Logitech Access Keyboard"
 msgstr "Logitech Access Keyboard"
 
-#: ../rules/base.xml.in.h:338
+#: ../rules/base.xml.in.h:381 ../rules/evdev.xml.in.h:381
 msgid "Logitech Cordless Desktop"
 msgstr "Logitech Cordless Desktop"
 
-#: ../rules/base.xml.in.h:339
+#: ../rules/base.xml.in.h:382 ../rules/evdev.xml.in.h:382
 msgid "Logitech Cordless Desktop (alternate option)"
 msgstr "Logitech Cordless Desktop (vaihtoehtoinen)"
 
-#: ../rules/base.xml.in.h:340
+#: ../rules/base.xml.in.h:383 ../rules/evdev.xml.in.h:383
 msgid "Logitech Cordless Desktop EX110"
 msgstr "Logitech Cordless Desktop EX110"
 
-#: ../rules/base.xml.in.h:341
+#: ../rules/base.xml.in.h:384 ../rules/evdev.xml.in.h:384
 msgid "Logitech Cordless Desktop LX-300"
 msgstr "Logitech Cordless Desktop LX-300"
 
-#: ../rules/base.xml.in.h:342
+#: ../rules/base.xml.in.h:385 ../rules/evdev.xml.in.h:385
 msgid "Logitech Cordless Desktop Navigator"
 msgstr "Logitech Cordless Desktop Navigator"
 
-#: ../rules/base.xml.in.h:343
+#: ../rules/base.xml.in.h:386 ../rules/evdev.xml.in.h:386
+msgid "Logitech Cordless Desktop Optical"
+msgstr "Logitech Cordless Desktop Optical"
+
+#: ../rules/base.xml.in.h:387 ../rules/evdev.xml.in.h:387
 msgid "Logitech Cordless Desktop Pro (alternate option2)"
 msgstr "Logitech Cordless Desktop Pro (vaihtoehtoinen2)"
 
-#: ../rules/base.xml.in.h:344
+#: ../rules/base.xml.in.h:388 ../rules/evdev.xml.in.h:388
+msgid "Logitech Cordless Desktop iTouch"
+msgstr "Logitech Cordless Desktop iTouch"
+
+#: ../rules/base.xml.in.h:389 ../rules/evdev.xml.in.h:389
 msgid "Logitech Cordless Freedom/Desktop Navigator"
 msgstr "Logitech Cordless Freedom/Desktop Navigator"
 
-#: ../rules/base.xml.in.h:345
+#: ../rules/base.xml.in.h:390 ../rules/evdev.xml.in.h:390
 msgid "Logitech G15 extra keys via G15daemon"
 msgstr "Logitech G15 -lisänäppäimet G15daemon-ohjelmasta"
 
-#: ../rules/base.xml.in.h:346
+#: ../rules/base.xml.in.h:391 ../rules/evdev.xml.in.h:391
+msgid "Logitech Generic Keyboard"
+msgstr "Logitech-yleisnäppäimistö"
+
+#: ../rules/base.xml.in.h:392 ../rules/evdev.xml.in.h:392
+msgid "Logitech Internet 350 Keyboard"
+msgstr "Logitech Internet 350 -näppämistö"
+
+#: ../rules/base.xml.in.h:393 ../rules/evdev.xml.in.h:393
 msgid "Logitech Internet Keyboard"
-msgstr "Logitech Internet Keyboard"
+msgstr "Logitech Internet -näppämistö"
 
-#: ../rules/base.xml.in.h:347
+#: ../rules/base.xml.in.h:394 ../rules/evdev.xml.in.h:394
 msgid "Logitech Internet Navigator Keyboard"
-msgstr "Logitech Internet Navigator Keyboard"
+msgstr "Logitech Internet Navigator -näppämistö"
 
-#: ../rules/base.xml.in.h:348
+#: ../rules/base.xml.in.h:395 ../rules/evdev.xml.in.h:395
+msgid "Logitech Media Elite Keyboard"
+msgstr "Logitech Media Elite -näppäimistö"
+
+#: ../rules/base.xml.in.h:396 ../rules/evdev.xml.in.h:396
+msgid "Logitech Ultra-X Cordless Media Desktop Keyboard"
+msgstr "Logitech Ultra-X Cordless Media Desktop -näppäimistö"
+
+#: ../rules/base.xml.in.h:397 ../rules/evdev.xml.in.h:397
 msgid "Logitech Ultra-X Keyboard"
 msgstr "Logitech Ultra-X-näppäimistö"
 
-#: ../rules/base.xml.in.h:349
+#: ../rules/base.xml.in.h:398 ../rules/evdev.xml.in.h:398
+msgid "Logitech diNovo Edge Keyboard"
+msgstr "Logitech diNovo Edge -näppäimistö"
+
+#: ../rules/base.xml.in.h:399 ../rules/evdev.xml.in.h:399
 msgid "Logitech diNovo Keyboard"
 msgstr "Logitech diNovo-näppäimistö"
 
-#: ../rules/base.xml.in.h:350
+#: ../rules/base.xml.in.h:400 ../rules/evdev.xml.in.h:400
 msgid "Logitech iTouch"
 msgstr "Logitech iTouch"
 
-#: ../rules/base.xml.in.h:351
+#: ../rules/base.xml.in.h:401 ../rules/evdev.xml.in.h:401
 msgid "Logitech iTouch Cordless Keyboard (model Y-RB6)"
 msgstr "Logitech iTouch Cordless Keyboard (malli Y-RB6)"
 
-#: ../rules/base.xml.in.h:352
+#: ../rules/base.xml.in.h:402 ../rules/evdev.xml.in.h:402
 msgid "Logitech iTouch Internet Navigator Keyboard SE"
 msgstr "Logitech iTouch Internet Navigator Keyboard SE"
 
-#: ../rules/base.xml.in.h:353
+#: ../rules/base.xml.in.h:403 ../rules/evdev.xml.in.h:403
 msgid "Logitech iTouch Internet Navigator Keyboard SE (USB)"
 msgstr "Logitech iTouch Internet Navigator Keyboard SE (USB)"
 
-#: ../rules/base.xml.in.h:354
+#: ../rules/base.xml.in.h:404 ../rules/evdev.xml.in.h:404
+msgid "Lower Sorbian"
+msgstr ""
+
+#: ../rules/base.xml.in.h:405 ../rules/evdev.xml.in.h:405
+msgid "Lower Sorbian (qwertz)"
+msgstr ""
+
+#: ../rules/base.xml.in.h:406 ../rules/evdev.xml.in.h:406
 msgid "Ltu"
 msgstr "Ltu"
 
-#: ../rules/base.xml.in.h:355
-msgid "Lva"
-msgstr "Lva"
-
-#: ../rules/base.xml.in.h:356
+#: ../rules/base.xml.in.h:407 ../rules/evdev.xml.in.h:407
 msgid "MESS"
 msgstr "MESS"
 
-#: ../rules/base.xml.in.h:357
+#: ../rules/base.xml.in.h:408 ../rules/evdev.xml.in.h:408
+msgid "MNE"
+msgstr "MNE"
+
+#: ../rules/base.xml.in.h:409 ../rules/evdev.xml.in.h:409
 msgid "MacBook/MacBook Pro"
 msgstr "MacBook/MacBook Pro"
 
-#: ../rules/base.xml.in.h:358
+#: ../rules/base.xml.in.h:410 ../rules/evdev.xml.in.h:410
 msgid "MacBook/MacBook Pro (Intl)"
 msgstr "MacBook/MacBook Pro (kansainvälinen)"
 
-#: ../rules/base.xml.in.h:359
+#: ../rules/base.xml.in.h:411 ../rules/evdev.xml.in.h:411
 msgid "Macedonia"
 msgstr "Makedonia"
 
-#: ../rules/base.xml.in.h:360
+#: ../rules/base.xml.in.h:412 ../rules/evdev.xml.in.h:412
 msgid "Macintosh"
 msgstr "Macintosh"
 
-#: ../rules/base.xml.in.h:361
+#: ../rules/base.xml.in.h:413 ../rules/evdev.xml.in.h:413
 msgid "Macintosh Old"
 msgstr "Macintosh vanha"
 
-#: ../rules/base.xml.in.h:362
+#: ../rules/base.xml.in.h:414 ../rules/evdev.xml.in.h:414
 msgid "Macintosh, Sun dead keys"
 msgstr "Macintosh, Sunin kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:363
+#: ../rules/base.xml.in.h:415 ../rules/evdev.xml.in.h:415
 msgid "Macintosh, eliminate dead keys"
 msgstr "Macintosh, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:364
-msgid "Make CapsLock an additional Ctrl."
-msgstr "Tee CapsLockista ylimääräinen Ctrl."
+#: ../rules/base.xml.in.h:416 ../rules/evdev.xml.in.h:416
+msgid "Make CapsLock an additional Backspace"
+msgstr "Tee CapsLockista ylimääräinen askelpalautin"
 
-#: ../rules/base.xml.in.h:365
+#: ../rules/base.xml.in.h:417 ../rules/evdev.xml.in.h:417
+msgid "Make CapsLock an additional Ctrl"
+msgstr "Tee CapsLockista ylimääräinen Ctrl"
+
+#: ../rules/base.xml.in.h:418 ../rules/evdev.xml.in.h:418
+msgid "Make CapsLock an additional ESC"
+msgstr "Tee CapsLockista ylimääräinen Esc"
+
+#: ../rules/base.xml.in.h:419 ../rules/evdev.xml.in.h:419
 msgid "Mal"
 msgstr "Mal"
 
-#: ../rules/base.xml.in.h:366
+#: ../rules/base.xml.in.h:420 ../rules/evdev.xml.in.h:420
 msgid "Malayalam"
 msgstr "Malayalam"
 
-#: ../rules/base.xml.in.h:367
+#: ../rules/base.xml.in.h:421 ../rules/evdev.xml.in.h:421
+msgid "Malayalam Lalitha"
+msgstr "Malayalam Lalitha"
+
+#: ../rules/base.xml.in.h:422 ../rules/evdev.xml.in.h:422
 msgid "Maldives"
 msgstr "Malediivit"
 
-#: ../rules/base.xml.in.h:368
+#: ../rules/base.xml.in.h:423 ../rules/evdev.xml.in.h:423
 msgid "Malta"
 msgstr "Malta"
 
-#: ../rules/base.xml.in.h:369
+#: ../rules/base.xml.in.h:424 ../rules/evdev.xml.in.h:424
 msgid "Maltese keyboard with US layout"
 msgstr "Maltalainen näppäimistö US-asettelulla"
 
-#: ../rules/base.xml.in.h:370
+#: ../rules/base.xml.in.h:425 ../rules/evdev.xml.in.h:425
 msgid "Mao"
 msgstr "Mao"
 
-#: ../rules/base.xml.in.h:371
+#: ../rules/base.xml.in.h:426 ../rules/evdev.xml.in.h:426
 msgid "Maori"
 msgstr "Maori"
 
-#: ../rules/base.xml.in.h:372
+#: ../rules/base.xml.in.h:427 ../rules/evdev.xml.in.h:427
 msgid "Memorex MX1998"
 msgstr "Memorex MX1998"
 
-#: ../rules/base.xml.in.h:373
+#: ../rules/base.xml.in.h:428 ../rules/evdev.xml.in.h:428
 msgid "Memorex MX2500 EZ-Access Keyboard"
 msgstr "Memorex MX2500 EZ-Access-näppäimistö"
 
-#: ../rules/base.xml.in.h:374
+#: ../rules/base.xml.in.h:429 ../rules/evdev.xml.in.h:429
 msgid "Memorex MX2750"
 msgstr "Memorex MX2750"
 
-#: ../rules/base.xml.in.h:375
-msgid "Menu is Compose."
-msgstr "Valikko on Compose."
+#: ../rules/base.xml.in.h:430 ../rules/evdev.xml.in.h:430
+msgid "Menu"
+msgstr "Valikko"
 
-#: ../rules/base.xml.in.h:376
-msgid "Menu key changes layout."
-msgstr "Valikkonäppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:431 ../rules/evdev.xml.in.h:431
+msgid "Meta is mapped to Left Win"
+msgstr "Meta tulee vasemmasta Win-näppäimestä"
 
-#: ../rules/base.xml.in.h:377
-msgid "Meta is mapped to the Win-keys."
-msgstr "Meta tulee Win-näppäimistä."
+#: ../rules/base.xml.in.h:432 ../rules/evdev.xml.in.h:432
+msgid "Meta is mapped to Win keys"
+msgstr "Meta tulee Win-näppäimistä"
 
-#: ../rules/base.xml.in.h:378
-msgid "Meta is mapped to the left Win-key."
-msgstr "Meta tulee vasemmasta Win-näppäimestä."
+#: ../rules/base.xml.in.h:433 ../rules/evdev.xml.in.h:433
+msgid "Microsoft Comfort Curve Keyboard 2000"
+msgstr "Microsoft Comfort Curve 2000 -näppäimistö"
 
-#: ../rules/base.xml.in.h:379
+#: ../rules/base.xml.in.h:434 ../rules/evdev.xml.in.h:434
 msgid "Microsoft Internet Keyboard"
 msgstr "Microsoft-Internet-näppäimistö"
 
-#: ../rules/base.xml.in.h:380
+#: ../rules/base.xml.in.h:435 ../rules/evdev.xml.in.h:435
 msgid "Microsoft Internet Keyboard Pro, Swedish"
 msgstr "Microsoft-Internet-näppäimistö Pro, ruotsalainen"
 
-#: ../rules/base.xml.in.h:381
+#: ../rules/base.xml.in.h:436 ../rules/evdev.xml.in.h:436
 msgid "Microsoft Natural"
 msgstr "Microsoft Natural"
 
-#: ../rules/base.xml.in.h:382
+#: ../rules/base.xml.in.h:437 ../rules/evdev.xml.in.h:437
+msgid "Microsoft Natural Keyboard Elite"
+msgstr "Microsoft Natural-näppäimistö Elite"
+
+#: ../rules/base.xml.in.h:438 ../rules/evdev.xml.in.h:438
 msgid "Microsoft Natural Keyboard Pro / Microsoft Internet Keyboard Pro"
 msgstr "Microsoft Natural-näppäimistö Pro / Microsoft-Internet-näppäimistö Pro"
 
-#: ../rules/base.xml.in.h:383
+#: ../rules/base.xml.in.h:439 ../rules/evdev.xml.in.h:439
 msgid "Microsoft Natural Keyboard Pro OEM"
 msgstr "Microsoft Natural-näppäimistö Pro OEM"
 
-#: ../rules/base.xml.in.h:384
+#: ../rules/base.xml.in.h:440 ../rules/evdev.xml.in.h:440
 msgid "Microsoft Natural Keyboard Pro USB / Microsoft Internet Keyboard Pro"
 msgstr "Microsoft Natural-näppäimistö Pro USB / Microsoft-Internet-näppäimistö Pro"
 
-#: ../rules/base.xml.in.h:385
+#: ../rules/base.xml.in.h:441 ../rules/evdev.xml.in.h:441
+msgid "Microsoft Natural Wireless Ergonomic Keyboard 7000"
+msgstr "Microsoft Natural Wireless Ergonomic -näppäimistö 7000"
+
+#: ../rules/base.xml.in.h:442 ../rules/evdev.xml.in.h:442
 msgid "Microsoft Office Keyboard"
 msgstr "Microsoft Office-näppäimistö"
 
-#: ../rules/base.xml.in.h:386
+#: ../rules/base.xml.in.h:443 ../rules/evdev.xml.in.h:443
 msgid "Microsoft Wireless Multimedia Keyboard 1.0A"
 msgstr "Microsoft-langaton multimedianäppämistö 1.0A"
 
-#: ../rules/base.xml.in.h:387 ../rules/sun.xml.in.h:72
+#: ../rules/base.xml.in.h:444 ../rules/evdev.xml.in.h:444
 msgid "Miscellaneous compatibility options"
 msgstr "Sekalaisia yhteensopivuusvalintoja"
 
-#: ../rules/base.xml.in.h:388
+#: ../rules/base.xml.in.h:445 ../rules/evdev.xml.in.h:445
 msgid "Mkd"
 msgstr "Mkd"
 
-#: ../rules/base.xml.in.h:389
+#: ../rules/base.xml.in.h:446 ../rules/evdev.xml.in.h:446
 msgid "Mlt"
 msgstr "Mlt"
 
-#: ../rules/base.xml.in.h:390
+#: ../rules/base.xml.in.h:447 ../rules/evdev.xml.in.h:447
 msgid "Mmr"
 msgstr "Mmr"
 
-#: ../rules/base.xml.in.h:391
+#: ../rules/base.xml.in.h:448 ../rules/evdev.xml.in.h:448
 msgid "Mng"
 msgstr "Mng"
 
-#: ../rules/base.xml.in.h:392
+#: ../rules/base.xml.in.h:449 ../rules/evdev.xml.in.h:449
 msgid "Mongolia"
 msgstr "Mongolia"
 
-#: ../rules/base.xml.in.h:393
+#: ../rules/base.xml.in.h:450 ../rules/evdev.xml.in.h:450
+msgid "Montenegro"
+msgstr "Montenegro"
+
+#: ../rules/base.xml.in.h:451 ../rules/evdev.xml.in.h:451
 msgid "Morocco"
 msgstr "Marokko"
 
-#: ../rules/base.xml.in.h:394 ../rules/sun.xml.in.h:73
+#: ../rules/base.xml.in.h:452 ../rules/evdev.xml.in.h:452
 msgid "Multilingual"
 msgstr "Monikielinen"
 
-#: ../rules/base.xml.in.h:395
+#: ../rules/base.xml.in.h:453 ../rules/evdev.xml.in.h:453
 msgid "Multilingual, first part"
 msgstr "Monikielinen, ensimmäinen osa"
 
-#: ../rules/base.xml.in.h:396 ../rules/sun.xml.in.h:74
+#: ../rules/base.xml.in.h:454 ../rules/evdev.xml.in.h:454
 msgid "Multilingual, second part"
 msgstr "Monikielinen, toinen osa"
 
-#: ../rules/base.xml.in.h:397
+#: ../rules/base.xml.in.h:455 ../rules/evdev.xml.in.h:455
 msgid "Myanmar"
 msgstr "Myanmar"
 
-#: ../rules/base.xml.in.h:398
+#: ../rules/base.xml.in.h:456 ../rules/evdev.xml.in.h:456
 msgid "NICOLA-F style Backspace"
 msgstr "NICOLA-F-tyylin Backspace"
 
-#: ../rules/base.xml.in.h:399
-msgid "Neostyle"
-msgstr "Neostyle"
+#: ../rules/base.xml.in.h:457 ../rules/evdev.xml.in.h:457
+msgid "NLA"
+msgstr "NLA"
 
-#: ../rules/base.xml.in.h:400
+#: ../rules/base.xml.in.h:458 ../rules/evdev.xml.in.h:458
+msgid "Nativo"
+msgstr ""
+
+#: ../rules/base.xml.in.h:459 ../rules/evdev.xml.in.h:459
+#, fuzzy
+msgid "Nativo for Esperanto"
+msgstr "Esperanto"
+
+#: ../rules/base.xml.in.h:460 ../rules/evdev.xml.in.h:460
+msgid "Nativo for USA keyboards"
+msgstr ""
+
+#: ../rules/base.xml.in.h:461 ../rules/evdev.xml.in.h:461
+msgid "Neo 2"
+msgstr "Neo 2"
+
+#: ../rules/base.xml.in.h:462 ../rules/evdev.xml.in.h:462
 msgid "Nep"
 msgstr "Nep"
 
-#: ../rules/base.xml.in.h:401
+#: ../rules/base.xml.in.h:463 ../rules/evdev.xml.in.h:463
 msgid "Nepal"
 msgstr "Nepal"
 
-#: ../rules/base.xml.in.h:402
+#: ../rules/base.xml.in.h:464 ../rules/evdev.xml.in.h:464
 msgid "Netherlands"
 msgstr "Alankomaat"
 
-#: ../rules/base.xml.in.h:403
+#: ../rules/base.xml.in.h:465 ../rules/evdev.xml.in.h:465
 msgid "Nig"
 msgstr "Nig"
 
-#: ../rules/base.xml.in.h:404
+#: ../rules/base.xml.in.h:466 ../rules/evdev.xml.in.h:466
 msgid "Nigeria"
 msgstr "Nigeria"
 
-#: ../rules/base.xml.in.h:405
+#: ../rules/base.xml.in.h:467 ../rules/evdev.xml.in.h:467
 msgid "Nld"
 msgstr "Nld"
 
-#: ../rules/base.xml.in.h:406 ../rules/sun.xml.in.h:75
+#: ../rules/base.xml.in.h:468 ../rules/evdev.xml.in.h:468
+msgid "Non-breakable space character at fourth level"
+msgstr "Sitova välilyöntimerkki 4. tasolla"
+
+#: ../rules/base.xml.in.h:469 ../rules/evdev.xml.in.h:469
+msgid "Non-breakable space character at fourth level, thin non-breakable space character at sixth level"
+msgstr "Sitova välilyöntimerkki 4. tasolla ja kapea sitova välilyöntimerkki 6. tasolla"
+
+#: ../rules/base.xml.in.h:470 ../rules/evdev.xml.in.h:470
+msgid "Non-breakable space character at fourth level, thin non-breakable space character at sixth level (via Ctrl+Shift)"
+msgstr "Sitova välilyöntimerkki 4. tasolla, kapea sitova välilyöntimerkki 6. tasolla (Ctrl+Shift)"
+
+#: ../rules/base.xml.in.h:471 ../rules/evdev.xml.in.h:471
+msgid "Non-breakable space character at second level"
+msgstr "Sitova välilyöntimerkki 2. tasolla"
+
+#: ../rules/base.xml.in.h:472 ../rules/evdev.xml.in.h:472
+msgid "Non-breakable space character at third level"
+msgstr "Sitova välilyöntimerkki 3. tasolla"
+
+#: ../rules/base.xml.in.h:473 ../rules/evdev.xml.in.h:473
+msgid "Non-breakable space character at third level, nothing at fourth level"
+msgstr "Sitova välilyöntimerkki 3. tasolla eikä mitään 4. tasolla"
+
+#: ../rules/base.xml.in.h:474 ../rules/evdev.xml.in.h:474
+msgid "Non-breakable space character at third level, thin non-breakable space character at fourth level"
+msgstr "Sitova välilyöntimerkki 3. tasolla, kapea sitova välilyöntimerkki 4. tasolla"
+
+#: ../rules/base.xml.in.h:475 ../rules/evdev.xml.in.h:475
 msgid "Nor"
 msgstr "Nor"
 
-#: ../rules/base.xml.in.h:407
+#: ../rules/base.xml.in.h:476 ../rules/evdev.xml.in.h:476
 msgid "Northern Saami"
 msgstr "Pohjoissaami"
 
-#: ../rules/base.xml.in.h:408
+#: ../rules/base.xml.in.h:477 ../rules/evdev.xml.in.h:477
 msgid "Northern Saami, eliminate dead keys"
 msgstr "Pohjoissaami, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:409
+#: ../rules/base.xml.in.h:478 ../rules/evdev.xml.in.h:478
 msgid "Northgate OmniKey 101"
 msgstr "Northgate OmniKey 101"
 
-#: ../rules/base.xml.in.h:410
+#: ../rules/base.xml.in.h:479 ../rules/evdev.xml.in.h:479
 msgid "Norway"
 msgstr "Norja"
 
-#: ../rules/base.xml.in.h:411
-msgid "NumLock LED shows alternative layout."
-msgstr "Numlock-ledi näyttää vaihtoehtoista asettelua."
+#: ../rules/base.xml.in.h:480 ../rules/evdev.xml.in.h:480
+msgid "NumLock"
+msgstr "NumLock"
 
-#: ../rules/base.xml.in.h:412
+#: ../rules/base.xml.in.h:481 ../rules/evdev.xml.in.h:481
 msgid "Numeric keypad delete key behaviour"
 msgstr "Numerosormion Del-näppäimen toiminta"
 
-#: ../rules/base.xml.in.h:413
-msgid "Numeric keypad keys work as with Mac."
-msgstr "Sormionäppäimet toimivat kuten Macissa."
+#: ../rules/base.xml.in.h:482 ../rules/evdev.xml.in.h:482
+msgid "Numeric keypad keys work as with Mac"
+msgstr "Sormionäppäimet toimivat kuten Macissa"
 
-#: ../rules/base.xml.in.h:414
+#: ../rules/base.xml.in.h:483 ../rules/evdev.xml.in.h:483
 msgid "Numeric keypad layout selection"
 msgstr "Sormion asettelun valinta"
 
-#: ../rules/base.xml.in.h:415
+#: ../rules/base.xml.in.h:484 ../rules/evdev.xml.in.h:484
 msgid "OADG 109A"
 msgstr "OADG 109A"
 
-#: ../rules/base.xml.in.h:416
+#: ../rules/base.xml.in.h:485 ../rules/evdev.xml.in.h:485
+msgid "OLPC"
+msgstr "OLPC"
+
+#: ../rules/base.xml.in.h:486 ../rules/evdev.xml.in.h:486
+msgid "OLPC Dari"
+msgstr "OLPC, dari"
+
+#: ../rules/base.xml.in.h:487 ../rules/evdev.xml.in.h:487
+msgid "OLPC Pashto"
+msgstr "OLPC, pashto"
+
+#: ../rules/base.xml.in.h:488 ../rules/evdev.xml.in.h:488
+msgid "OLPC Southern Uzbek"
+msgstr "OLPC, eteläinen uzbeekki"
+
+#: ../rules/base.xml.in.h:489 ../rules/evdev.xml.in.h:489
 msgid "Ogham"
 msgstr "Ogham"
 
-#: ../rules/base.xml.in.h:417
+#: ../rules/base.xml.in.h:490 ../rules/evdev.xml.in.h:490
 msgid "Ogham IS434"
 msgstr "Ogham IS434"
 
-#: ../rules/base.xml.in.h:418
+#: ../rules/base.xml.in.h:491 ../rules/evdev.xml.in.h:491
 msgid "Oriya"
 msgstr "Oriya"
 
-#: ../rules/base.xml.in.h:419
+#: ../rules/base.xml.in.h:492 ../rules/evdev.xml.in.h:492
 msgid "Ortek MCK-800 MM/Internet keyboard"
 msgstr "Ortek MCK-800 MM/Internet-näppäimistö"
 
-#: ../rules/base.xml.in.h:420
+#: ../rules/base.xml.in.h:493 ../rules/evdev.xml.in.h:493
 msgid "Ossetian"
 msgstr "Ossetia"
 
-#: ../rules/base.xml.in.h:421
+#: ../rules/base.xml.in.h:494 ../rules/evdev.xml.in.h:494
 msgid "Ossetian, Winkeys"
 msgstr "Ossetia, Win-näppäimet"
 
-#: ../rules/base.xml.in.h:422
+#: ../rules/base.xml.in.h:495 ../rules/evdev.xml.in.h:495
+msgid "Ossetian, legacy"
+msgstr "Ossetia, vanha"
+
+#: ../rules/base.xml.in.h:496 ../rules/evdev.xml.in.h:496
 msgid "PC-98xx Series"
 msgstr "PC-98xx-sarja"
 
-#: ../rules/base.xml.in.h:423
+#: ../rules/base.xml.in.h:497 ../rules/evdev.xml.in.h:497
 msgid "Pak"
 msgstr "Pak"
 
-#: ../rules/base.xml.in.h:424
+#: ../rules/base.xml.in.h:498 ../rules/evdev.xml.in.h:498
 msgid "Pakistan"
 msgstr "Pakistan"
 
-#: ../rules/base.xml.in.h:425
+#: ../rules/base.xml.in.h:499 ../rules/evdev.xml.in.h:499
 msgid "Pashto"
 msgstr "Pashto"
 
-#: ../rules/base.xml.in.h:426
+#: ../rules/base.xml.in.h:500 ../rules/evdev.xml.in.h:500
 msgid "Pattachote"
 msgstr "Pattachote"
 
-#: ../rules/base.xml.in.h:427 ../rules/sun.xml.in.h:78
+#: ../rules/base.xml.in.h:501 ../rules/evdev.xml.in.h:501
 msgid "Phonetic"
 msgstr "Foneettinen"
 
-#: ../rules/base.xml.in.h:428 ../rules/sun.xml.in.h:79
+#: ../rules/base.xml.in.h:502 ../rules/evdev.xml.in.h:502
 msgid "Pol"
 msgstr "Pol"
 
-#: ../rules/base.xml.in.h:429
+#: ../rules/base.xml.in.h:503 ../rules/evdev.xml.in.h:503
 msgid "Poland"
 msgstr "Puola"
 
-#: ../rules/base.xml.in.h:430
+#: ../rules/base.xml.in.h:504 ../rules/evdev.xml.in.h:504
 msgid "Polytonic"
 msgstr "Polytoninen"
 
-#: ../rules/base.xml.in.h:431
+#: ../rules/base.xml.in.h:505 ../rules/evdev.xml.in.h:505
 msgid "Portugal"
 msgstr "Portugali"
 
-#: ../rules/base.xml.in.h:432
-msgid "Press Left Alt key to choose 3rd level."
-msgstr "Paina vasenta Alt-näppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:433
-msgid "Press Left Win-key to choose 3rd level."
-msgstr "Paina vasenta Win-näppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:434
-msgid "Press Menu key to choose 3rd level."
-msgstr "Paina valikkonäppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:435
-msgid "Press Right Alt key to choose 3rd level, Shift+Right Alt key is Multi_Key."
-msgstr "Paina oikeaa Alt-näppäintä valitaksesi kolmannen tason, Shift-Oikea Alt on Multi_Key."
-
-#: ../rules/base.xml.in.h:436
-msgid "Press Right Alt key to choose 3rd level."
-msgstr "Paina oikeaa Alt-näppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:437
-msgid "Press Right Ctrl to choose 3rd level."
-msgstr "Paina oikeaa Ctrl-näppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:438
-msgid "Press Right Win-key to choose 3rd level."
-msgstr "Paina oikeaa Win-näppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:439
-msgid "Press any of Alt keys to choose 3rd level."
-msgstr "Paina jotakin Alt-näppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:440
-msgid "Press any of Win-keys to choose 3rd level."
-msgstr "Paina jotakin Win-näppäintä valitaksesi kolmannen tason."
-
-#: ../rules/base.xml.in.h:441
+#: ../rules/base.xml.in.h:506 ../rules/evdev.xml.in.h:506
 msgid "Pro"
 msgstr "Pro"
 
-#: ../rules/base.xml.in.h:442
+#: ../rules/base.xml.in.h:507 ../rules/evdev.xml.in.h:507
 msgid "Pro Keypad"
 msgstr "Pro sormio"
 
-#: ../rules/base.xml.in.h:443
+#: ../rules/base.xml.in.h:508 ../rules/evdev.xml.in.h:508
 msgid "Probhat"
 msgstr "Probhat"
 
-#: ../rules/base.xml.in.h:444
+#: ../rules/base.xml.in.h:509 ../rules/evdev.xml.in.h:509
+msgid "Programmer Dvorak"
+msgstr "Ohjelmoijan dvorak"
+
+#: ../rules/base.xml.in.h:510 ../rules/evdev.xml.in.h:510
 msgid "Propeller Voyager (KTEZ-1000)"
 msgstr "Propeller Voyager (KTEZ-1000)"
 
-#: ../rules/base.xml.in.h:445 ../rules/sun.xml.in.h:88
+#: ../rules/base.xml.in.h:511 ../rules/evdev.xml.in.h:511
 msgid "Prt"
 msgstr "Prt"
 
-#: ../rules/base.xml.in.h:446
+#: ../rules/base.xml.in.h:512 ../rules/evdev.xml.in.h:512
 msgid "QTronix Scorpius 98N+"
 msgstr "QTronix Scorpius 98N+"
 
-#: ../rules/base.xml.in.h:447
-msgid "R-Alt switches layout while pressed."
-msgstr "Oikea Alt vaihtaa asettelua painettaessa."
+#: ../rules/base.xml.in.h:513 ../rules/evdev.xml.in.h:513
+msgid "Right Alt"
+msgstr "Oikea Alt"
 
-#: ../rules/base.xml.in.h:448
-msgid "Right Alt is Compose."
-msgstr "Oikea Alt on Compose."
+#: ../rules/base.xml.in.h:514 ../rules/evdev.xml.in.h:514
+msgid "Right Alt (while pressed)"
+msgstr "Oikea Alt (painettaessa)"
 
-#: ../rules/base.xml.in.h:449
-msgid "Right Alt key changes layout."
-msgstr "Oikea Alt-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:515 ../rules/evdev.xml.in.h:515
+msgid "Right Alt key never chooses 3rd level"
+msgstr "Oikea Alt-näppäin ei koskaan valitse kolmatta tasoa"
 
-#: ../rules/base.xml.in.h:450 ../rules/sun.xml.in.h:90
-msgid "Right Alt key never chooses 3rd level."
-msgstr "Oikea Alt-näppäin ei koskaan valitse kolmatta tasoa."
+#: ../rules/base.xml.in.h:516 ../rules/evdev.xml.in.h:516
+msgid "Right Alt, Shift+Right Alt key is Multi_Key"
+msgstr "Oikea Alt, Shift-Oikea Alt on Multi_Key"
 
-#: ../rules/base.xml.in.h:451
-msgid "Right Ctrl is Compose."
-msgstr "Oikea Ctrl on Compose."
+#: ../rules/base.xml.in.h:517 ../rules/evdev.xml.in.h:517
+msgid "Right Ctrl"
+msgstr "Oikea Ctrl"
 
-#: ../rules/base.xml.in.h:452
-msgid "Right Ctrl key changes layout."
-msgstr "Oikea Ctrl-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:518 ../rules/evdev.xml.in.h:518
+msgid "Right Ctrl (while pressed)"
+msgstr "Oikea Ctrl (painettaessa)"
 
-#: ../rules/base.xml.in.h:453
-msgid "Right Ctrl key switches layout while pressed."
-msgstr "Oikea Ctrl-näppäin vaihtaa asettelua painettaessa."
+#: ../rules/base.xml.in.h:519 ../rules/evdev.xml.in.h:519
+msgid "Right Ctrl as Right Alt"
+msgstr "Oikea Ctrl kuten oikea Alt"
 
-#: ../rules/base.xml.in.h:454
-msgid "Right Ctrl key works as Right Alt."
-msgstr "Oikea Ctrl-näppäin toimii oikeana Alt-näppäimenä."
+#: ../rules/base.xml.in.h:520 ../rules/evdev.xml.in.h:520
+msgid "Right Shift"
+msgstr "Oikea Shift"
 
-#: ../rules/base.xml.in.h:455
-msgid "Right Shift key changes layout."
-msgstr "Oikea Shift-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:521 ../rules/evdev.xml.in.h:521
+msgid "Right Win"
+msgstr "Oikea Win"
 
-#: ../rules/base.xml.in.h:456
-msgid "Right Win-key changes layout."
-msgstr "Oikea Win-näppäin vaihtaa asettelua."
+#: ../rules/base.xml.in.h:522 ../rules/evdev.xml.in.h:522
+msgid "Right Win (while pressed)"
+msgstr "Oikea Win (painettaessa)"
 
-#: ../rules/base.xml.in.h:457
-msgid "Right Win-key is Compose."
-msgstr "Oikea Win-näppäin on Compose."
-
-#: ../rules/base.xml.in.h:458
-msgid "Right Win-key switches layout while pressed."
-msgstr "Oikea Win-näppäin vaihtaa asettelua painettaessa."
-
-#: ../rules/base.xml.in.h:459
+#: ../rules/base.xml.in.h:523 ../rules/evdev.xml.in.h:523
 msgid "Right hand"
 msgstr "Oikeakätinen"
 
-#: ../rules/base.xml.in.h:460
+#: ../rules/base.xml.in.h:524 ../rules/evdev.xml.in.h:524
 msgid "Right handed Dvorak"
 msgstr "Oikeakätinen dvorak"
 
-#: ../rules/base.xml.in.h:461
+#: ../rules/base.xml.in.h:525 ../rules/evdev.xml.in.h:525
 msgid "Romania"
 msgstr "Romania"
 
-#: ../rules/base.xml.in.h:462
+#: ../rules/base.xml.in.h:526 ../rules/evdev.xml.in.h:526
 msgid "Romanian keyboard with German letters"
 msgstr "Romanialainen näppäimistö saksalaisilla kirjaimilla"
 
-#: ../rules/base.xml.in.h:463
+#: ../rules/base.xml.in.h:527 ../rules/evdev.xml.in.h:527
 msgid "Romanian keyboard with German letters, eliminate dead keys"
 msgstr "Romanialainen näppäimistö saksalaisilla kirjaimilla, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:464
+#: ../rules/base.xml.in.h:528 ../rules/evdev.xml.in.h:528
 msgid "Rou"
 msgstr "Rou"
 
-#: ../rules/base.xml.in.h:465 ../rules/sun.xml.in.h:95
+#: ../rules/base.xml.in.h:529 ../rules/evdev.xml.in.h:529
 msgid "Rus"
 msgstr "Rus"
 
-#: ../rules/base.xml.in.h:466
+#: ../rules/base.xml.in.h:530 ../rules/evdev.xml.in.h:530
 msgid "Russia"
 msgstr "Venäjä"
 
-#: ../rules/base.xml.in.h:467 ../rules/sun.xml.in.h:96
+#: ../rules/base.xml.in.h:531 ../rules/evdev.xml.in.h:531
 msgid "Russian"
 msgstr "Venäläinen"
 
-#: ../rules/base.xml.in.h:468
+#: ../rules/base.xml.in.h:532 ../rules/evdev.xml.in.h:532
 msgid "Russian phonetic"
 msgstr "Venäläinen foneettinen"
 
-#: ../rules/base.xml.in.h:469
+#: ../rules/base.xml.in.h:533 ../rules/evdev.xml.in.h:533
+msgid "Russian phonetic Dvorak"
+msgstr "Venäläinen foneettinen dvorak"
+
+#: ../rules/base.xml.in.h:534 ../rules/evdev.xml.in.h:534
 msgid "Russian phonetic, eliminate dead keys"
 msgstr "Venäläinen foneettinen, ei kuolleita näppäimiä"
 
-#: ../rules/base.xml.in.h:470
+#: ../rules/base.xml.in.h:535 ../rules/evdev.xml.in.h:535
 msgid "Russian with Kazakh"
 msgstr "Venäjä kazakhin kanssa"
 
-#: ../rules/base.xml.in.h:471
-msgid "SCG"
-msgstr "SCG"
-
-#: ../rules/base.xml.in.h:472
+#: ../rules/base.xml.in.h:536 ../rules/evdev.xml.in.h:536
 msgid "SILVERCREST Multimedia Wireless Keyboard"
 msgstr "SILVERCREST langaton multimedianäppäimistö"
 
-#: ../rules/base.xml.in.h:473
+#: ../rules/base.xml.in.h:537 ../rules/evdev.xml.in.h:537
 msgid "SK-1300"
 msgstr "SK-1300"
 
-#: ../rules/base.xml.in.h:474
+#: ../rules/base.xml.in.h:538 ../rules/evdev.xml.in.h:538
 msgid "SK-2500"
 msgstr "SK-2500"
 
-#: ../rules/base.xml.in.h:475
+#: ../rules/base.xml.in.h:539 ../rules/evdev.xml.in.h:539
 msgid "SK-6200"
 msgstr "SK-6200"
 
-#: ../rules/base.xml.in.h:476
+#: ../rules/base.xml.in.h:540 ../rules/evdev.xml.in.h:540
 msgid "SK-7100"
 msgstr "SK-7100"
 
-#: ../rules/base.xml.in.h:477
+#: ../rules/base.xml.in.h:541 ../rules/evdev.xml.in.h:541
+msgid "SRB"
+msgstr "SRB"
+
+#: ../rules/base.xml.in.h:542 ../rules/evdev.xml.in.h:542
 msgid "SVEN Ergonomic 2500"
 msgstr "SVEN Ergonomic 2500"
 
-#: ../rules/base.xml.in.h:478
+#: ../rules/base.xml.in.h:543 ../rules/evdev.xml.in.h:543
+msgid "SVEN Slim 303"
+msgstr "SVEN Slim 303"
+
+#: ../rules/base.xml.in.h:544 ../rules/evdev.xml.in.h:544
 msgid "Samsung SDM 4500P"
 msgstr "Samsung SDM 4500P"
 
-#: ../rules/base.xml.in.h:479
+#: ../rules/base.xml.in.h:545 ../rules/evdev.xml.in.h:545
 msgid "Samsung SDM 4510P"
 msgstr "Samsung SDM 4510P"
 
-#: ../rules/base.xml.in.h:480
-msgid "ScrollLock LED shows alternative layout."
-msgstr "ScrollLock-ledi näyttää vaihtoehtoista asettelua."
+#: ../rules/base.xml.in.h:546 ../rules/evdev.xml.in.h:546
+msgid "ScrollLock"
+msgstr "ScrollLock"
 
-#: ../rules/base.xml.in.h:481
-msgid "Serbia and Montenegro"
-msgstr "Serbia ja Montenegro "
+#: ../rules/base.xml.in.h:547 ../rules/evdev.xml.in.h:547
+msgid "Secwepemctsin"
+msgstr ""
 
-#: ../rules/base.xml.in.h:482
-msgid "Shift with numeric keypad keys works as in MS Windows."
-msgstr "Shift ja sormionäppäimet toimivat kuten MS Windowsissa."
+#: ../rules/base.xml.in.h:548 ../rules/evdev.xml.in.h:548
+msgid "Semi-colon on third level"
+msgstr "Puolipilkku kolmannella tasolla"
 
-#: ../rules/base.xml.in.h:483
-msgid "Shift+CapsLock changes layout."
-msgstr "Shift+CapsLock vaihtaa asettelua."
+#: ../rules/base.xml.in.h:549 ../rules/evdev.xml.in.h:549
+msgid "Serbia"
+msgstr "Serbia"
 
-#: ../rules/base.xml.in.h:484
+#: ../rules/base.xml.in.h:550 ../rules/evdev.xml.in.h:550
+msgid "Shift cancels CapsLock"
+msgstr "Shift kumoaa CapsLockin"
+
+#: ../rules/base.xml.in.h:551 ../rules/evdev.xml.in.h:551
+msgid "Shift does not cancel NumLock, chooses 3d level instead"
+msgstr "Shift ei kumoa CapsLockia, valitsee 3. tason sen sijaan"
+
+#: ../rules/base.xml.in.h:552 ../rules/evdev.xml.in.h:552
+msgid "Shift with numeric keypad keys works as in MS Windows"
+msgstr "Shift ja sormionäppäimet toimivat kuten MS Windowsissa"
+
+#: ../rules/base.xml.in.h:553 ../rules/evdev.xml.in.h:553
+msgid "Shift+CapsLock"
+msgstr "Shift+CapsLock"
+
+#: ../rules/base.xml.in.h:554 ../rules/evdev.xml.in.h:554
+msgid "Simple"
+msgstr "yksinkertainen"
+
+#: ../rules/base.xml.in.h:555 ../rules/evdev.xml.in.h:555
 msgid "Slovakia"
 msgstr "Slovakia"
 
-#: ../rules/base.xml.in.h:485
+#: ../rules/base.xml.in.h:556 ../rules/evdev.xml.in.h:556
 msgid "Slovenia"
 msgstr "Slovenia"
 
-#: ../rules/base.xml.in.h:486
+#: ../rules/base.xml.in.h:557 ../rules/evdev.xml.in.h:557
 msgid "South Africa"
 msgstr "Etelä-Afrikka"
 
-#: ../rules/base.xml.in.h:487
+#: ../rules/base.xml.in.h:558 ../rules/evdev.xml.in.h:558
 msgid "Southern Uzbek"
 msgstr "Eteläinen uzbeekki"
 
-#: ../rules/base.xml.in.h:488
-msgid "Space key outputs non-breakable space character at fourth level, thin non-breakable space character at sixth level"
-msgstr "Välilyönnistä tulee sitova välilyöntimerkki 4. tasolla ja kapea sitova välilyöntimerkki 6. tasolla"
-
-#: ../rules/base.xml.in.h:489
-msgid "Space key outputs non-breakable space character at fourth level."
-msgstr "Välilyönnistä tulee sitova välilyöntimerkki 4. tasolla."
-
-#: ../rules/base.xml.in.h:490
-msgid "Space key outputs non-breakable space character at second level."
-msgstr "Välilyönnistä tulee sitova välilyöntimerkki 2. tasolla."
-
-#: ../rules/base.xml.in.h:491
-msgid "Space key outputs non-breakable space character at third level, nothing at fourth level."
-msgstr "Välilyönnistä tulee sitova välilyöntimerkki 3. tasolla eikä mitään 4. tasolla."
-
-#: ../rules/base.xml.in.h:492
-msgid "Space key outputs non-breakable space character at third level, thin non-breakable space character at fourth level"
-msgstr "Välilyönnistä tulee sitova välilyöntimerkki 3. tasolla ja kapea sitova välilyöntimerkki 4. tasolla."
-
-#: ../rules/base.xml.in.h:493
-msgid "Space key outputs non-breakable space character at third level."
-msgstr "Välilyönnistä tulee sitova välilyöntimerkki 3. tasolla."
-
-#: ../rules/base.xml.in.h:494
-msgid "Space key outputs usual space at any level."
-msgstr "Välilyönnistä tulee tavallinen välilyönti kaikilla tasoilla."
-
-#: ../rules/base.xml.in.h:495
+#: ../rules/base.xml.in.h:559 ../rules/evdev.xml.in.h:559
 msgid "Spain"
 msgstr "Espanja"
 
-#: ../rules/base.xml.in.h:496 ../rules/sun.xml.in.h:103
-msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server."
-msgstr "Erikoisnäppäimet (Ctrl+Alt+&lt;näppäin&gt;) käsitellään palvelimessa."
+#: ../rules/base.xml.in.h:560 ../rules/evdev.xml.in.h:560
+msgid "Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server"
+msgstr "Erikoisnäppäimet (Ctrl+Alt+&lt;näppäin&gt;) käsitellään palvelimessa"
 
-#: ../rules/base.xml.in.h:497
+#: ../rules/base.xml.in.h:561 ../rules/evdev.xml.in.h:561
 msgid "SrL"
 msgstr "SrL"
 
-#: ../rules/base.xml.in.h:498
+#: ../rules/base.xml.in.h:562 ../rules/evdev.xml.in.h:562
 msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
-#: ../rules/base.xml.in.h:499 ../rules/sun.xml.in.h:104
+#: ../rules/base.xml.in.h:563 ../rules/evdev.xml.in.h:563
 msgid "Standard"
 msgstr "Tavallinen"
 
-#: ../rules/base.xml.in.h:500
-msgid "Standard (Commabelow)"
+#: ../rules/base.xml.in.h:564 ../rules/evdev.xml.in.h:564
+msgid "Standard (Cedilla)"
 msgstr "Tavallinen (Pilkku alla)"
 
 #. RSTU 2019-91
-#: ../rules/base.xml.in.h:502
+#: ../rules/base.xml.in.h:566 ../rules/evdev.xml.in.h:566
 msgid "Standard RSTU"
 msgstr "Tavallinen RSTU"
 
 #. RSTU 2019-91
-#: ../rules/base.xml.in.h:504
+#: ../rules/base.xml.in.h:568 ../rules/evdev.xml.in.h:568
 msgid "Standard RSTU on Russian layout"
 msgstr "Tavallinen RSTU venäläisellä asettelulla"
 
-#: ../rules/base.xml.in.h:505 ../rules/sun.xml.in.h:112
+#: ../rules/base.xml.in.h:569 ../rules/evdev.xml.in.h:569
+msgid "Sun Type 5/6"
+msgstr "Sun Type 5/6"
+
+#: ../rules/base.xml.in.h:570 ../rules/evdev.xml.in.h:570
 msgid "Sun dead keys"
 msgstr "Sunin kuolleet näppäimet"
 
-#: ../rules/base.xml.in.h:506
+#: ../rules/base.xml.in.h:571 ../rules/evdev.xml.in.h:571
 msgid "Super Power Multimedia Keyboard"
 msgstr "Super Power -multimedianäppäimistö"
 
-#: ../rules/base.xml.in.h:507
-msgid "Super is mapped to the Win-keys."
-msgstr "Super tulee Win-näppäimistä."
+#: ../rules/base.xml.in.h:572 ../rules/evdev.xml.in.h:572
+msgid "Super is mapped to Win keys"
+msgstr "Super tulee Win-näppäimistä"
 
-#: ../rules/base.xml.in.h:508
+#: ../rules/base.xml.in.h:573 ../rules/evdev.xml.in.h:573
 msgid "Svdvorak"
 msgstr "Svdvorak"
 
-#: ../rules/base.xml.in.h:509 ../rules/sun.xml.in.h:113
+#: ../rules/base.xml.in.h:574 ../rules/evdev.xml.in.h:574
 msgid "Svk"
 msgstr "Svk"
 
-#: ../rules/base.xml.in.h:510
+#: ../rules/base.xml.in.h:575 ../rules/evdev.xml.in.h:575
 msgid "Svn"
 msgstr "Svn"
 
-#: ../rules/base.xml.in.h:511
-msgid "Swap Ctrl and CapsLock."
-msgstr "Vaihda Ctrl ja CapsLock."
+#: ../rules/base.xml.in.h:576 ../rules/evdev.xml.in.h:576
+msgid "Swap Ctrl and CapsLock"
+msgstr "Vaihda Ctrl ja CapsLock"
 
-#: ../rules/base.xml.in.h:512
-msgid "Swap keycodes of two keys when Mac keyboards are misdetected by kernel."
-msgstr "Vaihda kahden näppäimen näppäinkoodin, jos ydin tunnistaa väärin Mac-näppäimistön."
+#: ../rules/base.xml.in.h:577 ../rules/evdev.xml.in.h:577
+msgid "Swap ESC and CapsLock"
+msgstr "Vaihda Esc ja CapsLock"
 
-#: ../rules/base.xml.in.h:513 ../rules/sun.xml.in.h:115
+#: ../rules/base.xml.in.h:578 ../rules/evdev.xml.in.h:578
 msgid "Swe"
 msgstr "Swe"
 
-#: ../rules/base.xml.in.h:514
+#: ../rules/base.xml.in.h:579 ../rules/evdev.xml.in.h:579
 msgid "Sweden"
 msgstr "Ruotsi"
 
-#: ../rules/base.xml.in.h:515
+#: ../rules/base.xml.in.h:580 ../rules/evdev.xml.in.h:580
 msgid "Switzerland"
 msgstr "Sveitsi"
 
-#: ../rules/base.xml.in.h:516
+#: ../rules/base.xml.in.h:581 ../rules/evdev.xml.in.h:581
 msgid "Symplon PaceBook (tablet PC)"
 msgstr "Symplon PaceBook (lehtiö-PC)"
 
-#: ../rules/base.xml.in.h:517
+#: ../rules/base.xml.in.h:582 ../rules/evdev.xml.in.h:582
 msgid "Syr"
 msgstr "Syr"
 
-#: ../rules/base.xml.in.h:518
+#: ../rules/base.xml.in.h:583 ../rules/evdev.xml.in.h:583
 msgid "Syria"
 msgstr "Syyria"
 
-#: ../rules/base.xml.in.h:519
+#: ../rules/base.xml.in.h:584 ../rules/evdev.xml.in.h:584
 msgid "Syriac"
 msgstr "Syyrialainen"
 
-#: ../rules/base.xml.in.h:520
+#: ../rules/base.xml.in.h:585 ../rules/evdev.xml.in.h:585
 msgid "Syriac phonetic"
 msgstr "Syyrialainen foneettinen"
 
-#: ../rules/base.xml.in.h:521
+#: ../rules/base.xml.in.h:586 ../rules/evdev.xml.in.h:586
 msgid "TIS-820.2538"
 msgstr "TIS-820.2538"
 
-#: ../rules/base.xml.in.h:522
+#: ../rules/base.xml.in.h:587 ../rules/evdev.xml.in.h:587
 msgid "Tajikistan"
 msgstr "Tadžikistan"
 
-#: ../rules/base.xml.in.h:523
+#: ../rules/base.xml.in.h:588 ../rules/evdev.xml.in.h:588
 msgid "Tamil"
 msgstr "Tamili"
 
-#: ../rules/base.xml.in.h:524
+#: ../rules/base.xml.in.h:589 ../rules/evdev.xml.in.h:589
 msgid "Tamil TAB Typewriter"
 msgstr "Tamili TAB Typewriter"
 
-#: ../rules/base.xml.in.h:525
+#: ../rules/base.xml.in.h:590 ../rules/evdev.xml.in.h:590
 msgid "Tamil TSCII Typewriter"
 msgstr "Tamili TSCII Typewriter"
 
-#: ../rules/base.xml.in.h:526
+#: ../rules/base.xml.in.h:591 ../rules/evdev.xml.in.h:591
 msgid "Tamil Unicode"
 msgstr "Tamili Unicode"
 
-#: ../rules/base.xml.in.h:527
+#: ../rules/base.xml.in.h:592 ../rules/evdev.xml.in.h:592
+msgid "Targa Visionary 811"
+msgstr "Targa Visionary 811"
+
+#: ../rules/base.xml.in.h:593 ../rules/evdev.xml.in.h:593
 msgid "Tatar"
 msgstr "Tataari"
 
-#: ../rules/base.xml.in.h:528
+#: ../rules/base.xml.in.h:594 ../rules/evdev.xml.in.h:594
 msgid "Telugu"
 msgstr "Telugu"
 
-#: ../rules/base.xml.in.h:529
+#: ../rules/base.xml.in.h:595 ../rules/evdev.xml.in.h:595
 msgid "Tha"
 msgstr "Tha"
 
-#: ../rules/base.xml.in.h:530
+#: ../rules/base.xml.in.h:596 ../rules/evdev.xml.in.h:596
 msgid "Thailand"
 msgstr "Thaimaa"
 
-#: ../rules/base.xml.in.h:531 ../rules/sun.xml.in.h:119
-msgid "Third level choosers"
-msgstr "Kolmannnen tason valitsimet"
-
-#: ../rules/base.xml.in.h:532
+#: ../rules/base.xml.in.h:597 ../rules/evdev.xml.in.h:597
 msgid "Tibetan"
 msgstr "Tiibet"
 
-#: ../rules/base.xml.in.h:533
+#: ../rules/base.xml.in.h:598 ../rules/evdev.xml.in.h:598
 msgid "Tibetan (with ASCII numerals)"
 msgstr "Tiibet (ASCII-numeroilla)"
 
-#: ../rules/base.xml.in.h:534
+#: ../rules/base.xml.in.h:599 ../rules/evdev.xml.in.h:599
 msgid "Tifinagh"
 msgstr "Tifinagh"
 
-#: ../rules/base.xml.in.h:535
+#: ../rules/base.xml.in.h:600 ../rules/evdev.xml.in.h:600
 msgid "Tifinagh Alternative"
 msgstr "Tifinagh, vaihtoehtoinen"
 
-#: ../rules/base.xml.in.h:536
+#: ../rules/base.xml.in.h:601 ../rules/evdev.xml.in.h:601
 msgid "Tifinagh Alternative Phonetic"
 msgstr "Tifinagh, vaihtoehtoinen foneettinen"
 
-#: ../rules/base.xml.in.h:537
+#: ../rules/base.xml.in.h:602 ../rules/evdev.xml.in.h:602
 msgid "Tifinagh Extended"
 msgstr "Tifinagh, laajennettu"
 
-#: ../rules/base.xml.in.h:538
+#: ../rules/base.xml.in.h:603 ../rules/evdev.xml.in.h:603
 msgid "Tifinagh Extended Phonetic"
 msgstr "Tifinagh, laajennettu foneettinen"
 
-#: ../rules/base.xml.in.h:539
+#: ../rules/base.xml.in.h:604 ../rules/evdev.xml.in.h:604
 msgid "Tifinagh Phonetic"
 msgstr "Tifinagh, foneettinen"
 
-#: ../rules/base.xml.in.h:540
+#: ../rules/base.xml.in.h:605 ../rules/evdev.xml.in.h:605
 msgid "Tilde (~) variant"
 msgstr "Tildemuunnos (~)"
 
-#: ../rules/base.xml.in.h:541
+#: ../rules/base.xml.in.h:606 ../rules/evdev.xml.in.h:606
 msgid "Tjk"
 msgstr "Tjk"
 
-#: ../rules/base.xml.in.h:542
+#: ../rules/base.xml.in.h:607 ../rules/evdev.xml.in.h:607
+msgid "To the corresponding key in a Dvorak keyboard."
+msgstr ""
+
+#: ../rules/base.xml.in.h:608 ../rules/evdev.xml.in.h:608
+msgid "To the corresponding key in a Qwerty keyboard."
+msgstr ""
+
+#: ../rules/base.xml.in.h:609 ../rules/evdev.xml.in.h:609
 msgid "Toshiba Satellite S3000"
 msgstr "Toshiba Satellite S3000"
 
-#: ../rules/base.xml.in.h:543
+#: ../rules/base.xml.in.h:610 ../rules/evdev.xml.in.h:610
 msgid "Trust Direct Access Keyboard"
 msgstr "Trust Direct Access Keyboard"
 
-#: ../rules/base.xml.in.h:544
+#: ../rules/base.xml.in.h:611 ../rules/evdev.xml.in.h:611
 msgid "Trust Wireless Keyboard Classic"
 msgstr "Trust Wireless Keyboard Classic"
 
-#: ../rules/base.xml.in.h:545 ../rules/sun.xml.in.h:120
+#: ../rules/base.xml.in.h:612 ../rules/evdev.xml.in.h:612
 msgid "Tur"
 msgstr "Tur"
 
-#: ../rules/base.xml.in.h:546
+#: ../rules/base.xml.in.h:613 ../rules/evdev.xml.in.h:613
 msgid "Turkey"
 msgstr "Turkki"
 
-#: ../rules/base.xml.in.h:547
+#: ../rules/base.xml.in.h:614 ../rules/evdev.xml.in.h:614
 msgid "Typewriter"
 msgstr "Kirjoituskone"
 
-#: ../rules/base.xml.in.h:548 ../rules/sun.xml.in.h:124
-msgid "U.S. English"
-msgstr "Amerikanenglanti"
+#: ../rules/base.xml.in.h:615 ../rules/evdev.xml.in.h:615
+msgid "UCW layout (accented letters only)"
+msgstr ""
 
-#: ../rules/base.xml.in.h:549
+#: ../rules/base.xml.in.h:616 ../rules/evdev.xml.in.h:616
 msgid "US keyboard with Bosnian digraphs"
 msgstr "Yhdysvaltalainen näppäimistö bosnialaisilla merkkipareilla"
 
-#: ../rules/base.xml.in.h:550
+#: ../rules/base.xml.in.h:617 ../rules/evdev.xml.in.h:617
 msgid "US keyboard with Bosnian letters"
 msgstr "Yhdysvaltalainen näppäimistö bosnialaisilla kirjaimilla"
 
-#: ../rules/base.xml.in.h:551
+#: ../rules/base.xml.in.h:618 ../rules/evdev.xml.in.h:618
 msgid "US keyboard with Croatian digraphs"
 msgstr "Yhdysvaltalainen näppäimistö kroatialaisilla merkkipareilla"
 
-#: ../rules/base.xml.in.h:552
+#: ../rules/base.xml.in.h:619 ../rules/evdev.xml.in.h:619
 msgid "US keyboard with Croatian letters"
 msgstr "Yhdysvaltalainen näppäimistö kroatialaisilla kirjaimilla"
 
-#: ../rules/base.xml.in.h:553
+#: ../rules/base.xml.in.h:620 ../rules/evdev.xml.in.h:620
+msgid "US keyboard with Estonian letters"
+msgstr "Yhdysvaltalainen näppäimistö virolaisilla kirjaimilla"
+
+#: ../rules/base.xml.in.h:621 ../rules/evdev.xml.in.h:621
 msgid "US keyboard with Lithuanian letters"
 msgstr "Yhdysvaltalainen näppäimistö liettualaisilla kirjaimilla"
 
-#: ../rules/base.xml.in.h:554
+#: ../rules/base.xml.in.h:622 ../rules/evdev.xml.in.h:622
 msgid "US keyboard with Slovenian digraphs"
 msgstr "Yhdysvaltalainen näppäimistö slovenialaisilla merkkipareilla"
 
-#: ../rules/base.xml.in.h:555
+#: ../rules/base.xml.in.h:623 ../rules/evdev.xml.in.h:623
 msgid "US keyboard with Slovenian letters"
 msgstr "Yhdysvaltalainen näppäimistö slovenialaisilla kirjaimilla"
 
-#: ../rules/base.xml.in.h:556 ../rules/sun.xml.in.h:126
+#: ../rules/base.xml.in.h:624 ../rules/evdev.xml.in.h:624
 msgid "USA"
 msgstr "USA"
 
-#: ../rules/base.xml.in.h:557
+#: ../rules/base.xml.in.h:625 ../rules/evdev.xml.in.h:625
 msgid "Udmurt"
 msgstr "Udmurt"
 
-#: ../rules/base.xml.in.h:558
+#: ../rules/base.xml.in.h:626 ../rules/evdev.xml.in.h:626
 msgid "Ukr"
 msgstr "Ukr"
 
-#: ../rules/base.xml.in.h:559
+#: ../rules/base.xml.in.h:627 ../rules/evdev.xml.in.h:627
 msgid "Ukraine"
 msgstr "Ukraina"
 
-#: ../rules/base.xml.in.h:560
+#: ../rules/base.xml.in.h:628 ../rules/evdev.xml.in.h:628
+msgid "Unicode"
+msgstr "Unicode"
+
+#: ../rules/base.xml.in.h:629 ../rules/evdev.xml.in.h:629
+msgid "Unicode additions (arrows and math operators)"
+msgstr "Unicode-lisäosat (nuolet ja matematiikkatoiminnot)"
+
+#: ../rules/base.xml.in.h:630 ../rules/evdev.xml.in.h:630
+msgid "Unicode additions (arrows and math operators). Math operators on default level"
+msgstr "Unicode-lisäosat (nuolet ja matematiikkatoiminnot). Matematiikkatoiminnot oletustasolla"
+
+#: ../rules/base.xml.in.h:631 ../rules/evdev.xml.in.h:631
 msgid "UnicodeExpert"
 msgstr "Unicode-asiantuntija"
 
-#: ../rules/base.xml.in.h:561 ../rules/sun.xml.in.h:127
+#: ../rules/base.xml.in.h:632 ../rules/evdev.xml.in.h:632
 msgid "United Kingdom"
 msgstr "Iso-Britannia"
 
-#: ../rules/base.xml.in.h:562
-msgid "Urdu"
-msgstr "Urdu"
+#: ../rules/base.xml.in.h:633 ../rules/evdev.xml.in.h:633
+msgid "Unitek KB-1925"
+msgstr "Unitek KB-1925"
 
-#: ../rules/base.xml.in.h:563
+#: ../rules/base.xml.in.h:634 ../rules/evdev.xml.in.h:634
+msgid "Urdu, Alternative phonetic"
+msgstr "Urdu, vaihtoehtoinen foneettinen"
+
+#: ../rules/base.xml.in.h:635 ../rules/evdev.xml.in.h:635
+msgid "Urdu, Phonetic"
+msgstr "Urdu, foneettinen"
+
+#: ../rules/base.xml.in.h:636 ../rules/evdev.xml.in.h:636
+msgid "Urdu, Winkeys"
+msgstr "Urdu, Win-näppäimet"
+
+#: ../rules/base.xml.in.h:637 ../rules/evdev.xml.in.h:637
 msgid "Use Bosnian digraphs"
 msgstr "Käytä bosnialaisia merkkipareja"
 
-#: ../rules/base.xml.in.h:564
+#: ../rules/base.xml.in.h:638 ../rules/evdev.xml.in.h:638
 msgid "Use Croatian digraphs"
 msgstr "Käytä kroatialaisia merkkipareja"
 
-#: ../rules/base.xml.in.h:565
+#: ../rules/base.xml.in.h:639 ../rules/evdev.xml.in.h:639
 msgid "Use Slovenian digraphs"
 msgstr "Käytä slovenialaisia merkkipareja"
 
-#: ../rules/base.xml.in.h:566
+#: ../rules/base.xml.in.h:640 ../rules/evdev.xml.in.h:640
 msgid "Use guillemets for quotes"
 msgstr "Käytä guillemot-lainausmerkkejä"
 
-#: ../rules/base.xml.in.h:567
-msgid "Use keyboard LED to show alternative layout."
-msgstr "Käytä näppäimistö-lediä näyttämään vaihtoehtoista asettelua."
+#: ../rules/base.xml.in.h:641 ../rules/evdev.xml.in.h:641
+msgid "Use keyboard LED to show alternative layout"
+msgstr "Käytä näppäimistö-lediä näyttämään vaihtoehtoista asettelua"
 
-#: ../rules/base.xml.in.h:568
+#: ../rules/base.xml.in.h:642 ../rules/evdev.xml.in.h:642
 msgid "Using space key to input non-breakable space character"
 msgstr "Sitovan välilyöntimerkin syöttäminen"
 
-#: ../rules/base.xml.in.h:569
+#: ../rules/base.xml.in.h:643 ../rules/evdev.xml.in.h:643
+msgid "Usual space at any level"
+msgstr "Normaali välilyönti kaikilla tasoilla"
+
+#: ../rules/base.xml.in.h:644 ../rules/evdev.xml.in.h:644
 msgid "Uzb"
 msgstr "Uzb"
 
-#: ../rules/base.xml.in.h:570
+#: ../rules/base.xml.in.h:645 ../rules/evdev.xml.in.h:645
 msgid "Uzbekistan"
 msgstr "Uzbekistan"
 
-#: ../rules/base.xml.in.h:571
+#: ../rules/base.xml.in.h:646 ../rules/evdev.xml.in.h:646
 msgid "Vietnam"
 msgstr "Vietnam"
 
-#: ../rules/base.xml.in.h:572
+#: ../rules/base.xml.in.h:647 ../rules/evdev.xml.in.h:647
+msgid "ViewSonic KU-306 Internet Keyboard"
+msgstr "ViewSonic KU-306 Internet -näppäimistö"
+
+#: ../rules/base.xml.in.h:648 ../rules/evdev.xml.in.h:648
 msgid "Vnm"
 msgstr "Vnm"
 
-#: ../rules/base.xml.in.h:573
+#: ../rules/base.xml.in.h:649 ../rules/evdev.xml.in.h:649
 msgid "Wang 724 keypad with unicode additions (arrows and math operators)"
 msgstr "Wang 724 -sormio Unicode-lisäyksin (nuolet sekä matematiikkaoperaatiot)"
 
-#: ../rules/base.xml.in.h:574
-msgid "Wang 724 keypad with unicode additions (arrows and math operators). Math operators on default level."
-msgstr "Wang 724 -sormio Unicode-lisäyksin (nuolet sekä matematiikkaoperaatiot). Matematiikkaoperaatiot oletustasolla."
+#: ../rules/base.xml.in.h:650 ../rules/evdev.xml.in.h:650
+msgid "Wang 724 keypad with unicode additions (arrows and math operators). Math operators on default level"
+msgstr "Wang 724 -sormio Unicode-lisäyksin (nuolet sekä matematiikkaoperaatiot). Matematiikkaoperaatiot oletustasolla"
 
-#: ../rules/base.xml.in.h:575
+#: ../rules/base.xml.in.h:651 ../rules/evdev.xml.in.h:651
 msgid "Wang model 724 azerty"
 msgstr "Wang malli 724 azerty"
 
-#: ../rules/base.xml.in.h:576
+#: ../rules/base.xml.in.h:652 ../rules/evdev.xml.in.h:652
 msgid "Western"
 msgstr "Läntinen"
 
-#: ../rules/base.xml.in.h:577
+#: ../rules/base.xml.in.h:653 ../rules/evdev.xml.in.h:653
 msgid "Winbook Model XP5"
 msgstr "Winbook Model XP5"
 
-#: ../rules/base.xml.in.h:578
+#: ../rules/base.xml.in.h:654 ../rules/evdev.xml.in.h:654
 msgid "Winkeys"
 msgstr "Win-näppäimet"
 
-#: ../rules/base.xml.in.h:579
+#: ../rules/base.xml.in.h:655 ../rules/evdev.xml.in.h:655
 msgid "With &lt;\\|&gt; key"
 msgstr "&lt;\\|&gt;-näppäimillä"
 
-#: ../rules/base.xml.in.h:580
+#: ../rules/base.xml.in.h:656 ../rules/evdev.xml.in.h:656
 msgid "With EuroSign on 5"
 msgstr "Euro-merkki 5-näppäimessä"
 
-#: ../rules/base.xml.in.h:581
+#: ../rules/base.xml.in.h:657 ../rules/evdev.xml.in.h:657
 msgid "With guillemets"
 msgstr "Guillemot-lainausmerkeillä"
 
-#: ../rules/base.xml.in.h:582
+#: ../rules/base.xml.in.h:658 ../rules/evdev.xml.in.h:658
 msgid "Yahoo! Internet Keyboard"
 msgstr "Yahoo!-Internet-näppäimistö"
 
-#: ../rules/base.xml.in.h:583
+#: ../rules/base.xml.in.h:659 ../rules/evdev.xml.in.h:659
+msgid "Yakut"
+msgstr "Yakut"
+
+#: ../rules/base.xml.in.h:660 ../rules/evdev.xml.in.h:660
 msgid "Yoruba"
 msgstr "Yoruba"
 
-#: ../rules/base.xml.in.h:584
+#: ../rules/base.xml.in.h:661 ../rules/evdev.xml.in.h:661
 msgid "Z and ZHE swapped"
 msgstr "Z ja ZHE vaihdettu"
 
-#: ../rules/base.xml.in.h:585
+#: ../rules/base.xml.in.h:662 ../rules/evdev.xml.in.h:662
 msgid "Zar"
 msgstr "Zar"
 
-#: ../rules/base.xml.in.h:586
+#: ../rules/base.xml.in.h:663 ../rules/evdev.xml.in.h:663
 msgid "azerty"
 msgstr "azerty"
 
-#: ../rules/base.xml.in.h:587
+#: ../rules/base.xml.in.h:664 ../rules/evdev.xml.in.h:664
 msgid "azerty/digits"
 msgstr "azerty/numerot"
 
-#: ../rules/base.xml.in.h:588
+#: ../rules/base.xml.in.h:665 ../rules/evdev.xml.in.h:665
 msgid "digits"
 msgstr "numerot"
 
-#: ../rules/base.xml.in.h:589
+#: ../rules/base.xml.in.h:666 ../rules/evdev.xml.in.h:666
 msgid "displaced semicolon and quote (obsolete)"
 msgstr ""
 
-#: ../rules/base.xml.in.h:590
+#: ../rules/base.xml.in.h:667 ../rules/evdev.xml.in.h:667
 msgid "lyx"
 msgstr "lyx"
 
-#: ../rules/base.xml.in.h:591 ../rules/sun.xml.in.h:132
+#: ../rules/base.xml.in.h:668 ../rules/evdev.xml.in.h:668
 msgid "qwerty"
 msgstr "qwerty"
 
-#: ../rules/base.xml.in.h:592
+#: ../rules/base.xml.in.h:669 ../rules/evdev.xml.in.h:669
 msgid "qwerty, extended Backslash"
 msgstr "qwerty, laajennettu Backslash"
 
-#: ../rules/base.xml.in.h:593
+#: ../rules/base.xml.in.h:670 ../rules/evdev.xml.in.h:670
 msgid "qwerty/digits"
 msgstr "qwerty/numerot"
 
-#: ../rules/base.xml.in.h:594
+#: ../rules/base.xml.in.h:671 ../rules/evdev.xml.in.h:671
 msgid "qwertz"
 msgstr "qwertz"
 
-#: ../rules/sun.xml.in.h:1
-msgid "\"Typewriter\""
-msgstr "\"Kirjoituskone\""
-
-#: ../rules/sun.xml.in.h:17
-msgid "Acts as Shift with locking. Shift cancels Caps."
-msgstr "Toimii lukitsevana Shiftinä. Shift kumoaa CapsLockin."
-
-#: ../rules/sun.xml.in.h:18
-msgid "Acts as Shift with locking. Shift doesn't cancel Caps."
-msgstr "Toimii lukitsevana Shiftinä. Shift ei kumoa CapsLockia."
-
-#: ../rules/sun.xml.in.h:19
-msgid "Alt+Control changes group"
-msgstr "Alt+Ctrl vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:20
-msgid "Alt+Shift changes group"
-msgstr "Alt+Shift vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:21
-msgid "Basic"
-msgstr "Perus"
-
-#: ../rules/sun.xml.in.h:23
-msgid "Belgian"
-msgstr "belgialainen"
-
-#: ../rules/sun.xml.in.h:25
-msgid "Both Alt keys together change group"
-msgstr "Molemmat Alt-näppäimet yhdessä vaihtavat ryhmää"
-
-#: ../rules/sun.xml.in.h:26
-msgid "Both Ctrl keys together change group"
-msgstr "Molemmat Ctrl-näppäimet yhdessä vaihtavat ryhmää"
-
-#: ../rules/sun.xml.in.h:27
-msgid "Both Shift keys together change group"
-msgstr "Molemmat Shift-näppäimet yhdessä vaihtavat ryhmää"
-
-#: ../rules/sun.xml.in.h:28
-msgid "Bulgarian"
-msgstr "bulgarialainen"
-
-#: ../rules/sun.xml.in.h:30
-msgid "Canadian"
-msgstr "kanadalainen"
-
-#: ../rules/sun.xml.in.h:31
-msgid "Caps Lock is Compose"
-msgstr "Caps Lock on Compose"
-
-#: ../rules/sun.xml.in.h:32
-msgid "Caps Lock key changes group"
-msgstr "CapsLock-näppäin vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:34
-msgid "Caps_Lock LED shows alternative group"
-msgstr "CapsLock-ledi näyttää vaihtoehtoista ryhmää"
-
-#: ../rules/sun.xml.in.h:35
-msgid "Control Key Position"
-msgstr "Ctrl-näppäimen sijainti"
-
-#: ../rules/sun.xml.in.h:36
-msgid "Control key at bottom left"
-msgstr "Ctrl-näppäin alhaalla vasemmalla"
-
-#: ../rules/sun.xml.in.h:37
-msgid "Control key at left of 'A'"
-msgstr "Ctrl-näppäin \"A\"-näppäimestä vasemmalla"
-
-#: ../rules/sun.xml.in.h:38
-msgid "Control+Shift changes group"
-msgstr "Ctrl+Shift vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:40
-msgid "Czech"
-msgstr "tšekkiläinen"
-
-#: ../rules/sun.xml.in.h:41
-msgid "Danish"
-msgstr "tanskalainen"
-
-#: ../rules/sun.xml.in.h:45
-msgid "DeuCH"
-msgstr "DeuCH"
-
-#: ../rules/sun.xml.in.h:47
-msgid "Dvo"
-msgstr "Dvo"
-
-#: ../rules/sun.xml.in.h:52
-msgid "Finnish"
-msgstr "suomalainen"
-
-#: ../rules/sun.xml.in.h:54
-msgid "FraCH"
-msgstr "FraCH"
-
-#: ../rules/sun.xml.in.h:57
-msgid "German"
-msgstr "saksalainen"
-
-#: ../rules/sun.xml.in.h:58
-msgid "Group Shift/Lock behavior"
-msgstr "Ryhmien vaihto ja lukitus"
-
-#: ../rules/sun.xml.in.h:60
-msgid "Hungarian"
-msgstr "unkarilainen"
-
-#: ../rules/sun.xml.in.h:64
-msgid "Italian"
-msgstr "italialainen"
-
-#: ../rules/sun.xml.in.h:65
-msgid "Japanese"
-msgstr "japanilainen"
-
-#: ../rules/sun.xml.in.h:67
-msgid "Left Alt key changes group"
-msgstr "Vasen Alt-näppäin vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:68
-msgid "Left Alt key switches group while pressed"
-msgstr "Vasen Alt-näppäin vaihtaa ryhmää painettaessa"
-
-#: ../rules/sun.xml.in.h:69
-msgid "Left Ctrl key changes group"
-msgstr "Vasen Ctrl-näppäin vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:70
-msgid "Left Shift key changes group"
-msgstr "Vasen Shift-näppäin vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:71
-msgid "Make CapsLock an additional Control"
-msgstr "Tee CapsLockista ylimääräinen Ctrl"
-
-#: ../rules/sun.xml.in.h:76
-msgid "Norwegian"
-msgstr "norjalainen"
-
-#: ../rules/sun.xml.in.h:77
-msgid "Num_Lock LED shows alternative group"
-msgstr "Numlock-ledi näyttää vaihtoehtoista ryhmää"
-
-#: ../rules/sun.xml.in.h:80
-msgid "Polish"
-msgstr "puolalainen"
-
-#: ../rules/sun.xml.in.h:81
-msgid "Polish with Polish quotes on key \"1/!\""
-msgstr "puolalainen, puolalaiset lainausmerkit \"1/!\"-näppäimistä"
-
-#: ../rules/sun.xml.in.h:82
-msgid "Portuguese"
-msgstr "portugalilainen"
-
-#: ../rules/sun.xml.in.h:83
-msgid "Press Left Alt key to choose 3rd level"
-msgstr "Paina vasenta Alt-näppäintä valitaksesi kolmannen tason"
-
-#: ../rules/sun.xml.in.h:84
-msgid "Press Right Alt key to choose 3rd level"
-msgstr "Paina oikeaa Alt-näppäintä valitaksesi kolmannen tason"
-
-#: ../rules/sun.xml.in.h:85
-msgid "Press Right Alt-key to choose 3rd level, Shift+Right Alt-key is Multi_Key"
-msgstr "Paina oikeaa Alt-näppäintä valitaksesi kolmannen tason, Shift-Oikea Alt on Multi_Key"
-
-#: ../rules/sun.xml.in.h:86
-msgid "Press Right Control to choose 3rd level"
-msgstr "Paina oikeaa Ctrl-näppäintä valitaksesi kolmannen tason"
-
-#: ../rules/sun.xml.in.h:87
-msgid "Press any of Alt keys to choose 3rd level"
-msgstr "Paina jotakin Alt-näppäintä valitaksesi kolmannen tason"
-
-#: ../rules/sun.xml.in.h:89
-msgid "Right Alt key changes group"
-msgstr "Oikea Alt-näppäin vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:91
-msgid "Right Alt switches group while pressed"
-msgstr "Oikea Alt vaihtaa ryhmää painettaessa"
-
-#: ../rules/sun.xml.in.h:92
-msgid "Right Control key works as Right Alt"
-msgstr "Oikea Ctrl-näppäin toimii oikeana Alt-näppäimenä"
-
-#: ../rules/sun.xml.in.h:93
-msgid "Right Ctrl key changes group"
-msgstr "Oikea Ctrl-näppäin vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:94
-msgid "Right Shift key changes group"
-msgstr "Oikea Shift-näppäin vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:97
-msgid "Scroll Lock changes group"
-msgstr "Scrolllock vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:98
-msgid "Scroll_Lock LED shows alternative group"
-msgstr "Scrolllock-ledi näyttää vaihtoehtoista ryhmää"
-
-#: ../rules/sun.xml.in.h:99
-msgid "Shift with numpad keys works as in MS Windows"
-msgstr "Shift ja sormionäppäimet toimivat kuten MS Windowsissa"
-
-#: ../rules/sun.xml.in.h:100
-msgid "Shift+CapsLock changes group"
-msgstr "Shift+CapsLock vaihtaa ryhmää"
-
-#: ../rules/sun.xml.in.h:101
-msgid "Slovak"
-msgstr "slovakialainen"
-
-#: ../rules/sun.xml.in.h:102
-msgid "Spanish"
-msgstr "espanjalainen"
-
-#: ../rules/sun.xml.in.h:105
-msgid "Sun Type 4"
-msgstr "Sun Type 4"
-
-#: ../rules/sun.xml.in.h:106
-msgid "Sun Type 5"
-msgstr "Sun Type 5"
-
-#: ../rules/sun.xml.in.h:107
-msgid "Sun Type 5 European"
-msgstr "Sun Type 5 eurooppalainen"
-
-#: ../rules/sun.xml.in.h:108
-msgid "Sun Type 5 Unix"
-msgstr "Sun Type 5 Unix"
-
-#: ../rules/sun.xml.in.h:109
-msgid "Sun Type 6"
-msgstr "Sun Type 6"
-
-#: ../rules/sun.xml.in.h:110
-msgid "Sun Type 6 Unix"
-msgstr "Sun Type 6 Unix"
-
-#: ../rules/sun.xml.in.h:111
-msgid "Sun Type 6 with Euro key"
-msgstr "Sun Type 6 Euro-näppäimellä"
-
-#: ../rules/sun.xml.in.h:114
-msgid "Swap Control and Caps Lock"
-msgstr "Vaihda Ctrl ja CapsLock"
-
-#: ../rules/sun.xml.in.h:116
-msgid "Swedish"
-msgstr "ruotsalainen"
-
-#: ../rules/sun.xml.in.h:117
-msgid "Swiss French"
-msgstr "sveitsinranskalainen"
-
-#: ../rules/sun.xml.in.h:118
-msgid "Swiss German"
-msgstr "sveitsinsaksalainen"
-
-#: ../rules/sun.xml.in.h:121
-msgid "Turkish"
-msgstr "turkkilainen"
-
-#: ../rules/sun.xml.in.h:122
-msgid "Turkish (F)"
-msgstr "turkkilainen (F)"
-
-#: ../rules/sun.xml.in.h:123
-msgid "Turkish Alt-Q Layout"
-msgstr "turkkilainen Alt-Q-asettelu"
-
-#: ../rules/sun.xml.in.h:125
-msgid "U.S. English w/ ISO9995-3"
-msgstr "Amerikanenglanti + ISO9995-3"
-
-#: ../rules/sun.xml.in.h:128
-msgid "Use keyboard LED to show alternative group"
-msgstr "Käytä näppäimistö-lediä näyttämään vaihtoehtoista ryhmää"
-
-#: ../rules/sun.xml.in.h:129
-msgid "Uses internal capitalization. Shift cancels Caps."
-msgstr "Käyttää sisäistä suuraakkostusta. Shift kumoaa CapsLockin."
-
-#: ../rules/sun.xml.in.h:130
-msgid "Uses internal capitalization. Shift doesn't cancel Caps."
-msgstr "Käyttää sisäistä suuraakkostusta. Shift ei kumoa CapsLockia."
-
-#: ../rules/sun.xml.in.h:131
-msgid "bksl"
-msgstr "bksl"
-
-#: ../rules/sun.xml.in.h:133
-msgid "type4"
-msgstr "type4"
+#~ msgid "(Legacy) Dvorak"
+#~ msgstr "(Perinteinen) dvorak"
+
+#~ msgid "Add the EuroSign to the 2 key."
+#~ msgstr "Lisää euro-merkki 2-näppäimeen."
+
+#~ msgid "Add the EuroSign to the 5 key."
+#~ msgstr "Lisää euro-merkki 5-näppäimeen."
+
+#~ msgid "Add the EuroSign to the E key."
+#~ msgstr "Lisää euro-merkki E-näppäimeen."
+
+#~ msgid "Alt+Ctrl change layout."
+#~ msgstr "Alt+Ctrl vaihtaa asettelua."
+
+#~ msgid "Alt+Shift change layout."
+#~ msgstr "Alt+Shift vaihtaa asettelua."
+
+#~ msgid "Both Alt keys together change layout."
+#~ msgstr "Molemmat Alt-näppäimet yhdessä vaihtavat asettelua."
+
+#~ msgid "Both Ctrl keys together change layout."
+#~ msgstr "Molemmat Ctrl-näppäimet yhdessä vaihtavat asettelua."
+
+#~ msgid "Both Shift keys together change layout."
+#~ msgstr "Molemmat Shift-näppäimet yhdessä vaihtavat asettelua."
+
+#~ msgid "Caps Lock is Compose."
+#~ msgstr "Caps Lock on Compose."
+
+#~ msgid "CapsLock LED shows alternative layout."
+#~ msgstr "CapsLock-ledi näyttää vaihtoehtoista asettelua."
+
+#~ msgid "CapsLock just locks the Shift modifier."
+#~ msgstr "CapsLock vain lukitsee Shift-muunnoksen."
+
+#~ msgid "CapsLock key changes layout."
+#~ msgstr "CapsLock-näppäin vaihtaa asettelua."
+
+#~ msgid "Commabelow"
+#~ msgstr "Commabelow"
+
+#~ msgid "Ctrl+Shift change layout."
+#~ msgstr "Ctrl+Shift vaihtaa asettelua."
+
+#~ msgid "Dnk"
+#~ msgstr "Dnk"
+
+#~ msgid "Hewlett-Packard SK-2505 Internet Keyboard"
+#~ msgstr "Hewlett-Packard SK-2505-Internet-näppäimistö"
+
+#~ msgid "IBM Rapid Access II (alternate option)"
+#~ msgstr "IBM Rapid Access II (vaihtoehtoinen)"
+
+#~ msgid "Kotoistus"
+#~ msgstr "Kotoistus"
+
+#~ msgid "Kyr"
+#~ msgstr "Kyr"
+
+#~ msgid "LCtrl+LShift change layout."
+#~ msgstr "LCtrl+LShift vaihtaa ryhmää"
+
+#~ msgid "Layout switching"
+#~ msgstr "Asettelun vaihto"
+
+#~ msgid "Left Alt key changes layout."
+#~ msgstr "Vasen Alt-näppäin vaihtaa asettelua."
+
+#~ msgid "Left Alt key switches layout while pressed."
+#~ msgstr "Vasen Alt-näppäin vaihtaa asettelua painettaessa."
+
+#~ msgid "Left Ctrl key changes layout."
+#~ msgstr "Vasen Ctrl-näppäin vaihtaa asettelua."
+
+#~ msgid "Left Shift key changes layout."
+#~ msgstr "Vasen Shift-näppäin vaihtaa asettelua."
+
+#~ msgid "Left Win-key changes layout."
+#~ msgstr "Vasen Win-näppäin vaihtaa asettelua."
+
+#~ msgid "Left Win-key is Compose."
+#~ msgstr "Vasen Win-näppäin on Compose."
+
+#~ msgid "Lva"
+#~ msgstr "Lva"
+
+#~ msgid "Menu is Compose."
+#~ msgstr "Valikko on Compose."
+
+#~ msgid "Neostyle"
+#~ msgstr "Neostyle"
+
+#~ msgid "NumLock LED shows alternative layout."
+#~ msgstr "Numlock-ledi näyttää vaihtoehtoista asettelua."
+
+#~ msgid "Press Left Alt key to choose 3rd level."
+#~ msgstr "Paina vasenta Alt-näppäintä valitaksesi kolmannen tason."
+
+#~ msgid "Press Left Win-key to choose 3rd level."
+#~ msgstr "Paina vasenta Win-näppäintä valitaksesi kolmannen tason."
+
+#~ msgid "Press Right Alt key to choose 3rd level."
+#~ msgstr "Paina oikeaa Alt-näppäintä valitaksesi kolmannen tason."
+
+#~ msgid "Press Right Ctrl to choose 3rd level."
+#~ msgstr "Paina oikeaa Ctrl-näppäintä valitaksesi kolmannen tason."
+
+#~ msgid "Press Right Win-key to choose 3rd level."
+#~ msgstr "Paina oikeaa Win-näppäintä valitaksesi kolmannen tason."
+
+#~ msgid "Press any of Alt keys to choose 3rd level."
+#~ msgstr "Paina jotakin Alt-näppäintä valitaksesi kolmannen tason."
+
+#~ msgid "Press any of Win-keys to choose 3rd level."
+#~ msgstr "Paina jotakin Win-näppäintä valitaksesi kolmannen tason."
+
+#~ msgid "R-Alt switches layout while pressed."
+#~ msgstr "Oikea Alt vaihtaa asettelua painettaessa."
+
+#~ msgid "Right Alt is Compose."
+#~ msgstr "Oikea Alt on Compose."
+
+#~ msgid "Right Alt key changes layout."
+#~ msgstr "Oikea Alt-näppäin vaihtaa asettelua."
+
+#~ msgid "Right Ctrl key changes layout."
+#~ msgstr "Oikea Ctrl-näppäin vaihtaa asettelua."
+
+#~ msgid "Right Ctrl key switches layout while pressed."
+#~ msgstr "Oikea Ctrl-näppäin vaihtaa asettelua painettaessa."
+
+#~ msgid "Right Shift key changes layout."
+#~ msgstr "Oikea Shift-näppäin vaihtaa asettelua."
+
+#~ msgid "Right Win-key changes layout."
+#~ msgstr "Oikea Win-näppäin vaihtaa asettelua."
+
+#~ msgid "Right Win-key is Compose."
+#~ msgstr "Oikea Win-näppäin on Compose."
+
+#~ msgid "SCG"
+#~ msgstr "SCG"
+
+#~ msgid "ScrollLock LED shows alternative layout."
+#~ msgstr "ScrollLock-ledi näyttää vaihtoehtoista asettelua."
+
+#~ msgid "Shift+CapsLock changes layout."
+#~ msgstr "Shift+CapsLock vaihtaa asettelua."
+
+#~ msgid "Swap keycodes of two keys when Mac keyboards are misdetected by kernel."
+#~ msgstr "Vaihda kahden näppäimen näppäinkoodin, jos ydin tunnistaa väärin Mac-näppäimistön."
+
+#~ msgid "Third level choosers"
+#~ msgstr "Kolmannnen tason valitsimet"
+
+#~ msgid "U.S. English"
+#~ msgstr "Amerikanenglanti"
+
+#~ msgid "Urdu"
+#~ msgstr "Urdu"
+
+#~ msgid "\"Typewriter\""
+#~ msgstr "\"Kirjoituskone\""
+
+#~ msgid "Acts as Shift with locking. Shift cancels Caps."
+#~ msgstr "Toimii lukitsevana Shiftinä. Shift kumoaa CapsLockin."
+
+#~ msgid "Acts as Shift with locking. Shift doesn't cancel Caps."
+#~ msgstr "Toimii lukitsevana Shiftinä. Shift ei kumoa CapsLockia."
+
+#~ msgid "Alt+Control changes group"
+#~ msgstr "Alt+Ctrl vaihtaa ryhmää"
+
+#~ msgid "Alt+Shift changes group"
+#~ msgstr "Alt+Shift vaihtaa ryhmää"
+
+#~ msgid "Basic"
+#~ msgstr "Perus"
+
+#~ msgid "Belgian"
+#~ msgstr "belgialainen"
+
+#~ msgid "Bulgarian"
+#~ msgstr "bulgarialainen"
+
+#~ msgid "Canadian"
+#~ msgstr "kanadalainen"
+
+#~ msgid "Caps Lock key changes group"
+#~ msgstr "CapsLock-näppäin vaihtaa ryhmää"
+
+#~ msgid "Caps_Lock LED shows alternative group"
+#~ msgstr "CapsLock-ledi näyttää vaihtoehtoista ryhmää"
+
+#~ msgid "Control Key Position"
+#~ msgstr "Ctrl-näppäimen sijainti"
+
+#~ msgid "Control key at bottom left"
+#~ msgstr "Ctrl-näppäin alhaalla vasemmalla"
+
+#~ msgid "Control key at left of 'A'"
+#~ msgstr "Ctrl-näppäin \"A\"-näppäimestä vasemmalla"
+
+#~ msgid "Control+Shift changes group"
+#~ msgstr "Ctrl+Shift vaihtaa ryhmää"
+
+#~ msgid "Czech"
+#~ msgstr "tšekkiläinen"
+
+#~ msgid "Danish"
+#~ msgstr "tanskalainen"
+
+#~ msgid "DeuCH"
+#~ msgstr "DeuCH"
+
+#~ msgid "Dvo"
+#~ msgstr "Dvo"
+
+#~ msgid "Finnish"
+#~ msgstr "suomalainen"
+
+#~ msgid "FraCH"
+#~ msgstr "FraCH"
+
+#~ msgid "German"
+#~ msgstr "saksalainen"
+
+#~ msgid "Group Shift/Lock behavior"
+#~ msgstr "Ryhmien vaihto ja lukitus"
+
+#~ msgid "Hungarian"
+#~ msgstr "unkarilainen"
+
+#~ msgid "Italian"
+#~ msgstr "italialainen"
+
+#~ msgid "Japanese"
+#~ msgstr "japanilainen"
+
+#~ msgid "Left Alt key changes group"
+#~ msgstr "Vasen Alt-näppäin vaihtaa ryhmää"
+
+#~ msgid "Left Ctrl key changes group"
+#~ msgstr "Vasen Ctrl-näppäin vaihtaa ryhmää"
+
+#~ msgid "Left Shift key changes group"
+#~ msgstr "Vasen Shift-näppäin vaihtaa ryhmää"
+
+#~ msgid "Make CapsLock an additional Control"
+#~ msgstr "Tee CapsLockista ylimääräinen Ctrl"
+
+#~ msgid "Norwegian"
+#~ msgstr "norjalainen"
+
+#~ msgid "Num_Lock LED shows alternative group"
+#~ msgstr "Numlock-ledi näyttää vaihtoehtoista ryhmää"
+
+#~ msgid "Polish"
+#~ msgstr "puolalainen"
+
+#~ msgid "Polish with Polish quotes on key \"1/!\""
+#~ msgstr "puolalainen, puolalaiset lainausmerkit \"1/!\"-näppäimistä"
+
+#~ msgid "Portuguese"
+#~ msgstr "portugalilainen"
+
+#~ msgid "Press Left Alt key to choose 3rd level"
+#~ msgstr "Paina vasenta Alt-näppäintä valitaksesi kolmannen tason"
+
+#~ msgid "Press Right Alt key to choose 3rd level"
+#~ msgstr "Paina oikeaa Alt-näppäintä valitaksesi kolmannen tason"
+
+#~ msgid "Press Right Alt-key to choose 3rd level, Shift+Right Alt-key is Multi_Key"
+#~ msgstr "Paina oikeaa Alt-näppäintä valitaksesi kolmannen tason, Shift-Oikea Alt on Multi_Key"
+
+#~ msgid "Press Right Control to choose 3rd level"
+#~ msgstr "Paina oikeaa Ctrl-näppäintä valitaksesi kolmannen tason"
+
+#~ msgid "Press any of Alt keys to choose 3rd level"
+#~ msgstr "Paina jotakin Alt-näppäintä valitaksesi kolmannen tason"
+
+#~ msgid "Right Alt key changes group"
+#~ msgstr "Oikea Alt-näppäin vaihtaa ryhmää"
+
+#~ msgid "Right Control key works as Right Alt"
+#~ msgstr "Oikea Ctrl-näppäin toimii oikeana Alt-näppäimenä"
+
+#~ msgid "Right Ctrl key changes group"
+#~ msgstr "Oikea Ctrl-näppäin vaihtaa ryhmää"
+
+#~ msgid "Right Shift key changes group"
+#~ msgstr "Oikea Shift-näppäin vaihtaa ryhmää"
+
+#~ msgid "Scroll Lock changes group"
+#~ msgstr "Scrolllock vaihtaa ryhmää"
+
+#~ msgid "Scroll_Lock LED shows alternative group"
+#~ msgstr "Scrolllock-ledi näyttää vaihtoehtoista ryhmää"
+
+#~ msgid "Shift with numpad keys works as in MS Windows"
+#~ msgstr "Shift ja sormionäppäimet toimivat kuten MS Windowsissa"
+
+#~ msgid "Slovak"
+#~ msgstr "slovakialainen"
+
+#~ msgid "Spanish"
+#~ msgstr "espanjalainen"
+
+#~ msgid "Sun Type 4"
+#~ msgstr "Sun Type 4"
+
+#~ msgid "Sun Type 5 European"
+#~ msgstr "Sun Type 5 eurooppalainen"
+
+#~ msgid "Sun Type 5 Unix"
+#~ msgstr "Sun Type 5 Unix"
+
+#~ msgid "Sun Type 6"
+#~ msgstr "Sun Type 6"
+
+#~ msgid "Sun Type 6 Unix"
+#~ msgstr "Sun Type 6 Unix"
+
+#~ msgid "Sun Type 6 with Euro key"
+#~ msgstr "Sun Type 6 Euro-näppäimellä"
+
+#~ msgid "Swap Control and Caps Lock"
+#~ msgstr "Vaihda Ctrl ja CapsLock"
+
+#~ msgid "Swedish"
+#~ msgstr "ruotsalainen"
+
+#~ msgid "Swiss French"
+#~ msgstr "sveitsinranskalainen"
+
+#~ msgid "Swiss German"
+#~ msgstr "sveitsinsaksalainen"
+
+#~ msgid "Turkish"
+#~ msgstr "turkkilainen"
+
+#~ msgid "Turkish (F)"
+#~ msgstr "turkkilainen (F)"
+
+#~ msgid "Turkish Alt-Q Layout"
+#~ msgstr "turkkilainen Alt-Q-asettelu"
+
+#~ msgid "U.S. English w/ ISO9995-3"
+#~ msgstr "Amerikanenglanti + ISO9995-3"
+
+#~ msgid "Use keyboard LED to show alternative group"
+#~ msgstr "Käytä näppäimistö-lediä näyttämään vaihtoehtoista ryhmää"
+
+#~ msgid "Uses internal capitalization. Shift cancels Caps."
+#~ msgstr "Käyttää sisäistä suuraakkostusta. Shift kumoaa CapsLockin."
+
+#~ msgid "Uses internal capitalization. Shift doesn't cancel Caps."
+#~ msgstr "Käyttää sisäistä suuraakkostusta. Shift ei kumoa CapsLockia."
+
+#~ msgid "bksl"
+#~ msgstr "bksl"
+
+#~ msgid "type4"
+#~ msgstr "type4"
 
 #~ msgid "Acer TravelMate 800"
 #~ msgstr "Acer TravelMate 800"
-
-#~ msgid "BenQ X-Touch 730"
-#~ msgstr "BenQ X-Touch 730"
-
-#~ msgid "BenQ X-Touch 800"
-#~ msgstr "BenQ X-Touch 800"
 
 #~ msgid "Dell SK-8125 USB Multimedia Keybard"
 #~ msgstr "Dell SK-8125 USB -multimedianäppäimistö"
@@ -2701,17 +3068,8 @@ msgstr "type4"
 #~ msgid "Force standard legacy keypad"
 #~ msgstr "Pakota standardi vanha sormio"
 
-#~ msgid "Logitech Cordless Desktop Optical"
-#~ msgstr "Logitech Cordless Desktop Optical"
-
-#~ msgid "Logitech Cordless Desktop Pro"
-#~ msgstr "Logitech Cordless Desktop Pro"
-
 #~ msgid "Logitech Cordless Desktop Pro (alternate option)"
 #~ msgstr "Logitech Cordless Desktop Pro (vaihtoehtoinen)"
-
-#~ msgid "Logitech Cordless Desktop iTouch"
-#~ msgstr "Logitech Cordless Desktop iTouch"
 
 #~ msgid "Use keypad with unicode additions (arrows and math operators)"
 #~ msgstr "Käytä sormiota unicodelisäyksin (nuolet sekä matematiikkaoperaattorit)"

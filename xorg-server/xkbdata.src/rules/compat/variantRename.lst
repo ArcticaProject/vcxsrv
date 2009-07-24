@@ -14,6 +14,7 @@ gur	basic		in	guru
 ie	laptop		ie	basic
 ie	CloGaelachLaptop	ie	CloGaelach
 il	si1452		ie	basic
+in	urd		in	urd-phonetic
 iu	basic		ca	ike
 lo	basic		la	basic
 kan	basic		in	kan
@@ -30,6 +31,7 @@ ro	academic	ro	std
 ro	std_comma	ro	std
 ro	comma		ro	basic	
 ru	os		ru	os_legacy
+pk	urd		pk	urd-phonetic
 sapmi	basic		no	smi
 sapmi	nodeadkeys	no	smi_nodeadkeys
 sapmi	sefi		fi	smi

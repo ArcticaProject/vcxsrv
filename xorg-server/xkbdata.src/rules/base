@@ -21,7 +21,7 @@
 ! $msmodels = microsoft microsoft7000 microsoftpro microsoftprousb microsoftprose
 
 // PC geometries - they have special geometry but symbols are mostly pc105
-! $pcgeometries = abnt2 latitude jp106 kr106
+! $pcgeometries = latitude
 
 // Layouts that provide further specializations for the OLPC
 ! $olpclayouts = af am ara br ca es et it kh kz in mn np ru th tr us 
@@ -35,42 +35,44 @@
 ! $azerty = be fr
 ! $qwertz = al cz de hr hu ro si sk 
 
-! $inetkbds = a4techKB21 a4techKBS8 a4_rfkb23 \
-              acer_c300 acer_ferrari4k acer_laptop \
-              acpi airkey \
-              apple armada asus_laptop azonaRF2300 \
+! $inetkbds = acer_c300 acer_ferrari4k acer_laptop \
+              airkey \
+              apple armada azonaRF2300 \
               benqx brother \
-              btc5113rf btc5126t btc6301urf btc9000 btc9000a btc9001ah btc5090 btc9019u \
-              cherryblue cherrybluea cherryblueb cherrycyboard \
-              chicony chicony0108 chicony9885 \
+              btc5113rf btc9000 btc9000a btc9001ah btc5090 btc9019u \
+              cherryblue cherrybluea cherryblueb \
+              cherrycyboard cherrycmexpert \
+              chicony chicony0108 chicony0420 chicony9885 \
+              compalfl90 \
               compaqeak8 compaqik7 compaqik13 compaqik18 \
               cymotionlinux \
-              dell dellm65 inspiron precision_m dellusbmm dtk2000 \
-              emachines ennyah_dkb1008 evdev fscaa1667g \
-              genius geniuscomfy geniuscomfy2 geniuskb19e \
+              dell dellm65 inspiron dellusbmm \
+              emachines ennyah_dkb1008 evdev \
+              genius geniuscomfy2 \
               gyration honeywell_euroboard \
-              hp2501 hp2505 hp5xx hp500fa hp5181 hp5185 \
+              hp250x hp5xx hp500fa hpdv5 \
               hpi6 hpxe3gc hpxe3gf hpxe4xxx hpxt1000 hpzt11xx \
-              ibm_spacesaver ipaq inspiron intel latitude \
+              ibm_spacesaver ipaq inspiron intel \
               logiaccess logicda logicink \
               logiex110 logiclx300 \
               logiinkse logiinkseusb logiitc logiik \
               logitech_base itouch logiultrax \
               logitech_g15 \
 	      logidinovo logidinovoedge \
-              microsoft7000 microsoftinet microsoftpro microsoftprousb microsoftprooem microsoftprose \
+              microsoft7000 microsoftinet microsoftprousb microsoftprooem microsoftprose \
               microsoftoffice microsoftmult \
               mx1998 mx2500 mx2750 \
               oretec \
+              pc105 \
               presario propeller \
               qtronix \
-              rapidaccess rapidaccess2 rapidaccess2a thinkpad thinkpad60 \
+              rapidaccess rapidaccess2 thinkpad60 \
               samsung4500 samsung4510 \
-              scorpius silvercrest \
-              sk1300 sk2500 sk6200 sk7100 sp_inet \
+              silvercrest \
+              sk1300 sk2500 sk6200 sk7100 \
               sven sven303 symplon \
               toshiba_s3000 trust trustda \
-              yahoo
+              unitekkb1925 yahoo
 
 // all layouts with 3rd and 4th groups
 ! $threelevellayouts = al az \
@@ -82,7 +84,6 @@
               gb gr \
               hu \
               ie ir is it \
-              kg \
               latam \
               lk lt \
               mn mt \
@@ -95,6 +96,10 @@
               vn \
               za
 
+! $evdevkbds = ibm_spacesaver
+
+! $thinkpads = thinkpad thinkpad60 thinkpadz60
+
 
 ! $dvoraklayouts = br ca de ee es fr gb no pl se us
 
@@ -105,13 +110,10 @@
   sun5		=	sun(type5_euro)
   sun6		=	sun(type6_usb)
   pc98		=	xfree98(pc98)
-  abnt2		=	xfree86(abnt2)
-  jp106		=	xfree86(jp106)
   evdev		=	evdev
   olpc		=	evdev
   macintosh_hhk	=	macintosh(hhk)
   macintosh_old	=	macintosh(old)
- $macbooks	=	macintosh+macintosh(goodmap)
  $macs   	=	macintosh
   thinkpadz60	=	xfree86(thinkpadz60)
   *		=	xfree86
@@ -127,13 +129,16 @@
   *             =       +aliases(qwerty)
 
 ! option	=	keycodes
-  thinkpad     us              =       thinkpad(us)
 
 ! model		layout	=	geometry
+  thinkpad     us              =       thinkpad(us)
+
+! model		=	geometry
   microsoftelite	=	microsoft(elite)
  $msmodels	=	microsoft(natural)
   dell101	=	dell(dell101)
   dellm65	=	dell(dellm65)
+  latitude	=	dell(latitude)
   flexpro	=	keytronic(FlexPro)
   hp6000	=	hp(omnibook)
   omnikey101	=	northgate(omnikey101)
@@ -151,7 +156,7 @@
   kinesis	=	kinesis(model100)
   *		=       pc(pc104)
 
-! model		=	geometry
+! model		layout		variant		=	symbols
   *		ben		basic		=	pc+in(ben)
   *		ben		probhat		=	pc+in(ben_probhat)
   *		dev		basic		=	pc+in(deva)
@@ -203,7 +208,7 @@
   classmate	us		alt-intl	=	pc+us(classmate-alt-intl)
   classmate	us		altgr-intl	=	pc+us(classmate-altgr-intl)
 
-! model		layout		variant		=	symbols
+! model		layout				=	symbols
   *		ar			=	pc+ara
   *		ben			=	pc+in(ben)
   *		bs			=	pc+ba
@@ -283,10 +288,10 @@
   amiga		$nonlatin		=	xfree68_vndr/amiga(usa1)+%l%(v):2
   amiga		*			=	xfree68_vndr/amiga(usa1)+%l%(v)
   classmate	us			=	pc+%l(classmate)
-  sun4		$nonlatin		=	latin+sun_vndr/us(sun4)+%l%(v):2
-  sun4		*			=	latin+sun_vndr/us(sun4)+%l%(v)
-  sun5		$nonlatin		=	latin+sun_vndr/us(sun5)+%l%(v):2
-  sun5		*			=	latin+sun_vndr/us(sun5)+%l%(v)
+  sun4		$nonlatin		=	latin+sun_vndr/us(type4)+%l%(v):2
+  sun4		*			=	latin+sun_vndr/us(type4)+%l%(v)
+  sun5		$nonlatin		=	latin+sun_vndr/us(type5)+%l%(v):2
+  sun5		*			=	latin+sun_vndr/us(type5)+%l%(v)
   sun6		us			=	sun_vndr/us(type6)
   sun6		en_US			=	sun_vndr/us(type6)+iso9995-3(basic)
   sun6		*			=	sun_vndr/us(type6)+%l%(v)
@@ -300,11 +305,11 @@
  $macs		$macvendorlayouts	=	pc+macintosh_vndr/%l%(v)
   olpc		$olpclayouts		=	olpc+%l%(m)
   olpc		*			=	olpc+%l%(v)
-  thinkpad   	br			=	pc+br(thinkpad)
+ $thinkpads   	br			=	pc+br(thinkpad)
   *	   	$nonlatin		=	pc+us+%l%(v):2
   *		*			=	pc+%l%(v)
 
-! model		layout				=	symbols
+! model		layout[1]			=	symbols
   *		ar			=	pc+ara%(v[1])
   *		ben			=	pc+in(ben)%(v[1])
   *		bs			=	pc+ba%(v[1])
@@ -387,10 +392,10 @@
   macintosh_old	$macvendorlayouts	=	macintosh_vndr/us(oldmac)+macintosh_vndr/%l[1]%(v[1])
   macintosh_old	*			=	macintosh_vndr/us(oldmac)+%l[1]%(v[1])
  $macs		$macvendorlayouts	=	pc+macintosh_vndr/%l[1]%(v[1])
-  thinkpad	br			=	pc+%l[1](thinkpad)
+ $thinkpads	br			=	pc+%l[1](thinkpad)
   *		*			=	pc+%l[1]%(v[1])
 
-! model		layout[1]			=	symbols
+! model		layout[1]	variant[1]	=	symbols
   *		ben		basic		=	pc+in(ben)
   *		ben		probhat		=	pc+in(ben_probhat)
   *		dev		basic		=	pc+in(deva)
@@ -439,7 +444,7 @@
   *		yu		yz		=	pc+srp(latinyz)
   *		yu		unicodeyz		=	pc+srp(latinunicodeyz)
 
-! model		layout[1]	variant[1]	=	symbols
+! layout[2]	=	symbols
   ar		=	+ara%(v[2]):2
   ben		=	+in(ben)%(v[2]):2
   bs		=	+ba%(v[2]):2
@@ -516,7 +521,7 @@
   yu(unicodeyz)	=	+srp(latinunicodeyz):2
   *		=	+%l[2]%(v[2]):2
 
-! layout[2]	=	symbols
+! layout[3]	=	symbols
   ar		=	+ara%(v[3]):3
   ben		=	+in(ben)%(v[3]):3
   bs		=	+ba%(v[3]):3
@@ -593,7 +598,7 @@
   yu(unicodeyz)	=	+srp(latinunicodeyz):3
   *		=	+%l[3]%(v[3]):3
 
-! layout[3]	=	symbols
+! layout[4]	=	symbols
   ar		=	+ara%(v[4]):4
   ben		=	+in(ben)%(v[4]):4
   bs		=	+ba%(v[4]):4
@@ -670,7 +675,7 @@
   yu(unicodeyz)	=	+srp(latinunicodeyz):4
   *		=	+%l[4]%(v[4]):4
 
-! layout[4]	=	symbols
+! layout[2]	variant[2]	=	symbols
   ben		basic	=	+in(ben):2
   ben		probhat	=	+in(ben_probhat):2
   dev		basic	=	+in(deva):2
@@ -719,7 +724,7 @@
   yu		yz	=	+srp(latinyz):2
   yu		unicodeyz	=	+srp(latinunicodeyz):2
 
-! layout[2]	variant[2]	=	symbols
+! layout[3]	variant[3]	=	symbols
   ben		basic	=	+in(ben):3
   ben		probhat	=	+in(ben_probhat):3
   dev		basic	=	+in(deva):3
@@ -768,7 +773,7 @@
   yu		yz	=	+srp(latinyz):3
   yu		unicodeyz	=	+srp(latinunicodeyz):3
 
-! layout[3]	variant[3]	=	symbols
+! layout[4]	variant[4]	=	symbols
   ben		basic	=	+in(ben):4
   ben		probhat	=	+in(ben_probhat):4
   dev		basic	=	+in(deva):4
@@ -817,12 +822,29 @@
   yu		yz	=	+srp(latinyz):4
   yu		unicodeyz	=	+srp(latinunicodeyz):4
 
-! layout[4]	variant[4]	=	symbols
+! model		=	symbols
+  a4techKB21    =       +inet(media_nav_common)
+  a4techKBS8    =       +inet(media_nav_acpi_common)
+  a4_rfkb23     =       +inet(media_nav_acpi_common)
+  asus_laptop   =       +inet(media_common)
+  acer_tm_800   =       +inet(acer_laptop)
+  acpi          =       +inet(acpi_common)
   benqx730      =       +inet(benqx)
   benqx800      =       +inet(benqx)
+  btc5126t      =       +inet(nav_acpi_common)
+  btc9116u      =       +inet(btc9019u)
+  btc6301urf    =       +inet(media_nav_acpi_common)
   dellsk8125    =       +inet(dell)
   dellsk8135    =       +inet(dell)
-  hpnx9020      =       +inet(hp5185)
+  cherrybunlim  =       +inet(nav_common)
+  dexxa         =       +inet(media_nav_common)
+  dtk2000       =       +inet(media_nav_acpi_common)
+  fscaa1667g    =       +inet(media_nav_common)
+  geniuskb19e   =       +inet(media_nav_acpi_common)
+  geniuscomfy   =       +inet(media_nav_acpi_common)
+  geniuskkb2050hs =     +inet(dellusbmm)
+  hpnx9020      =       +inet(hpi6)
+  latitude      =       +inet(media_common)
   logicd        =       +inet(logitech_base)
   logicd_it     =       +inet(logitech_base)
   logicd_nav    =       +inet(logitech_base)
@@ -831,56 +853,67 @@
   logiclx300    =       +inet(logiex110)
   logii350      =       +inet(logiex110)
   logimel       =       +inet(logiex110)
-  vsonku306     =       +inet(microsoftprooem)
-  $inetkbds     =       +inet(%m)
-  acer_tm_800   =       +inet(acer_laptop)
-  benqx730      =       +inet(benqx)
-  benqx800      =       +inet(benqx)
-  dell8125      =       +inet(dellusbmm)
-  dell8135      =       +inet(dellusbmm)
-  ltcd          =       +inet(logicda)
   logicdit      =       +inet(logicd)
   logicdo       =       +inet(logicd)
   logicdp       =       +inet(logicd)
   logicdpa      =       +inet(logicda)
   logiciink     =       +inet(logicink)
+  ltcd          =       +inet(logicda)
+  microsoftccurve2k =   +inet(microsoftprooem)
+  microsoftpro  =       +inet(media_nav_acpi_common)
+  precision_m   =       +inet(media_nav_common)
+  scorpius      =       +inet(media_nav_acpi_common)
+  sp_inet       =       +inet(media_nav_acpi_common)
+  targa_v811    =       +inet(media_nav_acpi_common)
+  thinkpad      =       +inet(media_nav_common)
+  thinkpadz60   =       +inet(thinkpad60)
+  trust_slimline =      +inet(media_nav_acpi_common)
+  vsonku306     =       +inet(microsoftprooem)
+  $inetkbds     =       +inet(%m)
   $maclaptop    =       +inet(apple)+level3(enter_switch)
   $macs	        =       +inet(apple)
-  thinkpadz60   =       +inet(thinkpad60)
 
-! model		=	symbols
+! model		layout		=	compat
   pc98		nec_vndr/jp	=	pc98(basic)
   *		jp		=	complete+japan
   olpc         *               =       olpc
   *		*		=	complete
 
-! model		layout		=	compat
+! model		layout[1]	=	compat
   *		*		=	complete
 
-! model		layout[1]	=	compat
+! model		=	types
   $macs		=	complete+numpad(mac)
   *		=	complete
 
-! model		=	types
-  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):1
-
 ! layout	option	=	symbols
-  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):2
+  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle)
+  *			misc:typo 	= +typo(base)
 
 ! layout[1]	option	=	symbols
-  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):3
+  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):1
+  *			misc:typo 	= +typo(base):1
 
 ! layout[2]	option	=	symbols
-  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):4
+  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):2
+  *			misc:typo 	= +typo(base):2
 
 ! layout[3]	option	=	symbols
+  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):3
+  *			misc:typo 	= +typo(base):3
+
+! layout[4]	option	=	symbols
+  $threelevellayouts	grp:alts_toggle = +level3(ralt_switch_for_alts_toggle):4
+  *			misc:typo 	= +typo(base):4
+
+! option	=	symbols
   grp:shift_toggle	=	+group(shifts_toggle)
   altwin:menu		=	+altwin(menu)
   altwin:meta_alt	=	+altwin(meta_alt)
   altwin:ctrl_win	=	+altwin(ctrl_win)
+  altwin:ctrl_alt_win	=	+altwin(ctrl_alt_win)
   altwin:meta_win	=	+altwin(meta_win)
   altwin:left_meta_win	=	+altwin(left_meta_win)
-  altwin:super_win	=	+altwin(super_win)
   altwin:hyper_win	=	+altwin(hyper_win)
   altwin:alt_super_win	=	+altwin(alt_super_win)
   altwin:swap_lalt_lwin	=	+altwin(swap_lalt_lwin)
@@ -899,9 +932,11 @@
   grp:caps_switch       =       +capslock(groupshift)
   grp:shift_caps_toggle	=	+group(shift_caps_toggle)
   grp:shift_caps_switch	=	+group(shift_caps_switch)
+  grp:win_menu_switch	=	+group(win_menu_switch)
   grp:alt_caps_toggle   =       +group(alt_caps_toggle)
   grp:ctrl_alt_toggle	=	+group(ctrl_alt_toggle)
   grp:alt_shift_toggle	=	+group(alt_shift_toggle)
+  grp:alt_space_toggle	=	+group(alt_space_toggle)
   grp:menu_toggle	=	+group(menu_toggle)
   grp:lwin_toggle	=	+group(lwin_toggle)
   grp:rwin_toggle	=	+group(rwin_toggle)
@@ -911,6 +946,7 @@
   grp:lctrl_toggle	=	+group(lctrl_toggle)
   grp:rctrl_toggle	=	+group(rctrl_toggle)
   grp:lalt_toggle	=	+group(lalt_toggle)
+  grp:sclk_toggle	=	+group(sclk_toggle)
   lv3:switch		=	+level3(switch)
   lv3:ralt_switch	=	+level3(ralt_switch)
   lv3:ralt_switch_multikey	=	+level3(ralt_switch_multikey)
@@ -921,9 +957,12 @@
   lv3:win_switch	=	+level3(win_switch)
   lv3:lwin_switch	=	+level3(lwin_switch)
   lv3:rwin_switch	=	+level3(rwin_switch)
+  lv3:enter_switch	=	+level3(enter_switch)
   caps:capslock		=	+capslock(capslock)
   caps:shiftlock	=	+capslock(shiftlock)
   caps:swapescape	=	+capslock(swapescape)
+  caps:escape		=	+capslock(escape)
+  caps:backspace	=	+capslock(backspace)
   ctrl:nocaps		=	+ctrl(nocaps)
   ctrl:swapcaps		=	+ctrl(swapcaps)
   ctrl:ctrl_ac		=	+ctrl(ctrl_ac)
@@ -947,7 +986,8 @@
   keypad:oss_wang       =	+keypad(oss_wang)
   keypad:future         =	+keypad(future)
   keypad:future_wang    =	+keypad(future_wang)
-  keypad:phone_hex      =	+keypad(phone_hex)
+  keypad:hex            =	+keypad(ops)+keypad(hex)
+  keypad:atm            =	+keypad(ops)+keypad(hex)+keypad(atm)  
   nbsp:none             =	+nbsp(none)
   nbsp:level2           =	+nbsp(level2)
   nbsp:level3           =	+nbsp(level3)
@@ -964,18 +1004,24 @@
   kpdl:commaoss         =	+kpdl(commaoss)
   kpdl:momayyezoss      =	+kpdl(momayyezoss)
   kpdl:kposs            =	+kpdl(kposs)
+  kpdl:semi             =	+kpdl(semi)
   shift:breaks_caps     =	+shift(breaks_caps)
+  esperanto:qwerty      =	+epo(qwerty)
+  esperanto:dvorak      =	+epo(dvorak)
+  terminate:ctrl_alt_bksp =	+terminate(ctrl_alt_bksp)
 
 
-! layout[4]	option	=	symbols
+
+! option	=	compat
   grp_led:num		=	+lednum(group_lock)
   grp_led:caps		=	+ledcaps(group_lock)
   grp_led:scroll	=	+ledscroll(group_lock)
   grp:caps_toggle	=	+ledcaps(group_lock)
   japan:kana_lock	=	+japan(kana_lock)
+  caps:shiftlock	=	+ledcaps(shift_lock)
 
 
-! option	=	symbols
+! option	=	types
   caps:internal			=	+caps(internal)
   caps:internal_nocancel	=	+caps(internal_nocancel)
   caps:shift			=	+caps(shift)
@@ -983,3 +1029,4 @@
   numpad:pc			=	+numpad(pc)
   numpad:mac			=	+numpad(mac)
   numpad:microsoft		=	+numpad(microsoft)
+  numpad:shift3       		=	+numpad(shift3)

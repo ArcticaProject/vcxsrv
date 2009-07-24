@@ -31,7 +31,7 @@ xkb_symbols "basic" {
     key <AD02> {  [      Arabic_sad,     Arabic_fathatan  ]     };
     key <AD03> {  [     Arabic_theh,     Arabic_damma     ]     };
     key <AD04> {  [      Arabic_qaf,     Arabic_dammatan  ]     };
-    key <AD05> {  [      Arabic_feh,       VoidSymbol     ]     };
+    key <AD05> {  [      Arabic_feh,     0x100fef9        ]     };
     key <AD06> {  [   Arabic_ghain, Arabic_hamzaunderalef ]     };
     key <AD07> {  [      Arabic_ain,         grave        ]     };
     key <AD08> {  [       Arabic_ha,        division      ]     };
@@ -44,7 +44,7 @@ xkb_symbols "basic" {
     key <AC02> {  [     Arabic_seen,   Arabic_kasratan    ]     };
     key <AC03> {  [      Arabic_yeh,       bracketright   ]     };
     key <AC04> {  [      Arabic_beh,       bracketleft    ]     };
-    key <AC05> {  [      Arabic_lam,       VoidSymbol     ]     };
+    key <AC05> {  [      Arabic_lam,       0x100fef7      ]     };
     key <AC06> {  [     Arabic_alef,   Arabic_hamzaonalef ]     };
     key <AC07> {  [      Arabic_teh,      Arabic_tatweel  ]     };
     key <AC08> {  [     Arabic_noon,      Arabic_comma    ]     };
@@ -57,7 +57,7 @@ xkb_symbols "basic" {
     key <AB02> {  [    Arabic_hamza,      Arabic_sukun    ]     };
     key <AB03> {  [Arabic_hamzaonwaw,      braceright     ]     };
     key <AB04> {  [       Arabic_ra,       braceleft      ]     };
-    key <AB05> {  [       VoidSymbol,      VoidSymbol     ]     };
+    key <AB05> {  [       0x100fefb,       0x100fef5      ]     };
     key <AB06> {  [Arabic_alefmaksura, Arabic_maddaonalef ]     };
     key <AB07> {  [Arabic_tehmarbuta,    apostrophe       ]     };
     key <AB08> {  [      Arabic_waw,         comma        ]     };

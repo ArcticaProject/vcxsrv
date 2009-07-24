@@ -1,4 +1,4 @@
-AC_INIT(xkeyboard-config, 1.4)
+AC_INIT(xkeyboard-config, 1.6)
 AC_CONFIG_SRCDIR(rules/base.xml.in)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
@@ -46,7 +46,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 
 AM_GLIB_GNU_GETTEXT
 
-ALL_LINGUAS="af az bg cs da el en_GB es fi fr hu it ka ko nl ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_TW"
+ALL_LINGUAS="af az bg ca crh cs da de el en_GB eo es fi fr hu id it ka ko ky lt nb nl ru rw sk sl sq sr sv tr uk vi zh_CN zh_TW"
 
 AC_SUBST(xkb_base)
 AC_SUBST(xkb_rules_symlink)
@@ -91,7 +91,7 @@ else
   echo "    Symbolic link(s) to legacy rules: $xkb_rules_symlink"
 fi
 
-if test "$enable_compat_rules" == "yes" ; then
+if test "$enable_compat_rules" = "yes" ; then
   echo "    Compatibility rules are included"
 else
   echo "    Compatibility rules are not included"

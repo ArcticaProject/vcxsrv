@@ -476,9 +476,16 @@ xkb_symbols "shs" {
 // OLPC Section
 xkb_symbols "olpc" {
 
-    include "fr"
-
-    key <AE03>	{ [          3,    slash,          ograve,        Ograve ] };
+    include "ca(fr)"
+    
+    key <AE02>	{ [          2,    quotedbl,          ograve,        Ograve ] };
+    key <AE03>	{ [          3,    slash,          at,        VoidSymbol ] };
+    
+    key <AD03>	{ [          e,    E,          EuroSign, VoidSymbol]	};
+        
+    key <AB09>	{ [  period,         period,         0x1002010 ]	};
+    
+    key <I219>  { [  guillemotleft,  guillemotright, degree, VoidSymbol ] };
 };
 
 partial alphanumeric_keys 
@@ -509,3 +516,10 @@ xkb_symbols "kut" {
     //MODIFIER LETTER RIGHT HALF RING
     key <AC10> {	[ semicolon,	colon,U02BE,U02BE	]	};
 };
+
+partial alphanumeric_keys 
+xkb_symbols "eng" {
+    name[Group1] = "Canada - English";
+    include "us(basic)"
+};
+

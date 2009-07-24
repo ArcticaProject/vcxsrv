@@ -38,20 +38,10 @@ default xkb_keycodes "macintosh" {
    
 };
 
-xkb_keycodes "badmap" {
-    <TLDE> =  94;
-    <LSGT> =  49;
-};
-
-xkb_keycodes "goodmap" {
-    <TLDE> =  49;
-    <LSGT> =  94;
-};
-
 xkb_keycodes "old" {
 
     minimum= 8;
-    maximum= 134;
+    maximum= 255;
 
     <ESC>  = 61;
     <TLDE> = 58;

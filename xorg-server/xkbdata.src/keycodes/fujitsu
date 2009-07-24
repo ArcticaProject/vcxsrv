@@ -27,7 +27,7 @@
 default xkb_keycodes "138" {
 
     minimum= 8;
-    maximum= 156;
+    maximum= 255;
 
     <ESC>  = 37;
     <AE01> = 38;

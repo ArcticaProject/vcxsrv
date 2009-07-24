@@ -1,14 +1,28 @@
 
 transform_files=layoutRename.lst variantRename.lst
 
-transform_scripts=ln_s.sh lnv_s.sh ml_s.sh mlv_s.sh ml1_s.sh ml1v_s.sh ml1v1_s.sh
+transform_scripts= \
+ln_s.sh \
+lnv_s.sh \
+ml_s.sh \
+mlv_s.sh \
+ml1_s.sh \
+ml1v_s.sh \
+ml1v1_s.sh
 
 dist_parts=base.o_s.part
 
-scripts=base.l2_s.part base.l3_s.part base.l4_s.part \
-base.l2v2_s.part base.l3v3_s.part base.l4v4_s.part \
-base.ml_s.part base.ml1_s.part \
-base.mlv_s.part base.ml1v1_s.part \
+scripts= \
+base.l2_s.part \
+base.l3_s.part \
+base.l4_s.part \
+base.l2v2_s.part \
+base.l3v3_s.part \
+base.l4v4_s.part \
+base.ml_s.part \
+base.ml1_s.part \
+base.mlv_s.part \
+base.ml1v1_s.part \
 base.ml_s.part
 
 if USE_COMPAT_RULES

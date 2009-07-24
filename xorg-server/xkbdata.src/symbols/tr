@@ -268,8 +268,7 @@ xkb_symbols "intl" {
     key <BKSL>	{ type[group1] = "FOUR_LEVEL",[     comma,  semicolon,   dead_grave, dead_grave ]	};
     key <LSGT>	{ type[group1] = "FOUR_LEVEL",[     less,     greater,   bar,    brokenbar ]	};
     key <AB08>	{ [odiaeresis, Odiaeresis,     multiply,   VoidSymbol ]	};
-    key <AB09>	{ [  ccedilla,   Ccedilla, periodcentered,     division ] 
-};
+    key <AB09>	{ [  ccedilla,   Ccedilla, periodcentered,   division ]	};
     key <AB10>	{ type[group1] = "FOUR_LEVEL",[    period,      colon, dead_abovedot, dead_abovedot ] };
 
     include "nbsp(level3)"
@@ -280,7 +279,76 @@ xkb_symbols "intl" {
 partial alphanumeric_keys
 xkb_symbols "olpc" {
     name[Group1]= "Turkey";
+    include "tr(intl)"
+
+    key <AE01>	{ [         1,    exclam,    VoidSymbol,    VoidSymbol ] };
+    key <AE06>	{ [         6,  ampersand, VoidSymbol,  VoidSymbol ]	};
+    key <AE12>	{ type[group1] = "FOUR_LEVEL", [     minus, underscore, bar,    VoidSymbol ]	};
+
+
+    key <AB03>  { [         c,           C,     leftdoublequotemark,     VoidSymbol ] };
+    key <AB04>  { [         v,           V,     rightdoublequotemark,     VoidSymbol ] };
+    key <AB05>  { [         b,           B,     VoidSymbol,     VoidSymbol ] };
+    key <AB08>	{ [odiaeresis, Odiaeresis,     VoidSymbol,   VoidSymbol ]	};
+
+    key <AB09>	{ [  ccedilla,   Ccedilla, multiply,     VoidSymbol ] };
+    key <AB10>	{ [    period,      colon, division, dead_abovedot ] };
+
+    key <I219> { [  less,  greater, VoidSymbol, VoidSymbol ] };
+
+};
+
+// Crimean Tatar (Crimean Turkish) layouts. 
+// These layouts are currently experimental. In particular, the mapping of letter 'x', 
+// included for foreign words and shortcuts, might change in the future...
+// Reşat SABIQ <tilde.birlik@gmail.com>, 2009
+
+// Crimean Tatar (Crimean Turkish) Q Layout
+partial
+xkb_symbols "crh" {
+
+    include "tr(basic)"
+
+    name[Group1]="Turkey - Crimean Tatar (Turkish Q)";
+
+    key <AE11>	{ [         x,          X,          asterisk,      question ]   };
+
+    key <AC04>	{ [         f,          F,          iacute,          Iacute ]	};
+    key <AC07>	{ [         j,          J,          ibreve,          Ibreve ]	};
+    key <TLDE>	{ [  quotedbl,  backslash,            less,          degree ]	};
+
+    key <AB02>	{ [    ntilde,     Ntilde,  guillemotright,         greater ]	};
+};
+
+// Crimean Tatar (Crimean Turkish) F Layout
+partial
+xkb_symbols "crh_f" {
+
     include "tr(f)"
 
-    key <I219> { [  less,  greater, bar, brokenbar ] };
+    name[Group1]="Turkey - Crimean Tatar (Turkish F)";
+
+    key <AE11>	{ [         x,          X,           slash,        question ]	};
+
+    key <AD04>	{ type[group1] = "FOUR_LEVEL_SEMIALPHABETIC",
+                  [  idotless,          I,          iacute,          Iacute ]	};
+
+    key <AC07>	{ [         k,          K,          ibreve,          Ibreve ]	};
+    key <TLDE>	{ [      plus,   asterisk,       backslash,       plusminus ]	};
+
+    key <BKSL>	{ [    ntilde,     Ntilde,           grave,      dead_grave ]	};
+};
+
+// Crimean Tatar (Crimean Turkish) Alt-Q Layout
+partial
+xkb_symbols "crh_alt" {
+
+    include "tr(alt)"
+
+    name[Group1]="Turkey - Crimean Tatar (Turkish Alt-Q)";
+
+    key <AC04>	{ [         f,          F,          iacute,          Iacute ]	};
+    key <AC07>	{ [         j,          J,          ibreve,          Ibreve ]	};
+
+    key <AB06>	{ [         n,          N,          ntilde,          Ntilde ]	};
 };

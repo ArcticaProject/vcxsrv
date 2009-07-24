@@ -62,7 +62,6 @@ xkb_symbols "basic" {
     key <AB10> {	[     slash,	question	]	};
 
     key <BKSL> {	[ backslash,         bar	]	};
-    key <CAPS> {	[ Caps_Lock	]	};
     // End alphanumeric section
 };
 

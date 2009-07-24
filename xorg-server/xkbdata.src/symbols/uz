@@ -99,3 +99,24 @@ xkb_symbols "latin" {
     key <AC11>  { [0x010002BB, quotedbl] };
 };
 
+// Crimean Tatar (Crimean Turkish) layouts.
+partial
+xkb_symbols "crh" {
+    include "tr(crh)"
+
+    name[Group1]="Uzbekistan - Crimean Tatar (Turkish Q)";
+};
+
+partial
+xkb_symbols "crh_f" {
+    include "tr(crh_f)"
+
+    name[Group1]="Uzbekistan - Crimean Tatar (Turkish F)";
+};
+
+partial
+xkb_symbols "crh_alt" {
+    include "tr(crh_alt)"
+
+    name[Group1]="Uzbekistan - Crimean Tatar (Turkish Alt-Q)";
+};

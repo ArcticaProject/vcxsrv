@@ -61,6 +61,50 @@ xkb_symbols "intl" {
     include "level3(ralt_switch)"
 };
 
+partial alphanumeric_keys 
+xkb_symbols "extd" {
+    // Clone of the Microsoft "United Kingdom - Extended" layout, which
+    // includes dead keys for: grave; diaeresis; circumflex; tilde; and
+    // accute. It also enables direct access to accute characters using
+    // the Multi_key (Alt Gr).
+    //
+    // Taken from...
+    //    "Windows Keyboard Layouts"
+    //    http://msdn.microsoft.com/en-us/goglobal/bb964651.aspx
+    //
+    // -- Jonathan Miles <jon@cybah.co.uk>
+
+    include "latin"
+
+    name[Group1]="United Kingdom - Extended - Winkeys";
+    
+    // Alphanumeric section
+    key <TLDE> { [ dead_grave,    notsign,       brokenbar,    NoSymbol ] };
+    
+    key <AE02> { [     2,        quotedbl,  dead_diaeresis,     onehalf ] };
+    key <AE03> { [     3,        sterling,   threesuperior,    onethird ] };
+    key <AE04> { [     4,          dollar,        EuroSign,  onequarter ] };
+    key <AE06> { [     6,     asciicircum, dead_circumflex,    NoSymbol ] };
+
+    key <AD02> { [   w,                 W,          wacute,      Wacute ] };
+    key <AD03> { [   e,                 E,          eacute,      Eacute ] };
+    key <AD06> { [   y,                 Y,          yacute,      Yacute ] };
+    key <AD07> { [   u,                 U,          uacute,      Uacute ] };
+    key <AD08> { [   i,                 I,          iacute,      Iacute ] };
+    key <AD09> { [   o,                 O,          oacute,      Oacute ] };
+
+    key <AC01> { [   a,                 A,          aacute,      Aacute ] };
+    key <AC11> { [  apostrophe,         at,     dead_acute,    NoSymbol ] };
+
+    key <AB03> { [   c,                 C,        ccedilla,    Ccedilla ] };
+
+    key <BKSL>  { [ numbersign, asciitilde,     dead_tilde,    NoSymbol ] };
+    key <LSGT>  { [  backslash,        bar,       NoSymbol,    NoSymbol ] };
+    // End alphanumeric section
+
+    include "level3(ralt_switch)"
+};
+
 // Describe the differences between the US Colemak layout
 // and a UK variant. By Andy Buckley (andy@insectnation.org)
 
@@ -93,11 +137,12 @@ xkb_symbols "dvorak" {
 
     name[Group1]="United Kingdom - Dvorak";
 
-    key <BKSL> { [ numbersign,	asciitilde	] };
+    key <AD01> { [ apostrophe,	at		] };
     key <AE02> { [	    2,	quotedbl,  twosuperior,   NoSymbol	] };
     key <AE03> { [	    3,	sterling,  threesuperior, NoSymbol	] };
+    key <BKSL> { [ numbersign,	asciitilde	] };
     key <LSGT> { [  backslash,	bar		] };
-    key <AD01> { [ apostrophe,	at		] };
+    key <TLDE> { [	grave,	notsign,   bar,           bar		] };
 };
 
 // Dvorak letter positions, but punctuation all in the normal UK positions.

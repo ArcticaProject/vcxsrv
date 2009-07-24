@@ -33,7 +33,7 @@ xkb_keymap "bg"	{
 };
 // us_intl and br by Ricardo Y. Igarashi (iga@that.com.br)
 xkb_keymap "br"	{
-    xkb_keycodes	{ include "xfree86(abnt2)"	};
+    xkb_keycodes	{ include "xfree86"	};
     xkb_types		{ include "default"		};
     xkb_compatibility	{ include "default"		};
     xkb_symbols		{ include "us(pc101)+br"	};
@@ -141,7 +141,7 @@ xkb_keymap "it"	{
     xkb_geometry 	{ include "pc(pc102)"		};
 };
 xkb_keymap "jp106" {
-    xkb_keycodes	{ include "xfree86(jp106)"	};
+    xkb_keycodes	{ include "xfree86"	};
     xkb_types		{ include "default"		};
     xkb_compatibility	{ include "default"		};
     xkb_symbols		{ include "jp(jp106)"		};
