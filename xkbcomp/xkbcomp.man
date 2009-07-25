@@ -1,9 +1,3 @@
-.\" $Xorg: xkbcomp.man,v 1.3 2000/08/17 19:54:33 cpqbld Exp $
-.\"
-.\"
-.\"
-.\"
-.\" $XFree86: xc/programs/xkbcomp/xkbcomp.man,v 1.11 2003/07/28 21:57:02 herrb Exp $
 .\"
 .TH XKBCOMP 1 __xorgversion__
 .SH NAME
@@ -62,6 +56,9 @@ xkb directory (usually __projectroot__/lib/X11/xkb) will be searched.
 To prevent the current and default directories from being searched,
 use the \-I option alone (i.e. without a directory), before any \-I
 options that specify the directories you do want searched.
+.TP 8
+.B \-i\ \fIdeviceid\fP
+Specifies device ID (not name) to compile for.
 .TP 8
 .B \-l
 List maps that specify the \fImap\fP pattern in any files listed on the

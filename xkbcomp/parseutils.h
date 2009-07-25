@@ -1,4 +1,3 @@
-/* $Xorg: parseutils.h,v 1.3 2000/08/17 19:54:33 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86$ */
 
 #ifndef XKBPARSE_H
 #define	XKBPARSE_H 1
@@ -35,11 +33,11 @@
 
 #include "xkbcomp.h"
 
-extern	char	*scanStr;
-extern	int	 scanInt;
-extern	int	 lineNum;
+extern char *scanStr;
+extern int scanInt;
+extern int lineNum;
 
-extern	XkbFile	*rtrnValue;
+extern XkbFile *rtrnValue;
 
 #ifdef DEBUG
 #define	d(str)		fprintf(stderr,"%s\n",str);
@@ -52,196 +50,158 @@ extern	XkbFile	*rtrnValue;
 #endif
 
 
-extern ParseCommon *AppendStmt(
-    ParseCommon *	/* to */,
-    ParseCommon *	/* append */
-);
+extern ParseCommon *AppendStmt(ParseCommon * /* to */ ,
+                               ParseCommon *    /* append */
+    );
 
-extern ExprDef *ExprCreate(
-    unsigned		/* op */,
-    unsigned		/* type */
-);
+extern ExprDef *ExprCreate(unsigned /* op */ ,
+                           unsigned     /* type */
+    );
 
-extern ExprDef *ExprCreateUnary(
-    unsigned	 	/* op */,
-    unsigned	 	/* type */,
-    ExprDef	*	/* child */
-);
+extern ExprDef *ExprCreateUnary(unsigned /* op */ ,
+                                unsigned /* type */ ,
+                                ExprDef *       /* child */
+    );
 
-extern ExprDef *ExprCreateBinary(
-    unsigned	 	/* op */,
-    ExprDef	*	/* left */,
-    ExprDef	*	/* right */
-);
+extern ExprDef *ExprCreateBinary(unsigned /* op */ ,
+                                 ExprDef * /* left */ ,
+                                 ExprDef *      /* right */
+    );
 
-extern KeycodeDef *KeycodeCreate(
-    char *		/* name */,
-    ExprDef *		/* value */
-);
+extern KeycodeDef *KeycodeCreate(char * /* name */ ,
+                                 ExprDef *      /* value */
+    );
 
-extern KeyAliasDef *KeyAliasCreate(
-    char *		/* alias */,
-    char *		/* real */
-);
+extern KeyAliasDef *KeyAliasCreate(char * /* alias */ ,
+                                   char *       /* real */
+    );
 
-extern VModDef *VModCreate(
-    Atom		/* name */,
-    ExprDef *		/* value */
-);
+extern VModDef *VModCreate(Atom /* name */ ,
+                           ExprDef *    /* value */
+    );
 
-extern VarDef *VarCreate(
-    ExprDef *		/* name */,
-    ExprDef *		/* value */
-);
+extern VarDef *VarCreate(ExprDef * /* name */ ,
+                         ExprDef *      /* value */
+    );
 
-extern VarDef *BoolVarCreate(
-    Atom		/* nameToken */,
-    unsigned		/* set */
-);
+extern VarDef *BoolVarCreate(Atom /* nameToken */ ,
+                             unsigned   /* set */
+    );
 
-extern InterpDef *InterpCreate(
-    KeySym		/* sym */,
-    ExprDef *		/* match */
-);
+extern InterpDef *InterpCreate(KeySym /* sym */ ,
+                               ExprDef *        /* match */
+    );
 
-extern KeyTypeDef *KeyTypeCreate(
-    Atom		/* name */,
-    VarDef *		/* body */
-);
+extern KeyTypeDef *KeyTypeCreate(Atom /* name */ ,
+                                 VarDef *       /* body */
+    );
 
-extern SymbolsDef *SymbolsCreate(
-    char *		/* keyName */,
-    ExprDef *		/* symbols */
-);
+extern SymbolsDef *SymbolsCreate(char * /* keyName */ ,
+                                 ExprDef *      /* symbols */
+    );
 
-extern GroupCompatDef *GroupCompatCreate(
-    int			/* group */,
-    ExprDef *		/* def */
-);
+extern GroupCompatDef *GroupCompatCreate(int /* group */ ,
+                                         ExprDef *      /* def */
+    );
 
-extern ModMapDef *ModMapCreate(
-    Atom		/* modifier */,
-    ExprDef *		/* keys */
-);
+extern ModMapDef *ModMapCreate(Atom /* modifier */ ,
+                               ExprDef *        /* keys */
+    );
 
-extern IndicatorMapDef *IndicatorMapCreate(
-    Atom		/* name */,
-    VarDef *		/* body */
-);
+extern IndicatorMapDef *IndicatorMapCreate(Atom /* name */ ,
+                                           VarDef *     /* body */
+    );
 
-extern IndicatorNameDef *IndicatorNameCreate(
-    int			/* ndx */,
-    ExprDef *		/* name */,
-    Bool		/* virtual */
-);
+extern IndicatorNameDef *IndicatorNameCreate(int /* ndx */ ,
+                                             ExprDef * /* name */ ,
+                                             Bool       /* virtual */
+    );
 
-extern ExprDef *ActionCreate(
-    Atom	 	/* name */,
-    ExprDef	*	/* args */
-);
+extern ExprDef *ActionCreate(Atom /* name */ ,
+                             ExprDef *  /* args */
+    );
 
-extern ExprDef *CreateKeysymList(
-    KeySym		/* sym */
-);
+extern ExprDef *CreateKeysymList(KeySym /* sym */
+    );
 
-extern ShapeDef *ShapeDeclCreate(
-    Atom		/* name */,
-    OutlineDef *	/* outlines */
-);
+extern ShapeDef *ShapeDeclCreate(Atom /* name */ ,
+                                 OutlineDef *   /* outlines */
+    );
 
-extern OutlineDef *OutlineCreate(
-    Atom		/* field */,
-    ExprDef *		/* points */
-);
+extern OutlineDef *OutlineCreate(Atom /* field */ ,
+                                 ExprDef *      /* points */
+    );
 
-extern KeyDef *KeyDeclCreate(
-    char *	/* name */,
-    ExprDef *	/* expr */
-);
+extern KeyDef *KeyDeclCreate(char * /* name */ ,
+                             ExprDef *  /* expr */
+    );
 
-extern KeyDef *KeyDeclMerge(
-    KeyDef *	/* into */,
-    KeyDef *	/* from */
-);
+extern KeyDef *KeyDeclMerge(KeyDef * /* into */ ,
+                            KeyDef *    /* from */
+    );
 
-extern RowDef *RowDeclCreate(
-    KeyDef *	/* keys */
-);
+extern RowDef *RowDeclCreate(KeyDef *   /* keys */
+    );
 
-extern SectionDef *SectionDeclCreate(
-    Atom	/* name */,
-    RowDef *	/* rows */
-);
+extern SectionDef *SectionDeclCreate(Atom /* name */ ,
+                                     RowDef *   /* rows */
+    );
 
-extern OverlayKeyDef *OverlayKeyCreate(
-    char *		/* under */,
-    char *		/* over  */
-);
+extern OverlayKeyDef *OverlayKeyCreate(char * /* under */ ,
+                                       char *   /* over  */
+    );
 
-extern OverlayDef *OverlayDeclCreate(
-    Atom		/* name */,
-    OverlayKeyDef *	/* rows */
-);
+extern OverlayDef *OverlayDeclCreate(Atom /* name */ ,
+                                     OverlayKeyDef *    /* rows */
+    );
 
-extern DoodadDef *DoodadCreate(
-    unsigned	/* type */,
-    Atom	/* name */,
-    VarDef *	/* body */
-);
+extern DoodadDef *DoodadCreate(unsigned /* type */ ,
+                               Atom /* name */ ,
+                               VarDef * /* body */
+    );
 
-extern ExprDef *AppendKeysymList(
-    ExprDef *	/* list */,
-    KeySym	/* sym */
-);
+extern ExprDef *AppendKeysymList(ExprDef * /* list */ ,
+                                 KeySym /* sym */
+    );
 
-extern int LookupKeysym(
-    char *	/* str */,
-    KeySym *	/* sym_rtrn */
-);
+extern int LookupKeysym(char * /* str */ ,
+                        KeySym *        /* sym_rtrn */
+    );
 
-extern	IncludeStmt *IncludeCreate(
-    char *	/* str */,
-    unsigned	/* merge */
-);
+extern IncludeStmt *IncludeCreate(char * /* str */ ,
+                                  unsigned      /* merge */
+    );
 
-extern unsigned StmtSetMerge(
-    ParseCommon *	/* stmt */,
-    unsigned		/* merge */
-);
+extern unsigned StmtSetMerge(ParseCommon * /* stmt */ ,
+                             unsigned   /* merge */
+    );
 
 #ifdef DEBUG
-extern void PrintStmtAddrs(
-    ParseCommon *	/* stmt */
-);
+extern void PrintStmtAddrs(ParseCommon *        /* stmt */
+    );
 #endif
 
-extern int XKBParseFile(
-    FILE  *		/* file */,
-    XkbFile **		/* pRtrn */
-);
+extern int XKBParseFile(FILE * /* file */ ,
+                        XkbFile **      /* pRtrn */
+    );
 
-extern XkbFile *CreateXKBFile(
-    int			/* type */,
-    char *		/* name */,
-    ParseCommon *	/* defs */,
-    unsigned		/* flags */
-);
+extern XkbFile *CreateXKBFile(int /* type */ ,
+                              char * /* name */ ,
+                              ParseCommon * /* defs */ ,
+                              unsigned  /* flags */
+    );
 
-extern void yyerror(
-    const char *		/* s */
-);
+extern void yyerror(const char *        /* s */
+    );
 
-extern int yywrap(
-    void
-);
+extern int yywrap(void);
 
 extern int yylex(void);
 extern int yyparse(void);
 
-extern int setScanState(
-    char *	/* file */,
-    int 	/* line */
-);
+extern int setScanState(char * /* file */ ,
+                        int     /* line */
+    );
 
 extern FILE *yyin;
 

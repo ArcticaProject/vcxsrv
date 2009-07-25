@@ -1,4 +1,3 @@
-/* $XFree86$ */
 
 #ifndef COMPAT_H
 #define COMPAT_H 1

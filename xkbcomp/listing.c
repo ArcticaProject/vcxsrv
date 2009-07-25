@@ -1,4 +1,3 @@
-/* $Xorg: listing.c,v 1.5 2001/02/09 02:05:49 xorgcvs Exp $ */
 /************************************************************
  Copyright 1996 by Silicon Graphics Computer Systems, Inc.
 
@@ -70,8 +69,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/programs/xkbcomp/listing.c,v 3.9 2001/12/14 20:01:57 dawes Exp $ */
-
 
 #include <stdio.h>
 #include <ctype.h>
@@ -83,19 +80,18 @@ SOFTWARE.
 #include <malloc.h>
 #endif
 
-#define	DEBUG_VAR_NOT_LOCAL
 #define	DEBUG_VAR listingDebug
 #include "xkbcomp.h"
 #include <stdlib.h>
-#ifndef X_NOT_POSIX
+
 #ifdef _POSIX_SOURCE
-#include <limits.h>
+# include <limits.h>
 #else
-#define _POSIX_SOURCE
-#include <limits.h>
-#undef _POSIX_SOURCE
+# define _POSIX_SOURCE
+# include <limits.h>
+# undef _POSIX_SOURCE
 #endif
-#endif
+
 #ifndef PATH_MAX
 #ifdef WIN32
 #define PATH_MAX 512
@@ -112,28 +108,13 @@ SOFTWARE.
 #endif
 
 #ifdef WIN32
-#include <windows.h>
-#define FileName(file) file.cFileName
-#undef TEXT
-#undef ALTERNATE
+# include <windows.h>
+# define FileName(file) file.cFileName
+# undef TEXT
+# undef ALTERNATE
 #else
-#define FileName(file) file->d_name
-#ifndef X_NOT_POSIX
-#include <dirent.h>
-#else
-#ifdef SYSV
-#include <dirent.h>
-#else
-#ifdef USG
-#include <dirent.h>
-#else
-#include <sys/dir.h>
-#ifndef dirent
-#define dirent direct
-#endif
-#endif
-#endif
-#endif
+# include <dirent.h>
+# define FileName(file) file->d_name
 #endif
 
 #include "xkbpath.h"
@@ -144,184 +125,213 @@ SOFTWARE.
 
 #define	lowbit(x)	((x) & (-(x)))
 
-static	int		szListing= 0;
-static	int		nListed= 0;
-static	int		nFilesListed= 0;
+unsigned int listingDebug;
 
-typedef struct _Listing {
-	char *		file;
-	char *		map;
+static int szListing = 0;
+static int nListed = 0;
+static int nFilesListed = 0;
+
+typedef struct _Listing
+{
+    char *file;
+    char *map;
 } Listing;
 
-static	int		szMapOnly;
-static	int		nMapOnly;
-static	char **		mapOnly;
+static int szMapOnly;
+static int nMapOnly;
+static char **mapOnly;
 
-static	Listing *	list= NULL;
+static Listing *list = NULL;
 
 /***====================================================================***/
 
 int
 AddMapOnly(char *map)
 {
-    if (nMapOnly>=szMapOnly) {
-	if (szMapOnly<1)	szMapOnly= 5;
-	else			szMapOnly*= 2;
-	mapOnly= uTypedRealloc(list,szMapOnly,char *);
-	if (!mapOnly) {
-	    WSGO("Couldn't allocate list of maps\n");
-	    return 0;
-	}
+    if (nMapOnly >= szMapOnly)
+    {
+        if (szMapOnly < 1)
+            szMapOnly = 5;
+        else
+            szMapOnly *= 2;
+        mapOnly = uTypedRealloc(list, szMapOnly, char *);
+        if (!mapOnly)
+        {
+            WSGO("Couldn't allocate list of maps\n");
+            return 0;
+        }
     }
-    mapOnly[nMapOnly++]= map;
+    mapOnly[nMapOnly++] = map;
     return 1;
 }
 
 int
-AddListing(char *file,char *map)
+AddListing(char *file, char *map)
 {
-    if (nListed>=szListing) {
-	if (szListing<1)	szListing= 10;
-	else			szListing*= 2;
-	list= uTypedRealloc(list,szListing,Listing);
-	if (!list) {
-	    WSGO("Couldn't allocate list of files and maps\n");
-	    ACTION("Exiting\n");
-	    exit(1);
-	}
+    if (nListed >= szListing)
+    {
+        if (szListing < 1)
+            szListing = 10;
+        else
+            szListing *= 2;
+        list = uTypedRealloc(list, szListing, Listing);
+        if (!list)
+        {
+            WSGO("Couldn't allocate list of files and maps\n");
+            ACTION("Exiting\n");
+            exit(1);
+        }
     }
 
-    list[nListed].file= file;
-    list[nListed].map= map;
+    list[nListed].file = file;
+    list[nListed].map = map;
     nListed++;
-    if (file!=NULL)
-	nFilesListed++;
+    if (file != NULL)
+        nFilesListed++;
     return 1;
 }
 
 /***====================================================================***/
 
 static void
-ListFile(FILE *outFile,char *fileName,XkbFile *map)
+ListFile(FILE * outFile, char *fileName, XkbFile * map)
 {
-register unsigned	flags;
-char *			mapName;
+    register unsigned flags;
+    char *mapName;
 
-    flags= map->flags;
-    if ((flags&XkbLC_Hidden)&&(!(verboseLevel&WantHiddenMaps)))
-	return;
-    if ((flags&XkbLC_Partial)&&(!(verboseLevel&WantPartialMaps)))
-	return;
-    if (verboseLevel&WantLongListing) {
-	fprintf(outFile,(flags&XkbLC_Hidden)?"h":"-");
-	fprintf(outFile,(flags&XkbLC_Default)?"d":"-");
-	fprintf(outFile,(flags&XkbLC_Partial)?"p":"-");
-	fprintf(outFile,"----- ");
-	if (map->type==XkmSymbolsIndex) {
-	    fprintf(outFile,(flags&XkbLC_AlphanumericKeys)?"a":"-");
-	    fprintf(outFile,(flags&XkbLC_ModifierKeys)?"m":"-");
-	    fprintf(outFile,(flags&XkbLC_KeypadKeys)?"k":"-");
-	    fprintf(outFile,(flags&XkbLC_FunctionKeys)?"f":"-");
-	    fprintf(outFile,(flags&XkbLC_AlternateGroup)?"g":"-");
-	    fprintf(outFile,"--- ");
-	}
-        else fprintf(outFile,"-------- ");
+    flags = map->flags;
+    if ((flags & XkbLC_Hidden) && (!(verboseLevel & WantHiddenMaps)))
+        return;
+    if ((flags & XkbLC_Partial) && (!(verboseLevel & WantPartialMaps)))
+        return;
+    if (verboseLevel & WantLongListing)
+    {
+        fprintf(outFile, (flags & XkbLC_Hidden) ? "h" : "-");
+        fprintf(outFile, (flags & XkbLC_Default) ? "d" : "-");
+        fprintf(outFile, (flags & XkbLC_Partial) ? "p" : "-");
+        fprintf(outFile, "----- ");
+        if (map->type == XkmSymbolsIndex)
+        {
+            fprintf(outFile, (flags & XkbLC_AlphanumericKeys) ? "a" : "-");
+            fprintf(outFile, (flags & XkbLC_ModifierKeys) ? "m" : "-");
+            fprintf(outFile, (flags & XkbLC_KeypadKeys) ? "k" : "-");
+            fprintf(outFile, (flags & XkbLC_FunctionKeys) ? "f" : "-");
+            fprintf(outFile, (flags & XkbLC_AlternateGroup) ? "g" : "-");
+            fprintf(outFile, "--- ");
+        }
+        else
+            fprintf(outFile, "-------- ");
     }
-    mapName= map->name;
-    if ((!(verboseLevel&WantFullNames))&&((flags&XkbLC_Default)!=0))
-	mapName= NULL;
-    if (dirsToStrip>0) {
-	char *tmp,*last;
-	int	i;
-	for (i=0,tmp=last=fileName;(i<dirsToStrip)&&tmp;i++) {
-	    last= tmp;
-	    tmp= strchr(tmp,'/');
-	    if (tmp!=NULL)
-		tmp++;
-	}
-	fileName= (tmp?tmp:last);
+    mapName = map->name;
+    if ((!(verboseLevel & WantFullNames)) && ((flags & XkbLC_Default) != 0))
+        mapName = NULL;
+    if (dirsToStrip > 0)
+    {
+        char *tmp, *last;
+        int i;
+        for (i = 0, tmp = last = fileName; (i < dirsToStrip) && tmp; i++)
+        {
+            last = tmp;
+            tmp = strchr(tmp, '/');
+            if (tmp != NULL)
+                tmp++;
+        }
+        fileName = (tmp ? tmp : last);
     }
     if (mapName)
-	 fprintf(outFile,"%s(%s)\n",fileName,mapName);
-    else fprintf(outFile,"%s\n",fileName);
+        fprintf(outFile, "%s(%s)\n", fileName, mapName);
+    else
+        fprintf(outFile, "%s\n", fileName);
     return;
 }
 
 /***====================================================================***/
 
 static int
-AddDirectory(char *head,char *ptrn,char *rest,char *map)
+AddDirectory(char *head, char *ptrn, char *rest, char *map)
 {
 #ifdef WIN32
-    HANDLE		dirh;
-    WIN32_FIND_DATA	file;
+    HANDLE dirh;
+    WIN32_FIND_DATA file;
 #else
-    DIR			*dirp;
-    struct dirent	*file;
+    DIR *dirp;
+    struct dirent *file;
 #endif
-    int			nMatch;
+    int nMatch;
 
-    if (map==NULL) {
-	char *tmp = ptrn;
-	if ((rest==NULL)&&(ptrn!=NULL)&&(strchr(ptrn,'/')==NULL)) {
-	    tmp= ptrn;
-	    map= strchr(ptrn,'(');
-	}
-	else if ((rest==NULL)&&(ptrn==NULL)&&
-				(head!=NULL)&&(strchr(head,'/')==NULL)) {
-	    tmp= head;
-	    map= strchr(head,'(');
-	}
-	if (map!=NULL) {
-	    tmp= strchr(tmp,')');
-	    if ((tmp==NULL)||(tmp[1]!='\0')) {
-		ERROR1("File and map must have the format file(map)\n");
-		return 0;
-	    }
-	    *map= '\0'; map++;
-	    *tmp= '\0';
-	}
+    if (map == NULL)
+    {
+        char *tmp = ptrn;
+        if ((rest == NULL) && (ptrn != NULL) && (strchr(ptrn, '/') == NULL))
+        {
+            tmp = ptrn;
+            map = strchr(ptrn, '(');
+        }
+        else if ((rest == NULL) && (ptrn == NULL) &&
+                 (head != NULL) && (strchr(head, '/') == NULL))
+        {
+            tmp = head;
+            map = strchr(head, '(');
+        }
+        if (map != NULL)
+        {
+            tmp = strchr(tmp, ')');
+            if ((tmp == NULL) || (tmp[1] != '\0'))
+            {
+                ERROR1("File and map must have the format file(map)\n");
+                return 0;
+            }
+            *map = '\0';
+            map++;
+            *tmp = '\0';
+        }
     }
 #ifdef WIN32
     if ((dirh = FindFirstFile("*.*", &file)) == INVALID_HANDLE_VALUE)
-	return 0;
+        return 0;
 #else
-    if ((dirp = opendir ((head?head:"."))) == NULL)
-	return 0;
-    nMatch= 0;
+    if ((dirp = opendir((head ? head : "."))) == NULL)
+        return 0;
+    nMatch = 0;
 #endif
 #ifdef WIN32
     do
 #else
-    while ((file = readdir (dirp)) != NULL)
+    while ((file = readdir(dirp)) != NULL)
 #endif
     {
-	char *tmp,*filename;
-	struct stat sbuf;
+        char *tmp, *filename;
+        struct stat sbuf;
 
-	filename= FileName(file);
-	if (!filename || filename[0]=='.') 
-	    continue;
-	if (ptrn && (!XkbNameMatchesPattern(filename,ptrn)))
-	    continue;
-	tmp= (char *)uAlloc((head?strlen(head):0)+strlen(filename)+2);
-	if (!tmp)
-	    continue;
-	sprintf(tmp,"%s%s%s",(head?head:""),(head?"/":""),filename);
-	if (stat(tmp,&sbuf)<0) {
-	    uFree(tmp);
-	    continue;
-	}
-	if (((rest!=NULL)&&(!S_ISDIR(sbuf.st_mode)))||
-				    ((map!=NULL)&&(S_ISDIR(sbuf.st_mode)))) {
-	    uFree(tmp);
-	    continue;
-	}
-	if (S_ISDIR(sbuf.st_mode)) {
-	     if ((rest!=NULL)||(verboseLevel&ListRecursive))
-		nMatch+= AddDirectory(tmp,rest,NULL,map);
-	}
-	else nMatch+= AddListing(tmp,map);
+        filename = FileName(file);
+        if (!filename || filename[0] == '.')
+            continue;
+        if (ptrn && (!XkbNameMatchesPattern(filename, ptrn)))
+            continue;
+        tmp =
+            (char *) uAlloc((head ? strlen(head) : 0) + strlen(filename) + 2);
+        if (!tmp)
+            continue;
+        sprintf(tmp, "%s%s%s", (head ? head : ""), (head ? "/" : ""),
+                filename);
+        if (stat(tmp, &sbuf) < 0)
+        {
+            uFree(tmp);
+            continue;
+        }
+        if (((rest != NULL) && (!S_ISDIR(sbuf.st_mode))) ||
+            ((map != NULL) && (S_ISDIR(sbuf.st_mode))))
+        {
+            uFree(tmp);
+            continue;
+        }
+        if (S_ISDIR(sbuf.st_mode))
+        {
+            if ((rest != NULL) || (verboseLevel & ListRecursive))
+                nMatch += AddDirectory(tmp, rest, NULL, map);
+        }
+        else
+            nMatch += AddListing(tmp, map);
     }
 #ifdef WIN32
     while (FindNextFile(dirh, &file));
@@ -334,42 +344,53 @@ AddDirectory(char *head,char *ptrn,char *rest,char *map)
 Bool
 AddMatchingFiles(char *head_in)
 {
-char 	*str,*head,*ptrn,*rest= NULL;
+    char *str, *head, *ptrn, *rest = NULL;
 
-    if (head_in==NULL)
-	return 0;
-    ptrn= NULL;
-    for (str=head_in;(*str!='\0')&&(*str!='?')&&(*str!='*');str++) {
-	if ((str!=head_in)&&(*str=='/'))
-	    ptrn= str;
+    if (head_in == NULL)
+        return 0;
+    ptrn = NULL;
+    for (str = head_in; (*str != '\0') && (*str != '?') && (*str != '*');
+         str++)
+    {
+        if ((str != head_in) && (*str == '/'))
+            ptrn = str;
     }
-    if (*str=='\0') { /* no wildcards */
-	head= head_in;
-	ptrn= NULL;
-	rest= NULL;
+    if (*str == '\0')
+    {                           /* no wildcards */
+        head = head_in;
+        ptrn = NULL;
+        rest = NULL;
     }
-    else if (ptrn==NULL) { /* no slash before the first wildcard */
-	head= NULL;
-	ptrn= head_in;
+    else if (ptrn == NULL)
+    {                           /* no slash before the first wildcard */
+        head = NULL;
+        ptrn = head_in;
     }
-    else {	/* slash followed by wildcard */
-	head= head_in;
-	*ptrn= '\0'; ptrn++;
+    else
+    {                           /* slash followed by wildcard */
+        head = head_in;
+        *ptrn = '\0';
+        ptrn++;
     }
-    if (ptrn) {
-	rest= strchr(ptrn,'/');
-	if (rest!=NULL) {
-	    *rest= '\0';
-	    rest++;
-	}
+    if (ptrn)
+    {
+        rest = strchr(ptrn, '/');
+        if (rest != NULL)
+        {
+            *rest = '\0';
+            rest++;
+        }
     }
-    if(((rest && ptrn)&&((strchr(ptrn,'(')!=NULL)||(strchr(ptrn,')')!=NULL)))||
-	(head && ((strchr(head,'(')!=NULL)||(strchr(head,')')!=NULL)))) {
-	ERROR1("Files/maps to list must have the form file(map)\n");
-	ACTION("Illegal specifier ignored\n");
-	return 0;
+    if (((rest && ptrn)
+         && ((strchr(ptrn, '(') != NULL) || (strchr(ptrn, ')') != NULL)))
+        || (head
+            && ((strchr(head, '(') != NULL) || (strchr(head, ')') != NULL))))
+    {
+        ERROR1("Files/maps to list must have the form file(map)\n");
+        ACTION("Illegal specifier ignored\n");
+        return 0;
     }
-    return AddDirectory(head,ptrn,rest,NULL);
+    return AddDirectory(head, ptrn, rest, NULL);
 }
 
 /***====================================================================***/
@@ -377,15 +398,16 @@ char 	*str,*head,*ptrn,*rest= NULL;
 static Bool
 MapMatches(char *mapToConsider, char *ptrn)
 {
-int	i;
+    int i;
 
-    if (ptrn!=NULL)
-	return XkbNameMatchesPattern(mapToConsider,ptrn);
-    if (nMapOnly<1)
-	return True;
-    for (i=0;i<nMapOnly;i++) {
-	if (XkbNameMatchesPattern(mapToConsider,mapOnly[i]))
-	    return True;
+    if (ptrn != NULL)
+        return XkbNameMatchesPattern(mapToConsider, ptrn);
+    if (nMapOnly < 1)
+        return True;
+    for (i = 0; i < nMapOnly; i++)
+    {
+        if (XkbNameMatchesPattern(mapToConsider, mapOnly[i]))
+            return True;
     }
     return False;
 }
@@ -393,70 +415,81 @@ int	i;
 int
 GenerateListing(char *out_name)
 {
-int		i;
-FILE *		inputFile,*outFile;
-XkbFile *	rtrn,*mapToUse;
-unsigned	oldWarningLevel;
-char *		mapName;
+    int i;
+    FILE *inputFile, *outFile;
+    XkbFile *rtrn, *mapToUse;
+    unsigned oldWarningLevel;
+    char *mapName;
 
-    if (nFilesListed<1) {
-	ERROR1("Must specify at least one file or pattern to list\n");
-	return 0;
+    if (nFilesListed < 1)
+    {
+        ERROR1("Must specify at least one file or pattern to list\n");
+        return 0;
     }
-    if ((!out_name)||((out_name[0]=='-')&&(out_name[1]=='\0')))
-	outFile= stdout;
-    else if ((outFile=fopen(out_name,"w"))==NULL) {
-	ERROR1("Cannot open \"%s\" to write keyboard description\n",out_name);
-	ACTION("Exiting\n");
-	return 0;
+    if ((!out_name) || ((out_name[0] == '-') && (out_name[1] == '\0')))
+        outFile = stdout;
+    else if ((outFile = fopen(out_name, "w")) == NULL)
+    {
+        ERROR1("Cannot open \"%s\" to write keyboard description\n",
+               out_name);
+        ACTION("Exiting\n");
+        return 0;
     }
 #ifdef DEBUG
-    if (warningLevel>9)
-	fprintf(stderr,"should list:\n");
+    if (warningLevel > 9)
+        fprintf(stderr, "should list:\n");
 #endif
-    for (i=0;i<nListed;i++) {
+    for (i = 0; i < nListed; i++)
+    {
 #ifdef DEBUG
-	if (warningLevel>9) {
-	    fprintf(stderr,"%s(%s)\n",(list[i].file?list[i].file:"*"),
-					(list[i].map?list[i].map:"*"));
-	}
+        if (warningLevel > 9)
+        {
+            fprintf(stderr, "%s(%s)\n",
+                    (list[i].file ? list[i].file : "*"),
+                    (list[i].map ? list[i].map : "*"));
+        }
 #endif
-	oldWarningLevel= warningLevel;
-	warningLevel= 0;
-	if (list[i].file) {
-	    struct stat sbuf;
-	    
-	    if (stat(list[i].file,&sbuf)<0) {
-		if (oldWarningLevel>5)
-		    WARN1("Couldn't open \"%s\"\n",list[i].file);
-		continue;
-	    }
-	    if (S_ISDIR(sbuf.st_mode)) {
-		if (verboseLevel&ListRecursive)
-		    AddDirectory(list[i].file,NULL,NULL,NULL);
-		continue;
-	    }
+        oldWarningLevel = warningLevel;
+        warningLevel = 0;
+        if (list[i].file)
+        {
+            struct stat sbuf;
 
-	    inputFile= fopen(list[i].file,"r");
-	    if (!inputFile) {
-		if (oldWarningLevel>5)
-		    WARN1("Couldn't open \"%s\"\n",list[i].file);
-		continue;
-	    }
-	    setScanState(list[i].file, 1);
-	    if (XKBParseFile(inputFile,&rtrn)&&(rtrn!=NULL)) {
-		mapName= list[i].map;
-		mapToUse= rtrn;
-		for (;mapToUse;mapToUse= (XkbFile *)mapToUse->common.next) {
-		    if (!MapMatches(mapToUse->name,mapName))
-			continue;
-		    ListFile(outFile,list[i].file,mapToUse);
-		}
-	    }
-	    fclose(inputFile);
-	}
-	warningLevel= oldWarningLevel;
+            if (stat(list[i].file, &sbuf) < 0)
+            {
+                if (oldWarningLevel > 5)
+                    WARN1("Couldn't open \"%s\"\n", list[i].file);
+                continue;
+            }
+            if (S_ISDIR(sbuf.st_mode))
+            {
+                if (verboseLevel & ListRecursive)
+                    AddDirectory(list[i].file, NULL, NULL, NULL);
+                continue;
+            }
+
+            inputFile = fopen(list[i].file, "r");
+            if (!inputFile)
+            {
+                if (oldWarningLevel > 5)
+                    WARN1("Couldn't open \"%s\"\n", list[i].file);
+                continue;
+            }
+            setScanState(list[i].file, 1);
+            if (XKBParseFile(inputFile, &rtrn) && (rtrn != NULL))
+            {
+                mapName = list[i].map;
+                mapToUse = rtrn;
+                for (; mapToUse; mapToUse = (XkbFile *) mapToUse->common.next)
+                {
+                    if (!MapMatches(mapToUse->name, mapName))
+                        continue;
+                    ListFile(outFile, list[i].file, mapToUse);
+                }
+            }
+            fclose(inputFile);
+        }
+        warningLevel = oldWarningLevel;
     }
     return 1;
 }
-

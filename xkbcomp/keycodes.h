@@ -1,4 +1,3 @@
-/* $Xorg: keycodes.h,v 1.3 2000/08/17 19:54:32 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,21 +23,18 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86$ */
 
 #ifndef KEYCODES_H
 #define KEYCODES_H 1
 
 #define	KeyNameToLong(n)	((((unsigned long)n[0])<<24)|(((unsigned long)n[1])<<16)|(((unsigned long)n[2])<<8)|n[3])
 
-extern char * longText(
-    unsigned long 	/* val */,
-    unsigned		/* format */
-);
+extern char *longText(unsigned long /* val */ ,
+                      unsigned  /* format */
+    );
 
-extern void LongToKeyName(
-	unsigned long	/* val */,
-	char *		/* name_rtrn */
-);
+extern void LongToKeyName(unsigned long /* val */ ,
+                          char *        /* name_rtrn */
+    );
 
 #endif /* KEYCODES_H */

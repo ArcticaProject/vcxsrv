@@ -1,4 +1,3 @@
-/* $Xorg: alias.h,v 1.3 2000/08/17 19:54:30 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1995 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,38 +23,34 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86$ */
 
 #ifndef ALIAS_H
 #define ALIAS_H 1
 
-typedef struct _AliasInfo {
-	CommonInfo		def;
-	char			alias[XkbKeyNameLength+1];
-	char			real[XkbKeyNameLength+1];
+typedef struct _AliasInfo
+{
+    CommonInfo def;
+    char alias[XkbKeyNameLength + 1];
+    char real[XkbKeyNameLength + 1];
 } AliasInfo;
 
-extern int HandleAliasDef(
-	KeyAliasDef *		/* def   */,
-	unsigned		/* merge */,
-	unsigned		/* file_id */,
-	AliasInfo **		/* info  */
-);
+extern int HandleAliasDef(KeyAliasDef * /* def   */ ,
+                          unsigned /* merge */ ,
+                          unsigned /* file_id */ ,
+                          AliasInfo **  /* info  */
+    );
 
-extern void ClearAliases(
-	AliasInfo **		/* info */
-);
+extern void ClearAliases(AliasInfo **   /* info */
+    );
 
-extern Bool MergeAliases(
-	AliasInfo **		/* into */,
-	AliasInfo **		/* merge */,
-	unsigned		/* how_merge */
-);
+extern Bool MergeAliases(AliasInfo ** /* into */ ,
+                         AliasInfo ** /* merge */ ,
+                         unsigned       /* how_merge */
+    );
 
-extern int ApplyAliases(
-	XkbDescPtr		/* xkb */,
-	Bool			/* toGeom */,
-	AliasInfo **		/* info */
-);
+extern int ApplyAliases(XkbDescPtr /* xkb */ ,
+                        Bool /* toGeom */ ,
+                        AliasInfo **    /* info */
+    );
 
 #endif /* ALIAS_H */

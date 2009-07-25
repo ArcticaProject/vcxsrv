@@ -2,12 +2,11 @@
 #define	UTILS_H 1
 
   /*\
-   * $Xorg: utils.h,v 1.3 2000/08/17 19:54:33 cpqbld Exp $
    *
-   *		              COPYRIGHT 1990
-   *		        DIGITAL EQUIPMENT CORPORATION
-   *		           MAYNARD, MASSACHUSETTS
-   *			    ALL RIGHTS RESERVED.
+   *                          COPYRIGHT 1990
+   *                    DIGITAL EQUIPMENT CORPORATION
+   *                       MAYNARD, MASSACHUSETTS
+   *                        ALL RIGHTS RESERVED.
    *
    * THE INFORMATION IN THIS SOFTWARE IS SUBJECT TO CHANGE WITHOUT NOTICE AND
    * SHOULD NOT BE CONSTRUED AS A COMMITMENT BY DIGITAL EQUIPMENT CORPORATION.
@@ -26,8 +25,7 @@
    * documentation, and that the name of Digital Equipment Corporation not be
    * used in advertising or publicity pertaining to distribution of the 
    * software without specific, written prior permission.
-  \*/
-/* $XFree86: xc/programs/xkbcomp/utils.h,v 3.5 2002/06/05 00:00:37 dawes Exp $ */
+   \*/
 
 /***====================================================================***/
 
@@ -37,6 +35,7 @@
 #include	<X11/Xfuncs.h>
 
 #include <stddef.h>
+#include "config.h"
 
 #ifndef NUL
 #define	NUL	'\0'
@@ -45,14 +44,14 @@
 /***====================================================================***/
 
 #ifndef OPAQUE_DEFINED
-typedef	void *Opaque;
+typedef void *Opaque;
 #endif
 #ifndef NullOpaque
 #define	NullOpaque	((Opaque)NULL)
 #endif
 
 #ifndef BOOLEAN_DEFINED
-typedef	char	Boolean;
+typedef char Boolean;
 #endif
 
 #ifndef True
@@ -62,7 +61,7 @@ typedef	char	Boolean;
 #define	booleanText(b)	((b)?"True":"False")
 
 #ifndef COMPARISON_DEFINED
-typedef	int		Comparison;
+typedef int Comparison;
 
 #define	Greater		((Comparison)1)
 #define	Equal		((Comparison)0)
@@ -71,37 +70,23 @@ typedef	int		Comparison;
 #define	comparisonText(c)	((c)?((c)<0?"Less":"Greater"):"Equal")
 #endif
 
-#if 0
-typedef union {
-	int		 i;
-	unsigned	 u;
-	void		*p;
-	void		*(*fp)();
-} Union;
-#endif
-
 /***====================================================================***/
 
-extern	Opaque	uAlloc(
-    unsigned	/* size */
-);
-extern	Opaque	uCalloc(
-    unsigned	/* n */,
-    unsigned	/* size */
-);
-extern	Opaque	uRealloc(
-    Opaque	/* old */,
-    unsigned	/* newSize */
-);
-extern	Opaque	uRecalloc(
-    Opaque 	/* old */,
-    unsigned	/* nOld */,
-    unsigned	/* nNew */,
-    unsigned 	/* newSize */
-);
-extern	void	uFree(
-    Opaque	/* ptr */
-);
+extern Opaque uAlloc(unsigned   /* size */
+    );
+extern Opaque uCalloc(unsigned /* n */ ,
+                      unsigned  /* size */
+    );
+extern Opaque uRealloc(Opaque /* old */ ,
+                       unsigned /* newSize */
+    );
+extern Opaque uRecalloc(Opaque /* old */ ,
+                        unsigned /* nOld */ ,
+                        unsigned /* nNew */ ,
+                        unsigned        /* newSize */
+    );
+extern void uFree(Opaque        /* ptr */
+    );
 
 #define	uTypedAlloc(t)		((t *)uAlloc((unsigned)sizeof(t)))
 #define	uTypedCalloc(n,t)	((t *)uCalloc((unsigned)n,(unsigned)sizeof(t)))
@@ -117,9 +102,8 @@ extern	void	uFree(
 
 /***====================================================================***/
 
-extern	Boolean	uSetErrorFile(
-	char *	/* name */
-);
+extern Boolean uSetErrorFile(char *     /* name */
+    );
 
 #define INFO6 			uInformation
 #define INFO5 			uInformation
@@ -129,14 +113,14 @@ extern	Boolean	uSetErrorFile(
 #define INFO1 			uInformation
 #define INFO 			uInformation
 
-extern	void	uInformation(
-	const char * /* s */, ...
-)
+extern void
+uInformation(const char * /* s */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
 #define ACTION6			uAction
 #define ACTION5			uAction
@@ -146,14 +130,13 @@ __attribute__((format(printf, 1, 2)))
 #define ACTION1			uAction
 #define ACTION			uAction
 
-extern	void	uAction(
-	const char * /* s  */, ...
-)
+     extern void uAction(const char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
 #define WARN6			uWarning
 #define WARN5			uWarning
@@ -163,14 +146,13 @@ __attribute__((format(printf, 1, 2)))
 #define WARN1			uWarning
 #define WARN			uWarning
 
-extern	void	uWarning(
-	const char * /* s  */, ...
-)
+     extern void uWarning(const char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
 #define ERROR6			uError
 #define ERROR5			uError
@@ -180,14 +162,13 @@ __attribute__((format(printf, 1, 2)))
 #define ERROR1			uError
 #define ERROR			uError
 
-extern	void	uError(
-	const char * /* s  */, ...
-)
+     extern void uError(const char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
 #define FATAL6			uFatalError
 #define FATAL5			uFatalError
@@ -197,14 +178,13 @@ __attribute__((format(printf, 1, 2)))
 #define FATAL1			uFatalError
 #define FATAL			uFatalError
 
-extern	void	uFatalError(
-	const char * /* s  */, ...
-)
+     extern void uFatalError(const char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
 /* WSGO stands for "Weird Stuff Going On" */
 #define WSGO6			uInternalError
@@ -215,30 +195,24 @@ __attribute__((format(printf, 1, 2)))
 #define WSGO1			uInternalError
 #define WSGO			uInternalError
 
-extern	void	uInternalError(
-	const char * /* s  */, ...
-)
+     extern void uInternalError(const char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
-extern	void	uSetPreErrorMessage(
-	char * /* msg */
-);
+     extern void uSetPreErrorMessage(char *     /* msg */
+    );
 
-extern	void	uSetPostErrorMessage(
-	char * /* msg */
-);
+     extern void uSetPostErrorMessage(char *    /* msg */
+    );
 
-extern	void	uSetErrorPrefix(
-	char * /* void */
-);
+     extern void uSetErrorPrefix(char * /* void */
+    );
 
-extern	void	uFinishUp(
-	void
-);
+     extern void uFinishUp(void);
 
 
 /***====================================================================***/
@@ -255,21 +229,18 @@ extern	void	uFinishUp(
 #define	uStrCaseCmp(s1,s2)	(strcasecmp(s1,s2))
 #define	uStrCasePrefix(p,s)	(strncasecmp(p,s,strlen(p))==0)
 #else
-extern	int uStrCaseCmp(
-	const char *	/* s1 */,
-	const char *	/* s2 */
-);
-extern	int uStrCasePrefix(
-	const char *	/* p */,
-	char *	/* str */
-);
+     extern int uStrCaseCmp(const char * /* s1 */ ,
+                            const char *        /* s2 */
+    );
+     extern int uStrCasePrefix(const char * /* p */ ,
+                               char *   /* str */
+    );
 #endif
 #ifdef HAVE_STRDUP
-#define	uStringDup(s1)		(strdup(s1))
+#define	uStringDup(s1)		((s1) ? strdup(s1) : NULL)
 #else
-extern	char *uStringDup(
-	const char *	/* s1 */
-);
+     extern char *uStringDup(const char *       /* s1 */
+    );
 #endif
 
 /***====================================================================***/
@@ -287,36 +258,31 @@ extern	char *uStringDup(
 #define	DEBUG_VAR	debugFlags
 #endif
 
-#ifdef DEBUG_VAR_NOT_LOCAL
 extern
-#endif
-unsigned	int	DEBUG_VAR;
+     unsigned int DEBUG_VAR;
 
-extern	void	uDebug(
-	char * /* s  */, ...
-)
+     extern void uDebug(char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
-extern	void	uDebugNOI(	/* no indent */
-	char * /* s  */, ...
-)
+     extern void uDebugNOI(     /* no indent */
+                              char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 1, 2)))
+    __attribute__ ((format(printf, 1, 2)))
 #endif
-;
+    ;
 
-extern	Boolean	uSetDebugFile(
-    char *name
-);
+     extern Boolean uSetDebugFile(char *name);
 
-extern	FILE	*uDebugFile;
-extern	int	uDebugIndentLevel;
-extern	int	uDebugIndentSize;
+     extern FILE *uDebugFile;
+     extern int uDebugIndentLevel;
+     extern int uDebugIndentSize;
 #define	uDebugIndent(l)		(uDebugIndentLevel+=(l))
 #define	uDebugOutdent(l)	(uDebugIndentLevel-=(l))
 #ifdef DEBUG_ON
@@ -347,29 +313,24 @@ extern	int	uDebugIndentSize;
 #define	uDEBUG_NOI5(f,s,a,b,c,d,e)
 #endif
 
-extern	Boolean	uSetEntryFile(
-    char *name
-);
-extern	void	uEntry(
-	int	/* l */,
-	char *	/* s  */, ...
-)
+     extern Boolean uSetEntryFile(char *name);
+     extern void uEntry(int /* l */ ,
+                        char * /* s  */ , ...
+    )
 #if defined(__GNUC__) && \
     ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ >= 6)))
-__attribute__((format(printf, 2, 3)))
+    __attribute__ ((format(printf, 2, 3)))
 #endif
-;
+    ;
 
-extern	void	uExit(
-    int l,char *rtVal
-);
+     extern void uExit(int l, char *rtVal);
 #ifdef ENTRY_TRACKING_ON
 #define	ENTRY_BIT	0x10
 #define	LOW_ENTRY_BIT	0x1000
 #define	ENTER	(DEBUG_VAR&ENTRY_BIT)
 #define	FLAG(fLag)	(DEBUG_VAR&(fLag))
 
-extern	int	uEntryLevel;
+     extern int uEntryLevel;
 
 #define	uENTRY(s)			{ if (ENTER) uEntry(1,s);}
 #define	uENTRY1(s,a)			{ if (ENTER) uEntry(1,s,a);}
@@ -414,9 +375,7 @@ extern	int	uEntryLevel;
 #define	uFLAG_ENTRY7(f,s,a,b,c,d,e,g,h)
 #define	uFLAG_RETURN(v)			{ return(v);}
 #define	uFLAG_VOIDRETURN		{ return; }
-#endif 
+#endif
 
 
 #endif /* UTILS_H */
-
-

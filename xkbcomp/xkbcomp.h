@@ -1,4 +1,3 @@
-/* $Xorg: xkbcomp.h,v 1.3 2000/08/17 19:54:33 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,13 +23,11 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86: xc/programs/xkbcomp/xkbcomp.h,v 3.8 2001/12/19 21:30:30 dawes Exp $ */
 
 #ifndef XKBCOMP_H
 #define	XKBCOMP_H 1
 
 #ifndef DEBUG_VAR
-#define	DEBUG_VAR_NOT_LOCAL
 #define	DEBUG_VAR debugFlags
 #endif
 
@@ -78,9 +75,10 @@ extern char *scanFile;
 
 #define	FileSymInterp	100
 
-typedef	struct _ParseCommon {
-    unsigned		 stmtType;
-    struct _ParseCommon	*next;
+typedef struct _ParseCommon
+{
+    unsigned stmtType;
+    struct _ParseCommon *next;
 } ParseCommon;
 
 #define	ExprValue	0
@@ -111,188 +109,215 @@ typedef	struct _ParseCommon {
 #define	AutoKeyNames	(1L <<  0)
 #define	CreateKeyNames(x)	((x)->flags&AutoKeyNames)
 
-extern	unsigned	warningLevel;
-extern	unsigned	optionalParts;
+extern unsigned warningLevel;
+extern unsigned optionalParts;
 
-typedef struct _IncludeStmt {
-    ParseCommon		common;
-    unsigned		merge;
-    char 		*stmt;
-    char		*file;
-    char		*map;
-    char		*modifier;
-    char		*path;
-    struct _IncludeStmt	*next;
+typedef struct _IncludeStmt
+{
+    ParseCommon common;
+    unsigned merge;
+    char *stmt;
+    char *file;
+    char *map;
+    char *modifier;
+    char *path;
+    struct _IncludeStmt *next;
 } IncludeStmt;
 
-typedef struct _Expr {
-    ParseCommon		common;
-    unsigned		op;
-    unsigned		type;
-    union {
-	struct {
-	    struct _Expr *left;
-	    struct _Expr *right;
-	} binary;
-	struct {
-	    Atom	element;
-	    Atom field;
-	} field;
-	struct {
-	    Atom	element;
-	    Atom	field;
-	    struct _Expr *entry;
-	} array;
-	struct {
-	    Atom	  name;
-	    struct _Expr *args;
-	} action;
-	struct {
-	    int		 nSyms;
-	    int		 szSyms;
-	    KeySym *	 syms;
-	} list;
-	struct {
-	    int		 x;
-	    int		 y;
-	} coord;
-	struct _Expr	*child;
-	Atom	 str;
-	unsigned	 uval;
-	int		 ival;
-	char	 	 keyName[5];
-	Opaque		 ptr;
+typedef struct _Expr
+{
+    ParseCommon common;
+    unsigned op;
+    unsigned type;
+    union
+    {
+        struct
+        {
+            struct _Expr *left;
+            struct _Expr *right;
+        } binary;
+        struct
+        {
+            Atom element;
+            Atom field;
+        } field;
+        struct
+        {
+            Atom element;
+            Atom field;
+            struct _Expr *entry;
+        } array;
+        struct
+        {
+            Atom name;
+            struct _Expr *args;
+        } action;
+        struct
+        {
+            int nSyms;
+            int szSyms;
+            KeySym *syms;
+        } list;
+        struct
+        {
+            int x;
+            int y;
+        } coord;
+        struct _Expr *child;
+        Atom str;
+        unsigned uval;
+        int ival;
+        char keyName[5];
+        Opaque ptr;
     } value;
 } ExprDef;
 
-typedef struct _VarDef {
-    ParseCommon	common;
-    unsigned	 merge;
-    ExprDef 	*name;
-    ExprDef	*value;
+typedef struct _VarDef
+{
+    ParseCommon common;
+    unsigned merge;
+    ExprDef *name;
+    ExprDef *value;
 } VarDef;
 
-typedef struct _VModDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    Atom	 name;
-    ExprDef	*value;
+typedef struct _VModDef
+{
+    ParseCommon common;
+    unsigned merge;
+    Atom name;
+    ExprDef *value;
 } VModDef;
 
-typedef struct _KeycodeDef {
-    ParseCommon	common;
-    unsigned	merge;
-    char 	name[5];
-    ExprDef	*value;
+typedef struct _KeycodeDef
+{
+    ParseCommon common;
+    unsigned merge;
+    char name[5];
+    ExprDef *value;
 } KeycodeDef;
 
-typedef struct _KeyAliasDef {
-    ParseCommon	common;
-    unsigned	merge;
-    char 	alias[5];
-    char 	real[5];
+typedef struct _KeyAliasDef
+{
+    ParseCommon common;
+    unsigned merge;
+    char alias[5];
+    char real[5];
 } KeyAliasDef;
 
-typedef struct _KeyTypeDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    Atom	 name;
-    VarDef	*body;
+typedef struct _KeyTypeDef
+{
+    ParseCommon common;
+    unsigned merge;
+    Atom name;
+    VarDef *body;
 } KeyTypeDef;
 
-typedef struct _SymbolsDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    char 	 keyName[5];
-    ExprDef *	 symbols;
+typedef struct _SymbolsDef
+{
+    ParseCommon common;
+    unsigned merge;
+    char keyName[5];
+    ExprDef *symbols;
 } SymbolsDef;
 
-typedef struct _ModMapDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    Atom	 modifier;
-    ExprDef *	 keys;
+typedef struct _ModMapDef
+{
+    ParseCommon common;
+    unsigned merge;
+    Atom modifier;
+    ExprDef *keys;
 } ModMapDef;
 
-typedef struct _GroupCompatDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    int	 	 group;
-    ExprDef *	 def;
+typedef struct _GroupCompatDef
+{
+    ParseCommon common;
+    unsigned merge;
+    int group;
+    ExprDef *def;
 } GroupCompatDef;
 
-typedef struct _InterpDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    KeySym	 sym;
-    ExprDef	*match;
-    VarDef	*def;
+typedef struct _InterpDef
+{
+    ParseCommon common;
+    unsigned merge;
+    KeySym sym;
+    ExprDef *match;
+    VarDef *def;
 } InterpDef;
 
-typedef struct _IndicatorNameDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    int		 ndx;
-    ExprDef *	 name;
-    Bool	 virtual;
+typedef struct _IndicatorNameDef
+{
+    ParseCommon common;
+    unsigned merge;
+    int ndx;
+    ExprDef *name;
+    Bool virtual;
 } IndicatorNameDef;
 
-typedef struct _OutlineDef {
-    ParseCommon	 	common;
-    Atom 	field;
-    int		 	nPoints;
-    ExprDef *		points;
+typedef struct _OutlineDef
+{
+    ParseCommon common;
+    Atom field;
+    int nPoints;
+    ExprDef *points;
 } OutlineDef;
 
-typedef struct _ShapeDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    Atom	 name;
-    int		 nOutlines;
-    OutlineDef * outlines;
+typedef struct _ShapeDef
+{
+    ParseCommon common;
+    unsigned merge;
+    Atom name;
+    int nOutlines;
+    OutlineDef *outlines;
 } ShapeDef;
 
-typedef struct _KeyDef {
-    ParseCommon	 	common;
-    unsigned		defined;
-    char *		name;
-    ExprDef *		expr;
+typedef struct _KeyDef
+{
+    ParseCommon common;
+    unsigned defined;
+    char *name;
+    ExprDef *expr;
 } KeyDef;
 
-typedef struct _RowDef {
-    ParseCommon		common;
-    int			nKeys;
-    KeyDef *		keys;
+typedef struct _RowDef
+{
+    ParseCommon common;
+    int nKeys;
+    KeyDef *keys;
 } RowDef;
 
-typedef struct _SectionDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    Atom	 name;
-    int		 nRows;
-    RowDef *	 rows;
+typedef struct _SectionDef
+{
+    ParseCommon common;
+    unsigned merge;
+    Atom name;
+    int nRows;
+    RowDef *rows;
 } SectionDef;
 
-typedef struct _OverlayKeyDef {
-    ParseCommon		common;
-    char 		over[5];
-    char 		under[5];
+typedef struct _OverlayKeyDef
+{
+    ParseCommon common;
+    char over[5];
+    char under[5];
 } OverlayKeyDef;
 
-typedef struct _OverlayDef {
-    ParseCommon	 	common;
-    unsigned	 	merge;
-    Atom	 	name;
-    int		 	nKeys;
-    OverlayKeyDef *	keys;
+typedef struct _OverlayDef
+{
+    ParseCommon common;
+    unsigned merge;
+    Atom name;
+    int nKeys;
+    OverlayKeyDef *keys;
 } OverlayDef;
 
-typedef struct _DoodadDef {
-    ParseCommon	 common;
-    unsigned	 merge;
-    unsigned	 type;
-    Atom	 name;
-    VarDef *	 body;
+typedef struct _DoodadDef
+{
+    ParseCommon common;
+    unsigned merge;
+    unsigned type;
+    Atom name;
+    VarDef *body;
 } DoodadDef;
 
 /* IndicatorMapDef doesn't use the type field, but the rest of the fields
@@ -300,55 +325,50 @@ typedef struct _DoodadDef {
    any strict aliasing problems.  */
 #define IndicatorMapDef DoodadDef
 
-typedef struct _XkbFile {
-    ParseCommon	 common;
-    int		 type;
-    char *	 topName;
-    char *	 name;
-    ParseCommon	*defs;
-    int		 id;
-    unsigned	 flags;
-    Bool	 compiled;
+typedef struct _XkbFile
+{
+    ParseCommon common;
+    int type;
+    char *topName;
+    char *name;
+    ParseCommon *defs;
+    int id;
+    unsigned flags;
+    Bool compiled;
 } XkbFile;
 
-extern	Bool	CompileKeymap(
-    XkbFile	*	/* file */,
-    XkbFileInfo *	/* result */,
-    unsigned	 	/* merge */
-);
+extern Bool CompileKeymap(XkbFile * /* file */ ,
+                          XkbFileInfo * /* result */ ,
+                          unsigned      /* merge */
+    );
 
-extern	Bool	CompileKeycodes(
-    XkbFile	*	/* file */,
-    XkbFileInfo *	/* result */,
-    unsigned	 	/* merge */
-);
+extern Bool CompileKeycodes(XkbFile * /* file */ ,
+                            XkbFileInfo * /* result */ ,
+                            unsigned    /* merge */
+    );
 
-extern	Bool	CompileGeometry(
-    XkbFile	*	/* file */,
-    XkbFileInfo *	/* result */,
-    unsigned	 	/* merge */
-);
+extern Bool CompileGeometry(XkbFile * /* file */ ,
+                            XkbFileInfo * /* result */ ,
+                            unsigned    /* merge */
+    );
 
-extern	Bool	CompileKeyTypes(
-    XkbFile	*	/* file */,
-    XkbFileInfo *	/* result */,
-    unsigned	 	/* merge */
-);
+extern Bool CompileKeyTypes(XkbFile * /* file */ ,
+                            XkbFileInfo * /* result */ ,
+                            unsigned    /* merge */
+    );
 
 typedef struct _LEDInfo *LEDInfoPtr;
 
-extern	Bool	CompileCompatMap(
-    XkbFile	*	/* file */,
-    XkbFileInfo *	/* result */,
-    unsigned	 	/* merge */,
-    LEDInfoPtr *	/* unboundLEDs */
-);
+extern Bool CompileCompatMap(XkbFile * /* file */ ,
+                             XkbFileInfo * /* result */ ,
+                             unsigned /* merge */ ,
+                             LEDInfoPtr *       /* unboundLEDs */
+    );
 
-extern	Bool	CompileSymbols(
-    XkbFile	*	/* file */,
-    XkbFileInfo *	/* result */,
-    unsigned	 	/* merge */
-);
+extern Bool CompileSymbols(XkbFile * /* file */ ,
+                           XkbFileInfo * /* result */ ,
+                           unsigned     /* merge */
+    );
 
 #define	WantLongListing	(1<<0)
 #define	WantPartialMaps	(1<<1)
@@ -356,25 +376,21 @@ extern	Bool	CompileSymbols(
 #define	WantFullNames	(1<<3)
 #define	ListRecursive	(1<<4)
 
-extern char *	rootDir;
+extern char *rootDir;
 extern unsigned verboseLevel;
-extern unsigned	dirsToStrip;
+extern unsigned dirsToStrip;
 
-extern	Bool	AddListing(
-    char *	/* file */,
-    char *	/* map */
-);
+extern Bool AddListing(char * /* file */ ,
+                       char *   /* map */
+    );
 
-extern Bool AddMatchingFiles(
-    char *	/* head_in */
-);
+extern Bool AddMatchingFiles(char *     /* head_in */
+    );
 
-extern	int AddMapOnly(
-    char *	/* map */
-);
+extern int AddMapOnly(char *    /* map */
+    );
 
-extern	int GenerateListing(
-    char *	/* filename */
-);
+extern int GenerateListing(char *       /* filename */
+    );
 
 #endif /* XKBCOMP_H */

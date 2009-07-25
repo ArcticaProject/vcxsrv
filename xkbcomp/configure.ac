@@ -21,9 +21,13 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(xkbcomp,[1.0.5], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],xkbcomp)
+AC_INIT(xkbcomp,[1.1.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],xkbcomp)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
+
+# Require xorg-macros: XORG_CWARNFLAGS, XORG_CHANGELOG
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.2)
 
 AM_CONFIG_HEADER(config.h)
 
@@ -31,12 +35,25 @@ AC_PROG_CC
 AC_PROG_YACC
 AC_PROG_INSTALL
 
+XORG_CWARNFLAGS
+
+AC_CHECK_FUNCS([strdup strcasecmp])
+
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(XKBCOMP, x11 xkbfile)
+XKBCOMP_CFLAGS="$CWARNFLAGS $XKBCOMP_CFLAGS"
 AC_SUBST(XKBCOMP_CFLAGS)
 AC_SUBST(XKBCOMP_LIBS)
 
+AC_ARG_WITH([xkb_config_root],
+    [AC_HELP_STRING([--with-xkb-config-root=<paths>],
+        [Set default XKB config root (default: ${datadir}/X11/xkb)])],
+    [XKBCONFIGROOT="$withval"],
+    [XKBCONFIGROOT='${datadir}/X11/xkb'])
+AC_SUBST([XKBCONFIGROOT])
+
 XORG_MANPAGE_SECTIONS
 XORG_RELEASE_VERSION
+XORG_CHANGELOG
 
 AC_OUTPUT([Makefile])

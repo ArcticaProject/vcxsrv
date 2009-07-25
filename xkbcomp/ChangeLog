@@ -1,3 +1,206 @@
+commit 2cc1dc9a327a5100043d3d54e899b98b81cdf5f5
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jul 9 08:34:21 2009 +1000
+
+    Bump to 1.1.0.
+
+commit eeaa4aec798ef045d0b3b9de3c25932b85b9ac3d
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon May 11 09:39:03 2009 -0700
+
+    Use temporary buffer for generating Uxxx names to avoid overflow
+    
+    Instead of sprintf()'ing a 4 character string to a char [4] buffer,
+    and leaving the trailing '\0' to overwrite into the next entry,
+    snprintf() to a 5 character temp buffer and memcpy the 4 characters
+    to the right place.
+    
+    Fixes parfait errors:
+    Error: Buffer overflow at xkbcomp-1.0.4/misc.c:393
+            in function 'ComputeKbdDefaults' [Standard C Library pattern matching]
+           In sprintf related dereference of xkb->names->keys[i].name
+            with index not less than '4'
+           Destination array size is 4 bytes, data to be written is 4 bytes
+    Error: Buffer overflow at xkbcomp-1.0.4/misc.c:402
+            in function 'ComputeKbdDefaults' [Standard C Library pattern matching]
+           In sprintf related dereference of xkb->names->keys[i].name
+            with index not less than '4'
+           Destination array size is 4 bytes, data to be written is 4 bytes
+    
+    [This bug was found by the Parfait bug checking tool.
+      For more information see http://research.sun.com/projects/parfait ]
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 2fd42dae8840089727f95211abdb86316e566afd
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Sat Mar 7 16:36:51 2009 -0800
+
+    Allow the default XKB config root to be set from configure
+    
+    The default was hardcoded in the Makefile as $(datadir)/share/X11/xkb.
+    This could cause a problem if you are installing xkbcomp to an alternate
+    location but want to continue using the system's XKB data.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 3b816fe819bd849acdbabcfba769041bd3eab753
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Jan 22 02:45:20 2009 -0200
+
+    Correct a remaining of a wrong change to make some DEBUG_VAR's static.
+
+commit f099da35386cf63d4935ba2613409ff28b3d7ea5
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Wed Jan 21 20:43:28 2009 -0200
+
+    Correct make distcheck and most gcc and sparse warnings.
+    
+      Remaining warnings are due to macros that check address or vectors
+    on the stack and auto generated yacc code.
+    
+      Compiled with default flags and also as:
+    % make CFLAGS=-DENTRY_TRACKING_ON -DDEBUG_ON -DASSERTIONS_ON
+      to ensure the "simplification" of code like:
+    foo.c:
+    <hash>define DEBUG_VAR foo_VAR
+    <hash>include "foo.h"
+    ...
+    foo.h:
+    <hash>ifdef DEBUG_VAR_NOT_LOCAL
+    extern
+    <hash>endif
+    int DEBUG_VAR;
+    ...
+    did not change the author's "intended" logic.
+
+commit 82cebb165b22d5409c9d4d31554a8da0c867e0d3
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Wed Sep 10 17:48:29 2008 +0930
+
+    Check for NULL strings before calling strdup.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@redhat.com>
+
+commit a82e1dcc8ad095581402d05e5d1ae1bbf3646954
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 5 15:07:13 2008 -0700
+
+    sprintf -> snprintf conversions
+
+commit d2d06305e1834548edd8a647564efa222a511b53
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 5 14:44:51 2008 -0700
+
+    Remove #if 0'd typedef that appears nowhere else.
+
+commit acd277d7fd48ccfd8ef2ca052b4e144ee95a5d94
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 5 14:32:15 2008 -0700
+
+    Remove X_NOT_POSIX #ifdefs
+    
+    POSIX.1-1990 is well below the current minimum bar
+
+commit 37b62a26716d3abf2ae07dd88cf54bc04d980bd8
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 5 14:22:33 2008 -0700
+
+    Check for strdup & strcasecmp before assuming we need to provide our own
+
+commit 36fecff588199a3a6c007f09ff709f3148d40f77
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Tue Aug 19 16:33:03 2008 +0930
+
+    Don't overwrite previously assigned type indices with useless ones.
+    
+    The default type for a key with no levels is ONE_LEVEL.
+    Let's not overwrite the kt_index with this default type if we have previously
+    assigned a real type.
+    
+    Reproduceable by running setxkbmap -layout "ru(phonetic),us", the first group
+    is assigned ONE_LEVEL and shift stops working.
+    
+    Red Hat Bug #436626 <https://bugzilla.redhat.com/show_bug.cgi?id=436626>
+
+commit d0dfd26e81aef53e9adf5fd6372d69e2ac7a8f9c
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Tue Aug 19 14:36:13 2008 +0930
+
+    Remove unused merge parameter from HandleKeyNameVar.
+
+commit 391ea45b2cadc7faeb6acb5d9ec7b405d67d46fd
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Tue Aug 19 14:35:39 2008 +0930
+
+    Don't pass useless handlers around in HandleIncludeKeycodes.
+    
+    What use is a handler if we only ever use one function anyway?
+
+commit f05f20fd203afdadbcd571023ed31638ccda1f88
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Thu Aug 21 17:28:22 2008 +0930
+
+    More comments.
+
+commit 1aad2a5d8ede9fe5212a4e6087fbe34aa170ac54
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Aug 18 16:28:44 2008 +0930
+
+    Remove useless longestPath variable.
+
+commit 7aef93914e1d6446f64aa42eafa18375c2cb4bed
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Aug 18 14:05:33 2008 +0930
+
+    Silence valgrind warnings.
+    
+    "Conditional jump or move depends on uninitialised value(s)"
+
+commit eb18e9176841b3ea64c497f1919686e134713eb6
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Aug 11 18:01:48 2008 +0930
+
+    Add some explanatory comments
+
+commit 9b877d83947708259252275e14f6995dcf7c29ce
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Aug 11 16:20:22 2008 +0930
+
+    If we're not using XkbDesc, don't require it as a parameter.
+
+commit ca32570cf16494fb8e0577de8b05ba18cb927ce1
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Aug 11 15:47:09 2008 +0930
+
+    Indent fixes.
+    
+    indent -cbi 0 -nprs -nut -npcs -i4 -bli 0 *.c *.h
+
+commit 12e8f5e5b3f33dbd1290c76dd0d6a4cf832993d7
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Aug 11 15:40:03 2008 +0930
+
+    Add a few explanatory comments.
+
+commit de48206e7fe2206542313a2d1d1ea3c40b06114b
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Aug 11 15:14:31 2008 +0930
+
+    Remove RCS tags.
+
+commit 8eb2e1fcd08a05f296a31dbadde1ec3cc84d8e28
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Mon May 12 23:25:47 2008 +0200
+
+    Minimal man page addition for new -i option.
+
+commit 12df85eb5b08d5fb815b0965714f120b05c6c670
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Fri May 9 21:09:44 2008 +0300
+
+    Bump to 1.0.5
+
 commit 1aecdffaa0db7bbf85bc0aae9043e9437b25c30d
 Author: Daniel Stone <daniel@fooishbar.org>
 Date:   Thu Apr 17 00:52:29 2008 +0300
