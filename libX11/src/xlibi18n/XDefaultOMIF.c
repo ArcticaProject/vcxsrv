@@ -97,7 +97,7 @@ typedef struct _XOCGenericPart {
 
 typedef struct _XOCGenericRec {
     XOCMethods methods;
-    XOCCoreRec core;	
+    XOCCoreRec core;
     XOCGenericPart gen;
 } XOCGenericRec, *XOCGeneric;
 
@@ -133,7 +133,7 @@ get_prop_name(
     unsigned long fp;
 
     if (XGetFontProperty(fs, XA_FONT, &fp))
-	return XGetAtomName(dpy, fp); 
+	return XGetAtomName(dpy, fp);
 
     return (char *) NULL;
 }
@@ -159,7 +159,7 @@ check_charset(
 
 	if (length > name_len)
 	    return(NULL);
-	
+
 	if (_XlcCompareISOLatin1(last - length, font_data->name) == 0)
 	    return font_data;
     }
@@ -262,7 +262,7 @@ load_font_info(
 	    return False;
 	if (fn_num > 0)
 	    font_set->info->fid = XLoadFont(dpy, font_set->font_name);
-	    
+
 	if (fn_list) XFreeFontNames(fn_list);
     }
     return True;
@@ -374,7 +374,7 @@ get_font_name(
 	name = (char *) Xmalloc(strlen(*list) + 1);
 	if (name)
 	    strcpy(name, *list);
-    
+
 	XFreeFontNames(list);
     } else {
 	fs = XLoadQueryFont(dpy, pattern);
@@ -480,7 +480,7 @@ Limit the length of the string copy to prevent stack corruption.
 		continue;
 	} else {
 	    if (num_fields == 13 || num_fields == 14) {
-	    /* 
+	    /*
 	     * There are 14 fields in an XLFD name -- make certain the
 	     * charset (& encoding) is placed in the correct field.
 	     */
@@ -545,11 +545,11 @@ Limit the length of the string copy to prevent stack corruption.
     strcpy(base_name, oc->core.base_name_list);
     oc->core.base_name_list = base_name;
 
-    XFreeStringList(name_list);		
+    XFreeStringList(name_list);
 
     return found_num;
 err:
-    XFreeStringList(name_list);		
+    XFreeStringList(name_list);
 
     return -1;
 }
@@ -660,7 +660,7 @@ destroy_oc(
     if (oc->core.res_class)
 	Xfree(oc->core.res_class);
 #endif
-    
+
     Xfree(oc);
 }
 
@@ -714,7 +714,7 @@ wcs_to_mbs(
 		      &to_left, NULL, 0);
     if (ret != 0 || length > 0)
 	return False;
-    
+
     return True;
 }
 
@@ -843,7 +843,7 @@ _XmbDefaultTextPerCharExtents(XOC oc, _Xconst char *text, int length,
 				   cs->rbearing);
 	    overall.width += cs->width;
 	}
-   	(*num_chars)++; 
+   	(*num_chars)++;
     }
 
     if (overall_ink) {
@@ -998,12 +998,12 @@ create_oc(
     if (oc == NULL)
 	return (XOC) NULL;
     bzero((char *) oc, sizeof(XOCGenericRec));
-    
+
     oc->core.om = om;
 
     if (oc_resources[0].xrm_name == NULLQUARK)
 	_XlcCompileResourceList(oc_resources, XlcNumber(oc_resources));
-    
+
     if (_XlcSetValues((XPointer) oc, oc_resources, XlcNumber(oc_resources),
 		      args, num_args, XlcCreateMask | XlcDefaultMask))
 	goto err;
@@ -1039,7 +1039,7 @@ close_om(
     if ((data = gen->data)) {
 	if (data->font_data) {
 	  for (font_data = data->font_data, count = data->font_data_count;
-	       count-- > 0 ; font_data++) { 
+	       count-- > 0 ; font_data++) {
 	    if (font_data->name)
 		Xfree(font_data->name);
 	  }
@@ -1137,7 +1137,7 @@ static _Xconst char *supported_charset_list[] = {
     "SUNOLCURSOR-1",
     "SUNOLGLYPH-1"
 };
-    
+
 static Bool
 init_om(
     XOM om)
@@ -1230,7 +1230,7 @@ _XDefaultOpenOM(XLCd lcd, Display *dpy, XrmDatabase rdb,
     if (om == NULL)
 	return (XOM) NULL;
     bzero((char *) om, sizeof(XOMGenericRec));
-    
+
     om->methods = (XOMMethods)&methods;
     om->core.lcd = lcd;
     om->core.display = dpy;
@@ -1250,7 +1250,7 @@ _XDefaultOpenOM(XLCd lcd, Display *dpy, XrmDatabase rdb,
 
     if (om_resources[0].xrm_name == NULLQUARK)
 	_XlcCompileResourceList(om_resources, XlcNumber(om_resources));
-    
+
     om->core.resources = om_resources;
     om->core.num_resources = XlcNumber(om_resources);
 

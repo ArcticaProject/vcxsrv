@@ -52,7 +52,7 @@ char *_XGetAtomName(
 		if ((name = (char *)Xmalloc(idx)))
 		    strcpy(name, EntryName(e));
 		return name;
-	    }		
+	    }
 	}
     }
     GetResReq(GetAtomName, atom, req);
@@ -70,7 +70,7 @@ char *XGetAtomName(
     if ((name = _XGetAtomName(dpy, atom))) {
 	UnlockDisplay(dpy);
 	return name;
-    }	
+    }
     if (_XReply(dpy, (xReply *)&rep, 0, xFalse) == 0) {
 	UnlockDisplay(dpy);
 	SyncHandle();

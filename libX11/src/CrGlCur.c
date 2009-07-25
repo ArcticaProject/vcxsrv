@@ -46,6 +46,10 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #include "Cr.h"
 
+#ifdef __CYGWIN__
+#define LIBXCURSOR "cygXcursor-1.dll"
+#endif
+
 #if defined(hpux)
 typedef shl_dt	XModuleType;
 #else
@@ -89,7 +93,7 @@ fetch_symbol (XModuleType module, const char *under_symbol)
 #if defined(hpux)
     int getsyms_cnt, i;
     struct shl_symbol *symbols;
-    
+
     getsyms_cnt = shl_getsymbols(module, TYPE_PROCEDURE,
 				 EXPORT_SYMBOLS, malloc, &symbols);
 
@@ -228,12 +232,12 @@ Cursor XCreateGlyphCursor(
      unsigned int mask_char,
      XColor _Xconst *foreground,
      XColor _Xconst *background)
-{       
+{
     Cursor cid;
     register xCreateGlyphCursorReq *req;
 
 #ifdef USE_DYNAMIC_XCURSOR
-    cid = _XTryShapeCursor (dpy, source_font, mask_font, 
+    cid = _XTryShapeCursor (dpy, source_font, mask_font,
 			    source_char, mask_char, foreground, background);
     if (cid)
 	return cid;

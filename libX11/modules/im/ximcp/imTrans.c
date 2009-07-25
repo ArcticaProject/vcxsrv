@@ -24,7 +24,7 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
   Author: Hideki Hiura (hhiura@Sun.COM) Sun Microsystems, Inc.
-          Takashi Fujiwara     FUJITSU LIMITED 
+          Takashi Fujiwara     FUJITSU LIMITED
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
@@ -98,8 +98,8 @@ _XimTransConnect(
     _XRegisterFilterByType(im->core.display, window, KeyPress, KeyPress,
 				_XimTransFilterWaitEvent, (XPointer)im);
 
-    return _XRegisterInternalConnection(im->core.display, spec->fd, 
-			(_XInternalConnectionProc)_XimTransInternalConnection, 
+    return _XRegisterInternalConnection(im->core.display, spec->fd,
+			(_XInternalConnectionProc)_XimTransInternalConnection,
 			(XPointer)im);
 }
 

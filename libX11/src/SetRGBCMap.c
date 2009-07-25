@@ -49,7 +49,7 @@ void XSetRGBColormaps (
     xPropStandardColormap *data, tmpdata;  /* scratch data */
     int mode = PropModeReplace;		/* for partial writes */
     Bool alloced_scratch_space;		/* do we need to free? */
-	
+
 
     if (count < 1) return;
 

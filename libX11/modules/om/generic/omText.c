@@ -110,7 +110,7 @@ draw_vertical(
     int		direction = 0;
     int		font_ascent_return = 0, font_descent_return = 0;
     int		i;
-    XCharStruct	overall;		
+    XCharStruct	overall;
 
     wy = y;
     if (is_xchar2b) {
@@ -192,7 +192,7 @@ DrawStringWithFontSet(
 	* If it was, use that font.  If it was not set, then use the
 	* font defined by font_set->font_data[0] (which is what
 	* _XomGetFontDataFromFontSet() always seems to return for
-	* non-VW text).  Note that given the new algorithm in 
+	* non-VW text).  Note that given the new algorithm in
 	* parse_fontname() and parse_fontdata(), fs->font will
 	* *always* contain good data.   We should probably remove
 	* the check for "fd->font", but we won't :-) -- jjw/pma (HP)
@@ -307,7 +307,7 @@ _XomGenericDrawString(
     conv = _XomInitConverter(oc, type);
     if (conv == NULL)
 	return -1;
-    
+
     args[0] = (XPointer) &font;
     args[1] = (XPointer) &is_xchar2b;
     args[2] = (XPointer) &fs;

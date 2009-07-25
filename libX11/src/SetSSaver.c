@@ -35,7 +35,7 @@ int
 XSetScreenSaver(
     register Display *dpy,
     int timeout,
-    int interval, 
+    int interval,
     int prefer_blank,
     int allow_exp)
 

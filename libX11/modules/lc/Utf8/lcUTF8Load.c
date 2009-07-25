@@ -51,13 +51,21 @@ _XlcUtf8Loader(
 	return lcd;
 
     /* The official IANA name for UTF-8 is "UTF-8" in upper case with a dash. */
-    if (!XLC_PUBLIC_PART(lcd)->codeset ||
-	(_XlcCompareISOLatin1(XLC_PUBLIC_PART(lcd)->codeset, "UTF-8"))) {
+    if (!XLC_PUBLIC_PART(lcd)->codeset) {
+	_XlcDestroyLC(lcd);
+	return (XLCd) NULL;
+    }
+    else if (!_XlcCompareISOLatin1(XLC_PUBLIC_PART(lcd)->codeset, "UTF-8")) {
+        _XlcAddUtf8LocaleConverters(lcd);
+    }
+    else if (!_XlcCompareISOLatin1(XLC_PUBLIC_PART(lcd)->codeset, "GB18030")) {
+        _XlcAddGB18030LocaleConverters(lcd);
+    }
+    else {
 	_XlcDestroyLC(lcd);
 	return (XLCd) NULL;
     }
 
-    _XlcAddUtf8LocaleConverters(lcd);
     _XlcAddUtf8Converters(lcd);
 
     return lcd;

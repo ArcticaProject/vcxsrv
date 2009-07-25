@@ -47,7 +47,7 @@ XRotateWindowProperties(
     req->window = w;
     req->nAtoms = nprops;
     req->nPositions = npositions;
-    
+
     req->length += nprops;
     nbytes = nprops << 2;
 /* XXX Cray needs packing here.... */

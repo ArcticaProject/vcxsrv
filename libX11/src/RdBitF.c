@@ -29,17 +29,17 @@ from The Open Group.
 /* $XFree86: xc/lib/X11/RdBitF.c,v 3.6 2003/04/13 19:22:17 dawes Exp $ */
 
 /*
- *	Code to read bitmaps from disk files. Interprets 
+ *	Code to read bitmaps from disk files. Interprets
  *	data from X10 and X11 bitmap files and creates
  *	Pixmap representations of files. Returns Pixmap
  *	ID and specifics about image.
  *
  *	Modified for speedup by Jim Becker, changed image
- *	data parsing logic (removed some fscanf()s). 
+ *	data parsing logic (removed some fscanf()s).
  *	Aug 5, 1988
  *
  * Note that this file and ../Xmu/RdBitF.c look very similar....  Keep them
- * that way (but don't use common source code so that people can have one 
+ * that way (but don't use common source code so that people can have one
  * without the other).
  */
 
@@ -85,7 +85,7 @@ NextInt (
     int	value = 0;
     int gotone = 0;
     int done = 0;
-    
+
     /* loop, accumulate hex value until find delimiter  */
     /* skip any initial delimiters found in read stream */
 
@@ -164,7 +164,7 @@ XReadBitmapFileData (
 	    }
 	    continue;
 	}
-    
+
 	if (sscanf(line, "static short %s = {", name_and_type) == 1)
 	  version10p = 1;
 	else if (sscanf(line,"static unsigned char %s = {",name_and_type) == 1)
@@ -181,7 +181,7 @@ XReadBitmapFileData (
 
 	if (strcmp("bits[]", type))
 	  continue;
-    
+
 	if (!ww || !hh)
 	  RETURN (BitmapFileInvalid);
 
@@ -194,7 +194,7 @@ XReadBitmapFileData (
 
 	size = bytes_per_line * hh;
 	bits = (unsigned char *) Xmalloc ((unsigned int) size);
-	if (!bits) 
+	if (!bits)
 	  RETURN (BitmapNoMemory);
 
 	if (version10p) {
@@ -213,7 +213,7 @@ XReadBitmapFileData (
 	    int bytes;
 
 	    for (bytes=0, ptr=bits; bytes<size; bytes++, ptr++) {
-		if ((value = NextInt(fstream)) < 0) 
+		if ((value = NextInt(fstream)) < 0)
 		  RETURN (BitmapFileInvalid);
 		*ptr=value;
 	    }

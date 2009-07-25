@@ -42,7 +42,7 @@ XSetPlaneMask (
 	gc->values.plane_mask = planemask;
 	gc->dirty |= GCPlaneMask;
     }
-    UnlockDisplay(dpy);	
+    UnlockDisplay(dpy);
     SyncHandle();
     return 1;
 }

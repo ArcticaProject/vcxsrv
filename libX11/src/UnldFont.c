@@ -35,7 +35,7 @@ int
 XUnloadFont(
      register Display *dpy,
      Font font)
-{       
+{
     register xResourceReq *req;
 
     LockDisplay(dpy);

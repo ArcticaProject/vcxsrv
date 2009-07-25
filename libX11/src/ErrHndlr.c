@@ -31,12 +31,12 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #include "Xlibint.h"
 
-/* 
+/*
  * XErrorHandler - This procedure sets the X non-fatal error handler
  * (_XErrorFunction) to be the specified routine.  If NULL is passed in
  * the original error handler is restored.
  */
- 
+
 XErrorHandler
 XSetErrorHandler(XErrorHandler handler)
 {
@@ -59,12 +59,12 @@ XSetErrorHandler(XErrorHandler handler)
     return (XErrorHandler) oldhandler;
 }
 
-/* 
+/*
  * XIOErrorHandler - This procedure sets the X fatal I/O error handler
- * (_XIOErrorFunction) to be the specified routine.  If NULL is passed in 
+ * (_XIOErrorFunction) to be the specified routine.  If NULL is passed in
  * the original error handler is restored.
  */
- 
+
 XIOErrorHandler
 XSetIOErrorHandler(XIOErrorHandler handler)
 {

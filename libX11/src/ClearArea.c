@@ -35,7 +35,7 @@ int
 XClearArea (
     register Display *dpy,
     Window w,
-    int x, 
+    int x,
     int y,
     unsigned int width,
     unsigned int height,

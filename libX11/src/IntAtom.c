@@ -285,7 +285,7 @@ XInternAtoms (
         }
 	if (_XReply (dpy, (xReply *)&rep, 0, xTrue)) {
 	    if ((atoms_return[missed] = rep.atom))
-		_XUpdateAtomCache(dpy, names[missed], (Atom) rep.atom, 
+		_XUpdateAtomCache(dpy, names[missed], (Atom) rep.atom,
 				  sig, idx, n);
 	} else {
 	    atoms_return[missed] = None;

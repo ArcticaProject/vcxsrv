@@ -60,15 +60,15 @@ Visual *XDefaultVisual(Display *dpy, int scr)
 
 GC XDefaultGC(Display *dpy, int scr)
 {
-    return (DefaultGC(dpy,scr)); 
+    return (DefaultGC(dpy,scr));
 }
 
-unsigned long XBlackPixel(Display *dpy, int scr) 
+unsigned long XBlackPixel(Display *dpy, int scr)
 {
     return (BlackPixel(dpy, scr));
 }
 
-unsigned long XWhitePixel(Display *dpy, int scr) 
+unsigned long XWhitePixel(Display *dpy, int scr)
 {
     return (WhitePixel(dpy,scr));
 }
@@ -84,7 +84,7 @@ int XDisplayWidth(Display *dpy, int scr)
 
 int XDisplayHeight(Display *dpy, int scr)
 {
-    return (DisplayHeight(dpy, scr)); 
+    return (DisplayHeight(dpy, scr));
 }
 
 int XDisplayWidthMM(Display *dpy, int scr)
@@ -98,7 +98,7 @@ int XDisplayHeightMM(Display *dpy, int scr)
 }
 
 int XDisplayPlanes(Display *dpy, int scr)
-{ 
+{
     return (DisplayPlanes(dpy, scr));
 }
 
@@ -120,12 +120,12 @@ int XVendorRelease(Display *dpy) { return (VendorRelease(dpy)); }
 char *XDisplayString(Display *dpy) { return (DisplayString(dpy)); }
 
 int XDefaultDepth(Display *dpy, int scr)
-{ 
+{
     return(DefaultDepth(dpy, scr));
 }
 
 Colormap XDefaultColormap(Display *dpy, int scr)
-{ 
+{
     return (DefaultColormap(dpy, scr));
 }
 
@@ -159,7 +159,7 @@ Screen *XScreenOfDisplay(Display *dpy, int scr)
 }
 
 Screen *XDefaultScreenOfDisplay(Display *dpy)
-{ 
+{
     return (DefaultScreenOfDisplay(dpy));
 }
 
@@ -167,32 +167,32 @@ Display *XDisplayOfScreen(Screen *s) { return (DisplayOfScreen(s)); }
 
 Window XRootWindowOfScreen(Screen *s) { return (RootWindowOfScreen(s)); }
 
-unsigned long XBlackPixelOfScreen(Screen *s) 
+unsigned long XBlackPixelOfScreen(Screen *s)
 {
     return (BlackPixelOfScreen(s));
 }
 
-unsigned long XWhitePixelOfScreen(Screen *s) 
+unsigned long XWhitePixelOfScreen(Screen *s)
 {
     return (WhitePixelOfScreen(s));
 }
 
-Colormap XDefaultColormapOfScreen(Screen *s) 
+Colormap XDefaultColormapOfScreen(Screen *s)
 {
     return (DefaultColormapOfScreen(s));
 }
 
-int XDefaultDepthOfScreen(Screen *s) 
-{ 
+int XDefaultDepthOfScreen(Screen *s)
+{
     return (DefaultDepthOfScreen(s));
 }
 
-GC XDefaultGCOfScreen(Screen *s) 
-{ 
+GC XDefaultGCOfScreen(Screen *s)
+{
     return (DefaultGCOfScreen(s));
 }
 
-Visual *XDefaultVisualOfScreen(Screen *s) 
+Visual *XDefaultVisualOfScreen(Screen *s)
 {
     return (DefaultVisualOfScreen(s));
 }

@@ -69,7 +69,7 @@ Status XGetRGBColormaps (
     }
 
     /*
-     * See how many properties were found; if pre-ICCCM then assume 
+     * See how many properties were found; if pre-ICCCM then assume
      * default visual and a kill id of 1.
      */
     if (nitems < NumPropStandardColormapElements) {
@@ -86,7 +86,7 @@ Status XGetRGBColormaps (
 	}
     } else {
 	/*
-	 * make sure we have an integral number of colormaps 
+	 * make sure we have an integral number of colormaps
 	 */
 	ncmaps = (nitems / NumPropStandardColormapElements);
 	if ((((unsigned long) ncmaps) * NumPropStandardColormapElements) !=
@@ -96,7 +96,7 @@ Status XGetRGBColormaps (
 	}
     }
 
-    
+
     /*
      * allocate array
      */

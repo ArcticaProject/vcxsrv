@@ -64,7 +64,7 @@ OF THIS SOFTWARE.
 #define KANJI_CODESET   1
 #define KANA_CODESET    2
 #define USERDEF_CODESET 3
-#define MAX_CODESETS  
+#define MAX_CODESETS
 
 #define GR	0x80	/* begins right-side (non-ascii) region */
 #define GL	0x7f    /* ends left-side (ascii) region        */
@@ -125,7 +125,7 @@ euc_mbstowcs(
     const char *inbufptr = *from;
     wchar_t *outbufptr = (wchar_t *) *to;
 
-    CodeSet *codesets = XLC_GENERIC(lcd, codeset_list); 
+    CodeSet *codesets = XLC_GENERIC(lcd, codeset_list);
     int codeset_num = XLC_GENERIC(lcd, codeset_num);
     Ulong wc_shift = XLC_GENERIC(lcd, wc_shift_bits);
 
@@ -215,7 +215,7 @@ euc_mbstowcs(
 
 	chrcode <<= (wc_shift * shift_mult);
 	shift_mult--;
-	wc_tmp |= chrcode; 
+	wc_tmp |= chrcode;
 
 	if (--chr_len == 0) {
 	    wc_tmp |= wc_encode;
@@ -440,11 +440,11 @@ euc_mbstocs(
 	*from_left = tmp_from_left;
 	*to = (XPointer) tmp_to;
 	*to_left = tmp_to_left;
-    } 
+    }
 
     if (num_args > 0)
 	*((XlcCharSet *) args[0]) = charset;
-    
+
     return unconv_num;
 }
 
@@ -530,7 +530,7 @@ euc_cstombs(
 
     if (num_args < 1)
 	return -1;
-    
+
     if (!(codeset = GetCodeSetFromCharSet(lcd, (XlcCharSet) args[0])))
 	return -1;
 
@@ -588,10 +588,10 @@ euc_cstowcs(
     int length;
     Ulong wc_shift_bits = XLC_GENERIC(lcd, wc_shift_bits);
     CodeSet codeset;
-    
+
     if (num_args < 1)
 	return -1;
-    
+
     if (!(codeset = GetCodeSetFromCharSet(lcd, (XlcCharSet) args[0])))
         return -1;
 
@@ -604,7 +604,7 @@ euc_cstowcs(
 
 	toptr += buf_len;
 	*to = (XPointer) toptr;
-	
+
         while (buf_len--) {
 
             wch = (wchar_t) BIT8OFF(*csptr);
@@ -676,7 +676,7 @@ create_conv(
     conv = (XlcConv) Xmalloc(sizeof(XlcConvRec));
     if (conv == NULL)
 	return (XlcConv) NULL;
-    
+
     conv->methods = methods;
     conv->state = (XPointer) lcd;
     return conv;
@@ -1070,7 +1070,7 @@ euc_wcstocts(
 	    }
 
 
-	} while (length); 
+	} while (length);
 
     }	/* end for */
 
@@ -1329,7 +1329,7 @@ euc_mbstocts(
 		unconv_num++;
 		break;
 	    }
-	
+
 	    if (ctptr) {
 		strcpy(ctptr, ctdptr[cs_num]->ct_encoding);
 		ctptr += ctdptr[cs_num]->ct_encoding_len;
@@ -1349,7 +1349,7 @@ euc_mbstocts(
 	do {
 	    *ctptr++ = charset == ct_state.GR_charset ?
 		BIT8ON(*inbufptr++) : BIT8OFF(*inbufptr++);
-	} while (--clen); 
+	} while (--clen);
     }
 
     *to = (XPointer)ctptr;

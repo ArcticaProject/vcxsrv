@@ -156,7 +156,7 @@ sjis_mbstowcs(
     wchar_t *outbufptr = (wchar_t *) *to;
     wchar_t *outbuf_base = outbufptr;
 
-    CodeSet *codesets = XLC_GENERIC(lcd, codeset_list); 
+    CodeSet *codesets = XLC_GENERIC(lcd, codeset_list);
     int codeset_num = XLC_GENERIC(lcd, codeset_num);
     Ulong wc_shift = XLC_GENERIC(lcd, wc_shift_bits);
 
@@ -323,7 +323,7 @@ sjis_wcstombs(
 	    }
 
 	    *outbufptr++ = (char)tmp;
-	} while (length); 
+	} while (length);
 
     }	/* end for */
 
@@ -392,7 +392,7 @@ wc_codeset(
     return( codesets[0] );
 #endif
 }
-    
+
 
 static int
 sjis_mbtocs(
@@ -421,7 +421,7 @@ sjis_mbtocs(
 
 	if (*from_left >= char_size && *to_left >= char_size) {
 	    *dst++ = *src++;
-	    *dst++ = *src++; 
+	    *dst++ = *src++;
 	    if (!VALID_MULTIBYTE((Uchar) *(src-1))) /* check 2nd byte */
 		unconv_num++;
 	    sjis_to_jis((Uchar *)(dst-2), (Uchar *)(dst-1));
@@ -433,10 +433,10 @@ sjis_mbtocs(
 	    return -1;
 	charset = *CS3->charset_list;
 	char_size = charset->char_size;
-	
+
 	if (*from_left >= char_size && *to_left >= char_size) {
 	    *dst++ = *src++;
-	    *dst++ = *src++; 
+	    *dst++ = *src++;
 	    if (!VALID_MULTIBYTE((Uchar) *(src-1))) /* check 2nd byte */
 		unconv_num++;
 	    sjis_to_jis((Uchar *)(dst-2), (Uchar *)(dst-1));
@@ -530,11 +530,11 @@ sjis_mbstocs(
 	*from_left = tmp_from_left;
 	*to = (XPointer) tmp_to;
 	*to_left = tmp_to_left;
-    } 
+    }
 
     if (num_args > 0)
 	*((XlcCharSet *) args[0]) = charset;
-    
+
     return unconv_num;
 }
 
@@ -662,7 +662,7 @@ sjis_cstombs(
 
     if (num_args < 1)
 	return -1;
-    
+
     if (!(codeset = GetCodeSetFromCharSet(lcd, (XlcCharSet) args[0])))
 	return -1;
 
@@ -670,7 +670,7 @@ sjis_cstombs(
     buf_len /= codeset->length;
     if (csstr_len < buf_len)
 	buf_len = csstr_len;
-    
+
     cvt_length += buf_len * codeset->length;
 
     if (bufptr) {
@@ -964,7 +964,7 @@ sjis_mbstocts(
 		unconv_num++;
 		break;
 	    }
-	
+
 	    if (ctptr) {
 		strcpy(ctptr, ctdptr[cs_num]->ct_encoding);
 		ctptr += ctdptr[cs_num]->ct_encoding_len;
@@ -974,7 +974,7 @@ sjis_mbstocts(
 	clen = charset->length;
 	do {
 	    *ctptr++ = *inbufptr++;
-	} while (--clen); 
+	} while (--clen);
 
 	if (charset->length >= 2) {
 	    sjis_to_jis((Uchar *)(ctptr-2), (Uchar *)(ctptr-1));
@@ -1120,7 +1120,7 @@ sjis_wcstocts(
 		}
 		*ctptr++ = (char)tmp;
 	    }
-	} while (length); 
+	} while (length);
 
     }	/* end for */
 
@@ -1299,7 +1299,7 @@ sjis_ctstowcs(
 
     if (*from_left > *to_left)
 	*from_left = *to_left;
-  
+
     for (length = ctdata[Ascii].length; *from_left > 0; (*from_left) -= length )
     {
 	ct_type = CT_STD;
@@ -1436,7 +1436,7 @@ create_conv(
     conv = (XlcConv) Xmalloc(sizeof(XlcConvRec));
     if (conv == NULL)
 	return (XlcConv) NULL;
-    
+
     conv->methods = methods;
     conv->state = (XPointer) lcd;
     return conv;

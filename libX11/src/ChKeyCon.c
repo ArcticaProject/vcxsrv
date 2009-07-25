@@ -48,7 +48,7 @@ XChangeKeyboardControl(
 
     if (mask & KBKeyClickPercent)
 	*value++ = value_list->key_click_percent;
-	
+
     if (mask & KBBellPercent)
     	*value++ = value_list->bell_percent;
 

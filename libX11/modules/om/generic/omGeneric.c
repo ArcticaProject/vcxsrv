@@ -41,7 +41,7 @@
  * so that you can figure out what in the heck we're doing. We
  * realize this is a departure from the norm, but hey, we're
  * rebels! :-) :-)
- * 
+ *
  * Modifiers: Jeff Walls, Paul Anderson: HEWLETT-PACKARD
  */
 /*
@@ -223,7 +223,7 @@ get_prop_name(
     unsigned long fp;
 
     if (XGetFontProperty(fs, XA_FONT, &fp))
-	return XGetAtomName(dpy, fp); 
+	return XGetAtomName(dpy, fp);
 
     return (char *) NULL;
 }
@@ -261,7 +261,7 @@ load_fontset_data(
     if(font_set->font_name == (char *)NULL) return False ;
 
    /* If font_set->font is not NULL, it contains the *best*
-    * match font for this FontSet.  
+    * match font for this FontSet.
     * -- jjw/pma (HP)
     */
     if(font_set->font == NULL) {
@@ -338,7 +338,7 @@ load_font_info(
 					 &font_set->info);
 	    if (font_set->info == NULL)
 		return False;
-	    
+
 	    XFreeFontNames(fn_list);
 	}
     }
@@ -529,7 +529,7 @@ get_font_name(
     name = (char *) Xmalloc(strlen(*list) + 1);
     if (name)
 	strcpy(name, *list);
-    
+
     XFreeFontNames(list);
 
     return name;
@@ -568,9 +568,11 @@ get_rotate_fontname(
     for(field_num = 0 ; field_num < CHARSET_ENCODING_FIELD && ptr && *ptr ;
 			ptr++, field_num++) {
 	fields[field_num] = ptr;
-	
+
 	if((ptr = strchr(ptr, '-'))) {
 	    *ptr = '\0';
+	} else {
+	    break;
 	}
     }
 
@@ -604,7 +606,7 @@ get_rotate_fontname(
     }
 
     /* Max XLFD length is 255 */
-    if (len > XLFD_MAX_LEN) 
+    if (len > XLFD_MAX_LEN)
 	return NULL;
 
     rotate_font_ptr = (char *)Xmalloc(len + 1);
@@ -615,7 +617,8 @@ get_rotate_fontname(
 
     for(field_num = 0 ; field_num < CHARSET_ENCODING_FIELD &&
 			fields[field_num] ; field_num++) {
-	sprintf(rotate_font_ptr, "%s-%s", rotate_font_ptr, fields[field_num]);
+	strcat(rotate_font_ptr, "-");
+	strcat(rotate_font_ptr, fields[field_num]);
     }
 
     if(pattern)
@@ -638,7 +641,7 @@ is_match_charset(
     length = strlen(font_data->name);
     if (length > name_len)
 	return False;
-	
+
     if (_XlcCompareISOLatin1(last - length, font_data->name) == 0)
 	return True;
 
@@ -668,7 +671,7 @@ get_font_name_from_list(
              break;
         }
     }
-    
+
     XFreeFontNames(list);
 
     return name;
@@ -758,7 +761,7 @@ parse_omit_name(
 
     if (length > XLFD_MAX_LEN)
 	return -1;
-    
+
     strcpy(buf, pattern);
     last = buf + length - 1;
 
@@ -771,12 +774,12 @@ parse_omit_name(
     switch (num_fields) {
     case 12:
 	/* This is the best way to have specifed the fontset.  In this
-	 * case, there is no original encoding. E.g., 
+	 * case, there is no original encoding. E.g.,
          *       -*-*-*-*-*-*-14-*-*-*-*-*
 	 * To this, we'll append a dash:
          *       -*-*-*-*-*-*-14-*-*-*-*-*-
 	 * then append the encoding to get:
-         *       -*-*-*-*-*-*-14-*-*-*-*-*-JISX0208.1990-0 
+         *       -*-*-*-*-*-*-14-*-*-*-*-*-JISX0208.1990-0
 	 */
 	/*
 	 * Take care of:
@@ -789,7 +792,7 @@ parse_omit_name(
 	break;
     case 13:
 	/* Got the charset, not the encoding, zap the charset  In this
-	 * case, there is no original encoding, but there is a charset. E.g., 
+	 * case, there is no original encoding, but there is a charset. E.g.,
          *       -*-*-*-*-*-*-14-*-*-*-*-*-jisx0212.1990
 	 * To this, we remove the charset:
          *       -*-*-*-*-*-*-14-*-*-*-*-*-
@@ -802,11 +805,11 @@ parse_omit_name(
     case 14:
 	/* Both the charset and the encoding are specified.  Get rid
 	 * of them so that we can append the new charset encoding.  E.g.,
-         *       -*-*-*-*-*-*-14-*-*-*-*-*-jisx0212.1990-0 
+         *       -*-*-*-*-*-*-14-*-*-*-*-*-jisx0212.1990-0
 	 * To this, we'll remove the encoding and charset to get:
          *       -*-*-*-*-*-*-14-*-*-*-*-*-
 	 * then append the new encoding to get:
-         *       -*-*-*-*-*-*-14-*-*-*-*-*-JISX0208.1990-0 
+         *       -*-*-*-*-*-*-14-*-*-*-*-*-JISX0208.1990-0
 	 */
 	last = strrchr (buf, '-');
 	*last = '\0';
@@ -819,17 +822,17 @@ parse_omit_name(
 	break;
     }
 
-   /* At this point, "last" is pointing to the last "-" in the 
+   /* At this point, "last" is pointing to the last "-" in the
     * xlfd, and all xlfd's at this point take a form similar to:
     *       -*-*-*-*-*-*-14-*-*-*-*-*-
     * (i.e., no encoding).
     * After the strcpy, we'll end up with something similar to:
-    *       -*-*-*-*-*-*-14-*-*-*-*-*-JISX0208.1990-0 
+    *       -*-*-*-*-*-*-14-*-*-*-*-*-JISX0208.1990-0
     *
-    * If the modified font is found in the current FontSet, 
+    * If the modified font is found in the current FontSet,
     * we've found a match.
     */
-    
+
     last++;
 
     if ((last - buf) + strlen(font_data->name) > XLFD_MAX_LEN)
@@ -846,12 +849,12 @@ parse_omit_name(
 	*last = '*';
 	*(last + 1) = '-';
 	strcpy(last + 2, font_data->name);
-	num_fields++; 
+	num_fields++;
 	last+=2;
 	if ((font_data->xlfd_name = get_font_name(oc, buf)) != NULL)
-	    return True;	    
+	    return True;
     }
-    
+
 
     return False;
 }
@@ -884,7 +887,7 @@ parse_fontdata(
     if(font_data == NULL || font_data_count <= 0) {
 	return False;
     }
-    
+
     /* Loop through each font encoding defined in the "font_data" FontSet. */
     for ( ; font_data_count-- > 0; font_data++) {
 	Bool	is_found = False;
@@ -904,7 +907,7 @@ parse_fontdata(
 		fprintf(stderr,"Font pattern: %s %s\n",
 		pattern,font_data->name);
 #endif
-	    
+
 	    /*
 	     * If the current font is fully specified (i.e., the
 	     * xlfd contains no wildcards) and the font exists on
@@ -925,16 +928,16 @@ parse_fontdata(
 	        if (ret == False) continue;
                /*
 		* Since there was an exact match of a fully-specified font
-		* or a font alias, we can return now since the desired font 
+		* or a font alias, we can return now since the desired font
 		* was found for the current font encoding for this FontSet.
 		*
 		* Previous implementations of this algorithm would
-		* not return here. Instead, they continued searching 
-		* through the font encodings for this FontSet. The side-effect 
-		* of that behavior is you may return a "substitute" match 
-		* instead of an "exact" match.  We believe there should be a 
+		* not return here. Instead, they continued searching
+		* through the font encodings for this FontSet. The side-effect
+		* of that behavior is you may return a "substitute" match
+		* instead of an "exact" match.  We believe there should be a
 		* preference on exact matches.  Therefore, as soon as we
-		* find one, we bail. 
+		* find one, we bail.
 		*
 		* Also, previous implementations seemed to think it was
 		* important to find either a primary or substitute font
@@ -942,7 +945,7 @@ parse_fontdata(
 		* acceptable font.  We don't believe this is necessary.
 		* All the client cares about is finding a reasonable font
 		* for what was passed in.  If we find an exact match,
-		* there's no reason to look any further.  
+		* there's no reason to look any further.
 		*
 		* -- jjw/pma (HP)
 		*/
@@ -973,7 +976,7 @@ parse_fontdata(
 	    if (ret == False) continue;
 
            /*
-	    * A font which matched the wild-carded specification was found. 
+	    * A font which matched the wild-carded specification was found.
 	    * Only update the return data if a font has not yet been found.
 	    * This maintains the convention that FontSets listed higher in
 	    * a CodeSet in the Locale Database have higher priority than
@@ -990,7 +993,7 @@ parse_fontdata(
 	    *
 	    * a font found in the JISX0208.1990-0 FontSet will have a
 	    * higher priority than a font found in the JISX0208.1983-0
-	    * FontSet.  
+	    * FontSet.
 	    */
 	    if (font_data_return && font_data_return->xlfd_name == NULL) {
 
@@ -1017,7 +1020,7 @@ parse_fontdata(
 		 /*
 		  * Did not find a font for the current FontSet.  Check the
 		  * FontSet's "substitute" font for a match.  If we find a
-		  * match, we'll keep searching in hopes of finding an exact 
+		  * match, we'll keep searching in hopes of finding an exact
 		  * match later down the FontSet list.
 		  *
 		  * when we return and we have found a font font_data_return
@@ -1025,8 +1028,8 @@ parse_fontdata(
 		  * is a C_PRIMARY or a C_SUBSTITUTE font
 		  */
 		  ret = parse_fontdata(oc, font_set, font_set->substitute,
-				       font_set->substitute_num, name_list, 
-				       name_list_count, C_SUBSTITUTE, 
+				       font_set->substitute_num, name_list,
+				       name_list_count, C_SUBSTITUTE,
 				       font_data_return);
                   if (ret == -1)    return -1;
 		  if (ret == False) continue;
@@ -1115,7 +1118,7 @@ parse_vw(
 		if(font_set->vrotate == (VRotate)NULL)
 		    return (-1);
 		memset(font_set->vrotate, 0x00, sizeof(VRotateRec) * sub_num);
-		
+
 		for(i = 0 ; i < sub_num ; i++) {
 		    vrotate[i].charset_name = font_set->substitute[i].name;
 		    vrotate[i].side = font_set->substitute[i].side;
@@ -1168,12 +1171,12 @@ parse_fontname(
 	if(font_set->font_data_count > 0) {
 
            /*
-	    * If there are a non-zero number of FontSets defined 
+	    * If there are a non-zero number of FontSets defined
 	    * for this CharSet.
             * Try to find a font for this CharSet.  If we find an
 	    * acceptable font, we save the information for return
 	    * to the client.  If we do not find an acceptable font,
-	    * a "missing_charset" will be reported to the client 
+	    * a "missing_charset" will be reported to the client
 	    * for this CharSet.
 	    */
 	    font_data_return. xlfd_name = NULL;
@@ -1210,7 +1213,7 @@ parse_fontname(
 
 	} else if(font_set->substitute_num > 0) {
            /*
-	    * If there are no FontSets defined for this 
+	    * If there are no FontSets defined for this
 	    * CharSet.  We can only find "substitute" fonts.
 	    */
 	    ret = parse_fontdata(oc, font_set, font_set->substitute,
@@ -1277,14 +1280,14 @@ set_missing_list(
 	if (font_set->info || font_set->font) {
 	    continue;
 	}
-	
+
 	/* Change 1996.01.23 start */
 	if(font_set->font_data_count <= 0 ||
 	   font_set->font_data == (FontData)NULL) {
 	    if(font_set->substitute_num <= 0 ||
 	       font_set->substitute == (FontData)NULL) {
 		if(font_set->charset_list != NULL){
-		 length += 
+		 length +=
 		  strlen(font_set->charset_list[0]->encoding_name) + 1;
 		} else {
 		  length += 1;
@@ -1346,7 +1349,7 @@ set_missing_list(
 	/* Change 1996.01.23 end */
 	*charset_list++ = charset_buf;
 	charset_buf += strlen(charset_buf) + 1;
-    } 
+    }
 
     if(result == 0) {
 	return(False);
@@ -1408,7 +1411,7 @@ free_fontdataOC(
 		XFreeFontInfo(NULL, font_data->font, 1);/* Add 1996.01.23 */
 	    font_data->font = NULL;
 	}
-/* 
+/*
  * font_data->name and font_data->scopes belong to the OM not OC.
  * To save space this data is shared between OM and OC. We are
  * not allowed to free it here.
@@ -1496,7 +1499,7 @@ destroy_oc(
 	_XlcCloseConverter(gen->utf8_to_cs);
 
 /* For VW/UDC start */ /* Change 1996.01.8 */
-    destroy_fontdata(gen,dpy); 
+    destroy_fontdata(gen,dpy);
 /*
 */
 /* For VW/UDC end */
@@ -1520,7 +1523,7 @@ destroy_oc(
     if (oc->core.res_class)
 	Xfree(oc->core.res_class);
 #endif
-    
+
     Xfree(oc);
 }
 
@@ -1659,12 +1662,12 @@ create_oc(
     if (oc == NULL)
 	return (XOC) NULL;
     bzero((char *) oc, sizeof(XOCGenericRec));
-    
+
     oc->core.om = om;
 
     if (oc_resources[0].xrm_name == NULLQUARK)
 	_XlcCompileResourceList(oc_resources, XlcNumber(oc_resources));
-    
+
     if (_XlcSetValues((XPointer) oc, oc_resources, XlcNumber(oc_resources),
 		      args, num_args, XlcCreateMask | XlcDefaultMask))
 	goto err;
@@ -1847,7 +1850,7 @@ create_om(
     if (om == NULL)
 	return (XOM) NULL;
     bzero((char *) om, sizeof(XOMGenericRec));
-    
+
     om->methods = &methods;
     om->core.lcd = lcd;
     om->core.display = dpy;
@@ -1867,7 +1870,7 @@ create_om(
 
     if (om_resources[0].xrm_name == NULLQUARK)
 	_XlcCompileResourceList(om_resources, XlcNumber(om_resources));
-    
+
     om->core.resources = om_resources;
     om->core.num_resources = XlcNumber(om_resources);
 
@@ -2037,7 +2040,7 @@ init_om(
 	data = add_data(om);
 	if (data == NULL)
 	    return False;
-	
+
 	charset_list = (XlcCharSet *) Xmalloc(sizeof(XlcCharSet) * count);
 	if (charset_list == NULL)
 	    return False;
@@ -2165,7 +2168,7 @@ _XomGenericOpenOM(XLCd lcd, Display *dpy, XrmDatabase rdb,
     om = create_om(lcd, dpy, rdb, res_name, res_class);
     if (om == NULL)
 	return (XOM) NULL;
-    
+
     if (init_om(om) == False)
 	goto err;
 

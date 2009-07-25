@@ -37,7 +37,7 @@ extern long const _Xevent_to_mask[];
 #define AllButtons (Button1MotionMask|Button2MotionMask|Button3MotionMask|\
 		    Button4MotionMask|Button5MotionMask)
 
-/* 
+/*
  * return the next event in the queue matching one of the events in the mask.
  * If no event, flush output, and wait until match succeeds.
  * Events earlier in the queue are not discarded.
@@ -58,7 +58,7 @@ XMaskEvent (
 	    for (qelt = prev ? prev->next : dpy->head;
 		 qelt;
 		 prev = qelt, qelt = qelt->next) {
-		if ((qelt->event.type < LASTEvent) &&
+		if ((qelt->event.type < GenericEvent) &&
 		    (_Xevent_to_mask[qelt->event.type] & mask) &&
 		    ((qelt->event.type != MotionNotify) ||
 		     (mask & AllPointers) ||

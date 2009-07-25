@@ -43,7 +43,7 @@ void _XProcessWindowAttributes (
 
     if (valuemask & CWBackPixmap)
 	*value++ = attributes->background_pixmap;
-	
+
     if (valuemask & CWBackPixel)
     	*value++ = attributes->background_pixel;
 
@@ -61,7 +61,7 @@ void _XProcessWindowAttributes (
 
     if (valuemask & CWBackingStore)
         *value++ = attributes->backing_store;
-    
+
     if (valuemask & CWBackingPlanes)
 	*value++ = attributes->backing_planes;
 
@@ -102,10 +102,10 @@ void _XProcessWindowAttributes (
 Window XCreateWindow(
     register Display *dpy,
     Window parent,
-    int x, 
+    int x,
     int y,
-    unsigned int width, 
-    unsigned int height, 
+    unsigned int width,
+    unsigned int height,
     unsigned int borderWidth,
     int depth,
     unsigned int class,
@@ -133,7 +133,7 @@ Window XCreateWindow(
     wid = req->wid = XAllocID(dpy);
     valuemask &= AllMaskBits;
     if ((req->mask = valuemask))
-        _XProcessWindowAttributes (dpy, (xChangeWindowAttributesReq *)req, 
+        _XProcessWindowAttributes (dpy, (xChangeWindowAttributesReq *)req,
 			valuemask, attributes);
     UnlockDisplay(dpy);
     SyncHandle();

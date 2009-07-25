@@ -111,7 +111,7 @@ c s s
 c s s
 l l l
 l l lw(3i).
-Table 2 XkbIidocatorMapRec which_mods and mods,
+Table 2 XkbIndicatorMapRec which_mods and mods,
 Indicator Drives Keyboard
 _
 which_mods	New State	Effect on Keyboard Modifiers

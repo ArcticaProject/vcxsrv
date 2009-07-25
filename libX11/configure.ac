@@ -1,9 +1,9 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.57)
+AC_PREREQ(2.60)
 AC_INIT([libX11],
-        1.1.5,
+        1.2.2,
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         libX11)
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -14,13 +14,29 @@ AM_MAINTAINER_MODE
 AM_CONFIG_HEADER([src/config.h])
 AC_CONFIG_HEADER([include/X11/XlibConf.h])
 
-# Require xorg-macros version 1.1.0 or newer for XORG_WITH_LINT macro
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.1 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.1)
+# Require xorg-macros: XORG_CWARNFLAGS, XORG_CHANGELOG, XORG_WITH_LINT
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.2)
+
+# Set common system defines for POSIX extensions, such as _GNU_SOURCE
+# Must be called before any macros that run the compiler (like AC_PROG_LIBTOOL)
+# to avoid autoconf errors.
+AC_USE_SYSTEM_EXTENSIONS
 
 # Checks for programs.
 AC_PROG_LIBTOOL
+DOLT
 AC_PROG_CC
+XORG_CWARNFLAGS
+
+if test x"$CC_FOR_BUILD" = x; then
+	if test x"$cross_compiling" = xyes; then
+	       AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
+	else
+	       CC_FOR_BUILD="$CC"
+	fi
+fi
+AC_SUBST([CC_FOR_BUILD])
 
 XORG_PROG_RAWCPP
 
@@ -32,19 +48,20 @@ AC_CACHE_CHECK([whether to use XCB], [ac_cv_use_xcb], [ac_cv_use_xcb=yes])
 AM_CONDITIONAL(XCB, test x$ac_cv_use_xcb != xno)
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XPROTO, [xproto >= 7.0.6])
+PKG_CHECK_MODULES(XPROTO, [xproto >= 7.0.13])
 AC_SUBST(XPROTO_CFLAGS)
 
 case "$ac_cv_use_xcb" in
 no)
 	X11_REQUIRES="xau xcmiscproto bigreqsproto"
+	X11_EXTRA_DEPS="xau xdmcp"
 	PKG_CHECK_MODULES(XDMCP, xdmcp)
 	AC_CHECK_LIB(Xdmcp, XdmcpWrap, [xdmauth="yes"], [xdmauth="no"], [$XDMCP_LIBS])
 	AC_DEFINE(USE_XCB, 0, [Use XCB for low-level protocol implementation])
 	;;
 *)
-	X11_REQUIRES="xcb-xlib >= 0.9.92"
-	X11_EXTRA_DEPS="xcb-xlib"
+	X11_REQUIRES="xcb >= 1.1.92"
+	X11_EXTRA_DEPS="xcb >= 1.1.92"
 	xdmauth="no" # XCB handles all auth
 	AC_DEFINE(USE_XCB, 1, [Use XCB for low-level protocol implementation])
 	;;
@@ -66,6 +83,32 @@ XTRANS_CONNECTION_FLAGS
 
 # Secure RPC detection macro from xtrans.m4
 XTRANS_SECURE_RPC_FLAGS
+
+# Preferred order to try transports for local connections
+AC_MSG_CHECKING([what order to try transports in for local connections])
+case $host_os in
+	solaris*)
+		# On Solaris 2.6 through 9, named pipes (LOCAL_TRANS) were
+		# faster than Unix domain sockets, but on Solaris 10 & later,
+		# Unix domain sockets are faster now.
+		DEFAULT_LOCAL_TRANS="UNIX_TRANS,LOCAL_TRANS,TCP_TRANS"
+		;;
+	*)
+		if test "$LOCALCONN" = "yes"; then
+			DEFAULT_LOCAL_TRANS="LOCAL_TRANS,UNIX_TRANS,TCP_TRANS"
+		else
+			DEFAULT_LOCAL_TRANS="UNIX_TRANS,TCP_TRANS"
+		fi
+		;;
+esac
+
+AC_ARG_WITH(local-transport-order,
+	AC_HELP_STRING([--with-local-transport-order=LIST], [preference sorted list of transport types to try for local connections]),
+	[LOCAL_TRANSPORT_LIST=$withval],
+	[LOCAL_TRANSPORT_LIST=$DEFAULT_LOCAL_TRANS])
+AC_DEFINE_UNQUOTED([LOCAL_TRANSPORT_LIST], [$LOCAL_TRANSPORT_LIST],
+   [preference sorted list of transport types to try for local connections])
+AC_MSG_RESULT([$LOCAL_TRANSPORT_LIST])
 
 # Check for dlopen
 AC_MSG_CHECKING([if run-time linking is supported])
@@ -103,7 +146,7 @@ if test x$XLIB_LOADABLE_I18N = xyes; then
 	AC_SUBST(I18N_MODULE_LIBS,'${top_builddir}/src/libX11.la')
 fi
 AC_MSG_RESULT($XLIB_LOADABLE_I18N)
-	       
+
 AM_CONDITIONAL(XLIB_LOADABLE_I18N, test x$XLIB_LOADABLE_I18N = xyes)
 
 AC_MSG_CHECKING([if loadable Xcursor library support should be enabled])
@@ -117,7 +160,7 @@ if test x$XLIB_LOADABLE_XCURSOR = xyes; then
 		  [Use the X cursor library to load cursors])
 fi
 AC_MSG_RESULT($XLIB_LOADABLE_XCURSOR)
-		  
+
 # Checks for header files.
 AC_HEADER_STDC
 dnl AC_CHECK_HEADERS([stdio.h stdlib.h math.h])
@@ -168,17 +211,15 @@ AC_CHECK_LIB(c, getpwuid_r, [mtsafeapi="yes"], [mtsafeapi="no"])
 
 case x$xthreads in
 xyes)
-	AC_DEFINE(XTHREADS,[],[Whether libX11 is compiled with thread support])
+	AC_DEFINE(XTHREADS,1,[Whether libX11 is compiled with thread support])
 	if test x$mtsafeapi = xyes
 	then
-	AC_DEFINE(XUSE_MTSAFE_API,[],[Whether libX11 needs to use MT safe API's])
+	AC_DEFINE(XUSE_MTSAFE_API,1,[Whether libX11 needs to use MT safe API's])
 	fi
 	;;
 *)
 	;;
 esac
-AC_SUBST(XTHREADS)
-AC_SUBST(XUSE_MTSAFE_API)
 
 AC_CHECK_LIB(c, pthread_self, [thrstubs="no"], [thrstubs="yes"])
 AM_CONDITIONAL(THRSTUBS, test x$thrstubs = xyes)
@@ -232,7 +273,7 @@ AC_SUBST(KEYSYMDEF)
 
 AM_CONDITIONAL(UDC, test xfalse = xtrue)
 
-AC_ARG_ENABLE(xcms, 
+AC_ARG_ENABLE(xcms,
               AC_HELP_STRING([--disable-xcms],
                 [Disable Xlib support for CMS *EXPERIMENTAL*]),
               [XCMS=$enableval],[XCMS=yes])
@@ -275,18 +316,18 @@ if test "x$XF86BIGFONT" = "xyes"; then
     AC_SUBST(BIGFONT_LIBS)
 fi
 
-AC_ARG_ENABLE(xkb, 
+AC_ARG_ENABLE(xkb,
               AC_HELP_STRING([--disable-xkb],
                 [Disable XKB support *EXPERIMENTAL*]),
               [XKB=$enableval],[XKB=yes])
 
 XORG_MANPAGE_SECTIONS
 
-AC_ARG_ENABLE(man-pages, 
-	      AC_HELP_STRING([--enable-man-pages=section], 
+AC_ARG_ENABLE(man-pages,
+	      AC_HELP_STRING([--enable-man-pages=section],
 			     [Choose manual section for installing man pages]),
 		[LIBMAN=$enableval],[LIBMAN=yes])
-		
+
 if test "x$LIBMAN" != "xyes"; then
 	LIB_MAN_SUFFIX=$LIBMAN
 fi
@@ -308,7 +349,7 @@ AC_SUBST(XKBPROTO_REQUIRES)
 AC_FUNC_MMAP()
 composecache_default=$ac_cv_func_mmap_fixed_mapped
 AC_CHECK_FUNC(nl_langinfo, , [composecache_default=no])
-AC_ARG_ENABLE(composecache, 
+AC_ARG_ENABLE(composecache,
               AC_HELP_STRING([--disable-composecache],
                 [Disable compose table cache support]),
               [COMPOSECACHE=$enableval],[COMPOSECACHE=$composecache_default])
@@ -328,14 +369,6 @@ if test "x$GCC" = "xyes"; then
 	X11_CFLAGS="$GCC_WARNINGS $X11_CFLAGS"
 fi
 
-AC_TRY_COMPILE([
-#include <features.h>
-#ifndef __GLIBC__
-#error not glibc
-#endif
-], [], [AC_DEFINE(_GNU_SOURCE, 1,
-    [ Enable GNU and other extensions to the C environment for glibc])])
-
 X11_DATADIR="${datadir}/X11"
 AC_DEFINE_DIR(X11_DATADIR, X11_DATADIR, [Location of libX11 data])
 AC_SUBST(X11_DATADIR)
@@ -344,8 +377,7 @@ X11_LIBDIR="${libdir}/X11"
 AC_DEFINE_DIR(X11_LIBDIR, X11_LIBDIR, [Location of libX11 library data])
 AC_SUBST(X11_LIBDIR)
 
-X11_CFLAGS="$X11_CFLAGS $XPROTO_CFLAGS"
-
+X11_CFLAGS="$CWARNFLAGS $X11_CFLAGS $XPROTO_CFLAGS"
 AC_SUBST(X11_CFLAGS)
 AC_SUBST(X11_LIBS)
 
@@ -361,7 +393,10 @@ X11_LOCALEDATADIR="${X11_DATADIR}/locale"
 AC_DEFINE_DIR(XLOCALEDATADIR, X11_LOCALEDATADIR, [Location of libX11 locale data])
 AC_SUBST(X11_LOCALEDATADIR)
 
-X11_LOCALELIBDIR="${X11_LIBDIR}/locale"
+AC_ARG_WITH(locale-lib-dir,	AS_HELP_STRING([--with-locale-lib-dir=DIR],
+ [Directory where locale libraries files are installed (default: $libdir/X11/locale)]),
+				[ X11_LOCALELIBDIR="$withval" ],
+				[ X11_LOCALELIBDIR="${X11_LIBDIR}/locale" ])
 AC_DEFINE_DIR(XLOCALELIBDIR, X11_LOCALELIBDIR, [Location of libX11 locale libraries])
 AC_SUBST(X11_LOCALELIBDIR)
 
@@ -378,11 +413,12 @@ AC_DEFINE_DIR(XERRORDB, XERRORDB, [Location of error message database])
 
 XORG_CHECK_MALLOC_ZERO
 XORG_RELEASE_VERSION
+XORG_CHANGELOG
 
 AC_OUTPUT([Makefile
            include/Makefile
 	   man/Makefile
-           man/xkb/Makefile	   
+           man/xkb/Makefile
            src/Makefile
            src/util/Makefile
 	   src/xcms/Makefile
@@ -404,6 +440,7 @@ AC_OUTPUT([Makefile
 	   nls/C/Makefile
 	   nls/el_GR.UTF-8/Makefile
 	   nls/en_US.UTF-8/Makefile
+	   nls/fi_FI.UTF-8/Makefile
 	   nls/georgian-academy/Makefile
 	   nls/georgian-ps/Makefile
 	   nls/ibm-cp1133/Makefile
@@ -441,6 +478,7 @@ AC_OUTPUT([Makefile
 	   nls/mulelao-1/Makefile
 	   nls/nokhchi-1/Makefile
 	   nls/pt_BR.UTF-8/Makefile
+	   nls/ru_RU.UTF-8/Makefile
 	   nls/tatar-cyr/Makefile
 	   nls/th_TH/Makefile
 	   nls/th_TH.UTF-8/Makefile

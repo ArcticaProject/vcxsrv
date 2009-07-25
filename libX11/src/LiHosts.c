@@ -74,19 +74,19 @@ XHostAddress *XListHosts (
 	nbytes = reply.length << 2;	/* compute number of bytes in reply */
 
 	op = outbuf = (XHostAddress *)
-	    Xmalloc((unsigned) (nbytes + 
+	    Xmalloc((unsigned) (nbytes +
 	      (reply.nHosts * sizeof(XHostAddress)) +
 	      (reply.nHosts * sizeof(XServerInterpretedAddress))));
 
-	if (! outbuf) {	
+	if (! outbuf) {
 	    _XEatData(dpy, (unsigned long) nbytes);
 	    UnlockDisplay(dpy);
 	    SyncHandle();
 	    return (XHostAddress *) NULL;
 	}
-	sip = (XServerInterpretedAddress *) 
+	sip = (XServerInterpretedAddress *)
 	 (((unsigned char  *) outbuf) + (reply.nHosts * sizeof(XHostAddress)));
-	bp = buf = ((unsigned char  *) sip) 
+	bp = buf = ((unsigned char  *) sip)
 	  + (reply.nHosts * sizeof(XServerInterpretedAddress));
 
 	_XRead (dpy, (char *) buf, nbytes);
@@ -99,12 +99,12 @@ XHostAddress *XListHosts (
 	    op->length = xhe.length;
 #else
 	    op->family = ((xHostEntry *) bp)->family;
-	    op->length =((xHostEntry *) bp)->length; 
+	    op->length =((xHostEntry *) bp)->length;
 #endif
 	    if (op->family == FamilyServerInterpreted) {
 		char *tp = (char *) (bp + SIZEOF(xHostEntry));
 		char *vp = memchr(tp, 0, op->length);
-		
+
 		if (vp != NULL) {
 		    sip->type = tp;
 		    sip->typelength = vp - tp;
@@ -132,6 +132,6 @@ XHostAddress *XListHosts (
 }
 
 
-    
+
 
 

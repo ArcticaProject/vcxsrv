@@ -32,7 +32,7 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #include "Xlibint.h"
 
-/* 
+/*
  * Return the next event in the queue,
  * BUT do not remove it from the queue.
  * If none found, flush and wait until there is an event to peek.

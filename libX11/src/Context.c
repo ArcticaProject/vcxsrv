@@ -5,13 +5,13 @@ Copyright 1987, 1988, 1990 by Digital Equipment Corporation, Maynard,
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name Digital not be
 used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.  
+software without specific, written prior permission.
 
 DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
 ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
@@ -156,7 +156,7 @@ static void _XFreeContextDB(Display *display)
 /* Save the given value of data to correspond with the keys XID and context.
    Returns nonzero error code if an error has occured, 0 otherwise.
    Possible errors are Out-of-memory.
-*/   
+*/
 
 int XSaveContext(
     Display *display,
@@ -230,16 +230,12 @@ int XSaveContext(
 
 
 
-/* Given an XID and context, returns the associated data.  Note that data 
+/* Given an XID and context, returns the associated data.  Note that data
    here is a pointer since it is a return value.  Returns nonzero error code
    if an error has occured, 0 otherwise.  Possible errors are Entry-not-found.
 */
 
-int XFindContext(display, rid, context, data)
-    Display *display;
-    register XID rid;
-    register XContext context;
-    XPointer *data;		/* RETURN */
+int XFindContext(Display *display, XID rid, XContext context, XPointer *data)
 {
     register DB db;
     register TableEntry entry;
@@ -274,10 +270,7 @@ int XFindContext(display, rid, context, data)
    with the same arguments.
 */
 
-int XDeleteContext(display, rid, context)
-    Display *display;
-    register XID rid;
-    register XContext context;
+int XDeleteContext(Display *display, XID rid, XContext context)
 {
     register DB db;
     register TableEntry entry, *prev;

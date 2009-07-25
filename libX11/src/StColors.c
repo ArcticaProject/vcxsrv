@@ -42,7 +42,7 @@ XStoreColors(
     xColorItem citem;
     register xStoreColorsReq *req;
 
-    LockDisplay(dpy);    
+    LockDisplay(dpy);
     GetReq(StoreColors, req);
 
     req->cmap = cmap;
@@ -58,7 +58,7 @@ XStoreColors(
 
 	/* note that xColorItem doesn't contain all 16-bit quantities, so
 	   we can't use Data16 */
-	Data(dpy, (char *)&citem, (long) SIZEOF(xColorItem)); 
+	Data(dpy, (char *)&citem, (long) SIZEOF(xColorItem));
 			/* assume size is 4*n */
     }
     UnlockDisplay(dpy);

@@ -31,7 +31,7 @@ in this Software without prior written authorization from The Open Group.
    We don't do this because X_PolyArc applies the GC's join-style if
    the last point in one arc coincides with the first point in another.
    The client wouldn't expect this and would have no easy way to defeat it. */
-   
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -46,7 +46,7 @@ XDrawArc(
     int y, /* INT16 */
     unsigned int width,
     unsigned int height, /* CARD16 */
-    int angle1, 
+    int angle1,
     int angle2) /* INT16 */
 {
     register xPolyArcReq *req;

@@ -1,5 +1,5 @@
 /* $Xorg: locking.h,v 1.4 2001/02/09 02:03:40 xorgcvs Exp $ */
-/* 
+/*
 
 Copyright 1992, 1998  The Open Group
 

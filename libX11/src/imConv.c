@@ -46,9 +46,9 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "XlcPubI.h"
 
 #ifdef XKB
-/* 
- * rather than just call _XLookupString (i.e. the pre-XKB XLookupString) 
- * do this because with XKB the event may have some funky modifiers that 
+/*
+ * rather than just call _XLookupString (i.e. the pre-XKB XLookupString)
+ * do this because with XKB the event may have some funky modifiers that
  * _XLookupString doesn't grok.
  */
 #include "XKBlib.h"
@@ -107,7 +107,7 @@ _XimGetLocaleCode (
  * locale
  */
 /*ARGSUSED*/
-int 
+int
 _XimGetCharCode (
     XPointer            ucs_conv,
     KeySym 		keysym,
@@ -146,7 +146,7 @@ static int lookup_string(
 {
     int ret;
     unsigned ctrls = XkbGetXlibControls (event->display);
-    XkbSetXlibControls (event->display, 
+    XkbSetXlibControls (event->display,
 			XkbLC_ForceLatin1Lookup, XkbLC_ForceLatin1Lookup);
     ret = XLookupString(event, (char *)buffer, nbytes, keysym, status);
     XkbSetXlibControls (event->display,
@@ -183,11 +183,11 @@ _XimLookupMBText(
 	memcpy(look, (char *)buffer,count);
 	look[count] = '\0';
 	if ((count = im->methods->ctstombs(ic->core.im,
-				(char*) look, count, 
+				(char*) look, count,
 				buffer, nbytes, &dummy)) < 0) {
 	    count = 0;
 	}
-    } else if ((count == 0) || 
+    } else if ((count == 0) ||
 	       (count == 1 && (symbol > 0x7f && symbol < 0xff00))) {
 
         XPointer from = (XPointer) &ucs4;
@@ -252,7 +252,7 @@ _XimLookupWCText(
 
     if (count > 1) {
 	if ((count = im->methods->ctstowcs(ic->core.im,
-				(char*) look, count, 
+				(char*) look, count,
 				buffer, nbytes, &dummy)) < 0) {
 	    count = 0;
 	}
@@ -326,11 +326,11 @@ _XimLookupUTF8Text(
 	memcpy(look, (char *)buffer,count);
 	look[count] = '\0';
 	if ((count = im->methods->ctstoutf8(ic->core.im,
-				(char*) look, count, 
+				(char*) look, count,
 				buffer, nbytes, &dummy)) < 0) {
 	    count = 0;
 	}
-    } else if ((count == 0) || 
+    } else if ((count == 0) ||
 	       (count == 1 && (symbol > 0x7f && symbol < 0xff00))) {
 
         XPointer from = (XPointer) &ucs4;

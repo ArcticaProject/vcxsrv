@@ -40,8 +40,8 @@ XGetScreenSaver(
      int *interval,
      int *prefer_blanking,
      int *allow_exp)  /*boolean */
-     
-{       
+
+{
     xGetScreenSaverReply rep;
     register xReq *req;
     LockDisplay(dpy);

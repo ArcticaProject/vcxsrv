@@ -82,7 +82,7 @@ static char *Format_Image(
 
   return(data);
 }
-   
+
 #define BYTES_PER_OUTPUT_LINE 12
 
 int

@@ -39,7 +39,7 @@ XGrabButton(
     Window grab_window,
     Bool owner_events,
     unsigned int event_mask, /* CARD16 */
-    int pointer_mode, 
+    int pointer_mode,
     int keyboard_mode,
     Window confine_to,
     Cursor curs)

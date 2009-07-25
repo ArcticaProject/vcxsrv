@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -43,7 +43,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/extensions/XKBproto.h>
 #include "XKBlibint.h"
 
-#else 
+#else
 
 #include <stdio.h>
 #include <X11/X.h>
@@ -163,7 +163,7 @@ XkbNamesPtr	names;
     if ((which&XkbKeyNamesMask)&&(names->keys==NULL)) {
 	if ((!XkbIsLegalKeycode(xkb->min_key_code))||
 	    (!XkbIsLegalKeycode(xkb->max_key_code))||
-	    (xkb->max_key_code<xkb->min_key_code)) 
+	    (xkb->max_key_code<xkb->min_key_code))
 	    return BadValue;
 	names->keys= _XkbTypedCalloc((xkb->max_key_code+1),XkbKeyNameRec);
 	if (names->keys==NULL)
@@ -223,7 +223,7 @@ XkbNamesPtr	names;
 	return;
     names= xkb->names;
     if (freeMap)
-	which= XkbAllNamesMask; 
+	which= XkbAllNamesMask;
     if (which&XkbKTLevelNamesMask) {
 	XkbClientMapPtr	map= xkb->map;
 	if ((map!=NULL)&&(map->types!=NULL)) {
@@ -290,7 +290,7 @@ XkbFreeControls(XkbDescPtr xkb,unsigned which,Bool freeMap)
 
 /***===================================================================***/
 
-Status 
+Status
 XkbAllocIndicatorMaps(XkbDescPtr xkb)
 {
     if (xkb==NULL)
@@ -368,7 +368,7 @@ register int		i;
     }
     if (devi->num_leds>=devi->sz_leds) {
 	XkbDeviceLedInfoRec *prev_leds = devi->leds;
-	
+
 	if (devi->sz_leds>0)	devi->sz_leds*= 2;
 	else			devi->sz_leds= 1;
 	devi->leds= _XkbTypedRealloc(devi->leds,devi->sz_leds,
@@ -465,7 +465,7 @@ XkbDeviceInfoPtr	devi;
 }
 
 
-void 
+void
 XkbFreeDeviceInfo(XkbDeviceInfoPtr devi,unsigned which,Bool freeDevI)
 {
     if (devi) {

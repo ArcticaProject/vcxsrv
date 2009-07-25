@@ -50,7 +50,7 @@ int XGrabKeyboard (
 	req->time = time;
 
        /* if we ever return, suppress the error */
-	if (_XReply (dpy, (xReply *) &rep, 0, xTrue) == 0) 
+	if (_XReply (dpy, (xReply *) &rep, 0, xTrue) == 0)
 		rep.status = GrabSuccess;
 	status = rep.status;
 	UnlockDisplay(dpy);

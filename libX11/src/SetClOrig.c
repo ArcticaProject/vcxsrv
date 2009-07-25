@@ -35,7 +35,7 @@ int
 XSetClipOrigin (
     register Display *dpy,
     GC gc,
-    int xorig, 
+    int xorig,
     int yorig)
 {
     XGCValues *gv = &gc->values;

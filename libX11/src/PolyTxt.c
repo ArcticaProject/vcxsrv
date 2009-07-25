@@ -40,7 +40,7 @@ XDrawText(
     int y,
     XTextItem *items,
     int nitems)
-{   
+{
     register int i;
     register XTextItem *item;
     int length = 0;
@@ -81,11 +81,11 @@ XDrawText(
     req->length += (length + 3)>>2;  /* convert to number of 32-bit words */
 
 
-    /* 
+    /*
      * If the entire request does not fit into the remaining space in the
      * buffer, flush the buffer first.   If the request does fit into the
      * empty buffer, then we won't have to flush it at the end to keep
-     * the buffer 32-bit aligned. 
+     * the buffer 32-bit aligned.
      */
 
     if (dpy->bufptr + length > dpy->bufmax)
@@ -123,9 +123,9 @@ XDrawText(
             {
 	    	int nb = SIZEOF(xTextElt);
 
-	    	BufAlloc (char *, tbuf, nb); 
+	    	BufAlloc (char *, tbuf, nb);
 	    	*tbuf = 0;    /*   elt->len  */
-	    	if (PartialDelta > 0 ) 
+	    	if (PartialDelta > 0 )
 		{
 		    *(tbuf+1) = 127;  /* elt->delta  */
 		    PartialDelta = PartialDelta - 127;
@@ -139,7 +139,7 @@ XDrawText(
 	    }
 	    if (PartialDelta)
             {
-                BufAlloc (char *, tbuf , nbytes); 
+                BufAlloc (char *, tbuf , nbytes);
 	        *tbuf = 0;      /* elt->len */
 		*(tbuf+1) = PartialDelta;    /* elt->delta  */
 	    }
@@ -150,9 +150,9 @@ XDrawText(
 		{
 		    FirstTimeThrough = False;
 		    if (!item->delta)
- 		    { 
+ 		    {
 			nbytes += SIZEOF(xTextElt);
-	   		BufAlloc (char *, tbuf, nbytes); 
+	   		BufAlloc (char *, tbuf, nbytes);
 		        *(tbuf+1) = 0;     /* elt->delta */
 		    }
 		    else
@@ -181,9 +181,9 @@ XDrawText(
 		{
 		    FirstTimeThrough = False;
 		    if (!item->delta)
- 		    { 
+ 		    {
 			nbytes += SIZEOF(xTextElt);
-	   		BufAlloc (char *, tbuf, nbytes); 
+	   		BufAlloc (char *, tbuf, nbytes);
 			*(tbuf+1) = 0;   /*  elt->delta  */
 		    }
 		    else
@@ -195,7 +195,7 @@ XDrawText(
 		else
 		{
  		    nbytes += SIZEOF(xTextElt);
-	   	    BufAlloc (char *, tbuf, nbytes); 
+	   	    BufAlloc (char *, tbuf, nbytes);
 		    *(tbuf+1) = 0;   /* elt->delta  */
 		}
 	    	*tbuf = PartialNChars;   /*  elt->len  */
@@ -209,23 +209,23 @@ XDrawText(
 
     if (length &= 3) {
 	char *pad;
-	/* 
+	/*
 	 * BufAlloc is a macro that uses its last argument more than
-	 * once, otherwise I'd write "BufAlloc (char *, pad, 4-length)" 
+	 * once, otherwise I'd write "BufAlloc (char *, pad, 4-length)"
 	 */
 	length = 4 - length;
 	BufAlloc (char *, pad, length);
-	/* 
+	/*
 	 * if there are 3 bytes of padding, the first byte MUST be 0
-	 * so the pad bytes aren't mistaken for a final xTextElt 
+	 * so the pad bytes aren't mistaken for a final xTextElt
 	 */
 	*pad = 0;
         }
 
-    /* 
+    /*
      * If the buffer pointer is not now pointing to a 32-bit boundary,
      * we must flush the buffer so that it does point to a 32-bit boundary
-     * at the end of this routine. 
+     * at the end of this routine.
      */
 
     if ((dpy->bufptr - dpy->buffer) & 3)

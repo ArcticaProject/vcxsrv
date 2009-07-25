@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -42,7 +42,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/keysym.h>
 #include "XKBlibint.h"
 
-#else 
+#else
 
 #include <stdio.h>
 #include <X11/X.h>
@@ -60,11 +60,11 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 /***====================================================================***/
 
 #define	mapSize(m)	(sizeof(m)/sizeof(XkbKTMapEntryRec))
-static  XkbKTMapEntryRec map2Level[]= { 
+static  XkbKTMapEntryRec map2Level[]= {
   { True, ShiftMask, {1, ShiftMask, 0} }
 };
 
-static  XkbKTMapEntryRec mapAlpha[]= { 
+static  XkbKTMapEntryRec mapAlpha[]= {
   { True, ShiftMask, { 1, ShiftMask, 0 } },
   { True, LockMask,  { 0,  LockMask, 0 } }
 };
@@ -75,25 +75,25 @@ static	XkbModsRec preAlpha[]= {
 };
 
 #define	NL_VMOD_MASK	0
-static  XkbKTMapEntryRec mapKeypad[]= { 
+static  XkbKTMapEntryRec mapKeypad[]= {
 	{ True,	ShiftMask, { 1, ShiftMask,            0 } },
 	{ False,        0, { 1,         0, NL_VMOD_MASK } }
 };
 
 static	XkbKeyTypeRec	canonicalTypes[XkbNumRequiredTypes] = {
-	{ { 0, 0, 0 }, 
+	{ { 0, 0, 0 },
 	  1,	/* num_levels */
 	  0,	/* map_count */
 	  NULL,		NULL,
 	  None,		NULL
 	},
-	{ { ShiftMask, ShiftMask, 0 }, 
+	{ { ShiftMask, ShiftMask, 0 },
 	  2,	/* num_levels */
 	  mapSize(map2Level),	/* map_count */
 	  map2Level,	NULL,
 	  None,		NULL
 	},
-	{ { ShiftMask|LockMask, ShiftMask|LockMask, 0 }, 
+	{ { ShiftMask|LockMask, ShiftMask|LockMask, 0 },
 	  2,				/* num_levels */
 	  mapSize(mapAlpha),		/* map_count */
 	  mapAlpha,	preAlpha,
@@ -427,7 +427,7 @@ XkbApplyCompatMapToKey(XkbDescPtr xkb,KeyCode key,XkbChangesPtr changes)
 {
 KeySym *		syms;
 unsigned char 		explicit,mods;
-XkbSymInterpretPtr	*interps,ibuf[IBUF_SIZE]; 
+XkbSymInterpretPtr	*interps,ibuf[IBUF_SIZE];
 int			n,nSyms,found;
 unsigned		changed,tmp;
 
@@ -669,7 +669,7 @@ register int	i;
 int		width,nOldGroups,oldWidth,newTypes[XkbNumKbdGroups];
 
     if ((!xkb) || (!XkbKeycodeInRange(xkb,key)) || (!xkb->map) ||
-	(!xkb->map->types)||(!newTypes)||((groups&XkbAllGroupsMask)==0)||
+	(!xkb->map->types)||((groups&XkbAllGroupsMask)==0)||
 	(nGroups>XkbNumKbdGroups)) {
 	return BadMatch;
     }

@@ -41,22 +41,22 @@ _XTryShapeBitmapCursor (Display		*dpy,
 			unsigned int	x,
 			unsigned int	y);
 #endif
-    
+
 Cursor XCreatePixmapCursor(
      register Display *dpy,
      Pixmap source,
      Pixmap mask,
-     XColor *foreground, 
+     XColor *foreground,
      XColor *background,
      unsigned int x,
      unsigned int y)
 
-{       
+{
     register xCreateCursorReq *req;
     Cursor cid;
 
 #ifdef USE_DYNAMIC_XCURSOR
-    cid = _XTryShapeBitmapCursor (dpy, source, mask, 
+    cid = _XTryShapeBitmapCursor (dpy, source, mask,
 				  foreground, background, x, y);
     if (cid)
 	return cid;

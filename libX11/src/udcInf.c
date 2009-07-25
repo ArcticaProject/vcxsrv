@@ -48,7 +48,7 @@ from The Open Group.
 #include <XomGeneric.h>
 
 /*
-   external symbols 
+   external symbols
 */
 extern FontData read_EncodingInfo();
 extern int _xudc_get_codeset();
@@ -151,8 +151,8 @@ int  *num_codeset;
                 } else {
 		    int *prev_ret = ret;
 
-		    ret = 
-                        (int *)Xrealloc(ret,num_ret*sizeof(int)); 
+		    ret =
+                        (int *)Xrealloc(ret,num_ret*sizeof(int));
 		    if (ret == NULL){
 			Xfree(prev_ret);
 		    }
@@ -309,9 +309,9 @@ int  *num_gr;
     return 0;
 }
 
-/* 
+/*
  *      Code convert wo tomonau UDC area no kakutoku
- *      GetUDCCPArea() / glyph_to_code()           
+ *      GetUDCCPArea() / glyph_to_code()
  *
  */
 
@@ -375,7 +375,7 @@ XlcCharSet 	charset;
 	sprintf(buf, "csd%d.charset_name", i);
 	_XlcGetLocaleDataBase(lcd, "XLC_CHARSET_DEFINE", buf, &value, &count);
 	if(count > 0){
-	    if(!_XlcNCompareISOLatin1(value[0], 
+	    if(!_XlcNCompareISOLatin1(value[0],
 			charset->name,strlen(value[0])) ){
 		return(True);
 	    }
@@ -406,7 +406,7 @@ int size;
     strcpy(&from[seq_len + name_len],src);
     return True;
 }
-int 
+int
 _xudc_glyph_to_code(locale,charset_str,codeset,glyph_index,codepoint)
 char 	*locale;
 char 	*charset_str;
@@ -432,7 +432,7 @@ unsigned long 	*codepoint;
     dst  = (unsigned char *)to32;
 
     memset(dst,0,25);
-	
+
     lcd = (XLCd)_XlcGenericLoader(locale);
 
     if (!_xudc_gi_to_vgi(lcd,locale,charset_str,codeset,
@@ -560,7 +560,7 @@ int  *num_cr;
 
 /*
  *    code_to_glyph()
- *    
+ *
  */
 typedef struct __XUDCGIInf {
     char 		*charset_str;
@@ -589,7 +589,7 @@ FontScope	scope;
  *
  *
  */
-static Bool  
+static Bool
 _xudc_vgi_to_gi(lcd,locale,vglyph,glyph,charset,charsetname,size)
 XLCd    lcd;
 char    *locale;
@@ -605,7 +605,7 @@ int	size;
     FontData font_data;
     CodeSet cs;
 
-    
+
     for(i=0;;i++){
         sprintf(buf, "fs%d.charset.name",i);
         _XlcGetLocaleDataBase(lcd, "XLC_FONTSET", buf, &value, &count);

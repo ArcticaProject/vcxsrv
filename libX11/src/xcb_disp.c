@@ -16,11 +16,11 @@ static void *alloc_copy(const void *src, int *dstn, size_t n)
 	if(n <= 0)
 	{
 		*dstn = 0;
-		return 0;
+		return NULL;
 	}
 	dst = Xmalloc(n);
 	if(!dst)
-		return 0;
+		return NULL;
 	memcpy(dst, src, n);
 	*dstn = n;
 	return dst;
@@ -65,7 +65,7 @@ int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *scr
 
 #ifdef HAVE_LAUNCHD
 	if(!display || !*display) display = getenv("DISPLAY");
-	
+
 	if(display && strlen(display)>11 && !strncmp(display, "/tmp/launch", 11)) {
 		/* do nothing -- the magic happens inside of xcb_connect */
 	} else
@@ -76,15 +76,20 @@ int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *scr
 
 		len = strlen(host) + (1 + 20 + 1 + 20 + 1);
 		*fullnamep = Xmalloc(len);
+		if (!*fullnamep) {
+			free(host);
+			return 0;
+		}
+
 		snprintf(*fullnamep, len, "%s:%d.%d", host, n, *screenp);
 		free(host);
 	}
 
 	_XLockMutex(_Xglobal_lock);
 	if(xauth.name && xauth.data)
-		c = xcb_connect_to_display_with_auth_info(display, &xauth, 0);
+		c = xcb_connect_to_display_with_auth_info(display, &xauth, NULL);
 	else
-		c = xcb_connect(display, 0);
+		c = xcb_connect(display, NULL);
 	_XUnlockMutex(_Xglobal_lock);
 
 	dpy->fd = xcb_get_file_descriptor(c);
@@ -93,6 +98,10 @@ int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *scr
 	dpy->xcb->pending_requests_tail = &dpy->xcb->pending_requests;
 	dpy->xcb->next_xid = xcb_generate_id(dpy->xcb->connection);
 
+	dpy->xcb->event_notify = xcondition_malloc();
+	if (!dpy->xcb->event_notify)
+		return 0;
+	xcondition_init(dpy->xcb->event_notify);
 	return !xcb_connection_has_error(c);
 }
 
@@ -106,5 +115,6 @@ void _XFreeX11XCBStructure(Display *dpy)
 		dpy->xcb->pending_requests = tmp->next;
 		free(tmp);
 	}
+	xcondition_free(dpy->xcb->event_notify);
 	Xfree(dpy->xcb);
 }

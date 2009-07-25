@@ -38,7 +38,7 @@ Status XQueryBestStipple(
      unsigned int height,
      unsigned int *ret_width,
      unsigned int *ret_height)
-{       
+{
     xQueryBestSizeReply rep;
     register xQueryBestSizeReq *req;
 

@@ -3,7 +3,7 @@
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
  * 	All Rights Reserved
- * 
+ *
  * This file is a component of an X Window System-specific implementation
  * of Xcms based on the TekColor Color Management System.  Permission is
  * hereby granted to use, copy, modify, sell, and otherwise distribute this
@@ -11,10 +11,10 @@
  * that this copyright, permission, and disclaimer notice is reproduced in
  * all copies of this software and in supporting documentation.  TekColor
  * is a trademark of Tektronix, Inc.
- * 
+ *
  * Tektronix makes no representation about the suitability of this software
  * for any purpose.  It is provided "as is" and with all faults.
- * 
+ *
  * TEKTRONIX DISCLAIMS ALL WARRANTIES APPLICABLE TO THIS SOFTWARE,
  * INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.  IN NO EVENT SHALL TEKTRONIX BE LIABLE FOR ANY
@@ -239,7 +239,7 @@ ConvertMixedColors(
  *		batches:
  *			DI to DD
  *			DD to DI(not CIEXYZ)
- *		
+ *
  *		format_flag:
  *		    0x01 : convert Device-Dependent only specifications to the
  *			target format.
@@ -421,7 +421,7 @@ _XcmsDIConvertColors(
  *		3. The calling routine may want to convert only between
  *			CIExyY <-> CIEXYZ <-> CIEuvY
  *		    therefore, this routine allows pWhitePt to equal NULL.
- *		
+ *
  *
  *	RETURNS
  *		XcmsFailure if failed,
@@ -507,7 +507,7 @@ Continue:
 	 * complementary, i.e.,
 	 *	for an i, 0 <= i < n elements
 	 *	from_CIEXYZ[i] is not the inverse of to_CIEXYZ[i]
-	 *	
+	 *
 	 * Execute the functions all the way to CIEXYZ
 	 */
 	while (*src_to_CIEXYZ) {
@@ -603,7 +603,7 @@ _XcmsDDConvertColors(
 
     /*
      * Its ok if pColors_in_out->format == XcmsCIEXYZFormat
-     *	or 
+     *	or
      * if newFormat == XcmsCIEXYZFormat
      */
     if ( !( ValidDDColorSpaceID(ccc, pColors_in_out->format)
@@ -670,7 +670,7 @@ Continue:
 	 * complementary, i.e.,
 	 *	for an i, 0 <= i < n elements
 	 *	from_CIEXYZ[i] is not the inverse of to_CIEXYZ[i]
-	 *	
+	 *
 	 * Execute the functions all the way to CIEXYZ
 	 */
 	while (*src_to_CIEXYZ) {

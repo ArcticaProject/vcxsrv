@@ -143,7 +143,7 @@ typedef struct _XOCGenericPart {
 
 typedef struct _XOCGenericRec {
     XOCMethods 		methods;
-    XOCCoreRec 		core;	
+    XOCCoreRec 		core;
     XOCGenericPart 	gen;
 } XOCGenericRec, *XOCGeneric;
 

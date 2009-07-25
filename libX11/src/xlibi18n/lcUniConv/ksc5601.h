@@ -2968,17 +2968,17 @@ ksc5601_wctomb (conv_t conv, unsigned char *r, ucs4_t wc, int n)
     const Summary16 *summary = NULL;
     if (wc < 0x0460)
       summary = &ksc5601_uni2indx_page00[(wc>>4)];
-    else if (wc >= 0x2000 && wc < 0x2670)
+    else if (wc >= 0x2000 && wc < 0x2670) /* General Punctuation (2000, 206F) */
       summary = &ksc5601_uni2indx_page20[(wc>>4)-0x200];
-    else if (wc >= 0x3000 && wc < 0x33e0)
+    else if (wc >= 0x3000 && wc < 0x33e0) /* CJK Symbols and Punctuation (3000, 303F) */
       summary = &ksc5601_uni2indx_page30[(wc>>4)-0x300];
-    else if (wc >= 0x4e00 && wc < 0x9fa0)
+    else if (wc >= 0x4e00 && wc < 0x9fa0) /* CJK Unified Ideographs (4E00, 9FFF) */
       summary = &ksc5601_uni2indx_page4e[(wc>>4)-0x4e0];
-    else if (wc >= 0xac00 && wc < 0xd7a0)
+    else if (wc >= 0xac00 && wc < 0xd7a0) /* Hangul Syllables (AC00, D7AF) 11183 */
       summary = &ksc5601_uni2indx_pageac[(wc>>4)-0xac0];
-    else if (wc >= 0xf900 && wc < 0xfa10)
+    else if (wc >= 0xf900 && wc < 0xfa10) /* CJK Compatibility Ideographs (F900, FAFF) */
       summary = &ksc5601_uni2indx_pagef9[(wc>>4)-0xf90];
-    else if (wc >= 0xff00 && wc < 0xfff0)
+    else if (wc >= 0xff00 && wc < 0xfff0) /* Halfwidth and Fullwidth Forms (FF00, FFEF) */
       summary = &ksc5601_uni2indx_pageff[(wc>>4)-0xff0];
     if (summary) {
       unsigned short used = summary->used;

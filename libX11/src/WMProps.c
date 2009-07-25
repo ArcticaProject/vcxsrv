@@ -34,13 +34,13 @@ Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts,
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Wyse not be
 used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.  
+software without specific, written prior permission.
 
 WYSE DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
 ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
@@ -62,7 +62,7 @@ SOFTWARE.
 #include <X11/Xlocale.h>
 
 
-/* 
+/*
  * XSetWMProperties sets the following properties:
  *	WM_NAME		  type: TEXT		format: varies?
  *	WM_ICON_NAME	  type: TEXT		format: varies?
@@ -73,7 +73,7 @@ SOFTWARE.
  *	WM_CLASS	  type: STRING/STRING	format: 8
   *	WM_LOCALE_NAME	  type: STRING		format: 8
  */
-	
+
 void XSetWMProperties (
      Display *dpy,
      Window w,			/* window to decorate */
@@ -109,7 +109,7 @@ void XSetWMProperties (
     textprop.format = 8;
     textprop.nitems = len;
     XSetWMClientMachine (dpy, w, &textprop);
-	
+
     /* set hints about how geometry and window manager interaction */
     if (sizeHints) XSetWMNormalHints (dpy, w, sizeHints);
     if (wmHints) XSetWMHints (dpy, w, wmHints);
@@ -139,7 +139,7 @@ void XSetWMProperties (
 	}
 	XSetClassHint (dpy, w, classHints);
     }
-    
+
     locale = setlocale(LC_CTYPE, (char *)NULL);
     if (locale)
         XChangeProperty (dpy, w, XInternAtom(dpy, "WM_LOCALE_NAME", False),

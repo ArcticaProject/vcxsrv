@@ -59,7 +59,7 @@ _XomGenericTextPerCharExtents(
     conv = _XomInitConverter(oc, type);
     if (conv == NULL)
 	return 0;
-    
+
     bzero((char *) &overall, sizeof(XCharStruct));
     logical_ascent = logical_descent = require_num = *num_chars = 0;
 

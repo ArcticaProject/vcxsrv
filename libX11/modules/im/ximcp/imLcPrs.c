@@ -404,7 +404,7 @@ get_mb_string (Xim im, char *buf, KeySym ks)
     return len;
 }
 
-#define AllMask (ShiftMask | LockMask | ControlMask | Mod1Mask) 
+#define AllMask (ShiftMask | LockMask | ControlMask | Mod1Mask)
 #define LOCAL_WC_BUFSIZE 128
 #define LOCAL_UTF8_BUFSIZE 256
 #define SEQUENCE_MAX	10
@@ -445,7 +445,7 @@ parseline(
     do {
 	token = nexttoken(fp, tokenbuf, &lastch);
     } while (token == ENDOFLINE);
-    
+
     if (token == ENDOFFILE) {
 	return(-1);
     }
@@ -592,7 +592,7 @@ parseline(
 
     l = _Xmbstoutf8(local_utf8_buf, rhs_string_mb, LOCAL_UTF8_BUFSIZE - 1);
     if (l == LOCAL_UTF8_BUFSIZE - 1) {
-	local_wc_buf[l] = '\0';
+	local_utf8_buf[l] = '\0';
     }
     while (b->utf8used + l + 1 > b->utf8size) {
 	b->utf8size = b->utf8size ? b->utf8size * 1.5 : 1024;

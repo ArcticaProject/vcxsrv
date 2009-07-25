@@ -67,11 +67,11 @@ int XGetPointerMapping (
     _XRead (dpy, (char *)mapping, nbytes);
     /* don't return more data than the user asked for. */
     if (rep.nElts) {
-	    memcpy ((char *) map, (char *) mapping, 
+	    memcpy ((char *) map, (char *) mapping,
 		MIN((int)rep.nElts, nmaps) );
 	}
 
-    if (remainder) 
+    if (remainder)
 	_XEatData(dpy, (unsigned long)remainder);
 
     UnlockDisplay(dpy);

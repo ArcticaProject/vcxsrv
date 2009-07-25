@@ -37,7 +37,7 @@ XGetInputFocus(
      register Display *dpy,
      Window *focus,
      int *revert_to)
-{       
+{
     xGetInputFocusReply rep;
     register xReq *req;
     LockDisplay(dpy);

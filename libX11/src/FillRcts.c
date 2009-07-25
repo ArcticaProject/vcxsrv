@@ -65,4 +65,4 @@ XFillRectangles(
     SyncHandle();
     return 1;
 }
-    
+

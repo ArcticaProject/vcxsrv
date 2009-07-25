@@ -3,7 +3,7 @@
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
  * 	All Rights Reserved
- * 
+ *
  * This file is a component of an X Window System-specific implementation
  * of XCMS based on the TekColor Color Management System.  Permission is
  * hereby granted to use, copy, modify, sell, and otherwise distribute this
@@ -11,10 +11,10 @@
  * that this copyright, permission, and disclaimer notice is reproduced in
  * all copies of this software and in supporting documentation.  TekColor
  * is a trademark of Tektronix, Inc.
- * 
+ *
  * Tektronix makes no representation about the suitability of this software
  * for any purpose.  It is provided "as is" and with all faults.
- * 
+ *
  * TEKTRONIX DISCLAIMS ALL WARRANTIES APPLICABLE TO THIS SOFTWARE,
  * INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.  IN NO EVENT SHALL TEKTRONIX BE LIABLE FOR ANY
@@ -105,7 +105,7 @@ XcmsCIELuvQueryMaxC(
 
     /* Use my own CCC  and inherit screen white Pt */
     memcpy ((char *)&myCCC, (char *)ccc, sizeof(XcmsCCCRec));
-    myCCC.clientWhitePt.format = XcmsUndefinedFormat; 
+    myCCC.clientWhitePt.format = XcmsUndefinedFormat;
     myCCC.gamutCompProc = (XcmsCompressionProc)NULL;/* no gamut comp func */
 
     while (hue_angle < 0.0) {
@@ -113,7 +113,7 @@ XcmsCIELuvQueryMaxC(
     }
     while (hue_angle >= 360.0) {
 	hue_angle -= 360.0;
-    } 
+    }
 
     hue = radians(hue_angle);
     tmp.spec.CIELuv.L_star = L_star;
@@ -182,7 +182,7 @@ XcmsCIELuvQueryMaxC(
 		return(XcmsSuccess);
 	}
 	if (nT > 0) {
-	    n_L_star += ((TOPL - n_L_star) * 
+	    n_L_star += ((TOPL - n_L_star) *
 			 (L_star - tmp.spec.CIELuv.L_star)) / (TOPL - L_star);
 	} else {
 	    n_L_star *= L_star / tmp.spec.CIELuv.L_star;
@@ -193,7 +193,7 @@ XcmsCIELuvQueryMaxC(
 		/* printf("rFactor = %lf\n", rFactor); */
 	}
     }
-    if (XCMS_FABS(last_L_star - L_star) < 
+    if (XCMS_FABS(last_L_star - L_star) <
 	XCMS_FABS(tmp.spec.CIELuv.L_star - L_star)) {
 	    tmp.spec.CIELuv.u_star = lastuStar;
 	    tmp.spec.CIELuv.v_star = lastvStar;

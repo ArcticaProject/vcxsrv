@@ -42,8 +42,8 @@ XDrawLine (
     Drawable d,
     GC gc,
     int x1,
-    int y1, 
-    int x2, 
+    int y1,
+    int x2,
     int y2)
 {
     register xSegment *segment;

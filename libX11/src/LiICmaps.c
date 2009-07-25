@@ -65,7 +65,7 @@ Colormap *XListInstalledColormaps(
 	_XRead32 (dpy, (long *) cmaps, nbytes);
     }
     else cmaps = (Colormap *) NULL;
-    
+
     *n = rep.nColormaps;
     UnlockDisplay(dpy);
     SyncHandle();

@@ -212,6 +212,8 @@ typedef struct {
 #include "lcUniConv/ksc5601.h"
 #include "lcUniConv/big5.h"
 #include "lcUniConv/big5_emacs.h"
+#include "lcUniConv/big5hkscs.h"
+#include "lcUniConv/gbk.h"
 
 static Utf8ConvRec all_charsets[] = {
     /* The ISO10646-1/UTF-8 entry occurs twice, once at the beginning
@@ -332,13 +334,19 @@ static Utf8ConvRec all_charsets[] = {
 	cp1256_mbtowc, cp1256_wctomb
     },
     { "BIG5-0", NULLQUARK,
-    big5_mbtowc, big5_wctomb
-	},
+	big5_mbtowc, big5_wctomb
+    },
     { "BIG5-E0", NULLQUARK,
 	big5_0_mbtowc, big5_0_wctomb
     },
     { "BIG5-E1", NULLQUARK,
 	big5_1_mbtowc, big5_1_wctomb
+    },
+    { "GBK-0", NULLQUARK,
+	gbk_mbtowc, gbk_wctomb
+    },
+    { "BIG5HKSCS-0", NULLQUARK,
+	big5hkscs_mbtowc, big5hkscs_wctomb
     },
 
     /* The ISO10646-1/UTF-8 entry occurs twice, once at the beginning
@@ -1807,6 +1815,515 @@ open_utf8tofcs(
     return create_tofontcs_conv(from_lcd, &methods_utf8tocs);
 }
 
+/* ========================== iconv Stuff ================================ */
+
+/* from XlcNCharSet to XlcNMultiByte */
+
+static int
+iconv_cstombs(XlcConv conv, XPointer *from, int *from_left,
+	      XPointer *to, int *to_left, XPointer *args, int num_args)
+{
+    XlcCharSet charset;
+    char *name;
+    Utf8Conv convptr;
+    int i;
+    unsigned char const *src;
+    unsigned char const *srcend;
+    unsigned char *dst;
+    unsigned char *dstend;
+    int unconv_num;
+
+    if (from == NULL || *from == NULL)
+	return 0;
+
+    if (num_args < 1)
+	return -1;
+
+    charset = (XlcCharSet) args[0];
+    name = charset->encoding_name;
+    /* not charset->name because the latter has a ":GL"/":GR" suffix */
+
+    for (convptr = all_charsets, i = all_charsets_count-1; i > 0; convptr++, i--)
+	if (!strcmp(convptr->name, name))
+	    break;
+    if (i == 0)
+	return -1;
+
+    src = (unsigned char const *) *from;
+    srcend = src + *from_left;
+    dst = (unsigned char *) *to;
+    dstend = dst + *to_left;
+    unconv_num = 0;
+
+    while (src < srcend) {
+	ucs4_t wc;
+	int consumed;
+	int count;
+
+	consumed = convptr->cstowc(conv, &wc, src, srcend-src);
+	if (consumed == RET_ILSEQ)
+	    return -1;
+	if (consumed == RET_TOOFEW(0))
+	    break;
+
+    /* Use stdc iconv to convert widechar -> multibyte */
+
+	count = wctomb(dst, wc);
+	if (count == 0)
+	    break;
+	if (count == -1) {
+	    count = wctomb(dst, BAD_WCHAR);
+	    if (count == 0)
+		break;
+	    unconv_num++;
+	}
+	src += consumed;
+	dst += count;
+    }
+
+    *from = (XPointer) src;
+    *from_left = srcend - src;
+    *to = (XPointer) dst;
+    *to_left = dstend - dst;
+
+    return unconv_num;
+
+}
+
+static XlcConvMethodsRec iconv_cstombs_methods = {
+    close_converter,
+    iconv_cstombs,
+    NULL
+};
+
+static XlcConv
+open_iconv_cstombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+{
+    lazy_init_all_charsets();
+    return create_conv(from_lcd, &iconv_cstombs_methods);
+}
+
+static int
+iconv_mbstocs(XlcConv conv, XPointer *from, int *from_left,
+	      XPointer *to, int *to_left, XPointer *args, int num_args)
+{
+    Utf8Conv *preferred_charsets;
+    XlcCharSet last_charset = NULL;
+    unsigned char const *src;
+    unsigned char const *srcend;
+    unsigned char *dst;
+    unsigned char *dstend;
+    int unconv_num;
+
+    if (from == NULL || *from == NULL)
+	return 0;
+
+    preferred_charsets = (Utf8Conv *) conv->state;
+    src = (unsigned char const *) *from;
+    srcend = src + *from_left;
+    dst = (unsigned char *) *to;
+    dstend = dst + *to_left;
+    unconv_num = 0;
+
+    while (src < srcend && dst < dstend) {
+	Utf8Conv chosen_charset = NULL;
+	XlcSide chosen_side = XlcNONE;
+	wchar_t wc;
+	int consumed;
+	int count;
+
+    /* Uses stdc iconv to convert multibyte -> widechar */
+
+	consumed = mbtowc(&wc, src, srcend-src);
+	if (consumed == 0)
+	    break;
+	if (consumed == -1) {
+	    src++;
+	    unconv_num++;
+	    continue;
+	}
+
+	count = charset_wctocs(preferred_charsets, &chosen_charset, &chosen_side, conv, dst, wc, dstend-dst);
+
+	if (count == RET_TOOSMALL)
+	    break;
+	if (count == RET_ILSEQ) {
+	    src += consumed;
+	    unconv_num++;
+	    continue;
+	}
+
+	if (last_charset == NULL) {
+	    last_charset =
+	        _XlcGetCharSetWithSide(chosen_charset->name, chosen_side);
+	    if (last_charset == NULL) {
+		src += consumed;
+		unconv_num++;
+		continue;
+	    }
+	} else {
+	    if (!(last_charset->xrm_encoding_name == chosen_charset->xrm_name
+	          && (last_charset->side == XlcGLGR
+	              || last_charset->side == chosen_side)))
+		break;
+	}
+	src += consumed;
+	dst += count;
+    }
+
+    if (last_charset == NULL)
+	return -1;
+
+    *from = (XPointer) src;
+    *from_left = srcend - src;
+    *to = (XPointer) dst;
+    *to_left = dstend - dst;
+
+    if (num_args >= 1)
+	*((XlcCharSet *)args[0]) = last_charset;
+
+    return unconv_num;
+}
+
+static XlcConvMethodsRec iconv_mbstocs_methods = {
+    close_tocs_converter,
+    iconv_mbstocs,
+    NULL
+};
+
+static XlcConv
+open_iconv_mbstocs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+{
+    return create_tocs_conv(from_lcd, &iconv_mbstocs_methods);
+}
+
+/* from XlcNMultiByte to XlcNChar */
+
+static int
+iconv_mbtocs(XlcConv conv, XPointer *from, int *from_left,
+	     XPointer *to, int *to_left, XPointer *args, int num_args)
+{
+    Utf8Conv *preferred_charsets;
+    XlcCharSet last_charset = NULL;
+    unsigned char const *src;
+    unsigned char const *srcend;
+    unsigned char *dst;
+    unsigned char *dstend;
+    int unconv_num;
+
+    if (from == NULL || *from == NULL)
+	return 0;
+
+    preferred_charsets = (Utf8Conv *) conv->state;
+    src = (unsigned char const *) *from;
+    srcend = src + *from_left;
+    dst = (unsigned char *) *to;
+    dstend = dst + *to_left;
+    unconv_num = 0;
+
+    while (src < srcend && dst < dstend) {
+	Utf8Conv chosen_charset = NULL;
+	XlcSide chosen_side = XlcNONE;
+	wchar_t wc;
+	int consumed;
+	int count;
+
+    /* Uses stdc iconv to convert multibyte -> widechar */
+
+	consumed = mbtowc(&wc, src, srcend-src);
+	if (consumed == 0)
+	    break;
+	if (consumed == -1) {
+	    src++;
+	    unconv_num++;
+	    continue;
+	}
+
+	count = charset_wctocs(preferred_charsets, &chosen_charset, &chosen_side, conv, dst, wc, dstend-dst);
+	if (count == RET_TOOSMALL)
+	    break;
+	if (count == RET_ILSEQ) {
+	    src += consumed;
+	    unconv_num++;
+	    continue;
+	}
+
+	if (last_charset == NULL) {
+	    last_charset =
+		_XlcGetCharSetWithSide(chosen_charset->name, chosen_side);
+	    if (last_charset == NULL) {
+		src += consumed;
+		unconv_num++;
+		continue;
+	    }
+	} else {
+	    if (!(last_charset->xrm_encoding_name == chosen_charset->xrm_name
+		  && (last_charset->side == XlcGLGR
+		      || last_charset->side == chosen_side)))
+		break;
+	}
+	src += consumed;
+	dst += count;
+    }
+
+    if (last_charset == NULL)
+	return -1;
+
+    *from = (XPointer) src;
+    *from_left = srcend - src;
+    *to = (XPointer) dst;
+    *to_left = dstend - dst;
+
+    if (num_args >= 1)
+	*((XlcCharSet *)args[0]) = last_charset;
+
+    return unconv_num;
+}
+
+static XlcConvMethodsRec iconv_mbtocs_methods = {
+    close_tocs_converter,
+    iconv_mbtocs,
+    NULL
+};
+
+static XlcConv
+open_iconv_mbtocs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+{
+    return create_tocs_conv(from_lcd, &iconv_mbtocs_methods );
+}
+
+/* from XlcNMultiByte to XlcNString */
+
+static int
+iconv_mbstostr(XlcConv conv, XPointer *from, int *from_left,
+	       XPointer *to, int *to_left, XPointer *args, int num_args)
+{
+    unsigned char const *src;
+    unsigned char const *srcend;
+    unsigned char *dst;
+    unsigned char *dstend;
+    int unconv_num;
+
+    if (from == NULL || *from == NULL)
+	return 0;
+
+    src = (unsigned char const *) *from;
+    srcend = src + *from_left;
+    dst = (unsigned char *) *to;
+    dstend = dst + *to_left;
+    unconv_num = 0;
+
+    while (src < srcend) {
+	unsigned char c;
+	wchar_t wc;
+	int consumed;
+
+    /* Uses stdc iconv to convert multibyte -> widechar */
+
+	consumed = mbtowc(&wc, src, srcend-src);
+	if (consumed == 0)
+	    break;
+	if (dst == dstend)
+	    break;
+	if (consumed == -1) {
+	    consumed = 1;
+	    c = BAD_CHAR;
+	    unconv_num++;
+	} else {
+	    if ((wc & ~(wchar_t)0xff) != 0) {
+		c = BAD_CHAR;
+		unconv_num++;
+	    } else
+		c = (unsigned char) wc;
+	}
+	*dst++ = c;
+	src += consumed;
+    }
+
+    *from = (XPointer) src;
+    *from_left = srcend - src;
+    *to = (XPointer) dst;
+    *to_left = dstend - dst;
+
+    return unconv_num;
+}
+
+static XlcConvMethodsRec iconv_mbstostr_methods = {
+    close_converter,
+    iconv_mbstostr,
+    NULL
+};
+
+static XlcConv
+open_iconv_mbstostr(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+{
+    return create_conv(from_lcd, &iconv_mbstostr_methods);
+}
+
+/* from XlcNString to XlcNMultiByte */
+static int
+iconv_strtombs(XlcConv conv, XPointer *from, int *from_left,
+	       XPointer *to, int *to_left, XPointer *args, int num_args)
+{
+    unsigned char const *src;
+    unsigned char const *srcend;
+    unsigned char *dst;
+    unsigned char *dstend;
+
+    if (from == NULL || *from == NULL)
+	return 0;
+
+    src = (unsigned char const *) *from;
+    srcend = src + *from_left;
+    dst = (unsigned char *) *to;
+    dstend = dst + *to_left;
+
+    while (src < srcend) {
+	int count = wctomb(dst, *src);
+	if (count < 0)
+	    break;
+	dst += count;
+	src++;
+    }
+
+    *from = (XPointer) src;
+    *from_left = srcend - src;
+    *to = (XPointer) dst;
+    *to_left = dstend - dst;
+
+    return 0;
+}
+
+static XlcConvMethodsRec iconv_strtombs_methods= {
+    close_converter,
+    iconv_strtombs,
+    NULL
+};
+
+static XlcConv
+open_iconv_strtombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+{
+    return create_conv(from_lcd, &iconv_strtombs_methods);
+}
+
+/***************************************************************************/
+/* Part II: An iconv locale loader.
+ *
+ *Here we can assume that "multi-byte" is iconv and that `wchar_t' is Unicode.
+ */
+
+/* from XlcNMultiByte to XlcNWideChar */
+static int
+iconv_mbstowcs(XlcConv conv, XPointer *from, int *from_left,
+	       XPointer *to, int *to_left, XPointer *args,  int num_args)
+{
+    char *src = *((char **) from);
+    wchar_t *dst = *((wchar_t **) to);
+    int src_left = *from_left;
+    int dst_left = *to_left;
+    int length, unconv_num = 0;
+
+    while (src_left > 0 && dst_left > 0) {
+	length = mbtowc(dst, src, src_left);
+
+	if (length > 0) {
+	    src += length;
+	    src_left -= length;
+	    if (dst)
+	        dst++;
+	    dst_left--;
+	} else if (length < 0) {
+	    src++;
+	    src_left--;
+	    unconv_num++;
+        } else {
+            /* null ? */
+            src++;
+            src_left--;
+            if (dst) 
+                *dst++ = L'\0';
+            dst_left--;
+        }
+    }
+
+    *from = (XPointer) src;
+    if (dst)
+	*to = (XPointer) dst;
+    *from_left = src_left;
+    *to_left = dst_left;
+
+    return unconv_num;
+}
+
+static XlcConvMethodsRec iconv_mbstowcs_methods = {
+    close_converter,
+    iconv_mbstowcs,
+    NULL
+} ;
+
+static XlcConv
+open_iconv_mbstowcs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+{
+    return create_conv(from_lcd, &iconv_mbstowcs_methods);
+}
+
+static int
+iconv_wcstombs(XlcConv conv, XPointer *from, int *from_left,
+	       XPointer *to, int *to_left, XPointer *args, int num_args)
+{
+    wchar_t *src = *((wchar_t **) from);
+    char *dst = *((char **) to);
+    int src_left = *from_left;
+    int dst_left = *to_left;
+    int length, unconv_num = 0;
+
+    while (src_left > 0 && dst_left >= MB_CUR_MAX) { 
+	length = wctomb(dst, *src);		/* XXX */
+
+        if (length > 0) {
+	    src++;
+	    src_left--;
+	    if (dst) 
+		dst += length;
+	    dst_left -= length;
+	} else if (length < 0) {
+	    src++;
+	    src_left--;
+	    unconv_num++;
+	} 
+    }
+
+    *from = (XPointer) src;
+    if (dst)
+      *to = (XPointer) dst;
+    *from_left = src_left;
+    *to_left = dst_left;
+
+    return unconv_num;
+}
+
+static XlcConvMethodsRec iconv_wcstombs_methods = {
+    close_converter,
+    iconv_wcstombs,
+    NULL
+} ;
+
+static XlcConv
+open_iconv_wcstombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+{
+    return create_conv(from_lcd, &iconv_wcstombs_methods);
+}
+
+static XlcConv
+open_iconv_mbstofcs(
+    XLCd from_lcd,
+    const char *from_type,
+    XLCd to_lcd,
+    const char *to_type)
+{
+    return create_tofontcs_conv(from_lcd, &iconv_mbstocs_methods);
+}
+
 /* Registers UTF-8 converters for a UTF-8 locale. */
 
 void
@@ -1840,5 +2357,36 @@ _XlcAddUtf8LocaleConverters(
 
     /* Register converters for XlcNFontCharSet */
     _XlcSetConverter(lcd, XlcNMultiByte, lcd, XlcNFontCharSet, open_utf8tofcs);
+    _XlcSetConverter(lcd, XlcNWideChar, lcd, XlcNFontCharSet, open_wcstofcs);
+}
+
+void
+_XlcAddGB18030LocaleConverters(
+    XLCd lcd)
+{
+
+    /* Register elementary converters. */
+    _XlcSetConverter(lcd, XlcNMultiByte, lcd, XlcNWideChar, open_iconv_mbstowcs);
+    _XlcSetConverter(lcd, XlcNWideChar, lcd, XlcNMultiByte, open_iconv_wcstombs);
+
+    /* Register converters for XlcNCharSet. This implicitly provides
+     * converters from and to XlcNCompoundText. */
+
+    _XlcSetConverter(lcd, XlcNCharSet, lcd, XlcNMultiByte, open_iconv_cstombs);
+    _XlcSetConverter(lcd, XlcNMultiByte, lcd, XlcNCharSet, open_iconv_mbstocs);
+    _XlcSetConverter(lcd, XlcNMultiByte, lcd, XlcNChar, open_iconv_mbtocs);
+    _XlcSetConverter(lcd, XlcNString, lcd, XlcNMultiByte, open_iconv_strtombs);
+    _XlcSetConverter(lcd, XlcNMultiByte, lcd, XlcNString, open_iconv_mbstostr);
+
+    /* Register converters for XlcNFontCharSet */
+    _XlcSetConverter(lcd, XlcNMultiByte, lcd, XlcNFontCharSet, open_iconv_mbstofcs);
+
+    _XlcSetConverter(lcd, XlcNWideChar, lcd, XlcNString, open_wcstostr);
+    _XlcSetConverter(lcd, XlcNString, lcd, XlcNWideChar, open_strtowcs);
+    _XlcSetConverter(lcd, XlcNCharSet, lcd, XlcNWideChar, open_cstowcs);
+    _XlcSetConverter(lcd, XlcNWideChar, lcd, XlcNCharSet, open_wcstocs);
+    _XlcSetConverter(lcd, XlcNWideChar, lcd, XlcNChar, open_wcstocs1);
+
+    /* Register converters for XlcNFontCharSet */
     _XlcSetConverter(lcd, XlcNWideChar, lcd, XlcNFontCharSet, open_wcstofcs);
 }

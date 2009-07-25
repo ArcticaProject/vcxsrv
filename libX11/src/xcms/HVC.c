@@ -4,7 +4,7 @@
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
  * 	All Rights Reserved
- * 
+ *
  * This file is a component of an X Window System-specific implementation
  * of Xcms based on the TekColor Color Management System.  TekColor is a
  * trademark of Tektronix, Inc.  The term "TekHVC" designates a particular
@@ -12,10 +12,10 @@
  * foreign patents pending).  Permission is hereby granted to use, copy,
  * modify, sell, and otherwise distribute this software and its
  * documentation for any purpose and without fee, provided that:
- * 
+ *
  * 1. This copyright, permission, and disclaimer notice is reproduced in
  *    all copies of this software and any modification thereof and in
- *    supporting documentation; 
+ *    supporting documentation;
  * 2. Any color-handling application which displays TekHVC color
  *    cooordinates identifies these as TekHVC color coordinates in any
  *    interface that displays these coordinates and in any associated
@@ -25,10 +25,10 @@
  *    including those provided in this file and any equivalent pathways and
  *    mathematical derivations, regardless of digital (e.g., floating point
  *    or integer) representation.
- * 
+ *
  * Tektronix makes no representation about the suitability of this software
  * for any purpose.  It is provided "as is" and with all faults.
- * 
+ *
  * TEKTRONIX DISCLAIMS ALL WARRANTIES APPLICABLE TO THIS SOFTWARE,
  * INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.  IN NO EVENT SHALL TEKTRONIX BE LIABLE FOR ANY
@@ -85,7 +85,7 @@
 /*************************************************************************
  * Note: The DBL_EPSILON for ANSI is 1e-5 so my checks need to take
  *       this into account.  If your DBL_EPSILON is different then
- *       adjust this define. 
+ *       adjust this define.
  *
  *       Also note that EPS is the error factor in the calculations
  *       This may need to be the same as XMY_DBL_EPSILON in
@@ -319,7 +319,7 @@ XcmsTekHVC_ValidSpec(
     }
     while (pColor->spec.TekHVC.H >= 360.0) {
 	pColor->spec.TekHVC.H -= 360.0;
-    } 
+    }
     return(XcmsSuccess);
 }
 
@@ -416,9 +416,9 @@ XcmsTekHVCToCIEuvY(
 	    tempHue = radians(tempHue);
 
 	    /* Calculate u'v' for the obtained hue */
-	    u = (XcmsFloat) ((XCMS_COS(tempHue) * pColor->spec.TekHVC.C) / 
+	    u = (XcmsFloat) ((XCMS_COS(tempHue) * pColor->spec.TekHVC.C) /
 		    (pColor->spec.TekHVC.V * (double)CHROMA_SCALE_FACTOR));
-	    v = (XcmsFloat) ((XCMS_SIN(tempHue) * pColor->spec.TekHVC.C) / 
+	    v = (XcmsFloat) ((XCMS_SIN(tempHue) * pColor->spec.TekHVC.C) /
 		    (pColor->spec.TekHVC.V * (double)CHROMA_SCALE_FACTOR));
 
 	    /* Based on the white point get the offset from best red */
@@ -623,6 +623,6 @@ _XcmsTekHVC_CheckModify(
     } else if (pColor->spec.TekHVC.H >= 360.0) {
 	n = pColor->spec.TekHVC.H / 360.0;
 	pColor->spec.TekHVC.H -= n * 360.0;
-    } 
+    }
     return(1);
 }

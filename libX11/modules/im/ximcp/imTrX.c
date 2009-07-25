@@ -24,7 +24,7 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
   Author: Hideki Hiura (hhiura@Sun.COM) Sun Microsystems, Inc.
-          Takashi Fujiwara     FUJITSU LIMITED 
+          Takashi Fujiwara     FUJITSU LIMITED
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
@@ -105,12 +105,12 @@ _XimXFilterWaitEvent(
     spec->ev = (XPointer)ev;
     ret = _XimFilterWaitEvent(im);
 
-    /* 
+    /*
      * If ev is a pointer to a stack variable, there could be
      * a coredump later on if the pointer is dereferenced.
      * Therefore, reset to NULL to force reinitialization in
      * _XimXRead().
-     * 
+     *
      * Keep in mind _XimXRead may be called again when the stack
      * is very different.
      */
@@ -198,7 +198,7 @@ _XimXConnect(Xim im)
 	((major_code == 2) && (minor_code == 1))) {
 	spec->BoundarySize = (CARD32)event.xclient.data.l[3];
     }
-	
+
     /* ClientMessage Event Filter */
     _XRegisterFilterByType(im->core.display, spec->lib_connect_wid,
 			ClientMessage, ClientMessage,
@@ -238,7 +238,7 @@ _NewAtom(
 }
 
 Private Bool
-_XimXWrite(Xim im, INT16 len, XPointer data)    
+_XimXWrite(Xim im, INT16 len, XPointer data)
 {
     Atom	 atom;
     char	 atomName[16];
@@ -358,6 +358,7 @@ _XimXGetReadData(
 	    (void)memcpy(buf, prop_ret, (int)nitems);
 	    *ret_len  = (int)nitems;
 	    if (bytes_after_ret > 0) {
+		XFree(prop_ret);
 	        XGetWindowProperty(im->core.display,
 		    spec->lib_connect_wid, prop, 0L,
 		    ((length + bytes_after_ret + 3)/ 4), True, AnyPropertyType,
@@ -365,7 +366,7 @@ _XimXGetReadData(
 		    &prop_ret);
 	        XChangeProperty(im->core.display, spec->lib_connect_wid, prop,
 		    XA_STRING, 8, PropModePrepend, &prop_ret[length],
-		    (nitems - length)); 
+		    (nitems - length));
 	    }
 	} else {
 	    (void)memcpy(buf, prop_ret, buf_len);
@@ -380,7 +381,7 @@ _XimXGetReadData(
 		&type_ret, &format_ret, &nitems, &bytes_after_ret, &prop_ret);
 	    }
 	    XChangeProperty(im->core.display, spec->lib_connect_wid, prop,
-		    XA_STRING, 8, PropModePrepend, &prop_ret[buf_len], len); 
+		    XA_STRING, 8, PropModePrepend, &prop_ret[buf_len], len);
 	    event->xclient.data.l[0] = (long)len;
 	    event->xclient.data.l[1] = (long)prop;
 	    XPutBackEvent(im->core.display, event);
@@ -405,7 +406,7 @@ _XimXGetReadData(
 	    *ret_len  = buf_len;
 	    len = nitems - buf_len;
 	    XChangeProperty(im->core.display, spec->lib_connect_wid, prop,
-		XA_STRING, 8, PropModePrepend, &prop_ret[buf_len], len); 
+		XA_STRING, 8, PropModePrepend, &prop_ret[buf_len], len);
 	}
 	XFree(prop_ret);
     }
@@ -438,7 +439,7 @@ _XimXRead(Xim im, XPointer recv_buf, int buf_len, int *ret_len)
 {
     XEvent	*ev;
     XEvent	 event;
-    int		 len;
+    int		 len = 0;
     XSpecRec	*spec = (XSpecRec *)im->private.proto.spec;
     XPointer	  arg = spec->ev;
 
@@ -464,9 +465,7 @@ _XimXFlush(Xim im)
 }
 
 Public Bool
-_XimXConf(im, address)
-    Xim		 im;
-    char	*address;
+_XimXConf(Xim im, char *address)
 {
     XSpecRec	*spec;
 

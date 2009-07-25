@@ -32,13 +32,13 @@ Copyright 1987, 1988 by Digital Equipment Corporation, Maynard, Massachusetts.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Digital not be
 used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.  
+software without specific, written prior permission.
 
 DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
 ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
@@ -123,10 +123,10 @@ XGetErrorText(
  	if (ext->error_string)
  	    (*ext->error_string)(dpy, code, &ext->codes, buffer, nbytes);
 	if (ext->codes.first_error &&
-	    ext->codes.first_error < code &&
+	    ext->codes.first_error <= code &&
 	    (!bext || ext->codes.first_error > bext->codes.first_error))
 	    bext = ext;
-    }    
+    }
     if (!buffer[0] && bext) {
 	sprintf(buf, "%s.%d", bext->name, code - bext->codes.first_error);
 	(void) XGetErrorDatabaseText(dpy, "XProtoError", buf, "", buffer, nbytes);
@@ -194,7 +194,7 @@ XGetErrorDatabaseText(
 	    tptr = Xmalloc (tlen);
 	if (tptr) {
 	    sprintf(tptr, "%s.%s", name, type);
-	    XrmGetResource(db, tptr, "ErrorType.ErrorNumber", 
+	    XrmGetResource(db, tptr, "ErrorType.ErrorNumber",
 	      &type_str, &result);
 	    if (tptr != temp)
 		Xfree (tptr);

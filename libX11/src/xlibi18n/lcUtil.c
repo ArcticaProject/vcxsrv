@@ -40,7 +40,7 @@
 
 /* Compares two ISO 8859-1 strings, ignoring case of ASCII letters.
    Like strcasecmp in an ASCII locale. */
-int 
+int
 _XlcCompareISOLatin1(
     const char *str1,
     const char *str2)
@@ -63,7 +63,7 @@ _XlcCompareISOLatin1(
 
 /* Compares two ISO 8859-1 strings, at most len bytes of each, ignoring
    case of ASCII letters. Like strncasecmp in an ASCII locale. */
-int 
+int
 _XlcNCompareISOLatin1(
     const char *str1,
     const char *str2,

@@ -18,6 +18,8 @@
  *   ./cjk_tab_to_h BIG5 big5 > big5.h < BIG5.TXT
  *
  *   ./cjk_tab_to_h JOHAB johab > johab.h < JOHAB.TXT
+ *
+ *   ./cjk_tab_to_h BIG5HKSCS-0 big5hkscs >big5hkscs.h < BIG5HKSCS.TXT
  */
 
 #include <stdio.h>
@@ -892,6 +894,49 @@ static void do_big5 (const char* name)
   invert(&enc); output_uni2charset_sparse(name,&enc);
 }
 
+/* Big5-HKSCS specifics */
+
+static int row_byte_big5hkscs (int row) {
+  return 0x81+row;
+}
+static int col_byte_big5hkscs (int col) {
+  return (col >= 0x3f ? 0x62 : 0x40) + col;
+}
+static int byte_row_big5hkscs (int byte) {
+  if (byte >= 0x81 && byte < 0xff)
+    return byte-0x81;
+  else
+    return -1;
+}
+static int byte_col_big5hkscs (int byte) {
+  if (byte >= 0x40 && byte < 0x7f)
+    return byte-0x40;
+  else if (byte >= 0xa1 && byte < 0xff)
+    return byte-0x62;
+  else
+    return -1;
+}
+
+static void do_big5hkscs (const char* name)
+{
+  Encoding enc;
+
+  enc.rows = 126;
+  enc.cols = 157;
+  enc.row_byte = row_byte_big5hkscs;
+  enc.col_byte = col_byte_big5hkscs;
+  enc.byte_row = byte_row_big5hkscs;
+  enc.byte_col = byte_col_big5hkscs;
+  enc.check_row_expr = "%1$s >= 0x81 && %1$s < 0xff";
+  enc.check_col_expr = "(%1$s >= 0x40 && %1$s < 0x7f) || (%1$s >= 0xa1 && %1$s < 0xff)";
+  enc.byte_row_expr = "%1$s - 0x81";
+  enc.byte_col_expr = "%1$s - (%1$s >= 0xa1 ? 0x62 : 0x40)";
+
+  read_table(&enc);
+  output_charset2uni(name,&enc);
+  invert(&enc); output_uni2charset_sparse(name,&enc);
+}
+
 /* Johab Hangul specifics */
 
 static int row_byte_johab_hangul (int row) {
@@ -1014,6 +1059,8 @@ int main (int argc, char *argv[])
     do_ksc5601(name);
   else if (!strcmp(name,"big5") || !strcmp(name,"cp950ext"))
     do_big5(name);
+  else if (!strcmp(name,"big5hkscs"))
+    do_big5hkscs(name);
   else if (!strcmp(name,"johab_hangul"))
     do_johab_hangul(name);
   else if (!strcmp(name,"cp932ext"))

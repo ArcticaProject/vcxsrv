@@ -42,7 +42,7 @@ XWarpPointer(
      unsigned int src_height,
      int dest_x,
      int dest_y)
-{       
+{
     register xWarpPointerReq *req;
 
     LockDisplay(dpy);

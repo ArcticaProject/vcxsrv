@@ -147,7 +147,7 @@ XCreateColormap, XCopyColormapAndFree, XFreeColormap, XColor \- create, copy, or
 .SH SYNTAX
 .HP
 Colormap XCreateColormap\^(\^Display *\fIdisplay\fP\^, Window \fIw\fP\^,
-Visual *\fIvisual\fP\^, int \fIalloc\fP\^,); 
+Visual *\fIvisual\fP\^, int \fIalloc\fP\^);
 .HP
 Colormap XCopyColormapAndFree\^(\^Display *\fIdisplay\fP\^, Colormap
 \fIcolormap\fP\^); 

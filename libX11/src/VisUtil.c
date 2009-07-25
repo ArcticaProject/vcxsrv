@@ -33,7 +33,7 @@ in this Software without prior written authorization from The Open Group.
 #include <stdio.h>
 /*
  *	This procedure returns a list of visual information structures
- *	that match the specified attributes given in the visual information 
+ *	that match the specified attributes given in the visual information
  *	template.
  *
  *	If no visuals exist that match the specified attributes, a NULL is
@@ -76,7 +76,7 @@ XVisualInfo *XGetVisualInfo(
 
   count = 0;
   total = 10;
-  if (! (vip_base = vip = (XVisualInfo *) 
+  if (! (vip_base = vip = (XVisualInfo *)
 	 Xmalloc((unsigned) (sizeof(XVisualInfo) * total)))) {
       UnlockDisplay(dpy);
       return (XVisualInfo *) NULL;
@@ -128,13 +128,13 @@ XVisualInfo *XGetVisualInfo(
                 (vp->bits_per_rgb != visual_info_template->bits_per_rgb)) continue;
 
               /* YEA!!! WE FOUND A GOOD ONE */
- 
+
               if (count+1 > total)
                 {
 		  XVisualInfo *old_vip_base = vip_base;
                   total += 10;
                   if (! (vip_base = (XVisualInfo *)
-			 Xrealloc((char *) vip_base, 
+			 Xrealloc((char *) vip_base,
 				  (unsigned) (sizeof(XVisualInfo) * total)))) {
 		      Xfree((char *) old_vip_base);
 		      UnlockDisplay(dpy);
@@ -160,7 +160,7 @@ XVisualInfo *XGetVisualInfo(
 
             } /* END OF LOOP ON VISUALS */
 	  } /* END OF IF THERE ARE ANY VISUALS AT THIS DEPTH */
-          
+
         } /* END OF LOOP ON DEPTHS */
 
     } /* END OF LOOP ON SCREENS */
@@ -180,9 +180,9 @@ XVisualInfo *XGetVisualInfo(
 
 
 /*
- *	This procedure will return the visual information for a visual 
- *      that matches the specified depth and class for a screen.  Since 
- *	multiple visuals may exist that match the specified depth and 
+ *	This procedure will return the visual information for a visual
+ *      that matches the specified depth and class for a screen.  Since
+ *	multiple visuals may exist that match the specified depth and
  *	class, which visual chosen is undefined.
  *
  *	If a visual is found, True is returned as the function value,
@@ -225,7 +225,7 @@ Status XMatchVisualInfo(
 	/* if nvisuals == 0 then vp will be NULL */
         for (jj=0; jj<dp->nvisuals; jj++)
           {
-            if (vp->class == class) 
+            if (vp->class == class)
               {
 		visual_info->visual = _XVIDtoVisual(dpy, vp->visualid);
 		visual_info->visualid = vp->visualid;

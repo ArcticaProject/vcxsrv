@@ -37,7 +37,7 @@ XRecolorCursor(
      Cursor cursor,
      XColor *foreground,
      XColor *background)
-{       
+{
     register xRecolorCursorReq *req;
 
     LockDisplay(dpy);

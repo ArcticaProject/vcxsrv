@@ -310,6 +310,7 @@ libX11_la_SOURCES = \
                   Xintconn.h \
                   XlibAsync.c \
                   XlibInt.c \
+                  Xprivate.h \
                   XomGeneric.h \
                   Xresinternal.h \
                   Xrm.c \
@@ -342,7 +343,6 @@ EXTRA_DIST = \
 
 if XCB
 libX11_la_SOURCES += \
-                  xcb_lock.c \
                   xcb_disp.c \
                   xcb_io.c \
                   Xxcbint.h

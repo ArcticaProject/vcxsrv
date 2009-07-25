@@ -147,7 +147,7 @@ char *XKeysymToString(KeySym ks)
                 s[i] = 'A'+ val1 - 10;
         }
         s[i] = 'U';
-        return s; 
+        return s;
     }
     return ((char *) NULL);
 }

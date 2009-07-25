@@ -355,12 +355,12 @@ register xEvent *event)	/* wire protocol event */
 	      case ClientMessage:
 		{
 		   register int i;
-		   register XClientMessageEvent *ev 
+		   register XClientMessageEvent *ev
 		   			= (XClientMessageEvent *) re;
 		   event->u.clientMessage.window = ev->window;
 		   event->u.u.detail		 = ev->format;
 		   switch (ev->format) {
-			case 8:	
+			case 8:
 			  event->u.clientMessage.u.b.type   = ev->message_type;
 			  for (i = 0; i < 20; i++)
 			   event->u.clientMessage.u.b.bytes[i] = ev->data.b[i];
@@ -400,7 +400,7 @@ register xEvent *event)	/* wire protocol event */
 		    event->u.mappingNotify.count	= ev->count;
 		   }
 		break;
-		
+
 	      default:
 		return(_XUnknownNativeEvent(dpy, re, event));
 	}

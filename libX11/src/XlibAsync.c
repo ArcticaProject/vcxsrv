@@ -115,9 +115,9 @@ _XGetAsyncReply(
 
 	return buf;
     }
-    /* 
+    /*
      *if we get here, then extra > rep->generic.length--meaning we
-     * read a reply that's shorter than we expected.  This is an 
+     * read a reply that's shorter than we expected.  This is an
      * error,  but we still need to figure out how to handle it...
      */
     if ((rep->generic.length << 2) > len)

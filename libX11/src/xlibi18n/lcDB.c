@@ -14,7 +14,7 @@
  * software without specific, written prior permission.
  *
  * IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
- * ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS, AND 
+ * ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS, AND
  * NONINFRINGEMENT OF THIRD PARTY RIGHTS, IN NO EVENT SHALL
  * IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
  * ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
@@ -551,7 +551,7 @@ append_value_list (void)
     return 0;
 }
 
-static int 
+static int
 construct_name(
     char *name,
     int size)
@@ -836,7 +836,7 @@ f_double_quote(
 	len = get_quoted_word(str, wordp);
 	if (len < 1)
 	    goto err;
-	if ((parse_info.bufsize + (int)strlen(wordp) + 1) 
+	if ((parse_info.bufsize + (int)strlen(wordp) + 1)
 					>= parse_info.bufMaxSize) {
 	    if (realloc_parse_info(strlen(wordp)+1) == False) {
 		goto err;
@@ -898,7 +898,7 @@ f_numeric(
 	len = get_word(p, wordp);
 	if (len < 1)
 	    goto err;
-	if ((parse_info.bufsize + token_len + (int)strlen(wordp) + 1) 
+	if ((parse_info.bufsize + token_len + (int)strlen(wordp) + 1)
 					>= parse_info.bufMaxSize) {
 	    if (realloc_parse_info(token_len + strlen(wordp) + 1) == False)
 		goto err;
@@ -975,7 +975,7 @@ f_default(
 	break;
     case S_NAME:
     case S_VALUE:
-	if ((parse_info.bufsize + (int)strlen(wordp) + 1) 
+	if ((parse_info.bufsize + (int)strlen(wordp) + 1)
 					>= parse_info.bufMaxSize) {
 	    if (realloc_parse_info(strlen(wordp) + 1) == False)
 		goto err;

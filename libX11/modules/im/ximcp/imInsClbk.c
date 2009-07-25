@@ -271,8 +271,7 @@ _XimUnRegisterIMInstantiateCallback(
 
 
 Public void
-_XimResetIMInstantiateCallback( xim )
-    Xim		xim;
+_XimResetIMInstantiateCallback(Xim xim)
 {
     char		 locale[XIM_MAXLCNAMELEN];
     XimInstCallback	 icb;

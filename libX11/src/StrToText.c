@@ -33,8 +33,8 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xutil.h>
 
 /*
- * XStringListToTextProperty - fill in TextProperty structure with 
- * concatenated list of null-separated strings.  Return True if successful 
+ * XStringListToTextProperty - fill in TextProperty structure with
+ * concatenated list of null-separated strings.  Return True if successful
  * else False.  Allocate room on end for trailing NULL, but don't include in
  * count.
  */

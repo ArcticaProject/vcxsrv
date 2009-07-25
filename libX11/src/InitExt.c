@@ -46,7 +46,7 @@ XExtCodes *XInitExtension (
 {
 	XExtCodes codes;	/* temp. place for extension information. */
 	register _XExtension *ext;/* need a place to build it all */
-	if (!XQueryExtension(dpy, name, 
+	if (!XQueryExtension(dpy, name,
 		&codes.major_opcode, &codes.first_event,
 		&codes.first_error)) return (NULL);
 
@@ -61,7 +61,7 @@ XExtCodes *XInitExtension (
 	ext->codes = codes;
 	(void) strcpy(ext->name, name);
 
-	/* chain it onto the display list */	
+	/* chain it onto the display list */
 	ext->next = dpy->ext_procs;
 	dpy->ext_procs = ext;
 	UnlockDisplay (dpy);
@@ -363,7 +363,7 @@ BeforeFlushType XESetBeforeFlush(
 	if (!ext) {
 	    e->next_flush = dpy->flushes;
 	    dpy->flushes = e;
-	}	    
+	}
 	UnlockDisplay(dpy);
 	return (BeforeFlushType)oldproc;
 }

@@ -35,8 +35,8 @@ int
 XFreePixmap(
     register Display *dpy,
     Pixmap pixmap)
-{   
-    register xResourceReq *req;    
+{
+    register xResourceReq *req;
     LockDisplay(dpy);
     GetResReq(FreePixmap, pixmap, req);
     UnlockDisplay(dpy);

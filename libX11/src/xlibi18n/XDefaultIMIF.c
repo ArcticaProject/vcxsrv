@@ -162,7 +162,7 @@ _XDefaultOpenIM(
 			XlcNCompoundText, lcd, XlcNMultiByte))) {
 	return((XIM)NULL);
     }
-	
+
     if (!(ctow_conv = _XlcOpenConverter(lcd,
 			XlcNCompoundText, lcd, XlcNWideChar))) {
 	return((XIM)NULL);
@@ -413,7 +413,7 @@ _MbLookupString(
 {
     XComposeStatus NotSupportedYet ;
     int length;
-    
+
     length = XLookupString(ev, buffer, bytes, keysym, &NotSupportedYet);
 
     if (keysym && *keysym == NoSymbol){

@@ -3,26 +3,26 @@
  *			<marineau@genie.uottawa.ca>
  *                      <Holger.Veit@gmd.de>
  *
- * Permission is hereby granted, free of charge, to any person obtaining a 
- * copy of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
- * HOLGER VEIT  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
- * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * HOLGER VEIT  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
- * Except as contained in this notice, the name of Sebastien Marineau or Holger Veit 
- * shall not be used in advertising or otherwise to promote the sale, use or other 
+ *
+ * Except as contained in this notice, the name of Sebastien Marineau or Holger Veit
+ * shall not be used in advertising or otherwise to promote the sale, use or other
  * dealings in this Software without prior written authorization from Holger Veit or
  * Sebastien Marineau.
  *
@@ -67,7 +67,7 @@ char *__XOS2RedirRoot(char *fname)
 	return fname;
 
     root = (char*)getenv("X11ROOT");
-    if (root==0 || 
+    if (root==0 ||
 	(fname[1]==':' && isalpha(fname[0])) ||
         (strlen(fname)+strlen(root)+2) > 300)
 	return fname;
@@ -132,7 +132,7 @@ BOOL any_ready;
 int np,ns, i,ready_handles,n;
 APIRET rc;
 
-sd.have_read=FALSE; sd.have_write=FALSE; 
+sd.have_read=FALSE; sd.have_write=FALSE;
 sd.socket_nread=0; sd.socket_nwrite=0; sd.socket_ntotal=0;
 sd.max_fds=31; ready_handles=0; any_ready=FALSE;
 sd.pipe_ntotal=0; sd.pipe_have_write=FALSE;
@@ -150,7 +150,7 @@ if(FirstTime){
         }
    /* Call these a first time to set the semaphore */
     rc = DosCreateEventSem(NULL, &hPipeSem, DC_SEM_SHARED, FALSE);
-    if(rc) { 
+    if(rc) {
              fprintf(stderr, "Could not create event semaphore, rc=%d\n",rc);
              return(-1);
              }
@@ -239,7 +239,7 @@ if(FirstTime){
                         ready_handles+=np;
                         any_ready = TRUE;
                         }
-                        else if (np == -1) { 
+                        else if (np == -1) {
                                 return(-1); }
                       }
 
@@ -250,7 +250,7 @@ if(FirstTime){
                      }
                  else if (ns == -1) {return(-1);}
 
-                  if (i%8 == 0) { 
+                  if (i%8 == 0) {
                     now_millis = os2_get_sys_millis();
                     if((now_millis-start_millis) > timeout_ms) timeout_ms = 0;
                     }
@@ -350,7 +350,7 @@ fd_set *readfds,*writefds;
    int j,n;
         memcpy(sd->tcp_select_copy,sd->tcp_select_mask,
                 sd->socket_ntotal*sizeof(int));
- 
+
         e = os2_tcp_select(sd->tcp_select_copy,sd->socket_nread,
                 sd->socket_nwrite, 0, 0);
 
@@ -371,7 +371,7 @@ fd_set *readfds,*writefds;
                      n ++;
                      }
                errno = 0;
-               
+
                return n;
               }
         if(e<0){
@@ -394,7 +394,7 @@ PIPESEMSTATE pipeSemState[128];
 APIRET rc;
         e = 0;
         rc = DosResetEventSem(hPipeSem,&ulPostCount);
-        rc = DosQueryNPipeSemState((HSEM) hPipeSem, (PPIPESEMSTATE)&pipeSemState, 
+        rc = DosQueryNPipeSemState((HSEM) hPipeSem, (PPIPESEMSTATE)&pipeSemState,
                 sizeof(pipeSemState));
         if(rc) fprintf(stderr,"SELECT: rc from QueryNPipeSem: %d\n",rc);
         i=0;

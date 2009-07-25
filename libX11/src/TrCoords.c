@@ -33,14 +33,14 @@ in this Software without prior written authorization from The Open Group.
 
 Bool XTranslateCoordinates(
      register Display *dpy,
-     Window src_win, 
+     Window src_win,
      Window dest_win,
      int src_x,
      int src_y,
      int *dst_x,
      int *dst_y,
      Window *child)
-{       
+{
     register xTranslateCoordsReq *req;
     xTranslateCoordsReply rep;
 
@@ -55,7 +55,7 @@ Bool XTranslateCoordinates(
 	    SyncHandle();
 	    return(False);
 	}
-	
+
     *child = rep.child;
     *dst_x = cvtINT16toInt (rep.dstX);
     *dst_y = cvtINT16toInt (rep.dstY);

@@ -108,7 +108,7 @@ struct _XDisplay
 	int nscreens;		/* number of screens on this server*/
 	Screen *screens;	/* pointer to list of screens */
 	unsigned long motion_buffer;	/* size of motion buffer */
-	unsigned long flags;	   /* internal connection flags */
+	volatile unsigned long flags;	   /* internal connection flags */
 	int min_keycode;	/* minimum defined keycode */
 	int max_keycode;	/* maximum defined keycode */
 	KeySym *keysyms;	/* This server's keysyms */
@@ -121,7 +121,7 @@ struct _XDisplay
 	struct _XExten *ext_procs; /* extensions initialized on this display */
 	/*
 	 * the following can be fixed size, as the protocol defines how
-	 * much address space is available. 
+	 * much address space is available.
 	 * While this could be done using the extension vector, there
 	 * may be MANY events processed, so a search through the extension
 	 * list to find the right procedure for each event might be
@@ -417,7 +417,7 @@ extern LockInfoPtr _Xglobal_lock;
 
 /*
  * GetReq - Get the next available X request packet in the buffer and
- * return it. 
+ * return it.
  *
  * "name" is the name of the request, e.g. CreatePixmap, OpenFont, etc.
  * "req" is the name of the request pointer.
@@ -474,9 +474,9 @@ extern LockInfoPtr _Xglobal_lock;
 
 
 /*
- * GetResReq is for those requests that have a resource ID 
+ * GetResReq is for those requests that have a resource ID
  * (Window, Pixmap, GContext, etc.) as their single argument.
- * "rid" is the name of the resource. 
+ * "rid" is the name of the resource.
  */
 
 #if !defined(UNIXCPP) || defined(ANSICPP)
@@ -505,7 +505,7 @@ extern LockInfoPtr _Xglobal_lock;
 
 /*
  * GetEmptyReq is for those requests that have no arguments
- * at all. 
+ * at all.
  */
 #if !defined(UNIXCPP) || defined(ANSICPP)
 #define GetEmptyReq(name, req) \
@@ -611,7 +611,7 @@ extern void _XFlushGCCache(Display *dpy, GC gc);
  * "ptr" is the pointer being assigned to.
  * "n" is the number of bytes to allocate.
  *
- * Example: 
+ * Example:
  *    xTextElt *elt;
  *    BufAlloc (xTextElt *, elt, nbytes)
  */
@@ -661,7 +661,7 @@ extern void _XRead32(
 			     (((cs)->rbearing|(cs)->lbearing| \
 			       (cs)->ascent|(cs)->descent) == 0))
 
-/* 
+/*
  * CI_GET_CHAR_INFO_1D - return the charinfo struct for the indicated 8bit
  * character.  If the character is in the column and exists, then return the
  * appropriate metrics (note that fonts with common per-character metrics will
@@ -687,7 +687,7 @@ extern void _XRead32(
 
 
 /*
- * CI_GET_CHAR_INFO_2D - return the charinfo struct for the indicated row and 
+ * CI_GET_CHAR_INFO_2D - return the charinfo struct for the indicated row and
  * column.  This is used for fonts that have more than row zero.
  */
 #define CI_GET_CHAR_INFO_2D(fs,row,col,def,cs) \
@@ -959,9 +959,6 @@ extern void _XGetAsyncData(
     int		/* datalen */,
     int		/* discardtotal */
 );
-extern void _XSetSeqSyncFunction(
-    Display*	/* dpy */
-);
 extern void _XFlush(
     Display*	/* dpy */
 );
@@ -1045,7 +1042,7 @@ extern int (*XESetCopyGC(
 	      Display*			/* display */,
               GC			/* gc */,
               XExtCodes*		/* codes */
-            )		/* proc */	      
+            )		/* proc */
 ))(
     Display*, GC, XExtCodes*
 );
@@ -1057,7 +1054,7 @@ extern int (*XESetFlushGC(
 	      Display*			/* display */,
               GC			/* gc */,
               XExtCodes*		/* codes */
-            )		/* proc */	     
+            )		/* proc */
 ))(
     Display*, GC, XExtCodes*
 );
@@ -1069,7 +1066,7 @@ extern int (*XESetFreeGC(
 	      Display*			/* display */,
               GC			/* gc */,
               XExtCodes*		/* codes */
-            )		/* proc */	     
+            )		/* proc */
 ))(
     Display*, GC, XExtCodes*
 );
@@ -1081,7 +1078,7 @@ extern int (*XESetCreateFont(
 	      Display*			/* display */,
               XFontStruct*		/* fs */,
               XExtCodes*		/* codes */
-            )		/* proc */    
+            )		/* proc */
 ))(
     Display*, XFontStruct*, XExtCodes*
 );
@@ -1093,10 +1090,10 @@ extern int (*XESetFreeFont(
 	      Display*			/* display */,
               XFontStruct*		/* fs */,
               XExtCodes*		/* codes */
-            )		/* proc */    
+            )		/* proc */
 ))(
     Display*, XFontStruct*, XExtCodes*
-); 
+);
 
 extern int (*XESetCloseDisplay(
     Display*		/* display */,
@@ -1104,7 +1101,7 @@ extern int (*XESetCloseDisplay(
     int (*) (
 	      Display*			/* display */,
               XExtCodes*		/* codes */
-            )		/* proc */    
+            )		/* proc */
 ))(
     Display*, XExtCodes*
 );
@@ -1117,7 +1114,7 @@ extern int (*XESetError(
               xError*			/* err */,
               XExtCodes*		/* codes */,
               int*			/* ret_code */
-            )		/* proc */    
+            )		/* proc */
 ))(
     Display*, xError*, XExtCodes*, int*
 );
@@ -1131,7 +1128,7 @@ extern char* (*XESetErrorString(
                 XExtCodes*		/* codes */,
                 char*			/* buffer */,
                 int			/* nbytes */
-              )		/* proc */	       
+              )		/* proc */
 ))(
     Display*, int, XExtCodes*, char*, int
 );
@@ -1155,7 +1152,7 @@ extern Bool (*XESetWireToEvent(
 	       Display*			/* display */,
                XEvent*			/* re */,
                xEvent*			/* event */
-             )		/* proc */    
+             )		/* proc */
 ))(
     Display*, XEvent*, xEvent*
 );
@@ -1167,7 +1164,7 @@ extern Status (*XESetEventToWire(
 	      Display*			/* display */,
               XEvent*			/* re */,
               xEvent*			/* event */
-            )		/* proc */   
+            )		/* proc */
 ))(
     Display*, XEvent*, xEvent*
 );
@@ -1179,7 +1176,7 @@ extern Bool (*XESetWireToError(
 	       Display*			/* display */,
 	       XErrorEvent*		/* he */,
 	       xError*			/* we */
-            )		/* proc */   
+            )		/* proc */
 ))(
     Display*, XErrorEvent*, xError*
 );
@@ -1192,7 +1189,7 @@ extern void (*XESetBeforeFlush(
 	       XExtCodes*		/* codes */,
 	       _Xconst char*		/* data */,
 	       long			/* len */
-            )		/* proc */   
+            )		/* proc */
 ))(
     Display*, XExtCodes*, _Xconst char*, long
 );
@@ -1321,7 +1318,7 @@ Status _XGetWindowAttributes(
     XWindowAttributes *attr);
 
 int _XPutBackEvent (
-    register Display *dpy, 
+    register Display *dpy,
     register XEvent *event);
 
 _XFUNCPROTOEND

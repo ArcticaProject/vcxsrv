@@ -76,7 +76,7 @@ Status XTextPropertyToStringList (
      */
     list = (char **) Xmalloc (nelements * sizeof (char *));
     if (!list) return False;
-	
+
     start = (char *) Xmalloc ((datalen + 1) * sizeof (char));	/* for <NUL> */
     if (!start) {
 	Xfree ((char *) list);

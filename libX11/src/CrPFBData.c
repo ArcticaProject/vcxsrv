@@ -34,7 +34,7 @@ in this Software without prior written authorization from The Open Group.
 /*
  * XCreatePixmapFromBitmapData: Routine to make a pixmap from user supplied bitmap data.
  *             D is any drawable on the same screen that the pixmap will be used in.
- *             Data is a pointer to the bit data, and 
+ *             Data is a pointer to the bit data, and
  *             width & height give the size in bits of the pixmap.
  *             Fg and Bg are the pixel values to use for the two colors.
  *             Depth is the depth of the pixmap to create.
@@ -48,14 +48,14 @@ in this Software without prior written authorization from The Open Group.
  *    bitmap_unit=8
  *    xoffset=0
  *    no extra bytes per line
- */  
+ */
 Pixmap XCreatePixmapFromBitmapData(
     Display *display,
     Drawable d,
     char *data,
-    unsigned int width, 
+    unsigned int width,
     unsigned int height,
-    unsigned long fg, 
+    unsigned long fg,
     unsigned long bg,
     unsigned int depth)
 {

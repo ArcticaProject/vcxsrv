@@ -91,14 +91,14 @@ _XGetWindowAttributes(
     register Display *dpy,
     Window w,
     XWindowAttributes *attr)
-{       
+{
     xGetGeometryReply rep;
     register xResourceReq *req;
     register int i;
     register Screen *sp;
     _XAsyncHandler async;
     _XWAttrsState async_state;
- 
+
     GetResReq(GetWindowAttributes, w, req);
 
     async_state.attr_seq = dpy->request;

@@ -55,7 +55,7 @@ int XGrabPointer(
     req->confineTo = confine_to;
     req->cursor = curs;
     req->time = time;
-    
+
     /* if we ever return, suppress the error */
     if (_XReply (dpy, (xReply *) &rep, 0, xTrue) == 0)
 	rep.status = GrabSuccess;

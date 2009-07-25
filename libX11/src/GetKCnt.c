@@ -41,7 +41,7 @@ XGetKeyboardControl (
     register xReq *req;
     LockDisplay(dpy);
     GetEmptyReq (GetKeyboardControl, req);
-    (void) _XReply (dpy, (xReply *) &rep, 
+    (void) _XReply (dpy, (xReply *) &rep,
 	(SIZEOF(xGetKeyboardControlReply) - SIZEOF(xReply)) >> 2, xTrue);
 
     state->key_click_percent = rep.keyClickPercent;

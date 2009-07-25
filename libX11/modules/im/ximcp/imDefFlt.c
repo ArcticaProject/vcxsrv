@@ -11,7 +11,7 @@ in supporting documentation, and that the name of FUJITSU LIMITED
 not be used in advertising or publicity pertaining to distribution
 of the software without specific, written prior permission.
 FUJITSU LIMITED makes no representations about the suitability of
-this software for any purpose. 
+this software for any purpose.
 It is provided "as is" without express or implied warranty.
 
 FUJITSU LIMITED DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
@@ -22,7 +22,7 @@ USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
-  Author: Takashi Fujiwara     FUJITSU LIMITED 
+  Author: Takashi Fujiwara     FUJITSU LIMITED
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
@@ -264,7 +264,7 @@ _XimFilterKeyrelease(
     return _XimProtoKeyreleaseFilter((Xic)client_data, (XKeyEvent *)ev);
 }
 
-Private void 
+Private void
 _XimRegisterKeyPressFilter(
     Xic		 ic)
 {
@@ -281,7 +281,7 @@ _XimRegisterKeyPressFilter(
     return;
 }
 
-Private void 
+Private void
 _XimRegisterKeyReleaseFilter(
     Xic		 ic)
 {
@@ -298,7 +298,7 @@ _XimRegisterKeyReleaseFilter(
     return;
 }
 
-Private void 
+Private void
 _XimUnregisterKeyPressFilter(
     Xic		 ic)
 {
@@ -314,7 +314,7 @@ _XimUnregisterKeyPressFilter(
     return;
 }
 
-Private void 
+Private void
 _XimUnregisterKeyReleaseFilter(
     Xic		 ic)
 {
@@ -383,7 +383,7 @@ _XimFilterServerDestroy(
     return True;
 }
 
-Public void 
+Public void
 _XimRegisterServerFilter(
     Xim		 im)
 {
@@ -402,7 +402,7 @@ _XimRegisterServerFilter(
     return;
 }
 
-Public void 
+Public void
 _XimUnregisterServerFilter(
     Xim		 im)
 {

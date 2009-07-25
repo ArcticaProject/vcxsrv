@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -39,7 +39,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 XkbInternAtomFunc	_XkbInternAtomFunc= XInternAtom;
 XkbGetAtomNameFunc	_XkbGetAtomNameFunc= XGetAtomName;
 
-Bool 
+Bool
 XkbQueryExtension(	Display *dpy,
 			int *	opcodeReturn,
 			int *	eventBaseReturn,
@@ -62,7 +62,7 @@ XkbQueryExtension(	Display *dpy,
     return True;
 }
 
-Bool 
+Bool
 XkbLibraryVersion(int *libMajorRtrn,int *libMinorRtrn)
 {
 int supported;
@@ -73,7 +73,7 @@ int supported;
 	     supported= True;
 	else supported= False;
     }
-    else { 
+    else {
 	supported = True;
     }
 
@@ -117,7 +117,7 @@ XkbSelectEvents(	Display *	dpy,
 	else xkbi->selected_map_details= 0;
     }
     if (affect&XkbNewKeyboardNotifyMask) {
-	if (selectAll&XkbNewKeyboardNotifyMask) 
+	if (selectAll&XkbNewKeyboardNotifyMask)
 	     xkbi->selected_nkn_details= XkbAllNewKeyboardEventsMask;
 	else xkbi->selected_nkn_details= 0;
 	if (!(xkbi->xlib_ctrls&XkbLC_IgnoreNewKeyboards)) {

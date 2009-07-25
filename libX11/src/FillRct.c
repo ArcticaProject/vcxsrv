@@ -42,7 +42,7 @@ XFillRectangle(
     GC gc,
     int x,
     int y, /* INT16 */
-    unsigned int width, 
+    unsigned int width,
     unsigned int height) /* CARD16 */
 {
     xRectangle *rect;
@@ -57,7 +57,7 @@ XFillRectangle(
     FlushGC(dpy, gc);
 
     {
-    register xPolyFillRectangleReq *req 
+    register xPolyFillRectangleReq *req
 		= (xPolyFillRectangleReq *) dpy->last_req;
 
     /* if same as previous request, with same drawable, batch requests */

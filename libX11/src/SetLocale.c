@@ -19,7 +19,7 @@
  * OMRON, NTT SOFTWARE, AND NTT, DISCLAIM ALL WARRANTIES WITH REGARD
  * TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
  * AND FITNESS, IN NO EVENT SHALL OMRON, NTT SOFTWARE, OR NTT, BE
- * LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES 
+ * LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
@@ -27,7 +27,7 @@
  *	Authors: Li Yuhong		OMRON Corporation
  *		 Tetsuya Kato		NTT Software Corporation
  *		 Hiroshi Kuribayashi	OMRON Corporation
- *   
+ *
  */
 /*
 
@@ -138,12 +138,12 @@ _Xsetlocale(
  * returned by setlocale.
  *
  * Should match the code in Xt ExtractLocaleName.
- * 
+ *
  * This function name is a bit of a misnomer. Even the siname parameter
- * name is a misnomer. On most modern operating systems this function is 
- * a no-op, simply returning the osname; but on older operating systems 
- * like Ultrix, or HPUX 9.x and earlier, when you set LANG=german.88591 
- * then the string returned by setlocale(LC_ALL, "") will look something 
+ * name is a misnomer. On most modern operating systems this function is
+ * a no-op, simply returning the osname; but on older operating systems
+ * like Ultrix, or HPUX 9.x and earlier, when you set LANG=german.88591
+ * then the string returned by setlocale(LC_ALL, "") will look something
  * like: "german.88591 german.88591 ... german.88591". Then this function
  * will pick out the LC_CTYPE component and return a pointer to that.
  */
@@ -211,7 +211,7 @@ _XlcMapOSLocaleName(
 	start = osname;
 # endif
 # ifdef STARTCHAR
-    if (start && (start = strchr (start, STARTCHAR))) 
+    if (start && (start = strchr (start, STARTCHAR)))
 # elif  defined (STARTSTR)
     if (start && (start = strstr (start,STARTSTR)))
 # endif

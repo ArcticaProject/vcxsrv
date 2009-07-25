@@ -41,7 +41,7 @@ XDrawImageString16(
     int y,
     _Xconst XChar2b *string,
     int length)
-{   
+{
     register xImageText16Req *req;
     XChar2b *CharacterOffset = (XChar2b *)string;
     int FirstTimeThrough = True;
@@ -50,7 +50,7 @@ XDrawImageString16(
     LockDisplay(dpy);
     FlushGC(dpy, gc);
 
-    while (length > 0) 
+    while (length > 0)
     {
 	int Unit, Datalength;
 

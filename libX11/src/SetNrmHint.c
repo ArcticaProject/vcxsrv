@@ -69,7 +69,7 @@ void XSetWMSizeHints (
     xPropSizeHints data;
 
     memset(&data, 0, sizeof(data));
-    data.flags = (hints->flags & 
+    data.flags = (hints->flags &
 		  (USPosition|USSize|PPosition|PSize|PMinSize|PMaxSize|
 		   PResizeInc|PAspect|PBaseSize|PWinGravity));
 
@@ -111,7 +111,7 @@ void XSetWMSizeHints (
     if (hints->flags & PWinGravity) {
 	data.winGravity = hints->win_gravity;
     }
-   
+
     XChangeProperty (dpy, w, prop, XA_WM_SIZE_HINTS, 32,
 		     PropModeReplace, (unsigned char *) &data,
 		     NumPropSizeElements);

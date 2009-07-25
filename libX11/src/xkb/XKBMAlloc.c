@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -42,7 +42,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/keysym.h>
 #include "XKBlibint.h"
 
-#else 
+#else
 
 #include <stdio.h>
 #include <X11/X.h>
@@ -104,7 +104,7 @@ fprintf(stderr,"bad keycode (%d,%d) in XkbAllocClientMap\n",
 		return BadAlloc;
 	    }
 	    map->size_types= nTotalTypes;
-	    bzero(&map->types[map->num_types], 
+	    bzero(&map->types[map->num_types],
 		  ((map->size_types-map->num_types)*sizeof(XkbKeyTypeRec)));
 	}
     }
@@ -197,7 +197,7 @@ XkbServerMapPtr map;
 	        return BadAlloc;
 	    }
 	    map->size_acts= need;
-	    bzero(&map->acts[map->num_acts], 
+	    bzero(&map->acts[map->num_acts],
 		    ((map->size_acts-map->num_acts)*sizeof(XkbAction)));
 	}
 	if (map->key_acts==NULL) {
@@ -409,7 +409,7 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
 	if ((map_count>type->map_count)||(type->map==NULL))
 	    type->map=_XkbTypedRealloc(type->map,map_count,XkbKTMapEntryRec);
 	if (!type->map) {
-	    if (prev_map) 
+	    if (prev_map)
 		_XkbFree(prev_map);
 	    return BadAlloc;
 	}
@@ -421,7 +421,7 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
 	     						    XkbModsRec);
 	    }
 	    if (!type->preserve) {
-		if (prev_preserve) 
+		if (prev_preserve)
 		    _XkbFree(prev_preserve);
 		return BadAlloc;
 	    }
@@ -438,7 +438,7 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
 
 	type->level_names=_XkbTypedRealloc(type->level_names,new_num_lvls,Atom);
 	if (!type->level_names) {
-	    if (prev_level_names) 
+	    if (prev_level_names)
 		_XkbFree(prev_level_names);
 	    return BadAlloc;
 	}
@@ -457,7 +457,7 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
      *      might have to be enlarged.
      * If the key type decreased in size:
      *    - keys that have a group width > the old width don't have to be
-     *      resized (because they must have some other wider type associated 
+     *      resized (because they must have some other wider type associated
      *      with some group).
      *    + keys that have a group width == the old width might have to be
      *      shrunk.
