@@ -162,6 +162,7 @@ def c_open(self):
     _c('#include <assert.h>')
     _c('#include "xcbext.h"')
     _c('#include "%s.h"', _ns.header)
+    _c('#include <X11/Xtrans/Xtrans.h>')
         
     if _ns.is_ext:
         for (n, h) in self.imports:
