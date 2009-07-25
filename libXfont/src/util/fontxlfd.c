@@ -202,7 +202,6 @@ xlfd_round_double(double x)
     defined(__hppa__) || \
     defined(__amd64__) || defined(__amd64) || \
     defined(sgi)
-#if !defined(__UNIXOS2__)
 #include <float.h>
 
 /* if we have IEEE 754 fp, we can round to binary digits... */
@@ -263,7 +262,6 @@ xlfd_round_double(double x)
    }
    else
 #endif
-#endif /* !__UNIXOS2__ */
 #endif /* i386 || __i386__ */
     {
 	/*

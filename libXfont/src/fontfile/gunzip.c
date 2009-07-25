@@ -29,7 +29,7 @@ BufFilePushZIP (BufFilePtr f)
 {
   xzip_buf *x;
 
-  x = (xzip_buf *) xalloc (sizeof (xzip_buf));
+  x = malloc (sizeof (xzip_buf));
   if (!x) return 0;
   /* these are just for raw calloc/free */
   x->z.zalloc = Z_NULL;
@@ -46,7 +46,7 @@ BufFilePushZIP (BufFilePtr f)
      zlib header checking [undocumented, for gzip compatibility only?] */
   x->zstat = inflateInit2(&(x->z), -MAX_WBITS);
   if (x->zstat != Z_OK) {
-    xfree(x);
+    free(x);
     return 0;
   }
 
@@ -57,7 +57,7 @@ BufFilePushZIP (BufFilePtr f)
   x->z.avail_in = 0;
 
   if (BufCheckZipHeader(x->f)) {
-    xfree(x);
+    free(x);
     return 0;
   }
 
@@ -74,7 +74,7 @@ BufZipFileClose(BufFilePtr f, int flag)
   xzip_buf *x = (xzip_buf *)f->private;
   inflateEnd (&(x->z));
   BufFileClose (x->f, flag);
-  xfree (x);
+  free (x);
   return 1;
 }
 

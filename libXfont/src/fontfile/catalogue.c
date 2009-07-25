@@ -61,8 +61,7 @@ CatalogueAddFPE (CataloguePtr cat, FontPathElementPtr fpe)
 	else
 	    cat->fpeAlloc *= 2;
 	
-	new = xrealloc(cat->fpeList,
-		       cat->fpeAlloc * sizeof(FontPathElementPtr));
+	new = realloc(cat->fpeList, cat->fpeAlloc * sizeof(FontPathElementPtr));
 	if (new == NULL)
 	    return AllocError;
 
@@ -115,8 +114,8 @@ CatalogueUnrefFPEs (FontPathElementPtr fpe)
 	if (subfpe->refcount == 0)
 	{
 	    FontFileFreeFPE (subfpe);
-	    xfree(subfpe->name);
-	    xfree(subfpe);
+	    free(subfpe->name);
+	    free(subfpe);
 	}
     }
 
@@ -150,7 +149,7 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
     dir = opendir(path);
     if (dir == NULL)
     {
-	xfree(cat);
+	free(cat);
 	return BadFontPath;
     }
 
@@ -180,7 +179,7 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
 	    len += strlen(attrib);
 	}
 
-	subfpe = xalloc(sizeof *subfpe);
+	subfpe = malloc(sizeof *subfpe);
 	if (subfpe == NULL)
 	    continue;
 
@@ -190,10 +189,10 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
 	 * (which uses font->fpe->type) goes to CatalogueCloseFont. */
 	subfpe->type = fpe->type;
 	subfpe->name_length = len;
-	subfpe->name = xalloc (len + 1);
+	subfpe->name = malloc (len + 1);
 	if (subfpe == NULL)
 	{
-	    xfree(subfpe);
+	    free(subfpe);
 	    continue;
 	}
 
@@ -207,15 +206,15 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
 
 	if (FontFileInitFPE (subfpe) != Successful)
 	{
-	    xfree(subfpe->name);
-	    xfree(subfpe);
+	    free(subfpe->name);
+	    free(subfpe);
 	    continue;
 	}
 
 	if (CatalogueAddFPE(cat, subfpe) != Successful)
 	{
 	    FontFileFreeFPE (subfpe);
-	    xfree(subfpe);
+	    free(subfpe);
 	    continue;
 	}
     }
@@ -235,7 +234,7 @@ CatalogueInitFPE (FontPathElementPtr fpe)
 {
     CataloguePtr	cat;
 
-    cat = (CataloguePtr) xalloc(sizeof *cat);
+    cat = malloc(sizeof *cat);
     if (cat == NULL)
 	return AllocError;
 
@@ -271,8 +270,8 @@ CatalogueFreeFPE (FontPathElementPtr fpe)
 	return FontFileFreeFPE (fpe);
 
     CatalogueUnrefFPEs (fpe);
-    xfree(cat->fpeList);
-    xfree(cat);
+    free(cat->fpeList);
+    free(cat);
 
     return Successful;
 }
@@ -356,8 +355,7 @@ CatalogueStartListFonts(pointer client, FontPathElementPtr fpe,
 
     CatalogueRescan (fpe, FALSE);
 
-    data = (LFWIDataPtr) xalloc (sizeof *data +
-				 sizeof data->privates[0] * cat->fpeCount);
+    data = malloc (sizeof *data + sizeof data->privates[0] * cat->fpeCount);
     if (!data)
 	return AllocError;
     data->privates = (pointer *) (data + 1);
@@ -377,7 +375,7 @@ CatalogueStartListFonts(pointer client, FontPathElementPtr fpe,
  bail:
     for (j = 0; j < i; j++)
 	/* FIXME: we have no way to free the per-fpe privates. */;
-    xfree (data);
+    free (data);
 
     return AllocError;
 }
@@ -402,7 +400,7 @@ CatalogueListNextFontWithInfo(pointer client, FontPathElementPtr fpe,
 
     if (data->current == cat->fpeCount)
     {
-	xfree(data);
+	free(data);
 	return BadFontName;
     }
 
@@ -439,7 +437,7 @@ CatalogueListNextFontOrAlias(pointer client, FontPathElementPtr fpe,
 
     if (data->current == cat->fpeCount)
     {
-	xfree(data);
+	free(data);
 	return BadFontName;
     }
 

@@ -236,7 +236,7 @@ pcfWriteFont(FontPtr pFont, FontFilePtr file)
 	ink_minbounds = &pFont->info.ink_minbounds;
 	ink_maxbounds = &pFont->info.ink_maxbounds;
     }
-    offsetProps = (FontPropPtr) xalloc(pFont->info.nprops * sizeof(FontPropRec));
+    offsetProps = malloc(pFont->info.nprops * sizeof(FontPropRec));
     if (!offsetProps) {
       pcfError("pcfWriteFont(): Couldn't allocate offsetProps (%d*%d)", pFont->info.nprops, sizeof(FontPropRec));
 	return AllocError;
@@ -358,7 +358,7 @@ pcfWriteFont(FontPtr pFont, FontFilePtr file)
 	if (current_position > table->offset) {
 	    printf("can't go backwards... %d > %d\n",
 		   (int)current_position, (int)table->offset);
-	    xfree(offsetProps);
+	    free(offsetProps);
 	    return BadFontName;
 	}
 	while (current_position < table->offset)
@@ -463,6 +463,6 @@ pcfWriteFont(FontPtr pFont, FontFilePtr file)
 	}
     }
 
-    xfree(offsetProps);
+    free(offsetProps);
     return Successful;
 }

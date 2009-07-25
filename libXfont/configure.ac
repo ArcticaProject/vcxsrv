@@ -23,7 +23,7 @@ dnl Process this file with autoconf to create configure.
 AC_PREREQ([2.57])
 
 AC_INIT([libXfont],
-	1.3.4,
+	1.4.0,
 	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
 	libXfont)
 dnl
@@ -69,7 +69,6 @@ XFONT_FONTFILE=no
 #
 # Scalable fonts in files:
 # 	FreeType
-#	IBM Type1 rasterizer
 #	Bitstream Speedo rasterizer
 #
 AC_ARG_ENABLE(freetype, [ --disable-freetype],[XFONT_FREETYPE=$enableval],[XFONT_FREETYPE=yes])
@@ -106,20 +105,6 @@ fi
 AC_SUBST(FREETYPE_LIBS)
 AC_SUBST(FREETYPE_CFLAGS)
 AC_SUBST(FREETYPE_REQUIRES)
-
-AC_ARG_ENABLE(type1, [ --enable-type1 ], [XFONT_TYPE1=$enableval], [XFONT_TYPE1=yes])
-if test "x$XFONT_TYPE1" = xyes; then
-	AC_DEFINE(XFONT_TYPE1,1,[Support IBM Type 1 rasterizer for Type1 font files])
-	XFONT_FONTFILE=yes
-fi
-AM_CONDITIONAL(XFONT_TYPE1, [test "x$XFONT_TYPE1" = xyes ])
-
-AC_ARG_ENABLE(speedo, [ --disable-speedo ], [XFONT_SPEEDO=$enableval], [XFONT_SPEEDO=yes])
-AM_CONDITIONAL(XFONT_SPEEDO, [test "x$XFONT_SPEEDO" = xyes ])
-if test "x$XFONT_SPEEDO" = xyes; then
-	AC_DEFINE(XFONT_SPEEDO,1,[Support Speedo font files])
-	XFONT_FONTFILE=yes
-fi
 
 #
 # Bitmap fonts in files:
@@ -185,14 +170,6 @@ if test "x$XFONT_FONTFILE" = xyes; then
 	AC_DEFINE(XFONT_FONTFILE,1,[Support fonts in files])
 fi
 
-AC_ARG_ENABLE(loadable-font-modules, 
-  AC_HELP_STRING([--disable-loadable-font-modules], 
-       	 [support dynamically loaded font modules (default is enabled)]),
-	[LOADABLE_FONTS=$enableval], [LOADABLE_FONTS=yes])
-if test "x$LOADABLE_FONTS" = xyes; then
-	AC_DEFINE(LOADABLEFONTS,1,[Support dynamically loaded font modules])
-fi
-
 #
 # Support connection to font servers?
 #
@@ -236,8 +213,6 @@ AC_OUTPUT([Makefile
 	   src/FreeType/Makefile
 	   src/builtins/Makefile
 	   src/bitmap/Makefile
-	   src/Type1/Makefile
-	   src/Speedo/Makefile
 	   src/fc/Makefile
 	   src/util/Makefile
 	   src/stubs/Makefile

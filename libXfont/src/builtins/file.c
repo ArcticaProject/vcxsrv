@@ -87,7 +87,7 @@ BuiltinClose (BufFilePtr f, int unused)
 {
     BuiltinIOPtr    io = ((BuiltinIOPtr) f->private);
     
-    xfree (io);
+    free (io);
     return 1;
 }
 
@@ -105,7 +105,7 @@ BuiltinFileOpen (char *name)
 	    break;
     if (i == builtin_files_count)
 	return NULL;
-    io = (BuiltinIOPtr) xalloc (sizeof (BuiltinIORec));
+    io = malloc (sizeof (BuiltinIORec));
     if (!io)
 	return NULL;
     io->offset = 0;
@@ -113,7 +113,7 @@ BuiltinFileOpen (char *name)
     raw = BufFileCreate ((char *) io, BuiltinFill, 0, BuiltinSkip, BuiltinClose);
     if (!raw)
     {
-	xfree (io);
+	free (io);
 	return NULL;
     }
     if ((cooked = BufFilePushZIP (raw)))

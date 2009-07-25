@@ -1,3 +1,160 @@
+commit 04ced93e997b185b5d9124cacc96fa39a77b2ab7
+Author: Peter Astrand <astrand@maggie.lkpg.cendio.se>
+Date:   Wed Feb 4 22:09:25 2009 +0100
+
+    Avoid sending uninitialized padding data over the network.
+    
+    Besides cluttering Valgrind output, this might also be an information leak.
+    
+    Signed-off-by: Peter Astrand <astrand@cendio.se>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit e15dca77fa76252dd8499f8585d8ce922ac3b869
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Jan 29 18:02:34 2009 -0200
+
+    Janitor: make distcheck and .gitignore
+    
+      Distribute ChangeLog but not autogen.sh.
+      Use a single toplevel .gitignore file, instead of one per subdirectory.
+
+commit 38bac54519a67ab1a276b66dbaa84a3327ccf827
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Sat Sep 27 02:06:27 2008 -0400
+
+    Remove some strcasecmp silliness
+
+commit f431b4eb4dc743ccdf94b1b2ed858cc21f63c091
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 23:23:40 2009 -0500
+
+    Allow case insensitive filename matching in fontfile.
+    
+    Simplify the freetype renderer list to match.
+
+commit 903d39aeea73a973fb8b05ca1ac147c2cca146cb
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 23:21:29 2009 -0500
+
+    Delete some dead ifdefs
+
+commit daa7af2bb2326de363aa5ea51c29616e3634343a
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 23:20:20 2009 -0500
+
+    Move the copy of CopyISOLatin1Lowered near its user, and un-weak it.
+
+commit 6c29007756301f513c0151e2b63af073f310af66
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 23:17:55 2009 -0500
+
+    Drop OS/2 support
+
+commit 0cdc9b8f850342d50b72a57507db3413eacc6fb8
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 23:16:35 2009 -0500
+
+    xalloc -> malloc, etc.
+
+commit 632a2e90a4b209facc84d7a18873f19a720ea7df
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Sat Sep 27 01:30:13 2008 -0400
+
+    Remove PMF support.
+    
+    .pmf files are printer font metrics; they have no glyphs, just boxes for
+    layout.  They can't possibly be useful in a post-Xprint world.
+
+commit e1927f80deabe0268dc18b4a9f3ceda1325171f5
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 22:57:35 2009 -0500
+
+    Remove printer font support.
+    
+    Xprint is just insidious, isn't it.
+
+commit 732191d5d6ad58caab25e24df16fb89efaea2e9a
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 22:42:22 2009 -0500
+
+    Remove loadable renderer support.
+
+commit 423d0a2c1dfad969f4a238618811937bc5f49776
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Sat Sep 27 01:55:47 2008 -0400
+
+    Remove useless #define
+
+commit 50bca6dd881c2d787b3afa4d98a2c2667f767614
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 22:33:06 2009 -0500
+
+    Get rid of a useless array
+
+commit 6ba0565362ba9c8d1037c0e4725cb31faa141656
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 22:29:10 2009 -0500
+
+    const cleanup
+
+commit 1247f01ee36f80222e30c1678f940329aadb8335
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 01:13:08 2009 -0500
+
+    Delete Type1
+    
+    Yes, these are still real fonts, but freetype can handle them just fine.
+
+commit 85b66b8a7f3095f10437c8ecb3dcbfe68c9cfced
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Jan 20 01:03:16 2009 -0500
+
+    Delete speedo
+    
+    OUT OUT OUT
+
+commit 1559d8086e8063c692aae008006578b88e1368fe
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Dec 28 12:35:37 2008 -0800
+
+    Added missing AM_CFLAGS for -Wl,-flat_namespace
+    
+    Fixes commit f859a76b0f325b07952ad1c5c818318307c589b0
+
+commit 99bad52b592f4f11887bf9033590b61880c3c976
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Sat Mar 1 16:45:55 2008 -0300
+
+    Disable some fun stdio wrapping.
+    
+      The code is still there but no magic with macros is attempted anymore
+    to handle files.
+      This should really be changed to just use stdio, and properly adapt
+     functions like T1Decript, T1eexec, etc.
+
+commit 95760fbe45a700ea4cc118daa536604393721a59
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Dec 19 16:24:39 2008 -0800
+
+    Restore comment deleted by b6f793d7d5
+
+commit b6f793d7d5c7f7c55911e6524dede41b92dcbc22
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Fri Mar 14 01:30:24 2008 -0300
+
+    libXfont ansification and removal of xf86_ansic.h dependency
+    
+      Basically the code is now compiled as if FONTMODULE was never defined,
+    but also removed some "magic" defining _XOPEN_SOURCE before including
+    math.h.
+      Also removed some #if 0'ed code instead of fixing prototypes inside
+    the "dead code".
+      Changes to spdo_prv.h were due to defines like:
+      <hash>define foo() sp_foo()
+      that would not compile with the ansification in the format:
+      type foo(void)
+      due to the macro receiving "void" as an argument.
+
 commit 282ac4226195d58e3818e7ac97093e396aa78086
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Fri Dec 19 15:07:21 2008 -0800

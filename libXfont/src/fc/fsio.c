@@ -64,9 +64,6 @@
 #define EINTR WSAEINTR
 #endif
 
-#ifdef __UNIXOS2__
-#define select(n,r,w,x,t) os2PseudoSelect(n,r,w,x,t)
-#endif
 
 
 static int  padlength[4] = {0, 3, 2, 1};
@@ -284,7 +281,7 @@ _fs_flush (FSFpePtr conn)
     {
 	_fs_unmark_block (conn, FS_BROKEN_WRITE|FS_PENDING_WRITE);
 	if (conn->outBuf.size > FS_BUF_INC)
-	    conn->outBuf.buf = xrealloc (conn->outBuf.buf, FS_BUF_INC);
+	    conn->outBuf.buf = realloc (conn->outBuf.buf, FS_BUF_INC);
 	conn->outBuf.remove = conn->outBuf.insert = 0;
     }
     return FSIO_READY;
@@ -310,7 +307,7 @@ _fs_resize (FSBufPtr buf, long size)
     if (buf->size - buf->remove < size)
     {
 	new_size = ((buf->remove + size + FS_BUF_INC) / FS_BUF_INC) * FS_BUF_INC;
-	new = xrealloc (buf->buf, new_size);
+	new = realloc (buf->buf, new_size);
 	if (!new)
 	    return FSIO_ERROR;
 	buf->buf = new;
@@ -327,7 +324,7 @@ _fs_downsize (FSBufPtr buf, long size)
 	buf->insert = buf->remove = 0;
 	if (buf->size > size)
 	{
-	    buf->buf = xrealloc (buf->buf, size);
+	    buf->buf = realloc (buf->buf, size);
 	    buf->size = size;
 	}
     }
@@ -346,16 +343,16 @@ Bool
 _fs_io_init (FSFpePtr conn)
 {
     conn->outBuf.insert = conn->outBuf.remove = 0;
-    conn->outBuf.buf = xalloc (FS_BUF_INC);
+    conn->outBuf.buf = malloc (FS_BUF_INC);
     if (!conn->outBuf.buf)
 	return FALSE;
     conn->outBuf.size = FS_BUF_INC;
     
     conn->inBuf.insert = conn->inBuf.remove = 0;
-    conn->inBuf.buf = xalloc (FS_BUF_INC);
+    conn->inBuf.buf = malloc (FS_BUF_INC);
     if (!conn->inBuf.buf)
     {
-	xfree (conn->outBuf.buf);
+	free (conn->outBuf.buf);
 	conn->outBuf.buf = 0;
 	return FALSE;
     }
@@ -368,9 +365,9 @@ void
 _fs_io_fini (FSFpePtr conn)
 {
     if (conn->outBuf.buf)
-	xfree (conn->outBuf.buf);
+	free (conn->outBuf.buf);
     if (conn->inBuf.buf)
-	xfree (conn->inBuf.buf);
+	free (conn->inBuf.buf);
 }
 
 static int
@@ -397,6 +394,8 @@ _fs_do_write(FSFpePtr conn, char *data, long len, long size)
 	}
     }
     memcpy (conn->outBuf.buf + conn->outBuf.insert, data, len);
+    /* Clear pad data */
+    memset (conn->outBuf.buf + conn->outBuf.insert + len, 0, size - len);
     conn->outBuf.insert += size;
     _fs_mark_block (conn, FS_PENDING_WRITE);
     return FSIO_READY;

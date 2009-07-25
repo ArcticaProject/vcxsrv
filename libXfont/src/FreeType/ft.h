@@ -76,10 +76,6 @@ typedef struct _FTMapping
 
 /* ftfuncs.c */
 
-#if 0
-void FreeTypeRegisterFontFileFunctions(void);
-#endif
-
 /* ftenc.c */
 
 int FTPickMapping(char*, int, char*, FT_Face, FTMappingPtr);

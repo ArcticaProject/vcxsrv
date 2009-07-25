@@ -42,7 +42,7 @@ FontFileOpenWrite (const char *name)
 {
     int	fd;
 
-#if defined(WIN32) || defined(__UNIXOS2__) || defined(__CYGWIN__)
+#if defined(WIN32) || defined(__CYGWIN__)
     fd = open (name, O_CREAT|O_TRUNC|O_RDWR|O_BINARY, 0666);
 #else
     fd = creat (name, 0666);

@@ -217,14 +217,6 @@ _fs_add_rep_log (FSFpePtr conn, fsGenericReply *rep)
 static Bool
 fs_name_check(char *name)
 {
-#ifdef __UNIXOS2__
-    /* OS/2 uses D:/usr/X11R6/.... as fontfile pathnames, so check that
-     * there is not only a protocol/ prefix, but also that the first chars
-     * are not a drive letter
-     */
-    if (name && isalpha(*name) && name[1] == ':')
-      return FALSE;
-#endif
     /* Just make sure there is a protocol/ prefix */
     return (name && *name != '/' && strchr(name, '/'));
 }
@@ -266,7 +258,7 @@ fs_close_conn(FSFpePtr conn)
     for (client = conn->clients; client; client = nclient) 
     {
 	nclient = client->next;
-	xfree (client);
+	free (client);
     }
     conn->clients = NULL;
 }
@@ -411,7 +403,7 @@ fs_new_block_rec(FontPathElementPtr fpe, pointer client, int type)
 	size = 0;
 	break;
     }
-    blockrec = (FSBlockDataPtr) xalloc(sizeof(FSBlockDataRec) + size);
+    blockrec = malloc(sizeof(FSBlockDataRec) + size);
     if (!blockrec)
 	return (FSBlockDataPtr) 0;
     blockrec->data = (pointer) (blockrec + 1);
@@ -462,9 +454,9 @@ _fs_remove_block_rec(FSFpePtr conn, FSBlockDataPtr blockrec)
     {
 	FSBlockedGlyphPtr bglyph = (FSBlockedGlyphPtr)blockrec->data;
 	if (bglyph->num_expected_ranges)
-	    xfree(bglyph->expected_ranges);
+	    free(bglyph->expected_ranges);
     }
-    xfree(blockrec);
+    free(blockrec);
     _fs_set_pending_reply (conn);
 }
 
@@ -477,7 +469,7 @@ _fs_signal_clients_depending(FSClientsDependingPtr *clients_depending)
     {
 	*clients_depending = p->next;
 	ClientSignal(p->client);
-	xfree(p);
+	free(p);
     }
 }
 
@@ -493,7 +485,7 @@ _fs_add_clients_depending(FSClientsDependingPtr *clients_depending, pointer clie
 	    return Suspended;
     }
     
-    new = (FSClientsDependingPtr)xalloc (sizeof (FSClientsDependingRec));
+    new = malloc (sizeof (FSClientsDependingRec));
     if (!new)
 	return BadAlloc;
 
@@ -981,7 +973,7 @@ fs_read_extent_info(FontPathElementPtr fpe, FSBlockDataPtr blockrec)
 	numInfos *= 2;
 	haveInk = TRUE;
     }
-    ci = pCI = (CharInfoPtr) xalloc(sizeof(CharInfoRec) * numInfos);
+    ci = pCI = malloc(sizeof(CharInfoRec) * numInfos);
 
     if (!pCI) 
     {
@@ -1626,6 +1618,7 @@ fs_send_open_font(pointer client, FontPathElementPtr fpe, Mask flags,
     buf[0] = (unsigned char) namelen;
     memcpy(&buf[1], name, namelen);
     openreq.reqType = FS_OpenBitmapFont;
+    openreq.pad = 0;
     openreq.fid = fsd->fontid;
     openreq.format_hint = fsd->format;
     openreq.format_mask = fsd->fmask;
@@ -1638,6 +1631,7 @@ fs_send_open_font(pointer client, FontPathElementPtr fpe, Mask flags,
     blockrec->sequenceNumber = conn->current_seq;
     
     inforeq.reqType = FS_QueryXInfo;
+    inforeq.pad = 0;
     inforeq.id = fsd->fontid;
     inforeq.length = SIZEOF(fsQueryXInfoReq) >> 2;
 
@@ -1764,6 +1758,7 @@ fs_send_close_font(FontPathElementPtr fpe, Font id)
 	return Successful;
     /* tell the font server to close the font */
     req.reqType = FS_CloseFont;
+    req.pad = 0;
     req.length = SIZEOF(fsCloseReq) >> 2;
     req.id = id;
     _fs_add_req_log(conn, FS_CloseFont);
@@ -2156,7 +2151,7 @@ _fs_load_glyphs(pointer client, FontPtr pfont, Bool range_flag,
 	if (nranges)
 	{
 	    _fs_clean_aborted_loadglyphs(pfont, nranges, ranges);
-	    xfree(ranges);
+	    free(ranges);
 	}
 	return _fs_add_clients_depending(clients_depending, client);
     }
@@ -2184,7 +2179,7 @@ _fs_load_glyphs(pointer client, FontPtr pfont, Bool range_flag,
 	/* Since we're not ready to send the load_glyphs request yet,
 	   clean up the damage caused by the fs_build_range() call. */
 	_fs_clean_aborted_loadglyphs(pfont, nranges, ranges);
-	xfree(ranges);
+	free(ranges);
 
 	/* Now try to reopen the font. */
 	return fs_send_open_font(client, pfont->fpe,
@@ -2296,6 +2291,7 @@ fs_send_list_fonts(pointer client, FontPathElementPtr fpe, char *pattern,
 
     /* send the request */
     req.reqType = FS_ListFonts;
+    req.pad = 0;
     req.maxNames = maxnames;
     req.nbytes = patlen;
     req.length = (SIZEOF(fsListFontsReq) + patlen + 3) >> 2;
@@ -2466,6 +2462,7 @@ fs_start_list_with_info(pointer client, FontPathElementPtr fpe,
 
     /* send the request */
     req.reqType = FS_ListFontsWithXInfo;
+    req.pad = 0;
     req.maxNames = maxnames;
     req.nbytes = len;
     req.length = (SIZEOF(fsListFontsWithXInfoReq) + len + 3) >> 2;
@@ -2566,12 +2563,13 @@ fs_client_died(pointer client, FontPathElementPtr fpe)
     {
 	if (cur->client == client) {
 	    freeac.reqType = FS_FreeAC;
+	    freeac.pad = 0;
 	    freeac.id = cur->acid;
 	    freeac.length = sizeof (fsFreeACReq) >> 2;
 	    _fs_add_req_log(conn, FS_FreeAC);
 	    _fs_write (conn, (char *) &freeac, sizeof (fsFreeACReq));
 	    *prev = cur->next;
-	    xfree (cur);
+	    free (cur);
 	    break;
 	}
     }
@@ -2625,7 +2623,7 @@ _fs_client_access (FSFpePtr conn, pointer client, Bool sync)
     }
     if (!cur)
     {
-	cur = (FSClientPtr) xalloc (sizeof (FSClientRec));
+	cur = malloc (sizeof (FSClientRec));
 	if (!cur)
 	    return;
 	cur->client = client;
@@ -2640,6 +2638,7 @@ _fs_client_access (FSFpePtr conn, pointer client, Bool sync)
 	{
 	    fsFreeACReq	freeac;
 	    freeac.reqType = FS_FreeAC;
+	    freeac.pad = 0;
 	    freeac.id = cur->acid;
 	    freeac.length = sizeof (fsFreeACReq) >> 2;
 	    _fs_add_req_log(conn, FS_FreeAC);
@@ -2668,6 +2667,7 @@ _fs_client_access (FSFpePtr conn, pointer client, Bool sync)
     if (conn->curacid != cur->acid)
     {
     	setac.reqType = FS_SetAuthorization;
+	setac.pad = 0;
     	setac.length = sizeof (fsSetAuthorizationReq) >> 2;
     	setac.id = cur->acid;
     	_fs_add_req_log(conn, FS_SetAuthorization);
@@ -2810,15 +2810,14 @@ _fs_recv_conn_setup (FSFpePtr conn)
 	 */
 	if (conn->alts)
 	{
-	    xfree (conn->alts);
+	    free (conn->alts);
 	    conn->alts = 0;
 	    conn->numAlts = 0;
 	}
 	if (setup->num_alternates)
 	{
-	    alts = (FSFpeAltPtr) xalloc (setup->num_alternates * 
-					 sizeof (FSFpeAltRec) +
-					 (setup->alternate_len << 2));
+	    alts = malloc (setup->num_alternates * sizeof (FSFpeAltRec) +
+			   (setup->alternate_len << 2));
 	    if (alts)
 	    {
 		alt_names = (char *) (setup + 1);
@@ -2971,6 +2970,7 @@ _fs_send_cat_sync (FSFpePtr conn)
     lcreq.length = (SIZEOF(fsListCataloguesReq)) >> 2;
     lcreq.maxNames = 0;
     lcreq.nbytes = 0;
+    lcreq.pad2 = 0;
     _fs_add_req_log(conn, FS_SetCatalogues);
     if (_fs_write(conn, (char *) &lcreq, SIZEOF(fsListCataloguesReq)) != FSIO_READY)
 	return FSIO_ERROR;
@@ -3151,13 +3151,12 @@ _fs_init_conn (char *servername)
 {
     FSFpePtr	conn;
 
-    conn = xalloc (sizeof (FSFpeRec) + strlen (servername) + 1);
+    conn = calloc (1, sizeof (FSFpeRec) + strlen (servername) + 1);
     if (!conn)
 	return 0;
-    memset (conn, '\0', sizeof (FSFpeRec));
     if (!_fs_io_init (conn))
     {
-	xfree (conn);
+	free (conn);
 	return 0;
     }
     conn->servername = (char *) (conn + 1);
@@ -3173,8 +3172,8 @@ _fs_free_conn (FSFpePtr conn)
     _fs_close_server (conn);
     _fs_io_fini (conn);
     if (conn->alts)
-	xfree (conn->alts);
-    xfree (conn);
+	free (conn->alts);
+    free (conn);
 }
 
 /*
@@ -3193,73 +3192,6 @@ fs_register_fpe_functions(void)
 			 fs_list_fonts,
 			 fs_start_list_with_info,
 			 fs_next_list_with_info,
-			 fs_wakeup,
-			 fs_client_died,
-			 _fs_load_glyphs,
-			 NULL,
-			 NULL,
-			 NULL);
-}
-
-static int
-check_fs_open_font(pointer client, FontPathElementPtr fpe, Mask flags, 
-		   char *name, int namelen, 
-		   fsBitmapFormat format, fsBitmapFormatMask fmask, 
-		   XID id, FontPtr *ppfont,
-		   char **alias, FontPtr non_cachable_font)
-{
-    if (XpClientIsBitmapClient(client))
-	return (fs_open_font(client, fpe, flags, name, namelen, format, 
-			fmask, id, ppfont, alias, non_cachable_font) );
-    return BadFontName;
-}
-
-static int
-check_fs_list_fonts(pointer client, FontPathElementPtr fpe, 
-		    char *pattern, int patlen, int maxnames, 
-		    FontNamesPtr newnames)
-{
-    if (XpClientIsBitmapClient(client))
-	return (fs_list_fonts(client, fpe, pattern, patlen, maxnames, 
-		newnames));
-    return BadFontName;
-}
-
-static int
-check_fs_start_list_with_info(pointer client, FontPathElementPtr fpe, 
-			      char *pattern, int len, int maxnames, 
-			      pointer *pdata)
-{
-    if (XpClientIsBitmapClient(client))
-	return (fs_start_list_with_info(client, fpe, pattern, len, maxnames,
-		pdata));
-    return BadFontName;
-}
-
-static int
-check_fs_next_list_with_info(pointer client, FontPathElementPtr fpe, 
-			     char **namep, int *namelenp, 
-			     FontInfoPtr *pFontInfo, int *numFonts,
-			     pointer private)
-{
-    if (XpClientIsBitmapClient(client))
-	return (fs_next_list_with_info(client, fpe, namep, namelenp, pFontInfo, 
-		numFonts,private));
-    return BadFontName;
-}
-
-void
-check_fs_register_fpe_functions(void)
-{
-    RegisterFPEFunctions(fs_name_check,
-			 fs_init_fpe,
-			 fs_free_fpe,
-			 fs_reset_fpe,
-			 check_fs_open_font,
-			 fs_close_font,
-			 check_fs_list_fonts,
-			 check_fs_start_list_with_info,
-			 check_fs_next_list_with_info,
 			 fs_wakeup,
 			 fs_client_died,
 			 _fs_load_glyphs,

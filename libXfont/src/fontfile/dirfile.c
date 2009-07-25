@@ -66,7 +66,7 @@ FontFileReadDirectory (char *directory, FontDirectoryPtr *pdir)
                 status;
     struct stat	statb;
     static char format[24] = "";
-#if defined(__UNIXOS2__) || defined(WIN32)
+#if defined(WIN32)
     int i;
 #endif
 
@@ -76,7 +76,7 @@ FontFileReadDirectory (char *directory, FontDirectoryPtr *pdir)
 	return BadFontPath;
 
     /* Check for font directory attributes */
-#if !defined(__UNIXOS2__) && !defined(WIN32)
+#if !defined(WIN32)
     if ((ptr = strchr(directory, ':'))) {
 #else
     /* OS/2 and WIN32 path might start with a drive letter, don't clip this */
@@ -118,7 +118,7 @@ FontFileReadDirectory (char *directory, FontDirectoryPtr *pdir)
 		MAXFONTFILENAMELEN-1, MAXFONTNAMELEN-1);
 
 	while ((count = fscanf(file, format, file_name, font_name)) != EOF) {
-#if defined(__UNIXOS2__) || defined(WIN32)
+#if defined(WIN32)
 	    /* strip any existing trailing CR */
 	    for (i=0; i<strlen(font_name); i++) {
 		if (font_name[i]=='\r') font_name[i] = '\0';
@@ -378,7 +378,7 @@ lexAlias(FILE *file, char **lexToken)
 	    char       *nbuf;
 
 	    nsize = tokenSize ? (tokenSize << 1) : 64;
-	    nbuf = (char *) xrealloc(tokenBuf, nsize);
+	    nbuf = realloc(tokenBuf, nsize);
 	    if (!nbuf)
 		return EALLOC;
 	    tokenBuf = nbuf;

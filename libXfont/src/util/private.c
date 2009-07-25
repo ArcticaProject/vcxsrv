@@ -53,7 +53,7 @@ CreateFontRec (void)
 
     size = sizeof(FontRec) + (sizeof(pointer) * _FontPrivateAllocateIndex);
 
-    pFont = (FontPtr)xalloc(size);
+    pFont = malloc(size);
     
     if(pFont) {
 	bzero((char*)pFont, size);
@@ -69,8 +69,8 @@ void
 DestroyFontRec (FontPtr pFont)
 {
    if (pFont->devPrivates && pFont->devPrivates != (pointer)(&pFont[1]))
-	xfree(pFont->devPrivates);
-   xfree(pFont);
+	free(pFont->devPrivates);
+   free(pFont);
 }
 
 void
@@ -86,11 +86,12 @@ _FontSetNewPrivate (FontPtr pFont, int n, pointer ptr)
 
     if (n > pFont->maxPrivate) {
 	if (pFont->devPrivates && pFont->devPrivates != (pointer)(&pFont[1])) {
-	    new = (pointer *) xrealloc (pFont->devPrivates, (n + 1) * sizeof (pointer));
+	    new = realloc (pFont->devPrivates, (n + 1) * sizeof (pointer));
 	    if (!new)
 		return FALSE;
 	} else {
-	    new = (pointer *) xalloc ((n + 1) * sizeof (pointer));
+	    /* omg realloc */
+	    new = malloc ((n + 1) * sizeof (pointer));
 	    if (!new)
 		return FALSE;
 	    if (pFont->devPrivates)

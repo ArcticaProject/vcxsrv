@@ -162,7 +162,7 @@ BufFilePushCompressed (BufFilePtr f)
     hsize = hsize_table[maxbits - 12];
     extra = (1 << maxbits) * sizeof (char_type) +
 	    hsize * sizeof (unsigned short);
-    file = (CompressedFile *) xalloc (sizeof (CompressedFile) + extra);
+    file = malloc (sizeof (CompressedFile) + extra);
     if (!file)
 	return 0;
     file->file = f;
@@ -203,7 +203,7 @@ BufCompressedClose (BufFilePtr f, int doClose)
 
     file = (CompressedFile *) f->private;
     raw = file->file;
-    xfree (file);
+    free (file);
     BufFileClose (raw, doClose);
     return 1;
 }

@@ -12,9 +12,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `ws2_32' library (-lws2_32). */
-#undef HAVE_LIBWS2_32
-
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
@@ -54,11 +51,12 @@
 /* Support IPv6 for TCP connections */
 #undef IPv6
 
-/* Support dynamically loaded font modules */
-#undef LOADABLEFONTS
-
 /* Support os-specific local connections */
 #undef LOCALCONN
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
 
 /* Name of package */
 #undef PACKAGE
@@ -125,12 +123,6 @@
 
 /* Support snf format bitmap font files */
 #undef XFONT_SNFFORMAT
-
-/* Support Speedo font files */
-#undef XFONT_SPEEDO
-
-/* Support IBM Type 1 rasterizer for Type1 font files */
-#undef XFONT_TYPE1
 
 /* Support bzip2 for bitmap fonts */
 #undef X_BZIP2_FONT_COMPRESSION

@@ -49,11 +49,11 @@ FreeFontNames(FontNamesPtr pFN)
     if (!pFN)
 	return;
     for (i = 0; i < pFN->nnames; i++) {
-	xfree(pFN->names[i]);
+	free(pFN->names[i]);
     }
-    xfree(pFN->names);
-    xfree(pFN->length);
-    xfree(pFN);
+    free(pFN->names);
+    free(pFN->length);
+    free(pFN);
 }
 
 FontNamesPtr
@@ -61,18 +61,18 @@ MakeFontNamesRecord(unsigned int size)
 {
     FontNamesPtr pFN;
 
-    pFN = (FontNamesPtr) xalloc(sizeof(FontNamesRec));
+    pFN = malloc(sizeof(FontNamesRec));
     if (pFN) {
 	pFN->nnames = 0;
 	pFN->size = size;
 	if (size)
 	{
-	    pFN->length = (int *) xalloc(size * sizeof(int));
-	    pFN->names = (char **) xalloc(size * sizeof(char *));
+	    pFN->length = malloc(size * sizeof(int));
+	    pFN->names = malloc(size * sizeof(char *));
 	    if (!pFN->length || !pFN->names) {
-	    	xfree(pFN->length);
-	    	xfree(pFN->names);
-	    	xfree(pFN);
+	    	free(pFN->length);
+	    	free(pFN->names);
+	    	free(pFN);
 	    	pFN = (FontNamesPtr) 0;
 	    }
 	}
@@ -91,7 +91,7 @@ AddFontNamesName(FontNamesPtr names, char *name, int length)
     int         index = names->nnames;
     char       *nelt;
 
-    nelt = (char *) xalloc(length + 1);
+    nelt = malloc(length + 1);
     if (!nelt)
 	return AllocError;
     if (index >= names->size) {
@@ -101,16 +101,16 @@ AddFontNamesName(FontNamesPtr names, char *name, int length)
 
 	if (size == 0)
 	    size = 8;
-	nlength = (int *) xrealloc(names->length, size * sizeof(int));
-	nnames = (char **) xrealloc(names->names, size * sizeof(char *));
+	nlength = realloc(names->length, size * sizeof(int));
+	nnames = realloc(names->names, size * sizeof(char *));
 	if (nlength && nnames) {
 	    names->size = size;
 	    names->length = nlength;
 	    names->names = nnames;
 	} else {
-	    xfree(nelt);
-	    xfree(nlength);
-	    xfree(nnames);
+	    free(nelt);
+	    free(nlength);
+	    free(nnames);
 	    return AllocError;
 	}
     }

@@ -64,7 +64,7 @@ from The Open Group.
 # endif
 #endif
 #ifndef OPEN_MAX
-#if defined(SVR4) || defined(__UNIXOS2__)
+#if defined(SVR4) 
 #define OPEN_MAX 256
 #else
 #include <sys/param.h>

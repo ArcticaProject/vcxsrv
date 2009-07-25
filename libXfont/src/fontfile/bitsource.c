@@ -51,7 +51,7 @@ FontFileRegisterBitmapSource (FontPathElementPtr fpe)
     if (FontFileBitmapSources.count == FontFileBitmapSources.size)
     {
 	newsize = FontFileBitmapSources.size + 4;
-	new = (FontPathElementPtr *) xrealloc (FontFileBitmapSources.fpe, newsize * sizeof *new);
+	new = realloc (FontFileBitmapSources.fpe, newsize * sizeof *new);
 	if (!new)
 	    return FALSE;
 	FontFileBitmapSources.size = newsize;
@@ -73,7 +73,7 @@ FontFileUnregisterBitmapSource (FontPathElementPtr fpe)
 	    if (FontFileBitmapSources.count == 0)
 	    {
 		FontFileBitmapSources.size = 0;
-		xfree (FontFileBitmapSources.fpe);
+		free (FontFileBitmapSources.fpe);
 		FontFileBitmapSources.fpe = 0;
 	    }
 	    else
@@ -99,7 +99,7 @@ FontFileEmptyBitmapSource(void)
 
     FontFileBitmapSources.count = 0;
     FontFileBitmapSources.size = 0;
-    xfree (FontFileBitmapSources.fpe);
+    free (FontFileBitmapSources.fpe);
     FontFileBitmapSources.fpe = 0;
 }
 

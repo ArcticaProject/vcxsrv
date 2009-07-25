@@ -108,8 +108,7 @@ _fs_convert_props(fsPropInfo *pi, fsPropOffset *po, pointer pd,
 	|| nprops > SIZE_MAX/(sizeof(FontPropRec) + sizeof(char))) 
 	return -1;
 	   
-    dprop = (FontPropPtr) xalloc(sizeof(FontPropRec) * nprops +
-				 sizeof (char) * nprops);
+    dprop = malloc(sizeof(FontPropRec) * nprops + sizeof (char) * nprops);
     if (!dprop)
 	return -1;
     
@@ -132,7 +131,7 @@ _fs_convert_props(fsPropInfo *pi, fsPropOffset *po, pointer pd,
 					    local_off.value.length, 1);
 	    if (dprop->value == BAD_RESOURCE)
 	    {
-		xfree (pfi->props);
+		free (pfi->props);
 		pfi->nprops = 0;
 		pfi->props = 0;
 		pfi->isStringProp = 0;
@@ -150,7 +149,7 @@ _fs_free_props (FontInfoPtr pfi)
 {
     if (pfi->props)
     {
-	xfree (pfi->props);
+	free (pfi->props);
 	pfi->nprops = 0;
 	pfi->props = 0;
     }
@@ -616,12 +615,12 @@ _fs_unload_font(FontPtr pfont)
      * fsdata points at FSFontRec, FSFontDataRec and name
      */
     if (encoding)
-	xfree(encoding);
+	free(encoding);
 
     while ((glyphs = fsdata->glyphs))
     {
 	fsdata->glyphs = glyphs->next;
-	xfree (glyphs);
+	free (glyphs);
     }
     
     /* XXX we may get called after the resource DB has been cleaned out */
@@ -630,7 +629,7 @@ _fs_unload_font(FontPtr pfont)
     
     _fs_free_props (&pfont->info);
     
-    xfree(fsdata);
+    free(fsdata);
 	    
     DestroyFontRec(pfont);
 }
@@ -650,9 +649,7 @@ fs_create_font (FontPathElementPtr  fpe,
     pfont = CreateFontRec ();
     if (!pfont)
 	return 0;
-    fsfont = (FSFontPtr) xalloc (sizeof (FSFontRec) +
-				 sizeof (FSFontDataRec) +
-				 namelen + 1);
+    fsfont = malloc (sizeof (FSFontRec) + sizeof (FSFontDataRec) + namelen + 1);
     if (!fsfont)
     {
 	DestroyFontRec (pfont);
@@ -703,7 +700,7 @@ fs_create_font (FontPathElementPtr  fpe,
     /* save the ID */
     if (!StoreFontClientFont(pfont, fsd->fontid)) 
     {
-	xfree (fsfont);
+	free (fsfont);
 	DestroyFontRec (pfont);
 	return 0;
     }
@@ -717,7 +714,7 @@ fs_alloc_glyphs (FontPtr pFont, int size)
     FSGlyphPtr	glyphs;
     FSFontPtr	fsfont = (FSFontPtr) pFont->fontPrivate;
 
-    glyphs = xalloc (sizeof (FSGlyphRec) + size);
+    glyphs = malloc (sizeof (FSGlyphRec) + size);
     glyphs->next = fsfont->glyphs;
     fsfont->glyphs = glyphs;
     return (pointer) (glyphs + 1);

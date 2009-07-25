@@ -57,12 +57,7 @@ FontFileOpen (const char *name)
 	return 0;
     }
     len = strlen (name);
-#ifndef __UNIXOS2__
     if (len > 2 && !strcmp (name + len - 2, ".Z")) {
-#else
-    if (len > 2 && (!strcmp (name + len - 4, ".pcz") || 
-		    !strcmp (name + len - 2, ".Z"))) {
-#endif
 	cooked = BufFilePushCompressed (raw);
 	if (!cooked) {
 	    BufFileClose (raw, TRUE);

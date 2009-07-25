@@ -55,10 +55,7 @@ from The Open Group.
 #include <config.h>
 #endif
 
-#ifndef FONTMODULE
 #include <ctype.h>
-#endif
-
 #include <X11/fonts/fntfilst.h>
 #include <X11/fonts/bitmap.h>
 #include "snfstr.h"
@@ -150,14 +147,14 @@ snfReadProps(snfFontInfoPtr snfInfo, FontInfoPtr pFontInfo, FontFilePtr file)
 
     bytestoalloc = snfInfo->nProps * sizeof(snfFontPropRec) +
 	BYTESOFSTRINGINFO(snfInfo);
-    propspace = (char *) xalloc(bytestoalloc);
+    propspace = malloc(bytestoalloc);
     if (!propspace) {
       snfError("snfReadProps(): Couldn't allocate propspace (%d)\n", bytestoalloc);
 	return AllocError;
     }
 
     if (FontFileRead(file, propspace, bytestoalloc) != bytestoalloc) {
-	xfree(propspace);
+	free(propspace);
 	return BadFontName;
     }
     psnfp = (snfFontPropPtr) propspace;
@@ -175,7 +172,7 @@ snfReadProps(snfFontInfoPtr snfInfo, FontInfoPtr pFontInfo, FontFilePtr file)
 	    pfp->value = psnfp->value;
     }
 
-    xfree(propspace);
+    free(propspace);
     return Successful;
 }
 
@@ -269,16 +266,16 @@ snfReadFont(FontPtr pFont, FontFilePtr file,
     if (fi.inkMetrics)
 	bytestoalloc += num_chars * sizeof(xCharInfo);	/* ink_metrics */
 
-    fontspace = (char *) xalloc(bytestoalloc);
+    fontspace = malloc(bytestoalloc);
     if (!fontspace) {
       snfError("snfReadFont(): Couldn't allocate fontspace (%d)\n", bytestoalloc);
 	return AllocError;
     }
-    bitmaps = (char *) xalloc (bitmapsSize);
+    bitmaps = malloc (bitmapsSize);
     if (!bitmaps)
     {
       snfError("snfReadFont(): Couldn't allocate bitmaps (%d)\n", bitmapsSize);
-	xfree (fontspace);
+	free (fontspace);
 	return AllocError;
     }
     /*
@@ -311,8 +308,7 @@ snfReadFont(FontPtr pFont, FontFilePtr file,
 	if (bitmapFont->metrics[i].bits) {
             if (!bitmapFont->encoding[SEGMENT_MAJOR(i)]) {
                 bitmapFont->encoding[SEGMENT_MAJOR(i)]=
-                    (CharInfoPtr*)xcalloc(BITMAP_FONT_SEGMENT_SIZE,
-                                          sizeof(CharInfoPtr));
+                    calloc(BITMAP_FONT_SEGMENT_SIZE, sizeof(CharInfoPtr));
                 if (!bitmapFont->encoding[SEGMENT_MAJOR(i)]) {
                     ret = AllocError;
                     break;
@@ -323,12 +319,12 @@ snfReadFont(FontPtr pFont, FontFilePtr file,
     }
 
     if (ret != Successful) {
-	xfree(bitmaps);
+	free(bitmaps);
         if(bitmapFont->encoding) {
             for(j=0; j<SEGMENT_MAJOR(i); j++)
-                xfree(bitmapFont->encoding[i]);
+                free(bitmapFont->encoding[i]);
         }
-	xfree(fontspace);
+	free(fontspace);
 	return ret;
     }
     /*
@@ -336,8 +332,8 @@ snfReadFont(FontPtr pFont, FontFilePtr file,
      */
 
     if (FontFileRead(file, bitmaps, bitmapsSize) != bitmapsSize) {
-	xfree(bitmaps);
-	xfree(fontspace);
+	free(bitmaps);
+	free(fontspace);
 	return BadFontName;
     }
 
@@ -369,11 +365,11 @@ snfReadFont(FontPtr pFont, FontFilePtr file,
 		sizepadbitmaps += BYTES_FOR_GLYPH(metric,glyph);
 	    metric++;
 	}
-	padbitmaps = (char *) xalloc(sizepadbitmaps);
+	padbitmaps = malloc(sizepadbitmaps);
 	if (!padbitmaps) {
 	    snfError("snfReadFont(): Couldn't allocate padbitmaps (%d)\n", sizepadbitmaps);
-	    xfree (bitmaps);
-	    xfree (fontspace);
+	    free (bitmaps);
+	    free (fontspace);
 	    return AllocError;
 	}
 	metric = bitmapFont->metrics;
@@ -388,14 +384,14 @@ snfReadFont(FontPtr pFont, FontFilePtr file,
 	    padbitmaps += sizechar;
 	    metric++;
 	}
-	xfree(bitmaps);
+	free(bitmaps);
     }
 
     /* now read and atom'ize properties */
 
     ret = snfReadProps(&fi, &pFont->info, file);
     if (ret != Successful) {
-	xfree(fontspace);
+	free(fontspace);
 	return ret;
     }
     snfCopyInfo(&fi, &pFont->info);
@@ -409,7 +405,7 @@ snfReadFont(FontPtr pFont, FontFilePtr file,
 	for (i = 0; ret == Successful && i < num_chars; i++)
 	    ret = snfReadxCharInfo(file, &bitmapFont->ink_metrics[i]);
 	if (ret != Successful) {
-	    xfree(fontspace);
+	    free(fontspace);
 	    return ret;
 	}
     } else {
@@ -458,15 +454,15 @@ snfReadFontInfo(FontInfoPtr pFontInfo, FontFilePtr file)
 	return ret;
     snfCopyInfo(&fi, pFontInfo);
 
-    pFontInfo->props = (FontPropPtr) xalloc(fi.nProps * sizeof(FontPropRec));
+    pFontInfo->props = malloc(fi.nProps * sizeof(FontPropRec));
     if (!pFontInfo->props) {
       snfError("snfReadFontInfo(): Couldn't allocate props (%d*%d)\n", fi.nProps, sizeof(FontPropRec));
 	return AllocError;
     }
-    pFontInfo->isStringProp = (char *) xalloc(fi.nProps * sizeof(char));
+    pFontInfo->isStringProp = malloc(fi.nProps * sizeof(char));
     if (!pFontInfo->isStringProp) {
       snfError("snfReadFontInfo(): Couldn't allocate isStringProp (%d*%d)\n", fi.nProps, sizeof(char));
-	xfree(pFontInfo->props);
+	free(pFontInfo->props);
 	return AllocError;
     }
     num_chars = n2dChars(&fi);
@@ -476,21 +472,21 @@ snfReadFontInfo(FontInfoPtr pFontInfo, FontFilePtr file)
 
     ret = snfReadProps(&fi, pFontInfo, file);
     if (ret != Successful) {
-	xfree(pFontInfo->props);
-	xfree(pFontInfo->isStringProp);
+	free(pFontInfo->props);
+	free(pFontInfo->isStringProp);
 	return ret;
     }
     if (fi.inkMetrics) {
 	ret = snfReadxCharInfo(file, &pFontInfo->ink_minbounds);
 	if (ret != Successful) {
-	    xfree(pFontInfo->props);
-	    xfree(pFontInfo->isStringProp);
+	    free(pFontInfo->props);
+	    free(pFontInfo->isStringProp);
 	    return ret;
 	}
 	ret = snfReadxCharInfo(file, &pFontInfo->ink_maxbounds);
 	if (ret != Successful) {
-	    xfree(pFontInfo->props);
-	    xfree(pFontInfo->isStringProp);
+	    free(pFontInfo->props);
+	    free(pFontInfo->isStringProp);
 	    return ret;
 	}
     } else {
@@ -507,8 +503,8 @@ snfUnloadFont(FontPtr pFont)
     BitmapFontPtr   bitmapFont;
 
     bitmapFont = (BitmapFontPtr) pFont->fontPrivate;
-    xfree (bitmapFont->bitmaps);
-    xfree (bitmapFont);
+    free (bitmapFont->bitmaps);
+    free (bitmapFont);
     DestroyFontRec (pFont);
 }
 

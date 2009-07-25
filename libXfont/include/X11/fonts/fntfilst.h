@@ -34,9 +34,7 @@ in this Software without prior written authorization from The Open Group.
 #ifndef _FONTFILEST_H_
 #define _FONTFILEST_H_
 
-#ifndef FONTMODULE
 #include <X11/Xos.h>
-#endif
 #ifndef XP_PSTEXT
 #include <X11/fonts/fontmisc.h>
 #endif

@@ -36,10 +36,32 @@ in this Software without prior written authorization from The Open Group.
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include    <X11/fonts/fntfilst.h>
+#include <X11/fonts/fntfilst.h>
+#include <X11/keysym.h>
 #ifdef WIN32
 #include <ctype.h>
 #endif
+
+static unsigned char
+ISOLatin1ToLower(unsigned char source)
+{
+    if (source >= XK_A && source <= XK_Z)
+	return source + (XK_a - XK_A);
+    if (source >= XK_Agrave && source <= XK_Odiaeresis)
+	return source + (XK_agrave - XK_Agrave);
+    if (source >= XK_Ooblique && source <= XK_Thorn)
+	return source + (XK_oslash - XK_Ooblique);
+    return source;
+}
+
+_X_HIDDEN void
+CopyISOLatin1Lowered(char *dest, char *source, int length)
+{
+    int i;
+    for (i = 0; i < length; i++, source++, dest++)
+	*dest = ISOLatin1ToLower(*source);
+    *dest = '\0';
+}
 
 /*
  * Map FPE functions to renderer functions
@@ -55,7 +77,7 @@ int
 FontFileNameCheck (char *name)
 {
 #ifndef NCD
-#if defined(__UNIXOS2__) || defined(WIN32)
+#if defined(WIN32)
     /* OS/2 uses D:/... as a path name for fonts, so accept this as a valid
      * path if it starts with a letter and a colon. Same applies for WIN32
      */
@@ -303,17 +325,6 @@ FontFileOpenFont (pointer client, FontPathElementPtr fpe, Mask flags,
 				     entry->u.alias.resolved, aliasName, &vals);
 	    ret = FontNameAlias;
 	    break;
-#ifdef NOTYET
-	case FONT_ENTRY_BC:
-	    bc = &entry->u.bc;
-	    entry = bc->entry;
-	    ret = (*scalable->renderer->OpenScalable)
-		    (fpe, pFont, flags, entry, &bc->vals, format, fmask,
-		     non_cachable_font);
-	    if (ret == Successful && *pFont)
-		(*pFont)->fpe = fpe;
-	    break;
-#endif
 	default:
 	    ret = BadFontName;
 	}
@@ -325,7 +336,7 @@ FontFileOpenFont (pointer client, FontPathElementPtr fpe, Mask flags,
 
     if (ret != BadFontName)
     {
-	if (ranges) xfree(ranges);
+	if (ranges) free(ranges);
 	return ret;
     }
 
@@ -476,7 +487,7 @@ FontFileOpenFont (pointer client, FontPathElementPtr fpe, Mask flags,
 	ret = BadFontName;
 
     if (ranges)
-	xfree(ranges);
+	free(ranges);
     return ret;
 }
 
@@ -730,7 +741,7 @@ _FontFileListFonts (pointer client, FontPathElementPtr fpe,
 	scaleNames = MakeFontNamesRecord (0);
 	if (!scaleNames)
 	{
-	    if (ranges) xfree(ranges);
+	    if (ranges) free(ranges);
 	    return AllocError;
 	}
 	FontFileFindNamesInScalableDir (&dir->scalable, &zeroName, max,
@@ -747,7 +758,7 @@ _FontFileListFonts (pointer client, FontPathElementPtr fpe,
 	scaleNames = MakeFontNamesRecord (0);
 	if (!scaleNames)
 	{
-	    if (ranges) xfree(ranges);
+	    if (ranges) free(ranges);
 	    return AllocError;
 	}
 	FontFileFindNamesInScalableDir (&dir->nonScalable, &zeroName,
@@ -760,7 +771,7 @@ _FontFileListFonts (pointer client, FontPathElementPtr fpe,
 				  &max);
 	FreeFontNames (scaleNames);
 
-	if (ranges) xfree(ranges);
+	if (ranges) free(ranges);
     }
     else
     {
@@ -802,13 +813,13 @@ FontFileStartListFonts(pointer client, FontPathElementPtr fpe,
     LFWIDataPtr	data;
     int		ret;
 
-    data = (LFWIDataPtr) xalloc (sizeof *data);
+    data = malloc (sizeof *data);
     if (!data)
 	return AllocError;
     data->names = MakeFontNamesRecord (0);
     if (!data->names)
     {
-	xfree (data);
+	free (data);
 	return AllocError;
     }
     ret = _FontFileListFonts (client, fpe, pat, len,
@@ -816,7 +827,7 @@ FontFileStartListFonts(pointer client, FontPathElementPtr fpe,
     if (ret != Successful)
     {
 	FreeFontNames (data->names);
-	xfree (data);
+	free (data);
 	return ret;
     }
     data->current = 0;
@@ -900,23 +911,6 @@ FontFileListOneFontWithInfo (pointer client, FontPathElementPtr fpe,
 	    *namelenp = strlen (*namep);
 	    ret = FontNameAlias;
 	    break;
-#ifdef NOTYET
-	case FONT_ENTRY_BC:
-	    /* no LFWI for this yet */
-	    bc = &entry->u.bc;
-	    entry = bc->entry;
-	    /* Make a new scaled instance */
-	    if (strlen(dir->directory) + strlen(scalable->fileName) >=
-		sizeof(fileName)) {
-		ret = BadFontName;
-	    } else {
-		strcpy (fileName, dir->directory);
-		strcat (fileName, scalable->fileName);
-		ret = (*scalable->renderer->GetInfoScalable)
-		    (fpe, *pFontInfo, entry, tmpName, fileName, &bc->vals);
-	    }
-	    break;
-#endif
 	default:
 	    ret = BadFontName;
 	}
@@ -928,7 +922,7 @@ FontFileListOneFontWithInfo (pointer client, FontPathElementPtr fpe,
     
     if (ret != BadFontName)
     {
-	if (ranges) xfree(ranges);
+	if (ranges) free(ranges);
 	return ret;
     }
 
@@ -1004,11 +998,6 @@ FontFileListOneFontWithInfo (pointer client, FontPathElementPtr fpe,
 	    }
 	    else
 	    {
-#ifdef NOTDEF
-		/* no special case yet */
-		ret = FontFileMatchBitmapSource (fpe, pFont, flags, entry, &vals, format, fmask, noSpecificSize);
-		if (ret != Successful)
-#endif
 		{
 		    char origName[MAXFONTNAMELEN];
 
@@ -1034,7 +1023,7 @@ FontFileListOneFontWithInfo (pointer client, FontPathElementPtr fpe,
                                 (fpe, *pFontInfo, entry, fileName);
 		    }
 		    if (ranges) {
-			xfree(ranges);
+			free(ranges);
 			ranges = NULL;
 		    }
 		}
@@ -1048,7 +1037,7 @@ FontFileListOneFontWithInfo (pointer client, FontPathElementPtr fpe,
 	ret = BadFontName;
 
     if (ranges)
-	xfree(ranges);
+	free(ranges);
     return ret;
 }
 
@@ -1066,7 +1055,7 @@ FontFileListNextFontWithInfo(pointer client, FontPathElementPtr fpe,
     if (data->current == data->names->nnames)
     {
 	FreeFontNames (data->names);
-	xfree (data);
+	free (data);
 	return BadFontName;
     }
     name = data->names->names[data->current];
@@ -1102,7 +1091,7 @@ FontFileListNextFontOrAlias(pointer client, FontPathElementPtr fpe,
     if (data->current == data->names->nnames)
     {
 	FreeFontNames (data->names);
-	xfree (data);
+	free (data);
 	return BadFontName;
     }
     name = data->names->names[data->current];

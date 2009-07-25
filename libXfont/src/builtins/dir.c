@@ -1,6 +1,4 @@
 /*
- * Id: dir.c,v 1.2 1999/11/02 06:16:47 keithp Exp $
- *
  * Copyright 1999 SuSE, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
@@ -22,7 +20,6 @@
  *
  * Author:  Keith Packard, SuSE, Inc.
  */
-/* $XFree86: xc/lib/font/builtins/dir.c,v 1.3 1999/12/30 02:29:49 robin Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -39,17 +36,13 @@ BuiltinDirsDup (const BuiltinDirPtr a_dirs,
     if (!a_dirs)
         return NULL ;
 
-    dirs = xcalloc (a_dirs_len, sizeof (BuiltinDirRec)) ;
+    dirs = calloc (a_dirs_len, sizeof (BuiltinDirRec)) ;
     if (!dirs)
         return NULL ;
 
     for (i=0; i < a_dirs_len; i++) {
-        int len = strlen (a_dirs[i].file_name) ;
-        dirs[i].file_name = xcalloc (1, len+1) ;
-        memmove (dirs[i].file_name, a_dirs[i].file_name, len);
-        len = strlen (a_dirs[i].font_name) ;
-        dirs[i].font_name = xcalloc (1, len+1) ;
-        memmove (dirs[i].font_name, a_dirs[i].font_name, len);
+	dirs[i].file_name = strdup(a_dirs[i].file_name);
+	dirs[i].font_name = strdup(a_dirs[i].font_name);
     }
     return dirs ;
 }
@@ -104,14 +97,12 @@ BuiltinAliasesDup (const BuiltinAliasPtr a_aliases,
     if (!a_aliases)
         return NULL ;
 
-    aliases = xcalloc (a_aliases_len, sizeof (BuiltinAliasRec)) ;
+    aliases = calloc (a_aliases_len, sizeof (BuiltinAliasRec)) ;
     if (!aliases)
         return NULL ;
 
     for (i=0; i < a_aliases_len; i++) {
-        int len = strlen (a_aliases[i].font_name) ;
-        aliases[i].font_name = xcalloc (1, len+1) ;
-        memmove (aliases[i].font_name, a_aliases[i].font_name, len);
+	aliases[i].font_name = strdup(a_aliases[i].font_name);
     }
     return aliases ;
 }

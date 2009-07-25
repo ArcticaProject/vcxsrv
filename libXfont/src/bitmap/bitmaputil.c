@@ -212,7 +212,7 @@ bitmapAddInkMetrics(FontPtr pFont)
     int         i;
 
     bitmapFont = (BitmapFontPtr) pFont->fontPrivate;
-    bitmapFont->ink_metrics = (xCharInfo *) xalloc(bitmapFont->num_chars * sizeof(xCharInfo));
+    bitmapFont->ink_metrics = malloc(bitmapFont->num_chars * sizeof(xCharInfo));
     if (!bitmapFont->ink_metrics) {
       fprintf(stderr, "Error: Couldn't allocate ink_metrics (%d*%ld)\n",
 	      bitmapFont->num_chars, (unsigned long)sizeof(xCharInfo));
