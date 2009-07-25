@@ -29,7 +29,7 @@
 #include "xf86.h"
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
-#if defined(__i386__) || defined(__i386) || defined(__x86)
+#ifdef HAVE_SYS_KD_H
 # include <sys/kd.h>
 #endif
 
@@ -49,8 +49,9 @@ static char fb_dev[PATH_MAX] = "/dev/console";
 void
 xf86OpenConsole(void)
 {
+    int i;
 #ifdef HAS_USL_VTS
-    int fd, i;
+    int fd;
     struct vt_mode VT;
     struct vt_stat vtinfo;
     int FreeVTslot;
@@ -173,9 +174,14 @@ xf86OpenConsole(void)
 	if (ioctl(xf86Info.consoleFd, VT_SETMODE, &VT) < 0)
 	    FatalError("xf86OpenConsole: VT_SETMODE VT_PROCESS failed\n");
 #endif
+
 #ifdef KDSETMODE
-	if (ioctl(xf86Info.consoleFd, KDSETMODE, KD_GRAPHICS) < 0)
-	    FatalError("xf86OpenConsole: KDSETMODE KD_GRAPHICS failed\n");
+	SYSCALL(i = ioctl(xf86Info.consoleFd, KDSETMODE, KD_GRAPHICS));
+	if (i < 0) {
+	    xf86Msg(X_WARNING,
+		    "xf86OpenConsole: KDSETMODE KD_GRAPHICS failed on %s (%s)\n",
+		    fb_dev, strerror(errno));
+	}
 #endif
     }
     else /* serverGeneration != 1 */
@@ -244,8 +250,8 @@ xf86CloseConsole(void)
 			    "xf86CloseConsole():  unable to mmap framebuffer"
 			    " (%s)\n", strerror(errno));
 		} else {
-		    (void)memset(fbdata, 0, fbattr.fbtype.fb_size);
-		    (void)munmap(fbdata, fbattr.fbtype.fb_size);
+		    memset(fbdata, 0, fbattr.fbtype.fb_size);
+		    munmap(fbdata, fbattr.fbtype.fb_size);
 		}
 	    }
 
@@ -257,7 +263,7 @@ xf86CloseConsole(void)
 
 #ifdef KDSETMODE
     /* Reset the display back to text mode */
-    ioctl(xf86Info.consoleFd, KDSETMODE, KD_TEXT);
+    SYSCALL(ioctl(xf86Info.consoleFd, KDSETMODE, KD_TEXT));
 #endif
 
 #ifdef HAS_USL_VTS
@@ -329,8 +335,6 @@ xf86ProcessArgument(int argc, char **argv, int i)
 
 #endif /* HAS_USL_VTS */
 
-#if defined(__SOL8__) || (!defined(__i386__) && !defined(__i386))
-
     if ((i + 1) < argc) {
 	if (!strcmp(argv[i], "-dev")) {
 	    strncpy(fb_dev, argv[i+1], PATH_MAX);
@@ -338,8 +342,6 @@ xf86ProcessArgument(int argc, char **argv, int i)
 	    return 2;
 	}
     }
-
-#endif
 
     return 0;
 }
@@ -349,9 +351,7 @@ void xf86UseMsg()
 #ifdef HAS_USL_VTS
     ErrorF("vtXX                   Use the specified VT number\n");
 #endif
-#if defined(__SOL8__) || !defined(__i386__)
     ErrorF("-dev <fb>              Framebuffer device\n");
-#endif
     ErrorF("-keeptty               Don't detach controlling tty\n");
     ErrorF("                       (for debugging only)\n");
 }

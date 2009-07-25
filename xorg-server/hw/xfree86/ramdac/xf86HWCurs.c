@@ -123,7 +123,7 @@ xf86SetCursor(ScreenPtr pScreen, CursorPtr pCurs, int x, int y)
 	return;
     }
 
-    bits = (unsigned char *)dixLookupPrivate(&pCurs->devPrivates, pScreen);
+    bits = dixLookupPrivate(&pCurs->devPrivates, CursorScreenKey(pScreen));
 
     x -= infoPtr->pScrn->frameX0 + ScreenPriv->HotX;
     y -= infoPtr->pScrn->frameY0 + ScreenPriv->HotY;
@@ -133,7 +133,7 @@ xf86SetCursor(ScreenPtr pScreen, CursorPtr pCurs, int x, int y)
 #endif
     if (!bits) {
 	bits = (*infoPtr->RealizeCursor)(infoPtr, pCurs);
-	dixSetPrivate(&pCurs->devPrivates, pScreen, bits);
+	dixSetPrivate(&pCurs->devPrivates, CursorScreenKey(pScreen), bits);
     }
 
     if (!(infoPtr->Flags & HARDWARE_CURSOR_UPDATE_UNHIDDEN))
@@ -255,7 +255,7 @@ RealizeCursorInterleave0(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
 	    DstM = (SCANLINE*)mem;
 	    if (!(infoPtr->Flags & HARDWARE_CURSOR_SWAP_SOURCE_AND_MASK))
 		DstM += words;
-	    (void)memset(DstM, -1, words * sizeof(SCANLINE));
+	    memset(DstM, -1, words * sizeof(SCANLINE));
 	}
 	return mem;
     }

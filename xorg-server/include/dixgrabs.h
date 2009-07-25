@@ -47,7 +47,8 @@ extern int DeletePassiveGrab(
 
 extern Bool GrabMatchesSecond(
 	GrabPtr /* pFirstGrab */,
-	GrabPtr /* pSecondGrab */);
+	GrabPtr /* pSecondGrab */,
+	Bool /*ignoreDevice*/);
 
 extern int AddPassiveGrabToList(
 	ClientPtr /* client */,

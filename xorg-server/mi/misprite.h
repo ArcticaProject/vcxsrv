@@ -42,6 +42,7 @@ typedef struct {
 		CursorPtr /*pCursor*/
 );
     Bool	(*PutUpCursor)(
+                DeviceIntPtr /*pDev*/,
 		ScreenPtr /*pScreen*/,
 		CursorPtr /*pCursor*/,
 		int /*x*/,
@@ -50,6 +51,7 @@ typedef struct {
 		unsigned long /*mask*/
 );
     Bool	(*SaveUnderCursor)(
+                DeviceIntPtr /*pDev*/,
 		ScreenPtr /*pScreen*/,
 		int /*x*/,
 		int /*y*/,
@@ -57,6 +59,7 @@ typedef struct {
 		int /*h*/
 );
     Bool	(*RestoreUnderCursor)(
+                DeviceIntPtr /*pDev*/,
 		ScreenPtr /*pScreen*/,
 		int /*x*/,
 		int /*y*/,
@@ -64,6 +67,7 @@ typedef struct {
 		int /*h*/
 );
     Bool	(*MoveCursor)(
+                DeviceIntPtr /*pDev*/,
 		ScreenPtr /*pScreen*/,
 		CursorPtr /*pCursor*/,
 		int /*x*/,
@@ -76,6 +80,7 @@ typedef struct {
 		unsigned long /*mask*/
 );
     Bool	(*ChangeSave)(
+                DeviceIntPtr /*pDev*/,
 		ScreenPtr /*pScreen*/,
 		int /*x*/,
 		int /*y*/,
@@ -83,6 +88,14 @@ typedef struct {
 		int /*h*/,
 		int /*dx*/,
 		int /*dy*/
+);
+    Bool	(*DeviceCursorInitialize)(
+                DeviceIntPtr /*pDev*/,
+		ScreenPtr /*pScreen*/
+);
+    void	(*DeviceCursorCleanup)(
+                DeviceIntPtr /*pDev*/,
+		ScreenPtr /*pScreen*/
 );
 
 } miSpriteCursorFuncRec, *miSpriteCursorFuncPtr;

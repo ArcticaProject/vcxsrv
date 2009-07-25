@@ -299,7 +299,9 @@ IsRaiseOnClick (WindowPtr pWin)
 
   struct _Window	*pwin;
   struct _Property	*prop;  
-  WindowPtr		pRoot = GetCurrentRootWindow ();
+  /* XXX We're getting inputInfo.poniter here, but this might be really wrong.
+   * Which pointer's current window do we want? */
+  WindowPtr		pRoot = GetCurrentRootWindow (inputInfo.pointer);
 
   if (!pWin)
     {
@@ -352,7 +354,9 @@ IsMouseActive (WindowPtr pWin)
 
   struct _Window	*pwin;
   struct _Property	*prop;
-  WindowPtr		pRoot = GetCurrentRootWindow ();
+  /* XXX We're getting inputInfo.poniter here, but this might be really wrong.
+   * Which pointer's current window do we want? */
+  WindowPtr		pRoot = GetCurrentRootWindow (inputInfo.pointer);
 
   if (!pWin)
     {

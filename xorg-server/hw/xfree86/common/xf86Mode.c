@@ -39,6 +39,7 @@
 #endif
 
 #include <X11/X.h>
+#include "xf86Modes.h"
 #include "os.h"
 #include "servermd.h"
 #include "mibank.h"
@@ -705,16 +706,9 @@ xf86CheckModeForMonitor(DisplayModePtr mode, MonPtr monitor)
      * -- libv
      */
 
-    /* Is the horizontal blanking a bit lowish? */
-    if (((mode->HDisplay * 5 / 4) & ~0x07) > mode->HTotal) {
-        /* is this a cvt -r mode, and only a cvt -r mode? */
-        if (((mode->HTotal - mode->HDisplay) == 160) &&
-            ((mode->HSyncEnd - mode->HDisplay) == 80) &&
-            ((mode->HSyncEnd - mode->HSyncStart) == 32) &&
-            ((mode->VSyncStart - mode->VDisplay) == 3)) {
-            if (!monitor->reducedblanking && !(mode->type & M_T_DRIVER))
-                return MODE_NO_REDUCED;
-        }
+    if (xf86ModeIsReduced(mode)) {
+        if (!monitor->reducedblanking && !(mode->type & M_T_DRIVER))
+            return MODE_NO_REDUCED;
     }
 
     if ((monitor->maxPixClock) && (mode->Clock > monitor->maxPixClock))

@@ -88,10 +88,10 @@ CreateGrab(
 	return (GrabPtr)NULL;
     grab->resource = FakeClientID(client);
     grab->device = device;
-    grab->coreGrab = ((device == inputInfo.keyboard) ||
-		      (device == inputInfo.pointer));
+    grab->coreGrab = (type < LASTEvent);
     grab->window = window;
     grab->eventMask = eventMask;
+    grab->deviceMask = 0;
     grab->ownerEvents = ownerEvents;
     grab->keyboardMode = keyboardMode;
     grab->pointerMode = pointerMode;
@@ -105,6 +105,8 @@ CreateGrab(
     grab->detail.pMask = NULL;
     grab->confineTo = confineTo;
     grab->cursor = cursor;
+    grab->genericMasks = NULL;
+    grab->next = NULL;
     if (cursor)
 	cursor->refcnt++;
     return grab;
@@ -239,12 +241,28 @@ GrabSupersedesSecond(GrabPtr pFirstGrab, GrabPtr pSecondGrab)
     return FALSE;
 }
 
+/**
+ * Compares two grabs and returns TRUE if the first grab matches the second
+ * grab. 
+ * 
+ * A match is when 
+ *  - the devices set for the grab are equal (this is optional).
+ *  - the event types for both grabs are equal.
+ *  - XXX
+ *
+ * @param ignoreDevice TRUE if the device settings on the grabs are to be
+ * ignored.
+ * @return TRUE if the grabs match or FALSE otherwise.
+ */
 Bool
-GrabMatchesSecond(GrabPtr pFirstGrab, GrabPtr pSecondGrab)
+GrabMatchesSecond(GrabPtr pFirstGrab, GrabPtr pSecondGrab, Bool ignoreDevice)
 {
-    if ((pFirstGrab->device != pSecondGrab->device) ||
-	(pFirstGrab->modifierDevice != pSecondGrab->modifierDevice) ||
-	(pFirstGrab->type != pSecondGrab->type))
+    if (!ignoreDevice &&
+            ((pFirstGrab->device != pSecondGrab->device) ||
+             (pFirstGrab->modifierDevice != pSecondGrab->modifierDevice)))
+            return FALSE;
+
+    if (pFirstGrab->type != pSecondGrab->type)
 	return FALSE;
 
     if (GrabSupersedesSecond(pFirstGrab, pSecondGrab) ||
@@ -315,7 +333,7 @@ AddPassiveGrabToList(ClientPtr client, GrabPtr pGrab)
 
     for (grab = wPassiveGrabs(pGrab->window); grab; grab = grab->next)
     {
-	if (GrabMatchesSecond(pGrab, grab))
+	if (GrabMatchesSecond(pGrab, grab, FALSE))
 	{
 	    if (CLIENT_BITS(pGrab->resource) != CLIENT_BITS(grab->resource))
 	    {
@@ -397,7 +415,7 @@ DeletePassiveGrabFromList(GrabPtr pMinuendGrab)
 	 grab = grab->next)
     {
 	if ((CLIENT_BITS(grab->resource) != CLIENT_BITS(pMinuendGrab->resource)) ||
-	    !GrabMatchesSecond(grab, pMinuendGrab))
+	    !GrabMatchesSecond(grab, pMinuendGrab, (grab->coreGrab)))
 	    continue;
 	if (GrabSupersedesSecond(pMinuendGrab, grab))
 	{

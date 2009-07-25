@@ -1,8 +1,8 @@
 /*
  * GLX implementation that uses Apple's OpenGL.framework
- * (Indirect rendering path)
+ * (Indirect rendering path -- it's also used for some direct mode code too)
  *
- * Copyright (c) 2007 Apple Inc.
+ * Copyright (c) 2007, 2008, 2009 Apple Inc.
  * Copyright (c) 2004 Torrey T. Lyons. All Rights Reserved.
  * Copyright (c) 2002 Greg Parker. All Rights Reserved.
  *
@@ -37,6 +37,13 @@
 
 #include "dri.h"
 
+#include <AvailabilityMacros.h>
+
+/*  
+ * These define seem questionable to me, but I'm not sure why they were here
+ * in the first place.
+ */ 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
 #define GL_EXT_histogram 1
 #define GL_EXT_polygon_offset 1
 #define GL_SGIS_pixel_texture 1
@@ -53,11 +60,11 @@
 #define GL_APPLE_fence 1
 #define GL_IBM_multimode_draw_arrays 1
 #define GL_EXT_fragment_shader 1
+#endif
 
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/CGLContext.h>
 
-// X11 and X11's glx
 #include <GL/gl.h>
 #include <GL/glxproto.h>
 #include <windowstr.h>
@@ -76,17 +83,15 @@
 #include "x-hash.h"
 #include "x-list.h"
 
-#include <dispatch.h>
-#define GLAPIENTRYP *
+#include "capabilities.h"
+
 typedef unsigned long long GLuint64EXT;
 typedef long long GLint64EXT;
+#include <dispatch.h>
 #include <Xplugin.h>
-#include "glcontextmodes.h"
 #include <glapi.h>
 #include <glapitable.h>
 
-// ggs: needed to call back to glx with visual configs
-extern void GlxSetVisualConfigs(int nconfigs, __GLXvisualConfig *configs, void **configprivs);
 __GLXprovider * GlxGetDRISWrastProvider (void);
 
 // Write debugging output, or not
@@ -102,35 +107,27 @@ void warn_func(void * p1, char *format, ...);
 
 // some prototypes
 static __GLXscreen * __glXAquaScreenProbe(ScreenPtr pScreen);
-static __GLXdrawable * __glXAquaScreenCreateDrawable(__GLXscreen *screen, DrawablePtr pDraw, XID drawId, __GLcontextModes *modes);
+static __GLXdrawable * __glXAquaScreenCreateDrawable(__GLXscreen *screen, DrawablePtr pDraw, int type, XID drawId, __GLXconfig *conf);
 
-static Bool glAquaInitVisuals(VisualPtr *visualp, DepthPtr *depthp,
-                              int *nvisualp, int *ndepthp,
-                              int *rootDepthp, VisualID *defaultVisp,
-                              unsigned long sizes, int bitsPerRGB);
-static void glAquaSetVisualConfigs(int nconfigs, __GLXvisualConfig *configs,
-                                   void **privates);
-
-static void glAquaResetExtension(void);
 static void __glXAquaContextDestroy(__GLXcontext *baseContext);
 static int __glXAquaContextMakeCurrent(__GLXcontext *baseContext);
 static int __glXAquaContextLoseCurrent(__GLXcontext *baseContext);
 static int __glXAquaContextForceCurrent(__GLXcontext *baseContext);
 static int __glXAquaContextCopy(__GLXcontext *baseDst, __GLXcontext *baseSrc, unsigned long mask);
 
-static CGLPixelFormatObj makeFormat(__GLcontextModes *mode);
+static CGLPixelFormatObj makeFormat(__GLXconfig *conf);
 
 __GLXprovider __glXDRISWRastProvider = {
-  __glXAquaScreenProbe,
-  "Core OpenGL",
+    __glXAquaScreenProbe,
+    "Core OpenGL",
     NULL
 };
 
 __GLXprovider *
 GlxGetDRISWRastProvider (void)
 {
-  GLAQUA_DEBUG_MSG("GlxGetDRISWRastProvider\n");
-  return &__glXDRISWRastProvider;
+    GLAQUA_DEBUG_MSG("GlxGetDRISWRastProvider\n");
+    return &__glXDRISWRastProvider;
 }
 
 typedef struct __GLXAquaScreen   __GLXAquaScreen;
@@ -138,86 +135,77 @@ typedef struct __GLXAquaContext  __GLXAquaContext;
 typedef struct __GLXAquaDrawable __GLXAquaDrawable;
 
 struct __GLXAquaScreen {
-  __GLXscreen   base;
-  int           index;
+    __GLXscreen base;
+    int index;
     int num_vis;
-    __GLcontextModes *modes;
 };
 
-static __GLXAquaScreen glAquaScreens[MAXSCREENS];
-
 struct __GLXAquaContext {
-  __GLXcontext base;
-  CGLContextObj ctx;
-  CGLPixelFormatObj pixelFormat;
-  xp_surface_id sid;
-  unsigned isAttached :1;
+    __GLXcontext base;
+    CGLContextObj ctx;
+    CGLPixelFormatObj pixelFormat;
+    xp_surface_id sid;
+    unsigned isAttached :1;
 };
 
 struct __GLXAquaDrawable {
-  __GLXdrawable base;
+    __GLXdrawable base;
     DrawablePtr pDraw;
     xp_surface_id sid;
+    __GLXAquaContext *context;
 };
+
 
 static __GLXcontext *
 __glXAquaScreenCreateContext(__GLXscreen *screen,
-			     __GLcontextModes *modes,
+			     __GLXconfig *conf,
 			     __GLXcontext *baseShareContext)
 {
-  __GLXAquaContext *context;
-  __GLXAquaContext *shareContext = (__GLXAquaContext *) baseShareContext;
-  CGLError gl_err;
+    __GLXAquaContext *context;
+    __GLXAquaContext *shareContext = (__GLXAquaContext *) baseShareContext;
+    CGLError gl_err;
   
-  GLAQUA_DEBUG_MSG("glXAquaScreenCreateContext\n");
+    GLAQUA_DEBUG_MSG("glXAquaScreenCreateContext\n");
+    
+    context = xalloc (sizeof (__GLXAquaContext));
+    
+    if (context == NULL)
+	return NULL;
 
-  context = malloc (sizeof (__GLXAquaContext));
-  if (context == NULL) return NULL;
-
-  memset(context, 0, sizeof *context);
-
-  context->base.pGlxScreen = screen;
-  context->base.modes      = modes;
-
-  context->base.destroy        = __glXAquaContextDestroy;
-  context->base.makeCurrent    = __glXAquaContextMakeCurrent;
-  context->base.loseCurrent    = __glXAquaContextLoseCurrent;
-  context->base.copy           = __glXAquaContextCopy;
-  context->base.forceCurrent   = __glXAquaContextForceCurrent;
-  //  context->base.createDrawable = __glXAquaContextCreateDrawable;
-
-  context->pixelFormat = makeFormat(modes);
-  if (!context->pixelFormat) {
-        free(context);
+    memset(context, 0, sizeof *context);
+    
+    context->base.pGlxScreen = screen;
+    
+    context->base.destroy        = __glXAquaContextDestroy;
+    context->base.makeCurrent    = __glXAquaContextMakeCurrent;
+    context->base.loseCurrent    = __glXAquaContextLoseCurrent;
+    context->base.copy           = __glXAquaContextCopy;
+    context->base.forceCurrent   = __glXAquaContextForceCurrent;
+    /*FIXME verify that the context->base is fully initialized. */
+    
+    context->pixelFormat = makeFormat(conf);
+    
+    if (!context->pixelFormat) {
+        xfree(context);
         return NULL;
-  }
-
-  context->ctx = NULL;
-  gl_err = CGLCreateContext(context->pixelFormat,
-                            shareContext ? shareContext->ctx : NULL,
-                            &context->ctx);
-
-  if (gl_err != 0) {
-      ErrorF("CGLCreateContext error: %s\n", CGLErrorString(gl_err));
-      CGLDestroyPixelFormat(context->pixelFormat);
-      free(context);
-      return NULL;
     }
-	setup_dispatch_table();
+
+    context->ctx = NULL;
+    gl_err = CGLCreateContext(context->pixelFormat,
+			      shareContext ? shareContext->ctx : NULL,
+			      &context->ctx);
+    
+    if (gl_err != 0) {
+	ErrorF("CGLCreateContext error: %s\n", CGLErrorString(gl_err));
+	CGLDestroyPixelFormat(context->pixelFormat);
+	xfree(context);
+	return NULL;
+    }
+    
+    setup_dispatch_table();
     GLAQUA_DEBUG_MSG("glAquaCreateContext done\n");
-  return &context->base;
-}
-
-static __GLXextensionInfo __glDDXExtensionInfo = {
-    GL_CORE_APPLE,
-    glAquaResetExtension,
-    glAquaInitVisuals,
-    glAquaSetVisualConfigs
-};
-
-void *__glXglDDXExtensionInfo(void) {
-  GLAQUA_DEBUG_MSG("glXAglDDXExtensionInfo\n");
-    return &__glDDXExtensionInfo;
+    
+    return &context->base;
 }
 
 /* maps from surface id -> list of __GLcontext */
@@ -227,21 +215,23 @@ static void __glXAquaContextDestroy(__GLXcontext *baseContext) {
     x_list *lst;
 
     __GLXAquaContext *context = (__GLXAquaContext *) baseContext;
-
+    
     GLAQUA_DEBUG_MSG("glAquaContextDestroy (ctx 0x%x)\n",
                      (unsigned int) baseContext);
     if (context != NULL) {
       if (context->sid != 0 && surface_hash != NULL) {
-		lst = x_hash_table_lookup(surface_hash, (void *) context->sid, NULL);
+		lst = x_hash_table_lookup(surface_hash, x_cvt_uint_to_vptr(context->sid), NULL);
 		lst = x_list_remove(lst, context);
-		x_hash_table_insert(surface_hash, (void *) context->sid, lst);
+		x_hash_table_insert(surface_hash, x_cvt_uint_to_vptr(context->sid), lst);
       }
 
-      if (context->ctx != NULL) CGLDestroyContext(context->ctx);
+      if (context->ctx != NULL)
+	  CGLDestroyContext(context->ctx);
 
-      if (context->pixelFormat != NULL)	CGLDestroyPixelFormat(context->pixelFormat);
+      if (context->pixelFormat != NULL)
+	  CGLDestroyPixelFormat(context->pixelFormat);
       
-      free(context);
+      xfree(context);
     }
 }
 
@@ -266,79 +256,95 @@ static void surface_notify(void *_arg, void *data) {
     __GLXAquaDrawable *draw = (__GLXAquaDrawable *)data;
     __GLXAquaContext *context;
     x_list *lst;
-	if(_arg == NULL || data == NULL) {
-		ErrorF("surface_notify called with bad params");
-		return;
-	}
+    if(_arg == NULL || data == NULL) {
+	    ErrorF("surface_notify called with bad params");
+	    return;
+    }
 	
     GLAQUA_DEBUG_MSG("surface_notify(%p, %p)\n", _arg, data);
     switch (arg->kind) {
     case AppleDRISurfaceNotifyDestroyed:
         if (surface_hash != NULL)
-            x_hash_table_remove(surface_hash, (void *) arg->id);
-	        draw->base.pDraw = NULL;
-			draw->sid = 0;
+            x_hash_table_remove(surface_hash, x_cvt_uint_to_vptr(arg->id));
+	draw->base.pDraw = NULL;
+	draw->sid = 0;
         break;
 
     case AppleDRISurfaceNotifyChanged:
         if (surface_hash != NULL) {
-            lst = x_hash_table_lookup(surface_hash, (void *) arg->id, NULL);
+            lst = x_hash_table_lookup(surface_hash, x_cvt_uint_to_vptr(arg->id), NULL);
             for (; lst != NULL; lst = lst->next)
-            {
+		{
                 context = lst->data;
                 xp_update_gl_context(context->ctx);
             }
         }
         break;
-	default:
-		ErrorF("surface_notify: unknown kind %d\n", arg->kind);
-		break;
+    default:
+	ErrorF("surface_notify: unknown kind %d\n", arg->kind);
+	break;
     }
 }
 
-static void attach(__GLXAquaContext *context, __GLXAquaDrawable *draw) {
+static BOOL attach(__GLXAquaContext *context, __GLXAquaDrawable *draw) {
     DrawablePtr pDraw;
-	GLAQUA_DEBUG_MSG("attach(%p, %p)\n", context, draw);
+    
+    GLAQUA_DEBUG_MSG("attach(%p, %p)\n", context, draw);
+	
+    if(NULL == context || NULL == draw)
+	return TRUE;
+
     pDraw = draw->base.pDraw;
 
-    if (draw->sid == 0) {
-//        if (!quartzProcs->CreateSurface(pDraw->pScreen, pDraw->id, pDraw,
-        if (!DRICreateSurface(pDraw->pScreen, pDraw->id, pDraw,
-                                        0, &draw->sid, NULL,
-                                        surface_notify, draw))
-            return;
-        draw->pDraw = pDraw;
-	} 
+    if(NULL == pDraw) {
+	ErrorF("%s:%s() pDraw is NULL!\n", __FILE__, __func__);
+	return TRUE;
+    }
 
+    if (draw->sid == 0) {
+	//if (!quartzProcs->CreateSurface(pDraw->pScreen, pDraw->id, pDraw,
+        if (!DRICreateSurface(pDraw->pScreen, pDraw->id, pDraw,
+			      0, &draw->sid, NULL,
+			      surface_notify, draw))
+            return TRUE;
+        draw->pDraw = pDraw;
+    } 
+    
     if (!context->isAttached || context->sid != draw->sid) {
         x_list *lst;
-
+	
         if (xp_attach_gl_context(context->ctx, draw->sid) != Success) {
-//            quartzProcs->DestroySurface(pDraw->pScreen, pDraw->id, pDraw,
+	    //quartzProcs->DestroySurface(pDraw->pScreen, pDraw->id, pDraw,
             DRIDestroySurface(pDraw->pScreen, pDraw->id, pDraw,
-								surface_notify, draw);
+			      surface_notify, draw);
             if (surface_hash != NULL)
-                x_hash_table_remove(surface_hash, (void *) draw->sid);
-
+                x_hash_table_remove(surface_hash, x_cvt_uint_to_vptr(draw->sid));
+	    
             draw->sid = 0;
-            return;
+            return TRUE;
         }
-
+	
         context->isAttached = TRUE;
         context->sid = draw->sid;
-
+	
         if (surface_hash == NULL)
             surface_hash = x_hash_table_new(NULL, NULL, NULL, NULL);
-
-        lst = x_hash_table_lookup(surface_hash, (void *) context->sid, NULL);
+	
+        lst = x_hash_table_lookup(surface_hash, x_cvt_uint_to_vptr(context->sid), NULL);
         if (x_list_find(lst, context) == NULL) {
             lst = x_list_prepend(lst, context);
-            x_hash_table_insert(surface_hash, (void *) context->sid, lst);
+            x_hash_table_insert(surface_hash, x_cvt_uint_to_vptr(context->sid), lst);
         }
+	
+	
 
         GLAQUA_DEBUG_MSG("attached 0x%x to 0x%x\n", (unsigned int) pDraw->id,
                          (unsigned int) draw->sid);
     } 
+
+    draw->context = context;
+
+    return FALSE;
 }
 
 #if 0     // unused
@@ -368,11 +374,12 @@ static void unattach(__GLXAquaContext *context) {
 static int __glXAquaContextMakeCurrent(__GLXcontext *baseContext) {
     CGLError gl_err;
     __GLXAquaContext *context = (__GLXAquaContext *) baseContext;
-	__GLXAquaDrawable *drawPriv = (__GLXAquaDrawable *) context->base.drawPriv;
-
+    __GLXAquaDrawable *drawPriv = (__GLXAquaDrawable *) context->base.drawPriv;
+    
     GLAQUA_DEBUG_MSG("glAquaMakeCurrent (ctx 0x%p)\n", baseContext);
     
-    attach(context, drawPriv);
+    if(attach(context, drawPriv))
+	return /*error*/ 0;
 
     gl_err = CGLSetCurrentContext(context->ctx);
     if (gl_err != 0)
@@ -412,795 +419,386 @@ static int __glXAquaContextForceCurrent(__GLXcontext *baseContext)
 
 /* Drawing surface notification callbacks */
 
-static GLboolean __glXAquaDrawableResize(__GLXdrawable *base)  {
-    GLAQUA_DEBUG_MSG("unimplemented glAquaDrawableResize\n");
-    return GL_TRUE;
-}
-
 static GLboolean __glXAquaDrawableSwapBuffers(__GLXdrawable *base) {
-    CGLError gl_err;
-	__GLXAquaContext * drawableCtx;
-//    GLAQUA_DEBUG_MSG("glAquaDrawableSwapBuffers(%p)\n",base);
+    CGLError err;
+    __GLXAquaDrawable *drawable;
+ 
+    //    GLAQUA_DEBUG_MSG("glAquaDrawableSwapBuffers(%p)\n",base);
 	
-	if(!base) {
-		ErrorF("glXAquaDrawbleSwapBuffers passed NULL\n");
-	    return GL_FALSE;
-	}
-
-    drawableCtx = (__GLXAquaContext *)base->drawGlxc;
-
-    if (drawableCtx != NULL && drawableCtx->ctx != NULL) {
-        gl_err = CGLFlushDrawable(drawableCtx->ctx);
-        if (gl_err != 0)
-            ErrorF("CGLFlushDrawable error: %s\n", CGLErrorString(gl_err));
+    if(!base) {
+	ErrorF("%s passed NULL\n", __func__);
+	return GL_FALSE;
     }
+
+    drawable = (__GLXAquaDrawable *)base;
+
+    if(NULL == drawable->context) {
+	ErrorF("%s called with a NULL->context for drawable %p!\n",
+	       __func__, (void *)drawable);
+	return GL_FALSE;
+    }
+
+    err = CGLFlushDrawable(drawable->context->ctx);
+
+    if(kCGLNoError != err) {
+	ErrorF("CGLFlushDrawable error: %s in %s\n", CGLErrorString(err),
+	       __func__);
+	return GL_FALSE;
+    }
+
     return GL_TRUE;
 }
 
-static CGLPixelFormatObj makeFormat(__GLcontextModes *mode) {
-    int i;
-    CGLPixelFormatAttribute attr[64]; // currently uses max of 30
-    CGLPixelFormatObj result;
-    GLint n_formats;
-    CGLError gl_err;
-    
-    GLAQUA_DEBUG_MSG("makeFormat\n");
 
-    if (!mode->rgbMode)
-        return NULL;
+static CGLPixelFormatObj makeFormat(__GLXconfig *conf) {
+    CGLPixelFormatAttribute attr[64];
+    CGLPixelFormatObj fobj;
+    GLint formats;
+    CGLError error;
+    int i = 0;
+    
+    if(conf->doubleBufferMode)
+	attr[i++] = kCGLPFADoubleBuffer;
+
+    if(conf->stereoMode)
+	attr[i++] = kCGLPFAStereo;
+
+    attr[i++] = kCGLPFAColorSize;
+    attr[i++] = conf->redBits + conf->greenBits + conf->blueBits;
+    attr[i++] = kCGLPFAAlphaSize;
+    attr[i++] = conf->alphaBits;
+
+    if((conf->accumRedBits + conf->accumGreenBits + conf->accumBlueBits +
+	conf->accumAlphaBits) > 0) {
+
+	attr[i++] = kCGLPFAAccumSize;
+        attr[i++] = conf->accumRedBits + conf->accumGreenBits
+	    + conf->accumBlueBits + conf->accumAlphaBits;
+    }
+    
+    attr[i++] = kCGLPFADepthSize;
+    attr[i++] = conf->depthBits;
+
+    if(conf->stencilBits) {
+	attr[i++] = kCGLPFAStencilSize;
+        attr[i++] = conf->stencilBits;	
+    }
+    
+    if(conf->numAuxBuffers > 0) {
+	attr[i++] = kCGLPFAAuxBuffers;
+	attr[i++] = conf->numAuxBuffers;
+    }
+
+    if(conf->sampleBuffers > 0) {
+       attr[i++] = kCGLPFASampleBuffers;
+       attr[i++] = conf->sampleBuffers;
+       attr[i++] = kCGLPFASamples;
+       attr[i++] = conf->samples;
+    }
+     
+    attr[i++] = 0;
+
+    error = CGLChoosePixelFormat(attr, &fobj, &formats);
+    if(error) {
+	ErrorF("error: creating pixel format %s\n", CGLErrorString(error));
+	return NULL;
+    }
+
+    return fobj;
+}
+
+static void __glXAquaScreenDestroy(__GLXscreen *screen) {
+
+    GLAQUA_DEBUG_MSG("glXAquaScreenDestroy(%p)\n", screen);
+    __glXScreenDestroy(screen);
+
+    xfree(screen);
+}
+
+static __GLXconfig *CreateConfigs(int *numConfigsPtr, int screenNumber) {
+    __GLXconfig *c, *result;
+    struct glCapabilities cap;
+    struct glCapabilitiesConfig *conf = NULL;
+    int numConfigs = 0;
+    int i;
+
+    if(getGlCapabilities(&cap))
+	FatalError("error from getGlCapabilities() in %s\n", __func__);
+
+    assert(NULL != cap.configurations);
+
+    for(conf = cap.configurations; conf; conf = conf->next) {
+        if(conf->total_color_buffers <= 0)
+            continue;
+
+        numConfigs += (conf->stereo ? 2 : 1) 
+            * (conf->aux_buffers ? 2 : 1) 
+            * conf->buffers
+            * ((conf->total_stencil_bit_depths > 0) ? 
+	       conf->total_stencil_bit_depths : 1)
+            * conf->total_color_buffers
+            * ((conf->total_accum_buffers > 0) ? conf->total_accum_buffers : 1)
+            * conf->total_depth_buffer_depths
+            * (conf->multisample_buffers + 1);
+    }
+
+    *numConfigsPtr = numConfigs;
+    
+    c = xalloc(sizeof(*c) * numConfigs);
+    
+    if(NULL == c)
+	return NULL;
+
+    
+
+    result = c;
+    
+    memset(result, 0, sizeof(*c) * numConfigs);
 
     i = 0;
 
-    // attr [i++] = kCGLPFAAcelerated; // require hwaccel - BAD for multiscreen
-    // attr [i++] = kCGLPFANoRecovery; // disable fallback renderers - BAD
-
-    if (mode->stereoMode) {
-        attr[i++] = kCGLPFAStereo;
-    }
-    if (mode->doubleBufferMode) {
-        attr[i++] = kCGLPFADoubleBuffer;
-    }
-
-    if (mode->colorIndexMode) {
-        /* ignored */
-    }
-
-    if (mode->rgbMode) {
-        attr[i++] = kCGLPFAColorSize;
-        attr[i++] = mode->redBits + mode->greenBits + mode->blueBits;
-        attr[i++] = kCGLPFAAlphaSize;
-        attr[i++] = 1; /* FIXME: ignoring mode->alphaBits which is always 0 */
-    }
-
-    if (mode->haveAccumBuffer) {
-        attr[i++] = kCGLPFAAccumSize;
-        attr[i++] = mode->accumRedBits + mode->accumGreenBits
-                    + mode->accumBlueBits + mode->accumAlphaBits;
-    }
+    for(conf = cap.configurations; conf; conf = conf->next) {
+	int stereo, aux, buffers, stencil, color, accum, depth, msample;
 	
-    if (mode->haveDepthBuffer) {
-        attr[i++] = kCGLPFADepthSize;
-        attr[i++] = mode->depthBits;
-    }
+	for(stereo = 0; stereo < (conf->stereo ? 2 : 1); ++stereo) {
+	    for(aux = 0; aux < (conf->aux_buffers ? 2 : 1); ++aux) {
+		for(buffers = 0; buffers < conf->buffers; ++buffers) {
+		    for(stencil = 0; stencil < ((conf->total_stencil_bit_depths > 0) ? 
+						conf->total_stencil_bit_depths : 1); ++stencil) {
+			for(color = 0; color < conf->total_color_buffers; ++color) {
+			    for(accum = 0; accum < ((conf->total_accum_buffers > 0) ?
+						    conf->total_accum_buffers : 1); ++accum) {
+				for(depth = 0; depth < conf->total_depth_buffer_depths; ++depth) {
+				    for(msample = 0; msample < (conf->multisample_buffers + 1); ++msample) {
+					if((i + 1) < numConfigs) {
+					    c->next = c + 1;
+					} else {
+					    c->next = NULL;
+					}
+
+					c->doubleBufferMode = buffers ? GL_TRUE : GL_FALSE;
+					c->stereoMode = stereo ? GL_TRUE : GL_FALSE;
+					
+					c->redBits = conf->color_buffers[color].r;
+					c->greenBits = conf->color_buffers[color].g;
+					c->blueBits = conf->color_buffers[color].b;
+					c->alphaBits = 0;
+					
+					if(GLCAPS_COLOR_BUF_INVALID_VALUE != conf->color_buffers[color].a) {
+					    c->alphaBits = conf->color_buffers[color].a;
+					}
+
+					c->redMask = -1;
+					c->greenMask = -1;
+					c->blueMask = -1;
+					c->alphaMask = -1;
+					
+					c->rgbBits = c->redBits + c->greenBits + c->blueBits + c->alphaBits;
+					c->indexBits = 0;
+	    
+					c->accumRedBits = 0;
+					c->accumGreenBits = 0;
+					c->accumBlueBits = 0;
+					c->accumAlphaBits = 0;
+					
+					if(conf->total_accum_buffers > 0) {
+					    c->accumRedBits = conf->accum_buffers[accum].r;
+					    c->accumGreenBits = conf->accum_buffers[accum].g;
+					    c->accumBlueBits = conf->accum_buffers[accum].b;
+					    if(GLCAPS_COLOR_BUF_INVALID_VALUE != conf->accum_buffers[accum].a) {
+						c->accumAlphaBits = conf->accum_buffers[accum].a;
+					    }
+					}
+
+					c->depthBits = conf->depth_buffers[depth];
+					
+					c->stencilBits = 0;
+	    
+					if(conf->total_stencil_bit_depths > 0) {
+					    c->stencilBits = conf->stencil_bit_depths[stencil];
+					}
+
+
+					c->numAuxBuffers = aux ? conf->aux_buffers : 0;
+
+					c->level = 0;
+					/*TODO what should this be? */
+					c->pixmapMode = 0;
+					
+					c->visualID = -1;
+					c->visualType = GLX_TRUE_COLOR;
+
+					if(conf->accelerated) {
+					    c->visualRating = GLX_NONE;
+					} else {
+					    c->visualRating = GLX_SLOW_VISUAL_EXT;
+					}
 	
-    if (mode->haveStencilBuffer) {
-        attr[i++] = kCGLPFAStencilSize;
-        attr[i++] = mode->stencilBits;
+					c->transparentPixel = GLX_NONE;
+					c->transparentRed = GLX_NONE;
+					c->transparentGreen = GLX_NONE;
+					c->transparentAlpha = GLX_NONE;
+					c->transparentIndex = GLX_NONE;
+	    
+					c->sampleBuffers = 0;
+					c->samples = 0;
+
+					if(msample > 0) {
+					    c->sampleBuffers = conf->multisample_buffers;
+					    c->samples = conf->multisample_samples;
+					}
+
+					/* SGIX_fbconfig / GLX 1.3 */
+					c->drawableType = GLX_WINDOW_BIT | GLX_PIXMAP_BIT;
+					c->renderType = GLX_RGBA_BIT;
+					c->xRenderable = GL_TRUE;
+					c->fbconfigID = -1;
+					
+					/*TODO add querying code to capabilities.c for the Pbuffer maximums.
+					 *I'm not sure we can even use CGL for Pbuffers yet...
+					 */
+					/* SGIX_pbuffer / GLX 1.3 */
+					c->maxPbufferWidth = 0;
+					c->maxPbufferHeight = 0;
+					c->maxPbufferPixels = 0;
+					c->optimalPbufferWidth = 0;
+					c->optimalPbufferHeight = 0;
+					c->visualSelectGroup = 0;
+					
+					c->swapMethod = GLX_SWAP_UNDEFINED_OML;
+	
+					c->screen = screenNumber;
+	    
+					/* EXT_texture_from_pixmap */
+					c->bindToTextureRgb = 0;
+					c->bindToTextureRgba = 0;
+					c->bindToMipmapTexture = 0;
+					c->bindToTextureTargets = 0;
+					c->yInverted = 0;
+
+					if(c->next)
+					    c = c->next;
+					
+					++i;
+				    }
+				}
+			    }
+			}
+		    }
+		}
+	    }	
+	}
     }
 
-    attr[i++] = kCGLPFAAuxBuffers;
-    attr[i++] = mode->numAuxBuffers;
+    if(i != numConfigs)
+	FatalError("The number of __GLXconfig generated does not match the initial calculation!\n");
+    
 
-    /* mode->level ignored */
-
-    /* mode->pixmapMode ? */
-
-    attr[i++] = 0;
-
-    GLAQUA_DEBUG_MSG("makeFormat almost done\n");
-
-    result = NULL;
-    gl_err = CGLChoosePixelFormat(attr, &result, &n_formats);
-    if (gl_err != 0)
-        ErrorF("CGLChoosePixelFormat error: %s\n", CGLErrorString(gl_err));
-
-    GLAQUA_DEBUG_MSG("makeFormat done (0x%x)\n", (unsigned int) result);
+    freeGlCapabilities(&cap);
 
     return result;
 }
 
-// Originally copied from Mesa
-
-static int                 numConfigs     = 0;
-static __GLXvisualConfig  *visualConfigs  = NULL;
-static void              **visualPrivates = NULL;
-
-/*
- * In the case the driver defines no GLX visuals we'll use these.
- * Note that for TrueColor and DirectColor visuals, bufferSize is the 
- * sum of redSize, greenSize, blueSize and alphaSize, which may be larger 
- * than the nplanes/rootDepth of the server's X11 visuals
- */
-#define NUM_FALLBACK_CONFIGS 5
-static __GLXvisualConfig FallbackConfigs[NUM_FALLBACK_CONFIGS] = {
-  /* [0] = RGB, double buffered, Z */
-  {
-    -1,                 /* vid */
-    -1,                 /* class */
-    True,               /* rgba */
-    -1, -1, -1, 0,      /* rgba sizes */
-    -1, -1, -1, 0,      /* rgba masks */
-     0,  0,  0, 0,      /* rgba accum sizes */
-    True,               /* doubleBuffer */
-    False,              /* stereo */
-    -1,                 /* bufferSize */
-    16,                 /* depthSize */
-    0,                  /* stencilSize */
-    0,                  /* auxBuffers */
-    0,                  /* level */
-    GLX_NONE,           /* visualRating */
-    GLX_NONE,           /* transparentPixel */
-    0, 0, 0, 0,         /* transparent rgba color (floats scaled to ints) */
-    0                   /* transparentIndex */
-  },
-  /* [1] = RGB, double buffered, Z, stencil, accum */
-  {
-    -1,                 /* vid */
-    -1,                 /* class */
-    True,               /* rgba */
-    -1, -1, -1, 0,      /* rgba sizes */
-    -1, -1, -1, 0,      /* rgba masks */
-    16, 16, 16, 0,      /* rgba accum sizes */
-    True,               /* doubleBuffer */
-    False,              /* stereo */
-    -1,                 /* bufferSize */
-    16,                 /* depthSize */
-    8,                  /* stencilSize */
-    0,                  /* auxBuffers */
-    0,                  /* level */
-    GLX_NONE,           /* visualRating */
-    GLX_NONE,           /* transparentPixel */
-    0, 0, 0, 0,         /* transparent rgba color (floats scaled to ints) */
-    0                   /* transparentIndex */
-  },
-  /* [2] = RGB+Alpha, double buffered, Z, stencil, accum */
-  {
-    -1,                 /* vid */
-    -1,                 /* class */
-    True,               /* rgba */
-    -1, -1, -1, 8,      /* rgba sizes */
-    -1, -1, -1, -1,     /* rgba masks */
-    16, 16, 16, 16,     /* rgba accum sizes */
-    True,               /* doubleBuffer */
-    False,              /* stereo */
-    -1,                 /* bufferSize */
-    16,                 /* depthSize */
-    8,                  /* stencilSize */
-    0,                  /* auxBuffers */
-    0,                  /* level */
-    GLX_NONE,           /* visualRating */
-    GLX_NONE,           /* transparentPixel */
-    0, 0, 0, 0,         /* transparent rgba color (floats scaled to ints) */
-    0                   /* transparentIndex */
-  },
-  /* [3] = RGB+Alpha, single buffered, Z, stencil, accum */
-  {
-    -1,                 /* vid */
-    -1,                 /* class */
-    True,               /* rgba */
-    -1, -1, -1, 8,      /* rgba sizes */
-    -1, -1, -1, -1,     /* rgba masks */
-    16, 16, 16, 16,     /* rgba accum sizes */
-    False,              /* doubleBuffer */
-    False,              /* stereo */
-    -1,                 /* bufferSize */
-    16,                 /* depthSize */
-    8,                  /* stencilSize */
-    0,                  /* auxBuffers */
-    0,                  /* level */
-    GLX_NONE,           /* visualRating */
-    GLX_NONE,           /* transparentPixel */
-    0, 0, 0, 0,         /* transparent rgba color (floats scaled to ints) */
-    0                   /* transparentIndex */
-  },
-  /* [4] = CI, double buffered, Z */
-  {
-    -1,                 /* vid */
-    -1,                 /* class */
-    False,              /* rgba? (false = color index) */
-    -1, -1, -1, 0,      /* rgba sizes */
-    -1, -1, -1, 0,      /* rgba masks */
-     0,  0,  0, 0,      /* rgba accum sizes */
-    True,               /* doubleBuffer */
-    False,              /* stereo */
-    -1,                 /* bufferSize */
-    16,                 /* depthSize */
-    0,                  /* stencilSize */
-    0,                  /* auxBuffers */
-    0,                  /* level */
-    GLX_NONE,           /* visualRating */
-    GLX_NONE,           /* transparentPixel */
-    0, 0, 0, 0,         /* transparent rgba color (floats scaled to ints) */
-    0                   /* transparentIndex */
-  },
-};
-
-static __GLXvisualConfig NullConfig = {
-    -1,                 /* vid */
-    -1,                 /* class */
-    False,              /* rgba */
-    -1, -1, -1, 0,      /* rgba sizes */
-    -1, -1, -1, 0,      /* rgba masks */
-     0,  0,  0, 0,      /* rgba accum sizes */
-    False,              /* doubleBuffer */
-    False,              /* stereo */
-    -1,                 /* bufferSize */
-    16,                 /* depthSize */
-    0,                  /* stencilSize */
-    0,                  /* auxBuffers */
-    0,                  /* level */
-    GLX_NONE_EXT,       /* visualRating */
-    0,                  /* transparentPixel */
-    0, 0, 0, 0,         /* transparent rgba color (floats scaled to ints) */
-    0                   /* transparentIndex */
-};
-
-
-static inline int count_bits(uint32_t x)
-{
-    x = x - ((x >> 1) & 0x55555555);
-    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
-    x = (x + (x >> 4)) & 0x0f0f0f0f;
-    x = x + (x >> 8);
-    x = x + (x >> 16);
-    return x & 63;
-}
-
-
-static Bool init_visuals(int *nvisualp, VisualPtr *visualp,
-                         VisualID *defaultVisp,
-                         int ndepth, DepthPtr pdepth,
-                         int rootDepth)
-{
-    int numRGBconfigs;
-    int numCIconfigs;
-    int numVisuals = *nvisualp;
-    int numNewVisuals;
-    int numNewConfigs;
-    VisualPtr pVisual = *visualp;
-    VisualPtr pVisualNew = NULL;
-    VisualID *orig_vid = NULL;
-    __GLcontextModes *modes;
-    __GLXvisualConfig *pNewVisualConfigs = NULL;
-    void **glXVisualPriv;
-    void **pNewVisualPriv;
-    int found_default;
-    int i, j, k;
-
-    GLAQUA_DEBUG_MSG("init_visuals\n");
-
-    if (numConfigs > 0)
-        numNewConfigs = numConfigs;
-    else
-        numNewConfigs = NUM_FALLBACK_CONFIGS;
-
-    /* Alloc space for the list of new GLX visuals */
-    pNewVisualConfigs = (__GLXvisualConfig *)
-                     malloc(numNewConfigs * sizeof(__GLXvisualConfig));
-    if (!pNewVisualConfigs) {
-        return FALSE;
-    }
-
-    /* Alloc space for the list of new GLX visual privates */
-    pNewVisualPriv = (void **) malloc(numNewConfigs * sizeof(void *));
-    if (!pNewVisualPriv) {
-        free(pNewVisualConfigs);
-        return FALSE;
-    }
-
-    /*
-    ** If SetVisualConfigs was not called, then use default GLX
-    ** visual configs.
-    */
-    if (numConfigs == 0) {
-        memcpy(pNewVisualConfigs, FallbackConfigs,
-               NUM_FALLBACK_CONFIGS * sizeof(__GLXvisualConfig));
-        memset(pNewVisualPriv, 0, NUM_FALLBACK_CONFIGS * sizeof(void *));
-    }
-    else {
-        /* copy driver's visual config info */
-        for (i = 0; i < numConfigs; i++) {
-            pNewVisualConfigs[i] = visualConfigs[i];
-            pNewVisualPriv[i] = visualPrivates[i];
-        }
-    }
-
-    /* Count the number of RGB and CI visual configs */
-    numRGBconfigs = 0;
-    numCIconfigs = 0;
-    for (i = 0; i < numNewConfigs; i++) {
-        if (pNewVisualConfigs[i].rgba)
-            numRGBconfigs++;
-        else
-            numCIconfigs++;
-    }
-
-    /* Count the total number of visuals to compute */
-    numNewVisuals = 0;
-    for (i = 0; i < numVisuals; i++) {
-        int count;
-
-        count = ((pVisual[i].class == TrueColor ||
-                  pVisual[i].class == DirectColor)
-                ? numRGBconfigs : numCIconfigs);
-        if (count == 0)
-            count = 1;          /* preserve the existing visual */
-
-        numNewVisuals += count;
-    }
-
-    /* Reset variables for use with the next screen/driver's visual configs */
-    visualConfigs = NULL;
-    numConfigs = 0;
-
-    /* Alloc temp space for the list of orig VisualIDs for each new visual */
-    orig_vid = (VisualID *)malloc(numNewVisuals * sizeof(VisualID));
-    if (!orig_vid) {
-        free(pNewVisualPriv);
-        free(pNewVisualConfigs);
-        return FALSE;
-    }
-
-    /* Alloc space for the list of glXVisuals */
-    modes = _gl_context_modes_create(numNewVisuals, sizeof(__GLcontextModes));
-    if (modes == NULL) {
-        free(orig_vid);
-        free(pNewVisualPriv);
-        free(pNewVisualConfigs);
-        return FALSE;
-    }
-
-    /* Alloc space for the list of glXVisualPrivates */
-    glXVisualPriv = (void **)malloc(numNewVisuals * sizeof(void *));
-    if (!glXVisualPriv) {
-        _gl_context_modes_destroy( modes );
-        free(orig_vid);
-        free(pNewVisualPriv);
-        free(pNewVisualConfigs);
-        return FALSE;
-    }
-
-    /* Alloc space for the new list of the X server's visuals */
-    pVisualNew = (VisualPtr)malloc(numNewVisuals * sizeof(VisualRec));
-    if (!pVisualNew) {
-        free(glXVisualPriv);
-        _gl_context_modes_destroy( modes );
-        free(orig_vid);
-        free(pNewVisualPriv);
-        free(pNewVisualConfigs);
-        return FALSE;
-    }
-
-    /* Initialize the new visuals */
-    found_default = FALSE;
-    glAquaScreens[screenInfo.numScreens-1].modes = modes;
-    for (i = j = 0; i < numVisuals; i++) {
-        int is_rgb = (pVisual[i].class == TrueColor ||
-                      pVisual[i].class == DirectColor);
-
-        if (!is_rgb)
-        {
-            /* We don't support non-rgb visuals for GL. But we don't
-               want to remove them either, so just pass them through
-               with null glX configs */
-
-            pVisualNew[j] = pVisual[i];
-            pVisualNew[j].vid = FakeClientID(0);
-
-            /* Check for the default visual */
-            if (!found_default && pVisual[i].vid == *defaultVisp) {
-                *defaultVisp = pVisualNew[j].vid;
-                found_default = TRUE;
-            }
-
-            /* Save the old VisualID */
-            orig_vid[j] = pVisual[i].vid;
-
-            /* Initialize the glXVisual */
-            _gl_copy_visual_to_context_mode( modes, & NullConfig );
-            modes->visualID = pVisualNew[j].vid;
-
-            j++;
-
-            continue;
-        }
-
-        for (k = 0; k < numNewConfigs; k++) {
-            if (pNewVisualConfigs[k].rgba != is_rgb)
-                continue;
-
-            assert( modes != NULL );
-
-            /* Initialize the new visual */
-            pVisualNew[j] = pVisual[i];
-            pVisualNew[j].vid = FakeClientID(0);
-
-            /* Check for the default visual */
-            if (!found_default && pVisual[i].vid == *defaultVisp) {
-                *defaultVisp = pVisualNew[j].vid;
-                found_default = TRUE;
-            }
-
-            /* Save the old VisualID */
-            orig_vid[j] = pVisual[i].vid;
-
-            /* Initialize the glXVisual */
-            _gl_copy_visual_to_context_mode( modes, & pNewVisualConfigs[k] );
-            modes->visualID = pVisualNew[j].vid;
-
-            /*
-             * If the class is -1, then assume the X visual information
-             * is identical to what GLX needs, and take them from the X
-             * visual.  NOTE: if class != -1, then all other fields MUST
-             * be initialized.
-             */
-            if (modes->visualType == GLX_NONE) {
-                modes->visualType = _gl_convert_from_x_visual_type( pVisual[i].class );
-                modes->redBits    = count_bits(pVisual[i].redMask);
-                modes->greenBits  = count_bits(pVisual[i].greenMask);
-                modes->blueBits   = count_bits(pVisual[i].blueMask);
-                modes->alphaBits  = modes->alphaBits;
-                modes->redMask    = pVisual[i].redMask;
-                modes->greenMask  = pVisual[i].greenMask;
-                modes->blueMask   = pVisual[i].blueMask;
-                modes->alphaMask  = modes->alphaMask;
-                modes->rgbBits = (is_rgb)
-                    ? (modes->redBits + modes->greenBits +
-                       modes->blueBits + modes->alphaBits)
-                    : rootDepth;
-            }
-
-            /* Save the device-dependent private for this visual */
-            glXVisualPriv[j] = pNewVisualPriv[k];
-
-            j++;
-            modes = modes->next;
-        }
-    }
-
-    assert(j <= numNewVisuals);
-
-    /* Save the GLX visuals in the screen structure */
-    glAquaScreens[screenInfo.numScreens-1].num_vis = numNewVisuals;
-    //    glAquaScreens[screenInfo.numScreens-1].priv = glXVisualPriv;
-
-    /* set up depth's VisualIDs */
-    for (i = 0; i < ndepth; i++) {
-        int numVids = 0;
-        VisualID *pVids = NULL;
-        int k, n = 0;
-
-        /* Count the new number of VisualIDs at this depth */
-        for (j = 0; j < pdepth[i].numVids; j++)
-            for (k = 0; k < numNewVisuals; k++)
-            if (pdepth[i].vids[j] == orig_vid[k])
-                numVids++;
-
-        /* Allocate a new list of VisualIDs for this depth */
-        pVids = (VisualID *)malloc(numVids * sizeof(VisualID));
-
-        /* Initialize the new list of VisualIDs for this depth */
-        for (j = 0; j < pdepth[i].numVids; j++)
-            for (k = 0; k < numNewVisuals; k++)
-            if (pdepth[i].vids[j] == orig_vid[k])
-                pVids[n++] = pVisualNew[k].vid;
-
-        /* Update this depth's list of VisualIDs */
-        free(pdepth[i].vids);
-        pdepth[i].vids = pVids;
-        pdepth[i].numVids = numVids;
-    }
-
-    /* Update the X server's visuals */
-    *nvisualp = numNewVisuals;
-    *visualp = pVisualNew;
-
-    /* Free the old list of the X server's visuals */
-    free(pVisual);
-
-    /* Clean up temporary allocations */
-    free(orig_vid);
-    free(pNewVisualPriv);
-    free(pNewVisualConfigs);
-
-    /* Free the private list created by DDX HW driver */
-    if (visualPrivates)
-        free(visualPrivates);
-    visualPrivates = NULL;
-
-    return TRUE;
-}
-
-Bool enable_stereo = FALSE;
-/* based on code in i830_dri.c
-   This ends calling glAquaSetVisualConfigs to set the static
-   numconfigs, etc. */
-static void
-glAquaInitVisualConfigs(void)
-{
-    int                 lclNumConfigs     = 0;
-    __GLXvisualConfig  *lclVisualConfigs  = NULL;
-    void              **lclVisualPrivates = NULL;
-
-    int stereo, depth, aux, buffers, stencil, accum;
-    int i = 0;
-
-    GLAQUA_DEBUG_MSG("glAquaInitVisualConfigs ");
-        
-    /* count num configs:
-        2 stereo (on, off) (optional)
-        2 Z buffer (0, 24 bit)
-        2 AUX buffer (0, 2)
-        2 buffers (single, double)
-        2 stencil (0, 8 bit)
-        2 accum (0, 64 bit)
-        = 64 configs with stereo, or 32 without */
-
-    if (enable_stereo) lclNumConfigs = 2 * 2 * 2 * 2 * 2 * 2; /* 64 */
-    else               lclNumConfigs = 2 * 2 * 2 * 2 * 2; /* 32 */
-
-    /* alloc */
-    lclVisualConfigs = xcalloc(sizeof(__GLXvisualConfig), lclNumConfigs);
-    lclVisualPrivates = xcalloc(sizeof(void *), lclNumConfigs);
-
-    /* fill in configs */
-    if (NULL != lclVisualConfigs) {
-        i = 0; /* current buffer */
-        for (stereo = 0; stereo < (enable_stereo ? 2 : 1); stereo++) {
-	  for (depth = 0; depth < 2; depth++) {
-            for (aux = 0; aux < 2; aux++) {
-	      for (buffers = 0; buffers < 2; buffers++) {
-		for (stencil = 0; stencil < 2; stencil++) {
-		  for (accum = 0; accum < 2; accum++) {
-		    lclVisualConfigs[i].vid = -1;
-		    lclVisualConfigs[i].class = -1;
-		    lclVisualConfigs[i].rgba = TRUE;
-		    lclVisualConfigs[i].redSize = -1;
-		    lclVisualConfigs[i].greenSize = -1;
-		    lclVisualConfigs[i].blueSize = -1;
-		    lclVisualConfigs[i].redMask = -1;
-		    lclVisualConfigs[i].greenMask = -1;
-		    lclVisualConfigs[i].blueMask = -1;
-		    lclVisualConfigs[i].alphaMask = 0;
-		    if (accum) {
-		      lclVisualConfigs[i].accumRedSize = 16;
-		      lclVisualConfigs[i].accumGreenSize = 16;
-		      lclVisualConfigs[i].accumBlueSize = 16;
-		      lclVisualConfigs[i].accumAlphaSize = 16;
-		    } else {
-		      lclVisualConfigs[i].accumRedSize = 0;
-		      lclVisualConfigs[i].accumGreenSize = 0;
-		      lclVisualConfigs[i].accumBlueSize = 0;
-		      lclVisualConfigs[i].accumAlphaSize = 0;
-		    }
-		    lclVisualConfigs[i].doubleBuffer = buffers ? TRUE : FALSE;
-		    lclVisualConfigs[i].stereo = stereo ? TRUE : FALSE;
-		    lclVisualConfigs[i].bufferSize = -1;
-		    
-		    lclVisualConfigs[i].depthSize = depth? 24 : 0;
-		    lclVisualConfigs[i].stencilSize = stencil ? 8 : 0;
-		    lclVisualConfigs[i].auxBuffers = aux ? 2 : 0;
-		    lclVisualConfigs[i].level = 0;
-		    lclVisualConfigs[i].visualRating = GLX_NONE_EXT;
-		    lclVisualConfigs[i].transparentPixel = 0;
-		    lclVisualConfigs[i].transparentRed = 0;
-		    lclVisualConfigs[i].transparentGreen = 0;
-		    lclVisualConfigs[i].transparentBlue = 0;
-		    lclVisualConfigs[i].transparentAlpha = 0;
-		    lclVisualConfigs[i].transparentIndex = 0;
-		    i++;
-		  }
-		}
-	      }
-            }
-	  }
-	}
-    }
-    if (i != lclNumConfigs)
-        GLAQUA_DEBUG_MSG("glAquaInitVisualConfigs failed to alloc visual configs");
-
-    GlxSetVisualConfigs(lclNumConfigs, lclVisualConfigs, lclVisualPrivates);
-}
-
-
-static void glAquaSetVisualConfigs(int nconfigs, __GLXvisualConfig *configs,
-                                   void **privates)
-{
-    GLAQUA_DEBUG_MSG("glAquaSetVisualConfigs\n");
-
-    numConfigs = nconfigs;
-    visualConfigs = configs;
-    visualPrivates = privates;
-}
-
-static Bool glAquaInitVisuals(VisualPtr *visualp, DepthPtr *depthp,
-                              int *nvisualp, int *ndepthp,
-                              int *rootDepthp, VisualID *defaultVisp,
-                              unsigned long sizes, int bitsPerRGB)
-{
-    GLAQUA_DEBUG_MSG("glAquaInitVisuals\n");
-    
-    if (numConfigs == 0) /* if no configs */
-        glAquaInitVisualConfigs(); /* ensure the visual configs are setup */
-
-    /*
-     * setup the visuals supported by this particular screen.
-     */
-    return init_visuals(nvisualp, visualp, defaultVisp,
-                        *ndepthp, *depthp, *rootDepthp);
-}
-
-#if 0
-static void fixup_visuals(int screen)
-{
-    ScreenPtr pScreen = screenInfo.screens[screen];
-    glAquaScreenRec *pScr = &glAquaScreens[screen];
-    int j;
-    __GLcontextModes *modes;
-
-    GLAQUA_DEBUG_MSG("fixup_visuals\n");
-
-    for ( modes = pScr->modes ; modes != NULL ; modes = modes->next ) {
-        const int vis_class = _gl_convert_to_x_visual_type( modes->visualType );
-        const int nplanes = (modes->rgbBits - modes->alphaBits);
-        const VisualPtr pVis = pScreen->visuals;
-
-        /* Find a visual that matches the GLX visual's class and size */
-        for (j = 0; j < pScreen->numVisuals; j++) {
-            if (pVis[j].class == vis_class &&
-            pVis[j].nplanes == nplanes) {
-
-            /* Fixup the masks */
-            modes->redMask   = pVis[j].redMask;
-            modes->greenMask = pVis[j].greenMask;
-            modes->blueMask  = pVis[j].blueMask;
-
-            /* Recalc the sizes */
-            modes->redBits   = count_bits(modes->redMask);
-            modes->greenBits = count_bits(modes->greenMask);
-            modes->blueBits  = count_bits(modes->blueMask);
-            }
-        }
-    }
-}
-#endif
-static void __glXAquaScreenDestroy(__GLXscreen *screen) {
-
-	GLAQUA_DEBUG_MSG("glXAquaScreenDestroy(%p)\n", screen);
-  __glXScreenDestroy(screen);
-
-  free(screen);
-}
-
-static void init_screen_visuals(__GLXAquaScreen *screen) {
-  ScreenPtr pScreen = screen->base.pScreen;
-  
-  __GLcontextModes *modes;
-  int *used;
-  int i, j;
-  
-    GLAQUA_DEBUG_MSG("init_screen_visuals\n");
-
-    /* FIXME: Change 'used' to be a array of bits (rather than of ints),
-     * FIXME: create a stack array of 8 or 16 bytes.  If 'numVisuals' is less
-     * FIXME: than 64 or 128 the stack array can be used instead of calling
-     * FIXME: malloc / free.  If nothing else, convert 'used' to
-     * FIXME: array of bytes instead of ints!
-     */
-    used = (int *)malloc(pScreen->numVisuals * sizeof(int));
-    memset(used, 0, pScreen->numVisuals * sizeof(int));
-
-    i = 0;
-    for ( modes = screen -> base.modes
-          ; modes != NULL
-          ; modes = modes->next ) {
-        const int vis_class = _gl_convert_to_x_visual_type( modes->visualType );
-        const int nplanes = (modes->rgbBits - modes->alphaBits);
-        const VisualPtr pVis = pScreen->visuals;
-
-        for (j = 0; j < pScreen->numVisuals; j++) {
-            if (pVis[j].class     == vis_class &&
-                pVis[j].nplanes   == nplanes &&
-                pVis[j].redMask   == modes->redMask &&
-                pVis[j].greenMask == modes->greenMask &&
-                pVis[j].blueMask  == modes->blueMask &&
-                !used[j]) {
-
-                    /* set the VisualID */
-                    modes->visualID = pVis[j].vid;
-
-                    /* Mark this visual used */
-                    used[j] = 1;
-                    break;
-            }
-        }
-        if ( j == pScreen->numVisuals ) {
-            ErrorF("No matching visual for __GLcontextMode with "
-                   "visual class = %d (%d), nplanes = %u\n",
-                   vis_class, 
-                   (int)modes->visualType,
-                   (unsigned int)(modes->rgbBits - modes->alphaBits) );
-        }
-        else if ( modes->visualID == -1 ) {
-            FatalError( "Matching visual found, but visualID still -1!\n" );
-        }
-
-        i++;
-    }
-
-    free(used);
-}
-
+/* This is called by __glXInitScreens(). */
 static __GLXscreen * __glXAquaScreenProbe(ScreenPtr pScreen) {
-  __GLXAquaScreen *screen;
-  GLAQUA_DEBUG_MSG("glXAquaScreenProbe\n");
-  if (screen == NULL) return NULL;
+    __GLXAquaScreen *screen;
 
-  screen = malloc(sizeof *screen);
+    GLAQUA_DEBUG_MSG("glXAquaScreenProbe\n");
 
-  __glXScreenInit(&screen->base, pScreen);
+    if (pScreen == NULL) 
+	return NULL;
 
-  screen->base.destroy        = __glXAquaScreenDestroy;
-  screen->base.createContext  = __glXAquaScreenCreateContext;
-  screen->base.createDrawable = __glXAquaScreenCreateDrawable;
-  screen->base.pScreen       = pScreen;
+    screen = xalloc(sizeof *screen);
+    if(NULL == screen)
+	return NULL;
+    
+    screen->base.destroy        = __glXAquaScreenDestroy;
+    screen->base.createContext  = __glXAquaScreenCreateContext;
+    screen->base.createDrawable = __glXAquaScreenCreateDrawable;
+    screen->base.swapInterval = /*FIXME*/ NULL;
+    screen->base.hyperpipeFuncs = NULL;
+    screen->base.swapBarrierFuncs = NULL;
+    screen->base.pScreen       = pScreen;
+    
+    screen->base.fbconfigs = CreateConfigs(&screen->base.numFBConfigs, 
+					   pScreen->myNum);
+    
+    __glXScreenInit(&screen->base, pScreen);
 
-  init_screen_visuals(screen);
-
-  return &screen->base;
+    /* __glXScreenInit initializes these, so the order here is important, if we need these... */
+    //  screen->base.GLextensions = "";
+    // screen->base.GLXvendor = "Apple";
+    screen->base.GLXversion = xstrdup("1.4");
+    screen->base.GLXextensions = xstrdup("GLX_SGIX_fbconfig "
+					 "GLX_SGIS_multisample "
+					 "GLX_ARB_multisample "
+					 "GLX_EXT_visual_info "
+					 "GLX_EXT_import_context ");
+    
+    /*We may be able to add more GLXextensions at a later time. */
+    
+    return &screen->base;
 }
+
+static void __glXAquaDrawableCopySubBuffer (__GLXdrawable *drawable,
+					    int x, int y, int w, int h) {
+    /*TODO finish me*/
+}
+
 
 static void __glXAquaDrawableDestroy(__GLXdrawable *base) {
-    GLAQUA_DEBUG_MSG("glAquaDestroyDrawablePrivate\n");
+    /* gstaplin: base is the head of the structure, so it's at the same 
+     * offset in memory.
+     * Is this safe with strict aliasing?   I noticed that the other dri code
+     * does this too...
+     */
+    __GLXAquaDrawable *glxPriv = (__GLXAquaDrawable *)base;
 
+    GLAQUA_DEBUG_MSG(__func__);
+    
     /* It doesn't work to call DRIDestroySurface here, the drawable's
        already gone.. But dri.c notices the window destruction and
        frees the surface itself. */
 
-    free(base);
+    /*gstaplin: verify the statement above.  The surface destroy
+     *messages weren't making it through, and may still not be.
+     *We need a good test case for surface creation and destruction.
+     *We also need a good way to enable introspection on the server
+     *to validate the test, beyond using gdb with print.
+     */
+
+    xfree(glxPriv);
 }
 
 static __GLXdrawable *
 __glXAquaScreenCreateDrawable(__GLXscreen *screen,
 			      DrawablePtr pDraw,
+			      int type,
 			      XID drawId,
-			      __GLcontextModes *modes) {
+			      __GLXconfig *conf) {
   __GLXAquaDrawable *glxPriv;
 
-  GLAQUA_DEBUG_MSG("glAquaScreenCreateDrawable(%p,%p,%d,%p)\n", context, pDraw, drawId, modes);
-
   glxPriv = xalloc(sizeof *glxPriv);
-  if (glxPriv == NULL) return NULL;
+
+  if(glxPriv == NULL)
+      return NULL;
 
   memset(glxPriv, 0, sizeof *glxPriv);
 
-  if (!__glXDrawableInit(&glxPriv->base, screen, pDraw, drawId, modes)) {
+  if(!__glXDrawableInit(&glxPriv->base, screen, pDraw, type, drawId, conf)) {
     xfree(glxPriv);
     return NULL;
   }
 
   glxPriv->base.destroy       = __glXAquaDrawableDestroy;
-  glxPriv->base.resize        = __glXAquaDrawableResize;
   glxPriv->base.swapBuffers   = __glXAquaDrawableSwapBuffers;
-  //  glxPriv->base.copySubBuffer = __glXAquaDrawableCopySubBuffer;
+  glxPriv->base.copySubBuffer = NULL; /* __glXAquaDrawableCopySubBuffer; */
 
+  glxPriv->pDraw = pDraw;
+  glxPriv->sid = 0;
+  glxPriv->context = NULL;
+  
   return &glxPriv->base;
-}
-
-static void glAquaResetExtension(void)
-{
-    GLAQUA_DEBUG_MSG("glAquaResetExtension\n");
-    CGLSetOption(kCGLGOResetLibrary, GL_TRUE);
 }
 
 // Extra goodies for glx
@@ -1255,7 +853,9 @@ static void setup_dispatch_table(void) {
   SET_BlendEquationSeparateEXT(disp, glBlendEquationSeparateEXT);
   SET_BlendFunc(disp, glBlendFunc);
   SET_BlendFuncSeparateEXT(disp, glBlendFuncSeparateEXT);
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
   SET_BlitFramebufferEXT(disp, glBlitFramebufferEXT);
+#endif
   SET_BufferDataARB(disp, glBufferDataARB);
   SET_BufferSubDataARB(disp, glBufferSubDataARB);
   SET_CallList(disp, glCallList);
@@ -1312,12 +912,16 @@ static void setup_dispatch_table(void) {
   SET_ColorTable(disp, glColorTable);
   SET_ColorTableParameterfv(disp, glColorTableParameterfv);
   SET_ColorTableParameteriv(disp, glColorTableParameteriv);
+
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
   SET_CombinerInputNV(disp, glCombinerInputNV);
   SET_CombinerOutputNV(disp, glCombinerOutputNV);
   SET_CombinerParameterfNV(disp, glCombinerParameterfNV);
   SET_CombinerParameterfvNV(disp, glCombinerParameterfvNV);
   SET_CombinerParameteriNV(disp, glCombinerParameteriNV);
   SET_CombinerParameterivNV(disp, glCombinerParameterivNV);
+#endif
   SET_CompileShaderARB(disp, glCompileShaderARB);
   SET_CompressedTexImage1DARB(disp, glCompressedTexImage1DARB);
   SET_CompressedTexImage2DARB(disp, glCompressedTexImage2DARB);
@@ -1395,7 +999,10 @@ static void setup_dispatch_table(void) {
   SET_EvalPoint2(disp, glEvalPoint2);
 //SET_ExecuteProgramNV(disp, glExecuteProgramNV);
   SET_FeedbackBuffer(disp, glFeedbackBuffer);
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
   SET_FinalCombinerInputNV(disp, glFinalCombinerInputNV);
+#endif
   SET_Finish(disp, glFinish);
   SET_FinishFenceNV(disp, glFinishFenceAPPLE);       // <-- APPLE -> NV
   SET_Flush(disp, glFlush);
@@ -1437,10 +1044,12 @@ static void setup_dispatch_table(void) {
   SET_GetColorTable(disp, glGetColorTable);
   SET_GetColorTableParameterfv(disp, glGetColorTableParameterfv);
   SET_GetColorTableParameteriv(disp, glGetColorTableParameteriv);
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
   SET_GetCombinerInputParameterfvNV(disp, glGetCombinerInputParameterfvNV);
   SET_GetCombinerInputParameterivNV(disp, glGetCombinerInputParameterivNV);
   SET_GetCombinerOutputParameterfvNV(disp, glGetCombinerOutputParameterfvNV);
   SET_GetCombinerOutputParameterivNV(disp, glGetCombinerOutputParameterivNV);
+#endif
   SET_GetCompressedTexImageARB(disp, glGetCompressedTexImageARB);
   SET_GetConvolutionFilter(disp, glGetConvolutionFilter);
   SET_GetConvolutionParameterfv(disp, glGetConvolutionParameterfv);
@@ -1448,8 +1057,10 @@ static void setup_dispatch_table(void) {
   SET_GetDoublev(disp, glGetDoublev);
   SET_GetError(disp, glGetError);
 //SET_GetFenceivNV(disp, glGetFenceivNV);
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
   SET_GetFinalCombinerInputParameterfvNV(disp, glGetFinalCombinerInputParameterfvNV);
   SET_GetFinalCombinerInputParameterivNV(disp, glGetFinalCombinerInputParameterivNV);
+#endif
   SET_GetFloatv(disp, glGetFloatv);
   SET_GetFramebufferAttachmentParameterivEXT(disp, glGetFramebufferAttachmentParameterivEXT);
   SET_GetHandleARB(disp, glGetHandleARB);

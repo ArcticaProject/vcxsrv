@@ -94,7 +94,7 @@ ProcXResQueryClients (ClientPtr client)
             scratch.resource_mask = RESOURCE_ID_MASK;
         
             if(client->swapped) {
-                register int n;
+                int n;
                 swapl (&scratch.resource_base, n);
                 swapl (&scratch.resource_mask, n);
             }
@@ -133,9 +133,7 @@ ProcXResQueryClientResources (ClientPtr client)
         return BadValue;
     }
 
-    counts = xalloc((lastResourceType + 1) * sizeof(int));
-
-    memset(counts, 0, (lastResourceType + 1) * sizeof(int));
+    counts = xcalloc(lastResourceType + 1, sizeof(int));
 
     FindAllClientResources(clients[clientID], ResFindAllRes, counts);
 
@@ -177,7 +175,7 @@ ProcXResQueryClientResources (ClientPtr client)
             scratch.count = counts[i];
 
             if(client->swapped) {
-                register int n;
+                int n;
                 swapl (&scratch.resource_type, n);
                 swapl (&scratch.count, n);
             }
@@ -301,10 +299,6 @@ ProcXResQueryClientPixmapBytes (ClientPtr client)
     return (client->noClientException);
 }
 
-
-static void
-ResResetProc (ExtensionEntry *extEntry) { }
-
 static int
 ProcResDispatch (ClientPtr client)
 {
@@ -386,5 +380,5 @@ ResExtensionInit(INITARGS)
 {
     (void) AddExtension(XRES_NAME, 0, 0,
                             ProcResDispatch, SProcResDispatch,
-                            ResResetProc, StandardMinorOpcode);
+                            NULL, StandardMinorOpcode);
 }

@@ -60,8 +60,6 @@ extern void EnableDisableExtensionError(char *name, Bool enable);
 
 extern void InitExtensions(int argc, char **argv);
 
-extern void InitVisualWrap(void);
-
 extern void CloseDownExtensions(void);
 
 _XFUNCPROTOEND

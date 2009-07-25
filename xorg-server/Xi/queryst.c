@@ -119,7 +119,7 @@ ProcXQueryDeviceState(ClientPtr client)
 	total_length += (sizeof(xValuatorState) + (v->numAxes * sizeof(int)));
 	num_classes++;
     }
-    buf = (char *)xalloc(total_length);
+    buf = (char *)xcalloc(total_length, 1);
     if (!buf)
 	return BadAlloc;
     savbuf = buf;
@@ -139,8 +139,7 @@ ProcXQueryDeviceState(ClientPtr client)
 	tb->class = ButtonClass;
 	tb->length = sizeof(xButtonState);
 	tb->num_buttons = b->numButtons;
-	for (i = 0; i < 32; i++)
-	    tb->buttons[i] = b->down[i];
+	memcpy(tb->buttons, b->down, sizeof(b->down));
 	buf += sizeof(xButtonState);
     }
 

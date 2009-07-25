@@ -43,12 +43,12 @@
  * forcing as to use div instead of shift.  Let's be explicit.
  */
 
-#if defined(mips) || defined(sgi) || \
+#if defined(mips) || \
     defined(sparc) || defined(__sparc64__) || \
     defined(__alpha) || defined(__alpha__) || \
     defined(__i386__) || defined(__i386) || defined(__ia64__) || \
     defined(__s390x__) || defined(__s390__) || \
-    defined(__amd64__) || defined(amd64) || defined(__amd64) || defined(__x86_64__)
+    defined(__amd64__) || defined(amd64) || defined(__amd64)
 #define GetHighWord(x) (((int) (x)) >> 16)
 #else
 #define GetHighWord(x) (((int) (x)) / 65536)

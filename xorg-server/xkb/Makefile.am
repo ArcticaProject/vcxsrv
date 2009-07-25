@@ -6,7 +6,6 @@ AM_CFLAGS = $(DIX_CFLAGS) \
 DDX_SRCS = \
         ddxBeep.c \
         ddxCtrls.c \
-        ddxFakeBtn.c \
         ddxFakeMtn.c \
         ddxInit.c \
         ddxKeyClick.c \

@@ -18,6 +18,7 @@ libexa_la_SOURCES = \
 	exa.c \
 	exa.h \
 	exa_accel.c \
+	exa_glyphs.c \
 	exa_migration.c \
 	exa_offscreen.c \
 	exa_render.c \

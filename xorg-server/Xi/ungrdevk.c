@@ -120,7 +120,7 @@ ProcXUngrabDeviceKey(ClientPtr client)
 	if (mdev->key == NULL)
 	    return BadMatch;
     } else
-	mdev = inputInfo.keyboard;
+	mdev = PickKeyboard(client);
 
     rc = dixLookupWindow(&pWin, stuff->grabWindow, client, DixSetAttrAccess);
     if (rc != Success)

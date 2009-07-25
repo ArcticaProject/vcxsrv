@@ -56,8 +56,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #undef _XSERVER64
 #endif
 
-#ifdef XEPHYR_DRI
-
 /* THIS IS NOT AN X CONSORTIUM STANDARD */
 
 #define NEED_REPLIES
@@ -65,9 +63,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <X11/extensions/Xext.h>
 #include <X11/extensions/extutil.h>
 #include <GL/glx.h>
-#include <X11/dri/xf86dri.h>
+#include "xf86dri.h"
 #include <X11/dri/xf86dristr.h>
-#include "GL/internal/dri_interface.h"
 
 static XExtensionInfo _xf86dri_info_data;
 static XExtensionInfo *xf86dri_info = &_xf86dri_info_data;
@@ -650,5 +647,3 @@ XF86DRICloseFullScreen(Display *dpy, int screen, Drawable drawable)
     (void) drawable;
     return True;
 }
-#endif /*EPHYR_DRI*/
-

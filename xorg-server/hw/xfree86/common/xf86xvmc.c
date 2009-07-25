@@ -56,7 +56,8 @@ typedef struct {
   XvMCAdaptorPtr dixinfo;
 } xf86XvMCScreenRec, *xf86XvMCScreenPtr;
 
-static DevPrivateKey XF86XvMCScreenKey = &XF86XvMCScreenKey;
+static int XF86XvMCScreenKeyIndex;
+static DevPrivateKey XF86XvMCScreenKey = &XF86XvMCScreenKeyIndex;
 
 #define XF86XVMC_GET_PRIVATE(pScreen) (xf86XvMCScreenPtr) \
     dixLookupPrivate(&(pScreen)->devPrivates, XF86XvMCScreenKey)

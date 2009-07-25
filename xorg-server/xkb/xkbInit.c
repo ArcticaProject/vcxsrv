@@ -35,9 +35,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#ifndef _MSC_VER
 #include <unistd.h>
-#endif
 #include <math.h>
 #define NEED_EVENTS 1
 #include <X11/X.h>
@@ -57,14 +55,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #define	CREATE_ATOM(s)	MakeAtom(s,sizeof(s)-1,1)
 
-#ifdef sgi
-#define LED_CAPS	5
-#define	LED_NUM		6
-#define	LED_SCROLL	7
-#define	PHYS_LEDS	0x7f
-#define	LED_COMPOSE	8
-#else
-#if defined(ultrix) || defined(__osf__) || defined(__alpha) || defined(__alpha__)
+#if defined(__alpha) || defined(__alpha__)
 #define	LED_COMPOSE	2
 #define LED_CAPS	3
 #define	LED_SCROLL	4
@@ -82,7 +73,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define	LED_NUM		2
 #define	LED_SCROLL	3
 #define	PHYS_LEDS	0x07
-#endif
 #endif
 #endif
 
@@ -103,7 +93,7 @@ typedef struct	_SrvXkmInfo {
 #define	XKB_BIN_DIRECTORY	"."
 #endif
 #ifndef XKB_DFLT_RULES_FILE
-#define	XKB_DFLT_RULES_FILE	"rules"
+#define	XKB_DFLT_RULES_FILE	"base"
 #endif
 #ifndef XKB_DFLT_KB_LAYOUT
 #define	XKB_DFLT_KB_LAYOUT	"us"
@@ -182,12 +172,12 @@ char *			pval;
 
     name= MakeAtom(_XKB_RF_NAMES_PROP_ATOM,strlen(_XKB_RF_NAMES_PROP_ATOM),1);
     if (name==None) {
-	ErrorF("Atom error: %s not created\n",_XKB_RF_NAMES_PROP_ATOM);
+	ErrorF("[xkb] Atom error: %s not created\n",_XKB_RF_NAMES_PROP_ATOM);
 	return True;
     }
     pval= (char*) xalloc(len);
     if (!pval) {
-	ErrorF("Allocation error: %s proprerty not created\n",
+	ErrorF("[xkb] Allocation error: %s proprerty not created\n",
 						_XKB_RF_NAMES_PROP_ATOM);
 	return True;
     }
@@ -221,7 +211,7 @@ char *			pval;
     }
     pval[out++]= '\0';
     if (out!=len) {
-	ErrorF("Internal Error! bad size (%d!=%d) for _XKB_RULES_NAMES\n",
+	ErrorF("[xkb] Internal Error! bad size (%d!=%d) for _XKB_RULES_NAMES\n",
 								out,len);
     }
     dixChangeWindowProperty(serverClient, WindowTable[0], name, XA_STRING, 8,
@@ -250,14 +240,33 @@ XkbSetRulesUsed(XkbRF_VarDefsPtr defs)
     return;
 }
 
+/**
+ * Set the default RMLVO for the next device to be initialised.
+ * If a parameter is NULL, the previous setting will be used. Use empty
+ * strings if you want to delete a previous setting.
+ *
+ * If @rulesFile is NULL and no previous @rulesFile has been set, the
+ * built-in default is chosen as default.
+ */
 _X_EXPORT void
 XkbSetRulesDflts(char *rulesFile,char *model,char *layout,
 					char *variant,char *options)
 {
-    if (XkbRulesFile)
-	_XkbFree(XkbRulesFile);
-    XkbRulesFile= _XkbDupString(rulesFile);
-    rulesDefined= True;
+    if (!rulesFile && !XkbRulesFile)
+    {
+	LogMessage(X_WARNING, "[xkb] No rule given, and no previous rule "
+		              "defined. Defaulting to '%s'.\n",
+                              XKB_DFLT_RULES_FILE);
+	rulesFile = XKB_DFLT_RULES_FILE;
+    }
+
+    if (rulesFile) {
+	if (XkbRulesFile)
+	    _XkbFree(XkbRulesFile);
+	XkbRulesFile= _XkbDupString(rulesFile);
+	rulesDefined= True;
+    }
+
     if (model) {
 	if (XkbModelDflt)
 	    _XkbFree(XkbModelDflt);
@@ -279,6 +288,24 @@ XkbSetRulesDflts(char *rulesFile,char *model,char *layout,
 	XkbOptionsDflt= _XkbDupString(options);
     }
     return;
+}
+
+void
+XkbDeleteRulesDflts()
+{
+    _XkbFree(XkbRulesFile);
+    XkbRulesFile = NULL;
+    _XkbFree(XkbModelDflt);
+    XkbModelDflt = NULL;
+    _XkbFree(XkbLayoutDflt);
+    XkbLayoutDflt = NULL;
+    _XkbFree(XkbVariantDflt);
+    XkbVariantDflt = NULL;
+    _XkbFree(XkbOptionsDflt);
+    XkbOptionsDflt = NULL;
+
+    XkbFreeKeyboard(xkb_cached_map, XkbAllComponentsMask, True);
+    xkb_cached_map = NULL;
 }
 
 /***====================================================================***/
@@ -502,7 +529,7 @@ XkbEventCauseRec	cause;
 	    /*                 the other here, but for now just complain */
 	    /*                 can't just update the core range without */
 	    /*                 reallocating the KeySymsRec (pain)       */
-	    ErrorF("Internal Error!! XKB and core keymap have different range\n");
+	    ErrorF("[xkb] Internal Error!! XKB and core keymap have different range\n");
 	}
 	if (XkbAllocClientMap(xkb,XkbAllClientInfoMask,0)!=Success)
 	    FatalError("Couldn't allocate client map in XkbInitDevice\n");
@@ -728,7 +755,10 @@ XkbSrvLedInfoPtr	sli;
     if (pXDev && pXDev->key && pXDev->key->xkbInfo && pXDev->kbdfeed) {
 	xkbi= pXDev->key->xkbInfo;
 	xkb= xkbi->desc;
-	if (pXDev->kbdfeed) {
+        /* If we come from DeepCopyDeviceClasses, the CtrlProc was already set
+         * to XkbDDXKeybdCtrlProc, overwriting it leads to happy recursion.
+         */
+	if (pXDev->kbdfeed && pXDev->kbdfeed->CtrlProc != XkbDDXKeybdCtrlProc) {
 	    xkbi->kbdProc= pXDev->kbdfeed->CtrlProc;
 	    pXDev->kbdfeed->CtrlProc= XkbDDXKeybdCtrlProc;
 	}
@@ -745,7 +775,7 @@ XkbSrvLedInfoPtr	sli;
     sli= XkbFindSrvLedInfo(pXDev,XkbDfltXIClass,XkbDfltXIId,0);
     if (sli && xkbi)
 	XkbCheckIndicatorMaps(xkbi->device,sli,XkbAllIndicatorsMask);
-    else DebugF("No indicator feedback in XkbFinishInit (shouldn't happen)!\n");
+    else DebugF("[xkb] No indicator feedback in XkbFinishInit (shouldn't happen)!\n");
     return softRepeat;
 }
 

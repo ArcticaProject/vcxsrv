@@ -24,10 +24,8 @@ typedef struct {
   unsigned int height;
   unsigned int border_width;
   Window sibling_above;
-#ifdef SHAPE
   RegionPtr bounding_shape;
   RegionPtr clip_shape;
-#endif /* SHAPE */
 } xnestPrivWin;
 
 typedef struct {
@@ -68,9 +66,7 @@ void xnestCopyWindow(WindowPtr pWin, xPoint oldOrigin, RegionPtr oldRegion);
 void xnestClipNotify(WindowPtr pWin, int dx, int dy);
 void xnestWindowExposures(WindowPtr pWin, RegionPtr pRgn,
 			  RegionPtr other_exposed);
-#ifdef SHAPE
 void xnestSetShape(WindowPtr pWin);
 void xnestShapeWindow(WindowPtr pWin);
-#endif /* SHAPE */
 
 #endif /* XNESTWINDOW_H */

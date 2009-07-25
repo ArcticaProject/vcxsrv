@@ -189,7 +189,7 @@ ProcSetSelectionOwner(ClientPtr client)
 	    event.u.selectionClear.time = time.milliseconds;
 	    event.u.selectionClear.window = pSel->window;
 	    event.u.selectionClear.atom = pSel->selection;
-	    TryClientEvents(pSel->client, &event, 1, NoEventMask,
+	    TryClientEvents(pSel->client, NULL, &event, 1, NoEventMask,
 			    NoEventMask /* CantBeFiltered */, NullGrab);
 	}
     }
@@ -294,7 +294,7 @@ ProcConvertSelection(ClientPtr client)
 	event.u.selectionRequest.selection = stuff->selection;
 	event.u.selectionRequest.target = stuff->target;
 	event.u.selectionRequest.property = stuff->property;
-	if (TryClientEvents(pSel->client, &event, 1, NoEventMask,
+	if (TryClientEvents(pSel->client, NULL, &event, 1, NoEventMask,
 			    NoEventMask /* CantBeFiltered */, NullGrab))
 	    return client->noClientException;
     }
@@ -305,7 +305,7 @@ ProcConvertSelection(ClientPtr client)
     event.u.selectionNotify.selection = stuff->selection;
     event.u.selectionNotify.target = stuff->target;
     event.u.selectionNotify.property = None;
-    TryClientEvents(client, &event, 1, NoEventMask,
+    TryClientEvents(client, NULL, &event, 1, NoEventMask,
 		    NoEventMask /* CantBeFiltered */, NullGrab);
     return client->noClientException;
 }

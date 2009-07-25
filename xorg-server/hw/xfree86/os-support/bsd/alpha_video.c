@@ -433,24 +433,6 @@ xf86DisableIO()
 
 #endif /* USE_ALPHA_PIO */
 
-/***************************************************************************/
-/* Interrupt Handling section                                              */
-/***************************************************************************/
-
-_X_EXPORT Bool
-xf86DisableInterrupts()
-{
-
-	return(TRUE);
-}
-
-_X_EXPORT void
-xf86EnableInterrupts()
-{
-	return;
-}
-
-
 #define vuip    volatile unsigned int *
 
 static unsigned long msb_set = 0;

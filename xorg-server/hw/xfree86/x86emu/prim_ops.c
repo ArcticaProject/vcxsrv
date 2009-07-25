@@ -103,7 +103,7 @@
 #include "x86emu/x86emui.h"
 
 #if defined(__GNUC__)
-# if defined (__i386__) || defined(__i386) || defined(__AMD64__) || defined(__x86_64__) || defined(__amd64__) || defined(__x86_64__)
+# if defined (__i386__) || defined(__i386) || defined(__AMD64__) || defined(__amd64__)
 #  include "x86emu/prim_x86_gcc.h"
 # endif
 #endif

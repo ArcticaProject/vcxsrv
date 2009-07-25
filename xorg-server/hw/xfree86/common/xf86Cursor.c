@@ -44,10 +44,8 @@
 #include "xf86Priv.h"
 #include "xf86_OSproc.h"
 
-#ifdef XINPUT
 #include <X11/extensions/XIproto.h>
 #include "xf86Xinput.h"
-#endif
 
 #ifdef XFreeXDGA
 #include "dgaproc.h"
@@ -67,7 +65,7 @@ typedef struct {
 
 static Bool xf86CursorOffScreen(ScreenPtr *pScreen, int *x, int *y);
 static void xf86CrossScreen(ScreenPtr pScreen, Bool entering);
-static void xf86WarpCursor(ScreenPtr pScreen, int x, int y);
+static void xf86WarpCursor(DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y);
 
 static void xf86PointerMoved(int scrnIndex, int x, int y);
 
@@ -206,6 +204,7 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
   ScreenPtr   pCursorScreen;
   Bool        Switched;
   int         px, py;
+  DeviceIntPtr dev, it;
 
   if (!pScr->vtSema || !mode || !pScr->SwitchMode)
     return FALSE;
@@ -221,9 +220,20 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
   if (mode->HDisplay > pScr->virtualX || mode->VDisplay > pScr->virtualY)
     return FALSE;
 
-  pCursorScreen = miPointerGetScreen(inputInfo.pointer);
+  /* Let's take an educated guess for which pointer to take here. And about as
+     educated as it gets is to take the first pointer we find.
+   */
+  for (dev = inputInfo.devices; dev; dev = dev->next)
+  {
+      if (IsPointerDevice(dev) && dev->spriteInfo->spriteOwner)
+          break;
+  }
+  if (!dev)
+      dev = inputInfo.pointer;
+
+  pCursorScreen = miPointerGetScreen(dev);
   if (pScreen == pCursorScreen)
-    miPointerGetPosition(inputInfo.pointer, &px, &py);
+    miPointerGetPosition(dev, &px, &py);
 
   xf86EnterServerState(SETUP);
   Switched = (*pScr->SwitchMode)(pScr->scrnIndex, mode, 0);
@@ -232,6 +242,7 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
 
     /*
      * Adjust frame for new display size.
+     * Frame is centered around cursor position if cursor is on same screen.
      */
     if (pScreen == pCursorScreen)
       pScr->frameX0 = px - (mode->HDisplay / 2) + 1;
@@ -266,8 +277,42 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
   if (pScr->AdjustFrame)
     (*pScr->AdjustFrame)(pScr->scrnIndex, pScr->frameX0, pScr->frameY0, 0);
 
+  /* The original code centered the frame around the cursor if possible.
+   * Since this is hard to achieve with multiple cursors, we do the following:
+   *   - center around the first pointer
+   *   - move all other pointers to the nearest edge on the screen (or leave
+   *   them unmodified if they are within the boundaries).
+   */
   if (pScreen == pCursorScreen)
-    xf86WarpCursor(pScreen, px, py);
+  {
+      xf86WarpCursor(dev, pScreen, px, py);
+  }
+
+  for (it = inputInfo.devices; it; it = it->next)
+  {
+      if (it == dev)
+          continue;
+
+      if (IsPointerDevice(it) && it->spriteInfo->spriteOwner)
+      {
+          pCursorScreen = miPointerGetScreen(it);
+          if (pScreen == pCursorScreen)
+          {
+              miPointerGetPosition(it, &px, &py);
+              if (px < pScr->frameX0)
+                  px = pScr->frameX0;
+              else if (px > pScr->frameX1)
+                  px = pScr->frameX1;
+
+              if(py < pScr->frameY0)
+                  py = pScr->frameY0;
+              else if(py > pScr->frameY1)
+                  py = pScr->frameY1;
+
+              xf86WarpCursor(it, pScreen, px, py);
+          }
+      }
+  }
 
   return Switched;
 }
@@ -424,13 +469,13 @@ xf86CrossScreen (ScreenPtr pScreen, Bool entering)
 
 /* ARGSUSED */
 static void
-xf86WarpCursor (ScreenPtr pScreen, int x, int y)
+xf86WarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
     int    sigstate;
     sigstate = xf86BlockSIGIO ();
-  miPointerWarpCursor(pScreen,x,y);
+    miPointerWarpCursor(pDev, pScreen, x, y);
 
-  xf86Info.currentScreen = pScreen;
+    xf86Info.currentScreen = pScreen;
     xf86UnblockSIGIO (sigstate);
 }
 

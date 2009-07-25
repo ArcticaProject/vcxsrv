@@ -112,10 +112,6 @@ static void SScreenSaverNotifyEvent (
 	xScreenSaverNotifyEvent * /* to */
 	);
 
-static void ScreenSaverResetProc (
-	ExtensionEntry * /* extEntry */
-	);
-
 static RESTYPE SuspendType;  /* resource type for suspension records */
 
 typedef struct _ScreenSaverSuspension *ScreenSaverSuspensionPtr;
@@ -234,7 +230,8 @@ MakeScreenPrivate (
 	ScreenPtr /* pScreen */
 	);
 
-static DevPrivateKey ScreenPrivateKey = &ScreenPrivateKey;
+static int ScreenPrivateKeyIndex;
+static DevPrivateKey ScreenPrivateKey = &ScreenPrivateKeyIndex;
 
 #define GetScreenPrivate(s) ((ScreenSaverScreenPrivatePtr) \
     dixLookupPrivate(&(s)->devPrivates, ScreenPrivateKey))
@@ -271,18 +268,11 @@ ScreenSaverExtensionInit(INITARGS)
     if (AttrType && EventType && SuspendType &&
 	(extEntry = AddExtension(ScreenSaverName, ScreenSaverNumberEvents, 0,
 				 ProcScreenSaverDispatch, SProcScreenSaverDispatch,
-				 ScreenSaverResetProc, StandardMinorOpcode)))
+				 NULL, StandardMinorOpcode)))
     {
 	ScreenSaverEventBase = extEntry->eventBase;
 	EventSwapVector[ScreenSaverEventBase] = (EventSwapPtr) SScreenSaverNotifyEvent;
     }
-}
-
-/*ARGSUSED*/
-static void
-ScreenSaverResetProc (extEntry)
-ExtensionEntry	*extEntry;
-{
 }
 
 static void
@@ -753,10 +743,10 @@ ScreenSaverHandle (pScreen, xstate, force)
 
 static int
 ProcScreenSaverQueryVersion (client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
     xScreenSaverQueryVersionReply	rep;
-    register int		n;
+    int		n;
 
     REQUEST_SIZE_MATCH (xScreenSaverQueryVersionReq);
     rep.type = X_Reply;
@@ -774,11 +764,11 @@ ProcScreenSaverQueryVersion (client)
 
 static int
 ProcScreenSaverQueryInfo (client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
     REQUEST(xScreenSaverQueryInfoReq);
     xScreenSaverQueryInfoReply	rep;
-    register int		n, rc;
+    int		n, rc;
     ScreenSaverStuffPtr		pSaver;
     DrawablePtr			pDraw;
     CARD32			lastInput;
@@ -851,7 +841,7 @@ ProcScreenSaverQueryInfo (client)
 
 static int
 ProcScreenSaverSelectInput (client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
     REQUEST(xScreenSaverSelectInputReq);
     DrawablePtr			pDraw;

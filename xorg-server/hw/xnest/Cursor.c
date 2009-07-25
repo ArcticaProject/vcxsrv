@@ -25,6 +25,7 @@ is" without express or implied warranty.
 #include "cursorstr.h"
 #include "scrnintstr.h"
 #include "servermd.h"
+#include "mipointrst.h"
 
 #include "Xnest.h"
 
@@ -35,8 +36,10 @@ is" without express or implied warranty.
 #include "Keyboard.h"
 #include "Args.h"
 
+xnestCursorFuncRec xnestCursorFuncs = {NULL};
+
 Bool
-xnestRealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
+xnestRealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   XImage *ximage;
   Pixmap source, mask;
@@ -116,7 +119,7 @@ xnestRealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
 }
 
 Bool
-xnestUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
+xnestUnrealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   XFreeCursor(xnestDisplay, xnestCursor(pCursor, pScreen));
   xfree(xnestGetCursorPriv(pCursor, pScreen));
@@ -141,7 +144,7 @@ xnestRecolorCursor(ScreenPtr pScreen, CursorPtr pCursor, Bool displayed)
 		 &fg_color, &bg_color);
 }
 
-void xnestSetCursor (ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
+void xnestSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
 {
     if (pCursor)
     {
@@ -152,6 +155,29 @@ void xnestSetCursor (ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
 }
 
 void
-xnestMoveCursor (ScreenPtr pScreen, int x, int y)
+xnestMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
+}
+
+Bool
+xnestDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+    xnestCursorFuncPtr pScreenPriv;
+
+    pScreenPriv = (xnestCursorFuncPtr)
+            dixLookupPrivate(&pScreen->devPrivates, xnestCursorScreenKey);
+
+    pScreenPriv->spriteFuncs->DeviceCursorInitialize(pDev, pScreen);
+    return TRUE;
+}
+
+void
+xnestDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+    xnestCursorFuncPtr pScreenPriv;
+
+    pScreenPriv = (xnestCursorFuncPtr)
+            dixLookupPrivate(&pScreen->devPrivates, xnestCursorScreenKey);
+
+    pScreenPriv->spriteFuncs->DeviceCursorCleanup(pDev, pScreen);
 }

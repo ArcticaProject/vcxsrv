@@ -291,8 +291,7 @@ PolyGlyphBltAsSingleBitmap (
 
     pitch = (Right - Left + 31) >> 5;
     size = (pitch << 2) * (Bottom - Top);
-    block = (CARD32*)xalloc(size);
-    bzero(block, size);
+    block = xcalloc(1, size);
 
     topLine = 10000; botLine = -10000;
 

@@ -59,6 +59,7 @@ SOFTWARE.
 #include "inputstr.h"	/* DeviceIntPtr      */
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
+#include "exevents.h"
 #include "exglobals.h"
 
 #include "getvers.h"
@@ -85,7 +86,7 @@ SProcXGetExtensionVersion(ClientPtr client)
 
 /***********************************************************************
  *
- * This procedure lists the input devices available to the server.
+ * This procedure returns the major/minor version of the X Input extension.
  *
  */
 
@@ -93,6 +94,7 @@ int
 ProcXGetExtensionVersion(ClientPtr client)
 {
     xGetExtensionVersionReply rep;
+    XIClientPtr pXIClient;
 
     REQUEST(xGetExtensionVersionReq);
     REQUEST_AT_LEAST_SIZE(xGetExtensionVersionReq);
@@ -101,18 +103,16 @@ ProcXGetExtensionVersion(ClientPtr client)
 			  stuff->nbytes + 3) >> 2)
 	return BadLength;
 
+    pXIClient = dixLookupPrivate(&client->devPrivates, XIClientPrivateKey);
+
     rep.repType = X_Reply;
     rep.RepType = X_GetExtensionVersion;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.major_version = 0;
-    rep.minor_version = 0;
-
     rep.present = TRUE;
-    if (rep.present) {
-	rep.major_version = AllExtensionVersions[IReqCode - 128].major_version;
-	rep.minor_version = AllExtensionVersions[IReqCode - 128].minor_version;
-    }
+    rep.major_version = AllExtensionVersions[IReqCode - 128].major_version;
+    rep.minor_version = AllExtensionVersions[IReqCode - 128].minor_version;
+
     WriteReplyToClient(client, sizeof(xGetExtensionVersionReply), &rep);
 
     return Success;

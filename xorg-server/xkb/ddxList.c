@@ -192,9 +192,9 @@ char	tmpname[PATH_MAX];
 	in= Popen(buf,"r");
 #else
         if (xkbDebugFlags)
-            DebugF("xkbList executes: %s\n",buf);
+            DebugF("[xkb] xkbList executes: %s\n",buf);
 	if (System(buf) < 0)
-	    ErrorF("Could not invoke keymap compiler\n");
+	    ErrorF("[xkb] Could not invoke keymap compiler\n");
 	else
 	    in= fopen(tmpname, "r");
 #endif
@@ -262,7 +262,7 @@ char	tmpname[PATH_MAX];
 	fclose(in);
     else if ((rval=Pclose(in))!=0) {
 	if (xkbDebugFlags)
-	    ErrorF("xkbcomp returned exit code %d\n",rval);
+	    ErrorF("[xkb] xkbcomp returned exit code %d\n",rval);
     }
 #else
     fclose(in);

@@ -78,12 +78,12 @@ PtrCtrl defaultPointerControl = {
 	DEFAULT_PTR_THRESHOLD,
 	0};
 
-_X_EXPORT ClientPtr *clients;
+_X_EXPORT ClientPtr  clients[MAXCLIENTS];
 _X_EXPORT ClientPtr  serverClient;
 _X_EXPORT int  currentMaxClients;   /* current size of clients array */
 _X_EXPORT long maxBigRequestSize = MAX_BIG_REQUEST_SIZE;
 
-_X_EXPORT WindowPtr *WindowTable;
+_X_EXPORT WindowPtr WindowTable[MAXSCREENS];
 
 _X_EXPORT unsigned long globalSerialNumber = 0;
 _X_EXPORT unsigned long serverGeneration = 0;
@@ -111,7 +111,7 @@ CARD32 defaultDPMSStandbyTime = DEFAULT_STANDBY_TIME;
 CARD32 defaultDPMSSuspendTime = DEFAULT_SUSPEND_TIME;
 CARD32 defaultDPMSOffTime = DEFAULT_OFF_TIME;
 _X_EXPORT CARD16 DPMSPowerLevel = 0;
-_X_EXPORT Bool defaultDPMSEnabled = DEFAULT_DPMS_ENABLED;
+Bool defaultDPMSEnabled = DEFAULT_DPMS_ENABLED;
 _X_EXPORT Bool DPMSEnabledSwitch = FALSE;  /* these denote the DPMS command */
 _X_EXPORT Bool DPMSDisabledSwitch = FALSE; /* lind switch states */
 _X_EXPORT Bool DPMSCapableFlag = FALSE;
@@ -136,16 +136,13 @@ Bool screenSaverSuspended = FALSE;
 char *defaultFontPath = COMPILEDDEFAULTFONTPATH;
 char *defaultTextFont = COMPILEDDEFAULTFONT;
 char *defaultCursorFont = COMPILEDCURSORFONT;
-char *defaultDisplayClass = COMPILEDDISPLAYCLASS;
 FontPtr defaultFont;   /* not declared in dix.h to avoid including font.h in
 			every compilation of dix code */
-Bool loadableFonts = FALSE;
 CursorPtr rootCursor;
-Bool blackRoot=FALSE;
-Bool whiteRoot=FALSE;
-#ifdef XPRINT
-ClientPtr requestingClient;	/* XXX this should be obsolete now, remove? */
-#endif
+Bool party_like_its_1989 = FALSE;
+Bool whiteRoot = FALSE;
+
+int cursorScreenDevPriv[MAXSCREENS];
 
 _X_EXPORT TimeStamp currentTime;
 _X_EXPORT TimeStamp lastDeviceEventTime;
@@ -154,9 +151,8 @@ _X_EXPORT int defaultColorVisualClass = -1;
 _X_EXPORT int monitorResolution = 0;
 
 _X_EXPORT char *display;
+char *ConnectionInfo;
 
 CARD32 TimeOutValue = DEFAULT_TIMEOUT * MILLI_PER_SECOND;
-int	argcGlobal;
-char	**argvGlobal;
 
 DDXPointRec dixScreenOrigins[MAXSCREENS];

@@ -35,6 +35,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define DRI_STRUCT_H
 
 #include "xf86drm.h"
+#include "xf86Crtc.h"
 
 
 #define DRI_DRAWABLE_PRIV_FROM_WINDOW(pWin) ((DRIDrawablePrivPtr) \
@@ -106,6 +107,7 @@ typedef struct _DRIScreenPrivRec
     XF86DRILSAREAPtr    pLSAREA;      /* Mapped pointer to SAREA containing lock */
     int*                pLockRefCount;
     int*                pLockingContext;
+    xf86_crtc_notify_proc_ptr	xf86_crtc_notify;
 } DRIScreenPrivRec, *DRIScreenPrivPtr;
 
 

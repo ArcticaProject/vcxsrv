@@ -75,43 +75,10 @@
 #  endif
 # endif /* __inline */
 
-# if defined(IODEBUG) && defined(__GNUC__)
-#  define outb RealOutb
-#  define outw RealOutw
-#  define outl RealOutl
-#  define inb RealInb
-#  define inw RealInw
-#  define inl RealInl
-# endif
-
-# if defined(QNX4) /* Do this for now to keep Watcom happy */
-#  define outb outp
-#  define outw outpw
-#  define outl outpd 
-#  define inb inp
-#  define inw inpw
-#  define inl inpd
-
-/* Define the ffs function for inlining */
-extern int ffs(unsigned long);
-#  pragma aux ffs_ = \
-        "bsf edx, eax"          \
-        "jnz bits_set"          \
-        "xor eax, eax"          \
-        "jmp exit1"             \
-        "bits_set:"             \
-        "mov eax, edx"          \
-        "inc eax"               \
-        "exit1:"                \
-        __parm [eax]            \
-        __modify [eax edx]      \
-        __value [eax]           \
-        ;
-# endif
-
-# if defined(__SUNPRO_C)
-#  define DO_PROTOTYPES
-# endif
+/* Support gcc's __FUNCTION__ for people using other compilers */
+#if !defined(__GNUC__) && !defined(__FUNCTION__)
+# define __FUNCTION__ __func__ /* C99 */
+#endif
 
 # if defined(NO_INLINE) || defined(DO_PROTOTYPES)
 
@@ -250,7 +217,7 @@ struct __una_u16 { unsigned short x __attribute__((packed)); };
 
 static __inline__ unsigned long ldq_u(unsigned long * r11)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	const struct __una_u64 *ptr = (const struct __una_u64 *) r11;
 	return ptr->x;
 #    else
@@ -269,7 +236,7 @@ static __inline__ unsigned long ldq_u(unsigned long * r11)
 
 static __inline__ unsigned long ldl_u(unsigned int * r11)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	const struct __una_u32 *ptr = (const struct __una_u32 *) r11;
 	return ptr->x;
 #    else
@@ -288,7 +255,7 @@ static __inline__ unsigned long ldl_u(unsigned int * r11)
 
 static __inline__ unsigned long ldw_u(unsigned short * r11)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	const struct __una_u16 *ptr = (const struct __una_u16 *) r11;
 	return ptr->x;
 #    else
@@ -311,7 +278,7 @@ static __inline__ unsigned long ldw_u(unsigned short * r11)
 
 static __inline__ void stq_u(unsigned long r5, unsigned long * r11)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	struct __una_u64 *ptr = (struct __una_u64 *) r11;
 	ptr->x = r5;
 #    else
@@ -336,7 +303,7 @@ static __inline__ void stq_u(unsigned long r5, unsigned long * r11)
 
 static __inline__ void stl_u(unsigned long r5, unsigned int * r11)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	struct __una_u32 *ptr = (struct __una_u32 *) r11;
 	ptr->x = r5;
 #    else
@@ -361,7 +328,7 @@ static __inline__ void stl_u(unsigned long r5, unsigned int * r11)
 
 static __inline__ void stw_u(unsigned long r5, unsigned short * r11)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	struct __una_u16 *ptr = (struct __una_u16 *) r11;
 	ptr->x = r5;
 #    else
@@ -498,7 +465,7 @@ extern unsigned int inb(unsigned long port);
 extern unsigned int inw(unsigned long port);
 extern unsigned int inl(unsigned long port);
  
-#   elif defined(linux) && (defined(__amd64__) || defined(__x86_64__))
+#   elif defined(linux) && defined(__amd64__)
  
 #    include <inttypes.h>
 
@@ -564,9 +531,8 @@ inl(unsigned short port)
    return ret;
 }
 
-#   elif (defined(linux) || defined(Lynx) || defined(sun) || defined(__OpenBSD__) || defined(__FreeBSD__)) && defined(__sparc__)
+#   elif (defined(linux) || defined(sun) || defined(__OpenBSD__) || defined(__FreeBSD__)) && defined(__sparc__)
 
-#    if !defined(Lynx)
 #     ifndef ASI_PL
 #      define ASI_PL 0x88
 #     endif
@@ -805,7 +771,6 @@ xf86WriteMmio32LeNB(__volatile__ void *base, const unsigned long offset,
 			     : "r" (val), "r" (addr), "i" (ASI_PL));
 }
 
-#    endif	/* !Lynx */
 
 /*
  * EGCS 1.1 knows about arbitrary unaligned loads.  Define some
@@ -820,7 +785,7 @@ struct __una_u16 { unsigned short x __attribute__((packed)); };
 
 static __inline__ unsigned long ldq_u(unsigned long *p)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 #     if defined(__arch64__) || defined(__sparcv9)
 	const struct __una_u64 *ptr = (const struct __una_u64 *) p;
 #     else
@@ -836,7 +801,7 @@ static __inline__ unsigned long ldq_u(unsigned long *p)
 
 static __inline__ unsigned long ldl_u(unsigned int *p)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	const struct __una_u32 *ptr = (const struct __una_u32 *) p;
 	return ptr->x;
 #    else
@@ -848,7 +813,7 @@ static __inline__ unsigned long ldl_u(unsigned int *p)
 
 static __inline__ unsigned long ldw_u(unsigned short *p)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	const struct __una_u16 *ptr = (const struct __una_u16 *) p;
 	return ptr->x;
 #    else
@@ -860,7 +825,7 @@ static __inline__ unsigned long ldw_u(unsigned short *p)
 
 static __inline__ void stq_u(unsigned long val, unsigned long *p)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 #     if defined(__arch64__) || defined(__sparcv9)
 	struct __una_u64 *ptr = (struct __una_u64 *) p;
 #     else
@@ -875,7 +840,7 @@ static __inline__ void stq_u(unsigned long val, unsigned long *p)
 
 static __inline__ void stl_u(unsigned long val, unsigned int *p)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	struct __una_u32 *ptr = (struct __una_u32 *) p;
 	ptr->x = val;
 #    else
@@ -886,7 +851,7 @@ static __inline__ void stl_u(unsigned long val, unsigned int *p)
 
 static __inline__ void stw_u(unsigned long val, unsigned short *p)
 {
-#    if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#    if defined(__GNUC__)
 	struct __una_u16 *ptr = (struct __una_u16 *) p;
 	ptr->x = val;
 #    else
@@ -1067,7 +1032,7 @@ xf86WriteMmio32Be(__volatile__ void *base, const unsigned long offset,
 #     define write_mem_barrier()	/* NOP */
 #    endif /* __arm32__ */
 
-#   elif (defined(Lynx) || defined(linux) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__FreeBSD__)) && defined(__powerpc__)
+#   elif (defined(linux) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__FreeBSD__)) && defined(__powerpc__)
 
 #    ifndef MAP_FAILED
 #     define MAP_FAILED ((void *)-1)
@@ -1363,7 +1328,7 @@ do {									\
 #    define write_mem_barrier()   /* NOP */
 
 #    if !defined(__SUNPRO_C)
-#    if !defined(FAKEIT) && !defined(__mc68000__) && !defined(__arm__) && !defined(__sh__) && !defined(__hppa__) && !defined(__s390__)
+#    if !defined(FAKEIT) && !defined(__mc68000__) && !defined(__arm__) && !defined(__sh__) && !defined(__hppa__) && !defined(__s390__) && !defined(__m32r__)
 #     ifdef GCCUSESGAS
 
 /*
@@ -1472,7 +1437,7 @@ inl(unsigned short port)
 
 #     endif /* GCCUSESGAS */
 
-#    else /* !defined(FAKEIT) && !defined(__mc68000__)  && !defined(__arm__) && !defined(__sh__) && !defined(__hppa__)*/
+#    else /* !defined(FAKEIT) && !defined(__mc68000__)  && !defined(__arm__) && !defined(__sh__) && !defined(__hppa__) && !defined(__m32r__) */
 
 static __inline__ void
 outb(unsigned short port, unsigned char val)
@@ -1513,7 +1478,6 @@ inl(unsigned short port)
 #   endif /* ix86 */
 
 #  else /* !GNUC */
-#   if !defined(QNX4)
 #    if defined(__STDC__) && (__STDC__ == 1)
 #     ifndef asm
 #      define asm __asm
@@ -1529,13 +1493,13 @@ inl(unsigned short port)
 #      define uint_t unsigned int
 #      define uchar_t unsigned char
 #     endif /* __UNIXWARE__ */
-#     if !defined(sgi) && !defined(__SUNPRO_C) && !defined(_MSC_VER)
+#     if !defined(__SUNPRO_C) && !defined(_MSC_VER)
 #      include <sys/inline.h>
 #     endif
 #    else
 #     include "scoasm.h"
 #    endif
-#    if (!defined(__HIGHC__) && !defined(sgi) && !defined(__SUNPRO_C) && !defined(_MSC_VER)) || \
+#    if (!defined(__HIGHC__) && !defined(__SUNPRO_C) && !defined(_MSC_VER)) || \
 	defined(__USLC__)
 #     pragma asm partial_optimization outl
 #     pragma asm partial_optimization outw
@@ -1544,7 +1508,6 @@ inl(unsigned short port)
 #     pragma asm partial_optimization inw
 #     pragma asm partial_optimization inb
 #    endif
-#   endif
 #   define ldq_u(p)	(*((unsigned long  *)(p)))
 #   define ldl_u(p)	(*((unsigned int   *)(p)))
 #   define ldw_u(p)	(*((unsigned short *)(p)))
@@ -1554,32 +1517,6 @@ inl(unsigned short port)
 #   define mem_barrier()   /* NOP */
 #   define write_mem_barrier()   /* NOP */
 #  endif /* __GNUC__ */
-
-#  if defined(QNX4)
-#   include <sys/types.h>
-extern unsigned  inb(unsigned port);
-extern unsigned  inw(unsigned port);
-extern unsigned  inl(unsigned port);
-extern void outb(unsigned port, unsigned val);
-extern void outw(unsigned port, unsigned val);
-extern void outl(unsigned port, unsigned val);
-#  endif /* QNX4 */
-
-#  if defined(IODEBUG) && defined(__GNUC__)
-#   undef inb
-#   undef inw
-#   undef inl
-#   undef outb
-#   undef outw
-#   undef outl
-#   define inb(a) __extension__ ({unsigned char __c=RealInb(a); ErrorF("inb(0x%03x) = 0x%02x\t@ line %4d, file %s\n", a, __c, __LINE__, __FILE__);__c;})
-#   define inw(a) __extension__ ({unsigned short __c=RealInw(a); ErrorF("inw(0x%03x) = 0x%04x\t@ line %4d, file %s\n", a, __c, __LINE__, __FILE__);__c;})
-#   define inl(a) __extension__ ({unsigned int __c=RealInl(a); ErrorF("inl(0x%03x) = 0x%08x\t@ line %4d, file %s\n", a, __c, __LINE__, __FILE__);__c;})
-
-#   define outb(a,b) (ErrorF("outb(0x%03x, 0x%02x)\t@ line %4d, file %s\n", a, b, __LINE__, __FILE__),RealOutb(a,b))
-#   define outw(a,b) (ErrorF("outw(0x%03x, 0x%04x)\t@ line %4d, file %s\n", a, b, __LINE__, __FILE__),RealOutw(a,b))
-#   define outl(a,b) (ErrorF("outl(0x%03x, 0x%08x)\t@ line %4d, file %s\n", a, b, __LINE__, __FILE__),RealOutl(a,b))
-#  endif
 
 # endif /* NO_INLINE */
 
@@ -1604,8 +1541,6 @@ extern void (*xf86WriteMmio32)(int, void *, unsigned long);
 extern void (*xf86WriteMmioNB8)(int, void *, unsigned long);
 extern void (*xf86WriteMmioNB16)(int, void *, unsigned long);
 extern void (*xf86WriteMmioNB32)(int, void *, unsigned long);
-extern void xf86JensenMemToBus(char *, long, long, int);
-extern void xf86JensenBusToMem(char *, char *, unsigned long, int);
 extern void xf86SlowBCopyFromBus(unsigned char *, unsigned char *, int);
 extern void xf86SlowBCopyToBus(unsigned char *, unsigned char *, int);
 
@@ -1619,20 +1554,13 @@ extern void xf86SlowBCopyToBus(unsigned char *, unsigned char *, int);
 #   define MMIO_IN32(base, offset) xf86ReadMmio32(base, offset)
 #  endif
 
-#  if defined (JENSEN_SUPPORT)
-#   define MMIO_OUT32(base, offset, val) \
-    (*xf86WriteMmio32)((CARD32)(val), base, offset)
-#   define MMIO_ONB32(base, offset, val) \
-    (*xf86WriteMmioNB32)((CARD32)(val), base, offset)
-#  else
-#   define MMIO_OUT32(base, offset, val) \
+#  define MMIO_OUT32(base, offset, val) \
     do { \
 	write_mem_barrier(); \
 	*(volatile CARD32 *)(void *)(((CARD8*)(base)) + (offset)) = (val); \
     } while (0)
-#   define MMIO_ONB32(base, offset, val) \
+#  define MMIO_ONB32(base, offset, val) \
 	*(volatile CARD32 *)(void *)(((CARD8*)(base)) + (offset)) = (val)
-#  endif
 
 #  define MMIO_OUT8(base, offset, val) \
     (*xf86WriteMmio8)((CARD8)(val), base, offset)

@@ -29,6 +29,9 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 */
 
+#ifndef MIPOINTRST_H
+#define MIPOINTRST_H
+
 #include "mipointer.h"
 #include "scrnintstr.h"
 
@@ -50,3 +53,4 @@ typedef struct {
     Bool		    waitForUpdate;	/* don't move cursor in SIGIO */
     Bool		    showTransparent;	/* show empty cursors */
 } miPointerScreenRec, *miPointerScreenPtr;
+#endif /* MIPOINTRST_H */

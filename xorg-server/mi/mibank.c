@@ -67,7 +67,6 @@
  *   dropped due to colour flashing concerns.
  *
  * TODO:
- * - Allow miModifyBanking() to change BankSize and nBankDepth.
  * - Re-instate shared and double banking for framebuffers whose pixmap formats
  *   don't describe how the server "sees" the screen.
  * - Remove remaining assumptions that a pixmap's devPrivate field points
@@ -175,8 +174,11 @@ typedef struct _miBankQueue
 #define xalloc_ARRAY(atype, ntype) \
     (atype *)xalloc((ntype) * sizeof(atype))
 
-static DevPrivateKey miBankScreenKey = &miBankScreenKey;
-static DevPrivateKey miBankGCKey = &miBankGCKey;
+static int miBankScreenKeyIndex;
+static DevPrivateKey miBankScreenKey = &miBankScreenKeyIndex;
+static int miBankGCKeyIndex;
+static DevPrivateKey miBankGCKey = &miBankGCKeyIndex;
+
 static unsigned long miBankGeneration = 0;
 
 #define BANK_SCRPRIVLVAL dixLookupPrivate(&pScreen->devPrivates, miBankScreenKey)
@@ -2199,71 +2201,6 @@ miInitializeBanking(
     dixSetPrivate(&pScreen->devPrivates, miBankScreenKey, pScreenPriv);
 
     return TRUE;
-}
-
-/* This is used to force GC revalidation when the banking type is changed */
-/*ARGSUSED*/
-static int
-miBankNewSerialNumber(
-    WindowPtr pWin,
-    pointer   unused
-)
-{
-    pWin->drawable.serialNumber = NEXT_SERIAL_NUMBER;
-    return WT_WALKCHILDREN;
-}
-
-/* This entry modifies the banking interface */
-_X_EXPORT Bool
-miModifyBanking(
-    ScreenPtr     pScreen,
-    miBankInfoPtr pBankInfo
-)
-{
-    unsigned int type;
-
-    if (!pScreen)
-        return FALSE;
-
-    if (miBankGeneration == serverGeneration)
-    {
-        SCREEN_INIT;
-
-        if (pScreenPriv)
-        {
-            if (!pBankInfo || !pBankInfo->BankSize ||
-                !pBankInfo->pBankA || !pBankInfo->pBankB ||
-                !pBankInfo->SetSourceBank || !pBankInfo->SetDestinationBank ||
-                !pBankInfo->SetSourceAndDestinationBanks)
-                return FALSE;
-
-            /* BankSize and nBankDepth cannot, as yet, be changed */
-            if ((pScreenPriv->BankInfo.BankSize != pBankInfo->BankSize) ||
-                (pScreenPriv->BankInfo.nBankDepth != pBankInfo->nBankDepth))
-                return FALSE;
-
-            if ((type = miBankDeriveType(pScreen, pBankInfo)) == BANK_NOBANK)
-                return FALSE;
-
-            /* Reset banking info */
-            pScreenPriv->BankInfo = *pBankInfo;
-            if (type != pScreenPriv->type)
-            {
-                /*
-                 * Banking type is changing.  Revalidate all window GC's.
-                 */
-                pScreenPriv->type = type;
-                WalkTree(pScreen, miBankNewSerialNumber, 0);
-            }
-
-            return TRUE;
-        }
-    }
-
-    if (!pBankInfo || !pBankInfo->BankSize)
-        return TRUE;                            /* No change requested */
-
-    return FALSE;
 }
 
 /*

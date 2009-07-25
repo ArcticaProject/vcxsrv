@@ -25,6 +25,7 @@ is" without express or implied warranty.
 #include "scrnintstr.h"
 #include "windowstr.h"
 #include "servermd.h"
+#include "inputstr.h"
 
 #include "mi.h"
 
@@ -42,13 +43,12 @@ is" without express or implied warranty.
 
 CARD32 lastEventTime = 0;
 
-extern xEvent *xnestEvents;
+extern EventList *xnestEvents;
 
 void
 ProcessInputEvents()
 {
   mieqProcessInputEvents();
-  miPointerUpdate();
 }
 
 int
@@ -106,19 +106,20 @@ xnestQueueKeyEvent(int type, unsigned int keycode)
 {
   int i, n;
 
+  GetEventList(&xnestEvents);
   lastEventTime = GetTimeInMillis();
   n = GetKeyboardEvents(xnestEvents, xnestKeyboardDevice, type, keycode);
   for (i = 0; i < n; i++)
-    mieqEnqueue(xnestKeyboardDevice, xnestEvents + i);
+    mieqEnqueue(xnestKeyboardDevice, (xnestEvents + i)->event);
 }
 
 void
 xnestCollectEvents(void)
 {
   XEvent X;
-  xEvent x;
   int i, n, valuators[2];
   ScreenPtr pScreen;
+  GetEventList(&xnestEvents);
 
   while (XCheckIfEvent(xnestDisplay, &X, xnestNotExposurePredicate, NULL)) {
     switch (X.type) {
@@ -138,7 +139,7 @@ xnestCollectEvents(void)
       n = GetPointerEvents(xnestEvents, xnestPointerDevice, ButtonPress,
                            X.xbutton.button, POINTER_RELATIVE, 0, 0, NULL);
       for (i = 0; i < n; i++)
-        mieqEnqueue(xnestPointerDevice, xnestEvents + i);
+        mieqEnqueue(xnestPointerDevice, (xnestEvents + i)->event);
       break;
       
     case ButtonRelease:
@@ -147,7 +148,7 @@ xnestCollectEvents(void)
       n = GetPointerEvents(xnestEvents, xnestPointerDevice, ButtonRelease,
                            X.xbutton.button, POINTER_RELATIVE, 0, 0, NULL);
       for (i = 0; i < n; i++)
-        mieqEnqueue(xnestPointerDevice, xnestEvents + i);
+        mieqEnqueue(xnestPointerDevice, (xnestEvents + i)->event);
       break;
       
     case MotionNotify:
@@ -157,7 +158,7 @@ xnestCollectEvents(void)
       n = GetPointerEvents(xnestEvents, xnestPointerDevice, MotionNotify,
                            0, POINTER_ABSOLUTE, 0, 2, valuators);
       for (i = 0; i < n; i++)
-        mieqEnqueue(xnestPointerDevice, xnestEvents + i);
+        mieqEnqueue(xnestPointerDevice, (xnestEvents + i)->event);
       break;
       
     case FocusIn:
@@ -183,14 +184,14 @@ xnestCollectEvents(void)
       if (X.xcrossing.detail != NotifyInferior) {
 	pScreen = xnestScreen(X.xcrossing.window);
 	if (pScreen) {
-	  NewCurrentScreen(pScreen, X.xcrossing.x, X.xcrossing.y);
+	  NewCurrentScreen(inputInfo.pointer, pScreen, X.xcrossing.x, X.xcrossing.y);
           valuators[0] = X.xcrossing.x;
           valuators[1] = X.xcrossing.y;
           lastEventTime = GetTimeInMillis();
           n = GetPointerEvents(xnestEvents, xnestPointerDevice, MotionNotify,
                                0, POINTER_ABSOLUTE, 0, 2, valuators);
           for (i = 0; i < n; i++)
-            mieqEnqueue(xnestPointerDevice, xnestEvents + i);
+            mieqEnqueue(xnestPointerDevice, (xnestEvents + i)->event);
 	  xnestDirectInstallColormaps(pScreen);
 	}
       }

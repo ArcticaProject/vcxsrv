@@ -70,203 +70,7 @@ compWindowFormat (WindowPtr pWin)
 
 #define F(x)	IntToxFixed(x)
 
-static void
-PictureTransformIdentity (PictTransformPtr matrix)
-{
-    int	i;
-    memset (matrix, '\0', sizeof (PictTransform));
-    for (i = 0; i < 3; i++)
-	matrix->matrix[i][i] = F(1);
-}
-
-static Bool
-PictureTransformMultiply (PictTransformPtr dst, PictTransformPtr l, PictTransformPtr r)
-{
-    PictTransform   d;
-    int		    dx, dy;
-    int		    o;
-
-    for (dy = 0; dy < 3; dy++)
-	for (dx = 0; dx < 3; dx++)
-	{
-	    xFixed_48_16    v;
-	    xFixed_32_32    partial;
-	    v = 0;
-	    for (o = 0; o < 3; o++)
-	    {
-		partial = (xFixed_32_32) l->matrix[dy][o] * (xFixed_32_32) r->matrix[o][dx];
-		v += partial >> 16;
-	    }
-	    if (v > MAX_FIXED_48_16 || v < MIN_FIXED_48_16)
-		return FALSE;
-	    d.matrix[dy][dx] = (xFixed) v;
-	}
-    *dst = d;
-    return TRUE;
-}
-
-static void
-PictureTransformInitScale (PictTransformPtr t, xFixed sx, xFixed sy)
-{
-    memset (t, '\0', sizeof (PictTransform));
-    t->matrix[0][0] = sx;
-    t->matrix[1][1] = sy;
-    t->matrix[2][2] = F (1);
-}
-
-static xFixed
-fixed_inverse (xFixed x)
-{
-    return (xFixed) ((((xFixed_48_16) F(1)) * F(1)) / x);
-}
-
-static Bool
-PictureTransformScale (PictTransformPtr forward,
-		       PictTransformPtr reverse,
-		       xFixed sx, xFixed sy)
-{
-    PictTransform   t;
-    
-    PictureTransformInitScale (&t, sx, sy);
-    if (!PictureTransformMultiply (forward, &t, forward))
-	return FALSE;
-    PictureTransformInitScale (&t, fixed_inverse (sx), fixed_inverse (sy));
-    if (!PictureTransformMultiply (reverse, reverse, &t))
-	return FALSE;
-    return TRUE;
-}
-
-static void
-PictureTransformInitRotate (PictTransformPtr t, xFixed c, xFixed s)
-{
-    memset (t, '\0', sizeof (PictTransform));
-    t->matrix[0][0] = c;
-    t->matrix[0][1] = -s;
-    t->matrix[1][0] = s;
-    t->matrix[1][1] = c;
-    t->matrix[2][2] = F (1);
-}
-
-static Bool
-PictureTransformRotate (PictTransformPtr forward,
-			PictTransformPtr reverse,
-			xFixed c, xFixed s)
-{
-    PictTransform   t;
-    PictureTransformInitRotate (&t, c, s);
-    if (!PictureTransformMultiply (forward, &t, forward))
-	return FALSE;
-    
-    PictureTransformInitRotate (&t, c, -s);
-    if (!PictureTransformMultiply (reverse, reverse, &t))
-	return FALSE;
-    return TRUE;
-}
-
-static void
-PictureTransformInitTranslate (PictTransformPtr t, xFixed tx, xFixed ty)
-{
-    memset (t, '\0', sizeof (PictTransform));
-    t->matrix[0][0] = F (1);
-    t->matrix[0][2] = tx;
-    t->matrix[1][1] = F (1);
-    t->matrix[1][2] = ty;
-    t->matrix[2][2] = F (1);
-}
-
-static Bool
-PictureTransformTranslate (PictTransformPtr forward,
-			   PictTransformPtr reverse,
-			   xFixed tx, xFixed ty)
-{
-    PictTransform   t;
-    PictureTransformInitTranslate (&t, tx, ty);
-    if (!PictureTransformMultiply (forward, &t, forward))
-	return FALSE;
-    
-    PictureTransformInitTranslate (&t, -tx, -ty);
-    if (!PictureTransformMultiply (reverse, reverse, &t))
-	return FALSE;
-    return TRUE;
-}
-
-static void
-PictureTransformBounds (BoxPtr b, PictTransformPtr matrix)
-{
-    PictVector	v[4];
-    int		i;
-    int		x1, y1, x2, y2;
-
-    v[0].vector[0] = F (b->x1);    v[0].vector[1] = F (b->y1);	v[0].vector[2] = F(1);
-    v[1].vector[0] = F (b->x2);    v[1].vector[1] = F (b->y1);	v[1].vector[2] = F(1);
-    v[2].vector[0] = F (b->x2);    v[2].vector[1] = F (b->y2);	v[2].vector[2] = F(1);
-    v[3].vector[0] = F (b->x1);    v[3].vector[1] = F (b->y2);	v[3].vector[2] = F(1);
-    for (i = 0; i < 4; i++)
-    {
-	PictureTransformPoint (matrix, &v[i]);
-	x1 = xFixedToInt (v[i].vector[0]);
-	y1 = xFixedToInt (v[i].vector[1]);
-	x2 = xFixedToInt (xFixedCeil (v[i].vector[0]));
-	y2 = xFixedToInt (xFixedCeil (v[i].vector[1]));
-	if (i == 0)
-	{
-	    b->x1 = x1; b->y1 = y1;
-	    b->x2 = x2; b->y2 = y2;
-	}
-	else
-	{
-	    if (x1 < b->x1) b->x1 = x1;
-	    if (y1 < b->y1) b->y1 = y1;
-	    if (x2 > b->x2) b->x2 = x2;
-	    if (y2 > b->y2) b->y2 = y2;
-	}
-    }
-}
-
-static Bool
-PictureTransformIsIdentity(PictTransform *t)
-{
-    return ((t->matrix[0][0] == t->matrix[1][1]) &&
-            (t->matrix[0][0] == t->matrix[2][2]) &&
-            (t->matrix[0][0] != 0) &&
-            (t->matrix[0][1] == 0) &&
-            (t->matrix[0][2] == 0) &&
-            (t->matrix[1][0] == 0) &&
-            (t->matrix[1][2] == 0) &&
-            (t->matrix[2][0] == 0) &&
-            (t->matrix[2][1] == 0));
-}
-
 #define toF(x)	((float) (x) / 65536.0f)
-
-static void
-PictureTransformErrorF (PictTransform *t)
-{
-    ErrorF ("{ { %f %f %f } { %f %f %f } { %f %f %f } }",
-	    toF(t->matrix[0][0]), toF(t->matrix[0][1]), toF(t->matrix[0][2]), 
-	    toF(t->matrix[1][0]), toF(t->matrix[1][1]), toF(t->matrix[1][2]), 
-	    toF(t->matrix[2][0]), toF(t->matrix[2][1]), toF(t->matrix[2][2]));
-}
-
-static Bool
-PictureTransformIsInverse (char *where, PictTransform *a, PictTransform *b)
-{
-    PictTransform   t;
-
-    PictureTransformMultiply (&t, a, b);
-    if (!PictureTransformIsIdentity (&t))
-    {
-	ErrorF ("%s: ", where);
-	PictureTransformErrorF (a);
-	ErrorF (" * ");
-	PictureTransformErrorF (b);
-	ErrorF (" = ");
-	PictureTransformErrorF (a);
-	ErrorF ("\n");
-	return FALSE;
-    }
-    return TRUE;
-}
 
 static void
 xf86RotateCrtcRedisplay (xf86CrtcPtr crtc, RegionPtr region)
@@ -305,19 +109,37 @@ xf86RotateCrtcRedisplay (xf86CrtcPtr crtc, RegionPtr region)
     error = SetPictureTransform (src, &crtc->crtc_to_framebuffer);
     if (error)
 	return;
+    if (crtc->transform_in_use && crtc->filter)
+	SetPicturePictFilter (src, crtc->filter,
+			      crtc->params, crtc->nparams);
 
-    while (n--)
+    if (crtc->shadowClear)
     {
-	BoxRec	dst_box;
-
-	dst_box = *b;
-	PictureTransformBounds (&dst_box, &crtc->framebuffer_to_crtc);
 	CompositePicture (PictOpSrc,
 			  src, NULL, dst,
-			  dst_box.x1, dst_box.y1, 0, 0, dst_box.x1, dst_box.y1,
-			  dst_box.x2 - dst_box.x1,
-			  dst_box.y2 - dst_box.y1);
-	b++;
+			  0, 0, 0, 0, 0, 0,
+			  crtc->mode.HDisplay, crtc->mode.VDisplay);
+	crtc->shadowClear = FALSE;
+    }
+    else
+    {
+	while (n--)
+	{
+	    BoxRec	dst_box;
+
+	    dst_box = *b;
+	    dst_box.x1 -= crtc->filter_width >> 1;
+	    dst_box.x2 += crtc->filter_width >> 1;
+	    dst_box.y1 -= crtc->filter_height >> 1;
+	    dst_box.y2 += crtc->filter_height >> 1;
+	    pixman_f_transform_bounds (&crtc->f_framebuffer_to_crtc, &dst_box);
+	    CompositePicture (PictOpSrc,
+			      src, NULL, dst,
+			      dst_box.x1, dst_box.y1, 0, 0, dst_box.x1, dst_box.y1,
+			      dst_box.x2 - dst_box.x1,
+			      dst_box.y2 - dst_box.y1);
+	    b++;
+	}
     }
     FreePicture (src, None);
     FreePicture (dst, None);
@@ -331,14 +153,26 @@ xf86CrtcDamageShadow (xf86CrtcPtr crtc)
     RegionRec   damage_region;
     ScreenPtr	pScreen = pScrn->pScreen;
 
-    damage_box.x1 = crtc->x;
-    damage_box.x2 = crtc->x + xf86ModeWidth (&crtc->mode, crtc->rotation);
-    damage_box.y1 = crtc->y;
-    damage_box.y2 = crtc->y + xf86ModeHeight (&crtc->mode, crtc->rotation);
+    damage_box.x1 = 0;
+    damage_box.x2 = crtc->mode.HDisplay;
+    damage_box.y1 = 0;
+    damage_box.y2 = crtc->mode.VDisplay;
+    if (!pixman_transform_bounds (&crtc->crtc_to_framebuffer, &damage_box))
+    {
+	damage_box.x1 = 0;
+	damage_box.y1 = 0;
+	damage_box.x2 = pScreen->width;
+	damage_box.y2 = pScreen->height;
+    }
+    if (damage_box.x1 < 0) damage_box.x1 = 0;
+    if (damage_box.y1 < 0) damage_box.y1 = 0;
+    if (damage_box.x2 > pScreen->width) damage_box.x2 = pScreen->width;
+    if (damage_box.y2 > pScreen->height) damage_box.y2 = pScreen->height;
     REGION_INIT (pScreen, &damage_region, &damage_box, 1);
-    DamageDamageRegion (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
+    DamageRegionAppend (&(*pScreen->GetScreenPixmap)(pScreen)->drawable,
 			&damage_region);
     REGION_UNINIT (pScreen, &damage_region);
+    crtc->shadowClear = TRUE;
 }
 
 static void
@@ -401,7 +235,7 @@ xf86RotateRedisplay(ScreenPtr pScreen)
 	{
 	    xf86CrtcPtr	    crtc = xf86_config->crtc[c];
 
-	    if (crtc->rotation != RR_Rotate_0 && crtc->enabled)
+	    if (crtc->transform_in_use && crtc->enabled)
 	    {
 		RegionRec   crtc_damage;
 
@@ -437,10 +271,12 @@ xf86RotateBlockHandler(int screenNum, pointer blockData,
 	/* Re-wrap if rotation is still happening */
 	xf86_config->BlockHandler = pScreen->BlockHandler;
 	pScreen->BlockHandler = xf86RotateBlockHandler;
+    } else {
+	xf86_config->BlockHandler = NULL;
     }
 }
 
-static void
+void
 xf86RotateDestroy (xf86CrtcPtr crtc)
 {
     ScrnInfoPtr		pScrn = crtc->scrn;
@@ -457,8 +293,7 @@ xf86RotateDestroy (xf86CrtcPtr crtc)
     }
 
     for (c = 0; c < xf86_config->num_crtc; c++)
-	if (xf86_config->crtc[c]->rotatedPixmap ||
-	    xf86_config->crtc[c]->rotatedData)
+	if (xf86_config->crtc[c]->transform_in_use)
 	    return;
 
     /*
@@ -479,6 +314,24 @@ xf86RotateDestroy (xf86CrtcPtr crtc)
 }
 
 _X_EXPORT void
+xf86RotateFreeShadow(ScrnInfoPtr pScrn)
+{
+    xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
+    int c;
+
+   for (c = 0; c < config->num_crtc; c++) {
+       xf86CrtcPtr crtc = config->crtc[c];
+
+       if (crtc->rotatedPixmap || crtc->rotatedData) {
+	   crtc->funcs->shadow_destroy(crtc, crtc->rotatedPixmap,
+				crtc->rotatedData);
+	   crtc->rotatedPixmap = NULL;
+	   crtc->rotatedData = NULL;
+       }
+   }
+}
+
+_X_EXPORT void
 xf86RotateCloseScreen (ScreenPtr screen)
 {
     ScrnInfoPtr		scrn = xf86Screens[screen->myNum];
@@ -489,112 +342,93 @@ xf86RotateCloseScreen (ScreenPtr screen)
 	xf86RotateDestroy (xf86_config->crtc[c]);
 }
 
+static Bool
+xf86CrtcFitsScreen (xf86CrtcPtr crtc, struct pict_f_transform *crtc_to_fb)
+{
+    ScrnInfoPtr		pScrn = crtc->scrn;
+    BoxRec		b;
+
+    /* When called before PreInit, the driver is
+     * presumably doing load detect
+     */
+    if (pScrn->virtualX == 0 || pScrn->virtualY == 0)
+	return TRUE;
+
+    b.x1 = 0;
+    b.y1 = 0;
+    b.x2 = crtc->mode.HDisplay;
+    b.y2 = crtc->mode.VDisplay;
+    if (crtc_to_fb)
+	pixman_f_transform_bounds (crtc_to_fb, &b);
+    else {
+	b.x1 += crtc->x;
+	b.y1 += crtc->y;
+	b.x2 += crtc->x;
+	b.y2 += crtc->y;
+    }
+
+    return (0 <= b.x1 && b.x2 <= pScrn->virtualX &&
+	    0 <= b.y1 && b.y2 <= pScrn->virtualY);
+}
+
 _X_EXPORT Bool
-xf86CrtcRotate (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation)
+xf86CrtcRotate (xf86CrtcPtr crtc)
 {
     ScrnInfoPtr		pScrn = crtc->scrn;
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(pScrn);
     /* if this is called during ScreenInit() we don't have pScrn->pScreen yet */
     ScreenPtr		pScreen = screenInfo.screens[pScrn->scrnIndex];
-    PictTransform	crtc_to_fb, fb_to_crtc;
-    
-    PictureTransformIdentity (&crtc_to_fb);
-    PictureTransformIdentity (&fb_to_crtc);
-    PictureTransformIsInverse ("identity", &crtc_to_fb, &fb_to_crtc);
-    if (rotation != RR_Rotate_0)
+    PictTransform	crtc_to_fb;
+    struct pict_f_transform f_crtc_to_fb, f_fb_to_crtc;
+    xFixed		*new_params = NULL;
+    int			new_nparams = 0;
+    PictFilterPtr	new_filter = NULL;
+    int			new_width = 0;
+    int			new_height = 0;
+    RRTransformPtr	transform = NULL;
+    Bool		damage = FALSE;
+
+    if (crtc->transformPresent)
+	transform = &crtc->transform;
+
+    if (!RRTransformCompute (crtc->x, crtc->y,
+			     crtc->mode.HDisplay, crtc->mode.VDisplay,
+			     crtc->rotation,
+			     transform,
+
+			     &crtc_to_fb,
+			     &f_crtc_to_fb,
+			     &f_fb_to_crtc) &&
+	xf86CrtcFitsScreen (crtc, &f_crtc_to_fb))
     {
-	xFixed	rot_cos, rot_sin, rot_dx, rot_dy;
-	xFixed	scale_x, scale_y, scale_dx, scale_dy;
-	int	mode_w = crtc->mode.HDisplay;
-	int	mode_h = crtc->mode.VDisplay;
-	
-	/* rotation */
-	switch (rotation & 0xf) {
-	default:
-	case RR_Rotate_0:
-	    rot_cos = F ( 1);	    rot_sin = F ( 0);
-	    rot_dx  = F ( 0);	    rot_dy  = F ( 0);
-	    break;
-	case RR_Rotate_90:
-	    rot_cos = F ( 0);	    rot_sin = F ( 1);
-	    rot_dx =  F ( mode_h);  rot_dy  = F (0);
-	    break;
-	case RR_Rotate_180:
-	    rot_cos = F (-1);	    rot_sin = F ( 0);
-	    rot_dx  = F (mode_w);   rot_dy  = F ( mode_h);
-	    break;
-	case RR_Rotate_270:
-	    rot_cos = F ( 0);	    rot_sin = F (-1);
-	    rot_dx  = F ( 0);	    rot_dy  = F ( mode_w);
-	    break;
-	}
-	
-	PictureTransformRotate (&crtc_to_fb, &fb_to_crtc, rot_cos, rot_sin);
-	PictureTransformIsInverse ("rotate", &crtc_to_fb, &fb_to_crtc);
-
-	PictureTransformTranslate (&crtc_to_fb, &fb_to_crtc, rot_dx, rot_dy);
-	PictureTransformIsInverse ("rotate translate", &crtc_to_fb, &fb_to_crtc);
-
-	/* reflection */
-	scale_x = F (1);
-	scale_dx = 0;
-	scale_y = F (1);
-	scale_dy = 0;
-	if (rotation & RR_Reflect_X)
-	{
-	    scale_x = F(-1);
-	    if (rotation & (RR_Rotate_0|RR_Rotate_180))
-		scale_dx = F(mode_w);
-	    else
-		scale_dx = F(mode_h);
-	}
-	if (rotation & RR_Reflect_Y)
-	{
-	    scale_y = F(-1);
-	    if (rotation & (RR_Rotate_0|RR_Rotate_180))
-		scale_dy = F(mode_h);
-	    else
-		scale_dy = F(mode_w);
-	}
-	
-	PictureTransformScale (&crtc_to_fb, &fb_to_crtc, scale_x, scale_y);
-	PictureTransformIsInverse ("scale", &crtc_to_fb, &fb_to_crtc);
-
-	PictureTransformTranslate (&crtc_to_fb, &fb_to_crtc, scale_dx, scale_dy);
-	PictureTransformIsInverse ("scale translate", &crtc_to_fb, &fb_to_crtc);
-
-    }
-    
-    /*
-     * If the untranslated transformation is the identity,
-     * disable the shadow buffer
-     */
-    if (PictureTransformIsIdentity (&crtc_to_fb))
-    {
-	crtc->transform_in_use = FALSE;
-	PictureTransformInitTranslate (&crtc->crtc_to_framebuffer, 
-				       F (-crtc->x), F (-crtc->y));
-	PictureTransformInitTranslate (&crtc->framebuffer_to_crtc,
-				       F ( crtc->x), F ( crtc->y));
+	/*
+	 * If the untranslated transformation is the identity,
+	 * disable the shadow buffer
+	 */
 	xf86RotateDestroy (crtc);
+	crtc->transform_in_use = FALSE;
+	if (new_params)
+	    xfree (new_params);
+	new_params = NULL;
+	new_nparams = 0;
+	new_filter = NULL;
+	new_width = 0;
+	new_height = 0;
     }
     else
     {
-	PictureTransformTranslate (&crtc_to_fb, &fb_to_crtc, F(crtc->x), F(crtc->y));
-	PictureTransformIsInverse ("offset", &crtc_to_fb, &fb_to_crtc);
-
-	/* 
+	/*
 	 * these are the size of the shadow pixmap, which
 	 * matches the mode, not the pre-rotated copy in the
 	 * frame buffer
 	 */
-	int	    width = mode->HDisplay;
-	int	    height = mode->VDisplay;
+	int	    width = crtc->mode.HDisplay;
+	int	    height = crtc->mode.VDisplay;
 	void	    *shadowData = crtc->rotatedData;
 	PixmapPtr   shadow = crtc->rotatedPixmap;
 	int	    old_width = shadow ? shadow->drawable.width : 0;
 	int	    old_height = shadow ? shadow->drawable.height : 0;
-	
+
 	/* Allocate memory for rotation */
 	if (old_width != width || old_height != height)
 	{
@@ -613,9 +447,9 @@ xf86CrtcRotate (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation)
 	else
 	{
 	    /* mark shadowed area as damaged so it will be repainted */
-	    xf86CrtcDamageShadow (crtc);
+	    damage = TRUE;
 	}
-	
+
 	if (!xf86_config->rotation_damage)
 	{
 	    /* Create damage structure */
@@ -626,9 +460,32 @@ xf86CrtcRotate (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation)
 		goto bail2;
 	    
 	    /* Wrap block handler */
-	    xf86_config->BlockHandler = pScreen->BlockHandler;
-	    pScreen->BlockHandler = xf86RotateBlockHandler;
+	    if (!xf86_config->BlockHandler) {
+		xf86_config->BlockHandler = pScreen->BlockHandler;
+		pScreen->BlockHandler = xf86RotateBlockHandler;
+	    }
 	}
+#ifdef RANDR_12_INTERFACE
+	if (transform)
+	{
+	    if (transform->nparams) {
+		new_params = xalloc (transform->nparams * sizeof (xFixed));
+		if (new_params) {
+		    memcpy (new_params, transform->params,
+			    transform->nparams * sizeof (xFixed));
+		    new_nparams = transform->nparams;
+		    new_filter = transform->filter;
+		}
+	    } else
+		new_filter = transform->filter;
+	    if (new_filter)
+	    {
+		new_width = new_filter->width;
+		new_height = new_filter->height;
+	    }
+	}
+#endif
+
 	if (0)
 	{
     bail2:
@@ -647,15 +504,26 @@ xf86CrtcRotate (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation)
 	    return FALSE;
 	}
 	crtc->transform_in_use = TRUE;
-	crtc->crtc_to_framebuffer = crtc_to_fb;
-	crtc->framebuffer_to_crtc = fb_to_crtc;
-	crtc->bounds.x1 = 0;
-	crtc->bounds.x2 = crtc->mode.HDisplay;
-	crtc->bounds.y1 = 0;
-	crtc->bounds.y2 = crtc->mode.VDisplay;
-	PictureTransformBounds (&crtc->bounds, &crtc_to_fb);
     }
-    
+    crtc->crtc_to_framebuffer = crtc_to_fb;
+    crtc->f_crtc_to_framebuffer = f_crtc_to_fb;
+    crtc->f_framebuffer_to_crtc = f_fb_to_crtc;
+    if (crtc->params)
+	xfree (crtc->params);
+    crtc->params = new_params;
+    crtc->nparams = new_nparams;
+    crtc->filter = new_filter;
+    crtc->filter_width = new_width;
+    crtc->filter_height = new_height;
+    crtc->bounds.x1 = 0;
+    crtc->bounds.x2 = crtc->mode.HDisplay;
+    crtc->bounds.y1 = 0;
+    crtc->bounds.y2 = crtc->mode.VDisplay;
+    pixman_f_transform_bounds (&f_crtc_to_fb, &crtc->bounds);
+
+    if (damage)
+        xf86CrtcDamageShadow (crtc);
+
     /* All done */
     return TRUE;
 }

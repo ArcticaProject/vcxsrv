@@ -31,6 +31,7 @@
 Bool xf86RandR12CreateScreenResources (ScreenPtr pScreen);
 Bool xf86RandR12Init(ScreenPtr pScreen);
 void xf86RandR12SetRotations (ScreenPtr pScreen, Rotation rotation);
+void xf86RandR12SetTransformSupport (ScreenPtr pScreen, Bool transforms);
 Bool xf86RandR12SetConfig(ScreenPtr pScreen, Rotation rotation, int rate,
 			RRScreenSizePtr pSize);
 Rotation xf86RandR12GetRotation(ScreenPtr pScreen);

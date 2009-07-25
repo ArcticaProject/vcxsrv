@@ -16,10 +16,11 @@ libos_la_SOURCES = 	\
 	io.c		\
 	mitauth.c	\
 	oscolor.c	\
-	oscolor.h	\
 	osdep.h		\
 	osinit.c	\
 	utils.c		\
+	strcasecmp.c	\
+	strcasestr.c	\
 	xdmauth.c	\
 	xstrans.c	\
 	xprintf.c	\

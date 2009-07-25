@@ -64,11 +64,11 @@ SOFTWARE.
 #include "XIstubs.h"
 #include "extnsionst.h"
 #include "exglobals.h"	/* FIXME */
+#include "exevents.h"
 #include "xace.h"
 
 #include "listdev.h"
 
-#define VPC	20	/* Max # valuators per chunk */
 
 /***********************************************************************
  *
@@ -93,7 +93,7 @@ SProcXListInputDevices(ClientPtr client)
  *
  */
 
-static void
+void
 SizeDeviceInfo(DeviceIntPtr d, int *namesize, int *size)
 {
     int chunks;
@@ -153,7 +153,7 @@ CopySwapButtonClass(ClientPtr client, ButtonClassPtr b, char **buf)
     b2->class = ButtonClass;
     b2->length = sizeof(xButtonInfo);
     b2->num_buttons = b->numButtons;
-    if (client->swapped) {
+    if (client && client->swapped) {
 	swaps(&b2->num_buttons, n);	/* macro - braces are required */
     }
     *buf += sizeof(xButtonInfo);
@@ -177,9 +177,9 @@ CopySwapDevice(ClientPtr client, DeviceIntPtr d, int num_classes,
     dev->id = d->id;
     dev->type = d->type;
     dev->num_classes = num_classes;
-    if (d == inputInfo.keyboard)
+    if (d->isMaster && IsKeyboardDevice(d))
 	dev->use = IsXKeyboard;
-    else if (d == inputInfo.pointer)
+    else if (d->isMaster && IsPointerDevice(d))
 	dev->use = IsXPointer;
     else if (d->key && d->kbdfeed)
         dev->use = IsXExtensionKeyboard;
@@ -187,6 +187,7 @@ CopySwapDevice(ClientPtr client, DeviceIntPtr d, int num_classes,
         dev->use = IsXExtensionPointer;
     else
 	dev->use = IsXExtensionDevice;
+
     if (client->swapped) {
 	swapl(&dev->type, n);	/* macro - braces are required */
     }
@@ -211,7 +212,7 @@ CopySwapKeyClass(ClientPtr client, KeyClassPtr k, char **buf)
     k2->min_keycode = k->curKeySyms.minKeyCode;
     k2->max_keycode = k->curKeySyms.maxKeyCode;
     k2->num_keys = k2->max_keycode - k2->min_keycode + 1;
-    if (client->swapped) {
+    if (client && client->swapped) {
 	swaps(&k2->num_keys, n);
     }
     *buf += sizeof(xKeyInfo);
@@ -223,7 +224,7 @@ CopySwapKeyClass(ClientPtr client, KeyClassPtr k, char **buf)
  *
  * Devices may have up to 255 valuators.  The length of a ValuatorClass is
  * defined to be sizeof(ValuatorClassInfo) + num_axes * sizeof (xAxisInfo).
- * The maximum length is therefore (8 + 255 * 12) = 3068.  However, the 
+ * The maximum length is therefore (8 + 255 * 12) = 3068.  However, the
  * length field is one byte.  If a device has more than 20 valuators, we
  * must therefore return multiple valuator classes to the client.
  *
@@ -249,7 +250,7 @@ CopySwapValuatorClass(ClientPtr client, ValuatorClassPtr v, char **buf)
 	v2->num_axes = t_axes;
 	v2->mode = v->mode & DeviceMode;
 	v2->motion_buffer_size = v->numMotionEvents;
-	if (client->swapped) {
+	if (client && client->swapped) {
 	    swapl(&v2->motion_buffer_size, n);
 	}
 	*buf += sizeof(xValuatorInfo);
@@ -259,7 +260,7 @@ CopySwapValuatorClass(ClientPtr client, ValuatorClassPtr v, char **buf)
 	    a2->min_value = a->min_value;
 	    a2->max_value = a->max_value;
 	    a2->resolution = a->resolution;
-	    if (client->swapped) {
+	    if (client && client->swapped) {
 		swapl(&a2->min_value, n);
 		swapl(&a2->max_value, n);
 		swapl(&a2->resolution, n);
@@ -284,17 +285,24 @@ ListDeviceInfo(ClientPtr client, DeviceIntPtr d, xDeviceInfoPtr dev,
 {
     CopyDeviceName(namebuf, d->name);
     CopySwapDevice(client, d, 0, devbuf);
-    if (d->key != NULL) {
-	CopySwapKeyClass(client, d->key, classbuf);
-	dev->num_classes++;
+    CopySwapClasses(client, d, &dev->num_classes, classbuf);
+}
+
+void
+CopySwapClasses(ClientPtr client, DeviceIntPtr dev, CARD8 *num_classes,
+                char** classbuf)
+{
+    if (dev->key != NULL) {
+	CopySwapKeyClass(client, dev->key, classbuf);
+	(*num_classes)++;
     }
-    if (d->button != NULL) {
-	CopySwapButtonClass(client, d->button, classbuf);
-	dev->num_classes++;
+    if (dev->button != NULL) {
+	CopySwapButtonClass(client, dev->button, classbuf);
+	(*num_classes)++;
     }
-    if (d->valuator != NULL) {
-	dev->num_classes +=
-	    CopySwapValuatorClass(client, d->valuator, classbuf);
+    if (dev->valuator != NULL) {
+	(*num_classes) +=
+	    CopySwapValuatorClass(client, dev->valuator, classbuf);
     }
 }
 
@@ -302,12 +310,17 @@ ListDeviceInfo(ClientPtr client, DeviceIntPtr d, xDeviceInfoPtr dev,
  *
  * This procedure lists the input devices available to the server.
  *
+ * If this request is called by a client that has not issued a
+ * GetExtensionVersion request with major/minor version set, we don't send the
+ * complete device list. Instead, we only send the VCP, the VCK and floating
+ * SDs. This resembles the setup found on XI 1.x machines.
  */
 
 int
 ProcXListInputDevices(ClientPtr client)
 {
     xListInputDevicesReply rep;
+    XIClientPtr pXIClient;
     int numdevs = 0;
     int namesize = 1;	/* need 1 extra byte for strcpy */
     int rc, size = 0;
@@ -326,20 +339,23 @@ ProcXListInputDevices(ClientPtr client)
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
 
+    pXIClient = dixLookupPrivate(&client->devPrivates, XIClientPrivateKey);
+
     AddOtherInputDevices();
 
     for (d = inputInfo.devices; d; d = d->next) {
-	rc = XaceHook(XACE_DEVICE_ACCESS, client, d, DixGetAttrAccess);
-	if (rc != Success)
-	    return rc;
-	SizeDeviceInfo(d, &namesize, &size);
+        rc = XaceHook(XACE_DEVICE_ACCESS, client, d, DixGetAttrAccess);
+        if (rc != Success)
+            return rc;
+        SizeDeviceInfo(d, &namesize, &size);
         numdevs++;
     }
+
     for (d = inputInfo.off_devices; d; d = d->next) {
-	rc = XaceHook(XACE_DEVICE_ACCESS, client, d, DixGetAttrAccess);
-	if (rc != Success)
-	    return rc;
-	SizeDeviceInfo(d, &namesize, &size);
+        rc = XaceHook(XACE_DEVICE_ACCESS, client, d, DixGetAttrAccess);
+        if (rc != Success)
+            return rc;
+        SizeDeviceInfo(d, &namesize, &size);
         numdevs++;
     }
 
@@ -350,11 +366,15 @@ ProcXListInputDevices(ClientPtr client)
     savbuf = devbuf;
 
     dev = (xDeviceInfoPtr) devbuf;
-    for (d = inputInfo.devices; d; d = d->next, dev++)
-	ListDeviceInfo(client, d, dev, &devbuf, &classbuf, &namebuf);
-    for (d = inputInfo.off_devices; d; d = d->next, dev++)
-	ListDeviceInfo(client, d, dev, &devbuf, &classbuf, &namebuf);
+    for (d = inputInfo.devices; d; d = d->next)
+    {
+        ListDeviceInfo(client, d, dev++, &devbuf, &classbuf, &namebuf);
+    }
 
+    for (d = inputInfo.off_devices; d; d = d->next)
+    {
+        ListDeviceInfo(client, d, dev++, &devbuf, &classbuf, &namebuf);
+    }
     rep.ndevices = numdevs;
     rep.length = (total_length + 3) >> 2;
     WriteReplyToClient(client, sizeof(xListInputDevicesReply), &rep);

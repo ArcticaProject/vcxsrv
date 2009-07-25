@@ -231,9 +231,7 @@ typedef struct _DMXScreenInfo {
     InstallColormapProcPtr         InstallColormap;
     StoreColorsProcPtr             StoreColors;
 
-#ifdef SHAPE
     SetShapeProcPtr                SetShape;
-#endif
 
 #ifdef RENDER
     CreatePictureProcPtr           CreatePicture;
@@ -343,16 +341,14 @@ do {									\
 #define _MAXSCREENSALLOCF(o,size,fatal)                                 \
     do {                                                                \
         if (!o) {                                                       \
-            o = xalloc((size) * sizeof(*(o)));                          \
-            if (o) memset(o, 0, (size) * sizeof(*(o)));                 \
+            o = xcalloc((size), sizeof(*(o)));                          \
             if (!o && fatal) FatalError(MAXSCREEN_FAILED_TXT #o);       \
         }                                                               \
     } while (0)
 #define _MAXSCREENSALLOCR(o,size,retval)                                \
     do {                                                                \
         if (!o) {                                                       \
-            o = xalloc((size) * sizeof(*(o)));                          \
-            if (o) memset(o, 0, (size) * sizeof(*(o)));                 \
+            o = xcalloc((size), sizeof(*(o)));                          \
             if (!o) return retval;                                      \
         }                                                               \
     } while (0)

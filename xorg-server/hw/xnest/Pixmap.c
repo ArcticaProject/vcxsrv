@@ -33,7 +33,8 @@ is" without express or implied warranty.
 #include "Screen.h"
 #include "XNPixmap.h"
 
-DevPrivateKey xnestPixmapPrivateKey = &xnestPixmapPrivateKey;
+static int xnestPixmapPrivateKeyIndex;
+DevPrivateKey xnestPixmapPrivateKey = &xnestPixmapPrivateKeyIndex;
 
 PixmapPtr
 xnestCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
@@ -89,7 +90,7 @@ xnestPixmapToRegion(PixmapPtr pPixmap)
   register RegionPtr pReg, pTmpReg;
   register int x, y;
   unsigned long previousPixel, currentPixel;
-  BoxRec Box;
+  BoxRec Box = { 0, 0, 0, 0 };
   Bool overlap;
   
   ximage = XGetImage(xnestDisplay, xnestPixmap(pPixmap), 0, 0,

@@ -112,11 +112,6 @@
 #include <string.h>
 #include <math.h>
 
-
-#if defined(__Lynx__)
-#define rint(x) floor(x)
-#endif
-
 #define MARGIN_PERCENT    1.8   /* % of active vertical image                */
 #define CELL_GRAN         8.0   /* assumed character cell granularity        */
 #define MIN_PORCH         1     /* minimum front porch                       */

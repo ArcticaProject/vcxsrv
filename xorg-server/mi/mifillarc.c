@@ -53,9 +53,7 @@ Author:  Bob Scheifler, MIT X Consortium
 #define Dcos(d)	cos((double)d*(M_PI/11520.0))
 
 _X_EXPORT void
-miFillArcSetup(arc, info)
-    xArc *arc;
-    miFillArcRec *info;
+miFillArcSetup(xArc *arc, miFillArcRec *info)
 {
     info->y = arc->height >> 1;
     info->dy = arc->height & 1;
@@ -307,10 +305,7 @@ miGetPieEdge(
 }
 
 _X_EXPORT void
-miFillArcSliceSetup(arc, slice, pGC)
-    xArc *arc;
-    miArcSliceRec *slice;
-    GCPtr pGC;
+miFillArcSliceSetup(xArc *arc, miArcSliceRec *slice, GCPtr pGC)
 {
     int angle1, angle2;
 
@@ -776,11 +771,7 @@ miFillArcSliceD(
  * fill each arc as it comes.
  */
 _X_EXPORT void
-miPolyFillArc(pDraw, pGC, narcs, parcs)
-    DrawablePtr	pDraw;
-    GCPtr	pGC;
-    int		narcs;
-    xArc	*parcs;
+miPolyFillArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 {
     int i;
     xArc *arc;
@@ -788,7 +779,7 @@ miPolyFillArc(pDraw, pGC, narcs, parcs)
     for(i = narcs, arc = parcs; --i >= 0; arc++)
     {
 	if (miFillArcEmpty(arc))
-	    continue;;
+	    continue;
 	if ((arc->angle2 >= FULLCIRCLE) || (arc->angle2 <= -FULLCIRCLE))
 	{
 	    if (miCanFillArc(arc))

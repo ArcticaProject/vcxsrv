@@ -63,7 +63,7 @@
 #include <string.h>
 #if defined(linux) && \
     (defined(__alpha__) || defined(__powerpc__) || defined(__ia64__) \
-    || defined(__amd64__) || defined(__x86_64__))
+    || defined(__amd64__))
 #include <malloc.h>
 #endif
 #include <stdarg.h>
@@ -75,11 +75,6 @@
 #include "xf86Priv.h"
 #include "compiler.h"
 #include "sym.h"
-
-#if defined(Lynx) && defined(sun)
-/* Cross build machine doesn;t have strerror() */
-#define strerror(err) "strerror unsupported"
-#endif
 
 /*
  * handles are used to identify files that are loaded. Even archives
@@ -113,8 +108,7 @@ LoaderInit(void)
 
     xf86MsgVerb(X_INFO, 2, "Loader magic: %p\n", (void *)
 		((long)dixLookupTab ^ (long)extLookupTab
-	        ^ (long)fontLookupTab ^ (long)miLookupTab
-		^ (long)xfree86LookupTab));
+	        ^ (long)miLookupTab ^ (long)xfree86LookupTab));
     xf86MsgVerb(X_INFO, 2, "Module ABI versions:\n");
     xf86ErrorFVerb(2, "\t%s: %d.%d\n", ABI_CLASS_ANSIC,
 		   GET_ABI_MAJOR(LoaderVersionInfo.ansicVersion),
@@ -128,9 +122,6 @@ LoaderInit(void)
     xf86ErrorFVerb(2, "\t%s : %d.%d\n", ABI_CLASS_EXTENSION,
 		   GET_ABI_MAJOR(LoaderVersionInfo.extensionVersion),
 		   GET_ABI_MINOR(LoaderVersionInfo.extensionVersion));
-    xf86ErrorFVerb(2, "\t%s : %d.%d\n", ABI_CLASS_FONT,
-		   GET_ABI_MAJOR(LoaderVersionInfo.fontVersion),
-		   GET_ABI_MINOR(LoaderVersionInfo.fontVersion));
 
     LoaderGetOS(&osname, NULL, NULL, NULL);
     if (osname)
@@ -258,7 +249,7 @@ LoaderOpen(const char *module, const char *cname, int handle,
      * Find a free handle.
      */
     new_handle = 1;
-    while (freeHandles[new_handle] && new_handle < MAX_HANDLE)
+    while (new_handle < MAX_HANDLE && freeHandles[new_handle])
 	new_handle++;
 
     if (new_handle == MAX_HANDLE) {
@@ -361,6 +352,12 @@ void
 LoaderSetOptions(unsigned long opts)
 {
     LoaderOptions |= opts;
+}
+
+_X_EXPORT Bool
+LoaderShouldIgnoreABI(void)
+{
+    return (LoaderOptions & LDR_OPT_ABI_MISMATCH_NONFATAL) != 0;
 }
 
 _X_EXPORT int

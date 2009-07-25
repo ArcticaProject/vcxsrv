@@ -32,7 +32,7 @@
 
 #if __OBJC__
 
-#import <Cocoa/Cocoa.h>
+#include "sanitizedCocoa.h"
 #include "xpr/x-list.h"
 
 @interface X11Controller : NSObject
@@ -41,12 +41,22 @@
 
     IBOutlet NSButton *fake_buttons;
     IBOutlet NSButton *enable_fullscreen;
+    IBOutlet NSButton *enable_fullscreen_menu;
     IBOutlet NSButton *use_sysbeep;
     IBOutlet NSButton *enable_keyequivs;
     IBOutlet NSButton *sync_keymap;
     IBOutlet NSButton *click_through;
+    IBOutlet NSButton *focus_follows_mouse;
+    IBOutlet NSButton *focus_on_new_window;
     IBOutlet NSButton *enable_auth;
     IBOutlet NSButton *enable_tcp;
+    IBOutlet NSButton *sync_pasteboard;
+    IBOutlet NSButton *sync_pasteboard_to_clipboard;
+    IBOutlet NSButton *sync_pasteboard_to_primary;
+    IBOutlet NSButton *sync_clipboard_to_pasteboard;
+    IBOutlet NSButton *sync_primary_immediately;
+    IBOutlet NSTextField *sync_text1;
+    IBOutlet NSTextField *sync_text2;
     IBOutlet NSPopUpButton *depth;
 
     IBOutlet NSMenuItem *x11_about_item;
@@ -54,6 +64,7 @@
     IBOutlet NSMenuItem *dock_window_separator;
     IBOutlet NSMenuItem *apps_separator;
     IBOutlet NSMenuItem *toggle_fullscreen_item;
+    IBOutlet NSMenuItem *copy_menu_item;
     IBOutlet NSMenu *dock_apps_menu;
     IBOutlet NSTableView *apps_table;
 
@@ -65,18 +76,17 @@
     int checked_window_item;
     x_list *pending_apps;
 
-    BOOL finished_launching;
-    BOOL can_quit;
+    OSX_BOOL finished_launching;
+    OSX_BOOL can_quit;
 }
 
 - (void) set_window_menu:(NSArray *)list;
 - (void) set_window_menu_check:(NSNumber *)n;
 - (void) set_apps_menu:(NSArray *)list;
-- (void) set_can_quit:(BOOL)state;
+- (void) set_can_quit:(OSX_BOOL)state;
 - (void) server_ready;
 
 - (IBAction) apps_table_show:(id)sender;
-- (IBAction) apps_table_cancel:(id)sender;
 - (IBAction) apps_table_done:(id)sender;
 - (IBAction) apps_table_new:(id)sender;
 - (IBAction) apps_table_duplicate:(id)sender;
@@ -98,6 +108,6 @@
 
 #endif /* __OBJC__ */
 
-void X11ControllerMain(int argc, const char **argv, void (*server_thread) (void *), void *server_arg);
+void X11ControllerMain(int argc, char **argv, char **envp);
 
 #endif /* X11CONTROLLER_H */

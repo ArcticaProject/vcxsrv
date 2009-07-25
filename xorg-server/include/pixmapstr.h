@@ -74,8 +74,8 @@ typedef struct _Pixmap {
     DrawableRec		drawable;
     PrivateRec		*devPrivates;
     int			refcnt;
-    int			devKind;
-    DevUnion		devPrivate;
+    int			devKind; /* This is the pitch of the pixmap, typically width*bpp/8. */
+    DevUnion		devPrivate; /* When !NULL, devPrivate.ptr points to the raw pixel data. */
     short		screen_x;
     short		screen_y;
     unsigned		usage_hint; /* see CREATE_PIXMAP_USAGE_* */

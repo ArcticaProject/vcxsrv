@@ -34,6 +34,7 @@
 #include "xf86DDC.h"
 #include "mipointer.h"
 #include <randrstr.h>
+#include "inputstr.h"
 
 typedef struct _xf86RandRInfo {
     CreateScreenResourcesProcPtr    CreateScreenResources;
@@ -45,7 +46,8 @@ typedef struct _xf86RandRInfo {
     Rotation			    rotation;
 } XF86RandRInfoRec, *XF86RandRInfoPtr;
 
-static DevPrivateKey xf86RandRKey = NULL;
+static int xf86RandRKeyIndex;
+static DevPrivateKey xf86RandRKey;
 
 #define XF86RANDRINFO(p) ((XF86RandRInfoPtr)dixLookupPrivate(&(p)->devPrivates, xf86RandRKey))
 
@@ -72,7 +74,7 @@ xf86RandRGetInfo (ScreenPtr pScreen, Rotation *rotations)
 
     *rotations = RR_Rotate_0;
 
-    for (mode = scrp->modes; ; mode = mode->next)
+    for (mode = scrp->modes; mode != NULL ; mode = mode->next)
     {
 	int refresh = xf86RandRModeRefresh (mode);
 
@@ -244,7 +246,7 @@ xf86RandRSetConfig (ScreenPtr		pScreen,
     Bool		    useVirtual = FALSE;
     Rotation		    oldRotation = randrp->rotation;
 
-    miPointerPosition (&px, &py);
+    miPointerGetPosition(inputInfo.pointer, &px, &py);
     for (mode = scrp->modes; ; mode = mode->next)
     {
 	if (mode->HDisplay == pSize->width &&
@@ -311,7 +313,7 @@ xf86RandRSetConfig (ScreenPtr		pScreen,
 
         xf86SetViewport(pScreen, px, py);
 
-        (*pScreen->SetCursorPosition) (pScreen, px, py, FALSE);
+        (*pScreen->SetCursorPosition) (inputInfo.pointer, pScreen, px, py, FALSE);
     }
 
     return TRUE;
@@ -422,7 +424,7 @@ xf86RandRInit (ScreenPtr    pScreen)
 	return TRUE;
 #endif
 
-    xf86RandRKey = &xf86RandRKey;
+    xf86RandRKey = &xf86RandRKeyIndex;
 
     randrp = xalloc (sizeof (XF86RandRInfoRec));
     if (!randrp)

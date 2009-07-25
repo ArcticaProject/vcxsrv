@@ -24,12 +24,8 @@
 #include <X11/Xos.h>
 
 #if !defined(WIN32)
-#ifndef Lynx
 #include <sys/param.h>
 #include <sys/socket.h>
-#else
-#include <socket.h>
-#endif
 #include <netinet/in.h>
 #include <netdb.h>
 #endif
@@ -44,11 +40,7 @@
 #include "input.h"
 #include "dixstruct.h"
 #include "opaque.h"
-
-#if defined(DGUX)
-#include <net/net_ioctl.h>
-#include <sys/ioctl.h>
-#endif
+#include "site.h"
 
 #ifdef STREAMSCONN
 #include <tiuser.h>
@@ -68,7 +60,7 @@
 #define X_INCLUDE_NETDB_H
 #include <X11/Xos_r.h>
 
-extern char *defaultDisplayClass;
+static char *defaultDisplayClass = COMPILEDDISPLAYCLASS;
 
 static int		    xdmcpSocket, sessionSocket;
 static xdmcp_states	    state;

@@ -70,6 +70,5 @@ void PciBusStateEnter(void);
 void PciStateLeave(void);
 void PciBusStateLeave(void);
 void pciConvertRange2Host(int entityIndex, resRange *pRange);
-void isaConvertRange2Host(resRange *pRange);
 
 #endif /* _XF86_PCI_BUS_H */

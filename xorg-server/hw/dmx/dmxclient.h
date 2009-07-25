@@ -84,9 +84,7 @@ typedef XID           KeySym64;
 #include <X11/cursorfont.h>
 #include <X11/Xmu/SysUtil.h>    /* For XmuSnprintf */
 
-#ifdef SHAPE
 #include <X11/extensions/shape.h>
-#endif
 
 #ifdef RENDER
 #include <X11/extensions/Xrender.h>
@@ -98,9 +96,7 @@ typedef XID           KeySym64;
 #include <X11/extensions/XKBstr.h>
 #endif
 
-#ifdef XINPUT
 #include <X11/extensions/XI.h>
-#endif
 
 /* Always include these, since we query them even if we don't export XINPUT. */
 #include <X11/extensions/XInput.h> /* For XDevice */

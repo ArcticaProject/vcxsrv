@@ -260,8 +260,7 @@ void ps2LinuxVTPostSwitch(pointer p)
 /** Create a private structure for use within this file. */
 pointer ps2LinuxCreatePrivate(DeviceIntPtr pMouse)
 {
-    myPrivate *priv = xalloc(sizeof(*priv));
-    memset(priv, 0, sizeof(*priv));
+    myPrivate *priv = calloc(1, sizeof(*priv));
     priv->fd     = -1;
     priv->pMouse = pMouse;
     return priv;
@@ -270,7 +269,7 @@ pointer ps2LinuxCreatePrivate(DeviceIntPtr pMouse)
 /** Destroy a private structure. */
 void ps2LinuxDestroyPrivate(pointer priv)
 {
-    if (priv) xfree(priv);
+    if (priv) free(priv);
 }
 
 /** Fill the \a info structure with information needed to initialize \a

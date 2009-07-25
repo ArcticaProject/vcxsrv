@@ -43,11 +43,15 @@
 #define CW_ASSERT(x) do {} while (0)
 #endif
 
-DevPrivateKey cwGCKey = &cwGCKey;
-DevPrivateKey cwScreenKey = &cwScreenKey;
-DevPrivateKey cwWindowKey = &cwWindowKey;
+static int cwGCKeyIndex;
+DevPrivateKey cwGCKey = &cwGCKeyIndex;
+static int cwScreenKeyIndex;
+DevPrivateKey cwScreenKey = &cwScreenKeyIndex;
+static int cwWindowKeyIndex;
+DevPrivateKey cwWindowKey = &cwWindowKeyIndex;
 #ifdef RENDER
-DevPrivateKey cwPictureKey = &cwPictureKey;
+static int cwPictureKeyIndex;
+DevPrivateKey cwPictureKey = &cwPictureKeyIndex;
 #endif
 extern GCOps cwGCOps;
 

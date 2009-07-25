@@ -122,7 +122,7 @@ ProcXGrabDeviceKey(ClientPtr client)
 	if (mdev->key == NULL)
 	    return BadMatch;
     } else {
-	mdev = inputInfo.keyboard;
+	mdev = PickKeyboard(client);
 	ret = XaceHook(XACE_DEVICE_ACCESS, client, mdev, DixReadAccess);
 	if (ret != Success)
 	    return ret;

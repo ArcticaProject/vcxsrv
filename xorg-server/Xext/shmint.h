@@ -34,9 +34,6 @@ void
 ShmRegisterFuncs(ScreenPtr pScreen, ShmFuncsPtr funcs);
 
 void
-ShmSetPixmapFormat(ScreenPtr pScreen, int format);
-
-void
 ShmRegisterFbFuncs(ScreenPtr pScreen);
 
 #endif /* _SHMINT_H_ */

@@ -41,10 +41,6 @@ from The Open Group.
 #include "opaque.h"
 #include "modinit.h"
 
-static void BigReqResetProc(
-    ExtensionEntry * /* extEntry */
-);
-
 static DISPATCH_PROC(ProcBigReqDispatch);
 
 void
@@ -52,23 +48,16 @@ BigReqExtensionInit(INITARGS)
 {
     AddExtension(XBigReqExtensionName, 0, 0,
 		 ProcBigReqDispatch, ProcBigReqDispatch,
-		 BigReqResetProc, StandardMinorOpcode);
-}
-
-/*ARGSUSED*/
-static void
-BigReqResetProc (extEntry)
-    ExtensionEntry	*extEntry;
-{
+		 NULL, StandardMinorOpcode);
 }
 
 static int
 ProcBigReqDispatch (client)
-    register ClientPtr	client;
+     ClientPtr	client;
 {
     REQUEST(xBigReqEnableReq);
     xBigReqEnableReply rep;
-    register int n;
+     int n;
 
     if (client->swapped) {
 	swaps(&stuff->length, n);

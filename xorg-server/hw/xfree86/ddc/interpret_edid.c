@@ -163,6 +163,20 @@ xf86InterpretEDID(int scrnIndex, Uchar *block)
     return NULL;
 }
 
+xf86MonPtr
+xf86InterpretEEDID(int scrnIndex, Uchar *block)
+{
+    xf86MonPtr m;
+
+    m = xf86InterpretEDID(scrnIndex, block);
+    if (!m)
+	return NULL;
+
+    /* extension parse */
+
+    return m;
+}
+
 static void
 get_vendor_section(Uchar *c, struct vendor *r)
 {
@@ -270,6 +284,8 @@ get_std_timing_section(Uchar *c, struct std_timings *r,
     }
 }
 
+static const unsigned char empty_block[18];
+
 static void
 get_dt_md_section(Uchar *c, struct edid_version *ver, 
 		  struct detailed_monitor_section *det_mon)
@@ -313,6 +329,7 @@ get_dt_md_section(Uchar *c, struct edid_version *ver,
 	break;
       case ADD_EST_TIMINGS:
 	det_mon[i].type = DS_EST_III;
+	memcpy(det_mon[i].section.est_iii, c + 6, 6);
 	break;
       case ADD_DUMMY:
 	det_mon[i].type = DS_DUMMY;
@@ -321,10 +338,10 @@ get_dt_md_section(Uchar *c, struct edid_version *ver,
         det_mon[i].type = DS_UNKOWN;
         break;
       }
-      if (c[3] <= 0x0F) {
+      if (c[3] <= 0x0F && memcmp(c, empty_block, sizeof(empty_block))) {
 	det_mon[i].type = DS_VENDOR + c[3];
       }
-    } else { 
+    } else {
       det_mon[i].type = DT;
       get_detailed_timing_section(c,&det_mon[i].section.d_timings);
     }
@@ -394,14 +411,14 @@ get_monitor_ranges(Uchar *c, struct monitor_ranges *r)
 static void
 get_whitepoint_section(Uchar *c, struct whitePoints *wp)
 {
-    wp[1].white_x = WHITEX1;
-    wp[1].white_y = WHITEY1;
-    wp[2].white_x = WHITEX2;
-    wp[2].white_y = WHITEY2;
-    wp[1].index  = WHITE_INDEX1;
-    wp[2].index  = WHITE_INDEX2;
-    wp[1].white_gamma  = WHITE_GAMMA1;
-    wp[2].white_gamma  = WHITE_GAMMA2;
+    wp[0].white_x = WHITEX1;
+    wp[0].white_y = WHITEY1;
+    wp[1].white_x = WHITEX2;
+    wp[1].white_y = WHITEY2;
+    wp[0].index  = WHITE_INDEX1;
+    wp[1].index  = WHITE_INDEX2;
+    wp[0].white_gamma  = WHITE_GAMMA1;
+    wp[1].white_gamma  = WHITE_GAMMA2;
 }
 
 static void
@@ -444,4 +461,57 @@ validate_version(int scrnIndex, struct edid_version *r)
 		   r->revision, MAX_EDID_MINOR);
 
     return TRUE;
+}
+
+/*
+ * Returns true if HDMI, false if definitely not or unknown.
+ */
+_X_EXPORT Bool
+xf86MonitorIsHDMI(xf86MonPtr mon)
+{
+    int i = 0, version, offset;
+    char *edid = NULL;
+
+    if (!mon)
+       return FALSE;
+
+    if (!(mon->flags & EDID_COMPLETE_RAWDATA))
+       return FALSE;
+
+    if (!mon->no_sections)
+       return FALSE;
+
+    edid = (char *)mon->rawData;
+    if (!edid)
+       return FALSE;
+
+    /* find the CEA extension block */
+    for (i = 1; i <= mon->no_sections; i++)
+       if (edid[i * 128] == 0x02)
+           break;
+    if (i == mon->no_sections + 1)
+       return FALSE;
+    edid += (i * 128);
+
+    version = edid[1];
+    offset = edid[2];
+    if (version < 3 || offset < 4)
+       return FALSE;
+
+    /* walk the cea data blocks */
+    for (i = 4; i < offset; i += (edid[i] & 0x1f) + 1) {
+       char *x = edid + i;
+
+       /* find a vendor specific block */
+       if ((x[0] & 0xe0) >> 5 == 0x03) {
+           int oui = (x[3] << 16) + (x[2] << 8) + x[1];
+
+           /* find the HDMI vendor OUI */
+           if (oui == 0x000c03)
+               return TRUE;
+       }
+    }
+
+    /* guess it's not HDMI after all */
+    return FALSE;
 }

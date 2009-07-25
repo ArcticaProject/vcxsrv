@@ -1259,8 +1259,8 @@ ephyrQueryImageAttributes (KdScreenInfo *a_info,
 
     EPHYR_RETURN_VAL_IF_FAIL (a_w && a_h, FALSE) ;
 
-    EPHYR_LOG ("enter: dim (%dx%d), pitches: %#x, offsets: %#x\n",
-               *a_w, *a_h, (unsigned int)a_pitches, (unsigned int)a_offsets) ;
+    EPHYR_LOG ("enter: dim (%dx%d), pitches: %p, offsets: %p\n",
+               *a_w, *a_h, a_pitches, a_offsets) ;
 
    if (!ephyrHostXVQueryImageAttributes (s_base_port_id,
                                          a_id,

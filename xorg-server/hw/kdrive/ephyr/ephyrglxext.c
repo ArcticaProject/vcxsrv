@@ -42,8 +42,6 @@
 #include "hostx.h"
 
 
-#ifdef XEPHYR_DRI
-
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -727,6 +725,3 @@ ephyrGLXIsDirectSwap (__GLXclientState *a_cl, GLbyte *a_pc)
 {
     return ephyrGLXIsDirectReal (a_cl, a_pc, TRUE) ;
 }
-
-#endif /*XEPHYR_DRI*/
-

@@ -95,7 +95,7 @@ ProcXGetDeviceMotionEvents(ClientPtr client)
     INT32 *coords = NULL, *bufptr;
     xGetDeviceMotionEventsReply rep;
     unsigned long i;
-    int rc, num_events, axes, size = 0, tsize;
+    int rc, num_events, axes, size = 0;
     unsigned long nEvents;
     DeviceIntPtr dev;
     TimeStamp start, stop;
@@ -119,7 +119,7 @@ ProcXGetDeviceMotionEvents(ClientPtr client)
     rep.sequenceNumber = client->sequence;
     rep.nEvents = 0;
     rep.axes = axes;
-    rep.mode = v->mode & DeviceMode;
+    rep.mode = Absolute; /* XXX we don't do relative at the moment */
     rep.length = 0;
     start = ClientTimeToServerTime(stuff->start);
     stop = ClientTimeToServerTime(stuff->stop);
@@ -132,14 +132,10 @@ ProcXGetDeviceMotionEvents(ClientPtr client)
 	stop = currentTime;
     num_events = v->numMotionEvents;
     if (num_events) {
-	size = sizeof(Time) + (axes * sizeof(INT32));
-	tsize = num_events * size;
-	coords = (INT32 *) xalloc(tsize);
-	if (!coords)
-	    return BadAlloc;
-	rep.nEvents = (v->GetMotionProc) (dev, (xTimecoord *) coords,	/* XXX */
-					  start.milliseconds, stop.milliseconds,
-					  (ScreenPtr) NULL);
+        size = sizeof(Time) + (axes * sizeof(INT32));
+	rep.nEvents = GetMotionHistory(dev, (xTimecoord **) &coords,/* XXX */
+					start.milliseconds, stop.milliseconds,
+					(ScreenPtr) NULL, FALSE);
     }
     if (rep.nEvents > 0) {
 	length = (rep.nEvents * size + 3) >> 2;

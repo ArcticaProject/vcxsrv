@@ -176,7 +176,7 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
      * have executable code there.  Note that xf86ReadBIOS() can only read in
      * 64kB at a time.
      */
-    (void)memset((char *)base + V_BIOS, 0, SYS_BIOS - V_BIOS);
+    memset((char *)base + V_BIOS, 0, SYS_BIOS - V_BIOS);
 #if 0
     for (cs = V_BIOS;  cs < SYS_BIOS;  cs += V_BIOS_SIZE)
 	if (xf86ReadBIOS(cs, 0, (unsigned char *)base + cs, V_BIOS_SIZE) <
@@ -220,19 +220,6 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
 	    INTPriv(pInt)->highMemory = GET_HIGH_BASE(rom_device->rom_size);
 	    break;
 	}
-	case BUS_ISA:
-	    vbiosMem = (unsigned char *)sysMem + bios_location;
-#if 0
-	    (void)memset(vbiosMem, 0, V_BIOS_SIZE);
-	    if (xf86ReadBIOS(bios_location, 0, vbiosMem, V_BIOS_SIZE)
-		< V_BIOS_SIZE)
-		xf86DrvMsg(screen, X_WARNING,
-		    "Unable to retrieve all of segment 0x%x.\n",bios_location);
-#endif
-	    if (!int10_check_bios(screen, bios_location >> 4, vbiosMem)) {
-	        xf86DrvMsg(screen,X_ERROR,"Cannot read V_BIOS (4)\n");
-		goto error1;
-	    }
 	default:
 	    goto error1;
 	}
@@ -255,7 +242,7 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
      * 128KiB.
      */
     vbiosMem = (char *)base + V_BIOS;
-    (void)memset(vbiosMem, 0, 2 * V_BIOS_SIZE);
+    memset(vbiosMem, 0, 2 * V_BIOS_SIZE);
     if (read_legacy_video_BIOS(pInt->dev, vbiosMem) < V_BIOS_SIZE) {
 	xf86DrvMsg(screen, X_WARNING,
 		   "Unable to retrieve all of segment 0x0C0000.\n");

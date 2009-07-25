@@ -42,7 +42,7 @@
 
 #include "x86emu/types.h"
 
-#if !defined(__GNUC__) || !(defined (__i386__) || defined(__i386) || defined(__AMD64__) || defined(__x86_64__) || defined(__amd64__) || defined(__x86_64__))
+#if !defined(__GNUC__) || !(defined (__i386__) || defined(__i386) || defined(__AMD64__) || defined(__amd64__))
 #error This file is intended to be used by gcc on i386 or x86-64 system
 #endif
 

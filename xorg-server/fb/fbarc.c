@@ -77,6 +77,8 @@ fbPolyArc (DrawablePtr	pDrawable,
 	    fbGetDrawable (pDrawable, dst, dstStride, dstBpp, dstXoff, dstYoff);
 #ifdef FB_ACCESS_WRAPPER
 	    wrapped = 1;
+#else
+	    wrapped = 0;
 #endif
 	    while (narcs--)
 	    {

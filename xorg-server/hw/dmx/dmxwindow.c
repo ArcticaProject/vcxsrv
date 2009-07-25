@@ -57,9 +57,7 @@ static void dmxDoChangeWindowAttributes(WindowPtr pWindow,
 					unsigned long *mask,
 					XSetWindowAttributes *attribs);
 
-#ifdef SHAPE
 static void dmxDoSetShape(WindowPtr pWindow);
-#endif
 
 /** Initialize the private area for the window functions. */
 Bool dmxInitWindow(ScreenPtr pScreen)
@@ -289,9 +287,7 @@ void dmxCreateAndRealizeWindow(WindowPtr pWindow, Bool doSync)
 
     pWinPriv->window = dmxCreateNonRootWindow(pWindow);
     if (pWinPriv->restacked) dmxDoRestackWindow(pWindow);
-#ifdef SHAPE
     if (pWinPriv->isShaped) dmxDoSetShape(pWindow);
-#endif
 #ifdef RENDER
     if (pWinPriv->hasPict) dmxCreatePictureList(pWindow);
 #endif
@@ -323,9 +319,7 @@ Bool dmxCreateWindow(WindowPtr pWindow)
     pWinPriv->mapped     = FALSE;
     pWinPriv->restacked  = FALSE;
     pWinPriv->attribMask = 0;
-#ifdef SHAPE
     pWinPriv->isShaped   = FALSE;
-#endif
 #ifdef RENDER
     pWinPriv->hasPict    = FALSE;
 #endif
@@ -942,7 +936,6 @@ void dmxChangeBorderWidth(WindowPtr pWindow, unsigned int width)
     DMX_WRAP(ChangeBorderWidth, dmxChangeBorderWidth, dmxScreen, pScreen);
 }
 
-#ifdef SHAPE
 static void dmxDoSetShape(WindowPtr pWindow)
 {
     ScreenPtr       pScreen = pWindow->drawable.pScreen;
@@ -1029,4 +1022,3 @@ void dmxSetShape(WindowPtr pWindow)
 
     DMX_WRAP(SetShape, dmxSetShape, dmxScreen, pScreen);
 }
-#endif

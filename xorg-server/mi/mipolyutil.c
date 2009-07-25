@@ -161,13 +161,8 @@ miInsertEdgeInET(EdgeTable *ET, EdgeTableEntry *ETE,  int scanline,
  */
 
 Bool
-miCreateETandAET(count, pts, ET, AET, pETEs, pSLLBlock)
-    int count;
-    DDXPointPtr pts;
-    EdgeTable *ET;
-    EdgeTableEntry *AET;
-    EdgeTableEntry *pETEs;
-    ScanLineListBlock   *pSLLBlock;
+miCreateETandAET(int count, DDXPointPtr pts, EdgeTable *ET, EdgeTableEntry *AET,
+                 EdgeTableEntry *pETEs, ScanLineListBlock *pSLLBlock)
 {
     DDXPointPtr top, bottom;
     DDXPointPtr PrevPt, CurrPt;
@@ -257,8 +252,7 @@ miCreateETandAET(count, pts, ET, AET, pETEs, pSLLBlock)
  */
 
 void
-miloadAET(AET, ETEs)
-    EdgeTableEntry *AET, *ETEs;
+miloadAET(EdgeTableEntry *AET, EdgeTableEntry *ETEs)
 {
     EdgeTableEntry *pPrevAET;
     EdgeTableEntry *tmp;
@@ -305,8 +299,7 @@ miloadAET(AET, ETEs)
  *
  */
 void
-micomputeWAET(AET)
-    EdgeTableEntry *AET;
+micomputeWAET(EdgeTableEntry *AET)
 {
     EdgeTableEntry *pWETE;
     int inside = 1;
@@ -344,8 +337,7 @@ micomputeWAET(AET)
  */
 
 int
-miInsertionSort(AET)
-    EdgeTableEntry *AET;
+miInsertionSort(EdgeTableEntry *AET)
 {
     EdgeTableEntry *pETEchase;
     EdgeTableEntry *pETEinsert;
@@ -381,8 +373,7 @@ miInsertionSort(AET)
  *     Clean up our act.
  */
 void
-miFreeStorage(pSLLBlock)
-    ScanLineListBlock   *pSLLBlock;
+miFreeStorage(ScanLineListBlock *pSLLBlock)
 {
     ScanLineListBlock   *tmpSLLBlock;
 

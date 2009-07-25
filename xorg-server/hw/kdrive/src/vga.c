@@ -43,17 +43,6 @@
 #define _VgaBytePort(a)	(a)
 #endif
 
-#ifdef VXWORKS
-#define _VgaInb(r)  0
-#define _VgaOutb(v,r)   0
-
-#define _VgaByteAddr(a)     ((VGAVOL8 *) ((VGA32) (a) ^ 3))
-#define _VgaBytePort(a)	    0
-
-#undef stderr
-#define stderr stdout
-
-#endif
 
 #undef VGA_DEBUG_REGISTERS
 #ifdef VGA_DEBUG_REGISTERS

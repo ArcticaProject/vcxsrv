@@ -672,6 +672,13 @@ typedef struct _ExaDriver {
 	 * from.
 	 */
 	#define EXA_PREPARE_MASK	2
+	/**
+	 * EXA_PREPARE_AUX* are additional indices for other purposes, e.g.
+	 * separate alpha maps with Composite operations.
+	 */
+	#define EXA_PREPARE_AUX0	3
+	#define EXA_PREPARE_AUX1	4
+	#define EXA_PREPARE_AUX2	5
 	/** @} */
 
     /**
@@ -742,23 +749,45 @@ typedef struct _ExaDriver {
  */
 #define EXA_HANDLES_PIXMAPS             (1 << 3)
 
+/**
+ * EXA_SUPPORTS_PREPARE_AUX indicates to EXA that the driver can handle the
+ * EXA_PREPARE_AUX* indices in the Prepare/FinishAccess hooks. If there are no
+ * such hooks, this flag has no effect.
+ */
+#define EXA_SUPPORTS_PREPARE_AUX        (1 << 4)
+
 /** @} */
 
+/* in exa.c */
 ExaDriverPtr
 exaDriverAlloc(void);
 
 Bool
-exaDriverInit(ScreenPtr                pScreen,
+exaDriverInit(ScreenPtr      pScreen,
               ExaDriverPtr   pScreenInfo);
 
 void
-exaDriverFini(ScreenPtr                pScreen);
+exaDriverFini(ScreenPtr      pScreen);
 
 void
 exaMarkSync(ScreenPtr pScreen);
 void
 exaWaitSync(ScreenPtr pScreen);
 
+unsigned long
+exaGetPixmapOffset(PixmapPtr pPix);
+
+unsigned long
+exaGetPixmapPitch(PixmapPtr pPix);
+
+unsigned long
+exaGetPixmapSize(PixmapPtr pPix);
+
+void *
+exaGetPixmapDriverPrivate(PixmapPtr p);
+
+
+/* in exa_offscreen.c */
 ExaOffscreenArea *
 exaOffscreenAlloc(ScreenPtr pScreen, int size, int align,
                   Bool locked,
@@ -770,15 +799,6 @@ exaOffscreenFree(ScreenPtr pScreen, ExaOffscreenArea *area);
 
 void
 ExaOffscreenMarkUsed (PixmapPtr pPixmap);
-
-unsigned long
-exaGetPixmapOffset(PixmapPtr pPix);
-
-unsigned long
-exaGetPixmapPitch(PixmapPtr pPix);
-
-unsigned long
-exaGetPixmapSize(PixmapPtr pPix);
 
 void
 exaEnableDisableFBAccess (int index, Bool enable);
@@ -793,11 +813,11 @@ exaMoveInPixmap (PixmapPtr pPixmap);
 void
 exaMoveOutPixmap (PixmapPtr pPixmap);
 
-void *
-exaGetPixmapDriverPrivate(PixmapPtr p);
 
+/* in exa_unaccel.c */
 CARD32
 exaGetPixmapFirstPixel (PixmapPtr pPixmap);
+
 
 /**
  * Returns TRUE if the given planemask covers all the significant bits in the

@@ -50,7 +50,6 @@ SOFTWARE.
  *
  */
 
-#define EXTENSION_EVENT_BASE  64
 #define	 NEED_EVENTS
 #define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
@@ -112,7 +111,7 @@ SProcXSendExtensionEvent(ClientPtr client)
 
 /***********************************************************************
  *
- * Send an event to some client, as if it had come from an extension input 
+ * Send an event to some client, as if it had come from an extension input
  * device.
  *
  */

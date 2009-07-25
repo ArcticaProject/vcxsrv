@@ -7,10 +7,14 @@ Juliusz Chroboczek sorts before Intel Corporation sorts before Daniel
 Stone).
 
 Copyright © 2000-2001 Juliusz Chroboczek
+Copyright © 1998 Egbert Eich
 Copyright © 2006-2007 Intel Corporation
 Copyright © 2006 Nokia Corporation
+Copyright © 2006-2008 Peter Hutterer
 Copyright © 1999 Keith Packard
+Copyright © 2007-2008 Red Hat, Inc.
 Copyright © 2005-2007 Daniel Stone
+Copyright © 2006-2008 Simon Thum
 Copyright © 2006 Luc Verhaegen
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -86,30 +90,6 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-Copyright 2005 Kean Johnston
-Copyright 1999 by The XFree86 Project, Inc.
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the names of The XFree86 Project, Inc
-and Kean Johnston not be used in advertising or publicity pertaining to
-distribution of the software without specific, written prior permission.
-The XFree86 Project, Inc and Kean Johnston make no representations
-about the suitability of this software for any purpose.  It is provided
-"as is" without express or implied warranty.
-
-THE XFREE86 PROJECT, INC AND KEAN JOHNSTON DISCLAIM ALL WARRANTIES
-WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL THOMAS ROELL, DAVID WEXELBLAT
-OR KEAN JOHNSTON BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
-PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
-ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
-
 Copyright 1985-1998, 2001  The Open Group
 Copyright 2002 Red Hat Inc., Durham, North Carolina.
 
@@ -159,6 +139,7 @@ in this Software without prior written authorization from the X Consortium.
 
 
 Copyright © 1999-2000 SuSE, Inc.
+Copyright © 2007 Red Hat, Inc.
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
@@ -178,28 +159,6 @@ OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-Copyright © 2005 Novell, Inc.
-
-Permission to use, copy, modify, distribute, and sell this software
-and its documentation for any purpose is hereby granted without
-fee, provided that the above copyright notice appear in all copies
-and that both that copyright notice and this permission notice
-appear in supporting documentation, and that the name of
-Novell, Inc. not be used in advertising or publicity pertaining to
-distribution of the software without specific, written prior permission.
-Novell, Inc. makes no representations about the suitability of this
-software for any purpose. It is provided "as is" without express or
-implied warranty.
-
-NOVELL, INC. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
-NO EVENT SHALL NOVELL, INC. BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
-WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
-
 Copyright 1987 by Sun Microsystems, Inc. Mountain View, CA.
 All Rights Reserved
 
@@ -212,32 +171,6 @@ mentation,  and  that the names of Sun or X Consortium
 not be used in advertising or publicity pertaining to
 distribution  of  the software  without specific prior
 written permission. Sun and X Consortium make no
-representations about the suitability of this software for
-any purpose. It is provided "as is" without any express or
-implied warranty.
-
-SUN DISCLAIMS ALL WARRANTIES WITH REGARD TO  THIS  SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FIT-
-NESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SUN BE  LI-
-ABLE  FOR  ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
-ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,  DATA  OR
-PROFITS,  WHETHER  IN  AN  ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
-THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright 1987 by Sun Microsystems, Inc. Mountain View, CA.
-All Rights Reserved
-
-Permission  to  use,  copy,  modify,  and  distribute   this
-software  and  its documentation for any purpose and without
-fee is hereby granted, provided that the above copyright no-
-tice  appear  in all copies and that both that copyright no-
-tice and this permission notice appear in  supporting  docu-
-mentation,  and  that the names of Sun or The Open Group
-not be used in advertising or publicity pertaining to
-distribution  of  the software  without specific prior
-written permission. Sun and The Open Group make no
 representations about the suitability of this software for
 any purpose. It is provided "as is" without any express or
 implied warranty.
@@ -317,26 +250,6 @@ OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright 1987-1992 by Digital Equipment Corp., Maynard, MA
-X11R6 Changes Copyright (c) 1994 by Robert Chesler of Absol-Puter, Hudson, NH.
-
-Permission to use, copy, modify, and distribute this software and its
-documentation for any purpose and without fee is hereby granted,
-provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in
-supporting documentation, and that the name of Digital not be
-used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.
-
-DIGITAL AND ABSOL-PUTER DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS, IN NO EVENT SHALL DIGITAL OR ABSOL-PUTER BE LIABLE FOR ANY
-SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
-RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
-CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 Copyright 1997 Digital Equipment Corporation.
@@ -543,7 +456,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-Copyright 2005 Red Hat, Inc.
+Copyright © 2008 Red Hat, Inc.
+Partly based on code Copyright © 2000 SuSE, Inc.
 
 Permission to use, copy, modify, distribute, and sell this software
 and its documentation for any purpose is hereby granted without
@@ -556,12 +470,29 @@ Hat makes no representations about the suitability of this software
 for any purpose.  It is provided "as is" without express or implied
 warranty.
 
-RED HAT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+Red Hat DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
 INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
-NO EVENT SHALL RED HAT BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+NO EVENT SHALL Red Hat BE LIABLE FOR ANY SPECIAL, INDIRECT OR
 CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
 NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the name of SuSE not be used in advertising or
+publicity pertaining to distribution of the software without specific,
+written prior permission.  SuSE makes no representations about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+SuSE DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL SuSE
+BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
@@ -588,7 +519,7 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from Red Hat.
 
 
-Copyright © 2006 Red Hat, Inc
+Copyright © 2006, 2007 Red Hat, Inc
 
 Permission to use, copy, modify, distribute, and sell this software
 and its documentation for any purpose is hereby granted without
@@ -689,26 +620,6 @@ IN NO EVENT SHALL PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR
 ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-Copyright IBM Corporation 1987,1988,1989
-All Rights Reserved
-
-Permission to use, copy, modify, and distribute this software and its
-documentation for any purpose and without fee is hereby granted,
-provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in
-supporting documentation, and that the name of IBM not be
-used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.
-
-IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
-ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
-IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
-ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
-WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
-ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
-SOFTWARE.
 
 
 (C) Copyright IBM Corporation 2003
@@ -929,29 +840,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 
-Copyright 2000 Intel Corporation.  All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sub license, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice (including the
-next paragraph) shall be included in all copies or substantial portions
-of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
-IN NO EVENT SHALL INTEL, AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
-THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 Copyright © 2004 Nokia
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -971,30 +859,6 @@ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
 DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright 1998-2003 VIA Technologies, Inc.
-Copyright 2001-2003 S3 Graphics, Inc.
-All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sub license,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice (including the
-next paragraph) shall be included in all copies or substantial portions
-of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
-VIA, S3 GRAPHICS, AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
 
 
 (c)Copyright 1988,1991 Adobe Systems Incorporated.
@@ -1104,60 +968,26 @@ Copyright © 1999 Keith Packard
 Copyright © 2000 Compaq Computer Corporation
 Copyright © 2002 MontaVista Software Inc.
 Copyright © 2005 OpenedHand Ltd.
+Copyright © 2006 Nokia Corporation
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
 the above copyright notice appear in all copies and that both that
 copyright notice and this permission notice appear in supporting
-documentation, and that the name of Keith Packard or Compaq not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Keith Packard and Compaq makes no
-representations about the suitability of this software for any purpose.  It
-is provided "as is" without express or implied warranty.
+documentation, and that the name of the authors and/or copyright holders
+not be used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.  The authors and/or
+copyright holders make no representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
+implied warranty.
 
-KEITH PACKARD AND COMPAQ DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
-IN NO EVENT SHALL KEITH PACKARD BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Michael Taht or MontaVista not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Michael Taht and Montavista make no
-representations about the suitability of this software for any purpose.  It
-is provided "as is" without express or implied warranty.
-
-MICHAEL TAHT AND MONTAVISTA DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
-IN NO EVENT SHALL EITHER BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Matthew Allum or OpenedHand not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Matthew Allum and OpenedHand make no
-representations about the suitability of this software for any purpose.  It
-is provided "as is" without express or implied warranty.
-
-MATTHEW ALLUM AND OPENEDHAND DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
-IN NO EVENT SHALL EITHER BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
+THE AUTHORS AND/OR COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD
+TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS, IN NO EVENT SHALL THE AUTHORS AND/OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 Copyright 1993 by Davor Matic
@@ -1169,31 +999,6 @@ both that copyright notice and this permission notice appear in
 supporting documentation.  Davor Matic makes no representations about
 the suitability of this software for any purpose.  It is provided "as
 is" without express or implied warranty.
-
-
-(c) Copyright 1996 by Sebastien Marineau <marineau@genie.uottawa.ca>
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-HOLGER VEIT  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Except as contained in this notice, the name of Sebastien Marineau shall not be
-used in advertising or otherwise to promote the sale, use or other dealings
-in this Software without prior written authorization from Sebastien Marineau.
 
 
 Copyright (C) 2001-2004 Harold L Hunt II
@@ -1268,29 +1073,6 @@ CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-Copyright 1990,91 by Thomas Roell, Dinkelscherben, Germany
-Copyright 1993 by David Dawes <dawes@xfree86.org>
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the names of Thomas Roell and David Dawes
-not be used in advertising or publicity pertaining to distribution of
-the software without specific, written prior permission.  Thomas Roell and
-David Dawes makes no representations about the suitability of this
-software for any purpose.  It is provided "as is" without express or
-implied warranty.
-
-THOMAS ROELL AND DAVID DAWES DISCLAIMS ALL WARRANTIES WITH REGARD TO
-THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS, IN NO EVENT SHALL THOMAS ROELL OR DAVID DAWES BE LIABLE FOR
-ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
-RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
-CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
-
 Copyright 1990,91,92,93 by Thomas Roell, Germany.
 Copyright 1991,92,93    by SGCS (Snitily Graphics Consulting Services), USA.
 
@@ -1312,124 +1094,6 @@ SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
 RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
 CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright 2001-2005 by Kean Johnston <jkj@sco.com>
-Copyright 1990,91 by Thomas Roell, Dinkelscherben, Germany
-Copyright 1993 by David Wexelblat <dwex@goblin.org>
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the names of Thomas Roell, David Wexelblat
-and Kean Johnston not be used in advertising or publicity pertaining to
-distribution of the software without specific, written prior permission.
-Thomas Roell, David Wexelblat and Kean Johnston make no representations
-about the suitability of this software for any purpose.  It is provided
-"as is" without express or implied warranty.
-
-THOMAS ROELL, DAVID WEXELBLAT AND KEAN JOHNSTON DISCLAIM ALL WARRANTIES
-WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL THOMAS ROELLm DAVID WEXELBLAT
-OR KEAN JOHNSTON BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
-PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
-ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
-
-Copyright 2001-2005 by Kean Johnston <jkj@sco.com>
-Copyright 1990,91 by Thomas Roell, Dinkelscherben, Germany
-Copyright 1993 by David Dawes <dawes@xfree86.org>
-Copyright 1993 by David Wexelblat <dwex@goblin.org>
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the names of Thomas Roell, David Dawes
-and Kean Johnston not be used in advertising or publicity pertaining to
-distribution of the software without specific, written prior permission.
-Thomas Roell, David Dawes and Kean Johnston make no representations
-about the suitability of this software for any purpose.  It is provided
-"as is" without express or implied warranty.
-
-THOMAS ROELL, DAVID DAWES AND KEAN JOHNSTON DISCLAIM ALL WARRANTIES
-WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL THOMAS ROELLm DAVID WEXELBLAT
-OR KEAN JOHNSTON BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
-PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
-ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-
-
-Copyright (c) 2001-2003 Torrey T. Lyons.
-All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-TORREY T. LYONS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Except as contained in this notice, the name(s) of the above copyright
-holders shall not be used in advertising or otherwise to promote the sale,
-use or other dealings in this Software without prior written authorization.
-
-
-Copyright © 2004 David Reveman
-
-Permission to use, copy, modify, distribute, and sell this software
-and its documentation for any purpose is hereby granted without
-fee, provided that the above copyright notice appear in all copies
-and that both that copyright notice and this permission notice
-appear in supporting documentation, and that the name of
-David Reveman not be used in advertising or publicity pertaining to
-distribution of the software without specific, written prior permission.
-David Reveman makes no representations about the suitability of this
-software for any purpose. It is provided "as is" without express or
-implied warranty.
-
-DAVID REVEMAN DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
-NO EVENT SHALL DAVID REVEMAN BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
-WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright 1993 Gerrit Jan Akkerman
-
-Permission to use, copy, modify, and distribute this software and its
-documentation for any purpose and without fee is hereby granted,
-provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in
-supporting documentation, and that the name of Gerrit Jan Akkerman not be
-used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.
-
-GERRIT JAN AKKERMAN DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
-IN NO EVENT SHALL GERRIT JAN AKKERMAN BE LIABLE FOR ANY SPECIAL, INDIRECT
-OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
 
 
 Copyright 1998 by Alan Hourihane, Wigan, England.
@@ -1496,27 +1160,6 @@ representations about the suitability of this software for any purpose.
 MATTHIEU HERRB DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
 INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
 EVENT SHALL MATTHIEU HERRB BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright 1993 by Thomas Mueller
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Thomas Mueller not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Thomas Mueller makes no representations
-about the suitability of this software for any purpose.  It is provided
-"as is" without express or implied warranty.
-
-THOMAS MUELLER DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-EVENT SHALL THOMAS MUELLER BE LIABLE FOR ANY SPECIAL, INDIRECT OR
 CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
 DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
@@ -1660,27 +1303,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-Copyright 2001,2005 by Kean Johnston <jkj@sco.com>
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name Kean Johnston not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Kean Johnston makes no
-representations about the suitability of this software for any purpose.
-It is provided "as is" without express or implied warranty.
-
-KEAN JOHNSTON DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-EVENT SHALL KEAN JOHNSTON BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-
 Copyright 1992 by Rich Murphey <Rich@Rice.edu>
 Copyright 1993 by David Wexelblat <dwex@goblin.org>
 
@@ -1727,69 +1349,6 @@ CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-Copyright © 2004 Franco Catrin
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Franco Catrin not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Franco Catrin makes no
-representations about the suitability of this software for any purpose.  It
-is provided "as is" without express or implied warranty.
-
-FRANCO CATRIN DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-EVENT SHALL FRANCO CATRIN BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright © 2004 Ralph Thomas
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Ralph Thomas not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Ralph Thomas makes no
-representations about the suitability of this software for any purpose.  It
-is provided "as is" without express or implied warranty.
-
-RALPH THOMAS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-EVENT SHALL RALPH THOMAS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright © 2004 Damien Ciabrini
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Anders Carlsson not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission.  Anders Carlsson makes no
-representations about the suitability of this software for any purpose.  It
-is provided "as is" without express or implied warranty.
-
-DAMIEN CIABRINI DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-EVENT SHALL ANDERS CARLSSON BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-
 Copyright © 2003-2004 Anders Carlsson
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -1834,31 +1393,6 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
 
-Copyright 2000 Silicon Integrated Systems Corp, Inc., HsinChu, Taiwan.
-Copyright 2003 Eric Anholt
-All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sub license, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice (including the
-next paragraph) shall be included in all copies or substantial portions
-of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
-ERIC ANHOLT OR SILICON INTEGRATED SYSTEMS CORP BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 Copyright © 2004 PillowElephantBadgerBankPond
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -1880,27 +1414,6 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
 
-Copyright 2004 by Costas Stylianou <costas.stylianou@psion.com> +44(0)7850 394095
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Costas Sylianou not be used in
-advertising or publicity pertaining to distribution of the software without
-specific, written prior permission. Costas Stylianou makes no representations
-about the suitability of this software for any purpose.  It is provided
-"as is" without express or implied warranty.
-
-COSTAS STYLIANOU DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-EVENT SHALL COSTAS STYLIANOU BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-
-
 Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
 
 Permission to use, copy, modify, and distribute this software for any
@@ -1914,32 +1427,6 @@ FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
 OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright (C) 1995 Pascal Haible.  All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-PASCAL HAIBLE BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Except as contained in this notice, the name of Pascal Haible shall
-not be used in advertising or otherwise to promote the sale, use or other
-dealings in this Software without prior written authorization from
-Pascal Haible.
 
 
 Copyright © 2003-2004 Philip Blundell
@@ -2003,16 +1490,19 @@ Copyright © 2004, 2005 Red Hat, Inc.
 Copyright © 2004 Nicholas Miell
 Copyright © 2005 Trolltech AS
 Copyright © 2006 Intel Corporation
+Copyright © 2006-2007 Keith Packard
+Copyright © 2008 Red Hat, Inc
+Copyright © 2008 George Sapountzis <gsap7@yahoo.gr>
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of Red Hat not be used in advertising or
+the above copyright notice appear in all copies and that both that copyright
+notice and this permission notice appear in supporting documentation, and
+that the name of the copyright holders not be used in advertising or
 publicity pertaining to distribution of the software without specific,
-written prior permission.  Red Hat makes no representations about the
-suitability of this software for any purpose.  It is provided "as is"
-without express or implied warranty.
+written prior permission.  The copyright holders make no representations
+about the suitability of this software for any purpose.  It is provided "as
+is" without express or implied warranty.
 
 THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
 SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
@@ -2051,7 +1541,8 @@ Copyright 1987, 1998  The Open Group
 Copyright © 1998-1999, 2001 The XFree86 Project, Inc.
 Copyright © 2000 VA Linux Systems, Inc.
 Copyright (c) 2000, 2001 Nokia Home Communications
-Copyright 2003-2006 Sun Microsystems, Inc.
+Copyright 2003-2006, 2008 Sun Microsystems, Inc.
+Copyright © 2007, 2008 Red Hat, Inc.
 All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -2080,33 +1571,6 @@ or other dealings in this Software without prior written authorization
 of the copyright holder.
 
 
-Copyright (c) 1998-1999 Shunsuke Akiyama <akiyama@jp.FreeBSD.org>.
-Copyright (c) 1998-1999 X-TrueType Server Project
-Copyright (c) 1999 Lennart Augustsson <augustss@netbsd.org>
-All rights reserved
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-
-
 Copyright 1996 by Thomas E. Dickey <dickey@clark.net>
 
                         All Rights Reserved
@@ -2129,45 +1593,14 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-(c) Copyright 1996 Hewlett-Packard Company
-(c) Copyright 1996 International Business Machines Corp.
-(c) Copyright 1996, 2004 Sun Microsystems, Inc.
-(c) Copyright 1996 Novell, Inc.
-(c) Copyright 1996 Digital Equipment Corp.
-(c) Copyright 1996 Fujitsu Limited
-(c) Copyright 1996 Hitachi, Ltd.
-Copyright (c) 2003-2005 Roland Mainz <roland.mainz@nrubsig.org>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Except as contained in this notice, the names of the copyright holders shall
-not be used in advertising or otherwise to promote the sale, use or other
-dealings in this Software without prior written authorization from said
-copyright holders.
-
-
 Copyright 1998-1999 Precision Insight, Inc., Cedar Park, Texas.
 Copyright (c) 2001 Andreas Monitzer.
 Copyright (c) 2001-2004 Greg Parker.
 Copyright (c) 2001-2004 Torrey T. Lyons
 Copyright (c) 2002-2003 Apple Computer, Inc.
 Copyright (c) 2004-2005 Alexander Gottwald
-Copyright (c) 2002-2007 Apple Inc.
+Copyright (c) 2002-2009 Apple Inc.
+Copyright (c) 2007 Jeremy Huddleston
 All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -2194,6 +1627,8 @@ use or other dealings in this Software without prior written authorization.
 
 
 Copyright (C) 1999,2000 by Eric Sunshine <sunshine@sunshineco.com>
+Copyright (C) 2001-2005 by Thomas Winischhofer, Vienna, Austria.
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -2272,6 +1707,7 @@ the author(s).
 Copyright (C) 1996-1999 SciTech Software, Inc.
 Copyright (C) David Mosberger-Tang
 Copyright (C) 1999 Egbert Eich
+Copyright (C) 2008 Bart Trojanowski, Symbio Technologies, LLC
 
 Permission to use, copy, modify, distribute, and sell this software and
 its documentation for any purpose is hereby granted without fee,
@@ -2358,26 +1794,6 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
 OF THIS SOFTWARE.
 
 
-Copyright 1994 by Glenn G. Lai
-All Rights Reserved
-
-Permission to use, copy, modify, and distribute this software and its
-documentation for any purpose and without fee is hereby granted,
-provided that the above copyright notice appear in all copies and that
-both that copyr notice and this permission notice appear in
-supporting documentation, and that the name of Glenn G. Lai not be
-used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.
-
-Glenn G. Lai DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
-ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
-DIGITAL BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
-ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
-WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
-ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
-SOFTWARE.
-
-
 Copyright 1990, 1991 by Thomas Roell, Dinkelscherben, Germany
 Copyright 1992 by David Dawes <dawes@XFree86.org>
 Copyright 1992 by Jim Tsillas <jtsilla@damon.ccs.northeastern.edu>
@@ -2449,28 +1865,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
 JAKUB JELINEK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-Copyright (C) 1996 David S. Miller (davem@redhat.com)
-Copyright (C) 1999 Jakub Jelinek (jj@ultra.linux.cz)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-JAKUB JELINEK OR DAVID MILLER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
 
 
 Copyright 1997,1998 by UCHIYAMA Yasushi
@@ -2555,28 +1949,10 @@ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-Copyright © 2006-2007 Keith Packard
-
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that copyright
-notice and this permission notice appear in supporting documentation, and
-that the name of the copyright holders not be used in advertising or
-publicity pertaining to distribution of the software without specific,
-written prior permission.  The copyright holders make no representations
-about the suitability of this software for any purpose.  It is provided "as
-is" without express or implied warranty.
-
-THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
-EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
-OF THIS SOFTWARE.
 
 
 Copyright 2006 Adam Jackson.
+Copyright 2007 Red Hat, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -2595,3 +1971,58 @@ FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  IN NO EVENT SHALL
 THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+Copyright © 2007 OpenedHand Ltd
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the name of OpenedHand Ltd not be used in
+advertising or publicity pertaining to distribution of the software without
+specific, written prior permission. OpenedHand Ltd makes no
+representations about the suitability of this software for any purpose.  It
+is provided "as is" without express or implied warranty.
+
+OpenedHand Ltd DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+EVENT SHALL OpenedHand Ltd BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+
+Copyright (c) 1989, 1990, 1993, 1994
+     The Regents of the University of California.  All rights reserved.
+
+This code is derived from software contributed to Berkeley by
+Chris Torek.
+
+This code is derived from software contributed to Berkeley by
+Michael Rendell of Memorial University of Newfoundland.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 4. Neither the name of the University nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.

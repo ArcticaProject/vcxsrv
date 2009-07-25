@@ -1,22 +1,32 @@
 /*
-** The contents of this file are subject to the GLX Public License Version 1.0
-** (the "License"). You may not use this file except in compliance with the
-** License. You may obtain a copy of the License at Silicon Graphics, Inc.,
-** attn: Legal Services, 2011 N. Shoreline Blvd., Mountain View, CA 94043
-** or at http://www.sgi.com/software/opensource/glx/license.html.
-**
-** Software distributed under the License is distributed on an "AS IS"
-** basis. ALL WARRANTIES ARE DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY
-** IMPLIED WARRANTIES OF MERCHANTABILITY, OF FITNESS FOR A PARTICULAR
-** PURPOSE OR OF NON- INFRINGEMENT. See the License for the specific
-** language governing rights and limitations under the License.
-**
-** The Original Software is GLX version 1.2 source code, released February,
-** 1999. The developer of the Original Software is Silicon Graphics, Inc.
-** Those portions of the Subject Software created by Silicon Graphics, Inc.
-** are Copyright (c) 1991-9 Silicon Graphics, Inc. All Rights Reserved.
-**
-*/
+ * SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008)
+ * Copyright (C) 1991-2000 Silicon Graphics, Inc. All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice including the dates of first publication and
+ * either this permission notice or a reference to
+ * http://oss.sgi.com/projects/FreeB/
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * Except as contained in this notice, the name of Silicon Graphics, Inc.
+ * shall not be used in advertising or otherwise to promote the sale, use or
+ * other dealings in this Software without prior written authorization from
+ * Silicon Graphics, Inc.
+ */
 
 #define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
@@ -45,6 +55,7 @@
 ** from the server's perspective.
 */
 __GLXcontext *__glXLastContext;
+__GLXcontext *__glXContextList;
 
 /*
 ** X resources.
@@ -58,7 +69,8 @@ RESTYPE __glXSwapBarrierRes;
 */
 xGLXSingleReply __glXReply;
 
-static DevPrivateKey glxClientPrivateKey = &glxClientPrivateKey;
+static int glxClientPrivateKeyIndex;
+static DevPrivateKey glxClientPrivateKey = &glxClientPrivateKeyIndex;
 
 /*
 ** Client that called into GLX dispatch.
@@ -105,31 +117,46 @@ static int ContextGone(__GLXcontext* cx, XID id)
     return True;
 }
 
+static __GLXcontext *glxPendingDestroyContexts;
+static __GLXcontext *glxAllContexts;
+static int glxServerLeaveCount;
+static int glxBlockClients;
+
 /*
 ** Destroy routine that gets called when a drawable is freed.  A drawable
 ** contains the ancillary buffers needed for rendering.
 */
 static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 {
-    ScreenPtr pScreen = glxPriv->pDraw->pScreen;
+    __GLXcontext *c;
 
-    switch (glxPriv->type) {
-	case GLX_DRAWABLE_PIXMAP:
-	case GLX_DRAWABLE_PBUFFER:
-	    (*pScreen->DestroyPixmap)((PixmapPtr) glxPriv->pDraw);
-	    break;
+    for (c = glxAllContexts; c; c = c->next) {
+	if (c->drawPriv == glxPriv)
+	    c->drawPriv = NULL;
+	if (c->readPriv == glxPriv)
+	    c->readPriv = NULL;
     }
 
-    glxPriv->pDraw = NULL;
-    glxPriv->drawId = 0;
-    __glXUnrefDrawable(glxPriv);
+    glxPriv->destroy(glxPriv);
 
     return True;
 }
 
-static __GLXcontext *glxPendingDestroyContexts;
-static int glxServerLeaveCount;
-static int glxBlockClients;
+void __glXAddToContextList(__GLXcontext *cx)
+{
+    cx->next = glxAllContexts;
+    glxAllContexts = cx;
+}
+
+void __glXRemoveFromContextList(__GLXcontext *cx)
+{
+    __GLXcontext *c, **prev;
+
+    prev = &glxAllContexts;
+    for (c = glxAllContexts; c; c = c->next)
+	if (c == cx)
+	    *prev = c->next;
+}
 
 /*
 ** Free a context.
@@ -143,6 +170,8 @@ GLboolean __glXFreeContext(__GLXcontext *cx)
     if (cx == __glXLastContext) {
 	__glXFlushContextCache();
     }
+
+    __glXRemoveFromContextList(cx);
 
     /* We can get here through both regular dispatching from
      * __glXDispatch() or as a callback from the resource manager.  In

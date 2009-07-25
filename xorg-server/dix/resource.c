@@ -339,7 +339,7 @@ AvailableID(
     return 0;
 }
 
-_X_EXPORT void
+void
 GetXIDRange(int client, Bool server, XID *minp, XID *maxp)
 {
     XID id, maxid;
@@ -390,7 +390,7 @@ GetXIDRange(int client, Bool server, XID *minp, XID *maxp)
  *  invented, but this will be used so rarely that this should suffice.
  */
 
-_X_EXPORT unsigned int
+unsigned int
 GetXIDList(ClientPtr pClient, unsigned count, XID *pids)
 {
     unsigned int found = 0;
@@ -452,7 +452,7 @@ AddResource(XID id, RESTYPE type, pointer value)
     rrec = &clientTable[client];
     if (!rrec->buckets)
     {
-	ErrorF("AddResource(%lx, %lx, %lx), client=%d \n",
+	ErrorF("[dix] AddResource(%lx, %lx, %lx), client=%d \n",
 		(unsigned long)id, type, (unsigned long)value, client);
         FatalError("client not in use\n");
     }

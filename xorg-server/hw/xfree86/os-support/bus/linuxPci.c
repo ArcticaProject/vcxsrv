@@ -79,44 +79,28 @@ static pciBusFuncs_t linuxFuncs0 = {
 #endif
 };
 
-static pciBusInfo_t linuxPci0 = {
-/* configMech  */	PCI_CFG_MECH_OTHER,
-/* numDevices  */	32,
-/* secondary   */	FALSE,
-/* primary_bus */	0,
-/* funcs       */	&linuxFuncs0,
-/* pciBusPriv  */	NULL,
-/* bridge      */	NULL
-};
-
 static const struct pci_id_match match_host_bridge = {
     PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY,
     (PCI_CLASS_BRIDGE << 16) | (PCI_SUBCLASS_BRIDGE_HOST << 8),
     0x0000ffff00, 0
 };
 
-#ifndef INCLUDE_XF86_NO_DOMAIN
 #define MAX_DOMAINS 257
 static pointer DomainMmappedIO[MAX_DOMAINS];
-#endif
 
 void
 linuxPciInit(void)
 {
-	struct stat st;
+    struct stat st;
 
-#ifndef INCLUDE_XF86_NO_DOMAIN
-    (void) memset(DomainMmappedIO, 0, sizeof(DomainMmappedIO));
-#endif
+    memset(DomainMmappedIO, 0, sizeof(DomainMmappedIO));
 
-	if ((xf86Info.pciFlags == PCIForceNone) ||
-	    (-1 == stat("/proc/bus/pci", &st))) {
-		/* when using this as default for all linux architectures,
-		   we'll need a fallback for 2.0 kernels here */
-		return;
-	}
-	pciNumBuses    = 1;
-	pciBusInfo[0]  = &linuxPci0;
+    if (-1 == stat("/proc/bus/pci", &st)) {
+	/* when using this as default for all linux architectures,
+	   we'll need a fallback for 2.0 kernels here */
+	return;
+    }
+    pciBusFuncs	   = &linuxFuncs0;
 }
 
 /**
@@ -239,7 +223,6 @@ linuxPpcBusAddrToHostAddr(PCITAG tag, PciAddrType type, ADDRESS addr)
 
 #endif /* __powerpc__ */
 
-#ifndef INCLUDE_XF86_NO_DOMAIN
 
 /*
  * Compiling the following simply requires the presence of <linux/pci.c>.
@@ -603,4 +586,3 @@ xf86AccResFromOS(resPtr pRes)
     return pRes;
 }
 
-#endif /* !INCLUDE_XF86_NO_DOMAIN */

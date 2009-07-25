@@ -1,51 +1,72 @@
 /*
-   quartzKeyboard.c
+   quartzKeyboard.c: Keyboard support for Xquartz
 
-   Code to build a keymap using the Carbon Keyboard Layout API.
+   Copyright (c) 2003-2008 Apple Inc.
+   Copyright (c) 2001-2004 Torrey T. Lyons. All Rights Reserved.
+   Copyright 2004 Kaleb S. KEITHLEY. All Rights Reserved.
 
-   Copyright (c) 2003-2007 Apple Inc.
+   Copyright (C) 1999,2000 by Eric Sunshine <sunshine@sunshineco.com>
+   All rights reserved.
 
-   Permission is hereby granted, free of charge, to any person
-   obtaining a copy of this software and associated documentation files
-   (the "Software"), to deal in the Software without restriction,
-   including without limitation the rights to use, copy, modify, merge,
-   publish, distribute, sublicense, and/or sell copies of the Software,
-   and to permit persons to whom the Software is furnished to do so,
-   subject to the following conditions:
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met:
 
-   The above copyright notice and this permission notice shall be
-   included in all copies or substantial portions of the Software.
+     1. Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+     2. Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+     3. The name of the author may not be used to endorse or promote products
+        derived from this software without specific prior written permission.
 
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-   NONINFRINGEMENT.  IN NO EVENT SHALL THE ABOVE LISTED COPYRIGHT
-   HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-   DEALINGS IN THE SOFTWARE.
-
-   Except as contained in this notice, the name(s) of the above
-   copyright holders shall not be used in advertising or otherwise to
-   promote the sale, use or other dealings in this Software without
-   prior written authorization.
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
+   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+   TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+#include "sanitizedCarbon.h"
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
 
-#include "quartzCommon.h"
-
-#include <CoreServices/CoreServices.h>
-#include <Carbon/Carbon.h>
-
-#include "quartzKeyboard.h"
-#include "X11/keysym.h"
-#include "keysym2ucs.h"
-
 #define HACK_MISSING 1
 #define HACK_KEYPAD 1
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <AvailabilityMacros.h>
+
+#include "quartzCommon.h"
+#include "darwin.h"
+
+#include "quartzKeyboard.h"
+#include "quartzAudio.h"
+
+#include "threadSafety.h"
+
+#ifdef NDEBUG
+#undef NDEBUG
+#include <assert.h>
+#define NDEBUG 1
+#else
+#include <assert.h>
+#endif
+#include <pthread.h>
+
+#include "xkbsrv.h"
+#include "exevents.h"
+#include "X11/keysym.h"
+#include "keysym2ucs.h"
 
 enum {
     MOD_COMMAND = 256,
@@ -124,7 +145,9 @@ const static struct {
     KeySym normal, dead;
 } dead_keys[] = {
     {XK_grave, XK_dead_grave},
+    {XK_apostrophe, XK_dead_acute},             /* US:"=" on a Czech keyboard */
     {XK_acute, XK_dead_acute},
+    {UKEYSYM (0x384), XK_dead_acute},           /* US:";" on a Greek keyboard */
     {XK_asciicircum, XK_dead_circumflex},
     {UKEYSYM (0x2c6), XK_dead_circumflex},	/* MODIFIER LETTER CIRCUMFLEX ACCENT */
     {XK_asciitilde, XK_dead_tilde},
@@ -146,16 +169,383 @@ const static struct {
     {UKEYSYM (0x31b), XK_dead_horn},		/* COMBINING HORN */
 };
 
-unsigned int QuartzSystemKeymapSeed(void) {
-    static unsigned int seed;
-    static KeyboardLayoutRef last_key_layout;
-    KeyboardLayoutRef key_layout;
+darwinKeyboardInfo keyInfo;
+pthread_mutex_t keyInfo_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    KLGetCurrentKeyboardLayout (&key_layout);
-    if (key_layout != last_key_layout) seed++;
-    last_key_layout = key_layout;
+static void DarwinChangeKeyboardControl(DeviceIntPtr device, KeybdCtrl *ctrl) {
+    // FIXME: to be implemented
+    // keyclick, bell volume / pitch, autorepead, LED's
+}
 
-    return seed;
+//-----------------------------------------------------------------------------
+// Utility functions to help parse Darwin keymap
+//-----------------------------------------------------------------------------
+
+/*
+ * DarwinBuildModifierMaps
+ *      Use the keyMap field of keyboard info structure to populate
+ *      the modMap and modifierKeycodes fields.
+ */
+static void DarwinBuildModifierMaps(darwinKeyboardInfo *info) {
+    int i;
+    KeySym *k;
+
+    memset(info->modMap, NoSymbol, sizeof(info->modMap));
+    memset(info->modifierKeycodes, 0, sizeof(info->modifierKeycodes));
+
+    for (i = 0; i < NUM_KEYCODES; i++) {
+        k = info->keyMap + i * GLYPHS_PER_KEY;
+
+        switch (*k) {
+            case XK_Shift_L:
+                info->modifierKeycodes[NX_MODIFIERKEY_SHIFT][0] = i;
+                info->modMap[MIN_KEYCODE + i] = ShiftMask;
+                break;
+
+            case XK_Shift_R:
+#ifdef NX_MODIFIERKEY_RSHIFT
+                info->modifierKeycodes[NX_MODIFIERKEY_RSHIFT][0] = i;
+#else
+                info->modifierKeycodes[NX_MODIFIERKEY_SHIFT][0] = i;
+#endif
+                info->modMap[MIN_KEYCODE + i] = ShiftMask;
+                break;
+
+            case XK_Control_L:
+                info->modifierKeycodes[NX_MODIFIERKEY_CONTROL][0] = i;
+                info->modMap[MIN_KEYCODE + i] = ControlMask;
+                break;
+
+            case XK_Control_R:
+#ifdef NX_MODIFIERKEY_RCONTROL
+                info->modifierKeycodes[NX_MODIFIERKEY_RCONTROL][0] = i;
+#else
+                info->modifierKeycodes[NX_MODIFIERKEY_CONTROL][0] = i;
+#endif
+                info->modMap[MIN_KEYCODE + i] = ControlMask;
+                break;
+
+            case XK_Caps_Lock:
+                info->modifierKeycodes[NX_MODIFIERKEY_ALPHALOCK][0] = i;
+                info->modMap[MIN_KEYCODE + i] = LockMask;
+                break;
+
+            case XK_Alt_L:
+                info->modifierKeycodes[NX_MODIFIERKEY_ALTERNATE][0] = i;
+                info->modMap[MIN_KEYCODE + i] = Mod1Mask;
+                *k = XK_Mode_switch; // Yes, this is ugly.  This needs to be cleaned up when we integrate quartzKeyboard with this code and refactor.
+                break;
+
+            case XK_Alt_R:
+#ifdef NX_MODIFIERKEY_RALTERNATE
+                info->modifierKeycodes[NX_MODIFIERKEY_RALTERNATE][0] = i;
+#else
+                info->modifierKeycodes[NX_MODIFIERKEY_ALTERNATE][0] = i;
+#endif
+                *k = XK_Mode_switch; // Yes, this is ugly.  This needs to be cleaned up when we integrate quartzKeyboard with this code and refactor.
+                info->modMap[MIN_KEYCODE + i] = Mod1Mask;
+                break;
+
+            case XK_Mode_switch:
+                info->modMap[MIN_KEYCODE + i] = Mod1Mask;
+                break;
+
+            case XK_Meta_L:
+                info->modifierKeycodes[NX_MODIFIERKEY_COMMAND][0] = i;
+                info->modMap[MIN_KEYCODE + i] = Mod2Mask;
+                break;
+
+            case XK_Meta_R:
+#ifdef NX_MODIFIERKEY_RCOMMAND
+                info->modifierKeycodes[NX_MODIFIERKEY_RCOMMAND][0] = i;
+#else
+                info->modifierKeycodes[NX_MODIFIERKEY_COMMAND][0] = i;
+#endif
+                info->modMap[MIN_KEYCODE + i] = Mod2Mask;
+                break;
+
+            case XK_Num_Lock:
+                info->modMap[MIN_KEYCODE + i] = Mod3Mask;
+                break;
+        }
+    }
+}
+
+/*
+ * DarwinLoadKeyboardMapping
+ *  Load the keyboard map from a file or system and convert
+ *  it to an equivalent X keyboard map and modifier map.
+ */
+static void DarwinLoadKeyboardMapping(KeySymsRec *keySyms) {
+    pthread_mutex_lock(&keyInfo_mutex);
+    
+    DarwinBuildModifierMaps(&keyInfo);
+
+    keySyms->map        = keyInfo.keyMap;
+    keySyms->mapWidth   = GLYPHS_PER_KEY;
+    keySyms->minKeyCode = MIN_KEYCODE;
+    keySyms->maxKeyCode = MAX_KEYCODE;
+
+    pthread_mutex_unlock(&keyInfo_mutex);
+}
+
+/*
+ * DarwinKeyboardSetDeviceKeyMap
+ * Load a keymap into the keyboard device
+ */
+static void DarwinKeyboardSetDeviceKeyMap(KeySymsRec *keySyms) {
+    DeviceIntPtr pDev;
+
+    /* From ProcSetModifierMapping */
+    SendMappingNotify(darwinKeyboard, MappingModifier, 0, 0, serverClient);
+    for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+        if (pDev->key && pDev->coreEvents)
+            SendDeviceMappingNotify(serverClient, MappingModifier, 0, 0, pDev);
+    
+    /* From ProcChangeKeyboardMapping */
+    for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+        if ((pDev->coreEvents || pDev == inputInfo.keyboard) && pDev->key)
+            assert(SetKeySymsMap(&pDev->key->curKeySyms, keySyms));
+
+    SendMappingNotify(darwinKeyboard, MappingKeyboard, keySyms->minKeyCode,
+                      keySyms->maxKeyCode - keySyms->minKeyCode + 1, serverClient);
+    for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+        if (pDev->key && pDev->coreEvents)
+            SendDeviceMappingNotify(serverClient, MappingKeyboard, keySyms->minKeyCode,
+                                    keySyms->maxKeyCode - keySyms->minKeyCode + 1, pDev);    
+}
+
+/*
+ * DarwinKeyboardInit
+ *      Get the Darwin keyboard map and compute an equivalent
+ *      X keyboard map and modifier map. Set the new keyboard
+ *      device structure.
+ */
+void DarwinKeyboardInit(DeviceIntPtr pDev) {
+    KeySymsRec keySyms;
+    XkbComponentNamesRec names;
+    CFIndex value;
+    BOOL ok;
+
+    // Open a shared connection to the HID System.
+    // Note that the Event Status Driver is really just a wrapper
+    // for a kIOHIDParamConnectType connection.
+    assert(darwinParamConnect = NXOpenEventStatus());
+
+    DarwinLoadKeyboardMapping(&keySyms);
+
+    bzero(&names, sizeof(names));
+
+    /* We need to really have rules... or something... */
+    //XkbSetRulesDflts("base", "pc105", "us", NULL, NULL);
+    
+    pthread_mutex_lock(&keyInfo_mutex);
+    assert(XkbInitKeyboardDeviceStruct(pDev, &names, &keySyms, keyInfo.modMap,
+                                       QuartzBell, DarwinChangeKeyboardControl));
+    pthread_mutex_unlock(&keyInfo_mutex);
+
+    /* Get our key repeat settings from GlobalPreferences */
+    (void)CFPreferencesAppSynchronize(CFSTR(".GlobalPreferences"));
+    value = CFPreferencesGetAppIntegerValue(CFSTR("InitialKeyRepeat"), CFSTR(".GlobalPreferences"), &ok);
+    if(!ok)
+        value = 35;
+
+    if(value == 300000) { // off
+        XkbSetRepeatKeys(pDev, -1, AutoRepeatModeOff);
+    } else {
+        pDev->key->xkbInfo->desc->ctrls->repeat_delay = value * 15;
+
+        value = CFPreferencesGetAppIntegerValue(CFSTR("KeyRepeat"), CFSTR(".GlobalPreferences"), &ok);
+        if(!ok)
+            value = 6;
+        pDev->key->xkbInfo->desc->ctrls->repeat_interval = value * 15;
+
+        XkbSetRepeatKeys(pDev, -1, AutoRepeatModeOn);
+    }
+
+    DarwinKeyboardSetDeviceKeyMap(&keySyms);
+}
+
+void DarwinKeyboardReloadHandler(int screenNum, xEventPtr xe, DeviceIntPtr pDev, int nevents) {
+    KeySymsRec keySyms;
+
+    DEBUG_LOG("DarwinKeyboardReloadHandler\n");
+
+    DarwinLoadKeyboardMapping(&keySyms);
+    DarwinKeyboardSetDeviceKeyMap(&keySyms);
+}
+
+//-----------------------------------------------------------------------------
+// Modifier translation functions
+//
+// There are three different ways to specify a Mac modifier key:
+// keycode - specifies hardware key, read from keymapping
+// key     - NX_MODIFIERKEY_*, really an index
+// mask    - NX_*MASK, mask for modifier flags in event record
+// Left and right side have different keycodes but the same key and mask.
+//-----------------------------------------------------------------------------
+
+/*
+ * DarwinModifierNXKeyToNXKeycode
+ *      Return the keycode for an NX_MODIFIERKEY_* modifier.
+ *      side = 0 for left or 1 for right.
+ *      Returns 0 if key+side is not a known modifier.
+ */
+int DarwinModifierNXKeyToNXKeycode(int key, int side) {
+    int retval;
+    pthread_mutex_lock(&keyInfo_mutex);
+    retval = keyInfo.modifierKeycodes[key][side];
+    pthread_mutex_unlock(&keyInfo_mutex);
+
+    return retval;
+}
+
+/*
+ * DarwinModifierNXKeycodeToNXKey
+ *      Returns -1 if keycode+side is not a modifier key
+ *      outSide may be NULL, else it gets 0 for left and 1 for right.
+ */
+int DarwinModifierNXKeycodeToNXKey(unsigned char keycode, int *outSide) {
+    int key, side;
+
+    pthread_mutex_lock(&keyInfo_mutex);
+    keycode += MIN_KEYCODE;
+    // search modifierKeycodes for this keycode+side
+    for (key = 0; key < NX_NUMMODIFIERS; key++) {
+        for (side = 0; side <= 1; side++) {
+            if (keyInfo.modifierKeycodes[key][side] == keycode) break;
+        }
+    }
+    if (key == NX_NUMMODIFIERS) {
+        pthread_mutex_unlock(&keyInfo_mutex);
+        return -1;
+    }
+    if (outSide) *outSide = side;
+
+    pthread_mutex_unlock(&keyInfo_mutex);
+    return key;
+}
+
+/*
+ * DarwinModifierNXMaskToNXKey
+ *      Returns -1 if mask is not a known modifier mask.
+ */
+int DarwinModifierNXMaskToNXKey(int mask) {
+    switch (mask) {
+        case NX_ALPHASHIFTMASK:       return NX_MODIFIERKEY_ALPHALOCK;
+        case NX_SHIFTMASK:            return NX_MODIFIERKEY_SHIFT;
+#ifdef NX_DEVICELSHIFTKEYMASK
+        case NX_DEVICELSHIFTKEYMASK:  return NX_MODIFIERKEY_SHIFT;
+        case NX_DEVICERSHIFTKEYMASK:  return NX_MODIFIERKEY_RSHIFT;
+#endif
+        case NX_CONTROLMASK:          return NX_MODIFIERKEY_CONTROL;
+#ifdef NX_DEVICELCTLKEYMASK
+        case NX_DEVICELCTLKEYMASK:    return NX_MODIFIERKEY_CONTROL;
+        case NX_DEVICERCTLKEYMASK:    return NX_MODIFIERKEY_RCONTROL;
+#endif
+        case NX_ALTERNATEMASK:        return NX_MODIFIERKEY_ALTERNATE;
+#ifdef NX_DEVICELALTKEYMASK
+        case NX_DEVICELALTKEYMASK:    return NX_MODIFIERKEY_ALTERNATE;
+        case NX_DEVICERALTKEYMASK:    return NX_MODIFIERKEY_RALTERNATE;
+#endif
+        case NX_COMMANDMASK:          return NX_MODIFIERKEY_COMMAND;
+#ifdef NX_DEVICELCMDKEYMASK
+        case NX_DEVICELCMDKEYMASK:    return NX_MODIFIERKEY_COMMAND;
+        case NX_DEVICERCMDKEYMASK:    return NX_MODIFIERKEY_RCOMMAND;
+#endif
+        case NX_NUMERICPADMASK:       return NX_MODIFIERKEY_NUMERICPAD;
+        case NX_HELPMASK:             return NX_MODIFIERKEY_HELP;
+        case NX_SECONDARYFNMASK:      return NX_MODIFIERKEY_SECONDARYFN;
+    }
+    return -1;
+}
+
+/*
+ * DarwinModifierNXKeyToNXMask
+ *      Returns 0 if key is not a known modifier key.
+ */
+int DarwinModifierNXKeyToNXMask(int key) {
+    switch (key) {
+        case NX_MODIFIERKEY_ALPHALOCK:   return NX_ALPHASHIFTMASK;
+#ifdef NX_DEVICELSHIFTKEYMASK
+        case NX_MODIFIERKEY_SHIFT:       return NX_DEVICELSHIFTKEYMASK;
+        case NX_MODIFIERKEY_RSHIFT:      return NX_DEVICERSHIFTKEYMASK;
+        case NX_MODIFIERKEY_CONTROL:     return NX_DEVICELCTLKEYMASK;
+        case NX_MODIFIERKEY_RCONTROL:    return NX_DEVICERCTLKEYMASK;
+        case NX_MODIFIERKEY_ALTERNATE:   return NX_DEVICELALTKEYMASK;
+        case NX_MODIFIERKEY_RALTERNATE:  return NX_DEVICERALTKEYMASK;
+        case NX_MODIFIERKEY_COMMAND:     return NX_DEVICELCMDKEYMASK;
+        case NX_MODIFIERKEY_RCOMMAND:    return NX_DEVICERCMDKEYMASK;
+#else
+        case NX_MODIFIERKEY_SHIFT:       return NX_SHIFTMASK;
+        case NX_MODIFIERKEY_CONTROL:     return NX_CONTROLMASK;
+        case NX_MODIFIERKEY_ALTERNATE:   return NX_ALTERNATEMASK;
+        case NX_MODIFIERKEY_COMMAND:     return NX_COMMANDMASK;
+#endif
+        case NX_MODIFIERKEY_NUMERICPAD:  return NX_NUMERICPADMASK;
+        case NX_MODIFIERKEY_HELP:        return NX_HELPMASK;
+        case NX_MODIFIERKEY_SECONDARYFN: return NX_SECONDARYFNMASK;
+    }
+    return 0;
+}
+
+/*
+ * DarwinModifierStringToNXMask
+ *      Returns 0 if string is not a known modifier.
+ */
+int DarwinModifierStringToNXMask(const char *str, int separatelr) {
+#ifdef NX_DEVICELSHIFTKEYMASK
+    if(separatelr) {
+        if (!strcasecmp(str, "shift"))    return NX_DEVICELSHIFTKEYMASK | NX_DEVICERSHIFTKEYMASK;
+        if (!strcasecmp(str, "control"))  return NX_DEVICELCTLKEYMASK | NX_DEVICERCTLKEYMASK;
+        if (!strcasecmp(str, "option"))   return NX_DEVICELALTKEYMASK | NX_DEVICERALTKEYMASK;
+        if (!strcasecmp(str, "alt"))   return NX_DEVICELALTKEYMASK | NX_DEVICERALTKEYMASK;
+        if (!strcasecmp(str, "command"))  return NX_DEVICELCMDKEYMASK | NX_DEVICERCMDKEYMASK;
+        if (!strcasecmp(str, "lshift"))   return NX_DEVICELSHIFTKEYMASK;
+        if (!strcasecmp(str, "rshift"))   return NX_DEVICERSHIFTKEYMASK;
+        if (!strcasecmp(str, "lcontrol")) return NX_DEVICELCTLKEYMASK;
+        if (!strcasecmp(str, "rcontrol")) return NX_DEVICERCTLKEYMASK;
+        if (!strcasecmp(str, "loption"))  return NX_DEVICELALTKEYMASK;
+        if (!strcasecmp(str, "roption"))  return NX_DEVICERALTKEYMASK;
+        if (!strcasecmp(str, "lalt"))  return NX_DEVICELALTKEYMASK;
+        if (!strcasecmp(str, "ralt"))  return NX_DEVICERALTKEYMASK;
+        if (!strcasecmp(str, "lcommand")) return NX_DEVICELCMDKEYMASK;
+        if (!strcasecmp(str, "rcommand")) return NX_DEVICERCMDKEYMASK;
+    } else {
+#endif
+        if (!strcasecmp(str, "shift"))    return NX_SHIFTMASK;
+        if (!strcasecmp(str, "control"))  return NX_CONTROLMASK;
+        if (!strcasecmp(str, "option"))   return NX_ALTERNATEMASK;
+        if (!strcasecmp(str, "alt"))   return NX_ALTERNATEMASK;
+        if (!strcasecmp(str, "command"))  return NX_COMMANDMASK;
+        if (!strcasecmp(str, "lshift"))   return NX_SHIFTMASK;
+        if (!strcasecmp(str, "rshift"))   return NX_SHIFTMASK;
+        if (!strcasecmp(str, "lcontrol")) return NX_CONTROLMASK;
+        if (!strcasecmp(str, "rcontrol")) return NX_CONTROLMASK;
+        if (!strcasecmp(str, "loption"))  return NX_ALTERNATEMASK;
+        if (!strcasecmp(str, "roption"))  return NX_ALTERNATEMASK;
+        if (!strcasecmp(str, "lalt"))  return NX_ALTERNATEMASK;
+        if (!strcasecmp(str, "ralt"))  return NX_ALTERNATEMASK;
+        if (!strcasecmp(str, "lcommand")) return NX_COMMANDMASK;
+        if (!strcasecmp(str, "rcommand")) return NX_COMMANDMASK;
+#ifdef NX_DEVICELSHIFTKEYMASK
+    }
+#endif
+    if (!strcasecmp(str, "lock"))     return NX_ALPHASHIFTMASK;
+    if (!strcasecmp(str, "fn"))       return NX_SECONDARYFNMASK;
+    if (!strcasecmp(str, "help"))     return NX_HELPMASK;
+    if (!strcasecmp(str, "numlock"))  return NX_NUMERICPADMASK;
+    return 0;
+}
+
+/*
+ * LegalModifier
+ *      This allows the ddx layer to prevent some keys from being remapped
+ *      as modifier keys.
+ */
+Bool LegalModifier(unsigned int key, DeviceIntPtr pDev)
+{
+    return 1;
 }
 
 static inline UniChar macroman2ucs(unsigned char c) {
@@ -196,41 +586,78 @@ static KeySym make_dead_key(KeySym in) {
 }
 
 Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
+#if !defined(__LP64__) || MAC_OS_X_VERSION_MIN_REQUIRED < 1050
     KeyboardLayoutRef key_layout;
+    int is_uchr = 1;
+#endif
     const void *chr_data = NULL;
     int num_keycodes = NUM_KEYCODES;
-    UInt32 keyboard_type = 0;
-    int is_uchr = 1, i, j;
+    UInt32 keyboard_type = LMGetKbdType();
+    int i, j;
     OSStatus err;
     KeySym *k;
+    CFDataRef currentKeyLayoutDataRef = NULL;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
     TISInputSourceRef currentKeyLayoutRef = TISCopyCurrentKeyboardLayoutInputSource();
-    keyboard_type = LMGetKbdType ();
+
     if (currentKeyLayoutRef) {
-      CFDataRef currentKeyLayoutDataRef = (CFDataRef )TISGetInputSourceProperty(currentKeyLayoutRef, kTISPropertyUnicodeKeyLayoutData);
-      if (currentKeyLayoutDataRef) chr_data = CFDataGetBytePtr(currentKeyLayoutDataRef);
+      currentKeyLayoutDataRef = (CFDataRef )TISGetInputSourceProperty(currentKeyLayoutRef, kTISPropertyUnicodeKeyLayoutData);
+      if (currentKeyLayoutDataRef)
+          chr_data = CFDataGetBytePtr(currentKeyLayoutDataRef);
     }
-    
+#endif
+
+#if !defined(__LP64__) || MAC_OS_X_VERSION_MIN_REQUIRED < 1050
     if (chr_data == NULL) {
-      KLGetCurrentKeyboardLayout (&key_layout);
-      KLGetKeyboardLayoutProperty (key_layout, kKLuchrData, &chr_data);
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+        ErrorF("X11.app: Error detected in determining keyboard layout.  If you are using an Apple-provided keyboard layout, please report this error at http://xquartz.macosforge.org and http://bugreport.apple.com\n");
+        ErrorF("X11.app: Debug Info: keyboard_type=%u, currentKeyLayoutRef=%p, currentKeyLayoutDataRef=%p, chr_data=%p\n",
+               (unsigned)keyboard_type, currentKeyLayoutRef, currentKeyLayoutDataRef, chr_data);
+#endif
+
+        KLGetCurrentKeyboardLayout (&key_layout);
+        KLGetKeyboardLayoutProperty (key_layout, kKLuchrData, &chr_data);
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+        if(chr_data != NULL) {
+            ErrorF("X11.app: Fallback succeeded, but this is still a bug.  Please report the above information.\n");
+        }
+#endif
     }
-    
+
     if (chr_data == NULL) {
-      KLGetKeyboardLayoutProperty (key_layout, kKLKCHRData, &chr_data);
-      is_uchr = 0;
-      num_keycodes = 128;
+        ErrorF("X11.app: Debug Info: kKLuchrData failed, trying kKLKCHRData.\n");
+        ErrorF("If you are using a 3rd party keyboard layout, please see http://xquartz.macosforge.org/trac/ticket/154\n");
+        KLGetKeyboardLayoutProperty (key_layout, kKLKCHRData, &chr_data);
+        is_uchr = 0;
+        num_keycodes = 128;
+        
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+        if(chr_data != NULL) {
+            ErrorF("X11.app: Fallback succeeded, but this is still a bug.  Please report the above information.\n");
+        }
+#endif
     }
+#endif
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+    if(currentKeyLayoutRef)
+        CFRelease(currentKeyLayoutRef);
+#endif
     
     if (chr_data == NULL) {
       ErrorF ( "Couldn't get uchr or kchr resource\n");
       return FALSE;
     }
-
+    
     /* Scan the keycode range for the Unicode character that each
        key produces in the four shift states. Then convert that to
        an X11 keysym (which may just the bit that says "this is
        Unicode" if it can't find the real symbol.) */
+       
+    /* KeyTranslate is not available on 64-bit platforms; UCKeyTranslate
+       must be used instead. */
 
     for (i = 0; i < num_keycodes; i++) {
         static const int mods[4] = {0, MOD_SHIFT, MOD_OPTION,
@@ -239,7 +666,9 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
         k = info->keyMap + i * GLYPHS_PER_KEY;
 
         for (j = 0; j < 4; j++) {
+#if !defined(__LP64__) || MAC_OS_X_VERSION_MIN_REQUIRED < 1050
             if (is_uchr)  {
+#endif
                 UniChar s[8];
                 UniCharCount len;
                 UInt32 dead_key_state = 0, extra_dead = 0;
@@ -263,6 +692,7 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
                     k[j] = ucs2keysym (s[0]);
                     if (dead_key_state != 0) k[j] = make_dead_key (k[j]);
                 }
+#if !defined(__LP64__) || MAC_OS_X_VERSION_MIN_REQUIRED < 1050
             } else { // kchr
 	      UInt32 c, state = 0, state2 = 0;
                 UInt16 code;
@@ -286,6 +716,7 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
                     if (state != 0) k[j] = make_dead_key (k[j]);
                 }
             }
+#endif
         }
 	
         if (k[3] == k[2]) k[3] = NoSymbol;
@@ -318,7 +749,6 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
                 k[0] = known_numeric_keys[i].keypad;
         }
     }
-    if(currentKeyLayoutRef)	CFRelease(currentKeyLayoutRef);
-    
+
     return TRUE;
 }

@@ -1051,6 +1051,10 @@ StippleScanlineProcPtr *XAAGetStippleScanlineFuncMSBFirstFixedBase(void);
 StippleScanlineProcPtr *XAAGetStippleScanlineFuncMSBFirst(void);
 StippleScanlineProcPtr *XAAGetStippleScanlineFuncLSBFirstFixedBase(void);
 StippleScanlineProcPtr *XAAGetStippleScanlineFuncLSBFirst(void);
+StippleScanlineProcPtr *XAAGetStippleScanlineFunc3MSBFirstFixedBase(void);
+StippleScanlineProcPtr *XAAGetStippleScanlineFunc3MSBFirst(void);
+StippleScanlineProcPtr *XAAGetStippleScanlineFunc3LSBFirstFixedBase(void);
+StippleScanlineProcPtr *XAAGetStippleScanlineFunc3LSBFirst(void);
 
 int
 XAAPolyText8TEColorExpansion(

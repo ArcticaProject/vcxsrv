@@ -56,12 +56,13 @@ SOFTWARE.
 #include "mi.h"
 
 _X_EXPORT void
-miPolyPoint(pDrawable, pGC, mode, npt, pptInit)
-    DrawablePtr 	pDrawable;
-    GCPtr 		pGC;
-    int 		mode;		/* Origin or Previous */
-    int 		npt;
-    xPoint 		*pptInit;
+miPolyPoint(
+    DrawablePtr		pDrawable,
+    GCPtr		pGC,
+    int			mode,		/* Origin or Previous */
+    int			npt,
+    xPoint		*pptInit
+    )
 {
 
     int 		xorg;

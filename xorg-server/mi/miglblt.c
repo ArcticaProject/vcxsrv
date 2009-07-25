@@ -82,13 +82,15 @@ with the sample server.
 */
 
 _X_EXPORT void
-miPolyGlyphBlt(pDrawable, pGC, x, y, nglyph, ppci, pglyphBase)
-    DrawablePtr pDrawable;
-    GC 		*pGC;
-    int 	 x, y;
-    unsigned int nglyph;
-    CharInfoPtr *ppci;		/* array of character info */
-    pointer      pglyphBase;	/* start of array of glyphs */
+miPolyGlyphBlt(
+    DrawablePtr pDrawable,
+    GC		*pGC,
+    int		x,
+    int		y,
+    unsigned int nglyph,
+    CharInfoPtr *ppci,		/* array of character info */
+    pointer      pglyphBase	/* start of array of glyphs */
+    )
 {
     int width, height;
     PixmapPtr pPixmap;
@@ -196,13 +198,15 @@ miPolyGlyphBlt(pDrawable, pGC, x, y, nglyph, ppci, pglyphBase)
 
 
 _X_EXPORT void
-miImageGlyphBlt(pDrawable, pGC, x, y, nglyph, ppci, pglyphBase)
-    DrawablePtr pDrawable;
-    GC 		*pGC;
-    int 	 x, y;
-    unsigned int nglyph;
-    CharInfoPtr *ppci;		/* array of character info */
-    pointer      pglyphBase;	/* start of array of glyphs */
+miImageGlyphBlt(
+    DrawablePtr pDrawable,
+    GC		*pGC,
+    int		 x,
+    int		 y,
+    unsigned int nglyph,
+    CharInfoPtr *ppci,		/* array of character info */
+    pointer      pglyphBase	/* start of array of glyphs */
+    )
 {
     ExtentInfoRec info;		/* used by QueryGlyphExtents() */
     XID gcvals[3];

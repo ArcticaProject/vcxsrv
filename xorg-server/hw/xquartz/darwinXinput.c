@@ -1,8 +1,7 @@
-
 /*
- * X server support of the XINPUT extension for Darwin
+ * X server support of the XINPUT extension for xquartz
  *
- * This is currently a copy of mi/stubs.c, but eventually this
+ * This is currently a copy of Xi/stubs.c, but eventually this
  * should include more complete XINPUT support.
  */
 
@@ -52,100 +51,18 @@ SOFTWARE.
 
 ********************************************************/
 
+#define	 NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
 
-#define	 NEED_EVENTS
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "inputstr.h"
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
 #include "XIstubs.h"
-#include "chgkbd.h"
-
-/***********************************************************************
- *
- * Caller:	ProcXChangeKeyboardDevice
- *
- * This procedure does the implementation-dependent portion of the work
- * needed to change the keyboard device.
- *
- * The X keyboard device has a FocusRec.  If the device that has been 
- * made into the new X keyboard did not have a FocusRec, 
- * ProcXChangeKeyboardDevice will allocate one for it.
- *
- * If you do not want clients to be able to focus the old X keyboard
- * device, call DeleteFocusClassDeviceStruct to free the FocusRec.
- *
- * If you support input devices with keys that you do not want to be 
- * used as the X keyboard, you need to check for them here and return 
- * a BadDevice error.
- *
- * The default implementation is to do nothing (assume you do want
- * clients to be able to focus the old X keyboard).  The commented-out
- * sample code shows what you might do if you don't want the default.
- *
- */
-
-int ChangeKeyboardDevice (DeviceIntPtr old_dev, DeviceIntPtr new_dev) {
-    /***********************************************************************
-     DeleteFocusClassDeviceStruct(old_dev);	 * defined in xchgptr.c *
-    **********************************************************************/
-    return BadMatch;
-}
-
-
-/***********************************************************************
- *
- * Caller:	ProcXChangePointerDevice
- *
- * This procedure does the implementation-dependent portion of the work
- * needed to change the pointer device.
- *
- * The X pointer device does not have a FocusRec.  If the device that
- * has been made into the new X pointer had a FocusRec, 
- * ProcXChangePointerDevice will free it.
- *
- * If you want clients to be able to focus the old pointer device that
- * has now become accessible through the input extension, you need to 
- * add a FocusRec to it here.
- *
- * The XChangePointerDevice protocol request also allows the client
- * to choose which axes of the new pointer device are used to move 
- * the X cursor in the X- and Y- directions.  If the axes are different
- * than the default ones, you need to keep track of that here.
- *
- * If you support input devices with valuators that you do not want to be 
- * used as the X pointer, you need to check for them here and return a 
- * BadDevice error.
- *
- * The default implementation is to do nothing (assume you don't want
- * clients to be able to focus the old X pointer).  The commented-out
- * sample code shows what you might do if you don't want the default.
- *
- */
-
-int
-ChangePointerDevice (
-    DeviceIntPtr	old_dev,
-    DeviceIntPtr	new_dev,
-    unsigned char	x,
-    unsigned char	y)
-    {
-    /***********************************************************************
-    InitFocusClassDeviceStruct(old_dev);	* allow focusing old ptr*
-
-    x_axis = x;					* keep track of new x-axis*
-    y_axis = y;					* keep track of new y-axis*
-    if (x_axis != 0 || y_axis != 1)
-	axes_changed = TRUE;			* remember axes have changed*
-    else
-	axes_changed = FALSE;
-    *************************************************************************/
-    return BadMatch;
-    }
+#include "darwin.h"
 
 /***********************************************************************
  *
@@ -161,11 +78,10 @@ ChangePointerDevice (
  */
 
 void
-CloseInputDevice (d, client)
-    DeviceIntPtr d;
-    ClientPtr client;
-    {
-    }
+CloseInputDevice(DeviceIntPtr d, ClientPtr client)
+{
+  DEBUG_LOG("CloseInputDevice(%p, %p)\n", d, client);
+}
 
 /***********************************************************************
  *
@@ -194,8 +110,8 @@ CloseInputDevice (d, client)
  */
 
 void
-AddOtherInputDevices ()
-    {
+AddOtherInputDevices(void)
+{
     /**********************************************************************
      for each uninitialized device, do something like: 
 
@@ -208,8 +124,8 @@ AddOtherInputDevices ()
     RegisterOtherDevice(dev);
     dev->inited = ((*dev->deviceProc)(dev, DEVICE_INIT) == Success);
     ************************************************************************/
-
-    }
+  DEBUG_LOG("AddOtherInputDevices\n");
+}
 
 /***********************************************************************
  *
@@ -234,12 +150,10 @@ AddOtherInputDevices ()
  */
 
 void
-OpenInputDevice (dev, client, status)
-    DeviceIntPtr dev;
-    ClientPtr client;
-    int *status;
-    {
-    }
+OpenInputDevice(DeviceIntPtr dev, ClientPtr client, int *status)
+{
+  DEBUG_LOG("OpenInputDevice(%p, %p, %p)\n", dev, client, status);
+}
 
 /****************************************************************************
  *
@@ -254,13 +168,11 @@ OpenInputDevice (dev, client, status)
  */
 
 int
-SetDeviceMode (client, dev, mode)
-    register	ClientPtr	client;
-    DeviceIntPtr dev;
-    int		mode;
-    {
+SetDeviceMode(ClientPtr client, DeviceIntPtr dev, int mode)
+{
+  DEBUG_LOG("SetDeviceMode(%p, %p, %d)\n", client, dev, mode);
     return BadMatch;
-    }
+}
 
 /****************************************************************************
  *
@@ -275,15 +187,13 @@ SetDeviceMode (client, dev, mode)
  */
 
 int
-SetDeviceValuators (client, dev, valuators, first_valuator, num_valuators)
-    register	ClientPtr	client;
-    DeviceIntPtr dev;
-    int		*valuators;
-    int		first_valuator;
-    int		num_valuators;
-    {
-    return BadMatch;
-    }
+SetDeviceValuators(ClientPtr client, DeviceIntPtr dev,
+		   int *valuators, int first_valuator, int num_valuators)
+{
+  DEBUG_LOG("SetDeviceValuators(%p, %p, %p, %d, %d)\n", client,
+	    dev, valuators, first_valuator, num_valuators);
+  return BadMatch;
+}
 
 /****************************************************************************
  *
@@ -294,16 +204,48 @@ SetDeviceValuators (client, dev, valuators, first_valuator, num_valuators)
  */
 
 int
-ChangeDeviceControl (client, dev, control)
-    register	ClientPtr	client;
-    DeviceIntPtr dev;
-    xDeviceCtl	*control;
-    {
-    switch (control->control)
-	{
-	case DEVICE_RESOLUTION:
-	    return (BadMatch);
-	default:
-	    return (BadMatch);
-	}
+ChangeDeviceControl(ClientPtr client, DeviceIntPtr dev,
+		    xDeviceCtl * control)
+{
+
+  DEBUG_LOG("ChangeDeviceControl(%p, %p, %p)\n", client, dev, control);
+    switch (control->control) {
+    case DEVICE_RESOLUTION:
+	return (BadMatch);
+    case DEVICE_ABS_CALIB:
+    case DEVICE_ABS_AREA:
+        return (BadMatch);
+    case DEVICE_CORE:
+        return (BadMatch);
+    default:
+	return (BadMatch);
     }
+}
+
+
+/****************************************************************************
+ *
+ * Caller: configAddDevice (and others)
+ *
+ * Add a new device with the specified options.
+ *
+ */
+int
+NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
+{
+  DEBUG_LOG("NewInputDeviceRequest(%p, %p)\n", options, pdev);
+  return BadValue;
+}
+
+/****************************************************************************
+ *
+ * Caller: configRemoveDevice (and others)
+ *
+ * Remove the specified device previously added.
+ *
+ */
+void
+DeleteInputDeviceRequest(DeviceIntPtr dev)
+{
+  DEBUG_LOG("DeleteInputDeviceRequest(%p)\n", dev);
+}

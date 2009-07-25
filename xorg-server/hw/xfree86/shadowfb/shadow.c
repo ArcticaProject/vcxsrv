@@ -94,8 +94,10 @@ typedef struct {
 } ShadowGCRec, *ShadowGCPtr;
 
 
-static DevPrivateKey ShadowScreenKey = &ShadowScreenKey;
-static DevPrivateKey ShadowGCKey = &ShadowGCKey;
+static int ShadowScreenKeyIndex;
+static DevPrivateKey ShadowScreenKey = &ShadowScreenKeyIndex;
+static int ShadowGCKeyIndex;
+static DevPrivateKey ShadowGCKey = &ShadowGCKeyIndex;
 
 #define GET_SCREEN_PRIVATE(pScreen) \
     (ShadowScreenPtr)dixLookupPrivate(&(pScreen)->devPrivates, ShadowScreenKey)

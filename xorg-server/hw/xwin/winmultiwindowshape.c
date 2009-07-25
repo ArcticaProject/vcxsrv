@@ -32,7 +32,6 @@
 #ifdef HAVE_XWIN_CONFIG_H
 #include <xwin-config.h>
 #endif
-#ifdef SHAPE
 
 #include "win.h"
 
@@ -210,7 +209,6 @@ winReshapeMultiWindow (WindowPtr pWin)
   
   return;
 }
-#endif
 
 void
 winShapeRgnUpdateMultiwindow(HWND hwnd)

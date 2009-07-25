@@ -48,9 +48,7 @@ typedef struct _dmxWinPriv {
     unsigned long  attribMask;
     Colormap       cmap;
     Visual        *visual;
-#ifdef SHAPE
     Bool           isShaped;
-#endif
 #ifdef RENDER
     Bool           hasPict;
 #endif
@@ -97,10 +95,8 @@ extern void dmxResizeRootWindow(WindowPtr pRoot,
 
 extern Bool dmxBEDestroyWindow(WindowPtr pWindow);
 
-#ifdef SHAPE
 /* Support for shape extension */
 extern void dmxSetShape(WindowPtr pWindow);
-#endif
 
 /** Private index.  \see dmxwindow.c \see dmxscrinit.c */
 extern DevPrivateKey dmxWinPrivateKey;

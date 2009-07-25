@@ -1,10 +1,4 @@
-standard_dix_libs = libdix.la libxpstubs.la
-
-if XPRINT
-noinst_LTLIBRARIES = $(standard_dix_libs) libXpdix.la
-else
-noinst_LTLIBRARIES = $(standard_dix_libs)
-endif
+noinst_LTLIBRARIES = libdix.la
 
 AM_CFLAGS = $(DIX_CFLAGS) \
 	-DVENDOR_NAME=\""@VENDOR_NAME@"\" \
@@ -20,6 +14,8 @@ libdix_la_SOURCES = 	\
 	dispatch.h	\
 	dixfonts.c	\
 	dixutils.c	\
+	enterleave.c	\
+	enterleave.h	\
 	events.c	\
 	extension.c	\
 	ffs.c		\
@@ -33,26 +29,16 @@ libdix_la_SOURCES = 	\
 	pixmap.c	\
 	privates.c	\
 	property.c	\
+	ptrveloc.c	\
 	registry.c	\
 	resource.c	\
 	selection.c	\
 	swaprep.c	\
 	swapreq.c	\
 	tables.c	\
-	window.c	\
-	strcasecmp.c	\
-	strcasestr.c
+	window.c
 
-libxpstubs_la_SOURCES =	\
-	xpstubs.c
-
-if XPRINT
-libXpdix_la_SOURCES = $(libdix_la_SOURCES)
-libXpdix_la_CPPFLAGS = -I$(top_srcdir)/hw/xprint
-libXpdix_la_CFLAGS = $(AM_CFLAGS) $(XPRINT_CFLAGS)
-endif
-
-EXTRA_DIST = buildatoms BuiltInAtoms CHANGES Xserver.d Xserver-dtrace.h.in
+EXTRA_DIST = buildatoms BuiltInAtoms Xserver.d Xserver-dtrace.h.in
 
 # Install list of protocol names
 miscconfigdir = $(SERVER_MISC_CONFIG_PATH)

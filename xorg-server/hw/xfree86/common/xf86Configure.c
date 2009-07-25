@@ -76,12 +76,6 @@ static char *DFLT_MOUSE_PROTO = "OSMouse";
 #elif defined(__UNIXWARE__)
 static char *DFLT_MOUSE_PROTO = "OSMouse";
 static char *DFLT_MOUSE_DEV = "/dev/mouse";
-#elif defined(QNX4)
-static char *DFLT_MOUSE_PROTO = "OSMouse";
-static char *DFLT_MOUSE_DEV = "/dev/mouse";
-#elif defined(__QNXNTO__)
-static char *DFLT_MOUSE_PROTO = "OSMouse";
-static char *DFLT_MOUSE_DEV = "/dev/devi/mouse0";
 #elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
 static char *DFLT_MOUSE_DEV = "/dev/sysmouse";
 static char *DFLT_MOUSE_PROTO = "auto";
@@ -120,18 +114,6 @@ xf86AddBusDeviceToConfigure(const char *driver, BusType bus, void *busData, int 
 		(DevToConfig[i].pVideo->func == pVideo->func))
 		return NULL;
 	isPrimary = xf86IsPrimaryPci(pVideo);
-	break;
-    case BUS_ISA:
-	/*
-	 * This needs to be revisited as it doesn't allow for non-PCI
-	 * multihead.
-	 */
-	if (!xf86IsPrimaryIsa())
-	    return NULL;
-	isPrimary = TRUE;
-	for (i = 0;  i < nDevToConfig;  i++)
-	    if (!DevToConfig[i].pVideo)
-		return NULL;
 	break;
 #if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
     case BUS_SBUS:
@@ -208,10 +190,6 @@ xf86AddBusDeviceToConfigure(const char *driver, BusType bus, void *busData, int 
 	    chipset = (pVideo->vendor_id << 16) | pVideo->device_id;
 	}
 	break;
-    case BUS_ISA:
-	NewDevice.GDev.identifier = "ISA Adapter";
-	NewDevice.GDev.busID = "ISA";
-	break;
 #if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
     case BUS_SBUS: {
 	char *promPath = NULL;
@@ -245,17 +223,6 @@ xf86AddBusDeviceToConfigure(const char *driver, BusType bus, void *busData, int 
     return &NewDevice.GDev;
 
 #   undef NewDevice
-}
-
-/*
- * Backwards compatibility
- */
-_X_EXPORT GDevPtr
-xf86AddDeviceToConfigure(const char *driver, struct pci_device * pVideo, 
-			 int chipset)
-{
-    return xf86AddBusDeviceToConfigure(driver, pVideo ? BUS_PCI : BUS_ISA,
-				       pVideo, chipset);
 }
 
 static XF86ConfInputPtr
@@ -293,8 +260,7 @@ configureInputSection (void)
 #endif
     }
 
-    mouse = xf86confmalloc(sizeof(XF86ConfInputRec));
-    memset((XF86ConfInputPtr)mouse,0,sizeof(XF86ConfInputRec));
+    mouse = xf86confcalloc(1, sizeof(XF86ConfInputRec));
     mouse->inp_identifier = "Mouse0";
     mouse->inp_driver = "mouse";
     mouse->inp_option_lst = 
@@ -330,8 +296,7 @@ configureScreenSection (int screennum)
     {
 	XF86ConfDisplayPtr display;
 
-	display = xf86confmalloc(sizeof(XF86ConfDisplayRec));
-    	memset((XF86ConfDisplayPtr)display,0,sizeof(XF86ConfDisplayRec));
+	display = xf86confcalloc(1, sizeof(XF86ConfDisplayRec));
 	display->disp_depth = depths[i];
 	display->disp_black.red = display->disp_white.red = -1;
 	display->disp_black.green = display->disp_white.green = -1;
@@ -532,8 +497,7 @@ configureModuleSection (void)
 	for (el = elist; *el; el++) {
 	    XF86LoadPtr module;
 
-    	    module = xf86confmalloc(sizeof(XF86LoadRec));
-    	    memset((XF86LoadPtr)module,0,sizeof(XF86LoadRec));
+    	    module = xf86confcalloc(1, sizeof(XF86LoadRec));
     	    module->load_name = *el;
             ptr->mod_load_lst = (XF86LoadPtr)xf86addListItem(
                                 (glp)ptr->mod_load_lst, (glp)module);
@@ -547,8 +511,7 @@ configureModuleSection (void)
 	for (el = elist; *el; el++) {
 	    XF86LoadPtr module;
 
-    	    module = xf86confmalloc(sizeof(XF86LoadRec));
-    	    memset((XF86LoadPtr)module,0,sizeof(XF86LoadRec));
+    	    module = xf86confcalloc(1, sizeof(XF86LoadRec));
     	    module->load_name = *el;
 
             /* Add only those font backends which are referenced by fontpath */
@@ -672,12 +635,17 @@ configureDDCMonitorSection (int screennum)
     return ptr;
 }
 
+#if !defined(PATH_MAX)
+# define PATH_MAX 1024
+#endif
+
 void
-DoConfigure()
+DoConfigure(void)
 {
     int i,j, screennum = -1;
     char *home = NULL;
-    char *filename = NULL;
+    char filename[PATH_MAX];
+    char *addslash = "";
     XF86ConfigPtr xf86config = NULL;
     char **vlist, **vl;
     int *dev2screen;
@@ -722,11 +690,7 @@ DoConfigure()
     xf86FindPrimaryDevice();
  
     /* Create XF86Config file structure */
-    xf86config = malloc(sizeof(XF86ConfigRec));
-    memset ((XF86ConfigPtr)xf86config, 0, sizeof(XF86ConfigRec));
-    xf86config->conf_device_lst = NULL;
-    xf86config->conf_screen_lst = NULL;
-    xf86config->conf_monitor_lst = NULL;
+    xf86config = calloc(1, sizeof(XF86ConfigRec));
 
     /* Call all of the probe functions, reporting the results. */
     for (CurrentDriver = 0;  CurrentDriver < xf86NumDrivers;  CurrentDriver++) {
@@ -779,33 +743,26 @@ DoConfigure()
     xf86config->conf_input_lst = configureInputSection();
     xf86config->conf_layout_lst = configureLayoutSection();
 
-    if (!(home = getenv("HOME")))
+    home = getenv("HOME");
+    if ((home == NULL) || (home[0] == '\0')) {
     	home = "/";
-    {
-#if !defined(PATH_MAX)
-#define PATH_MAX 1024
-#endif
-        const char* configfile = XF86CONFIGFILE".new";
-    	char homebuf[PATH_MAX];
-    	/* getenv might return R/O memory, as with OS/2 */
-    	strncpy(homebuf,home,PATH_MAX-1);
-    	homebuf[PATH_MAX-1] = '\0';
-    	home = homebuf;
-    	if (!(filename =
-	     (char *)xalloc(strlen(home) + 
-	  			 strlen(configfile) + 3)))
+    } else {
+	/* Determine if trailing slash is present or needed */
+	int l = strlen(home);
 
-      	if (home[0] == '/' && home[1] == '\0')
-            home[0] = '\0';
-#ifndef QNX4
-	sprintf(filename, "%s/%s", home,configfile);
-#else
-	sprintf(filename, "//%d%s/%s", getnid(),home,configfile);
-#endif
-	
+	if (home[l-1] != '/') {
+	    addslash = "/";
+	}
     }
 
-    xf86writeConfigFile(filename, xf86config);
+    snprintf(filename, sizeof(filename), "%s%s" XF86CONFIGFILE ".new",
+	     home, addslash);
+
+    if (xf86writeConfigFile(filename, xf86config) == 0) {
+	xf86Msg(X_ERROR, "Unable to write config file: \"%s\": %s\n",
+		filename, strerror(errno));
+	goto bail;
+    }
 
     xf86DoConfigurePass1 = FALSE;
     /* Try to get DDC information filled in */
@@ -901,7 +858,11 @@ DoConfigure()
 		(glp)xf86config->conf_screen_lst, (glp)ScreenPtr);
     }
 
-    xf86writeConfigFile(filename, xf86config);
+    if (xf86writeConfigFile(filename, xf86config) == 0) {
+	xf86Msg(X_ERROR, "Unable to write config file: \"%s\": %s\n",
+		filename, strerror(errno));
+	goto bail;
+    }
 
     ErrorF("\n");
 

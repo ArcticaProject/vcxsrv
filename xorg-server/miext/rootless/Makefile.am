@@ -1,8 +1,6 @@
 AM_CFLAGS = $(DIX_CFLAGS) $(XSERVER_CFLAGS)
 AM_CPPFLAGS = -I$(top_srcdir)/hw/xfree86/os-support
 
-SUBDIRS = safeAlpha accel
-
 noinst_LTLIBRARIES = librootless.la
 librootless_la_SOURCES = \
 	rootlessCommon.c \

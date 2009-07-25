@@ -32,6 +32,8 @@
 #include "Pci.h"
 #ifdef _X86EMU
 #include "x86emu/x86emui.h"
+#else
+#define DEBUG_IO_TRACE() 0
 #endif
 #include <pciaccess.h>
 

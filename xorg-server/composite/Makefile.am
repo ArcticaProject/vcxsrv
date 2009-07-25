@@ -7,4 +7,5 @@ libcomposite_la_SOURCES = 	\
 	compext.c		\
 	compint.h		\
 	compinit.c		\
+	compoverlay.c		\
 	compwindow.c		

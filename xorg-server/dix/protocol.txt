@@ -296,6 +296,13 @@ R021 RANDR:SetCrtcConfig
 R022 RANDR:GetCrtcGammaSize
 R023 RANDR:GetCrtcGamma
 R024 RANDR:SetCrtcGamma
+R025 RANDR:GetScreenResourcesCurrent
+R026 RANDR:SetCrtcTransform
+R027 RANDR:GetCrtcTransform
+R028 RANDR:GetPanning
+R029 RANDR:SetPanning
+R030 RANDR:SetOutputPrimary
+R031 RANDR:GetOutputPrimary
 V000 RANDR:ScreenChangeNotify
 V001 RANDR:Notify
 E000 RANDR:BadRROutput
@@ -731,11 +738,6 @@ E000 XC-APPGROUP:BadAppGroup
 R000 XC-MISC:GetVersion
 R001 XC-MISC:GetXIDRange
 R002 XC-MISC:GetXIDList
-R000 XEVIE:QueryVersion
-R001 XEVIE:Start
-R002 XEVIE:End
-R003 XEVIE:Send
-R004 XEVIE:SelectInput
 R000 XFIXES:QueryVersion
 R001 XFIXES:ChangeSaveSet
 R002 XFIXES:SelectSelectionInput
@@ -942,6 +944,10 @@ R032 XInputExtension:DeviceBell
 R033 XInputExtension:SetDeviceValuators
 R034 XInputExtension:GetDeviceControl
 R035 XInputExtension:ChangeDeviceControl
+R036 XInputExtension:ListDeviceProperties
+R037 XInputExtension:ChangeDeviceProperty
+R038 XInputExtension:DeleteDeviceProperty
+R039 XInputExtension:GetDeviceProperty
 V000 XInputExtension:DeviceValuator
 V001 XInputExtension:DeviceKeyPress
 V002 XInputExtension:DeviceKeyRelease
@@ -958,6 +964,7 @@ V012 XInputExtension:ChangeDeviceNotify
 V013 XInputExtension:DeviceKeystateNotify
 V014 XInputExtension:DeviceButtonstateNotify
 V015 XInputExtension:DevicePresenceNotify
+V016 XInputExtension:DevicePropertyNotify
 E000 XInputExtension:BadDevice
 E001 XInputExtension:BadEvent
 E002 XInputExtension:BadMode

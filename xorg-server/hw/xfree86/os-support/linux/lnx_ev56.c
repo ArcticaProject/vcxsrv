@@ -90,7 +90,6 @@ writeDense32(int Value, pointer Base, register unsigned long Offset)
 }
 
 
-#ifndef INCLUDE_XF86_NO_DOMAIN
 
 void
 _dense_outb(char val, unsigned long port)
@@ -146,5 +145,4 @@ _dense_inl(unsigned long port)
   return *(volatile CARD32 *)port;
 }
 
-#endif /* !INCLUDE_XF86_NO_DOMAIN */
 

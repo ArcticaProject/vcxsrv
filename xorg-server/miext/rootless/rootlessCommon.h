@@ -39,9 +39,7 @@
 #include "rootless.h"
 #include "fb.h"
 
-#ifdef SHAPE
 #include "scrnintstr.h"
-#endif /* SHAPE */
 
 #ifdef RENDER
 #include "picturestr.h"
@@ -99,9 +97,7 @@ typedef struct _RootlessScreenRec {
     MarkOverlappedWindowsProcPtr MarkOverlappedWindows;
     ValidateTreeProcPtr ValidateTree;
 
-#ifdef SHAPE
     SetShapeProcPtr SetShape;
-#endif
 
 #ifdef RENDER
     CompositeProcPtr Composite;
@@ -242,7 +238,7 @@ extern RegionRec rootlessHugeRoot;
                             ((int)(_x) * _pPix->drawable.bitsPerPixel/8 +   \
                              (int)(_y) * _pPix->devKind);                   \
     if (_pPix->drawable.bitsPerPixel != FB_UNIT) {                          \
-        unsigned _diff = ((unsigned) _pPix->devPrivate.ptr) &               \
+        size_t _diff = ((size_t) _pPix->devPrivate.ptr) &               \
                          (FB_UNIT / CHAR_BIT - 1);                          \
         _pPix->devPrivate.ptr = (char *) (_pPix->devPrivate.ptr) -          \
                                 _diff;                                      \
@@ -277,10 +273,22 @@ Bool RootlessResolveColormap (ScreenPtr pScreen, int first_color,
 void RootlessFlushWindowColormap (WindowPtr pWin);
 void RootlessFlushScreenColormaps (ScreenPtr pScreen);
 
+// xp_error
+int RootlessColormapCallback(void *data, int first_color, int n_colors, uint32_t *colors);
+
 // Move a window to its proper location on the screen.
 void RootlessRepositionWindow(WindowPtr pWin);
 
 // Move the window to it's correct place in the physical stacking order.
 void RootlessReorderWindow(WindowPtr pWin);
+
+void RootlessScreenExpose (ScreenPtr pScreen);
+void RootlessHideAllWindows (void);
+void RootlessShowAllWindows (void);
+void RootlessUpdateRooted (Bool state);
+
+void RootlessEnableRoot (ScreenPtr pScreen);
+void RootlessDisableRoot (ScreenPtr pScreen);
+
 
 #endif /* _ROOTLESSCOMMON_H */

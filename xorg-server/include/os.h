@@ -93,7 +93,6 @@ typedef struct _NewClientRec *NewClientPtr;
 #define SIGVAL void
 #endif
 
-extern Bool OsDelayInitColors;
 extern void (*OsVendorVErrorFProc)(const char *, va_list args);
 
 extern int WaitForSomething(
@@ -115,7 +114,7 @@ extern void FlushIfCriticalOutputPending(void);
 
 extern void SetCriticalOutputPending(void);
 
-extern int WriteToClient(ClientPtr /*who*/, int /*count*/, char* /*buf*/);
+extern int WriteToClient(ClientPtr /*who*/, int /*count*/, const void* /*buf*/);
 
 extern void ResetOsBuffers(void);
 
@@ -166,7 +165,9 @@ extern void MakeClientGrabImpervious(ClientPtr /*client*/);
 
 extern void MakeClientGrabPervious(ClientPtr /*client*/);
 
-extern void AvailableClientInput(ClientPtr /* client */);
+#ifdef XQUARTZ
+extern void ListenOnOpenFD(int /* fd */, int /* noxauth */);
+#endif
 
 extern CARD32 GetTimeInMillis(void);
 
@@ -208,8 +209,6 @@ extern SIGVAL GiveUp(int /*sig*/);
 
 extern void UseMsg(void);
 
-extern void InitGlobals(void);
-
 extern void ProcessCommandLine(int /*argc*/, char* /*argv*/[]);
 
 extern int set_font_authorizations(
@@ -229,8 +228,6 @@ extern pointer XNFalloc(unsigned long /*amount*/);
 extern pointer XNFcalloc(unsigned long /*amount*/);
 extern pointer XNFrealloc(pointer /*ptr*/, unsigned long /*amount*/);
 
-extern void OsInitAllocator(void);
-
 extern char *Xstrdup(const char *s);
 extern char *XNFstrdup(const char *s);
 extern char *Xprintf(const char *fmt, ...);
@@ -244,10 +241,8 @@ extern OsSigHandlerPtr OsSignal(int /* sig */, OsSigHandlerPtr /* handler */);
 
 extern int auditTrailLevel;
 
-#ifdef SERVER_LOCK
 extern void LockServer(void);
 extern void UnlockServer(void);
-#endif
 
 extern int OsLookupColor(
     int	/*screen*/,
@@ -264,8 +259,6 @@ extern void OsCleanup(Bool);
 extern void OsVendorFatalError(void);
 
 extern void OsVendorInit(void);
-
-extern int OsInitColors(void);
 
 void OsBlockSignals (void);
 
@@ -403,12 +396,6 @@ extern XID GenerateAuthorization(
     unsigned int * /* data_length_return */,
     char	** /* data_return */);
 
-#ifdef COMMANDLINE_CHALLENGED_OPERATING_SYSTEMS
-extern void ExpandCommandLine(int * /*pargc*/, char *** /*pargv*/);
-#endif
-
-extern void ddxInitGlobals(void);
-
 extern int ddxProcessArgument(int /*argc*/, char * /*argv*/ [], int /*i*/);
 
 extern void ddxUseMsg(void);
@@ -436,19 +423,11 @@ extern void ddxUseMsg(void);
     (_pxReq->length ? (otherReqTypePtr)_pxReq \
 		    : (otherReqTypePtr)(((CARD32*)_pxReq)+1))
 
-/* stuff for SkippedRequestsCallback */
-extern CallbackListPtr SkippedRequestsCallback;
-typedef struct {
-    xReqPtr req;
-    ClientPtr client;
-    int numskipped;
-} SkippedRequestInfoRec;
-
 /* stuff for ReplyCallback */
 extern CallbackListPtr ReplyCallback;
 typedef struct {
     ClientPtr client;
-    pointer replyData;
+    const void *replyData;
     unsigned long dataLenBytes;
     unsigned long bytesRemaining;
     Bool startOfReply;
@@ -460,6 +439,27 @@ extern CallbackListPtr FlushCallback;
 extern void AbortDDX(void);
 extern void ddxGiveUp(void);
 extern int TimeSinceLastInputEvent(void);
+
+/* strcasecmp.c */
+#if NEED_STRCASECMP
+#define strcasecmp xstrcasecmp
+extern int xstrcasecmp(const char *s1, const char *s2);
+#endif
+
+#if NEED_STRNCASECMP
+#define strncasecmp xstrncasecmp
+extern int xstrncasecmp(const char *s1, const char *s2, size_t n);
+#endif
+
+#if NEED_STRCASESTR
+#define strcasestr xstrcasestr
+extern char *xstrcasestr(const char *s, const char *find);
+#endif
+
+#ifndef HAS_STRLCPY
+extern size_t strlcpy(char *dst, const char *src, size_t siz);
+extern size_t strlcat(char *dst, const char *src, size_t siz);
+#endif
 
 /* Logging. */
 typedef enum _LogParameter {
@@ -485,8 +485,7 @@ typedef enum {
 } MessageType;
 
 /* XXX Need to check which GCC versions have the format(printf) attribute. */
-#if defined(__GNUC__) && \
-    ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ > 4)))
+#if defined(__GNUC__) && (__GNUC__ > 2)
 #define _printf_attribute(a,b) __attribute((format(__printf__,a,b)))
 #else
 #define _printf_attribute(a,b) /**/
@@ -507,8 +506,7 @@ extern void FreeAuditTimer(void);
 extern void AuditF(const char *f, ...) _printf_attribute(1,2);
 extern void VAuditF(const char *f, va_list args);
 extern void FatalError(const char *f, ...) _printf_attribute(1,2)
-#if defined(__GNUC__) && \
-    ((__GNUC__ > 2) || ((__GNUC__ == 2) && (__GNUC_MINOR__ > 4)))
+#if defined(__GNUC__) && (__GNUC__ > 2)
 __attribute((noreturn))
 #endif
 ;

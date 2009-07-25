@@ -655,6 +655,32 @@ find_pci_class(CARD8 intf, CARD8 subClass, CARD16 _class,
 }
 #endif
 
+/*
+ * Return the last bus number in the same domain as dev.  Only look at the
+ * one domain since this is going into %cl, and VGA I/O is per-domain anyway.
+ */
+static int
+int1A_last_bus_number(struct pci_device *dev)
+{
+    struct pci_device *d;
+    struct pci_slot_match m = { dev->domain,
+				PCI_MATCH_ANY,
+				PCI_MATCH_ANY,
+				PCI_MATCH_ANY };
+    struct pci_device_iterator *iter;
+    int i = 0;
+
+    iter = pci_slot_match_iterator_create(&m);
+
+    while ((d = pci_device_next(iter)))
+	if (d->bus > i)
+	    i = d->bus;
+
+    pci_iterator_destroy(iter);
+
+    return i;
+}
+
 static int
 int1A_handler(xf86Int10InfoPtr pInt)
 {
@@ -674,7 +700,7 @@ int1A_handler(xf86Int10InfoPtr pInt)
 	X86_EDX = 0x20494350; /* " ICP" */
 	X86_EBX = 0x0210;    /* Version 2.10 */
 	X86_ECX &= 0xFF00;
-	X86_ECX |= (pciNumBuses & 0xFF);   /* Max bus number in system */
+	X86_ECX |= int1A_last_bus_number(pvp);
 	X86_EFLAGS &= ~((unsigned long)0x01); /* clear carry flag */
 #ifdef PRINT_INT
 	ErrorF("ax=0x%x dx=0x%x bx=0x%x cx=0x%x flags=0x%x\n",

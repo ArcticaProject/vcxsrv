@@ -43,12 +43,11 @@
 #include "fboverlay.h"
 #include "shadow.h"
 #include "randrstr.h"
+#include "globals.h"
 
 #ifdef XKB
 #include <X11/extensions/XKBstr.h>
 #endif
-
-extern WindowPtr    *WindowTable;
 
 #define KD_DPMS_NORMAL	    0
 #define KD_DPMS_STANDBY	    1
@@ -113,30 +112,6 @@ typedef struct _KdFrameBuffer {
     Pixel       redMask, greenMask, blueMask;
     void	*closure;
 } KdFrameBuffer;
-
-typedef struct _KdOffscreenArea KdOffscreenArea;
-
-typedef void (*KdOffscreenSaveProc) (ScreenPtr pScreen, KdOffscreenArea *area);
-
-typedef enum _KdOffscreenState {
-    KdOffscreenAvail,
-    KdOffscreenRemovable,
-    KdOffscreenLocked,
-} KdOffscreenState;
-
-struct _KdOffscreenArea {
-    int			offset;
-    int			save_offset;
-    int			size;
-    int			score;
-    pointer		privData;
-    
-    KdOffscreenSaveProc save;
-
-    KdOffscreenState	state;
-    
-   KdOffscreenArea	*next;
-};
 
 #define RR_Rotate_All	(RR_Rotate_0|RR_Rotate_90|RR_Rotate_180|RR_Rotate_270)
 #define RR_Reflect_All	(RR_Reflect_X|RR_Reflect_Y)
@@ -205,8 +180,6 @@ typedef struct {
     int		    bytesPerPixel[KD_MAX_FB];
 
     int		    dpmsState;
-    
-    KdOffscreenArea *off_screen_areas;
 
     ColormapPtr     pInstalledmap[KD_MAX_FB];         /* current colormap */
     xColorItem      systemPalette[KD_MAX_PSEUDO_SIZE];/* saved windows colors */
@@ -401,90 +374,6 @@ typedef struct _KdPointerMatrix {
     int	    matrix[2][3];
 } KdPointerMatrix;
 
-typedef struct _KaaTrapezoid {
-    float tl, tr, ty;
-    float bl, br, by;
-} KaaTrapezoid;
-
-typedef struct _KaaScreenInfo {
-    int	        offsetAlign;
-    int         pitchAlign;
-    int		flags;
-
-    int		(*markSync) (ScreenPtr pScreen);
-    void	(*waitMarker) (ScreenPtr pScreen, int marker);
-
-    Bool	(*PrepareSolid) (PixmapPtr	pPixmap,
-				 int		alu,
-				 Pixel		planemask,
-				 Pixel		fg);
-    void	(*Solid) (int x1, int y1, int x2, int y2);
-    void	(*DoneSolid) (void);
-
-    Bool	(*PrepareCopy) (PixmapPtr	pSrcPixmap,
-				PixmapPtr	pDstPixmap,
-				Bool		upsidedown,
-				Bool		reverse,
-				int		alu,
-				Pixel		planemask);
-    void	(*Copy) (int	srcX,
-			 int	srcY,
-			 int	dstX,
-			 int	dstY,
-			 int	width,
-			 int	height);
-    void	(*DoneCopy) (void);
-
-    Bool        (*PrepareBlend) (int		op,
-				 PicturePtr	pSrcPicture,
-				 PicturePtr	pDstPicture,
-				 PixmapPtr	pSrc,
-				 PixmapPtr	pDst);
-    void        (*Blend) (int	srcX,
-			  int	srcY,
-			  int	dstX,
-			  int	dstY,
-			  int	width,
-			  int	height);
-    void	(*DoneBlend) (void);
-
-    Bool        (*CheckComposite) (int		op,
-				   PicturePtr	pSrcPicture,
-				   PicturePtr	pMaskPicture,
-				   PicturePtr	pDstPicture);
-    Bool        (*PrepareComposite) (int		op,
-				     PicturePtr		pSrcPicture,
-				     PicturePtr		pMaskPicture,
-				     PicturePtr		pDstPicture,
-				     PixmapPtr		pSrc,
-				     PixmapPtr		pMask,
-				     PixmapPtr		pDst);
-    void        (*Composite) (int	srcX,
-			     int	srcY,
-			     int	maskX,
-			     int	maskY,
-			     int	dstX,
-			     int	dstY,
-			     int	width,
-			     int	height);
-    void	(*DoneComposite) (void);
-
-    Bool	(*PrepareTrapezoids) (PicturePtr pDstPicture,
-				      PixmapPtr pDst);
-    void	(*Trapezoids) (KaaTrapezoid	 *traps,
-			       int		 ntraps);
-    void	(*DoneTrapezoids) (void);
-
-    Bool        (*UploadToScreen) (PixmapPtr		pDst,
-				   char			*src,
-				   int			src_pitch);
-    Bool        (*UploadToScratch) (PixmapPtr		pSrc,
-				   PixmapPtr		pDst);
-} KaaScreenInfoRec, *KaaScreenInfoPtr;
-
-#define KAA_OFFSCREEN_PIXMAPS		(1 << 0)
-#define KAA_OFFSCREEN_ALIGN_POT		(1 << 1)
-
 /*
  * This is the only completely portable way to
  * compute this info.
@@ -504,7 +393,7 @@ extern Bool		kdEnabled;
 extern Bool		kdSwitchPending;
 extern Bool		kdEmulateMiddleButton;
 extern Bool		kdDisableZaphod;
-extern Bool		kdDontZap;
+extern Bool		kdAllowZap;
 extern int		kdVirtualTerminal;
 extern char		*kdSwitchCmd;
 extern KdOsFuncs	*kdOsFuncs;
@@ -514,119 +403,6 @@ extern KdOsFuncs	*kdOsFuncs;
 #define KdSetScreenPriv(pScreen,v) \
     dixSetPrivate(&(pScreen)->devPrivates, kdScreenPrivateKey, v)
 #define KdScreenPriv(pScreen) KdPrivScreenPtr pScreenPriv = KdGetScreenPriv(pScreen)
-
-/* kaa.c */
-Bool
-kaaDrawInit (ScreenPtr	        pScreen,
-	     KaaScreenInfoPtr   pScreenInfo);
-
-void
-kaaDrawFini (ScreenPtr	        pScreen);
-
-void
-kaaWrapGC (GCPtr pGC);
-
-void
-kaaUnwrapGC (GCPtr pGC);
-
-/* kasync.c */
-void
-KdCheckFillSpans  (DrawablePtr pDrawable, GCPtr pGC, int nspans,
-		   DDXPointPtr ppt, int *pwidth, int fSorted);
-
-void
-KdCheckSetSpans (DrawablePtr pDrawable, GCPtr pGC, char *psrc,
-		 DDXPointPtr ppt, int *pwidth, int nspans, int fSorted);
-
-void
-KdCheckPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth,
-		 int x, int y, int w, int h, int leftPad, int format,
-		 char *bits);
-
-RegionPtr
-KdCheckCopyArea (DrawablePtr pSrc, DrawablePtr pDst, GCPtr pGC,
-		 int srcx, int srcy, int w, int h, int dstx, int dsty);
-
-RegionPtr
-KdCheckCopyPlane (DrawablePtr pSrc, DrawablePtr pDst, GCPtr pGC,
-		  int srcx, int srcy, int w, int h, int dstx, int dsty,
-		  unsigned long bitPlane);
-
-void
-KdCheckPolyPoint (DrawablePtr pDrawable, GCPtr pGC, int mode, int npt,
-		  DDXPointPtr pptInit);
-
-void
-KdCheckPolylines (DrawablePtr pDrawable, GCPtr pGC,
-		  int mode, int npt, DDXPointPtr ppt);
-
-void
-KdCheckPolySegment (DrawablePtr pDrawable, GCPtr pGC,
-		    int nsegInit, xSegment *pSegInit);
-
-void
-KdCheckPolyRectangle (DrawablePtr pDrawable, GCPtr pGC, 
-		      int nrects, xRectangle *prect);
-
-void
-KdCheckPolyArc (DrawablePtr pDrawable, GCPtr pGC, 
-		int narcs, xArc *pArcs);
-
-#define KdCheckFillPolygon	miFillPolygon
-
-void
-KdCheckPolyFillRect (DrawablePtr pDrawable, GCPtr pGC,
-		     int nrect, xRectangle *prect);
-
-void
-KdCheckPolyFillArc (DrawablePtr pDrawable, GCPtr pGC, 
-		    int narcs, xArc *pArcs);
-
-void
-KdCheckImageGlyphBlt (DrawablePtr pDrawable, GCPtr pGC,
-		      int x, int y, unsigned int nglyph,
-		      CharInfoPtr *ppci, pointer pglyphBase);
-
-void
-KdCheckPolyGlyphBlt (DrawablePtr pDrawable, GCPtr pGC,
-		     int x, int y, unsigned int nglyph,
-		     CharInfoPtr *ppci, pointer pglyphBase);
-
-void
-KdCheckPushPixels (GCPtr pGC, PixmapPtr pBitmap,
-		   DrawablePtr pDrawable,
-		   int w, int h, int x, int y);
-
-void
-KdCheckGetImage (DrawablePtr pDrawable,
-		 int x, int y, int w, int h,
-		 unsigned int format, unsigned long planeMask,
-		 char *d);
-
-void
-KdCheckGetSpans (DrawablePtr pDrawable,
-		 int wMax,
-		 DDXPointPtr ppt,
-		 int *pwidth,
-		 int nspans,
-		 char *pdstStart);
-
-void
-KdCheckCopyWindow (WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc);
-
-void
-KdCheckPaintKey(DrawablePtr  pDrawable,
-		RegionPtr    pRegion,
-		CARD32       pixel,
-		int          layer);
-
-void
-KdCheckOverlayCopyWindow  (WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc);
-
-void
-KdScreenInitAsync (ScreenPtr pScreen);
-    
-extern const GCOps	kdAsyncPixmapGCOps;
 
 /* knoop.c */
 extern GCOps		kdNoopOps;
@@ -921,32 +697,6 @@ KdRandRGetTiming (ScreenPtr	    pScreen,
 		  RRScreenSizePtr   pSize);
 #endif
 
-/* kpict.c */
-void
-KdPictureInitAsync (ScreenPtr pScreen);
-
-#ifdef RENDER
-void
-KdCheckComposite (CARD8      op,
-		  PicturePtr pSrc,
-		  PicturePtr pMask,
-		  PicturePtr pDst,
-		  INT16      xSrc,
-		  INT16      ySrc,
-		  INT16      xMask,
-		  INT16      yMask,
-		  INT16      xDst,
-		  INT16      yDst,
-		  CARD16     width,
-		  CARD16     height);
-
-void
-KdCheckRasterizeTrapezoid(PicturePtr	pMask,
-			  xTrapezoid	*trap,
-			  int		x_off,
-			  int		y_off);
-#endif
-
 /* kshadow.c */
 Bool
 KdShadowFbAlloc (KdScreenInfo *screen, int fb, Bool rotate);
@@ -959,39 +709,6 @@ KdShadowSet (ScreenPtr pScreen, int randr, ShadowUpdateProc update, ShadowWindow
     
 void
 KdShadowUnset (ScreenPtr pScreen);
-
-/* ktest.c */
-Bool
-KdFrameBufferValid (CARD8 *base, int size);
-
-int
-KdFrameBufferSize (CARD8 *base, int max);
-
-/* koffscreen.c */
-
-Bool
-KdOffscreenInit (ScreenPtr pScreen);
-
-KdOffscreenArea *
-KdOffscreenAlloc (ScreenPtr pScreen, int size, int align,
-		  Bool locked,
-		  KdOffscreenSaveProc save,
-		  pointer privData);
-
-KdOffscreenArea *
-KdOffscreenFree (ScreenPtr pScreen, KdOffscreenArea *area);
-
-void
-KdOffscreenMarkUsed (PixmapPtr pPixmap);
-
-void
-KdOffscreenSwapOut (ScreenPtr pScreen);
-
-void
-KdOffscreenSwapIn (ScreenPtr pScreen);
-
-void
-KdOffscreenFini (ScreenPtr pScreen);
 
 /* function prototypes to be implemented by the drivers */
 void

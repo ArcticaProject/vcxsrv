@@ -43,11 +43,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h> 		/* for memset */
 #include <time.h>
 
 #ifndef _MSC_VER
-#include <unistd.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/time.h>
@@ -59,12 +59,12 @@
 #include <X11/keysym.h>
 #include <X11/extensions/XShm.h>
 #include <X11/extensions/shape.h>
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
 #include <GL/glx.h>
-#endif /*XEPHYR_DRI*/
+#endif /* XF86DRI */
 #include "ephyrlog.h"
 
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
 extern Bool XF86DRIQueryExtension (Display *dpy,
                                    int *event_basep,
                                    int *error_basep);
@@ -587,14 +587,37 @@ hostx_get_visual_masks (EphyrScreenInfo screen,
     }
 }
 
+static int 
+hostx_calculate_color_shift(unsigned long mask)
+{
+    int shift = 1;
+    /* count # of bits in mask */
+    while (mask=(mask>>1)) shift++;
+    /* cmap entry is an unsigned char so adjust it by size of that */
+    shift = shift - sizeof(unsigned char) * 8;
+    if (shift < 0) shift = 0;
+    return shift;
+}
+
 void
 hostx_set_cmap_entry(unsigned char idx,
 		     unsigned char r,
 		     unsigned char g,
 		     unsigned char b)
 {
-  /* XXX Will likely break for 8 on 16, not sure if this is correct */
-  HostX.cmap[idx] = (r << 16) | (g << 8) | (b);
+/* need to calculate the shifts for RGB because server could be BGR. */
+/* XXX Not sure if this is correct for 8 on 16, but this works for 8 on 24.*/
+    static int rshift, bshift, gshift = 0;
+    static int first_time = 1;
+    if (first_time) {
+	first_time = 0;
+	rshift = hostx_calculate_color_shift(HostX.visual->red_mask);
+	gshift = hostx_calculate_color_shift(HostX.visual->green_mask);
+	bshift = hostx_calculate_color_shift(HostX.visual->blue_mask);
+    }
+    HostX.cmap[idx] = ((r << rshift) & HostX.visual->red_mask) |
+		      ((g << gshift) & HostX.visual->green_mask) |
+		      ((b << bshift) & HostX.visual->blue_mask);
 }
 
 /**
@@ -1365,7 +1388,7 @@ hostx_has_xshape (void)
     return TRUE;
 }
 
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
 typedef struct {
     int is_valid ;
     int local_id ;
@@ -1468,5 +1491,4 @@ hostx_has_glx (void)
     return TRUE ;
 }
 
-#endif /*XEPHYR_DRI*/
-
+#endif /* XF86DRI */

@@ -576,6 +576,14 @@ extern XkbSrvLedInfoPtr XkbAllocSrvLedInfo(
     unsigned int		/* needed_parts */
 );
 
+extern XkbSrvLedInfoPtr XkbCopySrvLedInfo(
+    DeviceIntPtr		/* dev */,
+    XkbSrvLedInfoPtr		/* src */,
+    KbdFeedbackPtr		/* kf */,
+    LedFeedbackPtr		/* lf */
+);
+
+
 extern XkbSrvLedInfoPtr XkbFindSrvLedInfo(
     DeviceIntPtr		/* dev */,
     unsigned int		/* class */,
@@ -745,14 +753,14 @@ extern void AccessXInit(
 );
 
 extern Bool AccessXFilterPressEvent(
-    register struct _xEvent *	/* xE */,
-    register DeviceIntPtr	/* keybd */,
+    struct _xEvent *	/* xE */,
+    DeviceIntPtr	/* keybd */,
     int				/* count */
 );
 
 extern Bool AccessXFilterReleaseEvent(
-    register struct _xEvent *	/* xE */,
-    register DeviceIntPtr	/* keybd */,
+    struct _xEvent *	/* xE */,
+    DeviceIntPtr	/* keybd */,
     int				/* count */
 );
 
@@ -891,6 +899,10 @@ extern	void	XkbSetRulesDflts(
 	char *			/* options */
 );
 
+extern	void	XkbDeleteRulesDflts(
+	void
+);
+
 extern	void	XkbInitDevice(
 	DeviceIntPtr 	/* pXDev */
 );
@@ -980,7 +992,7 @@ extern void XkbSendNewKeyboardNotify(
 
 #include "xkbfile.h"
 #include <X11/extensions/XKMformat.h>
-#include <X11/extensions/XKBrules.h>
+#include "xkbrules.h"
 
 #define	_XkbListKeymaps		0
 #define	_XkbListKeycodes	1

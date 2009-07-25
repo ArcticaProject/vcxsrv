@@ -71,22 +71,22 @@ typedef enum {ClientStateInitial,
 typedef struct _saveSet {
     struct _Window  *windowPtr;
     Bool	    toRoot;
-    Bool	    remap;
+    Bool	    map;
 } SaveSetElt;
 #define SaveSetWindow(ss)   ((ss).windowPtr)
 #define SaveSetToRoot(ss)   ((ss).toRoot)
-#define SaveSetRemap(ss)    ((ss).remap)
+#define SaveSetShouldMap(ss)	    ((ss).map)
 #define SaveSetAssignWindow(ss,w)   ((ss).windowPtr = (w))
 #define SaveSetAssignToRoot(ss,tr)  ((ss).toRoot = (tr))
-#define SaveSetAssignRemap(ss,rm)  ((ss).remap = (rm))
+#define SaveSetAssignMap(ss,m)      ((ss).map = (m))
 #else
 typedef struct _Window *SaveSetElt;
 #define SaveSetWindow(ss)   (ss)
 #define SaveSetToRoot(ss)   FALSE
-#define SaveSetRemap(ss)    TRUE
+#define SaveSetShouldMap(ss)	    TRUE
 #define SaveSetAssignWindow(ss,w)   ((ss) = (w))
 #define SaveSetAssignToRoot(ss,tr)
-#define SaveSetAssignRemap(ss,rm)
+#define SaveSetAssignMap(ss,m)
 #endif
 
 typedef struct _Client {
@@ -125,21 +125,18 @@ typedef struct _Client {
     int         requestLogIndex;
 #endif
     unsigned long replyBytesRemaining;
-#ifdef XAPPGROUP
-    struct _AppGroupRec*	appgroup;
-#endif
+    void *appgroup; /* Can't remove, ABI */
     struct _FontResolution * (*fontResFunc) (    /* no need for font.h */
 		ClientPtr	/* pClient */,
 		int *		/* num */);
-#ifdef SMART_SCHEDULE
     int	    smart_priority;
     long    smart_start_tick;
     long    smart_stop_tick;
     long    smart_check_tick;
-#endif
+    
+    DeviceIntPtr clientPtr;
 }           ClientRec;
 
-#ifdef SMART_SCHEDULE
 /*
  * Scheduling interface
  */
@@ -155,7 +152,6 @@ extern void SmartScheduleStopTimer(void);
 
 extern Bool SmartScheduleInit(void);
 
-#endif
 
 /* This prototype is used pervasively in Xext, dix */
 #define DISPATCH_PROC(func) int func(ClientPtr /* client */)

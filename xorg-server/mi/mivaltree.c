@@ -103,16 +103,12 @@ Equipment Corporation.
 
 #include    "globals.h"
 
-#ifdef SHAPE
 /*
  * Compute the visibility of a shaped window
  */
-_X_EXPORT int
-miShapedWindowIn (pScreen, universe, bounding, rect, x, y)
-    ScreenPtr	pScreen;
-    RegionPtr	universe, bounding;
-    BoxPtr	rect;
-    int 	x, y;
+int
+miShapedWindowIn (ScreenPtr pScreen, RegionPtr universe, RegionPtr bounding,
+                  BoxPtr rect, int x, int y)
 {
     BoxRec  	box;
     BoxPtr	boundBox;
@@ -166,7 +162,6 @@ miShapedWindowIn (pScreen, universe, bounding, rect, x, y)
 	return rgnIN;
     return rgnOUT;
 }
-#endif
 
 static GetRedirectBorderClipProcPtr	miGetRedirectBorderClipProc;
 static SetRedirectBorderClipProcPtr	miSetRedirectBorderClipProc;
@@ -272,7 +267,6 @@ miComputeClips (
 	    break;
 	case rgnPART:
 	    newVis = VisibilityPartiallyObscured;
-#ifdef SHAPE
 	    {
 		RegionPtr   pBounding;
 
@@ -292,7 +286,6 @@ miComputeClips (
 		    }
 		}
 	    }
-#endif
 	    break;
 	default:
 	    newVis = VisibilityFullyObscured;
@@ -597,11 +590,12 @@ miTreeObscured(
  */
 /*ARGSUSED*/
 int
-miValidateTree (pParent, pChild, kind)
-    WindowPtr	  	pParent;    /* Parent to validate */
-    WindowPtr	  	pChild;     /* First child of pParent that was
+miValidateTree (
+    WindowPtr		pParent,    /* Parent to validate */
+    WindowPtr		pChild,     /* First child of pParent that was
 				     * affected */
-    VTKind    	  	kind;       /* What kind of configuration caused call */
+    VTKind		kind        /* What kind of configuration caused call */
+    )
 {
     RegionRec	  	totalClip;  /* Total clipping region available to
 				     * the marked children. pParent's clipList

@@ -95,8 +95,8 @@ TsRead (int fd, void *closure)
                     y = event.y - private->lasty;
 	    	}
             }
-            private->lastx = x;
-            private->lasty = y;
+            private->lastx = event.x;
+            private->lasty = event.y;
         } else {
             flags = 0;
             x = private->lastx;
@@ -114,6 +114,10 @@ TslibEnable (KdPointerInfo *pi)
 
     private->raw_event_hook = NULL;
     private->raw_event_closure = NULL;
+    if (!pi->path) {
+        pi->path = "/dev/input/touchscreen0";
+        ErrorF("[tslib/TslibEnable] no device path given, trying %s\n", pi->path);
+    }
     private->tsDev = ts_open(pi->path, 0);
     private->fd = ts_fd(private->tsDev);
     if (!private->tsDev || ts_config(private->tsDev) || private->fd < 0) {

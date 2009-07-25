@@ -6,24 +6,24 @@
 
    When implementing DDC in the driver one has the choice between
    DDC1 and DDC2. 
-   DDC1 data is contiuously transmitted by a DDC1 capable display 
+   DDC1 data is continuously transmitted by a DDC1 capable display 
    device. The data is send serially over a data line; the Vsync 
    signal serves as clock. Only one EDID 1.x data block can be 
    transmitted using DDC1. Since transmission of an EDID1 block 
    using a regular Vsync frequency would take up several seconds 
    the driver can increase the Vsync frequency to up to 25 kHz as 
-   soon as it detects DDC1 activety on the data line.
+   soon as it detects DDC1 activity on the data line.
    DDC2 data is transmitted using the I2C protocol. This requires
    an additional clock line. DDC2 is capable of transmitting EDID1
    and EDID2 block as well as a VDIF block on display devices that 
    support these.  
    Display devices switch into the DDC2 mode as soon as they detect
-   activety on the DDC clock line. Once the are in DDC2 mode they
+   activity on the DDC clock line. Once the are in DDC2 mode they
    stop transmitting DDC1 signals until the next power cycle.
 
    Some graphics chipset configurations which are not capable of
    DDC2 might still be able to read DDC1 data. Where available
-   DDC2 it is preferrable. 
+   DDC2 it is preferable. 
 	
    All relevant prototypes and defines are in xf86DDC.h.
    DDC2 additionally requires I2C support. The I2C prototypes
@@ -37,7 +37,7 @@
 
      unsigned int XXX_ddc1Read(ScrnInfoPtr pScrn)
      
-     Additionally a function is required to inclrease the Vsync
+     Additionally a function is required to increase the Vsync
      frequency to max. 25 kHz. 
  
      void XXX_ddc1SetSpeed(ScrnInfoPtr pScrn, xf86ddcSpeed speed)
@@ -58,7 +58,7 @@
      in PreInit(). DDC1SetSpeed is a pointer to the SetSpeed()
      function, DDC1Read has to point to the DDC1 read function.
      The function will return a pointer to the xf86Monitor structure
-     which contains all information retreived by DDC.
+     which contains all information retrieved by DDC.
      NULL will be returned on failure.
 
    DDC2 Support
@@ -73,7 +73,7 @@
      to the I2CBusRec of the appropriate I2C Bus has to be passed
      as the second argument.
      The function will return a pointer to the xf86Monitor structure
-     which contains all information retreived by DDC.
+     which contains all information retrieved by DDC.
      NULL will be returned on failure.
 
    Printing monitor parameters   
@@ -86,7 +86,7 @@
      is provided.
 
     Further processing of the xf86Monitor structure is not yet 
-    implemented. Howerver it is planned to use the information
+    implemented. However, it is planned to use the information
     about video modes, gamma values etc.
     Therefore it is strongly recommended to read out DDC data
     before any video mode processing is done.

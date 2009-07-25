@@ -46,9 +46,12 @@
 
 #include "compint.h"
 
-DevPrivateKey CompScreenPrivateKey = &CompScreenPrivateKey;
-DevPrivateKey CompWindowPrivateKey = &CompWindowPrivateKey;
-DevPrivateKey CompSubwindowsPrivateKey = &CompSubwindowsPrivateKey;
+static int CompScreenPrivateKeyIndex;
+DevPrivateKey CompScreenPrivateKey = &CompScreenPrivateKeyIndex;
+static int CompWindowPrivateKeyIndex;
+DevPrivateKey CompWindowPrivateKey = &CompWindowPrivateKeyIndex;
+static int CompSubwindowsPrivateKeyIndex;
+DevPrivateKey CompSubwindowsPrivateKey = &CompSubwindowsPrivateKeyIndex;
 
 
 static Bool
@@ -75,14 +78,6 @@ compCloseScreen (int index, ScreenPtr pScreen)
     pScreen->CreateWindow = cs->CreateWindow;
     pScreen->CopyWindow = cs->CopyWindow;
     pScreen->PositionWindow = cs->PositionWindow;
-
-    deleteCompOverlayClientsForScreen(pScreen);
-
-    /* 
-    ** Note: no need to call DeleteWindow; the server has
-    ** already destroyed it.
-    */
-    cs->pOverlayWin = NULL;
 
     xfree (cs);
     dixSetPrivate(&pScreen->devPrivates, CompScreenPrivateKey, NULL);
@@ -123,11 +118,11 @@ compChangeWindowAttributes(WindowPtr pWin, unsigned long mask)
 	    pScreen->backingStoreSupport != NotUseful) {
 	if (pWin->backingStore != NotUseful) {
 	    compRedirectWindow(serverClient, pWin, CompositeRedirectAutomatic);
-	    pWin->backStorage = TRUE;
+	    pWin->backStorage = (pointer) (intptr_t) 1;
 	} else {
 	    compUnredirectWindow(serverClient, pWin,
 				 CompositeRedirectAutomatic);
-	    pWin->backStorage = FALSE;
+	    pWin->backStorage = NULL;
 	}
     }
 
@@ -381,6 +376,7 @@ compScreenInit (ScreenPtr pScreen)
 	return FALSE;
 
     cs->damaged = FALSE;
+    cs->overlayWid = FakeClientID(0);
     cs->pOverlayWin = NULL;
     cs->pOverlayClients = NULL;
 

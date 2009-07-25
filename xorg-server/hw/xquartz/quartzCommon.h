@@ -35,17 +35,6 @@
 #ifndef _QUARTZCOMMON_H
 #define _QUARTZCOMMON_H
 
-// QuickDraw in ApplicationServices has the following conflicts with
-// the basic X server headers. Use QD_<name> to use the QuickDraw
-// definition of any of these symbols, or the normal name for the
-// X11 definition.
-#define Cursor       QD_Cursor
-#define WindowPtr    QD_WindowPtr
-#define Picture      QD_Picture
-#include <ApplicationServices/ApplicationServices.h>
-#undef Cursor
-#undef WindowPtr
-#undef Picture
 #include <X11/Xdefs.h>
 #include "privates.h"
 
@@ -66,10 +55,11 @@ typedef struct {
 extern int              quartzEventWriteFD;
 
 // User preferences used by Quartz modes
-extern int              quartzRootless;
 extern int              quartzUseSysBeep;
+extern int              focusOnNewWindow;
 extern int              quartzUseAGL;
 extern int              quartzEnableKeyEquivalents;
+extern int              quartzFullscreenDisableHotkeys;
 
 // Other shared data
 extern int              quartzServerVisible;
@@ -90,18 +80,5 @@ void QuartzFSRelease(void);
 int  QuartzFSUseQDCursor(int depth);
 void QuartzBlockHandler(pointer blockData, OSTimePtr pTimeout, pointer pReadmask);
 void QuartzWakeupHandler(pointer blockData, int result, pointer pReadmask);
-
-// Messages that can be sent to the main thread.
-enum {
-    kQuartzServerHidden,
-    kQuartzServerStarted,
-    kQuartzServerDied,
-    kQuartzCursorUpdate,
-    kQuartzPostEvent,
-    kQuartzSetWindowMenu,
-    kQuartzSetWindowMenuCheck,
-    kQuartzSetFrontProcess,
-    kQuartzSetCanQuit
-};
 
 #endif  /* _QUARTZCOMMON_H */

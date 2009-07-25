@@ -32,11 +32,11 @@
 #include "scrnintstr.h"
 #include "ephyrlog.h"
 
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
 #include "ephyrdri.h"
 #include "ephyrdriext.h"
 #include "ephyrglxext.h"
-#endif /*XEPHYR_DRI*/
+#endif /* XF86DRI */
 
 extern int KdTsPhyScreen;
 #ifdef GLXEXT
@@ -94,7 +94,7 @@ Bool
 ephyrScreenInitialize (KdScreenInfo *screen, EphyrScrPriv *scrpriv)
 {
   int width = 640, height = 480; 
-  unsigned long redMask, greenMask, blueMask;
+  CARD32 redMask, greenMask, blueMask;
   
   if (hostx_want_screen_size(screen, &width, &height)
       || !screen->width || !screen->height)
@@ -153,10 +153,21 @@ ephyrScreenInitialize (KdScreenInfo *screen, EphyrScrPriv *scrpriv)
 	  screen->fb[0].depth = 16;
 	  screen->fb[0].bitsPerPixel = 16;
 	}
-      else
+      else if (screen->fb[0].depth <= 24)
 	{
 	  screen->fb[0].depth = 24;
 	  screen->fb[0].bitsPerPixel = 32;
+	}
+      else if (screen->fb[0].depth <= 30)
+	{
+	  screen->fb[0].depth = 30;
+	  screen->fb[0].bitsPerPixel = 32;
+	}
+      else
+	{
+	  ErrorF("\nXephyr: Unsupported screen depth %d\n",
+	         screen->fb[0].depth);
+	  return FALSE;
 	}
 
       hostx_get_visual_masks (screen, &redMask, &greenMask, &blueMask);
@@ -177,12 +188,11 @@ ephyrScreenInit (KdScreenInfo *screen)
 {
   EphyrScrPriv *scrpriv;
   
-  scrpriv = xalloc (sizeof (EphyrScrPriv));
+  scrpriv = xcalloc (1, sizeof (EphyrScrPriv));
 
   if (!scrpriv)
     return FALSE;
 
-  memset (scrpriv, 0, sizeof (EphyrScrPriv));
   screen->driver = scrpriv;
 
   if (!ephyrScreenInitialize (screen, scrpriv))
@@ -518,8 +528,6 @@ ephyrRandRSetConfig (ScreenPtr		pScreen,
   
   scrpriv->randr = KdAddRotation (screen->randr, randr);
   
-  KdOffscreenSwapOut (screen->pScreen);
-  
   ephyrUnmapFramebuffer (screen); 
   
   screen->width  = newwidth;
@@ -634,7 +642,7 @@ ephyrInitScreen (ScreenPtr pScreen)
   }
 #endif /*XV*/
 
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
   if (!ephyrNoDRI && !hostx_has_dri ()) {
       EPHYR_LOG ("host x does not support DRI. Disabling DRI forwarding\n") ;
       ephyrNoDRI = TRUE ;
@@ -837,11 +845,11 @@ ephyrCrossScreen (ScreenPtr pScreen, Bool entering)
 int ephyrCurScreen; /*current event screen*/
 
 static void
-ephyrWarpCursor (ScreenPtr pScreen, int x, int y)
+ephyrWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
     ephyrBlockSigio ();
     ephyrCurScreen = pScreen->myNum;
-    miPointerWarpCursor (pScreen, x, y);
+    miPointerWarpCursor (inputInfo.pointer, pScreen, x, y);
     ephyrUnblockSigio ();
 }
 
@@ -849,10 +857,12 @@ miPointerScreenFuncRec ephyrPointerScreenFuncs =
 {
   ephyrCursorOffScreen,
   ephyrCrossScreen,
-  ephyrWarpCursor
+  ephyrWarpCursor,
+  NULL,
+  NULL
 };
 
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
 /**
  * find if the remote window denoted by a_remote
  * is paired with an internal Window within the Xephyr server.
@@ -884,7 +894,7 @@ ephyrExposePairedWindow (int a_remote)
     screen->WindowExposures (pair->local, &reg, NullRegion);
     REGION_UNINIT (screen, &reg);
 }
-#endif /*XEPHYR_DRI*/
+#endif /* XF86DRI */
 
 void
 ephyrPoll(void)
@@ -911,7 +921,7 @@ ephyrPoll(void)
                   if (ev.data.mouse_motion.screen >= 0)
                     {
                       ephyrWarpCursor
-                            (screenInfo.screens[ev.data.mouse_motion.screen],
+                            (inputInfo.pointer, screenInfo.screens[ev.data.mouse_motion.screen],
                              ev.data.mouse_motion.x,
                              ev.data.mouse_motion.y );
                     }
@@ -919,14 +929,14 @@ ephyrPoll(void)
             else
               {
                   int x=0, y=0;
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
                   EphyrWindowPair *pair = NULL;
 #endif
                   EPHYR_LOG ("enqueuing mouse motion:%d\n", ephyrCurScreen) ;
                   x = ev.data.mouse_motion.x;
                   y = ev.data.mouse_motion.y;
                   EPHYR_LOG ("initial (x,y):(%d,%d)\n", x, y) ;
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
                   EPHYR_LOG ("is this window peered by a gl drawable ?\n") ;
                   if (findWindowPairFromRemote (ev.data.mouse_motion.window,
                                                 &pair))
@@ -983,7 +993,7 @@ ephyrPoll(void)
 	  KdEnqueueKeyboardEvent (ephyrKbd, ev.data.key_up.scancode, TRUE);
 	  break;
 
-#ifdef XEPHYR_DRI
+#ifdef XF86DRI
 	case EPHYR_EV_EXPOSE:
 	  /*
 	   * We only receive expose events when the expose event have
@@ -993,7 +1003,7 @@ ephyrPoll(void)
 	   */
 	  ephyrExposePairedWindow (ev.data.expose.window);
 	  break;
-#endif /*XEPHYR_DRI*/
+#endif /* XF86DRI */
 
 	default:
 	  break;

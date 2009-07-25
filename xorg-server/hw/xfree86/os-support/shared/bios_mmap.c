@@ -91,33 +91,15 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
    *  re: boundaries and sizes and such...
    */
 
-/*
- * The Jensen lacks dense memory, thus we have to address the bus via
- * the sparse addressing scheme.
- *
- * Martin Ostermann (ost@comnets.rwth-aachen.de) - Apr.-Sep. 1996
- */
-
 #ifdef linux
 
-#ifdef TEST_JENSEN_CODE /* define to test the Sparse addressing on a non-Jensen */
-#define SPARSE (5)
-#define isJensen (1)
-#else
-#define isJensen (!_bus_base())
-#define SPARSE (7)
-#endif
-
 extern unsigned long _bus_base(void);
-extern unsigned long _bus_base_sparse(void);
-#define BUS_BASE (isJensen ? _bus_base_sparse() : _bus_base())
-#define JENSEN_SHIFT(x) (isJensen ? ((long)x<<SPARSE) : (long)x)
+#define BUS_BASE _bus_base()
 
 #else
 
 extern u_int64_t dense_base(void);
 #define BUS_BASE dense_base()
-#define JENSEN_SHIFT(x) ((long) x)
 
 #endif
 
@@ -141,8 +123,8 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	Offset += Base & (psize - 1);
 	Base &= ~(psize - 1);
 	mlen = (Offset + Len + psize - 1) & ~(psize - 1);
-	base = mmap((caddr_t)0, JENSEN_SHIFT(mlen), PROT_READ,
-		    MAP_SHARED, fd, (off_t)(JENSEN_SHIFT(Base) + BUS_BASE));
+	base = mmap((caddr_t)0, mlen, PROT_READ,
+		    MAP_SHARED, fd, (off_t)(Base + BUS_BASE));
 
 	if (base == MAP_FAILED)
 	{
@@ -151,10 +133,9 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 		return(-1);
 	}
 
-	xf86SlowBCopyFromBus((unsigned char *)(base+JENSEN_SHIFT(Offset)), 
-								    Buf, Len);
+	xf86SlowBCopyFromBus((unsigned char *)(base+Offset), Buf, Len);
 
-	munmap((caddr_t)JENSEN_SHIFT(base), JENSEN_SHIFT(mlen));
+	munmap((caddr_t)base, mlen);
 	close(fd);
 	return(Len);
 }

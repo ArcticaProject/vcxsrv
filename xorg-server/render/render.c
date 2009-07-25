@@ -210,11 +210,9 @@ int	(*SProcRenderVector[RenderNumberRequests])(ClientPtr) = {
     SProcRenderCreateConicalGradient
 };
 
-static void
-RenderResetProc (ExtensionEntry *extEntry);
-    
 int	RenderErrBase;
-DevPrivateKey RenderClientPrivateKey;
+static int RenderClientPrivateKeyIndex;
+DevPrivateKey RenderClientPrivateKey = &RenderClientPrivateKeyIndex;
 
 typedef struct _RenderClient {
     int	    major_version;
@@ -252,15 +250,10 @@ RenderExtensionInit (void)
 
     extEntry = AddExtension (RENDER_NAME, 0, RenderNumberErrors,
 			     ProcRenderDispatch, SProcRenderDispatch,
-			     RenderResetProc, StandardMinorOpcode);
+			     NULL, StandardMinorOpcode);
     if (!extEntry)
 	return;
     RenderErrBase = extEntry->errorBase;
-}
-
-static void
-RenderResetProc (ExtensionEntry *extEntry)
-{
 }
 
 static int
@@ -304,8 +297,6 @@ findVisual (ScreenPtr pScreen, VisualID vid)
     }
     return 0;
 }
-
-extern char *ConnectionInfo;
 
 static int
 ProcRenderQueryPictFormats (ClientPtr client)
@@ -1580,21 +1571,19 @@ ProcRenderCreateCursor (ClientPtr client)
     
     stride = BitmapBytePad(width);
     nbytes_mono = stride*height;
-    srcbits = (unsigned char *)xalloc(nbytes_mono);
+    srcbits = xcalloc(1, nbytes_mono);
     if (!srcbits)
     {
 	xfree (argbbits);
 	return (BadAlloc);
     }
-    mskbits = (unsigned char *)xalloc(nbytes_mono);
+    mskbits = xcalloc(1, nbytes_mono);
     if (!mskbits)
     {
 	xfree(argbbits);
 	xfree(srcbits);
 	return (BadAlloc);
     }
-    bzero ((char *) mskbits, nbytes_mono);
-    bzero ((char *) srcbits, nbytes_mono);
 
     if (pSrc->format == PICT_a8r8g8b8)
     {

@@ -43,6 +43,19 @@ in this Software without prior written authorization from The Open Group.
 #endif
 # include   "damage.h"
 
+typedef struct {
+    CursorPtr	    pCursor;
+    int		    x;			/* cursor hotspot */
+    int		    y;
+    BoxRec	    saved;		/* saved area from the screen */
+    Bool	    isUp;		/* cursor in frame buffer */
+    Bool	    shouldBeUp;		/* cursor should be displayed */
+    WindowPtr	    pCacheWin;		/* window the cursor last seen in */
+    Bool	    isInCacheWin;
+    Bool	    checkPixels;	/* check colormap collision */
+    ScreenPtr       pScreen;
+} miCursorInfoRec, *miCursorInfoPtr;
+
 /*
  * per screen information
  */
@@ -63,19 +76,14 @@ typedef struct {
     
     /* os layer procedures */
     ScreenBlockHandlerProcPtr		BlockHandler;
+    
+    /* device cursor procedures */
+    DeviceCursorInitializeProcPtr       DeviceCursorInitialize;
+    DeviceCursorCleanupProcPtr          DeviceCursorCleanup;
 
-    CursorPtr	    pCursor;
-    int		    x;			/* cursor hotspot */
-    int		    y;
-    BoxRec	    saved;		/* saved area from the screen */
-    Bool	    isUp;		/* cursor in frame buffer */
-    Bool	    shouldBeUp;		/* cursor should be displayed */
-    WindowPtr	    pCacheWin;		/* window the cursor last seen in */
-    Bool	    isInCacheWin;
-    Bool	    checkPixels;	/* check colormap collision */
     xColorItem	    colors[2];
-    ColormapPtr	    pInstalledMap;
-    ColormapPtr	    pColormap;
+    ColormapPtr     pInstalledMap;
+    ColormapPtr     pColormap;
     VisualPtr	    pVisual;
     miSpriteCursorFuncPtr    funcs;
     DamagePtr	    pDamage;		/* damage tracking structure */
@@ -83,16 +91,6 @@ typedef struct {
 
 #define SOURCE_COLOR	0
 #define MASK_COLOR	1
-
-#define miSpriteIsUpTRUE(pScreen, pScreenPriv) if (!pScreenPriv->isUp) { \
-    pScreenPriv->isUp = TRUE; \
-    DamageRegister (&(*pScreen->GetScreenPixmap) (pScreen)->drawable, pScreenPriv->pDamage); \
-}
-
-#define miSpriteIsUpFALSE(pScreen, pScreenPriv) if (pScreenPriv->isUp) { \
-    DamageUnregister (&(*pScreen->GetScreenPixmap) (pScreen)->drawable, pScreenPriv->pDamage); \
-    pScreenPriv->isUp = FALSE; \
-}
 
 /*
  * Overlap BoxPtr and Box elements

@@ -67,11 +67,12 @@ SOFTWARE.
  * clipping to the destination
  */
 _X_EXPORT void
-miPolyFillRect(pDrawable, pGC, nrectFill, prectInit)
-    DrawablePtr	pDrawable;
-    GCPtr	pGC;
-    int		nrectFill; 	/* number of rectangles to fill */
-    xRectangle	*prectInit;  	/* Pointer to first rectangle to fill */
+miPolyFillRect(
+    DrawablePtr	pDrawable,
+    GCPtr	pGC,
+    int		nrectFill,	/* number of rectangles to fill */
+    xRectangle	*prectInit	/* Pointer to first rectangle to fill */
+    )
 {
     int i;
     int	height;

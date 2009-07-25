@@ -66,11 +66,12 @@ SOFTWARE.
  */
 
 Bool
-miFillGeneralPoly(dst, pgc, count, ptsIn)
-    DrawablePtr dst;
-    GCPtr	pgc;
-    int		count;              /* number of points        */
-    DDXPointPtr ptsIn;              /* the points              */
+miFillGeneralPoly(
+    DrawablePtr dst,
+    GCPtr	pgc,
+    int		count,              /* number of points        */
+    DDXPointPtr ptsIn               /* the points              */
+    )
 {
     EdgeTableEntry *pAET;  /* the Active Edge Table   */
     int y;                 /* the current scanline    */

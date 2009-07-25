@@ -110,8 +110,10 @@ static void xf86XVAdjustFrame(int index, int x, int y, int flags);
 static Bool xf86XVInitAdaptors(ScreenPtr, XF86VideoAdaptorPtr*, int);
 
 
-static DevPrivateKey XF86XVWindowKey = &XF86XVWindowKey;
-DevPrivateKey XF86XvScreenKey;
+static int XF86XVWindowKeyIndex;
+static DevPrivateKey XF86XVWindowKey = &XF86XVWindowKeyIndex;
+static int XF86XvScreenKeyIndex;
+DevPrivateKey XF86XvScreenKey = &XF86XvScreenKeyIndex;
 static unsigned long PortResource = 0;
 
 DevPrivateKey (*XvGetScreenKeyProc)(void) = NULL;
@@ -962,9 +964,8 @@ xf86XVEnlistPortInWindow(WindowPtr pWin, XvPortRecPrivatePtr portPriv)
    }
 
    if(!winPriv) {
-	winPriv = xalloc(sizeof(XF86XVWindowRec));
+	winPriv = xcalloc(1, sizeof(XF86XVWindowRec));
 	if(!winPriv) return BadAlloc;
-	memset(winPriv, 0, sizeof(XF86XVWindowRec));
 	winPriv->PortRec = portPriv;
 	winPriv->next = PrivRoot;
 	dixSetPrivate(&pWin->devPrivates, XF86XVWindowKey, winPriv);
@@ -1173,7 +1174,7 @@ xf86XVCloseScreen(int i, ScreenPtr pScreen)
   int c;
 
   /* Clear offscreen images */
-  (void)memset(&OffscreenImages[pScreen->myNum], 0, sizeof(OffscreenImages[0]));
+  memset(&OffscreenImages[pScreen->myNum], 0, sizeof(OffscreenImages[0]));
 
   if(!ScreenPriv) return TRUE;
 

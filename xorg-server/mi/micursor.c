@@ -52,24 +52,18 @@ SOFTWARE.
 #include "cursor.h"
 #include "misc.h"
 #include "mi.h"
+#include "inputstr.h"
 
-extern Bool Must_have_memory;
-
-_X_EXPORT void
-miRecolorCursor( pScr, pCurs, displayed)
-    ScreenPtr	pScr;
-    CursorPtr	pCurs;
-    Bool	displayed;
+void
+miRecolorCursor(DeviceIntPtr pDev, ScreenPtr pScr,
+                CursorPtr pCurs, Bool displayed)
 {
     /*
      * This is guaranteed to correct any color-dependent state which may have
      * been bound up in private state created by RealizeCursor
      */
-    (* pScr->UnrealizeCursor)( pScr, pCurs);
-    Must_have_memory = TRUE; /* XXX */
-    (* pScr->RealizeCursor)( pScr, pCurs);
-    Must_have_memory = FALSE; /* XXX */
-    if ( displayed)
-	(* pScr->DisplayCursor)( pScr, pCurs);
-
+    pScr->UnrealizeCursor(pDev, pScr, pCurs);
+    pScr->RealizeCursor(pDev, pScr, pCurs);
+    if (displayed)
+	pScr->DisplayCursor(pDev, pScr, pCurs);
 }

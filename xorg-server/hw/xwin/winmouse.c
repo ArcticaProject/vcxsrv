@@ -36,7 +36,7 @@
 #endif
 #include "win.h"
 
-#ifdef XINPUT
+#if 1
 #include "inputstr.h"
 
 /* Peek the internal button mapping */
@@ -106,7 +106,7 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
 			       2);
       free(map);
 
-#ifdef XINPUT
+#if 1
       g_winMouseButtonMap = pDeviceInt->button->map;
 #endif
       break;
@@ -116,7 +116,7 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
       break;
 
     case DEVICE_CLOSE:
-#ifdef XINPUT
+#if 1
       g_winMouseButtonMap = NULL;
 #endif
     case DEVICE_OFF:
@@ -226,7 +226,7 @@ winMouseButtonsSendEvent (int iEventType, int iButton)
 
   /* Load an xEvent and enqueue the event */
   xCurrentEvent.u.u.type = iEventType;
-#ifdef XINPUT
+#if 1
   if (g_winMouseButtonMap)
     xCurrentEvent.u.u.detail = g_winMouseButtonMap[iButton];
   else

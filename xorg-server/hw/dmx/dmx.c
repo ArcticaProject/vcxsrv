@@ -113,10 +113,6 @@ static int _DMXXineramaActive(void)
     return 0;
 }
 
-static void DMXResetProc(ExtensionEntry *extEntry)
-{
-}
-
 /** Initialize the extension. */
 void DMXExtensionInit(void)
 {
@@ -124,7 +120,7 @@ void DMXExtensionInit(void)
     
     if ((extEntry = AddExtension(DMX_EXTENSION_NAME, 0, 0,
                                  ProcDMXDispatch, SProcDMXDispatch,
-                                 DMXResetProc, StandardMinorOpcode)))
+                                 NULL, StandardMinorOpcode)))
 	DMXCode = extEntry->base;
 }
 

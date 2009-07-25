@@ -38,7 +38,7 @@
 #include <X11/XKBlib.h>
 #include <X11/extensions/XInput.h>
 #include <X11/extensions/XKB.h>
-#include "xkbstr.h"
+#include <X11/extensions/XKBstr.h>
 #include <X11/extensions/dmxext.h>
 #include <sys/time.h>
 

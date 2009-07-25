@@ -75,6 +75,8 @@ libXi_la_SOURCES =	\
 	ungrdevb.c \
 	ungrdevb.h \
 	ungrdevk.c \
-	ungrdevk.h
+	ungrdevk.h \
+	xiproperty.c \
+	xiproperty.h
 
 EXTRA_DIST = stubs.c

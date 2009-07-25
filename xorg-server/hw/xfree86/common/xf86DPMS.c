@@ -47,7 +47,8 @@
 
 
 #ifdef DPMSExtension
-static DevPrivateKey DPMSKey = NULL;
+static int DPMSKeyIndex;
+static DevPrivateKey DPMSKey;
 static Bool DPMSClose(int i, ScreenPtr pScreen);
 static int DPMSCount = 0;
 #endif
@@ -62,7 +63,7 @@ xf86DPMSInit(ScreenPtr pScreen, DPMSSetProcPtr set, int flags)
     pointer DPMSOpt;
     MessageType enabled_from = X_INFO;
 
-    DPMSKey = &DPMSKey;
+    DPMSKey = &DPMSKeyIndex;
 
     if (DPMSDisabledSwitch)
 	DPMSEnabled = FALSE;

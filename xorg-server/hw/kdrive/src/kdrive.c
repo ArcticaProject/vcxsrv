@@ -67,7 +67,8 @@ KdDepths    kdDepths[] = {
 
 #define KD_DEFAULT_BUTTONS 5
 
-DevPrivateKey       kdScreenPrivateKey = &kdScreenPrivateKey;
+static int          kdScreenPrivateKeyIndex;
+DevPrivateKey       kdScreenPrivateKey = &kdScreenPrivateKeyIndex;
 unsigned long	    kdGeneration;
 
 Bool                kdVideoTest;
@@ -75,7 +76,7 @@ unsigned long       kdVideoTestTime;
 Bool		    kdEmulateMiddleButton;
 Bool		    kdRawPointerCoordinates;
 Bool		    kdDisableZaphod;
-Bool                kdDontZap;
+Bool                kdAllowZap;
 Bool		    kdEnabled;
 int		    kdSubpixelOrder;
 int		    kdVirtualTerminal = -1;
@@ -93,7 +94,6 @@ static Bool         kdCaughtSignal = FALSE;
  */
 
 KdOsFuncs	*kdOsFuncs;
-extern WindowPtr *WindowTable;
 
 void
 KdSetRootClip (ScreenPtr pScreen, BOOL enable)
@@ -103,9 +103,6 @@ KdSetRootClip (ScreenPtr pScreen, BOOL enable)
     Bool	WasViewable;
     Bool	anyMarked = FALSE;
     RegionPtr	pOldClip = 0;
-#ifdef DO_SAVE_UNDERS
-    Bool	dosave = FALSE;
-#endif
     WindowPtr   pLayerWin;
     BoxRec	box;
 
@@ -172,12 +169,6 @@ KdSetRootClip (ScreenPtr pScreen, BOOL enable)
 	    anyMarked = TRUE;
 	}
 
-#ifdef DO_SAVE_UNDERS
-	if (DO_SAVE_UNDERS(pWin))
-	{
-	    dosave = (*pScreen->ChangeSaveUnder)(pLayerWin, pLayerWin);
-	}
-#endif /* DO_SAVE_UNDERS */
 
 	if (anyMarked)
 	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
@@ -187,10 +178,6 @@ KdSetRootClip (ScreenPtr pScreen, BOOL enable)
     {
 	if (anyMarked)
 	    (*pScreen->HandleExposures)(pWin);
-#ifdef DO_SAVE_UNDERS
-	if (dosave)
-	    (*pScreen->PostChangeSaveUnder)(pLayerWin, pLayerWin);
-#endif /* DO_SAVE_UNDERS */
 	if (anyMarked && pScreen->PostValidateTree)
 	    (*pScreen->PostValidateTree)(pWin, NullWindow, VTOther);
     }
@@ -208,7 +195,6 @@ KdDisableScreen (ScreenPtr pScreen)
     if (!pScreenPriv->closed)
 	KdSetRootClip (pScreen, FALSE);
     KdDisableColormap (pScreen);
-    KdOffscreenSwapOut (pScreen);
     if (!pScreenPriv->screen->dumb && pScreenPriv->card->cfuncs->disableAccel)
 	(*pScreenPriv->card->cfuncs->disableAccel) (pScreen);
     if (!pScreenPriv->screen->softCursor && pScreenPriv->card->cfuncs->disableCursor)
@@ -285,7 +271,6 @@ KdEnableScreen (ScreenPtr pScreen)
     pScreenPriv->enabled = TRUE;
     pScreenPriv->dpmsState = KD_DPMS_NORMAL;
     pScreenPriv->card->selected = pScreenPriv->screen->mynum;
-    KdOffscreenSwapIn (pScreen);    
     if (!pScreenPriv->screen->softCursor && pScreenPriv->card->cfuncs->enableCursor)
 	(*pScreenPriv->card->cfuncs->enableCursor) (pScreen);
     if (!pScreenPriv->screen->dumb && pScreenPriv->card->cfuncs->enableAccel)
@@ -584,7 +569,7 @@ KdUseMsg (void)
     ErrorF("-videoTest       Start the server, pause momentarily and exit\n");
     ErrorF("-origin X,Y      Locates the next screen in the the virtual screen (Xinerama)\n");
     ErrorF("-switchCmd       Command to execute on vt switch\n");
-    ErrorF("-nozap           Don't terminate server on Ctrl+Alt+Backspace\n");
+    ErrorF("-zap             Terminate server on Ctrl+Alt+Backspace\n");
     ErrorF("vtxx             Use virtual terminal xx instead of the next available\n");
 #ifdef PSEUDO8
     p8UseMsg ();
@@ -630,9 +615,9 @@ KdProcessArgument (int argc, char **argv, int i)
 	kdDisableZaphod = TRUE;
 	return 1;
     }
-    if (!strcmp (argv[i], "-nozap"))
+    if (!strcmp (argv[i], "-zap"))
     {
-	kdDontZap = TRUE;
+	kdAllowZap = TRUE;
 	return 1;
     }
     if (!strcmp (argv[i], "-3button"))
@@ -756,10 +741,9 @@ KdAllocatePrivates (ScreenPtr pScreen)
     if (kdGeneration != serverGeneration)
 	kdGeneration = serverGeneration;
 
-    pScreenPriv = (KdPrivScreenPtr) xalloc(sizeof (*pScreenPriv));
+    pScreenPriv = xcalloc(1, sizeof (*pScreenPriv));
     if (!pScreenPriv)
 	return FALSE;
-    memset (pScreenPriv, '\0', sizeof (KdPrivScreenRec));
     KdSetScreenPriv (pScreen, pScreenPriv);
     return TRUE;
 }
@@ -797,9 +781,6 @@ KdCloseScreen (int index, ScreenPtr pScreen)
         ret = (*pScreen->CloseScreen) (index, pScreen);
     else
 	ret = TRUE;
-    
-    if (screen->off_screen_base < screen->memory_size)
-	KdOffscreenFini (pScreen);
     
     if (pScreenPriv->dpmsState != KD_DPMS_NORMAL)
 	(*card->cfuncs->dpms) (pScreen, KD_DPMS_NORMAL);
@@ -1099,9 +1080,6 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     if (!screen->dumb && card->cfuncs->initAccel)
 	if (!(*card->cfuncs->initAccel) (pScreen))
 	    screen->dumb = TRUE;
-
-    if (screen->off_screen_base < screen->memory_size)
-	KdOffscreenInit (pScreen);
     
 #ifdef PSEUDO8
     (void) p8Init (pScreen, PSEUDO8_USE_DEFAULT);
@@ -1395,6 +1373,11 @@ KdInitOutput (ScreenInfo    *pScreenInfo,
     signal(SIGSEGV, KdBacktrace);
 }
 
+void
+OsVendorFatalError(void)
+{
+}
+
 #ifdef DPMSExtension
 #ifndef _MSC_VER
 int
@@ -1415,7 +1398,5 @@ DPMSSupported (void)
 }
 #endif
 #endif
-
 #ifndef _MSC_VER
-void ddxInitGlobals(void) { /* THANK YOU XPRINT */ }
 #endif

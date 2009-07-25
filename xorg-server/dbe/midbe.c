@@ -60,11 +60,14 @@
 
 #include <stdio.h>
 
-static DevPrivateKey miDbeWindowPrivPrivKey = &miDbeWindowPrivPrivKey;
+static int miDbeWindowPrivPrivKeyIndex;
+static DevPrivateKey miDbeWindowPrivPrivKey = &miDbeWindowPrivPrivKeyIndex;
 static RESTYPE	dbeDrawableResType;
 static RESTYPE	dbeWindowPrivResType;
-static DevPrivateKey dbeScreenPrivKey = &dbeScreenPrivKey;
-static DevPrivateKey dbeWindowPrivKey = &dbeWindowPrivKey;
+static int dbeScreenPrivKeyIndex;
+static DevPrivateKey dbeScreenPrivKey = &dbeScreenPrivKeyIndex;
+static int dbeWindowPrivKeyIndex;
+static DevPrivateKey dbeWindowPrivKey = &dbeWindowPrivKeyIndex;
 
 
 /******************************************************************************

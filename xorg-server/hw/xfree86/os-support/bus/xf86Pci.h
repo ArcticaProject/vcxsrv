@@ -255,8 +255,6 @@ ADDRESS	      pciBusAddrToHostAddr(PCITAG tag, PciAddrType type, ADDRESS addr);
 PCITAG	      pciTag(int busnum, int devnum, int funcnum);
 Bool xf86scanpci(void);
 
-extern int pciNumBuses;
-
 /* Domain access functions.  Some of these probably shouldn't be public */
 pointer xf86MapDomainMemory(int ScreenNum, int Flags, struct pci_device *dev,
     ADDRESS Base, unsigned long Size);

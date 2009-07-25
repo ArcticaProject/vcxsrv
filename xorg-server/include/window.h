@@ -66,6 +66,10 @@ SOFTWARE.
 #define WT_NOMATCH 3
 #define NullWindow ((WindowPtr) 0)
 
+/* Forward declaration, we can't include input.h here */
+struct _DeviceIntRec;
+struct _Cursor;
+
 typedef struct _BackingStore *BackingStorePtr;
 typedef struct _Window *WindowPtr;
 
@@ -130,6 +134,15 @@ extern int ChangeWindowAttributes(
     Mask /*vmask*/,
     XID* /*vlist*/,
     ClientPtr /*client*/);
+
+extern int ChangeWindowDeviceCursor(
+    WindowPtr /*pWin*/,
+    struct _DeviceIntRec* /*pDev*/,
+    struct _Cursor* /*pCursor*/);
+
+extern struct _Cursor* WindowGetDeviceCursor(
+    WindowPtr /*pWin*/,
+    struct _DeviceIntRec* /*pDev*/);
 
 /* Quartz support on Mac OS X uses the HIToolbox
    framework whose GetWindowAttributes function conflicts here. */

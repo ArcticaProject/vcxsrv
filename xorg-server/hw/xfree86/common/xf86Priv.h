@@ -39,6 +39,7 @@
 
 #include "xf86Privstr.h"
 #include "propertyst.h"
+#include "input.h"
 
 /*
  * Parameters set ONLY from the command line options
@@ -50,16 +51,12 @@ extern Bool xf86AllowMouseOpenFail;
 extern Bool xf86VidModeDisabled;
 extern Bool xf86VidModeAllowNonLocal; 
 #endif 
-#ifdef XF86MISC
-extern Bool xf86MiscModInDevDisabled;
-extern Bool xf86MiscModInDevAllowNonLocal;
-#endif 
 extern Bool xf86fpFlag;
-extern Bool xf86coFlag;
 extern Bool xf86sFlag;
 extern Bool xf86bsEnableFlag;
 extern Bool xf86bsDisableFlag;
 extern Bool xf86silkenMouseDisableFlag;
+extern Bool xf86xkbdirFlag;
 extern Bool xf86acpiDisableFlag;
 extern char *xf86LayoutName;
 extern char *xf86ScreenName;
@@ -73,10 +70,8 @@ extern int xf86Depth;
 extern Pix24Flags xf86Pix24;
 extern rgb xf86Weight;
 extern Bool xf86FlipPixels;
-extern Bool xf86BestRefresh;
 extern Gamma xf86Gamma;
 extern char *xf86ServerName;
-extern Bool xf86ShowUnresolved;
 extern struct pci_slot_match xf86IsolateDevice;
 
 /* Other parameters */
@@ -156,20 +151,19 @@ Bool xf86PathIsSafe(const char *path);
 extern const DisplayModeRec xf86DefaultModes[];
 extern const int xf86NumDefaultModes;
 
-/* xf86DoProbe.c */
-void DoProbe(void);
+/* xf86Configure.c */
 void DoConfigure(void);
+
+/* xf86ShowOpts.c */
+void DoShowOptions(void);
 
 /* xf86Events.c */
 
-void xf86PostKbdEvent(unsigned key);
-void xf86PostMseEvent(DeviceIntPtr device, int buttons, int dx, int dy);
 void xf86Wakeup(pointer blockData, int err, pointer pReadmask);
 void xf86SigHandler(int signo);
 void xf86HandlePMEvents(int fd, pointer data);
 extern int (*xf86PMGetEventFromOs)(int fd,pmEvent *events,int num);
 extern pmWait (*xf86PMConfirmEventToOs)(int fd,pmEvent event);
-void xf86GrabServerCallback(CallbackListPtr *, pointer, pointer);
 
 /* xf86Helper.c */
 void xf86LogInit(void);
@@ -181,18 +175,8 @@ int xf86SetVerbosity(int verb);
 int xf86SetLogVerbosity(int verb);
 Bool xf86CallDriverProbe( struct _DriverRec * drv, Bool detect_only );
 
-/* xf86Lock.c */
-
-#ifdef USE_XF86_SERVERLOCK
-void xf86UnlockServer(void);
-#endif
-
-/* xf86XKB.c */
-
-void xf86InitXkb(void);
-
 /* xf86Xinput.c */
-extern xEvent *xf86Events;
+extern EventList *xf86Events;
 
 #endif /* _NO_XF86_PROTOTYPES */
 

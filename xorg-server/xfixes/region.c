@@ -169,20 +169,16 @@ ProcXFixesCreateRegionFromWindow (ClientPtr client)
     }
     switch (stuff->kind) {
     case WindowRegionBounding:
-#ifdef SHAPE
 	pRegion = wBoundingShape(pWin);
 	if (!pRegion)
-#endif
 	{
 	    pRegion = CreateBoundingShape (pWin);
 	    copy = FALSE;
 	}
 	break;
     case WindowRegionClip:
-#ifdef SHAPE
 	pRegion = wClipShape(pWin);
 	if (!pRegion)
-#endif
 	{
 	    pRegion = CreateClipShape (pWin);
 	    copy = FALSE;
@@ -678,7 +674,6 @@ typedef	RegionPtr (*CreateDftPtr)(WindowPtr pWin);
 int
 ProcXFixesSetWindowShapeRegion (ClientPtr client)
 {
-#ifdef SHAPE
     WindowPtr	    pWin;
     ScreenPtr	    pScreen;
     RegionPtr	    pRegion;
@@ -753,9 +748,6 @@ ProcXFixesSetWindowShapeRegion (ClientPtr client)
     (*pScreen->SetShape) (pWin);
     SendShapeNotify (pWin, stuff->destKind);
     return (client->noClientException);
-#else
-    return BadRequest;
-#endif
 }
 
 int

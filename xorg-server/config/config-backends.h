@@ -27,7 +27,7 @@
 #include <dix-config.h>
 #endif
 
-#ifdef HAVE_DBUS
+#ifdef CONFIG_NEED_DBUS
 #include <dbus/dbus.h>
 
 typedef void (*config_dbus_core_connect_hook)(DBusConnection *connection,

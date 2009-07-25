@@ -129,8 +129,10 @@ typedef struct _xaaWrapperGCPriv {
 #define xaaWrapperGCPriv(pGC)   xaaWrapperGCPrivPtr  pGCPriv = xaaWrapperGetGCPriv(pGC)
 
 
-static DevPrivateKey xaaWrapperScrPrivateKey = &xaaWrapperScrPrivateKey;
-static DevPrivateKey xaaWrapperGCPrivateKey = &xaaWrapperGCPrivateKey;
+static int xaaWrapperScrPrivateKeyIndex;
+static DevPrivateKey xaaWrapperScrPrivateKey = &xaaWrapperScrPrivateKeyIndex;
+static int xaaWrapperGCPrivateKeyIndex;
+static DevPrivateKey xaaWrapperGCPrivateKey = &xaaWrapperGCPrivateKeyIndex;
 
 static Bool
 xaaWrapperCreateScreenResources(ScreenPtr pScreen)

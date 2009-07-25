@@ -72,7 +72,7 @@ PERFORMANCE OF THIS SOFTWARE.
 #include <X11/extensions/syncstr.h>
 
 #include <stdio.h>
-#if !defined(WIN32) && !defined(Lynx)
+#if !defined(WIN32)
 #include <sys/time.h>
 #endif
 
@@ -1405,7 +1405,7 @@ ProcSyncListSystemCounters(client)
 
     if (client->swapped)
     {
-	register char n;
+	char n;
 	swaps(&rep.sequenceNumber, n);
 	swapl(&rep.length, n);
 	swapl(&rep.nCounters, n);
@@ -1425,7 +1425,7 @@ ProcSyncListSystemCounters(client)
 
 	if (client->swapped)
 	{
-	    register char n;
+	    char n;
 	    swapl(&walklist->counter, n);
 	    swapl(&walklist->resolution_hi, n);
 	    swapl(&walklist->resolution_lo, n);
@@ -1514,7 +1514,7 @@ ProcSyncGetPriority(client)
 
     if (client->swapped)
     {
-	register char n;
+	char n;
 	swaps(&rep.sequenceNumber, n);
 	swapl(&rep.priority, n);
     }
@@ -1799,7 +1799,7 @@ ProcSyncQueryCounter(client)
     rep.value_lo = XSyncValueLow32(pCounter->value);
     if (client->swapped)
     {
-	register char n;
+	char n;
 	swaps(&rep.sequenceNumber, n);
 	swapl(&rep.length, n);
 	swapl(&rep.value_hi, n);
@@ -1981,7 +1981,7 @@ ProcSyncQueryAlarm(client)
 
     if (client->swapped)
     {
-	register char n;
+	char n;
 	swaps(&rep.sequenceNumber, n);
 	swapl(&rep.length, n);
 	swapl(&rep.counter, n);
@@ -2070,7 +2070,7 @@ SProcSyncInitialize(client)
     ClientPtr       client;
 {
     REQUEST(xSyncInitializeReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncInitializeReq);
@@ -2083,7 +2083,7 @@ SProcSyncListSystemCounters(client)
     ClientPtr       client;
 {
     REQUEST(xSyncListSystemCountersReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncListSystemCountersReq);
@@ -2096,7 +2096,7 @@ SProcSyncCreateCounter(client)
     ClientPtr       client;
 {
     REQUEST(xSyncCreateCounterReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncCreateCounterReq);
@@ -2112,7 +2112,7 @@ SProcSyncSetCounter(client)
     ClientPtr       client;
 {
     REQUEST(xSyncSetCounterReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncSetCounterReq);
@@ -2128,7 +2128,7 @@ SProcSyncChangeCounter(client)
     ClientPtr       client;
 {
     REQUEST(xSyncChangeCounterReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncChangeCounterReq);
@@ -2144,7 +2144,7 @@ SProcSyncQueryCounter(client)
     ClientPtr       client;
 {
     REQUEST(xSyncQueryCounterReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncQueryCounterReq);
@@ -2158,7 +2158,7 @@ SProcSyncDestroyCounter(client)
     ClientPtr       client;
 {
     REQUEST(xSyncDestroyCounterReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncDestroyCounterReq);
@@ -2172,7 +2172,7 @@ SProcSyncAwait(client)
     ClientPtr       client;
 {
     REQUEST(xSyncAwaitReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_AT_LEAST_SIZE(xSyncAwaitReq);
@@ -2187,7 +2187,7 @@ SProcSyncCreateAlarm(client)
     ClientPtr       client;
 {
     REQUEST(xSyncCreateAlarmReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_AT_LEAST_SIZE(xSyncCreateAlarmReq);
@@ -2203,7 +2203,7 @@ SProcSyncChangeAlarm(client)
     ClientPtr       client;
 {
     REQUEST(xSyncChangeAlarmReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_AT_LEAST_SIZE(xSyncChangeAlarmReq);
@@ -2218,7 +2218,7 @@ SProcSyncQueryAlarm(client)
     ClientPtr       client;
 {
     REQUEST(xSyncQueryAlarmReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncQueryAlarmReq);
@@ -2232,7 +2232,7 @@ SProcSyncDestroyAlarm(client)
     ClientPtr       client;
 {
     REQUEST(xSyncDestroyAlarmReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncDestroyAlarmReq);
@@ -2246,7 +2246,7 @@ SProcSyncSetPriority(client)
     ClientPtr       client;
 {
     REQUEST(xSyncSetPriorityReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncSetPriorityReq);
@@ -2261,7 +2261,7 @@ SProcSyncGetPriority(client)
     ClientPtr       client;
 {
     REQUEST(xSyncGetPriorityReq);
-    register char   n;
+    char   n;
 
     swaps(&stuff->length, n);
     REQUEST_SIZE_MATCH (xSyncGetPriorityReq);
@@ -2533,7 +2533,7 @@ SyncInitServerTime(void)
  * IDLETIME implementation
  */
 
-static pointer IdleTimeCounter;
+static SyncCounter *IdleTimeCounter;
 static XSyncValue *pIdleTimeValueLess;
 static XSyncValue *pIdleTimeValueGreater;
 
@@ -2545,38 +2545,69 @@ IdleTimeQueryValue (pointer pCounter, CARD64 *pValue_return)
 }
 
 static void
-IdleTimeBlockHandler (pointer env,
-                      struct timeval **wt,
-                      pointer LastSelectMask)
+IdleTimeBlockHandler(pointer env, struct timeval **wt, pointer LastSelectMask)
 {
-    XSyncValue idle;
+    XSyncValue idle, old_idle;
+    SyncTriggerList *list = IdleTimeCounter->pTriglist;
+    SyncTrigger *trig;
 
     if (!pIdleTimeValueLess && !pIdleTimeValueGreater)
 	return;
 
+    old_idle = IdleTimeCounter->value;
     IdleTimeQueryValue (NULL, &idle);
+    IdleTimeCounter->value = idle; /* push, so CheckTrigger works */
 
     if (pIdleTimeValueLess &&
         XSyncValueLessOrEqual (idle, *pIdleTimeValueLess))
     {
-	AdjustWaitForDelay (wt, 0);
+	/*
+	 * We've been idle for less than the threshold value, and someone
+	 * wants to know about that, but now we need to know whether they
+	 * want level or edge trigger.  Check the trigger list against the
+	 * current idle time, and if any succeed, bomb out of select()
+	 * immediately so we can reschedule.
+	 */
+
+	for (list = IdleTimeCounter->pTriglist; list; list = list->next) {
+	    trig = list->pTrigger;
+	    if (trig->CheckTrigger(trig, old_idle)) {
+		AdjustWaitForDelay(wt, 0);
+		break;
+	    }
+	}
     }
     else if (pIdleTimeValueGreater)
     {
-	unsigned long timeout = 0;
+	/*
+	 * There's a threshold in the positive direction.  If we've been
+	 * idle less than it, schedule a wakeup for sometime in the future.
+	 * If we've been idle more than it, and someone wants to know about
+	 * that level-triggered, schedule an immediate wakeup.
+	 */
+	unsigned long timeout = -1;
 
-	if (XSyncValueLessThan (idle, *pIdleTimeValueGreater))
-	{
+	if (XSyncValueLessThan (idle, *pIdleTimeValueGreater)) {
 	    XSyncValue value;
 	    Bool overflow;
 
 	    XSyncValueSubtract (&value, *pIdleTimeValueGreater,
 	                        idle, &overflow);
-	    timeout = XSyncValueLow32 (value);
+	    timeout = min(timeout, XSyncValueLow32 (value));
+	} else {
+	    for (list = IdleTimeCounter->pTriglist; list; list = list->next) {
+		trig = list->pTrigger;
+		if (trig->CheckTrigger(trig, old_idle)) {
+		    timeout = min(timeout, 0);
+		    break;
+		}
+	    }
 	}
 
 	AdjustWaitForDelay (wt, timeout);
     }
+
+    IdleTimeCounter->value = old_idle; /* pop */
 }
 
 static void

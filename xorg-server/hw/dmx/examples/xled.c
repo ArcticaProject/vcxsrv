@@ -37,7 +37,7 @@
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKB.h>
-#include "xkbstr.h"
+#include <X11/extensions/XKBstr.h>
 #include <sys/time.h>
 
 int main(int argc, char **argv)

@@ -87,16 +87,15 @@ DLFindSymbolLocal(pointer module, const char *name)
 
     static const char symPrefix[] = DLSYM_PREFIX;
 
-    if (strlen(symPrefix)) {
+    if (sizeof(symPrefix) > 1) {
 	n = malloc(strlen(symPrefix) + strlen(name) + 1);
 	sprintf(n, "%s%s", symPrefix, name);
-    } else {
-	n = name;
+	name = n;
     }
 
-    p = dlsym(module, n);
+    p = dlsym(module, name);
 
-    if (strlen(symPrefix))
+    if (sizeof(symPrefix) > 1)
 	free(n);
 
     return p;

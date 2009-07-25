@@ -24,14 +24,9 @@
 #include "xvmcext.h"
 
 #ifdef HAS_XVMCSHM
-#ifndef Lynx
 #include <sys/ipc.h>
 #include <sys/types.h>
 #include <sys/shm.h>
-#else
-#include <ipc.h>
-#include <shm.h>
-#endif /* Lynx */
 #endif /* HAS_XVMCSHM */
    
 
@@ -39,7 +34,8 @@
 #define DR_CLIENT_DRIVER_NAME_SIZE 48
 #define DR_BUSID_SIZE 48
 
-static DevPrivateKey XvMCScreenKey = NULL;
+static int XvMCScreenKeyIndex;
+static DevPrivateKey XvMCScreenKey;
 
 unsigned long XvMCGeneration = 0;
 
@@ -112,12 +108,6 @@ XvMCDestroySubpictureRes(pointer data, XID id)
 
    return Success;
 }
-
-static void
-XvMCResetProc (ExtensionEntry *extEntry)
-{
-}
-
 
 static int 
 ProcXvMCQueryVersion(ClientPtr client)
@@ -613,8 +603,8 @@ ProcXvMCGetDRInfo(ClientPtr client)
 #ifdef HAS_XVMCSHM
     patternP = (CARD32 *)shmat( stuff->shmKey, NULL, SHM_RDONLY );
     if ( -1 != (long) patternP) {
-        register volatile CARD32 *patternC = patternP;
-	register int i;
+        volatile CARD32 *patternC = patternP;
+	int i;
 	CARD32 magic = stuff->magic;
 	
 	rep.isLocal = 1;
@@ -693,7 +683,7 @@ XvMCExtensionInit(void)
 
    extEntry = AddExtension(XvMCName, XvMCNumEvents, XvMCNumErrors, 
                               ProcXvMCDispatch, SProcXvMCDispatch,
-                              XvMCResetProc, StandardMinorOpcode);
+                              NULL, StandardMinorOpcode);
 
    if(!extEntry) return;
   
@@ -720,7 +710,7 @@ XvMCScreenInit(ScreenPtr pScreen, int num, XvMCAdaptorPtr pAdapt)
 {
    XvMCScreenPtr pScreenPriv;
 
-   XvMCScreenKey = &XvMCScreenKey;
+   XvMCScreenKey = &XvMCScreenKeyIndex;
 
    if(!(pScreenPriv = (XvMCScreenPtr)xalloc(sizeof(XvMCScreenRec))))
 	return BadAlloc;

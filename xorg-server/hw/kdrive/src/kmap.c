@@ -82,9 +82,6 @@ KdMapDevice (CARD32 addr, CARD32 size)
 		    strerror (errno));
     return a;
 #endif
-#ifdef VXWORKS
-    return (void *) addr;
-#endif
 }
 
 void
@@ -96,9 +93,6 @@ KdUnmapDevice (void *addr, CARD32 size)
 #endif
 #ifdef linux
     munmap (addr, size);
-#endif
-#ifdef VXWORKS
-    ;
 #endif
 }
 

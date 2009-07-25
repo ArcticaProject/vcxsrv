@@ -62,6 +62,7 @@ SOFTWARE.
 #include "XIstubs.h"
 #include "windowstr.h"	/* window structure  */
 #include "exglobals.h"
+#include "exevents.h"
 
 #include "opendev.h"
 
@@ -102,11 +103,8 @@ ProcXOpenDevice(ClientPtr client)
     REQUEST(xOpenDeviceReq);
     REQUEST_SIZE_MATCH(xOpenDeviceReq);
 
-    if (stuff->deviceid == inputInfo.pointer->id ||
-	stuff->deviceid == inputInfo.keyboard->id)
-	return BadDevice;
-
     status = dixLookupDevice(&dev, stuff->deviceid, client, DixUseAccess);
+
     if (status == BadDevice) {  /* not open */
 	for (dev = inputInfo.off_devices; dev; dev = dev->next)
 	    if (dev->id == stuff->deviceid)
@@ -115,6 +113,9 @@ ProcXOpenDevice(ClientPtr client)
 	    return BadDevice;
     } else if (status != Success)
 	return status;
+
+    if (dev->isMaster)
+        return BadDevice;
 
     OpenInputDevice(dev, client, &status);
     if (status != Success)

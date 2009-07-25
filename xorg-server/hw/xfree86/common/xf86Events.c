@@ -57,26 +57,20 @@
 #include <X11/Xpoll.h>
 #include <X11/Xproto.h>
 #include "misc.h"
-
 #include "compiler.h"
-
 #include "xf86.h"
 #include "xf86Priv.h"
 #define XF86_OS_PRIVS
 #include "xf86_OSlib.h"
-#include "atKeynames.h"
-
+#include <X11/keysym.h>
 
 #ifdef XFreeXDGA
 #include "dgaproc.h"
 #endif
 
-#ifdef XINPUT
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
-#else
 #include "inputstr.h"
-#endif
 #include "xf86Xinput.h"
 
 #include "mi.h"
@@ -87,24 +81,11 @@
 #include <X11/extensions/xf86bigfont.h>
 #endif
 
-#ifdef XKB
-extern Bool noXkbExtension;
-#endif
-
 #ifdef DPMSExtension
 #define DPMS_SERVER
 #include <X11/extensions/dpms.h>
 #include "dpmsproc.h"
 #endif
-
-#define XE_POINTER  1
-#define XE_KEYBOARD 2
-
-#define EqEnqueue(pDev, ev) { \
-    int __sigstate = xf86BlockSIGIO (); \
-    mieqEnqueue (pDev, ev); \
-    xf86UnblockSIGIO(__sigstate); \
-}
 
 /*
  * The first of many hacks to get VT switching to work under
@@ -160,7 +141,6 @@ LegalModifier(unsigned int key, DeviceIntPtr pDev)
  *      Function used for screensaver purposes by the os module. Returns the
  *      time in milliseconds since there last was any input.
  */
-
 int
 TimeSinceLastInputEvent()
 {
@@ -170,20 +150,15 @@ TimeSinceLastInputEvent()
   return GetTimeInMillis() - xf86Info.lastEventTime;
 }
 
-
-
 /*
  * SetTimeSinceLastInputEvent --
  *      Set the lastEventTime to now.
  */
-
 _X_EXPORT void
 SetTimeSinceLastInputEvent()
 {
   xf86Info.lastEventTime = GetTimeInMillis();
 }
-
-
 
 /*
  * ProcessInputEvents --
@@ -191,67 +166,16 @@ SetTimeSinceLastInputEvent()
  *      correct chronological order. Only reads from the system pointer
  *      and keyboard.
  */
-
 void
 ProcessInputEvents ()
 {
   int x, y;
-#ifdef INHERIT_LOCK_STATE
-  static int generation = 0;
-#endif
-
-    /*
-     * With INHERIT_LOCK_STATE defined, the initial state of CapsLock, NumLock
-     * and ScrollLock will be set to match that of the VT the server is
-     * running on.
-     */
-#ifdef INHERIT_LOCK_STATE
-    if (generation != serverGeneration) {
-      xEvent kevent;
-      DevicePtr pKeyboard = xf86Info.pKeyboard;
-      extern unsigned int xf86InitialCaps, xf86InitialNum, xf86InitialScroll;
-
-      generation = serverGeneration;
-      kevent.u.keyButtonPointer.time = GetTimeInMillis();
-      kevent.u.keyButtonPointer.rootX = 0;
-      kevent.u.keyButtonPointer.rootY = 0;
-      kevent.u.u.type = KeyPress;
-
-
-      if (xf86InitialCaps) {
-        kevent.u.u.detail = xf86InitialCaps;
-        (* pKeyboard->processInputProc)(&kevent, (DeviceIntPtr)pKeyboard, 1);
-        xf86InitialCaps = 0;
-      }
-      if (xf86InitialNum) {
-        kevent.u.u.detail = xf86InitialNum;
-        (* pKeyboard->processInputProc)(&kevent, (DeviceIntPtr)pKeyboard, 1);
-        xf86InitialNum = 0;
-      }
-      if (xf86InitialScroll) {
-        kevent.u.u.detail = xf86InitialScroll;
-        (* pKeyboard->processInputProc)(&kevent, (DeviceIntPtr)pKeyboard, 1);
-        xf86InitialScroll = 0;
-      }
-    }
-#endif
-
-  xf86Info.inputPending = FALSE;
 
   mieqProcessInputEvents();
-  miPointerUpdateSprite(inputInfo.pointer);
 
+  /* FIXME: This is a problem if we have multiple pointers */
   miPointerGetPosition(inputInfo.pointer, &x, &y);
   xf86SetViewport(xf86Info.currentScreen, x, y);
-}
-
-void
-xf86GrabServerCallback(CallbackListPtr *callbacks, pointer data, pointer args)
-{
-    ServerGrabInfoRec *grab = (ServerGrabInfoRec*)args;
-
-    xf86Info.grabInfo.server.client = grab->client;
-    xf86Info.grabInfo.server.grabstate = grab->grabstate;
 }
 
 /*
@@ -281,42 +205,7 @@ xf86ProcessActionEvent(ActionEvent action, void *arg)
 	if (!xf86Info.dontZoom)
 	    xf86ZoomViewport(xf86Info.currentScreen, -1);
 	break;
-    case ACTION_DISABLEGRAB:
-	if (!xf86Info.grabInfo.disabled && xf86Info.grabInfo.allowDeactivate) {
-	  if (inputInfo.pointer && inputInfo.pointer->grab != NULL &&
-	      inputInfo.pointer->DeactivateGrab)
-	    inputInfo.pointer->DeactivateGrab(inputInfo.pointer);
-	  if (inputInfo.keyboard && inputInfo.keyboard->grab != NULL &&
-	      inputInfo.keyboard->DeactivateGrab)
-	    inputInfo.keyboard->DeactivateGrab(inputInfo.keyboard);
-	}
-	break;
-    case ACTION_CLOSECLIENT:
-	if (!xf86Info.grabInfo.disabled && xf86Info.grabInfo.allowClosedown) {
-	  ClientPtr pointer, keyboard, server;
-
-	  pointer = keyboard = server = NULL;
-	  if (inputInfo.pointer && inputInfo.pointer->grab != NULL)
-	    pointer = clients[CLIENT_ID(inputInfo.pointer->grab->resource)];
-	  if (inputInfo.keyboard && inputInfo.keyboard->grab != NULL) {
-	    keyboard = clients[CLIENT_ID(inputInfo.keyboard->grab->resource)];
-	    if (keyboard == pointer)
-	      keyboard = NULL;
-	  }
-	  if ((xf86Info.grabInfo.server.grabstate == SERVER_GRABBED) &&
-	      (((server = xf86Info.grabInfo.server.client) == pointer) ||
-	       (server == keyboard)))
-	      server = NULL;
-
-	  if (pointer)
-	    CloseDownClient(pointer);
-	  if (keyboard)
-	    CloseDownClient(keyboard);
-	  if (server)
-	    CloseDownClient(server);
-	}
-	break;
-#if !defined(__SOL8__) && !defined(sgi) && \
+#if !defined(__SOL8__) && \
     (!defined(sun) || defined(__i386__)) && defined(VT_ACTIVATE)
     case ACTION_SWITCHSCREEN:
 	if (VTSwitchEnabled && !xf86Info.dontVTSwitch && arg) {
@@ -324,12 +213,8 @@ xf86ProcessActionEvent(ActionEvent action, void *arg)
 #if defined(__SCO__) || defined(__UNIXWARE__)
 	    vtno--;
 #endif
-#if defined(QNX4)
-	    xf86Info.vtRequestsPending = vtno;
-#else
 	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, vtno) < 0)
 		ErrorF("Failed to switch consoles (%s)\n", strerror(errno));
-#endif
 	}
 	break;
     case ACTION_SWITCHSCREEN_NEXT:
@@ -355,76 +240,9 @@ xf86ProcessActionEvent(ActionEvent action, void *arg)
 	}
 	break;
 #endif
-    case ACTION_MESSAGE:
-        {
-            char *retstr, *message = (char *) arg;
-	    ScrnInfoPtr pScr = XF86SCRNINFO(xf86Info.currentScreen);
-
-#ifdef DEBUG
-            ErrorF("ActionMessage: '%s'\n", message);
-#endif
-	    /* Okay the message made it to the ddx.  The common layer */
-	    /* can check for relevant messages here and react to any  */
-	    /* that have a global effect.  For example:               */
-	    /*                                                        */
-	    /* if (!strcmp(message, "foo") {                          */
-	    /*      do_foo(); break                                   */
-	    /* }                                                      */
-	    /*                                                        */
-	    /* otherwise fallback to sending a key event message to   */
-	    /* the current screen's driver:                           */
-	    if (*pScr->HandleMessage != NULL) {
-		(void) (*pScr->HandleMessage)(pScr->scrnIndex,
-			"KeyEventMessage", message, &retstr);
-	    }
-        }
-	break;
     default:
 	break;
     }
-}
-
-#define ModifierIsSet(k) ((modifiers & (k)) == (k))
-
-_X_EXPORT Bool
-xf86CommonSpecialKey(int key, Bool down, int modifiers)
-{
-  if ((!ModifierIsSet(ShiftMask)) &&
-      (((ModifierIsSet(ControlMask | AltMask)) ||
-        (ModifierIsSet(ControlMask | AltLangMask))))) {
-      switch (key) {
-	
-      case KEY_BackSpace:
-	xf86ProcessActionEvent(ACTION_TERMINATE, NULL);
-	break;
-
-      /*
-       * Check grabs
-       */
-      case KEY_KP_Divide:
-	xf86ProcessActionEvent(ACTION_DISABLEGRAB, NULL);
-	break;
-      case KEY_KP_Multiply:
-	xf86ProcessActionEvent(ACTION_CLOSECLIENT, NULL);
-	break;
-	
-	/*
-	 * The idea here is to pass the scancode down to a list of
-	 * registered routines. There should be some standard conventions
-	 * for processing certain keys.
-	 */
-      case KEY_KP_Minus:   /* Keypad - */
-	if (down) xf86ProcessActionEvent(ACTION_PREV_MODE, NULL);
-	if (!xf86Info.dontZoom) return TRUE;
-	break;
-	
-      case KEY_KP_Plus:   /* Keypad + */
-	if (down) xf86ProcessActionEvent(ACTION_NEXT_MODE, NULL);
-	if (!xf86Info.dontZoom) return TRUE;
-	break;
-      }
-  }
-  return FALSE;
 }
 
 /*
@@ -436,7 +254,6 @@ xf86CommonSpecialKey(int key, Bool down, int modifiers)
 void
 xf86Wakeup(pointer blockData, int err, pointer pReadmask)
 {
-#if !defined(__QNX__)
     fd_set* LastSelectMask = (fd_set*)pReadmask;
     fd_set devicesWithInput;
     InputInfoPtr pInfo;
@@ -463,27 +280,6 @@ xf86Wakeup(pointer blockData, int err, pointer pReadmask)
 	    }
 	}
     }
-#else   /* __QNX__ */
-
-    InputInfoPtr pInfo;
-
-    pInfo = xf86InputDevs;
-    while (pInfo) {
-		if (pInfo->read_input && pInfo->fd >= 0) {
-		    int sigstate = xf86BlockSIGIO();
-
-		    pInfo->read_input(pInfo);
-		    xf86UnblockSIGIO(sigstate);
-		    /*
-		     * Must break here because more than one device may share
-		     * the same file descriptor.
-		     */
-		    break;
-		}
-		pInfo = pInfo->next;
-    }
-
-#endif  /* __QNX__ */
 
     if (err >= 0) { /* we don't want the handlers called if select() */
 	IHPtr ih;   /* returned with an error condition, do we?      */
@@ -497,8 +293,6 @@ xf86Wakeup(pointer blockData, int err, pointer pReadmask)
     }
 
     if (xf86VTSwitchPending()) xf86VTSwitch();
-
-    if (xf86Info.inputPending) ProcessInputEvents();
 }
 
 
@@ -593,6 +387,19 @@ xf86SigHandler(int signo)
   FatalError("Caught signal %d.  Server aborting\n", signo);
 }
 
+/*
+ * xf86PrintBacktrace --
+ *    Print a stack backtrace for debugging purposes.
+ */
+_X_EXPORT void
+xf86PrintBacktrace(void)
+{
+    xorg_backtrace();
+}
+
+#define KeyPressed(k) (keyc->postdown[k >> 3] & (1 << (k & 7)))
+#define ModifierDown(k) ((keyc->state & (k)) == (k))
+
 static void
 xf86ReleaseKeys(DeviceIntPtr pDev)
 {
@@ -643,7 +450,7 @@ xf86ReleaseKeys(DeviceIntPtr pDev)
 		    int sigstate = xf86BlockSIGIO ();
                     nevents = GetKeyboardEvents(xf86Events, pDev, KeyRelease, i);
                     for (j = 0; j < nevents; j++)
-                        mieqEnqueue(pDev, xf86Events + j);
+                        mieqEnqueue(pDev, (xf86Events + j)->event);
 		    xf86UnblockSIGIO(sigstate);
                 }
                 break;

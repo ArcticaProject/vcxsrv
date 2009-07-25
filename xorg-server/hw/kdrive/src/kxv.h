@@ -186,30 +186,6 @@ typedef struct {
   QueryImageAttributesFuncPtr QueryImageAttributes;
 } KdVideoAdaptorRec, *KdVideoAdaptorPtr;
 
-typedef struct {
-  KdImagePtr image;
-  int flags;
-  int (*alloc_surface)(KdScreenInfo * screen,
-		  int id,
-		  unsigned short width, 	
-		  unsigned short height,
-		  KdSurfacePtr surface);
-  int (*free_surface)(KdSurfacePtr surface);
-  int (*display) (KdSurfacePtr surface,
-		  short vid_x, short vid_y, 
-		  short drw_x, short drw_y,
-		  short vid_w, short vid_h, 
-		  short drw_w, short drw_h,
-		  RegionPtr clipBoxes);
-  int (*stop)    (KdSurfacePtr surface);
-  int (*getAttribute) (KdScreenInfo * screen, Atom attr, INT32 *value);
-  int (*setAttribute) (KdScreenInfo * screen, Atom attr, INT32 value);
-  int max_width;
-  int max_height;
-  int num_attributes;
-  KdAttributePtr attributes;
-} KdOffscreenImageRec, *KdOffscreenImagePtr;
-
 Bool
 KdXVScreenInit(
    ScreenPtr pScreen, 
@@ -229,19 +205,6 @@ int
 KdXVListGenericAdaptors(
     KdScreenInfo *          screen,
     KdVideoAdaptorPtr  **Adaptors
-);
-
-Bool 
-KdXVRegisterOffscreenImages(
-   ScreenPtr pScreen,
-   KdOffscreenImagePtr images,
-   int num
-);
-
-KdOffscreenImagePtr
-KdXVQueryOffscreenImages(
-   ScreenPtr pScreen,
-   int *num
 );
 
 void

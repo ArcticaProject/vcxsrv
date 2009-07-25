@@ -32,23 +32,35 @@ in this Software without prior written authorization from The Open Group.
 
 typedef struct _miPointerSpriteFuncRec {
     Bool	(*RealizeCursor)(
+                    DeviceIntPtr /* pDev */,
                     ScreenPtr /* pScr */,
                     CursorPtr /* pCurs */
                     );
     Bool	(*UnrealizeCursor)(
+                    DeviceIntPtr /* pDev */,
                     ScreenPtr /* pScr */,
                     CursorPtr /* pCurs */
                     );
     void	(*SetCursor)(
+                    DeviceIntPtr /* pDev */,
                     ScreenPtr /* pScr */,
                     CursorPtr /* pCurs */,
                     int  /* x */,
                     int  /* y */
                     );
     void	(*MoveCursor)(
+                    DeviceIntPtr /* pDev */,
                     ScreenPtr /* pScr */,
                     int  /* x */,
                     int  /* y */
+                    );
+    Bool        (*DeviceCursorInitialize)(
+                    DeviceIntPtr /* pDev */,
+                    ScreenPtr /* pScr */
+                    );
+    void        (*DeviceCursorCleanup)(
+                    DeviceIntPtr /* pDev */,
+                    ScreenPtr /* pScr */
                     );
 } miPointerSpriteFuncRec, *miPointerSpriteFuncPtr;
 
@@ -63,6 +75,7 @@ typedef struct _miPointerScreenFuncRec {
                     int  /* entering */
                     );
     void	(*WarpCursor)(
+                    DeviceIntPtr /*pDev*/, 
                     ScreenPtr /* pScr */,
                     int  /* x */,
                     int  /* y */
@@ -72,6 +85,7 @@ typedef struct _miPointerScreenFuncRec {
                     xEventPtr /* event */
                     );
     void	(*NewEventScreen)(
+		    DeviceIntPtr /* pDev */,
                     ScreenPtr /* pScr */,
 		    Bool /* fromDIX */
                     );
@@ -90,13 +104,10 @@ extern Bool miPointerInitialize(
 );
 
 extern void miPointerWarpCursor(
+    DeviceIntPtr /*pDev*/,
     ScreenPtr /*pScreen*/,
     int /*x*/,
     int /*y*/
-) _X_DEPRECATED;
-
-extern int miPointerGetMotionBufferSize(
-    void
 ) _X_DEPRECATED;
 
 extern int miPointerGetMotionEvents(
@@ -107,34 +118,11 @@ extern int miPointerGetMotionEvents(
     ScreenPtr /*pScreen*/
 );
 
-/* Deprecated in favour of miPointerUpdateSprite. */
-extern void miPointerUpdate(
-    void
-) _X_DEPRECATED;
-
-/* Deprecated in favour of miSetPointerPosition. */
-extern void miPointerDeltaCursor(
-    int /*dx*/,
-    int /*dy*/,
-    unsigned long /*time*/
-) _X_DEPRECATED;
+/* Deprecated in favour of miPointerSetPosition. */
 extern void miPointerAbsoluteCursor(
     int /*x*/,
     int /*y*/,
     unsigned long /*time*/
-) _X_DEPRECATED;
-
-/* Deprecated in favour of miGetPointerPosition. */
-extern void miPointerPosition(
-    int * /*x*/,
-    int * /*y*/
-) _X_DEPRECATED;
-
-/* Deprecated in favour of miPointerSetScreen. */
-extern void miPointerSetNewScreen(
-    int, /*screen_no*/
-    int, /*x*/
-    int /*y*/
 ) _X_DEPRECATED;
 
 /* Deprecated in favour of miPointerGetScreen. */
@@ -161,8 +149,7 @@ extern void miPointerGetPosition(
 extern void miPointerSetPosition(
     DeviceIntPtr pDev,
     int *x,
-    int *y,
-    unsigned long time);
+    int *y);
 
 extern void miPointerUpdateSprite(
     DeviceIntPtr pDev);

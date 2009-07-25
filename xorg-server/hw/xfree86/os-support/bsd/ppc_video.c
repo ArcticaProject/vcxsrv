@@ -123,24 +123,6 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	return rv;
 }
 
-/***************************************************************************/
-/* Interrupt Handling section                                              */
-/***************************************************************************/
-
-_X_EXPORT Bool
-xf86DisableInterrupts()
-{
-
-	return(TRUE);
-}
-
-_X_EXPORT void
-xf86EnableInterrupts()
-{
-
-	return;
-}
-
 Bool xf86EnableIO()
 {
         int fd = xf86Info.screenFd;

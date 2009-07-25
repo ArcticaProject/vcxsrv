@@ -42,7 +42,8 @@ typedef struct _ExaXorgScreenPrivRec {
     OptionInfoPtr		 options;
 } ExaXorgScreenPrivRec, *ExaXorgScreenPrivPtr;
 
-static DevPrivateKey exaXorgScreenPrivateKey = &exaXorgScreenPrivateKey;
+static int exaXorgScreenPrivateKeyIndex;
+static DevPrivateKey exaXorgScreenPrivateKey = &exaXorgScreenPrivateKeyIndex;
 
 typedef enum {
     EXAOPT_MIGRATION_HEURISTIC,
@@ -177,13 +178,6 @@ exaDDXDriverInit(ScreenPtr pScreen)
     pScreenPriv->SavedCloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = exaXorgCloseScreen;
     
-}
-
-/*ARGSUSED*/
-static const OptionInfoRec *
-EXAAvailableOptions(void *unused)
-{
-    return (EXAOptions);
 }
 
 static XF86ModuleVersionInfo exaVersRec =

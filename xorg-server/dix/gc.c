@@ -1049,7 +1049,7 @@ FreeDefaultStipple(int screenNum)
     (*pScreen->DestroyPixmap)(pScreen->PixmapPerDepth[0]);
 }
 
-_X_EXPORT int
+int
 SetDashes(GCPtr pGC, unsigned offset, unsigned ndash, unsigned char *pdash)
 {
     long i;
@@ -1155,7 +1155,7 @@ VerifyRectOrder(int nrects, xRectangle *prects, int ordering)
     return -1;
 }
 
-_X_EXPORT int
+int
 SetClipRects(GCPtr pGC, int xOrigin, int yOrigin, int nrects, 
              xRectangle *prects, int ordering)
 {

@@ -7,7 +7,7 @@ INCLUDES = \
 AM_CFLAGS = $(DIX_CFLAGS)
 
 if XORG
-sdk_HEADERS = fb.h fbrop.h fbpseudocolor.h fboverlay.h wfbrename.h
+sdk_HEADERS = fb.h fbrop.h fboverlay.h wfbrename.h
 endif
 
 libfb_la_CFLAGS = $(AM_CFLAGS)
@@ -49,9 +49,7 @@ libfb_la_SOURCES = 	\
 	fbtile.c	\
 	fbtrap.c	\
 	fbutil.c	\
-	fbwindow.c	\
-	fbpseudocolor.c \
-	fbpseudocolor.h
+	fbwindow.c
 
 libwfb_la_SOURCES = $(libfb_la_SOURCES)
 

@@ -63,6 +63,7 @@ SOFTWARE.
 #include <X11/Xproto.h>
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
+#include <X11/extensions/geproto.h>
 #include "inputstr.h"
 #include "windowstr.h"
 #include "miscstruct.h"
@@ -73,10 +74,13 @@ SOFTWARE.
 #include "dixevents.h"	/* DeliverFocusedEvent */
 #include "dixgrabs.h"	/* CreateGrab() */
 #include "scrnintstr.h"
+#include "listdev.h" /* for CopySwapXXXClass */
 #include "xace.h"
 
 #ifdef XKB
+#include <X11/extensions/XKBproto.h>
 #include "xkbsrv.h"
+extern Bool XkbCopyKeymap(XkbDescPtr src, XkbDescPtr dst, Bool sendNotifies);
 #endif
 
 #define WID(w) ((w) ? ((w)->drawable.id) : 0)
@@ -88,115 +92,769 @@ SOFTWARE.
 #define Motion_Filter(class) (DevicePointerMotionMask | \
 			      (class)->state | (class)->motionMask)
 
-static Bool ShouldFreeInputMasks(WindowPtr /* pWin */ ,
+Bool ShouldFreeInputMasks(WindowPtr /* pWin */ ,
 				 Bool	/* ignoreSelectedEvents */
     );
 static Bool MakeInputMasks(WindowPtr	/* pWin */
     );
 
-/**************************************************************************
- *
- * Procedures for extension device event routing.
- *
- */
+/* Used to sture classes currently not in use by an MD */
+extern DevPrivateKey UnusedClassesPrivateKey;
+
 
 void
 RegisterOtherDevice(DeviceIntPtr device)
 {
     device->public.processInputProc = ProcessOtherEvent;
     device->public.realInputProc = ProcessOtherEvent;
-    (device)->ActivateGrab = ActivateKeyboardGrab;
-    (device)->DeactivateGrab = DeactivateKeyboardGrab;
 }
 
- /*ARGSUSED*/ void
-ProcessOtherEvent(xEventPtr xE, DeviceIntPtr other, int count)
+Bool
+IsPointerEvent(xEvent* xE)
 {
-    BYTE *kptr;
+    switch(xE->u.u.type)
+    {
+        case ButtonPress:
+        case ButtonRelease:
+        case MotionNotify:
+        case EnterNotify:
+        case LeaveNotify:
+            return TRUE;
+        default:
+            if (xE->u.u.type == DeviceButtonPress ||
+                xE->u.u.type == DeviceButtonRelease ||
+                xE->u.u.type == DeviceMotionNotify ||
+                xE->u.u.type == ProximityIn ||
+                xE->u.u.type == ProximityOut)
+            {
+                return TRUE;
+            }
+    }
+    return FALSE;
+}
+
+/**
+ * @return the device matching the deviceid of the device set in the event, or
+ * NULL if the event is not an XInput event.
+ */
+DeviceIntPtr
+XIGetDevice(xEvent* xE)
+{
+    DeviceIntPtr pDev = NULL;
+
+    if (xE->u.u.type == DeviceButtonPress ||
+        xE->u.u.type == DeviceButtonRelease ||
+        xE->u.u.type == DeviceMotionNotify ||
+        xE->u.u.type == ProximityIn ||
+        xE->u.u.type == ProximityOut ||
+        xE->u.u.type == DevicePropertyNotify)
+    {
+        int rc;
+        int id;
+
+        id = ((deviceKeyButtonPointer*)xE)->deviceid & ~MORE_EVENTS;
+
+        rc = dixLookupDevice(&pDev, id, serverClient, DixUnknownAccess);
+        if (rc != Success)
+            ErrorF("[dix] XIGetDevice failed on XACE restrictions (%d)\n", rc);
+    }
+    return pDev;
+}
+
+
+/**
+ * Copy the device->key into master->key and send a mapping notify to the
+ * clients if appropriate.
+ * master->key needs to be allocated by the caller.
+ *
+ * Device is the slave device. If it is attached to a master device, we may
+ * need to send a mapping notify to the client because it causes the MD
+ * to change state.
+ *
+ * Mapping notify needs to be sent in the following cases:
+ *      - different slave device on same master
+ *      - different master
+ *
+ * XXX: They way how the code is we also send a map notify if the slave device
+ * stays the same, but the master changes. This isn't really necessary though.
+ *
+ * XXX: this gives you funny behaviour with the ClientPointer. When a
+ * MappingNotify is sent to the client, the client usually responds with a
+ * GetKeyboardMapping. This will retrieve the ClientPointer's keyboard
+ * mapping, regardless of which keyboard sent the last mapping notify request.
+ * So depending on the CP setting, your keyboard may change layout in each
+ * app...
+ *
+ * This code is basically the old SwitchCoreKeyboard.
+ */
+
+void
+CopyKeyClass(DeviceIntPtr device, DeviceIntPtr master)
+{
+    static DeviceIntPtr lastMapNotifyDevice = NULL;
+    KeyClassPtr mk, dk; /* master, device */
+    BOOL sendNotify = FALSE;
     int i;
-    CARD16 modifiers;
-    CARD16 mask;
-    GrabPtr grab = other->grab;
-    Bool deactivateDeviceGrab = FALSE;
-    int key = 0, bit = 0, rootX, rootY;
-    ButtonClassPtr b = other->button;
-    KeyClassPtr k = other->key;
-    ValuatorClassPtr v = other->valuator;
-    deviceValuator *xV = (deviceValuator *) xE;
 
-    if (xE->u.u.type != DeviceValuator) {
-	GetSpritePosition(&rootX, &rootY);
-	xE->u.keyButtonPointer.rootX = rootX;
-	xE->u.keyButtonPointer.rootY = rootY;
-	key = xE->u.u.detail;
-	NoticeEventTime(xE);
-	xE->u.keyButtonPointer.state = inputInfo.keyboard->key->state |
-	    inputInfo.pointer->button->state;
-	bit = 1 << (key & 7);
-    }
-    if (DeviceEventCallback) {
-	DeviceEventInfoRec eventinfo;
+    if (device == master)
+        return;
 
-	eventinfo.events = (xEventPtr) xE;
-	eventinfo.count = count;
-	CallCallbacks(&DeviceEventCallback, (pointer) & eventinfo);
+    dk = device->key;
+    mk = master->key;
+
+    if (device != dixLookupPrivate(&master->devPrivates,
+                                   CoreDevicePrivateKey)) {
+        memcpy(mk->modifierMap, dk->modifierMap, MAP_LENGTH);
+
+        if (dk->maxKeysPerModifier)
+        {
+            mk->modifierKeyMap = xrealloc(mk->modifierKeyMap,
+                                          8 * dk->maxKeysPerModifier);
+            if (!mk->modifierKeyMap)
+                FatalError("[Xi] no memory for class shift.\n");
+            memcpy(mk->modifierKeyMap, dk->modifierKeyMap,
+                    (8 * dk->maxKeysPerModifier));
+        } else
+        {
+            xfree(mk->modifierKeyMap);
+            mk->modifierKeyMap = NULL;
+        }
+
+        mk->maxKeysPerModifier = dk->maxKeysPerModifier;
+        mk->curKeySyms.minKeyCode = dk->curKeySyms.minKeyCode;
+        mk->curKeySyms.maxKeyCode = dk->curKeySyms.maxKeyCode;
+        SetKeySymsMap(&mk->curKeySyms, &dk->curKeySyms);
+
+        /*
+         * Copy state from the extended keyboard to core.  If you omit this,
+         * holding Ctrl on keyboard one, and pressing Q on keyboard two, will
+         * cause your app to quit.  This feels wrong to me, hence the below
+         * code.
+         *
+         * XXX: If you synthesise core modifier events, the state will get
+         *      clobbered here.  You'll have to work out something sensible
+         *      to fix that.  Good luck.
+         */
+
+#define KEYBOARD_MASK (ShiftMask | LockMask | ControlMask | Mod1Mask | \
+        Mod2Mask | Mod3Mask | Mod4Mask | Mod5Mask)
+        mk->state &= ~(KEYBOARD_MASK);
+        mk->state |= (dk->state & KEYBOARD_MASK);
+#undef KEYBOARD_MASK
+        for (i = 0; i < 8; i++)
+            mk->modifierKeyCount[i] = dk->modifierKeyCount[i];
+
+#ifdef XKB
+        if (!noXkbExtension && dk->xkbInfo && dk->xkbInfo->desc) {
+            if (!mk->xkbInfo || !mk->xkbInfo->desc)
+            {
+                XkbInitDevice(master);
+                XkbFinishDeviceInit(master);
+            }
+            if (!XkbCopyKeymap(dk->xkbInfo->desc, mk->xkbInfo->desc, True))
+                FatalError("Couldn't pivot keymap from device to core!\n");
+        }
+#endif
+
+        dixSetPrivate(&master->devPrivates, CoreDevicePrivateKey, device);
+        sendNotify = TRUE;
+    } else if (lastMapNotifyDevice != master)
+        sendNotify = TRUE;
+
+    if (sendNotify)
+    {
+        SendMappingNotify(master, MappingKeyboard,
+                           mk->curKeySyms.minKeyCode,
+                          (mk->curKeySyms.maxKeyCode -
+                           mk->curKeySyms.minKeyCode),
+                          serverClient);
+        lastMapNotifyDevice = master;
     }
-    for (i = 1; i < count; i++)
+}
+
+/**
+ * Copies the feedback classes from device "from" into device "to". Classes
+ * are duplicated (not just flipping the pointers). All feedback classes are
+ * linked lists, the full list is duplicated.
+ */
+static void
+DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
+{
+    ClassesPtr classes;
+
+    if (from->kbdfeed)
+    {
+        KbdFeedbackPtr *k, it;
+
+        if (!to->kbdfeed)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->kbdfeed = classes->kbdfeed;
+        }
+
+        k = &to->kbdfeed;
+        for(it = from->kbdfeed; it; it = it->next)
+        {
+            if (!(*k))
+            {
+                *k = xcalloc(1, sizeof(KbdFeedbackClassRec));
+                if (!*k)
+                {
+                    ErrorF("[Xi] Cannot alloc memory for class copy.");
+                    return;
+                }
+            }
+            (*k)->BellProc = it->BellProc;
+            (*k)->CtrlProc = it->CtrlProc;
+            (*k)->ctrl     = it->ctrl;
+#ifdef XKB
+            if ((*k)->xkb_sli)
+                XkbFreeSrvLedInfo((*k)->xkb_sli);
+            (*k)->xkb_sli = XkbCopySrvLedInfo(from, it->xkb_sli, *k, NULL);
+#endif
+
+            k = &(*k)->next;
+        }
+    } else if (to->kbdfeed && !from->kbdfeed)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->kbdfeed = to->kbdfeed;
+        to->kbdfeed      = NULL;
+    }
+
+    if (from->ptrfeed)
+    {
+        PtrFeedbackPtr *p, it;
+        if (!to->ptrfeed)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->ptrfeed = classes->ptrfeed;
+        }
+
+        p = &to->ptrfeed;
+        for (it = from->ptrfeed; it; it = it->next)
+        {
+            if (!(*p))
+            {
+                *p = xcalloc(1, sizeof(PtrFeedbackClassRec));
+                if (!*p)
+                {
+                    ErrorF("[Xi] Cannot alloc memory for class copy.");
+                    return;
+                }
+            }
+            (*p)->CtrlProc = it->CtrlProc;
+            (*p)->ctrl     = it->ctrl;
+
+            p = &(*p)->next;
+        }
+    } else if (to->ptrfeed && !from->ptrfeed)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->ptrfeed = to->ptrfeed;
+        to->ptrfeed      = NULL;
+    }
+
+    if (from->intfeed)
+    {
+        IntegerFeedbackPtr *i, it;
+
+        if (!to->intfeed)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->intfeed = classes->intfeed;
+        }
+
+        i = &to->intfeed;
+        for (it = from->intfeed; it; it = it->next)
+        {
+            if (!(*i))
+            {
+                *i = xcalloc(1, sizeof(IntegerFeedbackClassRec));
+                if (!(*i))
+                {
+                    ErrorF("[Xi] Cannot alloc memory for class copy.");
+                    return;
+                }
+            }
+            (*i)->CtrlProc = it->CtrlProc;
+            (*i)->ctrl     = it->ctrl;
+
+            i = &(*i)->next;
+        }
+    } else if (to->intfeed && !from->intfeed)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->intfeed = to->intfeed;
+        to->intfeed      = NULL;
+    }
+
+    if (from->stringfeed)
+    {
+        StringFeedbackPtr *s, it;
+
+        if (!to->stringfeed)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->stringfeed = classes->stringfeed;
+        }
+
+        s = &to->stringfeed;
+        for (it = from->stringfeed; it; it = it->next)
+        {
+            if (!(*s))
+            {
+                *s = xcalloc(1, sizeof(StringFeedbackClassRec));
+                if (!(*s))
+                {
+                    ErrorF("[Xi] Cannot alloc memory for class copy.");
+                    return;
+                }
+            }
+            (*s)->CtrlProc = it->CtrlProc;
+            (*s)->ctrl     = it->ctrl;
+
+            s = &(*s)->next;
+        }
+    } else if (to->stringfeed && !from->stringfeed)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->stringfeed = to->stringfeed;
+        to->stringfeed      = NULL;
+    }
+
+    if (from->bell)
+    {
+        BellFeedbackPtr *b, it;
+
+        if (!to->bell)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->bell = classes->bell;
+        }
+
+        b = &to->bell;
+        for (it = from->bell; it; it = it->next)
+        {
+            if (!(*b))
+            {
+                *b = xcalloc(1, sizeof(BellFeedbackClassRec));
+                if (!(*b))
+                {
+                    ErrorF("[Xi] Cannot alloc memory for class copy.");
+                    return;
+                }
+            }
+            (*b)->BellProc = it->BellProc;
+            (*b)->CtrlProc = it->CtrlProc;
+            (*b)->ctrl     = it->ctrl;
+
+            b = &(*b)->next;
+        }
+    } else if (to->bell && !from->bell)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->bell = to->bell;
+        to->bell      = NULL;
+    }
+
+    if (from->leds)
+    {
+        LedFeedbackPtr *l, it;
+
+        if (!to->leds)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->leds = classes->leds;
+        }
+
+        l = &to->leds;
+        for (it = from->leds; it; it = it->next)
+        {
+            if (!(*l))
+            {
+                *l = xcalloc(1, sizeof(LedFeedbackClassRec));
+                if (!(*l))
+                {
+                    ErrorF("[Xi] Cannot alloc memory for class copy.");
+                    return;
+                }
+            }
+            (*l)->CtrlProc = it->CtrlProc;
+            (*l)->ctrl     = it->ctrl;
+#ifdef XKB
+            if ((*l)->xkb_sli)
+                XkbFreeSrvLedInfo((*l)->xkb_sli);
+            (*l)->xkb_sli = XkbCopySrvLedInfo(from, it->xkb_sli, NULL, *l);
+#endif
+
+            l = &(*l)->next;
+        }
+    } else if (to->leds && !from->leds)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->leds = to->leds;
+        to->leds      = NULL;
+    }
+}
+
+/**
+ * Copies the CONTENT of the classes of device from into the classes in device
+ * to. From and to are identical after finishing.
+ *
+ * If to does not have classes from currenly has, the classes are stored in
+ * to's devPrivates system. Later, we recover it again from there if needed.
+ * Saves a few memory allocations.
+ */
+
+void
+DeepCopyDeviceClasses(DeviceIntPtr from, DeviceIntPtr to)
+{
+    ClassesPtr classes;
+
+    /* XkbInitDevice (->XkbInitIndicatorMap->XkbFindSrvLedInfo) relies on the
+     * kbdfeed to be set up properly, so let's do the feedback classes first.
+     */
+    DeepCopyFeedbackClasses(from, to);
+
+    if (from->key)
+    {
+        KeyCode             *oldModKeyMap;
+        KeySym              *oldMap;
+#ifdef XKB
+        struct _XkbSrvInfo  *oldXkbInfo;
+#endif
+        if (!to->key)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->key = classes->key;
+            if (!to->key)
+            {
+                to->key = xcalloc(1, sizeof(KeyClassRec));
+                if (!to->key)
+                    FatalError("[Xi] no memory for class shift.\n");
+            } else
+                classes->key = NULL;
+        }
+
+        oldModKeyMap    = to->key->modifierKeyMap;
+        oldMap          = to->key->curKeySyms.map;
+#ifdef XKB
+        oldXkbInfo      = to->key->xkbInfo;
+#endif
+
+        if (!oldMap) /* newly created key struct */
+        {
+            int bytes = (to->key->curKeySyms.maxKeyCode -
+                         to->key->curKeySyms.minKeyCode + 1) *
+                         to->key->curKeySyms.mapWidth;
+            oldMap = (KeySym *)xcalloc(sizeof(KeySym), bytes);
+            memcpy(oldMap, from->key->curKeySyms.map, bytes);
+        }
+
+        to->key->modifierKeyMap = oldModKeyMap;
+        to->key->curKeySyms.map = oldMap;
+#ifdef XKB
+        to->key->xkbInfo        = oldXkbInfo;
+#endif
+
+        CopyKeyClass(from, to);
+    } else if (to->key && !from->key)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->key = to->key;
+        to->key      = NULL;
+    }
+
+    if (from->valuator)
+    {
+        ValuatorClassPtr v;
+        if (!to->valuator)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->valuator = classes->valuator;
+            if (to->valuator)
+                classes->valuator = NULL;
+        }
+
+        to->valuator = xrealloc(to->valuator, sizeof(ValuatorClassRec) +
+                from->valuator->numAxes * sizeof(AxisInfo) +
+                from->valuator->numAxes * sizeof(unsigned int));
+        v = to->valuator;
+        if (!v)
+            FatalError("[Xi] no memory for class shift.\n");
+
+        v->numAxes = from->valuator->numAxes;
+        v->axes = (AxisInfoPtr)&v[1];
+        memcpy(v->axes, from->valuator->axes, v->numAxes * sizeof(AxisInfo));
+
+        v->axisVal = (int*)(v->axes + from->valuator->numAxes);
+    } else if (to->valuator && !from->valuator)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->valuator = to->valuator;
+        to->valuator      = NULL;
+    }
+
+    if (from->button)
+    {
+        if (!to->button)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->button = classes->button;
+            if (!to->button)
+            {
+                to->button = xcalloc(1, sizeof(ButtonClassRec));
+                if (!to->button)
+                    FatalError("[Xi] no memory for class shift.\n");
+            } else
+                classes->button = NULL;
+        }
+
+#ifdef XKB
+        if (from->button->xkb_acts)
+        {
+            if (!to->button->xkb_acts)
+            {
+                to->button->xkb_acts = xcalloc(1, sizeof(XkbAction));
+                if (!to->button->xkb_acts)
+                    FatalError("[Xi] not enough memory for xkb_acts.\n");
+            }
+            memcpy(to->button->xkb_acts, from->button->xkb_acts,
+                    sizeof(XkbAction));
+        } else
+            xfree(to->button->xkb_acts);
+#endif
+    } else if (to->button && !from->button)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->button = to->button;
+        to->button      = NULL;
+    }
+
+
+    /* We can't just copy over the focus class. When an app sets the focus,
+     * it'll do so on the master device. Copying the SDs focus means losing
+     * the focus.
+     * So we only copy the focus class if the device didn't have one,
+     * otherwise we leave it as it is.
+     */
+    if (from->focus)
+    {
+        if (!to->focus)
+        {
+            WindowPtr *oldTrace;
+
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->focus = classes->focus;
+            if (!to->focus)
+            {
+                to->focus = xcalloc(1, sizeof(FocusClassRec));
+                if (!to->focus)
+                    FatalError("[Xi] no memory for class shift.\n");
+            } else
+                classes->focus = NULL;
+
+            oldTrace = to->focus->trace;
+            memcpy(to->focus, from->focus, sizeof(FocusClassRec));
+            to->focus->trace = xrealloc(oldTrace,
+                                  to->focus->traceSize * sizeof(WindowPtr));
+            if (!to->focus->trace && to->focus->traceSize)
+                FatalError("[Xi] no memory for trace.\n");
+            memcpy(to->focus->trace, from->focus->trace,
+                    from->focus->traceSize * sizeof(WindowPtr));
+        }
+    } else if (to->focus)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->focus = to->focus;
+        to->focus      = NULL;
+    }
+
+    if (from->proximity)
+    {
+        if (!to->proximity)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->proximity = classes->proximity;
+            if (!to->proximity)
+            {
+                to->proximity = xcalloc(1, sizeof(ProximityClassRec));
+                if (!to->proximity)
+                    FatalError("[Xi] no memory for class shift.\n");
+            } else
+                classes->proximity = NULL;
+        }
+        memcpy(to->proximity, from->proximity, sizeof(ProximityClassRec));
+    } else if (to->proximity)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->proximity = to->proximity;
+        to->proximity      = NULL;
+    }
+
+    if (from->absolute)
+    {
+        if (!to->absolute)
+        {
+            classes = dixLookupPrivate(&to->devPrivates,
+                                       UnusedClassesPrivateKey);
+            to->absolute = classes->absolute;
+            if (!to->absolute)
+            {
+                to->absolute = xcalloc(1, sizeof(AbsoluteClassRec));
+                if (!to->absolute)
+                    FatalError("[Xi] no memory for class shift.\n");
+            } else
+                classes->absolute = NULL;
+        }
+        memcpy(to->absolute, from->absolute, sizeof(AbsoluteClassRec));
+    } else if (to->absolute)
+    {
+        ClassesPtr classes;
+        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes->absolute = to->absolute;
+        to->absolute      = NULL;
+    }
+}
+
+
+/**
+ * Update the device state according to the data in the event.
+ *
+ * return values are
+ *   DEFAULT ... process as normal
+ *   DONT_PROCESS ... return immediately from caller
+ *   IS_REPEAT .. event is a repeat event.
+ */
+#define DEFAULT 0
+#define DONT_PROCESS 1
+#define IS_REPEAT 2
+int
+UpdateDeviceState(DeviceIntPtr device, xEvent* xE, int count)
+{
+    int i;
+    int key = 0,
+        bit = 0;
+
+    KeyClassPtr k       = NULL;
+    ButtonClassPtr b    = NULL;
+    ValuatorClassPtr v  = NULL;
+    deviceValuator *xV  = (deviceValuator *) xE;
+    BYTE *kptr          = NULL;
+    CARD16 modifiers    = 0,
+           mask         = 0;
+
+    /* currently no other generic event modifies the device */
+    if (xE->u.u.type == GenericEvent)
+        return DEFAULT;
+
+    k = device->key;
+    v = device->valuator;
+    b = device->button;
+
+
+    if (xE->u.u.type != DeviceValuator)
+    {
+        key = xE->u.u.detail;
+        bit = 1 << (key & 7);
+    }
+
+    /* Update device axis */
+    /* Don't update valuators for the VCP, it never sends XI events anyway */
+    for (i = 1; !device->isMaster && i < count; i++) {
 	if ((++xV)->type == DeviceValuator) {
-	    int first = xV->first_valuator;
 	    int *axisvals;
+            int first = xV->first_valuator;
+            BOOL change = FALSE;
 
-	    if (xV->num_valuators
-		&& (!v
-		    || (xV->num_valuators
-			&& (first + xV->num_valuators > v->numAxes))))
+
+	    if (xV->num_valuators &&
+                (!v || (xV->num_valuators &&
+                      (first + xV->num_valuators > v->numAxes))))
 		FatalError("Bad valuators reported for device %s\n",
-			   other->name);
-	    xV->device_state = 0;
-	    if (k)
-		xV->device_state |= k->state;
-	    if (b)
-		xV->device_state |= b->state;
+			   device->name);
 	    if (v && v->axisVal) {
-		axisvals = v->axisVal;
-		switch (xV->num_valuators) {
-		case 6:
-		    *(axisvals + first + 5) = xV->valuator5;
-		case 5:
-		    *(axisvals + first + 4) = xV->valuator4;
-		case 4:
-		    *(axisvals + first + 3) = xV->valuator3;
-		case 3:
-		    *(axisvals + first + 2) = xV->valuator2;
-		case 2:
-		    *(axisvals + first + 1) = xV->valuator1;
-		case 1:
-		    *(axisvals + first) = xV->valuator0;
-		case 0:
-		default:
-		    break;
-		}
+                /* v->axisVal is always in absolute coordinates. Only the
+                 * delivery mode changes.
+                 * If device is mode Absolute
+                 *     dev = event
+                 * If device is mode Relative
+                 *      swap = (event - device)
+                 *      dev = event
+                 *      event = delta
+                 */
+                int delta;
+                axisvals = v->axisVal;
+                if (v->mode == Relative) /* device reports relative */
+                    change = TRUE;
+
+                switch (xV->num_valuators) {
+                    case 6:
+                        if (change) delta = xV->valuator5 - *(axisvals + first + 5);
+                        *(axisvals + first + 5) = xV->valuator5;
+                        if (change) xV->valuator5 = delta;
+                    case 5:
+                        if (change) delta = xV->valuator4 - *(axisvals + first + 4);
+                        *(axisvals + first + 4) = xV->valuator4;
+                        if (change) xV->valuator4 = delta;
+                    case 4:
+                        if (change) delta = xV->valuator3 - *(axisvals + first + 3);
+                        *(axisvals + first + 3) = xV->valuator3;
+                        if (change) xV->valuator3 = delta;
+                    case 3:
+                        if (change) delta = xV->valuator2 - *(axisvals + first + 2);
+                        *(axisvals + first + 2) = xV->valuator2;
+                        if (change) xV->valuator2 = delta;
+                    case 2:
+                        if (change) delta = xV->valuator1 - *(axisvals + first + 1);
+                        *(axisvals + first + 1) = xV->valuator1;
+                        if (change) xV->valuator1 = delta;
+                    case 1:
+                        if (change) delta = xV->valuator0 - *(axisvals + first);
+                        *(axisvals + first) = xV->valuator0;
+                        if (change) xV->valuator0 = delta;
+                    case 0:
+                    default:
+                        break;
+                }
 	    }
 	}
+    }
 
     if (xE->u.u.type == DeviceKeyPress) {
         if (!k)
-            return;
+            return DONT_PROCESS;
 
 	modifiers = k->modifierMap[key];
 	kptr = &k->down[key >> 3];
 	if (*kptr & bit) {	/* allow ddx to generate multiple downs */
-	    if (!modifiers) {
-		xE->u.u.type = DeviceKeyRelease;
-		ProcessOtherEvent(xE, other, count);
-		xE->u.u.type = DeviceKeyPress;
-		/* release can have side effects, don't fall through */
-		ProcessOtherEvent(xE, other, count);
-	    }
-	    return;
+	    return IS_REPEAT;
 	}
-	if (other->valuator)
-	    other->valuator->motionHintWindow = NullWindow;
+	if (device->valuator)
+	    device->valuator->motionHintWindow = NullWindow;
 	*kptr |= bit;
 	k->prev_state = k->state;
 	for (i = 0, mask = 1; modifiers; i++, mask <<= 1) {
@@ -207,20 +865,16 @@ ProcessOtherEvent(xEventPtr xE, DeviceIntPtr other, int count)
 		modifiers &= ~mask;
 	    }
 	}
-	if (!grab && CheckDeviceGrabs(other, xE, 0, count)) {
-	    other->activatingKey = key;
-	    return;
-	}
     } else if (xE->u.u.type == DeviceKeyRelease) {
         if (!k)
-            return;
+            return DONT_PROCESS;
 
 	kptr = &k->down[key >> 3];
 	if (!(*kptr & bit))	/* guard against duplicates */
-	    return;
+	    return DONT_PROCESS;
 	modifiers = k->modifierMap[key];
-	if (other->valuator)
-	    other->valuator->motionHintWindow = NullWindow;
+	if (device->valuator)
+	    device->valuator->motionHintWindow = NullWindow;
 	*kptr &= ~bit;
 	k->prev_state = k->state;
 	for (i = 0, mask = 1; modifiers; i++, mask <<= 1) {
@@ -233,64 +887,205 @@ ProcessOtherEvent(xEventPtr xE, DeviceIntPtr other, int count)
 		modifiers &= ~mask;
 	    }
 	}
-
-	if (other->fromPassiveGrab && (key == other->activatingKey))
-	    deactivateDeviceGrab = TRUE;
     } else if (xE->u.u.type == DeviceButtonPress) {
         if (!b)
-            return;
+            return DONT_PROCESS;
 
-	kptr = &b->down[key >> 3];
-	*kptr |= bit;
-	if (other->valuator)
-	    other->valuator->motionHintWindow = NullWindow;
-	b->buttonsDown++;
+        kptr = &b->down[key >> 3];
+        if ((*kptr & bit) != 0)
+            return DONT_PROCESS;
+        *kptr |= bit;
+	if (device->valuator)
+	    device->valuator->motionHintWindow = NullWindow;
+        if (!b->map[key])
+            return DONT_PROCESS;
+        b->buttonsDown++;
 	b->motionMask = DeviceButtonMotionMask;
-	xE->u.u.detail = key;
-	if (xE->u.u.detail == 0)
-	    return;
-	if (xE->u.u.detail <= 5)
-	    b->state |= (Button1Mask >> 1) << xE->u.u.detail;
-	SetMaskForEvent(Motion_Filter(b), DeviceMotionNotify);
-	if (!grab)
-	    if (CheckDeviceGrabs(other, xE, 0, count))
-                /* if a passive grab was activated, the event has been sent
-                 * already */
-                return;
-
+        if (b->map[key] <= 5)
+	    b->state |= (Button1Mask >> 1) << b->map[key];
+	SetMaskForEvent(device->id, Motion_Filter(b), DeviceMotionNotify);
     } else if (xE->u.u.type == DeviceButtonRelease) {
         if (!b)
-            return;
+            return DONT_PROCESS;
 
-	kptr = &b->down[key >> 3];
-	*kptr &= ~bit;
-	if (other->valuator)
-	    other->valuator->motionHintWindow = NullWindow;
+        kptr = &b->down[key>>3];
+        if (!(*kptr & bit))
+            return DONT_PROCESS;
+        if (device->isMaster) {
+            DeviceIntPtr sd;
+
+            /*
+             * Leave the button down if any slave has the
+             * button still down. Note that this depends on the
+             * event being delivered through the slave first
+             */
+            for (sd = inputInfo.devices; sd; sd = sd->next) {
+                if (sd->isMaster || sd->u.master != device)
+                    continue;
+                if ((sd->button->down[key>>3] & bit) != 0)
+                    return DONT_PROCESS;
+            }
+        }
+        *kptr &= ~bit;
+	if (device->valuator)
+	    device->valuator->motionHintWindow = NullWindow;
+        if (!b->map[key])
+            return DONT_PROCESS;
         if (b->buttonsDown >= 1 && !--b->buttonsDown)
 	    b->motionMask = 0;
-	xE->u.u.detail = key;
-	if (xE->u.u.detail == 0)
-	    return;
-	if (xE->u.u.detail <= 5)
-	    b->state &= ~((Button1Mask >> 1) << xE->u.u.detail);
-	SetMaskForEvent(Motion_Filter(b), DeviceMotionNotify);
-	if (!b->state && other->fromPassiveGrab)
-	    deactivateDeviceGrab = TRUE;
+	if (b->map[key] <= 5)
+	    b->state &= ~((Button1Mask >> 1) << b->map[key]);
+	SetMaskForEvent(device->id, Motion_Filter(b), DeviceMotionNotify);
     } else if (xE->u.u.type == ProximityIn)
-	other->valuator->mode &= ~OutOfProximity;
+	device->valuator->mode &= ~OutOfProximity;
     else if (xE->u.u.type == ProximityOut)
-	other->valuator->mode |= OutOfProximity;
+	device->valuator->mode |= OutOfProximity;
+
+    return DEFAULT;
+}
+
+/**
+ * Main device event processing function.
+ * Called from when processing the events from the event queue.
+ *
+ */
+void
+ProcessOtherEvent(xEventPtr xE, DeviceIntPtr device, int count)
+{
+    int i;
+    CARD16 modifiers;
+    GrabPtr grab = device->deviceGrab.grab;
+    Bool deactivateDeviceGrab = FALSE;
+    int key = 0, rootX, rootY;
+    ButtonClassPtr b;
+    KeyClassPtr k;
+    ValuatorClassPtr v;
+    deviceValuator *xV  = (deviceValuator *) xE;
+    int ret = 0;
+    int state;
+    DeviceIntPtr mouse = NULL, kbd = NULL;
+
+    if (IsPointerDevice(device))
+    {
+        kbd = GetPairedDevice(device);
+        mouse = device;
+        if (!kbd->key) /* can happen with floating SDs */
+            kbd = NULL;
+    } else
+    {
+        mouse = GetPairedDevice(device);
+        kbd = device;
+        if (!mouse->valuator || !mouse->button) /* may be float. SDs */
+            mouse = NULL;
+    }
+
+    /* State needs to be assembled BEFORE the device is updated. */
+    state = (kbd) ? kbd->key->state : 0;
+    state |= (mouse) ? (mouse->button->state) : 0;
+
+    ret = UpdateDeviceState(device, xE, count);
+    if (ret == DONT_PROCESS)
+        return;
+
+    v = device->valuator;
+    b = device->button;
+    k = device->key;
+
+    if (device->isMaster)
+        CheckMotion(xE, device);
+
+    if (xE->u.u.type != DeviceValuator && xE->u.u.type != GenericEvent) {
+	GetSpritePosition(device, &rootX, &rootY);
+	xE->u.keyButtonPointer.rootX = rootX;
+	xE->u.keyButtonPointer.rootY = rootY;
+	NoticeEventTime(xE);
+
+        xE->u.keyButtonPointer.state = state;
+
+        key = xE->u.u.detail;
+    }
+    if (DeviceEventCallback) {
+	DeviceEventInfoRec eventinfo;
+
+	eventinfo.events = (xEventPtr) xE;
+	eventinfo.count = count;
+	CallCallbacks(&DeviceEventCallback, (pointer) & eventinfo);
+    }
+
+    /* Valuator event handling */
+    /* Don't care about valuators for the VCP, it never sends XI events */
+
+    for (i = 1; !device->isMaster && i < count; i++) {
+	if ((++xV)->type == DeviceValuator) {
+	    int first = xV->first_valuator;
+	    if (xV->num_valuators
+		&& (!v
+		    || (xV->num_valuators
+			&& (first + xV->num_valuators > v->numAxes))))
+		FatalError("Bad valuators reported for device %s\n",
+			   device->name);
+	    xV->device_state = 0;
+	    if (k)
+		xV->device_state |= k->state;
+	    if (b)
+		xV->device_state |= b->state;
+	}
+    }
+
+    if (xE->u.u.type == DeviceKeyPress) {
+        if (ret == IS_REPEAT) {	/* allow ddx to generate multiple downs */
+            modifiers = k->modifierMap[key];
+	    if (!modifiers) {
+		xE->u.u.type = DeviceKeyRelease;
+		ProcessOtherEvent(xE, device, count);
+		xE->u.u.type = DeviceKeyPress;
+		/* release can have side effects, don't fall through */
+		ProcessOtherEvent(xE, device, count);
+	    }
+	    return;
+	}
+	if (!grab && CheckDeviceGrabs(device, xE, 0, count)) {
+	    device->deviceGrab.activatingKey = key;
+	    return;
+	}
+    } else if (xE->u.u.type == DeviceKeyRelease) {
+	if (device->deviceGrab.fromPassiveGrab &&
+            (key == device->deviceGrab.activatingKey))
+	    deactivateDeviceGrab = TRUE;
+    } else if (xE->u.u.type == DeviceButtonPress) {
+	xE->u.u.detail = b->map[key];
+	if (xE->u.u.detail == 0) {
+	    xE->u.u.detail = key;
+	    return;
+	}
+        if (!grab && CheckDeviceGrabs(device, xE, 0, count))
+        {
+            /* if a passive grab was activated, the event has been sent
+             * already */
+            return;
+        }
+
+    } else if (xE->u.u.type == DeviceButtonRelease) {
+	xE->u.u.detail = b->map[key];
+	if (xE->u.u.detail == 0) {
+	    xE->u.u.detail = key;
+	    return;
+	}
+        if (!b->buttonsDown && device->deviceGrab.fromPassiveGrab)
+            deactivateDeviceGrab = TRUE;
+    }
 
     if (grab)
-	DeliverGrabbedEvent(xE, other, deactivateDeviceGrab, count);
-    else if (other->focus)
-	DeliverFocusedEvent(other, xE, GetSpriteWindow(), count);
+        DeliverGrabbedEvent(xE, device, deactivateDeviceGrab, count);
+    else if (device->focus && !IsPointerEvent(xE))
+	DeliverFocusedEvent(device, xE, GetSpriteWindow(device), count);
     else
-	DeliverDeviceEvents(GetSpriteWindow(), xE, NullGrab, NullWindow,
-			    other, count);
+	DeliverDeviceEvents(GetSpriteWindow(device), xE, NullGrab, NullWindow,
+			    device, count);
 
     if (deactivateDeviceGrab == TRUE)
-	(*other->DeactivateGrab) (other);
+	(*device->deviceGrab.DeactivateGrab) (device);
+    xE->u.u.detail = key;
 }
 
 _X_EXPORT int
@@ -305,13 +1100,22 @@ InitProximityClassDeviceStruct(DeviceIntPtr dev)
     return TRUE;
 }
 
+/**
+ * Initialise the device's valuators. The memory must already be allocated,
+ * this function merely inits the matching axis (specified through axnum) to
+ * sane values.
+ *
+ * It is a condition that (minval < maxval).
+ *
+ * @see InitValuatorClassDeviceStruct
+ */
 _X_EXPORT void
 InitValuatorAxisStruct(DeviceIntPtr dev, int axnum, int minval, int maxval,
 		       int resolution, int min_res, int max_res)
 {
     AxisInfoPtr ax;
-   
-    if (!dev || !dev->valuator)
+
+    if (!dev || !dev->valuator || minval > maxval)
         return;
 
     ax = dev->valuator->axes + axnum;
@@ -338,7 +1142,7 @@ FixDeviceStateNotify(DeviceIntPtr dev, deviceStateNotify * ev, KeyClassPtr k,
     if (b) {
 	ev->classes_reported |= (1 << ButtonClass);
 	ev->num_buttons = b->numButtons;
-	memmove((char *)&ev->buttons[0], (char *)b->down, 4);
+	memcpy((char*)ev->buttons, (char*)b->down, 4);
     } else if (k) {
 	ev->classes_reported |= (1 << KeyClass);
 	ev->num_keys = k->curKeySyms.maxKeyCode - k->curKeySyms.minKeyCode;
@@ -402,7 +1206,7 @@ DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
     event.window = pWin->drawable.id;
     event.time = currentTime.milliseconds;
 
-    (void)DeliverEventsToWindow(pWin, (xEvent *) & event, 1,
+    (void)DeliverEventsToWindow(dev, pWin, (xEvent *) & event, 1,
 				DeviceFocusChangeMask, NullGrab, dev->id);
 
     if ((type == DeviceFocusIn) &&
@@ -457,7 +1261,7 @@ DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
 		bev = (deviceButtonStateNotify *) ev++;
 		bev->type = DeviceButtonStateNotify;
 		bev->deviceid = dev->id;
-		memmove((char *)&bev->buttons[0], (char *)&b->down[4], 28);
+		memcpy((char*)&bev->buttons[4], (char*)&b->down[4], DOWN_LENGTH - 4);
 	    }
 	    if (nval > 0) {
 		(ev - 1)->deviceid |= MORE_EVENTS;
@@ -498,7 +1302,7 @@ DeviceFocusEvent(DeviceIntPtr dev, int type, int mode, int detail,
 	    }
 	}
 
-	(void)DeliverEventsToWindow(pWin, (xEvent *) sev, evcount,
+	(void)DeliverEventsToWindow(dev, pWin, (xEvent *) sev, evcount,
 				    DeviceStateNotifyMask, NullGrab, dev->id);
 	xfree(sev);
     }
@@ -681,7 +1485,7 @@ SelectForWindow(DeviceIntPtr dev, WindowPtr pWin, ClientPtr client,
     if (dev->valuator)
 	if ((dev->valuator->motionHintWindow == pWin) &&
 	    (mask & DevicePointerMotionHintMask) &&
-	    !(check & DevicePointerMotionHintMask) && !dev->grab)
+	    !(check & DevicePointerMotionHintMask) && !dev->deviceGrab.grab)
 	    dev->valuator->motionHintWindow = NullWindow;
     RecalculateDeviceDeliverableEvents(pWin);
     return Success;
@@ -694,12 +1498,11 @@ AddExtensionClient(WindowPtr pWin, ClientPtr client, Mask mask, int mskidx)
 
     if (!pWin->optional && !MakeWindowOptional(pWin))
 	return BadAlloc;
-    others = (InputClients *) xalloc(sizeof(InputClients));
+    others = xcalloc(1, sizeof(InputClients));
     if (!others)
 	return BadAlloc;
     if (!pWin->optional->inputMasks && !MakeInputMasks(pWin))
 	return BadAlloc;
-    bzero((char *)&others->mask[0], sizeof(Mask) * EMASKSIZE);
     others->mask[mskidx] = mask;
     others->resource = FakeClientID(client->index);
     others->next = pWin->optional->inputMasks->inputClients;
@@ -714,11 +1517,9 @@ MakeInputMasks(WindowPtr pWin)
 {
     struct _OtherInputMasks *imasks;
 
-    imasks = (struct _OtherInputMasks *)
-	xalloc(sizeof(struct _OtherInputMasks));
+    imasks = xcalloc(1, sizeof(struct _OtherInputMasks));
     if (!imasks)
 	return FALSE;
-    bzero((char *)imasks, sizeof(struct _OtherInputMasks));
     pWin->optional->inputMasks = imasks;
     return TRUE;
 }
@@ -806,7 +1607,7 @@ SendEvent(ClientPtr client, DeviceIntPtr d, Window dest, Bool propagate,
 {
     WindowPtr pWin;
     WindowPtr effectiveFocus = NullWindow;	/* only set if dest==InputFocus */
-    WindowPtr spriteWin = GetSpriteWindow();
+    WindowPtr spriteWin = GetSpriteWindow(d);
 
     if (dest == PointerWindow)
 	pWin = spriteWin;
@@ -827,7 +1628,7 @@ SendEvent(ClientPtr client, DeviceIntPtr d, Window dest, Bool propagate,
 	/* If the input focus is PointerRootWin, send the event to where
 	 * the pointer is if possible, then perhaps propogate up to root. */
 	if (inputFocus == PointerRootWin)
-	    inputFocus = GetCurrentRootWindow();
+	    inputFocus = GetCurrentRootWindow(d);
 
 	if (IsParent(inputFocus, spriteWin)) {
 	    effectiveFocus = inputFocus;
@@ -845,7 +1646,7 @@ SendEvent(ClientPtr client, DeviceIntPtr d, Window dest, Bool propagate,
     ev->u.u.type |= 0x80;
     if (propagate) {
 	for (; pWin; pWin = pWin->parent) {
-	    if (DeliverEventsToWindow(pWin, ev, count, mask, NullGrab, d->id))
+	    if (DeliverEventsToWindow(d, pWin, ev, count, mask, NullGrab, d->id))
 		return Success;
 	    if (pWin == effectiveFocus)
 		return Success;
@@ -855,7 +1656,7 @@ SendEvent(ClientPtr client, DeviceIntPtr d, Window dest, Bool propagate,
 		break;
 	}
     } else if (!XaceHook(XACE_SEND_ACCESS, client, NULL, pWin, ev, count))
-	(void)(DeliverEventsToWindow(pWin, ev, count, mask, NullGrab, d->id));
+	(void)(DeliverEventsToWindow(d, pWin, ev, count, mask, NullGrab, d->id));
     return Success;
 }
 
@@ -979,7 +1780,8 @@ SendDeviceMappingNotify(ClientPtr client, CARD8 request,
     }
 
 #ifdef XKB
-    if (request == MappingKeyboard || request == MappingModifier)
+    if (!noXkbExtension && (request == MappingKeyboard ||
+                            request == MappingModifier))
         XkbApplyMappingChange(dev, request, firstKeyCode, count, client);
 #endif
 
@@ -1031,10 +1833,10 @@ DeleteDeviceFromAnyExtEvents(WindowPtr pWin, DeviceIntPtr dev)
      * any input focus changes.
      * Deactivating a device grab should cause focus events. */
 
-    if (dev->grab && (dev->grab->window == pWin))
-	(*dev->DeactivateGrab) (dev);
+    if (dev->deviceGrab.grab && (dev->deviceGrab.grab->window == pWin))
+	(*dev->deviceGrab.DeactivateGrab) (dev);
 
-    /* If the focus window is a root window (ie. has no parent) 
+    /* If the focus window is a root window (ie. has no parent)
      * then don't delete the focus from it. */
 
     if (dev->focus && (pWin == dev->focus->win) && (pWin->parent != NullWindow)) {
@@ -1042,7 +1844,7 @@ DeleteDeviceFromAnyExtEvents(WindowPtr pWin, DeviceIntPtr dev)
 
 	/* If a grab is in progress, then alter the mode of focus events. */
 
-	if (dev->grab)
+	if (dev->deviceGrab.grab)
 	    focusEventMode = NotifyWhileGrabbed;
 
 	switch (dev->focus->revert) {
@@ -1164,7 +1966,9 @@ CheckDeviceGrabAndHintWindow(WindowPtr pWin, int type,
 	tempGrab.pointerMode = GrabModeAsync;
 	tempGrab.confineTo = NullWindow;
 	tempGrab.cursor = NullCursor;
-	(*dev->ActivateGrab) (dev, &tempGrab, currentTime, TRUE);
+        tempGrab.genericMasks = NULL;
+        tempGrab.next = NULL;
+	(*dev->deviceGrab.ActivateGrab) (dev, &tempGrab, currentTime, TRUE);
     }
 }
 
@@ -1187,7 +1991,7 @@ void
 MaybeStopDeviceHint(DeviceIntPtr dev, ClientPtr client)
 {
     WindowPtr pWin;
-    GrabPtr grab = dev->grab;
+    GrabPtr grab = dev->deviceGrab.grab;
 
     pWin = dev->valuator->motionHintWindow;
 
@@ -1228,7 +2032,7 @@ DeviceEventSuppressForWindow(WindowPtr pWin, ClientPtr client, Mask mask,
     return Success;
 }
 
-static Bool
+Bool
 ShouldFreeInputMasks(WindowPtr pWin, Bool ignoreSelectedEvents)
 {
     int i;
@@ -1261,7 +2065,7 @@ FindInterestedChildren(DeviceIntPtr dev, WindowPtr p1, Mask mask,
 
     while (p1) {
         p2 = p1->firstChild;
-        (void)DeliverEventsToWindow(p1, ev, count, mask, NullGrab, dev->id);
+        (void)DeliverEventsToWindow(dev, p1, ev, count, mask, NullGrab, dev->id);
         FindInterestedChildren(dev, p2, mask, ev, count);
         p1 = p1->nextSib;
     }
@@ -1283,8 +2087,9 @@ SendEventToAllWindows(DeviceIntPtr dev, Mask mask, xEvent * ev, int count)
         pWin = WindowTable[i];
         if (!pWin)
             continue;
-        (void)DeliverEventsToWindow(pWin, ev, count, mask, NullGrab, dev->id);
+        (void)DeliverEventsToWindow(dev, pWin, ev, count, mask, NullGrab, dev->id);
         p1 = pWin->firstChild;
         FindInterestedChildren(dev, p1, mask, ev, count);
     }
 }
+

@@ -6,5 +6,4 @@ endif
 
 EXTRA_DIST = \
 	README.DRI \
-	README.fonts \
 	README.rapidaccess

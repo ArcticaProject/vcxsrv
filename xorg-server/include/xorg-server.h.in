@@ -25,17 +25,11 @@
 /* Support Composite Extension */
 #undef COMPOSITE
 
-/* Use OsVendorInit */
-#undef DDXOSINIT
-
 /* Build DPMS extension */
 #undef DPMSExtension
 
 /* Build GLX extension */
 #undef GLXEXT
-
-/* Include handhelds.org h3600 touchscreen driver */
-#undef H3600_TS
 
 /* Support XDM-AUTH*-1 */
 #undef HASXDMAUTH
@@ -46,20 +40,8 @@
 /* Support IPv6 for TCP connections */
 #undef IPv6
 
-/* Support MIT Misc extension */
-#undef MITMISC
-
 /* Support MIT-SHM Extension */
 #undef MITSHM
-
-/* Disable some debugging code */
-#undef NDEBUG
-
-/* Need XFree86 helper functions */
-#undef NEED_XF86_PROTOTYPES
-
-/* Need XFree86 typedefs */
-#undef NEED_XF86_TYPES
 
 /* Internal define for Xinerama */
 #undef PANORAMIX
@@ -76,14 +58,8 @@
 /* Support MIT-SCREEN-SAVER extension */
 #undef SCREENSAVER
 
-/* Use a lock to prevent multiple servers on a display */
-#undef SERVER_LOCK
-
 /* Support SHAPE extension */
 #undef SHAPE
-
-/* Include time-based scheduler */
-#undef SMART_SCHEDULE
 
 /* Define to 1 on systems derived from System V Release 4 */
 #undef SVR4
@@ -111,9 +87,6 @@
 
 /* Build XFree86 BigFont extension */
 #undef XF86BIGFONT
-
-/* Support XFree86 miscellaneous extensions */
-#undef XF86MISC
 
 /* Support XFree86 Video Mode extension */
 #undef XF86VIDMODE
@@ -160,36 +133,17 @@
 /* Build XvMC Extension */
 #undef XvMCExtension
 
-/* Build XRes extension */
-#undef XResExtension
-
 /* Support XSync extension */
 #undef XSYNC
 
 /* Support XTest extension */
 #undef XTEST
 
-/* Support XTrap extension */
-#undef XTRAP
-
 /* Support Xv Extension */
 #undef XV
 
 /* Vendor name */
 #undef XVENDORNAME
-
-/* Endian order */
-#undef _X_BYTE_ORDER
-/* Deal with multiple architecture compiles on Mac OS X */
-#ifndef __APPLE_CC__
-#define X_BYTE_ORDER _X_BYTE_ORDER
-#else
-#ifdef __BIG_ENDIAN__
-#define X_BYTE_ORDER X_BIG_ENDIAN
-#else
-#define X_BYTE_ORDER X_LITTLE_ENDIAN
-#endif
-#endif
 
 /* BSD-compliant source */
 #undef _BSD_SOURCE

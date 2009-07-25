@@ -253,7 +253,7 @@ int10_check_bios(int scrnIndex, int codeSeg, const unsigned char* vbiosMem)
 	return FALSE;
 
     if (bios_checksum(vbiosMem, size))
-	xf86DrvMsg(scrnIndex, X_WARNING, "Bad V_BIOS checksum\n");
+	xf86DrvMsg(scrnIndex, X_INFO, "Bad V_BIOS checksum\n");
 
     return TRUE;
 }

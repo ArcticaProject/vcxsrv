@@ -21,9 +21,6 @@
 /* Builder string */
 #undef BUILDERSTRING
 
-/* Use only built-in fonts */
-#undef BUILTIN_FONTS
-
 /* Default font path */
 #undef COMPILEDDEFAULTFONTPATH
 
@@ -35,6 +32,9 @@
 
 /* Use the HAL hotplug API */
 #undef CONFIG_HAL
+
+/* Use D-Bus for input hotplug */
+#undef CONFIG_NEED_DBUS
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -65,17 +65,8 @@
 /* Use ddxBeforeReset */
 #undef DDXBEFORERESET
 
-/* Use OsVendorFatalError */
-#undef DDXOSFATALERROR
-
-/* Use OsVendorInit */
-#undef DDXOSINIT
-
 /* Use OsVendorVErrorF */
 #undef DDXOSVERRORF
-
-/* Use GetTimeInMillis */
-#undef DDXTIME
 
 /* Enable debugging code */
 #undef DEBUG
@@ -98,14 +89,11 @@
 /* Build DRI2 extension */
 #undef DRI2
 
+/* Build DRI2 AIGLX loader */
+#undef DRI2_AIGLX
+
 /* Default DRI driver path */
 #undef DRI_DRIVER_PATH
-
-/* Build Extended-Visual-Information extension */
-#undef EVI
-
-/* Build FontCache extension */
-#undef FONTCACHE
 
 /* Build GLX extension */
 #undef GLXEXT
@@ -165,6 +153,9 @@
 /* Define to 1 if you have the `authdes_seccreate' function. */
 #undef HAVE_AUTHDES_SECCREATE
 
+/* "Have avc_netlink_acquire_fd" */
+#undef HAVE_AVC_NETLINK_ACQUIRE_FD
+
 /* Has backtrace support */
 #undef HAVE_BACKTRACE
 
@@ -199,6 +190,9 @@
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
+/* Define to 1 if you have the `ffs' function. */
+#undef HAVE_FFS
+
 /* Define to 1 if you have the `geteuid' function. */
 #undef HAVE_GETEUID
 
@@ -220,23 +214,20 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* launchd support available */
-#undef HAVE_LAUNCHD
-
 /* Define to 1 if you have the `audit' library (-laudit). */
 #undef HAVE_LIBAUDIT
 
 /* Define to 1 if you have the <libaudit.h> header file. */
 #undef HAVE_LIBAUDIT_H
 
-/* Has version 2.2 (or newer) of the drm library */
-#undef HAVE_LIBDRM_2_2
-
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
 /* Define to 1 if you have the `selinux' library (-lselinux). */
 #undef HAVE_LIBSELINUX
+
+/* Define to 1 if you have the `ws2_32' library (-lws2_32). */
+#undef HAVE_LIBWS2_32
 
 /* Define to 1 if you have the `link' function. */
 #undef HAVE_LINK
@@ -289,6 +280,9 @@
 /* Define to 1 if you have the <selinux/selinux.h> header file. */
 #undef HAVE_SELINUX_SELINUX_H
 
+/* Use libmd SHA1 functions instead of OpenSSL libcrypto */
+#undef HAVE_SHA1_IN_LIBMD
+
 /* Define to 1 if you have the `shmctl64' function. */
 #undef HAVE_SHMCTL64
 
@@ -332,6 +326,9 @@
 /* Define to 1 if you have the <sys/io.h> header file. */
 #undef HAVE_SYS_IO_H
 
+/* Define to 1 if you have the <sys/kd.h> header file. */
+#undef HAVE_SYS_KD_H
+
 /* Define to 1 if you have the <sys/linker.h> header file. */
 #undef HAVE_SYS_LINKER_H
 
@@ -353,9 +350,6 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
-
-/* Has /dev/urandom */
-#undef HAVE_URANDOM
 
 /* Define to 1 if you have the `vprintf' function. */
 #undef HAVE_VPRINTF
@@ -384,8 +378,9 @@
 /* Support os-specific local connections */
 #undef LOCALCONN
 
-/* Support MIT Misc extension */
-#undef MITMISC
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
 
 /* Support MIT-SHM extension */
 #undef MITSHM
@@ -395,9 +390,6 @@
 
 /* Build Multibuffer extension */
 #undef MULTIBUFFER
-
-/* Disable some debugging code */
-#undef NDEBUG
 
 /* Do not have 'strcasecmp'. */
 #undef NEED_STRCASECMP
@@ -413,9 +405,6 @@
 
 /* Need XFree86 typedefs */
 #undef NEED_XF86_TYPES
-
-/* Avoid using a font server */
-#undef NOFONTSERVERACCESS
 
 /* Define to 1 if modules should avoid the libcwrapper */
 #undef NO_LIBCWRAPPER
@@ -495,9 +484,6 @@
 /* Support Secure RPC ("SUN-DES-1") authentication for X11 clients */
 #undef SECURE_RPC
 
-/* Use a lock to prevent multiple servers on a display */
-#undef SERVER_LOCK
-
 /* Server miscellaneous config path */
 #undef SERVER_MISC_CONFIG_PATH
 
@@ -507,9 +493,6 @@
 /* The size of `unsigned long', as computed by sizeof. */
 #undef SIZEOF_UNSIGNED_LONG
 
-/* Include time-based scheduler */
-#undef SMART_SCHEDULE
-
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
    automatically deduced at runtime.
@@ -517,6 +500,9 @@
 	STACK_DIRECTION < 0 => grows toward lower addresses
 	STACK_DIRECTION = 0 => direction of growth unknown */
 #undef STACK_DIRECTION
+
+/* Build a standalone xpbproxy */
+#undef STANDALONE_XPBPROXY
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
@@ -529,9 +515,6 @@
 
 /* Support TCP socket connections */
 #undef TCPCONN
-
-/* Build TOG-CUP extension */
-#undef TOGCUP
 
 /* Have tslib support */
 #undef TSLIB
@@ -578,9 +561,6 @@
 /* Build X-ACE extension */
 #undef XACE
 
-/* Build APPGROUP extension */
-#undef XAPPGROUP
-
 /* Build XCalibrate extension */
 #undef XCALIBRATE
 
@@ -593,12 +573,6 @@
 /* Support XDM Control Protocol */
 #undef XDMCP
 
-/* enable DRI extension in xephyr */
-#undef XEPHYR_DRI
-
-/* Build XEvIE extension */
-#undef XEVIE
-
 /* Support XF86 Big font extension */
 #undef XF86BIGFONT
 
@@ -607,9 +581,6 @@
 
 /* Build DRI extension */
 #undef XF86DRI
-
-/* Support XFree86 miscellaneous extensions */
-#undef XF86MISC
 
 /* Support XFree86 Video Mode extension */
 #undef XF86VIDMODE
@@ -626,17 +597,8 @@
 /* Build XDGA support */
 #undef XFreeXDGA
 
-/* Use loadable XGL modules */
-#undef XGL_MODULAR
-
-/* Default XGL module search path */
-#undef XGL_MODULE_PATH
-
 /* Support Xinerama extension */
 #undef XINERAMA
-
-/* Support X Input extension */
-#undef XINPUT
 
 /* Build XKB */
 #undef XKB
@@ -671,12 +633,6 @@
 /* Current Xorg version */
 #undef XORG_VERSION_CURRENT
 
-/* Build Print extension */
-#undef XPRINT
-
-/* Support FreeType rasterizer in Xprint for nearly all font file formats */
-#undef XP_USE_FREETYPE
-
 /* Have Quartz */
 #undef XQUARTZ
 
@@ -685,9 +641,6 @@
 
 /* Build registry module */
 #undef XREGISTRY
-
-/* Build XRes extension */
-#undef XResExtension
 
 /* Build Xsdl server */
 #undef XSDLSERVER
@@ -707,9 +660,6 @@
 /* Support XTest extension */
 #undef XTEST
 
-/* Support XTrap extension */
-#undef XTRAP
-
 /* Support Xv extension */
 #undef XV
 
@@ -718,19 +668,6 @@
 
 /* Short vendor name */
 #undef XVENDORNAMESHORT
-
-
-/* Deal with multiple architecture compiles on Mac OS X */
-#ifndef __APPLE_CC__
-#define X_BYTE_ORDER _X_BYTE_ORDER
-#else
-#ifdef __BIG_ENDIAN__
-#define X_BYTE_ORDER X_BIG_ENDIAN
-#else
-#define X_BYTE_ORDER X_LITTLE_ENDIAN
-#endif
-#endif
-
 
 /* Build Xv extension */
 #undef XvExtension
@@ -753,9 +690,6 @@
 
 /* Define to 1 if unsigned long is 64 bits. */
 #undef _XSERVER64
-
-/* Endian order */
-#undef _X_BYTE_ORDER
 
 /* Solaris 8 or later */
 #undef __SOL8__

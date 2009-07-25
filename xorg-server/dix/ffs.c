@@ -30,6 +30,8 @@ The Open Group.
 #include <dix-config.h>
 #endif
 
+#ifndef HAVE_FFS
+
 #include "dix.h"
 
 int
@@ -42,3 +44,5 @@ ffs(int i)
 	i >>= 1;
     return j;
 }
+
+#endif

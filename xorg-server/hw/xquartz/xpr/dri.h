@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "scrnintstr.h"
 #define _APPLEDRI_SERVER_
 #include "appledri.h"
-#include "Xplugin.h"
+#include <Xplugin.h>
 
 typedef void (*ClipNotifyPtr)( WindowPtr, int, int );
 

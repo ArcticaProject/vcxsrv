@@ -16,8 +16,6 @@
 #include "xf86fbman.h"
 #include "servermd.h"
 
-static const OptionInfoRec *XAAAvailableOptions(void *unused);
-
 /*
  * XAA Config options
  */
@@ -103,7 +101,9 @@ static XF86ModuleVersionInfo xaaVersRec =
 	MODINFOSTRING1,
 	MODINFOSTRING2,
 	XORG_VERSION_CURRENT,
-	1, 2, 0,
+	XAA_VERSION_MAJOR,
+	XAA_VERSION_MINOR,
+	XAA_VERSION_RELEASE,
 	ABI_CLASS_VIDEODRV,		/* requires the video driver ABI */
 	ABI_VIDEODRV_VERSION,
 	MOD_CLASS_NONE,
@@ -111,13 +111,6 @@ static XF86ModuleVersionInfo xaaVersRec =
 };
 
 _X_EXPORT XF86ModuleData xaaModuleData = { &xaaVersRec, NULL, NULL };
-
-/*ARGSUSED*/
-static const OptionInfoRec *
-XAAAvailableOptions(void *unused)
-{
-    return (XAAOptions);
-}
 
 Bool
 XAAInitAccel(ScreenPtr pScreen, XAAInfoRecPtr infoRec)

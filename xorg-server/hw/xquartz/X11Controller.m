@@ -1,6 +1,6 @@
 /* X11Controller.m -- connect the IB ui, also the NSApp delegate
  
-   Copyright (c) 2002-2007 Apple Inc. All rights reserved.
+   Copyright (c) 2002-2008 Apple Inc. All rights reserved.
  
    Permission is hereby granted, free of charge, to any person
    obtaining a copy of this software and associated documentation files
@@ -27,33 +27,33 @@
    promote the sale, use or other dealings in this Software without
    prior written authorization. */
 
+#include "sanitizedCarbon.h"
+#include <AvailabilityMacros.h>
+
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
-
-#define DEFAULT_PATH "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/X11/bin"
 
 #include "quartzCommon.h"
 
 #import "X11Controller.h"
 #import "X11Application.h"
-#import <Carbon/Carbon.h>
 
-/* ouch! */
-#define BOOL X_BOOL
 #include "opaque.h"
-# include "darwin.h"
-# include "quartz.h"
-# define _APPLEWM_SERVER_
-# include "X11/extensions/applewm.h"
-# include "applewmExt.h"
-#undef BOOL
+#include "darwin.h"
+#include "darwinEvents.h"
+#include "quartz.h"
+#define _APPLEWM_SERVER_
+#include "X11/extensions/applewm.h"
+#include "applewmExt.h"
 
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+
+BOOL xquartz_resetenv_display = NO;
 
 @implementation X11Controller
 
@@ -97,13 +97,20 @@
 		
       [self set_apps_menu:array];
     }
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver: self
+     selector: @selector(apps_table_done:)
+     name: NSWindowWillCloseNotification
+     object: [apps_table window]];
+    
 }
 
 - (void) item_selected:sender
 {
   [NSApp activateIgnoringOtherApps:YES];
 	
-  QuartzMessageServerThread (kXDarwinControllerNotify, 2,
+  DarwinSendDDXEvent(kXquartzControllerNotify, 2,
 			     AppleWMWindowMenuItem, [sender tag]);
 }
 
@@ -130,7 +137,7 @@
   NSMenu *menu;
   NSMenuItem *item;
   int first, count, i;
-	
+
   menu = [window_separator menu];
   first = [menu indexOfItem:window_separator] + 1;
   count = [list count];
@@ -140,17 +147,30 @@
 		
       name = [[list objectAtIndex:i] objectAtIndex:0];
       shortcut = [[list objectAtIndex:i] objectAtIndex:1];
-		
+        
+      if(windowItemModMask == 0 || windowItemModMask == -1)
+          shortcut = @"";
+
       item = (NSMenuItem *) [menu addItemWithTitle:name action:@selector
 				  (item_selected:) keyEquivalent:shortcut];
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+      [item setKeyEquivalentModifierMask:(NSUInteger) windowItemModMask];
+#else
+      [item setKeyEquivalentModifierMask:windowItemModMask];
+#endif
       [item setTarget:self];
       [item setTag:i];
       [item setEnabled:YES];
-		
+
       item = (NSMenuItem *) [dock_menu insertItemWithTitle:name
 				       action:@selector
 				       (item_selected:) keyEquivalent:shortcut
 				       atIndex:i];
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+      [item setKeyEquivalentModifierMask:(NSUInteger) windowItemModMask];
+#else
+      [item setKeyEquivalentModifierMask:windowItemModMask];
+#endif
       [item setTarget:self];
       [item setTag:i];
       [item setEnabled:YES];
@@ -254,7 +274,7 @@
   [self remove_window_menu];
   [self install_window_menu:list];
 	
-  QuartzMessageServerThread (kXDarwinControllerNotify, 1,
+  DarwinSendDDXEvent(kXquartzControllerNotify, 1,
 			     AppleWMWindowMenuNotify);
 }
 
@@ -294,76 +314,59 @@
 
 - (void) launch_client:(NSString *)filename
 {
-  const char *command = [filename UTF8String];
-  const char *argv[7];
-  int child1, child2 = 0;
-  int status;
-	
-  argv[0] = "/usr/bin/login";
-  argv[1] = "-fp";
-  argv[2] = getlogin();
-  argv[3] = [X11App prefs_get_string:@PREFS_LOGIN_SHELL default:"/bin/sh"];
-  argv[4] = "-c";
-  argv[5] = command;
-  argv[6] = NULL;
-
-  /* Do the fork-twice trick to avoid having to reap zombies */
+    int child1, child2 = 0;
+    int status;
+    const char *newargv[4];
+    char buf[128];
+    char *s;
     
-  child1 = fork();
+    newargv[0] = [X11App prefs_get_string:@PREFS_LOGIN_SHELL default:"/bin/sh"];
+    newargv[1] = "-c";
+    newargv[2] = [filename UTF8String];
+    newargv[3] = NULL;
     
-  switch (child1) {
-  case -1:                                /* error */
-    break;
-      
-  case 0:                                 /* child1 */
-    child2 = fork();
-      
-    switch (child2) {
-      int max_files, i;
-      char buf[1024], *temp;
-	
-    case -1:                            /* error */
-      _exit(1);
-	
-    case 0:                             /* child2 */
-      /* close all open files except for standard streams */
-      max_files = sysconf(_SC_OPEN_MAX);
-      for (i = 3; i < max_files; i++)	close(i);
-	
-      /* ensure stdin is on /dev/null */
-      close(0);
-      open("/dev/null", O_RDONLY);
-	
-      /* Setup environment */
-      temp = getenv("DISPLAY");
-      if (temp == NULL || temp[0] == 0) {
-    snprintf(buf, sizeof(buf), ":%s", display);
-	setenv("DISPLAY", buf, TRUE);
-      }
-	
-      temp = getenv("PATH");
-      if (temp == NULL || temp[0] == 0) 
-	setenv ("PATH", DEFAULT_PATH, TRUE);
-      else if (strnstr(temp, "/usr/X11/bin", sizeof(temp)) == NULL) {
-	snprintf(buf, sizeof(buf), "%s:/usr/X11/bin", temp);            
-	setenv("PATH", buf, TRUE);      
-      }
-      /* cd $HOME */
-      temp = getenv("HOME");
-      if (temp != NULL && temp[0]!=0) chdir(temp);
-	
-      execvp(argv[0], (char **const) argv);
-	
-      _exit(2);
-	
-    default:                            /* parent (child1) */
-      _exit(0);
+    s = getenv("DISPLAY");
+    if (xquartz_resetenv_display || s == NULL || s[0] == 0) {
+        snprintf(buf, sizeof(buf), ":%s", display);
+        setenv("DISPLAY", buf, TRUE);
     }
-    break;
+
+    /* Do the fork-twice trick to avoid having to reap zombies */
+    child1 = fork();
+    switch (child1) {
+        case -1:                                /* error */
+            break;
       
-  default:                                /* parent */
-    waitpid(child1, &status, 0);
-  }
+        case 0:                                 /* child1 */
+            child2 = fork();
+      
+            switch (child2) {
+                int max_files, i;
+	
+                case -1:                            /* error */
+                    _exit(1);
+	 
+                case 0:                             /* child2 */
+                /* close all open files except for standard streams */
+                max_files = sysconf(_SC_OPEN_MAX);
+                for(i = 3; i < max_files; i++)
+                    close(i);
+	
+                /* ensure stdin is on /dev/null */
+                close(0);
+                open("/dev/null", O_RDONLY);
+	
+                execvp(newargv[0], (char **const) newargv);
+                _exit(2);
+	
+                default:                            /* parent (child1) */
+                _exit(0);
+            }
+            break;
+      
+        default:                                /* parent */
+            waitpid(child1, &status, 0);
+    }
 }
 
 - (void) app_selected:sender
@@ -383,12 +386,14 @@
 - (IBAction) apps_table_show:sender
 {
   NSArray *columns;
+  NSMutableArray *oldapps = nil;
 	
-  if (table_apps == nil) {
-    table_apps = [[NSMutableArray alloc] initWithCapacity:1];
-      
-    if (apps != nil)[table_apps addObjectsFromArray:apps];
-  }
+  if (table_apps != nil)
+    oldapps = table_apps;
+
+  table_apps = [[NSMutableArray alloc] initWithCapacity:1];
+  if(apps != nil)
+      [table_apps addObjectsFromArray:apps];
 	
   columns = [apps_table tableColumns];
   [[columns objectAtIndex:0] setIdentifier:@"0"];
@@ -399,15 +404,9 @@
   [apps_table selectRow:0 byExtendingSelection:NO];
 	
   [[apps_table window] makeKeyAndOrderFront:sender];
-}
-
-- (IBAction) apps_table_cancel:sender
-{
-  [[apps_table window] orderOut:sender];
   [apps_table reloadData];
-	
-  [table_apps release];
-  table_apps = nil;
+  if(oldapps != nil)
+    [oldapps release];
 }
 
 - (IBAction) apps_table_done:sender
@@ -539,20 +538,20 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 - (void) hide_window:sender
 {
   if ([X11App x_active])
-    QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMHideWindow);
+    DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMHideWindow);
   else
     NSBeep ();			/* FIXME: something here */
 }
 
 - (IBAction)bring_to_front:sender
 {
-  QuartzMessageServerThread(kXDarwinControllerNotify, 1, AppleWMBringAllToFront);
+  DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMBringAllToFront);
 }
 
 - (IBAction)close_window:sender
 {
   if ([X11App x_active])
-    QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMCloseWindow);
+    DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMCloseWindow);
   else
     [[NSApp keyWindow] performClose:sender];
 }
@@ -560,7 +559,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 - (IBAction)minimize_window:sender
 {
   if ([X11App x_active])
-    QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMMinimizeWindow);
+    DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMMinimizeWindow);
   else
     [[NSApp keyWindow] performMiniaturize:sender];
 }
@@ -568,101 +567,145 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 - (IBAction)zoom_window:sender
 {
   if ([X11App x_active])
-    QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMZoomWindow);
+    DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMZoomWindow);
   else
     [[NSApp keyWindow] performZoom:sender];
 }
 
 - (IBAction) next_window:sender
 {
-  QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMNextWindow);
+  DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMNextWindow);
 }
 
 - (IBAction) previous_window:sender
 {
-  QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMPreviousWindow);
+  DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMPreviousWindow);
 }
 
-- (IBAction) enable_fullscreen_changed:sender
-{
-  int value = ![enable_fullscreen intValue];
-	
-#ifdef DARWIN_DDX_MISSING
-  QuartzMessageServerThread (kXDarwinSetRootless, 1, value);
-#endif
-	
-  [NSApp prefs_set_boolean:@PREFS_ROOTLESS value:value];
-  [NSApp prefs_synchronize];
+- (IBAction) enable_fullscreen_changed:sender {
+    int value = ![enable_fullscreen intValue];
+
+    [enable_fullscreen_menu setEnabled:!value];
+
+    DarwinSendDDXEvent(kXquartzSetRootless, 1, value);
+
+    [NSApp prefs_set_boolean:@PREFS_ROOTLESS value:value];
+    [NSApp prefs_synchronize];
 }
 
 - (IBAction) toggle_fullscreen:sender
 {
-#ifdef DARWIN_DDX_MISSING
-  QuartzMessageServerThread (kXDarwinToggleFullscreen, 0);
-#endif
+  DarwinSendDDXEvent(kXquartzToggleFullscreen, 0);
 }
 
-- (void) set_can_quit:(BOOL)state
+- (void) set_can_quit:(OSX_BOOL)state
 {
   can_quit = state;
 }
 
 - (IBAction)prefs_changed:sender
 {
-  darwinFakeButtons = [fake_buttons intValue];
-  quartzUseSysBeep = [use_sysbeep intValue];
-  X11EnableKeyEquivalents = [enable_keyequivs intValue];
-  darwinSyncKeymap = [sync_keymap intValue];
+    darwinFakeButtons = [fake_buttons intValue];
+    quartzUseSysBeep = [use_sysbeep intValue];
+    X11EnableKeyEquivalents = [enable_keyequivs intValue];
+    darwinSyncKeymap = [sync_keymap intValue];
+    quartzFullscreenMenu = [enable_fullscreen_menu intValue];
 
-  /* after adding prefs here, also add to [X11Application read_defaults]
-     and below */
-	
-  [NSApp prefs_set_boolean:@PREFS_FAKEBUTTONS value:darwinFakeButtons];
-  [NSApp prefs_set_boolean:@PREFS_SYSBEEP value:quartzUseSysBeep];
-  [NSApp prefs_set_boolean:@PREFS_KEYEQUIVS value:X11EnableKeyEquivalents];
-  [NSApp prefs_set_boolean:@PREFS_SYNC_KEYMAP value:darwinSyncKeymap];
-  [NSApp prefs_set_boolean:@PREFS_QUARTZ_WM_CLICK_THROUGH value:[click_through intValue]];
-  [NSApp prefs_set_boolean:@PREFS_NO_AUTH value:![enable_auth intValue]];
-  [NSApp prefs_set_boolean:@PREFS_NO_TCP value:![enable_tcp intValue]];
-  [NSApp prefs_set_integer:@PREFS_DEPTH value:[depth selectedTag]];
-	
-  [NSApp prefs_synchronize];
+    /* after adding prefs here, also add to [X11Application read_defaults]
+     and prefs_show */
+
+    [NSApp prefs_set_boolean:@PREFS_FAKEBUTTONS value:darwinFakeButtons];
+    [NSApp prefs_set_boolean:@PREFS_SYSBEEP value:quartzUseSysBeep];
+    [NSApp prefs_set_boolean:@PREFS_KEYEQUIVS value:X11EnableKeyEquivalents];
+    [NSApp prefs_set_boolean:@PREFS_SYNC_KEYMAP value:darwinSyncKeymap];
+    [NSApp prefs_set_boolean:@PREFS_FULLSCREEN_MENU value:quartzFullscreenMenu];
+    [NSApp prefs_set_boolean:@PREFS_CLICK_THROUGH value:[click_through intValue]];
+    [NSApp prefs_set_boolean:@PREFS_FFM value:[focus_follows_mouse intValue]];
+    [NSApp prefs_set_boolean:@PREFS_FOCUS_ON_NEW_WINDOW value:[focus_on_new_window intValue]];
+    [NSApp prefs_set_boolean:@PREFS_NO_AUTH value:![enable_auth intValue]];
+    [NSApp prefs_set_boolean:@PREFS_NO_TCP value:![enable_tcp intValue]];
+    [NSApp prefs_set_integer:@PREFS_DEPTH value:[depth selectedTag]];
+
+    BOOL pbproxy_active = [sync_pasteboard intValue];
+
+    [NSApp prefs_set_boolean:@PREFS_SYNC_PB value:pbproxy_active];
+    [NSApp prefs_set_boolean:@PREFS_SYNC_PB_TO_CLIPBOARD value:[sync_pasteboard_to_clipboard intValue]];
+    [NSApp prefs_set_boolean:@PREFS_SYNC_PB_TO_PRIMARY value:[sync_pasteboard_to_primary intValue]];
+    [NSApp prefs_set_boolean:@PREFS_SYNC_CLIPBOARD_TO_PB value:[sync_clipboard_to_pasteboard intValue]];
+    [NSApp prefs_set_boolean:@PREFS_SYNC_PRIMARY_ON_SELECT value:[sync_primary_immediately intValue]];
+
+    [NSApp prefs_synchronize];
+
+    [sync_pasteboard_to_clipboard setEnabled:pbproxy_active];
+    [sync_pasteboard_to_primary setEnabled:pbproxy_active];
+    [sync_clipboard_to_pasteboard setEnabled:pbproxy_active];
+    [sync_primary_immediately setEnabled:pbproxy_active];
+    
+    // setEnabled doesn't do this...
+    [sync_text1 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
+    [sync_text2 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
+    
+	DarwinSendDDXEvent(kXquartzReloadPreferences, 0);
 }
 
 - (IBAction) prefs_show:sender
 {
-  [fake_buttons setIntValue:darwinFakeButtons];
-  [use_sysbeep setIntValue:quartzUseSysBeep];
-  [enable_keyequivs setIntValue:X11EnableKeyEquivalents];
-  [sync_keymap setIntValue:darwinSyncKeymap];
-  [sync_keymap setEnabled:darwinKeymapFile == NULL];
-  [click_through setIntValue:[NSApp prefs_get_boolean:@PREFS_QUARTZ_WM_CLICK_THROUGH default:NO]];
+    BOOL pbproxy_active = [NSApp prefs_get_boolean:@PREFS_SYNC_PB default:YES];
+    
+    [fake_buttons setIntValue:darwinFakeButtons];
+    [use_sysbeep setIntValue:quartzUseSysBeep];
+    [enable_keyequivs setIntValue:X11EnableKeyEquivalents];
+    [sync_keymap setIntValue:darwinSyncKeymap];
+    [click_through setIntValue:[NSApp prefs_get_boolean:@PREFS_CLICK_THROUGH default:NO]];
+    [focus_follows_mouse setIntValue:[NSApp prefs_get_boolean:@PREFS_FFM default:NO]];
+    [focus_on_new_window setIntValue:[NSApp prefs_get_boolean:@PREFS_FOCUS_ON_NEW_WINDOW default:YES]];
+    
+    [enable_auth setIntValue:![NSApp prefs_get_boolean:@PREFS_NO_AUTH default:NO]];
+    [enable_tcp setIntValue:![NSApp prefs_get_boolean:@PREFS_NO_TCP default:NO]];
+
+    [depth selectItemAtIndex:[depth indexOfItemWithTag:[NSApp prefs_get_integer:@PREFS_DEPTH default:-1]]];
+
+    [sync_pasteboard setIntValue:pbproxy_active];
+    [sync_pasteboard_to_clipboard setIntValue:[NSApp prefs_get_boolean:@PREFS_SYNC_PB_TO_CLIPBOARD default:YES]];
+    [sync_pasteboard_to_primary setIntValue:[NSApp prefs_get_boolean:@PREFS_SYNC_PB_TO_PRIMARY default:YES]];
+    [sync_clipboard_to_pasteboard setIntValue:[NSApp prefs_get_boolean:@PREFS_SYNC_CLIPBOARD_TO_PB default:YES]];
+    [sync_primary_immediately setIntValue:[NSApp prefs_get_boolean:@PREFS_SYNC_PRIMARY_ON_SELECT default:NO]];
+
+    [sync_pasteboard_to_clipboard setEnabled:pbproxy_active];
+    [sync_pasteboard_to_primary setEnabled:pbproxy_active];
+    [sync_clipboard_to_pasteboard setEnabled:pbproxy_active];
+    [sync_primary_immediately setEnabled:pbproxy_active];
+
+    // setEnabled doesn't do this...
+    [sync_text1 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
+    [sync_text2 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
 	
-  [enable_auth setIntValue:![NSApp prefs_get_boolean:@PREFS_NO_AUTH default:NO]];
-  [enable_tcp setIntValue:![NSApp prefs_get_boolean:@PREFS_NO_TCP default:NO]];
-  [depth selectItemAtIndex:[depth indexOfItemWithTag:[NSApp prefs_get_integer:@PREFS_DEPTH default:-1]]];
-	
-  [enable_fullscreen setIntValue:!quartzEnableRootless];
-	
-  [prefs_panel makeKeyAndOrderFront:sender];
+    [enable_fullscreen setIntValue:!quartzEnableRootless];
+    [enable_fullscreen_menu setEnabled:!quartzEnableRootless];
+    [enable_fullscreen_menu setIntValue:quartzFullscreenMenu];
+    
+    [prefs_panel makeKeyAndOrderFront:sender];
 }
 
-- (IBAction) quit:sender
-{
-  QuartzMessageServerThread (kXDarwinQuit, 0);
+- (IBAction) quit:sender {
+    DarwinSendDDXEvent(kXquartzQuit, 0);
 }
 
-- (IBAction) x11_help:sender
-{
-  AHLookupAnchor ((CFStringRef)NSLocalizedString(@"Mac Help", no comment), CFSTR ("mchlp2276"));
+- (IBAction) x11_help:sender {
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+    AHLookupAnchor((CFStringRef)NSLocalizedString(@"Mac Help", no comment), CFSTR("mchlp2276"));
+#else
+    AHLookupAnchor(CFSTR("com.apple.machelp"), CFSTR("mchlp2276"));
+#endif
 }
 
-- (BOOL) validateMenuItem:(NSMenuItem *)item
-{
+- (OSX_BOOL) validateMenuItem:(NSMenuItem *)item {
   NSMenu *menu = [item menu];
-	
+    
   if (item == toggle_fullscreen_item)
     return !quartzEnableRootless;
+  else   if (item == copy_menu_item) // For some reason, this isn't working...
+      return NO;
   else if (menu == [window_separator menu] || menu == dock_menu
 	   || (menu == [x11_about_item menu] && [item tag] == 42))
     return (AppleWMSelectedEvents () & AppleWMControllerNotifyMask) != 0;
@@ -672,32 +715,34 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 
 - (void) applicationDidHide:(NSNotification *)notify
 {
-  QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMHideAll);
+  DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMHideAll);
 }
 
 - (void) applicationDidUnhide:(NSNotification *)notify
 {
-  QuartzMessageServerThread (kXDarwinControllerNotify, 1, AppleWMShowAll);
+  DarwinSendDDXEvent(kXquartzControllerNotify, 1, AppleWMShowAll);
 }
 
-- (NSApplicationTerminateReply) applicationShouldTerminate:sender
-{
-  NSString *msg;
+- (NSApplicationTerminateReply) applicationShouldTerminate:sender {
+    NSString *msg;
+    NSString *title;
 	
-  if (can_quit || [X11App prefs_get_boolean:@PREFS_NO_QUIT_ALERT default:NO])
-    return NSTerminateNow;
+    if (can_quit || [X11App prefs_get_boolean:@PREFS_NO_QUIT_ALERT default:NO])
+        return NSTerminateNow;
 	
-  /* Make sure we're frontmost. */
-  [NSApp activateIgnoringOtherApps:YES];
+    /* Make sure we're frontmost. */
+    [NSApp activateIgnoringOtherApps:YES];
 	
-  msg = NSLocalizedString (@"Are you sure you want to quit X11?\n\nIf you quit X11, any X11 applications you are running will stop immediately and you will lose any changes you have not saved.", @"Dialog when quitting");
+    title = NSLocalizedString(@"Do you really want to quit X11?", @"Dialog title when quitting");
+    msg = NSLocalizedString(@"Any open X11 applications will stop immediately, and you will lose any unsaved changes.", @"Dialog when quitting");
+
+    /* FIXME: safe to run the alert in here? Or should we return Later
+     *        and then run the alert on a timer? It seems to work here, so..
+     */
 	
-  /* FIXME: safe to run the alert in here? Or should we return Later
-     and then run the alert on a timer? It seems to work here, so.. */
-	
-  return (NSRunAlertPanel (nil, msg, NSLocalizedString (@"Quit", @""),
-			   NSLocalizedString (@"Cancel", @""), nil)
-	  == NSAlertDefaultReturn) ? NSTerminateNow : NSTerminateCancel;
+    return (NSRunAlertPanel (title, msg, NSLocalizedString (@"Quit", @""),
+                             NSLocalizedString (@"Cancel", @""), nil)
+            == NSAlertDefaultReturn) ? NSTerminateNow : NSTerminateCancel;
 }
 
 - (void) applicationWillTerminate:(NSNotification *)aNotification
@@ -705,7 +750,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
   [X11App prefs_synchronize];
 	
   /* shutdown the X server, it will exit () for us. */
-  QuartzMessageServerThread (kXDarwinQuit, 0);
+  DarwinSendDDXEvent(kXquartzQuit, 0);
 	
   /* In case it doesn't, exit anyway after a while. */
   while (sleep (10) != 0) ;
@@ -729,21 +774,21 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
   pending_apps = NULL;
 }
 
-- (BOOL) application:(NSApplication *)app openFile:(NSString *)filename
+- (OSX_BOOL) application:(NSApplication *)app openFile:(NSString *)filename
 {
-  const char *name = [filename UTF8String];
-	
-  if (finished_launching)
-    [self launch_client:filename];
-  else if (name[0] != ':')		/* ignore display names */
-    pending_apps = x_list_prepend (pending_apps, [filename retain]);
-	
-  /* FIXME: report failures. */
-  return YES;
+    const char *name = [filename UTF8String];
+    
+    if (finished_launching)
+        [self launch_client:filename];
+    else if (name[0] != ':')		/* ignore display names */
+        pending_apps = x_list_prepend (pending_apps, [filename retain]);
+    
+    /* FIXME: report failures. */
+    return YES;
 }
 
 @end
 
-void X11ControllerMain(int argc, const char **argv, void (*server_thread) (void *), void *server_arg) {
-    X11ApplicationMain (argc, argv, server_thread, server_arg);
+void X11ControllerMain(int argc, char **argv, char **envp) {
+    X11ApplicationMain (argc, argv, envp);
 }

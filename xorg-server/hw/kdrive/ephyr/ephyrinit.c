@@ -65,7 +65,7 @@ InitInput (int argc, char **argv)
 {
   KdKeyboardInfo *ki;
   KdPointerInfo *pi;
-        
+
   KdAddKeyboardDriver(&EphyrKeyboardDriver);
 #ifdef linux
   KdAddKeyboardDriver(&LinuxEvdevKeyboardDriver);
@@ -286,27 +286,33 @@ OsVendorFatalError(void)
 /* 'Fake' cursor stuff, could be improved */
 
 static Bool
-ephyrRealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
+ephyrRealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   return TRUE;
 }
 
 static Bool
-ephyrUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
+ephyrUnrealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   return TRUE;
 }
 
 static void
-ephyrSetCursor(ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
+ephyrSetCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
 {
   ;
 }
 
 static void
-ephyrMoveCursor(ScreenPtr pScreen, int x, int y)
+ephyrMoveCursor(DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
   ;
+}
+
+static Bool
+ephyrDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+  return TRUE;
 }
 
 miPointerSpriteFuncRec EphyrPointerSpriteFuncs = {
@@ -314,15 +320,17 @@ miPointerSpriteFuncRec EphyrPointerSpriteFuncs = {
 	ephyrUnrealizeCursor,
 	ephyrSetCursor,
 	ephyrMoveCursor,
+	ephyrDeviceCursorInitialize,
+	NULL
 };
 
 
 Bool
 ephyrCursorInit(ScreenPtr pScreen)
 {
-  miPointerInitialize(pScreen, 
+  miPointerInitialize(pScreen,
 		      &EphyrPointerSpriteFuncs,
-		      &ephyrPointerScreenFuncs, 
+		      &ephyrPointerScreenFuncs,
 		      FALSE);
 
   return TRUE;
@@ -347,18 +355,18 @@ KdCardFuncs ephyrFuncs = {
     ephyrRestore,	    /* restore */
     ephyrScreenFini,	    /* scrfini */
     ephyrCardFini,	    /* cardfini */
-    
-    0,	                    /* initCursor */
-    0,          	    /* enableCursor */
+
+    0,			    /* initCursor */
+    0,			    /* enableCursor */
     0,			    /* disableCursor */
     0,			    /* finiCursor */
     0,			    /* recolorCursor */
-    
+
     0,			    /* initAccel */
     0,			    /* enableAccel */
     0,			    /* disableAccel */
     0,			    /* finiAccel */
-    
-    ephyrGetColors,    	    /* getColors */
+
+    ephyrGetColors,/* getColors */
     ephyrPutColors,	    /* putColors */
 };

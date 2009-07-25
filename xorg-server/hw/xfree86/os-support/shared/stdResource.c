@@ -77,9 +77,6 @@ xf86StdAccResFromOS(resPtr ret)
     ret = xf86AddResToList(ret, &range, -1);
     RANGE(range, 0x000f0000, 0x000fffff, ResExcMemBlock);
     ret = xf86AddResToList(ret, &range, -1);
-    RANGE(range, 0x00100000, 0x3fffffff,
-	ResExcMemBlock | ResBios | ResEstimated);
-    ret = xf86AddResToList(ret, &range, -1);
 #if 0
     RANGE(range, 0xfec00000, 0xfecfffff, ResExcMemBlock | ResBios);
     ret = xf86AddResToList(ret, &range, -1);

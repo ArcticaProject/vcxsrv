@@ -75,6 +75,7 @@ typedef struct
 	char *file_inputdevs;
 	char *file_fontpath;
 	char *file_comment;
+	char *file_xkbdir;
 }
 XF86ConfFilesRec, *XF86ConfFilesPtr;
 

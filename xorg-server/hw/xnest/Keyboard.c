@@ -236,11 +236,7 @@ XkbError:
 	XkbFreeKeyboard(xkb, 0, False);
       }
 #endif
-#ifdef _XSERVER64
       xfree(keymap);
-#else
-      XFree(keymap);
-#endif
       break;
     case DEVICE_ON: 
       xnestEventMask |= XNEST_KEYBOARD_EVENT_MASK;

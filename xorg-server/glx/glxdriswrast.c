@@ -93,7 +93,6 @@ struct __GLXDRIdrawable {
     __GLXDRIscreen	*screen;
 
     GCPtr gc;		/* scratch GC for span drawing */
-    GCPtr cleargc;	/* GC for clearing the color buffer */
     GCPtr swapgc;	/* GC for swapping the color buffers */
 };
 
@@ -106,19 +105,11 @@ __glXDRIdrawableDestroy(__GLXdrawable *drawable)
     (*core->destroyDrawable)(private->driDrawable);
 
     FreeScratchGC(private->gc);
-    FreeScratchGC(private->cleargc);
     FreeScratchGC(private->swapgc);
 
+    __glXDrawableRelease(drawable);
+
     xfree(private);
-}
-
-static GLboolean
-__glXDRIdrawableResize(__GLXdrawable *drawable)
-{
-    /* Nothing to do here, the DRI driver asks the server for drawable
-     * geometry appropriately. */
-
-    return GL_TRUE;
 }
 
 static GLboolean
@@ -292,11 +283,10 @@ __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
     else
 	driShare = NULL;
 
-    context = xalloc(sizeof *context);
+    context = xcalloc(1, sizeof *context);
     if (context == NULL)
 	return NULL;
 
-    memset(context, 0, sizeof *context);
     context->base.destroy           = __glXDRIcontextDestroy;
     context->base.makeCurrent       = __glXDRIcontextMakeCurrent;
     context->base.loseCurrent       = __glXDRIcontextLoseCurrent;
@@ -332,11 +322,9 @@ __glXDRIscreenCreateDrawable(__GLXscreen *screen,
 
     ScreenPtr pScreen = driScreen->base.pScreen;
 
-    private = xalloc(sizeof *private);
+    private = xcalloc(1, sizeof *private);
     if (private == NULL)
 	return NULL;
-
-    memset(private, 0, sizeof *private);
 
     private->screen = driScreen;
     if (!__glXDrawableInit(&private->base, screen,
@@ -346,16 +334,13 @@ __glXDRIscreenCreateDrawable(__GLXscreen *screen,
     }
 
     private->base.destroy       = __glXDRIdrawableDestroy;
-    private->base.resize        = __glXDRIdrawableResize;
     private->base.swapBuffers   = __glXDRIdrawableSwapBuffers;
     private->base.copySubBuffer = __glXDRIdrawableCopySubBuffer;
 
     private->gc = CreateScratchGC(pScreen, pDraw->depth);
-    private->cleargc = CreateScratchGC(pScreen, pDraw->depth);
     private->swapgc = CreateScratchGC(pScreen, pDraw->depth);
 
     glxChangeGC(private->gc, GCFunction, GXcopy);
-    glxChangeGC(private->cleargc, GCFunction, GXcopy);
     glxChangeGC(private->swapgc, GCFunction, GXcopy);
     glxChangeGC(private->swapgc, GCGraphicsExposures, FALSE);
 
@@ -393,9 +378,6 @@ swrastPutImage(__DRIdrawable *draw, int op,
     switch (op) {
     case __DRI_SWRAST_IMAGE_OP_DRAW:
 	gc = drawable->gc;
-	break;
-    case __DRI_SWRAST_IMAGE_OP_CLEAR:
-	gc = drawable->cleargc;
 	break;
     case __DRI_SWRAST_IMAGE_OP_SWAP:
 	gc = drawable->swapgc;
@@ -475,10 +457,9 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     const __DRIconfig **driConfigs;
     int i;
 
-    screen = xalloc(sizeof *screen);
+    screen = xcalloc(1, sizeof *screen);
     if (screen == NULL)
 	return NULL;
-    memset(screen, 0, sizeof *screen);
 
     screen->base.destroy        = __glXDRIscreenDestroy;
     screen->base.createContext  = __glXDRIscreenCreateContext;

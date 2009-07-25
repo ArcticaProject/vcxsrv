@@ -59,8 +59,13 @@ SOFTWARE.
 #define ARGB_CURSOR
 #endif
 
+struct _DeviceIntRec;
+
 typedef struct _Cursor *CursorPtr;
 typedef struct _CursorMetric *CursorMetricPtr;
+
+extern int cursorScreenDevPriv[MAXSCREENS];
+#define CursorScreenKey(pScreen) (cursorScreenDevPriv + (pScreen)->myNum)
 
 extern CursorPtr rootCursor;
 
@@ -105,7 +110,7 @@ extern CursorPtr CreateRootCursor(
 extern int ServerBitsFromGlyph(
     FontPtr /*pfont*/,
     unsigned int /*ch*/,
-    register CursorMetricPtr /*cm*/,
+    CursorMetricPtr /*cm*/,
     unsigned char ** /*ppbits*/);
 
 extern Bool CursorMetricsFromGlyph(
@@ -117,18 +122,20 @@ extern void CheckCursorConfinement(
     WindowPtr /*pWin*/);
 
 extern void NewCurrentScreen(
+    struct _DeviceIntRec* /*pDev*/,
     ScreenPtr /*newScreen*/,
     int /*x*/,
     int /*y*/);
 
-extern Bool PointerConfinedToScreen(void);
+extern Bool PointerConfinedToScreen(struct _DeviceIntRec* /* pDev */);
 
 extern void GetSpritePosition(
+    struct _DeviceIntRec* /* pDev */,
     int * /*px*/,
     int * /*py*/);
 
 #ifdef PANORAMIX
-extern int XineramaGetCursorScreen(void);
+extern int XineramaGetCursorScreen(struct _DeviceIntRec* pDev);
 #endif /* PANORAMIX */
 
 #endif /* CURSOR_H */

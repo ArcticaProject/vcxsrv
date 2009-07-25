@@ -274,7 +274,8 @@ typedef struct _XAAStateWrapRec {
 #endif
 } XAAStateWrapRec, *XAAStateWrapPtr;
 
-static DevPrivateKey XAAStateKey = &XAAStateKey;
+static int XAAStateKeyIndex;
+static DevPrivateKey XAAStateKey = &XAAStateKeyIndex;
 
 /* Wrap functions start here */
 #define GET_STATEPRIV_GC(pGC)   XAAStateWrapPtr pStatePriv =\

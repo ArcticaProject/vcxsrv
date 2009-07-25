@@ -18,11 +18,12 @@ solaris-@SOLARIS_INOUT_ARCH@.il: solaris-@SOLARIS_INOUT_ARCH@.S
 	$(CPP) -P -DINLINE_ASM solaris-@SOLARIS_INOUT_ARCH@.S > $@
 
 noinst_LTLIBRARIES = libsolaris.la
-libsolaris_la_SOURCES = sun_bios.c sun_init.c \
-	sun_mouse.c sun_vid.c sun_bell.c $(AGP_SRC) sun_apm.c \
+libsolaris_la_SOURCES = sun_init.c \
+	sun_vid.c sun_bell.c $(AGP_SRC) sun_apm.c \
 	$(srcdir)/../shared/kmod_noop.c \
 	$(srcdir)/../shared/posix_tty.c $(srcdir)/../shared/sigiostubs.c \
 	$(srcdir)/../shared/stdResource.c \
+	$(srcdir)/../shared/vidmem.c \
 	$(VTSW_SRC)
 nodist_libsolaris_la_SOURCES = $(SOLARIS_INOUT_SRC)
 

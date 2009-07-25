@@ -1,10 +1,9 @@
 SUBDIRS = bus @XORG_OS_SUBDIR@ misc $(DRI_SUBDIRS)
-DIST_SUBDIRS = bsd bus misc linux lynxos solaris sysv sco usl hurd
+DIST_SUBDIRS = bsd bus misc linux solaris sysv sco hurd
 
-sdk_HEADERS = xf86_OSproc.h xf86_OSlib.h \
-              assyntax.h xf86OSmouse.h
+sdk_HEADERS = xf86_OSproc.h xf86_OSlib.h
 
-EXTRA_DIST = int10Defines.h xf86OSpriv.h README.OS-lib
+EXTRA_DIST = int10Defines.h xf86OSpriv.h
 
 # to get the grouping semantics right, you have to glom these three together
 # as one library, otherwise libtool will actively defeat your attempts to
@@ -24,5 +23,4 @@ DISTCLEANFILES = xorgos.c
 
 # FIXME: These don't seem to be used anywhere
 EXTRA_DIST += \
-	shared/bios_devmem.c \
-	shared/inout.S
+	shared/bios_devmem.c

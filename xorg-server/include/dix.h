@@ -51,6 +51,9 @@ SOFTWARE.
 #include "gc.h"
 #include "window.h"
 #include "input.h"
+#include "cursor.h"
+#include "geext.h"
+#include <X11/extensions/XI.h>
 
 #define EARLIER -1
 #define SAMETIME 0
@@ -58,7 +61,7 @@ SOFTWARE.
 
 #define NullClient ((ClientPtr) 0)
 #define REQUEST(type) \
-	register type *stuff = (type *)client->requestBuffer
+	type *stuff = (type *)client->requestBuffer
 
 
 #define REQUEST_SIZE_MATCH(req)\
@@ -116,10 +119,7 @@ typedef struct _Client *ClientPtr; /* also in misc.h */
 
 typedef struct _WorkQueue	*WorkQueuePtr;
 
-#ifdef XPRINT
-extern ClientPtr requestingClient;
-#endif
-extern ClientPtr *clients;
+extern ClientPtr clients[MAXCLIENTS];
 extern ClientPtr serverClient;
 extern int currentMaxClients;
 extern char dispatchExceptionAtReset;
@@ -169,9 +169,7 @@ extern void SendErrorToClient(
 extern void MarkClientException(
     ClientPtr /*client*/);
 
-#if defined(DDXBEFORERESET)
 extern void ddxBeforeReset (void);
-#endif
 
 /* dixutils.c */
 
@@ -218,7 +216,7 @@ extern int AlterSaveSetForClient(
     WindowPtr /*pWin*/,
     unsigned /*mode*/,
     Bool /*toRoot*/,
-    Bool /*remap*/);
+    Bool /*map*/);
   
 extern void DeleteWindowFromAnySaveSet(
     WindowPtr /*pWin*/);
@@ -309,17 +307,23 @@ extern void SetVendorString(char *string);
 /* events.c */
 
 extern void SetMaskForEvent(
+    int /* deviceid */,
     Mask /* mask */,
     int /* event */);
 
+extern void ConfineToShape(
+    DeviceIntPtr /* pDev */, 
+    RegionPtr /* shape */, 
+    int*      /* px */,
+    int*      /* py */);
 
 extern Bool IsParent(
     WindowPtr /* maybeparent */,
     WindowPtr /* child */);
 
-extern WindowPtr GetCurrentRootWindow(void);
+extern WindowPtr GetCurrentRootWindow(DeviceIntPtr pDev);
 
-extern WindowPtr GetSpriteWindow(void);
+extern WindowPtr GetSpriteWindow(DeviceIntPtr pDev);
 
 
 extern void NoticeEventTime(xEventPtr /* xE */);
@@ -351,12 +355,14 @@ extern void AllowSome(
     ClientPtr	/* client */,
     TimeStamp /* time */,
     DeviceIntPtr /* thisDev */,
-    int /* newState */);
+    int /* newState */,
+    Bool /* core */);
 
 extern void ReleaseActiveGrabs(
     ClientPtr client);
 
 extern int DeliverEventsToWindow(
+    DeviceIntPtr /* pWin */,
     WindowPtr /* pWin */,
     xEventPtr /* pEvents */,
     int /* count */,
@@ -375,8 +381,17 @@ extern int DeliverDeviceEvents(
 extern void DefineInitialRootWindow(
     WindowPtr /* win */);
 
+extern void SetupSprite(
+    DeviceIntPtr /* pDev */,
+    ScreenPtr    /* pScreen */);
+
+extern void InitializeSprite(
+    DeviceIntPtr /* pDev */,
+    WindowPtr    /* pWin */);
+
 extern void UpdateSpriteForScreen(
-     ScreenPtr /* pScreen */);
+    DeviceIntPtr /* pDev */,
+    ScreenPtr /* pScreen */);
 
 extern void WindowHasNewCursor(
     WindowPtr /* pWin */);
@@ -435,9 +450,14 @@ extern int GrabDevice(
     unsigned /* ownerEvents */,
     Time /* ctime */,
     Mask /* mask */,
-    CARD8 * /* status */);
+    CARD8 * /* status */,
+    Bool /* coreGrab */);
 
 extern void InitEvents(void);
+extern void InitSprite(
+        DeviceIntPtr /* pDev */, 
+        Bool /* hasCursor */
+        );
 
 extern void CloseDownEvents(void);
 
@@ -458,6 +478,10 @@ extern int DeliverEvents(
     int /*count*/,
     WindowPtr /*otherParent*/);
 
+extern Bool
+CheckMotion(
+    xEvent* /* xE */, 
+    DeviceIntPtr /* pDev */);
 
 extern void WriteEventsToClient(
     ClientPtr /*pClient*/,
@@ -466,6 +490,7 @@ extern void WriteEventsToClient(
 
 extern int TryClientEvents(
     ClientPtr /*client*/,
+    DeviceIntPtr /* device */,
     xEventPtr /*pEvents*/,
     int /*count*/,
     Mask /*mask*/,
@@ -473,6 +498,22 @@ extern int TryClientEvents(
     GrabPtr /*grab*/);
 
 extern void WindowsRestructured(void);
+
+extern Bool SetClientPointer(
+        ClientPtr /* client */, 
+        ClientPtr /* setter */, 
+        DeviceIntPtr /* device */);
+
+extern DeviceIntPtr PickPointer(
+    ClientPtr /* client */);
+
+extern DeviceIntPtr PickKeyboard(
+    ClientPtr /* client */);
+
+extern Bool IsInterferingGrab(
+        ClientPtr /* client */,
+        DeviceIntPtr /* dev */,
+        xEvent* /* events */);
 
 #ifdef PANORAMIX
 extern void ReinitializeRootWindow(WindowPtr win, int xoff, int yoff);
@@ -553,33 +594,21 @@ typedef struct {
     int count;
 } DeviceEventInfoRec;
 
-/* strcasecmp.c */
-#if NEED_STRCASECMP
-#define strcasecmp xstrcasecmp
-extern int xstrcasecmp(const char *s1, const char *s2);
-#endif
-
-#if NEED_STRNCASECMP
-#define strncasecmp xstrncasecmp
-extern int xstrncasecmp(const char *s1, const char *s2, size_t n);
-#endif
-
-#if NEED_STRCASESTR
-#define strcasestr xstrcasestr
-extern char *xstrcasestr(const char *s, const char *find);
-#endif
+extern int XItoCoreType(int xi_type);
+extern Bool DevHasCursor(DeviceIntPtr pDev);
+extern Bool IsPointerDevice( DeviceIntPtr dev);
+extern Bool IsKeyboardDevice(DeviceIntPtr dev);
+extern Bool IsPointerEvent(xEvent* xE);
 
 /*
  * These are deprecated compatibility functions and will be removed soon!
  * Please use the noted replacements instead.
  */
-
 /* replaced by dixLookupWindow */
 extern WindowPtr SecurityLookupWindow(
     XID id,
     ClientPtr client,
     Mask access_mode);
-
 /* replaced by dixLookupWindow */
 extern WindowPtr LookupWindow(
     XID id,
@@ -601,4 +630,16 @@ extern ClientPtr LookupClient(
     XID id,
     ClientPtr client);
 
+/* GE stuff */
+extern void SetGenericFilter(int extension, Mask* filters);
+extern int ExtGrabDevice(ClientPtr client,
+                         DeviceIntPtr dev,
+                         int device_mode,
+                         WindowPtr grabWindow,
+                         WindowPtr confineTo,
+                         TimeStamp ctime,
+                         Bool ownerEvents,
+                         CursorPtr cursor, 
+                         Mask xi_mask,
+                         GenericMaskPtr ge_masks);
 #endif /* DIX_H */

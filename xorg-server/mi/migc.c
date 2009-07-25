@@ -39,56 +39,22 @@ from The Open Group.
 
 /* ARGSUSED */
 _X_EXPORT void
-miChangeGC(pGC, mask)
-    GCPtr           pGC;
-    unsigned long   mask;
+miChangeGC(GCPtr pGC, unsigned long mask)
 {
     return;
 }
 
 _X_EXPORT void
-miDestroyGC(pGC)
-    GCPtr           pGC;
+miDestroyGC(GCPtr pGC)
 {
     if (pGC->pRotatedPixmap)
 	(*pGC->pScreen->DestroyPixmap) (pGC->pRotatedPixmap);
     if (pGC->freeCompClip)
 	REGION_DESTROY(pGC->pScreen, pGC->pCompositeClip);
-    miDestroyGCOps(pGC->ops);
-}
-
-/*
- * create a private op array for a gc
- */
-
-_X_EXPORT GCOpsPtr
-miCreateGCOps(prototype)
-    GCOpsPtr        prototype;
-{
-    GCOpsPtr        ret;
-
-     /* XXX */ Must_have_memory = TRUE;
-    ret = (GCOpsPtr) xalloc(sizeof(GCOps));
-     /* XXX */ Must_have_memory = FALSE;
-    if (!ret)
-	return 0;
-    *ret = *prototype;
-    ret->devPrivate.val = 1;
-    return ret;
 }
 
 _X_EXPORT void
-miDestroyGCOps(ops)
-    GCOpsPtr        ops;
-{
-    if (ops->devPrivate.val)
-	xfree(ops);
-}
-
-
-_X_EXPORT void
-miDestroyClip(pGC)
-    GCPtr           pGC;
+miDestroyClip(GCPtr pGC)
 {
     if (pGC->clientClipType == CT_NONE)
 	return;
@@ -109,11 +75,7 @@ miDestroyClip(pGC)
 }
 
 _X_EXPORT void
-miChangeClip(pGC, type, pvalue, nrects)
-    GCPtr           pGC;
-    int             type;
-    pointer         pvalue;
-    int             nrects;
+miChangeClip( GCPtr pGC, int type, pointer pvalue, int nrects)
 {
     (*pGC->funcs->DestroyClip) (pGC);
     if (type == CT_PIXMAP)
@@ -140,8 +102,7 @@ miChangeClip(pGC, type, pvalue, nrects)
 }
 
 _X_EXPORT void
-miCopyClip(pgcDst, pgcSrc)
-    GCPtr           pgcDst, pgcSrc;
+miCopyClip(GCPtr pgcDst, GCPtr pgcSrc)
 {
     RegionPtr       prgnNew;
 
@@ -165,18 +126,13 @@ miCopyClip(pgcDst, pgcSrc)
 
 /* ARGSUSED */
 _X_EXPORT void
-miCopyGC(pGCSrc, changes, pGCDst)
-    GCPtr           pGCSrc;
-    unsigned long   changes;
-    GCPtr           pGCDst;
+miCopyGC(GCPtr pGCSrc, unsigned long changes, GCPtr pGCDst)
 {
     return;
 }
 
 _X_EXPORT void
-miComputeCompositeClip(pGC, pDrawable)
-    GCPtr           pGC;
-    DrawablePtr     pDrawable;
+miComputeCompositeClip( GCPtr pGC, DrawablePtr pDrawable)
 {
     ScreenPtr       pScreen;
 

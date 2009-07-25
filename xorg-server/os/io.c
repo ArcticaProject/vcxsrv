@@ -70,11 +70,7 @@ SOFTWARE.
 #include <X11/Xmd.h>
 #include <errno.h>
 #if !defined(WIN32)
-#ifndef Lynx
 #include <sys/uio.h>
-#else
-#include <uio.h>
-#endif
 #endif
 #include <X11/X.h>
 #define NEED_REPLIES
@@ -96,15 +92,7 @@ static ConnectionOutputPtr AllocateOutputBuffer(void);
  * systems are broken and return EWOULDBLOCK when they should return EAGAIN
  */
 #ifndef WIN32
-#if defined(EAGAIN) && defined(EWOULDBLOCK)
 #define ETEST(err) (err == EAGAIN || err == EWOULDBLOCK)
-#else
-#ifdef EAGAIN
-#define ETEST(err) (err == EAGAIN)
-#else
-#define ETEST(err) (err == EWOULDBLOCK)
-#endif
-#endif
 #else /* WIN32 The socket errorcodes differ from the normal errors*/
 #define ETEST(err) (err == EAGAIN || err == WSAEWOULDBLOCK)
 #endif
@@ -118,13 +106,11 @@ static OsCommPtr AvailableInput = (OsCommPtr)NULL;
 #define get_req_len(req,cli) ((cli)->swapped ? \
 			      lswaps((req)->length) : (req)->length)
 
-#ifdef BIGREQS
 #include <X11/extensions/bigreqstr.h>
 
 #define get_big_req_len(req,cli) ((cli)->swapped ? \
 				  lswapl(((xBigReq *)(req))->length) : \
 				  ((xBigReq *)(req))->length)
-#endif
 
 #define MAX_TIMES_PER         10
 
@@ -185,14 +171,25 @@ static OsCommPtr AvailableInput = (OsCommPtr)NULL;
  *    a partial request) because others clients need to be scheduled.
  *****************************************************************/
 
-#define YieldControl()				\
-        { isItTimeToYield = TRUE;		\
-	  timesThisConnection = 0; }
-#define YieldControlNoInput()			\
-        { YieldControl();			\
-	  FD_CLR(fd, &ClientsWithInput); }
-#define YieldControlDeath()			\
-        { timesThisConnection = 0; }
+static void
+YieldControl(void)
+{
+    isItTimeToYield = TRUE;
+    timesThisConnection = 0;
+}
+
+static void
+YieldControlNoInput(int fd)
+{
+    YieldControl();
+    FD_CLR(fd, &ClientsWithInput);
+}
+
+static void
+YieldControlDeath(void)
+{
+    timesThisConnection = 0;
+}
 
 int
 ReadRequestFromClient(ClientPtr client)
@@ -204,9 +201,7 @@ ReadRequestFromClient(ClientPtr client)
     int result;
     register xReq *request;
     Bool need_header;
-#ifdef BIGREQS
     Bool move_header;
-#endif
 
     /* If an input buffer was empty, either free it if it is too big
      * or link it into our list of free input buffers.  This means that
@@ -255,9 +250,7 @@ ReadRequestFromClient(ClientPtr client)
     oci->bufptr += oci->lenLastReq;
 
     need_header = FALSE;
-#ifdef BIGREQS
     move_header = FALSE;
-#endif
     gotnow = oci->bufcnt + oci->buffer - oci->bufptr;
     if (gotnow < sizeof(xReq))
     {
@@ -274,7 +267,6 @@ ReadRequestFromClient(ClientPtr client)
 	 */
 	request = (xReq *)oci->bufptr;
 	needed = get_req_len(request, client);
-#ifdef BIGREQS
 	if (!needed && client->big_requests)
 	{
 	    /* It's a Big Request. */
@@ -288,7 +280,6 @@ ReadRequestFromClient(ClientPtr client)
 	    else
 		needed = get_big_req_len(request, client);
 	}
-#endif
 	client->req_len = needed;
 	needed <<= 2; /* needed is in bytes now */
     }
@@ -301,14 +292,12 @@ ReadRequestFromClient(ClientPtr client)
 	 */
 
 	oci->lenLastReq = 0;
-#ifdef BIGREQS
 	if (needed > maxBigRequestSize << 2)
 	{
 	    /* request is too big for us to handle */
 	    YieldControlDeath();
 	    return -1;
 	}
-#endif
 	if ((gotnow == 0) ||
 	    ((oci->bufptr - oci->buffer + needed) > oci->size))
 	{
@@ -357,7 +346,7 @@ ReadRequestFromClient(ClientPtr client)
 		if (0)
 #endif
 		{
-		    YieldControlNoInput();
+		    YieldControlNoInput(fd);
 		    return 0;
 		}
 	    }
@@ -385,7 +374,6 @@ ReadRequestFromClient(ClientPtr client)
 	    /* We wanted an xReq, now we've gotten it. */
 	    request = (xReq *)oci->bufptr;
 	    needed = get_req_len(request, client);
-#ifdef BIGREQS
 	    if (!needed && client->big_requests)
 	    {
 		move_header = TRUE;
@@ -394,24 +382,21 @@ ReadRequestFromClient(ClientPtr client)
 		else
 		    needed = get_big_req_len(request, client);
 	    }
-#endif
 	    client->req_len = needed;
 	    needed <<= 2;
 	}
 	if (gotnow < needed)
 	{
 	    /* Still don't have enough; punt. */
-	    YieldControlNoInput();
+	    YieldControlNoInput(fd);
 	    return 0;
 	}
     }
     if (needed == 0)
     {
-#ifdef BIGREQS
 	if (client->big_requests)
 	    needed = sizeof(xBigReq);
 	else
-#endif
 	    needed = sizeof(xReq);
     }
     oci->lenLastReq = needed;
@@ -429,41 +414,32 @@ ReadRequestFromClient(ClientPtr client)
     {
 	request = (xReq *)(oci->bufptr + needed);
 	if (gotnow >= (result = (get_req_len(request, client) << 2))
-#ifdef BIGREQS
 	    && (result ||
 		(client->big_requests &&
 		 (gotnow >= sizeof(xBigReq) &&
 		  gotnow >= (get_big_req_len(request, client) << 2))))
-#endif
 	    )
 	    FD_SET(fd, &ClientsWithInput);
 	else
 	{
-#ifdef SMART_SCHEDULE
 	    if (!SmartScheduleDisable)
 		FD_CLR(fd, &ClientsWithInput);
 	    else
-#endif
-		YieldControlNoInput();
+		YieldControlNoInput(fd);
 	}
     }
     else
     {
 	if (!gotnow)
 	    AvailableInput = oc;
-#ifdef SMART_SCHEDULE
 	if (!SmartScheduleDisable)
 	    FD_CLR(fd, &ClientsWithInput);
 	else
-#endif
-	    YieldControlNoInput();
+	    YieldControlNoInput(fd);
     }
-#ifdef SMART_SCHEDULE
     if (SmartScheduleDisable)
-#endif
     if (++timesThisConnection >= MAX_TIMES_PER)
 	YieldControl();
-#ifdef BIGREQS
     if (move_header)
     {
 	request = (xReq *)oci->bufptr;
@@ -472,7 +448,6 @@ ReadRequestFromClient(ClientPtr client)
 	oci->lenLastReq -= (sizeof(xBigReq) - sizeof(xReq));
 	client->req_len -= (sizeof(xBigReq) - sizeof(xReq)) >> 2;
     }
-#endif
     client->requestBuffer = (pointer)oci->bufptr;
 #ifdef DEBUG_COMMUNICATION
     {
@@ -554,7 +529,7 @@ InsertFakeRequest(ClientPtr client, char *data, int count)
 	(gotnow >= (int)(get_req_len((xReq *)oci->bufptr, client) << 2)))
 	FD_SET(fd, &ClientsWithInput);
     else
-	YieldControlNoInput();
+	YieldControlNoInput(fd);
     return(TRUE);
 }
 
@@ -578,13 +553,12 @@ ResetCurrentRequest(ClientPtr client)
     gotnow = oci->bufcnt + oci->buffer - oci->bufptr;
     if (gotnow < sizeof(xReq))
     {
-	YieldControlNoInput();
+	YieldControlNoInput(fd);
     }
     else
     {
 	request = (xReq *)oci->bufptr;
 	needed = get_req_len(request, client);
-#ifdef BIGREQS
 	if (!needed && client->big_requests)
 	{
 	    oci->bufptr -= sizeof(xBigReq) - sizeof(xReq);
@@ -596,7 +570,6 @@ ResetCurrentRequest(ClientPtr client)
 		swapl(&((xBigReq *)oci->bufptr)->length, n);
 	    }
 	}
-#endif
 	if (gotnow >= (needed << 2))
 	{
 	    if (FD_ISSET(fd, &AllClients))
@@ -610,17 +583,11 @@ ResetCurrentRequest(ClientPtr client)
 	    YieldControl();
 	}
 	else
-	    YieldControlNoInput();
+	    YieldControlNoInput(fd);
     }
 }
 
-
-
-_X_EXPORT CallbackListPtr SkippedRequestsCallback = NULL;
-
-    /* lookup table for adding padding bytes to data that is read from
-    	or written to the X socket.  */
-static int padlength[4] = {0, 3, 2, 1};
+static const int padlength[4] = {0, 3, 2, 1};
 
  /********************
  * FlushAllOutput()
@@ -730,11 +697,12 @@ SetCriticalOutputPending(void)
  *****************/
 
 _X_EXPORT int
-WriteToClient (ClientPtr who, int count, char *buf)
+WriteToClient (ClientPtr who, int count, const void *__buf)
 {
     OsCommPtr oc = (OsCommPtr)who->osPrivate;
     ConnectionOutputPtr oco = oc->output;
     int padBytes;
+    const char *buf = __buf;
 #ifdef DEBUG_COMMUNICATION
     Bool multicount = FALSE;
 #endif
@@ -871,13 +839,14 @@ WriteToClient (ClientPtr who, int count, char *buf)
  **********************/
 
 int
-FlushClient(ClientPtr who, OsCommPtr oc, char *extraBuf, int extraCount)
+FlushClient(ClientPtr who, OsCommPtr oc, const void *__extraBuf, int extraCount)
 {
     ConnectionOutputPtr oco = oc->output;
     int connection = oc->fd;
     XtransConnInfo trans_conn = oc->trans_conn;
     struct iovec iov[3];
     static char padBuffer[3];
+    const char *extraBuf = __extraBuf;
     long written;
     long padsize;
     long notWritten;
@@ -916,14 +885,14 @@ FlushClient(ClientPtr who, OsCommPtr oc, char *extraBuf, int extraCount)
 	    before = (-len); \
 	} else { \
 	    iov[i].iov_len = len; \
-	    iov[i].iov_base = (pointer) + before; \
+	    iov[i].iov_base = (pointer) + before;	\
 	    i++; \
 	    remain -= len; \
 	    before = 0; \
 	}
 
 	InsertIOV ((char *)oco->buf, oco->count)
-	InsertIOV (extraBuf, extraCount)
+	InsertIOV ((char *)extraBuf, extraCount)
 	InsertIOV (padBuffer, padsize)
 
 	errno = 0;

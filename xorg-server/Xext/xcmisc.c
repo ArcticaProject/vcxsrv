@@ -48,10 +48,6 @@ from The Open Group.
 #define UINT32_MAX 0xffffffffU
 #endif
 
-static void XCMiscResetProc(
-    ExtensionEntry * /* extEntry */
-);
-
 static DISPATCH_PROC(ProcXCMiscDispatch);
 static DISPATCH_PROC(ProcXCMiscGetVersion);
 static DISPATCH_PROC(ProcXCMiscGetXIDList);
@@ -66,22 +62,15 @@ XCMiscExtensionInit(INITARGS)
 {
     AddExtension(XCMiscExtensionName, 0, 0,
 		 ProcXCMiscDispatch, SProcXCMiscDispatch,
-		 XCMiscResetProc, StandardMinorOpcode);
-}
-
-/*ARGSUSED*/
-static void
-XCMiscResetProc (extEntry)
-    ExtensionEntry	*extEntry;
-{
+		 NULL, StandardMinorOpcode);
 }
 
 static int
 ProcXCMiscGetVersion(client)
-    register ClientPtr client;
+    ClientPtr client;
 {
     xXCMiscGetVersionReply rep;
-    register int n;
+    int n;
 
     REQUEST_SIZE_MATCH(xXCMiscGetVersionReq);
     rep.type = X_Reply;
@@ -100,10 +89,10 @@ ProcXCMiscGetVersion(client)
 
 static int
 ProcXCMiscGetXIDRange(client)
-    register ClientPtr client;
+    ClientPtr client;
 {
     xXCMiscGetXIDRangeReply rep;
-    register int n;
+    int n;
     XID min_id, max_id;
 
     REQUEST_SIZE_MATCH(xXCMiscGetXIDRangeReq);
@@ -124,11 +113,11 @@ ProcXCMiscGetXIDRange(client)
 
 static int
 ProcXCMiscGetXIDList(client)
-    register ClientPtr client;
+    ClientPtr client;
 {
     REQUEST(xXCMiscGetXIDListReq);
     xXCMiscGetXIDListReply rep;
-    register int n;
+    int n;
     XID *pids;
     unsigned int count;
 
@@ -164,7 +153,7 @@ ProcXCMiscGetXIDList(client)
 
 static int
 ProcXCMiscDispatch (client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
     REQUEST(xReq);
     switch (stuff->data)
@@ -182,9 +171,9 @@ ProcXCMiscDispatch (client)
 
 static int
 SProcXCMiscGetVersion(client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
-    register int n;
+    int n;
     REQUEST(xXCMiscGetVersionReq);
 
     swaps(&stuff->length, n);
@@ -196,9 +185,9 @@ SProcXCMiscGetVersion(client)
 
 static int
 SProcXCMiscGetXIDRange(client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
-    register int n;
+    int n;
     REQUEST(xReq);
 
     swaps(&stuff->length, n);
@@ -207,9 +196,9 @@ SProcXCMiscGetXIDRange(client)
 
 static int
 SProcXCMiscGetXIDList(client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
-    register int n;
+    int n;
     REQUEST(xXCMiscGetXIDListReq);
 
     swaps(&stuff->length, n);
@@ -219,7 +208,7 @@ SProcXCMiscGetXIDList(client)
 
 static int
 SProcXCMiscDispatch (client)
-    register ClientPtr	client;
+    ClientPtr	client;
 {
     REQUEST(xReq);
     switch (stuff->data)

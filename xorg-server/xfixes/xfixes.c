@@ -56,7 +56,9 @@
 static unsigned char	XFixesReqCode;
 int		XFixesEventBase;
 int		XFixesErrorBase;
-static DevPrivateKey XFixesClientPrivateKey = &XFixesClientPrivateKey;
+
+static int XFixesClientPrivateKeyIndex;
+static DevPrivateKey XFixesClientPrivateKey = &XFixesClientPrivateKeyIndex;
 
 static int
 ProcXFixesQueryVersion(ClientPtr client)
