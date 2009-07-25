@@ -124,29 +124,25 @@ RULES_FILES = base evdev xfree98
 
 LST_FILES = base.lst evdev.lst
 
-%.lst: %.xml
+$(DESTDIR)\%.lst: $(DESTDIR)\%.xml
 	perl xml2lst.pl < $< > $@
 
-base: $(BASE_PARTS_NO_COMPAT)
+$(DESTDIR)\base: $(BASE_PARTS_NO_COMPAT)
 	merge $@ $(BASE_PARTS)
 
-evdev: $(EVDEV_PARTS_NO_COMPAT)
+$(DESTDIR)\evdev: $(EVDEV_PARTS_NO_COMPAT)
 	merge $@ $(EVDEV_PARTS) 
 
 ALL_RULES_FILES = $(RULES_FILES) $(LST_FILES) \
-xkb.dtd README \
-	sgi \
-	sgi.lst \
-	sun \
-	sun.lst \
-	xfree98 \
-	xfree98.lst \
-	xorg \
-	xorg-it.lst \
-	xorg.lst \
-	xorg.xml 
+xkb.dtd README
 
-rules_DATA = $(ALL_RULES_FILES)
+COMPATFILES=xorg xorg.xml xorg.lst
+$(DESTDIR)\xorg: $(DESTDIR)\base
+	copy $< $@
+$(DESTDIR)\xorg%: $(DESTDIR)\base%
+	copy $< $@
+
+rules_DATA = $(ALL_RULES_FILES) $(COMPATFILES)
 
 XML_IN_FILES = base.xml.in evdev.xml.in
 xml_DATA = $(XML_IN_FILES:%.xml.in=%.xml) 
