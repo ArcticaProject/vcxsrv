@@ -204,7 +204,10 @@
 #define XF86XK_Red		0x1008FFA3   /* Red button                  */
 #define XF86XK_Green		0x1008FFA4   /* Green button                */
 #define XF86XK_Yellow		0x1008FFA5   /* Yellow button               */
-#define XF86XK_Blue             0x1008FFA6   /* Blue button                 */
+#define XF86XK_Blue		0x1008FFA6   /* Blue button                 */
+
+#define XF86XK_Suspend		0x1008FFA7   /* Suspend                     */
+#define XF86XK_Hibernate	0x1008FFA8   /* Hibernate                   */
 
 /* Keys for special action keys (hot keys) */
 /* Virtual terminals on some operating systems */
