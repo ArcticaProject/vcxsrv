@@ -2,6 +2,7 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
+xcbproto_version=@XCBPROTO_VERSION@
 
 Name: XCB
 Description: X-protocol C Binding

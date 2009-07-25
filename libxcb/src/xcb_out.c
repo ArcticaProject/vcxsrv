@@ -27,9 +27,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#ifndef _MSC_VER
 #include <unistd.h>
-#endif
 #include <string.h>
 #include <X11/Xtrans/Xtrans.h>
 
@@ -56,6 +54,25 @@ static int write_block(xcb_connection_t *c, struct iovec *vector, int count)
     vector[0].iov_len = c->out.queue_len;
     c->out.queue_len = 0;
     return _xcb_out_send(c, &vector, &count);
+}
+
+static void get_socket_back(xcb_connection_t *c)
+{
+    while(c->out.return_socket && c->out.socket_moving)
+        pthread_cond_wait(&c->out.socket_cond, &c->iolock);
+    if(!c->out.return_socket)
+        return;
+
+    c->out.socket_moving = 1;
+    pthread_mutex_unlock(&c->iolock);
+    c->out.return_socket(c->out.socket_closure);
+    pthread_mutex_lock(&c->iolock);
+    c->out.socket_moving = 0;
+
+    pthread_cond_broadcast(&c->out.socket_cond);
+    c->out.return_socket = 0;
+    c->out.socket_closure = 0;
+    _xcb_in_replies_done(c);
 }
 
 /* Public interface */
@@ -114,8 +131,8 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
             uint16_t len;
         } fields;
         uint32_t packet;
-    } sync = { { /* GetInputFocus */ 43, 0, 1 } };
-    unsigned int request;
+    } sync_req = { { /* GetInputFocus */ 43, 0, 1 } };
+    uint64_t request;
     uint32_t prefix[3] = { 0 };
     int veclen = req->count;
     enum workarounds workaround = WORKAROUND_NONE;
@@ -130,7 +147,7 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
     if(!(flags & XCB_REQUEST_RAW))
     {
         static const char pad[3];
-        int i;
+        unsigned int i;
         uint16_t shortlen = 0;
         size_t longlen = 0;
         assert(vector[0].iov_len >= 4);
@@ -190,22 +207,23 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
         workaround = WORKAROUND_GLX_GET_FB_CONFIGS_BUG;
 
     /* get a sequence number and arrange for delivery. */
-    _xcb_lock_io(c);
+    pthread_mutex_lock(&c->iolock);
     /* wait for other writing threads to get out of my way. */
     while(c->out.writing)
-        _xcb_wait_io(c, &c->out.cond);
+        pthread_cond_wait(&c->out.cond, &c->iolock);
+    get_socket_back(c);
 
     request = ++c->out.request;
-    /* send GetInputFocus (sync) when 64k-2 requests have been sent without
+    /* send GetInputFocus (sync_req) when 64k-2 requests have been sent without
      * a reply.
-     * Also send sync (could use NoOp) at 32-bit wrap to avoid having
+     * Also send sync_req (could use NoOp) at 32-bit wrap to avoid having
      * applications see sequence 0 as that is used to indicate
      * an error in sending the request */
     while((req->isvoid &&
 	c->out.request == c->in.request_expected + (1 << 16) - 1) ||
        request == 0)
     {
-        prefix[0] = sync.packet;
+        prefix[0] = sync_req.packet;
         _xcb_in_expect_reply(c, request, WORKAROUND_NONE, XCB_REQUEST_DISCARD_REPLY);
         c->in.request_expected = c->out.request;
 	request = ++c->out.request;
@@ -225,7 +243,7 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
             vector[1].iov_base = (uint32_t *) vector[1].iov_base + 1;
             vector[1].iov_len -= sizeof(uint32_t);
         }
-        vector[0].iov_len = sizeof(uint32_t) * (prefix[0] ? 1 : 0 | prefix[2] ? 2 : 0);
+        vector[0].iov_len = sizeof(uint32_t) * ((prefix[0] ? 1 : 0) + (prefix[2] ? 2 : 0));
         vector[0].iov_base = prefix + !prefix[0];
     }
 
@@ -234,8 +252,41 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
         _xcb_conn_shutdown(c);
         request = 0;
     }
-    _xcb_unlock_io(c);
+    pthread_mutex_unlock(&c->iolock);
     return request;
+}
+
+int xcb_take_socket(xcb_connection_t *c, void (*return_socket)(void *closure), void *closure, int flags, uint64_t *sent)
+{
+    int ret;
+    if(c->has_error)
+        return 0;
+    pthread_mutex_lock(&c->iolock);
+    get_socket_back(c);
+    ret = _xcb_out_flush_to(c, c->out.request);
+    if(ret)
+    {
+        c->out.return_socket = return_socket;
+        c->out.socket_closure = closure;
+        if(flags)
+            _xcb_in_expect_reply(c, c->out.request, WORKAROUND_EXTERNAL_SOCKET_OWNER, flags);
+        assert(c->out.request == c->out.request_written);
+        *sent = c->out.request;
+    }
+    pthread_mutex_unlock(&c->iolock);
+    return ret;
+}
+
+int xcb_writev(xcb_connection_t *c, struct iovec *vector, int count, uint64_t requests)
+{
+    int ret;
+    if(c->has_error)
+        return 0;
+    pthread_mutex_lock(&c->iolock);
+    c->out.request += requests;
+    ret = _xcb_out_send(c, &vector, &count);
+    pthread_mutex_unlock(&c->iolock);
+    return ret;
 }
 
 int xcb_flush(xcb_connection_t *c)
@@ -243,9 +294,9 @@ int xcb_flush(xcb_connection_t *c)
     int ret;
     if(c->has_error)
         return 0;
-    _xcb_lock_io(c);
+    pthread_mutex_lock(&c->iolock);
     ret = _xcb_out_flush_to(c, c->out.request);
-    _xcb_unlock_io(c);
+    pthread_mutex_unlock(&c->iolock);
     return ret;
 }
 
@@ -253,6 +304,12 @@ int xcb_flush(xcb_connection_t *c)
 
 int _xcb_out_init(_xcb_out *out)
 {
+    if(pthread_cond_init(&out->socket_cond, 0))
+        return 0;
+    out->return_socket = 0;
+    out->socket_closure = 0;
+    out->socket_moving = 0;
+
     if(pthread_cond_init(&out->cond, 0))
         return 0;
     out->writing = 0;
@@ -285,7 +342,7 @@ int _xcb_out_send(xcb_connection_t *c, struct iovec **vector, int *count)
     return ret;
 }
 
-int _xcb_out_flush_to(xcb_connection_t *c, unsigned int request)
+int _xcb_out_flush_to(xcb_connection_t *c, uint64_t request)
 {
     assert(XCB_SEQUENCE_COMPARE(request, <=, c->out.request));
     if(XCB_SEQUENCE_COMPARE(c->out.request_written, >=, request))
@@ -300,7 +357,7 @@ int _xcb_out_flush_to(xcb_connection_t *c, unsigned int request)
         return _xcb_out_send(c, &vec_ptr, &count);
     }
     while(c->out.writing)
-        _xcb_wait_io(c, &c->out.cond);
+        pthread_cond_wait(&c->out.cond, &c->iolock);
     assert(XCB_SEQUENCE_COMPARE(c->out.request_written, >=, request));
     return 1;
 }

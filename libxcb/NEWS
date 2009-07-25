@@ -1,3 +1,48 @@
+Release 1.4 (2009-07-15)
+========================
+* Add majorCode, minorCode and resourceID fields to X generic error
+* Fix precedence bug: wrong length for big-requests preceded by sync
+* Fix libxcb-randr version info
+
+Release 1.3 (2009-05-29)
+========================
+* Copy full IPv4 mapping (Bug #20665)
+* Fix XID allocation
+* Use poll() instead of select() when available
+* Fix local socket connection on Hurd
+* Fix XDM-AUTHORIZATION-1
+* Disable Nagle on TCP socket
+
+Release 1.2 (2009-02-17)
+========================
+* Stop packaging auto-generated C files into tarball.
+
+Release 1.1.93 (2008-12-11)
+===========================
+Enhancements:
+* Apple: Enable support for launchd DISPLAY socket
+* Treat XIDs the same as other cardinal values.
+
+Release 1.1.92 (2008-11-01)
+===========================
+Enhancements:
+* Added small fix to support trailing fixed fields; also warning for non-pad fixed fields
+* Fixed overly aggressive warning about fixed field following variable
+* Added generation of extern "C" for compatibility with C++
+* Remove libxcb-xlib and xcbxlib.h.
+* Inline _xcb_lock_io, _xcb_unlock_io, and _xcb_wait_io.
+* Track 64-bit sequence numbers internally.
+* Use sequence number ranges in pending replies
+* Remove duplicate XCB_EXTENSION calls for Composite extension
+* Factorize m4 macros and add one to set X extensions
+* Allow compile-time setting for XCB queue buffer size
+* Support handing off socket write permission to external code.
+* Add support for the abstract socket namespace under Linux
+
+Bug fixes:
+* Fix tiny memory leak in read_packet
+* Fix some fd leaks in _xcb_open_*()
+
 Release 1.1 (2007-11-04)
 ========================
 

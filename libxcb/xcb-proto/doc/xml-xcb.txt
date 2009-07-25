@@ -1,0 +1,258 @@
+                                  xcb/proto
+
+Description
+===========
+
+xcb/proto is a set of XML files describing the  X Window System protocol
+It is designed for use with libxcb, the X C binding
+<http://xcb.freedesktop.org/>.  xcb/proto consists of:
+
+xcb.xsd      An XML Schema defining the data format for describing the X
+             protocol.
+
+*.py         Code generator helpers that read the protocol descriptions
+             into python structures. See libxcb for example usage.
+
+*.xml        XML descriptions of the core X protocol and many extensions.
+
+
+Generating C bindings
+=====================
+
+See libxcb <http://cgit.freedesktop.org/xcb/libxcb/>.
+
+
+Protocol Description Format
+===========================
+
+Root element
+------------
+
+<xcb header="string" extension-name="string" extension-xname="string">
+  top-level elements
+</xcb>
+
+  This is the root element of a protocol description.  The attributes are all
+  various forms of the extension name.  header is the basename of the XML
+  protocol description file, which will be used as the basename for generated
+  bindings as well.  extension-name is the name of the extension in InterCaps,
+  which will be used in the names of functions.  extension-xname is the name
+  of the extension as passed to QueryExtension.
+
+  As an example, the XML-XCB description for the GO-FASTER extension would use
+  the root element <xcb header="gofaster" extension-name="GoFaster"
+  extension-xname="GO-FASTER">; as a result, C bindings will be put in
+  gofaster.h and gofaster.c, extension functions will be named
+  XCBGoFasterFunctionName, and the extension initialization will call
+  QueryExtension with the name "GO-FASTER".
+
+  This element can contain any number of the elements listed in the section
+  "Top-Level Elements" below.
+
+
+Top-Level Elements
+------------------
+
+<import>header_name</import>
+
+  The import element allows the protocol description to reference types
+  declared in another extension.  The content is be the basename of the
+  extension XML file, which is also the header attribute of the extension's
+  root node.  Note that types from xproto are automatically available, without
+  explicitly importing them.
+
+<struct name="identifier">structure contents</struct>
+
+  This element represents a data structure.  The name attribute gives the name
+  of the structure.  The content represents the fields of the structure, and
+  consists of one or more of the field, pad, and list elements described in
+  the section "Structure Contents" below.
+
+<union name="identifier">structure contents</union>
+
+  This element represents a union of data types, which can hold one value of
+  any of those types.  The name attribute gives the name of the union.  The
+  content represents the fields of the union, and consists of one or more of
+  the field and pad elements described in the section "Structure Contents
+  below".
+
+<xidtype name="identifier" />
+
+  This element represents an identifier for a particular type of resource.
+  The name attribute gives the name of the new type.
+
+<enum name="identifier">
+  <item name="identifier">[optional expression]</item>
+  ...
+</enum>
+
+  The enum element represents an enumeration type, which can take on any of
+  the values given by the contained item elements.  The name attribute on the
+  enum gives the name of the enumerated type.
+
+  The item element represents one possible value of an enumerated type.  The
+  name attribute on the item gives the name of that value, and the optional
+  content is an expression giving the numeric value.  If the expression is
+  omitted, the value will be one more than that of the previous item, or 0 for
+  the first item.
+
+<typedef oldname="identifier" newname="identifier" />
+
+  The typedef element declares the type given by the newname attribute to be
+  an alias for the type given by the oldname attribute.
+
+<request name="identifier" opcode="integer" [combine-adjacent="true"]>
+  structure contents
+  [<reply>structure contents</reply>]
+</request>
+
+  The request element represents an X protocol request.  The name attribute
+  gives the name of the request, and the opcode attribute gives the numeric
+  request code.  The content of the request element represents the fields in
+  the request, and consists of one or more of any of the elements listed in
+  the "Structure Contents" section below.  Note that for requests in the core
+  protocol, the first field in the request goes into the one-byte gap between
+  the major opcode and the length; if the request does not have any data in
+  that gap, put a one byte pad as the first element.  Extension requests
+  always have this gap filled with the minor opcode.
+
+  The optional reply element is present if the request has a reply.  The
+  content of the reply element represents the fields in the reply, and
+  consists of zero or more of the field, pad, and list elements listed in the
+  "Structure Contents" section below.  Note that the first field in the reply
+  always goes into the one-byte gap between the response type and the sequence
+  number; if the reply does not have any data in that gap, put a one byte pad
+  as the first element.
+
+  If the optional combine-adjacent attribute is true, multiple adjacent
+  requests of the same type may be combined into a single request without
+  affecting the semantics of the requests.
+
+<event name="identifier" number="integer" [no-sequence-number="true"]>
+  structure contents
+</event>
+
+  This element represents an X protocol event.  The name attribute gives the
+  name of the event, and the number attribute gives the event number.  The
+  content of the event element represents the fields in the event, and
+  consists of zero or more of the field, pad, and list elements listed in the
+  "Structure Contents" section below.
+
+  If the optional no-sequence-number attribute is true, the event does not
+  include a sequence number.  This is a special-case for the KeymapNotify
+  event in the core protocol, and should not be used in any other event.
+
+<error name="identifier" number="integer">
+  structure contents
+</error>
+
+  This element represents an X protocol error.  The name attribute gives the
+  name of the error, and the number attribute gives the error number.  The
+  content of the error element represents the fields in the error, and
+  consists of zero or more of the field, pad, and list elements listed in the
+  "Structure Contents" section below.
+
+<eventcopy name="identifier" number="identifier" ref="identifier" />
+
+  This element creates an alias for the event named in the ref attribute, with
+  the new name given in the name attribute, and the new event number given in
+  the number attribute.
+
+<errorcopy name="identifier" number="identifier" ref="identifier" />
+
+  This element creates an alias for the error named in the ref attribute, with
+  the new name given in the name attribute, and the new error number given in
+  the number attribute.
+
+
+Structure Contents
+------------------
+
+Note: "type" attributes below refer to types defined by previous elements,
+either in the current extension, xproto, or one of the imported extensions.
+The type name must refer to only one possible type; if more than one type
+matches, an error occurs.  To avoid this, the type may be explicitly prefixed
+with a namespace, which should be the value of the header attribute on the
+protocol description containing the desired type.  The namespace and type are
+separated by a single colon.  For example, to refer to the PIXMAP type defined
+in glx rather than the one defined in xproto, use type="glx:PIXMAP" rather
+than type="PIXMAP".
+
+Note: Most of the below may optionally contain an enum, altenum, or mask
+attribute, which follows the above rules for "type". "enum" is an exhaustive
+enum; the value is restricted to one of the constants named in the enum.
+"altenum" may be one of the values contained in the enum, but it need not be.
+"mask" refers to an enum to be used as a bitmask.
+
+<pad bytes="integer" />
+
+  This element declares some padding in a data structure.  The bytes
+  attribute declares the number of bytes of padding.
+
+<field type="identifier" name="identifier" />
+
+  This element represents a field in a data structure.  The type attribute
+  declares the data type of the field, and the name attribute gives the name
+  of the field.
+
+<list type="identifier" name="identifier">expression</list>
+
+  This element represents an array or list of fields in a data structure.  The
+  type attribute declares the data type of the field, and the name attribute
+  gives the name of the field.  The content is an expression giving the length
+  of the list in terms of other fields in the structure.  See the section
+  "Expressions" for details on the expression representation.
+
+<localfield type="identifier" name="identifier" />
+
+  This element represents a parameter in a request that is not sent over the
+  wire.  The field can be referenced in the length expressions of lists or in
+  an exprfield.  The type attribute declares the data type of the field, and
+  the name attribute gives the name of the field.
+
+<exprfield type="identifier" name="identifier">expression</exprfield>
+
+  This element represents a field in a request that is calculated rather than
+  supplied by the caller.  The type attribute declares the data type of the
+  field, and the name attribute gives the name of the field.  The content is
+  the expression giving the value of the field.  See the section "Expressions"
+  for details on the expression representation.
+
+<valueparam value-mask-type="identifier" value-mask-name="identifier"
+            value-list-name="identifier" />
+
+  This element represents a BITMASK/LISTofVALUE parameter pair: a bitmask
+  defining the set of values included, and a list containing these values.
+  value-mask-type gives the type of the bitmask; this must be CARD16 or
+  CARD32.  value-mask-name gives the field name of the bitmask, and
+  value-list-name gives the field name of the list of values.
+
+
+Expressions
+-----------
+
+  Expressions consist of a tree of <op> elements with leaves consisting of
+  <fieldref> or <value> elements.
+
+<op op="operator">expression expression</op>
+
+  The op element represents an operator, with the op attribute specifying
+  which operator.  The supported operations are +, -, *, /, &amp;, and
+  &lt;&lt;, and their semantics are identical to the corresponding operators
+  in C.  The two operand expressions may be other expression elements.
+
+<fieldref>identifier</fieldref>
+
+  The fieldref element represents a reference to the value of another field in
+  the structure containing this expression.  The identifier is the value of
+  the "name" attribute on the referenced field.
+
+<value>integer</value>
+
+  The value element represents a literal integer value in an expression.  The
+  integer may be expressed in decimal or hexadecimal.
+
+<bit>integer</bit>
+
+  The bit element represents a literal bitmask value in an expression.
+  The integer must be in the range 0..31, expanding to (1<<n) in C.

@@ -28,6 +28,7 @@
 #ifndef __XCBINT_H
 #define __XCBINT_H
 
+#include <unistd.h>
 #include "bigreq.h"
 
 #ifdef HAVE_CONFIG_H
@@ -40,7 +41,8 @@
 
 enum workarounds {
     WORKAROUND_NONE,
-    WORKAROUND_GLX_GET_FB_CONFIGS_BUG
+    WORKAROUND_GLX_GET_FB_CONFIGS_BUG,
+    WORKAROUND_EXTERNAL_SOCKET_OWNER
 };
 
 enum lazy_reply_tag
@@ -52,7 +54,18 @@ enum lazy_reply_tag
 
 #define XCB_PAD(i) (-(i) & 3)
 
-#define XCB_SEQUENCE_COMPARE(a,op,b)	((int) ((a) - (b)) op 0)
+#define XCB_SEQUENCE_COMPARE(a,op,b)	((int64_t) ((a) - (b)) op 0)
+#define XCB_SEQUENCE_COMPARE_32(a,op,b)	(((int) (a) - (int) (b)) op 0)
+
+#ifndef offsetof
+#define offsetof(type,member) ((size_t) &((type *)0)->member)
+#endif
+
+#ifndef MIN
+#define MIN(x,y) ((x) < (y) ? (x) : (y))
+#endif
+
+#define container_of(pointer,type,member) ((type *)(((char *)(pointer)) - offsetof(type, member)))
 
 /* xcb_list.c */
 
@@ -72,11 +85,16 @@ typedef struct _xcb_out {
     pthread_cond_t cond;
     int writing;
 
-    char queue[4096];
+    pthread_cond_t socket_cond;
+    void (*return_socket)(void *closure);
+    void *socket_closure;
+    int socket_moving;
+
+    char queue[XCB_QUEUE_BUFFER_SIZE];
     int queue_len;
 
-    unsigned int request;
-    unsigned int request_written;
+    uint64_t request;
+    uint64_t request_written;
 
     pthread_mutex_t reqlenlock;
     enum lazy_reply_tag maximum_request_length_tag;
@@ -90,7 +108,7 @@ int _xcb_out_init(_xcb_out *out);
 void _xcb_out_destroy(_xcb_out *out);
 
 int _xcb_out_send(xcb_connection_t *c, struct iovec **vector, int *count);
-int _xcb_out_flush_to(xcb_connection_t *c, unsigned int request);
+int _xcb_out_flush_to(xcb_connection_t *c, uint64_t request);
 
 
 /* xcb_in.c */
@@ -102,9 +120,9 @@ typedef struct _xcb_in {
     char queue[4096];
     int queue_len;
 
-    unsigned int request_expected;
-    unsigned int request_read;
-    unsigned int request_completed;
+    uint64_t request_expected;
+    uint64_t request_read;
+    uint64_t request_completed;
     struct reply_list *current_reply;
     struct reply_list **current_reply_tail;
 
@@ -120,20 +138,11 @@ typedef struct _xcb_in {
 int _xcb_in_init(_xcb_in *in);
 void _xcb_in_destroy(_xcb_in *in);
 
-int _xcb_in_expect_reply(xcb_connection_t *c, unsigned int request, enum workarounds workaround, int flags);
+int _xcb_in_expect_reply(xcb_connection_t *c, uint64_t request, enum workarounds workaround, int flags);
+void _xcb_in_replies_done(xcb_connection_t *c);
 
 int _xcb_in_read(xcb_connection_t *c);
 int _xcb_in_read_block(xcb_connection_t *c, void *buf, int nread);
-
-
-/* xcb_xlib.c */
-
-typedef struct _xcb_xlib {
-    int lock;
-    int sloppy_lock;
-    pthread_t thread;
-    pthread_cond_t cond;
-} _xcb_xlib;
 
 
 /* xcb_xid.c */
@@ -173,7 +182,6 @@ struct xcb_connection_t {
 
     /* I/O data */
     pthread_mutex_t iolock;
-    _xcb_xlib xlib;
     _xcb_in in;
     _xcb_out out;
 
@@ -183,7 +191,6 @@ struct xcb_connection_t {
 };
 
 void _xcb_conn_shutdown(xcb_connection_t *c);
-void _xcb_wait_io(xcb_connection_t *c, pthread_cond_t *cond);
 int _xcb_conn_wait(xcb_connection_t *c, pthread_cond_t *cond, struct iovec **vector, int *count);
 
 
@@ -194,11 +201,5 @@ int _xcb_get_auth_info(int fd, xcb_auth_info_t *info, int display);
 #ifdef GCC_HAS_VISIBILITY
 #pragma GCC visibility pop
 #endif
-
-
-/* xcb_conn.c symbols visible to xcb-xlib */
-
-void _xcb_lock_io(xcb_connection_t *c);
-void _xcb_unlock_io(xcb_connection_t *c);
 
 #endif

@@ -1,0 +1,9 @@
+prefix=@prefix@
+datarootdir=@datarootdir@
+datadir=@datadir@
+xcbincludedir=@xcbincludedir@
+pythondir=@pythondir@
+
+Name: XCB Proto
+Description: X protocol descriptions for XCB
+Version: @PACKAGE_VERSION@

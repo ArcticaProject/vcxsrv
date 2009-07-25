@@ -1,0 +1,140 @@
+Release 1.5 (2009-05-09)
+========================
+* Add support for mod mask Any
+* Add and use altenum (non-exhaustive enum)
+* Tweak some XInput specs
+* Fix milter spelling
+* Correct the length calculation for the value field of GetPropertyReply
+* xtest: rename window field to root
+* randr: add version 1.3 requests
+* shm: fix ShmCompletion event
+
+Release 1.4 (2009-02-16)
+========================
+* Add explicit padding in various protocol description.
+* Associate fields with the enum which describes their allowed values.
+
+Release 1.3 (2008-12-10)
+========================
+Explicit padding was added in various protocol description.
+
+Protcol fixes:
+* RandR
+* X proto
+* Change CARD8 to char when specs requires STRING8
+
+Release 1.2 (2008-07-17)
+========================
+New extensions:
+* XInput 1.4
+* SELinux 1.0
+
+Various fixes in protocol description:
+* X proto
+* X-Resource
+* XVMC
+* GLX
+
+New Python parser language-independent parts.
+
+Release 1.1 (2007-11-04)
+========================
+
+Incompatible change to the XML schema: rather than special-casing the
+treatment of protocol extension names, use the new extension-multiword
+attribute.  Normally, XCB prefixes C extension functions with
+xcb_extname_.  However, some of the existing extensions used multi-word
+names, such as xcb_big_requests_ or xcb_xc_misc_. Those extensions now
+use this attribute to match their existing defined API.  This allows the
+XCB code generator to avoid special-casing those extension names.
+
+Protocol updates:
+* Update DAMAGE to 1.1
+* Update RandR to version 1.2
+
+Bug fixes:
+* fix XSync Initialize call
+* Update autogen.sh to one that does objdir != srcdir.
+
+
+Release 1.0 (2006-11-23)
+========================
+
+The "Thanksgiving" release: We feel thankful to have it released.
+
+* Fix Bug #8990: randr type fixes
+* Fixed screen parameter type in several GLX requests to use CARD32 instead
+  of the SCREEN structure.
+* Corrected valueparam arguments to attribute lists in several requests and
+  a reply.
+* Estethic change for attribute parameter name
+* Remove support for the <localfield> tag: nothing needs it.
+* Fix Bug #8973: In UngrabKey, the 'key' field should have type KEYCODE, not
+  the more general CARD8.
+
+
+Release 1.0 RC3 (2006-11-02)
+============================
+
+* Add support for the Xinerama extension, version 1.1
+* Protocol descriptions now document the major and minor version numbers
+  of the extension version they support, through major-version and
+  minor-version attributes on the xcb tag.  XML Schema updated
+  accordingly.
+* Minor source reorganization: Now that the extensions do not get
+  installed to an extensions/ subdirectory, move them out of the
+  extensions/ subdirectory in the source as well.
+* Various protocol description fixes:
+    * Add REPEAT enumeration to Render extension to fix bug #8535
+    * Fix core xproto GrabMode enumeration (reported by Yang JianJun)
+    * Fix core xproto cap style enumeration (bug #8857).
+
+
+Release 1.0 RC2 (2006-10-07)
+============================
+
+* Add <import>xproto</import> explicitly to extensions that use xproto;
+  this goes along with the change in the code generator for libxcb 1.0 RC2 to
+  stop implicitly importing xproto.
+* Change "union" to "xidunion" for XID unions like DRAWABLE and FONTABLE,
+  so that the code generator can more easily declare these XID unions as
+  integer typedefs rather than unions.
+* Replace structures attempting to provide C type safety with CARD32 typedefs
+* render.xml no longer describes the CompositeGlyphs* requests as taking lists
+  of complicated unions of structures of lists: it says instead that they take
+  a LISTofBYTE. The caller is responsible for constructing an appropriate
+  sequence of glyph elements. Previously, the requests could not actually be
+  used because XCB did not correctly compute the length of the provided data.
+
+
+Release 1.0 RC1 (2006-09-25)
+============================
+
+The Great XCB Renaming
+----------------------
+
+* Rename shape_op and shape_kind to drop the "shape_" prefix, since
+  otherwise these types end up as xcb_shape_shape_{op,kind}_t.
+* Remove leading underscores from enums in the GLX protocol description,
+  previously needed to ensure a word separator, but now redundant.
+* The XML-XCB protocol descriptions have moved to /usr/share/xcb, with
+  extension descriptions no longer relegated to an extensions/ subdirectory.
+
+GIT Repository split
+--------------------
+
+Previously, several XCB-related projects all existed under the umbrella
+of a single monolithic GIT repository with per-project subdirectories.
+We have split this repository into individual per-project repositories.
+
+Josh Triplett and Jamey Sharp wrote a tool called git-split to
+accomplish this repository split. git-split reconstructs the history of
+a sub-project previously stored in a subdirectory of a larger
+repository. It constructs new commit objects based on the existing tree
+objects for the subtree in each commit, and discards commits which do
+not affect the history of the sub-project, as well as merges made
+unnecessary due to these discarded commits.
+
+We would like to acknowledge the work of the gobby team in creating a
+collaborative editor which greatly aided the development of git-split
+(as well as these release notes).

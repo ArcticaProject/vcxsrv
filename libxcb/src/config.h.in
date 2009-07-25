@@ -6,8 +6,8 @@
 /* Has Wraphelp.c needed for XDM AUTH protocols */
 #undef HASXDMAUTH
 
-/* Has backtrace*() needed for retrieving stack traces */
-#undef HAVE_BACKTRACE
+/* Define if your platform supports abstract sockets */
+#undef HAVE_ABSTRACT_SOCKETS
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
@@ -15,8 +15,14 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* launchd support available */
+#undef HAVE_LAUNCHD
+
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* Have the sockaddr_un.sun_len member. */
+#undef HAVE_SOCKADDR_SUN_LEN
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -39,6 +45,10 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
 /* Name of package */
 #undef PACKAGE
 
@@ -60,5 +70,11 @@
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
+/* poll() function is available */
+#undef USE_POLL
+
 /* Version number of package */
 #undef VERSION
+
+/* XCB buffer queue size */
+#undef XCB_QUEUE_BUFFER_SIZE
