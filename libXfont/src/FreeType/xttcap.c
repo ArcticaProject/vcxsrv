@@ -44,21 +44,8 @@ static char const * const releaseID =
 #endif
 #include <X11/fonts/fontmisc.h>
 #include <string.h>
-#ifndef FONTMODULE
 #include <ctype.h>
 #include <math.h>
-#else
-#include "Xmd.h"
-#include "Xdefs.h"
-#include "xf86_ansic.h"
-#endif
-/*
-#include <X11/X.h>
-#include <X11/Xmd.h>
-#include <X11/Xfuncproto.h>
-#include "xf86Module.h"
-#include "xf86_ansic.h"
-*/
 
 #ifndef True
 #define True (-1)
@@ -68,17 +55,6 @@ static char const * const releaseID =
 #endif /* False */
 
 #include "xttcap.h"
-
-#if 0
-/*
-  Prototypes for obsoleted OS (e.g. SunOS4)
- */
-
-#if (defined(sun) && !(defined(SVR4) || defined(__SVR4)))
-double strtod(char *str, char **ptr);
-double strtol(char *str, char **ptr, int base);
-#endif
-#endif
 
 
 /**************************************************************************
@@ -259,7 +235,7 @@ SPropRecValList_add_record(SDynPropRecValList *pThisList,
             {
                 char *p;
                     
-                if (NULL == (p = (char *)xalloc(strlen(strValue)+1))) {
+                if (NULL == (p = malloc(strlen(strValue)+1))) {
                     fprintf(stderr,
                             "truetype font property : "
                             "cannot allocate memory.\n");
@@ -283,8 +259,7 @@ SPropRecValList_add_record(SDynPropRecValList *pThisList,
             /* add to list */
             SPropRecValListNodeP *newNode;
             
-            if (NULL == (newNode =
-                         (SPropRecValListNodeP *)xalloc(sizeof(*newNode)))) {
+            if (NULL == (newNode = malloc(sizeof(*newNode)))) {
                 fprintf(stderr,
                         "truetype font property : "
                         "cannot allocate memory.\n");
@@ -473,7 +448,7 @@ parse_one_line(SDynPropRecValList *pThisList, FILE *is)
     char *buf = NULL;
     char *recordHead, *valueHead = NULL;
     
-    if (NULL == (buf = xalloc(LEN_LINEBUF))) {
+    if (NULL == (buf = malloc(LEN_LINEBUF))) {
         fprintf(stderr,
                 "truetype font property file : cannot allocate memory.\n");
         result = True;
@@ -508,7 +483,7 @@ parse_one_line(SDynPropRecValList *pThisList, FILE *is)
         result = SPropRecValList_add_record(pThisList, recordHead, valueHead);
     }
   quit:
-    xfree(buf);
+    free(buf);
   abort:    
     return result;
 }
@@ -649,13 +624,13 @@ SPropRecValList_add_by_font_cap(SDynPropRecValList *pThisList,
                     char *value;
 
                     len = term-p-1;
-                    value=(char *)xalloc(len+1);
+                    value=malloc(len+1);
                     memcpy(value, p+1, len);
                     value[len]='\0';
                     SPropRecValList_add_record(pThisList,
                                                "FaceNumber",
                                                value);
-                    xfree(value);
+                    free(value);
                     term=p;
                 }
                 break;
@@ -669,7 +644,7 @@ SPropRecValList_add_by_font_cap(SDynPropRecValList *pThisList,
         int i;
         char const *nextColon = strchr(strCapHead, ':');
         if (0<nextColon-strCapHead) {
-            char *duplicated = (char *)xalloc((nextColon-strCapHead)+1);
+            char *duplicated = malloc((nextColon-strCapHead)+1);
             {
                 char *value;
             
@@ -698,7 +673,7 @@ SPropRecValList_add_by_font_cap(SDynPropRecValList *pThisList,
               next:
                 ;
             }
-            xfree(duplicated);
+            free(duplicated);
         }
         strCapHead = nextColon+1;
     }
@@ -719,7 +694,7 @@ XttXstrdup(char const *str)
 {
     char *result;
     
-    result = (char *)xalloc(strlen(str)+1);
+    result = malloc(strlen(str)+1);
 
     if (result)
         strcpy(result, str);

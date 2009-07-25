@@ -94,8 +94,6 @@ typedef struct _PCFTable {
 extern int pcfReadFont ( FontPtr pFont, FontFilePtr file, 
 			 int bit, int byte, int glyph, int scan );
 extern int pcfReadFontInfo ( FontInfoPtr pFontInfo, FontFilePtr file );
-extern int pmfReadFont ( FontPtr pFont, FontFilePtr file, 
-			 int bit, int byte, int glyph, int scan );
 extern int pcfWriteFont ( FontPtr pFont, FontFilePtr file );
 extern void pcfError ( const char *, ... );
 

@@ -84,14 +84,13 @@ ResizeHashTable (void)
 	newHashSize = 1024;
     else
 	newHashSize = hashSize * 2;
-    newHashTable = (AtomListPtr *) xalloc (newHashSize * sizeof (AtomListPtr));
+    newHashTable = calloc (newHashSize, sizeof (AtomListPtr));
     if (!newHashTable) {
 	fprintf(stderr, "ResizeHashTable(): Error: Couldn't allocate"
 		" newHashTable (%ld)\n",
 		newHashSize * (unsigned long)sizeof (AtomListPtr));
 	return FALSE;
     }
-    bzero ((char *) newHashTable, newHashSize * sizeof (AtomListPtr));
     newHashMask = newHashSize - 1;
     newRehash = (newHashMask - 2);
     for (i = 0; i < hashSize; i++)
@@ -111,7 +110,7 @@ ResizeHashTable (void)
 	    newHashTable[h] = hashTable[i];
 	}
     }
-    xfree (hashTable);
+    free (hashTable);
     hashTable = newHashTable;
     hashSize = newHashSize;
     hashMask = newHashMask;
@@ -127,7 +126,7 @@ ResizeReverseMap (void)
 	reverseMapSize = 1000;
     else
 	reverseMapSize *= 2;
-    reverseMap = (AtomListPtr *) xrealloc (reverseMap, reverseMapSize * sizeof (AtomListPtr));
+    reverseMap = realloc (reverseMap, reverseMapSize * sizeof (AtomListPtr));
     if (!reverseMap) {
 	fprintf(stderr, "ResizeReverseMap(): Error: Couldn't reallocate"
 		" reverseMap (%ld)\n",
@@ -187,7 +186,7 @@ MakeAtom(char *string, unsigned len, int makeit)
     }
     if (!makeit)
 	return None;
-    a = (AtomListPtr) xalloc (sizeof (AtomListRec) + len + 1);
+    a = malloc (sizeof (AtomListRec) + len + 1);
     if (a == NULL) {
 	fprintf(stderr, "MakeAtom(): Error: Couldn't allocate AtomListRec"
 		" (%ld)\n", (unsigned long)sizeof (AtomListRec) + len + 1);

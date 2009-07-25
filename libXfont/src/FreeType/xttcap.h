@@ -121,10 +121,6 @@ SPropRecValList_dump(SRefPropRecValList *refList);
   Prototypes (xttmisc)
  */
 
-/* compare strings with ignoring case */
- /* False == equal, True == not equal */
-Bool mystrcasecmp(char const *s1, char const *s2);
-
 /* strdup clone */
 char * XttXstrdup(char const *str);
 #undef xstrdup

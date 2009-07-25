@@ -1,5 +1,3 @@
-/* $Xorg: renderers.c,v 1.4 2001/02/09 02:04:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -35,6 +33,7 @@ in this Software without prior written authorization from The Open Group.
 #include <config.h>
 #endif
 #include <X11/fonts/fntfilst.h>
+#include <unistd.h>
 extern void ErrorF(const char *f, ...);
 
 static FontRenderersRec	renderers;
@@ -62,13 +61,13 @@ FontFilePriorityRegisterRenderer (FontRendererPtr renderer, int priority)
 	rendererGeneration = serverGeneration;
 	renderers.number = 0;
 	if (renderers.renderers)
-	   xfree(renderers.renderers);
+	   free(renderers.renderers);
 	renderers.renderers = NULL;
     }
 
     for (i = 0; i < renderers.number; i++) {
-	if (!strcmp (renderers.renderers[i].renderer->fileSuffix, 
-                     renderer->fileSuffix)) {
+	if (!strcasecmp (renderers.renderers[i].renderer->fileSuffix, 
+                         renderer->fileSuffix)) {
             if(renderers.renderers[i].priority >= priority) {
                 if(renderers.renderers[i].priority == priority) {
                     if (rendererGeneration == 1)
@@ -84,7 +83,7 @@ FontFilePriorityRegisterRenderer (FontRendererPtr renderer, int priority)
     }
 
     if(i >= renderers.number) {
-        new = xrealloc (renderers.renderers, sizeof(*new) * (i + 1));
+        new = realloc (renderers.renderers, sizeof(*new) * (i + 1));
         if (!new)
             return FALSE;
         renderers.renderers = new;
@@ -108,7 +107,7 @@ FontFileMatchRenderer (char *fileName)
     {
 	r = renderers.renderers[i].renderer;
 	if (fileLen >= r->fileSuffixLen &&
-	    !strcmp (fileName + fileLen - r->fileSuffixLen, r->fileSuffix))
+	    !strcasecmp (fileName + fileLen - r->fileSuffixLen, r->fileSuffix))
 	{
 	    return r;
 	}

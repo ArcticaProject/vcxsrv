@@ -54,7 +54,7 @@ BufFilePushBZIP2 (BufFilePtr f)
 {
     xzip_buf *x;
 
-    x = (xzip_buf *) xalloc (sizeof (xzip_buf));
+    x = malloc (sizeof (xzip_buf));
     if (!x) return NULL;
 
     bzero(&(x->z), sizeof(bz_stream));
@@ -64,7 +64,7 @@ BufFilePushBZIP2 (BufFilePtr f)
 				    0,	/* verbosity: 0 silent, 4 max */
 				    0);	/* 0: go faster, 1: use less memory */
     if (x->zstat != BZ_OK) {
-	xfree(x);
+	free(x);
 	return NULL;
     }
 
@@ -87,7 +87,7 @@ BufBzip2FileClose(BufFilePtr f, int flag)
     xzip_buf *x = (xzip_buf *)f->private;
     BZ2_bzDecompressEnd (&(x->z));
     BufFileClose (x->f, flag);
-    xfree (x);
+    free (x);
     return 1;
 }
 

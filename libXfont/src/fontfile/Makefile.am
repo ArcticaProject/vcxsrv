@@ -18,7 +18,6 @@ libfontfile_la_SOURCES = 	\
 	decompress.c		\
 	defaults.c		\
 	dirfile.c		\
-	ffcheck.c		\
 	fileio.c		\
 	filewr.c		\
 	fontdir.c		\
@@ -26,7 +25,6 @@ libfontfile_la_SOURCES = 	\
 	fontfile.c		\
 	fontscale.c		\
 	gunzip.c		\
-	printerfont.c		\
 	register.c		\
 	renderers.c		\
 	catalogue.c

@@ -67,6 +67,7 @@ typedef struct _BitmapFileFunctions {
 			       FontFilePtr /* file */ );
 }           BitmapFileFunctionsRec, *BitmapFileFunctionsPtr;
 
+static int BitmapGetRenderIndex(FontRendererPtr renderer);
 
 /*
  * the readers[] and renderers[] arrays must be in the same order,
@@ -103,9 +104,6 @@ static BitmapFileFunctionsRec readers[] = {
 # ifdef X_BZIP2_FONT_COMPRESSION
     { bdfReadFont, bdfReadFontInfo} ,
 # endif
-#endif
-#if XFONT_PCFFORMAT
-    { pmfReadFont, pcfReadFontInfo} ,
 #endif
     { NULL, NULL }
 };
@@ -151,7 +149,7 @@ BitmapOpenBitmap (FontPathElementPtr fpe, FontPtr *ppFont, int flags,
 
     FontFileClose (file);
     if (ret != Successful) {
-	xfree(pFont);
+	free(pFont);
     } else {
 	*ppFont = pFont;
     }
@@ -236,11 +234,6 @@ static FontRendererRec	renderers[] = {
 	CAPABILITIES },
 # endif
 #endif
-#if XFONT_PCFFORMAT
-    { ".pmf", 4, BitmapOpenBitmap, BitmapOpenScalable,
-	BitmapGetInfoBitmap, BitmapGetInfoScalable, 0,
-	CAPABILITIES },
-#endif
     { NULL, 0, NULL, 0, NULL, NULL, 0, 0 }
 };
 
@@ -260,7 +253,7 @@ BitmapRegisterFontFileFunctions (void)
  * the font info reader, and the bitmap scaling routine.  All users
  * of this routine must be kept in step with the renderer array.
  */
-int
+static int
 BitmapGetRenderIndex(FontRendererPtr renderer)
 {
     return renderer - renderers;

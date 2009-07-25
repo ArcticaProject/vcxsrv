@@ -24,13 +24,7 @@ THE SOFTWARE.
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifndef FONTMODULE
 #include <string.h>
-#else
-#include "Xmd.h"
-#include "Xdefs.h"
-#include "xf86_ansic.h"
-#endif
 
 #include <X11/fonts/fntfilst.h>
 #include <X11/fonts/fontutil.h>

@@ -77,7 +77,7 @@ EmptyFontPatternCache (FontPatternCachePtr cache)
 	cache->entries[i].next = &cache->entries[i+1];
 	cache->entries[i].prev = 0;
 	cache->entries[i].pFont = 0;
-	xfree (cache->entries[i].pattern);
+	free (cache->entries[i].pattern);
 	cache->entries[i].pattern = 0;
 	cache->entries[i].patlen = 0;
     }
@@ -91,7 +91,7 @@ MakeFontPatternCache (void)
 {
     FontPatternCachePtr	cache;
     int			i;
-    cache = (FontPatternCachePtr) xalloc (sizeof *cache);
+    cache = malloc (sizeof *cache);
     if (!cache)
 	return 0;
     for (i = 0; i < NENTRIES; i++) {
@@ -110,8 +110,8 @@ FreeFontPatternCache (FontPatternCachePtr cache)
     int	    i;
 
     for (i = 0; i < NENTRIES; i++)
-	xfree (cache->entries[i].pattern);
-    xfree (cache);
+	free (cache->entries[i].pattern);
+    free (cache);
 }
 
 /* compute id for string */
@@ -139,7 +139,7 @@ CacheFontPattern (FontPatternCachePtr cache,
     char			*newpat;
     int				i;
 
-    newpat = (char *) xalloc (patlen);
+    newpat = malloc (patlen);
     if (!newpat)
 	return;
     if (cache->free)
@@ -157,7 +157,7 @@ CacheFontPattern (FontPatternCachePtr cache,
 	if (e->next)
 	    e->next->prev = e->prev;
 	*e->prev = e->next;
-	xfree (e->pattern);
+	free (e->pattern);
     }
     /* set pattern */
     memcpy (newpat, pattern, patlen);
@@ -214,7 +214,7 @@ RemoveCachedFontPattern (FontPatternCachePtr cache,
 	    *e->prev = e->next;
 	    e->next = cache->free;
 	    cache->free = e;
-	    xfree (e->pattern);
+	    free (e->pattern);
 	    e->pattern = 0;
 	}
     }

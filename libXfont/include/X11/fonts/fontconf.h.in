@@ -23,12 +23,6 @@
 /* Define as 1 if you have FreeType support in Xfont */
 #undef XFONT_FREETYPE
 
-/* Define as 1 if you have Type1 font support in Xfont */
-#undef XFONT_TYPE1
-
-/* Define as 1 if you have Speedo support in Xfont */
-#undef XFONT_SPEEDO
-
 /* Define as 1 if you have builtin font support in Xfont */
 #undef XFONT_BUILTINS
 

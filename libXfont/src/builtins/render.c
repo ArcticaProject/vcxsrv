@@ -50,7 +50,7 @@ BuiltinOpenBitmap (FontPathElementPtr fpe, FontPtr *ppFont, int	flags,
     file = BuiltinFileOpen (fileName);
     if (!file)
 	return BadFontName;
-    pFont = (FontPtr) xalloc(sizeof(FontRec));
+    pFont = malloc(sizeof(FontRec));
     if (!pFont) {
 	BuiltinFileClose (file, 0);
 	return AllocError;
@@ -69,7 +69,7 @@ BuiltinOpenBitmap (FontPathElementPtr fpe, FontPtr *ppFont, int	flags,
 
     BuiltinFileClose (file, 0);
     if (ret != Successful)
-	xfree(pFont);
+	free(pFont);
     else
 	*ppFont = pFont;
     return ret;

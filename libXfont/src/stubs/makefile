@@ -7,7 +7,6 @@ CSRCS = 		\
 	errorf.c		\
 	fatalerror.c		\
 	findoldfnt.c		\
-	fontmod.c		\
 	getcres.c		\
 	getdefptsize.c		\
 	getnewfntcid.c		\
@@ -18,8 +17,7 @@ CSRCS = 		\
 	servclient.c		\
 	setfntauth.c		\
 	stfntcfnt.c		\
-	stubs.h			\
-	xpstubs.c
+	stubs.h	
 
 CSRCS:=$(filter-out %.h,$(CSRCS))
 

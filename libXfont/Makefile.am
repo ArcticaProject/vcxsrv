@@ -31,7 +31,6 @@ libXfontinclude_HEADERS = \
 	include/X11/fonts/fntfilst.h \
 	include/X11/fonts/fontencc.h \
 	include/X11/fonts/fontmisc.h \
-	include/X11/fonts/fontmod.h  \
 	include/X11/fonts/fontshow.h \
 	include/X11/fonts/fontutil.h \
 	include/X11/fonts/fontxlfd.h \
@@ -44,7 +43,7 @@ nodist_libXfontinclude_HEADERS = \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xfont.pc
 
-EXTRA_DIST = xfont.pc.in autogen.sh include/X11/fonts/fontconf.h.in
+EXTRA_DIST = xfont.pc.in ChangeLog include/X11/fonts/fontconf.h.in
 
 .PHONY: ChangeLog
 

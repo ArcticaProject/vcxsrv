@@ -43,65 +43,11 @@ from The Open Group.
 
 #ifdef __SUNPRO_C
 #pragma weak serverGeneration
-#pragma weak Xalloc
-#pragma weak Xrealloc
-#pragma weak Xfree
-#pragma weak Xcalloc
-#pragma weak CopyISOLatin1Lowered
 #pragma weak register_fpe_functions
 #endif
 
 /* make sure everything initializes themselves at least once */
 weak long serverGeneration = 1;
-
-weak void *
-Xalloc (unsigned long m)
-{
-    return malloc (m);
-}
-
-weak void *
-Xrealloc (void *n, unsigned long m)
-{
-    if (!n)
-	return malloc (m);
-    else
-	return realloc (n, m);
-}
-
-weak void
-Xfree (void *n)
-{
-    if (n)
-	free (n);
-}
-
-weak void *
-Xcalloc (unsigned long n)
-{
-    return calloc (n, 1);
-}
-
-weak void
-CopyISOLatin1Lowered (char *dst, char *src, int len)
-{
-    register unsigned char *dest, *source;
-
-    for (dest = (unsigned char *)dst, source = (unsigned char *)src;
-	 *source && len > 0;
-	 source++, dest++, len--)
-    {
-	if ((*source >= XK_A) && (*source <= XK_Z))
-	    *dest = *source + (XK_a - XK_A);
-	else if ((*source >= XK_Agrave) && (*source <= XK_Odiaeresis))
-	    *dest = *source + (XK_agrave - XK_Agrave);
-	else if ((*source >= XK_Ooblique) && (*source <= XK_Thorn))
-	    *dest = *source + (XK_oslash - XK_Ooblique);
-	else
-	    *dest = *source;
-    }
-    *dest = '\0';
-}
 
 weak void
 register_fpe_functions (void)

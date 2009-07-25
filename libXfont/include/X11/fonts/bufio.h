@@ -34,13 +34,6 @@ from The Open Group.
 
 #include <X11/Xfuncproto.h>
 
-#ifdef TEST
-
-#define xalloc(s)   malloc(s)
-#define xfree(s)    free(s)
-
-#endif
-
 #define BUFFILESIZE	8192
 #define BUFFILEEOF	-1
 

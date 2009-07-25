@@ -1,5 +1,3 @@
-/* $Xorg: register.c,v 1.4 2001/02/09 02:04:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1994, 1998  The Open Group
@@ -25,13 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/font/fontfile/register.c,v 1.14 2001/01/17 19:43:30 dawes Exp $ */
-
-/*
- * This is in a separate source file so that small programs
- * such as mkfontdir that want to use the fontfile utilities don't
- * end up dragging in code from all the renderers, which is not small.
- */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -42,7 +33,6 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/fonts/fontmisc.h>
 #include <X11/fonts/fntfilst.h>
 #include <X11/fonts/bitmap.h>
-#include <X11/fonts/fontmod.h>
 
 /*
  * Translate monolithic build symbols to modular build symbols.
@@ -51,72 +41,20 @@ in this Software without prior written authorization from The Open Group.
  * with other packages.
  */
 
-#ifndef CRAY
-# ifdef BUILD_SPEEDO
-#  define XFONT_SPEEDO 1
-# endif
-# ifdef BUILD_TYPE1
-#  define XFONT_TYPE1 1
-# endif
-#endif
-
 #ifdef BUILD_FREETYPE
 # define XFONT_FREETYPE 1
 #endif
 
-/* Font renderers to initialize when not linked into something like
-   Xorg that provides its own module configuration options */
-static const FontModule builtinFontModuleList[] = {
-#ifdef XFONT_SPEEDO
-    {
-	SpeedoRegisterFontFileFunctions,
-	"speedo",
-	NULL
-    },
-#endif
-#ifdef XFONT_TYPE1
-    {
-	Type1RegisterFontFileFunctions,
-	"type1",
-	NULL
-    },
-#endif
-#ifdef XFONT_FREETYPE    
-    {
-	FreeTypeRegisterFontFileFunctions,
-	"freetype",
-	NULL
-    },
-#endif
-    /* List terminator - must be last entry */
-    {	NULL, NULL, NULL }
-};
-
 void
 FontFileRegisterFpeFunctions(void)
 {
-    const FontModule *fmlist = builtinFontModuleList;
-
 #ifdef XFONT_BITMAP
     /* bitmap is always builtin to libXfont now */
     BitmapRegisterFontFileFunctions ();
 #endif
-
-#ifdef LOADABLEFONTS
-    if (FontModuleList) {
-	fmlist = FontModuleList;
-    }
-#endif    
-
-    if (fmlist) {
-	int i;
-
-	for (i = 0; fmlist[i].name; i++) {
-	    if (fmlist[i].initFunc) {
-		fmlist[i].initFunc();
-	    }
-	}
-    }
+#ifdef XFONT_FREETYPE
+    FreeTypeRegisterFontFileFunctions();
+#endif
     
     FontFileRegisterLocalFpeFunctions ();
     CatalogueRegisterLocalFpeFunctions ();

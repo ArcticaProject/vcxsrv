@@ -37,11 +37,7 @@ from The Open Group.
 #define _BITMAP_H_
 
 #include <X11/fonts/fntfilio.h>
-#ifndef FONTMODULE
 #include <stdio.h>  /* just for NULL */
-#else
-#include "xf86_ansic.h"
-#endif
 
 /*
  * Internal format used to store bitmap fonts
@@ -94,7 +90,6 @@ extern Bool bitmapAddInkMetrics ( FontPtr pFont );
 extern int bitmapComputeWeight ( FontPtr pFont );
 
 extern void BitmapRegisterFontFileFunctions ( void );
-extern int BitmapGetRenderIndex ( FontRendererPtr renderer );
 
 extern int BitmapOpenScalable ( FontPathElementPtr fpe, FontPtr *pFont, 
 				int flags, FontEntryPtr entry, char *fileName,

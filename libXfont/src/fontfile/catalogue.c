@@ -27,15 +27,12 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include <X11/Xwindows.h>
 #include <X11/fonts/fntfilst.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef _MSC_VER
-#include <direct.h>
-#else
 #include <dirent.h>
 #include <unistd.h>
-#endif
 
 static const char CataloguePrefix[] = "catalogue:";
 
@@ -65,8 +62,7 @@ CatalogueAddFPE (CataloguePtr cat, FontPathElementPtr fpe)
 	else
 	    cat->fpeAlloc *= 2;
 	
-	new = xrealloc(cat->fpeList,
-		       cat->fpeAlloc * sizeof(FontPathElementPtr));
+	new = realloc(cat->fpeList, cat->fpeAlloc * sizeof(FontPathElementPtr));
 	if (new == NULL)
 	    return AllocError;
 
@@ -119,8 +115,8 @@ CatalogueUnrefFPEs (FontPathElementPtr fpe)
 	if (subfpe->refcount == 0)
 	{
 	    FontFileFreeFPE (subfpe);
-	    xfree(subfpe->name);
-	    xfree(subfpe);
+	    free(subfpe->name);
+	    free(subfpe);
 	}
     }
 
@@ -139,10 +135,8 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
     FontPathElementPtr	subfpe;
     struct stat		statbuf;
     const char		*path;
-#ifndef _MSC_VER
     DIR			*dir;
     struct dirent	*entry;
-#endif
     int			len;
     int			pathlen;
 
@@ -153,17 +147,15 @@ CatalogueRescan (FontPathElementPtr fpe, Bool forceScan)
     if ((forceScan == FALSE) && (statbuf.st_mtime <= cat->mtime))
 	return Successful;
 
-#ifdef _MSC_VER
-__asm int 3;
-#else
-     dir = opendir(path);
+    dir = opendir(path);
     if (dir == NULL)
     {
-	xfree(cat);
+	free(cat);
 	return BadFontPath;
     }
 
     CatalogueUnrefFPEs (fpe);
+    #ifndef _MSC_VER
     while (entry = readdir(dir), entry != NULL)
     {
 	snprintf(link, sizeof link, "%s/%s", path, entry->d_name);
@@ -189,7 +181,7 @@ __asm int 3;
 	    len += strlen(attrib);
 	}
 
-	subfpe = xalloc(sizeof *subfpe);
+	subfpe = malloc(sizeof *subfpe);
 	if (subfpe == NULL)
 	    continue;
 
@@ -199,10 +191,10 @@ __asm int 3;
 	 * (which uses font->fpe->type) goes to CatalogueCloseFont. */
 	subfpe->type = fpe->type;
 	subfpe->name_length = len;
-	subfpe->name = xalloc (len + 1);
+	subfpe->name = malloc (len + 1);
 	if (subfpe == NULL)
 	{
-	    xfree(subfpe);
+	    free(subfpe);
 	    continue;
 	}
 
@@ -216,21 +208,22 @@ __asm int 3;
 
 	if (FontFileInitFPE (subfpe) != Successful)
 	{
-	    xfree(subfpe->name);
-	    xfree(subfpe);
+	    free(subfpe->name);
+	    free(subfpe);
 	    continue;
 	}
 
 	if (CatalogueAddFPE(cat, subfpe) != Successful)
 	{
 	    FontFileFreeFPE (subfpe);
-	    xfree(subfpe);
+	    free(subfpe);
 	    continue;
 	}
     }
+    #endif
 
     closedir(dir);
-#endif
+
     qsort(cat->fpeList,
 	  cat->fpeCount, sizeof cat->fpeList[0], ComparePriority);
 
@@ -244,7 +237,7 @@ CatalogueInitFPE (FontPathElementPtr fpe)
 {
     CataloguePtr	cat;
 
-    cat = (CataloguePtr) xalloc(sizeof *cat);
+    cat = malloc(sizeof *cat);
     if (cat == NULL)
 	return AllocError;
 
@@ -280,8 +273,8 @@ CatalogueFreeFPE (FontPathElementPtr fpe)
 	return FontFileFreeFPE (fpe);
 
     CatalogueUnrefFPEs (fpe);
-    xfree(cat->fpeList);
-    xfree(cat);
+    free(cat->fpeList);
+    free(cat);
 
     return Successful;
 }
@@ -365,8 +358,7 @@ CatalogueStartListFonts(pointer client, FontPathElementPtr fpe,
 
     CatalogueRescan (fpe, FALSE);
 
-    data = (LFWIDataPtr) xalloc (sizeof *data +
-				 sizeof data->privates[0] * cat->fpeCount);
+    data = malloc (sizeof *data + sizeof data->privates[0] * cat->fpeCount);
     if (!data)
 	return AllocError;
     data->privates = (pointer *) (data + 1);
@@ -386,7 +378,7 @@ CatalogueStartListFonts(pointer client, FontPathElementPtr fpe,
  bail:
     for (j = 0; j < i; j++)
 	/* FIXME: we have no way to free the per-fpe privates. */;
-    xfree (data);
+    free (data);
 
     return AllocError;
 }
@@ -411,7 +403,7 @@ CatalogueListNextFontWithInfo(pointer client, FontPathElementPtr fpe,
 
     if (data->current == cat->fpeCount)
     {
-	xfree(data);
+	free(data);
 	return BadFontName;
     }
 
@@ -448,7 +440,7 @@ CatalogueListNextFontOrAlias(pointer client, FontPathElementPtr fpe,
 
     if (data->current == cat->fpeCount)
     {
-	xfree(data);
+	free(data);
 	return BadFontName;
     }
 

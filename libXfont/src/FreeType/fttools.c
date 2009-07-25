@@ -27,14 +27,8 @@
 #include <config.h>
 #endif
 #include <X11/fonts/fontmisc.h>
-#ifndef FONTMODULE
 #include <ctype.h>
 #include <string.h>
-#else
-#include "Xmd.h"
-#include "Xdefs.h"
-#include "xf86_ansic.h"
-#endif
 
 #include <X11/fonts/font.h>
 #include <ft2build.h>

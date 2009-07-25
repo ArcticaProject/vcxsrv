@@ -34,14 +34,8 @@ THE SOFTWARE.
 #endif
 #include <X11/fonts/fontmisc.h>
 
-#ifndef FONTMODULE
 #include <string.h>
 #include <math.h>
-#else
-#include "Xmd.h"
-#include "Xdefs.h"
-#include "xf86_ansic.h"
-#endif
 #include <ctype.h>
 
 #include <X11/fonts/fntfilst.h>
@@ -200,24 +194,22 @@ FreeTypeOpenFace(FTFacePtr *facep, char *FTFileName, char *realFileName, int fac
     }
 
     /* No cached match; need to make a new one */
-    face = (FTFacePtr)xalloc(sizeof(FTFaceRec));
-    if(face == NULL) {
+    face = calloc(1, sizeof(FTFaceRec));
+    if (face == NULL) {
         return AllocError;
     }
-    memset(face, 0, sizeof(FTFaceRec));
 
-    face->filename = (char*)xalloc(strlen(FTFileName)+1);
-    if(face->filename == NULL) {
-        xfree(face);
+    face->filename = strdup(FTFileName);
+    if (face->filename == NULL) {
+        free(face);
         return AllocError;
     }
-    strcpy(face->filename, FTFileName);
 
     ftrc = FT_New_Face(ftypeLibrary, realFileName, faceNumber, &face->face);
     if(ftrc != 0) {
         ErrorF("FreeType: couldn't open face %s: %d\n", FTFileName, ftrc);
-        xfree(face->filename);
-        xfree(face);
+        free(face->filename);
+        free(face);
         return BadFontName;
     }
 
@@ -263,8 +255,8 @@ FreeTypeFreeFace(FTFacePtr face)
         }
         MUMBLE1("Closing face: %s\n", face->filename);
         FT_Done_Face(face->face);
-        xfree(face->filename);
-        xfree(face);
+        free(face->filename);
+        free(face);
     }
 }
 
@@ -423,7 +415,7 @@ FreeTypeOpenInstance(FTInstancePtr *instance_return, FTFacePtr face,
     }
 
     /* None matching found */
-    instance = (FTInstancePtr)xalloc(sizeof(FTInstanceRec));
+    instance = malloc(sizeof(FTInstanceRec));
     if(instance == NULL) {
         return AllocError;
     }
@@ -458,7 +450,7 @@ FreeTypeOpenInstance(FTInstancePtr *instance_return, FTFacePtr face,
     ftrc = FT_New_Size(instance->face->face, &instance->size);
     if(ftrc != 0) {
         ErrorF("FreeType: couldn't create size object: %d\n", ftrc);
-        xfree(instance);
+        free(instance);
         return FTtoXReturnCode(ftrc);
     }
     FreeTypeActivateInstance(instance);
@@ -471,14 +463,14 @@ FreeTypeOpenInstance(FTInstancePtr *instance_return, FTFacePtr face,
         int xsize, ysize;
         xrc = FTFindSize(face->face, trans, &xsize, &ysize);
         if(xrc != Successful) {
-            xfree(instance);
+            free(instance);
             return xrc;
         }
         ftrc = FT_Set_Pixel_Sizes(instance->face->face, xsize, ysize);
     }
     if(ftrc != 0) {
         FT_Done_Size(instance->size);
-        xfree(instance);
+        free(instance);
         return FTtoXReturnCode(ftrc);
     }
 
@@ -575,10 +567,10 @@ FreeTypeFreeInstance(FTInstancePtr instance)
         FreeTypeFreeFace(instance->face);
 
         if(instance->charcellMetrics) {
-            xfree(instance->charcellMetrics);
+            free(instance->charcellMetrics);
         }
         if(instance->forceConstantMetrics) {
-            xfree(instance->forceConstantMetrics);
+            free(instance->forceConstantMetrics);
         }
         if(instance->glyphs) {
             for(i = 0; i < iceil(instance->nglyphs, FONTSEGMENTSIZE); i++) {
@@ -586,21 +578,21 @@ FreeTypeFreeInstance(FTInstancePtr instance)
                     for(j = 0; j < FONTSEGMENTSIZE; j++) {
                         if(instance->available[i][j] == 
                            FT_AVAILABLE_RASTERISED)
-                            xfree(instance->glyphs[i][j].bits);
+                            free(instance->glyphs[i][j].bits);
                     }
-                    xfree(instance->glyphs[i]);
+                    free(instance->glyphs[i]);
                 }
             }
-            xfree(instance->glyphs);
+            free(instance->glyphs);
         }
         if(instance->available) {
             for(i = 0; i < iceil(instance->nglyphs, FONTSEGMENTSIZE); i++) {
                 if(instance->available[i])
-                    xfree(instance->available[i]);
+                    free(instance->available[i]);
             }
-            xfree(instance->available);
+            free(instance->available);
         }
-        xfree(instance);
+        free(instance);
     }
 }
 
@@ -623,38 +615,30 @@ FreeTypeInstanceFindGlyph(unsigned idx_in, int flags, FTInstancePtr instance,
     }
   
     if(*available == NULL) {
-        *available = 
-            (int**)xalloc(sizeof(int*) * iceil(instance->nglyphs, 
-                                               FONTSEGMENTSIZE));
+        *available = calloc(iceil(instance->nglyphs, FONTSEGMENTSIZE),
+			    sizeof(int *));
         if(*available == NULL)
             return AllocError;
-        memset((char*)(*available), 0, 
-               sizeof(int*) * iceil(instance->nglyphs, FONTSEGMENTSIZE));
     }
 
     segment = ifloor(idx, FONTSEGMENTSIZE);
     offset = idx - segment * FONTSEGMENTSIZE;
 
     if((*available)[segment] == NULL) {
-        (*available)[segment] = (int*)xalloc(sizeof(int) * FONTSEGMENTSIZE);
+        (*available)[segment] = calloc(FONTSEGMENTSIZE, sizeof(int *));
         if((*available)[segment] == NULL)
             return AllocError;
-        memset((char*)(*available)[segment], 0, sizeof(int) * FONTSEGMENTSIZE);
     }
 
     if(*glyphs == NULL) {
-        *glyphs = (CharInfoPtr*)xalloc(sizeof(CharInfoPtr)*
-                                       iceil(instance->nglyphs, 
-                                             FONTSEGMENTSIZE));
+        *glyphs = calloc(iceil(instance->nglyphs, FONTSEGMENTSIZE),
+			 sizeof(CharInfoPtr));
         if(*glyphs == NULL)
             return AllocError;
-        memset((char*)(*glyphs), 0, 
-               sizeof(CharInfoPtr)*iceil(instance->nglyphs, FONTSEGMENTSIZE));
     }
 
     if((*glyphs)[segment] == NULL) {
-        (*glyphs)[segment]=
-            (CharInfoPtr)xalloc(sizeof(CharInfoRec) * FONTSEGMENTSIZE);
+        (*glyphs)[segment] = malloc(sizeof(CharInfoRec) * FONTSEGMENTSIZE);
         if((*glyphs)[segment] == NULL)
             return AllocError;
     }
@@ -1378,10 +1362,9 @@ FreeTypeRasteriseGlyph(unsigned idx, int flags, CharInfoPtr tgp,
 
     bpr = (((wd + (instance->bmfmt.glyph<<3) - 1) >> 3) & 
            -instance->bmfmt.glyph);
-    raster = (char*)xalloc(ht * bpr);
+    raster = calloc(1, ht * bpr);
     if(raster == NULL) 
 	return AllocError;
-    memset(raster, 0, ht * bpr);
 
     tgp->bits = raster;
 
@@ -1540,10 +1523,10 @@ FreeTypeFreeFont(FTFontPtr font)
 {
     FreeTypeFreeInstance(font->instance);
     if(font->ranges)
-        xfree(font->ranges);
+        free(font->ranges);
     if(font->dummy_char.bits)
-	xfree(font->dummy_char.bits);
-    xfree(font);
+	free(font->dummy_char.bits);
+    free(font);
 }
 
 /* Free a font.  If freeProps is 0, don't free the properties. */
@@ -1558,8 +1541,8 @@ FreeTypeFreeXFont(FontPtr pFont, int freeProps)
             FreeTypeFreeFont(tf);
         }
         if(freeProps && pFont->info.nprops>0) {
-            xfree(pFont->info.isStringProp);
-            xfree(pFont->info.props);
+            free(pFont->info.isStringProp);
+            free(pFont->info.props);
         }
         DestroyFontRec(pFont);
     }
@@ -1639,13 +1622,13 @@ FreeTypeAddProperties(FTFontPtr font, FontScalablePtr vals, FontInfoPtr info,
         ( (font_properties && (post || t1info)) ? 3 : 0 ) +
         2;                      /* type */
     
-    info->props = (FontPropPtr)xalloc(maxprops * sizeof(FontPropRec));
+    info->props = malloc(maxprops * sizeof(FontPropRec));
     if(info->props == NULL)
         return AllocError;
     
-    info->isStringProp = (char*)xalloc(maxprops);
+    info->isStringProp = malloc(maxprops);
     if(info->isStringProp == NULL) {
-        xfree(info->props);
+        free(info->props);
         return AllocError;
     }
 
@@ -2139,7 +2122,7 @@ restrict_code_range_by_str(int count,unsigned short *refFirstCol,
         fflush(stderr);
 #endif
         nRanges++;
-        ranges = (fsRange *)xrealloc(ranges, nRanges*sizeof(*ranges));
+        ranges = realloc(ranges, nRanges*sizeof(*ranges));
         if (NULL == ranges)
             break;
         {
@@ -2170,7 +2153,7 @@ restrict_code_range_by_str(int count,unsigned short *refFirstCol,
             }
             result=i;
         }
-        xfree(ranges);
+        free(ranges);
     }
     return result;
 }
@@ -2214,7 +2197,7 @@ FreeTypeSetUpTTCap( char *fileName, FontScalablePtr vals,
 		int dirLen = p1-fileName;
 		int baseLen = fileName+len - p2 -1;
 		
-		*dynStrRealFileName = (char *)xalloc(dirLen+baseLen+1);
+		*dynStrRealFileName = malloc(dirLen+baseLen+1);
 		if( *dynStrRealFileName == NULL ) {
 		    result = AllocError;
 		    goto quit;
@@ -2284,7 +2267,7 @@ FreeTypeSetUpTTCap( char *fileName, FontScalablePtr vals,
 	if( beginptr && 0 < *face_number ) {
 	    char *slash;
 	    *dynStrFTFileName = 	/* add ->  ':'+strlen0+':'+strlen1+'\0' */
-		(char *)xalloc(1+strlen(beginptr)+1+strlen(*dynStrRealFileName)+1);
+		malloc(1+strlen(beginptr)+1+strlen(*dynStrRealFileName)+1);
 	    if( *dynStrFTFileName == NULL ){
 		result = AllocError;
 		goto quit;
@@ -2309,7 +2292,7 @@ FreeTypeSetUpTTCap( char *fileName, FontScalablePtr vals,
 	    }
 	}
 	else{
-	    *dynStrFTFileName = (char *)xalloc(strlen(*dynStrRealFileName)+1);
+	    *dynStrFTFileName = malloc(strlen(*dynStrRealFileName)+1);
 	    if( *dynStrFTFileName == NULL ){
 		result = AllocError;
 		goto quit;
@@ -2829,7 +2812,7 @@ FreeTypeLoadFont(FTFontPtr font, FontInfoPtr info, FTFacePtr face,
     font->nranges = vals->nranges;
     font->ranges = 0;
     if(font->nranges) {
-        font->ranges = (fsRange*)xalloc(vals->nranges*sizeof(fsRange));
+        font->ranges = malloc(vals->nranges*sizeof(fsRange));
         if(font->ranges == NULL) 
             return AllocError;
         memcpy((char*)font->ranges, (char*)vals->ranges,
@@ -3157,12 +3140,11 @@ FreeTypeLoadXFont(char *fileName,
     char *dynStrFTFileName     = NULL;	/* :1:foo.ttc */
     char *dynStrTTCapCodeRange = NULL;
 
-    font = (FTFontPtr)xalloc(sizeof(FTFontRec));
+    font = calloc(1, sizeof(FTFontRec));
     if(font == NULL) {
         xrc = AllocError;
         goto quit;
     }
-    memset(font, 0, sizeof(FTFontRec));
 
     xrc = FreeTypeSetUpTTCap(fileName, vals, 
 			     &dynStrRealFileName, &dynStrFTFileName,
@@ -3467,7 +3449,7 @@ FreeTypeLoadXFont(char *fileName,
 	}
 
 	/* header's metrics */
-	instance->charcellMetrics = (xCharInfo*)xalloc(sizeof(xCharInfo));
+	instance->charcellMetrics = malloc(sizeof(xCharInfo));
 	if(instance->charcellMetrics == NULL) {
 	    xrc = AllocError;
 	    goto quit;
@@ -3498,7 +3480,7 @@ FreeTypeLoadXFont(char *fileName,
             int c = ins_ttcap->force_c_representative_metrics_char_code;
 	    /* header's metrics */
 	    if( instance->forceConstantMetrics == NULL ){
-		instance->forceConstantMetrics = (xCharInfo*)xalloc(sizeof(xCharInfo));
+		instance->forceConstantMetrics = malloc(sizeof(xCharInfo));
 		if(instance->forceConstantMetrics == NULL) {
 		    xrc = AllocError;
 		    goto quit;
@@ -3638,9 +3620,9 @@ FreeTypeLoadXFont(char *fileName,
     }
 
  quit:
-    if ( dynStrTTCapCodeRange ) xfree(dynStrTTCapCodeRange);
-    if ( dynStrFTFileName ) xfree(dynStrFTFileName);
-    if ( dynStrRealFileName ) xfree(dynStrRealFileName);
+    if ( dynStrTTCapCodeRange ) free(dynStrTTCapCodeRange);
+    if ( dynStrFTFileName ) free(dynStrFTFileName);
+    if ( dynStrRealFileName ) free(dynStrRealFileName);
     if ( xrc != Successful ) {
 	if( font ){
 	    if( face && font->instance == NULL ) FreeTypeFreeFace(face);
@@ -3769,9 +3751,8 @@ FreeTypeGetGlyphs(FontPtr pFont, unsigned long count, unsigned char *chars,
 		else ht=ht_actual;
 		bpr = (((wd + (tf->instance->bmfmt.glyph<<3) - 1) >> 3) & 
 		       -tf->instance->bmfmt.glyph);
-		raster = (char*)xalloc(ht * bpr);
+		raster = calloc(1, ht * bpr);
 		if(raster) {
-		    memset(raster, 0, ht * bpr);
 		    tf->dummy_char.bits = raster;
 		    *gp++ = &tf->dummy_char;
 		}
@@ -3917,27 +3898,15 @@ FreeTypeGetInfoScalable(FontPathElementPtr fpe, FontInfoPtr info,
 static FontRendererRec renderers[] = {
     {".ttf", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".TTF", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
     {".ttc", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".TTC", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
     {".otf", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".OTF", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
     {".otc", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".OTC", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
     {".pfa", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".PFA", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
     {".pfb", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".PFB", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
 };
 static int num_renderers = sizeof(renderers) / sizeof(renderers[0]);
@@ -3945,11 +3914,7 @@ static int num_renderers = sizeof(renderers) / sizeof(renderers[0]);
 static FontRendererRec alt_renderers[] = {
     {".bdf", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".BDF", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
     {".pcf", 4, 0, FreeTypeOpenScalable, 0,
-     FreeTypeGetInfoScalable, 0, CAPABILITIES},
-    {".PCF", 4, 0, FreeTypeOpenScalable, 0,
      FreeTypeGetInfoScalable, 0, CAPABILITIES},
 };
 

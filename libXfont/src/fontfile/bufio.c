@@ -51,7 +51,7 @@ BufFileCreate (char *private,
 {
     BufFilePtr	f;
 
-    f = (BufFilePtr) xalloc (sizeof *f);
+    f = malloc (sizeof *f);
     if (!f)
 	return 0;
     f->private = private;
@@ -125,7 +125,7 @@ BufFileRawClose (BufFilePtr f, int doClose)
 BufFilePtr
 BufFileOpenRead (int fd)
 {
-#if defined(__UNIXOS2__) || defined (WIN32)
+#if defined (WIN32)
     /* hv: I'd bet WIN32 has the same effect here */
     setmode(fd,O_BINARY);
 #endif
@@ -160,7 +160,7 @@ BufFileOpenWrite (int fd)
 {
     BufFilePtr	f;
 
-#if defined(__UNIXOS2__) || defined(WIN32)
+#if defined(WIN32)
     /* hv: I'd bet WIN32 has the same effect here */
     setmode(fd,O_BINARY);
 #endif
@@ -201,6 +201,6 @@ BufFileClose (BufFilePtr f, int doClose)
 {
     int ret;
     ret = (*f->close) (f, doClose);
-    xfree (f);
+    free (f);
     return ret;
 }

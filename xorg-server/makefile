@@ -48,9 +48,7 @@ INCLUDELIBFILES = afb\$(OBJDIR)\libafb.lib \
  $(MHMAKECONF)\libx11\modules\lc\gen\$(OBJDIR)\liblcGenConvLoad.lib \
  $(MHMAKECONF)\zlib\$(OBJDIR)\libz.lib \
  $(MHMAKECONF)\libx11\modules\lc\xlocale\$(OBJDIR)\libxlocale.lib \
- $(MHMAKECONF)\libXfont\src\Type1\$(OBJDIR)\libtype1.lib \
  $(MHMAKECONF)\libfontenc\src\$(OBJDIR)\libfontenc.lib \
- $(MHMAKECONF)\libXfont\src\Speedo\$(OBJDIR)\libspeedo.lib \
  $(MHMAKECONF)\libxfont\src\freetype\$(OBJDIR)\libft.lib \
  $(MHMAKECONF)\libxfont\src\stubs\$(OBJDIR)\libstubs.lib
 
