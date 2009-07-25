@@ -4,8 +4,6 @@
 
       - Use of fbCompositeOver_x888x8x8888sse2()
 
-      - Use pixmanFillsse2 and pixmanBltsse2
-
   - Update the RLEASING file
 
   - Things to keep in mind if breaking ABI:
@@ -15,6 +13,8 @@
       - X server will require 16.16 essentially forever. Can we get
         the required precision by simply adding offset_x/y to the
         relevant rendering API?
+
+      - Get rid of workaround for X server bug.
 
       - pixman_image_set_indexed() should copy its argument, and X
         should be ported over to use a pixman_image as the
@@ -177,6 +177,8 @@
 
 
 done:
+
+- Use pixmanFillsse2 and pixmanBltsse2
 
 - Be consistent about calling sse2 sse2
 

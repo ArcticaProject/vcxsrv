@@ -32,7 +32,18 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@HAVE_GTK_TRUE@noinst_PROGRAMS = $(am__EXEEXT_1)
+@HAVE_GTK_TRUE@am__append_1 = \
+@HAVE_GTK_TRUE@	clip-test		\
+@HAVE_GTK_TRUE@	clip-in			\
+@HAVE_GTK_TRUE@	composite-test		\
+@HAVE_GTK_TRUE@	gradient-test		\
+@HAVE_GTK_TRUE@	alpha-test		\
+@HAVE_GTK_TRUE@	screen-test		\
+@HAVE_GTK_TRUE@	convolution-test	\
+@HAVE_GTK_TRUE@	trap-test
+
+@HAVE_GTK_TRUE@am__append_2 = $(GTK_CFLAGS)
+noinst_PROGRAMS = $(am__EXEEXT_2)
 subdir = test
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -42,34 +53,74 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-@HAVE_GTK_TRUE@am__EXEEXT_1 = clip-test$(EXEEXT) \
+@HAVE_GTK_TRUE@am__EXEEXT_1 = clip-test$(EXEEXT) clip-in$(EXEEXT) \
 @HAVE_GTK_TRUE@	composite-test$(EXEEXT) gradient-test$(EXEEXT) \
-@HAVE_GTK_TRUE@	region-test$(EXEEXT) fetch-test$(EXEEXT)
+@HAVE_GTK_TRUE@	alpha-test$(EXEEXT) screen-test$(EXEEXT) \
+@HAVE_GTK_TRUE@	convolution-test$(EXEEXT) trap-test$(EXEEXT)
+am__EXEEXT_2 = region-test$(EXEEXT) scaling-test$(EXEEXT) \
+	fetch-test$(EXEEXT) oob-test$(EXEEXT) window-test$(EXEEXT) \
+	trap-crasher$(EXEEXT) $(am__EXEEXT_1)
 PROGRAMS = $(noinst_PROGRAMS)
-clip_test_SOURCES = clip-test.c
-clip_test_OBJECTS = clip-test.$(OBJEXT)
+am__alpha_test_SOURCES_DIST = alpha-test.c utils.c utils.h
+@HAVE_GTK_TRUE@am_alpha_test_OBJECTS = alpha-test.$(OBJEXT) \
+@HAVE_GTK_TRUE@	utils.$(OBJEXT)
+alpha_test_OBJECTS = $(am_alpha_test_OBJECTS)
 am__DEPENDENCIES_1 =
-@HAVE_GTK_TRUE@clip_test_DEPENDENCIES =  \
-@HAVE_GTK_TRUE@	$(top_builddir)/pixman/libpixman-1.la \
+@HAVE_GTK_TRUE@am__DEPENDENCIES_2 = $(TEST_LDADD) \
 @HAVE_GTK_TRUE@	$(am__DEPENDENCIES_1)
-composite_test_SOURCES = composite-test.c
-composite_test_OBJECTS = composite-test.$(OBJEXT)
-@HAVE_GTK_TRUE@composite_test_DEPENDENCIES =  \
-@HAVE_GTK_TRUE@	$(top_builddir)/pixman/libpixman-1.la \
-@HAVE_GTK_TRUE@	$(am__DEPENDENCIES_1)
+@HAVE_GTK_TRUE@alpha_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
+am__clip_in_SOURCES_DIST = clip-in.c utils.c utils.h
+@HAVE_GTK_TRUE@am_clip_in_OBJECTS = clip-in.$(OBJEXT) utils.$(OBJEXT)
+clip_in_OBJECTS = $(am_clip_in_OBJECTS)
+@HAVE_GTK_TRUE@clip_in_DEPENDENCIES = $(am__DEPENDENCIES_2)
+am__clip_test_SOURCES_DIST = clip-test.c utils.c utils.h
+@HAVE_GTK_TRUE@am_clip_test_OBJECTS = clip-test.$(OBJEXT) \
+@HAVE_GTK_TRUE@	utils.$(OBJEXT)
+clip_test_OBJECTS = $(am_clip_test_OBJECTS)
+@HAVE_GTK_TRUE@clip_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
+am__composite_test_SOURCES_DIST = composite-test.c utils.c utils.h
+@HAVE_GTK_TRUE@am_composite_test_OBJECTS = composite-test.$(OBJEXT) \
+@HAVE_GTK_TRUE@	utils.$(OBJEXT)
+composite_test_OBJECTS = $(am_composite_test_OBJECTS)
+@HAVE_GTK_TRUE@composite_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
+am__convolution_test_SOURCES_DIST = convolution-test.c utils.c utils.h
+@HAVE_GTK_TRUE@am_convolution_test_OBJECTS =  \
+@HAVE_GTK_TRUE@	convolution-test.$(OBJEXT) utils.$(OBJEXT)
+convolution_test_OBJECTS = $(am_convolution_test_OBJECTS)
+@HAVE_GTK_TRUE@convolution_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
 fetch_test_SOURCES = fetch-test.c
 fetch_test_OBJECTS = fetch-test.$(OBJEXT)
-@HAVE_GTK_TRUE@fetch_test_DEPENDENCIES =  \
-@HAVE_GTK_TRUE@	$(top_builddir)/pixman/libpixman-1.la
-gradient_test_SOURCES = gradient-test.c
-gradient_test_OBJECTS = gradient-test.$(OBJEXT)
-@HAVE_GTK_TRUE@gradient_test_DEPENDENCIES =  \
-@HAVE_GTK_TRUE@	$(top_builddir)/pixman/libpixman-1.la \
-@HAVE_GTK_TRUE@	$(am__DEPENDENCIES_1)
+fetch_test_DEPENDENCIES = $(TEST_LDADD)
+am__gradient_test_SOURCES_DIST = gradient-test.c utils.c utils.h
+@HAVE_GTK_TRUE@am_gradient_test_OBJECTS = gradient-test.$(OBJEXT) \
+@HAVE_GTK_TRUE@	utils.$(OBJEXT)
+gradient_test_OBJECTS = $(am_gradient_test_OBJECTS)
+@HAVE_GTK_TRUE@gradient_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
+oob_test_SOURCES = oob-test.c
+oob_test_OBJECTS = oob-test.$(OBJEXT)
+oob_test_DEPENDENCIES = $(TEST_LDADD)
 region_test_SOURCES = region-test.c
 region_test_OBJECTS = region-test.$(OBJEXT)
-@HAVE_GTK_TRUE@region_test_DEPENDENCIES =  \
-@HAVE_GTK_TRUE@	$(top_builddir)/pixman/libpixman-1.la
+region_test_DEPENDENCIES = $(TEST_LDADD)
+scaling_test_SOURCES = scaling-test.c
+scaling_test_OBJECTS = scaling-test.$(OBJEXT)
+scaling_test_DEPENDENCIES = $(TEST_LDADD)
+am__screen_test_SOURCES_DIST = screen-test.c utils.c utils.h
+@HAVE_GTK_TRUE@am_screen_test_OBJECTS = screen-test.$(OBJEXT) \
+@HAVE_GTK_TRUE@	utils.$(OBJEXT)
+screen_test_OBJECTS = $(am_screen_test_OBJECTS)
+@HAVE_GTK_TRUE@screen_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
+trap_crasher_SOURCES = trap-crasher.c
+trap_crasher_OBJECTS = trap-crasher.$(OBJEXT)
+trap_crasher_DEPENDENCIES = $(TEST_LDADD)
+am__trap_test_SOURCES_DIST = trap-test.c utils.c utils.h
+@HAVE_GTK_TRUE@am_trap_test_OBJECTS = trap-test.$(OBJEXT) \
+@HAVE_GTK_TRUE@	utils.$(OBJEXT)
+trap_test_OBJECTS = $(am_trap_test_OBJECTS)
+@HAVE_GTK_TRUE@trap_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
+window_test_SOURCES = window-test.c
+window_test_OBJECTS = window-test.$(OBJEXT)
+window_test_DEPENDENCIES = $(TEST_LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -82,16 +133,27 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = clip-test.c composite-test.c fetch-test.c gradient-test.c \
-	region-test.c
-DIST_SOURCES = clip-test.c composite-test.c fetch-test.c \
-	gradient-test.c region-test.c
+SOURCES = $(alpha_test_SOURCES) $(clip_in_SOURCES) \
+	$(clip_test_SOURCES) $(composite_test_SOURCES) \
+	$(convolution_test_SOURCES) fetch-test.c \
+	$(gradient_test_SOURCES) oob-test.c region-test.c \
+	scaling-test.c $(screen_test_SOURCES) trap-crasher.c \
+	$(trap_test_SOURCES) window-test.c
+DIST_SOURCES = $(am__alpha_test_SOURCES_DIST) \
+	$(am__clip_in_SOURCES_DIST) $(am__clip_test_SOURCES_DIST) \
+	$(am__composite_test_SOURCES_DIST) \
+	$(am__convolution_test_SOURCES_DIST) fetch-test.c \
+	$(am__gradient_test_SOURCES_DIST) oob-test.c region-test.c \
+	scaling-test.c $(am__screen_test_SOURCES_DIST) trap-crasher.c \
+	$(am__trap_test_SOURCES_DIST) window-test.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AR = @AR@
+ARM_NEON_CFLAGS = @ARM_NEON_CFLAGS@
+ARM_SIMD_CFLAGS = @ARM_SIMD_CFLAGS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -137,6 +199,7 @@ LT_VERSION_INFO = @LT_VERSION_INFO@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
 MMX_CFLAGS = @MMX_CFLAGS@
+MMX_LDFLAGS = @MMX_LDFLAGS@
 NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -147,6 +210,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PERL = @PERL@
+PIXMAN_TIMERS = @PIXMAN_TIMERS@
 PIXMAN_VERSION_MAJOR = @PIXMAN_VERSION_MAJOR@
 PIXMAN_VERSION_MICRO = @PIXMAN_VERSION_MICRO@
 PIXMAN_VERSION_MINOR = @PIXMAN_VERSION_MINOR@
@@ -156,6 +220,7 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SSE2_CFLAGS = @SSE2_CFLAGS@
+SSE2_LDFLAGS = @SSE2_LDFLAGS@
 STRIP = @STRIP@
 VERSION = @VERSION@
 VMX_CFLAGS = @VMX_CFLAGS@
@@ -208,21 +273,39 @@ sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@HAVE_GTK_TRUE@TESTPROGRAMS = \
-@HAVE_GTK_TRUE@	clip-test		\
-@HAVE_GTK_TRUE@	composite-test		\
-@HAVE_GTK_TRUE@	gradient-test		\
-@HAVE_GTK_TRUE@	region-test		\
-@HAVE_GTK_TRUE@	fetch-test
+TEST_LDADD = $(top_builddir)/pixman/libpixman-1.la
+INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman \
+	$(am__append_2)
+TESTPROGRAMS = region-test scaling-test fetch-test oob-test \
+	window-test trap-crasher $(am__append_1)
+fetch_test_LDADD = $(TEST_LDADD)
+region_test_LDADD = $(TEST_LDADD)
+scaling_test_LDADD = $(TEST_LDADD)
+trap_crasher_LDADD = $(TEST_LDADD)
+oob_test_LDADD = $(TEST_LDADD)
+window_test_LDADD = $(TEST_LDADD)
 
-@HAVE_GTK_TRUE@INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman $(GTK_CFLAGS)
-@HAVE_GTK_TRUE@composite_test_LDADD = $(top_builddir)/pixman/libpixman-1.la $(GTK_LIBS)
-@HAVE_GTK_TRUE@gradient_test_LDADD = $(top_builddir)/pixman/libpixman-1.la $(GTK_LIBS)
-@HAVE_GTK_TRUE@fetch_test_LDADD = $(top_builddir)/pixman/libpixman-1.la
-@HAVE_GTK_TRUE@region_test_LDADD = $(top_builddir)/pixman/libpixman-1.la
-@HAVE_GTK_TRUE@clip_test_LDADD = $(top_builddir)/pixman/libpixman-1.la $(GTK_LIBS)
+# GTK using test programs
+@HAVE_GTK_TRUE@GTK_LDADD = $(TEST_LDADD) $(GTK_LIBS)
+@HAVE_GTK_TRUE@gradient_test_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@gradient_test_SOURCES = gradient-test.c utils.c utils.h
+@HAVE_GTK_TRUE@alpha_test_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@alpha_test_SOURCES = alpha-test.c utils.c utils.h
+@HAVE_GTK_TRUE@composite_test_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@composite_test_SOURCES = composite-test.c utils.c utils.h
+@HAVE_GTK_TRUE@clip_test_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@clip_test_SOURCES = clip-test.c utils.c utils.h
+@HAVE_GTK_TRUE@clip_in_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@clip_in_SOURCES = clip-in.c utils.c utils.h
+@HAVE_GTK_TRUE@trap_test_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@trap_test_SOURCES = trap-test.c utils.c utils.h
+@HAVE_GTK_TRUE@screen_test_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@screen_test_SOURCES = screen-test.c utils.c utils.h
+@HAVE_GTK_TRUE@convolution_test_LDADD = $(GTK_LDADD)
+@HAVE_GTK_TRUE@convolution_test_SOURCES = convolution-test.c utils.c utils.h
 all: all-am
 
 .SUFFIXES:
@@ -263,21 +346,48 @@ clean-noinstPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
+alpha-test$(EXEEXT): $(alpha_test_OBJECTS) $(alpha_test_DEPENDENCIES) 
+	@rm -f alpha-test$(EXEEXT)
+	$(LINK) $(alpha_test_OBJECTS) $(alpha_test_LDADD) $(LIBS)
+clip-in$(EXEEXT): $(clip_in_OBJECTS) $(clip_in_DEPENDENCIES) 
+	@rm -f clip-in$(EXEEXT)
+	$(LINK) $(clip_in_OBJECTS) $(clip_in_LDADD) $(LIBS)
 clip-test$(EXEEXT): $(clip_test_OBJECTS) $(clip_test_DEPENDENCIES) 
 	@rm -f clip-test$(EXEEXT)
 	$(LINK) $(clip_test_OBJECTS) $(clip_test_LDADD) $(LIBS)
 composite-test$(EXEEXT): $(composite_test_OBJECTS) $(composite_test_DEPENDENCIES) 
 	@rm -f composite-test$(EXEEXT)
 	$(LINK) $(composite_test_OBJECTS) $(composite_test_LDADD) $(LIBS)
+convolution-test$(EXEEXT): $(convolution_test_OBJECTS) $(convolution_test_DEPENDENCIES) 
+	@rm -f convolution-test$(EXEEXT)
+	$(LINK) $(convolution_test_OBJECTS) $(convolution_test_LDADD) $(LIBS)
 fetch-test$(EXEEXT): $(fetch_test_OBJECTS) $(fetch_test_DEPENDENCIES) 
 	@rm -f fetch-test$(EXEEXT)
 	$(LINK) $(fetch_test_OBJECTS) $(fetch_test_LDADD) $(LIBS)
 gradient-test$(EXEEXT): $(gradient_test_OBJECTS) $(gradient_test_DEPENDENCIES) 
 	@rm -f gradient-test$(EXEEXT)
 	$(LINK) $(gradient_test_OBJECTS) $(gradient_test_LDADD) $(LIBS)
+oob-test$(EXEEXT): $(oob_test_OBJECTS) $(oob_test_DEPENDENCIES) 
+	@rm -f oob-test$(EXEEXT)
+	$(LINK) $(oob_test_OBJECTS) $(oob_test_LDADD) $(LIBS)
 region-test$(EXEEXT): $(region_test_OBJECTS) $(region_test_DEPENDENCIES) 
 	@rm -f region-test$(EXEEXT)
 	$(LINK) $(region_test_OBJECTS) $(region_test_LDADD) $(LIBS)
+scaling-test$(EXEEXT): $(scaling_test_OBJECTS) $(scaling_test_DEPENDENCIES) 
+	@rm -f scaling-test$(EXEEXT)
+	$(LINK) $(scaling_test_OBJECTS) $(scaling_test_LDADD) $(LIBS)
+screen-test$(EXEEXT): $(screen_test_OBJECTS) $(screen_test_DEPENDENCIES) 
+	@rm -f screen-test$(EXEEXT)
+	$(LINK) $(screen_test_OBJECTS) $(screen_test_LDADD) $(LIBS)
+trap-crasher$(EXEEXT): $(trap_crasher_OBJECTS) $(trap_crasher_DEPENDENCIES) 
+	@rm -f trap-crasher$(EXEEXT)
+	$(LINK) $(trap_crasher_OBJECTS) $(trap_crasher_LDADD) $(LIBS)
+trap-test$(EXEEXT): $(trap_test_OBJECTS) $(trap_test_DEPENDENCIES) 
+	@rm -f trap-test$(EXEEXT)
+	$(LINK) $(trap_test_OBJECTS) $(trap_test_LDADD) $(LIBS)
+window-test$(EXEEXT): $(window_test_OBJECTS) $(window_test_DEPENDENCIES) 
+	@rm -f window-test$(EXEEXT)
+	$(LINK) $(window_test_OBJECTS) $(window_test_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -285,11 +395,21 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/alpha-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clip-in.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clip-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/composite-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convolution-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fetch-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gradient-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oob-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/region-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scaling-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/screen-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trap-crasher.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trap-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/window-test.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -53,8 +53,8 @@ AC_PREREQ([2.57])
 #
 
 m4_define([pixman_major], 0)
-m4_define([pixman_minor], 12)
-m4_define([pixman_micro], 0)
+m4_define([pixman_minor], 15)
+m4_define([pixman_micro], 18)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -63,11 +63,18 @@ AM_INIT_AUTOMAKE([dist-bzip2])
 
 AM_CONFIG_HEADER(config.h)
 
+AC_CANONICAL_HOST
+
 AC_PROG_CC
 AC_PROG_LIBTOOL
 AC_CHECK_FUNCS([getisax])
 AC_C_BIGENDIAN
 AC_C_INLINE
+
+# Checks for Sun Studio compilers
+AC_CHECK_DECL([__SUNPRO_C], [SUNCC="yes"], [SUNCC="no"])
+AC_CHECK_DECL([__amd64], [AMD64_ABI="yes"], [AMD64_ABI="no"])
+
 # 
 # We ignore pixman_major in the version here because the major version should
 # always be encoded in the actual library name. Ie., the soname is:
@@ -94,10 +101,18 @@ AC_SUBST(LT_VERSION_INFO)
 
 changequote(,)dnl
 if test "x$GCC" = "xyes"; then
+
   case " $CFLAGS " in
   *[\ \	]-Wall[\ \	]*) ;;
   *) CFLAGS="$CFLAGS -Wall" ;;
-  esac fi changequote([,])dnl
+  esac 
+
+  case " $CFLAGS " in
+  *[\ \	]-fno-strict-aliasing[\ \	]*) ;;
+  *) CFLAGS="$CFLAGS -fno-strict-aliasing" ;;
+  esac
+
+fi changequote([,])dnl
 
 AC_PATH_PROG(PERL, perl, no)
 if test "x$PERL" = xno; then
@@ -141,12 +156,23 @@ AC_MSG_RESULT($have_sunstudio8)
 dnl ===========================================================================
 dnl Check for MMX
 
-MMX_CFLAGS="-mmmx -Winline"
+if test "x$MMX_CFLAGS" = "x" ; then
+   if test "x$SUNCC" = "xyes"; then
+      # Sun Studio doesn't have an -xarch=mmx flag, so we have to use sse
+      # but if we're building 64-bit, mmx & sse support is on by default and
+      # -xarch=sse throws an error instead
+      if test "$AMD64_ABI" = "no" ; then
+         MMX_CFLAGS="-xarch=sse"
+      fi
+   else
+      MMX_CFLAGS="-mmmx -Winline"
+   fi
+fi
 
 have_mmx_intrinsics=no
 AC_MSG_CHECKING(whether to use MMX intrinsics)
 xserver_save_CFLAGS=$CFLAGS
-CFLAGS="$CFLAGS $MMX_CFLAGS"
+CFLAGS="$MMX_CFLAGS $CFLAGS"
 AC_COMPILE_IFELSE([
 #if defined(__GNUC__) && (__GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4))
 error "Need GCC >= 3.4 for MMX intrinsics"
@@ -183,12 +209,21 @@ AM_CONDITIONAL(USE_MMX, test $have_mmx_intrinsics = yes)
 dnl ===========================================================================
 dnl Check for SSE2
 
-SSE2_CFLAGS="-mmmx -msse2 -Winline"
+if test "x$SSE2_CFLAGS" = "x" ; then
+   if test "x$SUNCC" = "xyes"; then
+      # SSE2 is enabled by default in the Sun Studio 64-bit environment
+      if test "$AMD64_ABI" = "no" ; then
+         SSE2_CFLAGS="-xarch=sse2"
+      fi
+   else
+      SSE2_CFLAGS="-mmmx -msse2 -Winline"
+   fi
+fi
 
 have_sse2_intrinsics=no
 AC_MSG_CHECKING(whether to use SSE2 intrinsics)
 xserver_save_CFLAGS=$CFLAGS
-CFLAGS="$CFLAGS -msse2 $SSE2_CFLAGS"
+CFLAGS="$SSE2_CFLAGS $CFLAGS"
 
 AC_COMPILE_IFELSE([
 #if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 2))
@@ -226,10 +261,41 @@ fi
 
 AM_CONDITIONAL(USE_SSE2, test $have_sse2_intrinsics = yes)
 
-dnl ========================================================
-AC_SUBST(MMX_CFLAGS)
-AC_SUBST(SSE2_CFLAGS)
+dnl ===========================================================================
+dnl Other special flags needed when building code using MMX or SSE instructions
+case $host_os in
+   solaris*)
+      # When building 32-bit binaries, apply a mapfile to ensure that the
+      # binaries aren't flagged as only able to run on MMX+SSE capable CPUs
+      # since they check at runtime before using those instructions.
+      # Not all linkers grok the mapfile format so we check for that first.
+      if test "$AMD64_ABI" = "no" ; then
+	 use_hwcap_mapfile=no
+	 AC_MSG_CHECKING(whether to use a hardware capability map file)
+	 hwcap_save_LDFLAGS="$LDFLAGS"
+	 HWCAP_LDFLAGS='-Wl,-M,$(srcdir)/solaris-hwcap.mapfile'
+	 LDFLAGS="$LDFLAGS -Wl,-M,pixman/solaris-hwcap.mapfile"
+	 AC_LINK_IFELSE([int main() { return 0; }],
+			use_hwcap_mapfile=yes,
+			HWCAP_LDFLAGS="")
+	 LDFLAGS="$hwcap_save_LDFLAGS"
+	 AC_MSG_RESULT($use_hwcap_mapfile)
+      fi
+      if test "x$MMX_LDFLAGS" = "x" ; then
+         MMX_LDFLAGS="$HWCAP_LDFLAGS"
+      fi
+      if test "x$SSE2_LDFLAGS" = "x" ; then
+	 SSE2_LDFLAGS="$HWCAP_LDFLAGS"
+      fi
+      ;;
+esac
 
+AC_SUBST(MMX_CFLAGS)
+AC_SUBST(MMX_LDFLAGS)
+AC_SUBST(SSE2_CFLAGS)
+AC_SUBST(SSE2_LDFLAGS)
+
+dnl ===========================================================================
 dnl Check for VMX/Altivec
 if test -n "`$CC -v 2>&1 | grep version | grep Apple`"; then
     VMX_CFLAGS="-faltivec"
@@ -277,6 +343,131 @@ AC_SUBST(VMX_CFLAGS)
 
 AM_CONDITIONAL(USE_VMX, test $have_vmx_intrinsics = yes)
 
+dnl ===========================================================================
+dnl Check for ARM SIMD instructions
+ARM_SIMD_CFLAGS="-mcpu=arm1136j-s"
+
+have_arm_simd=no
+AC_MSG_CHECKING(whether to use ARM SIMD assembler)
+xserver_save_CFLAGS=$CFLAGS
+CFLAGS="$CFLAGS $ARM_SIMD_CFLAGS"
+AC_COMPILE_IFELSE([
+int main () {
+    asm("uqadd8 r1, r1, r2");
+    return 0;
+}], have_arm_simd=yes)
+CFLAGS=$xserver_save_CFLAGS
+
+AC_ARG_ENABLE(arm-simd,
+   [AC_HELP_STRING([--disable-arm-simd],
+                   [disable ARM SIMD fast paths])],
+   [enable_arm_simd=$enableval], [enable_arm_simd=auto])
+
+if test $enable_arm_simd = no ; then
+   have_arm_simd=disabled
+fi
+
+if test $have_arm_simd = yes ; then
+   AC_DEFINE(USE_ARM_SIMD, 1, [use ARM SIMD compiler intrinsics])
+else
+   ARM_SIMD_CFLAGS=
+fi
+
+AC_MSG_RESULT($have_arm_simd)
+if test $enable_arm_simd = yes && test $have_arm_simd = no ; then
+   AC_MSG_ERROR([ARM SIMD intrinsics not detected])
+fi
+
+AC_SUBST(ARM_SIMD_CFLAGS)
+
+AM_CONDITIONAL(USE_ARM_SIMD, test $have_arm_simd = yes)
+
+dnl ==========================================================================
+dnl Check for ARM NEON instructions
+ARM_NEON_CFLAGS="-mfpu=neon -mcpu=cortex-a8"
+
+have_arm_neon=no
+AC_MSG_CHECKING(whether to use ARM NEON)
+xserver_save_CFLAGS=$CFLAGS
+CFLAGS="$CFLAGS $ARM_NEON_CFLAGS"
+AC_COMPILE_IFELSE([
+#include <arm_neon.h>
+int main () {
+    uint8x8_t neon_test=vmov_n_u8(0);
+    return 0;
+}], have_arm_neon=yes)
+CFLAGS=$xserver_save_CFLAGS
+
+AC_ARG_ENABLE(arm-neon,
+   [AC_HELP_STRING([--disable-arm-neon],
+                   [disable ARM NEON fast paths])],
+   [enable_arm_neon=$enableval], [enable_arm_neon=auto])
+
+if test $enable_arm_neon = no ; then
+   have_arm_neon=disabled
+fi
+
+if test $have_arm_neon = yes ; then
+   AC_DEFINE(USE_ARM_NEON, 1, [use ARM NEON compiler intrinsics])
+else
+   ARM_NEON_CFLAGS=
+fi
+
+AC_SUBST(ARM_NEON_CFLAGS)
+
+AM_CONDITIONAL(USE_ARM_NEON, test $have_arm_neon = yes)
+
+AC_MSG_RESULT($have_arm_neon)
+if test $enable_arm_neon = yes && test $have_arm_neon = no ; then
+   AC_MSG_ERROR([ARM NEON intrinsics not detected])
+fi
+
+dnl =========================================================================================
+dnl Check for GNU-style inline assembly support
+
+have_gcc_inline_asm=no
+AC_MSG_CHECKING(whether to use GNU-style inline assembler)
+AC_COMPILE_IFELSE([
+int main () {
+    /* Most modern architectures have a NOP instruction, so this is a fairly generic test. */
+	asm volatile ( "\tnop\n" : : : "cc", "memory" );
+    return 0;
+}], have_gcc_inline_asm=yes)
+
+AC_ARG_ENABLE(gcc-inline-asm,
+   [AC_HELP_STRING([--disable-gcc-inline-asm],
+                   [disable GNU-style inline assembler])],
+   [enable_gcc_inline_asm=$enableval], [enable_gcc_inline_asm=auto])
+
+if test $enable_gcc_inline_asm = no ; then
+   have_gcc_inline_asm=disabled
+fi
+
+if test $have_gcc_inline_asm = yes ; then
+   AC_DEFINE(USE_GCC_INLINE_ASM, 1, [use GNU-style inline assembler])
+fi
+
+AC_MSG_RESULT($have_gcc_inline_asm)
+if test $enable_gcc_inline_asm = yes && test $have_gcc_inline_asm = no ; then
+   AC_MSG_ERROR([GNU-style inline assembler not detected])
+fi
+
+AM_CONDITIONAL(USE_GCC_INLINE_ASM, test $have_gcc_inline_asm = yes)
+
+dnl ==============================================
+dnl Timers
+
+AC_ARG_ENABLE(timers,
+   [AC_HELP_STRING([--enable-timers],
+		   [enable TIMER_BEGIN and TIMER_END macros [default=no]])],
+   [enable_timers=$enableval], [enable_timers=no])
+
+AC_DEFINE(PIXMAN_TIMERS, 1, [enable TIMER_BEGIN/TIMER_END macros])
+AC_SUBST(PIXMAN_TIMERS)
+
+dnl ===================================
+dnl GTK+
+
 AC_ARG_ENABLE(gtk,
    [AC_HELP_STRING([--enable-gtk],
                    [enable tests using GTK+ [default=auto]])],
@@ -296,7 +487,7 @@ AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 AC_SUBST(DEP_CFLAGS)
 AC_SUBST(DEP_LIBS)
-		  
+
 AC_OUTPUT([pixman-1.pc
            pixman-1-uninstalled.pc
            Makefile

@@ -29,26 +29,30 @@ else
 CFLAGS += -O2
 endif
 
-SOURCES = \
-	pixman-image.c					\
-	pixman-access.c					\
-	pixman-access-accessors.c			\
+SOURCES =				\
+	pixman-image.c			\
+	pixman-access.c			\
+	pixman-access-accessors.c	\
 	pixman-region16.c		\
 	pixman-region32.c		\
-	pixman-compose.c				\
-	pixman-compose-accessors.c	\
-	pixman-combine32.c				\
-	pixman-combine64.c				\
-	pixman-pict.c					\
-	pixman-source.c					\
-	pixman-transformed.c				\
-	pixman-transformed-accessors.c			\
-	pixman-utils.c					\
-	pixman-edge.c					\
+	pixman-combine32.c		\
+	pixman-combine64.c		\
+	pixman-utils.c			\
+	pixman-edge.c			\
 	pixman-edge-accessors.c		\
-	pixman-trap.c					\
-	pixman-compute-region.c		\
-	pixman-timer.c					\
+	pixman-trap.c			\
+	pixman-timer.c			\
+	pixman-matrix.c			\
+	pixman-gradient-walker.c	\
+	pixman-linear-gradient.c	\
+	pixman-radial-gradient.c	\
+	pixman-bits-image.c		\
+	pixman.c			\
+	pixman-cpu.c			\
+	pixman-fast-path.c		\
+	pixman-implementation.c		\
+	pixman-solid-fill.c		\
+	pixman-general.c		\
 	$(NULL)
 
 # MMX compilation flags
@@ -124,16 +128,16 @@ $(CFG_VAR)/%.obj: %.c
 $(CFG_VAR)/$(LIBRARY).lib: $(OBJECTS)
 	lib -NOLOGO -OUT:$@ $(OBJECTS) || exit 0
 
-pixman-combine32.c: combine.inc pixman-combine32.h combine.pl
-	perl ./combine.pl 8 < $< > $@ || ($(RM) $@; exit 1)
-pixman-combine32.h: combine.h.inc combine.pl
-	perl ./combine.pl 8 < $< > $@ || ($(RM) $@; exit 1)
+pixman-combine32.c: pixman-combine.c.template pixman-combine32.h make-combine.pl
+	perl ./make-combine.pl 8 < $< > $@ || ($(RM) $@; exit 1)
+pixman-combine32.h: pixman-combine.h.template make-combine.pl
+	perl ./make-combine.pl 8 < $< > $@ || ($(RM) $@; exit 1)
 
-pixman-combine64.c: combine.inc pixman-combine64.h combine.pl
-	perl ./combine.pl 16 < $< > $@ || ($(RM) $@; exit 1)
-pixman-combine64.h: combine.h.inc combine.pl
-	perl ./combine.pl 16 < $< > $@ || ($(RM) $@; exit 1)
+pixman-combine64.c: pixman-combine.c.template pixman-combine64.h make-combine.pl
+	perl ./make-combine.pl 16 < $< > $@ || ($(RM) $@; exit 1)
+pixman-combine64.h: pixman-combine.h.template make-combine.pl
+	perl ./make-combine.pl 16 < $< > $@ || ($(RM) $@; exit 1)
 
 clean_r:
 	@rm -f $(CFG_VAR)/*.obj $(CFG_VAR)/*.lib $(CFG_VAR)/*.pdb $(CFG)/*.ilk || exit 0
-	@rm -f $(CFG)/*.obj $(CFG)/*.lib $(CFG)/*.pdb $(CFG)/*.ilk pixman-combine32.c pixman-combine64.c || exit 0
+	@rm -f $(CFG)/*.obj $(CFG)/*.lib $(CFG)/*.pdb $(CFG)/*.ilk pixman-combine32.c pixman-combine64.c pixman-combine64.c pixman-combine64.h || exit 0
