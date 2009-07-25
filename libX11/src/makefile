@@ -258,7 +258,6 @@ CSRCS = \
                   XlibAsync.c \
                   XlibInt.c \
                   Xrm.c \
-                  xcb_lock.c \
                   xcb_disp.c \
                   xcb_io.c
 

@@ -50,6 +50,8 @@
 
 #endif	/* NOT_X_ENV */
 
+#include <stdint.h>
+
 /* specifying NOT_X_ENV allows users to just use
    the database parsing routine. */
 /* For UDC/VW */
