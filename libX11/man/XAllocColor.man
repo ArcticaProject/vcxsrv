@@ -155,7 +155,7 @@ char *\fIcolor_name\fP\^, XColor *\fIscreen_def_return\fP\^, XColor
 *\fIexact_def_return\fP\^);
 .HP
 Status XAllocColorCells\^(\^Display *\fIdisplay\fP, Colormap \fIcolormap\fP\^,
-Bool \fIcontig\fP\^, unsigned long\fIplane_masks_return\fP[\^]\^, unsigned int
+Bool \fIcontig\fP\^, unsigned long \fIplane_masks_return\fP[\^]\^, unsigned int
 \fInplanes\fP\^, unsigned long \fIpixels_return\fP[\^]\^, unsigned int
 \fInpixels\fP\^);
 .HP

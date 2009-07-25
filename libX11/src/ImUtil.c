@@ -51,8 +51,8 @@ static int _XAddPixel(XImage *, long);
 static unsigned char const _lomask[0x09] = { 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff };
 static unsigned char const _himask[0x09] = { 0xff, 0xfe, 0xfc, 0xf8, 0xf0, 0xe0, 0xc0, 0x80, 0x00 };
 
-/* These two convenience routines return the scanline_pad and bits_per_pixel 
-	associated with a specific depth of ZPixmap format image for a 
+/* These two convenience routines return the scanline_pad and bits_per_pixel
+	associated with a specific depth of ZPixmap format image for a
 	display. */
 
 int
@@ -62,14 +62,14 @@ _XGetScanlinePad(
  {
  	register ScreenFormat *fmt = dpy->pixmap_format;
  	register int i;
- 
+
  	for (i = dpy->nformats + 1; --i; ++fmt)
  		if (fmt->depth == depth)
  			return(fmt->scanline_pad);
- 
+
  	return(dpy->bitmap_pad);
  }
- 
+
 int
 _XGetBitsPerPixel(
  Display *dpy,
@@ -77,7 +77,7 @@ _XGetBitsPerPixel(
  {
  	register ScreenFormat *fmt = dpy->pixmap_format;
  	register int i;
- 
+
  	for (i = dpy->nformats + 1; --i; ++fmt)
  		if (fmt->depth == depth)
  			return(fmt->bits_per_pixel);
@@ -89,7 +89,7 @@ _XGetBitsPerPixel(
 	    return 16;
 	return 32;
  }
- 
+
 
 /*
  * This module provides rudimentary manipulation routines for image data
@@ -113,7 +113,7 @@ _XGetBitsPerPixel(
  *
  * The logic contained in these routines makes several assumptions about
  * the image data structures, and at least for current implementations
- * these assumptions are believed to be true.  They are: 
+ * these assumptions are believed to be true.  They are:
  *
  *	For all formats, bits_per_pixel is less than or equal to 32.
  *	For XY formats, bitmap_unit is always less than or equal to bitmap_pad.
@@ -213,31 +213,31 @@ static void _putbits(
 		break;
 	    }
 	    numbits = numbits - dstoffset;
-	}	
+	}
 }
 
 
 /*
  * Macros
- * 
+ *
  * The ROUNDUP macro rounds up a quantity to the specified boundary,
  * then truncates to bytes.
  *
- * The XYNORMALIZE macro determines whether XY format data requires 
+ * The XYNORMALIZE macro determines whether XY format data requires
  * normalization and calls a routine to do so if needed. The logic in
- * this module is designed for LSBFirst byte and bit order, so 
+ * this module is designed for LSBFirst byte and bit order, so
  * normalization is done as required to present the data in this order.
  *
- * The ZNORMALIZE macro performs byte and nibble order normalization if 
+ * The ZNORMALIZE macro performs byte and nibble order normalization if
  * required for Z format data.
  *
  * The XYINDEX macro computes the index to the starting byte (char) boundary
  * for a bitmap_unit containing a pixel with coordinates x and y for image
  * data in XY format.
- * 
- * The ZINDEX macro computes the index to the starting byte (char) boundary 
+ *
+ * The ZINDEX macro computes the index to the starting byte (char) boundary
  * for a pixel with coordinates x and y for image data in ZPixmap format.
- * 
+ *
  */
 
 #if defined(Lynx) && defined(ROUNDUP)
@@ -301,10 +301,10 @@ void _XInitImageFuncPtrs (
 
 /*
  * CreateImage
- * 
- * Allocates the memory necessary for an XImage data structure. 
- * Initializes the structure with "default" values and returns XImage. 
- * 
+ *
+ * Allocates the memory necessary for an XImage data structure.
+ * Initializes the structure with "default" values and returns XImage.
+ *
  */
 
 XImage *XCreateImage (
@@ -319,7 +319,7 @@ XImage *XCreateImage (
     unsigned int width,
     unsigned int height,
     int xpad,
-    int image_bytes_per_line) 
+    int image_bytes_per_line)
 		/*How many bytes between a pixel on one line and the pixel with
 		  the same X coordinate on the next line? 0 means
 		  XCreateImage can calculate it.*/
@@ -351,7 +351,7 @@ XImage *XCreateImage (
 	else {
 		image->red_mask = image->green_mask = image->blue_mask = 0;
 	}
-	if (format == ZPixmap) 
+	if (format == ZPixmap)
 	{
 	    bits_per_pixel = _XGetBitsPerPixel(dpy, (int) depth);
 	}
@@ -365,7 +365,7 @@ XImage *XCreateImage (
 	 */
 	{
 	if (format == ZPixmap)
-	    min_bytes_per_line = 
+	    min_bytes_per_line =
 	       ROUNDUP((bits_per_pixel * width), image->bitmap_pad);
 	else
 	    min_bytes_per_line =
@@ -374,7 +374,7 @@ XImage *XCreateImage (
 	if (image_bytes_per_line == 0) {
 	    image->bytes_per_line = min_bytes_per_line;
 	} else if (image_bytes_per_line < min_bytes_per_line) {
-	    return 0;
+	    return NULL;
 	} else {
 	    image->bytes_per_line = image_bytes_per_line;
 	}
@@ -407,7 +407,7 @@ Status XInitImage (XImage *image)
 	 * compute per line accelerator.
 	 */
 	if (image->format == ZPixmap)
-	    min_bytes_per_line = 
+	    min_bytes_per_line =
 	       ROUNDUP((image->bits_per_pixel * image->width),
 		       image->bitmap_pad);
 	else
@@ -427,8 +427,8 @@ Status XInitImage (XImage *image)
 
 /*
  * _DestroyImage
- * 	
- * Deallocates the memory associated with the ximage data structure. 
+ *
+ * Deallocates the memory associated with the ximage data structure.
  * this version handles the case of the image data being malloc'd
  * entirely by the library.
  */
@@ -444,8 +444,8 @@ static int _XDestroyImage (XImage *ximage)
 
 /*
  * GetPixel
- * 
- * Returns the specified pixel.  The X and Y coordinates are relative to 
+ *
+ * Returns the specified pixel.  The X and Y coordinates are relative to
  * the origin (upper left [0,0]) of the image.  The pixel value is returned
  * in normalized format, i.e. the LSB of the long is the LSB of the pixel.
  * The algorithm used is:
@@ -480,7 +480,7 @@ static unsigned long _XGetPixel (
 	register int i, j;
 	int bits, nbytes;
 	long plane;
-     
+
 	if ((ximage->bits_per_pixel | ximage->depth) == 1) {
 		src = &ximage->data[XYINDEX(x, y, ximage)];
 		dst = (char *)&pixel;
@@ -509,7 +509,7 @@ static unsigned long _XGetPixel (
 		dst = (char *)&px;
 		px = 0;
 		for (i = (ximage->bits_per_pixel + 7) >> 3; --i >= 0; )
-		    *dst++ = *src++;		
+		    *dst++ = *src++;
 		ZNORMALIZE(&px, ximage);
 		pixel = 0;
 		for (i=sizeof(unsigned long); --i >= 0; )
@@ -634,11 +634,11 @@ static unsigned long _XGetPixel1 (
 	    return XGetPixel(ximage, x, y);
 	}
 }
-	
+
 /*
  * PutPixel
- * 
- * Overwrites the specified pixel.  The X and Y coordinates are relative to 
+ *
+ * Overwrites the specified pixel.  The X and Y coordinates are relative to
  * the origin (upper left [0,0]) of the image.  The input pixel value must be
  * in normalized format, i.e. the LSB of the long is the LSB of the pixel.
  * The algorithm used is:
@@ -711,8 +711,8 @@ static int _XPutPixel (
 		nbytes = (ximage->bits_per_pixel + 7) >> 3;
 		for (i = nbytes; --i >= 0; ) *dst++ = *src++;
 		ZNORMALIZE(&px, ximage);
-		_putbits ((char *)&pixel, 
-			  (x * ximage->bits_per_pixel) & 7, 
+		_putbits ((char *)&pixel,
+			  (x * ximage->bits_per_pixel) & 7,
 			  ximage->bits_per_pixel, (char *)&px);
 		ZNORMALIZE(&px, ximage);
 		src = (char *)&px;
@@ -829,9 +829,9 @@ static int _XPutPixel1 (
 
 /*
  * SubImage
- * 
+ *
  * Creates a new image that is a subsection of an existing one.
- * Allocates the memory necessary for the new XImage data structure. 
+ * Allocates the memory necessary for the new XImage data structure.
  * Pointer to new image is returned.  The algorithm used is repetitive
  * calls to get and put pixel.
  *
@@ -866,8 +866,8 @@ static XImage *_XSubImage (
 	/*
 	 * compute per line accelerator.
 	 */
-	if (subimage->format == ZPixmap) 	
-	    subimage->bytes_per_line = 
+	if (subimage->format == ZPixmap)
+	    subimage->bytes_per_line =
 		ROUNDUP(subimage->bits_per_pixel * width,
 			subimage->bitmap_pad);
 	else
@@ -904,7 +904,7 @@ static XImage *_XSubImage (
 
 /*
  * SetImage
- * 
+ *
  * Overwrites a section of one image with all of the data from another.
  * If the two images are not of the same format (i.e. XYPixmap and ZPixmap),
  * the image data is converted to the destination format.  The following
@@ -919,7 +919,7 @@ static XImage *_XSubImage (
  *	3. If the width of the source image is too large to fit between
  *	   the specified x starting point and the end of the scanline,
  *	   then pixels are truncated on the right.
- * 
+ *
  * The images need not have the same bitmap_bit_order, byte_order,
  * bitmap_unit, bits_per_pixel, bitmap_pad, or xoffset.
  *
@@ -963,7 +963,7 @@ int _XSetImage(
 
 /*
  * AddPixel
- * 
+ *
  * Adds a constant value to every pixel in a pixmap.
  *
  */

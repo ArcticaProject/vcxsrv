@@ -110,7 +110,7 @@ XGetOMValues(XOM om, ...)
 
     if (args == (XlcArgList) NULL)
 	return (char *) NULL;
-    
+
     ret = (*om->methods->get_values)(om, args, num_args);
 
     Xfree(args);

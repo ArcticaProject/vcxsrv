@@ -150,10 +150,10 @@ _XGenerateGCList (
 
     req->length += (nvalues = value - values);
 
-    /* 
+    /*
      * note: Data is a macro that uses its arguments multiple
      * times, so "nvalues" is changed in a separate assignment
-     * statement 
+     * statement
      */
 
     nvalues <<= 2;
@@ -175,7 +175,7 @@ _XUpdateGCCache (
 	  gv->function = attr->function;
 	  gc->dirty |= GCFunction;
 	}
-	
+
     if (mask & GCPlaneMask)
         if (gv->plane_mask != attr->plane_mask) {
             gv->plane_mask = attr->plane_mask;
@@ -211,7 +211,7 @@ _XUpdateGCCache (
             gv->cap_style = attr->cap_style;
 	    gc->dirty |= GCCapStyle;
 	  }
-    
+
     if (mask & GCJoinStyle)
         if (gv->join_style != attr->join_style) {
             gv->join_style = attr->join_style;
@@ -333,7 +333,7 @@ void _XFlushGCCache(
     }
 }
 
-void 
+void
 XFlushGC(
     Display *dpy,
     GC gc)
@@ -342,6 +342,6 @@ XFlushGC(
 }
 
 GContext XGContextFromGC(GC gc)
-{ 
+{
     return (gc->gid);
 }

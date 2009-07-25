@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -78,7 +78,7 @@ typedef struct _XkbMapNotifyEvent {
 	KeyCode		first_key_act;
 	KeyCode		first_key_behavior;
 	KeyCode		first_key_explicit;
-	KeyCode		first_modmap_key;  
+	KeyCode		first_modmap_key;
 	KeyCode		first_vmodmap_key;
 	int		num_key_syms;
 	int		num_key_acts;
@@ -215,7 +215,7 @@ typedef struct _XkbActionMessage {
 	Bool 		key_event_follows;/* true if key event also generated */
 	int		group;		/* effective group */
 	unsigned int	mods;		/* effective mods */
-	char 		message[XkbActionMessageLength+1]; 
+	char 		message[XkbActionMessageLength+1];
 					/* message -- leave space for NUL */
 } XkbActionMessageEvent;
 
@@ -241,8 +241,8 @@ typedef struct _XkbExtensionDeviceNotify {
 	Time 		time;		/* milliseconds */
 	int 		xkb_type;	/* XkbExtensionDeviceNotify */
 	int	 	device;		/* device ID */
-	unsigned int	reason;		/* reason for the event */	
-	unsigned int	supported;	/* mask of supported features */	
+	unsigned int	reason;		/* reason for the event */
+	unsigned int	supported;	/* mask of supported features */
 	unsigned int	unsupported;	/* mask of unsupported features */
 					/* that some app tried to use */
 	int	 	first_btn;	/* first button that changed */
@@ -531,7 +531,7 @@ extern	Bool	 XkbSetIndicatorMap(
 #define	XkbNoteIndicatorStateChanges(o,n,w)\
 				((o)->state_changes|=((n)->state_changes&(w)))
 #define	XkbGetIndicatorMapChanges(d,x,c) \
-				(XkbGetIndicatorMap((d),(c)->map_changes,x)
+				(XkbGetIndicatorMap((d),(c)->map_changes,x))
 #define	XkbChangeIndicatorMaps(d,x,c) \
 				(XkbSetIndicatorMap((d),(c)->map_changes,x))
 

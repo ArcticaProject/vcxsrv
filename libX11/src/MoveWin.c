@@ -35,7 +35,7 @@ int
 XMoveWindow (
     register Display *dpy,
     Window w,
-    int x, 
+    int x,
     int y)
 {
     register xConfigureWindowReq *req;

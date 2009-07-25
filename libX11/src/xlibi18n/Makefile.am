@@ -91,11 +91,13 @@ libi18n_la_SOURCES = \
 	lcUniConv/ascii.h\
 	lcUniConv/big5.h\
 	lcUniConv/big5_emacs.h\
+	lcUniConv/big5hkscs.h\
 	lcUniConv/cp1133.h\
 	lcUniConv/cp1251.h\
 	lcUniConv/cp1255.h\
 	lcUniConv/cp1256.h\
 	lcUniConv/gb2312.h\
+	lcUniConv/gbk.h\
 	lcUniConv/georgian_academy.h\
 	lcUniConv/georgian_ps.h\
 	lcUniConv/iso8859_1.h\

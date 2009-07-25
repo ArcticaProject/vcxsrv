@@ -40,7 +40,7 @@ XDrawText16(
     int y,
     XTextItem16 *items,
     int nitems)
-{   
+{
     register int i;
     register XTextItem16 *item;
     int length = 0;
@@ -85,7 +85,7 @@ XDrawText16(
      * If the entire request does not fit into the remaining space in the
      * buffer, flush the buffer first.   If the request does fit into the
      * empty buffer, then we won't have to flush it at the end to keep
-     *  the buffer 32-bit aligned. 
+     *  the buffer 32-bit aligned.
      */
 
     if (dpy->bufptr + length > dpy->bufmax)
@@ -122,9 +122,9 @@ XDrawText16(
             {
 	    	int nb = SIZEOF(xTextElt);
 
-	    	BufAlloc (xTextElt *, elt, nb); 
+	    	BufAlloc (xTextElt *, elt, nb);
 	    	elt->len = 0;
-	    	if (PartialDelta > 0 ) 
+	    	if (PartialDelta > 0 )
 		{
 		    elt->delta = 127;
 		    PartialDelta = PartialDelta - 127;
@@ -137,7 +137,7 @@ XDrawText16(
 	    }
 	    if (PartialDelta)
             {
-                BufAlloc (xTextElt *, elt, nbytes); 
+                BufAlloc (xTextElt *, elt, nbytes);
 	        elt->len = 0;
 		elt->delta = PartialDelta;
 	    }
@@ -148,9 +148,9 @@ XDrawText16(
 		{
 		    FirstTimeThrough = False;
 		    if (!item->delta)
- 		    { 
+ 		    {
 			nbytes += SIZEOF(xTextElt);
-	   		BufAlloc (xTextElt *, elt, nbytes); 
+	   		BufAlloc (xTextElt *, elt, nbytes);
 		        elt->delta = 0;
 		    }
 		    else
@@ -193,9 +193,9 @@ XDrawText16(
 		{
 		    FirstTimeThrough = False;
 		    if (!item->delta)
- 		    { 
+ 		    {
 			nbytes += SIZEOF(xTextElt);
-	   		BufAlloc (xTextElt *, elt, nbytes); 
+	   		BufAlloc (xTextElt *, elt, nbytes);
 			elt->delta = 0;
 		    }
 		    else
@@ -210,7 +210,7 @@ XDrawText16(
 		else
 		{
  		    nbytes += SIZEOF(xTextElt);
-	   	    BufAlloc (xTextElt *, elt, nbytes); 
+	   	    BufAlloc (xTextElt *, elt, nbytes);
 		    elt->delta = 0;
 		}
 	    	elt->len = PartialNChars;
@@ -241,21 +241,21 @@ XDrawText16(
 	char *pad;
 	/*
 	 * BufAlloc is a macro that uses its last argument more than
-	 * once, otherwise I'd write "BufAlloc (char *, pad, 4-length)" 
+	 * once, otherwise I'd write "BufAlloc (char *, pad, 4-length)"
 	 */
 	length = 4 - length;
 	BufAlloc (char *, pad, length);
-	/* 
+	/*
 	 * if there are 3 bytes of padding, the first byte MUST be 0
-	 * so the pad bytes aren't mistaken for a final xTextElt 
+	 * so the pad bytes aren't mistaken for a final xTextElt
 	 */
 	*pad = 0;
         }
 
-    /* 
+    /*
      * If the buffer pointer is not now pointing to a 32-bit boundary,
      * we must flush the buffer so that it does point to a 32-bit boundary
-     * at the end of this routine. 
+     * at the end of this routine.
      */
 
     if ((dpy->bufptr - dpy->buffer) & 3)

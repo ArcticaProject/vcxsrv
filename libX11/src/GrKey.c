@@ -38,7 +38,7 @@ XGrabKey(
     unsigned int modifiers,
     Window grab_window,
     Bool owner_events,
-    int pointer_mode, 
+    int pointer_mode,
     int keyboard_mode)
 
 {

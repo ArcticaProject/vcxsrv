@@ -58,7 +58,7 @@ XFillPolygon(
     /* shift (mult. by 4) before passing to the (possible) macro */
 
     nbytes = n_points << 2;
-    
+
     Data16 (dpy, (short *) points, nbytes);
     UnlockDisplay(dpy);
     SyncHandle();

@@ -28,13 +28,13 @@ Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Digital not be
 used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.  
+software without specific, written prior permission.
 
 DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
 ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
@@ -69,7 +69,7 @@ typedef struct {
 #endif
 
 
-/* 
+/*
  *   clip region
  */
 
@@ -80,13 +80,13 @@ typedef struct _XRegion {
     BOX extents;
 } REGION;
 
-/* Xutil.h contains the declaration: 
- * typedef struct _XRegion *Region; 
- */   
+/* Xutil.h contains the declaration:
+ * typedef struct _XRegion *Region;
+ */
 
 /*  1 if two BOXs overlap.
  *  0 if two BOXs do not overlap.
- *  Remember, x2 and y2 are not in the region 
+ *  Remember, x2 and y2 are not in the region
  */
 #define EXTENTCHECK(r1, r2) \
 	((r1)->x2 > (r2)->x1 && \

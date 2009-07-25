@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -362,7 +362,7 @@ XkbSetNames(	Display *	dpy,
 	    }
 	}
     }
- 
+
     nVMods= nLEDs= nRG= nKA= nAtoms= nGroups= 0;
     LockDisplay(dpy);
     xkbi = dpy->xkb_info;
@@ -407,7 +407,7 @@ XkbSetNames(	Display *	dpy,
     else req->indicators= leds= 0;
 
     if (which&XkbVirtualModNamesMask) {
-	vmods= req->virtualMods= (CARD16) 
+	vmods= req->virtualMods= (CARD16)
 		_XkbCountAtoms(names->vmods,XkbNumVirtualMods,&nVMods);
 	if (nVMods>0)
 	     nAtoms+= nVMods;
@@ -563,7 +563,7 @@ XkbChangeNames(Display *dpy,XkbDescPtr xkb,XkbNameChangesPtr changes)
     firstLvlType= changes->first_lvl;;
     nLvlTypes= changes->num_lvls;
     if (which&XkbKeyTypeNamesMask) {
-	if (nTypes<1)	
+	if (nTypes<1)
 	    which&= ~XkbKeyTypeNamesMask;
 	else if (firstType<=XkbLastRequiredType) {
 	    int	adjust;
@@ -622,7 +622,7 @@ XkbChangeNames(Display *dpy,XkbDescPtr xkb,XkbNameChangesPtr changes)
 	changes->changed_groups= 0;
     else if (changes->changed_groups==0)
 	which&= ~XkbGroupNamesMask;
- 
+
     nVMods= nLEDs= nRG= nKA= nAtoms= nGroups= 0;
     LockDisplay(dpy);
     xkbi = dpy->xkb_info;
@@ -882,9 +882,9 @@ int	first,last,old_last,new_last;
 	     old->changed_groups|= new->changed_groups;
 	else old->changed_groups=  new->changed_groups;
     }
-    if (wanted&XkbRGNamesMask) 
+    if (wanted&XkbRGNamesMask)
 	old->num_rg= new->num_radio_groups;
-    if (wanted&XkbKeyAliasesMask) 
+    if (wanted&XkbKeyAliasesMask)
 	old->num_aliases= new->num_aliases;
     old->changed|= wanted;
     return;

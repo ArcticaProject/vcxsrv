@@ -34,10 +34,10 @@ in this Software without prior written authorization from The Open Group.
 XTimeCoord *XGetMotionEvents(
     register Display *dpy,
     Window w,
-    Time start, 
+    Time start,
     Time stop,
     int *nEvents)  /* RETURN */
-{       
+{
     xGetMotionEventsReply rep;
     register xGetMotionEventsReq *req;
     XTimeCoord *tc = NULL;
@@ -53,10 +53,10 @@ XTimeCoord *XGetMotionEvents(
         SyncHandle();
 	return (NULL);
 	}
-    
+
     if (rep.nEvents) {
 	if (! (tc = (XTimeCoord *)
-	       Xmalloc( (unsigned) 
+	       Xmalloc( (unsigned)
 		       (nbytes = (long) rep.nEvents * sizeof(XTimeCoord))))) {
 	    _XEatData (dpy, (unsigned long) nbytes);
 	    UnlockDisplay(dpy);

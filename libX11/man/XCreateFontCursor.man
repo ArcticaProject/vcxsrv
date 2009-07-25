@@ -151,7 +151,7 @@ Cursor XCreateFontCursor\^(\^Display *\fIdisplay\fP\^, unsigned int
 .HP
 Cursor XCreatePixmapCursor\^(\^Display *\fIdisplay\fP\^, Pixmap
 \fIsource\fP\^, Pixmap \fImask\fP\^, XColor *\fIforeground_color\fP\^, XColor
-*\fIbackground_color\fP\^, unsigned int \fIx\fP\^, \fIy\fP\^); 
+*\fIbackground_color\fP\^, unsigned int \fIx\fP\^, unsigned int \fIy\fP\^);
 .HP
 Cursor XCreateGlyphCursor\^(\^Display *\fIdisplay\fP\^, Font
 \fIsource_font\fP\^, Font \fImask_font\fP\^, unsigned int \fIsource_char\fP\^,

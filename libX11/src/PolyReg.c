@@ -28,13 +28,13 @@ Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Digital not be
 used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.  
+software without specific, written prior permission.
 
 DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
 ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
@@ -84,7 +84,7 @@ InsertEdgeInET(
      */
     pPrevSLL = &ET->scanlines;
     pSLL = pPrevSLL->next;
-    while (pSLL && (pSLL->scanline < scanline)) 
+    while (pSLL && (pSLL->scanline < scanline))
     {
         pPrevSLL = pSLL;
         pSLL = pSLL->next;
@@ -93,11 +93,11 @@ InsertEdgeInET(
     /*
      * reassign pSLL (pointer to ScanLineList) if necessary
      */
-    if ((!pSLL) || (pSLL->scanline > scanline)) 
+    if ((!pSLL) || (pSLL->scanline > scanline))
     {
-        if (*iSLLBlock > SLLSPERBLOCK-1) 
+        if (*iSLLBlock > SLLSPERBLOCK-1)
         {
-            tmpSLLBlock = 
+            tmpSLLBlock =
 		  (ScanLineListBlock *)Xmalloc(sizeof(ScanLineListBlock));
             (*SLLBlock)->next = tmpSLLBlock;
             tmpSLLBlock->next = (ScanLineListBlock *)NULL;
@@ -117,7 +117,7 @@ InsertEdgeInET(
      */
     prev = (EdgeTableEntry *)NULL;
     start = pSLL->edgelist;
-    while (start && (start->bres.minor_axis < ETE->bres.minor_axis)) 
+    while (start && (start->bres.minor_axis < ETE->bres.minor_axis))
     {
         prev = start;
         start = start->next;
@@ -134,7 +134,7 @@ InsertEdgeInET(
  *     CreateEdgeTable
  *
  *     This routine creates the edge table for
- *     scan converting polygons. 
+ *     scan converting polygons.
  *     The Edge Table (ET) looks like:
  *
  *    EdgeTable
@@ -194,19 +194,19 @@ CreateETandAET(
      *  In this loop we are dealing with two vertices at
      *  a time -- these make up one edge of the polygon.
      */
-    while (count--) 
+    while (count--)
     {
         CurrPt = pts++;
 
         /*
          *  find out which point is above and which is below.
          */
-        if (PrevPt->y > CurrPt->y) 
+        if (PrevPt->y > CurrPt->y)
         {
             bottom = PrevPt, top = CurrPt;
             pETEs->ClockWise = 0;
         }
-        else 
+        else
         {
             bottom = CurrPt, top = PrevPt;
             pETEs->ClockWise = 1;
@@ -215,7 +215,7 @@ CreateETandAET(
         /*
          * don't add horizontal edges to the Edge table.
          */
-        if (bottom->y != top->y) 
+        if (bottom->y != top->y)
         {
             pETEs->ymax = bottom->y-1;  /* -1 so we don't get last scanline */
 
@@ -257,9 +257,9 @@ loadAET(
 
     pPrevAET = AET;
     AET = AET->next;
-    while (ETEs) 
+    while (ETEs)
     {
-        while (AET && (AET->bres.minor_axis < ETEs->bres.minor_axis)) 
+        while (AET && (AET->bres.minor_axis < ETEs->bres.minor_axis))
         {
             pPrevAET = AET;
             AET = AET->next;
@@ -281,13 +281,13 @@ loadAET(
  *
  *     This routine links the AET by the
  *     nextWETE (winding EdgeTableEntry) link for
- *     use by the winding number rule.  The final 
+ *     use by the winding number rule.  The final
  *     Active Edge Table (AET) might look something
  *     like:
  *
  *     AET
  *     ----------  ---------   ---------
- *     |ymax    |  |ymax    |  |ymax    | 
+ *     |ymax    |  |ymax    |  |ymax    |
  *     | ...    |  |...     |  |...     |
  *     |next    |->|next    |->|next    |->...
  *     |nextWETE|  |nextWETE|  |nextWETE|
@@ -307,7 +307,7 @@ computeWAET(
     AET->nextWETE = (EdgeTableEntry *)NULL;
     pWETE = AET;
     AET = AET->next;
-    while (AET) 
+    while (AET)
     {
         if (AET->ClockWise)
             isInside++;
@@ -315,7 +315,7 @@ computeWAET(
             isInside--;
 
         if ((!inside && !isInside) ||
-            ( inside &&  isInside)) 
+            ( inside &&  isInside))
         {
             pWETE->nextWETE = AET;
             pWETE = AET;
@@ -345,7 +345,7 @@ InsertionSort(
     register int changed = 0;
 
     AET = AET->next;
-    while (AET) 
+    while (AET)
     {
         pETEinsert = AET;
         pETEchase = AET;
@@ -353,7 +353,7 @@ InsertionSort(
             pETEchase = pETEchase->back;
 
         AET = AET->next;
-        if (pETEchase != pETEinsert) 
+        if (pETEchase != pETEinsert)
         {
             pETEchaseBackTMP = pETEchase->back;
             pETEinsert->back->next = AET;
@@ -378,7 +378,7 @@ FreeStorage(
 {
     register ScanLineListBlock   *tmpSLLBlock;
 
-    while (pSLLBlock) 
+    while (pSLLBlock)
     {
         tmpSLLBlock = pSLLBlock->next;
         Xfree((char *)pSLLBlock);
@@ -409,21 +409,21 @@ static int PtsToRegion(
     BOX *prevRects = reg->rects;
 
     extents = &reg->extents;
- 
+
     numRects = ((numFullPtBlocks * NUMPTSTOBUFFER) + iCurPtBlock) >> 1;
- 
-    if (!(reg->rects = (BOX *)Xrealloc((char *)reg->rects, 
+
+    if (!(reg->rects = (BOX *)Xrealloc((char *)reg->rects,
 	    (unsigned) (sizeof(BOX) * numRects))))  {
 	Xfree(prevRects);
 	return(0);
     }
- 
+
     reg->size = numRects;
     CurPtBlock = FirstPtBlock;
     rects = reg->rects - 1;
     numRects = 0;
     extents->x1 = MAXSHORT,  extents->x2 = MINSHORT;
- 
+
     for ( ; numFullPtBlocks >= 0; numFullPtBlocks--) {
 	/* the loop uses 2 points per iteration */
 	i = NUMPTSTOBUFFER >> 1;
@@ -461,7 +461,7 @@ static int PtsToRegion(
 	extents->y2 = 0;
     }
     reg->numRects = numRects;
- 
+
     return(TRUE);
 }
 
@@ -472,7 +472,7 @@ static int PtsToRegion(
  *     encoding of the resultant bitmap -- the run-length
  *     encoding is in the form of an array of rectangles.
  */
-Region 
+Region
 XPolygonRegion(
     XPoint     *Pts,		     /* the pts                 */
     int       Count,                 /* number of pts           */
@@ -494,7 +494,7 @@ XPolygonRegion(
     POINTBLOCK FirstPtBlock, *curPtBlock; /* PtBlock buffers    */
     POINTBLOCK *tmpPtBlock;
     int numFullPtBlocks = 0;
- 
+
     if (! (region = XCreateRegion())) return (Region) NULL;
 
     /* special case a rectangle */
@@ -520,7 +520,7 @@ XPolygonRegion(
 	}
 	return(region);
     }
-    
+
     if (Count < 2) return region;
 
     if (! (pETEs = (EdgeTableEntry *)
@@ -533,7 +533,7 @@ XPolygonRegion(
     CreateETandAET(Count, Pts, &ET, &AET, pETEs, &SLLBlock);
     pSLL = ET.scanlines.next;
     curPtBlock = &FirstPtBlock;
- 
+
     if (rule == EvenOddRule) {
         /*
          *  for each scanline
@@ -549,14 +549,14 @@ XPolygonRegion(
             }
             pPrevAET = &AET;
             pAET = AET.next;
- 
+
             /*
              *  for each active edge
              */
             while (pAET) {
                 pts->x = pAET->bres.minor_axis,  pts->y = y;
                 pts++, iPts++;
- 
+
                 /*
                  *  send out the buffer
                  */
@@ -590,7 +590,7 @@ XPolygonRegion(
             pPrevAET = &AET;
             pAET = AET.next;
             pWETE = pAET;
- 
+
             /*
              *  for each active edge
              */
@@ -602,7 +602,7 @@ XPolygonRegion(
                 if (pWETE == pAET) {
                     pts->x = pAET->bres.minor_axis,  pts->y = y;
                     pts++, iPts++;
- 
+
                     /*
                      *  send out the buffer
                      */
@@ -617,7 +617,7 @@ XPolygonRegion(
                 }
                 EVALUATEEDGEWINDING(pAET, pPrevAET, y, fixWAET);
             }
- 
+
             /*
              *  recompute the winding active edge table if
              *  we just resorted or have exited an edge.
@@ -628,7 +628,7 @@ XPolygonRegion(
             }
         }
     }
-    FreeStorage(SLLBlock.next);	
+    FreeStorage(SLLBlock.next);
     (void) PtsToRegion(numFullPtBlocks, iPts, &FirstPtBlock, region);
     for (curPtBlock = FirstPtBlock.next; --numFullPtBlocks >= 0;) {
 	tmpPtBlock = curPtBlock->next;

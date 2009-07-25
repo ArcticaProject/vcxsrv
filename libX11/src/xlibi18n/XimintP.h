@@ -15,7 +15,7 @@ pertaining to distribution of the software without specific, written
 prior permission.  Sun Microsystems, Inc., FUJITSU LIMITED and Sony
 Corporation makes no representations about the suitability of this
 software for any purpose.  It is provided "as is" without express or
-implied warranty. 
+implied warranty.
 
 Sun Microsystems Inc. ,FUJITSU LIMITED AND SONY CORPORATION DISCLAIMS ALL
 WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
@@ -27,7 +27,7 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
   Author: Hideki Hiura (hhiura@Sun.COM) Sun Microsystems, Inc.
-          Takashi Fujiwara     FUJITSU LIMITED 
+          Takashi Fujiwara     FUJITSU LIMITED
                                  fujiwara@a80.tech.yk.fujitsu.co.jp
 	  Makoto Wakamatsu     Sony Corporation
                                  makoto@sm.sony.co.jp

@@ -98,7 +98,7 @@ typedef struct _XLCdPublicPart {
 } XLCdPublicPart;
 
 typedef struct _XLCdPublicRec {
-    XLCdCoreRec core;	
+    XLCdCoreRec core;
     XLCdPublicPart pub;
 } XLCdPublicRec, *XLCdPublic;
 

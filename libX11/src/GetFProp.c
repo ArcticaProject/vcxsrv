@@ -50,7 +50,7 @@ Bool XGetFontProperty (
     return (0);
     }
 
-	
-    
 
-      
+
+
+

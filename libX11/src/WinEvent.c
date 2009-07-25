@@ -37,7 +37,7 @@ extern long const _Xevent_to_mask[];
 #define AllButtons (Button1MotionMask|Button2MotionMask|Button3MotionMask|\
 		    Button4MotionMask|Button5MotionMask)
 
-/* 
+/*
  * Return the next event in the queue
  * for the given window matching one of the events in the mask.
  * Events earlier in the queue are not discarded.
@@ -62,7 +62,7 @@ XWindowEvent (
 		 qelt;
 		 prev = qelt, qelt = qelt->next) {
 		if ((qelt->event.xany.window == w) &&
-		    (qelt->event.type < LASTEvent) &&
+		    (qelt->event.type < GenericEvent) &&
 		    (_Xevent_to_mask[qelt->event.type] & mask) &&
 		    ((qelt->event.type != MotionNotify) ||
 		     (mask & AllPointers) ||

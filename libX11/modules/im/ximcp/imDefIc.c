@@ -24,7 +24,7 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
   Author: Hideki Hiura (hhiura@Sun.COM) Sun Microsystems, Inc.
-          Takashi Fujiwara     FUJITSU LIMITED 
+          Takashi Fujiwara     FUJITSU LIMITED
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
@@ -918,7 +918,7 @@ _XimProtoSetFocus(
     CARD8	*buf = (CARD8 *)buf32;
     CARD16	*buf_s = (CARD16 *)&buf[XIM_HEADER_SIZE];
     INT16	 len;
- 
+
 #ifndef XIM_CONNECTABLE
     if (!IS_IC_CONNECTED(ic))
 	return;
@@ -997,7 +997,7 @@ _XimProtoUnsetFocus(
     _XimFlush(im);
 
     UNMARK_FOCUSED(ic);
-    
+
     _XimUnregisterFilter(ic);
     return;
 }
@@ -1317,7 +1317,7 @@ _XimDelayModeCreateIC(
     XimDefICValues	 ic_values;
     int			 len;
     XIMStyle		 input_style;
-   
+
     bzero((char *)&ic_values, sizeof(XimDefICValues));
     _XimGetCurrentICValues(ic, &ic_values);
     if (!(_XimGetInputStyle(values, &input_style)))

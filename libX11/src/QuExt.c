@@ -39,7 +39,7 @@ XQueryExtension(
     int *major_opcode,  /* RETURN */
     int *first_event,   /* RETURN */
     int *first_error)	/* RETURN */
-{       
+{
     xQueryExtensionReply rep;
     register xQueryExtensionReq *req;
 

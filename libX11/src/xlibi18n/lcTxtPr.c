@@ -93,7 +93,7 @@ _XTextListToTextProperty(
     buf_len = get_buf_size(is_wide_char, list, count);
     if ((buf = (char *) Xmalloc(buf_len)) == NULL)
 	return XNoMemory;
-    
+
     switch (style) {
 	case XStringStyle:
 	case XStdICCTextStyle:
@@ -116,7 +116,7 @@ _XTextListToTextProperty(
 		mb_list = (char **) list;
 		to = buf;
 		for (i = 0; i < count && buf_len > 0; i++) {
-		    if (*mb_list) 
+		    if (*mb_list)
 			strcpy(to, *mb_list);
 		    else
 			*to = '\0';

@@ -35,7 +35,7 @@ in this Software without prior written authorization from The Open Group.
 
 
 /*
- * Routines for allocating space for structures that are expected to get 
+ * Routines for allocating space for structures that are expected to get
  * longer at some point.
  */
 

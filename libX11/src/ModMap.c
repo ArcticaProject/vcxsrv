@@ -34,7 +34,7 @@ in this Software without prior written authorization from The Open Group.
 
 XModifierKeymap *
 XGetModifierMapping(register Display *dpy)
-{       
+{
     xGetModifierMappingReply rep;
     register xReq *req;
     unsigned long nbytes;
@@ -143,7 +143,7 @@ XInsertModifiermapEntry(XModifierKeymap *map,
             map->modifiermap[ row+i ] = keycode;
 	    return(map); /* we added it without stretching the map */
 	}
-    }   
+    }
 
     /* stretch the map */
     if ((newmap = XNewModifiermap(map->max_keypermod+1)) == NULL)

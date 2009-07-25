@@ -34,9 +34,9 @@ in this Software without prior written authorization from The Open Group.
 int
 XReparentWindow(
     register Display *dpy,
-    Window w, 
+    Window w,
     Window p,
-    int x, 
+    int x,
     int y)
 {
     register xReparentWindowReq *req;

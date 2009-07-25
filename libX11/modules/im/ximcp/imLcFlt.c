@@ -8,7 +8,7 @@ Permission to use, copy, modify, distribute, and sell this software
 and its documentation for any purpose is hereby granted without fee,
 provided that the above copyright notice appear in all copies and
 that both that copyright notice and this permission notice appear
-in supporting documentation, and that the name of Fuji Xerox, 
+in supporting documentation, and that the name of Fuji Xerox,
 FUJITSU LIMITED not be used in advertising or publicity pertaining
 to distribution of the software without specific, written prior
 permission. Fuji Xerox, FUJITSU LIMITED make no representations
@@ -25,7 +25,7 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
   Author   : Kazunori Nishihara	Fuji Xerox
-  Modifier : Takashi Fujiwara   FUJITSU LIMITED 
+  Modifier : Takashi Fujiwara   FUJITSU LIMITED
                                 fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
@@ -40,11 +40,7 @@ PERFORMANCE OF THIS SOFTWARE.
 #include "Ximint.h"
 
 Bool
-_XimLocalFilter(d, w, ev, client_data)
-    Display	*d;
-    Window	 w;
-    XEvent	*ev;
-    XPointer	 client_data;
+_XimLocalFilter(Display *d, Window w, XEvent *ev, XPointer client_data)
 {
     Xic		 ic = (Xic)client_data;
     KeySym	 keysym;
@@ -104,7 +100,7 @@ _XimLocalFilter(d, w, ev, client_data)
 	    ic->private.local.brl_committed = 0;
 	    /* return back to client KeyPressEvent keycode == 0 */
 	    ev->xkey.keycode = 0;
-	    _XPutBackEvent(d, ev);
+	    XPutBackEvent(d, ev);
 	    /* initialize internal state for next key sequence */
 	    ic->private.local.context = ((Xim)ic->core.im)->private.local.top;
 	    return(True);

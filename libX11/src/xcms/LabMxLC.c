@@ -3,7 +3,7 @@
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
  * 	All Rights Reserved
- * 
+ *
  * This file is a component of an X Window System-specific implementation
  * of XCMS based on the TekColor Color Management System.  Permission is
  * hereby granted to use, copy, modify, sell, and otherwise distribute this
@@ -11,10 +11,10 @@
  * that this copyright, permission, and disclaimer notice is reproduced in
  * all copies of this software and in supporting documentation.  TekColor
  * is a trademark of Tektronix, Inc.
- * 
+ *
  * Tektronix makes no representation about the suitability of this software
  * for any purpose.  It is provided "as is" and with all faults.
- * 
+ *
  * TEKTRONIX DISCLAIMS ALL WARRANTIES APPLICABLE TO THIS SOFTWARE,
  * INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.  IN NO EVENT SHALL TEKTRONIX BE LIABLE FOR ANY
@@ -83,7 +83,7 @@ _XcmsCIELabQueryMaxLCRGB(
  *		by a binary search of all possible chromas.  An assumption
  *		is made that there are no local maxima.  Use the unrounded
  *		Max psychometric chroma because the difference check can be
- *		small.  
+ *		small.
  *
  *		NOTE:  No local CCC is used because this is a private
  *		       routine and all routines that call it are expected
@@ -98,7 +98,7 @@ _XcmsCIELabQueryMaxLCRGB(
  *		XcmsFailure - Failure
  *		XcmsSuccess - Succeeded
  *
- */ 
+ */
 {
     XcmsFloat nSmall, nLarge;
     XcmsColor tmp;
@@ -115,15 +115,15 @@ _XcmsCIELabQueryMaxLCRGB(
      * out of bounds RGBi values in tmp when the ccc->gamutCompProc
      * is NULL.
      */
-    if ((_XcmsConvertColorsWithWhitePt(ccc, &tmp, ScreenWhitePointOfCCC(ccc), 
-		               (unsigned int)1, XcmsRGBiFormat, (Bool *) NULL) 
+    if ((_XcmsConvertColorsWithWhitePt(ccc, &tmp, ScreenWhitePointOfCCC(ccc),
+		               (unsigned int)1, XcmsRGBiFormat, (Bool *) NULL)
 	    == XcmsFailure) && tmp.format != XcmsRGBiFormat) {
 	return (XcmsFailure);
     }
 
     /* Now pick the smallest RGB */
-    nSmall = MIN3(tmp.spec.RGBi.red, 
-		  tmp.spec.RGBi.green, 
+    nSmall = MIN3(tmp.spec.RGBi.red,
+		  tmp.spec.RGBi.green,
 		  tmp.spec.RGBi.blue);
     /* Make the smallest RGB equal to zero */
     tmp.spec.RGBi.red   -= nSmall;
@@ -131,8 +131,8 @@ _XcmsCIELabQueryMaxLCRGB(
     tmp.spec.RGBi.blue  -= nSmall;
 
     /* Now pick the largest RGB */
-    nLarge = MAX3(tmp.spec.RGBi.red, 
-		  tmp.spec.RGBi.green, 
+    nLarge = MAX3(tmp.spec.RGBi.red,
+		  tmp.spec.RGBi.green,
 		  tmp.spec.RGBi.blue);
     /* Scale the RGB values based on the largest one */
     tmp.spec.RGBi.red   /= nLarge;
@@ -149,13 +149,13 @@ _XcmsCIELabQueryMaxLCRGB(
 
     /* Convert from RGBi to Lab */
     if (_XcmsConvertColorsWithWhitePt(ccc, &tmp,
-	       ScreenWhitePointOfCCC(ccc), 1, XcmsCIELabFormat, (Bool *) NULL) 
+	       ScreenWhitePointOfCCC(ccc), 1, XcmsCIELabFormat, (Bool *) NULL)
 	    == XcmsFailure) {
 	return (XcmsFailure);
     }
 
     memcpy((char *)pColor_return, (char *)&tmp, sizeof(XcmsColor));
-    return (XcmsSuccess);    
+    return (XcmsSuccess);
 }
 
 
@@ -192,7 +192,7 @@ XcmsCIELabQueryMaxLC (
  *		XcmsFailure - Failure
  *		XcmsSuccess - Succeeded
  *
- */ 
+ */
 {
     XcmsCCCRec myCCC;
 
@@ -202,7 +202,7 @@ XcmsCIELabQueryMaxLC (
     if (ccc == NULL || pColor_return == NULL) {
 	return(XcmsFailure);
     }
-    
+
     /* Use my own CCC */
     memcpy ((char *)&myCCC, (char *)ccc, sizeof(XcmsCCCRec));
     myCCC.clientWhitePt.format = XcmsUndefinedFormat;
@@ -213,8 +213,8 @@ XcmsCIELabQueryMaxLC (
     }
     while (hue_angle >= 360.0) {
 	hue_angle -= 360.0;
-    } 
-    
+    }
+
     return(_XcmsCIELabQueryMaxLCRGB (&myCCC, radians(hue_angle), pColor_return,
 	    (XcmsRGBi *)NULL));
 }

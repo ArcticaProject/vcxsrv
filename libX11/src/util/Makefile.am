@@ -4,8 +4,7 @@ noinst_PROGRAMS=makekeys
 
 makekeys_CFLAGS=$(X11_CFLAGS)
 
-#override CC = gcc
-LINK = $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+CC = @CC_FOR_BUILD@
 
 EXTRA_DIST = mkks.sh
 

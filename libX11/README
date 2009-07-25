@@ -1,40 +1,39 @@
-#define S(x, y)  y##x
+libX11 - Core X11 protocol client library
 
-Please contact S(south.rr.com, wt@mid) and jim.gettys@hp.com before doing
-any commits on this module.
+Documentation for this library can be found in the included man pages,
+the xlib spec from the doc/xorg-docs module, also available at:
 
-This is the libX11 from XFree86.
+	http://xorg.freedesktop.org/releases/X11R7.0/doc/PDF/xlib.pdf
 
-The goal of this project are (1) to get libX11 out of the huge
-XF86 hunk of code, (2) to make it buildable with autotools, and
-(3) keep the ability to easily merge bug fixes from libX11 in
-XF86 into this code, (4) make it possible for people to work with
-Xlib without having to deal with the entire XFree86 distribution,
-so that bugs can get detected and fixed, (5) provide a place to
-move the X library forward.
+and the O'Reilly Xlib books, which they have made freely available online,
+though only for older versions of X11:
 
-1 and 2 are related in that a new build system will need to be
-developed to get libX11 building outside of the XF86 tree.
-Autotools was chosen for a variety of reasons, not the least
-of which was that it is very common in the open source community.
+ - X Series Volume 2: Xlib Reference Manual (1989, covers X11R3)
+	http://www.archive.org/details/xlibretmanver1102nyemiss
 
-For 3, notice that the directory structure of the src subdirectory
-is congruant to the directory structure of xc/lib/X11 in the
-XFree86 tree. Absolutely, do not break this unless this becomes
-the dominant libX11. This allows easier incorporation of patches
-from the XFree86 libX11.
+ - X Series Volume 2: Xlib Reference Manual, 2nd Edition (1990, covers X11R4)
+	http://www.archive.org/details/xlibrefmanv115ed02nyemiss
 
-For 4, notice that the library can be built without having to build
-everything else, so you can build and test enhancements without
-replacing your entire X distribution.
+All questions regarding this software should be directed at the
+Xorg mailing list:
 
-For 5, see the xlibs@pdx.freedesktop.org mailing list.  For example,
-lots of "stuff" was pushed into Xlib that should have been stand-alone
-libraries, since they are not of universal interest and touch the X
-wire protocol.  (Mea culpa; a mistake I made 15 years ago that didn't
-matter much in the days before shared libraries has been amplified for
-aeons- jg).  And Xlib does not tolerate loss of its connection well,
-and so on...
+        http://lists.freedesktop.org/mailman/listinfo/xorg
 
-Thanks for checking this package out, Warren Turkal and Jim Gettys.
+Please submit bug reports to the Xorg bugzilla:
+
+        https://bugs.freedesktop.org/enter_bug.cgi?product=xorg
+
+The master development code repository can be found at:
+
+        git://anongit.freedesktop.org/git/xorg/lib/libX11
+
+        http://cgit.freedesktop.org/xorg/lib/libX11
+
+For patch submission instructions, see:
+
+	http://www.x.org/wiki/Development/Documentation/SubmittingPatches
+
+For more information on the git code manager, see:
+
+        http://wiki.x.org/wiki/GitPage
 

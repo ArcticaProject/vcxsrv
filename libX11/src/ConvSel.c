@@ -34,7 +34,7 @@ in this Software without prior written authorization from The Open Group.
 int
 XConvertSelection(
     register Display *dpy,
-    Atom selection, 
+    Atom selection,
     Atom target,
     Atom property,
     Window requestor,

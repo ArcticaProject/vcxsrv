@@ -41,7 +41,7 @@ XDrawRectangle(
     register Display *dpy,
     Drawable d,
     GC gc,
-    int x, 
+    int x,
     int y, /* INT16 */
     unsigned int width,
     unsigned int height) /* CARD16 */

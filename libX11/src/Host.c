@@ -54,13 +54,11 @@ XAddHost (
     XServerInterpretedAddress *siAddr;
     int addrlen;
 
-    if (host->family == FamilyServerInterpreted) {
-	siAddr = (XServerInterpretedAddress *) host->address;
-	addrlen = siAddr->typelength + siAddr->valuelength + 1;
-    } else {
-	addrlen = host->length;
-    }
-    
+    siAddr = host->family == FamilyServerInterpreted ?
+	(XServerInterpretedAddress *)host->address : NULL;
+    addrlen = siAddr ?
+	siAddr->typelength + siAddr->valuelength + 1 : host->length;
+
     length = (addrlen + 3) & ~0x3;	/* round up */
 
     LockDisplay(dpy);
@@ -68,7 +66,7 @@ XAddHost (
     req->mode = HostInsert;
     req->hostFamily = host->family;
     req->hostLength = addrlen;
-    if (host->family == FamilyServerInterpreted) {
+    if (siAddr) {
 	char *dest = (char *) NEXTPTR(req,xChangeHostsReq);
 	memcpy(dest, siAddr->type, siAddr->typelength);
 	dest[siAddr->typelength] = '\0';
@@ -91,13 +89,11 @@ XRemoveHost (
     XServerInterpretedAddress *siAddr;
     int addrlen;
 
-    if (host->family == FamilyServerInterpreted) {
-	siAddr = (XServerInterpretedAddress *) host->address;
-	addrlen = siAddr->typelength + siAddr->valuelength + 1;
-    } else {
-	addrlen = host->length;
-    }
-    
+    siAddr = host->family == FamilyServerInterpreted ?
+	(XServerInterpretedAddress *)host->address : NULL;
+    addrlen = siAddr ?
+	siAddr->typelength + siAddr->valuelength + 1 : host->length;
+
     length = (addrlen + 3) & ~0x3;	/* round up */
 
     LockDisplay(dpy);
@@ -105,7 +101,7 @@ XRemoveHost (
     req->mode = HostDelete;
     req->hostFamily = host->family;
     req->hostLength = addrlen;
-    if (host->family == FamilyServerInterpreted) {
+    if (siAddr) {
 	char *dest = (char *) NEXTPTR(req,xChangeHostsReq);
 	memcpy(dest, siAddr->type, siAddr->typelength);
 	dest[siAddr->typelength] = '\0';

@@ -52,7 +52,7 @@ int *XListDepths (
 
 	depths = (int *) Xmalloc (count * sizeof(int));
 	if (!depths) return NULL;
-	for (i = 0, dp = scr->depths; i < count; i++, dp++) 
+	for (i = 0, dp = scr->depths; i < count; i++, dp++)
 	  depths[i] = dp->depth;
     } else {
 	/* a screen must have a depth */

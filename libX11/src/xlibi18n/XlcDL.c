@@ -143,7 +143,7 @@ strdup_with_underscore(const char *symbol)
 {
 	char *result;
 
-	if ((result = malloc(strlen(symbol) + 2)) == NULL) 
+	if ((result = malloc(strlen(symbol) + 2)) == NULL)
 		return NULL;
 	result[0] = '_';
 	strcpy(result + 1, symbol);
@@ -213,7 +213,7 @@ Limit the length of path to prevent stack buffer corruption.
 	  if (!xi18n_objects_list) return;
 	}
 	n = parse_line(p, args, 6);
-	
+
 	if (n == 3 || n == 5) {
 	  if (!strcmp(args[0], "XLC")){
 	    xi18n_objects_list[lc_count].type = XLC_OBJECT;
@@ -323,7 +323,7 @@ open_object(
      char *lc_dir)
 {
   char *path;
-  
+
   if (object->refcount == 0) {
       path = __lc_path(object->dl_name, lc_dir);
       if (!path)
@@ -430,7 +430,7 @@ _XlcDynamicLoad(const char *lc_name)
 	if (lcd != (XLCd)NULL) {
 	    break;
 	}
-	
+
 	close_object (objects_list);
     }
     return (XLCd)lcd;
@@ -468,7 +468,7 @@ _XDynamicOpenIM(XLCd lcd, Display *display, XrmDatabase rdb,
     if (im != (XIM)NULL) {
         break;
     }
-    
+
     close_object (objects_list);
   }
   return (XIM)im;
@@ -612,7 +612,7 @@ _XDynamicOpenOM(XLCd lcd, Display *display, XrmDatabase rdb,
 	strcmp(objects_list->locale_name, lc_name)) continue;
     if (!open_object (objects_list, lc_dir))
         continue;
-    
+
     om_openOM = (dynamicIOpenProcp)fetch_symbol(objects_list, objects_list->open);
     if (!om_openOM) continue;
     om = (*om_openOM)(lcd, display, rdb, res_name, res_class);

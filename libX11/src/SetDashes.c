@@ -54,4 +54,4 @@ XSetDashes (
     SyncHandle();
     return 1;
     }
-    
+

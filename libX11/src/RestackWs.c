@@ -67,6 +67,6 @@ XRestackWindows (
     return 1;
     }
 
-    
 
-    
+
+

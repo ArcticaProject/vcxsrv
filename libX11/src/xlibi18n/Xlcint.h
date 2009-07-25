@@ -42,31 +42,31 @@ from The Open Group.
  * copyright notice and this permission notice appear in supporting
  * documentation, and that the names of OMRON, NTT Software, NTT, Open
  * Software Foundation, and Sony Corporation not be used in advertising
- * or publicity pertaining to distribution of the software without specific, 
+ * or publicity pertaining to distribution of the software without specific,
  * written prior permission. OMRON, NTT Software, NTT, Open Software
- * Foundation, and Sony Corporation  make no representations about the 
- * suitability of this software for any purpose.  It is provided "as is" 
+ * Foundation, and Sony Corporation  make no representations about the
+ * suitability of this software for any purpose.  It is provided "as is"
  * without express or implied warranty.
  *
- * OMRON, NTT SOFTWARE, NTT, OPEN SOFTWARE FOUNDATION, AND SONY 
- * CORPORATION DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING 
- * ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT 
- * SHALL OMRON, NTT SOFTWARE, NTT, OPEN SOFTWARE FOUNDATION, OR SONY 
+ * OMRON, NTT SOFTWARE, NTT, OPEN SOFTWARE FOUNDATION, AND SONY
+ * CORPORATION DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ * ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+ * SHALL OMRON, NTT SOFTWARE, NTT, OPEN SOFTWARE FOUNDATION, OR SONY
  * CORPORATION BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
  * ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
- * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT 
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
+ *
  *	Authors: Li Yuhong		OMRON Corporation
  *		 Tatsuya Kato		NTT Software Corporation
  *		 Hiroshi Kuribayashi	OMRON Coproration
  *		 Muneiyoshi Suzuki	Nippon Telegraph and Telephone Co.
- * 
- *		 M. Collins		OSF  
+ *
+ *		 M. Collins		OSF
  *		 Katsuhisa Yano		TOSHIBA Corp.
  *               Makoto Wakamatsu       Sony Corporation
  *               Takashi Fujiwara	FUJITSU LIMITED
- */				
+ */
 
 
 #ifndef	_XLCINT_H_
@@ -436,11 +436,11 @@ typedef char* (*XGetOCValuesProc)(
 );
 
 /*
- * X Font Sets are an instantiable object, so we define it, the 
+ * X Font Sets are an instantiable object, so we define it, the
  * object itself, a method list and data
  */
 
-/* 
+/*
  * XFontSet object method list
  */
 
@@ -598,7 +598,7 @@ typedef struct _XOC {
 
 
 /*
- * X Input Managers are an instantiable object, so we define it, the 
+ * X Input Managers are an instantiable object, so we define it, the
  * object itself, a method list and data.
  */
 
@@ -656,7 +656,7 @@ typedef struct {
 
 
 /*
- * An X Input Manager (IM).  Implementations may need to extend this data 
+ * An X Input Manager (IM).  Implementations may need to extend this data
  * structure to accomodate additional data, state information etc.
  */
 typedef struct _XIM {
@@ -667,13 +667,13 @@ typedef struct _XIM {
 
 
 /*
- * X Input Contexts (IC) are an instantiable object, so we define it, the 
+ * X Input Contexts (IC) are an instantiable object, so we define it, the
  * object itself, a method list and data for this object
  */
 
 /*
  * Input Context method list
- */ 
+ */
 typedef struct {
     void (*destroy)(
 	XIC
@@ -740,7 +740,7 @@ typedef struct {
 
 
 /*
- * an Input Context.  Implementations may need to extend this data 
+ * an Input Context.  Implementations may need to extend this data
  * structure to accomodate additional data, state information etc.
  */
 typedef struct _XIC {
@@ -909,6 +909,11 @@ extern void _XlcAddUtf8Converters(
 
 /* Registers UTF-8 converters for a UTF-8 locale. */
 extern void _XlcAddUtf8LocaleConverters(
+    XLCd		lcd
+);
+
+/* Registers GB18030 converters for a GB18030 locale. */
+extern void _XlcAddGB18030LocaleConverters(
     XLCd		lcd
 );
 

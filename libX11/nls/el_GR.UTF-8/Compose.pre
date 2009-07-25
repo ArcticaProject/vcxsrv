@@ -416,695 +416,522 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 
 <Multi_key> <greater> <Greek_alpha>                     : "ἀ"  U1f00
 <dead_horn> <Greek_alpha>                               : "ἀ"  U1f00
-<U0313> <Greek_alpha>                               : "ἀ"  U1f00
 <dead_psili> <Greek_alpha>                               : "ἀ"  U1f00
 <Multi_key> <less> <Greek_alpha>                        : "ἁ"  U1f01
 <dead_ogonek> <Greek_alpha>                             : "ἁ"  U1f01
-<U0314> <Greek_alpha>                             : "ἁ"  U1f01
 <dead_dasia> <Greek_alpha>                             : "ἁ"  U1f01
 <Multi_key> <greater> <grave> <Greek_alpha>             : "ἂ"  U1f02
 <Multi_key> <grave> <greater> <Greek_alpha>             : "ἂ"  U1f02
 <dead_horn> <dead_grave> <Greek_alpha>                  : "ἂ"  U1f02
-<U0313> <dead_grave> <Greek_alpha>                  : "ἂ"  U1f02
 <dead_psili> <dead_grave> <Greek_alpha>                  : "ἂ"  U1f02
 <dead_grave> <dead_horn> <Greek_alpha>                  : "ἂ"  U1f02
-<dead_grave> <U0313> <Greek_alpha>                  : "ἂ"  U1f02
 <dead_grave> <dead_psili> <Greek_alpha>                  : "ἂ"  U1f02
 <Multi_key> <less> <grave> <Greek_alpha>                : "ἃ"  U1f03
 <Multi_key> <grave> <less> <Greek_alpha>                : "ἃ"  U1f03
 <dead_ogonek> <dead_grave> <Greek_alpha>                : "ἃ"  U1f03
-<U0314> <dead_grave> <Greek_alpha>                : "ἃ"  U1f03
 <dead_dasia> <dead_grave> <Greek_alpha>                : "ἃ"  U1f03
 <dead_grave> <dead_ogonek> <Greek_alpha>                : "ἃ"  U1f03
-<dead_grave> <U0314> <Greek_alpha>                : "ἃ"  U1f03
 <dead_grave> <dead_dasia> <Greek_alpha>                : "ἃ"  U1f03
 <Multi_key> <greater> <apostrophe> <Greek_alpha>        : "ἄ"  U1f04
 <Multi_key> <apostrophe> <greater> <Greek_alpha>        : "ἄ"  U1f04
 <dead_horn> <dead_acute> <Greek_alpha>                  : "ἄ"  U1f04
-<U0313> <dead_acute> <Greek_alpha>                  : "ἄ"  U1f04
 <dead_psili> <dead_acute> <Greek_alpha>                  : "ἄ"  U1f04
 <dead_acute> <dead_horn> <Greek_alpha>                  : "ἄ"  U1f04
-<dead_acute> <U0313> <Greek_alpha>                  : "ἄ"  U1f04
 <dead_acute> <dead_psili> <Greek_alpha>                  : "ἄ"  U1f04
 <Multi_key> <less> <apostrophe> <Greek_alpha>           : "ἅ"  U1f05
 <Multi_key> <apostrophe> <less> <Greek_alpha>           : "ἅ"  U1f05
 <dead_ogonek> <dead_acute> <Greek_alpha>                : "ἅ"  U1f05
-<U0314> <dead_acute> <Greek_alpha>                : "ἅ"  U1f05
 <dead_dasia> <dead_acute> <Greek_alpha>                : "ἅ"  U1f05
 <dead_acute> <dead_ogonek> <Greek_alpha>                : "ἅ"  U1f05
-<dead_acute> <U0314> <Greek_alpha>                : "ἅ"  U1f05
 <dead_acute> <dead_dasia> <Greek_alpha>                : "ἅ"  U1f05
 <Multi_key> <greater> <asciitilde> <Greek_alpha>        : "ἆ"  U1f06
 <Multi_key> <asciitilde> <greater> <Greek_alpha>        : "ἆ"  U1f06
 <dead_horn> <dead_tilde> <Greek_alpha>                  : "ἆ"  U1f06
-<U0313> <dead_tilde> <Greek_alpha>                  : "ἆ"  U1f06
 <dead_psili> <dead_tilde> <Greek_alpha>                  : "ἆ"  U1f06
 <dead_tilde> <dead_horn> <Greek_alpha>                  : "ἆ"  U1f06
-<dead_tilde> <U0313> <Greek_alpha>                  : "ἆ"  U1f06
 <dead_tilde> <dead_psili> <Greek_alpha>                  : "ἆ"  U1f06
 <Multi_key> <less> <asciitilde> <Greek_alpha>           : "ἇ"  U1f07
 <Multi_key> <asciitilde> <less> <Greek_alpha>           : "ἇ"  U1f07
 <dead_ogonek> <dead_tilde> <Greek_alpha>                : "ἇ"  U1f07
-<U0314> <dead_tilde> <Greek_alpha>                : "ἇ"  U1f07
 <dead_dasia> <dead_tilde> <Greek_alpha>                : "ἇ"  U1f07
 <dead_tilde> <dead_ogonek> <Greek_alpha>                : "ἇ"  U1f07
-<dead_tilde> <U0314> <Greek_alpha>                : "ἇ"  U1f07
 <dead_tilde> <dead_dasia> <Greek_alpha>                : "ἇ"  U1f07
 <Multi_key> <greater> <Greek_ALPHA>                     : "Ἀ"  U1f08
 <dead_horn> <Greek_ALPHA>                               : "Ἀ"  U1f08
-<U0313> <Greek_ALPHA>                               : "Ἀ"  U1f08
 <dead_psili> <Greek_ALPHA>                               : "Ἀ"  U1f08
 <Multi_key> <less> <Greek_ALPHA>                        : "Ἁ"  U1f09
 <dead_ogonek> <Greek_ALPHA>                             : "Ἁ"  U1f09
-<U0314> <Greek_ALPHA>                             : "Ἁ"  U1f09
 <dead_dasia> <Greek_ALPHA>                             : "Ἁ"  U1f09
 <Multi_key> <greater> <grave> <Greek_ALPHA>             : "Ἂ"  U1f0a
 <Multi_key> <grave> <greater> <Greek_ALPHA>             : "Ἂ"  U1f0a
 <dead_horn> <dead_grave> <Greek_ALPHA>                  : "Ἂ"  U1f0a
-<U0313> <dead_grave> <Greek_ALPHA>                  : "Ἂ"  U1f0a
 <dead_psili> <dead_grave> <Greek_ALPHA>                  : "Ἂ"  U1f0a
 <dead_grave> <dead_horn> <Greek_ALPHA>                  : "Ἂ"  U1f0a
-<dead_grave> <U0313> <Greek_ALPHA>                  : "Ἂ"  U1f0a
 <dead_grave> <dead_psili> <Greek_ALPHA>                  : "Ἂ"  U1f0a
 <Multi_key> <less> <grave> <Greek_ALPHA>                : "Ἃ"  U1f0b
 <Multi_key> <grave> <less> <Greek_ALPHA>                : "Ἃ"  U1f0b
 <dead_ogonek> <dead_grave> <Greek_ALPHA>                : "Ἃ"  U1f0b
-<U0314> <dead_grave> <Greek_ALPHA>                : "Ἃ"  U1f0b
 <dead_dasia> <dead_grave> <Greek_ALPHA>                : "Ἃ"  U1f0b
 <dead_grave> <dead_ogonek> <Greek_ALPHA>                : "Ἃ"  U1f0b
-<dead_grave> <U0314> <Greek_ALPHA>                : "Ἃ"  U1f0b
 <dead_grave> <dead_dasia> <Greek_ALPHA>                : "Ἃ"  U1f0b
 <Multi_key> <greater> <apostrophe> <Greek_ALPHA>        : "Ἄ"  U1f0c
 <Multi_key> <apostrophe> <greater> <Greek_ALPHA>        : "Ἄ"  U1f0c
 <dead_horn> <dead_acute> <Greek_ALPHA>                  : "Ἄ"  U1f0c
-<U0313> <dead_acute> <Greek_ALPHA>                  : "Ἄ"  U1f0c
 <dead_psili> <dead_acute> <Greek_ALPHA>                  : "Ἄ"  U1f0c
 <dead_acute> <dead_horn> <Greek_ALPHA>                  : "Ἄ"  U1f0c
-<dead_acute> <U0313> <Greek_ALPHA>                  : "Ἄ"  U1f0c
 <dead_acute> <dead_psili> <Greek_ALPHA>                  : "Ἄ"  U1f0c
 <Multi_key> <less> <apostrophe> <Greek_ALPHA>           : "Ἅ"  U1f0d
 <Multi_key> <apostrophe> <less> <Greek_ALPHA>           : "Ἅ"  U1f0d
 <dead_ogonek> <dead_acute> <Greek_ALPHA>                : "Ἅ"  U1f0d
-<U0314> <dead_acute> <Greek_ALPHA>                : "Ἅ"  U1f0d
 <dead_dasia> <dead_acute> <Greek_ALPHA>                : "Ἅ"  U1f0d
 <dead_acute> <dead_ogonek> <Greek_ALPHA>                : "Ἅ"  U1f0d
-<dead_acute> <U0314> <Greek_ALPHA>                : "Ἅ"  U1f0d
 <dead_acute> <dead_dasia> <Greek_ALPHA>                : "Ἅ"  U1f0d
 <Multi_key> <greater> <asciitilde> <Greek_ALPHA>        : "Ἆ"  U1f0e
 <Multi_key> <asciitilde> <greater> <Greek_ALPHA>        : "Ἆ"  U1f0e
 <dead_horn> <dead_tilde> <Greek_ALPHA>                  : "Ἆ"  U1f0e
-<U0313> <dead_tilde> <Greek_ALPHA>                  : "Ἆ"  U1f0e
 <dead_psili> <dead_tilde> <Greek_ALPHA>                  : "Ἆ"  U1f0e
 <dead_tilde> <dead_horn> <Greek_ALPHA>                  : "Ἆ"  U1f0e
-<dead_tilde> <U0313> <Greek_ALPHA>                  : "Ἆ"  U1f0e
 <dead_tilde> <dead_psili> <Greek_ALPHA>                  : "Ἆ"  U1f0e
 <Multi_key> <less> <asciitilde> <Greek_ALPHA>           : "Ἇ"  U1f0f
 <Multi_key> <asciitilde> <less> <Greek_ALPHA>           : "Ἇ"  U1f0f
 <dead_ogonek> <dead_tilde> <Greek_ALPHA>                : "Ἇ"  U1f0f
-<U0314> <dead_tilde> <Greek_ALPHA>                : "Ἇ"  U1f0f
 <dead_dasia> <dead_tilde> <Greek_ALPHA>                : "Ἇ"  U1f0f
 <dead_tilde> <dead_ogonek> <Greek_ALPHA>                : "Ἇ"  U1f0f
-<dead_tilde> <U0314> <Greek_ALPHA>                : "Ἇ"  U1f0f
 <dead_tilde> <dead_dasia> <Greek_ALPHA>                : "Ἇ"  U1f0f
 <Multi_key> <greater> <Greek_epsilon>                   : "ἐ"  U1f10
 <dead_horn> <Greek_epsilon>                             : "ἐ"  U1f10
-<U0313> <Greek_epsilon>                             : "ἐ"  U1f10
 <dead_psili> <Greek_epsilon>                             : "ἐ"  U1f10
 <Multi_key> <less> <Greek_epsilon>                      : "ἑ"  U1f11
 <dead_ogonek> <Greek_epsilon>                           : "ἑ"  U1f11
-<U0314> <Greek_epsilon>                           : "ἑ"  U1f11
 <dead_dasia> <Greek_epsilon>                           : "ἑ"  U1f11
 <Multi_key> <greater> <grave> <Greek_epsilon>           : "ἒ"  U1f12
 <Multi_key> <grave> <greater> <Greek_epsilon>           : "ἒ"  U1f12
 <dead_horn> <dead_grave> <Greek_epsilon>                : "ἒ"  U1f12
-<U0313> <dead_grave> <Greek_epsilon>                : "ἒ"  U1f12
 <dead_psili> <dead_grave> <Greek_epsilon>                : "ἒ"  U1f12
 <dead_grave> <dead_horn> <Greek_epsilon>                : "ἒ"  U1f12
-<dead_grave> <U0313> <Greek_epsilon>                : "ἒ"  U1f12
 <dead_grave> <dead_psili> <Greek_epsilon>                : "ἒ"  U1f12
 <Multi_key> <less> <grave> <Greek_epsilon>              : "ἓ"  U1f13
 <Multi_key> <grave> <less> <Greek_epsilon>              : "ἓ"  U1f13
 <dead_ogonek> <dead_grave> <Greek_epsilon>              : "ἓ"  U1f13
-<U0314> <dead_grave> <Greek_epsilon>              : "ἓ"  U1f13
 <dead_dasia> <dead_grave> <Greek_epsilon>              : "ἓ"  U1f13
 <dead_grave> <dead_ogonek> <Greek_epsilon>              : "ἓ"  U1f13
-<dead_grave> <U0314> <Greek_epsilon>              : "ἓ"  U1f13
 <dead_grave> <dead_dasia> <Greek_epsilon>              : "ἓ"  U1f13
 <Multi_key> <greater> <apostrophe> <Greek_epsilon>      : "ἔ"  U1f14
 <Multi_key> <apostrophe> <greater> <Greek_epsilon>      : "ἔ"  U1f14
 <dead_horn> <dead_acute> <Greek_epsilon>                : "ἔ"  U1f14
-<U0313> <dead_acute> <Greek_epsilon>                : "ἔ"  U1f14
 <dead_psili> <dead_acute> <Greek_epsilon>                : "ἔ"  U1f14
 <dead_acute> <dead_horn> <Greek_epsilon>                : "ἔ"  U1f14
-<dead_acute> <U0313> <Greek_epsilon>                : "ἔ"  U1f14
 <dead_acute> <dead_psili> <Greek_epsilon>                : "ἔ"  U1f14
 <Multi_key> <less> <apostrophe> <Greek_epsilon>         : "ἕ"  U1f15
 <Multi_key> <apostrophe> <less> <Greek_epsilon>         : "ἕ"  U1f15
 <dead_ogonek> <dead_acute> <Greek_epsilon>              : "ἕ"  U1f15
-<U0314> <dead_acute> <Greek_epsilon>              : "ἕ"  U1f15
 <dead_dasia> <dead_acute> <Greek_epsilon>              : "ἕ"  U1f15
 <dead_acute> <dead_ogonek> <Greek_epsilon>              : "ἕ"  U1f15
-<dead_acute> <U0314> <Greek_epsilon>              : "ἕ"  U1f15
 <dead_acute> <dead_dasia> <Greek_epsilon>              : "ἕ"  U1f15
 <Multi_key> <greater> <Greek_EPSILON>                   : "Ἐ"  U1f18
 <dead_horn> <Greek_EPSILON>                             : "Ἐ"  U1f18
-<U0313> <Greek_EPSILON>                             : "Ἐ"  U1f18
 <dead_psili> <Greek_EPSILON>                             : "Ἐ"  U1f18
 <Multi_key> <less> <Greek_EPSILON>                      : "Ἑ"  U1f19
 <dead_ogonek> <Greek_EPSILON>                           : "Ἑ"  U1f19
-<U0314> <Greek_EPSILON>                           : "Ἑ"  U1f19
 <dead_dasia> <Greek_EPSILON>                           : "Ἑ"  U1f19
 <Multi_key> <greater> <grave> <Greek_EPSILON>           : "Ἒ"  U1f1a
 <Multi_key> <grave> <greater> <Greek_EPSILON>           : "Ἒ"  U1f1a
 <dead_horn> <dead_grave> <Greek_EPSILON>                : "Ἒ"  U1f1a
-<U0313> <dead_grave> <Greek_EPSILON>                : "Ἒ"  U1f1a
 <dead_psili> <dead_grave> <Greek_EPSILON>                : "Ἒ"  U1f1a
 <dead_grave> <dead_horn> <Greek_EPSILON>                : "Ἒ"  U1f1a
-<dead_grave> <U0313> <Greek_EPSILON>                : "Ἒ"  U1f1a
 <dead_grave> <dead_psili> <Greek_EPSILON>                : "Ἒ"  U1f1a
 <Multi_key> <less> <grave> <Greek_EPSILON>              : "Ἓ"  U1f1b
 <Multi_key> <grave> <less> <Greek_EPSILON>              : "Ἓ"  U1f1b
 <dead_ogonek> <dead_grave> <Greek_EPSILON>              : "Ἓ"  U1f1b
-<U0314> <dead_grave> <Greek_EPSILON>              : "Ἓ"  U1f1b
 <dead_dasia> <dead_grave> <Greek_EPSILON>              : "Ἓ"  U1f1b
 <dead_grave> <dead_ogonek> <Greek_EPSILON>              : "Ἓ"  U1f1b
-<dead_grave> <U0314> <Greek_EPSILON>              : "Ἓ"  U1f1b
 <dead_grave> <dead_dasia> <Greek_EPSILON>              : "Ἓ"  U1f1b
 <Multi_key> <greater> <apostrophe> <Greek_EPSILON>      : "Ἔ"  U1f1c
 <Multi_key> <apostrophe> <greater> <Greek_EPSILON>      : "Ἔ"  U1f1c
 <dead_horn> <dead_acute> <Greek_EPSILON>                : "Ἔ"  U1f1c
-<U0313> <dead_acute> <Greek_EPSILON>                : "Ἔ"  U1f1c
 <dead_psili> <dead_acute> <Greek_EPSILON>                : "Ἔ"  U1f1c
 <dead_acute> <dead_horn> <Greek_EPSILON>                : "Ἔ"  U1f1c
-<dead_acute> <U0313> <Greek_EPSILON>                : "Ἔ"  U1f1c
 <dead_acute> <dead_psili> <Greek_EPSILON>                : "Ἔ"  U1f1c
 <Multi_key> <less> <apostrophe> <Greek_EPSILON>         : "Ἕ"  U1f1d
 <Multi_key> <apostrophe> <less> <Greek_EPSILON>         : "Ἕ"  U1f1d
 <dead_ogonek> <dead_acute> <Greek_EPSILON>              : "Ἕ"  U1f1d
-<U0314> <dead_acute> <Greek_EPSILON>              : "Ἕ"  U1f1d
 <dead_dasia> <dead_acute> <Greek_EPSILON>              : "Ἕ"  U1f1d
 <dead_acute> <dead_ogonek> <Greek_EPSILON>              : "Ἕ"  U1f1d
-<dead_acute> <U0314> <Greek_EPSILON>              : "Ἕ"  U1f1d
 <dead_acute> <dead_dasia> <Greek_EPSILON>              : "Ἕ"  U1f1d
 <Multi_key> <greater> <Greek_eta>                       : "ἠ"  U1f20
 <dead_horn> <Greek_eta>                                 : "ἠ"  U1f20
-<U0313> <Greek_eta>                                 : "ἠ"  U1f20
 <dead_psili> <Greek_eta>                                 : "ἠ"  U1f20
 <Multi_key> <less> <Greek_eta>                          : "ἡ"  U1f21
 <dead_ogonek> <Greek_eta>                               : "ἡ"  U1f21
-<U0314> <Greek_eta>                               : "ἡ"  U1f21
 <dead_dasia> <Greek_eta>                               : "ἡ"  U1f21
 <Multi_key> <greater> <grave> <Greek_eta>               : "ἢ"  U1f22
 <Multi_key> <grave> <greater> <Greek_eta>               : "ἢ"  U1f22
 <dead_horn> <dead_grave> <Greek_eta>                    : "ἢ"  U1f22
-<U0313> <dead_grave> <Greek_eta>                    : "ἢ"  U1f22
 <dead_psili> <dead_grave> <Greek_eta>                    : "ἢ"  U1f22
 <dead_grave> <dead_horn> <Greek_eta>                    : "ἢ"  U1f22
-<dead_grave> <U0313> <Greek_eta>                    : "ἢ"  U1f22
 <dead_grave> <dead_psili> <Greek_eta>                    : "ἢ"  U1f22
 <Multi_key> <less> <grave> <Greek_eta>                  : "ἣ"  U1f23
 <Multi_key> <grave> <less> <Greek_eta>                  : "ἣ"  U1f23
 <dead_ogonek> <dead_grave> <Greek_eta>                  : "ἣ"  U1f23
-<U0314> <dead_grave> <Greek_eta>                  : "ἣ"  U1f23
 <dead_dasia> <dead_grave> <Greek_eta>                  : "ἣ"  U1f23
 <dead_grave> <dead_ogonek> <Greek_eta>                  : "ἣ"  U1f23
-<dead_grave> <U0314> <Greek_eta>                  : "ἣ"  U1f23
 <dead_grave> <dead_dasia> <Greek_eta>                  : "ἣ"  U1f23
 <Multi_key> <greater> <apostrophe> <Greek_eta>          : "ἤ"  U1f24
 <Multi_key> <apostrophe> <greater> <Greek_eta>          : "ἤ"  U1f24
 <dead_horn> <dead_acute> <Greek_eta>                    : "ἤ"  U1f24
-<U0313> <dead_acute> <Greek_eta>                    : "ἤ"  U1f24
 <dead_psili> <dead_acute> <Greek_eta>                    : "ἤ"  U1f24
 <dead_acute> <dead_horn> <Greek_eta>                    : "ἤ"  U1f24
-<dead_acute> <U0313> <Greek_eta>                    : "ἤ"  U1f24
 <dead_acute> <dead_psili> <Greek_eta>                    : "ἤ"  U1f24
 <Multi_key> <less> <apostrophe> <Greek_eta>             : "ἥ"  U1f25
 <Multi_key> <apostrophe> <less> <Greek_eta>             : "ἥ"  U1f25
 <dead_ogonek> <dead_acute> <Greek_eta>                  : "ἥ"  U1f25
-<U0314> <dead_acute> <Greek_eta>                  : "ἥ"  U1f25
 <dead_dasia> <dead_acute> <Greek_eta>                  : "ἥ"  U1f25
 <dead_acute> <dead_ogonek> <Greek_eta>                  : "ἥ"  U1f25
-<dead_acute> <U0314> <Greek_eta>                  : "ἥ"  U1f25
 <dead_acute> <dead_dasia> <Greek_eta>                  : "ἥ"  U1f25
 <Multi_key> <greater> <asciitilde> <Greek_eta>          : "ἦ"  U1f26
 <Multi_key> <asciitilde> <greater> <Greek_eta>          : "ἦ"  U1f26
 <dead_horn> <dead_tilde> <Greek_eta>                    : "ἦ"  U1f26
-<U0313> <dead_tilde> <Greek_eta>                    : "ἦ"  U1f26
 <dead_psili> <dead_tilde> <Greek_eta>                    : "ἦ"  U1f26
 <dead_tilde> <dead_horn> <Greek_eta>                    : "ἦ"  U1f26
-<dead_tilde> <U0313> <Greek_eta>                    : "ἦ"  U1f26
 <dead_tilde> <dead_psili> <Greek_eta>                    : "ἦ"  U1f26
 <Multi_key> <less> <asciitilde> <Greek_eta>             : "ἧ"  U1f27
 <Multi_key> <asciitilde> <less> <Greek_eta>             : "ἧ"  U1f27
 <dead_ogonek> <dead_tilde> <Greek_eta>                  : "ἧ"  U1f27
-<U0314> <dead_tilde> <Greek_eta>                  : "ἧ"  U1f27
 <dead_dasia> <dead_tilde> <Greek_eta>                  : "ἧ"  U1f27
 <dead_tilde> <dead_ogonek> <Greek_eta>                  : "ἧ"  U1f27
-<dead_tilde> <U0314> <Greek_eta>                  : "ἧ"  U1f27
 <dead_tilde> <dead_dasia> <Greek_eta>                  : "ἧ"  U1f27
 <Multi_key> <greater> <Greek_ETA>                       : "Ἠ"  U1f28
 <dead_horn> <Greek_ETA>                                 : "Ἠ"  U1f28
-<U0313> <Greek_ETA>                                 : "Ἠ"  U1f28
 <dead_psili> <Greek_ETA>                                 : "Ἠ"  U1f28
 <Multi_key> <less> <Greek_ETA>                          : "Ἡ"  U1f29
 <dead_ogonek> <Greek_ETA>                               : "Ἡ"  U1f29
-<U0314> <Greek_ETA>                               : "Ἡ"  U1f29
 <dead_dasia> <Greek_ETA>                               : "Ἡ"  U1f29
 <Multi_key> <greater> <grave> <Greek_ETA>               : "Ἢ"  U1f2a
 <Multi_key> <grave> <greater> <Greek_ETA>               : "Ἢ"  U1f2a
 <dead_horn> <dead_grave> <Greek_ETA>                    : "Ἢ"  U1f2a
-<U0313> <dead_grave> <Greek_ETA>                    : "Ἢ"  U1f2a
 <dead_psili> <dead_grave> <Greek_ETA>                    : "Ἢ"  U1f2a
 <dead_grave> <dead_horn> <Greek_ETA>                    : "Ἢ"  U1f2a
-<dead_grave> <U0313> <Greek_ETA>                    : "Ἢ"  U1f2a
 <dead_grave> <dead_psili> <Greek_ETA>                    : "Ἢ"  U1f2a
 <Multi_key> <less> <grave> <Greek_ETA>                  : "Ἣ"  U1f2b
 <Multi_key> <grave> <less> <Greek_ETA>                  : "Ἣ"  U1f2b
 <dead_ogonek> <dead_grave> <Greek_ETA>                  : "Ἣ"  U1f2b
-<U0314> <dead_grave> <Greek_ETA>                  : "Ἣ"  U1f2b
 <dead_dasia> <dead_grave> <Greek_ETA>                  : "Ἣ"  U1f2b
 <dead_grave> <dead_ogonek> <Greek_ETA>                  : "Ἣ"  U1f2b
-<dead_grave> <U0314> <Greek_ETA>                  : "Ἣ"  U1f2b
 <dead_grave> <dead_dasia> <Greek_ETA>                  : "Ἣ"  U1f2b
 <Multi_key> <greater> <apostrophe> <Greek_ETA>          : "Ἤ"  U1f2c
 <Multi_key> <apostrophe> <greater> <Greek_ETA>          : "Ἤ"  U1f2c
 <dead_horn> <dead_acute> <Greek_ETA>                    : "Ἤ"  U1f2c
-<U0313> <dead_acute> <Greek_ETA>                    : "Ἤ"  U1f2c
 <dead_psili> <dead_acute> <Greek_ETA>                    : "Ἤ"  U1f2c
 <dead_acute> <dead_horn> <Greek_ETA>                    : "Ἤ"  U1f2c
-<dead_acute> <U0313> <Greek_ETA>                    : "Ἤ"  U1f2c
 <dead_acute> <dead_psili> <Greek_ETA>                    : "Ἤ"  U1f2c
 <Multi_key> <less> <apostrophe> <Greek_ETA>             : "Ἥ"  U1f2d
 <Multi_key> <apostrophe> <less> <Greek_ETA>             : "Ἥ"  U1f2d
 <dead_ogonek> <dead_acute> <Greek_ETA>                  : "Ἥ"  U1f2d
-<U0314> <dead_acute> <Greek_ETA>                  : "Ἥ"  U1f2d
 <dead_dasia> <dead_acute> <Greek_ETA>                  : "Ἥ"  U1f2d
 <dead_acute> <dead_ogonek> <Greek_ETA>                  : "Ἥ"  U1f2d
-<dead_acute> <U0314> <Greek_ETA>                  : "Ἥ"  U1f2d
 <dead_acute> <dead_dasia> <Greek_ETA>                  : "Ἥ"  U1f2d
 <Multi_key> <greater> <asciitilde> <Greek_ETA>          : "Ἦ"  U1f2e
 <Multi_key> <asciitilde> <greater> <Greek_ETA>          : "Ἦ"  U1f2e
 <dead_horn> <dead_tilde> <Greek_ETA>                    : "Ἦ"  U1f2e
-<U0313> <dead_tilde> <Greek_ETA>                    : "Ἦ"  U1f2e
 <dead_psili> <dead_tilde> <Greek_ETA>                    : "Ἦ"  U1f2e
 <dead_tilde> <dead_horn> <Greek_ETA>                    : "Ἦ"  U1f2e
-<dead_tilde> <U0313> <Greek_ETA>                    : "Ἦ"  U1f2e
 <dead_tilde> <dead_psili> <Greek_ETA>                    : "Ἦ"  U1f2e
 <Multi_key> <less> <asciitilde> <Greek_ETA>             : "Ἧ"  U1f2f
 <Multi_key> <asciitilde> <less> <Greek_ETA>             : "Ἧ"  U1f2f
 <dead_ogonek> <dead_tilde> <Greek_ETA>                  : "Ἧ"  U1f2f
-<U0314> <dead_tilde> <Greek_ETA>                  : "Ἧ"  U1f2f
 <dead_dasia> <dead_tilde> <Greek_ETA>                  : "Ἧ"  U1f2f
 <dead_tilde> <dead_ogonek> <Greek_ETA>                  : "Ἧ"  U1f2f
-<dead_tilde> <U0314> <Greek_ETA>                  : "Ἧ"  U1f2f
 <dead_tilde> <dead_dasia> <Greek_ETA>                  : "Ἧ"  U1f2f
 <Multi_key> <greater> <Greek_iota>                      : "ἰ"  U1f30
 <dead_horn> <Greek_iota>                                : "ἰ"  U1f30
-<U0313> <Greek_iota>                                : "ἰ"  U1f30
 <dead_psili> <Greek_iota>                                : "ἰ"  U1f30
 <Multi_key> <less> <Greek_iota>                         : "ἱ"  U1f31
 <dead_ogonek> <Greek_iota>                              : "ἱ"  U1f31
-<U0314> <Greek_iota>                              : "ἱ"  U1f31
 <dead_dasia> <Greek_iota>                              : "ἱ"  U1f31
 <Multi_key> <greater> <grave> <Greek_iota>              : "ἲ"  U1f32
 <Multi_key> <grave> <greater> <Greek_iota>              : "ἲ"  U1f32
 <dead_horn> <dead_grave> <Greek_iota>                   : "ἲ"  U1f32
-<U0313> <dead_grave> <Greek_iota>                   : "ἲ"  U1f32
 <dead_psili> <dead_grave> <Greek_iota>                   : "ἲ"  U1f32
 <dead_grave> <dead_horn> <Greek_iota>                   : "ἲ"  U1f32
-<dead_grave> <U0313> <Greek_iota>                   : "ἲ"  U1f32
 <dead_grave> <dead_psili> <Greek_iota>                   : "ἲ"  U1f32
 <Multi_key> <less> <grave> <Greek_iota>                 : "ἳ"  U1f33
 <Multi_key> <grave> <less> <Greek_iota>                 : "ἳ"  U1f33
 <dead_ogonek> <dead_grave> <Greek_iota>                 : "ἳ"  U1f33
-<U0314> <dead_grave> <Greek_iota>                 : "ἳ"  U1f33
 <dead_dasia> <dead_grave> <Greek_iota>                 : "ἳ"  U1f33
 <dead_grave> <dead_ogonek> <Greek_iota>                 : "ἳ"  U1f33
-<dead_grave> <U0314> <Greek_iota>                 : "ἳ"  U1f33
 <dead_grave> <dead_dasia> <Greek_iota>                 : "ἳ"  U1f33
 <Multi_key> <greater> <apostrophe> <Greek_iota>         : "ἴ"  U1f34
 <Multi_key> <apostrophe> <greater> <Greek_iota>         : "ἴ"  U1f34
 <dead_horn> <dead_acute> <Greek_iota>                   : "ἴ"  U1f34
-<U0313> <dead_acute> <Greek_iota>                   : "ἴ"  U1f34
 <dead_psili> <dead_acute> <Greek_iota>                   : "ἴ"  U1f34
 <dead_acute> <dead_horn> <Greek_iota>                   : "ἴ"  U1f34
-<dead_acute> <U0313> <Greek_iota>                   : "ἴ"  U1f34
 <dead_acute> <dead_psili> <Greek_iota>                   : "ἴ"  U1f34
 <Multi_key> <less> <apostrophe> <Greek_iota>            : "ἵ"  U1f35
 <Multi_key> <apostrophe> <less> <Greek_iota>            : "ἵ"  U1f35
 <dead_ogonek> <dead_acute> <Greek_iota>                 : "ἵ"  U1f35
-<U0314> <dead_acute> <Greek_iota>                 : "ἵ"  U1f35
 <dead_dasia> <dead_acute> <Greek_iota>                 : "ἵ"  U1f35
 <dead_acute> <dead_ogonek> <Greek_iota>                 : "ἵ"  U1f35
-<dead_acute> <U0314> <Greek_iota>                 : "ἵ"  U1f35
 <dead_acute> <dead_dasia> <Greek_iota>                 : "ἵ"  U1f35
 <Multi_key> <greater> <asciitilde> <Greek_iota>         : "ἶ"  U1f36
 <Multi_key> <asciitilde> <greater> <Greek_iota>         : "ἶ"  U1f36
 <dead_horn> <dead_tilde> <Greek_iota>                   : "ἶ"  U1f36
-<U0313> <dead_tilde> <Greek_iota>                   : "ἶ"  U1f36
 <dead_psili> <dead_tilde> <Greek_iota>                   : "ἶ"  U1f36
 <dead_tilde> <dead_horn> <Greek_iota>                   : "ἶ"  U1f36
-<dead_tilde> <U0313> <Greek_iota>                   : "ἶ"  U1f36
 <dead_tilde> <dead_psili> <Greek_iota>                   : "ἶ"  U1f36
 <Multi_key> <less> <asciitilde> <Greek_iota>            : "ἷ"  U1f37
 <Multi_key> <asciitilde> <less> <Greek_iota>            : "ἷ"  U1f37
 <dead_ogonek> <dead_tilde> <Greek_iota>                 : "ἷ"  U1f37
-<U0314> <dead_tilde> <Greek_iota>                 : "ἷ"  U1f37
 <dead_dasia> <dead_tilde> <Greek_iota>                 : "ἷ"  U1f37
 <dead_tilde> <dead_ogonek> <Greek_iota>                 : "ἷ"  U1f37
-<dead_tilde> <U0314> <Greek_iota>                 : "ἷ"  U1f37
 <dead_tilde> <dead_dasia> <Greek_iota>                 : "ἷ"  U1f37
 <Multi_key> <greater> <Greek_IOTA>                      : "Ἰ"  U1f38
 <dead_horn> <Greek_IOTA>                                : "Ἰ"  U1f38
-<U0313> <Greek_IOTA>                                : "Ἰ"  U1f38
 <dead_psili> <Greek_IOTA>                                : "Ἰ"  U1f38
 <Multi_key> <less> <Greek_IOTA>                         : "Ἱ"  U1f39
 <dead_ogonek> <Greek_IOTA>                              : "Ἱ"  U1f39
-<U0314> <Greek_IOTA>                              : "Ἱ"  U1f39
 <dead_dasia> <Greek_IOTA>                              : "Ἱ"  U1f39
 <Multi_key> <greater> <grave> <Greek_IOTA>              : "Ἲ"  U1f3a
 <Multi_key> <grave> <greater> <Greek_IOTA>              : "Ἲ"  U1f3a
 <dead_horn> <dead_grave> <Greek_IOTA>                   : "Ἲ"  U1f3a
-<U0313> <dead_grave> <Greek_IOTA>                   : "Ἲ"  U1f3a
 <dead_psili> <dead_grave> <Greek_IOTA>                   : "Ἲ"  U1f3a
 <dead_grave> <dead_horn> <Greek_IOTA>                   : "Ἲ"  U1f3a
-<dead_grave> <U0313> <Greek_IOTA>                   : "Ἲ"  U1f3a
 <dead_grave> <dead_psili> <Greek_IOTA>                   : "Ἲ"  U1f3a
 <Multi_key> <less> <grave> <Greek_IOTA>                 : "Ἳ"  U1f3b
 <Multi_key> <grave> <less> <Greek_IOTA>                 : "Ἳ"  U1f3b
 <dead_ogonek> <dead_grave> <Greek_IOTA>                 : "Ἳ"  U1f3b
-<U0314> <dead_grave> <Greek_IOTA>                 : "Ἳ"  U1f3b
 <dead_dasia> <dead_grave> <Greek_IOTA>                 : "Ἳ"  U1f3b
 <dead_grave> <dead_ogonek> <Greek_IOTA>                 : "Ἳ"  U1f3b
-<dead_grave> <U0314> <Greek_IOTA>                 : "Ἳ"  U1f3b
 <dead_grave> <dead_dasia> <Greek_IOTA>                 : "Ἳ"  U1f3b
 <Multi_key> <greater> <apostrophe> <Greek_IOTA>         : "Ἴ"  U1f3c
 <Multi_key> <apostrophe> <greater> <Greek_IOTA>         : "Ἴ"  U1f3c
 <dead_horn> <dead_acute> <Greek_IOTA>                   : "Ἴ"  U1f3c
-<U0313> <dead_acute> <Greek_IOTA>                   : "Ἴ"  U1f3c
 <dead_psili> <dead_acute> <Greek_IOTA>                   : "Ἴ"  U1f3c
 <dead_acute> <dead_horn> <Greek_IOTA>                   : "Ἴ"  U1f3c
-<dead_acute> <U0313> <Greek_IOTA>                   : "Ἴ"  U1f3c
 <dead_acute> <dead_psili> <Greek_IOTA>                   : "Ἴ"  U1f3c
 <Multi_key> <less> <apostrophe> <Greek_IOTA>            : "Ἵ"  U1f3d
 <Multi_key> <apostrophe> <less> <Greek_IOTA>            : "Ἵ"  U1f3d
 <dead_ogonek> <dead_acute> <Greek_IOTA>                 : "Ἵ"  U1f3d
-<U0314> <dead_acute> <Greek_IOTA>                 : "Ἵ"  U1f3d
 <dead_dasia> <dead_acute> <Greek_IOTA>                 : "Ἵ"  U1f3d
 <dead_acute> <dead_ogonek> <Greek_IOTA>                 : "Ἵ"  U1f3d
-<dead_acute> <U0314> <Greek_IOTA>                 : "Ἵ"  U1f3d
 <dead_acute> <dead_dasia> <Greek_IOTA>                 : "Ἵ"  U1f3d
 <Multi_key> <greater> <asciitilde> <Greek_IOTA>         : "Ἶ"  U1f3e
 <Multi_key> <asciitilde> <greater> <Greek_IOTA>         : "Ἶ"  U1f3e
 <dead_horn> <dead_tilde> <Greek_IOTA>                   : "Ἶ"  U1f3e
-<U0313> <dead_tilde> <Greek_IOTA>                   : "Ἶ"  U1f3e
 <dead_psili> <dead_tilde> <Greek_IOTA>                   : "Ἶ"  U1f3e
 <dead_tilde> <dead_horn> <Greek_IOTA>                   : "Ἶ"  U1f3e
-<dead_tilde> <U0313> <Greek_IOTA>                   : "Ἶ"  U1f3e
 <dead_tilde> <dead_psili> <Greek_IOTA>                   : "Ἶ"  U1f3e
 <Multi_key> <less> <asciitilde> <Greek_IOTA>            : "Ἷ"  U1f3f
 <Multi_key> <asciitilde> <less> <Greek_IOTA>            : "Ἷ"  U1f3f
 <dead_ogonek> <dead_tilde> <Greek_IOTA>                 : "Ἷ"  U1f3f
-<U0314> <dead_tilde> <Greek_IOTA>                 : "Ἷ"  U1f3f
 <dead_dasia> <dead_tilde> <Greek_IOTA>                 : "Ἷ"  U1f3f
 <dead_tilde> <dead_ogonek> <Greek_IOTA>                 : "Ἷ"  U1f3f
-<dead_tilde> <U0314> <Greek_IOTA>                 : "Ἷ"  U1f3f
 <dead_tilde> <dead_dasia> <Greek_IOTA>                 : "Ἷ"  U1f3f
 <Multi_key> <greater> <Greek_omicron>                   : "ὀ"  U1f40
 <dead_horn> <Greek_omicron>                             : "ὀ"  U1f40
-<U0313> <Greek_omicron>                             : "ὀ"  U1f40
 <dead_psili> <Greek_omicron>                             : "ὀ"  U1f40
 <Multi_key> <less> <Greek_omicron>                      : "ὁ"  U1f41
 <dead_ogonek> <Greek_omicron>                           : "ὁ"  U1f41
-<U0314> <Greek_omicron>                           : "ὁ"  U1f41
 <dead_dasia> <Greek_omicron>                           : "ὁ"  U1f41
 <Multi_key> <greater> <grave> <Greek_omicron>           : "ὂ"  U1f42
 <Multi_key> <grave> <greater> <Greek_omicron>           : "ὂ"  U1f42
 <dead_horn> <dead_grave> <Greek_omicron>                : "ὂ"  U1f42
-<U0313> <dead_grave> <Greek_omicron>                : "ὂ"  U1f42
 <dead_psili> <dead_grave> <Greek_omicron>                : "ὂ"  U1f42
 <dead_grave> <dead_horn> <Greek_omicron>                : "ὂ"  U1f42
-<dead_grave> <U0313> <Greek_omicron>                : "ὂ"  U1f42
 <dead_grave> <dead_psili> <Greek_omicron>                : "ὂ"  U1f42
 <Multi_key> <less> <grave> <Greek_omicron>              : "ὃ"  U1f43
 <Multi_key> <grave> <less> <Greek_omicron>              : "ὃ"  U1f43
 <dead_ogonek> <dead_grave> <Greek_omicron>              : "ὃ"  U1f43
-<U0314> <dead_grave> <Greek_omicron>              : "ὃ"  U1f43
 <dead_dasia> <dead_grave> <Greek_omicron>              : "ὃ"  U1f43
 <dead_grave> <dead_ogonek> <Greek_omicron>              : "ὃ"  U1f43
-<dead_grave> <U0314> <Greek_omicron>              : "ὃ"  U1f43
 <dead_grave> <dead_dasia> <Greek_omicron>              : "ὃ"  U1f43
 <Multi_key> <greater> <apostrophe> <Greek_omicron>      : "ὄ"  U1f44
 <Multi_key> <apostrophe> <greater> <Greek_omicron>      : "ὄ"  U1f44
 <dead_horn> <dead_acute> <Greek_omicron>                : "ὄ"  U1f44
-<U0313> <dead_acute> <Greek_omicron>                : "ὄ"  U1f44
 <dead_psili> <dead_acute> <Greek_omicron>                : "ὄ"  U1f44
 <dead_acute> <dead_horn> <Greek_omicron>                : "ὄ"  U1f44
-<dead_acute> <U0313> <Greek_omicron>                : "ὄ"  U1f44
 <dead_acute> <dead_psili> <Greek_omicron>                : "ὄ"  U1f44
 <Multi_key> <less> <apostrophe> <Greek_omicron>         : "ὅ"  U1f45
 <Multi_key> <apostrophe> <less> <Greek_omicron>         : "ὅ"  U1f45
 <dead_ogonek> <dead_acute> <Greek_omicron>              : "ὅ"  U1f45
-<U0314> <dead_acute> <Greek_omicron>              : "ὅ"  U1f45
 <dead_dasia> <dead_acute> <Greek_omicron>              : "ὅ"  U1f45
 <dead_acute> <dead_ogonek> <Greek_omicron>              : "ὅ"  U1f45
-<dead_acute> <U0314> <Greek_omicron>              : "ὅ"  U1f45
 <dead_acute> <dead_dasia> <Greek_omicron>              : "ὅ"  U1f45
 <Multi_key> <greater> <Greek_OMICRON>                   : "Ὀ"  U1f48
 <dead_horn> <Greek_OMICRON>                             : "Ὀ"  U1f48
-<U0313> <Greek_OMICRON>                             : "Ὀ"  U1f48
 <dead_psili> <Greek_OMICRON>                             : "Ὀ"  U1f48
 <Multi_key> <less> <Greek_OMICRON>                      : "Ὁ"  U1f49
 <dead_ogonek> <Greek_OMICRON>                           : "Ὁ"  U1f49
-<U0314> <Greek_OMICRON>                           : "Ὁ"  U1f49
 <dead_dasia> <Greek_OMICRON>                           : "Ὁ"  U1f49
 <Multi_key> <greater> <grave> <Greek_OMICRON>           : "Ὂ"  U1f4a
 <Multi_key> <grave> <greater> <Greek_OMICRON>           : "Ὂ"  U1f4a
 <dead_horn> <dead_grave> <Greek_OMICRON>                : "Ὂ"  U1f4a
-<U0313> <dead_grave> <Greek_OMICRON>                : "Ὂ"  U1f4a
 <dead_psili> <dead_grave> <Greek_OMICRON>                : "Ὂ"  U1f4a
 <dead_grave> <dead_horn> <Greek_OMICRON>                : "Ὂ"  U1f4a
-<dead_grave> <U0313> <Greek_OMICRON>                : "Ὂ"  U1f4a
 <dead_grave> <dead_psili> <Greek_OMICRON>                : "Ὂ"  U1f4a
 <Multi_key> <less> <grave> <Greek_OMICRON>              : "Ὃ"  U1f4b
 <Multi_key> <grave> <less> <Greek_OMICRON>              : "Ὃ"  U1f4b
 <dead_ogonek> <dead_grave> <Greek_OMICRON>              : "Ὃ"  U1f4b
-<U0314> <dead_grave> <Greek_OMICRON>              : "Ὃ"  U1f4b
 <dead_dasia> <dead_grave> <Greek_OMICRON>              : "Ὃ"  U1f4b
 <dead_grave> <dead_ogonek> <Greek_OMICRON>              : "Ὃ"  U1f4b
-<dead_grave> <U0314> <Greek_OMICRON>              : "Ὃ"  U1f4b
 <dead_grave> <dead_dasia> <Greek_OMICRON>              : "Ὃ"  U1f4b
 <Multi_key> <greater> <apostrophe> <Greek_OMICRON>      : "Ὄ"  U1f4c
 <Multi_key> <apostrophe> <greater> <Greek_OMICRON>      : "Ὄ"  U1f4c
 <dead_horn> <dead_acute> <Greek_OMICRON>                : "Ὄ"  U1f4c
-<U0313> <dead_acute> <Greek_OMICRON>                : "Ὄ"  U1f4c
 <dead_psili> <dead_acute> <Greek_OMICRON>                : "Ὄ"  U1f4c
 <dead_acute> <dead_horn> <Greek_OMICRON>                : "Ὄ"  U1f4c
-<dead_acute> <U0313> <Greek_OMICRON>                : "Ὄ"  U1f4c
 <dead_acute> <dead_psili> <Greek_OMICRON>                : "Ὄ"  U1f4c
 <Multi_key> <less> <apostrophe> <Greek_OMICRON>         : "Ὅ"  U1f4d
 <Multi_key> <apostrophe> <less> <Greek_OMICRON>         : "Ὅ"  U1f4d
 <dead_ogonek> <dead_acute> <Greek_OMICRON>              : "Ὅ"  U1f4d
-<U0314> <dead_acute> <Greek_OMICRON>              : "Ὅ"  U1f4d
 <dead_dasia> <dead_acute> <Greek_OMICRON>              : "Ὅ"  U1f4d
 <dead_acute> <dead_ogonek> <Greek_OMICRON>              : "Ὅ"  U1f4d
-<dead_acute> <U0314> <Greek_OMICRON>              : "Ὅ"  U1f4d
 <dead_acute> <dead_dasia> <Greek_OMICRON>              : "Ὅ"  U1f4d
 <Multi_key> <greater> <Greek_upsilon>                   : "ὐ"  U1f50
 <dead_horn> <Greek_upsilon>                             : "ὐ"  U1f50
-<U0313> <Greek_upsilon>                             : "ὐ"  U1f50
 <dead_psili> <Greek_upsilon>                             : "ὐ"  U1f50
 <Multi_key> <less> <Greek_upsilon>                      : "ὑ"  U1f51
 <dead_ogonek> <Greek_upsilon>                           : "ὑ"  U1f51
-<U0314> <Greek_upsilon>                           : "ὑ"  U1f51
 <dead_dasia> <Greek_upsilon>                           : "ὑ"  U1f51
 <Multi_key> <greater> <grave> <Greek_upsilon>           : "ὒ"  U1f52
 <Multi_key> <grave> <greater> <Greek_upsilon>           : "ὒ"  U1f52
 <dead_horn> <dead_grave> <Greek_upsilon>                : "ὒ"  U1f52
-<U0313> <dead_grave> <Greek_upsilon>                : "ὒ"  U1f52
 <dead_psili> <dead_grave> <Greek_upsilon>                : "ὒ"  U1f52
 <dead_grave> <dead_horn> <Greek_upsilon>                : "ὒ"  U1f52
-<dead_grave> <U0313> <Greek_upsilon>                : "ὒ"  U1f52
 <dead_grave> <dead_psili> <Greek_upsilon>                : "ὒ"  U1f52
 <Multi_key> <less> <grave> <Greek_upsilon>              : "ὓ"  U1f53
 <Multi_key> <grave> <less> <Greek_upsilon>              : "ὓ"  U1f53
 <dead_ogonek> <dead_grave> <Greek_upsilon>              : "ὓ"  U1f53
-<U0314> <dead_grave> <Greek_upsilon>              : "ὓ"  U1f53
 <dead_dasia> <dead_grave> <Greek_upsilon>              : "ὓ"  U1f53
 <dead_grave> <dead_ogonek> <Greek_upsilon>              : "ὓ"  U1f53
-<dead_grave> <U0314> <Greek_upsilon>              : "ὓ"  U1f53
 <dead_grave> <dead_dasia> <Greek_upsilon>              : "ὓ"  U1f53
 <Multi_key> <greater> <apostrophe> <Greek_upsilon>      : "ὔ"  U1f54
 <Multi_key> <apostrophe> <greater> <Greek_upsilon>      : "ὔ"  U1f54
 <dead_horn> <dead_acute> <Greek_upsilon>                : "ὔ"  U1f54
-<U0313> <dead_acute> <Greek_upsilon>                : "ὔ"  U1f54
 <dead_psili> <dead_acute> <Greek_upsilon>                : "ὔ"  U1f54
 <dead_acute> <dead_horn> <Greek_upsilon>                : "ὔ"  U1f54
-<dead_acute> <U0313> <Greek_upsilon>                : "ὔ"  U1f54
 <dead_acute> <dead_psili> <Greek_upsilon>                : "ὔ"  U1f54
 <Multi_key> <less> <apostrophe> <Greek_upsilon>         : "ὕ"  U1f55
 <Multi_key> <apostrophe> <less> <Greek_upsilon>         : "ὕ"  U1f55
 <dead_ogonek> <dead_acute> <Greek_upsilon>              : "ὕ"  U1f55
-<U0314> <dead_acute> <Greek_upsilon>              : "ὕ"  U1f55
 <dead_dasia> <dead_acute> <Greek_upsilon>              : "ὕ"  U1f55
 <dead_acute> <dead_ogonek> <Greek_upsilon>              : "ὕ"  U1f55
-<dead_acute> <U0314> <Greek_upsilon>              : "ὕ"  U1f55
 <dead_acute> <dead_dasia> <Greek_upsilon>              : "ὕ"  U1f55
 <Multi_key> <greater> <asciitilde> <Greek_upsilon>      : "ὖ"  U1f56
 <Multi_key> <asciitilde> <greater> <Greek_upsilon>      : "ὖ"  U1f56
 <dead_horn> <dead_tilde> <Greek_upsilon>                : "ὖ"  U1f56
-<U0313> <dead_tilde> <Greek_upsilon>                : "ὖ"  U1f56
 <dead_psili> <dead_tilde> <Greek_upsilon>                : "ὖ"  U1f56
 <dead_tilde> <dead_horn> <Greek_upsilon>                : "ὖ"  U1f56
-<dead_tilde> <U0313> <Greek_upsilon>                : "ὖ"  U1f56
 <dead_tilde> <dead_psili> <Greek_upsilon>                : "ὖ"  U1f56
 <Multi_key> <less> <asciitilde> <Greek_upsilon>         : "ὗ"  U1f57
 <Multi_key> <asciitilde> <less> <Greek_upsilon>         : "ὗ"  U1f57
 <dead_ogonek> <dead_tilde> <Greek_upsilon>              : "ὗ"  U1f57
-<U0314> <dead_tilde> <Greek_upsilon>              : "ὗ"  U1f57
 <dead_dasia> <dead_tilde> <Greek_upsilon>              : "ὗ"  U1f57
 <dead_tilde> <dead_ogonek> <Greek_upsilon>              : "ὗ"  U1f57
-<dead_tilde> <U0314> <Greek_upsilon>              : "ὗ"  U1f57
 <dead_tilde> <dead_dasia> <Greek_upsilon>              : "ὗ"  U1f57
 <Multi_key> <less> <Greek_UPSILON>                      : "Ὑ"  U1f59
 <dead_ogonek> <Greek_UPSILON>                           : "Ὑ"  U1f59
-<U0314> <Greek_UPSILON>                           : "Ὑ"  U1f59
 <dead_dasia> <Greek_UPSILON>                           : "Ὑ"  U1f59
 <Multi_key> <less> <grave> <Greek_UPSILON>              : "Ὓ"  U1f5b
 <Multi_key> <grave> <less> <Greek_UPSILON>              : "Ὓ"  U1f5b
 <dead_ogonek> <dead_grave> <Greek_UPSILON>              : "Ὓ"  U1f5b
-<U0314> <dead_grave> <Greek_UPSILON>              : "Ὓ"  U1f5b
 <dead_dasia> <dead_grave> <Greek_UPSILON>              : "Ὓ"  U1f5b
 <dead_grave> <dead_ogonek> <Greek_UPSILON>              : "Ὓ"  U1f5b
-<dead_grave> <U0314> <Greek_UPSILON>              : "Ὓ"  U1f5b
 <dead_grave> <dead_dasia> <Greek_UPSILON>              : "Ὓ"  U1f5b
 <Multi_key> <less> <apostrophe> <Greek_UPSILON>         : "Ὕ"  U1f5d
 <Multi_key> <apostrophe> <less> <Greek_UPSILON>         : "Ὕ"  U1f5d
 <dead_ogonek> <dead_acute> <Greek_UPSILON>              : "Ὕ"  U1f5d
-<U0314> <dead_acute> <Greek_UPSILON>              : "Ὕ"  U1f5d
 <dead_dasia> <dead_acute> <Greek_UPSILON>              : "Ὕ"  U1f5d
 <dead_acute> <dead_ogonek> <Greek_UPSILON>              : "Ὕ"  U1f5d
-<dead_acute> <U0314> <Greek_UPSILON>              : "Ὕ"  U1f5d
 <dead_acute> <dead_dasia> <Greek_UPSILON>              : "Ὕ"  U1f5d
 <Multi_key> <less> <asciitilde> <Greek_UPSILON>         : "Ὗ"  U1f5f
 <Multi_key> <asciitilde> <less> <Greek_UPSILON>         : "Ὗ"  U1f5f
 <dead_ogonek> <dead_tilde> <Greek_UPSILON>              : "Ὗ"  U1f5f
-<U0314> <dead_tilde> <Greek_UPSILON>              : "Ὗ"  U1f5f
 <dead_dasia> <dead_tilde> <Greek_UPSILON>              : "Ὗ"  U1f5f
 <dead_tilde> <dead_ogonek> <Greek_UPSILON>              : "Ὗ"  U1f5f
-<dead_tilde> <U0314> <Greek_UPSILON>              : "Ὗ"  U1f5f
 <dead_tilde> <dead_dasia> <Greek_UPSILON>              : "Ὗ"  U1f5f
 <Multi_key> <greater> <Greek_omega>                     : "ὠ"  U1f60
 <dead_horn> <Greek_omega>                               : "ὠ"  U1f60
-<U0313> <Greek_omega>                               : "ὠ"  U1f60
 <dead_psili> <Greek_omega>                               : "ὠ"  U1f60
 <Multi_key> <less> <Greek_omega>                        : "ὡ"  U1f61
 <dead_ogonek> <Greek_omega>                             : "ὡ"  U1f61
-<U0314> <Greek_omega>                             : "ὡ"  U1f61
 <dead_dasia> <Greek_omega>                             : "ὡ"  U1f61
 <Multi_key> <greater> <grave> <Greek_omega>             : "ὢ"  U1f62
 <Multi_key> <grave> <greater> <Greek_omega>             : "ὢ"  U1f62
 <dead_horn> <dead_grave> <Greek_omega>                  : "ὢ"  U1f62
-<U0313> <dead_grave> <Greek_omega>                  : "ὢ"  U1f62
 <dead_psili> <dead_grave> <Greek_omega>                  : "ὢ"  U1f62
 <dead_grave> <dead_horn> <Greek_omega>                  : "ὢ"  U1f62
-<dead_grave> <U0313> <Greek_omega>                  : "ὢ"  U1f62
 <dead_grave> <dead_psili> <Greek_omega>                  : "ὢ"  U1f62
 <Multi_key> <less> <grave> <Greek_omega>                : "ὣ"  U1f63
 <Multi_key> <grave> <less> <Greek_omega>                : "ὣ"  U1f63
 <dead_ogonek> <dead_grave> <Greek_omega>                : "ὣ"  U1f63
-<U0314> <dead_grave> <Greek_omega>                : "ὣ"  U1f63
 <dead_dasia> <dead_grave> <Greek_omega>                : "ὣ"  U1f63
 <dead_grave> <dead_ogonek> <Greek_omega>                : "ὣ"  U1f63
-<dead_grave> <U0314> <Greek_omega>                : "ὣ"  U1f63
 <dead_grave> <dead_dasia> <Greek_omega>                : "ὣ"  U1f63
 <Multi_key> <greater> <apostrophe> <Greek_omega>        : "ὤ"  U1f64
 <Multi_key> <apostrophe> <greater> <Greek_omega>        : "ὤ"  U1f64
 <dead_horn> <dead_acute> <Greek_omega>                  : "ὤ"  U1f64
-<U0313> <dead_acute> <Greek_omega>                  : "ὤ"  U1f64
 <dead_psili> <dead_acute> <Greek_omega>                  : "ὤ"  U1f64
 <dead_acute> <dead_horn> <Greek_omega>                  : "ὤ"  U1f64
-<dead_acute> <U0313> <Greek_omega>                  : "ὤ"  U1f64
 <dead_acute> <dead_psili> <Greek_omega>                  : "ὤ"  U1f64
 <Multi_key> <less> <apostrophe> <Greek_omega>           : "ὥ"  U1f65
 <Multi_key> <apostrophe> <less> <Greek_omega>           : "ὥ"  U1f65
 <dead_ogonek> <dead_acute> <Greek_omega>                : "ὥ"  U1f65
-<U0314> <dead_acute> <Greek_omega>                : "ὥ"  U1f65
 <dead_dasia> <dead_acute> <Greek_omega>                : "ὥ"  U1f65
 <dead_acute> <dead_ogonek> <Greek_omega>                : "ὥ"  U1f65
-<dead_acute> <U0314> <Greek_omega>                : "ὥ"  U1f65
 <dead_acute> <dead_dasia> <Greek_omega>                : "ὥ"  U1f65
 <Multi_key> <greater> <asciitilde> <Greek_omega>        : "ὦ"  U1f66
 <Multi_key> <asciitilde> <greater> <Greek_omega>        : "ὦ"  U1f66
 <dead_horn> <dead_tilde> <Greek_omega>                  : "ὦ"  U1f66
-<U0313> <dead_tilde> <Greek_omega>                  : "ὦ"  U1f66
 <dead_psili> <dead_tilde> <Greek_omega>                  : "ὦ"  U1f66
 <dead_tilde> <dead_horn> <Greek_omega>                  : "ὦ"  U1f66
-<dead_tilde> <U0313> <Greek_omega>                  : "ὦ"  U1f66
 <dead_tilde> <dead_psili> <Greek_omega>                  : "ὦ"  U1f66
 <Multi_key> <less> <asciitilde> <Greek_omega>           : "ὧ"  U1f67
 <Multi_key> <asciitilde> <less> <Greek_omega>           : "ὧ"  U1f67
 <dead_ogonek> <dead_tilde> <Greek_omega>                : "ὧ"  U1f67
-<U0314> <dead_tilde> <Greek_omega>                : "ὧ"  U1f67
 <dead_dasia> <dead_tilde> <Greek_omega>                : "ὧ"  U1f67
 <dead_tilde> <dead_ogonek> <Greek_omega>                : "ὧ"  U1f67
-<dead_tilde> <U0314> <Greek_omega>                : "ὧ"  U1f67
 <dead_tilde> <dead_dasia> <Greek_omega>                : "ὧ"  U1f67
 <Multi_key> <greater> <Greek_OMEGA>                     : "Ὠ"  U1f68
 <dead_horn> <Greek_OMEGA>                               : "Ὠ"  U1f68
-<U0313> <Greek_OMEGA>                               : "Ὠ"  U1f68
 <dead_psili> <Greek_OMEGA>                               : "Ὠ"  U1f68
 <Multi_key> <less> <Greek_OMEGA>                        : "Ὡ"  U1f69
 <dead_ogonek> <Greek_OMEGA>                             : "Ὡ"  U1f69
-<U0314> <Greek_OMEGA>                             : "Ὡ"  U1f69
 <dead_dasia> <Greek_OMEGA>                             : "Ὡ"  U1f69
 <Multi_key> <greater> <grave> <Greek_OMEGA>             : "Ὢ"  U1f6a
 <Multi_key> <grave> <greater> <Greek_OMEGA>             : "Ὢ"  U1f6a
 <dead_horn> <dead_grave> <Greek_OMEGA>                  : "Ὢ"  U1f6a
-<U0313> <dead_grave> <Greek_OMEGA>                  : "Ὢ"  U1f6a
 <dead_psili> <dead_grave> <Greek_OMEGA>                  : "Ὢ"  U1f6a
 <dead_grave> <dead_horn> <Greek_OMEGA>                  : "Ὢ"  U1f6a
-<dead_grave> <U0313> <Greek_OMEGA>                  : "Ὢ"  U1f6a
 <dead_grave> <dead_psili> <Greek_OMEGA>                  : "Ὢ"  U1f6a
 <Multi_key> <less> <grave> <Greek_OMEGA>                : "Ὣ"  U1f6b
 <Multi_key> <grave> <less> <Greek_OMEGA>                : "Ὣ"  U1f6b
 <dead_ogonek> <dead_grave> <Greek_OMEGA>                : "Ὣ"  U1f6b
-<U0314> <dead_grave> <Greek_OMEGA>                : "Ὣ"  U1f6b
 <dead_dasia> <dead_grave> <Greek_OMEGA>                : "Ὣ"  U1f6b
 <dead_grave> <dead_ogonek> <Greek_OMEGA>                : "Ὣ"  U1f6b
-<dead_grave> <U0314> <Greek_OMEGA>                : "Ὣ"  U1f6b
 <dead_grave> <dead_dasia> <Greek_OMEGA>                : "Ὣ"  U1f6b
 <Multi_key> <greater> <apostrophe> <Greek_OMEGA>        : "Ὤ"  U1f6c
 <Multi_key> <apostrophe> <greater> <Greek_OMEGA>        : "Ὤ"  U1f6c
 <dead_horn> <dead_acute> <Greek_OMEGA>                  : "Ὤ"  U1f6c
-<U0313> <dead_acute> <Greek_OMEGA>                  : "Ὤ"  U1f6c
 <dead_psili> <dead_acute> <Greek_OMEGA>                  : "Ὤ"  U1f6c
 <dead_acute> <dead_horn> <Greek_OMEGA>                  : "Ὤ"  U1f6c
-<dead_acute> <U0313> <Greek_OMEGA>                  : "Ὤ"  U1f6c
 <dead_acute> <dead_psili> <Greek_OMEGA>                  : "Ὤ"  U1f6c
 <Multi_key> <less> <apostrophe> <Greek_OMEGA>           : "Ὥ"  U1f6d
 <Multi_key> <apostrophe> <less> <Greek_OMEGA>           : "Ὥ"  U1f6d
 <dead_ogonek> <dead_acute> <Greek_OMEGA>                : "Ὥ"  U1f6d
-<U0314> <dead_acute> <Greek_OMEGA>                : "Ὥ"  U1f6d
 <dead_dasia> <dead_acute> <Greek_OMEGA>                : "Ὥ"  U1f6d
 <dead_acute> <dead_ogonek> <Greek_OMEGA>                : "Ὥ"  U1f6d
-<dead_acute> <U0314> <Greek_OMEGA>                : "Ὥ"  U1f6d
 <dead_acute> <dead_dasia> <Greek_OMEGA>                : "Ὥ"  U1f6d
 <Multi_key> <greater> <asciitilde> <Greek_OMEGA>        : "Ὦ"  U1f6e
 <Multi_key> <asciitilde> <greater> <Greek_OMEGA>        : "Ὦ"  U1f6e
 <dead_horn> <dead_tilde> <Greek_OMEGA>                  : "Ὦ"  U1f6e
-<U0313> <dead_tilde> <Greek_OMEGA>                  : "Ὦ"  U1f6e
 <dead_psili> <dead_tilde> <Greek_OMEGA>                  : "Ὦ"  U1f6e
 <dead_tilde> <dead_horn> <Greek_OMEGA>                  : "Ὦ"  U1f6e
-<dead_tilde> <U0313> <Greek_OMEGA>                  : "Ὦ"  U1f6e
 <dead_tilde> <dead_psili> <Greek_OMEGA>                  : "Ὦ"  U1f6e
 <Multi_key> <less> <asciitilde> <Greek_OMEGA>           : "Ὧ"  U1f6f
 <Multi_key> <asciitilde> <less> <Greek_OMEGA>           : "Ὧ"  U1f6f
 <dead_ogonek> <dead_tilde> <Greek_OMEGA>                : "Ὧ"  U1f6f
-<U0314> <dead_tilde> <Greek_OMEGA>                : "Ὧ"  U1f6f
 <dead_dasia> <dead_tilde> <Greek_OMEGA>                : "Ὧ"  U1f6f
 <dead_tilde> <dead_ogonek> <Greek_OMEGA>                : "Ὧ"  U1f6f
-<dead_tilde> <U0314> <Greek_OMEGA>                : "Ὧ"  U1f6f
 <dead_tilde> <dead_dasia> <Greek_OMEGA>                : "Ὧ"  U1f6f
 <Multi_key> <grave> <Greek_alpha>                       : "ὰ"  U1f70
 <dead_grave> <Greek_alpha>                              : "ὰ"  U1f70
@@ -1123,18 +950,14 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <bar> <greater> <Greek_alpha>               : "ᾀ"  U1f80
 <Multi_key> <greater> <bar> <Greek_alpha>               : "ᾀ"  U1f80
 <dead_iota> <dead_horn> <Greek_alpha>                   : "ᾀ"  U1f80
-<dead_iota> <U0313> <Greek_alpha>                   : "ᾀ"  U1f80
 <dead_iota> <dead_psili> <Greek_alpha>                   : "ᾀ"  U1f80
 <dead_horn> <dead_iota> <Greek_alpha>                   : "ᾀ"  U1f80
-<U0313> <dead_iota> <Greek_alpha>                   : "ᾀ"  U1f80
 <dead_psili> <dead_iota> <Greek_alpha>                   : "ᾀ"  U1f80
 <Multi_key> <bar> <less> <Greek_alpha>                  : "ᾁ"  U1f81
 <Multi_key> <less> <bar> <Greek_alpha>                  : "ᾁ"  U1f81
 <dead_iota> <dead_ogonek> <Greek_alpha>                 : "ᾁ"  U1f81
-<dead_iota> <U0314> <Greek_alpha>                 : "ᾁ"  U1f81
 <dead_iota> <dead_dasia> <Greek_alpha>                 : "ᾁ"  U1f81
 <dead_ogonek> <dead_iota> <Greek_alpha>                 : "ᾁ"  U1f81
-<U0314> <dead_iota> <Greek_alpha>                 : "ᾁ"  U1f81
 <dead_dasia> <dead_iota> <Greek_alpha>                 : "ᾁ"  U1f81
 <Multi_key> <bar> <greater> <grave> <Greek_alpha>       : "ᾂ"  U1f82
 <Multi_key> <bar> <grave> <greater> <Greek_alpha>       : "ᾂ"  U1f82
@@ -1143,22 +966,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <greater> <Greek_alpha>       : "ᾂ"  U1f82
 <Multi_key> <grave> <greater> <bar> <Greek_alpha>       : "ᾂ"  U1f82
 <dead_iota> <dead_horn> <dead_grave> <Greek_alpha>      : "ᾂ"  U1f82
-<dead_iota> <U0313> <dead_grave> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_iota> <dead_psili> <dead_grave> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_iota> <dead_grave> <dead_horn> <Greek_alpha>      : "ᾂ"  U1f82
-<dead_iota> <dead_grave> <U0313> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_iota> <dead_grave> <dead_psili> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_horn> <dead_iota> <dead_grave> <Greek_alpha>      : "ᾂ"  U1f82
-<U0313> <dead_iota> <dead_grave> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_psili> <dead_iota> <dead_grave> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_horn> <dead_grave> <dead_iota> <Greek_alpha>      : "ᾂ"  U1f82
-<U0313> <dead_grave> <dead_iota> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_psili> <dead_grave> <dead_iota> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_grave> <dead_iota> <dead_horn> <Greek_alpha>      : "ᾂ"  U1f82
-<dead_grave> <dead_iota> <U0313> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_grave> <dead_iota> <dead_psili> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_grave> <dead_horn> <dead_iota> <Greek_alpha>      : "ᾂ"  U1f82
-<dead_grave> <U0313> <dead_iota> <Greek_alpha>      : "ᾂ"  U1f82
 <dead_grave> <dead_psili> <dead_iota> <Greek_alpha>      : "ᾂ"  U1f82
 <Multi_key> <bar> <less> <grave> <Greek_alpha>          : "ᾃ"  U1f83
 <Multi_key> <bar> <grave> <less> <Greek_alpha>          : "ᾃ"  U1f83
@@ -1167,22 +984,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <less> <Greek_alpha>          : "ᾃ"  U1f83
 <Multi_key> <grave> <less> <bar> <Greek_alpha>          : "ᾃ"  U1f83
 <dead_iota> <dead_ogonek> <dead_grave> <Greek_alpha>    : "ᾃ"  U1f83
-<dead_iota> <U0314> <dead_grave> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_iota> <dead_dasia> <dead_grave> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_iota> <dead_grave> <dead_ogonek> <Greek_alpha>    : "ᾃ"  U1f83
-<dead_iota> <dead_grave> <U0314> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_iota> <dead_grave> <dead_dasia> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_ogonek> <dead_iota> <dead_grave> <Greek_alpha>    : "ᾃ"  U1f83
-<U0314> <dead_iota> <dead_grave> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_dasia> <dead_iota> <dead_grave> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_ogonek> <dead_grave> <dead_iota> <Greek_alpha>    : "ᾃ"  U1f83
-<U0314> <dead_grave> <dead_iota> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_dasia> <dead_grave> <dead_iota> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_grave> <dead_iota> <dead_ogonek> <Greek_alpha>    : "ᾃ"  U1f83
-<dead_grave> <dead_iota> <U0314> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_grave> <dead_iota> <dead_dasia> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_grave> <dead_ogonek> <dead_iota> <Greek_alpha>    : "ᾃ"  U1f83
-<dead_grave> <U0314> <dead_iota> <Greek_alpha>    : "ᾃ"  U1f83
 <dead_grave> <dead_dasia> <dead_iota> <Greek_alpha>    : "ᾃ"  U1f83
 <Multi_key> <bar> <greater> <apostrophe> <Greek_alpha>  : "ᾄ"  U1f84
 <Multi_key> <bar> <apostrophe> <greater> <Greek_alpha>  : "ᾄ"  U1f84
@@ -1191,22 +1002,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <greater> <Greek_alpha>  : "ᾄ"  U1f84
 <Multi_key> <apostrophe> <greater> <bar> <Greek_alpha>  : "ᾄ"  U1f84
 <dead_iota> <dead_horn> <dead_acute> <Greek_alpha>      : "ᾄ"  U1f84
-<dead_iota> <U0313> <dead_acute> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_iota> <dead_psili> <dead_acute> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_iota> <dead_acute> <dead_horn> <Greek_alpha>      : "ᾄ"  U1f84
-<dead_iota> <dead_acute> <U0313> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_iota> <dead_acute> <dead_psili> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_horn> <dead_iota> <dead_acute> <Greek_alpha>      : "ᾄ"  U1f84
-<U0313> <dead_iota> <dead_acute> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_psili> <dead_iota> <dead_acute> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_horn> <dead_acute> <dead_iota> <Greek_alpha>      : "ᾄ"  U1f84
-<U0313> <dead_acute> <dead_iota> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_psili> <dead_acute> <dead_iota> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_acute> <dead_iota> <dead_horn> <Greek_alpha>      : "ᾄ"  U1f84
-<dead_acute> <dead_iota> <U0313> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_acute> <dead_iota> <dead_psili> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_acute> <dead_horn> <dead_iota> <Greek_alpha>      : "ᾄ"  U1f84
-<dead_acute> <U0313> <dead_iota> <Greek_alpha>      : "ᾄ"  U1f84
 <dead_acute> <dead_psili> <dead_iota> <Greek_alpha>      : "ᾄ"  U1f84
 <Multi_key> <bar> <less> <apostrophe> <Greek_alpha>     : "ᾅ"  U1f85
 <Multi_key> <bar> <apostrophe> <less> <Greek_alpha>     : "ᾅ"  U1f85
@@ -1215,22 +1020,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <less> <Greek_alpha>     : "ᾅ"  U1f85
 <Multi_key> <apostrophe> <less> <bar> <Greek_alpha>     : "ᾅ"  U1f85
 <dead_iota> <dead_ogonek> <dead_acute> <Greek_alpha>    : "ᾅ"  U1f85
-<dead_iota> <U0314> <dead_acute> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_iota> <dead_dasia> <dead_acute> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_iota> <dead_acute> <dead_ogonek> <Greek_alpha>    : "ᾅ"  U1f85
-<dead_iota> <dead_acute> <U0314> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_iota> <dead_acute> <dead_dasia> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_ogonek> <dead_iota> <dead_acute> <Greek_alpha>    : "ᾅ"  U1f85
-<U0314> <dead_iota> <dead_acute> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_dasia> <dead_iota> <dead_acute> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_ogonek> <dead_acute> <dead_iota> <Greek_alpha>    : "ᾅ"  U1f85
-<U0314> <dead_acute> <dead_iota> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_dasia> <dead_acute> <dead_iota> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_acute> <dead_iota> <dead_ogonek> <Greek_alpha>    : "ᾅ"  U1f85
-<dead_acute> <dead_iota> <U0314> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_acute> <dead_iota> <dead_dasia> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_acute> <dead_ogonek> <dead_iota> <Greek_alpha>    : "ᾅ"  U1f85
-<dead_acute> <U0314> <dead_iota> <Greek_alpha>    : "ᾅ"  U1f85
 <dead_acute> <dead_dasia> <dead_iota> <Greek_alpha>    : "ᾅ"  U1f85
 <Multi_key> <bar> <greater> <asciitilde> <Greek_alpha>  : "ᾆ"  U1f86
 <Multi_key> <bar> <asciitilde> <greater> <Greek_alpha>  : "ᾆ"  U1f86
@@ -1239,22 +1038,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <greater> <Greek_alpha>  : "ᾆ"  U1f86
 <Multi_key> <asciitilde> <greater> <bar> <Greek_alpha>  : "ᾆ"  U1f86
 <dead_iota> <dead_horn> <dead_tilde> <Greek_alpha>      : "ᾆ"  U1f86
-<dead_iota> <U0313> <dead_tilde> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_iota> <dead_psili> <dead_tilde> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_iota> <dead_tilde> <dead_horn> <Greek_alpha>      : "ᾆ"  U1f86
-<dead_iota> <dead_tilde> <U0313> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_iota> <dead_tilde> <dead_psili> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_horn> <dead_iota> <dead_tilde> <Greek_alpha>      : "ᾆ"  U1f86
-<U0313> <dead_iota> <dead_tilde> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_psili> <dead_iota> <dead_tilde> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_horn> <dead_tilde> <dead_iota> <Greek_alpha>      : "ᾆ"  U1f86
-<U0313> <dead_tilde> <dead_iota> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_psili> <dead_tilde> <dead_iota> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_tilde> <dead_iota> <dead_horn> <Greek_alpha>      : "ᾆ"  U1f86
-<dead_tilde> <dead_iota> <U0313> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_tilde> <dead_iota> <dead_psili> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_tilde> <dead_horn> <dead_iota> <Greek_alpha>      : "ᾆ"  U1f86
-<dead_tilde> <U0313> <dead_iota> <Greek_alpha>      : "ᾆ"  U1f86
 <dead_tilde> <dead_psili> <dead_iota> <Greek_alpha>      : "ᾆ"  U1f86
 <Multi_key> <bar> <less> <asciitilde> <Greek_alpha>     : "ᾇ"  U1f87
 <Multi_key> <bar> <asciitilde> <less> <Greek_alpha>     : "ᾇ"  U1f87
@@ -1263,38 +1056,28 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <less> <Greek_alpha>     : "ᾇ"  U1f87
 <Multi_key> <asciitilde> <less> <bar> <Greek_alpha>     : "ᾇ"  U1f87
 <dead_iota> <dead_ogonek> <dead_tilde> <Greek_alpha>    : "ᾇ"  U1f87
-<dead_iota> <U0314> <dead_tilde> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_iota> <dead_dasia> <dead_tilde> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_iota> <dead_tilde> <dead_ogonek> <Greek_alpha>    : "ᾇ"  U1f87
-<dead_iota> <dead_tilde> <U0314> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_iota> <dead_tilde> <dead_dasia> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_ogonek> <dead_iota> <dead_tilde> <Greek_alpha>    : "ᾇ"  U1f87
-<U0314> <dead_iota> <dead_tilde> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_dasia> <dead_iota> <dead_tilde> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_ogonek> <dead_tilde> <dead_iota> <Greek_alpha>    : "ᾇ"  U1f87
-<U0314> <dead_tilde> <dead_iota> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_dasia> <dead_tilde> <dead_iota> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_tilde> <dead_iota> <dead_ogonek> <Greek_alpha>    : "ᾇ"  U1f87
-<dead_tilde> <dead_iota> <U0314> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_tilde> <dead_iota> <dead_dasia> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_tilde> <dead_ogonek> <dead_iota> <Greek_alpha>    : "ᾇ"  U1f87
-<dead_tilde> <U0314> <dead_iota> <Greek_alpha>    : "ᾇ"  U1f87
 <dead_tilde> <dead_dasia> <dead_iota> <Greek_alpha>    : "ᾇ"  U1f87
 <Multi_key> <bar> <greater> <Greek_ALPHA>               : "ᾈ"  U1f88
 <Multi_key> <greater> <bar> <Greek_ALPHA>               : "ᾈ"  U1f88
 <dead_iota> <dead_horn> <Greek_ALPHA>                   : "ᾈ"  U1f88
-<dead_iota> <U0313> <Greek_ALPHA>                   : "ᾈ"  U1f88
 <dead_iota> <dead_psili> <Greek_ALPHA>                   : "ᾈ"  U1f88
 <dead_horn> <dead_iota> <Greek_ALPHA>                   : "ᾈ"  U1f88
-<U0313> <dead_iota> <Greek_ALPHA>                   : "ᾈ"  U1f88
 <dead_psili> <dead_iota> <Greek_ALPHA>                   : "ᾈ"  U1f88
 <Multi_key> <bar> <less> <Greek_ALPHA>                  : "ᾉ"  U1f89
 <Multi_key> <less> <bar> <Greek_ALPHA>                  : "ᾉ"  U1f89
 <dead_iota> <dead_ogonek> <Greek_ALPHA>                 : "ᾉ"  U1f89
-<dead_iota> <U0314> <Greek_ALPHA>                 : "ᾉ"  U1f89
 <dead_iota> <dead_dasia> <Greek_ALPHA>                 : "ᾉ"  U1f89
 <dead_ogonek> <dead_iota> <Greek_ALPHA>                 : "ᾉ"  U1f89
-<U0314> <dead_iota> <Greek_ALPHA>                 : "ᾉ"  U1f89
 <dead_dasia> <dead_iota> <Greek_ALPHA>                 : "ᾉ"  U1f89
 <Multi_key> <bar> <greater> <grave> <Greek_ALPHA>       : "ᾊ"  U1f8a
 <Multi_key> <bar> <grave> <greater> <Greek_ALPHA>       : "ᾊ"  U1f8a
@@ -1303,22 +1086,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <greater> <Greek_ALPHA>       : "ᾊ"  U1f8a
 <Multi_key> <grave> <greater> <bar> <Greek_ALPHA>       : "ᾊ"  U1f8a
 <dead_iota> <dead_horn> <dead_grave> <Greek_ALPHA>      : "ᾊ"  U1f8a
-<dead_iota> <U0313> <dead_grave> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_iota> <dead_psili> <dead_grave> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_iota> <dead_grave> <dead_horn> <Greek_ALPHA>      : "ᾊ"  U1f8a
-<dead_iota> <dead_grave> <U0313> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_iota> <dead_grave> <dead_psili> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_horn> <dead_iota> <dead_grave> <Greek_ALPHA>      : "ᾊ"  U1f8a
-<U0313> <dead_iota> <dead_grave> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_psili> <dead_iota> <dead_grave> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_horn> <dead_grave> <dead_iota> <Greek_ALPHA>      : "ᾊ"  U1f8a
-<U0313> <dead_grave> <dead_iota> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_psili> <dead_grave> <dead_iota> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_grave> <dead_iota> <dead_horn> <Greek_ALPHA>      : "ᾊ"  U1f8a
-<dead_grave> <dead_iota> <U0313> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_grave> <dead_iota> <dead_psili> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_grave> <dead_horn> <dead_iota> <Greek_ALPHA>      : "ᾊ"  U1f8a
-<dead_grave> <U0313> <dead_iota> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <dead_grave> <dead_psili> <dead_iota> <Greek_ALPHA>      : "ᾊ"  U1f8a
 <Multi_key> <bar> <less> <grave> <Greek_ALPHA>          : "ᾋ"  U1f8b
 <Multi_key> <bar> <grave> <less> <Greek_ALPHA>          : "ᾋ"  U1f8b
@@ -1327,22 +1104,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <less> <Greek_ALPHA>          : "ᾋ"  U1f8b
 <Multi_key> <grave> <less> <bar> <Greek_ALPHA>          : "ᾋ"  U1f8b
 <dead_iota> <dead_ogonek> <dead_grave> <Greek_ALPHA>    : "ᾋ"  U1f8b
-<dead_iota> <U0314> <dead_grave> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_iota> <dead_dasia> <dead_grave> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_iota> <dead_grave> <dead_ogonek> <Greek_ALPHA>    : "ᾋ"  U1f8b
-<dead_iota> <dead_grave> <U0314> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_iota> <dead_grave> <dead_dasia> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_ogonek> <dead_iota> <dead_grave> <Greek_ALPHA>    : "ᾋ"  U1f8b
-<U0314> <dead_iota> <dead_grave> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_dasia> <dead_iota> <dead_grave> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_ogonek> <dead_grave> <dead_iota> <Greek_ALPHA>    : "ᾋ"  U1f8b
-<U0314> <dead_grave> <dead_iota> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_dasia> <dead_grave> <dead_iota> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_grave> <dead_iota> <dead_ogonek> <Greek_ALPHA>    : "ᾋ"  U1f8b
-<dead_grave> <dead_iota> <U0314> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_grave> <dead_iota> <dead_dasia> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_grave> <dead_ogonek> <dead_iota> <Greek_ALPHA>    : "ᾋ"  U1f8b
-<dead_grave> <U0314> <dead_iota> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <dead_grave> <dead_dasia> <dead_iota> <Greek_ALPHA>    : "ᾋ"  U1f8b
 <Multi_key> <bar> <greater> <apostrophe> <Greek_ALPHA>  : "ᾌ"  U1f8c
 <Multi_key> <bar> <apostrophe> <greater> <Greek_ALPHA>  : "ᾌ"  U1f8c
@@ -1351,22 +1122,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <greater> <Greek_ALPHA>  : "ᾌ"  U1f8c
 <Multi_key> <apostrophe> <greater> <bar> <Greek_ALPHA>  : "ᾌ"  U1f8c
 <dead_iota> <dead_horn> <dead_acute> <Greek_ALPHA>      : "ᾌ"  U1f8c
-<dead_iota> <U0313> <dead_acute> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_iota> <dead_psili> <dead_acute> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_iota> <dead_acute> <dead_horn> <Greek_ALPHA>      : "ᾌ"  U1f8c
-<dead_iota> <dead_acute> <U0313> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_iota> <dead_acute> <dead_psili> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_horn> <dead_iota> <dead_acute> <Greek_ALPHA>      : "ᾌ"  U1f8c
-<U0313> <dead_iota> <dead_acute> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_psili> <dead_iota> <dead_acute> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_horn> <dead_acute> <dead_iota> <Greek_ALPHA>      : "ᾌ"  U1f8c
-<U0313> <dead_acute> <dead_iota> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_psili> <dead_acute> <dead_iota> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_acute> <dead_iota> <dead_horn> <Greek_ALPHA>      : "ᾌ"  U1f8c
-<dead_acute> <dead_iota> <U0313> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_acute> <dead_iota> <dead_psili> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_acute> <dead_horn> <dead_iota> <Greek_ALPHA>      : "ᾌ"  U1f8c
-<dead_acute> <U0313> <dead_iota> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <dead_acute> <dead_psili> <dead_iota> <Greek_ALPHA>      : "ᾌ"  U1f8c
 <Multi_key> <bar> <less> <apostrophe> <Greek_ALPHA>     : "ᾍ"  U1f8d
 <Multi_key> <bar> <apostrophe> <less> <Greek_ALPHA>     : "ᾍ"  U1f8d
@@ -1375,22 +1140,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <less> <Greek_ALPHA>     : "ᾍ"  U1f8d
 <Multi_key> <apostrophe> <less> <bar> <Greek_ALPHA>     : "ᾍ"  U1f8d
 <dead_iota> <dead_ogonek> <dead_acute> <Greek_ALPHA>    : "ᾍ"  U1f8d
-<dead_iota> <U0314> <dead_acute> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_iota> <dead_dasia> <dead_acute> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_iota> <dead_acute> <dead_ogonek> <Greek_ALPHA>    : "ᾍ"  U1f8d
-<dead_iota> <dead_acute> <U0314> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_iota> <dead_acute> <dead_dasia> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_ogonek> <dead_iota> <dead_acute> <Greek_ALPHA>    : "ᾍ"  U1f8d
-<U0314> <dead_iota> <dead_acute> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_dasia> <dead_iota> <dead_acute> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_ogonek> <dead_acute> <dead_iota> <Greek_ALPHA>    : "ᾍ"  U1f8d
-<U0314> <dead_acute> <dead_iota> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_dasia> <dead_acute> <dead_iota> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_acute> <dead_iota> <dead_ogonek> <Greek_ALPHA>    : "ᾍ"  U1f8d
-<dead_acute> <dead_iota> <U0314> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_acute> <dead_iota> <dead_dasia> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_acute> <dead_ogonek> <dead_iota> <Greek_ALPHA>    : "ᾍ"  U1f8d
-<dead_acute> <U0314> <dead_iota> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <dead_acute> <dead_dasia> <dead_iota> <Greek_ALPHA>    : "ᾍ"  U1f8d
 <Multi_key> <bar> <greater> <asciitilde> <Greek_ALPHA>  : "ᾎ"  U1f8e
 <Multi_key> <bar> <asciitilde> <greater> <Greek_ALPHA>  : "ᾎ"  U1f8e
@@ -1399,22 +1158,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <greater> <Greek_ALPHA>  : "ᾎ"  U1f8e
 <Multi_key> <asciitilde> <greater> <bar> <Greek_ALPHA>  : "ᾎ"  U1f8e
 <dead_iota> <dead_horn> <dead_tilde> <Greek_ALPHA>      : "ᾎ"  U1f8e
-<dead_iota> <U0313> <dead_tilde> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_iota> <dead_psili> <dead_tilde> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_iota> <dead_tilde> <dead_horn> <Greek_ALPHA>      : "ᾎ"  U1f8e
-<dead_iota> <dead_tilde> <U0313> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_iota> <dead_tilde> <dead_psili> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_horn> <dead_iota> <dead_tilde> <Greek_ALPHA>      : "ᾎ"  U1f8e
-<U0313> <dead_iota> <dead_tilde> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_psili> <dead_iota> <dead_tilde> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_horn> <dead_tilde> <dead_iota> <Greek_ALPHA>      : "ᾎ"  U1f8e
-<U0313> <dead_tilde> <dead_iota> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_psili> <dead_tilde> <dead_iota> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_tilde> <dead_iota> <dead_horn> <Greek_ALPHA>      : "ᾎ"  U1f8e
-<dead_tilde> <dead_iota> <U0313> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_tilde> <dead_iota> <dead_psili> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_tilde> <dead_horn> <dead_iota> <Greek_ALPHA>      : "ᾎ"  U1f8e
-<dead_tilde> <U0313> <dead_iota> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <dead_tilde> <dead_psili> <dead_iota> <Greek_ALPHA>      : "ᾎ"  U1f8e
 <Multi_key> <bar> <less> <asciitilde> <Greek_ALPHA>     : "ᾏ"  U1f8f
 <Multi_key> <bar> <asciitilde> <less> <Greek_ALPHA>     : "ᾏ"  U1f8f
@@ -1423,38 +1176,28 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <less> <Greek_ALPHA>     : "ᾏ"  U1f8f
 <Multi_key> <asciitilde> <less> <bar> <Greek_ALPHA>     : "ᾏ"  U1f8f
 <dead_iota> <dead_ogonek> <dead_tilde> <Greek_ALPHA>    : "ᾏ"  U1f8f
-<dead_iota> <U0314> <dead_tilde> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_iota> <dead_dasia> <dead_tilde> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_iota> <dead_tilde> <dead_ogonek> <Greek_ALPHA>    : "ᾏ"  U1f8f
-<dead_iota> <dead_tilde> <U0314> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_iota> <dead_tilde> <dead_dasia> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_ogonek> <dead_iota> <dead_tilde> <Greek_ALPHA>    : "ᾏ"  U1f8f
-<U0314> <dead_iota> <dead_tilde> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_dasia> <dead_iota> <dead_tilde> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_ogonek> <dead_tilde> <dead_iota> <Greek_ALPHA>    : "ᾏ"  U1f8f
-<U0314> <dead_tilde> <dead_iota> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_dasia> <dead_tilde> <dead_iota> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_tilde> <dead_iota> <dead_ogonek> <Greek_ALPHA>    : "ᾏ"  U1f8f
-<dead_tilde> <dead_iota> <U0314> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_tilde> <dead_iota> <dead_dasia> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_tilde> <dead_ogonek> <dead_iota> <Greek_ALPHA>    : "ᾏ"  U1f8f
-<dead_tilde> <U0314> <dead_iota> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <dead_tilde> <dead_dasia> <dead_iota> <Greek_ALPHA>    : "ᾏ"  U1f8f
 <Multi_key> <bar> <greater> <Greek_eta>                 : "ᾐ"  U1f90
 <Multi_key> <greater> <bar> <Greek_eta>                 : "ᾐ"  U1f90
 <dead_iota> <dead_horn> <Greek_eta>                     : "ᾐ"  U1f90
-<dead_iota> <U0313> <Greek_eta>                     : "ᾐ"  U1f90
 <dead_iota> <dead_psili> <Greek_eta>                     : "ᾐ"  U1f90
 <dead_horn> <dead_iota> <Greek_eta>                     : "ᾐ"  U1f90
-<U0313> <dead_iota> <Greek_eta>                     : "ᾐ"  U1f90
 <dead_psili> <dead_iota> <Greek_eta>                     : "ᾐ"  U1f90
 <Multi_key> <bar> <less> <Greek_eta>                    : "ᾑ"  U1f91
 <Multi_key> <less> <bar> <Greek_eta>                    : "ᾑ"  U1f91
 <dead_iota> <dead_ogonek> <Greek_eta>                   : "ᾑ"  U1f91
-<dead_iota> <U0314> <Greek_eta>                   : "ᾑ"  U1f91
 <dead_iota> <dead_dasia> <Greek_eta>                   : "ᾑ"  U1f91
 <dead_ogonek> <dead_iota> <Greek_eta>                   : "ᾑ"  U1f91
-<U0314> <dead_iota> <Greek_eta>                   : "ᾑ"  U1f91
 <dead_dasia> <dead_iota> <Greek_eta>                   : "ᾑ"  U1f91
 <Multi_key> <bar> <greater> <grave> <Greek_eta>         : "ᾒ"  U1f92
 <Multi_key> <bar> <grave> <greater> <Greek_eta>         : "ᾒ"  U1f92
@@ -1463,22 +1206,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <greater> <Greek_eta>         : "ᾒ"  U1f92
 <Multi_key> <grave> <greater> <bar> <Greek_eta>         : "ᾒ"  U1f92
 <dead_iota> <dead_horn> <dead_grave> <Greek_eta>        : "ᾒ"  U1f92
-<dead_iota> <U0313> <dead_grave> <Greek_eta>        : "ᾒ"  U1f92
 <dead_iota> <dead_psili> <dead_grave> <Greek_eta>        : "ᾒ"  U1f92
 <dead_iota> <dead_grave> <dead_horn> <Greek_eta>        : "ᾒ"  U1f92
-<dead_iota> <dead_grave> <U0313> <Greek_eta>        : "ᾒ"  U1f92
 <dead_iota> <dead_grave> <dead_psili> <Greek_eta>        : "ᾒ"  U1f92
 <dead_horn> <dead_iota> <dead_grave> <Greek_eta>        : "ᾒ"  U1f92
-<U0313> <dead_iota> <dead_grave> <Greek_eta>        : "ᾒ"  U1f92
 <dead_psili> <dead_iota> <dead_grave> <Greek_eta>        : "ᾒ"  U1f92
 <dead_horn> <dead_grave> <dead_iota> <Greek_eta>        : "ᾒ"  U1f92
-<U0313> <dead_grave> <dead_iota> <Greek_eta>        : "ᾒ"  U1f92
 <dead_psili> <dead_grave> <dead_iota> <Greek_eta>        : "ᾒ"  U1f92
 <dead_grave> <dead_iota> <dead_horn> <Greek_eta>        : "ᾒ"  U1f92
-<dead_grave> <dead_iota> <U0313> <Greek_eta>        : "ᾒ"  U1f92
 <dead_grave> <dead_iota> <dead_psili> <Greek_eta>        : "ᾒ"  U1f92
 <dead_grave> <dead_horn> <dead_iota> <Greek_eta>        : "ᾒ"  U1f92
-<dead_grave> <U0313> <dead_iota> <Greek_eta>        : "ᾒ"  U1f92
 <dead_grave> <dead_psili> <dead_iota> <Greek_eta>        : "ᾒ"  U1f92
 <Multi_key> <bar> <less> <grave> <Greek_eta>            : "ᾓ"  U1f93
 <Multi_key> <bar> <grave> <less> <Greek_eta>            : "ᾓ"  U1f93
@@ -1487,22 +1224,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <less> <Greek_eta>            : "ᾓ"  U1f93
 <Multi_key> <grave> <less> <bar> <Greek_eta>            : "ᾓ"  U1f93
 <dead_iota> <dead_ogonek> <dead_grave> <Greek_eta>      : "ᾓ"  U1f93
-<dead_iota> <U0314> <dead_grave> <Greek_eta>      : "ᾓ"  U1f93
 <dead_iota> <dead_dasia> <dead_grave> <Greek_eta>      : "ᾓ"  U1f93
 <dead_iota> <dead_grave> <dead_ogonek> <Greek_eta>      : "ᾓ"  U1f93
-<dead_iota> <dead_grave> <U0314> <Greek_eta>      : "ᾓ"  U1f93
 <dead_iota> <dead_grave> <dead_dasia> <Greek_eta>      : "ᾓ"  U1f93
 <dead_ogonek> <dead_iota> <dead_grave> <Greek_eta>      : "ᾓ"  U1f93
-<U0314> <dead_iota> <dead_grave> <Greek_eta>      : "ᾓ"  U1f93
 <dead_dasia> <dead_iota> <dead_grave> <Greek_eta>      : "ᾓ"  U1f93
 <dead_ogonek> <dead_grave> <dead_iota> <Greek_eta>      : "ᾓ"  U1f93
-<U0314> <dead_grave> <dead_iota> <Greek_eta>      : "ᾓ"  U1f93
 <dead_dasia> <dead_grave> <dead_iota> <Greek_eta>      : "ᾓ"  U1f93
 <dead_grave> <dead_iota> <dead_ogonek> <Greek_eta>      : "ᾓ"  U1f93
-<dead_grave> <dead_iota> <U0314> <Greek_eta>      : "ᾓ"  U1f93
 <dead_grave> <dead_iota> <dead_dasia> <Greek_eta>      : "ᾓ"  U1f93
 <dead_grave> <dead_ogonek> <dead_iota> <Greek_eta>      : "ᾓ"  U1f93
-<dead_grave> <U0314> <dead_iota> <Greek_eta>      : "ᾓ"  U1f93
 <dead_grave> <dead_dasia> <dead_iota> <Greek_eta>      : "ᾓ"  U1f93
 <Multi_key> <bar> <greater> <apostrophe> <Greek_eta>    : "ᾔ"  U1f94
 <Multi_key> <bar> <apostrophe> <greater> <Greek_eta>    : "ᾔ"  U1f94
@@ -1511,22 +1242,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <greater> <Greek_eta>    : "ᾔ"  U1f94
 <Multi_key> <apostrophe> <greater> <bar> <Greek_eta>    : "ᾔ"  U1f94
 <dead_iota> <dead_horn> <dead_acute> <Greek_eta>        : "ᾔ"  U1f94
-<dead_iota> <U0313> <dead_acute> <Greek_eta>        : "ᾔ"  U1f94
 <dead_iota> <dead_psili> <dead_acute> <Greek_eta>        : "ᾔ"  U1f94
 <dead_iota> <dead_acute> <dead_horn> <Greek_eta>        : "ᾔ"  U1f94
-<dead_iota> <dead_acute> <U0313> <Greek_eta>        : "ᾔ"  U1f94
 <dead_iota> <dead_acute> <dead_psili> <Greek_eta>        : "ᾔ"  U1f94
 <dead_horn> <dead_iota> <dead_acute> <Greek_eta>        : "ᾔ"  U1f94
-<U0313> <dead_iota> <dead_acute> <Greek_eta>        : "ᾔ"  U1f94
 <dead_psili> <dead_iota> <dead_acute> <Greek_eta>        : "ᾔ"  U1f94
 <dead_horn> <dead_acute> <dead_iota> <Greek_eta>        : "ᾔ"  U1f94
-<U0313> <dead_acute> <dead_iota> <Greek_eta>        : "ᾔ"  U1f94
 <dead_psili> <dead_acute> <dead_iota> <Greek_eta>        : "ᾔ"  U1f94
 <dead_acute> <dead_iota> <dead_horn> <Greek_eta>        : "ᾔ"  U1f94
-<dead_acute> <dead_iota> <U0313> <Greek_eta>        : "ᾔ"  U1f94
 <dead_acute> <dead_iota> <dead_psili> <Greek_eta>        : "ᾔ"  U1f94
 <dead_acute> <dead_horn> <dead_iota> <Greek_eta>        : "ᾔ"  U1f94
-<dead_acute> <U0313> <dead_iota> <Greek_eta>        : "ᾔ"  U1f94
 <dead_acute> <dead_psili> <dead_iota> <Greek_eta>        : "ᾔ"  U1f94
 <Multi_key> <bar> <less> <apostrophe> <Greek_eta>       : "ᾕ"  U1f95
 <Multi_key> <bar> <apostrophe> <less> <Greek_eta>       : "ᾕ"  U1f95
@@ -1535,22 +1260,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <less> <Greek_eta>       : "ᾕ"  U1f95
 <Multi_key> <apostrophe> <less> <bar> <Greek_eta>       : "ᾕ"  U1f95
 <dead_iota> <dead_ogonek> <dead_acute> <Greek_eta>      : "ᾕ"  U1f95
-<dead_iota> <U0314> <dead_acute> <Greek_eta>      : "ᾕ"  U1f95
 <dead_iota> <dead_dasia> <dead_acute> <Greek_eta>      : "ᾕ"  U1f95
 <dead_iota> <dead_acute> <dead_ogonek> <Greek_eta>      : "ᾕ"  U1f95
-<dead_iota> <dead_acute> <U0314> <Greek_eta>      : "ᾕ"  U1f95
 <dead_iota> <dead_acute> <dead_dasia> <Greek_eta>      : "ᾕ"  U1f95
 <dead_ogonek> <dead_iota> <dead_acute> <Greek_eta>      : "ᾕ"  U1f95
-<U0314> <dead_iota> <dead_acute> <Greek_eta>      : "ᾕ"  U1f95
 <dead_dasia> <dead_iota> <dead_acute> <Greek_eta>      : "ᾕ"  U1f95
 <dead_ogonek> <dead_acute> <dead_iota> <Greek_eta>      : "ᾕ"  U1f95
-<U0314> <dead_acute> <dead_iota> <Greek_eta>      : "ᾕ"  U1f95
 <dead_dasia> <dead_acute> <dead_iota> <Greek_eta>      : "ᾕ"  U1f95
 <dead_acute> <dead_iota> <dead_ogonek> <Greek_eta>      : "ᾕ"  U1f95
-<dead_acute> <dead_iota> <U0314> <Greek_eta>      : "ᾕ"  U1f95
 <dead_acute> <dead_iota> <dead_dasia> <Greek_eta>      : "ᾕ"  U1f95
 <dead_acute> <dead_ogonek> <dead_iota> <Greek_eta>      : "ᾕ"  U1f95
-<dead_acute> <U0314> <dead_iota> <Greek_eta>      : "ᾕ"  U1f95
 <dead_acute> <dead_dasia> <dead_iota> <Greek_eta>      : "ᾕ"  U1f95
 <Multi_key> <bar> <greater> <asciitilde> <Greek_eta>    : "ᾖ"  U1f96
 <Multi_key> <bar> <asciitilde> <greater> <Greek_eta>    : "ᾖ"  U1f96
@@ -1559,22 +1278,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <greater> <Greek_eta>    : "ᾖ"  U1f96
 <Multi_key> <asciitilde> <greater> <bar> <Greek_eta>    : "ᾖ"  U1f96
 <dead_iota> <dead_horn> <dead_tilde> <Greek_eta>        : "ᾖ"  U1f96
-<dead_iota> <U0313> <dead_tilde> <Greek_eta>        : "ᾖ"  U1f96
 <dead_iota> <dead_psili> <dead_tilde> <Greek_eta>        : "ᾖ"  U1f96
 <dead_iota> <dead_tilde> <dead_horn> <Greek_eta>        : "ᾖ"  U1f96
-<dead_iota> <dead_tilde> <U0313> <Greek_eta>        : "ᾖ"  U1f96
 <dead_iota> <dead_tilde> <dead_psili> <Greek_eta>        : "ᾖ"  U1f96
 <dead_horn> <dead_iota> <dead_tilde> <Greek_eta>        : "ᾖ"  U1f96
-<U0313> <dead_iota> <dead_tilde> <Greek_eta>        : "ᾖ"  U1f96
 <dead_psili> <dead_iota> <dead_tilde> <Greek_eta>        : "ᾖ"  U1f96
 <dead_horn> <dead_tilde> <dead_iota> <Greek_eta>        : "ᾖ"  U1f96
-<U0313> <dead_tilde> <dead_iota> <Greek_eta>        : "ᾖ"  U1f96
 <dead_psili> <dead_tilde> <dead_iota> <Greek_eta>        : "ᾖ"  U1f96
 <dead_tilde> <dead_iota> <dead_horn> <Greek_eta>        : "ᾖ"  U1f96
-<dead_tilde> <dead_iota> <U0313> <Greek_eta>        : "ᾖ"  U1f96
 <dead_tilde> <dead_iota> <dead_psili> <Greek_eta>        : "ᾖ"  U1f96
 <dead_tilde> <dead_horn> <dead_iota> <Greek_eta>        : "ᾖ"  U1f96
-<dead_tilde> <U0313> <dead_iota> <Greek_eta>        : "ᾖ"  U1f96
 <dead_tilde> <dead_psili> <dead_iota> <Greek_eta>        : "ᾖ"  U1f96
 <Multi_key> <bar> <less> <asciitilde> <Greek_eta>       : "ᾗ"  U1f97
 <Multi_key> <bar> <asciitilde> <less> <Greek_eta>       : "ᾗ"  U1f97
@@ -1583,38 +1296,28 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <less> <Greek_eta>       : "ᾗ"  U1f97
 <Multi_key> <asciitilde> <less> <bar> <Greek_eta>       : "ᾗ"  U1f97
 <dead_iota> <dead_ogonek> <dead_tilde> <Greek_eta>      : "ᾗ"  U1f97
-<dead_iota> <U0314> <dead_tilde> <Greek_eta>      : "ᾗ"  U1f97
 <dead_iota> <dead_dasia> <dead_tilde> <Greek_eta>      : "ᾗ"  U1f97
 <dead_iota> <dead_tilde> <dead_ogonek> <Greek_eta>      : "ᾗ"  U1f97
-<dead_iota> <dead_tilde> <U0314> <Greek_eta>      : "ᾗ"  U1f97
 <dead_iota> <dead_tilde> <dead_dasia> <Greek_eta>      : "ᾗ"  U1f97
 <dead_ogonek> <dead_iota> <dead_tilde> <Greek_eta>      : "ᾗ"  U1f97
-<U0314> <dead_iota> <dead_tilde> <Greek_eta>      : "ᾗ"  U1f97
 <dead_dasia> <dead_iota> <dead_tilde> <Greek_eta>      : "ᾗ"  U1f97
 <dead_ogonek> <dead_tilde> <dead_iota> <Greek_eta>      : "ᾗ"  U1f97
-<U0314> <dead_tilde> <dead_iota> <Greek_eta>      : "ᾗ"  U1f97
 <dead_dasia> <dead_tilde> <dead_iota> <Greek_eta>      : "ᾗ"  U1f97
 <dead_tilde> <dead_iota> <dead_ogonek> <Greek_eta>      : "ᾗ"  U1f97
-<dead_tilde> <dead_iota> <U0314> <Greek_eta>      : "ᾗ"  U1f97
 <dead_tilde> <dead_iota> <dead_dasia> <Greek_eta>      : "ᾗ"  U1f97
 <dead_tilde> <dead_ogonek> <dead_iota> <Greek_eta>      : "ᾗ"  U1f97
-<dead_tilde> <U0314> <dead_iota> <Greek_eta>      : "ᾗ"  U1f97
 <dead_tilde> <dead_dasia> <dead_iota> <Greek_eta>      : "ᾗ"  U1f97
 <Multi_key> <bar> <greater> <Greek_ETA>                 : "ᾘ"  U1f98
 <Multi_key> <greater> <bar> <Greek_ETA>                 : "ᾘ"  U1f98
 <dead_iota> <dead_horn> <Greek_ETA>                     : "ᾘ"  U1f98
-<dead_iota> <U0313> <Greek_ETA>                     : "ᾘ"  U1f98
 <dead_iota> <dead_psili> <Greek_ETA>                     : "ᾘ"  U1f98
 <dead_horn> <dead_iota> <Greek_ETA>                     : "ᾘ"  U1f98
-<U0313> <dead_iota> <Greek_ETA>                     : "ᾘ"  U1f98
 <dead_psili> <dead_iota> <Greek_ETA>                     : "ᾘ"  U1f98
 <Multi_key> <bar> <less> <Greek_ETA>                    : "ᾙ"  U1f99
 <Multi_key> <less> <bar> <Greek_ETA>                    : "ᾙ"  U1f99
 <dead_iota> <dead_ogonek> <Greek_ETA>                   : "ᾙ"  U1f99
-<dead_iota> <U0314> <Greek_ETA>                   : "ᾙ"  U1f99
 <dead_iota> <dead_dasia> <Greek_ETA>                   : "ᾙ"  U1f99
 <dead_ogonek> <dead_iota> <Greek_ETA>                   : "ᾙ"  U1f99
-<U0314> <dead_iota> <Greek_ETA>                   : "ᾙ"  U1f99
 <dead_dasia> <dead_iota> <Greek_ETA>                   : "ᾙ"  U1f99
 <Multi_key> <bar> <greater> <grave> <Greek_ETA>         : "ᾚ"  U1f9a
 <Multi_key> <bar> <grave> <greater> <Greek_ETA>         : "ᾚ"  U1f9a
@@ -1623,22 +1326,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <greater> <Greek_ETA>         : "ᾚ"  U1f9a
 <Multi_key> <grave> <greater> <bar> <Greek_ETA>         : "ᾚ"  U1f9a
 <dead_iota> <dead_horn> <dead_grave> <Greek_ETA>        : "ᾚ"  U1f9a
-<dead_iota> <U0313> <dead_grave> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_iota> <dead_psili> <dead_grave> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_iota> <dead_grave> <dead_horn> <Greek_ETA>        : "ᾚ"  U1f9a
-<dead_iota> <dead_grave> <U0313> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_iota> <dead_grave> <dead_psili> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_horn> <dead_iota> <dead_grave> <Greek_ETA>        : "ᾚ"  U1f9a
-<U0313> <dead_iota> <dead_grave> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_psili> <dead_iota> <dead_grave> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_horn> <dead_grave> <dead_iota> <Greek_ETA>        : "ᾚ"  U1f9a
-<U0313> <dead_grave> <dead_iota> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_psili> <dead_grave> <dead_iota> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_grave> <dead_iota> <dead_horn> <Greek_ETA>        : "ᾚ"  U1f9a
-<dead_grave> <dead_iota> <U0313> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_grave> <dead_iota> <dead_psili> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_grave> <dead_horn> <dead_iota> <Greek_ETA>        : "ᾚ"  U1f9a
-<dead_grave> <U0313> <dead_iota> <Greek_ETA>        : "ᾚ"  U1f9a
 <dead_grave> <dead_psili> <dead_iota> <Greek_ETA>        : "ᾚ"  U1f9a
 <Multi_key> <bar> <less> <grave> <Greek_ETA>            : "ᾛ"  U1f9b
 <Multi_key> <bar> <grave> <less> <Greek_ETA>            : "ᾛ"  U1f9b
@@ -1647,22 +1344,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <less> <Greek_ETA>            : "ᾛ"  U1f9b
 <Multi_key> <grave> <less> <bar> <Greek_ETA>            : "ᾛ"  U1f9b
 <dead_iota> <dead_ogonek> <dead_grave> <Greek_ETA>      : "ᾛ"  U1f9b
-<dead_iota> <U0314> <dead_grave> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_iota> <dead_dasia> <dead_grave> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_iota> <dead_grave> <dead_ogonek> <Greek_ETA>      : "ᾛ"  U1f9b
-<dead_iota> <dead_grave> <U0314> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_iota> <dead_grave> <dead_dasia> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_ogonek> <dead_iota> <dead_grave> <Greek_ETA>      : "ᾛ"  U1f9b
-<U0314> <dead_iota> <dead_grave> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_dasia> <dead_iota> <dead_grave> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_ogonek> <dead_grave> <dead_iota> <Greek_ETA>      : "ᾛ"  U1f9b
-<U0314> <dead_grave> <dead_iota> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_dasia> <dead_grave> <dead_iota> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_grave> <dead_iota> <dead_ogonek> <Greek_ETA>      : "ᾛ"  U1f9b
-<dead_grave> <dead_iota> <U0314> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_grave> <dead_iota> <dead_dasia> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_grave> <dead_ogonek> <dead_iota> <Greek_ETA>      : "ᾛ"  U1f9b
-<dead_grave> <U0314> <dead_iota> <Greek_ETA>      : "ᾛ"  U1f9b
 <dead_grave> <dead_dasia> <dead_iota> <Greek_ETA>      : "ᾛ"  U1f9b
 <Multi_key> <bar> <greater> <apostrophe> <Greek_ETA>    : "ᾜ"  U1f9c
 <Multi_key> <bar> <apostrophe> <greater> <Greek_ETA>    : "ᾜ"  U1f9c
@@ -1671,22 +1362,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <greater> <Greek_ETA>    : "ᾜ"  U1f9c
 <Multi_key> <apostrophe> <greater> <bar> <Greek_ETA>    : "ᾜ"  U1f9c
 <dead_iota> <dead_horn> <dead_acute> <Greek_ETA>        : "ᾜ"  U1f9c
-<dead_iota> <U0313> <dead_acute> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_iota> <dead_psili> <dead_acute> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_iota> <dead_acute> <dead_horn> <Greek_ETA>        : "ᾜ"  U1f9c
-<dead_iota> <dead_acute> <U0313> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_iota> <dead_acute> <dead_psili> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_horn> <dead_iota> <dead_acute> <Greek_ETA>        : "ᾜ"  U1f9c
-<U0313> <dead_iota> <dead_acute> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_psili> <dead_iota> <dead_acute> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_horn> <dead_acute> <dead_iota> <Greek_ETA>        : "ᾜ"  U1f9c
-<U0313> <dead_acute> <dead_iota> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_psili> <dead_acute> <dead_iota> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_acute> <dead_iota> <dead_horn> <Greek_ETA>        : "ᾜ"  U1f9c
-<dead_acute> <dead_iota> <U0313> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_acute> <dead_iota> <dead_psili> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_acute> <dead_horn> <dead_iota> <Greek_ETA>        : "ᾜ"  U1f9c
-<dead_acute> <U0313> <dead_iota> <Greek_ETA>        : "ᾜ"  U1f9c
 <dead_acute> <dead_psili> <dead_iota> <Greek_ETA>        : "ᾜ"  U1f9c
 <Multi_key> <bar> <less> <apostrophe> <Greek_ETA>       : "ᾝ"  U1f9d
 <Multi_key> <bar> <apostrophe> <less> <Greek_ETA>       : "ᾝ"  U1f9d
@@ -1695,22 +1380,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <less> <Greek_ETA>       : "ᾝ"  U1f9d
 <Multi_key> <apostrophe> <less> <bar> <Greek_ETA>       : "ᾝ"  U1f9d
 <dead_iota> <dead_ogonek> <dead_acute> <Greek_ETA>      : "ᾝ"  U1f9d
-<dead_iota> <U0314> <dead_acute> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_iota> <dead_dasia> <dead_acute> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_iota> <dead_acute> <dead_ogonek> <Greek_ETA>      : "ᾝ"  U1f9d
-<dead_iota> <dead_acute> <U0314> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_iota> <dead_acute> <dead_dasia> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_ogonek> <dead_iota> <dead_acute> <Greek_ETA>      : "ᾝ"  U1f9d
-<U0314> <dead_iota> <dead_acute> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_dasia> <dead_iota> <dead_acute> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_ogonek> <dead_acute> <dead_iota> <Greek_ETA>      : "ᾝ"  U1f9d
-<U0314> <dead_acute> <dead_iota> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_dasia> <dead_acute> <dead_iota> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_acute> <dead_iota> <dead_ogonek> <Greek_ETA>      : "ᾝ"  U1f9d
-<dead_acute> <dead_iota> <U0314> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_acute> <dead_iota> <dead_dasia> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_acute> <dead_ogonek> <dead_iota> <Greek_ETA>      : "ᾝ"  U1f9d
-<dead_acute> <U0314> <dead_iota> <Greek_ETA>      : "ᾝ"  U1f9d
 <dead_acute> <dead_dasia> <dead_iota> <Greek_ETA>      : "ᾝ"  U1f9d
 <Multi_key> <bar> <greater> <asciitilde> <Greek_ETA>    : "ᾞ"  U1f9e
 <Multi_key> <bar> <asciitilde> <greater> <Greek_ETA>    : "ᾞ"  U1f9e
@@ -1719,22 +1398,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <greater> <Greek_ETA>    : "ᾞ"  U1f9e
 <Multi_key> <asciitilde> <greater> <bar> <Greek_ETA>    : "ᾞ"  U1f9e
 <dead_iota> <dead_horn> <dead_tilde> <Greek_ETA>        : "ᾞ"  U1f9e
-<dead_iota> <U0313> <dead_tilde> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_iota> <dead_psili> <dead_tilde> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_iota> <dead_tilde> <dead_horn> <Greek_ETA>        : "ᾞ"  U1f9e
-<dead_iota> <dead_tilde> <U0313> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_iota> <dead_tilde> <dead_psili> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_horn> <dead_iota> <dead_tilde> <Greek_ETA>        : "ᾞ"  U1f9e
-<U0313> <dead_iota> <dead_tilde> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_psili> <dead_iota> <dead_tilde> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_horn> <dead_tilde> <dead_iota> <Greek_ETA>        : "ᾞ"  U1f9e
-<U0313> <dead_tilde> <dead_iota> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_psili> <dead_tilde> <dead_iota> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_tilde> <dead_iota> <dead_horn> <Greek_ETA>        : "ᾞ"  U1f9e
-<dead_tilde> <dead_iota> <U0313> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_tilde> <dead_iota> <dead_psili> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_tilde> <dead_horn> <dead_iota> <Greek_ETA>        : "ᾞ"  U1f9e
-<dead_tilde> <U0313> <dead_iota> <Greek_ETA>        : "ᾞ"  U1f9e
 <dead_tilde> <dead_psili> <dead_iota> <Greek_ETA>        : "ᾞ"  U1f9e
 <Multi_key> <bar> <less> <asciitilde> <Greek_ETA>       : "ᾟ"  U1f9f
 <Multi_key> <bar> <asciitilde> <less> <Greek_ETA>       : "ᾟ"  U1f9f
@@ -1743,38 +1416,28 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <less> <Greek_ETA>       : "ᾟ"  U1f9f
 <Multi_key> <asciitilde> <less> <bar> <Greek_ETA>       : "ᾟ"  U1f9f
 <dead_iota> <dead_ogonek> <dead_tilde> <Greek_ETA>      : "ᾟ"  U1f9f
-<dead_iota> <U0314> <dead_tilde> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_iota> <dead_dasia> <dead_tilde> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_iota> <dead_tilde> <dead_ogonek> <Greek_ETA>      : "ᾟ"  U1f9f
-<dead_iota> <dead_tilde> <U0314> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_iota> <dead_tilde> <dead_dasia> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_ogonek> <dead_iota> <dead_tilde> <Greek_ETA>      : "ᾟ"  U1f9f
-<U0314> <dead_iota> <dead_tilde> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_dasia> <dead_iota> <dead_tilde> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_ogonek> <dead_tilde> <dead_iota> <Greek_ETA>      : "ᾟ"  U1f9f
-<U0314> <dead_tilde> <dead_iota> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_dasia> <dead_tilde> <dead_iota> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_tilde> <dead_iota> <dead_ogonek> <Greek_ETA>      : "ᾟ"  U1f9f
-<dead_tilde> <dead_iota> <U0314> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_tilde> <dead_iota> <dead_dasia> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_tilde> <dead_ogonek> <dead_iota> <Greek_ETA>      : "ᾟ"  U1f9f
-<dead_tilde> <U0314> <dead_iota> <Greek_ETA>      : "ᾟ"  U1f9f
 <dead_tilde> <dead_dasia> <dead_iota> <Greek_ETA>      : "ᾟ"  U1f9f
 <Multi_key> <bar> <greater> <Greek_omega>               : "ᾠ"  U1fa0
 <Multi_key> <greater> <bar> <Greek_omega>               : "ᾠ"  U1fa0
 <dead_iota> <dead_horn> <Greek_omega>                   : "ᾠ"  U1fa0
-<dead_iota> <U0313> <Greek_omega>                   : "ᾠ"  U1fa0
 <dead_iota> <dead_psili> <Greek_omega>                   : "ᾠ"  U1fa0
 <dead_horn> <dead_iota> <Greek_omega>                   : "ᾠ"  U1fa0
-<U0313> <dead_iota> <Greek_omega>                   : "ᾠ"  U1fa0
 <dead_psili> <dead_iota> <Greek_omega>                   : "ᾠ"  U1fa0
 <Multi_key> <bar> <less> <Greek_omega>                  : "ᾡ"  U1fa1
 <Multi_key> <less> <bar> <Greek_omega>                  : "ᾡ"  U1fa1
 <dead_iota> <dead_ogonek> <Greek_omega>                 : "ᾡ"  U1fa1
-<dead_iota> <U0314> <Greek_omega>                 : "ᾡ"  U1fa1
 <dead_iota> <dead_dasia> <Greek_omega>                 : "ᾡ"  U1fa1
 <dead_ogonek> <dead_iota> <Greek_omega>                 : "ᾡ"  U1fa1
-<U0314> <dead_iota> <Greek_omega>                 : "ᾡ"  U1fa1
 <dead_dasia> <dead_iota> <Greek_omega>                 : "ᾡ"  U1fa1
 <Multi_key> <bar> <greater> <grave> <Greek_omega>       : "ᾢ"  U1fa2
 <Multi_key> <bar> <grave> <greater> <Greek_omega>       : "ᾢ"  U1fa2
@@ -1783,22 +1446,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <greater> <Greek_omega>       : "ᾢ"  U1fa2
 <Multi_key> <grave> <greater> <bar> <Greek_omega>       : "ᾢ"  U1fa2
 <dead_iota> <dead_horn> <dead_grave> <Greek_omega>      : "ᾢ"  U1fa2
-<dead_iota> <U0313> <dead_grave> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_iota> <dead_psili> <dead_grave> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_iota> <dead_grave> <dead_horn> <Greek_omega>      : "ᾢ"  U1fa2
-<dead_iota> <dead_grave> <U0313> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_iota> <dead_grave> <dead_psili> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_horn> <dead_iota> <dead_grave> <Greek_omega>      : "ᾢ"  U1fa2
-<U0313> <dead_iota> <dead_grave> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_psili> <dead_iota> <dead_grave> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_horn> <dead_grave> <dead_iota> <Greek_omega>      : "ᾢ"  U1fa2
-<U0313> <dead_grave> <dead_iota> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_psili> <dead_grave> <dead_iota> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_grave> <dead_iota> <dead_horn> <Greek_omega>      : "ᾢ"  U1fa2
-<dead_grave> <dead_iota> <U0313> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_grave> <dead_iota> <dead_psili> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_grave> <dead_horn> <dead_iota> <Greek_omega>      : "ᾢ"  U1fa2
-<dead_grave> <U0313> <dead_iota> <Greek_omega>      : "ᾢ"  U1fa2
 <dead_grave> <dead_psili> <dead_iota> <Greek_omega>      : "ᾢ"  U1fa2
 <Multi_key> <bar> <less> <grave> <Greek_omega>          : "ᾣ"  U1fa3
 <Multi_key> <bar> <grave> <less> <Greek_omega>          : "ᾣ"  U1fa3
@@ -1807,22 +1464,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <less> <Greek_omega>          : "ᾣ"  U1fa3
 <Multi_key> <grave> <less> <bar> <Greek_omega>          : "ᾣ"  U1fa3
 <dead_iota> <dead_ogonek> <dead_grave> <Greek_omega>    : "ᾣ"  U1fa3
-<dead_iota> <U0314> <dead_grave> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_iota> <dead_dasia> <dead_grave> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_iota> <dead_grave> <dead_ogonek> <Greek_omega>    : "ᾣ"  U1fa3
-<dead_iota> <dead_grave> <U0314> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_iota> <dead_grave> <dead_dasia> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_ogonek> <dead_iota> <dead_grave> <Greek_omega>    : "ᾣ"  U1fa3
-<U0314> <dead_iota> <dead_grave> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_dasia> <dead_iota> <dead_grave> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_ogonek> <dead_grave> <dead_iota> <Greek_omega>    : "ᾣ"  U1fa3
-<U0314> <dead_grave> <dead_iota> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_dasia> <dead_grave> <dead_iota> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_grave> <dead_iota> <dead_ogonek> <Greek_omega>    : "ᾣ"  U1fa3
-<dead_grave> <dead_iota> <U0314> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_grave> <dead_iota> <dead_dasia> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_grave> <dead_ogonek> <dead_iota> <Greek_omega>    : "ᾣ"  U1fa3
-<dead_grave> <U0314> <dead_iota> <Greek_omega>    : "ᾣ"  U1fa3
 <dead_grave> <dead_dasia> <dead_iota> <Greek_omega>    : "ᾣ"  U1fa3
 <Multi_key> <bar> <greater> <apostrophe> <Greek_omega>  : "ᾤ"  U1fa4
 <Multi_key> <bar> <apostrophe> <greater> <Greek_omega>  : "ᾤ"  U1fa4
@@ -1831,22 +1482,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <greater> <Greek_omega>  : "ᾤ"  U1fa4
 <Multi_key> <apostrophe> <greater> <bar> <Greek_omega>  : "ᾤ"  U1fa4
 <dead_iota> <dead_horn> <dead_acute> <Greek_omega>      : "ᾤ"  U1fa4
-<dead_iota> <U0313> <dead_acute> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_iota> <dead_psili> <dead_acute> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_iota> <dead_acute> <dead_horn> <Greek_omega>      : "ᾤ"  U1fa4
-<dead_iota> <dead_acute> <U0313> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_iota> <dead_acute> <dead_psili> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_horn> <dead_iota> <dead_acute> <Greek_omega>      : "ᾤ"  U1fa4
-<U0313> <dead_iota> <dead_acute> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_psili> <dead_iota> <dead_acute> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_horn> <dead_acute> <dead_iota> <Greek_omega>      : "ᾤ"  U1fa4
-<U0313> <dead_acute> <dead_iota> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_psili> <dead_acute> <dead_iota> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_acute> <dead_iota> <dead_horn> <Greek_omega>      : "ᾤ"  U1fa4
-<dead_acute> <dead_iota> <U0313> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_acute> <dead_iota> <dead_psili> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_acute> <dead_horn> <dead_iota> <Greek_omega>      : "ᾤ"  U1fa4
-<dead_acute> <U0313> <dead_iota> <Greek_omega>      : "ᾤ"  U1fa4
 <dead_acute> <dead_psili> <dead_iota> <Greek_omega>      : "ᾤ"  U1fa4
 <Multi_key> <bar> <less> <apostrophe> <Greek_omega>     : "ᾥ"  U1fa5
 <Multi_key> <bar> <apostrophe> <less> <Greek_omega>     : "ᾥ"  U1fa5
@@ -1855,22 +1500,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <less> <Greek_omega>     : "ᾥ"  U1fa5
 <Multi_key> <apostrophe> <less> <bar> <Greek_omega>     : "ᾥ"  U1fa5
 <dead_iota> <dead_ogonek> <dead_acute> <Greek_omega>    : "ᾥ"  U1fa5
-<dead_iota> <U0314> <dead_acute> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_iota> <dead_dasia> <dead_acute> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_iota> <dead_acute> <dead_ogonek> <Greek_omega>    : "ᾥ"  U1fa5
-<dead_iota> <dead_acute> <U0314> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_iota> <dead_acute> <dead_dasia> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_ogonek> <dead_iota> <dead_acute> <Greek_omega>    : "ᾥ"  U1fa5
-<U0314> <dead_iota> <dead_acute> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_dasia> <dead_iota> <dead_acute> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_ogonek> <dead_acute> <dead_iota> <Greek_omega>    : "ᾥ"  U1fa5
-<U0314> <dead_acute> <dead_iota> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_dasia> <dead_acute> <dead_iota> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_acute> <dead_iota> <dead_ogonek> <Greek_omega>    : "ᾥ"  U1fa5
-<dead_acute> <dead_iota> <U0314> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_acute> <dead_iota> <dead_dasia> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_acute> <dead_ogonek> <dead_iota> <Greek_omega>    : "ᾥ"  U1fa5
-<dead_acute> <U0314> <dead_iota> <Greek_omega>    : "ᾥ"  U1fa5
 <dead_acute> <dead_dasia> <dead_iota> <Greek_omega>    : "ᾥ"  U1fa5
 <Multi_key> <bar> <greater> <asciitilde> <Greek_omega>  : "ᾦ"  U1fa6
 <Multi_key> <bar> <asciitilde> <greater> <Greek_omega>  : "ᾦ"  U1fa6
@@ -1879,22 +1518,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <greater> <Greek_omega>  : "ᾦ"  U1fa6
 <Multi_key> <asciitilde> <greater> <bar> <Greek_omega>  : "ᾦ"  U1fa6
 <dead_iota> <dead_horn> <dead_tilde> <Greek_omega>      : "ᾦ"  U1fa6
-<dead_iota> <U0313> <dead_tilde> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_iota> <dead_psili> <dead_tilde> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_iota> <dead_tilde> <dead_horn> <Greek_omega>      : "ᾦ"  U1fa6
-<dead_iota> <dead_tilde> <U0313> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_iota> <dead_tilde> <dead_psili> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_horn> <dead_iota> <dead_tilde> <Greek_omega>      : "ᾦ"  U1fa6
-<U0313> <dead_iota> <dead_tilde> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_psili> <dead_iota> <dead_tilde> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_horn> <dead_tilde> <dead_iota> <Greek_omega>      : "ᾦ"  U1fa6
-<U0313> <dead_tilde> <dead_iota> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_psili> <dead_tilde> <dead_iota> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_tilde> <dead_iota> <dead_horn> <Greek_omega>      : "ᾦ"  U1fa6
-<dead_tilde> <dead_iota> <U0313> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_tilde> <dead_iota> <dead_psili> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_tilde> <dead_horn> <dead_iota> <Greek_omega>      : "ᾦ"  U1fa6
-<dead_tilde> <U0313> <dead_iota> <Greek_omega>      : "ᾦ"  U1fa6
 <dead_tilde> <dead_psili> <dead_iota> <Greek_omega>      : "ᾦ"  U1fa6
 <Multi_key> <bar> <less> <asciitilde> <Greek_omega>     : "ᾧ"  U1fa7
 <Multi_key> <bar> <asciitilde> <less> <Greek_omega>     : "ᾧ"  U1fa7
@@ -1903,38 +1536,28 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <less> <Greek_omega>     : "ᾧ"  U1fa7
 <Multi_key> <asciitilde> <less> <bar> <Greek_omega>     : "ᾧ"  U1fa7
 <dead_iota> <dead_ogonek> <dead_tilde> <Greek_omega>    : "ᾧ"  U1fa7
-<dead_iota> <U0314> <dead_tilde> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_iota> <dead_dasia> <dead_tilde> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_iota> <dead_tilde> <dead_ogonek> <Greek_omega>    : "ᾧ"  U1fa7
-<dead_iota> <dead_tilde> <U0314> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_iota> <dead_tilde> <dead_dasia> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_ogonek> <dead_iota> <dead_tilde> <Greek_omega>    : "ᾧ"  U1fa7
-<U0314> <dead_iota> <dead_tilde> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_dasia> <dead_iota> <dead_tilde> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_ogonek> <dead_tilde> <dead_iota> <Greek_omega>    : "ᾧ"  U1fa7
-<U0314> <dead_tilde> <dead_iota> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_dasia> <dead_tilde> <dead_iota> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_tilde> <dead_iota> <dead_ogonek> <Greek_omega>    : "ᾧ"  U1fa7
-<dead_tilde> <dead_iota> <U0314> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_tilde> <dead_iota> <dead_dasia> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_tilde> <dead_ogonek> <dead_iota> <Greek_omega>    : "ᾧ"  U1fa7
-<dead_tilde> <U0314> <dead_iota> <Greek_omega>    : "ᾧ"  U1fa7
 <dead_tilde> <dead_dasia> <dead_iota> <Greek_omega>    : "ᾧ"  U1fa7
 <Multi_key> <bar> <greater> <Greek_OMEGA>               : "ᾨ"  U1fa8
 <Multi_key> <greater> <bar> <Greek_OMEGA>               : "ᾨ"  U1fa8
 <dead_iota> <dead_horn> <Greek_OMEGA>                   : "ᾨ"  U1fa8
-<dead_iota> <U0313> <Greek_OMEGA>                   : "ᾨ"  U1fa8
 <dead_iota> <dead_psili> <Greek_OMEGA>                   : "ᾨ"  U1fa8
 <dead_horn> <dead_iota> <Greek_OMEGA>                   : "ᾨ"  U1fa8
-<U0313> <dead_iota> <Greek_OMEGA>                   : "ᾨ"  U1fa8
 <dead_psili> <dead_iota> <Greek_OMEGA>                   : "ᾨ"  U1fa8
 <Multi_key> <bar> <less> <Greek_OMEGA>                  : "ᾩ"  U1fa9
 <Multi_key> <less> <bar> <Greek_OMEGA>                  : "ᾩ"  U1fa9
 <dead_iota> <dead_ogonek> <Greek_OMEGA>                 : "ᾩ"  U1fa9
-<dead_iota> <U0314> <Greek_OMEGA>                 : "ᾩ"  U1fa9
 <dead_iota> <dead_dasia> <Greek_OMEGA>                 : "ᾩ"  U1fa9
 <dead_ogonek> <dead_iota> <Greek_OMEGA>                 : "ᾩ"  U1fa9
-<U0314> <dead_iota> <Greek_OMEGA>                 : "ᾩ"  U1fa9
 <dead_dasia> <dead_iota> <Greek_OMEGA>                 : "ᾩ"  U1fa9
 <Multi_key> <bar> <greater> <grave> <Greek_OMEGA>       : "ᾪ"  U1faa
 <Multi_key> <bar> <grave> <greater> <Greek_OMEGA>       : "ᾪ"  U1faa
@@ -1943,22 +1566,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <greater> <Greek_OMEGA>       : "ᾪ"  U1faa
 <Multi_key> <grave> <greater> <bar> <Greek_OMEGA>       : "ᾪ"  U1faa
 <dead_iota> <dead_horn> <dead_grave> <Greek_OMEGA>      : "ᾪ"  U1faa
-<dead_iota> <U0313> <dead_grave> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_iota> <dead_psili> <dead_grave> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_iota> <dead_grave> <dead_horn> <Greek_OMEGA>      : "ᾪ"  U1faa
-<dead_iota> <dead_grave> <U0313> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_iota> <dead_grave> <dead_psili> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_horn> <dead_iota> <dead_grave> <Greek_OMEGA>      : "ᾪ"  U1faa
-<U0313> <dead_iota> <dead_grave> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_psili> <dead_iota> <dead_grave> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_horn> <dead_grave> <dead_iota> <Greek_OMEGA>      : "ᾪ"  U1faa
-<U0313> <dead_grave> <dead_iota> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_psili> <dead_grave> <dead_iota> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_grave> <dead_iota> <dead_horn> <Greek_OMEGA>      : "ᾪ"  U1faa
-<dead_grave> <dead_iota> <U0313> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_grave> <dead_iota> <dead_psili> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_grave> <dead_horn> <dead_iota> <Greek_OMEGA>      : "ᾪ"  U1faa
-<dead_grave> <U0313> <dead_iota> <Greek_OMEGA>      : "ᾪ"  U1faa
 <dead_grave> <dead_psili> <dead_iota> <Greek_OMEGA>      : "ᾪ"  U1faa
 <Multi_key> <bar> <less> <grave> <Greek_OMEGA>          : "ᾫ"  U1fab
 <Multi_key> <bar> <grave> <less> <Greek_OMEGA>          : "ᾫ"  U1fab
@@ -1967,22 +1584,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <grave> <bar> <less> <Greek_OMEGA>          : "ᾫ"  U1fab
 <Multi_key> <grave> <less> <bar> <Greek_OMEGA>          : "ᾫ"  U1fab
 <dead_iota> <dead_ogonek> <dead_grave> <Greek_OMEGA>    : "ᾫ"  U1fab
-<dead_iota> <U0314> <dead_grave> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_iota> <dead_dasia> <dead_grave> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_iota> <dead_grave> <dead_ogonek> <Greek_OMEGA>    : "ᾫ"  U1fab
-<dead_iota> <dead_grave> <U0314> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_iota> <dead_grave> <dead_dasia> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_ogonek> <dead_iota> <dead_grave> <Greek_OMEGA>    : "ᾫ"  U1fab
-<U0314> <dead_iota> <dead_grave> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_dasia> <dead_iota> <dead_grave> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_ogonek> <dead_grave> <dead_iota> <Greek_OMEGA>    : "ᾫ"  U1fab
-<U0314> <dead_grave> <dead_iota> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_dasia> <dead_grave> <dead_iota> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_grave> <dead_iota> <dead_ogonek> <Greek_OMEGA>    : "ᾫ"  U1fab
-<dead_grave> <dead_iota> <U0314> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_grave> <dead_iota> <dead_dasia> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_grave> <dead_ogonek> <dead_iota> <Greek_OMEGA>    : "ᾫ"  U1fab
-<dead_grave> <U0314> <dead_iota> <Greek_OMEGA>    : "ᾫ"  U1fab
 <dead_grave> <dead_dasia> <dead_iota> <Greek_OMEGA>    : "ᾫ"  U1fab
 <Multi_key> <bar> <greater> <apostrophe> <Greek_OMEGA>  : "ᾬ"  U1fac
 <Multi_key> <bar> <apostrophe> <greater> <Greek_OMEGA>  : "ᾬ"  U1fac
@@ -1991,22 +1602,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <greater> <Greek_OMEGA>  : "ᾬ"  U1fac
 <Multi_key> <apostrophe> <greater> <bar> <Greek_OMEGA>  : "ᾬ"  U1fac
 <dead_iota> <dead_horn> <dead_acute> <Greek_OMEGA>      : "ᾬ"  U1fac
-<dead_iota> <U0313> <dead_acute> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_iota> <dead_psili> <dead_acute> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_iota> <dead_acute> <dead_horn> <Greek_OMEGA>      : "ᾬ"  U1fac
-<dead_iota> <dead_acute> <U0313> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_iota> <dead_acute> <dead_psili> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_horn> <dead_iota> <dead_acute> <Greek_OMEGA>      : "ᾬ"  U1fac
-<U0313> <dead_iota> <dead_acute> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_psili> <dead_iota> <dead_acute> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_horn> <dead_acute> <dead_iota> <Greek_OMEGA>      : "ᾬ"  U1fac
-<U0313> <dead_acute> <dead_iota> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_psili> <dead_acute> <dead_iota> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_acute> <dead_iota> <dead_horn> <Greek_OMEGA>      : "ᾬ"  U1fac
-<dead_acute> <dead_iota> <U0313> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_acute> <dead_iota> <dead_psili> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_acute> <dead_horn> <dead_iota> <Greek_OMEGA>      : "ᾬ"  U1fac
-<dead_acute> <U0313> <dead_iota> <Greek_OMEGA>      : "ᾬ"  U1fac
 <dead_acute> <dead_psili> <dead_iota> <Greek_OMEGA>      : "ᾬ"  U1fac
 <Multi_key> <bar> <less> <apostrophe> <Greek_OMEGA>     : "ᾭ"  U1fad
 <Multi_key> <bar> <apostrophe> <less> <Greek_OMEGA>     : "ᾭ"  U1fad
@@ -2015,22 +1620,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <apostrophe> <bar> <less> <Greek_OMEGA>     : "ᾭ"  U1fad
 <Multi_key> <apostrophe> <less> <bar> <Greek_OMEGA>     : "ᾭ"  U1fad
 <dead_iota> <dead_ogonek> <dead_acute> <Greek_OMEGA>    : "ᾭ"  U1fad
-<dead_iota> <U0314> <dead_acute> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_iota> <dead_dasia> <dead_acute> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_iota> <dead_acute> <dead_ogonek> <Greek_OMEGA>    : "ᾭ"  U1fad
-<dead_iota> <dead_acute> <U0314> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_iota> <dead_acute> <dead_dasia> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_ogonek> <dead_iota> <dead_acute> <Greek_OMEGA>    : "ᾭ"  U1fad
-<U0314> <dead_iota> <dead_acute> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_dasia> <dead_iota> <dead_acute> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_ogonek> <dead_acute> <dead_iota> <Greek_OMEGA>    : "ᾭ"  U1fad
-<U0314> <dead_acute> <dead_iota> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_dasia> <dead_acute> <dead_iota> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_acute> <dead_iota> <dead_ogonek> <Greek_OMEGA>    : "ᾭ"  U1fad
-<dead_acute> <dead_iota> <U0314> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_acute> <dead_iota> <dead_dasia> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_acute> <dead_ogonek> <dead_iota> <Greek_OMEGA>    : "ᾭ"  U1fad
-<dead_acute> <U0314> <dead_iota> <Greek_OMEGA>    : "ᾭ"  U1fad
 <dead_acute> <dead_dasia> <dead_iota> <Greek_OMEGA>    : "ᾭ"  U1fad
 <Multi_key> <bar> <greater> <asciitilde> <Greek_OMEGA>  : "ᾮ"  U1fae
 <Multi_key> <bar> <asciitilde> <greater> <Greek_OMEGA>  : "ᾮ"  U1fae
@@ -2039,22 +1638,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <greater> <Greek_OMEGA>  : "ᾮ"  U1fae
 <Multi_key> <asciitilde> <greater> <bar> <Greek_OMEGA>  : "ᾮ"  U1fae
 <dead_iota> <dead_horn> <dead_tilde> <Greek_OMEGA>      : "ᾮ"  U1fae
-<dead_iota> <U0313> <dead_tilde> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_iota> <dead_psili> <dead_tilde> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_iota> <dead_tilde> <dead_horn> <Greek_OMEGA>      : "ᾮ"  U1fae
-<dead_iota> <dead_tilde> <U0313> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_iota> <dead_tilde> <dead_psili> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_horn> <dead_iota> <dead_tilde> <Greek_OMEGA>      : "ᾮ"  U1fae
-<U0313> <dead_iota> <dead_tilde> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_psili> <dead_iota> <dead_tilde> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_horn> <dead_tilde> <dead_iota> <Greek_OMEGA>      : "ᾮ"  U1fae
-<U0313> <dead_tilde> <dead_iota> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_psili> <dead_tilde> <dead_iota> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_tilde> <dead_iota> <dead_horn> <Greek_OMEGA>      : "ᾮ"  U1fae
-<dead_tilde> <dead_iota> <U0313> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_tilde> <dead_iota> <dead_psili> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_tilde> <dead_horn> <dead_iota> <Greek_OMEGA>      : "ᾮ"  U1fae
-<dead_tilde> <U0313> <dead_iota> <Greek_OMEGA>      : "ᾮ"  U1fae
 <dead_tilde> <dead_psili> <dead_iota> <Greek_OMEGA>      : "ᾮ"  U1fae
 <Multi_key> <bar> <less> <asciitilde> <Greek_OMEGA>     : "ᾯ"  U1faf
 <Multi_key> <bar> <asciitilde> <less> <Greek_OMEGA>     : "ᾯ"  U1faf
@@ -2063,22 +1656,16 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <Multi_key> <asciitilde> <bar> <less> <Greek_OMEGA>     : "ᾯ"  U1faf
 <Multi_key> <asciitilde> <less> <bar> <Greek_OMEGA>     : "ᾯ"  U1faf
 <dead_iota> <dead_ogonek> <dead_tilde> <Greek_OMEGA>    : "ᾯ"  U1faf
-<dead_iota> <U0314> <dead_tilde> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_iota> <dead_dasia> <dead_tilde> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_iota> <dead_tilde> <dead_ogonek> <Greek_OMEGA>    : "ᾯ"  U1faf
-<dead_iota> <dead_tilde> <U0314> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_iota> <dead_tilde> <dead_dasia> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_ogonek> <dead_iota> <dead_tilde> <Greek_OMEGA>    : "ᾯ"  U1faf
-<U0314> <dead_iota> <dead_tilde> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_dasia> <dead_iota> <dead_tilde> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_ogonek> <dead_tilde> <dead_iota> <Greek_OMEGA>    : "ᾯ"  U1faf
-<U0314> <dead_tilde> <dead_iota> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_dasia> <dead_tilde> <dead_iota> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_tilde> <dead_iota> <dead_ogonek> <Greek_OMEGA>    : "ᾯ"  U1faf
-<dead_tilde> <dead_iota> <U0314> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_tilde> <dead_iota> <dead_dasia> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_tilde> <dead_ogonek> <dead_iota> <Greek_OMEGA>    : "ᾯ"  U1faf
-<dead_tilde> <U0314> <dead_iota> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_tilde> <dead_dasia> <dead_iota> <Greek_OMEGA>    : "ᾯ"  U1faf
 <dead_breve> <Greek_alpha>                              : "ᾰ"  U1fb0
 <dead_macron> <Greek_alpha>                             : "ᾱ"  U1fb1
@@ -2182,74 +1769,54 @@ XCOMM	http://hal.csd.auth.gr/~vvas/i18n/xkb/polytonic-compose.pl
 <dead_iota> <Greek_OMEGA>                               : "ῼ"  U1ffc
 <Multi_key> <greater> <Greek_rho>                       : "ῤ"  U1fe4
 <dead_horn> <Greek_rho>                                 : "ῤ"  U1fe4
-<U0313> <Greek_rho>                                 : "ῤ"  U1fe4
 <dead_psili> <Greek_rho>                                 : "ῤ"  U1fe4
 <Multi_key> <less> <Greek_rho>                          : "ῥ"  U1fe5
 <dead_ogonek> <Greek_rho>                               : "ῥ"  U1fe5
-<U0314> <Greek_rho>                               : "ῥ"  U1fe5
 <dead_dasia> <Greek_rho>                               : "ῥ"  U1fe5
 <Multi_key> <less> <Greek_RHO>                          : "Ῥ"  U1fec
 <dead_ogonek> <Greek_RHO>                               : "Ῥ"  U1fec
-<U0314> <Greek_RHO>                               : "Ῥ"  U1fec
 <dead_dasia> <Greek_RHO>                               : "Ῥ"  U1fec
 <dead_horn> <dead_grave> <space>                        : "῍"  U1fcd
-<U0313> <dead_grave> <space>                        : "῍"  U1fcd
 <dead_psili> <dead_grave> <space>                        : "῍"  U1fcd
 <dead_grave> <dead_horn> <space>                        : "῍"  U1fcd
-<dead_grave> <U0313> <space>                        : "῍"  U1fcd
 <dead_grave> <dead_psili> <space>                        : "῍"  U1fcd
 <dead_horn> <dead_acute> <space>                        : "῎"  U1fce
-<U0313> <dead_acute> <space>                        : "῎"  U1fce
 <dead_psili> <dead_acute> <space>                        : "῎"  U1fce
 <dead_acute> <dead_horn> <space>                        : "῎"  U1fce
-<dead_acute> <U0313> <space>                        : "῎"  U1fce
 <dead_acute> <dead_psili> <space>                        : "῎"  U1fce
 <dead_horn> <dead_tilde> <space>                        : "῏"  U1fcf
-<U0313> <dead_tilde> <space>                        : "῏"  U1fcf
 <dead_psili> <dead_tilde> <space>                        : "῏"  U1fcf
 <dead_tilde> <dead_horn> <space>                        : "῏"  U1fcf
-<dead_tilde> <U0313> <space>                        : "῏"  U1fcf
 <dead_tilde> <dead_psili> <space>                        : "῏"  U1fcf
 <dead_ogonek> <dead_grave> <space>                      : "῝"  U1fdd
-<U0314> <dead_grave> <space>                      : "῝"  U1fdd
 <dead_dasia> <dead_grave> <space>                      : "῝"  U1fdd
 <dead_grave> <dead_ogonek> <space>                      : "῝"  U1fdd
-<dead_grave> <U0314> <space>                      : "῝"  U1fdd
 <dead_grave> <dead_dasia> <space>                      : "῝"  U1fdd
 <dead_ogonek> <dead_acute> <space>                      : "῞"  U1fde
-<U0314> <dead_acute> <space>                      : "῞"  U1fde
 <dead_dasia> <dead_acute> <space>                      : "῞"  U1fde
 <dead_acute> <dead_ogonek> <space>                      : "῞"  U1fde
-<dead_acute> <U0314> <space>                      : "῞"  U1fde
 <dead_acute> <dead_dasia> <space>                      : "῞"  U1fde
 <dead_ogonek> <dead_tilde> <space>                      : "῟"  U1fdf
-<U0314> <dead_tilde> <space>                      : "῟"  U1fdf
 <dead_dasia> <dead_tilde> <space>                      : "῟"  U1fdf
 <dead_tilde> <dead_ogonek> <space>                      : "῟"  U1fdf
-<dead_tilde> <U0314> <space>                      : "῟"  U1fdf
 <dead_tilde> <dead_dasia> <space>                      : "῟"  U1fdf
 <dead_diaeresis> <dead_grave> <space>                   : "῭"  U1fed
 <dead_grave> <dead_diaeresis> <space>                   : "῭"  U1fed
 <dead_diaeresis> <dead_tilde> <space>                   : "῁"  U1fc1
 <dead_tilde> <dead_diaeresis> <space>                   : "῁"  U1fc1
 <dead_horn> <space>                                     : "᾿"  U1fbf
-<U0313> <space>                                     : "᾿"  U1fbf
 <dead_psili> <space>                                     : "᾿"  U1fbf
 <dead_horn> <dead_horn>                                 : "᾿"  U1fbf
-<U0313> <dead_horn>                                 : "᾿"  U1fbf
 <dead_psili> <dead_horn>                                 : "᾿"  U1fbf
 <dead_ogonek> <space>                                   : "῾"  U1ffe
-<U0314> <space>                                   : "῾"  U1ffe
 <dead_dasia> <space>                                   : "῾"  U1ffe
 <dead_ogonek> <dead_ogonek>                             : "῾"  U1ffe
-<U0314> <dead_ogonek>                             : "῾"  U1ffe
 <dead_dasia> <dead_ogonek>                             : "῾"  U1ffe
 <dead_grave> <space>                                    : "`"  U1fef
 <dead_grave> <dead_grave>                               : "`"  U1fef
 <dead_tilde> <space>                                    : "῀"  U1fc0
 <dead_tilde> <dead_tilde>                               : "῀"  U1fc0
 <dead_horn> <underscore>                                : "᾽"  U1fbd
-<U0313> <underscore>                                : "᾽"  U1fbd
 <dead_psili> <underscore>                                : "᾽"  U1fbd
 <dead_iota> <underscore>                                : "ι"  U1fbe
 <dead_iota> <space>                                     : "ͺ"  U037a
@@ -2388,6 +1955,19 @@ XCOMM Miscellaneous extensions.
 
 <Multi_key> <question> <exclam>         : "‽"   U203D # INTERROBANG
 <Multi_key> <exclam> <question>         : "‽"   U203D # INTERROBANG
+
+<Multi_key> <1> <3>			: "⅓"	U2153 # VULGAR FRACTION ONE THIRD
+<Multi_key> <2> <3>			: "⅔"	U2154 # VULGAR FRACTION TWO THIRDS
+<Multi_key> <1> <5>			: "⅕"	U2155 # VULGAR FRACTION ONE FIFTH
+<Multi_key> <2> <5>			: "⅖"	U2156 # VULGAR FRACTION TWO FIFTHS
+<Multi_key> <3> <5>			: "⅗"	U2157 # VULGAR FRACTION THREE FIFTHS
+<Multi_key> <4> <5>			: "⅘"	U2158 # VULGAR FRACTION FOUR FIFTHS
+<Multi_key> <1> <6>			: "⅙"	U2159 # VULGAR FRACTION ONE SIXTH
+<Multi_key> <5> <6>			: "⅚"	U215A # VULGAR FRACTION FIVE SIXTHS
+<Multi_key> <1> <8>			: "⅛"	U215B # VULGAR FRACTION ONE EIGHTH
+<Multi_key> <3> <8>			: "⅜"	U215C # VULGAR FRACTION THREE EIGHTHS
+<Multi_key> <5> <8>			: "⅝"	U215D # VULGAR FRACTION FIVE EIGHTHS
+<Multi_key> <7> <8>			: "⅞"	U215E # VULGAR FRACTION SEVEN EIGHTHS
 
 XCOMM
 XCOMM Khmer digraphs

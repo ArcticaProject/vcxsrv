@@ -32,7 +32,7 @@
 XkbGetKeyboard \-   Retrieves one or more components of a keyboard device 
 description
 .SH SYNOPSIS
-.B Bool XkbGetKeyboard
+.B XkbDescPtr XkbGetKeyboard
 (
 .I display,
 .I which,

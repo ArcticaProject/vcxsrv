@@ -51,9 +51,9 @@ XRotateBuffers (
     /* XRotateWindowProperties wants a non-const Atom*, but it doesn't
      * modify it, so this is safe.
      */
-    return XRotateWindowProperties(dpy, RootWindow(dpy, 0), n_to_atom, 8, rotate);
+    return XRotateWindowProperties(dpy, RootWindow(dpy, 0), (Atom *)n_to_atom, 8, rotate);
 }
-    
+
 char *XFetchBuffer (
     register Display *dpy,
     int *nbytes,
@@ -67,8 +67,8 @@ char *XFetchBuffer (
     *nbytes = 0;
     if ((buffer < 0) || (buffer > 7)) return (NULL);
 /* XXX should be (sizeof (maxint) - 1)/4 */
-    if (XGetWindowProperty(dpy, RootWindow(dpy, 0), n_to_atom[buffer], 
-	0L, 10000000L, False, XA_STRING, 
+    if (XGetWindowProperty(dpy, RootWindow(dpy, 0), n_to_atom[buffer],
+	0L, 10000000L, False, XA_STRING,
 	&actual_type, &actual_format, &nitems, &leftover, &data) != Success) {
 	return (NULL);
 	}
@@ -95,7 +95,7 @@ XStoreBuffer (
     register int buffer)
 {
     if ((buffer < 0) || (buffer > 7)) return 0;
-    return XChangeProperty(dpy, RootWindow(dpy, 0), n_to_atom[buffer], 
+    return XChangeProperty(dpy, RootWindow(dpy, 0), n_to_atom[buffer],
 	XA_STRING, 8, PropModeReplace, (unsigned char *) bytes, nbytes);
 }
 

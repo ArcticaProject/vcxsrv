@@ -81,7 +81,7 @@ copy_list(
 
     if (is_wide_char) {
 	wchar_t *wc_text, *wstr, **wstr_list;
-	
+
 	wc_text = (wchar_t *) text;
 	wstr_list = (wchar_t **) list;
 
@@ -94,7 +94,7 @@ copy_list(
 	}
     } else {
 	char *mb_text, *str, **str_list;
-	
+
 	mb_text = (char *) text;
 	str_list = (char **) list;
 

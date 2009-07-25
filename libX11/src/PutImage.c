@@ -684,7 +684,7 @@ SendXYImage(
     if ((dpy->bufptr + length) > dpy->bufmax) {
 	if ((buf = _XAllocScratch(dpy, (unsigned long) (length))) == NULL) {
 	    UnGetReq(PutImage);
-	    return;	
+	    return;
 	}
     }
     else
@@ -872,7 +872,7 @@ PutImageRequest(
 	SendZImage(dpy, req, image, req_xoffset, req_yoffset,
 		   dest_bits_per_pixel, dest_scanline_pad);
 }
-	
+
 static void
 PutSubImage (
     register Display *dpy,
@@ -891,7 +891,7 @@ PutSubImage (
 
     if ((req_width == 0) || (req_height == 0))
 	return;
-    
+
     Available = ((65536 < dpy->max_request_size) ? (65536 << 2)
 						 : (dpy->max_request_size << 2))
 		- SIZEOF(xPutImageReq);
@@ -907,7 +907,7 @@ PutSubImage (
     }
 
     if ((BytesPerRow * req_height) <= Available) {
-        PutImageRequest(dpy, d, gc, image, req_xoffset, req_yoffset, x, y, 
+        PutImageRequest(dpy, d, gc, image, req_xoffset, req_yoffset, x, y,
 			req_width, req_height,
 			dest_bits_per_pixel, dest_scanline_pad);
     } else if (req_height > 1) {
@@ -916,11 +916,11 @@ PutSubImage (
 	if (SubImageHeight == 0)
 	    SubImageHeight = 1;
 
-	PutSubImage(dpy, d, gc, image, req_xoffset, req_yoffset, x, y, 
+	PutSubImage(dpy, d, gc, image, req_xoffset, req_yoffset, x, y,
 		    req_width, (unsigned int) SubImageHeight,
 		    dest_bits_per_pixel, dest_scanline_pad);
 
-	PutSubImage(dpy, d, gc, image, req_xoffset, 
+	PutSubImage(dpy, d, gc, image, req_xoffset,
 		    req_yoffset + SubImageHeight, x, y + SubImageHeight,
 		    req_width, req_height - SubImageHeight,
 		    dest_bits_per_pixel, dest_scanline_pad);
@@ -928,11 +928,11 @@ PutSubImage (
 	int SubImageWidth = (((Available << 3) / dest_scanline_pad)
 				* dest_scanline_pad) - left_pad;
 
-	PutSubImage(dpy, d, gc, image, req_xoffset, req_yoffset, x, y, 
+	PutSubImage(dpy, d, gc, image, req_xoffset, req_yoffset, x, y,
 		    (unsigned int) SubImageWidth, 1,
 		    dest_bits_per_pixel, dest_scanline_pad);
 
-	PutSubImage(dpy, d, gc, image, req_xoffset + SubImageWidth, 
+	PutSubImage(dpy, d, gc, image, req_xoffset + SubImageWidth,
 		    req_yoffset, x + SubImageWidth, y,
 		    req_width - SubImageWidth, 1,
 		    dest_bits_per_pixel, dest_scanline_pad);
@@ -950,7 +950,7 @@ XPutImage (
     int req_yoffset,
     int x,
     int y,
-    unsigned int req_width, 
+    unsigned int req_width,
     unsigned int req_height)
 
 {

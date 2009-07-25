@@ -153,7 +153,7 @@ int
 XFreeFont(
     register Display *dpy,
     XFontStruct *fs)
-{ 
+{
     register xResourceReq *req;
     register _XExtension *ext;
 
@@ -230,7 +230,7 @@ _XQueryFont (
     fs->all_chars_exist 	= reply.allCharsExist;
     fs->ascent 			= cvtINT16toInt (reply.fontAscent);
     fs->descent 		= cvtINT16toInt (reply.fontDescent);
-    
+
 #ifdef MUSTCOPY
     {
 	xCharInfo *xcip;
@@ -258,7 +258,7 @@ _XQueryFont (
 #endif /* MUSTCOPY */
 
     fs->n_properties = reply.nFontProps;
-    /* 
+    /*
      * if no properties defined for the font, then it is bad
      * font, but shouldn't try to read nothing.
      */
@@ -290,7 +290,7 @@ _XQueryFont (
 			    (reply.nCharInfos * SIZEOF(xCharInfo)));
 	    return (XFontStruct *)NULL;
 	}
-	    
+
 #ifdef MUSTCOPY
 	{
 	    register XCharStruct *cs = fs->per_char;
@@ -516,7 +516,7 @@ _XF86BigfontQueryFont (
     fs->max_bounds = * (XCharStruct *) &reply.maxBounds;
 
     fs->n_properties = reply.nFontProps;
-    /* 
+    /*
      * if no properties defined for the font, then it is bad
      * font, but shouldn't try to read nothing.
      */

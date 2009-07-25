@@ -71,7 +71,7 @@ Sun Microsystems, Inc. or its licensors is granted.
  *  This is source code modified by FUJITSU LIMITED under the Joint
  *  Development Agreement for the CDE/Motif PST.
  *
- *   Modifier: Masayoshi Shimamura      FUJITSU LIMITED 
+ *   Modifier: Masayoshi Shimamura      FUJITSU LIMITED
  *
  */
 /* $XFree86: xc/lib/X11/lcInit.c,v 3.9 2001/11/16 00:52:27 dawes Exp $ */
@@ -103,7 +103,7 @@ Sun Microsystems, Inc. or its licensors is granted.
  */
 
 void
-_XlcInitLoader()
+_XlcInitLoader(void)
 {
 
 #ifdef USE_DYNAMIC_LC
@@ -142,7 +142,7 @@ _XlcInitLoader()
 }
 
 void
-_XlcDeInitLoader()
+_XlcDeInitLoader(void)
 {
 
 #ifdef USE_DYNAMIC_LC

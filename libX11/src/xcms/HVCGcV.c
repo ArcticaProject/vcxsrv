@@ -3,7 +3,7 @@
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
  * 	All Rights Reserved
- * 
+ *
  * This file is a component of an X Window System-specific implementation
  * of Xcms based on the TekColor Color Management System.  TekColor is a
  * trademark of Tektronix, Inc.  The term "TekHVC" designates a particular
@@ -11,10 +11,10 @@
  * foreign patents pending).  Permission is hereby granted to use, copy,
  * modify, sell, and otherwise distribute this software and its
  * documentation for any purpose and without fee, provided that:
- * 
+ *
  * 1. This copyright, permission, and disclaimer notice is reproduced in
  *    all copies of this software and any modification thereof and in
- *    supporting documentation; 
+ *    supporting documentation;
  * 2. Any color-handling application which displays TekHVC color
  *    cooordinates identifies these as TekHVC color coordinates in any
  *    interface that displays these coordinates and in any associated
@@ -24,10 +24,10 @@
  *    including those provided in this file and any equivalent pathways and
  *    mathematical derivations, regardless of digital (e.g., floating point
  *    or integer) representation.
- * 
+ *
  * Tektronix makes no representation about the suitability of this software
  * for any purpose.  It is provided "as is" and with all faults.
- * 
+ *
  * TEKTRONIX DISCLAIMS ALL WARRANTIES APPLICABLE TO THIS SOFTWARE,
  * INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.  IN NO EVENT SHALL TEKTRONIX BE LIABLE FOR ANY
@@ -68,15 +68,15 @@
 /* ARGSUSED */
 Status
 XcmsTekHVCClipV (
-    XcmsCCC ccc, 
-    XcmsColor *pColors_in_out, 
+    XcmsCCC ccc,
+    XcmsColor *pColors_in_out,
     unsigned int nColors,
     unsigned int i,
     Bool *pCompressed)
 /*
  *	DESCRIPTION
  *		Return the closest value for a specific hue and chroma.
- *		This routine takes any color as input and outputs 
+ *		This routine takes any color as input and outputs
  *		a CIE XYZ color.
  *
  *		Since this routine works with the value within
@@ -116,7 +116,7 @@ XcmsTekHVCClipV (
      */
 
     pColor = pColors_in_out + i;
-    
+
     if (ccc->visual->class < StaticColor &&
 	    FunctionSetOfCCC(ccc) != (XPointer) &XcmsLinearRGBFunctionSet) {
 	/*
@@ -164,7 +164,7 @@ XcmsTekHVCClipV (
 	    /* When the value input is less than the maximum value point */
 	    /* compute the intersection of the line from 0,0 to max_V, max_C */
 	    /* using the chroma input. */
-	    pColor->spec.TekHVC.V = pColor->spec.TekHVC.C * 
+	    pColor->spec.TekHVC.V = pColor->spec.TekHVC.C *
 				    hvc_max.spec.TekHVC.V / hvc_max.spec.TekHVC.C;
 	    if (pColor->spec.TekHVC.V >= hvc_max.spec.TekHVC.V) {
 		pColor->spec.TekHVC.C = hvc_max.spec.TekHVC.C;

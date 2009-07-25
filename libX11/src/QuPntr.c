@@ -33,15 +33,15 @@ in this Software without prior written authorization from The Open Group.
 
 Bool XQueryPointer(
      register Display *dpy,
-     Window w, 
+     Window w,
      Window *root,
      Window *child,
-     int *root_x, 
+     int *root_x,
      int *root_y,
      int *win_x,
      int *win_y,
      unsigned int *mask)
-{       
+{
     xQueryPointerReply rep;
     xResourceReq *req;
 

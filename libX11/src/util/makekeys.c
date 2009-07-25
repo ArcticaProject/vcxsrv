@@ -36,13 +36,10 @@ from The Open Group.
 #include <X11/keysymdef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#if defined(macII) && !defined(__STDC__)  /* stdlib.h fails to define these */
-char *malloc();
-#endif /* macII */
 
 typedef unsigned long Signature;
 
-#define KTNUM 3000
+#define KTNUM 4000
 
 static struct info {
     char	*name;
@@ -52,11 +49,11 @@ static struct info {
 #define MIN_REHASH 15
 #define MATCHES 10
 
-char tab[KTNUM];
-unsigned short offsets[KTNUM];
-unsigned short indexes[KTNUM];
-KeySym values[KTNUM];
-char buf[1024];
+static char tab[KTNUM];
+static unsigned short offsets[KTNUM];
+static unsigned short indexes[KTNUM];
+static KeySym values[KTNUM];
+static char buf[1024];
 
 int
 main(int argc, char *argv[])
@@ -103,12 +100,11 @@ main(int argc, char *argv[])
 		    key);
 	    continue;
 	}
-	name = malloc((unsigned)strlen(key)+1);
+	name = strdup(key);
 	if (!name) {
 	    fprintf(stderr, "makekeys: out of memory!\n");
 	    exit(1);
 	}
-	(void)strcpy(name, key);
 	info[ksnum].name = name;
 	ksnum++;
 	if (ksnum == KTNUM) {
@@ -157,6 +153,11 @@ next1:	;
     }
 
     z = best_z;
+    if (z == 0) {
+	fprintf(stderr, "makekeys: failed to find small enough hash!\n"
+		"Try increasing KTNUM in makekeys.c\n");
+	exit(1);
+    }
     printf("#ifdef NEEDKTABLE\n");
     printf("const unsigned char _XkeyTable[] = {\n");
     printf("0,\n");
@@ -237,6 +238,11 @@ next2:	;
     }
 
     z = best_z;
+    if (z == 0) {
+	fprintf(stderr, "makekeys: failed to find small enough hash!\n"
+		"Try increasing KTNUM in makekeys.c\n");
+	exit(1);
+    }
     for (i = z; --i >= 0;)
 	offsets[i] = 0;
     for (i = 0; i < ksnum; i++) {

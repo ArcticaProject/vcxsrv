@@ -29,13 +29,13 @@ Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts.
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Digital not be
 used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.  
+software without specific, written prior permission.
 
 DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
 ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
@@ -96,12 +96,12 @@ XSetSizeHints(		/* old routine */
 	    prop.maxAspectY = hints->max_aspect.y;
 	}
 	return XChangeProperty (dpy, w, property, XA_WM_SIZE_HINTS, 32,
-				PropModeReplace, (unsigned char *) &prop, 
+				PropModeReplace, (unsigned char *) &prop,
 				OldNumPropSizeElements);
 }
 
-/* 
- * XSetWMHints sets the property 
+/*
+ * XSetWMHints sets the property
  *	WM_HINTS 	type: WM_HINTS	format:32
  */
 
@@ -131,14 +131,14 @@ XSetWMHints (
 	if (wmhints->flags & WindowGroupHint)
 	    prop.windowGroup = wmhints->window_group;
 	return XChangeProperty (dpy, w, XA_WM_HINTS, XA_WM_HINTS, 32,
-				PropModeReplace, (unsigned char *) &prop, 
+				PropModeReplace, (unsigned char *) &prop,
 				NumPropWMHintsElements);
 }
 
 
 
-/* 
- * XSetZoomHints sets the property 
+/*
+ * XSetZoomHints sets the property
  *	WM_ZOOM_HINTS 	type: WM_SIZE_HINTS format: 32
  */
 
@@ -152,8 +152,8 @@ XSetZoomHints (
 }
 
 
-/* 
- * XSetNormalHints sets the property 
+/*
+ * XSetNormalHints sets the property
  *	WM_NORMAL_HINTS 	type: WM_SIZE_HINTS format: 32
  */
 
@@ -197,8 +197,8 @@ XSetIconSizes (
 		pp += 1;
 		list += 1;
 	    }
-	    XChangeProperty (dpy, w, XA_WM_ICON_SIZE, XA_WM_ICON_SIZE, 32, 
-			     PropModeReplace, (unsigned char *) prop, 
+	    XChangeProperty (dpy, w, XA_WM_ICON_SIZE, XA_WM_ICON_SIZE, 32,
+			     PropModeReplace, (unsigned char *) prop,
 			     count * NumPropIconSizeElements);
 	    Xfree ((char *)prop);
 	}
@@ -218,10 +218,10 @@ XSetCommand (
 	for (i = 0, nbytes = 0; i < argc; i++) {
 		nbytes += safestrlen(argv[i]) + 1;
 	}
-	if ((bp = buf = Xmalloc((unsigned) nbytes))) { 
+	if ((bp = buf = Xmalloc((unsigned) nbytes))) {
 	    /* copy arguments into single buffer */
 	    for (i = 0; i < argc; i++) {
-		if (argv[i]) { 
+		if (argv[i]) {
 		    (void) strcpy(bp, argv[i]);
 		    bp += strlen(argv[i]) + 1;
 		}
@@ -230,11 +230,11 @@ XSetCommand (
 	    }
 	    XChangeProperty (dpy, w, XA_WM_COMMAND, XA_STRING, 8,
 			     PropModeReplace, (unsigned char *)buf, nbytes);
-	    Xfree(buf);		
+	    Xfree(buf);
 	}
 	return 1;
 }
-/* 
+/*
  * XSetStandardProperties sets the following properties:
  *	WM_NAME		  type: STRING		format: 8
  *	WM_ICON_NAME	  type: STRING		format: 8
@@ -269,7 +269,7 @@ XSetStandardProperties (
 		phints.flags |= IconPixmapHint;
 		}
 	if (argv != NULL) XSetCommand(dpy, w, argv, argc);
-	
+
 	if (hints != NULL) XSetNormalHints(dpy, w, hints);
 
 	if (phints.flags != 0) XSetWMHints(dpy, w, &phints);
@@ -299,7 +299,7 @@ XSetClassHint(
 
 	len_nm = safestrlen(classhint->res_name);
 	len_cl = safestrlen(classhint->res_class);
-	if ((class_string = s = Xmalloc((unsigned) (len_nm + len_cl + 2)))) { 
+	if ((class_string = s = Xmalloc((unsigned) (len_nm + len_cl + 2)))) {
 	    if (len_nm) {
 		strcpy(s, classhint->res_name);
 		s += len_nm + 1;
@@ -311,7 +311,7 @@ XSetClassHint(
 	    else
 		*s = '\0';
 	    XChangeProperty(dpy, w, XA_WM_CLASS, XA_STRING, 8,
-			    PropModeReplace, (unsigned char *) class_string, 
+			    PropModeReplace, (unsigned char *) class_string,
 			    len_nm+len_cl+2);
 	    Xfree(class_string);
 	}

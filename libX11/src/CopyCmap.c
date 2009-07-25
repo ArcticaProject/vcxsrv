@@ -61,6 +61,6 @@ Colormap XCopyColormapAndFree(
 #if XCMS
     _XcmsCopyCmapRecAndFree(dpy, src_cmap, mid);
 #endif
-    
+
     return(mid);
 }

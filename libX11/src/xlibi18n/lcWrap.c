@@ -44,15 +44,15 @@ from The Open Group.
  * OPEN SOFTWARE FOUNDATION AND TOSHIBA DISCLAIM ALL WARRANTIES WITH REGARD TO
  * THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS, IN NO EVENT SHALL OPEN SOFTWARE FOUNDATIONN OR TOSHIBA BE
- * LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES 
+ * LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- *		 M. Collins		OSF  
+ *
+ *		 M. Collins		OSF
  *
  *		 Katsuhisa Yano		TOSHIBA Corp.
- */				
+ */
 /* $XFree86: xc/lib/X11/lcWrap.c,v 3.15 2003/04/13 19:22:22 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
@@ -96,7 +96,7 @@ XSetLocaleModifiers(
 }
 
 Bool
-XSupportsLocale()
+XSupportsLocale(void)
 {
     return _XlcCurrentLC() != (XLCd)NULL;
 }
@@ -236,7 +236,7 @@ _XlcAddLoader(
 	last = loader_list;
 	while (last->next)
 	    last = last->next;
-	
+
 	loader->next = NULL;
 	last->next = loader;
     }
@@ -260,9 +260,9 @@ _XOpenLC(
     if (name == NULL) {
 	name = setlocale (LC_CTYPE, (char *)NULL);
 #if !defined(X_LOCALE)
-        /* 
-         * _XlMapOSLocaleName will return the same string or a substring 
-         * of name, so strlen(name) is okay 
+        /*
+         * _XlMapOSLocaleName will return the same string or a substring
+         * of name, so strlen(name) is okay
          */
         if ((len = strlen(name)) >= sizeof sinamebuf) {
             siname = Xmalloc (len + 1);
@@ -349,7 +349,7 @@ _XCloseLC(
  */
 
 XLCd
-_XlcCurrentLC()
+_XlcCurrentLC(void)
 {
     XLCd lcd;
     static XLCd last_lcd = NULL;
@@ -358,7 +358,7 @@ _XlcCurrentLC()
 
     if (last_lcd)
 	_XCloseLC(last_lcd);
-    
+
     last_lcd = lcd;
 
     return lcd;
@@ -369,10 +369,10 @@ _XrmInitParseInfo(
     XPointer *state)
 {
     XLCd lcd = _XOpenLC((char *) NULL);
-    
+
     if (lcd == (XLCd) NULL)
 	return (XrmMethods) NULL;
-    
+
     return (*lcd->methods->init_parse_info)(lcd, state);
 }
 
@@ -384,7 +384,7 @@ XmbTextPropertyToTextList(
     int *count_ret)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return XLocaleNotSupported;
 
@@ -400,7 +400,7 @@ XwcTextPropertyToTextList(
     int *count_ret)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return XLocaleNotSupported;
 
@@ -416,7 +416,7 @@ Xutf8TextPropertyToTextList(
     int *count_ret)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return XLocaleNotSupported;
 
@@ -433,7 +433,7 @@ XmbTextListToTextProperty(
     XTextProperty *text_prop)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return XLocaleNotSupported;
 
@@ -450,7 +450,7 @@ XwcTextListToTextProperty(
     XTextProperty *text_prop)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return XLocaleNotSupported;
 
@@ -467,7 +467,7 @@ Xutf8TextListToTextProperty(
     XTextProperty *text_prop)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return XLocaleNotSupported;
 
@@ -480,7 +480,7 @@ XwcFreeStringList(
     wchar_t **list)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return;
 
@@ -488,13 +488,13 @@ XwcFreeStringList(
 }
 
 const char *
-XDefaultString()
+XDefaultString(void)
 {
     XLCd lcd = _XlcCurrentLC();
-    
+
     if (lcd == NULL)
 	return (char *) NULL;
-    
+
     return (*lcd->methods->default_string)(lcd);
 }
 
@@ -555,7 +555,7 @@ _XlcCountVaList(
 
     for (count = 0; va_arg(var, char *); count++)
 	(void)va_arg(var, XPointer);
-    
+
     *count_ret = count;
 }
 
@@ -570,7 +570,7 @@ _XlcVaToArgList(
     *args_ret = args = (XlcArgList) Xmalloc(sizeof(XlcArg) * count);
     if (args == (XlcArgList) NULL)
 	return;
-    
+
     for ( ; count-- > 0; args++) {
 	args->name = va_arg(var, char *);
 	args->value = va_arg(var, XPointer);

@@ -39,13 +39,13 @@ XCopyPlane(
      GC gc,
      int src_x,
      int src_y,
-     unsigned int width, 
+     unsigned int width,
      unsigned int height,
      int dst_x,
      int dst_y,
      unsigned long bit_plane)
 
-{       
+{
     register xCopyPlaneReq *req;
 
     LockDisplay(dpy);

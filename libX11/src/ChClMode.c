@@ -33,7 +33,7 @@ in this Software without prior written authorization from The Open Group.
 
 int
 XSetCloseDownMode(
-    register Display *dpy, 
+    register Display *dpy,
     int mode)
 {
     register xSetCloseDownModeReq *req;

@@ -105,7 +105,7 @@ XkbKeycodeToKeysym(Display *dpy,
 		 int	level)
 {
     XkbDescRec	*xkb;
-    
+
     if (_XkbUnavailable(dpy))
 	return NoSymbol;
 
@@ -140,7 +140,7 @@ XKeycodeToKeysym(Display *dpy,
 		 int col)
 {
     XkbDescRec	*xkb;
-    
+
     if (_XkbUnavailable(dpy))
 	return _XKeycodeToKeysym(dpy, kc, col);
 
@@ -149,7 +149,7 @@ XKeycodeToKeysym(Display *dpy,
     xkb = dpy->xkb_info->desc;
     if ((kc<xkb->min_key_code)||(kc>xkb->max_key_code))
 	return NoSymbol;
-    
+
     if (col>3) {
 	int lastSym,tmp,nGrp;
 
@@ -257,8 +257,8 @@ XLookupKeysym(register XKeyEvent *event, int col)
 }
 
    /*
-    * Not a public entry point -- XkbTranslateKey is an obsolete name 
-    * that is preserved here so that functions linked against the old 
+    * Not a public entry point -- XkbTranslateKey is an obsolete name
+    * that is preserved here so that functions linked against the old
     * version will continue to work in a shared library environment.
     */
 int
@@ -356,10 +356,10 @@ XkbTranslateKeyCode(	register XkbDescPtr	xkb,
     if (mods_rtrn) {
 	*mods_rtrn= type->mods.mask&(~preserve);
 	/* The Motif VTS doesn't get the help callback called if help
-	 * is bound to Shift+<whatever>, and it appears as though it 
-	 * is XkbTranslateKeyCode that is causing the problem.  The 
-	 * core X version of XTranslateKey always OR's in ShiftMask 
-	 * and LockMask for mods_rtrn, so this "fix" keeps this behavior 
+	 * is bound to Shift+<whatever>, and it appears as though it
+	 * is XkbTranslateKeyCode that is causing the problem.  The
+	 * core X version of XTranslateKey always OR's in ShiftMask
+	 * and LockMask for mods_rtrn, so this "fix" keeps this behavior
 	 * and solves the VTS problem.
 	 */
 	if ((xkb->dpy)&&(xkb->dpy->xkb_info)&&
@@ -660,7 +660,7 @@ XkbTranslateKeySym(	register Display *	dpy,
 	}
 	if (change) {
 	    if (n==1)
-	        *sym_rtrn=(*xkb->cvt.MBToKS)(xkb->cvt.MBToKSPriv,buffer,n,0);
+	        *sym_rtrn=(*xkb->cvt.MBToKS)(xkb->cvt.MBToKSPriv,buffer,n,NULL);
 	    else *sym_rtrn= NoSymbol;
 	}
     }
@@ -726,7 +726,7 @@ XLookupString (	register XKeyEvent *	event,
                 }
             }
         }
-    }                  	                                	 
+    }
 
 #ifdef USE_OWN_COMPOSE
     if ( status ) {
@@ -739,7 +739,7 @@ XLookupString (	register XKeyEvent *	event,
 	    status->compose_ptr = NULL;
 	    status->chars_matched = 0;
 	}
-	if ( ((status->chars_matched>0)&&(status->compose_ptr!=NULL)) || 
+	if ( ((status->chars_matched>0)&&(status->compose_ptr!=NULL)) ||
 		XimCompIsComposeKey(*keysym,event->keycode,status) ) {
 	    XimCompRtrn rtrn;
 
@@ -845,7 +845,7 @@ XkbLookupKeyBinding(	Display *		dpy,
 			int 			nbytes,
 			int * 			extra_rtrn)
 {
-    register struct _XKeytrans *p; 
+    register struct _XKeytrans *p;
 
     if (extra_rtrn)
 	*extra_rtrn= 0;
@@ -869,7 +869,7 @@ char
 XkbToControl( char ch )
 {
     register char c = ch;
- 
+
     if ((c >= '@' && c < '\177') || c == ' ') c &= 0x1F;
     else if (c == '2') c = '\000';
     else if (c >= '3' && c <= '7') c -= ('3' - '\033');

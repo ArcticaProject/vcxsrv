@@ -3,7 +3,7 @@
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
  * 	All Rights Reserved
- * 
+ *
  * This file is a component of an X Window System-specific implementation
  * of XCMS based on the TekColor Color Management System.  Permission is
  * hereby granted to use, copy, modify, sell, and otherwise distribute this
@@ -11,10 +11,10 @@
  * that this copyright, permission, and disclaimer notice is reproduced in
  * all copies of this software and in supporting documentation.  TekColor
  * is a trademark of Tektronix, Inc.
- * 
+ *
  * Tektronix makes no representation about the suitability of this software
  * for any purpose.  It is provided "as is" and with all faults.
- * 
+ *
  * TEKTRONIX DISCLAIMS ALL WARRANTIES APPLICABLE TO THIS SOFTWARE,
  * INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.  IN NO EVENT SHALL TEKTRONIX BE LIABLE FOR ANY
@@ -108,7 +108,7 @@ XcmsCIELuvQueryMinL(
     }
     while (hue_angle >= 360.0) {
 	hue_angle -= 360.0;
-    } 
+    }
 
     hue = radians(hue_angle);
     tmp.spec.CIELuv.L_star = START_L_STAR;
@@ -116,7 +116,7 @@ XcmsCIELuvQueryMinL(
     tmp.spec.CIELuv.v_star = XCMS_CIEVSTAROFHUE(hue, chroma);
     tmp.pixel = pColor_return->pixel;
     tmp.format = XcmsCIELuvFormat;
-    
+
     /* Step 1: Obtain the maximum L_star and chroma for this hue. */
     if (_XcmsCIELuvQueryMaxLCRGB(&myCCC, hue, &max_lc, &rgb_saved)
 	    == XcmsFailure) {
@@ -128,7 +128,7 @@ XcmsCIELuvQueryMinL(
 
     if (max_chroma <= chroma) {
 	/*
-	 *  If the chroma is greater than the chroma for the 
+	 *  If the chroma is greater than the chroma for the
 	 *  maximum L/chroma point then the L_star is the
 	 *  the L_star for the maximum L_star/chroma point.
 	 *  This is an error but I return the best approximation I can.
@@ -139,7 +139,7 @@ XcmsCIELuvQueryMinL(
     }
 
     /*
-     *  If the chroma is equal to the chroma for the 
+     *  If the chroma is equal to the chroma for the
      *  maximum L_star/chroma point then the L_star is the
      *  the L_star for the maximum L* and chroma point.
      */
@@ -182,15 +182,15 @@ XcmsCIELuvQueryMinL(
 	    /* Found It! */
 	    memcpy ((char *) pColor_return, (char *) &tmp, sizeof (XcmsColor));
 	    return(XcmsSuccess);
-	} 
+	}
 	nChroma += chroma - tmp_chroma;
 	if (nChroma > max_chroma) {
 	    nChroma = max_chroma;
 	    rFactor *= 0.5;  /* selective relaxation employed */
 	} else if (nChroma < 0.0) {
-	    if (XCMS_FABS(lastChroma - chroma) < 
+	    if (XCMS_FABS(lastChroma - chroma) <
 		XCMS_FABS(tmp_chroma - chroma)) {
-		memcpy ((char *)pColor_return, (char *)&prev, 
+		memcpy ((char *)pColor_return, (char *)&prev,
 			sizeof(XcmsColor));
 	    } else {
 		memcpy ((char *)pColor_return, (char *)&tmp,
@@ -204,7 +204,7 @@ XcmsCIELuvQueryMinL(
     }
 
     if (nCount >= nMaxCount) {
-	if (XCMS_FABS(lastChroma - chroma) < 
+	if (XCMS_FABS(lastChroma - chroma) <
 	    XCMS_FABS(tmp_chroma - chroma)) {
 		memcpy ((char *)pColor_return, (char *)&prev,
  			sizeof(XcmsColor));

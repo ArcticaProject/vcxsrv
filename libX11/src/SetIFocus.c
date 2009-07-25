@@ -37,7 +37,7 @@ XSetInputFocus(
     Window focus,
     int revert_to,
     Time time)
-{       
+{
     register xSetInputFocusReq *req;
 
     LockDisplay(dpy);

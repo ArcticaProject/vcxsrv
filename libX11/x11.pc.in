@@ -9,7 +9,7 @@ Name: X11
 Description: X Library
 Version: @PACKAGE_VERSION@
 Requires: xproto @XKBPROTO_REQUIRES@
-Requires.private: xau xdmcp @X11_EXTRA_DEPS@
+Requires.private: @X11_EXTRA_DEPS@
 Cflags: -I${includedir} @XTHREAD_CFLAGS@
 Libs: -L${libdir} -lX11
 Libs.private: @XTHREADLIB@

@@ -54,7 +54,7 @@ XConfigureWindow(
 
     if (mask & CWX)
 	*value++ = changes->x;
-	
+
     if (mask & CWY)
     	*value++ = changes->y;
 

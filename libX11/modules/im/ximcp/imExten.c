@@ -11,7 +11,7 @@ in supporting documentation, and that the name of FUJITSU LIMITED
 not be used in advertising or publicity pertaining to distribution
 of the software without specific, written prior permission.
 FUJITSU LIMITED makes no representations about the suitability of
-this software for any purpose. 
+this software for any purpose.
 It is provided "as is" without express or implied warranty.
 
 FUJITSU LIMITED DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
@@ -22,7 +22,7 @@ USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
-  Author: Takashi Fujiwara     FUJITSU LIMITED 
+  Author: Takashi Fujiwara     FUJITSU LIMITED
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
@@ -60,7 +60,7 @@ typedef struct	_XIM_QueryExtRec {
 
 Private XIM_QueryExtRec	extensions[] = {
 	{False, "XIM_EXT_SET_EVENT_MASK", 0, 0, 0,
-					XIM_EXT_SET_EVENT_MASK_IDX}, 
+					XIM_EXT_SET_EVENT_MASK_IDX},
 #ifdef EXT_FORWARD
 	{False, "XIM_EXT_FORWARD_KEYEVENT", 0, 0, 0,
 					XIM_EXT_FORWARD_KEYEVENT_IDX},
@@ -225,7 +225,7 @@ _XimExtForwardKeyEvent(
     Xim		 im = (Xim) ic->core.im;
     CARD32	 buf32[BUFSIZE/4];
     CARD8	*buf = (CARD8 *)buf32;
-    CARD8	*buf_b = &buf[XIM_HEADER_SIZE];	
+    CARD8	*buf_b = &buf[XIM_HEADER_SIZE];
     CARD16	*buf_s = (CARD16 *)buf_b;
     CARD32	*buf_l = (CARD32 *)buf_b;
     CARD32	 reply32[BUFSIZE/4];
@@ -385,7 +385,7 @@ _XimParseExtensionList(
 	     + sizeof(CARD8)		/* sizeof minor_opcode */
 	     + sizeof(INT16)		/* sizeof length */
 	     + XIM_PAD(len);		/* sizeof pad */
-	buf += len; 
+	buf += len;
     }
 
     return True;

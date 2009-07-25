@@ -4,13 +4,13 @@ Copyright 1993 by Digital Equipment Corporation, Maynard, Massachusetts,
 
                         All Rights Reserved
 
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
 provided that the above copyright notice appear in all copies and that
-both that copyright notice and this permission notice appear in 
+both that copyright notice and this permission notice appear in
 supporting documentation, and that the name of Digital not be
 used in advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.  
+software without specific, written prior permission.
 
 DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
 ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
@@ -59,14 +59,14 @@ _XimProtoEventToWire(
 			event->u.keyButtonPointer.root	= sw32(ev->root, sw);
 			event->u.keyButtonPointer.event	 =
 			    sw32(ev->window, sw);
-			event->u.keyButtonPointer.child  = 
+			event->u.keyButtonPointer.child  =
 			    sw32(ev->subwindow, sw);
 			event->u.keyButtonPointer.time	 = sw32(ev->time, sw);
 			event->u.keyButtonPointer.eventX = sw16(ev->x, sw) ;
 			event->u.keyButtonPointer.eventY = sw16(ev->y, sw) ;
 			event->u.keyButtonPointer.rootX	 =
 			    sw16(ev->x_root, sw);
-			event->u.keyButtonPointer.rootY  = 
+			event->u.keyButtonPointer.rootY  =
 			    sw16(ev->y_root, sw);
 			event->u.keyButtonPointer.state  = sw16(ev->state, sw);
 			event->u.keyButtonPointer.sameScreen = ev->same_screen;
@@ -143,7 +143,7 @@ _XimProtoEventToWire(
 		{
 			register XKeymapEvent *ev = (XKeymapEvent *) re;
 			memcpy((char *)(((xKeymapEvent *) event)->map),
-			       &ev->key_vector[1], 
+			       &ev->key_vector[1],
 			       sizeof (((xKeymapEvent *) event)->map));
 		}
 		break;
@@ -360,12 +360,12 @@ _XimProtoEventToWire(
 	      case ClientMessage:
 		{
 		   register int i;
-		   register XClientMessageEvent *ev 
+		   register XClientMessageEvent *ev
 		   			= (XClientMessageEvent *) re;
 		   event->u.clientMessage.window = sw32(ev->window, sw);
 		   event->u.u.detail		 = ev->format;
 		   switch (ev->format) {
-			case 8:	
+			case 8:
 			  event->u.clientMessage.u.b.type   = sw32(ev->message_type, sw);
 			  for (i = 0; i < 20; i++)
 			   event->u.clientMessage.u.b.bytes[i] = ev->data.b[i];
@@ -405,7 +405,7 @@ _XimProtoEventToWire(
 		    event->u.mappingNotify.count	= ev->count;
 		   }
 		break;
-		
+
 	      default:
 		return(0);
 	}
@@ -433,7 +433,7 @@ _XimProtoWireToEvent(
 	((XAnyEvent *)re)->serial = sw16(event->u.u.sequenceNumber, sw);
 	((XAnyEvent *)re)->send_event = ((event->u.u.type & 0x80) != 0);
 	((XAnyEvent *)re)->display = NULL;
-	
+
 	/* Ignore the leading bit of the event type since it is set when a
 		client sends an event rather than the server. */
 
@@ -502,7 +502,7 @@ _XimProtoWireToEvent(
 			ev->y_root	= cvtINT16toInt(sw16(event->u.enterLeave.rootY, sw));
 			ev->state	= sw16(event->u.enterLeave.state, sw);
 			ev->mode	= event->u.enterLeave.mode;
-			ev->same_screen = (event->u.enterLeave.flags & 
+			ev->same_screen = (event->u.enterLeave.flags &
 				ELFlagSameScreen) && True;
 			ev->focus	= (event->u.enterLeave.flags &
 			  	ELFlagFocus) && True;
@@ -522,7 +522,7 @@ _XimProtoWireToEvent(
 		{
 			register XKeymapEvent *ev = (XKeymapEvent *) re;
 			ev->window	= None;
-			memcpy(&ev->key_vector[1], 
+			memcpy(&ev->key_vector[1],
 			       (char *)((xKeymapEvent *) event)->map,
 			       sizeof (((xKeymapEvent *) event)->map));
 		}
@@ -740,14 +740,14 @@ _XimProtoWireToEvent(
 	      case ClientMessage:
 		{
 		   register int i;
-		   register XClientMessageEvent *ev 
+		   register XClientMessageEvent *ev
 		   			= (XClientMessageEvent *) re;
 		   ev->window		= sw32(event->u.clientMessage.window, sw);
 		   ev->format		= event->u.u.detail;
 		   switch (ev->format) {
-			case 8:	
+			case 8:
 			   ev->message_type = sw32(event->u.clientMessage.u.b.type, sw);
-			   for (i = 0; i < 20; i++) 	
+			   for (i = 0; i < 20; i++)
 			     ev->data.b[i] = event->u.clientMessage.u.b.bytes[i];
 			   break;
 			case 16:

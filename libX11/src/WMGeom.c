@@ -74,13 +74,13 @@ XWMGeometry (
      * Get the base sizes and increments.  Section 4.1.2.3 of the ICCCM
      * states that the base and minimum sizes are defaults for each other.
      * If neither is given, then the base sizes should be 0.  These parameters
-     * control the sets of sizes that window managers should allow for the 
+     * control the sets of sizes that window managers should allow for the
      * window according to the following formulae:
      *
      *          width = base_width  + (i * width_inc)
      *         height = base_height + (j * height_inc)
      */
-    base_width =  ((hints->flags & PBaseSize) ? hints->base_width : 
+    base_width =  ((hints->flags & PBaseSize) ? hints->base_width :
 		   ((hints->flags & PMinSize) ? hints->min_width : 0));
     base_height = ((hints->flags & PBaseSize) ? hints->base_height :
 		   ((hints->flags & PMinSize) ? hints->min_height : 0));
@@ -105,11 +105,11 @@ XWMGeometry (
      *     4.  multiply by the size increment
      *     5.  and add to the base size
      */
-    rwidth = ((((umask & WidthValue) ? uwidth : 
+    rwidth = ((((umask & WidthValue) ? uwidth :
 		((dmask & WidthValue) ? dwidth : 1)) * width_inc) +
 	      base_width);
-    rheight = ((((umask & HeightValue) ? uheight : 
-		 ((dmask & HeightValue) ? dheight : 1)) * height_inc) + 
+    rheight = ((((umask & HeightValue) ? uheight :
+		 ((dmask & HeightValue) ? dheight : 1)) * height_inc) +
 	       base_height);
 
     /*
@@ -137,7 +137,7 @@ XWMGeometry (
 	if (dmask & XNegative) {
 	    rx = (DisplayWidth (dpy, screen) + dx - rwidth - 2 * bwidth);
 	    rmask |= XNegative;
-	} else 
+	} else
 	  rx = dx;
     } else {
 	rx = 0;				/* gotta choose something... */
@@ -150,7 +150,7 @@ XWMGeometry (
 	if (dmask & YNegative) {
 	    ry = (DisplayHeight(dpy, screen) + dy - rheight - 2 * bwidth);
 	    rmask |= YNegative;
-	} else 
+	} else
 	  ry = dy;
     } else {
 	ry = 0;				/* gotta choose something... */

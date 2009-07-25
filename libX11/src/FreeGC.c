@@ -49,4 +49,4 @@ XFreeGC (
     Xfree ((char *) gc);
     return 1;
     }
-    
+

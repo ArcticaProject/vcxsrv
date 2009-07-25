@@ -16,6 +16,7 @@ SUBDIRS= \
 	C			\
 	el_GR.UTF-8		\
 	en_US.UTF-8		\
+	fi_FI.UTF-8		\
 	georgian-academy	\
 	georgian-ps		\
 	ibm-cp1133		\
@@ -53,6 +54,7 @@ SUBDIRS= \
 	mulelao-1		\
 	nokhchi-1		\
 	pt_BR.UTF-8		\
+	ru_RU.UTF-8		\
 	tatar-cyr		\
 	th_TH			\
 	th_TH.UTF-8		\

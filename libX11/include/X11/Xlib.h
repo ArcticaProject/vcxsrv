@@ -1,6 +1,6 @@
 /* $XdotOrg: lib/X11/include/X11/Xlib.h,v 1.6 2005-11-08 06:33:25 jkj Exp $ */
 /* $Xorg: Xlib.h,v 1.6 2001/02/09 02:03:38 xorgcvs Exp $ */
-/* 
+/*
 
 Copyright 1985, 1986, 1987, 1991, 1998  The Open Group
 
@@ -38,20 +38,7 @@ in this Software without prior written authorization from The Open Group.
 
 #define XlibSpecificationRelease 6
 
-#ifdef USG
-#ifndef __TYPES__
-#include <sys/types.h>			/* forgot to protect it... */
-#define __TYPES__
-#endif /* __TYPES__ */
-#else
-#if defined(_POSIX_SOURCE) && defined(MOTOROLA)
-#undef _POSIX_SOURCE
 #include <sys/types.h>
-#define _POSIX_SOURCE
-#else
-#include <sys/types.h>
-#endif
-#endif /* USG */
 
 #if defined(__SCO__) || defined(__UNIXWARE__)
 #include <stdint.h>
@@ -62,14 +49,6 @@ in this Software without prior written authorization from The Open Group.
 /* applications should not depend on these two headers being included! */
 #include <X11/Xfuncproto.h>
 #include <X11/Xosdefs.h>
-
-#ifndef X_WCHAR
-#ifdef X_NOT_STDC_ENV
-#ifndef ISC
-#define X_WCHAR
-#endif
-#endif
-#endif
 
 #ifndef X_WCHAR
 #include <stddef.h>
@@ -84,7 +63,7 @@ typedef unsigned long wchar_t;
 
 #if defined(ISC) && defined(USE_XMBTOWC)
 #define wctomb(a,b)	_Xwctomb(a,b)
-#define mblen(a,b)	_Xmblen(a,b) 
+#define mblen(a,b)	_Xmblen(a,b)
 #ifndef USE_XWCHAR_STRING
 #define mbtowc(a,b,c)	_Xmbtowc(a,b,c)
 #endif
@@ -217,10 +196,10 @@ typedef struct {
 	unsigned long background;/* background pixel */
 	int line_width;		/* line width */
 	int line_style;	 	/* LineSolid, LineOnOffDash, LineDoubleDash */
-	int cap_style;	  	/* CapNotLast, CapButt, 
+	int cap_style;	  	/* CapNotLast, CapButt,
 				   CapRound, CapProjecting */
 	int join_style;	 	/* JoinMiter, JoinRound, JoinBevel */
-	int fill_style;	 	/* FillSolid, FillTiled, 
+	int fill_style;	 	/* FillSolid, FillTiled,
 				   FillStippled, FillOpaeueStippled */
 	int fill_rule;	  	/* EvenOddRule, WindingRule */
 	int arc_mode;		/* ArcChord, ArcPieSlice */
@@ -271,7 +250,7 @@ typedef struct {
 
 /*
  * Depth structure; contains information for each possible depth.
- */	
+ */
 typedef struct {
 	int depth;		/* this depth (Z) of the depth */
 	int nvisuals;		/* number of Visual types at this depth */
@@ -302,7 +281,7 @@ typedef struct {
 	unsigned long black_pixel;	/* White and Black pixel values */
 	int max_maps, min_maps;	/* max and min color maps */
 	int backing_store;	/* Never, WhenMapped, Always */
-	Bool save_unders;	
+	Bool save_unders;
 	long root_input_mask;	/* initial root input mask */
 } Screen;
 
@@ -425,7 +404,7 @@ typedef struct _XImage {
 	} f;
 } XImage;
 
-/* 
+/*
  * Data structure for XReconfigureWindow
  */
 typedef struct {
@@ -446,7 +425,7 @@ typedef struct {
 	char pad;
 } XColor;
 
-/* 
+/*
  * Data structures for graphics operations.  On most machines, these are
  * congruent with the wire protocol structures, so reformatting the data
  * can be avoided on these architectures.
@@ -458,12 +437,12 @@ typedef struct {
 typedef struct {
     short x, y;
 } XPoint;
-    
+
 typedef struct {
     short x, y;
     unsigned short width, height;
 } XRectangle;
-    
+
 typedef struct {
     short x, y;
     unsigned short width, height;
@@ -522,7 +501,7 @@ typedef struct _XDisplay Display;
 struct _XPrivate;		/* Forward declare before use for C++ */
 struct _XrmHashBucketRec;
 
-typedef struct 
+typedef struct
 #ifdef XLIB_ILLEGAL_ACCESS
 _XDisplay
 #endif
@@ -577,7 +556,7 @@ _XDisplay
 	/* there is more to this structure, but it is private to Xlib */
 }
 #ifdef XLIB_ILLEGAL_ACCESS
-Display, 
+Display,
 #endif
 *_XPrivDisplay;
 
@@ -653,7 +632,7 @@ typedef struct {
 	int mode;		/* NotifyNormal, NotifyGrab, NotifyUngrab */
 	int detail;
 	/*
-	 * NotifyAncestor, NotifyVirtual, NotifyInferior, 
+	 * NotifyAncestor, NotifyVirtual, NotifyInferior,
 	 * NotifyNonlinear,NotifyNonlinearVirtual
 	 */
 	Bool same_screen;	/* same screen flag */
@@ -673,9 +652,9 @@ typedef struct {
 				   NotifyGrab, NotifyUngrab */
 	int detail;
 	/*
-	 * NotifyAncestor, NotifyVirtual, NotifyInferior, 
+	 * NotifyAncestor, NotifyVirtual, NotifyInferior,
 	 * NotifyNonlinear,NotifyNonlinearVirtual, NotifyPointer,
-	 * NotifyPointerRoot, NotifyDetailNone 
+	 * NotifyPointerRoot, NotifyDetailNone
 	 */
 } XFocusChangeEvent;
 typedef XFocusChangeEvent XFocusInEvent;
@@ -689,7 +668,7 @@ typedef struct {
 	Display *display;	/* Display the event was read from */
 	Window window;
 	char key_vector[32];
-} XKeymapEvent;	
+} XKeymapEvent;
 
 typedef struct {
 	int type;
@@ -971,6 +950,22 @@ typedef struct {
 	Window window;	/* window on which event was requested in event mask */
 } XAnyEvent;
 
+
+/***************************************************************
+ *
+ * GenericEvent.  This event is the standard event for all newer extensions.
+ */
+
+typedef struct
+    {
+    int            type;         /* of event. Always GenericEvent */
+    unsigned long  serial;       /* # of last request processed */
+    Bool           send_event;   /* true if from SendEvent request */
+    Display        *display;     /* Display the event was read from */
+    int            extension;    /* major opcode of extension that caused the event */
+    int            evtype;       /* actual event type. */
+    } XGenericEvent;
+
 /*
  * this union is defined so Xlib can always use the same sized
  * event structure internally, to avoid memory fragmentation.
@@ -1248,7 +1243,7 @@ typedef struct {
 typedef unsigned long XIMFeedback;
 
 #define XIMReverse		1L
-#define XIMUnderline		(1L<<1) 
+#define XIMUnderline		(1L<<1)
 #define XIMHighlight		(1L<<2)
 #define XIMPrimary	 	(1L<<5)
 #define XIMSecondary		(1L<<6)
@@ -1260,11 +1255,11 @@ typedef unsigned long XIMFeedback;
 typedef struct _XIMText {
     unsigned short length;
     XIMFeedback *feedback;
-    Bool encoding_is_wchar; 
+    Bool encoding_is_wchar;
     union {
 	char *multi_byte;
 	wchar_t *wide_char;
-    } string; 
+    } string;
 } XIMText;
 
 typedef	unsigned long	 XIMPreeditState;
@@ -1294,11 +1289,11 @@ typedef unsigned long XIMStringConversionFeedback;
 typedef struct _XIMStringConversionText {
     unsigned short length;
     XIMStringConversionFeedback *feedback;
-    Bool encoding_is_wchar; 
+    Bool encoding_is_wchar;
     union {
 	char *mbs;
 	wchar_t *wcs;
-    } string; 
+    } string;
 } XIMStringConversionText;
 
 typedef	unsigned short	XIMStringConversionPosition;
@@ -1320,7 +1315,7 @@ typedef enum {
     XIMForwardWord, XIMBackwardWord,
     XIMCaretUp, XIMCaretDown,
     XIMNextLine, XIMPreviousLine,
-    XIMLineStart, XIMLineEnd, 
+    XIMLineStart, XIMLineEnd,
     XIMAbsolutePosition,
     XIMDontChange
 } XIMCaretDirection;
@@ -1341,7 +1336,7 @@ typedef struct _XIMPreeditDrawCallbackStruct {
 } XIMPreeditDrawCallbackStruct;
 
 typedef enum {
-    XIMIsInvisible,	/* Disable caret feedback */ 
+    XIMIsInvisible,	/* Disable caret feedback */
     XIMIsPrimary,	/* UI defined caret feedback */
     XIMIsSecondary	/* UI defined caret feedback */
 } XIMCaretStyle;
@@ -1356,7 +1351,7 @@ typedef enum {
     XIMTextType,
     XIMBitmapType
 } XIMStatusDataType;
-	
+
 typedef struct _XIMStatusDrawCallbackStruct {
     XIMStatusDataType type;
     union {
@@ -1434,7 +1429,7 @@ extern XModifierKeymap	*XInsertModifiermapEntry(
 #else
     KeyCode		/* keycode_entry */,
 #endif
-    int			/* modifier */    
+    int			/* modifier */
 );
 
 extern XModifierKeymap *XNewModifiermap(
@@ -1480,7 +1475,7 @@ extern XImage *XGetSubImage(
     int			/* dest_y */
 );
 
-/* 
+/*
  * X function declarations.
  */
 extern Display *XOpenDisplay(
@@ -1513,7 +1508,7 @@ extern Status XGetAtomNames(
 extern char *XGetDefault(
     Display*		/* display */,
     _Xconst char*	/* program */,
-    _Xconst char*	/* option */		  
+    _Xconst char*	/* option */
 );
 extern char *XDisplayName(
     _Xconst char*	/* string */
@@ -1539,7 +1534,7 @@ extern int (*XSetAfterFunction(
 extern Atom XInternAtom(
     Display*		/* display */,
     _Xconst char*	/* atom_name */,
-    Bool		/* only_if_exists */		 
+    Bool		/* only_if_exists */
 );
 extern Status XInternAtoms(
     Display*		/* dpy */,
@@ -1556,7 +1551,7 @@ extern Colormap XCreateColormap(
     Display*		/* display */,
     Window		/* w */,
     Visual*		/* visual */,
-    int			/* alloc */			 
+    int			/* alloc */
 );
 extern Cursor XCreatePixmapCursor(
     Display*		/* display */,
@@ -1565,7 +1560,7 @@ extern Cursor XCreatePixmapCursor(
     XColor*		/* foreground_color */,
     XColor*		/* background_color */,
     unsigned int	/* x */,
-    unsigned int	/* y */			   
+    unsigned int	/* y */
 );
 extern Cursor XCreateGlyphCursor(
     Display*		/* display */,
@@ -1602,7 +1597,7 @@ extern Pixmap XCreatePixmap(
     Drawable		/* d */,
     unsigned int	/* width */,
     unsigned int	/* height */,
-    unsigned int	/* depth */		        
+    unsigned int	/* depth */
 );
 extern Pixmap XCreateBitmapFromData(
     Display*		/* display */,
@@ -1649,7 +1644,7 @@ extern Window XCreateWindow(
     Visual*		/* visual */,
     unsigned long	/* valuemask */,
     XSetWindowAttributes*	/* attributes */
-); 
+);
 extern Colormap *XListInstalledColormaps(
     Display*		/* display */,
     Window		/* w */,
@@ -1944,7 +1939,7 @@ extern int XAddHost(
 extern int XAddHosts(
     Display*		/* display */,
     XHostAddress*	/* hosts */,
-    int			/* num_hosts */    
+    int			/* num_hosts */
 );
 
 extern int XAddToExtensionList(
@@ -2167,7 +2162,7 @@ extern int XConfigureWindow(
     Display*		/* display */,
     Window		/* w */,
     unsigned int	/* value_mask */,
-    XWindowChanges*	/* values */		 
+    XWindowChanges*	/* values */
 );
 
 extern int XConnectionNumber(
@@ -2253,7 +2248,7 @@ extern int XDestroySubwindows(
 );
 
 extern int XDoesBackingStore(
-    Screen*		/* screen */    
+    Screen*		/* screen */
 );
 
 extern Bool XDoesSaveUnders(
@@ -2538,7 +2533,7 @@ extern int XFreeCursor(
 );
 
 extern int XFreeExtensionList(
-    char**		/* list */    
+    char**		/* list */
 );
 
 extern int XFreeFont(
@@ -2912,7 +2907,7 @@ extern int XPutImage(
     int			/* dest_x */,
     int			/* dest_y */,
     unsigned int	/* width */,
-    unsigned int	/* height */	  
+    unsigned int	/* height */
 );
 
 extern int XQLength(
@@ -3002,7 +2997,7 @@ extern int XQueryTextExtents(
     int*		/* direction_return */,
     int*		/* font_ascent_return */,
     int*		/* font_descent_return */,
-    XCharStruct*	/* overall_return */    
+    XCharStruct*	/* overall_return */
 );
 
 extern int XQueryTextExtents16(
@@ -3067,7 +3062,7 @@ extern int XRecolorCursor(
 );
 
 extern int XRefreshKeyboardMapping(
-    XMappingEvent*	/* event_map */    
+    XMappingEvent*	/* event_map */
 );
 
 extern int XRemoveFromSaveSet(
@@ -3223,7 +3218,7 @@ extern int XSetFont(
 extern int XSetFontPath(
     Display*		/* display */,
     char**		/* directories */,
-    int			/* ndirs */	     
+    int			/* ndirs */
 );
 
 extern int XSetForeground(
@@ -3522,7 +3517,7 @@ extern int XWarpPointer(
     unsigned int	/* src_width */,
     unsigned int	/* src_height */,
     int			/* dest_x */,
-    int			/* dest_y */	     
+    int			/* dest_y */
 );
 
 extern int XWidthMMOfScreen(
@@ -3547,7 +3542,7 @@ extern int XWriteBitmapFile(
     unsigned int	/* width */,
     unsigned int	/* height */,
     int			/* x_hot */,
-    int			/* y_hot */		     
+    int			/* y_hot */
 );
 
 extern Bool XSupportsLocale (void);
@@ -3955,7 +3950,7 @@ typedef void (*XConnectionWatchProc)(
     Bool			/* opening */,	 /* open or close flag */
     XPointer*			/* watch_data */ /* open sets, close uses */
 );
-    
+
 
 extern Status XInternalConnectionNumbers(
     Display*			/* dpy */,
@@ -3982,7 +3977,7 @@ extern void XRemoveConnectionWatch(
 
 extern void XSetAuthorization(
     char *			/* name */,
-    int				/* namelen */, 
+    int				/* namelen */,
     char *			/* data */,
     int				/* datalen */
 );

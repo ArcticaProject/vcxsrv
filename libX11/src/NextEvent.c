@@ -32,7 +32,7 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #include "Xlibint.h"
 
-/* 
+/*
  * Return next event in queue, or if none, flush output and wait for
  * events.
  */
@@ -43,9 +43,9 @@ XNextEvent (
 	register XEvent *event)
 {
 	register _XQEvent *qelt;
-	
+
 	LockDisplay(dpy);
-	
+
 	if (dpy->head == NULL)
 	    _XReadEvents(dpy);
 	qelt = dpy->head;

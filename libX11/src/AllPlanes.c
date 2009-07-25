@@ -38,11 +38,11 @@ Status XAllocColorPlanes(
     Bool contig,
     unsigned long *pixels, /* LISTofCARD32 */ /* RETURN */
     int ncolors,
-    int nreds, 
-    int ngreens, 
+    int nreds,
+    int ngreens,
     int nblues,
-    unsigned long *rmask, 
-    unsigned long *gmask, 
+    unsigned long *rmask,
+    unsigned long *gmask,
     unsigned long *bmask) /* CARD32 */ /* RETURN */
 {
     xAllocColorPlanesReply rep;
@@ -74,4 +74,4 @@ Status XAllocColorPlanes(
     UnlockDisplay(dpy);
     SyncHandle();
     return(status);
-}    
+}

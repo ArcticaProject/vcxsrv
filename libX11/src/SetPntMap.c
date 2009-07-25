@@ -48,7 +48,7 @@ XSetPointerMapping (
     req->nElts = nmaps;
     req->length += (nmaps + 3)>>2;
     Data (dpy, (char *)map, (long) nmaps);
-    if (_XReply (dpy, (xReply *)&rep, 0, xFalse) == 0) 
+    if (_XReply (dpy, (xReply *)&rep, 0, xFalse) == 0)
 	rep.success = MappingSuccess;
     UnlockDisplay(dpy);
     SyncHandle();
@@ -79,4 +79,4 @@ XChangeKeyboardMapping (
     SyncHandle();
     return 0;
     }
-    
+

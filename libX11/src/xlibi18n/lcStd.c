@@ -135,7 +135,7 @@ _Xlcmbstowcs(
 	if (lcd == NULL)
 	    return -1;
     }
-    
+
     conv = _XlcOpenConverter(lcd, XlcNMultiByte, lcd, XlcNWideChar);
     if (conv == NULL)
 	return -1;
@@ -290,7 +290,7 @@ _Xwcslen(
 
     while (*wstr_ptr)
 	wstr_ptr++;
-    
+
     return wstr_ptr - wstr;
 }
 

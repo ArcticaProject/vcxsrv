@@ -41,7 +41,7 @@ XCopyArea(
      int src_y,
      unsigned int width,
      unsigned int height,
-     int dst_x, 
+     int dst_x,
      int dst_y)
 
 {

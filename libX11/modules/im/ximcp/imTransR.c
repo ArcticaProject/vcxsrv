@@ -24,7 +24,7 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
   Author: Hideki Hiura (hhiura@Sun.COM) Sun Microsystems, Inc.
-          Takashi Fujiwara     FUJITSU LIMITED 
+          Takashi Fujiwara     FUJITSU LIMITED
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
@@ -39,7 +39,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "Ximint.h"
 
 Public TransportSW _XimTransportRec[] = {
-    { "X",          _XimXConf },  /* 1st entry must be X. 
+    { "X",          _XimXConf },  /* 1st entry must be X.
 					This will be a fallback */
 #ifdef TCPCONN
     { "tcp",        _XimTransConf }, /* use X transport lib */
@@ -57,15 +57,13 @@ Public TransportSW _XimTransportRec[] = {
 };
 
 Public Bool
-_XimConnect(im)
-    Xim		 im;
+_XimConnect(Xim im)
 {
     return im->private.proto.connect(im);
 }
 
 Public Bool
-_XimShutdown(im)
-    Xim		 im;
+_XimShutdown(Xim im)
 {
     return im->private.proto.shutdown(im);
 }
@@ -214,15 +212,8 @@ _XimCallDispatcher(
 }
 
 Public int
-_XimRead(im, len, buf, buf_size, predicate, arg)
-    Xim		 im;
-    INT16	*len;
-    XPointer	 buf;
-    int		 buf_size;
-    Bool	 (*predicate)(
-			      Xim, INT16, XPointer, XPointer
-			      );
-    XPointer	 arg;
+_XimRead(Xim im, INT16 *len, XPointer buf, int buf_size,
+	 Bool (*predicate)(Xim, INT16, XPointer, XPointer), XPointer arg)
 {
     INT16	 read_len;
     int		 ret_code;
@@ -254,16 +245,14 @@ _XimRegisterDispatcher(
 }
 
 Public void
-_XimFlush(im)
-    Xim		 im;
+_XimFlush(Xim im)
 {
     im->private.proto.flush(im);
     return;
 }
 
 Public Bool
-_XimFilterWaitEvent(im)
-    Xim		 im;
+_XimFilterWaitEvent(Xim im)
 {
     INT16	 read_len;
     CARD32	 reply32[BUFSIZE/4];

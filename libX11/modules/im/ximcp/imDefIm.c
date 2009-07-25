@@ -13,7 +13,7 @@ Corporation not be used in advertising or publicity pertaining to
 distribution of the software without specific, written prior permission.
 Sun Microsystems, Inc., FUJITSU LIMITED and Sony Corporation makes no
 representations about the suitability of this software for any purpose.  It
-is provided "as is" without express or implied warranty. 
+is provided "as is" without express or implied warranty.
 
 Sun Microsystems Inc., FUJITSU LIMITED AND SONY CORPORATION DISCLAIMS ALL
 WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
@@ -22,10 +22,10 @@ FUJITSU LIMITED AND SONY CORPORATION BE LIABLE FOR ANY SPECIAL, INDIRECT OR
 CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
 DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
-OF THIS SOFTWARE. 
+OF THIS SOFTWARE.
 
   Author: Hideki Hiura (hhiura@Sun.COM) Sun Microsystems, Inc.
-          Takashi Fujiwara     FUJITSU LIMITED 
+          Takashi Fujiwara     FUJITSU LIMITED
                                fujiwara@a80.tech.yk.fujitsu.co.jp
           Makoto Wakamatsu     Sony Corporation
                                makoto@sm.sony.co.jp
@@ -109,7 +109,7 @@ _XimCheckServerName(
 
     if(strncmp(str, XIM_SERVER_CATEGORY, category_len))
 	return False;
- 
+
     pp = &str[category_len];
 
     for(;;) {
@@ -145,7 +145,7 @@ _XimCheckLocaleName(
 
     if(strncmp(address, XIM_LOCAL_CATEGORY, category_len))
 	return (char*)NULL;
- 
+
     pp = &address[category_len];
 
     for(;;) {
@@ -182,7 +182,7 @@ _XimCheckTransport(
 
     if(strncmp(address, XIM_TRANSPORT_CATEGORY, category_len))
 	return False;
- 
+
     pp = &address[category_len];
 
     for(;;) {
@@ -257,7 +257,7 @@ _XimPreConnectionIM(
     Xim			 im,
     Atom		 selection)
 {
-    Display		*display = im->core.display; 
+    Display		*display = im->core.display;
     Atom		 locales, transport;
     char		*address;
     XLCd		 lcd;
@@ -367,14 +367,14 @@ Error:
 	if( locale_name[i] != NULL )
 	    XFree( locale_name[i] );
     XDestroyWindow(display, window);
-    return False; 
+    return False;
 }
 
 Private Bool
 _XimPreConnect(
     Xim		    im)
 {
-    Display	   *display = im->core.display; 
+    Display	   *display = im->core.display;
     Atom	    imserver;
     Atom	    actual_type;
     int		    actual_format;
@@ -389,7 +389,7 @@ _XimPreConnect(
 	return False;
 
     if(XGetWindowProperty(display, RootWindow(display, 0),
-			imserver, 0L, 1000000L, False, XA_ATOM, &actual_type, 
+			imserver, 0L, 1000000L, False, XA_ATOM, &actual_type,
 			&actual_format, &nitems, &bytes_after,
 			&prop_return) != Success)
 	return False;
@@ -684,7 +684,7 @@ _XimConnection(
 	}
     }
 
-    if (!( buf_s[0] == im->private.proto.protocol_major_version 
+    if (!( buf_s[0] == im->private.proto.protocol_major_version
         && buf_s[1] == im->private.proto.protocol_minor_version)) {
 	if(reply != preply)
 	    Xfree(preply);
@@ -918,7 +918,7 @@ _XimClose(
     buf_s[1] = 0;				/* unused */
     len = sizeof(CARD16)			/* sizeof imid */
         + sizeof(CARD16);			/* sizeof unused */
-  
+
     _XimSetHeader((XPointer)buf, XIM_CLOSE, 0, &len);
     if (!(_XimWrite(im, len, (XPointer)buf)))
 	return False;

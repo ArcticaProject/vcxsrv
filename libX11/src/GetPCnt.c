@@ -39,7 +39,7 @@ XGetPointerControl(
      int *accel_numer,
      int *accel_denom,
      int *threshold)
-{       
+{
     xGetPointerControlReply rep;
     xReq *req;
     LockDisplay(dpy);

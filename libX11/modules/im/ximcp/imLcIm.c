@@ -16,17 +16,17 @@ makes no representations about the suitability of this software for
 any purpose.  It is provided "as is" without express or implied
 warranty.
 
-FUJITSU LIMITED AND DIGITAL EQUIPMENT CORPORATION DISCLAIM ALL 
-WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL 
-FUJITSU LIMITED AND DIGITAL EQUIPMENT CORPORATION BE LIABLE FOR 
-ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES 
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER 
-IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, 
-ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF 
+FUJITSU LIMITED AND DIGITAL EQUIPMENT CORPORATION DISCLAIM ALL
+WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+FUJITSU LIMITED AND DIGITAL EQUIPMENT CORPORATION BE LIABLE FOR
+ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 
-  Author:    Takashi Fujiwara     FUJITSU LIMITED 
+  Author:    Takashi Fujiwara     FUJITSU LIMITED
                                	  fujiwara@a80.tech.yk.fujitsu.co.jp
   Modifier:  Franky Ling          Digital Equipment Corporation
 	                          frankyling@hgrd01.enet.dec.com
@@ -96,8 +96,7 @@ Private int     _XimCachedDefaultTreeRefcount = 0;
 
 
 Public Bool
-_XimCheckIfLocalProcessing(im)
-    Xim          im;
+_XimCheckIfLocalProcessing(Xim im)
 {
     FILE        *fp;
     char        *name;
@@ -366,7 +365,7 @@ Private int _XimCachedFileName (
     else
        sprintf (*res, "%s%c%d_%03x_%08x_%08x", dir, _XimGetMyEndian(),
 		XIM_CACHE_VERSION, sizeof (DefTree), hash, hash2);
-    
+
 /* fprintf (stderr, "-> %s\n", *res); */
     if ( (fd = _XOpenFile (*res, O_RDONLY)) == -1)
        return -1;
@@ -417,7 +416,7 @@ Private int _XimCachedFileName (
 	return -1;
     }
     munmap (m, sizeof (struct _XimCacheStruct));
-    
+
     return fd;
 }
 
@@ -555,7 +554,7 @@ _XimCreateDefaultTree(
         tmpname = name = _XlcFileName(im->core.lcd, COMPOSE_FILE);
     }
     intname = name;
-    
+
 #ifdef COMPOSECACHE
     if (getuid () == euid && getgid () == egid && euid != 0) {
 	char *c;
@@ -591,7 +590,7 @@ _XimCreateDefaultTree(
 	    Xfree (cachename);
 	cachename = NULL;
     }
-    
+
     if (getuid () == euid && getgid () == egid && euid != 0 && home) {
 
 	if (! cachedir) {
@@ -635,7 +634,7 @@ _XimCreateDefaultTree(
 	_XimWriteCachedDefaultTree (intname, encoding, cachename, im);
     }
 #endif
-    
+
     if (tmpcachedir)
 	Xfree  (tmpcachedir);
     if (tmpname)

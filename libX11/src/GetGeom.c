@@ -35,10 +35,10 @@ Status XGetGeometry (
     register Display *dpy,
     Drawable d,
     Window *root, /* RETURN */
-    int *x, 
+    int *x,
     int *y,  /* RETURN */
     unsigned int *width,
-    unsigned int *height, 
+    unsigned int *height,
     unsigned int *borderWidth,
     unsigned int *depth)  /* RETURN */
 {

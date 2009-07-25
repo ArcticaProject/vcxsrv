@@ -52,7 +52,7 @@ Status XQueryTree (
 	return (0);
 	}
 
-    *children = (Window *) NULL; 
+    *children = (Window *) NULL;
     if (rep.nChildren != 0) {
 	nbytes = rep.nChildren * sizeof(Window);
 	*children = (Window *) Xmalloc((unsigned) nbytes);

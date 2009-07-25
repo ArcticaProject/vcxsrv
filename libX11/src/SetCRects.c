@@ -67,7 +67,7 @@ int
 XSetClipRectangles (
     register Display *dpy,
     GC gc,
-    int clip_x_origin, 
+    int clip_x_origin,
     int clip_y_origin,
     XRectangle *rectangles,
     int n,
@@ -80,4 +80,4 @@ XSetClipRectangles (
     SyncHandle();
     return 1;
 }
-    
+

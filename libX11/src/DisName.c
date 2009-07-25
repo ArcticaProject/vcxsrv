@@ -30,14 +30,14 @@ from The Open Group.
 /* $XFree86$ */
 
 /* XDisplayName.c */
-/* 
+/*
  * Returns the name of the display XOpenDisplay would use.  This is better
  * than just printing the "display" variable in a program because that
  * could be NULL and/or there could be an environment variable set.
  * This makes it easier for programmers to provide meaningful error
- * messages. 
+ * messages.
  *
- * 
+ *
  * For example, this is used in XOpenDisplay() as
  *	strncpy( displaybuf, XDisplayName( display ), sizeof(displaybuf) );
  *      if ( *displaybuf == '\0' ) return( NULL );

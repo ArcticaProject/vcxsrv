@@ -61,7 +61,7 @@ static XLCdPublicMethodsRec publicMethods = {
 	default_string,
 	NULL,
 	NULL
-    }, 
+    },
     {
 	NULL,
 	create,
@@ -218,9 +218,9 @@ initialize(
 
     name = lcd->core->name;
 #if !defined(X_LOCALE)
-    /* 
-     * _XlMapOSLocaleName will return the same string or a substring 
-     * of name, so strlen(name) is okay 
+    /*
+     * _XlMapOSLocaleName will return the same string or a substring
+     * of name, so strlen(name) is okay
      */
     if ((len = strlen(name)) < sizeof sinamebuf)
         siname = sinamebuf;

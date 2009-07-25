@@ -33,9 +33,9 @@ in this Software without prior written authorization from The Open Group.
 Window XCreateSimpleWindow(
     register Display *dpy,
     Window parent,
-    int x, 
+    int x,
     int y,
-    unsigned int width, 
+    unsigned int width,
     unsigned int height,
     unsigned int borderWidth,
     unsigned long border,

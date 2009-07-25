@@ -47,7 +47,7 @@ _Xconst char *pattern,  /* null-terminated */
 int maxNames,
 int *actualCount,	/* RETURN */
 XFontStruct **info)	/* RETURN */
-{       
+{
     register long nbytes;
     register int i;
     register XFontStruct *fs;
@@ -68,7 +68,7 @@ XFontStruct **info)	/* RETURN */
 
     for (i = 0; ; i++) {
 	if (!_XReply (dpy, (xReply *) &reply,
-		      ((SIZEOF(xListFontsWithInfoReply) - 
+		      ((SIZEOF(xListFontsWithInfoReply) -
 			SIZEOF(xGenericReply)) >> 2), xFalse)) {
 	    for (j=(i-1); (j >= 0); j--) {
 		Xfree(flist[j]);
@@ -86,7 +86,7 @@ XFontStruct **info)	/* RETURN */
 	    size = i + reply.nReplies + 1;
 
 	    if (finfo) {
-		XFontStruct * tmp_finfo = (XFontStruct *) 
+		XFontStruct * tmp_finfo = (XFontStruct *)
 		    Xrealloc ((char *) finfo,
 			      (unsigned) (sizeof(XFontStruct) * size));
 		char ** tmp_flist = (char **)
@@ -134,7 +134,7 @@ XFontStruct **info)	/* RETURN */
 	fs->all_chars_exist 	= reply.allCharsExist;
 	fs->ascent 		= cvtINT16toInt (reply.fontAscent);
 	fs->descent 		= cvtINT16toInt (reply.fontDescent);
-    
+
 #ifdef MUSTCOPY
 	{
 	    xCharInfo *xcip;

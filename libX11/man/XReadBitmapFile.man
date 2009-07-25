@@ -160,7 +160,7 @@ int \fIx_hot\fP, int \fIy_hot\fP\^);
 .HP
 Pixmap XCreatePixmapFromBitmapData\^(\^Display *\fIdisplay\fP\^, Drawable
 \fId\fP\^, char *\fIdata\fP\^, unsigned int \fIwidth\fP, unsigned int
-\fIheight\fP\^, unsigned long \fIfg\fP, unsigned int \fIbg\fP\^, unsigned int
+\fIheight\fP\^, unsigned long \fIfg\fP, unsigned long \fIbg\fP\^, unsigned int
 \fIdepth\fP\^); 
 .HP
 Pixmap XCreateBitmapFromData(\^Display *\fIdisplay\fP\^, Drawable \fId\fP\^,

@@ -60,22 +60,22 @@ XGetWindowProperty(
     req->longOffset = offset;
     req->longLength = length;
     error.sequenceNumber = dpy->request;
-    
+
     if (!_XReply (dpy, (xReply *) &reply, 0, xFalse)) {
 	UnlockDisplay(dpy);
 	SyncHandle();
 	return (1);	/* not Success */
-	}	
+	}
 
     *prop = (unsigned char *) NULL;
     if (reply.propertyType != None) {
 	long nbytes, netbytes;
 	switch (reply.format) {
-      /* 
+      /*
        * One extra byte is malloced than is needed to contain the property
-       * data, but this last byte is null terminated and convenient for 
-       * returning string properties, so the client doesn't then have to 
-       * recopy the string to make it null terminated. 
+       * data, but this last byte is null terminated and convenient for
+       * returning string properties, so the client doesn't then have to
+       * recopy the string to make it null terminated.
        */
 	  case 8:
 	    nbytes = netbytes = reply.nItems;
@@ -104,7 +104,7 @@ XGetWindowProperty(
 	    /*
 	     * This part of the code should never be reached.  If it is,
 	     * the server sent back a property with an invalid format.
-	     * This is a BadImplementation error. 
+	     * This is a BadImplementation error.
 	     */
 	    {
 		/* sequence number stored above */

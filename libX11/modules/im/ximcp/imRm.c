@@ -24,7 +24,7 @@ PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
-  Author: Takashi Fujiwara     FUJITSU LIMITED 
+  Author: Takashi Fujiwara     FUJITSU LIMITED
 			       fujiwara@a80.tech.yk.fujitsu.co.jp
   Modifier: Makoto Wakamatsu   Sony Corporation
 			       makoto@sm.sony.co.jp
@@ -98,11 +98,11 @@ _XimSetProtoResource(im)
     else res_class = Xmalloc (strlen (im->core.res_class) + 50);
     /* pretend malloc always works */
 
-    (void) sprintf (res_name, "%s%s%s", 
+    (void) sprintf (res_name, "%s%s%s",
 	im->core.res_name != NULL ? im->core.res_name : "*",
 	im->core.res_name != NULL ? dotximdot : ximdot,
 	"useAuth");
-    (void) sprintf (res_class, "%s%s%s", 
+    (void) sprintf (res_class, "%s%s%s",
 	im->core.res_class != NULL ? im->core.res_class : "*",
 	im->core.res_class != NULL ? dotXimdot : Ximdot,
 	"UseAuth");
@@ -113,11 +113,11 @@ _XimSetProtoResource(im)
 	}
     }
 
-    (void) sprintf (res_name, "%s%s%s", 
+    (void) sprintf (res_name, "%s%s%s",
 	im->core.res_name != NULL ? im->core.res_name : "*",
 	im->core.res_name != NULL ? dotximdot : ximdot,
 	"delaybinding");
-    (void) sprintf (res_class, "%s%s%s", 
+    (void) sprintf (res_class, "%s%s%s",
 	im->core.res_class != NULL ? im->core.res_class : "*",
 	im->core.res_class != NULL ? dotXimdot : Ximdot,
 	"Delaybinding");
@@ -128,11 +128,11 @@ _XimSetProtoResource(im)
 	}
     }
 
-    (void) sprintf (res_name, "%s%s%s", 
+    (void) sprintf (res_name, "%s%s%s",
 	im->core.res_name != NULL ? im->core.res_name : "*",
 	im->core.res_name != NULL ? dotximdot : ximdot,
 	"reconnect");
-    (void) sprintf (res_class, "%s%s%s", 
+    (void) sprintf (res_class, "%s%s%s",
 	im->core.res_class != NULL ? im->core.res_class : "*",
 	im->core.res_class != NULL ? dotXimdot : Ximdot,
 	"Reconnect");
@@ -149,11 +149,11 @@ _XimSetProtoResource(im)
 	return;
     }
 
-    (void) sprintf (res_name, "%s%s%s", 
+    (void) sprintf (res_name, "%s%s%s",
 	im->core.res_name != NULL ? im->core.res_name : "*",
 	im->core.res_name != NULL ? dotximdot : ximdot,
 	"preeditDefaultStyle");
-    (void) sprintf (res_class, "%s%s%s", 
+    (void) sprintf (res_class, "%s%s%s",
 	im->core.res_class != NULL ? im->core.res_class : "*",
 	im->core.res_class != NULL ? dotXimdot : Ximdot,
 	"PreeditDefaultStyle");
@@ -172,11 +172,11 @@ _XimSetProtoResource(im)
     if(!preedit_style)
 	preedit_style = XIMPreeditNothing;
 
-    (void) sprintf (res_name, "%s%s%s", 
+    (void) sprintf (res_name, "%s%s%s",
 	im->core.res_name != NULL ? im->core.res_name : "*",
 	im->core.res_name != NULL ? dotximdot : ximdot,
 	"statusDefaultStyle");
-    (void) sprintf (res_class, "%s%s%s", 
+    (void) sprintf (res_class, "%s%s%s",
 	im->core.res_class != NULL ? im->core.res_class : "*",
 	im->core.res_class != NULL ? dotXimdot : Ximdot,
 	"StatusDefaultStyle");
@@ -410,7 +410,7 @@ _XimDefaultIMValues(
 			 = (char **)((char *)tmp + sizeof(XIMValuesList));
 	for(i = 0; i < n; i++) {
 	    values_list->supported_values[i] =
-                name_table + supported_local_im_values_list[i];
+		(char *)name_table + supported_local_im_values_list[i];
 	}
     }
 
@@ -447,7 +447,7 @@ _XimDefaultICValues(
 			 = (char **)((char *)tmp + sizeof(XIMValuesList));
 	for(i = 0; i < n; i++) {
 	    values_list->supported_values[i] =
-                name_table + supported_local_ic_values_list[i];
+		(char *)name_table + supported_local_ic_values_list[i];
 	}
     }
 
@@ -628,7 +628,7 @@ _XimDefaultColormap(
 					&win_attr) == (Status)NULL) {
 	return True;
     }
-   
+
     out = (Colormap *)((char *)top + info->offset);
     *out = win_attr.colormap;
     return True;
@@ -1096,7 +1096,7 @@ _XimDecodeStyles(
     if(num >0) {
 	out->count_styles = (unsigned short)num;
 	out->supported_styles = (XIMStyle *)((char *)tmp + sizeof(XIMStyles));
-    
+
 	for(i = 0; i < num; i++) {
 	    out->supported_styles[i] = styles->supported_styles[i];
 	}
@@ -1135,7 +1135,7 @@ _XimDecodeValues(
     if(num) {
 	out->count_values = (unsigned short)num;
 	out->supported_values = (char **)((char *)tmp + sizeof(XIMValuesList));
-    
+
 	for(i = 0; i < num; i++) {
 	    out->supported_values[i] = values_list->supported_values[i];
 	}
@@ -2267,13 +2267,13 @@ _XimSetIMValueData(
 	if(!(res = _XimGetResourceListRec(res_list, list_num, p->name))) {
 	    return p->value;
 	}
-	check = _XimCheckIMMode(res, XIM_SETIMVALUES);	
+	check = _XimCheckIMMode(res, XIM_SETIMVALUES);
 	if(check == XIM_CHECK_INVALID) {
 	    continue;
 	} else if (check == XIM_CHECK_ERROR) {
 	    return p->value;
 	}
-	    
+
 	if(!_XimEncodeLocalIMAttr(res, top, p->value)) {
 	    return p->value;
 	}
@@ -2297,13 +2297,13 @@ _XimGetIMValueData(
 	if(!(res = _XimGetResourceListRec(res_list, list_num, p->name))) {
 	    return p->value;
 	}
-	check = _XimCheckIMMode(res, XIM_GETIMVALUES);	
+	check = _XimCheckIMMode(res, XIM_GETIMVALUES);
 	if(check == XIM_CHECK_INVALID) {
 	    continue;
 	} else if (check == XIM_CHECK_ERROR) {
 	    return p->value;
 	}
-	    
+
 	if(!_XimDecodeLocalIMAttr(res, top, p->value)) {
 	    return p->value;
 	}
@@ -2380,10 +2380,7 @@ Public int
 }
 
 Public void
-_XimSetICMode(res_list, list_num, style)
-    XIMResourceList	res_list;
-    unsigned int	list_num;
-    XIMStyle		style;
+_XimSetICMode(XIMResourceList res_list, unsigned int list_num, XIMStyle style)
 {
     XIMResourceList	res;
     unsigned int	n = XIMNumber(ic_mode);
@@ -2632,7 +2629,7 @@ _XimSetLocalIMDefaults(
 
     for(i = 0; i < num; i++) {
 	if((res = _XimGetResourceListRecByQuark( res_list, list_num,
-				info[i].quark)) == (XIMResourceList)NULL) { 
+				info[i].quark)) == (XIMResourceList)NULL) {
 	    return False;
 	}
 
@@ -2977,7 +2974,7 @@ _XimDecodeAttr(
 	    if(!info[i].decode) {
 		return False;
 	    }
-	    return (*info[i].decode)(&info[i], top, val); 
+	    return (*info[i].decode)(&info[i], top, val);
 	}
     }
     return False;
@@ -3018,13 +3015,8 @@ _XimDecodeLocalICAttr(
 }
 
 Public char *
-_XimGetICValueData(ic, top, res_list, list_num, values, mode)
-    Xic			 ic;
-    XPointer		 top;
-    XIMResourceList	 res_list;
-    unsigned int	 list_num;
-    XIMArg		*values;
-    unsigned long	 mode;
+_XimGetICValueData(Xic ic, XPointer top, XIMResourceList res_list,
+		   unsigned int	 list_num, XIMArg *values, unsigned long mode)
 {
     register  XIMArg	*p;
     XIMResourceList	 res;
@@ -3072,9 +3064,7 @@ _XimGetICValueData(ic, top, res_list, list_num, values, mode)
 }
 
 Public void
-_XimGetCurrentIMValues(im, im_values)
-    Xim			 im;
-    XimDefIMValues	*im_values;
+_XimGetCurrentIMValues(Xim im, XimDefIMValues *im_values)
 {
     bzero((char *)im_values, sizeof(XimDefIMValues));
 
@@ -3088,9 +3078,7 @@ _XimGetCurrentIMValues(im, im_values)
 }
 
 Public void
-_XimSetCurrentIMValues(im, im_values)
-    Xim			 im;
-    XimDefIMValues	*im_values;
+_XimSetCurrentIMValues(Xim im, XimDefIMValues *im_values)
 {
     im->core.styles		= im_values->styles;
     im->core.im_values_list	= im_values->im_values_list;
@@ -3102,9 +3090,7 @@ _XimSetCurrentIMValues(im, im_values)
 }
 
 Public void
-_XimGetCurrentICValues(ic, ic_values)
-    Xic			 ic;
-    XimDefICValues	*ic_values;
+_XimGetCurrentICValues(Xic ic, XimDefICValues *ic_values)
 {
     bzero((char *)ic_values, sizeof(XimDefICValues));
 

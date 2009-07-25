@@ -37,7 +37,7 @@ from The Open Group.
 
 int
 _XPutBackEvent (
-    register Display *dpy, 
+    register Display *dpy,
     register XEvent *event)
 	{
 	register _XQEvent *qelt;
@@ -62,7 +62,7 @@ _XPutBackEvent (
 
 int
 XPutBackEvent (
-    register Display * dpy, 
+    register Display * dpy,
     register XEvent *event)
 	{
 	int ret;

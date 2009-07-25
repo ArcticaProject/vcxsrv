@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -176,7 +176,7 @@ XkbReadBufferRec	buf;
 XkbAction *		act;
 int			tmp;
 
-    if (!_XkbInitReadBuffer(dpy,&buf,(int)rep->length*4)) 
+    if (!_XkbInitReadBuffer(dpy,&buf,(int)rep->length*4))
 	return BadAlloc;
 
     if ((rep->totalBtns>0)&&(rep->totalBtns!=devi->num_btns)) {
@@ -207,7 +207,7 @@ int			tmp;
 	}
     }
     tmp= _XkbFreeReadBuffer(&buf);
-    if (tmp) 
+    if (tmp)
 	fprintf(stderr,"GetDeviceInfo! Bad length (%d extra bytes)\n",tmp);
     if (tmp || buf.error)
 	return BadLength;
@@ -337,7 +337,7 @@ XkbGetDeviceButtonActions(	Display *		dpy,
     xkbGetDeviceInfoReply	 	rep;
     Status				status;
 
-    if ((dpy->flags & XlibDisplayNoXkb) || 
+    if ((dpy->flags & XlibDisplayNoXkb) ||
 	(!dpy->xkb_info && !XkbUseExtension(dpy,NULL,NULL)))
 	return BadMatch;
     if (!devi)
@@ -378,7 +378,7 @@ XkbGetDeviceLedInfo(	Display *		dpy,
     xkbGetDeviceInfoReply	 	rep;
     Status				status;
 
-    if ((dpy->flags & XlibDisplayNoXkb) || 
+    if ((dpy->flags & XlibDisplayNoXkb) ||
 	(!dpy->xkb_info && !XkbUseExtension(dpy,NULL,NULL)))
 	return BadMatch;
     if (((which&XkbXI_IndicatorsMask)==0)||(which&(~XkbXI_IndicatorsMask)))
@@ -399,7 +399,7 @@ XkbGetDeviceLedInfo(	Display *		dpy,
 	UnlockDisplay(dpy);
 	SyncHandle();
 	return BadLength;
-    } 
+    }
     devi->type= rep.devType;
     devi->supported= rep.supported;
     devi->unsupported= rep.unsupported;
@@ -759,7 +759,7 @@ XkbChangeDeviceInfo(	Display *		dpy,
     return ok;
 }
 
-Bool 
+Bool
 XkbSetDeviceLedInfo(	Display *		dpy,
 			XkbDeviceInfoPtr	devi,
 			unsigned 		ledClass,
@@ -769,7 +769,7 @@ XkbSetDeviceLedInfo(	Display *		dpy,
     return False;
 }
 
-Bool 
+Bool
 XkbSetDeviceButtonActions(	Display *		dpy,
 				XkbDeviceInfoPtr 	devi,
 				unsigned int		first,

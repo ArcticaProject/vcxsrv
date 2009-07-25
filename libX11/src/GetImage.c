@@ -73,14 +73,14 @@ XImage *XGetImage (
 	req->height = height;
 	req->planeMask = plane_mask;
 	req->format = format;
-	
+
 	if (_XReply (dpy, (xReply *) &rep, 0, xFalse) == 0 ||
 	    rep.length == 0) {
 		UnlockDisplay(dpy);
 		SyncHandle();
 		return (XImage *)NULL;
 	}
-		
+
 	nbytes = (long)rep.length << 2;
 	data = (char *) Xmalloc((unsigned) nbytes);
 	if (! data) {
@@ -117,15 +117,15 @@ XImage *XGetSubImage(
      unsigned long plane_mask,
      int format,	/* either XYPixmap or ZPixmap */
      XImage *dest_image,
-     int dest_x, 
+     int dest_x,
      int dest_y)
 {
 	XImage *temp_image;
-	temp_image = XGetImage(dpy, d, x, y, width, height, 
+	temp_image = XGetImage(dpy, d, x, y, width, height,
 				plane_mask, format);
 	if (!temp_image)
 	    return (XImage *)NULL;
 	_XSetImage(temp_image, dest_image, dest_x, dest_y);
 	XDestroyImage(temp_image);
 	return (dest_image);
-}	
+}

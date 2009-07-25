@@ -18,15 +18,15 @@
  * OPEN SOFTWARE FOUNDATION DISCLAIMS ALL WARRANTIES WITH REGARD TO
  * THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS, IN NO EVENT SHALL OPEN SOFTWARE FOUNDATIONN BE
- * LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES 
+ * LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- *		 M. Collins		OSF  
+ *
+ *		 M. Collins		OSF
  *
  *		 Katsuhisa Yano		TOSHIBA Corp.
- */				
+ */
 
 /*
 
@@ -181,13 +181,13 @@ XCreateFontSet (
     om = XOpenOM(dpy, NULL, NULL, NULL);
     if (om == NULL)
 	return (XFontSet) NULL;
-    
+
     if ((oc = XCreateOC(om, XNBaseFontName, base_font_name_list, NULL))) {
 	list = &oc->core.missing_list;
 	oc->core.om_automatic = True;
     } else
 	list = &om->core.required_charset;
-    
+
     *missing_charset_list = copy_string_list(list->charset_list,
 					     list->charset_count);
     *missing_charset_count = list->charset_count;
@@ -200,7 +200,7 @@ XCreateFontSet (
 	if (!*def_string)
 	    *def_string = "";
     }
-    
+
     if (oc == NULL)
 	XCloseOM(om);
 

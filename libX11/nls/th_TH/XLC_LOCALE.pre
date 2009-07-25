@@ -16,8 +16,8 @@ fs0	{
 }
 XCOMM 	fs1 class (Thai) 
 fs1	{
-	charset         TIS620-0:GR
-	font            TIS620-0:GR
+	charset         ISO8859-11:GR
+	font            ISO8859-11:GR
 }
 END XLC_FONTSET
 
@@ -61,7 +61,7 @@ cs1	{
 #else
 	wc_encoding	\x00008080
 #endif
-	ct_encoding     TIS620-0:GR
+	ct_encoding     ISO8859-11:GR
 }
 
 END XLC_XLOCALE

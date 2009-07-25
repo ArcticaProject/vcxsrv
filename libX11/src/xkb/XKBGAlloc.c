@@ -7,19 +7,19 @@ software and its documentation for any purpose and without
 fee is hereby granted, provided that the above copyright
 notice appear in all copies and that both that copyright
 notice and this permission notice appear in supporting
-documentation, and that the name of Silicon Graphics not be 
-used in advertising or publicity pertaining to distribution 
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
 of the software without specific prior written permission.
-Silicon Graphics makes no representation about the suitability 
+Silicon Graphics makes no representation about the suitability
 of this software for any purpose. It is provided "as is"
 without any express or implied warranty.
 
-SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
 AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
-GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL 
-DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, 
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE 
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
@@ -43,7 +43,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/extensions/XKBgeom.h>
 #include <X11/extensions/XKBproto.h>
 
-#else 
+#else
 
 #include <stdio.h>
 #include <X11/X.h>
@@ -63,7 +63,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 /***====================================================================***/
 
-static void 
+static void
 _XkbFreeGeomLeafElems(	Bool			freeAll,
 			int			first,
 			int 			count,
@@ -77,14 +77,14 @@ _XkbFreeGeomLeafElems(	Bool			freeAll,
 	if (*elems!=NULL) {
 	    _XkbFree(*elems);
 	    *elems= NULL;
-	}	
+	}
 	return;
     }
 
     if ((first>=(*num_inout))||(first<0)||(count<1))
 	return;
 
-    if (first+count>=(*num_inout)) { 
+    if (first+count>=(*num_inout)) {
 	/* truncating the array is easy */
 	(*num_inout)= first;
     }
@@ -104,7 +104,7 @@ typedef void (*ContentsClearFunc)(
 		char *		/* priv */
 );
 
-static void 
+static void
 _XkbFreeGeomNonLeafElems(	Bool			freeAll,
 				int			first,
 				int 			count,
@@ -192,7 +192,7 @@ XkbFreeGeomKeyAliases(	XkbGeometryPtr	geom,
 			int		first,
 			int		count,
 			Bool		freeAll)
-{	
+{
     _XkbFreeGeomLeafElems(freeAll,first,count,
 				&geom->num_key_aliases,&geom->sz_key_aliases,
 				(char **)&geom->key_aliases,
@@ -253,7 +253,7 @@ XkbFreeGeomOutlines(XkbShapePtr	shape,int first,int count,Bool freeAll)
 				&shape->num_outlines,&shape->sz_outlines,
 				(char **)&shape->outlines,
 				sizeof(XkbOutlineRec),_XkbClearOutline);
-	
+
     return;
 }
 
@@ -281,7 +281,7 @@ XkbFreeGeomShapes(XkbGeometryPtr geom,int first,int count,Bool freeAll)
 
 /***====================================================================***/
 
-void 
+void
 XkbFreeGeomOverlayKeys(XkbOverlayRowPtr row,int first,int count,Bool freeAll)
 {
     _XkbFreeGeomLeafElems(freeAll,first,count,
@@ -402,7 +402,7 @@ _XkbClearDoodad(char *doodad_in)
 XkbDoodadPtr	doodad= (XkbDoodadPtr)doodad_in;
 
     switch (doodad->any.type) {
-   	case XkbTextDoodad: 
+   	case XkbTextDoodad:
 	    {
 		if (doodad->text.text!=NULL) {
 		    _XkbFree(doodad->text.text);
@@ -414,7 +414,7 @@ XkbDoodadPtr	doodad= (XkbDoodadPtr)doodad_in;
 		}
 	    }
 	    break;
-   	case XkbLogoDoodad: 
+   	case XkbLogoDoodad:
 	    {
 		if (doodad->logo.logo_name!=NULL) {
 		    _XkbFree(doodad->logo.logo_name);
@@ -547,7 +547,7 @@ _XkbGeomAlloc(	XPointer *		old,
 #define	_XkbAllocOverlayKeys(r,n) _XkbGeomAlloc((XPointer *)&(r)->keys,\
 				&(r)->num_keys,&(r)->sz_keys,\
 				(n),sizeof(XkbOverlayKeyRec))
-    
+
 Status
 XkbAllocGeomProps(XkbGeometryPtr geom,int nProps)
 {
@@ -693,7 +693,7 @@ register XkbPropertyPtr prop;
 	    if (prop->value)
 		strcpy(prop->value,value);
 	    return prop;
-	}    
+	}
     }
     if ((geom->num_properties>=geom->sz_properties)&&
 					(_XkbAllocProps(geom,1)!=Success)) {
@@ -950,7 +950,7 @@ Bool		found;
 	}
     }
     if (!found)
-   	return NULL; 
+   	return NULL;
     if ((row->num_keys>=row->sz_keys)&&(_XkbAllocOverlayKeys(row,1)!=Success))
 	return NULL;
     key= &row->keys[row->num_keys];
