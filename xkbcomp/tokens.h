@@ -1,4 +1,3 @@
-/* $Xorg: tokens.h,v 1.3 2000/08/17 19:54:33 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -96,5 +95,10 @@
 #define	KEYPAD_KEYS		75
 #define	FUNCTION_KEYS		76
 #define	ALTERNATE_GROUP		77
+
+extern Atom tok_ONE_LEVEL;
+extern Atom tok_TWO_LEVEL;
+extern Atom tok_ALPHABETIC;
+extern Atom tok_KEYPAD;
 
 #endif

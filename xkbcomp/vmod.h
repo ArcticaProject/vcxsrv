@@ -1,4 +1,3 @@
-/* $Xorg: vmod.h,v 1.3 2000/08/17 19:54:33 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,64 +23,56 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86$ */
 
 #ifndef VMOD_H
 #define VMOD_H 1
 
-typedef struct _VModInfo {
-    XkbDescPtr		xkb;
-    unsigned		defined;
-    unsigned		available;
-    unsigned		newlyDefined;
-    int			errorCount;
+typedef struct _VModInfo
+{
+    XkbDescPtr xkb;
+    unsigned defined;
+    unsigned available;
+    unsigned newlyDefined;
+    int errorCount;
 } VModInfo;
 
-extern void	InitVModInfo(
-    VModInfo *	/* info */,
-    XkbDescPtr	/* xkb */
-);
+extern void InitVModInfo(VModInfo * /* info */ ,
+                         XkbDescPtr     /* xkb */
+    );
 
-extern void	ClearVModInfo(
-    VModInfo *	/* info */,
-    XkbDescPtr	/* xkb */
-);
+extern void ClearVModInfo(VModInfo * /* info */ ,
+                          XkbDescPtr    /* xkb */
+    );
 
-extern Bool	HandleVModDef(
-    VModDef *	/* stmt */,
-    unsigned	/* mergeMode */,
-    VModInfo *	/* info */
-);
+extern Bool HandleVModDef(VModDef * /* stmt */ ,
+                          unsigned /* mergeMode */ ,
+                          VModInfo *    /* info */
+    );
 
-extern Bool	ApplyVModDefs(
-    VModInfo *	/* info */,
-    XkbDescPtr	/* xkb */
-);
+extern Bool ApplyVModDefs(VModInfo * /* info */ ,
+                          XkbDescPtr    /* xkb */
+    );
 
-extern int	LookupVModIndex(
-    XPointer 		/* priv */,
-    Atom		/* elem */,
-    Atom		/* field */,
-    unsigned		/* type */,
-    ExprResult *	/* val_rtrn */
-);
+extern int LookupVModIndex(XPointer /* priv */ ,
+                           Atom /* elem */ ,
+                           Atom /* field */ ,
+                           unsigned /* type */ ,
+                           ExprResult * /* val_rtrn */
+    );
 
-extern int	LookupVModMask(
-    XPointer 		/* priv */,
-    Atom		/* elem */,
-    Atom		/* field */,
-    unsigned		/* type */,
-    ExprResult *	/* val_rtrn */
-);
+extern int LookupVModMask(XPointer /* priv */ ,
+                          Atom /* elem */ ,
+                          Atom /* field */ ,
+                          unsigned /* type */ ,
+                          ExprResult *  /* val_rtrn */
+    );
 
-extern int	FindKeypadVMod(
-    XkbDescPtr		/* xkb */
-);
+extern int FindKeypadVMod(XkbDescPtr    /* xkb */
+    );
 
-extern Bool	ResolveVirtualModifier(
-    ExprDef *		/* def */,
-    ExprResult *	/* value_rtrn */,
-    VModInfo *		/* info */
-);
+extern Bool ResolveVirtualModifier(ExprDef * /* def */ ,
+                                   ExprResult * /* value_rtrn */ ,
+                                   VModInfo *   /* info */
+    );
 
 #endif /* VMOD_H */

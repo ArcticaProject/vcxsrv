@@ -1,4 +1,3 @@
-/* $Xorg: action.h,v 1.3 2000/08/17 19:54:30 cpqbld Exp $ */
 /************************************************************
  Copyright (c) 1994 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@
  THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  ********************************************************/
-/* $XFree86$ */
 
 #ifndef ACTION_H
 #define ACTION_H 1
@@ -57,34 +55,31 @@
 
 #define	PrivateAction	(XkbSA_LastAction+1)
 
-typedef struct _ActionInfo {
-	unsigned		action;
-	unsigned		field;
-	ExprDef *		array_ndx;
-	ExprDef *		value;
-	struct _ActionInfo *	next;
+typedef struct _ActionInfo
+{
+    unsigned action;
+    unsigned field;
+    ExprDef *array_ndx;
+    ExprDef *value;
+    struct _ActionInfo *next;
 } ActionInfo;
 
-extern int HandleActionDef(
-	ExprDef *		/* def */,
-	XkbDescPtr		/* xkb */,
-	XkbAnyAction *		/* action */,
-	unsigned		/* mergeMode */,
-	ActionInfo *		/* info */
-);
+extern int HandleActionDef(ExprDef * /* def */ ,
+                           XkbDescPtr /* xkb */ ,
+                           XkbAnyAction * /* action */ ,
+                           unsigned /* mergeMode */ ,
+                           ActionInfo * /* info */
+    );
 
-extern int SetActionField(
-	XkbDescPtr		/* xkb */,
-	char *			/* elem */,
-	char *			/* field */,
-	ExprDef *		/* index */,
-	ExprDef *		/* value */,
-	ActionInfo **		/* info_rtrn */
-);
+extern int SetActionField(XkbDescPtr /* xkb */ ,
+                          char * /* elem */ ,
+                          char * /* field */ ,
+                          ExprDef * /* index */ ,
+                          ExprDef * /* value */ ,
+                          ActionInfo ** /* info_rtrn */
+    );
 
-extern void ActionsInit(
-	void
-);
+extern void ActionsInit(void);
 
 extern LookupEntry ctrlNames[];
 
