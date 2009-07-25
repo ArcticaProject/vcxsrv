@@ -2,6 +2,7 @@
  * Copyright © 2000 Compaq Computer Corporation
  * Copyright © 2002 Hewlett-Packard Company
  * Copyright © 2006 Intel Corporation
+ * Copyright © 2008 Red Hat, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -31,6 +32,7 @@
 #define _XRANDRP_H_
 
 #include <X11/extensions/randr.h>
+#include <X11/extensions/renderproto.h>
 
 #define Window CARD32
 #define Drawable CARD32
@@ -562,6 +564,88 @@ typedef struct {
 #define sz_xRRSetCrtcGammaReq		12
 
 /*
+ * Additions for V1.3
+ */
+
+typedef xRRGetScreenResourcesReq xRRGetScreenResourcesCurrentReq;
+
+#define sz_xRRGetScreenResourcesCurrentReq sz_xRRGetScreenResourcesReq
+
+typedef xRRGetScreenResourcesReply xRRGetScreenResourcesCurrentReply;
+#define sz_xRRGetScreenResourcesCurrentReply	sz_xRRGetScreenResourcesReply
+
+typedef struct {
+    CARD8		reqType;
+    CARD8		randrReqType;
+    CARD16		length B16;
+    RRCrtc		crtc B32;
+    xRenderTransform	transform;
+    CARD16		nbytesFilter;	/* number of bytes in filter name */
+    CARD16		pad B16;
+} xRRSetCrtcTransformReq;
+
+#define sz_xRRSetCrtcTransformReq	48
+
+typedef struct {
+    CARD8		reqType;
+    CARD8		randrReqType;
+    CARD16		length B16;
+    RRCrtc		crtc B32;
+} xRRGetCrtcTransformReq;
+
+#define sz_xRRGetCrtcTransformReq	8
+
+typedef struct {
+    BYTE		type;
+    CARD8		status;
+    CARD16		sequenceNumber B16;
+    CARD32		length B32;
+    xRenderTransform	pendingTransform;
+    BYTE		hasTransforms;
+    CARD8		pad0;
+    CARD16		pad1 B16;
+    xRenderTransform	currentTransform;
+    CARD32		pad2 B32;
+    CARD16		pendingNbytesFilter B16;    /* number of bytes in filter name */
+    CARD16		pendingNparamsFilter B16;   /* number of filter params */
+    CARD16		currentNbytesFilter B16;    /* number of bytes in filter name */
+    CARD16		currentNparamsFilter B16;   /* number of filter params */
+} xRRGetCrtcTransformReply;
+
+#define sz_xRRGetCrtcTransformReply	96
+
+typedef struct {
+    CARD8	reqType;
+    CARD8	randrReqType;
+    CARD16	length B16;
+    Window	window B32;
+    RROutput	output B32;
+} xRRSetOutputPrimaryReq;
+#define sz_xRRSetOutputPrimaryReq	12
+
+typedef struct {
+    CARD8	reqType;
+    CARD8	randrReqType;
+    CARD16	length B16;
+    Window	window B32;
+} xRRGetOutputPrimaryReq;
+#define sz_xRRGetOutputPrimaryReq	8
+
+typedef struct {
+    BYTE	type;
+    CARD8	pad;
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    RROutput	output B32;
+    CARD32	pad1 B32;
+    CARD32	pad2 B32;
+    CARD32	pad3 B32;
+    CARD32	pad4 B32;
+    CARD32	pad5 B32;
+} xRRGetOutputPrimaryReply;
+#define sz_xRRGetOutputPrimaryReply	32
+
+/*
  * event
  */
 typedef struct {
@@ -602,8 +686,8 @@ typedef struct {
     CARD8 type;				/* always evBase + RRNotify */
     CARD8 subCode;			/* RRNotify_OutputChange */
     CARD16 sequenceNumber B16;
-    Time timestamp B32;			/* time crtc was changed */
-    Time configTimestamp B32;		/* time crtc was changed */
+    Time timestamp B32;			/* time output was changed */
+    Time configTimestamp B32;		/* time config was changed */
     Window window B32;			/* window requesting notification */
     RROutput output B32;		/* affected output */
     RRCrtc crtc B32;			/* current crtc */
@@ -629,6 +713,70 @@ typedef struct {
     CARD32 pad4 B32;
 } xRROutputPropertyNotifyEvent;
 #define sz_xRROutputPropertyNotifyEvent	32
+
+typedef struct {
+    CARD8	reqType;
+    CARD8	randrReqType;
+    CARD16	length B16;
+    RRCrtc	crtc B32;
+} xRRGetPanningReq; 
+#define sz_xRRGetPanningReq		8
+
+typedef struct {
+    BYTE	type;
+    CARD8	status;
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    Time	timestamp B32;
+    CARD16	left B16;
+    CARD16	top B16;
+    CARD16	width B16;
+    CARD16	height B16;
+    CARD16	track_left B16;
+    CARD16	track_top B16;
+    CARD16	track_width B16;
+    CARD16	track_height B16;
+    INT16	border_left B16;
+    INT16	border_top B16;
+    INT16	border_right B16;
+    INT16	border_bottom B16;
+} xRRGetPanningReply;
+#define sz_xRRGetPanningReply		36
+
+typedef struct {
+    CARD8	reqType;
+    CARD8	randrReqType;
+    CARD16	length B16;
+    RRCrtc	crtc B32;
+    Time	timestamp B32;
+    CARD16	left B16;
+    CARD16	top B16;
+    CARD16	width B16;
+    CARD16	height B16;
+    CARD16	track_left B16;
+    CARD16	track_top B16;
+    CARD16	track_width B16;
+    CARD16	track_height B16;
+    INT16	border_left B16;
+    INT16	border_top B16;
+    INT16	border_right B16;
+    INT16	border_bottom B16;
+} xRRSetPanningReq; 
+#define sz_xRRSetPanningReq		36
+
+typedef struct {
+    BYTE	type;
+    CARD8	status;
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    Time	newTimestamp B32;
+    CARD32      pad1 B32;
+    CARD32      pad2 B32;
+    CARD32      pad3 B32;
+    CARD32      pad4 B32;
+    CARD32      pad5 B32;
+} xRRSetPanningReply;
+#define sz_xRRSetPanningReply	32
 
 #undef RRModeFlags
 #undef RRCrtc

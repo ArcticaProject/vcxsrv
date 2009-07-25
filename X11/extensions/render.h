@@ -33,7 +33,7 @@ typedef XID		PictFormat;
 
 #define RENDER_NAME	"RENDER"
 #define RENDER_MAJOR	0
-#define RENDER_MINOR	10
+#define RENDER_MINOR	11
 
 #define X_RenderQueryVersion		    0
 #define X_RenderQueryPictFormats	    1
@@ -138,6 +138,27 @@ typedef XID		PictFormat;
 #define PictOpConjointAtopReverse		    0x2a
 #define PictOpConjointXor			    0x2b
 #define PictOpConjointMaximum			    0x2b
+
+/*
+ * Operators only available in version 0.11
+ */
+#define PictOpBlendMinimum			    0x30
+#define PictOpMultiply				    0x30
+#define PictOpScreen				    0x31
+#define PictOpOverlay				    0x32
+#define PictOpDarken				    0x33
+#define PictOpLighten				    0x34
+#define PictOpColorDodge			    0x35
+#define PictOpColorBurn				    0x36
+#define PictOpHardLight				    0x37
+#define PictOpSoftLight				    0x38
+#define PictOpDifference			    0x39
+#define PictOpExclusion				    0x3a
+#define PictOpHSLHue				    0x3b
+#define PictOpHSLSaturation			    0x3c
+#define PictOpHSLColor				    0x3d
+#define PictOpHSLLuminosity			    0x3e
+#define PictOpBlendMaximum			    0x3e
 
 #define PolyEdgeSharp			    0
 #define PolyEdgeSmooth			    1

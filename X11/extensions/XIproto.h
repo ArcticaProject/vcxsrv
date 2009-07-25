@@ -1,5 +1,3 @@
-/* $Xorg: XIproto.h,v 1.5 2001/02/09 02:03:24 xorgcvs Exp $ */
-
 /************************************************************
 
 Copyright 1989, 1998  The Open Group
@@ -45,7 +43,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ********************************************************/
-/* $XFree86: xc/include/extensions/XIproto.h,v 1.4 2001/01/17 17:53:17 dawes Exp $ */
 
 #ifndef _XIPROTO_H
 #define _XIPROTO_H
@@ -57,6 +54,9 @@ SOFTWARE.
 #define Window CARD32
 #define Time CARD32
 #define KeyCode CARD8
+#define Mask CARD32
+#define Atom CARD32
+#define Cursor CARD32
 
 /*********************************************************
  *
@@ -72,15 +72,16 @@ SOFTWARE.
 
 #define numInputClasses 7
 
-#define IEVENTS		16
-#define IERRORS		5
+#define IEVENTS         17       /* does NOT include generic events */
+#define IERRORS         5
+#define IREQUESTS       39
 
-#define CLIENT_REQ		1
+#define CLIENT_REQ      1
 
 typedef struct  _XExtEventInfo
     {
     Mask	mask;
-    BYTE 	type;
+    BYTE	type;
     BYTE	word;
     } XExtEventInfo;
 
@@ -114,6 +115,7 @@ struct tmask
 #define XI_DeviceKeystateNotify		13
 #define XI_DeviceButtonstateNotify	14
 #define XI_DevicePresenceNotify		15
+#define XI_DevicePropertyNotify         16
 
 /*********************************************************
  *
@@ -126,15 +128,15 @@ struct tmask
 #define X_OpenDevice			3
 #define X_CloseDevice			4
 #define X_SetDeviceMode			5
-#define X_SelectExtensionEvent  	6
+#define X_SelectExtensionEvent		6
 #define X_GetSelectedExtensionEvents	7
 #define X_ChangeDeviceDontPropagateList 8
-#define X_GetDeviceDontPropagateList 	9
-#define X_GetDeviceMotionEvents 	10
+#define X_GetDeviceDontPropagateList	9
+#define X_GetDeviceMotionEvents		10
 #define X_ChangeKeyboardDevice		11
 #define X_ChangePointerDevice		12
-#define X_GrabDevice 			13
-#define X_UngrabDevice  		14
+#define X_GrabDevice			13
+#define X_UngrabDevice			14
 #define X_GrabDeviceKey			15
 #define X_UngrabDeviceKey		16
 #define X_GrabDeviceButton		17
@@ -150,12 +152,17 @@ struct tmask
 #define X_SetDeviceModifierMapping	27
 #define X_GetDeviceButtonMapping	28
 #define X_SetDeviceButtonMapping	29
-#define X_QueryDeviceState 		30
-#define X_SendExtensionEvent 		31
+#define X_QueryDeviceState		30
+#define X_SendExtensionEvent		31
 #define X_DeviceBell			32
 #define X_SetDeviceValuators		33
 #define X_GetDeviceControl		34
 #define X_ChangeDeviceControl		35
+/* XI 1.5 */
+#define X_ListDeviceProperties          36
+#define X_ChangeDeviceProperty          37
+#define X_DeleteDeviceProperty          38
+#define X_GetDeviceProperty             39
 
 /*********************************************************
  *
@@ -166,26 +173,26 @@ struct tmask
  */
 
 typedef struct {
-    CARD8 	reqType;       /* input extension major code   */
-    CARD8 	ReqType;       /* always X_GetExtensionVersion */
-    CARD16 	length B16;
-    CARD16 	nbytes B16;
-    CARD8 	pad1, pad2;
+    CARD8	reqType;       /* input extension major code   */
+    CARD8	ReqType;       /* always X_GetExtensionVersion */
+    CARD16	length B16;
+    CARD16	nbytes B16;
+    CARD8	pad1, pad2;
 } xGetExtensionVersionReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;       	/* always X_GetExtensionVersion */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD16 	major_version B16;
-    CARD16 	minor_version B16;
-    BOOL 	present;
-    CARD8 	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* always X_GetExtensionVersion */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD16	major_version B16;
+    CARD16	minor_version B16;
+    BOOL	present;
+    CARD8	pad1, pad2, pad3;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
 } xGetExtensionVersionReply;
 
 /*********************************************************
@@ -195,23 +202,23 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;	/* always X_ListInputDevices 	*/
-    CARD16 	length B16;
+    CARD8	reqType;	/* input extension major code	*/
+    CARD8	ReqType;	/* always X_ListInputDevices	*/
+    CARD16	length B16;
 } xListInputDevicesReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;        /* always X_ListInputDevices  	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	ndevices;
-    CARD8 	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;        /* always X_ListInputDevices	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	ndevices;
+    CARD8	pad1, pad2, pad3;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
 } xListInputDevicesReply;
 
 typedef struct _xDeviceInfo *xDeviceInfoPtr;
@@ -220,68 +227,68 @@ typedef struct _xAnyClassinfo *xAnyClassPtr;
 
 typedef struct _xAnyClassinfo {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8 	c_class;
+    CARD8	c_class;
 #else
-    CARD8 	class;
+    CARD8	class;
 #endif
-    CARD8 	length;
+    CARD8	length;
     } xAnyClassInfo;
 
 typedef struct _xDeviceInfo {
     CARD32	type B32;
     CARD8	id;
-    CARD8 	num_classes;
-    CARD8 	use;
-    CARD8 	pad1;
+    CARD8	num_classes;
+    CARD8	use;      /* IsXPointer | IsXKeyboard | IsXExtension... */
+    CARD8	attached; /* id of master dev (if IsXExtension..) */
     } xDeviceInfo;
 
 typedef struct _xKeyInfo *xKeyInfoPtr;
 
 typedef struct _xKeyInfo {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8 	c_class;
+    CARD8	c_class;
 #else
-    CARD8 	class;
+    CARD8	class;
 #endif
-    CARD8 	length;
-    KeyCode 	min_keycode; 
-    KeyCode 	max_keycode; 
-    CARD16 	num_keys B16;
-    CARD8 	pad1,pad2;
+    CARD8	length;
+    KeyCode	min_keycode;
+    KeyCode	max_keycode;
+    CARD16	num_keys B16;
+    CARD8	pad1,pad2;
     } xKeyInfo;
 
 typedef struct _xButtonInfo *xButtonInfoPtr;
 
 typedef struct _xButtonInfo {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8 	c_class;
+    CARD8	c_class;
 #else
-    CARD8 	class;
+    CARD8	class;
 #endif
-    CARD8 	length;
-    CARD16 	num_buttons B16;
+    CARD8	length;
+    CARD16	num_buttons B16;
     } xButtonInfo;
 
 typedef struct _xValuatorInfo *xValuatorInfoPtr;
 
 typedef struct _xValuatorInfo {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8 	c_class;
+    CARD8	c_class;
 #else
-    CARD8 	class;
+    CARD8	class;
 #endif
-    CARD8 	length;
-    CARD8 	num_axes;
-    CARD8 	mode;
-    CARD32 	motion_buffer_size B32;
+    CARD8	length;
+    CARD8	num_axes;
+    CARD8	mode;
+    CARD32	motion_buffer_size B32;
     } xValuatorInfo;
 
 typedef struct _xAxisInfo *xAxisInfoPtr;
 
 typedef struct _xAxisInfo {
-    CARD32 	resolution B32;
-    CARD32 	min_value B32;
-    CARD32 	max_value B32;
+    CARD32	resolution B32;
+    CARD32	min_value B32;
+    CARD32	max_value B32;
     } xAxisInfo;
 
 /*********************************************************
@@ -292,33 +299,33 @@ typedef struct _xAxisInfo {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_OpenDevice 		*/
-    CARD16 	length B16;
+    CARD8	ReqType;        /* always X_OpenDevice		*/
+    CARD16	length B16;
     CARD8       deviceid;
     BYTE	pad1, pad2, pad3;
 } xOpenDeviceReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;       	/* always X_OpenDevice        	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	num_classes;
-    BYTE 	pad1, pad2, pad3;
-    CARD32 	pad00 B32;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* always X_OpenDevice		*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	num_classes;
+    BYTE	pad1, pad2, pad3;
+    CARD32	pad00 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
     } xOpenDeviceReply;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8 	c_class;
+    CARD8	c_class;
 #else
-    CARD8 	class;
+    CARD8	class;
 #endif
-    CARD8 	event_type_base;
+    CARD8	event_type_base;
     } xInputClassInfo;
 
 /*********************************************************
@@ -329,8 +336,8 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_CloseDevice 	*/
-    CARD16 	length B16;
+    CARD8	ReqType;        /* always X_CloseDevice	*/
+    CARD16	length B16;
     CARD8       deviceid;
     BYTE	pad1, pad2, pad3;
 } xCloseDeviceReq;
@@ -342,26 +349,26 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;     	/* always X_SetDeviceMode 	*/
-    CARD16 	length B16;
+    CARD8	reqType;	/* input extension major code	*/
+    CARD8	ReqType;	/* always X_SetDeviceMode	*/
+    CARD16	length B16;
     CARD8       deviceid;
     CARD8       mode;
-    BYTE 	pad1, pad2;
+    BYTE	pad1, pad2;
 } xSetDeviceModeReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;     	/* always X_SetDeviceMode  	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	status;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* always X_SetDeviceMode	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	status;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
 } xSetDeviceModeReply;
 
 /*********************************************************
@@ -372,9 +379,9 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_SelectExtensionEvent */
-    CARD16 	length B16;
-    Window 	window B32;
+    CARD8	ReqType;        /* always X_SelectExtensionEvent */
+    CARD16	length B16;
+    Window	window B32;
     CARD16	count B16;
     CARD16	pad00 B16;
 } xSelectExtensionEventReq;
@@ -387,23 +394,23 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_GetSelectedExtensionEvents */
-    CARD16 	length B16;
+    CARD8	ReqType;        /* X_GetSelectedExtensionEvents */
+    CARD16	length B16;
     Window	window B32;
 } xGetSelectedExtensionEventsReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;       	/* GetSelectedExtensionEvents	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD16 	this_client_count B16;
-    CARD16 	all_clients_count B16;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* GetSelectedExtensionEvents	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD16	this_client_count B16;
+    CARD16	all_clients_count B16;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
 } xGetSelectedExtensionEventsReply;
 
 /*********************************************************
@@ -414,11 +421,11 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_ChangeDeviceDontPropagateList */
-    CARD16 	length B16;
+    CARD8	ReqType;        /* X_ChangeDeviceDontPropagateList */
+    CARD16	length B16;
     Window	window B32;
-    CARD16 	count B16;
-    CARD8 	mode;
+    CARD16	count B16;
+    CARD8	mode;
     BYTE	pad;
 } xChangeDeviceDontPropagateListReq;
 
@@ -430,23 +437,23 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_GetDeviceDontPropagateList */
-    CARD16 	length B16;
+    CARD8	ReqType;        /* X_GetDeviceDontPropagateList */
+    CARD16	length B16;
     Window	window B32;
 } xGetDeviceDontPropagateListReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;        /* GetDeviceDontPropagateList   */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD16 	count B16;
-    CARD16 	pad00 B16;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;        /* GetDeviceDontPropagateList   */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD16	count B16;
+    CARD16	pad00 B16;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
     } xGetDeviceDontPropagateListReply;
 
 /*********************************************************
@@ -456,28 +463,28 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_GetDeviceMotionEvents*/
-    CARD16 	length B16;
-    Time 	start B32;
+    CARD8	reqType;	/* input extension major code	*/
+    CARD8	ReqType;        /* always X_GetDeviceMotionEvents*/
+    CARD16	length B16;
+    Time	start B32;
     Time	stop B32;
     CARD8	deviceid;
     BYTE	pad1, pad2, pad3;
 } xGetDeviceMotionEventsReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply */
-    CARD8 	RepType;        /* always X_GetDeviceMotionEvents  */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD32 	nEvents B32;
-    CARD8  	axes;
-    CARD8  	mode;
+    CARD8	repType;	/* X_Reply */
+    CARD8	RepType;        /* always X_GetDeviceMotionEvents  */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD32	nEvents B32;
+    CARD8	axes;
+    CARD8	mode;
     BYTE	pad1, pad2;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
 } xGetDeviceMotionEventsReply;
 
 /*********************************************************
@@ -488,24 +495,24 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_ChangeKeyboardDevice 	*/
-    CARD16 	length B16;
-    CARD8 	deviceid;
+    CARD8	ReqType;        /* X_ChangeKeyboardDevice	*/
+    CARD16	length B16;
+    CARD8	deviceid;
     BYTE	pad1, pad2, pad3;
 } xChangeKeyboardDeviceReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;        /* always X_ChangeKeyboardDevice*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;  /* 0 */
-    CARD8 	status;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;        /* always X_ChangeKeyboardDevice*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;  /* 0 */
+    CARD8	status;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
     } xChangeKeyboardDeviceReply;
 
 /*********************************************************
@@ -516,26 +523,26 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_ChangePointerDevice 	*/
-    CARD16 	length B16;
-    CARD8 	xaxis;
-    CARD8 	yaxis;
-    CARD8 	deviceid;
+    CARD8	ReqType;        /* X_ChangePointerDevice	*/
+    CARD16	length B16;
+    CARD8	xaxis;
+    CARD8	yaxis;
+    CARD8	deviceid;
     BYTE	pad1;
 } xChangePointerDeviceReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;        /* always X_ChangePointerDevice */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;  /* 0 */
-    CARD8 	status;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;        /* always X_ChangePointerDevice */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;  /* 0 */
+    CARD8	status;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
     } xChangePointerDeviceReply;
 
 /*********************************************************
@@ -546,30 +553,30 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_GrabDevice */
-    CARD16 	length B16;
-    Window 	grabWindow B32;
-    Time 	time B32;
+    CARD8	ReqType;        /* always X_GrabDevice */
+    CARD16	length B16;
+    Window	grabWindow B32;
+    Time	time B32;
     CARD16	event_count B16;
     CARD8	this_device_mode;
     CARD8	other_devices_mode;
-    BOOL 	ownerEvents;
-    CARD8 	deviceid;
-    CARD16 	pad01 B16;
+    BOOL	ownerEvents;
+    CARD8	deviceid;
+    CARD16	pad01 B16;
 } xGrabDeviceReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;        /* always X_GrabDevice  	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;  /* 0 */
-    CARD8 	status;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;        /* always X_GrabDevice	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;  /* 0 */
+    CARD8	status;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
     } xGrabDeviceReply;
 
 /*********************************************************
@@ -580,10 +587,10 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_UnGrabDevice 	*/
-    CARD16 	length B16;
-    Time 	time B32;
-    CARD8 	deviceid;
+    CARD8	ReqType;        /* always X_UnGrabDevice	*/
+    CARD16	length B16;
+    Time	time B32;
+    CARD8	deviceid;
     BYTE	pad1, pad2, pad3;
 } xUngrabDeviceReq;
 
@@ -595,17 +602,17 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_GrabDeviceKey 	*/
-    CARD16 	length B16;
-    Window 	grabWindow B32;
+    CARD8	ReqType;        /* always X_GrabDeviceKey	*/
+    CARD16	length B16;
+    Window	grabWindow B32;
     CARD16	event_count B16;
-    CARD16 	modifiers B16;
+    CARD16	modifiers B16;
     CARD8	modifier_device;
     CARD8	grabbed_device;
     CARD8	key;
-    BYTE 	this_device_mode;  
-    BYTE 	other_devices_mode;  
-    BOOL 	ownerEvents;
+    BYTE	this_device_mode;
+    BYTE	other_devices_mode;
+    BOOL	ownerEvents;
     BYTE	pad1, pad2;
 } xGrabDeviceKeyReq;
 
@@ -617,11 +624,11 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_UngrabDeviceKey 	*/
-    CARD16 	length B16;
-    Window 	grabWindow B32;
+    CARD8	ReqType;        /* always X_UngrabDeviceKey	*/
+    CARD16	length B16;
+    Window	grabWindow B32;
     CARD16	modifiers B16;
-    CARD8 	modifier_device;
+    CARD8	modifier_device;
     CARD8	key;
     CARD8	grabbed_device;
     BYTE	pad1, pad2, pad3;
@@ -635,17 +642,17 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_GrabDeviceButton 	*/
-    CARD16 	length B16;
-    Window 	grabWindow B32;
+    CARD8	ReqType;        /* always X_GrabDeviceButton	*/
+    CARD16	length B16;
+    Window	grabWindow B32;
     CARD8	grabbed_device;
     CARD8	modifier_device;
-    CARD16 	event_count B16;
-    CARD16 	modifiers B16;
-    BYTE 	this_device_mode;  
-    BYTE 	other_devices_mode;  
-    CARD8 	button;
-    BOOL 	ownerEvents;
+    CARD16	event_count B16;
+    CARD16	modifiers B16;
+    BYTE	this_device_mode;
+    BYTE	other_devices_mode;
+    CARD8	button;
+    BOOL	ownerEvents;
     BYTE	pad1, pad2;
 } xGrabDeviceButtonReq;
 
@@ -657,13 +664,13 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_UngrabDeviceButton 	*/
-    CARD16 	length B16;
-    Window 	grabWindow B32;
-    CARD16 	modifiers B16;
-    CARD8 	modifier_device;
-    CARD8 	button;
-    CARD8 	grabbed_device;
+    CARD8	ReqType;        /* always X_UngrabDeviceButton	*/
+    CARD16	length B16;
+    Window	grabWindow B32;
+    CARD16	modifiers B16;
+    CARD8	modifier_device;
+    CARD8	button;
+    CARD8	grabbed_device;
     BYTE	pad1, pad2, pad3;
 } xUngrabDeviceButtonReq;
 
@@ -675,11 +682,11 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* always X_AllowDeviceEvents 	*/
-    CARD16 	length B16;
-    Time 	time B32;
+    CARD8	ReqType;        /* always X_AllowDeviceEvents	*/
+    CARD16	length B16;
+    Time	time B32;
     CARD8	mode;
-    CARD8 	deviceid;
+    CARD8	deviceid;
     BYTE	pad1, pad2;
 } xAllowDeviceEventsReq;
 
@@ -690,25 +697,25 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;        /* input extension major code   */
-    CARD8 	ReqType;        /* always X_GetDeviceFocus 	*/
-    CARD16 	length B16;
-    CARD8 	deviceid;
-    BYTE 	pad1, pad2, pad3;
+    CARD8	reqType;        /* input extension major code   */
+    CARD8	ReqType;        /* always X_GetDeviceFocus	*/
+    CARD16	length B16;
+    CARD8	deviceid;
+    BYTE	pad1, pad2, pad3;
 } xGetDeviceFocusReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;        /* always X_GetDeviceFocus  	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD32 	focus B32;
-    Time 	time B32;
-    CARD8  	revertTo;
-    BYTE 	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;        /* always X_GetDeviceFocus	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD32	focus B32;
+    Time	time B32;
+    CARD8	revertTo;
+    BYTE	pad1, pad2, pad3;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
     } xGetDeviceFocusReply;
 
 /*********************************************************
@@ -718,14 +725,14 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;        /* input extension major code   */
-    CARD8 	ReqType;        /* always X_SetDeviceFocus 	*/
-    CARD16 	length B16;
-    Window 	focus B32;
-    Time   	time B32;
-    CARD8  	revertTo;
-    CARD8  	device;
-    CARD16 	pad01 B16;
+    CARD8	reqType;        /* input extension major code   */
+    CARD8	ReqType;        /* always X_SetDeviceFocus	*/
+    CARD16	length B16;
+    Window	focus B32;
+    Time	time B32;
+    CARD8	revertTo;
+    CARD8	device;
+    CARD16	pad01 B16;
 } xSetDeviceFocusReq;
 
 /*********************************************************
@@ -736,17 +743,17 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_GetFeedbackControl  	*/
-    CARD16 	length B16;
-    CARD8 	deviceid;
+    CARD8	ReqType;        /* X_GetFeedbackControl	*/
+    CARD16	length B16;
+    CARD8	deviceid;
     BYTE	pad1, pad2, pad3;
 } xGetFeedbackControlReq;
 
 typedef struct {
-    CARD8  	repType;  	/* X_Reply 			*/
-    CARD8  	RepType;        /* always X_GetFeedbackControl 	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;        /* always X_GetFeedbackControl	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
     CARD16	num_feedbacks B16;
     CARD16	pad01 B16;
     CARD32	pad02 B32;
@@ -758,12 +765,12 @@ typedef struct {
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class; 	/* feedback class		*/
+    CARD8	c_class;	/* feedback class		*/
 #else
-    CARD8  	class; 		/* feedback class		*/
+    CARD8	class;		/* feedback class		*/
 #endif
-    CARD8  	id; 		/* feedback id    		*/
-    CARD16  	length B16; 	/* feedback length		*/
+    CARD8	id;		/* feedback id		*/
+    CARD16	length B16;	/* feedback length		*/
 } xFeedbackState;
 
 typedef struct {
@@ -801,12 +808,12 @@ typedef struct {
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8   	id;
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD8	id;
+    CARD16	length B16;	/* feedback length		*/
     CARD32	resolution B32;
     INT32	min_value B32;
     INT32	max_value B32;
@@ -814,24 +821,24 @@ typedef struct {
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8   	id;
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD8	id;
+    CARD16	length B16;	/* feedback length		*/
     CARD16	max_symbols B16;
     CARD16	num_syms_supported B16;
 } xStringFeedbackState;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
     CARD8	id;
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD16	length B16;	/* feedback length		*/
     CARD8	percent;
     BYTE	pad1, pad2, pad3;
     CARD16	pitch B16;
@@ -840,12 +847,12 @@ typedef struct {
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
     CARD8	id;
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD16	length B16;	/* feedback length		*/
     CARD32	led_mask B32;
     CARD32	led_values B32;
 } xLedFeedbackState;
@@ -858,33 +865,33 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_ChangeFeedbackControl  	*/
-    CARD16 	length B16;
+    CARD8	ReqType;        /* X_ChangeFeedbackControl	*/
+    CARD16	length B16;
     CARD32	mask B32;
-    CARD8  	deviceid;
-    CARD8  	feedbackid;
+    CARD8	deviceid;
+    CARD8	feedbackid;
     BYTE	pad1, pad2;
 } xChangeFeedbackControlReq;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8  	id; 		/* feedback id      		*/
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD8	id;		/* feedback id		*/
+    CARD16	length B16;	/* feedback length		*/
 } xFeedbackCtl;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8  	id; 		/* feedback length  		*/
-    CARD16  	length B16; 	/* feedback length  		*/
-    KeyCode 	key; 
+    CARD8	id;		/* feedback length		*/
+    CARD16	length B16;	/* feedback length		*/
+    KeyCode	key;
     CARD8	auto_repeat_mode;
     INT8	click;
     INT8	percent;
@@ -896,13 +903,13 @@ typedef struct {
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8  	id; 		/* feedback id      		*/
-    CARD16  	length B16; 	/* feedback length  		*/
-    CARD8  	pad1,pad2;
+    CARD8	id;		/* feedback id		*/
+    CARD16	length B16;	/* feedback length		*/
+    CARD8	pad1,pad2;
     INT16	num B16;
     INT16	denom B16;
     INT16	thresh B16;
@@ -910,35 +917,35 @@ typedef struct {
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8  	id; 		/* feedback id      		*/
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD8	id;		/* feedback id		*/
+    CARD16	length B16;	/* feedback length		*/
     INT32	int_to_display B32;
 } xIntegerFeedbackCtl;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8  	id; 		/* feedback id      		*/
-    CARD16  	length B16; 	/* feedback length  		*/
-    CARD8  	pad1,pad2;
+    CARD8	id;		/* feedback id		*/
+    CARD16	length B16;	/* feedback length		*/
+    CARD8	pad1,pad2;
     CARD16	num_keysyms B16;
 } xStringFeedbackCtl;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8  	id; 		/* feedback id      		*/
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD8	id;		/* feedback id		*/
+    CARD16	length B16;	/* feedback length		*/
     INT8	percent;
     BYTE	pad1, pad2, pad3;
     INT16	pitch B16;
@@ -947,12 +954,12 @@ typedef struct {
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;  	/* feedback class id		*/
+    CARD8	c_class;	/* feedback class id		*/
 #else
-    CARD8  	class;  	/* feedback class id		*/
+    CARD8	class;		/* feedback class id		*/
 #endif
-    CARD8  	id; 		/* feedback id      		*/
-    CARD16  	length B16; 	/* feedback length  		*/
+    CARD8	id;		/* feedback id		*/
+    CARD16	length B16;	/* feedback length		*/
     CARD32	led_mask B32;
     CARD32	led_values B32;
 } xLedFeedbackCtl;
@@ -964,28 +971,28 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;        /* input extension major code   */
-    CARD8 	ReqType;     	/* always X_GetDeviceKeyMapping */
-    CARD16 	length B16;
-    CARD8   	deviceid;
-    KeyCode 	firstKeyCode; 
-    CARD8 	count;
+    CARD8	reqType;        /* input extension major code   */
+    CARD8	ReqType;	/* always X_GetDeviceKeyMapping */
+    CARD16	length B16;
+    CARD8	deviceid;
+    KeyCode	firstKeyCode;
+    CARD8	count;
     BYTE	pad1;
 } xGetDeviceKeyMappingReq;
 
 typedef struct {
-    CARD8  	repType;  	/* X_Reply 			*/
-    CARD8  	RepType;       	/* always X_GetDeviceKeyMapping */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8  	keySymsPerKeyCode;
-    CARD8  	pad0;
-    CARD16 	pad1 B16;
-    CARD32 	pad2 B32;
-    CARD32 	pad3 B32;
-    CARD32 	pad4 B32;
-    CARD32 	pad5 B32;
-    CARD32 	pad6 B32;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* always X_GetDeviceKeyMapping */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	keySymsPerKeyCode;
+    CARD8	pad0;
+    CARD16	pad1 B16;
+    CARD32	pad2 B32;
+    CARD32	pad3 B32;
+    CARD32	pad4 B32;
+    CARD32	pad5 B32;
+    CARD32	pad6 B32;
 } xGetDeviceKeyMappingReply;
 
 /*********************************************************
@@ -995,13 +1002,13 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;        /* input extension major code   */
-    CARD8 	ReqType;        /* always X_ChangeDeviceKeyMapping */
-    CARD16 	length B16;
-    CARD8   	deviceid;
-    KeyCode 	firstKeyCode;
-    CARD8 	keySymsPerKeyCode;
-    CARD8 	keyCodes;
+    CARD8	reqType;        /* input extension major code   */
+    CARD8	ReqType;        /* always X_ChangeDeviceKeyMapping */
+    CARD16	length B16;
+    CARD8	deviceid;
+    KeyCode	firstKeyCode;
+    CARD8	keySymsPerKeyCode;
+    CARD8	keyCodes;
 } xChangeDeviceKeyMappingReq;
 
 /*********************************************************
@@ -1011,26 +1018,26 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;        /* input extension major code   */
-    CARD8 	ReqType;        /* always X_GetDeviceModifierMapping */
-    CARD16 	length B16;
-    CARD8   	deviceid;
+    CARD8	reqType;        /* input extension major code   */
+    CARD8	ReqType;        /* always X_GetDeviceModifierMapping */
+    CARD16	length B16;
+    CARD8	deviceid;
     BYTE	pad1, pad2, pad3;
 } xGetDeviceModifierMappingReq;
 
 typedef struct {
-    CARD8  	repType;  	/* X_Reply */
-    CARD8  	RepType;        /* always X_GetDeviceModifierMapping */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8  	numKeyPerModifier;
-    CARD8  	pad0;
-    CARD16 	pad1 B16;
-    CARD32 	pad2 B32;
-    CARD32 	pad3 B32;
-    CARD32 	pad4 B32;
-    CARD32 	pad5 B32;
-    CARD32 	pad6 B32;
+    CARD8	repType;	/* X_Reply */
+    CARD8	RepType;        /* always X_GetDeviceModifierMapping */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	numKeyPerModifier;
+    CARD8	pad0;
+    CARD16	pad1 B16;
+    CARD32	pad2 B32;
+    CARD32	pad3 B32;
+    CARD32	pad4 B32;
+    CARD32	pad5 B32;
+    CARD32	pad6 B32;
 } xGetDeviceModifierMappingReply;
 
 /*********************************************************
@@ -1040,27 +1047,27 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;        /* input extension major code   */
-    CARD8 	ReqType;        /* always X_SetDeviceModifierMapping */
-    CARD16 	length B16;
-    CARD8   	deviceid;
-    CARD8   	numKeyPerModifier;
-    CARD16  	pad1 B16;
+    CARD8	reqType;        /* input extension major code   */
+    CARD8	ReqType;        /* always X_SetDeviceModifierMapping */
+    CARD16	length B16;
+    CARD8	deviceid;
+    CARD8	numKeyPerModifier;
+    CARD16	pad1 B16;
 } xSetDeviceModifierMappingReq;
 
 typedef struct {
-    CARD8  	repType;  	/* X_Reply */
-    CARD8  	RepType;        /* always X_SetDeviceModifierMapping */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8  	success;
-    CARD8  	pad0;
-    CARD16 	pad1 B16;
-    CARD32 	pad2 B32;
-    CARD32 	pad3 B32;
-    CARD32 	pad4 B32;
-    CARD32 	pad5 B32;
-    CARD32 	pad6 B32;
+    CARD8	repType;	/* X_Reply */
+    CARD8	RepType;        /* always X_SetDeviceModifierMapping */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	success;
+    CARD8	pad0;
+    CARD16	pad1 B16;
+    CARD32	pad2 B32;
+    CARD32	pad3 B32;
+    CARD32	pad4 B32;
+    CARD32	pad5 B32;
+    CARD32	pad6 B32;
 } xSetDeviceModifierMappingReply;
 
 /*********************************************************
@@ -1071,24 +1078,24 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_GetDeviceButtonMapping     */
-    CARD16 	length B16;
-    CARD8   	deviceid;
+    CARD8	ReqType;        /* X_GetDeviceButtonMapping     */
+    CARD16	length B16;
+    CARD8	deviceid;
     BYTE	pad1, pad2, pad3;
 } xGetDeviceButtonMappingReq;
 
 typedef struct {
-    CARD8  	repType;  	/* X_Reply */
-    CARD8  	RepType;        /* always X_GetDeviceButtonMapping */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	nElts;
+    CARD8	repType;	/* X_Reply */
+    CARD8	RepType;        /* always X_GetDeviceButtonMapping */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	nElts;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
 } xGetDeviceButtonMappingReply;
 
 /*********************************************************
@@ -1099,26 +1106,26 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;        /* X_SetDeviceButtonMapping     */
-    CARD16 	length B16;
-    CARD8   	deviceid;
-    CARD8   	map_length;
+    CARD8	ReqType;        /* X_SetDeviceButtonMapping     */
+    CARD16	length B16;
+    CARD8	deviceid;
+    CARD8	map_length;
     BYTE	pad1, pad2;
 } xSetDeviceButtonMappingReq;
 
 typedef struct {
-    CARD8  	repType;  		/* X_Reply */
-    CARD8  	RepType;        	/* always X_SetDeviceButtonMapping */
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	status;
-    BYTE 	pad0;
-    CARD16 	pad1 B16;
-    CARD32 	pad2 B32;
-    CARD32 	pad3 B32;
-    CARD32 	pad4 B32;
-    CARD32 	pad5 B32;
-    CARD32 	pad6 B32;
+    CARD8	repType;		/* X_Reply */
+    CARD8	RepType;	/* always X_SetDeviceButtonMapping */
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	status;
+    BYTE	pad0;
+    CARD16	pad1 B16;
+    CARD32	pad2 B32;
+    CARD32	pad3 B32;
+    CARD32	pad4 B32;
+    CARD32	pad5 B32;
+    CARD32	pad6 B32;
 } xSetDeviceButtonMappingReply;
 
 /*********************************************************
@@ -1129,59 +1136,59 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;
-    CARD8 	ReqType;        /* always X_QueryDeviceState */
-    CARD16 	length B16;
-    CARD8   	deviceid;
+    CARD8	ReqType;        /* always X_QueryDeviceState */
+    CARD16	length B16;
+    CARD8	deviceid;
     BYTE	pad1, pad2, pad3;
 } xQueryDeviceStateReq;
 
 typedef struct {
-    CARD8  	repType;  		/* X_Reply */
-    CARD8  	RepType;        	/* always X_QueryDeviceState	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	num_classes;
-    BYTE 	pad0;
-    CARD16 	pad1 B16;
-    CARD32 	pad2 B32;
-    CARD32 	pad3 B32;
-    CARD32 	pad4 B32;
-    CARD32 	pad5 B32;
-    CARD32 	pad6 B32;
+    CARD8	repType;		/* X_Reply */
+    CARD8	RepType;	/* always X_QueryDeviceState	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	num_classes;
+    BYTE	pad0;
+    CARD16	pad1 B16;
+    CARD32	pad2 B32;
+    CARD32	pad3 B32;
+    CARD32	pad4 B32;
+    CARD32	pad5 B32;
+    CARD32	pad6 B32;
 } xQueryDeviceStateReply;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;
+    CARD8	c_class;
 #else
-    CARD8  	class;
+    CARD8	class;
 #endif
-    CARD8  	length;
+    CARD8	length;
     CARD8	num_keys;
-    BYTE   	pad1;
-    CARD8  	keys[32];
+    BYTE	pad1;
+    CARD8	keys[32];
 } xKeyState;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;
+    CARD8	c_class;
 #else
-    CARD8  	class;
+    CARD8	class;
 #endif
-    CARD8  	length;
+    CARD8	length;
     CARD8	num_buttons;
-    BYTE   	pad1;
-    CARD8  	buttons[32];
+    BYTE	pad1;
+    CARD8	buttons[32];
 } xButtonState;
 
 typedef struct {
 #if defined(__cplusplus) || defined(c_plusplus)
-    CARD8  	c_class;
+    CARD8	c_class;
 #else
-    CARD8  	class;
+    CARD8	class;
 #endif
-    CARD8  	length;
-    CARD8  	num_valuators;
+    CARD8	length;
+    CARD8	num_valuators;
     CARD8	mode;
 } xValuatorState;
 
@@ -1195,11 +1202,11 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;
-    CARD8 	ReqType;        /* always X_SendExtensionEvent */
-    CARD16 	length B16;
+    CARD8	ReqType;        /* always X_SendExtensionEvent */
+    CARD16	length B16;
     Window	destination B32;
-    CARD8   	deviceid;
-    BOOL   	propagate;
+    CARD8	deviceid;
+    BOOL	propagate;
     CARD16	count B16;
     CARD8	num_events;
     BYTE	pad1,pad2,pad3;
@@ -1213,9 +1220,9 @@ typedef struct {
 
 typedef struct {
     CARD8	reqType;
-    CARD8 	ReqType;        /* always X_DeviceBell */
-    CARD16 	length B16;
-    CARD8   	deviceid;
+    CARD8	ReqType;        /* always X_DeviceBell */
+    CARD16	length B16;
+    CARD8	deviceid;
     CARD8	feedbackid;
     CARD8	feedbackclass;
     INT8	percent;
@@ -1228,27 +1235,27 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;     	/* always X_SetDeviceValuators 	*/
-    CARD16 	length B16;
+    CARD8	reqType;	/* input extension major code	*/
+    CARD8	ReqType;	/* always X_SetDeviceValuators	*/
+    CARD16	length B16;
     CARD8       deviceid;
     CARD8       first_valuator;
     CARD8       num_valuators;
-    BYTE 	pad1;
+    BYTE	pad1;
 } xSetDeviceValuatorsReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;     	/* always X_SetDeviceValuators 	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	status;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* always X_SetDeviceValuators	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	status;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
 } xSetDeviceValuatorsReply;
 
 /*********************************************************
@@ -1258,37 +1265,37 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;     	/* always X_GetDeviceControl 	*/
-    CARD16 	length B16;
+    CARD8	reqType;	/* input extension major code	*/
+    CARD8	ReqType;	/* always X_GetDeviceControl	*/
+    CARD16	length B16;
     CARD16      control B16;
     CARD8       deviceid;
-    BYTE 	pad2;
+    BYTE	pad2;
 } xGetDeviceControlReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;     	/* always X_GetDeviceControl 	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	status;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* always X_GetDeviceControl	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	status;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
 } xGetDeviceControlReply;
 
 typedef struct {
-    CARD16  	control B16; 	/* control type     	 	*/
-    CARD16  	length B16; 	/* control length  		*/
+    CARD16	control B16;	/* control type		*/
+    CARD16	length B16;	/* control length		*/
 } xDeviceState;
 
 typedef struct {
-    CARD16  	control B16; 		/* control type     	 	*/
-    CARD16  	length B16; 		/* control length  		*/
-    CARD32  	num_valuators B32; 	/* number of valuators		*/
+    CARD16	control B16;		/* control type		*/
+    CARD16	length B16;		/* control length		*/
+    CARD32	num_valuators B32;	/* number of valuators		*/
 } xDeviceResolutionState;
 
 typedef struct {
@@ -1338,39 +1345,39 @@ typedef struct {
  */
 
 typedef struct {
-    CARD8 	reqType;	/* input extension major code	*/
-    CARD8 	ReqType;     	/* always X_ChangeDeviceControl */
-    CARD16 	length B16;
+    CARD8	reqType;	/* input extension major code	*/
+    CARD8	ReqType;	/* always X_ChangeDeviceControl */
+    CARD16	length B16;
     CARD16      control B16;
     CARD8       deviceid;
     BYTE        pad0;
 } xChangeDeviceControlReq;
 
 typedef struct {
-    CARD8 	repType;  	/* X_Reply 			*/
-    CARD8 	RepType;     	/* always X_ChangeDeviceControl	*/
-    CARD16 	sequenceNumber B16;
-    CARD32 	length B32;
-    CARD8 	status;
+    CARD8	repType;	/* X_Reply			*/
+    CARD8	RepType;	/* always X_ChangeDeviceControl	*/
+    CARD16	sequenceNumber B16;
+    CARD32	length B32;
+    CARD8	status;
     BYTE	pad1, pad2, pad3;
-    CARD32 	pad01 B32;
-    CARD32 	pad02 B32;
-    CARD32 	pad03 B32;
-    CARD32 	pad04 B32;
-    CARD32 	pad05 B32;
+    CARD32	pad01 B32;
+    CARD32	pad02 B32;
+    CARD32	pad03 B32;
+    CARD32	pad04 B32;
+    CARD32	pad05 B32;
 } xChangeDeviceControlReply;
 
 typedef struct {
-    CARD16  	control B16; 	/* control type     	 	*/
-    CARD16  	length B16; 	/* control length  		*/
+    CARD16	control B16;	/* control type		*/
+    CARD16	length B16;	/* control length		*/
 } xDeviceCtl;
 
 typedef struct {
-    CARD16  	control B16; 		/* control type     	 	*/
-    CARD16  	length B16; 		/* control length  		*/
-    CARD8  	first_valuator; 	/* first valuator to change     */
-    CARD8  	num_valuators; 		/* number of valuators to change*/
-    CARD8  	pad1,pad2;
+    CARD16	control B16;		/* control type		*/
+    CARD16	length B16;		/* control length		*/
+    CARD8	first_valuator;		/* first valuator to change     */
+    CARD8	num_valuators;		/* number of valuators to change*/
+    CARD8	pad1,pad2;
 } xDeviceResolutionCtl;
 
 typedef struct {
@@ -1413,6 +1420,111 @@ typedef struct {
     CARD16          pad1 B16;
 } xDeviceEnableCtl;
 
+/* XI 1.5 */
+
+/*********************************************************
+ *
+ * ListDeviceProperties.
+ *
+ */
+
+typedef struct {
+    CARD8       reqType;        /* input extension major opcode */
+    CARD8       ReqType;        /* always X_ListDeviceProperties */
+    CARD16      length B16;
+    CARD8       deviceid;
+    CARD8       pad0;
+    CARD16      pad1 B16;
+} xListDevicePropertiesReq;
+
+typedef struct {
+    CARD8       repType;        /* X_Reply                       */
+    CARD8       RepType;        /* always X_ListDeviceProperties */
+    CARD16      sequenceNumber B16;
+    CARD32      length B32;
+    CARD16      nAtoms B16;
+    CARD16      pad1 B16;
+    CARD32      pad2 B32;
+    CARD32      pad3 B32;
+    CARD32      pad4 B32;
+    CARD32      pad5 B32;
+    CARD32      pad6 B32;
+} xListDevicePropertiesReply;
+
+/*********************************************************
+ *
+ * ChangeDeviceProperty.
+ *
+ */
+
+typedef struct {
+    CARD8       reqType;        /* input extension major opcode */
+    CARD8       ReqType;        /* always X_ChangeDeviceProperty */
+    CARD16      length B16;
+    Atom        property B32;
+    Atom        type B32;
+    CARD8       deviceid;
+    CARD8       format;
+    CARD8       mode;
+    CARD8       pad;
+    CARD32      nUnits B32;
+} xChangeDevicePropertyReq;
+
+/*********************************************************
+ *
+ * DeleteDeviceProperty.
+ *
+ */
+
+typedef struct {
+    CARD8       reqType;        /* input extension major opcode */
+    CARD8       ReqType;        /* always X_DeleteDeviceProperty */
+    CARD16      length B16;
+    Atom        property B32;
+    CARD8       deviceid;
+    CARD8       pad0;
+    CARD16      pad1 B16;
+} xDeleteDevicePropertyReq;
+
+/*********************************************************
+ *
+ * GetDeviceProperty.
+ *
+ */
+
+typedef struct {
+    CARD8       reqType;        /* input extension major opcode */
+    CARD8       ReqType;        /* always X_GetDeviceProperty */
+    CARD16      length B16;
+    Atom        property B32;
+    Atom        type B32;
+    CARD32      longOffset B32;
+    CARD32      longLength B32;
+    CARD8       deviceid;
+#if defined(__cplusplus) || defined(c_plusplus)
+    BOOL        c_delete;
+#else
+    BOOL        delete;
+#endif
+    CARD16      pad;
+} xGetDevicePropertyReq;
+
+typedef struct {
+    CARD8       repType;        /* X_Reply                        */
+    CARD8       RepType;        /* always X_GetDeviceProperty   */
+    CARD16      sequenceNumber B16;
+    CARD32      length B32;
+    Atom        propertyType B32;
+    CARD32      bytesAfter B32;
+    CARD32      nItems B32;
+    CARD8       format;
+    CARD8       deviceid;
+    CARD16      pad1 B16;
+    CARD32      pad2 B32;
+    CARD32      pad3 B32;
+} xGetDevicePropertyReply;
+
+
 /**********************************************************
  *
  * Input extension events.
@@ -1423,18 +1535,18 @@ typedef struct {
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     CARD8       deviceid;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     KeyButMask  device_state B16;
     CARD8	num_valuators;
     CARD8       first_valuator;
-    INT32 	valuator0 B32;
-    INT32 	valuator1 B32;
-    INT32 	valuator2 B32;
-    INT32 	valuator3 B32;
-    INT32 	valuator4 B32;
-    INT32 	valuator5 B32;
+    INT32	valuator0 B32;
+    INT32	valuator1 B32;
+    INT32	valuator2 B32;
+    INT32	valuator3 B32;
+    INT32	valuator4 B32;
+    INT32	valuator5 B32;
     }  deviceValuator;
 
 /**********************************************************
@@ -1445,14 +1557,14 @@ typedef struct
  *	     DeviceButtonPress, DeviceButtonRelease,
  *	     ProximityIn, ProximityOut
  *	     DeviceMotionNotify,
- * 
+ *
  */
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        detail;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     Time        time B32;
     Window      root B32;
     Window      event B32;
@@ -1474,9 +1586,9 @@ typedef struct
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        detail;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     Time        time B32;
     Window      window B32;
     BYTE	mode;
@@ -1500,9 +1612,9 @@ typedef struct
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        deviceid;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     Time        time B32;
     CARD8	num_keys;
     CARD8	num_buttons;
@@ -1523,9 +1635,9 @@ typedef struct
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        deviceid;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     CARD8       keys[28];
     }  deviceKeyStateNotify;
 
@@ -1537,9 +1649,9 @@ typedef struct
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        deviceid;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     CARD8       buttons[28];
     }  deviceButtonStateNotify;
 
@@ -1552,9 +1664,9 @@ typedef struct
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        deviceid;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     CARD8       request;
     KeyCode     firstKeyCode;
     CARD8       count;
@@ -1575,9 +1687,9 @@ typedef struct
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        deviceid;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     Time        time B32;
     CARD8       request;
     BYTE        pad1, pad2, pad3;
@@ -1596,9 +1708,9 @@ typedef struct
 
 typedef struct
     {
-    BYTE 	type;
+    BYTE	type;
     BYTE        pad00;
-    CARD16 	sequenceNumber B16;
+    CARD16	sequenceNumber B16;
     Time        time B32;
     BYTE        devchange; /* Device{Added|Removed|Enabled|Disabled|ControlChanged} */
     BYTE        deviceid;
@@ -1610,8 +1722,35 @@ typedef struct
     CARD32	pad06 B32;
     }  devicePresenceNotify;
 
+
+/*********************************************************
+ * DevicePropertyNotifyEvent
+ *
+ * Sent whenever a device's property changes.
+ *
+ */
+
+typedef struct
+    {
+    BYTE        type;
+    BYTE        state;               /* NewValue or Deleted */
+    CARD16      sequenceNumber B16;
+    CARD32      time B32;
+    Atom        atom B32;            /* affected property */
+    CARD32      pad0 B32;
+    CARD32      pad1 B32;
+    CARD32      pad2 B32;
+    CARD32      pad3 B32;
+    CARD16      pad5 B16;
+    CARD8       pad4;
+    CARD8       deviceid;            /* id of device */
+    } devicePropertyNotify;
+
 #undef Window
 #undef Time
 #undef KeyCode
+#undef Mask
+#undef Atom
+#undef Cursor
 
 #endif

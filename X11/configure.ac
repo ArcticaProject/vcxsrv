@@ -1,9 +1,13 @@
 AC_PREREQ([2.57])
-AC_INIT([Xproto], [7.0.14], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
+AC_INIT([Xproto], [7.0.15], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
 AC_CONFIG_HEADER([do-not-use-config.h])
 AC_CONFIG_HEADER([Xfuncproto.h])
+
+# Require xorg-macros: XORG_CHANGELOG
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.2)
 
 AC_CANONICAL_HOST
 
@@ -197,6 +201,7 @@ if test "x$WIDEPROTO" = xno; then
 fi
 
 XORG_RELEASE_VERSION
+XORG_CHANGELOG
 
 AC_OUTPUT([Makefile
            Xpoll.h
