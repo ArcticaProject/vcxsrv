@@ -1,26 +1,12 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define to 1 if `struct sockaddr_in' has a `sin_len' member */
-/* #undef BSD44SOCKETS */
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
 
 /* Include compose table cache support */
 #define COMPOSECACHE 1
 
-/* Has getresuid() & getresgid() functions */
-/* #undef HASGETRESUID */
-
-/* Has issetugid() function */
-/* #undef HASSETUGID */
-
-/* Has shm*() functions */
-//MH#define HAS_SHM 1
-
-/* Define to 1 if you have the `authdes_create' function. */
-/* #undef HAVE_AUTHDES_CREATE */
-
-/* Define to 1 if you have the `authdes_seccreate' function. */
-/* #undef HAVE_AUTHDES_SECCREATE */
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
@@ -31,8 +17,6 @@
 /* Use dlopen to load shared libraries */
 #define HAVE_DLOPEN 1
 
-/* Define to 1 if you have the <dl.h> header file. */
-/* #undef HAVE_DL_H */
 
 /* Define to 1 if you have the `getpagesize' function. */
 #define HAVE_GETPAGESIZE 1
@@ -128,12 +112,6 @@
 /* Patch version of this package */
 #define PACKAGE_VERSION_PATCHLEVEL 0
 
-/* Define as the return type of signal handlers (`int' or `void'). */
-/* #undef RETSIGTYPE */
-
-/* Support Secure RPC ("SUN-DES-1") authentication for X11 clients */
-/* #undef SECURE_RPC */
-
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
@@ -156,10 +134,10 @@
 #define USE_DYNAMIC_XCURSOR 1
 
 /* use SSE2 compiler intrinsics */
-/* #undef USE_SSE2 */
+#undef USE_SSE2
 
 /* use VMX compiler intrinsics */
-/* #undef USE_VMX */
+#undef USE_VMX
 
 /* poll() function is available */
 #define USE_POLL 1
@@ -168,7 +146,7 @@
 #define USE_XCB 1
 
 /* Version number of package */
-#define VERSION "0.12.0"
+#define VERSION "0.15.18"
 
 /* Support bdf format bitmap font files */
 #define XFONT_BDFFORMAT 1

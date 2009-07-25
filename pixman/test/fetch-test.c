@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include "pixman.h"
 
-
 #define SIZE 1024
-
 
 pixman_indexed_t mono_pallete = {
     .rgba = { 0x00000000, 0x00ffffff },

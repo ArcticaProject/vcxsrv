@@ -3,7 +3,7 @@ features such as image compositing and trapezoid rasterization.
 
 Please submit bugs & patches to the libpixman bugzilla:
 
-       https://bugs.freedesktop.org/enter_bug.cgi?product=libpixman
+       https://bugs.freedesktop.org/enter_bug.cgi?product=pixman
 
 All questions regarding this software should be directed to either the 
 Xorg mailing list:

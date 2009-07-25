@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
@@ -51,8 +54,20 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
+/* enable TIMER_BEGIN/TIMER_END macros */
+#undef PIXMAN_TIMERS
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
+
+/* use ARM NEON compiler intrinsics */
+#undef USE_ARM_NEON
+
+/* use ARM SIMD compiler intrinsics */
+#undef USE_ARM_SIMD
+
+/* use GNU-style inline assembler */
+#undef USE_GCC_INLINE_ASM
 
 /* use MMX compiler intrinsics */
 #undef USE_MMX
@@ -66,9 +81,17 @@
 /* Version number of package */
 #undef VERSION
 
-/* Define to 1 if your processor stores words with the most significant byte
-   first (like Motorola and SPARC, unlike Intel and VAX). */
-#undef WORDS_BIGENDIAN
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */

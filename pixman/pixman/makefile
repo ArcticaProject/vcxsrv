@@ -1,27 +1,49 @@
 LIBRARY = libpixman-1
 DEFINES += PIXMAN_DISABLE_DEPRECATED
 
-CSRCS =	pixman-access.c pixman-access-accessors.c pixman-region16.c pixman-region32.c pixman-image.c			\
-	pixman-combine32.c pixman-combine64.c pixman-compose.c pixman-compose-accessors.c	\
-	pixman-pict.c pixman-source.c pixman-transformed.c pixman-transformed-accessors.c pixman-utils.c			\
-	pixman-edge.c pixman-edge-accessors.c pixman-trap.c pixman-compute-region.c pixman-timer.c \
-  pixman-mmx.c
+CSRCS =			\
+	pixman-access.c				\
+	pixman-access-accessors.c		\
+	pixman-cpu.c				\
+	pixman-gradient-walker.c		\
+	pixman-region16.c			\
+	pixman-region32.c			\
+	pixman-image.c				\
+	pixman-implementation.c			\
+	pixman-combine32.c			\
+	pixman-combine64.c			\
+	pixman-general.c			\
+	pixman.c				\
+	pixman-fast-path.c			\
+	pixman-solid-fill.c			\
+	pixman-conical-gradient.c		\
+	pixman-linear-gradient.c		\
+	pixman-radial-gradient.c		\
+	pixman-bits-image.c			\
+	pixman-utils.c				\
+	pixman-edge.c				\
+	pixman-edge-accessors.c			\
+	pixman-trap.c				\
+	pixman-timer.c				\
+	pixman-matrix.c
 
-#pixman-combine32.c : combine.inc pixman-combine32.h combine.pl
-#	$(PERL) $(srcdir)/combine.pl 8 < $(srcdir)/combine.inc > $@ || ($(RM) $@; exit 1)
-#pixman-combine32.h : combine.h.inc combine.pl
-#	$(PERL) $(srcdir)/combine.pl 8 < $(srcdir)/combine.h.inc > $@ || ($(RM) $@; exit 1)
+BUILT_SOURCES = pixman-combine32.h pixman-combine32.c pixman-combine64.h pixman-combine64.c
 
-#pixman-combine64.c : combine.inc pixman-combine64.h combine.pl
-#	$(PERL) $(srcdir)/combine.pl 16 < $(srcdir)/combine.inc > $@ || ($(RM) $@; exit 1)
-#pixman-combine64.h : combine.h.inc combine.pl
-#	$(PERL) $(srcdir)/combine.pl 16 < $(srcdir)/combine.h.inc > $@ || ($(RM) $@; exit 1)
+#pixman-combine32.c : pixman-combine.c.template pixman-combine32.h make-combine.pl
+#	$(PERL) $(srcdir)/make-combine.pl 8 < $(srcdir)/pixman-combine.c.template > $@ || ($(RM) $@; exit 1)
+#pixman-combine32.h : pixman-combine.h.template make-combine.pl
+#	$(PERL) $(srcdir)/make-combine.pl 8 < $(srcdir)/pixman-combine.h.template > $@ || ($(RM) $@; exit 1)
+
+#pixman-combine64.c : pixman-combine.c.template pixman-combine64.h make-combine.pl
+#	$(PERL) $(srcdir)/make-combine.pl 16 < $(srcdir)/pixman-combine.c.template > $@ || ($(RM) $@; exit 1)
+#pixman-combine64.h : pixman-combine.h.template make-combine.pl
+#	$(PERL) $(srcdir)/make-combine.pl 16 < $(srcdir)/pixman-combine.h.template > $@ || ($(RM) $@; exit 1)
 
 ## mmx code
 #if USE_MMX
 #noinst_LTLIBRARIES += libpixman-mmx.la
-#libpixman_mmx_la_SOURCES = \
-#	pixman-mmx.c \
+CSRCS += \
+	pixman-mmx.c
 #	pixman-mmx.h
 #libpixman_mmx_la_CFLAGS = $(DEP_CFLAGS) $(MMX_CFLAGS)
 #libpixman_mmx_la_LIBADD = $(DEP_LIBS)
