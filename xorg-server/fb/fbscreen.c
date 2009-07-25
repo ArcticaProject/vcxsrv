@@ -90,11 +90,7 @@ _fbGetWindowPixmap (WindowPtr pWindow)
 void
 _fbSetWindowPixmap (WindowPtr pWindow, PixmapPtr pPixmap)
 {
-#ifdef FB_NO_WINDOW_PIXMAPS
-    FatalError ("Attempted to set window pixmap without fb support\n");
-#else
     dixSetPrivate(&pWindow->devPrivates, fbGetWinPrivateKey(), pPixmap);
-#endif
 }
 
 Bool

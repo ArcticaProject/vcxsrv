@@ -59,6 +59,7 @@ SOFTWARE.
 #include "cursorstr.h"
 #include "dixfontstr.h"
 #include "opaque.h"
+#include "inputstr.h"
 #include "xace.h"
 
 typedef struct _GlyphShare {
@@ -116,14 +117,15 @@ FreeCursor(pointer value, XID cid)
     CursorPtr 	pCurs = (CursorPtr)value;
 
     ScreenPtr	pscr;
+    DeviceIntPtr pDev = NULL; /* unused anyway */
 
-    if ( --pCurs->refcnt > 0)
+    if ( --pCurs->refcnt != 0)
 	return(Success);
 
     for (nscr = 0; nscr < screenInfo.numScreens; nscr++)
     {
 	pscr = screenInfo.screens[nscr];
-	(void)( *pscr->UnrealizeCursor)( pscr, pCurs);
+        (void)( *pscr->UnrealizeCursor)(pDev, pscr, pCurs);
     }
     dixFreePrivates(pCurs->devPrivates);
     FreeCursorBits(pCurs->bits);
@@ -175,9 +177,10 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
     CursorPtr 	pCurs;
     int		rc, nscr;
     ScreenPtr 	pscr;
+    DeviceIntPtr pDev; 
 
     *ppCurs = NULL;
-    pCurs = (CursorPtr)xalloc(sizeof(CursorRec) + sizeof(CursorBits));
+    pCurs = (CursorPtr)xcalloc(sizeof(CursorRec) + sizeof(CursorBits), 1);
     if (!pCurs)
     {
 	xfree(psrcbits);
@@ -194,11 +197,11 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
     bits->height = cm->height;
     bits->xhot = cm->xhot;
     bits->yhot = cm->yhot;
+    pCurs->refcnt = 1;		
     bits->devPrivates = NULL;
     bits->refcnt = -1;
     CheckForEmptyMask(bits);
     pCurs->bits = bits;
-    pCurs->refcnt = 1;		
 #ifdef XFIXES
     pCurs->serialNumber = ++cursorSerial;
     pCurs->name = None;
@@ -227,22 +230,51 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
 	
     /*
      * realize the cursor for every screen
+     * Do not change the refcnt, this will be changed when ChangeToCursor
+     * actually changes the sprite.
      */
     for (nscr = 0; nscr < screenInfo.numScreens; nscr++)
     {
-	pscr = screenInfo.screens[nscr];
-        if (!( *pscr->RealizeCursor)( pscr, pCurs))
-	{
-	    while (--nscr >= 0)
-	    {
-		pscr = screenInfo.screens[nscr];
-		( *pscr->UnrealizeCursor)( pscr, pCurs);
-	    }
-	    dixFreePrivates(pCurs->devPrivates);
-	    FreeCursorBits(bits);
-	    xfree(pCurs);
-	    return BadAlloc;
-	}
+        pscr = screenInfo.screens[nscr];
+        for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+        {
+            if (DevHasCursor(pDev))
+            {
+                if (!( *pscr->RealizeCursor)(pDev, pscr, pCurs))
+                {
+                    /* Realize failed for device pDev on screen pscr.
+                     * We have to assume that for all devices before, realize
+                     * worked. We need to rollback all devices so far on the
+                     * current screen and then all devices on previous
+                     * screens.
+                     */
+                    DeviceIntPtr pDevIt = inputInfo.devices; /*dev iterator*/
+                    while(pDevIt && pDevIt != pDev)
+                    {
+                        if (DevHasCursor(pDevIt))
+                            ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
+                        pDevIt = pDevIt->next;
+                    }
+                    while (--nscr >= 0)
+                    {
+                        pscr = screenInfo.screens[nscr];
+                        /* now unrealize all devices on previous screens */
+                        pDevIt = inputInfo.devices;
+                        while (pDevIt)
+                        {
+                            if (DevHasCursor(pDevIt))
+                                ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
+                            pDevIt = pDevIt->next;
+                        }
+                        ( *pscr->UnrealizeCursor)(pDev, pscr, pCurs);
+                    }
+                    dixFreePrivates(pCurs->devPrivates);
+                    FreeCursorBits(bits);
+                    xfree(pCurs);
+                    return BadAlloc;
+                }
+            }
+        }
     }
     *ppCurs = pCurs;
     return rc;
@@ -264,6 +296,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
     int		nscr;
     ScreenPtr 	pscr;
     GlyphSharePtr pShare;
+    DeviceIntPtr pDev;
 
     rc = dixLookupResource((pointer *)&sourcefont, source, RT_FONT, client,
 			   DixUseAccess);
@@ -293,7 +326,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
     }
     if (pShare)
     {
-	pCurs = (CursorPtr)xalloc(sizeof(CursorRec));
+	pCurs = (CursorPtr)xcalloc(sizeof(CursorRec), 1);
 	if (!pCurs)
 	    return BadAlloc;
 	bits = pShare->bits;
@@ -335,7 +368,8 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 	}
 	if (sourcefont != maskfont)
 	{
-	    pCurs = (CursorPtr)xalloc(sizeof(CursorRec) + sizeof(CursorBits));
+	    pCurs = 
+                (CursorPtr)xcalloc(sizeof(CursorRec) + sizeof(CursorBits), 1);
 	    if (pCurs)
 		bits = (CursorBitsPtr)((char *)pCurs + sizeof(CursorRec));
 	    else
@@ -343,9 +377,9 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 	}
 	else
 	{
-	    pCurs = (CursorPtr)xalloc(sizeof(CursorRec));
+	    pCurs = (CursorPtr)xcalloc(sizeof(CursorRec), 1);
 	    if (pCurs)
-		bits = (CursorBitsPtr)xalloc(sizeof(CursorBits));
+		bits = (CursorBitsPtr)xcalloc(sizeof(CursorBits), 1);
 	    else
 		bits = (CursorBitsPtr)NULL;
 	}
@@ -386,6 +420,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 	    sharedGlyphs = pShare;
 	}
     }
+
     CheckForEmptyMask(bits);
     pCurs->bits = bits;
     pCurs->refcnt = 1;
@@ -420,19 +455,52 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
      */
     for (nscr = 0; nscr < screenInfo.numScreens; nscr++)
     {
-	pscr = screenInfo.screens[nscr];
-        if (!( *pscr->RealizeCursor)( pscr, pCurs))
-	{
-	    while (--nscr >= 0)
-	    {
-		pscr = screenInfo.screens[nscr];
-		( *pscr->UnrealizeCursor)( pscr, pCurs);
-	    }
-	    dixFreePrivates(pCurs->devPrivates);
-	    FreeCursorBits(pCurs->bits);
-	    xfree(pCurs);
-	    return BadAlloc;
-	}
+        pscr = screenInfo.screens[nscr];
+
+        for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+        {
+            if (DevHasCursor(pDev))
+            {
+                if (!( *pscr->RealizeCursor)(pDev, pscr, pCurs))
+                {
+                    /* Realize failed for device pDev on screen pscr.
+                     * We have to assume that for all devices before, realize
+                     * worked. We need to rollback all devices so far on the
+                     * current screen and then all devices on previous
+                     * screens.
+                     */
+                    DeviceIntPtr pDevIt = inputInfo.devices; /*dev iterator*/
+                    while(pDevIt && pDevIt != pDev)
+                    {
+                        if (DevHasCursor(pDevIt))
+                            ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
+                        pDevIt = pDevIt->next;
+                    }
+
+                    (*pscr->UnrealizeCursor)(inputInfo.pointer, pscr, pCurs);
+
+                    while (--nscr >= 0)
+                    {
+                        pscr = screenInfo.screens[nscr];
+                        /* now unrealize all devices on previous screens */
+                        ( *pscr->UnrealizeCursor)(inputInfo.pointer, pscr, pCurs);
+
+                        pDevIt = inputInfo.devices;
+                        while (pDevIt)
+                        {
+                            if (DevHasCursor(pDevIt))
+                                ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
+                            pDevIt = pDevIt->next;
+                        }
+                        ( *pscr->UnrealizeCursor)(pDev, pscr, pCurs);
+                    }
+                    dixFreePrivates(pCurs->devPrivates);
+                    FreeCursorBits(bits);
+                    xfree(pCurs);
+                    return BadAlloc;
+                }
+            }
+        }
     }
     *ppCurs = pCurs;
     return Success;

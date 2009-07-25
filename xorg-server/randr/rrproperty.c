@@ -59,7 +59,8 @@ DeliverPropertyEvent(WindowPtr pWin, void *value)
 
 static void RRDeliverPropertyEvent(ScreenPtr pScreen, xEvent *event)
 {
-    WalkTree(pScreen, DeliverPropertyEvent, event);
+    if (!(dispatchException & (DE_RESET | DE_TERMINATE)))
+	WalkTree(pScreen, DeliverPropertyEvent, event);
 }
 
 void
@@ -332,13 +333,21 @@ RRPropertyValuePtr
 RRGetOutputProperty (RROutputPtr output, Atom property, Bool pending)
 {
     RRPropertyPtr   prop = RRQueryOutputProperty (output, property);
+    rrScrPrivPtr    pScrPriv = rrGetScrPriv(output->pScreen);
 
     if (!prop)
 	return NULL;
     if (pending && prop->is_pending)
 	return &prop->pending;
-    else
+    else {
+#if RANDR_13_INTERFACE
+	/* If we can, try to update the property value first */
+	if (pScrPriv->rrOutputGetProperty)
+	    pScrPriv->rrOutputGetProperty(output->pScreen, output,
+					  prop->propertyName);
+#endif
 	return &prop->current;
+    }
 }
 
 int
@@ -453,7 +462,7 @@ ProcRRQueryOutputProperty (ClientPtr client)
     xRRQueryOutputPropertyReply	    rep;
     RROutputPtr			    output;
     RRPropertyPtr		    prop;
-    char *extra;
+    char *extra = NULL;
     
     REQUEST_SIZE_MATCH(xRRQueryOutputPropertyReq);
 
@@ -605,7 +614,7 @@ ProcRRGetOutputProperty (ClientPtr client)
     unsigned long		n, len, ind;
     RROutputPtr			output;
     xRRGetOutputPropertyReply	reply;
-    char			*extra;
+    char			*extra = NULL;
 
     REQUEST_SIZE_MATCH(xRRGetOutputPropertyReq);
     if (stuff->delete)
@@ -661,11 +670,10 @@ ProcRRGetOutputProperty (ClientPtr client)
     if (prop->immutable && stuff->delete)
 	return BadAccess;
 
-    if (stuff->pending && prop->is_pending)
-	prop_value = &prop->pending;
-    else
-	prop_value = &prop->current;
-    
+    prop_value = RRGetOutputProperty(output, stuff->property, stuff->pending);
+    if (!prop_value)
+	return BadAtom;
+
     /* If the request type and actual type don't match. Return the
     property information, but not the data. */
 

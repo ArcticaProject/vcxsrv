@@ -19,7 +19,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * STUFF FOR PRIVATES
  *****************************************************************/
 
-typedef void *DevPrivateKey;
+typedef int *DevPrivateKey;
 struct _Private;
 typedef struct _Private PrivateRec;
 

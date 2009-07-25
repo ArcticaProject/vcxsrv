@@ -54,7 +54,7 @@ is the relative path (with no \(lq..\(rq components) specified by that
 environment variable, and
 .I <hostname>
 is the machine's hostname as reported by
-.BR gethostname (__oslibmansuffix__).
+.BR gethostname (__libmansuffix__).
 .PP
 When the __xservername__ server is started by the \(lqroot\(rq user, the config file
 search locations are as follows:
@@ -67,7 +67,6 @@ search locations are as follows:
 .B $XORGCONFIG
 .IB /etc/X11/ $XORGCONFIG
 .IB __projectroot__/etc/X11/ $XORGCONFIG
-.BI $HOME /__xconfigfile__
 .I /etc/X11/__xconfigfile__\-4
 .I /etc/X11/__xconfigfile__
 .I /etc/__xconfigfile__
@@ -93,7 +92,7 @@ is the path specified by that environment variable (usually the home
 directory), and
 .I <hostname>
 is the machine's hostname as reported by
-.BR gethostname (__oslibmansuffix__).
+.BR gethostname (__libmansuffix__).
 .PP
 The
 .I __xconfigfile__
@@ -116,6 +115,7 @@ The section names are:
 .BR "Files          " "File pathnames"
 .BR "ServerFlags    " "Server flags"
 .BR "Module         " "Dynamic module loading"
+.BR "Extensions     " "Extension enabling"
 .BR "InputDevice    " "Input device description"
 .BR "Device         " "Graphics device description"
 .BR "VideoAdaptor   " "Xv video adaptor description"
@@ -314,7 +314,7 @@ where
 .I <identifier>
 is an alphanumeric identifier,
 .I [attribute]
-is an attribute wich will be passed to the underlying FPE and
+is an attribute which will be passed to the underlying FPE and
 .I <priority>
 is a number used to order the fontfile FPEs. Examples:
 .PP
@@ -464,11 +464,10 @@ Default: off.
 .TP 7
 .BI "Option \*qDontZap\*q  \*q" boolean \*q
 This disallows the use of the
-.B Ctrl+Alt+Backspace
-sequence.
-That sequence is normally used to terminate the __xservername__ server.
-When this option is enabled, that key sequence has no special meaning and
-is passed to clients.
+.B Terminate_Server
+XKB action (usually on Ctrl+Alt+Backspace, depending on XKB options).
+This action is normally used to terminate the __xservername__ server.
+When this option is enabled, the action has no effect.
 Default: off.
 .TP 7
 .BI "Option \*qDontZoom\*q  \*q" boolean \*q
@@ -490,16 +489,6 @@ Default: the VidMode extension is enabled.
 .BI "Option \*qAllowNonLocalXvidtune\*q  \*q" boolean \*q
 This allows the xvidtune client (and other clients that use the VidMode
 extension) to connect from another host.
-Default: off.
-.TP 7
-.BI "Option \*qDisableModInDev\*q  \*q" boolean \*q
-This disables the parts of the XFree86\-Misc extension that can be used to
-modify the input device settings dynamically.
-Default: that functionality is enabled.
-.TP 7
-.BI "Option \*qAllowNonLocalModInDev\*q  \*q" boolean \*q
-This allows a client to connect from another host and change keyboard
-and mouse settings in the running server.
 Default: off.
 .TP 7
 .BI "Option \*qAllowMouseOpenFail\*q  \*q" boolean \*q
@@ -626,31 +615,6 @@ Default: PM enabled on platforms that support it.
 enable or disable XINERAMA extension.
 Default is disabled.
 .TP 7
-.BI "Option \*qAllowDeactivateGrabs\*q \*q" boolean \*q
-This option enables the use of the
-.B Ctrl+Alt+Keypad\-Divide
-key sequence to deactivate any active keyboard and mouse grabs.
-Default: off.
-.TP 7
-.BI "Option \*qAllowClosedownGrabs\*q \*q" boolean \*q
-This option enables the use of the
-.B Ctrl+Alt+Keypad\-Multiply
-key sequence to kill clients with an active keyboard or mouse grab as well
-as killing any application that may have locked the server, normally using
-the
-.BR XGrabServer(__libmansuffix__)
-Xlib function.
-Default: off.
-.br
-Note that the options
-.B AllowDeactivateGrabs
-and
-.B AllowClosedownGrabs
-will allow users to remove the grab used by screen saver/locker programs.
-An API was written to such cases.
-If you enable this option, make sure your screen saver/locker is updated.
-Default: off.
-.TP 7
 .BI "Option \*qHandleSpecialKeys\*q \*q" when \*q
 This option controls when the server uses the builtin handler to process
 special key combinations (such as
@@ -698,7 +662,7 @@ the X server to load. Disabled by default.
 If enabled, don't add the standard keyboard and mouse drivers, if there are no
 input devices in the config file.  Enabled by default if AutoAddDevices and
 AutoEnableDevices is enabled, otherwise disabled.
-If AllowEmptyInput is on, devices using the kbd or mouse driver are ignored.
+If AllowEmptyInput is on, devices using the kbd, mouse or vmmouse driver are ignored.
 .TP 7
 .BI "Option \*qAutoAddDevices\*q \*q" boolean \*q
 If this option is disabled, then no devices will be added from HAL events.
@@ -709,6 +673,15 @@ If this option is disabled, then the devices will be added (and the
 DevicePresenceNotify event sent), but not enabled, thus leaving policy up
 to the client.
 Enabled by default.
+.TP 7
+.BI "Option \*qLog\*q \*q" string \*q
+This option controls whether the log is flushed and/or synced to disk after
+each message.
+Possible values are
+.B flush
+or
+.BR sync .
+Unset by default.
 .SH "MODULE SECTION"
 The
 .B Module
@@ -795,11 +768,38 @@ __projectroot__/lib/modules/extensions
 .fi
 .RE
 .PP
-The \(lqbitmap\(rq font module is loaded automatically.
+The \(lqextmod\(rq, \(lqdbe\(rq, \(lqglx\(rq, and \(lqdri\(rq extension
+modules are loaded automatically, unless disabled with \*qDisable\*q entries.
 It is recommended
 that at very least the \(lqextmod\(rq extension module be loaded.
 If it isn't, some commonly used server extensions (like the SHAPE
 extension) will not be available.
+.SH "EXTENSIONS SECTION"
+The
+.B Extensions
+section is used to specify which X11 protocol extensions should be enabled
+or disabled.
+The
+.B Extensions
+section is optional, as are all of the entries that may be specified in
+it.
+.PP
+Entries in this section are listed as Option statements with the name of
+the extension as the first argument, and a boolean value as the second.
+The extension name is case\-sensitive, and matches the form shown in the output
+of \*qXorg -extension ?\*q.
+.PP
+.RS 7
+Example: the MIT-SHM extension can be disabled with the following entry:
+.PP
+.RS 4
+.nf
+.B "Section \*qExtensions\*q"
+.B "    Option \*qMIT-SHM\*q \*qDisable\*q"
+.B "EndSection"
+.fi
+.RE
+.RE
 .SH "INPUTDEVICE SECTION"
 The config file may have multiple
 .B InputDevice
@@ -855,9 +855,12 @@ or
 command line options, or if it is selected implicitly as the core pointer
 or keyboard device in the absence of such explicit references.
 The most commonly used input drivers are
-.BR keyboard (__drivermansuffix__)
+.BR evdev (__drivermansuffix__)
+on Linux systems, and
+.BR kbd (__drivermansuffix__)
 and
-.BR mouse (__drivermansuffix__).
+.BR mouse (__drivermansuffix__)
+on other platforms.
 .PP
 In the absence of an explicitly specified core input device, the first
 .B InputDevice
@@ -868,7 +871,7 @@ marked as
 is used.
 If there is no match there, the first
 .B InputDevice
-that uses the \(lqmouse\(rq (or \(lqkeyboard\(rq or \(lqkbd\(rq) driver is used.
+that uses the \(lqmouse\(rq (or \(lqkbd\(rq) driver is used.
 The final fallback is to use built\-in default configurations.
 .PP
 .B InputDevice
@@ -1626,8 +1629,8 @@ Others are driver\-independent, and will eventually be described here.
 .\" XXX These should really be in an xaa man page.
 .TP 7
 .BI "Option \*qAccel\*q"
-Enables XAA (X Acceleration Architecture), a mechanism that makes video
-cards' 2D hardware acceleration available to the  __xservername__ server.
+Enables XAA (X Acceleration Architecture), a mechanism that makes video cards'
+2D hardware acceleration available to the  __xservername__ server.
 This option is on by default, but it may be necessary to turn it off if
 there are bugs in the driver.
 There are many options to disable specific accelerated operations, listed
@@ -2151,11 +2154,11 @@ General:
 .BR cvt (__appmansuffix__),
 .BR gtf (__appmansuffix__).
 .PP
-.B Not all modules or interfaces are available on all platforms.
+.B "Not all modules or interfaces are available on all platforms."
 .PP
 Display drivers:
 .BR apm (__drivermansuffix__),
-.\" .BR ati (__drivermansuffix__),
+.BR ati (__drivermansuffix__),
 .BR chips (__drivermansuffix__),
 .BR cirrus (__drivermansuffix__),
 .BR cyrix (__drivermansuffix__),
@@ -2164,17 +2167,20 @@ Display drivers:
 .BR glint (__drivermansuffix__),
 .BR i128 (__drivermansuffix__),
 .BR i740 (__drivermansuffix__),
-.BR i810 (__drivermansuffix__),
 .BR imstt (__drivermansuffix__),
+.BR intel (__drivermansuffix__),
 .BR mga (__drivermansuffix__),
 .BR neomagic (__drivermansuffix__),
 .BR nv (__drivermansuffix__),
+.BR openchrome (__drivermansuffix__),
 .BR r128 (__drivermansuffix__),
+.BR radeon (__drivermansuffix__),
 .BR rendition (__drivermansuffix__),
 .BR savage (__drivermansuffix__),
 .BR s3virge (__drivermansuffix__),
 .BR siliconmotion (__drivermansuffix__),
 .BR sis (__drivermansuffix__),
+.BR sisusb (__drivermansuffix__),
 .BR sunbw2 (__drivermansuffix__),
 .BR suncg14 (__drivermansuffix__),
 .BR suncg3 (__drivermansuffix__),
@@ -2183,37 +2189,43 @@ Display drivers:
 .BR sunleo (__drivermansuffix__),
 .BR suntcx (__drivermansuffix__),
 .BR tdfx (__drivermansuffix__),
-.BR tga (__drivermansuffix__),
+.\" .BR tga (__drivermansuffix__),
 .BR trident (__drivermansuffix__),
 .BR tseng (__drivermansuffix__),
 .BR vesa (__drivermansuffix__),
-.BR vga (__drivermansuffix__),
-.BR via (__drivermansuffix__),
-.BR vmware (__drivermansuffix__).
+.BR vmware (__drivermansuffix__),
+.BR voodoo (__drivermansuffix__),
+.BR wsfb (__drivermansuffix__),
+.BR xgi (__drivermansuffix__),
+.BR xgixp (__drivermansuffix__).
 .PP
 Input drivers:
-.\" .BR acecad (__drivermansuffix__),
-.\" .BR calcomp (__drivermansuffix__),
+.BR acecad (__drivermansuffix__),
+.BR calcomp (__drivermansuffix__),
 .BR citron (__drivermansuffix__),
 .BR dmc (__drivermansuffix__),
 .BR dynapro (__drivermansuffix__),
 .BR elographics (__drivermansuffix__),
+.BR evdev (__drivermansuffix__),
 .BR fpit (__drivermansuffix__),
 .BR js_x (__drivermansuffix__),
+.BR joystick (__drivermansuffix__),
 .BR kbd (__drivermansuffix__),
-.BR keyboard (__drivermansuffix__),
-.\" .BR magictouch (__drivermansuffix__),
+.BR magictouch (__drivermansuffix__),
 .BR microtouch (__drivermansuffix__),
-.BR mouse (__drivermansuffix__),
+.BR mousedrv (__drivermansuffix__),
 .BR mutouch (__drivermansuffix__),
 .BR palmax (__drivermansuffix__),
 .BR penmount (__drivermansuffix__),
+.BR synaptics (__drivermansuffix__),
 .BR tek4957 (__drivermansuffix__),
-.\" .BR ur98 (__drivermansuffix__),
+.BR ur98 (__drivermansuffix__),
+.BR vmmouse (__drivermansuffix__),
 .BR void (__drivermansuffix__),
 .BR wacom (__drivermansuffix__).
 .PP
 Other modules and interfaces:
+.BR exa (__drivermansuffix__),
 .BR fbdevhw (__drivermansuffix__),
 .\" .BR shadowfb (__drivermansuffix__),
 .BR v4l (__drivermansuffix__).

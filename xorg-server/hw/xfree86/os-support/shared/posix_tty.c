@@ -114,9 +114,6 @@ GetBaud (int baudrate)
 _X_EXPORT int
 xf86OpenSerial (pointer options)
 {
-#ifdef Lynx
-	struct sgttyb ms_sgtty;
-#endif
 	struct termios t;
 	int fd, i;
 	char *dev;
@@ -154,12 +151,6 @@ xf86OpenSerial (pointer options)
 		return (-1);
 #endif
 	}
-
-#ifdef Lynx
-	/* LynxOS does not assert DTR without this */
-	ioctl (fd, TIOCGETP, (char *) &ms_sgtty);
-	ioctl (fd, TIOCSDTR, (char *) &ms_sgtty);
-#endif
 
 	/* set up default port parameters */
 	SYSCALL (tcgetattr (fd, &t));
@@ -343,7 +334,7 @@ xf86SetSerial (int fd, pointer options)
 	if ((xf86SetBoolOption (options, "ClearDTR", FALSE)))
 	{
 #ifdef CLEARDTR_SUPPORT
-# if !defined(Lynx) || defined(TIOCMBIC)
+# if defined(TIOCMBIC)
 		val = TIOCM_DTR;
 		SYSCALL (ioctl(fd, TIOCMBIC, &val));
 # else

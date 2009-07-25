@@ -251,13 +251,12 @@ EvdevPtrEnable (KdPointerInfo *pi)
         close (fd);
         return BadMatch;
     }
-    ke = xalloc (sizeof (Kevdev));
+    ke = xcalloc (1, sizeof (Kevdev));
     if (!ke)
     {
         close (fd);
         return BadAlloc;
     }
-    memset (ke, '\0', sizeof (Kevdev));
     if (ISBITSET (ev, EV_KEY))
     {
         if (ioctl (fd, EVIOCGBIT (EV_KEY, sizeof (ke->keybits)),
@@ -440,12 +439,11 @@ EvdevKbdEnable (KdKeyboardInfo *ki)
         return BadMatch;
     }
 
-    ke = xalloc (sizeof (Kevdev));
+    ke = xcalloc (1, sizeof (Kevdev));
     if (!ke) {
         close (fd);
         return BadAlloc;
     }
-    memset (ke, '\0', sizeof (Kevdev));
 
     if (!KdRegisterFd (fd, EvdevKbdRead, ki)) {
         xfree (ke);

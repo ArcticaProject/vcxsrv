@@ -31,11 +31,11 @@
 #include <assert.h>
 #include "os.h"
 
-#ifdef NDEBUG
+#ifndef DEBUG
 /*we are not in debug mode*/
 #define EPHYR_LOG(...)
 #define EPHYR_LOG_ERROR(...)
-#endif /*NDEBUG*/
+#endif /*!DEBUG*/
 
 #define ERROR_LOG_LEVEL 3
 #define INFO_LOG_LEVEL 4

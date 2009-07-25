@@ -56,9 +56,11 @@
 static RESTYPE		CursorClientType;
 static RESTYPE		CursorHideCountType;
 static RESTYPE		CursorWindowType;
-static DevPrivateKey	CursorScreenPrivateKey = &CursorScreenPrivateKey;
 static CursorPtr	CursorCurrent;
 static CursorPtr        pInvisibleCursor = NULL;
+
+static int CursorScreenPrivateKeyIndex;
+static DevPrivateKey CursorScreenPrivateKey = &CursorScreenPrivateKeyIndex;
 
 static void deleteCursorHideCountsForScreen (ScreenPtr pScreen);
 
@@ -70,7 +72,7 @@ static void deleteCursorHideCountsForScreen (ScreenPtr pScreen);
 	return BadCursor; \
     } \
 }
-	
+
 /*
  * There is a global list of windows selecting for cursor events
  */
@@ -119,8 +121,12 @@ typedef struct _CursorScreen {
 #define Wrap(as,s,elt,func)	(((as)->elt = (s)->elt), (s)->elt = func)
 #define Unwrap(as,s,elt)	((s)->elt = (as)->elt)
 
+/* The cursor doesn't show up until the first XDefineCursor() */
+static Bool CursorVisible = FALSE;
+
 static Bool
-CursorDisplayCursor (ScreenPtr pScreen,
+CursorDisplayCursor (DeviceIntPtr pDev,
+                     ScreenPtr pScreen,
 		     CursorPtr pCursor)
 {
     CursorScreenPtr	cs = GetCursorScreen(pScreen);
@@ -128,10 +134,18 @@ CursorDisplayCursor (ScreenPtr pScreen,
 
     Unwrap (cs, pScreen, DisplayCursor);
 
-    if (cs->pCursorHideCounts != NULL) {
-	ret = (*pScreen->DisplayCursor) (pScreen, pInvisibleCursor);
+    /*
+     * Have to check ConnectionInfo to distinguish client requests from
+     * initial root window setup.  Not a great way to do it, I admit.
+     */
+    if (ConnectionInfo)
+	CursorVisible = TRUE;
+
+    if (cs->pCursorHideCounts != NULL || !CursorVisible) {
+        ret = ((*pScreen->RealizeCursor)(pDev, pScreen, pInvisibleCursor) &&
+	       (*pScreen->DisplayCursor) (pDev, pScreen, pInvisibleCursor));
     } else {
-	ret = (*pScreen->DisplayCursor) (pScreen, pCursor);
+	ret = (*pScreen->DisplayCursor) (pDev, pScreen, pCursor);
     }
 
     if (pCursor != CursorCurrent)
@@ -354,7 +368,7 @@ ProcXFixesGetCursorImage (ClientPtr client)
 		  pCursor, RT_NONE, NULL, DixReadAccess);
     if (rc != Success)
 	return rc;
-    GetSpritePosition (&x, &y);
+    GetSpritePosition (PickPointer(client), &x, &y);
     width = pCursor->bits->width;
     height = pCursor->bits->height;
     npixels = width * height;
@@ -506,7 +520,7 @@ ProcXFixesGetCursorImageAndName (ClientPtr client)
 		  pCursor, RT_NONE, NULL, DixReadAccess|DixGetAttrAccess);
     if (rc != Success)
 	return rc;
-    GetSpritePosition (&x, &y);
+    GetSpritePosition (PickPointer(client), &x, &y);
     width = pCursor->bits->width;
     height = pCursor->bits->height;
     npixels = width * height;
@@ -879,7 +893,7 @@ ProcXFixesHideCursor (ClientPtr client)
     ret = createCursorHideCount(client, pWin->drawable.pScreen);
 
     if (ret == Success) {
-        (void) CursorDisplayCursor(pWin->drawable.pScreen, CursorCurrent);
+        (void) CursorDisplayCursor(PickPointer(client), pWin->drawable.pScreen, CursorCurrent);
     }
 
     return ret;
@@ -973,7 +987,7 @@ CursorFreeHideCount (pointer data, XID id)
     ScreenPtr pScreen = pChc->pScreen;
 
     deleteCursorHideCount(pChc, pChc->pScreen);
-    (void) CursorDisplayCursor(pScreen, CursorCurrent);
+    (void) CursorDisplayCursor(inputInfo.pointer, pScreen, CursorCurrent);
 
     return 1;
 }
@@ -1031,6 +1045,9 @@ Bool
 XFixesCursorInit (void)
 {
     int	i;
+
+    if (party_like_its_1989)
+	CursorVisible = TRUE;
     
     for (i = 0; i < screenInfo.numScreens; i++)
     {

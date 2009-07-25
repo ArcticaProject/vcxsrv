@@ -39,7 +39,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "exevents.h"
 #include <xkbsrv.h>
 #include <ctype.h>
-#define EXTENSION_EVENT_BASE 64
 
 /***====================================================================***/
 
@@ -57,7 +56,7 @@ int             xiEvent;
     key= xE->u.u.detail;
     xiEvent= (xE->u.u.type & EXTENSION_EVENT_BASE);
     if (xkbDebugFlags&0x8) {
-	DebugF("XkbPKE: Key %d %s\n",key,(xE->u.u.type==KeyPress?"down":"up"));
+	DebugF("[xkb] XkbPKE: Key %d %s\n",key,(xE->u.u.type==KeyPress?"down":"up"));
     }
 
     if ( (xkbi->repeatKey==key) && (xE->u.u.type==KeyRelease) &&
@@ -160,7 +159,7 @@ int             xiEvent;
 		    }
 		    rg->currentDown= key;
 		}
-		else ErrorF("InternalError! Illegal radio group %d\n",ndx);
+		else ErrorF("[xkb] InternalError! Illegal radio group %d\n",ndx);
 		break;
 	    case XkbKB_Overlay1: case XkbKB_Overlay2:
 		{
@@ -180,7 +179,7 @@ int             xiEvent;
 		}
 		break;
 	    default:
-		ErrorF("unknown key behavior 0x%04x\n",behavior.type);
+		ErrorF("[xkb] unknown key behavior 0x%04x\n",behavior.type);
 		break;
 	}
     }
@@ -223,8 +222,8 @@ ProcessKeyboardEvent(xEvent *xE,DeviceIntPtr keybd,int count)
             AccessXFilterPressEvent(xE, keybd, count);
         else if (is_release)
             AccessXFilterReleaseEvent(xE, keybd, count);
-    }
-    else {
+
+    } else {
         XkbProcessKeyboardEvent(xE, keybd, count);
     }
     

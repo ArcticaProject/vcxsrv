@@ -84,7 +84,6 @@
 /* SYSV386 (SVR3, SVR4), including Solaris                                */
 /**************************************************************************/
 #if (defined(SYSV) || defined(SVR4)) && \
-    !defined(DGUX) && !defined(sgi) && \
     (defined(sun) || defined(__i386__))
 # ifdef SCO325
 #  ifndef _SVID3
@@ -99,16 +98,10 @@
 # include <termio.h>
 # include <sys/stat.h>
 # include <sys/types.h>
-# if defined(__SCO__) || defined(ISC)
+# if defined(__SCO__) 
 # include <sys/param.h>
 # endif
 
-# ifdef ISC
-#  define TIOCMSET (TIOC|26)	/* set all modem bits */
-#  define TIOCMBIS (TIOC|27)	/* bis modem bits */
-#  define TIOCMBIC (TIOC|28)	/* bic modem bits */
-#  define TIOCMGET (TIOC|29)	/* get all modem bits */
-# endif
 
 # include <errno.h>
 
@@ -204,90 +197,13 @@
 #  define POSIX_TTY
 # endif /* SVR4 */
 
-# ifdef ISC
-#  include <termios.h>
-#  define POSIX_TTY
-# endif
 
 # if defined(sun) && (defined (__i386__) || defined(__i386)) && defined (SVR4) && !defined(__SOL8__)
 #  define USE_VT_SYSREQ
 #  define VT_SYSREQ_DEFAULT TRUE
 # endif
 
-# ifdef SYSV
-#  if !defined(ISC) || defined(ISC202) || defined(ISC22)
-#   define NEED_STRERROR
-#  endif
-# endif
-
-#endif /* (SYSV || SVR4) && !DGUX */
-
-
-
-/**************************************************************************/
-/* DG/ux R4.20MU03 Intel AViion Machines                                  */
-/**************************************************************************/
-#if defined(DGUX) && defined(SVR4)
-#include <sys/ioctl.h>
-#include <signal.h>
-#include <ctype.h>
-#include <termios.h>      /* Use termios for BSD Flavor ttys */
-#include <sys/termios.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/param.h>
-#include <errno.h>
-#include <sys/sysi86.h>
-#include <unistd.h>
-#include <sys/proc.h>
-#include <sys/map.h>
-#include <sys/sysmacros.h>
-#include <sys/mman.h>       /* Memory handling */
-#include <sys/kd.h>       /* definitios for KDENABIO KDDISABIO needed for IOPL s */
-#include <sys/kbd.h>
-#include <fcntl.h>
-#include <time.h>
-#include <sys/stream.h>
-#include <sys/ptms.h>
-
-#include <sys/socket.h>
-#include <sys/utsname.h>
-#include <sys/stropts.h>
-#include <sys/sockio.h>
-
-
-#define POSIX_TTY
-
-#undef HAS_USL_VTS
-#undef USE_VT_SYSREQ
-#undef VT_ACKACQ
-
-#define LED_CAP KBD_LED_CAPS_LOCK
-#define LED_NUM KBD_LED_NUM_LOCK
-#define LED_SCR KBD_LED_SCROLL_LOCK
-
-#define KDGKBTYPE KBD_GET_LANGUAGE
-
-
-/* General keyboard types */
-# define KB_84          2
-# define KB_101         1  /* Because ioctl(dgkeybdFd,KBD_GET_LANGUAGE,&type) gives 1=US keyboard */
-# define KB_OTHER       3
-
-#define KDSETLED KBD_SET_LED
-#define KDGETLED KBD_GET_STATE
-#undef KDMKTONE
-#define KDMKTONE KBD_TONE_HIGH
-
-
-#undef DEV_MEM
-#define DEV_MEM "/dev/mem"
-#define CLEARDTR_SUPPORT
-
-#undef  VT_SYSREQ_DEFAULT
-#define VT_SYSREQ_DEFAULT FALSE        /* Make sure that we dont define any VTs since DG/ux has none */
-
-#endif /* DGUX && SVR4 */
+#endif /* (SYSV || SVR4) */
 
 /**************************************************************************/
 /* Linux or Glibc-based system                                            */
@@ -298,10 +214,6 @@
 # include <stdlib.h>
 # include <sys/types.h>
 # include <assert.h>
-
-#ifdef __GNU__ /* GNU/Hurd */
-# define USE_OSMOUSE
-#endif
 
 # ifdef __linux__
 #  include <termio.h>
@@ -331,46 +243,6 @@
 # define POSIX_TTY
 
 #endif /* __linux__ || __GLIBC__ */
-
-/**************************************************************************/
-/* LynxOS AT                                                              */
-/**************************************************************************/
-#if defined(Lynx)
- 
-# include <termio.h>
-# include <sys/ioctl.h>
-# include <param.h>
-# include <signal.h>
-# include <kd.h>
-# include <vt.h>
-# include <sys/stat.h>
-
-# include <errno.h>
-extern int errno;
- 
-/* smem_create et.al. to access physical memory */ 
-# include <smem.h>
- 
-/* keyboard types */
-# define KB_84		1
-# define KB_101 	2
-# define KB_OTHER	3
-
-/* atc drivers ignores argument to VT_RELDISP ioctl */
-# define VT_ACKACQ	2
-
-# include <termios.h>
-# define POSIX_TTY
-# define CLEARDTR_SUPPORT
-
-/* LynxOS 2.5.1 has these */
-# ifdef LED_NUMLOCK
-#  define LED_CAP	LED_CAPSLOCK
-#  define LED_NUM	LED_NUMLOCK
-#  define LED_SCR	LED_SCROLLOCK
-# endif
-
-#endif /* Lynx */
 
 /**************************************************************************/
 /* 386BSD and derivatives,  BSD/386                                       */
@@ -527,84 +399,8 @@ extern int errno;
 /* __FreeBSD_kernel__ || __NetBSD__ || __OpenBSD__ || __bsdi__ */
 
 /**************************************************************************/
-/* QNX4                                                                   */
-/**************************************************************************/
-/* This is the QNX code for Watcom 10.6 and QNX 4.x */
-#if defined(QNX4)
-#include <signal.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <termios.h>
-#include <ioctl.h>
-#include <sys/param.h>
-
-/* Warning: by default, the fd_set size is 32 in QNX!  */
-#define FD_SETSIZE 256
-#include <sys/select.h>
-
-  /* keyboard types */
-# define KB_84                   1
-# define KB_101                  2
-# define KB_OTHER                3
-
-  /* LEDs */
-#  define LED_CAP 0x04
-#  define LED_NUM 0x02
-#  define LED_SCR 0x01
-
-# define POSIX_TTY
-# define OSMOUSE_ONLY
-# define MOUSE_PROTOCOL_IN_KERNEL
-
-#define TIOCM_DTR       0x0001            /* data terminal ready */
-#define TIOCM_RTS       0x0002            /* request to send */
-#define TIOCM_CTS       0x1000            /* clear to send */
-#define TIOCM_DSR       0x2000            /* data set ready */
-#define TIOCM_RI        0x4000            /* ring */
-#define TIOCM_RNG       TIOCM_RI
-#define TIOCM_CD        0x8000            /* carrier detect */
-#define TIOCM_CAR       TIOCM_CD
-#define TIOCM_LE        0x0100            /* line enable */
-#define TIOCM_ST        0x0200            /* secondary transmit */
-#define TIOCM_SR        0x0400            /* secondary receive */
-
-#endif
-
-/**************************************************************************/
-/* QNX/Neutrino                                                           */
-/**************************************************************************/
-/* This is the Neutrino code for for NTO2.0 and GCC */
-#if defined(__QNXNTO__)
-#include <signal.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <termios.h>
-#include <ioctl.h>
-#include <sys/param.h>
-
-/* Warning: by default, the fd_set size is 32 in NTO!  */
-#define FD_SETSIZE 256
-#include <sys/select.h>
-
-  /* keyboard types */
-# define KB_84                   1
-# define KB_101                  2
-# define KB_OTHER                3
-
-# define POSIX_TTY
-
-#endif
-
-/**************************************************************************/
 /* IRIX                                                                   */
 /**************************************************************************/
-#if defined(sgi)
-
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#endif
 
 /**************************************************************************/
 /* Generic                                                                */
@@ -624,15 +420,14 @@ extern int errno;
 # define MAXHOSTNAMELEN 32
 #endif /* !MAXHOSTNAMELEN */
 
-#if !defined(X_NOT_POSIX)
-# if defined(_POSIX_SOURCE)
-#  include <limits.h>
-# else
-#  define _POSIX_SOURCE
-#  include <limits.h>
-#  undef _POSIX_SOURCE
-# endif /* _POSIX_SOURCE */
-#endif /* !X_NOT_POSIX */
+#if defined(_POSIX_SOURCE)
+# include <limits.h>
+#else
+# define _POSIX_SOURCE
+# include <limits.h>
+# undef _POSIX_SOURCE
+#endif /* _POSIX_SOURCE */
+
 #if !defined(PATH_MAX)
 # if defined(MAXPATHLEN)
 #  define PATH_MAX MAXPATHLEN
@@ -641,21 +436,6 @@ extern int errno;
 # endif /* MAXPATHLEN */
 #endif /* !PATH_MAX */
 
-#ifdef NEED_STRERROR
-# ifndef strerror
-extern char *sys_errlist[];
-extern int sys_nerr;
-#  define strerror(n) \
-     ((n) >= 0 && (n) < sys_nerr) ? sys_errlist[n] : "unknown error"
-# endif /* !strerror */
-#endif /* NEED_STRERROR */
-
-#if defined(ISC) || defined(Lynx)
-#define rint(x) RInt(x)
-double RInt(
-	double x
-);
-#endif
 
 #ifndef DEV_MEM
 #define DEV_MEM "/dev/mem"
@@ -663,12 +443,6 @@ double RInt(
 
 #ifndef VT_SYSREQ_DEFAULT
 #define VT_SYSREQ_DEFAULT FALSE
-#endif
-
-#ifdef OSMOUSE_ONLY
-# ifndef MOUSE_PROTOCOL_IN_KERNEL
-#  define MOUSE_PROTOCOL_IN_KERNEL
-# endif
 #endif
 
 #define SYSCALL(call) while(((call) == -1) && (errno == EINTR))

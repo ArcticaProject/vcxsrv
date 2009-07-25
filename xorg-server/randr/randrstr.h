@@ -2,6 +2,7 @@
  * Copyright © 2000 Compaq Computer Corporation
  * Copyright © 2002 Hewlett-Packard Company
  * Copyright © 2006 Intel Corporation
+ * Copyright © 2008 Red Hat, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -43,6 +44,7 @@
 #include "pixmapstr.h"
 #include "extnsionst.h"
 #include "servermd.h"
+#include "rrtransform.h"
 #include <X11/extensions/randr.h>
 #include <X11/extensions/randrproto.h>
 #ifdef RENDER
@@ -54,6 +56,10 @@
 /* required for ABI compatibility for now */
 #define RANDR_10_INTERFACE 1
 #define RANDR_12_INTERFACE 1
+#define RANDR_13_INTERFACE 1 /* requires RANDR_12_INTERFACE */
+#define RANDR_GET_CRTC_INTERFACE 1
+
+#define RANDR_INTERFACE_VERSION 0x0103
 
 typedef XID	RRMode;
 typedef XID	RROutput;
@@ -115,6 +121,12 @@ struct _rrCrtc {
     CARD16	    *gammaBlue;
     CARD16	    *gammaGreen;
     void	    *devPrivate;
+    Bool	    transforms;
+    RRTransformRec  client_pending_transform;
+    RRTransformRec  client_current_transform;
+    PictTransform   transform;
+    struct pict_f_transform f_transform;
+    struct pict_f_transform f_inverse;
 };
 
 struct _rrOutput {
@@ -175,6 +187,23 @@ typedef void (*RRModeDestroyProcPtr) (ScreenPtr	    pScreen,
 
 #endif
 
+#if RANDR_13_INTERFACE
+typedef Bool (*RROutputGetPropertyProcPtr) (ScreenPtr		pScreen,
+					    RROutputPtr		output,
+					    Atom		property);
+typedef Bool (*RRGetPanningProcPtr)    (ScreenPtr		pScrn,
+					RRCrtcPtr		crtc,
+					BoxPtr		totalArea,
+					BoxPtr		trackingArea,
+					INT16		*border);
+typedef Bool (*RRSetPanningProcPtr)    (ScreenPtr		pScrn,
+					RRCrtcPtr		crtc,
+					BoxPtr		totalArea,
+					BoxPtr		trackingArea,
+					INT16		*border);
+
+#endif /* RANDR_13_INTERFACE */
+
 typedef Bool (*RRGetInfoProcPtr) (ScreenPtr pScreen, Rotation *rotations);
 typedef Bool (*RRCloseScreenProcPtr) ( int i, ScreenPtr pscreen);
 
@@ -220,6 +249,11 @@ typedef struct _rrScrPriv {
     RROutputValidateModeProcPtr	rrOutputValidateMode;
     RRModeDestroyProcPtr	rrModeDestroy;
 #endif
+#if RANDR_13_INTERFACE
+    RROutputGetPropertyProcPtr	rrOutputGetProperty;
+    RRGetPanningProcPtr	rrGetPanning;
+    RRSetPanningProcPtr	rrSetPanning;
+#endif
     
     /*
      * Private part of the structure; not considered part of the ABI
@@ -239,6 +273,7 @@ typedef struct _rrScrPriv {
 
     int			    numOutputs;
     RROutputPtr		    *outputs;
+    RROutputPtr		    primaryOutput;
 
     int			    numCrtcs;
     RRCrtcPtr		    *crtcs;
@@ -368,6 +403,9 @@ int
 ProcRRGetScreenResources (ClientPtr client);
 
 int
+ProcRRGetScreenResourcesCurrent (ClientPtr client);
+
+int
 ProcRRSetScreenConfig (ClientPtr client);
 
 int
@@ -406,6 +444,11 @@ miRROutputSetProperty (ScreenPtr	    pScreen,
 		       RRPropertyValuePtr   value);
 
 Bool
+miRROutputGetProperty (ScreenPtr	    pScreen,
+		       RROutputPtr	    output,
+		       Atom		    property);
+
+Bool
 miRROutputValidateMode (ScreenPtr	    pScreen,
 			RROutputPtr	    output,
 			RRModePtr	    mode);
@@ -425,7 +468,7 @@ RRTellChanged (ScreenPtr pScreen);
  * Poll the driver for changed information
  */
 Bool
-RRGetInfo (ScreenPtr pScreen);
+RRGetInfo (ScreenPtr pScreen, Bool force_query);
 
 Bool RRInit (void);
 
@@ -506,6 +549,12 @@ void
 RRCrtcSetRotations (RRCrtcPtr crtc, Rotation rotations);
 
 /*
+ * Set whether transforms are allowed on a CRTC
+ */
+void
+RRCrtcSetTransformSupport (RRCrtcPtr crtc, Bool transforms);
+
+/*
  * Notify the extension that the Crtc has been reconfigured,
  * the driver calls this whenever it has updated the mode
  */
@@ -515,6 +564,7 @@ RRCrtcNotify (RRCrtcPtr	    crtc,
 	      int	    x,
 	      int	    y,
 	      Rotation	    rotation,
+	      RRTransformPtr transform,
 	      int	    numOutputs,
 	      RROutputPtr   *outputs);
 
@@ -569,10 +619,56 @@ void
 RRCrtcGetScanoutSize(RRCrtcPtr crtc, int *width, int *height);
 
 /*
+ * Compute the complete transformation matrix including
+ * client-specified transform, rotation/reflection values and the crtc 
+ * offset.
+ *
+ * Return TRUE if the resulting transform is not a simple translation.
+ */
+Bool
+RRTransformCompute (int			    x,
+		    int			    y,
+		    int			    width,
+		    int			    height,
+		    Rotation		    rotation,
+		    RRTransformPtr	    rr_transform,
+
+		    PictTransformPtr	    transform,
+		    struct pict_f_transform *f_transform,
+		    struct pict_f_transform *f_inverse);
+
+/*
+ * Return crtc transform
+ */
+RRTransformPtr
+RRCrtcGetTransform (RRCrtcPtr crtc);
+
+/*
+ * Check whether the pending and current transforms are the same
+ */
+Bool
+RRCrtcPendingTransform (RRCrtcPtr crtc);
+
+/*
  * Destroy a Crtc at shutdown
  */
 void
 RRCrtcDestroy (RRCrtcPtr crtc);
+
+
+/*
+ * Set the pending CRTC transformation
+ */
+
+int
+RRCrtcTransformSet (RRCrtcPtr		crtc,
+		    PictTransformPtr	transform,
+		    struct pict_f_transform *f_transform,
+		    struct pict_f_transform *f_inverse,
+		    char		*filter,
+		    int			filter_len,
+		    xFixed		*params,
+		    int			nparams);
 
 /*
  * Initialize crtc type
@@ -598,6 +694,18 @@ ProcRRGetCrtcGamma (ClientPtr client);
 
 int
 ProcRRSetCrtcGamma (ClientPtr client);
+
+int
+ProcRRSetCrtcTransform (ClientPtr client);
+
+int
+ProcRRGetCrtcTransform (ClientPtr client);
+
+int
+ProcRRGetPanning (ClientPtr client);
+
+int
+ProcRRSetPanning (ClientPtr client);
 
 /* rrdispatch.c */
 Bool
@@ -715,6 +823,12 @@ RROutputDestroy (RROutputPtr	output);
 
 int
 ProcRRGetOutputInfo (ClientPtr client);
+
+extern int
+ProcRRSetOutputPrimary (ClientPtr client);
+
+extern int
+ProcRRGetOutputPrimary (ClientPtr client);
 
 /*
  * Initialize output type

@@ -2,7 +2,6 @@
 # not installed on the system for end-users
 
 EXTRA_DIST = \
-	DebuggingHints \
 	Domain.note \
 	RAC.Notes \
 	Registry \

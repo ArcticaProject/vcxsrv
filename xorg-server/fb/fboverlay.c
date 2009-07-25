@@ -33,7 +33,8 @@
 #include "fboverlay.h"
 #include "shmint.h"
 
-static DevPrivateKey fbOverlayScreenPrivateKey = &fbOverlayScreenPrivateKey;
+static int fbOverlayScreenPrivateKeyIndex;
+static DevPrivateKey fbOverlayScreenPrivateKey = &fbOverlayScreenPrivateKeyIndex;
 
 DevPrivateKey fbOverlayGetScreenPrivateKey(void)
 {

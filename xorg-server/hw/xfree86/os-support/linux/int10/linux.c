@@ -1,6 +1,6 @@
 /*
  * linux specific part of the int10 module
- * Copyright 1999, 2000, 2001, 2002, 2003, 2004 Egbert Eich
+ * Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2008 Egbert Eich
  */
 #ifdef HAVE_XORG_CONFIG_H
 #include <xorg-config.h>
@@ -245,14 +245,15 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
      * 64K bytes at a time.
      */
     if (!videoBiosMapped) {
-	(void)memset((pointer)V_BIOS, 0, SYS_BIOS - V_BIOS);
+	memset((pointer)V_BIOS, 0, SYS_BIOS - V_BIOS);
 #ifdef DEBUG
 	ErrorF("Reading BIOS\n");
 #endif
 	for (cs = V_BIOS;  cs < SYS_BIOS;  cs += V_BIOS_SIZE)
 	    if (xf86ReadBIOS(cs, 0, (pointer)cs, V_BIOS_SIZE) < V_BIOS_SIZE)
 		xf86DrvMsg(screen, X_WARNING,
-			   "Unable to retrieve all of segment 0x%06lX.\n", cs);
+			   "Unable to retrieve all of segment 0x%06lX.\n",
+			   (long)cs);
 #ifdef DEBUG
 	ErrorF("done\n");
 #endif
@@ -292,10 +293,6 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
 	    pInt->BIOSseg = V_BIOS >> 4;
 	    break;
 	}
-	case BUS_ISA:
-	    if (!xf86int10GetBiosSegment(pInt, NULL))
-		goto error3;
-	    break;
 	default:
 	    goto error3;
 	}
@@ -357,7 +354,10 @@ MapCurrentInt10(xf86Int10InfoPtr pInt)
 		   "shmat(low_mem) error: %s\n",strerror(errno));
 	return FALSE;
     }
-    
+    if (mprotect((void*)0, V_RAM, PROT_READ|PROT_WRITE|PROT_EXEC) != 0)
+        xf86DrvMsg(pInt->scrnIndex, X_ERROR,
+		   "Cannot set EXEC bit on low memory: %s\n", strerror(errno));
+
     if (((linuxInt10Priv*)pInt->private)->highMem >= 0) {
 	addr = shmat(((linuxInt10Priv*)pInt->private)->highMem,
 		     (char*)HIGH_MEM, 0);
@@ -368,6 +368,11 @@ MapCurrentInt10(xf86Int10InfoPtr pInt)
 		       "shmget error: %s\n",strerror(errno));
 	    return FALSE;
 	}
+	if (mprotect((void*)HIGH_MEM, HIGH_MEM_SIZE,
+		     PROT_READ|PROT_WRITE|PROT_EXEC) != 0)
+	    xf86DrvMsg(pInt->scrnIndex, X_ERROR,
+		       "Cannot set EXEC bit on high memory: %s\n",
+		       strerror(errno));
     } else {
 	if ((fd = open(DEV_MEM, O_RDWR, 0)) >= 0) {
 	    if (mmap((void *)(V_BIOS), SYS_BIOS - V_BIOS,

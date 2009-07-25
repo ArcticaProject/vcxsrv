@@ -101,9 +101,6 @@
 #if GLYPHPADBYTES != 4
 #error "GLYPHPADBYTES must be 4"
 #endif
-#if GETLEFTBITS_ALIGNMENT != 1
-#error "GETLEFTBITS_ALIGNMENT must be 1"
-#endif
 /* whether to bother to include 24bpp support */
 #ifndef FBNO24BIT
 #define FB_24BIT
@@ -141,9 +138,8 @@ typedef unsigned __int64    FbBits;
       defined(ia64) || defined(__ia64__) || \
       defined(__sparc64__) || defined(_LP64) || \
       defined(__s390x__) || \
-      defined(amd64) || defined (__amd64__) || defined(__x86_64__) || \
-      defined (__powerpc64__) || \
-      (defined(sgi) && (_MIPS_SZLONG == 64))
+      defined(amd64) || defined (__amd64__) || \
+      defined (__powerpc64__)
 typedef unsigned long	    FbBits;
 #  else
 typedef unsigned long long  FbBits;
@@ -600,9 +596,7 @@ extern void fbSetBits (FbStip *bits, int stride, FbStip data);
 }
 
 extern DevPrivateKey fbGetGCPrivateKey(void);
-#ifndef FB_NO_WINDOW_PIXMAPS
 extern DevPrivateKey fbGetWinPrivateKey(void);
-#endif
 extern const GCOps	fbGCOps;
 extern const GCFuncs	fbGCFuncs;
 
@@ -673,12 +667,8 @@ typedef struct {
 #define fbGetRotatedPixmap(pGC)	((pGC)->pRotatedPixmap)
 
 #define fbGetScreenPixmap(s)	((PixmapPtr) (s)->devPrivate)
-#ifdef FB_NO_WINDOW_PIXMAPS
-#define fbGetWindowPixmap(d)	fbGetScreenPixmap(((DrawablePtr) (d))->pScreen)
-#else
 #define fbGetWindowPixmap(pWin)	((PixmapPtr)\
     dixLookupPrivate(&((WindowPtr)(pWin))->devPrivates, fbGetWinPrivateKey()))
-#endif
 
 #ifdef ROOTLESS
 #define __fbPixDrawableX(pPix)	((pPix)->drawable.x)

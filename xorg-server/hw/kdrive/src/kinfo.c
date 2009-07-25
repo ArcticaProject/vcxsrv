@@ -34,10 +34,9 @@ KdCardInfoAdd (KdCardFuncs  *funcs,
 {
     KdCardInfo	*ci, **prev;
 
-    ci = (KdCardInfo *) xalloc (sizeof (KdCardInfo));
+    ci = xcalloc (1, sizeof (KdCardInfo));
     if (!ci)
 	return 0;
-    bzero (ci, sizeof (KdCardInfo));
     for (prev = &kdCardInfo; *prev; prev = &(*prev)->next);
     *prev = ci;
     ci->cfuncs = funcs;
@@ -80,10 +79,9 @@ KdScreenInfoAdd (KdCardInfo *ci)
     KdScreenInfo    *si, **prev;
     int		    n;
 
-    si = (KdScreenInfo *) xalloc (sizeof (KdScreenInfo));
+    si = xcalloc (1, sizeof (KdScreenInfo));
     if (!si)
 	return 0;
-    bzero (si, sizeof (KdScreenInfo));
     for (prev = &ci->screenList, n = 0; *prev; prev = &(*prev)->next, n++);
     *prev = si;
     si->next = 0;

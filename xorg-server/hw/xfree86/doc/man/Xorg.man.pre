@@ -30,7 +30,7 @@ SPARC and PowerPC.  The most widely supported operating systems are the
 free/OpenSource UNIX-like systems such as Linux, FreeBSD, NetBSD,
 OpenBSD, and Solaris.  Commercial UNIX operating systems such as
 UnixWare are also supported.  Other supported operating systems include
-LynxOS, and GNU Hurd.  Darwin and Mac OS X are supported with the
+GNU Hurd.  Darwin and Mac OS X are supported with the
 XDarwin(__appmansuffix__) X server.  Win32/Cygwin is supported with the 
 XWin(__appmansuffix__) X server.
 .PP
@@ -133,20 +133,13 @@ specifies the Virtual Terminal device number which
 will use.  Without this option,
 .B __xservername__
 will pick the first available Virtual Terminal that it can locate.  This
-option applies only to platforms such as Linux, BSD, SVR3 and SVR4, that
-have virtual terminal support.
+option applies only to platforms that have virtual terminal support, such
+as Linux, BSD, SVR3, and SVR4.
 .TP
 .B \-allowMouseOpenFail
 Allow the server to start up even if the mouse device can't be opened
 or initialised.  This is equivalent to the
 .B AllowMouseOpenFail
-__xconfigfile__(__filemansuffix__) file option.
-.TP 8
-.B \-allowNonLocalModInDev
-Allow changes to keyboard and mouse settings from non-local clients.
-By default, connections from non-local clients are not allowed to do
-this.  This is equivalent to the
-.B AllowNonLocalModInDev
 __xconfigfile__(__filemansuffix__) file option.
 .TP 8
 .B \-allowNonLocalXvidtune
@@ -175,7 +168,14 @@ to set the color depth, and use
 .B \-fbbpp
 if you really need to force a non-default framebuffer (hardware) pixel
 format.
-.TP
+.TP 8
+.BI \-config " file"
+Read the server configuration from
+.IR file .
+This option will work for any file when the server is run as root (i.e,
+with real-uid 0), or for files relative to a directory in the config
+search path for all other users.
+.TP 8
 .B \-configure
 When this option is specified, the
 .B __xservername__
@@ -194,12 +194,6 @@ option, and is provided for compatibility with the native SCO X server.
 .BI \-depth " n"
 Sets the default color depth.  Legal values are 1, 4, 8, 15, 16, and
 24.  Not all drivers support all values.
-.TP 8
-.B \-disableModInDev
-Disable dynamic modification of input device settings.  This is equivalent
-to the
-.B DisableModInDev
-__xconfigfile__(__filemansuffix__) file option.
 .TP 8
 .B \-disableVidMode
 Disable the parts of the VidMode extension (used by the xvidtune
@@ -319,6 +313,10 @@ file verbosity level.  When the
 value is supplied, the log file verbosity level is set to that value.
 The default log file verbosity level is 3.
 .TP 8
+.B \-modalias
+Print a list of device ids each installed driver module claims to support,
+in a format similar to Linux modalias.
+.TP 8
 .BI \-modulepath " searchpath"
 Set the module search path to
 .IR searchpath .
@@ -399,6 +397,16 @@ in a future release, so the
 .B \-version
 option should be used instead.
 .TP 8
+.B \-showDefaultModulePath
+Print out the default module path the server was compiled with.
+.TP 8
+.B \-showDefaultLibPath
+Print out the path libraries should be installed to.
+.TP 8
+.B \-showopts
+For each driver module installed, print out the list of options and their
+argument types.
+.TP 8
 .BI \-weight " nnn"
 Set RGB weighting at 16 bpp.  The default is 565.  This applies only to
 those drivers which support 16 bpp.
@@ -416,19 +424,6 @@ verbosity level is 0.
 Print out the server version, patchlevel, release date, the operating
 system/platform it was built on, and whether it includes module loader
 support.
-.TP 8
-.B \-showDefaultModulePath
-Print out the default module path the server was compiled with.
-.TP 8
-.B \-showDefaultLibPath
-Print out the path libraries should be installed to.
-.TP 8
-.BI \-config " file"
-Read the server configuration from
-.IR file .
-This option will work for any file when the server is run as root (i.e,
-with real-uid 0), or for files relative to a directory in the config
-search path for all other users.
 .SH "KEYBOARD"
 .PP
 The
@@ -454,10 +449,11 @@ by
 are:
 .TP 8
 .B Ctrl+Alt+Backspace
-Immediately kills the server -- no questions asked.  This can be disabled
-with the
+Immediately kills the server -- no questions asked.  This is disabled by
+default.  It can be enabled with the -retro command line flag or by setting
+the
 .B DontZap
-__xconfigfile__(__filemansuffix__) file option.
+__xconfigfile__(__filemansuffix__) file option to a FALSE value.
 .TP 8
 .B Ctrl+Alt+Keypad-Plus
 Change video mode to next one specified in the configuration file.
@@ -471,22 +467,8 @@ This can be disabled with the
 .B DontZoom
 __xconfigfile__(__filemansuffix__) file option.
 .TP 8
-.B Ctrl+Alt+Keypad-Multiply
-Not treated specially by default.  If the
-.B AllowClosedownGrabs
-__xconfigfile__(__filemansuffix__) file option is specified, this key sequence
-kills clients with an active keyboard or mouse grab as well as killing any
-application that may have locked the server, normally using the
-XGrabServer(__libmansuffix__) Xlib function.
-.TP 8
-.B Ctrl+Alt+Keypad-Divide
-Not treated specially by default.  If the
-.B AllowDeactivateGrabs
-__xconfigfile__(__filemansuffix__) file option is specified, this key sequence
-deactivates any active keyboard and mouse grabs.
-.TP 8
 .B Ctrl+Alt+F1...F12
-For BSD and Linux systems with virtual terminal support, these keystroke
+For systems with virtual terminal support, these keystroke
 combinations are used to switch to virtual terminals 1 through 12,
 respectively.  This can be disabled with the
 .B DontVTSwitch
@@ -560,9 +542,6 @@ Libraries.
 .B __projectroot__/lib/X11/fonts/\(**
 Fonts.
 .TP 30
-.B __projectroot__/share/X11/rgb.txt
-Color names to RGB mapping.
-.TP 30
 .B __projectroot__/share/X11/XErrorDB
 Client error message database.
 .TP 30
@@ -577,7 +556,7 @@ Initial access control list for display
 .IR n .
 .SH "SEE ALSO"
 X(__miscmansuffix__), Xserver(__appmansuffix__), xdm(__appmansuffix__), xinit(__appmansuffix__),
-__xconfigfile__(__filemansuffix__), xorgconfig(__appmansuffix__), xorgcfg(__appmansuffix__), xvidtune(__appmansuffix__),
+__xconfigfile__(__filemansuffix__), xvidtune(__appmansuffix__),
 apm(__drivermansuffix__),
 ati(__drivermansuffix__),
 chips(__drivermansuffix__),
@@ -588,12 +567,13 @@ glide(__drivermansuffix__),
 glint(__drivermansuffix__),
 i128(__drivermansuffix__),
 i740(__drivermansuffix__),
-i810(__drivermansuffix__),
 imstt(__drivermansuffix__),
+intel(__drivermansuffix__),
 mga(__drivermansuffix__),
 neomagic(__drivermansuffix__),
 nsc(__drivermansuffix__),
 nv(__drivermansuffix__),
+openchrome (__drivermansuffix__),
 r128(__drivermansuffix__),
 rendition(__drivermansuffix__),
 s3virge(__drivermansuffix__),
@@ -612,7 +592,6 @@ trident(__drivermansuffix__),
 tseng(__drivermansuffix__),
 v4l(__drivermansuffix__),
 vesa(__drivermansuffix__),
-vga(__drivermansuffix__),
 vmware(__drivermansuffix__),
 .br
 Web site
@@ -620,7 +599,7 @@ Web site
 
 .SH AUTHORS
 __xservername__ has many contributors world wide.  The names of most of them
-can be found in the documentation, CHANGELOG files in the source tree,
+can be found in the documentation, ChangeLog files in the source tree,
 and in the actual source code.
 .PP
 __xservername__ was originally based on XFree86 4.4rc2.

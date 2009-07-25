@@ -47,7 +47,8 @@
 #include "vidmodeproc.h"
 #include "xf86cmap.h"
 
-static DevPrivateKey VidModeKey = NULL;
+static int VidModeKeyIndex;
+static DevPrivateKey VidModeKey;
 static int VidModeCount = 0;
 static Bool VidModeClose(int i, ScreenPtr pScreen);
 
@@ -72,7 +73,7 @@ VidModeExtensionInit(ScreenPtr pScreen)
 	return FALSE;
     }
 
-    VidModeKey = &VidModeKey;
+    VidModeKey = &VidModeKeyIndex;
 
     if (!dixSetPrivate(&pScreen->devPrivates, VidModeKey,
 		       xcalloc(sizeof(VidModeRec), 1))) {

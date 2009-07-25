@@ -91,11 +91,9 @@ ServerBitsFromGlyph(FontPtr pfont, unsigned ch, CursorMetricPtr cm, unsigned cha
 
     pScreen = screenInfo.screens[0];
     nby = BitmapBytePad(cm->width) * (long)cm->height;
-    pbits = (char *)xalloc(nby);
+    pbits = xcalloc(1, nby);
     if (!pbits)
 	return BadAlloc;
-    /* zeroing the (pad) bits seems to help some ddx cursor handling */
-    bzero(pbits, nby);
 
     ppix = (PixmapPtr)(*pScreen->CreatePixmap)(pScreen, cm->width,
 					       cm->height, 1,

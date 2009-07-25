@@ -68,15 +68,6 @@
 #include <signal.h>
 #include <errno.h>
 
-#if ((defined(sun) && !defined(SVR4)) || defined(macII)) && !defined(__GLIBC__)
-#ifndef strerror
-extern char *sys_errlist[];
-extern int sys_nerr;
-#define strerror(n) \
-	(((n) >= 0 && (n) < sys_nerr) ? sys_errlist[n] : "unknown error")
-#endif
-#endif
-
 #if defined(SVR4) || defined(__linux__) || defined(CSRG_BASED)
 #define HAS_SAVED_IDS_AND_SETEUID
 #endif

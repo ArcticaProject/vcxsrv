@@ -101,21 +101,6 @@ glxSetup(pointer module, pointer opts, int *errmaj, int *errmin)
 	GlxPushProvider(provider);
     }
 
-    switch (xf86Info.glxVisuals) {
-    case XF86_GlxVisualsMinimal:
-	GlxSetVisualConfig(GLX_MINIMAL_VISUALS);
-	xf86Msg(xf86Info.aiglxFrom, "Exporting only minimal set of GLX visuals\n");
-	break;
-    case XF86_GlxVisualsTypical:
-	GlxSetVisualConfig(GLX_TYPICAL_VISUALS);
-	xf86Msg(xf86Info.aiglxFrom, "Exporting typical set of GLX visuals\n");
-	break;
-    case XF86_GlxVisualsAll:
-	GlxSetVisualConfig(GLX_ALL_VISUALS);
-	xf86Msg(xf86Info.aiglxFrom, "Exporting all GLX visuals\n");
-	break;
-    }
-
     LoadExtension(&GLXExt, FALSE);
 
     return module;

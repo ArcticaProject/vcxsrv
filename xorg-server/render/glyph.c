@@ -26,8 +26,12 @@
 #include <dix-config.h>
 #endif
 
-#include <stddef.h>  /* buggy openssl/sha.h wants size_t */
-#include <openssl/sha.h>
+#ifdef HAVE_SHA1_IN_LIBMD /* Use libmd for SHA1 */
+# include <sha1.h>
+#else /* Use OpenSSL's libcrypto */
+# include <stddef.h>  /* buggy openssl/sha.h wants size_t */
+# include <openssl/sha.h>
+#endif
 
 #include "misc.h"
 #include "scrnintstr.h"
@@ -88,14 +92,6 @@ static GlyphHashRec	globalGlyphs[GlyphFormatNum];
 static void
 FreeGlyphPrivates (GlyphPtr glyph)
 {
-    ScreenPtr pScreen;
-    int i;
-
-    for (i = 0; i < screenInfo.numScreens; i++) {
-	pScreen = screenInfo.screens[i];
-	dixFreePrivates(*GetGlyphPrivatesForScreen(glyph, pScreen));
-    }
-
     dixFreePrivates(glyph->devPrivates);
     glyph->devPrivates = NULL;
 }
@@ -202,6 +198,14 @@ HashGlyph (xGlyphInfo    *gi,
 	   unsigned long size,
 	   unsigned char sha1[20])
 {
+#ifdef HAVE_SHA1_IN_LIBMD /* Use libmd for SHA1 */
+    SHA1_CTX ctx;
+
+    SHA1Init (&ctx);
+    SHA1Update (&ctx, gi, sizeof (xGlyphInfo));
+    SHA1Update (&ctx, bits, size);
+    SHA1Final (sha1, &ctx);
+#else /* Use OpenSSL's libcrypto */
     SHA_CTX ctx;
     int success;
 
@@ -220,6 +224,7 @@ HashGlyph (xGlyphInfo    *gi,
     success = SHA1_Final (sha1, &ctx);
     if (! success)
 	return BadAlloc;
+#endif
 
     return Success;
 }
@@ -436,10 +441,9 @@ bail:
 Bool
 AllocateGlyphHash (GlyphHashPtr hash, GlyphHashSetPtr hashSet)
 {
-    hash->table = (GlyphRefPtr) xalloc (hashSet->size * sizeof (GlyphRefRec));
+    hash->table = xcalloc (hashSet->size, sizeof (GlyphRefRec));
     if (!hash->table)
 	return FALSE;
-    memset (hash->table, 0, hashSet->size * sizeof (GlyphRefRec));
     hash->hashSet = hashSet;
     hash->tableEntries = 0;
     return TRUE;
@@ -508,10 +512,9 @@ AllocateGlyphSet (int fdepth, PictFormatPtr format)
     }
 
     size = sizeof (GlyphSetRec);
-    glyphSet = xalloc (size);
+    glyphSet = xcalloc (1, size);
     if (!glyphSet)
 	return FALSE;
-    bzero((char *)glyphSet, size);
 
     if (!AllocateGlyphHash (&glyphSet->hash, &glyphHashSets[0]))
     {

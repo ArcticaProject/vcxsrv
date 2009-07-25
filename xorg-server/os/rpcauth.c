@@ -42,6 +42,7 @@ from The Open Group.
 #include <X11/Xauth.h>
 #include "misc.h"
 #include "os.h"
+#include "osdep.h"
 #include "dixstruct.h"
 
 #include <rpc/rpc.h>
@@ -49,16 +50,6 @@ from The Open Group.
 #ifdef sun
 /* <rpc/auth.h> only includes this if _KERNEL is #defined... */
 extern bool_t xdr_opaque_auth(XDR *, struct opaque_auth *);
-#endif
-
-#if defined(DGUX)
-#include <time.h>
-#include <rpc/auth_des.h>
-#endif /* DGUX */
-
-#ifdef ultrix
-#include <time.h>
-#include <rpc/auth_des.h>
 #endif
 
 static enum auth_stat why;

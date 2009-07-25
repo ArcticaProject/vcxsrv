@@ -32,6 +32,8 @@
 #include "X11/keysym.h"
 #include "inputstr.h"
 
+#include <pthread.h>
+
 // Each key can generate 4 glyphs. They are, in order:
 // unshifted, shifted, modeswitch unshifted, modeswitch shifted
 #define GLYPHS_PER_KEY  4
@@ -45,9 +47,20 @@ typedef struct darwinKeyboardInfo_struct {
     unsigned char modifierKeycodes[32][2];
 } darwinKeyboardInfo;
 
-/* These functions need to be implemented by XQuartz, XDarwin, etc. */
-void DarwinKeyboardReload(DeviceIntPtr pDev);
+/* These functions need to be implemented by Xquartz, XDarwin, etc. */
 Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info);
-unsigned int QuartzSystemKeymapSeed(void);
+
+/* Provided for darwinEvents.c */
+extern darwinKeyboardInfo keyInfo;
+extern pthread_mutex_t keyInfo_mutex;
+void DarwinKeyboardReloadHandler(int screenNum, xEventPtr xe, DeviceIntPtr dev, int nevents);
+int DarwinModifierNXKeycodeToNXKey(unsigned char keycode, int *outSide);
+int DarwinModifierNXKeyToNXKeycode(int key, int side);
+int DarwinModifierNXKeyToNXMask(int key);
+int DarwinModifierNXMaskToNXKey(int mask);
+int DarwinModifierStringToNXMask(const char *string, int separatelr);
+
+/* Provided for darwin.c */
+void DarwinKeyboardInit(DeviceIntPtr pDev);
 
 #endif /* QUARTZ_KEYBOARD_H */

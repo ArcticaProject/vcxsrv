@@ -30,6 +30,9 @@
 #ifndef X_HASH_H
 #define X_HASH_H 1
 
+#include <stdlib.h>
+#include <assert.h>
+
 typedef struct x_hash_table_struct x_hash_table;
 
 typedef int (x_compare_fun) (const void *a, const void *b);
@@ -56,5 +59,33 @@ X_EXTERN void *X_PFX (hash_table_lookup) (x_hash_table *h,
 X_EXTERN void X_PFX (hash_table_foreach) (x_hash_table *h,
 					  x_hash_foreach_fun *fun,
 					  void *data);
+
+/* Conversion between unsigned int (e.g. xp_resource_id) and void pointer */
+
+/* Forward declarations */
+static __inline__ void *
+X_PFX (cvt_uint_to_vptr) (unsigned int val) __attribute__((always_inline));
+static __inline__ unsigned int
+X_PFX (cvt_vptr_to_uint) (void * val) __attribute__((always_inline));
+
+/* Implementations */
+static __inline__ void *
+X_PFX (cvt_uint_to_vptr) (unsigned int val)
+{
+	return (void*)((size_t)(val));
+}
+
+static __inline__ unsigned int
+X_PFX (cvt_vptr_to_uint) (void * val)
+{
+	size_t sv = (size_t)val;
+	unsigned int uv = (unsigned int)sv;
+	
+	/* If this assert fails, chances are val actually is a pointer,
+	   or there's been memory corruption */
+	assert(sv == uv);
+	
+	return uv;
+}
 
 #endif /* X_HASH_H */

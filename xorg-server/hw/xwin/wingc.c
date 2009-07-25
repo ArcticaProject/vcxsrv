@@ -119,7 +119,7 @@ const GCOps winGCOps = {
   miImageGlyphBlt,
   miPolyGlyphBlt,
 #endif
-  winPushPixels
+  miPushPixels,
 };
 
 

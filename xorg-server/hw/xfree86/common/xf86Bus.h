@@ -137,11 +137,8 @@ extern BusAccPtr xf86BusAccInfo;
 
 int xf86AllocateEntity(void);
 BusType StringToBusType(const char* busID, const char **retID);
-memType ChkConflict(resRange *rgp, resPtr res, xf86State state);
 Bool xf86IsSubsetOf(resRange range, resPtr list);
 resPtr xf86ExtractTypeFromList(resPtr list, unsigned long type);
 resPtr xf86FindIntersect(resRange Range, resPtr list);
-void RemoveOverlaps(resPtr target, resPtr list, Bool pow2Alignment,
-		    Bool useEstimated);
 
 #endif /* _XF86_BUS_H */

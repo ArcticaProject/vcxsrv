@@ -92,7 +92,4 @@ typedef struct {
     ScreenPtr  pScreen;
 } HotSpot;
 
-#ifdef XEVIE
-extern HotSpot xeviehot;
-#endif
 #endif /* CURSORSTRUCT_H */

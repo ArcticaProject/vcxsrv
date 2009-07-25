@@ -1,5 +1,6 @@
 /*
  * Copyright © 2006 Keith Packard
+ * Copyright © 2008 Red Hat, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -379,6 +380,9 @@ RROutputDestroyResource (pointer value, XID pid)
     {
 	rrScrPriv(pScreen);
 	int		i;
+
+	if (pScrPriv->primaryOutput == output)
+	    pScrPriv->primaryOutput = NULL;
     
 	for (i = 0; i < pScrPriv->numOutputs; i++)
 	{
@@ -426,7 +430,7 @@ RROutputInit (void)
 }
 
 #define OutputInfoExtra	(SIZEOF(xRRGetOutputInfoReply) - 32)
-				
+
 int
 ProcRRGetOutputInfo (ClientPtr client)
 {
@@ -531,5 +535,106 @@ ProcRRGetOutputInfo (ClientPtr client)
 	xfree (extra);
     }
     
+    return client->noClientException;
+}
+
+void
+RRSetPrimaryOutput(ScreenPtr pScreen, rrScrPrivPtr pScrPriv,
+		   RROutputPtr output)
+{
+    if (pScrPriv->primaryOutput == output)
+	return;
+
+    /* clear the old primary */
+    if (pScrPriv->primaryOutput) {
+	RROutputChanged(pScrPriv->primaryOutput, 0);
+	pScrPriv->primaryOutput = NULL;
+    }
+
+    /* set the new primary */
+    if (output) {
+	pScrPriv->primaryOutput = output;
+	RROutputChanged(output, 0);
+    }
+
+    pScrPriv->layoutChanged = TRUE;
+
+    RRTellChanged(pScreen);
+}
+
+int
+ProcRRSetOutputPrimary(ClientPtr client)
+{
+    REQUEST(xRRSetOutputPrimaryReq);
+    RROutputPtr output = NULL;
+    WindowPtr pWin;
+    rrScrPrivPtr pScrPriv;
+
+    REQUEST_SIZE_MATCH(xRRSetOutputPrimaryReq);
+
+    pWin = SecurityLookupIDByType(client, stuff->window, RT_WINDOW,
+				  DixReadAccess);
+
+    if (!pWin) {
+	client->errorValue = stuff->window;
+	return BadWindow;
+    }
+
+    if (stuff->output) {
+	output = LookupOutput(client, stuff->output, DixReadAccess);
+
+	if (!output) {
+	    client->errorValue = stuff->output;
+	    return RRErrorBase + BadRROutput;
+	}
+
+	if (output->pScreen != pWin->drawable.pScreen) {
+	    client->errorValue = stuff->window;
+	    return BadMatch;
+	}
+    }
+
+    pScrPriv = rrGetScrPriv(pWin->drawable.pScreen);
+    RRSetPrimaryOutput(pWin->drawable.pScreen, pScrPriv, output);
+
+    return client->noClientException;
+}
+
+int
+ProcRRGetOutputPrimary(ClientPtr client)
+{
+    REQUEST(xRRGetOutputPrimaryReq);
+    WindowPtr pWin;
+    rrScrPrivPtr pScrPriv;
+    xRRGetOutputPrimaryReply rep;
+    RROutputPtr primary = NULL;
+
+    REQUEST_SIZE_MATCH(xRRGetOutputPrimaryReq);
+
+    pWin = SecurityLookupIDByType(client, stuff->window, RT_WINDOW,
+				  DixReadAccess);
+
+    if (!pWin) {
+	client->errorValue = stuff->window;
+	return BadWindow;
+    }
+
+    pScrPriv = rrGetScrPriv(pWin->drawable.pScreen);
+    if (pScrPriv)
+	primary = pScrPriv->primaryOutput;
+
+    memset(&rep, 0, sizeof(rep));
+    rep.type = X_Reply;
+    rep.sequenceNumber = client->sequence;
+    rep.output = primary ? primary->id : None;
+
+    if (client->swapped) {
+	int n;
+	swaps(&rep.sequenceNumber, n);
+	swapl(&rep.output, n);
+    }
+
+    WriteToClient(client, sizeof(xRRGetOutputPrimaryReply), &rep);
+
     return client->noClientException;
 }

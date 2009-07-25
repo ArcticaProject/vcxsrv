@@ -63,6 +63,8 @@ SOFTWARE.
 #include "extnsionst.h"	/* extension entry   */
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
+#include <X11/extensions/geproto.h>
+#include "geext.h" /* extension interfaces for ge */
 
 #include "dixevents.h"
 #include "exevents.h"
@@ -70,6 +72,7 @@ SOFTWARE.
 #include "exglobals.h"
 #include "swaprep.h"
 #include "registry.h"
+#include "privates.h"
 
 /* modules local to Xi */
 #include "allowev.h"
@@ -109,6 +112,8 @@ SOFTWARE.
 #include "ungrdev.h"
 #include "ungrdevb.h"
 #include "ungrdevk.h"
+#include "xiproperty.h"
+
 
 static Mask lastExtEventMask = 1;
 int ExtEventIndex;
@@ -143,6 +148,98 @@ static struct dev_type
 CARD8 event_base[numInputClasses];
 XExtEventInfo EventInfo[32];
 
+/**
+ * Dispatch vector. Functions defined in here will be called when the matching
+ * request arrives.
+ */
+static int (*ProcIVector[])(ClientPtr) = {
+        NULL,                                   /*  0 */
+	ProcXGetExtensionVersion,               /*  1 */
+	ProcXListInputDevices,                  /*  2 */
+	ProcXOpenDevice,                        /*  3 */
+	ProcXCloseDevice,                       /*  4 */
+	ProcXSetDeviceMode,                     /*  5 */
+	ProcXSelectExtensionEvent,              /*  6 */
+	ProcXGetSelectedExtensionEvents,        /*  7 */
+	ProcXChangeDeviceDontPropagateList,     /*  8 */
+	ProcXGetDeviceDontPropagateList,        /*  9 */
+	ProcXGetDeviceMotionEvents,             /* 10 */
+	ProcXChangeKeyboardDevice,              /* 11 */
+	ProcXChangePointerDevice,               /* 12 */
+	ProcXGrabDevice,                        /* 13 */
+	ProcXUngrabDevice,                      /* 14 */
+	ProcXGrabDeviceKey,                     /* 15 */
+	ProcXUngrabDeviceKey,                   /* 16 */
+	ProcXGrabDeviceButton,                  /* 17 */
+	ProcXUngrabDeviceButton,                /* 18 */
+	ProcXAllowDeviceEvents,                 /* 19 */
+	ProcXGetDeviceFocus,                    /* 20 */
+	ProcXSetDeviceFocus,                    /* 21 */
+	ProcXGetFeedbackControl,                /* 22 */
+	ProcXChangeFeedbackControl,             /* 23 */
+	ProcXGetDeviceKeyMapping,               /* 24 */
+	ProcXChangeDeviceKeyMapping,            /* 25 */
+	ProcXGetDeviceModifierMapping,          /* 26 */
+	ProcXSetDeviceModifierMapping,          /* 27 */
+	ProcXGetDeviceButtonMapping,            /* 28 */
+	ProcXSetDeviceButtonMapping,            /* 29 */
+	ProcXQueryDeviceState,                  /* 30 */
+	ProcXSendExtensionEvent,                /* 31 */
+	ProcXDeviceBell,                        /* 32 */
+	ProcXSetDeviceValuators,                /* 33 */
+	ProcXGetDeviceControl,                  /* 34 */
+	ProcXChangeDeviceControl,               /* 35 */
+        /* XI 1.5 */
+        ProcXListDeviceProperties,              /* 36 */
+        ProcXChangeDeviceProperty,              /* 37 */
+        ProcXDeleteDeviceProperty,              /* 38 */
+        ProcXGetDeviceProperty                  /* 39 */
+};
+
+/* For swapped clients */
+static int (*SProcIVector[])(ClientPtr) = {
+        NULL,                                    /*  0 */
+	SProcXGetExtensionVersion,               /*  1 */
+	SProcXListInputDevices,                  /*  2 */
+	SProcXOpenDevice,                        /*  3 */
+	SProcXCloseDevice,                       /*  4 */
+	SProcXSetDeviceMode,                     /*  5 */
+	SProcXSelectExtensionEvent,              /*  6 */
+	SProcXGetSelectedExtensionEvents,        /*  7 */
+	SProcXChangeDeviceDontPropagateList,     /*  8 */
+	SProcXGetDeviceDontPropagateList,        /*  9 */
+	SProcXGetDeviceMotionEvents,             /* 10 */
+	SProcXChangeKeyboardDevice,              /* 11 */
+	SProcXChangePointerDevice,               /* 12 */
+	SProcXGrabDevice,                        /* 13 */
+	SProcXUngrabDevice,                      /* 14 */
+	SProcXGrabDeviceKey,                     /* 15 */
+	SProcXUngrabDeviceKey,                   /* 16 */
+	SProcXGrabDeviceButton,                  /* 17 */
+	SProcXUngrabDeviceButton,                /* 18 */
+	SProcXAllowDeviceEvents,                 /* 19 */
+	SProcXGetDeviceFocus,                    /* 20 */
+	SProcXSetDeviceFocus,                    /* 21 */
+	SProcXGetFeedbackControl,                /* 22 */
+	SProcXChangeFeedbackControl,             /* 23 */
+	SProcXGetDeviceKeyMapping,               /* 24 */
+	SProcXChangeDeviceKeyMapping,            /* 25 */
+	SProcXGetDeviceModifierMapping,          /* 26 */
+	SProcXSetDeviceModifierMapping,          /* 27 */
+	SProcXGetDeviceButtonMapping,            /* 28 */
+	SProcXSetDeviceButtonMapping,            /* 29 */
+	SProcXQueryDeviceState,                  /* 30 */
+	SProcXSendExtensionEvent,                /* 31 */
+	SProcXDeviceBell,                        /* 32 */
+	SProcXSetDeviceValuators,                /* 33 */
+	SProcXGetDeviceControl,                  /* 34 */
+	SProcXChangeDeviceControl,               /* 35 */
+        SProcXListDeviceProperties,              /* 36 */
+        SProcXChangeDeviceProperty,              /* 37 */
+        SProcXDeleteDeviceProperty,              /* 38 */
+        SProcXGetDeviceProperty                  /* 39 */
+};
+
 /*****************************************************************
  *
  * Globals referenced elsewhere in the server.
@@ -150,6 +247,7 @@ XExtEventInfo EventInfo[32];
  */
 
 int IReqCode = 0;
+int IEventBase = 0;
 int BadDevice = 0;
 static int BadEvent = 1;
 int BadMode = 2;
@@ -166,6 +264,7 @@ Mask DeviceOwnerGrabButtonMask;
 Mask DeviceButtonGrabMask;
 Mask DeviceButtonMotionMask;
 Mask DevicePresenceNotifyMask;
+Mask DevicePropertyNotifyMask;
 
 int DeviceValuator;
 int DeviceKeyPress;
@@ -183,6 +282,7 @@ int DeviceButtonStateNotify;
 int DeviceMappingNotify;
 int ChangeDeviceNotify;
 int DevicePresenceNotify;
+int DevicePropertyNotify;
 
 int RT_INPUTCLIENT;
 
@@ -194,7 +294,23 @@ int RT_INPUTCLIENT;
 
 extern XExtensionVersion AllExtensionVersions[];
 
-Mask PropagateMask[MAX_DEVICES];
+
+Mask PropagateMask[MAXDEVICES];
+
+/*****************************************************************
+ *
+ * Versioning support
+ *
+ */
+
+static int XIClientPrivateKeyIndex;
+DevPrivateKey XIClientPrivateKey = &XIClientPrivateKeyIndex;
+
+static XExtensionVersion thisversion = { XI_Present,
+    XI_Add_DeviceProperties_Major,
+    XI_Add_DeviceProperties_Minor
+};
+
 
 /*****************************************************************
  *
@@ -202,10 +318,19 @@ Mask PropagateMask[MAX_DEVICES];
  *
  */
 
-static XExtensionVersion thisversion = { XI_Present,
-    XI_Add_DevicePresenceNotify_Major,
-    XI_Add_DevicePresenceNotify_Minor
-};
+static void
+XIClientCallback(CallbackListPtr        *list,
+                 pointer                closure,
+                 pointer                data)
+{
+    NewClientInfoRec *clientinfo = (NewClientInfoRec*)data;
+    ClientPtr pClient = clientinfo->client;
+    XIClientPtr pXIClient;
+
+    pXIClient = dixLookupPrivate(&pClient->devPrivates, XIClientPrivateKey);
+    pXIClient->major_version = 0;
+    pXIClient->minor_version = 0;
+}
 
 /*************************************************************************
  *
@@ -218,83 +343,15 @@ static int
 ProcIDispatch(ClientPtr client)
 {
     REQUEST(xReq);
-    if (stuff->data == X_GetExtensionVersion)
-	return (ProcXGetExtensionVersion(client));
-    if (stuff->data == X_ListInputDevices)
-	return (ProcXListInputDevices(client));
-    else if (stuff->data == X_OpenDevice)
-	return (ProcXOpenDevice(client));
-    else if (stuff->data == X_CloseDevice)
-	return (ProcXCloseDevice(client));
-    else if (stuff->data == X_SetDeviceMode)
-	return (ProcXSetDeviceMode(client));
-    else if (stuff->data == X_SelectExtensionEvent)
-	return (ProcXSelectExtensionEvent(client));
-    else if (stuff->data == X_GetSelectedExtensionEvents)
-	return (ProcXGetSelectedExtensionEvents(client));
-    else if (stuff->data == X_ChangeDeviceDontPropagateList)
-	return (ProcXChangeDeviceDontPropagateList(client));
-    else if (stuff->data == X_GetDeviceDontPropagateList)
-	return (ProcXGetDeviceDontPropagateList(client));
-    else if (stuff->data == X_GetDeviceMotionEvents)
-	return (ProcXGetDeviceMotionEvents(client));
-    else if (stuff->data == X_ChangeKeyboardDevice)
-	return (ProcXChangeKeyboardDevice(client));
-    else if (stuff->data == X_ChangePointerDevice)
-	return (ProcXChangePointerDevice(client));
-    else if (stuff->data == X_GrabDevice)
-	return (ProcXGrabDevice(client));
-    else if (stuff->data == X_UngrabDevice)
-	return (ProcXUngrabDevice(client));
-    else if (stuff->data == X_GrabDeviceKey)
-	return (ProcXGrabDeviceKey(client));
-    else if (stuff->data == X_UngrabDeviceKey)
-	return (ProcXUngrabDeviceKey(client));
-    else if (stuff->data == X_GrabDeviceButton)
-	return (ProcXGrabDeviceButton(client));
-    else if (stuff->data == X_UngrabDeviceButton)
-	return (ProcXUngrabDeviceButton(client));
-    else if (stuff->data == X_AllowDeviceEvents)
-	return (ProcXAllowDeviceEvents(client));
-    else if (stuff->data == X_GetDeviceFocus)
-	return (ProcXGetDeviceFocus(client));
-    else if (stuff->data == X_SetDeviceFocus)
-	return (ProcXSetDeviceFocus(client));
-    else if (stuff->data == X_GetFeedbackControl)
-	return (ProcXGetFeedbackControl(client));
-    else if (stuff->data == X_ChangeFeedbackControl)
-	return (ProcXChangeFeedbackControl(client));
-    else if (stuff->data == X_GetDeviceKeyMapping)
-	return (ProcXGetDeviceKeyMapping(client));
-    else if (stuff->data == X_ChangeDeviceKeyMapping)
-	return (ProcXChangeDeviceKeyMapping(client));
-    else if (stuff->data == X_GetDeviceModifierMapping)
-	return (ProcXGetDeviceModifierMapping(client));
-    else if (stuff->data == X_SetDeviceModifierMapping)
-	return (ProcXSetDeviceModifierMapping(client));
-    else if (stuff->data == X_GetDeviceButtonMapping)
-	return (ProcXGetDeviceButtonMapping(client));
-    else if (stuff->data == X_SetDeviceButtonMapping)
-	return (ProcXSetDeviceButtonMapping(client));
-    else if (stuff->data == X_QueryDeviceState)
-	return (ProcXQueryDeviceState(client));
-    else if (stuff->data == X_SendExtensionEvent)
-	return (ProcXSendExtensionEvent(client));
-    else if (stuff->data == X_DeviceBell)
-	return (ProcXDeviceBell(client));
-    else if (stuff->data == X_SetDeviceValuators)
-	return (ProcXSetDeviceValuators(client));
-    else if (stuff->data == X_GetDeviceControl)
-	return (ProcXGetDeviceControl(client));
-    else if (stuff->data == X_ChangeDeviceControl)
-	return (ProcXChangeDeviceControl(client));
+    if (stuff->data > IREQUESTS || !ProcIVector[stuff->data])
+        return BadRequest;
 
-    return (BadRequest);
+    return (*ProcIVector[stuff->data])(client);
 }
 
 /*******************************************************************************
  *
- * SProcXDispatch 
+ * SProcXDispatch
  *
  * Main swapped dispatch routine for requests to this extension.
  * This routine is used if server and client do not have the same byte ordering.
@@ -305,78 +362,10 @@ static int
 SProcIDispatch(ClientPtr client)
 {
     REQUEST(xReq);
-    if (stuff->data == X_GetExtensionVersion)
-	return (SProcXGetExtensionVersion(client));
-    if (stuff->data == X_ListInputDevices)
-	return (SProcXListInputDevices(client));
-    else if (stuff->data == X_OpenDevice)
-	return (SProcXOpenDevice(client));
-    else if (stuff->data == X_CloseDevice)
-	return (SProcXCloseDevice(client));
-    else if (stuff->data == X_SetDeviceMode)
-	return (SProcXSetDeviceMode(client));
-    else if (stuff->data == X_SelectExtensionEvent)
-	return (SProcXSelectExtensionEvent(client));
-    else if (stuff->data == X_GetSelectedExtensionEvents)
-	return (SProcXGetSelectedExtensionEvents(client));
-    else if (stuff->data == X_ChangeDeviceDontPropagateList)
-	return (SProcXChangeDeviceDontPropagateList(client));
-    else if (stuff->data == X_GetDeviceDontPropagateList)
-	return (SProcXGetDeviceDontPropagateList(client));
-    else if (stuff->data == X_GetDeviceMotionEvents)
-	return (SProcXGetDeviceMotionEvents(client));
-    else if (stuff->data == X_ChangeKeyboardDevice)
-	return (SProcXChangeKeyboardDevice(client));
-    else if (stuff->data == X_ChangePointerDevice)
-	return (SProcXChangePointerDevice(client));
-    else if (stuff->data == X_GrabDevice)
-	return (SProcXGrabDevice(client));
-    else if (stuff->data == X_UngrabDevice)
-	return (SProcXUngrabDevice(client));
-    else if (stuff->data == X_GrabDeviceKey)
-	return (SProcXGrabDeviceKey(client));
-    else if (stuff->data == X_UngrabDeviceKey)
-	return (SProcXUngrabDeviceKey(client));
-    else if (stuff->data == X_GrabDeviceButton)
-	return (SProcXGrabDeviceButton(client));
-    else if (stuff->data == X_UngrabDeviceButton)
-	return (SProcXUngrabDeviceButton(client));
-    else if (stuff->data == X_AllowDeviceEvents)
-	return (SProcXAllowDeviceEvents(client));
-    else if (stuff->data == X_GetDeviceFocus)
-	return (SProcXGetDeviceFocus(client));
-    else if (stuff->data == X_SetDeviceFocus)
-	return (SProcXSetDeviceFocus(client));
-    else if (stuff->data == X_GetFeedbackControl)
-	return (SProcXGetFeedbackControl(client));
-    else if (stuff->data == X_ChangeFeedbackControl)
-	return (SProcXChangeFeedbackControl(client));
-    else if (stuff->data == X_GetDeviceKeyMapping)
-	return (SProcXGetDeviceKeyMapping(client));
-    else if (stuff->data == X_ChangeDeviceKeyMapping)
-	return (SProcXChangeDeviceKeyMapping(client));
-    else if (stuff->data == X_GetDeviceModifierMapping)
-	return (SProcXGetDeviceModifierMapping(client));
-    else if (stuff->data == X_SetDeviceModifierMapping)
-	return (SProcXSetDeviceModifierMapping(client));
-    else if (stuff->data == X_GetDeviceButtonMapping)
-	return (SProcXGetDeviceButtonMapping(client));
-    else if (stuff->data == X_SetDeviceButtonMapping)
-	return (SProcXSetDeviceButtonMapping(client));
-    else if (stuff->data == X_QueryDeviceState)
-	return (SProcXQueryDeviceState(client));
-    else if (stuff->data == X_SendExtensionEvent)
-	return (SProcXSendExtensionEvent(client));
-    else if (stuff->data == X_DeviceBell)
-	return (SProcXDeviceBell(client));
-    else if (stuff->data == X_SetDeviceValuators)
-	return (SProcXSetDeviceValuators(client));
-    else if (stuff->data == X_GetDeviceControl)
-	return (SProcXGetDeviceControl(client));
-    else if (stuff->data == X_ChangeDeviceControl)
-	return (SProcXChangeDeviceControl(client));
+    if (stuff->data > IREQUESTS || !SProcIVector[stuff->data])
+        return BadRequest;
 
-    return (BadRequest);
+    return (*SProcIVector[stuff->data])(client);
 }
 
 /**********************************************************************
@@ -385,11 +374,6 @@ SProcIDispatch(ClientPtr client)
  * Swap any replies defined in this extension.
  *
  */
-
-/* FIXME: this would be more concise and readable in ANSI C */
-#define DISPATCH(code) \
-    if (rep->RepType == X_##code) \
-	SRepX##code (client, len, (x##code##Reply *) rep)
 
 static void
 SReplyIDispatch(ClientPtr client, int len, xGrabDeviceReply * rep)
@@ -445,6 +429,10 @@ SReplyIDispatch(ClientPtr client, int len, xGrabDeviceReply * rep)
     else if (rep->RepType == X_ChangeDeviceControl)
 	SRepXChangeDeviceControl(client, len,
 				 (xChangeDeviceControlReply *) rep);
+    else if (rep->RepType == X_ListDeviceProperties)
+        SRepXListDeviceProperties(client, len, (xListDevicePropertiesReply*)rep);
+    else if (rep->RepType == X_GetDeviceProperty)
+	SRepXGetDeviceProperty(client, len, (xGetDevicePropertyReply *) rep);
     else {
 	FatalError("XINPUT confused sending swapped reply");
     }
@@ -550,6 +538,17 @@ SDevicePresenceNotifyEvent (devicePresenceNotify *from, devicePresenceNotify *to
     swaps(&to->control, n);
 }
 
+static void
+SDevicePropertyNotifyEvent (devicePropertyNotify *from, devicePropertyNotify *to)
+{
+    char n;
+
+    *to = *from;
+    swaps(&to->sequenceNumber,n);
+    swapl(&to->time, n);
+    swapl(&to->atom, n);
+}
+
 /**************************************************************************
  *
  * Allow the specified event to have its propagation suppressed.
@@ -562,7 +561,7 @@ AllowPropagateSuppress(Mask mask)
 {
     int i;
 
-    for (i = 0; i < MAX_DEVICES; i++)
+    for (i = 0; i < MAXDEVICES; i++)
 	PropagateMask[i] |= mask;
 }
 
@@ -583,7 +582,7 @@ GetNextExtEventMask(void)
     }
     lastExtEventMask <<= 1;
 
-    for (i = 0; i < MAX_DEVICES; i++)
+    for (i = 0; i < MAXDEVICES; i++)
 	ExtValidMasks[i] |= mask;
     return mask;
 }
@@ -596,7 +595,7 @@ GetNextExtEventMask(void)
  *
  * Since extension event types will never be less than 64, we can use
  * 0-63 in the EventInfo array as the "type" to be used to look up this
- * mask.  This means that the corresponding macros such as 
+ * mask.  This means that the corresponding macros such as
  * DevicePointerMotionHint must have access to the same constants.
  *
  */
@@ -621,7 +620,7 @@ SetExclusiveAccess(Mask mask)
 {
     int i;
 
-    for (i = 0; i < MAX_DEVICES; i++)
+    for (i = 0; i < MAXDEVICES; i++)
 	ExtExclusiveMasks[i] |= mask;
 }
 
@@ -634,13 +633,16 @@ SetExclusiveAccess(Mask mask)
 static void
 SetMaskForExtEvent(Mask mask, int event)
 {
+    int i;
 
     EventInfo[ExtEventIndex].mask = mask;
     EventInfo[ExtEventIndex++].type = event;
 
     if ((event < LASTEvent) || (event >= 128))
 	FatalError("MaskForExtensionEvent: bogus event number");
-    SetMaskForEvent(mask, event);
+
+    for (i = 0; i < MAXDEVICES; i++)
+        SetMaskForEvent(i, mask, event);
 }
 
 /************************************************************************
@@ -670,6 +672,7 @@ FixExtensionEvents(ExtensionEntry * extEntry)
     DeviceKeyStateNotify = ChangeDeviceNotify + 1;
     DeviceButtonStateNotify = DeviceKeyStateNotify + 1;
     DevicePresenceNotify = DeviceButtonStateNotify + 1;
+    DevicePropertyNotify = DevicePresenceNotify + 1;
 
     event_base[KeyClass] = DeviceKeyPress;
     event_base[ButtonClass] = DeviceButtonPress;
@@ -721,8 +724,20 @@ FixExtensionEvents(ExtensionEntry * extEntry)
     SetEventInfo(GetNextExtEventMask(), _deviceButton3Motion);
     SetEventInfo(GetNextExtEventMask(), _deviceButton4Motion);
     SetEventInfo(GetNextExtEventMask(), _deviceButton5Motion);
+
+    /* If DeviceButtonMotionMask is != ButtonMotionMask, event delivery
+     * breaks down. The device needs the dev->button->motionMask. If DBMM is
+     * the same as BMM, we can ensure that both core and device events can be
+     * delivered, without the need for extra structures in the DeviceIntRec.
+     */
     DeviceButtonMotionMask = GetNextExtEventMask();
     SetEventInfo(DeviceButtonMotionMask, _deviceButtonMotion);
+    if (DeviceButtonMotionMask != ButtonMotionMask)
+    {
+        /* This should never happen, but if it does, hide under the
+         * bed and cry for help. */
+        ErrorF("[Xi] DeviceButtonMotionMask != ButtonMotionMask. Trouble!\n");
+    }
 
     DeviceFocusChangeMask = GetNextExtEventMask();
     SetMaskForExtEvent(DeviceFocusChangeMask, DeviceFocusIn);
@@ -745,12 +760,16 @@ FixExtensionEvents(ExtensionEntry * extEntry)
 
     DevicePresenceNotifyMask = GetNextExtEventMask();
     SetEventInfo(DevicePresenceNotifyMask, _devicePresence);
+
+    DevicePropertyNotifyMask = GetNextExtEventMask();
+    SetMaskForExtEvent(DevicePropertyNotifyMask, DevicePropertyNotify);
+
     SetEventInfo(0, _noExtensionEvent);
 }
 
 /************************************************************************
  *
- * This function restores extension event types and masks to their 
+ * This function restores extension event types and masks to their
  * initial state.
  *
  */
@@ -758,13 +777,17 @@ FixExtensionEvents(ExtensionEntry * extEntry)
 static void
 RestoreExtensionEvents(void)
 {
-    int i;
+    int i, j;
 
     IReqCode = 0;
+    IEventBase = 0;
 
     for (i = 0; i < ExtEventIndex - 1; i++) {
 	if ((EventInfo[i].type >= LASTEvent) && (EventInfo[i].type < 128))
-	    SetMaskForEvent(0, EventInfo[i].type);
+        {
+            for (j = 0; j < MAXDEVICES; j++)
+                SetMaskForEvent(j, 0, EventInfo[i].type);
+        }
 	EventInfo[i].mask = 0;
 	EventInfo[i].type = 0;
     }
@@ -786,6 +809,7 @@ RestoreExtensionEvents(void)
     DeviceKeyStateNotify = 13;
     DeviceButtonStateNotify = 13;
     DevicePresenceNotify = 14;
+    DevicePropertyNotify = 15;
 
     BadDevice = 0;
     BadEvent = 1;
@@ -824,8 +848,25 @@ IResetProc(ExtensionEntry * unused)
     EventSwapVector[DeviceMappingNotify] = NotImplemented;
     EventSwapVector[ChangeDeviceNotify] = NotImplemented;
     EventSwapVector[DevicePresenceNotify] = NotImplemented;
+    EventSwapVector[DevicePropertyNotify] = NotImplemented;
     RestoreExtensionEvents();
 }
+
+/*****************************************************************
+ *
+ * Returns TRUE if the device has some sort of pointer type.
+ *
+ */
+
+Bool
+DeviceIsPointerType(DeviceIntPtr dev)
+{
+    if (dev_type[1].type == dev->type)
+        return TRUE;
+
+    return FALSE;
+}
+
 
 /***********************************************************************
  *
@@ -833,7 +874,7 @@ IResetProc(ExtensionEntry * unused)
  *
  */
 
-_X_EXPORT void
+void
 AssignTypeAndName(DeviceIntPtr dev, Atom type, char *name)
 {
     dev->type = type;
@@ -909,6 +950,8 @@ SEventIDispatch(xEvent * from, xEvent * to)
 	DO_SWAP(SChangeDeviceNotifyEvent, changeDeviceNotify);
     else if (type == DevicePresenceNotify)
 	DO_SWAP(SDevicePresenceNotifyEvent, devicePresenceNotify);
+    else if (type == DevicePropertyNotify)
+	DO_SWAP(SDevicePropertyNotifyEvent, devicePropertyNotify);
     else {
 	FatalError("XInputExtension: Impossible event!\n");
     }
@@ -923,6 +966,7 @@ SEventIDispatch(xEvent * from, xEvent * to)
  *
  * This extension has several events and errors.
  *
+ * XI is mandatory nowadays, so if we fail to init XI, we die.
  */
 
 void
@@ -930,12 +974,20 @@ XInputExtensionInit(void)
 {
     ExtensionEntry *extEntry;
 
+    if (!dixRequestPrivate(XIClientPrivateKey, sizeof(XIClientRec)))
+        FatalError("Cannot request private for XI.\n");
+
+    if (!AddCallback(&ClientStateCallback, XIClientCallback, 0))
+        FatalError("Failed to add callback to XI.\n");
+
     extEntry = AddExtension(INAME, IEVENTS, IERRORS, ProcIDispatch,
 			    SProcIDispatch, IResetProc, StandardMinorOpcode);
     if (extEntry) {
 	IReqCode = extEntry->base;
+	IEventBase = extEntry->eventBase;
 	AllExtensionVersions[IReqCode - 128] = thisversion;
 	MakeDeviceTypeAtoms();
+	XIInitKnownProperties();
 	RT_INPUTCLIENT = CreateNewResourceType((DeleteType) InputClientGone);
 	RegisterResourceName(RT_INPUTCLIENT, "INPUTCLIENT");
 	FixExtensionEvents(extEntry);
@@ -956,6 +1008,7 @@ XInputExtensionInit(void)
 	EventSwapVector[DeviceMappingNotify] = SEventIDispatch;
 	EventSwapVector[ChangeDeviceNotify] = SEventIDispatch;
 	EventSwapVector[DevicePresenceNotify] = SEventIDispatch;
+
     } else {
 	FatalError("IExtensionInit: AddExtensions failed\n");
     }

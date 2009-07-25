@@ -128,15 +128,9 @@ exposing is done by the backing store's GraphicsExpose function, of course.
 */
 
 _X_EXPORT RegionPtr
-miHandleExposures(pSrcDrawable, pDstDrawable,
-		  pGC, srcx, srcy, width, height, dstx, dsty, plane)
-    DrawablePtr			pSrcDrawable;
-    DrawablePtr			pDstDrawable;
-    GCPtr 			pGC;
-    int 			srcx, srcy;
-    int 			width, height;
-    int 			dstx, dsty;
-    unsigned long		plane;
+miHandleExposures(DrawablePtr pSrcDrawable, DrawablePtr pDstDrawable,
+		  GCPtr pGC, int srcx, int srcy, int width, int height,
+		  int dstx, int dsty, unsigned long plane)
 {
     ScreenPtr pscr;
     RegionPtr prgnSrcClip;	/* drawable-relative source clip */
@@ -271,7 +265,6 @@ miHandleExposures(pSrcDrawable, pDstDrawable,
     extents = pGC->graphicsExposures &&
 	      (REGION_NUM_RECTS(&rgnExposed) > RECTLIMIT) &&
 	      (pDstDrawable->type != DRAWABLE_PIXMAP);
-#ifdef SHAPE
     if (pSrcWin)
     {
 	RegionPtr	region;
@@ -285,7 +278,6 @@ miHandleExposures(pSrcDrawable, pDstDrawable,
     	    (RECT_IN_REGION(pscr, region, &srcBox) != rgnIN))
 	    	extents = FALSE;
     }
-#endif
     if (extents)
     {
 	expBox = *REGION_EXTENTS(pscr, &rgnExposed);
@@ -349,13 +341,9 @@ miHandleExposures(pSrcDrawable, pDstDrawable,
 
 /* send GraphicsExpose events, or a NoExpose event, based on the region */
 
-_X_EXPORT void
-miSendGraphicsExpose (client, pRgn, drawable, major, minor)
-    ClientPtr	client;
-    RegionPtr	pRgn;
-    XID		drawable;
-    int	major;
-    int	minor;
+void
+miSendGraphicsExpose (ClientPtr client, RegionPtr pRgn, XID drawable,
+                      int major, int minor)
 {
     if (pRgn && !REGION_NIL(pRgn))
     {
@@ -383,7 +371,7 @@ miSendGraphicsExpose (client, pRgn, drawable, major, minor)
 	    pe->u.graphicsExposure.majorEvent = major;
 	    pe->u.graphicsExposure.minorEvent = minor;
 	}
-	TryClientEvents(client, pEvent, numRects,
+	TryClientEvents(client, NULL, pEvent, numRects,
 			    (Mask)0, NoEventMask, NullGrab);
 	xfree(pEvent);
     }
@@ -394,17 +382,14 @@ miSendGraphicsExpose (client, pRgn, drawable, major, minor)
 	event.u.noExposure.drawable = drawable;
 	event.u.noExposure.majorEvent = major;
 	event.u.noExposure.minorEvent = minor;
-	TryClientEvents(client, &event, 1,
+	TryClientEvents(client, NULL, &event, 1,
 	    (Mask)0, NoEventMask, NullGrab);
     }
 }
 
 
 void
-miSendExposures(pWin, pRgn, dx, dy)
-    WindowPtr pWin;
-    RegionPtr pRgn;
-    int dx, dy;
+miSendExposures( WindowPtr pWin, RegionPtr pRgn, int dx, int dy)
 {
     BoxPtr pBox;
     int numRects;
@@ -464,9 +449,7 @@ miSendExposures(pWin, pRgn, dx, dy)
 }
 
 _X_EXPORT void 
-miWindowExposures(pWin, prgn, other_exposed)
-    WindowPtr pWin;
-    RegionPtr prgn, other_exposed;
+miWindowExposures( WindowPtr pWin, RegionPtr prgn, RegionPtr other_exposed)
 {
     RegionPtr   exposures = prgn;
     if ((prgn && !REGION_NIL(prgn)) || 
@@ -531,7 +514,7 @@ miWindowExposures(pWin, prgn, other_exposed)
 	REGION_DESTROY( pWin->drawable.pScreen, exposures);
 }
 
-_X_EXPORT void
+void
 miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
 {
     ScreenPtr	pScreen = pWin->drawable.pScreen;
@@ -654,9 +637,7 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
  * the GC.  Useful when we have a scratch drawable and need to initialize 
  * it. */
 _X_EXPORT void
-miClearDrawable(pDraw, pGC)
-    DrawablePtr	pDraw;
-    GCPtr	pGC;
+miClearDrawable(DrawablePtr pDraw, GCPtr pGC)
 {
     XID fg = pGC->fgPixel;
     XID bg = pGC->bgPixel;

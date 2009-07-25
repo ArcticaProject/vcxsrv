@@ -179,7 +179,6 @@ _alpha_iobase_query(unsigned flags, int hose, int bus, int devfn)
      */
     _iobase = _alpha_iobase;
 
-#ifndef INCLUDE_XF86_NO_DOMAIN
     /* 
      * Only take over the inx/outx functions if this is a dense I/O
      * system *and* addressing domains are being used. The dense I/O
@@ -191,7 +190,6 @@ _alpha_iobase_query(unsigned flags, int hose, int bus, int devfn)
     _alpha_inb = _dense_inb;
     _alpha_inw = _dense_inw;
     _alpha_inl = _dense_inl;
-#endif /* !INCLUDE_XF86_NO_DOMAIN */
   } else _iobase = _alpha_iobase_legacy;
 
   return _iobase(flags, hose, bus, devfn);

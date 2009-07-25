@@ -36,7 +36,8 @@
 #include    "gcstruct.h"
 #include    "shadow.h"
 
-DevPrivateKey shadowScrPrivateKey = &shadowScrPrivateKey;
+static int shadowScrPrivateKeyIndex;
+DevPrivateKey shadowScrPrivateKey = &shadowScrPrivateKeyIndex;
 
 #define wrap(priv, real, mem) {\
     priv->mem = real->mem; \

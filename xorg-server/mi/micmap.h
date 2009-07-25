@@ -10,8 +10,6 @@ typedef Bool (* miInitVisualsProcPtr)(VisualPtr *, DepthPtr *, int *, int *,
 					int *, VisualID *, unsigned long, int,
 					int);
 
-extern miInitVisualsProcPtr miInitVisualsProc;
-					
 int miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps);
 void miInstallColormap(ColormapPtr pmap);
 void miUninstallColormap(ColormapPtr pmap);
@@ -30,11 +28,6 @@ Bool miSetVisualTypesAndMasks(int depth, int visuals, int bitsPerRGB,
 int miGetDefaultVisualMask(int);
 Bool miInitVisuals(VisualPtr *, DepthPtr *, int *, int *, int *, VisualID *,
 			unsigned long, int, int);
-void miResetInitVisuals(void);
-
-void miHookInitVisuals(void (**old)(miInitVisualsProcPtr *),
-		       void (*new)(miInitVisualsProcPtr *));
-
 
 #define MAX_PSEUDO_DEPTH	10
 #define MIN_TRUE_DEPTH		6

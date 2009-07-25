@@ -572,6 +572,9 @@ __glXTexImage3DReqSize(const GLbyte *pc, Bool swap)
         type = bswap_32(type);
     }
 
+    if (*(CARD32 *) (pc + 76))
+        return 0;
+
     return __glXImageSize(format, type, target, width, height, depth,
                           image_height, row_length, skip_images,
                           skip_rows, alignment);

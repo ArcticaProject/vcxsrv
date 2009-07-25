@@ -100,12 +100,10 @@ LexRec, *LexPtr;
 #define TestFree(a) if (a) { xf86conffree (a); a = NULL; }
 
 #define parsePrologue(typeptr,typerec) typeptr ptr; \
-if( (ptr=(typeptr)xf86confcalloc(1,sizeof(typerec))) == NULL ) { return NULL; } \
-memset(ptr,0,sizeof(typerec));
+if( (ptr=(typeptr)xf86confcalloc(1,sizeof(typerec))) == NULL ) { return NULL; }
 
 #define parsePrologueVoid(typeptr,typerec) int token; typeptr ptr; \
-if( (ptr=(typeptr)xf86confcalloc(1,sizeof(typerec))) == NULL ) { return; } \
-memset(ptr,0,sizeof(typerec));
+if( (ptr=(typeptr)xf86confcalloc(1,sizeof(typerec))) == NULL ) { return; }
 
 #define HANDLE_RETURN(f,func)\
 if ((ptr->f=func) == NULL)\

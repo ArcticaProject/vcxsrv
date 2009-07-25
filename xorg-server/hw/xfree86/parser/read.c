@@ -100,7 +100,6 @@ xf86readConfigFile (void)
 	{
 		return NULL;
 	}
-	memset (ptr, 0, sizeof (XF86ConfigRec));
 
 	while ((token = xf86getToken (TopLevelTab)) != EOF_TOKEN)
 	{

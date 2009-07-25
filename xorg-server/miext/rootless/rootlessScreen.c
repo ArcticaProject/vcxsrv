@@ -62,10 +62,14 @@ extern int RootlessMiValidateTree(WindowPtr pRoot, WindowPtr pChild,
 extern Bool RootlessCreateGC(GCPtr pGC);
 
 // Initialize globals
-DevPrivateKey rootlessGCPrivateKey = &rootlessGCPrivateKey;
-DevPrivateKey rootlessScreenPrivateKey = &rootlessScreenPrivateKey;
-DevPrivateKey rootlessWindowPrivateKey = &rootlessWindowPrivateKey;
-DevPrivateKey rootlessWindowOldPixmapPrivateKey = &rootlessWindowOldPixmapPrivateKey;
+static int rootlessGCPrivateKeyIndex;
+DevPrivateKey rootlessGCPrivateKey = &rootlessGCPrivateKeyIndex;
+static int rootlessScreenPrivateKeyIndex;
+DevPrivateKey rootlessScreenPrivateKey = &rootlessScreenPrivateKeyIndex;
+static int rootlessWindowPrivateKeyIndex;
+DevPrivateKey rootlessWindowPrivateKey = &rootlessWindowPrivateKeyIndex;
+static int rootlessWindowOldPixmapPrivateKeyIndex;
+DevPrivateKey rootlessWindowOldPixmapPrivateKey = &rootlessWindowOldPixmapPrivateKeyIndex;
 
 
 /*
@@ -471,6 +475,33 @@ RootlessMarkOverlappedWindows(WindowPtr pWin, WindowPtr pFirst,
     return result;
 }
 
+void expose_1 (WindowPtr pWin) {
+    WindowPtr pChild;
+    
+    if (!pWin->realized)
+        return;
+    
+    (*pWin->drawable.pScreen->PaintWindowBackground) (pWin, &pWin->borderClip,
+                                                      PW_BACKGROUND);
+    
+    /* FIXME: comments in windowstr.h indicate that borderClip doesn't
+     include subwindow visibility. But I'm not so sure.. so we may
+     be exposing too much.. */
+    
+    miSendExposures (pWin, &pWin->borderClip,
+                     pWin->drawable.x, pWin->drawable.y);
+    
+    for (pChild = pWin->firstChild; pChild != NULL; pChild = pChild->nextSib)
+        expose_1 (pChild);
+}
+
+void
+RootlessScreenExpose (ScreenPtr pScreen)
+{
+    expose_1 (WindowTable[pScreen->myNum]);
+}
+
+
 ColormapPtr
 RootlessGetColormap (ScreenPtr pScreen)
 {
@@ -666,9 +697,7 @@ RootlessWrap(ScreenPtr pScreen)
     WRAP(UninstallColormap);
     WRAP(StoreColors);
 
-#ifdef SHAPE
     WRAP(SetShape);
-#endif
 
 #ifdef RENDER
     {
@@ -715,4 +744,19 @@ Bool RootlessInit(ScreenPtr pScreen, RootlessFrameProcsPtr procs)
     }
 
     return TRUE;
+}
+
+void RootlessUpdateRooted (Bool state) {
+    int i;
+    
+    if (!state)
+    {
+        for (i = 0; i < screenInfo.numScreens; i++)
+            RootlessDisableRoot (screenInfo.screens[i]);
+    }
+    else
+    {
+        for (i = 0; i < screenInfo.numScreens; i++)
+            RootlessEnableRoot (screenInfo.screens[i]);
+    }
 }

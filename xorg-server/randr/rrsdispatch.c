@@ -125,7 +125,7 @@ static int
 SProcRRGetOutputInfo (ClientPtr client)
 {
     int n;
-    REQUEST(xRRGetOutputInfoReq);;
+    REQUEST(xRRGetOutputInfoReq);
 
     REQUEST_SIZE_MATCH(xRRGetOutputInfoReq);
     swaps(&stuff->length, n);
@@ -364,6 +364,103 @@ SProcRRSetCrtcGamma (ClientPtr client)
     return (*ProcRandrVector[stuff->randrReqType]) (client);
 }
 
+static int
+SProcRRSetCrtcTransform (ClientPtr client)
+{
+    int n, nparams;
+    char *filter;
+    CARD32 *params;
+    REQUEST(xRRSetCrtcTransformReq);
+
+    REQUEST_AT_LEAST_SIZE(xRRSetCrtcTransformReq);
+    swaps(&stuff->length, n);
+    swapl(&stuff->crtc, n);
+    SwapLongs((CARD32 *)&stuff->transform, (sizeof(xRenderTransform)) >> 2);
+    swaps(&stuff->nbytesFilter, n);
+    filter = (char *)(stuff + 1);
+    params = (CARD32 *) (filter + ((stuff->nbytesFilter + 3) & ~3));
+    nparams = ((CARD32 *) stuff + client->req_len) - params;
+    if (nparams < 0)
+	return BadLength;
+
+    SwapLongs(params, nparams);
+    return (*ProcRandrVector[stuff->randrReqType]) (client);
+}
+
+static int
+SProcRRGetCrtcTransform (ClientPtr client)
+{
+    int n;
+    REQUEST(xRRGetCrtcTransformReq);
+
+    REQUEST_SIZE_MATCH(xRRGetCrtcTransformReq);
+    swaps(&stuff->length, n);
+    swapl(&stuff->crtc, n);
+    return (*ProcRandrVector[stuff->randrReqType]) (client);
+}
+
+static int
+SProcRRGetPanning (ClientPtr client)
+{
+    int n;
+    REQUEST(xRRGetPanningReq);
+    
+    REQUEST_SIZE_MATCH(xRRGetPanningReq);
+    swaps(&stuff->length, n);
+    swapl(&stuff->crtc, n);
+    return (*ProcRandrVector[stuff->randrReqType]) (client);
+}
+
+static int
+SProcRRSetPanning (ClientPtr client)
+{
+    int n;
+    REQUEST(xRRSetPanningReq);
+    
+    REQUEST_SIZE_MATCH(xRRSetPanningReq);
+    swaps(&stuff->length, n);
+    swapl(&stuff->crtc, n);
+    swapl(&stuff->timestamp, n);
+    swaps(&stuff->left, n);
+    swaps(&stuff->top, n);
+    swaps(&stuff->width, n);
+    swaps(&stuff->height, n);
+    swaps(&stuff->track_left, n);
+    swaps(&stuff->track_top, n);
+    swaps(&stuff->track_width, n);
+    swaps(&stuff->track_height, n);
+    swaps(&stuff->border_left, n);
+    swaps(&stuff->border_top, n);
+    swaps(&stuff->border_right, n);
+    swaps(&stuff->border_bottom, n);
+    return (*ProcRandrVector[stuff->randrReqType]) (client);
+}
+
+static int
+SProcRRSetOutputPrimary (ClientPtr client)
+{
+    int n;
+    REQUEST(xRRSetOutputPrimaryReq);
+
+    REQUEST_SIZE_MATCH(xRRSetOutputPrimaryReq);
+    swaps(&stuff->length, n);
+    swapl(&stuff->window, n);
+    swapl(&stuff->output, n);
+    return ProcRandrVector[stuff->randrReqType](client);
+}
+
+static int
+SProcRRGetOutputPrimary (ClientPtr client)
+{
+    int n;
+    REQUEST(xRRSetOutputPrimaryReq);
+
+    REQUEST_SIZE_MATCH(xRRGetOutputPrimaryReq);
+    swaps(&stuff->length, n);
+    swapl(&stuff->window, n);
+    return ProcRandrVector[stuff->randrReqType](client);
+}
+
 int (*SProcRandrVector[RRNumberRequests])(ClientPtr) = {
     SProcRRQueryVersion,	/* 0 */
 /* we skip 1 to make old clients fail pretty immediately */
@@ -394,5 +491,13 @@ int (*SProcRandrVector[RRNumberRequests])(ClientPtr) = {
     SProcRRGetCrtcGammaSize,	/* 22 */
     SProcRRGetCrtcGamma,	/* 23 */
     SProcRRSetCrtcGamma,	/* 24 */
+/* V1.3 additions */
+    SProcRRGetScreenResources,	/* 25 GetScreenResourcesCurrent */
+    SProcRRSetCrtcTransform,	/* 26 */
+    SProcRRGetCrtcTransform,	/* 27 */
+    SProcRRGetPanning,		/* 28 */
+    SProcRRSetPanning,		/* 29 */
+    SProcRRSetOutputPrimary,	/* 30 */
+    SProcRRGetOutputPrimary,	/* 31 */
 };
 

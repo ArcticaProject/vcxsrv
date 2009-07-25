@@ -67,12 +67,9 @@ SOFTWARE.
 
 
 _X_EXPORT void
-miFillPolygon(dst, pgc, shape, mode, count, pPts)
-    DrawablePtr		dst;
-    GCPtr		pgc;
-    int			shape, mode;
-    int			count;
-    DDXPointPtr		pPts;
+miFillPolygon( DrawablePtr dst, GCPtr pgc,
+		int shape, int mode,
+		int count, DDXPointPtr pPts)
 {
     int			i;
     int			xorg, yorg;

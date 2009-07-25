@@ -48,8 +48,8 @@
     XAAPixmapPtr pixPriv = XAA_GET_PIXMAP_PRIVATE((PixmapPtr)(pDraw));\
     GCFuncs *oldFuncs = pGC->funcs;\
     pGC->funcs = pGCPriv->wrapFuncs;\
-    pGC->ops = pGCPriv->wrapOps
-
+    pGC->ops = pGCPriv->wrapOps; \
+    SYNC_CHECK(pGC)
     
 #define XAA_PIXMAP_OP_EPILOGUE(pGC)\
     pGCPriv->wrapOps = pGC->ops;\

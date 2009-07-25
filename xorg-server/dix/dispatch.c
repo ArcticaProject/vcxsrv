@@ -136,9 +136,6 @@ int ProcInitialConnection();
 #endif
 #include "privates.h"
 #include "xace.h"
-#ifdef XAPPGROUP
-#include "appgroup.h"
-#endif
 #ifdef XKB
 #ifndef XKB_IN_SERVER
 #define XKB_IN_SERVER
@@ -163,7 +160,6 @@ typedef const char *string;
 #define GETBIT(buf, i) (MASKWORD(buf, i) & BITMASK(i))
 
 extern xConnSetupPrefix connSetupPrefix;
-extern char *ConnectionInfo;
 
 static ClientPtr grabClient;
 #define GrabNone 0
@@ -201,7 +197,7 @@ XID clientErrorValue;   /* XXX this is a kludge */
 #define SAME_SCREENS(a, b) (\
     (a.pScreen == b.pScreen))
 
-_X_EXPORT void
+void
 SetInputCheck(HWEventQueuePtr c0, HWEventQueuePtr c1)
 {
     checkForInput[0] = c0;
@@ -240,7 +236,6 @@ UpdateCurrentTimeIf(void)
 	currentTime = systime;
 }
 
-#ifdef SMART_SCHEDULE
 
 #undef SMART_DEBUG
 
@@ -341,7 +336,6 @@ SmartScheduleClient (int *clientReady, int nready)
     }
     return best;
 }
-#endif
 
 #define MAJOROP ((xReq *)client->requestBuffer)->reqType
 
@@ -353,9 +347,7 @@ Dispatch(void)
     ClientPtr	client;
     int	nready;
     HWEventQueuePtr* icheck = checkForInput;
-#ifdef SMART_SCHEDULE
     long			start_tick;
-#endif
 
     nextFreeClientID = 1;
     nClients = 0;
@@ -374,13 +366,11 @@ Dispatch(void)
 
 	nready = WaitForSomething(clientReady);
 
-#ifdef SMART_SCHEDULE
 	if (nready && !SmartScheduleDisable)
 	{
 	    clientReady[0] = SmartScheduleClient (clientReady, nready);
 	    nready = 1;
 	}
-#endif
        /***************** 
 	*  Handle events in round robin fashion, doing input between 
 	*  each round 
@@ -402,19 +392,13 @@ Dispatch(void)
 	    }
 	    isItTimeToYield = FALSE;
  
-#ifdef XPRINT
-            requestingClient = client;
-#endif
-#ifdef SMART_SCHEDULE
 	    start_tick = SmartScheduleTime;
-#endif
 	    while (!isItTimeToYield)
 	    {
 	        if (*icheck[0] != *icheck[1])
 		    ProcessInputEvents();
 		
 		FlushIfCriticalOutputPending();
-#ifdef SMART_SCHEDULE
 		if (!SmartScheduleDisable && 
 		    (SmartScheduleTime - start_tick) >= SmartScheduleSlice)
 		{
@@ -423,7 +407,6 @@ Dispatch(void)
 			client->smart_priority--;
 		    break;
 		}
-#endif
 		/* now, finally, deal with client requests */
 
 	        result = ReadRequestFromClient(client);
@@ -471,14 +454,9 @@ Dispatch(void)
 	        }
 	    }
 	    FlushAllOutput();
-#ifdef SMART_SCHEDULE
 	    client = clients[clientReady[nready]];
 	    if (client)
 		client->smart_stop_tick = SmartScheduleTime;
-#endif
-#ifdef XPRINT
-	    requestingClient = NULL;
-#endif
 	}
 	dispatchException &= ~DE_PRIORITYCHANGE;
     }
@@ -1053,9 +1031,7 @@ ProcTranslateCoords(ClientPtr client)
 	pWin = pDst->firstChild;
 	while (pWin)
 	{
-#ifdef SHAPE
 	    BoxRec  box;
-#endif
 	    if ((pWin->mapped) &&
 		(x >= pWin->drawable.x - wBorderWidth (pWin)) &&
 		(x < pWin->drawable.x + (int)pWin->drawable.width +
@@ -1063,7 +1039,6 @@ ProcTranslateCoords(ClientPtr client)
 		(y >= pWin->drawable.y - wBorderWidth (pWin)) &&
 		(y < pWin->drawable.y + (int)pWin->drawable.height +
 		 wBorderWidth (pWin))
-#ifdef SHAPE
 		/* When a window is shaped, a further check
 		 * is made to see if the point is inside
 		 * borderSize
@@ -1077,7 +1052,6 @@ ProcTranslateCoords(ClientPtr client)
 				    wInputShape(pWin),
 				    x - pWin->drawable.x,
 				    y - pWin->drawable.y, &box))
-#endif
 		)
             {
 		rep.child = pWin->drawable.id;
@@ -2901,18 +2875,16 @@ ProcCreateCursor (ClientPtr client)
 	return (BadMatch);
 
     n = BitmapBytePad(width)*height;
-    srcbits = (unsigned char *)xalloc(n);
+    srcbits = xcalloc(1, n);
     if (!srcbits)
 	return (BadAlloc);
-    mskbits = (unsigned char *)xalloc(n);
+    mskbits = xalloc(n);
     if (!mskbits)
     {
 	xfree(srcbits);
 	return (BadAlloc);
     }
 
-    /* zeroing the (pad) bits helps some ddx cursor handling */
-    bzero((char *)srcbits, n);
     (* src->drawable.pScreen->GetImage)( (DrawablePtr)src, 0, 0, width, height,
 					 XYPixmap, 1, (pointer)srcbits);
     if ( msk == (PixmapPtr)NULL)
@@ -3465,9 +3437,7 @@ CloseDownClient(ClientPtr client)
 	if (client->index < nextFreeClientID)
 	    nextFreeClientID = client->index;
 	clients[client->index] = NullClient;
-#ifdef SMART_SCHEDULE
 	SmartLastClient = NullClient;
-#endif
 	dixFreePrivates(client->devPrivates);
 	xfree(client);
 
@@ -3512,20 +3482,19 @@ void InitClient(ClientPtr client, int i, pointer ospriv)
     if (!noXkbExtension) {
 	client->xkbClientFlags = 0;
 	client->mapNotifyMask = 0;
+	client->newKeyboardNotifyMask = 0;
+	client->vMinor = client->vMajor = 0;
 	QueryMinMaxKeyCodes(&client->minKC,&client->maxKC);
     }
 #endif
     client->replyBytesRemaining = 0;
-#ifdef XAPPGROUP
-    client->appgroup = NULL;
-#endif
     client->fontResFunc = NULL;
-#ifdef SMART_SCHEDULE
     client->smart_priority = 0;
     client->smart_start_tick = SmartScheduleTime;
     client->smart_stop_tick = SmartScheduleTime;
     client->smart_check_tick = SmartScheduleTime;
-#endif
+
+    client->clientPtr = NULL;
 }
 
 /************************
@@ -3643,9 +3612,6 @@ SendConnSetup(ClientPtr client, char *reason)
 
     client->requestVector = client->swapped ? SwappedProcVector : ProcVector;
     client->sequence = 0;
-#ifdef XAPPGROUP
-    XagConnectionInfo (client, &lconnSetupPrefix, &lConnectionInfo, &numScreens);
-#endif
     ((xConnSetup *)lConnectionInfo)->ridBase = client->clientAsMask;
     ((xConnSetup *)lConnectionInfo)->ridMask = RESOURCE_ID_MASK;
 #ifdef MATCH_CLIENT_ENDIAN

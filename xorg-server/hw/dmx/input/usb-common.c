@@ -368,8 +368,7 @@ void usbOff(DevicePtr pDev)
 /** Create a private structure for use within this file. */
 pointer usbCreatePrivate(DeviceIntPtr pDevice)
 {
-    myPrivate *priv = xalloc(sizeof(*priv));
-    memset(priv, 0, sizeof(*priv));
+    myPrivate *priv = calloc(1, sizeof(*priv));
     priv->fd        = -1;
     priv->pDevice   = pDevice;
     return priv;
@@ -378,5 +377,5 @@ pointer usbCreatePrivate(DeviceIntPtr pDevice)
 /** Destroy a private structure. */
 void usbDestroyPrivate(pointer priv)
 {
-    if (priv) xfree(priv);
+    if (priv) free(priv);
 }

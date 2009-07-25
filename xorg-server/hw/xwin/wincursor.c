@@ -204,8 +204,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   /* Allocate memory for the bitmaps */
   pAnd = malloc (nBytes);
   memset (pAnd, 0xFF, nBytes);
-  pXor = malloc (nBytes);
-  memset (pXor, 0x00, nBytes);
+  pXor = calloc (1, nBytes);
 
   /* Convert the X11 bitmap to a win32 bitmap 
    * The first is for an empty mask */

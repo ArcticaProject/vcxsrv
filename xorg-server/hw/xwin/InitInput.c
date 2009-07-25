@@ -30,9 +30,6 @@
 #include <xwin-config.h>
 #endif
 #include "win.h"
-#ifdef XWIN_CLIPBOARD
-# include "../../Xext/xf86miscproc.h"
-#endif
 #include "dixstruct.h"
 
 

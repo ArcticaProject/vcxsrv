@@ -45,7 +45,7 @@ is" without express or implied warranty.
 
 Bool xnestDoFullGeneration = True;
 
-xEvent *xnestEvents = NULL;
+EventList *xnestEvents = NULL;
 
 void
 InitOutput(ScreenInfo *screenInfo, int argc, char *argv[])
@@ -89,13 +89,10 @@ InitOutput(ScreenInfo *screenInfo, int argc, char *argv[])
 void
 InitInput(int argc, char *argv[])
 {
-  xnestPointerDevice = AddInputDevice(xnestPointerProc, TRUE);
-  xnestKeyboardDevice = AddInputDevice(xnestKeyboardProc, TRUE);
+  xnestPointerDevice = AddInputDevice(serverClient, xnestPointerProc, TRUE);
+  xnestKeyboardDevice = AddInputDevice(serverClient, xnestKeyboardProc, TRUE);
 
-  if (!xnestEvents)
-      xnestEvents = (xEvent *) xcalloc(sizeof(xEvent), GetMaximumEventsNum());
-  if (!xnestEvents)
-      FatalError("couldn't allocate room for events\n");
+  GetEventList(&xnestEvents);
 
   RegisterPointerDevice(xnestPointerDevice);
   RegisterKeyboardDevice(xnestKeyboardDevice);
@@ -143,8 +140,3 @@ void ddxBeforeReset(void)
 {
     return;
 }
-
-/* this is just to get the server to link on AIX */
-#ifdef AIXV3
-int SelectWaitTime = 10000; /* usec */
-#endif

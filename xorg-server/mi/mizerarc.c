@@ -96,10 +96,7 @@ static miZeroArcPtRec oob = {65536, 65536, 0};
  */
 
 _X_EXPORT Bool
-miZeroArcSetup(arc, info, ok360)
-    xArc *arc;
-    miZeroArcRec *info;
-    Bool ok360;
+miZeroArcSetup(xArc *arc, miZeroArcRec *info, Bool ok360)
 {
     int l;
     int angle1, angle2;
@@ -706,11 +703,7 @@ miZeroArcDashPts(
 }
 
 _X_EXPORT void
-miZeroPolyArc(pDraw, pGC, narcs, parcs)
-    DrawablePtr	pDraw;
-    GCPtr	pGC;
-    int		narcs;
-    xArc	*parcs;
+miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 {
     int maxPts = 0;
     int n, maxw = 0;

@@ -61,6 +61,7 @@
 #define DEBUG_MIGRATE		0
 #define DEBUG_PIXMAP		0
 #define DEBUG_OFFSCREEN		0
+#define DEBUG_GLYPH_CACHE	0
 
 #if DEBUG_TRACE_FALL
 #define EXA_FALLBACK(x)     					\
@@ -95,6 +96,38 @@ enum ExaMigrationHeuristic {
     ExaMigrationSmart
 };
 
+typedef struct {
+    unsigned char sha1[20];
+} ExaCachedGlyphRec, *ExaCachedGlyphPtr;
+
+typedef struct {
+    /* The identity of the cache, statically configured at initialization */
+    unsigned int format;
+    int glyphWidth;
+    int glyphHeight;
+
+    int size; /* Size of cache; eventually this should be dynamically determined */
+
+    /* Hash table mapping from glyph sha1 to position in the glyph; we use
+     * open addressing with a hash table size determined based on size and large
+     * enough so that we always have a good amount of free space, so we can
+     * use linear probing. (Linear probing is preferrable to double hashing
+     * here because it allows us to easily remove entries.)
+     */
+    int *hashEntries;
+    int hashSize;
+    
+    ExaCachedGlyphPtr glyphs;
+    int glyphCount; /* Current number of glyphs */
+    
+    PicturePtr picture;   /* Where the glyphs of the cache are stored */
+    int yOffset;          /* y location within the picture where the cache starts */
+    int columns;          /* Number of columns the glyphs are layed out in */
+    int evictionPosition; /* Next random position to evict a glyph */
+} ExaGlyphCacheRec, *ExaGlyphCachePtr;
+
+#define EXA_NUM_GLYPH_CACHES 4
+
 typedef void (*EnableDisableFBAccessProcPtr)(int, Bool);
 typedef struct {
     ExaDriverPtr info;
@@ -123,6 +156,8 @@ typedef struct {
     unsigned			 disableFbCount;
     Bool			 optimize_migration;
     unsigned			 offScreenCounter;
+
+    ExaGlyphCacheRec             glyphCaches[EXA_NUM_GLYPH_CACHES];
 } ExaScreenPrivRec, *ExaScreenPrivPtr;
 
 /*
@@ -210,17 +245,20 @@ typedef struct _ExaMigrationRec {
     RegionPtr pReg;
 } ExaMigrationRec, *ExaMigrationPtr;
 
+typedef struct {
+    INT16 xSrc;
+    INT16 ySrc;
+    INT16 xDst;
+    INT16 yDst;
+    INT16 width;
+    INT16 height;
+} ExaCompositeRectRec, *ExaCompositeRectPtr;
+
 /**
  * exaDDXDriverInit must be implemented by the DDX using EXA, and is the place
  * to set EXA options or hook in screen functions to handle using EXA as the AA.
   */
 void exaDDXDriverInit (ScreenPtr pScreen);
-
-void
-exaPrepareAccessWindow(WindowPtr pWin);
-
-void
-exaFinishAccessWindow(WindowPtr pWin);
 
 /* exa_unaccel.c */
 void
@@ -305,11 +343,12 @@ ExaCheckAddTraps (PicturePtr	pPicture,
 
 static _X_INLINE Bool
 exaGCReadsDestination(DrawablePtr pDrawable, unsigned long planemask,
-		      unsigned int fillStyle, unsigned char alu)
+		      unsigned int fillStyle, unsigned char alu,
+		      unsigned int clientClipType)
 {
-    return ((alu != GXcopy && alu != GXclear &&alu != GXset &&
+    return ((alu != GXcopy && alu != GXclear && alu != GXset &&
 	     alu != GXcopyInverted) || fillStyle == FillStippled ||
-	    !EXA_PM_IS_SOLID(pDrawable, planemask));
+	    clientClipType != CT_NONE || !EXA_PM_IS_SOLID(pDrawable, planemask));
 }
 
 void
@@ -317,7 +356,8 @@ exaCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc);
 
 Bool
 exaFillRegionTiled (DrawablePtr	pDrawable, RegionPtr pRegion, PixmapPtr pTile,
-		    DDXPointPtr pPatOrg, CARD32 planemask, CARD32 alu);
+		    DDXPointPtr pPatOrg, CARD32 planemask, CARD32 alu,
+		    unsigned int clientClipType);
 
 void
 exaGetImage (DrawablePtr pDrawable, int x, int y, int w, int h,
@@ -419,6 +459,13 @@ exaComposite(CARD8	op,
 	     CARD16	height);
 
 void
+exaCompositeRects(CARD8	              op,
+		  PicturePtr	      Src,
+		  PicturePtr	      pDst,
+		  int                 nrect,
+		  ExaCompositeRectPtr rects);
+
+void
 exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
                PictFormatPtr maskFormat, INT16 xSrc, INT16 ySrc,
                int ntrap, xTrapezoid *traps);
@@ -427,6 +474,13 @@ void
 exaTriangles (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
 	      PictFormatPtr maskFormat, INT16 xSrc, INT16 ySrc,
 	      int ntri, xTriangle *tris);
+
+/* exa_glyph.c */
+void
+exaGlyphsInit(ScreenPtr pScreen);
+
+void
+exaGlyphsFini (ScreenPtr pScreen);
 
 void
 exaGlyphs (CARD8	op,

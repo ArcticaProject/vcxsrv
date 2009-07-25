@@ -522,27 +522,6 @@ xf86DisableIO()
 
 #endif /* USE_ARC_MMAP */
 
-
-/***************************************************************************/
-/* Interrupt Handling section                                              */
-/***************************************************************************/
-
-_X_EXPORT Bool
-xf86DisableInterrupts()
-{
-
-	return(TRUE);
-}
-
-_X_EXPORT void
-xf86EnableInterrupts()
-{
-
-	return;
-}
-
-
-
 #if 0
 /*
  * XXX This is here for reference.  It needs to be handled differently for the

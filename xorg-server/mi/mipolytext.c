@@ -67,12 +67,7 @@ SOFTWARE.
 #include	"mi.h"
 
 _X_EXPORT int
-miPolyText8(pDraw, pGC, x, y, count, chars)
-    DrawablePtr pDraw;
-    GCPtr	pGC;
-    int		x, y;
-    int 	count;
-    char	*chars;
+miPolyText8(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, char *chars)
 {
     unsigned long n, i;
     int w;
@@ -89,12 +84,7 @@ miPolyText8(pDraw, pGC, x, y, count, chars)
 }
 
 _X_EXPORT int
-miPolyText16(pDraw, pGC, x, y, count, chars)
-    DrawablePtr pDraw;
-    GCPtr	pGC;
-    int		x, y;
-    int		count;
-    unsigned short *chars;
+miPolyText16(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, unsigned short *chars)
 {
     unsigned long n, i;
     int w;
@@ -112,12 +102,7 @@ miPolyText16(pDraw, pGC, x, y, count, chars)
 }
 
 _X_EXPORT void
-miImageText8(pDraw, pGC, x, y, count, chars)
-    DrawablePtr pDraw;
-    GCPtr	pGC;
-    int		x, y;
-    int		count;
-    char	*chars;
+miImageText8(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, char *chars)
 {
     unsigned long n;
     FontPtr font = pGC->font;
@@ -130,12 +115,8 @@ miImageText8(pDraw, pGC, x, y, count, chars)
 }
 
 _X_EXPORT void
-miImageText16(pDraw, pGC, x, y, count, chars)
-    DrawablePtr pDraw;
-    GCPtr	pGC;
-    int		x, y;
-    int		count;
-    unsigned short *chars;
+miImageText16(DrawablePtr pDraw, GCPtr pGC, int x, int y,
+		int count, unsigned short *chars)
 {
     unsigned long n;
     FontPtr font = pGC->font;

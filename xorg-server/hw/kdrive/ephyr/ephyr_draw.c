@@ -28,7 +28,6 @@
 #ifdef HAVE_CONFIG_H
 #include <kdrive-config.h>
 #endif
-#undef NDEBUG	/* No, really.  The whole point of this module is to crash. */
 
 #include "ephyr.h"
 #include "exa_priv.h"

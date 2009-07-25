@@ -229,7 +229,7 @@ xf86RemoveSIGIOHandler(int fd)
 	    sigemptyset(&sa.sa_mask);
 	    sigaddset(&sa.sa_mask, SIGIO);
 	    sa.sa_flags   = 0;
-	    sa.sa_handler = SIG_DFL;
+	    sa.sa_handler = SIG_IGN;
 	    sigaction(SIGIO, &sa, &osa);
 	}
     }

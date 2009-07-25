@@ -447,7 +447,7 @@ XkbIndicatorMapPtr	map;
 XkbDescPtr		xkb;
 
     if ((sli->flags&XkbSLI_HasOwnState)==0)
-	dev= inputInfo.keyboard;
+        return;
 
     sli->usesBase&=	 ~which;
     sli->usesLatched&=	 ~which;
@@ -462,7 +462,7 @@ XkbDescPtr		xkb;
 	if (which&bit) {
 	    CARD8		what;
 
-	    if (!XkbIM_InUse(map)) 
+	    if (!map || !XkbIM_InUse(map))
 		continue;
 	    sli->mapsPresent|= bit;
 
@@ -615,6 +615,45 @@ XkbFreeSrvLedInfo(XkbSrvLedInfoPtr sli)
     return;
 }
 
+/*
+ * XkbSrvLedInfoPtr
+ * XkbCopySrvLedInfo(dev,src,kf,lf)
+ *
+ * Takes the given XkbSrvLedInfoPtr and duplicates it. A deep copy is made,
+ * thus the new copy behaves like the original one and can be freed with
+ * XkbFreeSrvLedInfo.
+ */
+XkbSrvLedInfoPtr
+XkbCopySrvLedInfo(	DeviceIntPtr		from,
+			XkbSrvLedInfoPtr	src,
+			KbdFeedbackPtr		kf,
+			LedFeedbackPtr		lf)
+{
+    XkbSrvLedInfoPtr sli_new = NULL;
+
+    if (!src)
+	goto finish;
+
+    sli_new = _XkbTypedCalloc(1, XkbSrvLedInfoRec);
+    if (!sli_new)
+	goto finish;
+
+    memcpy(sli_new, src, sizeof(XkbSrvLedInfoRec));
+    if (sli_new->class == KbdFeedbackClass)
+	sli_new->fb.kf = kf;
+    else
+	sli_new->fb.lf = lf;
+
+    if (sli_new->flags & XkbSLI_IsDefault) {
+	sli_new->names= _XkbTypedCalloc(XkbNumIndicators,Atom);
+	sli_new->maps= _XkbTypedCalloc(XkbNumIndicators,XkbIndicatorMapRec);
+    } /* else sli_new->names/maps is pointing to
+	dev->key->xkbInfo->desc->names->indicators;
+	dev->key->xkbInfo->desc->names->indicators; */
+
+finish:
+    return sli_new;
+}
 
 /***====================================================================***/
 

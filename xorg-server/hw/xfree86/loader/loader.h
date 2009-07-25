@@ -53,9 +53,6 @@
 #ifndef _LOADER_H
 #define _LOADER_H
 
-#if defined(Lynx) && defined(sun)
-#define const /**/
-#endif
 #include <X11/Xosdefs.h>
 #include <X11/Xfuncproto.h>
 #include <X11/Xmd.h>

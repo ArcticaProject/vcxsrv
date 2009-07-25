@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2008 Apple, Inc.
  * Copyright (c) 2001-2004 Torrey T. Lyons. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -33,6 +34,8 @@
 #include <X11/extensions/XKB.h>
 #include <assert.h>
 
+#include "threadSafety.h"
+
 typedef struct {
     void                *framebuffer;
     int                 x;
@@ -52,9 +55,9 @@ typedef struct {
 
 // From darwin.c
 void DarwinPrintBanner(void);
-int DarwinParseModifierList(const char *constmodifiers);
+int DarwinParseModifierList(const char *constmodifiers, int separatelr);
 void DarwinAdjustScreenOrigins(ScreenInfo *pScreenInfo);
-void xf86SetRootClip (ScreenPtr pScreen, BOOL enable);
+void xf86SetRootClip (ScreenPtr pScreen, int enable);
 
 #define SCREEN_PRIV(pScreen) ((DarwinFramebufferPtr) \
     dixLookupPrivate(&pScreen->devPrivates, darwinScreenKey))
@@ -68,6 +71,10 @@ extern io_connect_t     darwinParamConnect;
 extern int              darwinEventReadFD;
 extern int              darwinEventWriteFD;
 extern DeviceIntPtr     darwinPointer;
+extern DeviceIntPtr     darwinTabletCurrent;
+extern DeviceIntPtr     darwinTabletCursor;
+extern DeviceIntPtr     darwinTabletStylus;
+extern DeviceIntPtr     darwinTabletEraser;
 extern DeviceIntPtr     darwinKeyboard;
 
 // User preferences
@@ -75,7 +82,8 @@ extern int              darwinMouseAccelChange;
 extern int              darwinFakeButtons;
 extern int              darwinFakeMouse2Mask;
 extern int              darwinFakeMouse3Mask;
-extern char            *darwinKeymapFile;
+extern unsigned int     darwinAppKitModMask;
+extern unsigned int     windowItemModMask;
 extern int              darwinSyncKeymap;
 extern unsigned int     darwinDesiredWidth, darwinDesiredHeight;
 extern int              darwinDesiredDepth;
@@ -85,48 +93,16 @@ extern int              darwinDesiredRefresh;
 extern int              darwinMainScreenX;
 extern int              darwinMainScreenY;
 
-
-/*
- * Special ddx events understood by the X server
- */
-enum {
-    kXDarwinUpdateModifiers   // update all modifier keys
-            = LASTEvent+1,    // (from X.h list of event names)
-    kXDarwinUpdateButtons,    // update state of mouse buttons 2 and up
-    kXDarwinScrollWheel,      // scroll wheel event
-    /*
-     * Quartz-specific events -- not used in IOKit mode
-     */
-    kXDarwinActivate,         // restore X drawing and cursor
-    kXDarwinDeactivate,       // clip X drawing and switch to Aqua cursor
-    kXDarwinSetRootClip,      // enable or disable drawing to the X screen
-    kXDarwinQuit,             // kill the X server and release the display
-    kXDarwinReadPasteboard,   // copy Mac OS X pasteboard into X cut buffer
-    kXDarwinWritePasteboard,  // copy X cut buffer onto Mac OS X pasteboard
-    kXDarwinBringAllToFront,  // bring all X windows to front
-    kXDarwinToggleFullscreen, // Enable/Disable fullscreen mode
-    kXDarwinSetRootless,      // Set rootless mode
-    /*
-     * AppleWM events
-     */
-    kXDarwinControllerNotify, // send an AppleWMControllerNotify event
-    kXDarwinPasteboardNotify, // notify the WM to copy or paste
-    /*
-     * Xplugin notification events
-     */
-    kXDarwinDisplayChanged,   // display configuration has changed
-    kXDarwinWindowState,      // window visibility state has changed
-    kXDarwinWindowMoved       // window has moved on screen
-};
-
 #define ENABLE_DEBUG_LOG 1
 
 #ifdef ENABLE_DEBUG_LOG
 extern FILE *debug_log_fp;
 #define DEBUG_LOG_NAME "x11-debug.txt"
-#define DEBUG_LOG(msg, args...) if (debug_log_fp) fprintf(debug_log_fp, "%s:%s:%d " msg, __FILE__, __FUNCTION__, __LINE__, ##args ); fflush(debug_log_fp);
+#define DEBUG_LOG(msg, args...) if (debug_log_fp) fprintf(debug_log_fp, "%s:%s:%s:%d " msg, threadSafetyID(pthread_self()), __FILE__, __FUNCTION__, __LINE__, ##args ); fflush(debug_log_fp);
 #else
 #define DEBUG_LOG(msg, args...) 
 #endif
+
+#define TRACE() DEBUG_LOG("\n")
 
 #endif  /* _DARWIN_H */

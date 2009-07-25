@@ -146,18 +146,11 @@ extern void xf86MapReadSideEffects(int, int, pointer, unsigned long);
 extern int xf86ReadBIOS(unsigned long, unsigned long, unsigned char *, int);
 extern Bool xf86EnableIO(void);
 extern void xf86DisableIO(void);
-extern Bool xf86DisableInterrupts(void);
-extern void xf86EnableInterrupts(void);
 extern void xf86SetTVOut(int);
 extern void xf86SetRGBOut(void);
 extern void xf86OSRingBell(int, int, int);
-#if defined(QNX4)
-#pragma aux xf86BusToMem modify [eax ebx ecx edx esi edi];
-#pragma aux xf86MemToBus modify [eax ebx ecx edx esi edi];
-#endif
 extern void xf86BusToMem(unsigned char *, unsigned char *, int);
 extern void xf86MemToBus(unsigned char *, unsigned char *, int);
-extern void xf86IODelay(void);
 extern void xf86UDelay(long usec);
 extern void xf86SetReallySlowBcopy(void);
 extern void xf86SlowBcopy(unsigned char *, unsigned char *, int);

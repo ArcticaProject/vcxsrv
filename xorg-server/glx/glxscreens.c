@@ -1,37 +1,32 @@
 /*
-** License Applicability. Except to the extent portions of this file are
-** made subject to an alternative license as permitted in the SGI Free
-** Software License B, Version 1.1 (the "License"), the contents of this
-** file are subject only to the provisions of the License. You may not use
-** this file except in compliance with the License. You may obtain a copy
-** of the License at Silicon Graphics, Inc., attn: Legal Services, 1600
-** Amphitheatre Parkway, Mountain View, CA 94043-1351, or at:
-** 
-** http://oss.sgi.com/projects/FreeB
-** 
-** Note that, as provided in the License, the Software is distributed on an
-** "AS IS" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS
-** DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND
-** CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
-** PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-** 
-** Original Code. The Original Code is: OpenGL Sample Implementation,
-** Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
-** Inc. The Original Code is Copyright (c) 1991-2000 Silicon Graphics, Inc.
-** Copyright in any portions created by third parties is as indicated
-** elsewhere herein. All Rights Reserved.
-** 
-** Additional Notice Provisions: The application programming interfaces
-** established by SGI in conjunction with the Original Code are The
-** OpenGL(R) Graphics System: A Specification (Version 1.2.1), released
-** April 1, 1999; The OpenGL(R) Graphics System Utility Library (Version
-** 1.3), released November 4, 1998; and OpenGL(R) Graphics with the X
-** Window System(R) (Version 1.3), released October 19, 1998. This software
-** was created using the OpenGL(R) version 1.2.1 Sample Implementation
-** published by SGI, but has not been independently verified as being
-** compliant with the OpenGL(R) version 1.2.1 Specification.
-**
-*/
+ * SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008)
+ * Copyright (C) 1991-2000 Silicon Graphics, Inc. All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice including the dates of first publication and
+ * either this permission notice or a reference to
+ * http://oss.sgi.com/projects/FreeB/
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * Except as contained in this notice, the name of Silicon Graphics, Inc.
+ * shall not be used in advertising or otherwise to promote the sale, use or
+ * other dealings in this Software without prior written authorization from
+ * Silicon Graphics, Inc.
+ */
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
@@ -48,7 +43,8 @@
 #include "glxutil.h"
 #include "glxext.h"
 
-static DevPrivateKey glxScreenPrivateKey = &glxScreenPrivateKey;
+static int glxScreenPrivateKeyIndex;
+static DevPrivateKey glxScreenPrivateKey = &glxScreenPrivateKeyIndex;
 
 const char GLServerVersion[] = "1.4";
 static const char GLServerExtensions[] = 
@@ -185,51 +181,6 @@ static char GLXServerExtensions[] =
 			;
 
 /*
-** This hook gets called when a window moves or changes size.
-*/
-static Bool glxPositionWindow(WindowPtr pWin, int x, int y)
-{
-    ScreenPtr pScreen;
-    __GLXdrawable *glxPriv;
-    Bool ret;
-    __GLXscreen *pGlxScreen;
-
-    /*
-    ** Call wrapped position window routine
-    */
-    pScreen = pWin->drawable.pScreen;
-    pGlxScreen = glxGetScreen(pScreen);
-    pScreen->PositionWindow = pGlxScreen->PositionWindow;
-    ret = (*pScreen->PositionWindow)(pWin, x, y);
-    pScreen->PositionWindow = glxPositionWindow;
-
-    /*
-    ** Tell all contexts rendering into this window that the window size
-    ** has changed.
-    */
-    glxPriv = (__GLXdrawable *) LookupIDByType(pWin->drawable.id,
-					       __glXDrawableRes);
-    if (glxPriv == NULL) {
-	/*
-	** This window is not being used by the OpenGL.
-	*/
-	return ret;
-    }
-
-    /*
-    ** resize the drawable
-    */
-    /* first change the drawable size */
-    if (glxPriv->resize(glxPriv) == GL_FALSE) {
-	/* resize failed! */
-	/* XXX: what can we possibly do here? */
-	ret = False;
-    }
-
-    return ret;
-}
-
-/*
  * If your DDX driver wants to register support for swap barriers or hyperpipe
  * topology, it should call __glXHyperpipeInit() or __glXSwapBarrierInit()
  * with a dispatch table of functions to handle the requests.   In the XFree86
@@ -260,7 +211,6 @@ glxCloseScreen (int index, ScreenPtr pScreen)
     __GLXscreen *pGlxScreen = glxGetScreen(pScreen);
 
     pScreen->CloseScreen = pGlxScreen->CloseScreen;
-    pScreen->PositionWindow = pGlxScreen->PositionWindow;
 
     pGlxScreen->destroy(pGlxScreen);
 
@@ -290,44 +240,6 @@ GLint glxConvertToXVisualType(int visualType)
 
     return ( (unsigned) (visualType - GLX_TRUE_COLOR) < 6 )
 	? x_visual_types[ visualType - GLX_TRUE_COLOR ] : -1;
-}
-
-
-static void
-filterOutNativeConfigs(__GLXscreen *pGlxScreen)
-{
-    __GLXconfig *m, *next, **last;
-    ScreenPtr pScreen = pGlxScreen->pScreen;
-    int i, depth;
-
-    last = &pGlxScreen->fbconfigs;
-    for (m = pGlxScreen->fbconfigs; m != NULL; m = next) {
-	next = m->next;
-	depth = m->redBits + m->blueBits + m->greenBits;
-
-	for (i = 0; i < pScreen->numVisuals; i++) {
-	    if (pScreen->visuals[i].nplanes == depth) {
-		*last = m;
-		last = &m->next;
-		break;
-	    }
-	}
-    }
-
-    *last = NULL;
-}
-
-static XID
-findVisualForConfig(ScreenPtr pScreen, __GLXconfig *m)
-{
-    int i;
-
-    for (i = 0; i < pScreen->numVisuals; i++) {
-	if (glxConvertToXVisualType(m->visualType) == pScreen->visuals[i].class)
-	    return pScreen->visuals[i].vid;
-    }
-
-    return 0;
 }
 
 /* This code inspired by composite/compinit.c.  We could move this to
@@ -437,119 +349,52 @@ initGlxVisual(VisualPtr visual, __GLXconfig *config)
     visual->offsetBlue = findFirstSet(config->blueMask);
 }
 
-typedef struct {
-    GLboolean doubleBuffer;
-    GLboolean depthBuffer;
-    GLboolean stencilBuffer;
-} FBConfigTemplateRec, *FBConfigTemplatePtr;
-
 static __GLXconfig *
-pickFBConfig(__GLXscreen *pGlxScreen, FBConfigTemplatePtr template, int class)
+pickFBConfig(__GLXscreen *pGlxScreen, VisualPtr visual)
 {
-    __GLXconfig *config;
+    __GLXconfig *best = NULL, *config;
+    int best_score = 0;
 
     for (config = pGlxScreen->fbconfigs; config != NULL; config = config->next) {
+	int score = 0;
+
+	if (config->redMask != visual->redMask ||
+	    config->greenMask != visual->greenMask ||
+	    config->blueMask != visual->blueMask)
+	    continue;
 	if (config->visualRating != GLX_NONE)
 	    continue;
-	if (glxConvertToXVisualType(config->visualType) != class)
+	if (glxConvertToXVisualType(config->visualType) != visual->class)
 	    continue;
-	if ((config->doubleBufferMode > 0) != template->doubleBuffer)
+	/* If it's the 32-bit RGBA visual, demand a 32-bit fbconfig. */
+	if (visual->nplanes == 32 && config->rgbBits != 32)
 	    continue;
-	if ((config->depthBits > 0) != template->depthBuffer)
-	    continue;
-	if ((config->stencilBits > 0) != template->stencilBuffer)
-	    continue;
-
-	return config;
-    }
-
-    return NULL;
-}
-
-static void
-addMinimalSet(__GLXscreen *pGlxScreen)
-{
-    __GLXconfig *config;
-    VisualPtr visuals;
-    int i, j;
-    FBConfigTemplateRec best = { GL_TRUE, GL_TRUE, GL_TRUE };
-    FBConfigTemplateRec good = { GL_TRUE, GL_TRUE, GL_FALSE };
-    FBConfigTemplateRec minimal = { GL_FALSE, GL_FALSE, GL_FALSE };
-
-    pGlxScreen->visuals = xcalloc(pGlxScreen->pScreen->numVisuals,
-				  sizeof (__GLXconfig *));
-    if (pGlxScreen->visuals == NULL) {
-	ErrorF("Failed to allocate for minimal set of GLX visuals\n");
-	return;
-    }
-
-    visuals = pGlxScreen->pScreen->visuals;
-    for (i = 0, j = 0; i < pGlxScreen->pScreen->numVisuals; i++) {
-	if (visuals[i].nplanes == 32)
-	    config = pickFBConfig(pGlxScreen, &minimal, visuals[i].class);
-	else {
-	    config = pickFBConfig(pGlxScreen, &best, visuals[i].class);
-	    if (config == NULL)
-		config = pickFBConfig(pGlxScreen, &good, visuals[i].class);
-        }
-	if (config == NULL)
-	    config = pGlxScreen->fbconfigs;
-	if (config == NULL)
+	/* Can't use the same FBconfig for multiple X visuals.  I think. */
+	if (config->visualID != 0)
 	    continue;
 
-	pGlxScreen->visuals[j] = config;
-	config->visualID = visuals[i].vid;
-	j++;
+	if (config->doubleBufferMode > 0)
+	    score += 8;
+	if (config->depthBits > 0)
+	    score += 4;
+	if (config->stencilBits > 0)
+	    score += 2;
+	if (config->alphaBits > 0)
+	    score++;
+
+	if (score > best_score) {
+	    best = config;
+	    best_score = score;
+	}
     }
 
-    pGlxScreen->numVisuals = j;
-}
-
-static void
-addTypicalSet(__GLXscreen *pGlxScreen)
-{
-    addMinimalSet(pGlxScreen);
-}
-
-static void
-addFullSet(__GLXscreen *pGlxScreen)
-{
-    __GLXconfig *config;
-    VisualPtr visuals;
-    int i, depth;
-
-    pGlxScreen->visuals =
-	xcalloc(pGlxScreen->numFBConfigs, sizeof (__GLXconfig *));
-    if (pGlxScreen->visuals == NULL) {
-	ErrorF("Failed to allocate for full set of GLX visuals\n");
-	return;
-    }
-
-    config = pGlxScreen->fbconfigs;
-    depth = config->redBits + config->greenBits + config->blueBits;
-    visuals = AddScreenVisuals(pGlxScreen->pScreen, pGlxScreen->numFBConfigs, depth);
-    if (visuals == NULL) {
-	xfree(pGlxScreen->visuals);
-	return;
-    }
-
-    pGlxScreen->numVisuals = pGlxScreen->numFBConfigs;
-    for (i = 0, config = pGlxScreen->fbconfigs; config; config = config->next, i++) {
-	pGlxScreen->visuals[i] = config;
-	initGlxVisual(&visuals[i], config);
-    }
-}
-
-static int glxVisualConfig = GLX_ALL_VISUALS;
-
-void GlxSetVisualConfig(int config)
-{
-    glxVisualConfig = config;
+    return best;
 }
 
 void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 {
     __GLXconfig *m;
+    __GLXconfig *config;
     int i;
 
     pGlxScreen->pScreen       = pScreen;
@@ -558,38 +403,69 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
     pGlxScreen->GLXversion    = xstrdup(GLXServerVersion);
     pGlxScreen->GLXextensions = xstrdup(GLXServerExtensions);
 
-    pGlxScreen->PositionWindow = pScreen->PositionWindow;
-    pScreen->PositionWindow = glxPositionWindow;
- 
     pGlxScreen->CloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = glxCloseScreen;
-
-    filterOutNativeConfigs(pGlxScreen);
 
     i = 0;
     for (m = pGlxScreen->fbconfigs; m != NULL; m = m->next) {
 	m->fbconfigID = FakeClientID(0);
-	m->visualID = findVisualForConfig(pScreen, m);
+	m->visualID = 0;
 	i++;
     }
     pGlxScreen->numFBConfigs = i;
 
-    /* Select a subset of fbconfigs that we send to the client when it
-     * asks for the glx visuals.  All the fbconfigs here have a valid
-     * value for visual ID and each visual ID is only present once.
-     * This runs before composite adds its extra visual so we have to
-     * remember the number of visuals here.*/
+    pGlxScreen->visuals =
+	xcalloc(pGlxScreen->numFBConfigs, sizeof (__GLXconfig *));
 
-    switch (glxVisualConfig) {
-    case GLX_MINIMAL_VISUALS:
-	addMinimalSet(pGlxScreen);
-	break;
-    case GLX_TYPICAL_VISUALS:
-	addTypicalSet(pGlxScreen);
-	break;
-    case GLX_ALL_VISUALS:
-	addFullSet(pGlxScreen);
-	break;
+    /* First, try to choose featureful FBconfigs for the existing X visuals.
+     * Note that if multiple X visuals end up with the same FBconfig being
+     * chosen, the later X visuals don't get GLX visuals (because we want to
+     * prioritize the root visual being GLX).
+     */
+    for (i = 0; i < pScreen->numVisuals; i++) {
+	VisualPtr visual = &pScreen->visuals[i];
+
+	config = pickFBConfig(pGlxScreen, visual);
+	if (config) {
+	    pGlxScreen->visuals[pGlxScreen->numVisuals++] = config;
+	    config->visualID = visual->vid;
+	}
+    }
+
+    /* Then, add new visuals corresponding to all FBconfigs that didn't have
+     * an existing, appropriate visual.
+     */
+    for (config = pGlxScreen->fbconfigs; config != NULL; config = config->next) {
+	int depth;
+
+	VisualPtr visual;
+
+	if (config->visualID != 0)
+	    continue;
+
+	/* Only count RGB bits and not alpha, as we're not trying to create
+	 * visuals for compositing (that's what the 32-bit composite visual
+	 * set up above is for.
+	 */
+	depth = config->redBits + config->greenBits + config->blueBits;
+
+	/* Make sure that our FBconfig's depth can actually be displayed
+	 * (corresponds to an existing visual).
+	 */
+	for (i = 0; i < pScreen->numVisuals; i++) {
+	    if (depth == pScreen->visuals[i].nplanes)
+		break;
+	}
+	if (i == pScreen->numVisuals)
+	    continue;
+
+	/* Create a new X visual for our FBconfig. */
+	visual = AddScreenVisuals(pScreen, 1, depth);
+	if (visual == NULL)
+	    continue;
+
+	pGlxScreen->visuals[pGlxScreen->numVisuals++] = config;
+	initGlxVisual(visual, config);
     }
 
     dixSetPrivate(&pScreen->devPrivates, glxScreenPrivateKey, pGlxScreen);

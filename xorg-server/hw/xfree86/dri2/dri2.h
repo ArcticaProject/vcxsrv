@@ -33,49 +33,124 @@
 #ifndef _DRI2_H_
 #define _DRI2_H_
 
-typedef unsigned int	(*DRI2GetPixmapHandleProcPtr)(PixmapPtr p,
-						      unsigned int *flags);
-typedef void		(*DRI2BeginClipNotifyProcPtr)(ScreenPtr pScreen);
-typedef void		(*DRI2EndClipNotifyProcPtr)(ScreenPtr pScreen);
+#include <X11/extensions/dri2tokens.h>
+
+/* Version 1 structure (for ABI compatibility) */
+typedef struct {
+    unsigned int attachment;
+    unsigned int name;
+    unsigned int pitch;
+    unsigned int cpp;
+    unsigned int flags;
+    void *driverPrivate;
+} DRI2BufferRec, *DRI2BufferPtr;
+
+/* Version 2 structure (with format at the end) */
+typedef struct {
+    unsigned int attachment;
+    unsigned int name;
+    unsigned int pitch;
+    unsigned int cpp;
+    unsigned int flags;
+    void *driverPrivate;
+    unsigned int format;
+} DRI2Buffer2Rec, *DRI2Buffer2Ptr;
+
+typedef DRI2BufferPtr	(*DRI2CreateBuffersProcPtr)(DrawablePtr pDraw,
+						    unsigned int *attachments,
+						    int count);
+typedef void		(*DRI2DestroyBuffersProcPtr)(DrawablePtr pDraw,
+						     DRI2BufferPtr buffers,
+						     int count);
+typedef void		(*DRI2CopyRegionProcPtr)(DrawablePtr pDraw,
+						 RegionPtr pRegion,
+						 DRI2BufferPtr pDestBuffer,
+						 DRI2BufferPtr pSrcBuffer);
+
+typedef void		(*DRI2WaitProcPtr)(WindowPtr pWin,
+					   unsigned int sequence);
+
+typedef DRI2Buffer2Ptr	(*DRI2CreateBufferProcPtr)(DrawablePtr pDraw,
+						   unsigned int attachment,
+						   unsigned int format);
+typedef void		(*DRI2DestroyBufferProcPtr)(DrawablePtr pDraw,
+						    DRI2Buffer2Ptr buffer);
+
+/**
+ * Version of the DRI2InfoRec structure defined in this header
+ */
+#define DRI2INFOREC_VERSION 2
 
 typedef struct {
-    unsigned int version;	/* Version of this struct */
+    unsigned int version;	/**< Version of this struct */
     int fd;
-    size_t driverSareaSize;
     const char *driverName;
-    DRI2GetPixmapHandleProcPtr getPixmapHandle;
-    DRI2BeginClipNotifyProcPtr beginClipNotify;
-    DRI2EndClipNotifyProcPtr endClipNotify;
+    const char *deviceName;
+
+    DRI2CreateBuffersProcPtr	CreateBuffers;
+    DRI2DestroyBuffersProcPtr	DestroyBuffers;
+    DRI2CopyRegionProcPtr	CopyRegion;
+    DRI2WaitProcPtr		Wait;
+
+    /**
+     * \name Fields added in version 2 of the structure.
+     */
+    /*@{*/
+    DRI2CreateBufferProcPtr	CreateBuffer;
+    DRI2DestroyBufferProcPtr	DestroyBuffer;
+    /*@}*/
+
 }  DRI2InfoRec, *DRI2InfoPtr;
 
-void *DRI2ScreenInit(ScreenPtr	pScreen,
-		     DRI2InfoPtr info);
+Bool DRI2ScreenInit(ScreenPtr	pScreen,
+		    DRI2InfoPtr info);
 
 void DRI2CloseScreen(ScreenPtr pScreen);
 
 Bool DRI2Connect(ScreenPtr pScreen,
+		 unsigned int driverType,
 		 int *fd,
 		 const char **driverName,
-		 unsigned int *sareaHandle);
+		 const char **deviceName);
 
-Bool DRI2AuthConnection(ScreenPtr pScreen, drm_magic_t magic);
+Bool DRI2Authenticate(ScreenPtr pScreen, drm_magic_t magic);
 
-unsigned int DRI2GetPixmapHandle(PixmapPtr pPixmap,
-				 unsigned int *flags);
-
-void DRI2Lock(ScreenPtr pScreen);
-void DRI2Unlock(ScreenPtr pScreen);
-
-Bool DRI2CreateDrawable(DrawablePtr pDraw,
-			unsigned int *handle,
-			unsigned int *head);
+int DRI2CreateDrawable(DrawablePtr pDraw);
 
 void DRI2DestroyDrawable(DrawablePtr pDraw);
 
-void DRI2ReemitDrawableInfo(DrawablePtr pDraw,
-			    unsigned int *head);
+DRI2Buffer2Ptr *DRI2GetBuffers(DrawablePtr pDraw,
+			     int *width,
+			     int *height,
+			     unsigned int *attachments,
+			     int count,
+			     int *out_count);
 
-Bool DRI2PostDamage(DrawablePtr pDrawable,
-		    struct drm_clip_rect *rects, int numRects);
+int DRI2CopyRegion(DrawablePtr pDraw,
+		   RegionPtr pRegion,
+		   unsigned int dest,
+		   unsigned int src);
+
+/**
+ * Determine the major and minor version of the DRI2 extension.
+ *
+ * Provides a mechanism to other modules (e.g., 2D drivers) to determine the
+ * version of the DRI2 extension.  While it is possible to peek directly at
+ * the \c XF86ModuleData from a layered module, such a module will fail to
+ * load (due to an unresolved symbol) if the DRI2 extension is not loaded.
+ *
+ * \param major  Location to store the major verion of the DRI2 extension
+ * \param minor  Location to store the minor verion of the DRI2 extension
+ *
+ * \note
+ * This interface was added some time after the initial release of the DRI2
+ * module.  Layered modules that wish to use this interface must first test
+ * its existance by calling \c xf86LoaderCheckSymbol.
+ */
+extern _X_EXPORT void DRI2Version(int *major, int *minor);
+
+extern _X_EXPORT DRI2Buffer2Ptr *DRI2GetBuffersWithFormat(DrawablePtr pDraw,
+	int *width, int *height, unsigned int *attachments, int count,
+	int *out_count);
 
 #endif

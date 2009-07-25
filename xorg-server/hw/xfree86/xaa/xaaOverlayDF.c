@@ -151,7 +151,8 @@ typedef struct {
    int (*TiledFillChooser)(GCPtr);
 } XAAOverlayRec, *XAAOverlayPtr;
 
-static DevPrivateKey XAAOverlayKey = &XAAOverlayKey;
+static int XAAOverlayKeyIndex;
+static DevPrivateKey XAAOverlayKey = &XAAOverlayKeyIndex;
 
 #define GET_OVERLAY_PRIV(pScreen) \
     (XAAOverlayPtr)dixLookupPrivate(&(pScreen)->devPrivates, XAAOverlayKey)

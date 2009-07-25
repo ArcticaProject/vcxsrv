@@ -43,8 +43,10 @@
 #include "xace.h"
 #include "registry.h"
 
-_X_EXPORT DevPrivateKey PictureScreenPrivateKey = &PictureScreenPrivateKey;
-DevPrivateKey	PictureWindowPrivateKey = &PictureWindowPrivateKey;
+static int PictureScreenPrivateKeyIndex;
+_X_EXPORT DevPrivateKey PictureScreenPrivateKey = &PictureScreenPrivateKeyIndex;
+static int PictureWindowPrivateKeyIndex;
+DevPrivateKey	PictureWindowPrivateKey = &PictureWindowPrivateKeyIndex;
 static int	PictureGeneration;
 RESTYPE		PictureType;
 RESTYPE		PictFormatType;
@@ -314,10 +316,9 @@ PictureCreateDefaultFormats (ScreenPtr pScreen, int *nformatp)
     }
     
 
-    pFormats = (PictFormatPtr) xalloc (nformats * sizeof (PictFormatRec));
+    pFormats = xcalloc (nformats, sizeof (PictFormatRec));
     if (!pFormats)
 	return 0;
-    memset (pFormats, '\0', nformats * sizeof (PictFormatRec));
     for (f = 0; f < nformats; f++)
     {
         pFormats[f].id = FakeClientID (0);
@@ -1779,67 +1780,3 @@ AddTraps (PicturePtr	pPicture,
     (*ps->AddTraps) (pPicture, xOff, yOff, ntrap, traps);
 }
 
-_X_EXPORT Bool
-PictureTransformPoint3d (PictTransformPtr transform,
-                         PictVectorPtr	vector)
-{
-    PictVector	    result;
-    int		    i, j;
-    xFixed_32_32    partial;
-    xFixed_48_16    v;
-
-    for (j = 0; j < 3; j++)
-    {
-	v = 0;
-	for (i = 0; i < 3; i++)
-	{
-	    partial = ((xFixed_48_16) transform->matrix[j][i] *
-		       (xFixed_48_16) vector->vector[i]);
-	    v += partial >> 16;
-	}
-	if (v > MAX_FIXED_48_16 || v < MIN_FIXED_48_16)
-	    return FALSE;
-	result.vector[j] = (xFixed) v;
-    }
-    if (!result.vector[2])
-	return FALSE;
-    *vector = result;
-    return TRUE;
-}
-
-
-_X_EXPORT Bool
-PictureTransformPoint (PictTransformPtr transform,
-		       PictVectorPtr	vector)
-{
-    PictVector	    result;
-    int		    i, j;
-    xFixed_32_32    partial;
-    xFixed_48_16    v;
-
-    for (j = 0; j < 3; j++)
-    {
-	v = 0;
-	for (i = 0; i < 3; i++)
-	{
-	    partial = ((xFixed_48_16) transform->matrix[j][i] * 
-		       (xFixed_48_16) vector->vector[i]);
-	    v += partial >> 16;
-	}
-	if (v > MAX_FIXED_48_16 || v < MIN_FIXED_48_16)
-	    return FALSE;
-	result.vector[j] = (xFixed) v;
-    }
-    if (!result.vector[2])
-	return FALSE;
-    for (j = 0; j < 2; j++)
-    {
-	partial = (xFixed_48_16) result.vector[j] << 16;
-	v = partial / result.vector[2];
-	if (v > MAX_FIXED_48_16 || v < MIN_FIXED_48_16)
-	    return FALSE;
-	vector->vector[j] = (xFixed) v;
-    }
-    vector->vector[2] = xFixed1;
-    return TRUE;
-}

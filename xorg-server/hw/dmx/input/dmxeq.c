@@ -79,10 +79,8 @@
 #include "inputstr.h"
 #include "scrnintstr.h"         /* For screenInfo */
 
-#ifdef XINPUT
 #include <X11/extensions/XIproto.h>
 #define EXTENSION_PROC_ARGS void *
-#endif
 
 #if DMX_EQ_DEBUG
 #define DMXDBG2(f,a,b)           dmxLog(dmxDebug,f,a,b)
@@ -100,9 +98,8 @@
 typedef struct _Event {
     xEvent	   event;    /**< Event. */
     ScreenPtr	   pScreen;  /**< Screen on which event occurred. */
-#ifdef XINPUT
     deviceValuator valuator; /**< XInput device valuator information. */
-#endif
+    DeviceIntPtr   pDev;
 } EventRec, *EventPtr;
 
 /** Event queue. */
@@ -158,7 +155,7 @@ Bool dmxeqInit(DevicePtr pKbd, DevicePtr pPtr)
  * called from regular code.
  */
 
-void dmxeqEnqueue(xEvent *e)
+void dmxeqEnqueue(DeviceIntPtr pDev, xEvent *e)
 {
     HWEventQueueType oldtail, newtail;
     Bool             isMotion;
@@ -183,15 +180,12 @@ void dmxeqEnqueue(xEvent *e)
 
                                 /* Store the event in the queue */
     dmxEventQueue.events[oldtail].event   = *e;
-#ifdef XINPUT
-    {
-                                /* If this is an XInput event, store the
-                                 * valuator event, too */
-        deviceKeyButtonPointer *ev = (deviceKeyButtonPointer *)e;
-        if (e->u.u.type >= LASTEvent && (ev->deviceid & MORE_EVENTS))
-            dmxEventQueue.events[oldtail].valuator = *(deviceValuator *)(ev+1);
-    }
-#endif
+    dmxEventQueue.events[oldtail].pDev    = pDev;
+                            /* If this is an XInput event, store the
+                             * valuator event, too */
+    deviceKeyButtonPointer *ev = (deviceKeyButtonPointer *)e;
+    if (e->u.u.type >= LASTEvent && (ev->deviceid & MORE_EVENTS))
+        dmxEventQueue.events[oldtail].valuator = *(deviceValuator *)(ev+1);
 
                                 /* Make sure that event times don't go
                                  * backwards - this is "unnecessary",
@@ -205,13 +199,12 @@ void dmxeqEnqueue(xEvent *e)
 
 /** Make \a pScreen the new screen for enqueueing events.  If \a fromDIX
  * is TRUE, also make \a pScreen the new screen for dequeuing events. */
-void dmxeqSwitchScreen(ScreenPtr pScreen, Bool fromDIX)
+void dmxeqSwitchScreen(DeviceIntPtr pDev, ScreenPtr pScreen, Bool fromDIX)
 {
     dmxEventQueue.pEnqueueScreen = pScreen;
     if (fromDIX) dmxEventQueue.pDequeueScreen = pScreen;
 }
 
-#ifdef XINPUT
 static void dmxeqProcessXInputEvent(xEvent *xe, EventRec *e)
 {
     deviceKeyButtonPointer *ev     = (deviceKeyButtonPointer *)xe;
@@ -238,7 +231,6 @@ static void dmxeqProcessXInputEvent(xEvent *xe, EventRec *e)
         pDevice->public.processInputProc(xe, pDevice, 1);
     }
 }
-#endif
 
 /**
  * This function is called from #ProcessInputEvents() to remove events
@@ -268,7 +260,7 @@ void dmxeqProcessInputEvents(void)
 	    y = e->event.u.keyButtonPointer.rootY;
 	    if (dmxEventQueue.head == QUEUE_SIZE - 1) dmxEventQueue.head = 0;
 	    else                                      ++dmxEventQueue.head;
-	    NewCurrentScreen(dmxEventQueue.pDequeueScreen, x, y);
+	    NewCurrentScreen(e->pDev, dmxEventQueue.pDequeueScreen, x, y);
 	} else {
 	    xe[0] = e->event;
 	    if (dmxEventQueue.head == QUEUE_SIZE - 1) dmxEventQueue.head = 0;
@@ -285,11 +277,8 @@ void dmxeqProcessInputEvents(void)
                                        (DeviceIntPtr)dmxEventQueue.pKbd, 1);
 	    	break;
             default:
-#ifdef XINPUT
                 dmxeqProcessXInputEvent(xe, e);
                 break;
-#endif
-                /* ifndef XINPUT, fall through */
             case ButtonPress:
             case ButtonRelease:
             case MotionNotify:

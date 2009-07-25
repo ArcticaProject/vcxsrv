@@ -63,8 +63,6 @@ SOFTWARE.
 #include "registry.h"
 #include "xace.h"
 
-#define EXTENSION_BASE  128
-#define EXTENSION_EVENT_BASE  64
 #define LAST_EVENT  128
 #define LAST_ERROR 255
 
@@ -84,7 +82,7 @@ AddExtension(char *name, int NumEvents, int NumErrors,
     int i;
     ExtensionEntry *ext, **newexts;
 
-    if (!MainProc || !SwappedMainProc || !CloseDownProc || !MinorOpcodeProc)
+    if (!MainProc || !SwappedMainProc || !MinorOpcodeProc)
         return((ExtensionEntry *) NULL);
     if ((lastEvent + NumEvents > LAST_EVENT) || 
 	        (unsigned)(lastError + NumErrors > LAST_ERROR))
@@ -247,7 +245,8 @@ CloseDownExtensions(void)
 
     for (i = NumExtensions - 1; i >= 0; i--)
     {
-	(* extensions[i]->CloseDown)(extensions[i]);
+	if (extensions[i]->CloseDown)
+	    extensions[i]->CloseDown(extensions[i]);
 	NumExtensions = i;
 	xfree(extensions[i]->name);
 	for (j = extensions[i]->num_aliases; --j >= 0;)

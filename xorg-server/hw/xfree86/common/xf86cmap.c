@@ -29,8 +29,7 @@
 #include <xorg-config.h>
 #endif
 
-#if defined(_XOPEN_SOURCE) || defined(__QNXNTO__) \
-	|| (defined(sun) && defined(__SVR4))
+#if defined(_XOPEN_SOURCE) || defined(sun) && defined(__SVR4)
 #include <math.h>
 #else
 #define _XOPEN_SOURCE   /* to get prototype for pow on some systems */
@@ -102,8 +101,10 @@ typedef struct {
   int		overscan;
 } CMapColormapRec, *CMapColormapPtr;
 
-static DevPrivateKey CMapScreenKey = NULL;
-static DevPrivateKey CMapColormapKey = &CMapColormapKey;
+static int CMapScreenKeyIndex;
+static DevPrivateKey CMapScreenKey;
+static int CMapColormapKeyIndex;
+static DevPrivateKey CMapColormapKey = &CMapColormapKeyIndex;
 
 static void CMapInstallColormap(ColormapPtr);
 static void CMapStoreColors(ColormapPtr, int, xColorItem *);
@@ -143,7 +144,7 @@ _X_EXPORT Bool xf86HandleColormaps(
     if(!maxColors || !sigRGBbits || !loadPalette)
 	return FALSE;
 
-    CMapScreenKey = &CMapScreenKey;
+    CMapScreenKey = &CMapScreenKeyIndex;
 
     elements = 1 << sigRGBbits;
 

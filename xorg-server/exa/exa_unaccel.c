@@ -57,9 +57,9 @@ void
 exaFinishAccessGC(GCPtr pGC)
 {
     if (pGC->fillStyle == FillTiled)
-	exaFinishAccess(&pGC->tile.pixmap->drawable, EXA_PREPARE_MASK);
+	exaFinishAccess(&pGC->tile.pixmap->drawable, EXA_PREPARE_SRC);
     if (pGC->stipple)
-        exaFinishAccess(&pGC->stipple->drawable, EXA_PREPARE_SRC);
+        exaFinishAccess(&pGC->stipple->drawable, EXA_PREPARE_MASK);
 }
 
 #if DEBUG_TRACE_FALL
@@ -97,12 +97,15 @@ ExaCheckPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth,
 		 int x, int y, int w, int h, int leftPad, int format,
 		 char *bits)
 {
+    ExaPixmapPriv(exaGetDrawablePixmap(pDrawable));
+
     EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
     if (exaGCReadsDestination(pDrawable, pGC->planemask, pGC->fillStyle,
-			      pGC->alu))
+			      pGC->alu, pGC->clientClipType))
 	exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
     else
-	ExaDoPrepareAccess (pDrawable, EXA_PREPARE_DEST);
+	exaPrepareAccessReg (pDrawable, EXA_PREPARE_DEST, pExaPixmap->pDamage ?
+			     DamagePendingRegion(pExaPixmap->pDamage) : NULL);
     fbPutImage (pDrawable, pGC, depth, x, y, w, h, leftPad, format, bits);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
 }
@@ -306,6 +309,15 @@ ExaCheckComposite (CARD8      op,
 
     REGION_NULL(pScreen, &region);
 
+    /* We need to prepare access to any separate alpha maps first, in case the
+     * driver doesn't support EXA_PREPARE_AUX*, in which case EXA_PREPARE_SRC
+     * may be used for moving them out.
+     */
+    if (pSrc->alphaMap && pSrc->alphaMap->pDrawable)
+	exaPrepareAccess(pSrc->alphaMap->pDrawable, EXA_PREPARE_AUX2);
+    if (pMask && pMask->alphaMap && pMask->alphaMap->pDrawable)
+	exaPrepareAccess(pMask->alphaMap->pDrawable, EXA_PREPARE_AUX1);
+
     if (!exaOpReadsDestination(op)) {
 	if (!miComputeCompositeRegion (&region, pSrc, pMask, pDst,
 				       xSrc, ySrc, xMask, yMask, xDst, yDst,
@@ -318,9 +330,17 @@ ExaCheckComposite (CARD8      op,
 
 	REGION_TRANSLATE(pScreen, &region, xoff, yoff);
 
+	if (pDst->alphaMap && pDst->alphaMap->pDrawable)
+	    exaPrepareAccessReg(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX0,
+				&region);
+
 	exaPrepareAccessReg (pDst->pDrawable, EXA_PREPARE_DEST, &region);
-    } else
+    } else {
+	if (pDst->alphaMap && pDst->alphaMap->pDrawable)
+	    exaPrepareAccess(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX0);
+
 	exaPrepareAccess (pDst->pDrawable, EXA_PREPARE_DEST);
+    }
 
     EXA_FALLBACK(("from picts %p/%p to pict %p\n",
 		 pSrc, pMask, pDst));
@@ -343,9 +363,15 @@ ExaCheckComposite (CARD8      op,
                  height);
     if (pMask && pMask->pDrawable != NULL)
 	exaFinishAccess (pMask->pDrawable, EXA_PREPARE_MASK);
+    if (pMask && pMask->alphaMap && pMask->alphaMap->pDrawable)
+	exaFinishAccess(pMask->alphaMap->pDrawable, EXA_PREPARE_AUX1);
     if (pSrc->pDrawable != NULL)
 	exaFinishAccess (pSrc->pDrawable, EXA_PREPARE_SRC);
+    if (pSrc->alphaMap && pSrc->alphaMap->pDrawable)
+	exaFinishAccess(pSrc->alphaMap->pDrawable, EXA_PREPARE_AUX2);
     exaFinishAccess (pDst->pDrawable, EXA_PREPARE_DEST);
+    if (pDst->alphaMap && pDst->alphaMap->pDrawable)
+	exaFinishAccess(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX0);
 
     REGION_UNINIT(pScreen, &region);
 }
@@ -373,23 +399,22 @@ ExaCheckAddTraps (PicturePtr	pPicture,
 CARD32
 exaGetPixmapFirstPixel (PixmapPtr pPixmap)
 {
-    ExaScreenPriv(pPixmap->drawable.pScreen);
     CARD32 pixel;
     void *fb;
     Bool need_finish = FALSE;
     BoxRec box;
     RegionRec migration;
     ExaPixmapPriv (pPixmap);
-    Bool sys_valid = !miPointInRegion(&pExaPixmap->validSys, 0, 0,  &box);
-    Bool damaged = miPointInRegion(DamageRegion(pExaPixmap->pDamage), 0, 0,
-				   &box);
+    Bool sys_valid = pExaPixmap->pDamage &&
+	!miPointInRegion(&pExaPixmap->validSys, 0, 0,  &box);
+    Bool damaged = pExaPixmap->pDamage &&
+ 	miPointInRegion(DamageRegion(pExaPixmap->pDamage), 0, 0, &box);
     Bool offscreen = exaPixmapIsOffscreen(pPixmap);
 
     fb = pExaPixmap->sys_ptr;
 
     /* Try to avoid framebuffer readbacks */
-    if (pExaScr->info->CreatePixmap ||
-	(!offscreen && !sys_valid && !damaged) ||
+    if ((!offscreen && !sys_valid && !damaged) ||
 	(offscreen && (!sys_valid || damaged)))
     {
 	box.x1 = 0;

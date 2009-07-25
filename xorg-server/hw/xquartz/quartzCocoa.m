@@ -32,24 +32,17 @@
  * use or other dealings in this Software without prior written authorization.
  */
 
+#include "sanitizedCocoa.h"
+
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
 
 #include "quartzCommon.h"
+#include "inputstr.h"
 #include "quartzPasteboard.h"
 
-#define BOOL xBOOL
 #include "darwin.h"
-#undef BOOL
-
-#include <Cocoa/Cocoa.h>
-
-#include "pseudoramiX.h"
-
-extern void FatalError(const char *, ...);
-extern char *display;
-extern int noPanoramiXExtension;
 
 /*
  * QuartzWriteCocoaPasteboard

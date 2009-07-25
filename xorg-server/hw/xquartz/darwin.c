@@ -1,10 +1,9 @@
 /**************************************************************
  *
- * Shared code for the Darwin X Server
- * running with Quartz or IOKit display mode
+ * Xquartz initialization code
  *
+ * Copyright (c) 2007-2008 Apple Inc.
  * Copyright (c) 2001-2004 Torrey T. Lyons. All Rights Reserved.
- * Copyright (c) 2007 Apple Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -47,12 +46,10 @@
 #include "globals.h"
 #include "dix.h"
 
-#ifdef XINPUT
-# include <X11/extensions/XI.h>
-# include <X11/extensions/XIproto.h>
-# include "exevents.h"
-# include "extinit.h"
-#endif
+#include <X11/extensions/XI.h>
+#include <X11/extensions/XIproto.h>
+#include "exevents.h"
+#include "extinit.h"
 
 #include <sys/types.h>
 #include <sys/time.h>
@@ -65,9 +62,7 @@
 #include <sys/utsname.h>
 
 #define NO_CFPLUGIN
-#include <IOKit/IOKitLib.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
-#include <IOKit/hidsystem/ev_keymap.h>
 
 #ifdef MITSHM
 #define _XSHM_SERVER_
@@ -76,9 +71,12 @@
 
 #include "darwin.h"
 #include "darwinEvents.h"
-#include "darwinKeyboard.h"
+#include "quartzKeyboard.h"
 #include "quartz.h"
 //#include "darwinClut8.h"
+
+#include "GL/visualConfigs.h"
+
 
 #ifdef ENABLE_DEBUG_LOG
 FILE *debug_log_fp = NULL;
@@ -88,7 +86,8 @@ FILE *debug_log_fp = NULL;
  * X server shared global variables
  */
 int                     darwinScreensFound = 0;
-DevPrivateKey           darwinScreenKey = &darwinScreenKey;
+static int              darwinScreenKeyIndex;
+DevPrivateKey           darwinScreenKey = &darwinScreenKeyIndex;
 io_connect_t            darwinParamConnect = 0;
 int                     darwinEventReadFD = -1;
 int                     darwinEventWriteFD = -1;
@@ -103,16 +102,30 @@ int                     darwinMainScreenY = 0;
 unsigned int            darwinDesiredWidth = 0, darwinDesiredHeight = 0;
 int                     darwinDesiredDepth = -1;
 int                     darwinDesiredRefresh = -1;
-char                    *darwinKeymapFile = "USA.keymapping";
 int                     darwinSyncKeymap = FALSE;
 
-// modifier masks for faking mouse buttons
+// modifier masks for faking mouse buttons - ANY of these bits trigger it  (not all)
+#ifdef NX_DEVICELCMDKEYMASK
+int                     darwinFakeMouse2Mask = NX_DEVICELALTKEYMASK | NX_DEVICERALTKEYMASK;
+int                     darwinFakeMouse3Mask = NX_DEVICELCMDKEYMASK | NX_DEVICERCMDKEYMASK;
+#else
 int                     darwinFakeMouse2Mask = NX_ALTERNATEMASK;
 int                     darwinFakeMouse3Mask = NX_COMMANDMASK;
+#endif
+
+// Modifier mask for overriding event delivery to appkit (might be useful to set this to rcommand for input menu
+unsigned int            darwinAppKitModMask = 0; // Any of these bits
+
+// Modifier mask for items in the Window menu (0 and -1 cause shortcuts to be disabled)
+unsigned int            windowItemModMask = NX_COMMANDMASK;
 
 // devices
-DeviceIntPtr            darwinPointer = NULL;
 DeviceIntPtr            darwinKeyboard = NULL;
+DeviceIntPtr            darwinPointer = NULL;
+DeviceIntPtr            darwinTabletCurrent = NULL;
+DeviceIntPtr            darwinTabletStylus = NULL;
+DeviceIntPtr            darwinTabletCursor = NULL;
+DeviceIntPtr            darwinTabletEraser = NULL;
 
 // Common pixmap formats
 static PixmapFormatRec formats[] = {
@@ -150,8 +163,7 @@ void
 DarwinPrintBanner(void)
 { 
   // this should change depending on which specific server we are building
-  ErrorF("XQuartz starting:\n");
-  ErrorF("X.org Release 7.2\n"); // This is here to help fink until they fix their packages.
+  ErrorF("Xquartz starting:\n");
   ErrorF("X.Org X Server %s\nBuild Date: %s\n", XSERVER_VERSION, BUILD_DATE );
 }
 
@@ -169,7 +181,6 @@ static Bool DarwinSaveScreen(ScreenPtr pScreen, int on)
     }
     return TRUE;
 }
-
 
 /*
  * DarwinAddScreen
@@ -206,6 +217,21 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
                                  dfb->greenMask, dfb->blueMask)) {
         return FALSE;
     }
+  
+// TODO: Make PseudoColor visuals not suck in TrueColor mode  
+//    if(dfb->depth > 8)
+//        miSetVisualTypesAndMasks(8, PseudoColorMask, 8, PseudoColor, 0, 0, 0);
+
+#if 0
+    /*
+     * These aren't used anymore.  xpr/xprScreen.c initializes the dfb struct
+     * above based on the display properties.
+     */
+    if(dfb->depth > 15)
+        miSetVisualTypesAndMasks(15, LARGE_VISUALS, 5, TrueColor, 0x7c00, 0x03e0, 0x001f);
+    if(dfb->depth > 24)
+        miSetVisualTypesAndMasks(24, LARGE_VISUALS, 8, TrueColor, 0x00ff0000, 0x0000ff00, 0x000000ff);
+#endif
 
     miSetPixmapDepths();
 
@@ -214,7 +240,7 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
     if (monitorResolution)
         dpi = monitorResolution;
     else
-        dpi = 75;
+        dpi = 96;
 
     // initialize fb
     if (! fbScreenInit(pScreen,
@@ -306,88 +332,74 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
  =============================================================================
 */
 
-#if 0
 /*
- * DarwinChangePointerControl
- *  Set mouse acceleration and thresholding
- *  FIXME: We currently ignore the threshold in ctrl->threshold.
+ * DarwinMouseProc: Handle the initialization, etc. of a mouse
  */
-static void DarwinChangePointerControl(
-    DeviceIntPtr    device,
-    PtrCtrl         *ctrl )
-{
-    kern_return_t   kr;
-    double          acceleration;
-
-    if (!darwinMouseAccelChange)
-        return;
-
-    acceleration = ctrl->num / ctrl->den;
-    kr = IOHIDSetMouseAcceleration( darwinParamConnect, acceleration );
-    if (kr != KERN_SUCCESS)
-        ErrorF( "Could not set mouse acceleration with kernel return = 0x%x.\n", kr );
-}
-#endif
-
-/*
- * DarwinMouseProc
- *  Handle the initialization, etc. of a mouse
- */
-static int DarwinMouseProc(
-    DeviceIntPtr    pPointer,
-    int             what )
-{
-    CARD8 map[6];
-
+static int DarwinMouseProc(DeviceIntPtr pPointer, int what) {
+	// 7 buttons: left, right, middle, then four scroll wheel "buttons"
+    CARD8 map[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    
     switch (what) {
-
         case DEVICE_INIT:
             pPointer->public.on = FALSE;
-
+            
             // Set button map.
-            map[1] = 1;
-            map[2] = 2;
-            map[3] = 3;
-            map[4] = 4;
-            map[5] = 5;
-            InitPointerDeviceStruct( (DevicePtr)pPointer, map, 5,
-				     GetMotionHistory,
-				     (PtrCtrlProcPtr)NoopDDA,
-				     GetMotionHistorySize(), 2);
-
-#ifdef XINPUT
-            InitValuatorAxisStruct( pPointer,
-                                    0,     // X axis
-                                    0,     // min value
-                                    16000, // max value (fixme screen size?)
-                                    1,     // resolution (fixme ?)
-                                    1,     // min resolution
-                                    1 );   // max resolution
-            InitValuatorAxisStruct( pPointer,
-                                    1,     // X axis
-                                    0,     // min value
-                                    16000, // max value (fixme screen size?)
-                                    1,     // resolution (fixme ?)
-                                    1,     // min resolution
-                                    1 );   // max resolution
-#endif
+            InitPointerDeviceStruct((DevicePtr)pPointer, map, 7,
+                                    (PtrCtrlProcPtr)NoopDDA,
+                                    GetMotionHistorySize(), 2);
+            pPointer->valuator->mode = Absolute; // Relative
+            InitAbsoluteClassDeviceStruct(pPointer);
+//            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+//            InitValuatorAxisStruct(pPointer, 1, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
             break;
-
         case DEVICE_ON:
             pPointer->public.on = TRUE;
             AddEnabledDevice( darwinEventReadFD );
             return Success;
-
         case DEVICE_CLOSE:
         case DEVICE_OFF:
             pPointer->public.on = FALSE;
-            RemoveEnabledDevice( darwinEventReadFD );
+            RemoveEnabledDevice(darwinEventReadFD);
             return Success;
     }
-
+    
     return Success;
 }
 
+static int DarwinTabletProc(DeviceIntPtr pPointer, int what) {
+    CARD8 map[4] = {0, 1, 2, 3};
+    
+    switch (what) {
+        case DEVICE_INIT:
+            pPointer->public.on = FALSE;
+            
+            // Set button map.
+            InitPointerDeviceStruct((DevicePtr)pPointer, map, 3,
+                                    (PtrCtrlProcPtr)NoopDDA,
+                                    GetMotionHistorySize(), 5);
+            pPointer->valuator->mode = Absolute; // Relative
+            InitProximityClassDeviceStruct(pPointer);
+			InitAbsoluteClassDeviceStruct(pPointer);
+
+            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 1, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 2, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 3, -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 4, -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+//          pPointer->use = IsXExtensionDevice;
+            break;
+        case DEVICE_ON:
+            pPointer->public.on = TRUE;
+            AddEnabledDevice( darwinEventReadFD );
+            return Success;
+        case DEVICE_CLOSE:
+        case DEVICE_OFF:
+            pPointer->public.on = FALSE;
+            RemoveEnabledDevice(darwinEventReadFD);
+            return Success;
+    }
+    return Success;
+}
 
 /*
  * DarwinKeybdProc
@@ -423,67 +435,10 @@ static int DarwinKeybdProc( DeviceIntPtr pDev, int onoff )
 */
 
 /*
- * DarwinFindLibraryFile
- *  Search for a file in the standard Library paths, which are (in order):
- *
- *      ~/Library/              user specific
- *      /Library/               host specific
- *      /Network/Library/       LAN specific
- *      /System/Library/        OS specific
- *
- *  A sub-path can be specified to search in below the various Library
- *  directories. Returns a new character string (owned by the caller)
- *  containing the full path to the first file found.
- */
-static char * DarwinFindLibraryFile(
-    const char *file,
-    const char *pathext )
-{
-    // Library search paths
-    char *pathList[] = {
-        "",
-        "/Network",
-        "/System",
-        NULL
-    };
-    char *home;
-    char *fullPath;
-    int i = 0;
-
-    // Return the file name as is if it is already a fully qualified path.
-    if (!access(file, F_OK)) {
-        fullPath = xalloc(strlen(file)+1);
-        strcpy(fullPath, file);
-        return fullPath;
-    }
-
-    fullPath = xalloc(PATH_MAX);
-
-    home = getenv("HOME");
-    if (home) {
-        snprintf(fullPath, PATH_MAX, "%s/Library/%s/%s", home, pathext, file);
-        if (!access(fullPath, F_OK))
-            return fullPath;
-    }
-
-    while (pathList[i]) {
-        snprintf(fullPath, PATH_MAX, "%s/Library/%s/%s", pathList[i++],
-                 pathext, file);
-        if (!access(fullPath, F_OK))
-            return fullPath;
-    }
-
-    xfree(fullPath);
-    return NULL;
-}
-
-
-/*
  * DarwinParseModifierList
  *  Parse a list of modifier names and return a corresponding modifier mask
  */
-int DarwinParseModifierList(
-    const char *constmodifiers) // string containing list of modifier names
+int DarwinParseModifierList(const char *constmodifiers, int separatelr)
 {
     int result = 0;
 
@@ -495,9 +450,9 @@ int DarwinParseModifierList(
 
         while (p) {
             modifier = strsep(&p, " ,+&|/"); // allow lots of separators
-            nxkey = DarwinModifierStringToNXKey(modifier);
-            if (nxkey != -1)
-                result |= DarwinModifierNXKeyToNXMask(nxkey);
+            nxkey = DarwinModifierStringToNXMask(modifier, separatelr);
+            if(nxkey)
+                result |= nxkey;
             else
                 ErrorF("fakebuttons: Unknown modifier \"%s\"\n", modifier);
         }
@@ -520,13 +475,43 @@ int DarwinParseModifierList(
  */
 void InitInput( int argc, char **argv )
 {
-    darwinPointer = AddInputDevice(DarwinMouseProc, TRUE);
-    RegisterPointerDevice( darwinPointer );
-
-    darwinKeyboard = AddInputDevice(DarwinKeybdProc, TRUE);
+    darwinKeyboard = AddInputDevice(serverClient, DarwinKeybdProc, TRUE);
     RegisterKeyboardDevice( darwinKeyboard );
+    darwinKeyboard->name = strdup("keyboard");
 
-    DarwinEQInit( (DevicePtr)darwinKeyboard, (DevicePtr)darwinPointer );
+    /* here's the snippet from the current gdk sources:
+    if (!strcmp (tmp_name, "pointer"))
+        gdkdev->info.source = GDK_SOURCE_MOUSE;
+    else if (!strcmp (tmp_name, "wacom") ||
+             !strcmp (tmp_name, "pen"))
+        gdkdev->info.source = GDK_SOURCE_PEN;
+    else if (!strcmp (tmp_name, "eraser"))
+        gdkdev->info.source = GDK_SOURCE_ERASER;
+    else if (!strcmp (tmp_name, "cursor"))
+        gdkdev->info.source = GDK_SOURCE_CURSOR;
+    else
+        gdkdev->info.source = GDK_SOURCE_PEN;
+    */
+
+    darwinPointer = AddInputDevice(serverClient, DarwinMouseProc, TRUE);
+    RegisterPointerDevice( darwinPointer );
+    darwinPointer->name = strdup("pointer");
+
+    darwinTabletStylus = AddInputDevice(serverClient, DarwinTabletProc, TRUE);
+    RegisterPointerDevice( darwinTabletStylus );
+    darwinTabletStylus->name = strdup("pen");
+
+    darwinTabletCursor = AddInputDevice(serverClient, DarwinTabletProc, TRUE);
+    RegisterPointerDevice( darwinTabletCursor );
+    darwinTabletCursor->name = strdup("cursor");
+
+    darwinTabletEraser = AddInputDevice(serverClient, DarwinTabletProc, TRUE);
+    RegisterPointerDevice( darwinTabletEraser );
+    darwinTabletEraser->name = strdup("eraser");
+
+    darwinTabletCurrent = darwinTabletStylus;
+
+    DarwinEQInit();
 
     QuartzInitInput(argc, argv);
 }
@@ -557,8 +542,7 @@ DarwinAdjustScreenOrigins(ScreenInfo *pScreenInfo)
     /* Find leftmost screen. If there's a tie, take the topmost of the two. */
     for (i = 1; i < pScreenInfo->numScreens; i++) {
         if (dixScreenOrigins[i].x < left  ||
-            (dixScreenOrigins[i].x == left &&
-             dixScreenOrigins[i].y < top))
+            (dixScreenOrigins[i].x == left && dixScreenOrigins[i].y < top))
         {
             left = dixScreenOrigins[i].x;
             top = dixScreenOrigins[i].y;
@@ -567,17 +551,20 @@ DarwinAdjustScreenOrigins(ScreenInfo *pScreenInfo)
 
     darwinMainScreenX = left;
     darwinMainScreenY = top;
+    
+    DEBUG_LOG("top = %d, left=%d\n", top, left);
 
     /* Shift all screens so that there is a screen whose top left
-       is at X11 (0,0) and at global screen coordinate
-       (darwinMainScreenX, darwinMainScreenY). */
+     * is at X11 (0,0) and at global screen coordinate
+     * (darwinMainScreenX, darwinMainScreenY).
+     */
 
     if (darwinMainScreenX != 0 || darwinMainScreenY != 0) {
         for (i = 0; i < pScreenInfo->numScreens; i++) {
             dixScreenOrigins[i].x -= darwinMainScreenX;
             dixScreenOrigins[i].y -= darwinMainScreenY;
-    /*            ErrorF("Screen %d placed at X11 coordinate (%d,%d).\n",
-		  i, dixScreenOrigins[i].x, dixScreenOrigins[i].y); */
+            DEBUG_LOG("Screen %d placed at X11 coordinate (%d,%d).\n",
+                      i, dixScreenOrigins[i].x, dixScreenOrigins[i].y);
         }
     }
 }
@@ -609,6 +596,10 @@ void InitOutput( ScreenInfo *pScreenInfo, int argc, char **argv )
     pScreenInfo->numPixmapFormats = NUMFORMATS;
     for (i = 0; i < NUMFORMATS; i++)
         pScreenInfo->formats[i] = formats[i];
+
+#ifdef GLXEXT
+    setVisualConfigs();    
+#endif
 
     // Discover screens and do mode specific initialization
     QuartzInitOutput(argc, argv);
@@ -654,27 +645,6 @@ void OsVendorInit(void)
 	}
 #endif
     }
-    //    DEBUG_LOG("Xquartz started at %s\n", ctime(time(NULL)));
-
-    // Find the full path to the keymapping file.
-    if ( darwinKeymapFile ) {
-        char *tempStr = DarwinFindLibraryFile(darwinKeymapFile, "Keyboards");
-        if ( !tempStr ) {
-            ErrorF("Could not find keymapping file %s.\n", darwinKeymapFile);
-        } else {
-            ErrorF("Using keymapping provided in %s.\n", tempStr);
-        }
-        darwinKeymapFile = tempStr;
-    }
-}
-
-
-/*
- * ddxInitGlobals
- *  Called by InitGlobals() from os/util.c.
- */
-void ddxInitGlobals(void)
-{
 }
 
 
@@ -720,7 +690,7 @@ int ddxProcessArgument( int argc, char *argv[], int i )
         if (!strcasecmp(argv[i+1], "none") || !strcmp(argv[i+1], ""))
             darwinFakeMouse2Mask = 0;
         else
-            darwinFakeMouse2Mask = DarwinParseModifierList(argv[i+1]);
+            darwinFakeMouse2Mask = DarwinParseModifierList(argv[i+1], 1);
         ErrorF("Modifier mask to fake mouse button 2 = 0x%x\n",
                darwinFakeMouse2Mask);
         return 2;
@@ -733,23 +703,10 @@ int ddxProcessArgument( int argc, char *argv[], int i )
         if (!strcasecmp(argv[i+1], "none") || !strcmp(argv[i+1], ""))
             darwinFakeMouse3Mask = 0;
         else
-            darwinFakeMouse3Mask = DarwinParseModifierList(argv[i+1]);
+            darwinFakeMouse3Mask = DarwinParseModifierList(argv[i+1], 1);
         ErrorF("Modifier mask to fake mouse button 3 = 0x%x\n",
                darwinFakeMouse3Mask);
         return 2;
-    }
-
-    if ( !strcmp( argv[i], "-keymap" ) ) {
-        if ( i == argc-1 ) {
-            FatalError( "-keymap must be followed by a filename\n" );
-        }
-        darwinKeymapFile = argv[i+1];
-        return 2;
-    }
-
-    if ( !strcmp( argv[i], "-nokeymap" ) ) {
-        darwinKeymapFile = NULL;
-        return 1;
     }
 
     if ( !strcmp( argv[i], "+synckeymap" ) ) {
@@ -835,12 +792,8 @@ void ddxUseMsg( void )
     ErrorF("-fakemouse2 <modifiers> : fake middle mouse button with modifier keys.\n");
     ErrorF("-fakemouse3 <modifiers> : fake right mouse button with modifier keys.\n");
     ErrorF("  ex: -fakemouse2 \"option,shift\" = option-shift-click is middle button.\n");
-    ErrorF("-keymap <file> : read the keymapping from a file instead of the kernel.\n");
     ErrorF("-version : show the server version.\n");
     ErrorF("\n");
-//    ErrorF("Quartz modes (Experimental / In Development):\n");
-//    ErrorF("-fullscreen : run full screen in parallel with Mac OS X window server.\n");
-//    ErrorF("-rootless : run rootless inside Mac OS X window server.\n");
     ErrorF("\n");
     ErrorF("Options ignored in rootless mode:\n");
     ErrorF("-size <height> <width> : use a screen resolution of <height> x <width>.\n");
@@ -856,10 +809,7 @@ void ddxUseMsg( void )
  */
 void ddxGiveUp( void )
 {
-    ErrorF( "Quitting XQuartz...\n" );
-
-    //if (!quartzRootless)
-    //    quartzProcs->ReleaseScreens();
+    ErrorF( "Quitting Xquartz...\n" );
 }
 
 
@@ -896,16 +846,13 @@ void AbortDDX( void )
  */
 
 void
-xf86SetRootClip (ScreenPtr pScreen, BOOL enable)
+xf86SetRootClip (ScreenPtr pScreen, int enable)
 {
     WindowPtr	pWin = WindowTable[pScreen->myNum];
     WindowPtr	pChild;
     Bool	WasViewable = (Bool)(pWin->viewable);
     Bool	anyMarked = TRUE;
     RegionPtr	pOldClip = NULL, bsExposed;
-#ifdef DO_SAVE_UNDERS
-    Bool	dosave = FALSE;
-#endif
     WindowPtr   pLayerWin;
     BoxRec	box;
 
@@ -976,12 +923,6 @@ xf86SetRootClip (ScreenPtr pScreen, BOOL enable)
 	    anyMarked = TRUE;
 	}
 
-#ifdef DO_SAVE_UNDERS
-	if (DO_SAVE_UNDERS(pWin))
-	{
-	    dosave = (*pScreen->ChangeSaveUnder)(pLayerWin, pLayerWin);
-	}
-#endif /* DO_SAVE_UNDERS */
 
 	if (anyMarked)
 	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
@@ -1013,10 +954,6 @@ xf86SetRootClip (ScreenPtr pScreen, BOOL enable)
     {
 	if (anyMarked)
 	    (*pScreen->HandleExposures)(pWin);
-#ifdef DO_SAVE_UNDERS
-	if (dosave)
-	    (*pScreen->PostChangeSaveUnder)(pLayerWin, pLayerWin);
-#endif /* DO_SAVE_UNDERS */
 	if (anyMarked && pScreen->PostValidateTree)
 	    (*pScreen->PostValidateTree)(pWin, NullWindow, VTOther);
     }

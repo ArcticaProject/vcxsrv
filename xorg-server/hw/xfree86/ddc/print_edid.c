@@ -168,7 +168,7 @@ print_dpms_features(int scrnIndex, struct disp_features *c,
     } else if (v->revision == 3) {
 	xf86DrvMsg(scrnIndex,X_INFO,
 		   "First detailed timing not preferred "
-		   "mode in violation of standard!");
+		   "mode in violation of standard!\n");
     }
 
     if (v->revision >= 4) {
@@ -230,7 +230,7 @@ print_established_timings(int scrnIndex, struct established_timings *t)
     unsigned char c;
 
     if (t->t1 || t->t2 || t->t_manu)
-	xf86DrvMsg(scrnIndex,X_INFO,"Supported VESA Video Modes:\n");
+	xf86DrvMsg(scrnIndex,X_INFO,"Supported established timings:\n");
     c=t->t1;
     if (c&0x80) xf86DrvMsg(scrnIndex,X_INFO,"720x400@70Hz\n");
     if (c&0x40) xf86DrvMsg(scrnIndex,X_INFO,"720x400@88Hz\n");
@@ -262,7 +262,7 @@ print_std_timings(int scrnIndex, struct std_timings *t)
     for (i=0;i<STD_TIMINGS;i++) {
 	if (t[i].hsize > 256) {  /* sanity check */
 	    if (!done) {
-		xf86DrvMsg(scrnIndex,X_INFO,"Supported Future Video Modes:\n");
+		xf86DrvMsg(scrnIndex,X_INFO,"Supported standard timings:\n");
 		done = 1;
 	    }
 	    xf86DrvMsg(scrnIndex,X_INFO,
@@ -295,7 +295,7 @@ print_detailed_timings(int scrnIndex, struct detailed_timings *t)
 {
 
     if (t->clock > 15000000) {  /* sanity check */
-	xf86DrvMsg(scrnIndex,X_INFO,"Supported additional Video Mode:\n");
+	xf86DrvMsg(scrnIndex,X_INFO,"Supported detailed timing:\n");
 	xf86DrvMsg(scrnIndex,X_INFO,"clock: %.1f MHz   ",t->clock/1000000.0);
 	xf86ErrorF("Image Size:  %i x %i mm\n",t->h_size,t->v_size); 
 	xf86DrvMsg(scrnIndex,X_INFO,
@@ -463,22 +463,28 @@ print_number_sections(int scrnIndex, int num)
 xf86MonPtr
 xf86PrintEDID(xf86MonPtr m)
 {
-    CARD16 i, j;
+    CARD16 i, j, n;
     char buf[EDID_WIDTH * 2 + 1];
 
-    if (!(m)) return NULL;
+    if (!m) return NULL;
 
-    print_vendor(m->scrnIndex,&m->vendor);
-    print_version(m->scrnIndex,&m->ver);
-    print_display(m->scrnIndex,&m->features, &m->ver);
-    print_established_timings(m->scrnIndex,&m->timings1);
-    print_std_timings(m->scrnIndex,m->timings2);
-    print_detailed_monitor_section(m->scrnIndex,m->det_mon);
-    print_number_sections(m->scrnIndex,m->no_sections);
+    print_vendor(m->scrnIndex, &m->vendor);
+    print_version(m->scrnIndex, &m->ver);
+    print_display(m->scrnIndex, &m->features, &m->ver);
+    print_established_timings(m->scrnIndex, &m->timings1);
+    print_std_timings(m->scrnIndex, m->timings2);
+    print_detailed_monitor_section(m->scrnIndex, m->det_mon);
+    print_number_sections(m->scrnIndex, m->no_sections);
+
+    /* extension block section stuff */
 
     xf86DrvMsg(m->scrnIndex, X_INFO, "EDID (in hex):\n");
- 
-    for (i = 0; i < 128; i += j) {
+
+    n = 128;
+    if (m->flags & EDID_COMPLETE_RAWDATA)
+	n += m->no_sections * 128;
+
+    for (i = 0; i < n; i += j) {
 	for (j = 0; j < EDID_WIDTH; ++j) {
 	    sprintf(&buf[j * 2], "%02x", m->rawData[i + j]);
 	}

@@ -52,7 +52,6 @@ void
 ProcessInputEvents()
 {
     mieqProcessInputEvents();
-    miPointerUpdate();
 }
 
 void DDXRingBell(int volume, int pitch, int duration)
@@ -296,7 +295,7 @@ vfbMouseProc(DeviceIntPtr pDevice, int onoff)
 	    map[1] = 1;
 	    map[2] = 2;
 	    map[3] = 3;
-	    InitPointerDeviceStruct(pDev, map, 3, GetMotionHistory,
+	    InitPointerDeviceStruct(pDev, map, 3,
 		(PtrCtrlProcPtr)NoopDDA, GetMotionHistorySize(), 2);
 	    break;
 
@@ -318,8 +317,8 @@ void
 InitInput(int argc, char *argv[])
 {
     DeviceIntPtr p, k;
-    p = AddInputDevice(vfbMouseProc, TRUE);
-    k = AddInputDevice(vfbKeybdProc, TRUE);
+    p = AddInputDevice(serverClient, vfbMouseProc, TRUE);
+    k = AddInputDevice(serverClient, vfbKeybdProc, TRUE);
     RegisterPointerDevice(p);
     RegisterKeyboardDevice(k);
     (void)mieqInit();

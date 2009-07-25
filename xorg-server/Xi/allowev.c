@@ -106,22 +106,22 @@ ProcXAllowDeviceEvents(ClientPtr client)
 
     switch (stuff->mode) {
     case ReplayThisDevice:
-	AllowSome(client, time, thisdev, NOT_GRABBED);
+	AllowSome(client, time, thisdev, NOT_GRABBED, FALSE);
 	break;
     case SyncThisDevice:
-	AllowSome(client, time, thisdev, FREEZE_NEXT_EVENT);
+	AllowSome(client, time, thisdev, FREEZE_NEXT_EVENT, FALSE);
 	break;
     case AsyncThisDevice:
-	AllowSome(client, time, thisdev, THAWED);
+	AllowSome(client, time, thisdev, THAWED, FALSE);
 	break;
     case AsyncOtherDevices:
-	AllowSome(client, time, thisdev, THAW_OTHERS);
+	AllowSome(client, time, thisdev, THAW_OTHERS, FALSE);
 	break;
     case SyncAll:
-	AllowSome(client, time, thisdev, FREEZE_BOTH_NEXT_EVENT);
+	AllowSome(client, time, thisdev, FREEZE_BOTH_NEXT_EVENT, FALSE);
 	break;
     case AsyncAll:
-	AllowSome(client, time, thisdev, THAWED_BOTH);
+	AllowSome(client, time, thisdev, THAWED_BOTH, FALSE);
 	break;
     default:
 	client->errorValue = stuff->mode;

@@ -46,11 +46,9 @@ static
 void
 winUpdateRgnRootless (WindowPtr pWindow);
 
-#ifdef SHAPE
 static
 void
 winReshapeRootless (WindowPtr pWin);
-#endif
 
 
 #ifdef XWIN_NATIVEGDI
@@ -447,9 +445,7 @@ winMapWindowRootless (WindowPtr pWin)
   fResult = (*pScreen->RealizeWindow)(pWin);
   WIN_WRAP(RealizeWindow, winMapWindowRootless);
 
-#ifdef SHAPE
   winReshapeRootless (pWin);
-#endif
   
   winUpdateRgnRootless (pWin);
   
@@ -457,7 +453,6 @@ winMapWindowRootless (WindowPtr pWin)
 }
 
 
-#ifdef SHAPE
 void
 winSetShapeRootless (WindowPtr pWin)
 {
@@ -478,7 +473,6 @@ winSetShapeRootless (WindowPtr pWin)
   
   return;
 }
-#endif
 
 
 /*
@@ -569,7 +563,6 @@ winUpdateRgnRootless (WindowPtr pWin)
 }
 
 
-#ifdef SHAPE
 static
 void
 winReshapeRootless (WindowPtr pWin)
@@ -646,4 +639,3 @@ winReshapeRootless (WindowPtr pWin)
   
   return;
 }
-#endif

@@ -34,7 +34,6 @@
 #include <X11/fonts/fontstruct.h>
 #include "dixfontstr.h"
 #include "exa.h"
-#include "cw.h"
 
 static void
 exaFillSpans(DrawablePtr pDrawable, GCPtr pGC, int n,
@@ -144,7 +143,6 @@ exaDoPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth, int x, int y,
     ExaScreenPriv (pDrawable->pScreen);
     PixmapPtr pPix = exaGetDrawablePixmap (pDrawable);
     ExaPixmapPriv(pPix);
-    ExaMigrationRec pixmaps[1];
     RegionPtr pClip;
     BoxPtr pbox;
     int nbox;
@@ -166,11 +164,16 @@ exaDoPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth, int x, int y,
     if (pExaScr->swappedOut)
 	return FALSE;
 
-    pixmaps[0].as_dst = TRUE;
-    pixmaps[0].as_src = FALSE;
-    pixmaps[0].pPix = pPix;
-    pixmaps[0].pReg = DamagePendingRegion(pExaPixmap->pDamage);
-    exaDoMigration (pixmaps, 1, TRUE);
+    if (pExaPixmap->pDamage) {
+	ExaMigrationRec pixmaps[1];
+
+ 	pixmaps[0].as_dst = TRUE;
+	pixmaps[0].as_src = FALSE;
+	pixmaps[0].pPix = pPix;
+	pixmaps[0].pReg = DamagePendingRegion(pExaPixmap->pDamage);
+
+	exaDoMigration (pixmaps, 1, TRUE);
+    }
 
     pPix = exaGetOffscreenPixmap (pDrawable, &xoff, &yoff);
 
@@ -398,6 +401,10 @@ exaCopyNtoN (DrawablePtr    pSrcDrawable,
     RegionPtr srcregion = NULL, dstregion = NULL;
     xRectangle *rects;
 
+    /* avoid doing copy operations if no boxes */
+    if (nbox == 0)
+	return;
+
     pSrcPixmap = exaGetDrawablePixmap (pSrcDrawable);
     pDstPixmap = exaGetDrawablePixmap (pDstDrawable);
 
@@ -420,7 +427,8 @@ exaCopyNtoN (DrawablePtr    pSrcDrawable,
 	xfree(rects);
 
 	if (!pGC || !exaGCReadsDestination(pDstDrawable, pGC->planemask,
-					   pGC->fillStyle, pGC->alu)) {
+					   pGC->fillStyle, pGC->alu,
+					   pGC->clientClipType)) {
 	    dstregion = REGION_CREATE(pScreen, NullBox, 0);
 	    REGION_COPY(pScreen, dstregion, srcregion);
 	    REGION_TRANSLATE(pScreen, dstregion, dst_off_x - dx - src_off_x,
@@ -441,15 +449,35 @@ exaCopyNtoN (DrawablePtr    pSrcDrawable,
     pDstExaPixmap = ExaGetPixmapPriv (pDstPixmap);
 
     /* Check whether the accelerator can use this pixmap.
-     * FIXME: If it cannot, use temporary pixmaps so that the drawing
-     * happens within limits.
+     * If the pitch of the pixmaps is out of range, there's nothing
+     * we can do but fall back to software rendering.
      */
-    if (pSrcExaPixmap->accel_blocked || pDstExaPixmap->accel_blocked)
-    {
+    if (pSrcExaPixmap->accel_blocked & EXA_RANGE_PITCH ||
+        pDstExaPixmap->accel_blocked & EXA_RANGE_PITCH)
 	goto fallback;
-    } else {
-	exaDoMigration (pixmaps, 2, TRUE);
+
+    /* If the width or the height of either of the pixmaps
+     * is out of range, check whether the boxes are actually out of the
+     * addressable range as well. If they aren't, we can still do
+     * the copying in hardware.
+     */
+    if (pSrcExaPixmap->accel_blocked || pDstExaPixmap->accel_blocked) {
+        int i;
+
+        for (i = 0; i < nbox; i++) {
+            /* src */
+            if ((pbox[i].x2 + dx + src_off_x) >= pExaScr->info->maxX ||
+                (pbox[i].y2 + dy + src_off_y) >= pExaScr->info->maxY)
+                goto fallback;
+
+            /* dst */
+            if ((pbox[i].x2 + dst_off_x) >= pExaScr->info->maxX ||
+                (pbox[i].y2 + dst_off_y) >= pExaScr->info->maxY)
+                goto fallback;
+        }
     }
+
+    exaDoMigration (pixmaps, 2, TRUE);
 
     /* Mixed directions must be handled specially if the card is lame */
     if ((pExaScr->info->flags & EXA_TWO_BITBLT_DIRECTIONS) &&
@@ -671,7 +699,8 @@ exaPolySegment (DrawablePtr pDrawable, GCPtr pGC, int nseg,
 }
 
 static Bool exaFillRegionSolid (DrawablePtr pDrawable, RegionPtr pRegion,
-				Pixel pixel, CARD32 planemask, CARD32 alu);
+				Pixel pixel, CARD32 planemask, CARD32 alu,
+				unsigned int clientClipType);
 
 static void
 exaPolyFillRect(DrawablePtr pDrawable,
@@ -724,10 +753,11 @@ exaPolyFillRect(DrawablePtr pDrawable,
 	if (((pGC->fillStyle == FillSolid || pGC->tileIsPixel) &&
 	     exaFillRegionSolid(pDrawable, pReg, pGC->fillStyle == FillSolid ?
 				pGC->fgPixel : pGC->tile.pixel,	pGC->planemask,
-				pGC->alu)) ||
+				pGC->alu, pGC->clientClipType)) ||
 	    (pGC->fillStyle == FillTiled && !pGC->tileIsPixel &&
 	     exaFillRegionTiled(pDrawable, pReg, pGC->tile.pixmap, &pGC->patOrg,
-				pGC->planemask, pGC->alu))) {
+				pGC->planemask, pGC->alu,
+				pGC->clientClipType))) {
 	    goto out;
 	}
     }
@@ -829,132 +859,6 @@ out:
     REGION_DESTROY(pScreen, pReg);
 }
 
-static void
-exaImageGlyphBlt (DrawablePtr	pDrawable,
-		  GCPtr		pGC,
-		  int		x,
-		  int		y,
-		  unsigned int	nglyph,
-		  CharInfoPtr	*ppciInit,
-		  pointer	pglyphBase)
-{
-    FbGCPrivPtr	    pPriv = fbGetGCPrivate(pGC);
-    CharInfoPtr	    *ppci;
-    CharInfoPtr	    pci;
-    unsigned char   *pglyph;		/* pointer bits in glyph */
-    int		    gWidth, gHeight;	/* width and height of glyph */
-    FbStride	    gStride;		/* stride of glyph */
-    Bool	    opaque;
-    int		    gx, gy;
-    void	    (*glyph) (FbBits *,
-			      FbStride,
-			      int,
-			      FbStip *,
-			      FbBits,
-			      int,
-			      int);
-    FbBits	    *dst;
-    FbStride	    dstStride;
-    int		    dstBpp;
-    int		    dstXoff, dstYoff;
-    FbBits	    depthMask;
-    PixmapPtr	    pPixmap = exaGetDrawablePixmap(pDrawable);
-    ExaPixmapPriv(pPixmap);
-    RegionPtr	    pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
-    BoxRec	    extents = *REGION_EXTENTS(pScreen, pending_damage);
-    int		    xoff, yoff;
-
-    if (extents.x1 >= extents.x2 || extents.y1 >= extents.y2)
-	return;
-
-    depthMask = FbFullMask(pDrawable->depth);
-
-    if ((pGC->planemask & depthMask) != depthMask)
-    {
-	ExaCheckImageGlyphBlt(pDrawable, pGC, x, y, nglyph, ppciInit, pglyphBase);
-	return;
-    }
-
-    glyph = NULL;
-    switch (pDrawable->bitsPerPixel) {
-    case 8:	glyph = fbGlyph8; break;
-    case 16:    glyph = fbGlyph16; break;
-    case 24:    glyph = fbGlyph24; break;
-    case 32:    glyph = fbGlyph32; break;
-    }
-
-    x += pDrawable->x;
-    y += pDrawable->y;
-
-    exaGetDrawableDeltas(pDrawable, pPixmap, &xoff, &yoff);
-    extents.x1 -= xoff;
-    extents.x2 -= xoff;
-    extents.y1 -= yoff;
-    extents.y2 -= yoff;
-
-    exaPrepareAccessReg (pDrawable, EXA_PREPARE_DEST, pending_damage);
-
-    if (TERMINALFONT (pGC->font) && !glyph)
-    {
-	opaque = TRUE;
-    }
-    else
-    {
-	FbBits fg = fbReplicatePixel (pGC->bgPixel, pDrawable->bitsPerPixel);
-
-	fbSolidBoxClipped (pDrawable,
-			   fbGetCompositeClip(pGC),
-			   extents.x1,
-			   extents.y1,
-			   extents.x2,
-			   extents.y2,
-			   fbAnd (GXcopy, fg, pGC->planemask),
-			   fbXor (GXcopy, fg, pGC->planemask));
-
-	opaque = FALSE;
-    }
-
-    EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
-
-    exaPrepareAccessGC (pGC);
-
-    fbGetDrawable (pDrawable, dst, dstStride, dstBpp, dstXoff, dstYoff);
-
-    for (ppci = ppciInit; nglyph; nglyph--, x += pci->metrics.characterWidth)
-    {
-	pci = *ppci++;
-	gWidth = GLYPHWIDTHPIXELS(pci);
-	gHeight = GLYPHHEIGHTPIXELS(pci);
-	gx = x + pci->metrics.leftSideBearing;
-	gy = y - pci->metrics.ascent;
-
-	if (!gWidth || !gHeight || (gx + gWidth) <= extents.x1 ||
-	    (gy + gHeight) <= extents.y1 || gx >= extents.x2 ||
-	    gy >= extents.y2)
-	    continue;
-
-	pglyph = FONTGLYPHBITS(pglyphBase, pci);
-
-	if (glyph && gWidth <= sizeof (FbStip) * 8 &&
-	    fbGlyphIn (fbGetCompositeClip(pGC), gx, gy, gWidth, gHeight))
-	{
-	    (*glyph) (dst + (gy + dstYoff) * dstStride, dstStride, dstBpp,
-		      (FbStip *) pglyph, pPriv->fg, gx + dstXoff, gHeight);
-	}
-	else
-	{
-	    RegionPtr pClip = fbGetCompositeClip(pGC);
-
-	    gStride = GLYPHWIDTHBYTESPADDED(pci) / sizeof (FbStip);
-	    fbPutXYImage (pDrawable, pClip, pPriv->fg, pPriv->bg, pPriv->pm,
-			  GXcopy, opaque, gx, gy, gWidth, gHeight,
-			  (FbStip *) pglyph, gStride, 0);
-	}
-    }
-    exaFinishAccessGC (pGC);
-    exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
-}
-
 const GCOps exaOps = {
     exaFillSpans,
     ExaCheckSetSpans,
@@ -973,7 +877,7 @@ const GCOps exaOps = {
     miPolyText16,
     miImageText8,
     miImageText16,
-    exaImageGlyphBlt,
+    ExaCheckImageGlyphBlt,
     ExaCheckPolyGlyphBlt,
     ExaCheckPushPixels,
 };
@@ -1006,11 +910,8 @@ exaCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
 }
 
 static Bool
-exaFillRegionSolid (DrawablePtr	pDrawable,
-		    RegionPtr	pRegion,
-		    Pixel	pixel,
-		    CARD32	planemask,
-		    CARD32	alu)
+exaFillRegionSolid (DrawablePtr	pDrawable, RegionPtr pRegion, Pixel pixel,
+		    CARD32 planemask, CARD32 alu, unsigned int clientClipType)
 {
     ExaScreenPriv(pDrawable->pScreen);
     PixmapPtr pPixmap = exaGetDrawablePixmap (pDrawable);
@@ -1023,7 +924,8 @@ exaFillRegionSolid (DrawablePtr	pDrawable,
     pixmaps[0].as_src = FALSE;
     pixmaps[0].pPix = pPixmap;
     pixmaps[0].pReg = exaGCReadsDestination(pDrawable, planemask, FillSolid,
-					    alu) ? NULL : pRegion;
+					    alu, clientClipType)
+	? NULL : pRegion;
 
     exaGetDrawableDeltas(pDrawable, pPixmap, &xoff, &yoff);
     REGION_TRANSLATE(pScreen, pRegion, xoff, yoff);
@@ -1086,12 +988,9 @@ out:
  * Based on fbFillRegionTiled(), fbTile().
  */
 Bool
-exaFillRegionTiled (DrawablePtr	pDrawable,
-		    RegionPtr	pRegion,
-		    PixmapPtr	pTile,
-		    DDXPointPtr pPatOrg,
-		    CARD32	planemask,
-		    CARD32	alu)
+exaFillRegionTiled (DrawablePtr pDrawable, RegionPtr pRegion, PixmapPtr pTile,
+		    DDXPointPtr pPatOrg, CARD32 planemask, CARD32 alu,
+		    unsigned int clientClipType)
 {
     ExaScreenPriv(pDrawable->pScreen);
     PixmapPtr pPixmap;
@@ -1103,6 +1002,7 @@ exaFillRegionTiled (DrawablePtr	pDrawable,
     int nbox = REGION_NUM_RECTS (pRegion);
     BoxPtr pBox = REGION_RECTS (pRegion);
     Bool ret = FALSE;
+    int i;
 
     tileWidth = pTile->drawable.width;
     tileHeight = pTile->drawable.height;
@@ -1113,26 +1013,24 @@ exaFillRegionTiled (DrawablePtr	pDrawable,
     if (tileWidth == 1 && tileHeight == 1)
 	return exaFillRegionSolid(pDrawable, pRegion,
 				  exaGetPixmapFirstPixel (pTile), planemask,
-				  alu);
+				  alu, clientClipType);
 
     pixmaps[0].as_dst = TRUE;
     pixmaps[0].as_src = FALSE;
     pixmaps[0].pPix = pPixmap = exaGetDrawablePixmap (pDrawable);
     pixmaps[0].pReg = exaGCReadsDestination(pDrawable, planemask, FillTiled,
-					    alu) ? NULL : pRegion;
+					    alu, clientClipType)
+	? NULL : pRegion;
     pixmaps[1].as_dst = FALSE;
     pixmaps[1].as_src = TRUE;
     pixmaps[1].pPix = pTile;
     pixmaps[1].pReg = NULL;
 
-    exaGetDrawableDeltas(pDrawable, pPixmap, &xoff, &yoff);
-    REGION_TRANSLATE(pScreen, pRegion, xoff, yoff);
-
     pExaPixmap = ExaGetPixmapPriv (pPixmap);
 
     if (pExaPixmap->accel_blocked || pTileExaPixmap->accel_blocked)
     {
-	goto out;
+	return FALSE;
     } else {
 	exaDoMigration (pixmaps, 2, TRUE);
     }
@@ -1140,23 +1038,32 @@ exaFillRegionTiled (DrawablePtr	pDrawable,
     pPixmap = exaGetOffscreenPixmap (pDrawable, &xoff, &yoff);
 
     if (!pPixmap || !exaPixmapIsOffscreen(pTile))
-	goto out;
+	return FALSE;
 
     if ((*pExaScr->info->PrepareCopy) (pTile, pPixmap, 1, 1, alu, planemask))
     {
-	while (nbox--)
+	if (xoff || yoff)
+	    REGION_TRANSLATE(pScreen, pRegion, xoff, yoff);
+
+	for (i = 0; i < nbox; i++)
 	{
-	    int height = pBox->y2 - pBox->y1;
-	    int dstY = pBox->y1;
+	    int height = pBox[i].y2 - pBox[i].y1;
+	    int dstY = pBox[i].y1;
 	    int tileY;
+
+	    if (alu == GXcopy)
+		height = min(height, tileHeight);
 
 	    modulus(dstY - yoff - pDrawable->y - pPatOrg->y, tileHeight, tileY);
 
 	    while (height > 0) {
-		int width = pBox->x2 - pBox->x1;
-		int dstX = pBox->x1;
+		int width = pBox[i].x2 - pBox[i].x1;
+		int dstX = pBox[i].x1;
 		int tileX;
 		int h = tileHeight - tileY;
+
+		if (alu == GXcopy)
+		    width = min(width, tileWidth);
 
 		if (h > height)
 		    h = height;
@@ -1179,16 +1086,73 @@ exaFillRegionTiled (DrawablePtr	pDrawable,
 		dstY += h;
 		tileY = 0;
 	    }
-	    pBox++;
 	}
 	(*pExaScr->info->DoneCopy) (pPixmap);
+
+	/* With GXcopy, we only need to do the basic algorithm up to the tile
+	 * size; then, we can just keep doubling the destination in each
+	 * direction until it fills the box. This way, the number of copy
+	 * operations is O(log(rx)) + O(log(ry)) instead of O(rx * ry), where
+	 * rx/ry is the ratio between box and tile width/height. This can make
+	 * a big difference if each driver copy incurs a significant constant
+	 * overhead.
+	 */
+	if (alu != GXcopy)
+	    ret = TRUE;
+	else {
+	    Bool more_copy = FALSE;
+
+	    for (i = 0; i < nbox; i++) {
+		int dstX = pBox[i].x1 + tileWidth;
+		int dstY = pBox[i].y1 + tileHeight;
+
+		if ((dstX < pBox[i].x2) || (dstY < pBox[i].y2)) {
+		    more_copy = TRUE;
+		    break;
+		}
+	    }
+
+	    if (more_copy == FALSE)
+		ret = TRUE;
+
+	    if (more_copy && (*pExaScr->info->PrepareCopy) (pPixmap, pPixmap,
+							    1, 1, alu, planemask)) {
+		for (i = 0; i < nbox; i++)
+		{
+		    int dstX = pBox[i].x1 + tileWidth;
+		    int dstY = pBox[i].y1 + tileHeight;
+		    int width = min(pBox[i].x2 - dstX, tileWidth);
+		    int height = min(pBox[i].y2 - pBox[i].y1, tileHeight);
+
+		    while (dstX < pBox[i].x2) {
+			(*pExaScr->info->Copy) (pPixmap, pBox[i].x1, pBox[i].y1,
+						dstX, pBox[i].y1, width, height);
+			dstX += width;
+			width = min(pBox[i].x2 - dstX, width * 2);
+		    }
+
+		    width = pBox[i].x2 - pBox[i].x1;
+		    height = min(pBox[i].y2 - dstY, tileHeight);
+
+		    while (dstY < pBox[i].y2) {
+			(*pExaScr->info->Copy) (pPixmap, pBox[i].x1, pBox[i].y1,
+						pBox[i].x1, dstY, width, height);
+			dstY += height;
+			height = min(pBox[i].y2 - dstY, height * 2);
+		    }
+		}
+
+		(*pExaScr->info->DoneCopy) (pPixmap);
+
+		ret = TRUE;
+	    }
+	}
+
 	exaMarkSync(pDrawable->pScreen);
 
-	ret = TRUE;
+	if (xoff || yoff)
+	    REGION_TRANSLATE(pScreen, pRegion, -xoff, -yoff);
     }
-
-out:
-    REGION_TRANSLATE(pScreen, pRegion, -xoff, -yoff);
 
     return ret;
 }

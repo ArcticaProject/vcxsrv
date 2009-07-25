@@ -187,12 +187,4 @@
 #define fbZeroSegment wfbZeroSegment
 #define free_pixman_pict wfb_free_pixman_pict
 #define image_from_pict wfb_image_from_pict
-#define xxScrPrivateKey wfbxxScrPrivateKey
-#define xxGCPrivateKey wfbxxGCPrivateKey
-#define xxColormapPrivateKey wfbxxColormapPrivateKey
-#define xxGeneration wfbxxGeneration
-#define xxPrintVisuals wfbxxPrintVisuals
-#define xxGCFuncs wfbxxGCFuncs
-#define xxGCOps wfbxxGCOps
-#define xxSetup wfbxxSetup
 #define composeFunctions wfbComposeFunctions

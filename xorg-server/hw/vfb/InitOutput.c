@@ -266,11 +266,6 @@ ddxUseMsg()
 #endif
 }
 
-/* ddxInitGlobals - called by |InitGlobals| from os/util.c */
-void ddxInitGlobals(void)
-{
-}
-
 int
 ddxProcessArgument(int argc, char *argv[], int i)
 {
@@ -867,8 +862,6 @@ vfbScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     pbits = vfbAllocateFramebufferMemory(pvfb);
     if (!pbits) return FALSE;
 
-    miSetPixmapDepths ();
-
     switch (pvfb->depth) {
     case 8:
 	miSetVisualTypesAndMasks (8,
@@ -880,20 +873,6 @@ vfbScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 				   (1 << DirectColor)),
 				  8, PseudoColor, 0, 0, 0);
 	break;
-#if 0
-    /* 12bit PseudoColor with 12bit color resolution
-     * (to simulate SGI hardware and the 12bit PseudoColor emulation layer) */
-    case 12:
-	miSetVisualTypesAndMasks (12,
-				  ((1 << StaticGray) |
-				   (1 << GrayScale) |
-				   (1 << StaticColor) |
-				   (1 << PseudoColor) |
-				   (1 << TrueColor) |
-				   (1 << DirectColor)),
-				  12, PseudoColor, 0, 0, 0);
-	break;
-#endif
     case 15:
 	miSetVisualTypesAndMasks (15,
 				  ((1 << TrueColor) |
@@ -912,18 +891,10 @@ vfbScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 				   (1 << DirectColor)),
 				  8, TrueColor, 0xff0000, 0x00ff00, 0x0000ff);
 	break;
-#if 0
-    /* 30bit TrueColor (to simulate Sun's XVR-1000/-4000 high quality
-     * framebuffer series) */
-    case 30:
-	miSetVisualTypesAndMasks (30,
-				  ((1 << TrueColor) |
-				   (1 << DirectColor)),
-				  10, TrueColor, 0x3ff00000, 0x000ffc00, 0x000003ff);
-	break;
-#endif
     }
-	
+
+    miSetPixmapDepths ();
+
     ret = fbScreenInit(pScreen, pbits, pvfb->width, pvfb->height,
 		       dpix, dpiy, pvfb->paddedWidth,pvfb->bitsPerPixel);
 #ifdef RENDER
@@ -1027,8 +998,3 @@ InitOutput(ScreenInfo *screenInfo, int argc, char **argv)
     }
 
 } /* end InitOutput */
-
-/* this is just to get the server to link on AIX */
-#ifdef AIXV3
-int SelectWaitTime = 10000; /* usec */
-#endif

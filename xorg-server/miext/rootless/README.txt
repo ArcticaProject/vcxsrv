@@ -76,10 +76,6 @@ rootlessConfig.h to specify compile time options for its platform.
         The following compile-time options are defined in 
 rootlessConfig.h:
 
-      o ROOTLESS_ACCEL: If true, use the optional rootless acceleration
-        functions where possible to a accelerate X11 drawing primitives.
-        If false, all drawing will be done with fb.
-
       o ROOTLESS_GLOBAL_COORDS: This option controls the way that frame
         coordinates are passed to the rootless implementation. If false,
         the coordinates are passed per screen relative to the origin of 

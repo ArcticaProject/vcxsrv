@@ -379,7 +379,7 @@ miCompositeSourceValidate (PicturePtr	pPicture,
 		t.vector[0] = IntToxFixed (points[i].x);
 		t.vector[1] = IntToxFixed (points[i].y);
 		t.vector[2] = xFixed1;
-		if (PictureTransformPoint (pPicture->transform, &t))
+		if (pixman_transform_point (pPicture->transform, &t))
 		{
 		    int	tx = xFixedToInt (t.vector[0]);
 		    int ty = xFixedToInt (t.vector[1]);

@@ -213,9 +213,23 @@ typedef struct _xf86CrtcFuncs {
     Bool
     (*set_mode_major)(xf86CrtcPtr crtc, DisplayModePtr mode,
 		      Rotation rotation, int x, int y);
+
+    /**
+     * Callback for panning. Doesn't change the mode.
+     */
+    void
+    (*set_origin)(xf86CrtcPtr crtc, int x, int y);
+
 } xf86CrtcFuncsRec, *xf86CrtcFuncsPtr;
 
+#define XF86_CRTC_VERSION 2
+
 struct _xf86Crtc {
+    /**
+     * ABI versioning
+     */
+    int version;
+
     /**
      * Associated ScrnInfo
      */
@@ -298,12 +312,35 @@ struct _xf86Crtc {
      * Current transformation matrix
      */
     PictTransform   crtc_to_framebuffer;
-    PictTransform   framebuffer_to_crtc;
+    struct pict_f_transform f_crtc_to_framebuffer;
+    struct pict_f_transform f_framebuffer_to_crtc;
+    PictFilterPtr   filter;
+    xFixed	    *params;
+    int		    nparams;
+    int		    filter_width;
+    int		    filter_height;
     Bool	    transform_in_use;
+    RRTransformRec  transform;
+    Bool	    transformPresent;
+    RRTransformRec  desiredTransform;
+    Bool	    desiredTransformPresent;
     /**
      * Bounding box in screen space
      */
     BoxRec	    bounds;
+    /**
+     * Panning:
+     * TotalArea: total panning area, larger than CRTC's size
+     * TrackingArea: Area of the pointer for which the CRTC is panned
+     * border: Borders of the displayed CRTC area which induces panning if the pointer reaches them
+     */
+    BoxRec          panningTotalArea;
+    BoxRec          panningTrackingArea;
+    INT16           panningBorder[4];
+    /**
+     * Clear the shadow
+     */
+    Bool	    shadowClear;
 };
 
 typedef struct _xf86OutputFuncs {
@@ -410,6 +447,21 @@ typedef struct _xf86OutputFuncs {
 		    Atom property,
 		    RRPropertyValuePtr value);
 #endif
+#ifdef RANDR_13_INTERFACE
+    /**
+     * Callback to get an updated property value
+     */
+    Bool
+    (*get_property)(xf86OutputPtr output,
+		    Atom property);
+#endif
+#ifdef RANDR_GET_CRTC_INTERFACE
+    /**
+     * Callback to get current CRTC for a given output
+     */
+    xf86CrtcPtr
+    (*get_crtc)(xf86OutputPtr output);
+#endif
     /**
      * Clean up driver-specific bits of the output
      */
@@ -417,7 +469,15 @@ typedef struct _xf86OutputFuncs {
     (*destroy) (xf86OutputPtr	    output);
 } xf86OutputFuncsRec, *xf86OutputFuncsPtr;
 
+
+#define XF86_OUTPUT_VERSION 2
+
 struct _xf86Output {
+    /**
+     * ABI versioning
+     */
+    int version;
+
     /**
      * Associated ScrnInfo
      */
@@ -518,6 +578,10 @@ struct _xf86Output {
 #else
     void		*randr_output;
 #endif
+    /** Desired initial panning */
+    BoxRec          initialTotalArea;
+    BoxRec          initialTrackingArea;
+    INT16           initialBorder[4];
 };
 
 typedef struct _xf86CrtcConfigFuncs {
@@ -538,6 +602,8 @@ typedef struct _xf86CrtcConfigFuncs {
 	      int		width,
 	      int		height);
 } xf86CrtcConfigFuncsRec, *xf86CrtcConfigFuncsPtr;
+
+typedef void (*xf86_crtc_notify_proc_ptr) (ScreenPtr pScreen);
 
 typedef struct _xf86CrtcConfig {
     int			num_output;
@@ -591,6 +657,9 @@ typedef struct _xf86CrtcConfig {
     /* wrap screen BlockHandler for rotation */
     ScreenBlockHandlerProcPtr	BlockHandler;
 
+    /* callback when crtc configuration changes */
+    xf86_crtc_notify_proc_ptr  xf86_crtc_notify;
+
 } xf86CrtcConfigRec, *xf86CrtcConfigPtr;
 
 extern int xf86CrtcConfigPrivateIndex;
@@ -624,15 +693,36 @@ xf86CrtcDestroy (xf86CrtcPtr		crtc);
 /**
  * Sets the given video mode on the given crtc
  */
+
+Bool
+xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
+			  RRTransformPtr transform, int x, int y);
+
 Bool
 xf86CrtcSetMode (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
 		 int x, int y);
+
+void
+xf86CrtcSetOrigin (xf86CrtcPtr crtc, int x, int y);
 
 /*
  * Assign crtc rotation during mode set
  */
 Bool
-xf86CrtcRotate (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation);
+xf86CrtcRotate (xf86CrtcPtr crtc);
+
+/*
+ * Clean up any rotation data, used when a crtc is turned off
+ * as well as when rotation is disabled.
+ */
+void
+xf86RotateDestroy (xf86CrtcPtr crtc);
+
+/*
+ * free shadow memory allocated for all crtcs
+ */
+void
+xf86RotateFreeShadow(ScrnInfoPtr pScrn);
 
 /*
  * Clean up rotation during CloseScreen
@@ -669,7 +759,11 @@ xf86ProbeOutputModes (ScrnInfoPtr pScrn, int maxX, int maxY);
 void
 xf86SetScrnInfoModes (ScrnInfoPtr pScrn);
 
+#ifdef RANDR_13_INTERFACE
+int
+#else
 Bool
+#endif
 xf86CrtcScreenInit (ScreenPtr pScreen);
 
 Bool
@@ -798,4 +892,28 @@ xf86_crtc_clip_video_helper(ScrnInfoPtr pScrn,
 			    INT32	width,
 			    INT32	height);
     
+xf86_crtc_notify_proc_ptr
+xf86_wrap_crtc_notify (ScreenPtr pScreen, xf86_crtc_notify_proc_ptr new);
+
+void
+xf86_unwrap_crtc_notify(ScreenPtr pScreen, xf86_crtc_notify_proc_ptr old);
+
+void
+xf86_crtc_notify(ScreenPtr pScreen);
+
+/**
+ * Panning
+ */
+Bool
+xf86_crtc_get_panning(ScrnInfoPtr pScrn,
+		      BoxPtr      totalArea,
+		      BoxPtr      TrackingArea,
+		      INT16      *border);
+
+Bool
+xf86_crtc_set_panning(ScrnInfoPtr pScrn,
+		      BoxPtr      totalArea,
+		      BoxPtr      TrackingArea,
+		      INT16      *border);
+
 #endif /* _XF86CRTC_H_ */

@@ -66,7 +66,6 @@
 #include <stdarg.h>
 #include <X11/Xfuncproto.h>
 
-#if !defined(X_NOT_POSIX)
 #if defined(_POSIX_SOURCE)
 #include <limits.h>
 #else
@@ -74,7 +73,7 @@
 #include <limits.h>
 #undef _POSIX_SOURCE
 #endif /* _POSIX_SOURCE */
-#endif /* !X_NOT_POSIX */
+
 #if !defined(PATH_MAX)
 #if defined(MAXPATHLEN)
 #define PATH_MAX MAXPATHLEN
@@ -436,7 +435,7 @@ again:
 			i = 0;
 			do
 			{
-				configRBuf[++i] = (c = configBuf[configPos++]);;
+				configRBuf[++i] = (c = configBuf[configPos++]);
 			}
 			while ((c != ' ') && (c != '\t') && (c != '\n') && (c != '\r') && (c != '\0') && (c != '#'));
 			--configPos;

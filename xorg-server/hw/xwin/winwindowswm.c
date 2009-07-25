@@ -49,8 +49,6 @@ static int WMErrorBase;
 static DISPATCH_PROC(ProcWindowsWMDispatch);
 static DISPATCH_PROC(SProcWindowsWMDispatch);
 
-static void WindowsWMResetProc(ExtensionEntry* extEntry);
-
 static unsigned char WMReqCode = 0;
 static int WMEventBase = 0;
 
@@ -98,7 +96,7 @@ winWindowsWMExtensionInit ()
 			       WindowsWMNumberErrors,
 			       ProcWindowsWMDispatch,
 			       SProcWindowsWMDispatch,
-			       WindowsWMResetProc,
+			       NULL,
 			       StandardMinorOpcode)))
     {
       WMReqCode = (unsigned char)extEntry->base;
@@ -106,12 +104,6 @@ winWindowsWMExtensionInit ()
       WMEventBase = extEntry->eventBase;
       EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
     }
-}
-
-/*ARGSUSED*/
-static void
-WindowsWMResetProc (ExtensionEntry* extEntry)
-{
 }
 
 static int

@@ -49,6 +49,12 @@
 #include "dixfont.h"
 #include "dixstruct.h"
 
+#undef Xmalloc
+#undef Xcalloc
+#undef Xrealloc
+#undef Xfree
+
+
 static int (*dmxSaveProcVector[256])(ClientPtr);
 static int   dmxFontLastError;
 

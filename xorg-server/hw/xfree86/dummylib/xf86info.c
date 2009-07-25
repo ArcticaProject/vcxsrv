@@ -8,5 +8,5 @@
 #include "xf86Priv.h"
 
 /* Dummy variables */
-xf86InfoRec xf86Info = {NULL, };
+xf86InfoRec xf86Info;
 

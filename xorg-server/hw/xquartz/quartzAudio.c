@@ -36,6 +36,8 @@
  * use or other dealings in this Software without prior written authorization.
  */
 
+#include "sanitizedCarbon.h"
+
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -45,6 +47,7 @@
 
 #include <CoreAudio/CoreAudio.h>
 #include <pthread.h>
+#include <AvailabilityMacros.h>
 
 #include "inputstr.h"
 #include <X11/extensions/XI.h>
@@ -236,7 +239,7 @@ static void QuartzCoreAudioBell(
         OSStatus status;
         status = AudioDeviceStart(quartzAudioDevice, QuartzAudioIOProc);
         if (status) {
-            ErrorF("QuartzAudioBell: AudioDeviceStart returned %ld\n", status);
+            ErrorF("QuartzAudioBell: AudioDeviceStart returned %ld\n", (long)status);
         } else {
             data.playing = TRUE;
         }
@@ -297,7 +300,7 @@ void QuartzAudioInit(void)
                     &propertySize, &outputDevice);
     if (status) {
         ErrorF("QuartzAudioInit: AudioHardwareGetProperty returned %ld\n",
-               status);
+               (long)status);
         return;
     }
     if (outputDevice == kAudioDeviceUnknown) {
@@ -312,7 +315,7 @@ void QuartzAudioInit(void)
                                     &propertySize, &outputStreamDescription);
     if (status) {
         ErrorF("QuartzAudioInit: GetProperty(stream format) returned %ld\n",
-               status);
+               (long)status);
         return;
     }
     sampleRate = outputStreamDescription.mSampleRate;
@@ -335,9 +338,14 @@ void QuartzAudioInit(void)
     // fixme assert fadeLength<framesPerBuffer
 
     // Prepare for playback
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+    AudioDeviceIOProcID sInputIOProcID = NULL;
+    status = AudioDeviceCreateIOProcID( outputDevice, QuartzAudioIOProc, &data, &sInputIOProcID );
+#else
     status = AudioDeviceAddIOProc(outputDevice, QuartzAudioIOProc, &data);
+#endif
     if (status) {
-        ErrorF("QuartzAudioInit: AddIOProc returned %ld\n", status);
+        ErrorF("QuartzAudioInit: AddIOProc returned %ld\n", (long)status);
         return;
     }
 

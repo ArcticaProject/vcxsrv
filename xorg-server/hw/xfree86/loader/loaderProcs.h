@@ -56,7 +56,6 @@
 #undef IN_LOADER
 #define IN_LOADER
 #include "xf86Module.h"
-#include <X11/fonts/fontmod.h>
 
 typedef struct module_desc {
     struct module_desc *child;
@@ -87,7 +86,6 @@ ModuleDescPtr LoadSubModuleLocal(ModuleDescPtr, const char *,
 				 pointer, const XF86ModReqInfo *,
 				 int *, int *);
 ModuleDescPtr DuplicateModule(ModuleDescPtr mod, ModuleDescPtr parent);
-void LoadFont(FontModule *);
 void UnloadModule(ModuleDescPtr);
 void UnloadSubModule(ModuleDescPtr);
 void UnloadDriver(ModuleDescPtr);

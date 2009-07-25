@@ -42,14 +42,15 @@
 #define DEBUG
 */
 
-static DevPrivateKey xf86FBManagerKey = NULL;
+static int xf86FBManagerKeyIndex;
+static DevPrivateKey xf86FBManagerKey;
 
 _X_EXPORT Bool xf86RegisterOffscreenManager(
     ScreenPtr pScreen, 
     FBManagerFuncsPtr funcs
 ){
 
-   xf86FBManagerKey = &xf86FBManagerKey;
+   xf86FBManagerKey = &xf86FBManagerKeyIndex;
    dixSetPrivate(&pScreen->devPrivates, xf86FBManagerKey, funcs);
 
    return TRUE;
@@ -269,7 +270,8 @@ xf86PurgeUnlockedOffscreenAreas(ScreenPtr pScreen)
 
 \************************************************************/ 
 
-static DevPrivateKey xf86FBScreenKey = &xf86FBScreenKey;
+static int xf86FBScreenKeyIndex;
+static DevPrivateKey xf86FBScreenKey = &xf86FBScreenKeyIndex;
 
 typedef struct _FBLink {
   FBArea area;

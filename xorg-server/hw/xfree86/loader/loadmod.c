@@ -59,9 +59,7 @@
 #include "misc.h"
 #include "xf86.h"
 #include "xf86Priv.h"
-#ifdef XINPUT
 #include "xf86Xinput.h"
-#endif
 #include "loader.h"
 #include "xf86Optrec.h"
 
@@ -200,7 +198,6 @@ LoaderSetPath(const char *path)
 /* Standard set of module subdirectories to search, in order of preference */
 static const char *stdSubdirs[] = {
     "",
-    "fonts/",
     "input/",
     "drivers/",
     "multimedia/",
@@ -850,14 +847,7 @@ doLoadModule(const char *module, const char *path, const char **subdirlist,
     char *m = NULL;
     const char **cim;
 
-    xf86MsgVerb(X_INFO, 3, "LoadModule: \"%s\"\n", module);
-
-    for (cim = compiled_in_modules; *cim; cim++)
-	if (!strcmp (module, *cim))
-	{
-	    xf86MsgVerb(X_INFO, 3, "Module \"%s\" already built-in\n", module);
-	    return (ModuleDescPtr) 1;
-	}
+    xf86MsgVerb(X_INFO, 3, "LoadModule: \"%s\"", module);
 
     patterns = InitPatterns(patternlist);
     name = LoaderGetCanonicalName(module, patterns);
@@ -872,6 +862,15 @@ doLoadModule(const char *module, const char *path, const char **subdirlist,
 	xf86ErrorFVerb(3, "\n");
 	m = (char *)module;
     }
+
+    for (cim = compiled_in_modules; *cim; cim++)
+	if (!strcmp (m, *cim))
+	{
+	    xf86MsgVerb(X_INFO, 3, "Module \"%s\" already built-in\n", m);
+	    ret = (ModuleDescPtr) 1;
+	    goto LoadModule_exit;
+	}
+
     if (!name) {
 	if (errmaj)
 	    *errmaj = LDR_BADUSAGE;
@@ -1133,24 +1132,6 @@ UnloadSubModule(ModuleDescPtr mod)
 
     TestFree(mod->name);
     xfree(mod);
-}
-
-static void
-FreeModuleDesc(ModuleDescPtr head)
-{
-    ModuleDescPtr sibs, prev;
-
-    if (head == (ModuleDescPtr) 1)
-	return;
-    if (head->child)
-	FreeModuleDesc(head->child);
-    sibs = head;
-    while (sibs) {
-	prev = sibs;
-	sibs = sibs->sib;
-	TestFree(prev->name);
-	xfree(prev);
-    }
 }
 
 static void

@@ -302,12 +302,10 @@ winXIconToHICON (WindowPtr pWin, int iconSize)
   /* Mask is 1-bit deep */
   maskStride = ((iconSize * 1 + 31) & (~31)) / 8; 
 
-  image = (unsigned char * ) malloc (stride * iconSize);
-  imageMask = (unsigned char *) malloc (stride * iconSize);
-  mask = (unsigned char *) malloc (maskStride * iconSize);
-  
+  image = malloc (stride * iconSize);
+  imageMask = malloc (stride * iconSize);
   /* Default to a completely black mask */
-  memset (mask, 0, maskStride * iconSize);
+  mask = calloc (maskStride, iconSize);
   
   winScaleXBitmapToWindows (iconSize, effBPP, iconPtr, image);
   maskPtr = (PixmapPtr) LookupIDByType (hints.icon_mask, RT_PIXMAP);

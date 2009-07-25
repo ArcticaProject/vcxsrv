@@ -73,13 +73,11 @@
 #include "windowstr.h"
 #include "mi.h"
 
-#ifdef XINPUT
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
 #include "exevents.h"
 #define EXTENSION_PROC_ARGS void *
 #include "extinit.h"
-#endif
 
 /* From XI.h */
 #ifndef Relative
@@ -462,9 +460,7 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
     GETDMXINPUTFROMPDEVICE;
     int              fd;
     DMXLocalInitInfo info;
-#ifdef XINPUT
     int              i;
-#endif
     
     if (dmxInput->detached) return Success;
 
@@ -480,15 +476,11 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
             break;
         }
         if (info.keyClass) {
-#if 00 /*BP*/
-            InitKeyClassDeviceStruct(pDevice, &info.keySyms, info.modMap);
-#else
             DevicePtr pDev = (DevicePtr) pDevice;
             InitKeyboardDeviceStruct(pDev,
                                      &info.keySyms,
                                      info.modMap,
                                      dmxBell, dmxKbdCtrl);
-#endif
         }
         if (info.buttonClass) {
             InitButtonClassDeviceStruct(pDevice, info.numButtons, info.map);
@@ -496,49 +488,33 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
         if (info.valuatorClass) {
             if (info.numRelAxes && dmxLocal->sendsCore) {
                 InitValuatorClassDeviceStruct(pDevice, info.numRelAxes,
-#if 00 /*BP*/
-                                              miPointerGetMotionEvents,
-                                              miPointerGetMotionBufferSize(),
-#else
-                                              GetMotionHistory,
                                               GetMaximumEventsNum(),
-#endif
                                               Relative);
-#ifdef XINPUT
                 for (i = 0; i < info.numRelAxes; i++)
                     InitValuatorAxisStruct(pDevice, i, info.minval[0],
                                            info.maxval[0], info.res[0],
                                            info.minres[0], info.maxres[0]);
-#endif
             } else if (info.numRelAxes) {
                 InitValuatorClassDeviceStruct(pDevice, info.numRelAxes,
-                                              dmxPointerGetMotionEvents,
                                               dmxPointerGetMotionBufferSize(),
                                               Relative);
-#ifdef XINPUT
                 for (i = 0; i < info.numRelAxes; i++)
                     InitValuatorAxisStruct(pDevice, i, info.minval[0],
                                            info.maxval[0], info.res[0],
                                            info.minres[0], info.maxres[0]);
-#endif
             } else if (info.numAbsAxes) {
                 InitValuatorClassDeviceStruct(pDevice, info.numAbsAxes,
-                                              dmxPointerGetMotionEvents,
                                               dmxPointerGetMotionBufferSize(),
                                               Absolute);
-#ifdef XINPUT
                 for (i = 0; i < info.numAbsAxes; i++)
                     InitValuatorAxisStruct(pDevice, i+info.numRelAxes,
                                            info.minval[i+1], info.maxval[i+1],
                                            info.res[i+1], info.minres[i+1],
                                            info.maxres[i+1]);
-#endif
             }
         }
         if (info.focusClass)       InitFocusClassDeviceStruct(pDevice);
-#ifdef XINPUT
         if (info.proximityClass)   InitProximityClassDeviceStruct(pDevice);
-#endif
         if (info.ptrFeedbackClass)
             InitPtrFeedbackClassDeviceStruct(pDevice, dmxChangePointerControl);
         if (info.kbdFeedbackClass)
@@ -759,22 +735,15 @@ static DeviceIntPtr dmxAddDevice(DMXLocalInputInfoPtr dmxLocal)
         }
     }
 
-#ifdef XINPUT
     if (!name) {
         name            = "extension";
         registerProcPtr = RegisterOtherDevice;
     }
-#else
-    if (!name)
-        dmxLog(dmxFatal,
-               "Server not build with XINPUT support (cannot add %s)\n",
-               dmxLocal->name);
-#endif
 
     if (!name || !registerProcPtr)
         dmxLog(dmxFatal, "Cannot add device %s\n", dmxLocal->name);
 
-    pDevice                       = AddInputDevice(dmxDeviceOnOff, TRUE);
+    pDevice                       = AddInputDevice(serverClient, dmxDeviceOnOff, TRUE);
     if (!pDevice) {
         dmxLog(dmxError, "Too many devices -- cannot add device %s\n",
                dmxLocal->name);
@@ -914,9 +883,11 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
         for (i = 0; i < num; i++) {
             const char *use = "Unknown";
             switch (devices[i].use) {
-            case IsXPointer:         use = "XPointer";         break;
-            case IsXKeyboard:        use = "XKeyboard";        break;
-            case IsXExtensionDevice: use = "XExtensionDevice"; break;
+            case IsXPointer:           use = "XPointer";         break;
+            case IsXKeyboard:          use = "XKeyboard";        break;
+            case IsXExtensionDevice:   use = "XExtensionDevice"; break;
+            case IsXExtensionPointer:  use = "XExtensionPointer"; break;
+            case IsXExtensionKeyboard: use = "XExtensionKeyboard"; break;
             }
             dmxLogInput(dmxInput, "  %2d %-10.10s %-16.16s\n",
                         devices[i].id,
@@ -950,7 +921,10 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
                     }
                 }
                 break;
+#if 0
             case IsXExtensionDevice:
+            case IsXExtensionKeyboard:
+            case IsXExtensionPointer:
                 if (doXI) {
                     if (!dmxInput->numDevs) {
                         dmxLog(dmxWarning,
@@ -969,6 +943,7 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
                     }
                 }
                 break;
+#endif
             }
         }
         XFreeDeviceList(devices);
@@ -1104,13 +1079,6 @@ void dmxInputInit(DMXInputInfo *dmxInput)
     
     for (i = 0; i < dmxInput->numDevs; i++) {
         DMXLocalInputInfoPtr dmxLocal = dmxInput->devs[i];
-#ifndef XINPUT
-        if (!dmxLocal->isCore)
-            dmxLog(dmxFatal,
-                   "This server was not compiled to support the XInput"
-                   " extension, but %s is not a core device.\n",
-                   dmxLocal->name);
-#endif
         dmxLocal->pDevice = dmxAddDevice(dmxLocal);
         if (dmxLocal->isCore) {
             if (dmxLocal->type == DMX_LOCAL_MOUSE)

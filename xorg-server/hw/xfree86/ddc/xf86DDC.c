@@ -2,6 +2,14 @@
  * 
  * Copyright 1998,1999 by Egbert Eich <Egbert.Eich@Physik.TU-Darmstadt.DE>
  */
+
+/*
+ * Note that DDC1 does not define any method for returning blocks beyond
+ * the first.  DDC2 does, but the original implementation would only ever
+ * read the first block.  If you want to read and parse all blocks, use
+ * xf86DoEEDID().
+ */
+
 #ifdef HAVE_XORG_CONFIG_H
 #include <xorg-config.h>
 #endif
@@ -29,18 +37,6 @@ static Bool TestDDC1(
 static unsigned int *FetchEDID_DDC1(
     ScrnInfoPtr,
     register unsigned int (*)(ScrnInfoPtr)
-);
-
-static unsigned char* EDID1Read_DDC2(
-    int scrnIndex, 
-    I2CBusPtr pBus
-);
-
-static unsigned char * DDCRead_DDC2(
-    int scrnIndex,
-    I2CBusPtr pBus, 
-    int start, 
-    int len
 );
 
 typedef enum {
@@ -107,6 +103,159 @@ xf86DoEDID_DDC1(
 	return tmp;
 }
 
+static I2CDevPtr
+DDC2MakeDevice(I2CBusPtr pBus, int address, char *name)
+{
+    I2CDevPtr dev = NULL;
+
+    if (!(dev = xf86I2CFindDev(pBus, address))) {
+	dev = xf86CreateI2CDevRec();
+	dev->DevName = name;
+	dev->SlaveAddr = address;
+	dev->ByteTimeout = 2200; /* VESA DDC spec 3 p. 43 (+10 %) */
+	dev->StartTimeout = 550;
+	dev->BitTimeout = 40;
+	dev->AcknTimeout = 40;
+
+	dev->pI2CBus = pBus;
+	if (!xf86I2CDevInit(dev)) {
+	    xf86DrvMsg(pBus->scrnIndex, X_PROBED, "No DDC2 device\n");
+	    return NULL;
+	}
+    }
+
+    return dev;
+}
+
+static I2CDevPtr
+DDC2Init(int scrnIndex, I2CBusPtr pBus)
+{
+    I2CDevPtr dev = NULL;
+
+    /*
+     * Slow down the bus so that older monitors don't 
+     * miss things.
+     */
+    pBus->RiseFallTime = 20;
+ 
+    DDC2MakeDevice(pBus, 0x0060, "E-EDID segment register");
+    dev = DDC2MakeDevice(pBus, 0x00A0, "ddc2");
+
+    return dev;
+}
+
+/* Mmmm, smell the hacks */
+static void
+EEDIDStop(I2CDevPtr d)
+{
+}
+
+/* block is the EDID block number.  a segment is two blocks. */
+static Bool
+DDC2Read(I2CDevPtr dev, int block, unsigned char *R_Buffer)
+{
+    unsigned char W_Buffer[1];
+    int i, segment;
+    I2CDevPtr seg;
+    void (*stop)(I2CDevPtr);
+
+    for (i = 0; i < RETRIES; i++) {
+	/* Stop bits reset the segment pointer to 0, so be careful here. */
+	segment = block >> 1;
+	if (segment) {
+	    Bool b;
+	    
+	    if (!(seg = xf86I2CFindDev(dev->pI2CBus, 0x0060)))
+		return FALSE;
+
+	    W_Buffer[0] = segment;
+
+	    stop = dev->pI2CBus->I2CStop;
+	    dev->pI2CBus->I2CStop = EEDIDStop;
+
+	    b = xf86I2CWriteRead(seg, W_Buffer, 1, NULL, 0);
+
+	    dev->pI2CBus->I2CStop = stop;
+	    if (!b) {
+		dev->pI2CBus->I2CStop(dev);
+		continue;
+	    }
+	}
+
+	W_Buffer[0] = (block & 0x01) * EDID1_LEN;
+
+	if (xf86I2CWriteRead(dev, W_Buffer, 1, R_Buffer, EDID1_LEN)) {
+	    if (!DDC_checksum(R_Buffer, EDID1_LEN))
+		return TRUE;
+	}
+    }
+ 
+    return FALSE;
+}
+
+/**
+ * Attempts to probe the monitor for EDID information, if NoDDC and NoDDC2 are
+ * unset.  EDID information blocks are interpreted and the results returned in
+ * an xf86MonPtr.  Unlike xf86DoEDID_DDC[12](), this function will return
+ * the complete EDID data, including all extension blocks, if the 'complete'
+ * parameter is TRUE;
+ *
+ * This function does not affect the list of modes used by drivers -- it is up
+ * to the driver to decide policy on what to do with EDID information.
+ *
+ * @return pointer to a new xf86MonPtr containing the EDID information.
+ * @return NULL if no monitor attached or failure to interpret the EDID.
+ */
+xf86MonPtr
+xf86DoEEDID(int scrnIndex, I2CBusPtr pBus, Bool complete)
+{
+    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
+    unsigned char *EDID_block = NULL;
+    xf86MonPtr tmp = NULL;
+    I2CDevPtr dev = NULL;
+    /* Default DDC and DDC2 to enabled. */
+    Bool noddc = FALSE, noddc2 = FALSE;
+    OptionInfoPtr options;
+
+    options = xalloc(sizeof(DDCOptions));
+    if (!options)
+	return NULL;
+    memcpy(options, DDCOptions, sizeof(DDCOptions));
+    xf86ProcessOptions(pScrn->scrnIndex, pScrn->options, options);
+
+    xf86GetOptValBool(options, DDCOPT_NODDC, &noddc);
+    xf86GetOptValBool(options, DDCOPT_NODDC2, &noddc2);
+    xfree(options);
+
+    if (noddc || noddc2)
+	return NULL;
+
+    if (!(dev = DDC2Init(scrnIndex, pBus)))
+	return NULL;
+
+    EDID_block = xcalloc(1, EDID1_LEN);
+    if (!EDID_block)
+	return NULL;
+
+    if (DDC2Read(dev, 0, EDID_block)) {
+	int i, n = EDID_block[0x7e];
+
+	if (complete && n) {
+	    EDID_block = xrealloc(EDID_block, EDID1_LEN * (1+n));
+
+	    for (i = 0; i < n; i++)
+		DDC2Read(dev, i+1, EDID_block + (EDID1_LEN * (1+i)));
+	}
+
+	tmp = xf86InterpretEEDID(scrnIndex, EDID_block);
+    }
+
+    if (tmp && complete)
+	tmp->flags |= EDID_COMPLETE_RAWDATA;
+
+    return tmp;
+}
+
 /**
  * Attempts to probe the monitor for EDID information, if NoDDC and NoDDC2 are
  * unset.  EDID information blocks are interpreted and the results returned in
@@ -121,42 +270,7 @@ xf86DoEDID_DDC1(
 xf86MonPtr
 xf86DoEDID_DDC2(int scrnIndex, I2CBusPtr pBus)
 {
-    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
-    unsigned char *EDID_block = NULL;
-    xf86MonPtr tmp = NULL;
-    /* Default DDC and DDC2 to enabled. */
-    Bool noddc = FALSE, noddc2 = FALSE;
-    OptionInfoPtr options;
-
-    options = xnfalloc(sizeof(DDCOptions));
-    (void)memcpy(options, DDCOptions, sizeof(DDCOptions));
-    xf86ProcessOptions(pScrn->scrnIndex, pScrn->options, options);
-
-    xf86GetOptValBool(options, DDCOPT_NODDC, &noddc);
-    xf86GetOptValBool(options, DDCOPT_NODDC2, &noddc2);
-    xfree(options);
-    
-    if (noddc || noddc2)
-	return NULL;
-
-    EDID_block = EDID1Read_DDC2(scrnIndex,pBus);
-
-    if (EDID_block){
-	tmp = xf86InterpretEDID(scrnIndex,EDID_block);
-    } else {
-#ifdef DEBUG
-	ErrorF("No EDID block returned\n");
-#endif
-	return NULL;
-    }
-#ifdef DEBUG
-    if (!tmp)
-	ErrorF("Cannot interpret EDID block\n");
-    else
-        ErrorF("Sections to follow: %i\n",tmp->no_sections);
-#endif
-    
-    return tmp;
+    return xf86DoEEDID(scrnIndex, pBus, FALSE);
 }
 
 /* 
@@ -224,69 +338,4 @@ FetchEDID_DDC1(register ScrnInfoPtr pScrn,
 	xp++;
     } while(--count);
     return (ptr);
-}
-
-static unsigned char*
-EDID1Read_DDC2(int scrnIndex, I2CBusPtr pBus)
-{
-    return  DDCRead_DDC2(scrnIndex, pBus, 0, EDID1_LEN);
-}
-
-static unsigned char *
-DDCRead_DDC2(int scrnIndex, I2CBusPtr pBus, int start, int len)
-{
-    I2CDevPtr dev;
-    unsigned char W_Buffer[2];
-    int w_bytes;
-    unsigned char *R_Buffer;
-    int i;
-    
-    /*
-     * Slow down the bus so that older monitors don't 
-     * miss things.
-     */
-    pBus->RiseFallTime = 20;
-    
-    if (!(dev = xf86I2CFindDev(pBus, 0x00A0))) {
-	dev = xf86CreateI2CDevRec();
-	dev->DevName = "ddc2";
-	dev->SlaveAddr = 0xA0;
-	dev->ByteTimeout = 2200; /* VESA DDC spec 3 p. 43 (+10 %) */
-	dev->StartTimeout = 550;
-	dev->BitTimeout = 40;
-	dev->AcknTimeout = 40;
-
-	dev->pI2CBus = pBus;
-	if (!xf86I2CDevInit(dev)) {
-	    xf86DrvMsg(scrnIndex, X_PROBED, "No DDC2 device\n");
-	    return NULL;
-	}
-    }
-    if (start < 0x100) {
-	w_bytes = 1;
-	W_Buffer[0] = start;
-    } else {
-	w_bytes = 2;
-	W_Buffer[0] = start & 0xFF;
-	W_Buffer[1] = (start & 0xFF00) >> 8;
-    }
-    R_Buffer = xcalloc(1,sizeof(unsigned char) 
-					* (len));
-    for (i=0; i<RETRIES; i++) {
-	if (xf86I2CWriteRead(dev, W_Buffer,w_bytes, R_Buffer,len)) {
-	    if (!DDC_checksum(R_Buffer,len))
-		return R_Buffer;
-
-#ifdef DEBUG
-	    else ErrorF("Checksum error in EDID block\n");
-#endif
-	}
-#ifdef DEBUG
-	else ErrorF("Error reading EDID block\n");
-#endif
-    }
-    
-    xf86DestroyI2CDevRec(dev,TRUE);
-    xfree(R_Buffer);
-    return NULL;
 }

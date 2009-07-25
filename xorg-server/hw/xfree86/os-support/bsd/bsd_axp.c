@@ -7,7 +7,7 @@
 #include "os.h"
 #include "xf86.h"
 #include "xf86Priv.h"
-#include "xf86Axp.h"
+#include "shared/xf86Axp.h"
 #include <sys/param.h>
 #include "xf86_OSlib.h"
 #include <stdio.h>

@@ -27,6 +27,8 @@
  * use or other dealings in this Software without prior written authorization.
  */
 
+#include "sanitizedCarbon.h"
+
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -37,57 +39,75 @@
 #include "quartzCommon.h"
 #include "X11Controller.h"
 #include "darwin.h"
+#include "darwinEvents.h"
+#include "quartzAudio.h"
 #include "quartz.h"
 #include "opaque.h"
 #include "micmap.h"
 
-#ifdef NDEBUG
-#undef NDEBUG
 #include <assert.h>
-#define NDEBUG 1
-#else
-#include <assert.h>
-#endif
 
-char **envpGlobal;      // argcGlobal and argvGlobal
-                        // are from dix/globals.c
+#include <pthread.h>
 
-int main(int argc, char **argv, char **envp);
-void _InitHLTB(void);
-void DarwinHandleGUI(int argc, char **argv, char **envp);
+int dix_main(int argc, char **argv, char **envp);
+
+struct arg {
+    int argc;
+    char **argv;
+    char **envp;
+};
 
 static void server_thread (void *arg) {
-  exit (main (argcGlobal, argvGlobal, envpGlobal));
+    struct arg args = *((struct arg *)arg);
+    free(arg);
+    exit (dix_main(args.argc, args.argv, args.envp));
 }
 
-/*
- * DarwinHandleGUI
- *  This function is called first from main(). The first time
- *  it is called we start the Mac OS X front end. The front end
- *  will call main() again from another thread to run the X
- *  server. On the second call this function loads the user
- *  preferences set by the Mac OS X front end.
- */
-void DarwinHandleGUI(int argc, char **argv, char **envp) {
-    static Bool been_here = FALSE;
+static pthread_t create_thread (void *func, void *arg) {
+    pthread_attr_t attr;
+    pthread_t tid;
+	
+    pthread_attr_init (&attr);
+    pthread_attr_setscope (&attr, PTHREAD_SCOPE_SYSTEM);
+    pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+    pthread_create (&tid, &attr, func, arg);
+    pthread_attr_destroy (&attr);
+	
+    return tid;
+}
+
+void QuartzInitServer(int argc, char **argv, char **envp) {
+    struct arg *args = (struct arg*)malloc(sizeof(struct arg));
+    if(!args)
+        FatalError("Could not allocate memory.\n");
+    
+    args->argc = argc;
+    args->argv = argv;
+    args->envp = envp;
+    
+    APPKIT_THREAD_ID = pthread_self();
+    SERVER_THREAD_ID = create_thread(server_thread, args);
+
+    if (!SERVER_THREAD_ID) {
+        FatalError("can't create secondary thread\n");
+    }
+}
+
+int server_main(int argc, char **argv, char **envp) {
     int         i;
     int         fd[2];
 
-    if (been_here) {
-        return;
-    }
-    been_here = TRUE;
+    /* Unset CFProcessPath, so our children don't inherit this kludge we need
+     * to load our nib.  If an xterm gets this set, then it fails to
+     * 'open hi.txt' properly.
+     */
+    unsetenv("CFProcessPath");
     
     // Make a pipe to pass events
     assert( pipe(fd) == 0 );
     darwinEventReadFD = fd[0];
     darwinEventWriteFD = fd[1];
     fcntl(darwinEventReadFD, F_SETFL, O_NONBLOCK);
-
-    // Store command line arguments to pass back to main()
-    argcGlobal = argc;
-    argvGlobal = argv;
-    envpGlobal = envp;
 
     for (i = 1; i < argc; i++) {
         // Display version info without starting Mac OS X UI if requested
@@ -97,16 +117,9 @@ void DarwinHandleGUI(int argc, char **argv, char **envp) {
         }
     }
 
-    /* Initially I ran the X server on the main thread, and received
-       events on the second thread. But now we may be using Carbon,
-       that needs to run on the main thread. (Otherwise, when it's
-       prebound, it will initialize itself on the wrong thread)
-       
-       grr.. but doing that means that if the X thread gets scheduled
-       before the main thread when we're _not_ prebound, things fail,
-       so initialize by hand. */
+    /* Create the audio mutex */
+    QuartzAudioInit();
 
-    _InitHLTB();    
-    X11ControllerMain(argc, (const char **)argv, server_thread, NULL);
+    X11ControllerMain(argc, argv, envp);
     exit(0);
 }

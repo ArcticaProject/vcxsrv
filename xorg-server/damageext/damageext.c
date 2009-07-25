@@ -29,9 +29,11 @@
 static unsigned char	DamageReqCode;
 static int		DamageEventBase;
 static int		DamageErrorBase;
-static DevPrivateKey	DamageClientPrivateKey = &DamageClientPrivateKey;
 static RESTYPE		DamageExtType;
 static RESTYPE		DamageExtWinType;
+
+static int DamageClientPrivateKeyIndex;
+static DevPrivateKey DamageClientPrivateKey = &DamageClientPrivateKeyIndex;
 
 /* Version of the damage extension supported by the server, as opposed to the
  * DAMAGE_* defines from damageproto for what version the proto header
@@ -90,9 +92,7 @@ DamageExtNotify (DamageExtPtr pDamageExt, BoxPtr pBoxes, int nBoxes)
     if (pDamageClient->critical > 0)
     {
 	SetCriticalOutputPending ();
-#ifdef SMART_SCHEDULE
 	pClient->smart_priority = SMART_MAX_PRIORITY;
-#endif
     }
 }
 
@@ -233,7 +233,7 @@ ProcDamageCreate (ClientPtr client)
     if (pDrawable->type == DRAWABLE_WINDOW)
     {
 	pRegion = &((WindowPtr) pDrawable)->borderClip;
-	DamageDamageRegion (pDrawable, pRegion);
+	DamageRegionAppend(pDrawable, pRegion);
     }
 
     return (client->noClientException);
@@ -303,7 +303,7 @@ ProcDamageAdd (ClientPtr client)
      * screen coordinates like damage expects.
      */
     REGION_TRANSLATE(pScreen, pRegion, pDrawable->x, pDrawable->y);
-    DamageDamageRegion(pDrawable, pRegion);
+    DamageRegionAppend(pDrawable, pRegion);
     REGION_TRANSLATE(pScreen, pRegion, -pDrawable->x, -pDrawable->y);
 
     return (client->noClientException);

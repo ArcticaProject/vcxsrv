@@ -42,7 +42,7 @@ Bool ephyrDRIGetClientDriverName (int a_screen,
                                   char ** a_client_driver_name) ;
 Bool ephyrDRICreateContext (int a_screen,
                             int a_visual_id,
-                            unsigned long int *a_returned_ctx_id,
+                            XID *a_returned_ctx_id,
                             drm_context_t *a_hw_ctx) ;
 Bool ephyrDRIDestroyContext (int a_screen,
                              int a_context_id) ;

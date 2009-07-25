@@ -23,7 +23,7 @@
 #include "randrstr.h"
 
 #define SERVER_RANDR_MAJOR	1
-#define SERVER_RANDR_MINOR	2
+#define SERVER_RANDR_MINOR	3
 
 Bool
 RRClientKnowsRates (ClientPtr	pClient)
@@ -76,7 +76,7 @@ ProcRRSelectInput (ClientPtr client)
     int		rc;
 
     REQUEST_SIZE_MATCH(xRRSelectInputReq);
-    rc = dixLookupWindow(&pWin, stuff->window, client, DixWriteAccess);
+    rc = dixLookupWindow(&pWin, stuff->window, client, DixReceiveAccess);
     if (rc != Success)
 	return rc;
     pHead = (RREventPtr *)SecurityLookupIDByType(client,
@@ -85,7 +85,8 @@ ProcRRSelectInput (ClientPtr client)
 
     if (stuff->enable & (RRScreenChangeNotifyMask|
 			 RRCrtcChangeNotifyMask|
-			 RROutputChangeNotifyMask)) 
+			 RROutputChangeNotifyMask|
+			 RROutputPropertyNotifyMask)) 
     {
 	ScreenPtr	pScreen = pWin->drawable.pScreen;
 	rrScrPriv	(pScreen);
@@ -210,5 +211,13 @@ int (*ProcRandrVector[RRNumberRequests])(ClientPtr) = {
     ProcRRGetCrtcGammaSize,	/* 22 */
     ProcRRGetCrtcGamma,		/* 23 */
     ProcRRSetCrtcGamma,		/* 24 */
+/* V1.3 additions */
+    ProcRRGetScreenResourcesCurrent, /* 25 */
+    ProcRRSetCrtcTransform,	/* 26 */
+    ProcRRGetCrtcTransform,	/* 27 */
+    ProcRRGetPanning,		/* 28 */
+    ProcRRSetPanning,		/* 29 */
+    ProcRRSetOutputPrimary,	/* 30 */
+    ProcRRGetOutputPrimary,	/* 31 */
 };
 

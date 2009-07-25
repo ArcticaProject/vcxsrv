@@ -352,11 +352,9 @@ winMapWindowMultiWindow (WindowPtr pWin)
   /* Refresh/redisplay the Windows window associated with this X window */
   winUpdateWindowsWindow (pWin);
 
-#ifdef SHAPE
   /* Update the Windows window's shape */
   winReshapeMultiWindow (pWin);
   winUpdateRgnMultiWindow (pWin);
-#endif
 
   return fResult;
 }

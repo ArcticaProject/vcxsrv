@@ -68,7 +68,7 @@ X86EMU_intrFuncs	_X86EMU_intrTab[256];
  * packed structures to talk about such things with.
  */
 
-#if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#if defined(__GNUC__)
 struct __una_u64 { unsigned long  x __attribute__((packed)); };
 struct __una_u32 { unsigned int   x __attribute__((packed)); };
 struct __una_u16 { unsigned short x __attribute__((packed)); };
@@ -76,7 +76,7 @@ struct __una_u16 { unsigned short x __attribute__((packed)); };
 
 static __inline__ unsigned long ldq_u(unsigned long * r11)
 {
-#if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#if defined(__GNUC__)
 	const struct __una_u64 *ptr = (const struct __una_u64 *) r11;
 	return ptr->x;
 #else
@@ -95,7 +95,7 @@ static __inline__ unsigned long ldq_u(unsigned long * r11)
 
 static __inline__ unsigned long ldl_u(unsigned int * r11)
 {
-#if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#if defined(__GNUC__)
 	const struct __una_u32 *ptr = (const struct __una_u32 *) r11;
 	return ptr->x;
 #else
@@ -114,7 +114,7 @@ static __inline__ unsigned long ldl_u(unsigned int * r11)
 
 static __inline__ unsigned long ldw_u(unsigned short * r11)
 {
-#if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#if defined(__GNUC__)
 	const struct __una_u16 *ptr = (const struct __una_u16 *) r11;
 	return ptr->x;
 #else
@@ -137,7 +137,7 @@ static __inline__ unsigned long ldw_u(unsigned short * r11)
 
 static __inline__ void stq_u(unsigned long r5, unsigned long * r11)
 {
-#if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#if defined(__GNUC__)
 	struct __una_u64 *ptr = (struct __una_u64 *) r11;
 	ptr->x = r5;
 #else
@@ -162,7 +162,7 @@ static __inline__ void stq_u(unsigned long r5, unsigned long * r11)
 
 static __inline__ void stl_u(unsigned long r5, unsigned int * r11)
 {
-#if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#if defined(__GNUC__)
 	struct __una_u32 *ptr = (struct __una_u32 *) r11;
 	ptr->x = r5;
 #else
@@ -187,7 +187,7 @@ static __inline__ void stl_u(unsigned long r5, unsigned int * r11)
 
 static __inline__ void stw_u(unsigned long r5, unsigned short * r11)
 {
-#if defined(__GNUC__) && ((__GNUC__ > 2) || (__GNUC_MINOR__ >= 91))
+#if defined(__GNUC__)
 	struct __una_u16 *ptr = (struct __una_u16 *) r11;
 	ptr->x = r5;
 #else
@@ -209,60 +209,6 @@ static __inline__ void stw_u(unsigned long r5, unsigned short * r11)
 		:"r" (r5), "r" (r11));
 #endif
 }
-
-#elif defined(__GNUC__) && ((__GNUC__ < 3)) && \
-             (defined (__ia64__) || defined (ia64__))
-#define IA64_UALOADS
-/*
- * EGCS 1.1 knows about arbitrary unaligned loads.  Define some
- * packed structures to talk about such things with.
- */
-struct __una_u64 { unsigned long  x __attribute__((packed)); };
-struct __una_u32 { unsigned int   x __attribute__((packed)); };
-struct __una_u16 { unsigned short x __attribute__((packed)); };
-
-static __inline__ unsigned long
-__uldq (const unsigned long * r11)
-{
-    const struct __una_u64 *ptr = (const struct __una_u64 *) r11;
-    return ptr->x;
-}
-
-static __inline__ unsigned long
-uldl (const unsigned int * r11)
-{
-    const struct __una_u32 *ptr = (const struct __una_u32 *) r11;
-    return ptr->x;
-}
-
-static __inline__ unsigned long
-uldw (const unsigned short * r11)
-{
-    const struct __una_u16 *ptr = (const struct __una_u16 *) r11;
-    return ptr->x;
-}
-
-static __inline__ void
-ustq (unsigned long r5, unsigned long * r11)
-{
-    struct __una_u64 *ptr = (struct __una_u64 *) r11;
-    ptr->x = r5;
-}
-
-static __inline__ void
-ustl (unsigned long r5, unsigned int * r11)
-{
-    struct __una_u32 *ptr = (struct __una_u32 *) r11;
-    ptr->x = r5;
-}
-
-static __inline__ void
-ustw (unsigned long r5, unsigned short * r11)
-{
-    struct __una_u16 *ptr = (struct __una_u16 *) r11;
-    ptr->x = r5;
-}
-
 #endif
 
 /****************************************************************************

@@ -54,20 +54,16 @@ typedef void (*InitInputProc)(int argc, char **argv);
  * Cursor functions
  */
 typedef Bool (*InitCursorProc)(ScreenPtr pScreen);
-typedef void (*CursorUpdateProc)(void);
 
 /*
  * Suspend and resume X11 activity
  */
 typedef void (*SuspendScreenProc)(ScreenPtr pScreen);
 typedef void (*ResumeScreenProc)(ScreenPtr pScreen, int x, int y);
-typedef void (*CaptureScreensProc)(void);
-typedef void (*ReleaseScreensProc)(void);
 
 /*
  * Screen state change support
  */
-typedef void (*ScreenChangedProc)(void);
 typedef void (*AddPseudoramiXScreensProc)(int *x, int *y, int *width, int *height);
 typedef void (*UpdateScreenProc)(ScreenPtr pScreen);
 
@@ -101,14 +97,10 @@ typedef struct _QuartzModeProcs {
     InitInputProc InitInput;
 
     InitCursorProc InitCursor;
-    CursorUpdateProc CursorUpdate;	// Not used if NULL
 
     SuspendScreenProc SuspendScreen;
     ResumeScreenProc ResumeScreen;
-    CaptureScreensProc CaptureScreens;	// Only called in fullscreen
-    ReleaseScreensProc ReleaseScreens;	// Only called in fullscreen
 
-    ScreenChangedProc ScreenChanged;
     AddPseudoramiXScreensProc AddPseudoramiXScreens;
     UpdateScreenProc UpdateScreen;
 
@@ -128,7 +120,16 @@ Bool QuartzAddScreen(int index, ScreenPtr pScreen);
 Bool QuartzSetupScreen(int index, ScreenPtr pScreen);
 void QuartzInitOutput(int argc,char **argv);
 void QuartzInitInput(int argc, char **argv);
+void QuartzInitServer(int argc, char **argv, char **envp);
 void QuartzGiveUp(void);
 void QuartzProcessEvent(xEvent *xe);
+void QuartzDisplayChangedHandler(int screenNum, xEventPtr xe, DeviceIntPtr dev, int nevents);
 
+void QuartzShow(int x, int y); // (x, y) = cursor loc
+void QuartzHide(void);
+void QuartzSetRootClip(BOOL enable);
+void QuartzSpaceChanged(uint32_t space_id);
+
+void QuartzSetFullscreen(Bool state);
+void QuartzSetRootless(Bool state);
 #endif

@@ -138,7 +138,6 @@ ProcXChangeDeviceControl(ClientPtr client)
     CARD32 *resolution;
     xDeviceAbsCalibCtl *calib;
     xDeviceAbsAreaCtl *area;
-    xDeviceCoreCtl *c;
     xDeviceEnableCtl *e;
     devicePresenceNotify dpn;
 
@@ -167,7 +166,7 @@ ProcXChangeDeviceControl(ClientPtr client)
             ret = BadMatch;
             goto out;
 	}
-	if ((dev->grab) && !SameClient(dev->grab, client)) {
+	if ((dev->deviceGrab.grab) && !SameClient(dev->deviceGrab.grab, client)) {
 	    rep.status = AlreadyGrabbed;
             ret = Success;
             goto out;
@@ -245,20 +244,9 @@ ProcXChangeDeviceControl(ClientPtr client)
 
         break;
     case DEVICE_CORE:
-        c = (xDeviceCoreCtl *)&stuff[1];
-
-        status = ChangeDeviceControl(client, dev, (xDeviceCtl *) c);
-
-        if (status == Success) {
-            dev->coreEvents = c->status;
-            ret = Success;
-        } else if (status == DeviceBusy) {
-            rep.status = DeviceBusy;
-            ret = Success;
-        } else {
-            ret = BadMatch;
-        }
-
+        /* Sorry, no device core switching no more. If you want a device to
+         * send core events, attach it to a master device */
+        ret = BadMatch;
         break;
     case DEVICE_ENABLE:
         e = (xDeviceEnableCtl *)&stuff[1];

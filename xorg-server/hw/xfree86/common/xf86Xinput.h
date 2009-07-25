@@ -57,11 +57,9 @@
 #endif
 #include "xf86str.h"
 #include "inputstr.h"
-#ifdef XINPUT
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
 #include "XIstubs.h"
-#endif
 
 /* Input device flags */
 #define XI86_OPEN_ON_INIT       0x01 /* open the device at startup time */
@@ -89,7 +87,6 @@
 #define TS_Raw 60
 #define TS_Scaled 61
 
-#ifdef XINPUT
 /* This holds the input driver entry and module information. */
 typedef struct _InputDriverRec {
     int			    driverVersion;
@@ -103,7 +100,6 @@ typedef struct _InputDriverRec {
     pointer		    module;
     int			    refCount;
 } InputDriverRec, *InputDriverPtr;
-#endif
 
 /* This is to input devices what the ScrnInfoRec is to screens. */
 
@@ -174,10 +170,7 @@ void xf86PostKeyEvent(DeviceIntPtr device, unsigned int key_code, int is_down,
 		      ...);
 void xf86PostKeyboardEvent(DeviceIntPtr device, unsigned int key_code,
                            int is_down);
-void xf86XinputFinalizeInit(DeviceIntPtr dev);
-void xf86ActivateDevice(LocalDevicePtr local);
-Bool xf86CheckButton(int button, int down);
-void xf86SwitchCoreDevice(LocalDevicePtr device, DeviceIntPtr core);
+int xf86ActivateDevice(LocalDevicePtr local);
 LocalDevicePtr xf86FirstLocalDevice(void);
 int xf86ScaleAxis(int Cx, int Sxhigh, int Sxlow, int Rxhigh, int Rxlow);
 void xf86XInputSetScreen(LocalDevicePtr local, int screen_number, int x, int y);
@@ -190,6 +183,7 @@ void xf86AddEnabledDevice(InputInfoPtr pInfo);
 void xf86RemoveEnabledDevice(InputInfoPtr pInfo);
 void xf86DisableDevice(DeviceIntPtr dev, Bool panic);
 void xf86EnableDevice(DeviceIntPtr dev);
+int xf86NewInputDevice(IDevPtr idev, DeviceIntPtr *pdev, BOOL is_auto);
 
 /* xf86Helper.c */
 void xf86AddInputDriver(InputDriverPtr driver, pointer module, int flags);
@@ -201,7 +195,7 @@ void xf86DeleteInput(InputInfoPtr pInp, int flags);
 void xf86MotionHistoryAllocate(LocalDevicePtr local);
 int xf86GetMotionEvents(DeviceIntPtr dev, xTimecoord *buff,
                         unsigned long start, unsigned long stop,
-                        ScreenPtr pScreen);
+                        ScreenPtr pScreen, BOOL core);
 
 /* xf86Option.c */
 void xf86CollectInputOptions(InputInfoPtr pInfo, const char **defaultOpts,

@@ -37,6 +37,11 @@ XInputExtensionInit(
 	void
 	);
 
+Bool
+DeviceIsPointerType(
+        DeviceIntPtr dev
+        );
+
 void
 AssignTypeAndName (
 	DeviceIntPtr           /* dev */,

@@ -417,18 +417,16 @@ xf86PciProbe(void)
 	if (xf86IsPrimaryPci(info))
 	    prim = "*";
 
-	xf86Msg( X_PROBED, "PCI:%s(%u@%u:%u:%u) ", prim, info->domain,
-		 info->bus, info->dev, info->func );
+	xf86Msg(X_PROBED, "PCI:%s(%u:%u:%u:%u) %04x:%04x:%04x:%04x ", prim,
+		info->domain, info->bus, info->dev, info->func,
+		info->vendor_id, info->device_id,
+		info->subvendor_id, info->subdevice_id);
 
 	if (vendorname)
 	    xf86ErrorF("%s ", vendorname);
-	else
-	    xf86ErrorF("unknown vendor (0x%04x) ", info->vendor_id);
 
 	if (chipname)
 	    xf86ErrorF("%s ", chipname);
-	else
-	    xf86ErrorF("unknown chipset (0x%04x) ", info->device_id);
 
 	xf86ErrorF("rev %d", info->revision);
 
@@ -441,7 +439,7 @@ xf86PciProbe(void)
 		    memdone = TRUE;
 		} else
 		    xf86ErrorF(", ");
-		xf86ErrorF("0x%08lx/%ld", r->base_addr, r->size);
+		xf86ErrorF("0x%08lx/%ld", (long)r->base_addr, (long)r->size);
 	    }
 	}
 
@@ -454,12 +452,12 @@ xf86PciProbe(void)
 		    iodone = TRUE;
 		} else
 		    xf86ErrorF(", ");
-		xf86ErrorF("0x%08lx/%ld", r->base_addr, r->size);
+		xf86ErrorF("0x%08lx/%ld", (long)r->base_addr, (long)r->size);
 	    }
 	}
 
 	if ( info->rom_size ) {
-	    xf86ErrorF(", BIOS @ 0x\?\?\?\?\?\?\?\?/%ld", info->rom_size);
+	    xf86ErrorF(", BIOS @ 0x\?\?\?\?\?\?\?\?/%ld", (long)info->rom_size);
 	}
 
 	xf86ErrorF("\n");
@@ -563,11 +561,6 @@ initPciBusState(void)
 	    pbap->enable_f = pciBusAccessEnable;
 	    pbap->disable_f = pciBusAccessDisable;
 	    savePciBusState(pbap);
-	    break;
-	case PCI_SUBCLASS_BRIDGE_ISA:
-	case PCI_SUBCLASS_BRIDGE_EISA:
-	case PCI_SUBCLASS_BRIDGE_MC:
-	    pbap->type = BUS_ISA;
 	    break;
 	}
 	pbap->next = xf86BusAccInfo;

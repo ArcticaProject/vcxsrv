@@ -602,7 +602,8 @@ xf86SbusUseBuiltinMode(ScrnInfoPtr pScrn, sbusDevicePtr psdp)
     pScrn->virtualY = psdp->height;
 }
 
-static DevPrivateKey sbusPaletteKey = &sbusPaletteKey;
+static sbusPaletteKeyIndex;
+static DevPrivateKey sbusPaletteKey = &sbusPaletteKeyIndex;
 typedef struct _sbusCmap {
     sbusDevicePtr psdp;
     CloseScreenProcPtr CloseScreen;

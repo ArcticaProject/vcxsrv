@@ -80,11 +80,11 @@ PrintPropertys(WindowPtr pWin)
     pProp = pWin->userProps;
     while (pProp)
     {
-        ErrorF(  "%x %x\n", pProp->propertyName, pProp->type);
-        ErrorF("property format: %d\n", pProp->format);
-        ErrorF("property data: \n");
+        ErrorF("[dix] %x %x\n", pProp->propertyName, pProp->type);
+        ErrorF("[dix] property format: %d\n", pProp->format);
+        ErrorF("[dix] property data: \n");
         for (j=0; j<(pProp->format/8)*pProp->size; j++)
-           ErrorF("%c\n", pProp->data[j]);
+           ErrorF("[dix] %c\n", pProp->data[j]);
         pProp = pProp->next;
     }
 }

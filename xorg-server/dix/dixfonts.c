@@ -87,7 +87,7 @@ extern FontPtr defaultFont;
 
 static FontPathElementPtr *font_path_elements = (FontPathElementPtr *) 0;
 static int  num_fpes = 0;
-_X_EXPORT FPEFunctions *fpe_functions = (FPEFunctions *) 0;
+static FPEFunctions *fpe_functions = (FPEFunctions *) 0;
 static int  num_fpe_types = 0;
 
 static unsigned char *font_path_string;
@@ -97,9 +97,8 @@ static int  size_slept_fpes = 0;
 static FontPathElementPtr *slept_fpes = (FontPathElementPtr *) 0;
 static FontPatternCachePtr patternCache;
 
-_X_EXPORT int
-FontToXError(err)
-    int         err;
+static int
+FontToXError(int err)
 {
     switch (err) {
     case Successful:
@@ -117,6 +116,16 @@ FontToXError(err)
     }
 }
 
+static int
+LoadGlyphs(ClientPtr client, FontPtr pfont, unsigned nchars, int item_size,
+	   unsigned char *data)
+{
+    if (fpe_functions[pfont->fpe->type].load_glyphs)
+	return (*fpe_functions[pfont->fpe->type].load_glyphs)
+	    (client, pfont, 0, nchars, item_size, data);
+    else
+	return Successful;
+}
 
 /*
  * adding RT_FONT prevents conflict with default cursor font
@@ -302,8 +311,14 @@ doOpenFont(ClientPtr client, OFclosurePtr c)
 	    c->fontname = newname;
 	    c->fnamelen = newlen;
 	    c->current_fpe = 0;
-	    if (--aliascount <= 0)
+	    if (--aliascount <= 0) {
+		/* We've tried resolving this alias 20 times, we're
+ 		 * probably stuck in an infinite loop of aliases pointing
+ 		 * to each other - time to take emergency exit!
+ 		 */
+ 		err = BadImplementation;
 		break;
+	    }
 	    continue;
 	}
 	if (err == BadFontName) {
@@ -386,7 +401,7 @@ OpenFont(ClientPtr client, XID fid, Mask flags, unsigned lenfname, char *pfontna
     f = (char *)xalloc(lenfname + 1);
     memmove(f, pfontname, lenfname);
     f[lenfname] = '\0';
-    ErrorF("OpenFont: fontname is \"%s\"\n", f);
+    ErrorF("[dix] OpenFont: fontname is \"%s\"\n", f);
     xfree(f);
 #endif
     if (!lenfname || lenfname > XLFDMAXFONTNAMELEN)
@@ -464,7 +479,7 @@ OpenFont(ClientPtr client, XID fid, Mask flags, unsigned lenfname, char *pfontna
  *
  *  \param value must conform to DeleteType
  */
-_X_EXPORT int
+int
 CloseFont(pointer value, XID fid)
 {
     int         nscr;
@@ -1693,7 +1708,7 @@ SetFontPathElements(int npaths, unsigned char *paths, int *bad, Bool persist)
 	if (len == 0) 
 	{
 	    if (persist)
-		ErrorF ("Removing empty element from the valid list of fontpaths\n");
+		ErrorF("[dix] Removing empty element from the valid list of fontpaths\n");
 	    err = BadValue;
 	}
 	else
@@ -1745,7 +1760,7 @@ SetFontPathElements(int npaths, unsigned char *paths, int *bad, Bool persist)
 		{
 		    if (persist)
 		    {
-			ErrorF("Could not init font path element %s, removing from list!\n",
+			ErrorF("[dix] Could not init font path element %s, removing from list!\n",
 			       fpe->name);
 		    }
 		    xfree (fpe->name);
@@ -1873,16 +1888,6 @@ GetFontPath(ClientPtr client, int *count, int *length, unsigned char **result)
     return Success;
 }
 
-_X_EXPORT int
-LoadGlyphs(ClientPtr client, FontPtr pfont, unsigned nchars, int item_size, unsigned char *data)
-{
-    if (fpe_functions[pfont->fpe->type].load_glyphs)
-	return (*fpe_functions[pfont->fpe->type].load_glyphs)
-	    (client, pfont, 0, nchars, item_size, data);
-    else
-	return Successful;
-}
-
 void
 DeleteClientFontStuff(ClientPtr client)
 {
@@ -1902,23 +1907,9 @@ InitFonts (void)
 {
     patternCache = MakeFontPatternCache();
 
-#ifndef BUILTIN_FONTS
-    if (screenInfo.numScreens > screenInfo.numVideoScreens) {
-	PrinterFontRegisterFpeFunctions();
-	FontFileCheckRegisterFpeFunctions();
-	check_fs_register_fpe_functions();
-    } else 
-#endif
-    {
-#ifdef BUILTIN_FONTS
-        BuiltinRegisterFpeFunctions();
-#else
-	FontFileRegisterFpeFunctions();
-#endif
-#ifndef NOFONTSERVERACCESS
-	fs_register_fpe_functions();
-#endif
-    }
+    BuiltinRegisterFpeFunctions();
+    FontFileRegisterFpeFunctions();
+    fs_register_fpe_functions();
 }
 
 int
@@ -1931,37 +1922,27 @@ GetDefaultPointSize ()
 FontResolutionPtr
 GetClientResolutions (int *num)
 {
-#ifdef XPRINT
-    if (requestingClient && requestingClient->fontResFunc != NULL &&
-	!requestingClient->clientGone)
-    {
-	return (*requestingClient->fontResFunc)(requestingClient, num);
-    }
-    else
-#endif
-    {
-	static struct _FontResolution res;
-	ScreenPtr   pScreen;
+    static struct _FontResolution res;
+    ScreenPtr   pScreen;
 
-	pScreen = screenInfo.screens[0];
-	res.x_resolution = (pScreen->width * 25.4) / pScreen->mmWidth;
-	/*
-	 * XXX - we'll want this as long as bitmap instances are prevalent 
-	 so that we can match them from scalable fonts
-	 */
-	if (res.x_resolution < 88)
-	    res.x_resolution = 75;
-	else
-	    res.x_resolution = 100;
-	res.y_resolution = (pScreen->height * 25.4) / pScreen->mmHeight;
-	if (res.y_resolution < 88)
-	    res.y_resolution = 75;
-	else
-	    res.y_resolution = 100;
-	res.point_size = 120;
-	*num = 1;
-	return &res;
-    }
+    pScreen = screenInfo.screens[0];
+    res.x_resolution = (pScreen->width * 25.4) / pScreen->mmWidth;
+    /*
+     * XXX - we'll want this as long as bitmap instances are prevalent 
+     so that we can match them from scalable fonts
+     */
+    if (res.x_resolution < 88)
+	res.x_resolution = 75;
+    else
+	res.x_resolution = 100;
+    res.y_resolution = (pScreen->height * 25.4) / pScreen->mmHeight;
+    if (res.y_resolution < 88)
+	res.y_resolution = 75;
+    else
+	res.y_resolution = 100;
+    res.point_size = 120;
+    *num = 1;
+    return &res;
 }
 
 /*

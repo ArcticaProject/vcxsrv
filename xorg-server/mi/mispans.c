@@ -180,11 +180,8 @@ static void miSubtractSpans (SpanGroup *spanGroup, Spans *sub)
 	}
     }
 }
-    
-void miAppendSpans(spanGroup, otherGroup, spans)
-    SpanGroup   *spanGroup;
-    SpanGroup	*otherGroup;
-    Spans       *spans;
+
+void miAppendSpans(SpanGroup *spanGroup, SpanGroup *otherGroup, Spans *spans)
 {
     int ymin, ymax;
     int spansCount;
@@ -217,8 +214,7 @@ void miAppendSpans(spanGroup, otherGroup, spans)
     }
 } /* AppendSpans */
 
-void miFreeSpanGroup(spanGroup)
-    SpanGroup   *spanGroup;
+void miFreeSpanGroup(SpanGroup *spanGroup)
 {
     if (spanGroup->group != NULL) xfree(spanGroup->group);
 }
@@ -376,10 +372,7 @@ miDisposeSpanGroup (SpanGroup *spanGroup)
     }
 }
 
-void miFillUniqueSpanGroup(pDraw, pGC, spanGroup)
-    DrawablePtr pDraw;
-    GCPtr	pGC;
-    SpanGroup   *spanGroup;
+void miFillUniqueSpanGroup(DrawablePtr pDraw, GCPtr pGC, SpanGroup *spanGroup)
 {
     int    		i;
     Spans  		*spans;

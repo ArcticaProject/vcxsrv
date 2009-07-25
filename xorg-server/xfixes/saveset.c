@@ -29,7 +29,7 @@
 int
 ProcXFixesChangeSaveSet(ClientPtr client)
 {
-    Bool	toRoot, remap;
+    Bool	toRoot, map;
     int		result;
     WindowPtr	pWin;
     REQUEST(xXFixesChangeSaveSetReq);
@@ -56,8 +56,8 @@ ProcXFixesChangeSaveSet(ClientPtr client)
 	return( BadValue );
     }
     toRoot = (stuff->target == SaveSetRoot);
-    remap = (stuff->map == SaveSetMap);
-    result = AlterSaveSetForClient(client, pWin, stuff->mode, toRoot, remap);
+    map = (stuff->map == SaveSetMap);
+    result = AlterSaveSetForClient(client, pWin, stuff->mode, toRoot, map);
     if (client->noClientException != Success)
 	return(client->noClientException);
     else

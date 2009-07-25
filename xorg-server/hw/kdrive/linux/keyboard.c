@@ -42,6 +42,8 @@
 #include <sys/ioctl.h>
 
 extern int LinuxConsoleFd;
+static unsigned char mediumraw_data, mediumraw_up;
+static enum { DEFAULT, EXTBYTE1, EXTBYTE2 } mediumraw_state = DEFAULT;
 
 static const KeySym linux_to_x[256] = {
 	NoSymbol,	NoSymbol,	NoSymbol,	NoSymbol,
@@ -701,7 +703,29 @@ LinuxKeyboardRead (int fd, void *closure)
             else
 #endif
                 scancode = b[0] & 0x7f;
-	    KdEnqueueKeyboardEvent (closure, scancode, b[0] & 0x80);
+	    /* This is extended medium raw mode interpreter
+	       see linux/drivers/keyboard.c (kbd->kbdmode == VC_MEDIUMRAW) */
+	    switch (mediumraw_state)
+	    {
+	    case DEFAULT:
+		if (scancode == 0)
+		{
+		    mediumraw_state = EXTBYTE1;
+		    mediumraw_up = b[0] & 0x80;
+		}
+		else
+		    KdEnqueueKeyboardEvent (closure, scancode, b[0] & 0x80);
+		break;
+	    case EXTBYTE1:
+		mediumraw_data = scancode;
+		mediumraw_state = EXTBYTE2;
+		break;
+	    case EXTBYTE2:
+		/* Note: Only codes < 256 will pass correctly through KdEnqueueKeyboardEvent() */
+	      KdEnqueueKeyboardEvent (closure, (int)mediumraw_data << 7 | scancode, mediumraw_up);
+		mediumraw_state = DEFAULT;
+		break;
+	    }
 	    b++;
 	}
     }

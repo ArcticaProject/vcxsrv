@@ -36,12 +36,12 @@
 
 #ifdef __APPLE__
 
-# define ROOTLESS_ACCEL TRUE
 # define ROOTLESS_GLOBAL_COORDS TRUE
 # define ROOTLESS_PROTECT_ALPHA TRUE
 # define ROOTLESS_REDISPLAY_DELAY 10
 # define ROOTLESS_RESIZE_GRAVITY TRUE
 # undef  ROOTLESS_TRACK_DAMAGE
+/*# define ROOTLESSDEBUG*/
 
 /* Bit mask for alpha channel with a particular number of bits per
    pixel. Note that we only care for 32bpp data. Mac OS X uses planar
@@ -52,7 +52,6 @@
 
 #if defined(__CYGWIN__) || defined(WIN32)
 
-# define ROOTLESS_ACCEL YES
 # define ROOTLESS_GLOBAL_COORDS TRUE
 # define ROOTLESS_PROTECT_ALPHA NO
 # define ROOTLESS_REDISPLAY_DELAY 10

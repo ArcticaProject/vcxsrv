@@ -480,7 +480,7 @@ register int	i;
 int		width,nOldGroups,oldWidth,newTypes[XkbNumKbdGroups];
 
     if ((!xkb) || (!XkbKeycodeInRange(xkb,key)) || (!xkb->map) ||
-	(!xkb->map->types)||(!newTypes)||((groups&XkbAllGroupsMask)==0)||
+	(!xkb->map->types)||(!newTypesIn)||((groups&XkbAllGroupsMask)==0)||
 	(nGroups>XkbNumKbdGroups)) {
 	return BadMatch;
     }

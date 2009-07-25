@@ -67,7 +67,6 @@ PROC_EXTERN(ProcXineramaIsActive);
 
 extern int SProcPanoramiXDispatch(ClientPtr client);
 
-extern char *ConnectionInfo;
 extern int connBlockScreenStart;
 extern xConnSetupPrefix connSetupPrefix;
 

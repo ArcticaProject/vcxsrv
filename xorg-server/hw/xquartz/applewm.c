@@ -25,6 +25,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **************************************************************************/
 
+#include "sanitizedCarbon.h"
+
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -71,8 +73,6 @@ static int WMErrorBase;
 
 static DISPATCH_PROC(ProcAppleWMDispatch);
 static DISPATCH_PROC(SProcAppleWMDispatch);
-
-static void AppleWMResetProc(ExtensionEntry* extEntry);
 
 static unsigned char WMReqCode = 0;
 static int WMEventBase = 0;
@@ -122,7 +122,7 @@ AppleWMExtensionInit(
                                  AppleWMNumberErrors,
                                  ProcAppleWMDispatch,
                                  SProcAppleWMDispatch,
-                                 AppleWMResetProc,
+                                 NULL,
                                  StandardMinorOpcode)))
     {
         WMReqCode = (unsigned char)extEntry->base;
@@ -131,14 +131,6 @@ AppleWMExtensionInit(
         EventSwapVector[WMEventBase] = (EventSwapPtr) SNotifyEvent;
         appleWMProcs = procsPtr;
     }
-}
-
-/*ARGSUSED*/
-static void
-AppleWMResetProc (
-    ExtensionEntry* extEntry
-)
-{
 }
 
 /* Updates the _NATIVE_SCREEN_ORIGIN property on the given root window. */
@@ -173,7 +165,11 @@ AppleWMDoReorderWindow(
 
     atom = xa_apple_no_order_in();
     rc = dixLookupProperty(&prop, pWin, atom, serverClient, DixReadAccess);
-    return (rc == Success) && (prop->type == atom);
+    
+    if(Success == rc && prop->type == atom)
+	return 0;
+    
+    return 1;
 }
 
 

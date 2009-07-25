@@ -21,6 +21,7 @@
  */
 
 #include "randrstr.h"
+#include "inputstr.h"
 
 /*
  * When the pointer moves, check to see if the specified position is outside
@@ -51,7 +52,7 @@ RRCrtcContainsPosition (RRCrtcPtr crtc, int x, int y)
  * Find the CRTC nearest the specified position, ignoring 'skip'
  */
 static void
-RRPointerToNearestCrtc (ScreenPtr pScreen, int x, int y, RRCrtcPtr skip)
+RRPointerToNearestCrtc (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y, RRCrtcPtr skip)
 {
     rrScrPriv (pScreen);
     int		c;
@@ -95,7 +96,7 @@ RRPointerToNearestCrtc (ScreenPtr pScreen, int x, int y, RRCrtcPtr skip)
 	}
     }
     if (best_dx || best_dy)
-	(*pScreen->SetCursorPosition) (pScreen, x + best_dx, y + best_dy, TRUE);
+	(*pScreen->SetCursorPosition) (pDev, pScreen, x + best_dx, y + best_dy, TRUE);
     pScrPriv->pointerCrtc = nearest;
 }
 
@@ -124,22 +125,34 @@ RRPointerMoved (ScreenPtr pScreen, int x, int y)
     }
 
     /* None contain pointer, find nearest */
-    RRPointerToNearestCrtc (pScreen, x, y, pointerCrtc);
+    ErrorF("RRPointerMoved: Untested, may cause \"bogus pointer event\"\n");
+    RRPointerToNearestCrtc (inputInfo.pointer, pScreen, x, y, pointerCrtc);
 }
 
 /*
- * When the screen is reconfigured, move the pointer to the nearest
+ * When the screen is reconfigured, move all pointers to the nearest
  * CRTC
  */
 void
 RRPointerScreenConfigured (ScreenPtr pScreen)
 {
-    WindowPtr	pRoot = GetCurrentRootWindow ();
-    ScreenPtr	pCurrentScreen = pRoot ? pRoot->drawable.pScreen : NULL;
+    WindowPtr	pRoot;
+    ScreenPtr	pCurrentScreen;
     int		x, y;
+    DeviceIntPtr pDev;
 
-    if (pScreen != pCurrentScreen)
-	return;
-    GetSpritePosition (&x, &y);
-    RRPointerToNearestCrtc (pScreen, x, y, NULL);
+    for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+    {
+        if (IsPointerDevice(pDev))
+        {
+            pRoot = GetCurrentRootWindow(pDev);
+            pCurrentScreen = pRoot ? pRoot->drawable.pScreen : NULL;
+
+            if (pScreen == pCurrentScreen)
+            {
+                GetSpritePosition(pDev, &x, &y);
+                RRPointerToNearestCrtc (pDev, pScreen, x, y, NULL);
+            }
+        }
+    }
 }

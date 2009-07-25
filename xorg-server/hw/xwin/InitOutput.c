@@ -920,11 +920,6 @@ ddxUseMsg(void)
 		  MB_ICONINFORMATION);
 }
 
-/* ddxInitGlobals - called by |InitGlobals| from os/util.c */
-void ddxInitGlobals(void)
-{
-}
-
 /* See Porting Layer Definition - p. 20 */
 /*
  * Do any global initialization, then initialize each screen.

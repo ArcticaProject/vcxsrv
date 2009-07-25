@@ -32,6 +32,7 @@
 
 #include "xf86.h"
 #include "xf86Priv.h"
+#include "xf86_OSproc.h"
 
 _X_EXPORT void
 xf86OSRingBell(int loudness, int pitch, int duration)

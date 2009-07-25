@@ -56,6 +56,9 @@ typedef struct _PictFormat {
 typedef struct pixman_vector PictVector, *PictVectorPtr;
 typedef struct pixman_transform PictTransform, *PictTransformPtr;
 
+#define pict_f_vector pixman_f_vector
+#define pict_f_transform pixman_f_transform
+
 #define PICT_GRADIENT_STOPTABLE_SIZE 1024
 #define SourcePictTypeSolidFill 0
 #define SourcePictTypeLinear 1
@@ -184,12 +187,14 @@ typedef struct _Picture {
     SourcePictPtr   pSourcePict;
 } PictureRec;
 
-typedef Bool (*PictFilterValidateParamsProcPtr) (PicturePtr pPicture, int id,
-						 xFixed *params, int nparams);
+typedef Bool (*PictFilterValidateParamsProcPtr) (ScreenPtr pScreen, int id,
+						 xFixed *params, int nparams,
+						 int *width, int *height);
 typedef struct {
     char			    *name;
     int				    id;
     PictFilterValidateParamsProcPtr ValidateParams;
+    int				    width, height;
 } PictFilterRec, *PictFilterPtr;
 
 #define PictFilterNearest	0
@@ -403,9 +408,6 @@ extern RESTYPE		GlyphSetType;
 #define GetPictureWindow(w) ((PicturePtr)dixLookupPrivate(&(w)->devPrivates, PictureWindowPrivateKey))
 #define SetPictureWindow(w,p) dixSetPrivate(&(w)->devPrivates, PictureWindowPrivateKey, p)
 
-#define GetGlyphPrivatesForScreen(glyph, s) \
-    ((PrivateRec **)dixLookupPrivateAddr(&(glyph)->devPrivates, s))
-
 #define VERIFY_PICTURE(pPicture, pid, client, mode, err) {\
     pPicture = SecurityLookupIDByType(client, pid, PictureType, mode);\
     if (!pPicture) { \
@@ -461,7 +463,9 @@ PictureGetFilterName (int id);
 int
 PictureAddFilter (ScreenPtr			    pScreen,
 		  char				    *filter,
-		  PictFilterValidateParamsProcPtr   ValidateParams);
+		  PictFilterValidateParamsProcPtr   ValidateParams,
+		  int				    width,
+		  int				    height);
 
 Bool
 PictureSetFilterAlias (ScreenPtr pScreen, char *filter, char *alias);
@@ -476,7 +480,12 @@ PictFilterPtr
 PictureFindFilter (ScreenPtr pScreen, char *name, int len);
 
 int
-SetPictureFilter (PicturePtr pPicture, char *name, int len, xFixed *params, int nparams);
+SetPicturePictFilter (PicturePtr pPicture, PictFilterPtr pFilter,
+		      xFixed *params, int nparams);
+
+int
+SetPictureFilter (PicturePtr pPicture, char *name, int len,
+		  xFixed *params, int nparams);
 
 Bool
 PictureFinishInit (void);
@@ -605,14 +614,6 @@ CompositeTriFan (CARD8		op,
 		 int		npoints,
 		 xPointFixed	*points);
 
-Bool
-PictureTransformPoint (PictTransformPtr transform,
-		       PictVectorPtr	vector);
-
-Bool
-PictureTransformPoint3d (PictTransformPtr transform,
-                         PictVectorPtr	vector);
-
 CARD32
 PictureGradientColor (PictGradientStopPtr stop1,
 		      PictGradientStopPtr stop2,
@@ -675,5 +676,25 @@ CreateConicalGradientPicture (Picture pid,
 void PanoramiXRenderInit (void);
 void PanoramiXRenderReset (void);
 #endif
+
+/*
+ * matrix.c
+ */
+
+void
+PictTransform_from_xRenderTransform (PictTransformPtr pict,
+				     xRenderTransform *render);
+
+void
+xRenderTransform_from_PictTransform (xRenderTransform *render,
+				     PictTransformPtr pict);
+
+Bool
+PictureTransformPoint (PictTransformPtr transform,
+		       PictVectorPtr	vector);
+
+Bool
+PictureTransformPoint3d (PictTransformPtr transform,
+                         PictVectorPtr	vector);
 
 #endif /* _PICTURESTR_H_ */

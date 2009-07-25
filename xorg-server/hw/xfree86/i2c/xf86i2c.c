@@ -35,12 +35,6 @@
 #define I2C_TIMEOUT(x)	/*(x)*/  /* Report timeouts */
 #define I2C_TRACE(x)    /*(x)*/  /* Report progress */
 
-/* Set which OSs have bad gettimeofday resolution. */
-#if defined(SVR4) && !defined(sun)
-#define BAD_GETTIMEOFDAY_RESOLUTION
-#endif
-
-
 /* This is the default I2CUDelay function if not supplied by the driver.
  * High level I2C interfaces implementing the bus protocol in hardware
  * should supply this function too.
@@ -49,23 +43,6 @@
  * All values 0 to 1e6 inclusive must be expected.
  */
 
-#ifdef BAD_GETTIMEOFDAY_RESOLUTION
-/*
- * This is temporary until a better, portable
- * way is found. Adjust bogo_usec to match CPU speed.
- */
-static int bogo_usec = 500;
-
-static void
-I2CUDelay(I2CBusPtr b, int usec)
-{
-    volatile long i;
-
-    if (usec > 0)
-	for (i = usec * bogo_usec; i > 0; i--)
-	    /* (perhaps hw delay action) */;
-}
-#else
 static void
 I2CUDelay(I2CBusPtr b, int usec)
 {
@@ -86,7 +63,6 @@ I2CUDelay(I2CBusPtr b, int usec)
     } while (diff>=0 && diff< (usec + 1));
   }
 }
-#endif
 
 /* Most drivers will register just with GetBits/PutBits functions.
  * The following functions implement a software I2C protocol

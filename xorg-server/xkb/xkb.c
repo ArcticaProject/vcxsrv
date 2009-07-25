@@ -175,7 +175,7 @@ ProcXkbUseExtension(ClientPtr client)
 	client->vMinor= stuff->wantedMinor;
     }
     else if (xkbDebugFlags&0x1) {
-	ErrorF("Rejecting client %d (0x%lx) (wants %d.%02d, have %d.%02d)\n",
+	ErrorF("[xkb] Rejecting client %d (0x%lx) (wants %d.%02d, have %d.%02d)\n",
 					client->index,
 					(long)client->clientAsMask,
 					stuff->wantedMajor,stuff->wantedMinor,
@@ -339,7 +339,7 @@ ProcXkbSelectEvents(ClientPtr client)
 	    }
 	}
 	if (dataLeft>2) {
-	    ErrorF("Extra data (%d bytes) after SelectEvents\n",dataLeft);
+	    ErrorF("[xkb] Extra data (%d bytes) after SelectEvents\n",dataLeft);
 	    return BadLength;
 	}
 	return client->noClientException;
@@ -420,7 +420,7 @@ _XkbBell(ClientPtr client, DeviceIntPtr dev, WindowPtr pWin,
         }
     }
     else {
-        client->errorValue = _XkbErrCode2(0x7, bellClass);;
+        client->errorValue = _XkbErrCode2(0x7, bellClass);
         return BadValue;
     }
 
@@ -522,7 +522,7 @@ ProcXkbBell(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixBellAccess);
                 if (rc == Success)
@@ -1311,7 +1311,7 @@ XkbSizeVirtualModMap(XkbDescPtr xkb,xkbGetMapReply *rep)
 	rep->totalVModMapKeys= 0;
 	return 0;
     }
-    for (nRtrn=i=0;i<rep->nVModMapKeys-1;i++) {
+    for (nRtrn=i=0;i<rep->nVModMapKeys;i++) {
 	if (xkb->server->vmodmap[i+rep->firstVModMapKey]!=0)
 	    nRtrn++;
     }
@@ -1330,7 +1330,7 @@ unsigned short *	pMap;
 
     wire= (xkbVModMapWireDesc *)buf;
     pMap= &xkb->server->vmodmap[rep->firstVModMapKey];
-    for (i=0;i<rep->nVModMapKeys-1;i++,pMap++) {
+    for (i=0;i<rep->nVModMapKeys;i++,pMap++) {
 	if (*pMap!=0) {
 	    wire->key= i+rep->firstVModMapKey;
 	    wire->vmods= *pMap;
@@ -1393,7 +1393,7 @@ char		*desc,*start;
     if ( rep->totalVModMapKeys>0 )
 	desc= XkbWriteVirtualModMap(xkb,rep,desc,client);
     if ((desc-start)!=(len)) {
-	ErrorF("BOGUS LENGTH in write keyboard desc, expected %d, got %ld\n",
+	ErrorF("[xkb] BOGUS LENGTH in write keyboard desc, expected %d, got %ld\n",
 					len, (unsigned long)(desc-start));
     }
     if (client->swapped) {
@@ -2560,7 +2560,7 @@ ProcXkbSetMap(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixManageAccess);
                 if (rc == Success)
@@ -2583,7 +2583,7 @@ ProcXkbSetMap(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixManageAccess);
                 if (rc == Success)
@@ -2891,7 +2891,7 @@ ProcXkbSetCompatMap(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixManageAccess);
                 if (rc == Success)
@@ -2906,7 +2906,7 @@ ProcXkbSetCompatMap(ClientPtr client)
     }
 
     /* Yay, the dry-runs succeed. Let's apply */
-    rc = _XkbSetCompatMap(client, dev, stuff, data, TRUE);
+    rc = _XkbSetCompatMap(client, dev, stuff, data, FALSE);
     if (rc != Success)
         return rc;
     if (stuff->deviceSpec == XkbUseCoreKbd)
@@ -2914,12 +2914,12 @@ ProcXkbSetCompatMap(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixManageAccess);
                 if (rc == Success)
                 {
-                    rc = _XkbSetCompatMap(client, other, stuff, data, TRUE);
+                    rc = _XkbSetCompatMap(client, other, stuff, data, FALSE);
                     if (rc != Success)
                         return rc;
                 }
@@ -3169,7 +3169,7 @@ ProcXkbSetIndicatorMap(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixSetAttrAccess);
                 if (rc == Success)
@@ -3437,7 +3437,8 @@ ProcXkbSetNamedIndicator(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->coreEvents &&
+            if ((other != dev) && !other->isMaster && (other->u.master == dev) &&
+                (other->kbdfeed || other->leds) &&
                 (XaceHook(XACE_DEVICE_ACCESS, client, other, DixSetAttrAccess) == Success))
             {
                 rc = _XkbCreateIndicatorMap(other, stuff->indicator,
@@ -3460,7 +3461,8 @@ ProcXkbSetNamedIndicator(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->coreEvents &&
+            if ((other != dev) && !other->isMaster && (other->u.master == dev) &&
+                (other->kbdfeed || other->leds) &&
                 (XaceHook(XACE_DEVICE_ACCESS, client, other, DixSetAttrAccess) == Success))
             {
                 _XkbSetNamedIndicator(client, other, stuff);
@@ -3752,7 +3754,7 @@ register int            n;
     }
 
     if ((desc-start)!=(length)) {
-	ErrorF("BOGUS LENGTH in write names, expected %d, got %ld\n",
+	ErrorF("[xkb] BOGUS LENGTH in write names, expected %d, got %ld\n",
 					length, (unsigned long)(desc-start));
     }
     WriteToClient(client, SIZEOF(xkbGetNamesReply), (char *)rep);
@@ -4249,7 +4251,7 @@ ProcXkbSetNames(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
 
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixManageAccess);
@@ -4274,7 +4276,7 @@ ProcXkbSetNames(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
 
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixManageAccess);
@@ -4525,9 +4527,9 @@ xkbDoodadWireDesc *	doodadWire;
 		wire= XkbWriteCountedString(wire,doodad->logo.logo_name,swap);
 		break;
 	    default:
-		ErrorF("Unknown doodad type %d in XkbWriteGeomDoodads\n",
+		ErrorF("[xkb] Unknown doodad type %d in XkbWriteGeomDoodads\n",
 			doodad->any.type);
-		ErrorF("Ignored\n");
+		ErrorF("[xkb] Ignored\n");
 		break;
 	}
     }
@@ -4755,7 +4757,7 @@ XkbSendGeometry(	ClientPtr		client,
 	if ( rep->nKeyAliases>0 )
 	    desc = XkbWriteGeomKeyAliases(desc,geom,client->swapped);
 	if ((desc-start)!=(len)) {
-	    ErrorF("BOGUS LENGTH in XkbSendGeometry, expected %d, got %ld\n",
+	    ErrorF("[xkb] BOGUS LENGTH in XkbSendGeometry, expected %d, got %ld\n",
 			len, (unsigned long)(desc-start));
 	}
     }
@@ -5325,7 +5327,7 @@ ProcXkbSetGeometry(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if ((other != dev) && other->key && other->coreEvents)
+            if ((other != dev) && other->key && !other->isMaster && (other->u.master == dev))
             {
                 rc = XaceHook(XACE_DEVICE_ACCESS, client, other, DixManageAccess);
                 if (rc == Success)
@@ -5671,7 +5673,7 @@ ProcXkbGetKbdByName(ClientPtr client)
 	    mrep.present = 0;
 	    mrep.totalSyms = mrep.totalActs =
 		mrep.totalKeyBehaviors= mrep.totalKeyExplicit= 
-		mrep.totalModMapKeys= 0;
+		mrep.totalModMapKeys= mrep.totalVModMapKeys= 0;
 	    if (rep.reported&(XkbGBN_TypesMask|XkbGBN_ClientSymbolsMask)) {
 		mrep.present|= XkbKeyTypesMask;
 		mrep.firstType = 0;
@@ -5697,6 +5699,8 @@ ProcXkbGetKbdByName(ClientPtr client)
 			mrep.firstKeyExplicit = new->min_key_code;
 		mrep.nKeyActs = mrep.nKeyBehaviors = 
 			mrep.nKeyExplicit = XkbNumKeys(new);
+		mrep.firstVModMapKey= new->min_key_code;
+		mrep.nVModMapKeys= XkbNumKeys(new);
 	    }
 	    else {
 		mrep.virtualMods= 0;
@@ -6224,8 +6228,8 @@ char *			str;
 	    return status;
     }
     else if (length!=0)  {
-	ErrorF("Internal Error!  BadLength in ProcXkbGetDeviceInfo\n");
-	ErrorF("                 Wrote %d fewer bytes than expected\n",length);
+	ErrorF("[xkb] Internal Error!  BadLength in ProcXkbGetDeviceInfo\n");
+	ErrorF("[xkb]                  Wrote %d fewer bytes than expected\n",length);
 	return BadLength;
     }
     if (stuff->wanted&(~supported)) {
@@ -6526,7 +6530,7 @@ ProcXkbSetDeviceInfo(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if (((other != dev) && other->coreEvents) &&
+            if (((other != dev) && !other->isMaster && (other->u.master == dev)) &&
                 ((stuff->deviceSpec == XkbUseCoreKbd && other->key) ||
                 (stuff->deviceSpec == XkbUseCorePtr && other->button)))
             {
@@ -6551,7 +6555,7 @@ ProcXkbSetDeviceInfo(ClientPtr client)
         DeviceIntPtr other;
         for (other = inputInfo.devices; other; other = other->next)
         {
-            if (((other != dev) && other->coreEvents) &&
+            if (((other != dev) && !other->isMaster && (other->u.master == dev)) &&
                 ((stuff->deviceSpec == XkbUseCoreKbd && other->key) ||
                 (stuff->deviceSpec == XkbUseCorePtr && other->button)))
             {
@@ -6590,25 +6594,25 @@ int rc;
     newCtrls=  xkbDebugCtrls&(~stuff->affectCtrls);
     newCtrls|= (stuff->ctrls&stuff->affectCtrls);
     if (xkbDebugFlags || newFlags || stuff->msgLength) {
-	ErrorF("XkbDebug: Setting debug flags to 0x%lx\n",(long)newFlags);
+	ErrorF("[xkb] XkbDebug: Setting debug flags to 0x%lx\n",(long)newFlags);
 	if (newCtrls!=xkbDebugCtrls)
-	    ErrorF("XkbDebug: Setting debug controls to 0x%lx\n",(long)newCtrls);
+	    ErrorF("[xkb] XkbDebug: Setting debug controls to 0x%lx\n",(long)newCtrls);
     }
     extraLength= (stuff->length<<2)-sz_xkbSetDebuggingFlagsReq;
     if (stuff->msgLength>0) {
 	char *msg;
 	if (extraLength<XkbPaddedSize(stuff->msgLength)) {
-	    ErrorF("XkbDebug: msgLength= %d, length= %ld (should be %d)\n",
+	    ErrorF("[xkb] XkbDebug: msgLength= %d, length= %ld (should be %d)\n",
 			stuff->msgLength,(long)extraLength,
 			XkbPaddedSize(stuff->msgLength));
 	    return BadLength;
 	}
 	msg= (char *)&stuff[1];
 	if (msg[stuff->msgLength-1]!='\0') {
-	    ErrorF("XkbDebug: message not null-terminated\n");
+	    ErrorF("[xkb] XkbDebug: message not null-terminated\n");
 	    return BadValue;
 	}
-	ErrorF("XkbDebug: %s\n",msg);
+	ErrorF("[xkb] XkbDebug: %s\n",msg);
     }
     xkbDebugFlags = newFlags;
     xkbDebugCtrls = newCtrls;
@@ -6705,15 +6709,9 @@ XkbClientGone(pointer data,XID id)
     DevicePtr	pXDev = (DevicePtr)data;
 
     if (!XkbRemoveResourceClient(pXDev,id)) {
-	ErrorF("Internal Error! bad RemoveResourceClient in XkbClientGone\n");
+	ErrorF("[xkb] Internal Error! bad RemoveResourceClient in XkbClientGone\n");
     }
     return 1;
-}
-
-/*ARGSUSED*/
-static void
-XkbResetProc(ExtensionEntry *extEntry)
-{
 }
 
 void
@@ -6723,7 +6721,7 @@ XkbExtensionInit(void)
 
     if ((extEntry = AddExtension(XkbName, XkbNumberEvents, XkbNumberErrors,
 				 ProcXkbDispatch, SProcXkbDispatch,
-				 XkbResetProc, StandardMinorOpcode))) {
+				 NULL, StandardMinorOpcode))) {
 	XkbReqCode = (unsigned char)extEntry->base;
 	XkbEventBase = (unsigned char)extEntry->eventBase;
 	XkbErrorBase = (unsigned char)extEntry->errorBase;

@@ -48,16 +48,10 @@
 #define OSNAME "netbsd"
 #elif defined(__OpenBSD__)
 #define OSNAME "openbsd"
-#elif defined(Lynx)
-#define OSNAME "lynxos"
 #elif defined(__GNU__)
 #define OSNAME "hurd"
 #elif defined(__SCO__)
 #define OSNAME "sco"
-#elif defined(DGUX)
-#define OSNAME "dgux"
-#elif defined(ISC)
-#define OSNAME "isc"
 #elif defined(SVR4) && defined(sun)
 #define OSNAME "solaris"
 #elif defined(SVR5)

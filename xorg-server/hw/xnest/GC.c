@@ -35,7 +35,8 @@ is" without express or implied warranty.
 #include "XNFont.h"
 #include "Color.h"
 
-DevPrivateKey xnestGCPrivateKey = &xnestGCPrivateKey;
+static int xnestGCPrivateKeyIndex;
+DevPrivateKey xnestGCPrivateKey = &xnestGCPrivateKeyIndex;
 
 static GCFuncs xnestFuncs = {
   xnestValidateGC,

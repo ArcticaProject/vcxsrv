@@ -71,12 +71,13 @@ static int getPolyYBounds(DDXPointPtr pts, int n, int *by, int *ty);
  *     For a derivation of the algorithm, see the author of
  *     this code.
  */
-_X_EXPORT Bool
-miFillConvexPoly(dst, pgc, count, ptsIn)
-    DrawablePtr dst;
-    GCPtr	pgc;
-    int		count;                /* number of points        */
-    DDXPointPtr ptsIn;                /* the points              */
+Bool
+miFillConvexPoly(
+    DrawablePtr dst,
+    GCPtr	pgc,
+    int		count,                /* number of points        */
+    DDXPointPtr ptsIn                 /* the points              */
+    )
 {
     int xl = 0, xr = 0; /* x vals of left and right edges */
     int dl = 0, dr = 0; /* decision variables             */

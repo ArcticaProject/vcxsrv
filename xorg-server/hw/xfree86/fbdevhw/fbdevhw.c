@@ -245,7 +245,6 @@ fbdev_modes_equal(struct fb_var_screeninfo *set, struct fb_var_screeninfo *req)
 		set->green.length == req->green.length &&
 		set->blue.length == req->blue.length &&
 		set->xres == req->xres && set->yres == req->yres &&
-		set->pixclock == req->pixclock &&
 		set->right_margin == req->right_margin &&
 		set->hsync_len == req->hsync_len &&
 		set->left_margin == req->left_margin &&

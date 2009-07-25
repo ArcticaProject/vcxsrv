@@ -26,6 +26,9 @@
 	    Do not specify "input.x11_options.Device" since "input.device"
 	    will be used automatically.
 
+            You MUST specify all options as strings, otherwise the server will
+            ignore them.
+
         Legacy Keys
 	     "input.xkb.rules"
              "input.xkb.model"
@@ -58,19 +61,33 @@
              string="Linux">
         <merge key="input.x11_driver" type="string">evdev</merge>
       </match>
+      <match key="/org/freedesktop/Hal/devices/computer:system.kernel.name"
+             string="SunOS">
+       <match key="input.device" contains="usb">
+        <merge key="input.x11_options.StreamsModule" type="string">usbms</merge>
+        <merge key="input.x11_options.Protocol" type="string">VUID</merge>
+       </match>
+      </match>
     </match>
 
     <match key="info.capabilities" contains="input.keys">
       <merge key="input.x11_options.XkbRules" type="string">base</merge>
 
       <!-- If we're using Linux, we use evdev by default (falling back to
-           keyboard otherwise). -->
-      <merge key="input.x11_driver" type="string">keyboard</merge>
+           kbd otherwise). -->
+      <merge key="input.x11_driver" type="string">kbd</merge>
       <merge key="input.x11_options.XkbModel" type="string">pc105</merge>
       <match key="/org/freedesktop/Hal/devices/computer:system.kernel.name"
              string="Linux">
         <merge key="input.x11_driver" type="string">evdev</merge>
         <merge key="input.x11_options.XkbModel" type="string">evdev</merge>
+      </match>
+      <match key="/org/freedesktop/Hal/devices/computer:system.kernel.name"
+             string="SunOS">
+       <match key="input.device" contains="usb">
+        <merge key="input.x11_options.StreamsModule" type="string">usbkbm</merge>
+        <merge key="input.x11_options.Protocol" type="string">VUID</merge>
+       </match>
       </match>
 
       <merge key="input.x11_options.XkbLayout" type="string">us</merge>

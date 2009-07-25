@@ -170,7 +170,7 @@ RRScanOldConfig (ScreenPtr pScreen, Rotation rotations)
     /* notice current mode */
     if (newMode)
 	RRCrtcNotify (crtc, newMode, 0, 0, pScrPriv->rotation,
-		      1, &output);
+		      NULL, 1, &output);
 }
 #endif
 
@@ -178,11 +178,19 @@ RRScanOldConfig (ScreenPtr pScreen, Rotation rotations)
  * Poll the driver for changed information
  */
 Bool
-RRGetInfo (ScreenPtr pScreen)
+RRGetInfo (ScreenPtr pScreen, Bool force_query)
 {
     rrScrPriv (pScreen);
     Rotation	    rotations;
     int		    i;
+
+    /* Return immediately if we don't need to re-query and we already have the
+     * information.
+     */
+    if (!force_query) {
+	if (pScrPriv->numCrtcs != 0 || pScrPriv->numOutputs != 0)
+	    return TRUE;
+    }
 
     for (i = 0; i < pScrPriv->numOutputs; i++)
 	pScrPriv->outputs[i]->changed = FALSE;

@@ -27,24 +27,27 @@
 #include "fb.h"
 
 #ifdef FB_SCREEN_PRIVATE
-static DevPrivateKey fbScreenPrivateKey = &fbScreenPrivateKey;
+static int fbScreenPrivateKeyIndex;
+static DevPrivateKey fbScreenPrivateKey = &fbScreenPrivateKeyIndex;
 DevPrivateKey fbGetScreenPrivateKey(void)
 {
     return fbScreenPrivateKey;
 }
 #endif
-static DevPrivateKey fbGCPrivateKey = &fbGCPrivateKey;
+
+static int fbGCPrivateKeyIndex;
+static DevPrivateKey fbGCPrivateKey = &fbGCPrivateKeyIndex;
 DevPrivateKey fbGetGCPrivateKey(void)
 {
     return fbGCPrivateKey;
 }
-#ifndef FB_NO_WINDOW_PIXMAPS
-static DevPrivateKey fbWinPrivateKey = &fbWinPrivateKey;
+
+static int fbWinPrivateKeyIndex;
+static DevPrivateKey fbWinPrivateKey = &fbWinPrivateKeyIndex;
 DevPrivateKey fbGetWinPrivateKey(void)
 {
     return fbWinPrivateKey;
 }
-#endif
 
 Bool
 fbAllocatePrivates(ScreenPtr pScreen, DevPrivateKey *pGCKey)

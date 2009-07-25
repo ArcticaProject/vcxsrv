@@ -120,9 +120,10 @@ int DGAGetOldDGAMode(int Index);
 int DGAGetModeInfo(int Index, XDGAModePtr mode, int num);
 
 Bool DGAVTSwitch(void);
-Bool DGAStealButtonEvent(int Index, int button, int is_down);
-Bool DGAStealMotionEvent(int Index, int dx, int dy);
-Bool DGAStealKeyEvent(int Index, int key_code, int is_down);
+Bool DGAStealButtonEvent(DeviceIntPtr dev, int Index, int button, 
+                         int is_down);
+Bool DGAStealMotionEvent(DeviceIntPtr dev, int Index, int dx, int dy);
+Bool DGAStealKeyEvent(DeviceIntPtr dev, int Index, int key_code, int is_down);
 Bool DGAIsDgaEvent (xEvent *e);
 
 Bool DGADeliverEvent (ScreenPtr pScreen, xEvent *e);

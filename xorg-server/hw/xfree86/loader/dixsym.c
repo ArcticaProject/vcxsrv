@@ -57,7 +57,6 @@
 #include "cursorstr.h"
 #include "dix.h"
 #include "dixevents.h"
-#include "dixfont.h"
 #include "dixstruct.h"
 #include "misc.h"
 #include "globals.h"
@@ -99,6 +98,7 @@ _X_HIDDEN void *dixLookupTab[] = {
     /* dix */
     /* atom.c */
     SYMFUNC(MakeAtom)
+    SYMFUNC(NameForAtom)
     SYMFUNC(ValidAtom)
     /* colormap.c */
     SYMFUNC(AllocColor)
@@ -138,7 +138,6 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(SendMappingNotify)
     SYMFUNC(InitPointerDeviceStruct)
     /* dispatch.c */
-    SYMFUNC(SetInputCheck)
     SYMFUNC(SendErrorToClient)
     SYMFUNC(UpdateCurrentTime)
     SYMFUNC(UpdateCurrentTimeIf)
@@ -147,11 +146,6 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMVAR(isItTimeToYield)
     SYMVAR(ClientStateCallback)
     SYMVAR(ServerGrabCallback)
-    /* dixfonts.c */
-    SYMFUNC(CloseFont)
-    SYMFUNC(FontToXError)
-    SYMFUNC(LoadGlyphs)
-    SYMVAR(fpe_functions)
     /* dixutils.c */
     SYMFUNC(AddCallback)
     SYMFUNC(ClientSleep)
@@ -179,7 +173,6 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(GetSpritePosition)
     SYMFUNC(GetSpriteWindow)
     SYMFUNC(GetSpriteCursor)
-    SYMFUNC(WindowsRestructured)
     SYMVAR(DeviceEventCallback)
     SYMVAR(EventCallback)
     SYMVAR(inputInfo)
@@ -200,10 +193,6 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(CheckExtension)
     SYMFUNC(MinorOpcodeOfRequest)
     SYMFUNC(StandardMinorOpcode)
-#ifdef XEVIE
-    SYMVAR(xeviehot)
-    SYMVAR(xeviewin)
-#endif
     /* gc.c */
     SYMFUNC(CopyGC)
     SYMFUNC(CreateGC)
@@ -214,10 +203,8 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(FreeGC)
     SYMFUNC(FreeScratchGC)
     SYMFUNC(GetScratchGC)
-    SYMFUNC(SetClipRects)
     SYMFUNC(ValidateGC)
     SYMFUNC(VerifyRectOrder)
-    SYMFUNC(SetDashes)
     /* globals.c */
     SYMVAR(ScreenSaverTime)
 #ifdef DPMSExtension
@@ -229,10 +216,7 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMVAR(DPMSSuspendTime)
     SYMVAR(DPMSEnabledSwitch)
     SYMVAR(DPMSDisabledSwitch)
-    SYMVAR(defaultDPMSEnabled)
 #endif
-    /* bigreq */
-    SYMVAR(maxBigRequestSize)
 #ifdef XV
     /* XXX These are exported from the DDX, not DIX. */
     SYMVAR(XvScreenInitProc)
@@ -280,8 +264,6 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(FakeClientID)
     SYMFUNC(FreeResource)
     SYMFUNC(FreeResourceByType)
-    SYMFUNC(GetXIDList)
-    SYMFUNC(GetXIDRange)
     SYMFUNC(LegalNewID)
     SYMFUNC(FindClientResourcesByType)
     SYMFUNC(FindAllClientResources)
@@ -308,8 +290,6 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(SwapColorItem)
     /* tables.c */
     SYMVAR(EventSwapVector)
-    SYMVAR(ReplySwapVector)
-    SYMVAR(ProcVector)
     /* window.c */
     SYMFUNC(ChangeWindowAttributes)
     SYMFUNC(CheckWindowOptionalNeed)
@@ -319,19 +299,12 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(GravityTranslate)
     SYMFUNC(MakeWindowOptional)
     SYMFUNC(MapWindow)
-    SYMFUNC(MoveWindowInStack)
     SYMFUNC(NotClippedByChildren)
-    SYMFUNC(ResizeChildrenWinSize)
     SYMFUNC(SaveScreens)
     SYMFUNC(dixSaveScreens)
-    SYMFUNC(SendVisibilityNotify)
-    SYMFUNC(SetWinSize)
-    SYMFUNC(SetBorderSize)
     SYMFUNC(TraverseTree)
     SYMFUNC(UnmapWindow)
     SYMFUNC(WalkTree)
-    SYMVAR(deltaSaveUndersViewable)
-    SYMVAR(numSaveUndersViewable)
     SYMVAR(savedScreenInfo)
     SYMVAR(screenIsSaved)
 
@@ -341,14 +314,10 @@ _X_HIDDEN void *dixLookupTab[] = {
     /* utils.c */
     SYMFUNC(Xstrdup)
     SYMFUNC(XNFstrdup)
-    SYMVAR(Must_have_memory)
     SYMFUNC(AdjustWaitForDelay)
     SYMVAR(noTestExtensions)
     SYMFUNC(GiveUp)
 
-#ifdef BIGREQS
-    SYMVAR(noBigReqExtension)
-#endif
 #ifdef COMPOSITE
     SYMVAR(noCompositeExtension)
 #endif
@@ -361,12 +330,6 @@ _X_HIDDEN void *dixLookupTab[] = {
 #ifdef DPMSExtension
     SYMVAR(noDPMSExtension)
 #endif
-#ifdef EVI
-    SYMVAR(noEVIExtension)
-#endif
-#ifdef FONTCACHE
-    SYMVAR(noFontCacheExtension)
-#endif
 #ifdef GLXEXT
     SYMVAR(noGlxExtension)
 #endif
@@ -375,9 +338,6 @@ _X_HIDDEN void *dixLookupTab[] = {
 #endif
 #ifdef MITSHM
     SYMVAR(noMITShmExtension)
-#endif
-#ifdef MITMISC
-    SYMVAR(noMITMiscExtension)
 #endif
 #ifdef MULTIBUFFER
     SYMVAR(noMultibufferExtension)
@@ -388,29 +348,11 @@ _X_HIDDEN void *dixLookupTab[] = {
 #ifdef RENDER
     SYMVAR(noRenderExtension)
 #endif
-#ifdef SHAPE
-    SYMVAR(noShapeExtension)
-#endif
 #ifdef XCSECURITY
     SYMVAR(noSecurityExtension)
 #endif
-#ifdef XSYNC
-    SYMVAR(noSyncExtension)
-#endif
-#ifdef TOGCUP
-    SYMVAR(noXcupExtension)
-#endif
 #ifdef RES
     SYMVAR(noResExtension)
-#endif
-#ifdef XAPPGROUP
-    SYMVAR(noXagExtension)
-#endif
-#ifdef XCMISC
-    SYMVAR(noXCMiscExtension)
-#endif
-#ifdef XEVIE
-    SYMVAR(noXevieExtension)
 #endif
 #ifdef XF86BIGFONT
     SYMVAR(noXFree86BigfontExtension)
@@ -420,9 +362,6 @@ _X_HIDDEN void *dixLookupTab[] = {
 #endif
 #ifdef XF86DRI
     SYMVAR(noXFree86DRIExtension)
-#endif
-#ifdef XF86MISC
-    SYMVAR(noXFree86MiscExtension)
 #endif
 #ifdef XF86VIDMODE
     SYMVAR(noXFree86VidModeExtension)
@@ -436,12 +375,6 @@ _X_HIDDEN void *dixLookupTab[] = {
 #endif
 #ifdef PANORAMIX
     SYMVAR(noPanoramiXExtension)
-#endif
-#ifdef XINPUT
-    SYMVAR(noXInputExtension)
-#endif
-#ifdef XIDLE
-    SYMVAR(noXIdleExtension)
 #endif
 #ifdef XSELINUX
     SYMVAR(noSELinuxExtension)
@@ -477,15 +410,12 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMFUNC(SetCriticalOutputPending)
     SYMVAR(FlushCallback)
     SYMVAR(ReplyCallback)
-    SYMVAR(SkippedRequestsCallback)
     SYMFUNC(ResetCurrentRequest)
     /* connection.c */
     SYMFUNC(IgnoreClient)
     SYMFUNC(AttendClient)
     SYMFUNC(AddEnabledDevice)
     SYMFUNC(RemoveEnabledDevice)
-    SYMFUNC(MakeClientGrabPervious)
-    SYMFUNC(MakeClientGrabImpervious)
     SYMVAR(GrabInProgress)
 
 #ifdef XKB
@@ -496,14 +426,10 @@ _X_HIDDEN void *dixLookupTab[] = {
     SYMVAR(XkbDfltRepeatInterval)
 #endif
 
-#ifdef XINPUT
     /* Xi */
     /* exevents.c */
     SYMFUNC(InitValuatorAxisStruct)
     SYMFUNC(InitProximityClassDeviceStruct)
-    /* extinit.c */
-    SYMFUNC(AssignTypeAndName)
-#endif
 
     /* xf86DGA.c */
     /* XXX This is exported from the DDX, not DIX. */

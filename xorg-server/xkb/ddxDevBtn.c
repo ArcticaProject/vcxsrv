@@ -42,6 +42,8 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 extern	int	DeviceValuator;
 
+static EventListPtr masterEvents = NULL;
+
 void
 XkbDDXFakeDeviceButton(DeviceIntPtr dev,Bool press,int button)
 {
@@ -52,6 +54,7 @@ deviceKeyButtonPointer *btn;
 deviceValuator *	val;
 int			x,y;
 int			nAxes, i, count;
+DeviceIntPtr		master = NULL;
 
     if (dev == inputInfo.pointer || !dev->public.on)
 	return;
@@ -60,7 +63,7 @@ int			nAxes, i, count;
     if (nAxes > 6)
 	nAxes = 6;
 
-    GetSpritePosition(&x,&y);
+    GetSpritePosition(dev, &x,&y);
     btn= (deviceKeyButtonPointer *) &events[0];
     val= (deviceValuator *) &events[1];
     if (press)		btn->type= DeviceButtonPress;
@@ -95,6 +98,32 @@ int			nAxes, i, count;
 	count= 1+((nAxes+5)/6);
     }
 
+    /* XXX: This is obnoxious. ProcessOtherEvent updates the DIX device state,
+     * but may not do anything if the device state is invalid. This happens if
+     * we post a mouse event from a pure keyboard device. So we need to hack
+     * around that by getting the master, then posting the event for the
+     * pointer paired with the master.
+     *
+     * Note:the DeviceButtonEvent on the SD itself will do nothing in most
+     * cases, unless dev is both a keyboard and a mouse.
+     */
+    if (!dev->isMaster && dev->u.master) {
+        if (!masterEvents)
+        {
+            masterEvents = InitEventList(1);
+            SetMinimumEventSize(masterEvents, 1, (1 + MAX_VALUATOR_EVENTS) * sizeof(xEvent));
+        }
+        master = dev->u.master;
+        if (!IsPointerDevice(master))
+            master = GetPairedDevice(dev->u.master);
+
+        CopyGetMasterEvent(master, dev, &events, masterEvents, count);
+    }
+
     (*dev->public.processInputProc)((xEventPtr)btn, dev, count);
+
+    if (master) {
+        (*master->public.processInputProc)(masterEvents->event, master, count);
+    }
     return;
 }

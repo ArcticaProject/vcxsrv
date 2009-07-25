@@ -122,6 +122,7 @@ typedef    void (* GetSpansProcPtr)(
 	char * /*pdstStart*/);
 
 typedef    void (* PointerNonInterestBoxProcPtr)(
+        DeviceIntPtr /*pDev*/,
 	ScreenPtr /*pScreen*/,
 	BoxPtr /*pBox*/);
 
@@ -266,33 +267,40 @@ typedef    Bool (* UnrealizeFontProcPtr)(
 	FontPtr /*pFont*/);
 
 typedef    void (* ConstrainCursorProcPtr)(
+        DeviceIntPtr /*pDev*/,
 	ScreenPtr /*pScreen*/,
 	BoxPtr /*pBox*/);
 
 typedef    void (* CursorLimitsProcPtr)(
+        DeviceIntPtr /* pDev */,
 	ScreenPtr /*pScreen*/,
 	CursorPtr /*pCursor*/,
 	BoxPtr /*pHotBox*/,
 	BoxPtr /*pTopLeftBox*/);
 
 typedef    Bool (* DisplayCursorProcPtr)(
+        DeviceIntPtr /* pDev */,
 	ScreenPtr /*pScreen*/,
 	CursorPtr /*pCursor*/);
 
 typedef    Bool (* RealizeCursorProcPtr)(
+        DeviceIntPtr /* pDev */,
 	ScreenPtr /*pScreen*/,
 	CursorPtr /*pCursor*/);
 
 typedef    Bool (* UnrealizeCursorProcPtr)(
+        DeviceIntPtr /* pDev */,
 	ScreenPtr /*pScreen*/,
 	CursorPtr /*pCursor*/);
 
 typedef    void (* RecolorCursorProcPtr)(
+        DeviceIntPtr /* pDev */,
 	ScreenPtr /*pScreen*/,
 	CursorPtr /*pCursor*/,
 	Bool /*displayed*/);
 
 typedef    Bool (* SetCursorPositionProcPtr)(
+        DeviceIntPtr /* pDev */,
 	ScreenPtr /*pScreen*/,
 	int /*x*/,
 	int /*y*/,
@@ -418,10 +426,8 @@ typedef    void (* ReparentWindowProcPtr)(
     WindowPtr /*pWin*/,
     WindowPtr /*pPriorParent*/);
 
-#ifdef SHAPE
 typedef    void (* SetShapeProcPtr)(
 	WindowPtr /*pWin*/);
-#endif /* SHAPE */
 
 typedef    void (* ChangeBorderWidthProcPtr)(
 	WindowPtr /*pWin*/,
@@ -431,6 +437,14 @@ typedef    void (* MarkUnrealizedWindowProcPtr)(
 	WindowPtr /*pChild*/,
 	WindowPtr /*pWin*/,
 	Bool /*fromConfigure*/);
+
+typedef    Bool (* DeviceCursorInitializeProcPtr)(
+        DeviceIntPtr /* pDev */,
+        ScreenPtr    /* pScreen */);
+
+typedef    void (* DeviceCursorCleanupProcPtr)(
+        DeviceIntPtr /* pDev */,
+        ScreenPtr    /* pScreen */);
 
 typedef struct _Screen {
     int			myNum;	/* index of this instance in Screens[] */
@@ -573,13 +587,14 @@ typedef struct _Screen {
     HandleExposuresProcPtr	HandleExposures;
     ReparentWindowProcPtr	ReparentWindow;
 
-#ifdef SHAPE
     SetShapeProcPtr		SetShape;
-#endif /* SHAPE */
 
     ChangeBorderWidthProcPtr	ChangeBorderWidth;
     MarkUnrealizedWindowProcPtr	MarkUnrealizedWindow;
 
+    /* Device cursor procedures */
+    DeviceCursorInitializeProcPtr DeviceCursorInitialize;
+    DeviceCursorCleanupProcPtr    DeviceCursorCleanup;
 } ScreenRec;
 
 typedef struct _ScreenInfo {
@@ -593,7 +608,7 @@ typedef struct _ScreenInfo {
     int		arraySize;
     int		numScreens;
     ScreenPtr	screens[MAXSCREENS];
-    int		numVideoScreens;
+    int		unused;
 } ScreenInfo;
 
 extern ScreenInfo screenInfo;

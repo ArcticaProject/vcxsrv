@@ -218,11 +218,6 @@ SProcXCalibrateScreenToCoord (ClientPtr client)
   return ProcXCalibrateScreenToCoord(client);
 }
 
-static void
-XCalibrateResetProc (ExtensionEntry *extEntry) 
-{ 
-}
-
 static int
 ProcXCalibrateDispatch (ClientPtr client)
 {
@@ -292,7 +287,7 @@ XCalibrateExtensionInit(void)
 
   extEntry = AddExtension(XCALIBRATE_NAME, XCalibrateNumberEvents, XCalibrateNumberErrors,
 			  ProcXCalibrateDispatch, SProcXCalibrateDispatch,
-			  XCalibrateResetProc, StandardMinorOpcode);
+			  NULL, StandardMinorOpcode);
 
   if (!extEntry)
     return;

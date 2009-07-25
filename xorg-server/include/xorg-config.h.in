@@ -18,12 +18,6 @@
 /* Current X.Org version. */
 #undef XORG_VERSION_CURRENT
 
-/* Need XFree86 libc-replacement typedefs. */
-#undef NEED_XF86_TYPES
-
-/* Need XFree86 libc-replacement functions. */
-#undef NEED_XF86_PROTOTYPES
-
 /* Name of X server. */
 #undef __XSERVERNAME__
 
@@ -59,6 +53,9 @@
 
 /* Solaris 8 or later? */
 #undef __SOL8__
+
+/* Define to 1 if you have the <sys/kd.h> header file. */
+#undef HAVE_SYS_KD_H
 
 /* Define to 1 if you have the `walkcontext' function (used on Solaris for
    xorg_backtrace in hw/xfree86/common/xf86Events.c */

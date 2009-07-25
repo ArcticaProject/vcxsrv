@@ -1,6 +1,7 @@
 /*
  * Copyright 1990,91 by Thomas Roell, Dinkelscherben, Germany
  * Copyright 1993 by David Wexelblat <dwex@goblin.org>
+ * Copyright 1999 by David Holland <davidh@iquest.net>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -21,6 +22,33 @@
  * OF THIS SOFTWARE.
  *
  */
+/* Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, and/or sell copies of the Software, and to permit persons
+ * to whom the Software is furnished to do so, provided that the above
+ * copyright notice(s) and this permission notice appear in all copies of
+ * the Software and that both the above copyright notice(s) and this
+ * permission notice appear in supporting documentation.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+ * OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+ * INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+ * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+ * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
+ * Except as contained in this notice, the name of a copyright holder
+ * shall not be used in advertising or otherwise to promote the sale, use
+ * or other dealings in this Software without prior written authorization
+ * of the copyright holder.
+ */
 
 #ifdef HAVE_XORG_CONFIG_H
 #include <xorg-config.h>
@@ -29,120 +57,175 @@
 #include <sys/types.h> /* get __x86 definition if not set by compiler */
 
 #if defined(__i386__) || defined(__i386) || defined(__x86)
-#define _NEED_SYSI86
+# define _NEED_SYSI86
 #endif
 #include "xf86.h"
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
-
-#ifndef MAP_FAILED
-#define MAP_FAILED ((void *)-1)
-#endif
+#include "xf86OSpriv.h"
+#include <sys/mman.h>
 
 /***************************************************************************/
 /* Video Memory Mapping section 					   */
 /***************************************************************************/
 
-char *apertureDevName = NULL;
+static char *apertureDevName = NULL;
+static int apertureDevFD_ro = -1;
+static int apertureDevFD_rw = -1;
 
-_X_EXPORT Bool
-xf86LinearVidMem(void)
+static Bool
+solOpenAperture(void)
 {
-	int	mmapFd;
-
-	if (apertureDevName)
-	    return TRUE;
-
+    if (apertureDevName == NULL)
+    {
 	apertureDevName = "/dev/xsvc";
-	if ((mmapFd = open(apertureDevName, O_RDWR)) < 0)
+	if ((apertureDevFD_rw = open(apertureDevName, O_RDWR)) < 0)
 	{
+	    xf86MsgVerb(X_WARNING, 0,
+			"solOpenAperture: failed to open %s (%s)\n",
+			apertureDevName, strerror(errno));
 	    apertureDevName = "/dev/fbs/aperture";
-	    if((mmapFd = open(apertureDevName, O_RDWR)) < 0)
-	    {
-		xf86MsgVerb(X_WARNING, 0,
-		    "xf86LinearVidMem: failed to open %s (%s)\n",
-		    apertureDevName, strerror(errno));
-		xf86MsgVerb(X_WARNING, 0,
-		    "xf86LinearVidMem: either /dev/fbs/aperture or /dev/xsvc"
-		    " device driver required\n");
-		xf86MsgVerb(X_WARNING, 0,
-		    "xf86LinearVidMem: linear memory access disabled\n");
-		apertureDevName = NULL;
-		return FALSE;
-	    }
+	    apertureDevFD_rw = open(apertureDevName, O_RDWR);
 	}
-	close(mmapFd);
-	return TRUE;
+	apertureDevFD_ro = open(apertureDevName, O_RDONLY);
+
+	if ((apertureDevFD_rw < 0) || (apertureDevFD_ro < 0))
+	{
+	    xf86MsgVerb(X_WARNING, 0,
+			"solOpenAperture: failed to open %s (%s)\n",
+			apertureDevName, strerror(errno));
+	    xf86MsgVerb(X_WARNING, 0,
+			"solOpenAperture: either /dev/fbs/aperture"
+			" or /dev/xsvc required\n");
+
+	    apertureDevName = NULL;
+
+	    if (apertureDevFD_rw >= 0)
+	    {
+		close(apertureDevFD_rw);
+	    }
+	    apertureDevFD_rw = -1;
+
+	    if (apertureDevFD_ro >= 0)
+	    {
+		close(apertureDevFD_ro);
+	    }
+	    apertureDevFD_ro = -1;
+
+	    return FALSE;
+	}
+    }
+    return TRUE;
 }
 
-_X_EXPORT pointer
-xf86MapVidMem(int ScreenNum, int Flags, unsigned long Base, unsigned long Size)
+static pointer
+solMapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int Flags)
 {
-	pointer base;
-	int fd;
-	char vtname[20];
+    pointer base;
+    int fd;
+    int prot;
 
-	/*
-	 * Solaris 2.1 x86 SVR4 (10/27/93)
-	 * The server must treat the virtual terminal device file as the
-	 * standard SVR4 /dev/pmem.
-	 *
-	 * Using the /dev/vtXX device as /dev/pmem only works for the
-	 * A0000-FFFFF region - If we wish you mmap the linear aperture
-	 * it requires a device driver.
-	 *
-	 * So what we'll do is use /dev/vtXX for the A0000-FFFFF stuff, and
-	 * try to use the /dev/fbs/aperture or /dev/xsvc driver if the server
-	 * tries to mmap anything > FFFFF.  Its very very unlikely that the
-	 * server will try to mmap anything below FFFFF that can't be handled
-	 * by /dev/vtXX.
-	 *
-	 * DWH - 2/23/94
-	 * DWH - 1/31/99 (Gee has it really been 5 years?)
-	 *
-	 * Solaris 2.8 7/26/99
-	 * Use /dev/xsvc for everything
-	 *
-	 * DWH - 7/26/99 - Solaris8/dev/xsvc changes
-	 *
-	 * TSI - 2001.09 - SPARC changes
-	 */
+    if (Flags & VIDMEM_READONLY)
+    {
+	fd = apertureDevFD_ro;
+	prot = PROT_READ;
+    }
+    else
+    {
+	fd = apertureDevFD_rw;
+	prot = PROT_READ | PROT_WRITE;
+    }
 
-#if defined(__i386__) && !defined(__SOL8__)
-	if(Base < 0xFFFFF)
-		sprintf(vtname, "/dev/vt%02d", xf86Info.vtno);
-	else
-#endif
-	{
-		if (!xf86LinearVidMem())
-			FatalError("xf86MapVidMem:  no aperture device\n");
+    if (fd < 0)
+    {
+	xf86DrvMsg(ScreenNum, X_ERROR,
+		   "solMapVidMem: failed to open %s (%s)\n",
+		   apertureDevName, strerror(errno));
+	return NULL;
+    }
 
-		strcpy(vtname, apertureDevName);
-	}
+    base = mmap(NULL, Size, prot, MAP_SHARED, fd, (off_t)Base);
 
-	fd = open(vtname, (Flags & VIDMEM_READONLY) ? O_RDONLY : O_RDWR);
-	if (fd < 0)
-		FatalError("xf86MapVidMem: failed to open %s (%s)\n",
-			   vtname, strerror(errno));
+    if (base == MAP_FAILED) {
+        xf86DrvMsg(ScreenNum, X_ERROR,
+		   "solMapVidMem: failed to mmap %s (0x%08lx,0x%lx) (%s)\n",
+		   apertureDevName, Base, Size, strerror(errno));
+	return NULL;
+    }
 
-	base = mmap(NULL, Size,
-		    (Flags & VIDMEM_READONLY) ?
-			PROT_READ : (PROT_READ | PROT_WRITE),
-		     MAP_SHARED, fd, (off_t)Base);
-	close(fd);
-	if (base == MAP_FAILED)
-		FatalError("xf86MapVidMem:  mmap failure:  %s\n",
-			   strerror(errno));
-
-	return(base);
+    return base;
 }
 
 /* ARGSUSED */
-_X_EXPORT void
-xf86UnMapVidMem(int ScreenNum, pointer Base, unsigned long Size)
+static void
+solUnMapVidMem(int ScreenNum, pointer Base, unsigned long Size)
 {
-	munmap(Base, Size);
+    if (munmap(Base, Size) != 0) {
+	xf86DrvMsgVerb(ScreenNum, X_WARNING, 0,
+		       "solUnMapVidMem: failed to unmap %s"
+		       " (0x%08lx,0x%lx) (%s)\n",
+		       apertureDevName, Base, Size,
+		       strerror(errno));
+    }
 }
+
+_X_HIDDEN void
+xf86OSInitVidMem(VidMemInfoPtr pVidMem)
+{
+    pVidMem->linearSupported = solOpenAperture();
+    if (pVidMem->linearSupported) {
+	pVidMem->mapMem = solMapVidMem;
+	pVidMem->unmapMem = solUnMapVidMem;
+    } else {
+	xf86MsgVerb(X_WARNING, 0,
+		    "xf86OSInitVidMem: linear memory access disabled\n");
+    }
+    pVidMem->initialised = TRUE;
+}
+
+/*
+ * Read BIOS via mmap()ing physical memory.
+ */
+_X_EXPORT int
+xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
+	     int Len)
+{
+    unsigned char *ptr;
+    int psize;
+    int mlen;
+
+    psize = getpagesize();
+    Offset += Base & (psize - 1);
+    Base &= ~(psize - 1);
+    mlen = (Offset + Len + psize - 1) & ~(psize - 1);
+
+    if (solOpenAperture() == FALSE)
+    {
+	xf86Msg(X_WARNING,
+		"xf86ReadBIOS: Failed to open aperture to read BIOS\n");
+	return -1;
+    }
+
+    ptr = (unsigned char *)mmap(NULL, mlen, PROT_READ,
+				MAP_SHARED, apertureDevFD_ro, (off_t)Base);
+    if (ptr == MAP_FAILED)
+    {
+	xf86Msg(X_WARNING, "xf86ReadBIOS: %s mmap failed [0x%08lx, 0x%04x]\n",
+		apertureDevName, Base, mlen);
+	return -1;
+    }
+
+    (void)memcpy(Buf, (void *)(ptr + Offset), Len);
+    if (munmap((caddr_t)ptr, mlen) != 0) {
+	xf86MsgVerb(X_WARNING, 0,
+		    "solUnMapVidMem: failed to unmap %s"
+		    " (0x%08lx,0x%lx) (%s)\n",
+		    apertureDevName, ptr, mlen, strerror(errno));
+    }
+
+    return Len;
+}
+
 
 /***************************************************************************/
 /* I/O Permissions section						   */
@@ -156,81 +239,27 @@ _X_EXPORT Bool
 xf86EnableIO(void)
 {
 #if defined(__i386__) || defined(__i386) || defined(__x86)
-	if (ExtendedEnabled)
-		return TRUE;
-
-	if (sysi86(SI86V86, V86SC_IOPL, PS_IOPL) < 0) {
-		xf86Msg(X_WARNING,"xf86EnableIOPorts: Failed to set IOPL for I/O\n");
-		return FALSE;
-	}
-	ExtendedEnabled = TRUE;
-#endif /* i386 */
+    if (ExtendedEnabled)
 	return TRUE;
+
+    if (sysi86(SI86V86, V86SC_IOPL, PS_IOPL) < 0) {
+	xf86Msg(X_WARNING, "xf86EnableIOPorts: Failed to set IOPL for I/O\n");
+	return FALSE;
+    }
+    ExtendedEnabled = TRUE;
+#endif /* i386 */
+    return TRUE;
 }
 
 _X_EXPORT void
 xf86DisableIO(void)
 {
 #if defined(__i386__) || defined(__i386) || defined(__x86)
-	if(!ExtendedEnabled)
-		return;
+    if(!ExtendedEnabled)
+	return;
 
-	sysi86(SI86V86, V86SC_IOPL, 0);
+    sysi86(SI86V86, V86SC_IOPL, 0);
 
-	ExtendedEnabled = FALSE;
+    ExtendedEnabled = FALSE;
 #endif /* i386 */
 }
-
-
-/***************************************************************************/
-/* Interrupt Handling section						   */
-/***************************************************************************/
-
-_X_EXPORT Bool xf86DisableInterrupts(void)
-{
-#if defined(__i386__) || defined(__i386) || defined(__x86)
-	if (!ExtendedEnabled && (sysi86(SI86V86, V86SC_IOPL, PS_IOPL) < 0))
-		return FALSE;
-
-#ifdef __GNUC__
-	__asm__ __volatile__("cli");
-#else
-	asm("cli");
-#endif /* __GNUC__ */
-
-	if (!ExtendedEnabled)
-		sysi86(SI86V86, V86SC_IOPL, 0);
-#endif /* i386 */
-
-	return TRUE;
-}
-
-_X_EXPORT void xf86EnableInterrupts(void)
-{
-#if defined(__i386__) || defined(__i386) || defined(__x86)
-	if (!ExtendedEnabled && (sysi86(SI86V86, V86SC_IOPL, PS_IOPL) < 0))
-		return;
-
-#ifdef __GNUC__
-	__asm__ __volatile__("sti");
-#else
-	asm("sti");
-#endif /* __GNUC__ */
-
-	if (!ExtendedEnabled)
-		sysi86(SI86V86, V86SC_IOPL, 0);
-#endif /* i386 */
-}
-
-_X_EXPORT void
-xf86MapReadSideEffects(int ScreenNum, int Flags, pointer Base,
-	unsigned long Size)
-{
-}
-
-_X_EXPORT Bool
-xf86CheckMTRR(int ScreenNum)
-{
-	return FALSE;
-}
-

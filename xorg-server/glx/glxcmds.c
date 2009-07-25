@@ -1,37 +1,32 @@
 /*
-** License Applicability. Except to the extent portions of this file are
-** made subject to an alternative license as permitted in the SGI Free
-** Software License B, Version 1.1 (the "License"), the contents of this
-** file are subject only to the provisions of the License. You may not use
-** this file except in compliance with the License. You may obtain a copy
-** of the License at Silicon Graphics, Inc., attn: Legal Services, 1600
-** Amphitheatre Parkway, Mountain View, CA 94043-1351, or at:
-** 
-** http://oss.sgi.com/projects/FreeB
-** 
-** Note that, as provided in the License, the Software is distributed on an
-** "AS IS" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS
-** DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND
-** CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
-** PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-** 
-** Original Code. The Original Code is: OpenGL Sample Implementation,
-** Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
-** Inc. The Original Code is Copyright (c) 1991-2000 Silicon Graphics, Inc.
-** Copyright in any portions created by third parties is as indicated
-** elsewhere herein. All Rights Reserved.
-** 
-** Additional Notice Provisions: The application programming interfaces
-** established by SGI in conjunction with the Original Code are The
-** OpenGL(R) Graphics System: A Specification (Version 1.2.1), released
-** April 1, 1999; The OpenGL(R) Graphics System Utility Library (Version
-** 1.3), released November 4, 1998; and OpenGL(R) Graphics with the X
-** Window System(R) (Version 1.3), released October 19, 1998. This software
-** was created using the OpenGL(R) version 1.2.1 Sample Implementation
-** published by SGI, but has not been independently verified as being
-** compliant with the OpenGL(R) version 1.2.1 Specification.
-**
-*/
+ * SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008)
+ * Copyright (C) 1991-2000 Silicon Graphics, Inc. All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice including the dates of first publication and
+ * either this permission notice or a reference to
+ * http://oss.sgi.com/projects/FreeB/
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * Except as contained in this notice, the name of Silicon Graphics, Inc.
+ * shall not be used in advertising or otherwise to promote the sale, use or
+ * other dealings in this Software without prior written authorization from
+ * Silicon Graphics, Inc.
+ */
 
 #define NEED_REPLIES
 #define FONT_PCF
@@ -147,11 +142,8 @@ validGlxFBConfigForWindow(ClientPtr client, __GLXconfig *config,
 void
 __glXContextDestroy(__GLXcontext *context)
 {
-    if (!context->isDirect)
-	__glXDeassociateContext(context);
     __glXFlushContextCache();
 }
-
 
 static void __glXdirectContextDestroy(__GLXcontext *context)
 {
@@ -165,11 +157,10 @@ static __GLXcontext *__glXdirectContextCreate(__GLXscreen *screen,
 {
     __GLXcontext *context;
 
-    context = xalloc (sizeof (__GLXcontext));
+    context = xcalloc (1, sizeof (__GLXcontext));
     if (context == NULL)
 	return NULL;
 
-    memset(context, 0, sizeof *context);
     context->destroy = __glXdirectContextDestroy;
 
     return context;
@@ -268,6 +259,8 @@ DoCreateContext(__GLXclientState *cl, GLXContextID gcId,
     glxc->isCurrent = GL_FALSE;
     glxc->isDirect = isDirect;
     glxc->renderMode = GL_RENDER;
+
+    __glXAddToContextList(glxc);
 
     return Success;
 }
@@ -431,6 +424,7 @@ static void StopUsingContext(__GLXcontext *glxc)
 static void StartUsingContext(__GLXclientState *cl, __GLXcontext *glxc)
 {
     glxc->isCurrent = GL_TRUE;
+    __glXLastContext = glxc;	
 }
 
 /**
@@ -618,7 +612,10 @@ DoMakeCurrent(__GLXclientState *cl,
 	    return __glXError(GLXBadContext);
 	}
 	__glXFlushContextCache();
-	__glXDeassociateContext(prevglxc);
+	if (!prevglxc->isDirect) {
+	    prevglxc->drawPriv = NULL;
+	    prevglxc->readPriv = NULL;
+	}
     }
 	
 
@@ -634,19 +631,7 @@ DoMakeCurrent(__GLXclientState *cl,
 	    return __glXError(GLXBadContext);
 	}
 
-	/* resize the buffers */
-	if (!(*drawPriv->resize)(drawPriv)) {
-	    /* could not do initial resize.  make current failed */
-	    (*glxc->loseCurrent)(glxc);
-	    glxc->drawPriv = NULL;
-	    glxc->readPriv = NULL;
-	    return __glXError(GLXBadContext);
-	}
-
 	glxc->isCurrent = GL_TRUE;
-	__glXAssociateContext(glxc);
-	assert(drawPriv->drawGlxc == glxc);
-	assert(readPriv->readGlxc == glxc);
     }
 
     if (prevglxc) {
@@ -763,29 +748,46 @@ int __glXDisp_QueryVersion(__GLXclientState *cl, GLbyte *pc)
 int __glXDisp_WaitGL(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXWaitGLReq *req = (xGLXWaitGLReq *)pc;
+    GLXContextTag tag = req->contextTag;
+    __GLXcontext *glxc = NULL;
     int error;
+
+    if (tag) {
+	glxc = __glXLookupContextByTag(cl, tag);
+	if (!glxc)
+	    return __glXError(GLXBadContextTag);
     
-    if (!__glXForceCurrent(cl, req->contextTag, &error)) {
-	return error;
+	if (!__glXForceCurrent(cl, req->contextTag, &error))
+	    return error;
+
+	CALL_Finish( GET_DISPATCH(), () );
     }
-    CALL_Finish( GET_DISPATCH(), () );
+
+    if (glxc && glxc->drawPriv->waitGL)
+	(*glxc->drawPriv->waitGL)(glxc->drawPriv);
+
     return Success;
 }
 
 int __glXDisp_WaitX(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXWaitXReq *req = (xGLXWaitXReq *)pc;
+    GLXContextTag tag = req->contextTag;
+    __GLXcontext *glxc = NULL;
     int error;
+
+    if (tag) {
+	glxc = __glXLookupContextByTag(cl, tag);
+	if (!glxc)
+	    return __glXError(GLXBadContextTag);
     
-    if (!__glXForceCurrent(cl, req->contextTag, &error)) {
-	return error;
+	if (!__glXForceCurrent(cl, req->contextTag, &error))
+	    return error;
     }
-    /*
-    ** In a multithreaded server that had separate X and GL threads, we would
-    ** have to wait for the X thread to finish before returning.  As it stands,
-    ** this sample implementation only supports singlethreaded servers, and
-    ** nothing needs to be done here.
-    */
+
+    if (glxc && glxc->drawPriv->waitGL)
+	(*glxc->drawPriv->waitGL)(glxc->drawPriv);
+
     return Success;
 }
 
@@ -1070,6 +1072,33 @@ int __glXDisp_GetFBConfigsSGIX(__GLXclientState *cl, GLbyte *pc)
     return DoGetFBConfigs(cl, req->screen);
 }
 
+GLboolean
+__glXDrawableInit(__GLXdrawable *drawable,
+		  __GLXscreen *screen, DrawablePtr pDraw, int type,
+		  XID drawId, __GLXconfig *config)
+{
+    drawable->pDraw = pDraw;
+    drawable->type = type;
+    drawable->drawId = drawId;
+    drawable->config = config;
+    drawable->eventMask = 0;
+
+    return GL_TRUE;
+}
+
+void
+__glXDrawableRelease(__GLXdrawable *drawable)
+{
+    ScreenPtr pScreen = drawable->pDraw->pScreen;
+
+    switch (drawable->type) {
+    case GLX_DRAWABLE_PIXMAP:
+    case GLX_DRAWABLE_PBUFFER:
+	(*pScreen->DestroyPixmap)((PixmapPtr) drawable->pDraw);
+	break;
+    }
+}
+
 static int 
 DoCreateGLXDrawable(ClientPtr client, __GLXscreen *pGlxScreen, __GLXconfig *config,
 		    DrawablePtr pDraw, XID glxDrawableId, int type)
@@ -1120,6 +1149,7 @@ static void
 determineTextureTarget(XID glxDrawableID, CARD32 *attribs, CARD32 numAttribs)
 {
     GLenum target = 0;
+    GLenum format = 0;
     int i;
     __GLXdrawable *pGlxDraw;
 
@@ -1136,6 +1166,9 @@ determineTextureTarget(XID glxDrawableID, CARD32 *attribs, CARD32 numAttribs)
 		break;
 	    }
 	}
+
+	if (attribs[2 * i] == GLX_TEXTURE_FORMAT_EXT)
+		format = attribs[2 * i + 1];
     }
  
     if (!target) {
@@ -1148,6 +1181,7 @@ determineTextureTarget(XID glxDrawableID, CARD32 *attribs, CARD32 numAttribs)
     }
 
     pGlxDraw->target = target;
+    pGlxDraw->format = format;
 }
 
 int __glXDisp_CreateGLXPixmap(__GLXclientState *cl, GLbyte *pc)

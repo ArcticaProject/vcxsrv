@@ -115,8 +115,7 @@ void dmxStatActivate(const char *interval, const char *displays)
 /** Allocate a \a DMXStatInfo structure. */
 DMXStatInfo *dmxStatAlloc(void)
 {
-    DMXStatInfo *pt = malloc(sizeof(*pt));
-    memset(pt, 0, sizeof(*pt));
+    DMXStatInfo *pt = calloc(1, sizeof(*pt));
     return pt;
 }
 

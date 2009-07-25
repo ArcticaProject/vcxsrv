@@ -103,9 +103,6 @@ Equipment Corporation.
 #include "extnsionst.h"
 #include "privates.h"
 #include "registry.h"
-#ifdef XPRINT
-#include "DiPrint.h"
-#endif
 #ifdef PANORAMIX
 #include "panoramiXsrv.h"
 #else
@@ -121,7 +118,6 @@ Equipment Corporation.
 
 extern void Dispatch(void);
 
-char *ConnectionInfo;
 xConnSetupPrefix connSetupPrefix;
 
 extern FontPtr defaultFont;
@@ -237,51 +233,31 @@ static int indexForScanlinePad[ 65 ] = {
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
-#ifdef __APPLE__
-void DarwinHandleGUI(int argc, char **argv, char **envp);
-#endif
+#ifdef XQUARTZ
+#include <pthread.h>
 
-int
-main(int argc, char *argv[], char *envp[])
+BOOL serverInitComplete = FALSE;
+pthread_mutex_t serverInitCompleteMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t serverInitCompleteCond = PTHREAD_COND_INITIALIZER;
+
+int dix_main(int argc, char *argv[], char *envp[])
+#else
+int main(int argc, char *argv[], char *envp[])
+#endif
 {
-    int		i, j, k, error;
-    char	*xauthfile;
+    int		i;
     HWEventQueueType	alwaysCheckForInput[2];
 
     display = "0";
 
-    InitGlobals();
     InitRegions();
-#ifdef XPRINT
-    PrinterInitGlobals();
-#endif
-
-#ifdef XQUARTZ
-    /* Quartz support on Mac OS X requires that the Cocoa event loop be in
-     * the main thread. This allows the X server main to be called again
-     * from another thread. */
-    DarwinHandleGUI(argc, argv, envp);
-#endif
 
     CheckUserParameters(argc, argv, envp);
 
     CheckUserAuthorization();
 
-#ifdef COMMANDLINE_CHALLENGED_OPERATING_SYSTEMS
-    ExpandCommandLine(&argc, &argv);
-#endif
-
     InitConnectionLimits();
 
-    /* These are needed by some routines which are called from interrupt
-     * handlers, thus have no direct calling path back to main and thus
-     * can't be passed argc, argv as parameters */
-    argcGlobal = argc;
-    argvGlobal = argv;
-    /* prep X authority file from environment; this can be overriden by a
-     * command line option */
-    xauthfile = getenv("XAUTHORITY");
-    if (xauthfile) InitAuthorization (xauthfile);
     ProcessCommandLine(argc, argv);
 
     alwaysCheckForInput[0] = 0;
@@ -308,10 +284,7 @@ main(int argc, char *argv[], char *envp[])
 	{
 	    CreateWellKnownSockets();
 	    InitProcVectors();
-	    clients = (ClientPtr *)xalloc(MAXCLIENTS * sizeof(ClientPtr));
-	    if (!clients)
-		FatalError("couldn't create client array");
-	    for (i=1; i<MAXCLIENTS; i++) 
+	    for (i=1; i<MAXCLIENTS; i++)
 		clients[i] = NullClient;
 	    serverClient = (ClientPtr)xalloc(sizeof(ClientRec));
 	    if (!serverClient)
@@ -329,21 +302,6 @@ main(int argc, char *argv[], char *envp[])
 	SetInputCheck(&alwaysCheckForInput[0], &alwaysCheckForInput[1]);
 	screenInfo.arraySize = MAXSCREENS;
 	screenInfo.numScreens = 0;
-	screenInfo.numVideoScreens = -1;
-	WindowTable = (WindowPtr *)xalloc(MAXSCREENS * sizeof(WindowPtr));
-	if (!WindowTable)
-	    FatalError("couldn't create root window table");
-
-	/*
-	 * Just in case the ddx doesnt supply a format for depth 1 (like qvss).
-	 */
-	j = indexForBitsPerPixel[ 1 ];
-	k = indexForScanlinePad[ BITMAP_SCANLINE_PAD ];
-	PixmapWidthPaddingInfo[1].padRoundUp = BITMAP_SCANLINE_PAD-1;
-	PixmapWidthPaddingInfo[1].padPixelsLog2 = answer[j][k];
- 	j = indexForBitsPerPixel[8]; /* bits per byte */
- 	PixmapWidthPaddingInfo[1].padBytesLog2 = answer[j][k];
-	PixmapWidthPaddingInfo[1].bitsPerPixel = 1;
 
 	InitAtoms();
 	InitEvents();
@@ -354,16 +312,10 @@ main(int argc, char *argv[], char *envp[])
 	dixResetRegistry();
 	ResetFontPrivateIndex();
 	InitCallbackManager();
-	InitVisualWrap();
 	InitOutput(&screenInfo, argc, argv);
-#ifdef XPRINT
-	PrinterInitOutput(&screenInfo, argc, argv);
-#endif
 
 	if (screenInfo.numScreens < 1)
 	    FatalError("no screens found");
-	if (screenInfo.numVideoScreens < 0)
-	    screenInfo.numVideoScreens = screenInfo.numScreens;
 	InitExtensions(argc, argv);
 	for (i = 0; i < screenInfo.numScreens; i++)
 	{
@@ -380,19 +332,10 @@ main(int argc, char *argv[], char *envp[])
 	    if (!CreateRootWindow(pScreen))
 		FatalError("failed to create root window");
 	}
-        InitCoreDevices();
-	InitInput(argc, argv);
-	if (InitAndStartDevices() != Success)
-	    FatalError("failed to initialize core devices");
 
 	InitFonts();
-	if (loadableFonts)
-	    SetFontPath(serverClient, 0, (unsigned char *)defaultFontPath,
-			&error);
-        else {
-	    if (SetDefaultFontPath(defaultFontPath) != Success)
-		ErrorF("failed to set default font path '%s'",
-			defaultFontPath);
+	if (SetDefaultFontPath(defaultFontPath) != Success) {
+	    ErrorF("[dix] failed to set default font path '%s'", defaultFontPath);
 	}
 	if (!SetDefaultFont(defaultTextFont)) {
 	    FatalError("could not open default font '%s'", defaultTextFont);
@@ -421,6 +364,11 @@ main(int argc, char *argv[], char *envp[])
 	for (i = 0; i < screenInfo.numScreens; i++)
 	    InitRootWindow(WindowTable[i]);
 	DefineInitialRootWindow(WindowTable[0]);
+
+        InitCoreDevices();
+	InitInput(argc, argv);
+	InitAndStartDevices();
+
 	dixSaveScreens(serverClient, SCREEN_SAVER_FORCER, ScreenSaverReset);
 
 #ifdef PANORAMIX
@@ -436,9 +384,19 @@ main(int argc, char *argv[], char *envp[])
 	    }
 	}
 
+#ifdef XQUARTZ
+    /* Let the other threads know the server is done with its init */
+    pthread_mutex_lock(&serverInitCompleteMutex);
+    serverInitComplete = TRUE;
+    pthread_cond_broadcast(&serverInitCompleteCond);
+    pthread_mutex_unlock(&serverInitCompleteMutex);
+#endif
+        
 	NotifyParentProcess();
 
 	Dispatch();
+
+        UndisplayDevices();
 
 	/* Now free up whatever must be freed */
 	if (screenIsSaved == SCREEN_SAVER_ON)
@@ -459,8 +417,9 @@ main(int argc, char *argv[], char *envp[])
 
         config_fini();
 
-        memset(WindowTable, 0, MAXSCREENS * sizeof(WindowPtr));
+        memset(WindowTable, 0, sizeof(WindowTable));
 	CloseDownDevices();
+	CloseDownEvents();
 
 	for (i = screenInfo.numScreens - 1; i >= 0; i--)
 	{
@@ -472,9 +431,6 @@ main(int argc, char *argv[], char *envp[])
 	    xfree(screenInfo.screens[i]);
 	    screenInfo.numScreens = i;
 	}
-  	CloseDownEvents();
-	xfree(WindowTable);
-	WindowTable = NULL;
 	FreeFonts();
 
 	FreeAuditTimer();
@@ -516,7 +472,7 @@ SetVendorString(char *string)
     VendorString = string;
 }
 
-static int padlength[4] = {0, 3, 2, 1};
+static const int padlength[4] = {0, 3, 2, 1};
 
 #ifndef PANORAMIX
 static
@@ -607,7 +563,7 @@ CreateConnectionBlock(void)
 	root.maxInstalledMaps = pScreen->maxInstalledCmaps; 
 	root.rootVisualID = pScreen->rootVisual;		
 	root.backingStore = pScreen->backingStoreSupport;
-	root.saveUnders = pScreen->saveUnderSupport != NotUseful;
+	root.saveUnders = FALSE;
 	root.rootDepth = pScreen->rootDepth;
 	root.nDepths = pScreen->numDepths;
 	memmove(pBuf, (char *)&root, sizeof(xWindowRoot));

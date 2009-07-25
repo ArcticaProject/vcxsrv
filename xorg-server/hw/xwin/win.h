@@ -586,9 +586,7 @@ typedef struct _winPrivScreenRec
   ReparentWindowProcPtr			ReparentWindow;
   ResizeWindowProcPtr			ResizeWindow;
   MoveWindowProcPtr			MoveWindow;
-#ifdef SHAPE
   SetShapeProcPtr			SetShape;
-#endif
 
   winCursorRec                          cursor;
 } winPrivScreenRec;
@@ -1196,10 +1194,8 @@ winUnmapWindowRootless (WindowPtr pWindow);
 Bool
 winMapWindowRootless (WindowPtr pWindow);
 
-#ifdef SHAPE
 void
 winSetShapeRootless (WindowPtr pWindow);
-#endif
 
 
 /*
@@ -1215,7 +1211,6 @@ winXIconToHICON (WindowPtr pWin, int iconSize);
  * winmultiwindowshape.c
  */
 
-# ifdef SHAPE
 void
 winReshapeMultiWindow (WindowPtr pWin);
 
@@ -1224,7 +1219,6 @@ winSetShapeMultiWindow (WindowPtr pWindow);
 
 void
 winUpdateRgnMultiWindow (WindowPtr pWindow);
-# endif
 #endif
 
 

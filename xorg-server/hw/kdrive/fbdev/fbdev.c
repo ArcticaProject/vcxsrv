@@ -99,8 +99,6 @@ fbdevCardInit (KdCardInfo *card)
     return TRUE;
 }
 
-#define FBDEV_KLUDGE_FORMAT
-#ifdef FBDEV_KLUDGE_FORMAT
 static Pixel
 fbdevMakeContig (Pixel orig, Pixel others)
 {
@@ -114,7 +112,6 @@ fbdevMakeContig (Pixel orig, Pixel others)
     }
     return orig;
 }
-#endif
 
 static Bool
 fbdevModeSupported (KdScreenInfo		*screen,
@@ -179,16 +176,24 @@ fbdevScreenInitialize (KdScreenInfo *screen, FbdevScrPriv *scrpriv)
 	screen->rate = 103; /* FIXME: should get proper value from fb driver */
     }
     if (!screen->fb[0].depth)
-	screen->fb[0].depth = 16;
+    {
+	if (k >= 0) 
+	    screen->fb[0].depth = var.bits_per_pixel;
+	else
+	    screen->fb[0].depth = 16;
+    }
 
-    t = KdFindMode (screen, fbdevModeSupported);
-    screen->rate = t->rate;
-    screen->width = t->horizontal;
-    screen->height = t->vertical;
+    if ((screen->width != var.xres) || (screen->height != var.yres))
+    {
+      t = KdFindMode (screen, fbdevModeSupported);
+      screen->rate = t->rate;
+      screen->width = t->horizontal;
+      screen->height = t->vertical;
 
-    /* Now try setting the mode */
-    if (k < 0 || (t->horizontal != var.xres || t->vertical != var.yres))
-        fbdevConvertMonitorTiming (t, &var);
+      /* Now try setting the mode */
+      if (k < 0 || (t->horizontal != var.xres || t->vertical != var.yres))
+          fbdevConvertMonitorTiming (t, &var);
+    }
 
     var.activate = FB_ACTIVATE_NOW;
     var.bits_per_pixel = screen->fb[0].depth;
@@ -253,7 +258,7 @@ fbdevScreenInitialize (KdScreenInfo *screen, FbdevScrPriv *scrpriv)
 	screen->fb[0].redMask = Mask (priv->var.red.offset, priv->var.red.length);
 	screen->fb[0].greenMask = Mask (priv->var.green.offset, priv->var.green.length);
 	screen->fb[0].blueMask = Mask (priv->var.blue.offset, priv->var.blue.length);
-#ifdef FBDEV_KLUDGE_FORMAT
+
 	/*
 	 * This is a kludge so that Render will work -- fill in the gaps
 	 * in the pixel
@@ -270,7 +275,6 @@ fbdevScreenInitialize (KdScreenInfo *screen, FbdevScrPriv *scrpriv)
 						  screen->fb[0].redMask|
 						  screen->fb[0].greenMask);
 
-#endif
 	allbits = screen->fb[0].redMask | screen->fb[0].greenMask | screen->fb[0].blueMask;
 	depth = 32;
 	while (depth && !(allbits & (1 << (depth - 1))))
@@ -293,10 +297,9 @@ fbdevScreenInit (KdScreenInfo *screen)
 {
     FbdevScrPriv *scrpriv;
 
-    scrpriv = xalloc (sizeof (FbdevScrPriv));
+    scrpriv = xcalloc (1, sizeof (FbdevScrPriv));
     if (!scrpriv)
 	return FALSE;
-    memset (scrpriv, '\0', sizeof (FbdevScrPriv));
     screen->driver = scrpriv;
     if (!fbdevScreenInitialize (screen, scrpriv))
     {
@@ -520,8 +523,6 @@ fbdevRandRSetConfig (ScreenPtr		pScreen,
      */
     
     scrpriv->randr = KdAddRotation (screen->randr, randr);
-
-    KdOffscreenSwapOut (screen->pScreen);
 
     fbdevUnmapFramebuffer (screen);
     
@@ -769,7 +770,7 @@ fbdevGetColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs)
     cmap.start = min;
     cmap.len = max - min + 1;
     cmap.red = &priv->red[min];
-    cmap.green = &priv->green[min];;
+    cmap.green = &priv->green[min];
     cmap.blue = &priv->blue[min];
     cmap.transp = 0;
     k = ioctl (priv->fd, FBIOGETCMAP, &cmap);

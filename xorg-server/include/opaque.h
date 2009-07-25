@@ -49,14 +49,11 @@ extern int ScreenSaverBlanking;
 extern int ScreenSaverAllowExposures;
 extern int defaultScreenSaverBlanking;
 extern int defaultScreenSaverAllowExposures;
-extern int argcGlobal;
-extern char **argvGlobal;
 extern char *display;
 
 extern int defaultBackingStore;
 extern Bool disableBackingStore;
 extern Bool enableBackingStore;
-extern Bool disableSaveUnders;
 extern Bool PartialNetwork;
 #ifndef NOLOGOHACK
 extern int logoScreenSaver;
@@ -72,7 +69,7 @@ extern int limitNoFile;
 #endif
 extern Bool defeatAccessControl;
 extern long maxBigRequestSize;
-extern Bool blackRoot;
+extern Bool party_like_its_1989;
 extern Bool whiteRoot;
 
 extern Bool CoreDump;

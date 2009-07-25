@@ -64,6 +64,12 @@
 #include <X11/extensions/dmxproto.h>  /* For DMX_BAD_* */
 #include "cursorstr.h"
 
+#undef Xmalloc
+#undef Xcalloc
+#undef Xrealloc
+#undef Xfree
+
+
 /* The default font is declared in dix/globals.c, but is not included in
  * _any_ header files. */
 extern FontPtr  defaultFont;
@@ -1121,11 +1127,10 @@ static void dmxBERestoreRenderGlyph(pointer value, XID id, pointer n)
     }
 
     /* Now allocate the memory we need */
-    images = xalloc(len_images*sizeof(char));
+    images = xcalloc(len_images, sizeof(char));
     gids   = xalloc(glyphSet->hash.tableEntries*sizeof(Glyph));
     glyphs = xalloc(glyphSet->hash.tableEntries*sizeof(XGlyphInfo));
 
-    memset(images, 0, len_images * sizeof(char));
     pos = images;
     ctr = 0;
     
@@ -1350,7 +1355,6 @@ int dmxAttachScreen(int idx, DMXScreenAttributesPtr attr)
  * RTContext
  * TagResType
  * StalledResType
- * RT_APPGROUP
  * SecurityAuthorizationResType
  * RTEventClient
  * __glXContextRes

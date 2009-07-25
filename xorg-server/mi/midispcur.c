@@ -52,23 +52,41 @@ in this Software without prior written authorization from The Open Group.
 # include   "picturestr.h"
 #endif
 
-/* per-screen private data */
+# include "inputstr.h" /* for MAX_DEVICES */
 
-static DevPrivateKey miDCScreenKey = &miDCScreenKey;
+/* per-screen private data */
+static int miDCScreenKeyIndex;
+static DevPrivateKey miDCScreenKey = &miDCScreenKeyIndex;
 
 static Bool	miDCCloseScreen(int index, ScreenPtr pScreen);
+
+/* per device private data */
+static int miDCSpriteKeyIndex;
+static DevPrivateKey miDCSpriteKey = &miDCSpriteKeyIndex;
 
 typedef struct {
     GCPtr	    pSourceGC, pMaskGC;
     GCPtr	    pSaveGC, pRestoreGC;
     GCPtr	    pMoveGC;
     GCPtr	    pPixSourceGC, pPixMaskGC;
-    CloseScreenProcPtr CloseScreen;
     PixmapPtr	    pSave, pTemp;
 #ifdef ARGB_CURSOR
     PicturePtr	    pRootPicture;
     PicturePtr	    pTempPicture;
 #endif
+} miDCBufferRec, *miDCBufferPtr;
+
+#define MIDCBUFFER(dev) \
+ ((DevHasCursor(dev)) ? \
+  (miDCBufferPtr)dixLookupPrivate(&dev->devPrivates, miDCSpriteKey) : \
+  (miDCBufferPtr)dixLookupPrivate(&dev->u.master->devPrivates, miDCSpriteKey))
+
+/* 
+ * The core pointer buffer will point to the index of the virtual core pointer
+ * in the pCursorBuffers array. 
+ */
+typedef struct {
+    CloseScreenProcPtr CloseScreen;
 } miDCScreenRec, *miDCScreenPtr;
 
 /* per-cursor per-screen private data */
@@ -86,18 +104,25 @@ typedef struct {
 
 static Bool	miDCRealizeCursor(ScreenPtr pScreen, CursorPtr pCursor);
 static Bool	miDCUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor);
-static Bool	miDCPutUpCursor(ScreenPtr pScreen, CursorPtr pCursor,
-				int x, int y, unsigned long source,
-				unsigned long mask);
-static Bool	miDCSaveUnderCursor(ScreenPtr pScreen, int x, int y,
+static Bool	miDCPutUpCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
+                                CursorPtr pCursor, int x, int y, 
+                                unsigned long source, unsigned long mask);
+static Bool	miDCSaveUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
+                                    int x, int y,
 				    int w, int h);
-static Bool	miDCRestoreUnderCursor(ScreenPtr pScreen, int x, int y,
+static Bool	miDCRestoreUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
+                                       int x, int y,
 				       int w, int h);
-static Bool	miDCMoveCursor(ScreenPtr pScreen, CursorPtr pCursor,
-			       int x, int y, int w, int h, int dx, int dy,
+static Bool	miDCMoveCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
+                               CursorPtr pCursor, int x, int y, 
+                               int w, int h, int dx, int dy,
 			       unsigned long source, unsigned long mask);
-static Bool	miDCChangeSave(ScreenPtr pScreen, int x, int y, int w, int h,	
-			       int dx, int dy);
+static Bool	miDCChangeSave(DeviceIntPtr pDev, ScreenPtr pScreen, 
+                               int x, int y, int w, int h,	
+                               int dx, int dy);
+
+static Bool     miDCDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen);
+static void     miDCDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen);
 
 static miSpriteCursorFuncRec miDCFuncs = {
     miDCRealizeCursor,
@@ -107,12 +132,12 @@ static miSpriteCursorFuncRec miDCFuncs = {
     miDCRestoreUnderCursor,
     miDCMoveCursor,
     miDCChangeSave,
+    miDCDeviceInitialize,
+    miDCDeviceCleanup
 };
 
 _X_EXPORT Bool
-miDCInitialize (pScreen, screenFuncs)
-    ScreenPtr		    pScreen;
-    miPointerScreenFuncPtr  screenFuncs;
+miDCInitialize (ScreenPtr pScreen, miPointerScreenFuncPtr screenFuncs)
 {
     miDCScreenPtr   pScreenPriv;
 
@@ -120,27 +145,10 @@ miDCInitialize (pScreen, screenFuncs)
     if (!pScreenPriv)
 	return FALSE;
 
-    /*
-     * initialize the entire private structure to zeros
-     */
-
-    pScreenPriv->pSourceGC =
-	pScreenPriv->pMaskGC =
-	pScreenPriv->pSaveGC =
- 	pScreenPriv->pRestoreGC =
- 	pScreenPriv->pMoveGC =
- 	pScreenPriv->pPixSourceGC =
-	pScreenPriv->pPixMaskGC = NULL;
-#ifdef ARGB_CURSOR
-    pScreenPriv->pRootPicture = NULL;
-    pScreenPriv->pTempPicture = NULL;
-#endif
-    
-    pScreenPriv->pSave = pScreenPriv->pTemp = NULL;
 
     pScreenPriv->CloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = miDCCloseScreen;
-    
+
     dixSetPrivate(&pScreen->devPrivates, miDCScreenKey, pScreenPriv);
 
     if (!miSpriteInitialize (pScreen, &miDCFuncs, screenFuncs))
@@ -156,38 +164,22 @@ miDCInitialize (pScreen, screenFuncs)
 #define tossPict(pict)	(pict ? FreePicture (pict, 0) : 0)
 
 static Bool
-miDCCloseScreen (index, pScreen)
-    int		index;
-    ScreenPtr	pScreen;
+miDCCloseScreen (int index, ScreenPtr pScreen)
 {
     miDCScreenPtr   pScreenPriv;
 
     pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						  miDCScreenKey);
     pScreen->CloseScreen = pScreenPriv->CloseScreen;
-    tossGC (pScreenPriv->pSourceGC);
-    tossGC (pScreenPriv->pMaskGC);
-    tossGC (pScreenPriv->pSaveGC);
-    tossGC (pScreenPriv->pRestoreGC);
-    tossGC (pScreenPriv->pMoveGC);
-    tossGC (pScreenPriv->pPixSourceGC);
-    tossGC (pScreenPriv->pPixMaskGC);
-    tossPix (pScreenPriv->pSave);
-    tossPix (pScreenPriv->pTemp);
-#ifdef ARGB_CURSOR
-    tossPict (pScreenPriv->pTempPicture);
-#endif
     xfree ((pointer) pScreenPriv);
     return (*pScreen->CloseScreen) (index, pScreen);
 }
 
 static Bool
-miDCRealizeCursor (pScreen, pCursor)
-    ScreenPtr	pScreen;
-    CursorPtr	pCursor;
+miDCRealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
 {
     if (pCursor->bits->refcnt <= 1)
-	dixSetPrivate(&pCursor->bits->devPrivates, pScreen, NULL);
+	dixSetPrivate(&pCursor->bits->devPrivates, CursorScreenKey(pScreen), NULL);
     return TRUE;
 }
 
@@ -232,9 +224,7 @@ miDCMakePicture (PicturePtr *ppPicture, DrawablePtr pDraw, WindowPtr pWin)
 #endif
 
 static miDCCursorPtr
-miDCRealize (
-    ScreenPtr	pScreen,
-    CursorPtr	pCursor)
+miDCRealize (ScreenPtr pScreen, CursorPtr pCursor)
 {
     miDCCursorPtr   pPriv;
     GCPtr	    pGC;
@@ -288,7 +278,7 @@ miDCRealize (
 	    xfree ((pointer) pPriv);
 	    return (miDCCursorPtr)NULL;
 	}
-	dixSetPrivate(&pCursor->bits->devPrivates, pScreen, pPriv);
+	dixSetPrivate(&pCursor->bits->devPrivates, CursorScreenKey(pScreen), pPriv);
 	return pPriv;
     }
     pPriv->pPicture = 0;
@@ -306,7 +296,7 @@ miDCRealize (
 	xfree ((pointer) pPriv);
 	return (miDCCursorPtr)NULL;
     }
-    dixSetPrivate(&pCursor->bits->devPrivates, pScreen, pPriv);
+    dixSetPrivate(&pCursor->bits->devPrivates, CursorScreenKey(pScreen), pPriv);
 
     /* create the two sets of bits, clipping as appropriate */
 
@@ -346,14 +336,12 @@ miDCRealize (
 }
 
 static Bool
-miDCUnrealizeCursor (pScreen, pCursor)
-    ScreenPtr	pScreen;
-    CursorPtr	pCursor;
+miDCUnrealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
 {
     miDCCursorPtr   pPriv;
 
     pPriv = (miDCCursorPtr)dixLookupPrivate(&pCursor->bits->devPrivates,
-					    pScreen);
+					    CursorScreenKey(pScreen));
     if (pPriv && (pCursor->bits->refcnt <= 1))
     {
 	if (pPriv->sourceBits)
@@ -365,7 +353,7 @@ miDCUnrealizeCursor (pScreen, pCursor)
 	    FreePicture (pPriv->pPicture, 0);
 #endif
 	xfree ((pointer) pPriv);
-	dixSetPrivate(&pCursor->bits->devPrivates, pScreen, NULL);
+	dixSetPrivate(&pCursor->bits->devPrivates, CursorScreenKey(pScreen), NULL);
     }
     return TRUE;
 }
@@ -450,18 +438,16 @@ miDCMakeGC(
 
 
 static Bool
-miDCPutUpCursor (pScreen, pCursor, x, y, source, mask)
-    ScreenPtr	    pScreen;
-    CursorPtr	    pCursor;
-    int		    x, y;
-    unsigned long   source, mask;
+miDCPutUpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
+                 int x, int y, unsigned long source, unsigned long mask)
 {
     miDCScreenPtr   pScreenPriv;
     miDCCursorPtr   pPriv;
+    miDCBufferPtr   pBuffer;
     WindowPtr	    pWin;
 
     pPriv = (miDCCursorPtr)dixLookupPrivate(&pCursor->bits->devPrivates,
-					    pScreen);
+					    CursorScreenKey(pScreen));
     if (!pPriv)
     {
 	pPriv = miDCRealize(pScreen, pCursor);
@@ -471,15 +457,26 @@ miDCPutUpCursor (pScreen, pCursor, x, y, source, mask)
     pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						  miDCScreenKey);
     pWin = WindowTable[pScreen->myNum];
+    pBuffer = MIDCBUFFER(pDev);
+
 #ifdef ARGB_CURSOR
     if (pPriv->pPicture)
     {
-	if (!EnsurePicture(pScreenPriv->pRootPicture, &pWin->drawable, pWin))
+        /* see comment in miDCPutUpCursor */
+        if (pBuffer->pRootPicture && 
+                pBuffer->pRootPicture->pDrawable &&
+                pBuffer->pRootPicture->pDrawable->pScreen != pScreen)
+        {
+            tossPict(pBuffer->pRootPicture);
+            pBuffer->pRootPicture = NULL;
+        }
+
+	if (!EnsurePicture(pBuffer->pRootPicture, &pWin->drawable, pWin))
 	    return FALSE;
 	CompositePicture (PictOpOver,
 			  pPriv->pPicture,
 			  NULL,
-			  pScreenPriv->pRootPicture,
+			  pBuffer->pRootPicture,
 			  0, 0, 0, 0, 
 			  x, y, 
 			  pCursor->bits->width,
@@ -488,16 +485,35 @@ miDCPutUpCursor (pScreen, pCursor, x, y, source, mask)
     else
 #endif
     {
-	if (!EnsureGC(pScreenPriv->pSourceGC, pWin))
+        /**
+         * XXX: Before MPX, the sourceGC and maskGC were attached to the
+         * screen, and would switch as the screen switches.  With mpx we have
+         * the GC's attached to the device now, so each time we switch screen
+         * we need to make sure the GC's are allocated on the new screen.
+         * This is ... not optimal. (whot)
+         */
+        if (pBuffer->pSourceGC && pScreen != pBuffer->pSourceGC->pScreen)
+        {
+            tossGC(pBuffer->pSourceGC);
+            pBuffer->pSourceGC = NULL;
+        }
+
+        if (pBuffer->pMaskGC && pScreen != pBuffer->pMaskGC->pScreen)
+        {
+            tossGC(pBuffer->pMaskGC);
+            pBuffer->pMaskGC = NULL;
+        }
+
+	if (!EnsureGC(pBuffer->pSourceGC, pWin))
 	    return FALSE;
-	if (!EnsureGC(pScreenPriv->pMaskGC, pWin))
+	if (!EnsureGC(pBuffer->pMaskGC, pWin))
 	{
-	    FreeGC (pScreenPriv->pSourceGC, (GContext) 0);
-	    pScreenPriv->pSourceGC = 0;
+	    FreeGC (pBuffer->pSourceGC, (GContext) 0);
+	    pBuffer->pSourceGC = 0;
 	    return FALSE;
 	}
 	miDCPutBits ((DrawablePtr)pWin, pPriv,
-		     pScreenPriv->pSourceGC, pScreenPriv->pMaskGC,
+		     pBuffer->pSourceGC, pBuffer->pMaskGC,
 		     x, y, pCursor->bits->width, pCursor->bits->height,
 		     source, mask);
     }
@@ -505,31 +521,39 @@ miDCPutUpCursor (pScreen, pCursor, x, y, source, mask)
 }
 
 static Bool
-miDCSaveUnderCursor (pScreen, x, y, w, h)
-    ScreenPtr	pScreen;
-    int		x, y, w, h;
+miDCSaveUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
+                     int x, int y, int w, int h)
 {
     miDCScreenPtr   pScreenPriv;
+    miDCBufferPtr   pBuffer;
     PixmapPtr	    pSave;
     WindowPtr	    pWin;
     GCPtr	    pGC;
 
     pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						  miDCScreenKey);
-    pSave = pScreenPriv->pSave;
+    pBuffer = MIDCBUFFER(pDev);
+
+    pSave = pBuffer->pSave;
     pWin = WindowTable[pScreen->myNum];
     if (!pSave || pSave->drawable.width < w || pSave->drawable.height < h)
     {
 	if (pSave)
 	    (*pScreen->DestroyPixmap) (pSave);
-	pScreenPriv->pSave = pSave =
+	pBuffer->pSave = pSave =
 		(*pScreen->CreatePixmap) (pScreen, w, h, pScreen->rootDepth, 0);
 	if (!pSave)
 	    return FALSE;
     }
-    if (!EnsureGC(pScreenPriv->pSaveGC, pWin))
+    /* see comment in miDCPutUpCursor */
+    if (pBuffer->pSaveGC && pBuffer->pSaveGC->pScreen != pScreen)
+    {
+        tossGC(pBuffer->pSaveGC);
+        pBuffer->pSaveGC = NULL;
+    }
+    if (!EnsureGC(pBuffer->pSaveGC, pWin))
 	return FALSE;
-    pGC = pScreenPriv->pSaveGC;
+    pGC = pBuffer->pSaveGC;
     if (pSave->drawable.serialNumber != pGC->serialNumber)
 	ValidateGC ((DrawablePtr) pSave, pGC);
     (*pGC->ops->CopyArea) ((DrawablePtr) pWin, (DrawablePtr) pSave, pGC,
@@ -538,24 +562,32 @@ miDCSaveUnderCursor (pScreen, x, y, w, h)
 }
 
 static Bool
-miDCRestoreUnderCursor (pScreen, x, y, w, h)
-    ScreenPtr	pScreen;
-    int		x, y, w, h;
+miDCRestoreUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
+                        int x, int y, int w, int h)
 {
     miDCScreenPtr   pScreenPriv;
+    miDCBufferPtr   pBuffer;
     PixmapPtr	    pSave;
     WindowPtr	    pWin;
     GCPtr	    pGC;
 
     pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						  miDCScreenKey);
-    pSave = pScreenPriv->pSave;
+    pBuffer = MIDCBUFFER(pDev);
+    pSave = pBuffer->pSave;
+
     pWin = WindowTable[pScreen->myNum];
     if (!pSave)
 	return FALSE;
-    if (!EnsureGC(pScreenPriv->pRestoreGC, pWin))
+    /* see comment in miDCPutUpCursor */
+    if (pBuffer->pRestoreGC && pBuffer->pRestoreGC->pScreen != pScreen)
+    {
+        tossGC(pBuffer->pRestoreGC);
+        pBuffer->pRestoreGC = NULL;
+    }
+    if (!EnsureGC(pBuffer->pRestoreGC, pWin))
 	return FALSE;
-    pGC = pScreenPriv->pRestoreGC;
+    pGC = pBuffer->pRestoreGC;
     if (pWin->drawable.serialNumber != pGC->serialNumber)
 	ValidateGC ((DrawablePtr) pWin, pGC);
     (*pGC->ops->CopyArea) ((DrawablePtr) pSave, (DrawablePtr) pWin, pGC,
@@ -564,11 +596,11 @@ miDCRestoreUnderCursor (pScreen, x, y, w, h)
 }
 
 static Bool
-miDCChangeSave (pScreen, x, y, w, h, dx, dy)
-    ScreenPtr	    pScreen;
-    int		    x, y, w, h, dx, dy;
+miDCChangeSave (DeviceIntPtr pDev, ScreenPtr pScreen,
+                int x, int y, int w, int h, int dx, int dy)
 {
     miDCScreenPtr   pScreenPriv;
+    miDCBufferPtr   pBuffer;
     PixmapPtr	    pSave;
     WindowPtr	    pWin;
     GCPtr	    pGC;
@@ -576,16 +608,24 @@ miDCChangeSave (pScreen, x, y, w, h, dx, dy)
 
     pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						  miDCScreenKey);
-    pSave = pScreenPriv->pSave;
+    pBuffer = MIDCBUFFER(pDev);
+
+    pSave = pBuffer->pSave;
     pWin = WindowTable[pScreen->myNum];
     /*
      * restore the bits which are about to get trashed
      */
     if (!pSave)
 	return FALSE;
-    if (!EnsureGC(pScreenPriv->pRestoreGC, pWin))
+    /* see comment in miDCPutUpCursor */
+    if (pBuffer->pRestoreGC && pBuffer->pRestoreGC->pScreen != pScreen)
+    {
+        tossGC(pBuffer->pRestoreGC);
+        pBuffer->pRestoreGC = NULL;
+    }
+    if (!EnsureGC(pBuffer->pRestoreGC, pWin))
 	return FALSE;
-    pGC = pScreenPriv->pRestoreGC;
+    pGC = pBuffer->pRestoreGC;
     if (pWin->drawable.serialNumber != pGC->serialNumber)
 	ValidateGC ((DrawablePtr) pWin, pGC);
     /*
@@ -623,9 +663,15 @@ miDCChangeSave (pScreen, x, y, w, h, dx, dy)
 	(*pGC->ops->CopyArea) ((DrawablePtr) pSave, (DrawablePtr) pWin, pGC,
 			       0, sourcey, -dx, copyh, x + dx, desty);
     }
-    if (!EnsureGC(pScreenPriv->pSaveGC, pWin))
+    /* see comment in miDCPutUpCursor */
+    if (pBuffer->pSaveGC && pBuffer->pSaveGC->pScreen != pScreen)
+    {
+        tossGC(pBuffer->pSaveGC);
+        pBuffer->pSaveGC = NULL;
+    }
+    if (!EnsureGC(pBuffer->pSaveGC, pWin))
 	return FALSE;
-    pGC = pScreenPriv->pSaveGC;
+    pGC = pBuffer->pSaveGC;
     if (pSave->drawable.serialNumber != pGC->serialNumber)
 	ValidateGC ((DrawablePtr) pSave, pGC);
     /*
@@ -697,14 +743,13 @@ miDCChangeSave (pScreen, x, y, w, h, dx, dy)
 }
 
 static Bool
-miDCMoveCursor (pScreen, pCursor, x, y, w, h, dx, dy, source, mask)
-    ScreenPtr	    pScreen;
-    CursorPtr	    pCursor;
-    int		    x, y, w, h, dx, dy;
-    unsigned long   source, mask;
+miDCMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
+                int x, int y, int w, int h, int dx, int dy,
+                unsigned long source, unsigned long mask)
 {
     miDCCursorPtr   pPriv;
     miDCScreenPtr   pScreenPriv;
+    miDCBufferPtr   pBuffer;
     int		    status;
     WindowPtr	    pWin;
     GCPtr	    pGC;
@@ -712,7 +757,7 @@ miDCMoveCursor (pScreen, pCursor, x, y, w, h, dx, dy, source, mask)
     PixmapPtr	    pTemp;
 
     pPriv = (miDCCursorPtr)dixLookupPrivate(&pCursor->bits->devPrivates,
-					    pScreen);
+					    CursorScreenKey(pScreen));
     if (!pPriv)
     {
 	pPriv = miDCRealize(pScreen, pCursor);
@@ -722,39 +767,41 @@ miDCMoveCursor (pScreen, pCursor, x, y, w, h, dx, dy, source, mask)
     pScreenPriv = (miDCScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						  miDCScreenKey);
     pWin = WindowTable[pScreen->myNum];
-    pTemp = pScreenPriv->pTemp;
+    pBuffer = MIDCBUFFER(pDev);
+
+    pTemp = pBuffer->pTemp;
     if (!pTemp ||
-	pTemp->drawable.width != pScreenPriv->pSave->drawable.width ||
-	pTemp->drawable.height != pScreenPriv->pSave->drawable.height)
+	pTemp->drawable.width != pBuffer->pSave->drawable.width ||
+	pTemp->drawable.height != pBuffer->pSave->drawable.height)
     {
 	if (pTemp)
 	    (*pScreen->DestroyPixmap) (pTemp);
 #ifdef ARGB_CURSOR
-	if (pScreenPriv->pTempPicture)
+	if (pBuffer->pTempPicture)
 	{
-	    FreePicture (pScreenPriv->pTempPicture, 0);
-	    pScreenPriv->pTempPicture = 0;
+	    FreePicture (pBuffer->pTempPicture, 0);
+	    pBuffer->pTempPicture = 0;
 	}
 #endif
-	pScreenPriv->pTemp = pTemp = (*pScreen->CreatePixmap)
-	    (pScreen, w, h, pScreenPriv->pSave->drawable.depth, 0);
+	pBuffer->pTemp = pTemp = (*pScreen->CreatePixmap)
+	    (pScreen, w, h, pBuffer->pSave->drawable.depth, 0);
 	if (!pTemp)
 	    return FALSE;
     }
-    if (!pScreenPriv->pMoveGC)
+    if (!pBuffer->pMoveGC)
     {
-	pScreenPriv->pMoveGC = CreateGC ((DrawablePtr)pTemp,
+	pBuffer->pMoveGC = CreateGC ((DrawablePtr)pTemp,
 	    GCGraphicsExposures, &gcval, &status, (XID)0, serverClient);
-	if (!pScreenPriv->pMoveGC)
+	if (!pBuffer->pMoveGC)
 	    return FALSE;
     }
     /*
      * copy the saved area to a temporary pixmap
      */
-    pGC = pScreenPriv->pMoveGC;
+    pGC = pBuffer->pMoveGC;
     if (pGC->serialNumber != pTemp->drawable.serialNumber)
 	ValidateGC ((DrawablePtr) pTemp, pGC);
-    (*pGC->ops->CopyArea)((DrawablePtr)pScreenPriv->pSave,
+    (*pGC->ops->CopyArea)((DrawablePtr)pBuffer->pSave,
 			  (DrawablePtr)pTemp, pGC, 0, 0, w, h, 0, 0);
     
     /*
@@ -763,12 +810,21 @@ miDCMoveCursor (pScreen, pCursor, x, y, w, h, dx, dy, source, mask)
 #ifdef ARGB_CURSOR
     if (pPriv->pPicture)
     {
-	if (!EnsurePicture(pScreenPriv->pTempPicture, &pTemp->drawable, pWin))
+        /* see comment in miDCPutUpCursor */
+        if (pBuffer->pTempPicture && 
+                pBuffer->pTempPicture->pDrawable &&
+                pBuffer->pTempPicture->pDrawable->pScreen != pScreen)
+        {
+            tossPict(pBuffer->pTempPicture);
+            pBuffer->pTempPicture = NULL;
+        }
+
+	if (!EnsurePicture(pBuffer->pTempPicture, &pTemp->drawable, pWin))
 	    return FALSE;
 	CompositePicture (PictOpOver,
 			  pPriv->pPicture,
 			  NULL,
-			  pScreenPriv->pTempPicture,
+			  pBuffer->pTempPicture,
 			  0, 0, 0, 0, 
 			  dx, dy, 
 			  pCursor->bits->width,
@@ -777,33 +833,39 @@ miDCMoveCursor (pScreen, pCursor, x, y, w, h, dx, dy, source, mask)
     else
 #endif
     {
-	if (!pScreenPriv->pPixSourceGC)
+	if (!pBuffer->pPixSourceGC)
 	{
-	    pScreenPriv->pPixSourceGC = CreateGC ((DrawablePtr)pTemp,
+	    pBuffer->pPixSourceGC = CreateGC ((DrawablePtr)pTemp,
 		GCGraphicsExposures, &gcval, &status, (XID)0, serverClient);
-	    if (!pScreenPriv->pPixSourceGC)
+	    if (!pBuffer->pPixSourceGC)
 		return FALSE;
 	}
-	if (!pScreenPriv->pPixMaskGC)
+	if (!pBuffer->pPixMaskGC)
 	{
-	    pScreenPriv->pPixMaskGC = CreateGC ((DrawablePtr)pTemp,
+	    pBuffer->pPixMaskGC = CreateGC ((DrawablePtr)pTemp,
 		GCGraphicsExposures, &gcval, &status, (XID)0, serverClient);
-	    if (!pScreenPriv->pPixMaskGC)
+	    if (!pBuffer->pPixMaskGC)
 		return FALSE;
 	}
 	miDCPutBits ((DrawablePtr)pTemp, pPriv,
-		     pScreenPriv->pPixSourceGC, pScreenPriv->pPixMaskGC,
+		     pBuffer->pPixSourceGC, pBuffer->pPixMaskGC,
 		     dx, dy, pCursor->bits->width, pCursor->bits->height,
 		     source, mask);
     }
 
+    /* see comment in miDCPutUpCursor */
+    if (pBuffer->pRestoreGC && pBuffer->pRestoreGC->pScreen != pScreen)
+    {
+        tossGC(pBuffer->pRestoreGC);
+        pBuffer->pRestoreGC = NULL;
+    }
     /*
      * copy the temporary pixmap onto the screen
      */
 
-    if (!EnsureGC(pScreenPriv->pRestoreGC, pWin))
+    if (!EnsureGC(pBuffer->pRestoreGC, pWin))
 	return FALSE;
-    pGC = pScreenPriv->pRestoreGC;
+    pGC = pBuffer->pRestoreGC;
     if (pWin->drawable.serialNumber != pGC->serialNumber)
 	ValidateGC ((DrawablePtr) pWin, pGC);
 
@@ -811,4 +873,56 @@ miDCMoveCursor (pScreen, pCursor, x, y, w, h, dx, dy, source, mask)
 			    pGC,
 			    0, 0, w, h, x, y);
     return TRUE;
+}
+
+static Bool
+miDCDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+    miDCBufferPtr pBuffer;
+
+    pBuffer = xalloc(sizeof(miDCBufferRec));
+    dixSetPrivate(&pDev->devPrivates, miDCSpriteKey, pBuffer);
+
+    pBuffer->pSourceGC =
+        pBuffer->pMaskGC =
+        pBuffer->pSaveGC =
+        pBuffer->pRestoreGC =
+        pBuffer->pMoveGC =
+        pBuffer->pPixSourceGC =
+        pBuffer->pPixMaskGC = NULL;
+#ifdef ARGB_CURSOR
+    pBuffer->pRootPicture = NULL;
+    pBuffer->pTempPicture = NULL;
+#endif
+    pBuffer->pSave = pBuffer->pTemp = NULL;
+
+    return TRUE;
+}
+
+static void
+miDCDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+    miDCBufferPtr   pBuffer;
+
+    if (DevHasCursor(pDev))
+    {
+        pBuffer = MIDCBUFFER(pDev);
+        tossGC (pBuffer->pSourceGC);
+        tossGC (pBuffer->pMaskGC);
+        tossGC (pBuffer->pSaveGC);
+        tossGC (pBuffer->pRestoreGC);
+        tossGC (pBuffer->pMoveGC);
+        tossGC (pBuffer->pPixSourceGC);
+        tossGC (pBuffer->pPixMaskGC);
+        tossPix (pBuffer->pSave);
+        tossPix (pBuffer->pTemp);
+#ifdef ARGB_CURSOR
+#if 0				/* This has been free()d before */
+        tossPict (pScreenPriv->pRootPicture);
+#endif 
+        tossPict (pBuffer->pTempPicture);
+#endif
+        xfree(pBuffer);
+        dixSetPrivate(&pDev->devPrivates, miDCSpriteKey, NULL);
+    }
 }

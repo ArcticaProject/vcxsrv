@@ -292,7 +292,7 @@ create_bits_picture (PicturePtr pict,
     
     fbGetDrawable (pict->pDrawable, bits, stride, bpp, xoff, yoff);
 
-    bits = (CARD8*)bits + yoff * stride * sizeof(FbBits) + xoff * (bpp / 8);
+    bits = (FbBits*)((CARD8*)bits + yoff * stride * sizeof(FbBits) + xoff * (bpp / 8));
 
     image = pixman_image_create_bits (
 	pict->format,

@@ -80,13 +80,13 @@ hash_table_destroy_item (x_hash_table *h, void *k, void *v)
         (*h->destroy_value) (v);
 }
 
-static inline unsigned int
+static inline size_t
 hash_table_hash_key (x_hash_table *h, void *k)
 {
     if (h->hash_key != 0)
         return (*h->hash_key) (k);
     else
-        return (unsigned int) k;
+        return (size_t) k;
 }
 
 static inline int
@@ -104,7 +104,7 @@ hash_table_split (x_hash_table *h)
     x_list **new, **old;
     x_list *node, *item, *next;
     int new_size, old_size;
-    unsigned int b;
+    size_t b;
     int i;
 
     if (h->bucket_index == N_BUCKET_SIZES - 1)
@@ -207,7 +207,7 @@ X_PFX (hash_table_size) (x_hash_table *h)
 static void
 hash_table_modify (x_hash_table *h, void *k, void *v, int replace)
 {
-    unsigned int hash_value;
+    size_t hash_value;
     x_list *node, *item;
 
     assert (h != NULL);
@@ -266,7 +266,7 @@ X_PFX (hash_table_replace) (x_hash_table *h, void *k, void *v)
 X_EXTERN void
 X_PFX (hash_table_remove) (x_hash_table *h, void *k)
 {
-    unsigned int hash_value;
+    size_t hash_value;
     x_list **ptr, *item;
 
     assert (h != NULL);
@@ -294,7 +294,7 @@ X_PFX (hash_table_remove) (x_hash_table *h, void *k)
 X_EXTERN void *
 X_PFX (hash_table_lookup) (x_hash_table *h, void *k, void **k_ret)
 {
-    unsigned int hash_value;
+    size_t hash_value;
     x_list *node, *item;
 
     assert (h != NULL);

@@ -56,6 +56,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dri.h"
 #include "dristruct.h"
 #include "xpr.h"
+#include "x-hash.h"
 
 static int DRIErrorBase = 0;
 
@@ -190,7 +191,7 @@ static void surface_notify(
 )
 {
     DRISurfaceNotifyArg *arg = _arg;
-    int client_index = (int) data;
+    int client_index = (int) x_cvt_vptr_to_uint(data);
     ClientPtr client;
     xAppleDRINotifyEvent se;
 
@@ -236,7 +237,8 @@ ProcAppleDRICreateSurface(
     if (!DRICreateSurface( screenInfo.screens[stuff->screen],
                            (Drawable)stuff->drawable, pDrawable,
                            stuff->client_id, &sid, key,
-                           surface_notify, (void *) client->index)) {
+                           surface_notify,
+                           x_cvt_uint_to_vptr(client->index))) {
         return BadValue;
     }
 

@@ -478,9 +478,7 @@ winFinishScreenInitFB (int index,
       WRAP(UnrealizeWindow);
       WRAP(PositionWindow);
       WRAP(ChangeWindowAttributes);
-#ifdef SHAPE
       WRAP(SetShape);
-#endif
 
       /* Assign rootless window procedures to be top level procedures */
       pScreen->CreateWindow = winCreateWindowRootless;
@@ -489,9 +487,7 @@ winFinishScreenInitFB (int index,
       /*pScreen->ChangeWindowAttributes = winChangeWindowAttributesRootless;*/
       pScreen->RealizeWindow = winMapWindowRootless;
       pScreen->UnrealizeWindow = winUnmapWindowRootless;
-#ifdef SHAPE
       pScreen->SetShape = winSetShapeRootless;
-#endif
 
       /* Undefine the WRAP macro, as it is not needed elsewhere */
 #undef WRAP
@@ -523,9 +519,7 @@ winFinishScreenInitFB (int index,
       WRAP(ResizeWindow);
       WRAP(MoveWindow);
       WRAP(CopyWindow);
-#ifdef SHAPE
       WRAP(SetShape);
-#endif
 
       /* Assign multi-window window procedures to be top level procedures */
       pScreen->CreateWindow = winCreateWindowMultiWindow;
@@ -539,9 +533,7 @@ winFinishScreenInitFB (int index,
       pScreen->ResizeWindow = winResizeWindowMultiWindow;
       pScreen->MoveWindow = winMoveWindowMultiWindow;
       pScreen->CopyWindow = winCopyWindowMultiWindow;
-#ifdef SHAPE
       pScreen->SetShape = winSetShapeMultiWindow;
-#endif
 
       /* Undefine the WRAP macro, as it is not needed elsewhere */
 #undef WRAP

@@ -36,14 +36,6 @@ extern void miDestroyGC(
     GCPtr  /*pGC*/
 );
 
-extern GCOpsPtr miCreateGCOps(
-    GCOpsPtr /*prototype*/
-);
-
-extern void miDestroyGCOps(
-    GCOpsPtr /*ops*/
-);
-
 extern void miDestroyClip(
     GCPtr /*pGC*/
 );

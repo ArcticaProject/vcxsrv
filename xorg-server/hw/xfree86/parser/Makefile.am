@@ -32,10 +32,7 @@ EXTRA_DIST = \
 	configProcs.h \
 	xf86Optrec.h \
 	xf86Parser.h \
-	xf86tokens.h \
-	cpconfig.c
+	xf86tokens.h
 
 sdk_HEADERS = \
-	$(LIBHEADERS) \
-	xf86Parser.h \
-	xf86Optrec.h
+	$(LIBHEADERS)

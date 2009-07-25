@@ -142,20 +142,6 @@ xf86DisableIO()
     return;
 }
 
-/**************************************************************************
- * Interrupt Handling section                                              
- **************************************************************************/
-Bool 
-xf86DisableInterrupts()
-{
-    return TRUE;
-}
-void 
-xf86EnableInterrupts()
-{
-    return;
-}
-
 void
 xf86MapReadSideEffects(int ScreenNum, int Flags, pointer Base,
 	unsigned long Size)

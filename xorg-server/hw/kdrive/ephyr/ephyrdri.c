@@ -29,13 +29,10 @@
 #include <kdrive-config.h>
 #endif
 
-#ifdef XEPHYR_DRI
-
 #include <X11/Xutil.h>
 #include <X11/Xlibint.h>
-/*#define _XF86DRI_SERVER_*/
 #include <GL/glx.h>
-#include <X11/dri/xf86dri.h>
+#include "xf86dri.h"
 #include "hostx.h"
 #include "ephyrdri.h"
 #define _HAVE_XALLOC_DECLS
@@ -146,7 +143,7 @@ ephyrDRIGetClientDriverName (int a_screen,
 Bool
 ephyrDRICreateContext (int a_screen,
                        int a_visual_id,
-                       unsigned long int *a_returned_ctxt_id,
+                       XID *a_returned_ctxt_id,
                        drm_context_t *a_hw_ctxt)
 {
     Display *dpy = hostx_get_display () ;
@@ -287,5 +284,3 @@ ephyrDRIGetDeviceInfo (int a_screen,
     EPHYR_LOG ("leave:%d\n", is_ok) ;
     return is_ok ;
 }
-#endif /*EPHYR_DRI*/
-

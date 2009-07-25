@@ -44,11 +44,16 @@ int		g_iLastScreen = -1;
 #ifdef HAS_DEVWINDOWS
 int		g_fdMessageQueue = WIN_FD_INVALID;
 #endif
-DevPrivateKey	g_iScreenPrivateKey = &g_iScreenPrivateKey;
-DevPrivateKey	g_iCmapPrivateKey = &g_iCmapPrivateKey;
-DevPrivateKey	g_iGCPrivateKey = &g_iGCPrivateKey;
-DevPrivateKey	g_iPixmapPrivateKey = &g_iPixmapPrivateKey;
-DevPrivateKey	g_iWindowPrivateKey = &g_iWindowPrivateKey;
+static int	g_iScreenPrivateKeyIndex;
+DevPrivateKey	g_iScreenPrivateKey = &g_iScreenPrivateKeyIndex;
+static int	g_iCmapPrivateKeyIndex;
+DevPrivateKey	g_iCmapPrivateKey = &g_iCmapPrivateKeyIndex;
+static int	g_iGCPrivateKeyIndex;
+DevPrivateKey	g_iGCPrivateKey = &g_iGCPrivateKeyIndex;
+static int	g_iPixmapPrivateKeyIndex;
+DevPrivateKey	g_iPixmapPrivateKey = &g_iPixmapPrivateKeyIndex;
+static int	g_iWindowPrivateKeyIndex;
+DevPrivateKey	g_iWindowPrivateKey = &g_iWindowPrivateKeyIndex;
 unsigned long	g_ulServerGeneration = 0;
 Bool		g_fInitializedDefaultScreens = FALSE;
 DWORD		g_dwEnginesSupported = 0;

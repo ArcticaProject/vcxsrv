@@ -56,7 +56,6 @@ xnestPointerProc(DeviceIntPtr pDev, int onoff)
       for (i = 0; i <= nmap; i++)
 	map[i] = i; /* buttons are already mapped */
       InitPointerDeviceStruct(&pDev->public, map, nmap,
-			      GetMotionHistory,
 			      xnestChangePointerControl,
 			      GetMotionHistorySize(), 2);
       break;
