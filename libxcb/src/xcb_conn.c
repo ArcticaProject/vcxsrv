@@ -31,12 +31,16 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <netinet/in.h>
-#include <sys/select.h>
 #include <fcntl.h>
 #include <errno.h>
 
 #include "xcb.h"
 #include "xcbint.h"
+#if USE_POLL
+#include <poll.h>
+#else
+#include <sys/select.h>
+#endif
 
 typedef struct {
     uint8_t  status;
@@ -59,28 +63,13 @@ static int set_fd_flags(const int fd)
     return 1;
 }
 
-static int _xcb_xlib_init(_xcb_xlib *xlib)
-{
-    xlib->lock = 0;
-#ifndef NDEBUG
-    xlib->sloppy_lock = (getenv("LIBXCB_ALLOW_SLOPPY_LOCK") != 0);
-#endif
-    pthread_cond_init(&xlib->cond, 0);
-    return 1;
-}
-
-static void _xcb_xlib_destroy(_xcb_xlib *xlib)
-{
-    pthread_cond_destroy(&xlib->cond);
-}
-
 static int write_setup(xcb_connection_t *c, xcb_auth_info_t *auth_info)
 {
     static const char pad[3];
     xcb_setup_request_t out;
     struct iovec parts[6];
     int count = 0;
-    int endian = 0x01020304;
+    static const uint32_t endian = 0x01020304;
     int ret;
 
     memset(&out, 0, sizeof(out));
@@ -110,14 +99,14 @@ static int write_setup(xcb_connection_t *c, xcb_auth_info_t *auth_info)
         parts[count].iov_len = XCB_PAD(out.authorization_protocol_data_len);
         parts[count++].iov_base = (char *) pad;
     }
-    assert(count <= sizeof(parts) / sizeof(*parts));
+    assert(count <= (int) (sizeof(parts) / sizeof(*parts)));
 
-    _xcb_lock_io(c);
+    pthread_mutex_lock(&c->iolock);
     {
         struct iovec *parts_ptr = parts;
         ret = _xcb_out_send(c, &parts_ptr, &count);
     }
-    _xcb_unlock_io(c);
+    pthread_mutex_unlock(&c->iolock);
     return ret;
 }
 
@@ -230,7 +219,6 @@ xcb_connection_t *xcb_connect_to_fd(int fd, xcb_auth_info_t *auth_info)
     if(!(
         set_fd_flags(fd) &&
         pthread_mutex_init(&c->iolock, 0) == 0 &&
-        _xcb_xlib_init(&c->xlib) &&
         _xcb_in_init(&c->in) &&
         _xcb_out_init(&c->out) &&
         write_setup(c, auth_info) &&
@@ -255,7 +243,6 @@ void xcb_disconnect(xcb_connection_t *c)
     close(c->fd);
 
     pthread_mutex_destroy(&c->iolock);
-    _xcb_xlib_destroy(&c->xlib);
     _xcb_in_destroy(&c->in);
     _xcb_out_destroy(&c->out);
 
@@ -272,91 +259,76 @@ void _xcb_conn_shutdown(xcb_connection_t *c)
     c->has_error = 1;
 }
 
-void _xcb_lock_io(xcb_connection_t *c)
-{
-    pthread_mutex_lock(&c->iolock);
-    while(c->xlib.lock)
-    {
-        if(pthread_equal(c->xlib.thread, pthread_self()))
-            break;
-        pthread_cond_wait(&c->xlib.cond, &c->iolock);
-    }
-}
-
-void _xcb_unlock_io(xcb_connection_t *c)
-{
-    pthread_mutex_unlock(&c->iolock);
-}
-
-void _xcb_wait_io(xcb_connection_t *c, pthread_cond_t *cond)
-{
-    int xlib_locked = c->xlib.lock;
-    if(xlib_locked)
-    {
-        c->xlib.lock = 0;
-        pthread_cond_broadcast(&c->xlib.cond);
-    }
-    pthread_cond_wait(cond, &c->iolock);
-    if(xlib_locked)
-    {
-        while(c->xlib.lock)
-            pthread_cond_wait(&c->xlib.cond, &c->iolock);
-        c->xlib.lock = 1;
-        c->xlib.thread = pthread_self();
-    }
-}
-
 int _xcb_conn_wait(xcb_connection_t *c, pthread_cond_t *cond, struct iovec **vector, int *count)
 {
-    int ret, xlib_locked;
+    int ret;
+#if USE_POLL
+    struct pollfd fd;
+#else
     fd_set rfds, wfds;
+#endif
 
     /* If the thing I should be doing is already being done, wait for it. */
     if(count ? c->out.writing : c->in.reading)
     {
-        _xcb_wait_io(c, cond);
+        pthread_cond_wait(cond, &c->iolock);
         return 1;
     }
 
+#if USE_POLL
+    memset(&fd, 0, sizeof(fd));
+    fd.fd = c->fd;
+    fd.events = POLLIN;
+#else
     FD_ZERO(&rfds);
     FD_SET(c->fd, &rfds);
+#endif
     ++c->in.reading;
 
+#if USE_POLL
+    if(count)
+    {
+        fd.events |= POLLOUT;
+        ++c->out.writing;
+    }
+#else
     FD_ZERO(&wfds);
     if(count)
     {
         FD_SET(c->fd, &wfds);
         ++c->out.writing;
     }
+#endif
 
-    xlib_locked = c->xlib.lock;
-    if(xlib_locked)
-    {
-        c->xlib.lock = 0;
-        pthread_cond_broadcast(&c->xlib.cond);
-    }
-    _xcb_unlock_io(c);
+    pthread_mutex_unlock(&c->iolock);
     do {
+#if USE_POLL
+    ret = poll(&fd, 1, -1);
+#else
 	ret = select(c->fd + 1, &rfds, &wfds, 0, 0);
+#endif
     } while (ret == -1 && errno == EINTR);
     if (ret < 0)
     {
         _xcb_conn_shutdown(c);
 	ret = 0;
     }
-    _xcb_lock_io(c);
-    if(xlib_locked)
-    {
-        c->xlib.lock = 1;
-        c->xlib.thread = pthread_self();
-    }
+    pthread_mutex_lock(&c->iolock);
 
     if(ret)
     {
+#if USE_POLL
+        if((fd.revents & POLLIN) == POLLIN)
+#else
         if(FD_ISSET(c->fd, &rfds))
+#endif
             ret = ret && _xcb_in_read(c);
 
+#if USE_POLL
+        if((fd.revents & POLLOUT) == POLLOUT)
+#else
         if(FD_ISSET(c->fd, &wfds))
+#endif
             ret = ret && write_vec(c, vector, count);
     }
 

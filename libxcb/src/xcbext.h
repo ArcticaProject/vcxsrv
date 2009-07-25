@@ -59,6 +59,23 @@ enum xcb_send_request_flags_t {
 
 unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vector, const xcb_protocol_request_t *request);
 
+/* xcb_take_socket allows external code to ask XCB for permission to
+ * take over the write side of the socket and send raw data with
+ * xcb_writev. xcb_take_socket provides the sequence number of the last
+ * request XCB sent. The caller of xcb_take_socket must supply a
+ * callback which XCB can call when it wants the write side of the
+ * socket back to make a request. This callback synchronizes with the
+ * external socket owner, flushes any output queues if appropriate, and
+ * then returns the sequence number of the last request sent over the
+ * socket. */
+int xcb_take_socket(xcb_connection_t *c, void (*return_socket)(void *closure), void *closure, int flags, uint64_t *sent);
+
+/* You must own the write-side of the socket (you've called
+ * xcb_take_socket, and haven't returned from return_socket yet) to call
+ * xcb_writev. Also, the iovec must have at least 1 byte of data in it.
+ * */
+int xcb_writev(xcb_connection_t *c, struct iovec *vector, int count, uint64_t requests);
+
 
 /* xcb_in.c */
 

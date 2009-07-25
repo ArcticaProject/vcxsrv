@@ -2,53 +2,77 @@ SUBDIRS=src tests doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 
-pkgconfig_DATA = \
-xcb.pc \
-xcb-xlib.pc \
-xcb-composite.pc \
-xcb-damage.pc \
-xcb-dpms.pc \
-xcb-glx.pc \
-xcb-randr.pc \
-xcb-record.pc \
-xcb-render.pc \
-xcb-res.pc \
-xcb-screensaver.pc \
-xcb-shape.pc \
-xcb-shm.pc \
-xcb-sync.pc \
-xcb-xevie.pc \
-xcb-xf86dri.pc \
-xcb-xfixes.pc \
-xcb-xinerama.pc \
-xcb-xprint.pc \
-xcb-xtest.pc \
-xcb-xv.pc \
-xcb-xvmc.pc
+pkgconfig_DATA = xcb.pc
+
+if BUILD_COMPOSITE
+pkgconfig_DATA += xcb-composite.pc
+endif
+if BUILD_DAMAGE
+pkgconfig_DATA += xcb-damage.pc
+endif
+if BUILD_DPMS
+pkgconfig_DATA += xcb-dpms.pc
+endif
+if BUILD_GLX
+pkgconfig_DATA += xcb-glx.pc
+endif
+if BUILD_RANDR
+pkgconfig_DATA += xcb-randr.pc
+endif
+if BUILD_RECORD
+pkgconfig_DATA += xcb-record.pc
+endif
+if BUILD_RENDER
+pkgconfig_DATA += xcb-render.pc
+endif
+if BUILD_RESOURCE
+pkgconfig_DATA += xcb-res.pc
+endif
+if BUILD_SCREENSAVER
+pkgconfig_DATA += xcb-screensaver.pc
+endif
+if BUILD_SHAPE
+pkgconfig_DATA += xcb-shape.pc
+endif
+if BUILD_SHM
+pkgconfig_DATA += xcb-shm.pc
+endif
+if BUILD_SYNC
+pkgconfig_DATA += xcb-sync.pc
+endif
+if BUILD_XEVIE
+pkgconfig_DATA += xcb-xevie.pc
+endif
+if BUILD_XFREE86_DRI
+pkgconfig_DATA += xcb-xf86dri.pc
+endif
+if BUILD_XFIXES
+pkgconfig_DATA += xcb-xfixes.pc
+endif
+if BUILD_XINERAMA
+pkgconfig_DATA += xcb-xinerama.pc
+endif
+if BUILD_XINPUT
+pkgconfig_DATA += xcb-xinput.pc
+endif
+if BUILD_XPRINT
+pkgconfig_DATA += xcb-xprint.pc
+endif
+if BUILD_SELINUX
+pkgconfig_DATA += xcb-xselinux.pc
+endif
+if BUILD_XTEST
+pkgconfig_DATA += xcb-xtest.pc
+endif
+if BUILD_XV
+pkgconfig_DATA += xcb-xv.pc
+endif
+if BUILD_XVMC
+pkgconfig_DATA += xcb-xvmc.pc
+endif
+
 
 EXTRA_DIST = \
-xcb.pc.in \
-xcb-xlib.pc.in \
-xcb-composite.pc.in \
-xcb-damage.pc.in \
-xcb-dpms.pc.in \
-xcb-glx.pc.in \
-xcb-randr.pc.in \
-xcb-record.pc.in \
-xcb-render.pc.in \
-xcb-res.pc.in \
-xcb-screensaver.pc.in \
-xcb-shape.pc.in \
-xcb-shm.pc.in \
-xcb-sync.pc.in \
-xcb-xevie.pc.in \
-xcb-xinerama.pc.in \
-xcb-xf86dri.pc.in \
-xcb-xfixes.pc.in \
-xcb-xprint.pc.in \
-xcb-xtest.pc.in \
-xcb-xv.pc.in \
-xcb-xvmc.pc.in \
 tools/README \
 tools/api_conv.pl \
 tools/constants \

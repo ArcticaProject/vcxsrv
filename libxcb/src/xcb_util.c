@@ -30,6 +30,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #ifdef DNETCONN
 #include <netdnet/dnetdb.h>
 #include <netdnet/dn.h>
@@ -38,6 +39,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -123,12 +125,18 @@ static int _xcb_open_unix(char *protocol, const char *file);
 #ifdef DNETCONN
 static int _xcb_open_decnet(const char *host, char *protocol, const unsigned short port);
 #endif
+#ifdef HAVE_ABSTRACT_SOCKETS
+static int _xcb_open_abstract(char *protocol, const char *file, size_t filelen);
+#endif
 
 static int _xcb_open(char *host, char *protocol, const int display)
 {
+#ifdef HAVE_ABSTRACT_SOCKETS
     int fd;
+#endif
     static const char base[] = "/tmp/.X11-unix/X";
     char file[sizeof(base) + 20];
+    int filelen;
 
     if(*host)
     {
@@ -155,11 +163,18 @@ static int _xcb_open(char *host, char *protocol, const int display)
     }
 
     /* display specifies Unix socket */
-    snprintf(file, sizeof(file), "%s%d", base, display);
+    filelen = snprintf(file, sizeof(file), "%s%d", base, display);
+    if(filelen < 0)
+        return -1;
+    /* snprintf may truncate the file */
+    filelen = MIN(filelen, sizeof(file) - 1);
+#ifdef HAVE_ABSTRACT_SOCKETS
+    fd = _xcb_open_abstract(protocol, file, filelen);
+    if (fd >= 0 || (errno != ENOENT && errno != ECONNREFUSED))
+        return fd;
+
+#endif
     return  _xcb_open_unix(protocol, file);
-
-
-    return fd;
 }
 
 #ifdef DNETCONN
@@ -179,8 +194,9 @@ static int _xcb_open_decnet(const char *host, const char *protocol, const unsign
     addr.sdn_add.a_len = nodeaddr->n_length;
     memcpy(addr.sdn_add.a_addr, nodeaddr->n_addr, addr.sdn_add.a_len);
 
-    sprintf((char *)addr.sdn_objname, "X$X%d", port);
-    addr.sdn_objnamel = strlen((char *)addr.sdn_objname);
+    addr.sdn_objnamel = sprintf((char *)addr.sdn_objname, "X$X%d", port);
+    if(addr.sdn_objnamel < 0)
+        return -1;
     addr.sdn_objnum = 0;
 
     fd = socket(PF_DECnet, SOCK_STREAM, 0);
@@ -188,12 +204,15 @@ static int _xcb_open_decnet(const char *host, const char *protocol, const unsign
         return -1;
 
     memset(&accessdata, 0, sizeof(accessdata));
-    sprintf((char*)accessdata.acc_acc, "%d", getuid());
-    accessdata.acc_accl = strlen((char *)accessdata.acc_acc);
+    accessdata.acc_accl = sprintf((char*)accessdata.acc_acc, "%d", getuid());
+    if(accessdata.acc_accl < 0)
+        return -1;
     setsockopt(fd, DNPROTO_NSP, SO_CONACCESS, &accessdata, sizeof(accessdata));
 
-    if(connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1)
+    if(connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
+        close(fd);
         return -1;
+    }
     return fd;
 }
 #endif
@@ -201,14 +220,7 @@ static int _xcb_open_decnet(const char *host, const char *protocol, const unsign
 static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
 {
     int fd = -1;
-    struct addrinfo hints = { 0
-#ifdef AI_ADDRCONFIG
-                              | AI_ADDRCONFIG
-#endif
-#ifdef AI_NUMERICSERV
-                              | AI_NUMERICSERV
-#endif
-                              , AF_UNSPEC, SOCK_STREAM };
+    struct addrinfo hints;
     char service[6]; /* "65535" with the trailing '\0' */
     struct addrinfo *results, *addr;
     char *bracket;
@@ -216,6 +228,17 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
     if (protocol && strcmp("tcp",protocol))
         return -1;
 
+    memset(&hints, 0, sizeof(hints));
+#ifdef AI_ADDRCONFIG
+    hints.ai_flags |= AI_ADDRCONFIG;
+#endif
+#ifdef AI_NUMERICSERV
+    hints.ai_flags |= AI_NUMERICSERV;
+#endif
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+#ifdef AF_INET6
     /* Allow IPv6 addresses enclosed in brackets. */
     if(host[0] == '[' && (bracket = strrchr(host, ']')) && bracket[1] == '\0')
     {
@@ -224,6 +247,7 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
         hints.ai_flags |= AI_NUMERICHOST;
         hints.ai_family = AF_INET6;
     }
+#endif
 
     snprintf(service, sizeof(service), "%hu", port);
     if(getaddrinfo(host, service, &hints, &results))
@@ -233,9 +257,15 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
     for(addr = results; addr; addr = addr->ai_next)
     {
         fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-        if(fd >= 0 && connect(fd, addr->ai_addr, addr->ai_addrlen) >= 0)
-            break;
-        fd = -1;
+        if(fd >= 0) {
+            int on = 1;
+            setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(on));
+
+            if (connect(fd, addr->ai_addr, addr->ai_addrlen) >= 0)
+                break;
+            close(fd);
+            fd = -1;
+        }
     }
     freeaddrinfo(results);
     return fd;
@@ -244,45 +274,56 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
 static int _xcb_open_unix(char *protocol, const char *file)
 {
     int fd;
-    struct sockaddr_un addr = { AF_UNIX };
+    struct sockaddr_un addr;
 
     if (protocol && strcmp("unix",protocol))
         return -1;
 
     strcpy(addr.sun_path, file);
-
+    addr.sun_family = AF_UNIX;
+#ifdef HAVE_SOCKADDR_SUN_LEN
+    addr.sun_len = SUN_LEN(&addr);
+#endif
     fd = socket(AF_UNIX, SOCK_STREAM, 0);
     if(fd == -1)
         return -1;
-    if(connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1)
+    if(connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
+        close(fd);
         return -1;
+    }
     return fd;
 }
 
+#ifdef HAVE_ABSTRACT_SOCKETS
+static int _xcb_open_abstract(char *protocol, const char *file, size_t filelen)
+{
+    int fd;
+    struct sockaddr_un addr = {0};
+    socklen_t namelen;
+
+    if (protocol && strcmp("unix",protocol))
+        return -1;
+
+    strcpy(addr.sun_path + 1, file);
+    addr.sun_family = AF_UNIX;
+    namelen = offsetof(struct sockaddr_un, sun_path) + 1 + filelen;
+#ifdef HAVE_SOCKADDR_SUN_LEN
+    addr.sun_len = 1 + filelen;
+#endif
+    fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (fd == -1)
+        return -1;
+    if (connect(fd, (struct sockaddr *) &addr, namelen) == -1) {
+        close(fd);
+        return -1;
+    }
+    return fd;
+}
+#endif
+
 xcb_connection_t *xcb_connect(const char *displayname, int *screenp)
 {
-    int fd, display = 0;
-    char *host;
-    char *protocol;
-    xcb_connection_t *c;
-    xcb_auth_info_t auth;
-
-    if(!_xcb_parse_display(displayname, &host, &protocol, &display, screenp))
-        return (xcb_connection_t *) &error_connection;
-    fd = _xcb_open(host, protocol, display);
-    free(host);
-    if(fd == -1)
-        return (xcb_connection_t *) &error_connection;
-
-    if(_xcb_get_auth_info(fd, &auth, display))
-    {
-        c = xcb_connect_to_fd(fd, &auth);
-        free(auth.name);
-        free(auth.data);
-    }
-    else
-        c = xcb_connect_to_fd(fd, 0);
-    return c;
+    return xcb_connect_to_display_with_auth_info(displayname, NULL, screenp);
 }
 
 xcb_connection_t *xcb_connect_to_display_with_auth_info(const char *displayname, xcb_auth_info_t *auth, int *screenp)
@@ -290,13 +331,38 @@ xcb_connection_t *xcb_connect_to_display_with_auth_info(const char *displayname,
     int fd, display = 0;
     char *host;
     char *protocol;
+    xcb_auth_info_t ourauth;
+    xcb_connection_t *c;
 
-    if(!_xcb_parse_display(displayname, &host, &protocol, &display, screenp))
+    int parsed = _xcb_parse_display(displayname, &host, &protocol, &display, screenp);
+    
+#ifdef HAVE_LAUNCHD
+    if(!displayname)
+        displayname = getenv("DISPLAY");
+    if(displayname && strlen(displayname)>11 && !strncmp(displayname, "/tmp/launch", 11))
+        fd = _xcb_open_unix(NULL, displayname);
+    else
+#endif
+    if(!parsed)
         return (xcb_connection_t *) &error_connection;
-    fd = _xcb_open(host, protocol, display);
+    else
+        fd = _xcb_open(host, protocol, display);
     free(host);
+
     if(fd == -1)
         return (xcb_connection_t *) &error_connection;
 
-    return xcb_connect_to_fd(fd, auth);
+    if(auth)
+        return xcb_connect_to_fd(fd, auth);
+
+    if(_xcb_get_auth_info(fd, &ourauth, display))
+    {
+        c = xcb_connect_to_fd(fd, &ourauth);
+        free(ourauth.name);
+        free(ourauth.data);
+    }
+    else
+        c = xcb_connect_to_fd(fd, 0);
+
+    return c;
 }

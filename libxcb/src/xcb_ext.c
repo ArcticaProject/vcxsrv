@@ -40,11 +40,11 @@ typedef struct lazyreply {
     } value;
 } lazyreply;
 
-static lazyreply *get_index(xcb_connection_t *c, int index)
+static lazyreply *get_index(xcb_connection_t *c, int idx)
 {
-    if(index > c->ext.extensions_size)
+    if(idx > c->ext.extensions_size)
     {
-        int new_size = index << 1;
+        int new_size = idx << 1;
         lazyreply *new_extensions = realloc(c->ext.extensions, sizeof(lazyreply) * new_size);
         if(!new_extensions)
             return 0;
@@ -52,7 +52,7 @@ static lazyreply *get_index(xcb_connection_t *c, int index)
         c->ext.extensions = new_extensions;
         c->ext.extensions_size = new_size;
     }
-    return c->ext.extensions + index - 1;
+    return c->ext.extensions + idx - 1;
 }
 
 static lazyreply *get_lazyreply(xcb_connection_t *c, xcb_extension_t *ext)

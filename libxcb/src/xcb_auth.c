@@ -49,11 +49,21 @@ enum auth_protos {
     N_AUTH_PROTOS
 };
 
+#define AUTH_PROTO_XDM_AUTHORIZATION "XDM-AUTHORIZATION-1"
+#define AUTH_PROTO_MIT_MAGIC_COOKIE "MIT-MAGIC-COOKIE-1"
+
 static char *authnames[N_AUTH_PROTOS] = {
 #ifdef HASXDMAUTH
-    "XDM-AUTHORIZATION-1",
+    AUTH_PROTO_XDM_AUTHORIZATION,
 #endif
-    "MIT-MAGIC-COOKIE-1",
+    AUTH_PROTO_MIT_MAGIC_COOKIE,
+};
+
+static int authnameslen[N_AUTH_PROTOS] = {
+#ifdef HASXDMAUTH
+    sizeof(AUTH_PROTO_XDM_AUTHORIZATION) - 1,
+#endif
+    sizeof(AUTH_PROTO_MIT_MAGIC_COOKIE) - 1,
 };
 
 static size_t memdup(char **dst, void *src, size_t len)
@@ -68,9 +78,9 @@ static size_t memdup(char **dst, void *src, size_t len)
     return len;
 }
 
-static int authname_match(enum auth_protos kind, char *name, int namelen)
+static int authname_match(enum auth_protos kind, char *name, size_t namelen)
 {
-    if(strlen(authnames[kind]) != namelen)
+    if(authnameslen[kind] != namelen)
 	return 0;
     if(memcmp(authnames[kind], name, namelen))
 	return 0;
@@ -87,12 +97,12 @@ static Xauth *get_authptr(struct sockaddr *sockname, unsigned int socknamelen,
     unsigned short family;
     char hostnamebuf[256];   /* big enough for max hostname */
     char dispbuf[40];   /* big enough to hold more than 2^64 base 10 */
-    int authnamelens[N_AUTH_PROTOS];
-    int i;
+    int dispbuflen;
 
     family = FamilyLocal; /* 256 */
     switch(sockname->sa_family)
     {
+#ifdef AF_INET6
     case AF_INET6:
         addr = (char *) SIN6_ADDR(sockname);
         addrlen = sizeof(*SIN6_ADDR(sockname));
@@ -104,6 +114,7 @@ static Xauth *get_authptr(struct sockaddr *sockname, unsigned int socknamelen,
         }
         addr += 12;
         /* if v4-mapped, fall through. */
+#endif
     case AF_INET:
         if(!addr)
             addr = (char *) &((struct sockaddr_in *)sockname)->sin_addr;
@@ -117,7 +128,11 @@ static Xauth *get_authptr(struct sockaddr *sockname, unsigned int socknamelen,
         return 0;   /* cannot authenticate this family */
     }
 
-    snprintf(dispbuf, sizeof(dispbuf), "%d", display);
+    dispbuflen = snprintf(dispbuf, sizeof(dispbuf), "%d", display);
+    if(dispbuflen < 0)
+        return 0;
+    /* snprintf may have truncate our text */
+    dispbuflen = MIN(dispbuflen, sizeof(dispbuf) - 1);
 
     if (family == FamilyLocal) {
         if (gethostname(hostnamebuf, sizeof(hostnamebuf)) == -1)
@@ -126,12 +141,10 @@ static Xauth *get_authptr(struct sockaddr *sockname, unsigned int socknamelen,
         addrlen = strlen(addr);
     }
 
-    for (i = 0; i < N_AUTH_PROTOS; i++)
-	authnamelens[i] = strlen(authnames[i]);
     return XauGetBestAuthByAddr (family,
                                  (unsigned short) addrlen, addr,
-                                 (unsigned short) strlen(dispbuf), dispbuf,
-                                 N_AUTH_PROTOS, authnames, authnamelens);
+                                 (unsigned short) dispbuflen, dispbuf,
+                                 N_AUTH_PROTOS, authnames, authnameslen);
 }
 
 #ifdef HASXDMAUTH
@@ -179,12 +192,13 @@ static int compute_auth(xcb_auth_info_t *info, Xauth *authptr, struct sockaddr *
 	    APPEND(info->data, j, si->sin_port);
 	}
 	break;
+#ifdef AF_INET6
         case AF_INET6:
             /*block*/ {
             struct sockaddr_in6 *si6 = (struct sockaddr_in6 *) sockname;
             if(IN6_IS_ADDR_V4MAPPED(SIN6_ADDR(sockname)))
             {
-                APPEND(info->data, j, si6->sin6_addr.s6_addr[12]);
+                do_append(info->data, &j, &si6->sin6_addr.s6_addr[12], 4);
                 APPEND(info->data, j, si6->sin6_port);
             }
             else
@@ -199,6 +213,7 @@ static int compute_auth(xcb_auth_info_t *info, Xauth *authptr, struct sockaddr *
             }
         }
         break;
+#endif
         case AF_UNIX:
             /*block*/ {
 	    uint32_t fakeaddr = htonl(0xffffffff - next_nonce());
@@ -235,25 +250,50 @@ int _xcb_get_auth_info(int fd, xcb_auth_info_t *info, int display)
     char sockbuf[sizeof(struct sockaddr) + MAXPATHLEN];
     unsigned int socknamelen = sizeof(sockbuf);   /* need extra space */
     struct sockaddr *sockname = (struct sockaddr *) &sockbuf;
+    int gotsockname = 0;
     Xauth *authptr = 0;
     int ret = 1;
 
+    /* Some systems like hpux or Hurd do not expose peer names
+     * for UNIX Domain Sockets, but this is irrelevant,
+     * since compute_auth() ignores the peer name in this
+     * case anyway.*/
     if (getpeername(fd, sockname, &socknamelen) == -1)
-        return 0;  /* can only authenticate sockets */
+    {
+        if (sockname->sa_family != AF_UNIX)
+            return 0;   /* except for AF_UNIX, sockets should have peernames */
+        if (getsockname(fd, sockname, &socknamelen) == -1)
+            return 0;   /* can only authenticate sockets */
+        gotsockname = 1;
+    }
 
     authptr = get_authptr(sockname, socknamelen, display);
     if (authptr == 0)
         return 0;   /* cannot find good auth data */
 
     info->namelen = memdup(&info->name, authptr->name, authptr->name_length);
-    if(info->namelen)
-	ret = compute_auth(info, authptr, sockname);
+    if (!info->namelen)
+        goto no_auth;   /* out of memory */
+
+    if (!gotsockname && getsockname(fd, sockname, &socknamelen) == -1)
+    {
+        free(info->name);
+        goto no_auth;   /* can only authenticate sockets */
+    }
+
+    ret = compute_auth(info, authptr, sockname);
     if(!ret)
     {
-	free(info->name);
-	info->name = 0;
-	info->namelen = 0;
+        free(info->name);
+        goto no_auth;   /* cannot build auth record */
     }
+
     XauDisposeAuth(authptr);
     return ret;
+
+ no_auth:
+    info->name = 0;
+    info->namelen = 0;
+    XauDisposeAuth(authptr);
+    return 0;
 }
