@@ -1,5 +1,5 @@
 /*
- * This file generated automatically from bigreq.xml by c-client.xsl using XSLT.
+ * This file generated automatically from bigreq.xml by c_client.py.
  * Edit at your peril.
  */
 
@@ -13,6 +13,10 @@
 #define __BIGREQ_H
 
 #include "xcb.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define XCB_BIGREQUESTS_MAJOR_VERSION 0
 #define XCB_BIGREQUESTS_MINOR_VERSION 0
@@ -105,6 +109,8 @@ xcb_big_requests_enable_unchecked (xcb_connection_t *c  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_big_requests_enable_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -123,6 +129,10 @@ xcb_big_requests_enable_reply (xcb_connection_t                  *c  /**< */,
                                xcb_big_requests_enable_cookie_t   cookie  /**< */,
                                xcb_generic_error_t              **e  /**< */);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

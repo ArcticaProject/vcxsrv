@@ -1,5 +1,5 @@
 /*
- * This file generated automatically from xc_misc.xml by c-client.xsl using XSLT.
+ * This file generated automatically from xc_misc.xml by c_client.py.
  * Edit at your peril.
  */
 
@@ -13,6 +13,10 @@
 #define __XC_MISC_H
 
 #include "xcb.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define XCB_XCMISC_MAJOR_VERSION 1
 #define XCB_XCMISC_MINOR_VERSION 1
@@ -179,6 +183,8 @@ xcb_xc_misc_get_version_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_xc_misc_get_version_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -253,6 +259,8 @@ xcb_xc_misc_get_xid_range_unchecked (xcb_connection_t *c  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_xc_misc_get_xid_range_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -370,6 +378,8 @@ xcb_xc_misc_get_xid_list_ids_end (const xcb_xc_misc_get_xid_list_reply_t *R  /**
  * The parameter @p e supplied to this function must be NULL if
  * xcb_xc_misc_get_xid_list_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -388,6 +398,10 @@ xcb_xc_misc_get_xid_list_reply (xcb_connection_t                   *c  /**< */,
                                 xcb_xc_misc_get_xid_list_cookie_t   cookie  /**< */,
                                 xcb_generic_error_t               **e  /**< */);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

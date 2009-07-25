@@ -1,5 +1,5 @@
 /*
- * This file generated automatically from xproto.xml by c-client.xsl using XSLT.
+ * This file generated automatically from xproto.xml by c_client.py.
  * Edit at your peril.
  */
 
@@ -13,6 +13,10 @@
 #define __XPROTO_H
 
 #include "xcb.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @brief xcb_char2b_t
@@ -312,6 +316,41 @@ typedef struct xcb_depth_iterator_t {
     int          index; /**<  */
 } xcb_depth_iterator_t;
 
+typedef enum xcb_event_mask_t {
+    XCB_EVENT_MASK_NO_EVENT = 0,
+    XCB_EVENT_MASK_KEY_PRESS = 1,
+    XCB_EVENT_MASK_KEY_RELEASE = 2,
+    XCB_EVENT_MASK_BUTTON_PRESS = 4,
+    XCB_EVENT_MASK_BUTTON_RELEASE = 8,
+    XCB_EVENT_MASK_ENTER_WINDOW = 16,
+    XCB_EVENT_MASK_LEAVE_WINDOW = 32,
+    XCB_EVENT_MASK_POINTER_MOTION = 64,
+    XCB_EVENT_MASK_POINTER_MOTION_HINT = 128,
+    XCB_EVENT_MASK_BUTTON_1_MOTION = 256,
+    XCB_EVENT_MASK_BUTTON_2_MOTION = 512,
+    XCB_EVENT_MASK_BUTTON_3_MOTION = 1024,
+    XCB_EVENT_MASK_BUTTON_4_MOTION = 2048,
+    XCB_EVENT_MASK_BUTTON_5_MOTION = 4096,
+    XCB_EVENT_MASK_BUTTON_MOTION = 8192,
+    XCB_EVENT_MASK_KEYMAP_STATE = 16384,
+    XCB_EVENT_MASK_EXPOSURE = 32768,
+    XCB_EVENT_MASK_VISIBILITY_CHANGE = 65536,
+    XCB_EVENT_MASK_STRUCTURE_NOTIFY = 131072,
+    XCB_EVENT_MASK_RESIZE_REDIRECT = 262144,
+    XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY = 524288,
+    XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT = 1048576,
+    XCB_EVENT_MASK_FOCUS_CHANGE = 2097152,
+    XCB_EVENT_MASK_PROPERTY_CHANGE = 4194304,
+    XCB_EVENT_MASK_COLOR_MAP_CHANGE = 8388608,
+    XCB_EVENT_MASK_OWNER_GRAB_BUTTON = 16777216
+} xcb_event_mask_t;
+
+typedef enum xcb_backing_store_t {
+    XCB_BACKING_STORE_NOT_USEFUL = 0,
+    XCB_BACKING_STORE_WHEN_MAPPED = 1,
+    XCB_BACKING_STORE_ALWAYS = 2
+} xcb_backing_store_t;
+
 /**
  * @brief xcb_screen_t
  **/
@@ -353,6 +392,7 @@ typedef struct xcb_setup_request_t {
     uint16_t protocol_minor_version; /**<  */
     uint16_t authorization_protocol_name_len; /**<  */
     uint16_t authorization_protocol_data_len; /**<  */
+    uint8_t  pad1[2]; /**<  */
 } xcb_setup_request_t;
 
 /**
@@ -443,15 +483,36 @@ typedef struct xcb_setup_iterator_t {
 } xcb_setup_iterator_t;
 
 typedef enum xcb_mod_mask_t {
-    XCB_MOD_MASK_SHIFT = (1 << 0),
-    XCB_MOD_MASK_LOCK = (1 << 1),
-    XCB_MOD_MASK_CONTROL = (1 << 2),
-    XCB_MOD_MASK_1 = (1 << 3),
-    XCB_MOD_MASK_2 = (1 << 4),
-    XCB_MOD_MASK_3 = (1 << 5),
-    XCB_MOD_MASK_4 = (1 << 6),
-    XCB_MOD_MASK_5 = (1 << 7)
+    XCB_MOD_MASK_SHIFT = 1,
+    XCB_MOD_MASK_LOCK = 2,
+    XCB_MOD_MASK_CONTROL = 4,
+    XCB_MOD_MASK_1 = 8,
+    XCB_MOD_MASK_2 = 16,
+    XCB_MOD_MASK_3 = 32,
+    XCB_MOD_MASK_4 = 64,
+    XCB_MOD_MASK_5 = 128,
+    XCB_MOD_MASK_ANY = 32768
 } xcb_mod_mask_t;
+
+typedef enum xcb_key_but_mask_t {
+    XCB_KEY_BUT_MASK_SHIFT = 1,
+    XCB_KEY_BUT_MASK_LOCK = 2,
+    XCB_KEY_BUT_MASK_CONTROL = 4,
+    XCB_KEY_BUT_MASK_MOD_1 = 8,
+    XCB_KEY_BUT_MASK_MOD_2 = 16,
+    XCB_KEY_BUT_MASK_MOD_3 = 32,
+    XCB_KEY_BUT_MASK_MOD_4 = 64,
+    XCB_KEY_BUT_MASK_MOD_5 = 128,
+    XCB_KEY_BUT_MASK_BUTTON_1 = 256,
+    XCB_KEY_BUT_MASK_BUTTON_2 = 512,
+    XCB_KEY_BUT_MASK_BUTTON_3 = 1024,
+    XCB_KEY_BUT_MASK_BUTTON_4 = 2048,
+    XCB_KEY_BUT_MASK_BUTTON_5 = 4096
+} xcb_key_but_mask_t;
+
+typedef enum xcb_window_enum_t {
+    XCB_WINDOW_NONE = 0
+} xcb_window_enum_t;
 
 /** Opcode for xcb_key_press. */
 #define XCB_KEY_PRESS 2
@@ -473,6 +534,7 @@ typedef struct xcb_key_press_event_t {
     int16_t         event_y; /**<  */
     uint16_t        state; /**<  */
     uint8_t         same_screen; /**<  */
+    uint8_t         pad0; /**<  */
 } xcb_key_press_event_t;
 
 /** Opcode for xcb_key_release. */
@@ -481,12 +543,12 @@ typedef struct xcb_key_press_event_t {
 typedef xcb_key_press_event_t xcb_key_release_event_t;
 
 typedef enum xcb_button_mask_t {
-    XCB_BUTTON_MASK_1 = (1 << 8),
-    XCB_BUTTON_MASK_2 = (1 << 9),
-    XCB_BUTTON_MASK_3 = (1 << 10),
-    XCB_BUTTON_MASK_4 = (1 << 11),
-    XCB_BUTTON_MASK_5 = (1 << 12),
-    XCB_BUTTON_MASK_ANY = (1 << 15)
+    XCB_BUTTON_MASK_1 = 256,
+    XCB_BUTTON_MASK_2 = 512,
+    XCB_BUTTON_MASK_3 = 1024,
+    XCB_BUTTON_MASK_4 = 2048,
+    XCB_BUTTON_MASK_5 = 4096,
+    XCB_BUTTON_MASK_ANY = 32768
 } xcb_button_mask_t;
 
 /** Opcode for xcb_button_press. */
@@ -509,6 +571,7 @@ typedef struct xcb_button_press_event_t {
     int16_t         event_y; /**<  */
     uint16_t        state; /**<  */
     uint8_t         same_screen; /**<  */
+    uint8_t         pad0; /**<  */
 } xcb_button_press_event_t;
 
 /** Opcode for xcb_button_release. */
@@ -541,6 +604,7 @@ typedef struct xcb_motion_notify_event_t {
     int16_t         event_y; /**<  */
     uint16_t        state; /**<  */
     uint8_t         same_screen; /**<  */
+    uint8_t         pad0; /**<  */
 } xcb_motion_notify_event_t;
 
 typedef enum xcb_notify_detail_t {
@@ -601,6 +665,7 @@ typedef struct xcb_focus_in_event_t {
     uint16_t     sequence; /**<  */
     xcb_window_t event; /**<  */
     uint8_t      mode; /**<  */
+    uint8_t      pad0[3]; /**<  */
 } xcb_focus_in_event_t;
 
 /** Opcode for xcb_focus_out. */
@@ -635,6 +700,7 @@ typedef struct xcb_expose_event_t {
     uint16_t     width; /**<  */
     uint16_t     height; /**<  */
     uint16_t     count; /**<  */
+    uint8_t      pad1[2]; /**<  */
 } xcb_expose_event_t;
 
 /** Opcode for xcb_graphics_exposure. */
@@ -655,6 +721,7 @@ typedef struct xcb_graphics_exposure_event_t {
     uint16_t       minor_opcode; /**<  */
     uint16_t       count; /**<  */
     uint8_t        major_opcode; /**<  */
+    uint8_t        pad1[3]; /**<  */
 } xcb_graphics_exposure_event_t;
 
 /** Opcode for xcb_no_exposure. */
@@ -670,6 +737,7 @@ typedef struct xcb_no_exposure_event_t {
     xcb_drawable_t drawable; /**<  */
     uint16_t       minor_opcode; /**<  */
     uint8_t        major_opcode; /**<  */
+    uint8_t        pad1; /**<  */
 } xcb_no_exposure_event_t;
 
 typedef enum xcb_visibility_t {
@@ -690,6 +758,7 @@ typedef struct xcb_visibility_notify_event_t {
     uint16_t     sequence; /**<  */
     xcb_window_t window; /**<  */
     uint8_t      state; /**<  */
+    uint8_t      pad1[3]; /**<  */
 } xcb_visibility_notify_event_t;
 
 /** Opcode for xcb_create_notify. */
@@ -710,6 +779,7 @@ typedef struct xcb_create_notify_event_t {
     uint16_t     height; /**<  */
     uint16_t     border_width; /**<  */
     uint8_t      override_redirect; /**<  */
+    uint8_t      pad1; /**<  */
 } xcb_create_notify_event_t;
 
 /** Opcode for xcb_destroy_notify. */
@@ -739,6 +809,7 @@ typedef struct xcb_unmap_notify_event_t {
     xcb_window_t event; /**<  */
     xcb_window_t window; /**<  */
     uint8_t      from_configure; /**<  */
+    uint8_t      pad1[3]; /**<  */
 } xcb_unmap_notify_event_t;
 
 /** Opcode for xcb_map_notify. */
@@ -754,6 +825,7 @@ typedef struct xcb_map_notify_event_t {
     xcb_window_t event; /**<  */
     xcb_window_t window; /**<  */
     uint8_t      override_redirect; /**<  */
+    uint8_t      pad1[3]; /**<  */
 } xcb_map_notify_event_t;
 
 /** Opcode for xcb_map_request. */
@@ -786,6 +858,7 @@ typedef struct xcb_reparent_notify_event_t {
     int16_t      x; /**<  */
     int16_t      y; /**<  */
     uint8_t      override_redirect; /**<  */
+    uint8_t      pad1[3]; /**<  */
 } xcb_reparent_notify_event_t;
 
 /** Opcode for xcb_configure_notify. */
@@ -807,6 +880,7 @@ typedef struct xcb_configure_notify_event_t {
     uint16_t     height; /**<  */
     uint16_t     border_width; /**<  */
     uint8_t      override_redirect; /**<  */
+    uint8_t      pad1; /**<  */
 } xcb_configure_notify_event_t;
 
 /** Opcode for xcb_configure_request. */
@@ -880,6 +954,7 @@ typedef struct xcb_circulate_notify_event_t {
     xcb_window_t window; /**<  */
     uint8_t      pad1[4]; /**<  */
     uint8_t      place; /**<  */
+    uint8_t      pad2[3]; /**<  */
 } xcb_circulate_notify_event_t;
 
 /** Opcode for xcb_circulate_request. */
@@ -906,6 +981,7 @@ typedef struct xcb_property_notify_event_t {
     xcb_atom_t      atom; /**<  */
     xcb_timestamp_t time; /**<  */
     uint8_t         state; /**<  */
+    uint8_t         pad1[3]; /**<  */
 } xcb_property_notify_event_t;
 
 /** Opcode for xcb_selection_clear. */
@@ -922,6 +998,14 @@ typedef struct xcb_selection_clear_event_t {
     xcb_window_t    owner; /**<  */
     xcb_atom_t      selection; /**<  */
 } xcb_selection_clear_event_t;
+
+typedef enum xcb_time_t {
+    XCB_TIME_CURRENT_TIME = 0
+} xcb_time_t;
+
+typedef enum xcb_atom_enum_t {
+    XCB_ATOM_NONE = 0
+} xcb_atom_enum_t;
 
 /** Opcode for xcb_selection_request. */
 #define XCB_SELECTION_REQUEST 30
@@ -963,6 +1047,10 @@ typedef enum xcb_colormap_state_t {
     XCB_COLORMAP_STATE_INSTALLED = 1
 } xcb_colormap_state_t;
 
+typedef enum xcb_colormap_enum_t {
+    XCB_COLORMAP_NONE = 0
+} xcb_colormap_enum_t;
+
 /** Opcode for xcb_colormap_notify. */
 #define XCB_COLORMAP_NOTIFY 32
 
@@ -977,13 +1065,14 @@ typedef struct xcb_colormap_notify_event_t {
     xcb_colormap_t colormap; /**<  */
     uint8_t        _new; /**<  */
     uint8_t        state; /**<  */
+    uint8_t        pad1[2]; /**<  */
 } xcb_colormap_notify_event_t;
 
 /**
  * @brief xcb_client_message_data_t
  **/
 typedef union xcb_client_message_data_t {
-    uint8_t data8[20]; /**<  */
+    uint8_t  data8[20]; /**<  */
     uint16_t data16[10]; /**<  */
     uint32_t data32[5]; /**<  */
 } xcb_client_message_data_t;
@@ -1031,6 +1120,7 @@ typedef struct xcb_mapping_notify_event_t {
     uint8_t       request; /**<  */
     xcb_keycode_t first_keycode; /**<  */
     uint8_t       count; /**<  */
+    uint8_t       pad1; /**<  */
 } xcb_mapping_notify_event_t;
 
 /** Opcode for xcb_request. */
@@ -1046,6 +1136,7 @@ typedef struct xcb_request_error_t {
     uint32_t bad_value; /**<  */
     uint16_t minor_opcode; /**<  */
     uint8_t  major_opcode; /**<  */
+    uint8_t  pad0; /**<  */
 } xcb_request_error_t;
 
 /** Opcode for xcb_value. */
@@ -1061,6 +1152,7 @@ typedef struct xcb_value_error_t {
     uint32_t bad_value; /**<  */
     uint16_t minor_opcode; /**<  */
     uint8_t  major_opcode; /**<  */
+    uint8_t  pad0; /**<  */
 } xcb_value_error_t;
 
 /** Opcode for xcb_window. */
@@ -1145,21 +1237,21 @@ typedef enum xcb_window_class_t {
 } xcb_window_class_t;
 
 typedef enum xcb_cw_t {
-    XCB_CW_BACK_PIXMAP = (1 << 0),
-    XCB_CW_BACK_PIXEL = (1 << 1),
-    XCB_CW_BORDER_PIXMAP = (1 << 2),
-    XCB_CW_BORDER_PIXEL = (1 << 3),
-    XCB_CW_BIT_GRAVITY = (1 << 4),
-    XCB_CW_WIN_GRAVITY = (1 << 5),
-    XCB_CW_BACKING_STORE = (1 << 6),
-    XCB_CW_BACKING_PLANES = (1 << 7),
-    XCB_CW_BACKING_PIXEL = (1 << 8),
-    XCB_CW_OVERRIDE_REDIRECT = (1 << 9),
-    XCB_CW_SAVE_UNDER = (1 << 10),
-    XCB_CW_EVENT_MASK = (1 << 11),
-    XCB_CW_DONT_PROPAGATE = (1 << 12),
-    XCB_CW_COLORMAP = (1 << 13),
-    XCB_CW_CURSOR = (1 << 14)
+    XCB_CW_BACK_PIXMAP = 1,
+    XCB_CW_BACK_PIXEL = 2,
+    XCB_CW_BORDER_PIXMAP = 4,
+    XCB_CW_BORDER_PIXEL = 8,
+    XCB_CW_BIT_GRAVITY = 16,
+    XCB_CW_WIN_GRAVITY = 32,
+    XCB_CW_BACKING_STORE = 64,
+    XCB_CW_BACKING_PLANES = 128,
+    XCB_CW_BACKING_PIXEL = 256,
+    XCB_CW_OVERRIDE_REDIRECT = 512,
+    XCB_CW_SAVE_UNDER = 1024,
+    XCB_CW_EVENT_MASK = 2048,
+    XCB_CW_DONT_PROPAGATE = 4096,
+    XCB_CW_COLORMAP = 8192,
+    XCB_CW_CURSOR = 16384
 } xcb_cw_t;
 
 typedef enum xcb_back_pixmap_t {
@@ -1181,41 +1273,6 @@ typedef enum xcb_gravity_t {
     XCB_GRAVITY_SOUTH_EAST = 9,
     XCB_GRAVITY_STATIC = 10
 } xcb_gravity_t;
-
-typedef enum xcb_backing_store_t {
-    XCB_BACKING_STORE_NOT_USEFUL = 0,
-    XCB_BACKING_STORE_WHEN_MAPPED = 1,
-    XCB_BACKING_STORE_ALWAYS = 2
-} xcb_backing_store_t;
-
-typedef enum xcb_event_mask_t {
-    XCB_EVENT_MASK_NO_EVENT = 0,
-    XCB_EVENT_MASK_KEY_PRESS = (1 << 0),
-    XCB_EVENT_MASK_KEY_RELEASE = (1 << 1),
-    XCB_EVENT_MASK_BUTTON_PRESS = (1 << 2),
-    XCB_EVENT_MASK_BUTTON_RELEASE = (1 << 3),
-    XCB_EVENT_MASK_ENTER_WINDOW = (1 << 4),
-    XCB_EVENT_MASK_LEAVE_WINDOW = (1 << 5),
-    XCB_EVENT_MASK_POINTER_MOTION = (1 << 6),
-    XCB_EVENT_MASK_POINTER_MOTION_HINT = (1 << 7),
-    XCB_EVENT_MASK_BUTTON_1_MOTION = (1 << 8),
-    XCB_EVENT_MASK_BUTTON_2_MOTION = (1 << 9),
-    XCB_EVENT_MASK_BUTTON_3_MOTION = (1 << 10),
-    XCB_EVENT_MASK_BUTTON_4_MOTION = (1 << 11),
-    XCB_EVENT_MASK_BUTTON_5_MOTION = (1 << 12),
-    XCB_EVENT_MASK_BUTTON_MOTION = (1 << 13),
-    XCB_EVENT_MASK_KEYMAP_STATE = (1 << 14),
-    XCB_EVENT_MASK_EXPOSURE = (1 << 15),
-    XCB_EVENT_MASK_VISIBILITY_CHANGE = (1 << 16),
-    XCB_EVENT_MASK_STRUCTURE_NOTIFY = (1 << 17),
-    XCB_EVENT_MASK_RESIZE_REDIRECT = (1 << 18),
-    XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY = (1 << 19),
-    XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT = (1 << 20),
-    XCB_EVENT_MASK_FOCUS_CHANGE = (1 << 21),
-    XCB_EVENT_MASK_PROPERTY_CHANGE = (1 << 22),
-    XCB_EVENT_MASK_COLOR_MAP_CHANGE = (1 << 23),
-    XCB_EVENT_MASK_OWNER_GRAB_BUTTON = (1 << 24)
-} xcb_event_mask_t;
 
 /** Opcode for xcb_create_window. */
 #define XCB_CREATE_WINDOW 1
@@ -1301,6 +1358,7 @@ typedef struct xcb_get_window_attributes_reply_t {
     uint32_t       all_event_masks; /**<  */
     uint32_t       your_event_mask; /**<  */
     uint16_t       do_not_propagate_mask; /**<  */
+    uint8_t        pad0[2]; /**<  */
 } xcb_get_window_attributes_reply_t;
 
 /** Opcode for xcb_destroy_window. */
@@ -1416,13 +1474,13 @@ typedef struct xcb_unmap_subwindows_request_t {
 } xcb_unmap_subwindows_request_t;
 
 typedef enum xcb_config_window_t {
-    XCB_CONFIG_WINDOW_X = (1 << 0),
-    XCB_CONFIG_WINDOW_Y = (1 << 1),
-    XCB_CONFIG_WINDOW_WIDTH = (1 << 2),
-    XCB_CONFIG_WINDOW_HEIGHT = (1 << 3),
-    XCB_CONFIG_WINDOW_BORDER_WIDTH = (1 << 4),
-    XCB_CONFIG_WINDOW_SIBLING = (1 << 5),
-    XCB_CONFIG_WINDOW_STACK_MODE = (1 << 6)
+    XCB_CONFIG_WINDOW_X = 1,
+    XCB_CONFIG_WINDOW_Y = 2,
+    XCB_CONFIG_WINDOW_WIDTH = 4,
+    XCB_CONFIG_WINDOW_HEIGHT = 8,
+    XCB_CONFIG_WINDOW_BORDER_WIDTH = 16,
+    XCB_CONFIG_WINDOW_SIBLING = 32,
+    XCB_CONFIG_WINDOW_STACK_MODE = 64
 } xcb_config_window_t;
 
 typedef enum xcb_stack_mode_t {
@@ -1445,6 +1503,7 @@ typedef struct xcb_configure_window_request_t {
     uint16_t     length; /**<  */
     xcb_window_t window; /**<  */
     uint16_t     value_mask; /**<  */
+    uint8_t      pad1[2]; /**<  */
 } xcb_configure_window_request_t;
 
 typedef enum xcb_circulate_t {
@@ -1499,6 +1558,7 @@ typedef struct xcb_get_geometry_reply_t {
     uint16_t     width; /**<  */
     uint16_t     height; /**<  */
     uint16_t     border_width; /**<  */
+    uint8_t      pad0[2]; /**<  */
 } xcb_get_geometry_reply_t;
 
 /**
@@ -1791,6 +1851,7 @@ typedef struct xcb_send_event_request_t {
     uint16_t     length; /**<  */
     xcb_window_t destination; /**<  */
     uint32_t     event_mask; /**<  */
+    char         event[32]; /**<  */
 } xcb_send_event_request_t;
 
 typedef enum xcb_grab_mode_t {
@@ -1805,6 +1866,10 @@ typedef enum xcb_grab_status_t {
     XCB_GRAB_STATUS_NOT_VIEWABLE = 3,
     XCB_GRAB_STATUS_FROZEN = 4
 } xcb_grab_status_t;
+
+typedef enum xcb_cursor_enum_t {
+    XCB_CURSOR_NONE = 0
+} xcb_cursor_enum_t;
 
 /**
  * @brief xcb_grab_pointer_cookie_t
@@ -1913,6 +1978,7 @@ typedef struct xcb_change_active_pointer_grab_request_t {
     xcb_cursor_t    cursor; /**<  */
     xcb_timestamp_t time; /**<  */
     uint16_t        event_mask; /**<  */
+    uint8_t         pad1[2]; /**<  */
 } xcb_change_active_pointer_grab_request_t;
 
 /**
@@ -1936,6 +2002,7 @@ typedef struct xcb_grab_keyboard_request_t {
     xcb_timestamp_t time; /**<  */
     uint8_t         pointer_mode; /**<  */
     uint8_t         keyboard_mode; /**<  */
+    uint8_t         pad0[2]; /**<  */
 } xcb_grab_keyboard_request_t;
 
 /**
@@ -1980,6 +2047,7 @@ typedef struct xcb_grab_key_request_t {
     xcb_keycode_t key; /**<  */
     uint8_t       pointer_mode; /**<  */
     uint8_t       keyboard_mode; /**<  */
+    uint8_t       pad0[3]; /**<  */
 } xcb_grab_key_request_t;
 
 /** Opcode for xcb_ungrab_key. */
@@ -1994,6 +2062,7 @@ typedef struct xcb_ungrab_key_request_t {
     uint16_t      length; /**<  */
     xcb_window_t  grab_window; /**<  */
     uint16_t      modifiers; /**<  */
+    uint8_t       pad0[2]; /**<  */
 } xcb_ungrab_key_request_t;
 
 typedef enum xcb_allow_t {
@@ -2079,6 +2148,7 @@ typedef struct xcb_query_pointer_reply_t {
     int16_t      win_x; /**<  */
     int16_t      win_y; /**<  */
     uint16_t     mask; /**<  */
+    uint8_t      pad0[2]; /**<  */
 } xcb_query_pointer_reply_t;
 
 /**
@@ -2192,7 +2262,8 @@ typedef struct xcb_warp_pointer_request_t {
 typedef enum xcb_input_focus_t {
     XCB_INPUT_FOCUS_NONE = 0,
     XCB_INPUT_FOCUS_POINTER_ROOT = 1,
-    XCB_INPUT_FOCUS_PARENT = 2
+    XCB_INPUT_FOCUS_PARENT = 2,
+    XCB_INPUT_FOCUS_FOLLOW_KEYBOARD = 3
 } xcb_input_focus_t;
 
 /** Opcode for xcb_set_input_focus. */
@@ -2281,6 +2352,7 @@ typedef struct xcb_open_font_request_t {
     uint16_t   length; /**<  */
     xcb_font_t fid; /**<  */
     uint16_t   name_len; /**<  */
+    uint8_t    pad1[2]; /**<  */
 } xcb_open_font_request_t;
 
 /** Opcode for xcb_close_font. */
@@ -2590,48 +2662,48 @@ typedef struct xcb_free_pixmap_request_t {
 } xcb_free_pixmap_request_t;
 
 typedef enum xcb_gc_t {
-    XCB_GC_FUNCTION = (1 << 0),
-    XCB_GC_PLANE_MASK = (1 << 1),
-    XCB_GC_FOREGROUND = (1 << 2),
-    XCB_GC_BACKGROUND = (1 << 3),
-    XCB_GC_LINE_WIDTH = (1 << 4),
-    XCB_GC_LINE_STYLE = (1 << 5),
-    XCB_GC_CAP_STYLE = (1 << 6),
-    XCB_GC_JOIN_STYLE = (1 << 7),
-    XCB_GC_FILL_STYLE = (1 << 8),
-    XCB_GC_FILL_RULE = (1 << 9),
-    XCB_GC_TILE = (1 << 10),
-    XCB_GC_STIPPLE = (1 << 11),
-    XCB_GC_TILE_STIPPLE_ORIGIN_X = (1 << 12),
-    XCB_GC_TILE_STIPPLE_ORIGIN_Y = (1 << 13),
-    XCB_GC_FONT = (1 << 14),
-    XCB_GC_SUBWINDOW_MODE = (1 << 15),
-    XCB_GC_GRAPHICS_EXPOSURES = (1 << 16),
-    XCB_GC_CLIP_ORIGIN_X = (1 << 17),
-    XCB_GC_CLIP_ORIGIN_Y = (1 << 18),
-    XCB_GC_CLIP_MASK = (1 << 19),
-    XCB_GC_DASH_OFFSET = (1 << 20),
-    XCB_GC_DASH_LIST = (1 << 21),
-    XCB_GC_ARC_MODE = (1 << 22)
+    XCB_GC_FUNCTION = 1,
+    XCB_GC_PLANE_MASK = 2,
+    XCB_GC_FOREGROUND = 4,
+    XCB_GC_BACKGROUND = 8,
+    XCB_GC_LINE_WIDTH = 16,
+    XCB_GC_LINE_STYLE = 32,
+    XCB_GC_CAP_STYLE = 64,
+    XCB_GC_JOIN_STYLE = 128,
+    XCB_GC_FILL_STYLE = 256,
+    XCB_GC_FILL_RULE = 512,
+    XCB_GC_TILE = 1024,
+    XCB_GC_STIPPLE = 2048,
+    XCB_GC_TILE_STIPPLE_ORIGIN_X = 4096,
+    XCB_GC_TILE_STIPPLE_ORIGIN_Y = 8192,
+    XCB_GC_FONT = 16384,
+    XCB_GC_SUBWINDOW_MODE = 32768,
+    XCB_GC_GRAPHICS_EXPOSURES = 65536,
+    XCB_GC_CLIP_ORIGIN_X = 131072,
+    XCB_GC_CLIP_ORIGIN_Y = 262144,
+    XCB_GC_CLIP_MASK = 524288,
+    XCB_GC_DASH_OFFSET = 1048576,
+    XCB_GC_DASH_LIST = 2097152,
+    XCB_GC_ARC_MODE = 4194304
 } xcb_gc_t;
 
 typedef enum xcb_gx_t {
-    XCB_GX_CLEAR = 0x0,
-    XCB_GX_AND = 0x1,
-    XCB_GX_AND_REVERSE = 0x2,
-    XCB_GX_COPY = 0x3,
-    XCB_GX_AND_INVERTED = 0x4,
-    XCB_GX_NOOP = 0x5,
-    XCB_GX_XOR = 0x6,
-    XCB_GX_OR = 0x7,
-    XCB_GX_NOR = 0x8,
-    XCB_GX_EQUIV = 0x9,
-    XCB_GX_INVERT = 0xa,
-    XCB_GX_OR_REVERSE = 0xb,
-    XCB_GX_COPY_INVERTED = 0xc,
-    XCB_GX_OR_INVERTED = 0xd,
-    XCB_GX_NAND = 0xe,
-    XCB_GX_SET = 0xf
+    XCB_GX_CLEAR = 0,
+    XCB_GX_AND = 1,
+    XCB_GX_AND_REVERSE = 2,
+    XCB_GX_COPY = 3,
+    XCB_GX_AND_INVERTED = 4,
+    XCB_GX_NOOP = 5,
+    XCB_GX_XOR = 6,
+    XCB_GX_OR = 7,
+    XCB_GX_NOR = 8,
+    XCB_GX_EQUIV = 9,
+    XCB_GX_INVERT = 10,
+    XCB_GX_OR_REVERSE = 11,
+    XCB_GX_COPY_INVERTED = 12,
+    XCB_GX_OR_INVERTED = 13,
+    XCB_GX_NAND = 14,
+    XCB_GX_SET = 15
 } xcb_gx_t;
 
 typedef enum xcb_line_style_t {
@@ -2648,7 +2720,7 @@ typedef enum xcb_cap_style_t {
 } xcb_cap_style_t;
 
 typedef enum xcb_join_style_t {
-    XCB_JOIN_STYLE_MITRE = 0,
+    XCB_JOIN_STYLE_MITER = 0,
     XCB_JOIN_STYLE_ROUND = 1,
     XCB_JOIN_STYLE_BEVEL = 2
 } xcb_join_style_t;
@@ -2943,6 +3015,7 @@ typedef struct xcb_fill_poly_request_t {
     xcb_gcontext_t gc; /**<  */
     uint8_t        shape; /**<  */
     uint8_t        coordinate_mode; /**<  */
+    uint8_t        pad1[2]; /**<  */
 } xcb_fill_poly_request_t;
 
 /** Opcode for xcb_poly_fill_rectangle. */
@@ -2997,6 +3070,7 @@ typedef struct xcb_put_image_request_t {
     int16_t        dst_y; /**<  */
     uint8_t        left_pad; /**<  */
     uint8_t        depth; /**<  */
+    uint8_t        pad0[2]; /**<  */
 } xcb_put_image_request_t;
 
 /**
@@ -3226,6 +3300,7 @@ typedef struct xcb_alloc_color_request_t {
     uint16_t       red; /**<  */
     uint16_t       green; /**<  */
     uint16_t       blue; /**<  */
+    uint8_t        pad1[2]; /**<  */
 } xcb_alloc_color_request_t;
 
 /**
@@ -3262,6 +3337,7 @@ typedef struct xcb_alloc_named_color_request_t {
     uint16_t       length; /**<  */
     xcb_colormap_t cmap; /**<  */
     uint16_t       name_len; /**<  */
+    uint8_t        pad1[2]; /**<  */
 } xcb_alloc_named_color_request_t;
 
 /**
@@ -3371,9 +3447,9 @@ typedef struct xcb_free_colors_request_t {
 } xcb_free_colors_request_t;
 
 typedef enum xcb_color_flag_t {
-    XCB_COLOR_FLAG_RED = (1 << 0),
-    XCB_COLOR_FLAG_GREEN = (1 << 1),
-    XCB_COLOR_FLAG_BLUE = (1 << 2)
+    XCB_COLOR_FLAG_RED = 1,
+    XCB_COLOR_FLAG_GREEN = 2,
+    XCB_COLOR_FLAG_BLUE = 4
 } xcb_color_flag_t;
 
 /**
@@ -3423,6 +3499,7 @@ typedef struct xcb_store_named_color_request_t {
     xcb_colormap_t cmap; /**<  */
     uint32_t       pixel; /**<  */
     uint16_t       name_len; /**<  */
+    uint8_t        pad0[2]; /**<  */
 } xcb_store_named_color_request_t;
 
 /**
@@ -3495,6 +3572,7 @@ typedef struct xcb_lookup_color_request_t {
     uint16_t       length; /**<  */
     xcb_colormap_t cmap; /**<  */
     uint16_t       name_len; /**<  */
+    uint8_t        pad1[2]; /**<  */
 } xcb_lookup_color_request_t;
 
 /**
@@ -3512,6 +3590,10 @@ typedef struct xcb_lookup_color_reply_t {
     uint16_t visual_green; /**<  */
     uint16_t visual_blue; /**<  */
 } xcb_lookup_color_reply_t;
+
+typedef enum xcb_pixmap_enum_t {
+    XCB_PIXMAP_NONE = 0
+} xcb_pixmap_enum_t;
 
 /** Opcode for xcb_create_cursor. */
 #define XCB_CREATE_CURSOR 93
@@ -3535,6 +3617,10 @@ typedef struct xcb_create_cursor_request_t {
     uint16_t     x; /**<  */
     uint16_t     y; /**<  */
 } xcb_create_cursor_request_t;
+
+typedef enum xcb_font_enum_t {
+    XCB_FONT_NONE = 0
+} xcb_font_enum_t;
 
 /** Opcode for xcb_create_glyph_cursor. */
 #define XCB_CREATE_GLYPH_CURSOR 94
@@ -3649,6 +3735,7 @@ typedef struct xcb_query_extension_request_t {
     uint8_t  pad0; /**<  */
     uint16_t length; /**<  */
     uint16_t name_len; /**<  */
+    uint8_t  pad1[2]; /**<  */
 } xcb_query_extension_request_t;
 
 /**
@@ -3742,14 +3829,14 @@ typedef struct xcb_get_keyboard_mapping_reply_t {
 } xcb_get_keyboard_mapping_reply_t;
 
 typedef enum xcb_kb_t {
-    XCB_KB_KEY_CLICK_PERCENT = (1 << 0),
-    XCB_KB_BELL_PERCENT = (1 << 1),
-    XCB_KB_BELL_PITCH = (1 << 2),
-    XCB_KB_BELL_DURATION = (1 << 3),
-    XCB_KB_LED = (1 << 4),
-    XCB_KB_LED_MODE = (1 << 5),
-    XCB_KB_KEY = (1 << 6),
-    XCB_KB_AUTO_REPEAT_MODE = (1 << 7)
+    XCB_KB_KEY_CLICK_PERCENT = 1,
+    XCB_KB_BELL_PERCENT = 2,
+    XCB_KB_BELL_PITCH = 4,
+    XCB_KB_BELL_DURATION = 8,
+    XCB_KB_LED = 16,
+    XCB_KB_LED_MODE = 32,
+    XCB_KB_KEY = 64,
+    XCB_KB_AUTO_REPEAT_MODE = 128
 } xcb_kb_t;
 
 typedef enum xcb_led_mode_t {
@@ -3871,6 +3958,7 @@ typedef struct xcb_get_pointer_control_reply_t {
     uint16_t acceleration_numerator; /**<  */
     uint16_t acceleration_denominator; /**<  */
     uint16_t threshold; /**<  */
+    uint8_t  pad1[18]; /**<  */
 } xcb_get_pointer_control_reply_t;
 
 typedef enum xcb_blanking_t {
@@ -3932,6 +4020,7 @@ typedef struct xcb_get_screen_saver_reply_t {
     uint16_t interval; /**<  */
     uint8_t  prefer_blanking; /**<  */
     uint8_t  allow_exposures; /**<  */
+    uint8_t  pad1[18]; /**<  */
 } xcb_get_screen_saver_reply_t;
 
 typedef enum xcb_host_mode_t {
@@ -4071,8 +4160,9 @@ typedef struct xcb_kill_client_request_t {
  **/
 typedef struct xcb_rotate_properties_request_t {
     uint8_t      major_opcode; /**<  */
-    xcb_window_t window; /**<  */
+    uint8_t      pad0; /**<  */
     uint16_t     length; /**<  */
+    xcb_window_t window; /**<  */
     uint16_t     atoms_len; /**<  */
     int16_t      delta; /**<  */
 } xcb_rotate_properties_request_t;
@@ -5937,6 +6027,8 @@ xcb_get_window_attributes_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_window_attributes_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -6533,6 +6625,8 @@ xcb_get_geometry_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_geometry_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -6629,15 +6723,15 @@ xcb_query_tree_children_length (const xcb_query_tree_reply_t *R  /**< */);
 
 /*****************************************************************************
  **
- ** xcb_window_iterator_t xcb_query_tree_children_iterator
+ ** xcb_generic_iterator_t xcb_query_tree_children_end
  ** 
  ** @param const xcb_query_tree_reply_t *R
- ** @returns xcb_window_iterator_t
+ ** @returns xcb_generic_iterator_t
  **
  *****************************************************************************/
  
-xcb_window_iterator_t
-xcb_query_tree_children_iterator (const xcb_query_tree_reply_t *R  /**< */);
+xcb_generic_iterator_t
+xcb_query_tree_children_end (const xcb_query_tree_reply_t *R  /**< */);
 
 /**
  * Return the reply
@@ -6650,6 +6744,8 @@ xcb_query_tree_children_iterator (const xcb_query_tree_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_tree_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -6736,6 +6832,8 @@ xcb_intern_atom_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_intern_atom_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -6806,14 +6904,14 @@ xcb_get_atom_name_unchecked (xcb_connection_t *c  /**< */,
 
 /*****************************************************************************
  **
- ** uint8_t * xcb_get_atom_name_name
+ ** char * xcb_get_atom_name_name
  ** 
  ** @param const xcb_get_atom_name_reply_t *R
- ** @returns uint8_t *
+ ** @returns char *
  **
  *****************************************************************************/
  
-uint8_t *
+char *
 xcb_get_atom_name_name (const xcb_get_atom_name_reply_t *R  /**< */);
 
 
@@ -6853,6 +6951,8 @@ xcb_get_atom_name_name_end (const xcb_get_atom_name_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_atom_name_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -7116,6 +7216,8 @@ xcb_get_property_value_end (const xcb_get_property_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_property_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -7212,15 +7314,15 @@ xcb_list_properties_atoms_length (const xcb_list_properties_reply_t *R  /**< */)
 
 /*****************************************************************************
  **
- ** xcb_atom_iterator_t xcb_list_properties_atoms_iterator
+ ** xcb_generic_iterator_t xcb_list_properties_atoms_end
  ** 
  ** @param const xcb_list_properties_reply_t *R
- ** @returns xcb_atom_iterator_t
+ ** @returns xcb_generic_iterator_t
  **
  *****************************************************************************/
  
-xcb_atom_iterator_t
-xcb_list_properties_atoms_iterator (const xcb_list_properties_reply_t *R  /**< */);
+xcb_generic_iterator_t
+xcb_list_properties_atoms_end (const xcb_list_properties_reply_t *R  /**< */);
 
 /**
  * Return the reply
@@ -7233,6 +7335,8 @@ xcb_list_properties_atoms_iterator (const xcb_list_properties_reply_t *R  /**< *
  * The parameter @p e supplied to this function must be NULL if
  * xcb_list_properties_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -7368,6 +7472,8 @@ xcb_get_selection_owner_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_selection_owner_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -7600,6 +7706,8 @@ xcb_grab_pointer_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_grab_pointer_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -7938,6 +8046,8 @@ xcb_grab_keyboard_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_grab_keyboard_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -8334,6 +8444,8 @@ xcb_query_pointer_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_pointer_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -8502,6 +8614,8 @@ xcb_get_motion_events_events_iterator (const xcb_get_motion_events_reply_t *R  /
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_motion_events_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -8592,6 +8706,8 @@ xcb_translate_coordinates_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_translate_coordinates_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -8800,6 +8916,8 @@ xcb_get_input_focus_unchecked (xcb_connection_t *c  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_input_focus_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -8874,6 +8992,8 @@ xcb_query_keymap_unchecked (xcb_connection_t *c  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_keymap_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -9222,6 +9342,8 @@ xcb_query_font_char_infos_iterator (const xcb_query_font_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_font_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -9308,6 +9430,8 @@ xcb_query_text_extents_unchecked (xcb_connection_t   *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_text_extents_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -9502,6 +9626,8 @@ xcb_list_fonts_names_iterator (const xcb_list_fonts_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_list_fonts_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -9666,6 +9792,8 @@ xcb_list_fonts_with_info_name_end (const xcb_list_fonts_with_info_reply_t *R  /*
  * The parameter @p e supplied to this function must be NULL if
  * xcb_list_fonts_with_info_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -9823,6 +9951,8 @@ xcb_get_font_path_path_iterator (const xcb_get_font_path_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_font_path_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -11303,6 +11433,8 @@ xcb_get_image_data_end (const xcb_get_image_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_image_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -11936,15 +12068,15 @@ xcb_list_installed_colormaps_cmaps_length (const xcb_list_installed_colormaps_re
 
 /*****************************************************************************
  **
- ** xcb_colormap_iterator_t xcb_list_installed_colormaps_cmaps_iterator
+ ** xcb_generic_iterator_t xcb_list_installed_colormaps_cmaps_end
  ** 
  ** @param const xcb_list_installed_colormaps_reply_t *R
- ** @returns xcb_colormap_iterator_t
+ ** @returns xcb_generic_iterator_t
  **
  *****************************************************************************/
  
-xcb_colormap_iterator_t
-xcb_list_installed_colormaps_cmaps_iterator (const xcb_list_installed_colormaps_reply_t *R  /**< */);
+xcb_generic_iterator_t
+xcb_list_installed_colormaps_cmaps_end (const xcb_list_installed_colormaps_reply_t *R  /**< */);
 
 /**
  * Return the reply
@@ -11957,6 +12089,8 @@ xcb_list_installed_colormaps_cmaps_iterator (const xcb_list_installed_colormaps_
  * The parameter @p e supplied to this function must be NULL if
  * xcb_list_installed_colormaps_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -12047,6 +12181,8 @@ xcb_alloc_color_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_alloc_color_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -12133,6 +12269,8 @@ xcb_alloc_named_color_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_alloc_named_color_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -12301,6 +12439,8 @@ xcb_alloc_color_cells_masks_end (const xcb_alloc_color_cells_reply_t *R  /**< */
  * The parameter @p e supplied to this function must be NULL if
  * xcb_alloc_color_cells_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -12438,6 +12578,8 @@ xcb_alloc_color_planes_pixels_end (const xcb_alloc_color_planes_reply_t *R  /**<
  * The parameter @p e supplied to this function must be NULL if
  * xcb_alloc_color_planes_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -12832,6 +12974,8 @@ xcb_query_colors_colors_iterator (const xcb_query_colors_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_colors_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -12918,6 +13062,8 @@ xcb_lookup_color_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_lookup_color_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -13308,6 +13454,8 @@ xcb_query_best_size_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_best_size_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -13390,6 +13538,8 @@ xcb_query_extension_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_query_extension_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -13490,6 +13640,8 @@ xcb_list_extensions_names_iterator (const xcb_list_extensions_reply_t *R  /**< *
  * The parameter @p e supplied to this function must be NULL if
  * xcb_list_extensions_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -13651,15 +13803,15 @@ xcb_get_keyboard_mapping_keysyms_length (const xcb_get_keyboard_mapping_reply_t 
 
 /*****************************************************************************
  **
- ** xcb_keysym_iterator_t xcb_get_keyboard_mapping_keysyms_iterator
+ ** xcb_generic_iterator_t xcb_get_keyboard_mapping_keysyms_end
  ** 
  ** @param const xcb_get_keyboard_mapping_reply_t *R
- ** @returns xcb_keysym_iterator_t
+ ** @returns xcb_generic_iterator_t
  **
  *****************************************************************************/
  
-xcb_keysym_iterator_t
-xcb_get_keyboard_mapping_keysyms_iterator (const xcb_get_keyboard_mapping_reply_t *R  /**< */);
+xcb_generic_iterator_t
+xcb_get_keyboard_mapping_keysyms_end (const xcb_get_keyboard_mapping_reply_t *R  /**< */);
 
 /**
  * Return the reply
@@ -13672,6 +13824,8 @@ xcb_get_keyboard_mapping_keysyms_iterator (const xcb_get_keyboard_mapping_reply_
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_keyboard_mapping_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -13799,6 +13953,8 @@ xcb_get_keyboard_control_unchecked (xcb_connection_t *c  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_keyboard_control_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -13987,6 +14143,8 @@ xcb_get_pointer_control_unchecked (xcb_connection_t *c  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_pointer_control_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -14122,6 +14280,8 @@ xcb_get_screen_saver_unchecked (xcb_connection_t *c  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_screen_saver_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -14365,6 +14525,8 @@ xcb_list_hosts_hosts_iterator (const xcb_list_hosts_reply_t *R  /**< */);
  * The parameter @p e supplied to this function must be NULL if
  * xcb_list_hosts_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -14704,6 +14866,8 @@ xcb_set_pointer_mapping_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_set_pointer_mapping_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -14817,6 +14981,8 @@ xcb_get_pointer_mapping_map_end (const xcb_get_pointer_mapping_reply_t *R  /**< 
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_pointer_mapping_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -14899,6 +15065,8 @@ xcb_set_modifier_mapping_unchecked (xcb_connection_t    *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_set_modifier_mapping_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -14991,15 +15159,15 @@ xcb_get_modifier_mapping_keycodes_length (const xcb_get_modifier_mapping_reply_t
 
 /*****************************************************************************
  **
- ** xcb_keycode_iterator_t xcb_get_modifier_mapping_keycodes_iterator
+ ** xcb_generic_iterator_t xcb_get_modifier_mapping_keycodes_end
  ** 
  ** @param const xcb_get_modifier_mapping_reply_t *R
- ** @returns xcb_keycode_iterator_t
+ ** @returns xcb_generic_iterator_t
  **
  *****************************************************************************/
  
-xcb_keycode_iterator_t
-xcb_get_modifier_mapping_keycodes_iterator (const xcb_get_modifier_mapping_reply_t *R  /**< */);
+xcb_generic_iterator_t
+xcb_get_modifier_mapping_keycodes_end (const xcb_get_modifier_mapping_reply_t *R  /**< */);
 
 /**
  * Return the reply
@@ -15012,6 +15180,8 @@ xcb_get_modifier_mapping_keycodes_iterator (const xcb_get_modifier_mapping_reply
  * The parameter @p e supplied to this function must be NULL if
  * xcb_get_modifier_mapping_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -15075,6 +15245,10 @@ xcb_no_operation_checked (xcb_connection_t *c  /**< */);
 xcb_void_cookie_t
 xcb_no_operation (xcb_connection_t *c  /**< */);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

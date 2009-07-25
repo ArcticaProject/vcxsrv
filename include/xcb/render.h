@@ -1,5 +1,5 @@
 /*
- * This file generated automatically from render.xml by c-client.xsl using XSLT.
+ * This file generated automatically from render.xml by c_client.py.
  * Edit at your peril.
  */
 
@@ -15,6 +15,10 @@
 #include "xcb.h"
 #include "xproto.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define XCB_RENDER_MAJOR_VERSION 0
 #define XCB_RENDER_MINOR_VERSION 10
   
@@ -24,6 +28,10 @@ typedef enum xcb_render_pict_type_t {
     XCB_RENDER_PICT_TYPE_INDEXED,
     XCB_RENDER_PICT_TYPE_DIRECT
 } xcb_render_pict_type_t;
+
+typedef enum xcb_render_picture_enum_t {
+    XCB_RENDER_PICTURE_NONE
+} xcb_render_picture_enum_t;
 
 typedef enum xcb_render_pict_op_t {
     XCB_RENDER_PICT_OP_CLEAR,
@@ -40,7 +48,7 @@ typedef enum xcb_render_pict_op_t {
     XCB_RENDER_PICT_OP_XOR,
     XCB_RENDER_PICT_OP_ADD,
     XCB_RENDER_PICT_OP_SATURATE,
-    XCB_RENDER_PICT_OP_DISJOINT_CLEAR = 0x10,
+    XCB_RENDER_PICT_OP_DISJOINT_CLEAR = 16,
     XCB_RENDER_PICT_OP_DISJOINT_SRC,
     XCB_RENDER_PICT_OP_DISJOINT_DST,
     XCB_RENDER_PICT_OP_DISJOINT_OVER,
@@ -52,7 +60,7 @@ typedef enum xcb_render_pict_op_t {
     XCB_RENDER_PICT_OP_DISJOINT_ATOP,
     XCB_RENDER_PICT_OP_DISJOINT_ATOP_REVERSE,
     XCB_RENDER_PICT_OP_DISJOINT_XOR,
-    XCB_RENDER_PICT_OP_CONJOINT_CLEAR = 0x20,
+    XCB_RENDER_PICT_OP_CONJOINT_CLEAR = 32,
     XCB_RENDER_PICT_OP_CONJOINT_SRC,
     XCB_RENDER_PICT_OP_CONJOINT_DST,
     XCB_RENDER_PICT_OP_CONJOINT_OVER,
@@ -77,19 +85,19 @@ typedef enum xcb_render_poly_mode_t {
 } xcb_render_poly_mode_t;
 
 typedef enum xcb_render_cp_t {
-    XCB_RENDER_CP_REPEAT = (1 << 0),
-    XCB_RENDER_CP_ALPHA_MAP = (1 << 1),
-    XCB_RENDER_CP_ALPHA_X_ORIGIN = (1 << 2),
-    XCB_RENDER_CP_ALPHA_Y_ORIGIN = (1 << 3),
-    XCB_RENDER_CP_CLIP_X_ORIGIN = (1 << 4),
-    XCB_RENDER_CP_CLIP_Y_ORIGIN = (1 << 5),
-    XCB_RENDER_CP_CLIP_MASK = (1 << 6),
-    XCB_RENDER_CP_GRAPHICS_EXPOSURE = (1 << 7),
-    XCB_RENDER_CP_SUBWINDOW_MODE = (1 << 8),
-    XCB_RENDER_CP_POLY_EDGE = (1 << 9),
-    XCB_RENDER_CP_POLY_MODE = (1 << 10),
-    XCB_RENDER_CP_DITHER = (1 << 11),
-    XCB_RENDER_CP_COMPONENT_ALPHA = (1 << 12)
+    XCB_RENDER_CP_REPEAT = 1,
+    XCB_RENDER_CP_ALPHA_MAP = 2,
+    XCB_RENDER_CP_ALPHA_X_ORIGIN = 4,
+    XCB_RENDER_CP_ALPHA_Y_ORIGIN = 8,
+    XCB_RENDER_CP_CLIP_X_ORIGIN = 16,
+    XCB_RENDER_CP_CLIP_Y_ORIGIN = 32,
+    XCB_RENDER_CP_CLIP_MASK = 64,
+    XCB_RENDER_CP_GRAPHICS_EXPOSURE = 128,
+    XCB_RENDER_CP_SUBWINDOW_MODE = 256,
+    XCB_RENDER_CP_POLY_EDGE = 512,
+    XCB_RENDER_CP_POLY_MODE = 1024,
+    XCB_RENDER_CP_DITHER = 2048,
+    XCB_RENDER_CP_COMPONENT_ALPHA = 4096
 } xcb_render_cp_t;
 
 typedef enum xcb_render_sub_pixel_t {
@@ -954,6 +962,7 @@ typedef struct xcb_render_set_picture_filter_request_t {
     uint16_t             length; /**<  */
     xcb_render_picture_t picture; /**<  */
     uint16_t             filter_len; /**<  */
+    uint8_t              pad0[2]; /**<  */
 } xcb_render_set_picture_filter_request_t;
 
 /**
@@ -1960,6 +1969,8 @@ xcb_render_query_version_unchecked (xcb_connection_t *c  /**< */,
  * The parameter @p e supplied to this function must be NULL if
  * xcb_render_query_version_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -2138,6 +2149,8 @@ xcb_render_query_pict_formats_subpixels_end (const xcb_render_query_pict_formats
  * The parameter @p e supplied to this function must be NULL if
  * xcb_render_query_pict_formats_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -2255,6 +2268,8 @@ xcb_render_query_pict_index_values_values_iterator (const xcb_render_query_pict_
  * The parameter @p e supplied to this function must be NULL if
  * xcb_render_query_pict_index_values_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -3781,6 +3796,8 @@ xcb_render_query_filters_filters_iterator (const xcb_render_query_filters_reply_
  * The parameter @p e supplied to this function must be NULL if
  * xcb_render_query_filters_unchecked(). is used.
  * Otherwise, it stores the error if any.
+ *
+ * The returned value must be freed by the caller using free().
  */
 
 /*****************************************************************************
@@ -4184,21 +4201,25 @@ xcb_render_create_solid_fill (xcb_connection_t     *c  /**< */,
  **
  ** xcb_void_cookie_t xcb_render_create_linear_gradient_checked
  ** 
- ** @param xcb_connection_t      *c
- ** @param xcb_render_picture_t   picture
- ** @param xcb_render_pointfix_t  p1
- ** @param xcb_render_pointfix_t  p2
- ** @param uint32_t               num_stops
+ ** @param xcb_connection_t         *c
+ ** @param xcb_render_picture_t      picture
+ ** @param xcb_render_pointfix_t     p1
+ ** @param xcb_render_pointfix_t     p2
+ ** @param uint32_t                  num_stops
+ ** @param const xcb_render_fixed_t *stops
+ ** @param const xcb_render_color_t *colors
  ** @returns xcb_void_cookie_t
  **
  *****************************************************************************/
  
 xcb_void_cookie_t
-xcb_render_create_linear_gradient_checked (xcb_connection_t      *c  /**< */,
-                                           xcb_render_picture_t   picture  /**< */,
-                                           xcb_render_pointfix_t  p1  /**< */,
-                                           xcb_render_pointfix_t  p2  /**< */,
-                                           uint32_t               num_stops  /**< */);
+xcb_render_create_linear_gradient_checked (xcb_connection_t         *c  /**< */,
+                                           xcb_render_picture_t      picture  /**< */,
+                                           xcb_render_pointfix_t     p1  /**< */,
+                                           xcb_render_pointfix_t     p2  /**< */,
+                                           uint32_t                  num_stops  /**< */,
+                                           const xcb_render_fixed_t *stops  /**< */,
+                                           const xcb_render_color_t *colors  /**< */);
 
 /**
  * Delivers a request to the X server
@@ -4213,21 +4234,25 @@ xcb_render_create_linear_gradient_checked (xcb_connection_t      *c  /**< */,
  **
  ** xcb_void_cookie_t xcb_render_create_linear_gradient
  ** 
- ** @param xcb_connection_t      *c
- ** @param xcb_render_picture_t   picture
- ** @param xcb_render_pointfix_t  p1
- ** @param xcb_render_pointfix_t  p2
- ** @param uint32_t               num_stops
+ ** @param xcb_connection_t         *c
+ ** @param xcb_render_picture_t      picture
+ ** @param xcb_render_pointfix_t     p1
+ ** @param xcb_render_pointfix_t     p2
+ ** @param uint32_t                  num_stops
+ ** @param const xcb_render_fixed_t *stops
+ ** @param const xcb_render_color_t *colors
  ** @returns xcb_void_cookie_t
  **
  *****************************************************************************/
  
 xcb_void_cookie_t
-xcb_render_create_linear_gradient (xcb_connection_t      *c  /**< */,
-                                   xcb_render_picture_t   picture  /**< */,
-                                   xcb_render_pointfix_t  p1  /**< */,
-                                   xcb_render_pointfix_t  p2  /**< */,
-                                   uint32_t               num_stops  /**< */);
+xcb_render_create_linear_gradient (xcb_connection_t         *c  /**< */,
+                                   xcb_render_picture_t      picture  /**< */,
+                                   xcb_render_pointfix_t     p1  /**< */,
+                                   xcb_render_pointfix_t     p2  /**< */,
+                                   uint32_t                  num_stops  /**< */,
+                                   const xcb_render_fixed_t *stops  /**< */,
+                                   const xcb_render_color_t *colors  /**< */);
 
 /**
  * Delivers a request to the X server
@@ -4245,25 +4270,29 @@ xcb_render_create_linear_gradient (xcb_connection_t      *c  /**< */,
  **
  ** xcb_void_cookie_t xcb_render_create_radial_gradient_checked
  ** 
- ** @param xcb_connection_t      *c
- ** @param xcb_render_picture_t   picture
- ** @param xcb_render_pointfix_t  inner
- ** @param xcb_render_pointfix_t  outer
- ** @param xcb_render_fixed_t     inner_radius
- ** @param xcb_render_fixed_t     outer_radius
- ** @param uint32_t               num_stops
+ ** @param xcb_connection_t         *c
+ ** @param xcb_render_picture_t      picture
+ ** @param xcb_render_pointfix_t     inner
+ ** @param xcb_render_pointfix_t     outer
+ ** @param xcb_render_fixed_t        inner_radius
+ ** @param xcb_render_fixed_t        outer_radius
+ ** @param uint32_t                  num_stops
+ ** @param const xcb_render_fixed_t *stops
+ ** @param const xcb_render_color_t *colors
  ** @returns xcb_void_cookie_t
  **
  *****************************************************************************/
  
 xcb_void_cookie_t
-xcb_render_create_radial_gradient_checked (xcb_connection_t      *c  /**< */,
-                                           xcb_render_picture_t   picture  /**< */,
-                                           xcb_render_pointfix_t  inner  /**< */,
-                                           xcb_render_pointfix_t  outer  /**< */,
-                                           xcb_render_fixed_t     inner_radius  /**< */,
-                                           xcb_render_fixed_t     outer_radius  /**< */,
-                                           uint32_t               num_stops  /**< */);
+xcb_render_create_radial_gradient_checked (xcb_connection_t         *c  /**< */,
+                                           xcb_render_picture_t      picture  /**< */,
+                                           xcb_render_pointfix_t     inner  /**< */,
+                                           xcb_render_pointfix_t     outer  /**< */,
+                                           xcb_render_fixed_t        inner_radius  /**< */,
+                                           xcb_render_fixed_t        outer_radius  /**< */,
+                                           uint32_t                  num_stops  /**< */,
+                                           const xcb_render_fixed_t *stops  /**< */,
+                                           const xcb_render_color_t *colors  /**< */);
 
 /**
  * Delivers a request to the X server
@@ -4278,25 +4307,29 @@ xcb_render_create_radial_gradient_checked (xcb_connection_t      *c  /**< */,
  **
  ** xcb_void_cookie_t xcb_render_create_radial_gradient
  ** 
- ** @param xcb_connection_t      *c
- ** @param xcb_render_picture_t   picture
- ** @param xcb_render_pointfix_t  inner
- ** @param xcb_render_pointfix_t  outer
- ** @param xcb_render_fixed_t     inner_radius
- ** @param xcb_render_fixed_t     outer_radius
- ** @param uint32_t               num_stops
+ ** @param xcb_connection_t         *c
+ ** @param xcb_render_picture_t      picture
+ ** @param xcb_render_pointfix_t     inner
+ ** @param xcb_render_pointfix_t     outer
+ ** @param xcb_render_fixed_t        inner_radius
+ ** @param xcb_render_fixed_t        outer_radius
+ ** @param uint32_t                  num_stops
+ ** @param const xcb_render_fixed_t *stops
+ ** @param const xcb_render_color_t *colors
  ** @returns xcb_void_cookie_t
  **
  *****************************************************************************/
  
 xcb_void_cookie_t
-xcb_render_create_radial_gradient (xcb_connection_t      *c  /**< */,
-                                   xcb_render_picture_t   picture  /**< */,
-                                   xcb_render_pointfix_t  inner  /**< */,
-                                   xcb_render_pointfix_t  outer  /**< */,
-                                   xcb_render_fixed_t     inner_radius  /**< */,
-                                   xcb_render_fixed_t     outer_radius  /**< */,
-                                   uint32_t               num_stops  /**< */);
+xcb_render_create_radial_gradient (xcb_connection_t         *c  /**< */,
+                                   xcb_render_picture_t      picture  /**< */,
+                                   xcb_render_pointfix_t     inner  /**< */,
+                                   xcb_render_pointfix_t     outer  /**< */,
+                                   xcb_render_fixed_t        inner_radius  /**< */,
+                                   xcb_render_fixed_t        outer_radius  /**< */,
+                                   uint32_t                  num_stops  /**< */,
+                                   const xcb_render_fixed_t *stops  /**< */,
+                                   const xcb_render_color_t *colors  /**< */);
 
 /**
  * Delivers a request to the X server
@@ -4314,21 +4347,25 @@ xcb_render_create_radial_gradient (xcb_connection_t      *c  /**< */,
  **
  ** xcb_void_cookie_t xcb_render_create_conical_gradient_checked
  ** 
- ** @param xcb_connection_t      *c
- ** @param xcb_render_picture_t   picture
- ** @param xcb_render_pointfix_t  center
- ** @param xcb_render_fixed_t     angle
- ** @param uint32_t               num_stops
+ ** @param xcb_connection_t         *c
+ ** @param xcb_render_picture_t      picture
+ ** @param xcb_render_pointfix_t     center
+ ** @param xcb_render_fixed_t        angle
+ ** @param uint32_t                  num_stops
+ ** @param const xcb_render_fixed_t *stops
+ ** @param const xcb_render_color_t *colors
  ** @returns xcb_void_cookie_t
  **
  *****************************************************************************/
  
 xcb_void_cookie_t
-xcb_render_create_conical_gradient_checked (xcb_connection_t      *c  /**< */,
-                                            xcb_render_picture_t   picture  /**< */,
-                                            xcb_render_pointfix_t  center  /**< */,
-                                            xcb_render_fixed_t     angle  /**< */,
-                                            uint32_t               num_stops  /**< */);
+xcb_render_create_conical_gradient_checked (xcb_connection_t         *c  /**< */,
+                                            xcb_render_picture_t      picture  /**< */,
+                                            xcb_render_pointfix_t     center  /**< */,
+                                            xcb_render_fixed_t        angle  /**< */,
+                                            uint32_t                  num_stops  /**< */,
+                                            const xcb_render_fixed_t *stops  /**< */,
+                                            const xcb_render_color_t *colors  /**< */);
 
 /**
  * Delivers a request to the X server
@@ -4343,22 +4380,30 @@ xcb_render_create_conical_gradient_checked (xcb_connection_t      *c  /**< */,
  **
  ** xcb_void_cookie_t xcb_render_create_conical_gradient
  ** 
- ** @param xcb_connection_t      *c
- ** @param xcb_render_picture_t   picture
- ** @param xcb_render_pointfix_t  center
- ** @param xcb_render_fixed_t     angle
- ** @param uint32_t               num_stops
+ ** @param xcb_connection_t         *c
+ ** @param xcb_render_picture_t      picture
+ ** @param xcb_render_pointfix_t     center
+ ** @param xcb_render_fixed_t        angle
+ ** @param uint32_t                  num_stops
+ ** @param const xcb_render_fixed_t *stops
+ ** @param const xcb_render_color_t *colors
  ** @returns xcb_void_cookie_t
  **
  *****************************************************************************/
  
 xcb_void_cookie_t
-xcb_render_create_conical_gradient (xcb_connection_t      *c  /**< */,
-                                    xcb_render_picture_t   picture  /**< */,
-                                    xcb_render_pointfix_t  center  /**< */,
-                                    xcb_render_fixed_t     angle  /**< */,
-                                    uint32_t               num_stops  /**< */);
+xcb_render_create_conical_gradient (xcb_connection_t         *c  /**< */,
+                                    xcb_render_picture_t      picture  /**< */,
+                                    xcb_render_pointfix_t     center  /**< */,
+                                    xcb_render_fixed_t        angle  /**< */,
+                                    uint32_t                  num_stops  /**< */,
+                                    const xcb_render_fixed_t *stops  /**< */,
+                                    const xcb_render_color_t *colors  /**< */);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
