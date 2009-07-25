@@ -1,7 +1,7 @@
 /*
  * $XFree86: xc/include/extensions/xfixesproto.h,v 1.1 2002/11/30 06:21:43 keithp Exp $
  *
- * Copyright Â© 2006 Sun Microsystems
+ * Copyright © 2006 Sun Microsystems
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -21,7 +21,7 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  *
- * Copyright Â© 2002 Keith Packard, member of The XFree86 Project, Inc.
+ * Copyright © 2002 Keith Packard, member of The XFree86 Project, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -47,9 +47,7 @@
 
 #include <X11/Xmd.h>
 #include <X11/extensions/xfixeswire.h>
-#define _SHAPE_SERVER_
-#include <X11/extensions/shape.h>
-#undef _SHAPE_SERVER_
+#include <X11/extensions/shapeconst.h>
 
 #define Window CARD32
 #define Drawable CARD32

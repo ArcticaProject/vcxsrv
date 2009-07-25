@@ -206,6 +206,9 @@
 #define XF86XK_Yellow		0x1008FFA5   /* Yellow button               */
 #define XF86XK_Blue             0x1008FFA6   /* Blue button                 */
 
+#define XF86XK_Suspend		0x1008FFA7   /* Sleep to RAM                */
+#define XF86XK_Hibernate	0x1008FFA8   /* Sleep to disk               */
+
 /* Keys for special action keys (hot keys) */
 /* Virtual terminals on some operating systems */
 #define XF86XK_Switch_VT_1	0x1008FE01

@@ -32,14 +32,14 @@ nodist_xproto_HEADERS = \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xproto.pc
 
-EXTRA_DIST = autogen.sh xproto.pc.in ChangeLog
+EXTRA_DIST = xproto.pc.in ChangeLog
 
 CLEANFILES=ChangeLog
 
 .PHONY: ChangeLog
 
 ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
+	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog
 

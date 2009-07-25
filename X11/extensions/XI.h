@@ -106,8 +106,14 @@ SOFTWARE.
 #define sz_xGetDeviceControlReply		32
 #define sz_xChangeDeviceControlReq		8
 #define sz_xChangeDeviceControlReply		32
+#define sz_xListDevicePropertiesReq             8
+#define sz_xListDevicePropertiesReply           32
+#define sz_xChangeDevicePropertyReq             20
+#define sz_xDeleteDevicePropertyReq             12
+#define sz_xGetDevicePropertyReq                24
+#define sz_xGetDevicePropertyReply              32
 
-#define INAME 			"XInputExtension"
+#define INAME		"XInputExtension"
 
 #define XI_KEYBOARD	"KEYBOARD"
 #define XI_MOUSE	"MOUSE"
@@ -127,13 +133,18 @@ SOFTWARE.
 #define XI_EYETRACKER	"EYETRACKER"
 #define XI_CURSORKEYS	"CURSORKEYS"
 #define XI_FOOTMOUSE	"FOOTMOUSE"
+#define XI_JOYSTICK	"JOYSTICK"
 
+/* Indices into the versions[] array (XExtInt.c). Used as a index to
+ * retrieve the minimum version of XI from _XiCheckExtInit */
 #define Dont_Check			0
 #define XInput_Initial_Release		1
 #define XInput_Add_XDeviceBell		2
 #define XInput_Add_XSetDeviceValuators	3
 #define XInput_Add_XChangeDeviceControl	4
 #define XInput_Add_DevicePresenceNotify	5
+#define XInput_Add_DeviceProperties	6
+/* DO NOT ADD TO HERE -> XI2 */
 
 #define XI_Absent		0
 #define XI_Present		1
@@ -152,6 +163,9 @@ SOFTWARE.
 
 #define XI_Add_DevicePresenceNotify_Major	1
 #define XI_Add_DevicePresenceNotify_Minor	4
+
+#define XI_Add_DeviceProperties_Major		1
+#define XI_Add_DeviceProperties_Minor		5
 
 #define DEVICE_RESOLUTION	1
 #define DEVICE_ABS_CALIB        2
@@ -225,6 +239,7 @@ SOFTWARE.
 #define ProximityClass  	4
 #define FocusClass  		5
 #define OtherClass  		6
+#define AttachClass             7
 
 #define KbdFeedbackClass  	0
 #define PtrFeedbackClass  	1
@@ -246,6 +261,10 @@ SOFTWARE.
 
 #define _devicePresence		 0
 
+#define _deviceEnter             0
+#define _deviceLeave             1
+
+/* Device presence notify states */
 #define DeviceAdded              0
 #define DeviceRemoved            1
 #define DeviceEnabled            2
@@ -253,6 +272,7 @@ SOFTWARE.
 #define DeviceUnrecoverable      4
 #define DeviceControlChanged     5
 
+/* XI Errors */
 #define XI_BadDevice	0
 #define XI_BadEvent	1
 #define XI_BadMode	2
@@ -268,7 +288,7 @@ SOFTWARE.
  * without polluting the namespace.
  */
 #ifdef _XSERVER64
-typedef unsigned int	XEventClass;
+typedef	unsigned int	XEventClass;
 #else
 typedef	unsigned long	XEventClass;
 #endif

@@ -139,7 +139,11 @@ PICTOP		{ Clear, Src, Dst, Over, OverReverse, In, InReverse,
 		  ConjointClear, ConjointSrc, ConjointDst, ConjointOver,
 		  ConjointOverReverse, ConjointIn, ConjointInReverse,
 		  ConjointOut, ConjointOutReverse, ConjointAtop,
-		  ConjointAtopReverse, ConjointXor }
+		  ConjointAtopReverse, ConjointXor,
+		  Multiply, Screen, Overlay, Darken, Lighten, ColorDodge,
+		  ColorBurn, HardLight, SoftLight, Difference, Exclusion,
+		  HSLHue, HSLSaturation, HSLColor, HSLLuminosity
+		}
 SUBPIXEL	{ Unknown, HorizontalRGB, HorizontalBGR, 
 		  VerticalRGB, VerticalBGR, None
 		}
@@ -216,12 +220,6 @@ TRAPEZOID	[
 			left, right:	LINEFIX
 		]
 (TRAPEZOID is deprecated)
-COLORTRIANGLE	[
-			p1, p2, p3:	COLORPOINT
-		]
-COLORTRAP	[
-			top, bottom:	COLORSPANFIX
-		]
 GLYPHSET	32-bit value (top three bits guaranteed to be zero)
 GLYPH		32-bit value
 GLYPHINFO	[
@@ -349,25 +347,27 @@ alpha channel is used in the final image composition.
 
 9. Source and Mask Transformations
 
-When fetching pixels from the source or mask pictures, Render provides three
+When fetching pixels from the source or mask pictures, Render provides four
 options for pixel values which fall outside the drawable (this includes
-pixels within a window geometry obscured by other windows).
+pixels within a window geometry obscured by other windows). 
 
- +	Transparent.  Missing values are replaced with transparent.
+ +	None.  Missing values are replaced with transparent.
  
- +	Nearest.  Replace missing pixels with the nearest available
+ +	Pad.  Replace missing pixels with the nearest available
  	pixel.  Where multiple pixels are equidistant, select
 	those with smallest Y and then smallest X coordinates
 
- +	Tile.  Select the pixel which would appear were the
+ +	Normal.  Select the pixel which would appear were the
  	drawable tiled to enclose the missing coordinate.  If
 	the tiling doesn't cover the coordinate, use the
 	selected Constant or Nearest mode.
 
-When GraphicsExposures are selected in the destination picture, a region
-containing at least the union of all destination pixel values affected by
-data replaced as above is delivered after each compositing operation.  If
-the resulting region is empty, a NoExpose event is delivered instead.
+ *	Reflect.  Select the pixel which would appear were the
+	drawable tiled to enclose the missing coordinate in such a
+	way that tiles in even numbered columns are reflected in the Y
+	axis, and tiles in even numbered rows are reflected in the X
+	axis. Tiles that in both an even numbered row and an even
+	numbered column are reflected in both axes.
 
 To construct the source and mask operands, the computed pixels values are
 transformed through a homogeneous matrix, filtered and then used in the
@@ -606,70 +606,62 @@ CreatePicture
 	dither:			ATOM or None
 	component-alpha:	BOOL
 	
-	When used as a source or mask operand, the repeat and fill-constant
-	values control how pixels outside the geometry of the drawable are
-	computed.
-	
-	Repeat indicates how the drawable contents should be extented
-	in both directions.  
+	When used as a source or mask operand, Repeat indicates how the
+	drawable contents should be extented in both directions.
 	
 	The alpha channel of alpha-map is used in place of any alpha channel
 	contained within the drawable for all rendering operations.  The
 	alpha-mask origin is interpreted relative to the origin of drawable.
-	Rendering is additionally clipped by the geometry of alpha-map.
-	Exposures to the window do not affect the contents of alpha-map.
-	Alpha-map must refer to a picture containing a Pixmap, not a Window
-	(or a Match error results).
+	Rendering is additionally clipped by the geometry and clip mask of
+	alpha-map.  Exposures to the window do not affect the contents of
+	alpha-map.  Alpha-map must refer to a picture containing a Pixmap,
+	not a Window (or a Match error results).
 
 	The clip-mask restricts reads and writes to drawable.  Only pixels
 	where the clip-mask has bits set to 1 are read or written.  Pixels
 	are not accessed outside the area covered by the clip-mask or where
 	the clip-mask has bits set to 0.  The clip-mask affects all graphics
 	requests, including sources.  The clip-mask origin is interpreted
-	relative to the origin of drawable.  If a pixmap is specified as the
-	clip-mask, it must have depth 1 and have the same root as the
+	relative to the origin of the picture.  If a pixmap is specified as
+	the clip-mask, it must have depth 1 and have the same root as the
 	drawable (or a Match error results).  If clip-mask is None, then
 	pixels are always drawn, regardless of the clip origin.  The
 	clip-mask can also be set with the SetPictureClipRectangles request.
-	
-	For ClipByChildren, both source and destination windows are
-	additionally clipped by all viewable InputOutput children.  For
-	IncludeInferiors , neither source nor destination window is clipped
-	by inferiors.  This will result in including subwindow contents in
-	the source and drawing through subwindow boundaries of the
-	destination.  The use of IncludeInferiors with a source or
-	destination window of one depth with mapped inferiors of differing
-	depth is not illegal, but the semantics are undefined by this
-	extension.
+	Transformations, filters and repeat modes do not affect the clip
+	mask.
 
-	The graphics-exposures flag controls GraphicsExposure event
-	generation for Composite requests (and any similar requests
-	defined by additional extensions).
+	When a window is used as a destination, the subwindow_mode
+	determines what happens to pixels obscured by inferior
+	windows. For ClipByChildren the window is clipped by inferiors
+	and siblings. For IncludeInferior, the window is clipped by
+	siblings, but not by inferiors.
 
-	Poly-edge and poly-mode control the rasterization of polygons
-	as described above.
+	When a window is used as source or mask, the subwindow_mode is
+	ignored. Pixels that are obscured by other windows, whether
+	siblings or inferiors, have undefined contents.
 
-	Dither selects which of the available dither patterns should
-	be used.  If dither is None, no dithering will be done.
+	The graphics-exposures flag is ignored. GraphicsExposure events are
+	never generated by this extension.
 
-	Component-alpha indicates whether each image component is
-	intended as a separate alpha value when the picture is used
-	as a mask operand.
+	Poly-edge and poly-mode control the rasterization of polygons as
+	described above.
+
+	Dither is ignored.
+
+	Component-alpha indicates whether each image component is intended as
+	a separate alpha value when the picture is used as a mask operand.
 
 	The default component values are
 
 		Component		Default
 		-------------------------------
-		repeat			False
-		fill-nearest:		False
+		repeat			None
 		clip-x-origin        	0
 		clip-y-origin          	0
 		clip-mask		None
-		graphics-exposures	True
 		subwindow-mode		ClipByChildren
 		poly-edge		Smooth
 		poly-mode		Precise
-		dither			None
 		component-alpha		False
 
 ChangePicture
@@ -698,12 +690,14 @@ SetPictureClipRectangles
 	This request changes clip-mask in picture to the specified list of
 	rectangles and sets the clip origin.  Input and output will be
 	clipped to remain contained within the rectangles.  The clip origin
-	is interpreted relative to the origin of the drawable associated
-	with picture.  The rectangle coordinates are interpreted relative to
-	the clip origin.  Note that the list of rectangles can be empty,
-	which effectively disables output.  This is the opposite of passing
-	None as the clip-mask in CreatePicture and ChangePicture.
-	
+	is interpreted relative to the origin of picture after
+	transformations and repeats have been applied. The rectangle
+	coordinates are interpreted relative to the clip origin.
+
+	The list of rectangles can be empty, which effectively disables
+	output.  This is the opposite of passing None as the clip-mask in
+	CreatePicture and ChangePicture.
+
 	Note that output is clipped to the union of all of the rectangles
 	and that no particular ordering among the rectangles is required.
 
@@ -782,12 +776,6 @@ Composite
 
 	If mask is None, it is replaced by a constant alpha value of 1.
 
-	When dst has graphics-exposures true, a region covering all dst
-	pixels affected by substitutions performed on src or mask pixels
-	outside their respective geometries is computed.  If that region is
-	empty, a NoExpose event is sent.  Otherwise, a sequence of
-	GraphicsExpose events are sent covering that region.
-
 FillRectangles
 
 	op:		PICTOP
@@ -832,6 +820,8 @@ Trapezoids
 
 		for each trapezoid
 			Combine (op, dst, source, trapezoid)
+
+	(The Trapezoids request is deprecated)
 
 Triangles
 
@@ -917,31 +907,6 @@ TriFan
 		for each triangle
 			Combine (op, dst, source, triangle)
 
-ColorTrapezoids
-
-	op:		PICTOP
-	dst:		PICTURE
-	trapezoids:	LISTofCOLORTRAP
-
-	The geometry of the trapezoids must meet the same requirements as
-	for the Trapezoids request.  The trapezoids are filled in the order
-	they occur in the list.
-
-ColorTriangles
-
-	op:		PICTOP
-	dst:		PICTURE
-	triangles:	LISTofCOLORTRIANGLE
-
-	The colored triangles are rasterized in the order they occur in the
-	list.
-
-???
-
-Should I included compressed triangle representations here?
-
-???
-
 CreateGlyphSet
 
 	gsid:		GLYPHSET
@@ -992,21 +957,6 @@ AddGlyphs
 	are stored with each glyph in a separate Z-format image padded to a
 	32-bit boundary.  Existing glyphs with the same names are replaced.
 
-AddGlyphsFromPicture
-
-	glyphset:	GLYPHSET
-	src:		PICTURE
-	glyphs:		LISTofPICTGLYPH
-
-	Errors:
-		GlyphSet, Alloc
-
-	This request adds glyphs to glyphset by copying them from src from
-	the locations included in glyphs.  Existing glyphs with the same
-	names are replaced.  Src may be in a different PictFormat than
-	glyphset, in which case the images are converted to the glyphset
-	format.
-	
 FreeGlyphs
 
 	glyphset:	GLYPHSET
@@ -1251,3 +1201,7 @@ what each version before 1.0 implemented:
 
 		The repeat picture attribute now supports Pad and
 		Reflect, older versions only supported None and Normal.
+
+	0.11:
+		Blend mode operators
+

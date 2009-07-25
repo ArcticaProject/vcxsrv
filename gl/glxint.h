@@ -1,27 +1,35 @@
 #ifndef __GLX_glxint_h__
 #define __GLX_glxint_h__
 
-/* $XFree86: xc/include/GL/glxint.h,v 1.3 2000/11/18 19:37:04 tsi Exp $ */
 /*
-** The contents of this file are subject to the GLX Public License Version 1.0
-** (the "License"). You may not use this file except in compliance with the
-** License. You may obtain a copy of the License at Silicon Graphics, Inc.,
-** attn: Legal Services, 2011 N. Shoreline Blvd., Mountain View, CA 94043
-** or at http://www.sgi.com/software/opensource/glx/license.html.
-**
-** Software distributed under the License is distributed on an "AS IS"
-** basis. ALL WARRANTIES ARE DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY
-** IMPLIED WARRANTIES OF MERCHANTABILITY, OF FITNESS FOR A PARTICULAR
-** PURPOSE OR OF NON- INFRINGEMENT. See the License for the specific
-** language governing rights and limitations under the License.
-**
-** The Original Software is GLX version 1.2 source code, released February,
-** 1999. The developer of the Original Software is Silicon Graphics, Inc.
-** Those portions of the Subject Software created by Silicon Graphics, Inc.
-** are Copyright (c) 1991-9 Silicon Graphics, Inc. All Rights Reserved.
-**
-** $SGI$
-*/
+ * SGI FREE SOFTWARE LICENSE B (Version 2.0, Sept. 18, 2008)
+ * Copyright (C) 1991-2000 Silicon Graphics, Inc. All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice including the dates of first publication and
+ * either this permission notice or a reference to
+ * http://oss.sgi.com/projects/FreeB/
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * SILICON GRAPHICS, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * Except as contained in this notice, the name of Silicon Graphics, Inc.
+ * shall not be used in advertising or otherwise to promote the sale, use or
+ * other dealings in this Software without prior written authorization from
+ * Silicon Graphics, Inc.
+ */
 
 #include <X11/X.h>
 #include <X11/Xdefs.h>
