@@ -21,9 +21,13 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(xtrans, 1.2.2, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xtrans)
+AC_INIT(xtrans, 1.2.3, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xtrans)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
+
+# Require xorg-macros version 1.2.0 or newer for XORG_CHANGELOG macro
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.2)
 
 # Because xtrans is included into other modules rather than being linked
 # with, these defines have to be added to the cflags line
@@ -44,6 +48,7 @@ sticky_bit_define="-DHAS_STICKY_DIR_BIT"
 AC_SUBST(sticky_bit_define)
 
 XORG_RELEASE_VERSION
+XORG_CHANGELOG
 
 AC_OUTPUT([Makefile
            xtrans.pc])
