@@ -32,10 +32,11 @@ AC_DEFUN([XTRANS_TCP_FLAGS],[
  # SVR4 hides these in libraries other than libc
  AC_SEARCH_LIBS(socket, [socket])
  AC_SEARCH_LIBS(gethostbyname, [nsl])
+ AC_HAVE_LIBRARY([ws2_32])
 
  # Needs to come after above checks for libsocket & libnsl for SVR4 systems
  AC_ARG_ENABLE(ipv6, 
-	AC_HELP_STRING([--enable-IPv6],[Enable IPv6 support]),
+	AC_HELP_STRING([--enable-ipv6],[Enable IPv6 support]),
 	[IPV6CONN=$enableval], 
 	[AC_CHECK_FUNC(getaddrinfo,[IPV6CONN=yes],[IPV6CONN=no])])
  AC_MSG_CHECKING([if IPv6 support should be built])

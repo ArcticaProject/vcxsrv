@@ -1,3 +1,41 @@
+commit 1cf4a1a6716f2c0adf5ee4d0a194a1013be53105
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun Jan 11 10:54:52 2009 -0800
+
+    Version 1.2.3
+
+commit d0c5592142369afa93dcd58ca6f390dbd127a28a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun Jan 11 10:51:49 2009 -0800
+
+    Add bugzilla, mailing list & git repo pointers to README
+
+commit 9f12a154437554938a4fa18b7d3948c7dff8d631
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Dec 1 13:58:31 2008 -0800
+
+    Switch ChangeLog generation to use XORG_CHANGELOG from xorg-macros 1.2
+
+commit 8c313881a0c586179c09922a7e00a1f8d669a68a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Dec 1 08:37:42 2008 -0800
+
+    18748: xtrans.m4 causes configure --help to list --enable-ipv6 in wrong case.
+    
+    X.Org Bug #18748 <http://bugs.freedesktop.org/show_bug.cgi?id=18748>
+
+commit c626a4298e98f4988701dd587bc8355c62542ec4
+Author: Alan Hourihane <alanh@tungstengraphics.com>
+Date:   Wed Oct 15 11:19:41 2008 +0100
+
+    add winsock check for windows builds
+
+commit 005bd80a9eab736aea737869b8a1079c565e1cd6
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Oct 7 09:56:49 2008 -0400
+
+    xtrans 1.2.2
+
 commit 1185dd2966521e1a19474dfd4206306cb383fc89
 Author: Adam Jackson <ajax@redhat.com>
 Date:   Tue Oct 7 09:55:22 2008 -0400
