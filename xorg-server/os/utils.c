@@ -218,6 +218,9 @@ OsSignal(sig, handler)
     int sig;
     OsSigHandlerPtr handler;
 {
+#ifdef X_NOT_POSIX
+    return signal(sig, handler);
+#else
     struct sigaction act, oact;
 
     sigemptyset(&act.sa_mask);
@@ -228,6 +231,7 @@ OsSignal(sig, handler)
     if (sigaction(sig, &act, &oact))
       perror("sigaction");
     return oact.sa_handler;
+#endif
 }
 
 /*
@@ -236,7 +240,11 @@ OsSignal(sig, handler)
  * server at a time.  This keeps the servers from stomping on each other
  * if the user forgets to give them different display numbers.
  */
+#ifdef _MSC_VER
+#define LOCK_DIR getenv("TEMP")
+#else
 #define LOCK_DIR "/tmp"
+#endif
 #define LOCK_TMP_PREFIX "/.tX"
 #define LOCK_PREFIX "/.X"
 #define LOCK_SUFFIX "-lock"
@@ -252,8 +260,14 @@ OsSignal(sig, handler)
 #endif
 #endif
 
+#ifdef _MSC_VER
+#define kill(pid, exitcode)  TerminateProcess(OpenProcess(PROCESS_TERMINATE ,FALSE,pid),exitcode)
+#define link rename
+#endif
+
+
 static Bool StillLocking = FALSE;
-static char LockFile[PATH_MAX];
+static char szLockFile[PATH_MAX];
 static Bool nolock = FALSE;
 
 /*
@@ -281,10 +295,10 @@ LockServer(void)
   len = strlen(LOCK_PREFIX) > strlen(LOCK_TMP_PREFIX) ? strlen(LOCK_PREFIX) :
 						strlen(LOCK_TMP_PREFIX);
   len += strlen(tmppath) + strlen(port) + strlen(LOCK_SUFFIX) + 1;
-  if (len > sizeof(LockFile))
+  if (len > sizeof(szLockFile))
     FatalError("Display name `%s' is too long\n", port);
   (void)sprintf(tmp, "%s" LOCK_TMP_PREFIX "%s" LOCK_SUFFIX, tmppath, port);
-  (void)sprintf(LockFile, "%s" LOCK_PREFIX "%s" LOCK_SUFFIX, tmppath, port);
+  (void)sprintf(szLockFile, "%s" LOCK_PREFIX "%s" LOCK_SUFFIX, tmppath, port);
 
   /*
    * Create a temporary file containing our PID.  Attempt three times
@@ -326,7 +340,7 @@ LockServer(void)
   i = 0;
   haslock = 0;
   while ((!haslock) && (i++ < 3)) {
-    haslock = (link(tmp,LockFile) == 0);
+    haslock = (link(tmp,szLockFile) == 0);
     if (haslock) {
       /*
        * We're done.
@@ -337,17 +351,17 @@ LockServer(void)
       /*
        * Read the pid from the existing file
        */
-      lfd = open(LockFile, O_RDONLY);
+      lfd = open(szLockFile, O_RDONLY);
       if (lfd < 0) {
         unlink(tmp);
-        FatalError("Can't read lock file %s\n", LockFile);
+        FatalError("Can't read lock file %s\n", szLockFile);
       }
       pid_str[0] = '\0';
       if (read(lfd, pid_str, 11) != 11) {
         /*
          * Bogus lock file.
          */
-        unlink(LockFile);
+        unlink(szLockFile);
         close(lfd);
         continue;
       }
@@ -364,7 +378,7 @@ LockServer(void)
         /*
          * Stale lock file.
          */
-        unlink(LockFile);
+        unlink(szLockFile);
         continue;
       }
       else if (((t < 0) && (errno == EPERM)) || (t == 0)) {
@@ -374,13 +388,13 @@ LockServer(void)
         unlink(tmp);
 	FatalError("Server is already active for display %s\n%s %s\n%s\n",
 		   port, "\tIf this server is no longer running, remove",
-		   LockFile, "\tand start again.");
+		   szLockFile, "\tand start again.");
       }
     }
   }
   unlink(tmp);
   if (!haslock)
-    FatalError("Could not create server lock file: %s\n", LockFile);
+    FatalError("Could not create server lock file: %s\n", szLockFile);
   StillLocking = FALSE;
 }
 
@@ -395,7 +409,7 @@ UnlockServer(void)
 
   if (!StillLocking){
 
-  (void) unlink(LockFile);
+  (void) unlink(szLockFile);
   }
 }
 
@@ -1675,7 +1689,7 @@ Fclose(pointer iop)
 #endif
 
 #define MAX_ARG_LENGTH          128
-#define MAX_ENV_LENGTH          256
+#define MAX_ENV_LENGTH          2048
 #define MAX_ENV_PATH_LENGTH     2048	/* Limit for *PATH and TERMCAP */
 
 #if USE_ISPRINT

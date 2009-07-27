@@ -3,7 +3,6 @@ DEFINES += HAVE_XKB_CONFIG_H
 DDX_SRCS = \
         ddxBeep.c \
         ddxCtrls.c \
-        ddxFakeBtn.c \
         ddxFakeMtn.c \
         ddxInit.c \
         ddxKeyClick.c \

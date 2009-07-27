@@ -68,6 +68,7 @@ extern Atom MakeAtom ( char *string, unsigned len, int makeit );
 extern int ValidAtom ( Atom atom );
 extern char *NameForAtom (Atom atom);
 
+#ifndef _MSC_VER
 #ifndef _HAVE_XALLOC_DECLS
 #define _HAVE_XALLOC_DECLS
 extern pointer Xalloc(unsigned long);
@@ -75,13 +76,21 @@ extern pointer Xrealloc(pointer, unsigned long);
 extern void Xfree(pointer);
 extern pointer Xcalloc(unsigned long);
 #endif
+#endif
 extern int f_strcasecmp(const char *s1, const char *s2);
 
 #ifndef xalloc
+#ifdef _MSC_VER
+#define xalloc(n)       malloc ((unsigned) n)
+#define xfree(p)        free ((pointer) p)
+#define xrealloc(p,n)   realloc (p,n)
+#define xcalloc(n,s)    calloc(n, s)
+#else
 #define xalloc(n)   Xalloc ((unsigned) n)
 #define xfree(p)    Xfree ((pointer) p)
 #define xrealloc(p,n)	Xrealloc ((pointer)p,n)
 #define xcalloc(n,s)    Xcalloc((unsigned) n * (unsigned) s)
+#endif
 #endif
 #define lowbit(x) ((x) & (~(x) + 1))
 

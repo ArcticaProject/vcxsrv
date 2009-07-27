@@ -45,8 +45,14 @@ VSEFLAGSD	= $(CFLAGSD)
 VCFLAGS	= $(CFLAGS)
 VCFLAGSD= $(CFLAGSD)
 
+!ifdef DEBUG
+OUTDIR=obj_d
+!else
+OUTDIR=obj
+!endif
+
 DLL_INLINED_OBJS = \
-		pthread.obj \
+		$(OUTDIR)\pthread.obj \
 		version.res
 
 # Aggregate modules for inlinability
@@ -439,7 +445,7 @@ VC-static:
 	@ nmake /nologo EHFLAGS="$(OPTIM) $(VCFLAGS) /DPTW32_BUILD_INLINED /DPTW32_STATIC_LIB" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VER).static
 
 VC-static-debug:
-	@ nmake /nologo EHFLAGS="$(OPTIMD) $(VCFLAGSD) /DPTW32_BUILD_INLINED /DPTW32_STATIC_LIB" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).static
+	@ nmake /nologo DEBUG=1 EHFLAGS="$(OPTIMD) $(VCFLAGSD) /DPTW32_BUILD_INLINED /DPTW32_STATIC_LIB" CLEANUP=__CLEANUP_C pthreadVC$(DLL_VERD).static
 
 realclean: clean
 	if exist pthread*.dll del pthread*.dll
@@ -469,17 +475,23 @@ $(DLLS): $(DLL_OBJS)
 		/link /nodefaultlib:libcmt /implib:$*.lib \
 		msvcrt.lib wsock32.lib /out:$@
 
-$(INLINED_STAMPS): $(DLL_INLINED_OBJS)
+$(INLINED_STAMPS): $(OUTDIR) $(DLL_INLINED_OBJS)
 	cl /LDd /Zi /nologo $(DLL_INLINED_OBJS) \
 		/link /nodefaultlib:libcmt /implib:$*.lib \
 		msvcrt.lib wsock32.lib /out:$*.dll
 
-$(STATIC_STAMPS): $(DLL_INLINED_OBJS)
+$(STATIC_STAMPS): $(OUTDIR) $(DLL_INLINED_OBJS)
 	if exist $*.lib del $*.lib
 	lib $(DLL_INLINED_OBJS) /out:$*.lib
-
+  
+$(OUTDIR):
+	mkdir $(OUTDIR)
+  
 .c.obj:
 	cl $(EHFLAGS) /D$(CLEANUP) -c $<
+
+.c{$(OUTDIR)}.obj:
+	cl $(EHFLAGS) /D$(CLEANUP) -Fo"$@" -c $<
 
 .rc.res:
 	rc /dPTW32_RC_MSC /d$(CLEANUP) $<

@@ -1,12 +1,8 @@
 CSRCS=\
 bigreq.c \
-cup.c \
 dpms.c \
 dpmsstubs.c \
-EVI.c \
 mbuf.c \
-mitmisc.c \
-sampleEVI.c \
 saver.c \
 security.c \
 shape.c \
@@ -14,9 +10,9 @@ sleepuntil.c \
 sync.c \
 xace.c \
 xcmisc.c \
-xevie.c \
 xres.c \
-xtest.c
+xtest.c \
+geext.c
 
 #shm.c \
 #appgroup.c \

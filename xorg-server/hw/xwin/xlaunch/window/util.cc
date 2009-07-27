@@ -25,6 +25,8 @@
  */
 #include "util.h"
 
+const char * MessageDebug::notify_names[NOTIFY_NAMES_LEN];
+
 std::string win32_error::message(DWORD errorcode)
 {
     LPVOID lpMsgBuf;

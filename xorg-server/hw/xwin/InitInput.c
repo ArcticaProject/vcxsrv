@@ -95,7 +95,7 @@ ProcessInputEvents (void)
 #endif
 
   mieqProcessInputEvents ();
-  miPointerUpdate ();
+  miPointerUpdateSprite(inputInfo.pointer);
 
 #if 0
   ErrorF ("ProcessInputEvents - returning\n");
@@ -144,8 +144,8 @@ InitInput (int argc, char *argv[])
     }
 #endif
 
-  pMouse = AddInputDevice (winMouseProc, TRUE);
-  pKeyboard = AddInputDevice (winKeybdProc, TRUE);
+  pMouse = AddInputDevice (serverClient, winMouseProc, TRUE);
+  pKeyboard = AddInputDevice (serverClient, winKeybdProc, TRUE);
   
   RegisterPointerDevice (pMouse);
   RegisterKeyboardDevice (pKeyboard);

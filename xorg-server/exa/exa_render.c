@@ -1054,14 +1054,14 @@ exaTrapezoids (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
     BoxRec		bounds;
 
     if (maskFormat) {
+	PicturePtr	pPicture;
+	INT16		xDst, yDst;
+	INT16		xRel, yRel;
+
 	miTrapezoidBounds (ntrap, traps, &bounds);
 
 	if (bounds.y1 >= bounds.y2 || bounds.x1 >= bounds.x2)
 	    return;
-
-	PicturePtr	pPicture;
-	INT16		xDst, yDst;
-	INT16		xRel, yRel;
 
 	xDst = traps[0].left.p1.x >> 16;
 	yDst = traps[0].left.p1.y >> 16;
@@ -1118,14 +1118,14 @@ exaTriangles (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
     BoxRec		bounds;
 
     if (maskFormat) {
+	PicturePtr	pPicture;
+	INT16		xDst, yDst;
+	INT16		xRel, yRel;
+
 	miTriangleBounds (ntri, tris, &bounds);
 
 	if (bounds.y1 >= bounds.y2 || bounds.x1 >= bounds.x2)
 	    return;
-
-	PicturePtr	pPicture;
-	INT16		xDst, yDst;
-	INT16		xRel, yRel;
 
 	xDst = tris[0].p1.x >> 16;
 	yDst = tris[0].p1.y >> 16;

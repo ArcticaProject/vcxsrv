@@ -31,7 +31,7 @@
 #include <X11/XKBlib.h>
 
 #include "tokens.h"
-#define	DEBUG_VAR	scanDebug
+
 #include "utils.h"
 #include "parseutils.h"
 

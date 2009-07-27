@@ -34,7 +34,8 @@ CSRCS=allowev.c \
 	setmode.c \
 	ungrdev.c \
 	ungrdevb.c \
-	ungrdevk.c
+	ungrdevk.c \
+	xiproperty.c
   
 LIBRARY=libXi
 

@@ -308,12 +308,24 @@ winKeybdProc (DeviceIntPtr pDeviceInt, int iState)
 #endif
       break;
       
-    case DEVICE_ON: 
+    case DEVICE_ON:
+    {
+      DeviceIntPtr master;
       pDevice->on = TRUE;
 
       // immediately copy the state of this keyboard device to the VCK
       // (which otherwise happens lazily after the first keypress)
-      SwitchCoreKeyboard(pDeviceInt);
+      master  = (!pDeviceInt->isMaster && pDeviceInt->u.master) ? pDeviceInt->u.master : NULL;
+      if (master)
+      {
+        /* Force a copy of the key class into the VCK so that the layout
+           is transferred. */
+        if (!master->key)
+          master = GetPairedDevice(master);
+        CopyKeyClass(pDeviceInt, master);
+      }
+    }
+
       break;
 
     case DEVICE_CLOSE:

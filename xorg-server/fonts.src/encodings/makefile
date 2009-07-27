@@ -3,6 +3,8 @@ $(error Please do not specify MAKESERVER=1)
 endif
 load_makefile large\makefile
 
+INC_BDF_RULES=1
+
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\encodings
 $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"

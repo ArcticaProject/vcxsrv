@@ -62,7 +62,7 @@ extern Bool	g_fSoftwareCursor;
  */
 
 static void
-winPointerWarpCursor (ScreenPtr pScreen, int x, int y);
+winPointerWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y);
 
 static Bool
 winCursorOffScreen (ScreenPtr *ppScreen, int *x, int *y);
@@ -79,7 +79,7 @@ miPointerScreenFuncRec g_winPointerCursorFuncs =
 
 
 static void
-winPointerWarpCursor (ScreenPtr pScreen, int x, int y)
+winPointerWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
   winScreenPriv(pScreen);
   RECT			rcClient;
@@ -127,7 +127,7 @@ winPointerWarpCursor (ScreenPtr pScreen, int x, int y)
     }
 
   /* Call the mi warp procedure to do the actual warping in X. */
-  miPointerWarpCursor (pScreen, x, y);
+  miPointerWarpCursor (pDev, pScreen, x, y);
 }
 
 static Bool
@@ -444,7 +444,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
  *  Convert the X cursor representation to native format if possible.
  */
 static Bool
-winRealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
+winRealizeCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   if(pCursor == NULL || pCursor->bits == NULL)
     return FALSE;
@@ -460,7 +460,7 @@ winRealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
  *  Free the storage space associated with a realized cursor.
  */
 static Bool
-winUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
+winUnrealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   return TRUE;
 }
@@ -471,7 +471,7 @@ winUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
  *  Set the cursor sprite and position.
  */
 static void
-winSetCursor (ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
+winSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
 {
   POINT ptCurPos, ptTemp;
   HWND  hwnd;
@@ -549,7 +549,7 @@ winSetCursor (ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
  *  Move the cursor. This is a noop for us.
  */
 static void
-winMoveCursor (ScreenPtr pScreen, int x, int y)
+winMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
 }
 

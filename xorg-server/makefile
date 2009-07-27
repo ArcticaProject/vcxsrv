@@ -2,9 +2,7 @@ ifneq ($(MAKESERVER),1)
 $(error Please specify MAKESERVER=1 on the command line or as environment variable)
 endif
 
-INCLUDELIBFILES = afb\$(OBJDIR)\libafb.lib \
- cfb\$(OBJDIR)\libcfb.lib \
- cfb32\$(OBJDIR)\libcfb32.lib \
+INCLUDELIBFILES =  \
  composite\$(OBJDIR)\libcomposite.lib \
  config\$(OBJDIR)\libconfig.lib \
  damageext\$(OBJDIR)\libdamageext.lib \
@@ -16,7 +14,6 @@ INCLUDELIBFILES = afb\$(OBJDIR)\libafb.lib \
  hw\kdrive\ephyr\$(OBJDIR)\libxephyr.lib \
  hw\kdrive\src\$(OBJDIR)\libkdrive.lib \
  hw\xwin\$(OBJDIR)\libxwin.lib \
- mfb\$(OBJDIR)\libmfb.lib \
  mi\$(OBJDIR)\libmi.lib \
  miext\damage\$(OBJDIR)\libdamage.lib \
  miext\shadow\$(OBJDIR)\libshadow.lib \
@@ -60,13 +57,13 @@ OBJS = dix\$(OBJDIR)\main.obj
 
 WINAPP=vcxsrv
 
-LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib
-
 ifeq ($(DEBUG),1)
-LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype200b8MT_D.lib \
+LINKLIBS += $(MHMAKECONF)\openssl\out32_d\libeay32.lib \
+            $(MHMAKECONF)\freetype\lib\freetype200b8MT_D.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2d.lib
 else
-LINKLIBS += $(MHMAKECONF)\freetype\lib\freetype200b8MT.lib \
+LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib \
+            $(MHMAKECONF)\freetype\lib\freetype200b8MT.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2.lib
 endif
 

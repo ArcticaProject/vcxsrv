@@ -688,18 +688,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\pcf\pcfutil.c"
-				>
-				<FileConfiguration
-					Name="Release Multithreaded|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\src\pfr\pfrcmap.c"
 				>
 			</File>

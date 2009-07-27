@@ -72,11 +72,12 @@ $(OBJDIR)\%.res : %.rc
 BDFTOPCF= $(MHMAKECONF)\bdftopcf\$(OBJDIR)\bdftopcf.exe
 load_makefile $(MHMAKECONF)\bdftopcf\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 
+ifdef INC_BDF_RULES
 $(DESTDIR)\%.pcf.gz: %.bdf
 	@del -e $@
 	$(BDFTOPCF) -t $< | gzip > $@
 
 $(DESTDIR)\%.enc.gz: %.enc
 	gzip -c < $< > $@
-
+endif
 

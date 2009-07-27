@@ -39,7 +39,7 @@ class win32_error : public std::runtime_error
 };
 
 #define MESSAGE_NAMES_LEN 1024
-#define NOTIFY_NAMES_LEN 0
+#define NOTIFY_NAMES_LEN 1
 class MessageDebug
 {
     protected:

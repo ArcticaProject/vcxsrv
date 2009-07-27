@@ -43,14 +43,14 @@
 #ifndef EPHYR_LOG
 #define EPHYR_LOG(...) \
 LogMessageVerb(X_NOTICE, INFO_LOG_LEVEL, "in %s:%d:%s: ",\
-                      __FILE__, __LINE__, __func__) ; \
+                      __FILE__, __LINE__, __FUNCTION__) ; \
 LogMessageVerb(X_NOTICE, INFO_LOG_LEVEL, __VA_ARGS__)
 #endif /*nomadik_log*/
 
 #ifndef EPHYR_LOG_ERROR
 #define EPHYR_LOG_ERROR(...) \
 LogMessageVerb(X_NOTICE, ERROR_LOG_LEVEL, "Error:in %s:%d:%s: ",\
-                      __FILE__, __LINE__, __func__) ; \
+                      __FILE__, __LINE__, __FUNCTION__) ; \
 LogMessageVerb(X_NOTICE, ERROR_LOG_LEVEL, __VA_ARGS__)
 #endif /*EPHYR_LOG_ERROR*/
 

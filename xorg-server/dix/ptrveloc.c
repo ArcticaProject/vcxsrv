@@ -26,11 +26,16 @@
 #include <dix-config.h>
 #endif
 
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES
+#endif
+
 #include <math.h>
 #include <ptrveloc.h>
 #include <inputstr.h>
 #include <assert.h>
 #include <os.h>
+
 
 /*****************************************************************************
  * Predictable pointer acceleration
@@ -57,6 +62,10 @@
  *  function selection (threshold =/!= 0)
  *
  ****************************************************************************/
+
+#ifdef _MSC_VER
+#define inline __inline
+#endif
 
 /* fwds */
 static inline void

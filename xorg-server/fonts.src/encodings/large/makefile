@@ -1,6 +1,9 @@
 ifeq ($(MAKESERVER),1)
 $(error Please do not specify MAKESERVER=1)
 endif
+
+INC_BDF_RULES=1
+
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\encodings\large
 $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"

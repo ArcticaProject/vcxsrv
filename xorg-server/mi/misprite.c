@@ -725,10 +725,10 @@ miSpriteSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
                    CursorPtr pCursor, int x, int y)
 {
     miSpriteScreenPtr	pScreenPriv;
+    miCursorInfoPtr pPointer;
 
     pScreenPriv = (miSpriteScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						      miSpriteScreenKey);
-    miCursorInfoPtr pPointer;
 
     if (!pDev->isMaster && !pDev->u.master)
     {

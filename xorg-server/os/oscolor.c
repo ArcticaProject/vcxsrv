@@ -49,6 +49,10 @@ SOFTWARE.
 #include <dix-config.h>
 #endif
 
+#ifdef _MSC_VER
+#define strncasecmp _strnicmp
+#endif
+
 #include <X11/keysym.h>
 #include "os.h"
 

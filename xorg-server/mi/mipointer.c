@@ -285,10 +285,10 @@ miPointerDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
 static void
 miPointerDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
 {
+    SetupScreen(pScreen);
     if (!pDev->isMaster && pDev->u.master)
         return;
 
-    SetupScreen(pScreen);
     (*pScreenPriv->spriteFuncs->DeviceCursorCleanup)(pDev, pScreen);
     xfree(dixLookupPrivate(&pDev->devPrivates, miPointerPrivKey));
     dixSetPrivate(&pDev->devPrivates, miPointerPrivKey, NULL);
@@ -302,9 +302,9 @@ miPointerWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
     miPointerPtr pPointer;
     BOOL changedScreen = FALSE;
+    SetupScreen (pScreen);
 
     pPointer = MIPOINTER(pDev);
-    SetupScreen (pScreen);
 
     if (pPointer->pScreen != pScreen)
     {

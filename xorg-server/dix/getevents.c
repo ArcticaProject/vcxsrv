@@ -112,6 +112,13 @@ key_autorepeats(DeviceIntPtr pDev, int key_code)
               (1 << (key_code & 7)));
 }
 
+#ifdef _MSC_VER
+float roundf(float f)
+{
+  return ((f<0.0f) ? ceil(f-.5)  : floor (f+.5));
+}
+#endif
+
 /**
  * Rescale the coord between the two axis ranges.
  */

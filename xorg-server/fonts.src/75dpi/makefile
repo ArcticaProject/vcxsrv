@@ -2,6 +2,8 @@ ifeq ($(MAKESERVER),1)
 $(error Please do not specify MAKESERVER=1)
 endif
 
+INC_BDF_RULES=1
+
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\75dpi
 $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
@@ -233,31 +235,22 @@ FONT_FILES = $(BDF2UCS_FONT_FILES) $(EXTRA_FONT_FILES)
 BDF_FILES = $(FONT_FILES:%=%.bdf)
 PCF_FILES = $(FONT_FILES:%=$(DESTDIR)\%.pcf.gz)
 
-ISO8859_1_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-1.bdf)
 ISO8859_1_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-1.pcf.gz)
 
-ISO8859_2_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-2.bdf)
 ISO8859_2_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-2.pcf.gz)
 
-ISO8859_3_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-3.bdf)
 ISO8859_3_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-3.pcf.gz)
 
-ISO8859_4_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-4.bdf)
 ISO8859_4_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-4.pcf.gz)
 
-ISO8859_9_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-9.bdf)
 ISO8859_9_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-9.pcf.gz)
 
-ISO8859_10_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-10.bdf)
 ISO8859_10_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-10.pcf.gz)
 
-ISO8859_13_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-13.bdf)
 ISO8859_13_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-13.pcf.gz)
 
-ISO8859_14_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-14.bdf)
 ISO8859_14_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-14.pcf.gz)
 
-ISO8859_15_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-15.bdf)
 ISO8859_15_PCF_FILES = $(BDF2UCS_FONT_FILES:%=$(DESTDIR)\%-ISO8859-15.pcf.gz)
 
 UTIL_DIR = ..\font-util
@@ -265,43 +258,69 @@ UCS2ANY = $(UTIL_DIR)\$(OBJDIR)\ucs2any.exe
 
 load_makefile $(UTIL_DIR)\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 
-%-ISO8859-1.bdf: %.bdf
-	@del -e $@
+$(DESTDIR)\%-ISO8859-1.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-1.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-1 ISO8859-1
-
-%-ISO8859-2.bdf: %.bdf
 	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-1.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-1.bdf)
+
+$(DESTDIR)\%-ISO8859-2.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-2.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-2 ISO8859-2
-
-%-ISO8859-3.bdf: %.bdf
 	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-2.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-2.bdf)
+
+$(DESTDIR)\%-ISO8859-3.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-3.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-3 ISO8859-3
-
-%-ISO8859-4.bdf: %.bdf
 	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-3.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-3.bdf)
+
+$(DESTDIR)\%-ISO8859-4.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-4.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-4 ISO8859-4
-
-%-ISO8859-9.bdf: %.bdf
 	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-4.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-4.bdf)
+
+$(DESTDIR)\%-ISO8859-9.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-9.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-9 ISO8859-9
-
-%-ISO8859-10.bdf: %.bdf
 	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-9.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-9.bdf)
+
+$(DESTDIR)\%-ISO8859-10.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-10.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-10 ISO8859-10
-
-%-ISO8859-13.bdf: %.bdf
 	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-10.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-10.bdf)
+
+$(DESTDIR)\%-ISO8859-13.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-13.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-13 ISO8859-13
-
-%-ISO8859-14.bdf: %.bdf
 	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-13.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-13.bdf)
+
+$(DESTDIR)\%-ISO8859-14.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-14.bdf)
 	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-14 ISO8859-14
-
-%-ISO8859-15.bdf: %.bdf
 	@del -e $@
-	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-15 ISO8859-15
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-14.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-14.bdf)
 
-fontdir = .
+$(DESTDIR)\%-ISO8859-15.pcf.gz: %.bdf
+	@del -e $(<:%.bdf=%-ISO8859-15.bdf)
+	$(UCS2ANY) $< $(UTIL_DIR)\map-ISO8859-15 ISO8859-15
+	@del -e $@
+	$(BDFTOPCF) -t $(<:%.bdf=%-ISO8859-15.bdf) | gzip > $@
+	@del $(<:%.bdf=%-ISO8859-15.bdf)
+
 font_DATA = \
 	$(PCF_FILES) \
 	$(ISO8859_1_PCF_FILES) \
@@ -313,16 +332,6 @@ font_DATA = \
 	$(ISO8859_13_PCF_FILES) \
 	$(ISO8859_14_PCF_FILES) \
 	$(ISO8859_15_PCF_FILES)
-BUILT_BDF_FILES = \
-	$(ISO8859_1_BDF_FILES) \
-	$(ISO8859_2_BDF_FILES) \
-	$(ISO8859_3_BDF_FILES) \
-	$(ISO8859_4_BDF_FILES) \
-	$(ISO8859_9_BDF_FILES) \
-	$(ISO8859_10_BDF_FILES) \
-	$(ISO8859_13_BDF_FILES) \
-	$(ISO8859_14_BDF_FILES) \
-	$(ISO8859_15_BDF_FILES)
 
 all: $(DESTDIR) $(UCS2ANY) $(DESTDIR)\fonts.scale $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
 

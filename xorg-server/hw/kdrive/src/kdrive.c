@@ -1373,10 +1373,12 @@ KdInitOutput (ScreenInfo    *pScreenInfo,
     signal(SIGSEGV, KdBacktrace);
 }
 
+#ifndef _MSC_VER
 void
 OsVendorFatalError(void)
 {
 }
+#endif
 
 #ifdef DPMSExtension
 #ifndef _MSC_VER
