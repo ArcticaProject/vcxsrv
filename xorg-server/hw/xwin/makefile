@@ -19,6 +19,13 @@ SRCS_MULTIWINDOW = \
 
 DEFINES += XWIN_MULTIWINDOW
 
+#SRCS_MULTIWINDOWEXTWM = \
+#	winwin32rootless.c \
+#	winwin32rootlesswindow.c \
+#	winwin32rootlesswndproc.c \
+#	winwindowswm.c
+#DEFINES += XWIN_MULTIWINDOWEXTWM
+
 SRCS_RANDR = \
 	winrandr.c
 DEFINES += XWIN_RANDR RELOCATE_PROJECTROOT
@@ -56,7 +63,7 @@ CSRCS = InitInput.c \
 	winwindow.c \
         winprefslex.c \
         winprefsyacc.c \
-	winwndproc.c $(SRCS_RANDR) $(SRCS_MULTIWINDOW) $(SRCS_CLIPBOARD)
+	winwndproc.c $(SRCS_RANDR) $(SRCS_MULTIWINDOW) $(SRCS_MULTIWINDOWEXTWM) $(SRCS_CLIPBOARD)
 
 DEFINES += YY_NO_UNISTD_H
 

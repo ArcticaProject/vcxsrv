@@ -430,7 +430,7 @@ miSpriteSourceValidate (DrawablePtr pDrawable, int x, int y, int width,
         if (DevHasCursor(pDev))
         {
             pCursorInfo = MISPRITE(pDev);
-            if (pDrawable->type == DRAWABLE_WINDOW && pCursorInfo->isUp &&
+            if (pCursorInfo && pDrawable->type == DRAWABLE_WINDOW && pCursorInfo->isUp &&
                     pCursorInfo->pScreen == pScreen &&
                     ORG_OVERLAP(&pCursorInfo->saved, pDrawable->x, pDrawable->y,
                         x, y, width, height))
@@ -468,7 +468,7 @@ miSpriteCopyWindow (WindowPtr pWindow, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
             /*
              * Damage will take care of destination check
              */
-            if (pCursorInfo->isUp && pCursorInfo->pScreen == pScreen &&
+            if (pCursorInfo && pCursorInfo->isUp && pCursorInfo->pScreen == pScreen &&
                     RECT_IN_REGION (pScreen, prgnSrc, &pCursorInfo->saved) != rgnOUT)
             {
                 SPRITE_DEBUG (("CopyWindow remove\n"));
@@ -553,9 +553,12 @@ miSpriteInstallColormap (ColormapPtr pMap)
             if (DevHasCursor(pDev))
             {
                 pCursorInfo = MISPRITE(pDev);
-                pCursorInfo->checkPixels = TRUE;
-                if (pCursorInfo->isUp && pCursorInfo->pScreen == pScreen)
-                    miSpriteRemoveCursor(pDev, pScreen);
+                if (pCursorInfo)
+                {
+                  pCursorInfo->checkPixels = TRUE;
+                  if (pCursorInfo->isUp && pCursorInfo->pScreen == pScreen)
+                      miSpriteRemoveCursor(pDev, pScreen);
+                }
             }
         }
 

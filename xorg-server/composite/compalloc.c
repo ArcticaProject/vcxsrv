@@ -108,7 +108,7 @@ compRedirectWindow (ClientPtr pClient, WindowPtr pWin, int update)
      */
     if (!cw)
     {
-	cw = xalloc (sizeof (CompWindowRec));
+	cw = xcalloc (1,sizeof (CompWindowRec));
 	if (!cw)
 	{
 	    xfree (ccw);

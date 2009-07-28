@@ -240,11 +240,7 @@ OsSignal(sig, handler)
  * server at a time.  This keeps the servers from stomping on each other
  * if the user forgets to give them different display numbers.
  */
-#ifdef _MSC_VER
-#define LOCK_DIR getenv("TEMP")
-#else
 #define LOCK_DIR "/tmp"
-#endif
 #define LOCK_TMP_PREFIX "/.tX"
 #define LOCK_PREFIX "/.X"
 #define LOCK_SUFFIX "-lock"
@@ -260,12 +256,6 @@ OsSignal(sig, handler)
 #endif
 #endif
 
-#ifdef _MSC_VER
-#define kill(pid, exitcode)  TerminateProcess(OpenProcess(PROCESS_TERMINATE ,FALSE,pid),exitcode)
-#define link rename
-#endif
-
-
 static Bool StillLocking = FALSE;
 static char szLockFile[PATH_MAX];
 static Bool nolock = FALSE;
@@ -279,19 +269,27 @@ static Bool nolock = FALSE;
 void
 LockServer(void)
 {
+#if defined(WIN32) && !defined(__CYGWIN__)
+  char MutexName[100];
+  sprintf(MutexName, "Global\\VcXsrv_Mutex_%d\n", getpid());
+  if (!CreateMutex(NULL,TRUE,MutexName) || GetLastError()== ERROR_ALREADY_EXISTS)
+  {
+    FatalError("Server is already active for display %d\n", atoi(display));
+  }
+#else
+  char port[20];
   char tmp[PATH_MAX], pid_str[12];
   int lfd, i, haslock, l_pid, t;
   char *tmppath = NULL;
   int len;
-  char port[20];
 
   if (nolock) return;
   /*
    * Path names
    */
   tmppath = LOCK_DIR;
-
   sprintf(port, "%d", atoi(display));
+
   len = strlen(LOCK_PREFIX) > strlen(LOCK_TMP_PREFIX) ? strlen(LOCK_PREFIX) :
 						strlen(LOCK_TMP_PREFIX);
   len += strlen(tmppath) + strlen(port) + strlen(LOCK_SUFFIX) + 1;
@@ -396,6 +394,7 @@ LockServer(void)
   if (!haslock)
     FatalError("Could not create server lock file: %s\n", szLockFile);
   StillLocking = FALSE;
+#endif
 }
 
 /*

@@ -553,12 +553,23 @@ winMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
 }
 
+static Bool
+winDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+  return TRUE;
+}
+static void
+winDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
+{
+}
 
 static miPointerSpriteFuncRec winSpriteFuncsRec = {
   winRealizeCursor,
   winUnrealizeCursor,
   winSetCursor,
-  winMoveCursor
+  winMoveCursor,
+  winDeviceInitialize,
+  winDeviceCleanup
 };
 
 

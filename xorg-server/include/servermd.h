@@ -269,6 +269,12 @@ SOFTWARE.
 #define GLYPHPADBYTES		4
 #endif /* linux/s390 */ 
 
+#ifdef WIN32
+#define IMAGE_BYTE_ORDER	LSBFirst
+#define BITMAP_BIT_ORDER	LSBFirst
+#define GLYPHPADBYTES		4
+#endif
+
 /* size of buffer to use with GetImage, measured in bytes. There's obviously
  * a trade-off between the amount of heap used and the number of times the
  * ddx routine has to be called.

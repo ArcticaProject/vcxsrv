@@ -619,7 +619,7 @@ winSendKeyEvent (DWORD dwKey, Bool fDown)
   
   ZeroMemory (&xCurrentEvent, sizeof (xCurrentEvent));
 
-  xCurrentEvent.u.u.type = fDown ? KeyPress : KeyRelease;
+  xCurrentEvent.u.u.type = fDown ? DeviceKeyPress : DeviceKeyRelease;
   xCurrentEvent.u.keyButtonPointer.time =
     g_c32LastInputEventTime = GetTickCount ();
   xCurrentEvent.u.u.detail = dwKey + MIN_KEYCODE;

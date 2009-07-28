@@ -1006,15 +1006,17 @@ int
 winMouseProc (DeviceIntPtr pDeviceInt, int iState);
 
 int
-winMouseWheel (ScreenPtr pScreen, int iDeltaZ);
+winMouseWheel (ScreenPtr pScreen, int iDeltaZ, int x, int y);
 
 void
-winMouseButtonsSendEvent (int iEventType, int iButton);
+winMouseButtonsSendEvent (int iEventType, int iButton, int x, int y);
+
+void winGetPtMouse(HWND hwnd, LPARAM lParam, POINT *ptMouse);
 
 int
 winMouseButtonsHandle (ScreenPtr pScreen,
 		       int iEventType, int iButton,
-		       WPARAM wParam);
+		       WPARAM wParam, HWND hwnd, LPARAM lParam);
 
 void
 winEnqueueMotion(int x, int y);

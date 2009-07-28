@@ -44,6 +44,10 @@
 
 #ifdef XKB
 extern BOOL winCheckKeyPressed(WPARAM wParam, LPARAM lParam);
+#ifndef XKB_IN_SERVER
+#define XKB_IN_SERVER
+#endif
+#include <xkbsrv.h>
 #endif
 extern void winFixShiftKeys (int iScanCode);
 
@@ -815,7 +819,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-      return winMouseButtonsHandle (s_pScreen, ButtonPress, Button1, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, Button1, wParam, hwnd, lParam);
       
     case WM_LBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -826,7 +830,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-      return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button1, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, Button1, wParam, hwnd, lParam);
 
     case WM_MBUTTONDBLCLK:
     case WM_MBUTTONDOWN:
@@ -838,7 +842,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-      return winMouseButtonsHandle (s_pScreen, ButtonPress, Button2, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, Button2, wParam, hwnd, lParam);
       
     case WM_MBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -849,7 +853,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-      return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button2, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, Button2, wParam, hwnd, lParam);
       
     case WM_RBUTTONDBLCLK:
     case WM_RBUTTONDOWN:
@@ -861,7 +865,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-      return winMouseButtonsHandle (s_pScreen, ButtonPress, Button3, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, Button3, wParam, hwnd, lParam);
       
     case WM_RBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -872,7 +876,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-      return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button3, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, Button3, wParam, hwnd, lParam);
 
     case WM_XBUTTONDBLCLK:
     case WM_XBUTTONDOWN:
@@ -884,7 +888,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-      return winMouseButtonsHandle (s_pScreen, ButtonPress, HIWORD(wParam) + 5, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, HIWORD(wParam) + 5, wParam, hwnd, lParam);
     case WM_XBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
@@ -894,7 +898,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-      return winMouseButtonsHandle (s_pScreen, ButtonRelease, HIWORD(wParam) + 5, wParam);
+	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, HIWORD(wParam) + 5, wParam, hwnd, lParam);
 
     case WM_TIMER:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -904,15 +908,20 @@ winWindowProc (HWND hwnd, UINT message,
       switch (wParam)
 	{
 	case WIN_E3B_TIMER_ID:
-	  /* Send delayed button press */
-	  winMouseButtonsSendEvent (ButtonPress,
-				    s_pScreenPriv->iE3BCachedPress);
+	  {
+	    POINT Pos;
+	    GetCursorPos(&Pos);
+	    ScreenToClient(hwnd,&Pos);
+	    /* Send delayed button press */
+	    winMouseButtonsSendEvent (DeviceButtonPress,
+	                              s_pScreenPriv->iE3BCachedPress,Pos.x,Pos.y);
 
-	  /* Kill this timer */
-	  KillTimer (s_pScreenPriv->hwndScreen, WIN_E3B_TIMER_ID);
+	    /* Kill this timer */
+	    KillTimer (s_pScreenPriv->hwndScreen, WIN_E3B_TIMER_ID);
 
-	  /* Clear screen privates flags */
-	  s_pScreenPriv->iE3BCachedPress = 0;
+	    /* Clear screen privates flags */
+	    s_pScreenPriv->iE3BCachedPress = 0;
+	  }
 	  break;
 
 	case WIN_POLLING_MOUSE_TIMER_ID:
@@ -923,10 +932,11 @@ winWindowProc (HWND hwnd, UINT message,
 	    
 	    /* Get the current position of the mouse cursor */
 	    GetCursorPos (&point);
+	    ScreenToClient(hwnd,&point);
 	    
 	    /* Map from screen (-X, -Y) to root (0, 0) */
-	    point.x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
-	    point.y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
+	    //point.x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
+	    //point.y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
 
 	    /* Deliver absolute cursor position to X Server */
 	    winEnqueueMotion(point.x , point.y);
@@ -938,6 +948,7 @@ winWindowProc (HWND hwnd, UINT message,
 	    wR = (GetKeyState (VK_RBUTTON) & 0x8000)?MK_RBUTTON:0;
 	    wShift = (GetKeyState (VK_SHIFT) & 0x8000)?MK_SHIFT:0;
 	    wCtrl = (GetKeyState (VK_CONTROL) & 0x8000)?MK_CONTROL:0;
+	    ScreenToClient(hwnd,&point);
 	    lPos = MAKELPARAM(point.x, point.y);
 	    if (g_fButton[0] & !wL)
 	    PostMessage (hwnd, WM_LBUTTONUP, wCtrl|wM|wR|wShift, lPos);
@@ -960,7 +971,7 @@ winWindowProc (HWND hwnd, UINT message,
 #if CYGDEBUG
       winDebug ("winWindowProc - WM_MOUSEWHEEL\n");
 #endif
-      winMouseWheel (s_pScreen, GET_WHEEL_DELTA_WPARAM(wParam));
+      winMouseWheel (s_pScreen, GET_WHEEL_DELTA_WPARAM(wParam),GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
       break;
 
     case WM_SETFOCUS:
