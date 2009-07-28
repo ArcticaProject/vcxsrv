@@ -1,0 +1,9 @@
+# $Xorg: compose.dir,v 1.3 2000/08/17 19:46:48 cpqbld Exp $
+#
+#	This file contains compose table file name.
+#	The first word is the compose table file name and
+#	the second word is full locale name.
+#
+# $XFree86: xc/nls/compose.dir,v 1.24 2003/08/06 14:04:00 eich Exp $
+#
+iso8859-1/Compose		C
