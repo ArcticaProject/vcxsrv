@@ -258,34 +258,39 @@ void winGetPtMouse(HWND hwnd, LPARAM lParam, POINT *ptMouse)
   /* Unpack the client area mouse coordinates */
   ptMouse->x = GET_X_LPARAM(lParam);
   ptMouse->y = GET_Y_LPARAM(lParam);
+}
 
-//  /* Translate the client area mouse coordinates to screen coordinates */
-//  ClientToScreen (hwnd, ptMouse);
+void winGetPtMouseScreen(HWND hwnd, LPARAM lParam, POINT *ptMouse)
+{
+  /* Unpack the client area mouse coordinates */
+  ptMouse->x = GET_X_LPARAM(lParam);
+  ptMouse->y = GET_Y_LPARAM(lParam);
+
+  /* Translate the client area mouse coordinates to screen coordinates */
+  ClientToScreen (hwnd, ptMouse);
 
   /* Screen Coords from (-X, -Y) -> Root Window (0, 0) */
-//  ptMouse->x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
-//  ptMouse->y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
+  ptMouse->x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
+  ptMouse->y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
 }
 
 /*
  * Decide what to do with a Windows mouse message
  */
 
-int
-winMouseButtonsHandle (ScreenPtr pScreen,
-		       int iEventType, int iButton,
-		       WPARAM wParam, HWND hwnd, LPARAM lParam)
+static int
+_winMouseButtonsHandle (ScreenPtr pScreen,
+                       int iEventType, int iButton,
+                       WPARAM wParam, POINT *ptMouse)
 {
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
-  POINT ptMouse;
-  winGetPtMouse(hwnd,lParam,&ptMouse);
 
   /* Send button events right away if emulate 3 buttons is off */
   if (pScreenInfo->iE3BTimeout == WIN_E3B_OFF)
     {
       /* Emulate 3 buttons is off, send the button event */
-      winMouseButtonsSendEvent (iEventType, iButton, ptMouse.x, ptMouse.y);
+      winMouseButtonsSendEvent (iEventType, iButton, ptMouse->x, ptMouse->y);
       return 0;
     }
 
@@ -326,7 +331,7 @@ winMouseButtonsHandle (ScreenPtr pScreen,
       pScreenPriv->iE3BCachedPress = 0;
 
       /* Send fake middle button */
-      winMouseButtonsSendEvent (DeviceButtonPress, Button2, ptMouse.x, ptMouse.y);
+      winMouseButtonsSendEvent (DeviceButtonPress, Button2, ptMouse->x, ptMouse->y);
 
       /* Indicate that a fake middle button event was sent */
       pScreenPriv->fE3BFakeButton2Sent = TRUE;
@@ -342,8 +347,8 @@ winMouseButtonsHandle (ScreenPtr pScreen,
       pScreenPriv->iE3BCachedPress = 0;
 
       /* Send cached press, then send release */
-      winMouseButtonsSendEvent (DeviceButtonPress, iButton, ptMouse.x, ptMouse.y);
-      winMouseButtonsSendEvent (DeviceButtonRelease, iButton, ptMouse.x, ptMouse.y);
+      winMouseButtonsSendEvent (DeviceButtonPress, iButton, ptMouse->x, ptMouse->y);
+      winMouseButtonsSendEvent (DeviceButtonRelease, iButton, ptMouse->x, ptMouse->y);
     }
   else if (iEventType == DeviceButtonRelease
 	   && pScreenPriv->fE3BFakeButton2Sent
@@ -356,7 +361,7 @@ winMouseButtonsHandle (ScreenPtr pScreen,
       pScreenPriv->fE3BFakeButton2Sent = FALSE;
       
       /* Send middle mouse button release */
-      winMouseButtonsSendEvent (DeviceButtonRelease, Button2, ptMouse.x, ptMouse.y);
+      winMouseButtonsSendEvent (DeviceButtonRelease, Button2, ptMouse->x, ptMouse->y);
     }
   else if (iEventType == DeviceButtonRelease
 	   && pScreenPriv->iE3BCachedPress == 0
@@ -366,11 +371,32 @@ winMouseButtonsHandle (ScreenPtr pScreen,
        * Button was release, no button is cached,
        * and there is no fake button 2 release is pending.
        */
-      winMouseButtonsSendEvent (DeviceButtonRelease, iButton, ptMouse.x, ptMouse.y);
+      winMouseButtonsSendEvent (DeviceButtonRelease, iButton, ptMouse->x, ptMouse->y);
     }
 
   return 0;
 }
+
+int
+winMouseButtonsHandle (ScreenPtr pScreen,
+                       int iEventType, int iButton,
+                       WPARAM wParam, HWND hwnd, LPARAM lParam)
+{
+  POINT ptMouse;
+  winGetPtMouse(hwnd,lParam,&ptMouse);
+  return _winMouseButtonsHandle(pScreen, iEventType, iButton, wParam ,&ptMouse);
+}
+
+int
+winMouseButtonsHandleScreen (ScreenPtr pScreen,
+                             int iEventType, int iButton,
+                             WPARAM wParam, HWND hwnd, LPARAM lParam)
+{
+  POINT ptMouse;
+  winGetPtMouseScreen(hwnd,lParam,&ptMouse);
+  return _winMouseButtonsHandle(pScreen, iEventType, iButton, wParam ,&ptMouse);
+}
+
 
 /**
  * Enqueue a motion event.
