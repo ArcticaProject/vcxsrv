@@ -1548,7 +1548,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
       if (dockWindow == None) dockWindow = XInternAtom(pDisplay, "_NET_WM_WINDOW_TYPE_DOCK", False);
       if (*pAtom == dockWindow)
       {
-	hint = (hint & ~HINT_NOFRAME) | HINT_SIZEBOX; /* Xming puts a sizebox on dock windows */
+	hint = (hint & ~HINT_NOFRAME) | HINT_SIZEBOX; /* VcXsrv puts a sizebox on dock windows */
 	*zstyle = HWND_TOPMOST;
       }
     }

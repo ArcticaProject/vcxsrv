@@ -46,15 +46,15 @@
 #define WINDOW_CLASS		"VcXsrv/x"
 #define WINDOW_TITLE		PROJECT_NAME " Server - %s:%s.%d"
 #define WINDOW_TITLE_XDMCP	PROJECT_NAME " Server - %s:%s.%d"
-#define WIN_SCR_PROP		"cyg_screen_prop rl"
-#define WINDOW_CLASS_X		"cygwin/x X rl"
+#define WIN_SCR_PROP		"vcxsrv_screen_prop rl"
+#define WINDOW_CLASS_X		"vcxsrv/x X rl"
 #define WINDOW_TITLE_X		PROJECT_NAME " X"
-#define WIN_WINDOW_PROP		"cyg_window_prop_rl"
+#define WIN_WINDOW_PROP		"vcxsrv_window_prop_rl"
 #ifdef HAS_DEVWINDOWS
 # define WIN_MSG_QUEUE_FNAME	"/dev/windows"
 #endif
-#define WIN_WID_PROP		"cyg_wid_prop_rl"
-#define WIN_NEEDMANAGE_PROP	"cyg_override_redirect_prop_rl"
+#define WIN_WID_PROP		"vcxsrv_wid_prop_rl"
+#define WIN_NEEDMANAGE_PROP	"vcxsrv_override_redirect_prop_rl"
 #ifndef CYGMULTIWINDOW_DEBUG
 #define CYGMULTIWINDOW_DEBUG    NO
 #endif

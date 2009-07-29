@@ -60,15 +60,15 @@
 #define STR_CAPTION_CLIPBOARD       "Clipboard settings"
 #define STR_CLIPBOARD               "Clipboard"
 #define STR_CLIPBOARD_DESC          "Start the integrated clipboard manager"
-#define STR_EXTRA_PARAMS_DESC       "Additional parameters for Xming"
+#define STR_EXTRA_PARAMS_DESC       "Additional parameters for VcXsrv"
 
 #define STR_CAPTION_FINISH          "Finish configuration"
-#define STR_FINISH_DESC	            "Configuration is complete. Clish Finish to start Xming."
+#define STR_FINISH_DESC	            "Configuration is complete. Clish Finish to start VcXsrv."
 #define STR_FINISH_SAVE_DESC        "You may also save the configuration for later use."
 #define STR_FINISH_SAVE	            "Save configuration"
 
 #define STR_DISPLAY_TITLE           "Select display settings"
-#define STR_DISPLAY_SUBTITLE        "Choose how Xming display programs"
+#define STR_DISPLAY_SUBTITLE        "Choose how VcXsrv display programs"
 #define STR_CLIENTS_TITLE           "Select how to start clients"
 #define STR_CLIENTS_SUBTITLE        ""
 #define STR_PROGRAM_TITLE           "Specify the program to start"
