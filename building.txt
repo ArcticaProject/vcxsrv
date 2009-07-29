@@ -34,4 +34,5 @@ Building xlaunch:
 
 To build installer:
 - install http://nsis.sourceforge.net
-- run ... in xorg-server\installer
+- run 'packageall.bat' in xorg-server\installer
+
