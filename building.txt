@@ -1,20 +1,31 @@
+Prerequisits:
+- Microsoft Visual C++ 2008 Express Edition with SP1 (http://www.microsoft.com/express/vc/)
+- Perl (cygwin perl (http://www.cygwin.com/)  or activestate perl (http://www.activestate.com/activeperl/) )
+- Python (2.5 used: http://www.python.org/)
+- Gnuwin32 gawk and gzip (http://gnuwin32.sourceforge.net/)
+  Copy gawk.exe to awk.exe
+- Make sure python, perl, gzip and awk are in the environment PATH
+- make sure the command prompt is set for compiling with the visual studio compiler (vcvars32.bat)
+
 Building freetype:
-- open freetype\freetype.sln
-  Build configurations Release Multithreaded and Debug Multithreaded
+- open freetype\freetype.sln in Visual C++ 2008 Express Edition
+  Build configurations 'Release Multithreaded' and 'Debug Multithreaded'
 
 Building openssl:
-- make sure the command prompt is set for compiling with the visual studio compiler (vcvars32.bat)
-- make sure perl is in the path
 - run 'perl Configure VC-WIN32' in the openssl directory
-- run ms\do_masm.bat in the openssl directory
-- run nmake -f ms\nt.mak in the openssl directory
+- run 'ms\do_masm.bat in the openssl' directory
+- run 'nmake -f ms\nt.mak' in the openssl directory
+- run 'nmake DEBUG=1 -f ms\nt.mak' in the openssl directory (if you want to build the DEBUG version of vcxsrv)
 
 Building pthreads:
 - goto pthreads directory
-- run nmake VC-static
-- run nmake VC-static-debug
+- run 'nmake VC-static'
+- run 'nmake VC-static-debug'
 
 Building vcxsrv:
-- run mhmake MAKESERVER=1 in xorg-server directory
+- run 'mhmake MAKESERVER=1' in xorg-server directory
+- run 'mhmake DEBUG=1 MAKESERVER=1' in xorg-server directory for a debugable version
+- run 'mhame' in xorg-server\fonts.src to build the fonts directory
+- run 'mhmake' in xorg-server\xkbdata.src to build the keyboard data
 
 
