@@ -28,3 +28,5 @@
 #include "resources.h"
 #include "images.rc"
 #include "dialog.rc"
+
+IDI_XLAUNCH		ICON	"..\\..\\X.ico"

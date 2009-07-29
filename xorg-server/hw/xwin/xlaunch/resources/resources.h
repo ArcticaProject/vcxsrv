@@ -35,6 +35,8 @@
 #define IDD_FONTPATH            106
 #define IDD_CLIPBOARD           107
 
+#define IDI_XLAUNCH             108
+
 #define IDS_DISPLAY_TITLE       300
 #define IDS_DISPLAY_SUBTITLE    301
 #define IDS_CLIENTS_TITLE       302

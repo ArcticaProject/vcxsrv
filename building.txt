@@ -28,4 +28,10 @@ Building vcxsrv:
 - run 'mhame' in xorg-server\fonts.src to build the fonts directory
 - run 'mhmake' in xorg-server\xkbdata.src to build the keyboard data
 
+Building xlaunch:
+- run 'mhmake' in 'xorg-server\hw\xwin\xlaunch'
+- run 'mhmake DEBUG=1' in 'xorg-server\hw\xwin\xlaunch' if you want a debugable version.
 
+To build installer:
+- install http://nsis.sourceforge.net
+- run ... in xorg-server\installer
