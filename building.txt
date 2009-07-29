@@ -22,6 +22,14 @@ Building pthreads:
 - run 'nmake VC-static'
 - run 'nmake VC-static-debug'
 
+Building mhmake
+- open tools\mhmake\mhmake.sln in Visual C++ 2008 Express Edition
+- Build the Debug and Release configurations
+- Copy Debug\mhmake_dbg.exe and Release\mhmake.exe to a directory in your environment PATH
+
+Add an environment variable named MHMAKECONF having as value the root directory of the sources.
+e.g.: set MHMAKECONF=c:\vcxsrv\trunk
+
 Building vcxsrv:
 - run 'mhmake MAKESERVER=1' in xorg-server directory
 - run 'mhmake DEBUG=1 MAKESERVER=1' in xorg-server directory for a debugable version
