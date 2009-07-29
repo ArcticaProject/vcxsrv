@@ -2,6 +2,8 @@ ifeq ($(MAKESERVER),1)
 $(error Please do not specify MAKESERVER=1)
 endif
 
+load_makefile compat\makefile DEBUG=$(DEBUG)
+
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\rules
 $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
@@ -127,10 +129,10 @@ LST_FILES = base.lst evdev.lst
 $(DESTDIR)\%.lst: $(DESTDIR)\%.xml
 	perl xml2lst.pl < $< > $@
 
-$(DESTDIR)\base: $(BASE_PARTS_NO_COMPAT)
+$(DESTDIR)\base: compat\all $(BASE_PARTS_NO_COMPAT)
 	merge $@ $(BASE_PARTS)
 
-$(DESTDIR)\evdev: $(EVDEV_PARTS_NO_COMPAT)
+$(DESTDIR)\evdev: compat\all $(EVDEV_PARTS_NO_COMPAT)
 	merge $@ $(EVDEV_PARTS) 
 
 ALL_RULES_FILES = $(RULES_FILES) $(LST_FILES) \

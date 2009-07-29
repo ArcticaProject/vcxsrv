@@ -2,8 +2,8 @@
 
 set OUTFILE=base.ml_s.part
 
-del %OUTFILE%
+if exist %OUTFILE% del %OUTFILE%
 
-awk "{ printf """  *		%%s			=	pc+%%s\n""", $1, $2; }" layoutRename.lst >> %OUTFILE%
+gawk "{ printf """  *		%%s			=	pc+%%s\n""", $1, $2; }" layoutRename.lst >> %OUTFILE%
 
-awk "{ printf """  *		%%s(%%s)			=	pc+%%s(%%s)\n""", $1, $2, $3, $4;}" variantRename.lst >> %OUTFILE%
+gawk "{ printf """  *		%%s(%%s)			=	pc+%%s(%%s)\n""", $1, $2, $3, $4;}" variantRename.lst >> %OUTFILE%

@@ -13,7 +13,7 @@ Building freetype:
 
 Building openssl:
 - run 'perl Configure VC-WIN32' in the openssl directory
-- run 'ms\do_masm.bat in the openssl' directory
+- run 'ms\do_masm.bat' in the openssl' directory
 - run 'nmake -f ms\nt.mak' in the openssl directory
 - run 'nmake DEBUG=1 -f ms\nt.mak' in the openssl directory (if you want to build the DEBUG version of vcxsrv)
 
@@ -25,6 +25,7 @@ Building pthreads:
 Building vcxsrv:
 - run 'mhmake MAKESERVER=1' in xorg-server directory
 - run 'mhmake DEBUG=1 MAKESERVER=1' in xorg-server directory for a debugable version
+- run 'mhmake' in bdftopcf
 - run 'mhame' in xorg-server\fonts.src to build the fonts directory
 - run 'mhmake' in xorg-server\xkbdata.src to build the keyboard data
 
