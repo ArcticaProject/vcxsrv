@@ -15,9 +15,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Mhmake.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-/* $Rev$ */
-
 /* -*-C-*-  Note some compilers choke on comments on `#line' lines.  */
 /* Skeleton output parser for bison,
    Copyright (C) 1984, 1989, 1990 Bob Corbett and Richard Stallman
