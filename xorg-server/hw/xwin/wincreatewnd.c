@@ -91,13 +91,17 @@ winCreateBoundingWindowFullScreen (ScreenPtr pScreen)
 	    g_pszQueryHost,
 	    display,
 	    (int) pScreenInfo->dwScreen);
-  else    
+  else
+  {
+    char HostName[256];
+    gethostname(HostName,256);
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE,
+	    HostName,
 	    display, 
 	    (int) pScreenInfo->dwScreen);
-
+  }
   /* Create the window */
   *phwnd = CreateWindowExA (0,			/* Extended styles */
 			    WINDOW_CLASS,	/* Class name */
@@ -336,12 +340,17 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 	    g_pszQueryHost,
 	    display,
 	    (int) pScreenInfo->dwScreen);
-  else    
+  else
+  {
+    char HostName[256];
+    gethostname(HostName,256);
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE,
+	    HostName,
 	    display, 
 	    (int) pScreenInfo->dwScreen);
+  }
 
   /* Create the window */
   *phwnd = CreateWindowExA (0,			/* Extended styles */

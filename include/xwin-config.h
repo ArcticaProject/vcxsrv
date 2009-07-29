@@ -25,7 +25,7 @@
 /* #undef NEED_SNPRINTF */
 
 /* Vendor web address for support */
-#define __VENDORDWEBSUPPORT__ "http://x.cygwin.com/"
+#define __VENDORDWEBSUPPORT__ "http://www.hmca.be/"
 
 /* Default log location */
 #define DEFAULT_LOGDIR "."

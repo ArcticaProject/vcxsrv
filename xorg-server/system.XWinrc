@@ -80,16 +80,15 @@
 // Make some menus...
 menu apps {
 	xterm	exec	"xterm"
-	"Emacs"		exec	"emacs"
 	notepad	exec	notepad
 	xload	exec	"xload -display %display%"  # Comment
 }
 
 menu root {
 // Comments fit here, too...
-	"Reload .XWinrc"	RELOAD
+	"Reload system.XWinrc"	RELOAD
 	"Applications"	menu	apps
-	SEParATOR
+	Separator
 }
 
 menu aot {
@@ -100,7 +99,7 @@ menu aot {
 menu xtermspecial {
 	"Emacs"		exec	"emacs"
 	"Always on Top"	alwaysontop
-	SepArAtor
+	Separator
 }
 
 RootMenu root
@@ -121,5 +120,5 @@ SysMenu {
 
 # SilentExit
 
-DEBUG "Done parsing the configuration file..."
+# DEBUG "Done parsing the configuration file..."
 

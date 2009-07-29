@@ -13,22 +13,22 @@
 #define BIGREQS 1
 
 /* Builder address */
-#define BUILDERADDR "cygwin-xfree@cygwin.com"
+#define BUILDERADDR "hmca@telenet.be"
 
 /* Operating System Name */
-#define OSNAME "Cygwin"
+#define OSNAME "Win32"
 
 /* Operating System Vendor */
-#define OSVENDOR "Red Hat"
+#define OSVENDOR "Microsoft"
 
 /* Builder string */
 #define BUILDERSTRING ""
 
 /* Default font path */
-#define COMPILEDDEFAULTFONTPATH "fonts/misc/,fonts/TTF/,fonts/OTF,fonts/Type1/,fonts/100dpi/,fonts/75dpi/,built-ins"
+#define COMPILEDDEFAULTFONTPATH "fonts/misc/,fonts/TTF/,fonts/OTF,fonts/Type1/,fonts/100dpi/,fonts/75dpi/,fonts/cyrillic/,fonts/encodings/,fonts/Speedo/,built-ins"
 
 /* Miscellaneous server configuration files path */
-#define SERVER_MISC_CONFIG_PATH "."///usr/lib/X11"
+#define SERVER_MISC_CONFIG_PATH "."
 
 /* Support Composite Extension */
 #define COMPOSITE 1
@@ -72,7 +72,7 @@
 /* #undef GLX_DRI */
 
 /* Path to DRI drivers */
-#define DRI_DRIVER_PATH "/usr/lib/dri"
+#define DRI_DRIVER_PATH ""
 
 /* Include handhelds.org h3600 touchscreen driver */
 /* #undef H3600_TS */
@@ -405,10 +405,10 @@
 /* #undef XORG_RELEASE */
 
 /* Current Xorg version */
-#define XORG_VERSION_CURRENT (((1) * 10000000) + ((5) * 100000) + ((3) * 1000) + 0)
+#define XORG_VERSION_CURRENT (((1) * 10000000) + ((0) * 100000) + ((0) * 1000) + 0)
 
 /* Xorg release date */
-#define XORG_DATE "5 November 2008"
+#define XORG_DATE "2 August 2009"
 
 /* Build Xv Extension */
 /* #undef XvExtension */
@@ -455,7 +455,7 @@
 #define DBE 1
 
 /* Vendor name */
-#define XVENDORNAME "The Cygwin/X Project"
+#define XVENDORNAME "The VcXsrv Project"
 
 /* Endian order */
 #ifndef X_BYTE_ORDER

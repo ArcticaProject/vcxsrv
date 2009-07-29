@@ -440,7 +440,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       SetWindowRgn (hwnd, hRgnWindow, TRUE);
       DeleteObject(hRgnWindow);
 
-      SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)XMING_SIGNATURE);
+      SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)VCXSRV_SIGNATURE);
 }
       return 0;
 
@@ -903,7 +903,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 #endif
 	  if (forHwnd != NULL)
 	  {
-	    if (GetWindowLongPtr(forHwnd, GWLP_USERDATA) & (LONG_PTR)XMING_SIGNATURE)
+	    if (GetWindowLongPtr(forHwnd, GWLP_USERDATA) & (LONG_PTR)VCXSRV_SIGNATURE)
 	    {
 	      if (GetWindowLongPtr(forHwnd, GWL_EXSTYLE) & WS_EX_TOPMOST)
 		SetWindowPos (hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);

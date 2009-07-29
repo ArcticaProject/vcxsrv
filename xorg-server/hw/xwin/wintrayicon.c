@@ -45,6 +45,7 @@ winInitNotifyIcon (winPrivScreenPtr pScreenPriv)
 {
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
   NOTIFYICONDATA	nid = {0};
+  char HostName[256];
   
   nid.cbSize = sizeof (NOTIFYICONDATA);
   nid.hWnd = pScreenPriv->hwndScreen;
@@ -55,11 +56,14 @@ winInitNotifyIcon (winPrivScreenPtr pScreenPriv)
 
   /* Save handle to the icon so it can be freed later */
   pScreenPriv->hiconNotifyIcon = nid.hIcon;
+  
+  gethostname(HostName,256);
 
   /* Set display and screen-specific tooltip text */
   snprintf (nid.szTip,
 	    sizeof (nid.szTip),
-	    PROJECT_NAME " Server - %s:%d",
+	    PROJECT_NAME " Server - %s:%s.%d",
+	    HostName,
 	    display, 
 	    (int) pScreenInfo->dwScreen);
 

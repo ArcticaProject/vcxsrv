@@ -41,11 +41,11 @@
 
 /* Constant strings */
 #ifndef PROJECT_NAME
-#  define PROJECT_NAME		"Cygwin/X"
+#  define PROJECT_NAME		"VcXsrv"
 #endif
-#define WINDOW_CLASS		"cygwin/x"
-#define WINDOW_TITLE		PROJECT_NAME ":%s.%d"
-#define WINDOW_TITLE_XDMCP	"%s:%s.%d"
+#define WINDOW_CLASS		"VcXsrv/x"
+#define WINDOW_TITLE		PROJECT_NAME " Server - %s:%s.%d"
+#define WINDOW_TITLE_XDMCP	PROJECT_NAME " Server - %s:%s.%d"
 #define WIN_SCR_PROP		"cyg_screen_prop rl"
 #define WINDOW_CLASS_X		"cygwin/x X rl"
 #define WINDOW_TITLE_X		PROJECT_NAME " X"
@@ -62,7 +62,7 @@
 #define CYGWINDOWING_DEBUG	NO
 #endif
 
-#define XMING_SIGNATURE		0x12345678L
+#define VCXSRV_SIGNATURE		0xdeaddeadL
 
 typedef struct _winPrivScreenRec *winPrivScreenPtr;
 
