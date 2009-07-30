@@ -11,7 +11,7 @@
 default partial modifier_keys
 xkb_symbols "ralt_switch" {
   key <RALT> {
-    type[Group1]="ONE_LEVEL",
+    type[Group1]="TWO_LEVEL",
     symbols[Group1] = [ ISO_Level3_Shift ]
     };
   modifier_map Mod5   { ISO_Level3_Shift };
