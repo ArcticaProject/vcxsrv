@@ -298,6 +298,7 @@ AddDirectory(char *head, char *ptrn, char *rest, char *map)
 #ifdef WIN32
     if ((dirh = FindFirstFile("*.*", &file)) == INVALID_HANDLE_VALUE)
         return 0;
+    nMatch = 0;
 #else
     if ((dirp = opendir((head ? head : "."))) == NULL)
         return 0;
