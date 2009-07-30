@@ -207,52 +207,92 @@ $inc_dir=(defined($VARS{'INC'}))?$VARS{'INC'}:$inc_def;
 $bin_dir=$bin_dir.$o unless ((substr($bin_dir,-1,1) eq $o) || ($bin_dir eq ''));
 
 $cflags= "$xcflags$cflags" if $xcflags ne "";
+$cdflags= "$xcflags$cflags" if $xcdflags ne "";
 
 $cflags.=" -DOPENSSL_NO_IDEA" if $no_idea;
+$cdflags.=" -DOPENSSL_NO_IDEA" if $no_idea;
 $cflags.=" -DOPENSSL_NO_AES"  if $no_aes;
+$cdflags.=" -DOPENSSL_NO_AES"  if $no_aes;
 $cflags.=" -DOPENSSL_NO_CAMELLIA"  if $no_camellia;
+$cdflags.=" -DOPENSSL_NO_CAMELLIA"  if $no_camellia;
 $cflags.=" -DOPENSSL_NO_SEED" if $no_seed;
+$cdflags.=" -DOPENSSL_NO_SEED" if $no_seed;
 $cflags.=" -DOPENSSL_NO_RC2"  if $no_rc2;
+$cdflags.=" -DOPENSSL_NO_RC2"  if $no_rc2;
 $cflags.=" -DOPENSSL_NO_RC4"  if $no_rc4;
+$cdflags.=" -DOPENSSL_NO_RC4"  if $no_rc4;
 $cflags.=" -DOPENSSL_NO_RC5"  if $no_rc5;
+$cdflags.=" -DOPENSSL_NO_RC5"  if $no_rc5;
 $cflags.=" -DOPENSSL_NO_MD2"  if $no_md2;
+$cdflags.=" -DOPENSSL_NO_MD2"  if $no_md2;
 $cflags.=" -DOPENSSL_NO_MD4"  if $no_md4;
+$cdflags.=" -DOPENSSL_NO_MD4"  if $no_md4;
 $cflags.=" -DOPENSSL_NO_MD5"  if $no_md5;
+$cdflags.=" -DOPENSSL_NO_MD5"  if $no_md5;
 $cflags.=" -DOPENSSL_NO_SHA"  if $no_sha;
+$cdflags.=" -DOPENSSL_NO_SHA"  if $no_sha;
 $cflags.=" -DOPENSSL_NO_SHA1" if $no_sha1;
+$cdflags.=" -DOPENSSL_NO_SHA1" if $no_sha1;
 $cflags.=" -DOPENSSL_NO_RIPEMD" if $no_ripemd;
+$cdflags.=" -DOPENSSL_NO_RIPEMD" if $no_ripemd;
 $cflags.=" -DOPENSSL_NO_MDC2" if $no_mdc2;
+$cdflags.=" -DOPENSSL_NO_MDC2" if $no_mdc2;
 $cflags.=" -DOPENSSL_NO_BF"  if $no_bf;
+$cdflags.=" -DOPENSSL_NO_BF"  if $no_bf;
 $cflags.=" -DOPENSSL_NO_CAST" if $no_cast;
+$cdflags.=" -DOPENSSL_NO_CAST" if $no_cast;
 $cflags.=" -DOPENSSL_NO_DES"  if $no_des;
+$cdflags.=" -DOPENSSL_NO_DES"  if $no_des;
 $cflags.=" -DOPENSSL_NO_RSA"  if $no_rsa;
+$cdflags.=" -DOPENSSL_NO_RSA"  if $no_rsa;
 $cflags.=" -DOPENSSL_NO_DSA"  if $no_dsa;
+$cdflags.=" -DOPENSSL_NO_DSA"  if $no_dsa;
 $cflags.=" -DOPENSSL_NO_DH"   if $no_dh;
+$cdflags.=" -DOPENSSL_NO_DH"   if $no_dh;
 $cflags.=" -DOPENSSL_NO_SOCK" if $no_sock;
+$cdflags.=" -DOPENSSL_NO_SOCK" if $no_sock;
 $cflags.=" -DOPENSSL_NO_SSL2" if $no_ssl2;
+$cdflags.=" -DOPENSSL_NO_SSL2" if $no_ssl2;
 $cflags.=" -DOPENSSL_NO_SSL3" if $no_ssl3;
+$cdflags.=" -DOPENSSL_NO_SSL3" if $no_ssl3;
 $cflags.=" -DOPENSSL_NO_TLSEXT" if $no_tlsext;
+$cdflags.=" -DOPENSSL_NO_TLSEXT" if $no_tlsext;
 $cflags.=" -DOPENSSL_NO_CMS" if $no_cms;
+$cdflags.=" -DOPENSSL_NO_CMS" if $no_cms;
 $cflags.=" -DOPENSSL_NO_JPAKE" if $no_jpake;
+$cdflags.=" -DOPENSSL_NO_JPAKE" if $no_jpake;
 $cflags.=" -DOPENSSL_NO_CAPIENG" if $no_capieng;
+$cdflags.=" -DOPENSSL_NO_CAPIENG" if $no_capieng;
 $cflags.=" -DOPENSSL_NO_ERR"  if $no_err;
+$cdflags.=" -DOPENSSL_NO_ERR"  if $no_err;
 $cflags.=" -DOPENSSL_NO_KRB5" if $no_krb5;
+$cdflags.=" -DOPENSSL_NO_KRB5" if $no_krb5;
 $cflags.=" -DOPENSSL_NO_EC"   if $no_ec;
+$cdflags.=" -DOPENSSL_NO_EC"   if $no_ec;
 $cflags.=" -DOPENSSL_NO_ECDSA" if $no_ecdsa;
+$cdflags.=" -DOPENSSL_NO_ECDSA" if $no_ecdsa;
 $cflags.=" -DOPENSSL_NO_ECDH" if $no_ecdh;
+$cdflags.=" -DOPENSSL_NO_ECDH" if $no_ecdh;
 $cflags.=" -DOPENSSL_NO_ENGINE"   if $no_engine;
+$cdflags.=" -DOPENSSL_NO_ENGINE"   if $no_engine;
 $cflags.=" -DOPENSSL_NO_HW"   if $no_hw;
+$cdflags.=" -DOPENSSL_NO_HW"   if $no_hw;
 $cflags.=" -DOPENSSL_FIPS"    if $fips;
+$cdflags.=" -DOPENSSL_FIPS"    if $fips;
 $cflags.= " -DZLIB" if $zlib_opt;
+$cdflags.= " -DZLIB" if $zlib_opt;
 $cflags.= " -DZLIB_SHARED" if $zlib_opt == 2;
+$cdflags.= " -DZLIB_SHARED" if $zlib_opt == 2;
 
 if ($no_static_engine)
 	{
 	$cflags .= " -DOPENSSL_NO_STATIC_ENGINE";
+	$cdflags .= " -DOPENSSL_NO_STATIC_ENGINE";
 	}
 else
 	{
 	$cflags .= " -DOPENSSL_NO_DYNAMIC_ENGINE";
+	$cdflags .= " -DOPENSSL_NO_DYNAMIC_ENGINE";
 	}
 
 #$cflags.=" -DRSAref"  if $rsaref ne "";
@@ -521,10 +561,26 @@ $defs .= $preamble if defined $preamble;
 $defs.= <<"EOF";
 INSTALLTOP=$INSTALLTOP
 
+!ifdef DEBUG
+# The output directory for everything intersting
+OUT_D=out32_d
+# The output directory for all the temporary muck
+TMP_D=tmp32_d
+!else
+# The output directory for everything intersting
+OUT_D=out32
+# The output directory for all the temporary muck
+TMP_D=tmp32
+!endif
+
 # Set your compiler options
 PLATFORM=$platform
 CC=$bin_dir${cc}
+!ifdef DEBUG
+CFLAG=$cdflags
+!else
 CFLAG=$cflags
+!endif
 APP_CFLAG=$app_cflag
 LIB_CFLAG=$lib_cflag
 SHLIB_CFLAG=$shl_cflag
@@ -567,10 +623,6 @@ RMD160_ASM_SRC=$rmd160_asm_src
 CPUID_ASM_OBJ=$cpuid_asm_obj
 CPUID_ASM_SRC=$cpuid_asm_src
 
-# The output directory for everything intersting
-OUT_D=$out_dir
-# The output directory for all the temporary muck
-TMP_D=$tmp_dir
 # The output directory for the header files
 INC_D=$inc_dir
 INCO_D=$inc_dir${o}openssl

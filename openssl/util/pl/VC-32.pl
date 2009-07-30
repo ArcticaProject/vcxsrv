@@ -107,13 +107,13 @@ elsif ($FLAVOR =~ /CE/)
     }
 else	# Win32
     {
-    $base_cflags=' /W3 /WX /Gs0 /GF /Gy /nologo -DOPENSSL_SYSNAME_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -DDSO_WIN32';
+    $base_cflags=' /W3 /GF /nologo -DOPENSSL_SYSNAME_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -DDSO_WIN32';
     $base_cflags.=' -D_CRT_SECURE_NO_DEPRECATE';	# shut up VC8
     $base_cflags.=' -D_CRT_NONSTDC_NO_DEPRECATE';	# shut up VC8
-    my $f = $shlib || $fips ?' /MD':' /MT';
+    my $f = ' /MD';
     $lib_cflag='/Zl' if (!$shlib);	# remove /DEFAULTLIBs from static lib
-    $opt_cflags=$f.' /Ox /O2 /Ob2';
-    $dbg_cflags=$f.'d /Od -DDEBUG -D_DEBUG';
+    $opt_cflags=$f.' /O2 /Ob2 /Oi /Ox /Oy /Ot';     
+    $dbg_cflags=$f.'d /RTCc /RTC1 /Od /GS /GR /Zi';   
     $lflags="/nologo /subsystem:console /opt:ref";
     }
 $mlflags='';
@@ -131,6 +131,7 @@ if ($debug)
 else
 	{
 	$cflags=$opt_cflags.$base_cflags;
+	$cdflags=$dbg_cflags.$base_cflags;
 	}
 
 $obj='.obj';
@@ -161,6 +162,7 @@ else
 if ($FLAVOR =~ /NT/)
 	{
 	$cflags.=" -DOPENSSL_SYSNAME_WINNT -DUNICODE -D_UNICODE";
+	$cdflags.=" -DOPENSSL_SYSNAME_WINNT -DUNICODE -D_UNICODE";
 	$ex_libs="unicows.lib $ex_libs";
 	}
 # static library stuff
@@ -226,6 +228,7 @@ if (!$no_asm)
 	$cpuid_asm_obj='crypto\cpu_win32.obj';
 	$cpuid_asm_src='crypto\cpu_win32.asm';
 	$cflags.=" -DOPENSSL_CPUID_OBJ -DOPENSSL_IA32_SSE2 -DAES_ASM -DBN_ASM -DOPENSSL_BN_ASM_PART_WORDS -DOPENSSL_BN_ASM_MONT -DMD5_ASM -DSHA1_ASM -DRMD160_ASM";
+	$cdflags.=" -DOPENSSL_CPUID_OBJ -DOPENSSL_IA32_SSE2 -DAES_ASM -DBN_ASM -DOPENSSL_BN_ASM_PART_WORDS -DOPENSSL_BN_ASM_MONT -DMD5_ASM -DSHA1_ASM -DRMD160_ASM";
 	}
     elsif ($FLAVOR =~ "WIN64A")
 	{
@@ -281,7 +284,8 @@ elsif ($shlib && $FLAVOR =~ /CE/)
 	$tmp_def='tmp32dll_$(TARGETCPU)';
 	}
 
-$cflags.=" /Fd$out_def";
+$cflags.=" /Fd\$(OUT_D)";
+$cdflags.=" /Fd\$(OUT_D)";
 
 sub do_lib_rule
 	{
