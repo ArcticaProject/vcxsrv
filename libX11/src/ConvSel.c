@@ -51,5 +51,5 @@ XConvertSelection(
     req->time = time;
     UnlockDisplay(dpy);
     SyncHandle();
-    return 1;
+    return Success;
 }
