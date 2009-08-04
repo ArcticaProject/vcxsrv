@@ -1318,7 +1318,7 @@ int			(*getTOC)(
 	XkbFileInfo *	/* result */,
 	XkmInfo *	/* info */,
 	int		/* max_to */,
-	xkmSectionInfo */* toc_rtrn */
+	xkmSectionInfo * /* toc_rtrn */
 );
 
     switch (result->type) {
