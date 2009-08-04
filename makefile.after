@@ -69,10 +69,9 @@ $(OBJDIR)\%$(OBJEXT) : %.cc
 $(OBJDIR)\%.res : %.rc
 	$(RC) $(RCFLAGS) $(RCDEFINES:%=-d "%") $(RCINCLUDES:%=-i "%") -Fo"$(relpath $@)" "$<"
 
-BDFTOPCF= $(MHMAKECONF)\bdftopcf\$(OBJDIR)\bdftopcf.exe
+ifdef INC_BDF_RULES
 load_makefile $(MHMAKECONF)\bdftopcf\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 
-ifdef INC_BDF_RULES
 $(DESTDIR)\%.pcf.gz: %.bdf
 	@del -e $@
 	$(BDFTOPCF) -t $< | gzip > $@
@@ -81,3 +80,13 @@ $(DESTDIR)\%.enc.gz: %.enc
 	gzip -c < $< > $@
 endif
 
+ifdef x11thislocaledir
+
+$(x11thislocaledir)\%: %.pre
+	cl /nologo /EP $< -DXCOMM\#\# > $@
+
+$(x11thislocaledir):
+	if not exist $(x11thislocaledir) mkdir $(x11thislocaledir)
+
+all: $(x11thislocaledir)
+endif

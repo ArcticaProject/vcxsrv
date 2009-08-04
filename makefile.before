@@ -60,5 +60,7 @@ SYSTEMLIBS ?= odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool
 
 CPPFLAGS ?= $(CCFLAGS) -EHa
 
+BDFTOPCF= $(MHMAKECONF)\bdftopcf\$(OBJDIR)\bdftopcf.exe
+
 all: $(OBJDIR)
 
