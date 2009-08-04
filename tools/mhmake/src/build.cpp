@@ -296,7 +296,7 @@ found:
 #endif
 
 /*****************************************************************************/
-static string SearchCommand(const string &Command, const string &Extension="")
+string SearchCommand(const string &Command, const string &Extension="")
 {
   char FullCommand[MAX_PATH]="";
   unsigned long Size=sizeof(FullCommand);
@@ -499,14 +499,13 @@ static bool CopyFile(refptr<fileinfo> pSrc, refptr<fileinfo> pDest)
 static bool CopyDir(refptr<fileinfo> pDir,refptr<fileinfo> pDest,const string WildSearch="*")
 {
   bool Error=true;
-  string Dir=pDir->GetFullFileName()+OSPATHSEP;
-  string Pattern=Dir+WildSearch;
+  string Pattern=pDir->GetFullFileName()+OSPATHSEP+WildSearch;
 #ifdef WIN32
   WIN32_FIND_DATA FindData;
   HANDLE hFind=FindFirstFile(Pattern.c_str(),&FindData);
   if (hFind==INVALID_HANDLE_VALUE)
   {
-    return Error;
+    return false;
   }
 
   do
@@ -514,20 +513,41 @@ static bool CopyDir(refptr<fileinfo> pDir,refptr<fileinfo> pDest,const string Wi
     /* Only handle items which are not . and .. */
     if (FindData.cFileName[0]!='.' || (FindData.cFileName[1] && (FindData.cFileName[1]!='.' || FindData.cFileName[2])) )
     {
-      string FileName=Dir+FindData.cFileName;
-      refptr<fileinfo> pSrc=GetFileInfo(FileName);
+      if (FindData.dwFileAttributes&FILE_ATTRIBUTE_HIDDEN)
+        continue;
+      refptr<fileinfo> pSrc=GetFileInfo(FindData.cFileName,pDir);
 
       if (pSrc->IsDir())
       {
-        /* Currently we do not do a recursion */
+        refptr<fileinfo> pNewDest=GetFileInfo(FindData.cFileName,pDest);
+        if (!pNewDest->IsDir())
+        {
+          if (pNewDest->Exists())
+          {
+            cerr << pNewDest->GetFullFileName() << " exists and is not a directory.\n";
+            Error = false;
+            goto exit;
+          }
+          if (!CreateDirectory(pNewDest->GetFullFileName().c_str(),NULL))
+          {
+            cerr << "Error creating directory " << pNewDest->GetFullFileName() << endl;
+            Error = false;
+            goto exit;
+          }
+          pNewDest->InvalidateDate();
+        }
+        Error = CopyDir(pSrc,pNewDest);
+        if (!Error) goto exit;
       }
       else
       {
         Error = CopyFile(pSrc,pDest);
+        if (!Error) goto exit;
       }
     }
   } while (FindNextFile(hFind,&FindData));
 
+exit:
   FindClose(hFind);
 #else
   glob_t Res;
@@ -536,18 +556,43 @@ static bool CopyDir(refptr<fileinfo> pDir,refptr<fileinfo> pDest,const string Wi
 
   for (int i=0; i<Res.gl_pathc; i++)
   {
-    int Len=strlen(Res.gl_pathv[i])-1;
-    if (Res.gl_pathv[i][Len]=='/')
+    refptr<fileinfo> pSrc=GetFileInfo(Res.gl_pathv[i]);
+    if (pSrc->IsDir())
     {
-      Res.gl_pathv[i][Len]=0;
-      /* Do not recurs for the moment: Error = CopyDir(Res.gl_pathv[i]); */
+      *(strrchr(Res.gl_pathv[i],'/'))='\0';
+      const char *SrcDirName=strrchr(Res.gl_pathv[i],'/')+1;
+
+      if (SrcDirName[0]=='.')
+        continue;
+
+      refptr<fileinfo> pNewDest=GetFileInfo(SrcDirName,pDest);
+      if (!pNewDest->IsDir())
+      {
+        if (pNewDest->Exists())
+        {
+          cerr << pNewDest->GetFullFileName() << " exists and is not a directory.\n";
+          Error = false;
+          goto exit;
+        }
+        if (-1==mkdir(pNewDest->GetFullFileName().c_str(),0777))
+        {
+          cerr << "Error creating directory " << pNewDest->GetFullFileName() << endl;
+          Error = false;
+          goto exit;
+        }
+        pNewDest->InvalidateDate();
+      }
+      Error = CopyDir(pSrc,pNewDest);
+      if (!Error) goto exit;
     }
     else
     {
       Error = CopyFile(GetFileInfo(Res.gl_pathv[i]),pDest);
+      if (!Error) goto exit;
     }
   }
 
+exit:
   globfree(&Res);
 #endif
 
@@ -638,7 +683,11 @@ static bool CopyFiles(const string &Params)
     /* Now check if there is a wildcard */
     if (SrcFileName.find('*')!=string::npos)
     {
-      CopyDir(pSrc->GetDir(), pDest, pSrc->GetName());
+      if (!CopyDir(pSrc->GetDir(), pDest, pSrc->GetName()))
+      {
+        cerr << "copy: Error copying directory: " << Params << endl;
+        return false;
+      }
     }
     else
     {
@@ -958,7 +1007,7 @@ string mhmakefileparser::GetFullCommand(string Command)
   return pFound->second;
 }
 
-static bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,string *pOutput)
+bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,string *pOutput)
 {
 #ifdef WIN32
   STARTUPINFO StartupInfo;
@@ -1299,7 +1348,7 @@ bool mhmakefileparser::ExecuteCommand(string Command,string *pOutput)
   if (i==Params.size())
   {
     if (Command!="del" && Command!="touch" && Command!="copy" && Command!="echo")
-      Command=GetFullCommand(Command);// + Params;
+      Command=GetFullCommand(Command);
 #ifndef WIN32
     if (Command.substr(0,GetComspec().size())==GetComspec())
     {
@@ -1584,7 +1633,9 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
 
         pMakefile->InitEnv();  // Make sure that the exports are set in the evironment
 #ifdef _DEBUG
-       if (!g_GenProjectTree)
+       if (!g_GenProjectTree && !g_Quiet)
+#else
+       if (!g_Quiet)
 #endif
         cout << "Building " << Target->GetFullFileName()<<endl;
       }

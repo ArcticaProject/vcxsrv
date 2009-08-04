@@ -255,6 +255,9 @@ refptr<loadedmakefile> LOADEDMAKEFILES::find(const loadedmakefile &ToSearch)
 
 LOADEDMAKEFILES g_LoadedMakefiles;
 
+bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,string *pOutput);
+string SearchCommand(const string &Command, const string &Extension="");
+
 ///////////////////////////////////////////////////////////////////////////////
 loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
 {
@@ -266,79 +269,34 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
     m_MhMakeConf=GetFileInfo(pEnv);
 
     // Get the revision of the working copy
-    // We do it the fastest way: this means just parsing the entries file in the .svn directory of the mhmakeconf directory
-    string EntriesFile=m_MhMakeConf->GetFullFileName()+OSPATHSEPSTR".svn"OSPATHSEPSTR"entries";
-    FILE *pFile=fopen(EntriesFile.c_str(),"r");
-    if (!pFile)
-    {
-      /* Entries file cannot be opened. Maybe it is not an svn working copy, so ignore it */
-      #ifdef _DEBUG
-      if (g_PrintAdditionalInfo) cout<<"Warning: Assuming no subversion working copy: Error opening "<<EntriesFile<<endl;
-      #endif
-      return;
-    }
+    // We do it with the svn info command
 
-    /* Check the format of this file, if it is 8 it is the new format else it is the old format. We do
-     * this by inspecting the first line of the file
-     */
-    char Line[255];
-    if (fgets(Line,sizeof(Line),pFile))
-    {
-      int iVersion=atoi(Line);
-      if (iVersion<8)
-      {
-        // This is the old format
-        while (fgets(Line,sizeof(Line),pFile))
-        {
-          if (!strncmp(Line,"   url=\"",8))
+    string Output;
+    bool Ret;
+    try
           {
-            char *pUrl=Line+8+7;
-            char *pEnd=strchr(pUrl,'"');
-            #ifdef _DEBUG
-            if (!pEnd)
-            {
-              cerr<<"Format of entries file in .svn directory must have been changed. Update mhmake!\n";
-              exit(1);
+      string SvnCommand=SearchCommand("svn",EXEEXT);
+      Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetFullFileName(),false,&Output);
             }
-            #endif
-            *pEnd='\0';
-            m_GlobalCommandLineVars[WC_URL]=pUrl;
-          }
-          if (!strncmp(Line,"   revision=\"",13))
-          {
-            char *pRevision=Line+13;
-            char *pEnd=strchr(pRevision,'"');
-            #ifdef _DEBUG
-            if (!pEnd)
+    catch (int)
             {
-              cerr<<"Format of entries file in .svn directory must have been changed. Update mhmake!\n";
-              exit(1);
-            }
-            #endif
-            *pEnd='\0';
-            m_GlobalCommandLineVars[WC_REVISION]=pRevision;
-            break;
-          }
+      Ret=false;
         }
-      }
-      else
+
+    char *pTok=strtok((char*)Output.c_str(),"\n");   // doing this is changing string, so this is very dangerous !!!
+    while (pTok)
       {
-        /* This is the new format */
-        fgets(Line,sizeof(Line),pFile);
-        fgets(Line,sizeof(Line),pFile);
-        if (fgets(Line,sizeof(Line),pFile))
+      if (!strncmp(pTok,"URL: ",5))
         {
-          Line[strlen(Line)-1]=0;
-          m_GlobalCommandLineVars[WC_REVISION]=Line;
+        m_GlobalCommandLineVars[WC_URL]=pTok+5+7;
         }
-        if (fgets(Line,sizeof(Line),pFile))
+      else if (!strncmp(pTok,"Revision: ",10))
         {
-          Line[strlen(Line)-1]=0;
-          m_GlobalCommandLineVars[WC_URL]=Line+7;
-        }
+        m_GlobalCommandLineVars[WC_REVISION]=pTok+10;
+        break;
       }
+      pTok=strtok(NULL,"\n");
     }
-    fclose(pFile);
   }
 }
 

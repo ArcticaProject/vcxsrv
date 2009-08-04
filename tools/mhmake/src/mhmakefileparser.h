@@ -209,6 +209,7 @@ public:
   string f_filterout(const string & Arg) const;
   string f_word(const string & Arg) const;
   string f_words(const string & Arg) const;
+  string f_strip(const string & Arg) const;
 
   const refptr<fileinfo> GetFirstTarget() const
   {

@@ -51,6 +51,7 @@ funcdef mhmakefileparser::m_FunctionsDef[]= {
  ,{"filter-out" ,&mhmakefileparser::f_filterout}
  ,{"word"       ,&mhmakefileparser::f_word}
  ,{"words"      ,&mhmakefileparser::f_words}
+ ,{"strip"      ,&mhmakefileparser::f_strip}
 };
 
 map<string,function_f> mhmakefileparser::m_Functions;
@@ -622,6 +623,20 @@ string mhmakefileparser::f_words(const string & Arg) const
   sprintf(szNumber,"%d",NrWords);
 
   return szNumber;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Removes leading and trailing space
+string mhmakefileparser::f_strip(const string & Arg) const
+{
+  string::const_iterator pFirst=Arg.begin();
+  string::const_iterator pLast=Arg.end();
+  while (strchr(" \t",*pFirst) && pFirst!=pLast) pFirst++;
+  if (pFirst==pLast)
+    return "";
+  while (strchr(" \t",*(--pLast)));
+  pLast++;
+  return Arg.substr(pFirst-Arg.begin(),pLast-pFirst);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

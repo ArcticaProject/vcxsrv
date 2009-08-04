@@ -50,6 +50,15 @@ int __CDECL main(int argc, char* argv[])
   //_CrtSetBreakAlloc(44);
   #endif
 
+  #ifdef WIN32
+  /* Remove the VS_UNICODE_OUTPUT environment variable. This variable is set when running from
+   * the Visual Studio IDE and is causing the output of cl.exe to send the output directly to the IDE instead
+   * of sending it to stdout. This is causing all scripts that are calling cl.exe and intercept the
+   * output to fail.
+   */
+  putenv("VS_UNICODE_OUTPUT=");
+  #endif
+
   try
   {
     mhmakefileparser::InitBuildTime();
