@@ -274,24 +274,24 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
     string Output;
     bool Ret;
     try
-          {
+    {
       string SvnCommand=SearchCommand("svn",EXEEXT);
       Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetFullFileName(),false,&Output);
-            }
+    }
     catch (int)
-            {
+    {
       Ret=false;
-        }
+    }
 
     char *pTok=strtok((char*)Output.c_str(),"\n");   // doing this is changing string, so this is very dangerous !!!
     while (pTok)
-      {
+    {
       if (!strncmp(pTok,"URL: ",5))
-        {
+      {
         m_GlobalCommandLineVars[WC_URL]=pTok+5+7;
-        }
+      }
       else if (!strncmp(pTok,"Revision: ",10))
-        {
+      {
         m_GlobalCommandLineVars[WC_REVISION]=pTok+10;
         break;
       }

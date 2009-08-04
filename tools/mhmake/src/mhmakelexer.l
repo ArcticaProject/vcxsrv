@@ -672,7 +672,7 @@ export {
 }
 
  /*---------------------------------------------------------------------------*/
-\$[<@/] {
+\$[<@/$] {
   PRINTF(("%s %d: DOLLAREXPR: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::DOLLAREXPR;

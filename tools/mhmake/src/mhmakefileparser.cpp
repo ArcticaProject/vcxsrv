@@ -167,7 +167,7 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
   int i=0;
   int Length=Expr.size();
   string Ret;
-  bool DollarEscaped=false;
+  string ToAdd;
   while (i<Length)
   {
     char Char=Expr[i++];
@@ -176,9 +176,8 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
       char CharNext=Expr[i];
       if (CharNext=='$')
       {
-        Ret+="$$";
+        ToAdd="$$";
         i++;
-        DollarEscaped=true;
       }
       else
       {
@@ -186,34 +185,31 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
         i++;
         if (inew>i)
         {
-          Ret+=ExpandMacro(Expr.substr(i,inew-i-1));
+          ToAdd=ExpandMacro(Expr.substr(i,inew-i-1));
           i=inew;
         }
         else
         {
           // This is a single character expression
-          Ret+=ExpandMacro(string(1,Expr[i-1]));
+          ToAdd=ExpandMacro(string(1,Expr[i-1]));
         }
       }
+      Ret+=ToAdd;
     }
     else
     {
       Ret+=Char;
     }
-
   }
-  // Here we do a special case in case we still have a $ without a %
   if (m_InExpandExpression==1)
   {
+      // Here we do a special case in case we still have a $ within a %
     if (Ret.find('$')!=string::npos)
       Ret=ExpandExpression(Ret);
-    if (DollarEscaped)
+    int Pos;
+    while ((Pos=Ret.find("$$"))!=string::npos)
     {
-      int Pos;
-      while ((Pos=Ret.find("$$"))!=string::npos)
-      {
-        Ret=Ret.replace(Pos,2,"$");
-      }
+      Ret=Ret.replace(Pos,2,"$");
     }
   }
   ((mhmakefileparser*)this)->m_InExpandExpression--;
