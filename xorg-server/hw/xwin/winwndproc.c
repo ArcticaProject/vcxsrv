@@ -966,14 +966,19 @@ winWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_MOUSEWHEEL:
+    {
+      POINT Pos;
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
 #if CYGDEBUG
       winDebug ("winWindowProc - WM_MOUSEWHEEL\n");
 #endif
-      winMouseWheel (s_pScreen, GET_WHEEL_DELTA_WPARAM(wParam),GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+      Pos.x=GET_X_LPARAM(lParam);
+      Pos.y=GET_Y_LPARAM(lParam);
+      ScreenToClient(hwnd,&Pos);
+      winMouseWheel (s_pScreen, GET_WHEEL_DELTA_WPARAM(wParam),Pos.x,Pos.y);
       break;
-
+    }
     case WM_SETFOCUS:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
