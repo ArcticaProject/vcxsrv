@@ -9,8 +9,8 @@
 #	$XFree86: xc/nls/locale.alias,v 1.65 2004/01/03 03:31:00 dawes Exp $
 #
 
-POSIX						C
-POSIX-UTF2					C
-C_C.C						C
-C.en						C
-English_United-States.437			C
+POSIX:						C
+POSIX-UTF2:					C
+C_C.C:						C
+C.en:						C
+English_United-States.437:			C
