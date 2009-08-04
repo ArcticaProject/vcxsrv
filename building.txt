@@ -33,13 +33,6 @@ e.g.: set MHMAKECONF=c:\vcxsrv\trunk
 Building vcxsrv:
 - run 'mhmake MAKESERVER=1' in xorg-server directory
 - run 'mhmake DEBUG=1 MAKESERVER=1' in xorg-server directory for a debugable version
-- run 'mhmake' in bdftopcf
-- run 'mhame' in xorg-server\fonts.src to build the fonts directory
-- run 'mhmake' in xorg-server\xkbdata.src to build the keyboard data
-
-Building xlaunch:
-- run 'mhmake' in 'xorg-server\hw\xwin\xlaunch'
-- run 'mhmake DEBUG=1' in 'xorg-server\hw\xwin\xlaunch' if you want a debugable version.
 
 To build installer:
 - install http://nsis.sourceforge.net

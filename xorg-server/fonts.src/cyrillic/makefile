@@ -103,11 +103,11 @@ load_makefile $(MHMAKECONF)\mkfontscale\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 
 all: $(DESTDIR) $(MKFONTSCALE) $(DESTDIR)\fonts.scale $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
 
-$(DESTDIR)\fonts.scale: $(font_DATA)
+$(DESTDIR)\fonts.scale: $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) .
 
-$(DESTDIR)\fonts.dir: $(font_DATA)
+$(DESTDIR)\fonts.dir: $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) -b -s -l .
 

@@ -71,6 +71,7 @@ $(OBJDIR)\%.res : %.rc
 
 ifdef INC_BDF_RULES
 load_makefile $(MHMAKECONF)\bdftopcf\makefile MAKESERVER=0 DEBUG=$(DEBUG)
+load_makefile $(MHMAKECONF)\mkfontscale\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 
 $(DESTDIR)\%.pcf.gz: %.bdf
 	@del -e $@

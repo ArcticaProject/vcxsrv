@@ -92,7 +92,11 @@ load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 xkbcomp.exe: ..\xkbcomp\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\xkbcomp.exe
 	copy $< $@
 
-all: $(WINAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB
+load_makefile ..\libX11\nls\makefile MAKESERVER=0 DEBUG=0
+load_makefile fonts.src\makefile MAKESERVER=0 DEBUG=0
+load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
+
+all: $(WINAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB ..\libX11\nls\all fonts.src\all xkbdata.src\all
 
 protocol.txt: dix\protocol.txt
 	copy $< $@

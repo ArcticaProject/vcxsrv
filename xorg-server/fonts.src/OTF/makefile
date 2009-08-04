@@ -2,6 +2,8 @@ ifeq ($(MAKESERVER),1)
 $(error Please do not specify MAKESERVER=1)
 endif
 
+INC_BDF_RULES=1
+
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\OTF
 $(DESTDIR):
 	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
@@ -39,11 +41,11 @@ MKFONTSCALE=$(MHMAKECONF)\mkfontscale\$(OBJDIR)\mkfontscale.exe
 
 load_makefile $(MHMAKECONF)\mkfontscale\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 
-$(DESTDIR)\fonts.scale: $(font_DATA)
+$(DESTDIR)\fonts.scale: $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) .
 
-$(DESTDIR)\fonts.dir: $(font_DATA)
+$(DESTDIR)\fonts.dir: $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) -b -s -l .
 #	$(FCCACHE) $(DESTDIR)
