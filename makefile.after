@@ -48,7 +48,7 @@ endif
 .PHONY: all cleanall clean clean$(OBJDIRPREFIX)
 
 ### Implicit rules ###
-CREATEDIR=if not isdir $@ mkdir /s $@
+CREATEDIR=if not exist $@ mkdir $@
 
 $(OBJDIR) :
 	$(CREATEDIR)
