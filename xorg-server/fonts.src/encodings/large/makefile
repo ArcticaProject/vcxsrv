@@ -5,8 +5,6 @@ endif
 INC_BDF_RULES=1
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\encodings\large
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 ENCODING_FILES =		\
 	big5.eten-0.enc		\

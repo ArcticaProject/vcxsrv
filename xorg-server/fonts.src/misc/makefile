@@ -7,8 +7,6 @@ INC_BDF_RULES=1
 all: $(BDFTOPCF)
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\misc
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 BDF2UCS_FONT_FILES = \
 	clR6x12 \

@@ -5,8 +5,6 @@ endif
 THISDIR=semantics
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 dist_xkbdata_semantics_DATA = \
 	basic \

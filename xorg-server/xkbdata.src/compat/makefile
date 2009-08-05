@@ -5,8 +5,6 @@ endif
 THISDIR=compat
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 dist_xkbdata_compat_DATA = \
 accessx basic complete \

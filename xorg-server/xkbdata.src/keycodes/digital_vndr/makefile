@@ -3,9 +3,6 @@ $(error Please do not specify MAKESERVER=1)
 endif
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\keycodes\digital_vndr
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
-
 
 dist_keycodes_DATA = \
 lk pc

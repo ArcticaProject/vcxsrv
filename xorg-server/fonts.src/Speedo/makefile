@@ -5,8 +5,6 @@ endif
 INC_BDF_RULES=1
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\Speedo
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 FONT_FILES = \
 	font0419.spd \

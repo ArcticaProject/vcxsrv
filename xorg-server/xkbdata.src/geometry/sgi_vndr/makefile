@@ -3,8 +3,6 @@ $(error Please do not specify MAKESERVER=1)
 endif
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\geometry\sgi_vndr
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 
 dist_geom_DATA = \

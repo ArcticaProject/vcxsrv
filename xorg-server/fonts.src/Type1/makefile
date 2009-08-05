@@ -5,8 +5,6 @@ endif
 INC_BDF_RULES=1
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\Type1
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 FONT_FILES = \
 	cursor.pfa \

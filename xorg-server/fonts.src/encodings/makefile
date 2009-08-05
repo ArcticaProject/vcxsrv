@@ -6,8 +6,6 @@ load_makefile large\makefile MAKESERVER=0 DEBUG=0
 INC_BDF_RULES=1
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\encodings
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 ENCODING_FILES =		\
 	adobe-dingbats.enc	\

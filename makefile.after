@@ -87,7 +87,12 @@ $(x11thislocaledir)\%: %.pre
 	cl /nologo /EP $< -DXCOMM\#\# > $@
 
 $(x11thislocaledir):
-	if not exist $(x11thislocaledir) mkdir $(x11thislocaledir)
+	$(CREATEDIR)
 
 all: $(x11thislocaledir)
+endif
+
+ifdef DESTDIR
+$(DESTDIR):
+	$(CREATEDIR)
 endif

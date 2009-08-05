@@ -5,8 +5,6 @@ endif
 load_makefile compat\makefile DEBUG=$(DEBUG)
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\rules
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 BASE_PARTS_NO_COMPAT = base.hdr.part base.lists.part \
 HDR base.m_k.part \

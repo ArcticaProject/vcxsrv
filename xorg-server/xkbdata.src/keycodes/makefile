@@ -5,8 +5,6 @@ endif
 THISDIR=keycodes
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 SUBDIRS = digital_vndr sgi_vndr
 

@@ -5,8 +5,6 @@ endif
 INC_BDF_RULES=1
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\OTF
-$(DESTDIR):
-	if not isdir "$(DESTDIR)" mkdir /s "$(DESTDIR)"
 
 FONT_FILES = \
 	SyrCOMAdiabene.otf \
