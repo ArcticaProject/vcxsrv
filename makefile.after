@@ -3,7 +3,11 @@ OBJS:=$(OBJS:%.cc=$(OBJDIR)$/%$(OBJEXT))
 
 RESOBJS:=$(RESOURCES:%.rc=$(OBJDIR)$/%.res)
 
+ifeq ($(DEBUG),1)
+MANIFESTFILE:=$(MHMAKECONF)\runtime.debug.manifest
+else
 MANIFESTFILE:=$(MHMAKECONF)\runtime.manifest
+endif
 
 ifdef SUBDIRS
 load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG);)
