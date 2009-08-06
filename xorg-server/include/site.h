@@ -52,7 +52,7 @@ SOFTWARE.
  * server executable.
  */
 #ifndef VENDOR_STRING
-#define VENDOR_STRING "The X.Org Foundation"
+#define VENDOR_STRING "HMCA"
 #endif
 
 /*
@@ -61,7 +61,7 @@ SOFTWARE.
  * by the vendor.
  */
 #ifndef VENDOR_RELEASE
-#define VENDOR_RELEASE	6600
+#define VENDOR_RELEASE	XORG_VERSION_CURRENT
 #endif
 
 /*

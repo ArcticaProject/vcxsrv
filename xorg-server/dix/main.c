@@ -458,8 +458,8 @@ int main(int argc, char *argv[], char *envp[])
     return(0);
 }
 
-static int  VendorRelease = VENDOR_RELEASE;
-static char *VendorString = VENDOR_NAME;
+static int  VendorRelease = XORG_VERSION_CURRENT;
+static char *VendorString = "HMCA" ;
 
 void
 SetVendorRelease(int release)
