@@ -42,6 +42,7 @@ XPStyle on
 
 !define FUSION_REFCOUNT_UNINSTALL_SUBKEY_GUID {8cedc215-ac4b-488b-93c0-a50a49cb2fb8}
 
+!include runtime
 
 ;--------------------------------
 
@@ -80,11 +81,11 @@ Section "VcXsrv (required)"
 
   InitPluginsDir
   SetOutPath $PLUGINSDIR
-  File "C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.1_none_e163563597edeada\msvcr90.dll"
-  File "C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.1_none_e163563597edeada\msvcm90.dll"
-  File "C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.1_none_e163563597edeada\msvcp90.dll"
-  File "C:\Windows\winsxs\manifests\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.1_none_e163563597edeada.cat"
-  File "C:\Windows\winsxs\manifests\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.1_none_e163563597edeada.manifest"
+  File "${MSVCR90_DLL}"
+  File "${MSVCM90_DLL}"
+  File "${MSVCP90_DLL}"
+  File "${MSVC_CAT}"
+  File "${MSVC_MANIFEST}"
   DetailPrint "Installing CRT assembly..."
   System::Call "sxs::CreateAssemblyCache(*i .r0, i 0) i.r1"
   StrCmp $1 0 0 fail
@@ -97,7 +98,7 @@ Section "VcXsrv (required)"
   System::Call "*(i 32, i 0, i 2364391957, i 1217113163, i 178634899, i 3090139977, w 'nsissxs', w '') i.s"
   Pop $2
   # IAssemblyCache::InstallAssembly(0, manifestPath, fir)
-  System::Call "$0->7(i 0, w '$PLUGINSDIR\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.1_none_e163563597edeada.manifest', i r2) i.r1"
+  System::Call "$0->7(i 0, w '$PLUGINSDIR\${MSVC_MANIFEST_PART}', i r2) i.r1"
   System::Free $2
   StrCmp $1 0 0 fail2
   System::Call "$0->2()"
@@ -174,7 +175,7 @@ Section "Uninstall"
   StrCmp $1 0 0 fail
   System::Call "*(i 32, i 0, i 2364391957, i 1217113163, i 178634899, i 3090139977, w 'nsissxs', w '') i.s"
   Pop $2
-  System::Call "$0->3(i 0, w 'Microsoft.VC90.CRT,version=$\"9.0.21022.8$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"1fc8b3b9a1e18e3b$\"', i r2, *i . r3) i.r1"
+  System::Call "$0->3(i 0, w 'Microsoft.VC90.CRT,version=$\"9.0.${MSVC_VERSION}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
   StrCmp $1 0 0 fail2
   DetailPrint "Disposition returned is $3"
   System::Call "$0->2()"

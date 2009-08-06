@@ -3,12 +3,6 @@ OBJS:=$(OBJS:%.cc=$(OBJDIR)$/%$(OBJEXT))
 
 RESOBJS:=$(RESOURCES:%.rc=$(OBJDIR)$/%.res)
 
-ifeq ($(DEBUG),1)
-MANIFESTFILE:=$(MHMAKECONF)\runtime.debug.manifest
-else
-MANIFESTFILE:=$(MHMAKECONF)\runtime.manifest
-endif
-
 ifdef SUBDIRS
 load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG);)
 all: $(SUBDIRS:%=%\all)
@@ -34,7 +28,12 @@ PDB := $(EXE:%.exe=%.pdb)
 
 #LINKFLAGS += /SUBSYSTEM:WINDOWS
 
+MANIFESTFILE:=$(OBJDIR)\runtime.manifest
+
 all: $(EXE)
+
+$(MANIFESTFILE):
+	$(MHMAKECONF)/tools/genruntimemanifest $@ $(DEBUG)
 
 $(EXE) :  $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) $(MANIFESTFILE)
 	$(LINK) $(LINKFLAGS) /MANIFEST:NO /OUT:$(relpath $@) $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(OBJS) $(RESOBJS)
