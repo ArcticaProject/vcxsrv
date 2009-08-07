@@ -650,7 +650,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	break;
       g_fButton[2] = TRUE;
       SetCapture(hwnd);
-      return winMouseButtonsHandleScreen (s_pScreen, ButtonPress, Button3, wParam, hwnd, lParam);
+      return winMouseButtonsHandleScreen (s_pScreen, DeviceButtonPress, Button3, wParam, hwnd, lParam);
 
     case WM_RBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
