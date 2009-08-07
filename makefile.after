@@ -21,12 +21,18 @@ $(LIBRARY_DIR) : $(OBJS)
 
 endif # End static library stuff
 
-### WINAPP stuff ###
+### WINAPP/TTYAPP stuff ###
+ifeq (1,$(call OR, $(call NE,$(WINAPP)_,_) $(call NE,$(TTYAPP)_,_)))
+
 ifdef WINAPP
 EXE := $(WINAPP:%=$(OBJDIR)\%.exe)
-PDB := $(EXE:%.exe=%.pdb)
+LINKFLAGS += /SUBSYSTEM:WINDOWS
+else
+EXE := $(TTYAPP:%=$(OBJDIR)\%.exe)
+LINKFLAGS += /SUBSYSTEM:CONSOLE
+endif
 
-#LINKFLAGS += /SUBSYSTEM:WINDOWS
+PDB := $(EXE:%.exe=%.pdb)
 
 MANIFESTFILE:=$(OBJDIR)\runtime.manifest
 
@@ -39,7 +45,7 @@ $(EXE) :  $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) $(MANIFESTFILE)
 	$(LINK) $(LINKFLAGS) /MANIFEST:NO /OUT:$(relpath $@) $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(OBJS) $(RESOBJS)
 	mt -nologo -manifest $(MANIFESTFILE) -outputresource:$(relpath $@);\#1
 
-endif  # End WINAPP stuff
+endif  # End WINAPP or TTYAPP stuff
 
 ifeq ($(DEBUG),1)
 COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I"%") -Fo"$(relpath $@)" -Fd"$(PDB)" "$<"

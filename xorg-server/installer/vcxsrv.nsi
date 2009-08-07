@@ -62,6 +62,7 @@ Section "VcXsrv (required)"
   File "..\..\xkbcomp\obj\release\xkbcomp.exe"
   File "..\xkeysymdb"
   File "..\hw\xwin\xlaunch\obj\release\xlaunch.exe"
+  File "..\..\tools\plink\obj\release\plink.exe""
   SetOutPath $INSTDIR\fonts
   File /r "..\fonts\*.*"
   SetOutPath $INSTDIR\xkbdata

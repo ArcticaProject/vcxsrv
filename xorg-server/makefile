@@ -55,7 +55,7 @@ load_makefile $(LIBDIRS:%$(OBJDIR)\=%makefile MAKESERVER=$(MAKESERVER) DEBUG=$(D
 
 OBJS = dix\$(OBJDIR)\main.obj
 
-WINAPP=vcxsrv
+TTYAPP=vcxsrv
 
 ifeq ($(DEBUG),1)
 LINKLIBS += $(MHMAKECONF)\openssl\out32_d\libeay32.lib \
@@ -74,12 +74,12 @@ XWin.rc: hw\xwin\XWin.rc
 
 RESOURCES = XWin.rc
 
-$(OBJDIR)\$(WINAPP).exe: $(LINKLIBS)
+$(OBJDIR)\$(TTYAPP).exe: $(LINKLIBS)
 
 XKeysymDB: ..\libX11\src\XKeysymDB
 	copy $< $@
 
-$(WINAPP).exe: $(OBJDIR)\$(WINAPP).exe
+$(TTYAPP).exe: $(OBJDIR)\$(TTYAPP).exe
 	copy $< $@
 
 load_makefile hw\xwin\xlaunch\makefile MAKESERVER=0 DEBUG=$(DEBUG)
@@ -96,7 +96,7 @@ load_makefile ..\libX11\nls\makefile MAKESERVER=0 DEBUG=0
 load_makefile fonts.src\makefile MAKESERVER=0 DEBUG=0
 load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
-all: $(WINAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB ..\libX11\nls\all fonts.src\all xkbdata.src\all
+all: $(TTYAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB ..\libX11\nls\all fonts.src\all xkbdata.src\all
 
 protocol.txt: dix\protocol.txt
 	copy $< $@

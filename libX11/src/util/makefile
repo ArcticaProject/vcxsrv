@@ -1,4 +1,4 @@
-WINAPP=makekeys
+TTYAPP=makekeys
 
 DEFINES += X11_t TRANS_CLIENT
 

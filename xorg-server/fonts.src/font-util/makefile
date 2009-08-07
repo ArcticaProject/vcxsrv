@@ -1,4 +1,4 @@
-WINAPP = ucs2any
+TTYAPP = ucs2any
 
 CSRCS = ucs2any.c
 

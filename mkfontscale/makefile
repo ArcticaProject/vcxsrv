@@ -1,4 +1,4 @@
-WINAPP = mkfontscale
+TTYAPP = mkfontscale
 
 DEFINES += _BSD_SOURCE
 

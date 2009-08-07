@@ -1,4 +1,4 @@
-WINAPP = bdftopcf
+TTYAPP = bdftopcf
 
 INCLUDELIBFILES = \
  $(MHMAKECONF)\zlib\$(OBJDIR)\libz.lib \
