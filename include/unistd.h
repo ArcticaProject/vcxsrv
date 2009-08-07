@@ -3,5 +3,6 @@
 
 #define strcasecmp _stricmp
 #define snprintf _snprintf
+#define strdup _strdup
 
 #endif

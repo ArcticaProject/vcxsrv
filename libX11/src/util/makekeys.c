@@ -36,6 +36,7 @@ from The Open Group.
 #include <X11/keysymdef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 typedef unsigned long Signature;
 
