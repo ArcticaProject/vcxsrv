@@ -37,6 +37,8 @@
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
+#include <fcntl.h>
+#include <io.h>
 
 /// @brief Send WM_ENDSESSION to all program windows.
 /// This will shutdown the started xserver
@@ -699,6 +701,94 @@ int main(int argc, char **argv)
     }
 }
 
+#ifdef _MSC_VER
+#pragma warning(disable:4273)
+#endif
 
+_Check_return_opt_ int __cdecl printf(_In_z_ _Printf_format_string_ const char * pFmt, ...)
+{
+  static int ConsoleCreated=0;
+  va_list arglist;
+  if (!ConsoleCreated)
+  {
+    int hConHandle;
+    long lStdHandle;
+    CONSOLE_SCREEN_BUFFER_INFO coninfo;
+
+    FILE *fp;
+    const unsigned int MAX_CONSOLE_LINES = 500;
+    ConsoleCreated=1;
+    if (!AttachConsole(ATTACH_PARENT_PROCESS))
+      AllocConsole();
+
+      // set the screen buffer to be big enough to let us scroll text
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE),	&coninfo);
+    coninfo.dwSize.Y = MAX_CONSOLE_LINES;
+    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE),	coninfo.dwSize);
+
+    // redirect unbuffered STDOUT to the console
+    lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
+    hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+    fp = _fdopen( hConHandle, "w" );
+    *stdout = *fp;
+    setvbuf( stdout, NULL, _IONBF, 0 );
+
+    // redirect unbuffered STDIN to the console
+    lStdHandle = (long)GetStdHandle(STD_INPUT_HANDLE);
+    hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+    fp = _fdopen( hConHandle, "r" );
+    *stdin = *fp;
+    setvbuf( stdin, NULL, _IONBF, 0 );
+
+    // redirect unbuffered STDERR to the console
+    lStdHandle = (long)GetStdHandle(STD_ERROR_HANDLE);
+    hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+    fp = _fdopen( hConHandle, "w" );
+    *stderr = *fp;
+    setvbuf( stderr, NULL, _IONBF, 0 );
+
+  }
+
+  va_start(arglist, pFmt );
+  return vfprintf(stderr, pFmt, arglist);
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+  int argc=1;
+  #define MAXNRARGS 20
+  char *argv[MAXNRARGS]={"plink"};
+  char *pTmp=lpCmdLine;
+  while (*pTmp && argc<MAXNRARGS-1)
+  {
+    char *pEnd;
+    if (*pTmp=='"')
+    {
+      pEnd=strchr(pTmp+1,'"');
+    }
+    else if (*pTmp!=' ')
+    {
+      pEnd=strchr(pTmp,' ');
+    }
+    else
+    {
+      pTmp++;
+      continue;
+    }
+    if (pEnd)
+    {
+      *pEnd=0;
+      argv[argc++]=pTmp;
+      pTmp=pEnd+1;
+    }
+    else
+    {
+      argv[argc++]=pTmp;
+      break;
+    }
+  }
+  
+  return main(argc,argv);
+}
 
 

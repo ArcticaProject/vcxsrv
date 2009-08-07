@@ -92,11 +92,17 @@ load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 xkbcomp.exe: ..\xkbcomp\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\xkbcomp.exe
 	copy $< $@
 
+load_makefile ..\tools\plink\makefile MAKESERVER=0 DEBUG=$(DEBUG))
+
+plink.exe: ..\tools\plink\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\plink.exe
+	copy $< $@
+
 load_makefile ..\libX11\nls\makefile MAKESERVER=0 DEBUG=0
 load_makefile fonts.src\makefile MAKESERVER=0 DEBUG=0
 load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
-all: $(TTYAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB ..\libX11\nls\all fonts.src\all xkbdata.src\all
+all: $(TTYAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB ..\libX11\nls\all fonts.src\all xkbdata.src\all \
+     plink.exe
 
 protocol.txt: dix\protocol.txt
 	copy $< $@
