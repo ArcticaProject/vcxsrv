@@ -37,7 +37,7 @@ UninstPage uninstConfirm
 UninstPage instfiles
 
 SetPluginUnload alwaysoff
-ShowInstDetails show
+; ShowInstDetails show
 XPStyle on
 
 !define FUSION_REFCOUNT_UNINSTALL_SUBKEY_GUID {8cedc215-ac4b-488b-93c0-a50a49cb2fb8}
