@@ -109,6 +109,10 @@ Equipment Corporation.
 #include <dix-config.h>
 #endif
 
+#ifdef CreateWindow
+#undef CreateWindow
+#endif
+
 #ifdef PANORAMIX_DEBUG
 #include <stdio.h>
 int ProcInitialConnection();
