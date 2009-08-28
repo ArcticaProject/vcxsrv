@@ -35,6 +35,10 @@ in this Software without prior written authorization from the X Consortium.
 #define SCREENSAVER
 #endif
 
+#ifdef CreateWindow
+#undef CreateWindow
+#endif
+
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "misc.h"
