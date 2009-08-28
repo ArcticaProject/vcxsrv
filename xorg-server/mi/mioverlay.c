@@ -3,6 +3,10 @@
 #include <dix-config.h>
 #endif
 
+#ifdef CreateWindow
+#undef CreateWindow
+#endif
+
 #include <X11/X.h>
 #include "scrnintstr.h"
 #include "validate.h"
