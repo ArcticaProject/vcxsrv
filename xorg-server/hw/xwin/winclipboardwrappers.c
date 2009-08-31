@@ -342,9 +342,20 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if clipboard not completely initialized yet */
   if (!g_fClipboardStarted)
     {
-      ErrorF ("winProcSetSelectionOwner - Clipboard not yet started, "
-	      "aborting.\n");
-      goto winProcSetSelectionOwner_Done;
+      if (g_fClipboardLaunched)
+      {
+         // Just wait until it is started
+        ErrorF ("winProcSetSelectionOwner - waiting to be started.\n");
+        while (g_fClipboardLaunched && !g_fClipboardStarted)
+          Sleep(0);
+        ErrorF ("winProcSetSelectionOwner - Clipboard started.\n");
+      }
+      else
+      {
+        ErrorF ("winProcSetSelectionOwner - Clipboard not yet started, "
+	        "aborting.\n");
+        goto winProcSetSelectionOwner_Done;
+      }
     }
   
   /* Grab window if we have one */
@@ -511,8 +522,8 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Access the Windows clipboard */
   if (!OpenClipboard (g_hwndClipboard))
     {
-      ErrorF ("winProcSetSelectionOwner - OpenClipboard () failed: %08x\n",
-	      (int) GetLastError ());
+      ErrorF ("winProcSetSelectionOwner - OpenClipboard () failed: %08x, hwnd: %08x\n",
+	      (int) GetLastError (),g_hwndClipboard);
       goto winProcSetSelectionOwner_Done;
     }
 
