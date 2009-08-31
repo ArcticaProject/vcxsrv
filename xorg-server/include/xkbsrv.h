@@ -293,8 +293,8 @@ extern int	XkbReqCode;
 extern int	XkbEventBase;
 extern int	XkbDisableLockActions;
 extern int	XkbKeyboardErrorCode;
-extern char *	XkbBaseDirectory;
-extern char *	XkbBinDirectory;
+extern const char *	XkbBaseDirectory;
+extern const char *	XkbBinDirectory;
 extern char *	XkbInitialMap;
 extern unsigned	int XkbXIUnsupported;
 

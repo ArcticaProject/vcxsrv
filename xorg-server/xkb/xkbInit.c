@@ -114,8 +114,8 @@ typedef struct	_SrvXkmInfo {
 #define	XKB_DFLT_RULES_PROP	True
 #endif
 
-char	*		XkbBaseDirectory=	XKB_BASE_DIRECTORY;
-char	*		XkbBinDirectory=	XKB_BIN_DIRECTORY;
+const char	*		XkbBaseDirectory=	XKB_BASE_DIRECTORY;
+const char	*		XkbBinDirectory=	XKB_BIN_DIRECTORY;
 static int	 	XkbWantAccessX=		0;	
 
 static Bool		rulesDefined=		False;
