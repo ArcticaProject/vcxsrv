@@ -959,14 +959,7 @@ typedef struct _LbxFreeCellsEvent {
 #define DBG_BLOCK	0x00000020
 #define DBG_CLIENT	0x00000040
 #define DBG_DELTA	0x00000080
-
-extern int lbxDebug;
-
-#define DBG(n,m)    if (lbxDebug & (n)) { fprintf m; } else
-#else
-#define DBG(n,m)
 #endif
-
 /*
  * Cancel the previous redefinition of the basic types, thus restoring their
  * X.h definitions.

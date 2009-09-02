@@ -1,3 +1,279 @@
+commit 987aeb9bd1915a655f31e250ee9c02d04927b150
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Aug 25 09:30:15 2009 +1000
+
+    xextproto 7.1.1
+
+commit 55a0bbdde9b27b8dbc6e75d41c51af3f92dea6e3
+Author: Eduard Bagrov <ebagrov@linuxtesting.org>
+Date:   Fri Aug 21 18:48:19 2009 +0200
+
+    Fix XSyncValueSubtract typo
+    
+    X.Org bug#23438 <http://bugs.freedesktop.org/show_bug.cgi?id=23438>
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit 23ac4d5235862d51f0cfb080ad2118a9fb181673
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Aug 5 15:09:11 2009 +1000
+
+    xextproto 7.1.0
+
+commit 5ffa318ddb35308e3a87122bfb3944e3201532ba
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Aug 5 15:06:52 2009 +1000
+
+    lbxproto: remove debug macro and definition of lbxDebug.
+    
+    This should not be in the protocol headers.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 5a266968b1ced367df1a47dc9729313c85be0516
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Jul 22 20:26:35 2009 +1000
+
+    Bump to 7.0.99.3
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d7ead7a591da851f6bb2efecdd35b63836df4ed0
+Author: Magnus Kessler <Magnus.Kessler@gmx.net>
+Date:   Wed Jul 22 09:37:38 2009 +0100
+
+    Rename xtest.h to xtestconst.h to avoid a collision with XTest.h on case-insensitive filesystems
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2fd05eca7dd501c58b284d9cceb73d6146672b0a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Jul 21 13:35:58 2009 +1000
+
+    Bump to 7.0.99.2
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a049c37f789f881fad09e60a061488cba2b4072e
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Mon Jul 20 22:42:59 2009 +0100
+
+    Rename mitmisc.h to mitmiscconst.h to avoid a collision with MITMisc.h on case-insensitive filesystems
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 609c3b03fbed24f05d636d98dad9febc7226624c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Jul 15 16:28:12 2009 +1000
+
+    Remove RCS tags.
+
+commit 6e9e47edf97a0bb504b4b65f5ef066f3d5e3d34b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Jul 15 16:20:13 2009 +1000
+
+    Bump to 7.0.99.1
+
+commit ef8766e44c5cdd1e3ba7ebabf576e2de77f57a09
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:43:12 2009 +1000
+
+    xtestext1: split xtestext1.h header into xtestext1proto.h
+
+commit a1f0b58efce74176c71070818fa98c25021bb25e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:36:22 2009 +1000
+
+    sync: remove sync.h library header, split into syncconst.h
+    
+    Rename syncstr.h to syncproto.h
+
+commit 35ec2669091197a4e5b3c56d79ea26ae87759b16
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:32:29 2009 +1000
+
+    shape: remove shape.h, split into shapeconst.h
+    
+    Rename shapestr.h to shapeproto.h
+
+commit 7cfdafd5ec565502a40e9e1f5b3edbb2be6aafbc
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:30:17 2009 +1000
+
+    security: remove security.h, split into secur.h
+    
+    Rename securstr.h to securproto.h
+
+commit 19f527b4abe17b58dd78ec988a11c8081166cf01
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:28:02 2009 +1000
+
+    multibuf: remove multibuf.h, split into multibufconst.h
+
+commit 4b7fff5309f3e51e17372e3eaf91ee01c00ffd08
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:19:04 2009 +1000
+
+    remove extutil.h, pure library header
+
+commit 0af7f152239a0f14fc85acd146845c784bb1cd6a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:18:06 2009 +1000
+
+    dpms: remove dpms.h library header, split into dpmsconst.h
+
+commit ac0dfab3fe1ae9c9633696825636a4bcfa14dfd6
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:14:14 2009 +1000
+
+    Remove Xext.h and Xge.h - pure library headers.
+
+commit 413572e112e24aa7a28632e13a8aa15c9fdaa57e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:10:01 2009 +1000
+
+    Xdbe: remove Xdbe.h library header, split into dbe.h
+    
+    Rename Xdbeproto to dbeproto.h
+
+commit d2574e8804a204653bda1786c1ece3437f7901a2
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 11:04:12 2009 +1000
+
+    Xcup: remove XCup.h library header, split into cup.h
+    
+    Rename Xcupstr.h to cupproto.h
+
+commit 38daa9d8d9d86f3b9df12dd5032959822b7c0a45
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 10:59:10 2009 +1000
+
+    Xag: remove Xag.h library header, split into Xagconst.h
+
+commit 8cb2568c4a7df1eb0482009bf9150912e98969e6
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 10:54:21 2009 +1000
+
+    XTest: remove XTest.h, split into xtest.h and xtestproto.h
+    
+    To avoid conflicts, xtest.h uses a XTEST_CONST_H include barrier.
+
+commit c63abdd1eb7bc1d8ae4e25073ef2f29d94991e2b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 10:46:33 2009 +1000
+
+    XShm: remove XShm.h library header, split into shm.h, shmproto.h
+    
+    Removing Xlib function prototypes.
+    Move extension name to shm.h
+    Move protocol request opcodes to shmproto.h
+
+commit 0adb09e032e3bd56426620b19438be9c0c66dd54
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 10:43:32 2009 +1000
+
+    XLbx: remove XLbx library headers, split into lbx.h, lbxproto.h
+    
+    Remove Xlib function prototypes.
+    Move extension name into lbx.h, move protocol opcodes into lbxproto.h
+
+commit 727003b51844dd1bd41b668bedfa92d2bb7ef964
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 10:30:40 2009 +1000
+
+    XEVI: remove XEVI.h library header, split into EVIproto.h
+    
+    Remove Xlib function prototypes.
+    Move protocol opcodes to EVIproto.h
+    Move extension name from EVIproto.h into EVI.h
+
+commit 3770d4bd035e43c8e2228d45184d9d398fccb325
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 25 10:24:57 2009 +1000
+
+    MITMisc: remove MITMisc.h library header, split into mitmistproto.h
+    
+    Moving extension name from mitmiststr.h into mitmisc.h.
+    Removing Xlib function prototypes from mitmisc.h.
+    Moving protocol request opcodes into mitmiscproto.h
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 57d09e47d05fce0d6df4060b2eff9a8efcc25b2f
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Jul 15 13:41:36 2009 -0400
+
+    Remove most LBX headers.
+    
+    XLbx.h and lbxstr.h are required for libXext to build, and we're not
+    allowed to remove API from that.
+
+commit 7629def0733b82687f2879095451d72e42e13db7
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sat Mar 28 14:20:38 2009 -0400
+
+    C sucks: define XEventClass in terms of unsigned int, not CARD32.
+    
+    Apparently pulling in Xmd.h here breaks qt, since they both define an
+    INT32 type (and incompatible ones even, since Xmd's is unsigned long on
+    ILP32 because whoever wrote Xmd.h is a C novice).
+    
+    (Based on inputproto commit b5cbe2d93f6c0129b8f29da97778f6d1b15c38f9.
+    Patch submitted to xorg@ in <20090117121713.46bf3332@family.dyweni.com>.)
+
+commit ac98d8c559dc798f09e35d13f51cb1116c6378bb
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Jan 29 16:22:20 2009 -0200
+
+    Bump to libXext Version 7.0.5.
+    
+      Add required change to correct #18038
+    (patch to avoid gcc warning in libXext)
+
+commit 8b5b82ec72dd6952d0664655715a0a47951454f4
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 20:06:28 2009 -0200
+
+    Janitor: Correct make distcheck and dont distribute autogen.sh
+
+commit fa652c6013a5d3ae8106814d97245fdbac3557ac
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Dec 23 16:16:46 2008 +0100
+
+    Add geproto.txt to EXTRA_DIST
+
+commit bd7f3e16b5a5520f0abb8c481f23a19219d26c7f
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Dec 23 15:45:13 2008 +0100
+
+    COPYING: add Peter Hutterer's license and copyright notice
+    
+    Taken from Xge.h
+
+commit e1773d8ad7d36535f856dcb308be9a1b0601c1fc
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Dec 18 10:10:42 2008 +1000
+
+    Bump to 7.0.4
+
+commit e7f0c4261c59da82da1c151dd1bd0d143a32906a
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Dec 1 14:44:03 2008 +1000
+
+    Clean up XGE documentation.
+
+commit b0080664e432f8ee569ce099a536c0232dd64d3e
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Mon Dec 1 15:41:16 2008 +1000
+
+    geproto: remote trailing whitespaces.
+
+commit f7e5f23e37e62cc0a981d9b002b69d90b8a7daa9
+Author: Peter Hutterer <peter.hutterer@redhat.com>
+Date:   Fri Sep 26 14:54:19 2008 +0930
+
+    Xge.h: include Xmd.h for CARD8
+
 commit db08133016b421ef12c65db9c4a2819078f01b06
 Author: Peter Hutterer <peter@cs.unisa.edu.au>
 Date:   Wed May 28 17:18:14 2008 +0930
@@ -11,7 +287,7 @@ Date:   Mon May 12 17:26:02 2008 +0930
     Xge: replace copyrights with standard format from xserver COPYING.
 
 commit 9dc48efe2b3136756613ae00afd706f9a52d6f10
-Merge: 69356e4... a07a30f...
+Merge: 69356e4 a07a30f
 Author: Peter Hutterer <peter@cs.unisa.edu.au>
 Date:   Mon May 12 17:22:14 2008 +0930
 
