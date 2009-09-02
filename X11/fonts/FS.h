@@ -1,5 +1,3 @@
-/* $Xorg: FS.h,v 1.4 2001/02/09 02:03:24 xorgcvs Exp $ */
-
 /*
  * Copyright 1990, 1991 Network Computing Devices;
  * Portions Copyright 1987 by Digital Equipment Corporation 
@@ -50,7 +48,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/include/fonts/FS.h,v 1.9 2003/07/09 15:27:28 tsi Exp $ */
 
 #ifndef _FS_H_
 #define	_FS_H_

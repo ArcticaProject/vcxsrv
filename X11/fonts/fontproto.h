@@ -1,5 +1,3 @@
-/* $XFree86: xc/include/fonts/fontproto.h,v 1.2 1999/09/04 09:14:08 dawes Exp $ */
-
 /***********************************************************
 
 Copyright (c) 1999  The XFree86 Project Inc.
