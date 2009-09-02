@@ -298,15 +298,15 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
     GlyphSharePtr pShare;
     DeviceIntPtr pDev;
 
-    rc = dixLookupResource((pointer *)&sourcefont, source, RT_FONT, client,
-			   DixUseAccess);
+    rc = dixLookupResourceByType((pointer *)&sourcefont, source, RT_FONT, client,
+				 DixUseAccess);
     if (rc != Success)
     {
 	client->errorValue = source;
 	return (rc == BadValue) ? BadFont : rc;
     }
-    rc = dixLookupResource((pointer *)&maskfont, mask, RT_FONT, client,
-			   DixUseAccess);
+    rc = dixLookupResourceByType((pointer *)&maskfont, mask, RT_FONT, client,
+				 DixUseAccess);
     if (rc != Success && mask != None)
     {
 	client->errorValue = mask;

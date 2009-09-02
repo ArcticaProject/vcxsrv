@@ -428,7 +428,7 @@ ProcShapeMask (client)
     if (stuff->src == None)
 	srcRgn = 0;
     else {
-	rc = dixLookupResource((pointer *)&pPixmap, stuff->src, RT_PIXMAP,
+	rc = dixLookupResourceByType((pointer *)&pPixmap, stuff->src, RT_PIXMAP,
 			       client, DixReadAccess);
         if (rc != Success)
 	    return (rc == BadValue) ? BadPixmap : rc;

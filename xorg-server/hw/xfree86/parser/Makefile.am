@@ -1,8 +1,5 @@
 if INSTALL_LIBXF86CONFIG
 lib_LIBRARIES = libxf86config.a
-LIBHEADERS = \
-	xf86Optrec.h \
-	xf86Parser.h
 else
 noinst_LIBRARIES = libxf86config.a
 endif
@@ -30,9 +27,8 @@ AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
 EXTRA_DIST = \
 	Configint.h \
 	configProcs.h \
-	xf86Optrec.h \
-	xf86Parser.h \
 	xf86tokens.h
 
 sdk_HEADERS = \
-	$(LIBHEADERS)
+	xf86Optrec.h \
+	xf86Parser.h

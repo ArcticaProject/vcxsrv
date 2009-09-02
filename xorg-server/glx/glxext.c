@@ -127,6 +127,33 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
     __GLXcontext *c;
 
     for (c = glxAllContexts; c; c = c->next) {
+	if (c->isCurrent && (c->drawPriv == glxPriv || c->readPriv == glxPriv)) {
+	    int i;
+
+	    (*c->loseCurrent)(c);
+	    c->isCurrent = GL_FALSE;
+	    if (c == __glXLastContext)
+		__glXFlushContextCache();
+
+	    for (i = 1; i < currentMaxClients; i++) {
+		if (clients[i]) {
+		    __GLXclientState *cl = glxGetClient(clients[i]);
+
+		    if (cl->inUse) {
+			int j;
+
+			for (j = 0; j < cl->numCurrentContexts; j++) {
+			    if (cl->currentContexts[j] == c)
+				cl->currentContexts[j] = NULL;
+			}
+		    }
+		}
+	    }
+
+	    if (!c->idExists) {
+		__glXFreeContext(c);
+	    }
+	}
 	if (c->drawPriv == glxPriv)
 	    c->drawPriv = NULL;
 	if (c->readPriv == glxPriv)

@@ -205,6 +205,11 @@ static Bool quirk_first_detailed_preferred (int scrnIndex, xf86MonPtr DDC)
 	DDC->vendor.prod_id == 2423)
 	return TRUE;
 
+    /* Peacock Ergovision 19.  See rh#492359 */
+    if (memcmp (DDC->vendor.name, "PEA", 4) == 0 &&
+	DDC->vendor.prod_id == 9003)
+	return TRUE;
+
     return FALSE;
 }
 

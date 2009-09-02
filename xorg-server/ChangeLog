@@ -1,3 +1,414 @@
+commit 3044711412d0a08ba65a491bd2441c0c8980f5e2
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Aug 25 22:37:16 2009 -0700
+
+    Bump version to 1.6.3.901 (1.6.4 RC1)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d8e48deb212767c4dfce982e6cb9d1b1fce63b96
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Aug 25 22:29:25 2009 -0700
+
+    Block signals while delivering XTest events (fixes bug 23100)
+    
+    XTest uses the same event list as all input devices, and input devices
+    use it at SIGIO time. This causes mass confusion when a SIGIO event
+    occurs in the middle of XTest event processing.
+    
+    The master branch has a much different fix, using a separate input
+    queue which reduces latency that may be caused by XTest event queuing;
+    it's a 'nicer' fix in some ways, but this simple fix should solve the
+    problem.
+    
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 76a1839b0a7dcb82e46c43533d252288677c6dbb
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Aug 25 18:07:00 2009 -0700
+
+    Ensure that rotation updates happen frequently
+    
+    The smart scheduler is designed to minimize scheduler overhead by
+    increasing the interval between WaitForSomething calls when a single
+    client is running. However, the software rotation code depends on
+    its BlockHandler being invoked for screen updates; the long delays
+    caused by the smart scheduler optimizations means that screen updates
+    can be delayed a long time as well.
+    
+    The change is simple -- prevent the smart scheduler from increasing
+    the scheduling interval while any screen is using software rotation.
+    (cherry picked from commit e7dd1efef408effe52d0bd3d3aa0b5d4ee10ed90)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 31dc4fe0be57da4e9458ee490811fbd92598b7a7
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Aug 25 16:58:07 2009 -0700
+
+    Perform rotation redisplay before calling driver block handler (which may flush rendering)
+    
+    The rotation block handler uses regular driver rendering functions to
+    repaint the screen, if those functions queue commands in the driver,
+    it's important that the driver block handler be invoked after the
+    rotated image is drawn.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 1740cda7a37abc7d0a169ab4555b446adaa62211)
+
+commit cebc0a7aa7a368b2ade3a808195d2e738fda83e9
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Aug 25 16:54:16 2009 -0700
+
+    xf86_reload_cursors: fix cursor position to eliminate jumping after mode set
+    
+    xf86_reload_cursors restores the cursor to the correct position, but
+    that must adjust for cursor hot spot and frame before calling down to
+    the hardware function, otherwise the cursor jumps to the wrong
+    position until it is repositioned by the user.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 4aab05e3b3231f1ec9795a66a075d17a722634a7)
+
+commit 5848fca11f3c5b65bb6634816c0df6aeb6eda87d
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Jun 23 16:45:40 2009 +0200
+
+    glx: Clean up more thoroughly if the drawable of a current context goes away.
+    
+    Fixes crash when restarting compiz, due to cl->currentContexts[x] being stale.
+    (cherry picked from commit 3020b1d43e34fca08cd51f7c7c8ed51497d49ef3)
+
+commit fad2de1cca057586a88fb20ebf9a9964f8e3e298
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Thu May 14 11:46:41 2009 +0200
+
+    glx: If a destroyed window is bound to the current context, make it not current.
+    
+    Avoids subsequent crashes due to stale pointers to the DrawableRec, see
+    https://bugs.freedesktop.org/show_bug.cgi?id=21132#c15 and previous comments.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    (cherry picked from commit 2075d4bf9e53b8baef0b919da6c44771220cd4a5)
+
+commit a32d717ac64b21e15a5736ae4981cdd32f2da56b
+Author: Richard Hughes <richard@hughsie.com>
+Date:   Mon Aug 17 09:15:32 2009 +0100
+
+    Do not reset lastDeviceEventTime when we do dixSaveScreens
+    
+    When we turn off DPMS with DPMSModeOff and do dixSaveScreens, don't reset the
+    event time else session clients using IDLETIME will be reset.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 6b5978dcf1f7ac3ecc2f22df06f7000f360e2066)
+
+commit 32115e690f43fde619234722aa674ff1ae1b44ae
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Aug 14 11:48:54 2009 +1000
+
+    dix: update the sprite trace for all masters && floating slaves (#23257)
+    
+    When the windows are restructured, CheckMotion needs to be called for all
+    masters and floating slaves to update the spriteTrace.
+    
+    X.Org Bug 23257 <http://bugs.freedesktop.org/show_bug.cgi?id=23257>
+    (cherry picked from commit 6c292d17053eb2a7e7054e51210f423dbc0cb7e8)
+    
+    Tested-by: Thomas Jaeger
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit af7e62a913c3c5b9639b4557b31537853f3f58bb
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Sun Aug 16 18:07:49 2009 -0700
+
+    xfree86: Link libselinux with Xorg system libraries
+    
+    Put the reference to -lselinux in XORG_SYS_LIBS so it isn't added as a
+    make dependency for libxorg.la. Otherwise, make goes looking for a file
+    -lselinux in the current directory, which it obviously won't find.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Tested-by: Justin P. Mattock <justinmattock@gmail.com>
+    (cherry picked from commit c73cd3b265c301b8a54ffe484d6c696f2abefb46)
+
+commit 397f7c42cd775f1dbfced58bc1dfaead48e86440
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Aug 14 09:48:45 2009 +1000
+
+    config: don't shutdown the libhal ctx if it failed to initialize (#23213)
+    
+    Regression introduced by b1c3dc6ae226db178420e3b5f297b94afc87c94c.
+    Shutting down the libhal_ctx if the init failed may cause an abort.
+    This can happen if hald is not yet running at server startup.
+    
+    X.Org Bug 23213 <http://bugs.freedesktop.org/show_bug.cgi?id=23213>
+    
+    Tested-by: Stefan Dirsch
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 49046088f10cceaea7da97401d742d3fb59371f5)
+
+commit 55c26d8e4d110b689aea9d806e9d4fa7bbbdd32a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Aug 13 16:37:00 2009 +1000
+
+    Xext: fix up wrong conditions for negative sync transitions.
+    
+    If the counter had a value higher than the trigger value for a negative
+    transition, the trigger value did not get set.
+    
+    The correct sequence of checks is:
+    if (positive transition)
+       if (counter value < trigger value)
+          set up trigger
+    if (negative transition)
+       if (counter value > trigger value)
+          set up trigger
+    
+    Red Hat Bug 501601 <https://bugzilla.redhat.com/show_bug.cgi?id=501601>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit db568f9eabf3450d8a023597ff007df355b13ea8)
+
+commit f274e595ed56722450f6ecebad70500c92e50c58
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Jul 31 23:37:53 2009 -0700
+
+    Bump release number to 1.6.3
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 55dcfdbbd6a2a4debb717b104c4b54f4a2c76fff
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jul 28 15:02:37 2009 -0700
+
+    Remove hardcoded gcc -Wall option from configure.ac
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    (cherry picked from commit 442967c90dd9d8483a56bdc9237c49e33d619126)
+
+commit 4d349b6c333449517913a5e981b4fc3155da4855
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Fri Mar 27 15:56:15 2009 -0400
+
+    selinux: Only activate if policy says to be an object manager
+    (cherry picked from commit 283a081572d8db787c77d09e5ba6bcadebf4f7fe)
+
+commit d0875154f4f4b751264a2f6781500e97409a499b
+Author: Ben Skeggs <bskeggs@redhat.com>
+Date:   Wed May 27 15:24:34 2009 +1000
+
+    quirk: use first detailed timing as preferred for PEA prod 9003 (rh#492359)
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 048697ccfa31cf7f7a29afa90a2f702d43efb7d4)
+
+commit c941479ecc2dead9c3deaee2620c9b9518c3da9a
+Author: Rémi Cardona <remi@gentoo.org>
+Date:   Mon Jul 27 12:07:51 2009 +0200
+
+    config: add HAL error checks
+    
+    This patch simplifies error handling in the HAL code and fixes a
+    segfault if libhal_find_device_by_capability() failed.
+    
+    Fixes http://bugs.gentoo.org/278760
+    
+    Based on a patch by Martin von Gagern <Martin.vGagern@gmx.net>
+    
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit b1c3dc6ae226db178420e3b5f297b94afc87c94c)
+
+commit 546f913ff5461dd93d4a0b29b24d2267557326c7
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri May 8 21:31:01 2009 -0700
+
+    Don't printf NULL pointers on HAL connection error
+    
+    Fixes Solaris bug 6801386 Xorg core dumps on startup if hald not running
+    http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6801386
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    (cherry picked from commit 1e816065e5ec3b9394dc1fa5815457a664e15fd9)
+
+commit 155cb2f9a376d40b699a72ac3bdede71af1b518f
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sun Jul 26 14:22:35 2009 -0700
+
+    Bump to version 1.6.2.901 (1.6.3 RC1)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 87900645c22d6066fe70190ab838a687808db5c3
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Thu Jun 11 14:21:53 2009 +1000
+
+    xfree86: move didLock assignment down to where the function pointer is valid.
+    
+    crtc->funcs->lock is NULL, so it's no use calling it here. Move it down so
+    it's actually defined before we use it.
+    
+    Introduced with 6f59a8160042ea145514fdcb410f17f33fd437c2.
+    
+    Tested-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 0de58c88aba7ddd69b04f24ab5b2967c359aa69e)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 72c9bc64ff86999a4643663e5699a6547a9e2997
+Author: Benjamin Defnet <benjamin.r.defnet@intel.com>
+Date:   Wed Jun 10 21:35:48 2009 -0700
+
+    randr: fix operation order so that rotation+transform works
+    
+    The matrix multiply to combine rotation and projective transforms was being
+    done in the wrong order.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit b2bf67b61c564a4b92a429ca9ad455403161f33a)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 7f95d18397757facafcba39e4613b2ed5047c5c4
+Author: Benjamin Defnet <benjamin.r.defnet@intel.com>
+Date:   Mon Jun 8 21:45:42 2009 -0700
+
+    hw/xf86/modes: Set crtc mode/rotation/transform before calling set_mode_major
+    
+    This moves code out of each implementation of set_mode_major and back into
+    the X server. The real feature here is that the transform is now available
+    in the crtc for use by either xf86CrtcRotate or whatever the driver wants to
+    do. Without this change, the transform was lost for drivers providing the
+    set_mode_major interface.
+    
+    Note that users of this API will want to stop smashing the transformPresent
+    field, and could also stop setting mode/x/y/rotation for new enough X servers,
+    but there's no reason to make that change as it will break things when
+    running against older X servers.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Acked-by: Daniel Stone <daniel@fooishbar.org>
+    (cherry picked from commit 6f59a8160042ea145514fdcb410f17f33fd437c2)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit abc89e2c48a88c29f49fe44d03778deab4b1a3b9
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Tue Mar 10 15:49:49 2009 +0100
+
+    randr: Nuke broken set_origin shortcut
+    
+    Shortcut is impossible to implement this way, because we don't know for sure
+    whether the crtc of an output has changed or not.
+    (cherry picked from commit cadf65a6e190a8952ad3cc216dc9ea55241de91a)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b1eed8970f7c5b07152dbc6b7dcc4c8504aeb67c
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri May 22 09:54:38 2009 +0200
+
+    randr: fix server crash in RRGetScreenInfo
+    
+    We don't return rates to randr < 1.1 clients, so don't allocate space
+    for them.  This fixes a FatalError due to not all allocated space being
+    used.
+    
+    X.Org bug#21861 <http://bugs.freedesktop.org/show_bug.cgi?id=21861>
+    
+    Reported-by: Guillaume Quintin <coincoin169g@gmail.com>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    (cherry picked from commit 12e725d08b4cf7dbb7f09b9ec09fa1b621156ea9)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 1addf6fe235f8537024140aff56dffb4738701a7
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Aug 6 15:26:24 2008 -0700
+
+    Replace dixLookupResource by dixLookupResourceBy{Type,Class}
+    
+    dixLookupResource attempted to automatically detect whether the caller
+    wanted a lookup by-type or by-class, unfortunately, it guessed wrong for
+    RT_NONE. Instead of trying to make the guess better, this patch just reverts
+    the unification and creates separate functions for each operation.
+    (cherry picked from commit f8dd80d13bb5313a11b38b280f8ad3e22f0a6300)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c838a03e891a6fcd2f7b71f727c1b93f7c26e7a7
+Author: Robert Noland <rnoland@2hip.net>
+Date:   Wed Apr 15 12:06:19 2009 -0500
+
+    One = is more than adequate here.  Make is sh safe.
+    (cherry picked from commit b3e3154cce47add97f5561088036ce3b9e7dc937)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 68cb38bed65c49716104eeb345c4b1b85a4b15bc
+Author: Rémi Cardona <remi@gentoo.org>
+Date:   Fri Jul 3 10:51:50 2009 +0200
+
+    configure: libXinerama isn't needed anymore
+    
+    since libXinerama commit 90d4d23bf2e94721149ddc0a80093b10a82e8845 and
+    xineramaproto commit 21477147613c28c968b5e1eb9d8aea7017dd399d, the
+    server no longer needs libXinerama.
+    
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+    (cherry picked from commit 2c69deb92e11542f615df0f24fdc03e3b4415475)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit ec60f4ca65dbc25f9a40636f5280b1a1ec68407f
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Fri Jul 10 20:06:02 2009 +0200
+
+    EXA: Only pass CT_YXBANDED to RECTS_TO_REGION() if that is really true.
+    
+    Fixes http://bugs.freedesktop.org/show_bug.cgi?id=22642 .
+    (cherry picked from commit 35758544813f156eaac28844e693b2a28f6de316)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b10c4fe343d2339bae4736793939e44a6befaf88
+Author: Kim Woelders <kim@woelders.dk>
+Date:   Sat Jul 11 18:55:17 2009 +0200
+
+    Fix key repeat problem.
+    
+    Signed-off-by: Kim Woelders <kim@woelders.dk>
+
+commit 606f6dba16d42e3546a82a386d5a01087467b511
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Apr 14 10:54:25 2009 -0400
+
+    xdmcp: Don't crash on X -query with more than 255 IP addresses. (#20675)
+    
+    You could be more clever than this, but the wire protocol says this
+    really is an array of not more than 255 ARRAY8, so it's not just a
+    matter of changing the types.
+    
+    (cherry picked from commit 0eb19f9437b7d8c19592e49eedb028771d300d80)
+
+commit 396d3a7762abd0dd84042833b75f2ebf9d100bb0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 8 11:26:46 2009 -0700
+
+    Fix build of drivers with 1.6.2 when not using --install-libxf86config
+    
+    c859b736d1d23c5dc2f53958b1e76660e6d45018 removed duplicate entries for
+    these from the Makefile, but removed a different set than was done in
+    master branch, causing xf86Parser.h to not be installed, which in turn
+    breaks the build of drivers like -ati, -intel & -nv that use xf86Modes.h,
+    which includes xf86Parser.h
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
 commit 6f1aff5a2b45bc2985081abc240a8fed37170386
 Author: Keith Packard <keithp@keithp.com>
 Date:   Mon Jul 6 14:08:31 2009 -0700

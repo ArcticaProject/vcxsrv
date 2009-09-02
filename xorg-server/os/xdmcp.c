@@ -491,7 +491,9 @@ XdmcpRegisterConnection (
 	    return;
 	}
     }
-    newAddress = (CARD8 *) xalloc (addrlen * sizeof (CARD8));
+    if (ConnectionAddresses.length + 1 == 256)
+	return;
+    newAddress = xalloc (addrlen * sizeof (CARD8));
     if (!newAddress)
 	return;
     if (!XdmcpReallocARRAY16 (&ConnectionTypes, ConnectionTypes.length + 1))

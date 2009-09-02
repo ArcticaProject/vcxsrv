@@ -1349,7 +1349,7 @@ GrabButton(ClientPtr client, DeviceIntPtr dev, BYTE this_device_mode,
     if (rcursor == None)
 	cursor = NullCursor;
     else {
-	rc = dixLookupResource((pointer *)&cursor, rcursor, RT_CURSOR,
+	rc = dixLookupResourceByType((pointer *)&cursor, rcursor, RT_CURSOR,
 			       client, DixUseAccess);
 	if (rc != Success)
 	{

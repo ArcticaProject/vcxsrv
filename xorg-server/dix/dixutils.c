@@ -216,7 +216,7 @@ dixLookupDrawable(DrawablePtr *pDraw, XID id, ClientPtr client,
     if (id == INVALID)
 	return BadDrawable;
 
-    rc = dixLookupResource((pointer *)&pTmp, id, RC_DRAWABLE, client, access);
+    rc = dixLookupResourceByClass((pointer *)&pTmp, id, RC_DRAWABLE, client, access);
 
     if (rc == BadValue)
 	return BadDrawable;
@@ -259,7 +259,7 @@ dixLookupClient(ClientPtr *pClient, XID rid, ClientPtr client, Mask access)
     if (!clientIndex || !clients[clientIndex] || (rid & SERVER_BIT))
 	goto bad;
 
-    rc = dixLookupResource(&pRes, rid, RC_ANY, client, DixGetAttrAccess);
+    rc = dixLookupResourceByClass(&pRes, rid, RC_ANY, client, DixGetAttrAccess);
     if (rc != Success)
 	goto bad;
 

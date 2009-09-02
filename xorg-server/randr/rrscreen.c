@@ -664,8 +664,9 @@ ProcRRGetScreenInfo (ClientPtr client)
 	rep.sizeID = pData->size;
 	rep.rate = pData->refresh;
 
-	extraLen = (rep.nSizes * sizeof (xScreenSizes) +
-		    rep.nrateEnts * sizeof (CARD16));
+	extraLen = rep.nSizes * sizeof (xScreenSizes);
+	if (has_rate)
+		extraLen += rep.nrateEnts * sizeof (CARD16);
 
 	if (extraLen)
 	{

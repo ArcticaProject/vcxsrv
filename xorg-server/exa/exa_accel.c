@@ -415,6 +415,7 @@ exaCopyNtoN (DrawablePtr    pSrcDrawable,
 
     if (rects) {
 	int i;
+	int ordering;
 
 	for (i = 0; i < nbox; i++) {
 	    rects[i].x = pbox[i].x1 + dx + src_off_x;
@@ -423,7 +424,16 @@ exaCopyNtoN (DrawablePtr    pSrcDrawable,
 	    rects[i].height = pbox[i].y2 - pbox[i].y1;
 	}
 
-	srcregion  = RECTS_TO_REGION(pScreen, nbox, rects, CT_YXBANDED);
+	/* This must match the miRegionCopy() logic for reversing rect order */
+	if (nbox == 1 || (dx > 0 && dy > 0) ||
+	    (pDstDrawable != pSrcDrawable &&
+	     (pDstDrawable->type != DRAWABLE_WINDOW ||
+	      pSrcDrawable->type != DRAWABLE_WINDOW)))
+	    ordering = CT_YXBANDED;
+	else
+	    ordering = CT_UNSORTED;
+
+	srcregion  = RECTS_TO_REGION(pScreen, nbox, rects, ordering);
 	xfree(rects);
 
 	if (!pGC || !exaGCReadsDestination(pDstDrawable, pGC->planemask,

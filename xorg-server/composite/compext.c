@@ -144,7 +144,7 @@ ProcCompositeRedirectWindow (ClientPtr client)
     REQUEST(xCompositeRedirectWindowReq);
 
     REQUEST_SIZE_MATCH(xCompositeRedirectWindowReq);
-    rc = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW, client,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW, client,
 			   DixSetAttrAccess|DixManageAccess|DixBlendAccess);
     if (rc != Success)
     {
@@ -162,7 +162,7 @@ ProcCompositeRedirectSubwindows (ClientPtr client)
     REQUEST(xCompositeRedirectSubwindowsReq);
 
     REQUEST_SIZE_MATCH(xCompositeRedirectSubwindowsReq);
-    rc = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW, client,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW, client,
 			   DixSetAttrAccess|DixManageAccess|DixBlendAccess);
     if (rc != Success)
     {
@@ -214,7 +214,7 @@ ProcCompositeCreateRegionFromBorderClip (ClientPtr client)
     REQUEST(xCompositeCreateRegionFromBorderClipReq);
 
     REQUEST_SIZE_MATCH(xCompositeCreateRegionFromBorderClipReq);
-    rc = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW, client,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW, client,
 			   DixGetAttrAccess);
     if (rc != Success)
     {
@@ -250,7 +250,7 @@ ProcCompositeNameWindowPixmap (ClientPtr client)
     REQUEST(xCompositeNameWindowPixmapReq);
 
     REQUEST_SIZE_MATCH(xCompositeNameWindowPixmapReq);
-    rc = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW, client,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW, client,
 			   DixGetAttrAccess);
     if (rc != Success)
     {
@@ -298,7 +298,7 @@ ProcCompositeGetOverlayWindow (ClientPtr client)
     int rc;
 
     REQUEST_SIZE_MATCH(xCompositeGetOverlayWindowReq);
-    rc = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW, client,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW, client,
 			   DixGetAttrAccess);
     if (rc != Success)
     {
