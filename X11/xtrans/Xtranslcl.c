@@ -75,7 +75,7 @@ from The Open Group.
 #include <sys/signal.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
-#if defined(SVR4)
+#if defined(SVR4) || defined(__SVR4)
 #include <sys/filio.h>
 #endif
 #ifdef sun

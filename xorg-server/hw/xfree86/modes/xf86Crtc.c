@@ -255,9 +255,6 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
     RRTransformRec	saved_transform;
     Bool		saved_transform_present;
 
-    if (crtc->funcs->set_mode_major)
-	return crtc->funcs->set_mode_major(crtc, mode, rotation, x, y);
-
     crtc->enabled = xf86CrtcInUse (crtc);
 
     if (!crtc->enabled)
@@ -268,7 +265,6 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
 
     adjusted_mode = xf86DuplicateMode(mode);
 
-    didLock = crtc->funcs->lock (crtc);
 
     saved_mode = crtc->mode;
     saved_x = crtc->x;
@@ -293,19 +289,12 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
     } else
 	crtc->transformPresent = FALSE;
 
-    if (crtc->funcs->set_origin &&
-	memcmp (mode, &saved_mode, sizeof(saved_mode)) == 0 &&
-	saved_rotation == rotation &&
-	saved_transform_present == crtc->transformPresent &&
-	(!crtc->transformPresent || RRTransformEqual(&saved_transform, &crtc->transform)))
-    {
-	if (!xf86CrtcRotate (crtc))
-		goto done;
-	crtc->funcs->set_origin (crtc, crtc->x, crtc->y);
-	ret = TRUE;
+    if (crtc->funcs->set_mode_major) {
+	ret = crtc->funcs->set_mode_major(crtc, mode, rotation, x, y);
 	goto done;
     }
 
+    didLock = crtc->funcs->lock (crtc);
     /* Pass our mode to the outputs and the CRTC to give them a chance to
      * adjust it according to limitations or output properties, and also
      * a chance to reject the mode entirely.

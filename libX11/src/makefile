@@ -83,6 +83,7 @@ CSRCS = \
                   FreeCols.c \
                   FreeCurs.c \
                   FreeEData.c \
+                  FreeEventData.c \
                   FreeGC.c \
                   FreePix.c \
                   FSSaver.c \
@@ -92,6 +93,7 @@ CSRCS = \
                   GetAtomNm.c \
                   GetColor.c \
                   GetDflt.c \
+                  GetEventData.c \
                   GetFPath.c \
                   GetFProp.c \
                   GetGCVals.c \

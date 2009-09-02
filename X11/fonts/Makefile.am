@@ -10,4 +10,14 @@ fonts_HEADERS = \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = fontsproto.pc
 
-EXTRA_DIST = autogen.sh fontsproto.pc.in
+EXTRA_DIST = fontsproto.pc.in
+
+EXTRA_DIST += ChangeLog
+MAINTAINERCLEANFILES = ChangeLog
+
+.PHONY: ChangeLog
+
+ChangeLog:
+	$(CHANGELOG_CMD)
+
+dist-hook: ChangeLog

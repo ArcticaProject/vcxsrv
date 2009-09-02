@@ -630,8 +630,8 @@ FontEncFromXLFD(const char *name, int length)
     }
 
     /* now p either is null or points at the '-' before the charset registry */
-    
-    if(p == 0)
+
+    if(p == NULL)
         return NULL;
     
     len = length - (p - name) - 1;

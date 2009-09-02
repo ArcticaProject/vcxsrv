@@ -557,7 +557,7 @@ SELinuxLabelInitial(void)
 	SELinuxScreen(NULL, NULL, &srec);
 
 	/* Do the default colormap */
-	dixLookupResource(&unused, screenInfo.screens[i]->defColormap,
+	dixLookupResourceByType(&unused, screenInfo.screens[i]->defColormap,
 			  RT_COLORMAP, serverClient, DixCreateAccess);
     }
 }
@@ -1988,6 +1988,10 @@ SELinuxExtensionInit(INITARGS)
 	ErrorF("SELinux: Disabled on system, not enabling in X server\n");
 	return;
     }
+
+    /* Don't init unless there's something to do */
+    if (!security_get_boolean_active("xserver_object_manager"))
+        return;
 
     /* Check SELinux mode in configuration file */
     switch(selinuxEnforcingState) {

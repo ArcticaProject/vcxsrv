@@ -175,8 +175,6 @@ pixman_image_create_conical_gradient (pixman_point_fixed_t *        center,
 
     image->common.property_changed = conical_gradient_property_changed;
 
-    conical_gradient_property_changed (image);
-
     return image;
 }
 

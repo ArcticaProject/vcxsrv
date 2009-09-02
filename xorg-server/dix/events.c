@@ -1161,7 +1161,7 @@ EnqueueEvent(xEvent *xE, DeviceIntPtr device, int count)
 #ifdef XKB
     /* Fix for key repeating bug. */
     if (device->key != NULL && device->key->xkbInfo != NULL &&
-	xE->u.u.type == KeyRelease)
+	(xE->u.u.type == KeyRelease || xE->u.u.type == DeviceKeyRelease))
 	AccessXCancelRepeatKey(device->key->xkbInfo, xE->u.u.detail);
 #endif
 
@@ -2661,8 +2661,8 @@ WindowsRestructured(void)
     DeviceIntPtr pDev = inputInfo.devices;
     while(pDev)
     {
-        if (DevHasCursor(pDev))
-            CheckMotion((xEvent *)NULL, pDev);
+        if (pDev->isMaster || !pDev->u.master)
+            CheckMotion(NULL, pDev);
         pDev = pDev->next;
     }
 }
@@ -4445,7 +4445,7 @@ ProcGrabPointer(ClientPtr client)
 	cursor = NullCursor;
     else
     {
-	rc = dixLookupResource((pointer *)&cursor, stuff->cursor, RT_CURSOR,
+	rc = dixLookupResourceByType((pointer *)&cursor, stuff->cursor, RT_CURSOR,
 			       client, DixUseAccess);
 	if (rc != Success)
 	{
@@ -4545,8 +4545,8 @@ ProcChangeActivePointerGrab(ClientPtr client)
 	newCursor = NullCursor;
     else
     {
-	int rc = dixLookupResource((pointer *)&newCursor, stuff->cursor,
-				   RT_CURSOR, client, DixUseAccess);
+	int rc = dixLookupResourceByType((pointer *)&newCursor, stuff->cursor,
+					 RT_CURSOR, client, DixUseAccess);
 	if (rc != Success)
 	{
 	    client->errorValue = stuff->cursor;
@@ -5146,7 +5146,7 @@ ProcGrabButton(ClientPtr client)
 	cursor = NullCursor;
     else
     {
-	rc = dixLookupResource((pointer *)&cursor, stuff->cursor, RT_CURSOR,
+	rc = dixLookupResourceByType((pointer *)&cursor, stuff->cursor, RT_CURSOR,
 			       client, DixUseAccess);
 	if (rc != Success)
 	if (!cursor)
@@ -5396,7 +5396,7 @@ ProcRecolorCursor(ClientPtr client)
     REQUEST(xRecolorCursorReq);
 
     REQUEST_SIZE_MATCH(xRecolorCursorReq);
-    rc = dixLookupResource((pointer *)&pCursor, stuff->cursor, RT_CURSOR,
+    rc = dixLookupResourceByType((pointer *)&pCursor, stuff->cursor, RT_CURSOR,
 			   client, DixWriteAccess);
     if (rc != Success)
     {

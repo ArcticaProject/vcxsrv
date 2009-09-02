@@ -82,7 +82,6 @@ combine_mask_alpha_ca (const uint32_t *src, uint32_t *mask)
 
     if (a == ~0)
     {
-	x = x >> A_SHIFT;
 	x |= x << G_SHIFT;
 	x |= x << R_SHIFT;
 	*(mask) = x;
@@ -1614,17 +1613,14 @@ combine_over_ca (pixman_implementation_t *imp,
 	combine_mask_ca (&s, &m);
 
 	a = ~m;
-	if (a != ~0)
+	if (a)
 	{
-	    if (a)
-	    {
-		uint32_t d = *(dest + i);
-		UN8x4_MUL_UN8x4_ADD_UN8x4 (d, a, s);
-		s = d;
-	    }
-
-	    *(dest + i) = s;
+	    uint32_t d = *(dest + i);
+	    UN8x4_MUL_UN8x4_ADD_UN8x4 (d, a, s);
+	    s = d;
 	}
+
+	*(dest + i) = s;
     }
 }
 
@@ -1648,10 +1644,8 @@ combine_over_reverse_ca (pixman_implementation_t *imp,
 	    uint32_t s = *(src + i);
 	    uint32_t m = *(mask + i);
 
-	    combine_mask_value_ca (&s, &m);
-
-	    if (a != MASK)
-		UN8x4_MUL_UN8_ADD_UN8x4 (s, a, d);
+	    UN8x4_MUL_UN8x4 (s, m);
+	    UN8x4_MUL_UN8_ADD_UN8x4 (s, a, d);
 
 	    *(dest + i) = s;
 	}

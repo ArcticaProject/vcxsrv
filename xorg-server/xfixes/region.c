@@ -115,7 +115,7 @@ ProcXFixesCreateRegionFromBitmap (ClientPtr client)
     REQUEST_SIZE_MATCH (xXFixesCreateRegionFromBitmapReq);
     LEGAL_NEW_RESOURCE (stuff->region, client);
 
-    rc = dixLookupResource((pointer *)&pPixmap, stuff->bitmap, RT_PIXMAP,
+    rc = dixLookupResourceByType((pointer *)&pPixmap, stuff->bitmap, RT_PIXMAP,
 			   client, DixReadAccess);
     if (rc != Success)
     {
@@ -160,7 +160,7 @@ ProcXFixesCreateRegionFromWindow (ClientPtr client)
     
     REQUEST_SIZE_MATCH (xXFixesCreateRegionFromWindowReq);
     LEGAL_NEW_RESOURCE (stuff->region, client);
-    rc = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW,
 			   client, DixGetAttrAccess);
     if (rc != Success)
     {
@@ -682,7 +682,7 @@ ProcXFixesSetWindowShapeRegion (ClientPtr client)
     REQUEST(xXFixesSetWindowShapeRegionReq);
 
     REQUEST_SIZE_MATCH(xXFixesSetWindowShapeRegionReq);
-    rc = dixLookupResource((pointer *)&pWin, stuff->dest, RT_WINDOW,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->dest, RT_WINDOW,
 			   client, DixSetAttrAccess);
     if (rc != Success)
     {

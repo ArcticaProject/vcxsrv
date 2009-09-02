@@ -46,11 +46,15 @@ XNextEvent (
 
 	LockDisplay(dpy);
 
+	/* Delete unclaimed cookies */
+	_XFreeEventCookies(dpy);
+
 	if (dpy->head == NULL)
 	    _XReadEvents(dpy);
 	qelt = dpy->head;
 	*event = qelt->event;
 	_XDeq(dpy, NULL, qelt);
+	_XStoreEventCookie(dpy, event);
 	UnlockDisplay(dpy);
 	return 0;
 }

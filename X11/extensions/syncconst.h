@@ -113,7 +113,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	Bool signb = XSyncValueIsNegative(b);\
 	((presult)->lo = (a).lo - (b).lo);\
 	((presult)->hi = (a).hi - (b).hi);\
-	if (t>(presult)->lo) (presult)->hi--;\
+	if (t<(presult)->lo) (presult)->hi--;\
 	*poverflow = ((signa == signb) && !(signa == XSyncValueIsNegative(*presult)));\
      }
 #define _XSyncMaxValue(pv) ((pv)->hi = 0x7fffffff, (pv)->lo = 0xffffffff)

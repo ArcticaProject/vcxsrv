@@ -1,48 +1,263 @@
-2006-05-15  Adam Jackson  <ajax@freedesktop.org>
+commit ca16bc230e73bfbf651acb9010ba695bbbef0e8a
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri Aug 7 21:47:25 2009 +0200
 
-	* configure.ac:
-	Bump to 1.0.1
+    Bump to 1.0.2
 
-2006-02-17  Alan Coopersmith  <alan.coopersmith@sun.com>
+commit b0e27b7935e8f5f9ad3dd7b6fd77b8a38aa7d1d0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Feb 19 18:22:31 2009 -0800
 
-	* ucs2any.c: 
-	* COPYING:
-	Sync license statement with NetBSD, which has removed advertising 
-	clause from original NetBSD license.   (See
-	http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/xsrc/xfree/xc/fonts/util/ucs2any.c?rev=1.9&content-type=text/plain and
-	http://www.mail-archive.com/devel%40xfree86.org/msg07685.html )
+    Add README with pointers to mailing list, bugzilla & git repos
 
-2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit db703deee7cbfca5b12f4666229136a54554ec98
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Feb 19 18:20:14 2009 -0800
 
-	* configure.ac:
-	Update package version number for final X11R7 release candidate.
+    Add missing copyright/license notices to COPYING
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-09  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 0678b945e4f382c45048e3d1a9739282d506b47e
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:08 2009 -0200
 
-	* Makefile.am:
-	* configure.ac:
-	* fontutil.pc.in:
-	Bug #5175: Make mapdir configurable (David Coulthart and Donnie
-	Berkholz).
+    Janitor: Correct make distcheck and configure.ac simplification
 
-2005-12-06  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit de26fc14c3e5ecc24f4fbdf0c83d57f5974ed802
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jun 24 14:28:27 2008 -0700
 
-	* Makefile.am:
-	Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+    Update license of code copyrighted by the NetBSD Foundation
+    
+    As per http://mail-index.netbsd.org/netbsd-announce/2008/06/20/msg000030.html
+    dropped the endorsement clause and verified remaining text matches current
+    NetBSD Foundation license.
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 2defe2544aeaeea00e41a2dca18b1f5ec0ca85e0
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:38:07 2007 -0500
 
-	* configure.ac:
-	Update package version number for X11R7 RC3 release.
+    Replace static ChangeLog with dist-hook to generate from git log
 
-2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit fb486bb1a5038912d064291b12c7aef5da3d8b63
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Dec 3 16:42:39 2007 -0500
 
-	* Makefile.am:
-	* fontutil.m4:
-	Add configure option macro to disable ISO8859-* fonts.
+    Replace bdftruncate Perl script with C program
+    From bugzilla bug 13465¹:
+    
+      [This] is a replacement for the bdftruncate program, which removes
+      the only runtime dependency on Perl in modular Xorg.
+    
+    1] http://bugs.freedesktop.org/show_bug.cgi?id=13465
+    
+    Bug was posted by Joerg Sonnenberger <joerg@NetBSD.org>.
 
-2005-10-18  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit cedfe304041ecfc43cfcf2b44699efb53fc6aa5c
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:53:24 2007 -0400
 
-	* configure.ac:
-	Update package version number for RC1 release.
+    Add *~ to .gitignore to skip patch/emacs droppings
 
+commit cff602a576aada75140b6cf13f1532218959189d
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:26:51 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 7e2dfd48d78c008d8afd56828bf0db8a025f417a
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Fri May 19 18:35:15 2006 +0000
+
+    Bump to 1.0.1
+
+commit 449004af4c7023511471db479b58c547270805e5
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Feb 17 15:59:48 2006 +0000
+
+    Update license copy in COPYING file too.
+
+commit d36e97caf2141939cbd516d9f7802bb704f13f22
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Feb 17 15:58:37 2006 +0000
+
+    Sync license statement with NetBSD, which has removed advertising clause
+        from original NetBSD license. (See
+        http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/xsrc/xfree/xc/fonts/util
+        /ucs2any.c?rev=1.9&content-type=text/plain and
+        http://www.mail-archive.com/devel%40xfree86.org/msg07685.html )
+
+commit 778c667cf5dc67a53996e0196a7394dbd41426a3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:26 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 25ea9d0868ecf3dccfbac5a82c659b852fb61d0e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Dec 9 05:56:52 2005 +0000
+
+    Bug #5175: Make mapdir configurable (David Coulthart and Donnie Berkholz).
+
+commit 3fc66a4a7e844d96c478ff35673ba6bbcd99df0a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:41 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit 19a7b8a70f3cfac4dbc652cc918deefba2380700
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:41 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 092577dbc7f5fe59bbec80b29f42bacb73844fa7
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:07:21 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit 27506bc355dd88c2ca8b3e14c8158dfb5d6e53b6
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:22 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit c9e22d273e7b8df6ffa1224978d0a6877b57c626
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 15 08:27:53 2005 +0000
+
+    Add configure option macro to disable ISO8859-* fonts.
+
+commit cb284d5e05a4d62b070bb94624c2fb32c322e40d
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:08 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit e096b243bb3be6a41bd928016d24acfe2cae677e
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 17 22:20:58 2005 +0000
+
+    Use sed to replace variables in man pages
+
+commit f45a6a9b5d53d91aec9ca0381311f5b0a4842c07
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Oct 4 23:12:28 2005 +0000
+
+    Use CLEANFILES so that bdftruncate is rebuilt after make clean
+
+commit dd8c1045a1432cc31a7419eb45905282f3f065ea
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:49 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit be020c6e52a9f087493122a59721366e3a2417f2
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Jul 27 19:53:18 2005 +0000
+
+    Fix typo
+
+commit 854ba0573bbed8632f5a8adf93a497874e451d98
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 22 04:13:44 2005 +0000
+
+    Fix distcheck for fonts with multiple encodings
+
+commit ae573de21851d1e3ed27bc499ccff396cf9d4067
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Fri Jul 15 12:39:39 2005 +0000
+
+    use bin_SCRIPTS for bdftruncate remove $(EXEEXT) from bdftruncate rule fix
+        bdftruncate rule to work with separate $(srcdir)
+
+commit 5b1ba00aa310ddac6fae4ba4bb50763e9fe7a292
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Jul 15 01:15:35 2005 +0000
+
+    Replace $< with portable construct
+
+commit 70e2335cc8e9f1c377a70880696ee2d83558456e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Jun 30 22:28:08 2005 +0000
+
+    Initial build system files for font module
+
+commit 8dbbdb2b6491edd6a0ec957d3a742802d2946fa3
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Sun Nov 28 19:06:20 2004 +0000
+
+    Updated 8859-7.TXT to ISO 8859-7:2003 (with euro sign) Updated obsolete
+        email address
+
+commit 5622b3c34465c8f7f83fe9fbab897fc7b438ef81
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Aug 26 11:58:06 2004 +0000
+
+    Fixed support for LynxOS 3.1 (LynxOS 4 will follow) (Thomas Mueller).
+    2
+
+commit edf6e4ce161fbf36a294f0947add0993bce2def6
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:05 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit efdd203d3b3f68f463b9aaf31ef60dd58170c327
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:31:32 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit cada8e174bc996c693440605bc4778390a2525b4
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:10:53 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit f5f59905ca85472432f99a82502e47827647cbd7
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:11 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 58fcd5a2cdba17e073e857283624d539758910a0
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:24 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit c653490dc1a7fe5dbd4437800832474c2f3ddefd
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:01 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit a3557f2e82e07580a5f7ceb41c49809a001b73e5
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:01 2003 +0000
+
+    Initial revision
+
+commit ea7d5c737a21afcb846d4aeceb8741a44d7001da
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 731ff0ca425ebc6b780199c58f11a63f24103567
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    Initial revision

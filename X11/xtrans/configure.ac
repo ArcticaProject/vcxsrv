@@ -21,7 +21,7 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(xtrans, 1.2.3, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xtrans)
+AC_INIT(xtrans, 1.2.4, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xtrans)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 

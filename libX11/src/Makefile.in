@@ -114,43 +114,43 @@ am__libX11_la_SOURCES_DIST = AllCells.c AllowEv.c AllPlanes.c \
 	DrRects.c DrSegs.c ErrDes.c ErrHndlr.c evtomask.c EvToWire.c \
 	FetchName.c FillArc.c FillArcs.c FillPoly.c FillRct.c \
 	FillRcts.c FilterEv.c Flush.c Font.c FontInfo.c FontNames.c \
-	FreeCmap.c FreeCols.c FreeCurs.c FreeEData.c FreeGC.c \
-	FreePix.c FSSaver.c FSWrap.c GCMisc.c Geom.c GetAtomNm.c \
-	GetColor.c GetDflt.c GetFPath.c GetFProp.c GetGCVals.c \
-	GetGeom.c GetHColor.c GetHints.c GetIFocus.c GetImage.c \
-	GetKCnt.c GetMoEv.c GetNrmHint.c GetPCnt.c GetPntMap.c \
-	GetProp.c GetRGBCMap.c GetSOwner.c GetSSaver.c GetStCmap.c \
-	GetTxtProp.c GetWAttrs.c GetWMCMapW.c GetWMProto.c globals.c \
-	GrButton.c GrKeybd.c GrKey.c GrPointer.c GrServer.c Host.c \
-	Iconify.c IfEvent.c imConv.c ImText16.c ImText.c ImUtil.c \
-	InitExt.c InsCmap.c IntAtom.c KeyBind.c Key.h KeysymStr.c \
-	KillCl.c LiHosts.c LiICmaps.c LiProps.c ListExt.c LoadFont.c \
-	LockDis.c locking.c locking.h LookupCol.c LowerWin.c Macros.c \
-	MapRaised.c MapSubs.c MapWindow.c MaskEvent.c Misc.c ModMap.c \
-	MoveWin.c NextEvent.c OCWrap.c OMWrap.c OpenDis.c ParseCmd.c \
-	ParseCol.c ParseGeom.c PeekEvent.c PeekIfEv.c Pending.c \
-	PixFormats.c PmapBgnd.c PmapBord.c poly.h PolyReg.c \
-	PolyTxt16.c PolyTxt.c PropAlloc.c PutBEvent.c PutImage.c \
-	Quarks.c QuBest.c QuColor.c QuColors.c QuCurShp.c QuExt.c \
-	QuKeybd.c QuPntr.c QuStipShp.c QuTextE16.c QuTextExt.c \
-	QuTileShp.c QuTree.c RaiseWin.c RdBitF.c RecolorC.c \
-	ReconfWin.c ReconfWM.c Region.c RegstFlt.c RepWindow.c \
-	RestackWs.c RotProp.c ScrResStr.c SelInput.c SendEvent.c \
-	SetBack.c SetClMask.c SetClOrig.c SetCRects.c SetDashes.c \
-	SetFont.c SetFore.c SetFPath.c SetFunc.c SetHints.c \
-	SetIFocus.c SetLocale.c SetLStyle.c SetNrmHint.c SetPMask.c \
-	SetPntMap.c SetRGBCMap.c SetSOwner.c SetSSaver.c SetState.c \
-	SetStCmap.c SetStip.c SetTile.c SetTSOrig.c SetTxtProp.c \
-	SetWMCMapW.c SetWMProto.c StBytes.c StColor.c StColors.c \
-	StName.c StNColor.c StrKeysym.c StrToText.c Sync.c Synchro.c \
-	Text16.c Text.c TextExt16.c TextExt.c TextToStr.c TrCoords.c \
-	UndefCurs.c UngrabBut.c UngrabKbd.c UngrabKey.c UngrabPtr.c \
-	UngrabSvr.c UninsCmap.c UnldFont.c UnmapSubs.c UnmapWin.c \
-	VisUtil.c WarpPtr.c Window.c WinEvent.c Withdraw.c WMGeom.c \
-	WMProps.c WrBitF.c Xatomtype.h Xintatom.h Xintconn.h \
-	XlibAsync.c XlibInt.c Xprivate.h XomGeneric.h Xresinternal.h \
-	Xrm.c XrmI.h os2Stubs.c udcInf.c UIThrStubs.c xcb_disp.c \
-	xcb_io.c Xxcbint.h ConnDis.c x11_trans.c
+	FreeCmap.c FreeCols.c FreeCurs.c FreeEData.c FreeEventData.c \
+	FreeGC.c FreePix.c FSSaver.c FSWrap.c GCMisc.c Geom.c \
+	GetAtomNm.c GetColor.c GetDflt.c GetEventData.c GetFPath.c \
+	GetFProp.c GetGCVals.c GetGeom.c GetHColor.c GetHints.c \
+	GetIFocus.c GetImage.c GetKCnt.c GetMoEv.c GetNrmHint.c \
+	GetPCnt.c GetPntMap.c GetProp.c GetRGBCMap.c GetSOwner.c \
+	GetSSaver.c GetStCmap.c GetTxtProp.c GetWAttrs.c GetWMCMapW.c \
+	GetWMProto.c globals.c GrButton.c GrKeybd.c GrKey.c \
+	GrPointer.c GrServer.c Host.c Iconify.c IfEvent.c imConv.c \
+	ImText16.c ImText.c ImUtil.c InitExt.c InsCmap.c IntAtom.c \
+	KeyBind.c Key.h KeysymStr.c KillCl.c LiHosts.c LiICmaps.c \
+	LiProps.c ListExt.c LoadFont.c LockDis.c locking.c locking.h \
+	LookupCol.c LowerWin.c Macros.c MapRaised.c MapSubs.c \
+	MapWindow.c MaskEvent.c Misc.c ModMap.c MoveWin.c NextEvent.c \
+	OCWrap.c OMWrap.c OpenDis.c ParseCmd.c ParseCol.c ParseGeom.c \
+	PeekEvent.c PeekIfEv.c Pending.c PixFormats.c PmapBgnd.c \
+	PmapBord.c poly.h PolyReg.c PolyTxt16.c PolyTxt.c PropAlloc.c \
+	PutBEvent.c PutImage.c Quarks.c QuBest.c QuColor.c QuColors.c \
+	QuCurShp.c QuExt.c QuKeybd.c QuPntr.c QuStipShp.c QuTextE16.c \
+	QuTextExt.c QuTileShp.c QuTree.c RaiseWin.c RdBitF.c \
+	RecolorC.c ReconfWin.c ReconfWM.c Region.c RegstFlt.c \
+	RepWindow.c RestackWs.c RotProp.c ScrResStr.c SelInput.c \
+	SendEvent.c SetBack.c SetClMask.c SetClOrig.c SetCRects.c \
+	SetDashes.c SetFont.c SetFore.c SetFPath.c SetFunc.c \
+	SetHints.c SetIFocus.c SetLocale.c SetLStyle.c SetNrmHint.c \
+	SetPMask.c SetPntMap.c SetRGBCMap.c SetSOwner.c SetSSaver.c \
+	SetState.c SetStCmap.c SetStip.c SetTile.c SetTSOrig.c \
+	SetTxtProp.c SetWMCMapW.c SetWMProto.c StBytes.c StColor.c \
+	StColors.c StName.c StNColor.c StrKeysym.c StrToText.c Sync.c \
+	Synchro.c Text16.c Text.c TextExt16.c TextExt.c TextToStr.c \
+	TrCoords.c UndefCurs.c UngrabBut.c UngrabKbd.c UngrabKey.c \
+	UngrabPtr.c UngrabSvr.c UninsCmap.c UnldFont.c UnmapSubs.c \
+	UnmapWin.c utlist.h VisUtil.c WarpPtr.c Window.c WinEvent.c \
+	Withdraw.c WMGeom.c WMProps.c WrBitF.c Xatomtype.h Xintatom.h \
+	Xintconn.h XlibAsync.c XlibInt.c Xprivate.h XomGeneric.h \
+	Xresinternal.h Xrm.c XrmI.h os2Stubs.c udcInf.c UIThrStubs.c \
+	xcb_disp.c xcb_io.c Xxcbint.h ConnDis.c x11_trans.c
 @OS2_TRUE@am__objects_1 = os2Stubs.lo
 @UDC_TRUE@am__objects_2 = udcInf.lo
 @THRSTUBS_TRUE@am__objects_3 = UIThrStubs.lo
@@ -172,44 +172,45 @@ am_libX11_la_OBJECTS = AllCells.lo AllowEv.lo AllPlanes.lo AutoRep.lo \
 	EvToWire.lo FetchName.lo FillArc.lo FillArcs.lo FillPoly.lo \
 	FillRct.lo FillRcts.lo FilterEv.lo Flush.lo Font.lo \
 	FontInfo.lo FontNames.lo FreeCmap.lo FreeCols.lo FreeCurs.lo \
-	FreeEData.lo FreeGC.lo FreePix.lo FSSaver.lo FSWrap.lo \
-	GCMisc.lo Geom.lo GetAtomNm.lo GetColor.lo GetDflt.lo \
-	GetFPath.lo GetFProp.lo GetGCVals.lo GetGeom.lo GetHColor.lo \
-	GetHints.lo GetIFocus.lo GetImage.lo GetKCnt.lo GetMoEv.lo \
-	GetNrmHint.lo GetPCnt.lo GetPntMap.lo GetProp.lo GetRGBCMap.lo \
-	GetSOwner.lo GetSSaver.lo GetStCmap.lo GetTxtProp.lo \
-	GetWAttrs.lo GetWMCMapW.lo GetWMProto.lo globals.lo \
-	GrButton.lo GrKeybd.lo GrKey.lo GrPointer.lo GrServer.lo \
-	Host.lo Iconify.lo IfEvent.lo imConv.lo ImText16.lo ImText.lo \
-	ImUtil.lo InitExt.lo InsCmap.lo IntAtom.lo KeyBind.lo \
-	KeysymStr.lo KillCl.lo LiHosts.lo LiICmaps.lo LiProps.lo \
-	ListExt.lo LoadFont.lo LockDis.lo locking.lo LookupCol.lo \
-	LowerWin.lo Macros.lo MapRaised.lo MapSubs.lo MapWindow.lo \
-	MaskEvent.lo Misc.lo ModMap.lo MoveWin.lo NextEvent.lo \
-	OCWrap.lo OMWrap.lo OpenDis.lo ParseCmd.lo ParseCol.lo \
-	ParseGeom.lo PeekEvent.lo PeekIfEv.lo Pending.lo PixFormats.lo \
-	PmapBgnd.lo PmapBord.lo PolyReg.lo PolyTxt16.lo PolyTxt.lo \
-	PropAlloc.lo PutBEvent.lo PutImage.lo Quarks.lo QuBest.lo \
-	QuColor.lo QuColors.lo QuCurShp.lo QuExt.lo QuKeybd.lo \
-	QuPntr.lo QuStipShp.lo QuTextE16.lo QuTextExt.lo QuTileShp.lo \
-	QuTree.lo RaiseWin.lo RdBitF.lo RecolorC.lo ReconfWin.lo \
-	ReconfWM.lo Region.lo RegstFlt.lo RepWindow.lo RestackWs.lo \
-	RotProp.lo ScrResStr.lo SelInput.lo SendEvent.lo SetBack.lo \
-	SetClMask.lo SetClOrig.lo SetCRects.lo SetDashes.lo SetFont.lo \
-	SetFore.lo SetFPath.lo SetFunc.lo SetHints.lo SetIFocus.lo \
-	SetLocale.lo SetLStyle.lo SetNrmHint.lo SetPMask.lo \
-	SetPntMap.lo SetRGBCMap.lo SetSOwner.lo SetSSaver.lo \
-	SetState.lo SetStCmap.lo SetStip.lo SetTile.lo SetTSOrig.lo \
-	SetTxtProp.lo SetWMCMapW.lo SetWMProto.lo StBytes.lo \
-	StColor.lo StColors.lo StName.lo StNColor.lo StrKeysym.lo \
-	StrToText.lo Sync.lo Synchro.lo Text16.lo Text.lo TextExt16.lo \
-	TextExt.lo TextToStr.lo TrCoords.lo UndefCurs.lo UngrabBut.lo \
-	UngrabKbd.lo UngrabKey.lo UngrabPtr.lo UngrabSvr.lo \
-	UninsCmap.lo UnldFont.lo UnmapSubs.lo UnmapWin.lo VisUtil.lo \
-	WarpPtr.lo Window.lo WinEvent.lo Withdraw.lo WMGeom.lo \
-	WMProps.lo WrBitF.lo XlibAsync.lo XlibInt.lo Xrm.lo \
-	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
-	$(am__objects_4) $(am__objects_5)
+	FreeEData.lo FreeEventData.lo FreeGC.lo FreePix.lo FSSaver.lo \
+	FSWrap.lo GCMisc.lo Geom.lo GetAtomNm.lo GetColor.lo \
+	GetDflt.lo GetEventData.lo GetFPath.lo GetFProp.lo \
+	GetGCVals.lo GetGeom.lo GetHColor.lo GetHints.lo GetIFocus.lo \
+	GetImage.lo GetKCnt.lo GetMoEv.lo GetNrmHint.lo GetPCnt.lo \
+	GetPntMap.lo GetProp.lo GetRGBCMap.lo GetSOwner.lo \
+	GetSSaver.lo GetStCmap.lo GetTxtProp.lo GetWAttrs.lo \
+	GetWMCMapW.lo GetWMProto.lo globals.lo GrButton.lo GrKeybd.lo \
+	GrKey.lo GrPointer.lo GrServer.lo Host.lo Iconify.lo \
+	IfEvent.lo imConv.lo ImText16.lo ImText.lo ImUtil.lo \
+	InitExt.lo InsCmap.lo IntAtom.lo KeyBind.lo KeysymStr.lo \
+	KillCl.lo LiHosts.lo LiICmaps.lo LiProps.lo ListExt.lo \
+	LoadFont.lo LockDis.lo locking.lo LookupCol.lo LowerWin.lo \
+	Macros.lo MapRaised.lo MapSubs.lo MapWindow.lo MaskEvent.lo \
+	Misc.lo ModMap.lo MoveWin.lo NextEvent.lo OCWrap.lo OMWrap.lo \
+	OpenDis.lo ParseCmd.lo ParseCol.lo ParseGeom.lo PeekEvent.lo \
+	PeekIfEv.lo Pending.lo PixFormats.lo PmapBgnd.lo PmapBord.lo \
+	PolyReg.lo PolyTxt16.lo PolyTxt.lo PropAlloc.lo PutBEvent.lo \
+	PutImage.lo Quarks.lo QuBest.lo QuColor.lo QuColors.lo \
+	QuCurShp.lo QuExt.lo QuKeybd.lo QuPntr.lo QuStipShp.lo \
+	QuTextE16.lo QuTextExt.lo QuTileShp.lo QuTree.lo RaiseWin.lo \
+	RdBitF.lo RecolorC.lo ReconfWin.lo ReconfWM.lo Region.lo \
+	RegstFlt.lo RepWindow.lo RestackWs.lo RotProp.lo ScrResStr.lo \
+	SelInput.lo SendEvent.lo SetBack.lo SetClMask.lo SetClOrig.lo \
+	SetCRects.lo SetDashes.lo SetFont.lo SetFore.lo SetFPath.lo \
+	SetFunc.lo SetHints.lo SetIFocus.lo SetLocale.lo SetLStyle.lo \
+	SetNrmHint.lo SetPMask.lo SetPntMap.lo SetRGBCMap.lo \
+	SetSOwner.lo SetSSaver.lo SetState.lo SetStCmap.lo SetStip.lo \
+	SetTile.lo SetTSOrig.lo SetTxtProp.lo SetWMCMapW.lo \
+	SetWMProto.lo StBytes.lo StColor.lo StColors.lo StName.lo \
+	StNColor.lo StrKeysym.lo StrToText.lo Sync.lo Synchro.lo \
+	Text16.lo Text.lo TextExt16.lo TextExt.lo TextToStr.lo \
+	TrCoords.lo UndefCurs.lo UngrabBut.lo UngrabKbd.lo \
+	UngrabKey.lo UngrabPtr.lo UngrabSvr.lo UninsCmap.lo \
+	UnldFont.lo UnmapSubs.lo UnmapWin.lo VisUtil.lo WarpPtr.lo \
+	Window.lo WinEvent.lo Withdraw.lo WMGeom.lo WMProps.lo \
+	WrBitF.lo XlibAsync.lo XlibInt.lo Xrm.lo $(am__objects_1) \
+	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
+	$(am__objects_5)
 libX11_la_OBJECTS = $(am_libX11_la_OBJECTS)
 libX11_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -498,43 +499,43 @@ libX11_la_SOURCES = AllCells.c AllowEv.c AllPlanes.c AutoRep.c \
 	DrRects.c DrSegs.c ErrDes.c ErrHndlr.c evtomask.c EvToWire.c \
 	FetchName.c FillArc.c FillArcs.c FillPoly.c FillRct.c \
 	FillRcts.c FilterEv.c Flush.c Font.c FontInfo.c FontNames.c \
-	FreeCmap.c FreeCols.c FreeCurs.c FreeEData.c FreeGC.c \
-	FreePix.c FSSaver.c FSWrap.c GCMisc.c Geom.c GetAtomNm.c \
-	GetColor.c GetDflt.c GetFPath.c GetFProp.c GetGCVals.c \
-	GetGeom.c GetHColor.c GetHints.c GetIFocus.c GetImage.c \
-	GetKCnt.c GetMoEv.c GetNrmHint.c GetPCnt.c GetPntMap.c \
-	GetProp.c GetRGBCMap.c GetSOwner.c GetSSaver.c GetStCmap.c \
-	GetTxtProp.c GetWAttrs.c GetWMCMapW.c GetWMProto.c globals.c \
-	GrButton.c GrKeybd.c GrKey.c GrPointer.c GrServer.c Host.c \
-	Iconify.c IfEvent.c imConv.c ImText16.c ImText.c ImUtil.c \
-	InitExt.c InsCmap.c IntAtom.c KeyBind.c Key.h KeysymStr.c \
-	KillCl.c LiHosts.c LiICmaps.c LiProps.c ListExt.c LoadFont.c \
-	LockDis.c locking.c locking.h LookupCol.c LowerWin.c Macros.c \
-	MapRaised.c MapSubs.c MapWindow.c MaskEvent.c Misc.c ModMap.c \
-	MoveWin.c NextEvent.c OCWrap.c OMWrap.c OpenDis.c ParseCmd.c \
-	ParseCol.c ParseGeom.c PeekEvent.c PeekIfEv.c Pending.c \
-	PixFormats.c PmapBgnd.c PmapBord.c poly.h PolyReg.c \
-	PolyTxt16.c PolyTxt.c PropAlloc.c PutBEvent.c PutImage.c \
-	Quarks.c QuBest.c QuColor.c QuColors.c QuCurShp.c QuExt.c \
-	QuKeybd.c QuPntr.c QuStipShp.c QuTextE16.c QuTextExt.c \
-	QuTileShp.c QuTree.c RaiseWin.c RdBitF.c RecolorC.c \
-	ReconfWin.c ReconfWM.c Region.c RegstFlt.c RepWindow.c \
-	RestackWs.c RotProp.c ScrResStr.c SelInput.c SendEvent.c \
-	SetBack.c SetClMask.c SetClOrig.c SetCRects.c SetDashes.c \
-	SetFont.c SetFore.c SetFPath.c SetFunc.c SetHints.c \
-	SetIFocus.c SetLocale.c SetLStyle.c SetNrmHint.c SetPMask.c \
-	SetPntMap.c SetRGBCMap.c SetSOwner.c SetSSaver.c SetState.c \
-	SetStCmap.c SetStip.c SetTile.c SetTSOrig.c SetTxtProp.c \
-	SetWMCMapW.c SetWMProto.c StBytes.c StColor.c StColors.c \
-	StName.c StNColor.c StrKeysym.c StrToText.c Sync.c Synchro.c \
-	Text16.c Text.c TextExt16.c TextExt.c TextToStr.c TrCoords.c \
-	UndefCurs.c UngrabBut.c UngrabKbd.c UngrabKey.c UngrabPtr.c \
-	UngrabSvr.c UninsCmap.c UnldFont.c UnmapSubs.c UnmapWin.c \
-	VisUtil.c WarpPtr.c Window.c WinEvent.c Withdraw.c WMGeom.c \
-	WMProps.c WrBitF.c Xatomtype.h Xintatom.h Xintconn.h \
-	XlibAsync.c XlibInt.c Xprivate.h XomGeneric.h Xresinternal.h \
-	Xrm.c XrmI.h $(am__append_1) $(am__append_2) $(am__append_3) \
-	$(am__append_4) $(am__append_6)
+	FreeCmap.c FreeCols.c FreeCurs.c FreeEData.c FreeEventData.c \
+	FreeGC.c FreePix.c FSSaver.c FSWrap.c GCMisc.c Geom.c \
+	GetAtomNm.c GetColor.c GetDflt.c GetEventData.c GetFPath.c \
+	GetFProp.c GetGCVals.c GetGeom.c GetHColor.c GetHints.c \
+	GetIFocus.c GetImage.c GetKCnt.c GetMoEv.c GetNrmHint.c \
+	GetPCnt.c GetPntMap.c GetProp.c GetRGBCMap.c GetSOwner.c \
+	GetSSaver.c GetStCmap.c GetTxtProp.c GetWAttrs.c GetWMCMapW.c \
+	GetWMProto.c globals.c GrButton.c GrKeybd.c GrKey.c \
+	GrPointer.c GrServer.c Host.c Iconify.c IfEvent.c imConv.c \
+	ImText16.c ImText.c ImUtil.c InitExt.c InsCmap.c IntAtom.c \
+	KeyBind.c Key.h KeysymStr.c KillCl.c LiHosts.c LiICmaps.c \
+	LiProps.c ListExt.c LoadFont.c LockDis.c locking.c locking.h \
+	LookupCol.c LowerWin.c Macros.c MapRaised.c MapSubs.c \
+	MapWindow.c MaskEvent.c Misc.c ModMap.c MoveWin.c NextEvent.c \
+	OCWrap.c OMWrap.c OpenDis.c ParseCmd.c ParseCol.c ParseGeom.c \
+	PeekEvent.c PeekIfEv.c Pending.c PixFormats.c PmapBgnd.c \
+	PmapBord.c poly.h PolyReg.c PolyTxt16.c PolyTxt.c PropAlloc.c \
+	PutBEvent.c PutImage.c Quarks.c QuBest.c QuColor.c QuColors.c \
+	QuCurShp.c QuExt.c QuKeybd.c QuPntr.c QuStipShp.c QuTextE16.c \
+	QuTextExt.c QuTileShp.c QuTree.c RaiseWin.c RdBitF.c \
+	RecolorC.c ReconfWin.c ReconfWM.c Region.c RegstFlt.c \
+	RepWindow.c RestackWs.c RotProp.c ScrResStr.c SelInput.c \
+	SendEvent.c SetBack.c SetClMask.c SetClOrig.c SetCRects.c \
+	SetDashes.c SetFont.c SetFore.c SetFPath.c SetFunc.c \
+	SetHints.c SetIFocus.c SetLocale.c SetLStyle.c SetNrmHint.c \
+	SetPMask.c SetPntMap.c SetRGBCMap.c SetSOwner.c SetSSaver.c \
+	SetState.c SetStCmap.c SetStip.c SetTile.c SetTSOrig.c \
+	SetTxtProp.c SetWMCMapW.c SetWMProto.c StBytes.c StColor.c \
+	StColors.c StName.c StNColor.c StrKeysym.c StrToText.c Sync.c \
+	Synchro.c Text16.c Text.c TextExt16.c TextExt.c TextToStr.c \
+	TrCoords.c UndefCurs.c UngrabBut.c UngrabKbd.c UngrabKey.c \
+	UngrabPtr.c UngrabSvr.c UninsCmap.c UnldFont.c UnmapSubs.c \
+	UnmapWin.c utlist.h VisUtil.c WarpPtr.c Window.c WinEvent.c \
+	Withdraw.c WMGeom.c WMProps.c WrBitF.c Xatomtype.h Xintatom.h \
+	Xintconn.h XlibAsync.c XlibInt.c Xprivate.h XomGeneric.h \
+	Xresinternal.h Xrm.c XrmI.h $(am__append_1) $(am__append_2) \
+	$(am__append_3) $(am__append_4) $(am__append_6)
 x11datadir = @X11_DATADIR@
 x11data_DATA = XKeysymDB XErrorDB
 EXTRA_DIST = \
@@ -553,7 +554,7 @@ EXTRA_DIST = \
 @XLOCALE_TRUE@USE_I18N_LIBS = $(I18N_LIBS)
 @XCMS_TRUE@USE_XCMS_LIBS = $(XCMS_LIBS)
 @XKB_TRUE@USE_XKB_LIBS = $(XKB_LIBS)
-libX11_la_LDFLAGS = -version-number 6:2:0 -no-undefined
+libX11_la_LDFLAGS = -version-number 6:3:0 -no-undefined
 libX11_la_LIBADD = \
 	$(USE_I18N_LIBS) \
 	$(USE_XCMS_LIBS) \
@@ -745,6 +746,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FreeCols.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FreeCurs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FreeEData.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FreeEventData.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FreeGC.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FreePix.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GCMisc.Plo@am__quote@
@@ -752,6 +754,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GetAtomNm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GetColor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GetDflt.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GetEventData.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GetFPath.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GetFProp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GetGCVals.Plo@am__quote@

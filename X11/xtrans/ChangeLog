@@ -1,3 +1,121 @@
+commit 4f82ca502d8ec33b0038700675d54539d85d723c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jul 31 17:24:25 2009 -0700
+
+    Version 1.2.4
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit e5f52f206916b7c5264b9371f9bd0113632a4a16
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 30 16:07:39 2009 -0700
+
+    Fix ifdef checks for SVR4 to do the right thing on Solaris
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 6d1ad967b894a37f423fd52247df5fcc3bfab1a8
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon May 18 18:26:36 2009 -0700
+
+    xfs segfaults in _FontTransSocketReopen when cloning itself
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 1e32f79670a6dc0baae2c2622d2b562f41266ea5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Apr 24 02:10:53 2009 -0700
+
+    Constify path argument to trans_mkdir()
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 732f3366c40c4bea258b11b96c4763f5948a4844
+Author: Benjamin Close <Benjamin.Close@clearchain.com>
+Date:   Mon Feb 9 16:34:00 2009 +1030
+
+    Update is_numeric base on the declaration change in 389e01fb51ba2d708015e27d8fc17c88a0e55802
+    
+    Signed-off-by: Benjamin Close <Benjamin.Close@clearchain.com>
+
+commit 300893171ca7ad684472e5961a7b2ba0eb291f6b
+Author: Benjamin Close <Benjamin.Close@clearchain.com>
+Date:   Mon Feb 9 16:33:59 2009 +1030
+
+    Revert "Fix "XXX declared 'static' but not defined""
+    
+    This reverts commit d192bac409fe5ef99fa9fb9b5a0d5f656f0f1412.
+    
+    When transport.c is directly include (as in the case of libICE:icetrans.c:32)
+    Xtranssock.c must be included before Xtransutil.c in order for the socket
+    structures to be included. Including Xtransutil.c after Xtranssock.c requires
+    is_number and trans_mkdir to be defined.
+    
+    This reintroduces the warning until a cleaner solution can be found
+    but fixes the build.
+    
+    Found by: Tinderbox
+    
+    Signed-off-by: Benjamin Close <Benjamin.Close@clearchain.com>
+
+commit 389e01fb51ba2d708015e27d8fc17c88a0e55802
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Feb 6 11:31:06 2009 -0800
+
+    Constify string argument to is_numeric
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit cca91ddaae2121f42b2d5c08867bb93df8f9de13
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Feb 6 11:27:02 2009 -0800
+
+    Fix libICE build after code motion in d192bac409...
+    
+    The #ifdef ICE_t case in Xtransutil.c depended on some #includes that
+    are done in files that transport.c previously included before Xtransutil.c
+    but are now after Xtransutil.c is included.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit d192bac409fe5ef99fa9fb9b5a0d5f656f0f1412
+Author: Tomas Carnecky <tom@dbservice.com>
+Date:   Wed Feb 4 15:26:18 2009 +0100
+
+    Fix "XXX declared 'static' but not defined"
+    
+    The functions are declared static in Xtransint.h but are defined
+    in Xtransutil.c. So when someone (xserver/os/connection.c)
+    incuded Xtransint.h, gcc would throw the warning.
+    I removed the declarations from the header and rearranged includes
+    in transport.c so that Xtransutil.c is included just after
+    Xtransint.h. This way the functions are still defined for the
+    files that need them (Xtranssock.c, Xtranstli.c).
+    
+    Signed-off-by: Tomas Carnecky <tom@dbservice.com>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 77784ae71b6af1ec270198cfdd5f2eab1fe4a0c0
+Author: Tomas Carnecky <tom@dbservice.com>
+Date:   Wed Feb 4 15:22:28 2009 +0100
+
+    Fix "warning: format not a string literal and no format arguments"
+    
+    Signed-off-by: Tomas Carnecky <tom@dbservice.com>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit c893bc4aa7a674c6888aacc8249b3c4a8f6bf12a
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Fri Jan 30 18:47:32 2009 -0200
+
+    Janitor: Correct make distcheck and compiler warnings.
+    
+      Compiler warnings are spread on other packages, with a
+    warning in the format:
+    /usr/include/X11/Xtrans/Xtranssock.c:548: warning: 'ciptr' may be used uninitialized in this function
+    so the code was slightly changed so that the compiler
+    would not "think" it could be used without initialization.
+
 commit 1cf4a1a6716f2c0adf5ee4d0a194a1013be53105
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Sun Jan 11 10:54:52 2009 -0800

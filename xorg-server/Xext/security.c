@@ -1025,7 +1025,7 @@ SecurityClientState(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 
     case ClientStateRunning:
 	state->authId = AuthorizationIDOfClient(pci->client);
-	rc = dixLookupResource((pointer *)&pAuth, state->authId,
+	rc = dixLookupResourceByType((pointer *)&pAuth, state->authId,
 			       SecurityAuthorizationResType, serverClient,
 			       DixGetAttrAccess);
 	if (rc == Success) {
@@ -1040,7 +1040,7 @@ SecurityClientState(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 
     case ClientStateGone:
     case ClientStateRetained:
-	rc = dixLookupResource((pointer *)&pAuth, state->authId,
+	rc = dixLookupResourceByType((pointer *)&pAuth, state->authId,
 			       SecurityAuthorizationResType, serverClient,
 			       DixGetAttrAccess);
 	if (rc == Success) {

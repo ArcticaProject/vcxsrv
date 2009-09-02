@@ -89,7 +89,7 @@ CloseInputDevice(DeviceIntPtr d, ClientPtr client)
  *
  * Caller:	ProcXListInputDevices
  *
- * This is the implementation-dependent routine to initialize an input 
+ * This is the implementation-dependent routine to initialize an input
  * device to the point that information about it can be listed.
  * Some implementations open all input devices when the server is first
  * initialized, and never close them.  Other implementations open only
@@ -101,12 +101,12 @@ CloseInputDevice(DeviceIntPtr d, ClientPtr client)
  * This procedure should be used by implementations that do not initialize
  * all input devices at server startup.  It should do device-dependent
  * initialization for any devices not previously initialized, and call
- * AddInputDevice for each of those devices so that a DeviceIntRec will be 
+ * AddInputDevice for each of those devices so that a DeviceIntRec will be
  * created for them.
  *
  * The default implementation is to do nothing (assume all input devices
  * are initialized during X server initialization and kept open).
- * The commented-out sample code shows what you might do if you don't want 
+ * The commented-out sample code shows what you might do if you don't want
  * the default.
  *
  */
@@ -115,7 +115,7 @@ void
 AddOtherInputDevices(void)
 {
     /**********************************************************************
-     for each uninitialized device, do something like: 
+     for each uninitialized device, do something like:
 
     DeviceIntPtr dev;
     DeviceProc deviceProc;
@@ -138,7 +138,7 @@ AddOtherInputDevices(void)
  * initialized, and never close them.  Other implementations open only
  * the X pointer and keyboard devices during server initialization,
  * and only open other input devices when some client makes an
- * XOpenDevice request.  This entry point is for the latter type of 
+ * XOpenDevice request.  This entry point is for the latter type of
  * implementation.
  *
  * If the physical device is not already open, do it here.  In this case,

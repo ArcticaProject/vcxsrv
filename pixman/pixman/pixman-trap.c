@@ -243,6 +243,8 @@ pixman_add_traps (pixman_image_t * image,
     pixman_edge_t l, r;
     pixman_fixed_t t, b;
 
+    _pixman_image_validate (image);
+    
     width = image->bits.width;
     height = image->bits.height;
     bpp = PIXMAN_FORMAT_BPP (image->bits.format);
@@ -357,6 +359,8 @@ pixman_rasterize_trapezoid (pixman_image_t *          image,
 
     return_if_fail (image->type == BITS);
 
+    _pixman_image_validate (image);
+    
     if (!pixman_trapezoid_valid (trap))
 	return;
 

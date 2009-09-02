@@ -6,10 +6,15 @@
 
 #include <xcb/xcb.h>
 #include <X11/Xlib.h>
+#include <X11/Xfuncproto.h>
+
+_XFUNCPROTOBEGIN
 
 xcb_connection_t *XGetXCBConnection(Display *dpy);
 
 enum XEventQueueOwner { XlibOwnsEventQueue = 0, XCBOwnsEventQueue };
 void XSetEventQueueOwner(Display *dpy, enum XEventQueueOwner owner);
+
+_XFUNCPROTOEND
 
 #endif /* XLIB_XCB_H */

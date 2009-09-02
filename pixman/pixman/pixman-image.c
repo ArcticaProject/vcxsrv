@@ -62,7 +62,7 @@ _pixman_init_gradient (gradient_t *                  gradient,
  * depth, but that's a project for the future.
  */
 void
-_pixman_image_get_scanline_generic_64 (pixman_image_t * pict,
+_pixman_image_get_scanline_generic_64 (pixman_image_t * image,
                                        int              x,
                                        int              y,
                                        int              width,
@@ -85,7 +85,7 @@ _pixman_image_get_scanline_generic_64 (pixman_image_t * pict,
     }
 
     /* Fetch the source image into the first half of buffer. */
-    _pixman_image_get_scanline_32 (pict, x, y, width, (uint32_t*)buffer, mask8,
+    _pixman_image_get_scanline_32 (image, x, y, width, (uint32_t*)buffer, mask8,
                                    mask_bits);
 
     /* Expand from 32bpp to 64bpp in place. */
@@ -120,12 +120,13 @@ _pixman_image_allocate (void)
 	common->destroy_func = NULL;
 	common->destroy_data = NULL;
 	common->need_workaround = FALSE;
+	common->dirty = TRUE;
     }
 
     return image;
 }
 
-source_pict_class_t
+source_image_class_t
 _pixman_image_classify (pixman_image_t *image,
                         int             x,
                         int             y,
@@ -168,7 +169,7 @@ _pixman_image_get_scanline_64 (pixman_image_t *image,
 static void
 image_property_changed (pixman_image_t *image)
 {
-    image->common.property_changed (image);
+    image->common.dirty = TRUE;
 }
 
 /* Ref Counting */
@@ -236,6 +237,16 @@ void
 _pixman_image_reset_clip_region (pixman_image_t *image)
 {
     image->common.have_clip_region = FALSE;
+}
+
+void
+_pixman_image_validate (pixman_image_t *image)
+{
+    if (image->common.dirty)
+    {
+	image->common.property_changed (image);
+	image->common.dirty = FALSE;
+    }
 }
 
 PIXMAN_EXPORT pixman_bool_t

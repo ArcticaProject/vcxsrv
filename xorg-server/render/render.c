@@ -1009,7 +1009,7 @@ ProcRenderReferenceGlyphSet (ClientPtr client)
 
     LEGAL_NEW_RESOURCE(stuff->gsid, client);
 
-    rc = dixLookupResource((pointer *)&glyphSet, stuff->existing, GlyphSetType,
+    rc = dixLookupResourceByType((pointer *)&glyphSet, stuff->existing, GlyphSetType,
 			   client, DixGetAttrAccess);
     if (rc != Success)
     {
@@ -1033,7 +1033,7 @@ ProcRenderFreeGlyphSet (ClientPtr client)
     REQUEST(xRenderFreeGlyphSetReq);
 
     REQUEST_SIZE_MATCH(xRenderFreeGlyphSetReq);
-    rc = dixLookupResource((pointer *)&glyphSet, stuff->glyphset, GlyphSetType,
+    rc = dixLookupResourceByType((pointer *)&glyphSet, stuff->glyphset, GlyphSetType,
 			   client, DixDestroyAccess);
     if (rc != Success)
     {
@@ -1072,7 +1072,7 @@ ProcRenderAddGlyphs (ClientPtr client)
     CARD32	    component_alpha;
 
     REQUEST_AT_LEAST_SIZE(xRenderAddGlyphsReq);
-    err = dixLookupResource((pointer *)&glyphSet, stuff->glyphset, GlyphSetType,
+    err = dixLookupResourceByType((pointer *)&glyphSet, stuff->glyphset, GlyphSetType,
 			    client, DixAddAccess);
     if (err != Success)
     {
@@ -1262,7 +1262,7 @@ ProcRenderFreeGlyphs (ClientPtr client)
     CARD32	    glyph;
 
     REQUEST_AT_LEAST_SIZE(xRenderFreeGlyphsReq);
-    rc = dixLookupResource((pointer *)&glyphSet, stuff->glyphset, GlyphSetType,
+    rc = dixLookupResourceByType((pointer *)&glyphSet, stuff->glyphset, GlyphSetType,
 			   client, DixRemoveAccess);
     if (rc != Success)
     {

@@ -191,20 +191,21 @@ DamageSubtract
 
 		damage:				DAMAGE
 		repair:				Region or None
-		parts:				Region
+		parts:				Region or None
 
 	Synchronously modifies the regions in the following manner:
 
 	    If repair is None:
 
-		1)	parts = damage
+		1)	if parts is not None, parts = damage
 		2)	damage = <empty>
 		
 	    Otherwise:
 	
-		1)	parts = damage INTERSECT repair
-		2)	damage = damage - parts
-		3)	Generate DamageNotify for remaining damage areas
+		1)	tmp = damage INTERSECT repair
+		2)	damage = damage - tmp
+		3)	if parts is not None, parts = tmp
+		4)	Generate DamageNotify for remaining damage areas
 
 DamageAdd
 

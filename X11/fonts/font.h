@@ -1,4 +1,3 @@
-/* $Xorg: font.h,v 1.3 2000/08/18 04:05:44 coskrey Exp $ */
 /***********************************************************
 Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts.
 
@@ -21,8 +20,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/include/fonts/font.h,v 3.4 2000/11/27 00:10:02 dawes Exp $ */
-/* $NCDXorg: @(#)font.h,v 1.7 1991/06/24 17:00:23 lemke Exp $ */
 
 #ifndef FONT_H
 #define FONT_H

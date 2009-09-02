@@ -44,7 +44,7 @@ solid_fill_get_scanline_32 (pixman_image_t *image,
     return;
 }
 
-static source_pict_class_t
+static source_image_class_t
 solid_fill_classify (pixman_image_t *image,
                      int             x,
                      int             y,
@@ -85,8 +85,6 @@ pixman_image_create_solid_fill (pixman_color_t *color)
     img->source.class = SOURCE_IMAGE_CLASS_UNKNOWN;
     img->common.classify = solid_fill_classify;
     img->common.property_changed = solid_fill_property_changed;
-
-    solid_fill_property_changed (img);
 
     return img;
 }

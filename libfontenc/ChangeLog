@@ -1,3 +1,31 @@
+commit 1c26f6e05dbace09a4720482b67d441000d7d78e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Aug 28 14:14:11 2009 +1000
+
+    Bump to 1.0.5
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8a0bd244c5da5baae73c51e45b075b1412682e43
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Feb 2 20:34:38 2009 -0800
+
+    Add README with pointers to mailing list, bugzilla & git repos
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit f160a71e9501a9d650fd99e9a080970bfd520abb
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Wed Jan 28 16:25:32 2009 -0200
+
+    Janitor: Correct make distcheck and compiler warnings.
+
+commit 90f2dfbc40d6fa72213f508b0dd85f00965b6194
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 15:51:21 2007 -0500
+
+    Add missing PHONY line for automatic ChangeLog generation
+
 commit 1b4ca41a58016053220047b9f77a2eec812c03a0
 Author: Daniel Stone <daniel@fooishbar.org>
 Date:   Sat Dec 16 01:19:45 2006 +0200

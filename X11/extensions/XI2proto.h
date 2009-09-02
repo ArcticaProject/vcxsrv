@@ -48,12 +48,6 @@
  */
 
 /**
- * @mainpage
- * @include XI2proto.txt
- */
-
-/**
- * @file XI2proto.h
  * Protocol definitions for the XI2 protocol.
  * This file should not be included by clients that merely use XI2, but do not
  * need the wire protocol. Such clients should include XI2.h, or the matching
@@ -75,8 +69,6 @@
 
 /**
  * XI2 Request opcodes
- * @addtogroup XI2Requests
- * @{
  */
 #define X_XIQueryPointer                40
 #define X_XIWarpPointer                 41
@@ -99,7 +91,6 @@
 #define X_XIDeleteProperty              58
 #define X_XIGetProperty                 59
 #define X_XIGetSelectedEvents           60
-/*@}*/
 
 /** Number of XI requests */
 #define XI2REQUESTS (X_XIGetSelectedEvents - X_XIQueryPointer + 1)
@@ -121,7 +112,6 @@ typedef struct {
 } FP3232;
 
 /**
- * \struct xXIDeviceInfo
  * Struct to describe a device.
  *
  * For a MasterPointer or a MasterKeyboard, 'attachment' specifies the
@@ -129,8 +119,6 @@ typedef struct {
  * For a SlaveKeyboard or SlavePointer, 'attachment' specifies the master
  * device this device is attached to.
  * For a FloatingSlave, 'attachment' is undefined.
- *
- * @see xXIQueryDeviceReq
  */
 typedef struct {
     uint16_t    deviceid;
@@ -145,13 +133,9 @@ typedef struct {
 } xXIDeviceInfo;
 
 /**
- * \struct xXIAnyInfo
  * Default template for a device class.
  * A device class is equivalent to a device's capabilities. Multiple classes
  * are supported per device.
- *
- * @see xXIQueryDeviceReq
- * @see xXIDeviceChangedEvent
  */
 typedef struct {
     uint16_t    type;           /**< One of *class */
@@ -164,9 +148,6 @@ typedef struct {
  * Denotes button capability on a device.
  * Struct is followed by num_buttons * Atom that names the buttons in the
  * device-native setup (i.e. ignoring button mappings).
- *
- * @see xXIQueryDeviceReq
- * @see xXIDeviceChangedEvent
  */
 typedef struct {
     uint16_t    type;           /**< Always ButtonClass */
@@ -179,9 +160,6 @@ typedef struct {
  * Denotes key capability on a device.
  * Struct is followed by num_keys * CARD32 that lists the keycodes available
  * on the device.
- *
- * @see xXIQueryDeviceReq
- * @see xXIDeviceChangedEvent
  */
 typedef struct {
     uint16_t    type;           /**< Always KeyClass */
@@ -193,9 +171,6 @@ typedef struct {
 /**
  * Denotes an valuator capability on a device.
  * One XIValuatorInfo describes exactly one valuator (axis) on the device.
- *
- * @see xXIQueryDevice
- * @see xXIDeviceChangedEvent
  */
 typedef struct {
     uint16_t    type;           /**< Always ValuatorClass       */
@@ -218,8 +193,6 @@ typedef struct {
  * Struct is followed by (mask_len * CARD8), with each bit set representing
  * the event mask for the given type. A mask bit represents an event type if
  * (mask == (1 << type)).
- *
- * @see XISelectEvents
  */
 typedef struct {
     uint16_t    deviceid;       /**< Device id to select for        */
@@ -260,7 +233,6 @@ typedef struct
  *************************************************************************************/
 
 /**
- * @struct xXIQueryVersionReq
  * Query the server for the supported X Input extension version.
  */
 
@@ -289,12 +261,9 @@ typedef struct {
 #define sz_xXIQueryVersionReply             32
 
 /**
- * @struct xXIQueryDeviceReq
  * Query the server for information about a specific device or all input
  * devices.
- *
  */
-
 typedef struct {
     uint8_t     reqType;                /**< Input extension major code */
     uint8_t     ReqType;                /**< Always ::X_XIQueryDevice */
@@ -320,7 +289,6 @@ typedef struct {
 #define sz_xXIQueryDeviceReply                  32
 
 /**
- * @struct xXISelectEventsReq
  * Select for events on a given window.
  */
 typedef struct {
@@ -334,7 +302,6 @@ typedef struct {
 #define sz_xXISelectEventsReq                  12
 
 /**
- * @struct xXIGetSelectedEventsReq
  * Query for selected events on a given window.
  */
 typedef struct {
@@ -362,7 +329,6 @@ typedef struct {
 #define sz_xXIGetSelectedEventsReply            32
 
 /**
- * @struct xXIQueryPointerReq
  * Query the given device's screen/window coordinates.
  */
 
@@ -397,7 +363,6 @@ typedef struct {
 #define sz_xXIQueryPointerReply                 56
 
 /**
- * @struct xXIWarpPointerReq
  * Warp the given device's pointer to the specified position.
  */
 
@@ -407,19 +372,18 @@ typedef struct {
     uint16_t    length;                 /**< Length in 4 byte units */
     Window      src_win;
     Window      dst_win;
-    INT16       src_x;
-    INT16       src_y;
+    FP1616      src_x;
+    FP1616      src_y;
     uint16_t    src_width;
     uint16_t    src_height;
-    INT16       dst_x;
-    INT16       dst_y;
+    FP1616      dst_x;
+    FP1616      dst_y;
     uint16_t    deviceid;
     uint16_t    pad1;
 } xXIWarpPointerReq;
-#define sz_xXIWarpPointerReq                    28
+#define sz_xXIWarpPointerReq                    36
 
 /**
- * @struct xXIChangeCursorReq
  * Change the given device's sprite to the given cursor.
  */
 
@@ -435,7 +399,6 @@ typedef struct {
 #define sz_xXIChangeCursorReq                           16
 
 /**
- * @struct xXIChangeHierarchyReq
  * Modify the device hierarchy.
  */
 
@@ -506,7 +469,6 @@ typedef struct {
 
 
 /**
- * @struct xXISetClientPointerReq
  * Set the window/client's ClientPointer.
  */
 typedef struct {
@@ -520,7 +482,6 @@ typedef struct {
 #define sz_xXISetClientPointerReq                 12
 
 /**
- * @struct xXIGetClientPointerReq
  * Query the given window/client's ClientPointer setting.
  */
 typedef struct {
@@ -548,7 +509,6 @@ typedef struct {
 #define sz_xXIGetClientPointerReply               32
 
 /**
- * @struct xXISetFocusReq
  * Set the input focus to the specified window.
  */
 typedef struct {
@@ -563,7 +523,6 @@ typedef struct {
 #define sz_xXISetFocusReq                       16
 
 /**
- * @struct xXIGetDeviceFocusReq
  * Query the current input focus.
  */
 typedef struct {
@@ -591,7 +550,6 @@ typedef struct {
 
 
 /**
- * @struct xXIGrabDeviceReq
  * Grab the given device.
  */
 typedef struct {
@@ -637,7 +595,6 @@ typedef struct {
 #define sz_xXIGrabDeviceReply                  32
 
 /**
- * @struct xXIUngrabDeviceReq
  * Ungrab the specified device.
  *
  */
@@ -653,7 +610,6 @@ typedef struct {
 
 
 /**
- * @struct xXIAllowEventsReq
  * Allow or replay events on the specified grabbed device.
  */
 typedef struct {
@@ -669,7 +625,6 @@ typedef struct {
 
 
 /**
- * @struct xXIPassiveGrabDeviceReq
  * Passively grab the device.
  */
 typedef struct {
@@ -707,7 +662,6 @@ typedef struct {
 #define sz_xXIPassiveGrabDeviceReply            32
 
 /**
- * @struct xXIPassiveUngrabDeviceReq
  * Delete a passive grab for the given device.
  */
 typedef struct {
@@ -725,7 +679,6 @@ typedef struct {
 #define sz_xXIPassiveUngrabDeviceReq            20
 
 /**
- * @struct xXIListPropertiesReq
  * List all device properties on the specified device.
  */
 typedef struct {
@@ -753,7 +706,6 @@ typedef struct {
 #define sz_xXIListPropertiesReply               32
 
 /**
- * @struct xXIChangePropertyReq
  * Change a property on the specified device.
  */
 typedef struct {
@@ -770,7 +722,6 @@ typedef struct {
 #define sz_xXIChangePropertyReq                 20
 
 /**
- * @struct xXIDeletePropertyReq
  * Delete the specified property.
  */
 typedef struct {
@@ -784,7 +735,6 @@ typedef struct {
 #define sz_xXIDeletePropertyReq                 12
 
 /**
- * @struct xXIGetPropertyReq
  * Query the specified property's values.
  */
 typedef struct {
@@ -828,7 +778,6 @@ typedef struct {
  *************************************************************************************/
 
 /**
- * @struct xXIGenericDeviceEvent
  * Generic XI2 event header. All XI2 events use the same header.
  */
 typedef struct
@@ -841,12 +790,6 @@ typedef struct
     uint16_t    deviceid;
     Time        time;
 } xXIGenericDeviceEvent;
-
-/**
- * @struct xXIHierarchyEvent
- * The device hierarchy has been modified. This event includes the device
- * hierarchy after the modification has been applied.
- */
 
 /**
  * Device hierarchy information.
@@ -868,6 +811,10 @@ typedef struct
                                              ::XIDeviceEnabled, ::XIDeviceDisabled */
 } xXIHierarchyInfo;
 
+/**
+ * The device hierarchy has been modified. This event includes the device
+ * hierarchy after the modification has been applied.
+ */
 typedef struct
 {
     uint8_t     type;                   /**< Always GenericEvent */
@@ -888,7 +835,6 @@ typedef struct
 } xXIHierarchyEvent;
 
 /**
- * @struct xXIDeviceChangedEvent
  * A device has changed capabilities.
  */
 typedef struct
@@ -910,10 +856,8 @@ typedef struct
 } xXIDeviceChangedEvent;
 
 /**
- * @struct xXIDeviceEvent
  * Default input event for pointer or keyboard input.
  */
-
 typedef struct
 {
     uint8_t     type;                   /**< Always GenericEvent */
@@ -943,7 +887,6 @@ typedef struct
 
 
 /**
- * @struct xXIRawEvent
  * Sent when an input event is generated. RawEvents include valuator
  * information in both device-specific data (i.e. unaccelerated) and
  * processed data (i.e. accelerated, if applicable).
@@ -958,9 +901,7 @@ typedef struct
     uint16_t    deviceid;
     Time        time;
     uint32_t    detail;
-    uint16_t    eventtype;              /**< ::XI_Motion, ::XI_ButtonPress,
-                                             ::XI_ButtonRelease, ::XI_KeyPress,
-                                             ::XI_KeyRelease */
+    uint16_t    pad0;
     uint16_t    valuators_len;          /**< Length of trailing valuator
                                              mask in 4 byte units */
     uint32_t    flags;                  /**< ::XIKeyRepeat */
@@ -968,7 +909,6 @@ typedef struct
 } xXIRawEvent;
 
 /**
- * @struct xXIEnterEvent
  * Note that the layout of root, event, child, root_x, root_y, event_x,
  * event_y must be identical to the xXIDeviceEvent.
  */
@@ -1005,7 +945,6 @@ typedef xXIEnterEvent xXIFocusInEvent;
 typedef xXIEnterEvent xXIFocusOutEvent;
 
 /**
- * @struct xXIPropertyEvent
  * Sent when a device property is created, modified or deleted. Does not
  * include property data, the client is required to query the data.
  */

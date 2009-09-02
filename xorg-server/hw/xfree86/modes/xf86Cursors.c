@@ -640,9 +640,11 @@ xf86_reload_cursors (ScreenPtr screen)
 	    (*cursor_info->LoadCursorARGB) (scrn, cursor);
 	else if (src)
 #endif
-	    (*cursor_info->LoadCursorImage)(cursor_info->pScrn, src);
+	    (*cursor_info->LoadCursorImage)(scrn, src);
 
-	(*cursor_info->SetCursorPosition)(cursor_info->pScrn, x, y);
+	x += scrn->frameX0 + cursor_screen_priv->HotX;
+	y += scrn->frameY0 + cursor_screen_priv->HotY;
+	(*cursor_info->SetCursorPosition)(scrn, x, y);
     }
 }
 

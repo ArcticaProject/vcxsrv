@@ -135,8 +135,8 @@ _m_paddusb (__m64 a, __m64 b)        /* unoptimized */
     unsigned long long y = ((M64U (a) >> 8) & 0x00FF00FF00FF00FFULL) +
                            ((M64U (b) >> 8) & 0x00FF00FF00FF00FFULL);
 
-    x | = ((x & 0xFF00FF00FF00FF00ULL) >> 8) * 0xFF;
-    y | = ((y & 0xFF00FF00FF00FF00ULL) >> 8) * 0xFF;
+    x |= ((x & 0xFF00FF00FF00FF00ULL) >> 8) * 0xFF;
+    y |= ((y & 0xFF00FF00FF00FF00ULL) >> 8) * 0xFF;
 
     x = (x & 0x00FF00FF00FF00FFULL) | ((y & 0x00FF00FF00FF00FFULL) << 8);
 
@@ -152,8 +152,8 @@ _m_paddusw (__m64 a, __m64 b)        /* unoptimized */
     unsigned long long y = ((M64U (a) >> 16) & 0x0000FFFF0000FFFFULL) +
                            ((M64U (b) >> 16) & 0x0000FFFF0000FFFFULL);
 
-    x | = ((x & 0xFFFF0000FFFF0000) >> 16) * 0xFFFF;
-    y | = ((y & 0xFFFF0000FFFF0000) >> 16) * 0xFFFF;
+    x |= ((x & 0xFFFF0000FFFF0000) >> 16) * 0xFFFF;
+    y |= ((y & 0xFFFF0000FFFF0000) >> 16) * 0xFFFF;
 
     x = (x & 0x0000FFFF0000FFFFULL) | ((y & 0x0000FFFF0000FFFFULL) << 16);
 

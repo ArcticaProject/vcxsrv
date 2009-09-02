@@ -31,7 +31,7 @@ AC_PREREQ([2.57])
 #
 #   - Released development versions have an odd MINOR number
 #
-#   - Released stable versions have an event MINOR number
+#   - Released stable versions have an even MINOR number
 #
 #   - Versions that break ABI must have a new MAJOR number
 #
@@ -53,8 +53,8 @@ AC_PREREQ([2.57])
 #
 
 m4_define([pixman_major], 0)
-m4_define([pixman_minor], 15)
-m4_define([pixman_micro], 18)
+m4_define([pixman_minor], 16)
+m4_define([pixman_micro], 0)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -462,7 +462,9 @@ AC_ARG_ENABLE(timers,
 		   [enable TIMER_BEGIN and TIMER_END macros [default=no]])],
    [enable_timers=$enableval], [enable_timers=no])
 
-AC_DEFINE(PIXMAN_TIMERS, 1, [enable TIMER_BEGIN/TIMER_END macros])
+if test $enable_timers = yes ; then 
+   AC_DEFINE(PIXMAN_TIMERS, 1, [enable TIMER_BEGIN/TIMER_END macros])
+fi
 AC_SUBST(PIXMAN_TIMERS)
 
 dnl ===================================
@@ -487,6 +489,14 @@ AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 AC_SUBST(DEP_CFLAGS)
 AC_SUBST(DEP_LIBS)
+
+dnl =====================================
+dnl posix_memalign 
+
+AC_CHECK_FUNC(posix_memalign, have_posix_memalign=yes, have_posix_memalign=no)
+if test x$have_posix_memalign = xyes; then
+   AC_DEFINE(HAVE_POSIX_MEMALIGN, 1, [Whether we have posix_memalign()])
+fi
 
 AC_OUTPUT([pixman-1.pc
            pixman-1-uninstalled.pc

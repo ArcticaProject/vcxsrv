@@ -474,12 +474,12 @@ connect_and_register(DBusConnection *connection, struct config_hal_info *info)
     char **devices;
     int num_devices, i;
 
+    if (info->hal_ctx)
+        return TRUE; /* already registered, pretend we did something */
+
     info->system_bus = connection;
 
     dbus_error_init(&error);
-
-    if (info->hal_ctx)
-        return TRUE; /* already registered, pretend we did something */
 
     info->hal_ctx = libhal_ctx_new();
     if (!info->hal_ctx) {
@@ -489,17 +489,19 @@ connect_and_register(DBusConnection *connection, struct config_hal_info *info)
 
     if (!libhal_ctx_set_dbus_connection(info->hal_ctx, info->system_bus)) {
         LogMessage(X_ERROR, "config/hal: couldn't associate HAL context with bus\n");
-        goto out_ctx;
+        goto out_err;
     }
     if (!libhal_ctx_init(info->hal_ctx, &error)) {
         LogMessage(X_ERROR, "config/hal: couldn't initialise context: %s (%s)\n",
-               error.name, error.message);
-        goto out_ctx;
+		   error.name ? error.name : "unknown error",
+		   error.message ? error.message : "null");
+        goto out_err;
     }
     if (!libhal_device_property_watch_all(info->hal_ctx, &error)) {
         LogMessage(X_ERROR, "config/hal: couldn't watch all properties: %s (%s)\n",
-               error.name, error.message);
-        goto out_ctx2;
+		   error.name ? error.name : "unknown error",
+		   error.message ? error.message : "null");
+        goto out_ctx;
     }
     libhal_ctx_set_device_added(info->hal_ctx, device_added);
     libhal_ctx_set_device_removed(info->hal_ctx, device_removed);
@@ -507,6 +509,12 @@ connect_and_register(DBusConnection *connection, struct config_hal_info *info)
     devices = libhal_find_device_by_capability(info->hal_ctx, "input",
                                                &num_devices, &error);
     /* FIXME: Get default devices if error is set. */
+    if (dbus_error_is_set(&error)) {
+        LogMessage(X_ERROR, "config/hal: couldn't find input device: %s (%s)\n",
+		   error.name ? error.name : "unknown error",
+		   error.message ? error.message : "null");
+        goto out_ctx;
+    }
     for (i = 0; i < num_devices; i++)
         device_added(info->hal_ctx, devices[i]);
     libhal_free_string_array(devices);
@@ -515,14 +523,22 @@ connect_and_register(DBusConnection *connection, struct config_hal_info *info)
 
     return TRUE;
 
-out_ctx2:
-    if (!libhal_ctx_shutdown(info->hal_ctx, &error))
-        LogMessage(X_WARNING, "config/hal: couldn't shut down context: %s (%s)\n",
-               error.name, error.message);
 out_ctx:
-    libhal_ctx_free(info->hal_ctx);
+    dbus_error_free(&error);
+
+    if (!libhal_ctx_shutdown(info->hal_ctx, &error)) {
+        LogMessage(X_WARNING, "config/hal: couldn't shut down context: %s (%s)\n",
+                error.name ? error.name : "unknown error",
+                error.message ? error.message : "null");
+        dbus_error_free(&error);
+    }
+
 out_err:
     dbus_error_free(&error);
+
+    if (info->hal_ctx) {
+        libhal_ctx_free(info->hal_ctx);
+    }
 
     info->hal_ctx = NULL;
     info->system_bus = NULL;

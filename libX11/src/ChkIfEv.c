@@ -62,6 +62,7 @@ Bool XCheckIfEvent (
 		   && (*predicate)(dpy, &qelt->event, arg)) {
 		    *event = qelt->event;
 		    _XDeq(dpy, prev, qelt);
+		    _XStoreEventCookie(dpy, event);
 		    UnlockDisplay(dpy);
 		    return True;
 		}

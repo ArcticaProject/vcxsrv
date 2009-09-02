@@ -966,6 +966,17 @@ typedef struct
     int            evtype;       /* actual event type. */
     } XGenericEvent;
 
+typedef struct {
+    int            type;         /* of event. Always GenericEvent */
+    unsigned long  serial;       /* # of last request processed */
+    Bool           send_event;   /* true if from SendEvent request */
+    Display        *display;     /* Display the event was read from */
+    int            extension;    /* major opcode of extension that caused the event */
+    int            evtype;       /* actual event type. */
+    unsigned int   cookie;
+    void           *data;
+} XGenericEventCookie;
+
 /*
  * this union is defined so Xlib can always use the same sized
  * event structure internally, to avoid memory fragmentation.
@@ -1003,6 +1014,8 @@ typedef union _XEvent {
 	XMappingEvent xmapping;
 	XErrorEvent xerror;
 	XKeymapEvent xkeymap;
+	XGenericEvent xgeneric;
+	XGenericEventCookie xcookie;
 	long pad[24];
 } XEvent;
 #endif
@@ -3996,6 +4009,16 @@ extern int _Xmbtowc(
 extern int _Xwctomb(
     char *			/* str */,
     wchar_t			/* wc */
+);
+
+extern Bool XGetEventData(
+    Display*			/* dpy */,
+    XGenericEventCookie*	/* cookie*/
+);
+
+extern void XFreeEventData(
+    Display*			/* dpy */,
+    XGenericEventCookie*	/* cookie*/
 );
 
 _XFUNCPROTOEND

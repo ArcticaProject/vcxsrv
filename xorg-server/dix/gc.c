@@ -273,7 +273,7 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 		else
 		{
 		    NEXTVAL(XID, newpix);
-		    rc = dixLookupResource((pointer *)&pPixmap, newpix,
+		    rc = dixLookupResourceByType((pointer *)&pPixmap, newpix,
 					   RT_PIXMAP, client, DixReadAccess);
 		}
 		if (rc == Success)
@@ -310,7 +310,7 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 		else
 		{
 		    NEXTVAL(XID, newstipple)
-		    rc = dixLookupResource((pointer *)&pPixmap, newstipple,
+		    rc = dixLookupResourceByType((pointer *)&pPixmap, newstipple,
 					   RT_PIXMAP, client, DixReadAccess);
 		}
 		if (rc == Success)
@@ -353,7 +353,7 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 		else
 		{
 		    NEXTVAL(XID, newfont)
-		    rc = dixLookupResource((pointer *)&pFont, newfont,
+		    rc = dixLookupResourceByType((pointer *)&pFont, newfont,
 					   RT_FONT, client, DixUseAccess);
 		}
 		if (rc == Success)
@@ -420,7 +420,7 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 			pPixmap = NullPixmap;
 		    }
 		    else {
-			rc = dixLookupResource((pointer *)&pPixmap, pid,
+			rc = dixLookupResourceByType((pointer *)&pPixmap, pid,
 					       RT_PIXMAP, client,
 					       DixReadAccess);
 			if (rc != Success) {

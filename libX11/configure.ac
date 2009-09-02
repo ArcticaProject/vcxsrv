@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.60)
 AC_INIT([libX11],
-        1.2.2,
+        1.2.99.901,
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         libX11)
 AC_CONFIG_SRCDIR([Makefile.am])

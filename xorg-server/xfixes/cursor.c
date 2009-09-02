@@ -865,7 +865,7 @@ ProcXFixesHideCursor (ClientPtr client)
 
     REQUEST_SIZE_MATCH (xXFixesHideCursorReq);
 
-    ret = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW,
+    ret = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW,
 			    client, DixGetAttrAccess);
     if (ret != Success) {
 	client->errorValue = stuff->window;
@@ -923,7 +923,7 @@ ProcXFixesShowCursor (ClientPtr client)
 
     REQUEST_SIZE_MATCH (xXFixesShowCursorReq);
 
-    rc = dixLookupResource((pointer *)&pWin, stuff->window, RT_WINDOW,
+    rc = dixLookupResourceByType((pointer *)&pWin, stuff->window, RT_WINDOW,
 			   client, DixGetAttrAccess);
     if (rc != Success) {
 	client->errorValue = stuff->window;

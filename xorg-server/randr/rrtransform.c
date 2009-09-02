@@ -251,10 +251,10 @@ RRTransformCompute (int			    x,
 #ifdef RANDR_12_INTERFACE
     if (rr_transform)
     {
-        if (!pixman_transform_multiply (transform, transform, &rr_transform->transform))
+        if (!pixman_transform_multiply (transform, &rr_transform->transform, transform))
 	    overflow = TRUE;
-	pixman_f_transform_multiply (f_transform, f_transform, &rr_transform->f_transform);
-	pixman_f_transform_multiply (f_inverse, &rr_transform->f_inverse, f_inverse);
+	pixman_f_transform_multiply (f_transform, &rr_transform->f_transform, f_transform);
+	pixman_f_transform_multiply (f_inverse, f_inverse, &rr_transform->f_inverse);
     }
 #endif
     /*

@@ -115,48 +115,66 @@ LookupClient(XID id, ClientPtr client)
     return (i == Success) ? pClient : NULL;
 }
 
-/* replaced by dixLookupResource */
+/* replaced by dixLookupResourceByType */
 _X_EXPORT pointer
 SecurityLookupIDByType(ClientPtr client, XID id, RESTYPE rtype,
 		       Mask access_mode)
 {
     pointer retval;
-    int i = dixLookupResource(&retval, id, rtype, client, access_mode);
+    int i = dixLookupResourceByType(&retval, id, rtype, client, access_mode);
     static int warn = 1;
     if (warn > 0 && --warn)
 	ErrorF("Warning: LookupIDByType()/SecurityLookupIDByType() "
 	       "are deprecated.  Please convert your driver/module "
-	       "to use dixLookupResource().\n");
+	       "to use dixLookupResourceByType().\n");
     return (i == Success) ? retval : NULL;
 }
 
-/* replaced by dixLookupResource */
+/* replaced by dixLookupResourceByClass */
 _X_EXPORT pointer
 SecurityLookupIDByClass(ClientPtr client, XID id, RESTYPE classes,
 			Mask access_mode)
 {
     pointer retval;
-    int i = dixLookupResource(&retval, id, classes, client, access_mode);
+    int i = dixLookupResourceByClass(&retval, id, classes, client, access_mode);
     static int warn = 1;
     if (warn > 0 && --warn)
 	ErrorF("Warning: LookupIDByClass()/SecurityLookupIDByClass() "
 	       "are deprecated.  Please convert your driver/module "
-	       "to use dixLookupResource().\n");
+	       "to use dixLookupResourceByClass().\n");
     return (i == Success) ? retval : NULL;
 }
 
-/* replaced by dixLookupResource */
+/* replaced by dixLookupResourceByType */
 _X_EXPORT pointer
 LookupIDByType(XID id, RESTYPE rtype)
 {
     return SecurityLookupIDByType(NullClient, id, rtype, DixUnknownAccess);
 }
 
-/* replaced by dixLookupResource */
+/* replaced by dixLookupResourceByClass */
 _X_EXPORT pointer
 LookupIDByClass(XID id, RESTYPE classes)
 {
     return SecurityLookupIDByClass(NullClient, id, classes, DixUnknownAccess);
+}
+
+/* replaced by dixLookupResourceBy{Type,Class} */
+_X_EXPORT int
+dixLookupResource (pointer *result, XID id, RESTYPE rtype,
+		   ClientPtr client, Mask mode)
+{
+    Bool istype = ((rtype & TypeMask) && (rtype != RC_ANY)) || (rtype == RT_NONE);
+
+    static int warn = 1;
+    if (warn > 0 && --warn)
+	ErrorF("Warning: dixLookupResource() "
+	       "is deprecated.  Please convert your driver/module "
+	       "to use dixLookupResourceByType/dixLookupResourceByClass().\n");
+    if (istype)
+	return dixLookupResourceByType (result, id, rtype, client, mode);
+    else
+	return dixLookupResourceByClass (result, id, rtype, client, mode);
 }
 
 /* end deprecated functions */

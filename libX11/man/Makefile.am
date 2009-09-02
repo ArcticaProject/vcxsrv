@@ -75,6 +75,7 @@ libman_PRE = \
 	XGravityEvent.man \
 	XrmGetFileDatabase.man \
 	XrmGetResource.man \
+	XGetEventData.man \
 	XGetVisualInfo.man \
 	XGetWindowAttributes.man \
 	XGetWindowProperty.man \
@@ -271,6 +272,7 @@ all_shadows =                                \
     $(XGraphicsExposeEvent_shadows)          \
     $(XrmGetFileDatabase_shadows)            \
     $(XrmGetResource_shadows)                \
+    $(XGetEventData_shadows)                 \
     $(XGetVisualInfo_shadows)                \
     $(XGetWindowAttributes_shadows)          \
     $(XGetWindowProperty_shadows)            \
@@ -657,6 +659,10 @@ XrmGetResource_shadows =                    \
     XrmQGetResource                         \
     XrmQGetSearchList                       \
     XrmQGetSearchResource
+
+XGetEventData_shadows =                     \
+    XFreeEventData                          \
+    XGenericEventCookie
 
 XGetVisualInfo_shadows =                    \
     XMatchVisualInfo                        \
@@ -1222,6 +1228,9 @@ shadows.DONE:
 	 done)
 	(for i in $(XrmGetResource_shadows:=.@LIB_MAN_SUFFIX@) ; do \
 	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XrmGetResource.$(LIB_MAN_SUFFIX) > $$i; \
+	 done)
+	(for i in $(XGetEventData_shadows:=.@LIB_MAN_SUFFIX@) ; do \
+	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGetEventData.$(LIB_MAN_SUFFIX) > $$i; \
 	 done)
 	(for i in $(XGetVisualInfo_shadows:=.@LIB_MAN_SUFFIX@) ; do \
 	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGetVisualInfo.$(LIB_MAN_SUFFIX) > $$i; \

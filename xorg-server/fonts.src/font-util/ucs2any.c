@@ -13,9 +13,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of The NetBSD Foundation nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS
  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -55,7 +52,7 @@
 #include <unistd.h>
 
 /* global variable for argv[0] */
-const char *my_name = NULL;
+static const char *my_name = NULL;
 
 #ifdef NEED_BASENAME
 static char *
@@ -336,7 +333,7 @@ DEC VT100 graphics characters in the range 1-31 (as expected by
 some old xterm versions and a few other applications)
 */
 #define decmap_size 31
-int decmap[decmap_size] = {
+static int decmap[decmap_size] = {
 	0x25C6, /* BLACK DIAMOND */
 	0x2592, /* MEDIUM SHADE */
 	0x2409, /* SYMBOL FOR HORIZONTAL TABULATION */
@@ -522,6 +519,7 @@ main(int argc, char *argv[])
 	char *registry_encoding = NULL;
 
 	my_name = argv[0];
+	bbx.cheight = bbx.cxoff = bbx.cyoff = -1;
 
 	startchar = da_new("startchar");
 	my_char = da_new("my_char");
