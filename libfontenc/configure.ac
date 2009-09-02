@@ -23,27 +23,24 @@ dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
 
-AC_INIT(libfontenc, 1.0.4, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libfontenc)
+AC_INIT(libfontenc, 1.0.5, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libfontenc)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
+# Require xorg-macros: XORG_CWARNFLAGS, XORG_CHANGELOG, XORG_WITH_LINT
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.2)
 AM_CONFIG_HEADER(config.h)
-
-# Require xorg-macros version 1.1.0 or newer for XORG_WITH_LINT macro
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.1 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.1)
 
 # Check for progs
 AC_PROG_CC
 AC_PROG_LIBTOOL
+XORG_CWARNFLAGS
 
-m4_ifdef([AS_HELP_STRING], , [m4_define([AS_HELP_STRING], m4_defn([AC_HELP_STRING]))])
-
-DEFAULT_ENCODINGSDIR=${libdir}/X11/fonts/encodings
-AC_ARG_WITH(encodingsdir,
-	AS_HELP_STRING([--with-encodingsdir=ENCODINGSDIR], [Path to font encodings]),
-	[ENCODINGSDIR="$withval"],
-	[ENCODINGSDIR="$DEFAULT_ENCODINGSDIR"])
+encodingsdir=${libdir}/X11/fonts/encodings
+AC_ARG_WITH(encodingsdir, AC_HELP_STRING([--with-encodingsdir=<pathname>],
+	[Path to font encodings]), [encodingsdir="$withval"])
+ENCODINGSDIR="$encodingsdir"
 AC_SUBST(ENCODINGSDIR)
 
 # zlib
@@ -52,7 +49,7 @@ AC_CHECK_LIB(z, gzclose)
 
 # Check for dependencies
 PKG_CHECK_MODULES(FONTENC, xproto)
-
+FONTENC_CFLAGS="$CWARNFLAGS $FONTENC_CFLAGS"
 AC_SUBST(FONTENC_CFLAGS)
 AC_SUBST(FONTENC_LIBS)
 
@@ -61,6 +58,7 @@ XORG_WITH_LINT
 LINT_FLAGS="${LINT_FLAGS} ${FONTENC_CFLAGS}"
 		  
 XORG_RELEASE_VERSION
+XORG_CHANGELOG
 
 AC_OUTPUT([Makefile
 	   src/Makefile
