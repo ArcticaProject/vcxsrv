@@ -19,14 +19,12 @@
 #  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 #  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-bin_PROGRAMS = ucs2any
-bin_SCRIPTS = bdftruncate
+bin_PROGRAMS = bdftruncate ucs2any
+
+AM_CFLAGS = $(CWARNFLAGS)
 
 ucs2any_SOURCES = ucs2any.c
-
-bdftruncate: $(top_srcdir)/bdftruncate.pl
-	@rm -f $@
-	cp $(top_srcdir)/bdftruncate.pl $@
+bdftruncate_SOURCES = bdftruncate.c
 
 aclocaldir = $(datadir)/aclocal
 aclocal_DATA = fontutil.m4
@@ -62,8 +60,6 @@ CLEANFILES = bdftruncate $(appman_DATA)
 
 EXTRA_DIST = $(mapfiles_DATA) \
 	$(appman_PRE) \
-	autogen.sh \
-	bdftruncate.pl \
 	fontutil.pc.in \
 	$(aclocal_DATA)
 
@@ -81,3 +77,13 @@ SUFFIXES = .$(APP_MAN_SUFFIX) .man
 
 .man.$(APP_MAN_SUFFIX):
 	sed $(MAN_SUBSTS) < $< > $@
+
+EXTRA_DIST += ChangeLog
+MAINTAINERCLEANFILES = ChangeLog
+
+.PHONY: ChangeLog
+
+ChangeLog:
+	$(CHANGELOG_CMD)
+
+dist-hook: ChangeLog

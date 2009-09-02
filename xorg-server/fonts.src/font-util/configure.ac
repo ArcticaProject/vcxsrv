@@ -22,25 +22,27 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(font-util, [1.0.1], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-util)
+AC_INIT(font-util, [1.0.2], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-util)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
+# Require xorg-macros: XORG_CWARNFLAGS, XORG_CHANGELOG
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.2)
 AM_CONFIG_HEADER(config.h)
+XORG_CWARNFLAGS
 
 AC_PROG_CC
 AC_PROG_INSTALL
 
-m4_ifdef([AS_HELP_STRING], , [m4_define([AS_HELP_STRING], m4_defn([AC_HELP_STRING]))])
-
-DEFAULT_MAPDIR=${libdir}/X11/fonts/util
-AC_ARG_WITH(mapdir,
-	AS_HELP_STRING([--with-mapdir=MAPDIR], [Path to install font maps]),
-	[MAPDIR="$withval"],
-	[MAPDIR="$DEFAULT_MAPDIR"])
+mapdir=${libdir}/X11/fonts/util
+AC_ARG_WITH(mapdir, AC_HELP_STRING([--with-mapdir=<pathname>],
+	[Path to install font maps]), [mapdir="$withval"])
+MAPDIR="$mapdir"
 AC_SUBST(MAPDIR)
 
 XORG_MANPAGE_SECTIONS
 XORG_RELEASE_VERSION
+XORG_CHANGELOG
 
 AC_OUTPUT([Makefile fontutil.pc])
