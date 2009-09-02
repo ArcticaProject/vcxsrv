@@ -39,9 +39,7 @@ This scheme involves changes to the following parts of the sample release:
 	-  remove entries from user's auth file
 
 This mechanism assumes that the superuser and the transport layer between 
-the client and the server is secure.  Organizations that desire stricter
-security are encouraged to look at systems such as Kerberos (at Project
-Athena).
+the client and the server is secure.
 
 
 Description

@@ -1,3 +1,48 @@
+commit 825435514bd91d0d903247c46249a87d6fe8ae09
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Aug 28 14:34:32 2009 +1000
+
+    libXau 1.0.5
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit fc54a4f03b926dfdb590b112c7128516ffc25539
+Author: Jeremy Huddleston <jeremy@yuffie.local>
+Date:   Sun Feb 22 11:14:04 2009 -0800
+
+    Make file locking more robust for network shares like AFP
+
+commit 742ff03dcad4d16ca8901ed47be91b303523a385
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Feb 6 11:35:40 2009 -0800
+
+    Restore FamilyKrb5Principal definition
+    
+    Even if Kerberos5 support is currently unimplemented in the X server &
+    libXau, the Family id for the X11 protocol is still defined and reserved
+    for Kerberos5, and should be recorded here for interoperability with
+    other implementations and to avoid reuse if someone adds a new
+    authentication family in the future.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit c147fb417582e7384b5464bb53cfd492f9d7c69d
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Mon Feb 2 16:54:20 2009 -0200
+
+    Remove old api kerberos.
+    
+      LibXau uses a 1993 kerberos api, but the X Server side support has
+    been already removed for quite some time.
+      This corrects bug report
+    https://bugs.freedesktop.org/show_bug.cgi?id=14684
+
+commit 11fbe620625520668f5e88e4f5a8fe149a7cfa3f
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Jan 29 15:08:23 2009 -0200
+
+    Janitor: Correct make distcheck and remove extra .gitignore file.
+
 commit 7f6275300243fd15ce974d1b5e478b47f7758485
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Tue Aug 26 14:19:19 2008 -0700

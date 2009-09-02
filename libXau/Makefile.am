@@ -18,10 +18,6 @@ libXau_la_SOURCES = \
 	AuUnlock.c \
 	AuWrite.c
 
-if KERBEROS
-libXau_la_SOURCES +=k5encode.c
-endif KERBEROS
-
 xauincludedir=$(includedir)/X11
 
 xauinclude_HEADERS = include/X11/Xauth.h
@@ -87,6 +83,6 @@ Xau.$(LIB_MAN_SUFFIX): $(srcdir)/Xau.man
 .PHONY: ChangeLog
 
 ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
+	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog
