@@ -64,17 +64,14 @@
 #define PIXREGION_END(reg) PIXREGION_BOX (reg, (reg)->data->numRects - 1)
 
 #define GOOD_RECT(rect) ((rect)->x1 < (rect)->x2 && (rect)->y1 < (rect)->y2)
+#define BAD_RECT(rect) ((rect)->x1 > (rect)->x2 || (rect)->y1 > (rect)->y2)
 
-#define PIXMAN_REGION_LOG_FAILURES
+#define noPIXMAN_REGION_LOG_FAILURES
 
-#if defined PIXMAN_REGION_DEBUG
-
-#    define GOOD(reg) assert (PREFIX (_selfcheck) (reg))
-
-#elif defined PIXMAN_REGION_LOG_FAILURES
+#if defined PIXMAN_REGION_LOG_FAILURES || defined PIXMAN_REGION_DEBUG
 
 static void
-log_region_error (void)
+log_region_error (const char *function, const char *message)
 {
     static int n_messages = 0;
 
@@ -82,8 +79,13 @@ log_region_error (void)
     {
 	fprintf (stderr,
 		 "*** BUG ***\n"
-		 "Malformed region detected\n"
-		 "Set a breakpoint on 'log_region_error' to debug\n\n");
+		 "%s: %s\n"
+		 "Set a breakpoint on 'log_region_error' to debug\n\n",
+                 function, message);
+
+#if defined PIXMAN_REGION_DEBUG
+        abort ();
+#endif
 
 	n_messages++;
     }
@@ -93,11 +95,12 @@ log_region_error (void)
     do									\
     {									\
 	if (!PREFIX (_selfcheck (reg)))					\
-	    log_region_error ();					\
+	    log_region_error (FUNC, "Malformed region " # reg);         \
     } while (0)
 
 #else
 
+#define log_region_error(function, name)
 #define GOOD(reg)
 
 #endif
@@ -383,6 +386,8 @@ PREFIX (_init_rect) (region_type_t *	region,
 
     if (!GOOD_RECT (&region->extents))
     {
+        if (BAD_RECT (&region->extents))
+            log_region_error (FUNC, "Invalid rectangle passed");
         PREFIX (_init) (region);
         return;
     }
@@ -395,6 +400,8 @@ PREFIX (_init_with_extents) (region_type_t *region, box_type_t *extents)
 {
     if (!GOOD_RECT (extents))
     {
+        if (BAD_RECT (extents))
+            log_region_error (FUNC, "Invalid rectangle passed");
         PREFIX (_init) (region);
         return;
     }
@@ -1346,7 +1353,11 @@ PREFIX (_union_rect) (region_type_t *dest,
     region.extents.y2 = y + height;
 
     if (!GOOD_RECT (&region.extents))
+    {
+        if (BAD_RECT (&region.extents))
+            log_region_error (FUNC, "Invalid rectangle passed");
 	return PREFIX (_copy) (dest, source);
+    }
     
     region.data = NULL;
 

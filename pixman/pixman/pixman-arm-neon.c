@@ -835,7 +835,7 @@ neon_composite_over_n_8_0565 (pixman_implementation_t * impl,
 	    w = width;
 
 
-#ifndef USE_GCC_INLINE_ASM
+#if 1 /* #ifndef USE_GCC_INLINE_ASM */
 	    uint8x8_t alpha;
 	    uint16x8_t dval, temp;
 	    uint8x8x4_t sval8temp;
@@ -872,6 +872,7 @@ neon_composite_over_n_8_0565 (pixman_implementation_t * impl,
 	    if (w&4)
 		vst1q_lane_u64 ((void *)dst4, vreinterpretq_u64_u16 (temp),1);
 #else
+	    /* this code has some bug (does not pass blitters-test) */
 	    asm volatile (
 		"vdup.32      d0, %[src]\n\t"
 		"vdup.8       d1, d0[1]\n\t"

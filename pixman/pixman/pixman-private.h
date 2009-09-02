@@ -26,7 +26,7 @@ typedef struct radial_gradient radial_gradient_t;
 typedef struct bits_image bits_image_t;
 typedef struct circle circle_t;
 
-typedef void (*fetch_scanline_t) (pixman_image_t *pict,
+typedef void (*fetch_scanline_t) (pixman_image_t *image,
 				  int             x,
 				  int             y,
 				  int             width,
@@ -34,9 +34,13 @@ typedef void (*fetch_scanline_t) (pixman_image_t *pict,
 				  const uint32_t *mask,
 				  uint32_t        mask_bits);
 
-typedef void (*fetch_pixels_t)   (bits_image_t *  image,
-				  uint32_t *      buffer,
-				  int             n_pixels);
+typedef uint32_t (*fetch_pixel_32_t) (bits_image_t *image,
+				      int           x,
+				      int           y);
+
+typedef uint64_t (*fetch_pixel_64_t) (bits_image_t *image,
+				      int           x,
+				      int           y);
 
 typedef void (*store_scanline_t) (bits_image_t *  image,
 				  int             x,
@@ -58,9 +62,9 @@ typedef enum
     SOURCE_IMAGE_CLASS_UNKNOWN,
     SOURCE_IMAGE_CLASS_HORIZONTAL,
     SOURCE_IMAGE_CLASS_VERTICAL,
-} source_pict_class_t;
+} source_image_class_t;
 
-typedef source_pict_class_t (*classify_func_t) (pixman_image_t *image,
+typedef source_image_class_t (*classify_func_t) (pixman_image_t *image,
 						int             x,
 						int             y,
 						int             width,
@@ -78,6 +82,7 @@ struct image_common
     pixman_bool_t               clip_sources;       /* Whether the clip applies when
 						     * the image is used as a source
 						     */
+    pixman_bool_t		dirty;
     pixman_bool_t               need_workaround;
     pixman_transform_t *        transform;
     pixman_repeat_t             repeat;
@@ -100,7 +105,7 @@ struct image_common
 struct source_image
 {
     image_common_t common;
-    source_pict_class_t class;
+    source_image_class_t class;
 };
 
 struct solid_fill
@@ -163,9 +168,13 @@ struct bits_image
     uint32_t *                 free_me;
     int                        rowstride;  /* in number of uint32_t's */
 
-    /* Fetch raw pixels, with no regard for transformations, alpha map etc. */
-    fetch_pixels_t             fetch_pixels_raw_32;
-    fetch_pixels_t             fetch_pixels_raw_64;
+    /* Fetch a pixel, disregarding alpha maps, transformations etc. */
+    fetch_pixel_32_t	       fetch_pixel_raw_32;
+    fetch_pixel_64_t	       fetch_pixel_raw_64;
+
+    /* Fetch a pixel, taking alpha maps into account */
+    fetch_pixel_32_t	       fetch_pixel_32;
+    fetch_pixel_64_t	       fetch_pixel_64;
 
     /* Fetch raw scanlines, with no regard for transformations, alpha maps etc. */
     fetch_scanline_t           fetch_scanline_raw_32;
@@ -202,7 +211,7 @@ void
 _pixman_bits_image_setup_raw_accessors (bits_image_t *image);
 
 void
-_pixman_image_get_scanline_generic_64  (pixman_image_t *pict,
+_pixman_image_get_scanline_generic_64  (pixman_image_t *image,
                                         int             x,
                                         int             y,
                                         int             width,
@@ -210,7 +219,7 @@ _pixman_image_get_scanline_generic_64  (pixman_image_t *pict,
                                         const uint32_t *mask,
                                         uint32_t        mask_bits);
 
-source_pict_class_t
+source_image_class_t
 _pixman_image_classify (pixman_image_t *image,
                         int             x,
                         int             y,
@@ -269,6 +278,9 @@ _pixman_init_gradient (gradient_t *                  gradient,
 void
 _pixman_image_reset_clip_region (pixman_image_t *image);
 
+void
+_pixman_image_validate (pixman_image_t *image);
+
 pixman_bool_t
 _pixman_image_is_opaque (pixman_image_t *image);
 
@@ -279,14 +291,14 @@ uint32_t
 _pixman_image_get_solid (pixman_image_t *     image,
                          pixman_format_code_t format);
 
-#define PIXMAN_IMAGE_GET_LINE(pict, x, y, type, out_stride, line, mul)	\
+#define PIXMAN_IMAGE_GET_LINE(image, x, y, type, out_stride, line, mul)	\
     do									\
     {									\
 	uint32_t *__bits__;						\
 	int       __stride__;						\
         								\
-	__bits__ = pict->bits.bits;                                     \
-	__stride__ = pict->bits.rowstride;                              \
+	__bits__ = image->bits.bits;					\
+	__stride__ = image->bits.rowstride;				\
 	(out_stride) =							\
 	    __stride__ * (int) sizeof (uint32_t) / (int) sizeof (type);	\
 	(line) =							\

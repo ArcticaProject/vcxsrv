@@ -173,6 +173,11 @@ pixman_image_composite (pixman_op_t      op,
     uint32_t *dest_bits;
     int dest_dx, dest_dy;
 
+    _pixman_image_validate (src);
+    if (mask)
+	_pixman_image_validate (mask);
+    _pixman_image_validate (dest);
+    
     /*
      * Check if we can replace our operator by a simpler one
      * if the src or dest are opaque. The output operator should be
@@ -322,6 +327,8 @@ pixman_image_fill_rectangles (pixman_op_t                 op,
     pixman_color_t c;
     int i;
 
+    _pixman_image_validate (dest);
+    
     if (color->alpha == 0xffff)
     {
 	if (op == PIXMAN_OP_OVER)

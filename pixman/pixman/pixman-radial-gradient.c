@@ -198,41 +198,64 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
 
     if (affine)
     {
+	/* When computing t over a scanline, we notice that some expressions
+	 * are constant so we can compute them just once. Given:
+	 *
+	 * t = (-2·B ± ⎷(B² - 4·A·C)) / 2·A
+	 *
+	 * where
+	 *
+	 * A = cdx² + cdy² - dr² [precomputed as radial->A]
+	 * B = -2·(pdx·cdx + pdy·cdy + r₁·dr)
+	 * C = pdx² + pdy² - r₁²
+	 *
+	 * Since we have an affine transformation, we know that (pdx, pdy)
+	 * increase linearly with each pixel,
+	 *
+	 * pdx = pdx₀ + n·cx,
+	 * pdy = pdy₀ + n·cy,
+	 *
+	 * we can then express B in terms of an linear increment along
+	 * the scanline:
+	 *
+	 * B = B₀ + n·cB, with
+	 * B₀ = -2·(pdx₀·cdx + pdy₀·cdy + r₁·dr) and
+	 * cB = -2·(cx·cdx + cy·cdy)
+	 *
+	 * Thus we can replace the full evaluation of B per-pixel (4 multiplies,
+	 * 2 additions) with a single addition.
+	 */
+	double r1   = radial->c1.radius / 65536.;
+	double r1sq = r1 * r1;
+	double pdx  = rx - radial->c1.x / 65536.;
+	double pdy  = ry - radial->c1.y / 65536.;
+	double A = radial->A;
+	double invA = -65536. / (2. * A);
+	double A4 = -4. * A;
+	double B  = -2. * (pdx*radial->cdx + pdy*radial->cdy + r1*radial->dr);
+	double cB = -2. *  (cx*radial->cdx +  cy*radial->cdy);
+	pixman_bool_t invert = A * radial->dr < 0;
+
 	while (buffer < end)
 	{
 	    if (!mask || *mask++ & mask_bits)
 	    {
-		double pdx, pdy;
-		double B, C;
-		double det;
-		double c1x = radial->c1.x / 65536.0;
-		double c1y = radial->c1.y / 65536.0;
-		double r1  = radial->c1.radius / 65536.0;
 		pixman_fixed_48_16_t t;
-
-		pdx = rx - c1x;
-		pdy = ry - c1y;
-
-		B = -2 * (pdx * radial->cdx +
-			  pdy * radial->cdy +
-			  r1 * radial->dr);
-		C = pdx * pdx + pdy * pdy - r1 * r1;
-
-		det = (B * B) - (4 * radial->A * C);
-		if (det < 0.0)
-		    det = 0.0;
-
-		if (radial->A < 0)
-		    t = (pixman_fixed_48_16_t) ((-B - sqrt (det)) / (2.0 * radial->A) * 65536);
+		double det = B * B + A4 * (pdx * pdx + pdy * pdy - r1sq);
+		if (det <= 0.)
+		    t = (pixman_fixed_48_16_t) (B * invA);
+		else if (invert)
+		    t = (pixman_fixed_48_16_t) ((B + sqrt (det)) * invA);
 		else
-		    t = (pixman_fixed_48_16_t) ((-B + sqrt (det)) / (2.0 * radial->A) * 65536);
+		    t = (pixman_fixed_48_16_t) ((B - sqrt (det)) * invA);
 
 		*buffer = _pixman_gradient_walker_pixel (&walker, t);
 	    }
 	    ++buffer;
 
-	    rx += cx;
-	    ry += cy;
+	    pdx += cx;
+	    pdy += cy;
+	    B += cB;
 	}
     }
     else
@@ -273,7 +296,7 @@ radial_gradient_get_scanline_32 (pixman_image_t *image,
 		if (det < 0.0)
 		    det = 0.0;
 
-		if (radial->A < 0)
+		if (radial->A * radial->dr < 0)
 		    t = (pixman_fixed_48_16_t) ((-B - sqrt (det)) / (2.0 * radial->A) * 65536);
 		else
 		    t = (pixman_fixed_48_16_t) ((-B + sqrt (det)) / (2.0 * radial->A) * 65536);
@@ -339,8 +362,6 @@ pixman_image_create_radial_gradient (pixman_point_fixed_t *        inner,
 		 radial->dr  * radial->dr);
 
     image->common.property_changed = radial_gradient_property_changed;
-
-    radial_gradient_property_changed (image);
 
     return image;
 }
