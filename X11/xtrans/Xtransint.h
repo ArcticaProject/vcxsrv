@@ -94,7 +94,7 @@ from The Open Group.
  * to avoid a race condition. JKJ (6/5/97)
  */
 
-# if defined(_POSIX_SOURCE) || defined(USG) || defined(SVR4) || defined(__SCO__)
+# if defined(_POSIX_SOURCE) || defined(USG) || defined(SVR4) || defined(__SVR4) || defined(__SCO__)
 #  ifndef NEED_UTSNAME
 #   define NEED_UTSNAME
 #  endif
@@ -347,12 +347,12 @@ static int TRANS(WriteV)(
 
 
 static int is_numeric (
-    char *		/* str */
+    const char *	/* str */
 );
 
 #ifdef TRANS_SERVER
 static int trans_mkdir (
-    char *,		/* path */
+    const char *,	/* path */
     int			/* mode */
 );
 #endif
@@ -372,7 +372,7 @@ static int trans_mkdir (
 			int hack= 0, saveerrno=errno; \
                         struct timeval tp;\
                         gettimeofday(&tp,0); \
-			ErrorF(__xtransname); \
+			ErrorF("%s",__xtransname);	\
 			ErrorF(x+hack,a,b,c); \
                         ErrorF("timestamp (ms): %d\n",tp.tv_sec*1000+tp.tv_usec/1000); \
 			errno=saveerrno; \
@@ -382,7 +382,7 @@ static int trans_mkdir (
 			int hack= 0, saveerrno=errno; \
                         struct timeval tp;\
                         gettimeofday(&tp,0); \
-			fprintf(stderr, __xtransname); fflush(stderr); \
+			fprintf(stderr, "%s", __xtransname); fflush(stderr); \
 			fprintf(stderr, x+hack,a,b,c); fflush(stderr); \
                         fprintf(stderr, "timestamp (ms): %d\n",tp.tv_sec*1000+tp.tv_usec/1000); \
                         fflush(stderr); \
@@ -394,14 +394,14 @@ static int trans_mkdir (
 /* Use ErrorF() for the X server */
 #define PRMSG(lvl,x,a,b,c)	if (lvl <= XTRANSDEBUG){ \
 			int hack= 0, saveerrno=errno; \
-			ErrorF(__xtransname); \
+			ErrorF("%s",__xtransname);    \
 			ErrorF(x+hack,a,b,c); \
 			errno=saveerrno; \
 			} else ((void)0)
 #else
 #define PRMSG(lvl,x,a,b,c)	if (lvl <= XTRANSDEBUG){ \
 			int hack= 0, saveerrno=errno; \
-			fprintf(stderr, __xtransname); fflush(stderr); \
+			fprintf(stderr, "%s", __xtransname); fflush(stderr); \
 			fprintf(stderr, x+hack,a,b,c); fflush(stderr); \
 			errno=saveerrno; \
 			} else ((void)0)

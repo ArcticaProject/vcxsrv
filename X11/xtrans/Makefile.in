@@ -172,8 +172,8 @@ aclocaldir = $(datadir)/aclocal
 aclocal_DATA = xtrans.m4
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xtrans.pc
-EXTRA_DIST = xtrans.pc.in ${aclocal_DATA}
-CLEANFILES = ChangeLog
+EXTRA_DIST = xtrans.pc.in ${aclocal_DATA} ChangeLog
+MAINTAINERCLEANFILES = ChangeLog
 all: all-am
 
 .SUFFIXES:
@@ -464,7 +464,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -472,6 +471,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-am
 
 clean-am: clean-generic mostlyclean-am

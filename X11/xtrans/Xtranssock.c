@@ -87,7 +87,7 @@ from the copyright holders.
 #endif /* !NO_TCP_H */
 
 #include <sys/ioctl.h>
-#if defined(SVR4) 
+#if defined(SVR4) || defined(__SVR4)
 #include <sys/filio.h>
 #endif
 
@@ -222,7 +222,7 @@ static int TRANS(SocketINETClose) (XtransConnInfo ciptr);
 
 #if defined HAVE_SOCKLEN_T || (defined(IPv6) && defined(AF_INET6))
 # define SOCKLEN_T socklen_t
-#elif defined(SVR4) || defined(__SCO__)
+#elif defined(SVR4) || defined(__SVR4) || defined(__SCO__)
 # define SOCKLEN_T size_t 
 #else
 # define SOCKLEN_T int
@@ -528,7 +528,14 @@ TRANS(SocketReopen) (int i, int type, int fd, char *port)
     ciptr->family = AF_UNIX;
     memcpy(ciptr->peeraddr, ciptr->addr, sizeof(struct sockaddr));
     ciptr->port = rindex(addr->sa_data, ':');
-    if (ciptr->port[0] == ':') ciptr->port++; /* port should now point to portnum or NULL */
+    if (ciptr->port == NULL) {
+	if (is_numeric(addr->sa_data)) {
+	    ciptr->port = addr->sa_data;
+	}
+    } else if (ciptr->port[0] == ':') {
+	ciptr->port++;
+    }
+    /* port should now point to portnum or NULL */
     return ciptr;
 }
 
@@ -555,8 +562,12 @@ TRANS(SocketOpenCOTSClientBase) (char *transname, char *protocol,
 
     while ((i = TRANS(SocketSelectFamily) (i, transname)) >= 0) {
 	if ((ciptr = TRANS(SocketOpen) (
-		 i, Sockettrans2devtab[i].devcotsname)) != NULL)
+		i, Sockettrans2devtab[i].devcotsname)) != NULL) {
+	    /* Save the index for later use */
+
+	    ciptr->index = i;
 	    break;
+	}
     }
     if (i < 0) {
 	if (i == -1)
@@ -567,10 +578,6 @@ TRANS(SocketOpenCOTSClientBase) (char *transname, char *protocol,
 		   transname, 0, 0);
 	return NULL;
     }
-
-    /* Save the index for later use */
-
-    ciptr->index = i;
 
     return ciptr;
 }
@@ -1187,7 +1194,7 @@ TRANS(SocketUNIXResetListener) (XtransConnInfo ciptr)
     if (!abstract && (
 	stat (unsock->sun_path, &statb) == -1 ||
         ((statb.st_mode & S_IFMT) !=
-#if (defined (sun) && defined(SVR4)) || defined(NCR) || defined(SCO325) || !defined(S_IFSOCK)
+#if defined(NCR) || defined(SCO325) || !defined(S_IFSOCK)
 	  		S_IFIFO
 #else
 			S_IFSOCK

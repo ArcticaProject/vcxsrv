@@ -103,7 +103,7 @@ Xtransport_table Xtransports[] = {
 #ifndef sun
     { &TRANS(PTSFuncs),		TRANS_LOCAL_PTS_INDEX },
 #endif /* sun */
-#ifdef SVR4
+#if defined(SVR4) || defined(__SVR4)
     { &TRANS(NAMEDFuncs),	TRANS_LOCAL_NAMED_INDEX },
 #endif
 #ifdef sun
@@ -1348,7 +1348,7 @@ static int TRANS(WriteV) (XtransConnInfo ciptr, struct iovec *iov, int iovcnt)
 #endif /* SYSV && __i386__ || WIN32 || __sxg__ */
 
 
-#if defined(_POSIX_SOURCE) || defined(USG) || defined(SVR4) || defined(__SCO__)
+#if defined(_POSIX_SOURCE) || defined(USG) || defined(SVR4) || defined(__SVR4) || defined(__SCO__)
 #ifndef NEED_UTSNAME
 #define NEED_UTSNAME
 #endif
