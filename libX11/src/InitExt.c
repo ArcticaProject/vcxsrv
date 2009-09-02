@@ -253,6 +253,49 @@ WireToEventType XESetWireToEvent(
 	return (WireToEventType)oldproc;
 }
 
+typedef Bool (*WireToEventCookieType) (
+    Display*	/* display */,
+    XGenericEventCookie*	/* re */,
+    xEvent*	/* event */
+);
+
+WireToEventCookieType XESetWireToEventCookie(
+    Display *dpy,       /* display */
+    int extension,      /* extension major opcode */
+    WireToEventCookieType proc /* routine to call for generic events */
+    )
+{
+	WireToEventCookieType oldproc;
+	if (proc == NULL) proc = (WireToEventCookieType)_XUnknownWireEventCookie;
+	LockDisplay (dpy);
+	oldproc = dpy->generic_event_vec[extension & 0x7F];
+	dpy->generic_event_vec[extension & 0x7F] = proc;
+	UnlockDisplay (dpy);
+	return (WireToEventCookieType)oldproc;
+}
+
+typedef Bool (*CopyEventCookieType) (
+    Display*	/* display */,
+    XGenericEventCookie*	/* in */,
+    XGenericEventCookie*	/* out */
+);
+
+CopyEventCookieType XESetCopyEventCookie(
+    Display *dpy,       /* display */
+    int extension,      /* extension major opcode */
+    CopyEventCookieType proc /* routine to copy generic events */
+    )
+{
+	CopyEventCookieType oldproc;
+	if (proc == NULL) proc = (CopyEventCookieType)_XUnknownCopyEventCookie;
+	LockDisplay (dpy);
+	oldproc = dpy->generic_event_copy_vec[extension & 0x7F];
+	dpy->generic_event_copy_vec[extension & 0x7F] = proc;
+	UnlockDisplay (dpy);
+	return (CopyEventCookieType)oldproc;
+}
+
+
 typedef Status (*EventToWireType) (
     Display*	/* display */,
     XEvent*	/* re */,

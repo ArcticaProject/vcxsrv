@@ -53,6 +53,10 @@ XMaskEvent (
 	unsigned long qe_serial = 0;
 
         LockDisplay(dpy);
+
+	/* Delete unclaimed cookies */
+	_XFreeEventCookies(dpy);
+
 	prev = NULL;
 	while (1) {
 	    for (qelt = prev ? prev->next : dpy->head;

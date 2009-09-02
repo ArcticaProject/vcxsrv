@@ -185,6 +185,20 @@ struct _XDisplay
 	struct _XkbInfoRec *xkb_info; /* XKB info */
 	struct _XtransConnInfo *trans_conn; /* transport connection object */
 	struct _X11XCBPrivate *xcb; /* XCB glue private data */
+
+	/* Generic event cookie handling */
+	unsigned int next_cookie; /* next event cookie */
+	/* vector for wire to generic event, index is (extension - 128) */
+	Bool (*generic_event_vec[128])(
+		Display *	/* dpy */,
+		XGenericEventCookie *	/* Xlib event */,
+		xEvent *	/* wire event */);
+	/* vector for event copy, index is (extension - 128) */
+	Bool (*generic_event_copy_vec[128])(
+		Display *	/* dpy */,
+		XGenericEventCookie *	/* in */,
+		XGenericEventCookie *   /* out*/);
+	void *cookiejar;  /* cookie events returned but not claimed */
 };
 
 #define XAllocIDs(dpy,ids,n) (*(dpy)->idlist_alloc)(dpy,ids,n)
@@ -1005,6 +1019,19 @@ extern Bool _XUnknownWireEvent(
     XEvent*	/* re */,
     xEvent*	/* event */
 );
+
+extern Bool _XUnknownWireEventCookie(
+    Display*	/* dpy */,
+    XGenericEventCookie*	/* re */,
+    xEvent*	/* event */
+);
+
+extern Bool _XUnknownCopyEventCookie(
+    Display*	/* dpy */,
+    XGenericEventCookie*	/* in */,
+    XGenericEventCookie*	/* out */
+);
+
 extern Status _XUnknownNativeEvent(
     Display*	/* dpy */,
     XEvent*	/* re */,
@@ -1156,6 +1183,31 @@ extern Bool (*XESetWireToEvent(
 ))(
     Display*, XEvent*, xEvent*
 );
+
+extern Bool (*XESetWireToEventCookie(
+    Display*		/* display */,
+    int			/* extension */,
+    Bool (*) (
+	       Display*			/* display */,
+               XGenericEventCookie*	/* re */,
+               xEvent*			/* event */
+             )		/* proc */
+))(
+    Display*, XGenericEventCookie*, xEvent*
+);
+
+extern Bool (*XESetCopyEventCookie(
+    Display*		/* display */,
+    int			/* extension */,
+    Bool (*) (
+	       Display*			/* display */,
+               XGenericEventCookie*	/* in */,
+               XGenericEventCookie*	/* out */
+             )		/* proc */
+))(
+    Display*, XGenericEventCookie*, XGenericEventCookie*
+);
+
 
 extern Status (*XESetEventToWire(
     Display*		/* display */,
@@ -1320,6 +1372,26 @@ Status _XGetWindowAttributes(
 int _XPutBackEvent (
     register Display *dpy,
     register XEvent *event);
+
+extern Bool _XIsEventCookie(
+        Display *dpy,
+        XEvent *ev);
+
+extern void _XFreeEventCookies(
+        Display *dpy);
+
+extern void _XStoreEventCookie(
+        Display *dpy,
+        XEvent *ev);
+
+extern Bool _XFetchEventCookie(
+        Display *dpy,
+        XGenericEventCookie *ev);
+
+extern Bool _XCopyEventCookie(
+        Display *dpy,
+        XGenericEventCookie *in,
+        XGenericEventCookie *out);
 
 _XFUNCPROTOEND
 

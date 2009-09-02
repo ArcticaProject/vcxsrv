@@ -2258,6 +2258,128 @@ void _XEatData(
 }
 #endif /* !USE_XCB */
 
+/* Cookie jar implementation
+   dpy->cookiejar is a linked list. _XEnq receives the events but leaves
+   them in the normal EQ. _XStoreEvent returns the cookie event (minus
+   data pointer) and adds it to the cookiejar. _XDeq just removes
+   the entry like any other event but resets the data pointer for
+   cookie events (to avoid double-free, the memory is re-used by Xlib).
+
+   _XFetchEventCookie (called from XGetEventData) removes a cookie from the
+   jar. _XFreeEventCookies removes all unclaimed cookies from the jar
+   (called by XNextEvent).
+
+   _XFreeDisplayStructure calls _XFreeEventCookies for each cookie in the
+   normal EQ.
+ */
+
+#include "utlist.h"
+struct stored_event {
+    XGenericEventCookie ev;
+    struct stored_event *prev;
+    struct stored_event *next;
+};
+
+Bool
+_XIsEventCookie(Display *dpy, XEvent *ev)
+{
+    return (ev->xcookie.type == GenericEvent &&
+	    dpy->generic_event_vec[ev->xcookie.extension & 0x7F] != NULL);
+}
+
+/**
+ * Free all events in the event list.
+ */
+void
+_XFreeEventCookies(Display *dpy)
+{
+    struct stored_event **head, *e, *tmp;
+
+    if (!dpy->cookiejar)
+        return;
+
+    head = (struct stored_event**)&dpy->cookiejar;
+
+    DL_FOREACH_SAFE(*head, e, tmp) {
+        XFree(e->ev.data);
+        XFree(e);
+        if (dpy->cookiejar == e)
+            dpy->cookiejar = NULL;
+    }
+}
+
+/**
+ * Add an event to the display's event list. This event must be freed on the
+ * next call to XNextEvent().
+ */
+void
+_XStoreEventCookie(Display *dpy, XEvent *event)
+{
+    XGenericEventCookie* cookie = &event->xcookie;
+    struct stored_event **head, *add;
+
+    if (!_XIsEventCookie(dpy, event))
+        return;
+
+    head = (struct stored_event**)(&dpy->cookiejar);
+
+    add = Xmalloc(sizeof(struct stored_event));
+    if (!add) {
+        ESET(ENOMEM);
+        _XIOError(dpy);
+    }
+    add->ev = *cookie;
+    DL_APPEND(*head, add);
+    cookie->data = NULL; /* don't return data yet, must be claimed */
+}
+
+/**
+ * Return the event with the given cookie and remove it from the list.
+ */
+Bool
+_XFetchEventCookie(Display *dpy, XGenericEventCookie* ev)
+{
+    Bool ret = False;
+    struct stored_event **head, *event;
+    head = (struct stored_event**)&dpy->cookiejar;
+
+    if (!_XIsEventCookie(dpy, (XEvent*)ev))
+        return ret;
+
+    DL_FOREACH(*head, event) {
+        if (event->ev.cookie == ev->cookie &&
+            event->ev.extension == ev->extension &&
+            event->ev.evtype == ev->evtype) {
+            *ev = event->ev;
+            DL_DELETE(*head, event);
+            Xfree(event);
+            ret = True;
+            break;
+        }
+    }
+
+    return ret;
+}
+
+Bool
+_XCopyEventCookie(Display *dpy, XGenericEventCookie *in, XGenericEventCookie *out)
+{
+    Bool ret = False;
+    int extension;
+
+    if (!_XIsEventCookie(dpy, (XEvent*)in) || !out)
+        return ret;
+
+    extension = in->extension & 0x7F;
+
+    if (!dpy->generic_event_copy_vec[extension])
+        return ret;
+
+    ret = ((*dpy->generic_event_copy_vec[extension])(dpy, in, out));
+    out->cookie = ret ? ++dpy->next_cookie  : 0;
+    return ret;
+}
+
 
 /*
  * _XEnq - Place event packets on the display's queue.
@@ -2269,6 +2391,7 @@ void _XEnq(
 	register xEvent *event)
 {
 	register _XQEvent *qelt;
+	int type, extension;
 
 	if ((qelt = dpy->qfree)) {
 		/* If dpy->qfree is non-NULL do this, else malloc a new one. */
@@ -2281,8 +2404,29 @@ void _XEnq(
 		_XIOError(dpy);
 	}
 	qelt->next = NULL;
-	/* go call through display to find proper event reformatter */
-	if ((*dpy->event_vec[event->u.u.type & 0177])(dpy, &qelt->event, event)) {
+
+	type = event->u.u.type & 0177;
+	extension = ((xGenericEvent*)event)->extension;
+	/* If an extension has registerd a generic_event_vec handler, then
+	 * it can handle event cookies. Otherwise, proceed with the normal
+	 * event handlers.
+	 *
+	 * If the generic_event_vec is called, qelt->event is a event cookie
+	 * with the data pointer and the "free" pointer set. Data pointer is
+	 * some memory allocated by the extension.
+	 */
+        if (type == GenericEvent && dpy->generic_event_vec[extension & 0x7F]) {
+	    XGenericEventCookie *cookie = &qelt->event.xcookie;
+	    (*dpy->generic_event_vec[extension & 0x7F])(dpy, cookie, event);
+	    cookie->cookie = ++dpy->next_cookie;
+
+	    qelt->qserial_num = dpy->next_event_serial_num++;
+	    if (dpy->tail)	dpy->tail->next = qelt;
+	    else		dpy->head = qelt;
+
+	    dpy->tail = qelt;
+	    dpy->qlen++;
+	} else if ((*dpy->event_vec[type])(dpy, &qelt->event, event)) {
 	    qelt->qserial_num = dpy->next_event_serial_num++;
 	    if (dpy->tail)	dpy->tail->next = qelt;
 	    else 		dpy->head = qelt;
@@ -2316,6 +2460,13 @@ void _XDeq(
     qelt->next = dpy->qfree;
     dpy->qfree = qelt;
     dpy->qlen--;
+
+    if (_XIsEventCookie(dpy, &qelt->event)) {
+	XGenericEventCookie* cookie = &qelt->event.xcookie;
+	/* dpy->qfree is re-used, reset memory to avoid double free on
+	 * _XFreeDisplayStructure */
+	cookie->data = NULL;
+    }
 }
 
 /*
@@ -2333,6 +2484,34 @@ _XUnknownWireEvent(
 	(void) fprintf(stderr,
 	    "Xlib: unhandled wire event! event number = %d, display = %x\n.",
 			event->u.u.type, dpy);
+#endif
+	return(False);
+}
+
+Bool
+_XUnknownWireEventCookie(
+    Display *dpy,	/* pointer to display structure */
+    XGenericEventCookie *re,	/* pointer to where event should be reformatted */
+    xEvent *event)	/* wire protocol event */
+{
+#ifdef notdef
+	fprintf(stderr,
+	    "Xlib: unhandled wire cookie event! extension number = %d, display = %x\n.",
+			((xGenericEvent*)event)->extension, dpy);
+#endif
+	return(False);
+}
+
+Bool
+_XUnknownCopyEventCookie(
+    Display *dpy,	/* pointer to display structure */
+    XGenericEventCookie *in,	/* source */
+    XGenericEventCookie *out)	/* destination */
+{
+#ifdef notdef
+	fprintf(stderr,
+	    "Xlib: unhandled cookie event copy! extension number = %d, display = %x\n.",
+			in->extension, dpy);
 #endif
 	return(False);
 }

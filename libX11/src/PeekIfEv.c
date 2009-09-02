@@ -60,7 +60,12 @@ XPeekIfEvent (
 		 prev = qelt, qelt = qelt->next) {
 		if(qelt->qserial_num > qe_serial
 		   && (*predicate)(dpy, &qelt->event, arg)) {
+		    XEvent copy;
 		    *event = qelt->event;
+		    if (_XCopyEventCookie(dpy, &event->xcookie, &copy.xcookie)) {
+			_XStoreEventCookie(dpy, &copy);
+			*event = copy;
+		    }
 		    UnlockDisplay(dpy);
 		    return 0;
 		}

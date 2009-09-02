@@ -790,6 +790,17 @@ _XBigReqHandler(
 
 void _XFreeDisplayStructure(Display *dpy)
 {
+	/* move all cookies in the EQ to the jar, then free them. */
+	if (dpy->qfree) {
+	    _XQEvent *qelt = dpy->qfree;
+	    while (qelt) {
+		if (_XIsEventCookie(dpy, &qelt->event))
+		    _XStoreEventCookie(dpy, &qelt->event);
+		qelt = qelt->next;
+	    }
+        }
+	if (dpy->cookiejar)
+	    _XFreeEventCookies(dpy);
 	while (dpy->ext_procs) {
 	    _XExtension *ext = dpy->ext_procs;
 	    dpy->ext_procs = ext->next;

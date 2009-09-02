@@ -1,0 +1,223 @@
+.\" Copyright \(co 2009 Red Hat, Inc.
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the "Software"),
+.\" to deal in the Software without restriction, including without limitation
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense,
+.\" and/or sell copies of the Software, and to permit persons to whom the
+.\" Software is furnished to do so, subject to the following conditions:
+.\"
+.\" The above copyright notice and this permission notice (including the next
+.\" paragraph) shall be included in all copies or substantial portions of the
+.\" Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+.\" THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+.\" LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+.\" FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+.\" DEALINGS IN THE SOFTWARE.
+.\"
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xW Athena X Widgets \- C Language X Toolkit Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.\".ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de hN
+.ie t <\fB\\$1\fR>\\$2
+.el <\fI\\$1\fP>\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XGetEventData __libmansuffix__ __xorgversion__ "XLIB FUNCTIONS"
+.SH NAME
+XGetEventData, XFreeEventData, XGenericEventCookie \- retrieve and free additional event data through cookies.
+.SH SYNTAX
+.HP
+Bool XGetEventData\^(\^Display *\fIdisplay\fP\^, XGenericEventCookie *\fIcookie\fP\^);
+.HP
+void XFreeEventData\^(\^Display *\fIdisplay\fP\^, XGenericEventCookie *\fIcookie\fP\^);
+.HP
+.SH ARGUMENTS
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcookie\fP 1i
+Specifies the cookie to free or retrieve the data for.
+
+.SH STRUCTURES
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	int type;
+	unsigned long serial;
+	Bool send_event;
+	Display *display;
+	int extension;
+	int evtype;
+	unsigned int cookie;
+	void *data;
+} XGenericEventCookie;
+.De
+
+.SH DESCRIPTION
+Some extension
+.ZN XGenericEvents
+require additional memory to store information.
+For these events, the library returns a
+.ZN XGenericEventCookie
+with a token ('cookie') unique to this event. The
+.ZN XGenericEventCookie 's
+data pointer is undefined until
+.ZN XGetEventData
+is called.
+
+The
+.ZN XGetEventData
+function retrieves this extra data for the given cookie. No round-trip to
+the server is required. If the cookie is invalid or the
+event is not an event handled by cookie handlers,
+.ZN False
+is returned. If
+.ZN XGetEventData
+returns
+.ZN True ,
+the cookie's data pointer points to the memory containing the event
+information. A client must call
+.ZN XFreeEventData
+to free this memory.
+.ZN XGetEventData
+returns
+.ZN False
+for multiple calls for the same event cookie.
+
+The
+.ZN XFreeEventData
+function frees the data associated with a cookie. A client must call
+.ZN XFreeEventData
+for each cookie claimed with
+.ZN XGetEventData .
+
+.SH EXAMPLE CODE
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+XEvent event;
+XGenericEventCookie *cookie = &ev;
+
+XNextEvent(display, &event);
+if (XGetEventData(display, cookie)) {
+    handle_cookie_event(cookie->data);
+} else
+    handle_event(&event);
+}
+XFreeEventData(display, cookie);
+.De
+
+.SH NOTES
+A cookie is defined as unclaimed if it has been returned to the client
+through
+.ZN XNextEvent
+but its data has not been retrieved via
+.ZN XGetEventData .
+Subsequent calls to
+.ZN XNextEvent
+may free memory associated with unclaimed cookies.
+Multi-threaded X clients must ensure that
+.ZN XGetEventData
+is called before the next call to
+.ZN XNextEvent .
+
+.SH "SEE ALSO"
+XNextEvent(3X11),
+.br
+\fI\*(xL\fP
+

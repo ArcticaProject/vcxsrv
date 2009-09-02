@@ -1,3 +1,132 @@
+commit 9da7e230d5320e1556ad2084fcd06ee7994385ea
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Aug 5 14:15:02 2009 +1000
+
+    Bump to 1.2.99.901 (1.3 RC1)
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8f78c7b4e3570cd46c5a220982963c17fe2157b8
+Author: Filippo Giunchedi <filippo@debian.org>
+Date:   Sat Jun 6 16:56:54 2009 +0200
+
+    nls: add {left,right}wards arrow to compose table
+    
+    Debian bug#532117 <http://bugs.debian.org/532117>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 7949bfa00390241d994f32463e50d4bd78920568
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri Jul 31 13:33:52 2009 +0200
+
+    Update library version for new symbols
+    
+    Commit 554f755e5545f63d3c8f299297927238da155773 added generic event
+    cookie handling.  Bump libX11 version number accordingly.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 640fec5f4feacd01a00eea3dcd4edb220907d3dc
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sun Aug 2 17:18:31 2009 +0200
+
+    Add _XFUNCPROTOBEGIN/END to Xlib-xcb.h
+    
+    X.Org bug#22252 <https://bugs.freedesktop.org/show_bug.cgi?id=22252>
+    
+    Reported-by: Riku Salminen <rsalmin2@cc.hut.fi>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit bc06d49e9dac1836d6824769ddb2ac5ba9f14df7
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Jul 29 08:44:09 2009 +1000
+
+    Fix compiler warning 'unused variable qelt'
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 03f4907e14f5755e72309f08742977b871e81e33
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Jul 29 08:34:57 2009 +1000
+
+    Add utlist.h to the Makefile.am
+    
+    utlist.h contains the linked list macros, it was added with the recent
+    addition of event cookies but utlist.h wasn't added to the Makefile.am. As a
+    result, make dist failed.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 554f755e5545f63d3c8f299297927238da155773
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jun 26 11:27:43 2009 +1000
+
+    Add generic event cookie handling to libX11.
+    
+    Generic events require more bytes than Xlib provides in the standard XEvent.
+    Memory allocated by the extension and stored as pointers inside the event is
+    prone to leak by simple 'while (1) { XNextEvent(...); }' loops.
+    
+    This patch adds cookie handling for generic events. Extensions may register
+    a cookie handler in addition to the normal event vectors. If an extension
+    has registered a cookie handler, _all_ generic events for this extensions
+    must be handled through cookies. Otherwise, the default event handler is
+    used.
+    
+    The cookie handler must return an XGenericEventCookie with a pointer to the
+    data.The rest of the event (type, serialNumber, etc.) are to be filled as
+    normal. When a client retrieves such a cookie event, the data is stored in
+    an internal queue (the 'cookiejar'). This data is freed on the next call to
+    XNextEvent().
+    
+    New extension interfaces:
+        XESetWireToEventCookie(display, extension_number, cookie_handler)
+    
+    Where cookie_handler must set cookie->data. The data pointer is of arbitray
+    size and type but must be a single memory block. This memory block
+    represents the actual extension's event.
+    
+    New client interfaces:
+        XGetEventData(display, *cookie);
+        XFreeEventData(display, *cookie);
+    
+    If the client needs the actual event data, it must call XGetEventData() with
+    the cookie. This returns the data pointer (and removes it from the cookie
+    jar) and the client is then responsible for freeing the event with
+    XFreeEventData(). It is safe to call either function with a non-cookie
+    event. Events unclaimed or not handled by the XGetEventData() are cleaned up
+    automatically.
+    
+    Example client code:
+        XEvent event;
+        XGenericEventCookie *cookie = &ev;
+    
+        XNextEvent(display, &event);
+        if (XGetEventData(display, cookie)) {
+            XIEvent *xievent = cookie->data;
+            ...
+        } else if (cookie->type == GenericEvent) {
+            /* handle generic event */
+        } else {
+            /* handle extension/core event */
+        }
+        XFreeEventData(display, cookie);
+    
+    Cookies are not multi-threading safe. Clients that use XGetEventData() must
+    lock between XNextEvent and XGetEventData to avoid other threads freeing
+    cookies.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d7675cb8fa7155e7aff1459636a117a97aa1bf28
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Jul 6 13:17:35 2009 +1000
+
+    Bump to 1.2.99.1
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
 commit 75fe48e7a42a685d7098e8d7108b9b956c471563
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Fri Jul 10 14:07:34 2009 +1000

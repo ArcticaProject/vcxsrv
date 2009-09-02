@@ -54,6 +54,10 @@ Bool XCheckMaskEvent (
 	int n;			/* time through count */
 
         LockDisplay(dpy);
+
+	/* Delete unclaimed cookies */
+	_XFreeEventCookies(dpy);
+
 	prev = NULL;
 	for (n = 3; --n >= 0;) {
 	    for (qelt = prev ? prev->next : dpy->head;
