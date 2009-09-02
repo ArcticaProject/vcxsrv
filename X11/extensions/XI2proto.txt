@@ -63,7 +63,37 @@ COMPLEXFIELDTYPE:  { name of subfield:   type of subfield,
 
 3. Interoperability between version 1.x and 2.0
 
-FIXME
+There is little interaction between 1.x and 2.x versions of the X Input
+Extension. Clients are requested to avoid mixing XI1.x and XI2 code as much as
+possible. Several direct incompatibilities are observable:
+
+3.1 Limitations resulting from different variable ranges
+
+XI2 provides a larger range for some fields than XI1. As a result, XI1 clients
+may not receive data an XI2 client receives.
+These fields include:
+- devices with a deviceid of greater than 127 are invisible to XI1 clients.
+- key events and key grabs featuring larger than 255 can only be sent to XI2
+  clients.
+- no subpixel information is avialable to XI1 clients. If motion events are in
+  a subpixel range only, the server may omit these events and an XI 1.x client
+  will not receive events until the pixel boundary is crossed.
+
+
+3.2 Blocking of grabs
+
+XI1 grabs are different to XI2 grab and a device may not be grabbed through an
+XI2 grab if an XI1 grab is currently active on this device or vice versa.
+Likewise, a keycode or button already grabbed by an XI 1.x or XI2 client may
+not be grabbed with the same modifier combination by an XI2 or XI 1.x client,
+respectively.
+
+3.3 Invisibility of Master Devices
+
+XI 1.x was not designed with support for multiple master devices (see Section
+4). As a result, only the first master pointer and master keyboard are visible
+to XI 1.x clients, all other master devices are invisible and cannot be
+accessed from XI 1.x calls.
 
                               ❧❧❧❧❧❧❧❧❧❧❧
 
@@ -118,6 +148,26 @@ Given that W is the event window, and P the parent window of W, event delivery
 to P is only attempted if neither the XI event, nor the core event has been
 delivered on W. Once an event has been delivered as either XI or core event,
 event processing stops.
+
+4.4. The ClientPointer principle
+
+Many core protocol and some extension requests are ambiguous when multiple
+master devices are available (e.g. QueryPointer does not specfy which pointer).
+The X server does not have the knowledge to chose the contextually correct
+master device. For each client, one master pointer is designated as this
+clients's "ClientPointer". Whenever a client sends an ambiguous request (e.g.
+QueryPointer), the ClientPointer or the keyboard paired with the ClientPointer
+is chosen to provide the data for this request.
+
+This ClientPointer may be explicitly assigned to a client with the
+SetClientPointer call. If no ClientPointer is set when a client issues an
+ambiguous request, the server choses one device as the ClientPointer. The
+method of chosing a ClientPointer from the available master pointers is
+implementation-specific.
+
+If the master pointer currently set as ClientPointer for one or more clients is
+removed, the server may either unset the ClientPointer setting or change the
+ClientPointer to a different master pointer.
 
                               ❧❧❧❧❧❧❧❧❧❧❧
 5. Data types
@@ -176,7 +226,8 @@ future revisions of XI2. A client must always retrieve the exact length of the
 protocol reply from the connection, even if the reply is longer than defined
 for the XI2 version supported by the client.
 Additional bytes in a request may include data supported in later versions of
-XI2. Clients should ignore this data.
+XI2. Clients should ignore this data. Padding bytes in XI2 protocol requests
+are required to be 0.
 
 7.1 Requests introduced in version 2.0
 
@@ -193,7 +244,7 @@ XI2. Clients should ignore this data.
     server sends the highest version it supports, but no higher than the
     requested version. Major versions changes can introduce incompatibilities
     in existing functionality, minor version changes introduce only backward
-    compatible changes.  It is the clients responsibility to ensure that the
+    compatible changes.  It is the client's responsibility to ensure that the
     server supports a version which is compatible with its expectations.
 
     major_version
@@ -220,7 +271,7 @@ XI2. Clients should ignore this data.
                  name:                  LISTofCHAR8
                  classes:               LISTofCLASS }
 
-    CLASS { BUTTONCLASS KEYCLASS, AXISCLASS }
+    CLASS { BUTTONCLASS, KEYCLASS, AXISCLASS }
 
     BUTTONCLASS { type:                 ButtonClass
                   length:               CARD16
@@ -248,45 +299,43 @@ XI2. Clients should ignore this data.
     XIQueryDevices details information about the requested input devices.
 
     devices
-        The device to list. If 'devices' is AllDevices, all enabled and
-        disabled devices are listed. If 'devices' is AllMasterDevices, all
-        enabled and disabled master devices are listed. If 'devices' is a
-        valid DEVICE, only this DEVICE is listed and 'num_devices' is 1.
+        The device to list. If devices is AllDevices, all enabled and
+        disabled devices are listed. If devices is AllMasterDevices, all
+        enabled and disabled master devices are listed. If devices is a
+        valid DEVICE, only this DEVICE is listed and num_devices is 1.
     num_devices
-        The number of 'deviceinfos' returned.
+        The number of deviceinfos returned.
 
-    Each 'deviceinfo' is detailed as follows:
+    Each deviceinfo is detailed as follows:
     deviceid
         The unique ID of the device. Device IDs may get re-used when a device
         is removed.
     use
-        If the device is a master pointer, 'use' is MasterPointer.
-        If the device is a master keyboard, 'use' is MasterKeyboard.
-        If the device is a slave pointer, 'use' is SlavePointer.
-        If the device is a slave keyboard, 'use' is SlaveKeyboard.
-        If the device is a floating slave, 'use' is FloatingSlave.
-
+        If the device is a master pointer, use is MasterPointer.
+        If the device is a master keyboard, use is MasterKeyboard.
+        If the device is a slave pointer, use is SlavePointer.
+        If the device is a slave keyboard, use is SlaveKeyboard.
+        If the device is a floating slave, use is FloatingSlave.
     attachment
-        If the device is a master pointer or a master keyboard, 'attachment'
+        If the device is a master pointer or a master keyboard, attachment
         specifies the paired master keyboard, or the paired master pointer,
         respectively.  If the device is a non-floating slave device
-        'attachment' specifies the master device this device is attached to.
-        If the device is a floating slave, 'attachment' is undefined.
-
+        attachment specifies the master device this device is attached to.
+        If the device is a floating slave, attachment is undefined.
     enabled
         Zero if the device is disabled, non-zero otherwise.
     num_classes
-        Number of 'classes' provided.
+        Number of classes provided.
     name_len
-        Length of the name in bytes.
+        Length of the name in bytes not including padding.
     classes
         Details the available classes provided by the device in an undefined
         order.
     name
-        The device's name, padded to a multiple of 4 bytes.
+        The device's name. padded to a multiple of 4 bytes.
 
-    For all classes, 'type' specifies the device class. Clients are required
-    to ignore unknown device classes. The 'length' field specifies the length
+    For all classes, type specifies the device class. Clients are required
+    to ignore unknown device classes. The length field specifies the length
     of the class in 4 byte units.
     The following classes may occur only once: ButtonClass, KeyClass
 
@@ -300,14 +349,14 @@ XI2. Clients should ignore this data.
     num_buttons
         Number of buttons provided by the device.
     labels
-        List of Atoms specifying the label for each button. An atom of None
+        List of Atoms specifying the label for each button. An Atom of None
         specifies an unlabeled button. Buttons are listed in the device-native
-        order and potential button mappings are ignored.
+        order regardless of the current button mapping.
     state
-        The current button mask for this device. Each bit representing a
-        button is 1 if this button is logically down, or 0 otherwise. State a
-        multiple of 4-byte units and always contains at least num_buttons
-        bits.
+        The current button mask for this device after button mapping is
+        applied. Each bit representing a button is 1 if this button is
+        logically down, or 0 otherwise. State is a multiple of 4-byte units
+        and always contains at least num_buttons bits.
 
     KeyClass:
     type
@@ -345,8 +394,8 @@ XI2. Clients should ignore this data.
     value
         Last published axis value (if mode is absolute).
 
-    An axis in Relative mode may specify 'min' and 'max' as a hint to the
-    client. If no 'min' and 'max' information is available, both must be 0.
+    An axis in Relative mode may specify min and max as a hint to the
+    client. If no min and max information is available, both must be 0.
 
     ┌───
         XISelectEvents
@@ -363,7 +412,7 @@ XI2. Clients should ignore this data.
     window
         The window to select the events on.
     num_masks
-        Number of items in mask.
+        Number of items in masks.
     deviceid
         Numerical deviceid, or AllDevices, or AllMasterDevices.
     mask_len
@@ -371,21 +420,21 @@ XI2. Clients should ignore this data.
     mask
         Event mask. An event mask for an event type T is defined as (1 << T).
 
-    XISelectEvents selects for XI2 events on 'window'.
+    XISelectEvents selects for XI2 events on window.
 
-    If 'num_masks' is 0, a BadValue error occurs.
+    If num_masks is 0, a BadValue error occurs.
 
-    Each 'mask' sets the (and overwrites a previous) event mask for the DEVICE
-    specified through 'deviceid'. The device 'AllDevices' or
-    'AllMasterDevices' is treated as a separate device by server. A client's
-    event mask is the union of 'AllDevices', 'AllMasterDevices' and the
+    Each mask sets the (and overwrites a previous) event mask for the DEVICE
+    specified through deviceid. The device AllDevices or
+    AllMasterDevices is treated as a separate device by server. A client's
+    event mask is the union of AllDevices, AllMasterDevices and the
     per-device event mask.
     The removal of device from the server unsets the event masks for the
     device. If an event mask is set for AllDevices or AllMasterDevices, the
     event mask is not cleared on device removal and affects all future
     devices.
 
-    If 'mask_len' is 0, the event mask for the given device is cleared.
+    If mask_len is 0, the event mask for the given device is cleared.
 
     The mask for XIHierarchyEvents may only be selected for XIAllDevices.
     Setting it for any other device results in a BadValue error.
@@ -398,18 +447,19 @@ XI2. Clients should ignore this data.
             masks:          LISTofEVENTMASK
     └───
 
-
     window
         The window to select the events on.
     num_masks
-        Number of items in mask.
+        Number of items in masks.
     masks
         Selected event masks by this client.
 
-    Masks are returned on a per-device basis, with masks for 'AllDevices' and
-    'AllMasterDevices' returned separately.
+    Masks are returned on a per-device basis, with masks for AllDevices and
+    AllMasterDevices returned separately. A client can calculate the
+    effective mask for a device with a bitwise OR of the AllDevices, the
+    AllMasterDevices and the device-specific mask.
 
-    If 'num_masks' is 0, no events have been selected by this client on the
+    If num_masks is 0, no events have been selected by this client on the
     given window.
 
     ┌───
@@ -435,23 +485,26 @@ XI2. Clients should ignore this data.
     root
         The root window the pointer is logically on.
     child
-        The child window of 'window' that contains the pointer or None.
+        The child window of window that contains the pointer or None.
     root_x
     root_y
         Pointer position relative to the root window's origin.
     win_x
     win_y
-        Pointer position relative to 'window' or 0 if 'same_screen' is false.
+        Pointer position relative to window or 0 if same_screen is false.
     same_screen
-        TRUE if 'window' is on the same screen as the pointer.
+        True if window is on the same screen as the pointer.
     mods
         XKB modifier state on the paired device.
     group
         XKB group state on the paired device.
     buttons_len
-        The length of 'buttons' in 4 byte units.
+        The length of buttons in 4 byte units.
     buttons
         Button state.
+
+    If the device is not a master pointer device or not a floating slave
+    pointer, a BadDevice error results.
 
     ┌───
         XIWarpPointer
@@ -466,7 +519,7 @@ XI2. Clients should ignore this data.
             deviceid:        DEVICEID
     └───
 
-    WarpPointer moves the pointer of 'deviceid' as if the user had moved
+    WarpPointer moves the pointer of deviceid as if the user had moved
     the pointer. WarpPointer can only be called for MasterPointer and
     FloatingSlave devices.
 
@@ -476,9 +529,9 @@ XI2. Clients should ignore this data.
        rectangle of src_window.
     dst_win
        If dst_win is None, this request moves the pointer by offsets
-       'dst_x'/'dst_y' relative to the current position of the pointer. If
+       dst_x/dst_y relative to the current position of the pointer. If
         dst_window is a window, this request moves the pointer to
-       'dst_x'/'dst_y' relative to dst_win's origin.
+       dst_x/dst_y relative to dst_win's origin.
     src_x
     src_y
     src_width
@@ -486,8 +539,8 @@ XI2. Clients should ignore this data.
        Specifies the source window rectangle.
     dst_x
     dst_y
-        The relative coordinates to move the pointer if 'dst_win' is None, or
-        the absolute coordinates if 'dst_win' is a window.
+        The relative coordinates to move the pointer if dst_win is None, or
+        the absolute coordinates if dst_win is a window.
     deviceid
         The device to warp.
 
@@ -514,13 +567,19 @@ XI2. Clients should ignore this data.
     deviceid
         The master pointer device.
 
-    Whenever 'device' enters a window W, the cursor shape is selected in the
+    Whenever device enters a window W, the cursor shape is selected in the
     following order:
-    - if the current window has a device cursor C(d) defined for 'device',
+    - if the current window has a device cursor C(d) defined for device,
       display this cursor C(d).
     - otherwise, if the current window has a cursor C(w) defined in the core
       protocol's window attributes, display cursor C(w).
     - repeat on parent window until a cursor has been found.
+
+    The device cursor for a given window is reset once the window is destroyed
+    or the device is removed, whichever comes earlier.
+
+    If deviceid does not specify a master pointer, a BadDevice error
+    is returned.
 
     ┌───
         XIChangeHierarchy
@@ -565,9 +624,10 @@ XI2. Clients should ignore this data.
     changes
         The list of changes.
 
-    The server processes the changes one by one and applies changes
-    immediately. If an error occurs, processing stops at the current change
-    and returns the number of successfully applied changes in the error.
+    The server processes the changes in the order received from the client and
+    applies each requested change immediately. If an error occurs, processing
+    stops at the current change and returns the number of successfully applied
+    changes in the error.
 
     ADDMASTER creates a pair of master devices.
     type
@@ -575,11 +635,11 @@ XI2. Clients should ignore this data.
     length
         Length in 4 byte units.
     name_len
-        Length of 'name' in bytes.
+        Length of name in bytes.
     send_core
-        TRUE if the device should send core events.
+        True if the device should send core events.
     enable
-        TRUE if the device is to be enabled immediately.
+        True if the device is to be enabled immediately.
     name
         The name for the new master devices. The master pointer's name is
         automatically appended with " pointer", the master keyboard's name is
@@ -594,14 +654,15 @@ XI2. Clients should ignore this data.
         The device to remove.
     return_mode
         Return mode for attached slave devices.
-        If 'return_mode' is Float, all slave devices are set to floating.
-        If 'return_mode' is Attach, slave pointers are attached to
-        'return_pointer' and slave keyboards are attached to
-        'return_keyboard'.
+        If return_mode is Float, all slave devices are set to floating.
+        If return_mode is Attach, slave pointers are attached to
+        return_pointer and slave keyboards are attached to
+        return_keyboard.
     return_pointer
     return_keyboard
         The master pointer and master keyboard to attach slave devices to, if
-        'return_mode' is Attach.
+        return_mode is Attach. If return_mode is Float, return_pointer
+        and return_keyboard are undefined.
 
     Removing a master pointer removes the paired master keyboard and vice
     versa.
@@ -630,7 +691,7 @@ XI2. Clients should ignore this data.
             deviceid:        DEVICEID
     └───
 
-    Set the ClientPointer for the client owning 'win' to the given device.
+    Set the ClientPointer for the client owning win to the given device.
 
     win
          Window or client ID.
@@ -640,7 +701,8 @@ XI2. Clients should ignore this data.
     Some protocol requests are ambiguous and the server has to choose a device
     to provide data for a request or a reply. By default, the server will
     choose a client's ClientPointer device to provide the data, unless the
-    client currently has a grab on another device.
+    client currently has a grab on another device. See section 4.4 for more
+    details.
 
     If win is None, the ClientPointer for this client is set to the given
     device. Otherwise, if win is a valid window, the ClientPointer for the
@@ -649,7 +711,7 @@ XI2. Clients should ignore this data.
     this client's ClientPointer is set to the given device.
 
     If deviceid does not specify a master pointer or master keyboard, a
-    BadDevice error returned.
+    BadDevice error is returned.
 
     If window does not specify a valid window or client ID and is not None, a
     BadWindow error is returned.
@@ -662,14 +724,18 @@ XI2. Clients should ignore this data.
             deviceid:        DEVICEID
     └───
 
-    Query the ClientPointer for the client owning 'win'.
+    Query the ClientPointer for the client owning win.
 
     win
         The window or client ID.
     set
-        TRUE if the client has an explicitly set ClientPointer.
+        True if the client has a ClientPointer set.
     deviceid
-        The master pointer that acts as a ClientPointer if 'set' is TRUE.
+        The master pointer that acts as a ClientPointer if set is True.
+
+    No difference is made between a ClientPointer set explicitly through
+    XISetClientPointer and a ClientPointer implicitly assigned by the server
+    in response to an ambiguous request.
 
     ┌───
         XISetFocus
@@ -753,7 +819,6 @@ XI2. Clients should ignore this data.
     status
         Success or the reason why the grab could not be established.
 
-
     The masks parameter specifies which events the client wishes to receive
     while the device is grabbed.
 
@@ -815,8 +880,8 @@ XI2. Clients should ignore this data.
     time
         A valid server time or CurrentTime.
 
-    The request has no effect if the specified time is earlier
-    than the last-device-grab time or is later than the current server time.
+    The request has no effect if the specified time is earlier than the
+    last-device-grab time or is later than the current server time.
     This request generates FocusIn and FocusOut events.
     An XIUngrabDevice is performed automatically if the event window for an
     active device grab becomes not viewable.
@@ -916,7 +981,7 @@ XI2. Clients should ignore this data.
 
     ┌───
         XIPassiveGrabDevice
-            deviceid:        DEVICEID
+            deviceid:        DEVICE
             detail:          CARD32
             grab_type:       GRABTYPE
             grab_window:     Window
@@ -946,7 +1011,8 @@ XI2. Clients should ignore this data.
             The cursor to display for the duration of the grab. If grab_type
             is not GrabtypeButton, this argument is ignored.
         deviceid
-            The device to establish the passive grab on.
+            The device to establish the passive grab on or AllDevices or
+            AllMasterDevices.
         detail
             The button number, or key symbol to grab for.
             Must be 0 for GrabtypeEnter and GrabtypeFocusIn.
@@ -1262,9 +1328,16 @@ Version 2.0:
         ButtonPress
         ButtonRelease
         Motion
-        RawEvent
+        RawKeyPress
+        RawKeyRelease
+        RawButtonPress
+        RawButtonRelease
+        RawMotion
         Enter
         Leave
+        FocusIn
+        FocusOut
+        PropertyEvent
 
 All events have a set of common fields specified as EVENTHEADER.
 
@@ -1319,25 +1392,25 @@ EVENTHEADER { type:                       BYTE
         The current hierarchy information.
 
     An XIHierarchyEvent is sent whenever the device hierarchy been
-    changed. The 'flags' specify all types of hierarchy modifiations that have
+    changed. The flags specify all types of hierarchy modifiations that have
     occured.
-    For all devices, 'info' details the hierarchy information after the
+    For all devices, info details the hierarchy information after the
     modification of the hierarchy has occured. For each device specified with
-    'deviceid':
-    - if 'type' is MasterPointer or MasterKeyboard, 'attachment' decribes the
+    deviceid:
+    - if type is MasterPointer or MasterKeyboard, attachment decribes the
       pairing of this device.
-    - if 'type' is SlavePointer or SlaveKeyboard, 'attachment' describes the
+    - if type is SlavePointer or SlaveKeyboard, attachment describes the
       master device this device is attached to.
-    - if 'type' is FloatingSlave device, 'attachment' is undefined.
+    - if type is FloatingSlave device, attachment is undefined.
 
     enabled
-         TRUE if the device is enabled and can send events. A disabled master
+         True if the device is enabled and can send events. A disabled master
          device will not forward events from an attached, enabled slave
          device.
 
     Note: Multiple devices may be affected in one hierarchy change,
-    'deviceid' in an XIHierarchyEvent is always the first affected
-    device. Clients should ignore deviceid and instead use the 'devices' list.
+    deviceid in an XIHierarchyEvent is always the first affected
+    device. Clients should ignore deviceid and instead use the devices list.
 
     ┌───
         DeviceChangedEvent:
@@ -1356,22 +1429,21 @@ EVENTHEADER { type:                       BYTE
 
     reason
         The reason for generating this event.
-        If 'reason' is SlaveSwitch, the slave device sending events through
-        this device has changed and 'source' specifies the new slave device.
-        A SlaveSwitch 'reason' can only occur on a master device.
-        If 'reason' is DeviceChange, the device itself has changed through
-        other means (e.g. a physical device change) and 'source' is
-        undefined.
+        If reason is SlaveSwitch, the slave device sending events through
+        this device has changed and source specifies the new slave device.
+        A SlaveSwitch reason can only occur on a master device.
+        If reason is DeviceChange, the device itself has changed through
+        other means (e.g. a physical device change) and source is
+        the device itself.
     source
-        The source of the new classes. Only defined in 'reason' is
-        SlaveSwitch.
+        The source of the new classes.
     num_classes
-        Number of 'classes' provided.
+        Number of classes provided.
     classes
         Details the available classes provided by the device.  The order the
         classes are provided in is undefined.
 
-    For a detailed description of 'classes', see the XQueryInputDevice
+    For a detailed description of classes, see the XQueryInputDevice
     request.
 
     ┌───
@@ -1432,9 +1504,9 @@ EVENTHEADER { type:                       BYTE
         event window (16.16 fixed point).
 
     buttons_len
-        The length of 'buttons' in 4 byte units.
+        The length of buttons in 4 byte units.
     valuators_len
-        The length of 'valuators' in 4 byte units.
+        The length of valuators in 4 byte units.
     sourceid
         The source device that originally generated the event.
     mods
@@ -1444,7 +1516,7 @@ EVENTHEADER { type:                       BYTE
     buttons
         Button state before the event.
     valuators
-        Bitmask of valuators provided in 'axisvalues'.
+        Bitmask of valuators provided in axisvalues.
     axisvalues
         Valuator data in device-native resolution.
     flags
@@ -1455,7 +1527,7 @@ EVENTHEADER { type:                       BYTE
         the physical state of the key has not changed.  This is only
         valid for KeyPress events.
 
-    Modifier state in 'mods' is detailed as follows:
+    Modifier state in mods is detailed as follows:
     base_mods
         XKB base modifier state.
     latched_mods
@@ -1463,7 +1535,7 @@ EVENTHEADER { type:                       BYTE
     locked_mods
         XKB locked modifier state.
 
-    Group state in 'group' is detailed as follows:
+    Group state in group is detailed as follows:
     base_group
         XKB base group state.
     latched_group
@@ -1496,11 +1568,11 @@ EVENTHEADER { type:                       BYTE
     detail
         The button number or keycode.
     flags
-        Flags as described in DeviceEvent::flags.
+        Flags as described in DeviceEvent.
     valuators_len
-        The length of 'valuators' in 4 byte units.
+        The length of valuators in 4 byte units.
     valuators
-        Bitmask of valuators provided in 'axisvalues' and 'axisvalues_raw'.
+        Bitmask of valuators provided in axisvalues and axisvalues_raw.
     axisvalues
         Valuator data in device-native resolution.
     axisvalues_raw
@@ -1571,7 +1643,7 @@ EVENTHEADER { type:                       BYTE
         Specifies the relation of the event window to the window the pointer
         entered or left. See the core protocol spec for details.
     same_screen
-        TRUE if the event window is on the same screen as the pointer's root
+        True if the event window is on the same screen as the pointer's root
         window.
     focus
         If the event window is the focus window or an inferior of the focus
@@ -1582,7 +1654,7 @@ EVENTHEADER { type:                       BYTE
     group
         XKB group state before the event.
     buttons_len
-        The length of 'buttons' in 4 byte units.
+        The length of buttons in 4 byte units.
     buttons
         Button state before the event.
 
