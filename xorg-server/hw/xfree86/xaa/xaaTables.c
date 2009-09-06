@@ -1,4 +1,4 @@
-
+#include "xaalocal.h"
 /*
  * This is a table of 24-bit values, indexed with an 8-bit byte value, then
  * expands each bit to three consecutive bits. This is required for color

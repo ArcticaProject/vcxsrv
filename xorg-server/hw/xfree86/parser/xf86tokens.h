@@ -99,7 +99,6 @@ typedef enum {
     /* File tokens */
     FONTPATH,
     MODULEPATH,
-    INPUTDEVICES,
     LOGFILEPATH,
     XKBDIR,
 

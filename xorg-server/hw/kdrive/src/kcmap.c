@@ -217,7 +217,8 @@ KdUninstallColormap (ColormapPtr pCmap)
 	return;
 
     /* install default if on same fb */
-    defMap = (ColormapPtr) LookupIDByType(defMapID, RT_COLORMAP);
+    dixLookupResourceByType((pointer *)&defMap, defMapID, RT_COLORMAP,
+			    serverClient, DixInstallAccess);
     if (defMap && KdColormapFb (defMap) == fb)
 	(*pCmap->pScreen->InstallColormap)(defMap);
     else

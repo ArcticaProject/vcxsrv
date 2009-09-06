@@ -31,8 +31,8 @@
 #endif
 
 #include <X11/X.h>
-#define NEED_EVENTS
 #include <X11/Xproto.h>
+#include <X11/Xatom.h>
 #include "misc.h"
 #include "os.h"
 #include "dixstruct.h"
@@ -43,16 +43,40 @@
 #include "dixevents.h"
 #include "sleepuntil.h"
 #include "mi.h"
-#define _XTEST_SERVER_
-#include <X11/extensions/XTest.h>
-#include <X11/extensions/xteststr.h>
+#include "xkbsrv.h"
+#include "xkbstr.h"
+#include <X11/extensions/xtestproto.h>
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
+#include "exglobals.h"
+#include "mipointer.h"
+#include "xserver-properties.h"
+#include "exevents.h"
 
 #include "modinit.h"
 
 extern int DeviceValuator;
-extern int DeviceMotionNotify;
+
+/* XTest events are sent during request processing and may be interruped by
+ * a SIGIO. We need a separate event list to avoid events overwriting each
+ * other's memory */
+static EventListPtr xtest_evlist;
+
+/* Used to store if a device is an XTest Virtual device */
+static int XTestDevicePrivateKeyIndex;
+DevPrivateKey XTestDevicePrivateKey = &XTestDevicePrivateKeyIndex;
+
+/**
+ * xtestpointer
+ * is the virtual pointer for XTest. It is the first slave
+ * device of the VCP.
+ * xtestkeyboard
+ * is the virtual keyboard for XTest. It is the first slave
+ * device of the VCK
+ *
+ * Neither of these devices can be deleted.
+ */
+DeviceIntPtr xtestpointer, xtestkeyboard;
 
 #ifdef PANORAMIX
 #include "panoramiX.h"
@@ -81,11 +105,12 @@ XTestExtensionInit(INITARGS)
     AddExtension(XTestExtensionName, 0, 0,
             ProcXTestDispatch, SProcXTestDispatch,
             NULL, StandardMinorOpcode);
+
+    xtest_evlist = InitEventList(GetMaximumEventsNum());
 }
 
 static int
-ProcXTestGetVersion(client)
-    ClientPtr client;
+ProcXTestGetVersion(ClientPtr client)
 {
     xXTestGetVersionReply rep;
     int n;
@@ -105,8 +130,7 @@ ProcXTestGetVersion(client)
 }
 
 static int
-ProcXTestCompareCursor(client)
-    ClientPtr client;
+ProcXTestCompareCursor(ClientPtr client)
 {
     REQUEST(xXTestCompareCursorReq);
     xXTestCompareCursorReply rep;
@@ -144,8 +168,7 @@ ProcXTestCompareCursor(client)
 }
 
 static int
-ProcXTestFakeInput(client)
-    ClientPtr client;
+ProcXTestFakeInput(ClientPtr client)
 {
     REQUEST(xXTestFakeInputReq);
     int nev, n, type, rc;
@@ -157,7 +180,6 @@ ProcXTestFakeInput(client)
     int valuators[MAX_VALUATORS] = {0};
     int numValuators = 0;
     int firstValuator = 0;
-    EventListPtr events;
     int nevents = 0;
     int i;
     int base = 0;
@@ -189,11 +211,34 @@ ProcXTestFakeInput(client)
         switch (type) {
             case XI_DeviceKeyPress:
             case XI_DeviceKeyRelease:
+                if (!dev->key)
+                {
+                    client->errorValue = ev->u.u.type;
+                    return BadValue;
+                }
+                break;
             case XI_DeviceButtonPress:
             case XI_DeviceButtonRelease:
+                if (!dev->button)
+                {
+                    client->errorValue = ev->u.u.type;
+                    return BadValue;
+                }
+                break;
             case XI_DeviceMotionNotify:
+                if (!dev->valuator)
+                {
+                    client->errorValue = ev->u.u.type;
+                    return BadValue;
+                }
+                break;
             case XI_ProximityIn:
             case XI_ProximityOut:
+                if (!dev->proximity)
+                {
+                    client->errorValue = ev->u.u.type;
+                    return BadValue;
+                }
                 break;
             default:
                 client->errorValue = ev->u.u.type;
@@ -221,7 +266,7 @@ ProcXTestFakeInput(client)
             flags |= POINTER_ABSOLUTE;
         }
 
-        if (nev == 1 && type == XI_DeviceMotionNotify && !dev->valuator)
+        if (nev > 1 && !dev->valuator)
         {
             client->errorValue = dv->first_valuator;
             return BadValue;
@@ -296,8 +341,7 @@ ProcXTestFakeInput(client)
                 return BadValue;
         }
 
-        if (dev->u.lastSlave)
-            dev = dev->u.lastSlave;
+        dev = GetXTestDevice(dev);
     }
 
     /* If the event has a time set, wait for it to pass */
@@ -334,14 +378,20 @@ ProcXTestFakeInput(client)
     {
         case KeyPress:
         case KeyRelease:
-            if (ev->u.u.detail < dev->key->curKeySyms.minKeyCode ||
-                    ev->u.u.detail > dev->key->curKeySyms.maxKeyCode)
+            if (!dev->key)
+                return BadDevice;
+
+            if (ev->u.u.detail < dev->key->xkbInfo->desc->min_key_code ||
+                ev->u.u.detail > dev->key->xkbInfo->desc->max_key_code)
             {
                 client->errorValue = ev->u.u.detail;
                 return BadValue;
             }
             break;
         case MotionNotify:
+            if (!dev->valuator)
+                return BadDevice;
+
             /* broken lib, XI events have root uninitialized */
             if (extension || ev->u.keyButtonPointer.root == None)
                 root = GetCurrentRootWindow(dev);
@@ -368,12 +418,9 @@ ProcXTestFakeInput(client)
             break;
         case ButtonPress:
         case ButtonRelease:
-            if (!extension)
-            {
-                dev = PickPointer(client);
-                if (dev->u.lastSlave)
-                    dev = dev->u.lastSlave;
-            }
+            if (!dev->button)
+                return BadDevice;
+
             if (!ev->u.u.detail || ev->u.u.detail > dev->button->numButtons)
             {
                 client->errorValue = ev->u.u.detail;
@@ -384,35 +431,32 @@ ProcXTestFakeInput(client)
     if (screenIsSaved == SCREEN_SAVER_ON)
         dixSaveScreens(serverClient, SCREEN_SAVER_OFF, ScreenSaverReset);
 
-    OsBlockSignals();
-    GetEventList(&events);
     switch(type) {
         case MotionNotify:
-            nevents = GetPointerEvents(events, dev, type, 0, flags,
+            nevents = GetPointerEvents(xtest_evlist, dev, type, 0, flags,
                             firstValuator, numValuators, valuators);
             break;
         case ButtonPress:
         case ButtonRelease:
-            nevents = GetPointerEvents(events, dev, type, ev->u.u.detail,
+            nevents = GetPointerEvents(xtest_evlist, dev, type, ev->u.u.detail,
                                        flags, firstValuator,
                                        numValuators, valuators);
             break;
         case KeyPress:
         case KeyRelease:
-            nevents = GetKeyboardEvents(events, dev, type, ev->u.u.detail);
+            nevents = GetKeyboardEvents(xtest_evlist, dev, type, ev->u.u.detail);
             break;
     }
 
     for (i = 0; i < nevents; i++)
-        mieqEnqueue(dev, (events+i)->event);
-    OsReleaseSignals();
+        mieqProcessDeviceEvent(dev, (InternalEvent*)(xtest_evlist+i)->event, NULL);
 
+    miPointerUpdateSprite(dev);
     return client->noClientException;
 }
 
 static int
-ProcXTestGrabControl(client)
-    ClientPtr client;
+ProcXTestGrabControl(ClientPtr client)
 {
     REQUEST(xXTestGrabControlReq);
 
@@ -430,8 +474,7 @@ ProcXTestGrabControl(client)
 }
 
 static int
-ProcXTestDispatch (client)
-    ClientPtr	client;
+ProcXTestDispatch (ClientPtr client)
 {
     REQUEST(xReq);
     switch (stuff->data)
@@ -450,8 +493,7 @@ ProcXTestDispatch (client)
 }
 
 static int
-SProcXTestGetVersion(client)
-    ClientPtr	client;
+SProcXTestGetVersion(ClientPtr client)
 {
     int n;
     REQUEST(xXTestGetVersionReq);
@@ -463,8 +505,7 @@ SProcXTestGetVersion(client)
 }
 
 static int
-SProcXTestCompareCursor(client)
-    ClientPtr	client;
+SProcXTestCompareCursor(ClientPtr client)
 {
     int n;
     REQUEST(xXTestCompareCursorReq);
@@ -477,9 +518,7 @@ SProcXTestCompareCursor(client)
 }
 
 static int
-XTestSwapFakeInput(client, req)
-    ClientPtr	client;
-    xReq *req;
+XTestSwapFakeInput(ClientPtr client, xReq *req)
 {
     int nev;
     xEvent *ev;
@@ -503,8 +542,7 @@ XTestSwapFakeInput(client, req)
 }
 
 static int
-SProcXTestFakeInput(client)
-    ClientPtr	client;
+SProcXTestFakeInput(ClientPtr client)
 {
     int n;
     REQUEST(xReq);
@@ -517,8 +555,7 @@ SProcXTestFakeInput(client)
 }
 
 static int
-SProcXTestGrabControl(client)
-    ClientPtr	client;
+SProcXTestGrabControl(ClientPtr client)
 {
     int n;
     REQUEST(xXTestGrabControlReq);
@@ -529,8 +566,7 @@ SProcXTestGrabControl(client)
 }
 
 static int
-SProcXTestDispatch (client)
-    ClientPtr	client;
+SProcXTestDispatch (ClientPtr client)
 {
     REQUEST(xReq);
     switch (stuff->data)
@@ -547,3 +583,126 @@ SProcXTestDispatch (client)
             return BadRequest;
     }
 }
+
+/**
+ * Allocate an virtual slave device for xtest events, this
+ * is a slave device to inputInfo master devices
+ */
+void InitXTestDevices(void)
+{
+    if(AllocXTestDevice(serverClient, "Virtual core",
+                       &xtestpointer, &xtestkeyboard,
+                       inputInfo.pointer, inputInfo.keyboard) != Success)
+        FatalError("Failed to allocate XTest devices");
+
+    if (ActivateDevice(xtestpointer, TRUE) != Success ||
+        ActivateDevice(xtestkeyboard, TRUE) != Success)
+        FatalError("Failed to activate XTest core devices.");
+    if (!EnableDevice(xtestpointer, TRUE) ||
+        !EnableDevice(xtestkeyboard, TRUE))
+        FatalError("Failed to enable XTest core devices.");
+
+    AttachDevice(NULL, xtestpointer, inputInfo.pointer);
+    AttachDevice(NULL, xtestkeyboard, inputInfo.keyboard);
+}
+
+/**
+ * Don't allow changing the XTest property.
+ */
+static int
+DeviceSetXTestProperty(DeviceIntPtr dev, Atom property,
+                      XIPropertyValuePtr prop, BOOL checkonly)
+{
+    if (property == XIGetKnownProperty(XI_PROP_XTEST_DEVICE))
+        return BadAccess;
+
+    return Success;
+}
+
+/**
+ * Allocate a device pair that is initialised as a slave
+ * device with properties that identify the devices as belonging
+ * to XTest subsystem.
+ * This only creates the pair, Activate/Enable Device
+ * still need to be called.
+ */
+int AllocXTestDevice (ClientPtr client, char* name,
+                     DeviceIntPtr* ptr, DeviceIntPtr* keybd,
+                     DeviceIntPtr master_ptr, DeviceIntPtr master_keybd)
+{
+    int retval;
+    int len = strlen(name);
+    char *xtestname = xcalloc(len + 7, 1 );
+    char dummy = 1;
+
+    strncpy( xtestname, name, len);
+    strncat( xtestname, " XTEST", 6 );
+
+    retval = AllocDevicePair( client, xtestname, ptr, keybd, CorePointerProc, CoreKeyboardProc, FALSE);
+    if ( retval == Success ){
+        dixSetPrivate(&((*ptr)->devPrivates), XTestDevicePrivateKey, (void *)master_ptr->id);
+        dixSetPrivate(&((*keybd)->devPrivates), XTestDevicePrivateKey, (void *)master_keybd->id);
+    }
+
+    xfree( xtestname );
+
+    XIChangeDeviceProperty(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
+                           XA_INTEGER, 8, PropModeReplace, 1, &dummy,
+                           FALSE);
+    XISetDevicePropertyDeletable(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE), FALSE);
+    XIRegisterPropertyHandler(*ptr, DeviceSetXTestProperty, NULL, NULL);
+    XIChangeDeviceProperty(*keybd, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
+                           XA_INTEGER, 8, PropModeReplace, 1, &dummy,
+                           FALSE);
+    XISetDevicePropertyDeletable(*keybd, XIGetKnownProperty(XI_PROP_XTEST_DEVICE), FALSE);
+    XIRegisterPropertyHandler(*keybd, DeviceSetXTestProperty, NULL, NULL);
+
+    return retval;
+}
+
+/**
+ * If master is NULL, return TRUE if the given device is an xtest device or
+ * FALSE otherwise.
+ * If master is not NULL, return TRUE if the given device is this master's
+ * xtest device.
+ */
+BOOL
+IsXTestDevice(DeviceIntPtr dev, DeviceIntPtr master)
+{
+    int is_XTest = FALSE;
+    int mid;
+    void *tmp; /* shut up, gcc! */
+
+    if (IsMaster(dev))
+        return is_XTest;
+
+    tmp = dixLookupPrivate(&dev->devPrivates, XTestDevicePrivateKey);
+    mid = (int)tmp;
+
+    /* deviceid 0 is reserved for XIAllDevices, non-zero mid means XTest
+     * device */
+    if ((!master && mid) ||
+        (master && mid == master->id))
+        is_XTest = TRUE;
+
+    return is_XTest;
+}
+
+/**
+ * @return The X Test virtual device for the given master.
+ */
+DeviceIntPtr
+GetXTestDevice(DeviceIntPtr master)
+{
+    DeviceIntPtr it;
+
+    for (it = inputInfo.devices; it; it = it->next)
+    {
+        if (IsXTestDevice(it, master))
+            return it;
+    }
+
+    /* This only happens if master is a slave device. don't do that */
+    return NULL;
+}
+

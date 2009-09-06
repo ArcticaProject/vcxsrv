@@ -27,38 +27,38 @@ from The Open Group.
 */
 
 
-extern void miChangeGC(
+extern _X_EXPORT void miChangeGC(
     GCPtr  /*pGC*/,
     unsigned long /*mask*/
 );
 
-extern void miDestroyGC(
+extern _X_EXPORT void miDestroyGC(
     GCPtr  /*pGC*/
 );
 
-extern void miDestroyClip(
+extern _X_EXPORT void miDestroyClip(
     GCPtr /*pGC*/
 );
 
-extern void miChangeClip(
+extern _X_EXPORT void miChangeClip(
     GCPtr   /*pGC*/,
     int     /*type*/,
     pointer /*pvalue*/,
     int     /*nrects*/
 );
 
-extern void miCopyClip(
+extern _X_EXPORT void miCopyClip(
     GCPtr /*pgcDst*/,
     GCPtr /*pgcSrc*/
 );
 
-extern void miCopyGC(
+extern _X_EXPORT void miCopyGC(
     GCPtr /*pGCSrc*/,
     unsigned long /*changes*/,
     GCPtr /*pGCDst*/
 );
 
-extern void miComputeCompositeClip(
+extern _X_EXPORT void miComputeCompositeClip(
     GCPtr       /*pGC*/,
     DrawablePtr /*pDrawable*/
 );

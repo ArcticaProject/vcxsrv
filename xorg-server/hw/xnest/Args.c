@@ -174,7 +174,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
   return 0;
 }
 
-void ddxUseMsg()
+void ddxUseMsg(void)
 {
   ErrorF("-display string        display name of the real server\n");
   ErrorF("-sync                  sinchronize with the real server\n");

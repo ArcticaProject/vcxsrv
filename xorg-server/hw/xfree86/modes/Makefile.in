@@ -39,8 +39,11 @@ subdir = hw/xfree86/modes
 DIST_COMMON = $(sdk_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
+	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/shave.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -50,18 +53,21 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 	$(top_builddir)/include/xorg-config.h \
 	$(top_builddir)/include/xkb-config.h \
 	$(top_builddir)/include/xwin-config.h \
-	$(top_builddir)/include/kdrive-config.h
+	$(top_builddir)/include/kdrive-config.h \
+	$(top_builddir)/include/version-config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
-ARFLAGS = cru
-libxf86modes_a_AR = $(AR) $(ARFLAGS)
-libxf86modes_a_LIBADD =
-am_libxf86modes_a_OBJECTS = xf86Crtc.$(OBJEXT) xf86Cursors.$(OBJEXT) \
-	xf86cvt.$(OBJEXT) xf86gtf.$(OBJEXT) xf86DiDGA.$(OBJEXT) \
-	xf86EdidModes.$(OBJEXT) xf86Modes.$(OBJEXT) \
-	xf86RandR12.$(OBJEXT) xf86Rotate.$(OBJEXT)
-libxf86modes_a_OBJECTS = $(am_libxf86modes_a_OBJECTS)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
+libxf86modes_la_LIBADD =
+am__libxf86modes_la_SOURCES_DIST = xf86Crtc.c xf86Crtc.h xf86Cursors.c \
+	xf86cvt.c xf86gtf.c xf86DisplayIDModes.c xf86EdidModes.c \
+	xf86Modes.c xf86Modes.h xf86RandR12.c xf86RandR12.h \
+	xf86Rename.h xf86Rotate.c xf86DiDGA.c
+@DGA_TRUE@am__objects_1 = xf86DiDGA.lo
+am_libxf86modes_la_OBJECTS = xf86Crtc.lo xf86Cursors.lo xf86cvt.lo \
+	xf86gtf.lo xf86DisplayIDModes.lo xf86EdidModes.lo xf86Modes.lo \
+	xf86RandR12.lo xf86Rotate.lo $(am__objects_1)
+libxf86modes_la_OBJECTS = $(am_libxf86modes_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -72,8 +78,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libxf86modes_a_SOURCES)
-DIST_SOURCES = $(libxf86modes_a_SOURCES)
+SOURCES = $(libxf86modes_la_SOURCES)
+DIST_SOURCES = $(am__libxf86modes_la_SOURCES_DIST)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -105,6 +111,7 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
 APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
@@ -125,9 +132,12 @@ CCASDEPMODE = @CCASDEPMODE@
 CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CHANGELOG_CMD = @CHANGELOG_CMD@
 COMPILEDDEFAULTFONTPATH = @COMPILEDDEFAULTFONTPATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CWARNFLAGS = @CWARNFLAGS@
+CXX = @CXX@
 CYGPATH_W = @CYGPATH_W@
 DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
@@ -156,7 +166,9 @@ DRIPROTO_CFLAGS = @DRIPROTO_CFLAGS@
 DRIPROTO_LIBS = @DRIPROTO_LIBS@
 DRIVER_MAN_DIR = @DRIVER_MAN_DIR@
 DRIVER_MAN_SUFFIX = @DRIVER_MAN_SUFFIX@
+DRI_CFLAGS = @DRI_CFLAGS@
 DRI_DRIVER_PATH = @DRI_DRIVER_PATH@
+DRI_LIBS = @DRI_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DTRACE = @DTRACE@
 DUMPBIN = @DUMPBIN@
@@ -165,9 +177,13 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FC = @FC@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
 GLX_DEFINES = @GLX_DEFINES@
 GL_CFLAGS = @GL_CFLAGS@
@@ -206,12 +222,13 @@ LTCOMPILE = @LTCOMPILE@
 LTCXXCOMPILE = @LTCXXCOMPILE@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
+MAIN_LIB = @MAIN_LIB@
+MAKEFLAGS = @MAKEFLAGS@
 MAKEINFO = @MAKEINFO@
 MAKE_HTML = @MAKE_HTML@
 MAKE_PDF = @MAKE_PDF@
 MAKE_PS = @MAKE_PS@
 MAKE_TEXT = @MAKE_TEXT@
-MESA_SOURCE = @MESA_SOURCE@
 MISC_MAN_DIR = @MISC_MAN_DIR@
 MISC_MAN_SUFFIX = @MISC_MAN_SUFFIX@
 MKDIR_P = @MKDIR_P@
@@ -231,7 +248,6 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PCIACCESS_CFLAGS = @PCIACCESS_CFLAGS@
@@ -241,6 +257,7 @@ PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PROJECTROOT = @PROJECTROOT@
 PS2PDF = @PS2PDF@
+Q = @Q@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
@@ -254,11 +271,10 @@ STRIP = @STRIP@
 TSLIB_CFLAGS = @TSLIB_CFLAGS@
 TSLIB_LIBS = @TSLIB_LIBS@
 UTILS_SYS_LIBS = @UTILS_SYS_LIBS@
-VENDOR_MAN_VERSION = @VENDOR_MAN_VERSION@
-VENDOR_NAME = @VENDOR_NAME@
+V = @V@
 VENDOR_NAME_SHORT = @VENDOR_NAME_SHORT@
-VENDOR_RELEASE = @VENDOR_RELEASE@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 X11EXAMPLES_DEP_CFLAGS = @X11EXAMPLES_DEP_CFLAGS@
 X11EXAMPLES_DEP_LIBS = @X11EXAMPLES_DEP_LIBS@
 XDMCP_CFLAGS = @XDMCP_CFLAGS@
@@ -294,6 +310,7 @@ XORG_OS_SUBDIR = @XORG_OS_SUBDIR@
 XORG_SYS_LIBS = @XORG_SYS_LIBS@
 XPBPROXY_CFLAGS = @XPBPROXY_CFLAGS@
 XPBPROXY_LIBS = @XPBPROXY_LIBS@
+XQUARTZ_SPARKLE = @XQUARTZ_SPARKLE@
 XRESEXAMPLES_DEP_CFLAGS = @XRESEXAMPLES_DEP_CFLAGS@
 XRESEXAMPLES_DEP_LIBS = @XRESEXAMPLES_DEP_LIBS@
 XSDL_INCS = @XSDL_INCS@
@@ -318,7 +335,6 @@ YFLAGS = @YFLAGS@
 __XCONFIGFILE__ = @__XCONFIGFILE__@
 abi_ansic = @abi_ansic@
 abi_extension = @abi_extension@
-abi_font = @abi_font@
 abi_videodrv = @abi_videodrv@
 abi_xinput = @abi_xinput@
 abs_builddir = @abs_builddir@
@@ -341,6 +357,7 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
+distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -372,27 +389,31 @@ psdir = @psdir@
 sbindir = @sbindir@
 sdkdir = @sdkdir@
 sharedstatedir = @sharedstatedir@
+shavedir = @shavedir@
 srcdir = @srcdir@
+symbol_visibility = @symbol_visibility@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LIBRARIES = libxf86modes.a
-libxf86modes_a_SOURCES = \
+noinst_LTLIBRARIES = libxf86modes.la
+@DGA_TRUE@DGA_SRCS = xf86DiDGA.c
+libxf86modes_la_SOURCES = \
 	xf86Crtc.c \
 	xf86Crtc.h \
 	xf86Cursors.c \
 	xf86cvt.c \
 	xf86gtf.c \
-	xf86DiDGA.c \
+	xf86DisplayIDModes.c \
 	xf86EdidModes.c \
 	xf86Modes.c \
 	xf86Modes.h \
 	xf86RandR12.c \
 	xf86RandR12.h \
 	xf86Rename.h \
-	xf86Rotate.c
+	xf86Rotate.c \
+        $(DGA_SRCS)
 
 INCLUDES = $(XORG_INCS) -I$(srcdir)/../ddc -I$(srcdir)/../i2c \
 	   -I$(srcdir)/../loader -I$(srcdir)/../rac -I$(srcdir)/../parser \
@@ -442,12 +463,16 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libxf86modes.a: $(libxf86modes_a_OBJECTS) $(libxf86modes_a_DEPENDENCIES) 
-	-rm -f libxf86modes.a
-	$(libxf86modes_a_AR) libxf86modes.a $(libxf86modes_a_OBJECTS) $(libxf86modes_a_LIBADD)
-	$(RANLIB) libxf86modes.a
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libxf86modes.la: $(libxf86modes_la_OBJECTS) $(libxf86modes_la_DEPENDENCIES) 
+	$(LINK)  $(libxf86modes_la_OBJECTS) $(libxf86modes_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -455,15 +480,16 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Crtc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Cursors.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86DiDGA.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86EdidModes.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Modes.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86RandR12.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Rotate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86cvt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86gtf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Crtc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Cursors.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86DiDGA.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86DisplayIDModes.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86EdidModes.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Modes.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86RandR12.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Rotate.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86cvt.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86gtf.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -596,7 +622,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
 	for dir in "$(DESTDIR)$(sdkdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -628,7 +654,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
+clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -700,7 +726,7 @@ uninstall-am: uninstall-sdkHEADERS
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstLIBRARIES ctags distclean \
+	clean-libtool clean-noinstLTLIBRARIES ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \

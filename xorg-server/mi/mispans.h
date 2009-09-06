@@ -45,6 +45,8 @@ SOFTWARE.
 
 ******************************************************************/
 
+#ifndef MISPANS_H
+#define MISPANS_H
 
 typedef struct {
     int         count;		/* number of spans		    */
@@ -60,30 +62,30 @@ typedef struct {
 } SpanGroup;
 
 /* Initialize SpanGroup.  MUST BE DONE before use. */
-extern void miInitSpanGroup(
+extern _X_EXPORT void miInitSpanGroup(
     SpanGroup * /*spanGroup*/
 );
 
 /* Add a Spans to a SpanGroup. The spans MUST BE in y-sorted order */
-extern void miAppendSpans(
+extern _X_EXPORT void miAppendSpans(
     SpanGroup * /*spanGroup*/,
     SpanGroup * /*otherGroup*/,
     Spans * /*spans*/
 );
 
 /* Paint a span group, insuring that each pixel is painted at most once */
-extern void miFillUniqueSpanGroup(
+extern _X_EXPORT void miFillUniqueSpanGroup(
     DrawablePtr /*pDraw*/,
     GCPtr /*pGC*/,
     SpanGroup * /*spanGroup*/
 );
 
 /* Free up data in a span group.  MUST BE DONE or you'll suffer memory leaks */
-extern void miFreeSpanGroup(
+extern _X_EXPORT void miFreeSpanGroup(
     SpanGroup * /*spanGroup*/
 );
 
-extern int miClipSpans(
+extern _X_EXPORT int miClipSpans(
     RegionPtr /*prgnDst*/,
     DDXPointPtr /*ppt*/,
     int * /*pwidth*/,
@@ -97,3 +99,4 @@ extern int miClipSpans(
 #define miSpansCarefulRop(rop)	(((rop) & 0xc) == 0x8 || ((rop) & 0x3) == 0x2)
 #define miSpansEasyRop(rop)	(!miSpansCarefulRop(rop))
 
+#endif /* MISPANS_H */

@@ -23,7 +23,6 @@
 #ifdef HAVE_CONFIG_H
 #include <kdrive-config.h>
 #endif
-#define NEED_EVENTS
 #include <errno.h>
 #include <linux/input.h>
 #include <X11/X.h>
@@ -210,7 +209,7 @@ EvdevPtrInit (KdPointerInfo *pi)
         for (i = 0; i < NUM_DEFAULT_EVDEV; i++) {
             fd = open (kdefaultEvdev[i], 2);
             if (fd >= 0) {
-                pi->path = KdSaveString (kdefaultEvdev[i]);
+                pi->path = strdup (kdefaultEvdev[i]);
                 break;
             }
         }
@@ -225,7 +224,7 @@ EvdevPtrInit (KdPointerInfo *pi)
 
     close(fd);
 
-    pi->name = KdSaveString("Evdev mouse");
+    pi->name = strdup("Evdev mouse");
 
     return Success;
 }
@@ -234,6 +233,8 @@ static Status
 EvdevPtrEnable (KdPointerInfo *pi)
 {        
     int fd;
+    unsigned long   ev[NBITS(EV_MAX)];
+    Kevdev            *ke;
 
     if (!pi || !pi->path)
         return BadImplementation;
@@ -242,8 +243,6 @@ EvdevPtrEnable (KdPointerInfo *pi)
     if (fd < 0)
         return BadMatch;
 
-    unsigned long   ev[NBITS(EV_MAX)];
-    Kevdev            *ke;
         
     if (ioctl (fd, EVIOCGBIT(0 /*EV*/, sizeof (ev)), ev) < 0)
     {
@@ -353,18 +352,11 @@ EvdevPtrFini (KdPointerInfo *pi)
 static void
 readMapping (KdKeyboardInfo *ki)
 {
-    int             minScanCode, maxScanCode;
-
     if (!ki)
         return;
 
-    minScanCode = 0;
-    maxScanCode = 193;
-
-    ki->keySyms.mapWidth = 2;
-
-    ki->minScanCode = minScanCode;
-    ki->maxScanCode = maxScanCode;		
+    ki->minScanCode = 0;
+    ki->maxScanCode = 193;
 }
 
 static void
@@ -412,7 +404,7 @@ EvdevKbdInit (KdKeyboardInfo *ki)
 
     close (fd);
 
-    ki->name = KdSaveString("Evdev keyboard");
+    ki->name = strdup("Evdev keyboard");
 
     readMapping(ki);
 

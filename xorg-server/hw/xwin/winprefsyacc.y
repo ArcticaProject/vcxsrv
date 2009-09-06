@@ -1,6 +1,7 @@
 %{
 /*
  * Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ * Copyright (C) Colin Harrison 2005-2008
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -27,6 +28,7 @@
  * from the XFree86 Project.
  *
  * Authors:     Earle F. Philhower, III
+ *              Colin Harrison
  */
 /* $XFree86: $ */
 
@@ -40,6 +42,10 @@
 
 /* The following give better error messages in bison at the cost of a few KB */
 #define YYERROR_VERBOSE 1
+
+/* YYLTYPE_IS_TRIVIAL and YYENABLE_NLS defined to suppress warnings */
+#define YYLTYPE_IS_TRIVIAL 1
+#define YYENABLE_NLS 0
 
 /* The global pref settings */
 WINPREFS pref;
@@ -64,6 +70,10 @@ static void OpenIcons(void);
 static void AddIconLine(char *matchstr, char *iconfile);
 static void CloseIcons(void);
 
+static void OpenStyles(void);
+static void AddStyleLine(char *matchstr, unsigned long style);
+static void CloseStyles(void);
+
 static void OpenSysMenu(void);
 static void AddSysMenuLine(char *matchstr, char *menuname, int pos);
 static void CloseSysMenu(void);
@@ -78,14 +88,19 @@ extern int yylex(void);
 
 %union {
   char *sVal;
+  unsigned long uVal;
   int iVal;
 }
 
-%token NEWLINE MENU LB RB ICONDIRECTORY DEFAULTICON ICONS DEFAULTSYSMENU
+%token NEWLINE MENU LB RB ICONDIRECTORY DEFAULTICON ICONS STYLES
+%token TOPMOST MAXIMIZE MINIMIZE BOTTOM NOTITLE OUTLINE NOFRAME DEFAULTSYSMENU
 %token SYSMENU ROOTMENU SEPARATOR ATSTART ATEND EXEC ALWAYSONTOP DEBUG
 %token RELOAD TRAYICON SILENTEXIT
 
 %token <sVal> STRING
+%type <uVal>  group1
+%type <uVal>  group2
+%type <uVal>  stylecombo
 %type <iVal>  atspot
 
 %%
@@ -107,6 +122,7 @@ command:	defaulticon
 	| icondirectory
 	| menu
 	| icons
+	| styles
 	| sysmenu
 	| rootmenu
 	| defaultsysmenu
@@ -152,6 +168,33 @@ iconlist:	iconline
 	;
 
 icons:	ICONS LB {OpenIcons();} newline_or_nada iconlist RB {CloseIcons();}
+	;
+
+group1:	TOPMOST { $$=STYLE_TOPMOST; }
+	| MAXIMIZE { $$=STYLE_MAXIMIZE; }
+	| MINIMIZE { $$=STYLE_MINIMIZE; }
+	| BOTTOM { $$=STYLE_BOTTOM; }
+	;
+
+group2:	NOTITLE { $$=STYLE_NOTITLE; }
+	| OUTLINE { $$=STYLE_OUTLINE; }
+	| NOFRAME { $$=STYLE_NOFRAME; }
+	;
+
+stylecombo:	group1 { $$=$1; }
+	| group2 { $$=$1; }
+	| group1 group2 { $$=$1|$2; }
+	| group2 group1 { $$=$1|$2; }
+	;
+
+styleline:	STRING stylecombo NEWLINE newline_or_nada { AddStyleLine($1, $2); free($1); }
+	;
+
+stylelist:	styleline
+	| styleline stylelist
+	;
+
+styles:	STYLES LB {OpenStyles();} newline_or_nada stylelist RB {CloseStyles();}
 	;
 
 atspot:	{ $$=AT_END; }
@@ -312,6 +355,39 @@ AddIconLine (char *matchstr, char *iconfile)
 
 static void 
 CloseIcons (void)
+{
+}
+
+static void
+OpenStyles (void)
+{
+  if (pref.style != NULL) {
+    ErrorF("LoadPreferences: Redefining window style\n");
+    free(pref.style);
+    pref.style = NULL;
+  }
+  pref.styleItems = 0;
+}
+
+static void
+AddStyleLine (char *matchstr, unsigned long style)
+{
+  if (pref.style==NULL)
+    pref.style = (STYLEITEM*)malloc(sizeof(STYLEITEM));
+  else
+    pref.style = (STYLEITEM*)
+      realloc(pref.style, sizeof(STYLEITEM)*(pref.styleItems+1));
+
+  strncpy(pref.style[pref.styleItems].match, matchstr, MENU_MAX);
+  pref.style[pref.styleItems].match[MENU_MAX] = 0;
+
+  pref.style[pref.styleItems].type = style;
+
+  pref.styleItems++;
+}
+
+static void
+CloseStyles (void)
 {
 }
 

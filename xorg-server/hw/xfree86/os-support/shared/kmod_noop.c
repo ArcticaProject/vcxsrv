@@ -31,7 +31,7 @@
 
 #include "xf86_OSproc.h"
 
-_X_EXPORT int xf86LoadKernelModule(const char *pathname)
+int xf86LoadKernelModule(const char *pathname)
 {
     (void) pathname;
     return 0;  /* failure */

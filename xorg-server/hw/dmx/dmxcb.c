@@ -43,12 +43,6 @@
 #include "dmxinput.h"
 #include "dmxlog.h"
 
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
-
 extern int     connBlockScreenStart;
 
 #ifdef PANORAMIX

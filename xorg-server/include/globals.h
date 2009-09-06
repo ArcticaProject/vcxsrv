@@ -6,135 +6,129 @@
 
 /* Global X server variables that are visible to mi, dix, os, and ddx */
 
-extern CARD32 defaultScreenSaverTime;
-extern CARD32 defaultScreenSaverInterval;
-extern CARD32 ScreenSaverTime;
-extern CARD32 ScreenSaverInterval;
+extern _X_EXPORT CARD32 defaultScreenSaverTime;
+extern _X_EXPORT CARD32 defaultScreenSaverInterval;
+extern _X_EXPORT CARD32 ScreenSaverTime;
+extern _X_EXPORT CARD32 ScreenSaverInterval;
 
 #ifdef SCREENSAVER
-extern Bool screenSaverSuspended;
+extern _X_EXPORT Bool screenSaverSuspended;
 #endif
 
-extern char *defaultFontPath;
-extern int monitorResolution;
-extern int defaultColorVisualClass;
+extern _X_EXPORT char *defaultFontPath;
+extern _X_EXPORT int monitorResolution;
+extern _X_EXPORT int defaultColorVisualClass;
 
-extern WindowPtr WindowTable[MAXSCREENS];
-extern int GrabInProgress;
-extern Bool noTestExtensions;
+extern _X_EXPORT WindowPtr WindowTable[MAXSCREENS];
+extern _X_EXPORT int GrabInProgress;
+extern _X_EXPORT Bool noTestExtensions;
 
-extern DDXPointRec dixScreenOrigins[MAXSCREENS];
+extern _X_EXPORT DDXPointRec dixScreenOrigins[MAXSCREENS];
 
-extern char *ConnectionInfo;
+extern _X_EXPORT char *ConnectionInfo;
 
 #ifdef DPMSExtension
-extern CARD32 defaultDPMSStandbyTime;
-extern CARD32 defaultDPMSSuspendTime;
-extern CARD32 defaultDPMSOffTime;
-extern CARD32 DPMSStandbyTime;
-extern CARD32 DPMSSuspendTime;
-extern CARD32 DPMSOffTime;
-extern CARD16 DPMSPowerLevel;
-extern Bool defaultDPMSEnabled;
-extern Bool DPMSEnabled;
-extern Bool DPMSEnabledSwitch;
-extern Bool DPMSDisabledSwitch;
-extern Bool DPMSCapableFlag;
+extern _X_EXPORT CARD32 DPMSStandbyTime;
+extern _X_EXPORT CARD32 DPMSSuspendTime;
+extern _X_EXPORT CARD32 DPMSOffTime;
+extern _X_EXPORT CARD16 DPMSPowerLevel;
+extern _X_EXPORT Bool DPMSEnabled;
+extern _X_EXPORT Bool DPMSDisabledSwitch;
+extern _X_EXPORT Bool DPMSCapableFlag;
 #endif
 
 #ifdef PANORAMIX
-extern Bool PanoramiXExtensionDisabledHack;
+extern _X_EXPORT Bool PanoramiXExtensionDisabledHack;
 #endif
 
 #ifdef COMPOSITE
-extern Bool noCompositeExtension;
+extern _X_EXPORT Bool noCompositeExtension;
 #endif
 
 #ifdef DAMAGE
-extern Bool noDamageExtension;
+extern _X_EXPORT Bool noDamageExtension;
 #endif
 
 #ifdef DBE
-extern Bool noDbeExtension;
+extern _X_EXPORT Bool noDbeExtension;
 #endif
 
 #ifdef DPMSExtension
-extern Bool noDPMSExtension;
+extern _X_EXPORT Bool noDPMSExtension;
 #endif
 
 #ifdef GLXEXT
-extern Bool noGlxExtension;
+extern _X_EXPORT Bool noGlxExtension;
 #endif
 
 #ifdef SCREENSAVER
-extern Bool noScreenSaverExtension;
+extern _X_EXPORT Bool noScreenSaverExtension;
 #endif
 
 #ifdef MITSHM
-extern Bool noMITShmExtension;
+extern _X_EXPORT Bool noMITShmExtension;
 #endif
 
 #ifdef MULTIBUFFER
-extern Bool noMultibufferExtension;
+extern _X_EXPORT Bool noMultibufferExtension;
 #endif
 
 #ifdef RANDR
-extern Bool noRRExtension;
+extern _X_EXPORT Bool noRRExtension;
 #endif
 
 #ifdef RENDER
-extern Bool noRenderExtension;
+extern _X_EXPORT Bool noRenderExtension;
 #endif
 
 #ifdef XCSECURITY
-extern Bool noSecurityExtension;
+extern _X_EXPORT Bool noSecurityExtension;
 #endif
 
 #ifdef RES
-extern Bool noResExtension;
+extern _X_EXPORT Bool noResExtension;
 #endif
 
 #ifdef XF86BIGFONT
-extern Bool noXFree86BigfontExtension;
+extern _X_EXPORT Bool noXFree86BigfontExtension;
 #endif
 
 #ifdef XFreeXDGA
-extern Bool noXFree86DGAExtension;
+extern _X_EXPORT Bool noXFree86DGAExtension;
 #endif
 
 #ifdef XF86DRI
-extern Bool noXFree86DRIExtension;
+extern _X_EXPORT Bool noXFree86DRIExtension;
 #endif
 
 #ifdef XF86VIDMODE
-extern Bool noXFree86VidModeExtension;
+extern _X_EXPORT Bool noXFree86VidModeExtension;
 #endif
 
 #ifdef XFIXES
-extern Bool noXFixesExtension;
-#endif
-
-#ifdef XKB
-/* |noXkbExtension| is defined in xc/programs/Xserver/xkb/xkbInit.c */
-extern Bool noXkbExtension;
+extern _X_EXPORT Bool noXFixesExtension;
 #endif
 
 #ifdef PANORAMIX
-extern Bool noPanoramiXExtension;
+extern _X_EXPORT Bool noPanoramiXExtension;
 #endif
 
 #ifdef XSELINUX
-extern Bool noSELinuxExtension;
+extern _X_EXPORT Bool noSELinuxExtension;
 
 #define SELINUX_MODE_DEFAULT    0
 #define SELINUX_MODE_DISABLED   1
 #define SELINUX_MODE_PERMISSIVE 2
 #define SELINUX_MODE_ENFORCING  3
-extern int selinuxEnforcingState;
+extern _X_EXPORT int selinuxEnforcingState;
 #endif
 
 #ifdef XV
-extern Bool noXvExtension;
+extern _X_EXPORT Bool noXvExtension;
+#endif
+
+#ifdef DRI2
+extern _X_EXPORT Bool noDRI2Extension;
 #endif
 
 #endif /* !_XSERV_GLOBAL_H_ */

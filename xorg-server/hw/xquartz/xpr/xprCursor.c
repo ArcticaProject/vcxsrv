@@ -128,7 +128,7 @@ load_cursor(CursorPtr src, int screen)
 
             while (ycount-- > 0)
             {
-                xcount = (src->bits->width + 7) / 8;
+                xcount = bits_to_bytes(src->bits->width);
                 sptr = srow; mptr = mrow;
                 dptr = drow;
 

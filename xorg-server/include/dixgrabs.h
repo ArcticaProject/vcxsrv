@@ -26,35 +26,35 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef DIXGRABS_H
 #define DIXGRABS_H 1
 
+struct _GrabParameters;
+
 extern GrabPtr CreateGrab(
 	int /* client */,
 	DeviceIntPtr /* device */,
-	WindowPtr /* window */,
-	Mask /* eventMask */,
-	Bool /* ownerEvents */,
-	Bool /* keyboardMode */,
-	Bool /* pointerMode */,
 	DeviceIntPtr /* modDevice */,
-	unsigned short /* modifiers */,
+	WindowPtr /* window */,
+        GrabType /* grabtype */,
+        GrabMask * /* mask */,
+        struct _GrabParameters * /* param */,
 	int /* type */,
 	KeyCode /* keybut */,
-	WindowPtr /* confineTo */,
-	CursorPtr /* cursor */);
+        WindowPtr /* confineTo */,
+        CursorPtr /* cursor */);
 
-extern int DeletePassiveGrab(
+extern _X_EXPORT int DeletePassiveGrab(
 	pointer /* value */,
 	XID /* id */);
 
-extern Bool GrabMatchesSecond(
+extern _X_EXPORT Bool GrabMatchesSecond(
 	GrabPtr /* pFirstGrab */,
 	GrabPtr /* pSecondGrab */,
 	Bool /*ignoreDevice*/);
 
-extern int AddPassiveGrabToList(
+extern _X_EXPORT int AddPassiveGrabToList(
 	ClientPtr /* client */,
 	GrabPtr /* pGrab */);
 
-extern Bool DeletePassiveGrabFromList(
+extern _X_EXPORT Bool DeletePassiveGrabFromList(
 	GrabPtr /* pMinuendGrab */);
 
 #endif /* DIXGRABS_H */

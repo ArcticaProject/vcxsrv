@@ -33,46 +33,46 @@ from The Open Group.
 
 #include "globals.h"
 
-extern char *defaultTextFont;
-extern char *defaultCursorFont;
-extern int MaxClients;
-extern volatile char isItTimeToYield;
-extern volatile char dispatchException;
+extern _X_EXPORT char *defaultTextFont;
+extern _X_EXPORT char *defaultCursorFont;
+extern _X_EXPORT int MaxClients;
+extern _X_EXPORT volatile char isItTimeToYield;
+extern _X_EXPORT volatile char dispatchException;
 
 /* bit values for dispatchException */
 #define DE_RESET     1
 #define DE_TERMINATE 2
 #define DE_PRIORITYCHANGE 4  /* set when a client's priority changes */
 
-extern CARD32 TimeOutValue;
-extern int ScreenSaverBlanking;
-extern int ScreenSaverAllowExposures;
-extern int defaultScreenSaverBlanking;
-extern int defaultScreenSaverAllowExposures;
-extern char *display;
+extern _X_EXPORT CARD32 TimeOutValue;
+extern _X_EXPORT int ScreenSaverBlanking;
+extern _X_EXPORT int ScreenSaverAllowExposures;
+extern _X_EXPORT int defaultScreenSaverBlanking;
+extern _X_EXPORT int defaultScreenSaverAllowExposures;
+extern _X_EXPORT char *display;
 
-extern int defaultBackingStore;
-extern Bool disableBackingStore;
-extern Bool enableBackingStore;
-extern Bool PartialNetwork;
+extern _X_EXPORT int defaultBackingStore;
+extern _X_EXPORT Bool disableBackingStore;
+extern _X_EXPORT Bool enableBackingStore;
+extern _X_EXPORT Bool PartialNetwork;
 #ifndef NOLOGOHACK
-extern int logoScreenSaver;
+extern _X_EXPORT int logoScreenSaver;
 #endif
 #ifdef RLIMIT_DATA
-extern int limitDataSpace;
+extern _X_EXPORT int limitDataSpace;
 #endif
 #ifdef RLIMIT_STACK
-extern int limitStackSpace;
+extern _X_EXPORT int limitStackSpace;
 #endif
 #ifdef RLIMIT_NOFILE
-extern int limitNoFile;
+extern _X_EXPORT int limitNoFile;
 #endif
-extern Bool defeatAccessControl;
-extern long maxBigRequestSize;
-extern Bool party_like_its_1989;
-extern Bool whiteRoot;
+extern _X_EXPORT Bool defeatAccessControl;
+extern _X_EXPORT long maxBigRequestSize;
+extern _X_EXPORT Bool party_like_its_1989;
+extern _X_EXPORT Bool whiteRoot;
 
-extern Bool CoreDump;
+extern _X_EXPORT Bool CoreDump;
 
 
 #endif /* OPAQUE_H */

@@ -74,17 +74,17 @@ typedef struct _shadowBuf {
 #define SHADOW_REFLECT_Y    32
 #define SHADOW_REFLECT_ALL  (SHADOW_REFLECT_X|SHADOW_REFLECT_Y)
 
-extern DevPrivateKey shadowScrPrivateKey;
+extern _X_EXPORT DevPrivateKey shadowScrPrivateKey;
 
 #define shadowGetBuf(pScr) ((shadowBufPtr) \
     dixLookupPrivate(&(pScr)->devPrivates, shadowScrPrivateKey))
 #define shadowBuf(pScr)            shadowBufPtr pBuf = shadowGetBuf(pScr)
 #define shadowDamage(pBuf)  DamageRegion(pBuf->pDamage)    
 
-Bool
+extern _X_EXPORT Bool
 shadowSetup (ScreenPtr pScreen);
 
-Bool
+extern _X_EXPORT Bool
 shadowAdd (ScreenPtr	    pScreen,
 	   PixmapPtr	    pPixmap,
 	   ShadowUpdateProc update,
@@ -92,95 +92,92 @@ shadowAdd (ScreenPtr	    pScreen,
 	   int		    randr,
 	   void		    *closure);
 
-void
+extern _X_EXPORT void
 shadowRemove (ScreenPtr pScreen, PixmapPtr pPixmap);
 
-shadowBufPtr
-shadowFindBuf (WindowPtr pWindow);
-
-Bool
+extern _X_EXPORT Bool
 shadowInit (ScreenPtr pScreen, ShadowUpdateProc update, ShadowWindowProc window);
 
-void *
+extern _X_EXPORT void *
 shadowAlloc (int width, int height, int bpp);
 
-void
+extern _X_EXPORT void
 shadowUpdatePacked (ScreenPtr	    pScreen,
 		    shadowBufPtr    pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdatePlanar4 (ScreenPtr	    pScreen,
 		     shadowBufPtr   pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdatePlanar4x8 (ScreenPtr    pScreen,
 		       shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotatePacked (ScreenPtr    pScreen,
 			  shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate8_90 (ScreenPtr    pScreen,
 			shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate16_90 (ScreenPtr    pScreen,
 			 shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate16_90YX (ScreenPtr    pScreen,
 			   shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate32_90 (ScreenPtr    pScreen,
 			 shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate8_180 (ScreenPtr    pScreen,
 			 shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate16_180 (ScreenPtr    pScreen,
 			  shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate32_180 (ScreenPtr    pScreen,
 			  shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate8_270 (ScreenPtr    pScreen,
 			 shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate16_270 (ScreenPtr    pScreen,
 			  shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate16_270YX (ScreenPtr    pScreen,
 			    shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate32_270 (ScreenPtr    pScreen,
 			  shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate8 (ScreenPtr    pScreen,
 		     shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate16 (ScreenPtr    pScreen,
 		      shadowBufPtr pBuf);
 
-void
+extern _X_EXPORT void
 shadowUpdateRotate32 (ScreenPtr    pScreen,
 		      shadowBufPtr pBuf);
 
 typedef void (* shadowUpdateProc)(ScreenPtr, shadowBufPtr);
 
-shadowUpdateProc shadowUpdatePackedWeak(void);
-shadowUpdateProc shadowUpdatePlanar4Weak(void);
-shadowUpdateProc shadowUpdatePlanar4x8Weak(void);
-shadowUpdateProc shadowUpdateRotatePackedWeak(void);
+extern _X_EXPORT shadowUpdateProc shadowUpdatePackedWeak(void);
+extern _X_EXPORT shadowUpdateProc shadowUpdatePlanar4Weak(void);
+extern _X_EXPORT shadowUpdateProc shadowUpdatePlanar4x8Weak(void);
+extern _X_EXPORT shadowUpdateProc shadowUpdateRotatePackedWeak(void);
 
 #endif /* _SHADOW_H_ */

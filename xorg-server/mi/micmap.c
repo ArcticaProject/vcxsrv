@@ -46,9 +46,9 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "globals.h"
 #include "micmap.h"
 
-_X_EXPORT ColormapPtr miInstalledMaps[MAXSCREENS];
+ColormapPtr miInstalledMaps[MAXSCREENS];
 
-_X_EXPORT int
+int
 miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
 {
     if (miInstalledMaps[pScreen->myNum]) {
@@ -58,7 +58,7 @@ miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
     return 0;
 }
 
-_X_EXPORT void
+void
 miInstallColormap(ColormapPtr pmap)
 {
     int index = pmap->pScreen->myNum;
@@ -77,7 +77,7 @@ miInstallColormap(ColormapPtr pmap)
     }
 }
 
-_X_EXPORT void
+void
 miUninstallColormap(ColormapPtr pmap)
 {
     int index = pmap->pScreen->myNum;
@@ -87,14 +87,16 @@ miUninstallColormap(ColormapPtr pmap)
     {
 	if (pmap->mid != pmap->pScreen->defColormap)
 	{
-	    curpmap = (ColormapPtr) LookupIDByType(pmap->pScreen->defColormap,
-						   RT_COLORMAP);
+	    dixLookupResourceByType((pointer *)&curpmap,
+				    pmap->pScreen->defColormap,
+				    RT_COLORMAP, serverClient,
+				    DixUseAccess);
 	    (*pmap->pScreen->InstallColormap)(curpmap);
 	}
     }
 }
 
-_X_EXPORT void
+void
 miResolveColor(unsigned short *pred, unsigned short *pgreen,
 		unsigned short *pblue, VisualPtr pVisual)
 {
@@ -116,7 +118,7 @@ miResolveColor(unsigned short *pred, unsigned short *pgreen,
     }
 }
 
-_X_EXPORT Bool
+Bool
 miInitializeColormap(ColormapPtr pmap)
 {
     unsigned i;
@@ -201,7 +203,7 @@ miInitializeColormap(ColormapPtr pmap)
     outdefs[i].blue = pmap->blue[blue >> pVisual->offsetBlue].co.local.blue; \
 }
 
-_X_EXPORT int
+int
 miExpandDirectColors(ColormapPtr pmap, int ndef, xColorItem *indefs,
 			xColorItem *outdefs)
 {
@@ -261,7 +263,7 @@ miExpandDirectColors(ColormapPtr pmap, int ndef, xColorItem *indefs,
     return nresult;
 }
 
-_X_EXPORT Bool
+Bool
 miCreateDefColormap(ScreenPtr pScreen)
 {
 /* 
@@ -378,7 +380,7 @@ static int  miVisualPriority[] = {
 
 static miVisualsPtr	miVisuals;
 
-_X_EXPORT void
+void
 miClearVisualTypes(void)
 {
     miVisualsPtr v;
@@ -390,7 +392,7 @@ miClearVisualTypes(void)
 }
 
 
-_X_EXPORT Bool
+Bool
 miSetVisualTypesAndMasks(int depth, int visuals, int bitsPerRGB, 
 			 int preferredCVC,
 			 Pixel redMask, Pixel greenMask, Pixel blueMask)
@@ -398,7 +400,7 @@ miSetVisualTypesAndMasks(int depth, int visuals, int bitsPerRGB,
     miVisualsPtr   new, *prev, v;
     int		    count;
 
-    new = (miVisualsPtr) xalloc (sizeof *new);
+    new = xalloc (sizeof *new);
     if (!new)
 	return FALSE;
     if (!redMask || !greenMask || !blueMask)
@@ -424,14 +426,14 @@ miSetVisualTypesAndMasks(int depth, int visuals, int bitsPerRGB,
     return TRUE;
 }
 
-_X_EXPORT Bool
+Bool
 miSetVisualTypes(int depth, int visuals, int bitsPerRGB, int preferredCVC)
 {
     return miSetVisualTypesAndMasks (depth, visuals, bitsPerRGB,
 				     preferredCVC, 0, 0, 0);
 }
 
-_X_EXPORT int
+int
 miGetDefaultVisualMask(int depth)
 {
     if (depth > MAX_PSEUDO_DEPTH)
@@ -455,7 +457,7 @@ miVisualTypesSet (int depth)
     return FALSE;
 }
 
-_X_EXPORT Bool
+Bool
 miSetPixmapDepths (void)
 {
     int	d, f;
@@ -497,7 +499,7 @@ maskShift (Pixel p)
  * the set which can be used with this version of cfb.
  */
 
-_X_EXPORT Bool
+Bool
 miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
 		int *ndepthp, int *rootDepthp, VisualID *defaultVisp,
 		unsigned long sizes, int bitsPerRGB, int preferredVis)
@@ -539,9 +541,9 @@ miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
 	ndepth++;
 	nvisual += visuals->count;
     }
-    depth = (DepthPtr) xalloc (ndepth * sizeof (DepthRec));
-    visual = (VisualPtr) xalloc (nvisual * sizeof (VisualRec));
-    preferredCVCs = (int *)xalloc(ndepth * sizeof(int));
+    depth = xalloc (ndepth * sizeof (DepthRec));
+    visual = xalloc (nvisual * sizeof (VisualRec));
+    preferredCVCs = xalloc(ndepth * sizeof(int));
     if (!depth || !visual || !preferredCVCs)
     {
 	xfree (depth);
@@ -565,7 +567,7 @@ miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
 	vid = NULL;
 	if (nvtype)
 	{
-	    vid = (VisualID *) xalloc (nvtype * sizeof (VisualID));
+	    vid = xalloc (nvtype * sizeof (VisualID));
 	    if (!vid) {
 		xfree(preferredCVCs);
 		return FALSE;

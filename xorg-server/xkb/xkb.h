@@ -29,12 +29,4 @@ extern int ProcXkbSetDeviceInfo(ClientPtr client);
 extern int ProcXkbSetDebuggingFlags(ClientPtr client);
 
 extern void XkbExtensionInit(void);
-
-extern Bool XkbFilterEvents(ClientPtr pClient, int nEvents, xEvent *xE);
-
-extern Bool XkbCopyKeymap(
-    XkbDescPtr              src,
-    XkbDescPtr              dst,
-    Bool                    sendNotifies);
-
 #endif

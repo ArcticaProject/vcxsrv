@@ -288,6 +288,7 @@ SOFTWARE.
 #define LOG2_BYTES_PER_SCANLINE_PAD	2
 #endif
 
+#include <X11/Xfuncproto.h>
 /* 
  *   This returns the number of padding units, for depth d and width w.
  * For bitmaps this can be calculated with the macros above.
@@ -303,7 +304,7 @@ typedef struct _PaddingInfo {
 	int	bytesPerPixel;	/* only set when notPower2 is TRUE */
 	int	bitsPerPixel;	/* bits per pixel */
 } PaddingInfo;
-extern PaddingInfo PixmapWidthPaddingInfo[];
+extern _X_EXPORT PaddingInfo PixmapWidthPaddingInfo[];
 
 /* The only portable way to get the bpp from the depth is to look it up */
 #define BitsPerPixel(d) (PixmapWidthPaddingInfo[d].bitsPerPixel)

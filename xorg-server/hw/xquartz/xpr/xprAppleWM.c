@@ -33,25 +33,15 @@
 
 #include "xpr.h"
 
-#define _APPLEWM_SERVER_
-#include <X11/extensions/applewmstr.h>
+#include <X11/extensions/applewmproto.h>
 
 #include "applewmExt.h"
 #include "rootless.h"
+#include "rootlessCommon.h"
 #include <Xplugin.h>
 #include <X11/X.h>
 #include "quartz.h"
 #include "x-hash.h"
-
-/* This lookup table came straight from the Tiger X11 source.  I tried to figure
- * it out based on CGWindowLevel.h, but I dunno... -JH
- */
-static const int normal_window_levels[AppleWMNumWindowLevels+1] = {
-0, 3, 4, 5, INT_MIN + 30, INT_MIN + 29,
-};
-static const int rooted_window_levels[AppleWMNumWindowLevels+1] = {
-202, 203, 204, 205, 201, 200
-};
 
 static int xprSetWindowLevel(
     WindowPtr pWin,
@@ -59,15 +49,25 @@ static int xprSetWindowLevel(
 {
     xp_window_id wid;
     xp_window_changes wc;
+    RootlessWindowRec *winRec;
 
+    // AppleWMNumWindowLevels is allowed, but is only set by the server
+    // for the root window.
+    if (level < 0 || level >= AppleWMNumWindowLevels) {
+        return BadValue;
+    }
+    
     wid = x_cvt_vptr_to_uint(RootlessFrameForWindow (pWin, TRUE));
     if (wid == 0)
         return BadWindow;
 
     RootlessStopDrawing (pWin, FALSE);
-
-    //if (WINREC(WindowTable[pWin->drawable.pScreen->myNum]) == NULL)
-    if (quartzHasRoot)
+    winRec = WINREC(pWin);
+ 
+    if(!winRec)
+        return BadWindow;
+    
+    if(quartzEnableRootless)
         wc.window_level = normal_window_levels[level];
     else
         wc.window_level = rooted_window_levels[level];
@@ -76,9 +76,39 @@ static int xprSetWindowLevel(
         return BadValue;
     }
 
+    winRec->level = level;
+
     return Success;
 }
 
+#if defined(XPLUGIN_VERSION) && XPLUGIN_VERSION >= 3
+static int xprAttachTransient(WindowPtr pWinChild, WindowPtr pWinParent) {
+    xp_window_id child_wid, parent_wid; 
+    xp_window_changes wc;
+
+    child_wid = x_cvt_vptr_to_uint(RootlessFrameForWindow(pWinChild, TRUE));
+    if (child_wid == 0)
+        return BadWindow;
+
+    if(pWinParent) {
+        parent_wid = x_cvt_vptr_to_uint(RootlessFrameForWindow(pWinParent, TRUE));
+        if (parent_wid == 0)
+            return BadWindow;
+    } else {
+        parent_wid = 0;
+    }
+     
+    wc.transient_for = parent_wid;
+
+    RootlessStopDrawing (pWinChild, FALSE);
+
+    if (xp_configure_window(child_wid, XP_ATTACH_TRANSIENT, &wc) != Success) {
+        return BadValue;
+    }
+
+    return Success;    
+}
+#endif
 
 static int xprFrameDraw(
     WindowPtr pWin,
@@ -104,14 +134,23 @@ static int xprFrameDraw(
     return Success;
 }
 
-
 static AppleWMProcsRec xprAppleWMProcs = {
     xp_disable_update,
     xp_reenable_update,
     xprSetWindowLevel,
     xp_frame_get_rect,
     xp_frame_hit_test,
-    xprFrameDraw
+    xprFrameDraw,
+#if defined(XPLUGIN_VERSION) && XPLUGIN_VERSION >= 3
+    xp_set_dock_proxy,
+    xprAttachTransient
+#elif defined(XPLUGIN_VERSION) && XPLUGIN_VERSION >= 2
+    xp_set_dock_proxy,
+    NULL
+#else
+    NULL,
+    NULL
+#endif
 };
 
 

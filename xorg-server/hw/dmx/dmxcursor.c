@@ -90,6 +90,7 @@
 #include "globals.h"
 #include "cursorstr.h"
 #include "dixevents.h"          /* For GetSpriteCursor() */
+#include "inputstr.h"           /* for inputInfo.pointer */
 
 #if DMX_CURSOR_DEBUG
 #define DMXDBG0(f)               dmxLog(dmxDebug,f)

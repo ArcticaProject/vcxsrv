@@ -159,26 +159,13 @@ fbComposite (CARD8      op,
 {
     pixman_image_t *src, *mask, *dest;
     
-    xDst += pDst->pDrawable->x;
-    yDst += pDst->pDrawable->y;
-    if (pSrc->pDrawable)
-    {
-        xSrc += pSrc->pDrawable->x;
-        ySrc += pSrc->pDrawable->y;
-    }
-    if (pMask && pMask->pDrawable)
-    {
-	xMask += pMask->pDrawable->x;
-	yMask += pMask->pDrawable->y;
-    }
-
     miCompositeSourceValidate (pSrc, xSrc, ySrc, width, height);
     if (pMask)
 	miCompositeSourceValidate (pMask, xMask, yMask, width, height);
     
-    src = image_from_pict (pSrc, TRUE);
-    mask = image_from_pict (pMask, TRUE);
-    dest = image_from_pict (pDst, TRUE);
+    src = image_from_pict (pSrc, TRUE, TRUE);
+    mask = image_from_pict (pMask, TRUE, TRUE);
+    dest = image_from_pict (pDst, TRUE, FALSE);
 
     if (src && dest && !(pMask && !mask))
     {
@@ -281,22 +268,78 @@ create_conical_gradient_image (PictGradient *gradient)
 	gradient->nstops);
 }
 
+static DrawablePtr 
+copy_drawable (DrawablePtr pDraw)
+{
+    ScreenPtr pScreen = pDraw->pScreen;
+    PixmapPtr pPixmap;
+    GCPtr pGC;
+    int width, height;
+    ChangeGCVal gcv[2];
+    
+    width = pDraw->width;
+    height = pDraw->height;
+    
+    pPixmap = (*pScreen->CreatePixmap) (pScreen, width, height, pDraw->depth, 0);
+    
+    if (!pPixmap)
+	return NULL;
+    
+    pGC = GetScratchGC (pDraw->depth, pScreen);
+    
+    if (!pGC)
+    {
+	(*pScreen->DestroyPixmap) (pPixmap);
+	return NULL;
+    }
+    
+    /* First fill the pixmap with zeros */
+    gcv[0].val = 0x00000000;
+    gcv[1].val = IncludeInferiors;
+    dixChangeGC (NullClient, pGC, GCBackground | GCSubwindowMode, NULL, gcv);
+    ValidateGC ((DrawablePtr)pPixmap, pGC);
+    miClearDrawable ((DrawablePtr)pPixmap, pGC);
+    
+    /* Then copy the window there */
+    ValidateGC(&pPixmap->drawable, pGC);
+    (* pGC->ops->CopyArea) (pDraw, &pPixmap->drawable, pGC, 0, 0, width, height, 0, 0);
+    
+    FreeScratchGC (pGC);
+    
+    return &pPixmap->drawable;
+}
+
+static void
+destroy_drawable (pixman_image_t *image, void *data)
+{
+    DrawablePtr pDrawable = data;
+    ScreenPtr pScreen = pDrawable->pScreen;
+
+    pScreen->DestroyPixmap ((PixmapPtr)pDrawable);
+}
+
 static pixman_image_t *
 create_bits_picture (PicturePtr pict,
-		     Bool       has_clip)
+		     Bool	has_clip,
+		     Bool       is_src)
 {
     FbBits *bits;
     FbStride stride;
     int bpp, xoff, yoff;
     pixman_image_t *image;
-    
-    fbGetDrawable (pict->pDrawable, bits, stride, bpp, xoff, yoff);
+    DrawablePtr drawable;
 
-    bits = (FbBits*)((CARD8*)bits + yoff * stride * sizeof(FbBits) + xoff * (bpp / 8));
+    if (is_src && pict->pDrawable->type == DRAWABLE_WINDOW)
+	drawable = copy_drawable (pict->pDrawable);
+    else
+	drawable = pict->pDrawable;
+    
+    fbGetDrawable (drawable, bits, stride, bpp, xoff, yoff);
+
+    bits = (FbBits*)((CARD8*)bits + drawable->y * stride * sizeof(FbBits) + drawable->x * (bpp / 8));
 
     image = pixman_image_create_bits (
-	pict->format,
-	pict->pDrawable->width, pict->pDrawable->height,
+	pict->format, drawable->width, drawable->height,
 	(uint32_t *)bits, stride * sizeof (FbStride));
     
     
@@ -314,21 +357,46 @@ create_bits_picture (PicturePtr pict,
 #endif
 #endif
     
-    /* pCompositeClip is undefined for source pictures, so
-     * only set the clip region for pictures with drawables
-     */
     if (has_clip)
     {
-	if (pict->clientClipType != CT_NONE)
-	    pixman_image_set_has_client_clip (image, TRUE);
-	
-	pixman_image_set_clip_region (image, pict->pCompositeClip);
+	if (is_src)
+	{
+	    if (pict->clientClipType != CT_NONE)
+	    {
+		pixman_image_set_has_client_clip (image, TRUE);
+
+		pixman_region_translate (pict->clientClip,
+					 pict->clipOrigin.x,
+					 pict->clipOrigin.y);
+		
+		pixman_image_set_clip_region (image, pict->clientClip);
+
+		pixman_region_translate (pict->clientClip,
+					 - pict->clipOrigin.x,
+					 - pict->clipOrigin.y);
+	    }
+	}
+	else
+	{
+	    pixman_region_translate (pict->pCompositeClip,
+				     - pict->pDrawable->x,
+				     - pict->pDrawable->y);
+
+	    pixman_image_set_clip_region (image, pict->pCompositeClip);
+	    
+	    pixman_region_translate (pict->pCompositeClip,
+				     pict->pDrawable->x,
+				     pict->pDrawable->y);
+	}
     }
     
     /* Indexed table */
     if (pict->pFormat->index.devPrivate)
 	pixman_image_set_indexed (image, pict->pFormat->index.devPrivate);
 
+    if (drawable != pict->pDrawable)
+	pixman_image_set_destroy_function (image, destroy_drawable, drawable);
+    
     return image;
 }
 
@@ -368,7 +436,7 @@ set_image_properties (pixman_image_t *image, PicturePtr pict)
     
     if (pict->alphaMap)
     {
-	pixman_image_t *alpha_map = image_from_pict (pict->alphaMap, TRUE);
+	pixman_image_t *alpha_map = image_from_pict (pict->alphaMap, TRUE, TRUE);
 	
 	pixman_image_set_alpha_map (
 	    image, alpha_map, pict->alphaOrigin.x, pict->alphaOrigin.y);
@@ -402,7 +470,8 @@ set_image_properties (pixman_image_t *image, PicturePtr pict)
 
 pixman_image_t *
 image_from_pict (PicturePtr pict,
-		 Bool has_clip)
+		 Bool has_clip,
+		 Bool is_src)
 {
     pixman_image_t *image = NULL;
 
@@ -411,7 +480,7 @@ image_from_pict (PicturePtr pict,
 
     if (pict->pDrawable)
     {
-	image = create_bits_picture (pict, has_clip);
+	image = create_bits_picture (pict, has_clip, is_src);
     }
     else if (pict->pSourcePict)
     {

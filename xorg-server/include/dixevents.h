@@ -26,62 +26,62 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef DIXEVENTS_H
 #define DIXEVENTS_H
 
-extern void SetCriticalEvent(int /* event */);
+extern _X_EXPORT void SetCriticalEvent(int /* event */);
 
-extern CursorPtr GetSpriteCursor(DeviceIntPtr /*pDev*/);
+extern _X_EXPORT CursorPtr GetSpriteCursor(DeviceIntPtr /*pDev*/);
 
-extern int ProcAllowEvents(ClientPtr /* client */);
+extern _X_EXPORT int ProcAllowEvents(ClientPtr /* client */);
 
-extern int MaybeDeliverEventsToClient(
+extern _X_EXPORT int MaybeDeliverEventsToClient(
 	WindowPtr              /* pWin */,
 	xEvent *               /* pEvents */,
 	int                    /* count */,
 	Mask                   /* filter */,
 	ClientPtr              /* dontClient */);
 
-extern int ProcWarpPointer(ClientPtr /* client */);
+extern _X_EXPORT int ProcWarpPointer(ClientPtr /* client */);
 
-extern int EventSelectForWindow(
+extern _X_EXPORT int EventSelectForWindow(
 	WindowPtr              /* pWin */,
 	ClientPtr              /* client */,
 	Mask                   /* mask */);
 
-extern int EventSuppressForWindow(
+extern _X_EXPORT int EventSuppressForWindow(
 	WindowPtr              /* pWin */,
 	ClientPtr              /* client */,
 	Mask                   /* mask */,
 	Bool *                 /* checkOptional */);
 
-extern int ProcSetInputFocus(ClientPtr /* client */);
+extern _X_EXPORT int ProcSetInputFocus(ClientPtr /* client */);
 
-extern int ProcGetInputFocus(ClientPtr /* client */);
+extern _X_EXPORT int ProcGetInputFocus(ClientPtr /* client */);
 
-extern int ProcGrabPointer(ClientPtr /* client */);
+extern _X_EXPORT int ProcGrabPointer(ClientPtr /* client */);
 
-extern int ProcChangeActivePointerGrab(ClientPtr /* client */);
+extern _X_EXPORT int ProcChangeActivePointerGrab(ClientPtr /* client */);
 
-extern int ProcUngrabPointer(ClientPtr /* client */);
+extern _X_EXPORT int ProcUngrabPointer(ClientPtr /* client */);
 
-extern int ProcGrabKeyboard(ClientPtr /* client */);
+extern _X_EXPORT int ProcGrabKeyboard(ClientPtr /* client */);
 
-extern int ProcUngrabKeyboard(ClientPtr /* client */);
+extern _X_EXPORT int ProcUngrabKeyboard(ClientPtr /* client */);
 
-extern int ProcQueryPointer(ClientPtr /* client */);
+extern _X_EXPORT int ProcQueryPointer(ClientPtr /* client */);
 
-extern int ProcSendEvent(ClientPtr /* client */);
+extern _X_EXPORT int ProcSendEvent(ClientPtr /* client */);
 
-extern int ProcUngrabKey(ClientPtr /* client */);
+extern _X_EXPORT int ProcUngrabKey(ClientPtr /* client */);
 
-extern int ProcGrabKey(ClientPtr /* client */);
+extern _X_EXPORT int ProcGrabKey(ClientPtr /* client */);
 
-extern int ProcGrabButton(ClientPtr /* client */);
+extern _X_EXPORT int ProcGrabButton(ClientPtr /* client */);
 
-extern int ProcUngrabButton(ClientPtr /* client */);
+extern _X_EXPORT int ProcUngrabButton(ClientPtr /* client */);
 
-extern int ProcRecolorCursor(ClientPtr /* client */);
+extern _X_EXPORT int ProcRecolorCursor(ClientPtr /* client */);
 
 #ifdef PANORAMIX
-extern void PostSyntheticMotion(DeviceIntPtr pDev, 
+extern _X_EXPORT void PostSyntheticMotion(DeviceIntPtr pDev,
                                 int x, 
                                 int y, 
                                 int screen,

@@ -48,7 +48,7 @@
 
 #include "pciaccess.h"
 
-_X_EXPORT pointer
+pointer
 xf86MapDomainMemory(int ScreenNum, int Flags, struct pci_device *dev,
 		    ADDRESS Base, unsigned long Size)
 {

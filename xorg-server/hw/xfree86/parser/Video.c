@@ -86,7 +86,7 @@ xf86freeVideoPortList (XF86ConfVideoPortPtr ptr)
 		xf86optionListFree (ptr->vp_option_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -278,7 +278,7 @@ xf86freeVideoAdaptorList (XF86ConfVideoAdaptorPtr ptr)
 		xf86optionListFree (ptr->va_option_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 

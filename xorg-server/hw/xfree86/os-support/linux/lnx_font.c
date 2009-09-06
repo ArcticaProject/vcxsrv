@@ -65,9 +65,7 @@ getfont(int *width, int *height,
     op.flags = 0;
 
     SYSCALL(result = ioctl(xf86Info.consoleFd, KDFONTOP, &op));
-#ifdef DEBUG
-    ErrorF("Console font read: h: %i count: %i\n",op.height,op.charcount);
-#endif
+    DebugF("Console font read: h: %i count: %i\n",op.height,op.charcount);
 
     if (!result) {
 
@@ -130,9 +128,7 @@ lnx_savefont(void)
     int fd;
     int width = 32, height = 32, charcount = 2048;
 
-#ifdef DEBUG
-    ErrorF("SAVE font\n");
-#endif
+    DebugF("SAVE font\n");
 
 #if CHECK_OS_VERSION
     /* Check if the kernel has full support for this */
@@ -172,7 +168,7 @@ lnx_savefont(void)
 	return FALSE;
     }
 
-    size = (width + 7)/8 * 32 * charcount;
+    size = bits_to_bytes(width) * 32 * charcount;
     fontdata = (unsigned char *)xnfalloc(size);
     if (!fontdata) {
 	xf86Msg(X_WARNING,
@@ -247,9 +243,7 @@ lnx_restorefont(void)
 {
     if (lnxfont.data == NULL)
 	return FALSE;
-#ifdef DEBUG
-    ErrorF("RESTORE font\n");
-#endif
+    DebugF("RESTORE font\n");
 #if 0
     /* must wack the height to make the kernel reprogram the VGA registers */
     if (!setfont(lnxfont.width, lnxfont.height + 1, lnxfont.charcount,

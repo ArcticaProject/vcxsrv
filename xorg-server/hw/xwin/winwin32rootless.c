@@ -38,7 +38,7 @@
 #include "win.h"
 #include <winuser.h>
 #define _WINDOWSWM_SERVER_
-#include "windowswmstr.h"
+#include <X11/extensions/windowswmstr.h>
 #include "dixevents.h"
 #include "winmultiwindowclass.h"
 #include "winprefs.h"
@@ -49,11 +49,15 @@
  * Constant defines
  */
 
-#define MOUSE_POLLING_INTERVAL		500
-
+#ifndef ULW_COLORKEY
 #define ULW_COLORKEY	0x00000001
+#endif
+#ifndef ULW_ALPHA
 #define ULW_ALPHA	0x00000002
+#endif
+#ifndef ULW_OPAQUE
 #define ULW_OPAQUE	0x00000004
+#endif
 #define AC_SRC_ALPHA	0x01
 
 /*
@@ -69,9 +73,6 @@ winMWExtWMSetNativeProperty (RootlessWindowPtr pFrame);
  */
 
 Bool			g_fNoConfigureWindow = FALSE;
-
-
-extern void winSelectIcons(WindowPtr pWin, HICON *pIcon, HICON *pSmallIcon);
 
 /*
  * Internal function to get the DIB format that is compatible with the screen
@@ -397,9 +398,9 @@ winMWExtWMDestroyFrame (RootlessFrameID wid)
 #endif
 
   /* Store the info we need to destroy after this window is gone */
-  hInstance = (HINSTANCE) GetClassLong (pRLWinPriv->hWnd, GCL_HMODULE);
-  hiconClass = (HICON) GetClassLong (pRLWinPriv->hWnd, GCL_HICON);
-  hiconSmClass = (HICON) GetClassLong (pRLWinPriv->hWnd, GCL_HICONSM);
+  hInstance = (HINSTANCE) GetClassLongPtr (pRLWinPriv->hWnd, GCLP_HMODULE);
+  hiconClass = (HICON) GetClassLongPtr (pRLWinPriv->hWnd, GCLP_HICON);
+  hiconSmClass = (HICON) GetClassLongPtr (pRLWinPriv->hWnd, GCLP_HICONSM);
   iReturn = GetClassName (pRLWinPriv->hWnd, pszClass, CLASS_NAME_LENGTH);
 
   pRLWinPriv->fClose = TRUE;

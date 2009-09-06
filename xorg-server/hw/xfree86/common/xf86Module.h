@@ -82,8 +82,8 @@ typedef enum {
  * mask is 0xFFFF0000.
  */
 #define ABI_ANSIC_VERSION	SET_ABI_VERSION(0, 4)
-#define ABI_VIDEODRV_VERSION	SET_ABI_VERSION(5, 0)
-#define ABI_XINPUT_VERSION	SET_ABI_VERSION(4, 0)
+#define ABI_VIDEODRV_VERSION	SET_ABI_VERSION(6, 0)
+#define ABI_XINPUT_VERSION	SET_ABI_VERSION(7, 0)
 #define ABI_EXTENSION_VERSION	SET_ABI_VERSION(2, 0)
 #define ABI_FONT_VERSION	SET_ABI_VERSION(0, 6)
 
@@ -181,34 +181,22 @@ typedef struct {
     const char **	initDependencies;
 } ExtensionModule;
 
-extern ExtensionModule *ExtensionModuleList;
+extern _X_EXPORT ExtensionModule *ExtensionModuleList;
 
 /* Prototypes for Loader functions that are exported to modules */
-#ifndef IN_LOADER
-/* Prototypes with opaque pointers for use by modules */
-pointer LoadSubModule(pointer, const char *, const char **,
+extern _X_EXPORT pointer LoadSubModule(pointer, const char *, const char **,
 		      const char **, pointer, const XF86ModReqInfo *,
 		      int *, int *);
-pointer LoadSubModuleLocal(pointer, const char *, const char **,
-			   const char **, pointer, const XF86ModReqInfo *,
-			   int *, int *);
-void UnloadSubModule(pointer);
-void UnloadModule (pointer);
-#endif
-pointer LoaderSymbol(const char *);
-pointer LoaderSymbolLocal(pointer module, const char *);
-char **LoaderListDirs(const char **, const char **);
-void LoaderFreeDirList(char **);
-void LoaderErrorMsg(const char *, const char *, int, int);
-void LoadExtension(ExtensionModule *, Bool);
-void LoaderRefSymLists(const char **, ...);
-void LoaderRefSymbols(const char *, ...);
-void LoaderReqSymLists(const char **, ...);
-void LoaderReqSymbols(const char *, ...);
-int LoaderCheckUnresolved(int);
-void LoaderGetOS(const char **name, int *major, int *minor, int *teeny);
-Bool LoaderShouldIgnoreABI(void);
-int LoaderGetABIVersion(const char *abiclass);
+extern _X_EXPORT void UnloadSubModule(pointer);
+extern _X_EXPORT void UnloadModule (pointer);
+extern _X_EXPORT pointer LoaderSymbol(const char *);
+extern _X_EXPORT char **LoaderListDirs(const char **, const char **);
+extern _X_EXPORT void LoaderFreeDirList(char **);
+extern _X_EXPORT void LoaderErrorMsg(const char *, const char *, int, int);
+extern _X_EXPORT void LoadExtension(ExtensionModule *, Bool);
+extern _X_EXPORT void LoaderGetOS(const char **name, int *major, int *minor, int *teeny);
+extern _X_EXPORT Bool LoaderShouldIgnoreABI(void);
+extern _X_EXPORT int LoaderGetABIVersion(const char *abiclass);
 
 typedef pointer (*ModuleSetupProc)(pointer, pointer, int *, int *);
 typedef void (*ModuleTearDownProc)(pointer);

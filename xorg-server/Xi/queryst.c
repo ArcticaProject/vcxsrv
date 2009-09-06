@@ -32,8 +32,6 @@ from The Open Group.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -44,6 +42,8 @@ from The Open Group.
 #include <X11/extensions/XIproto.h>
 #include "exevents.h"
 #include "exglobals.h"
+#include "xkbsrv.h"
+#include "xkbstr.h"
 
 #include "queryst.h"
 
@@ -85,7 +85,7 @@ ProcXQueryDeviceState(ClientPtr client)
     xValuatorState *tv;
     xQueryDeviceStateReply rep;
     DeviceIntPtr dev;
-    int *values;
+    double *values;
 
     REQUEST(xQueryDeviceStateReq);
     REQUEST_SIZE_MATCH(xQueryDeviceStateReq);
@@ -128,7 +128,8 @@ ProcXQueryDeviceState(ClientPtr client)
 	tk = (xKeyState *) buf;
 	tk->class = KeyClass;
 	tk->length = sizeof(xKeyState);
-	tk->num_keys = k->curKeySyms.maxKeyCode - k->curKeySyms.minKeyCode + 1;
+	tk->num_keys = k->xkbInfo->desc->max_key_code -
+                       k->xkbInfo->desc->min_key_code + 1;
 	for (i = 0; i < 32; i++)
 	    tk->keys[i] = k->down[i];
 	buf += sizeof(xKeyState);
@@ -160,7 +161,7 @@ ProcXQueryDeviceState(ClientPtr client)
     }
 
     rep.num_classes = num_classes;
-    rep.length = (total_length + 3) >> 2;
+    rep.length = bytes_to_int32(total_length);
     WriteReplyToClient(client, sizeof(xQueryDeviceStateReply), &rep);
     if (total_length > 0)
 	WriteToClient(client, total_length, savbuf);

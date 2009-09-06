@@ -283,7 +283,7 @@ xf86OSInitVidMem(VidMemInfoPtr pVidMem)
 static Bool ExtendedEnabled = FALSE;
 static Bool InitDone = FALSE;
 
-_X_EXPORT Bool
+Bool
 xf86EnableIO()
 {
 	int i;
@@ -302,7 +302,7 @@ xf86EnableIO()
 	return TRUE;
 }
 	
-_X_EXPORT void
+void
 xf86DisableIO()
 {
 	if (!ExtendedEnabled)

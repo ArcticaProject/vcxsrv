@@ -28,7 +28,6 @@ SOFTWARE.
 #include "dixfont.h"
 #include <X11/fonts/fontstruct.h>
 #include "closure.h"
-#define NEED_REPLIES
 #include <X11/Xproto.h> /* for xQueryFontReply */
 
 #define FONTCHARSET(font)	  (font)

@@ -70,18 +70,16 @@ suspend (pmEvent event, Bool undo)
    xf86inSuspend = TRUE;
     
     for (i = 0; i < xf86NumScreens; i++) {
-        xf86EnableAccess(xf86Screens[i]);
 	if (xf86Screens[i]->EnableDisableFBAccess)
 	    (*xf86Screens[i]->EnableDisableFBAccess) (i, FALSE);
     }
     pInfo = xf86InputDevs;
     while (pInfo) {
-	DisableDevice(pInfo->dev);
+	DisableDevice(pInfo->dev, TRUE);
 	pInfo = pInfo->next;
     }
     xf86EnterServerState(SETUP);
     for (i = 0; i < xf86NumScreens; i++) {
-        xf86EnableAccess(xf86Screens[i]);
 	if (xf86Screens[i]->PMEvent)
 	    xf86Screens[i]->PMEvent(i,event,undo);
 	else {
@@ -90,7 +88,7 @@ suspend (pmEvent event, Bool undo)
 	}
     }
     xf86AccessLeave();      
-    xf86AccessLeaveState(); 
+
 }
 
 static void
@@ -102,7 +100,6 @@ resume(pmEvent event, Bool undo)
     xf86AccessEnter();
     xf86EnterServerState(SETUP);
     for (i = 0; i < xf86NumScreens; i++) {
-        xf86EnableAccess(xf86Screens[i]);
 	if (xf86Screens[i]->PMEvent)
 	    xf86Screens[i]->PMEvent(i,event,undo);
 	else {
@@ -112,14 +109,13 @@ resume(pmEvent event, Bool undo)
     }
     xf86EnterServerState(OPERATING);
     for (i = 0; i < xf86NumScreens; i++) {
-        xf86EnableAccess(xf86Screens[i]);
 	if (xf86Screens[i]->EnableDisableFBAccess)
 	    (*xf86Screens[i]->EnableDisableFBAccess) (i, TRUE);
     }
     dixSaveScreens(serverClient, SCREEN_SAVER_FORCER, ScreenSaverReset);
     pInfo = xf86InputDevs;
     while (pInfo) {
-	EnableDevice(pInfo->dev);
+	EnableDevice(pInfo->dev, TRUE);
 	pInfo = pInfo->next;
     }
     xf86inSuspend = FALSE;
@@ -167,7 +163,6 @@ DoApmEvent(pmEvent event, Bool undo)
 	    if (xf86Screens[i]->PMEvent) {
 		if (!setup) xf86EnterServerState(SETUP);
 		setup = 1;
-		xf86EnableAccess(xf86Screens[i]);
 		xf86Screens[i]->PMEvent(i,event,undo);
 	    }
 	}

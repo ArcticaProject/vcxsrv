@@ -91,10 +91,8 @@ typedef XID           KeySym64;
 #undef PictFormatType
 #endif
 
-#ifdef XKB
 #include <X11/extensions/XKB.h>
-#include <X11/extensions/XKBstr.h>
-#endif
+#include "xkbstr.h"
 
 #include <X11/extensions/XI.h>
 
@@ -134,14 +132,9 @@ extern int ChangeDeviceNotify;
 
 /* Some protocol gets included last, after undefines. */
 #include <X11/XKBlib.h>
-#ifdef XKB
 #include <X11/extensions/XKBproto.h>
-#ifndef XKB_IN_SERVER
-#define XKB_IN_SERVER
-#endif
-#include <xkbsrv.h>
+#include "xkbstr.h"
 #undef XPointer
-#endif
 #include <X11/extensions/XIproto.h>
 
 #endif

@@ -375,10 +375,10 @@ SProcRRSetCrtcTransform (ClientPtr client)
     REQUEST_AT_LEAST_SIZE(xRRSetCrtcTransformReq);
     swaps(&stuff->length, n);
     swapl(&stuff->crtc, n);
-    SwapLongs((CARD32 *)&stuff->transform, (sizeof(xRenderTransform)) >> 2);
+    SwapLongs((CARD32 *)&stuff->transform, bytes_to_int32(sizeof(xRenderTransform)));
     swaps(&stuff->nbytesFilter, n);
     filter = (char *)(stuff + 1);
-    params = (CARD32 *) (filter + ((stuff->nbytesFilter + 3) & ~3));
+    params = (CARD32 *) (filter + pad_to_int32(stuff->nbytesFilter));
     nparams = ((CARD32 *) stuff + client->req_len) - params;
     if (nparams < 0)
 	return BadLength;
@@ -453,7 +453,7 @@ static int
 SProcRRGetOutputPrimary (ClientPtr client)
 {
     int n;
-    REQUEST(xRRSetOutputPrimaryReq);
+    REQUEST(xRRGetOutputPrimaryReq);
 
     REQUEST_SIZE_MATCH(xRRGetOutputPrimaryReq);
     swaps(&stuff->length, n);

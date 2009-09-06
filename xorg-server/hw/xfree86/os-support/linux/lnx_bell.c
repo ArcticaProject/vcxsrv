@@ -34,7 +34,7 @@
 #include "xf86Priv.h"
 #include "xf86_OSproc.h"
 
-_X_EXPORT void
+void
 xf86OSRingBell(int loudness, int pitch, int duration)
 {
     if (xf86Info.consoleFd == -1 || !pitch || !loudness)

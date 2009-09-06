@@ -38,34 +38,50 @@ typedef struct
     char *layoutname;
 } WinKBLayoutRec, *WinKBLayoutPtr;
 
+/*
+   This table is sorted by low byte of winlayout, then by next byte, etc.
+*/
+
 WinKBLayoutRec winKBLayouts[] = 
 {
+    {  0x404, -1, "pc105", "zh_TW",   NULL, NULL, "Chinese (Taiwan)"},
     {  0x405, -1, "pc105", "cz",      NULL, NULL, "Czech"},
     {0x10405, -1, "pc105", "cz_qwerty", NULL, NULL, "Czech (QWERTY)"},
     {  0x406, -1, "pc105", "dk",      NULL, NULL, "Danish"},
     {  0x407, -1, "pc105", "de",      NULL, NULL, "German (Germany)"},
     {0x10407, -1, "pc105", "de",      NULL, NULL, "German (Germany, IBM)"},
-    {  0x807, -1, "pc105", "de_CH",   NULL, NULL, "German (Switzerland)"},
+    {  0x807, -1, "pc105", "ch",      "de", NULL, "German (Switzerland)"},
     {  0x409, -1, "pc105", "us",      NULL, NULL, "English (USA)"},
     {0x10409, -1, "pc105", "dvorak",  NULL, NULL, "English (USA, Dvorak)"}, 
     {0x20409, -1, "pc105", "us_intl", NULL, NULL, "English (USA, International)"}, 
     {  0x809, -1, "pc105", "gb",      NULL, NULL, "English (United Kingdom)"},
     { 0x1809, -1, "pc105", "ie",      NULL, NULL, "Irish"},
     {  0x40a, -1, "pc105", "es",      NULL, NULL, "Spanish (Spain, Traditional Sort)"},
+    {  0x80a, -1, "pc105", "latam",   NULL, NULL, "Latin American"},
     {  0x40b, -1, "pc105", "fi",      NULL, NULL, "Finnish"},
     {  0x40c, -1, "pc105", "fr",      NULL, NULL, "French (Standard)"},
     {  0x80c, -1, "pc105", "be",      NULL, NULL, "French (Belgian)"},
-    {  0xc0c, -1, "pc105", "ca_enhanced", NULL, NULL, "French (Canada)"},
-    { 0x100c, -1, "pc105", "fr_CH",   NULL, NULL, "French (Switzerland)"},
+    {  0xc0c, -1, "pc105", "ca",      "fr", NULL, "French (Canada)"},
+    { 0x100c, -1, "pc105", "ch",      "fr", NULL, "French (Switzerland)"},
+    {  0x40d, -1, "pc105", "il",      NULL, NULL, "Hebrew"},
     {  0x40e, -1, "pc105", "hu",      NULL, NULL, "Hungarian"},
+    {  0x40f, -1, "pc105", "is",      NULL, NULL, "Icelandic"},
     {  0x410, -1, "pc105", "it",      NULL, NULL, "Italian"},
+    {0x10410, -1, "pc105", "it",      NULL, NULL, "Italian (142)"},
+    {0xa0000410,-1, "macbook79","it",   "mac",NULL, "Italiano (Apple)"},
     {  0x411,  7, "jp106", "jp",      NULL, NULL, "Japanese"},
+    {  0x413, -1, "pc105", "nl",      NULL, NULL, "Dutch"},
     {  0x813, -1, "pc105", "be",      NULL, NULL, "Dutch (Belgian)"},  
     {  0x414, -1, "pc105", "no",      NULL, NULL, "Norwegian"},
+    {  0x415, -1, "pc105", "pl",      NULL, NULL, "Polish (Programmers)"},
     {  0x416, -1, "pc105", "br",      NULL, NULL, "Portuguese (Brazil, ABNT)"},
     {0x10416, -1, "abnt2", "br",      NULL, NULL, "Portuguese (Brazil, ABNT2)"},
     {  0x816, -1, "pc105", "pt",      NULL, NULL, "Portuguese (Portugal)"},
+    {  0x41a, -1, "pc105", "hr",      NULL, NULL, "Croatian"},
     {  0x41d, -1, "pc105", "se",      NULL, NULL, "Swedish (Sweden)"},
+    {  0x424, -1, "pc105", "si",      NULL, NULL, "Slovenian"},
+    {  0x425, -1, "pc105", "ee",      NULL, NULL, "Estonian"},
+    {  0x452, -1, "pc105", "gb",      "intl", NULL, "United Kingdom (Extended)"},
     {     -1, -1, NULL,    NULL,      NULL, NULL, NULL}
 };
 

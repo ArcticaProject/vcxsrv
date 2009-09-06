@@ -2,6 +2,7 @@
 #define _WINWINDOW_H_
 /*
  *Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2009
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,6 +29,7 @@
  *from the XFree86 Project.
  *
  * Authors:	Kensuke Matsuzaki
+ *              Colin Harrison
  */
 
 #ifndef NO
@@ -42,8 +44,8 @@
 #  define PROJECT_NAME		"Cygwin/X"
 #endif
 #define WINDOW_CLASS		"cygwin/x"
-#define WINDOW_TITLE		PROJECT_NAME " - %s:%d"
-#define WINDOW_TITLE_XDMCP	PROJECT_NAME " - %s"
+#define WINDOW_TITLE		PROJECT_NAME ":%s.%d"
+#define WINDOW_TITLE_XDMCP	"%s:%s.%d"
 #define WIN_SCR_PROP		"cyg_screen_prop rl"
 #define WINDOW_CLASS_X		"cygwin/x X rl"
 #define WINDOW_TITLE_X		PROJECT_NAME " X"
@@ -59,6 +61,8 @@
 #ifndef CYGWINDOWING_DEBUG
 #define CYGWINDOWING_DEBUG	NO
 #endif
+
+#define XMING_SIGNATURE		0x12345678L
 
 typedef struct _winPrivScreenRec *winPrivScreenPtr;
 
@@ -111,8 +115,24 @@ typedef struct _winWMMessageRec{
 #define		WM_WM_NAME_EVENT	(WM_USER + 9)
 #define		WM_WM_HINTS_EVENT	(WM_USER + 10)
 #define		WM_WM_CHANGE_STATE	(WM_USER + 11)
+#define		WM_WM_MAP2		(WM_USER + 12)
+#define		WM_WM_MAP3		(WM_USER + 13)
 #define		WM_MANAGE		(WM_USER + 100)
 #define		WM_UNMANAGE		(WM_USER + 102)
+
+#define		MwmHintsDecorations	(1L << 1)
+
+#define		MwmDecorAll		(1l << 0)
+#define		MwmDecorBorder		(1l << 1)
+#define		MwmDecorHandle		(1l << 2)
+#define		MwmDecorTitle		(1l << 3)
+
+/* This structure only contains 3 elements... the Motif 2.0 structure
+contains 5... we only need the first 3... so that is all we will define */
+typedef struct MwmHints {
+  unsigned long		flags, functions, decorations;
+} MwmHints;
+#define		PropMwmHintsElements	3
 
 void
 winSendMessageToWM (void *pWMInfo, winWMMessagePtr msg);

@@ -428,7 +428,7 @@ ephyrHostGLXSendClientInfo (int32_t a_major, int32_t a_minor,
     req->minor = a_minor;
 
     size = strlen (a_extension_list) + 1;
-    req->length += (size + 3) >> 2;
+    req->length += bytes_to_int32(size);
     req->numbytes = size;
     Data (dpy, a_extension_list, size);
 

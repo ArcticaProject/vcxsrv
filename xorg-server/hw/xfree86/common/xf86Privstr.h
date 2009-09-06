@@ -34,7 +34,6 @@
 #ifndef _XF86PRIVSTR_H
 #define _XF86PRIVSTR_H
 
-#include "xf86Pci.h"
 #include "xf86str.h"
 
 typedef enum {
@@ -42,12 +41,6 @@ typedef enum {
     LogFlush,
     LogSync
 } Log;
-
-typedef enum {
-    SKNever,
-    SKWhenNeeded,
-    SKAlways
-} SpecialKeysInDDX;
 
 typedef enum {
     XF86_GlxVisualsMinimal,
@@ -65,11 +58,13 @@ typedef struct {
     int			consoleFd;
     int			vtno;
     Bool		vtSysreq;
-    SpecialKeysInDDX	ddxSpecialKeys;
 
     /* event handler part */
     int			lastEventTime;
     Bool		vtRequestsPending;
+#ifdef sun
+    int			vtPendingNum;
+#endif
     Bool		dontVTSwitch;
     Bool		dontZap;
     Bool		dontZoom;

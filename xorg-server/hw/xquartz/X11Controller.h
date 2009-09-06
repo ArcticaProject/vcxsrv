@@ -30,10 +30,30 @@
 #ifndef X11CONTROLLER_H
 #define X11CONTROLLER_H 1
 
+#ifdef HAVE_DIX_CONFIG_H
+#include <dix-config.h>
+#endif
+
 #if __OBJC__
 
 #include "sanitizedCocoa.h"
 #include "xpr/x-list.h"
+
+#ifdef XQUARTZ_SPARKLE
+#define BOOL OSX_BOOL
+#include <Sparkle/SUUpdater.h>
+#undef BOOL
+#endif
+
+#ifndef NSINTEGER_DEFINED
+#if __LP64__ || NS_BUILD_32_LIKE_64
+typedef long NSInteger;
+typedef unsigned long NSUInteger;
+#else
+typedef int NSInteger;
+typedef unsigned int NSUInteger;
+#endif
+#endif
 
 @interface X11Controller : NSObject
 {
@@ -59,11 +79,19 @@
     IBOutlet NSTextField *sync_text2;
     IBOutlet NSPopUpButton *depth;
 
-    IBOutlet NSMenuItem *x11_about_item;
     IBOutlet NSMenuItem *window_separator;
+    // window_separator is DEPRECATED due to this radar:
+    // <rdar://problem/7088335> NSApplication releases the separator in the Windows menu even though it's an IBOutlet
+    // It is kept around for localization compatability and is subject to removal "eventually"
+    // If it is !NULL (meaning it is in the nib), it is removed from the menu and released
+
+    IBOutlet NSMenuItem *x11_about_item;
     IBOutlet NSMenuItem *dock_window_separator;
     IBOutlet NSMenuItem *apps_separator;
     IBOutlet NSMenuItem *toggle_fullscreen_item;
+#ifdef XQUARTZ_SPARKLE
+    NSMenuItem *check_for_updates_item; // Programatically enabled
+#endif
     IBOutlet NSMenuItem *copy_menu_item;
     IBOutlet NSMenu *dock_apps_menu;
     IBOutlet NSTableView *apps_table;
@@ -72,6 +100,9 @@
     NSMutableArray *table_apps;
 
     IBOutlet NSMenu *dock_menu;
+    
+    // This is where in the Windows menu we'll start (this will be the index of the separator)
+    NSInteger windows_menu_start;
 
     int checked_window_item;
     x_list *pending_apps;
@@ -83,6 +114,10 @@
 - (void) set_window_menu:(NSArray *)list;
 - (void) set_window_menu_check:(NSNumber *)n;
 - (void) set_apps_menu:(NSArray *)list;
+#ifdef XQUARTZ_SPARKLE
+- (void) setup_sparkle;
+- (void) updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update;
+#endif
 - (void) set_can_quit:(OSX_BOOL)state;
 - (void) server_ready;
 

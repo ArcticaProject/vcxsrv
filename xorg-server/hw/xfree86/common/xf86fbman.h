@@ -110,43 +110,43 @@ typedef struct {
 } FBManagerFuncs, *FBManagerFuncsPtr;
 
 
-Bool xf86RegisterOffscreenManager(
+extern _X_EXPORT Bool xf86RegisterOffscreenManager(
     ScreenPtr pScreen, 
     FBManagerFuncsPtr funcs
 );
 
-Bool
+extern _X_EXPORT Bool
 xf86InitFBManagerRegion(
     ScreenPtr pScreen, 
     RegionPtr ScreenRegion
 );
 
-Bool
+extern _X_EXPORT Bool
 xf86InitFBManagerArea(
     ScreenPtr pScreen,
     int PixalArea,
     int Verbosity
 );
 
-Bool
+extern _X_EXPORT Bool
 xf86InitFBManager(
     ScreenPtr pScreen, 
     BoxPtr FullBox
 );
 
-Bool
+extern _X_EXPORT Bool
 xf86InitFBManagerLinear(
     ScreenPtr pScreen, 
     int offset,
     int size
 );
 
-Bool 
+extern _X_EXPORT Bool
 xf86FBManagerRunning(
     ScreenPtr pScreen
 );
 
-FBAreaPtr 
+extern _X_EXPORT FBAreaPtr
 xf86AllocateOffscreenArea (
    ScreenPtr pScreen, 
    int w, int h,
@@ -156,7 +156,7 @@ xf86AllocateOffscreenArea (
    pointer privData
 );
 
-FBAreaPtr 
+extern _X_EXPORT FBAreaPtr
 xf86AllocateLinearOffscreenArea (
    ScreenPtr pScreen, 
    int length,
@@ -166,7 +166,7 @@ xf86AllocateLinearOffscreenArea (
    pointer privData
 );
 
-FBLinearPtr 
+extern _X_EXPORT FBLinearPtr
 xf86AllocateOffscreenLinear (
    ScreenPtr pScreen, 
    int length,
@@ -176,36 +176,36 @@ xf86AllocateOffscreenLinear (
    pointer privData
 );
 
-void xf86FreeOffscreenArea(FBAreaPtr area);
-void xf86FreeOffscreenLinear(FBLinearPtr area);
+extern _X_EXPORT void xf86FreeOffscreenArea(FBAreaPtr area);
+extern _X_EXPORT void xf86FreeOffscreenLinear(FBLinearPtr area);
 
-Bool 
+extern _X_EXPORT Bool
 xf86ResizeOffscreenArea(
    FBAreaPtr resize,
    int w, int h
 );
 
-Bool 
+extern _X_EXPORT Bool
 xf86ResizeOffscreenLinear(
    FBLinearPtr resize,
    int size
 );
 
 
-Bool
+extern _X_EXPORT Bool
 xf86RegisterFreeBoxCallback(
     ScreenPtr pScreen,  
     FreeBoxCallbackProcPtr FreeBoxCallback,
     pointer devPriv
 );
 
-Bool
+extern _X_EXPORT Bool
 xf86PurgeUnlockedOffscreenAreas(
     ScreenPtr pScreen
 );
 
 
-Bool
+extern _X_EXPORT Bool
 xf86QueryLargestOffscreenArea(
     ScreenPtr pScreen,
     int *width, int *height,
@@ -214,7 +214,7 @@ xf86QueryLargestOffscreenArea(
     int priority
 );
 
-Bool
+extern _X_EXPORT Bool
 xf86QueryLargestOffscreenLinear(
     ScreenPtr pScreen,
     int *size,

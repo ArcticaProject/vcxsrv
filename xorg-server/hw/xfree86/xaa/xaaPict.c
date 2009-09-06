@@ -75,12 +75,18 @@ XAAGetPixelFromRGBA (
         gshift = bbits;
 	rshift = gshift + gbits;
 	ashift = rshift + rbits;
-    } else {  /* PICT_TYPE_ABGR */
+    } else if(PICT_FORMAT_TYPE(format) == PICT_TYPE_ABGR) {
         rshift = 0;
 	gshift = rbits;
 	bshift = gshift + gbits;
 	ashift = bshift + bbits;
-    }
+    } else if(PICT_FORMAT_TYPE(format) == PICT_TYPE_BGRA) {
+	bshift = PICT_FORMAT_BPP(format) - bbits;
+	gshift = bshift - gbits;
+	rshift = gshift - rbits;
+	ashift = 0;
+    } else
+	return FALSE;
     
     *pixel |=  ( blue >> (16 - bbits)) << bshift;
     *pixel |=  (  red >> (16 - rbits)) << rshift;
@@ -116,12 +122,18 @@ XAAGetRGBAFromPixel(
         gshift = bbits;
 	rshift = gshift + gbits;
 	ashift = rshift + rbits;
-    } else {  /* PICT_TYPE_ABGR */
+    } else if(PICT_FORMAT_TYPE(format) == PICT_TYPE_ABGR) {
         rshift = 0;
 	gshift = rbits;
 	bshift = gshift + gbits;
 	ashift = bshift + bbits;
-    }
+    } else if(PICT_FORMAT_TYPE(format) == PICT_TYPE_BGRA) {
+	bshift = PICT_FORMAT_BPP(format) - bbits;
+	gshift = bshift - gbits;
+	rshift = gshift - rbits;
+	ashift = 0;
+    } else
+	return FALSE;
  
     *red = ((pixel >> rshift ) & ((1 << rbits) - 1)) << (16 - rbits);
     while(rbits < 16) {

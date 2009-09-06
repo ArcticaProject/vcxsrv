@@ -36,6 +36,10 @@
 #include "winmultiwindowclass.h"
 #include "winprefs.h"
 
+#include "propertyst.h"
+
+#include "propertyst.h"
+#include "windowstr.h"
 
 /*
  * External global variables
@@ -66,7 +70,7 @@ winScaleXBitmapToWindows (int iconSize,
 {
   int			row, column, effXBPP, effXDepth;
   unsigned char		*outPtr;
-  unsigned char		*iconData = 0;
+  char		*iconData = 0;
   int			stride, xStride;
   float			factX, factY;
   int			posX, posY;
@@ -83,8 +87,8 @@ winScaleXBitmapToWindows (int iconSize,
   if (pixmap->drawable.depth == 15)
     effXDepth = 16;
 
-  /* Need 32-bit aligned rows */
-  stride = ((iconSize * effBPP + 31) & (~31)) / 8;
+  /* Need 16-bit aligned rows for DDBitmaps */
+  stride = ((iconSize * effBPP + 15) & (~15)) / 8;
   xStride = PixmapBytePad (pixmap->drawable.width, pixmap->drawable.depth);
   if (stride == 0 || xStride == 0)
     {
@@ -126,7 +130,7 @@ winScaleXBitmapToWindows (int iconSize,
 	  posX = factX * column;
 	  posY = factY * row;
 	  
-	  ptr = iconData + posY*xStride;
+	  ptr = (unsigned char*) iconData + posY*xStride;
 	  if (effXBPP == 1)
 	    {
 	      ptr += posX / 8;
@@ -187,10 +191,10 @@ winScaleXBitmapToWindows (int iconSize,
 	      switch (effBPP)
 		{
 		case 32:
-		  *(outPtr++) = *(ptr++); // b
-		  *(outPtr++) = *(ptr++); // g
-		  *(outPtr++) = *(ptr++); // r
-		  *(outPtr++) = 0; // resvd
+		  *(outPtr++) = *(ptr++); /* b */
+		  *(outPtr++) = *(ptr++); /* g */
+		  *(outPtr++) = *(ptr++); /* r */
+		  *(outPtr++) = (effXDepth == 32) ? *(ptr++) : 0x0; /* alpha */
 		  break;
 		case 24:
 		  *(outPtr++) = *(ptr++);
@@ -231,7 +235,7 @@ winScaleXBitmapToWindows (int iconSize,
 		  *(outPtr++) = (color & 31) << 2;
 		  *(outPtr++) = ((color >> 5) & 31) << 2;
 		  *(outPtr++) = ((color >> 10) & 31) << 2;
-		  *(outPtr++) = 0; // resvd
+		  *(outPtr++) = 0; /* resvd */
 		  break;
 		case 24:
 		  *(outPtr++) = (color & 31) << 2;
@@ -260,6 +264,144 @@ winScaleXBitmapToWindows (int iconSize,
   free (iconData);
 }
 
+static HICON
+NetWMToWinIconAlpha(uint32_t *icon)
+{
+  int width = icon[0];
+  int height = icon[1];
+  uint32_t *pixels = &icon[2];
+  HICON result;
+  HDC hdc = GetDC(NULL);
+  uint32_t *DIB_pixels;
+  ICONINFO ii = {TRUE};
+  BITMAPV4HEADER bmh = {sizeof(bmh)};
+
+  /* Define an ARGB pixel format used for Color+Alpha icons */
+  bmh.bV4Width = width;
+  bmh.bV4Height = -height; /* Invert the image */
+  bmh.bV4Planes = 1;
+  bmh.bV4BitCount = 32;
+  bmh.bV4V4Compression = BI_BITFIELDS;
+  bmh.bV4AlphaMask = 0xFF000000;
+  bmh.bV4RedMask =   0x00FF0000;
+  bmh.bV4GreenMask = 0x0000FF00;
+  bmh.bV4BlueMask =  0x000000FF;
+
+  ii.hbmColor = CreateDIBSection(hdc, (BITMAPINFO*)&bmh,
+                DIB_RGB_COLORS, (void**)&DIB_pixels, NULL, 0);
+  ReleaseDC(NULL, hdc);
+  ii.hbmMask = CreateBitmap(width, height, 1, 1, NULL);
+  memcpy(DIB_pixels, pixels, height*width*4);
+
+  /* CreateIconIndirect() traditionally required DDBitmaps */
+  /* Systems from WinXP accept 32-bit ARGB DIBitmaps with full 8-bit alpha support */
+  /* The icon is created with a DIB + empty DDB mask (an MS example does the same) */
+  result = CreateIconIndirect(&ii);
+
+  DeleteObject(ii.hbmColor);
+  DeleteObject(ii.hbmMask);
+
+  winDebug("NetWMToWinIconAlpha - %d x %d = %p\n", icon[0], icon[1], result);
+  return result;
+}
+
+static HICON
+NetWMToWinIconThreshold(uint32_t *icon)
+{
+  int width = icon[0];
+  int height = icon[1];
+  uint32_t *pixels = &icon[2];
+  int row, col;
+  HICON result;
+  ICONINFO ii = {TRUE};
+
+  HDC hdc = GetDC(NULL);
+  HDC xorDC = CreateCompatibleDC(hdc);
+  HDC andDC = CreateCompatibleDC(hdc);
+  ii.hbmColor = CreateCompatibleBitmap(hdc, width, height);
+  ii.hbmMask = CreateCompatibleBitmap(hdc, width, height);
+  ReleaseDC(NULL, hdc);
+  SelectObject(xorDC, ii.hbmColor);
+  SelectObject(andDC, ii.hbmMask);
+
+  for (row = 0; row < height; row++) {
+    for (col = 0; col < width; col++) {
+      if ((*pixels & 0xFF000000) > 31<<24) { /* 31 alpha threshold, i.e. opaque above, transparent below */
+	SetPixelV(xorDC, col, row, RGB(((char*)pixels)[2], ((char*)pixels)[1],
+		((char*)pixels)[0]));
+	SetPixelV(andDC, col, row, RGB(0, 0, 0)); /* black mask */
+      }
+      else {
+	SetPixelV(xorDC, col, row, RGB(0, 0, 0));
+	SetPixelV(andDC, col, row, RGB(255, 255, 255)); /* white mask */
+      }
+      pixels++;
+    }
+  }
+  DeleteDC(xorDC);
+  DeleteDC(andDC);
+
+  result = CreateIconIndirect(&ii);
+
+  DeleteObject(ii.hbmColor);
+  DeleteObject(ii.hbmMask );
+
+  winDebug("NetWMToWinIconThreshold - %d x %d = %p\n", icon[0], icon[1], result);
+  return result;
+}
+
+static HICON
+NetWMToWinIcon(int bpp, uint32_t *icon)
+{
+  static Bool hasIconAlphaChannel = FALSE;
+  static BOOL versionChecked = FALSE;
+
+  if (!versionChecked)
+    {
+      OSVERSIONINFOEX osvi = {0};
+      ULONGLONG dwlConditionMask = 0;
+
+      osvi.dwOSVersionInfoSize = sizeof (osvi);
+      osvi.dwMajorVersion = 5;
+      osvi.dwMinorVersion = 1;
+
+      /* Windows versions later than XP have icon alpha channel suport, 2000 does not */
+      VER_SET_CONDITION(dwlConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+      VER_SET_CONDITION(dwlConditionMask, VER_MINORVERSION, VER_GREATER_EQUAL);
+      hasIconAlphaChannel = VerifyVersionInfo(&osvi, VER_MAJORVERSION | VER_MINORVERSION, dwlConditionMask);
+      versionChecked = TRUE;
+
+      ErrorF("OS has icon alpha channel support: %s\n", hasIconAlphaChannel ? "yes" : "no");
+    }
+
+  if (hasIconAlphaChannel && (bpp==32))
+    return NetWMToWinIconAlpha(icon);
+  else
+    return NetWMToWinIconThreshold(icon);
+}
+
+static pointer
+GetWindowProp(WindowPtr pWin, Atom name, long int *size_return)
+{
+  struct _Window	*pwin;
+  struct _Property	*prop;
+
+  if (!pWin || !name) {
+    ErrorF ("GetWindowProp - pWin or name was NULL\n");
+    return 0;
+  }
+  pwin = (struct _Window*) pWin;
+  if (!pwin->optional) return NULL;
+  for (prop = (struct _Property *) pwin->optional->userProps;
+       prop;
+       prop=prop->next){
+    if (prop->propertyName == name) {
+      *size_return=prop->size;
+      return prop->data;
+    }
+  }
+  return NULL;
+}
 
 /*
  * Attempt to create a custom icon from the WM_HINTS bitmaps
@@ -273,10 +415,49 @@ winXIconToHICON (WindowPtr pWin, int iconSize)
   PixmapPtr		iconPtr;
   PixmapPtr		maskPtr;
   int			planes, bpp, effBPP, stride, maskStride, i;
+  int			biggest_size = 0;
   HDC			hDC;
   ICONINFO		ii;
   WinXWMHints		hints;
-  HICON			hIcon;
+  HICON			hIcon = NULL;
+  uint32_t		*biggest_icon = NULL;
+
+  /* Try to get _NET_WM_ICON icons first */
+  static Atom _XA_NET_WM_ICON;
+  static int generation;
+  uint32_t *icon, *icon_data = NULL;
+  long int size=0;
+
+  hDC = GetDC (GetDesktopWindow ());
+  planes = GetDeviceCaps (hDC, PLANES);
+  bpp = GetDeviceCaps (hDC, BITSPIXEL);
+  ReleaseDC (GetDesktopWindow (), hDC);
+
+  if (generation != serverGeneration) {
+     generation = serverGeneration;
+     _XA_NET_WM_ICON = MakeAtom("_NET_WM_ICON", 12, TRUE);
+  }
+
+  if (_XA_NET_WM_ICON) icon_data = GetWindowProp(pWin, _XA_NET_WM_ICON, &size);
+  if (icon_data)
+    {
+      for(icon = icon_data;
+	  icon < &icon_data[size] && *icon;
+	  icon = &icon[icon[0]*icon[1]+2])
+	{
+	  if (icon[0]==iconSize && icon[1]==iconSize)
+            return NetWMToWinIcon(bpp, icon);
+	  /* Find the biggest icon and let Windows scale the size */
+	  else if (biggest_size < icon[0])
+	    {
+	      biggest_icon = icon;
+	      biggest_size = icon[0];
+	    }
+	}
+      if (biggest_icon)
+	return NetWMToWinIcon(bpp, biggest_icon);
+    }
+  winDebug("winXIconToHICON - pWin %x: no suitable NetIcon\n",(int)pWin, iconSize);
 
   winMultiWindowGetWMHints (pWin, &hints);
   if (!hints.icon_pixmap) return NULL;
@@ -284,23 +465,18 @@ winXIconToHICON (WindowPtr pWin, int iconSize)
   iconPtr = (PixmapPtr) LookupIDByType (hints.icon_pixmap, RT_PIXMAP);
   
   if (!iconPtr) return NULL;
-  
-  hDC = GetDC (GetDesktopWindow ());
-  planes = GetDeviceCaps (hDC, PLANES);
-  bpp = GetDeviceCaps (hDC, BITSPIXEL);
-  ReleaseDC (GetDesktopWindow (), hDC);
-  
+
   /* 15 BPP is really 16BPP as far as we care */
   if (bpp == 15)
     effBPP = 16;
   else
     effBPP = bpp;
   
-  /* Need 32-bit aligned rows */
-  stride = ((iconSize * effBPP + 31) & (~31)) / 8;
+  /* Need 16-bit aligned rows for DDBitmaps */
+  stride = ((iconSize * effBPP + 15) & (~15)) / 8;
 
   /* Mask is 1-bit deep */
-  maskStride = ((iconSize * 1 + 31) & (~31)) / 8; 
+  maskStride = ((iconSize * 1 + 15) & (~15)) / 8;
 
   image = malloc (stride * iconSize);
   imageMask = malloc (stride * iconSize);
@@ -364,43 +540,37 @@ void
 winUpdateIcon (Window id)
 {
   WindowPtr		pWin;
-  HICON			hIcon, hiconOld;
+  HICON			hIcon, hIconSmall=NULL, hIconOld;
 
   pWin = (WindowPtr) LookupIDByType (id, RT_WINDOW);
   if (!pWin) return;
-  hIcon = (HICON)winOverrideIcon ((unsigned long)pWin);
-
-  if (!hIcon)
-    hIcon = winXIconToHICON (pWin, GetSystemMetrics(SM_CXICON));
-
-  if (hIcon)
-    {
-      winWindowPriv(pWin);
-
-      if (pWinPriv->hWnd)
-	{
-	  hiconOld = (HICON) SetClassLong (pWinPriv->hWnd,
-					   GCL_HICON,
-					   (int) hIcon);
-	  
-	  /* Delete the icon if its not the default */
-	  winDestroyIcon(hiconOld);
-	}
+  winWindowPriv(pWin);
+  if (pWinPriv->hWnd) {
+    hIcon = winOverrideIcon ((unsigned long)pWin);
+    if (!hIcon) {
+      hIcon = winXIconToHICON (pWin, GetSystemMetrics(SM_CXICON));
+      if (!hIcon) {
+        hIcon = g_hIconX;
+        hIconSmall = g_hSmallIconX;
+      } else {
+        /* Leave undefined if not found */
+        hIconSmall = winXIconToHICON (pWin, GetSystemMetrics(SM_CXSMICON));
+      }
     }
- 
-  hIcon = winXIconToHICON (pWin, GetSystemMetrics(SM_CXSMICON));
-  if (hIcon)
-    {
-      winWindowPriv(pWin);
 
-      if (pWinPriv->hWnd)
-	{
-	  hiconOld = (HICON) SetClassLong (pWinPriv->hWnd,
-					   GCL_HICONSM,
-					   (int) hIcon);
-	  winDestroyIcon (hiconOld);
-	}
-    }
+    /* Set the large icon */
+    hIconOld = (HICON) SendMessage (pWinPriv->hWnd,
+                     WM_SETICON, ICON_BIG, (LPARAM) hIcon);
+
+    /* Delete the icon if its not the default */
+    winDestroyIcon(hIconOld);
+
+    /* Same for the small icon */
+    hIconOld = (HICON) SendMessage (pWinPriv->hWnd,
+                    WM_SETICON, ICON_SMALL, (LPARAM) hIconSmall);
+    winDestroyIcon(hIconOld);
+
+  }
 }
 
 void winInitGlobalIcons (void)
@@ -410,8 +580,8 @@ void winInitGlobalIcons (void)
   /* Load default X icon in case it's not ready yet */
   if (!g_hIconX) 
     {  
-      g_hIconX = (HICON)winOverrideDefaultIcon(sm_cx);
-      g_hSmallIconX = (HICON)winOverrideDefaultIcon(sm_cxsm);
+      g_hIconX = winOverrideDefaultIcon(sm_cx);
+      g_hSmallIconX = winOverrideDefaultIcon(sm_cxsm);
     }
   
   if (!g_hIconX)

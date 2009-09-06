@@ -44,6 +44,7 @@
 #include <sys/un.h>
 
 #include <sys/time.h>
+#include <fcntl.h>
 
 #include <mach/mach.h>
 #include <mach/mach_error.h>
@@ -514,8 +515,43 @@ int main(int argc, char **argv, char **envp) {
      * thread handle it.
      */
     if(!listenOnly) {
-        if(fork() == 0) {
-            return startup_trigger(argc, argv, envp);
+        pid_t child1, child2;
+        int status;
+
+        /* Do the fork-twice trick to avoid having to reap zombies */
+        child1 = fork();
+        switch (child1) {
+            case -1:                                /* error */
+                break;
+
+            case 0:                                 /* child1 */
+                child2 = fork();
+
+                switch (child2) {
+                    int max_files, i;
+
+                    case -1:                            /* error */
+                        break;
+
+                    case 0:                             /* child2 */
+                        /* close all open files except for standard streams */
+                        max_files = sysconf(_SC_OPEN_MAX);
+                        for(i = 3; i < max_files; i++)
+                            close(i);
+
+                        /* ensure stdin is on /dev/null */
+                        close(0);
+                        open("/dev/null", O_RDONLY);
+
+                        return startup_trigger(argc, argv, envp);
+
+                    default:                            /* parent (child1) */
+                        _exit(0);
+                }
+                break;
+
+            default:                                /* parent */
+              waitpid(child1, &status, 0);
         }
     }
     

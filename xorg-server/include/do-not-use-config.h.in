@@ -265,6 +265,12 @@
 /* Define to 1 if you have the `pci_device_enable' function. */
 #undef HAVE_PCI_DEVICE_ENABLE
 
+/* Define to 1 if you have the `pci_device_is_boot_vga' function. */
+#undef HAVE_PCI_DEVICE_IS_BOOT_VGA
+
+/* Define to 1 if you have the `pci_device_vgaarb_init' function. */
+#undef HAVE_PCI_DEVICE_VGAARB_INIT
+
 /* Define to 1 if you have the `pci_system_init_dev_mem' function. */
 #undef HAVE_PCI_SYSTEM_INIT_DEV_MEM
 
@@ -307,6 +313,9 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
+/* Define to 1 if you have the <stropts.h> header file. */
+#undef HAVE_STROPTS_H
+
 /* Define to 1 if you have the `strrchr' function. */
 #undef HAVE_STRRCHR
 
@@ -315,6 +324,9 @@
 
 /* Define to 1 if SYSV IPC is available */
 #undef HAVE_SYSV_IPC
+
+/* Define to 1 if you have the <sys/agpgart.h> header file. */
+#undef HAVE_SYS_AGPGART_H
 
 /* Define to 1 if you have the <sys/agpio.h> header file. */
 #undef HAVE_SYS_AGPIO_H
@@ -347,6 +359,9 @@
 
 /* Define to 1 if you have the <sys/vm86.h> header file. */
 #undef HAVE_SYS_VM86_H
+
+/* Define to 1 if you have the <sys/vt.h> header file. */
+#undef HAVE_SYS_VT_H
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
@@ -432,9 +447,6 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
-
-/* Define to the home page for this package. */
-#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
@@ -522,6 +534,9 @@
 /* Have tslib support */
 #undef TSLIB
 
+/* Enable unit tests */
+#undef UNITTESTS
+
 /* Support UNIX socket connections */
 #undef UNIXCONN
 
@@ -539,6 +554,18 @@
 
 /* Define to use byteswap macros from <sys/endian.h> */
 #undef USE_SYS_ENDIAN_H
+
+/* Vendor man version */
+#undef VENDOR_MAN_VERSION
+
+/* Vendor name */
+#undef VENDOR_NAME
+
+/* Vendor name */
+#undef VENDOR_NAME_SHORT
+
+/* Vendor release */
+#undef VENDOR_RELEASE
 
 /* Version number of package */
 #undef VERSION
@@ -603,20 +630,26 @@
 /* Support Xinerama extension */
 #undef XINERAMA
 
-/* Build XKB */
-#undef XKB
-
 /* Path to XKB data */
 #undef XKB_BASE_DIRECTORY
 
 /* Path to XKB bin dir */
 #undef XKB_BIN_DIRECTORY
 
-/* Disable XKB per default */
-#undef XKB_DFLT_DISABLED
+/* Default XKB layout */
+#undef XKB_DFLT_LAYOUT
 
-/* Build XKB server */
-#undef XKB_IN_SERVER
+/* Default XKB model */
+#undef XKB_DFLT_MODEL
+
+/* Default XKB options */
+#undef XKB_DFLT_OPTIONS
+
+/* Default XKB ruleset */
+#undef XKB_DFLT_RULES
+
+/* Default XKB variant */
+#undef XKB_DFLT_VARIANT
 
 /* Path to XKB output dir */
 #undef XKM_OUTPUT_DIR
@@ -638,6 +671,9 @@
 
 /* Have Quartz */
 #undef XQUARTZ
+
+/* Support application updating through sparkle. */
+#undef XQUARTZ_SPARKLE
 
 /* Support Record extension */
 #undef XRECORD
@@ -694,17 +730,11 @@
 /* Define to 1 if unsigned long is 64 bits. */
 #undef _XSERVER64
 
-/* Solaris 8 or later */
-#undef __SOL8__
-
 /* Vendor web address for support */
 #undef __VENDORDWEBSUPPORT__
 
 /* Name of configuration file */
 #undef __XCONFIGFILE__
-
-/* Default XKB rules */
-#undef __XKBDEFRULES__
 
 /* Name of X server */
 #undef __XSERVERNAME__

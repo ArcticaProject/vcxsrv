@@ -186,7 +186,7 @@ xf86OSInitVidMem(VidMemInfoPtr pVidMem)
 /*
  * Read BIOS via mmap()ing physical memory.
  */
-_X_EXPORT int
+int
 xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	     int Len)
 {
@@ -235,7 +235,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 static Bool ExtendedEnabled = FALSE;
 #endif
 
-_X_EXPORT Bool
+Bool
 xf86EnableIO(void)
 {
 #if defined(__i386__) || defined(__i386) || defined(__x86)
@@ -251,7 +251,7 @@ xf86EnableIO(void)
     return TRUE;
 }
 
-_X_EXPORT void
+void
 xf86DisableIO(void)
 {
 #if defined(__i386__) || defined(__i386) || defined(__x86)

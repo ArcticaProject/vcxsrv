@@ -20,7 +20,6 @@
 # (Replaces CppFileTarget from Imake)
 
 
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -40,17 +39,23 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-DIST_COMMON = $(dist_options_DATA) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(top_srcdir)/cpprules.in
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(top_srcdir)/cpprules.in
 bin_PROGRAMS = Xorg$(EXEEXT)
+
+# Re-add dtrace object code that gets lost when building static libraries
+@XSERVER_DTRACE_TRUE@am__append_1 = $(XSERVER_LIBS)
 
 # Needs to be built before any files are compiled when using Sun compilers
 # so in*/out* inline definitions are properly processed.
-@SOLARIS_ASM_INLINE_TRUE@am__append_1 = os-support/solaris/solaris-@SOLARIS_INOUT_ARCH@.il
+@SOLARIS_ASM_INLINE_TRUE@am__append_2 = os-support/solaris/solaris-@SOLARIS_INOUT_ARCH@.il
 subdir = hw/xfree86
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
+	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/shave.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -60,25 +65,19 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 	$(top_builddir)/include/xorg-config.h \
 	$(top_builddir)/include/xkb-config.h \
 	$(top_builddir)/include/xwin-config.h \
-	$(top_builddir)/include/kdrive-config.h
+	$(top_builddir)/include/kdrive-config.h \
+	$(top_builddir)/include/version-config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libosandcommon_la_DEPENDENCIES = os-support/libxorgos.la \
-	common/libcommon.la
-am_libosandcommon_la_OBJECTS = osandcommon.lo
-libosandcommon_la_OBJECTS = $(am_libosandcommon_la_OBJECTS)
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(optionsdir)"
+am__DEPENDENCIES_1 =
+am_libxorg_la_OBJECTS = libxorg.lo
+libxorg_la_OBJECTS = $(am_libxorg_la_OBJECTS)
+am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_Xorg_OBJECTS = xorg.$(OBJEXT)
 Xorg_OBJECTS = $(am_Xorg_OBJECTS)
-am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) common/libinit.a \
-	loader/libloader.a libosandcommon.la parser/libxf86config.a \
-	dixmods/libdixmods.la modes/libxf86modes.a ramdac/libramdac.a \
-	ddc/libddc.a i2c/libi2c.a dixmods/libxorgxkb.la \
-	$(top_builddir)/mi/libmi.la $(top_builddir)/os/libos.la \
-	dixmods/libxorgxkb.la
+@XSERVER_DTRACE_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 Xorg_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(Xorg_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -92,8 +91,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libosandcommon_la_SOURCES) $(Xorg_SOURCES)
-DIST_SOURCES = $(libosandcommon_la_SOURCES) $(Xorg_SOURCES)
+SOURCES = $(libxorg_la_SOURCES) $(Xorg_SOURCES)
+DIST_SOURCES = $(libxorg_la_SOURCES) $(Xorg_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -101,28 +100,6 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-pdf-recursive install-ps-recursive install-recursive \
 	installcheck-recursive installdirs-recursive pdf-recursive \
 	ps-recursive uninstall-recursive
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
-am__install_max = 40
-am__nobase_strip_setup = \
-  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
-am__nobase_strip = \
-  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
-am__nobase_list = $(am__nobase_strip_setup); \
-  for p in $$list; do echo "$$p $$p"; done | \
-  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
-  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
-    if (++n[$$2] == $(am__install_max)) \
-      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
-    END { for (dir in files) print dir, files[dir] }'
-am__base_list = \
-  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
-  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-DATA = $(dist_options_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -161,6 +138,7 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
 APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
@@ -181,9 +159,12 @@ CCASDEPMODE = @CCASDEPMODE@
 CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CHANGELOG_CMD = @CHANGELOG_CMD@
 COMPILEDDEFAULTFONTPATH = @COMPILEDDEFAULTFONTPATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CWARNFLAGS = @CWARNFLAGS@
+CXX = @CXX@
 CYGPATH_W = @CYGPATH_W@
 DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
@@ -212,7 +193,9 @@ DRIPROTO_CFLAGS = @DRIPROTO_CFLAGS@
 DRIPROTO_LIBS = @DRIPROTO_LIBS@
 DRIVER_MAN_DIR = @DRIVER_MAN_DIR@
 DRIVER_MAN_SUFFIX = @DRIVER_MAN_SUFFIX@
+DRI_CFLAGS = @DRI_CFLAGS@
 DRI_DRIVER_PATH = @DRI_DRIVER_PATH@
+DRI_LIBS = @DRI_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DTRACE = @DTRACE@
 DUMPBIN = @DUMPBIN@
@@ -221,9 +204,13 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FC = @FC@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
 GLX_DEFINES = @GLX_DEFINES@
 GL_CFLAGS = @GL_CFLAGS@
@@ -262,12 +249,13 @@ LTCOMPILE = @LTCOMPILE@
 LTCXXCOMPILE = @LTCXXCOMPILE@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
+MAIN_LIB = @MAIN_LIB@
+MAKEFLAGS = @MAKEFLAGS@
 MAKEINFO = @MAKEINFO@
 MAKE_HTML = @MAKE_HTML@
 MAKE_PDF = @MAKE_PDF@
 MAKE_PS = @MAKE_PS@
 MAKE_TEXT = @MAKE_TEXT@
-MESA_SOURCE = @MESA_SOURCE@
 MISC_MAN_DIR = @MISC_MAN_DIR@
 MISC_MAN_SUFFIX = @MISC_MAN_SUFFIX@
 MKDIR_P = @MKDIR_P@
@@ -287,7 +275,6 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PCIACCESS_CFLAGS = @PCIACCESS_CFLAGS@
@@ -297,6 +284,7 @@ PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PROJECTROOT = @PROJECTROOT@
 PS2PDF = @PS2PDF@
+Q = @Q@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
@@ -310,11 +298,10 @@ STRIP = @STRIP@
 TSLIB_CFLAGS = @TSLIB_CFLAGS@
 TSLIB_LIBS = @TSLIB_LIBS@
 UTILS_SYS_LIBS = @UTILS_SYS_LIBS@
-VENDOR_MAN_VERSION = @VENDOR_MAN_VERSION@
-VENDOR_NAME = @VENDOR_NAME@
+V = @V@
 VENDOR_NAME_SHORT = @VENDOR_NAME_SHORT@
-VENDOR_RELEASE = @VENDOR_RELEASE@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 X11EXAMPLES_DEP_CFLAGS = @X11EXAMPLES_DEP_CFLAGS@
 X11EXAMPLES_DEP_LIBS = @X11EXAMPLES_DEP_LIBS@
 XDMCP_CFLAGS = @XDMCP_CFLAGS@
@@ -342,23 +329,7 @@ XNEST_LIBS = @XNEST_LIBS@
 XNEST_SYS_LIBS = @XNEST_SYS_LIBS@
 XORG_CFLAGS = @XORG_CFLAGS@
 XORG_INCS = @XORG_INCS@
-XORG_LIBS = \
-            $(XSERVER_LIBS) \
-            common/libinit.a \
-            loader/libloader.a \
-            libosandcommon.la \
-            parser/libxf86config.a \
-	    dixmods/libdixmods.la \
-	    modes/libxf86modes.a \
-	    ramdac/libramdac.a \
-	    ddc/libddc.a \
-	    i2c/libi2c.a \
-	    dixmods/libxorgxkb.la \
-	    $(top_builddir)/mi/libmi.la \
-	    $(top_builddir)/os/libos.la \
-	    @XORG_LIBS@ \
-	    dixmods/libxorgxkb.la
-
+XORG_LIBS = @XORG_LIBS@
 XORG_MODULES_CFLAGS = @XORG_MODULES_CFLAGS@
 XORG_MODULES_LIBS = @XORG_MODULES_LIBS@
 XORG_OS = @XORG_OS@
@@ -366,6 +337,7 @@ XORG_OS_SUBDIR = @XORG_OS_SUBDIR@
 XORG_SYS_LIBS = @XORG_SYS_LIBS@
 XPBPROXY_CFLAGS = @XPBPROXY_CFLAGS@
 XPBPROXY_LIBS = @XPBPROXY_LIBS@
+XQUARTZ_SPARKLE = @XQUARTZ_SPARKLE@
 XRESEXAMPLES_DEP_CFLAGS = @XRESEXAMPLES_DEP_CFLAGS@
 XRESEXAMPLES_DEP_LIBS = @XRESEXAMPLES_DEP_LIBS@
 XSDL_INCS = @XSDL_INCS@
@@ -390,7 +362,6 @@ YFLAGS = @YFLAGS@
 __XCONFIGFILE__ = @__XCONFIGFILE__@
 abi_ansic = @abi_ansic@
 abi_extension = @abi_extension@
-abi_font = @abi_font@
 abi_videodrv = @abi_videodrv@
 abi_xinput = @abi_xinput@
 abs_builddir = @abs_builddir@
@@ -413,6 +384,7 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
+distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -444,7 +416,9 @@ psdir = @psdir@
 sbindir = @sbindir@
 sdkdir = @sdkdir@
 sharedstatedir = @sharedstatedir@
+shavedir = @shavedir@
 srcdir = @srcdir@
+symbol_visibility = @symbol_visibility@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
@@ -487,38 +461,53 @@ MANDEFS = \
 @DRI_TRUE@DRI_SUBDIR = dri
 @DRI2_TRUE@DRI2_SUBDIR = dri2
 @XF86UTILS_TRUE@XF86UTILS_SUBDIR = utils
+@XAA_TRUE@XAA_SUBDIR = xaa
+@VGAHW_TRUE@VGAHW_SUBDIR = vgahw
+@VBE_TRUE@VBE_SUBDIR = vbe
+@INT10MODULE_TRUE@INT10_SUBDIR = int10
 DOC_SUBDIR = doc
-SUBDIRS = common ddc dummylib i2c x86emu int10 fbdevhw os-support parser \
-	  ramdac shadowfb vbe vgahw xaa \
+SUBDIRS = common ddc i2c x86emu $(INT10_SUBDIR) fbdevhw os-support parser \
+	  ramdac shadowfb $(VBE_SUBDIR) $(VGAHW_SUBDIR) $(XAA_SUBDIR) \
 	  xf8_16bpp loader dixmods exa modes \
 	  $(DRI_SUBDIR) $(DRI2_SUBDIR) $(XF86UTILS_SUBDIR) $(DOC_SUBDIR)
 
-DIST_SUBDIRS = common ddc dummylib i2c x86emu int10 fbdevhw os-support \
+DIST_SUBDIRS = common ddc i2c x86emu int10 fbdevhw os-support \
                parser ramdac shadowfb vbe vgahw xaa \
                xf8_16bpp loader dixmods dri dri2 exa modes \
 	       utils doc
 
+Xorg_SOURCES = xorg.c
 AM_CFLAGS = $(DIX_CFLAGS) @XORG_CFLAGS@
 INCLUDES = @XORG_INCS@ 
-Xorg_SOURCES = xorg.c
-
-# libxorgos and libcommon need symbols from each other
-noinst_LTLIBRARIES = libosandcommon.la
-libosandcommon_la_SOURCES = osandcommon.c
-libosandcommon_la_LIBADD = \
+noinst_LTLIBRARIES = libxorg.la
+libxorg_la_SOURCES = libxorg.c
+libxorg_la_LIBADD = \
+            $(XSERVER_LIBS) \
+            loader/libloader.la \
             os-support/libxorgos.la \
-            common/libcommon.la
+            common/libcommon.la \
+            parser/libxf86config_internal.la \
+            dixmods/libdixmods.la \
+            modes/libxf86modes.la \
+            ramdac/libramdac.la \
+            ddc/libddc.la \
+            i2c/libi2c.la \
+            dixmods/libxorgxkb.la \
+            $(top_builddir)/mi/libmi.la \
+            $(top_builddir)/os/libos.la \
+            @XORG_LIBS@
 
-DISTCLEANFILES = osandcommon.c xorg.c xorg.conf.example \
+libxorg_la_DEPENDENCIES = $(libxorg_la_LIBADD)
+DISTCLEANFILES = libxorg.c xorg.c xorg.conf.example \
 	xorg.conf.example.pre
-Xorg_DEPENDENCIES = $(XORG_LIBS)
-Xorg_LDADD = $(XORG_LIBS) $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS)
+Xorg_DEPENDENCIES = libxorg.la
+Xorg_LDADD = $(MAIN_LIB) libxorg.la $(XORG_SYS_LIBS) \
+	$(XSERVER_SYS_LIBS) $(am__append_1)
 Xorg_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
-BUILT_SOURCES = xorg.conf.example $(am__append_1)
+BUILT_SOURCES = xorg.conf.example $(am__append_2)
 EXTRA_DIST = xorgconf.cpp
-optionsdir = $(libdir)/X11
-dist_options_DATA = Options
 CPP_FILES_FLAGS = \
+	$(MANDEFS) \
 	-DLOCALFONTPATH="\"$(BASE_FONT_PATH)/local\"" \
 	-DMISCFONTPATH="\"$(BASE_FONT_PATH)/misc\"" \
 	-DT1FONTPATH="\"$(BASE_FONT_PATH)/Type1\"" \
@@ -571,8 +560,8 @@ clean-noinstLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libosandcommon.la: $(libosandcommon_la_OBJECTS) $(libosandcommon_la_DEPENDENCIES) 
-	$(LINK)  $(libosandcommon_la_OBJECTS) $(libosandcommon_la_LIBADD) $(LIBS)
+libxorg.la: $(libxorg_la_OBJECTS) $(libxorg_la_DEPENDENCIES) 
+	$(LINK)  $(libxorg_la_OBJECTS) $(libxorg_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -626,7 +615,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/osandcommon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libxorg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xorg.Po@am__quote@
 
 .c.o:
@@ -655,26 +644,6 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-dist_optionsDATA: $(dist_options_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(optionsdir)" || $(MKDIR_P) "$(DESTDIR)$(optionsdir)"
-	@list='$(dist_options_DATA)'; test -n "$(optionsdir)" || list=; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(optionsdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(optionsdir)" || exit $$?; \
-	done
-
-uninstall-dist_optionsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_options_DATA)'; test -n "$(optionsdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(optionsdir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(optionsdir)" && rm -f $$files
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -872,10 +841,10 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-recursive
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA)
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(optionsdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -929,7 +898,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-data-local install-dist_optionsDATA
+install-data-am: install-data-local
 
 install-dvi: install-dvi-recursive
 
@@ -975,7 +944,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-dist_optionsDATA
+uninstall-am: uninstall-binPROGRAMS
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all check \
 	ctags-recursive install install-am install-strip \
@@ -987,17 +956,16 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_optionsDATA
 	ctags-recursive distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-binPROGRAMS \
-	install-data install-data-am install-data-local \
-	install-dist_optionsDATA install-dvi install-dvi-am \
-	install-exec install-exec-am install-exec-local install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-dist_optionsDATA
+	install-data install-data-am install-data-local install-dvi \
+	install-dvi-am install-exec install-exec-am install-exec-local \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am \
+	uninstall-binPROGRAMS
 
 
 .pre:
@@ -1006,7 +974,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_optionsDATA
 .man.pre.man:
 	$(RAWCPP) $(RAWCPPFLAGS) $(MANDEFS) $(EXTRAMANDEFS) < $< | $(CPP_SED_MAGIC) > $@
 
-osandcommon.c xorg.c:
+libxorg.c xorg.c:
 	touch $@
 
 @SOLARIS_ASM_INLINE_TRUE@os-support/solaris/solaris-@SOLARIS_INOUT_ARCH@.il:

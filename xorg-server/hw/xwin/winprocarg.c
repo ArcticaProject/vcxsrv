@@ -31,9 +31,9 @@ from The Open Group.
 #endif
 #ifdef XVENDORNAME
 #define VENDOR_STRING XVENDORNAME
-#define VERSION_STRING XORG_RELEASE
 #define VENDOR_CONTACT BUILDERADDR
 #endif
+#include <../xfree86/common/xorgVersion.h>
 #include "win.h"
 #include "winconfig.h"
 #include "winprefs.h"
@@ -1369,16 +1369,6 @@ ddxProcessArgument (int argc, char *argv[], int i)
     }
 #endif
 
-#ifdef XKB
-  /*
-   * Look for the '-kb' argument
-   */
-  if (IS_OPTION ("-kb"))
-    {
-      g_cmdline.noXkbExtension = TRUE;  
-      return 0; /* Let DIX parse this again */
-    }
-
   if (IS_OPTION ("-xkbrules"))
     {
       CHECK_ARGS (1);
@@ -1409,7 +1399,6 @@ ddxProcessArgument (int argc, char *argv[], int i)
       g_cmdline.xkbOptions = argv[++i];
       return 2;
     }
-#endif
 
   if (IS_OPTION ("-keyhook"))
     {
@@ -1459,13 +1448,13 @@ winLogCommandLine (int argc, char *argv[])
   for (i = 0, iCurrLen = 0; i < argc; ++i)
     if (argv[i])
       {
-	/* Add a character for lines that overflow */
+	/* Adds two characters for lines that overflow */
 	if ((strlen (argv[i]) < CHARS_PER_LINE
 	    && iCurrLen + strlen (argv[i]) > CHARS_PER_LINE)
 	    || strlen (argv[i]) > CHARS_PER_LINE)
 	  {
 	    iCurrLen = 0;
-	    ++iSize;
+	    iSize += 2;
 	  }
 	
 	/* Add space for item and trailing space */
@@ -1495,7 +1484,7 @@ winLogCommandLine (int argc, char *argv[])
 	iCurrLen = 0;
 	
 	/* Add line break if it fits */
-	strncat (g_pszCommandLine, "\n", iSize - strlen (g_pszCommandLine));
+	strncat (g_pszCommandLine, "\n ", iSize - strlen (g_pszCommandLine));
       }
       
       strncat (g_pszCommandLine, argv[i], iSize - strlen (g_pszCommandLine));
@@ -1525,7 +1514,7 @@ winLogVersionInfo (void)
 
   ErrorF ("Welcome to the XWin X Server\n");
   ErrorF ("Vendor: %s\n", VENDOR_STRING);
-  ErrorF ("Release: %s\n\n", VERSION_STRING);
+  ErrorF ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
   ErrorF ("Contact: %s\n\n", VENDOR_CONTACT);
 }
 

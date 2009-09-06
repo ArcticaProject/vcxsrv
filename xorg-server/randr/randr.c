@@ -25,8 +25,6 @@
  *	    Keith Packard, Intel Corporation
  */
 
-#define NEED_REPLIES
-#define NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -288,7 +286,8 @@ RRFreeClient (pointer data, XID id)
 
     pRREvent = (RREventPtr) data;
     pWin = pRREvent->window;
-    pHead = (RREventPtr *) LookupIDByType(pWin->drawable.id, RREventType);
+    dixLookupResourceByType((pointer *)&pHead, pWin->drawable.id,
+			    RREventType, serverClient, DixDestroyAccess);
     if (pHead) {
 	pPrev = 0;
 	for (pCur = *pHead; pCur && pCur != pRREvent; pCur=pCur->next)
@@ -366,7 +365,8 @@ TellChanged (WindowPtr pWin, pointer value)
     rrScrPriv(pScreen);
     int				i;
 
-    pHead = (RREventPtr *) LookupIDByType (pWin->drawable.id, RREventType);
+    dixLookupResourceByType((pointer *)&pHead, pWin->drawable.id,
+			    RREventType, serverClient, DixReadAccess);
     if (!pHead)
 	return WT_WALKCHILDREN;
 

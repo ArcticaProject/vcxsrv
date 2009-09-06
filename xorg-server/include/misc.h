@@ -72,9 +72,6 @@ OF THIS SOFTWARE.
  *
  */
 
-extern unsigned long globalSerialNumber;
-extern unsigned long serverGeneration;
-
 #include <X11/Xosdefs.h>
 #include <X11/Xfuncproto.h>
 #include <X11/Xmd.h>
@@ -89,7 +86,7 @@ extern unsigned long serverGeneration;
 #define MAXCLIENTS	256
 #define MAXEXTENSIONS   128
 #define MAXFORMATS	8
-#define MAXDEVICES	20 /* input devices */
+#define MAXDEVICES	40 /* input devices */
 
 #define EXTENSION_EVENT_BASE 64
 #define EXTENSION_BASE 128
@@ -183,6 +180,36 @@ typedef struct _xReq *xReqPtr;
 
 #endif
 
+/**
+ * Calculate the number of bytes needed to hold bits.
+ * @param bits The minimum number of bits needed.
+ * @return The number of bytes needed to hold bits.
+ */
+static inline int
+bits_to_bytes(const int bits) {
+    return ((bits + 7) >> 3);
+}
+/**
+ * Calculate the number of 4-byte units needed to hold the given number of
+ * bytes.
+ * @param bytes The minimum number of bytes needed.
+ * @return The number of 4-byte units needed to hold bytes.
+ */
+static inline int
+bytes_to_int32(const int bytes) {
+    return (((bytes) + 3) >> 2);
+}
+
+/**
+ * Calculate the number of bytes (in multiples of 4) needed to hold bytes.
+ * @param bytes The minimum number of bytes needed.
+ * @return The closest multiple of 4 that is equal or higher than bytes.
+ */
+static inline int
+pad_to_int32(const int bytes) {
+    return (((bytes) + 3) & ~3);
+}
+
 /* some macros to help swap requests, replies, and events */
 
 #define LengthRestB(stuff) \
@@ -227,17 +254,17 @@ typedef struct _xReq *xReqPtr;
 		 ((char *) &(dst))[0] = ((char *) &(src))[1];\
 		 ((char *) &(dst))[1] = ((char *) &(src))[0]; }
 
-extern void SwapLongs(
+extern _X_EXPORT void SwapLongs(
     CARD32 *list,
     unsigned long count);
 
-extern void SwapShorts(
+extern _X_EXPORT void SwapShorts(
     short *list,
     unsigned long count);
 
-extern void MakePredeclaredAtoms(void);
+extern _X_EXPORT void MakePredeclaredAtoms(void);
 
-extern int Ones(
+extern _X_EXPORT int Ones(
     unsigned long /*mask*/);
 
 typedef struct _xPoint *DDXPointPtr;
@@ -255,5 +282,8 @@ typedef struct _GrabRec *GrabPtr;
 typedef struct _CharInfo *CharInfoPtr; /* also in fonts/include/font.h */
 #define _XTYPEDEF_CHARINFOPTR
 #endif
+
+extern _X_EXPORT unsigned long globalSerialNumber;
+extern _X_EXPORT unsigned long serverGeneration;
 
 #endif /* MISC_H */

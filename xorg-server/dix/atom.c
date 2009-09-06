@@ -64,7 +64,7 @@ typedef struct _Node {
     struct _Node   *left,   *right;
     Atom a;
     unsigned int fingerPrint;
-    char   *string;
+    const char   *string;
 } NodeRec, *NodePtr;
 
 static Atom lastAtom = None;
@@ -74,8 +74,8 @@ static NodePtr *nodeTable;
 
 void FreeAtom(NodePtr patom);
 
-_X_EXPORT Atom 
-MakeAtom(char *string, unsigned len, Bool makeit)
+Atom
+MakeAtom(const char *string, unsigned len, Bool makeit)
 {
     NodePtr * np;
     unsigned i;
@@ -109,7 +109,7 @@ MakeAtom(char *string, unsigned len, Bool makeit)
     {
 	NodePtr nd;
 
-	nd = (NodePtr) xalloc(sizeof(NodeRec));
+	nd = xalloc(sizeof(NodeRec));
 	if (!nd)
 	    return BAD_RESOURCE;
 	if (lastAtom < XA_LAST_PREDEFINED)
@@ -118,13 +118,14 @@ MakeAtom(char *string, unsigned len, Bool makeit)
 	}
 	else
 	{
-	    nd->string = (char *) xalloc(len + 1);
-	    if (!nd->string) {
+	    char *newstring = xalloc(len + 1);
+	    if (!newstring) {
 		xfree(nd);
 		return BAD_RESOURCE;
 	    }
-	    strncpy(nd->string, string, (int)len);
-	    nd->string[len] = 0;
+	    strncpy(newstring, string, (int)len);
+	    newstring[len] = 0;
+	    nd->string = newstring;
 	}
 	if ((lastAtom + 1) >= tableLength) {
 	    NodePtr *table;
@@ -151,13 +152,13 @@ MakeAtom(char *string, unsigned len, Bool makeit)
 	return None;
 }
 
-_X_EXPORT Bool
+Bool
 ValidAtom(Atom atom)
 {
     return (atom != None) && (atom <= lastAtom);
 }
 
-_X_EXPORT char *
+const char *
 NameForAtom(Atom atom)
 {
     NodePtr node;
@@ -201,7 +202,7 @@ InitAtoms(void)
 {
     FreeAllAtoms();
     tableLength = InitialTableSize;
-    nodeTable = (NodePtr *)xalloc(InitialTableSize*sizeof(NodePtr));
+    nodeTable = xalloc(InitialTableSize*sizeof(NodePtr));
     if (!nodeTable)
 	AtomError();
     nodeTable[None] = (NodePtr)NULL;

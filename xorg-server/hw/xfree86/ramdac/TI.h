@@ -1,26 +1,22 @@
 
 #include <xf86RamDac.h>
 
-unsigned long TIramdacCalculateMNPForClock(unsigned long RefClock,
+extern _X_EXPORT unsigned long TIramdacCalculateMNPForClock(unsigned long RefClock,
     unsigned long ReqClock, char IsPixClock, unsigned long MinClock,
     unsigned long MaxClock, unsigned long *rM, unsigned long *rN,
     unsigned long *rP);
-RamDacHelperRecPtr TIramdacProbe(ScrnInfoPtr pScrn, RamDacSupportedInfoRecPtr ramdacs);
-void TIramdacSave(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
-void TIramdacRestore(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
-void TIramdac3026SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
-void TIramdac3030SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
-unsigned long TIramdac3030CalculateMNPForClock(unsigned long RefClock,
-    unsigned long ReqClock, char IsPixClock, unsigned long MinClock,
-    unsigned long MaxClock, unsigned long *rM, unsigned long *rN,
-    unsigned long *rP);
-void TIramdacHWCursorInit(xf86CursorInfoPtr infoPtr);
-void TIramdacLoadPalette( ScrnInfoPtr pScrn, int numColors, int *indices,
+extern _X_EXPORT RamDacHelperRecPtr TIramdacProbe(ScrnInfoPtr pScrn, RamDacSupportedInfoRecPtr ramdacs);
+extern _X_EXPORT void TIramdacSave(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void TIramdacRestore(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void TIramdac3026SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void TIramdac3030SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void TIramdacHWCursorInit(xf86CursorInfoPtr infoPtr);
+extern _X_EXPORT void TIramdacLoadPalette( ScrnInfoPtr pScrn, int numColors, int *indices,
     LOCO *colors, VisualPtr pVisual);
 
 typedef void TIramdacLoadPaletteProc(ScrnInfoPtr, int, int *, LOCO *,
     VisualPtr);
-TIramdacLoadPaletteProc *TIramdacLoadPaletteWeak(void);
+extern _X_EXPORT TIramdacLoadPaletteProc *TIramdacLoadPaletteWeak(void);
 
 #define TI3030_RAMDAC		(VENDOR_TI << 16) | 0x00
 #define TI3026_RAMDAC		(VENDOR_TI << 16) | 0x01

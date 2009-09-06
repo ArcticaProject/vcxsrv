@@ -27,31 +27,31 @@ typedef struct _Private PrivateRec;
  * Request pre-allocated private space for your driver/module.
  * Calling this is not necessary if only a pointer by itself is needed.
  */
-extern int
+extern _X_EXPORT int
 dixRequestPrivate(const DevPrivateKey key, unsigned size);
 
 /*
  * Allocates a new private and attaches it to an existing object.
  */
-extern pointer *
+extern _X_EXPORT pointer *
 dixAllocatePrivate(PrivateRec **privates, const DevPrivateKey key);
 
 /*
  * Look up a private pointer.
  */
-pointer
+extern _X_EXPORT pointer
 dixLookupPrivate(PrivateRec **privates, const DevPrivateKey key);
 
 /*
  * Look up the address of a private pointer.
  */
-pointer *
+extern _X_EXPORT pointer *
 dixLookupPrivateAddr(PrivateRec **privates, const DevPrivateKey key);
 
 /*
  * Set a private pointer.
  */
-int
+extern _X_EXPORT int
 dixSetPrivate(PrivateRec **privates, const DevPrivateKey key, pointer val);
 
 /*
@@ -63,24 +63,24 @@ typedef struct _PrivateCallback {
     pointer *value;	/* address of private pointer */
 } PrivateCallbackRec;
 
-extern int
+extern _X_EXPORT int
 dixRegisterPrivateInitFunc(const DevPrivateKey key, 
 			   CallbackProcPtr callback, pointer userdata);
 
-extern int
+extern _X_EXPORT int
 dixRegisterPrivateDeleteFunc(const DevPrivateKey key,
 			     CallbackProcPtr callback, pointer userdata);
 
 /*
  * Frees private data.
  */
-extern void
+extern _X_EXPORT void
 dixFreePrivates(PrivateRec *privates);
 
 /*
  * Resets the subsystem, called from the main loop.
  */
-extern int
+extern _X_EXPORT int
 dixResetPrivates(void);
 
 /*
@@ -93,14 +93,14 @@ dixResetPrivates(void);
  * Looks up the offset where the devPrivates field is located.
  * Returns -1 if no offset has been registered for the resource type.
  */
-extern int
+extern _X_EXPORT int
 dixLookupPrivateOffset(RESTYPE type);
 
 /*
  * Specifies the offset where the devPrivates field is located.
  * A negative value indicates no devPrivates field is available.
  */
-extern int
+extern _X_EXPORT int
 dixRegisterPrivateOffset(RESTYPE type, int offset);
 
 /*

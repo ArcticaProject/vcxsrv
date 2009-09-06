@@ -30,7 +30,7 @@
 #include "xf86.h"
 #include "xf86Priv.h"
 
-_X_EXPORT void
+void
 xf86OSRingBell(int loudness, int pitch, int duration)
 {
     return;

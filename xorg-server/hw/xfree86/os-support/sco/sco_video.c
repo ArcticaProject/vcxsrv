@@ -124,9 +124,7 @@ mapVidMemMMAP(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
   realBase = Base & ~(getpagesize() - 1);
   alignOff = Base - realBase;
 
-#ifdef DEBUG
-  ErrorF("base: %lx, realBase: %lx, alignOff: %lx\n", Base,realBase,alignOff);
-#endif
+  DebugF("base: %lx, realBase: %lx, alignOff: %lx\n", Base,realBase,alignOff);
 
   base = mmap((caddr_t)0, Size + alignOff,
 	      (flags & VIDMEM_READONLY) ? PROT_READ : (PROT_READ | PROT_WRITE),
@@ -138,9 +136,7 @@ mapVidMemMMAP(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
     return 0; /* NOTREACHED */
   }
 
-#ifdef DEBUG
-    ErrorF("base: %lx aligned base: %lx\n",base, base + alignOff);
-#endif
+    DebugF("base: %lx aligned base: %lx\n",base, base + alignOff);
     return (pointer)((char *)base + alignOff);
 }
 

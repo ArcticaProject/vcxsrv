@@ -37,8 +37,11 @@ host_triplet = @host@
 subdir = hw/xfree86/loader
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
+	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/shave.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -48,18 +51,15 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 	$(top_builddir)/include/xorg-config.h \
 	$(top_builddir)/include/xkb-config.h \
 	$(top_builddir)/include/xwin-config.h \
-	$(top_builddir)/include/kdrive-config.h
+	$(top_builddir)/include/kdrive-config.h \
+	$(top_builddir)/include/version-config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
-ARFLAGS = cru
-libloader_a_AR = $(AR) $(ARFLAGS)
-libloader_a_LIBADD =
-am_libloader_a_OBJECTS = loader.$(OBJEXT) loadext.$(OBJEXT) \
-	loadmod.$(OBJEXT) dlloader.$(OBJEXT) os.$(OBJEXT) \
-	dixsym.$(OBJEXT) extsym.$(OBJEXT) misym.$(OBJEXT) \
-	xf86sym.$(OBJEXT)
-libloader_a_OBJECTS = $(am_libloader_a_OBJECTS)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
+libloader_la_LIBADD =
+am_libloader_la_OBJECTS = loader.lo loadext.lo loadmod.lo dlloader.lo \
+	os.lo sdksyms.lo
+libloader_la_OBJECTS = $(am_libloader_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -70,8 +70,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libloader_a_SOURCES)
-DIST_SOURCES = $(libloader_a_SOURCES)
+SOURCES = $(libloader_la_SOURCES)
+DIST_SOURCES = $(libloader_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -80,6 +80,7 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
 APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
@@ -100,9 +101,12 @@ CCASDEPMODE = @CCASDEPMODE@
 CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CHANGELOG_CMD = @CHANGELOG_CMD@
 COMPILEDDEFAULTFONTPATH = @COMPILEDDEFAULTFONTPATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CWARNFLAGS = @CWARNFLAGS@
+CXX = @CXX@
 CYGPATH_W = @CYGPATH_W@
 DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
@@ -131,7 +135,9 @@ DRIPROTO_CFLAGS = @DRIPROTO_CFLAGS@
 DRIPROTO_LIBS = @DRIPROTO_LIBS@
 DRIVER_MAN_DIR = @DRIVER_MAN_DIR@
 DRIVER_MAN_SUFFIX = @DRIVER_MAN_SUFFIX@
+DRI_CFLAGS = @DRI_CFLAGS@
 DRI_DRIVER_PATH = @DRI_DRIVER_PATH@
+DRI_LIBS = @DRI_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DTRACE = @DTRACE@
 DUMPBIN = @DUMPBIN@
@@ -140,9 +146,13 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FC = @FC@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
 GLX_DEFINES = @GLX_DEFINES@
 GL_CFLAGS = @GL_CFLAGS@
@@ -181,12 +191,13 @@ LTCOMPILE = @LTCOMPILE@
 LTCXXCOMPILE = @LTCXXCOMPILE@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
+MAIN_LIB = @MAIN_LIB@
+MAKEFLAGS = @MAKEFLAGS@
 MAKEINFO = @MAKEINFO@
 MAKE_HTML = @MAKE_HTML@
 MAKE_PDF = @MAKE_PDF@
 MAKE_PS = @MAKE_PS@
 MAKE_TEXT = @MAKE_TEXT@
-MESA_SOURCE = @MESA_SOURCE@
 MISC_MAN_DIR = @MISC_MAN_DIR@
 MISC_MAN_SUFFIX = @MISC_MAN_SUFFIX@
 MKDIR_P = @MKDIR_P@
@@ -206,7 +217,6 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PCIACCESS_CFLAGS = @PCIACCESS_CFLAGS@
@@ -216,6 +226,7 @@ PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PROJECTROOT = @PROJECTROOT@
 PS2PDF = @PS2PDF@
+Q = @Q@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
@@ -229,11 +240,10 @@ STRIP = @STRIP@
 TSLIB_CFLAGS = @TSLIB_CFLAGS@
 TSLIB_LIBS = @TSLIB_LIBS@
 UTILS_SYS_LIBS = @UTILS_SYS_LIBS@
-VENDOR_MAN_VERSION = @VENDOR_MAN_VERSION@
-VENDOR_NAME = @VENDOR_NAME@
+V = @V@
 VENDOR_NAME_SHORT = @VENDOR_NAME_SHORT@
-VENDOR_RELEASE = @VENDOR_RELEASE@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 X11EXAMPLES_DEP_CFLAGS = @X11EXAMPLES_DEP_CFLAGS@
 X11EXAMPLES_DEP_LIBS = @X11EXAMPLES_DEP_LIBS@
 XDMCP_CFLAGS = @XDMCP_CFLAGS@
@@ -269,6 +279,7 @@ XORG_OS_SUBDIR = @XORG_OS_SUBDIR@
 XORG_SYS_LIBS = @XORG_SYS_LIBS@
 XPBPROXY_CFLAGS = @XPBPROXY_CFLAGS@
 XPBPROXY_LIBS = @XPBPROXY_LIBS@
+XQUARTZ_SPARKLE = @XQUARTZ_SPARKLE@
 XRESEXAMPLES_DEP_CFLAGS = @XRESEXAMPLES_DEP_CFLAGS@
 XRESEXAMPLES_DEP_LIBS = @XRESEXAMPLES_DEP_LIBS@
 XSDL_INCS = @XSDL_INCS@
@@ -293,7 +304,6 @@ YFLAGS = @YFLAGS@
 __XCONFIGFILE__ = @__XCONFIGFILE__@
 abi_ansic = @abi_ansic@
 abi_extension = @abi_extension@
-abi_font = @abi_font@
 abi_videodrv = @abi_videodrv@
 abi_xinput = @abi_xinput@
 abs_builddir = @abs_builddir@
@@ -316,6 +326,7 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
+distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -347,39 +358,38 @@ psdir = @psdir@
 sbindir = @sbindir@
 sdkdir = @sdkdir@
 sharedstatedir = @sharedstatedir@
+shavedir = @shavedir@
 srcdir = @srcdir@
+symbol_visibility = @symbol_visibility@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LIBRARIES = libloader.a
-INCLUDES = $(XORG_INCS) -I$(srcdir)/../parser -I$(srcdir)/../dixmods/extmod \
-	   -I$(srcdir)/../vbe -I$(top_srcdir)/miext/cw -I$(srcdir)/../int10 \
+noinst_LTLIBRARIES = libloader.la
+INCLUDES = $(XORG_INCS) -I$(srcdir)/../parser -I$(top_srcdir)/miext/cw \
 	   -I$(srcdir)/../ddc -I$(srcdir)/../i2c -I$(srcdir)/../modes \
 	   -I$(srcdir)/../ramdac
 
 
 #AM_LDFLAGS = -r
-AM_CFLAGS = -DIN_LOADER $(DIX_CFLAGS) $(XORG_CFLAGS)
+AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
 EXTRA_DIST = \
 	dlloader.h \
 	loader.h \
-	loaderProcs.h
+	loaderProcs.h \
+	sdksyms.sh
 
-libloader_a_SOURCES = \
+libloader_la_SOURCES = \
 	loader.c \
 	loaderProcs.h \
 	loadext.c \
         loadmod.c \
         dlloader.c \
 	os.c \
-	dixsym.c \
-	extsym.c \
-	misym.c \
-	xf86sym.c \
-	sym.h
+	sdksyms.c
 
+CLEANFILES = sdksyms.c sdksyms.dep
 all: all-am
 
 .SUFFIXES:
@@ -415,12 +425,16 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libloader.a: $(libloader_a_OBJECTS) $(libloader_a_DEPENDENCIES) 
-	-rm -f libloader.a
-	$(libloader_a_AR) libloader.a $(libloader_a_OBJECTS) $(libloader_a_LIBADD)
-	$(RANLIB) libloader.a
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libloader.la: $(libloader_la_OBJECTS) $(libloader_la_DEPENDENCIES) 
+	$(LINK)  $(libloader_la_OBJECTS) $(libloader_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -428,15 +442,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dixsym.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dlloader.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extsym.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/loader.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/loadext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/loadmod.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misym.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/os.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86sym.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dlloader.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/loader.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/loadext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/loadmod.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/os.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sdksyms.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -549,7 +560,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LTLIBRARIES)
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -568,6 +579,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -578,7 +590,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
+clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -650,7 +662,7 @@ uninstall-am:
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstLIBRARIES ctags distclean \
+	clean-libtool clean-noinstLTLIBRARIES ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
@@ -662,6 +674,11 @@ uninstall-am:
 	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
 	pdf pdf-am ps ps-am tags uninstall uninstall-am
 
+
+sdksyms.dep sdksyms.c: sdksyms.sh
+	CPP='$(CPP)' AWK='$(AWK)' $(srcdir)/sdksyms.sh $(top_srcdir) $(AM_CFLAGS) $(CFLAGS) $(INCLUDES)
+
+sinclude sdksyms.dep
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

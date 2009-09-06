@@ -180,7 +180,7 @@ promIsP1275(void)
 #endif
 }
 
-_X_EXPORT void
+void
 sparcPromClose(void)
 {
     if (promOpenCount > 1) {
@@ -198,7 +198,7 @@ sparcPromClose(void)
     promOpenCount = 0;
 }
 
-_X_EXPORT int
+int
 sparcPromInit(void)
 {
     if (promOpenCount) {
@@ -224,7 +224,7 @@ sparcPromInit(void)
     return 0;
 }
 
-_X_EXPORT char *
+char *
 sparcPromGetProperty(sbusPromNodePtr pnode, const char *prop, int *lenp)
 {
     if (promSetNode(pnode))
@@ -232,7 +232,7 @@ sparcPromGetProperty(sbusPromNodePtr pnode, const char *prop, int *lenp)
     return promGetProperty(prop, lenp);
 }
 
-_X_EXPORT int
+int
 sparcPromGetBool(sbusPromNodePtr pnode, const char *prop)
 {
     if (promSetNode(pnode))
@@ -609,7 +609,7 @@ sparcPromPathname2Node(const char *pathName)
     return i;
 }
 
-_X_EXPORT pointer
+pointer
 xf86MapSbusMem(sbusDevicePtr psdp, unsigned long offset, unsigned long size)
 {
     pointer ret;
@@ -636,7 +636,7 @@ xf86MapSbusMem(sbusDevicePtr psdp, unsigned long offset, unsigned long size)
     return (char *)ret + (offset - off);
 }
 
-_X_EXPORT void
+void
 xf86UnmapSbusMem(sbusDevicePtr psdp, pointer addr, unsigned long size)
 {
     unsigned long mask = getpagesize() - 1;
@@ -647,7 +647,7 @@ xf86UnmapSbusMem(sbusDevicePtr psdp, pointer addr, unsigned long size)
 }
 
 /* Tell OS that we are driving the HW cursor ourselves. */
-_X_EXPORT void
+void
 xf86SbusHideOsHwCursor(sbusDevicePtr psdp)
 {
     struct fbcursor fbcursor;
@@ -668,7 +668,7 @@ xf86SbusHideOsHwCursor(sbusDevicePtr psdp)
 }
 
 /* Set HW cursor colormap. */
-_X_EXPORT void
+void
 xf86SbusSetOsHwCursorCmap(sbusDevicePtr psdp, int bg, int fg)
 {
     struct fbcursor fbcursor;

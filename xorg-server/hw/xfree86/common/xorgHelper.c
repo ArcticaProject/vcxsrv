@@ -17,7 +17,7 @@
 
 
 CARD32
-xorgGetVersion()
+xorgGetVersion(void)
 {
     return XORG_VERSION_CURRENT;
 }

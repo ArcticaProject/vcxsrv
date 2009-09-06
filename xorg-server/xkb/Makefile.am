@@ -7,8 +7,6 @@ DDX_SRCS = \
         ddxBeep.c \
         ddxCtrls.c \
         ddxFakeMtn.c \
-        ddxInit.c \
-        ddxKeyClick.c \
         ddxLEDs.c \
         ddxLoad.c \
         ddxList.c \
@@ -39,11 +37,7 @@ X11_SRCS = \
         XKBGAlloc.c \
         XKBMAlloc.c
 
-# ends up unused...
-# XI_SRCS = xkbPrOtherEv.c
-
-libxkb_la_SOURCES = $(DDX_SRCS) $(DIX_SRCS) $(XI_SRCS) $(XKBFILE_SRCS) \
-                    $(X11_SRCS)
+libxkb_la_SOURCES = $(DDX_SRCS) $(DIX_SRCS) $(XKBFILE_SRCS) $(X11_SRCS)
 libxkbstubs_la_SOURCES = ddxVT.c ddxPrivate.c ddxKillSrv.c
 
 EXTRA_DIST = xkbDflts.h xkbgeom.h xkb.h

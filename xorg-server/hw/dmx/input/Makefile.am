@@ -58,12 +58,10 @@ libdmxinput_a_SOURCES = ChkNotMaskEv.c \
 
 if GLX
 GLX_DEFS = @GL_CFLAGS@
-GLX_INCS = -I@MESA_SOURCE@/include
 endif	    
 
 AM_CFLAGS = $(DIX_CFLAGS) \
             -I$(top_srcdir)/hw/dmx \
-            $(GLX_INCS) \
             -DHAVE_DMX_CONFIG_H \
             $(GLX_DEFS) \
             @DMXMODULES_CFLAGS@

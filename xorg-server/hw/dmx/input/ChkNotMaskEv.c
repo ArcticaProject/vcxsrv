@@ -58,7 +58,6 @@
 #include <dmx-config.h>
 #endif
 
-#define NEED_EVENTS
 #include "dmx.h"
 #include "ChkNotMaskEv.h"
 

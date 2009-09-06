@@ -119,7 +119,7 @@ typedef struct {
 
 /* mizerarc.c */
 
-extern Bool miZeroArcSetup(
+extern _X_EXPORT Bool miZeroArcSetup(
     xArc * /*arc*/,
     miZeroArcRec * /*info*/,
     Bool /*ok360*/

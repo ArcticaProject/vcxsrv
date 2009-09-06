@@ -39,15 +39,9 @@
 #include <cursorstr.h>
 #include <mipointrst.h>
 #include <servermd.h>
+#include "misc.h"
 
 extern Bool	g_fSoftwareCursor;
-
-
-#ifndef MIN
-#define MIN(x,y) ((x)<(y)?(x):(y))
-#endif
-
-#define BYTE_COUNT(x) (((x) + 7) / 8)
 
 #define BRIGHTNESS(x) (x##Red * 0.299 + x##Green * 0.587 + x##Blue * 0.114)
 
@@ -62,7 +56,7 @@ extern Bool	g_fSoftwareCursor;
  */
 
 static void
-winPointerWarpCursor (ScreenPtr pScreen, int x, int y);
+winPointerWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y);
 
 static Bool
 winCursorOffScreen (ScreenPtr *ppScreen, int *x, int *y);
@@ -79,7 +73,7 @@ miPointerScreenFuncRec g_winPointerCursorFuncs =
 
 
 static void
-winPointerWarpCursor (ScreenPtr pScreen, int x, int y)
+winPointerWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
   winScreenPriv(pScreen);
   RECT			rcClient;
@@ -99,8 +93,16 @@ winPointerWarpCursor (ScreenPtr pScreen, int x, int y)
       return;
     }
 
-  /* Only update the Windows cursor position if we are active */
-  if (pScreenPriv->hwndScreen == GetForegroundWindow ())
+  /*
+     Only update the Windows cursor position if root window is active,
+     or we are in a rootless mode
+  */
+  if ((pScreenPriv->hwndScreen == GetForegroundWindow ())
+      || pScreenPriv->pScreenInfo->fRootless
+#ifdef XWIN_MULTIWINDOW
+      || pScreenPriv->pScreenInfo->fMultiWindow
+#endif
+      )
     {
       /* Get the client area coordinates */
       GetClientRect (pScreenPriv->hwndScreen, &rcClient);
@@ -119,7 +121,7 @@ winPointerWarpCursor (ScreenPtr pScreen, int x, int y)
     }
 
   /* Call the mi warp procedure to do the actual warping in X. */
-  miPointerWarpCursor (pScreen, x, y);
+  miPointerWarpCursor (pDev, pScreen, x, y);
 }
 
 static Bool
@@ -195,11 +197,11 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   /* Get the number of bytes required to store the whole cursor image 
    * This is roughly (sm_cx * sm_cy) / 8 
    * round up to 8 pixel boundary so we can convert whole bytes */
-  nBytes = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * pScreenPriv->cursor.sm_cy;
+  nBytes = bits_to_bytes(pScreenPriv->cursor.sm_cx) * pScreenPriv->cursor.sm_cy;
 
   /* Get the effective width and height */
-  nCX = MIN(pScreenPriv->cursor.sm_cx, pCursor->bits->width);
-  nCY = MIN(pScreenPriv->cursor.sm_cy, pCursor->bits->height);
+  nCX = min(pScreenPriv->cursor.sm_cx, pCursor->bits->width);
+  nCY = min(pScreenPriv->cursor.sm_cy, pCursor->bits->height);
 
   /* Allocate memory for the bitmaps */
   pAnd = malloc (nBytes);
@@ -210,11 +212,11 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
    * The first is for an empty mask */
   if (pCursor->bits->emptyMask)
     {
-      int x, y, xmax = BYTE_COUNT(nCX);
+      int x, y, xmax = bits_to_bytes(nCX);
       for (y = 0; y < nCY; ++y)
 	for (x = 0; x < xmax; ++x)
 	  {
-	    int nWinPix = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * y + x;
+	    int nWinPix = bits_to_bytes(pScreenPriv->cursor.sm_cx) * y + x;
 	    int nXPix = BitmapBytePad(pCursor->bits->width) * y + x;
 
 	    pAnd[nWinPix] = 0;
@@ -226,11 +228,11 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
     }
   else
     {
-      int x, y, xmax = BYTE_COUNT(nCX);
+      int x, y, xmax = bits_to_bytes(nCX);
       for (y = 0; y < nCY; ++y)
 	for (x = 0; x < xmax; ++x)
 	  {
-	    int nWinPix = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * y + x;
+	    int nWinPix = bits_to_bytes(pScreenPriv->cursor.sm_cx) * y + x;
 	    int nXPix = BitmapBytePad(pCursor->bits->width) * y + x;
 
 	    unsigned char mask = pCursor->bits->mask[nXPix];
@@ -319,7 +321,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
 		    (*pCur++) = 0;
 		  else /* Within X11 icon bounds */
 		    {
-		      int nWinPix = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * y + (x/8);
+		      int nWinPix = bits_to_bytes(pScreenPriv->cursor.sm_cx) * y + (x/8);
 
 		      bit = pAnd[nWinPix];
 		      bit = bit & (1<<(7-(x&7)));
@@ -436,7 +438,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
  *  Convert the X cursor representation to native format if possible.
  */
 static Bool
-winRealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
+winRealizeCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   if(pCursor == NULL || pCursor->bits == NULL)
     return FALSE;
@@ -452,7 +454,7 @@ winRealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
  *  Free the storage space associated with a realized cursor.
  */
 static Bool
-winUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
+winUnrealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   return TRUE;
 }
@@ -463,7 +465,7 @@ winUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
  *  Set the cursor sprite and position.
  */
 static void
-winSetCursor (ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
+winSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
 {
   POINT ptCurPos, ptTemp;
   HWND  hwnd;
@@ -537,20 +539,35 @@ winSetCursor (ScreenPtr pScreen, CursorPtr pCursor, int x, int y)
 
 
 /*
- * QuartzMoveCursor
+ * winMoveCursor
  *  Move the cursor. This is a noop for us.
  */
 static void
-winMoveCursor (ScreenPtr pScreen, int x, int y)
+winMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
 }
 
+static Bool
+winDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScr)
+{
+  winScreenPriv(pScr);
+  return pScreenPriv->cursor.spriteFuncs->DeviceCursorInitialize(pDev, pScr);
+}
+
+static void
+winDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScr)
+{
+  winScreenPriv(pScr);
+  return pScreenPriv->cursor.spriteFuncs->DeviceCursorCleanup(pDev, pScr);
+}
 
 static miPointerSpriteFuncRec winSpriteFuncsRec = {
   winRealizeCursor,
   winUnrealizeCursor,
   winSetCursor,
-  winMoveCursor
+  winMoveCursor,
+  winDeviceCursorInitialize,
+  winDeviceCursorCleanup
 };
 
 

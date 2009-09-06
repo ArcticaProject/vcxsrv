@@ -87,24 +87,25 @@ typedef struct {
 #define TUNER_STILL_TUNING      5
 
 
-FI1236Ptr Detect_FI1236(I2CBusPtr b, I2CSlaveAddr addr);
-void FI1236_set_tuner_type(FI1236Ptr f, int type);
-void TUNER_set_frequency(FI1236Ptr f, CARD32 frequency);
 void FI1236_tune(FI1236Ptr f, CARD32 frequency);
-int FI1236_AFC(FI1236Ptr f);
-int TUNER_get_afc_hint(FI1236Ptr f);
-void fi1236_dump_status(FI1236Ptr f);
 
 #define FI1236SymbolsList  \
 		"Detect_FI1236", \
 		"FI1236_set_tuner_type", \
 		"TUNER_set_frequency"
 
-#define xf86_Detect_FI1236         ((FI1236Ptr (*)(I2CBusPtr, I2CSlaveAddr))LoaderSymbol("Detect_FI1236"))
-#define xf86_FI1236_set_tuner_type ((void (*)(FI1236Ptr, int))LoaderSymbol("FI1236_set_tuner_type"))
-#define xf86_TUNER_set_frequency           ((void (*)(FI1236Ptr, CARD32))LoaderSymbol("TUNER_set_frequency"))
-#define xf86_FI1236_AFC           ((int (*)(FI1236Ptr))LoaderSymbol("FI1236_AFC"))
-#define xf86_TUNER_get_afc_hint   ((int (*)(FI1236Ptr))LoaderSymbol("TUNER_get_afc_hint"))
-#define xf86_fi1236_dump_status   ((void (*)(FI1236Ptr))LoaderSymbol("fi1236_dump_status"))
+#define xf86_Detect_FI1236		Detect_FI1236
+extern _X_EXPORT FI1236Ptr Detect_FI1236(I2CBusPtr b, I2CSlaveAddr addr);
+#define xf86_FI1236_set_tuner_type	FI1236_set_tuner_type
+extern _X_EXPORT void FI1236_set_tuner_type(FI1236Ptr f, int type);
+#define xf86_TUNER_set_frequency	TUNER_set_frequency
+extern _X_EXPORT void TUNER_set_frequency(FI1236Ptr f, CARD32 frequency);
+
+#define xf86_FI1236_AFC			FI1236_AFC
+extern _X_EXPORT int FI1236_AFC(FI1236Ptr f);
+#define xf86_TUNER_get_afc_hint		TUNER_get_afc_hint
+extern _X_EXPORT int TUNER_get_afc_hint(FI1236Ptr f);
+#define xf86_fi1236_dump_status		fi1236_dump_status
+extern _X_EXPORT void fi1236_dump_status(FI1236Ptr f);
 
 #endif

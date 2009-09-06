@@ -13,7 +13,7 @@
 #include "xvmodproc.h"
 
 void
-XvRegister()
+XvRegister(void)
 {
     XvScreenInitProc = XvScreenInit;
     XvGetScreenKeyProc = XvGetScreenKey;

@@ -29,7 +29,6 @@
  * \author Ian Romanick <idr@us.ibm.com>
  */
 
-#define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -103,7 +102,7 @@ int DoGetProgramString(struct __GLXclientStateRec *cl, GLbyte *pc,
 	    CALL_by_offset(GET_DISPATCH(), 
 			   (void (GLAPIENTRYP)(GLuint, GLenum, GLubyte *)),
 			   get_program_string_offset,
-			   (target, pname, answer));
+			   (target, pname, (GLubyte *)answer));
 	}
 
 	if (__glXErrorOccured()) {

@@ -484,7 +484,7 @@ miInitializeCompositeWrapper(ScreenPtr pScreen)
     if (!dixRequestPrivate(cwGCKey, sizeof(cwGCRec)))
 	return;
 
-    pScreenPriv = (cwScreenPtr)xalloc(sizeof(cwScreenRec));
+    pScreenPriv = xalloc(sizeof(cwScreenRec));
     if (!pScreenPriv)
 	return;
 

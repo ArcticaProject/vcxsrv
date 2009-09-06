@@ -32,7 +32,7 @@
 #include "config-backends.h"
 
 void
-config_init()
+config_init(void)
 {
 #if defined(CONFIG_DBUS_API) || defined(CONFIG_HAL)
     if (config_dbus_core_init()) {
@@ -52,7 +52,7 @@ config_init()
 }
 
 void
-config_fini()
+config_fini(void)
 {
 #if defined(CONFIG_DBUS_API) || defined(CONFIG_HAL)
 # ifdef CONFIG_HAL

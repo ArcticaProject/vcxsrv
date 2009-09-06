@@ -28,7 +28,6 @@
  * Silicon Graphics, Inc.
  */
 
-/* #define NEED_REPLIES */
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -251,9 +250,4 @@ void __glXDisp_DrawArrays(GLbyte *pc)
     CALL_DisableClientState( GET_DISPATCH(), (GL_EDGE_FLAG_ARRAY) );
     CALL_DisableClientState( GET_DISPATCH(), (GL_SECONDARY_COLOR_ARRAY) );
     CALL_DisableClientState( GET_DISPATCH(), (GL_FOG_COORD_ARRAY) );
-}
-
-void __glXDisp_DrawArraysEXT(GLbyte *pc)
-{
-   __glXDisp_DrawArrays(pc);
 }

@@ -177,6 +177,7 @@ static char GLXServerExtensions[] =
                         "GLX_SGIX_swap_barrier "
 #endif
 			"GLX_SGIX_fbconfig "
+			"GLX_SGIX_pbuffer "
 			"GLX_MESA_copy_sub_buffer "
 			;
 
@@ -211,6 +212,7 @@ glxCloseScreen (int index, ScreenPtr pScreen)
     __GLXscreen *pGlxScreen = glxGetScreen(pScreen);
 
     pScreen->CloseScreen = pGlxScreen->CloseScreen;
+    pScreen->DestroyWindow = pGlxScreen->DestroyWindow;
 
     pGlxScreen->destroy(pGlxScreen);
 
@@ -223,8 +225,8 @@ glxGetScreen(ScreenPtr pScreen)
     return dixLookupPrivate(&pScreen->devPrivates, glxScreenPrivateKey);
 }
 
-void GlxSetVisualConfigs(int nconfigs, 
-                         __GLXvisualConfig *configs, void **privates)
+_X_EXPORT void GlxSetVisualConfigs(int nconfigs,
+                         void *configs, void **privates)
 {
     /* We keep this stub around for the DDX drivers that still
      * call it. */
@@ -253,6 +255,7 @@ AddScreenVisuals(ScreenPtr pScreen, int count, int d)
     VisualPtr	 visuals;
     ColormapPtr	 installedCmap;
     DepthPtr	 depth;
+    int		 rc;
 
     depth = NULL;
     for (i = 0; i < pScreen->numDepths; i++) {
@@ -293,8 +296,10 @@ AddScreenVisuals(ScreenPtr pScreen, int count, int d)
      * for all colormaps.
      */
     for (i = 0; i < numInstalledCmaps; i++) {
-	installedCmap = LookupIDByType (installedCmaps[i], RT_COLORMAP);
-	if (!installedCmap)
+	rc = dixLookupResourceByType((pointer *)&installedCmap,
+				     installedCmaps[i], RT_COLORMAP,
+				     serverClient, DixReadAccess);
+	if (rc != Success)
 	    continue;
 	j = installedCmap->pVisual - pScreen->visuals;
 	installedCmap->pVisual = &visuals[j];
@@ -391,6 +396,31 @@ pickFBConfig(__GLXscreen *pGlxScreen, VisualPtr visual)
     return best;
 }
 
+static Bool
+glxDestroyWindow(WindowPtr pWin)
+{
+    ScreenPtr pScreen = pWin->drawable.pScreen;
+    __GLXscreen *pGlxScreen = glxGetScreen(pScreen);
+    Bool retval = TRUE;
+
+    FreeResource(pWin->drawable.id, FALSE);
+
+    /* call lower wrapped functions */
+    if (pGlxScreen->DestroyWindow) {
+	/* unwrap */
+	pScreen->DestroyWindow = pGlxScreen->DestroyWindow;
+
+	/* call lower layers */
+	retval = (*pScreen->DestroyWindow)(pWin);
+
+	/* rewrap */
+	pGlxScreen->DestroyWindow = pScreen->DestroyWindow;
+	pScreen->DestroyWindow = glxDestroyWindow;
+    }
+
+    return retval;
+}
+
 void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 {
     __GLXconfig *m;
@@ -405,6 +435,8 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 
     pGlxScreen->CloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = glxCloseScreen;
+    pGlxScreen->DestroyWindow = pScreen->DestroyWindow;
+    pScreen->DestroyWindow = glxDestroyWindow;
 
     i = 0;
     for (m = pGlxScreen->fbconfigs; m != NULL; m = m->next) {

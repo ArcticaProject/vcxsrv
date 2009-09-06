@@ -39,12 +39,12 @@
 #endif
 #ifdef HAVE_ALIAS
 #  define ALIAS2(from,to) \
-    GLint __glX ## from ## ReqSize( const GLbyte * pc, Bool swap ) \
+    int __glX ## from ## ReqSize( const GLbyte * pc, Bool swap ) \
         __attribute__ ((alias( # to )));
 #  define ALIAS(from,to) ALIAS2( from, __glX ## to ## ReqSize )
 #else
 #  define ALIAS(from,to) \
-    GLint __glX ## from ## ReqSize( const GLbyte * pc, Bool swap ) \
+    int __glX ## from ## ReqSize( const GLbyte * pc, Bool swap ) \
     { return __glX ## to ## ReqSize( pc, swap ); }
 #endif
 

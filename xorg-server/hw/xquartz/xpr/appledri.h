@@ -1,8 +1,9 @@
+/* $XFree86: xc/lib/GL/dri/xf86dri.h,v 1.7 2000/12/07 20:26:02 dawes Exp $ */
 /**************************************************************************
 
 Copyright 1998-1999 Precision Insight, Inc., Cedar Park, Texas.
 Copyright 2000 VA Linux Systems, Inc.
-Copyright (c) 2002 Apple Computer, Inc.
+Copyright (c) 2002, 2008, 2009 Apple Computer, Inc.
 All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -45,6 +46,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define X_AppleDRICreateSurface			2
 #define X_AppleDRIDestroySurface		3
 #define X_AppleDRIAuthConnection                4
+#define X_AppleDRICreateSharedBuffer            5
+#define X_AppleDRISwapBuffers                   6
+#define X_AppleDRICreatePixmap                  7
+#define X_AppleDRIDestroyPixmap                 8
+
 /* Requests up to and including 18 were used in a previous version */
 
 /* Events */
@@ -99,8 +105,19 @@ Bool XAppleDRIDestroySurface (Display *dpy, int screen, Drawable drawable);
 
 Bool XAppleDRISynchronizeSurfaces (Display *dpy);
 
+Bool XAppleDRICreateSharedBuffer(Display *dpy, int screen, Drawable drawable,
+				 Bool doubleSwap, char *path, size_t pathlen,
+				 int *width, int *height);
+
+Bool XAppleDRISwapBuffers(Display *dpy, int screen, Drawable drawable);
+
+Bool XAppleDRICreatePixmap(Display *dpy, int screen, Drawable drawable,
+			   int *width, int *height, int *pitch, int *bpp,
+			   size_t *size, char *bufname, size_t bufnamesize);
+
+Bool XAppleDRIDestroyPixmap(Display *dpy, Pixmap pixmap);
+
 _XFUNCPROTOEND
 
 #endif /* _APPLEDRI_SERVER_ */
 #endif /* _APPLEDRI_H_ */
-

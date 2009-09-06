@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -105,12 +103,14 @@ ProcXGrabDeviceButton(ClientPtr client)
     DeviceIntPtr mdev;
     XEventClass *class;
     struct tmask tmp[EMASKSIZE];
+    GrabParameters param;
+    GrabMask mask;
 
     REQUEST(xGrabDeviceButtonReq);
     REQUEST_AT_LEAST_SIZE(xGrabDeviceButtonReq);
 
     if (stuff->length !=
-	(sizeof(xGrabDeviceButtonReq) >> 2) + stuff->event_count)
+	bytes_to_int32(sizeof(xGrabDeviceButtonReq)) + stuff->event_count)
 	return BadLength;
 
     ret = dixLookupDevice(&dev, stuff->grabbed_device, client, DixGrabAccess);
@@ -119,14 +119,14 @@ ProcXGrabDeviceButton(ClientPtr client)
 
     if (stuff->modifier_device != UseXKeyboard) {
 	ret = dixLookupDevice(&mdev, stuff->modifier_device, client,
-			      DixReadAccess);
+			      DixUseAccess);
 	if (ret != Success)
 	    return ret;
 	if (mdev->key == NULL)
 	    return BadMatch;
     } else {
 	mdev = PickKeyboard(client);
-	ret = XaceHook(XACE_DEVICE_ACCESS, client, mdev, DixReadAccess);
+	ret = XaceHook(XACE_DEVICE_ACCESS, client, mdev, DixUseAccess);
 	if (ret != Success)
 	    return ret;
     }
@@ -137,10 +137,18 @@ ProcXGrabDeviceButton(ClientPtr client)
 				  stuff->event_count, tmp, dev,
 				  X_GrabDeviceButton)) != Success)
 	return ret;
-    ret = GrabButton(client, dev, stuff->this_device_mode,
-		     stuff->other_devices_mode, stuff->modifiers, mdev,
-		     stuff->button, stuff->grabWindow, stuff->ownerEvents,
-		     (Cursor) 0, (Window) 0, tmp[stuff->grabbed_device].mask);
+
+    memset(&param, 0, sizeof(param));
+    param.grabtype = GRABTYPE_XI;
+    param.ownerEvents = stuff->ownerEvents;
+    param.this_device_mode = stuff->this_device_mode;
+    param.other_devices_mode = stuff->other_devices_mode;
+    param.grabWindow = stuff->grabWindow;
+    param.modifiers = stuff->modifiers;
+    mask.xi = tmp[stuff->grabbed_device].mask;
+
+    ret = GrabButton(client, dev, mdev, stuff->button, &param,
+                     GRABTYPE_XI, &mask);
 
     return ret;
 }

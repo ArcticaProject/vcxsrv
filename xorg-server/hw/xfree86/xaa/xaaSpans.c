@@ -396,7 +396,7 @@ XAARenderPixmapCopySpans(
 	\****************/
 
 
-void 
+void
 XAAFillSolidSpans(
    ScrnInfoPtr pScrn,
    int fg, int rop,
@@ -432,7 +432,7 @@ XAAFillSolidSpans(
 	\***************/
 
 
-void 
+void
 XAAFillMono8x8PatternSpansScreenOrigin(
    ScrnInfoPtr pScrn,
    int fg, int bg, int rop,
@@ -491,7 +491,7 @@ XAAFillMono8x8PatternSpansScreenOrigin(
 }
 
 
-void 
+void
 XAAFillMono8x8PatternSpans(
    ScrnInfoPtr pScrn,
    int fg, int bg, int rop,
@@ -559,7 +559,7 @@ XAAFillMono8x8PatternSpans(
 	\****************/
 
 
-void 
+void
 XAAFillColor8x8PatternSpansScreenOrigin(
    ScrnInfoPtr pScrn,
    int rop,
@@ -605,7 +605,7 @@ XAAFillColor8x8PatternSpansScreenOrigin(
 }
 
 
-void 
+void
 XAAFillColor8x8PatternSpans(
    ScrnInfoPtr pScrn,
    int rop,
@@ -654,7 +654,7 @@ XAAFillColor8x8PatternSpans(
 	\*****************/
 
 
-void 
+void
 XAAFillCacheBltSpans(
    ScrnInfoPtr pScrn,
    int rop,
@@ -713,7 +713,7 @@ XAAFillCacheBltSpans(
 	\****************/
 
 
-void 
+void
 XAAFillCacheExpandSpans(
    ScrnInfoPtr pScrn,
    int fg, int bg, int rop,

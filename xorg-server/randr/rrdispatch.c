@@ -79,9 +79,10 @@ ProcRRSelectInput (ClientPtr client)
     rc = dixLookupWindow(&pWin, stuff->window, client, DixReceiveAccess);
     if (rc != Success)
 	return rc;
-    pHead = (RREventPtr *)SecurityLookupIDByType(client,
-						 pWin->drawable.id, RREventType,
-						 DixWriteAccess);
+    rc = dixLookupResourceByType((pointer *)&pHead, pWin->drawable.id,
+				 RREventType, client, DixWriteAccess);
+    if (rc != Success && rc != BadValue)
+	return rc;
 
     if (stuff->enable & (RRScreenChangeNotifyMask|
 			 RRCrtcChangeNotifyMask|

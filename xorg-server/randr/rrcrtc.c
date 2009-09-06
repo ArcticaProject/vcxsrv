@@ -480,6 +480,29 @@ RRCrtcGammaSet (RRCrtcPtr   crtc,
 }
 
 /*
+ * Request current gamma back from the DDX (if possible).
+ * This includes gamma size.
+ */
+Bool
+RRCrtcGammaGet(RRCrtcPtr crtc)
+{
+    Bool ret = TRUE;
+#if RANDR_12_INTERFACE
+    ScreenPtr	pScreen = crtc->pScreen;
+#endif
+
+#if RANDR_12_INTERFACE
+    if (pScreen)
+    {
+        rrScrPriv(pScreen);
+        if (pScrPriv->rrCrtcGetGamma)
+            ret = (*pScrPriv->rrCrtcGetGamma) (pScreen, crtc);
+    }
+#endif
+    return ret;
+}
+
+/*
  * Notify the extension that the Crtc gamma has been changed
  * The driver calls this whenever it has changed the gamma values
  * in the RRCrtcRec
@@ -635,10 +658,7 @@ ProcRRGetCrtcInfo (ClientPtr client)
     BoxRec			panned_area;
     
     REQUEST_SIZE_MATCH(xRRGetCrtcInfoReq);
-    crtc = LookupCrtc(client, stuff->crtc, DixReadAccess);
-
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
 
     /* All crtcs must be associated with screens before client
      * requests are processed
@@ -752,17 +772,13 @@ ProcRRSetCrtcConfig (ClientPtr client)
     TimeStamp		    configTime;
     TimeStamp		    time;
     Rotation		    rotation;
-    int			    i, j;
+    int			    rc, i, j;
     
     REQUEST_AT_LEAST_SIZE(xRRSetCrtcConfigReq);
-    numOutputs = (stuff->length - (SIZEOF (xRRSetCrtcConfigReq) >> 2));
+    numOutputs = (stuff->length - bytes_to_int32(SIZEOF (xRRSetCrtcConfigReq)));
     
-    crtc = LookupIDByType (stuff->crtc, RRCrtcType);
-    if (!crtc)
-    {
-	client->errorValue = stuff->crtc;
-	return RRErrorBase + BadRRCrtc;
-    }
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixSetAttrAccess);
+
     if (stuff->mode == None)
     {
 	mode = NULL;
@@ -771,12 +787,7 @@ ProcRRSetCrtcConfig (ClientPtr client)
     }
     else
     {
-	mode = LookupIDByType (stuff->mode, RRModeType);
-	if (!mode)
-	{
-	    client->errorValue = stuff->mode;
-	    return RRErrorBase + BadRRMode;
-	}
+	VERIFY_RR_MODE(stuff->mode, mode, DixSetAttrAccess);
 	if (numOutputs == 0)
 	    return BadMatch;
     }
@@ -792,13 +803,13 @@ ProcRRSetCrtcConfig (ClientPtr client)
     outputIds = (RROutput *) (stuff + 1);
     for (i = 0; i < numOutputs; i++)
     {
-	outputs[i] = (RROutputPtr) LookupIDByType (outputIds[i], RROutputType);
-	if (!outputs[i])
+	rc = dixLookupResourceByType((pointer *)(outputs + i), outputIds[i],
+				     RROutputType, client, DixSetAttrAccess);
+	if (rc != Success)
 	{
-	    client->errorValue = outputIds[i];
 	    if (outputs)
 		xfree (outputs);
-	    return RRErrorBase + BadRROutput;
+	    return (rc == BadValue) ? RRErrorBase + BadRROutput : rc;
 	}
 	/* validate crtc for this output */
 	for (j = 0; j < outputs[i]->numCrtcs; j++)
@@ -1005,10 +1016,7 @@ ProcRRGetPanning (ClientPtr client)
     int			n;
     
     REQUEST_SIZE_MATCH(xRRGetPanningReq);
-    crtc = LookupCrtc(client, stuff->crtc, DixReadAccess);
-
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
 
     /* All crtcs must be associated with screens before client
      * requests are processed
@@ -1078,11 +1086,7 @@ ProcRRSetPanning (ClientPtr client)
     int			n;
     
     REQUEST_SIZE_MATCH(xRRSetPanningReq);
-    crtc = LookupCrtc(client, stuff->crtc, DixReadAccess);
-
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
-
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
 
     /* All crtcs must be associated with screens before client
      * requests are processed
@@ -1155,10 +1159,12 @@ ProcRRGetCrtcGammaSize (ClientPtr client)
     int				n;
 
     REQUEST_SIZE_MATCH(xRRGetCrtcGammaSizeReq);
-    crtc = LookupCrtc (client, stuff->crtc, DixReadAccess);
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
-    
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
+
+    /* Gamma retrieval failed, any better error? */
+    if (!RRCrtcGammaGet(crtc))
+        return RRErrorBase + BadRRCrtc;
+
     reply.type = X_Reply;
     reply.sequenceNumber = client->sequence;
     reply.length = 0;
@@ -1183,10 +1189,12 @@ ProcRRGetCrtcGamma (ClientPtr client)
     char			*extra = NULL;
     
     REQUEST_SIZE_MATCH(xRRGetCrtcGammaReq);
-    crtc = LookupCrtc (client, stuff->crtc, DixReadAccess);
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
-    
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
+
+    /* Gamma retrieval failed, any better error? */
+    if (!RRCrtcGammaGet(crtc))
+        return RRErrorBase + BadRRCrtc;
+
     len = crtc->gammaSize * 3 * 2;
     
     if (crtc->gammaSize) {
@@ -1197,7 +1205,7 @@ ProcRRGetCrtcGamma (ClientPtr client)
 
     reply.type = X_Reply;
     reply.sequenceNumber = client->sequence;
-    reply.length = (len + 3) >> 2;
+    reply.length = bytes_to_int32(len);
     reply.size = crtc->gammaSize;
     if (client->swapped) {
 	swaps (&reply.sequenceNumber, n);
@@ -1224,11 +1232,9 @@ ProcRRSetCrtcGamma (ClientPtr client)
     CARD16			*red, *green, *blue;
     
     REQUEST_AT_LEAST_SIZE(xRRSetCrtcGammaReq);
-    crtc = LookupCrtc (client, stuff->crtc, DixWriteAccess);
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
     
-    len = client->req_len - (sizeof (xRRSetCrtcGammaReq) >> 2);
+    len = client->req_len - bytes_to_int32(sizeof (xRRSetCrtcGammaReq));
     if (len < (stuff->size * 3 + 1) >> 1)
 	return BadLength;
 
@@ -1259,9 +1265,7 @@ ProcRRSetCrtcTransform (ClientPtr client)
     int			    nparams;
 
     REQUEST_AT_LEAST_SIZE(xRRSetCrtcTransformReq);
-    crtc = LookupCrtc (client, stuff->crtc, DixWriteAccess);
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
 
     PictTransform_from_xRenderTransform (&transform, &stuff->transform);
     pixman_f_transform_from_pixman_transform (&f_transform, &transform);
@@ -1270,7 +1274,7 @@ ProcRRSetCrtcTransform (ClientPtr client)
 
     filter = (char *) (stuff + 1);
     nbytes = stuff->nbytesFilter;
-    params = (xFixed *) (filter + ((nbytes + 3) & ~3));
+    params = (xFixed *) (filter + pad_to_int32(nbytes));
     nparams = ((xFixed *) stuff + client->req_len) - params;
     if (nparams < 0)
 	return BadLength;
@@ -1291,7 +1295,7 @@ transform_filter_length (RRTransformPtr transform)
 	return 0;
     nbytes = strlen (transform->filter->name);
     nparams = transform->nparams;
-    return ((nbytes + 3) & ~3) + (nparams * sizeof (xFixed));
+    return pad_to_int32(nbytes) + (nparams * sizeof (xFixed));
 }
 
 static int
@@ -1330,7 +1334,7 @@ transform_encode (ClientPtr client, xRenderTransform *wire, PictTransform *pict)
 {
     xRenderTransform_from_PictTransform (wire, pict);
     if (client->swapped)
-	SwapLongs ((CARD32 *) wire, sizeof (xRenderTransform) >> 2);
+	SwapLongs ((CARD32 *) wire, bytes_to_int32(sizeof(xRenderTransform)));
 }
 
 int
@@ -1344,9 +1348,7 @@ ProcRRGetCrtcTransform (ClientPtr client)
     char			*extra;
 
     REQUEST_SIZE_MATCH (xRRGetCrtcTransformReq);
-    crtc = LookupCrtc (client, stuff->crtc, DixWriteAccess);
-    if (!crtc)
-	return RRErrorBase + BadRRCrtc;
+    VERIFY_RR_CRTC(stuff->crtc, crtc, DixReadAccess);
 
     pending = &crtc->client_pending_transform;
     current = &crtc->client_current_transform;
@@ -1361,7 +1363,7 @@ ProcRRGetCrtcTransform (ClientPtr client)
     extra = (char *) (reply + 1);
     reply->type = X_Reply;
     reply->sequenceNumber = client->sequence;
-    reply->length = (CrtcTransformExtra + nextra) >> 2;
+    reply->length = bytes_to_int32(CrtcTransformExtra + nextra);
 
     reply->hasTransforms = crtc->transforms;
 

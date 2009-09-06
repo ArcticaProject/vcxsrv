@@ -307,7 +307,7 @@ static int ProcPseudoramiXQueryScreens(ClientPtr client)
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.number = noPseudoramiXExtension ? 0 : pseudoramiXNumScreens;
-    rep.length = rep.number * sz_XineramaScreenInfo >> 2;
+    rep.length = bytes_to_int32(rep.number * sz_XineramaScreenInfo);
     if (client->swapped) {
 	register int n;
 	swaps (&rep.sequenceNumber, n);

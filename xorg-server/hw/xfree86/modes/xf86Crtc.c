@@ -40,8 +40,7 @@
 #include "xf86Priv.h"
 #include "xf86RandR12.h"
 #include "X11/extensions/render.h"
-#define DPMS_SERVER
-#include "X11/extensions/dpms.h"
+#include "X11/extensions/dpmsconst.h"
 #include "X11/Xatom.h"
 #ifdef RENDER
 #include "picturestr.h"
@@ -55,7 +54,7 @@
 
 int xf86CrtcConfigPrivateIndex = -1;
 
-_X_EXPORT void
+void
 xf86CrtcConfigInit (ScrnInfoPtr scrn,
 		    const xf86CrtcConfigFuncsRec *funcs)
 {
@@ -70,7 +69,7 @@ xf86CrtcConfigInit (ScrnInfoPtr scrn,
     scrn->privates[xf86CrtcConfigPrivateIndex].ptr = config;
 }
  
-_X_EXPORT void
+void
 xf86CrtcSetSizeRange (ScrnInfoPtr scrn,
 		      int minWidth, int minHeight,
 		      int maxWidth, int maxHeight)
@@ -86,7 +85,7 @@ xf86CrtcSetSizeRange (ScrnInfoPtr scrn,
 /*
  * Crtc functions
  */
-_X_EXPORT xf86CrtcPtr
+xf86CrtcPtr
 xf86CrtcCreate (ScrnInfoPtr		scrn,
 		const xf86CrtcFuncsRec	*funcs)
 {
@@ -117,6 +116,16 @@ xf86CrtcCreate (ScrnInfoPtr		scrn,
     crtc->desiredTransformPresent = FALSE;
     memset (&crtc->bounds, '\0', sizeof (crtc->bounds));
 
+    /* Preallocate gamma at a sensible size. */
+    crtc->gamma_size = 256;
+    crtc->gamma_red = malloc(3 * crtc->gamma_size * sizeof (CARD16));
+    if (!crtc->gamma_red) {
+	xfree (crtc);
+	return NULL;
+    }
+    crtc->gamma_green = crtc->gamma_red + crtc->gamma_size;
+    crtc->gamma_blue = crtc->gamma_green + crtc->gamma_size;
+
     if (xf86_config->crtc)
 	crtcs = xrealloc (xf86_config->crtc,
 			  (xf86_config->num_crtc + 1) * sizeof (xf86CrtcPtr));
@@ -132,7 +141,7 @@ xf86CrtcCreate (ScrnInfoPtr		scrn,
     return crtc;
 }
 
-_X_EXPORT void
+void
 xf86CrtcDestroy (xf86CrtcPtr crtc)
 {
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(crtc->scrn);
@@ -150,6 +159,7 @@ xf86CrtcDestroy (xf86CrtcPtr crtc)
 	}
     if (crtc->params)
 	xfree (crtc->params);
+    free(crtc->gamma_red);
     xfree (crtc);
 }
 
@@ -158,7 +168,7 @@ xf86CrtcDestroy (xf86CrtcPtr crtc)
  * Return whether any outputs are connected to the specified pipe
  */
 
-_X_EXPORT Bool
+Bool
 xf86CrtcInUse (xf86CrtcPtr crtc)
 {
     ScrnInfoPtr		pScrn = crtc->scrn;
@@ -171,7 +181,7 @@ xf86CrtcInUse (xf86CrtcPtr crtc)
     return FALSE;
 }
 
-_X_EXPORT void
+void
 xf86CrtcSetScreenSubpixelOrder (ScreenPtr pScreen)
 {
 #ifdef RENDER
@@ -239,7 +249,7 @@ xf86CrtcSetScreenSubpixelOrder (ScreenPtr pScreen)
 /**
  * Sets the given video mode on the given crtc
  */
-_X_EXPORT Bool
+Bool
 xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
 			  RRTransformPtr transform, int x, int y)
 {
@@ -257,9 +267,11 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
 
     crtc->enabled = xf86CrtcInUse (crtc);
 
+    /* We only hit this if someone explicitly sends a "disabled" modeset. */
     if (!crtc->enabled)
     {
-	/* XXX disable crtc? */
+	/* Check everything for stuff that should be off. */
+	xf86DisableUnusedFunctions(scrn);
 	return TRUE;
     }
 
@@ -341,6 +353,11 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
 	    output->funcs->mode_set(output, mode, adjusted_mode);
     }
 
+    /* Only upload when needed, to avoid unneeded delays. */
+    if (!crtc->active)
+	crtc->funcs->gamma_set(crtc, crtc->gamma_red, crtc->gamma_green,
+                                            crtc->gamma_blue, crtc->gamma_size);
+
     /* Now, enable the clocks, plane, pipe, and outputs that we set up. */
     crtc->funcs->commit(crtc);
     for (i = 0; i < xf86_config->num_output; i++) 
@@ -350,13 +367,14 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
 	    output->funcs->commit(output);
     }
 
-    /* XXX free adjustedmode */
     ret = TRUE;
-    if (scrn->pScreen)
-	xf86CrtcSetScreenSubpixelOrder (scrn->pScreen);
 
 done:
-    if (!ret) {
+    if (ret) {
+	crtc->active = TRUE;
+	if (scrn->pScreen)
+	    xf86CrtcSetScreenSubpixelOrder (scrn->pScreen);
+    } else {
 	crtc->x = saved_x;
 	crtc->y = saved_y;
 	crtc->rotation = saved_rotation;
@@ -365,6 +383,8 @@ done:
 	    RRTransformCopy (&crtc->transform, &saved_transform);
 	crtc->transformPresent = saved_transform_present;
     }
+
+    free(adjusted_mode);
 
     if (didLock)
 	crtc->funcs->unlock (crtc);
@@ -376,7 +396,7 @@ done:
  * Sets the given video mode on the given crtc, but without providing
  * a transform
  */
-_X_EXPORT Bool
+Bool
 xf86CrtcSetMode (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
 		 int x, int y)
 {
@@ -386,7 +406,7 @@ xf86CrtcSetMode (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
 /**
  * Pans the screen, does not change the mode
  */
-_X_EXPORT void
+void
 xf86CrtcSetOrigin (xf86CrtcPtr crtc, int x, int y)
 {
     crtc->x = x;
@@ -420,6 +440,7 @@ typedef enum {
     OPTION_IGNORE,
     OPTION_ROTATE,
     OPTION_PANNING,
+    OPTION_PRIMARY,
 } OutputOpts;
 
 static OptionInfoRec xf86OutputOptions[] = {
@@ -436,6 +457,7 @@ static OptionInfoRec xf86OutputOptions[] = {
     {OPTION_IGNORE,	    "Ignore",		OPTV_BOOLEAN, {0}, FALSE },
     {OPTION_ROTATE,	    "Rotate",		OPTV_STRING,  {0}, FALSE },
     {OPTION_PANNING,	    "Panning",		OPTV_STRING,  {0}, FALSE },
+    {OPTION_PRIMARY,	    "Primary",		OPTV_BOOLEAN, {0}, FALSE },
     {-1,		    NULL,		OPTV_NONE,    {0}, FALSE },
 };
 
@@ -444,7 +466,7 @@ enum {
 };
 
 static OptionInfoRec xf86DeviceOptions[] = {
-    {OPTION_MODEDEBUG,	    "ModeDebug",	OPTV_STRING,  {0}, FALSE },
+    {OPTION_MODEDEBUG,	    "ModeDebug",	OPTV_BOOLEAN,  {0}, FALSE },
     {-1,		    NULL,		OPTV_NONE,    {0}, FALSE },
 };
 
@@ -560,7 +582,7 @@ xf86OutputInitialRotation (xf86OutputPtr output)
     return RR_Rotate_0;
 }
 
-_X_EXPORT xf86OutputPtr
+xf86OutputPtr
 xf86OutputCreate (ScrnInfoPtr		    scrn,
 		  const xf86OutputFuncsRec  *funcs,
 		  const char		    *name)
@@ -568,6 +590,7 @@ xf86OutputCreate (ScrnInfoPtr		    scrn,
     xf86OutputPtr	output, *outputs;
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
     int			len;
+    Bool		primary;
 
     if (name)
 	len = strlen (name) + 1;
@@ -613,14 +636,26 @@ xf86OutputCreate (ScrnInfoPtr		    scrn,
 	xfree (output);
 	return NULL;
     }
-    
+
     xf86_config->output = outputs;
-    xf86_config->output[xf86_config->num_output++] = output;
-    
+
+    if (xf86GetOptValBool (output->options, OPTION_PRIMARY, &primary) && primary)
+    {
+	memmove(xf86_config->output + 1, xf86_config->output,
+		xf86_config->num_output * sizeof (xf86OutputPtr));
+	xf86_config->output[0] = output;
+    }
+    else
+    {
+	xf86_config->output[xf86_config->num_output] = output;
+    }
+
+    xf86_config->num_output++;
+
     return output;
 }
 
-_X_EXPORT Bool
+Bool
 xf86OutputRename (xf86OutputPtr output, const char *name)
 {
     int	    len = strlen(name) + 1;
@@ -639,7 +674,7 @@ xf86OutputRename (xf86OutputPtr output, const char *name)
     return TRUE;
 }
 
-_X_EXPORT void
+void
 xf86OutputUseScreenMonitor (xf86OutputPtr output, Bool use_screen_monitor)
 {
     if (use_screen_monitor != output->use_screen_monitor)
@@ -649,7 +684,7 @@ xf86OutputUseScreenMonitor (xf86OutputPtr output, Bool use_screen_monitor)
     }
 }
 
-_X_EXPORT void
+void
 xf86OutputDestroy (xf86OutputPtr output)
 {
     ScrnInfoPtr		scrn = output->scrn;
@@ -725,7 +760,6 @@ xf86CrtcCloseScreen (int index, ScreenPtr screen)
 /*
  * Called at ScreenInit time to set up
  */
-_X_EXPORT
 #ifdef RANDR_13_INTERFACE
 int
 #else
@@ -1484,7 +1518,7 @@ GuessRangeFromModes(MonPtr mon, DisplayModePtr mode)
        mon->vrefresh[0].lo = 58.0;
 }
 
-_X_EXPORT void
+void
 xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 {
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(scrn);
@@ -1630,8 +1664,7 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	}
 
 	if (add_default_modes)
-	    default_modes = xf86GetDefaultModes (output->interlaceAllowed,
-						 output->doubleScanAllowed);
+	    default_modes = xf86GetDefaultModes ();
 
 	/*
 	 * If this is not an RB monitor, remove RB modes from the default
@@ -1668,11 +1701,17 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	output->probed_modes = xf86ModesAdd (output->probed_modes, default_modes);
 	
 	/*
-	 * Check all modes against max size
+	 * Check all modes against max size, interlace, and doublescan
 	 */
 	if (maxX && maxY)
 	    xf86ValidateModesSize (scrn, output->probed_modes,
 				       maxX, maxY, 0);
+
+	{
+	    int flags = (output->interlaceAllowed ? V_INTERLACE : 0) |
+			(output->doubleScanAllowed ? V_DBLSCAN : 0);
+	    xf86ValidateModesFlags (scrn, output->probed_modes, flags);
+	}
 	 
 	/*
 	 * Check all modes against output
@@ -1745,7 +1784,7 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
  */
 
 /* XXX where does this function belong? Here? */
-_X_EXPORT void
+void
 xf86RandR12GetOriginalVirtualSize(ScrnInfoPtr scrn, int *x, int *y);
 
 static DisplayModePtr
@@ -1840,7 +1879,7 @@ SetCompatOutput(xf86CrtcConfigPtr config)
     return output;
 }
 
-_X_EXPORT void
+void
 xf86SetScrnInfoModes (ScrnInfoPtr scrn)
 {
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(scrn);
@@ -1885,7 +1924,8 @@ xf86SetScrnInfoModes (ScrnInfoPtr scrn)
 }
 
 static void
-xf86EnableOutputs(ScrnInfoPtr scrn, xf86CrtcConfigPtr config, Bool *enabled)
+xf86CollectEnabledOutputs(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
+			  Bool *enabled)
 {
     Bool any_enabled = FALSE;
     int o;
@@ -2181,6 +2221,99 @@ xf86TargetUserpref(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
     return FALSE;
 }
 
+static Bool
+xf86CrtcSetInitialGamma(xf86CrtcPtr crtc, float gamma_red, float gamma_green,
+        float gamma_blue)
+{
+    int i, size = 256;
+    CARD16 *red, *green, *blue;
+
+    red = malloc(3 * size * sizeof(CARD16));
+    green = red + size;
+    blue = green + size;
+
+     /* Only cause warning if user wanted gamma to be set. */
+    if (!crtc->funcs->gamma_set && (gamma_red != 1.0 || gamma_green != 1.0 || gamma_blue != 1.0)) {
+        free(red);
+        return FALSE;
+    } else if (!crtc->funcs->gamma_set) {
+        free(red);
+        return TRUE;
+      }
+
+    /* At this early stage none of the randr-interface stuff is up.
+     * So take the default gamma size for lack of something better.
+     */
+    for (i = 0; i < size; i++) {
+        if (gamma_red == 1.0)
+            red[i] = i << 8;
+        else
+            red[i] = (CARD16)(pow((double)i/(double)(size - 1),
+			1. / (double)gamma_red) * (double)(size - 1) * 256);
+
+        if (gamma_green == 1.0)
+            green[i] = i << 8;
+        else
+            green[i] = (CARD16)(pow((double)i/(double)(size - 1),
+			1. / (double)gamma_green) * (double)(size - 1) * 256);
+
+        if (gamma_blue == 1.0)
+            blue[i] = i << 8;
+        else
+            blue[i] = (CARD16)(pow((double)i/(double)(size - 1),
+			1. / (double)gamma_blue) * (double)(size - 1) * 256);
+    }
+
+    /* Default size is 256, so anything else is failure. */
+    if (size != crtc->gamma_size) {
+        free(red);
+        return FALSE;
+      }
+
+    crtc->gamma_size = size;
+    memcpy (crtc->gamma_red, red, crtc->gamma_size * sizeof (CARD16));
+    memcpy (crtc->gamma_green, green, crtc->gamma_size * sizeof (CARD16));
+    memcpy (crtc->gamma_blue, blue, crtc->gamma_size * sizeof (CARD16));
+
+    /* Do not set gamma now, delay until the crtc is activated. */
+
+    free(red);
+
+    return TRUE;
+}
+
+static Bool
+xf86OutputSetInitialGamma(xf86OutputPtr output)
+{
+    XF86ConfMonitorPtr mon = output->conf_monitor;
+    float gamma_red = 1.0, gamma_green = 1.0, gamma_blue = 1.0;
+    
+    if (!mon)
+        return TRUE;
+
+    if (!output->crtc)
+        return FALSE;
+
+    /* Get configured values, where they exist. */
+    if (mon->mon_gamma_red >= GAMMA_MIN &&
+        mon->mon_gamma_red <= GAMMA_MAX)
+            gamma_red = mon->mon_gamma_red;
+
+    if (mon->mon_gamma_green >= GAMMA_MIN &&
+        mon->mon_gamma_green <= GAMMA_MAX)
+            gamma_green = mon->mon_gamma_green;
+
+    if (mon->mon_gamma_blue >= GAMMA_MIN &&
+        mon->mon_gamma_blue <= GAMMA_MAX)
+            gamma_blue = mon->mon_gamma_blue;
+
+    /* This avoids setting gamma 1.0 in case another cloned output on this crtc has a specific gamma. */
+    if (gamma_red != 1.0 || gamma_green != 1.0 || gamma_blue != 1.0) {
+	xf86DrvMsg(output->scrn->scrnIndex, X_INFO, "Output %s wants gamma correction (%.1f, %.1f, %.1f)\n", output->name, gamma_red, gamma_green, gamma_blue);
+	return xf86CrtcSetInitialGamma(output->crtc, gamma_red, gamma_green, gamma_blue);
+    }else
+	return TRUE;
+}
 
 /**
  * Construct default screen configuration
@@ -2196,7 +2329,7 @@ xf86TargetUserpref(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
  * accordingly.
  */
 
-_X_EXPORT Bool
+Bool
 xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
 {
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(scrn);
@@ -2231,7 +2364,7 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
     modes = xnfcalloc (config->num_output, sizeof (DisplayModePtr));
     enabled = xnfcalloc (config->num_output, sizeof (Bool));
     
-    xf86EnableOutputs(scrn, config, enabled);
+    xf86CollectEnabledOutputs(scrn, config, enabled);
 
     if (xf86TargetUserpref(scrn, config, modes, enabled, width, height))
 	xf86DrvMsg(i, X_INFO, "Using user preference for initial modes\n");
@@ -2291,8 +2424,14 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
 
 	crtc->enabled = FALSE;
 	memset (&crtc->desiredMode, '\0', sizeof (crtc->desiredMode));
+	/* Set default gamma for all crtc's. */
+	/* This is done to avoid problems later on with cloned outputs. */
+	xf86CrtcSetInitialGamma(crtc, 1.0, 1.0, 1.0);
     }
-    
+
+    if (xf86_crtc_supports_gamma(scrn))
+	xf86DrvMsg(scrn->scrnIndex, X_INFO, "Using default gamma of (1.0, 1.0, 1.0) unless otherwise stated.\n");
+
     /*
      * Set initial configuration
      */
@@ -2310,17 +2449,17 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
 	    crtc->desiredY = output->initial_y;
 	    crtc->desiredTransformPresent = FALSE;
 	    crtc->enabled = TRUE;
-	    crtc->x = output->initial_x;
-	    crtc->y = output->initial_y;
 	    memcpy (&crtc->panningTotalArea,    &output->initialTotalArea,    sizeof(BoxRec));
 	    memcpy (&crtc->panningTrackingArea, &output->initialTrackingArea, sizeof(BoxRec));
 	    memcpy (crtc->panningBorder,        output->initialBorder,        4*sizeof(INT16));
 	    output->crtc = crtc;
+	    if (!xf86OutputSetInitialGamma(output))
+		xf86DrvMsg (scrn->scrnIndex, X_WARNING, "Initial gamma correction for output %s: failed.\n", output->name);
 	} else {
 	    output->crtc = NULL;
 	}
     }
-    
+
     if (scrn->display->virtualX == 0)
     {
 	/*
@@ -2429,7 +2568,7 @@ xf86PrepareCrtcs (ScrnInfoPtr scrn)
  * modes (used in EnterVT functions, or at server startup)
  */
 
-_X_EXPORT Bool
+Bool
 xf86SetDesiredModes (ScrnInfoPtr scrn)
 {
     xf86CrtcConfigPtr   config = XF86_CRTC_CONFIG_PTR(scrn);
@@ -2507,7 +2646,7 @@ xf86SetDesiredModes (ScrnInfoPtr scrn)
  * - Closer in refresh rate to the requested mode.
  */
 
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86OutputFindClosestMode (xf86OutputPtr output, DisplayModePtr desired)
 {
     DisplayModePtr	best = NULL, scan = NULL;
@@ -2570,7 +2709,7 @@ xf86OutputFindClosestMode (xf86OutputPtr output, DisplayModePtr desired)
  * mode across all outputs that are currently active.
  */
 
-_X_EXPORT Bool
+Bool
 xf86SetSingleMode (ScrnInfoPtr pScrn, DisplayModePtr desired, Rotation rotation)
 {
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(pScrn);
@@ -2643,7 +2782,7 @@ xf86SetSingleMode (ScrnInfoPtr pScrn, DisplayModePtr desired, Rotation rotation)
  * If the new mode is off, it will turn off outputs and then CRTCs.
  * Otherwise, it will affect CRTCs before outputs.
  */
-_X_EXPORT void
+void
 xf86DPMSSet(ScrnInfoPtr scrn, int mode, int flags)
 {
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(scrn);
@@ -2681,7 +2820,7 @@ xf86DPMSSet(ScrnInfoPtr scrn, int mode, int flags)
  * Even for monitors with no DPMS support, by the definition of our DPMS hooks,
  * the outputs will still get disabled (blanked).
  */
-_X_EXPORT Bool
+Bool
 xf86SaveScreen(ScreenPtr pScreen, int mode)
 {
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
@@ -2697,7 +2836,7 @@ xf86SaveScreen(ScreenPtr pScreen, int mode)
 /**
  * Disable all inactive crtcs and outputs
  */
-_X_EXPORT void
+void
 xf86DisableUnusedFunctions(ScrnInfoPtr pScrn)
 {
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(pScrn);
@@ -2719,6 +2858,7 @@ xf86DisableUnusedFunctions(ScrnInfoPtr pScrn)
 	    crtc->funcs->dpms(crtc, DPMSModeOff);
 	    memset(&crtc->mode, 0, sizeof(crtc->mode));
 	    xf86RotateDestroy(crtc);
+	    crtc->active = FALSE;
 	}
     }
     if (pScrn->pScreen)
@@ -2727,7 +2867,7 @@ xf86DisableUnusedFunctions(ScrnInfoPtr pScrn)
 
 #ifdef RANDR_12_INTERFACE
 
-#define EDID_ATOM_NAME		"EDID_DATA"
+#define EDID_ATOM_NAME		"EDID"
 
 /**
  * Set the RandR EDID property
@@ -2754,7 +2894,7 @@ xf86OutputSetEDIDProperty (xf86OutputPtr output, void *data, int data_len)
 /**
  * Set the EDID information for the specified output
  */
-_X_EXPORT void
+void
 xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
 {
     ScrnInfoPtr		scrn = output->scrn;
@@ -2822,7 +2962,7 @@ xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
  * Return the list of modes supported by the EDID information
  * stored in 'output'
  */
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86OutputGetEDIDModes (xf86OutputPtr output)
 {
     ScrnInfoPtr	scrn = output->scrn;
@@ -2834,7 +2974,7 @@ xf86OutputGetEDIDModes (xf86OutputPtr output)
 }
 
 /* maybe we should care about DDC1?  meh. */
-_X_EXPORT xf86MonPtr
+xf86MonPtr
 xf86OutputGetEDID (xf86OutputPtr output, I2CBusPtr pDDCBus)
 {
     ScrnInfoPtr	scrn = output->scrn;
@@ -2853,7 +2993,7 @@ static char *_xf86ConnectorNames[] = {
 					"Component", "LFP", "Proprietary",
 					"HDMI", "DisplayPort",
 				     };
-_X_EXPORT char *
+char *
 xf86ConnectorGetName(xf86ConnectorType connector)
 {
     return _xf86ConnectorNames[connector];
@@ -2938,7 +3078,7 @@ xf86_covering_crtc(ScrnInfoPtr pScrn,
  * not that the video shouldn't be displayed
  */
 
-_X_EXPORT Bool
+Bool
 xf86_crtc_clip_video_helper(ScrnInfoPtr pScrn,
 			    xf86CrtcPtr *crtc_ret,
 			    xf86CrtcPtr desired_crtc,
@@ -3014,4 +3154,24 @@ xf86_crtc_notify(ScreenPtr screen)
     
     if (config->xf86_crtc_notify)
 	config->xf86_crtc_notify(screen);
+}
+
+Bool
+xf86_crtc_supports_gamma(ScrnInfoPtr pScrn)
+{
+    if (xf86CrtcConfigPrivateIndex != -1) {
+	xf86CrtcConfigPtr xf86_config = XF86_CRTC_CONFIG_PTR(pScrn);
+	xf86CrtcPtr crtc;
+
+	/* for multiple drivers loaded we need this */
+	if (!xf86_config)
+		return FALSE;
+	if (xf86_config->num_crtc == 0)
+	    return FALSE;
+	crtc = xf86_config->crtc[0];
+
+	return (crtc->funcs->gamma_set != NULL);
+    }
+
+    return FALSE;
 }

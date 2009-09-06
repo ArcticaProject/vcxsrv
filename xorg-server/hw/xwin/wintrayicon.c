@@ -51,7 +51,7 @@ winInitNotifyIcon (winPrivScreenPtr pScreenPriv)
   nid.uID = pScreenInfo->dwScreen;
   nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
   nid.uCallbackMessage = WM_TRAYICON;
-  nid.hIcon = (HICON)winTaskbarIcon ();
+  nid.hIcon = winTaskbarIcon ();
 
   /* Save handle to the icon so it can be freed later */
   pScreenPriv->hiconNotifyIcon = nid.hIcon;
@@ -59,7 +59,7 @@ winInitNotifyIcon (winPrivScreenPtr pScreenPriv)
   /* Set display and screen-specific tooltip text */
   snprintf (nid.szTip,
 	    sizeof (nid.szTip),
-	    PROJECT_NAME " Server - %s:%d",
+	    PROJECT_NAME " Server:%s.%d",
 	    display, 
 	    (int) pScreenInfo->dwScreen);
 

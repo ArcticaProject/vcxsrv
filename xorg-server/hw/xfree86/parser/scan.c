@@ -180,8 +180,8 @@ xf86getNextLine(void)
 
 	if (configBufLen != CONFIG_BUF_LEN) {
 
-		tmpConfigBuf = xf86confmalloc(CONFIG_BUF_LEN);
-		tmpConfigRBuf = xf86confmalloc(CONFIG_BUF_LEN);
+		tmpConfigBuf = malloc(CONFIG_BUF_LEN);
+		tmpConfigRBuf = malloc(CONFIG_BUF_LEN);
 
 		if (!tmpConfigBuf || !tmpConfigRBuf) {
 
@@ -190,8 +190,8 @@ xf86getNextLine(void)
 			 * and free any partial allocations
 			 */
 
-			xf86conffree(tmpConfigBuf);
-			xf86conffree(tmpConfigRBuf);
+			free(tmpConfigBuf);
+			free(tmpConfigRBuf);
 
 		} else {
 
@@ -202,8 +202,8 @@ xf86getNextLine(void)
 
 			configBufLen = CONFIG_BUF_LEN;
 
-			xf86conffree(configBuf);
-			xf86conffree(configRBuf);
+			free(configBuf);
+			free(configRBuf);
 
 			configBuf = tmpConfigBuf;
 			configRBuf = tmpConfigRBuf;
@@ -237,8 +237,8 @@ xf86getNextLine(void)
 
 		if (!eolFound) {
 
-			tmpConfigBuf = xf86confrealloc(configBuf, configBufLen + CONFIG_BUF_LEN);
-			tmpConfigRBuf = xf86confrealloc(configRBuf, configBufLen + CONFIG_BUF_LEN);
+			tmpConfigBuf = realloc(configBuf, configBufLen + CONFIG_BUF_LEN);
+			tmpConfigRBuf = realloc(configRBuf, configBufLen + CONFIG_BUF_LEN);
 
 			if (!tmpConfigBuf || !tmpConfigRBuf) {
 
@@ -420,7 +420,7 @@ again:
 			}
 			while ((c != '\"') && (c != '\n') && (c != '\r') && (c != '\0'));
 			configRBuf[i] = '\0';
-			val.str = xf86confmalloc (strlen (configRBuf) + 1);
+			val.str = malloc (strlen (configRBuf) + 1);
 			strcpy (val.str, configRBuf);	/* private copy ! */
 			return (STRING);
 		}
@@ -595,7 +595,7 @@ xf86pathIsSafe(const char *path)
 #endif
 
 #define BAIL_OUT		do {									\
-							xf86conffree(result);				\
+							free(result);				\
 							return NULL;						\
 						} while (0)
 
@@ -632,7 +632,7 @@ DoSubstitution(const char *template, const char *cmdline, const char *projroot,
 	if (envUsed)
 		*envUsed = 0;
 
-	result = xf86confmalloc(PATH_MAX + 1);
+	result = malloc(PATH_MAX + 1);
 	l = 0;
 	for (i = 0; template[i]; i++) {
 		if (template[i] != '%') {
@@ -669,11 +669,11 @@ DoSubstitution(const char *template, const char *cmdline, const char *projroot,
 				break;
 			case 'H':
 				if (!hostname) {
-					if ((hostname = xf86confmalloc(MAXHOSTNAMELEN + 1))) {
+					if ((hostname = malloc(MAXHOSTNAMELEN + 1))) {
 						if (gethostname(hostname, MAXHOSTNAMELEN) == 0) {
 							hostname[MAXHOSTNAMELEN] = '\0';
 						} else {
-							xf86conffree(hostname);
+							free(hostname);
 							hostname = NULL;
 						}
 					}
@@ -791,7 +791,7 @@ xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
 
 	if (!path || !path[0])
 		path = DEFAULT_CONF_PATH;
-	pathcopy = xf86confmalloc(strlen(path) + 1);
+	pathcopy = malloc(strlen(path) + 1);
 	strcpy(pathcopy, path);
 	if (!projroot || !projroot[0])
 		projroot = PROJECTROOT;
@@ -811,7 +811,7 @@ xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
 			}
 		}
 		if (configPath && !configFile) {
-			xf86conffree(configPath);
+			free(configPath);
 			configPath = NULL;
 		}
 		template = strtok(NULL, ",");
@@ -834,21 +834,21 @@ xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
 		    }
 		}
 		if (configPath && !configFile) {
-		    xf86conffree(configPath);
+		    free(configPath);
 		    configPath = NULL;
 		}
 		template = strtok(NULL, ",");
 	    }
 	}
 	
-	xf86conffree(pathcopy);
+	free(pathcopy);
 	if (!configFile) {
 
 		return NULL;
 	}
 
-	configBuf = xf86confmalloc (CONFIG_BUF_LEN);
-	configRBuf = xf86confmalloc (CONFIG_BUF_LEN);
+	configBuf = malloc (CONFIG_BUF_LEN);
+	configRBuf = malloc (CONFIG_BUF_LEN);
 	configBuf[0] = '\0';		/* sanity ... */
 
 	return configPath;
@@ -857,11 +857,11 @@ xf86openConfigFile(const char *path, const char *cmdline, const char *projroot)
 void
 xf86closeConfigFile (void)
 {
-	xf86conffree (configPath);
+	free (configPath);
 	configPath = NULL;
-	xf86conffree (configRBuf);
+	free (configRBuf);
 	configRBuf = NULL;
-	xf86conffree (configBuf);
+	free (configBuf);
 	configBuf = NULL;
 
 	if (configFile) {
@@ -877,9 +877,9 @@ void
 xf86setBuiltinConfig(const char *config[])
 {
 	builtinConfig = config;
-	configPath = xf86configStrdup("<builtin configuration>");
-	configBuf = xf86confmalloc (CONFIG_BUF_LEN);
-	configRBuf = xf86confmalloc (CONFIG_BUF_LEN);
+	configPath = strdup("<builtin configuration>");
+	configBuf = malloc (CONFIG_BUF_LEN);
+	configRBuf = malloc (CONFIG_BUF_LEN);
 	configBuf[0] = '\0';		/* sanity ... */
 
 }
@@ -915,8 +915,8 @@ void
 xf86setSection (char *section)
 {
 	if (configSection)
-		xf86conffree(configSection);
-	configSection = xf86confmalloc(strlen (section) + 1);
+		free(configSection);
+	configSection = malloc(strlen (section) + 1);
 	strcpy (configSection, section);
 }
 
@@ -948,7 +948,7 @@ StringToToken (char *str, xf86ConfigSymTabRec * tab)
  * Compare two names.  The characters '_', ' ', and '\t' are ignored
  * in the comparison.
  */
-_X_EXPORT int
+int
 xf86nameCompare (const char *s1, const char *s2)
 {
 	char c1, c2;
@@ -1013,7 +1013,7 @@ xf86addComment(char *cur, char *add)
 	endnewline = add[len - 1] == '\n';
 	len +=  1 + iscomment + (!hasnewline) + (!endnewline) + eol_seen;
 
-	if ((str = xf86confrealloc(cur, len + curlen)) == NULL)
+	if ((str = realloc(cur, len + curlen)) == NULL)
 		return (cur);
 
 	cur = str;

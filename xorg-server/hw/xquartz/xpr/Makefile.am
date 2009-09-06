@@ -9,6 +9,7 @@ AM_CPPFLAGS = \
 libXquartzXpr_la_SOURCES = \
 	appledri.c \
 	dri.c \
+	driWrap.c \
 	xprAppleWM.c \
 	xprCursor.c \
 	xprEvent.c \
@@ -20,6 +21,7 @@ libXquartzXpr_la_SOURCES = \
 
 EXTRA_DIST = \
 	dri.h \
+	driWrap.h \
 	dristruct.h \
 	appledri.h \
 	appledristr.h \

@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -62,6 +60,8 @@ SOFTWARE.
 #include <X11/extensions/XIproto.h>
 #include "exglobals.h"
 #include "dixgrabs.h"
+#include "xkbsrv.h"
+#include "xkbstr.h"
 
 #include "ungrdevk.h"
 
@@ -126,8 +126,8 @@ ProcXUngrabDeviceKey(ClientPtr client)
     if (rc != Success)
 	return rc;
 
-    if (((stuff->key > dev->key->curKeySyms.maxKeyCode) ||
-	 (stuff->key < dev->key->curKeySyms.minKeyCode))
+    if (((stuff->key > dev->key->xkbInfo->desc->max_key_code) ||
+	 (stuff->key < dev->key->xkbInfo->desc->min_key_code))
 	&& (stuff->key != AnyKey))
 	return BadValue;
 
@@ -139,6 +139,7 @@ ProcXUngrabDeviceKey(ClientPtr client)
     temporaryGrab.device = dev;
     temporaryGrab.window = pWin;
     temporaryGrab.type = DeviceKeyPress;
+    temporaryGrab.grabtype = GRABTYPE_XI;
     temporaryGrab.modifierDevice = mdev;
     temporaryGrab.modifiersDetail.exact = stuff->modifiers;
     temporaryGrab.modifiersDetail.pMask = NULL;

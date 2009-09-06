@@ -48,7 +48,7 @@
 
 #define AUDIO_DEVICE    "/dev/audio"
 
-_X_EXPORT void
+void
 xf86OSRingBell(int loudness, int pitch, int duration)
 {
     static short    samples[BELL_SAMPLES];

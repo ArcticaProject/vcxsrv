@@ -51,7 +51,6 @@ SOFTWARE.
 #endif
 
 #include <X11/X.h>
-#define NEED_EVENTS
 #include <X11/Xproto.h>
 #include <X11/Xprotostr.h>
 #include "misc.h"
@@ -62,7 +61,7 @@ SOFTWARE.
 /* Thanks to Jack Palevich for testing and subsequently rewriting all this */
 
 /* Byte swap a list of longs */
-_X_EXPORT void
+void
 SwapLongs (CARD32 *list, unsigned long count)
 {
 	char n;
@@ -88,7 +87,7 @@ SwapLongs (CARD32 *list, unsigned long count)
 }
 
 /* Byte swap a list of shorts */
-_X_EXPORT void
+void
 SwapShorts (short *list, unsigned long count)
 {
 	char n;
@@ -248,7 +247,7 @@ SProcChangeProperty(ClientPtr client)
     return((* ProcVector[X_ChangeProperty])(client));
 }
 
-int 
+int
 SProcDeleteProperty(ClientPtr client)
 {
     char n;
@@ -261,7 +260,7 @@ SProcDeleteProperty(ClientPtr client)
               
 }
 
-int 
+int
 SProcGetProperty(ClientPtr client)
 {
     char n;
@@ -853,7 +852,7 @@ SProcFreeColors(ClientPtr client)
 
 }
 
-_X_EXPORT void
+void
 SwapColorItem(xColorItem *pItem)
 {
     char n;

@@ -38,16 +38,21 @@ subdir = include
 DIST_COMMON = $(am__sdk_HEADERS_DIST) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/dix-config.h.in \
 	$(srcdir)/do-not-use-config.h.in $(srcdir)/kdrive-config.h.in \
-	$(srcdir)/xkb-config.h.in $(srcdir)/xorg-config.h.in \
-	$(srcdir)/xorg-server.h.in $(srcdir)/xwin-config.h.in
+	$(srcdir)/version-config.h.in $(srcdir)/xkb-config.h.in \
+	$(srcdir)/xorg-config.h.in $(srcdir)/xorg-server.h.in \
+	$(srcdir)/xwin-config.h.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
+	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/shave.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = do-not-use-config.h xorg-server.h dix-config.h \
-	xorg-config.h xkb-config.h xwin-config.h kdrive-config.h
+	xorg-config.h xkb-config.h xwin-config.h kdrive-config.h \
+	version-config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
@@ -77,9 +82,9 @@ am__installdirs = "$(DESTDIR)$(sdkdir)" "$(DESTDIR)$(sdkdir)"
 am__sdk_HEADERS_DIST = XIstubs.h bstore.h bstorestr.h closestr.h \
 	closure.h colormap.h colormapst.h hotplug.h cursor.h \
 	cursorstr.h dix.h dixaccess.h dixevents.h dixfont.h \
-	dixfontstr.h dixgrabs.h dixstruct.h exevents.h extension.h \
-	extinit.h extnsionst.h gc.h gcstruct.h globals.h input.h \
-	inputstr.h misc.h miscstruct.h opaque.h os.h pixmap.h \
+	dixfontstr.h dixgrabs.h dixstruct.h events.h exevents.h \
+	extension.h extinit.h extnsionst.h gc.h gcstruct.h globals.h \
+	input.h inputstr.h misc.h miscstruct.h opaque.h os.h pixmap.h \
 	pixmapstr.h privates.h property.h propertyst.h ptrveloc.h \
 	region.h regionstr.h registry.h resource.h rgb.h screenint.h \
 	scrnintstr.h selection.h servermd.h site.h swaprep.h swapreq.h \
@@ -94,6 +99,7 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
 APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
@@ -114,9 +120,12 @@ CCASDEPMODE = @CCASDEPMODE@
 CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CHANGELOG_CMD = @CHANGELOG_CMD@
 COMPILEDDEFAULTFONTPATH = @COMPILEDDEFAULTFONTPATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CWARNFLAGS = @CWARNFLAGS@
+CXX = @CXX@
 CYGPATH_W = @CYGPATH_W@
 DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
@@ -145,7 +154,9 @@ DRIPROTO_CFLAGS = @DRIPROTO_CFLAGS@
 DRIPROTO_LIBS = @DRIPROTO_LIBS@
 DRIVER_MAN_DIR = @DRIVER_MAN_DIR@
 DRIVER_MAN_SUFFIX = @DRIVER_MAN_SUFFIX@
+DRI_CFLAGS = @DRI_CFLAGS@
 DRI_DRIVER_PATH = @DRI_DRIVER_PATH@
+DRI_LIBS = @DRI_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DTRACE = @DTRACE@
 DUMPBIN = @DUMPBIN@
@@ -154,9 +165,13 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FC = @FC@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
 GLX_DEFINES = @GLX_DEFINES@
 GL_CFLAGS = @GL_CFLAGS@
@@ -195,12 +210,13 @@ LTCOMPILE = @LTCOMPILE@
 LTCXXCOMPILE = @LTCXXCOMPILE@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
+MAIN_LIB = @MAIN_LIB@
+MAKEFLAGS = @MAKEFLAGS@
 MAKEINFO = @MAKEINFO@
 MAKE_HTML = @MAKE_HTML@
 MAKE_PDF = @MAKE_PDF@
 MAKE_PS = @MAKE_PS@
 MAKE_TEXT = @MAKE_TEXT@
-MESA_SOURCE = @MESA_SOURCE@
 MISC_MAN_DIR = @MISC_MAN_DIR@
 MISC_MAN_SUFFIX = @MISC_MAN_SUFFIX@
 MKDIR_P = @MKDIR_P@
@@ -220,7 +236,6 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PCIACCESS_CFLAGS = @PCIACCESS_CFLAGS@
@@ -230,6 +245,7 @@ PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PROJECTROOT = @PROJECTROOT@
 PS2PDF = @PS2PDF@
+Q = @Q@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
@@ -243,11 +259,10 @@ STRIP = @STRIP@
 TSLIB_CFLAGS = @TSLIB_CFLAGS@
 TSLIB_LIBS = @TSLIB_LIBS@
 UTILS_SYS_LIBS = @UTILS_SYS_LIBS@
-VENDOR_MAN_VERSION = @VENDOR_MAN_VERSION@
-VENDOR_NAME = @VENDOR_NAME@
+V = @V@
 VENDOR_NAME_SHORT = @VENDOR_NAME_SHORT@
-VENDOR_RELEASE = @VENDOR_RELEASE@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 X11EXAMPLES_DEP_CFLAGS = @X11EXAMPLES_DEP_CFLAGS@
 X11EXAMPLES_DEP_LIBS = @X11EXAMPLES_DEP_LIBS@
 XDMCP_CFLAGS = @XDMCP_CFLAGS@
@@ -283,6 +298,7 @@ XORG_OS_SUBDIR = @XORG_OS_SUBDIR@
 XORG_SYS_LIBS = @XORG_SYS_LIBS@
 XPBPROXY_CFLAGS = @XPBPROXY_CFLAGS@
 XPBPROXY_LIBS = @XPBPROXY_LIBS@
+XQUARTZ_SPARKLE = @XQUARTZ_SPARKLE@
 XRESEXAMPLES_DEP_CFLAGS = @XRESEXAMPLES_DEP_CFLAGS@
 XRESEXAMPLES_DEP_LIBS = @XRESEXAMPLES_DEP_LIBS@
 XSDL_INCS = @XSDL_INCS@
@@ -307,7 +323,6 @@ YFLAGS = @YFLAGS@
 __XCONFIGFILE__ = @__XCONFIGFILE__@
 abi_ansic = @abi_ansic@
 abi_extension = @abi_extension@
-abi_font = @abi_font@
 abi_videodrv = @abi_videodrv@
 abi_xinput = @abi_xinput@
 abs_builddir = @abs_builddir@
@@ -330,6 +345,7 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
+distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -361,7 +377,9 @@ psdir = @psdir@
 sbindir = @sbindir@
 sdkdir = @sdkdir@
 sharedstatedir = @sharedstatedir@
+shavedir = @shavedir@
 srcdir = @srcdir@
+symbol_visibility = @symbol_visibility@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
@@ -385,6 +403,7 @@ top_srcdir = @top_srcdir@
 @XORG_TRUE@	dixfontstr.h	\
 @XORG_TRUE@	dixgrabs.h	\
 @XORG_TRUE@	dixstruct.h	\
+@XORG_TRUE@	events.h	\
 @XORG_TRUE@	exevents.h	\
 @XORG_TRUE@	extension.h	\
 @XORG_TRUE@	extinit.h	\
@@ -428,9 +447,10 @@ top_srcdir = @top_srcdir@
 @XORG_TRUE@nodist_sdk_HEADERS = xorg-server.h
 AM_CFLAGS = $(DIX_CFLAGS)
 EXTRA_DIST = \
-	dix-config-apple-verbatim.h
+	dix-config-apple-verbatim.h \
+	eventconvert.h eventstr.h
 
-all: do-not-use-config.h xorg-server.h dix-config.h xorg-config.h xkb-config.h xwin-config.h kdrive-config.h
+all: do-not-use-config.h xorg-server.h dix-config.h xorg-config.h xkb-config.h xwin-config.h kdrive-config.h version-config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
@@ -539,8 +559,18 @@ stamp-h7: $(srcdir)/kdrive-config.h.in $(top_builddir)/config.status
 	@rm -f stamp-h7
 	cd $(top_builddir) && $(SHELL) ./config.status include/kdrive-config.h
 
+version-config.h: stamp-h8
+	@if test ! -f $@; then \
+	  rm -f stamp-h8; \
+	  $(MAKE) $(AM_MAKEFLAGS) stamp-h8; \
+	else :; fi
+
+stamp-h8: $(srcdir)/version-config.h.in $(top_builddir)/config.status
+	@rm -f stamp-h8
+	cd $(top_builddir) && $(SHELL) ./config.status include/version-config.h
+
 distclean-hdr:
-	-rm -f do-not-use-config.h stamp-h1 xorg-server.h stamp-h2 dix-config.h stamp-h3 xorg-config.h stamp-h4 xkb-config.h stamp-h5 xwin-config.h stamp-h6 kdrive-config.h stamp-h7
+	-rm -f do-not-use-config.h stamp-h1 xorg-server.h stamp-h2 dix-config.h stamp-h3 xorg-config.h stamp-h4 xkb-config.h stamp-h5 xwin-config.h stamp-h6 kdrive-config.h stamp-h7 version-config.h stamp-h8
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -598,11 +628,11 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS:  $(HEADERS) $(SOURCES) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in $(TAGS_DEPENDENCIES) \
+TAGS:  $(HEADERS) $(SOURCES) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in version-config.h.in $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	set x; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in version-config.h.in $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -620,9 +650,9 @@ TAGS:  $(HEADERS) $(SOURCES) do-not-use-config.h.in xorg-server.h.in dix-config.
 	  fi; \
 	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in $(TAGS_DEPENDENCIES) \
+CTAGS:  $(HEADERS) $(SOURCES) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in version-config.h.in $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
-	list='$(SOURCES) $(HEADERS) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS) do-not-use-config.h.in xorg-server.h.in dix-config.h.in xorg-config.h.in xkb-config.h.in xwin-config.h.in kdrive-config.h.in version-config.h.in $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -674,7 +704,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(HEADERS) do-not-use-config.h xorg-server.h \
 		dix-config.h xorg-config.h xkb-config.h xwin-config.h \
-		kdrive-config.h
+		kdrive-config.h version-config.h
 installdirs:
 	for dir in "$(DESTDIR)$(sdkdir)" "$(DESTDIR)$(sdkdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \

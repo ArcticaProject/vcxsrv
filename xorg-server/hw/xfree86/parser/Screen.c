@@ -169,7 +169,7 @@ xf86parseDisplaySubSection (void)
 
 				while ((token = xf86getSubTokenWithTab (&(ptr->disp_comment), DisplayTab)) == STRING)
 				{
-					mptr = xf86confcalloc (1, sizeof (XF86ModeRec));
+					mptr = calloc (1, sizeof (XF86ModeRec));
 					mptr->mode_name = val.str;
 					mptr->list.next = NULL;
 					ptr->disp_mode_lst = (XF86ModePtr)
@@ -292,7 +292,7 @@ xf86parseScreenSection (void)
 
 				if (aptr == NULL)
 				{
-					aptr = xf86confcalloc (1, sizeof (XF86ConfAdaptorLinkRec));
+					aptr = calloc (1, sizeof (XF86ConfAdaptorLinkRec));
 					aptr->list.next = NULL;
 					aptr->al_adaptor_str = val.str;
 					ptr->scrn_adaptor_lst = (XF86ConfAdaptorLinkPtr)
@@ -315,7 +315,7 @@ xf86parseScreenSection (void)
 			if (xf86getSubToken (&(ptr->scrn_comment)) != STRING)
 				Error (QUOTE_MSG, "SubSection");
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				HANDLE_LIST (scrn_display_lst, xf86parseDisplaySubSection,
 							 XF86ConfDisplayPtr);
 			}
@@ -456,7 +456,7 @@ xf86freeScreenList (XF86ConfScreenPtr ptr)
 		xf86freeDisplayList (ptr->scrn_display_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -470,7 +470,7 @@ xf86freeAdaptorLinkList (XF86ConfAdaptorLinkPtr ptr)
 		TestFree (ptr->al_adaptor_str);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -485,7 +485,7 @@ xf86freeDisplayList (XF86ConfDisplayPtr ptr)
 		xf86optionListFree (ptr->disp_option_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -499,7 +499,7 @@ xf86freeModeList (XF86ModePtr ptr)
 		TestFree (ptr->mode_name);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -544,7 +544,7 @@ xf86validateScreen (XF86ConfigPtr p)
 				return (FALSE);
 			}
 
-			adaptor->al_adaptor->va_fwdref = xf86configStrdup(screen->scrn_identifier);
+			adaptor->al_adaptor->va_fwdref = strdup(screen->scrn_identifier);
 			adaptor = adaptor->list.next;
 		}
 

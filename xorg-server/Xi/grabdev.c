@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -86,7 +84,7 @@ SProcXGrabDevice(ClientPtr client)
     swapl(&stuff->time, n);
     swaps(&stuff->event_count, n);
 
-    if (stuff->length != (sizeof(xGrabDeviceReq) >> 2) + stuff->event_count)
+    if (stuff->length != bytes_to_int32(sizeof(xGrabDeviceReq)) + stuff->event_count)
        return BadLength;
     
     SwapLongs((CARD32 *) (&stuff[1]), stuff->event_count);
@@ -106,12 +104,13 @@ ProcXGrabDevice(ClientPtr client)
     int rc;
     xGrabDeviceReply rep;
     DeviceIntPtr dev;
+    GrabMask mask;
     struct tmask tmp[EMASKSIZE];
 
     REQUEST(xGrabDeviceReq);
     REQUEST_AT_LEAST_SIZE(xGrabDeviceReq);
 
-    if (stuff->length != (sizeof(xGrabDeviceReq) >> 2) + stuff->event_count)
+    if (stuff->length != bytes_to_int32(sizeof(xGrabDeviceReq)) + stuff->event_count)
 	return BadLength;
 
     rep.repType = X_Reply;
@@ -128,10 +127,13 @@ ProcXGrabDevice(ClientPtr client)
 				 X_GrabDevice)) != Success)
 	return rc;
 
-    rc = GrabDevice(client, dev, stuff->this_device_mode,
-		    stuff->other_devices_mode, stuff->grabWindow,
+    mask.xi = tmp[stuff->deviceid].mask;
+
+    rc = GrabDevice(client, dev, stuff->other_devices_mode,
+                    stuff->this_device_mode, stuff->grabWindow,
 		    stuff->ownerEvents, stuff->time,
-		    tmp[stuff->deviceid].mask, &rep.status, FALSE);
+		    &mask, GRABTYPE_XI, None, None,
+		    &rep.status);
 
     if (rc != Success)
 	return rc;
@@ -179,10 +181,10 @@ CreateMaskFromList(ClientPtr client, XEventClass * list, int count,
 
     for (i = 0; i < count; i++, list++) {
 	device = *list >> 8;
-	if (device > 255) /* FIXME: we only use 7 bit for devices? */
+	if (device > 255)
 	    return BadClass;
 
-	rc = dixLookupDevice(&tdev, device, client, DixReadAccess);
+	rc = dixLookupDevice(&tdev, device, client, DixUseAccess);
 	if (rc != BadDevice && rc != Success)
 	    return rc;
 	if (rc == BadDevice || (dev != NULL && tdev != dev))

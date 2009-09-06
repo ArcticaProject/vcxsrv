@@ -1,4 +1,4 @@
-noinst_LIBRARIES = libi2c.a
+noinst_LTLIBRARIES = libi2c.la
 
 multimediadir = $(moduledir)/multimedia
 multimedia_LTLIBRARIES =	\
@@ -10,7 +10,7 @@ multimedia_LTLIBRARIES =	\
 	tda9885_drv.la		\
 	uda1380_drv.la
 
-libi2c_a_SOURCES = xf86i2c.c
+libi2c_la_SOURCES = xf86i2c.c
 
 INCLUDES = $(XORG_INCS)
 

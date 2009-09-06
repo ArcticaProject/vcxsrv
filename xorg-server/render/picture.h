@@ -25,6 +25,8 @@
 #ifndef _PICTURE_H_
 #define _PICTURE_H_
 
+#include "privates.h"
+
 #include <pixman.h>
 
 typedef struct _DirectFormat	*DirectFormatPtr;
@@ -60,15 +62,23 @@ typedef struct _Picture		*PicturePtr;
 #define PICT_TYPE_ABGR		PIXMAN_TYPE_ABGR
 #define PICT_TYPE_COLOR		PIXMAN_TYPE_COLOR
 #define PICT_TYPE_GRAY		PIXMAN_TYPE_GRAY
+#define PICT_TYPE_BGRA		PIXMAN_TYPE_BGRA
 
 #define PICT_FORMAT_COLOR(f)	PIXMAN_FORMAT_COLOR(f)
 
 /* 32bpp formats */
 typedef enum _PictFormatShort {
+    PICT_a2r10g10b10 =	PIXMAN_a2r10g10b10,
+    PICT_x2r10g10b10 =	PIXMAN_x2r10g10b10,
+    PICT_a2b10g10r10 =	PIXMAN_a2b10g10r10,
+    PICT_x2b10g10r10 =	PIXMAN_x2b10g10r10,
+
     PICT_a8r8g8b8 =	PIXMAN_a8r8g8b8,
     PICT_x8r8g8b8 =	PIXMAN_x8r8g8b8,
     PICT_a8b8g8r8 =	PIXMAN_a8b8g8r8,
     PICT_x8b8g8r8 =	PIXMAN_x8b8g8r8,
+    PICT_b8g8r8a8 =	PIXMAN_b8g8r8a8,
+    PICT_b8g8r8x8 =	PIXMAN_b8g8r8x8,
 
 /* 24bpp formats */
     PICT_r8g8b8 =	PIXMAN_r8g8b8,
@@ -159,12 +169,12 @@ typedef enum _PictFormatShort {
 #define PictureCmapPolicyColor	    3
 #define PictureCmapPolicyAll	    4
 
-extern int  PictureCmapPolicy;
+extern _X_EXPORT int PictureCmapPolicy;
 
-int	PictureParseCmapPolicy (const char *name);
+extern _X_EXPORT int PictureParseCmapPolicy (const char *name);
 
-extern int RenderErrBase;
-extern DevPrivateKey RenderClientPrivateKey;
+extern _X_EXPORT int RenderErrBase;
+extern _X_EXPORT DevPrivateKey RenderClientPrivateKey;
 
 /* Fixed point updates from Carl Worth, USC, Information Sciences Institute */
 

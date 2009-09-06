@@ -95,7 +95,7 @@ static miZeroArcPtRec oob = {65536, 65536, 0};
  *
  */
 
-_X_EXPORT Bool
+Bool
 miZeroArcSetup(xArc *arc, miZeroArcRec *info, Bool ok360)
 {
     int l;
@@ -702,14 +702,14 @@ miZeroArcDashPts(
     dinfo->dashOffset = pGC->dash[dinfo->dashIndex] - dashRemaining;
 }
 
-_X_EXPORT void
+void
 miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 {
     int maxPts = 0;
     int n, maxw = 0;
     xArc *arc;
     int i;
-    DDXPointPtr points, pts, oddPts;
+    DDXPointPtr points, pts, oddPts = NULL;
     DDXPointPtr pt;
     int numPts;
     Bool dospans;
@@ -737,7 +737,7 @@ miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
     dospans = (pGC->fillStyle != FillSolid);
     if (dospans)
     {
-	widths = (int *)xalloc(sizeof(int) * numPts);
+	widths = xalloc(sizeof(int) * numPts);
 	if (!widths)
 	    return;
 	maxw = 0;
@@ -754,7 +754,7 @@ miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 		   (unsigned char *) pGC->dash, (int)pGC->numInDashList,
 		   &dinfo.dashOffsetInit);
     }
-    points = (DDXPointPtr)xalloc(sizeof(DDXPointRec) * numPts);
+    points = xalloc(sizeof(DDXPointRec) * numPts);
     if (!points)
     {
 	if (dospans)

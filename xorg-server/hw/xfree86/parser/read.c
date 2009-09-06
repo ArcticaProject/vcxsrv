@@ -96,7 +96,7 @@ xf86readConfigFile (void)
 	int token;
 	XF86ConfigPtr ptr = NULL;
 
-	if ((ptr = xf86confcalloc (1, sizeof (XF86ConfigRec))) == NULL)
+	if ((ptr = calloc (1, sizeof (XF86ConfigRec))) == NULL)
 	{
 		return NULL;
 	}
@@ -118,107 +118,107 @@ xf86readConfigFile (void)
 			xf86setSection (val.str);
 			if (xf86nameCompare (val.str, "files") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_RETURN (conf_files, xf86parseFilesSection ());
 			}
 			else if (xf86nameCompare (val.str, "serverflags") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_RETURN (conf_flags, xf86parseFlagsSection ());
 			}
 			else if (xf86nameCompare (val.str, "pointer") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_input_lst, xf86parsePointerSection,
 							 XF86ConfInputPtr);
 			}
 			else if (xf86nameCompare (val.str, "videoadaptor") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_videoadaptor_lst, xf86parseVideoAdaptorSection,
 							 XF86ConfVideoAdaptorPtr);
 			}
 			else if (xf86nameCompare (val.str, "device") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_device_lst, xf86parseDeviceSection,
 							 XF86ConfDevicePtr);
 			}
 			else if (xf86nameCompare (val.str, "monitor") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_monitor_lst, xf86parseMonitorSection,
 							 XF86ConfMonitorPtr);
 			}
 			else if (xf86nameCompare (val.str, "modes") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_modes_lst, xf86parseModesSection,
 							 XF86ConfModesPtr);
 			}
 			else if (xf86nameCompare (val.str, "screen") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_screen_lst, xf86parseScreenSection,
 							 XF86ConfScreenPtr);
 			}
 			else if (xf86nameCompare(val.str, "inputdevice") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_input_lst, xf86parseInputSection,
 							 XF86ConfInputPtr);
 			}
 			else if (xf86nameCompare (val.str, "module") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_RETURN (conf_modules, xf86parseModuleSection ());
 			}
 			else if (xf86nameCompare (val.str, "serverlayout") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_layout_lst, xf86parseLayoutSection,
 							 XF86ConfLayoutPtr);
 			}
 			else if (xf86nameCompare (val.str, "vendor") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_LIST (conf_vendor_lst, xf86parseVendorSection,
 							 XF86ConfVendorPtr);
 			}
 			else if (xf86nameCompare (val.str, "dri") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_RETURN (conf_dri, xf86parseDRISection ());
 			}
 			else if (xf86nameCompare (val.str, "extensions") == 0)
 			{
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 				HANDLE_RETURN (conf_extensions, xf86parseExtensionsSection ());
 			}
 			else
 			{
 				Error (INVALID_SECTION_MSG, xf86tokenString ());
-				xf86conffree(val.str);
+				free(val.str);
 				val.str = NULL;
 			}
 			break;
 		default:
 			Error (INVALID_KEYWORD_MSG, xf86tokenString ());
-			xf86conffree(val.str);
+			free(val.str);
 			val.str = NULL;
 		}
 	}
@@ -306,5 +306,5 @@ xf86freeConfig (XF86ConfigPtr p)
 	xf86freeExtensions (p->conf_extensions);
 	TestFree(p->conf_comment);
 
-	xf86conffree (p);
+	free (p);
 }

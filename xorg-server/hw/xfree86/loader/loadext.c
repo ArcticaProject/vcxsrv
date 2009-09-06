@@ -66,7 +66,7 @@ NewExtensionModule(void)
     }
 }
 
-_X_EXPORT void
+void
 LoadExtension(ExtensionModule * e, Bool builtin)
 {
     ExtensionModule *newext;
@@ -387,7 +387,7 @@ tsort(void)
 }
 
 void
-LoaderSortExtensions()
+LoaderSortExtensions(void)
 {
     int i, j;
     ExtensionModule *ext, *newList;

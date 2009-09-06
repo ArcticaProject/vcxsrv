@@ -90,11 +90,7 @@ SOFTWARE.
 #define DEFAULT_BELL		50
 #define DEFAULT_BELL_PITCH	400
 #define DEFAULT_BELL_DURATION	100
-#ifdef XKB
 #define DEFAULT_AUTOREPEAT	TRUE
-#else
-#define DEFAULT_AUTOREPEAT	FALSE
-#endif
 #define DEFAULT_AUTOREPEATS	{\
         0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,\
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,\

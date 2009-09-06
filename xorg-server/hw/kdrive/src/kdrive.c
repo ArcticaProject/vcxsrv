@@ -24,9 +24,6 @@
 #include <kdrive-config.h>
 #endif
 #include "kdrive.h"
-#ifdef PSEUDO8
-#include "pseudo8/pseudo8.h"
-#endif
 #include <mivalidate.h>
 #include <dixstruct.h>
 #include "privates.h"
@@ -102,7 +99,6 @@ KdSetRootClip (ScreenPtr pScreen, BOOL enable)
     WindowPtr	pChild;
     Bool	WasViewable;
     Bool	anyMarked = FALSE;
-    RegionPtr	pOldClip = 0;
     WindowPtr   pLayerWin;
     BoxRec	box;
 
@@ -343,7 +339,7 @@ AbortDDX(void)
 }
 
 void
-ddxGiveUp ()
+ddxGiveUp (void)
 {
     AbortDDX ();
 }
@@ -521,17 +517,6 @@ KdParseScreen (KdScreenInfo *screen,
  *	{NMO}	    Reorder buttons
  */
 
-char *
-KdSaveString (char *str)
-{
-    char    *n = (char *) xalloc (strlen (str) + 1);
-
-    if (!n)
-	return 0;
-    strcpy (n, str);
-    return n;
-}
-
 void
 KdParseRgba (char *rgba)
 {
@@ -553,7 +538,6 @@ void
 KdUseMsg (void)
 {
     ErrorF("\nTinyX Device Dependent Usage:\n");
-    ErrorF("-card pcmcia     Use PCMCIA card as additional screen\n");
     ErrorF("-screen WIDTH[/WIDTHMM]xHEIGHT[/HEIGHTMM][@ROTATION][X][Y][xDEPTH/BPP{,DEPTH/BPP}[xFREQ]]  Specify screen characteristics\n");
     ErrorF("-rgba rgb/bgr/vrgb/vbgr/none   Specify subpixel ordering for LCD panels\n");
     ErrorF("-mouse driver [,n,,options]    Specify the pointer driver and its options (n is the number of buttons)\n");
@@ -569,9 +553,6 @@ KdUseMsg (void)
     ErrorF("-switchCmd       Command to execute on vt switch\n");
     ErrorF("-zap             Terminate server on Ctrl+Alt+Backspace\n");
     ErrorF("vtxx             Use virtual terminal xx instead of the next available\n");
-#ifdef PSEUDO8
-    p8UseMsg ();
-#endif
 }
 
 int
@@ -580,14 +561,6 @@ KdProcessArgument (int argc, char **argv, int i)
     KdCardInfo	    *card;
     KdScreenInfo    *screen;
 
-    if (!strcmp (argv[i], "-card"))
-    {
-	if ((i+1) < argc)
-	    InitCard (argv[i+1]);
-	else
-	    UseMsg ();
-	return 2;
-    }
     if (!strcmp (argv[i], "-screen"))
     {
 	if ((i+1) < argc)
@@ -704,11 +677,7 @@ KdProcessArgument (int argc, char **argv, int i)
         return 2;
     }
 
-#ifdef PSEUDO8
-    return p8ProcessArgument (argc, argv, i);
-#else
     return 0;
-#endif
 }
 
 /*
@@ -1079,10 +1048,6 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 	if (!(*card->cfuncs->initAccel) (pScreen))
 	    screen->dumb = TRUE;
     
-#ifdef PSEUDO8
-    (void) p8Init (pScreen, PSEUDO8_USE_DEFAULT);
-#endif
-    
     if (card->cfuncs->finishInitScreen)
 	if (!(*card->cfuncs->finishInitScreen) (pScreen))
 	    return FALSE;
@@ -1290,38 +1255,12 @@ KdDepthToFb (ScreenPtr	pScreen, int depth)
 
 #endif
 
-#ifdef HAVE_BACKTRACE
-/* shamelessly ripped from xf86Events.c */
-void
-KdBacktrace (int signum)
-{
-    void *array[32]; /* more than 32 and you have bigger problems */
-    size_t size, i;
-    char **strings;
-
-    signal(signum, SIG_IGN);
-
-    size = backtrace (array, 32);
-    fprintf (stderr, "\nBacktrace (%d deep):\n", size);
-    strings = backtrace_symbols (array, size);
-    for (i = 0; i < size; i++)
-        fprintf (stderr, "%d: %s\n", i, strings[i]);
-    free (strings);
-    
-    kdCaughtSignal = TRUE;    
-    if (signum == SIGSEGV)
-        FatalError("Segmentation fault caught\n");
-    else if (signum > 0)
-        FatalError("Signal %d caught\n", signum);
-}
-#else
-void
-KdBacktrace (int signum)
+static int
+KdSignalWrapper (int signum)
 {
     kdCaughtSignal = TRUE;
-    FatalError("Segmentation fault caught\n");
+    return 1; /* use generic OS layer cleanup & abort */
 }
-#endif
 
 void
 KdInitOutput (ScreenInfo    *pScreenInfo,
@@ -1368,7 +1307,7 @@ KdInitOutput (ScreenInfo    *pScreenInfo,
 	for (screen = card->screenList; screen; screen = screen->next)
 	    KdAddScreen (pScreenInfo, screen, argc, argv);
 
-    signal(SIGSEGV, KdBacktrace);
+    OsRegisterSigWrapper(KdSignalWrapper);
 }
 
 void
@@ -1376,16 +1315,10 @@ OsVendorFatalError(void)
 {
 }
 
-#ifdef DPMSExtension
 int
 DPMSSet(ClientPtr client, int level)
 {
-}
-
-int
-DPMSGet (int *level)
-{
-    return -1;
+    return Success;
 }
 
 Bool
@@ -1393,5 +1326,3 @@ DPMSSupported (void)
 {
     return FALSE;
 }
-#endif
-

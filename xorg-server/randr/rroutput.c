@@ -448,20 +448,14 @@ ProcRRGetOutputInfo (ClientPtr client)
     int				i, n;
     
     REQUEST_SIZE_MATCH(xRRGetOutputInfoReq);
-    output = LookupOutput(client, stuff->output, DixReadAccess);
-
-    if (!output)
-    {
-	client->errorValue = stuff->output;
-	return RRErrorBase + BadRROutput;
-    }
+    VERIFY_RR_OUTPUT(stuff->output, output, DixReadAccess);
 
     pScreen = output->pScreen;
     pScrPriv = rrGetScrPriv(pScreen);
 
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
-    rep.length = OutputInfoExtra >> 2;
+    rep.length = bytes_to_int32(OutputInfoExtra);
     rep.timestamp = pScrPriv->lastSetTime.milliseconds;
     rep.crtc = output->crtc ? output->crtc->id : None;
     rep.mmWidth = output->mmWidth;
@@ -474,14 +468,14 @@ ProcRRGetOutputInfo (ClientPtr client)
     rep.nClones = output->numClones;
     rep.nameLength = output->nameLength;
     
-    extraLen = ((output->numCrtcs + 
+    extraLen = ((output->numCrtcs +
 		 output->numModes + output->numUserModes +
 		 output->numClones +
-		 ((rep.nameLength + 3) >> 2)) << 2);
+		 bytes_to_int32(rep.nameLength)) << 2);
 
     if (extraLen)
     {
-	rep.length += extraLen >> 2;
+	rep.length += bytes_to_int32(extraLen);
 	extra = xalloc (extraLen);
 	if (!extra)
 	    return BadAlloc;
@@ -538,7 +532,7 @@ ProcRRGetOutputInfo (ClientPtr client)
     return client->noClientException;
 }
 
-void
+static void
 RRSetPrimaryOutput(ScreenPtr pScreen, rrScrPrivPtr pScrPriv,
 		   RROutputPtr output)
 {
@@ -569,24 +563,16 @@ ProcRRSetOutputPrimary(ClientPtr client)
     RROutputPtr output = NULL;
     WindowPtr pWin;
     rrScrPrivPtr pScrPriv;
+    int rc;
 
     REQUEST_SIZE_MATCH(xRRSetOutputPrimaryReq);
 
-    pWin = SecurityLookupIDByType(client, stuff->window, RT_WINDOW,
-				  DixReadAccess);
-
-    if (!pWin) {
-	client->errorValue = stuff->window;
-	return BadWindow;
-    }
+    rc = dixLookupWindow(&pWin, stuff->window, client, DixGetAttrAccess);
+    if (rc != Success)
+	return rc;
 
     if (stuff->output) {
-	output = LookupOutput(client, stuff->output, DixReadAccess);
-
-	if (!output) {
-	    client->errorValue = stuff->output;
-	    return RRErrorBase + BadRROutput;
-	}
+	VERIFY_RR_OUTPUT(stuff->output, output, DixReadAccess);
 
 	if (output->pScreen != pWin->drawable.pScreen) {
 	    client->errorValue = stuff->window;
@@ -608,16 +594,13 @@ ProcRRGetOutputPrimary(ClientPtr client)
     rrScrPrivPtr pScrPriv;
     xRRGetOutputPrimaryReply rep;
     RROutputPtr primary = NULL;
+    int rc;
 
     REQUEST_SIZE_MATCH(xRRGetOutputPrimaryReq);
 
-    pWin = SecurityLookupIDByType(client, stuff->window, RT_WINDOW,
-				  DixReadAccess);
-
-    if (!pWin) {
-	client->errorValue = stuff->window;
-	return BadWindow;
-    }
+    rc = dixLookupWindow(&pWin, stuff->window, client, DixGetAttrAccess);
+    if (rc != Success)
+	return rc;
 
     pScrPriv = rrGetScrPriv(pWin->drawable.pScreen);
     if (pScrPriv)

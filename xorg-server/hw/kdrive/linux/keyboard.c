@@ -42,8 +42,6 @@
 #include <sys/ioctl.h>
 
 extern int LinuxConsoleFd;
-static unsigned char mediumraw_data, mediumraw_up;
-static enum { DEFAULT, EXTBYTE1, EXTBYTE2 } mediumraw_state = DEFAULT;
 
 static const KeySym linux_to_x[256] = {
 	NoSymbol,	NoSymbol,	NoSymbol,	NoSymbol,
@@ -112,7 +110,6 @@ static const KeySym linux_to_x[256] = {
 	XK_udiaeresis,	XK_yacute,	XK_thorn,	XK_ydiaeresis
 };
 
-#ifdef XKB
 /*
  * Getting a keycode from scancode
  *
@@ -137,6 +134,7 @@ static const KeySym linux_to_x[256] = {
    for the core X keyboard protocol has to be AT-scancode based so that it
    corresponds to the Xkb keymap.
 */
+#if 0
 static unsigned char at2lnx[] =
 {
 	0x0,    /* no valid scancode */
@@ -209,10 +207,6 @@ static unsigned char at2lnx[] =
 #define NUM_AT_KEYS (sizeof(at2lnx)/sizeof(at2lnx[0]))
 #define LNX_KEY_INDEX(n) n < NUM_AT_KEYS ? at2lnx[n] : 0
 
-#else /* not XKB */
-#define LNX_KEY_INDEX(n) n
-#endif
-
 static unsigned char tbl[KD_MAX_WIDTH] =
 {
     0,
@@ -220,10 +214,12 @@ static unsigned char tbl[KD_MAX_WIDTH] =
     (1 << KG_ALTGR),
     (1 << KG_ALTGR) | (1 << KG_SHIFT)
 };
+#endif
 
 static void
 readKernelMapping(KdKeyboardInfo *ki)
 {
+#if 0
     KeySym	    *k;
     int		    i, j;
     struct kbentry  kbe;
@@ -489,9 +485,8 @@ readKernelMapping(KdKeyboardInfo *ki)
     }
     ki->minScanCode = minKeyCode;
     ki->maxScanCode = maxKeyCode;
+#endif
 }
-
-#ifdef XKB
 
 /*
  * We need these to handle extended scancodes correctly (I could just use the
@@ -555,9 +550,6 @@ readKernelMapping(KdKeyboardInfo *ki)
 #define KEY_F17          /* F17                   0x72  */  114
 #define KEY_KP_DEC       /* KP_DEC                0x73  */  115
 
-#endif /* XKB */
-
-
 static void
 LinuxKeyboardRead (int fd, void *closure)
 {
@@ -568,164 +560,118 @@ LinuxKeyboardRead (int fd, void *closure)
     while ((n = read (fd, buf, sizeof (buf))) > 0) {
 	b = buf;
 	while (n--) {
-#ifdef XKB
-            if (!noXkbExtension) {
-                /*
-                 * With xkb we use RAW mode for reading the console, which allows us
-                 * process extended scancodes.
-                 *
-                 * See if this is a prefix extending the following keycode
-                 */
-                if (!prefix && ((b[0] & 0x7f) == KEY_Prefix0))
-                {
-                        prefix = KEY_Prefix0;
-#ifdef DEBUG
-                        ErrorF("Prefix0");
-#endif
-                        /* swallow this up */
-                        b++;
-                        continue;
-                }
-                else if (!prefix && ((b[0] & 0x7f) == KEY_Prefix1))
-                {
-                        prefix = KEY_Prefix1;
-                        ErrorF("Prefix1");
-                        /* swallow this up */
-                        b++;
-                        continue;
-                }
-                scancode  = b[0] & 0x7f;
-
-                switch (prefix) {
-                        /* from xf86Events.c */
-                        case KEY_Prefix0:
-                        {
-#ifdef DEBUG
-                            ErrorF("Prefix0 scancode: 0x%02x\n", scancode);
-#endif
-                            switch (scancode) {
-                                case KEY_KP_7:
-                                    scancode = KEY_Home;      break;  /* curs home */
-                                case KEY_KP_8:
-                                    scancode = KEY_Up;        break;  /* curs up */
-                                case KEY_KP_9:
-                                    scancode = KEY_PgUp;      break;  /* curs pgup */
-                                case KEY_KP_4:
-                                    scancode = KEY_Left;      break;  /* curs left */
-                                case KEY_KP_5:
-                                    scancode = KEY_Begin;     break;  /* curs begin */
-                                case KEY_KP_6:
-                                    scancode = KEY_Right;     break;  /* curs right */
-                                case KEY_KP_1:
-                                    scancode = KEY_End;       break;  /* curs end */
-                                case KEY_KP_2:
-                                    scancode = KEY_Down;      break;  /* curs down */
-                                case KEY_KP_3:
-                                    scancode = KEY_PgDown;    break;  /* curs pgdown */
-                                case KEY_KP_0:
-                                    scancode = KEY_Insert;    break;  /* curs insert */
-                                case KEY_KP_Decimal:
-                                    scancode = KEY_Delete;    break;  /* curs delete */
-                                case KEY_Enter:
-                                    scancode = KEY_KP_Enter;  break;  /* keypad enter */
-                                case KEY_LCtrl:
-                                    scancode = KEY_RCtrl;     break;  /* right ctrl */
-                                case KEY_KP_Multiply:
-                                    scancode = KEY_Print;     break;  /* print */
-                                case KEY_Slash:
-                                    scancode = KEY_KP_Divide; break;  /* keyp divide */
-                                case KEY_Alt:
-                                    scancode = KEY_AltLang;   break;  /* right alt */
-                                case KEY_ScrollLock:
-                                    scancode = KEY_Break;     break;  /* curs break */
-                                case 0x5b:
-                                    scancode = KEY_LMeta;     break;
-                                case 0x5c:
-                                    scancode = KEY_RMeta;     break;
-                                case 0x5d:
-                                    scancode = KEY_Menu;      break;
-                                case KEY_F3:
-                                    scancode = KEY_F13;       break;
-                                case KEY_F4:
-                                    scancode = KEY_F14;       break;
-                                case KEY_F5:
-                                    scancode = KEY_F15;       break;
-                                case KEY_F6:
-                                    scancode = KEY_F16;       break;
-                                case KEY_F7:
-                                    scancode = KEY_F17;       break;
-                                case KEY_KP_Plus:
-                                    scancode = KEY_KP_DEC;    break;
-                                /* Ignore virtual shifts (E0 2A, E0 AA, E0 36, E0 B6) */
-                                case 0x2A:
-                                case 0x36:
-                                    b++;
-                                    prefix = 0;
-                                    continue;
-                                default:
-#ifdef DEBUG
-                                    ErrorF("Unreported Prefix0 scancode: 0x%02x\n",
-                                           scancode);
-#endif
-                                     /*
-                                      * "Internet" keyboards are generating lots of new
-                                      * codes.  Let them pass.  There is little consistency
-                                      * between them, so don't bother with symbolic names at
-                                      * this level.
-                                      */
-                                    scancode += 0x78;
-                            }
-                            break;
-                        }
-
-                        case KEY_Prefix1:
-                        {
-                            /* we do no handle these */
-#ifdef DEBUG
-                            ErrorF("Prefix1 scancode: 0x%02x\n", scancode);
-#endif
-                            b++;
-                            prefix = 0;
-                            continue;
-                        }
-
-                        default: /* should not happen*/
-                        case 0: /* do nothing */
-#ifdef DEBUG
-                            ErrorF("Plain scancode: 0x%02x\n", scancode);
-#endif
-                            ;
-                }
-
-                prefix = 0;
+            /*
+             * With xkb we use RAW mode for reading the console, which allows us
+             * process extended scancodes.
+             *
+             * See if this is a prefix extending the following keycode
+             */
+            if (!prefix && ((b[0] & 0x7f) == KEY_Prefix0))
+            {
+                    prefix = KEY_Prefix0;
+                    /* swallow this up */
+                    b++;
+                    continue;
             }
-            /* without xkb we use mediumraw mode -- enqueue the scancode as is */
-            else
-#endif
-                scancode = b[0] & 0x7f;
-	    /* This is extended medium raw mode interpreter
-	       see linux/drivers/keyboard.c (kbd->kbdmode == VC_MEDIUMRAW) */
-	    switch (mediumraw_state)
-	    {
-	    case DEFAULT:
-		if (scancode == 0)
-		{
-		    mediumraw_state = EXTBYTE1;
-		    mediumraw_up = b[0] & 0x80;
-		}
-		else
-		    KdEnqueueKeyboardEvent (closure, scancode, b[0] & 0x80);
-		break;
-	    case EXTBYTE1:
-		mediumraw_data = scancode;
-		mediumraw_state = EXTBYTE2;
-		break;
-	    case EXTBYTE2:
-		/* Note: Only codes < 256 will pass correctly through KdEnqueueKeyboardEvent() */
-	      KdEnqueueKeyboardEvent (closure, (int)mediumraw_data << 7 | scancode, mediumraw_up);
-		mediumraw_state = DEFAULT;
-		break;
-	    }
+            else if (!prefix && ((b[0] & 0x7f) == KEY_Prefix1))
+            {
+                    prefix = KEY_Prefix1;
+                    /* swallow this up */
+                    b++;
+                    continue;
+            }
+            scancode = b[0] & 0x7f;
+
+            switch (prefix) {
+                    /* from xf86Events.c */
+                    case KEY_Prefix0:
+                    {
+                        switch (scancode) {
+                            case KEY_KP_7:
+                                scancode = KEY_Home;      break;  /* curs home */
+                            case KEY_KP_8:
+                                scancode = KEY_Up;        break;  /* curs up */
+                            case KEY_KP_9:
+                                scancode = KEY_PgUp;      break;  /* curs pgup */
+                            case KEY_KP_4:
+                                scancode = KEY_Left;      break;  /* curs left */
+                            case KEY_KP_5:
+                                scancode = KEY_Begin;     break;  /* curs begin */
+                            case KEY_KP_6:
+                                scancode = KEY_Right;     break;  /* curs right */
+                            case KEY_KP_1:
+                                scancode = KEY_End;       break;  /* curs end */
+                            case KEY_KP_2:
+                                scancode = KEY_Down;      break;  /* curs down */
+                            case KEY_KP_3:
+                                scancode = KEY_PgDown;    break;  /* curs pgdown */
+                            case KEY_KP_0:
+                                scancode = KEY_Insert;    break;  /* curs insert */
+                            case KEY_KP_Decimal:
+                                scancode = KEY_Delete;    break;  /* curs delete */
+                            case KEY_Enter:
+                                scancode = KEY_KP_Enter;  break;  /* keypad enter */
+                            case KEY_LCtrl:
+                                scancode = KEY_RCtrl;     break;  /* right ctrl */
+                            case KEY_KP_Multiply:
+                                scancode = KEY_Print;     break;  /* print */
+                            case KEY_Slash:
+                                scancode = KEY_KP_Divide; break;  /* keyp divide */
+                            case KEY_Alt:
+                                scancode = KEY_AltLang;   break;  /* right alt */
+                            case KEY_ScrollLock:
+                                scancode = KEY_Break;     break;  /* curs break */
+                            case 0x5b:
+                                scancode = KEY_LMeta;     break;
+                            case 0x5c:
+                                scancode = KEY_RMeta;     break;
+                            case 0x5d:
+                                scancode = KEY_Menu;      break;
+                            case KEY_F3:
+                                scancode = KEY_F13;       break;
+                            case KEY_F4:
+                                scancode = KEY_F14;       break;
+                            case KEY_F5:
+                                scancode = KEY_F15;       break;
+                            case KEY_F6:
+                                scancode = KEY_F16;       break;
+                            case KEY_F7:
+                                scancode = KEY_F17;       break;
+                            case KEY_KP_Plus:
+                                scancode = KEY_KP_DEC;    break;
+                            /* Ignore virtual shifts (E0 2A, E0 AA, E0 36, E0 B6) */
+                            case 0x2A:
+                            case 0x36:
+                                b++;
+                                prefix = 0;
+                                continue;
+                            default:
+                                 /*
+                                  * "Internet" keyboards are generating lots of new
+                                  * codes.  Let them pass.  There is little consistency
+                                  * between them, so don't bother with symbolic names at
+                                  * this level.
+                                  */
+                                scancode += 0x78;
+                        }
+                        break;
+                    }
+
+                    case KEY_Prefix1:
+                    {
+                        /* we do no handle these */
+                        b++;
+                        prefix = 0;
+                        continue;
+                    }
+
+                    default: /* should not happen*/
+                    case 0: /* do nothing */
+                        ;
+            }
+
+            prefix = 0;
+	    KdEnqueueKeyboardEvent (closure, scancode, b[0] & 0x80);
 	    b++;
 	}
     }
@@ -750,13 +696,7 @@ LinuxKeyboardEnable (KdKeyboardInfo *ki)
 
     ioctl (fd, KDGKBMODE, &LinuxKbdTrans);
     tcgetattr (fd, &LinuxTermios);
-#ifdef XKB
-    if (!noXkbExtension)
-        ioctl(fd, KDSKBMODE, K_RAW);
-    else
-#else
-        ioctl(fd, KDSKBMODE, K_MEDIUMRAW);
-#endif
+    ioctl(fd, KDSKBMODE, K_RAW);
     nTty = LinuxTermios;
     nTty.c_iflag = (IGNPAR | IGNBRK) & (~PARMRK) & (~ISTRIP);
     nTty.c_oflag = 0;
@@ -799,10 +739,10 @@ LinuxKeyboardInit (KdKeyboardInfo *ki)
 
     if (ki->path)
         xfree(ki->path);
-    ki->path = KdSaveString("console");
+    ki->path = strdup("console");
     if (ki->name)
         xfree(ki->name);
-    ki->name = KdSaveString("Linux console keyboard");
+    ki->name = strdup("Linux console keyboard");
 
     readKernelMapping (ki);
 

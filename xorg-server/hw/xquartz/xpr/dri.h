@@ -1,7 +1,7 @@
 /**************************************************************************
 
 Copyright 1998-1999 Precision Insight, Inc., Cedar Park, Texas.
-Copyright (c) 2002 Apple Computer, Inc.
+Copyright (c) 2002, 2009 Apple Computer, Inc.
 All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -124,5 +124,15 @@ extern void DRISurfaceNotify (xp_surface_id id, int kind);
 extern void DRIQueryVersion(int *majorVersion,
                             int *minorVersion,
                             int *patchVersion);
+
+extern Bool DRICreatePixmap(ScreenPtr pScreen, Drawable id,
+			    DrawablePtr pDrawable, char *path,
+			    size_t pathmax);
+
+extern Bool DRIGetPixmapData(DrawablePtr pDrawable, int *width, int *height,
+			     int *pitch, int *bpp, void **ptr);
+
+
+extern void DRIDestroyPixmap(DrawablePtr pDrawable);
 
 #endif

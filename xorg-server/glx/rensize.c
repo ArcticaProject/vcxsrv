@@ -195,7 +195,7 @@ int __glXImageSize( GLenum format, GLenum type, GLenum target,
 	} else {
 	    groupsPerRow = w;
 	}
-	rowSize = (groupsPerRow + 7) >> 3;
+	rowSize = bits_to_bytes(groupsPerRow);
 	padding = (rowSize % alignment);
 	if (padding) {
 	    rowSize += alignment - padding;

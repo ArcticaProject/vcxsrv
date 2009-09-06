@@ -34,7 +34,6 @@
 
 #include "dmx.h"
 
-#define NEED_REPLIES
 #include "glxserver.h"
 #include <windowstr.h>
 #include <propertyst.h>

@@ -33,10 +33,10 @@
 #endif
 #ifdef XVENDORNAME
 #define VENDOR_STRING XVENDORNAME
-#define VERSION_STRING XORG_RELEASE
 #define VENDOR_CONTACT BUILDERADDR
 #endif
 
+#include <../xfree86/common/xorgVersion.h>
 #include "win.h"
 
 /* References to external symbols */
@@ -80,7 +80,6 @@ OsVendorVErrorF (const char *pszFormat, va_list va_args)
  *
  * Attempt to do last-ditch, safe, important cleanup here.
  */
-#ifdef DDXOSFATALERROR
 void
 OsVendorFatalError (void)
 {
@@ -93,7 +92,6 @@ OsVendorFatalError (void)
 		  "Please open %s for more information.\n",
 		  MB_ICONERROR, (g_pszLogFile?g_pszLogFile:"the logfile"));
 }
-#endif
 
 
 /*
@@ -117,13 +115,15 @@ winMessageBoxF (const char *pszError, UINT uType, ...)
 #define MESSAGEBOXF \
 	"%s\n" \
 	"Vendor: %s\n" \
-	"Release: %s\n" \
+	"Release: %d.%d.%d.%d (%d)\n" \
 	"Contact: %s\n" \
 	"XWin was started with the following command-line:\n\n" \
 	"%s\n"
 
   pszMsgBox = Xprintf (MESSAGEBOXF,
-	   pszErrorF, VENDOR_STRING, VERSION_STRING, VENDOR_CONTACT,
+	   pszErrorF, VENDOR_STRING,
+		       XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT,
+		       VENDOR_CONTACT,
 	   g_pszCommandLine);
   if (!pszMsgBox)
     goto winMessageBoxF_Cleanup;

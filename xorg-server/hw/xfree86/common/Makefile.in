@@ -16,7 +16,6 @@
 @SET_MAKE@
 
 
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -41,8 +40,11 @@ subdir = hw/xfree86/common
 DIST_COMMON = $(am__sdk_HEADERS_DIST) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/xf86Build.h.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
+	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/shave.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -52,38 +54,32 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 	$(top_builddir)/include/xorg-config.h \
 	$(top_builddir)/include/xkb-config.h \
 	$(top_builddir)/include/xwin-config.h \
-	$(top_builddir)/include/kdrive-config.h
+	$(top_builddir)/include/kdrive-config.h \
+	$(top_builddir)/include/version-config.h
 CONFIG_CLEAN_FILES = xf86Build.h
 CONFIG_CLEAN_VPATH_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
-ARFLAGS = cru
-libinit_a_AR = $(AR) $(ARFLAGS)
-libinit_a_LIBADD =
-am_libinit_a_OBJECTS = xf86Init.$(OBJEXT)
-nodist_libinit_a_OBJECTS =
-libinit_a_OBJECTS = $(am_libinit_a_OBJECTS) \
-	$(nodist_libinit_a_OBJECTS)
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libcommon_la_LIBADD =
 am__libcommon_la_SOURCES_DIST = xf86Configure.c xf86ShowOpts.c \
 	xf86Bus.c xf86Config.c xf86Cursor.c xf86DGA.c xf86DPMS.c \
 	xf86Events.c xf86Globals.c xf86AutoConfig.c xf86Option.c \
-	xf86VidMode.c xf86fbman.c xf86cmap.c xf86Helper.c xf86PM.c \
-	xf86RAC.c xf86Xinput.c xisb.c xf86Mode.c xorgHelper.c xf86xv.c \
-	xf86xvmc.c xf86pciBus.c xf86fbBus.c xf86noBus.c xf86sbusBus.c \
-	xf86RandR.c
-@XV_TRUE@am__objects_1 = xf86xv.lo xf86xvmc.lo
-@XORG_BUS_SPARC_TRUE@am__objects_2 = xf86sbusBus.lo
-am__objects_3 = xf86pciBus.lo xf86fbBus.lo xf86noBus.lo \
-	$(am__objects_2)
-am__objects_4 = xf86RandR.lo
+	xf86Init.c xf86VGAarbiter.c xf86VidMode.c xf86fbman.c \
+	xf86cmap.c xf86Helper.c xf86PM.c xf86Xinput.c xisb.c \
+	xf86Mode.c xorgHelper.c xf86xv.c xf86xvmc.c xf86pciBus.c \
+	xf86fbBus.c xf86noBus.c xf86sbusBus.c xf86RandR.c
+@DGA_TRUE@am__objects_1 = xf86DGA.lo
+@XV_TRUE@am__objects_2 = xf86xv.lo xf86xvmc.lo
+@XORG_BUS_SPARC_TRUE@am__objects_3 = xf86sbusBus.lo
+am__objects_4 = xf86pciBus.lo xf86fbBus.lo xf86noBus.lo \
+	$(am__objects_3)
+am__objects_5 = xf86RandR.lo
 am_libcommon_la_OBJECTS = xf86Configure.lo xf86ShowOpts.lo xf86Bus.lo \
-	xf86Config.lo xf86Cursor.lo xf86DGA.lo xf86DPMS.lo \
+	xf86Config.lo xf86Cursor.lo $(am__objects_1) xf86DPMS.lo \
 	xf86Events.lo xf86Globals.lo xf86AutoConfig.lo xf86Option.lo \
-	xf86VidMode.lo xf86fbman.lo xf86cmap.lo xf86Helper.lo \
-	xf86PM.lo xf86RAC.lo xf86Xinput.lo xisb.lo xf86Mode.lo \
-	xorgHelper.lo $(am__objects_1) $(am__objects_3) \
-	$(am__objects_4)
+	xf86Init.lo xf86VGAarbiter.lo xf86VidMode.lo xf86fbman.lo \
+	xf86cmap.lo xf86Helper.lo xf86PM.lo xf86Xinput.lo xisb.lo \
+	xf86Mode.lo xorgHelper.lo $(am__objects_2) $(am__objects_4) \
+	$(am__objects_5)
 nodist_libcommon_la_OBJECTS = xf86DefModeSet.lo
 libcommon_la_OBJECTS = $(am_libcommon_la_OBJECTS) \
 	$(nodist_libcommon_la_OBJECTS)
@@ -97,14 +93,13 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libinit_a_SOURCES) $(nodist_libinit_a_SOURCES) \
-	$(libcommon_la_SOURCES) $(nodist_libcommon_la_SOURCES)
-DIST_SOURCES = $(libinit_a_SOURCES) $(am__libcommon_la_SOURCES_DIST)
+SOURCES = $(libcommon_la_SOURCES) $(nodist_libcommon_la_SOURCES)
+DIST_SOURCES = $(am__libcommon_la_SOURCES_DIST)
 am__sdk_HEADERS_DIST = compiler.h fourcc.h xf86.h xf86Module.h \
-	xf86Opt.h xf86PciInfo.h xf86Priv.h xf86Privstr.h \
-	xf86Resources.h xf86cmap.h xf86fbman.h xf86str.h xf86RAC.h \
-	xf86Xinput.h xisb.h xf86xv.h xf86xvmc.h xorgVersion.h \
-	xf86sbusBus.h xf86xvpriv.h
+	xf86Opt.h xf86PciInfo.h xf86Priv.h xf86Privstr.h xf86cmap.h \
+	xf86fbman.h xf86str.h xf86Xinput.h xisb.h xf86xv.h xf86xvmc.h \
+	xf86xvpriv.h vidmodeproc.h xorgVersion.h xf86sbusBus.h \
+	xf86VGAarbiter.h
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -136,6 +131,7 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
 APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
@@ -156,9 +152,12 @@ CCASDEPMODE = @CCASDEPMODE@
 CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CHANGELOG_CMD = @CHANGELOG_CMD@
 COMPILEDDEFAULTFONTPATH = @COMPILEDDEFAULTFONTPATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CWARNFLAGS = @CWARNFLAGS@
+CXX = @CXX@
 CYGPATH_W = @CYGPATH_W@
 DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
@@ -187,7 +186,9 @@ DRIPROTO_CFLAGS = @DRIPROTO_CFLAGS@
 DRIPROTO_LIBS = @DRIPROTO_LIBS@
 DRIVER_MAN_DIR = @DRIVER_MAN_DIR@
 DRIVER_MAN_SUFFIX = @DRIVER_MAN_SUFFIX@
+DRI_CFLAGS = @DRI_CFLAGS@
 DRI_DRIVER_PATH = @DRI_DRIVER_PATH@
+DRI_LIBS = @DRI_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DTRACE = @DTRACE@
 DUMPBIN = @DUMPBIN@
@@ -196,9 +197,13 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FC = @FC@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
 GLX_DEFINES = @GLX_DEFINES@
 GL_CFLAGS = @GL_CFLAGS@
@@ -237,12 +242,13 @@ LTCOMPILE = @LTCOMPILE@
 LTCXXCOMPILE = @LTCXXCOMPILE@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
+MAIN_LIB = @MAIN_LIB@
+MAKEFLAGS = @MAKEFLAGS@
 MAKEINFO = @MAKEINFO@
 MAKE_HTML = @MAKE_HTML@
 MAKE_PDF = @MAKE_PDF@
 MAKE_PS = @MAKE_PS@
 MAKE_TEXT = @MAKE_TEXT@
-MESA_SOURCE = @MESA_SOURCE@
 MISC_MAN_DIR = @MISC_MAN_DIR@
 MISC_MAN_SUFFIX = @MISC_MAN_SUFFIX@
 MKDIR_P = @MKDIR_P@
@@ -262,7 +268,6 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PCIACCESS_CFLAGS = @PCIACCESS_CFLAGS@
@@ -272,6 +277,7 @@ PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PROJECTROOT = @PROJECTROOT@
 PS2PDF = @PS2PDF@
+Q = @Q@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
@@ -285,11 +291,10 @@ STRIP = @STRIP@
 TSLIB_CFLAGS = @TSLIB_CFLAGS@
 TSLIB_LIBS = @TSLIB_LIBS@
 UTILS_SYS_LIBS = @UTILS_SYS_LIBS@
-VENDOR_MAN_VERSION = @VENDOR_MAN_VERSION@
-VENDOR_NAME = @VENDOR_NAME@
+V = @V@
 VENDOR_NAME_SHORT = @VENDOR_NAME_SHORT@
-VENDOR_RELEASE = @VENDOR_RELEASE@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 X11EXAMPLES_DEP_CFLAGS = @X11EXAMPLES_DEP_CFLAGS@
 X11EXAMPLES_DEP_LIBS = @X11EXAMPLES_DEP_LIBS@
 XDMCP_CFLAGS = @XDMCP_CFLAGS@
@@ -325,6 +330,7 @@ XORG_OS_SUBDIR = @XORG_OS_SUBDIR@
 XORG_SYS_LIBS = @XORG_SYS_LIBS@
 XPBPROXY_CFLAGS = @XPBPROXY_CFLAGS@
 XPBPROXY_LIBS = @XPBPROXY_LIBS@
+XQUARTZ_SPARKLE = @XQUARTZ_SPARKLE@
 XRESEXAMPLES_DEP_CFLAGS = @XRESEXAMPLES_DEP_CFLAGS@
 XRESEXAMPLES_DEP_LIBS = @XRESEXAMPLES_DEP_LIBS@
 XSDL_INCS = @XSDL_INCS@
@@ -349,7 +355,6 @@ YFLAGS = @YFLAGS@
 __XCONFIGFILE__ = @__XCONFIGFILE__@
 abi_ansic = @abi_ansic@
 abi_extension = @abi_extension@
-abi_font = @abi_font@
 abi_videodrv = @abi_videodrv@
 abi_xinput = @abi_xinput@
 abs_builddir = @abs_builddir@
@@ -372,6 +377,7 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
+distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -403,17 +409,20 @@ psdir = @psdir@
 sbindir = @sbindir@
 sdkdir = @sdkdir@
 sharedstatedir = @sharedstatedir@
+shavedir = @shavedir@
 srcdir = @srcdir@
+symbol_visibility = @symbol_visibility@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LIBRARIES = libinit.a
 noinst_LTLIBRARIES = libcommon.la
 @XORG_BUS_SPARC_TRUE@SBUS_SOURCES = xf86sbusBus.c
 @XV_TRUE@XVSOURCES = xf86xv.c xf86xvmc.c
-@XV_TRUE@XVSDKINCS = xf86xv.h xf86xvmc.h
+@XV_TRUE@XVSDKINCS = xf86xv.h xf86xvmc.h xf86xvpriv.h
+@XF86VIDMODE_TRUE@XF86VMODE_SDK = vidmodeproc.h
+@DGA_TRUE@DGASOURCES = xf86DGA.c
 XISOURCES = xf86Xinput.c xisb.c
 XISDKINCS = xf86Xinput.h xisb.h
 RANDRSOURCES = xf86RandR.c
@@ -422,28 +431,26 @@ MODEDEFSOURCES = $(srcdir)/vesamodes $(srcdir)/extramodes
 BUILT_SOURCES = xf86DefModeSet.c
 AM_LDFLAGS = -r
 libcommon_la_SOURCES = xf86Configure.c xf86ShowOpts.c xf86Bus.c xf86Config.c \
-                      xf86Cursor.c xf86DGA.c xf86DPMS.c \
+                      xf86Cursor.c $(DGASOURCES) xf86DPMS.c \
                       xf86Events.c xf86Globals.c xf86AutoConfig.c \
-                      xf86Option.c \
+                      xf86Option.c xf86Init.c xf86VGAarbiter.c \
                       xf86VidMode.c xf86fbman.c xf86cmap.c \
-                      xf86Helper.c xf86PM.c xf86RAC.c xf86Xinput.c xisb.c \
+                      xf86Helper.c xf86PM.c xf86Xinput.c xisb.c \
                       xf86Mode.c xorgHelper.c \
                       $(XVSOURCES) $(BUSSOURCES) $(RANDRSOURCES)
 
-nodist_libcommon_la_SOURCES = xf86DefModeSet.c
-libinit_a_SOURCES = xf86Init.c
-nodist_libinit_a_SOURCES = xf86Build.h
+nodist_libcommon_la_SOURCES = xf86DefModeSet.c xf86Build.h
 INCLUDES = $(XORG_INCS) -I$(srcdir)/../ddc -I$(srcdir)/../i2c \
-	   -I$(srcdir)/../loader -I$(srcdir)/../rac -I$(srcdir)/../parser \
+	   -I$(srcdir)/../loader -I$(srcdir)/../parser \
            -I$(srcdir)/../vbe -I$(srcdir)/../int10 \
 	   -I$(srcdir)/../vgahw -I$(srcdir)/../dixmods/extmod \
-	   -I$(srcdir)/../modes
+	   -I$(srcdir)/../modes -I$(srcdir)/../ramdac
 
 sdk_HEADERS = compiler.h fourcc.h xf86.h xf86Module.h xf86Opt.h \
-              xf86PciInfo.h xf86Priv.h xf86Privstr.h xf86Resources.h \
-              xf86cmap.h xf86fbman.h xf86str.h xf86RAC.h xf86Xinput.h xisb.h \
-              $(XVSDKINCS) xorgVersion.h \
-              xf86sbusBus.h xf86xvpriv.h
+              xf86PciInfo.h xf86Priv.h xf86Privstr.h \
+              xf86cmap.h xf86fbman.h xf86str.h xf86Xinput.h xisb.h \
+              $(XVSDKINCS) $(XF86VMODE_SDK) xorgVersion.h \
+              xf86sbusBus.h xf86VGAarbiter.h
 
 DISTCLEANFILES = xf86Build.h
 CLEANFILES = $(BUILT_SOURCES)
@@ -451,6 +458,7 @@ EXTRA_DIST = \
 	compiler.h \
 	fourcc.h \
 	scoasm.h \
+	vidmodeproc.h \
 	xf86.h \
 	xf86Bus.h \
 	xf86Config.h \
@@ -460,7 +468,6 @@ EXTRA_DIST = \
 	xf86PciInfo.h \
 	xf86Priv.h \
 	xf86Privstr.h \
-	xf86Resources.h \
 	xf86Xinput.h \
 	xf86cmap.h \
 	xf86fbman.h \
@@ -471,9 +478,10 @@ EXTRA_DIST = \
 	xf86xvpriv.h \
 	xisb.h \
 	xorgVersion.h \
-	xf86Date.h \
 	$(MODEDEFSOURCES) \
 	modeline2c.awk \
+	xf86VGAarbiter.h \
+	xf86VGAarbiterPriv.h \
         $(DISTKBDSOURCES)
 
 AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
@@ -515,13 +523,6 @@ $(am__aclocal_m4_deps):
 xf86Build.h: $(top_builddir)/config.status $(srcdir)/xf86Build.h.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libinit.a: $(libinit_a_OBJECTS) $(libinit_a_DEPENDENCIES) 
-	-rm -f libinit.a
-	$(libinit_a_AR) libinit.a $(libinit_a_OBJECTS) $(libinit_a_LIBADD)
-	$(RANLIB) libinit.a
-
 clean-noinstLTLIBRARIES:
 	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
 	@list='$(noinst_LTLIBRARIES)'; for p in $$list; do \
@@ -550,13 +551,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Events.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Globals.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Helper.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Init.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Init.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Mode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Option.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86PM.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86RAC.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86RandR.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86ShowOpts.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86VGAarbiter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86VidMode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86Xinput.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86cmap.Plo@am__quote@
@@ -702,7 +703,7 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
 	for dir in "$(DESTDIR)$(sdkdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -738,8 +739,8 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
-	clean-noinstLTLIBRARIES mostlyclean-am
+clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -810,18 +811,18 @@ uninstall-am: uninstall-sdkHEADERS
 .MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstLIBRARIES clean-noinstLTLIBRARIES \
-	ctags distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-sdkHEADERS install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-sdkHEADERS
+	clean-libtool clean-noinstLTLIBRARIES ctags distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-sdkHEADERS install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-sdkHEADERS
 
 
 xf86DefModeSet.c: $(srcdir)/modeline2c.awk $(MODEDEFSOURCES)

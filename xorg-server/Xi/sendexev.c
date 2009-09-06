@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -91,8 +89,8 @@ SProcXSendExtensionEvent(ClientPtr client)
     swapl(&stuff->destination, n);
     swaps(&stuff->count, n);
 
-    if (stuff->length != (sizeof(xSendExtensionEventReq) >> 2) + stuff->count +
-       (stuff->num_events * (sizeof(xEvent) >> 2)))
+    if (stuff->length != bytes_to_int32(sizeof(xSendExtensionEventReq)) + stuff->count +
+       bytes_to_int32(stuff->num_events * sizeof(xEvent)))
        return BadLength;
 
     eventP = (xEvent *) & stuff[1];
@@ -128,8 +126,8 @@ ProcXSendExtensionEvent(ClientPtr client)
     REQUEST(xSendExtensionEventReq);
     REQUEST_AT_LEAST_SIZE(xSendExtensionEventReq);
 
-    if (stuff->length != (sizeof(xSendExtensionEventReq) >> 2) + stuff->count +
-	(stuff->num_events * (sizeof(xEvent) >> 2)))
+    if (stuff->length != bytes_to_int32(sizeof(xSendExtensionEventReq)) + stuff->count +
+	(stuff->num_events * bytes_to_int32(sizeof(xEvent))))
 	return BadLength;
 
     ret = dixLookupDevice(&dev, stuff->deviceid, client, DixWriteAccess);

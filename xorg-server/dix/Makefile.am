@@ -1,8 +1,9 @@
-noinst_LTLIBRARIES = libdix.la
+noinst_LTLIBRARIES = libdix.la libmain.la
 
-AM_CFLAGS = $(DIX_CFLAGS) \
-	-DVENDOR_NAME=\""@VENDOR_NAME@"\" \
-	-DVENDOR_RELEASE="@VENDOR_RELEASE@"
+AM_CFLAGS = $(DIX_CFLAGS)
+
+libmain_la_SOURCES =    \
+	main.c
 
 libdix_la_SOURCES = 	\
 	atom.c		\
@@ -17,6 +18,7 @@ libdix_la_SOURCES = 	\
 	enterleave.c	\
 	enterleave.h	\
 	events.c	\
+	eventconvert.c  \
 	extension.c	\
 	ffs.c		\
 	gc.c		\
@@ -25,7 +27,7 @@ libdix_la_SOURCES = 	\
 	glyphcurs.c	\
 	grabs.c		\
 	initatoms.c	\
-	main.c		\
+	inpututils.c	\
 	pixmap.c	\
 	privates.c	\
 	property.c	\

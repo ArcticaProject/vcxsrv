@@ -28,7 +28,6 @@
  * Silicon Graphics, Inc.
  */
 
-#define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -37,6 +36,7 @@
 #include "glxserver.h"
 #include <windowstr.h>
 #include <propertyst.h>
+#include <registry.h>
 #include "privates.h"
 #include <os.h>
 #include "g_disptab.h"
@@ -171,14 +171,20 @@ void __glXAddToContextList(__GLXcontext *cx)
     glxAllContexts = cx;
 }
 
-void __glXRemoveFromContextList(__GLXcontext *cx)
+static void __glXRemoveFromContextList(__GLXcontext *cx)
 {
-    __GLXcontext *c, **prev;
+    __GLXcontext *c, *prev;
 
-    prev = &glxAllContexts;
-    for (c = glxAllContexts; c; c = c->next)
-	if (c == cx)
-	    *prev = c->next;
+    if (cx == glxAllContexts)
+	glxAllContexts = cx->next;
+    else {
+	prev = glxAllContexts;
+	for (c = glxAllContexts; c; c = c->next) {
+	    if (c == cx)
+		prev->next = c->next;
+	    prev = c;
+	}
+    }
 }
 
 /*
@@ -340,6 +346,10 @@ void GlxExtensionInit(void)
     __glXContextRes = CreateNewResourceType((DeleteType)ContextGone);
     __glXDrawableRes = CreateNewResourceType((DeleteType)DrawableGone);
     __glXSwapBarrierRes = CreateNewResourceType((DeleteType)SwapBarrierGone);
+
+    RegisterResourceName(__glXContextRes, "GLXContext");
+    RegisterResourceName(__glXDrawableRes, "GLXDrawable");
+    RegisterResourceName(__glXSwapBarrierRes, "GLXSwapBarrier");
 
     if (!dixRequestPrivate(glxClientPrivateKey, sizeof (__GLXclientState)))
 	return;

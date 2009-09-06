@@ -42,8 +42,8 @@ from The Open Group.
 #ifdef __CYGWIN__
 #include <mntent.h>
 #endif
-#if defined(XKB) && defined(WIN32)
-#include <xkbsrv.h>
+#if defined(WIN32)
+#include "xkbsrv.h"
 #endif
 #ifdef RELOCATE_PROJECTROOT
 #include <shlobj.h>
@@ -667,7 +667,6 @@ winFixupPaths (void)
             winMsg (X_DEFAULT, "Logfile set to \"%s\"\n", g_pszLogFile);
         }
     }
-#ifdef XKB
     {
         static char xkbbasedir[MAX_PATH];
 
@@ -677,7 +676,6 @@ winFixupPaths (void)
         XkbBaseDirectory = xkbbasedir;
 	XkbBinDirectory = basedir;
     }
-#endif /* XKB */
 #endif /* RELOCATE_PROJECTROOT */
 }
 
@@ -857,7 +855,6 @@ winUseMsg (void)
 	  "\tSpecify a keyboard device from the configuration file.\n");
 #endif
 
-#ifdef XKB
   ErrorF ("-xkbrules XKBRules\n"
 	  "\tEquivalent to XKBRules in XF86Config files.\n");
 
@@ -874,7 +871,6 @@ winUseMsg (void)
 
   ErrorF ("-xkboptions XKBOptions\n"
 	  "\tEquivalent to XKBOptions in XF86Config files.\n");
-#endif
 
   ErrorF ("-logfile filename\n"
 	  "\tWrite logmessages to <filename> instead of /tmp/Xwin.log.\n");
@@ -960,7 +956,7 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
   if (!winReadConfigfile ())
     winErrorFVerb (1, "InitOutput - Error reading config file\n");
 #else
-  winMsg(X_INFO, "XF86Config is not supported\n");
+  winMsg(X_INFO, "xorg.conf is not supported\n");
   winMsg(X_INFO, "See http://x.cygwin.com/docs/faq/cygwin-x-faq.html "
          "for more information\n");
   winConfigFiles ();
@@ -1056,7 +1052,7 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
  */
 
 static Bool
-winCheckDisplayNumber ()
+winCheckDisplayNumber (void)
 {
   int			nDisp;
   HANDLE		mutex;
@@ -1120,20 +1116,3 @@ winCheckDisplayNumber ()
 
   return TRUE;
 }
-
-#ifdef DPMSExtension
-Bool DPMSSupported(void)
-{
-  return FALSE;
-}
-
-void DPMSSet(int level)
-{
-  return;
-}
-
-int DPMSGet(int *plevel)
-{
-  return 0;
-}
-#endif

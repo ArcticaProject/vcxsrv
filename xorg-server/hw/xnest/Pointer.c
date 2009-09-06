@@ -33,6 +33,9 @@ is" without express or implied warranty.
 #include "Pointer.h"
 #include "Args.h"
 
+#include "xserver-properties.h"
+#include "exevents.h" /* For XIGetKnownProperty */
+
 DeviceIntPtr xnestPointerDevice = NULL;
 
 void
@@ -46,6 +49,8 @@ int
 xnestPointerProc(DeviceIntPtr pDev, int onoff)
 {
   CARD8 map[MAXBUTTONS];
+  Atom btn_labels[MAXBUTTONS] = {0};
+  Atom axes_labels[2] = {0};
   int nmap;
   int i;
 
@@ -55,9 +60,21 @@ xnestPointerProc(DeviceIntPtr pDev, int onoff)
       nmap = XGetPointerMapping(xnestDisplay, map, MAXBUTTONS);
       for (i = 0; i <= nmap; i++)
 	map[i] = i; /* buttons are already mapped */
-      InitPointerDeviceStruct(&pDev->public, map, nmap,
+
+      btn_labels[0] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_LEFT);
+      btn_labels[1] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_MIDDLE);
+      btn_labels[2] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_RIGHT);
+      btn_labels[3] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_UP);
+      btn_labels[4] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_DOWN);
+      btn_labels[5] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_LEFT);
+      btn_labels[6] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_RIGHT);
+
+      axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_X);
+      axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_Y);
+
+      InitPointerDeviceStruct(&pDev->public, map, nmap, btn_labels,
 			      xnestChangePointerControl,
-			      GetMotionHistorySize(), 2);
+			      GetMotionHistorySize(), 2, axes_labels);
       break;
     case DEVICE_ON: 
       xnestEventMask |= XNEST_POINTER_EVENT_MASK;

@@ -1,5 +1,6 @@
 /*
  *Copyright (C) 2003-2004 Harold L Hunt II All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2008
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -20,12 +21,13 @@
  *CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  *WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *Except as contained in this notice, the name of Harold L Hunt II
- *shall not be used in advertising or otherwise to promote the sale, use
- *or other dealings in this Software without prior written authorization
- *from Harold L Hunt II.
+ *Except as contained in this notice, the name of the copyright holder(s)
+ *and author(s) shall not be used in advertising or otherwise to promote
+ *the sale, use or other dealings in this Software without prior written
+ *authorization from the copyright holder(s) and author(s).
  *
  * Authors:	Harold L Hunt II
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -37,6 +39,7 @@
 #include <errno.h>
 #endif
 #include "X11/Xauth.h"
+#include "misc.h"
 
 
 /*
@@ -231,15 +234,6 @@ winClipboardProc (void *pvNotUsed)
   iMaxDescriptor = iConnectionNumber + 1;
 #endif
 
-  /* Select event types to watch */
-  if (XSelectInput (pDisplay,
-		    DefaultRootWindow (pDisplay),
-		    SubstructureNotifyMask |
-		    StructureNotifyMask |
-		    PropertyChangeMask) == BadWindow)
-    ErrorF ("winClipboardProc - XSelectInput generated BadWindow "
-	    "on RootWindow\n\n");
-
   /* Create atoms */
   atomClipboard = XInternAtom (pDisplay, "CLIPBOARD", False);
   atomClipboardManager = XInternAtom (pDisplay, "CLIPBOARD_MANAGER", False);
@@ -258,6 +252,13 @@ winClipboardProc (void *pvNotUsed)
       pthread_exit (NULL);
     }
 
+  /* Select event types to watch */
+  if (XSelectInput (pDisplay,
+		    iWindow,
+		    PropertyChangeMask) == BadWindow)
+    ErrorF ("winClipboardProc - XSelectInput generated BadWindow "
+	    "on messaging window\n");
+
   /* Save the window in the screen privates */
   g_iClipboardWindow = iWindow;
 
@@ -273,7 +274,8 @@ winClipboardProc (void *pvNotUsed)
       /* PRIMARY */
       iReturn = XSetSelectionOwner (pDisplay, XA_PRIMARY,
 				    iWindow, CurrentTime);
-      if (iReturn == BadAtom || iReturn == BadWindow)
+      if (iReturn == BadAtom || iReturn == BadWindow ||
+	  XGetSelectionOwner (pDisplay, XA_PRIMARY) != iWindow)
 	{
 	  ErrorF ("winClipboardProc - Could not set PRIMARY owner\n");
 	  pthread_exit (NULL);
@@ -282,7 +284,8 @@ winClipboardProc (void *pvNotUsed)
       /* CLIPBOARD */
       iReturn = XSetSelectionOwner (pDisplay, atomClipboard,
 				    iWindow, CurrentTime);
-      if (iReturn == BadAtom || iReturn == BadWindow)
+      if (iReturn == BadAtom || iReturn == BadWindow ||
+	  XGetSelectionOwner (pDisplay, atomClipboard) != iWindow)
 	{
 	  ErrorF ("winClipboardProc - Could not set CLIPBOARD owner\n");
 	  pthread_exit (NULL);

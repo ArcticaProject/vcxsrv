@@ -252,7 +252,7 @@ XAADoImageRead(
 }
 
 
-void 
+void
 XAAScreenToScreenBitBlt(
     ScrnInfoPtr pScrn,
     int nbox,

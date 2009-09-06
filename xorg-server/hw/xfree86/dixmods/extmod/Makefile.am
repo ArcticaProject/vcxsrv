@@ -12,7 +12,7 @@ XV_SRCS = xvmod.c xvmodproc.h
 endif
 
 if XF86VIDMODE
-XF86VMODE_SRCS = xf86vmode.c vidmodeproc.h
+XF86VMODE_SRCS = xf86vmode.c
 endif
 
 AM_CFLAGS = @DIX_CFLAGS@ @XORG_CFLAGS@

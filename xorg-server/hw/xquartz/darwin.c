@@ -51,6 +51,8 @@
 #include "exevents.h"
 #include "extinit.h"
 
+#include "xserver-properties.h"
+
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/syslimits.h>
@@ -73,10 +75,6 @@
 #include "darwinEvents.h"
 #include "quartzKeyboard.h"
 #include "quartz.h"
-//#include "darwinClut8.h"
-
-#include "GL/visualConfigs.h"
-
 
 #ifdef ENABLE_DEBUG_LOG
 FILE *debug_log_fp = NULL;
@@ -155,10 +153,6 @@ const int NUMFORMATS = sizeof(formats)/sizeof(formats[0]);
 #define XORG_RELEASE "?"
 #endif
 
-void DDXRingBell(int volume, int pitch, int duration) {
-  // FIXME -- make some noise, yo
-}
-
 void
 DarwinPrintBanner(void)
 { 
@@ -183,18 +177,23 @@ static Bool DarwinSaveScreen(ScreenPtr pScreen, int on)
 }
 
 /*
- * DarwinAddScreen
+ * DarwinScreenInit
  *  This is a callback from dix during AddScreen() from InitOutput().
  *  Initialize the screen and communicate information about it back to dix.
  */
-static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv) {
+static Bool DarwinScreenInit(int index, ScreenPtr pScreen, int argc, char **argv) {
     int         dpi;
     static int  foundIndex = 0;
     Bool        ret;
     DarwinFramebufferPtr dfb;
 
     // reset index of found screens for each server generation
-    if (index == 0) foundIndex = 0;
+    if (index == 0) {
+        foundIndex = 0;
+
+        // reset the visual list
+        miClearVisualTypes();
+    }
 
     // allocate space for private per screen storage
     dfb = xalloc(sizeof(DarwinFramebufferRec));
@@ -208,9 +207,6 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
     if (! ret)
         return FALSE;
 
-    // reset the visual list
-    miClearVisualTypes();
-
     // setup a single visual appropriate for our pixel type
     if(!miSetVisualTypesAndMasks(dfb->depth, dfb->visuals, dfb->bitsPerRGB,
                                  dfb->preferredCVC, dfb->redMask,
@@ -221,17 +217,10 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
 // TODO: Make PseudoColor visuals not suck in TrueColor mode  
 //    if(dfb->depth > 8)
 //        miSetVisualTypesAndMasks(8, PseudoColorMask, 8, PseudoColor, 0, 0, 0);
-
-#if 0
-    /*
-     * These aren't used anymore.  xpr/xprScreen.c initializes the dfb struct
-     * above based on the display properties.
-     */
     if(dfb->depth > 15)
-        miSetVisualTypesAndMasks(15, LARGE_VISUALS, 5, TrueColor, 0x7c00, 0x03e0, 0x001f);
+        miSetVisualTypesAndMasks(15, TrueColorMask, 5, TrueColor, RM_ARGB(0,5,5,5), GM_ARGB(0,5,5,5), BM_ARGB(0,5,5,5));
     if(dfb->depth > 24)
-        miSetVisualTypesAndMasks(24, LARGE_VISUALS, 8, TrueColor, 0x00ff0000, 0x0000ff00, 0x000000ff);
-#endif
+        miSetVisualTypesAndMasks(24, TrueColorMask, 8, TrueColor, RM_ARGB(0,8,8,8), GM_ARGB(0,8,8,8), BM_ARGB(0,8,8,8));
 
     miSetPixmapDepths();
 
@@ -252,29 +241,6 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
     {
         return FALSE;
     }
-
-//    ErrorF("Screen type: %d, %d=%d, %d=%d, %d=%d, %x=%x=%x, %x=%x=%x, %x=%x=%x\n", pScreen->visuals->class,
-//           pScreen->visuals->offsetRed, dfb->bitsPerRGB * 2,
-//           pScreen->visuals->offsetGreen, dfb->bitsPerRGB,
-//           pScreen->visuals->offsetBlue, 0,
-//           pScreen->visuals->redMask, dfb->redMask, ((1<<dfb->bitsPerRGB)-1) << pScreen->visuals->offsetRed,
-//           pScreen->visuals->greenMask, dfb->greenMask, ((1<<dfb->bitsPerRGB)-1) << pScreen->visuals->offsetGreen,
-//           pScreen->visuals->blueMask, dfb->blueMask, ((1<<dfb->bitsPerRGB)-1) << pScreen->visuals->offsetBlue);
-
-    // set the RGB order correctly for TrueColor
-//    if (dfb->bitsPerPixel > 8) {
-//        for (i = 0, visual = pScreen->visuals;  // someday we may have more than 1
-//            i < pScreen->numVisuals; i++, visual++) {
-//            if (visual->class == TrueColor) {
-//                visual->offsetRed = bitsPerRGB * 2;
-//                visual->offsetGreen = bitsPerRGB;
-//                visual->offsetBlue = 0;
-//                visual->redMask = ((1<<bitsPerRGB)-1) << visual->offsetRed;
-//                visual->greenMask = ((1<<bitsPerRGB)-1) << visual->offsetGreen;
-//                visual->blueMask = ((1<<bitsPerRGB)-1) << visual->offsetBlue;
-//            }
-//        }
-//    }
 
 #ifdef RENDER
     if (! fbPictureInit(pScreen, 0, 0)) {
@@ -300,21 +266,6 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
         return FALSE;
     }
 
-    /* Set the colormap to the statically defined one if we're in 8 bit
-     * mode and we're using a fixed color map.  Essentially this translates
-     * to Darwin/x86 in 8-bit mode.
-     */
-//    if(dfb->depth == 8) {
-//        ColormapPtr map = RootlessGetColormap (pScreen);
-//        for( i = 0; i < map->pVisual->ColormapEntries; i++ ) {
-//            Entry *ent = map->red + i;
-//            ErrorF("Setting lo %d -> r: %04x g: %04x b: %04x\n", i, darwinClut8[i].red, darwinClut8[i].green, darwinClut8[i].blue);
-//            ent->co.local.red   = darwinClut8[i].red;
-//            ent->co.local.green = darwinClut8[i].green;
-//            ent->co.local.blue  = darwinClut8[i].blue;
-//        }
-//    }
-
     dixScreenOrigins[index].x = dfb->x;
     dixScreenOrigins[index].y = dfb->y;
 
@@ -336,17 +287,35 @@ static Bool DarwinAddScreen(int index, ScreenPtr pScreen, int argc, char **argv)
  * DarwinMouseProc: Handle the initialization, etc. of a mouse
  */
 static int DarwinMouseProc(DeviceIntPtr pPointer, int what) {
+#define NBUTTONS 7
+#define NAXES 2
 	// 7 buttons: left, right, middle, then four scroll wheel "buttons"
-    CARD8 map[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    
+    CARD8 map[NBUTTONS + 1] = {0, 1, 2, 3, 4, 5, 6, 7};
+    Atom btn_labels[NAXES] = {0};
+    Atom axes_labels[NBUTTONS] = {0};
+
     switch (what) {
         case DEVICE_INIT:
             pPointer->public.on = FALSE;
-            
+
+            btn_labels[0] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_LEFT);
+            btn_labels[1] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_MIDDLE);
+            btn_labels[2] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_RIGHT);
+            btn_labels[3] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_UP);
+            btn_labels[4] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_DOWN);
+            btn_labels[5] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_LEFT);
+            btn_labels[6] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_RIGHT);
+
+            axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_X);
+            axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_Y);
+
+
             // Set button map.
-            InitPointerDeviceStruct((DevicePtr)pPointer, map, 7,
+            InitPointerDeviceStruct((DevicePtr)pPointer, map, NBUTTONS,
+                                    btn_labels,
                                     (PtrCtrlProcPtr)NoopDDA,
-                                    GetMotionHistorySize(), 2);
+                                    GetMotionHistorySize(), NAXES,
+                                    axes_labels);
             pPointer->valuator->mode = Absolute; // Relative
             InitAbsoluteClassDeviceStruct(pPointer);
 //            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
@@ -364,28 +333,43 @@ static int DarwinMouseProc(DeviceIntPtr pPointer, int what) {
     }
     
     return Success;
+#undef NBUTTONS
+#undef NAXES
 }
 
 static int DarwinTabletProc(DeviceIntPtr pPointer, int what) {
-    CARD8 map[4] = {0, 1, 2, 3};
-    
+#define NBUTTONS 3
+#define NAXES 5
+    CARD8 map[NBUTTONS + 1] = {0, 1, 2, 3};
+    Atom axes_labels[NAXES] = {0};
+    Atom btn_labels[NBUTTONS] = {0};
+
     switch (what) {
         case DEVICE_INIT:
             pPointer->public.on = FALSE;
-            
+
+            btn_labels[0] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_LEFT);
+            btn_labels[1] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_MIDDLE);
+            btn_labels[2] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_RIGHT);
+
+            axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_ABS_X);
+            axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_ABS_Y);
+
             // Set button map.
-            InitPointerDeviceStruct((DevicePtr)pPointer, map, 3,
+            InitPointerDeviceStruct((DevicePtr)pPointer, map, NBUTTONS,
+                                    btn_labels,
                                     (PtrCtrlProcPtr)NoopDDA,
-                                    GetMotionHistorySize(), 5);
+                                    GetMotionHistorySize(), NAXES,
+                                    axes_labels);
             pPointer->valuator->mode = Absolute; // Relative
             InitProximityClassDeviceStruct(pPointer);
 			InitAbsoluteClassDeviceStruct(pPointer);
 
-            InitValuatorAxisStruct(pPointer, 0, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 1, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 2, 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 3, -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
-            InitValuatorAxisStruct(pPointer, 4, -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 0, axes_labels[0], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 1, axes_labels[1], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 2, axes_labels[2], 0, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 3, axes_labels[3], -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
+            InitValuatorAxisStruct(pPointer, 4, axes_labels[4], -XQUARTZ_VALUATOR_LIMIT, XQUARTZ_VALUATOR_LIMIT, 1, 0, 1);
 //          pPointer->use = IsXExtensionDevice;
             break;
         case DEVICE_ON:
@@ -399,6 +383,8 @@ static int DarwinTabletProc(DeviceIntPtr pPointer, int what) {
             return Success;
     }
     return Success;
+#undef NBUTTONS
+#undef NAXES
 }
 
 /*
@@ -577,7 +563,7 @@ DarwinAdjustScreenOrigins(ScreenInfo *pScreenInfo)
  *  The display mode dependent code gets called three times. The mode
  *  specific InitOutput routines are expected to discover the number
  *  of potentially useful screens and cache routes to them internally.
- *  Inside DarwinAddScreen are two other mode specific calls.
+ *  Inside DarwinScreenInit are two other mode specific calls.
  *  A mode specific AddScreen routine is called for each screen to
  *  actually initialize the screen with the ScreenPtr structure.
  *  After other screen setup has been done, a mode specific
@@ -597,16 +583,12 @@ void InitOutput( ScreenInfo *pScreenInfo, int argc, char **argv )
     for (i = 0; i < NUMFORMATS; i++)
         pScreenInfo->formats[i] = formats[i];
 
-#ifdef GLXEXT
-    setVisualConfigs();    
-#endif
-
     // Discover screens and do mode specific initialization
     QuartzInitOutput(argc, argv);
 
     // Add screens
     for (i = 0; i < darwinScreensFound; i++) {
-        AddScreen( DarwinAddScreen, argc, argv );
+        AddScreen(DarwinScreenInit, argc, argv);
     }
 
     DarwinAdjustScreenOrigins(pScreenInfo);

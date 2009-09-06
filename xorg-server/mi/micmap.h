@@ -4,29 +4,29 @@
 #ifndef _MICMAP_H_
 #define _MICMAP_H_
 
-extern ColormapPtr miInstalledMaps[MAXSCREENS];
+extern _X_EXPORT ColormapPtr miInstalledMaps[MAXSCREENS];
 
 typedef Bool (* miInitVisualsProcPtr)(VisualPtr *, DepthPtr *, int *, int *,
 					int *, VisualID *, unsigned long, int,
 					int);
 
-int miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps);
-void miInstallColormap(ColormapPtr pmap);
-void miUninstallColormap(ColormapPtr pmap);
+extern _X_EXPORT int miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps);
+extern _X_EXPORT void miInstallColormap(ColormapPtr pmap);
+extern _X_EXPORT void miUninstallColormap(ColormapPtr pmap);
 
-void miResolveColor(unsigned short *, unsigned short *, unsigned short *,
+extern _X_EXPORT void miResolveColor(unsigned short *, unsigned short *, unsigned short *,
 			VisualPtr);
-Bool miInitializeColormap(ColormapPtr);
-int miExpandDirectColors(ColormapPtr, int, xColorItem *, xColorItem *);
-Bool miCreateDefColormap(ScreenPtr);
-void miClearVisualTypes(void);
-Bool miSetVisualTypes(int, int, int, int);
-Bool miSetPixmapDepths(void);
-Bool miSetVisualTypesAndMasks(int depth, int visuals, int bitsPerRGB, 
+extern _X_EXPORT Bool miInitializeColormap(ColormapPtr);
+extern _X_EXPORT int miExpandDirectColors(ColormapPtr, int, xColorItem *, xColorItem *);
+extern _X_EXPORT Bool miCreateDefColormap(ScreenPtr);
+extern _X_EXPORT void miClearVisualTypes(void);
+extern _X_EXPORT Bool miSetVisualTypes(int, int, int, int);
+extern _X_EXPORT Bool miSetPixmapDepths(void);
+extern _X_EXPORT Bool miSetVisualTypesAndMasks(int depth, int visuals, int bitsPerRGB,
 			      int preferredCVC,
 			      Pixel redMask, Pixel greenMask, Pixel blueMask);
-int miGetDefaultVisualMask(int);
-Bool miInitVisuals(VisualPtr *, DepthPtr *, int *, int *, int *, VisualID *,
+extern _X_EXPORT int miGetDefaultVisualMask(int);
+extern _X_EXPORT Bool miInitVisuals(VisualPtr *, DepthPtr *, int *, int *, int *, VisualID *,
 			unsigned long, int, int);
 
 #define MAX_PSEUDO_DEPTH	10

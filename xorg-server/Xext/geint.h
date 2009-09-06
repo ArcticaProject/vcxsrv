@@ -29,7 +29,6 @@
 #ifndef _GEINT_H_
 #define _GEINT_H_
 
-#define NEED_EVENTS
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "misc.h"
@@ -38,10 +37,10 @@
 #include "extnsionst.h"
 #include <X11/extensions/geproto.h>
 
-extern int GEEventType;
-extern int GEEventBase;
-extern int GEErrorBase;
-extern DevPrivateKey GEClientPrivateKey;
+extern _X_EXPORT int GEEventType;
+extern _X_EXPORT int GEEventBase;
+extern _X_EXPORT int GEErrorBase;
+extern _X_EXPORT DevPrivateKey GEClientPrivateKey;
 
 typedef struct _GEClientInfo {
     CARD32  major_version;
@@ -50,7 +49,7 @@ typedef struct _GEClientInfo {
 
 #define GEGetClient(pClient)    ((GEClientInfoPtr)(dixLookupPrivate(&((pClient)->devPrivates), GEClientPrivateKey)))
 
-extern int (*ProcGEVector[/*GENumRequests*/])(ClientPtr);
-extern int (*SProcGEVector[/*GENumRequests*/])(ClientPtr);
+extern _X_EXPORT int (*ProcGEVector[/*GENumRequests*/])(ClientPtr);
+extern _X_EXPORT int (*SProcGEVector[/*GENumRequests*/])(ClientPtr);
 
 #endif /* _GEINT_H_ */

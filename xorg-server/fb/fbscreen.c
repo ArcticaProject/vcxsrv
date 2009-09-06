@@ -242,14 +242,6 @@ fbFinishScreenInit(ScreenPtr	pScreen,
 	pScreen->CreateScreenResources = fb24_32CreateScreenResources;
     }
 #endif
-#if 0
-    /* leave backing store initialization to the enclosing code so
-     * it can choose the correct order of wrappers
-     */
-    /* init backing store here so we can overwrite CloseScreen without stepping
-     * on the backing store wrapped version */
-    fbInitializeBackingStore (pScreen);
-#endif
     return TRUE;
 }
 

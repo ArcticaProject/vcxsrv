@@ -1,6 +1,6 @@
 /************************************************************
 
-Author: Eamon Walsh <ewalsh@epoch.ncsc.mil>
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
@@ -49,10 +49,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "scrnintstr.h"
 #include "selection.h"
 #include "xacestr.h"
+#define _XSELINUX_NEED_FLASK
 #include "xselinux.h"
-#define XSERV_t
-#define TRANS_SERVER
-#include <X11/Xtrans/Xtrans.h>
 #include "../os/osdep.h"
 #include "modinit.h"
 
@@ -135,32 +133,6 @@ static unsigned numKnownEvents;
 /* Array of property and selection SID structures */
 static SELinuxAtomRec *knownAtoms;
 static unsigned numKnownAtoms;
-
-/* dynamically allocated security classes and permissions */
-static struct security_class_mapping map[] = {
-    { "x_drawable", { "read", "write", "destroy", "create", "getattr", "setattr", "list_property", "get_property", "set_property", "", "", "list_child", "add_child", "remove_child", "hide", "show", "blend", "override", "", "", "", "", "send", "receive", "", "manage", NULL }},
-    { "x_screen", { "", "", "", "", "getattr", "setattr", "saver_getattr", "saver_setattr", "", "", "", "", "", "", "hide_cursor", "show_cursor", "saver_hide", "saver_show", NULL }},
-    { "x_gc", { "", "", "destroy", "create", "getattr", "setattr", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "use", NULL }},
-    { "x_font", { "", "", "destroy", "create", "getattr", "", "", "", "", "", "", "", "add_glyph", "remove_glyph", "", "", "", "", "", "", "", "", "", "", "use", NULL }},
-    { "x_colormap", { "read", "write", "destroy", "create", "getattr", "", "", "", "", "", "", "", "add_color", "remove_color", "", "", "", "", "", "", "install", "uninstall", "", "", "use", NULL }},
-    { "x_property", { "read", "write", "destroy", "create", "getattr", "setattr", "", "", "", "", "", "", "", "", "", "", "write", NULL }},
-    { "x_selection", { "read", "", "", "setattr", "getattr", "setattr", NULL }},
-    { "x_cursor", { "read", "write", "destroy", "create", "getattr", "setattr", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "use", NULL }},
-    { "x_client", { "", "", "destroy", "", "getattr", "setattr", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "manage", NULL }},
-    { "x_device", { "read", "write", "", "", "getattr", "setattr", "", "", "", "getfocus", "setfocus", "", "", "", "", "", "", "grab", "freeze", "force_cursor", "", "", "", "", "use", "manage", "", "bell", NULL }},
-    { "x_server", { "record", "", "", "", "getattr", "setattr", "", "", "", "", "", "", "", "", "", "", "", "grab", "", "", "", "", "", "", "", "manage", "debug", NULL }},
-    { "x_extension", { "", "", "", "", "query", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "use", NULL }},
-    { "x_event", { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "send", "receive", NULL }},
-    { "x_synthetic_event", { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "send", "receive", NULL }},
-    { "x_resource", { "read", "write", "write", "write", "read", "write", "read", "read", "write", "read", "write", "read", "write", "write", "write", "read", "read", "write", "write", "write", "write", "write", "write", "read", "read", "write", "read", "write", NULL }},
-    { NULL }
-};
-
-/* x_resource "read" bits from the list above */
-#define SELinuxReadMask (DixReadAccess|DixGetAttrAccess|DixListPropAccess| \
-			 DixGetPropAccess|DixGetFocusAccess|DixListAccess| \
-			 DixShowAccess|DixBlendAccess|DixReceiveAccess| \
-			 DixUseAccess|DixDebugAccess)
 
 /* forward declarations */
 static void SELinuxScreen(CallbackListPtr *, pointer, pointer);
@@ -460,8 +432,7 @@ SELinuxDoCheck(SELinuxSubjectRec *subj, SELinuxObjectRec *obj,
 static void
 SELinuxLabelClient(ClientPtr client)
 {
-    XtransConnInfo ci = ((OsCommPtr)client->osPrivate)->trans_conn;
-    int fd = _XSERVTransGetConnectionNumber(ci);
+    int fd = XaceGetConnectionNumber(client);
     SELinuxSubjectRec *subj;
     SELinuxObjectRec *obj;
     security_context_t ctx;
@@ -479,7 +450,7 @@ SELinuxLabelClient(ClientPtr client)
     }
 
     /* For local clients, try and determine the executable name */
-    if (_XSERVTransIsLocal(ci)) {
+    if (XaceIsLocal(client)) {
 	struct ucred creds;
 	socklen_t len = sizeof(creds);
 	char path[PATH_MAX + 1];
@@ -613,7 +584,8 @@ SELinuxAudit(void *auditdata,
 {
     SELinuxAuditRec *audit = auditdata;
     ClientPtr client = audit->client;
-    char idNum[16], *propertyName, *selectionName;
+    char idNum[16];
+    const char *propertyName, *selectionName;
     int major = -1, minor = -1;
 
     if (client) {
@@ -940,6 +912,10 @@ SELinuxProperty(CallbackListPtr *pcbl, pointer unused, pointer calldata)
     SELinuxAuditRec auditdata = { .client = rec->client, .property = name };
     security_id_t tsid;
     int rc;
+
+    /* Don't care about the new content check */
+    if (rec->access_mode & DixPostAccess)
+	return;
 
     subj = dixLookupPrivate(&rec->client->devPrivates, subjectKey);
     obj = dixLookupPrivate(&pProp->devPrivates, objectKey);
@@ -1307,7 +1283,7 @@ SELinuxSendContextReply(ClientPtr client, security_id_t sid)
     }
 
     rep.type = X_Reply;
-    rep.length = (len + 3) >> 2;
+    rep.length = bytes_to_int32(len);
     rep.sequenceNumber = client->sequence;
     rep.context_len = len;
 
@@ -1342,14 +1318,6 @@ ProcSELinuxSetCreateContext(ClientPtr client, unsigned offset)
 	    return BadAlloc;
     }
 
-    if (offset == CTX_DEV) {
-	/* Device create context currently requires manage permission */
-	rc = XaceHook(XACE_SERVER_ACCESS, client, DixManageAccess);
-	if (rc != Success)
-	    goto out;
-	privPtr = &serverClient->devPrivates;
-    }
-
     ptr = dixLookupPrivate(privPtr, subjectKey);
     pSid = (security_id_t *)(ptr + offset);
     sidput(*pSid);
@@ -1361,7 +1329,7 @@ ProcSELinuxSetCreateContext(ClientPtr client, unsigned offset)
 	    avc_context_to_sid_raw(ctx, pSid) < 0)
 	    rc = BadValue;
     }
-out:
+
     xfree(ctx);
     return rc;
 }
@@ -1534,8 +1502,8 @@ SELinuxPopulateItem(SELinuxListItemRec *i, PrivateRec **privPtr, CARD32 id,
 	return BadValue;
 
     i->id = id;
-    i->octx_len = (strlen(i->octx) + 4) >> 2;
-    i->dctx_len = (strlen(i->dctx) + 4) >> 2;
+    i->octx_len = bytes_to_int32(strlen(i->octx) + 1);
+    i->dctx_len = bytes_to_int32(strlen(i->dctx) + 1);
 
     *size += i->octx_len + i->dctx_len + 3;
     return Success;

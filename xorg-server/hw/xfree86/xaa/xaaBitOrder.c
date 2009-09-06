@@ -4,7 +4,7 @@
 #endif
 
 #include <X11/Xmd.h>
-CARD32 XAAReverseBitOrder(CARD32 v);
+#include "xaalocal.h"
 
 CARD32
 XAAReverseBitOrder(CARD32 v)

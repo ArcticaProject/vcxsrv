@@ -551,6 +551,15 @@ initializeExtensions(__GLXDRIscreen *screen)
     LogMessage(X_INFO, "AIGLX: enabled GLX_MESA_copy_sub_buffer\n");
 
     for (i = 0; extensions[i]; i++) {
+#ifdef __DRI_READ_DRAWABLE
+	if (strcmp(extensions[i]->name, __DRI_READ_DRAWABLE) == 0) {
+	    __glXEnableExtension(screen->glx_enable_bits,
+				 "GLX_SGI_make_current_read");
+
+	    LogMessage(X_INFO, "AIGLX: enabled GLX_SGI_make_current_read\n");
+	}
+#endif
+
 #ifdef __DRI_SWAP_CONTROL
 	if (strcmp(extensions[i]->name, __DRI_SWAP_CONTROL) == 0) {
 	    screen->swapControl =
@@ -661,6 +670,10 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
     __glXScreenInit(&screen->base, pScreen);
 
+    /* The first call simply determines the length of the extension string.
+     * This allows us to allocate some memory to hold the extension string,
+     * but it requires that we call __glXGetExtensionString a second time.
+     */
     buffer_size = __glXGetExtensionString(screen->glx_enable_bits, NULL);
     if (buffer_size > 0) {
 	if (screen->base.GLXextensions != NULL) {
@@ -693,7 +706,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     return NULL;
 }
 
-__GLXprovider __glXDRI2Provider = {
+_X_EXPORT __GLXprovider __glXDRI2Provider = {
     __glXDRIscreenProbe,
     "DRI2",
     NULL

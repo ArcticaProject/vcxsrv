@@ -32,9 +32,6 @@
 #ifndef _QUARTZAUDIO_H
 #define _QUARTZAUDIO_H
 
-#include "input.h"
-
 void QuartzAudioInit(void);
-void QuartzBell(int volume, DeviceIntPtr pDevice, pointer ctrl, int class);
 
 #endif

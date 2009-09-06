@@ -528,7 +528,9 @@ XAAInitAccel(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
 #define XAAMSG(s) do { if (serverGeneration == 1) xf86ErrorF(s); } while (0)
 
     if((infoRec->Flags & OFFSCREEN_PIXMAPS) && HaveScreenToScreenCopy &&
-		xf86IsOptionSet(options, XAAOPT_HAS_DUMB_INVERTED_OPTION_SENSE))
+		xf86ReturnOptValBool(options,
+				     XAAOPT_HAS_DUMB_INVERTED_OPTION_SENSE,
+				     FALSE))
     {
 	XAAMSG("\tOffscreen Pixmaps\n");
     } else {

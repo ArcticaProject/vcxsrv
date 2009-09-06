@@ -180,7 +180,7 @@ typedef struct _ScanLineListBlock {
 
 /* mipolyutil.c */
 
-extern Bool miCreateETandAET(
+extern _X_EXPORT Bool miCreateETandAET(
     int /*count*/,
     DDXPointPtr /*pts*/,
     EdgeTable * /*ET*/,
@@ -189,19 +189,19 @@ extern Bool miCreateETandAET(
     ScanLineListBlock * /*pSLLBlock*/
 );
 
-extern void miloadAET(
+extern _X_EXPORT void miloadAET(
     EdgeTableEntry * /*AET*/,
     EdgeTableEntry * /*ETEs*/
 );
 
-extern void micomputeWAET(
+extern _X_EXPORT void micomputeWAET(
     EdgeTableEntry * /*AET*/
 );
 
-extern int miInsertionSort(
+extern _X_EXPORT int miInsertionSort(
     EdgeTableEntry * /*AET*/
 );
 
-extern void miFreeStorage(
+extern _X_EXPORT void miFreeStorage(
     ScanLineListBlock * /*pSLLBlock*/
 );

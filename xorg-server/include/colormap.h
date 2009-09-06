@@ -76,7 +76,7 @@ typedef struct _CMEntry *EntryPtr;
 /* moved to screenint.h: typedef struct _ColormapRec *ColormapPtr */
 typedef struct _colorResource *colorResourcePtr;
 
-extern int CreateColormap(
+extern _X_EXPORT int CreateColormap(
     Colormap /*mid*/,
     ScreenPtr /*pScreen*/,
     VisualPtr /*pVisual*/,
@@ -84,24 +84,24 @@ extern int CreateColormap(
     int /*alloc*/,
     int /*client*/);
 
-extern int FreeColormap(
+extern _X_EXPORT int FreeColormap(
     pointer /*pmap*/,
     XID /*mid*/);
 
-extern int TellLostMap(
+extern _X_EXPORT int TellLostMap(
     WindowPtr /*pwin*/,
     pointer /* Colormap *pmid */);
 
-extern int TellGainedMap(
+extern _X_EXPORT int TellGainedMap(
     WindowPtr /*pwin*/,
     pointer /* Colormap *pmid */);
 
-extern int CopyColormapAndFree(
+extern _X_EXPORT int CopyColormapAndFree(
     Colormap /*mid*/,
     ColormapPtr /*pSrc*/,
     int /*client*/);
 
-extern int AllocColor(
+extern _X_EXPORT int AllocColor(
     ColormapPtr /*pmap*/,
     unsigned short* /*pred*/,
     unsigned short* /*pgreen*/,
@@ -109,11 +109,11 @@ extern int AllocColor(
     Pixel* /*pPix*/,
     int /*client*/);
 
-extern void FakeAllocColor(
+extern _X_EXPORT void FakeAllocColor(
     ColormapPtr /*pmap*/,
     xColorItem * /*item*/);
 
-extern void FakeFreeColor(
+extern _X_EXPORT void FakeFreeColor(
     ColormapPtr /*pmap*/,
     Pixel /*pixel*/);
 
@@ -121,7 +121,7 @@ typedef int (*ColorCompareProcPtr)(
     EntryPtr /*pent*/,
     xrgb * /*prgb*/);
 
-extern int FindColor(
+extern _X_EXPORT int FindColor(
     ColormapPtr /*pmap*/,
     EntryPtr /*pentFirst*/,
     int /*size*/,
@@ -131,17 +131,17 @@ extern int FindColor(
     int /*client*/,
     ColorCompareProcPtr /*comp*/);
 
-extern int QueryColors(
+extern _X_EXPORT int QueryColors(
     ColormapPtr /*pmap*/,
     int /*count*/,
     Pixel* /*ppixIn*/,
     xrgb* /*prgbList*/);
 
-extern int FreeClientPixels(
+extern _X_EXPORT int FreeClientPixels(
     pointer /*pcr*/,
     XID /*fakeid*/);
 
-extern int AllocColorCells(
+extern _X_EXPORT int AllocColorCells(
     int /*client*/,
     ColormapPtr /*pmap*/,
     int /*colors*/,
@@ -150,7 +150,7 @@ extern int AllocColorCells(
     Pixel* /*ppix*/,
     Pixel* /*masks*/);
 
-extern int AllocColorPlanes(
+extern _X_EXPORT int AllocColorPlanes(
     int /*client*/,
     ColormapPtr /*pmap*/,
     int /*colors*/,
@@ -163,19 +163,19 @@ extern int AllocColorPlanes(
     Pixel* /*pgmask*/,
     Pixel* /*pbmask*/);
 
-extern int FreeColors(
+extern _X_EXPORT int FreeColors(
     ColormapPtr /*pmap*/,
     int /*client*/,
     int /*count*/,
     Pixel* /*pixels*/,
     Pixel /*mask*/);
 
-extern int StoreColors(
+extern _X_EXPORT int StoreColors(
     ColormapPtr /*pmap*/,
     int /*count*/,
     xColorItem* /*defs*/);
 
-extern int IsMapInstalled(
+extern _X_EXPORT int IsMapInstalled(
     Colormap /*map*/,
     WindowPtr /*pWin*/);
 

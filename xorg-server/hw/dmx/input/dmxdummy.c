@@ -60,9 +60,7 @@ void dmxDummyKbdGetInfo(DevicePtr pDev, DMXLocalInitInfoPtr info)
     info->freemap            = 0;
     info->focusClass         = 1;
     info->kbdFeedbackClass   = 1;
-#ifdef XKB
     info->force              = 1;
-#endif
 }
 
 /** Return information about the dummy mouse device specified in \a pDev

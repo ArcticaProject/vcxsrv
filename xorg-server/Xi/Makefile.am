@@ -76,7 +76,33 @@ libXi_la_SOURCES =	\
 	ungrdevb.h \
 	ungrdevk.c \
 	ungrdevk.h \
+	xiallowev.c \
+	xiallowev.h \
+	xichangecursor.c \
+	xichangecursor.h \
+	xichangehierarchy.c \
+	xichangehierarchy.h \
+	xigetclientpointer.c \
+	xigetclientpointer.h \
+	xigrabdev.c \
+	xigrabdev.h \
+	xipassivegrab.h \
+	xipassivegrab.c \
 	xiproperty.c \
-	xiproperty.h
+	xiproperty.h \
+	xiquerydevice.c \
+	xiquerydevice.h \
+	xiquerypointer.c \
+	xiquerypointer.h \
+	xiqueryversion.c \
+	xiqueryversion.h \
+	xiselectev.c \
+	xiselectev.h \
+	xisetclientpointer.c \
+	xisetclientpointer.h \
+	xisetdevfocus.c \
+	xisetdevfocus.h \
+	xiwarppointer.c \
+	xiwarppointer.h
 
 EXTRA_DIST = stubs.c

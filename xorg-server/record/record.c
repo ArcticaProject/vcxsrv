@@ -32,15 +32,13 @@ and Jim Haggerty of Metheus.
 
 */
 
-#define NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
 
 #include "dixstruct.h"
 #include "extnsionst.h"
-#define _XRECORD_SERVER_
-#include <X11/extensions/recordstr.h>
+#include <X11/extensions/recordproto.h>
 #include "set.h"
 #include "swaprep.h"
 #include "inputstr.h"
@@ -128,11 +126,10 @@ static int numEnabledRCAPs;
  *  returns an error.
  */
 #define VERIFY_CONTEXT(_pContext, _contextid, _client) { \
-    (_pContext) = (RecordContextPtr)LookupIDByType((_contextid), RTContext); \
-    if (!(_pContext)) { \
-        (_client)->errorValue = (_contextid); \
-	return RecordErrorBase + XRecordBadContext; \
-    } \
+    int rc = dixLookupResourceByType((pointer *)&(_pContext), _contextid, \
+                                     RTContext, _client, DixUseAccess); \
+    if (rc != Success) \
+	return (rc == BadValue) ? RecordErrorBase + XRecordBadContext : rc; \
 }
 
 static int RecordDeleteContext(
@@ -374,7 +371,8 @@ RecordAProtocolElement(RecordContextPtr pContext, ClientPtr pClient,
 
 	replylen = pRep->length;
 	if (recordingClientSwapped) swapl(&replylen, n);
-	replylen += numElemHeaders + (datalen >> 2) + (futurelen >> 2);
+	replylen += numElemHeaders + bytes_to_int32(datalen) +
+            bytes_to_int32(futurelen);
 	if (recordingClientSwapped) swapl(&replylen, n);
 	pRep->length = replylen;
     } /* end if not continued reply */
@@ -482,7 +480,7 @@ RecordABigRequest(RecordContextPtr pContext, ClientPtr client, xReq *stuff)
 			   (pointer)stuff, SIZEOF(xReq), bytesLeft);
 
     /* reinsert the extended length field that was squished out */
-    bigLength = client->req_len + (sizeof(bigLength) >> 2);
+    bigLength = client->req_len + bytes_to_int32(sizeof(bigLength));
     if (client->swapped)
 	swapl(&bigLength, n);
     RecordAProtocolElement(pContext, client, XRecordFromClient,
@@ -615,7 +613,7 @@ RecordAReply(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
 	    if (pContext->continuedReply)
 	    {
 		RecordAProtocolElement(pContext, client, XRecordFromServer,
-		    pri->replyData, pri->dataLenBytes, /* continuation */ -1);
+		   (pointer)pri->replyData, pri->dataLenBytes, /* continuation */ -1);
 		if (!pri->bytesRemaining)
 		    pContext->continuedReply = 0;
 	    }
@@ -625,7 +623,7 @@ RecordAReply(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
 		if (majorop <= 127)
 		{ /* core reply */
 		    RecordAProtocolElement(pContext, client, XRecordFromServer,
-		       pri->replyData, pri->dataLenBytes, pri->bytesRemaining);
+		       (pointer)pri->replyData, pri->dataLenBytes, pri->bytesRemaining);
 		    if (pri->bytesRemaining)
 			pContext->continuedReply = 1;
 		}
@@ -646,7 +644,7 @@ RecordAReply(CallbackListPtr *pcbl, pointer nulldata, pointer calldata)
 						minorop))
 			{
 			    RecordAProtocolElement(pContext, client, 
-				XRecordFromServer, pri->replyData,
+				XRecordFromServer, (pointer)pri->replyData,
 				pri->dataLenBytes, pri->bytesRemaining);
 			    if (pri->bytesRemaining)
 				pContext->continuedReply = 1;
@@ -1168,10 +1166,12 @@ RecordDeleteClientFromContext(RecordContextPtr pContext, XID clientspec)
  * Side Effects: none.
  */
 static int
-RecordSanityCheckClientSpecifiers(XID *clientspecs, int nspecs, XID errorspec)
+RecordSanityCheckClientSpecifiers(ClientPtr client, XID *clientspecs, int nspecs, XID errorspec)
 {
     int i;
     int clientIndex;
+    int rc;
+    pointer value;
 
     for (i = 0; i < nspecs; i++)
     {
@@ -1187,8 +1187,10 @@ RecordSanityCheckClientSpecifiers(XID *clientspecs, int nspecs, XID errorspec)
 	{
 	    if (clientspecs[i] == clients[clientIndex]->clientAsMask)
 		continue;
-	    if (!LookupIDByClass(clientspecs[i], RC_ANY))
-		return BadMatch;
+            rc = dixLookupResourceByClass(&value, clientspecs[i], RC_ANY,
+                                          client, DixGetAttrAccess);
+            if (rc != Success)
+                return rc;
 	}
 	else
 	    return BadMatch;
@@ -1344,8 +1346,8 @@ RecordSanityCheckRegisterClients(RecordContextPtr pContext, ClientPtr client, xR
 
     recordingClient = pContext->pRecordingClient ?
 		      pContext->pRecordingClient->clientAsMask : 0;
-    err = RecordSanityCheckClientSpecifiers((XID *)&stuff[1], stuff->nClients,
-					    recordingClient);
+    err = RecordSanityCheckClientSpecifiers(client, (XID *)&stuff[1],
+					    stuff->nClients, recordingClient);
     if (err != Success) return err;
 
     pRange = (xRecordRange *)(((XID *)&stuff[1]) + stuff->nClients);
@@ -1960,7 +1962,7 @@ ProcRecordUnregisterClients(ClientPtr client)
 	4 * stuff->nClients)
 	return BadLength;
     VERIFY_CONTEXT(pContext, stuff->context, client);
-    err = RecordSanityCheckClientSpecifiers((XID *)&stuff[1],
+    err = RecordSanityCheckClientSpecifiers(client, (XID *)&stuff[1],
 					    stuff->nClients, 0);
     if (err != Success)
 	return err;
@@ -2277,8 +2279,8 @@ ProcRecordGetContext(ClientPtr client)
     {
 	rep.nClients += pRCAP->numClients;
 	rep.length += pRCAP->numClients *
-		( (sizeof(xRecordClientInfo) >> 2) +
-		  pri->nRanges * (sizeof(xRecordRange) >> 2));
+		( bytes_to_int32(sizeof(xRecordClientInfo)) +
+		  pri->nRanges * bytes_to_int32(sizeof(xRecordRange)));
     }
 
     /* write the reply header */
@@ -2577,13 +2579,13 @@ SwapCreateRegister(xRecordRegisterClientsReq *stuff)
     swapl(&stuff->nClients, n);
     swapl(&stuff->nRanges, n);
     pClientID = (XID *)&stuff[1];
-    if (stuff->nClients > stuff->length - (sz_xRecordRegisterClientsReq >> 2))
+    if (stuff->nClients > stuff->length - bytes_to_int32(sz_xRecordRegisterClientsReq))
 	return BadLength;
     for (i = 0; i < stuff->nClients; i++, pClientID++)
     {
 	swapl(pClientID, n);
     }
-    if (stuff->nRanges > stuff->length - (sz_xRecordRegisterClientsReq >> 2)
+    if (stuff->nRanges > stuff->length - bytes_to_int32(sz_xRecordRegisterClientsReq)
 	- stuff->nClients)
 	return BadLength;
     RecordSwapRanges((xRecordRange *)pClientID, stuff->nRanges);
@@ -2738,8 +2740,8 @@ RecordConnectionSetupInfo(RecordContextPtr pContext, NewClientInfoRec *pci)
 	char *pConnSetup = (char *)xalloc(prefixsize + restsize);
 	if (!pConnSetup)
 	    return;
-	SwapConnSetupPrefix(pci->prefix, pConnSetup);
-	SwapConnSetupInfo(pci->setup, pConnSetup + prefixsize);
+	SwapConnSetupPrefix(pci->prefix, (xConnSetupPrefix*)pConnSetup);
+	SwapConnSetupInfo((char*)pci->setup, (char*)(pConnSetup + prefixsize));
 	RecordAProtocolElement(pContext, pci->client, XRecordClientStarted,
 			       (pointer)pConnSetup, prefixsize + restsize, 0);
 	xfree(pConnSetup);
@@ -2862,6 +2864,13 @@ RecordCloseDown(ExtensionEntry *extEntry)
 void 
 RecordExtensionInit(void)
 {
+    /* FIXME Record is currently broken. Dont initialize it so that clients
+     * that require it can bail out correctly rather than waiting for stuff
+     * that'll never happen */
+    ErrorF("record: RECORD extension enabled at configure time.\n");
+    ErrorF("record: This extension is known to be broken, disabling extension now..\n");
+    ErrorF("record: http://bugs.freedesktop.org/show_bug.cgi?id=20500\n");
+#if 0
     ExtensionEntry *extentry;
 
     RTContext = CreateNewResourceType(RecordDeleteContext);
@@ -2884,5 +2893,6 @@ RecordExtensionInit(void)
     }
     RecordErrorBase = extentry->errorBase;
 
+#endif
 } /* RecordExtensionInit */
 

@@ -28,19 +28,12 @@
  * Silicon Graphics, Inc.
  */
 
-#define NEED_REPLIES
-#define FONT_PCF
 #include "glxserver.h"
 #include <GL/glxtokens.h>
 #include <pixmapstr.h>
 #include <windowstr.h>
 #include "glxutil.h"
-
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
+#include <stdlib.h>
 
 /************************************************************************/
 
@@ -58,7 +51,7 @@ __glXMalloc(size_t size)
     if (size == 0) {
 	return NULL;
     }
-    addr = (void *) xalloc(size);
+    addr = malloc(size);
     if (addr == NULL) {
 	/* XXX: handle out of memory error */
 	return NULL;
@@ -75,7 +68,7 @@ __glXCalloc(size_t numElements, size_t elementSize)
     if ((numElements == 0) || (elementSize == 0)) {
 	return NULL;
     }
-    addr = xcalloc(numElements, elementSize);
+    addr = calloc(numElements, elementSize);
     if (addr == NULL) {
 	/* XXX: handle out of memory error */
 	return NULL;
@@ -93,13 +86,13 @@ __glXRealloc(void *addr, size_t newSize)
 	    xfree(addr);
 	    return NULL;
 	} else {
-	    newAddr = xrealloc(addr, newSize);
+	    newAddr = realloc(addr, newSize);
 	}
     } else {
 	if (newSize == 0) {
 	    return NULL;
 	} else {
-	    newAddr = xalloc(newSize);
+	    newAddr = malloc(newSize);
 	}
     }
     if (newAddr == NULL) {
@@ -113,6 +106,6 @@ void
 __glXFree(void *addr)
 {
     if (addr) {
-	xfree(addr);
+	free(addr);
     }
 }

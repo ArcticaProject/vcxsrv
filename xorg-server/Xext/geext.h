@@ -34,46 +34,23 @@ from the author.
 #define _GEEXT_H_
 #include <X11/extensions/geproto.h>
 
-
-/**
- * This struct is used both in the window and by grabs to determine the event
- * mask for a client.
- * A window will have a linked list of these structs, with one entry per
- * client per device, null-terminated.
- * A grab has only one instance of this struct.
- */
-typedef struct _GenericMaskRec {
-    struct _GenericMaskRec* next;
-    XID             resource;                 /* id for the resource manager */
-    DeviceIntPtr    dev;
-    Mask            eventMask[MAXEXTENSIONS]; /* one mask per extension */
-} GenericMaskRec, *GenericMaskPtr;
-
-
-/* Struct to keep information about registered extensions
- *
- * evswap ... use to swap event fields for different byte ordered clients.
- * evfill ... use to fill various event fields from the given parameters.
- */
+/** Struct to keep information about registered extensions */
 typedef struct _GEExtension {
+    /** Event swapping routine */
     void (*evswap)(xGenericEvent* from, xGenericEvent* to);
-    void (*evfill)(xGenericEvent* ev,
-                    DeviceIntPtr pDev,  /* device */
-                    WindowPtr pWin,     /* event window */
-                    GrabPtr pGrab       /* current grab, may be NULL */
-                    );
 } GEExtension, *GEExtensionPtr;
 
 
 /* All registered extensions and their handling functions. */
-extern GEExtension GEExtensions[MAXEXTENSIONS];
+extern _X_EXPORT GEExtension GEExtensions[MAXEXTENSIONS];
 
-/* Returns the extension offset from the event */
-#define GEEXT(ev) (((xGenericEvent*)(ev))->extension)
-
-#define GEEXTIDX(ev) (GEEXT(ev) & 0x7F)
 /* Typecast to generic event */
 #define GEV(ev) ((xGenericEvent*)(ev))
+/* Returns the extension offset from the event */
+#define GEEXT(ev) (GEV(ev)->extension)
+
+/* Return zero-based extension offset (offset - 128). Only for use in arrays */
+#define GEEXTIDX(ev) (GEEXT(ev) & 0x7F)
 /* True if mask is set for extension on window */
 #define GEMaskIsSet(pWin, extension, mask) \
     ((pWin)->optional && \
@@ -86,29 +63,21 @@ extern GEExtension GEExtensions[MAXEXTENSIONS];
 
 /* Returns the event_fill for the given event */
 #define GEEventFill(ev) \
-    GEExtensions[GEEXTIDX(xE)].evfill
+    GEExtensions[GEEXTIDX(ev)].evfill
 
 #define GEIsType(ev, ext, ev_type) \
-        ((ev->u.u.type == GenericEvent) &&  \
-         ((xGenericEvent*)(ev))->extension == ext && \
-         ((xGenericEvent*)(ev))->evtype == ev_type)
+        ((GEV(ev)->type == GenericEvent) &&  \
+         GEEXT(ev) == (ext) && \
+         GEV(ev)->evtype == (ev_type))
 
 
 /* Interface for other extensions */
-void GEWindowSetMask(ClientPtr pClient, DeviceIntPtr pDev,
-                     WindowPtr pWin, int extension, Mask mask);
-
-void GERegisterExtension(
+extern _X_EXPORT void GERegisterExtension(
         int extension,
-        void (*ev_dispatch)(xGenericEvent* from, xGenericEvent* to),
-        void (*ev_fill)(xGenericEvent* ev, DeviceIntPtr pDev,
-                        WindowPtr pWin, GrabPtr pGrab)
-        );
+        void (*ev_dispatch)(xGenericEvent* from, xGenericEvent* to));
 
-void GEInitEvent(xGenericEvent* ev, int extension);
-BOOL GEDeviceMaskIsSet(WindowPtr pWin, DeviceIntPtr pDev,
-                       int extension, Mask mask);
+extern _X_EXPORT void GEInitEvent(xGenericEvent* ev, int extension);
 
-void GEExtensionInit(void);
+extern _X_EXPORT void GEExtensionInit(void);
 
 #endif /* _GEEXT_H_ */

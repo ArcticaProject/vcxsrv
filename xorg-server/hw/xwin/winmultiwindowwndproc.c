@@ -1,5 +1,6 @@
 /*
  *Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2008
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,6 +29,7 @@
  * Authors:	Kensuke Matsuzaki
  *		Earle F. Philhower, III
  *		Harold L Hunt II
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -49,6 +51,8 @@ extern Bool			g_fKeyboardHookLL;
 extern Bool			g_fSoftwareCursor;
 extern Bool			g_fButton[3];
 
+extern void winUpdateWindowPosition (HWND hWnd, Bool reshape, HWND *zstyle);
+
 
 /*
  * Local globals
@@ -61,7 +65,6 @@ static UINT_PTR		g_uipMousePollingTimerID = 0;
  * Constant defines
  */
 
-#define MOUSE_POLLING_INTERVAL		500
 #define WIN_MULTIWINDOW_SHAPE		YES
 
 
@@ -206,6 +209,8 @@ ValidateSizing (HWND hwnd, WindowPtr pWin,
   WinXSizeHints sizeHints;
   RECT *rect;
   int iWidth, iHeight;
+  RECT rcClient, rcWindow;
+  int iBorderWidthX, iBorderWidthY;
 
   /* Invalid input checking */
   if (pWin==NULL || lParam==0)
@@ -227,19 +232,20 @@ ValidateSizing (HWND hwnd, WindowPtr pWin,
   iWidth = rect->right - rect->left;
   iHeight = rect->bottom - rect->top;
 
-  /* Now remove size of any borders */
-  iWidth -= 2 * GetSystemMetrics(SM_CXSIZEFRAME);
-  iHeight -= (GetSystemMetrics(SM_CYCAPTION)
-	      + 2 * GetSystemMetrics(SM_CYSIZEFRAME));
-	      
+  /* Now remove size of any borders and title bar */
+  GetClientRect(hwnd, &rcClient);
+  GetWindowRect(hwnd, &rcWindow);
+  iBorderWidthX = (rcWindow.right - rcWindow.left) - (rcClient.right - rcClient.left);
+  iBorderWidthY = (rcWindow.bottom - rcWindow.top) - (rcClient.bottom - rcClient.top);
+  iWidth -= iBorderWidthX;
+  iHeight -= iBorderWidthY;
 
   /* Constrain the size to legal values */
   ConstrainSize (sizeHints, &iWidth, &iHeight);
 
-  /* Add back the borders */
-  iWidth += 2 * GetSystemMetrics(SM_CXSIZEFRAME);
-  iHeight += (GetSystemMetrics(SM_CYCAPTION)
-	      + 2 * GetSystemMetrics(SM_CYSIZEFRAME));
+  /* Add back the size of borders and title bar */
+  iWidth += iBorderWidthX;
+  iHeight += iBorderWidthY;
 
   /* Adjust size according to where we're dragging from */
   switch(wParam) {
@@ -286,6 +292,20 @@ static void winRaiseWindow(WindowPtr pWin)
   }
 }
 
+static
+void winStartMousePolling(winPrivScreenPtr s_pScreenPriv)
+{
+  /*
+   * Timer to poll mouse position.  This is needed to make
+   * programs like xeyes follow the mouse properly when the
+   * mouse pointer is outside of any X window.
+   */
+  if (g_uipMousePollingTimerID == 0)
+    g_uipMousePollingTimerID = SetTimer (s_pScreenPriv->hwndScreen,
+					 WIN_POLLING_MOUSE_TIMER_ID,
+					 MOUSE_POLLING_INTERVAL,
+					 NULL);
+}
 
 /*
  * winTopLevelWindowProc - Window procedure for all top-level Windows windows.
@@ -403,6 +423,8 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       SetWindowRgn (hwnd, hRgnWindow, TRUE);
       DeleteObject(hRgnWindow);
 
+      SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)XMING_SIGNATURE);
+
       return 0;
 
     case WM_INIT_SYS_MENU:
@@ -434,6 +456,14 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       /* Checks/Unchecks any menu items before they are displayed */
       HandleCustomWM_INITMENU ((unsigned long)hwnd, wParam);
       break;
+
+    case WM_ERASEBKGND:
+      /*
+       * Pretend that we did erase the background but we don't care,
+       * since we repaint the entire region anyhow
+       * This avoids some flickering when resizing.
+       */
+      return TRUE;
 
     case WM_PAINT:
       /* Only paint if our window handle is valid */
@@ -495,8 +525,8 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	break;
 
       /* Has the mouse pointer crossed screens? */
-      if (s_pScreen != miPointerGetScreen(inputInfo.pointer))
-	miPointerSetScreen (inputInfo.pointer, s_pScreenInfo->dwScreen,
+      if (s_pScreen != miPointerGetScreen(g_pwinPointer))
+	miPointerSetScreen (g_pwinPointer, s_pScreenInfo->dwScreen,
 			       ptMouse.x - s_pScreenInfo->dwXOffset,
 			       ptMouse.y - s_pScreenInfo->dwYOffset);
 
@@ -535,9 +565,9 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	}
 
       /* Deliver absolute cursor position to X Server */
-      miPointerAbsoluteCursor (ptMouse.x - s_pScreenInfo->dwXOffset,
-			       ptMouse.y - s_pScreenInfo->dwYOffset,
-			       g_c32LastInputEventTime = GetTickCount ());
+      winEnqueueMotion(ptMouse.x - s_pScreenInfo->dwXOffset,
+		       ptMouse.y - s_pScreenInfo->dwYOffset);
+
       return 0;
       
     case WM_NCMOUSEMOVE:
@@ -561,15 +591,8 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	  ShowCursor (TRUE);
 	}
 
-      /*
-       * Timer to poll mouse events.  This is needed to make
-       * programs like xeyes follow the mouse properly.
-       */
-      if (g_uipMousePollingTimerID == 0)
-	g_uipMousePollingTimerID = SetTimer (s_pScreenPriv->hwndScreen,
-					     WIN_POLLING_MOUSE_TIMER_ID,
-					     MOUSE_POLLING_INTERVAL,
-					     NULL);
+      winStartMousePolling(s_pScreenPriv);
+
       break;
 
     case WM_MOUSELEAVE:
@@ -585,15 +608,8 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	  ShowCursor (TRUE);
 	}
 
-      /*
-       * Timer to poll mouse events.  This is needed to make
-       * programs like xeyes follow the mouse properly.
-       */
-      if (g_uipMousePollingTimerID == 0)
-	g_uipMousePollingTimerID = SetTimer (s_pScreenPriv->hwndScreen,
-					     WIN_POLLING_MOUSE_TIMER_ID,
-					     MOUSE_POLLING_INTERVAL,
-					     NULL);
+      winStartMousePolling(s_pScreenPriv);
+
       return 0;
 
     case WM_LBUTTONDBLCLK:
@@ -601,12 +617,15 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
       g_fButton[0] = TRUE;
+      SetCapture(hwnd);
       return winMouseButtonsHandle (s_pScreen, ButtonPress, Button1, wParam);
-      
+
     case WM_LBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
       g_fButton[0] = FALSE;
+      ReleaseCapture();
+      winStartMousePolling(s_pScreenPriv);
       return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button1, wParam);
 
     case WM_MBUTTONDBLCLK:
@@ -614,46 +633,65 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
       g_fButton[1] = TRUE;
+      SetCapture(hwnd);
       return winMouseButtonsHandle (s_pScreen, ButtonPress, Button2, wParam);
-      
+
     case WM_MBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
       g_fButton[1] = FALSE;
+      ReleaseCapture();
+      winStartMousePolling(s_pScreenPriv);
       return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button2, wParam);
-      
+
     case WM_RBUTTONDBLCLK:
     case WM_RBUTTONDOWN:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
       g_fButton[2] = TRUE;
+      SetCapture(hwnd);
       return winMouseButtonsHandle (s_pScreen, ButtonPress, Button3, wParam);
-      
+
     case WM_RBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
       g_fButton[2] = FALSE;
+      ReleaseCapture();
+      winStartMousePolling(s_pScreenPriv);
       return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button3, wParam);
 
     case WM_XBUTTONDBLCLK:
     case WM_XBUTTONDOWN:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
+	SetCapture(hwnd);
       return winMouseButtonsHandle (s_pScreen, ButtonPress, HIWORD(wParam) + 5, wParam);
+
     case WM_XBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
+      ReleaseCapture();
+      winStartMousePolling(s_pScreenPriv);
       return winMouseButtonsHandle (s_pScreen, ButtonRelease, HIWORD(wParam) + 5, wParam);
 
     case WM_MOUSEWHEEL:
-      
-      /* Pass the message to the root window */
-      SendMessage (hwndScreen, message, wParam, lParam);
-      return 0;
+      if (SendMessage(hwnd, WM_NCHITTEST, 0, MAKELONG(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) == HTCLIENT)
+	{
+	  /* Pass the message to the root window */
+	  SendMessage (hwndScreen, message, wParam, lParam);
+	  return 0;
+	}
+      else break;
 
     case WM_SETFOCUS:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
+
+      {
+	/* Get the parent window for transient handling */
+	HWND hParent = GetParent(hwnd);
+	if (hParent && IsIconic(hParent)) ShowWindow (hParent, SW_RESTORE);
+      }
 
       winRestoreModeKeyStates ();
 
@@ -668,6 +706,9 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 
       /* Remove our keyboard hook if it is installed */
       winRemoveKeyboardHookLL ();
+      if (!wParam)
+	/* Revert the X focus as well, but only if the Windows focus is going to another window */
+	DeleteWindowFromAnyEvents(pWin, FALSE);
       return 0;
 
     case WM_SYSDEADCHAR:      
@@ -770,6 +811,10 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	    if (!pWin || !pWin->overrideRedirect) /* for OOo menus */
 	      winSendMessageToWM (s_pScreenPriv->pWMInfo, &wmMsg);
 	}
+      /* Prevent the mouse wheel from stalling when another window is minimized */
+      if (HIWORD(wParam) == 0 && LOWORD(wParam) == WA_ACTIVE &&
+	  (HWND)lParam != NULL && (HWND)lParam != (HWND)GetParent(hwnd))
+	SetFocus(hwnd);
       return 0;
 
     case WM_ACTIVATEAPP:
@@ -824,97 +869,56 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       if (!wParam)
 	return 0;
 
-      /* Tell X to map the window */
-      MapWindow (pWin, wClient(pWin));
-
       /* */
       if (!pWin->overrideRedirect)
 	{
-	  DWORD		dwExStyle;
-	  DWORD		dwStyle;
-	  RECT		rcNew;
-	  int		iDx, iDy;
-	      
 	  /* Flag that this window needs to be made active when clicked */
 	  SetProp (hwnd, WIN_NEEDMANAGE_PROP, (HANDLE) 1);
 
-	  /* Get the standard and extended window style information */
-	  dwExStyle = GetWindowLongPtr (hwnd, GWL_EXSTYLE);
-	  dwStyle = GetWindowLongPtr (hwnd, GWL_STYLE);
-
-	  /* */
-	  if (dwExStyle != WS_EX_APPWINDOW)
+	  if (!(GetWindowLongPtr (hwnd, GWL_EXSTYLE) & WS_EX_APPWINDOW))
 	    {
-	      /* Setup a rectangle with the X window position and size */
-	      SetRect (&rcNew,
-		       pDraw->x,
-		       pDraw->y,
-		       pDraw->x + pDraw->width,
-		       pDraw->y + pDraw->height);
-
-#if 0
-	      ErrorF ("winTopLevelWindowProc - (%d, %d)-(%d, %d)\n",
-		      rcNew.left, rcNew.top,
-		      rcNew.right, rcNew.bottom);
-#endif
-
-	      /* */
-	      AdjustWindowRectEx (&rcNew,
-				  WS_POPUP | WS_SIZEBOX | WS_OVERLAPPEDWINDOW,
-				  FALSE,
-				  WS_EX_APPWINDOW);
-
-	      /* Calculate position deltas */
-	      iDx = pDraw->x - rcNew.left;
-	      iDy = pDraw->y - rcNew.top;
-
-	      /* Calculate new rectangle */
-	      rcNew.left += iDx;
-	      rcNew.right += iDx;
-	      rcNew.top += iDy;
-	      rcNew.bottom += iDy;
-
-#if 0
-	      ErrorF ("winTopLevelWindowProc - (%d, %d)-(%d, %d)\n",
-		      rcNew.left, rcNew.top,
-		      rcNew.right, rcNew.bottom);
-#endif
+	      HWND		zstyle = HWND_NOTOPMOST;
 
 	      /* Set the window extended style flags */
 	      SetWindowLongPtr (hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW);
 
+	      /* Set the transient style flags */
+	      if (GetParent(hwnd)) SetWindowLongPtr (hwnd, GWL_STYLE,
+		   WS_POPUP | WS_OVERLAPPED | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 	      /* Set the window standard style flags */
-	      SetWindowLongPtr (hwnd, GWL_STYLE,
-				WS_POPUP | WS_SIZEBOX | WS_OVERLAPPEDWINDOW);
+	      else SetWindowLongPtr (hwnd, GWL_STYLE,
+		   (WS_POPUP | WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS)
+		   & ~WS_CAPTION & ~WS_SIZEBOX);
 
-	      /* Position the Windows window */
-	      SetWindowPos (hwnd, HWND_TOP,
-			    rcNew.left, rcNew.top,
-			    rcNew.right - rcNew.left, rcNew.bottom - rcNew.top,
-			    SWP_NOMOVE | SWP_FRAMECHANGED
-			    | SWP_SHOWWINDOW | SWP_NOACTIVATE);
-
-	      /* Bring the Windows window to the foreground */
+	      winUpdateWindowPosition (hwnd, FALSE, &zstyle);
 	      SetForegroundWindow (hwnd);
 	    }
+	  wmMsg.msg = WM_WM_MAP3;
 	}
       else /* It is an overridden window so make it top of Z stack */
 	{
 #if CYGWINDOWING_DEBUG
 	  ErrorF ("overridden window is shown\n");
 #endif
-	  SetWindowPos (hwnd, HWND_TOPMOST, 0, 0, 0, 0,
-			SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	  HWND forHwnd = GetForegroundWindow();
+	  if (forHwnd != NULL)
+	  {
+	    if (GetWindowLongPtr(forHwnd, GWLP_USERDATA) & (LONG_PTR)XMING_SIGNATURE)
+	    {
+	      if (GetWindowLongPtr(forHwnd, GWL_EXSTYLE) & WS_EX_TOPMOST)
+		SetWindowPos (hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	      else
+		SetWindowPos (hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	    }
+	  }
+	  wmMsg.msg = WM_WM_MAP2;
 	}
 	  
-      /* Setup the Window Manager message */
-      wmMsg.msg = WM_WM_MAP;
-      wmMsg.iWidth = pDraw->width;
-      wmMsg.iHeight = pDraw->height;
-
       /* Tell our Window Manager thread to map the window */
       if (fWMMsgInitialized)
 	winSendMessageToWM (s_pScreenPriv->pWMInfo, &wmMsg);
+
+      winStartMousePolling(s_pScreenPriv);
 
       return 0;
 

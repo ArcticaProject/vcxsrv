@@ -1379,22 +1379,22 @@ typedef struct _XAAInfoRec {
 #define SET_SYNC_FLAG(infoRec)	(infoRec)->NeedToSync = TRUE
 
 
-Bool 
+extern _X_EXPORT Bool
 XAAInit(
     ScreenPtr pScreen,
     XAAInfoRecPtr infoRec
 );
 
-XAAInfoRecPtr XAACreateInfoRec(void);
+extern _X_EXPORT XAAInfoRecPtr XAACreateInfoRec(void);
 
-void
+extern _X_EXPORT void
 XAADestroyInfoRec(
     XAAInfoRecPtr infoRec
 );
 
 typedef void (*DepthChangeFuncPtr) (ScrnInfoPtr pScrn, int depth);
 
-Bool
+extern _X_EXPORT Bool
 XAAInitDualFramebufferOverlay(
    ScreenPtr pScreen, 
    DepthChangeFuncPtr callback

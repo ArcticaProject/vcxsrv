@@ -107,6 +107,7 @@ Equipment Corporation.
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#include <version-config.h>
 #endif
 
 #ifdef PANORAMIX_DEBUG
@@ -130,19 +131,11 @@ int ProcInitialConnection();
 #include "dispatch.h"
 #include "swaprep.h"
 #include "swapreq.h"
-#ifdef PANORAMIX
-#include "panoramiX.h"
-#include "panoramiXsrv.h"
-#endif
 #include "privates.h"
 #include "xace.h"
-#ifdef XKB
-#ifndef XKB_IN_SERVER
-#define XKB_IN_SERVER
-#endif
 #include "inputstr.h"
-#include <xkbsrv.h>
-#endif
+#include "xkbsrv.h"
+#include "site.h"
 
 #ifdef XSERVER_DTRACE
 #include "registry.h"
@@ -159,7 +152,9 @@ typedef const char *string;
 #define BITCLEAR(buf, i) MASKWORD(buf, i) &= ~BITMASK(i)
 #define GETBIT(buf, i) (MASKWORD(buf, i) & BITMASK(i))
 
-extern xConnSetupPrefix connSetupPrefix;
+xConnSetupPrefix connSetupPrefix;
+
+PaddingInfo PixmapWidthPaddingInfo[33];
 
 static ClientPtr grabClient;
 #define GrabNone 0
@@ -167,9 +162,9 @@ static ClientPtr grabClient;
 #define GrabKickout 2
 static int grabState = GrabNone;
 static long grabWaiters[mskcnt];
-_X_EXPORT CallbackListPtr ServerGrabCallback = NULL;
+CallbackListPtr ServerGrabCallback = NULL;
 HWEventQueuePtr checkForInput[2];
-extern int connBlockScreenStart;
+int connBlockScreenStart;
 
 static void KillAllClients(void);
 
@@ -177,15 +172,15 @@ static int nextFreeClientID; /* always MIN free client ID */
 
 static int	nClients;	/* number of authorized clients */
 
-_X_EXPORT CallbackListPtr ClientStateCallback;
+CallbackListPtr ClientStateCallback;
 
 /* dispatchException & isItTimeToYield must be declared volatile since they
  * are modified by signal handlers - otherwise optimizer may assume it doesn't
  * need to actually check value in memory when used and may miss changes from
  * signal handlers.
  */
-_X_EXPORT volatile char dispatchException = 0;
-_X_EXPORT volatile char isItTimeToYield;
+volatile char dispatchException = 0;
+volatile char isItTimeToYield;
 
 /* Various of the DIX function interfaces were not designed to allow
  * the client->errorValue to be set on BadValue and other errors.
@@ -204,7 +199,7 @@ SetInputCheck(HWEventQueuePtr c0, HWEventQueuePtr c1)
     checkForInput[1] = c1;
 }
 
-_X_EXPORT void
+void
 UpdateCurrentTime(void)
 {
     TimeStamp systime;
@@ -223,7 +218,7 @@ UpdateCurrentTime(void)
 }
 
 /* Like UpdateCurrentTime, but can't call ProcessInputEvents */
-_X_EXPORT void
+void
 UpdateCurrentTimeIf(void)
 {
     TimeStamp systime;
@@ -242,12 +237,12 @@ UpdateCurrentTimeIf(void)
 #define SMART_SCHEDULE_DEFAULT_INTERVAL	20	    /* ms */
 #define SMART_SCHEDULE_MAX_SLICE	200	    /* ms */
 
-Bool	    SmartScheduleDisable = FALSE;
-long	    SmartScheduleSlice = SMART_SCHEDULE_DEFAULT_INTERVAL;
-long	    SmartScheduleInterval = SMART_SCHEDULE_DEFAULT_INTERVAL;
-long	    SmartScheduleMaxSlice = SMART_SCHEDULE_MAX_SLICE;
-long	    SmartScheduleTime;
-int	    SmartScheduleLatencyLimited = 0;
+Bool SmartScheduleDisable = FALSE;
+long SmartScheduleSlice = SMART_SCHEDULE_DEFAULT_INTERVAL;
+long SmartScheduleInterval = SMART_SCHEDULE_DEFAULT_INTERVAL;
+long SmartScheduleMaxSlice = SMART_SCHEDULE_MAX_SLICE;
+long SmartScheduleTime;
+int SmartScheduleLatencyLimited = 0;
 static ClientPtr   SmartLastClient;
 static int	   SmartLastIndex[SMART_MAX_PRIORITY-SMART_MIN_PRIORITY+1];
 
@@ -370,7 +365,7 @@ Dispatch(void)
     nextFreeClientID = 1;
     nClients = 0;
 
-    clientReady = (int *) xalloc(sizeof(int) * MaxClients);
+    clientReady = xalloc(sizeof(int) * MaxClients);
     if (!clientReady)
 	return;
 
@@ -437,12 +432,6 @@ Dispatch(void)
 	        }
 
 		client->sequence++;
-#ifdef DEBUG
-		if (client->requestLogIndex == MAX_REQUEST_LOG)
-		    client->requestLogIndex = 0;
-		client->requestLog[client->requestLogIndex] = MAJOROP;
-		client->requestLogIndex++;
-#endif
 #ifdef XSERVER_DTRACE
 		XSERVER_REQUEST_START(LookupMajorName(MAJOROP), MAJOROP,
 			      ((xReq *)client->requestBuffer)->length,
@@ -490,7 +479,167 @@ Dispatch(void)
 
 #undef MAJOROP
 
-_X_EXPORT int
+static int  VendorRelease = VENDOR_RELEASE;
+static char *VendorString = VENDOR_NAME;
+
+static const int padlength[4] = {0, 3, 2, 1};
+
+void
+SetVendorRelease(int release)
+{
+    VendorRelease = release;
+}
+
+void
+SetVendorString(char *string)
+{
+    VendorString = string;
+}
+
+Bool
+CreateConnectionBlock(void)
+{
+    xConnSetup setup;
+    xWindowRoot root;
+    xDepth	depth;
+    xVisualType visual;
+    xPixmapFormat format;
+    unsigned long vid;
+    int i, j, k,
+        lenofblock,
+        sizesofar = 0;
+    char *pBuf;
+
+
+    memset(&setup, 0, sizeof(xConnSetup));
+    /* Leave off the ridBase and ridMask, these must be sent with
+       connection */
+
+    setup.release = VendorRelease;
+    /*
+     * per-server image and bitmap parameters are defined in Xmd.h
+     */
+    setup.imageByteOrder = screenInfo.imageByteOrder;
+
+    setup.bitmapScanlineUnit = screenInfo.bitmapScanlineUnit;
+    setup.bitmapScanlinePad = screenInfo.bitmapScanlinePad;
+
+    setup.bitmapBitOrder = screenInfo.bitmapBitOrder;
+    setup.motionBufferSize = NumMotionEvents();
+    setup.numRoots = screenInfo.numScreens;
+    setup.nbytesVendor = strlen(VendorString);
+    setup.numFormats = screenInfo.numPixmapFormats;
+    setup.maxRequestSize = MAX_REQUEST_SIZE;
+    QueryMinMaxKeyCodes(&setup.minKeyCode, &setup.maxKeyCode);
+
+    lenofblock = sizeof(xConnSetup) +
+            pad_to_int32(setup.nbytesVendor) +
+	    (setup.numFormats * sizeof(xPixmapFormat)) +
+            (setup.numRoots * sizeof(xWindowRoot));
+    ConnectionInfo = xalloc(lenofblock);
+    if (!ConnectionInfo)
+	return FALSE;
+
+    memmove(ConnectionInfo, (char *)&setup, sizeof(xConnSetup));
+    sizesofar = sizeof(xConnSetup);
+    pBuf = ConnectionInfo + sizeof(xConnSetup);
+
+    memmove(pBuf, VendorString, (int)setup.nbytesVendor);
+    sizesofar += setup.nbytesVendor;
+    pBuf += setup.nbytesVendor;
+    i = padlength[setup.nbytesVendor & 3];
+    sizesofar += i;
+    while (--i >= 0)
+	*pBuf++ = 0;
+
+    memset(&format, 0, sizeof(xPixmapFormat));
+    for (i=0; i<screenInfo.numPixmapFormats; i++)
+    {
+	format.depth = screenInfo.formats[i].depth;
+	format.bitsPerPixel = screenInfo.formats[i].bitsPerPixel;
+	format.scanLinePad = screenInfo.formats[i].scanlinePad;
+	memmove(pBuf, (char *)&format, sizeof(xPixmapFormat));
+	pBuf += sizeof(xPixmapFormat);
+	sizesofar += sizeof(xPixmapFormat);
+    }
+
+    connBlockScreenStart = sizesofar;
+    memset(&depth, 0, sizeof(xDepth));
+    memset(&visual, 0, sizeof(xVisualType));
+    for (i=0; i<screenInfo.numScreens; i++)
+    {
+	ScreenPtr	pScreen;
+	DepthPtr	pDepth;
+	VisualPtr	pVisual;
+
+	pScreen = screenInfo.screens[i];
+	root.windowId = WindowTable[i]->drawable.id;
+	root.defaultColormap = pScreen->defColormap;
+	root.whitePixel = pScreen->whitePixel;
+	root.blackPixel = pScreen->blackPixel;
+	root.currentInputMask = 0;    /* filled in when sent */
+	root.pixWidth = pScreen->width;
+	root.pixHeight = pScreen->height;
+	root.mmWidth = pScreen->mmWidth;
+	root.mmHeight = pScreen->mmHeight;
+	root.minInstalledMaps = pScreen->minInstalledCmaps;
+	root.maxInstalledMaps = pScreen->maxInstalledCmaps;
+	root.rootVisualID = pScreen->rootVisual;
+	root.backingStore = pScreen->backingStoreSupport;
+	root.saveUnders = FALSE;
+	root.rootDepth = pScreen->rootDepth;
+	root.nDepths = pScreen->numDepths;
+	memmove(pBuf, (char *)&root, sizeof(xWindowRoot));
+	sizesofar += sizeof(xWindowRoot);
+	pBuf += sizeof(xWindowRoot);
+
+	pDepth = pScreen->allowedDepths;
+	for(j = 0; j < pScreen->numDepths; j++, pDepth++)
+	{
+	    lenofblock += sizeof(xDepth) +
+		    (pDepth->numVids * sizeof(xVisualType));
+	    pBuf = (char *)xrealloc(ConnectionInfo, lenofblock);
+	    if (!pBuf)
+	    {
+		xfree(ConnectionInfo);
+		return FALSE;
+	    }
+	    ConnectionInfo = pBuf;
+	    pBuf += sizesofar;
+	    depth.depth = pDepth->depth;
+	    depth.nVisuals = pDepth->numVids;
+	    memmove(pBuf, (char *)&depth, sizeof(xDepth));
+	    pBuf += sizeof(xDepth);
+	    sizesofar += sizeof(xDepth);
+	    for(k = 0; k < pDepth->numVids; k++)
+	    {
+		vid = pDepth->vids[k];
+		for (pVisual = pScreen->visuals;
+		     pVisual->vid != vid;
+		     pVisual++)
+		    ;
+		visual.visualID = vid;
+		visual.class = pVisual->class;
+		visual.bitsPerRGB = pVisual->bitsPerRGBValue;
+		visual.colormapEntries = pVisual->ColormapEntries;
+		visual.redMask = pVisual->redMask;
+		visual.greenMask = pVisual->greenMask;
+		visual.blueMask = pVisual->blueMask;
+		memmove(pBuf, (char *)&visual, sizeof(xVisualType));
+		pBuf += sizeof(xVisualType);
+		sizesofar += sizeof(xVisualType);
+	    }
+	}
+    }
+    connSetupPrefix.success = xTrue;
+    connSetupPrefix.length = lenofblock/4;
+    connSetupPrefix.majorVersion = X_PROTOCOL;
+    connSetupPrefix.minorVersion = X_PROTOCOL_REVISION;
+    return TRUE;
+}
+
+
+int
 ProcBadRequest(ClientPtr client)
 {
     return (BadRequest);
@@ -509,7 +658,7 @@ ProcCreateWindow(ClientPtr client)
     rc = dixLookupWindow(&pParent, stuff->parent, client, DixAddAccess);
     if (rc != Success)
         return rc;
-    len = client->req_len - (sizeof(xCreateWindowReq) >> 2);
+    len = client->req_len - bytes_to_int32(sizeof(xCreateWindowReq));
     if (Ones(stuff->mask) != len)
         return BadLength;
     if (!stuff->width || !stuff->height)
@@ -552,7 +701,7 @@ ProcChangeWindowAttributes(ClientPtr client)
     rc = dixLookupWindow(&pWin, stuff->window, client, access_mode);
     if (rc != Success)
         return rc;
-    len = client->req_len - (sizeof(xChangeWindowAttributesReq) >> 2);
+    len = client->req_len - bytes_to_int32(sizeof(xChangeWindowAttributesReq));
     if (len != Ones(stuff->valueMask))
         return BadLength;
     result =  ChangeWindowAttributes(pWin, 
@@ -577,6 +726,7 @@ ProcGetWindowAttributes(ClientPtr client)
     rc = dixLookupWindow(&pWin, stuff->id, client, DixGetAttrAccess);
     if (rc != Success)
 	return rc;
+    memset(&wa, 0, sizeof(xGetWindowAttributesReply));
     GetWindowAttributes(pWin, client, &wa);
     WriteReplyToClient(client, sizeof(xGetWindowAttributesReply), &wa);
     return(client->noClientException);
@@ -755,7 +905,7 @@ ProcConfigureWindow(ClientPtr client)
 			 DixManageAccess|DixSetAttrAccess);
     if (rc != Success)
         return rc;
-    len = client->req_len - (sizeof(xConfigureWindowReq) >> 2);
+    len = client->req_len - bytes_to_int32(sizeof(xConfigureWindowReq));
     if (Ones((Mask)stuff->mask) != len)
         return BadLength;
     result =  ConfigureWindow(pWin, (Mask)stuff->mask, (XID *) &stuff[1], 
@@ -838,6 +988,7 @@ ProcGetGeometry(ClientPtr client)
     xGetGeometryReply rep;
     int status;
 
+    memset(&rep, 0, sizeof(xGetGeometryReply));
     if ((status = GetGeometry(client, &rep)) != Success)
 	return status;
 
@@ -859,6 +1010,7 @@ ProcQueryTree(ClientPtr client)
     rc = dixLookupWindow(&pWin, stuff->id, client, DixListAccess);
     if (rc != Success)
         return rc;
+    memset(&reply, 0, sizeof(xQueryTreeReply));
     reply.type = X_Reply;
     reply.root = WindowTable[pWin->drawable.pScreen->myNum]->drawable.id;
     reply.sequenceNumber = client->sequence;
@@ -873,7 +1025,7 @@ ProcQueryTree(ClientPtr client)
     {
 	int curChild = 0;
 
-	childIDs = (Window *) xalloc(numChildren * sizeof(Window));
+	childIDs = xalloc(numChildren * sizeof(Window));
 	if (!childIDs)
 	    return BadAlloc;
 	for (pChild = pWin->lastChild; pChild != pHead; pChild = pChild->prevSib)
@@ -881,7 +1033,7 @@ ProcQueryTree(ClientPtr client)
     }
     
     reply.nChildren = numChildren;
-    reply.length = (numChildren * sizeof(Window)) >> 2;
+    reply.length = bytes_to_int32(numChildren * sizeof(Window));
     
     WriteReplyToClient(client, sizeof(xQueryTreeReply), &reply);
     if (numChildren)
@@ -912,6 +1064,7 @@ ProcInternAtom(ClientPtr client)
     if (atom != BAD_RESOURCE)
     {
 	xInternAtomReply reply;
+	memset(&reply, 0, sizeof(xInternAtomReply));
 	reply.type = X_Reply;
 	reply.length = 0;
 	reply.sequenceNumber = client->sequence;
@@ -926,7 +1079,7 @@ ProcInternAtom(ClientPtr client)
 int
 ProcGetAtomName(ClientPtr client)
 {
-    char *str;
+    const char *str;
     xGetAtomNameReply reply;
     int len;
     REQUEST(xResourceReq);
@@ -935,8 +1088,9 @@ ProcGetAtomName(ClientPtr client)
     if ( (str = NameForAtom(stuff->id)) )
     {
 	len = strlen(str);
+	memset(&reply, 0, sizeof(xGetAtomNameReply));
 	reply.type = X_Reply;
-	reply.length = (len + 3) >> 2;
+	reply.length = bytes_to_int32(len);
 	reply.sequenceNumber = client->sequence;
 	reply.nameLength = len;
 	WriteReplyToClient(client, sizeof(xGetAtomNameReply), &reply);
@@ -1031,6 +1185,7 @@ ProcTranslateCoords(ClientPtr client)
     rc = dixLookupWindow(&pDst, stuff->dstWid, client, DixGetAttrAccess);
     if (rc != Success)
         return rc;
+    memset(&rep, 0, sizeof(xTranslateCoordsReply));
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
@@ -1111,12 +1266,13 @@ int
 ProcCloseFont(ClientPtr client)
 {
     FontPtr pFont;
+    int rc;
     REQUEST(xResourceReq);
 
     REQUEST_SIZE_MATCH(xResourceReq);
-    pFont = (FontPtr)SecurityLookupIDByType(client, stuff->id, RT_FONT,
-					    DixDestroyAccess);
-    if ( pFont != (FontPtr)NULL)	/* id was valid */
+    rc = dixLookupResourceByType((pointer *)&pFont, stuff->id, RT_FONT,
+				 client, DixDestroyAccess);
+    if (rc == Success)
     {
         FreeResource(stuff->id, RT_NONE);
 	return(client->noClientException);
@@ -1124,7 +1280,7 @@ ProcCloseFont(ClientPtr client)
     else
     {
 	client->errorValue = stuff->id;
-        return (BadFont);
+        return (rc == BadValue) ? BadFont : rc;
     }
 }
 
@@ -1167,14 +1323,14 @@ ProcQueryFont(ClientPtr client)
 	rlength = sizeof(xQueryFontReply) +
 	             FONTINFONPROPS(FONTCHARSET(pFont)) * sizeof(xFontProp)  +
 		     nprotoxcistructs * sizeof(xCharInfo);
-	reply = (xQueryFontReply *)xalloc(rlength);
+	reply = xcalloc(1, rlength);
 	if(!reply)
 	{
 	    return(BadAlloc);
 	}
 
 	reply->type = X_Reply;
-	reply->length = (rlength - sizeof(xGenericReply)) >> 2;
+	reply->length = bytes_to_int32(rlength - sizeof(xGenericReply));
 	reply->sequenceNumber = client->sequence;
 	QueryFont( pFont, reply, nprotoxcistructs);
 
@@ -1208,7 +1364,7 @@ ProcQueryTextExtents(ClientPtr client)
     if (rc != Success)
 	return (rc == BadValue) ? BadFont: rc;
 
-    length = client->req_len - (sizeof(xQueryTextExtentsReq) >> 2);
+    length = client->req_len - bytes_to_int32(sizeof(xQueryTextExtentsReq));
     length = length << 1;
     if (stuff->oddLength)
     {
@@ -1376,7 +1532,7 @@ ProcCreateGC(ClientPtr client)
     if (rc != Success)
 	return rc;
 
-    len = client->req_len -  (sizeof(xCreateGCReq) >> 2);
+    len = client->req_len -  bytes_to_int32(sizeof(xCreateGCReq));
     if (len != Ones(stuff->mask))
         return BadLength;
     pGC = (GC *)CreateGC(pDraw, stuff->mask, (XID *) &stuff[1], &error,
@@ -1401,7 +1557,7 @@ ProcChangeGC(ClientPtr client)
     if (result != Success)
 	return result;
 
-    len = client->req_len -  (sizeof(xChangeGCReq) >> 2);
+    len = client->req_len -  bytes_to_int32(sizeof(xChangeGCReq));
     if (len != Ones(stuff->mask))
         return BadLength;
 
@@ -1651,7 +1807,7 @@ ProcPolyPoint(ClientPtr client)
         return BadValue;
     }
     VALIDATE_DRAWABLE_AND_GC(stuff->drawable, pDraw, DixWriteAccess); 
-    npoint = ((client->req_len << 2) - sizeof(xPolyPointReq)) >> 2;
+    npoint = bytes_to_int32((client->req_len << 2) - sizeof(xPolyPointReq));
     if (npoint)
         (*pGC->ops->PolyPoint)(pDraw, pGC, stuff->coordMode, npoint,
 			  (xPoint *) &stuff[1]);
@@ -1674,7 +1830,7 @@ ProcPolyLine(ClientPtr client)
         return BadValue;
     }
     VALIDATE_DRAWABLE_AND_GC(stuff->drawable, pDraw, DixWriteAccess);
-    npoint = ((client->req_len << 2) - sizeof(xPolyLineReq)) >> 2;
+    npoint = bytes_to_int32((client->req_len << 2) - sizeof(xPolyLineReq));
     if (npoint > 1)
 	(*pGC->ops->Polylines)(pDraw, pGC, stuff->coordMode, npoint, 
 			      (DDXPointPtr) &stuff[1]);
@@ -1762,7 +1918,7 @@ ProcFillPoly(ClientPtr client)
     }
 
     VALIDATE_DRAWABLE_AND_GC(stuff->drawable, pDraw, DixWriteAccess);
-    things = ((client->req_len << 2) - sizeof(xFillPolyReq)) >> 2;
+    things = bytes_to_int32((client->req_len << 2) - sizeof(xFillPolyReq));
     if (things)
         (*pGC->ops->FillPolygon) (pDraw, pGC, stuff->shape,
 			 stuff->coordMode, things,
@@ -1906,8 +2062,8 @@ ProcPutImage(ClientPtr client)
     tmpImage = (char *)&stuff[1];
     lengthProto = length;
 	
-    if (((((lengthProto * stuff->height) + (unsigned)3) >> 2) + 
-	(sizeof(xPutImageReq) >> 2)) != client->req_len)
+    if ((bytes_to_int32(lengthProto * stuff->height) +
+	bytes_to_int32(sizeof(xPutImageReq))) != client->req_len)
 	return BadLength;
 
     ReformatImage (tmpImage, lengthProto * stuff->height, 
@@ -1926,9 +2082,11 @@ DoGetImage(ClientPtr client, int format, Drawable drawable,
            int x, int y, int width, int height, 
            Mask planemask, xGetImageReply **im_return)
 {
-    DrawablePtr		pDraw;
+    DrawablePtr		pDraw, pBoundingDraw;
     int			nlines, linesPerBuf, rc;
-    int	linesDone;
+    int			linesDone;
+    /* coordinates relative to the bounding drawable */
+    int			relx, rely;
     long		widthBytesLine, length;
     Mask		plane = 0;
     char		*pBuf;
@@ -1944,34 +2102,59 @@ DoGetImage(ClientPtr client, int format, Drawable drawable,
     if (rc != Success)
 	return rc;
 
+    memset(&xgi, 0, sizeof(xGetImageReply));
+
+    relx = x;
+    rely = y;
+
     if(pDraw->type == DRAWABLE_WINDOW)
     {
-      if( /* check for being viewable */
-	 !((WindowPtr) pDraw)->realized ||
-	  /* check for being on screen */
-         pDraw->x + x < 0 ||
- 	 pDraw->x + x + width > pDraw->pScreen->width ||
-         pDraw->y + y < 0 ||
-         pDraw->y + y + height > pDraw->pScreen->height ||
-          /* check for being inside of border */
-         x < - wBorderWidth((WindowPtr)pDraw) ||
-         x + width > wBorderWidth((WindowPtr)pDraw) + (int)pDraw->width ||
-         y < -wBorderWidth((WindowPtr)pDraw) ||
-         y + height > wBorderWidth ((WindowPtr)pDraw) + (int)pDraw->height
-        )
-	    return(BadMatch);
-	xgi.visual = wVisual (((WindowPtr) pDraw));
+	WindowPtr pWin = (WindowPtr)pDraw;
+
+	/* "If the drawable is a window, the window must be viewable ... or a
+	 * BadMatch error results" */
+	if (!pWin->viewable)
+	    return BadMatch;
+
+	relx += pDraw->x;
+	rely += pDraw->y;
+
+	if (pDraw->pScreen->GetWindowPixmap) {
+	    PixmapPtr pPix = (*pDraw->pScreen->GetWindowPixmap) (pWin);
+
+	    pBoundingDraw = &pPix->drawable;
+#ifdef COMPOSITE
+	    relx -= pPix->screen_x;
+	    rely -= pPix->screen_y;
+#endif
+	}
+	else
+	{
+	    pBoundingDraw = (DrawablePtr)WindowTable[pDraw->pScreen->myNum];
+	}
+
+	xgi.visual = wVisual (pWin);
     }
     else
     {
-      if(x < 0 ||
-         x+width > (int)pDraw->width ||
-         y < 0 ||
-         y+height > (int)pDraw->height
-        )
-	    return(BadMatch);
+	pBoundingDraw = pDraw;
 	xgi.visual = None;
     }
+
+    /* "If the drawable is a pixmap, the given rectangle must be wholly
+     *  contained within the pixmap, or a BadMatch error results.  If the
+     *  drawable is a window [...] it must be the case that if there were no
+     *  inferiors or overlapping windows, the specified rectangle of the window
+     *  would be fully visible on the screen and wholly contained within the
+     *  outside edges of the window, or a BadMatch error results."
+     *
+     * We relax the window case slightly to mean that the rectangle must exist
+     * within the bounds of the window's backing pixmap.  In particular, this
+     * means that a GetImage request may succeed or fail with BadMatch depending
+     * on whether any of its ancestor windows are redirected.  */
+    if(relx < 0 || relx + width > (int)pBoundingDraw->width ||
+       rely < 0 || rely + height > (int)pBoundingDraw->height)
+	return BadMatch;
 
     xgi.type = X_Reply;
     xgi.sequenceNumber = client->sequence;
@@ -1995,7 +2178,7 @@ DoGetImage(ClientPtr client, int format, Drawable drawable,
     xgi.length = length;
 
     if (im_return) {
-	pBuf = (char *)xalloc(sz_xGetImageReply + length);
+	pBuf = xcalloc(1, sz_xGetImageReply + length);
 	if (!pBuf)
 	    return (BadAlloc);
 	if (widthBytesLine == 0)
@@ -2006,7 +2189,7 @@ DoGetImage(ClientPtr client, int format, Drawable drawable,
 	*(xGetImageReply *)pBuf = xgi;
 	pBuf += sz_xGetImageReply;
     } else {
-	xgi.length = (xgi.length + 3) >> 2;
+	xgi.length = bytes_to_int32(xgi.length);
 	if (widthBytesLine == 0 || height == 0)
 	    linesPerBuf = 0;
 	else if (widthBytesLine >= IMAGE_BUFSIZE)
@@ -2033,7 +2216,7 @@ DoGetImage(ClientPtr client, int format, Drawable drawable,
 		length += widthBytesLine;
 	    }
 	}
-	if(!(pBuf = (char *) xalloc(length)))
+	if(!(pBuf = xcalloc(1, length)))
 	    return (BadAlloc);
 	WriteReplyToClient(client, sizeof (xGetImageReply), &xgi);
     }
@@ -2405,8 +2588,7 @@ ProcListInstalledColormaps(ClientPtr client)
     if (rc != Success)
 	goto out;
 
-    preply = (xListInstalledColormapsReply *) 
-		xalloc(sizeof(xListInstalledColormapsReply) +
+    preply = xalloc(sizeof(xListInstalledColormapsReply) +
 		     pWin->drawable.pScreen->maxInstalledCmaps *
 		     sizeof(Colormap));
     if(!preply)
@@ -2550,7 +2732,7 @@ ProcAllocColorCells (ClientPtr client)
 	}
 	nmasks = stuff->planes;
 	length = ((long)npixels + (long)nmasks) * sizeof(Pixel);
-	ppixels = (Pixel *)xalloc(length);
+	ppixels = xalloc(length);
 	if(!ppixels)
             return(BadAlloc);
 	pmasks = ppixels + npixels;
@@ -2569,7 +2751,7 @@ ProcAllocColorCells (ClientPtr client)
 #endif
 	{
 	    accr.type = X_Reply;
-	    accr.length = length >> 2;
+	    accr.length = bytes_to_int32(length);
 	    accr.sequenceNumber = client->sequence;
 	    accr.nPixels = npixels;
 	    accr.nMasks = nmasks;
@@ -2619,7 +2801,7 @@ ProcAllocColorPlanes(ClientPtr client)
 	acpr.sequenceNumber = client->sequence;
 	acpr.nPixels = npixels;
 	length = (long)npixels * sizeof(Pixel);
-	ppixels = (Pixel *)xalloc(length);
+	ppixels = xalloc(length);
 	if(!ppixels)
             return(BadAlloc);
 	if( (rc = AllocColorPlanes(client->index, pcmp, npixels,
@@ -2633,7 +2815,7 @@ ProcAllocColorPlanes(ClientPtr client)
 	    else
 	        return rc;
 	}
-	acpr.length = length >> 2;
+	acpr.length = bytes_to_int32(length);
 #ifdef PANORAMIX
 	if (noPanoramiXExtension || !pcmp->pScreen->myNum)
 #endif
@@ -2668,7 +2850,7 @@ ProcFreeColors(ClientPtr client)
 
 	if(pcmp->flags & AllAllocated)
 	    return(BadAccess);
-	count = ((client->req_len << 2)- sizeof(xFreeColorsReq)) >> 2;
+	count = bytes_to_int32((client->req_len << 2) - sizeof(xFreeColorsReq));
 	rc = FreeColors(pcmp, client->index, count,
 	    (Pixel *)&stuff[1], (Pixel)stuff->planeMask);
         if (client->noClientException != Success)
@@ -2771,8 +2953,8 @@ ProcQueryColors(ClientPtr client)
 	xrgb 			*prgbs;
 	xQueryColorsReply	qcr;
 
-	count = ((client->req_len << 2) - sizeof(xQueryColorsReq)) >> 2;
-	prgbs = (xrgb *)xalloc(count * sizeof(xrgb));
+	count = bytes_to_int32((client->req_len << 2) - sizeof(xQueryColorsReq));
+	prgbs = xcalloc(1, count * sizeof(xrgb));
 	if(!prgbs && count)
             return(BadAlloc);
 	if( (rc = QueryColors(pcmp, count, (Pixel *)&stuff[1], prgbs)) )
@@ -2786,8 +2968,9 @@ ProcQueryColors(ClientPtr client)
 	        return rc;
 	    }
 	}
+	memset(&qcr, 0, sizeof(xQueryColorsReply));
 	qcr.type = X_Reply;
-	qcr.length = (count * sizeof(xrgb)) >> 2;
+	qcr.length = bytes_to_int32(count * sizeof(xrgb));
 	qcr.sequenceNumber = client->sequence;
 	qcr.nColors = count;
 	WriteReplyToClient(client, sizeof(xQueryColorsReply), &qcr);
@@ -3013,6 +3196,7 @@ ProcQueryBestSize (ClientPtr client)
 	return rc;
     (* pScreen->QueryBestSize)(stuff->class, &stuff->width,
 			       &stuff->height, pScreen);
+    memset(&reply, 0, sizeof(xQueryBestSizeReply));
     reply.type = X_Reply;
     reply.length = 0;
     reply.sequenceNumber = client->sequence;
@@ -3156,7 +3340,7 @@ ProcListHosts(ClientPtr client)
     reply.type = X_Reply;
     reply.sequenceNumber = client->sequence;
     reply.nHosts = nHosts;
-    reply.length = len >> 2;
+    reply.length = bytes_to_int32(len);
     WriteReplyToClient(client, sizeof(xListHostsReply), &reply);
     if (nHosts)
     {
@@ -3289,7 +3473,7 @@ ProcGetFontPath(ClientPtr client)
 
     reply.type = X_Reply;
     reply.sequenceNumber = client->sequence;
-    reply.length = (stringLens + numpaths + 3) >> 2;
+    reply.length = bytes_to_int32(stringLens + numpaths);
     reply.nPaths = numpaths;
 
     WriteReplyToClient(client, sizeof(xGetFontPathReply), &reply);
@@ -3480,41 +3664,16 @@ KillAllClients(void)
 
 void InitClient(ClientPtr client, int i, pointer ospriv)
 {
+    memset(client, 0, sizeof(*client));
     client->index = i;
-    client->sequence = 0; 
     client->clientAsMask = ((Mask)i) << CLIENTOFFSET;
-    client->clientGone = FALSE;
     client->closeDownMode = i ? DestroyAll : RetainPermanent;
-    client->numSaved = 0;
-    client->saveSet = (SaveSetElt *)NULL;
-    client->noClientException = Success;
-#ifdef DEBUG
-    client->requestLogIndex = 0;
-#endif
     client->requestVector = InitialVector;
     client->osPrivate = ospriv;
-    client->swapped = FALSE;
-    client->big_requests = FALSE;
-    client->priority = 0;
-    client->clientState = ClientStateInitial;
-    client->devPrivates = NULL;
-#ifdef XKB
-    if (!noXkbExtension) {
-	client->xkbClientFlags = 0;
-	client->mapNotifyMask = 0;
-	client->newKeyboardNotifyMask = 0;
-	client->vMinor = client->vMajor = 0;
-	QueryMinMaxKeyCodes(&client->minKC,&client->maxKC);
-    }
-#endif
-    client->replyBytesRemaining = 0;
-    client->fontResFunc = NULL;
-    client->smart_priority = 0;
+    QueryMinMaxKeyCodes(&client->minKC,&client->maxKC);
     client->smart_start_tick = SmartScheduleTime;
     client->smart_stop_tick = SmartScheduleTime;
     client->smart_check_tick = SmartScheduleTime;
-
-    client->clientPtr = NULL;
 }
 
 /************************
@@ -3533,7 +3692,7 @@ ClientPtr NextAvailableClient(pointer ospriv)
     i = nextFreeClientID;
     if (i == MAXCLIENTS)
 	return (ClientPtr)NULL;
-    clients[i] = client = (ClientPtr)xalloc(sizeof(ClientRec));
+    clients[i] = client = xalloc(sizeof(ClientRec));
     if (!client)
 	return (ClientPtr)NULL;
     InitClient(client, i, ospriv);
@@ -3543,7 +3702,7 @@ ClientPtr NextAvailableClient(pointer ospriv)
 	return (ClientPtr)NULL;
     }
     data.reqType = 1;
-    data.length = (sz_xReq + sz_xConnClientPrefix) >> 2;
+    data.length = bytes_to_int32(sz_xReq + sz_xConnClientPrefix);
     if (!InsertFakeRequest(client, (char *)&data, sz_xReq))
     {
 	FreeClientResources(client);
@@ -3583,8 +3742,8 @@ ProcInitialConnection(ClientPtr client)
 	SwapConnClientPrefix(prefix);
     }
     stuff->reqType = 2;
-    stuff->length += ((prefix->nbytesAuthProto + (unsigned)3) >> 2) +
-		     ((prefix->nbytesAuthString + (unsigned)3) >> 2);
+    stuff->length += bytes_to_int32(prefix->nbytesAuthProto) +
+		     bytes_to_int32(prefix->nbytesAuthString);
     if (client->swapped)
     {
 	swaps(&stuff->length, whichbyte);
@@ -3608,7 +3767,7 @@ SendConnSetup(ClientPtr client, char *reason)
 
 	csp.success = xFalse;
 	csp.lengthReason = strlen(reason);
-	csp.length = (csp.lengthReason + (unsigned)3) >> 2;
+	csp.length = bytes_to_int32(csp.lengthReason);
 	csp.majorVersion = X_PROTOCOL;
 	csp.minorVersion = X_PROTOCOL_REVISION;
 	if (client->swapped)
@@ -3699,7 +3858,7 @@ ProcEstablishConnection(ClientPtr client)
 
     prefix = (xConnClientPrefix *)((char *)stuff + sz_xReq);
     auth_proto = (char *)prefix + sz_xConnClientPrefix;
-    auth_string = auth_proto + ((prefix->nbytesAuthProto + 3) & ~3);
+    auth_string = auth_proto + pad_to_int32(prefix->nbytesAuthProto);
     if ((prefix->majorVersion != X_PROTOCOL) ||
 	(prefix->minorVersion != X_PROTOCOL_REVISION))
 	reason = "Protocol version mismatch";
@@ -3724,12 +3883,13 @@ ProcEstablishConnection(ClientPtr client)
     return(client->noClientException);
 }
 
-_X_EXPORT void
+void
 SendErrorToClient(ClientPtr client, unsigned majorCode, unsigned minorCode, 
                   XID resId, int errorCode)
 {
     xError rep;
 
+    memset(&rep, 0, sizeof(xError));
     rep.type = X_Error;
     rep.sequenceNumber = client->sequence;
     rep.errorCode = errorCode;
@@ -3744,4 +3904,173 @@ void
 MarkClientException(ClientPtr client)
 {
     client->noClientException = -1;
+}
+
+/*
+ * This array encodes the answer to the question "what is the log base 2
+ * of the number of pixels that fit in a scanline pad unit?"
+ * Note that ~0 is an invalid entry (mostly for the benefit of the reader).
+ */
+static int answer[6][4] = {
+	/* pad   pad   pad     pad*/
+	/*  8     16    32    64 */
+
+	{   3,     4,    5 ,   6 },	/* 1 bit per pixel */
+	{   1,     2,    3 ,   4 },	/* 4 bits per pixel */
+	{   0,     1,    2 ,   3 },	/* 8 bits per pixel */
+	{   ~0,    0,    1 ,   2 },	/* 16 bits per pixel */
+	{   ~0,    ~0,   0 ,   1 },	/* 24 bits per pixel */
+	{   ~0,    ~0,   0 ,   1 }	/* 32 bits per pixel */
+};
+
+/*
+ * This array gives the answer to the question "what is the first index for
+ * the answer array above given the number of bits per pixel?"
+ * Note that ~0 is an invalid entry (mostly for the benefit of the reader).
+ */
+static int indexForBitsPerPixel[ 33 ] = {
+	~0, 0, ~0, ~0,	/* 1 bit per pixel */
+	1, ~0, ~0, ~0,	/* 4 bits per pixel */
+	2, ~0, ~0, ~0,	/* 8 bits per pixel */
+	~0,~0, ~0, ~0,
+	3, ~0, ~0, ~0,	/* 16 bits per pixel */
+	~0,~0, ~0, ~0,
+	4, ~0, ~0, ~0,	/* 24 bits per pixel */
+	~0,~0, ~0, ~0,
+	5		/* 32 bits per pixel */
+};
+
+/*
+ * This array gives the bytesperPixel value for cases where the number
+ * of bits per pixel is a multiple of 8 but not a power of 2.
+ */
+static int answerBytesPerPixel[ 33 ] = {
+	~0, 0, ~0, ~0,	/* 1 bit per pixel */
+	0, ~0, ~0, ~0,	/* 4 bits per pixel */
+	0, ~0, ~0, ~0,	/* 8 bits per pixel */
+	~0,~0, ~0, ~0,
+	0, ~0, ~0, ~0,	/* 16 bits per pixel */
+	~0,~0, ~0, ~0,
+	3, ~0, ~0, ~0,	/* 24 bits per pixel */
+	~0,~0, ~0, ~0,
+	0		/* 32 bits per pixel */
+};
+
+/*
+ * This array gives the answer to the question "what is the second index for
+ * the answer array above given the number of bits per scanline pad unit?"
+ * Note that ~0 is an invalid entry (mostly for the benefit of the reader).
+ */
+static int indexForScanlinePad[ 65 ] = {
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	 0, ~0, ~0, ~0,	/* 8 bits per scanline pad unit */
+	~0, ~0, ~0, ~0,
+	 1, ~0, ~0, ~0,	/* 16 bits per scanline pad unit */
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	 2, ~0, ~0, ~0,	/* 32 bits per scanline pad unit */
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	~0, ~0, ~0, ~0,
+	 3		/* 64 bits per scanline pad unit */
+};
+
+/*
+	grow the array of screenRecs if necessary.
+	call the device-supplied initialization procedure
+with its screen number, a pointer to its ScreenRec, argc, and argv.
+	return the number of successfully installed screens.
+
+*/
+
+int
+AddScreen(
+    Bool	(* pfnInit)(
+	int /*index*/,
+	ScreenPtr /*pScreen*/,
+	int /*argc*/,
+	char ** /*argv*/
+		),
+    int argc,
+    char **argv)
+{
+
+    int i;
+    int scanlinepad, format, depth, bitsPerPixel, j, k;
+    ScreenPtr pScreen;
+
+    i = screenInfo.numScreens;
+    if (i == MAXSCREENS)
+	return -1;
+
+    pScreen = (ScreenPtr) xcalloc(1, sizeof(ScreenRec));
+    if (!pScreen)
+	return -1;
+
+    pScreen->devPrivates = NULL;
+    pScreen->myNum = i;
+    pScreen->totalPixmapSize = BitmapBytePad(sizeof(PixmapRec)*8);
+    pScreen->ClipNotify = 0;	/* for R4 ddx compatibility */
+    pScreen->CreateScreenResources = 0;
+
+    /*
+     * This loop gets run once for every Screen that gets added,
+     * but thats ok.  If the ddx layer initializes the formats
+     * one at a time calling AddScreen() after each, then each
+     * iteration will make it a little more accurate.  Worst case
+     * we do this loop N * numPixmapFormats where N is # of screens.
+     * Anyway, this must be called after InitOutput and before the
+     * screen init routine is called.
+     */
+    for (format=0; format<screenInfo.numPixmapFormats; format++)
+    {
+	depth = screenInfo.formats[format].depth;
+	bitsPerPixel = screenInfo.formats[format].bitsPerPixel;
+	scanlinepad = screenInfo.formats[format].scanlinePad;
+	j = indexForBitsPerPixel[ bitsPerPixel ];
+	k = indexForScanlinePad[ scanlinepad ];
+	PixmapWidthPaddingInfo[ depth ].padPixelsLog2 = answer[j][k];
+	PixmapWidthPaddingInfo[ depth ].padRoundUp =
+	    (scanlinepad/bitsPerPixel) - 1;
+	j = indexForBitsPerPixel[ 8 ]; /* bits per byte */
+	PixmapWidthPaddingInfo[ depth ].padBytesLog2 = answer[j][k];
+	PixmapWidthPaddingInfo[ depth ].bitsPerPixel = bitsPerPixel;
+	if (answerBytesPerPixel[bitsPerPixel])
+	{
+	    PixmapWidthPaddingInfo[ depth ].notPower2 = 1;
+	    PixmapWidthPaddingInfo[ depth ].bytesPerPixel =
+		answerBytesPerPixel[bitsPerPixel];
+	}
+	else
+	{
+	    PixmapWidthPaddingInfo[ depth ].notPower2 = 0;
+	}
+    }
+
+    /* This is where screen specific stuff gets initialized.  Load the
+       screen structure, call the hardware, whatever.
+       This is also where the default colormap should be allocated and
+       also pixel values for blackPixel, whitePixel, and the cursor
+       Note that InitScreen is NOT allowed to modify argc, argv, or
+       any of the strings pointed to by argv.  They may be passed to
+       multiple screens.
+    */
+    pScreen->rgf = ~0L;  /* there are no scratch GCs yet*/
+    WindowTable[i] = NullWindow;
+    screenInfo.screens[i] = pScreen;
+    screenInfo.numScreens++;
+    if (!(*pfnInit)(i, pScreen, argc, argv))
+    {
+	dixFreePrivates(pScreen->devPrivates);
+	xfree(pScreen);
+	screenInfo.numScreens--;
+	return -1;
+    }
+    return i;
 }

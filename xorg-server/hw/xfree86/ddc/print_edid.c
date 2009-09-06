@@ -3,22 +3,23 @@
  * Copyright 2007 Red Hat, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software")
- * to deal in the software without restriction, including without limitation
- * on the rights to use, copy, modify, merge, publish, distribute, sub
- * license, and/or sell copies of the Software, and to permit persons to whom
- * them Software is furnished to do so, subject to the following conditions:
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice (including the next
  * paragraph) shall be included in all copies or substantial portions of the
  * Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTIBILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  IN NO EVENT SHALL
- * THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  *
  * print_edid.c: print out all information retrieved from display device  
  */
@@ -250,7 +251,7 @@ print_established_timings(int scrnIndex, struct established_timings *t)
     if (c&0x02) xf86DrvMsg(scrnIndex,X_INFO,"1024x768@75Hz\n");
     if (c&0x01) xf86DrvMsg(scrnIndex,X_INFO,"1280x1024@75Hz\n");
     c=t->t_manu;
-    if (c&0x80) xf86DrvMsg(scrnIndex,X_INFO,"1152x870@75Hz\n");
+    if (c&0x80) xf86DrvMsg(scrnIndex,X_INFO,"1152x864@75Hz\n");
     xf86DrvMsg(scrnIndex,X_INFO,"Manufacturer's mask: %X\n",c&0x7F);
 }
   
@@ -397,8 +398,12 @@ print_detailed_monitor_section(int scrnIndex,
 		if (r->supported_scaling & SCALING_VSTRETCH)
 		    xf86ErrorF(" vstretch");
 		xf86ErrorF("\n");
-		xf86DrvMsg(scrnIndex, X_INFO, "Preferred refresh rate: %d\n",
-			   r->preferred_refresh);
+		if (r->preferred_refresh)
+		    xf86DrvMsg(scrnIndex, X_INFO, "Preferred refresh rate: %d\n",
+			       r->preferred_refresh);
+		else
+		    xf86DrvMsg(scrnIndex, X_INFO, "Buggy monitor, no preferred "
+			       "refresh rate given\n");
 	    } else if (r->max_clock != 0) {
 		xf86ErrorF(" PixClock max %i MHz\n", r->max_clock);
 	    } else {
@@ -445,7 +450,7 @@ print_detailed_monitor_section(int scrnIndex,
 	    break;
 	}
 	if (m[i].type >= DS_VENDOR && m[i].type <= DS_VENDOR_MAX) {
-	    xf86DrvMsg(scrnIndex, X_WARNING,
+	    xf86DrvMsg(scrnIndex, X_INFO,
 		       "Unknown vendor-specific block %hx\n",
 		       m[i].type - DS_VENDOR);
 	}

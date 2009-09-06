@@ -425,7 +425,7 @@ static CGLError handleRendererDescriptions(CGLRendererInfoObj info, GLint r,
 
     handleAccumulationModes(c, flags);
     
-    return 0;
+    return kCGLNoError;
 }
 
 static void initCapabilities(struct glCapabilities *cap) {
@@ -491,56 +491,36 @@ void freeGlCapabilities(struct glCapabilities *cap) {
     cap->configurations = NULL;    
 }
 
-enum { MAX_DISPLAYS = 3 };
-
 /*Return true if an error occured. */
 bool getGlCapabilities(struct glCapabilities *cap) {
-    CGDirectDisplayID dspys[MAX_DISPLAYS];
-    CGDisplayErr err;
-    CGOpenGLDisplayMask displayMask;
-    CGDisplayCount i, displayCount = 0;
+	CGLRendererInfoObj info;
+    CGLError err;
+	GLint numRenderers = 0, r;
 
     initCapabilities(cap);
-    
-    err = CGGetActiveDisplayList(MAX_DISPLAYS, dspys, &displayCount);
+
+	err = CGLQueryRendererInfo((GLuint)-1, &info, &numRenderers);
     if(err) {
-	fprintf(stderr, "CGGetActiveDisplayList error: %s\n", CGLErrorString(err));
-	return true;
-    }
- 
-    for(i = 0; i < displayCount; ++i) {
-        displayMask = CGDisplayIDToOpenGLDisplayMask(dspys[i]);
-       
-	CGLRendererInfoObj info;
-	GLint numRenderers = 0, r, renderCount = 0;
-	    
-	err = CGLQueryRendererInfo(displayMask, &info, &numRenderers);
-
-        if(err) {
 	    fprintf(stderr, "CGLQueryRendererInfo error: %s\n", CGLErrorString(err));
-	    fprintf(stderr, "trying to continue...\n");
-	    continue;
+        return err;
 	}
-			
-	CGLDescribeRenderer(info, 0, kCGLRPRendererCount, &renderCount);
 
-	for(r = 0; r < renderCount; ++r) {
-	    CGLError derr;
+	for(r = 0; r < numRenderers; r++) {
 	    struct glCapabilitiesConfig tmpconf, *conf;
 
 	    initConfig(&tmpconf);
 
-	    derr = handleRendererDescriptions(info, r, &tmpconf);
-	    if(derr) {
-		fprintf(stderr, "error: %s\n", CGLErrorString(derr));
-		fprintf(stderr, "trying to continue...\n");
-		continue;
+	    err = handleRendererDescriptions(info, r, &tmpconf);
+	    if(err) {
+            fprintf(stderr, "handleRendererDescriptions returned error: %s\n", CGLErrorString(err));
+            fprintf(stderr, "trying to continue...\n");
+            continue;
 	    }
 
 	    conf = malloc(sizeof(*conf));
 	    if(NULL == conf) {
-		perror("malloc");
-		abort();
+            perror("malloc");
+            abort();
 	    }
 
 	    /* Copy the struct. */
@@ -551,9 +531,8 @@ bool getGlCapabilities(struct glCapabilities *cap) {
 	    cap->configurations = conf;
 	}
 
-    	CGLDestroyRendererInfo(info);
-    }
-    
+    CGLDestroyRendererInfo(info);
+
     /* No error occured.  We are done. */
-    return false;
+    return kCGLNoError;
 }

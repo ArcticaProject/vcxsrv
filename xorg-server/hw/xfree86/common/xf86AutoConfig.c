@@ -144,11 +144,6 @@ static int
 videoPtrToDriverList(struct pci_device *dev,
 		     char *returnList[], int returnListMax)
 {
-    /*
-     * things not handled yet:
-     * cyrix/nsc.  should be merged into geode anyway.
-     * xgi.
-     */
     int i;
     /* Add more entries here if we ever return more than 4 drivers for
        any device */
@@ -156,11 +151,27 @@ videoPtrToDriverList(struct pci_device *dev,
 
     switch (dev->vendor_id)
     {
+	/* AMD Geode LX */
 	case 0x1022:
-	    if (dev->device_id == 0x2081) {
+	    if (dev->device_id == 0x2081)
 		driverList[0] = "geode";
-		driverList[1] = "amd";
-	    }
+	    break;
+	/* older Geode products acquired by AMD still carry an NSC vendor_id */
+	case 0x100B:
+	    if (dev->device_id == 0x0030) {
+		/* NSC Geode GX2 specifically ... */
+		driverList[0] = "geode";
+		/* GX2 support started its life in the NSC tree and was later 
+		   forked by AMD for GEODE so we keep it as a backup */
+		driverList[1] = "nsc";
+	    } else 
+		/* ... or any other NSC Geode e.g. SC series */
+		driverList[0] = "nsc";
+	    break;
+	/* Cyrix Geode GX1 */
+	case 0x1078:
+	    if (dev->device_id == 0x0104)
+		driverList[0] = "cyrix";
 	    break;
 	case 0x1142:		    driverList[0] = "apm"; break;
 	case 0xedd8:		    driverList[0] = "ark"; break;
@@ -168,18 +179,21 @@ videoPtrToDriverList(struct pci_device *dev,
 	case 0x1002:		    driverList[0] = "ati"; break;
 	case 0x102c:		    driverList[0] = "chips"; break;
 	case 0x1013:		    driverList[0] = "cirrus"; break;
+	case 0x3d3d:		    driverList[0] = "glint"; break;
+	case 0x105d:		    driverList[0] = "i128"; break;
 	case 0x8086:
 	    if ((dev->device_id == 0x00d1) || (dev->device_id == 0x7800)) {
 		driverList[0] = "i740";
+            } else if (dev->device_id == 0x8108) {
+                break; /* "hooray" for poulsbo */
 	    } else {
 		driverList[0] = "intel";
-		driverList[1] = "i810";
 	    }
 	    break;
 	case 0x102b:		    driverList[0] = "mga";	break;
 	case 0x10c8:		    driverList[0] = "neomagic"; break;
-	case 0x105d:		    driverList[0] = "i128";	break;
 	case 0x10de: case 0x12d2:   driverList[0] = "nv";	break;
+	case 0x1106:		    driverList[0] = "openchrome"; break;
 	case 0x1163:		    driverList[0] = "rendition"; break;
 	case 0x5333:
 	    switch (dev->device_id)
@@ -202,11 +216,11 @@ videoPtrToDriverList(struct pci_device *dev,
 	    else
 	        driverList[0] = "tdfx";
 	    break;
-	case 0x3d3d:		    driverList[0] = "glint";	break;
+	case 0x1011:		    driverList[0] = "tga"; break;
 	case 0x1023:		    driverList[0] = "trident"; break;
-	case 0x100c:		    driverList[0] = "tseng";	break;
-	case 0x1106:		    driverList[0] = "openchrome"; break;
-	case 0x15ad:		    driverList[0] = "vmware";	break;
+	case 0x100c:		    driverList[0] = "tseng"; break;
+	case 0x80ee:		    driverList[0] = "vboxvideo"; break;
+	case 0x15ad:		    driverList[0] = "vmware"; break;
 	case 0x18ca:
 	    if (dev->device_id == 0x47)
 		driverList[0] = "xgixp";
@@ -269,7 +283,7 @@ xf86AutoConfig(void)
     return (ret == CONFIG_OK);
 }
 
-int 
+static int
 xchomp(char *line)
 {
     size_t len = 0;
@@ -283,46 +297,6 @@ xchomp(char *line)
         line[len - 1] = '\0';
     }
     return 0;
-}
-
-GDevPtr
-autoConfigDevice(GDevPtr preconf_device)
-{
-    GDevPtr ptr = NULL;
-
-    if (!xf86configptr) {
-        return NULL;
-    }
-
-    /* If there's a configured section with no driver chosen, use it */
-    if (preconf_device) {
-        ptr = preconf_device;
-    } else {
-        ptr = xcalloc(1, sizeof(GDevRec));
-        if (!ptr) {
-            return NULL;
-        }
-        ptr->chipID = -1;
-        ptr->chipRev = -1;
-        ptr->irq = -1;
-
-        ptr->active = TRUE;
-        ptr->claimed = FALSE;
-        ptr->identifier = "Autoconfigured Video Device";
-        ptr->driver = NULL;
-    }
-    if (!ptr->driver) {
-        ptr->driver = chooseVideoDriver();
-    }
-
-    /* TODO Handle multiple screen sections */
-    if (xf86ConfigLayout.screens && !xf86ConfigLayout.screens->screen->device) {   
-        xf86ConfigLayout.screens->screen->device = ptr;
-        ptr->myScreenSection = xf86ConfigLayout.screens->screen;
-    }
-    xf86Msg(X_DEFAULT, "Assigned the driver to the xf86ConfigLayout\n");
-
-    return ptr;
 }
 
 #ifdef __linux__
@@ -448,8 +422,25 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
     if (xf86Info.consoleFd >= 0) {
 	struct vis_identifier   visid;
 	const char *cp;
+	extern char xf86SolarisFbDev[PATH_MAX];
+	int iret;
 
-	if (ioctl(xf86Info.consoleFd, VIS_GETIDENTIFIER, &visid) >= 0) {
+	SYSCALL(iret = ioctl(xf86Info.consoleFd, VIS_GETIDENTIFIER, &visid));
+	if (iret < 0) {
+	    int fbfd;
+
+	    fbfd = open(xf86SolarisFbDev, O_RDONLY);
+	    if (fbfd >= 0) {
+		SYSCALL(iret = ioctl(fbfd, VIS_GETIDENTIFIER, &visid));
+		close(fbfd);
+	    }
+	}
+
+	if (iret < 0) {
+	    xf86Msg(X_WARNING,
+		    "could not get frame buffer identifier from %s\n",
+		    xf86SolarisFbDev);
+	} else {
 	    xf86Msg(X_PROBED, "console driver: %s\n", visid.name);
 
 	    /* Special case from before the general case was set */
@@ -529,7 +520,7 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
     }
 }
 
-char*
+static char*
 chooseVideoDriver(void)
 {
     char *chosen_driver = NULL;
@@ -551,4 +542,44 @@ chooseVideoDriver(void)
     }
 
     return chosen_driver;
+}
+
+GDevPtr
+autoConfigDevice(GDevPtr preconf_device)
+{
+    GDevPtr ptr = NULL;
+
+    if (!xf86configptr) {
+        return NULL;
+    }
+
+    /* If there's a configured section with no driver chosen, use it */
+    if (preconf_device) {
+        ptr = preconf_device;
+    } else {
+        ptr = xcalloc(1, sizeof(GDevRec));
+        if (!ptr) {
+            return NULL;
+        }
+        ptr->chipID = -1;
+        ptr->chipRev = -1;
+        ptr->irq = -1;
+
+        ptr->active = TRUE;
+        ptr->claimed = FALSE;
+        ptr->identifier = "Autoconfigured Video Device";
+        ptr->driver = NULL;
+    }
+    if (!ptr->driver) {
+        ptr->driver = chooseVideoDriver();
+    }
+
+    /* TODO Handle multiple screen sections */
+    if (xf86ConfigLayout.screens && !xf86ConfigLayout.screens->screen->device) {
+        xf86ConfigLayout.screens->screen->device = ptr;
+        ptr->myScreenSection = xf86ConfigLayout.screens->screen;
+    }
+    xf86Msg(X_DEFAULT, "Assigned the driver to the xf86ConfigLayout\n");
+
+    return ptr;
 }

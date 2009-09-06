@@ -56,29 +56,6 @@
 #include "Pci.h"
 #include <dirent.h>
 
-/*
- * linux platform specific PCI access functions -- using /proc/bus/pci
- * needs kernel version 2.2.x
- */
-static ADDRESS linuxTransAddrBusToHost(PCITAG tag, PciAddrType type, ADDRESS addr);
-#if defined(__powerpc__)
-static ADDRESS linuxPpcBusAddrToHostAddr(PCITAG, PciAddrType, ADDRESS);
-#endif
-
-static pciBusFuncs_t linuxFuncs0 = {
-#if defined(__powerpc__)
-/* pciAddrBusToHost */	linuxPpcBusAddrToHostAddr,
-#else
-/* linuxTransAddrBusToHost is busted on sparc64 but the PCI rework tree
- * makes it all moot, so we kludge it for now */
-#if defined(__sparc__)
-/* pciAddrBusToHost */  pciAddrNOOP,
-#else
-/* pciAddrBusToHost */	linuxTransAddrBusToHost,
-#endif /* __sparc64__ */
-#endif
-};
-
 static const struct pci_id_match match_host_bridge = {
     PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY, PCI_MATCH_ANY,
     (PCI_CLASS_BRIDGE << 16) | (PCI_SUBCLASS_BRIDGE_HOST << 8),
@@ -91,16 +68,7 @@ static pointer DomainMmappedIO[MAX_DOMAINS];
 void
 linuxPciInit(void)
 {
-    struct stat st;
-
     memset(DomainMmappedIO, 0, sizeof(DomainMmappedIO));
-
-    if (-1 == stat("/proc/bus/pci", &st)) {
-	/* when using this as default for all linux architectures,
-	   we'll need a fallback for 2.0 kernels here */
-	return;
-    }
-    pciBusFuncs	   = &linuxFuncs0;
 }
 
 /**
@@ -176,53 +144,6 @@ linuxPciOpenFile(struct pci_device *dev, Bool write)
 
     return fd;
 }
-
-/*
- * This function will convert a BAR address into a host address
- * suitable for passing into the mmap function of a /proc/bus
- * device.
- */
-ADDRESS linuxTransAddrBusToHost(PCITAG tag, PciAddrType type, ADDRESS addr)
-{
-    ADDRESS ret = xf86GetOSOffsetFromPCI(tag, PCI_MEM|PCI_IO, addr);
-
-    if (ret)
-	return ret;
-
-    /*
-     * if it is not a BAR address, it must be legacy, (or wrong)
-     * return it as is..
-     */
-    return addr;
-}
-
-
-#if defined(__powerpc__)
-
-#ifndef __NR_pciconfig_iobase
-#define __NR_pciconfig_iobase   200
-#endif
-
-static ADDRESS
-linuxPpcBusAddrToHostAddr(PCITAG tag, PciAddrType type, ADDRESS addr)
-{
-    if (type == PCI_MEM)
-    {
-	ADDRESS membase = syscall(__NR_pciconfig_iobase, 1,
-		    PCI_BUS_FROM_TAG(tag), PCI_DFN_FROM_TAG(tag));
-	return (addr + membase);
-    }
-    else if (type == PCI_IO)
-    {
-	ADDRESS iobase = syscall(__NR_pciconfig_iobase, 2,
-		    PCI_BUS_FROM_TAG(tag), PCI_DFN_FROM_TAG(tag));
-	return (addr + iobase);
-    }
-    else return addr;
-}
-
-#endif /* __powerpc__ */
-
 
 /*
  * Compiling the following simply requires the presence of <linux/pci.c>.
@@ -464,7 +385,7 @@ linuxOpenLegacy(struct pci_device *dev, char *name)
  * returns a pointer to it.  The pointer is saved for future use if it's in
  * the legacy ISA memory space (memory in a domain between 0 and 1MB).
  */
-_X_EXPORT pointer
+pointer
 xf86MapDomainMemory(int ScreenNum, int Flags, struct pci_device *dev,
 		    ADDRESS Base, unsigned long Size)
 {
@@ -529,60 +450,5 @@ xf86MapLegacyIO(struct pci_device *dev)
     }
 
     return (IOADDRESS)DomainMmappedIO[domain];
-}
-
-resPtr
-xf86AccResFromOS(resPtr pRes)
-{
-    struct pci_device *dev;
-    struct pci_device_iterator *iter;
-    resRange      range;
-
-    iter = pci_id_match_iterator_create(& match_host_bridge);
-    while ((dev = pci_device_next(iter)) != NULL) {
-	const int domain = dev->domain;
-	const struct pciSizes * const sizes = linuxGetSizesStruct(dev);
-
-	/*
-	 * At minimum, the top and bottom resources must be claimed, so
-	 * that resources that are (or appear to be) unallocated can be
-	 * relocated.
-	 */
-	RANGE(range, 0x00000000u, 0x0009ffffu,
-	      RANGE_TYPE(ResExcMemBlock, domain));
-	pRes = xf86AddResToList(pRes, &range, -1);
-	RANGE(range, 0x000c0000u, 0x000effffu,
-	      RANGE_TYPE(ResExcMemBlock, domain));
-	pRes = xf86AddResToList(pRes, &range, -1);
-	RANGE(range, 0x000f0000u, 0x000fffffu,
-	      RANGE_TYPE(ResExcMemBlock, domain));
-	pRes = xf86AddResToList(pRes, &range, -1);
-
-	RANGE(range, (ADDRESS)(sizes->mem_size - 1), 
-	      (ADDRESS)(sizes->mem_size - 1),
-	      RANGE_TYPE(ResExcMemBlock, domain));
-	pRes = xf86AddResToList(pRes, &range, -1);
-
-	RANGE(range, 0x00000000u, 0x00000000u,
-	      RANGE_TYPE(ResExcIoBlock, domain));
-	pRes = xf86AddResToList(pRes, &range, -1);
-	RANGE(range, (IOADDRESS)(sizes->io_size - 1), 
-	      (IOADDRESS)(sizes->io_size - 1),
-	      RANGE_TYPE(ResExcIoBlock, domain));
-	pRes = xf86AddResToList(pRes, &range, -1);
-
-	/* FIXME: The old code reserved domain 0 for a special purpose.  The
-	 * FIXME: new code just uses whatever domains the kernel tells it,
-	 * FIXME: but there is no way to get a domain < 0.  What should
-	 * FIXME: happen here?
-	 *
-	if (domain <= 0)
-	  break;
-	 */
-    }
-
-    pci_iterator_destroy(iter);
-
-    return pRes;
 }
 

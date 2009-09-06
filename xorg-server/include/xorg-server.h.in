@@ -100,14 +100,8 @@
 /* Support X Input extension */
 #undef XINPUT
 
-/* Build XKB */
-#undef XKB
-
-/* Enable XKB per default */
-#undef XKB_DFLT_DISABLED
-
-/* Build XKB server */
-#undef XKB_IN_SERVER
+/* XKB default rules */
+#undef XKB_DFLT_RULES
 
 /* Support loadable input and output drivers */
 #undef XLOADABLE
@@ -160,9 +154,6 @@
 /* Location of configuration file */
 #undef __XCONFIGFILE__
 
-/* XKB default rules */
-#undef __XKBDEFRULES__
-
 /* Name of X server */
 #undef __XSERVERNAME__
 
@@ -174,9 +165,6 @@
 
 /* System is BSD-like */
 #undef CSRG_BASED
-
-/* Solaris 8 or later? */
-#undef __SOL8__
 
 /* System has PC console */
 #undef PCCONS_SUPPORT
@@ -195,5 +183,8 @@
 
 /* Use libpciaccess */
 #undef XSERVER_LIBPCIACCESS
+
+/* X Access Control Extension */
+#undef XACE
 
 #endif /* _XORG_SERVER_H_ */

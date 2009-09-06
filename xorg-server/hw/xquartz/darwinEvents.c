@@ -36,7 +36,6 @@ in this Software without prior written authorization from The Open Group.
 #include <dix-config.h>
 #endif
 
-#define NEED_EVENTS
 #include   <X11/X.h>
 #include   <X11/Xmd.h>
 #include   <X11/Xproto.h>
@@ -68,14 +67,15 @@ in this Software without prior written authorization from The Open Group.
 #define SCROLLWHEELLEFTFAKE  6
 #define SCROLLWHEELRIGHTFAKE 7
 
-#define _APPLEWM_SERVER_
+#include <X11/extensions/applewmconst.h>
 #include "applewmExt.h"
-#include <X11/extensions/applewm.h>
 
 /* FIXME: Abstract this better */
 void QuartzModeEQInit(void);
 
-int darwin_modifier_flags = 0;  // last known modifier state
+int darwin_all_modifier_flags = 0;  // last known modifier state
+int darwin_all_modifier_mask = 0;
+int darwin_x11_modifier_mask = 0;
 
 #define FD_ADD_MAX 128
 static int fd_add[FD_ADD_MAX];
@@ -146,7 +146,7 @@ static void DarwinPressModifierKey(int pressed, int key) {
  *  Send events to update the modifier state.
  */
 
-int darwin_modifier_mask_list[] = {
+static int darwin_x11_modifier_mask_list[] = {
 #ifdef NX_DEVICELCMDKEYMASK
     NX_DEVICELCTLKEYMASK, NX_DEVICERCTLKEYMASK,
     NX_DEVICELSHIFTKEYMASK, NX_DEVICERSHIFTKEYMASK,
@@ -158,6 +158,8 @@ int darwin_modifier_mask_list[] = {
     NX_ALPHASHIFTMASK,
     0
 };
+
+static int darwin_all_modifier_mask_additions[] = { NX_SECONDARYFNMASK, };
 
 static void DarwinUpdateModifiers(
     int pressed,        // KeyPress or KeyRelease
@@ -174,7 +176,7 @@ static void DarwinUpdateModifiers(
         DarwinPressModifierKey(KeyRelease, NX_MODIFIERKEY_ALPHALOCK);
     }
     
-    for(f=darwin_modifier_mask_list; *f; f++)
+    for(f=darwin_x11_modifier_mask_list; *f; f++)
         if(*f & flags && *f != NX_ALPHASHIFTMASK) {
             key = DarwinModifierNXMaskToNXKey(*f);
             if(key == -1)
@@ -307,6 +309,16 @@ static void kXquartzListenOnOpenFDHandler(int screenNum, xEventPtr xe, DeviceInt
 }
 
 Bool DarwinEQInit(void) { 
+    int *p;
+
+    for(p=darwin_x11_modifier_mask_list, darwin_all_modifier_mask=0; *p; p++) {
+        darwin_x11_modifier_mask |= *p;
+    }
+    
+    for(p=darwin_all_modifier_mask_additions, darwin_all_modifier_mask= darwin_x11_modifier_mask; *p; p++) {
+        darwin_all_modifier_mask |= *p;
+    }
+    
     mieqInit();
     mieqSetHandler(kXquartzReloadKeymap, DarwinKeyboardReloadHandler);
     mieqSetHandler(kXquartzActivate, DarwinEventHandler);
@@ -435,14 +447,14 @@ void DarwinSendPointerEvents(DeviceIntPtr pDev, int ev_type, int ev_button, floa
             DarwinSendPointerEvents(pDev, ButtonRelease, darwinFakeMouseButtonDown, pointer_x, pointer_y, pressure, tilt_x, tilt_y);
             darwinFakeMouseButtonDown=0;
         }
-		if (darwin_modifier_flags & darwinFakeMouse2Mask) {
+		if (darwin_all_modifier_flags & darwinFakeMouse2Mask) {
             ev_button = 2;
 			darwinFakeMouseButtonDown = 2;
-            DarwinUpdateModKeys(darwin_modifier_flags & ~darwinFakeMouse2Mask);
-		} else if (darwin_modifier_flags & darwinFakeMouse3Mask) {
+            DarwinUpdateModKeys(darwin_all_modifier_flags & ~darwinFakeMouse2Mask);
+		} else if (darwin_all_modifier_flags & darwinFakeMouse3Mask) {
             ev_button = 3;
 			darwinFakeMouseButtonDown = 3;
-            DarwinUpdateModKeys(darwin_modifier_flags & ~darwinFakeMouse3Mask);
+            DarwinUpdateModKeys(darwin_all_modifier_flags & ~darwinFakeMouse3Mask);
 		}
 	}
 
@@ -452,9 +464,9 @@ void DarwinSendPointerEvents(DeviceIntPtr pDev, int ev_type, int ev_button, floa
         }
 
         if(darwinFakeMouseButtonDown == 2) {
-            DarwinUpdateModKeys(darwin_modifier_flags & ~darwinFakeMouse2Mask);
+            DarwinUpdateModKeys(darwin_all_modifier_flags & ~darwinFakeMouse2Mask);
         } else if(darwinFakeMouseButtonDown == 3) {
-            DarwinUpdateModKeys(darwin_modifier_flags & ~darwinFakeMouse3Mask);
+            DarwinUpdateModKeys(darwin_all_modifier_flags & ~darwinFakeMouse3Mask);
         }
 
         darwinFakeMouseButtonDown = 0;
@@ -465,7 +477,7 @@ void DarwinSendPointerEvents(DeviceIntPtr pDev, int ev_type, int ev_button, floa
         num_events = GetPointerEvents(darwinEvents, pDev, ev_type, ev_button, 
                                       POINTER_ABSOLUTE, 0, pDev==darwinTabletCurrent?5:2, valuators);
         for(i=0; i<num_events; i++) mieqEnqueue (pDev, darwinEvents[i].event);
-        DarwinPokeEQ();
+        if(num_events > 0) DarwinPokeEQ();
     } darwinEvents_unlock();
 }
 
@@ -480,7 +492,7 @@ void DarwinSendKeyboardEvents(int ev_type, int keycode) {
     darwinEvents_lock(); {
         num_events = GetKeyboardEvents(darwinEvents, darwinKeyboard, ev_type, keycode + MIN_KEYCODE);
         for(i=0; i<num_events; i++) mieqEnqueue(darwinKeyboard,darwinEvents[i].event);
-        DarwinPokeEQ();
+        if(num_events > 0) DarwinPokeEQ();
     } darwinEvents_unlock();
 }
 
@@ -508,7 +520,7 @@ void DarwinSendProximityEvents(int ev_type, float pointer_x, float pointer_y) {
         num_events = GetProximityEvents(darwinEvents, pDev, ev_type,
                                         0, 5, valuators);
         for(i=0; i<num_events; i++) mieqEnqueue (pDev,darwinEvents[i].event);
-        DarwinPokeEQ();
+        if(num_events > 0) DarwinPokeEQ();
     } darwinEvents_unlock();
 }
 
@@ -544,9 +556,9 @@ void DarwinSendScrollEvents(float count_x, float count_y,
 /* Send the appropriate KeyPress/KeyRelease events to GetKeyboardEvents to
    reflect changing modifier flags (alt, control, meta, etc) */
 void DarwinUpdateModKeys(int flags) {
-	DarwinUpdateModifiers(KeyRelease, darwin_modifier_flags & ~flags);
-	DarwinUpdateModifiers(KeyPress, ~darwin_modifier_flags & flags);
-	darwin_modifier_flags = flags;
+	DarwinUpdateModifiers(KeyRelease, darwin_all_modifier_flags & ~flags & darwin_x11_modifier_mask);
+	DarwinUpdateModifiers(KeyPress, ~darwin_all_modifier_flags & flags & darwin_x11_modifier_mask);
+	darwin_all_modifier_flags = flags;
 }
 
 /*
@@ -574,7 +586,7 @@ void DarwinSendDDXEvent(int type, int argc, ...) {
     }
 
     darwinEvents_lock(); {
-        mieqEnqueue(darwinPointer, &xe);
+        mieqEnqueue(NULL, &xe);
         DarwinPokeEQ();
     } darwinEvents_unlock();
 }

@@ -33,7 +33,7 @@
 #define _ASM
 #include <sys/asm_linkage.h>
 #define FUNCTION_START(f,n)	ENTRY(f)
-#define FUNCTION_END(f)		SET_SIZE(f)
+#define FUNCTION_END(f)		retl; nop; SET_SIZE(f)
 #endif
 
 /* Converted from common/compiler.h gcc inline format to Sun cc inline

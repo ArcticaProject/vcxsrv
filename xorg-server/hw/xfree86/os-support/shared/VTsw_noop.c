@@ -36,19 +36,19 @@
  */
 
 Bool
-xf86VTSwitchPending()
+xf86VTSwitchPending(void)
 {
 	return(FALSE);
 }
 
 Bool
-xf86VTSwitchAway()
+xf86VTSwitchAway(void)
 {
 	return(FALSE);
 }
 
 Bool
-xf86VTSwitchTo()
+xf86VTSwitchTo(void)
 {
 	return(TRUE);
 }

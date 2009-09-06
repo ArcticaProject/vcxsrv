@@ -242,16 +242,16 @@ xnestSetInstalledColormapWindows(ScreenPtr pScreen)
 	WindowPtr pWin;
 	Visual *visual;
 	ColormapPtr pCmap;
-	
+
 	pWin = xnestWindowPtr(icws.windows[0]);
 	visual = xnestVisualFromID(pScreen, wVisual(pWin));
 	
 	if (visual == xnestDefaultVisual(pScreen))
-	  pCmap = (ColormapPtr)LookupIDByType(wColormap(pWin), 
-					      RT_COLORMAP);
+	    dixLookupResourceByType((pointer *)&pCmap, wColormap(pWin),
+				    RT_COLORMAP, serverClient, DixUseAccess);
 	else
-	  pCmap = (ColormapPtr)LookupIDByType(pScreen->defColormap, 
-					      RT_COLORMAP);
+	    dixLookupResourceByType((pointer *)&pCmap, pScreen->defColormap,
+				    RT_COLORMAP, serverClient, DixUseAccess);
 	
 	XSetWindowColormap(xnestDisplay, 
 			   xnestDefaultWindows[pScreen->myNum],
@@ -302,7 +302,8 @@ xnestDirectInstallColormaps(ScreenPtr pScreen)
   for (i = 0; i < n; i++) {
     ColormapPtr pCmap;
     
-    pCmap = (ColormapPtr)LookupIDByType(pCmapIDs[i], RT_COLORMAP);
+    dixLookupResourceByType((pointer *)&pCmap, pCmapIDs[i], RT_COLORMAP,
+			    serverClient, DixInstallAccess);
     if (pCmap)
       XInstallColormap(xnestDisplay, xnestColormap(pCmap));
   }
@@ -321,7 +322,8 @@ xnestDirectUninstallColormaps(ScreenPtr pScreen)
   for (i = 0; i < n; i++) {
     ColormapPtr pCmap;
     
-    pCmap = (ColormapPtr)LookupIDByType(pCmapIDs[i], RT_COLORMAP);
+    dixLookupResourceByType((pointer *)&pCmap, pCmapIDs[i], RT_COLORMAP,
+			    serverClient, DixUninstallAccess);
     if (pCmap)
       XUninstallColormap(xnestDisplay, xnestColormap(pCmap));
   }
@@ -365,8 +367,10 @@ xnestUninstallColormap(ColormapPtr pCmap)
     {
       if (pCmap->mid != pCmap->pScreen->defColormap)
         {
-	  pCurCmap = (ColormapPtr)LookupIDByType(pCmap->pScreen->defColormap,
-						 RT_COLORMAP);
+	  dixLookupResourceByType((pointer *)&pCurCmap,
+				  pCmap->pScreen->defColormap,
+				  RT_COLORMAP,
+				  serverClient, DixInstallAccess);
 	  (*pCmap->pScreen->InstallColormap)(pCurCmap);
         }
     }

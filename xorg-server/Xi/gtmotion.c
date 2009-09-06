@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -138,7 +136,7 @@ ProcXGetDeviceMotionEvents(ClientPtr client)
 					(ScreenPtr) NULL, FALSE);
     }
     if (rep.nEvents > 0) {
-	length = (rep.nEvents * size + 3) >> 2;
+	length = bytes_to_int32(rep.nEvents * size);
 	rep.length = length;
     }
     nEvents = rep.nEvents;

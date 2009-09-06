@@ -615,26 +615,6 @@ Default: PM enabled on platforms that support it.
 enable or disable XINERAMA extension.
 Default is disabled.
 .TP 7
-.BI "Option \*qHandleSpecialKeys\*q \*q" when \*q
-This option controls when the server uses the builtin handler to process
-special key combinations (such as
-.BR Ctrl+Alt+Backspace ).
-Normally the XKEYBOARD extension keymaps will provide mappings for each of
-the special key combinations, so the builtin handler is not needed unless
-the XKEYBOARD extension is disabled.
-The value of
-.I when
-can be
-.BR Always ,
-.BR Never ,
-or
-.BR WhenNeeded .
-Default: Use the builtin handler only if needed.
-The server will scan the keymap for a mapping to the
-.B Terminate
-action and, if found, use XKEYBOARD for processing actions, otherwise
-the builtin handler will be used.
-.TP 7
 .BI "Option \*qAIGLX\*q \*q" boolean \*q
 enable or disable AIGLX. AIGLX is enabled by default.
 .TP 7
@@ -859,7 +839,7 @@ The most commonly used input drivers are
 on Linux systems, and
 .BR kbd (__drivermansuffix__)
 and
-.BR mouse (__drivermansuffix__)
+.BR mousedrv (__drivermansuffix__)
 on other platforms.
 .PP
 In the absence of an explicitly specified core input device, the first
@@ -1409,11 +1389,10 @@ This option controls whether the video card should drive the sync signal
 on the green color pin.  Not all cards support this option, and most
 monitors do not require it.  The default is off.
 .TP 7
-.BI "Option " "\*qTargetRefresh\*q  " \*qrate\*q
-This optional entry specifies the vertical refresh rate that the server
-should aim for when selecting video modes.  Without this option, the
-default is to prefer modes with higher refresh rates.
-.TP 7
+.BI "Option " "\*qPrimary\*q  " \*qbool\*q
+This optional entry specifies that the monitor should be treated as the primary
+monitor. (RandR 1.2-supporting drivers only)
+.TP7
 .BI "Option " "\*qPreferredMode\*q  " \*qstring\*q
 This optional entry specifies a mode to be marked as the preferred initial mode
 of the monitor.

@@ -17,9 +17,6 @@ else
 KMOD_SOURCES = $(srcdir)/../shared/kmod_noop.c
 endif
 
-# FIXME: Non-i386/ia64 resource support.
-RES_SOURCES = $(srcdir)/../shared/stdResource.c
-
 if AGP
 AGP_SOURCES = $(srcdir)/../linux/lnx_agp.c
 else

@@ -99,19 +99,18 @@ miInsertEdgeInET(EdgeTable *ET, EdgeTableEntry *ETE,  int scanline,
     {
         if (*iSLLBlock > SLLSPERBLOCK-1) 
         {
-            tmpSLLBlock = 
-		  (ScanLineListBlock *)xalloc(sizeof(ScanLineListBlock));
+            tmpSLLBlock = xalloc(sizeof(ScanLineListBlock));
 	    if (!tmpSLLBlock)
 		return FALSE;
             (*SLLBlock)->next = tmpSLLBlock;
-            tmpSLLBlock->next = (ScanLineListBlock *)NULL;
+            tmpSLLBlock->next = NULL;
             *SLLBlock = tmpSLLBlock;
             *iSLLBlock = 0;
         }
         pSLL = &((*SLLBlock)->SLLs[(*iSLLBlock)++]);
 
         pSLL->next = pPrevSLL->next;
-        pSLL->edgelist = (EdgeTableEntry *)NULL;
+        pSLL->edgelist = NULL;
         pPrevSLL->next = pSLL;
     }
     pSLL->scanline = scanline;
@@ -119,7 +118,7 @@ miInsertEdgeInET(EdgeTable *ET, EdgeTableEntry *ETE,  int scanline,
     /*
      * now insert the edge in the right bucket
      */
-    prev = (EdgeTableEntry *)NULL;
+    prev = NULL;
     start = pSLL->edgelist;
     while (start && (start->bres.minor < ETE->bres.minor)) 
     {
@@ -175,18 +174,18 @@ miCreateETandAET(int count, DDXPointPtr pts, EdgeTable *ET, EdgeTableEntry *AET,
     /*
      *  initialize the Active Edge Table
      */
-    AET->next = (EdgeTableEntry *)NULL;
-    AET->back = (EdgeTableEntry *)NULL;
-    AET->nextWETE = (EdgeTableEntry *)NULL;
+    AET->next = NULL;
+    AET->back = NULL;
+    AET->nextWETE = NULL;
     AET->bres.minor = MININT;
 
     /*
      *  initialize the Edge Table.
      */
-    ET->scanlines.next = (ScanLineList *)NULL;
+    ET->scanlines.next = NULL;
     ET->ymax = MININT;
     ET->ymin = MAXINT;
-    pSLLBlock->next = (ScanLineListBlock *)NULL;
+    pSLLBlock->next = NULL;
 
     PrevPt = &pts[count-1];
 
@@ -305,7 +304,7 @@ micomputeWAET(EdgeTableEntry *AET)
     int inside = 1;
     int isInside = 0;
 
-    AET->nextWETE = (EdgeTableEntry *)NULL;
+    AET->nextWETE = NULL;
     pWETE = AET;
     AET = AET->next;
     while (AET) 
@@ -324,7 +323,7 @@ micomputeWAET(EdgeTableEntry *AET)
         }
         AET = AET->next;
     }
-    pWETE->nextWETE = (EdgeTableEntry *)NULL;
+    pWETE->nextWETE = NULL;
 }
 
 /*

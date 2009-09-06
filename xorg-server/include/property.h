@@ -52,14 +52,14 @@ SOFTWARE.
 
 typedef struct _Property *PropertyPtr;
 
-extern int dixLookupProperty(
+extern _X_EXPORT int dixLookupProperty(
     PropertyPtr * /*result*/,
     WindowPtr /*pWin*/,
     Atom /*proprty*/,
     ClientPtr /*pClient*/,
     Mask /*access_mode*/);
 
-extern int dixChangeWindowProperty(
+extern _X_EXPORT int dixChangeWindowProperty(
     ClientPtr /*pClient*/,
     WindowPtr /*pWin*/,
     Atom /*property*/,
@@ -70,7 +70,7 @@ extern int dixChangeWindowProperty(
     pointer /*value*/,
     Bool /*sendevent*/);
 
-extern int ChangeWindowProperty(
+extern _X_EXPORT int ChangeWindowProperty(
     WindowPtr /*pWin*/,
     Atom /*property*/,
     Atom /*type*/,
@@ -80,12 +80,12 @@ extern int ChangeWindowProperty(
     pointer /*value*/,
     Bool /*sendevent*/);
 
-extern int DeleteProperty(
+extern _X_EXPORT int DeleteProperty(
     ClientPtr /*client*/,
     WindowPtr /*pWin*/,
     Atom /*propName*/);
 
-extern void DeleteAllWindowProperties(
+extern _X_EXPORT void DeleteAllWindowProperties(
     WindowPtr /*pWin*/);
 
 #endif  /* PROPERTY_H */

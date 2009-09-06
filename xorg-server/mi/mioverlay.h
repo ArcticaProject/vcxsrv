@@ -9,24 +9,24 @@
 typedef void (*miOverlayTransFunc)(ScreenPtr, int, BoxPtr);
 typedef Bool (*miOverlayInOverlayFunc)(WindowPtr);
 
-Bool
+extern _X_EXPORT Bool
 miInitOverlay(
    ScreenPtr pScreen, 
    miOverlayInOverlayFunc inOverlay,
    miOverlayTransFunc trans
 );
 
-Bool
+extern _X_EXPORT Bool
 miOverlayGetPrivateClips(
     WindowPtr pWin,
     RegionPtr *borderClip,
     RegionPtr *clipList
 );
 
-Bool miOverlayCollectUnderlayRegions(WindowPtr, RegionPtr*);
-void miOverlayComputeCompositeClip(GCPtr, WindowPtr);
-Bool miOverlayCopyUnderlay(ScreenPtr);
-void miOverlaySetTransFunction(ScreenPtr, miOverlayTransFunc);
-void miOverlaySetRootClip(ScreenPtr, Bool);
+extern _X_EXPORT Bool miOverlayCollectUnderlayRegions(WindowPtr, RegionPtr*);
+extern _X_EXPORT void miOverlayComputeCompositeClip(GCPtr, WindowPtr);
+extern _X_EXPORT Bool miOverlayCopyUnderlay(ScreenPtr);
+extern _X_EXPORT void miOverlaySetTransFunction(ScreenPtr, miOverlayTransFunc);
+extern _X_EXPORT void miOverlaySetRootClip(ScreenPtr, Bool);
 
 #endif /* __MIOVERLAY_H */

@@ -66,7 +66,7 @@ SOFTWARE.
  *****************************************************************/
 
 
-_X_EXPORT void
+void
 miPolySegment(DrawablePtr pDraw, GCPtr pGC, int nseg, xSegment *pSegs)
 {
     int i;

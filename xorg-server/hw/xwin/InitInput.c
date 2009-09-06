@@ -31,6 +31,7 @@
 #endif
 #include "win.h"
 #include "dixstruct.h"
+#include "inputstr.h"
 
 
 /*
@@ -48,7 +49,8 @@ DISPATCH_PROC(winProcSetSelectionOwner);
  * Local global declarations
  */
 
-CARD32				g_c32LastInputEventTime = 0;
+DeviceIntPtr g_pwinPointer;
+DeviceIntPtr g_pwinKeyboard;
 
 
 /*
@@ -94,7 +96,6 @@ ProcessInputEvents (void)
 #endif
 
   mieqProcessInputEvents ();
-  miPointerUpdate ();
 
 #if 0
   ErrorF ("ProcessInputEvents - returning\n");
@@ -102,12 +103,10 @@ ProcessInputEvents (void)
 }
 
 
-int
-TimeSinceLastInputEvent ()
+void DDXRingBell(int volume, int pitch, int duration)
 {
-  if (g_c32LastInputEventTime == 0)
-    g_c32LastInputEventTime = GetTickCount ();
-  return GetTickCount () - g_c32LastInputEventTime;
+  /* winKeybdBell is used instead */
+  return;
 }
 
 
@@ -115,8 +114,6 @@ TimeSinceLastInputEvent ()
 void
 InitInput (int argc, char *argv[])
 {
-  DeviceIntPtr		pMouse, pKeyboard;
-
 #if CYGDEBUG
   winDebug ("InitInput\n");
 #endif
@@ -138,14 +135,16 @@ InitInput (int argc, char *argv[])
     }
 #endif
 
-  pMouse = AddInputDevice (winMouseProc, TRUE);
-  pKeyboard = AddInputDevice (winKeybdProc, TRUE);
+  g_pwinPointer = AddInputDevice (serverClient, winMouseProc, TRUE);
+  g_pwinKeyboard = AddInputDevice (serverClient, winKeybdProc, TRUE);
   
-  RegisterPointerDevice (pMouse);
-  RegisterKeyboardDevice (pKeyboard);
+  RegisterPointerDevice (g_pwinPointer);
+  RegisterKeyboardDevice (g_pwinKeyboard);
 
-  miRegisterPointerDevice (screenInfo.screens[0], pMouse);
-  mieqInit ((DevicePtr)pKeyboard, (DevicePtr)pMouse);
+  g_pwinPointer->name = strdup("Windows mouse");
+  g_pwinKeyboard->name = strdup("Windows keyboard");
+
+  mieqInit ();
 
   /* Initialize the mode key states */
   winInitializeModeKeyStates ();

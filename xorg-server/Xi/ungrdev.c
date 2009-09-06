@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -106,7 +104,7 @@ ProcXUngrabDevice(ClientPtr client)
     time = ClientTimeToServerTime(stuff->time);
     if ((CompareTimeStamps(time, currentTime) != LATER) &&
 	(CompareTimeStamps(time, dev->deviceGrab.grabTime) != EARLIER) &&
-	(grab) && SameClient(grab, client) && !grab->coreGrab)
+	(grab) && SameClient(grab, client) && grab->grabtype == GRABTYPE_XI)
 	(*dev->deviceGrab.DeactivateGrab) (dev);
     return Success;
 }

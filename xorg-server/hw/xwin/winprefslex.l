@@ -1,6 +1,7 @@
 %{ # -*- C -*-
 /*
  * Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ * Copyright (C) Colin Harrison 2005-2008
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -27,6 +28,7 @@
  * from the XFree86 Project.
  *
  * Authors:     Earle F. Philhower, III
+ *              Colin Harrison
  */
 /* $XFree86: $ */
 
@@ -70,6 +72,14 @@ MENU                    { return MENU; }
 ICONDIRECTORY           { return ICONDIRECTORY; }
 DEFAULTICON             { return DEFAULTICON; }
 ICONS                   { return ICONS; }
+STYLES                  { return STYLES; }
+TOPMOST                 { return TOPMOST; }
+MAXIMIZE                { return MAXIMIZE; }
+MINIMIZE                { return MINIMIZE; }
+BOTTOM                  { return BOTTOM; }
+NOTITLE                 { return NOTITLE; }
+OUTLINE                 { return OUTLINE; }
+NOFRAME                 { return NOFRAME; }
 ROOTMENU                { return ROOTMENU; }
 DEFAULTSYSMENU          { return DEFAULTSYSMENU; }
 SYSMENU                 { return SYSMENU; }
@@ -95,7 +105,7 @@ SILENTEXIT		{ return SILENTEXIT; }
  * Run-of-the mill requirement for yacc
  */
 int
-yywrap ()
+yywrap (void)
 {
   return 1;
 }

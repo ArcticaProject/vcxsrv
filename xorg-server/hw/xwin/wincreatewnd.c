@@ -63,7 +63,7 @@ winCreateBoundingWindowFullScreen (ScreenPtr pScreen)
   int			iWidth = pScreenInfo->dwWidth;
   int			iHeight = pScreenInfo->dwHeight;
   HWND			*phwnd = &pScreenPriv->hwndScreen;
-  WNDCLASS		wc;
+  WNDCLASSEX		wc;
   char			szTitle[256];
 
 #if CYGDEBUG
@@ -71,24 +71,30 @@ winCreateBoundingWindowFullScreen (ScreenPtr pScreen)
 #endif
 
   /* Setup our window class */
+  wc.cbSize=sizeof(WNDCLASSEX);
   wc.style = CS_HREDRAW | CS_VREDRAW;
   wc.lpfnWndProc = winWindowProc;
   wc.cbClsExtra = 0;
   wc.cbWndExtra = 0;
   wc.hInstance = g_hInstance;
-  wc.hIcon = LoadIcon (g_hInstance, MAKEINTRESOURCE(IDI_XWIN));
+  wc.hIcon = (HICON)LoadImage (g_hInstance, MAKEINTRESOURCE(IDI_XWIN), IMAGE_ICON,
+		GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), 0);
   wc.hCursor = 0;
   wc.hbrBackground = 0;
   wc.lpszMenuName = NULL;
   wc.lpszClassName = WINDOW_CLASS;
-  RegisterClass (&wc);
+  wc.hIconSm = (HICON)LoadImage (g_hInstance, MAKEINTRESOURCE(IDI_XWIN), IMAGE_ICON,
+		GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), LR_DEFAULTSIZE);
+  RegisterClassEx (&wc);
 
   /* Set display and screen-specific tooltip text */
   if (g_pszQueryHost != NULL)
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE_XDMCP,
-	    g_pszQueryHost); 
+	    g_pszQueryHost,
+	    display,
+	    (int) pScreenInfo->dwScreen);
   else    
     snprintf (szTitle,
 	    sizeof (szTitle),
@@ -150,7 +156,7 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
   int                   iPosX;
   int                   iPosY;
   HWND			*phwnd = &pScreenPriv->hwndScreen;
-  WNDCLASS		wc;
+  WNDCLASSEX		wc;
   RECT			rcClient, rcWorkArea;
   DWORD			dwWindowStyle;
   BOOL			fForceShowWindow = FALSE;
@@ -193,17 +199,21 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
     dwWindowStyle |= WS_POPUP;
 
   /* Setup our window class */
+  wc.cbSize=sizeof(WNDCLASSEX);
   wc.style = CS_HREDRAW | CS_VREDRAW;
   wc.lpfnWndProc = winWindowProc;
   wc.cbClsExtra = 0;
   wc.cbWndExtra = 0;
   wc.hInstance = g_hInstance;
-  wc.hIcon = LoadIcon (g_hInstance, MAKEINTRESOURCE(IDI_XWIN));
+  wc.hIcon = (HICON)LoadImage (g_hInstance, MAKEINTRESOURCE(IDI_XWIN), IMAGE_ICON,
+		GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), 0);
   wc.hCursor = 0;
   wc.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
   wc.lpszMenuName = NULL;
   wc.lpszClassName = WINDOW_CLASS;
-  RegisterClass (&wc);
+  wc.hIconSm = (HICON)LoadImage (g_hInstance, MAKEINTRESOURCE(IDI_XWIN), IMAGE_ICON,
+		GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), LR_DEFAULTSIZE);
+  RegisterClassEx (&wc);
 
   /* Get size of work area */
   winGetWorkArea (&rcWorkArea, pScreenInfo);
@@ -331,7 +341,9 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
     snprintf (szTitle,
 	    sizeof (szTitle),
 	    WINDOW_TITLE_XDMCP,
-	    g_pszQueryHost); 
+	    g_pszQueryHost,
+	    display,
+	    (int) pScreenInfo->dwScreen);
   else    
     snprintf (szTitle,
 	    sizeof (szTitle),

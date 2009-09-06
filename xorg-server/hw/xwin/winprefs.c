@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ * Copyright (C) Colin Harrison 2005-2008
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -26,6 +27,7 @@
  * from the XFree86 Project.
  *
  * Authors:     Earle F. Philhower, III
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -187,35 +189,28 @@ ReloadEnumWindowsProc (HWND hwnd, LPARAM lParam)
   /* It's our baby, either clean or dirty it */
   if (lParam==FALSE) 
     {
-      hicon = (HICON)GetClassLong(hwnd, GCL_HICON);
+      /* Reset the window's icon to undefined. */
+      hicon = (HICON)SendMessage(hwnd, WM_SETICON, ICON_BIG, 0);
 
-      /* Unselect any icon in the class structure */
-      SetClassLong (hwnd, GCL_HICON, (LONG)LoadIcon (NULL, IDI_APPLICATION));
-
-      /* If it's generated on-the-fly, get rid of it, will regen */
+      /* If the old icon is generated on-the-fly, get rid of it, will regen */
       winDestroyIcon (hicon);
-     
-      hicon = (HICON)GetClassLong(hwnd, GCL_HICONSM);
 
-      /* Unselect any icon in the class structure */
-      SetClassLong (hwnd, GCL_HICONSM, 0);
-
-      /* If it's generated on-the-fly, get rid of it, will regen */
+      /* Same for the small icon */
+      hicon = (HICON)SendMessage(hwnd, WM_SETICON, ICON_SMALL, 0);
       winDestroyIcon (hicon);
-      
-      /* Remove any menu additions, use bRevert flag */
+
+      /* Remove any menu additions; bRevert=TRUE destroys any modified menus */
       GetSystemMenu (hwnd, TRUE);
       
-      /* This window is now clean of our taint */
+      /* This window is now clean of our taint (but with undefined icons) */
     }
   else
     {
-      /* Make the icon default, dynamic, or from xwinrc */
-      SetClassLong (hwnd, GCL_HICON, (LONG)g_hIconX);
-      SetClassLong (hwnd, GCL_HICONSM, (LONG)g_hSmallIconX);
+      /* winUpdateIcon() will set the icon default, dynamic, or from xwinrc */
       wid = (Window)GetProp (hwnd, WIN_WID_PROP);
       if (wid)
 	winUpdateIcon (wid);
+
       /* Update the system menu for this window */
       SetupSysMenu ((unsigned long)hwnd);
 
@@ -239,8 +234,12 @@ ReloadPrefs (void)
   int i;
 
 #ifdef XWIN_MULTIWINDOW
-  /* First, iterate over all windows replacing their icon with system */
-  /* default one and deleting any custom system menus                 */
+  /* First, iterate over all windows, deleting their icons and custom menus.
+   * This is really only needed because winDestroyIcon() will try to
+   * destroy the old global icons, which will have changed.
+   * It is probably better to set a windows USER_DATA to flag locally defined
+   * icons, and use that to accurately know when to destroy old icons.
+   */
   EnumThreadWindows (g_dwCurrentThreadID, ReloadEnumWindowsProc, FALSE);
 #endif
   
@@ -314,7 +313,7 @@ HandleCustomWM_INITMENU(unsigned long hwndIn,
   if (!hwnd || !hmenu) 
     return;
   
-  if (GetWindowLong (hwnd, GWL_EXSTYLE) & WS_EX_TOPMOST)
+  if (GetWindowLongPtr(hwnd, GWL_EXSTYLE) & WS_EX_TOPMOST)
     dwExStyle = MF_BYCOMMAND | MF_CHECKED;
   else
     dwExStyle = MF_BYCOMMAND | MF_UNCHECKED;
@@ -409,7 +408,7 @@ HandleCustomWM_COMMAND (unsigned long hwndIn,
 		    return FALSE;
 
 		  /* Get extended window style */
-		  dwExStyle = GetWindowLong (hwnd, GWL_EXSTYLE);
+		  dwExStyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
 		  
 		  /* Handle topmost windows */
 		  if (dwExStyle & WS_EX_TOPMOST)
@@ -527,7 +526,7 @@ SetupRootMenu (unsigned long hmenuRoot)
 /*
  * Check for and return an overridden default ICON specified in the prefs
  */
-unsigned long
+HICON
 winOverrideDefaultIcon(int size)
 {
   HICON hicon;
@@ -539,7 +538,7 @@ winOverrideDefaultIcon(int size)
         ErrorF ("winOverrideDefaultIcon: LoadImageComma(%s) failed\n",
 		pref.defaultIconName);
 
-      return (unsigned long)hicon;
+      return hicon;
     }
 
   return 0;
@@ -549,7 +548,7 @@ winOverrideDefaultIcon(int size)
 /*
  * Return the HICON to use in the taskbar notification area
  */
-unsigned long
+HICON
 winTaskbarIcon(void)
 {
   HICON hicon;
@@ -573,7 +572,7 @@ winTaskbarIcon(void)
 				GetSystemMetrics (SM_CYSMICON),
 				0);
 
-  return (unsigned long)hicon;
+  return hicon;
 }
 
 
@@ -648,7 +647,7 @@ LoadImageComma (char *fname, int sx, int sy, int flags)
  * Check for a match of the window class to one specified in the
  * ICONS{} section in the prefs file, and load the icon from a file
  */
-unsigned long
+HICON
 winOverrideIcon (unsigned long longWin)
 {
   WindowPtr pWin = (WindowPtr) longWin;
@@ -684,8 +683,8 @@ winOverrideIcon (unsigned long longWin)
          ErrorF ("winOverrideIcon: LoadImageComma(%s) failed\n",
                   pref.icon[i].iconFile);
 
-	pref.icon[i].hicon = (unsigned long)hicon;
-	return (unsigned long)hicon;
+	pref.icon[i].hicon = hicon;
+	return hicon;
       }
   }
   
@@ -728,7 +727,7 @@ winIconIsOverride(unsigned hiconIn)
  * Load it into prefs structure for use by other functions
  */
 void
-LoadPreferences ()
+LoadPreferences (void)
 {
   char *home;
   char fname[PATH_MAX+NAME_MAX+2];
@@ -819,4 +818,50 @@ LoadPreferences ()
 	} /* for all menuitems */
     } /* for all menus */
 
+}
+
+
+/*
+ * Check for a match of the window class to one specified in the
+ * STYLES{} section in the prefs file, and return the style type
+ */
+unsigned long
+winOverrideStyle (unsigned long longpWin)
+{
+  WindowPtr pWin = (WindowPtr) longpWin;
+  char *res_name, *res_class;
+  int i;
+  char *wmName;
+
+  if (pWin==NULL)
+    return STYLE_NONE;
+
+  /* If we can't find the class, we can't override from default! */
+  if (!winMultiWindowGetClassHint (pWin, &res_name, &res_class))
+    return STYLE_NONE;
+
+  winMultiWindowGetWMName (pWin, &wmName);
+
+  for (i=0; i<pref.styleItems; i++) {
+    if (!strcmp(pref.style[i].match, res_name) ||
+	!strcmp(pref.style[i].match, res_class) ||
+	(wmName && strstr(wmName, pref.style[i].match)))
+      {
+	free (res_name);
+	free (res_class);
+	if (wmName)
+	  free (wmName);
+
+	if (pref.style[i].type)
+	  return pref.style[i].type;
+      }
+  }
+
+  /* Didn't find the style, fail gracefully */
+  free (res_name);
+  free (res_class);
+  if (wmName)
+    free (wmName);
+
+  return STYLE_NONE;
 }

@@ -33,7 +33,6 @@
 #include "xf86.h"
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
-#include "xf86Resources.h"
 #include "xf86cmap.h"
 
 #include "xf86Bus.h"
@@ -320,7 +319,7 @@ xf86CheckSbusSlot(int fbNum)
     for (i = 0; i < xf86NumEntities; i++) {
 	p = xf86Entities[i];
 	/* Check if this SBUS slot is taken */
-	if (p->busType == BUS_SBUS && p->sbusBusId.fbNum == fbNum)
+	if (p->bus.type == BUS_SBUS && p->bus.id.sbus.fbNum == fbNum)
 	    return FALSE;
     }
 
@@ -345,22 +344,18 @@ xf86ClaimSbusSlot(sbusDevicePtr psdp, DriverPtr drvp,
         p = xf86Entities[num];
         p->driver = drvp;
         p->chipset = -1;
-        p->busType = BUS_SBUS;
+        p->bus.type = BUS_SBUS;
         xf86AddDevToEntity(num, dev);
-        p->sbusBusId.fbNum = psdp->fbNum;
+        p->bus.id.sbus.fbNum = psdp->fbNum;
         p->active = active;
         p->inUse = FALSE;
-        /* Here we initialize the access structure */
-        p->access = xnfcalloc(1,sizeof(EntityAccessRec));
-	p->access->fallback = &AccessNULL;
-        p->access->pAccess = &AccessNULL;
 	sbusSlotClaimed = TRUE;
 	return num;
     } else
 	return -1;
 }
 
-_X_EXPORT int
+int
 xf86MatchSbusInstances(const char *driverName, int sbusDevId, 
 		       GDevPtr *devList, int numDevs, DriverPtr drvp,
 		       int **foundEntities)
@@ -406,11 +401,6 @@ xf86MatchSbusInstances(const char *driverName, int sbusDevId,
 	return 0;
     }
 
-    if (xf86DoProbe) {
-	xfree(instances);
-	return numFound;
-    }
-
     if (sparcPromInit() >= 0)
 	useProm = 1;
 
@@ -435,9 +425,7 @@ xf86MatchSbusInstances(const char *driverName, int sbusDevId,
 	return actualcards;
     }
 
-#ifdef DEBUG
-    ErrorF("%s instances found: %d\n", driverName, allocatedInstances);
-#endif
+    DebugF("%s instances found: %d\n", driverName, allocatedInstances);
 
     for (i = 0; i < allocatedInstances; i++) {
 	char *promPath = NULL;
@@ -494,9 +482,7 @@ xf86MatchSbusInstances(const char *driverName, int sbusDevId,
 	    xfree(promPath);
     }
 
-#ifdef DEBUG
-    ErrorF("%s instances found: %d\n", driverName, numClaimedInstances);
-#endif
+    DebugF("%s instances found: %d\n", driverName, numClaimedInstances);
 
     /*
      * Of the claimed instances, check that another driver hasn't already
@@ -510,11 +496,9 @@ xf86MatchSbusInstances(const char *driverName, int sbusDevId,
 	if (!xf86CheckSbusSlot(psdp->fbNum))
 	    continue;
 
-#ifdef DEBUG
-	ErrorF("%s: card at fb%d %08x is claimed by a Device section\n",
+	DebugF("%s: card at fb%d %08x is claimed by a Device section\n",
 	       driverName, psdp->fbNum, psdp->node.node);
-#endif
-	
+
 	/* Allocate an entry in the lists to be returned */
 	numFound++;
 	retEntities = xnfrealloc(retEntities, numFound * sizeof(int));
@@ -536,38 +520,38 @@ xf86MatchSbusInstances(const char *driverName, int sbusDevId,
 /*
  * xf86GetSbusInfoForEntity() -- Get the sbusDevicePtr of entity.
  */
-_X_EXPORT sbusDevicePtr
+sbusDevicePtr
 xf86GetSbusInfoForEntity(int entityIndex)
 {
     sbusDevicePtr *psdpp;
     EntityPtr p = xf86Entities[entityIndex];
 
     if (entityIndex >= xf86NumEntities
-	|| p->busType != BUS_SBUS) return NULL;
+	|| p->bus.type != BUS_SBUS) return NULL;
 
     for (psdpp = xf86SbusInfo; *psdpp != NULL; psdpp++) {
-	if (p->sbusBusId.fbNum == (*psdpp)->fbNum)
+	if (p->bus.id.sbus.fbNum == (*psdpp)->fbNum)
 	    return (*psdpp);
     }
     return NULL;
 }
 
-_X_EXPORT int
+int
 xf86GetEntityForSbusInfo(sbusDevicePtr psdp)
 {
     int i;
 
     for (i = 0; i < xf86NumEntities; i++) {
 	EntityPtr p = xf86Entities[i];
-	if (p->busType != BUS_SBUS) continue;
+	if (p->bus.type != BUS_SBUS) continue;
 
-	if (p->sbusBusId.fbNum == psdp->fbNum)
+	if (p->bus.id.sbus.fbNum == psdp->fbNum)
 	    return i;
     }
     return -1;
 }
 
-_X_EXPORT void
+void
 xf86SbusUseBuiltinMode(ScrnInfoPtr pScrn, sbusDevicePtr psdp)
 {
     DisplayModePtr mode;
@@ -667,7 +651,7 @@ xf86SbusCmapCloseScreen(int i, ScreenPtr pScreen)
     return (*pScreen->CloseScreen) (i, pScreen);
 }    
 
-_X_EXPORT Bool
+Bool
 xf86SbusHandleColormaps(ScreenPtr pScreen, sbusDevicePtr psdp)
 {
     sbusCmapPtr cmap;

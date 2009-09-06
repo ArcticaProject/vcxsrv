@@ -92,8 +92,7 @@ miFillGeneralPoly(
     if (count < 3)
 	return(TRUE);
 
-    if(!(pETEs = (EdgeTableEntry *)
-        xalloc(sizeof(EdgeTableEntry) * count)))
+    if(!(pETEs = xalloc(sizeof(EdgeTableEntry) * count)))
 	return(FALSE);
     ptsOut = FirstPoint;
     width = FirstWidth;

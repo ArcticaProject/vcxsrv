@@ -65,7 +65,7 @@ DevPrivateKey XAAGetPixmapKey(void) {
 static Bool SwitchedOut = FALSE;
 
 XAAInfoRecPtr
-XAACreateInfoRec()
+XAACreateInfoRec(void)
 {
     XAAInfoRecPtr infoRec;
 
@@ -76,7 +76,7 @@ XAACreateInfoRec()
     return infoRec;
 }
 
-void 
+void
 XAADestroyInfoRec(XAAInfoRecPtr infoRec)
 {
     if(!infoRec) return;
@@ -94,7 +94,7 @@ XAADestroyInfoRec(XAAInfoRecPtr infoRec)
 }
 
 
-Bool 
+Bool
 XAAInit(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
 {
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];

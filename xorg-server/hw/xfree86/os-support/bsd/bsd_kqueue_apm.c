@@ -178,7 +178,7 @@ xf86OSPMOpen(void)
 
     xf86PMGetEventFromOs = bsdPMGetEventFromOS;
     xf86PMConfirmEventToOs = bsdPMConfirmEventToOs;
-    APMihPtr = xf86AddInputHandler(kq, xf86HandlePMEvents, NULL);
+    APMihPtr = xf86AddGeneralHandler(kq, xf86HandlePMEvents, NULL);
     return bsdCloseAPM;
 }
 
@@ -188,7 +188,7 @@ bsdCloseAPM(void)
     int kq;
 
     if (APMihPtr) {
-	kq = xf86RemoveInputHandler(APMihPtr);
+	kq = xf86RemoveGeneralHandler(APMihPtr);
 	close(devFd);
 	devFd = -1;
 	close(kq);

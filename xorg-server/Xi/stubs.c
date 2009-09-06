@@ -54,7 +54,6 @@ SOFTWARE.
  * Xnest could do the same thing.
  */
 
-#define	 NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -154,7 +153,7 @@ AddOtherInputDevices(void)
 void
 OpenInputDevice(DeviceIntPtr dev, ClientPtr client, int *status)
 {
-    *status = XaceHook(XACE_DEVICE_ACCESS, client, dev, DixReadAccess);
+    *status = XaceHook(XACE_DEVICE_ACCESS, client, dev, DixUseAccess);
 }
 
 /****************************************************************************

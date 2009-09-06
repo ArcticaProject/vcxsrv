@@ -4,13 +4,7 @@ INCLUDES = 					\
 
 AM_CFLAGS =	-DHAVE_DIX_CONFIG_H
 
-noinst_LIBRARIES = libkdrive.a libkdrivestubs.a
-
-if KDRIVE_HW
-KDRIVE_HW_SOURCES =	\
-	vga.c		\
-	vga.h
-endif
+noinst_LTLIBRARIES = libkdrive.la libkdrivestubs.la
 
 if XV
 KDRIVE_XV_SOURCES =	\
@@ -18,7 +12,7 @@ KDRIVE_XV_SOURCES =	\
 	kxv.h
 endif
 
-libkdrive_a_SOURCES =	\
+libkdrive_la_SOURCES =	\
 	fourcc.h	\
 	kcmap.c		\
 	kcurscol.c	\
@@ -26,13 +20,11 @@ libkdrive_a_SOURCES =	\
 	kdrive.h	\
 	kinfo.c		\
 	kinput.c	\
-	kkeymap.c	\
 	kmap.c		\
 	kmode.c		\
 	kshadow.c	\
 	$(KDRIVE_XV_SOURCES) \
-	$(KDRIVE_HW_SOURCES) \
         $(top_srcdir)/mi/miinitext.c
 
-libkdrivestubs_a_SOURCES = \
+libkdrivestubs_la_SOURCES = \
         $(top_srcdir)/fb/fbcmap_mi.c

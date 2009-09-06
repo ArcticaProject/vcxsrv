@@ -123,7 +123,7 @@ PictureFreeFilterIds (void)
     filterNames = 0;
 }
 
-_X_EXPORT int
+int
 PictureAddFilter (ScreenPtr			    pScreen,
 		  char				    *filter,
 		  PictFilterValidateParamsProcPtr   ValidateParams,
@@ -159,7 +159,7 @@ PictureAddFilter (ScreenPtr			    pScreen,
     return id;
 }
 
-_X_EXPORT Bool
+Bool
 PictureSetFilterAlias (ScreenPtr pScreen, char *filter, char *alias)
 {
     PictureScreenPtr    ps = GetPictureScreen(pScreen);

@@ -37,12 +37,7 @@
 #include "glxserver.h"
 #include "glxutil.h"
 #include "dmx_glxvisuals.h"
-
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
+#include <stdlib.h>
 
 static int                 numConfigs     = 0;
 static __GLXvisualConfig  *visualConfigs  = NULL;

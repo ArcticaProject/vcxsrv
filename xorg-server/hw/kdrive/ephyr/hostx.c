@@ -78,6 +78,7 @@ struct EphyrHostScreen
 {
   Window          win;
   Window          win_pre_existing; 	/* Set via -parent option like xnest */
+  Window          peer_win;          /* Used for GL; should be at most one */
   XImage         *ximg;
   int             win_width, win_height;
   int             server_depth;
@@ -121,6 +122,7 @@ extern int            monitorResolution;
 
 char           *ephyrResName = NULL;
 int             ephyrResNameFromCmd = 0;
+char	       *ephyrTitle = NULL;
 
 static void
 hostx_set_fullscreen_hint(void);
@@ -221,20 +223,25 @@ hostx_set_screen_number(EphyrScreenInfo screen, int number)
 void
 hostx_set_win_title (EphyrScreenInfo screen, char *extra_text)
 {
-  struct EphyrHostScreen *host_screen = host_screen_from_screen_info (screen);
-#define BUF_LEN 256
-  char buf[BUF_LEN+1];
+    struct EphyrHostScreen *host_screen = host_screen_from_screen_info (screen);
 
-  if (!host_screen)
+    if (!host_screen)
     return;
 
-  memset (buf, 0, BUF_LEN+1) ;
-  snprintf (buf, BUF_LEN, "Xephyr on %s.%d %s", 
-            HostX.server_dpy_name, 
-            host_screen->mynum,
-            (extra_text != NULL) ? extra_text : "");
+    if (ephyrTitle) {
+      XStoreName(HostX.dpy, host_screen->win, ephyrTitle);
+    } else {
+#define BUF_LEN 256
+      char buf[BUF_LEN+1];
 
-  XStoreName (HostX.dpy, host_screen->win, buf);
+      memset (buf, 0, BUF_LEN+1) ;
+      snprintf (buf, BUF_LEN, "Xephyr on %s.%d %s", 
+		HostX.server_dpy_name, 
+		host_screen->mynum,
+		(extra_text != NULL) ? extra_text : "");
+
+      XStoreName (HostX.dpy, host_screen->win, buf);
+    }
 }
 
 int
@@ -316,6 +323,12 @@ hostx_use_resname (char *name, int fromcmd)
 {
   ephyrResName = name;
   ephyrResNameFromCmd = fromcmd;
+}
+
+void
+hostx_set_title (char *title)
+{
+  ephyrTitle = title;
 }
 
 int
@@ -582,7 +595,7 @@ hostx_calculate_color_shift(unsigned long mask)
 {
     int shift = 1;
     /* count # of bits in mask */
-    while (mask=(mask>>1)) shift++;
+    while ((mask = (mask >> 1))) shift++;
     /* cmap entry is an unsigned char so adjust it by size of that */
     shift = shift - sizeof(unsigned char) * 8;
     if (shift < 0) shift = 0;
@@ -904,35 +917,17 @@ host_screen_from_window (Window w)
 {
   int index = 0;
   struct EphyrHostScreen *result  = NULL;
-#if 0
-  unsigned int num_children = 0;
-  Window root = None, parent = None, *children = NULL;
-#endif
 
   for (index = 0 ; index < HostX.n_screens ; index++)
     {
-      if (HostX.screens[index].win == w)
+      if (HostX.screens[index].win == w || HostX.screens[index].peer_win == w)
         {
           result = &HostX.screens[index];
           goto out;
         }
     }
-#if 0
-  XQueryTree (hostx_get_display (), w, &root, &parent,
-              &children, &num_children);
-  if (parent == root || parent == None)
-      goto out;
-  result = host_screen_from_window (parent);
-#endif
 
 out:
-#if 0
-  if (children)
-      {
-        XFree (children);
-        children = NULL;
-      }
-#endif
   return result;
 }
 
@@ -1225,6 +1220,11 @@ hostx_create_window (int a_screen_number,
     if (win == None) {
         EPHYR_LOG_ERROR ("failed to create peer window\n") ;
         goto out ;
+    }
+    if (HostX.screens[a_screen_number].peer_win == None) {
+	HostX.screens[a_screen_number].peer_win = win;
+    } else {
+        EPHYR_LOG_ERROR ("multiple peer windows created for same screen\n") ;
     }
     XFlush (dpy) ;
     XMapWindow (dpy, win) ;

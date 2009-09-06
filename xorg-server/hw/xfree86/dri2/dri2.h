@@ -35,16 +35,6 @@
 
 #include <X11/extensions/dri2tokens.h>
 
-/* Version 1 structure (for ABI compatibility) */
-typedef struct {
-    unsigned int attachment;
-    unsigned int name;
-    unsigned int pitch;
-    unsigned int cpp;
-    unsigned int flags;
-    void *driverPrivate;
-} DRI2BufferRec, *DRI2BufferPtr;
-
 /* Version 2 structure (with format at the end) */
 typedef struct {
     unsigned int attachment;
@@ -52,9 +42,11 @@ typedef struct {
     unsigned int pitch;
     unsigned int cpp;
     unsigned int flags;
-    void *driverPrivate;
     unsigned int format;
-} DRI2Buffer2Rec, *DRI2Buffer2Ptr;
+    void *driverPrivate;
+} DRI2BufferRec, *DRI2BufferPtr;
+
+typedef DRI2BufferRec DRI2Buffer2Rec, *DRI2Buffer2Ptr;
 
 typedef DRI2BufferPtr	(*DRI2CreateBuffersProcPtr)(DrawablePtr pDraw,
 						    unsigned int *attachments,
@@ -70,16 +62,16 @@ typedef void		(*DRI2CopyRegionProcPtr)(DrawablePtr pDraw,
 typedef void		(*DRI2WaitProcPtr)(WindowPtr pWin,
 					   unsigned int sequence);
 
-typedef DRI2Buffer2Ptr	(*DRI2CreateBufferProcPtr)(DrawablePtr pDraw,
+typedef DRI2BufferPtr	(*DRI2CreateBufferProcPtr)(DrawablePtr pDraw,
 						   unsigned int attachment,
 						   unsigned int format);
 typedef void		(*DRI2DestroyBufferProcPtr)(DrawablePtr pDraw,
-						    DRI2Buffer2Ptr buffer);
+						    DRI2BufferPtr buffer);
 
 /**
  * Version of the DRI2InfoRec structure defined in this header
  */
-#define DRI2INFOREC_VERSION 2
+#define DRI2INFOREC_VERSION 3
 
 typedef struct {
     unsigned int version;	/**< Version of this struct */
@@ -87,46 +79,38 @@ typedef struct {
     const char *driverName;
     const char *deviceName;
 
-    DRI2CreateBuffersProcPtr	CreateBuffers;
-    DRI2DestroyBuffersProcPtr	DestroyBuffers;
+    DRI2CreateBufferProcPtr	CreateBuffer;
+    DRI2DestroyBufferProcPtr	DestroyBuffer;
     DRI2CopyRegionProcPtr	CopyRegion;
     DRI2WaitProcPtr		Wait;
 
-    /**
-     * \name Fields added in version 2 of the structure.
-     */
-    /*@{*/
-    DRI2CreateBufferProcPtr	CreateBuffer;
-    DRI2DestroyBufferProcPtr	DestroyBuffer;
-    /*@}*/
-
 }  DRI2InfoRec, *DRI2InfoPtr;
 
-Bool DRI2ScreenInit(ScreenPtr	pScreen,
+extern _X_EXPORT Bool DRI2ScreenInit(ScreenPtr	pScreen,
 		    DRI2InfoPtr info);
 
-void DRI2CloseScreen(ScreenPtr pScreen);
+extern _X_EXPORT void DRI2CloseScreen(ScreenPtr pScreen);
 
-Bool DRI2Connect(ScreenPtr pScreen,
+extern _X_EXPORT Bool DRI2Connect(ScreenPtr pScreen,
 		 unsigned int driverType,
 		 int *fd,
 		 const char **driverName,
 		 const char **deviceName);
 
-Bool DRI2Authenticate(ScreenPtr pScreen, drm_magic_t magic);
+extern _X_EXPORT Bool DRI2Authenticate(ScreenPtr pScreen, drm_magic_t magic);
 
-int DRI2CreateDrawable(DrawablePtr pDraw);
+extern _X_EXPORT int DRI2CreateDrawable(DrawablePtr pDraw);
 
-void DRI2DestroyDrawable(DrawablePtr pDraw);
+extern _X_EXPORT void DRI2DestroyDrawable(DrawablePtr pDraw);
 
-DRI2Buffer2Ptr *DRI2GetBuffers(DrawablePtr pDraw,
+extern _X_EXPORT DRI2BufferPtr *DRI2GetBuffers(DrawablePtr pDraw,
 			     int *width,
 			     int *height,
 			     unsigned int *attachments,
 			     int count,
 			     int *out_count);
 
-int DRI2CopyRegion(DrawablePtr pDraw,
+extern _X_EXPORT int DRI2CopyRegion(DrawablePtr pDraw,
 		   RegionPtr pRegion,
 		   unsigned int dest,
 		   unsigned int src);
@@ -149,7 +133,7 @@ int DRI2CopyRegion(DrawablePtr pDraw,
  */
 extern _X_EXPORT void DRI2Version(int *major, int *minor);
 
-extern _X_EXPORT DRI2Buffer2Ptr *DRI2GetBuffersWithFormat(DrawablePtr pDraw,
+extern _X_EXPORT DRI2BufferPtr *DRI2GetBuffersWithFormat(DrawablePtr pDraw,
 	int *width, int *height, unsigned int *attachments, int count,
 	int *out_count);
 

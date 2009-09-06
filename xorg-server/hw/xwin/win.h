@@ -58,7 +58,6 @@
 # define WM_XBUTTONDBLCLK 525
 #endif
 
-#define NEED_EVENTS
 
 #define WIN_DEFAULT_BPP				0
 #define WIN_DEFAULT_WHITEPIXEL			255
@@ -103,6 +102,7 @@
 #define WIN_E3B_TIMER_ID		1
 #define WIN_POLLING_MOUSE_TIMER_ID	2
 
+#define MOUSE_POLLING_INTERVAL		50
 
 #define WIN_E3B_OFF		-1
 #define WIN_FD_INVALID		-1
@@ -314,6 +314,7 @@ typedef Bool (*winReleasePrimarySurfaceProcPtr)(ScreenPtr);
 
 typedef Bool (*winFinishCreateWindowsWindowProcPtr)(WindowPtr pWin);
 
+typedef Bool (*winCreateScreenResourcesProc)(ScreenPtr);
 
 /* Typedef for DIX wrapper functions */
 typedef int (*winDispatchProcPtr) (ClientPtr);
@@ -564,6 +565,8 @@ typedef struct _winPrivScreenRec
   winCreatePrimarySurfaceProcPtr	pwinCreatePrimarySurface;
   winReleasePrimarySurfaceProcPtr	pwinReleasePrimarySurface;
 
+  winCreateScreenResourcesProc       pwinCreateScreenResources;
+
 #ifdef XWIN_MULTIWINDOW
   /* Window Procedures for MultiWindow mode */
   winFinishCreateWindowsWindowProcPtr	pwinFinishCreateWindowsWindow;
@@ -633,12 +636,13 @@ extern DevPrivateKey		g_iGCPrivateKey;
 extern DevPrivateKey		g_iPixmapPrivateKey;
 extern DevPrivateKey		g_iWindowPrivateKey;
 extern unsigned long		g_ulServerGeneration;
-extern CARD32			g_c32LastInputEventTime;
 extern DWORD			g_dwEnginesSupported;
 extern HINSTANCE		g_hInstance;
 extern int                      g_copyROP[];
 extern int                      g_patternROP[];
 extern const char *		g_pszQueryHost;
+extern DeviceIntPtr             g_pwinPointer;
+extern DeviceIntPtr             g_pwinKeyboard;
 
 
 /*
@@ -952,6 +956,11 @@ winKeybdReleaseKeys (void);
 void
 winSendKeyEvent (DWORD dwKey, Bool fDown);
 
+BOOL
+winCheckKeyPressed(WPARAM wParam, LPARAM lParam);
+
+void
+winFixShiftKeys (int iScanCode);
 
 /*
  * winkeyhook.c
@@ -1003,6 +1012,9 @@ int
 winMouseButtonsHandle (ScreenPtr pScreen,
 		       int iEventType, int iButton,
 		       WPARAM wParam);
+
+void
+winEnqueueMotion(int x, int y);
 
 #ifdef XWIN_NATIVEGDI
 /*
@@ -1205,6 +1217,8 @@ winSetShapeRootless (WindowPtr pWindow);
 HICON
 winXIconToHICON (WindowPtr pWin, int iconSize);
 
+void
+winSelectIcons(WindowPtr pWin, HICON *pIcon, HICON *pSmallIcon);
 
 #ifdef XWIN_MULTIWINDOW
 /*

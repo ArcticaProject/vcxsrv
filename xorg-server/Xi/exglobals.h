@@ -43,18 +43,19 @@ extern int BadMode;
 extern int DeviceBusy;
 extern int BadClass;
 
-extern Mask DevicePointerMotionMask;
-extern Mask DevicePointerMotionHintMask;
-extern Mask DeviceFocusChangeMask;
-extern Mask DeviceStateNotifyMask;
-extern Mask DeviceMappingNotifyMask;
-extern Mask DeviceOwnerGrabButtonMask;
-extern Mask DeviceButtonGrabMask;
-extern Mask DeviceButtonMotionMask;
-extern Mask DevicePresenceNotifyMask;
-extern Mask DevicePropertyNotifyMask;
-extern Mask DeviceEnterWindowMask;
-extern Mask DeviceLeaveWindowMask;
+/* Note: only the ones needed in files other than extinit.c are declared */
+extern const Mask DevicePointerMotionMask;
+extern const Mask DevicePointerMotionHintMask;
+extern const Mask DeviceFocusChangeMask;
+extern const Mask DeviceStateNotifyMask;
+extern const Mask DeviceMappingNotifyMask;
+extern const Mask DeviceOwnerGrabButtonMask;
+extern const Mask DeviceButtonGrabMask;
+extern const Mask DeviceButtonMotionMask;
+extern const Mask DevicePresenceNotifyMask;
+extern const Mask DevicePropertyNotifyMask;
+extern const Mask XIAllMasks;
+
 extern Mask PropagateMask[];
 
 extern int DeviceValuator;
@@ -74,8 +75,6 @@ extern int DeviceMappingNotify;
 extern int ChangeDeviceNotify;
 extern int DevicePresenceNotify;
 extern int DevicePropertyNotify;
-extern int DeviceEnterNotify;
-extern int DeviceLeaveNotify;
 
 extern int RT_INPUTCLIENT;
 

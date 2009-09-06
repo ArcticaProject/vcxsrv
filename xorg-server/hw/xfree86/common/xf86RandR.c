@@ -30,6 +30,7 @@
 #include "mibank.h"
 #include "globals.h"
 #include "xf86.h"
+#include "xf86str.h"
 #include "xf86Priv.h"
 #include "xf86DDC.h"
 #include "mipointer.h"
@@ -364,7 +365,7 @@ xf86RandRCloseScreen (int index, ScreenPtr pScreen)
     return (*pScreen->CloseScreen) (index, pScreen);
 }
 
-_X_EXPORT Rotation
+Rotation
 xf86GetRotation(ScreenPtr pScreen)
 {
     if (xf86RandRKey == NULL)
@@ -374,7 +375,7 @@ xf86GetRotation(ScreenPtr pScreen)
 }
 
 /* Function to change RandR's idea of the virtual screen size */
-_X_EXPORT Bool
+Bool
 xf86RandRSetNewVirtualAndDimensions(ScreenPtr pScreen,
 	int newvirtX, int newvirtY, int newmmWidth, int newmmHeight,
 	Bool resetMode)

@@ -44,7 +44,7 @@ typedef struct {
     GCFuncs	    *wrapFuncs;	    /* wrapped funcs */
 } cwGCRec, *cwGCPtr;
 
-extern DevPrivateKey cwGCKey;
+extern _X_EXPORT DevPrivateKey cwGCKey;
 
 #define getCwGC(pGC) ((cwGCPtr)dixLookupPrivate(&(pGC)->devPrivates, cwGCKey))
 #define setCwGC(pGC,p) dixSetPrivate(&(pGC)->devPrivates, cwGCKey, p)
@@ -64,8 +64,8 @@ typedef struct {
     (cwPicturePtr)dixLookupPrivate(&(pPicture)->devPrivates, cwPictureKey) : 0)
 #define setCwPicture(pPicture,p) dixSetPrivate(&(pPicture)->devPrivates, cwPictureKey, p)
 
-extern DevPrivateKey cwPictureKey;
-extern DevPrivateKey cwWindowKey;
+extern _X_EXPORT DevPrivateKey cwPictureKey;
+extern _X_EXPORT DevPrivateKey cwWindowKey;
 
 #define cwWindowPrivate(pWin) dixLookupPrivate(&(pWin)->devPrivates, cwWindowKey)
 #define getCwPixmap(pWindow)	    ((PixmapPtr) cwWindowPrivate(pWindow))
@@ -110,7 +110,7 @@ typedef struct {
 #endif
 } cwScreenRec, *cwScreenPtr;
 
-extern DevPrivateKey cwScreenKey;
+extern _X_EXPORT DevPrivateKey cwScreenKey;
 
 #define getCwScreen(pScreen) ((cwScreenPtr)dixLookupPrivate(&(pScreen)->devPrivates, cwScreenKey))
 #define setCwScreen(pScreen,p) dixSetPrivate(&(pScreen)->devPrivates, cwScreenKey, p)
@@ -151,18 +151,18 @@ extern DevPrivateKey cwScreenKey;
 } while (0)
 
 /* cw.c */
-DrawablePtr
+extern _X_EXPORT DrawablePtr
 cwGetBackingDrawable(DrawablePtr pDrawable, int *x_off, int *y_off);
 
 /* cw_render.c */
 
-void
+extern _X_EXPORT void
 cwInitializeRender (ScreenPtr pScreen);
 
-void
+extern _X_EXPORT void
 cwFiniRender (ScreenPtr pScreen);
 
 /* cw.c */
 
-void
+extern _X_EXPORT void
 miInitializeCompositeWrapper(ScreenPtr pScreen);

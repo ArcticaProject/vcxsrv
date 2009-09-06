@@ -587,7 +587,7 @@ XAAFillColor8x8PatternRects(
 	|  Cache Blits  |
 	\***************/
 
-void 
+void
 XAAFillCacheBltRects(
    ScrnInfoPtr pScrn,
    int rop,
@@ -709,7 +709,7 @@ XAAFillCacheBltRects(
 
 
 
-void 
+void
 XAAFillCacheExpandRects(
    ScrnInfoPtr pScrn,
    int fg, int bg, int rop,
@@ -812,7 +812,7 @@ WriteColumn(
 
     src = pSrc + (yoff * srcwidth);
 
-    dwords = ((w * Bpp) + 3) >> 2;
+    dwords = bytes_to_int32(w * Bpp);
 
     if((infoRec->ImageWriteFlags & CPU_TRANSFER_PAD_QWORD) && 
                                                 ((dwords * h) & 0x01)) {
@@ -873,7 +873,7 @@ WriteColumn(
     }
 }
 
-void 
+void
 XAAFillImageWriteRects(
     ScrnInfoPtr pScrn,
     int rop,

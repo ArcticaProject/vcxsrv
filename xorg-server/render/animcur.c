@@ -104,17 +104,6 @@ static DevPrivateKey AnimCurScreenPrivateKey = &AnimCurScreenPrivateKeyIndex;
 #define Wrap(as,s,elt,func) (((as)->elt = (s)->elt), (s)->elt = func)
 #define Unwrap(as,s,elt)    ((s)->elt = (as)->elt)
 
-static Bool
-AnimCurDisplayCursor (DeviceIntPtr pDev, 
-                      ScreenPtr pScreen,
-		      CursorPtr pCursor);
-
-static Bool
-AnimCurSetCursorPosition (DeviceIntPtr pDev,
-                          ScreenPtr pScreen,
-			  int x,
-			  int y,
-			  Bool generateEvent);
 
 static Bool
 AnimCurCloseScreen (int index, ScreenPtr pScreen)
@@ -157,7 +146,7 @@ AnimCurCursorLimits (DeviceIntPtr pDev,
     }
     else
     {
-        (*pScreen->CursorLimits) (inputInfo.pointer, pScreen, pCursor,
+        (*pScreen->CursorLimits) (pDev, pScreen, pCursor,
                                   pHotBox, pTopLeftBox); 
     }
     Wrap (as, pScreen, CursorLimits, AnimCurCursorLimits);

@@ -45,7 +45,7 @@
 
 #include "X11Application.h"
 
-#include <X11/extensions/applewm.h>
+#include <X11/extensions/applewmconst.h>
 #include <X11/extensions/randr.h>
 
 // X headers
@@ -179,7 +179,7 @@ void QuartzInitInput(
     int argc,
     char **argv )
 {
-    X11ApplicationSetCanQuit(1);
+    X11ApplicationSetCanQuit(0);
     X11ApplicationServerReady();
     // Do final display mode specific initialization before handling events
     if (quartzProcs->InitInput)
@@ -276,7 +276,9 @@ static void QuartzUpdateScreens(void) {
     pScreen->ResizeWindow(pRoot, x - sx, y - sy, width, height, NULL);
     //pScreen->PaintWindowBackground (pRoot, &pRoot->borderClip,  PW_BACKGROUND);
     miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);
-    DefineInitialRootWindow(pRoot);
+
+//  TODO: This is a noop in 1.6 and nuked in master... we may need to do something else now to handle it
+//    DefineInitialRootWindow(pRoot);
 
     DEBUG_LOG("Root Window: %dx%d @ (%d, %d) darwinMainScreen (%d, %d) xy (%d, %d) dixScreenOrigins (%d, %d)\n", width, height, x - sx, y - sy, darwinMainScreenX, darwinMainScreenY, x, y, dixScreenOrigins[pScreen->myNum].x, dixScreenOrigins[pScreen->myNum].y);
 
@@ -350,13 +352,20 @@ void QuartzSetRootless(Bool state) {
     /* When in rootless, the menubar is not part of the screen, so we need to update our screens on toggle */    
     QuartzUpdateScreens();
 
-    if (!quartzEnableRootless && !quartzHasRoot) {
-        RootlessHideAllWindows();
-    } else if (quartzEnableRootless && !quartzHasRoot) {
-        RootlessShowAllWindows();
+    if(!quartzHasRoot) {
+        if(!quartzEnableRootless) {
+            RootlessHideAllWindows();
+        } else {
+            RootlessShowAllWindows();
+        }
     }
 
+    X11ApplicationShowHideMenubar(!quartzHasRoot);
+
     xp_reenable_update();
+
+    if (!quartzEnableRootless && quartzFullscreenDisableHotkeys)
+        xp_disable_hot_keys(quartzHasRoot);
 }
 
 /*

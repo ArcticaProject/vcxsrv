@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS=dist-bzip2 foreign nostdinc
-DISTCHECK_CONFIGURE_FLAGS=--disable-xorgcfg
+ACLOCAL_AMFLAGS = -I m4
 
 if COMPOSITE
 COMPOSITE_DIR=composite
@@ -38,7 +38,8 @@ SUBDIRS = \
 	$(GLX_DIR) \
 	exa \
 	config \
-	hw
+	hw \
+	test
 
 aclocaldir = $(datadir)/aclocal
 aclocal_DATA = xorg-server.m4
@@ -48,15 +49,13 @@ pkgconfig_DATA = xorg-server.pc
 
 EXTRA_DIST = xorg-server.pc.in xorg-server.m4 ChangeLog autogen.sh
 
+DISTCLEANFILES = doltcompile doltlibtool
 MAINTAINERCLEANFILES=ChangeLog
-
-DISTCLEANFILES = doltlibtool doltcompile
 
 .PHONY: ChangeLog
 
 ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || \
-	(touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
+	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog
 
@@ -81,7 +80,8 @@ DIST_SUBDIRS = \
 	glx \
 	exa \
 	config \
-	hw
+	hw \
+	test
 
 # gross hack
 relink: all

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 1997-2003 by The XFree86 Project, Inc.
  *
@@ -40,10 +39,10 @@
 #include "xf86.h"
 #include "xf86Priv.h"
 #ifdef DPMSExtension
-#define DPMS_SERVER
-#include <X11/extensions/dpms.h>
+#include <X11/extensions/dpmsconst.h>
 #include "dpmsproc.h"
 #endif
+#include "xf86VGAarbiter.h"
 
 
 #ifdef DPMSExtension
@@ -54,44 +53,41 @@ static int DPMSCount = 0;
 #endif
 
 
-_X_EXPORT Bool
+Bool
 xf86DPMSInit(ScreenPtr pScreen, DPMSSetProcPtr set, int flags)
 {
 #ifdef DPMSExtension
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     DPMSPtr pDPMS;
     pointer DPMSOpt;
-    MessageType enabled_from = X_INFO;
+    MessageType enabled_from;
 
     DPMSKey = &DPMSKeyIndex;
 
-    if (DPMSDisabledSwitch)
-	DPMSEnabled = FALSE;
     if (!dixSetPrivate(&pScreen->devPrivates, DPMSKey,
 		       xcalloc(sizeof(DPMSRec), 1)))
 	return FALSE;
 
-    pDPMS = (DPMSPtr)dixLookupPrivate(&pScreen->devPrivates, DPMSKey);
+    pDPMS = dixLookupPrivate(&pScreen->devPrivates, DPMSKey);
     pScrn->DPMSSet = set;
     pDPMS->Flags = flags;
     DPMSOpt = xf86FindOption(pScrn->options, "dpms");
-    if (DPMSOpt) {
-	if ((pDPMS->Enabled
-	    = xf86SetBoolOption(pScrn->options, "dpms", FALSE))
-	    && !DPMSDisabledSwitch)
-	    DPMSEnabled = TRUE;
-            enabled_from = X_CONFIG;
-	xf86MarkOptionUsed(DPMSOpt);
-    } else if (DPMSEnabledSwitch) {
-	if (!DPMSDisabledSwitch)
-	    DPMSEnabled = TRUE;
-	pDPMS->Enabled = TRUE;
-    }  
-    else {
-	pDPMS->Enabled = defaultDPMSEnabled;
+    if (DPMSDisabledSwitch) {
+	enabled_from = X_CMDLINE;
+	DPMSEnabled = FALSE;
     }
-    if (pDPMS->Enabled)
+    else if (DPMSOpt) {
+	enabled_from = X_CONFIG;
+	DPMSEnabled = xf86CheckBoolOption(pScrn->options, "dpms", FALSE);
+	xf86MarkOptionUsed(DPMSOpt);
+    }
+    else {
+	enabled_from = X_DEFAULT;
+	DPMSEnabled = TRUE;
+    }
+    if (DPMSEnabled)
 	xf86DrvMsg(pScreen->myNum, enabled_from, "DPMS enabled\n");
+    pDPMS->Enabled = DPMSEnabled;
     pDPMS->CloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = DPMSClose;
     DPMSCount++;
@@ -113,7 +109,7 @@ DPMSClose(int i, ScreenPtr pScreen)
     if (DPMSKey == NULL)
 	return FALSE;
 
-    pDPMS = (DPMSPtr)dixLookupPrivate(&pScreen->devPrivates, DPMSKey);
+    pDPMS = dixLookupPrivate(&pScreen->devPrivates, DPMSKey);
 
     /* This shouldn't happen */
     if (!pDPMS)
@@ -131,7 +127,7 @@ DPMSClose(int i, ScreenPtr pScreen)
  	xf86Screens[i]->DPMSSet(xf86Screens[i],DPMSModeOn,0);
     }
     
-    xfree((pointer)pDPMS);
+    xfree(pDPMS);
     dixSetPrivate(&pScreen->devPrivates, DPMSKey, NULL);
     if (--DPMSCount == 0)
 	DPMSKey = NULL;
@@ -144,7 +140,7 @@ DPMSClose(int i, ScreenPtr pScreen)
  *	Device dependent DPMS mode setting hook.  This is called whenever
  *	the DPMS mode is to be changed.
  */
-_X_EXPORT int
+int
 DPMSSet(ClientPtr client, int level)
 {
     int rc, i;
@@ -165,11 +161,11 @@ DPMSSet(ClientPtr client, int level)
     /* For each screen, set the DPMS level */
     for (i = 0; i < xf86NumScreens; i++) {
     	pScrn = xf86Screens[i];
-	pDPMS = (DPMSPtr)dixLookupPrivate(&screenInfo.screens[i]->devPrivates,
-					  DPMSKey);
+	pDPMS = dixLookupPrivate(&screenInfo.screens[i]->devPrivates, DPMSKey);
 	if (pDPMS && pScrn->DPMSSet && pDPMS->Enabled && pScrn->vtSema) { 
-	    xf86EnableAccess(pScrn);
+	    xf86VGAarbiterLock(pScrn);
 	    pScrn->DPMSSet(pScrn, level, 0);
+	    xf86VGAarbiterUnlock(pScrn);
 	}
     }
     return Success;
@@ -180,7 +176,7 @@ DPMSSet(ClientPtr client, int level)
  * DPMSSupported --
  *	Return TRUE if any screen supports DPMS.
  */
-_X_EXPORT Bool
+Bool
 DPMSSupported(void)
 {
     int i;
@@ -194,33 +190,11 @@ DPMSSupported(void)
     /* For each screen, check if DPMS is supported */
     for (i = 0; i < xf86NumScreens; i++) {
     	pScrn = xf86Screens[i];
-	pDPMS = (DPMSPtr)dixLookupPrivate(&screenInfo.screens[i]->devPrivates,
-					  DPMSKey);
+	pDPMS = dixLookupPrivate(&screenInfo.screens[i]->devPrivates, DPMSKey);
 	if (pDPMS && pScrn->DPMSSet)
 	    return TRUE;
     }
     return FALSE;
-}
-
-
-/*
- * DPMSGet --
- *	Device dependent DPMS mode getting hook.  This returns the current
- *	DPMS mode, or -1 if DPMS is not supported.
- *
- *	This should hook in to the appropriate driver-level function, which
- *	will be added to the ScrnInfoRec.
- *
- *	NOTES:
- *	 1. the calling interface should be changed to specify which
- *	    screen to check.
- *	 2. It isn't clear that this function is ever used or what it should
- *	    return.
- */
-_X_EXPORT int
-DPMSGet(int *level)
-{
-    return DPMSPowerLevel;
 }
 
 #endif /* DPMSExtension */

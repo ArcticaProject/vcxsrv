@@ -105,7 +105,7 @@ unsigned int XAAShiftMasks[32] = {
 
 #endif
 
-void 
+void
 #ifdef TRIPLE_BITS
 EXPNAME(XAAFillColorExpandRects3)(
 #else
@@ -241,7 +241,7 @@ SECOND_PASS:
 
 
 
-void 
+void
 #ifdef TRIPLE_BITS
 EXPNAME(XAAFillColorExpandSpans3)(
 #else
@@ -352,7 +352,7 @@ SECOND_PASS:
 
 #ifndef FIXEDBASE
 
-void 
+void
 #ifdef TRIPLE_BITS
 EXPNAME(XAAFillScanlineColorExpandRects3)(
 #else
@@ -465,7 +465,7 @@ SECOND_PASS:
      SET_SYNC_FLAG(infoRec);
 }
 
-void 
+void
 #ifdef TRIPLE_BITS
 EXPNAME(XAAFillScanlineColorExpandSpans3)(
 #else

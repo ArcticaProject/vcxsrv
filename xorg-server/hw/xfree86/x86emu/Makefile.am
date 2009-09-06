@@ -1,6 +1,6 @@
-noinst_LIBRARIES = libx86emu.a
+noinst_LTLIBRARIES = libx86emu.la
 
-libx86emu_a_SOURCES = debug.c \
+libx86emu_la_SOURCES = debug.c \
                       decode.c \
                       fpu.c \
                       ops2.c \

@@ -6,7 +6,19 @@
 #define _XKB_CONFIG_H_
 
 /* Default set of XKB rules. */
-#undef __XKBDEFRULES__
+#undef XKB_DFLT_RULES
+
+/* Default XKB model. */
+#undef XKB_DFLT_MODEL
+
+/* Default XKB layout. */
+#undef XKB_DFLT_LAYOUT
+
+/* Default XKB variant. */
+#undef XKB_DFLT_VARIANT
+
+/* Default XKB options. */
+#undef XKB_DFLT_OPTIONS
 
 /* Path to XKB definitions. */
 #undef XKB_BASE_DIRECTORY

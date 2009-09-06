@@ -24,8 +24,6 @@ in this Software without prior written authorization from The Open Group.
 
 ********************************************************/
 
-#define NEED_REPLIES
-#define NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -205,7 +203,7 @@ MultibufferExtensionInit()
     for (i = 0; i < screenInfo.numScreens; i++)
     {
 	pScreen = screenInfo.screens[i];
-	if (!(pMultibufferScreen = (MultibufferScreenPtr) xalloc (sizeof (MultibufferScreenRec))))
+	if (!(pMultibufferScreen = xalloc (sizeof (MultibufferScreenRec))))
 	{
 	    for (j = 0; j < i; j++)
 		xfree (dixLookupPrivate(&screenInfo.screens[j]->devPrivates, MultibufferScreenPrivKey));
@@ -350,8 +348,7 @@ CreateImageBuffers (pWin, nbuf, ids, action, hint)
     xRectangle		clearRect;
 
     DestroyImageBuffers(pWin);
-    pMultibuffers = (MultibuffersPtr) xalloc (sizeof (MultibuffersRec) +
-					      nbuf * sizeof (MultibufferRec));
+    pMultibuffers = xalloc (sizeof (MultibuffersRec) + nbuf * sizeof (MultibufferRec));
     if (!pMultibuffers)
 	return BadAlloc;
     pMultibuffers->pWindow = pWin;
@@ -433,7 +430,7 @@ ProcCreateImageBuffers (client)
     int				len, nbuf, i, err, rc;
 
     REQUEST_AT_LEAST_SIZE (xMbufCreateImageBuffersReq);
-    len = stuff->length - (sizeof(xMbufCreateImageBuffersReq) >> 2);
+    len = stuff->length - bytes_to_int32(sizeof(xMbufCreateImageBuffersReq));
     if (len == 0)
 	return BadLength;
     rc = dixLookupWindow(&pWin, stuff->window, client, DixUnknownAccess);
@@ -501,13 +498,13 @@ ProcDisplayImageBuffers (client)
     
 
     REQUEST_AT_LEAST_SIZE (xMbufDisplayImageBuffersReq);
-    nbuf = stuff->length - (sizeof (xMbufDisplayImageBuffersReq) >> 2);
+    nbuf = stuff->length - bytes_to_int32(sizeof (xMbufDisplayImageBuffersReq));
     if (!nbuf)
 	return Success;
     minDelay = stuff->minDelay;
     ids = (XID *) &stuff[1];
-    ppMultibuffers = (MultibuffersPtr *) xalloc(nbuf * sizeof (MultibuffersPtr));
-    pMultibuffer = (MultibufferPtr *) xalloc(nbuf * sizeof (MultibufferPtr));
+    ppMultibuffers = xalloc(nbuf * sizeof (MultibuffersPtr));
+    pMultibuffer = xalloc(nbuf * sizeof (MultibufferPtr));
     if (!ppMultibuffers || !pMultibuffer)
     {
 	if (ppMultibuffers) xfree(ppMultibuffers);
@@ -595,7 +592,7 @@ ProcSetMBufferAttributes (client)
     pMultibuffers = (MultibuffersPtr)LookupIDByType (pWin->drawable.id, MultibuffersResType);
     if (!pMultibuffers)
 	return BadMatch;
-    len = stuff->length - (sizeof (xMbufSetMBufferAttributesReq) >> 2);
+    len = stuff->length - bytes_to_int32(sizeof (xMbufSetMBufferAttributesReq));
     vmask = stuff->valueMask;
     if (len != Ones (vmask))
 	return BadLength;
@@ -647,7 +644,7 @@ ProcGetMBufferAttributes (client)
     pMultibuffers = (MultibuffersPtr)LookupIDByType (pWin->drawable.id, MultibuffersResType);
     if (!pMultibuffers)
 	return BadAccess;
-    ids = (XID *) xalloc (pMultibuffers->numMultibuffer * sizeof (XID));
+    ids = xalloc (pMultibuffers->numMultibuffer * sizeof (XID));
     if (!ids)
 	return BadAlloc;
     for (i = 0; i < pMultibuffers->numMultibuffer; i++)
@@ -690,7 +687,7 @@ ProcSetBufferAttributes (client)
     pMultibuffer = (MultibufferPtr) LookupIDByType (stuff->buffer, MultibufferResType);
     if (!pMultibuffer)
 	return MultibufferErrorBase + MultibufferBadBuffer;
-    len = stuff->length - (sizeof (xMbufSetBufferAttributesReq) >> 2);
+    len = stuff->length - bytes_to_int32(sizeof (xMbufSetBufferAttributesReq));
     vmask = stuff->valueMask;
     if (len != Ones (vmask))
 	return BadLength;
@@ -784,14 +781,13 @@ ProcGetBufferInfo (client)
 	pDepth = &pScreen->allowedDepths[i];
 	nInfo += pDepth->numVids;
     }
-    pInfo = (xMbufBufferInfo *)
-		xalloc (nInfo * sizeof (xMbufBufferInfo));
+    pInfo = xalloc (nInfo * sizeof (xMbufBufferInfo));
     if (!pInfo)
 	return BadAlloc;
 
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
-    rep.length = nInfo * (sizeof (xMbufBufferInfo) >> 2);
+    rep.length = nInfo * bytes_to_int32(sizeof (xMbufBufferInfo));
     rep.normalInfo = nInfo;
     rep.stereoInfo = 0;
     if (client->swapped)
@@ -1108,6 +1104,34 @@ SClobberNotifyEvent (from, to)
     to->state = from->state;
 }
 
+RegionPtr CreateUnclippedWinSize(WindowPtr pWin);
+
+RegionPtr
+CreateUnclippedWinSize (WindowPtr pWin)
+{
+    RegionPtr	pRgn;
+    BoxRec	box;
+
+    box.x1 = pWin->drawable.x;
+    box.y1 = pWin->drawable.y;
+    box.x2 = pWin->drawable.x + (int) pWin->drawable.width;
+    box.y2 = pWin->drawable.y + (int) pWin->drawable.height;
+    pRgn = REGION_CREATE(pWin->drawable.pScreen, &box, 1);
+    if (wBoundingShape (pWin) || wClipShape (pWin)) {
+	ScreenPtr pScreen;
+        pScreen = pWin->drawable.pScreen;
+
+	REGION_TRANSLATE(pScreen, pRgn, - pWin->drawable.x,
+			 - pWin->drawable.y);
+	if (wBoundingShape (pWin))
+	    REGION_INTERSECT(pScreen, pRgn, pRgn, wBoundingShape (pWin));
+	if (wClipShape (pWin))
+	    REGION_INTERSECT(pScreen, pRgn, pRgn, wClipShape (pWin));
+	REGION_TRANSLATE(pScreen, pRgn, pWin->drawable.x, pWin->drawable.y);
+    }
+    return pRgn;
+}
+
 static void
 PerformDisplayRequest (ppMultibuffers, pMultibuffer, nbuf)
     MultibufferPtr	    *pMultibuffer;
@@ -1238,8 +1262,8 @@ DisplayImageBuffers (ids, nbuf)
     MultibuffersPtr *pMultibuffers;
     int		    i, j;
 
-    pMultibuffer = (MultibufferPtr *) xalloc (nbuf * sizeof *pMultibuffer +
-				   nbuf * sizeof *pMultibuffers);
+    pMultibuffer = xalloc (nbuf * sizeof *pMultibuffer +
+			    nbuf * sizeof *pMultibuffers);
     if (!pMultibuffer)
 	return BadAlloc;
     pMultibuffers = (MultibuffersPtr *) (pMultibuffer + nbuf);
@@ -1364,7 +1388,7 @@ MultibufferExpose (pMultibuffer, pRegion)
 	numRects = REGION_NUM_RECTS(pRegion);
 	pBox = REGION_RECTS(pRegion);
 
-	pEvent = (xEvent *) xalloc(numRects * sizeof(xEvent));
+	pEvent = xalloc(numRects * sizeof(xEvent));
 	if (pEvent) {
 	    pe = pEvent;
 
@@ -1718,7 +1742,7 @@ EventSelectForMultibuffer (pMultibuffer, client, mask)
 	}
 	if (!other)
 	{ /* new client that never selected events on this buffer before */
-	    other = (OtherClients *) xalloc (sizeof (OtherClients));
+	    other = xalloc (sizeof (OtherClients));
 	    if (!other)
 		return BadAlloc;
 	    other->mask = mask;

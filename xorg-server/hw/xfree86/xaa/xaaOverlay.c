@@ -112,7 +112,7 @@ XAASetColorKey8_32(
     SET_SYNC_FLAG(infoRec);
 }
 
-void 
+void
 XAASetupOverlay8_32Planar(ScreenPtr pScreen)
 {
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_SCREEN(pScreen);

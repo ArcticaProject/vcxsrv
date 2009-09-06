@@ -56,15 +56,6 @@ static ExtensionModule extensionModules[] = {
 	NULL
     },
 #endif
-#ifdef notyet
-    {
-	XTestExtensionInit,
-	XTestExtensionName,
-	&noTestExtensions,
-	NULL,
-	NULL
-    },
-#endif
 #ifdef SCREENSAVER
     {
 	ScreenSaverExtensionInit,

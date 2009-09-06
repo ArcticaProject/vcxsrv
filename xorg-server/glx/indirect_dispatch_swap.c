@@ -3879,7 +3879,7 @@ void __glXDispSwap_ResetMinmax(GLbyte * pc)
 void __glXDispSwap_TexImage3D(GLbyte * pc)
 {
     const CARD32 ptr_is_null = *(CARD32 *)(pc + 76);
-    const GLvoid * const pixels = (const GLvoid *) (ptr_is_null != 0) ? NULL : (pc + 80);
+    const GLvoid * const pixels = (const GLvoid *) ((ptr_is_null != 0) ? NULL : (pc + 80));
     __GLXpixel3DHeader * const hdr = (__GLXpixel3DHeader *)(pc);
 
     CALL_PixelStorei( GET_DISPATCH(), (GL_UNPACK_SWAP_BYTES,   hdr->swapBytes) );

@@ -37,7 +37,6 @@
 #endif
 #include "win.h"
 #include "winmsg.h"
-#include "safeAlpha.h"	
 
 
 #ifdef XWIN_MULTIWINDOWEXTWM
@@ -245,6 +244,25 @@ winScreenInit (int index,
   return TRUE;
 }
 
+static Bool
+winCreateScreenResources(ScreenPtr pScreen)
+{
+  winScreenPriv(pScreen);
+  Bool result;
+
+  result = pScreenPriv->pwinCreateScreenResources(pScreen);
+
+  /* Now the screen bitmap has been wrapped in a pixmap,
+     add that to the Shadow framebuffer */
+  if (!shadowAdd(pScreen, pScreen->devPrivate,
+		 pScreenPriv->pwinShadowUpdate, NULL, 0, 0))
+    {
+      ErrorF ("winCreateScreenResources - shadowAdd () failed\n");
+      return FALSE;
+    }
+
+  return result;
+}
 
 /* See Porting Layer Definition - p. 20 */
 Bool
@@ -360,22 +378,6 @@ winFinishScreenInitFB (int index,
   pScreen->blockData = pScreen;
   pScreen->wakeupData = pScreen;
 
-#ifdef XWIN_MULTIWINDOWEXTWM
-  /*
-   * Setup acceleration for multi-window external window manager mode.
-   * To be compatible with the Damage extension, this must be done
-   * before calling miDCInitialize, which calls DamageSetup.
-   */
-  if (pScreenInfo->fMWExtWM)
-    {
-      if (!RootlessAccelInit (pScreen))
-        {
-          ErrorF ("winFinishScreenInitFB - RootlessAccelInit () failed\n");
-          return FALSE;
-        }
-    }
-#endif
-
 #ifdef RENDER
   /* Render extension initialization, calls miPictureInit */
   if (!fbPictureInit (pScreen, NULL, 0))
@@ -428,15 +430,18 @@ winFinishScreenInitFB (int index,
       )
     {
 #if CYGDEBUG
-      winDebug ("winFinishScreenInitFB - Calling shadowInit ()\n");
+      winDebug ("winFinishScreenInitFB - Calling shadowSetup ()\n");
 #endif
-      if (!shadowInit (pScreen,
-		       pScreenPriv->pwinShadowUpdate,
-		       NULL))
+      if (!shadowSetup(pScreen))
 	{
-	  ErrorF ("winFinishScreenInitFB - shadowInit () failed\n");
+	  ErrorF ("winFinishScreenInitFB - shadowSetup () failed\n");
 	  return FALSE;
 	}
+
+      /* Wrap CreateScreenResources so we can add the screen pixmap
+         to the Shadow framebuffer after it's been created */
+      pScreenPriv->pwinCreateScreenResources = pScreen->CreateScreenResources;
+      pScreen->CreateScreenResources = winCreateScreenResources;
     }
 
 #ifdef XWIN_MULTIWINDOWEXTWM

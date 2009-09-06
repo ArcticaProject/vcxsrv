@@ -80,7 +80,6 @@
 #include "scrnintstr.h"         /* For screenInfo */
 
 #include <X11/extensions/XIproto.h>
-#define EXTENSION_PROC_ARGS void *
 
 #if DMX_EQ_DEBUG
 #define DMXDBG2(f,a,b)           dmxLog(dmxDebug,f,a,b)

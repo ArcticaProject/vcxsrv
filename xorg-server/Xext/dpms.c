@@ -26,13 +26,6 @@ Equipment Corporation.
 
 ******************************************************************/
 
-/*
- * HISTORY
- *
- * @(#)RCSfile: dpms.c,v Revision: 1.1.4.5  (DEC) Date: 1996/03/04 15:27:00
- */
-
-
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -44,42 +37,12 @@ Equipment Corporation.
 #include "dixstruct.h"
 #include "extnsionst.h"
 #include "opaque.h"
-#define DPMS_SERVER
-#include <X11/extensions/dpms.h>
-#include <X11/extensions/dpmsstr.h>
+#include <X11/extensions/dpmsproto.h>
 #include "dpmsproc.h"
 #include "modinit.h"
 
-static DISPATCH_PROC(ProcDPMSDispatch);
-static DISPATCH_PROC(SProcDPMSDispatch);
-static DISPATCH_PROC(ProcDPMSGetVersion);
-static DISPATCH_PROC(SProcDPMSGetVersion);
-static DISPATCH_PROC(ProcDPMSGetTimeouts);
-static DISPATCH_PROC(SProcDPMSGetTimeouts);
-static DISPATCH_PROC(ProcDPMSSetTimeouts);
-static DISPATCH_PROC(SProcDPMSSetTimeouts);
-static DISPATCH_PROC(ProcDPMSEnable);
-static DISPATCH_PROC(SProcDPMSEnable);
-static DISPATCH_PROC(ProcDPMSDisable);
-static DISPATCH_PROC(SProcDPMSDisable);
-static DISPATCH_PROC(ProcDPMSForceLevel);
-static DISPATCH_PROC(SProcDPMSForceLevel);
-static DISPATCH_PROC(ProcDPMSInfo);
-static DISPATCH_PROC(SProcDPMSInfo);
-static DISPATCH_PROC(ProcDPMSCapable);
-static DISPATCH_PROC(SProcDPMSCapable);
-
-void
-DPMSExtensionInit(INITARGS)
-{
-    AddExtension(DPMSExtensionName, 0, 0,
-		 ProcDPMSDispatch, SProcDPMSDispatch,
-		 NULL, StandardMinorOpcode);
-}
-
 static int
-ProcDPMSGetVersion(client)
-    ClientPtr client;
+ProcDPMSGetVersion(ClientPtr client)
 {
     /* REQUEST(xDPMSGetVersionReq); */
     xDPMSGetVersionReply rep;
@@ -123,8 +86,7 @@ ProcDPMSCapable(ClientPtr client)
 }
 
 static int
-ProcDPMSGetTimeouts(client)
-    ClientPtr client;
+ProcDPMSGetTimeouts(ClientPtr client)
 {
     /* REQUEST(xDPMSGetTimeoutsReq); */
     xDPMSGetTimeoutsReply rep;
@@ -150,8 +112,7 @@ ProcDPMSGetTimeouts(client)
 }
 
 static int
-ProcDPMSSetTimeouts(client)
-    ClientPtr client;
+ProcDPMSSetTimeouts(ClientPtr client)
 {
     REQUEST(xDPMSSetTimeoutsReq);
 
@@ -177,8 +138,7 @@ ProcDPMSSetTimeouts(client)
 }
 
 static int
-ProcDPMSEnable(client)
-    ClientPtr client;
+ProcDPMSEnable(ClientPtr client)
 {
     Bool was_enabled = DPMSEnabled;
 
@@ -194,8 +154,7 @@ ProcDPMSEnable(client)
 }
 
 static int
-ProcDPMSDisable(client)
-    ClientPtr client;
+ProcDPMSDisable(ClientPtr client)
 {
     /* REQUEST(xDPMSDisableReq); */
 
@@ -209,8 +168,7 @@ ProcDPMSDisable(client)
 }
 
 static int
-ProcDPMSForceLevel(client)
-    ClientPtr client;
+ProcDPMSForceLevel(ClientPtr client)
 {
     REQUEST(xDPMSForceLevelReq);
 
@@ -219,19 +177,10 @@ ProcDPMSForceLevel(client)
     if (!DPMSEnabled)
 	return BadMatch;
 
-    if (stuff->level == DPMSModeOn) {
-      lastDeviceEventTime.milliseconds =
-          GetTimeInMillis();
-    } else if (stuff->level == DPMSModeStandby) {
-      lastDeviceEventTime.milliseconds =
-          GetTimeInMillis() -  DPMSStandbyTime;
-    } else if (stuff->level == DPMSModeSuspend) {
-      lastDeviceEventTime.milliseconds =
-          GetTimeInMillis() -  DPMSSuspendTime;
-    } else if (stuff->level == DPMSModeOff) {
-      lastDeviceEventTime.milliseconds =
-          GetTimeInMillis() -  DPMSOffTime;
-    } else {
+    if (stuff->level != DPMSModeOn &&
+        stuff->level != DPMSModeStandby &&
+        stuff->level != DPMSModeSuspend &&
+        stuff->level != DPMSModeOff) {
 	client->errorValue = stuff->level;
 	return BadValue;
     }
@@ -265,8 +214,7 @@ ProcDPMSInfo(ClientPtr client)
 }
 
 static int
-ProcDPMSDispatch (client)
-    ClientPtr	client;
+ProcDPMSDispatch (ClientPtr client)
 {
     REQUEST(xReq);
 
@@ -294,8 +242,7 @@ ProcDPMSDispatch (client)
 }
 
 static int
-SProcDPMSGetVersion(client)
-    ClientPtr	client;
+SProcDPMSGetVersion(ClientPtr client)
 {
     int n;
     REQUEST(xDPMSGetVersionReq);
@@ -320,8 +267,7 @@ SProcDPMSCapable(ClientPtr client)
 }
 
 static int
-SProcDPMSGetTimeouts(client)
-    ClientPtr client;
+SProcDPMSGetTimeouts(ClientPtr client)
 {
     REQUEST(xDPMSGetTimeoutsReq);
     int n;
@@ -333,8 +279,7 @@ SProcDPMSGetTimeouts(client)
 }
 
 static int
-SProcDPMSSetTimeouts(client)
-    ClientPtr client;
+SProcDPMSSetTimeouts(ClientPtr client)
 {
     REQUEST(xDPMSSetTimeoutsReq);
     int n;
@@ -349,8 +294,7 @@ SProcDPMSSetTimeouts(client)
 }
 
 static int
-SProcDPMSEnable(client)
-    ClientPtr client;
+SProcDPMSEnable(ClientPtr client)
 {
     REQUEST(xDPMSEnableReq);
     int n;
@@ -362,8 +306,7 @@ SProcDPMSEnable(client)
 }
 
 static int
-SProcDPMSDisable(client)
-    ClientPtr client;
+SProcDPMSDisable(ClientPtr client)
 {
     REQUEST(xDPMSDisableReq);
     int n;
@@ -375,8 +318,7 @@ SProcDPMSDisable(client)
 }
 
 static int
-SProcDPMSForceLevel(client)
-    ClientPtr client;
+SProcDPMSForceLevel(ClientPtr client)
 {
     REQUEST(xDPMSForceLevelReq);
     int n;
@@ -390,8 +332,7 @@ SProcDPMSForceLevel(client)
 }
 
 static int
-SProcDPMSInfo(client)
-    ClientPtr client;
+SProcDPMSInfo(ClientPtr client)
 {
     REQUEST(xDPMSInfoReq);
     int n;
@@ -403,8 +344,7 @@ SProcDPMSInfo(client)
 }
 
 static int
-SProcDPMSDispatch (client)
-    ClientPtr	client;
+SProcDPMSDispatch (ClientPtr client)
 {
     REQUEST(xReq);
     switch (stuff->data)
@@ -428,4 +368,12 @@ SProcDPMSDispatch (client)
     default:
 	return BadRequest;
     }
+}
+
+void
+DPMSExtensionInit(INITARGS)
+{
+    AddExtension(DPMSExtensionName, 0, 0,
+		 ProcDPMSDispatch, SProcDPMSDispatch,
+		 NULL, StandardMinorOpcode);
 }

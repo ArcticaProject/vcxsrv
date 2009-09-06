@@ -134,7 +134,7 @@ xf86freeModeLineList (XF86ConfModeLinePtr ptr)
 		TestFree (ptr->ml_comment);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -580,7 +580,7 @@ VertDone:
 
 				/* add to the end of the list of modes sections 
 				   referenced here */
-				mptr = xf86confcalloc (1, sizeof (XF86ConfModesLinkRec));
+				mptr = calloc (1, sizeof (XF86ConfModesLinkRec));
 				mptr->list.next = NULL;
 				mptr->ml_modes_str = val.str;
 				mptr->ml_modes = NULL;
@@ -822,7 +822,7 @@ xf86freeMonitorList (XF86ConfMonitorPtr ptr)
 		xf86freeModeLineList (ptr->mon_modeline_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -838,7 +838,7 @@ xf86freeModesList (XF86ConfModesPtr ptr)
 		xf86freeModeLineList (ptr->mon_modeline_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 

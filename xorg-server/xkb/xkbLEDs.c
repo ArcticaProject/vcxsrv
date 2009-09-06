@@ -31,7 +31,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #include <ctype.h>
 #include <math.h>
-#define NEED_EVENTS 1
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "misc.h"
@@ -284,7 +283,7 @@ unsigned			oldState;
     ed->ledID=		sli->id;
     ed->ledsDefined=	sli->namesPresent|sli->mapsPresent;
     ed->ledState=	sli->effectiveState;
-    ed->unsupported|=	XkbXI_IndicatorStateMask;
+    ed->unsupported=	0;
     ed->supported=	XkbXI_AllFeaturesMask;
 
     if (changes!=&my_changes)	changes= NULL;
@@ -606,12 +605,12 @@ void
 XkbFreeSrvLedInfo(XkbSrvLedInfoPtr sli)
 {
     if ((sli->flags&XkbSLI_IsDefault)==0) {
-	if (sli->maps)	_XkbFree(sli->maps);
-	if (sli->names)	_XkbFree(sli->names);
+	if (sli->maps)	xfree(sli->maps);
+	if (sli->names)	xfree(sli->names);
     }
     sli->maps= NULL;
     sli->names= NULL;
-    _XkbFree(sli);
+    xfree(sli);
     return;
 }
 
@@ -644,7 +643,7 @@ XkbCopySrvLedInfo(	DeviceIntPtr		from,
     else
 	sli_new->fb.lf = lf;
 
-    if (sli_new->flags & XkbSLI_IsDefault) {
+    if (!(sli_new->flags & XkbSLI_IsDefault)) {
 	sli_new->names= _XkbTypedCalloc(XkbNumIndicators,Atom);
 	sli_new->maps= _XkbTypedCalloc(XkbNumIndicators,XkbIndicatorMapRec);
     } /* else sli_new->names/maps is pointing to
@@ -668,7 +667,7 @@ finish:
 	 *
 	 */
 
-XkbSrvLedInfoPtr 
+XkbSrvLedInfoPtr
 XkbFindSrvLedInfo(	DeviceIntPtr		dev,
 			unsigned		class,
 			unsigned		id,
@@ -876,7 +875,7 @@ xkbExtensionDeviceNotify	my_ed;
     ed->ledID=		sli->id;
     ed->ledsDefined=	sli->namesPresent|sli->mapsPresent;
     ed->ledState=	sli->effectiveState;
-    ed->unsupported|=	XkbXI_IndicatorMapsMask;
+    ed->unsupported=	0;
     ed->supported=	XkbXI_AllFeaturesMask;
 
     XkbUpdateLedAutoState(dev,sli,changed_maps,ed,changes,cause);
@@ -957,7 +956,7 @@ Bool				kb_changed;
 	ed->ledID=		sli->id;
 	ed->ledsDefined=	sli->namesPresent|sli->mapsPresent;
 	ed->ledState=		sli->effectiveState;
-	ed->unsupported|=	XkbXI_IndicatorStateMask;
+	ed->unsupported=	0;
 	ed->supported=		XkbXI_AllFeaturesMask;
     }
 

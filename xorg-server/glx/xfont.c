@@ -28,7 +28,6 @@
  * Silicon Graphics, Inc.
  */
 
-#define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -181,12 +180,17 @@ int __glXDisp_UseXFont(__GLXclientState *cl, GLbyte *pc)
     ** Font can actually be either the ID of a font or the ID of a GC
     ** containing a font.
     */
-    pFont = (FontPtr)LookupIDByType(req->font, RT_FONT);
-    if (!pFont) {
-        pGC = (GC *)LookupIDByType(req->font, RT_GC);
-        if (!pGC) {
+
+    error = dixLookupResourceByType((pointer *)&pFont,
+				    req->font, RT_FONT,
+				    client, DixReadAccess);
+    if (error != Success) {
+	error = dixLookupResourceByType((pointer *)&pGC,
+					req->font, RT_GC,
+					client, DixReadAccess);
+        if (error != Success) {
 	    client->errorValue = req->font;
-            return BadFont;
+            return error == BadGC ? BadFont : error;
 	}
 	pFont = pGC->font;
     }

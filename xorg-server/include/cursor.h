@@ -64,16 +64,16 @@ struct _DeviceIntRec;
 typedef struct _Cursor *CursorPtr;
 typedef struct _CursorMetric *CursorMetricPtr;
 
-extern int cursorScreenDevPriv[MAXSCREENS];
+extern _X_EXPORT int cursorScreenDevPriv[MAXSCREENS];
 #define CursorScreenKey(pScreen) (cursorScreenDevPriv + (pScreen)->myNum)
 
-extern CursorPtr rootCursor;
+extern _X_EXPORT CursorPtr rootCursor;
 
-extern int FreeCursor(
+extern _X_EXPORT int FreeCursor(
     pointer /*pCurs*/,
     XID /*cid*/);
 
-extern int AllocARGBCursor(
+extern _X_EXPORT int AllocARGBCursor(
     unsigned char* /*psrcbits*/,
     unsigned char* /*pmaskbits*/,
     CARD32* /*argb*/,
@@ -88,7 +88,7 @@ extern int AllocARGBCursor(
     ClientPtr /*client*/,
     XID /*cid*/);
 
-extern int AllocGlyphCursor(
+extern _X_EXPORT int AllocGlyphCursor(
     Font /*source*/,
     unsigned int /*sourceChar*/,
     Font /*mask*/,
@@ -103,39 +103,39 @@ extern int AllocGlyphCursor(
     ClientPtr /*client*/,
     XID /*cid*/);
 
-extern CursorPtr CreateRootCursor(
+extern _X_EXPORT CursorPtr CreateRootCursor(
     char* /*pfilename*/,
     unsigned int /*glyph*/);
 
-extern int ServerBitsFromGlyph(
+extern _X_EXPORT int ServerBitsFromGlyph(
     FontPtr /*pfont*/,
     unsigned int /*ch*/,
     CursorMetricPtr /*cm*/,
     unsigned char ** /*ppbits*/);
 
-extern Bool CursorMetricsFromGlyph(
+extern _X_EXPORT Bool CursorMetricsFromGlyph(
     FontPtr /*pfont*/,
     unsigned /*ch*/,
     CursorMetricPtr /*cm*/);
 
-extern void CheckCursorConfinement(
+extern _X_EXPORT void CheckCursorConfinement(
     WindowPtr /*pWin*/);
 
-extern void NewCurrentScreen(
+extern _X_EXPORT void NewCurrentScreen(
     struct _DeviceIntRec* /*pDev*/,
     ScreenPtr /*newScreen*/,
     int /*x*/,
     int /*y*/);
 
-extern Bool PointerConfinedToScreen(struct _DeviceIntRec* /* pDev */);
+extern _X_EXPORT Bool PointerConfinedToScreen(struct _DeviceIntRec* /* pDev */);
 
-extern void GetSpritePosition(
+extern _X_EXPORT void GetSpritePosition(
     struct _DeviceIntRec* /* pDev */,
     int * /*px*/,
     int * /*py*/);
 
 #ifdef PANORAMIX
-extern int XineramaGetCursorScreen(struct _DeviceIntRec* pDev);
+extern _X_EXPORT int XineramaGetCursorScreen(struct _DeviceIntRec* pDev);
 #endif /* PANORAMIX */
 
 #endif /* CURSOR_H */

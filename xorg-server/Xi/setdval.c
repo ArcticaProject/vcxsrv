@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -102,7 +100,7 @@ ProcXSetDeviceValuators(ClientPtr client)
     rep.status = Success;
     rep.sequenceNumber = client->sequence;
 
-    if (stuff->length != (sizeof(xSetDeviceValuatorsReq) >> 2) +
+    if (stuff->length != bytes_to_int32(sizeof(xSetDeviceValuatorsReq)) +
 	stuff->num_valuators)
 	return BadLength;
 

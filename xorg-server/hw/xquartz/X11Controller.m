@@ -43,8 +43,7 @@
 #include "darwin.h"
 #include "darwinEvents.h"
 #include "quartz.h"
-#define _APPLEWM_SERVER_
-#include "X11/extensions/applewm.h"
+#include <X11/extensions/applewmconst.h>
 #include "applewmExt.h"
 
 #include <stdio.h>
@@ -103,7 +102,14 @@ BOOL xquartz_resetenv_display = NO;
      selector: @selector(apps_table_done:)
      name: NSWindowWillCloseNotification
      object: [apps_table window]];
+
+    // Setup data about our Windows menu
+    if(window_separator) {
+        [[window_separator menu] removeItem:window_separator];
+        window_separator = nil;
+    }
     
+    windows_menu_start = [[X11App windowsMenu] numberOfItems];
 }
 
 - (void) item_selected:sender
@@ -117,17 +123,15 @@ BOOL xquartz_resetenv_display = NO;
 - (void) remove_window_menu
 {
   NSMenu *menu;
-  int first, count, i;
-	
+  int count, i;
+
   /* Work backwards so we don't mess up the indices */
-  menu = [window_separator menu];
-  first = [menu indexOfItem:window_separator] + 1;
+  menu = [X11App windowsMenu];
   count = [menu numberOfItems];
-  for (i = count - 1; i >= first; i--)
+  for (i = count - 1; i >= windows_menu_start; i--)
     [menu removeItemAtIndex:i];
 	
-  menu = [dock_window_separator menu];
-  count = [menu indexOfItem:dock_window_separator];
+  count = [dock_menu indexOfItem:dock_window_separator];
   for (i = 0; i < count; i++)
     [dock_menu removeItemAtIndex:0];
 }
@@ -138,9 +142,15 @@ BOOL xquartz_resetenv_display = NO;
   NSMenuItem *item;
   int first, count, i;
 
-  menu = [window_separator menu];
-  first = [menu indexOfItem:window_separator] + 1;
+  menu = [X11App windowsMenu];
+  first = windows_menu_start + 1;
   count = [list count];
+  
+  // Push a Separator
+  if(count) {
+      [menu addItem:[NSMenuItem separatorItem]];
+  }
+
   for (i = 0; i < count; i++)
     {
       NSString *name, *shortcut;
@@ -153,11 +163,7 @@ BOOL xquartz_resetenv_display = NO;
 
       item = (NSMenuItem *) [menu addItemWithTitle:name action:@selector
 				  (item_selected:) keyEquivalent:shortcut];
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
       [item setKeyEquivalentModifierMask:(NSUInteger) windowItemModMask];
-#else
-      [item setKeyEquivalentModifierMask:windowItemModMask];
-#endif
       [item setTarget:self];
       [item setTag:i];
       [item setEnabled:YES];
@@ -166,11 +172,7 @@ BOOL xquartz_resetenv_display = NO;
 				       action:@selector
 				       (item_selected:) keyEquivalent:shortcut
 				       atIndex:i];
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
       [item setKeyEquivalentModifierMask:(NSUInteger) windowItemModMask];
-#else
-      [item setKeyEquivalentModifierMask:windowItemModMask];
-#endif
       [item setTarget:self];
       [item setTag:i];
       [item setEnabled:YES];
@@ -285,8 +287,8 @@ BOOL xquartz_resetenv_display = NO;
   int first, count;
   int n = [nn intValue];
 
-  menu = [window_separator menu];
-  first = [menu indexOfItem:window_separator] + 1;
+  menu = [X11App windowsMenu];
+  first = windows_menu_start + 1;
   count = [menu numberOfItems] - first;
 	
   if (checked_window_item >= 0 && checked_window_item < count)
@@ -311,6 +313,31 @@ BOOL xquartz_resetenv_display = NO;
   [self remove_apps_menu];
   [self install_apps_menu:list];
 }
+
+#ifdef XQUARTZ_SPARKLE
+- (void) setup_sparkle {
+    if(check_for_updates_item)
+        return; // already did it...
+
+    NSMenu *menu = [x11_about_item menu];
+
+    check_for_updates_item = [menu insertItemWithTitle:NSLocalizedString(@"Check for X11 Updates...", @"Check for X11 Updates...")
+                                               action:@selector (checkForUpdates:)
+                                        keyEquivalent:@""
+                                              atIndex:1];
+    [check_for_updates_item setTarget:[SUUpdater sharedUpdater]];
+    [check_for_updates_item setEnabled:YES];
+
+    // Set X11Controller as the delegate for the updater.
+    [[SUUpdater sharedUpdater] setDelegate:self];
+}
+
+// Sent immediately before installing the specified update.
+- (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update {
+    //[self set_can_quit:YES];
+}
+
+#endif
 
 - (void) launch_client:(NSString *)filename
 {
@@ -704,9 +731,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
     
   if (item == toggle_fullscreen_item)
     return !quartzEnableRootless;
-  else   if (item == copy_menu_item) // For some reason, this isn't working...
-      return NO;
-  else if (menu == [window_separator menu] || menu == dock_menu
+  else if (menu == [X11App windowsMenu] || menu == dock_menu
 	   || (menu == [x11_about_item menu] && [item tag] == 42))
     return (AppleWMSelectedEvents () & AppleWMControllerNotifyMask) != 0;
   else
@@ -747,13 +772,16 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 
 - (void) applicationWillTerminate:(NSNotification *)aNotification
 {
+  unsigned remain;
   [X11App prefs_synchronize];
 	
   /* shutdown the X server, it will exit () for us. */
   DarwinSendDDXEvent(kXquartzQuit, 0);
 	
   /* In case it doesn't, exit anyway after a while. */
-  while (sleep (10) != 0) ;
+  remain = 10000000;
+  while((remain = usleep(remain)) > 0);
+
   exit (1);
 }
 

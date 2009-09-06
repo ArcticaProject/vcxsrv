@@ -2,6 +2,7 @@
 #define WINPREFS_H
 /*
  * Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ * Copyright (C) Colin Harrison 2005-2008
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,6 +29,7 @@
  * from the XFree86 Project.
  *
  * Authors:     Earle F. Philhower, III
+ *              Colin Harrison
  */
 
 /* Need Bool */
@@ -56,6 +58,15 @@ typedef enum MENUCOMMANDTYPE
   CMD_ALWAYSONTOP,  /* Toggle always-on-top mode           */
   CMD_RELOAD        /* Reparse the .XWINRC file            */
 } MENUCOMMANDTYPE;
+
+#define STYLE_NONE     (0L)    /* Dummy the first entry                      */
+#define STYLE_NOTITLE  (1L)    /* Force window style no titlebar             */
+#define STYLE_OUTLINE  (1L<<1) /* Force window style just thin-line border   */
+#define STYLE_NOFRAME  (1L<<2) /* Force window style no frame                */
+#define STYLE_TOPMOST  (1L<<3) /* Open a window always-on-top                */
+#define STYLE_MAXIMIZE (1L<<4) /* Open a window maximized                    */
+#define STYLE_MINIMIZE (1L<<5) /* Open a window minimized                    */
+#define STYLE_BOTTOM   (1L<<6) /* Open a window at the bottom of the Z order */
 
 /* Where to place a system menu */
 typedef enum MENUPOSITION
@@ -94,8 +105,15 @@ typedef struct ICONITEM
 {
   char match[MENU_MAX+1];             /* What string to search for? */
   char iconFile[PATH_MAX+NAME_MAX+2]; /* Icon location, WIN32 path */
-  unsigned long hicon;                /* LoadImage() result */
+  HICON hicon;                /* LoadImage() result */
 } ICONITEM;
+
+/* To redefine styles for certain window types */
+typedef struct STYLEITEM
+{
+  char match[MENU_MAX+1];    /* What string to search for? */
+  unsigned long type;                 /* What should it do? */
+} STYLEITEM;
 
 typedef struct WINPREFS
 {
@@ -121,6 +139,9 @@ typedef struct WINPREFS
 
   ICONITEM *icon;
   int iconItems;
+
+  STYLEITEM *style;
+  int styleItems;
 
   /* Silent exit flag */
   Bool fSilentExit;
@@ -151,12 +172,15 @@ HandleCustomWM_COMMAND (unsigned long hwndIn,
 int
 winIconIsOverride (unsigned hiconIn);
 
-unsigned long
+HICON
 winOverrideIcon (unsigned long longpWin);
 
 unsigned long
+winOverrideStyle (unsigned long longpWin);
+
+HICON
 winTaskbarIcon(void);
 
-unsigned long
+HICON
 winOverrideDefaultIcon(int size);
 #endif

@@ -74,85 +74,19 @@
 #include "xf86.h"
 #include "xf86Priv.h"
 #include "compiler.h"
-#include "sym.h"
 
-/*
- * handles are used to identify files that are loaded. Even archives
- * are counted as a single file.
- */
+extern void *xorg_symbols[];
+
 #define MAX_HANDLE 256
-#define HANDLE_FREE 0
-#define HANDLE_USED 1
-static char freeHandles[MAX_HANDLE];
 static int refCount[MAX_HANDLE];
 
-/*
- * modules are used to identify compilation units (ie object modules).
- * Archives contain multiple modules, each of which is treated seperately.
- */
 static int moduleseq = 0;
 
 /* Prototypes for static functions. */
-static loaderPtr _LoaderListPush(void);
-static loaderPtr _LoaderListPop(int);
-
-void
-LoaderInit(void)
-{
-    const char *osname = NULL;
-
-    char *ld_bind_now = getenv("LD_BIND_NOW");
-    if (ld_bind_now && *ld_bind_now) {
-        xf86Msg(X_ERROR, "LD_BIND_NOW is set, dlloader will NOT work!\n");
-    }
-
-    xf86MsgVerb(X_INFO, 2, "Loader magic: %p\n", (void *)
-		((long)dixLookupTab ^ (long)extLookupTab
-	        ^ (long)miLookupTab ^ (long)xfree86LookupTab));
-    xf86MsgVerb(X_INFO, 2, "Module ABI versions:\n");
-    xf86ErrorFVerb(2, "\t%s: %d.%d\n", ABI_CLASS_ANSIC,
-		   GET_ABI_MAJOR(LoaderVersionInfo.ansicVersion),
-		   GET_ABI_MINOR(LoaderVersionInfo.ansicVersion));
-    xf86ErrorFVerb(2, "\t%s: %d.%d\n", ABI_CLASS_VIDEODRV,
-		   GET_ABI_MAJOR(LoaderVersionInfo.videodrvVersion),
-		   GET_ABI_MINOR(LoaderVersionInfo.videodrvVersion));
-    xf86ErrorFVerb(2, "\t%s : %d.%d\n", ABI_CLASS_XINPUT,
-		   GET_ABI_MAJOR(LoaderVersionInfo.xinputVersion),
-		   GET_ABI_MINOR(LoaderVersionInfo.xinputVersion));
-    xf86ErrorFVerb(2, "\t%s : %d.%d\n", ABI_CLASS_EXTENSION,
-		   GET_ABI_MAJOR(LoaderVersionInfo.extensionVersion),
-		   GET_ABI_MINOR(LoaderVersionInfo.extensionVersion));
-
-    LoaderGetOS(&osname, NULL, NULL, NULL);
-    if (osname)
-	xf86MsgVerb(X_INFO, 2, "Loader running on %s\n", osname);
-
-#if defined(__UNIXWARE__) && !defined(__GNUC__)
-    /* For UnixWare we need to load the C Runtime libraries which are
-     * normally auto-linked by the compiler. Otherwise we are bound to
-     * see unresolved symbols when trying to use the type "long long".
-     * Obviously, this does not apply if the GNU C compiler is used.
-     */
-    {
-	int errmaj, errmin, wasLoaded; /* place holders */
-	char *xcrtpath = DEFAULT_MODULE_PATH "/libcrt.a";
-	char *uwcrtpath = "/usr/ccs/lib/libcrt.a";
-	char *path;
-	struct stat st;
-
-	if(stat(xcrtpath, &st) < 0)
-	    path = uwcrtpath; /* fallback: try to get libcrt.a from the uccs */
-	else
-	    path = xcrtpath; /* get the libcrt.a we compiled with */
-	LoaderOpen (path, "libcrt", 0, &errmaj, &errmin, &wasLoaded);
-    }
-#endif
-}
-
-static loaderPtr listHead = (loaderPtr) 0;
+static loaderPtr listHead = NULL;
 
 static loaderPtr
-_LoaderListPush()
+_LoaderListPush(void)
 {
     loaderPtr item = calloc(1, sizeof(struct _loader));
 
@@ -180,25 +114,44 @@ _LoaderListPop(int handle)
     return 0;
 }
 
-/* These four are just ABI stubs */
-_X_EXPORT void
-LoaderRefSymbols(const char *sym0, ...)
+void
+LoaderInit(void)
 {
-}
+    xf86MsgVerb(X_INFO, 2, "Loader magic: %p\n", (void *)xorg_symbols);
+    xf86MsgVerb(X_INFO, 2, "Module ABI versions:\n");
+    xf86ErrorFVerb(2, "\t%s: %d.%d\n", ABI_CLASS_ANSIC,
+		   GET_ABI_MAJOR(LoaderVersionInfo.ansicVersion),
+		   GET_ABI_MINOR(LoaderVersionInfo.ansicVersion));
+    xf86ErrorFVerb(2, "\t%s: %d.%d\n", ABI_CLASS_VIDEODRV,
+		   GET_ABI_MAJOR(LoaderVersionInfo.videodrvVersion),
+		   GET_ABI_MINOR(LoaderVersionInfo.videodrvVersion));
+    xf86ErrorFVerb(2, "\t%s : %d.%d\n", ABI_CLASS_XINPUT,
+		   GET_ABI_MAJOR(LoaderVersionInfo.xinputVersion),
+		   GET_ABI_MINOR(LoaderVersionInfo.xinputVersion));
+    xf86ErrorFVerb(2, "\t%s : %d.%d\n", ABI_CLASS_EXTENSION,
+		   GET_ABI_MAJOR(LoaderVersionInfo.extensionVersion),
+		   GET_ABI_MINOR(LoaderVersionInfo.extensionVersion));
 
-_X_EXPORT void
-LoaderRefSymLists(const char **list0, ...)
-{
-}
+#if defined(__UNIXWARE__) && !defined(__GNUC__)
+    /* For UnixWare we need to load the C Runtime libraries which are
+     * normally auto-linked by the compiler. Otherwise we are bound to
+     * see unresolved symbols when trying to use the type "long long".
+     * Obviously, this does not apply if the GNU C compiler is used.
+     */
+    {
+	int errmaj, errmin, wasLoaded; /* place holders */
+	char *xcrtpath = DEFAULT_MODULE_PATH "/libcrt.a";
+	char *uwcrtpath = "/usr/ccs/lib/libcrt.a";
+	char *path;
+	struct stat st;
 
-_X_EXPORT void
-LoaderReqSymLists(const char **list0, ...)
-{
-}
-
-_X_EXPORT void
-LoaderReqSymbols(const char *sym0, ...)
-{
+	if(stat(xcrtpath, &st) < 0)
+	    path = uwcrtpath; /* fallback: try to get libcrt.a from the uccs */
+	else
+	    path = xcrtpath; /* get the libcrt.a we compiled with */
+	LoaderOpen (path, "libcrt", 0, &errmaj, &errmin, &wasLoaded);
+    }
+#endif
 }
 
 /* Public Interface to the loader. */
@@ -214,12 +167,7 @@ LoaderOpen(const char *module, const char *cname, int handle,
     ErrorF("LoaderOpen(%s)\n", module);
 #endif
 
-    /*
-     * Check to see if the module is already loaded.
-     * Only if we are loading it into an existing namespace.
-     * If it is to be loaded into a new namespace, don't check.
-     * Note: We only have one namespace.
-     */
+    /* Is the module already loaded? */
     if (handle >= 0) {
 	tmp = listHead;
 	while (tmp) {
@@ -249,7 +197,7 @@ LoaderOpen(const char *module, const char *cname, int handle,
      * Find a free handle.
      */
     new_handle = 1;
-    while (new_handle < MAX_HANDLE && freeHandles[new_handle])
+    while (new_handle < MAX_HANDLE && refCount[new_handle])
 	new_handle++;
 
     if (new_handle == MAX_HANDLE) {
@@ -261,7 +209,6 @@ LoaderOpen(const char *module, const char *cname, int handle,
 	return -1;
     }
 
-    freeHandles[new_handle] = HANDLE_USED;
     refCount[new_handle] = 1;
 
     tmp = _LoaderListPush();
@@ -275,7 +222,7 @@ LoaderOpen(const char *module, const char *cname, int handle,
     if ((tmp->private = DLLoadModule(tmp, flags)) == NULL) {
 	xf86Msg(X_ERROR, "Failed to load %s\n", module);
 	_LoaderListPop(new_handle);
-	freeHandles[new_handle] = HANDLE_FREE;
+	refCount[new_handle] = 0;
 	if (errmaj)
 	    *errmaj = LDR_NOLOAD;
 	if (errmin)
@@ -292,24 +239,17 @@ LoaderHandleOpen(int handle)
     if (handle < 0 || handle >= MAX_HANDLE)
 	return -1;
 
-    if (freeHandles[handle] != HANDLE_USED)
+    if (!refCount[handle])
 	return -1;
 
     refCount[handle]++;
     return handle;
 }
 
-_X_EXPORT void *
+void *
 LoaderSymbol(const char *sym)
 {
     return (DLFindSymbol(sym));
-}
-
-/* more stub */
-_X_EXPORT int
-LoaderCheckUnresolved(int delay_flag)
-{
-    return 0;
 }
 
 int
@@ -331,17 +271,12 @@ LoaderUnload(int handle)
      */
 
     while ((tmp = _LoaderListPop(handle)) != NULL) {
-	if (strchr(tmp->name, ':') == NULL) {
-	    /* It is not a member of an archive */
-	    xf86Msg(X_INFO, "Unloading %s\n", tmp->name);
-	}
+	xf86Msg(X_INFO, "Unloading %s\n", tmp->name);
 	DLUnloadModule(tmp->private);
 	free(tmp->name);
 	free(tmp->cname);
 	free(tmp);
     }
-
-    freeHandles[handle] = HANDLE_FREE;
 
     return 0;
 }
@@ -354,13 +289,13 @@ LoaderSetOptions(unsigned long opts)
     LoaderOptions |= opts;
 }
 
-_X_EXPORT Bool
+Bool
 LoaderShouldIgnoreABI(void)
 {
     return (LoaderOptions & LDR_OPT_ABI_MISMATCH_NONFATAL) != 0;
 }
 
-_X_EXPORT int
+int
 LoaderGetABIVersion(const char *abiclass)
 {
     struct {

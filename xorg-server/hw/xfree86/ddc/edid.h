@@ -12,6 +12,12 @@
 #ifndef _EDID_H_
 #define _EDID_H_ 
 
+#include <X11/Xmd.h>
+
+#ifndef _X_EXPORT
+# include <X11/Xfuncproto.h>
+#endif
+
 /* read complete EDID record */
 #define EDID1_LEN 128
 #define BITS_PER_BYTE 9
@@ -532,8 +538,15 @@ struct detailed_monitor_section {
 };
 
 /* flags */
-#define EDID_COMPLETE_RAWDATA	0x1
+#define MONITOR_EDID_COMPLETE_RAWDATA	0x01
+/* old, don't use */
+#define EDID_COMPLETE_RAWDATA		0x01
+#define MONITOR_DISPLAYID		0x02
 
+/*
+ * For DisplayID devices, only the scrnIndex, flags, and rawData fields
+ * are meaningful.  For EDID, they all are.
+ */
 typedef struct {
   int scrnIndex;
   struct vendor vendor;
@@ -547,6 +560,6 @@ typedef struct {
   Uchar *rawData;
 } xf86Monitor, *xf86MonPtr;
 
-extern xf86MonPtr ConfiguredMonitor;
+extern _X_EXPORT xf86MonPtr ConfiguredMonitor;
 
 #endif /* _EDID_H_ */

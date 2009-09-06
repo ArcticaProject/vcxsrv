@@ -48,7 +48,7 @@ extern const GUID _IID_IDirectDraw4;
  */
 
 void
-winDetectSupportedEngines ()
+winDetectSupportedEngines (void)
 {
   OSVERSIONINFO		osvi;
 
@@ -285,7 +285,7 @@ winSetEngine (ScreenPtr pScreen)
  */
 
 Bool
-winGetDDProcAddresses ()
+winGetDDProcAddresses (void)
 {
   Bool			fReturn = TRUE;
   

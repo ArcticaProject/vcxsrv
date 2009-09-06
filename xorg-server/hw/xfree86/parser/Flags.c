@@ -1,5 +1,4 @@
 /* 
- * 
  * Copyright (c) 1997  Metro Link Incorporated
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -134,7 +133,7 @@ xf86parseFlagsSection (void)
 					{
 						char *valstr = NULL;
 						/* can't use strdup because it calls malloc */
-						tmp = xf86configStrdup (ServerFlagsTab[i].name);
+						tmp = strdup (ServerFlagsTab[i].name);
 						if (hasvalue)
 						{
 							tokentype = xf86getSubToken(&(ptr->flg_comment));
@@ -145,7 +144,7 @@ xf86parseFlagsSection (void)
 							} else {
 								if (tokentype != NUMBER)
 									Error (NUMBER_MSG, tmp);
-								valstr = xf86confmalloc(16);
+								valstr = malloc(16);
 								if (valstr)
 									sprintf(valstr, "%d", val.num);
 							}
@@ -202,11 +201,11 @@ addNewOption2 (XF86OptionPtr head, char *name, char *val, int used)
 	/* Don't allow duplicates, free old strings */
 	if (head != NULL && (old = xf86findOption(head, name)) != NULL) {
 		new = old;
-		xf86conffree(new->opt_name);
-		xf86conffree(new->opt_val);
+		free(new->opt_name);
+		free(new->opt_val);
 	}
 	else
-		new = xf86confcalloc (1, sizeof (XF86OptionRec));
+		new = calloc (1, sizeof (XF86OptionRec));
 	new->opt_name = name;
 	new->opt_val = val;
 	new->opt_used = used;
@@ -229,21 +228,22 @@ xf86freeFlags (XF86ConfFlagsPtr flags)
 		return;
 	xf86optionListFree (flags->flg_option_lst);
 	TestFree(flags->flg_comment);
-	xf86conffree (flags);
+	free (flags);
 }
 
 XF86OptionPtr
 xf86optionListDup (XF86OptionPtr opt)
 {
 	XF86OptionPtr newopt = NULL;
+	char *val;
 
 	while (opt)
 	{
-		newopt = xf86addNewOption(newopt, xf86configStrdup(opt->opt_name), 
-					  xf86configStrdup(opt->opt_val));
+		val = opt->opt_val ? strdup(opt->opt_val) : NULL;
+		newopt = xf86addNewOption(newopt, strdup(opt->opt_name), val);
 		newopt->opt_used = opt->opt_used;
 		if (opt->opt_comment)
-			newopt->opt_comment = xf86configStrdup(opt->opt_comment);
+			newopt->opt_comment = strdup(opt->opt_comment);
 		opt = opt->list.next;
 	}
 	return newopt;
@@ -261,7 +261,7 @@ xf86optionListFree (XF86OptionPtr opt)
 		TestFree (opt->opt_comment);
 		prev = opt;
 		opt = opt->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 
@@ -286,7 +286,7 @@ xf86newOption(char *name, char *value)
 {
 	XF86OptionPtr opt;
 
-	opt = xf86confcalloc(1, sizeof (XF86OptionRec));
+	opt = calloc(1, sizeof (XF86OptionRec));
 	if (!opt)
 		return NULL;
 
@@ -331,7 +331,7 @@ xf86findOption (XF86OptionPtr list, const char *name)
  * returned.  If the option is not found, a NULL is returned.
  */
 
-_X_EXPORT char *
+char *
 xf86findOptionValue (XF86OptionPtr list, const char *name)
 {
 	XF86OptionPtr p = xf86findOption (list, name);
@@ -366,10 +366,10 @@ xf86optionListCreate( const char **options, int count, int used )
 	for (i = 0; i < count; i += 2)
 	{
 		/* can't use strdup because it calls malloc */
-		t1 = xf86confmalloc (sizeof (char) *
+		t1 = malloc (sizeof (char) *
 				(strlen (options[i]) + 1));
 		strcpy (t1, options[i]);
-		t2 = xf86confmalloc (sizeof (char) *
+		t2 = malloc (sizeof (char) *
 				(strlen (options[i + 1]) + 1));
 		strcpy (t2, options[i + 1]);
 		p = addNewOption2 (p, t1, t2, used);
@@ -435,7 +435,7 @@ xf86uLongToString(unsigned long i)
 	int l;
 
 	l = (int)(ceil(log10((double)i) + 2.5));
-	s = xf86confmalloc(l);
+	s = malloc(l);
 	if (!s)
 		return NULL;
 	sprintf(s, "%lu", i);
@@ -452,7 +452,7 @@ xf86parseOption(XF86OptionPtr head)
 	if ((token = xf86getSubToken(&comment)) != STRING) {
 		xf86parseError(BAD_OPTION_MSG, NULL);
 		if (comment)
-			xf86conffree(comment);
+			free(comment);
 		return (head);
 	}
 
@@ -479,10 +479,10 @@ xf86parseOption(XF86OptionPtr head)
 	/* Don't allow duplicates */
 	if (head != NULL && (old = xf86findOption(head, name)) != NULL) {
 		cnew = old;
-		xf86conffree(option->opt_name);
+		free(option->opt_name);
 		TestFree(option->opt_val);
 		TestFree(option->opt_comment);
-		xf86conffree(option);
+		free(option);
 	}
 	else
 		cnew = option;

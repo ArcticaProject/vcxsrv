@@ -72,7 +72,6 @@ typedef struct
 {
 	char *file_logfile;
 	char *file_modulepath;
-	char *file_inputdevs;
 	char *file_fontpath;
 	char *file_comment;
 	char *file_xkbdir;
@@ -457,29 +456,29 @@ xf86ConfigSymTabRec, *xf86ConfigSymTabPtr;
 /*
  * prototypes for public functions
  */
-extern const char *xf86openConfigFile (const char *, const char *,
+extern _X_EXPORT const char *xf86openConfigFile (const char *, const char *,
 					const char *);
-extern void xf86setBuiltinConfig(const char *config[]);
-extern XF86ConfigPtr xf86readConfigFile (void);
-extern void xf86closeConfigFile (void);
-extern void xf86freeConfig (XF86ConfigPtr p);
-extern int xf86writeConfigFile (const char *, XF86ConfigPtr);
-XF86ConfDevicePtr xf86findDevice(const char *ident, XF86ConfDevicePtr p);
-XF86ConfLayoutPtr xf86findLayout(const char *name, XF86ConfLayoutPtr list);
-XF86ConfMonitorPtr xf86findMonitor(const char *ident, XF86ConfMonitorPtr p);
-XF86ConfModesPtr xf86findModes(const char *ident, XF86ConfModesPtr p);
-XF86ConfModeLinePtr xf86findModeLine(const char *ident, XF86ConfModeLinePtr p);
-XF86ConfScreenPtr xf86findScreen(const char *ident, XF86ConfScreenPtr p);
-XF86ConfInputPtr xf86findInput(const char *ident, XF86ConfInputPtr p);
-XF86ConfInputPtr xf86findInputByDriver(const char *driver, XF86ConfInputPtr p);
-XF86ConfVideoAdaptorPtr xf86findVideoAdaptor(const char *ident,
+extern _X_EXPORT void xf86setBuiltinConfig(const char *config[]);
+extern _X_EXPORT XF86ConfigPtr xf86readConfigFile (void);
+extern _X_EXPORT void xf86closeConfigFile (void);
+extern _X_EXPORT void xf86freeConfig (XF86ConfigPtr p);
+extern _X_EXPORT int xf86writeConfigFile (const char *, XF86ConfigPtr);
+extern _X_EXPORT XF86ConfDevicePtr xf86findDevice(const char *ident, XF86ConfDevicePtr p);
+extern _X_EXPORT XF86ConfLayoutPtr xf86findLayout(const char *name, XF86ConfLayoutPtr list);
+extern _X_EXPORT XF86ConfMonitorPtr xf86findMonitor(const char *ident, XF86ConfMonitorPtr p);
+extern _X_EXPORT XF86ConfModesPtr xf86findModes(const char *ident, XF86ConfModesPtr p);
+extern _X_EXPORT XF86ConfModeLinePtr xf86findModeLine(const char *ident, XF86ConfModeLinePtr p);
+extern _X_EXPORT XF86ConfScreenPtr xf86findScreen(const char *ident, XF86ConfScreenPtr p);
+extern _X_EXPORT XF86ConfInputPtr xf86findInput(const char *ident, XF86ConfInputPtr p);
+extern _X_EXPORT XF86ConfInputPtr xf86findInputByDriver(const char *driver, XF86ConfInputPtr p);
+extern _X_EXPORT XF86ConfVideoAdaptorPtr xf86findVideoAdaptor(const char *ident,
 						XF86ConfVideoAdaptorPtr p);
 
-GenericListPtr xf86addListItem(GenericListPtr head, GenericListPtr c_new);
-int xf86itemNotSublist(GenericListPtr list_1, GenericListPtr list_2);
+extern _X_EXPORT GenericListPtr xf86addListItem(GenericListPtr head, GenericListPtr c_new);
+extern _X_EXPORT int xf86itemNotSublist(GenericListPtr list_1, GenericListPtr list_2);
 
-int xf86pathIsAbsolute(const char *path);
-int xf86pathIsSafe(const char *path);
-char *xf86addComment(char *cur, char *add);
+extern _X_EXPORT int xf86pathIsAbsolute(const char *path);
+extern _X_EXPORT int xf86pathIsSafe(const char *path);
+extern _X_EXPORT char *xf86addComment(char *cur, char *add);
 
 #endif /* _xf86Parser_h_ */

@@ -31,7 +31,6 @@ Equipment Corporation.
 #include <dmx-config.h>
 #endif
 
-#define NEED_REPLIES
 #include <stdio.h>
 #include <X11/X.h>
 #include <X11/Xproto.h>
@@ -73,9 +72,9 @@ extern VisualPtr glxMatchVisual(ScreenPtr pScreen,
 
 int 		PanoramiXPixWidth = 0;
 int 		PanoramiXPixHeight = 0;
-_X_EXPORT int 	PanoramiXNumScreens = 0;
+int 		PanoramiXNumScreens = 0;
 
-_X_EXPORT PanoramiXData *panoramiXdataPtr = NULL;
+PanoramiXData *panoramiXdataPtr = NULL;
 static RegionRec   	PanoramiXScreenRegion = {{0, 0, 0, 0}, NULL};
 
 static int		PanoramiXNumDepths;
@@ -83,14 +82,14 @@ static DepthPtr		PanoramiXDepths;
 static int		PanoramiXNumVisuals;
 static VisualPtr	PanoramiXVisuals;
 
-_X_EXPORT unsigned long XRC_DRAWABLE;
-_X_EXPORT unsigned long XRT_WINDOW;
-_X_EXPORT unsigned long XRT_PIXMAP;
-_X_EXPORT unsigned long XRT_GC;
-_X_EXPORT unsigned long XRT_COLORMAP;
+unsigned long XRC_DRAWABLE;
+unsigned long XRT_WINDOW;
+unsigned long XRT_PIXMAP;
+unsigned long XRT_GC;
+unsigned long XRT_COLORMAP;
 
 static Bool VisualsEqual(VisualPtr, ScreenPtr, VisualPtr);
-_X_EXPORT XineramaVisualsEqualProcPtr XineramaVisualsEqualPtr = &VisualsEqual;
+XineramaVisualsEqualProcPtr XineramaVisualsEqualPtr = &VisualsEqual;
 
 /*
  *	Function prototypes
@@ -330,7 +329,7 @@ XineramaDestroyClip(GCPtr pGC)
     Xinerama_GC_FUNC_EPILOGUE (pGC);
 }
 
-_X_EXPORT int
+int
 XineramaDeleteResource(pointer data, XID id)
 {
     xfree(data);
@@ -355,9 +354,12 @@ PanoramiXRes *
 PanoramiXFindIDByScrnum(RESTYPE type, XID id, int screen)
 {
     PanoramiXSearchData data;
+    pointer val;
 
-    if(!screen) 
-	return LookupIDByType(id, type);
+    if(!screen) {
+	dixLookupResourceByType(&val, id, type, serverClient, DixReadAccess);
+	return val;
+    }
 
     data.screen = screen;
     data.id = id;
@@ -373,7 +375,7 @@ typedef struct _connect_callback_list {
 
 static XineramaConnectionCallbackList *ConnectionCallbackList = NULL;
 
-_X_EXPORT Bool
+Bool
 XineramaRegisterConnectionBlockCallback(void (*func)(void))
 {
     XineramaConnectionCallbackList *newlist;
@@ -667,7 +669,7 @@ Bool PanoramiXCreateConnectionBlock(void)
 	length += (depth->nVisuals * sizeof(xVisualType));
     }
 
-    connSetupPrefix.length = length >> 2;
+    connSetupPrefix.length = bytes_to_int32(length);
 
     for (i = 0; i < PanoramiXNumDepths; i++)
 	xfree(PanoramiXDepths[i].vids);
@@ -841,7 +843,7 @@ PanoramiXConsolidate(void)
     AddResource(defmap->info[0].id, XRT_COLORMAP, defmap);
 }
 
-_X_EXPORT VisualID
+VisualID
 PanoramiXTranslateVisualID(int screen, VisualID orig)
 {
     ScreenPtr pOtherScreen = screenInfo.screens[screen];
@@ -1051,7 +1053,7 @@ ProcXineramaQueryScreens(ClientPtr client)
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.number = (noPanoramiXExtension) ? 0 : PanoramiXNumScreens;
-    rep.length = rep.number * sz_XineramaScreenInfo >> 2;
+    rep.length = bytes_to_int32(rep.number * sz_XineramaScreenInfo);
     if (client->swapped) {
 	int n;
 	swaps (&rep.sequenceNumber, n);

@@ -26,6 +26,7 @@ BUILTIN_SRCS =			\
 	sleepuntil.c		\
 	sleepuntil.h		\
 	sync.c			\
+	syncsrv.h		\
 	xcmisc.c		\
 	xtest.c
 
@@ -62,6 +63,9 @@ endif
 XINERAMA_SRCS = panoramiX.c panoramiX.h panoramiXh.h panoramiXsrv.h panoramiXprocs.c panoramiXSwap.c 
 if XINERAMA
 BUILTIN_SRCS += $(XINERAMA_SRCS)
+if XORG
+sdk_HEADERS += panoramiXsrv.h panoramiX.h
+endif
 endif
 
 # X-ACE extension: provides hooks for building security policy extensions
@@ -69,6 +73,9 @@ endif
 XACE_SRCS = xace.c xace.h xacestr.h
 if XACE
 BUILTIN_SRCS += $(XACE_SRCS)
+if XORG
+sdk_HEADERS += xace.h xacestr.h
+endif
 endif
 
 # SELinux extension: provides SELinux policy support for X objects

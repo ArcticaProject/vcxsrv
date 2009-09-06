@@ -27,7 +27,6 @@
 #ifndef _DAMAGEEXTINT_H_
 #define _DAMAGEEXTINT_H_
 
-#define NEED_EVENTS
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "misc.h"
@@ -59,11 +58,10 @@ typedef struct _DamageExt {
 } DamageExtRec, *DamageExtPtr;
 
 #define VERIFY_DAMAGEEXT(pDamageExt, rid, client, mode) { \
-    pDamageExt = SecurityLookupIDByType (client, rid, DamageExtType, mode); \
-    if (!pDamageExt) { \
-	client->errorValue = rid; \
-	return DamageErrorBase + BadDamage; \
-    } \
+    int rc = dixLookupResourceByType((pointer *)&(pDamageExt), rid, \
+                                     DamageExtType, client, mode); \
+    if (rc != Success) \
+        return (rc == BadValue) ? DamageErrorBase + BadDamage : rc; \
 }
 
 void

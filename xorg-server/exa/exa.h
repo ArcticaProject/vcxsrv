@@ -39,7 +39,7 @@
 #include "fb.h"
 
 #define EXA_VERSION_MAJOR   2
-#define EXA_VERSION_MINOR   4
+#define EXA_VERSION_MINOR   5
 #define EXA_VERSION_RELEASE 0
 
 typedef struct _ExaOffscreenArea ExaOffscreenArea;
@@ -66,6 +66,9 @@ struct _ExaOffscreenArea {
     ExaOffscreenArea    *next;
 
     unsigned            eviction_cost;
+
+    ExaOffscreenArea    *prev;          /* Double-linked list for defragmentation */
+    int                 align;          /* required alignment */
 };
 
 /**
@@ -499,27 +502,8 @@ typedef struct _ExaDriver {
                                    int                  src_pitch);
 
     /**
-     * UploadToScratch() is used to upload a pixmap to a scratch area for
-     * acceleration.
-     *
-     * @param pSrc source pixmap in host memory
-     * @param pDst fake, scratch pixmap to be set up in offscreen memory.
-     *
-     * The UploadToScratch() call was added to support Xati before Xati had
-     * support for hostdata uploads and before exaGlyphs() was written.  It
-     * behaves incorrectly (uses an invalid pixmap as pDst),
-     * and UploadToScreen() should be implemented instead.
-     *
-     * Drivers implementing UploadToScratch() had to set up space (likely in a
-     * statically allocated area) in offscreen memory, copy pSrc to that
-     * scratch area, and adust pDst->devKind for the pitch and
-     * pDst->devPrivate.ptr for the pointer to that scratch area.  The driver
-     * was responsible for syncing (as it was implemented using memcpy() in
-     * Xati), and only the data from the last UploadToScratch() was guaranteed
-     * to be valid at any given time.
-     *
-     * UploadToScratch() should not be implemented by drivers, and will likely
-     * be removed in a future version of EXA.
+     * UploadToScratch() is no longer used and will be removed next time the EXA
+     * major version needs to be bumped.
      */
     Bool        (*UploadToScratch) (PixmapPtr           pSrc,
                                     PixmapPtr           pDst);
@@ -602,14 +586,14 @@ typedef struct _ExaDriver {
      * untiling, or to adjust the pixmap's devPrivate.ptr for the purpose of
      * making CPU access use a different aperture.
      *
-     * The index is one of #EXA_PREPARE_DEST, #EXA_PREPARE_SRC, or
-     * #EXA_PREPARE_MASK, indicating which pixmap is in question.  Since only up
-     * to three pixmaps will have PrepareAccess() called on them per operation,
-     * drivers can have a small, statically-allocated space to maintain state
-     * for PrepareAccess() and FinishAccess() in.  Note that the same pixmap may
-     * have PrepareAccess() called on it more than once, for example when doing
-     * a copy within the same pixmap (so it gets PrepareAccess as()
-     * #EXA_PREPARE_DEST and then as #EXA_PREPARE_SRC).
+     * The index is one of #EXA_PREPARE_DEST, #EXA_PREPARE_SRC,
+     * #EXA_PREPARE_MASK, #EXA_PREPARE_AUX_DEST, #EXA_PREPARE_AUX_SRC, or
+     * #EXA_PREPARE_AUX_MASK. Since only up to #EXA_NUM_PREPARE_INDICES pixmaps
+     * will have PrepareAccess() called on them per operation, drivers can have
+     * a small, statically-allocated space to maintain state for PrepareAccess()
+     * and FinishAccess() in.  Note that PrepareAccess() is only called once per
+     * pixmap and operation, regardless of whether the pixmap is used as a
+     * destination and/or source, and the index may not reflect the usage.
      *
      * PrepareAccess() may fail.  An example might be the case of hardware that
      * can set up 1 or 2 surfaces for CPU access, but not 3.  If PrepareAccess()
@@ -676,9 +660,10 @@ typedef struct _ExaDriver {
 	 * EXA_PREPARE_AUX* are additional indices for other purposes, e.g.
 	 * separate alpha maps with Composite operations.
 	 */
-	#define EXA_PREPARE_AUX0	3
-	#define EXA_PREPARE_AUX1	4
-	#define EXA_PREPARE_AUX2	5
+	#define EXA_PREPARE_AUX_DEST	3
+	#define EXA_PREPARE_AUX_SRC	4
+	#define EXA_PREPARE_AUX_MASK	5
+	#define EXA_NUM_PREPARE_INDICES	6
 	/** @} */
 
     /**
@@ -714,10 +699,21 @@ typedef struct _ExaDriver {
     /* Hooks to allow driver to its own pixmap memory management */
     void *(*CreatePixmap)(ScreenPtr pScreen, int size, int align);
     void (*DestroyPixmap)(ScreenPtr pScreen, void *driverPriv);
+    /**
+     * Returning a pixmap with non-NULL devPrivate.ptr implies a pixmap which is
+     * not offscreen, which will never be accelerated and Prepare/FinishAccess won't
+     * be called.
+     */
     Bool (*ModifyPixmapHeader)(PixmapPtr pPixmap, int width, int height,
                               int depth, int bitsPerPixel, int devKind,
                               pointer pPixData);
 
+    /* hooks for drivers with tiling support:
+     * driver MUST fill out new_fb_pitch with valid pitch of pixmap
+     */
+    void *(*CreatePixmap2)(ScreenPtr pScreen, int width, int height,
+			   int depth, int usage_hint, int bitsPerPixel,
+			   int *new_fb_pitch);
     /** @} */
 } ExaDriverRec, *ExaDriverPtr;
 
@@ -756,66 +752,83 @@ typedef struct _ExaDriver {
  */
 #define EXA_SUPPORTS_PREPARE_AUX        (1 << 4)
 
+/**
+ * EXA_SUPPORTS_OFFSCREEN_OVERLAPS indicates to EXA that the driver Copy hooks
+ * can handle the source and destination occupying overlapping offscreen memory
+ * areas. This allows the offscreen memory defragmentation code to defragment
+ * areas where the defragmented position overlaps the fragmented position.
+ *
+ * Typically this is supported by traditional 2D engines but not by 3D engines.
+ */
+#define EXA_SUPPORTS_OFFSCREEN_OVERLAPS (1 << 5)
+
+/**
+ * EXA_MIXED_PIXMAPS will hide unacceleratable pixmaps from drivers and manage the
+ * problem known software fallbacks like trapezoids. This only migrates pixmaps one way
+ * into a driver pixmap and then pins it.
+ */
+#define EXA_MIXED_PIXMAPS (1 << 6)
+
 /** @} */
 
 /* in exa.c */
-ExaDriverPtr
+extern _X_EXPORT ExaDriverPtr
 exaDriverAlloc(void);
 
-Bool
+extern _X_EXPORT Bool
 exaDriverInit(ScreenPtr      pScreen,
               ExaDriverPtr   pScreenInfo);
 
-void
+extern _X_EXPORT void
 exaDriverFini(ScreenPtr      pScreen);
 
-void
+extern _X_EXPORT void
 exaMarkSync(ScreenPtr pScreen);
-void
+extern _X_EXPORT void
 exaWaitSync(ScreenPtr pScreen);
 
-unsigned long
+extern _X_EXPORT unsigned long
 exaGetPixmapOffset(PixmapPtr pPix);
 
-unsigned long
+extern _X_EXPORT unsigned long
 exaGetPixmapPitch(PixmapPtr pPix);
 
-unsigned long
+extern _X_EXPORT unsigned long
 exaGetPixmapSize(PixmapPtr pPix);
 
-void *
+extern _X_EXPORT void *
 exaGetPixmapDriverPrivate(PixmapPtr p);
 
 
 /* in exa_offscreen.c */
-ExaOffscreenArea *
+extern _X_EXPORT ExaOffscreenArea *
 exaOffscreenAlloc(ScreenPtr pScreen, int size, int align,
                   Bool locked,
                   ExaOffscreenSaveProc save,
                   pointer privData);
 
-ExaOffscreenArea *
+extern _X_EXPORT ExaOffscreenArea *
 exaOffscreenFree(ScreenPtr pScreen, ExaOffscreenArea *area);
 
-void
+extern _X_EXPORT void
 ExaOffscreenMarkUsed (PixmapPtr pPixmap);
 
-void
+extern _X_EXPORT void
 exaEnableDisableFBAccess (int index, Bool enable);
 
-Bool
+extern _X_EXPORT Bool
 exaDrawableIsOffscreen (DrawablePtr pDrawable);
 
-/* in exa_migration.c */
-void
+/* in exa.c */
+extern _X_EXPORT void
 exaMoveInPixmap (PixmapPtr pPixmap);
 
-void
+extern _X_EXPORT void
 exaMoveOutPixmap (PixmapPtr pPixmap);
 
 
 /* in exa_unaccel.c */
-CARD32
+extern _X_EXPORT CARD32
 exaGetPixmapFirstPixel (PixmapPtr pPixmap);
 
 

@@ -40,63 +40,63 @@
 #include "xf86_OSlib.h"
 #include "xf86OSpriv.h"
 
-_X_EXPORT Bool
+Bool
 xf86GARTCloseScreen(int screenNum)
 {
 	return FALSE;
 }
 
-_X_EXPORT Bool
+Bool
 xf86AgpGARTSupported()
 {
 	return FALSE;
 }
 
-_X_EXPORT AgpInfoPtr
+AgpInfoPtr
 xf86GetAGPInfo(int screenNum)
 {
 	return NULL;
 }
 
-_X_EXPORT Bool
+Bool
 xf86AcquireGART(int screenNum)
 {
 	return FALSE;
 }
 
-_X_EXPORT Bool
+Bool
 xf86ReleaseGART(int screenNum)
 {
 	return FALSE;
 }
 
-_X_EXPORT int
+int
 xf86AllocateGARTMemory(int screenNum, unsigned long size, int type,
 			unsigned long *physical)
 {
 	return -1;
 }
 
-_X_EXPORT Bool
+Bool
 xf86DeallocateGARTMemory(int screenNum, int key)
 {
 	return FALSE;
 }
 
-_X_EXPORT Bool
+Bool
 xf86BindGARTMemory(int screenNum, int key, unsigned long offset)
 {
 	return FALSE;
 }
 
 
-_X_EXPORT Bool
+Bool
 xf86UnbindGARTMemory(int screenNum, int key)
 {
 	return FALSE;
 }
 
-_X_EXPORT Bool
+Bool
 xf86EnableAGP(int screenNum, CARD32 mode)
 {
 	return FALSE;

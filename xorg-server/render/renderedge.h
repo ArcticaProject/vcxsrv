@@ -76,16 +76,16 @@ typedef pixman_edge_t RenderEdge;
     }				    \
 }
 
-xFixed
+extern _X_EXPORT xFixed
 RenderSampleCeilY (xFixed y, int bpp);
 
-xFixed
+extern _X_EXPORT xFixed
 RenderSampleFloorY (xFixed y, int bpp);
 
-void
+extern _X_EXPORT void
 RenderEdgeStep (RenderEdge *e, int n);
 
-void
+extern _X_EXPORT void
 RenderEdgeInit (RenderEdge	*e,
 		int		bpp,
 		xFixed		y_start,
@@ -94,7 +94,7 @@ RenderEdgeInit (RenderEdge	*e,
 		xFixed		x_bot,
 		xFixed		y_bot);
 
-void
+extern _X_EXPORT void
 RenderLineFixedEdgeInit (RenderEdge *e,
 			 int	    bpp,
 			 xFixed	    y,

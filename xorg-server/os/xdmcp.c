@@ -391,8 +391,7 @@ XdmcpRegisterAuthentication (
 				     AuthenticationNames.length + 1) &&
 	  XdmcpReallocARRAYofARRAY8 (&AuthenticationDatas,
 				     AuthenticationDatas.length + 1) &&
-	  (newFuncs = (AuthenticationFuncsPtr) xalloc (
-			(AuthenticationNames.length + 1) * sizeof (AuthenticationFuncsRec)))))
+	  (newFuncs = xalloc ((AuthenticationNames.length + 1) * sizeof (AuthenticationFuncsRec)))))
     {
 	XdmcpDisposeARRAY8 (&AuthenticationName);
 	XdmcpDisposeARRAY8 (&AuthenticationData);
@@ -534,7 +533,7 @@ XdmcpRegisterAuthorization (char *name, int namelen)
     ARRAY8  authName;
     int	    i;
 
-    authName.data = (CARD8 *) xalloc (namelen * sizeof (CARD8));
+    authName.data = xalloc (namelen * sizeof (CARD8));
     if (!authName.data)
 	return;
     if (!XdmcpReallocARRAYofARRAY8 (&AuthorizationNames, AuthorizationNames.length +1))
@@ -1592,9 +1591,7 @@ get_fromaddr_by_name(
 
 #if defined(IPv6) && defined(AF_INET6)
 static int
-get_mcast_options(argc, argv, i)
-    int	    argc, i;
-    char    **argv;
+get_mcast_options(int argc, char **argv, int i)
 {
     char *address = XDM_DEFAULT_MCAST_ADDR6;
     int hopcount = 1;

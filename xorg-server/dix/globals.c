@@ -61,7 +61,7 @@ SOFTWARE.
 #include "dixstruct.h"
 #include "os.h"
 
-_X_EXPORT ScreenInfo screenInfo;
+ScreenInfo screenInfo;
 KeybdCtrl defaultKeyboardControl = {
 	DEFAULT_KEYBOARD_CLICK,
 	DEFAULT_BELL,
@@ -78,47 +78,30 @@ PtrCtrl defaultPointerControl = {
 	DEFAULT_PTR_THRESHOLD,
 	0};
 
-_X_EXPORT ClientPtr  clients[MAXCLIENTS];
-_X_EXPORT ClientPtr  serverClient;
-_X_EXPORT int  currentMaxClients;   /* current size of clients array */
-_X_EXPORT long maxBigRequestSize = MAX_BIG_REQUEST_SIZE;
+ClientPtr  clients[MAXCLIENTS];
+ClientPtr  serverClient;
+int  currentMaxClients;   /* current size of clients array */
+long maxBigRequestSize = MAX_BIG_REQUEST_SIZE;
 
-_X_EXPORT WindowPtr WindowTable[MAXSCREENS];
+WindowPtr WindowTable[MAXSCREENS];
 
-_X_EXPORT unsigned long globalSerialNumber = 0;
-_X_EXPORT unsigned long serverGeneration = 0;
+unsigned long globalSerialNumber = 0;
+unsigned long serverGeneration = 0;
 
 /* these next four are initialized in main.c */
-_X_EXPORT CARD32 ScreenSaverTime;
+CARD32 ScreenSaverTime;
 CARD32 ScreenSaverInterval;
-_X_EXPORT int ScreenSaverBlanking;
+int ScreenSaverBlanking;
 int  ScreenSaverAllowExposures;
 
 #ifdef DPMSExtension
-# ifndef DEFAULT_STANDBY_TIME
-#  define DEFAULT_STANDBY_TIME DEFAULT_SCREEN_SAVER_TIME * 2
-# endif
-# ifndef DEFAULT_SUSPEND_TIME
-#  define DEFAULT_SUSPEND_TIME DEFAULT_SCREEN_SAVER_TIME * 3
-# endif
-# ifndef DEFAULT_OFF_TIME
-#  define DEFAULT_OFF_TIME DEFAULT_SCREEN_SAVER_TIME * 4
-# endif
-# ifndef DEFAULT_DPMS_ENABLED
-#  define DEFAULT_DPMS_ENABLED TRUE
-# endif
-CARD32 defaultDPMSStandbyTime = DEFAULT_STANDBY_TIME;
-CARD32 defaultDPMSSuspendTime = DEFAULT_SUSPEND_TIME;
-CARD32 defaultDPMSOffTime = DEFAULT_OFF_TIME;
-_X_EXPORT CARD16 DPMSPowerLevel = 0;
-Bool defaultDPMSEnabled = DEFAULT_DPMS_ENABLED;
-_X_EXPORT Bool DPMSEnabledSwitch = FALSE;  /* these denote the DPMS command */
-_X_EXPORT Bool DPMSDisabledSwitch = FALSE; /* lind switch states */
-_X_EXPORT Bool DPMSCapableFlag = FALSE;
-_X_EXPORT CARD32 DPMSStandbyTime;
-_X_EXPORT CARD32 DPMSSuspendTime;
-_X_EXPORT CARD32 DPMSOffTime;
-_X_EXPORT Bool DPMSEnabled;
+CARD16 DPMSPowerLevel = 0;
+Bool DPMSDisabledSwitch = FALSE;
+Bool DPMSCapableFlag = FALSE;
+CARD32 DPMSStandbyTime;
+CARD32 DPMSSuspendTime;
+CARD32 DPMSOffTime;
+Bool DPMSEnabled;
 #endif
 
 CARD32 defaultScreenSaverTime = DEFAULT_SCREEN_SAVER_TIME;
@@ -144,13 +127,13 @@ Bool whiteRoot = FALSE;
 
 int cursorScreenDevPriv[MAXSCREENS];
 
-_X_EXPORT TimeStamp currentTime;
-_X_EXPORT TimeStamp lastDeviceEventTime;
+TimeStamp currentTime;
+TimeStamp lastDeviceEventTime;
 
-_X_EXPORT int defaultColorVisualClass = -1;
-_X_EXPORT int monitorResolution = 0;
+int defaultColorVisualClass = -1;
+int monitorResolution = 0;
 
-_X_EXPORT char *display;
+char *display;
 char *ConnectionInfo;
 
 CARD32 TimeOutValue = DEFAULT_TIMEOUT * MILLI_PER_SECOND;

@@ -50,6 +50,9 @@ static void signal_handler (int sig) {
 }
 
 int main (int argc, const char *argv[]) {
+    const char *s;
+    int i;
+
 #ifdef DEBUG
     printf("pid: %u\n", getpid());
 #endif

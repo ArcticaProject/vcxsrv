@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -63,9 +61,10 @@ SOFTWARE.
 #include <X11/extensions/XIproto.h>
 #include "XIstubs.h"
 #include "extnsionst.h"
-#include "exglobals.h"	/* FIXME */
 #include "exevents.h"
 #include "xace.h"
+#include "xkbsrv.h"
+#include "xkbstr.h"
 
 #include "listdev.h"
 
@@ -93,7 +92,7 @@ SProcXListInputDevices(ClientPtr client)
  *
  */
 
-void
+static void
 SizeDeviceInfo(DeviceIntPtr d, int *namesize, int *size)
 {
     int chunks;
@@ -175,11 +174,11 @@ CopySwapDevice(ClientPtr client, DeviceIntPtr d, int num_classes,
     dev = (xDeviceInfoPtr) * buf;
 
     dev->id = d->id;
-    dev->type = d->type;
+    dev->type = d->xinput_type;
     dev->num_classes = num_classes;
-    if (d->isMaster && IsKeyboardDevice(d))
+    if (IsMaster(d) && IsKeyboardDevice(d))
 	dev->use = IsXKeyboard;
-    else if (d->isMaster && IsPointerDevice(d))
+    else if (IsMaster(d) && IsPointerDevice(d))
 	dev->use = IsXPointer;
     else if (d->key && d->kbdfeed)
         dev->use = IsXExtensionKeyboard;
@@ -209,8 +208,8 @@ CopySwapKeyClass(ClientPtr client, KeyClassPtr k, char **buf)
     k2 = (xKeyInfoPtr) * buf;
     k2->class = KeyClass;
     k2->length = sizeof(xKeyInfo);
-    k2->min_keycode = k->curKeySyms.minKeyCode;
-    k2->max_keycode = k->curKeySyms.maxKeyCode;
+    k2->min_keycode = k->xkbInfo->desc->min_key_code;
+    k2->max_keycode = k->xkbInfo->desc->max_key_code;
     k2->num_keys = k2->max_keycode - k2->min_keycode + 1;
     if (client && client->swapped) {
 	swaps(&k2->num_keys, n);
@@ -273,22 +272,7 @@ CopySwapValuatorClass(ClientPtr client, ValuatorClassPtr v, char **buf)
     return (i);
 }
 
-/***********************************************************************
- *
- * This procedure lists information to be returned for an input device.
- *
- */
-
 static void
-ListDeviceInfo(ClientPtr client, DeviceIntPtr d, xDeviceInfoPtr dev,
-	       char **devbuf, char **classbuf, char **namebuf)
-{
-    CopyDeviceName(namebuf, d->name);
-    CopySwapDevice(client, d, 0, devbuf);
-    CopySwapClasses(client, d, &dev->num_classes, classbuf);
-}
-
-void
 CopySwapClasses(ClientPtr client, DeviceIntPtr dev, CARD8 *num_classes,
                 char** classbuf)
 {
@@ -308,6 +292,41 @@ CopySwapClasses(ClientPtr client, DeviceIntPtr dev, CARD8 *num_classes,
 
 /***********************************************************************
  *
+ * This procedure lists information to be returned for an input device.
+ *
+ */
+
+static void
+ListDeviceInfo(ClientPtr client, DeviceIntPtr d, xDeviceInfoPtr dev,
+	       char **devbuf, char **classbuf, char **namebuf)
+{
+    CopyDeviceName(namebuf, d->name);
+    CopySwapDevice(client, d, 0, devbuf);
+    CopySwapClasses(client, d, &dev->num_classes, classbuf);
+}
+
+/***********************************************************************
+ *
+ * This procedure checks if a device should be left off the list.
+ *
+ */
+
+static Bool
+ShouldSkipDevice(ClientPtr client, DeviceIntPtr d)
+{
+    /* don't send master devices other than VCP/VCK */
+    if (!IsMaster(d) || d == inputInfo.pointer || d == inputInfo.keyboard)
+    {
+        int rc = XaceHook(XACE_DEVICE_ACCESS, client, d, DixGetAttrAccess);
+        if (rc == Success)
+            return FALSE;
+    }
+    return TRUE;
+}
+
+
+/***********************************************************************
+ *
  * This procedure lists the input devices available to the server.
  *
  * If this request is called by a client that has not issued a
@@ -320,66 +339,80 @@ int
 ProcXListInputDevices(ClientPtr client)
 {
     xListInputDevicesReply rep;
-    XIClientPtr pXIClient;
     int numdevs = 0;
     int namesize = 1;	/* need 1 extra byte for strcpy */
-    int rc, size = 0;
+    int i = 0, size = 0;
     int total_length;
-    char *devbuf;
-    char *classbuf;
-    char *namebuf;
-    char *savbuf;
+    char *devbuf, *classbuf, *namebuf, *savbuf;
+    Bool *skip;
     xDeviceInfo *dev;
     DeviceIntPtr d;
 
     REQUEST_SIZE_MATCH(xListInputDevicesReq);
 
+    memset(&rep, 0, sizeof(xListInputDevicesReply));
     rep.repType = X_Reply;
     rep.RepType = X_ListInputDevices;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
 
-    pXIClient = dixLookupPrivate(&client->devPrivates, XIClientPrivateKey);
 
     AddOtherInputDevices();
 
-    for (d = inputInfo.devices; d; d = d->next) {
-        rc = XaceHook(XACE_DEVICE_ACCESS, client, d, DixGetAttrAccess);
-        if (rc != Success)
-            return rc;
+    /* allocate space for saving skip value */
+    skip = xcalloc(sizeof(Bool), inputInfo.numDevices);
+    if (!skip)
+        return BadAlloc;
+
+    /* figure out which devices to skip */
+    numdevs = 0;
+    for (d = inputInfo.devices; d; d = d->next, i++) {
+        skip[i] = ShouldSkipDevice(client, d);
+        if (skip[i])
+            continue;
+
         SizeDeviceInfo(d, &namesize, &size);
         numdevs++;
     }
 
-    for (d = inputInfo.off_devices; d; d = d->next) {
-        rc = XaceHook(XACE_DEVICE_ACCESS, client, d, DixGetAttrAccess);
-        if (rc != Success)
-            return rc;
+    for (d = inputInfo.off_devices; d; d = d->next, i++) {
+        skip[i] = ShouldSkipDevice(client, d);
+        if (skip[i])
+            continue;
+
         SizeDeviceInfo(d, &namesize, &size);
         numdevs++;
     }
 
+    /* allocate space for reply */
     total_length = numdevs * sizeof(xDeviceInfo) + size + namesize;
-    devbuf = (char *)xalloc(total_length);
+    devbuf = (char *)xcalloc(1, total_length);
     classbuf = devbuf + (numdevs * sizeof(xDeviceInfo));
     namebuf = classbuf + size;
     savbuf = devbuf;
 
+    /* fill in and send reply */
+    i = 0;
     dev = (xDeviceInfoPtr) devbuf;
-    for (d = inputInfo.devices; d; d = d->next)
-    {
+    for (d = inputInfo.devices; d; d = d->next, i++) {
+        if (skip[i])
+            continue;
+
         ListDeviceInfo(client, d, dev++, &devbuf, &classbuf, &namebuf);
     }
 
-    for (d = inputInfo.off_devices; d; d = d->next)
-    {
+    for (d = inputInfo.off_devices; d; d = d->next, i++) {
+        if (skip[i])
+            continue;
+
         ListDeviceInfo(client, d, dev++, &devbuf, &classbuf, &namebuf);
     }
     rep.ndevices = numdevs;
-    rep.length = (total_length + 3) >> 2;
+    rep.length = bytes_to_int32(total_length);
     WriteReplyToClient(client, sizeof(xListInputDevicesReply), &rep);
     WriteToClient(client, total_length, savbuf);
     xfree(savbuf);
+    xfree(skip);
     return Success;
 }
 

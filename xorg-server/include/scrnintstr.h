@@ -611,9 +611,9 @@ typedef struct _ScreenInfo {
     int		unused;
 } ScreenInfo;
 
-extern ScreenInfo screenInfo;
+extern _X_EXPORT ScreenInfo screenInfo;
 
-extern void InitOutput(
+extern _X_EXPORT void InitOutput(
     ScreenInfo 	* /*pScreenInfo*/,
     int     	/*argc*/,
     char    	** /*argv*/);

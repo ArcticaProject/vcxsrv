@@ -67,7 +67,6 @@
 #define ScrollLockMask	Mod5Mask
 
 #define KeyPressed(k) (keyc->postdown[k >> 3] & (1 << (k & 7)))
-#define ModifierDown(k) ((keyc->state & (k)) == (k))
 
 /*
  * NOTE: The AT/MF keyboards can generate (via the 8042) two (MF: three)

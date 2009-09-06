@@ -149,7 +149,7 @@ winKeyboardMessageHookLL (int iCode, WPARAM wParam, LPARAM lParam)
  */
 
 Bool
-winInstallKeyboardHookLL ()
+winInstallKeyboardHookLL (void)
 {
   OSVERSIONINFO		osvi = {0};
   
@@ -186,7 +186,7 @@ winInstallKeyboardHookLL ()
  */
 
 void
-winRemoveKeyboardHookLL ()
+winRemoveKeyboardHookLL (void)
 {
   if (g_hhookKeyboardLL)
     UnhookWindowsHookEx (g_hhookKeyboardLL);

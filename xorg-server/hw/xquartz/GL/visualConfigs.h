@@ -23,6 +23,6 @@
 #ifndef VISUAL_CONFIGS_H
 #define VISUAL_CONFIGS_H
 
-void setVisualConfigs(void);
+__GLXconfig *__glXAquaCreateVisualConfigs(int *numConfigsPtr, int screenNumber);
 
 #endif

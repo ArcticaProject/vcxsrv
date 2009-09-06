@@ -51,11 +51,14 @@
 /* Build DRI2 extension */
 #undef DRI2
 
-/* Solaris 8 or later? */
-#undef __SOL8__
+/* Define to 1 if you have the <stropts.h> header file. */
+#undef HAVE_STROPTS_H
 
 /* Define to 1 if you have the <sys/kd.h> header file. */
 #undef HAVE_SYS_KD_H
+
+/* Define to 1 if you have the <sys/vt.h> header file. */
+#undef HAVE_SYS_VT_H
 
 /* Define to 1 if you have the `walkcontext' function (used on Solaris for
    xorg_backtrace in hw/xfree86/common/xf86Events.c */
@@ -115,8 +118,14 @@
 /* Have pci_system_init_dev_mem() */
 #undef HAVE_PCI_SYSTEM_INIT_DEV_MEM
 
+/* Define to 1 if you have the `pci_device_is_boot_vga' function. */
+#undef HAVE_PCI_DEVICE_IS_BOOT_VGA
+
 /* Have pci_enable_device */
 #undef HAVE_PCI_DEVICE_ENABLE
+
+/* Define to 1 if you have the `pci_device_vgaarb_init' function. */
+#undef HAVE_PCI_DEVICE_VGAARB_INIT
 
 /* Path to text files containing PCI IDs */
 #undef PCI_TXT_IDS_PATH

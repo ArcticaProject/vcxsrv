@@ -73,7 +73,6 @@ SOFTWARE.
 #include <sys/uio.h>
 #endif
 #include <X11/X.h>
-#define NEED_REPLIES
 #include <X11/Xproto.h>
 #include "os.h"
 #include "osdep.h"
@@ -82,8 +81,8 @@ SOFTWARE.
 #include "dixstruct.h"
 #include "misc.h"
 
-_X_EXPORT CallbackListPtr       ReplyCallback;
-_X_EXPORT CallbackListPtr       FlushCallback;
+CallbackListPtr       ReplyCallback;
+CallbackListPtr       FlushCallback;
 
 static ConnectionInputPtr AllocateInputBuffer(void);
 static ConnectionOutputPtr AllocateOutputBuffer(void);
@@ -106,7 +105,7 @@ static OsCommPtr AvailableInput = (OsCommPtr)NULL;
 #define get_req_len(req,cli) ((cli)->swapped ? \
 			      lswaps((req)->length) : (req)->length)
 
-#include <X11/extensions/bigreqstr.h>
+#include <X11/extensions/bigreqsproto.h>
 
 #define get_big_req_len(req,cli) ((cli)->swapped ? \
 				  lswapl(((xBigReq *)(req))->length) : \
@@ -274,7 +273,7 @@ ReadRequestFromClient(ClientPtr client)
 	    if (gotnow < sizeof(xBigReq))
 	    {
 		/* Still need more data to tell just how big. */
-		needed = sizeof(xBigReq) >> 2; /* needed is in CARD32s now */
+		needed = bytes_to_int32(sizeof(xBigReq)); /* needed is in CARD32s now */
 		need_header = TRUE;
 	    }
 	    else
@@ -378,7 +377,7 @@ ReadRequestFromClient(ClientPtr client)
 	    {
 		move_header = TRUE;
 		if (gotnow < sizeof(xBigReq))
-		    needed = sizeof(xBigReq) >> 2;
+		    needed = bytes_to_int32(sizeof(xBigReq));
 		else
 		    needed = get_big_req_len(request, client);
 	    }
@@ -446,7 +445,7 @@ ReadRequestFromClient(ClientPtr client)
 	oci->bufptr += (sizeof(xBigReq) - sizeof(xReq));
 	*(xReq *)oci->bufptr = *request;
 	oci->lenLastReq -= (sizeof(xBigReq) - sizeof(xReq));
-	client->req_len -= (sizeof(xBigReq) - sizeof(xReq)) >> 2;
+	client->req_len -= bytes_to_int32(sizeof(xBigReq) - sizeof(xReq));
     }
     client->requestBuffer = (pointer)oci->bufptr;
 #ifdef DEBUG_COMMUNICATION
@@ -539,7 +538,7 @@ InsertFakeRequest(ClientPtr client, char *data, int count)
  *
  **********************/
 
-_X_EXPORT void
+void
 ResetCurrentRequest(ClientPtr client)
 {
     OsCommPtr oc = (OsCommPtr)client->osPrivate;
@@ -679,7 +678,7 @@ FlushIfCriticalOutputPending(void)
 	FlushAllOutput();
 }
 
-_X_EXPORT void
+void
 SetCriticalOutputPending(void)
 {
     CriticalOutputPending = TRUE;
@@ -696,7 +695,7 @@ SetCriticalOutputPending(void)
  *    this routine as int.
  *****************/
 
-_X_EXPORT int
+int
 WriteToClient (ClientPtr who, int count, const void *__buf)
 {
     OsCommPtr oc = (OsCommPtr)who->osPrivate;
@@ -1012,14 +1011,14 @@ AllocateInputBuffer(void)
 {
     ConnectionInputPtr oci;
 
-    oci = (ConnectionInputPtr)xalloc(sizeof(ConnectionInput));
+    oci = xalloc(sizeof(ConnectionInput));
     if (!oci)
-	return (ConnectionInputPtr)NULL;
-    oci->buffer = (char *)xalloc(BUFSIZE);
+	return NULL;
+    oci->buffer = xalloc(BUFSIZE);
     if (!oci->buffer)
     {
 	xfree(oci);
-	return (ConnectionInputPtr)NULL;
+	return NULL;
     }
     oci->size = BUFSIZE;
     oci->bufptr = oci->buffer;
@@ -1033,14 +1032,14 @@ AllocateOutputBuffer(void)
 {
     ConnectionOutputPtr oco;
 
-    oco = (ConnectionOutputPtr)xalloc(sizeof(ConnectionOutput));
+    oco = xalloc(sizeof(ConnectionOutput));
     if (!oco)
-	return (ConnectionOutputPtr)NULL;
-    oco->buf = (unsigned char *) xcalloc(1, BUFSIZE);
+	return NULL;
+    oco->buf = xcalloc(1, BUFSIZE);
     if (!oco->buf)
     {
 	xfree(oco);
-	return (ConnectionOutputPtr)NULL;
+	return NULL;
     }
     oco->size = BUFSIZE;
     oco->count = 0;

@@ -33,42 +33,6 @@
 #ifndef _XF86_PCI_BUS_H
 #define _XF86_PCI_BUS_H
 
-#define PCITAG_SPECIAL pciTag(0xFF,0xFF,0xFF)
-
-typedef struct {
-    CARD32 command;
-    CARD32 base[6];
-    CARD32 biosBase;
-} pciSave, *pciSavePtr;
-
-typedef struct {
-    struct pci_device * dev;
-    CARD32 ctrl;
-} pciArg;
-
-typedef struct {
-    pciArg arg;
-    xf86AccessRec ioAccess;
-    xf86AccessRec io_memAccess;
-    xf86AccessRec memAccess;
-    pciSave save;
-    pciSave restore;
-    Bool ctrl;
-} pciAccRec, *pciAccPtr;
-
-typedef union {
-    CARD16 control;
-} pciBridgesSave, *pciBridgesSavePtr;
-
 void xf86PciProbe(void);
-void initPciState(void);
-void initPciBusState(void);
-void DisablePciAccess(void);
-void DisablePciBusAccess(void);
-void PciStateEnter(void);
-void PciBusStateEnter(void);
-void PciStateLeave(void);
-void PciBusStateLeave(void);
-void pciConvertRange2Host(int entityIndex, resRange *pRange);
 
 #endif /* _XF86_PCI_BUS_H */

@@ -1,23 +1,30 @@
 /*
- * Copyright © 2006 Sun Microsystems
+ * Copyright © 2006 Sun Microsystems, Inc.  All rights reserved.
  *
- * Permission to use, copy, modify, distribute, and sell this software and its
- * documentation for any purpose is hereby granted without fee, provided that
- * the above copyright notice appear in all copies and that both that
- * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Sun Microsystems not be used in
- * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Sun Microsystems makes no
- * representations about the suitability of this software for any purpose.  It
- * is provided "as is" without express or implied warranty.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, and/or sell copies of the Software, and to permit persons
+ * to whom the Software is furnished to do so, provided that the above
+ * copyright notice(s) and this permission notice appear in all copies of
+ * the Software and that both the above copyright notice(s) and this
+ * permission notice appear in supporting documentation.
  *
- * SUN MICROSYSTEMS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
- * EVENT SHALL SUN MICROSYSTEMS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
- * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
- * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+ * OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+ * INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+ * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+ * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
+ * Except as contained in this notice, the name of a copyright holder
+ * shall not be used in advertising or otherwise to promote the sale, use
+ * or other dealings in this Software without prior written authorization
+ * of the copyright holder.
  *
  * Copyright © 2003 Keith Packard
  *
@@ -45,6 +52,7 @@
 #endif
 
 #include "compint.h"
+#include "compositeext.h"
 
 static int CompScreenPrivateKeyIndex;
 DevPrivateKey CompScreenPrivateKey = &CompScreenPrivateKeyIndex;
@@ -213,7 +221,6 @@ compRegisterAlternateVisuals (CompScreenPtr cs, VisualID *vids, int nVisuals)
     return TRUE;
 }
 
-_X_EXPORT
 Bool CompositeRegisterAlternateVisuals (ScreenPtr pScreen, VisualID *vids,
 					int nVisuals)
 {
@@ -231,6 +238,7 @@ static CompAlternateVisual  altVisuals[] = {
     {	24,	PICT_r8g8b8 },
 #endif
     {	32,	PICT_a8r8g8b8 },
+    {	32,	PICT_b8g8r8a8 },
 };
 
 static const int NUM_COMP_ALTERNATE_VISUALS = sizeof(altVisuals) /
@@ -265,7 +273,8 @@ compAddAlternateVisual(ScreenPtr pScreen, CompScreenPtr cs,
 	return TRUE;
 
     pPictFormat = PictureMatchFormat (pScreen, alt->depth, alt->format);
-    if (!pPictFormat)
+    if (!pPictFormat ||
+	pPictFormat->direct.red != pScreen->visuals[0].offsetRed)
 	return FALSE;
 
     vid = xalloc(sizeof(VisualID));
@@ -297,10 +306,12 @@ compAddAlternateVisual(ScreenPtr pScreen, CompScreenPtr cs,
      * for all colormaps.
      */
     for (i = 0; i < numInstalledCmaps; i++) {
-	int j;
+	int j, rc;
 
-	installedCmap = LookupIDByType (installedCmaps[i], RT_COLORMAP);
-	if (!installedCmap)
+	rc = dixLookupResourceByType((pointer *)&installedCmap,
+				     installedCmaps[i], RT_COLORMAP,
+				     serverClient, DixReadAccess);
+	if (rc != Success)
 	    continue;
 	j = installedCmap->pVisual - pScreen->visuals;
 	installedCmap->pVisual = &visuals[j];

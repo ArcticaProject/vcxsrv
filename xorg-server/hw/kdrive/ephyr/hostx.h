@@ -148,6 +148,9 @@ hostx_use_preexisting_window(unsigned long win_id);
 void
 hostx_use_resname (char *name, int fromcmd);
 
+void
+hostx_set_title(char *name);
+
 void 
 hostx_handle_signal(int signum);
 

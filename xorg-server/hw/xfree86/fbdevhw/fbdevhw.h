@@ -13,50 +13,52 @@
 #define FBDEVHW_TEXT			3	/* Text/attributes	*/
 #define FBDEVHW_VGA_PLANES		4	/* EGA/VGA planes       */
 
-Bool  fbdevHWGetRec(ScrnInfoPtr pScrn);
-void  fbdevHWFreeRec(ScrnInfoPtr pScrn);
+extern _X_EXPORT Bool  fbdevHWGetRec(ScrnInfoPtr pScrn);
+extern _X_EXPORT void  fbdevHWFreeRec(ScrnInfoPtr pScrn);
 
-Bool  fbdevHWProbe(struct pci_device * pPci, char *device, char **namep);
-Bool  fbdevHWInit(ScrnInfoPtr pScrn, struct pci_device * pPci, char *device);
+extern _X_EXPORT int   fbdevHWGetFD(ScrnInfoPtr pScrn);
 
-char* fbdevHWGetName(ScrnInfoPtr pScrn);
-int   fbdevHWGetDepth(ScrnInfoPtr pScrn, int *fbbpp);
-int   fbdevHWGetLineLength(ScrnInfoPtr pScrn);
-int   fbdevHWGetType(ScrnInfoPtr pScrn);
-int   fbdevHWGetVidmem(ScrnInfoPtr pScrn);
+extern _X_EXPORT Bool  fbdevHWProbe(struct pci_device * pPci, char *device, char **namep);
+extern _X_EXPORT Bool  fbdevHWInit(ScrnInfoPtr pScrn, struct pci_device * pPci, char *device);
 
-void* fbdevHWMapVidmem(ScrnInfoPtr pScrn);
-int   fbdevHWLinearOffset(ScrnInfoPtr pScrn);
-Bool  fbdevHWUnmapVidmem(ScrnInfoPtr pScrn);
-void* fbdevHWMapMMIO(ScrnInfoPtr pScrn);
-Bool  fbdevHWUnmapMMIO(ScrnInfoPtr pScrn);
+extern _X_EXPORT char* fbdevHWGetName(ScrnInfoPtr pScrn);
+extern _X_EXPORT int   fbdevHWGetDepth(ScrnInfoPtr pScrn, int *fbbpp);
+extern _X_EXPORT int   fbdevHWGetLineLength(ScrnInfoPtr pScrn);
+extern _X_EXPORT int   fbdevHWGetType(ScrnInfoPtr pScrn);
+extern _X_EXPORT int   fbdevHWGetVidmem(ScrnInfoPtr pScrn);
 
-void  fbdevHWSetVideoModes(ScrnInfoPtr pScrn);
-DisplayModePtr fbdevHWGetBuildinMode(ScrnInfoPtr pScrn);
-void  fbdevHWUseBuildinMode(ScrnInfoPtr pScrn);
-Bool  fbdevHWModeInit(ScrnInfoPtr pScrn, DisplayModePtr mode);
-void  fbdevHWSave(ScrnInfoPtr pScrn);
-void  fbdevHWRestore(ScrnInfoPtr pScrn);
+extern _X_EXPORT void* fbdevHWMapVidmem(ScrnInfoPtr pScrn);
+extern _X_EXPORT int   fbdevHWLinearOffset(ScrnInfoPtr pScrn);
+extern _X_EXPORT Bool  fbdevHWUnmapVidmem(ScrnInfoPtr pScrn);
+extern _X_EXPORT void* fbdevHWMapMMIO(ScrnInfoPtr pScrn);
+extern _X_EXPORT Bool  fbdevHWUnmapMMIO(ScrnInfoPtr pScrn);
 
-void  fbdevHWLoadPalette(ScrnInfoPtr pScrn, int numColors, int *indices,
+extern _X_EXPORT void  fbdevHWSetVideoModes(ScrnInfoPtr pScrn);
+extern _X_EXPORT DisplayModePtr fbdevHWGetBuildinMode(ScrnInfoPtr pScrn);
+extern _X_EXPORT void  fbdevHWUseBuildinMode(ScrnInfoPtr pScrn);
+extern _X_EXPORT Bool  fbdevHWModeInit(ScrnInfoPtr pScrn, DisplayModePtr mode);
+extern _X_EXPORT void  fbdevHWSave(ScrnInfoPtr pScrn);
+extern _X_EXPORT void  fbdevHWRestore(ScrnInfoPtr pScrn);
+
+extern _X_EXPORT void  fbdevHWLoadPalette(ScrnInfoPtr pScrn, int numColors, int *indices,
 		 LOCO *colors, VisualPtr pVisual);
 
-ModeStatus fbdevHWValidMode(int scrnIndex, DisplayModePtr mode, Bool verbose, int flags);
-Bool  fbdevHWSwitchMode(int scrnIndex, DisplayModePtr mode, int flags);
-void  fbdevHWAdjustFrame(int scrnIndex, int x, int y, int flags);
-Bool  fbdevHWEnterVT(int scrnIndex, int flags);
-void  fbdevHWLeaveVT(int scrnIndex, int flags);
-void  fbdevHWDPMSSet(ScrnInfoPtr pScrn, int mode, int flags);
+extern _X_EXPORT ModeStatus fbdevHWValidMode(int scrnIndex, DisplayModePtr mode, Bool verbose, int flags);
+extern _X_EXPORT Bool  fbdevHWSwitchMode(int scrnIndex, DisplayModePtr mode, int flags);
+extern _X_EXPORT void  fbdevHWAdjustFrame(int scrnIndex, int x, int y, int flags);
+extern _X_EXPORT Bool  fbdevHWEnterVT(int scrnIndex, int flags);
+extern _X_EXPORT void  fbdevHWLeaveVT(int scrnIndex, int flags);
+extern _X_EXPORT void  fbdevHWDPMSSet(ScrnInfoPtr pScrn, int mode, int flags);
 
-Bool  fbdevHWSaveScreen(ScreenPtr pScreen, int mode);
+extern _X_EXPORT Bool  fbdevHWSaveScreen(ScreenPtr pScreen, int mode);
 
-xf86SwitchModeProc	*fbdevHWSwitchModeWeak(void);
-xf86AdjustFrameProc	*fbdevHWAdjustFrameWeak(void);
-xf86EnterVTProc		*fbdevHWEnterVTWeak(void);
-xf86LeaveVTProc		*fbdevHWLeaveVTWeak(void);
-xf86ValidModeProc	*fbdevHWValidModeWeak(void);
-xf86DPMSSetProc		*fbdevHWDPMSSetWeak(void);
-xf86LoadPaletteProc	*fbdevHWLoadPaletteWeak(void);
-SaveScreenProcPtr	fbdevHWSaveScreenWeak(void);
+extern _X_EXPORT xf86SwitchModeProc	*fbdevHWSwitchModeWeak(void);
+extern _X_EXPORT xf86AdjustFrameProc	*fbdevHWAdjustFrameWeak(void);
+extern _X_EXPORT xf86EnterVTProc	*fbdevHWEnterVTWeak(void);
+extern _X_EXPORT xf86LeaveVTProc	*fbdevHWLeaveVTWeak(void);
+extern _X_EXPORT xf86ValidModeProc	*fbdevHWValidModeWeak(void);
+extern _X_EXPORT xf86DPMSSetProc	*fbdevHWDPMSSetWeak(void);
+extern _X_EXPORT xf86LoadPaletteProc	*fbdevHWLoadPaletteWeak(void);
+extern _X_EXPORT SaveScreenProcPtr	fbdevHWSaveScreenWeak(void);
 
 #endif

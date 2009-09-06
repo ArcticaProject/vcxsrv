@@ -101,7 +101,7 @@ static void set_x11_path() {
             }
 
             ver = CFBundleGetVersionNumber(bundle);
-            if(ver < 0x02308000) {
+            if( !(ver >= 0x02308000 || (ver >= 0x02168000 && ver < 0x02208000))) {
                 CFStringRef versionStr = CFBundleGetValueForInfoDictionaryKey(bundle, kCFBundleVersionKey);
                 const char * versionCStr = "Unknown";
 
@@ -110,7 +110,7 @@ static void set_x11_path() {
 
                 fprintf(stderr, "Xquartz: Could not find a new enough X11.app LSFindApplicationForInfo() returned\n");
                 fprintf(stderr, "         X11.app = %s\n", x11_path);
-                fprintf(stderr, "         Version = %s (%x), Expected Version > 2.3.0\n", versionCStr, (unsigned)ver);
+                fprintf(stderr, "         Version = %s (%x), Expected Version > 2.3.0 or 2.1.6\n", versionCStr, (unsigned)ver);
                 exit(9);
             }
 
@@ -222,7 +222,7 @@ int main(int argc, char **argv, char **envp) {
     sig_t handler;
 
     if(argc == 2 && !strcmp(argv[1], "-version")) {
-        fprintf(stderr, "X.org Release 7.3\n");
+        fprintf(stderr, "X.org Release 7.4\n");
         fprintf(stderr, "X.Org X Server %s\n", XSERVER_VERSION);
         fprintf(stderr, "Build Date: %s\n", BUILD_DATE);
         return EXIT_SUCCESS;

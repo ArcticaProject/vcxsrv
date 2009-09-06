@@ -1,6 +1,6 @@
 /************************************************************
 
-Author: Eamon Walsh <ewalsh@epoch.ncsc.mil>
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
@@ -139,6 +139,7 @@ typedef struct {
 } SELinuxListItemsReply;
 
 
+#ifdef _XSELINUX_NEED_FLASK
 /* Private Flask definitions */
 #define SECCLASS_X_DRAWABLE		1
 #define SECCLASS_X_SCREEN		2
@@ -156,4 +157,395 @@ typedef struct {
 #define SECCLASS_X_FAKEEVENT		14
 #define SECCLASS_X_RESOURCE		15
 
+/* Mapping from DixAccess bits to Flask permissions */
+static struct security_class_mapping map[] = {
+    { "x_drawable",
+        { "read",		/* DixReadAccess */
+          "write",		/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "create",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "list_property",	/* DixListPropAccess */
+          "get_property",	/* DixGetPropAccess */
+          "set_property",	/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "list_child",		/* DixListAccess */
+          "add_child",		/* DixAddAccess */
+          "remove_child",	/* DixRemoveAccess */
+          "hide",		/* DixHideAccess */
+          "show",		/* DixShowAccess */
+          "blend",		/* DixBlendAccess */
+          "override",		/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "send",		/* DixSendAccess */
+          "receive",		/* DixReceiveAccess */
+          "",			/* DixUseAccess */
+          "manage",		/* DixManageAccess */
+          NULL }},
+    { "x_screen",
+        { "",			/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "",			/* DixDestroyAccess */
+          "",			/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "saver_getattr",	/* DixListPropAccess */
+          "saver_setattr",	/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "hide_cursor",	/* DixHideAccess */
+          "show_cursor",	/* DixShowAccess */
+          "saver_hide",		/* DixBlendAccess */
+          "saver_show",		/* DixGrabAccess */
+          NULL }},
+    { "x_gc",
+        { "",			/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "create",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "use",		/* DixUseAccess */
+          NULL }},
+    { "x_font",
+        { "",			/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "create",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "",			/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "add_glyph",		/* DixAddAccess */
+          "remove_glyph",	/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "use",		/* DixUseAccess */
+          NULL }},
+    { "x_colormap",
+        { "read",		/* DixReadAccess */
+          "write",		/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "create",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "",			/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "add_color",		/* DixAddAccess */
+          "remove_color",	/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "install",		/* DixInstallAccess */
+          "uninstall",		/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "use",		/* DixUseAccess */
+          NULL }},
+    { "x_property",
+        { "read",		/* DixReadAccess */
+          "write",		/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "create",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "write",		/* DixBlendAccess */
+          NULL }},
+    { "x_selection",
+        { "read",		/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "",			/* DixDestroyAccess */
+          "setattr",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          NULL }},
+    { "x_cursor",
+        { "read",		/* DixReadAccess */
+          "write",		/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "create",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "use",		/* DixUseAccess */
+          NULL }},
+    { "x_client",
+        { "",			/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "",			/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "",			/* DixUseAccess */
+          "manage",		/* DixManageAccess */
+          NULL }},
+    { "x_device",
+        { "read",		/* DixReadAccess */
+          "write",		/* DixWriteAccess */
+          "destroy",		/* DixDestroyAccess */
+          "create",		/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "list_property",	/* DixListPropAccess */
+          "get_property",	/* DixGetPropAccess */
+          "set_property",	/* DixSetPropAccess */
+          "getfocus",		/* DixGetFocusAccess */
+          "setfocus",		/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "add",		/* DixAddAccess */
+          "remove",		/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "grab",		/* DixGrabAccess */
+          "freeze",		/* DixFreezeAccess */
+          "force_cursor",	/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "use",		/* DixUseAccess */
+          "manage",		/* DixManageAccess */
+          "",			/* DixDebugAccess */
+          "bell",		/* DixBellAccess */
+          NULL }},
+    { "x_server",
+        { "record",		/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "",			/* DixDestroyAccess */
+          "",			/* DixCreateAccess */
+          "getattr",		/* DixGetAttrAccess */
+          "setattr",		/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "grab",		/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "",			/* DixUseAccess */
+          "manage",		/* DixManageAccess */
+          "debug",		/* DixDebugAccess */
+          NULL }},
+    { "x_extension",
+        { "",			/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "",			/* DixDestroyAccess */
+          "",			/* DixCreateAccess */
+          "query",		/* DixGetAttrAccess */
+          "",			/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "",			/* DixSendAccess */
+          "",			/* DixReceiveAccess */
+          "use",		/* DixUseAccess */
+          NULL }},
+    { "x_event",
+        { "",			/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "",			/* DixDestroyAccess */
+          "",			/* DixCreateAccess */
+          "",			/* DixGetAttrAccess */
+          "",			/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "send",		/* DixSendAccess */
+          "receive",		/* DixReceiveAccess */
+          NULL }},
+    { "x_synthetic_event",
+        { "",			/* DixReadAccess */
+          "",			/* DixWriteAccess */
+          "",			/* DixDestroyAccess */
+          "",			/* DixCreateAccess */
+          "",			/* DixGetAttrAccess */
+          "",			/* DixSetAttrAccess */
+          "",			/* DixListPropAccess */
+          "",			/* DixGetPropAccess */
+          "",			/* DixSetPropAccess */
+          "",			/* DixGetFocusAccess */
+          "",			/* DixSetFocusAccess */
+          "",			/* DixListAccess */
+          "",			/* DixAddAccess */
+          "",			/* DixRemoveAccess */
+          "",			/* DixHideAccess */
+          "",			/* DixShowAccess */
+          "",			/* DixBlendAccess */
+          "",			/* DixGrabAccess */
+          "",			/* DixFreezeAccess */
+          "",			/* DixForceAccess */
+          "",			/* DixInstallAccess */
+          "",			/* DixUninstallAccess */
+          "send",		/* DixSendAccess */
+          "receive",		/* DixReceiveAccess */
+          NULL }},
+    { "x_resource",
+        { "read",		/* DixReadAccess */
+          "write",		/* DixWriteAccess */
+          "write",		/* DixDestroyAccess */
+          "write",		/* DixCreateAccess */
+          "read",		/* DixGetAttrAccess */
+          "write",		/* DixSetAttrAccess */
+          "read",		/* DixListPropAccess */
+          "read",		/* DixGetPropAccess */
+          "write",		/* DixSetPropAccess */
+          "read",		/* DixGetFocusAccess */
+          "write",		/* DixSetFocusAccess */
+          "read",		/* DixListAccess */
+          "write",		/* DixAddAccess */
+          "write",		/* DixRemoveAccess */
+          "write",		/* DixHideAccess */
+          "read",		/* DixShowAccess */
+          "read",		/* DixBlendAccess */
+          "write",		/* DixGrabAccess */
+          "write",		/* DixFreezeAccess */
+          "write",		/* DixForceAccess */
+          "write",		/* DixInstallAccess */
+          "write",		/* DixUninstallAccess */
+          "write",		/* DixSendAccess */
+          "read",		/* DixReceiveAccess */
+          "read",		/* DixUseAccess */
+          "write",		/* DixManageAccess */
+          "read",		/* DixDebugAccess */
+          "write",		/* DixBellAccess */
+          NULL }},
+    { NULL }
+};
+
+/* x_resource "read" bits from the list above */
+#define SELinuxReadMask (DixReadAccess|DixGetAttrAccess|DixListPropAccess| \
+			 DixGetPropAccess|DixGetFocusAccess|DixListAccess| \
+			 DixShowAccess|DixBlendAccess|DixReceiveAccess| \
+			 DixUseAccess|DixDebugAccess)
+
+#endif /* _XSELINUX_NEED_FLASK */
 #endif /* _XSELINUX_H */
