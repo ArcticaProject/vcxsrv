@@ -27,8 +27,6 @@ DATA_FILES=$(dist_xkbdata_keycodes_DATA:%=$(DESTDIR)\%)
 
 load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=0 DEBUG=$(DEBUG);)
 
-.PHONY: extrastuff
-
 extrastuff: $(SUBDIRS:%=%\all)
 
 include ..\xkbrules.mak

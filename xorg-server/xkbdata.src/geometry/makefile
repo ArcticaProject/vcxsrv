@@ -20,8 +20,6 @@ SUBDIRS = digital_vndr  sgi_vndr
 
 load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=0 DEBUG=$(DEBUG);)
 
-.PHONY: extrastuff
-
 extrastuff: $(SUBDIRS:%=%\all)
 
 include ..\xkbrules.mak

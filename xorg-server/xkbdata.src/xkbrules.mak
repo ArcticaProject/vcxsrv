@@ -8,6 +8,8 @@ $(DESTDIR)\%: %
 	copy $< $@
 
 ifneq ($(DIRFILE),)
+.PHONY: extrastuff
+
 $(DIRFILE): extrastuff $(DATA_FILES)
 	-del -e $@
 	cd $(DESTDIR) & ..\..\xkbcomp.exe -lfhlpR -o $(relpath $@) *
