@@ -92,7 +92,7 @@ load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 xkbcomp.exe: ..\xkbcomp\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\xkbcomp.exe
 	copy $< $@
 
-load_makefile ..\tools\plink\makefile MAKESERVER=0 DEBUG=$(DEBUG))
+load_makefile ..\tools\plink\makefile MAKESERVER=0 DEBUG=$(DEBUG)
 
 plink.exe: ..\tools\plink\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\plink.exe
 	copy $< $@
