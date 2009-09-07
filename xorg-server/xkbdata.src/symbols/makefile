@@ -13,7 +13,7 @@ ad af al \
 am ara az \
 be bd \
 bg br ba \
-bt by braille \
+bt by brai \
 ca cd \
 ch cn cz \
 de dk \
@@ -31,19 +31,18 @@ mm mn mt mv \
 ng nl no np \
 pc pk pl pt \
 ro rs ru \
-se si sk \
+se si sk sn \
 sy th \
-tj tr \
+terminate \
+tj tm tr \
 ua us uz vn \
 za \
 altwin capslock compose ctrl eurosign group inet \
-keypad kpdl level3 level5 nbsp olpc shift srvr_ctrl
+keypad kpdl level3 level5 nbsp olpc shift srvr_ctrl typo
 
 DATA_FILES=$(dist_xkbdata_symbols_DATA:%=$(DESTDIR)\%)
 
 load_makefile $(SUBDIRS:%=%\makefile MAKESERVER=0 DEBUG=$(DEBUG);)
-
-.PHONY: extrastuff
 
 extrastuff: $(SUBDIRS:%=%\all)
 
