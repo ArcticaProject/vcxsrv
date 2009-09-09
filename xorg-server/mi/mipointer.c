@@ -302,8 +302,8 @@ miPointerWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 {
     miPointerPtr pPointer;
     BOOL changedScreen = FALSE;
-    SetupScreen (pScreen);
 
+    SetupScreen (pScreen);
     pPointer = MIPOINTER(pDev);
 
     if (pPointer->pScreen != pScreen)
