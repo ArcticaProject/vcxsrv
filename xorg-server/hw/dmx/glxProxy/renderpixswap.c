@@ -28,7 +28,6 @@
  * Silicon Graphics, Inc.
  */
 
-#define NEED_REPLIES
 #include "glxserver.h"
 #include "unpack.h"
 #include "g_disptab.h"

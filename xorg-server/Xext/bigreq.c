@@ -26,7 +26,6 @@ from The Open Group.
 
 */
 
-#define NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -37,7 +36,7 @@ from The Open Group.
 #include "os.h"
 #include "dixstruct.h"
 #include "extnsionst.h"
-#include <X11/extensions/bigreqstr.h>
+#include <X11/extensions/bigreqsproto.h>
 #include "opaque.h"
 #include "modinit.h"
 
@@ -52,8 +51,7 @@ BigReqExtensionInit(INITARGS)
 }
 
 static int
-ProcBigReqDispatch (client)
-     ClientPtr	client;
+ProcBigReqDispatch (ClientPtr client)
 {
     REQUEST(xBigReqEnableReq);
     xBigReqEnableReply rep;
@@ -66,6 +64,7 @@ ProcBigReqDispatch (client)
 	return BadRequest;
     REQUEST_SIZE_MATCH(xBigReqEnableReq);
     client->big_requests = TRUE;
+    memset(&rep, 0, sizeof(xBigReqEnableReply));
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;

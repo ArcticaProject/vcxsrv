@@ -880,8 +880,7 @@ miComputeWideEllipse(
     {
 	if (spdata)
 	    xfree(spdata);
-	spdata = (miArcSpanData *)xalloc(sizeof(miArcSpanData) +
-					 sizeof(miArcSpan) * (k + 2));
+	spdata = xalloc(sizeof(miArcSpanData) + sizeof(miArcSpan) * (k + 2));
 	lruent->spdata = spdata;
 	if (!spdata)
 	{
@@ -925,7 +924,7 @@ miFillWideEllipse(
 
     yorgu = parc->height + pGC->lineWidth;
     n = (sizeof(int) * 2) * yorgu;
-    widths = (int *)xalloc(n + (sizeof(DDXPointRec) * 2) * yorgu);
+    widths = xalloc(n + (sizeof(DDXPointRec) * 2) * yorgu);
     if (!widths)
 	return;
     points = (DDXPointPtr)((char *)widths + n);
@@ -1041,7 +1040,7 @@ miFillWideEllipse(
  * fuller explanation of this.)
  */
 
-_X_EXPORT void
+void
 miPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 {
     int		i;
@@ -1361,7 +1360,7 @@ miArcJoin(DrawablePtr pDraw, GCPtr pGC, miArcFacePtr pLeft,
 		arc.height = width;
 		arc.angle1 = -miDatan2 (corner.y - center.y, corner.x - center.x);
 		arc.angle2 = a;
-		pArcPts = (SppPointPtr) xalloc (3 * sizeof (SppPointRec));
+		pArcPts = xalloc (3 * sizeof (SppPointRec));
 		if (!pArcPts)
 		    return;
 		pArcPts[0].x = otherCorner.x;
@@ -1783,7 +1782,7 @@ addArc (
 	    arc = (miArcDataPtr) xrealloc (*arcsp,
 					   newsize * sizeof (**arcsp));
 	    if (!arc)
-		return (miArcDataPtr)NULL;
+		return NULL;
 	    *sizep = newsize;
 	    *arcsp = arc;
 	}
@@ -1885,7 +1884,7 @@ miComputeArcs (
 	int		arcsJoin;
 	int		selfJoin;
 
-	int		iDash = 0, dashRemaining;
+	int		iDash = 0, dashRemaining = 0;
 	int		iDashStart = 0, dashRemainingStart = 0, iphaseStart;
 	int		startAngle, spanAngle, endAngle, backwards = 0;
 	int		prevDashAngle, dashAngle;
@@ -1895,14 +1894,14 @@ miComputeArcs (
 	isDoubleDash = (pGC->lineStyle == LineDoubleDash);
 	dashOffset = pGC->dashOffset;
 
-	data = (struct arcData *) xalloc (narcs * sizeof (struct arcData));
+	data = xalloc (narcs * sizeof (struct arcData));
 	if (!data)
-	    return (miPolyArcPtr)NULL;
-	arcs = (miPolyArcPtr) xalloc (sizeof (*arcs) * (isDoubleDash ? 2 : 1));
+	    return NULL;
+	arcs = xalloc (sizeof (*arcs) * (isDoubleDash ? 2 : 1));
 	if (!arcs)
 	{
 	    xfree(data);
-	    return (miPolyArcPtr)NULL;
+	    return NULL;
 	}
 	for (i = 0; i < narcs; i++) {
 		a0 = todeg (parcs[i].angle1);
@@ -2255,7 +2254,7 @@ miComputeArcs (
 arcfail:
 	miFreeArcs(arcs, pGC);
 	xfree(data);
-	return (miPolyArcPtr)NULL;
+	return NULL;
 }
 
 static double
@@ -3111,7 +3110,7 @@ realAllocSpan (void)
 	struct finalSpan	*span;
 	int			i;
 
-	newChunk = (struct finalSpanChunk *) xalloc (sizeof (struct finalSpanChunk));
+	newChunk = xalloc (sizeof (struct finalSpanChunk));
 	if (!newChunk)
 		return (struct finalSpan *) NULL;
 	newChunk->next = chunks;
@@ -3158,8 +3157,8 @@ fillSpans (
 
 	if (nspans == 0)
 		return;
-	xSpan = xSpans = (DDXPointPtr) xalloc (nspans * sizeof (DDXPointRec));
-	xWidth = xWidths = (int *) xalloc (nspans * sizeof (int));
+	xSpan = xSpans = xalloc (nspans * sizeof (DDXPointRec));
+	xWidth = xWidths = xalloc (nspans * sizeof (int));
 	if (xSpans && xWidths)
 	{
 	    i = 0;
@@ -3216,10 +3215,9 @@ realFindSpan (int y)
 		else
 			change = SPAN_REALLOC;
 		newSize = finalSize + change;
-		newSpans = (struct finalSpan **) xalloc
- 					(newSize * sizeof (struct finalSpan *));
+		newSpans = xalloc(newSize * sizeof (struct finalSpan *));
 		if (!newSpans)
-		    return (struct finalSpan **)NULL;
+		    return NULL;
 		newMiny = finalMiny;
 		newMaxy = finalMaxy;
 		if (y < finalMiny)

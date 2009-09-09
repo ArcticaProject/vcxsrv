@@ -43,14 +43,13 @@
 #include <xkbsrv.h>
 #endif
 
-#if 1
 #include "inputstr.h"
+#include "exevents.h" /* for button/axes labels */
+#include "xserver-properties.h"
 
 /* Peek the internal button mapping */
 static CARD8 const *g_winMouseButtonMap = NULL;
-#endif
 
-#include <X11/extensions/XIproto.h>
 
 /*
  * Local prototypes
@@ -78,6 +77,8 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
   int			lngWheelEvents = 2;
   CARD8			*map;
   DevicePtr		pDevice = (DevicePtr) pDeviceInt;
+  Atom *btn_labels;
+  Atom axes_labels[2];
 
   switch (iState)
     {
@@ -105,17 +106,29 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
       map[0] = 0;
       for (i=1; i <= lngMouseButtons + lngWheelEvents; i++)
       	map[i] = i;
+
+      btn_labels = calloc((lngMouseButtons + lngWheelEvents), sizeof(Atom));
+      btn_labels[0] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_LEFT);
+      btn_labels[1] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_MIDDLE);
+      btn_labels[2] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_RIGHT);
+      btn_labels[3] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_UP);
+      btn_labels[4] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_DOWN);
+
+      axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_X);
+      axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_Y);
+
       InitPointerDeviceStruct (pDevice,
 			       map,
 			       lngMouseButtons + lngWheelEvents,
+			       btn_labels,
 			       winMouseCtrl,
 			       GetMotionHistorySize(),
-			       2);
+			       2,
+			       axes_labels);
       free(map);
+      free(btn_labels);
 
-#if 1
       g_winMouseButtonMap = pDeviceInt->button->map;
-#endif
       break;
 
     case DEVICE_ON:
@@ -123,9 +136,7 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
       break;
 
     case DEVICE_CLOSE:
-#if 1
       g_winMouseButtonMap = NULL;
-#endif
     case DEVICE_OFF:
       pDevice->on = FALSE;
       break;
@@ -136,7 +147,7 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
 
 /* Handle the mouse wheel */
 int
-winMouseWheel (ScreenPtr pScreen, int iDeltaZ, int x, int y)
+winMouseWheel (ScreenPtr pScreen, int iDeltaZ)
 {
   winScreenPriv(pScreen);
   int button; /* Button4 or Button5 */
@@ -211,10 +222,10 @@ winMouseWheel (ScreenPtr pScreen, int iDeltaZ, int x, int y)
   while (iDeltaZ--)
     {
       /* Push the wheel button */
-      winMouseButtonsSendEvent (DeviceButtonPress, button,x,y);
+      winMouseButtonsSendEvent (ButtonPress, button);
 
       /* Release the wheel button */
-      winMouseButtonsSendEvent (DeviceButtonRelease, button,x,y);
+      winMouseButtonsSendEvent (ButtonRelease, button);
     }
 
   return 0;
@@ -226,62 +237,36 @@ winMouseWheel (ScreenPtr pScreen, int iDeltaZ, int x, int y)
  */
 
 void
-winMouseButtonsSendEvent (int iEventType, int iButton, int x, int y)
+winMouseButtonsSendEvent (int iEventType, int iButton)
 {
-  DeviceIntPtr pDev;
-  deviceKeyButtonPointer	xCurrentEvent;
-  deviceKeyButtonPointer *kbp = &xCurrentEvent;
+  EventListPtr events;
+  int i, nevents;
 
-  /* Load an xEvent and enqueue the event */
-  kbp->type=iEventType;
-#if 1
   if (g_winMouseButtonMap)
-    kbp->detail = g_winMouseButtonMap[iButton];
-  else
+    iButton = g_winMouseButtonMap[iButton];
+
+  GetEventList(&events);
+  nevents = GetPointerEvents(events, g_pwinPointer, iEventType, iButton,
+			     POINTER_RELATIVE, 0, 0, NULL);
+
+  for (i = 0; i < nevents; i++)
+    mieqEnqueue(g_pwinPointer, events[i].event);
+
+#if CYGDEBUG
+  ErrorF("winMouseButtonsSendEvent: iEventType: %d, iButton: %d, nEvents %d\n",
+          iEventType, iButton, nevents);
 #endif
-    kbp->detail = iButton;
-  kbp->time = g_c32LastInputEventTime = GetTickCount ();
-
-  kbp->root_x = x;
-  kbp->root_y = y;
-
-  for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
-    if ((pDev->coreEvents && pDev != inputInfo.pointer) && pDev->button)
-      {
-         kbp->deviceid = pDev->id;
-         mieqEnqueue (pDev, (xEventPtr)kbp);
-      }
 }
 
-void winGetPtMouse(HWND hwnd, LPARAM lParam, POINT *ptMouse)
-{
-  /* Unpack the client area mouse coordinates */
-  ptMouse->x = GET_X_LPARAM(lParam);
-  ptMouse->y = GET_Y_LPARAM(lParam);
-}
-
-void winGetPtMouseScreen(HWND hwnd, LPARAM lParam, POINT *ptMouse)
-{
-  /* Unpack the client area mouse coordinates */
-  ptMouse->x = GET_X_LPARAM(lParam);
-  ptMouse->y = GET_Y_LPARAM(lParam);
-
-  /* Translate the client area mouse coordinates to screen coordinates */
-  ClientToScreen (hwnd, ptMouse);
-
-  /* Screen Coords from (-X, -Y) -> Root Window (0, 0) */
-  ptMouse->x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
-  ptMouse->y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
-}
 
 /*
  * Decide what to do with a Windows mouse message
  */
 
-static int
-_winMouseButtonsHandle (ScreenPtr pScreen,
+int
+winMouseButtonsHandle (ScreenPtr pScreen,
                        int iEventType, int iButton,
-                       WPARAM wParam, POINT *ptMouse)
+		       WPARAM wParam)
 {
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
@@ -290,12 +275,12 @@ _winMouseButtonsHandle (ScreenPtr pScreen,
   if (pScreenInfo->iE3BTimeout == WIN_E3B_OFF)
     {
       /* Emulate 3 buttons is off, send the button event */
-      winMouseButtonsSendEvent (iEventType, iButton, ptMouse->x, ptMouse->y);
+      winMouseButtonsSendEvent (iEventType, iButton);
       return 0;
     }
 
   /* Emulate 3 buttons is on, let the fun begin */
-  if (iEventType == DeviceButtonPress
+  if (iEventType == ButtonPress
       && pScreenPriv->iE3BCachedPress == 0
       && !pScreenPriv->fE3BFakeButton2Sent)
     {
@@ -316,7 +301,7 @@ _winMouseButtonsHandle (ScreenPtr pScreen,
 		pScreenInfo->iE3BTimeout,
 		NULL);
     }
-  else if (iEventType == DeviceButtonPress
+  else if (iEventType == ButtonPress
 	   && pScreenPriv->iE3BCachedPress != 0
 	   && pScreenPriv->iE3BCachedPress != iButton
 	   && !pScreenPriv->fE3BFakeButton2Sent)
@@ -331,12 +316,12 @@ _winMouseButtonsHandle (ScreenPtr pScreen,
       pScreenPriv->iE3BCachedPress = 0;
 
       /* Send fake middle button */
-      winMouseButtonsSendEvent (DeviceButtonPress, Button2, ptMouse->x, ptMouse->y);
+      winMouseButtonsSendEvent (ButtonPress, Button2);
 
       /* Indicate that a fake middle button event was sent */
       pScreenPriv->fE3BFakeButton2Sent = TRUE;
     }
-  else if (iEventType == DeviceButtonRelease
+  else if (iEventType == ButtonRelease
 	   && pScreenPriv->iE3BCachedPress == iButton)
     {
       /*
@@ -347,10 +332,10 @@ _winMouseButtonsHandle (ScreenPtr pScreen,
       pScreenPriv->iE3BCachedPress = 0;
 
       /* Send cached press, then send release */
-      winMouseButtonsSendEvent (DeviceButtonPress, iButton, ptMouse->x, ptMouse->y);
-      winMouseButtonsSendEvent (DeviceButtonRelease, iButton, ptMouse->x, ptMouse->y);
+      winMouseButtonsSendEvent (ButtonPress, iButton);
+      winMouseButtonsSendEvent (ButtonRelease, iButton);
     }
-  else if (iEventType == DeviceButtonRelease
+  else if (iEventType == ButtonRelease
 	   && pScreenPriv->fE3BFakeButton2Sent
 	   && !(wParam & MK_LBUTTON)
 	   && !(wParam & MK_RBUTTON))
@@ -361,9 +346,9 @@ _winMouseButtonsHandle (ScreenPtr pScreen,
       pScreenPriv->fE3BFakeButton2Sent = FALSE;
       
       /* Send middle mouse button release */
-      winMouseButtonsSendEvent (DeviceButtonRelease, Button2, ptMouse->x, ptMouse->y);
+      winMouseButtonsSendEvent (ButtonRelease, Button2);
     }
-  else if (iEventType == DeviceButtonRelease
+  else if (iEventType == ButtonRelease
 	   && pScreenPriv->iE3BCachedPress == 0
 	   && !pScreenPriv->fE3BFakeButton2Sent)
     {
@@ -371,52 +356,33 @@ _winMouseButtonsHandle (ScreenPtr pScreen,
        * Button was release, no button is cached,
        * and there is no fake button 2 release is pending.
        */
-      winMouseButtonsSendEvent (DeviceButtonRelease, iButton, ptMouse->x, ptMouse->y);
+      winMouseButtonsSendEvent (ButtonRelease, iButton);
     }
 
   return 0;
 }
 
-int
-winMouseButtonsHandle (ScreenPtr pScreen,
-                       int iEventType, int iButton,
-                       WPARAM wParam, HWND hwnd, LPARAM lParam)
-{
-  POINT ptMouse;
-  winGetPtMouse(hwnd,lParam,&ptMouse);
-  return _winMouseButtonsHandle(pScreen, iEventType, iButton, wParam ,&ptMouse);
-}
-
-int
-winMouseButtonsHandleScreen (ScreenPtr pScreen,
-                             int iEventType, int iButton,
-                             WPARAM wParam, HWND hwnd, LPARAM lParam)
-{
-  POINT ptMouse;
-  winGetPtMouseScreen(hwnd,lParam,&ptMouse);
-  return _winMouseButtonsHandle(pScreen, iEventType, iButton, wParam ,&ptMouse);
-}
-
-
 /**
  * Enqueue a motion event.
+ *
+ *  XXX: miPointerMove does exactly this, but is static :-( (and uses a static buffer)
+ *
  */
 void winEnqueueMotion(int x, int y)
 {
   int i, nevents;
   int valuators[2];
-  int MaxN=GetMaximumEventsNum();
 
-  EventListPtr events = InitEventList(MaxN);
+  EventListPtr events;
+
+  miPointerSetPosition(g_pwinPointer, &x, &y);
+  GetEventList(&events);
 
   valuators[0] = x;
   valuators[1] = y;
-  nevents = GetPointerEvents(events, inputInfo.pointer, MotionNotify, 0,
+  nevents = GetPointerEvents(events, g_pwinPointer, MotionNotify, 0,
 			     POINTER_ABSOLUTE, 0, 2, valuators);
 
   for (i = 0; i < nevents; i++)
-    mieqEnqueue(inputInfo.pointer, events[i].event);
-
-  FreeEventList(events,MaxN);
+    mieqEnqueue(g_pwinPointer, events[i].event);
 }
-// XXX: miPointerMove does exactly this, but is static :-( (and uses a static buffer)

@@ -50,17 +50,17 @@ SOFTWARE.
 
 _XFUNCPROTOBEGIN
 
-extern unsigned short StandardMinorOpcode(ClientPtr /*client*/);
+extern _X_EXPORT unsigned short StandardMinorOpcode(ClientPtr /*client*/);
 
-extern unsigned short MinorOpcodeOfRequest(ClientPtr /*client*/);
+extern _X_EXPORT unsigned short MinorOpcodeOfRequest(ClientPtr /*client*/);
 
-extern Bool EnableDisableExtension(char *name, Bool enable);
+extern _X_EXPORT Bool EnableDisableExtension(char *name, Bool enable);
 
-extern void EnableDisableExtensionError(char *name, Bool enable);
+extern _X_EXPORT void EnableDisableExtensionError(char *name, Bool enable);
 
-extern void InitExtensions(int argc, char **argv);
+extern _X_EXPORT void InitExtensions(int argc, char **argv);
 
-extern void CloseDownExtensions(void);
+extern _X_EXPORT void CloseDownExtensions(void);
 
 _XFUNCPROTOEND
 

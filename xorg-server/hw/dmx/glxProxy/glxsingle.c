@@ -44,7 +44,6 @@
 #undef Xrealloc
 #undef Xfree
 
-#define NEED_REPLIES
 #include "glxserver.h"
 #include "glxext.h"
 #include "g_disptab.h"
@@ -903,7 +902,7 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
 		   else {
 		      /* this is a GL_BITMAP pixel type, should copy bits */
 		      int r;
-		      int src_rowsize = ((sw * ebits) + 7) / 8;
+		      int src_rowsize = bits_to_bytes(sw * ebits);
 		      int src_pad = src_rowsize % 4;
                       if ( src_pad ) {
 			 src_rowsize += (4 - src_pad);

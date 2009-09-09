@@ -233,7 +233,7 @@ unmapVidMem(int ScreenNum, pointer Base, unsigned long Size)
  * Read BIOS via mmap()ing DEV_MEM
  */
 
-_X_EXPORT int
+int
 xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 	     int Len)
 {
@@ -450,7 +450,7 @@ armUnmapVidMem(int ScreenNum, pointer Base, unsigned long Size)
 #ifdef USE_DEV_IO
 static int IoFd = -1;
 
-_X_EXPORT Bool
+Bool
 xf86EnableIO()
 {
 	if (IoFd >= 0)
@@ -465,7 +465,7 @@ xf86EnableIO()
 	return TRUE;
 }
 
-_X_EXPORT void
+void
 xf86DisableIO()
 {
 	if (IoFd < 0)

@@ -41,6 +41,8 @@
 #include <dmx-config.h>
 #endif
 
+#include <stdlib.h>
+
 #include "dmx.h"
 #include "dmxinit.h"
 #include "dmxextension.h"
@@ -63,12 +65,6 @@
 #include "inputstr.h"                 /* For DeviceIntRec */
 #include <X11/extensions/dmxproto.h>  /* For DMX_BAD_* */
 #include "cursorstr.h"
-
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
 
 /* The default font is declared in dix/globals.c, but is not included in
  * _any_ header files. */
@@ -1127,9 +1123,9 @@ static void dmxBERestoreRenderGlyph(pointer value, XID id, pointer n)
     }
 
     /* Now allocate the memory we need */
-    images = xcalloc(len_images, sizeof(char));
-    gids   = xalloc(glyphSet->hash.tableEntries*sizeof(Glyph));
-    glyphs = xalloc(glyphSet->hash.tableEntries*sizeof(XGlyphInfo));
+    images = calloc(len_images, sizeof(char));
+    gids   = malloc(glyphSet->hash.tableEntries*sizeof(Glyph));
+    glyphs = malloc(glyphSet->hash.tableEntries*sizeof(XGlyphInfo));
 
     pos = images;
     ctr = 0;
@@ -1164,9 +1160,9 @@ static void dmxBERestoreRenderGlyph(pointer value, XID id, pointer n)
 		     len_images);
 
     /* Clean up */
-    xfree(len_images);
-    xfree(gids);
-    xfree(glyphs);    
+    free(len_images);
+    free(gids);
+    free(glyphs);    
 }
 #endif
 

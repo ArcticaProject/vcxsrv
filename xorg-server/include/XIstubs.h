@@ -26,27 +26,27 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef XI_STUBS_H
 #define XI_STUBS_H 1
 
-void
+extern _X_EXPORT void
 CloseInputDevice (
 	DeviceIntPtr           /* d */,
 	ClientPtr              /* client */);
 
-void
+extern _X_EXPORT void
 AddOtherInputDevices (void);
 
-void
+extern _X_EXPORT void
 OpenInputDevice (
 	DeviceIntPtr           /* dev */,
 	ClientPtr              /* client */,
 	int *                  /* status */);
 
-int
+extern _X_EXPORT int
 SetDeviceMode (
 	ClientPtr              /* client */,
 	DeviceIntPtr           /* dev */,
 	int                    /* mode */);
 
-int
+extern _X_EXPORT int
 SetDeviceValuators (
 	ClientPtr              /* client */,
 	DeviceIntPtr           /* dev */,
@@ -54,7 +54,7 @@ SetDeviceValuators (
 	int                    /* first_valuator */,
 	int                    /* num_valuators */);
 
-int
+extern _X_EXPORT int
 ChangeDeviceControl (
 	ClientPtr             /* client */,
 	DeviceIntPtr          /* dev */,

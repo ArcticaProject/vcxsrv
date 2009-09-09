@@ -41,7 +41,7 @@
 #define KBD_FD(i) ((i).kbdFd != -1 ? (i).kbdFd : (i).consoleFd)
 #endif
 
-_X_EXPORT void
+void
 xf86OSRingBell(int loudness, int pitch, int duration)
 {
 #ifdef WSCONS_SUPPORT

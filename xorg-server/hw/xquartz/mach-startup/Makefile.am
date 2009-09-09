@@ -19,7 +19,7 @@ X11_bin_LDADD = \
 	$(top_builddir)/dix/dixfonts.lo \
 	$(top_builddir)/miext/rootless/librootless.la \
 	$(top_builddir)/hw/xquartz/pbproxy/libxpbproxy.la \
-	$(DARWIN_LIBS) $(XSERVER_LIBS) $(XSERVER_SYS_LIBS) -lXplugin
+	$(DARWIN_LIBS) $(MAIN_LIB) $(XSERVER_LIBS) $(XSERVER_SYS_LIBS) -lXplugin
 
 X11_bin_LDFLAGS =  \
 	-XCClinker -Objc \
@@ -37,6 +37,11 @@ X11_bin_LDADD += \
 X11_bin_LDFLAGS += \
 	-L/System/Library/Frameworks/OpenGL.framework/Libraries -lGL \
 	-Wl,-framework,OpenGL
+endif
+
+if XQUARTZ_SPARKLE
+X11_bin_LDFLAGS += \
+	-Wl,-framework,Sparkle
 endif
 
 if RECORD

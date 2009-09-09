@@ -39,15 +39,9 @@
 #include <cursorstr.h>
 #include <mipointrst.h>
 #include <servermd.h>
+#include "misc.h"
 
 extern Bool	g_fSoftwareCursor;
-
-
-#ifndef MIN
-#define MIN(x,y) ((x)<(y)?(x):(y))
-#endif
-
-#define BYTE_COUNT(x) (((x) + 7) / 8)
 
 #define BRIGHTNESS(x) (x##Red * 0.299 + x##Green * 0.587 + x##Blue * 0.114)
 
@@ -55,6 +49,11 @@ extern Bool	g_fSoftwareCursor;
 # define WIN_DEBUG_MSG winDebug
 #else
 # define WIN_DEBUG_MSG(...)
+#endif
+
+#ifdef _MSC_VER
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
 /*
@@ -203,11 +202,11 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   /* Get the number of bytes required to store the whole cursor image 
    * This is roughly (sm_cx * sm_cy) / 8 
    * round up to 8 pixel boundary so we can convert whole bytes */
-  nBytes = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * pScreenPriv->cursor.sm_cy;
+  nBytes = bits_to_bytes(pScreenPriv->cursor.sm_cx) * pScreenPriv->cursor.sm_cy;
 
   /* Get the effective width and height */
-  nCX = MIN(pScreenPriv->cursor.sm_cx, pCursor->bits->width);
-  nCY = MIN(pScreenPriv->cursor.sm_cy, pCursor->bits->height);
+  nCX = min(pScreenPriv->cursor.sm_cx, pCursor->bits->width);
+  nCY = min(pScreenPriv->cursor.sm_cy, pCursor->bits->height);
 
   /* Allocate memory for the bitmaps */
   pAnd = malloc (nBytes);
@@ -218,11 +217,11 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
    * The first is for an empty mask */
   if (pCursor->bits->emptyMask)
     {
-      int x, y, xmax = BYTE_COUNT(nCX);
+      int x, y, xmax = bits_to_bytes(nCX);
       for (y = 0; y < nCY; ++y)
 	for (x = 0; x < xmax; ++x)
 	  {
-	    int nWinPix = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * y + x;
+	    int nWinPix = bits_to_bytes(pScreenPriv->cursor.sm_cx) * y + x;
 	    int nXPix = BitmapBytePad(pCursor->bits->width) * y + x;
 
 	    pAnd[nWinPix] = 0;
@@ -234,11 +233,11 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
     }
   else
     {
-      int x, y, xmax = BYTE_COUNT(nCX);
+      int x, y, xmax = bits_to_bytes(nCX);
       for (y = 0; y < nCY; ++y)
 	for (x = 0; x < xmax; ++x)
 	  {
-	    int nWinPix = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * y + x;
+	    int nWinPix = bits_to_bytes(pScreenPriv->cursor.sm_cx) * y + x;
 	    int nXPix = BitmapBytePad(pCursor->bits->width) * y + x;
 
 	    unsigned char mask = pCursor->bits->mask[nXPix];
@@ -327,7 +326,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
 		    (*pCur++) = 0;
 		  else /* Within X11 icon bounds */
 		    {
-		      int nWinPix = BYTE_COUNT(pScreenPriv->cursor.sm_cx) * y + (x/8);
+		      int nWinPix = bits_to_bytes(pScreenPriv->cursor.sm_cx) * y + (x/8);
 
 		      bit = pAnd[nWinPix];
 		      bit = bit & (1<<(7-(x&7)));
@@ -545,7 +544,7 @@ winSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, in
 
 
 /*
- * QuartzMoveCursor
+ * winMoveCursor
  *  Move the cursor. This is a noop for us.
  */
 static void
@@ -554,13 +553,17 @@ winMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 }
 
 static Bool
-winDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
+winDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScr)
 {
-  return TRUE;
+  winScreenPriv(pScr);
+  return pScreenPriv->cursor.spriteFuncs->DeviceCursorInitialize(pDev, pScr);
 }
+
 static void
-winDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
+winDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScr)
 {
+  winScreenPriv(pScr);
+  return pScreenPriv->cursor.spriteFuncs->DeviceCursorCleanup(pDev, pScr);
 }
 
 static miPointerSpriteFuncRec winSpriteFuncsRec = {
@@ -568,8 +571,8 @@ static miPointerSpriteFuncRec winSpriteFuncsRec = {
   winUnrealizeCursor,
   winSetCursor,
   winMoveCursor,
-  winDeviceInitialize,
-  winDeviceCleanup
+  winDeviceCursorInitialize,
+  winDeviceCursorCleanup
 };
 
 

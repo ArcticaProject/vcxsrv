@@ -32,7 +32,7 @@
 #define _ASM
 #include <sys/asm_linkage.h>
 #define FUNCTION_START(f,n)	ENTRY(f)
-#define FUNCTION_END(f)		SET_SIZE(f)
+#define FUNCTION_END(f)		ret; SET_SIZE(f)
 #endif
 
 	FUNCTION_START(inb,4)

@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -111,7 +109,7 @@ ProcXGetDeviceButtonMapping(ClientPtr client)
 	return BadMatch;
 
     rep.nElts = b->numButtons;
-    rep.length = (rep.nElts + (4 - 1)) / 4;
+    rep.length = bytes_to_int32(rep.nElts);
     WriteReplyToClient(client, sizeof(xGetDeviceButtonMappingReply), &rep);
     (void)WriteToClient(client, rep.nElts, (char *)&b->map[1]);
     return Success;

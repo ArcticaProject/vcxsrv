@@ -15,7 +15,7 @@
 #include "xaalocal.h"
    
 
-void 
+void
 XAASolidHorVertLineAsRects(
    ScrnInfoPtr pScrn,
    int x, int y, int len, int dir
@@ -29,7 +29,7 @@ XAASolidHorVertLineAsRects(
 }
    
 
-void 
+void
 XAASolidHorVertLineAsTwoPoint(
    ScrnInfoPtr pScrn,
    int x, int y, int len, int dir
@@ -44,7 +44,7 @@ XAASolidHorVertLineAsTwoPoint(
 	(*infoRec->SubsequentSolidTwoPointLine)(pScrn, x, y, x, y + len, 0);
 }
    
-void 
+void
 XAASolidHorVertLineAsBresenham(
    ScrnInfoPtr pScrn,
    int x, int y, int len, int dir

@@ -40,7 +40,7 @@
 #ifdef __CYGWIN__
 #include <sys/select.h>
 #else
-#include "X11/Xwinsock.h"
+#include <X11/Xwinsock.h>
 #define HAS_WINSOCK
 #endif
 #include <fcntl.h>
@@ -53,29 +53,12 @@ typedef int pid_t;
 /* X headers */
 #include <X11/X.h>
 #include <X11/Xatom.h>
-/* NOTE: For some unknown reason, including Xproto.h solves
- * tons of problems with including windows.h.  Unknowns reasons
- * are usually bad, so someone should investigate this.
- */
 #include <X11/Xproto.h>
-#include "X11/Xutil.h"
-#include "X11/Xlocale.h"
-
-/* Fixups to prevent collisions between Windows and X headers */
-#define ATOM			DWORD
-
-#ifndef __CYGWIN__
-#ifndef sleep
-#define sleep(x) Sleep (1000 * (x))
-#endif
-#endif
+#include <X11/Xutil.h>
+#include <X11/Xlocale.h>
 
 /* Windows headers */
-#ifndef XFree86Server
-#define XFree86Server
-#endif
-#include <windows.h>
-#undef XFree86Server
+#include <X11/Xwindows.h>
 
 
 /* Clipboard module constants */

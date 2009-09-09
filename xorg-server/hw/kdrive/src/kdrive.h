@@ -24,8 +24,8 @@
 #define _KDRIVE_H_
 
 #include <stdio.h>
+#include <string.h>
 #include <X11/X.h>
-#define NEED_EVENTS
 #include <X11/Xproto.h>
 #include <X11/Xos.h>
 #include "scrnintstr.h"
@@ -45,9 +45,7 @@
 #include "randrstr.h"
 #include "globals.h"
 
-#ifdef XKB
-#include <X11/extensions/XKBstr.h>
-#endif
+#include "xkbstr.h"
 
 #define KD_DPMS_NORMAL	    0
 #define KD_DPMS_STANDBY	    1
@@ -222,6 +220,7 @@ struct _KdPointerInfo {
     DeviceIntPtr          dixdev;
     char                  *name;
     char                  *path;
+    char                  *protocol;
     InputOption           *options;
     int                   inputClass;
 
@@ -276,11 +275,6 @@ typedef struct {
     int    modbit;
 } KdKeySymModsRec;
 
-extern const KeySym       kdDefaultKeymap[KD_MAX_LENGTH * KD_MAX_WIDTH];
-extern const int          kdDefaultKeymapWidth;
-extern const CARD8        kdDefaultModMap[MAP_LENGTH];
-extern const KeySymsRec   kdDefaultKeySyms;
-
 typedef struct _KdKeyboardInfo KdKeyboardInfo;
 
 typedef struct _KdKeyboardDriver {
@@ -301,21 +295,16 @@ struct _KdKeyboardInfo {
     char                *name;
     char                *path;
     int                 inputClass;
-#ifdef XKB
     XkbDescPtr          xkb;
     char                *xkbRules;
     char                *xkbModel;
     char                *xkbLayout;
     char                *xkbVariant;
     char                *xkbOptions;
-#endif
     int                 LockLed;
 
-    CARD8               keyState[KD_KEY_COUNT/8];
     int                 minScanCode;
     int                 maxScanCode;
-    CARD8               modmap[MAP_LENGTH];
-    KeySymsRec          keySyms; 
 
     int                 leds;
     int                 bellPitch;
@@ -473,9 +462,6 @@ KdSubRotation (Rotation a, Rotation b);
 void
 KdParseScreen (KdScreenInfo *screen,
 	       char	    *arg);
-
-char *
-KdSaveString (char *str);
 
 KdPointerInfo *
 KdParsePointer (char *arg);

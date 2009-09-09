@@ -34,25 +34,25 @@
 # include "xf86Priv.h"
 # include "xf86_OSlib.h"
 
-_X_EXPORT int
+int
 xf86InstallSIGIOHandler(int fd, void (*f)(int, void *), void *closure)
 {
     return 0;
 }
 
-_X_EXPORT int
+int
 xf86RemoveSIGIOHandler(int fd)
 {
     return 0;
 }
 
-_X_EXPORT int
+int
 xf86BlockSIGIO (void)
 {
     return 0;
 }
 
-_X_EXPORT void
+void
 xf86UnblockSIGIO (int wasset)
 {
 }

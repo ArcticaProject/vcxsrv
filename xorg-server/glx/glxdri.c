@@ -41,6 +41,7 @@
 
 #include <windowstr.h>
 #include <os.h>
+#include <damage.h>
 
 #define _XF86DRI_SERVER_
 #include <drm_sarea.h>
@@ -1089,7 +1090,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     if (!DRIGetDeviceInfo(pScreen, &hFB, &junk,
 			  &framebuffer.size, &framebuffer.stride,
 			  &framebuffer.dev_priv_size, &framebuffer.dev_priv)) {
-	LogMessage(X_ERROR, "AIGLX error: XF86DRIGetDeviceInfo failed");
+	LogMessage(X_ERROR, "AIGLX error: XF86DRIGetDeviceInfo failed\n");
 	goto handle_error;
     }
 
@@ -1100,7 +1101,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     status = drmMap(fd, hFB, framebuffer.size, 
 		    (drmAddressPtr)&framebuffer.base);
     if (status != 0) {
-	LogMessage(X_ERROR, "AIGLX error: drmMap of framebuffer failed (%s)",
+	LogMessage(X_ERROR, "AIGLX error: drmMap of framebuffer failed (%s)\n",
 		   strerror(-status));
 	goto handle_error;
     }
@@ -1110,7 +1111,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
      */
     status = drmMap(fd, hSAREA, SAREA_MAX, &pSAREA);
     if (status != 0) {
-	LogMessage(X_ERROR, "AIGLX error: drmMap of SAREA failed (%s)",
+	LogMessage(X_ERROR, "AIGLX error: drmMap of SAREA failed (%s)\n",
 		   strerror(-status));
 	goto handle_error;
     }
@@ -1128,7 +1129,8 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 					   screen);
 
     if (screen->driScreen == NULL) {
-	LogMessage(X_ERROR, "AIGLX error: Calling driver entry point failed");
+	LogMessage(X_ERROR,
+		   "AIGLX error: Calling driver entry point failed\n");
 	goto handle_error;
     }
 
@@ -1141,6 +1143,10 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
     __glXScreenInit(&screen->base, pScreen);
 
+    /* The first call simply determines the length of the extension string.
+     * This allows us to allocate some memory to hold the extension string,
+     * but it requires that we call __glXGetExtensionString a second time.
+     */
     buffer_size = __glXGetExtensionString(screen->glx_enable_bits, NULL);
     if (buffer_size > 0) {
 	if (screen->base.GLXextensions != NULL) {
@@ -1155,7 +1161,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     __glXsetEnterLeaveServerFuncs(__glXDRIenterServer, __glXDRIleaveServer);
 
     screen->enterVT = pScrn->EnterVT;
-    pScrn->EnterVT = glxDRIEnterVT; 
+    pScrn->EnterVT = glxDRIEnterVT;
     screen->leaveVT = pScrn->LeaveVT;
     pScrn->LeaveVT = glxDRILeaveVT;
 
@@ -1186,7 +1192,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     return NULL;
 }
 
-__GLXprovider __glXDRIProvider = {
+_X_EXPORT __GLXprovider __glXDRIProvider = {
     __glXDRIscreenProbe,
     "DRI",
     NULL

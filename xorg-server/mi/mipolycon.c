@@ -105,8 +105,8 @@ miFillConvexPoly(
     dy = ymax - ymin + 1;
     if ((count < 3) || (dy < 0))
 	return(TRUE);
-    ptsOut = FirstPoint = (DDXPointPtr )xalloc(sizeof(DDXPointRec)*dy);
-    width = FirstWidth = (int *)xalloc(sizeof(int) * dy);
+    ptsOut = FirstPoint = xalloc(sizeof(DDXPointRec)*dy);
+    width = FirstWidth = xalloc(sizeof(int) * dy);
     if(!FirstPoint || !FirstWidth)
     {
 	if (FirstWidth) xfree(FirstWidth);

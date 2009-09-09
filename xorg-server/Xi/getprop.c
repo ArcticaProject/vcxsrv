@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -122,7 +120,7 @@ ProcXGetDeviceDontPropagateList(ClientPtr client)
 	if (count) {
 	    rep.count = count;
 	    buf = (XEventClass *) xalloc(rep.count * sizeof(XEventClass));
-	    rep.length = (rep.count * sizeof(XEventClass) + 3) >> 2;
+	    rep.length = bytes_to_int32(rep.count * sizeof(XEventClass));
 
 	    tbuf = buf;
 	    for (i = 0; i < EMASKSIZE; i++)

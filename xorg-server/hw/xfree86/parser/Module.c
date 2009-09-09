@@ -108,11 +108,11 @@ xf86parseModuleSubSection (XF86LoadPtr head, char *name)
 			break;
 		case EOF_TOKEN:
 			xf86parseError (UNEXPECTED_EOF_MSG, NULL);
-			xf86conffree(ptr);
+			free(ptr);
 			return NULL;
 		default:
 			xf86parseError (INVALID_KEYWORD_MSG, xf86tokenString ());
-			xf86conffree(ptr);
+			free(ptr);
 			return NULL;
 			break;
 		}
@@ -233,7 +233,7 @@ xf86addNewLoadDirective (XF86LoadPtr head, char *name, int type, XF86OptionPtr o
 	XF86LoadPtr new;
 	int token;
 
-	new = xf86confcalloc (1, sizeof (XF86LoadRec));
+	new = calloc (1, sizeof (XF86LoadRec));
 	new->load_name = name;
 	new->load_type = type;
 	new->load_opt  = opts;
@@ -263,7 +263,7 @@ xf86freeModules (XF86ConfModulePtr ptr)
 		TestFree (lptr->load_comment);
 		prev = lptr;
 		lptr = lptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 	lptr = ptr->mod_disable_lst;
 	while (lptr)
@@ -272,8 +272,8 @@ xf86freeModules (XF86ConfModulePtr ptr)
 		TestFree (lptr->load_comment);
 		prev = lptr;
 		lptr = lptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 	TestFree (ptr->mod_comment);
-	xf86conffree (ptr);
+	free (ptr);
 }

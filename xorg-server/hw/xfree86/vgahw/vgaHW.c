@@ -793,7 +793,7 @@ vgaHWRestoreFonts(ScrnInfoPtr scrninfp, vgaRegPtr restore)
     if (hwp->FontInfo1) {
 	hwp->writeSeq(hwp, 0x02, 0x04);	/* write to plane 2 */
 	hwp->writeGr(hwp, 0x04, 0x02);	/* read plane 2 */
-	slowbcopy_tobus(hwp->FontInfo1, hwp->Base, FONT_AMOUNT);
+	xf86SlowBcopy(hwp->FontInfo1, hwp->Base, FONT_AMOUNT);
     }
 #endif
 
@@ -801,7 +801,7 @@ vgaHWRestoreFonts(ScrnInfoPtr scrninfp, vgaRegPtr restore)
     if (hwp->FontInfo2) {
 	hwp->writeSeq(hwp, 0x02, 0x08);	/* write to plane 3 */
 	hwp->writeGr(hwp, 0x04, 0x03);	/* read plane 3 */
-	slowbcopy_tobus(hwp->FontInfo2, hwp->Base, FONT_AMOUNT);
+	xf86SlowBcopy(hwp->FontInfo2, hwp->Base, FONT_AMOUNT);
     }
 #endif
 
@@ -809,10 +809,10 @@ vgaHWRestoreFonts(ScrnInfoPtr scrninfp, vgaRegPtr restore)
     if (hwp->TextInfo) {
 	hwp->writeSeq(hwp, 0x02, 0x01);	/* write to plane 0 */
 	hwp->writeGr(hwp, 0x04, 0x00);	/* read plane 0 */
-	slowbcopy_tobus(hwp->TextInfo, hwp->Base, TEXT_AMOUNT);
+	xf86SlowBcopy(hwp->TextInfo, hwp->Base, TEXT_AMOUNT);
 	hwp->writeSeq(hwp, 0x02, 0x02);	/* write to plane 1 */
 	hwp->writeGr(hwp, 0x04, 0x01);	/* read plane 1 */
-	slowbcopy_tobus((unsigned char *)hwp->TextInfo + TEXT_AMOUNT,
+	xf86SlowBcopy((unsigned char *)hwp->TextInfo + TEXT_AMOUNT,
 			hwp->Base, TEXT_AMOUNT);
     }
 #endif
@@ -971,24 +971,24 @@ vgaHWSaveFonts(ScrnInfoPtr scrninfp, vgaRegPtr save)
     if (hwp->FontInfo1 || (hwp->FontInfo1 = xalloc(FONT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x04);	/* write to plane 2 */
 	hwp->writeGr(hwp, 0x04, 0x02);	/* read plane 2 */
-	slowbcopy_frombus(hwp->Base, hwp->FontInfo1, FONT_AMOUNT);
+	xf86SlowBcopy(hwp->Base, hwp->FontInfo1, FONT_AMOUNT);
     }
 #endif /* SAVE_FONT1 */
 #if SAVE_FONT2
     if (hwp->FontInfo2 || (hwp->FontInfo2 = xalloc(FONT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x08);	/* write to plane 3 */
 	hwp->writeGr(hwp, 0x04, 0x03);	/* read plane 3 */
-	slowbcopy_frombus(hwp->Base, hwp->FontInfo2, FONT_AMOUNT);
+	xf86SlowBcopy(hwp->Base, hwp->FontInfo2, FONT_AMOUNT);
     }
 #endif /* SAVE_FONT2 */
 #if SAVE_TEXT
     if (hwp->TextInfo || (hwp->TextInfo = xalloc(2 * TEXT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x01);	/* write to plane 0 */
 	hwp->writeGr(hwp, 0x04, 0x00);	/* read plane 0 */
-	slowbcopy_frombus(hwp->Base, hwp->TextInfo, TEXT_AMOUNT);
+	xf86SlowBcopy(hwp->Base, hwp->TextInfo, TEXT_AMOUNT);
 	hwp->writeSeq(hwp, 0x02, 0x02);	/* write to plane 1 */
 	hwp->writeGr(hwp, 0x04, 0x01);	/* read plane 1 */
-	slowbcopy_frombus(hwp->Base,
+	xf86SlowBcopy(hwp->Base,
 		(unsigned char *)hwp->TextInfo + TEXT_AMOUNT, TEXT_AMOUNT);
     }
 #endif /* SAVE_TEXT */
@@ -1025,32 +1025,24 @@ vgaHWSaveMode(ScrnInfoPtr scrninfp, vgaRegPtr save)
 
     for (i = 0; i < save->numCRTC; i++) {
 	save->CRTC[i] = hwp->readCrtc(hwp, i);
-#ifdef DEBUG
-	ErrorF("CRTC[0x%02x] = 0x%02x\n", i, save->CRTC[i]);
-#endif
+	DebugF("CRTC[0x%02x] = 0x%02x\n", i, save->CRTC[i]);
     }
 
     hwp->enablePalette(hwp);
     for (i = 0; i < save->numAttribute; i++) {
 	save->Attribute[i] = hwp->readAttr(hwp, i);
-#ifdef DEBUG
-	ErrorF("Attribute[0x%02x] = 0x%02x\n", i, save->Attribute[i]);
-#endif
+	DebugF("Attribute[0x%02x] = 0x%02x\n", i, save->Attribute[i]);
     }
     hwp->disablePalette(hwp);
 
     for (i = 0; i < save->numGraphics; i++) {
 	save->Graphics[i] = hwp->readGr(hwp, i);
-#ifdef DEBUG
-	ErrorF("Graphics[0x%02x] = 0x%02x\n", i, save->Graphics[i]);
-#endif
+	DebugF("Graphics[0x%02x] = 0x%02x\n", i, save->Graphics[i]);
     }
 
     for (i = 1; i < save->numSequencer; i++) {
 	save->Sequencer[i] = hwp->readSeq(hwp, i);
-#ifdef DEBUG
-	ErrorF("Sequencer[0x%02x] = 0x%02x\n", i, save->Sequencer[i]);
-#endif
+	DebugF("Sequencer[0x%02x] = 0x%02x\n", i, save->Sequencer[i]);
     }
 }
 
@@ -1088,18 +1080,16 @@ vgaHWSaveColormap(ScrnInfoPtr scrninfp, vgaRegPtr save)
     hwp->writeDacReadAddr(hwp, 0x00);
     for (i = 0; i < 6; i++) {
 	save->DAC[i] = hwp->readDacData(hwp);
-#ifdef DEBUG
 	switch (i % 3) {
 	case 0:
-	    ErrorF("DAC[0x%02x] = 0x%02x, ", i / 3, save->DAC[i]);
+	    DebugF("DAC[0x%02x] = 0x%02x, ", i / 3, save->DAC[i]);
 	    break;
 	case 1:
-	    ErrorF("0x%02x, ", save->DAC[i]);
+	    DebugF("0x%02x, ", save->DAC[i]);
 	    break;
 	case 2:
-	    ErrorF("0x%02x\n", save->DAC[i]);
+	    DebugF("0x%02x\n", save->DAC[i]);
 	}
-#endif
     }
 
     /*
@@ -1131,18 +1121,16 @@ vgaHWSaveColormap(ScrnInfoPtr scrninfp, vgaRegPtr save)
 	for (i = 6; i < 768; i++) {
 	    save->DAC[i] = hwp->readDacData(hwp);
 	    DACDelay(hwp);
-#ifdef DEBUG
 	    switch (i % 3) {
 	    case 0:
-		ErrorF("DAC[0x%02x] = 0x%02x, ", i / 3, save->DAC[i]);
+		DebugF("DAC[0x%02x] = 0x%02x, ", i / 3, save->DAC[i]);
 		break;
 	    case 1:
-		ErrorF("0x%02x, ", save->DAC[i]);
+		DebugF("0x%02x, ", save->DAC[i]);
 		break;
 	    case 2:
-		ErrorF("0x%02x\n", save->DAC[i]);
+		DebugF("0x%02x\n", save->DAC[i]);
 	    }
-#endif
 	}
     }
 
@@ -1772,9 +1760,7 @@ vgaHWMapMem(ScrnInfoPtr scrp)
      * XXX This is not correct but we do it
      * for now.
      */
-#ifdef DEBUG
-    ErrorF("Mapping VGAMem\n");
-#endif
+    DebugF("Mapping VGAMem\n");
     hwp->Base = xf86MapDomainMemory(scr_index, VIDMEM_MMIO_32BIT, hwp->dev,
 				    hwp->MapPhys, hwp->MapSize);
     return hwp->Base != NULL;
@@ -1790,15 +1776,13 @@ vgaHWUnmapMem(ScrnInfoPtr scrp)
     if (hwp->Base == NULL)
 	return;
     
-#ifdef DEBUG
-    ErrorF("Unmapping VGAMem\n");
-#endif
+    DebugF("Unmapping VGAMem\n");
     xf86UnMapVidMem(scr_index, hwp->Base, hwp->MapSize);
     hwp->Base = NULL;
 }
 
 int
-vgaHWGetIndex()
+vgaHWGetIndex(void)
 {
     return vgaHWPrivateIndex;
 }
@@ -1999,6 +1983,13 @@ vgaHWddc1SetSpeed(ScrnInfoPtr pScrn, xf86ddcSpeed speed)
     }
 }
 
-DDC1SetSpeedProc  vgaHWddc1SetSpeedWeak(void) { return vgaHWddc1SetSpeed; }
+DDC1SetSpeedProc
+vgaHWddc1SetSpeedWeak(void)
+{
+    return vgaHWddc1SetSpeed;
+}
 
-SaveScreenProcPtr vgaHWSaveScreenWeak(void) { return vgaHWSaveScreen; }
+SaveScreenProcPtr vgaHWSaveScreenWeak(void)
+{
+    return vgaHWSaveScreen;
+}

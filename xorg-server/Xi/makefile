@@ -35,7 +35,20 @@ CSRCS=allowev.c \
 	ungrdev.c \
 	ungrdevb.c \
 	ungrdevk.c \
-	xiproperty.c
+	xiallowev.c \
+	xichangecursor.c \
+	xichangehierarchy.c \
+	xigetclientpointer.c \
+	xigrabdev.c \
+	xipassivegrab.c \
+	xiproperty.c \
+	xiquerydevice.c \
+	xiquerypointer.c \
+	xiqueryversion.c \
+	xiselectev.c \
+	xisetclientpointer.c \
+	xisetdevfocus.c \
+	xiwarppointer.c
   
 LIBRARY=libXi
 

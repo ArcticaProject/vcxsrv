@@ -105,7 +105,7 @@ typedef struct ICONITEM
 {
   char match[MENU_MAX+1];             /* What string to search for? */
   char iconFile[PATH_MAX+NAME_MAX+2]; /* Icon location, WIN32 path */
-  unsigned long hicon;                /* LoadImage() result */
+  HICON hicon;                /* LoadImage() result */
 } ICONITEM;
 
 /* To redefine styles for certain window types */
@@ -172,15 +172,18 @@ HandleCustomWM_COMMAND (unsigned long hwndIn,
 int
 winIconIsOverride (unsigned hiconIn);
 
-unsigned long
+HICON
 winOverrideIcon (unsigned long longpWin);
 
 unsigned long
 winOverrideStyle (unsigned long longpWin);
 
 unsigned long
+winOverrideStyle (unsigned long longpWin);
+
+HICON
 winTaskbarIcon(void);
 
-unsigned long
+HICON
 winOverrideDefaultIcon(int size);
 #endif

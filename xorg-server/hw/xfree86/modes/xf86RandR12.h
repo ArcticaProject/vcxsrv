@@ -28,15 +28,15 @@
 #include "xf86Rename.h"
 #endif
 
-Bool xf86RandR12CreateScreenResources (ScreenPtr pScreen);
-Bool xf86RandR12Init(ScreenPtr pScreen);
-void xf86RandR12SetRotations (ScreenPtr pScreen, Rotation rotation);
-void xf86RandR12SetTransformSupport (ScreenPtr pScreen, Bool transforms);
-Bool xf86RandR12SetConfig(ScreenPtr pScreen, Rotation rotation, int rate,
+extern _X_EXPORT Bool xf86RandR12CreateScreenResources (ScreenPtr pScreen);
+extern _X_EXPORT Bool xf86RandR12Init(ScreenPtr pScreen);
+extern _X_EXPORT void xf86RandR12SetRotations (ScreenPtr pScreen, Rotation rotation);
+extern _X_EXPORT void xf86RandR12SetTransformSupport (ScreenPtr pScreen, Bool transforms);
+extern _X_EXPORT Bool xf86RandR12SetConfig(ScreenPtr pScreen, Rotation rotation, int rate,
 			RRScreenSizePtr pSize);
-Rotation xf86RandR12GetRotation(ScreenPtr pScreen);
-void xf86RandR12GetOriginalVirtualSize(ScrnInfoPtr pScrn, int *x, int *y);
-Bool xf86RandR12PreInit (ScrnInfoPtr pScrn);
-void xf86RandR12TellChanged (ScreenPtr pScreen);
+extern _X_EXPORT Rotation xf86RandR12GetRotation(ScreenPtr pScreen);
+extern _X_EXPORT void xf86RandR12GetOriginalVirtualSize(ScrnInfoPtr pScrn, int *x, int *y);
+extern _X_EXPORT Bool xf86RandR12PreInit (ScrnInfoPtr pScrn);
+extern _X_EXPORT void xf86RandR12TellChanged (ScreenPtr pScreen);
 
 #endif /* _XF86_RANDR_H_ */

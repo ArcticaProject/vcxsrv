@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 1997-2003 by The XFree86 Project, Inc.
  *
@@ -44,14 +43,6 @@
 #include "xf86sbusBus.h"
 #endif
 
-typedef struct racInfo {
-    xf86AccessPtr mem_new;
-    xf86AccessPtr io_new;
-    xf86AccessPtr io_mem_new;
-    xf86SetAccessFuncPtr old;
-} AccessFuncRec, *AccessFuncPtr;
-
-
 typedef struct {
     DriverPtr                   driver;
     int                         chipset;
@@ -60,12 +51,9 @@ typedef struct {
     EntityProc                  entityEnter;
     EntityProc                  entityLeave;
     pointer                     private;
-    resPtr                      resources;
     Bool                        active;
     Bool                        inUse;
     BusRec                      bus;
-    EntityAccessPtr             access;
-    AccessFuncPtr               rac;
     pointer                     busAcc;
     int                         lastScrnFlag;
     DevUnion *                  entityPrivates;
@@ -74,71 +62,15 @@ typedef struct {
     IOADDRESS                   domainIO;
 } EntityRec, *EntityPtr;
 
-#define NO_SEPARATE_IO_FROM_MEM 0x0001
-#define NO_SEPARATE_MEM_FROM_IO 0x0002
-#define NEED_VGA_ROUTED 0x0004
-#define NEED_VGA_ROUTED_SETUP 0x0008
-#define NEED_MEM 0x0010
-#define NEED_IO  0x0020
-#define NEED_MEM_SHARED 0x0040
-#define NEED_IO_SHARED 0x0080
-#define ACCEL_IS_SHARABLE 0x0100
-#define IS_SHARED_ACCEL 0x0200
-#define SA_PRIM_INIT_DONE 0x0400
-#define NEED_VGA_MEM 0x1000
-#define NEED_VGA_IO  0x2000
-
-#define NEED_SHARED (NEED_MEM_SHARED | NEED_IO_SHARED)
-
-#define busType bus.type
-#define isaBusId bus.id.isa
-#define sbusBusId bus.id.sbus
-
-struct x_BusAccRec;
-typedef void (*BusAccProcPtr)(struct x_BusAccRec *ptr);
-
-typedef struct x_BusAccRec {
-    BusAccProcPtr set_f;
-    BusAccProcPtr enable_f;
-    BusAccProcPtr disable_f;
-    BusAccProcPtr save_f;
-    BusAccProcPtr restore_f;
-    struct x_BusAccRec *current; /* pointer to bridge open on this bus */
-    struct x_BusAccRec *primary; /* pointer to the bus connecting to this */
-    struct x_BusAccRec *next;    /* this links the different buses together */
-    BusType type;
-    BusType busdep_type;
-    /* Bus-specific fields */
-    union {
-	struct {
-	    int bus;
-	    int primary_bus;
-	    struct pci_device * dev;
-	    pciBridgesSave save;
-	} pci;
-    } busdep;
-} BusAccRec, *BusAccPtr;
-
-/* state change notification callback */
-typedef struct _stateChange {
-    xf86StateChangeNotificationCallbackFunc func;
-    pointer arg;
-    struct _stateChange *next;
-} StateChangeNotificationRec, *StateChangeNotificationPtr;
-
+#define ACCEL_IS_SHARABLE 0x100
+#define IS_SHARED_ACCEL 0x200
+#define SA_PRIM_INIT_DONE 0x400
 
 extern EntityPtr *xf86Entities;
 extern int xf86NumEntities;
-extern xf86AccessRec AccessNULL;
 extern BusRec primaryBus;
-extern resPtr Acc;
-extern resPtr ResRange;
-extern BusAccPtr xf86BusAccInfo;
 
 int xf86AllocateEntity(void);
 BusType StringToBusType(const char* busID, const char **retID);
-Bool xf86IsSubsetOf(resRange range, resPtr list);
-resPtr xf86ExtractTypeFromList(resPtr list, unsigned long type);
-resPtr xf86FindIntersect(resRange Range, resPtr list);
 
 #endif /* _XF86_BUS_H */

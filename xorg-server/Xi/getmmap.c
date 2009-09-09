@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS	/* for inputstr.h    */
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -89,36 +87,34 @@ SProcXGetDeviceModifierMapping(ClientPtr client)
 int
 ProcXGetDeviceModifierMapping(ClientPtr client)
 {
-    CARD8 maxkeys;
     DeviceIntPtr dev;
     xGetDeviceModifierMappingReply rep;
-    KeyClassPtr kp;
-    int rc;
+    KeyCode *modkeymap = NULL;
+    int ret, max_keys_per_mod;
 
     REQUEST(xGetDeviceModifierMappingReq);
     REQUEST_SIZE_MATCH(xGetDeviceModifierMappingReq);
 
-    rc = dixLookupDevice(&dev, stuff->deviceid, client, DixGetAttrAccess);
-    if (rc != Success)
-	return rc;
+    ret = dixLookupDevice(&dev, stuff->deviceid, client, DixGetAttrAccess);
+    if (ret != Success)
+	return ret;
 
-    kp = dev->key;
-    if (kp == NULL)
-	return BadMatch;
-
-    maxkeys = kp->maxKeysPerModifier;
+    ret = generate_modkeymap(client, dev, &modkeymap, &max_keys_per_mod);
+    if (ret != Success)
+        return ret;
 
     rep.repType = X_Reply;
     rep.RepType = X_GetDeviceModifierMapping;
-    rep.numKeyPerModifier = maxkeys;
+    rep.numKeyPerModifier = max_keys_per_mod;
     rep.sequenceNumber = client->sequence;
     /* length counts 4 byte quantities - there are 8 modifiers 1 byte big */
-    rep.length = 2 * maxkeys;
+    rep.length = max_keys_per_mod << 1;
 
     WriteReplyToClient(client, sizeof(xGetDeviceModifierMappingReply), &rep);
+    WriteToClient(client, max_keys_per_mod * 8, (char *) modkeymap);
 
-    /* Reply with the (modified by DDX) map that SetModifierMapping passed in */
-    WriteToClient(client, 8 * maxkeys, (char *)kp->modifierKeyMap);
+    xfree(modkeymap);
+
     return Success;
 }
 

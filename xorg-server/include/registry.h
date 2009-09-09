@@ -28,22 +28,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * Registration functions.  The name string is not copied, so it must
  * not be a stack variable.
  */
-void RegisterResourceName(RESTYPE type, char *name);
-void RegisterExtensionNames(ExtensionEntry *ext);
+extern _X_EXPORT void RegisterResourceName(RESTYPE type, char *name);
+extern _X_EXPORT void RegisterExtensionNames(ExtensionEntry *ext);
 
 /*
  * Lookup functions.  The returned string must not be modified or freed.
  */
-const char *LookupMajorName(int major);
-const char *LookupRequestName(int major, int minor);
-const char *LookupEventName(int event);
-const char *LookupErrorName(int error);
-const char *LookupResourceName(RESTYPE rtype);
+extern _X_EXPORT const char *LookupMajorName(int major);
+extern _X_EXPORT const char *LookupRequestName(int major, int minor);
+extern _X_EXPORT const char *LookupEventName(int event);
+extern _X_EXPORT const char *LookupErrorName(int error);
+extern _X_EXPORT const char *LookupResourceName(RESTYPE rtype);
 
 /*
  * Setup and teardown
  */
-void dixResetRegistry(void);
+extern _X_EXPORT void dixResetRegistry(void);
 
 #else /* XREGISTRY */
 

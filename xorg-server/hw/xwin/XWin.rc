@@ -73,7 +73,7 @@ CAPTION "Exit VcXsrv?"
 BEGIN
   PUSHBUTTON "E&xit", IDOK, 55, 56, 30, 14
   DEFPUSHBUTTON "&Cancel", IDCANCEL, 95, 56, 30, 14
-  CTEXT "Exiting will close all screens running on this display.", IDC_STATIC, 7, 12, 166, 8
+  CTEXT "E&xiting will close all screens running on this display.", IDC_STATIC, 7, 12, 166, 8
   CTEXT "No information about connected clients available.", IDC_CLIENTS_CONNECTED, 7, 24, 166, 8
   CTEXT "Proceed with shutdown of this display/server?", IDC_STATIC, 7, 36, 166, 8
 END

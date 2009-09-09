@@ -36,9 +36,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include "winclipboard.h"
-
-extern void		winFixClipboardChain();
-
+#include "misc.h"
 
 /*
  * Constants
@@ -255,15 +253,20 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 
     case WM_DRAWCLIPBOARD:
       {
-	static Bool s_fProcessingDrawClipboard = FALSE;
 	static Atom atomClipboard;
+	static int generation;
+	static Bool s_fProcessingDrawClipboard = FALSE;
 	Display	*pDisplay = g_pClipboardDisplay;
 	Window	iWindow = g_iClipboardWindow;
 	int	iReturn;
 
 	winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD: Enter\n");
 
-	if (atomClipboard == None) atomClipboard = XInternAtom (pDisplay, "CLIPBOARD", False);
+	if (generation != serverGeneration)
+          {
+            generation = serverGeneration;
+            atomClipboard = XInternAtom (pDisplay, "CLIPBOARD", False);
+          }
 
 	/*
 	 * We've occasionally seen a loop in the clipboard chain.
@@ -396,8 +399,8 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 				      iWindow,
 				      CurrentTime);
 
- 	if (iReturn == BadAtom || iReturn == BadWindow ||
- 	    XGetSelectionOwner (pDisplay, atomClipboard) != iWindow)
+	if (iReturn == BadAtom || iReturn == BadWindow ||
+	    XGetSelectionOwner (pDisplay, atomClipboard) != iWindow)
 	  {
 	    winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 		    "Could not reassert ownership of CLIPBOARD\n");

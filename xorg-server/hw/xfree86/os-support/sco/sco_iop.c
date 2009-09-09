@@ -64,7 +64,7 @@ extern long sysi86 (int cmd, ...);
 
 static Bool IOEnabled = FALSE;
 
-_X_EXPORT Bool
+Bool
 xf86EnableIO(void)
 {
 	if (IOEnabled)
@@ -79,7 +79,7 @@ xf86EnableIO(void)
 	return TRUE;
 }
 
-_X_EXPORT void
+void
 xf86DisableIO(void)
 {
 	if (!IOEnabled)

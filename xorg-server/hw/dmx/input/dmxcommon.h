@@ -54,14 +54,10 @@
     XModifierKeymap         *savedModMap;   \
     int                     stateSaved
 
-#ifdef XKB
 #define DMX_COMMON_XKB                      \
     DMX_COMMON_OTHER;                       \
     XkbDescPtr              xkb;            \
     XkbIndicatorRec         savedIndicators
-#else
-#define DMX_COMMON_XKB      DMX_COMMON_OTHER
-#endif
 
 #define DMX_COMMON_PRIVATE                  \
     DMX_COMMON_XKB;                         \

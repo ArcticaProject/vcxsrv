@@ -143,7 +143,7 @@ GlyphScanlineFuncPtr *glyph_get_scanline_func(void) {
 /* This gets built for MSBFIRST or LSBFIRST with FIXEDBASE or not.
 	A total of 4 versions */
 
-void 
+void
 EXPNAME(XAATEGlyphRenderer)(
     ScrnInfoPtr pScrn,
     int x, int y, int w, int h, int skipleft, int startline, 
@@ -239,7 +239,7 @@ THE_END:
 
 ********************************************************************/
 
-void 
+void
 EXPNAME(XAATEGlyphRenderer3)(
     ScrnInfoPtr pScrn,
     int x, int y, int w, int h, int skipleft, int startline, 
@@ -340,7 +340,7 @@ THE_END:
 #ifndef FIXEDBASE
 /*  Scanline version of above gets built for LSBFIRST and MSBFIRST */
 
-void 
+void
 EXPNAME(XAATEGlyphRendererScanline)(
     ScrnInfoPtr pScrn,
     int x, int y, int w, int h, int skipleft, int startline, 
@@ -415,7 +415,7 @@ THE_END:
     SET_SYNC_FLAG(infoRec);
 }
 
-void 
+void
 EXPNAME(XAATEGlyphRendererScanline3)(
     ScrnInfoPtr pScrn,
     int x, int y, int w, int h, int skipleft, int startline, 

@@ -1,10 +1,10 @@
 
 #include "xf86RamDac.h"
 
-RamDacHelperRecPtr BTramdacProbe(ScrnInfoPtr pScrn, RamDacSupportedInfoRecPtr ramdacs);
-void BTramdacSave(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
-void BTramdacRestore(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
-void BTramdacSetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT RamDacHelperRecPtr BTramdacProbe(ScrnInfoPtr pScrn, RamDacSupportedInfoRecPtr ramdacs);
+extern _X_EXPORT void BTramdacSave(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void BTramdacRestore(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void BTramdacSetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
 
 #define ATT20C504_RAMDAC 	(VENDOR_BT << 16) | 0x00
 #define ATT20C505_RAMDAC 	(VENDOR_BT << 16) | 0x01

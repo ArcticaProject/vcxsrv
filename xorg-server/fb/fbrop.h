@@ -27,7 +27,7 @@ typedef struct _mergeRopBits {
     FbBits   ca1, cx1, ca2, cx2;
 } FbMergeRopRec, *FbMergeRopPtr;
 
-extern const FbMergeRopRec	FbMergeRopBits[16];
+extern _X_EXPORT const FbMergeRopRec	FbMergeRopBits[16];
 
 #define FbDeclareMergeRop() FbBits   _ca1, _cx1, _ca2, _cx2;
 #define FbDeclarePrebuiltMergeRop()	FbBits	_cca, _ccx;
@@ -95,14 +95,14 @@ extern const FbMergeRopRec	FbMergeRopBits[16];
  * Stippling operations; 
  */
 
-extern const FbBits	fbStipple16Bits[256];	/* half of table */
+extern _X_EXPORT const FbBits	fbStipple16Bits[256];	/* half of table */
 #define FbStipple16Bits(b) \
     (fbStipple16Bits[(b)&0xff] | fbStipple16Bits[(b) >> 8] << FB_HALFUNIT)
-extern const FbBits	fbStipple8Bits[256];
-extern const FbBits	fbStipple4Bits[16];
-extern const FbBits	fbStipple2Bits[4];
-extern const FbBits	fbStipple1Bits[2];
-extern const FbBits	*const fbStippleTable[];
+extern _X_EXPORT const FbBits	fbStipple8Bits[256];
+extern _X_EXPORT const FbBits	fbStipple4Bits[16];
+extern _X_EXPORT const FbBits	fbStipple2Bits[4];
+extern _X_EXPORT const FbBits	fbStipple1Bits[2];
+extern _X_EXPORT const FbBits	*const fbStippleTable[];
 
 #define FbStippleRRop(dst, b, fa, fx, ba, bx) \
     (FbDoRRop(dst, fa, fx) & b) | (FbDoRRop(dst, ba, bx) & ~b)

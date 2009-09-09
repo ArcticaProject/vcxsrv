@@ -38,9 +38,7 @@
 #include <sys/file.h> /* needed for FNONBLOCK & FASYNC */
 #endif
 
-#ifdef XKB
-#include <xkbsrv.h>
-#endif
+#include "xkbsrv.h"
 
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
@@ -48,6 +46,8 @@
 #include "exevents.h"
 #include "extinit.h"
 #include "exglobals.h"
+#include "eventstr.h"
+#include "xserver-properties.h"
 
 #define AtomFromName(x) MakeAtom(x, strlen(x), 1)
 
@@ -77,12 +77,6 @@ static KdPointerMatrix	kdPointerMatrix = {
 
 void KdResetInputMachine (void);
     
-#define IsKeyDown(ki, key) ((ki->keyState[(key) >> 3] >> ((key) & 7)) & 1)
-#define KEYMAP(ki)        (ki->dixdev->key->curKeySyms)
-#define KEYMAPDDX(ki)     (ki->keySyms)
-#define KEYCOL1(ki, k)    (KEYMAP(ki).map[((k)-(KEYMAP(ki).minKeyCode))*KEYMAP(ki).mapWidth])
-#define KEYCOL1DDX(ki, k) (KEYMAPDDX(ki).map[((k)-(KEYMAPDDX(ki).minKeyCode))*KEYMAPDDX(ki).mapWidth])
-
 #define KD_MAX_INPUT_FDS    8
 
 typedef struct _kdInputFd {
@@ -347,7 +341,7 @@ KdDisableInput (void)
 void
 KdEnableInput (void)
 {
-    xEvent xE;
+    InternalEvent ev;
     KdKeyboardInfo *ki;
     KdPointerInfo *pi;
     
@@ -364,8 +358,8 @@ KdEnableInput (void)
     }
 
     /* reset screen saver */
-    xE.u.keyButtonPointer.time = GetTimeInMillis ();
-    NoticeEventTime (&xE);
+    ev.any.time = GetTimeInMillis ();
+    NoticeEventTime (&ev);
 
     KdUnblockSigio ();
 }
@@ -410,6 +404,8 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
     DevicePtr       pDev = (DevicePtr)pDevice;
     KdPointerInfo   *pi;
     Atom            xiclass;
+    Atom            *btn_labels;
+    Atom            *axes_labels;
 
     if (!pDev)
 	return BadImplementation;
@@ -457,9 +453,47 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
             return !Success;
         }
 
-	InitPointerDeviceStruct(pDev, pi->map, pi->nButtons,
+	btn_labels = xcalloc(pi->nButtons, sizeof(Atom));
+	if (!btn_labels)
+	    return BadAlloc;
+	axes_labels = xcalloc(pi->nAxes, sizeof(Atom));
+	if (!axes_labels) {
+	    xfree(btn_labels);
+	    return BadAlloc;
+	}
+
+	switch(pi->nAxes)
+	{
+	    default:
+	    case 7:
+		btn_labels[6] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_RIGHT);
+	    case 6:
+		btn_labels[5] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_HWHEEL_LEFT);
+	    case 5:
+		btn_labels[4] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_DOWN);
+	    case 4:
+		btn_labels[3] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_WHEEL_UP);
+	    case 3:
+		btn_labels[2] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_RIGHT);
+	    case 2:
+		btn_labels[1] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_MIDDLE);
+	    case 1:
+		btn_labels[0] = XIGetKnownProperty(BTN_LABEL_PROP_BTN_LEFT);
+	    case 0:
+		break;
+	}
+
+	if (pi->nAxes >= 2) {
+	    axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_X);
+	    axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_REL_Y);
+	}
+
+	InitPointerDeviceStruct(pDev, pi->map, pi->nButtons, btn_labels,
 	    (PtrCtrlProcPtr)NoopDDA,
-	    GetMotionHistorySize(), pi->nAxes);
+	    GetMotionHistorySize(), pi->nAxes, axes_labels);
+
+        xfree(btn_labels);
+        xfree(axes_labels);
 
         if (pi->inputClass == KD_TOUCHSCREEN) {
             InitAbsoluteClassDeviceStruct(pDevice);
@@ -685,85 +719,6 @@ KdKbdCtrl (DeviceIntPtr pDevice, KeybdCtrl *ctrl)
 
 extern KeybdCtrl defaultKeyboardControl;
 
-static void
-KdInitAutoRepeats (KdKeyboardInfo *ki)
-{
-    int		    key_code;
-    unsigned char   mask;
-    int		    i;
-    unsigned char   *repeats;
-
-    repeats = defaultKeyboardControl.autoRepeats;
-    memset (repeats, '\0', 32);
-    for (key_code = KD_MIN_KEYCODE; key_code <= KD_MAX_KEYCODE; key_code++)
-    {
-	if (!ki->modmap[key_code])
-	{
-	    i = key_code >> 3;
-	    mask = 1 << (key_code & 7);
-	    repeats[i] |= mask;
-	}
-    }
-}
-
-const KdKeySymModsRec kdKeySymMods[] = {
-  {  XK_Control_L,	ControlMask },
-  {  XK_Control_R, ControlMask },
-  {  XK_Shift_L,	ShiftMask },
-  {  XK_Shift_R,	ShiftMask },
-  {  XK_Caps_Lock,	LockMask },
-  {  XK_Shift_Lock, LockMask },
-  {  XK_Alt_L,	Mod1Mask },
-  {  XK_Alt_R,	Mod1Mask },
-  {  XK_Meta_L,	Mod1Mask },
-  {  XK_Meta_R,	Mod1Mask },
-  {  XK_Num_Lock,	Mod2Mask },
-  {  XK_Super_L,	Mod3Mask },
-  {  XK_Super_R,	Mod3Mask },
-  {  XK_Hyper_L,	Mod3Mask },
-  {  XK_Hyper_R,	Mod3Mask },
-  {  XK_Mode_switch, Mod4Mask },
-  /* PDA specific hacks */
-#ifdef XF86XK_Start
-  {  XF86XK_Start, ControlMask },
-#endif
-  {  XK_Menu, ShiftMask },
-  {  XK_telephone, Mod1Mask },
-#ifdef XF86XK_AudioRecord
-  {  XF86XK_AudioRecord, Mod2Mask },
-#endif
-#ifdef XF86XK_Calendar
-  {  XF86XK_Calendar, Mod3Mask }
-#endif
-};
-
-#define NUM_SYM_MODS (sizeof(kdKeySymMods) / sizeof(kdKeySymMods[0]))
-
-static void
-KdInitModMap (KdKeyboardInfo *ki)
-{
-    int	    key_code;
-    int	    row;
-    int	    width;
-    KeySym  *syms;
-    int	    i;
-
-    width = ki->keySyms.mapWidth;
-    for (key_code = ki->keySyms.minKeyCode; key_code <= ki->keySyms.maxKeyCode; key_code++)
-    {
-	ki->modmap[key_code] = 0;
-	syms = ki->keySyms.map + (key_code - ki->keySyms.minKeyCode) * width;
-	for (row = 0; row < width; row++, syms++)
-	{
-	    for (i = 0; i < NUM_SYM_MODS; i++) 
-	    {
-		if (*syms == kdKeySymMods[i].modsym) 
-		    ki->modmap[key_code] |= kdKeySymMods[i].modbit;
-	    }
-	}
-    }
-}
-
 static int
 KdKeyboardProc(DeviceIntPtr pDevice, int onoff)
 {
@@ -771,9 +726,7 @@ KdKeyboardProc(DeviceIntPtr pDevice, int onoff)
     DevicePtr   pDev = (DevicePtr)pDevice;
     KdKeyboardInfo *ki;
     Atom xiclass;
-#ifdef XKB
-    XkbComponentNamesRec names;
-#endif
+    XkbRMLVOSet rmlvo;
 
     if (!pDev)
 	return BadImplementation;
@@ -819,28 +772,13 @@ KdKeyboardProc(DeviceIntPtr pDevice, int onoff)
             return !Success;
         }
 
-        KdInitModMap(ki);
-        KdInitAutoRepeats(ki);
-
-#ifdef XKB
-        if (!noXkbExtension) {
-            memset(&names, 0, sizeof(XkbComponentNamesRec));
-
-            XkbSetRulesDflts (ki->xkbRules, ki->xkbModel, ki->xkbLayout,
-                              ki->xkbVariant, ki->xkbOptions);
-
-            ret = XkbInitKeyboardDeviceStruct (pDevice,
-                                               &names,
-                                               &ki->keySyms,
-                                               ki->modmap,
-                                               KdBell, KdKbdCtrl);
-        }
-        else
-#endif
-	ret = InitKeyboardDeviceStruct(pDev,
-				       &ki->keySyms,
-				       ki->modmap,
-				       KdBell, KdKbdCtrl);
+        memset(&rmlvo, 0, sizeof(rmlvo));
+        rmlvo.rules = ki->xkbRules;
+        rmlvo.model = ki->xkbModel;
+        rmlvo.layout = ki->xkbLayout;
+        rmlvo.variant = ki->xkbVariant;
+        rmlvo.options = ki->xkbOptions;
+        ret = InitKeyboardDeviceStruct (pDevice, &rmlvo, KdBell, KdKbdCtrl);
 	if (!ret) {
             ErrorF("Couldn't initialise keyboard %s\n", ki->name);
 	    return BadImplementation;
@@ -973,23 +911,9 @@ KdKeyboardInfo *
 KdNewKeyboard (void)
 {
     KdKeyboardInfo *ki = xcalloc(sizeof(KdKeyboardInfo), 1);
-
     if (!ki)
         return NULL;
-    
-    ki->keySyms.map = (KeySym *)xcalloc(sizeof(KeySym),
-                                        KD_MAX_LENGTH *
-                                         kdDefaultKeySyms.mapWidth);
-    if (!ki->keySyms.map) {
-        xfree(ki);
-        return NULL;
-    }
 
-    memcpy(ki->keySyms.map, kdDefaultKeySyms.map,
-           sizeof(KeySym) * (KD_MAX_LENGTH * kdDefaultKeySyms.mapWidth));
-    ki->keySyms.minKeyCode = kdDefaultKeySyms.minKeyCode;
-    ki->keySyms.maxKeyCode = kdDefaultKeySyms.maxKeyCode;
-    ki->keySyms.mapWidth = kdDefaultKeySyms.mapWidth;
     ki->minScanCode = 0;
     ki->maxScanCode = 0;
     ki->leds = 0;
@@ -997,13 +921,11 @@ KdNewKeyboard (void)
     ki->bellDuration = 200;
     ki->next = NULL;
     ki->options = NULL;
-#ifdef XKB
-    ki->xkbRules = KdSaveString("base");
-    ki->xkbModel = KdSaveString("pc105");
-    ki->xkbLayout = KdSaveString("us");
+    ki->xkbRules = strdup("base");
+    ki->xkbModel = strdup("pc105");
+    ki->xkbLayout = strdup("us");
     ki->xkbVariant = NULL;
     ki->xkbOptions = NULL;
-#endif
 
     return ki;
 }
@@ -1187,7 +1109,6 @@ KdParseKbdOptions (KdKeyboardInfo *ki)
 
     for (option = ki->options; option; option = option->next)
     {
-#ifdef XKB
         if (strcasecmp(option->key, "XkbRules") == 0)
             ki->xkbRules = option->value;
         else if (strcasecmp(option->key, "XkbModel") == 0)
@@ -1199,9 +1120,8 @@ KdParseKbdOptions (KdKeyboardInfo *ki)
         else if (strcasecmp(option->key, "XkbOptions") == 0)
             ki->xkbOptions = option->value;
         else if (!strcasecmp (option->key, "device"))
-            ki->path = KdSaveString(option->value);
+            ki->path = strdup(option->value);
         else
-#endif
            ErrorF("Kbd option key (%s) of value (%s) not assigned!\n", 
                     option->key, option->value);
     }
@@ -1223,9 +1143,7 @@ KdParseKeyboard (char *arg)
     ki->path = NULL;
     ki->driver = NULL;
     ki->driverPrivate = NULL;
-#ifdef XKB
     ki->xkb = NULL;
-#endif
     ki->next = NULL;
 
     if (!arg)
@@ -1298,7 +1216,9 @@ KdParsePointerOptions (KdPointerInfo *pi)
         else if (!strcmp (option->key, "rawcoord"))
             pi->transformCoordinates = FALSE;
         else if (!strcasecmp (option->key, "device"))
-            pi->path = KdSaveString(option->value);
+            pi->path = strdup(option->value);
+        else if (!strcasecmp (option->key, "protocol"))
+            pi->protocol = strdup(option->value);
         else
             ErrorF("Pointer option key (%s) of value (%s) not assigned!\n", 
                     option->key, option->value);
@@ -1319,6 +1239,7 @@ KdParsePointer (char *arg)
         return NULL;
     pi->emulateMiddleButton = kdEmulateMiddleButton;
     pi->transformCoordinates = !kdRawPointerCoordinates;
+    pi->protocol = NULL;
     pi->nButtons = 5; /* XXX should not be hardcoded */
     pi->inputClass = KD_MOUSE;
 
@@ -1799,7 +1720,7 @@ char *kdActionNames[] = {
 #endif /* DEBUG */
 
 static void
-KdQueueEvent (DeviceIntPtr pDev, xEvent *ev)
+KdQueueEvent (DeviceIntPtr pDev, InternalEvent *ev)
 {
     KdAssertSigioBlocked ("KdQueueEvent");
     mieqEnqueue (pDev, ev);
@@ -1887,13 +1808,6 @@ KdReceiveTimeout (KdPointerInfo *pi)
     KdRunMouseMachine (pi, timeout, 0, 0, 0, 0, 0, 0);
 }
 
-#define KILL_SEQUENCE     ((1L << KK_CONTROL)|(1L << KK_ALT)|(1L << KK_F8)|(1L << KK_F10))
-#define SPECIAL_SEQUENCE  ((1L << KK_CONTROL) | (1L << KK_ALT))
-#define SETKILLKEY(b)     (KdSpecialKeys |= (1L << (b)))
-#define CLEARKILLKEY(b)   (KdSpecialKeys &= ~(1L << (b)))
-
-CARD32	KdSpecialKeys = 0;
-
 /*
  * kdCheckTermination
  *
@@ -1907,92 +1821,10 @@ CARD32	KdSpecialKeys = 0;
 
 extern int nClients;
 
-static void
-KdCheckSpecialKeys(KdKeyboardInfo *ki, int type, int sym)
-{
-    if (!ki)
-        return;
-
-    /*
-     * Ignore key releases
-     */
-
-    if (type == KeyRelease)
-        return;
-
-    /* Some iPaq keyboard -> mouse button mapping used to be here, but I
-     * refuse to perpetuate this madness. -daniels */
-
-    /*
-     * Check for control/alt pressed
-     */
-    if ((ki->dixdev->key->state & (ControlMask|Mod1Mask)) !=
-	(ControlMask|Mod1Mask))
-	return;
-
-    /*
-     * Let OS function see keysym first
-     */
-    
-    if (kdOsFuncs->SpecialKey)
-	if ((*kdOsFuncs->SpecialKey) (sym))
-	    return;
-
-    /*
-     * Now check for backspace or delete; these signal the
-     * X server to terminate
-     *
-     * I can't believe it's not XKB. -daniels
-     */
-    switch (sym) {
-    case XK_BackSpace:
-    case XK_Delete:
-    case XK_KP_Delete:
-	/*
-	 * Set the dispatch exception flag so the server will terminate the
-	 * next time through the dispatch loop.
-	 */
-	if (kdAllowZap || party_like_its_1989)
-	    dispatchException |= DE_TERMINATE;
-	break;
-    }
-}
-
-/*
- * kdEnqueueKeyboardEvent
- *
- * This function converts hardware keyboard event information into an X event
- * and enqueues it using MI.  It wakes up the server before returning so that
- * the event will be processed normally.
- *
- */
-
-static void
-KdHandleKeyboardEvent (KdKeyboardInfo *ki, int type, int key)
-{
-    int           byte;
-    CARD8         bit;
-    KdPointerInfo *pi;
-    
-    byte = key >> 3;
-    bit = 1 << (key & 7);
-
-    switch (type) {
-    case KeyPress:
-	ki->keyState[byte] |= bit;
-	break;
-    case KeyRelease:
-	ki->keyState[byte] &= ~bit;
-	break;
-    }
-
-    for (pi = kdPointers; pi; pi = pi->next)
-	KdRunMouseMachine (pi, keyboard, 0, 0, 0, 0, 0, 0);
-}
-
 void
 KdReleaseAllKeys (void)
 {
+#if 0
     int	key, nEvents, i;
     KdKeyboardInfo *ki;
 
@@ -2001,7 +1833,7 @@ KdReleaseAllKeys (void)
     for (ki = kdKeyboards; ki; ki = ki->next) {
         for (key = ki->keySyms.minKeyCode; key < ki->keySyms.maxKeyCode;
              key++) {
-            if (IsKeyDown(ki, key)) {
+            if (key_is_down(ki->dixdev, key, KEY_POSTED | KEY_PROCESSED)) {
                 KdHandleKeyboardEvent(ki, KeyRelease, key);
                 GetEventList(&kdEvents);
                 nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, KeyRelease, key);
@@ -2012,6 +1844,7 @@ KdReleaseAllKeys (void)
     }
 
     KdUnblockSigio ();
+#endif
 }
 
 static void
@@ -2025,7 +1858,8 @@ KdCheckLock (void)
         if (tmp->LockLed && tmp->dixdev && tmp->dixdev->key) {
             keyc = tmp->dixdev->key;
             isSet = (tmp->leds & (1 << (tmp->LockLed-1))) != 0;
-            shouldBeSet = (keyc->state & LockMask) != 0;
+            /* FIXME: Just use XKB indicators! */
+            shouldBeSet = !!(XkbStateFieldFromRec(&keyc->xkbInfo->state) & LockMask);
             if (isSet != shouldBeSet)
                 KdSetLed (tmp, tmp->LockLed, shouldBeSet);
         }
@@ -2051,7 +1885,7 @@ KdEnqueueKeyboardEvent(KdKeyboardInfo   *ki,
     if (scan_code >= ki->minScanCode && scan_code <= ki->maxScanCode)
     {
 	key_code = scan_code + KD_MIN_KEYCODE - ki->minScanCode;
-	
+
 	/*
 	 * Set up this event -- the type may be modified below
 	 */
@@ -2059,19 +1893,12 @@ KdEnqueueKeyboardEvent(KdKeyboardInfo   *ki,
 	    type = KeyRelease;
 	else
 	    type = KeyPress;
-	
-#ifdef XKB
-        if (noXkbExtension)
-#endif
-        {
-            KdCheckSpecialKeys(ki, type, key_code);
-            KdHandleKeyboardEvent(ki, type, key_code);
-	}
-	
+
         GetEventList(&kdEvents);
+
         nEvents = GetKeyboardEvents(kdEvents, ki->dixdev, type, key_code);
         for (i = 0; i < nEvents; i++)
-            KdQueueEvent(ki->dixdev, (kdEvents + i)->event);
+            KdQueueEvent(ki->dixdev, (InternalEvent *)((kdEvents + i)->event));
     }
     else {
         ErrorF("driver %s wanted to post scancode %d outside of [%d, %d]!\n",
@@ -2119,8 +1946,8 @@ KdEnqueuePointerEvent(KdPointerInfo *pi, unsigned long flags, int rx, int ry,
     }
     else {
 	if (pi->transformCoordinates) {
-	    x = matrix[0][0] * rx + matrix[0][1] * ry;
-	    y = matrix[1][0] * rx + matrix[1][1] * ry;
+	    x = matrix[0][0] * rx + matrix[0][1] * ry + matrix[0][2];
+	    y = matrix[1][0] * rx + matrix[1][1] * ry + matrix[1][2];
 	}
 	else {
 	    x = rx;
@@ -2181,7 +2008,7 @@ _KdEnqueuePointerEvent (KdPointerInfo *pi, int type, int x, int y, int z,
     nEvents = GetPointerEvents(kdEvents, pi->dixdev, type, b, absrel,
                                0, 3, valuators);
     for (i = 0; i < nEvents; i++)
-        KdQueueEvent(pi->dixdev, (kdEvents + i)->event);
+        KdQueueEvent(pi->dixdev, (InternalEvent *)((kdEvents + i)->event));
 }
 
 void
@@ -2373,7 +2200,7 @@ miPointerScreenFuncRec kdPointerScreenFuncs =
 
 #ifndef _MSC_VER
 void
-ProcessInputEvents ()
+ProcessInputEvents (void)
 {
     mieqProcessInputEvents();
     miPointerUpdateSprite(inputInfo.pointer);
@@ -2483,9 +2310,9 @@ NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
     for (option = options; option; option = option->next) {
         if (strcmp(option->key, "device") == 0) {
             if (pi && option->value)
-                pi->path = KdSaveString(option->value);
+                pi->path = strdup(option->value);
             else if (ki && option->value)
-                ki->path = KdSaveString(option->value);
+                ki->path = strdup(option->value);
         }
         else if (strcmp(option->key, "driver") == 0) {
             if (pi) {
@@ -2511,16 +2338,16 @@ NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
 
     if (pi) {
         if (KdAddPointer(pi) != Success ||
-            ActivateDevice(pi->dixdev) != Success ||
-            EnableDevice(pi->dixdev) != TRUE) {
+            ActivateDevice(pi->dixdev, TRUE) != Success ||
+            EnableDevice(pi->dixdev, TRUE) != TRUE) {
             ErrorF("couldn't add or enable pointer\n");
             return BadImplementation;
         }
     }
     else if (ki) {
         if (KdAddKeyboard(ki) != Success ||
-            ActivateDevice(ki->dixdev) != Success ||
-            EnableDevice(ki->dixdev) != TRUE) {
+            ActivateDevice(ki->dixdev, TRUE) != Success ||
+            EnableDevice(ki->dixdev, TRUE) != TRUE) {
             ErrorF("couldn't add or enable keyboard\n");
             return BadImplementation;
         }
@@ -2538,5 +2365,5 @@ NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
 void
 DeleteInputDeviceRequest(DeviceIntPtr pDev)
 {
-    RemoveDevice(pDev);
+    RemoveDevice(pDev, TRUE);
 }

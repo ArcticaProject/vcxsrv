@@ -107,5 +107,5 @@ xf86freeExtensions (XF86ConfExtensionsPtr ptr)
 
     xf86optionListFree (ptr->ext_option_lst);
     TestFree (ptr->extensions_comment);
-    xf86conffree (ptr);
+    free (ptr);
 }

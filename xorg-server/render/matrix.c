@@ -39,7 +39,7 @@
 #include "servermd.h"
 #include "picturestr.h"
 
-_X_EXPORT void
+void
 PictTransform_from_xRenderTransform (PictTransformPtr pict,
 				     xRenderTransform *render)
 {
@@ -56,7 +56,7 @@ PictTransform_from_xRenderTransform (PictTransformPtr pict,
     pict->matrix[2][2] = render->matrix33;
 }
 
-_X_EXPORT void
+void
 xRenderTransform_from_PictTransform (xRenderTransform *render,
 				     PictTransformPtr pict)
 {
@@ -73,14 +73,14 @@ xRenderTransform_from_PictTransform (xRenderTransform *render,
     render->matrix33 = pict->matrix[2][2];
 }
 
-_X_EXPORT Bool
+Bool
 PictureTransformPoint (PictTransformPtr transform,
 		       PictVectorPtr	vector)
 {
 	return pixman_transform_point(transform, vector);
 }
 
-_X_EXPORT Bool
+Bool
 PictureTransformPoint3d (PictTransformPtr transform,
                          PictVectorPtr	vector)
 {

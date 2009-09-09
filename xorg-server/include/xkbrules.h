@@ -29,27 +29,20 @@
 
 /***====================================================================***/
 
+typedef struct _XkbRMLVOSet {
+        char *                  rules;
+        char *                  model;
+        char *                  layout;
+        char *                  variant;
+        char *                  options;
+} XkbRMLVOSet;
+
 typedef struct _XkbRF_VarDefs {
 	char *			model;
 	char *			layout;
 	char *			variant;
 	char *			options;
-	unsigned short		sz_extra;
-	unsigned short		num_extra;
-	char *			extra_names;
-	char **			extra_values;
 } XkbRF_VarDefsRec,*XkbRF_VarDefsPtr;
-
-typedef struct _XkbRF_VarDesc {
-	char *			name;
-	char *			desc;
-} XkbRF_VarDescRec, *XkbRF_VarDescPtr;
-
-typedef struct _XkbRF_DescribeVars {
-	int			sz_desc;
-	int			num_desc;
-	XkbRF_VarDescPtr	desc;
-} XkbRF_DescribeVarsRec,*XkbRF_DescribeVarsPtr;
 
 typedef struct _XkbRF_Rule {
 	int			number;
@@ -65,7 +58,6 @@ typedef struct _XkbRF_Rule {
 	char *			types;
 	char *			compat;
 	char *			geometry;
-	char *			keymap;
 	unsigned		flags;
 } XkbRF_RuleRec,*XkbRF_RulePtr;
 
@@ -82,15 +74,6 @@ typedef struct _XkbRF_Group {
 #define	XkbRF_Invalid		(1L<<5)
 
 typedef struct _XkbRF_Rules {
-	XkbRF_DescribeVarsRec	models;
-	XkbRF_DescribeVarsRec	layouts;
-	XkbRF_DescribeVarsRec	variants;
-	XkbRF_DescribeVarsRec	options;
-	unsigned short		sz_extra;
-	unsigned short		num_extra;
-	char **			extra_names;
-	XkbRF_DescribeVarsPtr	extra;
-
 	unsigned short		sz_rules;
 	unsigned short		num_rules;
 	XkbRF_RulePtr		rules;
@@ -103,24 +86,21 @@ typedef struct _XkbRF_Rules {
 
 _XFUNCPROTOBEGIN
 
-extern Bool	XkbRF_GetComponents(
+/* Seems preferable to dragging xkbstr.h in. */
+struct _XkbComponentNames;
+
+extern _X_EXPORT Bool	XkbRF_GetComponents(
     XkbRF_RulesPtr		/* rules */,
     XkbRF_VarDefsPtr		/* var_defs */,
-    XkbComponentNamesPtr	/* names */
+    struct _XkbComponentNames *	/* names */
 );
 
-extern XkbRF_RulePtr	XkbRF_AddRule(
-    XkbRF_RulesPtr	/* rules */
-);
-
-extern XkbRF_GroupPtr XkbRF_AddGroup(XkbRF_RulesPtr  rules);
-
-extern Bool	XkbRF_LoadRules(
+extern _X_EXPORT Bool	XkbRF_LoadRules(
     FILE *		/* file */,
     XkbRF_RulesPtr	/* rules */
 );
 
-extern Bool XkbRF_LoadRulesByName(
+extern _X_EXPORT Bool XkbRF_LoadRulesByName(
     char *		/* base */,
     char *		/* locale */,
     XkbRF_RulesPtr	/* rules */
@@ -128,50 +108,12 @@ extern Bool XkbRF_LoadRulesByName(
 
 /***====================================================================***/
 
-extern XkbRF_VarDescPtr	XkbRF_AddVarDesc(
-    XkbRF_DescribeVarsPtr	/* vars */
-);
+extern _X_EXPORT XkbRF_RulesPtr XkbRF_Create(void);
 
-extern XkbRF_VarDescPtr	XkbRF_AddVarDescCopy(
-    XkbRF_DescribeVarsPtr	/* vars */,
-    XkbRF_VarDescPtr		/* copy_from */
-);
-
-extern XkbRF_DescribeVarsPtr XkbRF_AddVarToDescribe(
-    XkbRF_RulesPtr		/* rules */,
-    char *			/* name */
-);
-
-extern Bool	XkbRF_LoadDescriptions(
-    FILE *		/* file */,
-    XkbRF_RulesPtr	/* rules */
-);
-
-extern Bool XkbRF_LoadDescriptionsByName(
-    char *		/* base */,
-    char *		/* locale */,
-    XkbRF_RulesPtr	/* rules */
-);
-
-extern XkbRF_RulesPtr XkbRF_Load(
-    char *		/* base */,
-    char *		/* locale */,
-    Bool		/* wantDesc */,
-    Bool		/* wantRules */
-);
-
-extern XkbRF_RulesPtr XkbRF_Create(
-    int			/* sz_rules */,
-    int			/* sz_extra */
-);
-
-/***====================================================================***/
-
-extern void XkbRF_Free(
+extern _X_EXPORT void XkbRF_Free(
     XkbRF_RulesPtr	/* rules */,
     Bool		/* freeRules */
 );
-
 
 /***====================================================================***/
 

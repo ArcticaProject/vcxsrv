@@ -50,8 +50,6 @@ SOFTWARE.
 #endif
 
 #include <X11/X.h>
-#define NEED_EVENTS
-#define NEED_REPLIES
 #include <X11/Xproto.h>
 #include "windowstr.h"
 #include "extnsionst.h"
@@ -338,7 +336,7 @@ int (* SwappedProcVector[256]) (
     SProcNoOperation
 };
 
-_X_EXPORT EventSwapPtr EventSwapVector[128] =
+EventSwapPtr EventSwapVector[128] =
 {
     (EventSwapPtr)SErrorEvent,
     NotImplemented,

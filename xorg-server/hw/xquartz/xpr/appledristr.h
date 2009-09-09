@@ -2,7 +2,7 @@
 
 Copyright 1998-1999 Precision Insight, Inc., Cedar Park, Texas.
 Copyright 2000 VA Linux Systems, Inc.
-Copyright (c) 2002 Apple Computer, Inc.
+Copyright (c) 2002, 2008, 2009 Apple Computer, Inc.
 All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -153,12 +153,87 @@ typedef struct _AppleDRINotify {
 	BYTE	type;		/* always eventBase + event type */
 	BYTE	kind;
 	CARD16	sequenceNumber B16;
-	Time	time B32;	/* time of change */
-	CARD16	pad1 B16;
+	CARD32	time B32;	/* time of change */
+	CARD32	pad1 B32;
 	CARD32	arg B32;
 	CARD32	pad3 B32;
+	CARD32	pad4 B32;
+	CARD32	pad5 B32;
+	CARD32	pad6 B32;
 } xAppleDRINotifyEvent;
-#define sz_xAppleDRINotifyEvent	20
+#define sz_xAppleDRINotifyEvent	32
+
+
+typedef struct {
+    CARD8 reqType;
+    CARD8 driReqType;
+    CARD16 length B16;
+    CARD32 screen B32;
+    CARD32 drawable B32;
+    BOOL doubleSwap;
+    CARD8 pad1, pad2, pad3;
+} xAppleDRICreateSharedBufferReq;
+
+#define sz_xAppleDRICreateSharedBufferReq 16
+
+typedef struct {
+    BYTE type;
+    BYTE data1;
+    CARD16 sequenceNumber B16;
+    CARD32 length B32;
+    CARD32 stringLength B32; /* 0 on error */
+    CARD32 width B32;
+    CARD32 height B32;
+    CARD32 pad1 B32;
+    CARD32 pad2 B32;
+    CARD32 pad3 B32;
+} xAppleDRICreateSharedBufferReply;
+
+#define sz_xAppleDRICreateSharedBufferReply 32
+
+typedef struct {
+    CARD8 reqType;
+    CARD8 driReqType;
+    CARD16 length B16;
+    CARD32 screen B32;
+    CARD32 drawable B32;
+} xAppleDRISwapBuffersReq;
+
+#define sz_xAppleDRISwapBuffersReq 12
+
+typedef struct {
+    CARD8 reqType; /*1*/
+    CARD8 driReqType; /*2*/
+    CARD16 length B16; /*4*/
+    CARD32 screen B32; /*8*/
+    CARD32 drawable B32; /*12*/
+} xAppleDRICreatePixmapReq;
+
+#define sz_xAppleDRICreatePixmapReq 12
+
+typedef struct {
+    BYTE type; /*1*/
+    BOOL pad1; /*2*/
+    CARD16 sequenceNumber B16; /*4*/
+    CARD32 length B32; /*8*/
+    CARD32 width B32; /*12*/
+    CARD32 height B32; /*16*/
+    CARD32 pitch B32; /*20*/
+    CARD32 bpp B32; /*24*/
+    CARD32 size B32; /*28*/
+    CARD32 stringLength B32; /*32*/
+} xAppleDRICreatePixmapReply;
+
+#define sz_xAppleDRICreatePixmapReply 32
+
+typedef struct {
+    CARD8 reqType; /*1*/
+    CARD8 driReqType; /*2*/
+    CARD16 length B16; /*4*/
+    CARD32 drawable B32; /*8*/
+} xAppleDRIDestroyPixmapReq;
+
+#define sz_xAppleDRIDestroyPixmapReq 8
 
 #ifdef _APPLEDRI_SERVER_
 

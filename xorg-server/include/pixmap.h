@@ -93,7 +93,7 @@ typedef union _PixUnion {
 #define WindowDrawable(type) \
 	((type == DRAWABLE_WINDOW) || (type == UNDRAWABLE_WINDOW))
 
-extern PixmapPtr GetScratchPixmapHeader(
+extern _X_EXPORT PixmapPtr GetScratchPixmapHeader(
     ScreenPtr /*pScreen*/,
     int /*width*/,
     int /*height*/,
@@ -102,16 +102,16 @@ extern PixmapPtr GetScratchPixmapHeader(
     int /*devKind*/,
     pointer /*pPixData*/);
 
-extern void FreeScratchPixmapHeader(
+extern _X_EXPORT void FreeScratchPixmapHeader(
     PixmapPtr /*pPixmap*/);
 
-extern Bool CreateScratchPixmapsForScreen(
+extern _X_EXPORT Bool CreateScratchPixmapsForScreen(
     int /*scrnum*/);
 
-extern void FreeScratchPixmapsForScreen(
+extern _X_EXPORT void FreeScratchPixmapsForScreen(
     int /*scrnum*/);
 
-extern PixmapPtr AllocatePixmap(
+extern _X_EXPORT PixmapPtr AllocatePixmap(
     ScreenPtr /*pScreen*/,
     int /*pixDataSize*/);
 

@@ -31,9 +31,6 @@
 # include "picturestr.h"
 #endif
 
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
-
 static Bool ShadowCloseScreen (int i, ScreenPtr pScreen);
 static void ShadowCopyWindow(
     WindowPtr pWin,
@@ -102,7 +99,7 @@ static DevPrivateKey ShadowGCKey = &ShadowGCKeyIndex;
 #define GET_SCREEN_PRIVATE(pScreen) \
     (ShadowScreenPtr)dixLookupPrivate(&(pScreen)->devPrivates, ShadowScreenKey)
 #define GET_GC_PRIVATE(pGC) \
-    (ShadowGCPtr)dixLookupPrivate(&(pGC)->devPrivates, ShadowGCKey);
+    (ShadowGCPtr)dixLookupPrivate(&(pGC)->devPrivates, ShadowGCKey)
 
 #define SHADOW_GC_FUNC_PROLOGUE(pGC)\
     ShadowGCPtr pGCPriv = GET_GC_PRIVATE(pGC);\
@@ -1364,44 +1361,44 @@ ShadowFontToBox(BoxPtr BB, DrawablePtr pDrawable, GCPtr pGC, int x, int y,
     if (pFont->info.constantWidth) {
         int ascent, descent, left, right = 0;
 
-	ascent = MAX(pFont->info.fontAscent, pFont->info.maxbounds.ascent);
-	descent = MAX(pFont->info.fontDescent, pFont->info.maxbounds.descent);
+	ascent = max(pFont->info.fontAscent, pFont->info.maxbounds.ascent);
+	descent = max(pFont->info.fontDescent, pFont->info.maxbounds.descent);
 	left = pFont->info.maxbounds.leftSideBearing;
 	if (count > 0) {
 	    right = (count - 1) * pFont->info.maxbounds.characterWidth;
 	}
 	right += pFont->info.maxbounds.rightSideBearing;
 	BB->x1 =
-	    MAX(pDrawable->x + x - left, (REGION_EXTENTS(pGC->pScreen,
+	    max(pDrawable->x + x - left, (REGION_EXTENTS(pGC->pScreen,
 		&((WindowPtr) pDrawable)->winSize))->x1);
 	BB->y1 =
-	    MAX(pDrawable->y + y - ascent,
+	    max(pDrawable->y + y - ascent,
 	    (REGION_EXTENTS(pGC->pScreen,
              &((WindowPtr) pDrawable)->winSize))->y1);
 	BB->x2 =
-	    MIN(pDrawable->x + x + right,
+	    min(pDrawable->x + x + right,
 	    (REGION_EXTENTS(pGC->pScreen,
              &((WindowPtr) pDrawable)->winSize))->x2);
 	BB->y2 =
-	    MIN(pDrawable->y + y + descent,
+	    min(pDrawable->y + y + descent,
 	    (REGION_EXTENTS(pGC->pScreen,
              &((WindowPtr) pDrawable)->winSize))->y2);
     } else {
     	ShadowTextExtent(pFont, count, chars, wide ? (FONTLASTROW(pFont) == 0)
                          ? Linear16Bit : TwoD16Bit : Linear8Bit, BB);
 	BB->x1 =
-	    MAX(pDrawable->x + x + BB->x1, (REGION_EXTENTS(pGC->pScreen,
+	    max(pDrawable->x + x + BB->x1, (REGION_EXTENTS(pGC->pScreen,
 		&((WindowPtr) pDrawable)->winSize))->x1);
 	BB->y1 =
-	    MAX(pDrawable->y + y + BB->y1,
+	    max(pDrawable->y + y + BB->y1,
 	    (REGION_EXTENTS(pGC->pScreen,
              &((WindowPtr) pDrawable)->winSize))->y1);
 	BB->x2 =
-	    MIN(pDrawable->x + x + BB->x2,
+	    min(pDrawable->x + x + BB->x2,
 	    (REGION_EXTENTS(pGC->pScreen,
 	     &((WindowPtr) pDrawable)->winSize))->x2);
 	BB->y2 =
-	    MIN(pDrawable->y + y + BB->y2,
+	    min(pDrawable->y + y + BB->y2,
 	    (REGION_EXTENTS(pGC->pScreen, 
 	     &((WindowPtr) pDrawable)->winSize))->y2);
     }

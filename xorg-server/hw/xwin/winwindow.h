@@ -2,7 +2,7 @@
 #define _WINWINDOW_H_
 /*
  *Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
- *Copyright (C) Colin Harrison 2005-2008
+ *Copyright (C) Colin Harrison 2005-2009
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -116,6 +116,7 @@ typedef struct _winWMMessageRec{
 #define		WM_WM_HINTS_EVENT	(WM_USER + 10)
 #define		WM_WM_CHANGE_STATE	(WM_USER + 11)
 #define		WM_WM_MAP2		(WM_USER + 12)
+#define		WM_WM_MAP3		(WM_USER + 13)
 #define		WM_MANAGE		(WM_USER + 100)
 #define		WM_UNMANAGE		(WM_USER + 102)
 

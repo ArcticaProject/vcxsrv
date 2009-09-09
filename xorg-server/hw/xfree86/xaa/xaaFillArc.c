@@ -161,11 +161,7 @@ XAAFillArcSliceSolid(DrawablePtr pDraw, GCPtr pGC, xArc *arc)
 
 
 void
-XAAPolyFillArcSolid(pDraw, pGC, narcs, parcs)
-    DrawablePtr	pDraw;
-    GCPtr	pGC;
-    int		narcs;
-    xArc	*parcs;
+XAAPolyFillArcSolid(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 {
     register xArc *arc;
     register int i;

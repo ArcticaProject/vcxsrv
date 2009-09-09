@@ -83,6 +83,7 @@ XFixesSelectionCallback (CallbackListPtr *callbacks, pointer data, pointer args)
 	{
 	    xXFixesSelectionNotifyEvent	ev;
 
+	    memset(&ev, 0, sizeof(xXFixesSelectionNotifyEvent));
 	    ev.type = XFixesEventBase + XFixesSelectionNotify;
 	    ev.subtype = subtype;
 	    ev.sequenceNumber = e->pClient->sequence;
@@ -132,6 +133,7 @@ XFixesSelectSelectionInput (ClientPtr	pClient,
 			    WindowPtr	pWindow,
 			    CARD32	eventMask)
 {
+    pointer val;
     int rc;
     SelectionEventPtr	*prev, e;
 
@@ -172,7 +174,10 @@ XFixesSelectSelectionInput (ClientPtr	pClient,
 	 * Add a resource hanging from the window to
 	 * catch window destroy
 	 */
-	if (!LookupIDByType(pWindow->drawable.id, SelectionWindowType))
+	rc = dixLookupResourceByType (&val, pWindow->drawable.id,
+				      SelectionWindowType, serverClient,
+				      DixGetAttrAccess);
+	if (rc != Success)
 	    if (!AddResource (pWindow->drawable.id, SelectionWindowType,
 			      (pointer) pWindow))
 	    {

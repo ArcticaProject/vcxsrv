@@ -22,6 +22,7 @@ Xvfb_SOURCES = $(SRCS)
 XVFB_LIBS = \
         @XVFB_LIBS@ \
 	libfbcmap.a \
+	$(MAIN_LIB) \
 	$(XSERVER_LIBS)
 
 Xvfb_LDADD = $(XVFB_LIBS) $(XVFB_SYS_LIBS) $(XSERVER_SYS_LIBS)

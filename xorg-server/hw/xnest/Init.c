@@ -89,13 +89,18 @@ InitOutput(ScreenInfo *screenInfo, int argc, char *argv[])
 void
 InitInput(int argc, char *argv[])
 {
-  xnestPointerDevice = AddInputDevice(serverClient, xnestPointerProc, TRUE);
-  xnestKeyboardDevice = AddInputDevice(serverClient, xnestKeyboardProc, TRUE);
+  int rc;
+  rc = AllocDevicePair(serverClient, "Xnest",
+                       &xnestPointerDevice,
+                       &xnestKeyboardDevice,
+                       xnestPointerProc,
+                       xnestKeyboardProc,
+                       FALSE);
+
+  if (rc != Success)
+      FatalError("Failed to init Xnest default devices.\n");
 
   GetEventList(&xnestEvents);
-
-  RegisterPointerDevice(xnestPointerDevice);
-  RegisterKeyboardDevice(xnestKeyboardDevice);
 
   mieqInit();
 
@@ -107,14 +112,14 @@ InitInput(int argc, char *argv[])
 /*
  * DDX - specific abort routine.  Called by AbortServer().
  */
-void AbortDDX()
+void AbortDDX(void)
 {
   xnestDoFullGeneration = True;
   xnestCloseDisplay();
 }
 
 /* Called by GiveUp(). */
-void ddxGiveUp()
+void ddxGiveUp(void)
 {
   AbortDDX();
 }
@@ -126,17 +131,19 @@ DarwinHandleGUI(int argc, char *argv[])
 }
 #endif
 
-void OsVendorInit()
+void OsVendorInit(void)
 {
     return;
 }
 
-void OsVendorFatalError()
+void OsVendorFatalError(void)
 {
     return;
 }
 
+#if defined(DDXBEFORERESET)
 void ddxBeforeReset(void)
 {
     return;
 }
+#endif

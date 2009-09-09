@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS	/* for inputstr.h    */
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -61,6 +59,8 @@ SOFTWARE.
 #include <X11/extensions/XIproto.h>
 #include "exglobals.h"
 #include "swaprep.h"
+#include "xkbsrv.h"
+#include "xkbstr.h"
 
 #include "getkmap.h"
 
@@ -92,7 +92,8 @@ ProcXGetDeviceKeyMapping(ClientPtr client)
 {
     xGetDeviceKeyMappingReply rep;
     DeviceIntPtr dev;
-    KeySymsPtr k;
+    XkbDescPtr xkb;
+    KeySymsPtr syms;
     int rc;
 
     REQUEST(xGetDeviceKeyMappingReq);
@@ -103,31 +104,37 @@ ProcXGetDeviceKeyMapping(ClientPtr client)
 	return rc;
     if (dev->key == NULL)
 	return BadMatch;
-    k = &dev->key->curKeySyms;
+    xkb = dev->key->xkbInfo->desc;
 
-    if ((stuff->firstKeyCode < k->minKeyCode) ||
-	(stuff->firstKeyCode > k->maxKeyCode)) {
+    if (stuff->firstKeyCode < xkb->min_key_code ||
+	stuff->firstKeyCode > xkb->max_key_code) {
 	client->errorValue = stuff->firstKeyCode;
 	return BadValue;
     }
 
-    if (stuff->firstKeyCode + stuff->count > k->maxKeyCode + 1) {
+    if (stuff->firstKeyCode + stuff->count > xkb->max_key_code + 1) {
 	client->errorValue = stuff->count;
 	return BadValue;
     }
 
+    syms = XkbGetCoreMap(dev);
+    if (!syms)
+        return BadAlloc;
+
     rep.repType = X_Reply;
     rep.RepType = X_GetDeviceKeyMapping;
     rep.sequenceNumber = client->sequence;
-    rep.keySymsPerKeyCode = k->mapWidth;
-    rep.length = (k->mapWidth * stuff->count);	/* KeySyms are 4 bytes */
+    rep.keySymsPerKeyCode = syms->mapWidth;
+    rep.length = (syms->mapWidth * stuff->count);	/* KeySyms are 4 bytes */
     WriteReplyToClient(client, sizeof(xGetDeviceKeyMappingReply), &rep);
 
     client->pSwapReplyFunc = (ReplySwapPtr) CopySwap32Write;
     WriteSwappedDataToClient(client,
-			     k->mapWidth * stuff->count * sizeof(KeySym),
-			     &k->map[(stuff->firstKeyCode - k->minKeyCode) *
-				     k->mapWidth]);
+                             syms->mapWidth * stuff->count * sizeof(KeySym),
+                             &syms->map[syms->mapWidth * (stuff->firstKeyCode -
+                                                          syms->minKeyCode)]);
+    xfree(syms->map);
+    xfree(syms);
 
     return Success;
 }

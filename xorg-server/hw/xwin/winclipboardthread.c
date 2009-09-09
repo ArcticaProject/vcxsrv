@@ -39,6 +39,7 @@
 #include <errno.h>
 #endif
 #include "X11/Xauth.h"
+#include "misc.h"
 
 #ifdef _MSC_VER
 #define snprintf _snprintf

@@ -53,6 +53,7 @@ SOFTWARE.
 #include "input.h"
 #include "cursor.h"
 #include "geext.h"
+#include "events.h"
 #include <X11/extensions/XI.h>
 
 #define EARLIER -1
@@ -119,15 +120,15 @@ typedef struct _Client *ClientPtr; /* also in misc.h */
 
 typedef struct _WorkQueue	*WorkQueuePtr;
 
-extern ClientPtr clients[MAXCLIENTS];
-extern ClientPtr serverClient;
-extern int currentMaxClients;
-extern char dispatchExceptionAtReset;
+extern _X_EXPORT ClientPtr clients[MAXCLIENTS];
+extern _X_EXPORT ClientPtr serverClient;
+extern _X_EXPORT int currentMaxClients;
+extern _X_EXPORT char dispatchExceptionAtReset;
 
 typedef int HWEventQueueType;
 typedef HWEventQueueType* HWEventQueuePtr;
 
-extern HWEventQueuePtr checkForInput[2];
+extern _X_EXPORT HWEventQueuePtr checkForInput[2];
 
 typedef struct _TimeStamp {
     CARD32 months;	/* really ~49.7 days */
@@ -136,96 +137,95 @@ typedef struct _TimeStamp {
 
 /* dispatch.c */
 
-extern void SetInputCheck(
+extern _X_EXPORT void SetInputCheck(
     HWEventQueuePtr /*c0*/,
     HWEventQueuePtr /*c1*/);
 
-extern void CloseDownClient(
+extern _X_EXPORT void CloseDownClient(
     ClientPtr /*client*/);
 
-extern void UpdateCurrentTime(void);
+extern _X_EXPORT void UpdateCurrentTime(void);
 
-extern void UpdateCurrentTimeIf(void);
+extern _X_EXPORT void UpdateCurrentTimeIf(void);
 
-extern int dixDestroyPixmap(
+extern _X_EXPORT int dixDestroyPixmap(
     pointer /*value*/,
     XID /*pid*/);
 
-extern void InitClient(
+extern _X_EXPORT void InitClient(
     ClientPtr /*client*/,
     int /*i*/,
     pointer /*ospriv*/);
 
-extern ClientPtr NextAvailableClient(
+extern _X_EXPORT ClientPtr NextAvailableClient(
     pointer /*ospriv*/);
 
-extern void SendErrorToClient(
+extern _X_EXPORT void SendErrorToClient(
     ClientPtr /*client*/,
     unsigned int /*majorCode*/,
     unsigned int /*minorCode*/,
     XID /*resId*/,
     int /*errorCode*/);
 
-extern void MarkClientException(
+extern _X_EXPORT void MarkClientException(
     ClientPtr /*client*/);
 
-extern void ddxBeforeReset (void);
-
+extern _X_HIDDEN Bool CreateConnectionBlock(void);
 /* dixutils.c */
 
-extern void CopyISOLatin1Lowered(
+extern _X_EXPORT void CopyISOLatin1Lowered(
     unsigned char * /*dest*/,
     unsigned char * /*source*/,
     int /*length*/);
 
-extern int CompareISOLatin1Lowered(
+extern _X_EXPORT int CompareISOLatin1Lowered(
     unsigned char * /*a*/,
     int alen,
     unsigned char * /*b*/,
     int blen);
 
-extern int dixLookupWindow(
+extern _X_EXPORT int dixLookupWindow(
     WindowPtr *result,
     XID id,
     ClientPtr client,
     Mask access_mode);
 
-extern int dixLookupDrawable(
+extern _X_EXPORT int dixLookupDrawable(
     DrawablePtr *result,
     XID id,
     ClientPtr client,
     Mask type_mask,
     Mask access_mode);
 
-extern int dixLookupGC(
+extern _X_EXPORT int dixLookupGC(
     GCPtr *result,
     XID id,
     ClientPtr client,
     Mask access_mode);
 
-extern int dixLookupClient(
+extern _X_EXPORT int dixLookupClient(
     ClientPtr *result,
     XID id,
     ClientPtr client,
     Mask access_mode);
 
-extern void NoopDDA(void);
+extern _X_EXPORT void NoopDDA(void);
 
-extern int AlterSaveSetForClient(
+extern _X_EXPORT int AlterSaveSetForClient(
     ClientPtr /*client*/,
     WindowPtr /*pWin*/,
     unsigned /*mode*/,
     Bool /*toRoot*/,
     Bool /*map*/);
   
-extern void DeleteWindowFromAnySaveSet(
+extern _X_EXPORT void DeleteWindowFromAnySaveSet(
     WindowPtr /*pWin*/);
 
-extern void BlockHandler(
+extern _X_EXPORT void BlockHandler(
     pointer /*pTimeout*/,
     pointer /*pReadmask*/);
 
-extern void WakeupHandler(
+extern _X_EXPORT void WakeupHandler(
     int /*result*/,
     pointer /*pReadmask*/);
 
@@ -240,23 +240,23 @@ typedef void (* WakeupHandlerProcPtr)(
     int /* result */,
     pointer /* pReadmask */);
 
-extern Bool RegisterBlockAndWakeupHandlers(
+extern _X_EXPORT Bool RegisterBlockAndWakeupHandlers(
     BlockHandlerProcPtr /*blockHandler*/,
     WakeupHandlerProcPtr /*wakeupHandler*/,
     pointer /*blockData*/);
 
-extern void RemoveBlockAndWakeupHandlers(
+extern _X_EXPORT void RemoveBlockAndWakeupHandlers(
     BlockHandlerProcPtr /*blockHandler*/,
     WakeupHandlerProcPtr /*wakeupHandler*/,
     pointer /*blockData*/);
 
-extern void InitBlockAndWakeupHandlers(void);
+extern _X_EXPORT void InitBlockAndWakeupHandlers(void);
 
-extern void ProcessWorkQueue(void);
+extern _X_EXPORT void ProcessWorkQueue(void);
 
-extern void ProcessWorkQueueZombies(void);
+extern _X_EXPORT void ProcessWorkQueueZombies(void);
 
-extern Bool QueueWorkProc(
+extern _X_EXPORT Bool QueueWorkProc(
     Bool (* /*function*/)(
         ClientPtr /*clientUnused*/,
         pointer /*closure*/),
@@ -268,47 +268,47 @@ typedef Bool (* ClientSleepProcPtr)(
     ClientPtr /*client*/,
     pointer /*closure*/);
 
-extern Bool ClientSleep(
+extern _X_EXPORT Bool ClientSleep(
     ClientPtr /*client*/,
     ClientSleepProcPtr /* function */,
     pointer /*closure*/);
 
 #ifndef ___CLIENTSIGNAL_DEFINED___
 #define ___CLIENTSIGNAL_DEFINED___
-extern Bool ClientSignal(
+extern _X_EXPORT Bool ClientSignal(
     ClientPtr /*client*/);
 #endif /* ___CLIENTSIGNAL_DEFINED___ */
 
-extern void ClientWakeup(
+extern _X_EXPORT void ClientWakeup(
     ClientPtr /*client*/);
 
-extern Bool ClientIsAsleep(
+extern _X_EXPORT Bool ClientIsAsleep(
     ClientPtr /*client*/);
 
 /* atom.c */
 
-extern Atom MakeAtom(
-    char * /*string*/,
+extern _X_EXPORT Atom MakeAtom(
+    const char * /*string*/,
     unsigned /*len*/,
     Bool /*makeit*/);
 
-extern Bool ValidAtom(
+extern _X_EXPORT Bool ValidAtom(
     Atom /*atom*/);
 
-extern char *NameForAtom(
+extern _X_EXPORT const char *NameForAtom(
     Atom /*atom*/);
 
-extern void AtomError(void);
+extern _X_EXPORT void AtomError(void);
 
-extern void FreeAllAtoms(void);
+extern _X_EXPORT void FreeAllAtoms(void);
 
-extern void InitAtoms(void);
+extern _X_EXPORT void InitAtoms(void);
 
 /* main.c */
 
-extern void SetVendorRelease(int release);
+extern _X_EXPORT void SetVendorRelease(int release);
 
-extern void SetVendorString(char *string);
+extern _X_EXPORT void SetVendorString(char *string);
 
 /* events.c */
 
@@ -317,27 +317,26 @@ extern void SetMaskForEvent(
     Mask /* mask */,
     int /* event */);
 
-extern void ConfineToShape(
+extern _X_EXPORT void ConfineToShape(
     DeviceIntPtr /* pDev */, 
     RegionPtr /* shape */, 
     int*      /* px */,
     int*      /* py */);
 
-extern Bool IsParent(
+extern _X_EXPORT Bool IsParent(
     WindowPtr /* maybeparent */,
     WindowPtr /* child */);
 
-extern WindowPtr GetCurrentRootWindow(DeviceIntPtr pDev);
+extern _X_EXPORT WindowPtr GetCurrentRootWindow(DeviceIntPtr pDev);
 
-extern WindowPtr GetSpriteWindow(DeviceIntPtr pDev);
+extern _X_EXPORT WindowPtr GetSpriteWindow(DeviceIntPtr pDev);
 
 
-extern void NoticeEventTime(xEventPtr /* xE */);
+extern _X_EXPORT void NoticeEventTime(InternalEvent *ev);
 
 extern void EnqueueEvent(
-    xEventPtr /* xE */,
-    DeviceIntPtr /* device */,
-    int	/* count */);
+    InternalEvent * /* ev */,
+    DeviceIntPtr  /* device */);
 
 extern void ActivatePointerGrab(
     DeviceIntPtr /* mouse */,
@@ -357,39 +356,34 @@ extern void ActivateKeyboardGrab(
 extern void DeactivateKeyboardGrab(
     DeviceIntPtr /* keybd */);
 
+extern BOOL ActivateFocusInGrab(
+    DeviceIntPtr /* dev */,
+    WindowPtr /* old */,
+    WindowPtr /* win */);
+
 extern void AllowSome(
     ClientPtr	/* client */,
     TimeStamp /* time */,
     DeviceIntPtr /* thisDev */,
-    int /* newState */,
-    Bool /* core */);
+    int /* newState */);
 
 extern void ReleaseActiveGrabs(
     ClientPtr client);
 
-extern int DeliverEventsToWindow(
+extern _X_EXPORT int DeliverEventsToWindow(
     DeviceIntPtr /* pWin */,
     WindowPtr /* pWin */,
     xEventPtr /* pEvents */,
     int /* count */,
     Mask /* filter */,
-    GrabPtr /* grab */,
-    int /* mskidx */);
+    GrabPtr /* grab */);
 
 extern int DeliverDeviceEvents(
     WindowPtr /* pWin */,
-    xEventPtr /* xE */,
+    InternalEvent* /* event */,
     GrabPtr /* grab */,
     WindowPtr /* stopAt */,
-    DeviceIntPtr /* dev */,
-    int /* count */);
-
-extern void DefineInitialRootWindow(
-    WindowPtr /* win */);
-
-extern void SetupSprite(
-    DeviceIntPtr /* pDev */,
-    ScreenPtr    /* pScreen */);
+    DeviceIntPtr /* dev */);
 
 extern void InitializeSprite(
     DeviceIntPtr /* pDev */,
@@ -399,37 +393,32 @@ extern void UpdateSpriteForScreen(
     DeviceIntPtr /* pDev */,
     ScreenPtr /* pScreen */);
 
-extern void WindowHasNewCursor(
+extern _X_EXPORT void WindowHasNewCursor(
     WindowPtr /* pWin */);
 
 extern Bool CheckDeviceGrabs(
     DeviceIntPtr /* device */,
-    xEventPtr /* xE */,
-    int /* checkFirst */,
-    int /* count */);
+    DeviceEvent* /* event */,
+    int /* checkFirst */);
 
 extern void DeliverFocusedEvent(
     DeviceIntPtr /* keybd */,
-    xEventPtr /* xE */,
-    WindowPtr /* window */,
-    int /* count */);
+    InternalEvent* /* event */,
+    WindowPtr /* window */);
 
 extern void DeliverGrabbedEvent(
-    xEventPtr /* xE */,
+    InternalEvent* /* event */,
     DeviceIntPtr /* thisDev */,
-    Bool /* deactivateGrab */,
-    int /* count */);
+    Bool /* deactivateGrab */);
 
-#ifdef XKB
 extern void FixKeyState(
-    xEvent * /* xE */,
+    DeviceEvent* /* event */,
     DeviceIntPtr /* keybd */);
-#endif /* XKB */
 
 extern void RecalculateDeliverableEvents(
     WindowPtr /* pWin */);
 
-extern int OtherClientGone(
+extern _X_EXPORT int OtherClientGone(
     pointer /* value */,
     XID /* id */);
 
@@ -455,15 +444,13 @@ extern int GrabDevice(
     Window /* grabWindow */,
     unsigned /* ownerEvents */,
     Time /* ctime */,
-    Mask /* mask */,
-    CARD8 * /* status */,
-    Bool /* coreGrab */);
+    GrabMask* /* mask */,
+    int /* grabtype */,
+    Cursor /* curs */,
+    Window /* confineToWin */,
+    CARD8 * /* status */);
 
 extern void InitEvents(void);
-extern void InitSprite(
-        DeviceIntPtr /* pDev */, 
-        Bool /* hasCursor */
-        );
 
 extern void CloseDownEvents(void);
 
@@ -478,23 +465,22 @@ extern Mask EventMaskForClient(
 
 
 
-extern int DeliverEvents(
+extern _X_EXPORT int DeliverEvents(
     WindowPtr /*pWin*/,
     xEventPtr /*xE*/,
     int /*count*/,
     WindowPtr /*otherParent*/);
 
-extern Bool
-CheckMotion(
-    xEvent* /* xE */, 
+extern Bool CheckMotion(
+    DeviceEvent* /* ev */,
     DeviceIntPtr /* pDev */);
 
-extern void WriteEventsToClient(
+extern _X_EXPORT void WriteEventsToClient(
     ClientPtr /*pClient*/,
     int	     /*count*/,
     xEventPtr /*events*/);
 
-extern int TryClientEvents(
+extern _X_EXPORT int TryClientEvents(
     ClientPtr /*client*/,
     DeviceIntPtr /* device */,
     xEventPtr /*pEvents*/,
@@ -503,17 +489,16 @@ extern int TryClientEvents(
     Mask /*filter*/,
     GrabPtr /*grab*/);
 
-extern void WindowsRestructured(void);
+extern _X_EXPORT void WindowsRestructured(void);
 
-extern Bool SetClientPointer(
-        ClientPtr /* client */, 
-        ClientPtr /* setter */, 
+extern int SetClientPointer(
+        ClientPtr /* client */,
         DeviceIntPtr /* device */);
 
-extern DeviceIntPtr PickPointer(
+extern _X_EXPORT DeviceIntPtr PickPointer(
     ClientPtr /* client */);
 
-extern DeviceIntPtr PickKeyboard(
+extern _X_EXPORT DeviceIntPtr PickKeyboard(
     ClientPtr /* client */);
 
 extern Bool IsInterferingGrab(
@@ -522,15 +507,15 @@ extern Bool IsInterferingGrab(
         xEvent* /* events */);
 
 #ifdef PANORAMIX
-extern void ReinitializeRootWindow(WindowPtr win, int xoff, int yoff);
+extern _X_EXPORT void ReinitializeRootWindow(WindowPtr win, int xoff, int yoff);
 #endif
 
 #ifdef RANDR
-void
+extern _X_EXPORT void
 ScreenRestructured (ScreenPtr pScreen);
 #endif
 
-extern int ffs(int i);
+extern _X_EXPORT int ffs(int i);
 
 /*
  *  callback manager stuff
@@ -544,30 +529,30 @@ typedef struct _CallbackList *CallbackListPtr; /* also in misc.h */
 typedef void (*CallbackProcPtr) (
     CallbackListPtr *, pointer, pointer);
 
-extern Bool AddCallback(
+extern _X_EXPORT Bool AddCallback(
     CallbackListPtr * /*pcbl*/,
     CallbackProcPtr /*callback*/,
     pointer /*data*/);
 
-extern Bool DeleteCallback(
+extern _X_EXPORT Bool DeleteCallback(
     CallbackListPtr * /*pcbl*/,
     CallbackProcPtr /*callback*/,
     pointer /*data*/);
 
-extern void CallCallbacks(
+extern _X_EXPORT void CallCallbacks(
     CallbackListPtr * /*pcbl*/,
     pointer /*call_data*/);
 
-extern void DeleteCallbackList(
+extern _X_EXPORT void DeleteCallbackList(
     CallbackListPtr * /*pcbl*/);
 
-extern void InitCallbackManager(void);
+extern _X_EXPORT void InitCallbackManager(void);
 
 /*
  *  ServerGrabCallback stuff
  */
 
-extern CallbackListPtr ServerGrabCallback;
+extern _X_EXPORT CallbackListPtr ServerGrabCallback;
 
 typedef enum {SERVER_GRABBED, SERVER_UNGRABBED,
 	      CLIENT_PERVIOUS, CLIENT_IMPERVIOUS } ServerGrabState;
@@ -581,7 +566,7 @@ typedef struct {
  *  EventCallback stuff
  */
 
-extern CallbackListPtr EventCallback;
+extern _X_EXPORT CallbackListPtr EventCallback;
 
 typedef struct {
     ClientPtr client;
@@ -593,7 +578,7 @@ typedef struct {
  *  DeviceEventCallback stuff
  */
 
-extern CallbackListPtr DeviceEventCallback;
+extern _X_EXPORT CallbackListPtr DeviceEventCallback;
 
 typedef struct {
     xEventPtr events;
@@ -604,48 +589,41 @@ extern int XItoCoreType(int xi_type);
 extern Bool DevHasCursor(DeviceIntPtr pDev);
 extern Bool IsPointerDevice( DeviceIntPtr dev);
 extern Bool IsKeyboardDevice(DeviceIntPtr dev);
-extern Bool IsPointerEvent(xEvent* xE);
+extern Bool IsPointerEvent(InternalEvent *event);
+extern Bool IsMaster(DeviceIntPtr dev);
+
+extern _X_HIDDEN int CorePointerProc(DeviceIntPtr dev, int what);
+extern _X_HIDDEN int CoreKeyboardProc(DeviceIntPtr dev, int what);
+
 
 /*
  * These are deprecated compatibility functions and will be removed soon!
  * Please use the noted replacements instead.
  */
 /* replaced by dixLookupWindow */
-extern WindowPtr SecurityLookupWindow(
+extern _X_EXPORT WindowPtr SecurityLookupWindow(
     XID id,
     ClientPtr client,
     Mask access_mode);
 /* replaced by dixLookupWindow */
-extern WindowPtr LookupWindow(
+extern _X_EXPORT WindowPtr LookupWindow(
     XID id,
     ClientPtr client);
 
 /* replaced by dixLookupDrawable */
-extern pointer SecurityLookupDrawable(
+extern _X_EXPORT pointer SecurityLookupDrawable(
     XID id,
     ClientPtr client,
     Mask access_mode);
 
 /* replaced by dixLookupDrawable */
-extern pointer LookupDrawable(
+extern _X_EXPORT pointer LookupDrawable(
     XID id,
     ClientPtr client);
 
 /* replaced by dixLookupClient */
-extern ClientPtr LookupClient(
+extern _X_EXPORT ClientPtr LookupClient(
     XID id,
     ClientPtr client);
 
-/* GE stuff */
-extern void SetGenericFilter(int extension, Mask* filters);
-extern int ExtGrabDevice(ClientPtr client,
-                         DeviceIntPtr dev,
-                         int device_mode,
-                         WindowPtr grabWindow,
-                         WindowPtr confineTo,
-                         TimeStamp ctime,
-                         Bool ownerEvents,
-                         CursorPtr cursor, 
-                         Mask xi_mask,
-                         GenericMaskPtr ge_masks);
 #endif /* DIX_H */

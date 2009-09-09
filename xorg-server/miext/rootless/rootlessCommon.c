@@ -109,8 +109,8 @@ RootlessResolveColormap (ScreenPtr pScreen, int first_color,
   map = RootlessGetColormap (pScreen);
   if (map == NULL || map->class != PseudoColor) return FALSE;
 
-  last = MIN (map->pVisual->ColormapEntries, first_color + n_colors);
-  for (i = MAX (0, first_color); i < last; i++) {
+  last = min (map->pVisual->ColormapEntries, first_color + n_colors);
+  for (i = max (0, first_color); i < last; i++) {
     Entry *ent = map->red + i;
     uint16_t red, green, blue;
 

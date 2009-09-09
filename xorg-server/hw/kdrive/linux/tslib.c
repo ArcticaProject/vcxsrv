@@ -35,7 +35,6 @@
 #include <kdrive-config.h>
 #endif
 
-#define NEED_EVENTS
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include <X11/Xpoll.h>
@@ -115,7 +114,7 @@ TslibEnable (KdPointerInfo *pi)
     private->raw_event_hook = NULL;
     private->raw_event_closure = NULL;
     if (!pi->path) {
-        pi->path = "/dev/input/touchscreen0";
+        pi->path = strdup("/dev/input/touchscreen0");
         ErrorF("[tslib/TslibEnable] no device path given, trying %s\n", pi->path);
     }
     private->tsDev = ts_open(pi->path, 0);
@@ -170,7 +169,7 @@ TslibInit (KdPointerInfo *pi)
     /* hacktastic */
     private->phys_screen = 0;
     pi->nAxes = 3;
-    pi->name = KdSaveString("Touchscreen");
+    pi->name = strdup("Touchscreen");
     pi->inputClass = KD_TOUCHSCREEN;
 
     return Success;

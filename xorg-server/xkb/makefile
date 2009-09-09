@@ -4,8 +4,6 @@ DDX_SRCS = \
         ddxBeep.c \
         ddxCtrls.c \
         ddxFakeMtn.c \
-        ddxInit.c \
-        ddxKeyClick.c \
         ddxLEDs.c \
         ddxLoad.c \
         ddxList.c \

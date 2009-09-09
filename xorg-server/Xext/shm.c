@@ -40,8 +40,6 @@ in this Software without prior written authorization from The Open Group.
 #endif
 #include <unistd.h>
 #include <sys/stat.h>
-#define NEED_REPLIES
-#define NEED_EVENTS
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "misc.h"
@@ -56,8 +54,7 @@ in this Software without prior written authorization from The Open Group.
 #include "servermd.h"
 #include "shmint.h"
 #include "xace.h"
-#define _XSHM_SERVER_
-#include <X11/extensions/shmstr.h>
+#include <X11/extensions/shmproto.h>
 #include <X11/Xfuncproto.h>
 
 /* Needed for Solaris cross-zone shared memory extension */
@@ -134,9 +131,9 @@ static DISPATCH_PROC(SProcShmPutImage);
 static DISPATCH_PROC(SProcShmQueryVersion);
 
 static unsigned char ShmReqCode;
-_X_EXPORT int ShmCompletionCode;
-_X_EXPORT int BadShmSegCode;
-_X_EXPORT RESTYPE ShmSegType;
+int ShmCompletionCode;
+int BadShmSegCode;
+RESTYPE ShmSegType;
 static ShmDescPtr Shmsegs;
 static Bool sharedPixmaps;
 static ShmFuncsPtr shmFuncs[MAXSCREENS];
@@ -148,12 +145,11 @@ static ShmFuncs fbFuncs = {fbShmCreatePixmap, NULL};
 
 #define VERIFY_SHMSEG(shmseg,shmdesc,client) \
 { \
-    shmdesc = (ShmDescPtr)LookupIDByType(shmseg, ShmSegType); \
-    if (!shmdesc) \
-    { \
-	client->errorValue = shmseg; \
-	return BadShmSegCode; \
-    } \
+    int rc; \
+    rc = dixLookupResourceByType((pointer *)&(shmdesc), shmseg, ShmSegType, \
+                                 client, DixReadAccess); \
+    if (rc != Success) \
+	return (rc == BadValue) ? BadShmSegCode : rc; \
 }
 
 #define VERIFY_SHMPTR(shmseg,offset,needwrite,shmdesc,client) \
@@ -202,7 +198,7 @@ static Bool CheckForShmSyscall(void)
     if (shmid != -1)
     {
         /* Successful allocation - clean up */
-	shmctl(shmid, IPC_RMID, (struct shmid_ds *)NULL);
+	shmctl(shmid, IPC_RMID, NULL);
     }
     else
     {
@@ -269,11 +265,11 @@ ShmResetProc(ExtensionEntry *extEntry)
 
     for (i = 0; i < MAXSCREENS; i++)
     {
-	shmFuncs[i] = (ShmFuncsPtr)NULL;
+	shmFuncs[i] = NULL;
     }
 }
 
-_X_EXPORT void
+void
 ShmRegisterFuncs(ScreenPtr pScreen, ShmFuncsPtr funcs)
 {
     shmFuncs[pScreen->myNum] = funcs;
@@ -300,7 +296,7 @@ ShmDestroyPixmap (PixmapPtr pPixmap)
     return ret;
 }
 
-_X_EXPORT void
+void
 ShmRegisterFbFuncs(ScreenPtr pScreen)
 {
     shmFuncs[pScreen->myNum] = &fbFuncs;
@@ -313,6 +309,7 @@ ProcShmQueryVersion(ClientPtr client)
     int n;
 
     REQUEST_SIZE_MATCH(xShmQueryVersionReq);
+    memset(&rep, 0, sizeof(xShmQueryVersionReply));
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
@@ -441,7 +438,7 @@ ProcShmAttach(ClientPtr client)
     }
     else
     {
-	shmdesc = (ShmDescPtr) xalloc(sizeof(ShmDescRec));
+	shmdesc = xalloc(sizeof(ShmDescRec));
 	if (!shmdesc)
 	    return BadAlloc;
 	shmdesc->addr = shmat(stuff->shmid, 0,
@@ -533,20 +530,22 @@ doShmPutImage(DrawablePtr dst, GCPtr pGC,
 static int 
 ProcPanoramiXShmPutImage(ClientPtr client)
 {
-    int			 j, result = 0, orig_x, orig_y;
+    int			 j, result, orig_x, orig_y;
     PanoramiXRes	*draw, *gc;
     Bool		 sendEvent, isRoot;
 
     REQUEST(xShmPutImageReq);
     REQUEST_SIZE_MATCH(xShmPutImageReq);
 
-    if(!(draw = (PanoramiXRes *)SecurityLookupIDByClass(
-                client, stuff->drawable, XRC_DRAWABLE, DixWriteAccess)))
-        return BadDrawable;
+    result = dixLookupResourceByClass((pointer *)&draw, stuff->drawable,
+				      XRC_DRAWABLE, client, DixWriteAccess);
+    if (result != Success)
+        return (result == BadValue) ? BadDrawable : result;
 
-    if(!(gc = (PanoramiXRes *)SecurityLookupIDByType(
-                client, stuff->gc, XRT_GC, DixReadAccess)))
-        return BadGC;
+    result = dixLookupResourceByType((pointer *)&gc, stuff->gc,
+				     XRT_GC, client, DixReadAccess);
+    if (result != Success)
+        return (result == BadValue) ? BadGC : result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -590,9 +589,10 @@ ProcPanoramiXShmGetImage(ClientPtr client)
         return(BadValue);
     }
 
-    if(!(draw = (PanoramiXRes *)SecurityLookupIDByClass(
-		client, stuff->drawable, XRC_DRAWABLE, DixWriteAccess)))
-	return BadDrawable;
+    rc = dixLookupResourceByClass((pointer *)&draw, stuff->drawable,
+				  XRC_DRAWABLE, client, DixWriteAccess);
+    if (rc != Success)
+	return (rc == BadValue) ? BadDrawable : rc;
 
     if (draw->type == XRT_PIXMAP)
 	return ProcShmGetImage(client);
@@ -748,7 +748,7 @@ CreatePmap:
 
     VERIFY_SHMSIZE(shmdesc, stuff->offset, size, client);
 
-    if(!(newPix = (PanoramiXRes *) xalloc(sizeof(PanoramiXRes))))
+    if(!(newPix = xalloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
 
     newPix->type = XRT_PIXMAP;

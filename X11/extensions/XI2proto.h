@@ -102,6 +102,11 @@
  *                               COMMON STRUCTS                                      *
  *                                                                                   *
  *************************************************************************************/
+#ifdef _MSC_VER
+typedef int int32_t;
+typedef unsigned uint32_t;
+#endif
+
 /** Fixed point 16.16 */
 typedef int32_t FP1616;
 

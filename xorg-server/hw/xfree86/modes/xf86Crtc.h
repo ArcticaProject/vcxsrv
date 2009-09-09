@@ -216,13 +216,14 @@ typedef struct _xf86CrtcFuncs {
 
     /**
      * Callback for panning. Doesn't change the mode.
+     * Added in ABI version 2
      */
     void
     (*set_origin)(xf86CrtcPtr crtc, int x, int y);
 
 } xf86CrtcFuncsRec, *xf86CrtcFuncsPtr;
 
-#define XF86_CRTC_VERSION 2
+#define XF86_CRTC_VERSION 3
 
 struct _xf86Crtc {
     /**
@@ -236,9 +237,9 @@ struct _xf86Crtc {
     ScrnInfoPtr	    scrn;
     
     /**
-     * Active state of this CRTC
+     * Desired state of this CRTC
      *
-     * Set when this CRTC is driving one or more outputs 
+     * Set when this CRTC should be driving one or more outputs 
      */
     Bool	    enabled;
     
@@ -312,18 +313,19 @@ struct _xf86Crtc {
      * Current transformation matrix
      */
     PictTransform   crtc_to_framebuffer;
-    struct pict_f_transform f_crtc_to_framebuffer;
-    struct pict_f_transform f_framebuffer_to_crtc;
-    PictFilterPtr   filter;
-    xFixed	    *params;
-    int		    nparams;
-    int		    filter_width;
-    int		    filter_height;
+    /* framebuffer_to_crtc was removed in ABI 2 */
+    struct pict_f_transform f_crtc_to_framebuffer; /* ABI 2 */
+    struct pict_f_transform f_framebuffer_to_crtc; /* ABI 2 */
+    PictFilterPtr   filter; /* ABI 2 */
+    xFixed	    *params; /* ABI 2 */
+    int		    nparams; /* ABI 2 */
+    int		    filter_width; /* ABI 2 */
+    int		    filter_height; /* ABI 2 */
     Bool	    transform_in_use;
-    RRTransformRec  transform;
-    Bool	    transformPresent;
-    RRTransformRec  desiredTransform;
-    Bool	    desiredTransformPresent;
+    RRTransformRec  transform; /* ABI 2 */
+    Bool	    transformPresent; /* ABI 2 */
+    RRTransformRec  desiredTransform; /* ABI 2 */
+    Bool	    desiredTransformPresent; /* ABI 2 */
     /**
      * Bounding box in screen space
      */
@@ -333,10 +335,28 @@ struct _xf86Crtc {
      * TotalArea: total panning area, larger than CRTC's size
      * TrackingArea: Area of the pointer for which the CRTC is panned
      * border: Borders of the displayed CRTC area which induces panning if the pointer reaches them
+     * Added in ABI version 2
      */
     BoxRec          panningTotalArea;
     BoxRec          panningTrackingArea;
     INT16           panningBorder[4];
+
+    /**
+     * Current gamma, especially useful after initial config.
+     * Added in ABI version 3
+     */
+    CARD16 *gamma_red;
+    CARD16 *gamma_green;
+    CARD16 *gamma_blue;
+    int gamma_size;
+
+    /**
+     * Actual state of this CRTC
+     *
+     * Set to TRUE after modesetting, set to FALSE if no outputs are connected
+     * Added in ABI version 3
+     */
+    Bool	    active;
     /**
      * Clear the shadow
      */
@@ -578,7 +598,10 @@ struct _xf86Output {
 #else
     void		*randr_output;
 #endif
-    /** Desired initial panning */
+    /** 
+     * Desired initial panning
+     * Added in ABI version 2
+     */
     BoxRec          initialTotalArea;
     BoxRec          initialTrackingArea;
     INT16           initialBorder[4];
@@ -662,7 +685,7 @@ typedef struct _xf86CrtcConfig {
 
 } xf86CrtcConfigRec, *xf86CrtcConfigPtr;
 
-extern int xf86CrtcConfigPrivateIndex;
+extern _X_EXPORT int xf86CrtcConfigPrivateIndex;
 
 #define XF86_CRTC_CONFIG_PTR(p)	((xf86CrtcConfigPtr) ((p)->privates[xf86CrtcConfigPrivateIndex].ptr))
 
@@ -670,11 +693,11 @@ extern int xf86CrtcConfigPrivateIndex;
  * Initialize xf86CrtcConfig structure
  */
 
-void
+extern _X_EXPORT void
 xf86CrtcConfigInit (ScrnInfoPtr				scrn,
 		    const xf86CrtcConfigFuncsRec	*funcs);
 
-void
+extern _X_EXPORT void
 xf86CrtcSetSizeRange (ScrnInfoPtr scrn,
 		      int minWidth, int minHeight,
 		      int maxWidth, int maxHeight);
@@ -682,11 +705,11 @@ xf86CrtcSetSizeRange (ScrnInfoPtr scrn,
 /*
  * Crtc functions
  */
-xf86CrtcPtr
+extern _X_EXPORT xf86CrtcPtr
 xf86CrtcCreate (ScrnInfoPtr		scrn,
 		const xf86CrtcFuncsRec	*funcs);
 
-void
+extern _X_EXPORT void
 xf86CrtcDestroy (xf86CrtcPtr		crtc);
 
 
@@ -694,138 +717,142 @@ xf86CrtcDestroy (xf86CrtcPtr		crtc);
  * Sets the given video mode on the given crtc
  */
 
-Bool
+extern _X_EXPORT Bool
 xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
 			  RRTransformPtr transform, int x, int y);
 
-Bool
+extern _X_EXPORT Bool
 xf86CrtcSetMode (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotation,
 		 int x, int y);
 
-void
+extern _X_EXPORT void
 xf86CrtcSetOrigin (xf86CrtcPtr crtc, int x, int y);
 
 /*
  * Assign crtc rotation during mode set
  */
-Bool
+extern _X_EXPORT Bool
 xf86CrtcRotate (xf86CrtcPtr crtc);
 
 /*
  * Clean up any rotation data, used when a crtc is turned off
  * as well as when rotation is disabled.
  */
-void
+extern _X_EXPORT void
 xf86RotateDestroy (xf86CrtcPtr crtc);
 
 /*
  * free shadow memory allocated for all crtcs
  */
-void
+extern _X_EXPORT void
 xf86RotateFreeShadow(ScrnInfoPtr pScrn);
 
 /*
  * Clean up rotation during CloseScreen
  */
-void
+extern _X_EXPORT void
 xf86RotateCloseScreen (ScreenPtr pScreen);
 
 /**
  * Return whether any output is assigned to the crtc
  */
-Bool
+extern _X_EXPORT Bool
 xf86CrtcInUse (xf86CrtcPtr crtc);
 
 /*
  * Output functions
  */
-xf86OutputPtr
+extern _X_EXPORT xf86OutputPtr
 xf86OutputCreate (ScrnInfoPtr		    scrn,
 		  const xf86OutputFuncsRec  *funcs,
 		  const char		    *name);
 
-void
+extern _X_EXPORT void
 xf86OutputUseScreenMonitor (xf86OutputPtr output, Bool use_screen_monitor);
 
-Bool
+extern _X_EXPORT Bool
 xf86OutputRename (xf86OutputPtr output, const char *name);
 
-void
+extern _X_EXPORT void
 xf86OutputDestroy (xf86OutputPtr	output);
 
-void
+extern _X_EXPORT void
 xf86ProbeOutputModes (ScrnInfoPtr pScrn, int maxX, int maxY);
 
-void
+extern _X_EXPORT void
 xf86SetScrnInfoModes (ScrnInfoPtr pScrn);
 
 #ifdef RANDR_13_INTERFACE
-int
+# define ScreenInitRetType	int
 #else
-Bool
+# define ScreenInitRetType	Bool
 #endif
+
+extern _X_EXPORT ScreenInitRetType
 xf86CrtcScreenInit (ScreenPtr pScreen);
 
-Bool
+extern _X_EXPORT Bool
 xf86InitialConfiguration (ScrnInfoPtr pScrn, Bool canGrow);
 
-void
+extern _X_EXPORT void
 xf86DPMSSet(ScrnInfoPtr pScrn, int PowerManagementMode, int flags);
     
-Bool
+extern _X_EXPORT Bool
 xf86SaveScreen(ScreenPtr pScreen, int mode);
 
-void
+extern _X_EXPORT void
 xf86DisableUnusedFunctions(ScrnInfoPtr pScrn);
 
-DisplayModePtr
+extern _X_EXPORT DisplayModePtr
 xf86OutputFindClosestMode (xf86OutputPtr output, DisplayModePtr desired);
     
-Bool
+extern _X_EXPORT Bool
 xf86SetSingleMode (ScrnInfoPtr pScrn, DisplayModePtr desired, Rotation rotation);
 
 /**
  * Set the EDID information for the specified output
  */
-void
+extern _X_EXPORT void
 xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon);
 
 /**
  * Return the list of modes supported by the EDID information
  * stored in 'output'
  */
-DisplayModePtr
+extern _X_EXPORT DisplayModePtr
 xf86OutputGetEDIDModes (xf86OutputPtr output);
 
-xf86MonPtr
+extern _X_EXPORT xf86MonPtr
 xf86OutputGetEDID (xf86OutputPtr output, I2CBusPtr pDDCBus);
 
 /**
  * Initialize dga for this screen
  */
 
-Bool
+#ifdef XFreeXDGA
+extern _X_EXPORT Bool
 xf86DiDGAInit (ScreenPtr pScreen, unsigned long dga_address);
 
 /**
  * Re-initialize dga for this screen (as when the set of modes changes)
  */
 
-Bool
+extern _X_EXPORT Bool
 xf86DiDGAReInit (ScreenPtr pScreen);
+#endif
 
 /*
  * Set the subpixel order reported for the screen using
  * the information from the outputs
  */
 
-void
+extern _X_EXPORT void
 xf86CrtcSetScreenSubpixelOrder (ScreenPtr pScreen);
 
 /*
  * Get a standard string name for a connector type 
  */
-char *
+extern _X_EXPORT char *
 xf86ConnectorGetName(xf86ConnectorType connector);
 
 /*
@@ -833,7 +860,7 @@ xf86ConnectorGetName(xf86ConnectorType connector);
  * modes (used in EnterVT functions, or at server startup)
  */
 
-Bool
+extern _X_EXPORT Bool
 xf86SetDesiredModes (ScrnInfoPtr pScrn);
 
 /**
@@ -842,7 +869,7 @@ xf86SetDesiredModes (ScrnInfoPtr pScrn);
  *
  * Driver should call this from ScreenInit function
  */
-Bool
+extern _X_EXPORT Bool
 xf86_cursors_init (ScreenPtr screen, int max_width, int max_height, int flags);
 
 /**
@@ -852,25 +879,25 @@ xf86_cursors_init (ScreenPtr screen, int max_width, int max_height, int flags);
  * 
  * Driver should call this from crtc commit function.
  */
-void
+extern _X_EXPORT void
 xf86_reload_cursors (ScreenPtr screen);
 
 /**
  * Called from EnterVT to turn the cursors back on
  */
-void
+extern _X_EXPORT void
 xf86_show_cursors (ScrnInfoPtr scrn);
 
 /**
  * Called by the driver to turn cursors off
  */
-void
+extern _X_EXPORT void
 xf86_hide_cursors (ScrnInfoPtr scrn);
 
 /**
  * Clean up CRTC-based cursor code. Driver must call this at CloseScreen time.
  */
-void
+extern _X_EXPORT void
 xf86_cursors_fini (ScreenPtr screen);
 
 /*
@@ -879,7 +906,7 @@ xf86_cursors_fini (ScreenPtr screen);
  * wraps xf86XVClipVideoHelper()
  */
 
-Bool
+extern _X_EXPORT Bool
 xf86_crtc_clip_video_helper(ScrnInfoPtr pScrn,
 			    xf86CrtcPtr *crtc_ret,
 			    xf86CrtcPtr desired_crtc,
@@ -892,28 +919,20 @@ xf86_crtc_clip_video_helper(ScrnInfoPtr pScrn,
 			    INT32	width,
 			    INT32	height);
     
-xf86_crtc_notify_proc_ptr
+extern _X_EXPORT xf86_crtc_notify_proc_ptr
 xf86_wrap_crtc_notify (ScreenPtr pScreen, xf86_crtc_notify_proc_ptr new);
 
-void
+extern _X_EXPORT void
 xf86_unwrap_crtc_notify(ScreenPtr pScreen, xf86_crtc_notify_proc_ptr old);
 
-void
+extern _X_EXPORT void
 xf86_crtc_notify(ScreenPtr pScreen);
 
 /**
- * Panning
+ * Gamma
  */
-Bool
-xf86_crtc_get_panning(ScrnInfoPtr pScrn,
-		      BoxPtr      totalArea,
-		      BoxPtr      TrackingArea,
-		      INT16      *border);
 
-Bool
-xf86_crtc_set_panning(ScrnInfoPtr pScrn,
-		      BoxPtr      totalArea,
-		      BoxPtr      TrackingArea,
-		      INT16      *border);
+extern _X_EXPORT Bool
+xf86_crtc_supports_gamma(ScrnInfoPtr pScrn);
 
 #endif /* _XF86CRTC_H_ */

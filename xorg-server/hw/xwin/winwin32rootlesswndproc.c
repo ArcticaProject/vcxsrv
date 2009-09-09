@@ -774,6 +774,17 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       SendMessage (hwndScreen, message, wParam, lParam);
       return 0;
 
+    case WM_ERASEBKGND:
+#if CYGDEBUG
+      winDebug ("winMWExtWMWindowProc - WM_ERASEBKGND\n");
+#endif
+      /*
+       * Pretend that we did erase the background but we don't care,
+       * since we repaint the entire region anyhow
+       * This avoids some flickering when resizing.
+       */
+      return TRUE;
+
     case WM_PAINT:
     
       /* BeginPaint gives us an hdc that clips to the invalidated region */

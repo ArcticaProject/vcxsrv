@@ -41,7 +41,7 @@
 /*
  * global structure that holds the result of parsing the config file
  */
-extern XF86ConfigPtr xf86configptr;
+extern _X_EXPORT XF86ConfigPtr xf86configptr;
 #endif
 
 typedef enum _ConfigStatus {
@@ -68,7 +68,5 @@ ConfigStatus xf86HandleConfigFile(Bool);
 
 Bool xf86AutoConfig(void);
 GDevPtr autoConfigDevice(GDevPtr preconf_device);
-char* chooseVideoDriver(void);
-int xchomp(char *line);
 
 #endif /* _xf86_config_h */

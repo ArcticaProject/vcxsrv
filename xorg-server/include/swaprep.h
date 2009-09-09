@@ -26,239 +26,239 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef SWAPREP_H
 #define SWAPREP_H 1
 
-extern void Swap32Write(
+extern _X_EXPORT void Swap32Write(
     ClientPtr /* pClient */,
     int /* size */,
     CARD32 * /* pbuf */);
 
-extern void CopySwap32Write(
+extern _X_EXPORT void CopySwap32Write(
     ClientPtr /* pClient */,
     int /* size */,
     CARD32 * /* pbuf */);
 
-extern void CopySwap16Write(
+extern _X_EXPORT void CopySwap16Write(
     ClientPtr /* pClient */,
     int /* size */,
     short * /* pbuf */);
 
-extern void SGenericReply(
+extern _X_EXPORT void SGenericReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGenericReply * /* pRep */);
 
-extern void SGetWindowAttributesReply(
+extern _X_EXPORT void SGetWindowAttributesReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetWindowAttributesReply * /* pRep */);
 
-extern void SGetGeometryReply(
+extern _X_EXPORT void SGetGeometryReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetGeometryReply * /* pRep */);
 
-extern void SQueryTreeReply(
+extern _X_EXPORT void SQueryTreeReply(
     ClientPtr /* pClient */,
     int /* size */,
     xQueryTreeReply * /* pRep */);
 
-extern void SInternAtomReply(
+extern _X_EXPORT void SInternAtomReply(
     ClientPtr /* pClient */,
     int /* size */,
     xInternAtomReply * /* pRep */);
 
-extern void SGetAtomNameReply(
+extern _X_EXPORT void SGetAtomNameReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetAtomNameReply * /* pRep */);
 
-extern void SGetPropertyReply(
+extern _X_EXPORT void SGetPropertyReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetPropertyReply * /* pRep */);
 
-extern void SListPropertiesReply(
+extern _X_EXPORT void SListPropertiesReply(
     ClientPtr /* pClient */,
     int /* size */,
     xListPropertiesReply * /* pRep */);
 
-extern void SGetSelectionOwnerReply(
+extern _X_EXPORT void SGetSelectionOwnerReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetSelectionOwnerReply * /* pRep */);
 
-extern void SQueryPointerReply(
+extern _X_EXPORT void SQueryPointerReply(
     ClientPtr /* pClient */,
     int /* size */,
     xQueryPointerReply * /* pRep */);
 
-extern void SwapTimeCoordWrite(
+extern _X_EXPORT void SwapTimeCoordWrite(
     ClientPtr /* pClient */,
     int /* size */,
     xTimecoord * /* pRep */);
 
-extern void SGetMotionEventsReply(
+extern _X_EXPORT void SGetMotionEventsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetMotionEventsReply * /* pRep */);
 
-extern void STranslateCoordsReply(
+extern _X_EXPORT void STranslateCoordsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xTranslateCoordsReply * /* pRep */);
 
-extern void SGetInputFocusReply(
+extern _X_EXPORT void SGetInputFocusReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetInputFocusReply * /* pRep */);
 
-extern void SQueryKeymapReply(
+extern _X_EXPORT void SQueryKeymapReply(
     ClientPtr /* pClient */,
     int /* size */,
     xQueryKeymapReply * /* pRep */);
 
-extern void SQueryFontReply(
+extern _X_EXPORT void SQueryFontReply(
     ClientPtr /* pClient */,
     int /* size */,
     xQueryFontReply * /* pRep */);
 
-extern void SQueryTextExtentsReply(
+extern _X_EXPORT void SQueryTextExtentsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xQueryTextExtentsReply * /* pRep */);
 
-extern void SListFontsReply(
+extern _X_EXPORT void SListFontsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xListFontsReply * /* pRep */);
 
-extern void SListFontsWithInfoReply(
+extern _X_EXPORT void SListFontsWithInfoReply(
     ClientPtr /* pClient */,
     int /* size */,
     xListFontsWithInfoReply * /* pRep */);
 
-extern void SGetFontPathReply(
+extern _X_EXPORT void SGetFontPathReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetFontPathReply * /* pRep */);
 
-extern void SGetImageReply(
+extern _X_EXPORT void SGetImageReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetImageReply * /* pRep */);
 
-extern void SListInstalledColormapsReply(
+extern _X_EXPORT void SListInstalledColormapsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xListInstalledColormapsReply * /* pRep */);
 
-extern void SAllocColorReply(
+extern _X_EXPORT void SAllocColorReply(
     ClientPtr /* pClient */,
     int /* size */,
     xAllocColorReply * /* pRep */);
 
-extern void SAllocNamedColorReply(
+extern _X_EXPORT void SAllocNamedColorReply(
     ClientPtr /* pClient */,
     int /* size */,
     xAllocNamedColorReply * /* pRep */);
 
-extern void SAllocColorCellsReply(
+extern _X_EXPORT void SAllocColorCellsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xAllocColorCellsReply * /* pRep */);
 
-extern void SAllocColorPlanesReply(
+extern _X_EXPORT void SAllocColorPlanesReply(
     ClientPtr /* pClient */,
     int /* size */,
     xAllocColorPlanesReply * /* pRep */);
 
-extern void SQColorsExtend(
+extern _X_EXPORT void SQColorsExtend(
     ClientPtr /* pClient */,
     int /* size */,
     xrgb * /* prgb */);
 
-extern void SQueryColorsReply(
+extern _X_EXPORT void SQueryColorsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xQueryColorsReply * /* pRep */);
 
-extern void SLookupColorReply(
+extern _X_EXPORT void SLookupColorReply(
     ClientPtr /* pClient */,
     int /* size */,
     xLookupColorReply * /* pRep */);
 
-extern void SQueryBestSizeReply(
+extern _X_EXPORT void SQueryBestSizeReply(
     ClientPtr /* pClient */,
     int /* size */,
     xQueryBestSizeReply * /* pRep */);
 
-extern void SListExtensionsReply(
+extern _X_EXPORT void SListExtensionsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xListExtensionsReply * /* pRep */);
 
-extern void SGetKeyboardMappingReply(
+extern _X_EXPORT void SGetKeyboardMappingReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetKeyboardMappingReply * /* pRep */);
 
-extern void SGetPointerMappingReply(
+extern _X_EXPORT void SGetPointerMappingReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetPointerMappingReply * /* pRep */);
 
-extern void SGetModifierMappingReply(
+extern _X_EXPORT void SGetModifierMappingReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetModifierMappingReply * /* pRep */);
 
-extern void SGetKeyboardControlReply(
+extern _X_EXPORT void SGetKeyboardControlReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetKeyboardControlReply * /* pRep */);
 
-extern void SGetPointerControlReply(
+extern _X_EXPORT void SGetPointerControlReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetPointerControlReply * /* pRep */);
 
-extern void SGetScreenSaverReply(
+extern _X_EXPORT void SGetScreenSaverReply(
     ClientPtr /* pClient */,
     int /* size */,
     xGetScreenSaverReply * /* pRep */);
 
-extern void SLHostsExtend(
+extern _X_EXPORT void SLHostsExtend(
     ClientPtr /* pClient */,
     int /* size */,
     char * /* buf */);
 
-extern void SListHostsReply(
+extern _X_EXPORT void SListHostsReply(
     ClientPtr /* pClient */,
     int /* size */,
     xListHostsReply * /* pRep */);
 
-extern void SErrorEvent(
+extern _X_EXPORT void SErrorEvent(
     xError * /* from */,
     xError * /* to */);
 
-extern void SwapConnSetupInfo(
+extern _X_EXPORT void SwapConnSetupInfo(
     char * /* pInfo */,
     char * /* pInfoTBase */);
 
-extern void WriteSConnectionInfo(
+extern _X_EXPORT void WriteSConnectionInfo(
     ClientPtr /* pClient */,
     unsigned long /* size */,
     char * /* pInfo */);
 
-extern void SwapConnSetupPrefix(
+extern _X_EXPORT void SwapConnSetupPrefix(
     xConnSetupPrefix * /* pcspFrom */,
     xConnSetupPrefix * /* pcspTo */);
 
-extern void WriteSConnSetupPrefix(
+extern _X_EXPORT void WriteSConnSetupPrefix(
     ClientPtr /* pClient */,
     xConnSetupPrefix * /* pcsp */);
 
 #undef SWAPREP_PROC
-#define SWAPREP_PROC(func) void func(xEvent * /* from */, xEvent * /* to */)
+#define SWAPREP_PROC(func) extern _X_EXPORT void func(xEvent * /* from */, xEvent * /* to */)
 
 SWAPREP_PROC(SCirculateEvent);
 SWAPREP_PROC(SClientMessageEvent);

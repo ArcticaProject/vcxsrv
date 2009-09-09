@@ -75,6 +75,7 @@
 
 /*
  * Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
+ * Copyright (C) Colin Harrison 2005-2008
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -101,6 +102,7 @@
  * from the XFree86 Project.
  *
  * Authors:     Earle F. Philhower, III
+ *              Colin Harrison
  */
 /* $XFree86: $ */
 
@@ -114,6 +116,10 @@
 
 /* The following give better error messages in bison at the cost of a few KB */
 #define YYERROR_VERBOSE 1
+
+/* YYLTYPE_IS_TRIVIAL and YYENABLE_NLS defined to suppress warnings */
+#define YYLTYPE_IS_TRIVIAL 1
+#define YYENABLE_NLS 0
 
 /* The global pref settings */
 WINPREFS pref;
@@ -138,6 +144,10 @@ static void OpenIcons(void);
 static void AddIconLine(char *matchstr, char *iconfile);
 static void CloseIcons(void);
 
+static void OpenStyles(void);
+static void AddStyleLine(char *matchstr, unsigned long style);
+static void CloseStyles(void);
+
 static void OpenSysMenu(void);
 static void AddSysMenuLine(char *matchstr, char *menuname, int pos);
 static void CloseSysMenu(void);
@@ -151,7 +161,7 @@ extern int yylex(void);
 
 
 /* Line 189 of yacc.c  */
-#line 152 "winprefsyacc.c"
+#line 162 "winprefsyacc.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -185,19 +195,27 @@ extern int yylex(void);
      ICONDIRECTORY = 262,
      DEFAULTICON = 263,
      ICONS = 264,
-     DEFAULTSYSMENU = 265,
-     SYSMENU = 266,
-     ROOTMENU = 267,
-     SEPARATOR = 268,
-     ATSTART = 269,
-     ATEND = 270,
-     EXEC = 271,
-     ALWAYSONTOP = 272,
-     DEBUG = 273,
-     RELOAD = 274,
-     TRAYICON = 275,
-     SILENTEXIT = 276,
-     STRING = 277
+     STYLES = 265,
+     TOPMOST = 266,
+     MAXIMIZE = 267,
+     MINIMIZE = 268,
+     BOTTOM = 269,
+     NOTITLE = 270,
+     OUTLINE = 271,
+     NOFRAME = 272,
+     DEFAULTSYSMENU = 273,
+     SYSMENU = 274,
+     ROOTMENU = 275,
+     SEPARATOR = 276,
+     ATSTART = 277,
+     ATEND = 278,
+     EXEC = 279,
+     ALWAYSONTOP = 280,
+     DEBUG = 281,
+     RELOAD = 282,
+     TRAYICON = 283,
+     SILENTEXIT = 284,
+     STRING = 285
    };
 #endif
 /* Tokens.  */
@@ -208,19 +226,27 @@ extern int yylex(void);
 #define ICONDIRECTORY 262
 #define DEFAULTICON 263
 #define ICONS 264
-#define DEFAULTSYSMENU 265
-#define SYSMENU 266
-#define ROOTMENU 267
-#define SEPARATOR 268
-#define ATSTART 269
-#define ATEND 270
-#define EXEC 271
-#define ALWAYSONTOP 272
-#define DEBUG 273
-#define RELOAD 274
-#define TRAYICON 275
-#define SILENTEXIT 276
-#define STRING 277
+#define STYLES 265
+#define TOPMOST 266
+#define MAXIMIZE 267
+#define MINIMIZE 268
+#define BOTTOM 269
+#define NOTITLE 270
+#define OUTLINE 271
+#define NOFRAME 272
+#define DEFAULTSYSMENU 273
+#define SYSMENU 274
+#define ROOTMENU 275
+#define SEPARATOR 276
+#define ATSTART 277
+#define ATEND 278
+#define EXEC 279
+#define ALWAYSONTOP 280
+#define DEBUG 281
+#define RELOAD 282
+#define TRAYICON 283
+#define SILENTEXIT 284
+#define STRING 285
 
 
 
@@ -230,15 +256,16 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 79 "winprefsyacc.y"
+#line 89 "winprefsyacc.y"
 
   char *sVal;
+  unsigned long uVal;
   int iVal;
 
 
 
 /* Line 214 of yacc.c  */
-#line 239 "winprefsyacc.c"
+#line 266 "winprefsyacc.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -250,7 +277,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 251 "winprefsyacc.c"
+#line 278 "winprefsyacc.c"
 
 #ifdef short
 # undef short
@@ -465,20 +492,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   68
+#define YYLAST   92
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  23
+#define YYNTOKENS  31
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  25
+#define YYNNTS  32
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  46
+#define YYNRULES  63
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  94
+#define YYNSTATES  118
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   277
+#define YYMAXUTOK   285
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -513,7 +540,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30
 };
 
 #if YYDEBUG
@@ -522,40 +550,48 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     4,     7,     9,    11,    12,    15,    17,
-      19,    21,    23,    25,    27,    29,    31,    33,    35,    39,
-      43,    48,    52,    56,    60,    65,    71,    77,    82,    84,
-      87,    88,    96,   101,   103,   106,   107,   114,   115,   117,
-     119,   125,   127,   130,   131,   139,   142
+      19,    21,    23,    25,    27,    29,    31,    33,    35,    37,
+      41,    45,    50,    54,    58,    62,    67,    73,    79,    84,
+      86,    89,    90,    98,   103,   105,   108,   109,   116,   118,
+     120,   122,   124,   126,   128,   130,   132,   134,   137,   140,
+     145,   147,   150,   151,   158,   159,   161,   163,   169,   171,
+     174,   175,   183,   186
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      24,     0,    -1,    -1,    24,    25,    -1,     3,    -1,    27,
-      -1,    -1,     3,    26,    -1,    31,    -1,    32,    -1,    35,
-      -1,    39,    -1,    44,    -1,    29,    -1,    30,    -1,    47,
-      -1,    28,    -1,    46,    -1,    20,    22,     3,    -1,    12,
-      22,     3,    -1,    10,    22,    41,     3,    -1,     8,    22,
-       3,    -1,     7,    22,     3,    -1,    13,     3,    26,    -1,
-      22,    17,     3,    26,    -1,    22,    16,    22,     3,    26,
-      -1,    22,     4,    22,     3,    26,    -1,    22,    19,     3,
-      26,    -1,    33,    -1,    33,    34,    -1,    -1,     4,    22,
-       5,    36,    26,    34,     6,    -1,    22,    22,     3,    26,
-      -1,    37,    -1,    37,    38,    -1,    -1,     9,     5,    40,
-      26,    38,     6,    -1,    -1,    14,    -1,    15,    -1,    22,
-      22,    41,     3,    26,    -1,    42,    -1,    42,    43,    -1,
-      -1,    11,     5,     3,    45,    26,    43,     6,    -1,    21,
-       3,    -1,    18,    22,     3,    -1
+      32,     0,    -1,    -1,    32,    33,    -1,     3,    -1,    35,
+      -1,    -1,     3,    34,    -1,    39,    -1,    40,    -1,    43,
+      -1,    47,    -1,    54,    -1,    59,    -1,    37,    -1,    38,
+      -1,    62,    -1,    36,    -1,    61,    -1,    28,    30,     3,
+      -1,    20,    30,     3,    -1,    18,    30,    56,     3,    -1,
+       8,    30,     3,    -1,     7,    30,     3,    -1,    21,     3,
+      34,    -1,    30,    25,     3,    34,    -1,    30,    24,    30,
+       3,    34,    -1,    30,     4,    30,     3,    34,    -1,    30,
+      27,     3,    34,    -1,    41,    -1,    41,    42,    -1,    -1,
+       4,    30,     5,    44,    34,    42,     6,    -1,    30,    30,
+       3,    34,    -1,    45,    -1,    45,    46,    -1,    -1,     9,
+       5,    48,    34,    46,     6,    -1,    11,    -1,    12,    -1,
+      13,    -1,    14,    -1,    15,    -1,    16,    -1,    17,    -1,
+      49,    -1,    50,    -1,    49,    50,    -1,    50,    49,    -1,
+      30,    51,     3,    34,    -1,    52,    -1,    52,    53,    -1,
+      -1,    10,     5,    55,    34,    53,     6,    -1,    -1,    22,
+      -1,    23,    -1,    30,    30,    56,     3,    34,    -1,    57,
+      -1,    57,    58,    -1,    -1,    19,     5,     3,    60,    34,
+      58,     6,    -1,    29,     3,    -1,    26,    30,     3,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    93,    93,    94,    97,    98,   102,   103,   106,   107,
-     108,   109,   110,   111,   112,   113,   114,   115,   118,   121,
-     124,   127,   130,   133,   134,   135,   136,   137,   140,   141,
-     144,   144,   147,   150,   151,   154,   154,   157,   158,   159,
-     162,   165,   166,   169,   169,   172,   175
+       0,   108,   108,   109,   112,   113,   117,   118,   121,   122,
+     123,   124,   125,   126,   127,   128,   129,   130,   131,   134,
+     137,   140,   143,   146,   149,   150,   151,   152,   153,   156,
+     157,   160,   160,   163,   166,   167,   170,   170,   173,   174,
+     175,   176,   179,   180,   181,   184,   185,   186,   187,   190,
+     193,   194,   197,   197,   200,   201,   202,   205,   208,   209,
+     212,   212,   215,   218
 };
 #endif
 
@@ -565,13 +601,16 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "NEWLINE", "MENU", "LB", "RB",
-  "ICONDIRECTORY", "DEFAULTICON", "ICONS", "DEFAULTSYSMENU", "SYSMENU",
-  "ROOTMENU", "SEPARATOR", "ATSTART", "ATEND", "EXEC", "ALWAYSONTOP",
-  "DEBUG", "RELOAD", "TRAYICON", "SILENTEXIT", "STRING", "$accept",
-  "input", "line", "newline_or_nada", "command", "trayicon", "rootmenu",
-  "defaultsysmenu", "defaulticon", "icondirectory", "menuline", "menulist",
-  "menu", "$@1", "iconline", "iconlist", "icons", "$@2", "atspot",
-  "sysmenuline", "sysmenulist", "sysmenu", "$@3", "silentexit", "debug", 0
+  "ICONDIRECTORY", "DEFAULTICON", "ICONS", "STYLES", "TOPMOST", "MAXIMIZE",
+  "MINIMIZE", "BOTTOM", "NOTITLE", "OUTLINE", "NOFRAME", "DEFAULTSYSMENU",
+  "SYSMENU", "ROOTMENU", "SEPARATOR", "ATSTART", "ATEND", "EXEC",
+  "ALWAYSONTOP", "DEBUG", "RELOAD", "TRAYICON", "SILENTEXIT", "STRING",
+  "$accept", "input", "line", "newline_or_nada", "command", "trayicon",
+  "rootmenu", "defaultsysmenu", "defaulticon", "icondirectory", "menuline",
+  "menulist", "menu", "$@1", "iconline", "iconlist", "icons", "$@2",
+  "group1", "group2", "stylecombo", "styleline", "stylelist", "styles",
+  "$@3", "atspot", "sysmenuline", "sysmenulist", "sysmenu", "$@4",
+  "silentexit", "debug", 0
 };
 #endif
 
@@ -582,28 +621,33 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277
+     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
+     285
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    23,    24,    24,    25,    25,    26,    26,    27,    27,
-      27,    27,    27,    27,    27,    27,    27,    27,    28,    29,
-      30,    31,    32,    33,    33,    33,    33,    33,    34,    34,
-      36,    35,    37,    38,    38,    40,    39,    41,    41,    41,
-      42,    43,    43,    45,    44,    46,    47
+       0,    31,    32,    32,    33,    33,    34,    34,    35,    35,
+      35,    35,    35,    35,    35,    35,    35,    35,    35,    36,
+      37,    38,    39,    40,    41,    41,    41,    41,    41,    42,
+      42,    44,    43,    45,    46,    46,    48,    47,    49,    49,
+      49,    49,    50,    50,    50,    51,    51,    51,    51,    52,
+      53,    53,    55,    54,    56,    56,    56,    57,    58,    58,
+      60,    59,    61,    62
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     0,     2,     1,     1,     0,     2,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     3,     3,
-       4,     3,     3,     3,     4,     5,     5,     4,     1,     2,
-       0,     7,     4,     1,     2,     0,     6,     0,     1,     1,
-       5,     1,     2,     0,     7,     2,     3
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     3,
+       3,     4,     3,     3,     3,     4,     5,     5,     4,     1,
+       2,     0,     7,     4,     1,     2,     0,     6,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     2,     2,     4,
+       1,     2,     0,     6,     0,     1,     1,     5,     1,     2,
+       0,     7,     2,     3
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -612,48 +656,54 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        2,     0,     1,     4,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     3,     5,    16,    13,    14,     8,
-       9,    10,    11,    12,    17,    15,     0,     0,     0,    35,
-      37,     0,     0,     0,     0,    45,    30,    22,    21,     6,
-      38,    39,     0,    43,    19,    46,    18,     6,     6,     0,
-      20,     6,     0,     7,     0,    33,     0,     0,     0,     0,
-      28,     0,     0,    34,    36,     0,    41,     0,     6,     0,
-       0,     0,     0,    29,    31,     6,    37,    42,    44,    23,
-       0,     0,     6,     6,    32,     0,     6,     6,    24,    27,
-       6,    26,    25,    40
+       0,     0,     0,     0,     0,     3,     5,    17,    14,    15,
+       8,     9,    10,    11,    12,    13,    18,    16,     0,     0,
+       0,    36,    52,    54,     0,     0,     0,     0,    62,    31,
+      23,    22,     6,     6,    55,    56,     0,    60,    20,    63,
+      19,     6,     6,     0,     0,    21,     6,     0,     7,     0,
+      34,     0,     0,    50,     0,     0,     0,     0,    29,     0,
+       0,    35,    37,    38,    39,    40,    41,    42,    43,    44,
+      45,    46,     0,    51,    53,     0,    58,     0,     6,     0,
+       0,     0,     0,    30,    32,     6,    47,    48,     6,    54,
+      59,    61,    24,     0,     0,     6,     6,    33,    49,     0,
+       6,     6,    25,    28,     6,    27,    26,    57
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,    14,    49,    15,    16,    17,    18,    19,    20,
-      60,    61,    21,    47,    55,    56,    22,    39,    42,    66,
-      67,    23,    51,    24,    25
+      -1,     1,    15,    53,    16,    17,    18,    19,    20,    21,
+      68,    69,    22,    51,    60,    61,    23,    42,    80,    81,
+      82,    63,    64,    24,    43,    46,    86,    87,    25,    56,
+      26,    27
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -48
+#define YYPACT_NINF -44
 static const yytype_int8 yypact[] =
 {
-     -48,     2,   -48,   -48,   -15,    -3,     4,    22,     7,    25,
-       9,    11,    12,    29,   -48,   -48,   -48,   -48,   -48,   -48,
-     -48,   -48,   -48,   -48,   -48,   -48,    32,    35,    38,   -48,
-      10,    39,    41,    42,    43,   -48,   -48,   -48,   -48,    44,
-     -48,   -48,    45,   -48,   -48,   -48,   -48,    44,    44,    27,
-     -48,    44,    -5,   -48,    28,    27,    46,    31,    48,    -1,
-      -5,    49,    51,   -48,   -48,    34,    31,    52,    44,    37,
-      40,    54,    57,   -48,   -48,    44,    10,   -48,   -48,   -48,
-      58,    60,    44,    44,   -48,    61,    44,    44,   -48,   -48,
-      44,   -48,   -48,   -48
+     -44,     7,   -44,   -44,   -28,   -10,    -7,    27,    29,    14,
+      41,    18,    19,    20,    44,   -44,   -44,   -44,   -44,   -44,
+     -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,    46,    50,
+      51,   -44,   -44,    -4,    53,    54,    55,    56,   -44,   -44,
+     -44,   -44,    57,    57,   -44,   -44,    58,   -44,   -44,   -44,
+     -44,    57,    57,    34,    35,   -44,    57,   -18,   -44,    36,
+      34,    63,    26,    35,    64,    42,    70,    -3,   -18,    68,
+      72,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,   -44,
+     -11,    17,    73,   -44,   -44,    47,    42,    74,    57,    48,
+      49,    78,    79,   -44,   -44,    57,   -44,   -44,    57,    -4,
+     -44,   -44,   -44,    80,    81,    57,    57,   -44,   -44,    82,
+      57,    57,   -44,   -44,    57,   -44,   -44,   -44
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -48,   -48,   -48,   -47,   -48,   -48,   -48,   -48,   -48,   -48,
-     -48,     5,   -48,   -48,   -48,    13,   -48,   -48,   -10,   -48,
-       1,   -48,   -48,   -48,   -48
+     -44,   -44,   -44,   -43,   -44,   -44,   -44,   -44,   -44,   -44,
+     -44,    21,   -44,   -44,   -44,    28,   -44,   -44,     5,    10,
+     -44,   -44,    24,   -44,   -44,    -8,   -44,     6,   -44,   -44,
+     -44,   -44
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -663,40 +713,48 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      52,    53,     2,    69,    57,     3,     4,    26,    58,     5,
-       6,     7,     8,     9,    10,    70,    71,    59,    72,    27,
-      11,    79,    12,    13,    40,    41,    28,    29,    84,    30,
-      31,    32,    35,    33,    34,    88,    89,    36,    37,    91,
-      92,    38,    43,    93,    44,    45,    46,    48,    50,    54,
-      62,    68,    64,    65,    75,    74,    76,    82,    78,    80,
-      83,    86,    81,    87,    90,    73,    85,    77,    63
+      54,    89,    28,    66,    77,    78,    79,     2,    57,    58,
+       3,     4,    67,    65,     5,     6,     7,     8,    44,    45,
+      29,    90,    91,    30,    92,     9,    10,    11,    73,    74,
+      75,    76,    31,    12,    32,    13,    14,    73,    74,    75,
+      76,    77,    78,    79,    33,   102,    34,    38,    35,    36,
+      37,    39,   107,    40,    41,   108,    47,    48,    49,    50,
+      52,    55,   112,   113,    59,    62,    70,   115,   116,    72,
+      84,   117,    85,    88,    94,    95,    98,    99,   103,   104,
+     101,   105,   106,   110,   111,   114,    97,    83,    71,    93,
+      96,   109,   100
 };
 
 static const yytype_uint8 yycheck[] =
 {
-      47,    48,     0,     4,    51,     3,     4,    22,    13,     7,
-       8,     9,    10,    11,    12,    16,    17,    22,    19,    22,
-      18,    68,    20,    21,    14,    15,    22,     5,    75,    22,
-       5,    22,     3,    22,    22,    82,    83,     5,     3,    86,
-      87,     3,     3,    90,     3,     3,     3,     3,     3,    22,
-      22,     3,     6,    22,     3,     6,    22,     3,     6,    22,
-       3,     3,    22,     3,     3,    60,    76,    66,    55
+      43,     4,    30,    21,    15,    16,    17,     0,    51,    52,
+       3,     4,    30,    56,     7,     8,     9,    10,    22,    23,
+      30,    24,    25,    30,    27,    18,    19,    20,    11,    12,
+      13,    14,     5,    26,     5,    28,    29,    11,    12,    13,
+      14,    15,    16,    17,    30,    88,     5,     3,    30,    30,
+      30,     5,    95,     3,     3,    98,     3,     3,     3,     3,
+       3,     3,   105,   106,    30,    30,    30,   110,   111,     6,
+       6,   114,    30,     3,     6,     3,     3,    30,    30,    30,
+       6,     3,     3,     3,     3,     3,    81,    63,    60,    68,
+      80,    99,    86
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    24,     0,     3,     4,     7,     8,     9,    10,    11,
-      12,    18,    20,    21,    25,    27,    28,    29,    30,    31,
-      32,    35,    39,    44,    46,    47,    22,    22,    22,     5,
-      22,     5,    22,    22,    22,     3,     5,     3,     3,    40,
-      14,    15,    41,     3,     3,     3,     3,    36,     3,    26,
-       3,    45,    26,    26,    22,    37,    38,    26,    13,    22,
-      33,    34,    22,    38,     6,    22,    42,    43,     3,     4,
-      16,    17,    19,    34,     6,     3,    22,    43,     6,    26,
-      22,    22,     3,     3,    26,    41,     3,     3,    26,    26,
-       3,    26,    26,    26
+       0,    32,     0,     3,     4,     7,     8,     9,    10,    18,
+      19,    20,    26,    28,    29,    33,    35,    36,    37,    38,
+      39,    40,    43,    47,    54,    59,    61,    62,    30,    30,
+      30,     5,     5,    30,     5,    30,    30,    30,     3,     5,
+       3,     3,    48,    55,    22,    23,    56,     3,     3,     3,
+       3,    44,     3,    34,    34,     3,    60,    34,    34,    30,
+      45,    46,    30,    52,    53,    34,    21,    30,    41,    42,
+      30,    46,     6,    11,    12,    13,    14,    15,    16,    17,
+      49,    50,    51,    53,     6,    30,    57,    58,     3,     4,
+      24,    25,    27,    42,     6,     3,    50,    49,     3,    30,
+      58,     6,    34,    30,    30,     3,     3,    34,    34,    56,
+       3,     3,    34,    34,     3,    34,    34,    34
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1507,171 +1565,269 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 18:
+        case 19:
 
 /* Line 1455 of yacc.c  */
-#line 118 "winprefsyacc.y"
+#line 134 "winprefsyacc.y"
     { SetTrayIcon((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
-    break;
-
-  case 19:
-
-/* Line 1455 of yacc.c  */
-#line 121 "winprefsyacc.y"
-    { SetRootMenu((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 124 "winprefsyacc.y"
-    { SetDefaultSysMenu((yyvsp[(2) - (4)].sVal), (yyvsp[(3) - (4)].iVal)); free((yyvsp[(2) - (4)].sVal)); }
+#line 137 "winprefsyacc.y"
+    { SetRootMenu((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 127 "winprefsyacc.y"
-    { SetDefaultIcon((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
+#line 140 "winprefsyacc.y"
+    { SetDefaultSysMenu((yyvsp[(2) - (4)].sVal), (yyvsp[(3) - (4)].iVal)); free((yyvsp[(2) - (4)].sVal)); }
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 130 "winprefsyacc.y"
-    { SetIconDirectory((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
+#line 143 "winprefsyacc.y"
+    { SetDefaultIcon((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 133 "winprefsyacc.y"
-    { AddMenuLine("-", CMD_SEPARATOR, ""); }
+#line 146 "winprefsyacc.y"
+    { SetIconDirectory((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 134 "winprefsyacc.y"
-    { AddMenuLine((yyvsp[(1) - (4)].sVal), CMD_ALWAYSONTOP, ""); free((yyvsp[(1) - (4)].sVal)); }
+#line 149 "winprefsyacc.y"
+    { AddMenuLine("-", CMD_SEPARATOR, ""); }
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 135 "winprefsyacc.y"
-    { AddMenuLine((yyvsp[(1) - (5)].sVal), CMD_EXEC, (yyvsp[(3) - (5)].sVal)); free((yyvsp[(1) - (5)].sVal)); free((yyvsp[(3) - (5)].sVal)); }
+#line 150 "winprefsyacc.y"
+    { AddMenuLine((yyvsp[(1) - (4)].sVal), CMD_ALWAYSONTOP, ""); free((yyvsp[(1) - (4)].sVal)); }
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 136 "winprefsyacc.y"
-    { AddMenuLine((yyvsp[(1) - (5)].sVal), CMD_MENU, (yyvsp[(3) - (5)].sVal)); free((yyvsp[(1) - (5)].sVal)); free((yyvsp[(3) - (5)].sVal)); }
+#line 151 "winprefsyacc.y"
+    { AddMenuLine((yyvsp[(1) - (5)].sVal), CMD_EXEC, (yyvsp[(3) - (5)].sVal)); free((yyvsp[(1) - (5)].sVal)); free((yyvsp[(3) - (5)].sVal)); }
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 137 "winprefsyacc.y"
-    { AddMenuLine((yyvsp[(1) - (4)].sVal), CMD_RELOAD, ""); free((yyvsp[(1) - (4)].sVal)); }
+#line 152 "winprefsyacc.y"
+    { AddMenuLine((yyvsp[(1) - (5)].sVal), CMD_MENU, (yyvsp[(3) - (5)].sVal)); free((yyvsp[(1) - (5)].sVal)); free((yyvsp[(3) - (5)].sVal)); }
     break;
 
-  case 30:
+  case 28:
 
 /* Line 1455 of yacc.c  */
-#line 144 "winprefsyacc.y"
-    { OpenMenu((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
+#line 153 "winprefsyacc.y"
+    { AddMenuLine((yyvsp[(1) - (4)].sVal), CMD_RELOAD, ""); free((yyvsp[(1) - (4)].sVal)); }
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 144 "winprefsyacc.y"
-    {CloseMenu();}
+#line 160 "winprefsyacc.y"
+    { OpenMenu((yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 147 "winprefsyacc.y"
-    { AddIconLine((yyvsp[(1) - (4)].sVal), (yyvsp[(2) - (4)].sVal)); free((yyvsp[(1) - (4)].sVal)); free((yyvsp[(2) - (4)].sVal)); }
+#line 160 "winprefsyacc.y"
+    {CloseMenu();}
     break;
 
-  case 35:
+  case 33:
 
 /* Line 1455 of yacc.c  */
-#line 154 "winprefsyacc.y"
-    {OpenIcons();}
+#line 163 "winprefsyacc.y"
+    { AddIconLine((yyvsp[(1) - (4)].sVal), (yyvsp[(2) - (4)].sVal)); free((yyvsp[(1) - (4)].sVal)); free((yyvsp[(2) - (4)].sVal)); }
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 154 "winprefsyacc.y"
-    {CloseIcons();}
+#line 170 "winprefsyacc.y"
+    {OpenIcons();}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 157 "winprefsyacc.y"
-    { (yyval.iVal)=AT_END; }
+#line 170 "winprefsyacc.y"
+    {CloseIcons();}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 158 "winprefsyacc.y"
-    { (yyval.iVal)=AT_START; }
+#line 173 "winprefsyacc.y"
+    { (yyval.uVal)=STYLE_TOPMOST; }
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 159 "winprefsyacc.y"
-    { (yyval.iVal)=AT_END; }
+#line 174 "winprefsyacc.y"
+    { (yyval.uVal)=STYLE_MAXIMIZE; }
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 162 "winprefsyacc.y"
-    { AddSysMenuLine((yyvsp[(1) - (5)].sVal), (yyvsp[(2) - (5)].sVal), (yyvsp[(3) - (5)].iVal)); free((yyvsp[(1) - (5)].sVal)); free((yyvsp[(2) - (5)].sVal)); }
+#line 175 "winprefsyacc.y"
+    { (yyval.uVal)=STYLE_MINIMIZE; }
+    break;
+
+  case 41:
+
+/* Line 1455 of yacc.c  */
+#line 176 "winprefsyacc.y"
+    { (yyval.uVal)=STYLE_BOTTOM; }
+    break;
+
+  case 42:
+
+/* Line 1455 of yacc.c  */
+#line 179 "winprefsyacc.y"
+    { (yyval.uVal)=STYLE_NOTITLE; }
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 169 "winprefsyacc.y"
-    {OpenSysMenu();}
+#line 180 "winprefsyacc.y"
+    { (yyval.uVal)=STYLE_OUTLINE; }
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 169 "winprefsyacc.y"
-    {CloseSysMenu();}
+#line 181 "winprefsyacc.y"
+    { (yyval.uVal)=STYLE_NOFRAME; }
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 172 "winprefsyacc.y"
-    { pref.fSilentExit = TRUE; }
+#line 184 "winprefsyacc.y"
+    { (yyval.uVal)=(yyvsp[(1) - (1)].uVal); }
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 175 "winprefsyacc.y"
+#line 185 "winprefsyacc.y"
+    { (yyval.uVal)=(yyvsp[(1) - (1)].uVal); }
+    break;
+
+  case 47:
+
+/* Line 1455 of yacc.c  */
+#line 186 "winprefsyacc.y"
+    { (yyval.uVal)=(yyvsp[(1) - (2)].uVal)|(yyvsp[(2) - (2)].uVal); }
+    break;
+
+  case 48:
+
+/* Line 1455 of yacc.c  */
+#line 187 "winprefsyacc.y"
+    { (yyval.uVal)=(yyvsp[(1) - (2)].uVal)|(yyvsp[(2) - (2)].uVal); }
+    break;
+
+  case 49:
+
+/* Line 1455 of yacc.c  */
+#line 190 "winprefsyacc.y"
+    { AddStyleLine((yyvsp[(1) - (4)].sVal), (yyvsp[(2) - (4)].uVal)); free((yyvsp[(1) - (4)].sVal)); }
+    break;
+
+  case 52:
+
+/* Line 1455 of yacc.c  */
+#line 197 "winprefsyacc.y"
+    {OpenStyles();}
+    break;
+
+  case 53:
+
+/* Line 1455 of yacc.c  */
+#line 197 "winprefsyacc.y"
+    {CloseStyles();}
+    break;
+
+  case 54:
+
+/* Line 1455 of yacc.c  */
+#line 200 "winprefsyacc.y"
+    { (yyval.iVal)=AT_END; }
+    break;
+
+  case 55:
+
+/* Line 1455 of yacc.c  */
+#line 201 "winprefsyacc.y"
+    { (yyval.iVal)=AT_START; }
+    break;
+
+  case 56:
+
+/* Line 1455 of yacc.c  */
+#line 202 "winprefsyacc.y"
+    { (yyval.iVal)=AT_END; }
+    break;
+
+  case 57:
+
+/* Line 1455 of yacc.c  */
+#line 205 "winprefsyacc.y"
+    { AddSysMenuLine((yyvsp[(1) - (5)].sVal), (yyvsp[(2) - (5)].sVal), (yyvsp[(3) - (5)].iVal)); free((yyvsp[(1) - (5)].sVal)); free((yyvsp[(2) - (5)].sVal)); }
+    break;
+
+  case 60:
+
+/* Line 1455 of yacc.c  */
+#line 212 "winprefsyacc.y"
+    {OpenSysMenu();}
+    break;
+
+  case 61:
+
+/* Line 1455 of yacc.c  */
+#line 212 "winprefsyacc.y"
+    {CloseSysMenu();}
+    break;
+
+  case 62:
+
+/* Line 1455 of yacc.c  */
+#line 215 "winprefsyacc.y"
+    { pref.fSilentExit = TRUE; }
+    break;
+
+  case 63:
+
+/* Line 1455 of yacc.c  */
+#line 218 "winprefsyacc.y"
     { ErrorF("LoadPreferences: %s\n", (yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1672 "winprefsyacc.c"
+#line 1828 "winprefsyacc.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1883,7 +2039,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 179 "winprefsyacc.y"
+#line 222 "winprefsyacc.y"
 
 /*
  * Errors in parsing abort and print log messages
@@ -2020,6 +2176,39 @@ AddIconLine (char *matchstr, char *iconfile)
 
 static void 
 CloseIcons (void)
+{
+}
+
+static void
+OpenStyles (void)
+{
+  if (pref.style != NULL) {
+    ErrorF("LoadPreferences: Redefining window style\n");
+    free(pref.style);
+    pref.style = NULL;
+  }
+  pref.styleItems = 0;
+}
+
+static void
+AddStyleLine (char *matchstr, unsigned long style)
+{
+  if (pref.style==NULL)
+    pref.style = (STYLEITEM*)malloc(sizeof(STYLEITEM));
+  else
+    pref.style = (STYLEITEM*)
+      realloc(pref.style, sizeof(STYLEITEM)*(pref.styleItems+1));
+
+  strncpy(pref.style[pref.styleItems].match, matchstr, MENU_MAX);
+  pref.style[pref.styleItems].match[MENU_MAX] = 0;
+
+  pref.style[pref.styleItems].type = style;
+
+  pref.styleItems++;
+}
+
+static void
+CloseStyles (void)
 {
 }
 

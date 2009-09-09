@@ -57,6 +57,7 @@ typedef struct _RootlessWindowRec {
     int x, y;
     unsigned int width, height;
     unsigned int borderWidth;
+    int level;
 
     RootlessFrameID wid;	// implementation specific frame id
     WindowPtr win;		// underlying X window

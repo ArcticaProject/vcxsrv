@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -106,7 +104,7 @@ ProcXChangeDeviceDontPropagateList(ClientPtr client)
     REQUEST(xChangeDeviceDontPropagateListReq);
     REQUEST_AT_LEAST_SIZE(xChangeDeviceDontPropagateListReq);
 
-    if (stuff->length != (sizeof(xChangeDeviceDontPropagateListReq) >> 2) +
+    if (stuff->length != bytes_to_int32(sizeof(xChangeDeviceDontPropagateListReq)) +
 	stuff->count)
 	return BadLength;
 

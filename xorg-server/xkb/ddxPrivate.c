@@ -3,7 +3,6 @@
 #include <dix-config.h>
 #endif
 
-#define NEED_EVENTS
 #include <X11/X.h>
 #include "windowstr.h"
 #include <xkbsrv.h>

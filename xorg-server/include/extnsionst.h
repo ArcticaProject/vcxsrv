@@ -80,9 +80,9 @@ typedef struct _ExtensionEntry {
  */
 typedef void (*EventSwapPtr) (xEvent *, xEvent *);
 
-extern EventSwapPtr EventSwapVector[128];
+extern _X_EXPORT EventSwapPtr EventSwapVector[128];
 
-extern void NotImplemented (	/* FIXME: this may move to another file... */
+extern _X_EXPORT void NotImplemented (	/* FIXME: this may move to another file... */
 	xEvent *,
 	xEvent *);
 
@@ -91,7 +91,7 @@ extern void NotImplemented (	/* FIXME: this may move to another file... */
 
 #define    GetGCValue(pGC, GCElement)    (pGC->GCElement)
 
-extern ExtensionEntry *AddExtension(
+extern _X_EXPORT ExtensionEntry *AddExtension(
     char* /*name*/,
     int /*NumEvents*/,
     int /*NumErrors*/,
@@ -101,12 +101,12 @@ extern ExtensionEntry *AddExtension(
     unsigned short (* /*MinorOpcodeProc*/)(ClientPtr /*client*/)
 );
 
-extern Bool AddExtensionAlias(
+extern _X_EXPORT Bool AddExtensionAlias(
     char* /*alias*/,
     ExtensionEntry * /*extension*/);
 
-extern ExtensionEntry *CheckExtension(const char *extname);
-extern ExtensionEntry *GetExtensionEntry(int major);
+extern _X_EXPORT ExtensionEntry *CheckExtension(const char *extname);
+extern _X_EXPORT ExtensionEntry *GetExtensionEntry(int major);
 
 #endif /* EXTENSIONSTRUCT_H */
 

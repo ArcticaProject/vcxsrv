@@ -1,7 +1,7 @@
 
 noinst_LTLIBRARIES = libmisc.la
 
-libmisc_la_SOURCES = Delay.c BUSmemcpy.c SlowBcopy.c
+libmisc_la_SOURCES = SlowBcopy.c
 
 #AM_LDFLAGS = -r
 

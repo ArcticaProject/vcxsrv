@@ -55,7 +55,7 @@ SOFTWARE.
 #include "pixmap.h"
 #include "mi.h"
 
-_X_EXPORT void
+void
 miPolyRectangle(DrawablePtr pDraw, GCPtr pGC, int nrects, xRectangle *pRects)
 {
     int i;
@@ -90,7 +90,7 @@ miPolyRectangle(DrawablePtr pDraw, GCPtr pGC, int nrects, xRectangle *pRects)
 	offset2 = pGC->lineWidth;
 	offset1 = offset2 >> 1;
 	offset3 = offset2 - offset1;
-	tmp = (xRectangle *) xalloc(ntmp * sizeof (xRectangle));
+	tmp = xalloc(ntmp * sizeof (xRectangle));
 	if (!tmp)
 	    return;
 	t = tmp;

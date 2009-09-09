@@ -39,7 +39,7 @@ in this Software without prior written authorization from The Open Group.
 #include "registry.h"
 #include "xacestr.h"
 #include "securitysrv.h"
-#include <X11/extensions/securstr.h>
+#include <X11/extensions/securproto.h>
 #include "modinit.h"
 
 /* Extension stuff */
@@ -410,7 +410,7 @@ SecurityEventSelectForAuthorization(
 	}
     }
     
-    pEventClient = (OtherClients *) xalloc(sizeof(OtherClients));
+    pEventClient = xalloc(sizeof(OtherClients));
     if (!pEventClient)
 	return BadAlloc;
     pEventClient->mask = mask;
@@ -452,9 +452,9 @@ ProcSecurityGenerateAuthorization(
     /* check request length */
 
     REQUEST_AT_LEAST_SIZE(xSecurityGenerateAuthorizationReq);
-    len = SIZEOF(xSecurityGenerateAuthorizationReq) >> 2;
-    len += (stuff->nbytesAuthProto + (unsigned)3) >> 2;
-    len += (stuff->nbytesAuthData  + (unsigned)3) >> 2;
+    len = bytes_to_int32(SIZEOF(xSecurityGenerateAuthorizationReq));
+    len += bytes_to_int32(stuff->nbytesAuthProto);
+    len += bytes_to_int32(stuff->nbytesAuthData);
     values = ((CARD32 *)stuff) + len;
     len += Ones(stuff->valueMask);
     if (client->req_len != len)
@@ -522,7 +522,7 @@ ProcSecurityGenerateAuthorization(
     }
 
     protoname = (char *)&stuff[1];
-    protodata = protoname + ((stuff->nbytesAuthProto + (unsigned)3) >> 2);
+    protodata = protoname + bytes_to_int32(stuff->nbytesAuthProto);
 
     /* call os layer to generate the authorization */
 
@@ -542,7 +542,7 @@ ProcSecurityGenerateAuthorization(
 
     /* associate additional information with this auth ID */
 
-    pAuth = (SecurityAuthorizationPtr)xalloc(sizeof(SecurityAuthorizationRec));
+    pAuth = xalloc(sizeof(SecurityAuthorizationRec));
     if (!pAuth)
     {
 	err = BadAlloc;
@@ -582,7 +582,7 @@ ProcSecurityGenerateAuthorization(
     /* tell client the auth id and data */
 
     rep.type = X_Reply;
-    rep.length = (authdata_len + 3) >> 2;
+    rep.length = bytes_to_int32(authdata_len);
     rep.sequenceNumber = client->sequence;
     rep.authId = authId;
     rep.dataLength = authdata_len;
@@ -625,13 +625,16 @@ ProcSecurityRevokeAuthorization(
 {
     REQUEST(xSecurityRevokeAuthorizationReq);
     SecurityAuthorizationPtr pAuth;
+    int rc;
 
     REQUEST_SIZE_MATCH(xSecurityRevokeAuthorizationReq);
 
-    pAuth = (SecurityAuthorizationPtr)SecurityLookupIDByType(client,
-	stuff->authId, SecurityAuthorizationResType, DixDestroyAccess);
-    if (!pAuth)
-	return SecurityErrorBase + XSecurityBadAuthorization;
+    rc = dixLookupResourceByType((pointer *)&pAuth, stuff->authId,
+				 SecurityAuthorizationResType, client,
+				 DixDestroyAccess);
+    if (rc != Success)
+	return (rc == BadValue) ?
+	    SecurityErrorBase + XSecurityBadAuthorization : rc;
 
     FreeResource(stuff->authId, RT_NONE);
     return Success;
@@ -687,10 +690,10 @@ SProcSecurityGenerateAuthorization(
     swaps(&stuff->nbytesAuthProto, n);
     swaps(&stuff->nbytesAuthData, n);
     swapl(&stuff->valueMask, n);
-    values_offset = ((stuff->nbytesAuthProto + (unsigned)3) >> 2) +
-		    ((stuff->nbytesAuthData + (unsigned)3) >> 2);
+    values_offset = bytes_to_int32(stuff->nbytesAuthProto) +
+		    bytes_to_int32(stuff->nbytesAuthData);
     if (values_offset > 
-	stuff->length - (sz_xSecurityGenerateAuthorizationReq >> 2))
+	stuff->length - bytes_to_int32(sz_xSecurityGenerateAuthorizationReq))
 	return BadLength;
     values = (CARD32 *)(&stuff[1]) + values_offset;
     nvalues = (((CARD32 *)stuff) + stuff->length) - values;

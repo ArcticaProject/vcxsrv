@@ -81,7 +81,7 @@ with the sample server.
 	use the bitmap in a call to PushPixels
 */
 
-_X_EXPORT void
+void
 miPolyGlyphBlt(
     DrawablePtr pDrawable,
     GC		*pGC,
@@ -141,7 +141,7 @@ miPolyGlyphBlt(
     DoChangeGC(pGCtmp, GCFunction|GCForeground|GCBackground, gcvals, 0);
 
     nbyLine = BitmapBytePad(width);
-    pbits = (unsigned char *)xalloc(height*nbyLine);
+    pbits = xalloc(height*nbyLine);
     if (!pbits)
     {
 	(*pDrawable->pScreen->DestroyPixmap)(pPixmap);
@@ -197,7 +197,7 @@ miPolyGlyphBlt(
 }
 
 
-_X_EXPORT void
+void
 miImageGlyphBlt(
     DrawablePtr pDrawable,
     GC		*pGC,

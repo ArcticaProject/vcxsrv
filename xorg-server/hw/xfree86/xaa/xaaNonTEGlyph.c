@@ -37,7 +37,7 @@
 /* if the backing rectangle and text are of the same dimensions
 	then we can draw in one pass */
 
-void 
+void
 #ifdef TRIPLE_BITS
 EXPNAME(XAANonTEGlyphRenderer3)(
 #else
@@ -90,7 +90,7 @@ EXPNAME(XAANonTEGlyphRenderer)(
 #ifndef FIXEDBASE
 /*  Scanline version of above gets built for LSBFIRST and MSBFIRST */
 
-void 
+void
 #ifdef TRIPLE_BITS
 EXPNAME(XAANonTEGlyphRendererScanline3)(
 #else

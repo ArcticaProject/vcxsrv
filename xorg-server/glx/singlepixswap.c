@@ -28,7 +28,6 @@
  * Silicon Graphics, Inc.
  */
 
-#define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #else
@@ -107,6 +106,7 @@ int __glXDispSwap_ReadPixels(__GLXclientState *cl, GLbyte *pc)
 	__GLX_SEND_HEADER();
 	__GLX_SEND_VOID_ARRAY(compsize);
     }
+    __GLX_NOTE_FLUSHED_CMDS(cx);
     return Success;
 }
 

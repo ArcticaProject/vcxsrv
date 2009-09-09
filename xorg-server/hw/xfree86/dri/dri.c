@@ -45,8 +45,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/ioctl.h>
 #include <errno.h>
 
-#define NEED_REPLIES
-#define NEED_EVENTS
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "xf86drm.h"
@@ -71,6 +69,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "mipointer.h"
 #include "xf86_OSproc.h"
 #include "inputstr.h"
+#include "xf86VGAarbiter.h"
 
 #define PCI_BUS_NO_DOMAIN(bus) ((bus) & 0xffu)
 
@@ -335,6 +334,12 @@ DRIScreenInit(ScreenPtr pScreen, DRIInfoPtr pDRIInfo, int *pDRMFD)
 	return FALSE;
     }
 
+    if (!xf86VGAarbiterAllowDRI(pScreen)) {
+        DRIDrvMsg(pScreen->myNum, X_WARNING,
+                  "Direct rendering is not supported when VGA arb is necessary for the device\n");
+	return FALSE;
+    }
+		
     /*
      * If Xinerama is on, don't allow DRI to initialise.  It won't be usable
      * anyway.
@@ -1365,11 +1370,12 @@ Bool
 DRIDrawablePrivDelete(pointer pResource, XID id)
 {
     WindowPtr pWin;
+    int rc;
 
     id = (XID)pResource;
-    pWin = LookupIDByType(id, RT_WINDOW);
+    rc = dixLookupWindow(&pWin, id, serverClient, DixGetAttrAccess);
 
-    if (pWin) {
+    if (rc == Success) {
 	DRIDrawablePrivPtr pDRIDrwPriv = DRI_DRAWABLE_PRIV_FROM_WINDOW(pWin);
 
 	if (!pDRIDrwPriv)
@@ -1835,7 +1841,7 @@ DRISwapContext(int drmFD, void *oldctx, void *newctx)
 					  newContextStore);
 }
 
-void* 
+void*
 DRIGetContextStore(DRIContextPrivPtr context)
 {
     return((void *)context->pContextStore);

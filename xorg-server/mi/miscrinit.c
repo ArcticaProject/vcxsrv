@@ -39,8 +39,8 @@ from The Open Group.
 #include "dix.h"
 #include "miline.h"
 #ifdef MITSHM
-#define _XSHM_SERVER_
-#include <X11/extensions/XShm.h>
+#include <X11/extensions/shm.h>
+#include "shmint.h"
 #endif
 
 /* We use this structure to propogate some information from miScreenInit to
@@ -60,7 +60,7 @@ typedef struct
 
 
 /* this plugs into pScreen->ModifyPixmapHeader */
-_X_EXPORT Bool
+Bool
 miModifyPixmapHeader(PixmapPtr pPixmap, int width, int height, int depth,
                      int bitsPerPixel, int devKind, pointer pPixData)
 {
@@ -132,7 +132,7 @@ miCloseScreen (int iScreen, ScreenPtr pScreen)
  * possible private-requesting modules have been inited; we create the
  * screen pixmap here.
  */
-_X_EXPORT Bool
+Bool
 miCreateScreenResources(ScreenPtr pScreen)
 {
     miScreenInitParmsPtr pScrInitParms;
@@ -180,7 +180,7 @@ miScreenDevPrivateInit(ScreenPtr pScreen, int width, pointer pbits)
      * to the screen, until CreateScreenResources can put them in the
      * screen pixmap.
      */
-    pScrInitParms = (miScreenInitParmsPtr)xalloc(sizeof(miScreenInitParmsRec));
+    pScrInitParms = xalloc(sizeof(miScreenInitParmsRec));
     if (!pScrInitParms)
 	return FALSE;
     pScrInitParms->pbits = pbits;
@@ -202,7 +202,7 @@ miSetScreenPixmap(PixmapPtr pPix)
 	pPix->drawable.pScreen->devPrivate = (pointer)pPix;
 }
 
-_X_EXPORT Bool
+Bool
 miScreenInit(
     ScreenPtr pScreen,
     pointer pbits,		/* pointer to screen bits */
@@ -297,16 +297,17 @@ static int privateKeyIndex;
 static DevPrivateKey privateKey = &privateKeyIndex;
 
 DevPrivateKey
-miAllocateGCPrivateIndex()
+miAllocateGCPrivateIndex(void)
 {
     return privateKey;
 }
 
 static int miZeroLineScreenKeyIndex;
-_X_EXPORT DevPrivateKey miZeroLineScreenKey = &miZeroLineScreenKeyIndex;
+DevPrivateKey miZeroLineScreenKey = &miZeroLineScreenKeyIndex;
 
-_X_EXPORT void
+void
 miSetZeroLineBias(ScreenPtr pScreen, unsigned int bias)
 {
-    dixSetPrivate(&pScreen->devPrivates, miZeroLineScreenKey, (pointer)bias);
+    dixSetPrivate(&pScreen->devPrivates, miZeroLineScreenKey, 
+					(unsigned long *)(unsigned long)bias);
 }

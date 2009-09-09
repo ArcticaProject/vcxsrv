@@ -171,8 +171,7 @@ typedef struct _miBankQueue
         (*pScreenPriv->BankInfo.SetDestinationBank)(pScreen, (_no)) - \
         (pScreenPriv->BankInfo.BankSize * (_no)))
 
-#define xalloc_ARRAY(atype, ntype) \
-    (atype *)xalloc((ntype) * sizeof(atype))
+#define xalloc_ARRAY(atype, ntype) xalloc((ntype) * sizeof(atype))
 
 static int miBankScreenKeyIndex;
 static DevPrivateKey miBankScreenKey = &miBankScreenKeyIndex;
@@ -955,7 +954,7 @@ miBankCopy(
 
             paddedWidth = PixmapBytePad(maxWidth,
                 pScreenPriv->pScreenPixmap->drawable.depth);
-            pImage = (char *)xalloc(paddedWidth * maxHeight);
+            pImage = xalloc(paddedWidth * maxHeight);
 
             pGC->fExpose = FALSE;
 
@@ -1750,7 +1749,7 @@ miBankGetImage(
 
             paddedWidth = PixmapBytePad(w,
                 pScreenPriv->pScreenPixmap->drawable.depth);
-            pBankImage = (char *)xalloc(paddedWidth * h);
+            pBankImage = xalloc(paddedWidth * h);
 
             if (pBankImage)
             {
@@ -1811,7 +1810,7 @@ miBankGetSpans(
             paddedWidth =
                 PixmapBytePad(pScreenPriv->pScreenPixmap->drawable.width,
                     pScreenPriv->pScreenPixmap->drawable.depth);
-            pBankImage = (char *)xalloc(paddedWidth);
+            pBankImage = xalloc(paddedWidth);
 
             if (pBankImage)
             {
@@ -1985,7 +1984,7 @@ miBankCopyWindow(
     xfree(pBoxNew1);
 }
 
-_X_EXPORT Bool
+Bool
 miInitializeBanking(
     ScreenPtr     pScreen,
     unsigned int  xsize,

@@ -122,7 +122,7 @@ typedef unsigned long RESTYPE;
 #define BAD_RESOURCE 0xe0000000
 
 /* Resource state callback */
-extern CallbackListPtr ResourceStateCallback;
+extern _X_EXPORT CallbackListPtr ResourceStateCallback;
 
 typedef enum {ResourceStateAdding,
 	      ResourceStateFreeing} ResourceState;
@@ -154,15 +154,15 @@ typedef Bool (*FindComplexResType)(
     XID /*id*/,
     pointer /*cdata*/);
 
-extern RESTYPE CreateNewResourceType(
+extern _X_EXPORT RESTYPE CreateNewResourceType(
     DeleteType /*deleteFunc*/);
 
-extern RESTYPE CreateNewResourceClass(void);
+extern _X_EXPORT RESTYPE CreateNewResourceClass(void);
 
-extern Bool InitClientResources(
+extern _X_EXPORT Bool InitClientResources(
     ClientPtr /*client*/);
 
-extern XID FakeClientID(
+extern _X_EXPORT XID FakeClientID(
     int /*client*/);
 
 /* Quartz support on Mac OS X uses the CarbonCore
@@ -170,81 +170,81 @@ extern XID FakeClientID(
 #ifdef __APPLE__
 #define AddResource Darwin_X_AddResource
 #endif
-extern Bool AddResource(
+extern _X_EXPORT Bool AddResource(
     XID /*id*/,
     RESTYPE /*type*/,
     pointer /*value*/);
 
-extern void FreeResource(
+extern _X_EXPORT void FreeResource(
     XID /*id*/,
     RESTYPE /*skipDeleteFuncType*/);
 
-extern void FreeResourceByType(
+extern _X_EXPORT void FreeResourceByType(
     XID /*id*/,
     RESTYPE /*type*/,
     Bool /*skipFree*/);
 
-extern Bool ChangeResourceValue(
+extern _X_EXPORT Bool ChangeResourceValue(
     XID /*id*/,
     RESTYPE /*rtype*/,
     pointer /*value*/);
 
-extern void FindClientResourcesByType(
+extern _X_EXPORT void FindClientResourcesByType(
     ClientPtr /*client*/,
     RESTYPE /*type*/,
     FindResType /*func*/,
     pointer /*cdata*/);
 
-extern void FindAllClientResources(
+extern _X_EXPORT void FindAllClientResources(
     ClientPtr /*client*/,
     FindAllRes /*func*/,
     pointer /*cdata*/);
 
-extern void FreeClientNeverRetainResources(
+extern _X_EXPORT void FreeClientNeverRetainResources(
     ClientPtr /*client*/);
 
-extern void FreeClientResources(
+extern _X_EXPORT void FreeClientResources(
     ClientPtr /*client*/);
 
-extern void FreeAllResources(void);
+extern _X_EXPORT void FreeAllResources(void);
 
-extern Bool LegalNewID(
+extern _X_EXPORT Bool LegalNewID(
     XID /*id*/,
     ClientPtr /*client*/);
 
-extern pointer LookupClientResourceComplex(
+extern _X_EXPORT pointer LookupClientResourceComplex(
     ClientPtr client,
     RESTYPE type,
     FindComplexResType func,
     pointer cdata);
 
-extern int dixLookupResourceByType(
+extern _X_EXPORT int dixLookupResourceByType(
     pointer *result,
     XID id,
     RESTYPE rtype,
     ClientPtr client,
     Mask access_mode);
 
-extern int dixLookupResourceByClass(
+extern _X_EXPORT int dixLookupResourceByClass(
     pointer *result,
     XID id,
     RESTYPE rclass,
     ClientPtr client,
     Mask access_mode);
 
-extern void GetXIDRange(
+extern _X_EXPORT void GetXIDRange(
     int /*client*/,
     Bool /*server*/,
     XID * /*minp*/,
     XID * /*maxp*/);
 
-extern unsigned int GetXIDList(
+extern _X_EXPORT unsigned int GetXIDList(
     ClientPtr /*client*/,
     unsigned int /*count*/,
     XID * /*pids*/);
 
-extern RESTYPE lastResourceType;
-extern RESTYPE TypeMask;
+extern _X_EXPORT RESTYPE lastResourceType;
+extern _X_EXPORT RESTYPE TypeMask;
 
 /*
  * These are deprecated compatibility functions and will be removed soon!
@@ -265,26 +265,27 @@ extern int dixLookupResource(
     ClientPtr client,
     Mask access_mode) X_DEPRECATED;
 
-extern pointer SecurityLookupIDByType(
+/* replaced by dixLookupResourceByType */
+extern _X_EXPORT pointer SecurityLookupIDByType(
     ClientPtr client,
     XID id,
     RESTYPE rtype,
     Mask access_mode) X_DEPRECATED;
 
 /* replaced by dixLookupResourceByClass */
-extern pointer SecurityLookupIDByClass(
+extern _X_EXPORT pointer SecurityLookupIDByClass(
     ClientPtr client,
     XID id,
     RESTYPE classes,
     Mask access_mode) X_DEPRECATED;
 
 /* replaced by dixLookupResourceByType */
-extern pointer LookupIDByType(
+extern _X_EXPORT pointer LookupIDByType(
     XID id,
     RESTYPE rtype) X_DEPRECATED;
 
 /* replaced by dixLookupResourceByClass */
-extern pointer LookupIDByClass(
+extern _X_EXPORT pointer LookupIDByClass(
     XID id,
     RESTYPE classes) X_DEPRECATED;
 

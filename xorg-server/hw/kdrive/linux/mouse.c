@@ -23,7 +23,6 @@
 #ifdef HAVE_CONFIG_H
 #include <kdrive-config.h>
 #endif
-#define NEED_EVENTS
 #include <errno.h>
 #include <termios.h>
 #include <X11/X.h>
@@ -945,7 +944,7 @@ MouseInit (KdPointerInfo *pi)
         for (i = 0; i < NUM_DEFAULT_MOUSE; i++) {
             fd = open (kdefaultMouse[i], 2);
             if (fd >= 0) {
-                pi->path = KdSaveString (kdefaultMouse[i]);
+                pi->path = strdup (kdefaultMouse[i]);
                 break;
             }
         }
@@ -962,7 +961,11 @@ MouseInit (KdPointerInfo *pi)
     km = (Kmouse *) xalloc (sizeof (Kmouse));
     if (km) {
         km->iob.avail = km->iob.used = 0;
-        MouseFirstProtocol(km, "exps/2");
+        MouseFirstProtocol(km, pi->protocol ? pi->protocol : "exps/2");
+        /* MouseFirstProtocol sets state to MouseBroken for later protocol
+         * checks. Skip these checks if a protocol was supplied */
+        if (pi->protocol)
+                km->state = MouseWorking;
         km->i_prot = 0;
         km->tty = isatty (fd);
         km->iob.fd = -1;

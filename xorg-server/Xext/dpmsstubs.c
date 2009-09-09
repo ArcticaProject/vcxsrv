@@ -39,11 +39,6 @@ Bool DPMSSupported(void)
     return FALSE;
 }
 
-int DPMSGet(int *plevel)
-{
-    return -1;
-}
-
 int DPMSSet(ClientPtr client, int level)
 {
     return Success;

@@ -133,23 +133,22 @@ lnxACPIOpen(void)
     int fd;    
     struct sockaddr_un addr;
     int r = -1;
+    static int warned = 0;
 
-#ifdef DEBUG
-    ErrorF("ACPI: OSPMOpen called\n");
-#endif
+    DebugF("ACPI: OSPMOpen called\n");
     if (ACPIihPtr || !xf86Info.pmFlag)
 	return NULL;
    
-#ifdef DEBUG
-    ErrorF("ACPI: Opening device\n");
-#endif
+    DebugF("ACPI: Opening device\n");
     if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) > -1) {
 	memset(&addr, 0, sizeof(addr));
 	addr.sun_family = AF_UNIX;
 	strcpy(addr.sun_path, ACPI_SOCKET);
 	if ((r = connect(fd, (struct sockaddr*)&addr, sizeof(addr))) == -1) {
-	    xf86MsgVerb(X_WARNING,3,"Open ACPI failed (%s) (%s)\n", ACPI_SOCKET,
-	    	strerror(errno));
+	    if (!warned)
+		xf86MsgVerb(X_WARNING,3,"Open ACPI failed (%s) (%s)\n",
+		            ACPI_SOCKET, strerror(errno));
+	    warned = 1;
 	    shutdown(fd, 2);
 	    close(fd);
 	    return NULL;
@@ -160,6 +159,7 @@ lnxACPIOpen(void)
     xf86PMConfirmEventToOs = lnxACPIConfirmEventToOs;
     ACPIihPtr = xf86AddGeneralHandler(fd,xf86HandlePMEvents,NULL);
     xf86MsgVerb(X_INFO,3,"Open ACPI successful (%s)\n", ACPI_SOCKET);
+    warned = 0;
 
     return lnxCloseACPI;
 }
@@ -168,10 +168,8 @@ static void
 lnxCloseACPI(void)
 {
     int fd;
-    
-#ifdef DEBUG
-   ErrorF("ACPI: Closing device\n");
-#endif
+
+    DebugF("ACPI: Closing device\n");
     if (ACPIihPtr) {
 	fd = xf86RemoveGeneralHandler(ACPIihPtr);
 	shutdown(fd, 2);

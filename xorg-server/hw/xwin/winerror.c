@@ -35,6 +35,7 @@
 #define VENDOR_STRING XVENDORNAME
 #define VENDOR_CONTACT BUILDERADDR
 #endif
+
 #include <../xfree86/common/xorgVersion.h>
 #include "win.h"
 
@@ -146,7 +147,7 @@ winMessageBoxF (const char *pszError, UINT uType, ...)
 
   pszMsgBox = Xprintf (MESSAGEBOXF,
 	   pszErrorF, VENDOR_STRING,
-		       XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, BUILD_DATE,
+		       XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT,
 		       VENDOR_CONTACT,
 	   g_pszCommandLine);
   if (!pszMsgBox)

@@ -13,6 +13,7 @@ CSRCS=\
 	dixutils.c	\
 	enterleave.c	\
 	events.c	\
+	eventconvert.c  \
 	extension.c	\
 	ffs.c		\
 	gc.c		\
@@ -21,6 +22,7 @@ CSRCS=\
 	glyphcurs.c	\
 	grabs.c		\
 	initatoms.c	\
+	inpututils.c	\
 	main.c		\
 	pixmap.c	\
 	privates.c	\

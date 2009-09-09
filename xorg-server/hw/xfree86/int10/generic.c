@@ -75,6 +75,7 @@ static void *sysMem = NULL;
  * etc.).  How do we know that \c pci_device_read_rom will return the
  * legacy VGA BIOS image?
  */
+#ifndef _PC
 static int
 read_legacy_video_BIOS(struct pci_device *dev, unsigned char *Buf)
 {
@@ -114,6 +115,7 @@ read_legacy_video_BIOS(struct pci_device *dev, unsigned char *Buf)
 
     return Len;
 }
+#endif /* _PC */
 
 
 xf86Int10InfoPtr
@@ -126,8 +128,7 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
     int screen;
     legacyVGARec vga;
  
-#ifdef _PC
-    int size;
+#if 0
     CARD32 cs;
 #endif
 

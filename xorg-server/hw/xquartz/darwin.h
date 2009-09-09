@@ -36,22 +36,7 @@
 
 #include "threadSafety.h"
 
-typedef struct {
-    void                *framebuffer;
-    int                 x;
-    int                 y;
-    int                 width;
-    int                 height;
-    int                 pitch;
-    int                 depth;
-    int                 visuals;
-    int                 bitsPerRGB;
-    int                 bitsPerPixel;
-    int                 preferredCVC;
-    Pixel               redMask;
-    Pixel               greenMask;
-    Pixel               blueMask;
-} DarwinFramebufferRec, *DarwinFramebufferPtr;
+#include "darwinfb.h"
 
 // From darwin.c
 void DarwinPrintBanner(void);

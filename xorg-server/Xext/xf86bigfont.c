@@ -72,8 +72,7 @@
 #include "dixfontstr.h"
 #include "extnsionst.h"
 
-#define _XF86BIGFONT_SERVER_
-#include <X11/extensions/xf86bigfstr.h>
+#include <X11/extensions/xf86bigfproto.h>
 
 static void XF86BigfontResetProc(
     ExtensionEntry *	/* extEntry */
@@ -125,7 +124,7 @@ CheckForShmSyscall(void)
     if (shmid != -1)
     {
         /* Successful allocation - clean up */
-	shmctl(shmid, IPC_RMID, (struct shmid_ds *)NULL);
+	shmctl(shmid, IPC_RMID, NULL);
     }
     else
     {
@@ -229,7 +228,7 @@ shmalloc(
     if (size < 3500)
 	return (ShmDescPtr) NULL;
 
-    pDesc = (ShmDescRec *) xalloc(sizeof(ShmDescRec));
+    pDesc = xalloc(sizeof(ShmDescRec));
     if (!pDesc)
 	return (ShmDescPtr) NULL;
 
@@ -427,15 +426,15 @@ ProcXF86BigfontQueryFont(
     }
 #endif
     client->errorValue = stuff->id;		/* EITHER font or gc */
-    pFont = (FontPtr)SecurityLookupIDByType(client, stuff->id, RT_FONT,
-					    DixGetAttrAccess);
+    dixLookupResourceByType((pointer *)&pFont, stuff->id, RT_FONT,
+			    client, DixGetAttrAccess);
     if (!pFont) {
-	GC *pGC = (GC *) SecurityLookupIDByType(client, stuff->id, RT_GC,
-						DixGetAttrAccess);
-        if (!pGC) {
-	    client->errorValue = stuff->id;
+	GC *pGC;
+	dixLookupResourceByType((pointer *)&pGC, stuff->id, RT_GC,
+				client, DixGetAttrAccess);
+        if (!pGC)
             return BadFont;    /* procotol spec says only error is BadFont */
-	}
+
 	pFont = pGC->font;
     }
 
@@ -473,8 +472,7 @@ ProcXF86BigfontQueryFont(
 		shmid = pDesc->shmid;
 	    } else {
 #endif
-		pCI = (xCharInfo *)
-		      xalloc(nCharInfos * sizeof(xCharInfo));
+		pCI = xalloc(nCharInfos * sizeof(xCharInfo));
 		if (!pCI)
 		    return BadAlloc;
 #ifdef HAS_SHM
@@ -536,8 +534,7 @@ ProcXF86BigfontQueryFont(
 	    if (hashModulus > nCharInfos+1)
 		hashModulus = nCharInfos+1;
 
-	    tmp = (CARD16*)
-		  xalloc((4*nCharInfos+1) * sizeof(CARD16));
+	    tmp = xalloc((4*nCharInfos+1) * sizeof(CARD16));
 	    if (!tmp) {
 		if (!pDesc) xfree(pCI);
 		return BadAlloc;
@@ -621,8 +618,7 @@ ProcXF86BigfontQueryFont(
 	      ? nUniqCharInfos * sizeof(xCharInfo)
 	        + (nCharInfos+1)/2 * 2 * sizeof(CARD16)
 	      : 0);
-	xXF86BigfontQueryFontReply* reply =
-	   (xXF86BigfontQueryFontReply *) xalloc(rlength);
+	xXF86BigfontQueryFontReply* reply = xalloc(rlength);
 	char* p;
 	if (!reply) {
 	    if (nCharInfos > 0) {
@@ -632,7 +628,7 @@ ProcXF86BigfontQueryFont(
 	    return BadAlloc;
 	}
 	reply->type = X_Reply;
-	reply->length = (rlength - sizeof(xGenericReply)) >> 2;
+	reply->length = bytes_to_int32(rlength - sizeof(xGenericReply));
 	reply->sequenceNumber = client->sequence;
 	reply->minBounds = pFont->info.ink_minbounds;
 	reply->maxBounds = pFont->info.ink_maxbounds;

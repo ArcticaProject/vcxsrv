@@ -48,8 +48,6 @@ extern int darwinMainScreenX, darwinMainScreenY;
 #endif
 #include "fb.h"
 
-#define AppleWMNumWindowLevels 5
-
 #include "rootlessCommon.h"
 #include "rootlessWindow.h"
 
@@ -107,12 +105,6 @@ current_time_in_seconds (void)
   return t;
   } */
 
-static inline Bool
-rootlessHasRoot (ScreenPtr pScreen)
-{
-  return WINREC (WindowTable[pScreen->myNum]) != NULL;
-}
-
 #ifdef __APPLE__
 void
 RootlessNativeWindowStateChanged (WindowPtr pWin, unsigned int state)
@@ -150,7 +142,7 @@ void RootlessNativeWindowMoved (WindowPtr pWin) {
     mask = CWX | CWY;
     
     /* pretend we're the owner of the window! */
-    err = dixLookupClient(&pClient, pWin->drawable.id, NullClient, DixUnknownAccess);
+    err = dixLookupClient(&pClient, pWin->drawable.id, serverClient, DixUnknownAccess);
     if(err != Success) {
         ErrorF("RootlessNativeWindowMoved(): Failed to lookup window: 0x%x\n", (unsigned int)pWin->drawable.id);
         return;
@@ -490,6 +482,7 @@ RootlessEnsureFrame(WindowPtr pWin)
     winRec->is_reorder_pending = FALSE;
     winRec->pixmap = NULL;
     winRec->wid = NULL;
+    winRec->level = 0;
 
     SETWINREC(pWin, winRec);
 

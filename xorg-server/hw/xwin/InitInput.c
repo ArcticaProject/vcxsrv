@@ -49,7 +49,8 @@ DISPATCH_PROC(winProcSetSelectionOwner);
  * Local global declarations
  */
 
-CARD32				g_c32LastInputEventTime = 0;
+DeviceIntPtr g_pwinPointer;
+DeviceIntPtr g_pwinKeyboard;
 
 
 /*
@@ -95,12 +96,12 @@ ProcessInputEvents (void)
 #endif
 
   mieqProcessInputEvents ();
-  miPointerUpdateSprite(inputInfo.pointer);
 
 #if 0
   ErrorF ("ProcessInputEvents - returning\n");
 #endif
 }
+
 
 void DDXRingBell(int volume, int pitch, int duration)
 {
@@ -108,21 +109,11 @@ void DDXRingBell(int volume, int pitch, int duration)
   return;
 }
 
-int
-TimeSinceLastInputEvent ()
-{
-  if (g_c32LastInputEventTime == 0)
-    g_c32LastInputEventTime = GetTickCount ();
-  return GetTickCount () - g_c32LastInputEventTime;
-}
-
 
 /* See Porting Layer Definition - p. 17 */
 void
 InitInput (int argc, char *argv[])
 {
-  DeviceIntPtr		pMouse, pKeyboard;
-
 #if CYGDEBUG
   winDebug ("InitInput\n");
 #endif
@@ -144,14 +135,14 @@ InitInput (int argc, char *argv[])
     }
 #endif
 
-  pMouse = AddInputDevice (serverClient, winMouseProc, TRUE);
-  pKeyboard = AddInputDevice (serverClient, winKeybdProc, TRUE);
+  g_pwinPointer = AddInputDevice (serverClient, winMouseProc, TRUE);
+  g_pwinKeyboard = AddInputDevice (serverClient, winKeybdProc, TRUE);
   
-  RegisterPointerDevice (pMouse);
-  RegisterKeyboardDevice (pKeyboard);
+  RegisterPointerDevice (g_pwinPointer);
+  RegisterKeyboardDevice (g_pwinKeyboard);
 
-  pMouse->name = strdup("Windows mouse");
-  pKeyboard->name = strdup("Windows keyboard");
+  g_pwinPointer->name = strdup("Windows mouse");
+  g_pwinKeyboard->name = strdup("Windows keyboard");
 
   mieqInit ();
 

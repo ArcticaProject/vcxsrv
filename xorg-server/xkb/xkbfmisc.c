@@ -34,9 +34,9 @@
 
 #include <X11/Xos.h>
 #include <X11/Xfuncs.h>
+#include <X11/extensions/XKMformat.h>
 
 #include <X11/X.h>
-#define	NEED_EVENTS
 #include <X11/keysym.h>
 #include <X11/Xproto.h>
 #include "misc.h"
@@ -164,14 +164,13 @@ XkbWriteXKBKeymapForNames(	FILE *			file,
 				unsigned		want,
 				unsigned		need)
 {
-char *		name,*tmp;
+const char *	tmp;
 unsigned	complete;
 XkbNamesPtr	old_names;
 int		multi_section;
 unsigned	wantNames,wantConfig,wantDflts;
 
     complete= 0;
-    if ((name=names->keymap)==NULL)	name= "default";
     if (COMPLETE(names->keycodes))	complete|= XkmKeyNamesMask;
     if (COMPLETE(names->types))		complete|= XkmTypesMask;
     if (COMPLETE(names->compat))	complete|= XkmCompatMapMask;
@@ -293,15 +292,15 @@ unsigned	wantNames,wantConfig,wantDflts;
     multi_section= 1;
     if (((complete&XkmKeymapRequired)==XkmKeymapRequired)&&
 	((complete&(~XkmKeymapLegal))==0)) {
-	fprintf(file,"xkb_keymap \"%s\" {\n",name);
+	fprintf(file,"xkb_keymap \"default\" {\n");
     }
     else if (((complete&XkmSemanticsRequired)==XkmSemanticsRequired)&&
 	((complete&(~XkmSemanticsLegal))==0)) {
-	fprintf(file,"xkb_semantics \"%s\" {\n",name);
+	fprintf(file,"xkb_semantics \"default\" {\n");
     }
     else if (((complete&XkmLayoutRequired)==XkmLayoutRequired)&&
 	((complete&(~XkmLayoutLegal))==0)) {
-	fprintf(file,"xkb_layout \"%s\" {\n",name);
+	fprintf(file,"xkb_layout \"default\" {\n");
     }
     else if (XkmSingleSection(complete&(~XkmVirtualModsMask))) {
 	multi_section= 0;
@@ -311,41 +310,36 @@ unsigned	wantNames,wantConfig,wantDflts;
     }
 
     wantNames= complete&(~(wantConfig|wantDflts));
-    name= names->keycodes;
     if (wantConfig&XkmKeyNamesMask)
-	XkbWriteXKBKeycodes(file,xkb,False,False,_AddIncl,name);
+	XkbWriteXKBKeycodes(file,xkb,False,False,_AddIncl,names->keycodes);
     else if (wantDflts&XkmKeyNamesMask)
 	fprintf(stderr,"Default symbols not implemented yet!\n");
     else if (wantNames&XkmKeyNamesMask)
-	XkbWriteSectionFromName(file,"keycodes",name);
+	XkbWriteSectionFromName(file,"keycodes",names->keycodes);
 
-    name= names->types;
     if (wantConfig&XkmTypesMask)
-	XkbWriteXKBKeyTypes(file,xkb,False,False,_AddIncl,name);
+	XkbWriteXKBKeyTypes(file,xkb,False,False,_AddIncl,names->types);
     else if (wantDflts&XkmTypesMask)
 	fprintf(stderr,"Default types not implemented yet!\n");
     else if (wantNames&XkmTypesMask)
-	XkbWriteSectionFromName(file,"types",name);
+	XkbWriteSectionFromName(file,"types",names->types);
 
-    name= names->compat;
     if (wantConfig&XkmCompatMapMask)
-	XkbWriteXKBCompatMap(file,xkb,False,False,_AddIncl,name);
+	XkbWriteXKBCompatMap(file,xkb,False,False,_AddIncl,names->compat);
     else if (wantDflts&XkmCompatMapMask)
 	fprintf(stderr,"Default interps not implemented yet!\n");
     else if (wantNames&XkmCompatMapMask)
-	XkbWriteSectionFromName(file,"compatibility",name);
+	XkbWriteSectionFromName(file,"compatibility",names->compat);
 
-    name= names->symbols;
     if (wantConfig&XkmSymbolsMask)
-	XkbWriteXKBSymbols(file,xkb,False,False,_AddIncl,name);
+	XkbWriteXKBSymbols(file,xkb,False,False,_AddIncl,names->symbols);
     else if (wantNames&XkmSymbolsMask)
-	XkbWriteSectionFromName(file,"symbols",name);
+	XkbWriteSectionFromName(file,"symbols",names->symbols);
 
-    name= names->geometry;
     if (wantConfig&XkmGeometryMask)
-	XkbWriteXKBGeometry(file,xkb,False,False,_AddIncl,name);
+	XkbWriteXKBGeometry(file,xkb,False,False,_AddIncl,names->geometry);
     else if (wantNames&XkmGeometryMask)
-	XkbWriteSectionFromName(file,"geometry",name);
+	XkbWriteSectionFromName(file,"geometry",names->geometry);
 
     if (multi_section)
 	fprintf(file,"};\n");
@@ -411,29 +405,6 @@ unsigned	rtrn;
 	if (orig!=0)				rtrn|= XkbGBN_OtherNamesMask;
     }
     return rtrn;
-}
-
-/* all latin-1 alphanumerics, plus parens, slash, minus, underscore and */
-/* wildcards */
-
-static unsigned char componentSpecLegal[] = {
-	0x00, 0x00, 0x00, 0x00, 0x00, 0xa7, 0xff, 0x83,
-	0xfe, 0xff, 0xff, 0x87, 0xfe, 0xff, 0xff, 0x07,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0x7f, 0xff, 0xff, 0xff, 0x7f, 0xff
-};
-
-void
-XkbEnsureSafeMapName(char *name)
-{
-   if (name==NULL)
-        return;
-    while (*name!='\0') {
-	if ((componentSpecLegal[(*name)/8]&(1<<((*name)%8)))==0)
-	    *name= '_';
-        name++;
-    }
-    return;
 }
 
 /***====================================================================***/

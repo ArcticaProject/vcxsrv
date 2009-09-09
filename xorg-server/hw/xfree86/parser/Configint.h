@@ -92,18 +92,14 @@ LexRec, *LexPtr;
 
 #include "configProcs.h"
 #include <stdlib.h>
-#define xf86confmalloc malloc
-#define xf86confrealloc realloc
-#define xf86confcalloc calloc
-#define xf86conffree free
 
-#define TestFree(a) if (a) { xf86conffree (a); a = NULL; }
+#define TestFree(a) if (a) { free (a); a = NULL; }
 
 #define parsePrologue(typeptr,typerec) typeptr ptr; \
-if( (ptr=(typeptr)xf86confcalloc(1,sizeof(typerec))) == NULL ) { return NULL; }
+if( (ptr=calloc(1,sizeof(typerec))) == NULL ) { return NULL; }
 
 #define parsePrologueVoid(typeptr,typerec) int token; typeptr ptr; \
-if( (ptr=(typeptr)xf86confcalloc(1,sizeof(typerec))) == NULL ) { return; }
+if( (ptr=calloc(1,sizeof(typerec))) == NULL ) { return; }
 
 #define HANDLE_RETURN(f,func)\
 if ((ptr->f=func) == NULL)\

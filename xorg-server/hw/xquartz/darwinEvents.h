@@ -78,7 +78,15 @@ enum {
 /* Send one of the above events to the server thread. */
 void DarwinSendDDXEvent(int type, int argc, ...);
 
-extern int darwin_modifier_mask_list[];
-extern int darwin_modifier_flags;
+/* A mask of the modifiers that are in our X11 keyboard layout:
+ * (Fn for example is just useful for 3button mouse emulation) */
+extern int darwin_all_modifier_mask;
+
+/* A mask of the modifiers that are in our X11 keyboard layout:
+ * (Fn for example is just useful for 3button mouse emulation) */
+extern int darwin_x11_modifier_mask;
+
+/* The current state of the above listed modifiers */
+extern int darwin_all_modifier_flags;
 
 #endif  /* _DARWIN_EVENTS_H */

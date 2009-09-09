@@ -12,7 +12,6 @@ is" without express or implied warranty.
 
 */
 
-#define NEED_EVENTS
 #ifdef HAVE_XNEST_CONFIG_H
 #include <xnest-config.h>
 #endif
@@ -34,9 +33,8 @@ is" without express or implied warranty.
 #include "Args.h"
 #include "Events.h"
 
-#ifdef XKB
 #include <X11/extensions/XKB.h>
-#include <xkbsrv.h>
+#include "xkbsrv.h"
 #include <X11/extensions/XKBconfig.h>
 
 extern Bool
@@ -60,30 +58,6 @@ extern	Status	XkbGetControls(
 	unsigned long		/* which */,
 	XkbDescPtr		/* desc */
 );
-
-#ifndef XKB_BASE_DIRECTORY
-#define	XKB_BASE_DIRECTORY	"/usr/X11R6/lib/X11/xkb/"
-#endif
-#ifndef XKB_CONFIG_FILE
-#define	XKB_CONFIG_FILE		"X0-config.keyboard"
-#endif
-#ifndef XKB_DFLT_RULES_FILE
-#define	XKB_DFLT_RULES_FILE	__XKBDEFRULES__
-#endif
-#ifndef XKB_DFLT_KB_LAYOUT
-#define	XKB_DFLT_KB_LAYOUT	"us"
-#endif
-#ifndef XKB_DFLT_KB_MODEL
-#define	XKB_DFLT_KB_MODEL	"pc101"
-#endif
-#ifndef XKB_DFLT_KB_VARIANT
-#define	XKB_DFLT_KB_VARIANT	NULL
-#endif
-#ifndef XKB_DFLT_KB_OPTIONS
-#define	XKB_DFLT_KB_OPTIONS	NULL
-#endif
-
-#endif
 
 DeviceIntPtr xnestKeyboardDevice = NULL;
 
@@ -140,19 +114,18 @@ xnestChangeKeyboardControl(DeviceIntPtr pDev, KeybdCtrl *ctrl)
 int
 xnestKeyboardProc(DeviceIntPtr pDev, int onoff)
 {
-  XModifierKeymap *modifier_keymap;
   KeySym *keymap;
   int mapWidth;
   int min_keycode, max_keycode;
   KeySymsRec keySyms;
-  CARD8 modmap[MAP_LENGTH];
-  int i, j;
+  int i;
   XKeyboardState values;
+  XkbDescPtr xkb;
+  int op, event, error, major, minor;
 
   switch (onoff)
     {
     case DEVICE_INIT: 
-      modifier_keymap = XGetModifierMapping(xnestDisplay);
       XDisplayKeycodes(xnestDisplay, &min_keycode, &max_keycode);
 #ifdef _XSERVER64
       {
@@ -175,67 +148,26 @@ xnestKeyboardProc(DeviceIntPtr pDev, int onoff)
 				   &mapWidth);
 #endif
       
-      for (i = 0; i < MAP_LENGTH; i++)
-	modmap[i] = 0;
-      for (j = 0; j < 8; j++)
-	for(i = 0; i < modifier_keymap->max_keypermod; i++) {
-	  CARD8 keycode;
-	  if ((keycode = 
-	      modifier_keymap->
-	        modifiermap[j * modifier_keymap->max_keypermod + i]))
-	    modmap[keycode] |= 1<<j;
-	}
-      XFreeModifiermap(modifier_keymap);
-      
       keySyms.minKeyCode = min_keycode;
       keySyms.maxKeyCode = max_keycode;
       keySyms.mapWidth = mapWidth;
       keySyms.map = keymap;
 
-#ifdef XKB
-      if (noXkbExtension) {
-XkbError:
-#endif
-      XGetKeyboardControl(xnestDisplay, &values);
-
-      memmove((char *) defaultKeyboardControl.autoRepeats,
-             (char *) values.auto_repeats, sizeof(values.auto_repeats));
-
-      InitKeyboardDeviceStruct(&pDev->public, &keySyms, modmap,
-			       xnestBell, xnestChangeKeyboardControl);
-#ifdef XKB
-      } else {
-	XkbComponentNamesRec names;
-	char *rules, *model, *layout, *variants, *options;
-
-	XkbDescPtr xkb;
-	int op, event, error, major, minor;
-
-	if (XkbQueryExtension(xnestDisplay, &op, &event, &error, &major, &minor) == 0) {
-	  ErrorF("Unable to initialize XKEYBOARD extension.\n");
+      if (XkbQueryExtension(xnestDisplay, &op, &event, &error, &major, &minor) == 0) {
+          ErrorF("Unable to initialize XKEYBOARD extension.\n");
 	  goto XkbError;
-        }
-	xkb = XkbGetKeyboard(xnestDisplay, XkbGBN_AllComponentsMask, XkbUseCoreKbd);
-	if (xkb == NULL || xkb->geom == NULL) {
-	  ErrorF("Couldn't get keyboard.\n");
-	  goto XkbError;
-	}
-	XkbGetControls(xnestDisplay, XkbAllControlsMask, xkb);
-
-	memset(&names, 0, sizeof(XkbComponentNamesRec));
-	rules = XKB_DFLT_RULES_FILE;
-	model = XKB_DFLT_KB_MODEL;
-	layout = XKB_DFLT_KB_LAYOUT;
-	variants = XKB_DFLT_KB_VARIANT;
-	options = XKB_DFLT_KB_OPTIONS;
-
-	XkbSetRulesDflts(rules, model, layout, variants, options);
-	XkbInitKeyboardDeviceStruct(pDev, &names, &keySyms, modmap,
-				    xnestBell, xnestChangeKeyboardControl);
-	XkbDDXChangeControls(pDev, xkb->ctrls, xkb->ctrls);
-	XkbFreeKeyboard(xkb, 0, False);
       }
-#endif
+      xkb = XkbGetKeyboard(xnestDisplay, XkbGBN_AllComponentsMask, XkbUseCoreKbd);
+      if (xkb == NULL || xkb->geom == NULL) {
+	  ErrorF("Couldn't get keyboard.\n");
+          goto XkbError;
+      }
+      XkbGetControls(xnestDisplay, XkbAllControlsMask, xkb);
+
+      InitKeyboardDeviceStruct(pDev, NULL,
+			       xnestBell, xnestChangeKeyboardControl);
+      XkbDDXChangeControls(pDev, xkb->ctrls, xkb->ctrls);
+      XkbFreeKeyboard(xkb, 0, False);
       xfree(keymap);
       break;
     case DEVICE_ON: 
@@ -252,6 +184,17 @@ XkbError:
       break;
     }
   return Success;
+
+XkbError:
+  XGetKeyboardControl(xnestDisplay, &values);
+  memmove((char *)defaultKeyboardControl.autoRepeats,
+          (char *)values.auto_repeats,
+          sizeof(values.auto_repeats));
+
+  InitKeyboardDeviceStruct(pDev, NULL,
+                           xnestBell, xnestChangeKeyboardControl);
+  xfree(keymap);
+  return Success;
 }
 
 Bool
@@ -267,10 +210,15 @@ xnestUpdateModifierState(unsigned int state)
   KeyClassPtr keyc = pDev->key;
   int i;
   CARD8 mask;
+  int xkb_state;
 
+  if (!pDev)
+      return;
+
+  xkb_state = XkbStateFieldFromRec(&pDev->key->xkbInfo->state);
   state = state & 0xff;
 
-  if (keyc->state == state)
+  if (xkb_state == state)
     return;
 
   for (i = 0, mask = 1; i < 8; i++, mask <<= 1) {
@@ -278,11 +226,11 @@ xnestUpdateModifierState(unsigned int state)
 
     /* Modifier is down, but shouldn't be
      */
-    if ((keyc->state & mask) && !(state & mask)) {
+    if ((xkb_state & mask) && !(state & mask)) {
       int count = keyc->modifierKeyCount[i];
 
       for (key = 0; key < MAP_LENGTH; key++)
-	if (keyc->modifierMap[key] & mask) {
+	if (keyc->xkbInfo->desc->map->modmap[key] & mask) {
 	  int bit;
 	  BYTE *kptr;
 
@@ -299,9 +247,9 @@ xnestUpdateModifierState(unsigned int state)
 
     /* Modifier shoud be down, but isn't
      */
-    if (!(keyc->state & mask) && (state & mask))
+    if (!(xkb_state & mask) && (state & mask))
       for (key = 0; key < MAP_LENGTH; key++)
-	if (keyc->modifierMap[key] & mask) {
+	if (keyc->xkbInfo->desc->map->modmap[key] & mask) {
 	  xnestQueueKeyEvent(KeyPress, key);
 	  break;
 	}

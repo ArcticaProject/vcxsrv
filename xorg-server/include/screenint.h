@@ -55,7 +55,7 @@ typedef struct _Visual *VisualPtr;
 typedef struct _Depth  *DepthPtr;
 typedef struct _Screen *ScreenPtr;
 
-extern int AddScreen(
+extern _X_EXPORT int AddScreen(
     Bool (* /*pfnInit*/)(
 	int /*index*/,
 	ScreenPtr /*pScreen*/,

@@ -85,7 +85,7 @@ typedef struct _miBankInfo
     unsigned int nBankDepth;
 } miBankInfoRec, *miBankInfoPtr;
 
-Bool
+extern _X_EXPORT Bool
 miInitializeBanking(
     ScreenPtr /*pScreen*/,
     unsigned int /*xsize*/,
@@ -99,7 +99,7 @@ miInitializeBanking(
  * and various screen attributes.  DDX needs to determine this width before
  * initializing the screen.
  */
-int
+extern _X_EXPORT int
 miScanLineWidth(
     unsigned int /*xsize*/,
     unsigned int /*ysize*/,

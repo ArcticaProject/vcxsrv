@@ -245,7 +245,8 @@ ProcRRXineramaIsActive(ClientPtr client)
     xXineramaIsActiveReply	rep;
 
     REQUEST_SIZE_MATCH(xXineramaIsActiveReq);
-	
+
+    memset(&rep, 0, sizeof(xXineramaIsActiveReply));
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
@@ -312,7 +313,7 @@ ProcRRXineramaQueryScreens(ClientPtr client)
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.number = RRXineramaScreenCount (pScreen);
-    rep.length = rep.number * sz_XineramaScreenInfo >> 2;
+    rep.length = bytes_to_int32(rep.number * sz_XineramaScreenInfo);
     if(client->swapped) {
 	register int n;
 	swaps(&rep.sequenceNumber, n);

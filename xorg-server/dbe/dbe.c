@@ -33,7 +33,6 @@
 
 /* INCLUDES */
 
-#define NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -412,20 +411,23 @@ ProcDbeDeallocateBackBufferName(ClientPtr client)
 {
     REQUEST(xDbeDeallocateBackBufferNameReq);
     DbeWindowPrivPtr	pDbeWindowPriv;
-    int			i;
+    int			rc, i;
+    pointer val;
 
 
     REQUEST_SIZE_MATCH(xDbeDeallocateBackBufferNameReq);
 
     /* Buffer name must be valid */
-    if (!(pDbeWindowPriv = (DbeWindowPrivPtr)SecurityLookupIDByType(client,
-		stuff->buffer, dbeWindowPrivResType, DixDestroyAccess)) ||
-        !(SecurityLookupIDByType(client, stuff->buffer, dbeDrawableResType,
-				 DixDestroyAccess)))
-    {
-        client->errorValue = stuff->buffer;
-        return(dbeErrorBase + DbeBadBuffer);
-    }
+    rc = dixLookupResourceByType((pointer *)&pDbeWindowPriv, stuff->buffer,
+				 dbeWindowPrivResType, client,
+				 DixDestroyAccess);
+    if (rc != Success)
+	return (rc == BadValue) ? dbeErrorBase + DbeBadBuffer : rc;
+
+    rc = dixLookupResourceByType(&val, stuff->buffer, dbeDrawableResType,
+				 client, DixDestroyAccess);
+    if (rc != Success)
+	return (rc == BadValue) ? dbeErrorBase + DbeBadBuffer : rc;
 
     /* Make sure that the id is valid for the window.
      * This is paranoid code since we already looked up the ID by type
@@ -739,7 +741,7 @@ ProcDbeGetVisualInfo(ClientPtr client)
 
     rep.type           = X_Reply;
     rep.sequenceNumber = client->sequence;
-    rep.length         = length >> 2;
+    rep.length         = bytes_to_int32(length);
     rep.m              = count;
 
     if (client->swapped)
@@ -834,19 +836,21 @@ ProcDbeGetBackBufferAttributes(ClientPtr client)
     REQUEST(xDbeGetBackBufferAttributesReq);
     xDbeGetBackBufferAttributesReply	rep;
     DbeWindowPrivPtr			pDbeWindowPriv;
-    int					n;
+    int					rc, n;
 
 
     REQUEST_SIZE_MATCH(xDbeGetBackBufferAttributesReq);
 
-    if (!(pDbeWindowPriv = (DbeWindowPrivPtr)SecurityLookupIDByType(client,
-		stuff->buffer, dbeWindowPrivResType, DixGetAttrAccess)))
+    rc = dixLookupResourceByType((pointer *)&pDbeWindowPriv, stuff->buffer,
+				 dbeWindowPrivResType, client,
+				 DixGetAttrAccess);
+    if (rc == Success)
     {
-        rep.attributes = None;
+        rep.attributes = pDbeWindowPriv->pWindow->drawable.id;
     }
     else
     {
-        rep.attributes = pDbeWindowPriv->pWindow->drawable.id;
+        rep.attributes = None;
     }
         
     rep.type           = X_Reply;

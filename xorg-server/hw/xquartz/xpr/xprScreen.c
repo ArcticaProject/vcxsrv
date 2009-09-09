@@ -48,6 +48,8 @@
 #include "applewmExt.h"
 #include "micmap.h"
 
+#include "rootlessCommon.h"
+
 #ifdef DAMAGE
 # include "damage.h"
 #endif
@@ -256,6 +258,9 @@ xprDisplayInit(void)
 
     AppleDRIExtensionInit();
     xprAppleWMInit();
+
+    if (!quartzEnableRootless)
+        RootlessHideAllWindows();
 }
 
 /*
@@ -272,22 +277,9 @@ xprAddScreen(int index, ScreenPtr pScreen)
     
     if(depth == -1) {
         depth = CGDisplaySamplesPerPixel(kCGDirectMainDisplay) * CGDisplayBitsPerSample(kCGDirectMainDisplay);
-        //dfb->depth = CGDisplaySamplesPerPixel(kCGDirectMainDisplay) * CGDisplayBitsPerSample(kCGDirectMainDisplay);
-        //dfb->bitsPerRGB = CGDisplayBitsPerSample(kCGDirectMainDisplay);
-        //dfb->bitsPerPixel = CGDisplayBitsPerPixel(kCGDirectMainDisplay);
     }
     
     switch(depth) {
-//        case -8: // broken
-//            dfb->visuals = (1 << StaticGray) | (1 << GrayScale);
-//            dfb->preferredCVC = GrayScale;
-//            dfb->depth = 8;
-//            dfb->bitsPerRGB = 8;
-//            dfb->bitsPerPixel = 8;
-//            dfb->redMask = 0;
-//            dfb->greenMask = 0;
-//            dfb->blueMask = 0;
-//            break;
         case 8: // pseudo-working
             dfb->visuals = PseudoColorMask;
             dfb->preferredCVC = PseudoColor;
@@ -299,27 +291,27 @@ xprAddScreen(int index, ScreenPtr pScreen)
             dfb->blueMask = 0;
             break;
         case 15:
-            dfb->visuals = LARGE_VISUALS;
+            dfb->visuals = TrueColorMask; //LARGE_VISUALS;
             dfb->preferredCVC = TrueColor;
             dfb->depth = 15;
             dfb->bitsPerRGB = 5;
             dfb->bitsPerPixel = 16;
-            dfb->redMask   = 0x7c00;
-            dfb->greenMask = 0x03e0;
-            dfb->blueMask  = 0x001f;
+            dfb->redMask   = RM_ARGB(0,5,5,5);
+            dfb->greenMask = GM_ARGB(0,5,5,5);
+            dfb->blueMask  = BM_ARGB(0,5,5,5);
             break;
 //        case 24:
         default:
             if(depth != 24)
                 ErrorF("Unsupported color depth requested.  Defaulting to 24bit. (depth=%d darwinDesiredDepth=%d CGDisplaySamplesPerPixel=%d CGDisplayBitsPerSample=%d)\n",  darwinDesiredDepth, depth, (int)CGDisplaySamplesPerPixel(kCGDirectMainDisplay), (int)CGDisplayBitsPerSample(kCGDirectMainDisplay));
-            dfb->visuals = LARGE_VISUALS;
+            dfb->visuals = TrueColorMask; //LARGE_VISUALS;
             dfb->preferredCVC = TrueColor;
             dfb->depth = 24;
             dfb->bitsPerRGB = 8;
             dfb->bitsPerPixel = 32;
-            dfb->redMask   = 0x00ff0000;
-            dfb->greenMask = 0x0000ff00;
-            dfb->blueMask  = 0x000000ff;
+            dfb->redMask   = RM_ARGB(0,8,8,8);
+            dfb->greenMask = GM_ARGB(0,8,8,8);
+            dfb->blueMask  = BM_ARGB(0,8,8,8);
             break;
     }
 

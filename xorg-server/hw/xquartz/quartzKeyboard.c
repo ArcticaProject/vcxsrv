@@ -68,6 +68,9 @@
 #include "X11/keysym.h"
 #include "keysym2ucs.h"
 
+extern void
+CopyKeyClass(DeviceIntPtr device, DeviceIntPtr master);
+
 enum {
     MOD_COMMAND = 256,
     MOD_SHIFT = 512,
@@ -148,6 +151,7 @@ const static struct {
     {XK_apostrophe, XK_dead_acute},             /* US:"=" on a Czech keyboard */
     {XK_acute, XK_dead_acute},
     {UKEYSYM (0x384), XK_dead_acute},           /* US:";" on a Greek keyboard */
+//    {XK_Greek_accentdieresis, XK_dead_diaeresis},   /* US:"opt+;" on a Greek keyboard ... replace with dead_accentdieresis if there is one */
     {XK_asciicircum, XK_dead_circumflex},
     {UKEYSYM (0x2c6), XK_dead_circumflex},	/* MODIFIER LETTER CIRCUMFLEX ACCENT */
     {XK_asciitilde, XK_dead_tilde},
@@ -276,43 +280,29 @@ static void DarwinBuildModifierMaps(darwinKeyboardInfo *info) {
  *  Load the keyboard map from a file or system and convert
  *  it to an equivalent X keyboard map and modifier map.
  */
-static void DarwinLoadKeyboardMapping(KeySymsRec *keySyms) {
-    pthread_mutex_lock(&keyInfo_mutex);
-    
+static void DarwinLoadKeyboardMapping(KeySymsRec *keySyms) {    
     DarwinBuildModifierMaps(&keyInfo);
 
     keySyms->map        = keyInfo.keyMap;
     keySyms->mapWidth   = GLYPHS_PER_KEY;
     keySyms->minKeyCode = MIN_KEYCODE;
     keySyms->maxKeyCode = MAX_KEYCODE;
-
-    pthread_mutex_unlock(&keyInfo_mutex);
 }
 
 /*
  * DarwinKeyboardSetDeviceKeyMap
  * Load a keymap into the keyboard device
  */
-static void DarwinKeyboardSetDeviceKeyMap(KeySymsRec *keySyms) {
+static void DarwinKeyboardSetDeviceKeyMap(KeySymsRec *keySyms, CARD8 *modmap) {
     DeviceIntPtr pDev;
 
-    /* From ProcSetModifierMapping */
-    SendMappingNotify(darwinKeyboard, MappingModifier, 0, 0, serverClient);
-    for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
-        if (pDev->key && pDev->coreEvents)
-            SendDeviceMappingNotify(serverClient, MappingModifier, 0, 0, pDev);
-    
-    /* From ProcChangeKeyboardMapping */
+    pthread_mutex_lock(&keyInfo_mutex);
     for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
         if ((pDev->coreEvents || pDev == inputInfo.keyboard) && pDev->key)
-            assert(SetKeySymsMap(&pDev->key->curKeySyms, keySyms));
-
-    SendMappingNotify(darwinKeyboard, MappingKeyboard, keySyms->minKeyCode,
-                      keySyms->maxKeyCode - keySyms->minKeyCode + 1, serverClient);
-    for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
-        if (pDev->key && pDev->coreEvents)
-            SendDeviceMappingNotify(serverClient, MappingKeyboard, keySyms->minKeyCode,
-                                    keySyms->maxKeyCode - keySyms->minKeyCode + 1, pDev);    
+            XkbApplyMappingChange(pDev, keySyms, keySyms->minKeyCode,
+                                  keySyms->maxKeyCode - keySyms->minKeyCode + 1,
+                                  modmap, serverClient);
+    pthread_mutex_unlock(&keyInfo_mutex);
 }
 
 /*
@@ -332,16 +322,16 @@ void DarwinKeyboardInit(DeviceIntPtr pDev) {
     // for a kIOHIDParamConnectType connection.
     assert(darwinParamConnect = NXOpenEventStatus());
 
-    DarwinLoadKeyboardMapping(&keySyms);
-
     bzero(&names, sizeof(names));
 
     /* We need to really have rules... or something... */
     //XkbSetRulesDflts("base", "pc105", "us", NULL, NULL);
-    
-    pthread_mutex_lock(&keyInfo_mutex);
-    assert(XkbInitKeyboardDeviceStruct(pDev, &names, &keySyms, keyInfo.modMap,
-                                       QuartzBell, DarwinChangeKeyboardControl));
+
+    InitKeyboardDeviceStruct(pDev, NULL, NULL, DarwinChangeKeyboardControl);
+
+    pthread_mutex_lock(&keyInfo_mutex);   
+    DarwinLoadKeyboardMapping(&keySyms);    
+    DarwinKeyboardSetDeviceKeyMap(&keySyms, keyInfo.modMap);
     pthread_mutex_unlock(&keyInfo_mutex);
 
     /* Get our key repeat settings from GlobalPreferences */
@@ -363,16 +353,23 @@ void DarwinKeyboardInit(DeviceIntPtr pDev) {
         XkbSetRepeatKeys(pDev, -1, AutoRepeatModeOn);
     }
 
-    DarwinKeyboardSetDeviceKeyMap(&keySyms);
+    CopyKeyClass(pDev, inputInfo.keyboard);
 }
 
 void DarwinKeyboardReloadHandler(int screenNum, xEventPtr xe, DeviceIntPtr pDev, int nevents) {
     KeySymsRec keySyms;
 
     DEBUG_LOG("DarwinKeyboardReloadHandler\n");
+//    if (pDev->key) {
+//        if (pDev->key->curKeySyms.map) xfree(pDev->key->curKeySyms.map);
+//        xfree(pDev->key);
+//    }
 
+    
+    pthread_mutex_lock(&keyInfo_mutex);
     DarwinLoadKeyboardMapping(&keySyms);
-    DarwinKeyboardSetDeviceKeyMap(&keySyms);
+    DarwinKeyboardSetDeviceKeyMap(&keySyms, keyInfo.modMap);
+    pthread_mutex_unlock(&keyInfo_mutex);
 }
 
 //-----------------------------------------------------------------------------
@@ -408,21 +405,22 @@ int DarwinModifierNXKeyToNXKeycode(int key, int side) {
 int DarwinModifierNXKeycodeToNXKey(unsigned char keycode, int *outSide) {
     int key, side;
 
-    pthread_mutex_lock(&keyInfo_mutex);
     keycode += MIN_KEYCODE;
+
     // search modifierKeycodes for this keycode+side
+    pthread_mutex_lock(&keyInfo_mutex);
     for (key = 0; key < NX_NUMMODIFIERS; key++) {
         for (side = 0; side <= 1; side++) {
             if (keyInfo.modifierKeycodes[key][side] == keycode) break;
         }
     }
+    pthread_mutex_unlock(&keyInfo_mutex);
+
     if (key == NX_NUMMODIFIERS) {
-        pthread_mutex_unlock(&keyInfo_mutex);
         return -1;
     }
     if (outSide) *outSide = side;
 
-    pthread_mutex_unlock(&keyInfo_mutex);
     return key;
 }
 
@@ -718,9 +716,8 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
             }
 #endif
         }
-	
+
         if (k[3] == k[2]) k[3] = NoSymbol;
-        if (k[2] == k[1]) k[2] = NoSymbol;
         if (k[1] == k[0]) k[1] = NoSymbol;
         if (k[0] == k[2] && k[1] == k[3]) k[2] = k[3] = NoSymbol;
     }

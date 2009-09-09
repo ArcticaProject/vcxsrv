@@ -116,9 +116,9 @@ miFillSppPoly(
     y = ymax - ymin + 1;
     if ((count < 3) || (y <= 0))
 	return;
-    ptsOut = FirstPoint = (DDXPointPtr)xalloc(sizeof(DDXPointRec) * y);
-    width = FirstWidth = (int *) xalloc(sizeof(int) * y);
-    Marked = (int *) xalloc(sizeof(int) * count);
+    ptsOut = FirstPoint = xalloc(sizeof(DDXPointRec) * y);
+    width = FirstWidth = xalloc(sizeof(int) * y);
+    Marked = xalloc(sizeof(int) * count);
 
     if(!ptsOut || !width || !Marked)
     {

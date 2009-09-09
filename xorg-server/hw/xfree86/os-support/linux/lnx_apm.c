@@ -160,15 +160,11 @@ lnxAPMOpen(void)
 {
     int fd, pfd;    
 
-#ifdef DEBUG
-    ErrorF("APM: OSPMOpen called\n");
-#endif
+    DebugF("APM: OSPMOpen called\n");
     if (APMihPtr || !xf86Info.pmFlag)
 	return NULL;
    
-#ifdef DEBUG
-    ErrorF("APM: Opening device\n");
-#endif
+    DebugF("APM: Opening device\n");
     if ((fd = open( APM_DEVICE, O_RDWR )) > -1) {
 	if (access( APM_PROC, R_OK ) ||
 	    ((pfd = open( APM_PROC, O_RDONLY)) == -1)) {
@@ -180,11 +176,10 @@ lnxAPMOpen(void)
 	    close(pfd);
 	xf86PMGetEventFromOs = lnxPMGetEventFromOs;
 	xf86PMConfirmEventToOs = lnxPMConfirmEventToOs;
-	APMihPtr = xf86AddInputHandler(fd,xf86HandlePMEvents,NULL);
+	APMihPtr = xf86AddGeneralHandler(fd, xf86HandlePMEvents, NULL);
 	xf86MsgVerb(X_INFO,3,"Open APM successful\n");
 	return lnxCloseAPM;
     }
-    xf86MsgVerb(X_INFO,3,"No APM support in BIOS or kernel\n");
     return NULL;
 }
 
@@ -192,12 +187,10 @@ static void
 lnxCloseAPM(void)
 {
     int fd;
-    
-#ifdef DEBUG
-   ErrorF("APM: Closing device\n");
-#endif
+
+    DebugF("APM: Closing device\n");
     if (APMihPtr) {
-	fd = xf86RemoveInputHandler(APMihPtr);
+	fd = xf86RemoveGeneralHandler(APMihPtr);
 	close(fd);
 	APMihPtr = NULL;
     }

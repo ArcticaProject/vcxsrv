@@ -43,7 +43,7 @@ static Bool initDone = FALSE;
  * Close /dev/agpgart.  This frees all associated memory allocated during
  * this server generation.
  */
-_X_EXPORT Bool
+Bool
 xf86GARTCloseScreen(int screenNum)
 {
 	if(gartFd != -1) {
@@ -116,13 +116,13 @@ GARTInit(int screenNum)
 	return TRUE;
 }
 
-_X_EXPORT Bool
-xf86AgpGARTSupported()
+Bool
+xf86AgpGARTSupported(void)
 {
 	return GARTInit(-1);
 }
 
-_X_EXPORT AgpInfoPtr
+AgpInfoPtr
 xf86GetAGPInfo(int screenNum)
 {
 	struct _agp_info agpinf;
@@ -155,7 +155,7 @@ xf86GetAGPInfo(int screenNum)
 	info->systemPages = agpinf.pg_system;
 	info->usedPages = agpinf.pg_used;
 
-	xf86DrvMsg(screenNum, X_INFO, "Kernel reported %d total, %d used\n", agpinf.pg_total, agpinf.pg_used);
+	xf86DrvMsg(screenNum, X_INFO, "Kernel reported %zu total, %zu used\n", agpinf.pg_total, agpinf.pg_used);
 
 	return info;
 }
@@ -165,7 +165,7 @@ xf86GetAGPInfo(int screenNum)
  * count instead of using acquiredScreen?
  */
 
-_X_EXPORT Bool
+Bool
 xf86AcquireGART(int screenNum)
 {
 	if (screenNum != -1 && !GARTInit(screenNum))
@@ -183,7 +183,7 @@ xf86AcquireGART(int screenNum)
 	return TRUE;
 }
 
-_X_EXPORT Bool
+Bool
 xf86ReleaseGART(int screenNum)
 {
 	if (screenNum != -1 && !GARTInit(screenNum))
@@ -213,7 +213,7 @@ xf86ReleaseGART(int screenNum)
 	return FALSE;
 }
 
-_X_EXPORT int
+int
 xf86AllocateGARTMemory(int screenNum, unsigned long size, int type,
 			unsigned long *physical)
 {
@@ -251,7 +251,7 @@ xf86AllocateGARTMemory(int screenNum, unsigned long size, int type,
 	return alloc.key;
 }
 
-_X_EXPORT Bool
+Bool
 xf86DeallocateGARTMemory(int screenNum, int key)
 {
 	if (!GARTInit(screenNum) || acquiredScreen != screenNum)
@@ -278,7 +278,7 @@ xf86DeallocateGARTMemory(int screenNum, int key)
 }
 
 /* Bind GART memory with "key" at "offset" */
-_X_EXPORT Bool
+Bool
 xf86BindGARTMemory(int screenNum, int key, unsigned long offset)
 {
 	struct _agp_bind bind;
@@ -321,7 +321,7 @@ xf86BindGARTMemory(int screenNum, int key, unsigned long offset)
 
 
 /* Unbind GART memory with "key" */
-_X_EXPORT Bool
+Bool
 xf86UnbindGARTMemory(int screenNum, int key)
 {
 	struct _agp_unbind unbind;
@@ -353,7 +353,7 @@ xf86UnbindGARTMemory(int screenNum, int key)
 
 
 /* XXX Interface may change. */
-_X_EXPORT Bool
+Bool
 xf86EnableAGP(int screenNum, CARD32 mode)
 {
 	agp_setup setup;

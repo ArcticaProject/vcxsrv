@@ -1,24 +1,24 @@
 
 #include <xf86RamDac.h>
 
-RamDacHelperRecPtr IBMramdacProbe(ScrnInfoPtr pScrn, RamDacSupportedInfoRecPtr ramdacs);
-void IBMramdacSave(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
-void IBMramdacRestore(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
-void IBMramdac526SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
-void IBMramdac640SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
-unsigned long IBMramdac526CalculateMNPCForClock(unsigned long RefClock,
+extern _X_EXPORT RamDacHelperRecPtr IBMramdacProbe(ScrnInfoPtr pScrn, RamDacSupportedInfoRecPtr ramdacs);
+extern _X_EXPORT void IBMramdacSave(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void IBMramdacRestore(ScrnInfoPtr pScrn, RamDacRecPtr RamDacRec, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void IBMramdac526SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT void IBMramdac640SetBpp(ScrnInfoPtr pScrn, RamDacRegRecPtr RamDacRegRec);
+extern _X_EXPORT unsigned long IBMramdac526CalculateMNPCForClock(unsigned long RefClock,
     unsigned long ReqClock, char IsPixClock, unsigned long MinClock,
     unsigned long MaxClock, unsigned long *rM, unsigned long *rN,
     unsigned long *rP, unsigned long *rC);
-unsigned long IBMramdac640CalculateMNPCForClock(unsigned long RefClock,
+extern _X_EXPORT unsigned long IBMramdac640CalculateMNPCForClock(unsigned long RefClock,
     unsigned long ReqClock, char IsPixClock, unsigned long MinClock,
     unsigned long MaxClock, unsigned long *rM, unsigned long *rN,
     unsigned long *rP, unsigned long *rC);
-void IBMramdac526HWCursorInit(xf86CursorInfoPtr infoPtr);
-void IBMramdac640HWCursorInit(xf86CursorInfoPtr infoPtr);
+extern _X_EXPORT void IBMramdac526HWCursorInit(xf86CursorInfoPtr infoPtr);
+extern _X_EXPORT void IBMramdac640HWCursorInit(xf86CursorInfoPtr infoPtr);
 
 typedef void IBMramdac526SetBppProc(ScrnInfoPtr, RamDacRegRecPtr);
-IBMramdac526SetBppProc *IBMramdac526SetBppWeak(void);
+extern _X_EXPORT IBMramdac526SetBppProc *IBMramdac526SetBppWeak(void);
 
 #define IBM524_RAMDAC		((VENDOR_IBM << 16) | 0x00)
 #define IBM524A_RAMDAC		((VENDOR_IBM << 16) | 0x01)

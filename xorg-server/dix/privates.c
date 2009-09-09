@@ -84,7 +84,7 @@ privateExists(PrivateRec **privates, const DevPrivateKey key)
 /*
  * Request pre-allocated space.
  */
-_X_EXPORT int
+int
 dixRequestPrivate(const DevPrivateKey key, unsigned size)
 {
     PrivateDescRec *item = findItem(key);
@@ -98,7 +98,7 @@ dixRequestPrivate(const DevPrivateKey key, unsigned size)
 /*
  * Allocate a private and attach it to an existing object.
  */
-_X_EXPORT pointer *
+pointer *
 dixAllocatePrivate(PrivateRec **privates, const DevPrivateKey key)
 {
     PrivateDescRec *item = findItem(key);
@@ -154,7 +154,7 @@ dixAllocatePrivate(PrivateRec **privates, const DevPrivateKey key)
 /*
  * Look up a private pointer.
  */
-_X_EXPORT pointer
+pointer
 dixLookupPrivate(PrivateRec **privates, const DevPrivateKey key)
 {
     pointer *ptr;
@@ -169,7 +169,7 @@ dixLookupPrivate(PrivateRec **privates, const DevPrivateKey key)
 /*
  * Look up the address of a private pointer.
  */
-_X_EXPORT pointer *
+pointer *
 dixLookupPrivateAddr(PrivateRec **privates, const DevPrivateKey key)
 {
     if (privateExists(privates, key))
@@ -181,7 +181,7 @@ dixLookupPrivateAddr(PrivateRec **privates, const DevPrivateKey key)
 /*
  * Set a private pointer.
  */
-_X_EXPORT int
+int
 dixSetPrivate(PrivateRec **privates, const DevPrivateKey key, pointer val)
 {
  top:
@@ -198,7 +198,7 @@ dixSetPrivate(PrivateRec **privates, const DevPrivateKey key, pointer val)
 /*
  * Called to free privates at object deletion time.
  */
-_X_EXPORT void
+void
 dixFreePrivates(PrivateRec *privates)
 {
     int i;
@@ -223,7 +223,7 @@ dixFreePrivates(PrivateRec *privates)
 /*
  * Callback registration
  */
-_X_EXPORT int
+int
 dixRegisterPrivateInitFunc(const DevPrivateKey key,
 			   CallbackProcPtr callback, pointer data)
 {
@@ -234,7 +234,7 @@ dixRegisterPrivateInitFunc(const DevPrivateKey key,
     return AddCallback(&item->initfuncs, callback, data);
 }
 
-_X_EXPORT int
+int
 dixRegisterPrivateDeleteFunc(const DevPrivateKey key,
 			     CallbackProcPtr callback, pointer data)
 {
@@ -265,7 +265,7 @@ static int offsetsSize = 0;
 /*
  * Specify where the devPrivates field is located in a structure type
  */
-_X_EXPORT int
+int
 dixRegisterPrivateOffset(RESTYPE type, int offset)
 {
     type = type & TypeMask;
@@ -287,7 +287,7 @@ dixRegisterPrivateOffset(RESTYPE type, int offset)
     return TRUE;
 }
 
-_X_EXPORT int
+int
 dixLookupPrivateOffset(RESTYPE type)
 {
     type = type & TypeMask;
@@ -312,7 +312,7 @@ dixResetPrivates(void)
     if (offsets)
 	xfree(offsets);
     offsetsSize = sizeof(offsetDefaults);
-    offsets = (int *)xalloc(offsetsSize);
+    offsets = xalloc(offsetsSize);
     offsetsSize /= sizeof(int);
     if (!offsets)
 	return FALSE;

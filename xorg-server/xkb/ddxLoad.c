@@ -34,7 +34,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <stdio.h>
 #include <ctype.h>
-#define	NEED_EVENTS 1
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xproto.h>
@@ -178,7 +177,7 @@ OutputDirectory(
     }
 }
 
-static Bool    	
+static Bool
 XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 				XkbComponentNamesPtr	names,
 				unsigned		want,
@@ -205,7 +204,6 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 
     snprintf(keymap, sizeof(keymap), "server-%s", display);
 
-    XkbEnsureSafeMapName(keymap);
     OutputDirectory(xkm_output_dir, sizeof(xkm_output_dir));
 
 #ifdef WIN32
@@ -405,7 +403,7 @@ XkbRF_RulesPtr	rules;
 	return False;
     }
 
-    rules = XkbRF_Create(0, 0);
+    rules = XkbRF_Create();
     if (!rules) {
         LogMessage(X_ERROR, "XKB: Couldn't create rules struct\n");
 	fclose(file);
@@ -428,4 +426,37 @@ XkbRF_RulesPtr	rules;
         LogMessage(X_ERROR, "XKB: Rules returned no components\n");
 
     return complete;
+}
+
+XkbDescPtr
+XkbCompileKeymap(DeviceIntPtr dev, XkbRMLVOSet *rmlvo)
+{
+    XkbComponentNamesRec kccgst;
+    XkbRF_VarDefsRec mlvo;
+    XkbDescPtr xkb;
+    char name[PATH_MAX];
+
+    if (!dev || !rmlvo) {
+        LogMessage(X_ERROR, "XKB: No device or RMLVO specified\n");
+        return NULL;
+    }
+
+    mlvo.model = rmlvo->model;
+    mlvo.layout = rmlvo->layout;
+    mlvo.variant = rmlvo->variant;
+    mlvo.options = rmlvo->options;
+
+    /* XDNFR already logs for us. */
+    if (!XkbDDXNamesFromRules(dev, rmlvo->rules, &mlvo, &kccgst))
+        return NULL;
+
+    /* XDLKBN too, but it might return 0 as well as allocating. */
+    if (!XkbDDXLoadKeymapByNames(dev, &kccgst, XkmAllIndicesMask, 0, &xkb, name,
+                                 PATH_MAX)) {
+        if (xkb)
+            XkbFreeKeyboard(xkb, 0, TRUE);
+        return NULL;
+    }
+
+    return xkb;
 }

@@ -251,13 +251,12 @@ typedef enum {
 
 
 /* Public PCI access functions */
-ADDRESS	      pciBusAddrToHostAddr(PCITAG tag, PciAddrType type, ADDRESS addr);
-PCITAG	      pciTag(int busnum, int devnum, int funcnum);
-Bool xf86scanpci(void);
+extern _X_EXPORT PCITAG pciTag(int busnum, int devnum, int funcnum);
+extern _X_EXPORT Bool xf86scanpci(void);
 
 /* Domain access functions.  Some of these probably shouldn't be public */
-pointer xf86MapDomainMemory(int ScreenNum, int Flags, struct pci_device *dev,
+extern _X_EXPORT pointer xf86MapDomainMemory(int ScreenNum, int Flags, struct pci_device *dev,
     ADDRESS Base, unsigned long Size);
-IOADDRESS xf86MapLegacyIO(struct pci_device *dev);
+extern _X_EXPORT IOADDRESS xf86MapLegacyIO(struct pci_device *dev);
 
 #endif /* _XF86PCI_H */

@@ -194,15 +194,11 @@ typedef struct
 #ifdef XWIN_XF86CONFIG
   char *keyboard;
 #endif
-#ifdef XKB
-  Bool noXkbExtension;
-  char *xkbMap;
   char *xkbRules; 
   char *xkbModel;
   char *xkbLayout;
   char *xkbVariant;
   char *xkbOptions;
-#endif
   /* layout */
   char *screenname;
   /* mouse settings */
@@ -309,25 +305,7 @@ typedef struct
     long rate;
   }
   keyboard;
-#ifdef XKB
-  struct
-  {
-    Bool disable;
-    char *rules;
-    char *model;
-    char *layout;
-    char *variant;
-    char *options;
-    char *initialMap;
-    char *keymap;
-    char *types;
-    char *compat;
-    char *keycodes;
-    char *symbols;
-    char *geometry;
-  }
-  xkb;
-#endif
+  XkbRMLVOSet xkb;
   struct
   {
     Bool emulate3Buttons;

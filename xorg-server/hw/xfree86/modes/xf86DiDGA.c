@@ -255,7 +255,7 @@ static DGAFunctionRec xf86_dga_funcs = {
    NULL
 };
 
-_X_EXPORT Bool
+Bool
 xf86DiDGAReInit (ScreenPtr pScreen)
 {
     ScrnInfoPtr		scrn = xf86Screens[pScreen->myNum];
@@ -267,7 +267,7 @@ xf86DiDGAReInit (ScreenPtr pScreen)
     return DGAReInitModes (pScreen, xf86_config->dga_modes, xf86_config->dga_nmode);
 }
 
-_X_EXPORT Bool
+Bool
 xf86DiDGAInit (ScreenPtr pScreen, unsigned long dga_address)
 {
     ScrnInfoPtr		scrn = xf86Screens[pScreen->myNum];

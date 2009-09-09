@@ -236,7 +236,7 @@ DoSimpleClip (BoxPtr a_dst_box,
 static Bool
 ephyrLocalAtomToHost (int a_local_atom, int *a_host_atom)
 {
-    char *atom_name=NULL;
+    const char *atom_name=NULL;
     int host_atom=None ;
 
     EPHYR_RETURN_VAL_IF_FAIL (a_host_atom, FALSE) ;

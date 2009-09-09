@@ -223,7 +223,7 @@ xf86freeVendorList (XF86ConfVendorPtr p)
 	TestFree (p->vnd_identifier);
 	TestFree (p->vnd_comment);
 	xf86optionListFree (p->vnd_option_lst);
-	xf86conffree (p);
+	free (p);
 }
 
 void
@@ -239,6 +239,6 @@ xf86freeVendorSubList (XF86ConfVendSubPtr ptr)
 		xf86optionListFree (ptr->vs_option_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }

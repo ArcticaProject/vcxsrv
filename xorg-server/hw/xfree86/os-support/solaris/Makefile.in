@@ -39,8 +39,11 @@ subdir = hw/xfree86/os-support/solaris
 DIST_COMMON = $(sdk_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
+	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/shave.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -50,23 +53,25 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 	$(top_builddir)/include/xorg-config.h \
 	$(top_builddir)/include/xkb-config.h \
 	$(top_builddir)/include/xwin-config.h \
-	$(top_builddir)/include/kdrive-config.h
+	$(top_builddir)/include/kdrive-config.h \
+	$(top_builddir)/include/version-config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libsolaris_la_LIBADD =
 am__libsolaris_la_SOURCES_DIST = sun_init.c sun_vid.c sun_bell.c \
-	sun_agp.c sun_apm.c $(srcdir)/../shared/kmod_noop.c \
-	$(srcdir)/../shared/posix_tty.c \
-	$(srcdir)/../shared/sigiostubs.c \
-	$(srcdir)/../shared/stdResource.c $(srcdir)/../shared/vidmem.c \
-	$(srcdir)/../shared/VTsw_noop.c $(srcdir)/../shared/VTsw_usl.c
-am__objects_1 = sun_agp.lo
-@SOLARIS_USL_CONSOLE_FALSE@am__objects_2 = VTsw_noop.lo
-@SOLARIS_USL_CONSOLE_TRUE@am__objects_2 = VTsw_usl.lo
+	$(srcdir)/../shared/agp_noop.c sun_agp.c sun_apm.c \
+	$(srcdir)/../shared/kmod_noop.c \
+	$(srcdir)/../shared/posix_tty.c $(srcdir)/../shared/sigio.c \
+	$(srcdir)/../shared/vidmem.c $(srcdir)/../shared/VTsw_noop.c \
+	sun_VTsw.c
+@AGP_FALSE@am__objects_1 = agp_noop.lo
+@AGP_TRUE@am__objects_1 = sun_agp.lo
+@SOLARIS_VT_FALSE@am__objects_2 = VTsw_noop.lo
+@SOLARIS_VT_TRUE@am__objects_2 = sun_VTsw.lo
 am_libsolaris_la_OBJECTS = sun_init.lo sun_vid.lo sun_bell.lo \
-	$(am__objects_1) sun_apm.lo kmod_noop.lo posix_tty.lo \
-	sigiostubs.lo stdResource.lo vidmem.lo $(am__objects_2)
+	$(am__objects_1) sun_apm.lo kmod_noop.lo posix_tty.lo sigio.lo \
+	vidmem.lo $(am__objects_2)
 am__objects_3 = solaris-@SOLARIS_INOUT_ARCH@.lo
 nodist_libsolaris_la_OBJECTS = $(am__objects_3)
 libsolaris_la_OBJECTS = $(am_libsolaris_la_OBJECTS) \
@@ -119,6 +124,7 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
 APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
@@ -139,9 +145,12 @@ CCASDEPMODE = @CCASDEPMODE@
 CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CHANGELOG_CMD = @CHANGELOG_CMD@
 COMPILEDDEFAULTFONTPATH = @COMPILEDDEFAULTFONTPATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CWARNFLAGS = @CWARNFLAGS@
+CXX = @CXX@
 CYGPATH_W = @CYGPATH_W@
 DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
@@ -170,7 +179,9 @@ DRIPROTO_CFLAGS = @DRIPROTO_CFLAGS@
 DRIPROTO_LIBS = @DRIPROTO_LIBS@
 DRIVER_MAN_DIR = @DRIVER_MAN_DIR@
 DRIVER_MAN_SUFFIX = @DRIVER_MAN_SUFFIX@
+DRI_CFLAGS = @DRI_CFLAGS@
 DRI_DRIVER_PATH = @DRI_DRIVER_PATH@
+DRI_LIBS = @DRI_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DTRACE = @DTRACE@
 DUMPBIN = @DUMPBIN@
@@ -179,9 +190,13 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FC = @FC@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
 GLX_DEFINES = @GLX_DEFINES@
 GL_CFLAGS = @GL_CFLAGS@
@@ -220,12 +235,13 @@ LTCOMPILE = @LTCOMPILE@
 LTCXXCOMPILE = @LTCXXCOMPILE@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
+MAIN_LIB = @MAIN_LIB@
+MAKEFLAGS = @MAKEFLAGS@
 MAKEINFO = @MAKEINFO@
 MAKE_HTML = @MAKE_HTML@
 MAKE_PDF = @MAKE_PDF@
 MAKE_PS = @MAKE_PS@
 MAKE_TEXT = @MAKE_TEXT@
-MESA_SOURCE = @MESA_SOURCE@
 MISC_MAN_DIR = @MISC_MAN_DIR@
 MISC_MAN_SUFFIX = @MISC_MAN_SUFFIX@
 MKDIR_P = @MKDIR_P@
@@ -245,7 +261,6 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
-PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PCIACCESS_CFLAGS = @PCIACCESS_CFLAGS@
@@ -255,6 +270,7 @@ PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PROJECTROOT = @PROJECTROOT@
 PS2PDF = @PS2PDF@
+Q = @Q@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
@@ -268,11 +284,10 @@ STRIP = @STRIP@
 TSLIB_CFLAGS = @TSLIB_CFLAGS@
 TSLIB_LIBS = @TSLIB_LIBS@
 UTILS_SYS_LIBS = @UTILS_SYS_LIBS@
-VENDOR_MAN_VERSION = @VENDOR_MAN_VERSION@
-VENDOR_NAME = @VENDOR_NAME@
+V = @V@
 VENDOR_NAME_SHORT = @VENDOR_NAME_SHORT@
-VENDOR_RELEASE = @VENDOR_RELEASE@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 X11EXAMPLES_DEP_CFLAGS = @X11EXAMPLES_DEP_CFLAGS@
 X11EXAMPLES_DEP_LIBS = @X11EXAMPLES_DEP_LIBS@
 XDMCP_CFLAGS = @XDMCP_CFLAGS@
@@ -308,6 +323,7 @@ XORG_OS_SUBDIR = @XORG_OS_SUBDIR@
 XORG_SYS_LIBS = @XORG_SYS_LIBS@
 XPBPROXY_CFLAGS = @XPBPROXY_CFLAGS@
 XPBPROXY_LIBS = @XPBPROXY_LIBS@
+XQUARTZ_SPARKLE = @XQUARTZ_SPARKLE@
 XRESEXAMPLES_DEP_CFLAGS = @XRESEXAMPLES_DEP_CFLAGS@
 XRESEXAMPLES_DEP_LIBS = @XRESEXAMPLES_DEP_LIBS@
 XSDL_INCS = @XSDL_INCS@
@@ -332,7 +348,6 @@ YFLAGS = @YFLAGS@
 __XCONFIGFILE__ = @__XCONFIGFILE__@
 abi_ansic = @abi_ansic@
 abi_extension = @abi_extension@
-abi_font = @abi_font@
 abi_videodrv = @abi_videodrv@
 abi_xinput = @abi_xinput@
 abs_builddir = @abs_builddir@
@@ -355,6 +370,7 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
+distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -386,34 +402,31 @@ psdir = @psdir@
 sbindir = @sbindir@
 sdkdir = @sdkdir@
 sharedstatedir = @sharedstatedir@
+shavedir = @shavedir@
 srcdir = @srcdir@
+symbol_visibility = @symbol_visibility@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@SOLARIS_USL_CONSOLE_FALSE@VTSW_SRC = $(srcdir)/../shared/VTsw_noop.c
-@SOLARIS_USL_CONSOLE_TRUE@VTSW_SRC = $(srcdir)/../shared/VTsw_usl.c
-
-# TODO: Don't build agpgart on SPARC
-#if defined(i386Architecture) || defined(AMD64Architecture)
-AGP_SRC = sun_agp.c
-#else
-#AGP_SRC = $(srcdir)/../shared/agp_noop.c
-#endif
+@SOLARIS_VT_FALSE@VTSW_SRC = $(srcdir)/../shared/VTsw_noop.c
+@SOLARIS_VT_TRUE@VTSW_SRC = sun_VTsw.c
+@AGP_FALSE@AGP_SRC = $(srcdir)/../shared/agp_noop.c
+@AGP_TRUE@AGP_SRC = sun_agp.c
 SOLARIS_INOUT_SRC = solaris-@SOLARIS_INOUT_ARCH@.S
 DISTCLEANFILES = solaris-@SOLARIS_INOUT_ARCH@.il
 noinst_LTLIBRARIES = libsolaris.la
 libsolaris_la_SOURCES = sun_init.c \
 	sun_vid.c sun_bell.c $(AGP_SRC) sun_apm.c \
 	$(srcdir)/../shared/kmod_noop.c \
-	$(srcdir)/../shared/posix_tty.c $(srcdir)/../shared/sigiostubs.c \
-	$(srcdir)/../shared/stdResource.c \
+	$(srcdir)/../shared/posix_tty.c \
+	$(srcdir)/../shared/sigio.c \
 	$(srcdir)/../shared/vidmem.c \
 	$(VTSW_SRC)
 
 nodist_libsolaris_la_SOURCES = $(SOLARIS_INOUT_SRC)
-sdk_HEADERS = agpgart.h
+sdk_HEADERS = 
 nodist_sdk_HEADERS = solaris-@SOLARIS_INOUT_ARCH@.il
 AM_CFLAGS = -DUSESTDRES -DHAVE_SYSV_IPC $(XORG_CFLAGS) $(DIX_CFLAGS)
 INCLUDES = $(XORG_INCS) 
@@ -473,12 +486,12 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VTsw_noop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VTsw_usl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/agp_noop.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kmod_noop.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posix_tty.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sigiostubs.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sigio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/solaris-@SOLARIS_INOUT_ARCH@.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stdResource.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sun_VTsw.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sun_agp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sun_apm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sun_bell.Plo@am__quote@
@@ -528,6 +541,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
+agp_noop.lo: $(srcdir)/../shared/agp_noop.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT agp_noop.lo -MD -MP -MF $(DEPDIR)/agp_noop.Tpo -c -o agp_noop.lo `test -f '$(srcdir)/../shared/agp_noop.c' || echo '$(srcdir)/'`$(srcdir)/../shared/agp_noop.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/agp_noop.Tpo $(DEPDIR)/agp_noop.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(srcdir)/../shared/agp_noop.c' object='agp_noop.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o agp_noop.lo `test -f '$(srcdir)/../shared/agp_noop.c' || echo '$(srcdir)/'`$(srcdir)/../shared/agp_noop.c
+
 kmod_noop.lo: $(srcdir)/../shared/kmod_noop.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT kmod_noop.lo -MD -MP -MF $(DEPDIR)/kmod_noop.Tpo -c -o kmod_noop.lo `test -f '$(srcdir)/../shared/kmod_noop.c' || echo '$(srcdir)/'`$(srcdir)/../shared/kmod_noop.c
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/kmod_noop.Tpo $(DEPDIR)/kmod_noop.Plo
@@ -542,19 +562,12 @@ posix_tty.lo: $(srcdir)/../shared/posix_tty.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o posix_tty.lo `test -f '$(srcdir)/../shared/posix_tty.c' || echo '$(srcdir)/'`$(srcdir)/../shared/posix_tty.c
 
-sigiostubs.lo: $(srcdir)/../shared/sigiostubs.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sigiostubs.lo -MD -MP -MF $(DEPDIR)/sigiostubs.Tpo -c -o sigiostubs.lo `test -f '$(srcdir)/../shared/sigiostubs.c' || echo '$(srcdir)/'`$(srcdir)/../shared/sigiostubs.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/sigiostubs.Tpo $(DEPDIR)/sigiostubs.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(srcdir)/../shared/sigiostubs.c' object='sigiostubs.lo' libtool=yes @AMDEPBACKSLASH@
+sigio.lo: $(srcdir)/../shared/sigio.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sigio.lo -MD -MP -MF $(DEPDIR)/sigio.Tpo -c -o sigio.lo `test -f '$(srcdir)/../shared/sigio.c' || echo '$(srcdir)/'`$(srcdir)/../shared/sigio.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/sigio.Tpo $(DEPDIR)/sigio.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(srcdir)/../shared/sigio.c' object='sigio.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sigiostubs.lo `test -f '$(srcdir)/../shared/sigiostubs.c' || echo '$(srcdir)/'`$(srcdir)/../shared/sigiostubs.c
-
-stdResource.lo: $(srcdir)/../shared/stdResource.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT stdResource.lo -MD -MP -MF $(DEPDIR)/stdResource.Tpo -c -o stdResource.lo `test -f '$(srcdir)/../shared/stdResource.c' || echo '$(srcdir)/'`$(srcdir)/../shared/stdResource.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/stdResource.Tpo $(DEPDIR)/stdResource.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(srcdir)/../shared/stdResource.c' object='stdResource.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o stdResource.lo `test -f '$(srcdir)/../shared/stdResource.c' || echo '$(srcdir)/'`$(srcdir)/../shared/stdResource.c
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sigio.lo `test -f '$(srcdir)/../shared/sigio.c' || echo '$(srcdir)/'`$(srcdir)/../shared/sigio.c
 
 vidmem.lo: $(srcdir)/../shared/vidmem.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT vidmem.lo -MD -MP -MF $(DEPDIR)/vidmem.Tpo -c -o vidmem.lo `test -f '$(srcdir)/../shared/vidmem.c' || echo '$(srcdir)/'`$(srcdir)/../shared/vidmem.c
@@ -569,13 +582,6 @@ VTsw_noop.lo: $(srcdir)/../shared/VTsw_noop.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(srcdir)/../shared/VTsw_noop.c' object='VTsw_noop.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o VTsw_noop.lo `test -f '$(srcdir)/../shared/VTsw_noop.c' || echo '$(srcdir)/'`$(srcdir)/../shared/VTsw_noop.c
-
-VTsw_usl.lo: $(srcdir)/../shared/VTsw_usl.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT VTsw_usl.lo -MD -MP -MF $(DEPDIR)/VTsw_usl.Tpo -c -o VTsw_usl.lo `test -f '$(srcdir)/../shared/VTsw_usl.c' || echo '$(srcdir)/'`$(srcdir)/../shared/VTsw_usl.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/VTsw_usl.Tpo $(DEPDIR)/VTsw_usl.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(srcdir)/../shared/VTsw_usl.c' object='VTsw_usl.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o VTsw_usl.lo `test -f '$(srcdir)/../shared/VTsw_usl.c' || echo '$(srcdir)/'`$(srcdir)/../shared/VTsw_usl.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -828,7 +834,7 @@ uninstall-am: uninstall-nodist_sdkHEADERS uninstall-sdkHEADERS
 
 
 solaris-@SOLARIS_INOUT_ARCH@.il: solaris-@SOLARIS_INOUT_ARCH@.S
-	$(CPP) -P -DINLINE_ASM solaris-@SOLARIS_INOUT_ARCH@.S > $@
+	$(CPP) -P -DINLINE_ASM $(srcdir)/solaris-@SOLARIS_INOUT_ARCH@.S > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

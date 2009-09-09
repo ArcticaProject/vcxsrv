@@ -116,10 +116,10 @@ xf86parseLayoutSection (void)
 			{
 				XF86ConfInactivePtr iptr;
 
-				iptr = xf86confcalloc (1, sizeof (XF86ConfInactiveRec));
+				iptr = calloc (1, sizeof (XF86ConfInactiveRec));
 				iptr->list.next = NULL;
 				if (xf86getSubToken (&(ptr->lay_comment)) != STRING) {
-					xf86conffree (iptr);
+					free (iptr);
 					Error (INACTIVE_MSG, NULL);
 				}
 				iptr->inactive_device_str = val.str;
@@ -132,7 +132,7 @@ xf86parseLayoutSection (void)
 				XF86ConfAdjacencyPtr aptr;
 				int absKeyword = 0;
 
-				aptr = xf86confcalloc (1, sizeof (XF86ConfAdjacencyRec));
+				aptr = calloc (1, sizeof (XF86ConfAdjacencyRec));
 				aptr->list.next = NULL;
 				aptr->adj_scrnum = -1;
 				aptr->adj_where = CONF_ADJ_OBSOLETE;
@@ -145,7 +145,7 @@ xf86parseLayoutSection (void)
 					xf86unGetToken (token);
 				token = xf86getSubToken(&(ptr->lay_comment));
 				if (token != STRING) {
-					xf86conffree(aptr);
+					free(aptr);
 					Error (SCREEN_MSG, NULL);
 				}
 				aptr->adj_screen_str = val.str;
@@ -173,7 +173,7 @@ xf86parseLayoutSection (void)
 					absKeyword = 1;
 					break;
 				case EOF_TOKEN:
-					xf86conffree(aptr);
+					free(aptr);
 					Error (UNEXPECTED_EOF_MSG, NULL);
 					break;
 				default:
@@ -194,13 +194,13 @@ xf86parseLayoutSection (void)
 						aptr->adj_x = val.num;
 						token = xf86getSubToken(&(ptr->lay_comment));
 						if (token != NUMBER) {
-							xf86conffree(aptr);
+							free(aptr);
 							Error(INVALID_SCR_MSG, NULL);
 						}
 						aptr->adj_y = val.num;
 					} else {
 						if (absKeyword) {
-							xf86conffree(aptr);
+							free(aptr);
 							Error(INVALID_SCR_MSG, NULL);
 						} else
 							xf86unGetToken (token);
@@ -213,7 +213,7 @@ xf86parseLayoutSection (void)
 				case CONF_ADJ_RELATIVE:
 					token = xf86getSubToken(&(ptr->lay_comment));
 					if (token != STRING) {
-						xf86conffree(aptr);
+						free(aptr);
 						Error(INVALID_SCR_MSG, NULL);
 					}
 					aptr->adj_refscreen = val.str;
@@ -221,13 +221,13 @@ xf86parseLayoutSection (void)
 					{
 						token = xf86getSubToken(&(ptr->lay_comment));
 						if (token != NUMBER) {
-							xf86conffree(aptr);
+							free(aptr);
 							Error(INVALID_SCR_MSG, NULL);
 						}
 						aptr->adj_x = val.num;
 						token = xf86getSubToken(&(ptr->lay_comment));
 						if (token != NUMBER) {
-							xf86conffree(aptr);
+							free(aptr);
 							Error(INVALID_SCR_MSG, NULL);
 						}
 						aptr->adj_y = val.num;
@@ -239,21 +239,21 @@ xf86parseLayoutSection (void)
 
 					/* bottom */
 					if (xf86getSubToken (&(ptr->lay_comment)) != STRING) {
-						xf86conffree(aptr);
+						free(aptr);
 						Error (SCREEN_MSG, NULL);
 					}
 					aptr->adj_bottom_str = val.str;
 
 					/* left */
 					if (xf86getSubToken (&(ptr->lay_comment)) != STRING) {
-						xf86conffree(aptr);
+						free(aptr);
 						Error (SCREEN_MSG, NULL);
 					}
 					aptr->adj_left_str = val.str;
 
 					/* right */
 					if (xf86getSubToken (&(ptr->lay_comment)) != STRING) {
-						xf86conffree(aptr);
+						free(aptr);
 						Error (SCREEN_MSG, NULL);
 					}
 					aptr->adj_right_str = val.str;
@@ -267,11 +267,11 @@ xf86parseLayoutSection (void)
 			{
 				XF86ConfInputrefPtr iptr;
 
-				iptr = xf86confcalloc (1, sizeof (XF86ConfInputrefRec));
+				iptr = calloc (1, sizeof (XF86ConfInputrefRec));
 				iptr->list.next = NULL;
 				iptr->iref_option_lst = NULL;
 				if (xf86getSubToken (&(ptr->lay_comment)) != STRING) {
-					xf86conffree(iptr);
+					free(iptr);
 					Error (INPUTDEV_MSG, NULL);
 				}
 				iptr->iref_inputdev_str = val.str;
@@ -397,7 +397,7 @@ xf86freeAdjacencyList (XF86ConfAdjacencyPtr ptr)
 
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 
 }
@@ -413,7 +413,7 @@ xf86freeInputrefList (XF86ConfInputrefPtr ptr)
 		xf86optionListFree (ptr->iref_option_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 
 }
@@ -431,7 +431,7 @@ xf86freeLayoutList (XF86ConfLayoutPtr ptr)
 		xf86freeInputrefList (ptr->lay_input_lst);
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 

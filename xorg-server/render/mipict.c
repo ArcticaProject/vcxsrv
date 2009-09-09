@@ -313,32 +313,24 @@ miClipPictureSrc (RegionPtr	pRegion,
 		  int		dx,
 		  int		dy)
 {
-    /* XXX what to do with clipping from transformed pictures? */
-    if (pPicture->transform || !pPicture->pDrawable)
-	return TRUE;
-    if (pPicture->repeat)
+    if (pPicture->clientClipType != CT_NONE)
     {
-	if (pPicture->clientClipType != CT_NONE)
-	{
-	    pixman_region_translate ( pRegion, 
-			     dx - pPicture->clipOrigin.x,
-			     dy - pPicture->clipOrigin.y);
-	    if (!REGION_INTERSECT (pScreen, pRegion, pRegion, 
-				   (RegionPtr) pPicture->pCompositeClip)) // clientClip))
-		return FALSE;
-	    pixman_region_translate ( pRegion, 
-			     - (dx - pPicture->clipOrigin.x),
-			     - (dy - pPicture->clipOrigin.y));
-	}
-	return TRUE;
+	Bool result;
+	
+	pixman_region_translate ( pPicture->clientClip,
+				  pPicture->clipOrigin.x - dx,
+				  pPicture->clipOrigin.y - dy);
+
+	result = REGION_INTERSECT (pScreen, pRegion, pRegion, pPicture->clientClip);
+	
+	pixman_region_translate ( pPicture->clientClip,
+				  - (pPicture->clipOrigin.x - dx),
+				  - (pPicture->clipOrigin.y - dy));
+
+	if (!result)
+	    return FALSE;
     }
-    else
-    {
-	return miClipPictureReg (pRegion,
-				 pPicture->pCompositeClip,
-				 dx,
-				 dy);
-    }
+    return TRUE;
 }
 
 void
@@ -358,8 +350,6 @@ miCompositeSourceValidate (PicturePtr	pPicture,
     
     if (pScreen->SourceValidate)
     {
-        x -= pPicture->pDrawable->x;
-        y -= pPicture->pDrawable->y;
 	if (pPicture->transform)
 	{
 	    xPoint	    points[4];
@@ -394,6 +384,8 @@ miCompositeSourceValidate (PicturePtr	pPicture,
 	    width = xmax - xmin;
 	    height = ymax - ymin;
 	}
+        x += pPicture->pDrawable->x;
+        y += pPicture->pDrawable->y;
 	(*pScreen->SourceValidate) (pDrawable, x, y, width, height);
     }
 }
@@ -403,7 +395,7 @@ miCompositeSourceValidate (PicturePtr	pPicture,
  * an allocation failure, but rendering ignores those anyways.
  */
 
-_X_EXPORT Bool
+Bool
 miComputeCompositeRegion (RegionPtr	pRegion,
 			  PicturePtr	pSrc,
 			  PicturePtr	pMask,
@@ -459,8 +451,8 @@ miComputeCompositeRegion (RegionPtr	pRegion,
     if (pSrc->alphaMap)
     {
 	if (!miClipPictureSrc (pRegion, pSrc->alphaMap,
-			       xDst - (xSrc + pSrc->alphaOrigin.x),
-			       yDst - (ySrc + pSrc->alphaOrigin.y)))
+			       xDst - (xSrc - pSrc->alphaOrigin.x),
+			       yDst - (ySrc - pSrc->alphaOrigin.y)))
 	{
 	    pixman_region_fini (pRegion);
 	    return FALSE;
@@ -477,8 +469,8 @@ miComputeCompositeRegion (RegionPtr	pRegion,
 	if (pMask->alphaMap)
 	{
 	    if (!miClipPictureSrc (pRegion, pMask->alphaMap,
-				   xDst - (xMask + pMask->alphaOrigin.x),
-				   yDst - (yMask + pMask->alphaOrigin.y)))
+				   xDst - (xMask - pMask->alphaOrigin.x),
+				   yDst - (yMask - pMask->alphaOrigin.y)))
 	    {
 		pixman_region_fini (pRegion);
 		return FALSE;
@@ -612,7 +604,7 @@ miRenderPixelToColor (PictFormatPtr format,
     }
 }
 
-_X_EXPORT Bool
+Bool
 miPictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
 {
     PictureScreenPtr    ps;

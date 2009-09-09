@@ -1,6 +1,6 @@
 /*
  *Copyright (C) 1994-2000 The XFree86 Project, Inc. All Rights Reserved.
- *Copyright (C) Colin Harrison 2005-2008
+ *Copyright (C) Colin Harrison 2005-2009
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -57,8 +57,6 @@ typedef int pid_t;
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
-
-/* Windows headers */
 #include <X11/Xwindows.h>
 
 /* Local headers */
@@ -67,9 +65,15 @@ typedef int pid_t;
 #include "winwindow.h"
 #include "winprefs.h"
 #include "window.h"
+#include "pixmapstr.h"
 #include "windowstr.h"
+
 #ifdef XWIN_MULTIWINDOWEXTWM
 #include <X11/extensions/windowswmstr.h>
+#else
+/* We need the native HWND atom for intWM, so for consistency use the
+   same name as extWM would if we were building with enabled... */
+#define WINDOWSWM_NATIVE_HWND "_WINDOWSWM_NATIVE_HWND"
 #endif
 
 extern void winDebug(const char *format, ...);
@@ -259,6 +263,12 @@ PushMessage (WMMsgQueuePtr pQueue, WMMsgNodePtr pNode)
       break;
     case WM_WM_MAP:
       ErrorF ("\tWM_WM_MAP\n");
+      break;
+    case WM_WM_MAP2:
+      ErrorF ("\tWM_WM_MAP2\n");
+      break;
+    case WM_WM_MAP3:
+      ErrorF ("\tWM_WM_MAP3\n");
       break;
     case WM_WM_UNMAP:
       ErrorF ("\tWM_WM_UNMAP\n");
@@ -731,6 +741,28 @@ winMultiWindowWMProc (void *pArg)
 			   1);
 	  break;
 
+	case WM_WM_MAP3:
+#if CYGMULTIWINDOW_DEBUG
+	  ErrorF ("\tWM_WM_MAP3\n");
+#endif
+	  /* Put a note as to the HWND associated with this Window */
+	  XChangeProperty (pWMInfo->pDisplay,
+			   pNode->msg.iWindow,
+			   pWMInfo->atmPrivMap,
+			   XA_INTEGER,//pWMInfo->atmPrivMap,
+			   32,
+			   PropModeReplace,
+			   (unsigned char *) &(pNode->msg.hwndWindow),
+			   1);
+	  UpdateName (pWMInfo, pNode->msg.iWindow);
+	  winUpdateIcon (pNode->msg.iWindow);
+	  {
+	    HWND zstyle = HWND_NOTOPMOST;
+	    winApplyHints (pWMInfo->pDisplay, pNode->msg.iWindow, pNode->msg.hwndWindow, &zstyle);
+	    winUpdateWindowPosition (pNode->msg.hwndWindow, TRUE, &zstyle);
+	  }
+	  break;
+
 	case WM_WM_UNMAP:
 #if CYGMULTIWINDOW_DEBUG
 	  ErrorF ("\tWM_WM_UNMAP\n");
@@ -1085,7 +1117,6 @@ winMultiWindowXMsgProc (void *pArg)
   XCloseDisplay (pProcArg->pDisplay);
   pthread_exit (NULL);
   return NULL;
- 
 }
 
 
@@ -1464,18 +1495,17 @@ CheckAnotherWindowManager (Display *pDisplay, DWORD dwScreen)
  */
 
 void
-winDeinitMultiWindowWM ()
+winDeinitMultiWindowWM (void)
 {
   ErrorF ("winDeinitMultiWindowWM - Noting shutdown in progress\n");
   g_shutdown = TRUE;
 }
 
 /* Windows window styles */
-#define HINT_NOFRAME	(1L<<0)
+#define HINT_NOFRAME	(1l<<0)
 #define HINT_BORDER	(1L<<1)
-#define HINT_SIZEBOX	(1L<<2)
-#define HINT_CAPTION	(1L<<3)
-#define HINT_NOMAXIMIZE	(1L<<4)
+#define HINT_SIZEBOX	(1l<<2)
+#define HINT_CAPTION	(1l<<3)
 /* These two are used on their own */
 #define HINT_MAX	(1L<<0)
 #define HINT_MIN	(1L<<1)
@@ -1483,21 +1513,30 @@ winDeinitMultiWindowWM ()
 static void
 winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
 {
-  static Atom	windowState, motif_wm_hints, windowType;
-  Atom		type, *pAtom = NULL;
-  int 		format;
-  unsigned long	hint = 0, maxmin = 0, rcStyle, nitems = 0 , left = 0;
-  WindowPtr	pWin = GetProp (hWnd, WIN_WINDOW_PROP);
+  static Atom		windowState, motif_wm_hints, windowType;
+  static Atom		hiddenState, fullscreenState, belowState, aboveState;
+  static Atom		dockWindow;
+  static int		generation;
+  Atom			type, *pAtom = NULL;
+  int			format;
+  unsigned long		hint = 0, maxmin = 0, style, nitems = 0 , left = 0;
+  WindowPtr		pWin = GetProp (hWnd, WIN_WINDOW_PROP);
   MwmHints *mwm_hint = NULL;
-  XSizeHints *normal_hint;
-  long supplied;
 
   if (!hWnd) return;
   if (!IsWindow (hWnd)) return;
 
-  if (windowState == None) windowState = XInternAtom(pDisplay, "_NET_WM_STATE", False);
-  if (motif_wm_hints == None) motif_wm_hints = XInternAtom(pDisplay, "_MOTIF_WM_HINTS", False);
-  if (windowType == None) windowType = XInternAtom(pDisplay, "_NET_WM_WINDOW_TYPE", False);
+  if (generation != serverGeneration) {
+      generation = serverGeneration;
+      windowState = XInternAtom(pDisplay, "_NET_WM_STATE", False);
+      motif_wm_hints = XInternAtom(pDisplay, "_MOTIF_WM_HINTS", False);
+      windowType = XInternAtom(pDisplay, "_NET_WM_WINDOW_TYPE", False);
+      hiddenState = XInternAtom(pDisplay, "_NET_WM_STATE_HIDDEN", False);
+      fullscreenState = XInternAtom(pDisplay, "_NET_WM_STATE_FULLSCREEN", False);
+      belowState = XInternAtom(pDisplay, "_NET_WM_STATE_BELOW", False);
+      aboveState = XInternAtom(pDisplay, "_NET_WM_STATE_ABOVE", False);
+      dockWindow = XInternAtom(pDisplay, "_NET_WM_WINDOW_TYPE_DOCK", False);
+  }
 
   if (XGetWindowProperty(pDisplay, iWindow, windowState, 0L,
 			 1L, False, XA_ATOM, &type, &format,
@@ -1505,11 +1544,6 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   {
     if (pAtom && nitems == 1)
     {
-      static Atom hiddenState, fullscreenState, belowState, aboveState;
-      if (hiddenState == None) hiddenState = XInternAtom(pDisplay, "_NET_WM_STATE_HIDDEN", False);
-      if (fullscreenState == None) fullscreenState = XInternAtom(pDisplay, "_NET_WM_STATE_FULLSCREEN", False);
-      if (belowState == None) belowState = XInternAtom(pDisplay, "_NET_WM_STATE_BELOW", False);
-      if (aboveState == None) aboveState = XInternAtom(pDisplay, "_NET_WM_STATE_ABOVE", False);
       if (*pAtom == hiddenState) maxmin |= HINT_MIN;
       else if (*pAtom == fullscreenState) maxmin |= HINT_MAX;
       if (*pAtom == belowState) *zstyle = HWND_BOTTOM;
@@ -1544,73 +1578,47 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   {
     if (pAtom && nitems == 1)
     {
-      static Atom dockWindow;
-      if (dockWindow == None) dockWindow = XInternAtom(pDisplay, "_NET_WM_WINDOW_TYPE_DOCK", False);
       if (*pAtom == dockWindow)
       {
-	hint = (hint & ~HINT_NOFRAME) | HINT_SIZEBOX; /* VcXsrv puts a sizebox on dock windows */
+	hint = (hint & ~HINT_NOFRAME) | HINT_SIZEBOX; /* Xming puts a sizebox on dock windows */
 	*zstyle = HWND_TOPMOST;
       }
     }
     if (pAtom) XFree(pAtom);
   }
 
-  normal_hint = XAllocSizeHints();
-  if (normal_hint && (XGetWMNormalHints(pDisplay, iWindow, normal_hint, &supplied) == Success))
-    {
-      if (normal_hint->flags & PMaxSize)
-	{
-	  /* Not maximizable if a maximum size is specified */
-	  hint |= HINT_NOMAXIMIZE;
-
-	  if (normal_hint->flags & PMinSize)
-	    {
-	      /*
-		 If both minimum size and maximum size are specified and are the same,
-		 don't bother with a resizing frame
-	      */
-	      if ((normal_hint->min_width == normal_hint->max_width)
-		  && (normal_hint->min_height == normal_hint->max_height))
-		  hint = (hint & ~HINT_SIZEBOX);
-	    }
-	}
-    }
-  XFree(normal_hint);
-
   /* Apply Styles, overriding hint settings from above */
-  rcStyle = winOverrideStyle((unsigned long)pWin);
-  if (rcStyle & STYLE_TOPMOST) *zstyle = HWND_TOPMOST;
-  else if (rcStyle & STYLE_MAXIMIZE) maxmin = (hint & ~HINT_MIN) | HINT_MAX;
-  else if (rcStyle & STYLE_MINIMIZE) maxmin = (hint & ~HINT_MAX) | HINT_MIN;
-  else if (rcStyle & STYLE_BOTTOM) *zstyle = HWND_BOTTOM;
+  style = winOverrideStyle((unsigned long)pWin);
+  if (style & STYLE_TOPMOST) *zstyle = HWND_TOPMOST;
+  else if (style & STYLE_MAXIMIZE) maxmin = (hint & ~HINT_MIN) | HINT_MAX;
+  else if (style & STYLE_MINIMIZE) maxmin = (hint & ~HINT_MAX) | HINT_MIN;
+  else if (style & STYLE_BOTTOM) *zstyle = HWND_BOTTOM;
 
   if (maxmin & HINT_MAX) SendMessage(hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
   else if (maxmin & HINT_MIN) SendMessage(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 
-  if (rcStyle & STYLE_NOTITLE)
+  if (style & STYLE_NOTITLE)
 	hint = (hint & ~HINT_NOFRAME & ~HINT_BORDER & ~HINT_CAPTION) | HINT_SIZEBOX;
-  else if (rcStyle & STYLE_OUTLINE)
+  else if (style & STYLE_OUTLINE)
 	hint = (hint & ~HINT_NOFRAME & ~HINT_SIZEBOX & ~HINT_CAPTION) | HINT_BORDER;
-  else if (rcStyle & STYLE_NOFRAME)
+  else if (style & STYLE_NOFRAME)
 	hint = (hint & ~HINT_BORDER & ~HINT_CAPTION & ~HINT_SIZEBOX) | HINT_NOFRAME;
 
-  SetWindowLongPtr (hWnd, GWL_STYLE, GetWindowLongPtr(hWnd, GWL_STYLE) & ~WS_CAPTION & ~WS_SIZEBOX); /* Just in case */
-  if (!hint) /* All on */
-    SetWindowLongPtr (hWnd, GWL_STYLE, GetWindowLongPtr(hWnd, GWL_STYLE) | WS_CAPTION | WS_SIZEBOX);
+  style = GetWindowLongPtr(hWnd, GWL_STYLE) & ~WS_CAPTION & ~WS_SIZEBOX; /* Just in case */
+  if (!style) return;
+  if (!hint) /* All on, but no resize of children is allowed */
+    style = style | WS_CAPTION | (GetParent(hWnd) ? 0 : WS_SIZEBOX);
   else if (hint & HINT_NOFRAME); /* All off, so do nothing */
-  else  SetWindowLongPtr (hWnd, GWL_STYLE, GetWindowLongPtr(hWnd, GWL_STYLE) |
-			((hint & HINT_BORDER) ? WS_BORDER : 0) |
-			((hint & HINT_SIZEBOX) ? WS_SIZEBOX : 0) |
-			((hint & HINT_CAPTION) ? WS_CAPTION : 0));
-
-  if (hint & HINT_NOMAXIMIZE)
-    SetWindowLongPtr(hWnd, GWL_STYLE, GetWindowLongPtr(hWnd, GWL_STYLE) & ~WS_MAXIMIZEBOX);
+  else style = style | ((hint & HINT_BORDER) ? WS_BORDER : 0) |
+		((hint & HINT_SIZEBOX) ? (GetParent(hWnd) ? 0 : WS_SIZEBOX) : 0) |
+		((hint & HINT_CAPTION) ? WS_CAPTION : 0);
+  SetWindowLongPtr (hWnd, GWL_STYLE, style);
 }
 
 void
 winUpdateWindowPosition (HWND hWnd, Bool reshape, HWND *zstyle)
 {
-  int	iX, iY, iWidth, iHeight;
+  int iX, iY, iWidth, iHeight;
   int	iDx, iDy;
   RECT	rcNew;
   WindowPtr	pWin = GetProp (hWnd, WIN_WINDOW_PROP);

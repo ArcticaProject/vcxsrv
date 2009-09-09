@@ -1,6 +1,6 @@
-noinst_LIBRARIES = libramdac.a
+noinst_LTLIBRARIES = libramdac.la
 
-libramdac_a_SOURCES = xf86RamDac.c xf86RamDacCmap.c \
+libramdac_la_SOURCES = xf86RamDac.c xf86RamDacCmap.c \
                       xf86Cursor.c xf86HWCurs.c IBM.c BT.c TI.c \
 		      xf86BitOrder.c
 

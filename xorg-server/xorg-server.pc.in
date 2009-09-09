@@ -9,11 +9,10 @@ abi_ansic=@abi_ansic@
 abi_videodrv=@abi_videodrv@
 abi_xinput=@abi_xinput@
 abi_extension=@abi_extension@
-abi_font=@abi_font@
 
 Name: xorg-server
 Description: Modular X.Org X Server
 Version: @PACKAGE_VERSION@
 Requires: pixman-1 pciaccess
-Cflags: -I${sdkdir}
+Cflags: -I${sdkdir} @symbol_visibility@
 Libs: -L${libdir}

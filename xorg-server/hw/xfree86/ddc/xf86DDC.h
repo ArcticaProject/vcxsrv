@@ -24,42 +24,53 @@ typedef enum {
 
 typedef void (* DDC1SetSpeedProc)(ScrnInfoPtr, xf86ddcSpeed);
 
-extern xf86MonPtr xf86DoEDID_DDC1(
+extern _X_EXPORT xf86MonPtr xf86DoEDID_DDC1(
     int scrnIndex, 
     DDC1SetSpeedProc DDC1SetSpeed,
     unsigned int (*DDC1Read)(ScrnInfoPtr)
 );
 
-extern xf86MonPtr xf86DoEDID_DDC2(
+extern _X_EXPORT xf86MonPtr xf86DoEDID_DDC2(
    int scrnIndex,
    I2CBusPtr pBus
 );
 
-extern xf86MonPtr xf86DoEEDID(int scrnIndex, I2CBusPtr pBus, Bool);
+extern _X_EXPORT xf86MonPtr xf86DoEEDID(int scrnIndex, I2CBusPtr pBus, Bool);
 
-extern xf86MonPtr xf86PrintEDID(
+extern _X_EXPORT xf86MonPtr xf86PrintEDID(
     xf86MonPtr monPtr
 );
 
-extern xf86MonPtr xf86InterpretEDID(
+extern _X_EXPORT xf86MonPtr xf86InterpretEDID(
     int screenIndex, Uchar *block
 );
 
-extern xf86MonPtr xf86InterpretEEDID(
+extern _X_EXPORT xf86MonPtr xf86InterpretEEDID(
     int screenIndex, Uchar *block
 );
 
-extern void 
-xf86DDCMonitorSet(int scrnIndex, MonPtr Monitor, xf86MonPtr DDC);
+extern _X_EXPORT void
+xf86EdidMonitorSet(int scrnIndex, MonPtr Monitor, xf86MonPtr DDC);
 
-extern Bool xf86SetDDCproperties(
+extern _X_EXPORT Bool xf86SetDDCproperties(
     ScrnInfoPtr pScreen,
     xf86MonPtr DDC
 );
 
-DisplayModePtr xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC);
+extern _X_EXPORT DisplayModePtr xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC);
 
-extern Bool
+extern _X_EXPORT Bool
 xf86MonitorIsHDMI(xf86MonPtr mon);
+
+extern _X_EXPORT xf86MonPtr
+xf86DoDisplayID(int scrnIndex, I2CBusPtr pBus);
+
+extern _X_EXPORT void
+xf86DisplayIDMonitorSet(int scrnIndex, MonPtr mon, xf86MonPtr DDC);
+
+extern _X_EXPORT DisplayModePtr
+FindDMTMode(int hsize, int vsize, int refresh, Bool rb);
+
+extern _X_EXPORT const DisplayModeRec DMTModes[];
 
 #endif

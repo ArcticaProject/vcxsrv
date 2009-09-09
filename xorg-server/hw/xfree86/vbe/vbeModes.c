@@ -414,11 +414,9 @@ VBESetModeParameters(ScrnInfoPtr pScrn, vbeInfoPtr pVbe)
 	    data->block->PixelClock = best->Clock * 1000;
 	    /* XXX May not have this. */
 	    clock = VBEGetPixelClock(pVbe, data->mode, data->block->PixelClock);
-#ifdef DEBUG
-	    ErrorF("Setting clock %.2fMHz, closest is %.2fMHz\n",
+	    DebugF("Setting clock %.2fMHz, closest is %.2fMHz\n",
 		(double)data->block->PixelClock / 1000000.0, 
 		(double)clock / 1000000.0);
-#endif
 	    if (clock)
 		data->block->PixelClock = clock;
 	    data->mode |= (1 << 11);

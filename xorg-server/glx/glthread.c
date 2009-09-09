@@ -31,6 +31,7 @@
 
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
+#include <X11/Xfuncproto.h>
 #endif
 
 #include <stdlib.h>
@@ -71,7 +72,7 @@
  */
 #ifdef PTHREADS
 
-unsigned long
+_X_EXPORT unsigned long
 _glthread_GetID(void)
 {
    return (unsigned long) pthread_self();
@@ -125,7 +126,7 @@ _glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
 #define USE_LOCK_FOR_KEY	/* undef this to try a version without
 				   lock for the global key... */
 
-unsigned long
+_X_EXPORT unsigned long
 _glthread_GetID(void)
 {
    abort();   /* XXX not implemented yet */
@@ -256,7 +257,7 @@ _glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
  */
 #ifdef USE_XTHREADS
 
-unsigned long
+_X_EXPORT unsigned long
 _glthread_GetID(void)
 {
    return (unsigned long) xthread_self();
@@ -346,7 +347,7 @@ _glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
  * no-op functions
  */
 
-unsigned long
+_X_EXPORT unsigned long
 _glthread_GetID(void)
 {
    return 0;

@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -134,6 +132,7 @@ ProcXUngrabDeviceButton(ClientPtr client)
     temporaryGrab.device = dev;
     temporaryGrab.window = pWin;
     temporaryGrab.type = DeviceButtonPress;
+    temporaryGrab.grabtype = GRABTYPE_XI;
     temporaryGrab.modifierDevice = mdev;
     temporaryGrab.modifiersDetail.exact = stuff->modifiers;
     temporaryGrab.modifiersDetail.pMask = NULL;

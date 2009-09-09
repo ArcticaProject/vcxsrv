@@ -1394,16 +1394,6 @@ ddxProcessArgument (int argc, char *argv[], int i)
     }
 #endif
 
-#ifdef XKB
-  /*
-   * Look for the '-kb' argument
-   */
-  if (IS_OPTION ("-kb"))
-    {
-      g_cmdline.noXkbExtension = TRUE;  
-      return 0; /* Let DIX parse this again */
-    }
-
   if (IS_OPTION ("-xkbrules"))
     {
       CHECK_ARGS (1);
@@ -1434,7 +1424,6 @@ ddxProcessArgument (int argc, char *argv[], int i)
       g_cmdline.xkbOptions = argv[++i];
       return 2;
     }
-#endif
 
   if (IS_OPTION ("-keyhook"))
     {
@@ -1520,7 +1509,7 @@ winLogCommandLine (int argc, char *argv[])
 	iCurrLen = 0;
 	
 	/* Add line break if it fits */
-	strncat (g_pszCommandLine, "\n", iSize - strlen (g_pszCommandLine));
+	strncat (g_pszCommandLine, "\n ", iSize - strlen (g_pszCommandLine));
       }
       
       strncat (g_pszCommandLine, argv[i], iSize - strlen (g_pszCommandLine));
@@ -1550,8 +1539,8 @@ winLogVersionInfo (void)
 
   ErrorF ("Welcome to the XWin X Server\n");
   ErrorF ("Vendor: %s\n", VENDOR_STRING);
-  ErrorF ("Release: %d.%d.%d.%d (%d)\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, BUILD_DATE);
-  ErrorF ("Contact: %s\n", VENDOR_CONTACT);
+  ErrorF ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
+  ErrorF ("Contact: %s\n\n", VENDOR_CONTACT);
 }
 
 /*

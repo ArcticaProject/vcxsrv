@@ -42,16 +42,10 @@
 #include "winmsg.h"
 #include "inputstr.h"
 
-#ifdef XKB
-extern BOOL winCheckKeyPressed(WPARAM wParam, LPARAM lParam);
 #ifndef XKB_IN_SERVER
 #define XKB_IN_SERVER
 #endif
 #include <xkbsrv.h>
-#endif
-extern void winFixShiftKeys (int iScanCode);
-
-
 /*
  * Global variables
  */
@@ -728,8 +722,8 @@ winWindowProc (HWND hwnd, UINT message,
 	break;
 
       /* Has the mouse pointer crossed screens? */
-      if (s_pScreen != miPointerGetScreen(inputInfo.pointer))
-	miPointerSetScreen (inputInfo.pointer, s_pScreenInfo->dwScreen,
+      if (s_pScreen != miPointerGetScreen(g_pwinPointer))
+	miPointerSetScreen (g_pwinPointer, s_pScreenInfo->dwScreen,
 			       GET_X_LPARAM(lParam)-s_pScreenInfo->dwXOffset,
 			       GET_Y_LPARAM(lParam)-s_pScreenInfo->dwYOffset);
 
@@ -770,7 +764,6 @@ winWindowProc (HWND hwnd, UINT message,
       /* Deliver absolute cursor position to X Server */
       winEnqueueMotion(GET_X_LPARAM(lParam)-s_pScreenInfo->dwXOffset,
 		       GET_Y_LPARAM(lParam)-s_pScreenInfo->dwYOffset);
-
       return 0;
 
     case WM_NCMOUSEMOVE:
@@ -819,7 +812,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, Button1, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonPress, Button1, wParam);
       
     case WM_LBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -830,7 +823,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, Button1, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button1, wParam);
 
     case WM_MBUTTONDBLCLK:
     case WM_MBUTTONDOWN:
@@ -842,7 +835,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, Button2, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonPress, Button2, wParam);
       
     case WM_MBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -853,7 +846,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, Button2, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button2, wParam);
       
     case WM_RBUTTONDBLCLK:
     case WM_RBUTTONDOWN:
@@ -865,7 +858,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, Button3, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonPress, Button3, wParam);
       
     case WM_RBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -876,7 +869,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, Button3, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonRelease, Button3, wParam);
 
     case WM_XBUTTONDBLCLK:
     case WM_XBUTTONDOWN:
@@ -888,7 +881,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	SetCapture (hwnd);
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonPress, HIWORD(wParam) + 5, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonPress, HIWORD(wParam) + 5, wParam);
     case WM_XBUTTONUP:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
@@ -898,7 +891,7 @@ winWindowProc (HWND hwnd, UINT message,
 #endif
 	  )
 	ReleaseCapture ();
-	return winMouseButtonsHandle (s_pScreen, DeviceButtonRelease, HIWORD(wParam) + 5, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (s_pScreen, ButtonRelease, HIWORD(wParam) + 5, wParam);
 
     case WM_TIMER:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
@@ -908,20 +901,15 @@ winWindowProc (HWND hwnd, UINT message,
       switch (wParam)
 	{
 	case WIN_E3B_TIMER_ID:
-	  {
-	    POINT Pos;
-	    GetCursorPos(&Pos);
-	    ScreenToClient(hwnd,&Pos);
 	    /* Send delayed button press */
-	    winMouseButtonsSendEvent (DeviceButtonPress,
-	                              s_pScreenPriv->iE3BCachedPress,Pos.x,Pos.y);
+	    winMouseButtonsSendEvent (ButtonPress,
+				    s_pScreenPriv->iE3BCachedPress);
 
 	    /* Kill this timer */
 	    KillTimer (s_pScreenPriv->hwndScreen, WIN_E3B_TIMER_ID);
 
 	    /* Clear screen privates flags */
 	    s_pScreenPriv->iE3BCachedPress = 0;
-	  }
 	  break;
 
 	case WIN_POLLING_MOUSE_TIMER_ID:
@@ -932,11 +920,10 @@ winWindowProc (HWND hwnd, UINT message,
 	    
 	    /* Get the current position of the mouse cursor */
 	    GetCursorPos (&point);
-	    ScreenToClient(hwnd,&point);
 	    
 	    /* Map from screen (-X, -Y) to root (0, 0) */
-	    //point.x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
-	    //point.y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
+	    point.x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
+	    point.y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
 
 	    /* Deliver absolute cursor position to X Server */
 	    winEnqueueMotion(point.x , point.y);
@@ -948,7 +935,6 @@ winWindowProc (HWND hwnd, UINT message,
 	    wR = (GetKeyState (VK_RBUTTON) & 0x8000)?MK_RBUTTON:0;
 	    wShift = (GetKeyState (VK_SHIFT) & 0x8000)?MK_SHIFT:0;
 	    wCtrl = (GetKeyState (VK_CONTROL) & 0x8000)?MK_CONTROL:0;
-	    ScreenToClient(hwnd,&point);
 	    lPos = MAKELPARAM(point.x, point.y);
 	    if (g_fButton[0] & !wL)
 	    PostMessage (hwnd, WM_LBUTTONUP, wCtrl|wM|wR|wShift, lPos);
@@ -966,19 +952,14 @@ winWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_MOUSEWHEEL:
-    {
-      POINT Pos;
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
 #if CYGDEBUG
       winDebug ("winWindowProc - WM_MOUSEWHEEL\n");
 #endif
-      Pos.x=GET_X_LPARAM(lParam);
-      Pos.y=GET_Y_LPARAM(lParam);
-      ScreenToClient(hwnd,&Pos);
-      winMouseWheel (s_pScreen, GET_WHEEL_DELTA_WPARAM(wParam),Pos.x,Pos.y);
+      winMouseWheel (s_pScreen, GET_WHEEL_DELTA_WPARAM(wParam));
       break;
-    }
+
     case WM_SETFOCUS:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
@@ -1048,12 +1029,10 @@ winWindowProc (HWND hwnd, UINT message,
       if ((wParam == VK_LWIN || wParam == VK_RWIN) && !g_fKeyboardHookLL)
 	break;
 
-#ifdef XKB
       /* 
        * Discard presses generated from Windows auto-repeat
-       * ago: Only discard them if XKB is not disabled 
        */
-      if (!g_winInfo.xkb.disable && (lParam & (1<<30)))
+      if (lParam & (1<<30))
       {
         switch (wParam)
         {
@@ -1069,7 +1048,6 @@ winWindowProc (HWND hwnd, UINT message,
             return 0;
         }
       } 
-#endif 
       
       /* Discard fake Ctrl_L presses that precede AltGR on non-US keyboards */
       if (winIsFakeCtrl_L (message, wParam, lParam))

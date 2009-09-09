@@ -54,7 +54,7 @@ typedef struct {
 
 /* DDX interface */
 
-int
+extern _X_EXPORT int
 DGASetMode(
    int Index,
    int num,
@@ -62,35 +62,35 @@ DGASetMode(
    PixmapPtr *pPix
 );
 
-void
+extern _X_EXPORT void
 DGASetInputMode(
    int Index,
    Bool keyboard,
    Bool mouse
 );
 
-void 
+extern _X_EXPORT void
 DGASelectInput(
    int Index,
    ClientPtr client,
    long mask
 );
 
-Bool DGAAvailable(int Index);
-Bool DGAActive(int Index);
-void DGAShutdown(void);
-void DGAInstallCmap(ColormapPtr cmap);
-int DGAGetViewportStatus(int Index); 
-int DGASync(int Index);
+extern _X_EXPORT Bool DGAAvailable(int Index);
+extern _X_EXPORT Bool DGAActive(int Index);
+extern _X_EXPORT void DGAShutdown(void);
+extern _X_EXPORT void DGAInstallCmap(ColormapPtr cmap);
+extern _X_EXPORT int DGAGetViewportStatus(int Index);
+extern _X_EXPORT int DGASync(int Index);
 
-int
+extern _X_EXPORT int
 DGAFillRect(
    int Index,
    int x, int y, int w, int h,
    unsigned long color
 );
 
-int
+extern _X_EXPORT int
 DGABlitRect(
    int Index,
    int srcx, int srcy, 
@@ -98,7 +98,7 @@ DGABlitRect(
    int dstx, int dsty
 );
 
-int
+extern _X_EXPORT int
 DGABlitTransRect(
    int Index,
    int srcx, int srcy, 
@@ -107,38 +107,36 @@ DGABlitTransRect(
    unsigned long color
 );
 
-int
+extern _X_EXPORT int
 DGASetViewport(
    int Index,
    int x, int y,
    int mode
 ); 
 
-int DGAGetModes(int Index);
-int DGAGetOldDGAMode(int Index);
+extern _X_EXPORT int DGAGetModes(int Index);
+extern _X_EXPORT int DGAGetOldDGAMode(int Index);
 
-int DGAGetModeInfo(int Index, XDGAModePtr mode, int num);
+extern _X_EXPORT int DGAGetModeInfo(int Index, XDGAModePtr mode, int num);
 
-Bool DGAVTSwitch(void);
-Bool DGAStealButtonEvent(DeviceIntPtr dev, int Index, int button, 
+extern _X_EXPORT Bool DGAVTSwitch(void);
+extern _X_EXPORT Bool DGAStealButtonEvent(DeviceIntPtr dev, int Index, int button,
                          int is_down);
-Bool DGAStealMotionEvent(DeviceIntPtr dev, int Index, int dx, int dy);
-Bool DGAStealKeyEvent(DeviceIntPtr dev, int Index, int key_code, int is_down);
-Bool DGAIsDgaEvent (xEvent *e);
-
-Bool DGADeliverEvent (ScreenPtr pScreen, xEvent *e);
+extern _X_EXPORT Bool DGAStealMotionEvent(DeviceIntPtr dev, int Index, int dx, int dy);
+extern _X_EXPORT Bool DGAStealKeyEvent(DeviceIntPtr dev, int Index, int key_code, int is_down);
+extern _X_EXPORT Bool DGAIsDgaEvent (xEvent *e);
 	    
-Bool DGAOpenFramebuffer(int Index, char **name, unsigned char **mem, 
+extern _X_EXPORT Bool DGAOpenFramebuffer(int Index, char **name, unsigned char **mem,
 			int *size, int *offset, int *flags);
-void DGACloseFramebuffer(int Index);
-Bool DGAChangePixmapMode(int Index, int *x, int *y, int mode);
-int DGACreateColormap(int Index, ClientPtr client, int id, int mode, 
+extern _X_EXPORT void DGACloseFramebuffer(int Index);
+extern _X_EXPORT Bool DGAChangePixmapMode(int Index, int *x, int *y, int mode);
+extern _X_EXPORT int DGACreateColormap(int Index, ClientPtr client, int id, int mode,
 			int alloc);
 
-extern unsigned char DGAReqCode;
-extern int DGAErrorBase;
-extern int DGAEventBase;
-extern int *XDGAEventBase;
+extern _X_EXPORT unsigned char DGAReqCode;
+extern _X_EXPORT int DGAErrorBase;
+extern _X_EXPORT int DGAEventBase;
+extern _X_EXPORT int *XDGAEventBase;
 
 
 

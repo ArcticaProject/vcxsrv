@@ -49,5 +49,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define DixManageAccess		(1<<25)	/* manage object */
 #define DixDebugAccess		(1<<26)	/* debug object */
 #define DixBellAccess		(1<<27)	/* audible sound */
+#define DixPostAccess		(1<<28) /* post or follow-up call */
 
 #endif /* DIX_ACCESS_H */

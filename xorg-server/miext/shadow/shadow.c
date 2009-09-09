@@ -139,7 +139,7 @@ shadowSetup(ScreenPtr pScreen)
     if (!DamageSetup(pScreen))
 	return FALSE;
 
-    pBuf = (shadowBufPtr) xalloc(sizeof(shadowBufRec));
+    pBuf = xalloc(sizeof(shadowBufRec));
     if (!pBuf)
 	return FALSE;
 #ifdef BACKWARDS_COMPATIBILITY
@@ -204,7 +204,7 @@ shadowAdd(ScreenPtr pScreen, PixmapPtr pPixmap, ShadowUpdateProc update,
     pBuf->update = update;
     pBuf->window = window;
     pBuf->randr = randr;
-    pBuf->closure = 0;
+    pBuf->closure = closure;
     pBuf->pPixmap = pPixmap;
     DamageRegister(&pPixmap->drawable, pBuf->pDamage);
     return TRUE;

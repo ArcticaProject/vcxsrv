@@ -13,6 +13,15 @@
 #include "xf86_OSlib.h"
 #include "xf86OSpriv.h"
 
+#include <machine/bwx.h>
+
+/*
+ * The following functions are used only on EV56 and greater CPUs,
+ * and the assembler requires going to EV56 mode in order to emit
+ * these instructions.
+ */
+__asm(".arch ev56");
+
 int readDense8(pointer Base, register unsigned long Offset);
 int readDense16(pointer Base, register unsigned long Offset);
 int readDense32(pointer Base, register unsigned long Offset);
@@ -33,14 +42,14 @@ int
 readDense8(pointer Base, register unsigned long Offset)
 {
     mem_barrier();
-    return *(volatile CARD8*) ((unsigned long)Base+(Offset));
+    return (alpha_ldbu((pointer)((unsigned long)Base+(Offset))));
 }
 
 int
 readDense16(pointer Base, register unsigned long Offset)
 {
     mem_barrier();
-    return *(volatile CARD16*) ((unsigned long)Base+(Offset));
+    return (alpha_ldwu((pointer)((unsigned long)Base+(Offset))));
 }
 
 int
@@ -53,13 +62,13 @@ readDense32(pointer Base, register unsigned long Offset)
 void
 writeDenseNB8(int Value, pointer Base, register unsigned long Offset)
 {
-    *(volatile CARD8*)((unsigned long)Base+(Offset)) = Value;
+    alpha_stb((pointer)((unsigned long)Base+(Offset)), Value);
 }
 
 void
 writeDenseNB16(int Value, pointer Base, register unsigned long Offset)
 {
-    *(volatile CARD16*)((unsigned long)Base + (Offset)) = Value;
+    alpha_stw((pointer)((unsigned long)Base + (Offset)), Value);
 }
 
 void
@@ -72,14 +81,14 @@ void
 writeDense8(int Value, pointer Base, register unsigned long Offset)
 {
     write_mem_barrier();
-    *(volatile CARD8 *)((unsigned long)Base+(Offset)) = Value;
+    alpha_stb((pointer)((unsigned long)Base+(Offset)), Value);
 }
 
 void
 writeDense16(int Value, pointer Base, register unsigned long Offset)
 {
     write_mem_barrier();
-    *(volatile CARD16 *)((unsigned long)Base+(Offset)) = Value;
+    alpha_stw((pointer)((unsigned long)Base + (Offset)), Value);
 }
 
 void

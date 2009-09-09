@@ -50,19 +50,27 @@
      ICONDIRECTORY = 262,
      DEFAULTICON = 263,
      ICONS = 264,
-     DEFAULTSYSMENU = 265,
-     SYSMENU = 266,
-     ROOTMENU = 267,
-     SEPARATOR = 268,
-     ATSTART = 269,
-     ATEND = 270,
-     EXEC = 271,
-     ALWAYSONTOP = 272,
-     DEBUG = 273,
-     RELOAD = 274,
-     TRAYICON = 275,
-     SILENTEXIT = 276,
-     STRING = 277
+     STYLES = 265,
+     TOPMOST = 266,
+     MAXIMIZE = 267,
+     MINIMIZE = 268,
+     BOTTOM = 269,
+     NOTITLE = 270,
+     OUTLINE = 271,
+     NOFRAME = 272,
+     DEFAULTSYSMENU = 273,
+     SYSMENU = 274,
+     ROOTMENU = 275,
+     SEPARATOR = 276,
+     ATSTART = 277,
+     ATEND = 278,
+     EXEC = 279,
+     ALWAYSONTOP = 280,
+     DEBUG = 281,
+     RELOAD = 282,
+     TRAYICON = 283,
+     SILENTEXIT = 284,
+     STRING = 285
    };
 #endif
 /* Tokens.  */
@@ -73,19 +81,27 @@
 #define ICONDIRECTORY 262
 #define DEFAULTICON 263
 #define ICONS 264
-#define DEFAULTSYSMENU 265
-#define SYSMENU 266
-#define ROOTMENU 267
-#define SEPARATOR 268
-#define ATSTART 269
-#define ATEND 270
-#define EXEC 271
-#define ALWAYSONTOP 272
-#define DEBUG 273
-#define RELOAD 274
-#define TRAYICON 275
-#define SILENTEXIT 276
-#define STRING 277
+#define STYLES 265
+#define TOPMOST 266
+#define MAXIMIZE 267
+#define MINIMIZE 268
+#define BOTTOM 269
+#define NOTITLE 270
+#define OUTLINE 271
+#define NOFRAME 272
+#define DEFAULTSYSMENU 273
+#define SYSMENU 274
+#define ROOTMENU 275
+#define SEPARATOR 276
+#define ATSTART 277
+#define ATEND 278
+#define EXEC 279
+#define ALWAYSONTOP 280
+#define DEBUG 281
+#define RELOAD 282
+#define TRAYICON 283
+#define SILENTEXIT 284
+#define STRING 285
 
 
 
@@ -95,15 +111,16 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 79 "winprefsyacc.y"
+#line 89 "winprefsyacc.y"
 
   char *sVal;
+  unsigned long uVal;
   int iVal;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 103 "winprefsyacc.h"
+#line 120 "winprefsyacc.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

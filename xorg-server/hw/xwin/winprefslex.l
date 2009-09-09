@@ -105,7 +105,7 @@ SILENTEXIT		{ return SILENTEXIT; }
  * Run-of-the mill requirement for yacc
  */
 int
-yywrap ()
+yywrap (void)
 {
   return 1;
 }

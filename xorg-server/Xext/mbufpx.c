@@ -24,8 +24,6 @@ in this Software without prior written authorization from The Open Group.
 
 ********************************************************/
 
-#define NEED_REPLIES
-#define NEED_EVENTS
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -92,7 +90,7 @@ pixMultibufferInit(pScreen, pMBScreen)
 	nInfo += pDepth->numVids;
     }
 
-    pInfo = (xMbufBufferInfo *) xalloc (nInfo * sizeof (xMbufBufferInfo));
+    pInfo = xalloc (nInfo * sizeof (xMbufBufferInfo));
     if (!pInfo)
 	return FALSE;
 
@@ -116,7 +114,7 @@ pixMultibufferInit(pScreen, pMBScreen)
      * Setup the devPrivate to mbufScreenRec
      */
 
-    pMBPriv = (mbufPixmapPrivPtr) xalloc(sizeof(* pMBPriv));
+    pMBPriv = xalloc(sizeof(* pMBPriv));
     if (!pMBPriv)
     {
 	xfree(pInfo);
@@ -263,7 +261,7 @@ MultibufferPaintBackgroundRegion(pWin, pDrawable, pRegion)
     int nrects  = REGION_NUM_RECTS(pRegion);
     BoxPtr pbox = REGION_RECTS(pRegion);
 
-    pRects = (xRectangle *)xalloc(nrects * sizeof(xRectangle));
+    pRects = xalloc(nrects * sizeof(xRectangle));
     if (pRects)
     {
 	int i;

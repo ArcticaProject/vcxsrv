@@ -39,9 +39,6 @@
 #include "colormapst.h"
 #include "xf86RamDacPriv.h"
 
-#include "xf86PciInfo.h"
-#include "xf86Pci.h"
-
 void
 RamDacLoadPalette(ScrnInfoPtr pScrn, int numColors, int *indices, LOCO *colors,
 		 VisualPtr pVisual)

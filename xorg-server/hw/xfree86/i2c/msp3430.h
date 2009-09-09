@@ -92,11 +92,16 @@ typedef struct {
 #define MSPMODE_B			8
 /*----------------------------------------------------------*/
 
-void InitMSP3430(MSP3430Ptr m);
-MSP3430Ptr DetectMSP3430(I2CBusPtr b, I2CSlaveAddr addr);
-void ResetMSP3430(MSP3430Ptr m);
-void MSP3430SetVolume (MSP3430Ptr m, CARD8 value);
-void MSP3430SetSAP (MSP3430Ptr m, int mode);
+#define xf86_InitMSP3430	InitMSP3430
+extern _X_EXPORT void InitMSP3430(MSP3430Ptr m);
+#define xf86_DetectMSP3430	DetectMSP3430
+extern _X_EXPORT MSP3430Ptr DetectMSP3430(I2CBusPtr b, I2CSlaveAddr addr);
+#define xf86_ResetMSP3430	ResetMSP3430
+extern _X_EXPORT void ResetMSP3430(MSP3430Ptr m);
+#define xf86_MSP3430SetVolume	MSP3430SetVolume
+extern _X_EXPORT void MSP3430SetVolume (MSP3430Ptr m, CARD8 value);
+#define xf86_MSP3430SetSAP	MSP3430SetSAP
+extern _X_EXPORT void MSP3430SetSAP (MSP3430Ptr m, int mode);
 
 #define MSP3430SymbolsList \
 		"InitMSP3430", \
@@ -104,11 +109,5 @@ void MSP3430SetSAP (MSP3430Ptr m, int mode);
 		"ResetMSP3430", \
 		"MSP3430SetVolume", \
 		"MSP3430SetSAP"
-
-#define xf86_DetectMSP3430     ((MSP3430Ptr (*)(I2CBusPtr, I2CSlaveAddr))LoaderSymbol("DetectMSP3430"))
-#define xf86_ResetMSP3430      ((void (*)(MSP3430Ptr))LoaderSymbol("ResetMSP3430"))
-#define xf86_MSP3430SetVolume  ((void (*)(MSP3430Ptr, CARD8))LoaderSymbol("MSP3430SetVolume"))
-#define xf86_MSP3430SetSAP     ((void (*)(MSP3430Ptr, int))LoaderSymbol("MSP3430SetSAP"))
-#define xf86_InitMSP3430       ((void (*)(MSP3430Ptr))LoaderSymbol("InitMSP3430"))
 
 #endif

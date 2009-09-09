@@ -12,62 +12,78 @@ if XF86UTILS
 XF86UTILS_SUBDIR = utils
 endif
 
+if XAA
+XAA_SUBDIR = xaa
+endif
+
+if VGAHW
+VGAHW_SUBDIR = vgahw
+endif
+
+if VBE
+VBE_SUBDIR = vbe
+endif
+
+if INT10MODULE
+INT10_SUBDIR = int10
+endif
+
 DOC_SUBDIR = doc
 
-SUBDIRS = common ddc dummylib i2c x86emu int10 fbdevhw os-support parser \
-	  ramdac shadowfb vbe vgahw xaa \
+SUBDIRS = common ddc i2c x86emu $(INT10_SUBDIR) fbdevhw os-support parser \
+	  ramdac shadowfb $(VBE_SUBDIR) $(VGAHW_SUBDIR) $(XAA_SUBDIR) \
 	  xf8_16bpp loader dixmods exa modes \
 	  $(DRI_SUBDIR) $(DRI2_SUBDIR) $(XF86UTILS_SUBDIR) $(DOC_SUBDIR)
 
-DIST_SUBDIRS = common ddc dummylib i2c x86emu int10 fbdevhw os-support \
+DIST_SUBDIRS = common ddc i2c x86emu int10 fbdevhw os-support \
                parser ramdac shadowfb vbe vgahw xaa \
                xf8_16bpp loader dixmods dri dri2 exa modes \
 	       utils doc
 
 bin_PROGRAMS = Xorg
+Xorg_SOURCES = xorg.c
 
 AM_CFLAGS = $(DIX_CFLAGS) @XORG_CFLAGS@
 INCLUDES = @XORG_INCS@ 
 
-Xorg_SOURCES = xorg.c
-
-# libxorgos and libcommon need symbols from each other
-noinst_LTLIBRARIES = libosandcommon.la
-libosandcommon_la_SOURCES = osandcommon.c
-libosandcommon_la_LIBADD = \
+noinst_LTLIBRARIES = libxorg.la
+libxorg_la_SOURCES = libxorg.c
+libxorg_la_LIBADD = \
+            $(XSERVER_LIBS) \
+            loader/libloader.la \
             os-support/libxorgos.la \
-            common/libcommon.la
+            common/libcommon.la \
+            parser/libxf86config_internal.la \
+            dixmods/libdixmods.la \
+            modes/libxf86modes.la \
+            ramdac/libramdac.la \
+            ddc/libddc.la \
+            i2c/libi2c.la \
+            dixmods/libxorgxkb.la \
+            $(top_builddir)/mi/libmi.la \
+            $(top_builddir)/os/libos.la \
+            @XORG_LIBS@
 
-osandcommon.c xorg.c:
+libxorg_la_DEPENDENCIES = $(libxorg_la_LIBADD)
+
+libxorg.c xorg.c:
 	touch $@
 
-DISTCLEANFILES = osandcommon.c xorg.c
+DISTCLEANFILES = libxorg.c xorg.c
 
-XORG_LIBS = \
-            $(XSERVER_LIBS) \
-            common/libinit.a \
-            loader/libloader.a \
-            libosandcommon.la \
-            parser/libxf86config.a \
-	    dixmods/libdixmods.la \
-	    modes/libxf86modes.a \
-	    ramdac/libramdac.a \
-	    ddc/libddc.a \
-	    i2c/libi2c.a \
-	    dixmods/libxorgxkb.la \
-	    $(top_builddir)/mi/libmi.la \
-	    $(top_builddir)/os/libos.la \
-	    @XORG_LIBS@ \
-	    dixmods/libxorgxkb.la
-
-Xorg_DEPENDENCIES = $(XORG_LIBS)
-Xorg_LDADD = $(XORG_LIBS) $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS)
+Xorg_DEPENDENCIES = libxorg.la
+Xorg_LDADD = $(MAIN_LIB) libxorg.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS)
 
 Xorg_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 
 BUILT_SOURCES = xorg.conf.example
 DISTCLEANFILES += xorg.conf.example xorg.conf.example.pre
 EXTRA_DIST = xorgconf.cpp
+
+if XSERVER_DTRACE
+# Re-add dtrace object code that gets lost when building static libraries
+Xorg_LDADD += $(XSERVER_LIBS)
+endif
 
 if SOLARIS_ASM_INLINE
 # Needs to be built before any files are compiled when using Sun compilers
@@ -91,10 +107,8 @@ if INSTALL_SETUID
 	chmod u+s $(DESTDIR)$(bindir)/Xorg
 endif
 
-optionsdir = $(libdir)/X11
-dist_options_DATA = Options
-
 CPP_FILES_FLAGS = \
+	$(MANDEFS) \
 	-DLOCALFONTPATH="\"$(BASE_FONT_PATH)/local\"" \
 	-DMISCFONTPATH="\"$(BASE_FONT_PATH)/misc\"" \
 	-DT1FONTPATH="\"$(BASE_FONT_PATH)/Type1\"" \

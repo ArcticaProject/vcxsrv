@@ -25,7 +25,6 @@
  * authorization from the copyright holder(s) and author(s).
  */
 
-#define NEED_EVENTS
 #ifdef HAVE_XORG_CONFIG_H
 #include <xorg-config.h>
 #endif
@@ -228,8 +227,6 @@ xf86SwitchMode(ScreenPtr pScreen, DisplayModePtr mode)
       if (IsPointerDevice(dev) && dev->spriteInfo->spriteOwner)
           break;
   }
-  if (!dev)
-      dev = inputInfo.pointer;
 
   pCursorScreen = miPointerGetScreen(dev);
   if (pScreen == pCursorScreen)
@@ -480,7 +477,7 @@ xf86WarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
 }
 
 
-_X_EXPORT void *
+void *
 xf86GetPointerScreenFuncs(void)
 {
     return (void *)&xf86PointerScreenFuncs;

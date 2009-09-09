@@ -37,11 +37,7 @@ SOFTWARE.
  *      translation from client ids to server addresses.
  */
 
-#ifdef DEBUG
-#define MAX_REQUEST_LOG 100
-#endif
-
-extern CallbackListPtr ClientStateCallback;
+extern _X_EXPORT CallbackListPtr ClientStateCallback;
 
 typedef struct {
     ClientPtr 		client;
@@ -54,7 +50,7 @@ typedef void (*ReplySwapPtr) (
 		int		/* size */,
 		void *		/* pbuf */);
 
-extern void ReplyNotSwappd (
+extern _X_EXPORT void ReplyNotSwappd (
 		ClientPtr	/* pClient */,
 		int		/* size */,
 		void *		/* pbuf */);
@@ -89,6 +85,7 @@ typedef struct _Window *SaveSetElt;
 #define SaveSetAssignMap(ss,m)
 #endif
 
+/* The unused_ members are ABI spacing.  Please reuse them. */
 typedef struct _Client {
     int         index;
     Mask        clientAsMask;
@@ -104,7 +101,7 @@ typedef struct _Client {
 					 * killed */
     SaveSetElt	*saveSet;
     int         numSaved;
-    pointer     screenPrivate[MAXSCREENS];
+    void	*unused_screenPrivate[16];
     int         (**requestVector) (
 		ClientPtr /* pClient */);
     CARD32	req_len;		/* length of current request */
@@ -112,23 +109,15 @@ typedef struct _Client {
     int		priority;
     ClientState clientState;
     PrivateRec	*devPrivates;
-#ifdef XKB
     unsigned short	xkbClientFlags;
     unsigned short	mapNotifyMask;
     unsigned short	newKeyboardNotifyMask;
     unsigned short	vMajor,vMinor;
     KeyCode		minKC,maxKC;
-#endif
 
-#ifdef DEBUG
-    unsigned char requestLog[MAX_REQUEST_LOG];
-    int         requestLogIndex;
-#endif
     unsigned long replyBytesRemaining;
-    void *appgroup; /* Can't remove, ABI */
-    struct _FontResolution * (*fontResFunc) (    /* no need for font.h */
-		ClientPtr	/* pClient */,
-		int *		/* num */);
+    void *unused_appgroup;
+    void *unused_fontResFunc;
     int	    smart_priority;
     long    smart_start_tick;
     long    smart_stop_tick;
@@ -140,17 +129,17 @@ typedef struct _Client {
 /*
  * Scheduling interface
  */
-extern long SmartScheduleTime;
-extern long SmartScheduleInterval;
-extern long SmartScheduleSlice;
-extern long SmartScheduleMaxSlice;
-extern Bool SmartScheduleDisable;
-extern void SmartScheduleStartTimer(void);
-extern void SmartScheduleStopTimer(void);
+extern _X_EXPORT long SmartScheduleTime;
+extern _X_EXPORT long SmartScheduleInterval;
+extern _X_EXPORT long SmartScheduleSlice;
+extern _X_EXPORT long SmartScheduleMaxSlice;
+extern _X_EXPORT Bool SmartScheduleDisable;
+extern _X_EXPORT void SmartScheduleStartTimer(void);
+extern _X_EXPORT void SmartScheduleStopTimer(void);
 #define SMART_MAX_PRIORITY  (20)
 #define SMART_MIN_PRIORITY  (-20)
 
-extern Bool SmartScheduleInit(void);
+extern _X_EXPORT Bool SmartScheduleInit(void);
 
 
 /* This prototype is used pervasively in Xext, dix */
@@ -166,14 +155,14 @@ typedef struct _WorkQueue {
     pointer     closure;
 }           WorkQueueRec;
 
-extern TimeStamp currentTime;
-extern TimeStamp lastDeviceEventTime;
+extern _X_EXPORT TimeStamp currentTime;
+extern _X_EXPORT TimeStamp lastDeviceEventTime;
 
-extern int CompareTimeStamps(
+extern _X_EXPORT int CompareTimeStamps(
     TimeStamp /*a*/,
     TimeStamp /*b*/);
 
-extern TimeStamp ClientTimeToServerTime(CARD32 /*c*/);
+extern _X_EXPORT TimeStamp ClientTimeToServerTime(CARD32 /*c*/);
 
 typedef struct _CallbackRec {
   CallbackProcPtr proc;
@@ -191,14 +180,14 @@ typedef struct _CallbackList {
 
 /* proc vectors */
 
-extern int (* InitialVector[3]) (ClientPtr /*client*/);
+extern _X_EXPORT int (* InitialVector[3]) (ClientPtr /*client*/);
 
-extern int (* ProcVector[256]) (ClientPtr /*client*/);
+extern _X_EXPORT int (* ProcVector[256]) (ClientPtr /*client*/);
 
-extern int (* SwappedProcVector[256]) (ClientPtr /*client*/);
+extern _X_EXPORT int (* SwappedProcVector[256]) (ClientPtr /*client*/);
 
-extern ReplySwapPtr ReplySwapVector[256];
+extern _X_EXPORT ReplySwapPtr ReplySwapVector[256];
 
-extern int ProcBadRequest(ClientPtr /*client*/);
+extern _X_EXPORT int ProcBadRequest(ClientPtr /*client*/);
 
 #endif				/* DIXSTRUCT_H */

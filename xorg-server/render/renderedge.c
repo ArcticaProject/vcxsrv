@@ -31,7 +31,7 @@
  * grid row
  */
 
-_X_EXPORT xFixed
+xFixed
 RenderSampleCeilY (xFixed y, int n)
 {
     return pixman_sample_ceil_y (y, n);
@@ -43,7 +43,7 @@ RenderSampleCeilY (xFixed y, int n)
  * Compute the largest value no greater than y which is on a
  * grid row
  */
-_X_EXPORT xFixed
+xFixed
 RenderSampleFloorY (xFixed y, int n)
 {
     return pixman_sample_floor_y (y, n);
@@ -52,7 +52,7 @@ RenderSampleFloorY (xFixed y, int n)
 /*
  * Step an edge by any amount (including negative values)
  */
-_X_EXPORT void
+void
 RenderEdgeStep (RenderEdge *e, int n)
 {
     pixman_edge_step (e, n);
@@ -62,7 +62,7 @@ RenderEdgeStep (RenderEdge *e, int n)
  * Initialize one edge structure given the line endpoints and a
  * starting y value
  */
-_X_EXPORT void
+void
 RenderEdgeInit (RenderEdge	*e,
 		int		n,
 		xFixed		y_start,
@@ -78,7 +78,7 @@ RenderEdgeInit (RenderEdge	*e,
  * Initialize one edge structure given a line, starting y value
  * and a pixel offset for the line
  */
-_X_EXPORT void
+void
 RenderLineFixedEdgeInit (RenderEdge *e,
 			 int	    n,
 			 xFixed	    y,

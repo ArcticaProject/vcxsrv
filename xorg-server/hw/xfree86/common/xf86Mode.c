@@ -71,7 +71,7 @@ printModeRejectMessage(int index, DisplayModePtr p, int status)
  *	Find closest clock to given frequency (in kHz).  This assumes the
  *	number of clocks is greater than zero.
  */
-_X_EXPORT int
+int
 xf86GetNearestClock(ScrnInfoPtr scrp, int freq, Bool allowDiv2,
     int DivFactor, int MulFactor, int *divider)
 {
@@ -110,7 +110,7 @@ xf86GetNearestClock(ScrnInfoPtr scrp, int freq, Bool allowDiv2,
  * Convert a ModeStatus value to a printable message
  */
 
-_X_EXPORT const char *
+const char *
 xf86ModeStatusToString(ModeStatus status)
 {
     switch (status) {
@@ -199,7 +199,7 @@ xf86ModeStatusToString(ModeStatus status)
  * xf86ShowClockRanges() -- Print the clock ranges allowed
  * and the clock values scaled by ClockMulFactor and ClockDivFactor
  */
-_X_EXPORT void
+void
 xf86ShowClockRanges(ScrnInfoPtr scrp, ClockRangePtr clockRanges)
 {
     ClockRangePtr cp;
@@ -399,7 +399,7 @@ xf86HandleBuiltinMode(ScrnInfoPtr scrp,
  * reason.
  */
 
-_X_EXPORT ModeStatus
+ModeStatus
 xf86LookupMode(ScrnInfoPtr scrp, DisplayModePtr modep,
 	       ClockRangePtr clockRanges, LookupModeFlags strategy)
 {
@@ -643,7 +643,7 @@ xf86LookupMode(ScrnInfoPtr scrp, DisplayModePtr modep,
  * This function takes a mode and monitor description, and determines
  * if the mode is valid for the monitor.
  */
-_X_EXPORT ModeStatus
+ModeStatus
 xf86CheckModeForMonitor(DisplayModePtr mode, MonPtr monitor)
 {
     int i;
@@ -654,10 +654,8 @@ xf86CheckModeForMonitor(DisplayModePtr mode, MonPtr monitor)
 	return MODE_ERROR;
     }
 
-#ifdef DEBUG
-    ErrorF("xf86CheckModeForMonitor(%p %s, %p %s)\n",
+    DebugF("xf86CheckModeForMonitor(%p %s, %p %s)\n",
 	   mode, mode->name, monitor, monitor->id);
-#endif
 
     /* Some basic mode validity checks */
     if (0 >= mode->HDisplay || mode->HDisplay > mode->HSyncStart ||
@@ -790,7 +788,7 @@ xf86CheckModeSize(ScrnInfoPtr scrp, int w, int x, int y)
  *    maxVValue    maximum vertical timing value
  */
 
-_X_EXPORT ModeStatus
+ModeStatus
 xf86InitialCheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode,
 			      ClockRangePtr clockRanges,
 			      LookupModeFlags strategy,
@@ -808,10 +806,8 @@ xf86InitialCheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode,
 	return MODE_ERROR;
     }
 
-#ifdef DEBUG
-    ErrorF("xf86InitialCheckModeForDriver(%p, %p %s, %p, 0x%x, %d, %d, %d)\n",
+    DebugF("xf86InitialCheckModeForDriver(%p, %p %s, %p, 0x%x, %d, %d, %d)\n",
 	   scrp, mode, mode->name , clockRanges, strategy, maxPitch,  virtualX, virtualY);
-#endif
 
     /* Some basic mode validity checks */
     if (0 >= mode->HDisplay || mode->HDisplay > mode->HSyncStart ||
@@ -938,7 +934,7 @@ xf86InitialCheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode,
  *    clockRanges  allowable clock ranges
  */
 
-_X_EXPORT ModeStatus
+ModeStatus
 xf86CheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode, int flags)
 {
     ClockRangesPtr cp;
@@ -1185,7 +1181,7 @@ found:
  * if an unrecoverable error was encountered.
  */
 
-_X_EXPORT int
+int
 xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 		  char **modeNames, ClockRangePtr clockRanges,
 		  int *linePitches, int minPitch, int maxPitch, int pitchInc,
@@ -1204,20 +1200,17 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
     PixmapFormatRec *BankFormat;
     ClockRangePtr cp;
     ClockRangesPtr storeClockRanges;
-    double targetRefresh = 0.0;
     int numTimings = 0;
     range hsync[MAX_HSYNC];
     range vrefresh[MAX_VREFRESH];
     Bool inferred_virtual = FALSE;
 
-#ifdef DEBUG
-    ErrorF("xf86ValidateModes(%p, %p, %p, %p,\n\t\t  %p, %d, %d, %d, %d, %d, %d, %d, %d, 0x%x)\n",
+    DebugF("xf86ValidateModes(%p, %p, %p, %p,\n\t\t  %p, %d, %d, %d, %d, %d, %d, %d, %d, 0x%x)\n",
 	   scrp, availModes, modeNames, clockRanges,
 	   linePitches, minPitch, maxPitch, pitchInc,
 	   minHeight, maxHeight, virtualX, virtualY,
 	   apertureSize, strategy
 	   );
-#endif
 
     /* Some sanity checking */
     if (scrp == NULL || scrp->name == NULL || !scrp->monitor ||
@@ -1466,26 +1459,6 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
     }
 
     /*
-     * Go through the mode pool and see if any modes match the target
-     * refresh rate, (if specified).  If no modes match, abandon the target.
-     */
-    targetRefresh = xf86SetRealOption(scrp->options,
-				      "TargetRefresh", 0.0);
-    if (targetRefresh > 0.0) {
-	for (p = scrp->modePool; p != NULL; p = p->next) {
-	    if (xf86ModeVRefresh(p) > targetRefresh * (1.0 - SYNC_TOLERANCE))
-		break;
-	}
-	if (!p)
-	    targetRefresh = 0.0;
-    }
-
-    if (targetRefresh > 0.0) {
-	xf86DrvMsg(scrp->scrnIndex, X_CONFIG,
-		   "Target refresh rate is %.1f Hz\n", targetRefresh);
-    }
-
-    /*
      * Allocate one entry in scrp->modes for each named mode.
      */
     while (scrp->modes)
@@ -1556,14 +1529,6 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 			if (!scrp->monitor->reducedblanking &&
 			    (q->type & M_T_DEFAULT) &&
 			    ((double)q->HTotal / (double)q->HDisplay) < 1.15)
-			    continue;
-
-			/*
-			 * If there is a target refresh rate, skip modes that
-			 * don't match up.
-			 */
-			if (xf86ModeVRefresh(q) <
-			    (1.0 - SYNC_TOLERANCE) * targetRefresh)
 			    continue;
 
 			if (modeSize < (q->HDisplay * q->VDisplay)) {
@@ -1771,7 +1736,7 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
  *
  */
  
-_X_EXPORT void
+void
 xf86DeleteMode(DisplayModePtr *modeList, DisplayModePtr mode)
 {
     /* Catch the easy/insane cases */
@@ -1803,7 +1768,7 @@ xf86DeleteMode(DisplayModePtr *modeList, DisplayModePtr mode)
  * invalid.
  */
 
-_X_EXPORT void
+void
 xf86PruneDriverModes(ScrnInfoPtr scrp)
 {
     DisplayModePtr first, p, n;
@@ -1843,7 +1808,7 @@ xf86PruneDriverModes(ScrnInfoPtr scrp)
  * parameters for each mode.  The initialisation includes adjustments
  * for interlaced and double scan modes.
  */
-_X_EXPORT void
+void
 xf86SetCrtcForModes(ScrnInfoPtr scrp, int adjustFlags)
 {
     DisplayModePtr p;
@@ -1860,67 +1825,18 @@ xf86SetCrtcForModes(ScrnInfoPtr scrp, int adjustFlags)
 
     do {
 	xf86SetModeCrtc(p, adjustFlags);
-#ifdef DEBUG
-	ErrorF("%sMode %s: %d (%d) %d %d (%d) %d %d (%d) %d %d (%d) %d\n",
+	DebugF("%sMode %s: %d (%d) %d %d (%d) %d %d (%d) %d %d (%d) %d\n",
 	       (p->type & M_T_DEFAULT) ? "Default " : "",
 	       p->name, p->CrtcHDisplay, p->CrtcHBlankStart,
 	       p->CrtcHSyncStart, p->CrtcHSyncEnd, p->CrtcHBlankEnd,
 	       p->CrtcHTotal, p->CrtcVDisplay, p->CrtcVBlankStart,
 	       p->CrtcVSyncStart, p->CrtcVSyncEnd, p->CrtcVBlankEnd,
 	       p->CrtcVTotal);
-#endif
 	p = p->next;
     } while (p != NULL && p != scrp->modes);
 }
 
-
-#if 0
-static void
-add(char **p, char *new)
-{
-    *p = xnfrealloc(*p, strlen(*p) + strlen(new) + 2);
-    strcat(*p, " ");
-    strcat(*p, new);
-}
-
-_X_EXPORT void
-xf86PrintModeline(int scrnIndex,DisplayModePtr mode)
-{
-    char tmp[256];
-    char *flags = xnfcalloc(1, 1);
-
-    if (mode->HSkew) { 
-	snprintf(tmp, 256, "hskew %i", mode->HSkew); 
-	add(&flags, tmp);
-    }
-    if (mode->VScan) { 
-	snprintf(tmp, 256, "vscan %i", mode->VScan); 
-	add(&flags, tmp);
-    }
-    if (mode->Flags & V_INTERLACE) add(&flags, "interlace");
-    if (mode->Flags & V_CSYNC) add(&flags, "composite");
-    if (mode->Flags & V_DBLSCAN) add(&flags, "doublescan");
-    if (mode->Flags & V_BCAST) add(&flags, "bcast");
-    if (mode->Flags & V_PHSYNC) add(&flags, "+hsync");
-    if (mode->Flags & V_NHSYNC) add(&flags, "-hsync");
-    if (mode->Flags & V_PVSYNC) add(&flags, "+vsync");
-    if (mode->Flags & V_NVSYNC) add(&flags, "-vsync");
-    if (mode->Flags & V_PCSYNC) add(&flags, "+csync");
-    if (mode->Flags & V_NCSYNC) add(&flags, "-csync");
-#if 0
-    if (mode->Flags & V_CLKDIV2) add(&flags, "vclk/2");
-#endif
-    xf86DrvMsgVerb(scrnIndex, X_INFO, 3,
-		   "Modeline \"%s\"  %6.2f  %i %i %i %i  %i %i %i %i%s\n",
-		   mode->name, mode->Clock/1000., mode->HDisplay,
-		   mode->HSyncStart, mode->HSyncEnd, mode->HTotal,
-		   mode->VDisplay, mode->VSyncStart, mode->VSyncEnd,
-		   mode->VTotal, flags);
-    xfree(flags);
-}
-#endif
-
-_X_EXPORT void
+void
 xf86PrintModes(ScrnInfoPtr scrp)
 {
     DisplayModePtr p;
@@ -1988,29 +1904,3 @@ xf86PrintModes(ScrnInfoPtr scrp)
 	p = p->next;
     } while (p != NULL && p != scrp->modes);
 }
-
-#if 0
-/**
- * Adds the new mode into the mode list, and returns the new list
- *
- * \param modes doubly-linked mode list.
- */
-_X_EXPORT DisplayModePtr
-xf86ModesAdd(DisplayModePtr modes, DisplayModePtr new)
-{
-    if (modes == NULL)
-	return new;
-
-    if (new) {
-        DisplayModePtr mode = modes;
-
-        while (mode->next)
-            mode = mode->next;
-
-        mode->next = new;
-        new->prev = mode;
-    }
-
-    return modes;
-}
-#endif

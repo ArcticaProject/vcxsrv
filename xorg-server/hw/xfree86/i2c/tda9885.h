@@ -39,22 +39,21 @@ typedef struct {
 #define TDA9885_ADDR_3   0x96
 #define TDA9885_ADDR_4   0x94
 
-TDA9885Ptr Detect_tda9885(I2CBusPtr b, I2CSlaveAddr addr);
-Bool tda9885_init(TDA9885Ptr t);
-void tda9885_setparameters(TDA9885Ptr t);
-void tda9885_getstatus(TDA9885Ptr t);
-void tda9885_dumpstatus(TDA9885Ptr t);
+#define xf86_Detect_tda9885		Detect_tda9885
+extern _X_EXPORT TDA9885Ptr Detect_tda9885(I2CBusPtr b, I2CSlaveAddr addr);
+#define xf86_tda9885_init		tda9885_init
+extern _X_EXPORT Bool tda9885_init(TDA9885Ptr t);
+#define xf86_tda9885_setparameters	tda9885_setparameters
+extern _X_EXPORT void tda9885_setparameters(TDA9885Ptr t);
+#define xf86_tda9885_getstatus		tda9885_getstatus
+extern _X_EXPORT void tda9885_getstatus(TDA9885Ptr t);
+#define xf86_tda9885_dumpstatus		tda9885_dumpstatus
+extern _X_EXPORT void tda9885_dumpstatus(TDA9885Ptr t);
 
 #define TDA9885SymbolsList  \
 		"Detect_tda9885", \
 		"tda9885_init", \
 		"tda9885_setaudio", \
 		"tda9885_mute"
-
-#define xf86_Detect_tda9885       ((TDA9885Ptr (*)(I2CBusPtr, I2CSlaveAddr))LoaderSymbol("Detect_tda9885"))
-#define xf86_tda9885_init         ((Bool (*)(TDA9885Ptr))LoaderSymbol("tda9885_init"))
-#define xf86_tda9885_setparameters     ((void (*)(TDA9885Ptr))LoaderSymbol("tda9885_setparameters"))
-#define xf86_tda9885_getstatus    ((void (*)(TDA9885Ptr))LoaderSymbol("tda9885_getstatus"))
-#define xf86_tda9885_dumpstatus    ((void (*)(TDA9885Ptr))LoaderSymbol("tda9885_dumpstatus"))
 
 #endif

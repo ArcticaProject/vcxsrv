@@ -97,7 +97,7 @@ SOFTWARE.
     }\
 }
 
-_X_EXPORT void
+void
 miZeroLine(
     DrawablePtr pDraw,
     GCPtr	pGC,
@@ -155,8 +155,8 @@ miZeroLine(
     width = xright - xleft + 1;
     height = ybottom - ytop + 1;
     list_len = (height >= width) ? height : width;
-    pspanInit = (DDXPointPtr)xalloc(list_len * sizeof(DDXPointRec));
-    pwidthInit = (int *)xalloc(list_len * sizeof(int));
+    pspanInit = xalloc(list_len * sizeof(DDXPointRec));
+    pwidthInit = xalloc(list_len * sizeof(int));
     if (!pspanInit || !pwidthInit)
 	return;
 

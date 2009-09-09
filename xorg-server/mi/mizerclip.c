@@ -404,7 +404,7 @@ the numerator is therefore (2^32 - 1), which does not overflow an unsigned
  *          -1 for completely clipped line
  *
  */
-_X_EXPORT int
+int
 miZeroClipLine(int xmin, int ymin, int xmax, int ymax,
                int *new_x1, int *new_y1, int *new_x2, int *new_y2,
                unsigned int adx, unsigned int ady,

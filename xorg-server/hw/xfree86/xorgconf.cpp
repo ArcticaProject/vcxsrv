@@ -1,4 +1,3 @@
-XCOMM $XdotOrg$
 XCOMM
 XCOMM Copyright (c) 1994-1998 by The XFree86 Project, Inc.
 XCOMM
@@ -29,15 +28,15 @@ XCOMM $XConsortium: XF86Conf.cpp /main/22 1996/10/23 11:43:51 kaleb $
 
 XCOMM **********************************************************************
 XCOMM This is a sample configuration file only, intended to illustrate
-XCOMM what a config file might look like.  Refer to the XF86Config(4/5)
-XCOMM man page for details about the format of this file. This man page
-XCOMM is installed as MANPAGE 
+XCOMM what a config file might look like.  Refer to the __xconfigfile__(__filemansuffix__)
+XCOMM man page for details about the format of this file. 
 XCOMM **********************************************************************
 
-XCOMM The ordering of sections is not important in version 4.0 and later.
+XCOMM The ordering of sections is not important in XFree86 4.0 and later,
+XCOMM nor in any Xorg release.
 
 XCOMM **********************************************************************
-XCOMM Files section.  This allows default font and rgb paths to be set
+XCOMM Files section.  This allows default font and module paths to be set
 XCOMM **********************************************************************
 
 Section "Files"
@@ -98,18 +97,18 @@ XCOMM provide a better stack trace in the core dump to aid in debugging
 
 XCOMM    Option	"NoTrapSignals"
 
-XCOMM Uncomment this to disable the <Crtl><Alt><Fn> VT switch sequence
+XCOMM Uncomment this to disable the <Ctrl><Alt><Fn> VT switch sequence
 XCOMM (where n is 1 through 12).  This allows clients to receive these key
 XCOMM events.
 
 XCOMM    Option	"DontVTSwitch"
 
-XCOMM Uncomment this to disable the <Crtl><Alt><BS> server abort sequence
-XCOMM This allows clients to receive this key event.
+XCOMM Uncomment this to enable the <Ctrl><Alt><BS> server abort sequence
+XCOMM The default allows clients to receive this key event.
 
-XCOMM    Option	"DontZap"
+XCOMM    Option	"DontZap"	"false"
 
-XCOMM Uncomment this to disable the <Crtl><Alt><KP_+>/<KP_-> mode switching
+XCOMM Uncomment this to disable the <Ctrl><Alt><KP_+>/<KP_-> mode switching
 XCOMM sequences.  This allows clients to receive these key events.
 
 XCOMM    Option	"DontZoom"
@@ -147,14 +146,6 @@ XCOMM the driver supports it.
     Option	"standby time"	"20"
     Option	"suspend time"	"30"
     Option	"off time"	"60"
-
-XCOMM On some platform the server needs to estimate the sizes of PCI
-XCOMM memory and pio ranges. This is done by assuming that PCI ranges
-XCOMM don't overlap. Some broken BIOSes tend to set ranges of inactive
-XCOMM devices wrong. Here one can adjust how aggressive the assumptions
-XCOMM should be. Default is 0.
-
-XCOMM Option   "EstimateSizesAggresively" "0"
 
 EndSection
 
@@ -218,7 +209,7 @@ XCOMM    Option	"XkbOptions"	"ctrl:swapcaps"
 XCOMM These are the default XKB settings for xorg
 XCOMM
 XCOMM    Option	"XkbRules"	"xorg"
-XCOMM    Option	"XkbModel"	"pc101"
+XCOMM    Option	"XkbModel"	"pc105"
 XCOMM    Option	"XkbLayout"	"us"
 XCOMM    Option	"XkbVariant"	""
 XCOMM    Option	"XkbOptions"	""

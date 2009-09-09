@@ -35,13 +35,12 @@
  * Silicon Graphics, Inc.
  */
 
-#include <damage.h>
-
 /* We just need to avoid clashing with DRAWABLE_{WINDOW,PIXMAP} */
 enum {
     GLX_DRAWABLE_WINDOW,
     GLX_DRAWABLE_PIXMAP,
-    GLX_DRAWABLE_PBUFFER
+    GLX_DRAWABLE_PBUFFER,
+    GLX_DRAWABLE_ANY
 };
 
 struct __GLXdrawable {

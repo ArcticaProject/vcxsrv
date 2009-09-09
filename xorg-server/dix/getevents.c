@@ -1,6 +1,7 @@
 /*
  * Copyright © 2006 Nokia Corporation
  * Copyright © 2006-2007 Daniel Stone
+ * Copyright © 2008 Red Hat, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,7 +22,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * Author: Daniel Stone <daniel@fooishbar.org>
+ * Authors: Daniel Stone <daniel@fooishbar.org>
+ *          Peter Hutterer <peter.hutterer@who-t.net>
  */
 
 #ifdef HAVE_DIX_CONFIG_H
@@ -30,8 +32,6 @@
 
 #include <X11/X.h>
 #include <X11/keysym.h>
-#define NEED_EVENTS
-#define NEED_REPLIES
 #include <X11/Xproto.h>
 
 #include "misc.h"
@@ -43,11 +43,11 @@
 #include "globals.h"
 #include "dixevents.h"
 #include "mipointer.h"
+#include "eventstr.h"
+#include "eventconvert.h"
 
-#ifdef XKB
 #include <X11/extensions/XKBproto.h>
-#include <xkbsrv.h>
-#endif
+#include "xkbsrv.h"
 
 #ifdef PANORAMIX
 #include "panoramiX.h"
@@ -60,6 +60,11 @@
 #include "exevents.h"
 #include "exglobals.h"
 #include "extnsionst.h"
+#include "listdev.h" /* for sizing up DeviceClassesChangedEvent */
+
+#ifdef _MSC_VER
+#define lroundf(val)   ((int)(val<0.0f)?val-.5f:val+.5f)
+#endif
 
 /* Number of motion history events to store. */
 #define MOTION_HISTORY_SIZE 256
@@ -71,7 +76,7 @@
 EventListPtr InputEventList = NULL;
 int InputEventListLen = 0;
 
-_X_EXPORT int
+int
 GetEventList(EventListPtr* list)
 {
     *list = InputEventList;
@@ -81,28 +86,41 @@ GetEventList(EventListPtr* list)
 /**
  * Pick some arbitrary size for Xi motion history.
  */
-_X_EXPORT int
+int
 GetMotionHistorySize(void)
 {
     return MOTION_HISTORY_SIZE;
 }
 
-static void
-set_key_down(DeviceIntPtr pDev, int key_code)
+void
+set_key_down(DeviceIntPtr pDev, int key_code, int type)
 {
-    pDev->key->postdown[key_code >> 3] |= (1 << (key_code & 7));
+    if (type == KEY_PROCESSED)
+        pDev->key->down[key_code >> 3] |= (1 << (key_code & 7));
+    else
+        pDev->key->postdown[key_code >> 3] |= (1 << (key_code & 7));
 }
 
-static void
-set_key_up(DeviceIntPtr pDev, int key_code)
+void
+set_key_up(DeviceIntPtr pDev, int key_code, int type)
 {
-    pDev->key->postdown[key_code >> 3] &= ~(1 << (key_code & 7));
+    if (type == KEY_PROCESSED)
+        pDev->key->down[key_code >> 3] &= ~(1 << (key_code & 7));
+    else
+        pDev->key->postdown[key_code >> 3] &= ~(1 << (key_code & 7));
 }
 
-static Bool
-key_is_down(DeviceIntPtr pDev, int key_code)
+Bool
+key_is_down(DeviceIntPtr pDev, int key_code, int type)
 {
-    return !!(pDev->key->postdown[key_code >> 3] & (1 << (key_code & 7)));
+    int ret = 0;
+
+    if (type & KEY_PROCESSED)
+        ret |= !!(pDev->key->down[key_code >> 3] & (1 << (key_code & 7)));
+    else if (type & KEY_POSTED)
+        ret |= !!(pDev->key->postdown[key_code >> 3] & (1 << (key_code & 7)));
+
+    return ret;
 }
 
 static Bool
@@ -119,14 +137,118 @@ float roundf(float f)
 }
 #endif
 
+static void
+init_event(DeviceIntPtr dev, DeviceEvent* event, Time ms)
+{
+    memset(event, 0, sizeof(DeviceEvent));
+    event->header = ET_Internal;
+    event->length = sizeof(DeviceEvent);
+    event->time = ms;
+    event->deviceid = dev->id;
+    event->sourceid = dev->id;
+}
+
+static void
+init_raw(DeviceIntPtr dev, RawDeviceEvent *event, Time ms, int type, int detail)
+{
+    memset(event, 0, sizeof(RawDeviceEvent));
+    event->header = ET_Internal;
+    event->length = sizeof(RawDeviceEvent);
+    event->type = ET_RawKeyPress - ET_KeyPress + type;
+    event->time = ms;
+    event->deviceid = dev->id;
+    event->sourceid = dev->id;
+    event->detail.button = detail;
+}
+
+static void
+set_raw_valuators(RawDeviceEvent *event, int first, int num, int *valuators, int32_t* data)
+{
+    int i;
+    for (i = first; i < first + num; i++)
+        SetBit(event->valuators.mask, i);
+
+    memcpy(&data[first], valuators, num * sizeof(uint32_t));
+}
+
+
+static void
+set_valuators(DeviceIntPtr dev, DeviceEvent* event, int first_valuator,
+              int num_valuators, int *valuators)
+{
+    int i;
+
+    for (i = first_valuator; i < first_valuator + num_valuators; i++)
+    {
+        SetBit(event->valuators.mask, i);
+        if (dev->valuator->mode == Absolute)
+            SetBit(event->valuators.mode, i);
+        event->valuators.data_frac[i] =
+            dev->last.remainder[i] * (1 << 16) * (1 << 16);
+    }
+
+    memcpy(&event->valuators.data[first_valuator],
+           valuators, num_valuators * sizeof(uint32_t));
+
+}
+
+void
+CreateClassesChangedEvent(EventList* event,
+                          DeviceIntPtr master,
+                          DeviceIntPtr slave,
+                          int type)
+{
+    int i;
+    DeviceChangedEvent *dce;
+    CARD32 ms = GetTimeInMillis();
+
+    dce = (DeviceChangedEvent*)event->event;
+    memset(dce, 0, sizeof(DeviceChangedEvent));
+    dce->deviceid = slave->id;
+    dce->masterid = master->id;
+    dce->header = ET_Internal;
+    dce->length = sizeof(DeviceChangedEvent);
+    dce->type = ET_DeviceChanged;
+    dce->time = ms;
+    dce->flags = type;
+    dce->flags |= DEVCHANGE_SLAVE_SWITCH;
+    dce->sourceid = slave->id;
+
+    if (slave->button)
+    {
+        dce->buttons.num_buttons = slave->button->numButtons;
+        for (i = 0; i < dce->buttons.num_buttons; i++)
+            dce->buttons.names[i] = slave->button->labels[i];
+    }
+    if (slave->valuator)
+    {
+        dce->num_valuators = slave->valuator->numAxes;
+        for (i = 0; i < dce->num_valuators; i++)
+        {
+            dce->valuators[i].min = slave->valuator->axes[i].min_value;
+            dce->valuators[i].max = slave->valuator->axes[i].max_value;
+            dce->valuators[i].resolution = slave->valuator->axes[i].resolution;
+            /* This should, eventually, be a per-axis mode */
+            dce->valuators[i].mode = slave->valuator->mode;
+            dce->valuators[i].name = slave->valuator->axes[i].label;
+        }
+    }
+    if (slave->key)
+    {
+        dce->keys.min_keycode = slave->key->xkbInfo->desc->min_key_code;
+        dce->keys.max_keycode = slave->key->xkbInfo->desc->max_key_code;
+    }
+}
+
 /**
  * Rescale the coord between the two axis ranges.
  */
 static int
-rescaleValuatorAxis(int coord, AxisInfoPtr from, AxisInfoPtr to,
+rescaleValuatorAxis(int coord, float remainder, float *remainder_return, AxisInfoPtr from, AxisInfoPtr to,
                     int defmax)
 {
-    int fmin = 0, tmin = 0, fmax = defmax, tmax = defmax;
+    int fmin = 0, tmin = 0, fmax = defmax, tmax = defmax, coord_return;
+    float value;
 
     if(from && from->min_value < from->max_value) {
         fmin = from->min_value;
@@ -137,14 +259,23 @@ rescaleValuatorAxis(int coord, AxisInfoPtr from, AxisInfoPtr to,
         tmax = to->max_value;
     }
 
-    if(fmin == tmin && fmax == tmax)
+    if(fmin == tmin && fmax == tmax) {
+        if (remainder_return)
+            *remainder_return = remainder;
         return coord;
+    }
 
-    if(fmax == fmin) /* avoid division by 0 */
+    if(fmax == fmin) { /* avoid division by 0 */
+        if (remainder_return)
+            *remainder_return = 0.0;
         return 0;
+    }
 
-    return roundf(((float)(coord - fmin)) * (tmax - tmin) /
-                 (fmax - fmin)) + tmin;
+    value = (coord + remainder - fmin) * (tmax - tmin) / (fmax - fmin) + tmin;
+    coord_return = lroundf(value);
+    if (remainder_return)
+        *remainder_return = value - coord_return;
+    return coord_return;
 }
 
 /**
@@ -172,21 +303,25 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
 
     /* scale back to device coordinates */
     if(pDev->valuator->numAxes > 0)
-        pDev->last.valuators[0] = rescaleValuatorAxis(pDev->last.valuators[0], NULL, pDev->valuator->axes + 0, scr->width);
+        pDev->last.valuators[0] = rescaleValuatorAxis(pDev->last.valuators[0], pDev->last.remainder[0],
+                        &pDev->last.remainder[0], NULL, pDev->valuator->axes + 0, scr->width);
     if(pDev->valuator->numAxes > 1)
-        pDev->last.valuators[1] = rescaleValuatorAxis(pDev->last.valuators[1], NULL, pDev->valuator->axes + 1, scr->height);
+        pDev->last.valuators[1] = rescaleValuatorAxis(pDev->last.valuators[1], pDev->last.remainder[1],
+                        &pDev->last.remainder[0], NULL, pDev->valuator->axes + 1, scr->height);
 
     /* calculate the other axis as well based on info from the old
      * slave-device. If the old slave had less axes than this one,
      * last.valuators is reset to 0.
      */
-    if ((lastSlave = master->u.lastSlave) && lastSlave->valuator) {
+    if ((lastSlave = master->last.slave) && lastSlave->valuator) {
         for (i = 2; i < pDev->valuator->numAxes; i++) {
             if (i >= lastSlave->valuator->numAxes)
                 pDev->last.valuators[i] = 0;
             else
                 pDev->last.valuators[i] =
                     rescaleValuatorAxis(pDev->last.valuators[i],
+                            pDev->last.remainder[i],
+                            &pDev->last.remainder[i],
                             lastSlave->valuator->axes + i,
                             pDev->valuator->axes + i, 0);
         }
@@ -197,7 +332,7 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
 /**
  * Allocate the motion history buffer.
  */
-_X_EXPORT void
+void
 AllocateMotionHistory(DeviceIntPtr pDev)
 {
     int size;
@@ -211,7 +346,7 @@ AllocateMotionHistory(DeviceIntPtr pDev)
      * potential valuators, plus the respective range of the valuators.
      * 3 * INT32 for (min_val, max_val, curr_val))
      */
-    if (pDev->isMaster)
+    if (IsMaster(pDev))
         size = sizeof(INT32) * 3 * MAX_VALUATORS;
     else
         size = sizeof(INT32) * pDev->valuator->numAxes;
@@ -233,7 +368,7 @@ AllocateMotionHistory(DeviceIntPtr pDev)
  *
  * If core is set, we only generate x/y, in INT16, scaled to screen coords.
  */
-_X_EXPORT int
+int
 GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
                  unsigned long stop, ScreenPtr pScreen, BOOL core)
 {
@@ -255,7 +390,7 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
     if (core && !pScreen)
         return 0;
 
-    if (pDev->isMaster)
+    if (IsMaster(pDev))
         size = (sizeof(INT32) * 3 * MAX_VALUATORS) + sizeof(Time);
     else
         size = (sizeof(INT32) * pDev->valuator->numAxes) + sizeof(Time);
@@ -293,7 +428,7 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
                 /* scale to screen coords */
                 to = &core_axis;
                 to->max_value = pScreen->width;
-                coord = rescaleValuatorAxis(coord, &from, to, pScreen->width);
+                coord = rescaleValuatorAxis(coord, 0.0, NULL, &from, to, pScreen->width);
 
                 memcpy(corebuf, &coord, sizeof(INT16));
                 corebuf++;
@@ -304,10 +439,10 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
                 memcpy(&coord, icbuf++, sizeof(INT32));
 
                 to->max_value = pScreen->height;
-                coord = rescaleValuatorAxis(coord, &from, to, pScreen->height);
+                coord = rescaleValuatorAxis(coord, 0.0, NULL, &from, to, pScreen->height);
                 memcpy(corebuf, &coord, sizeof(INT16));
 
-            } else if (pDev->isMaster)
+            } else if (IsMaster(pDev))
             {
                 memcpy(obuff, ibuff, sizeof(Time)); /* copy timestamp */
 
@@ -339,7 +474,7 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
                         dflt = 0;
 
                     /* scale from stored range into current range */
-                    coord = rescaleValuatorAxis(coord, &from, to, 0);
+                    coord = rescaleValuatorAxis(coord, 0.0, NULL, &from, to, 0);
                     memcpy(ocbuf, &coord, sizeof(INT32));
                     ocbuf++;
                 }
@@ -383,7 +518,7 @@ updateMotionHistory(DeviceIntPtr pDev, CARD32 ms, int first_valuator,
         return;
 
     v = pDev->valuator;
-    if (pDev->isMaster)
+    if (IsMaster(pDev))
     {
         buff += ((sizeof(INT32) * 3 * MAX_VALUATORS) + sizeof(CARD32)) *
                 v->last_motion;
@@ -435,23 +570,15 @@ updateMotionHistory(DeviceIntPtr pDev, CARD32 ms, int first_valuator,
  * Returns the maximum number of events GetKeyboardEvents,
  * GetKeyboardValuatorEvents, and GetPointerEvents will ever return.
  *
- * Should be used in DIX as:
- * xEvent *events = xcalloc(sizeof(xEvent), GetMaximumEventsNum());
- *
  * This MUST be absolutely constant, from init until exit.
  */
-_X_EXPORT int
+int
 GetMaximumEventsNum(void) {
-    /* One base event -- device, plus valuator events.
-     *  Multiply by two if we're doing non-XKB key repeats. */
-    int ret = 1 + MAX_VALUATOR_EVENTS;
-
-#ifdef XKB
-    if (noXkbExtension)
-#endif
-        ret *= 2;
-
-    return ret;
+    /* One raw event
+     * One device event
+     * One possible device changed event
+     */
+    return 3;
 }
 
 
@@ -464,6 +591,9 @@ clipAxis(DeviceIntPtr pDev, int axisNum, int *val)
 {
     AxisInfoPtr axis = pDev->valuator->axes + axisNum;
     /* InitValuatoraAxisStruct ensures that (min < max). */
+
+    if (axisNum >= pDev->valuator->numAxes)
+        return;
 
     /* If a value range is defined, clip. If not, do nothing */
     if (axis->max_value <= axis->min_value)
@@ -482,50 +612,10 @@ static void
 clipValuators(DeviceIntPtr pDev, int first_valuator, int num_valuators,
               int *valuators)
 {
-    AxisInfoPtr axes = pDev->valuator->axes + first_valuator;
     int i;
 
-    for (i = 0; i < num_valuators; i++, axes++)
+    for (i = 0; i < num_valuators; i++)
         clipAxis(pDev, i + first_valuator, &(valuators[i]));
-}
-
-
-/**
- * Fills events with valuator events for pDev, as given by the other
- * parameters.
- */
-static EventList *
-getValuatorEvents(EventList *events, DeviceIntPtr pDev,
-        int first_valuator, int num_valuators, int *valuators) {
-    deviceValuator *xv;
-    int i;
-
-    for (i = 0; i < num_valuators; i += 6, events++) {
-        xv = (deviceValuator*)events->event;
-        xv->type = DeviceValuator;
-        xv->first_valuator = first_valuator + i;
-        xv->num_valuators = ((num_valuators - i) > 6) ? 6 : (num_valuators - i);
-        xv->deviceid = pDev->id;
-        switch (num_valuators - i) {
-        case 6:
-            xv->valuator5 = valuators[i + 5];
-        case 5:
-            xv->valuator4 = valuators[i + 4];
-        case 4:
-            xv->valuator3 = valuators[i + 3];
-        case 3:
-            xv->valuator2 = valuators[i + 2];
-        case 2:
-            xv->valuator1 = valuators[i + 1];
-        case 1:
-            xv->valuator0 = valuators[i + 0];
-        }
-
-        if (i + 6 < num_valuators)
-            xv->deviceid |= MORE_EVENTS;
-    }
-
-    return events;
 }
 
 /**
@@ -535,19 +625,26 @@ getValuatorEvents(EventList *events, DeviceIntPtr pDev,
  *
  * @param events Pointer to a pre-allocated event list.
  * @param dev The slave device that generated an event.
+ * @param type Either DEVCHANGE_POINTER_EVENT and/or DEVCHANGE_KEYBOARD_EVENT
  * @param num_events The current number of events, returns the number of
  *        events if a DCCE was generated.
  * @return The updated @events pointer.
  */
 static EventListPtr
-updateFromMaster(EventListPtr events, DeviceIntPtr dev, int *num_events)
+updateFromMaster(EventListPtr events, DeviceIntPtr dev, int type, int *num_events)
 {
-    DeviceIntPtr master = dev->u.master;
-    if (master && master->u.lastSlave != dev)
+    DeviceIntPtr master;
+
+    master = GetMaster(dev, (type & DEVCHANGE_POINTER_EVENT) ?  MASTER_POINTER : MASTER_KEYBOARD);
+
+    if (master && master->last.slave != dev)
     {
+        CreateClassesChangedEvent(events, master, dev, type);
         updateSlaveDeviceCoords(master, dev);
-        master->u.lastSlave = dev;
+        master->last.slave = dev;
         master->last.numValuators = dev->last.numValuators;
+        (*num_events)++;
+        events++;
     }
     return events;
 }
@@ -663,48 +760,69 @@ accelPointer(DeviceIntPtr dev, int first, int num, int *valuators, CARD32 ms)
  * @param dev The device to be moved.
  * @param x Pointer to current x-axis value, may be modified.
  * @param y Pointer to current y-axis value, may be modified.
+ * @param x_frac Fractional part of current x-axis value, may be modified.
+ * @param y_frac Fractional part of current y-axis value, may be modified.
  * @param scr Screen the device's sprite is currently on.
  * @param screenx Screen x coordinate the sprite is on after the update.
  * @param screeny Screen y coordinate the sprite is on after the update.
+ * @param screenx_frac Fractional part of screen x coordinate, as above.
+ * @param screeny_frac Fractional part of screen y coordinate, as above.
  */
 static void
-positionSprite(DeviceIntPtr dev, int *x, int *y,
-               ScreenPtr scr, int *screenx, int *screeny)
+positionSprite(DeviceIntPtr dev, int *x, int *y, float x_frac, float y_frac,
+               ScreenPtr scr, int *screenx, int *screeny, float *screenx_frac, float *screeny_frac)
 {
-    /* scale x&y to screen */
-    *screenx = rescaleValuatorAxis(*x, dev->valuator->axes + 0, NULL, scr->width);
-    *screeny = rescaleValuatorAxis(*y, dev->valuator->axes + 1, NULL, scr->height);
-    dev->last.valuators[0] = *screenx;
-    dev->last.valuators[1] = *screeny;
+    int old_screenx, old_screeny;
 
+    /* scale x&y to screen */
+    if (dev->valuator->numAxes > 0) {
+        *screenx = rescaleValuatorAxis(*x, x_frac, screenx_frac,
+                dev->valuator->axes + 0, NULL, scr->width);
+    } else {
+        *screenx = dev->last.valuators[0];
+        *screenx_frac = dev->last.remainder[0];
+    }
+
+    if (dev->valuator->numAxes > 1) {
+        *screeny = rescaleValuatorAxis(*y, y_frac, screeny_frac,
+                dev->valuator->axes + 1, NULL, scr->height);
+    } else {
+        *screeny = dev->last.valuators[1];
+        *screeny_frac = dev->last.remainder[1];
+    }
+
+    old_screenx = *screenx;
+    old_screeny = *screeny;
     /* This takes care of crossing screens for us, as well as clipping
      * to the current screen. */
-    miPointerSetPosition(dev, &dev->last.valuators[0], &dev->last.valuators[1]);
+    miPointerSetPosition(dev, screenx, screeny);
 
     if (dev->u.master) {
-        dev->u.master->last.valuators[0] = dev->last.valuators[0];
-        dev->u.master->last.valuators[1] = dev->last.valuators[1];
+        dev->u.master->last.valuators[0] = *screenx;
+        dev->u.master->last.valuators[1] = *screeny;
+        dev->u.master->last.remainder[0] = *screenx_frac;
+        dev->u.master->last.remainder[1] = *screeny_frac;
     }
 
     /* Crossed screen? Scale back to device coordiantes */
-    if(*screenx != dev->last.valuators[0])
+    if(*screenx != old_screenx)
     {
         scr = miPointerGetScreen(dev);
-        *x = rescaleValuatorAxis(dev->last.valuators[0], NULL,
+        *x = rescaleValuatorAxis(*screenx, *screenx_frac, &x_frac, NULL,
                                 dev->valuator->axes + 0, scr->width);
-        *screenx = dev->last.valuators[0];
     }
-    if(*screeny != dev->last.valuators[1])
+    if(*screeny != old_screeny)
     {
         scr = miPointerGetScreen(dev);
-        *screeny = dev->last.valuators[1];
-        *y = rescaleValuatorAxis(dev->last.valuators[1], NULL,
+        *y = rescaleValuatorAxis(*screeny, *screeny_frac, &y_frac, NULL,
                                  dev->valuator->axes + 1, scr->height);
     }
 
     /* dropy x/y (device coordinates) back into valuators for next event */
     dev->last.valuators[0] = *x;
     dev->last.valuators[1] = *y;
+    dev->last.remainder[0] = x_frac;
+    dev->last.remainder[1] = y_frac;
 }
 
 /**
@@ -720,32 +838,17 @@ updateHistory(DeviceIntPtr dev, int first, int num, CARD32 ms)
 {
     updateMotionHistory(dev, ms, first, num, &dev->last.valuators[first]);
     if (dev->u.master)
-        updateMotionHistory(dev->u.master, ms, first, num,
-                            &dev->last.valuators[first]);
-}
-
-/**
- * Calculate how many DeviceValuator events are needed given a number of
- * valuators.
- * @param num_valuators Number of valuators to attach to event.
- * @return the number of DeviceValuator events needed.
- */
-static int
-countValuatorEvents(int num_valuators)
-{
-    if (num_valuators) {
-        if (((num_valuators - 1) / 6) + 1 > MAX_VALUATOR_EVENTS)
-            num_valuators = MAX_VALUATOR_EVENTS * 6;
-        return ((num_valuators - 1)/ 6) + 1;
-    } else
-        return 0;
+    {
+        DeviceIntPtr master = GetMaster(dev, MASTER_POINTER);
+        updateMotionHistory(master, ms, first, num, &dev->last.valuators[first]);
+    }
 }
 
 /**
  * Convenience wrapper around GetKeyboardValuatorEvents, that takes no
  * valuators.
  */
-_X_EXPORT int
+int
 GetKeyboardEvents(EventList *events, DeviceIntPtr pDev, int type, int key_code) {
     return GetKeyboardValuatorEvents(events, pDev, type, key_code, 0, 0, NULL);
 }
@@ -771,98 +874,73 @@ GetKeyboardEvents(EventList *events, DeviceIntPtr pDev, int type, int key_code) 
  * key press will trigger a matching KeyRelease, as well as the
  * KeyPresses.
  */
-_X_EXPORT int
+int
 GetKeyboardValuatorEvents(EventList *events, DeviceIntPtr pDev, int type,
                           int key_code, int first_valuator,
                           int num_valuators, int *valuators) {
-    int numEvents = 0;
+    int num_events = 0;
     CARD32 ms = 0;
-    KeySym *map;
-    KeySym sym;
-    deviceKeyButtonPointer *kbp = NULL;
+    DeviceEvent *event;
+    RawDeviceEvent *raw;
+
+    /* refuse events from disabled devices */
+    if (!pDev->enabled)
+        return 0;
 
     if (!events ||!pDev->key || !pDev->focus || !pDev->kbdfeed ||
        (type != KeyPress && type != KeyRelease) ||
        (key_code < 8 || key_code > 255))
         return 0;
 
-    numEvents = 1;
+    num_events = 1;
 
-    map = pDev->key->curKeySyms.map;
-    sym = map[(key_code - pDev->key->curKeySyms.minKeyCode)
-              * pDev->key->curKeySyms.mapWidth];
+    events = updateFromMaster(events, pDev, DEVCHANGE_KEYBOARD_EVENT, &num_events);
 
-    events = updateFromMaster(events, pDev, &numEvents);
-
-    numEvents += countValuatorEvents(num_valuators);
-
-#ifdef XKB
-    if (noXkbExtension)
-#endif
-    {
-        switch (sym) {
-            case XK_Num_Lock:
-            case XK_Caps_Lock:
-            case XK_Scroll_Lock:
-            case XK_Shift_Lock:
-                if (type == KeyRelease)
-                    return 0;
-                else if (type == KeyPress && key_is_down(pDev, key_code))
-                    type = KeyRelease;
-        }
-    }
-
-    /* Handle core repeating, via press/release/press/release.
-     * FIXME: In theory, if you're repeating with two keyboards in non-XKB,
-     *        you could get unbalanced events here. */
-    if (type == KeyPress && key_is_down(pDev, key_code)) {
+    /* Handle core repeating, via press/release/press/release. */
+    if (type == KeyPress && key_is_down(pDev, key_code, KEY_POSTED)) {
         /* If autorepeating is disabled either globally or just for that key,
          * or we have a modifier, don't generate a repeat event. */
         if (!pDev->kbdfeed->ctrl.autoRepeat ||
             !key_autorepeats(pDev, key_code) ||
-            pDev->key->modifierMap[key_code])
+            pDev->key->xkbInfo->desc->map->modmap[key_code])
             return 0;
-
-#ifdef XKB
-        if (noXkbExtension)
-#endif
-        {
-            int numReleaseEvents;
-
-            numReleaseEvents = GetKeyboardValuatorEvents(events, pDev,
-                                                         KeyRelease, key_code,
-                                                         first_valuator,
-                                                         num_valuators,
-                                                         valuators);
-            numEvents += numReleaseEvents;
-            events += numReleaseEvents;
-        }
     }
 
     ms = GetTimeInMillis();
 
-    kbp = (deviceKeyButtonPointer *) events->event;
-    kbp->time = ms;
-    kbp->deviceid = pDev->id;
-    kbp->detail = key_code;
+    raw = (RawDeviceEvent*)events->event;
+    events++;
+    num_events++;
+
+    init_raw(pDev, raw, ms, type, key_code);
+    set_raw_valuators(raw, first_valuator, num_valuators, valuators,
+                      raw->valuators.data_raw);
+
+    if (num_valuators)
+        clipValuators(pDev, first_valuator, num_valuators, valuators);
+
+    set_raw_valuators(raw, first_valuator, num_valuators, valuators,
+                      raw->valuators.data);
+
+    event = (DeviceEvent*) events->event;
+    init_event(pDev, event, ms);
+    event->detail.key = key_code;
+
     if (type == KeyPress) {
-        kbp->type = DeviceKeyPress;
-	set_key_down(pDev, key_code);
+        event->type = ET_KeyPress;
+	set_key_down(pDev, key_code, KEY_POSTED);
     }
     else if (type == KeyRelease) {
-        kbp->type = DeviceKeyRelease;
-	set_key_up(pDev, key_code);
+        event->type = ET_KeyRelease;
+	set_key_up(pDev, key_code, KEY_POSTED);
     }
 
-    events++;
-    if (num_valuators) {
-        kbp->deviceid |= MORE_EVENTS;
+    if (num_valuators)
         clipValuators(pDev, first_valuator, num_valuators, valuators);
-        events = getValuatorEvents(events, pDev, first_valuator,
-                                   num_valuators, valuators);
-    }
 
-    return numEvents;
+    set_valuators(pDev, event, first_valuator, num_valuators, valuators);
+
+    return num_events;
 }
 
 /**
@@ -884,8 +962,8 @@ InitEventList(int num_events)
 
     for (i = 0; i < num_events; i++)
     {
-        events[i].evlen = sizeof(xEvent);
-        events[i].event = xcalloc(1, sizeof(xEvent));
+        events[i].evlen = sizeof(InternalEvent);
+        events[i].event = xcalloc(1, sizeof(InternalEvent));
         if (!events[i].event)
         {
             /* rollback */
@@ -903,7 +981,7 @@ InitEventList(int num_events)
 /**
  * Allocs min_size memory for each event in the list.
  */
-_X_EXPORT void
+void
 SetMinimumEventSize(EventListPtr list, int num_events, int min_size)
 {
     if (!list)
@@ -930,7 +1008,7 @@ SetMinimumEventSize(EventListPtr list, int num_events, int min_size)
  * @param list The list to be freed.
  * @param num_events Number of elements in list.
  */
-_X_EXPORT void
+void
 FreeEventList(EventListPtr list, int num_events)
 {
     if (!list)
@@ -959,16 +1037,22 @@ FreeEventList(EventListPtr list, int num_events)
  *
  * master->last.valuators[x] for x > 2 is undefined.
  */
-_X_EXPORT int
+int
 GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
                  int flags, int first_valuator, int num_valuators,
                  int *valuators) {
     int num_events = 1;
     CARD32 ms;
-    deviceKeyButtonPointer *kbp = NULL;
-    int x, y, /* switches between device and screen coords */
+    DeviceEvent *event;
+    RawDeviceEvent    *raw;
+    int x = 0, y = 0, /* device coords */
         cx, cy; /* only screen coordinates */
+    float x_frac = 0.0, y_frac = 0.0, cx_frac, cy_frac;
     ScreenPtr scr = miPointerGetScreen(pDev);
+
+    /* refuse events from disabled devices */
+    if (!pDev->enabled)
+        return 0;
 
     ms = GetTimeInMillis(); /* before pointer update to help precision */
 
@@ -976,36 +1060,52 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
         ((num_valuators + first_valuator) > pDev->valuator->numAxes) ||
         (type != MotionNotify && type != ButtonPress && type != ButtonRelease) ||
         (type != MotionNotify && !pDev->button) ||
+        ((type == ButtonPress || type == ButtonRelease) && !buttons) ||
         (type == MotionNotify && num_valuators <= 0))
         return 0;
 
-    num_events += countValuatorEvents(num_valuators);
+    events = updateFromMaster(events, pDev, DEVCHANGE_POINTER_EVENT, &num_events);
 
-    events = updateFromMaster(events, pDev, &num_events);
+    raw = (RawDeviceEvent*)events->event;
+    events++;
+    num_events++;
+
+    init_raw(pDev, raw, ms, type, buttons);
+    set_raw_valuators(raw, first_valuator, num_valuators, valuators,
+                      raw->valuators.data_raw);
 
     if (flags & POINTER_ABSOLUTE)
     {
         if (flags & POINTER_SCREEN) /* valuators are in screen coords */
         {
 
-            valuators[0] = rescaleValuatorAxis(valuators[0], NULL,
-                                               pDev->valuator->axes + 0,
-                                               scr->width);
-            valuators[1] = rescaleValuatorAxis(valuators[1], NULL,
-                                               pDev->valuator->axes + 1,
-                                               scr->height);
+            if (num_valuators >= 1 && first_valuator == 0)
+                valuators[0] = rescaleValuatorAxis(valuators[0], 0.0, &x_frac, NULL,
+                        pDev->valuator->axes + 0,
+                        scr->width);
+            if (first_valuator <= 1 && num_valuators >= (2 - first_valuator))
+                valuators[1 - first_valuator] = rescaleValuatorAxis(valuators[1 - first_valuator], 0.0, &y_frac, NULL,
+                        pDev->valuator->axes + 1,
+                        scr->height);
         }
 
         moveAbsolute(pDev, &x, &y, first_valuator, num_valuators, valuators);
     } else {
-        if (flags & POINTER_ACCELERATE)
+        if (flags & POINTER_ACCELERATE) {
             accelPointer(pDev, first_valuator, num_valuators, valuators, ms);
+            /* The pointer acceleration code modifies the fractional part
+             * in-place, so we need to extract this information first */
+            x_frac = pDev->last.remainder[0];
+            y_frac = pDev->last.remainder[1];
+        }
         moveRelative(pDev, &x, &y, first_valuator, num_valuators, valuators);
     }
 
-    positionSprite(pDev, &x, &y, scr, &cx, &cy);
-    updateHistory(pDev, first_valuator, num_valuators, ms);
+    set_raw_valuators(raw, first_valuator, num_valuators, valuators,
+            raw->valuators.data);
 
+    positionSprite(pDev, &x, &y, x_frac, y_frac, scr, &cx, &cy, &cx_frac, &cy_frac);
+    updateHistory(pDev, first_valuator, num_valuators, ms);
 
     /* Update the valuators with the true value sent to the client*/
     if (num_valuators >= 1 && first_valuator == 0)
@@ -1013,32 +1113,34 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
     if (first_valuator <= 1 && num_valuators >= (2 - first_valuator))
         valuators[1 - first_valuator] = y;
 
-    kbp = (deviceKeyButtonPointer *) events->event;
-    kbp->time = ms;
-    kbp->deviceid = pDev->id;
+    if (num_valuators)
+        clipValuators(pDev, first_valuator, num_valuators, valuators);
+
+    event = (DeviceEvent*) events->event;
+    init_event(pDev, event, ms);
 
     if (type == MotionNotify) {
-        kbp->type = DeviceMotionNotify;
+        event->type = ET_Motion;
+        event->detail.button = 0;
     }
     else {
-        if (type == ButtonPress)
-            kbp->type = DeviceButtonPress;
-        else if (type == ButtonRelease)
-            kbp->type = DeviceButtonRelease;
-        kbp->detail = buttons;
+        if (type == ButtonPress) {
+            event->type = ET_ButtonPress;
+            pDev->button->postdown[buttons >> 3] |= (1 << (buttons & 7));
+        }
+        else if (type == ButtonRelease) {
+            event->type = ET_ButtonRelease;
+            pDev->button->postdown[buttons >> 3] &= ~(1 << (buttons & 7));
+        }
+        event->detail.button = buttons;
     }
 
-    kbp->root_x = cx; /* root_x/y always in screen coords */
-    kbp->root_y = cy;
+    event->root_x = cx; /* root_x/y always in screen coords */
+    event->root_y = cy;
+    event->root_x_frac = cx_frac;
+    event->root_y_frac = cy_frac;
 
-    events++;
-    if (num_valuators) {
-        kbp->deviceid |= MORE_EVENTS;
-        if (flags & POINTER_ABSOLUTE)
-            clipValuators(pDev, first_valuator, num_valuators, valuators);
-        events = getValuatorEvents(events, pDev, first_valuator,
-                                   num_valuators, valuators);
-    }
+    set_valuators(pDev, event, first_valuator, num_valuators, valuators);
 
     return num_events;
 }
@@ -1051,13 +1153,16 @@ GetPointerEvents(EventList *events, DeviceIntPtr pDev, int type, int buttons,
  * The DDX is responsible for allocating the event structure in the first
  * place via GetMaximumEventsNum(), and for freeing it.
  */
-_X_EXPORT int
+int
 GetProximityEvents(EventList *events, DeviceIntPtr pDev, int type,
                    int first_valuator, int num_valuators, int *valuators)
 {
     int num_events = 1;
-    deviceKeyButtonPointer *kbp;
-    DeviceIntPtr master;
+    DeviceEvent *event;
+
+    /* refuse events from disabled devices */
+    if (!pDev->enabled)
+        return 0;
 
     /* Sanity checks. */
     if (type != ProximityIn && type != ProximityOut)
@@ -1068,38 +1173,21 @@ GetProximityEvents(EventList *events, DeviceIntPtr pDev, int type,
     if ((pDev->valuator->mode & 1) == Relative)
         num_valuators = 0;
 
-    if (num_valuators) {
-        if ((((num_valuators - 1) / 6) + 1) > MAX_VALUATOR_EVENTS)
-            num_valuators = MAX_VALUATOR_EVENTS * 6;
-        num_events += ((num_valuators - 1) / 6) + 1;
-    }
-
     /* You fail. */
     if (first_valuator < 0 ||
         (num_valuators + first_valuator) > pDev->valuator->numAxes)
         return 0;
 
-    master = pDev->u.master;
-    if (master && master->u.lastSlave != pDev)
-    {
-        updateSlaveDeviceCoords(master, pDev);
-        master->u.lastSlave = pDev;
-        master->last.numValuators = pDev->last.numValuators;
-    }
+    events = updateFromMaster(events, pDev, DEVCHANGE_POINTER_EVENT, &num_events);
 
-    kbp = (deviceKeyButtonPointer *) events->event;
-    kbp->type = type;
-    kbp->deviceid = pDev->id;
-    kbp->detail = 0;
-    kbp->time = GetTimeInMillis();
+    event = (DeviceEvent *) events->event;
+    init_event(pDev, event, GetTimeInMillis());
+    event->type = (type == ProximityIn) ? ET_ProximityIn : ET_ProximityOut;
 
-    if (num_valuators) {
-        kbp->deviceid |= MORE_EVENTS;
-        events++;
+    if (num_valuators)
         clipValuators(pDev, first_valuator, num_valuators, valuators);
-        events = getValuatorEvents(events, pDev, first_valuator,
-                                   num_valuators, valuators);
-    }
+
+    set_valuators(pDev, event, first_valuator, num_valuators, valuators);
 
     return num_events;
 }
@@ -1117,7 +1205,7 @@ PostSyntheticMotion(DeviceIntPtr pDev,
                     int screen,
                     unsigned long time)
 {
-    xEvent xE;
+    DeviceEvent ev;
 
 #ifdef PANORAMIX
     /* Translate back to the sprite screen since processInputProc
@@ -1129,11 +1217,13 @@ PostSyntheticMotion(DeviceIntPtr pDev,
     }
 #endif
 
-    memset(&xE, 0, sizeof(xEvent));
-    xE.u.u.type = MotionNotify;
-    xE.u.keyButtonPointer.rootX = x;
-    xE.u.keyButtonPointer.rootY = y;
-    xE.u.keyButtonPointer.time = time;
+    memset(&ev, 0, sizeof(DeviceEvent));
+    init_event(pDev, &ev, time);
+    ev.root_x = x;
+    ev.root_y = y;
+    ev.type = ET_Motion;
+    ev.time = time;
 
-    (*pDev->public.processInputProc)(&xE, pDev, 1);
+    /* FIXME: MD/SD considerations? */
+    (*pDev->public.processInputProc)((InternalEvent*)&ev, pDev);
 }

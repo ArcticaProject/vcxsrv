@@ -49,7 +49,7 @@ static AXP axpList[] = {
   {"Miata",NULL,NULL,PYXIS_CIA},
   {"Ruffian",NULL,NULL,PYXIS_CIA},
   {"Nautilus",NULL,NULL,IRONGATE},
-  {NULL,NULL,NULL,NONE}
+  {NULL,NULL,NULL,SYS_NONE}
 };
 
 
@@ -69,21 +69,15 @@ lnxGetAXP(void)
     switch (count) {
     case 1:
       sscanf(res, "cpu model : %s",cpu);
-#ifdef DEBUG
-      ErrorF("CPU %s\n",cpu);
-#endif
+      DebugF("CPU %s\n",cpu);
       break;
     case 5:
       sscanf(res, "system type : %s",systype);
-#ifdef DEBUG
-      ErrorF("system type : %s\n",systype);
-#endif
+      DebugF("system type : %s\n",systype);
       break;
     case 6:
       sscanf(res, "system variation : %s",sysvari);
-#ifdef DEBUG
-      ErrorF("system variation: %s\n",sysvari);
-#endif
+      DebugF("system variation: %s\n",sysvari);
       break;
     }
     count++;
@@ -131,12 +125,12 @@ extern unsigned int _dense_inb(unsigned long);
 extern unsigned int _dense_inw(unsigned long);
 extern unsigned int _dense_inl(unsigned long);
 
-_X_EXPORT void (*_alpha_outb)(char, unsigned long) = _outb;
-_X_EXPORT void (*_alpha_outw)(short, unsigned long) = _outw;
-_X_EXPORT void (*_alpha_outl)(int, unsigned long) = _outl;
-_X_EXPORT unsigned int (*_alpha_inb)(unsigned long) = _inb;
-_X_EXPORT unsigned int (*_alpha_inw)(unsigned long) = _inw;
-_X_EXPORT unsigned int (*_alpha_inl)(unsigned long) = _inl;
+void (*_alpha_outb)(char, unsigned long) = _outb;
+void (*_alpha_outw)(short, unsigned long) = _outw;
+void (*_alpha_outl)(int, unsigned long) = _outl;
+unsigned int (*_alpha_inb)(unsigned long) = _inb;
+unsigned int (*_alpha_inw)(unsigned long) = _inw;
+unsigned int (*_alpha_inl)(unsigned long) = _inl;
 
 static long _alpha_iobase_query(unsigned, int, int, int);
 long (*_iobase)(unsigned, int, int, int) = _alpha_iobase_query;

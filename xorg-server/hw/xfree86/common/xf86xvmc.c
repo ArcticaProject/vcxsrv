@@ -45,8 +45,7 @@
 #include "xf86xvpriv.h"
 #include "xf86xvmc.h"
 
-typedef int (*XvMCScreenInitProcPtr)(ScreenPtr, int, XvMCAdaptorPtr);
-_X_EXPORT XvMCScreenInitProcPtr XvMCScreenInitProc = NULL;
+XvMCScreenInitProcPtr XvMCScreenInitProc = NULL;
 
 
 typedef struct {
@@ -156,7 +155,7 @@ xf86XvMCCloseScreen (int i, ScreenPtr pScreen)
     return (*pScreen->CloseScreen)(i, pScreen);
 }
 
-_X_EXPORT Bool xf86XvMCScreenInit(
+Bool xf86XvMCScreenInit(
    ScreenPtr pScreen, 
    int num_adaptors,
    XF86MCAdaptorPtr *adaptors
@@ -219,12 +218,12 @@ _X_EXPORT Bool xf86XvMCScreenInit(
    return TRUE;
 }
 
-_X_EXPORT XF86MCAdaptorPtr xf86XvMCCreateAdaptorRec (void)
+XF86MCAdaptorPtr xf86XvMCCreateAdaptorRec (void)
 {
    return xcalloc(1, sizeof(XF86MCAdaptorRec));
 }
 
-_X_EXPORT void xf86XvMCDestroyAdaptorRec(XF86MCAdaptorPtr adaptor)
+void xf86XvMCDestroyAdaptorRec(XF86MCAdaptorPtr adaptor)
 {
    xfree(adaptor);
 }

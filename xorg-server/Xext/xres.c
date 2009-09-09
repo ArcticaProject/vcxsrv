@@ -2,8 +2,6 @@
    Copyright (c) 2002  XFree86 Inc
 */
 
-#define NEED_EVENTS
-#define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -77,7 +75,7 @@ ProcXResQueryClients (ClientPtr client)
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.num_clients = num_clients;
-    rep.length = rep.num_clients * sz_xXResClient >> 2;
+    rep.length = bytes_to_int32(rep.num_clients * sz_xXResClient);
     if (client->swapped) {
         int n;
         swaps (&rep.sequenceNumber, n);
@@ -146,7 +144,7 @@ ProcXResQueryClientResources (ClientPtr client)
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.num_types = num_types;
-    rep.length = rep.num_types * sz_xXResType >> 2;
+    rep.length = bytes_to_int32(rep.num_types * sz_xXResType);
     if (client->swapped) {
         int n;
         swaps (&rep.sequenceNumber, n);

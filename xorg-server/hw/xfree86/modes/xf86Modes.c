@@ -48,10 +48,8 @@ extern XF86ConfigPtr xf86configptr;
 
 /**
  * Calculates the horizontal sync rate of a mode.
- *
- * Exact copy of xf86Mode.c's.
  */
-_X_EXPORT double
+double
 xf86ModeHSync(const DisplayModeRec *mode)
 {
     double hsync = 0.0;
@@ -66,10 +64,8 @@ xf86ModeHSync(const DisplayModeRec *mode)
 
 /**
  * Calculates the vertical refresh rate of a mode.
- *
- * Exact copy of xf86Mode.c's.
  */
-_X_EXPORT double
+double
 xf86ModeVRefresh(const DisplayModeRec *mode)
 {
     double refresh = 0.0;
@@ -88,7 +84,7 @@ xf86ModeVRefresh(const DisplayModeRec *mode)
     return refresh;
 }
 
-_X_EXPORT int
+int
 xf86ModeWidth (const DisplayModeRec *mode, Rotation rotation)
 {
     switch (rotation & 0xf) {
@@ -103,7 +99,7 @@ xf86ModeWidth (const DisplayModeRec *mode, Rotation rotation)
     }
 }
 
-_X_EXPORT int
+int
 xf86ModeHeight (const DisplayModeRec *mode, Rotation rotation)
 {
     switch (rotation & 0xf) {
@@ -119,11 +115,11 @@ xf86ModeHeight (const DisplayModeRec *mode, Rotation rotation)
 }
 
 /** Calculates the memory bandwidth (in MiB/sec) of a mode. */
-_X_EXPORT unsigned int
+unsigned int
 xf86ModeBandwidth(DisplayModePtr mode, int depth)
 {
     float a_active, a_total, active_percent, pixels_per_second;
-    int bytes_per_pixel = (depth + 7) / 8;
+    int bytes_per_pixel = bits_to_bytes(depth);
 
     if (!mode->HTotal || !mode->VTotal || !mode->Clock)
 	return 0;
@@ -137,7 +133,7 @@ xf86ModeBandwidth(DisplayModePtr mode, int depth)
 }
 
 /** Sets a default mode name of <width>x<height> on a mode. */
-_X_EXPORT void
+void
 xf86SetModeDefaultName(DisplayModePtr mode)
 {
     if (mode->name != NULL)
@@ -151,10 +147,8 @@ xf86SetModeDefaultName(DisplayModePtr mode)
  *
  * Initialises the Crtc parameters for a mode.  The initialisation includes
  * adjustments for interlaced and double scan modes.
- *
- * Exact copy of xf86Mode.c's.
  */
-_X_EXPORT void
+void
 xf86SetModeCrtc(DisplayModePtr p, int adjustFlags)
 {
     if ((p == NULL) || ((p->type & M_T_CRTC_C) == M_T_BUILTIN))
@@ -205,7 +199,7 @@ xf86SetModeCrtc(DisplayModePtr p, int adjustFlags)
 /**
  * Allocates and returns a copy of pMode, including pointers within pMode.
  */
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86DuplicateMode(const DisplayModeRec *pMode)
 {
     DisplayModePtr pNew;
@@ -229,7 +223,7 @@ xf86DuplicateMode(const DisplayModeRec *pMode)
  *
  * \param modeList doubly-linked mode list
  */
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86DuplicateModes(ScrnInfoPtr pScrn, DisplayModePtr modeList)
 {
     DisplayModePtr first = NULL, last = NULL;
@@ -260,10 +254,8 @@ xf86DuplicateModes(ScrnInfoPtr pScrn, DisplayModePtr modeList)
  *
  * This doesn't use Crtc values, as it might be used on ModeRecs without the
  * Crtc values set.  So, it's assumed that the other numbers are enough.
- *
- * This isn't in xf86Modes.c, but it might deserve to be there.
  */
-_X_EXPORT Bool
+Bool
 xf86ModesEqual(const DisplayModeRec *pMode1, const DisplayModeRec *pMode2)
 {
      if (pMode1->Clock == pMode2->Clock &&
@@ -285,7 +277,6 @@ xf86ModesEqual(const DisplayModeRec *pMode1, const DisplayModeRec *pMode2)
      }
 }
 
-/* exact copy of xf86Mode.c */
 static void
 add(char **p, char *new)
 {
@@ -296,10 +287,8 @@ add(char **p, char *new)
 
 /**
  * Print out a modeline.
- *
- * Convenient VRefresh printing was added, though, compared to xf86Mode.c
  */
-_X_EXPORT void
+void
 xf86PrintModeline(int scrnIndex,DisplayModePtr mode)
 {
     char tmp[256];
@@ -345,11 +334,14 @@ xf86PrintModeline(int scrnIndex,DisplayModePtr mode)
  *
  * \bug only V_INTERLACE and V_DBLSCAN are supported.  Is that enough?
  */
-_X_EXPORT void
+void
 xf86ValidateModesFlags(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 			    int flags)
 {
     DisplayModePtr mode;
+
+    if (flags == (V_INTERLACE | V_DBLSCAN))
+	return;
 
     for (mode = modeList; mode != NULL; mode = mode->next) {
 	if (mode->Flags & V_INTERLACE && !(flags & V_INTERLACE))
@@ -364,7 +356,7 @@ xf86ValidateModesFlags(ScrnInfoPtr pScrn, DisplayModePtr modeList,
  *
  * \param modeList doubly-linked list of modes.
  */
-_X_EXPORT void
+void
 xf86ValidateModesSize(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 			  int maxX, int maxY, int maxPitch)
 {
@@ -391,7 +383,7 @@ xf86ValidateModesSize(ScrnInfoPtr pScrn, DisplayModePtr modeList,
  *
  * \param modeList doubly-linked list of modes.
  */
-_X_EXPORT void
+void
 xf86ValidateModesSync(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 			  MonPtr mon)
 {
@@ -436,7 +428,7 @@ xf86ValidateModesSync(ScrnInfoPtr pScrn, DisplayModePtr modeList,
  * \param max pointer to maximums of clock ranges
  * \param n_ranges number of ranges.
  */
-_X_EXPORT void
+void
 xf86ValidateModesClocks(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 			    int *min, int *max, int n_ranges)
 {
@@ -469,7 +461,7 @@ xf86ValidateModesClocks(ScrnInfoPtr pScrn, DisplayModePtr modeList,
  *
  * \param modeList doubly-linked list of modes.
  */
-_X_EXPORT void
+void
 xf86ValidateModesUserConfig(ScrnInfoPtr pScrn, DisplayModePtr modeList)
 {
     DisplayModePtr mode;
@@ -501,7 +493,7 @@ xf86ValidateModesUserConfig(ScrnInfoPtr pScrn, DisplayModePtr modeList)
  * \param bandwidth bandwidth in MHz.
  * \param depth color depth.
  */
-_X_EXPORT void
+void
 xf86ValidateModesBandwidth(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 			   unsigned int bandwidth, int depth)
 {
@@ -535,20 +527,12 @@ xf86ModeIsReduced(const DisplayModeRec *mode)
  *
  * \param modeList doubly-linked list of modes.
  */
-_X_EXPORT void
+void
 xf86ValidateModesReducedBlanking(ScrnInfoPtr pScrn, DisplayModePtr modeList)
 {
-    DisplayModePtr mode;
-
-    for (mode = modeList; mode != NULL; mode = mode->next) {
-	/* gratuitous duplication from pre-randr validation code */
-	if ((((mode->HDisplay * 5 / 4) & ~0x07) > mode->HTotal) &&
-	    ((mode->HTotal - mode->HDisplay) == 160) &&
-	    ((mode->HSyncEnd - mode->HDisplay) == 80) &&
-	    ((mode->HSyncEnd - mode->HSyncStart) == 32) &&
-	    ((mode->VSyncStart - mode->VDisplay) == 3))
-	    mode->status = MODE_NO_REDUCED;
-    }
+    for (; modeList != NULL; modeList = modeList->next)
+	if (xf86ModeIsReduced(modeList))
+	    modeList->status = MODE_NO_REDUCED;
 }
 
 /**
@@ -558,7 +542,7 @@ xf86ValidateModesReducedBlanking(ScrnInfoPtr pScrn, DisplayModePtr modeList)
  * \param verbose determines whether the reason for mode invalidation is
  *	  printed.
  */
-_X_EXPORT void
+void
 xf86PruneInvalidModes(ScrnInfoPtr pScrn, DisplayModePtr *modeList,
 			  Bool verbose)
 {
@@ -592,7 +576,7 @@ xf86PruneInvalidModes(ScrnInfoPtr pScrn, DisplayModePtr *modeList,
  *
  * \param modes doubly-linked mode list.
  */
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86ModesAdd(DisplayModePtr modes, DisplayModePtr new)
 {
     if (modes == NULL)
@@ -658,7 +642,7 @@ xf86GetConfigModes (XF86ConfModeLinePtr conf_mode)
 /**
  * Build a mode list from a monitor configuration
  */
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86GetMonitorModes (ScrnInfoPtr pScrn, XF86ConfMonitorPtr conf_monitor)
 {
     DisplayModePtr	    modes = NULL;
@@ -690,8 +674,8 @@ xf86GetMonitorModes (ScrnInfoPtr pScrn, XF86ConfMonitorPtr conf_monitor)
 /**
  * Build a mode list containing all of the default modes
  */
-_X_EXPORT DisplayModePtr
-xf86GetDefaultModes (Bool interlaceAllowed, Bool doubleScanAllowed)
+DisplayModePtr
+xf86GetDefaultModes (void)
 {
     DisplayModePtr  head = NULL, mode;
     int		    i;
@@ -700,13 +684,7 @@ xf86GetDefaultModes (Bool interlaceAllowed, Bool doubleScanAllowed)
     {
 	const DisplayModeRec	*defMode = &xf86DefaultModes[i];
 	
-	if (!interlaceAllowed && (defMode->Flags & V_INTERLACE))
-	    continue;
-	if (!doubleScanAllowed && (defMode->Flags & V_DBLSCAN))
-	    continue;
-
 	mode = xf86DuplicateMode(defMode);
-
 	head = xf86ModesAdd(head, mode);
     }
     return head;

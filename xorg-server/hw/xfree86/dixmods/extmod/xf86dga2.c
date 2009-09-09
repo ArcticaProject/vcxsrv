@@ -11,8 +11,6 @@
 #include <xorg-config.h>
 #endif
 
-#define NEED_REPLIES
-#define NEED_EVENTS
 #include <X11/X.h>
 #include <X11/Xproto.h>
 #include "misc.h"
@@ -24,9 +22,7 @@
 #include "cursorstr.h"
 #include "scrnintstr.h"
 #include "servermd.h"
-#define _XF86DGA_SERVER_
-#include <X11/extensions/xf86dga.h>
-#include <X11/extensions/xf86dgastr.h>
+#include <X11/extensions/xf86dgaproto.h>
 #include "swaprep.h"
 #include "dgaproc.h"
 #include "xf86dgaext.h"
@@ -161,7 +157,7 @@ ProcXDGAOpenFramebuffer(ClientPtr client)
     }
 
     nameSize = deviceName ? (strlen(deviceName) + 1) : 0;
-    rep.length = (nameSize + 3) >> 2;
+    rep.length = bytes_to_int32(nameSize);
 
     WriteToClient(client, sizeof(xXDGAOpenFramebufferReply), (char *)&rep);
     if(rep.length)
@@ -227,10 +223,10 @@ ProcXDGAQueryModes(ClientPtr client)
 
     size = num * sz_xXDGAModeInfo;
     for(i = 0; i < num; i++)
-	size += (strlen(mode[i].name) + 4) & ~3L;  /* plus NULL */
+	size += pad_to_int32(strlen(mode[i].name) + 1);  /* plus NULL */
 
     rep.number = num;
-    rep.length = size >> 2;
+    rep.length = bytes_to_int32(size);
 
     WriteToClient(client, sz_xXDGAQueryModesReply, (char*)&rep);
 
@@ -391,7 +387,7 @@ ProcXDGASetMode(ClientPtr client)
     info.reserved1 = mode.reserved1;
     info.reserved2 = mode.reserved2;
 
-    rep.length = (sz_xXDGAModeInfo + info.name_size) >> 2;
+    rep.length = bytes_to_int32(sz_xXDGAModeInfo + info.name_size);
 
     WriteToClient(client, sz_xXDGASetModeReply, (char*)&rep);
     WriteToClient(client, sz_xXDGAModeInfo, (char*)(&info));
@@ -422,6 +418,7 @@ static int
 ProcXDGAInstallColormap(ClientPtr client)
 {
     ColormapPtr cmap;
+    int rc;
     REQUEST(xXDGAInstallColormapReq);
 
     if (stuff->screen > screenInfo.numScreens)
@@ -432,13 +429,13 @@ ProcXDGAInstallColormap(ClientPtr client)
 
     REQUEST_SIZE_MATCH(xXDGAInstallColormapReq);
 
-    cmap = (ColormapPtr)LookupIDByType(stuff->cmap, RT_COLORMAP);
-    if (cmap) {
+    rc = dixLookupResourceByType((pointer *)&cmap, stuff->cmap, RT_COLORMAP,
+				 client, DixInstallAccess);
+    if (rc == Success) {
         DGAInstallCmap(cmap);
         return (client->noClientException);
     } else {
-        client->errorValue = stuff->cmap;
-        return (BadColor);
+        return (rc == BadValue) ? BadColor : rc;
     }
 
     return (client->noClientException);
@@ -860,6 +857,7 @@ static int
 ProcXF86DGAInstallColormap(ClientPtr client)
 {
     ColormapPtr pcmp;
+    int rc;
     REQUEST(xXF86DGAInstallColormapReq);
 
     if (stuff->screen > screenInfo.numScreens)
@@ -873,13 +871,13 @@ ProcXF86DGAInstallColormap(ClientPtr client)
     if (!DGAActive(stuff->screen))
 	return (DGAErrorBase + XF86DGADirectNotActivated);
 
-    pcmp = (ColormapPtr  )LookupIDByType(stuff->id, RT_COLORMAP);
-    if (pcmp) {
+    rc = dixLookupResourceByType((pointer *)&pcmp, stuff->id, RT_COLORMAP,
+				 client, DixInstallAccess);
+    if (rc == Success) {
 	DGAInstallCmap(pcmp);
         return (client->noClientException);
     } else {
-        client->errorValue = stuff->id;
-        return (BadColor);
+        return (rc == BadValue) ? BadColor : rc;
     }
 }
 

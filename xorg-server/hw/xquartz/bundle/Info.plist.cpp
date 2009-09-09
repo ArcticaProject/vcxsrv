@@ -19,17 +19,25 @@
 	<key>CFBundlePackageType</key>
 		<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-		<string>2.3.2</string>
+		<string>2.4.0</string>
 	<key>CFBundleVersion</key>
-		<string>2.3.2</string>
+		<string>2.4.0</string>
 	<key>CFBundleSignature</key>
 		<string>x11a</string>
 	<key>CSResourcesFileMapped</key>
 		<true/>
+#ifdef XQUARTZ_SPARKLE
+	<key>SUEnableAutomaticChecks</key>
+		<true/>
+	<key>SUPublicDSAKeyFile</key>
+		<string>sparkle.pem</string>
+        <key>SUFeedURL</key>
+                <string>http://xquartz.macosforge.org/downloads/sparkle/release.xml</string>
+#endif
 	<key>NSHumanReadableCopyright</key>
-		<string>Copyright © 2003-2009, Apple Inc.
-Copyright © 2003, XFree86 Project, Inc.
-Copyright © 2003-2009, X.org Foundation, Inc.
+		<string>© 2003-2009 Apple Inc.
+© 2003 XFree86 Project, Inc.
+© 2003-2009 X.org Foundation, Inc.
 </string>
 	<key>NSMainNibFile</key>
 		<string>main</string>

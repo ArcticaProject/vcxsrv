@@ -50,11 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
-#define IsOn(ptr, bit) \
-	(((BYTE *) (ptr))[(bit)>>3] & (1 << ((bit) & 7)))
-
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -99,9 +94,13 @@ ProcXSetDeviceButtonMapping(ClientPtr client)
     REQUEST(xSetDeviceButtonMappingReq);
     REQUEST_AT_LEAST_SIZE(xSetDeviceButtonMappingReq);
 
-    if (stuff->length != (sizeof(xSetDeviceButtonMappingReq) +
-			  stuff->map_length + 3) >> 2)
+    if (stuff->length !=
+        bytes_to_int32(sizeof(xSetDeviceButtonMappingReq) + stuff->map_length))
 	return BadLength;
+
+    ret = dixLookupDevice(&dev, stuff->deviceid, client, DixManageAccess);
+    if (ret != Success)
+        return ret;
 
     rep.repType = X_Reply;
     rep.RepType = X_SetDeviceButtonMapping;
@@ -109,21 +108,16 @@ ProcXSetDeviceButtonMapping(ClientPtr client)
     rep.sequenceNumber = client->sequence;
     rep.status = MappingSuccess;
 
-    ret = dixLookupDevice(&dev, stuff->deviceid, client, DixManageAccess);
-    if (ret != Success)
-	return ret;
+    ret = ApplyPointerMapping(dev, (CARD8 *) &stuff[1], stuff->map_length, client);
+    if (ret == -1)
+        return BadValue;
+    else if (ret == MappingBusy)
+        rep.status = ret;
+    else if (ret != Success)
+        return ret;
 
-    ret = SetButtonMapping(client, dev, stuff->map_length, (BYTE *) & stuff[1]);
+    WriteReplyToClient(client, sizeof(xSetDeviceButtonMappingReply), &rep);
 
-    if (ret == BadValue || ret == BadMatch)
-	return ret;
-    else {
-	rep.status = ret;
-	WriteReplyToClient(client, sizeof(xSetDeviceButtonMappingReply), &rep);
-    }
-
-    if (ret != MappingBusy)
-	SendDeviceMappingNotify(client, MappingPointer, 0, 0, dev);
     return Success;
 }
 

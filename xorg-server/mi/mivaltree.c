@@ -769,7 +769,7 @@ miValidateTree (
 		if (pScreen->ClipNotify)
 		    (* pScreen->ClipNotify) (pWin, 0, 0);
 		REGION_EMPTY( pScreen, &pWin->borderClip);
-		pWin->valdata = (ValidatePtr)NULL;
+		pWin->valdata = NULL;
 	    }
 	}
     }

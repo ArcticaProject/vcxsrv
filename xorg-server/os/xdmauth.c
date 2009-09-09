@@ -259,7 +259,7 @@ XdmAuthorizationValidate (unsigned char *plain, int length,
 	    *reason = "Bad XDM authorization key length";
 	return NULL;
     }
-    client = (XdmClientAuthPtr) xalloc (sizeof (XdmClientAuthRec));
+    client = xalloc (sizeof (XdmClientAuthRec));
     if (!client)
 	return NULL;
     XdmClientAuthDecode (plain, client);
@@ -363,7 +363,7 @@ XdmAddCookie (unsigned short data_length, char *data, XID id)
     /* the first octet of the key must be zero */
     if (key_bits[0] != '\0')
 	return 0;
-    new = (XdmAuthorizationPtr) xalloc (sizeof (XdmAuthorizationRec));
+    new = xalloc (sizeof (XdmAuthorizationRec));
     if (!new)
 	return 0;
     new->next = xdmAuth;
@@ -385,7 +385,7 @@ XdmCheckCookie (unsigned short cookie_length, char *cookie,
     /* Auth packets must be a multiple of 8 bytes long */
     if (cookie_length & 7)
 	return (XID) -1;
-    plain = (unsigned char *) xalloc (cookie_length);
+    plain = xalloc (cookie_length);
     if (!plain)
 	return (XID) -1;
     for (auth = xdmAuth; auth; auth=auth->next) {
@@ -430,7 +430,7 @@ XdmToID (unsigned short cookie_length, char *cookie)
     XdmClientAuthPtr	client;
     unsigned char	*plain;
 
-    plain = (unsigned char *) xalloc (cookie_length);
+    plain = xalloc (cookie_length);
     if (!plain)
 	return (XID) -1;
     for (auth = xdmAuth; auth; auth=auth->next) {

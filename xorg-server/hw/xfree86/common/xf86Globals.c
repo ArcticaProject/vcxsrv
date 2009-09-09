@@ -43,6 +43,7 @@
 #include "xf86Parser.h"
 #include "xf86Xinput.h"
 #include "xf86InPriv.h"
+#include "xf86Config.h"
 
 /* Globals that video drivers may access */
 
@@ -51,11 +52,11 @@ static int xf86CreateRootWindowKeyIndex;
 DevPrivateKey xf86CreateRootWindowKey = &xf86CreateRootWindowKeyIndex;
 /* Index of ScrnInfo in pScreen.devPrivates */
 static int xf86ScreenKeyIndex;
-_X_EXPORT DevPrivateKey xf86ScreenKey = &xf86ScreenKeyIndex;
+DevPrivateKey xf86ScreenKey = &xf86ScreenKeyIndex;
 static int xf86PixmapKeyIndex;
-_X_EXPORT DevPrivateKey xf86PixmapKey = &xf86PixmapKeyIndex;
-_X_EXPORT ScrnInfoPtr *xf86Screens = NULL;	/* List of ScrnInfos */
-_X_EXPORT const unsigned char byte_reversed[256] =
+DevPrivateKey xf86PixmapKey = &xf86PixmapKeyIndex;
+ScrnInfoPtr *xf86Screens = NULL;	/* List of ScrnInfos */
+const unsigned char byte_reversed[256] =
 {
     0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
     0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
@@ -101,9 +102,11 @@ xf86InfoRec xf86Info = {
     .consoleFd                  = -1,
     .vtno                       = -1,
     .vtSysreq                   = FALSE,
-    .ddxSpecialKeys             = SKWhenNeeded,
     .lastEventTime              = -1,
     .vtRequestsPending          = FALSE,
+#ifdef sun
+    .vtPendingNum               = -1,
+#endif
     .dontVTSwitch               = FALSE,
     .dontZap                    = FALSE,
     .dontZoom                   = FALSE,
@@ -140,21 +143,18 @@ xf86InfoRec xf86Info = {
 #endif
 };
 const char *xf86ConfigFile = NULL;
-const char *xf86InputDeviceList = NULL;
 const char *xf86ModulePath = DEFAULT_MODULE_PATH;
 MessageType xf86ModPathFrom = X_DEFAULT;
 const char *xf86LogFile = DEFAULT_LOGPREFIX;
 MessageType xf86LogFileFrom = X_DEFAULT;
 Bool xf86LogFileWasOpened = FALSE;
 serverLayoutRec xf86ConfigLayout = {NULL, };
-_X_EXPORT confDRIRec xf86ConfigDRI = {0, };
+confDRIRec xf86ConfigDRI = {0, };
 XF86ConfigPtr xf86configptr = NULL;
 Bool xf86Resetting = FALSE;
 Bool xf86Initialising = FALSE;
-Bool xf86DoProbe = FALSE;
 Bool xf86DoConfigure = FALSE;
 Bool xf86DoShowOptions = FALSE;
-Bool xf86DoModalias = FALSE;
 DriverPtr *xf86DriverList = NULL;
 int xf86NumDrivers = 0;
 InputDriverPtr *xf86InputDriverList = NULL;
@@ -185,7 +185,6 @@ char *xf86LayoutName = NULL;
 char *xf86ScreenName = NULL;
 char *xf86PointerName = NULL;
 char *xf86KeyboardName = NULL;
-Bool xf86ProbeOnly = FALSE;
 int xf86Verbose = DEFAULT_VERBOSE;
 int xf86LogVerbose = DEFAULT_LOG_VERBOSE;
 int xf86FbBpp = -1;
@@ -200,7 +199,7 @@ Bool xf86VidModeDisabled = FALSE;
 Bool xf86VidModeAllowNonLocal = FALSE;
 #endif
 RootWinPropPtr *xf86RegisteredPropertiesTable = NULL;
-_X_EXPORT Bool xf86inSuspend = FALSE;
+Bool xf86inSuspend = FALSE;
 Bool xorgHWAccess = FALSE;
 
 struct pci_slot_match xf86IsolateDevice = {

@@ -91,58 +91,58 @@ typedef struct _GlyphList {
     PictFormatPtr   format;
 } GlyphListRec, *GlyphListPtr;
 
-GlyphHashSetPtr
+extern _X_EXPORT GlyphHashSetPtr
 FindGlyphHashSet (CARD32 filled);
 
-void
+extern _X_EXPORT void
 GlyphUninit (ScreenPtr pScreen);
 
-GlyphHashSetPtr
+extern _X_EXPORT GlyphHashSetPtr
 FindGlyphHashSet (CARD32 filled);
 
-GlyphRefPtr
+extern _X_EXPORT GlyphRefPtr
 FindGlyphRef (GlyphHashPtr	hash,
 	      CARD32		signature,
 	      Bool		match,
 	      unsigned char	sha1[20]);
 
-GlyphPtr
+extern _X_EXPORT GlyphPtr
 FindGlyphByHash (unsigned char sha1[20], int format);
 
-int
+extern _X_EXPORT int
 HashGlyph (xGlyphInfo    *gi,
 	   CARD8	 *bits,
 	   unsigned long size,
 	   unsigned char sha1[20]);
 
-void
+extern _X_EXPORT void
 FreeGlyph (GlyphPtr glyph, int format);
 
-void
+extern _X_EXPORT void
 AddGlyph (GlyphSetPtr glyphSet, GlyphPtr glyph, Glyph id);
 
-Bool
+extern _X_EXPORT Bool
 DeleteGlyph (GlyphSetPtr glyphSet, Glyph id);
 
-GlyphPtr
+extern _X_EXPORT GlyphPtr
 FindGlyph (GlyphSetPtr glyphSet, Glyph id);
 
-GlyphPtr
+extern _X_EXPORT GlyphPtr
 AllocateGlyph (xGlyphInfo *gi, int format);
 
-Bool
+extern _X_EXPORT Bool
 AllocateGlyphHash (GlyphHashPtr hash, GlyphHashSetPtr hashSet);
 
-Bool
+extern _X_EXPORT Bool
 ResizeGlyphHash (GlyphHashPtr hash, CARD32 change, Bool global);
 
-Bool
+extern _X_EXPORT Bool
 ResizeGlyphSet (GlyphSetPtr glyphSet, CARD32 change);
 
-GlyphSetPtr
+extern _X_EXPORT GlyphSetPtr
 AllocateGlyphSet (int fdepth, PictFormatPtr format);
 
-int
+extern _X_EXPORT int
 FreeGlyphSet (pointer   value,
 	      XID       gid);
 

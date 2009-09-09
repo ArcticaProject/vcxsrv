@@ -78,7 +78,6 @@ Equipment Corporation.
 #endif
 
 #include <X11/X.h>
-#define NEED_EVENTS
 #include <X11/Xproto.h>
 #include <X11/Xprotostr.h>
 
@@ -127,7 +126,7 @@ exposing is done by the backing store's GraphicsExpose function, of course.
 
 */
 
-_X_EXPORT RegionPtr
+RegionPtr
 miHandleExposures(DrawablePtr pSrcDrawable, DrawablePtr pDstDrawable,
 		  GCPtr pGC, int srcx, int srcy, int width, int height,
 		  int dstx, int dsty, unsigned long plane)
@@ -208,7 +207,7 @@ miHandleExposures(DrawablePtr pSrcDrawable, DrawablePtr pDstDrawable,
 	box.y2 = pSrcDrawable->height;
 	prgnSrcClip = &rgnSrcRec;
 	REGION_INIT(pscr, prgnSrcClip, &box, 1);
-	pSrcWin = (WindowPtr)NULL;
+	pSrcWin = NULL;
     }
 
     if (pDstDrawable == pSrcDrawable)
@@ -254,6 +253,10 @@ miHandleExposures(DrawablePtr pSrcDrawable, DrawablePtr pDstDrawable,
 
     /* intersect with visible areas of dest */
     REGION_INTERSECT(pscr, &rgnExposed, &rgnExposed, prgnDstClip);
+
+    /* intersect with client clip region. */
+    if (pGC->clientClipType == CT_REGION)
+	REGION_INTERSECT(pscr, &rgnExposed, &rgnExposed, pGC->clientClip);
 
     /*
      * If we have LOTS of rectangles, we decide to take the extents
@@ -355,7 +358,7 @@ miSendGraphicsExpose (ClientPtr client, RegionPtr pRgn, XID drawable,
 
 	numRects = REGION_NUM_RECTS(pRgn);
 	pBox = REGION_RECTS(pRgn);
-	if(!(pEvent = (xEvent *)xalloc(numRects * sizeof(xEvent))))
+	if(!(pEvent = xalloc(numRects * sizeof(xEvent))))
 		return;
 	pe = pEvent;
 
@@ -378,6 +381,7 @@ miSendGraphicsExpose (ClientPtr client, RegionPtr pRgn, XID drawable,
     else
     {
         xEvent event;
+	memset(&event, 0, sizeof(xEvent));
 	event.u.u.type = NoExpose;
 	event.u.noExposure.drawable = drawable;
 	event.u.noExposure.majorEvent = major;
@@ -398,7 +402,7 @@ miSendExposures( WindowPtr pWin, RegionPtr pRgn, int dx, int dy)
 
     pBox = REGION_RECTS(pRgn);
     numRects = REGION_NUM_RECTS(pRgn);
-    if(!(pEvent = (xEvent *) xalloc(numRects * sizeof(xEvent))))
+    if(!(pEvent = xcalloc(1, numRects * sizeof(xEvent))))
 	return;
 
     for (i=numRects, pe = pEvent; --i >= 0; pe++, pBox++)
@@ -432,7 +436,7 @@ miSendExposures( WindowPtr pWin, RegionPtr pRgn, int dx, int dy)
 		return;
 	    }
 	    realWin = win->info[0].id;
-	    pWin = LookupIDByType(realWin, RT_WINDOW);
+	    dixLookupWindow(&pWin, realWin, serverClient, DixSendAccess);
 	}
 	if(x || y || scrnum)
 	  for (i = 0; i < numRects; i++) {
@@ -448,7 +452,7 @@ miSendExposures( WindowPtr pWin, RegionPtr pRgn, int dx, int dy)
     xfree(pEvent);
 }
 
-_X_EXPORT void 
+void
 miWindowExposures( WindowPtr pWin, RegionPtr prgn, RegionPtr other_exposed)
 {
     RegionPtr   exposures = prgn;
@@ -518,7 +522,7 @@ void
 miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
 {
     ScreenPtr	pScreen = pWin->drawable.pScreen;
-    ChangeGCVal gcval[5];
+    ChangeGCVal gcval[6];
     BITS32	gcmask;
     GCPtr	pGC;
     int		i;
@@ -586,23 +590,39 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
     gcval[0].val = GXcopy;
     gcmask = GCFunction;
 
+#ifdef ROOTLESS_SAFEALPHA
+/* Bit mask for alpha channel with a particular number of bits per
+ * pixel. Note that we only care for 32bpp data. Mac OS X uses planar
+ * alpha for 16bpp.
+ */
+#define RootlessAlphaMask(bpp) ((bpp) == 32 ? 0xFF000000 : 0)
+#endif
+    
     if (solid)
     {
+#ifdef ROOTLESS_SAFEALPHA
+	gcval[1].val = fill.pixel | RootlessAlphaMask(pWin->drawable.bitsPerPixel);
+#else
 	gcval[1].val = fill.pixel;
+#endif
 	gcval[2].val  = FillSolid;
 	gcmask |= GCForeground | GCFillStyle;
     }
     else
     {
-	gcval[1].val = FillTiled;
-	gcval[2].ptr = (pointer)fill.pixmap;
-	gcval[3].val = tile_x_off;
-	gcval[4].val = tile_y_off;
+	int c=1;
+#ifdef ROOTLESS_SAFEALPHA
+	gcval[c++].val = ((CARD32)-1) & ~RootlessAlphaMask(pWin->drawable.bitsPerPixel);
+	gcmask |= GCPlaneMask;
+#endif
+	gcval[c++].val = FillTiled;
+	gcval[c++].ptr = (pointer)fill.pixmap;
+	gcval[c++].val = tile_x_off;
+	gcval[c++].val = tile_y_off;
 	gcmask |= GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin;
     }
 
-    prect = (xRectangle *)xalloc(REGION_NUM_RECTS(prgn) *
-					 sizeof(xRectangle));
+    prect = xalloc(REGION_NUM_RECTS(prgn) * sizeof(xRectangle));
     if (!prect)
 	return;
 
@@ -636,7 +656,7 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
 /* MICLEARDRAWABLE -- sets the entire drawable to the background color of
  * the GC.  Useful when we have a scratch drawable and need to initialize 
  * it. */
-_X_EXPORT void
+void
 miClearDrawable(DrawablePtr pDraw, GCPtr pGC)
 {
     XID fg = pGC->fgPixel;

@@ -58,7 +58,7 @@ xf86freeBuffersList (XF86ConfBuffersPtr ptr)
 	TestFree (ptr->buf_comment);
 	prev = ptr;
 	ptr  = ptr->list.next;
-	xf86conffree (prev);
+	free (prev);
     }
 }
 
@@ -183,5 +183,5 @@ xf86freeDRI (XF86ConfDRIPtr ptr)
     
     xf86freeBuffersList (ptr->dri_buffers_lst);
     TestFree (ptr->dri_comment);
-    xf86conffree (ptr);
+    free (ptr);
 }

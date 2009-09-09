@@ -77,30 +77,30 @@ typedef int (*VisitWindowProcPtr)(
     WindowPtr /*pWin*/,
     pointer /*data*/);
 
-extern int TraverseTree(
+extern _X_EXPORT int TraverseTree(
     WindowPtr /*pWin*/,
     VisitWindowProcPtr /*func*/,
     pointer /*data*/);
 
-extern int WalkTree(
+extern _X_EXPORT int WalkTree(
     ScreenPtr /*pScreen*/,
     VisitWindowProcPtr /*func*/,
     pointer /*data*/);
 
-extern Bool CreateRootWindow(
+extern _X_EXPORT Bool CreateRootWindow(
     ScreenPtr /*pScreen*/);
 
-extern void InitRootWindow(
+extern _X_EXPORT void InitRootWindow(
     WindowPtr /*pWin*/);
 
 typedef WindowPtr (* RealChildHeadProc) (WindowPtr pWin);
 
-void RegisterRealChildHeadProc (RealChildHeadProc proc);
+extern _X_EXPORT void RegisterRealChildHeadProc (RealChildHeadProc proc);
 
-extern WindowPtr RealChildHead(
+extern _X_EXPORT WindowPtr RealChildHead(
     WindowPtr /*pWin*/);
 
-extern WindowPtr CreateWindow(
+extern _X_EXPORT WindowPtr CreateWindow(
     Window /*wid*/,
     WindowPtr /*pParent*/,
     int /*x*/,
@@ -116,11 +116,11 @@ extern WindowPtr CreateWindow(
     VisualID /*visual*/,
     int* /*error*/);
 
-extern int DeleteWindow(
+extern _X_EXPORT int DeleteWindow(
     pointer /*pWin*/,
     XID /*wid*/);
 
-extern int DestroySubwindows(
+extern _X_EXPORT int DestroySubwindows(
     WindowPtr /*pWin*/,
     ClientPtr /*client*/);
 
@@ -129,18 +129,18 @@ extern int DestroySubwindows(
 #ifdef __APPLE__
 #define ChangeWindowAttributes Darwin_X_ChangeWindowAttributes
 #endif
-extern int ChangeWindowAttributes(
+extern _X_EXPORT int ChangeWindowAttributes(
     WindowPtr /*pWin*/,
     Mask /*vmask*/,
     XID* /*vlist*/,
     ClientPtr /*client*/);
 
-extern int ChangeWindowDeviceCursor(
+extern _X_EXPORT int ChangeWindowDeviceCursor(
     WindowPtr /*pWin*/,
     struct _DeviceIntRec* /*pDev*/,
     struct _Cursor* /*pCursor*/);
 
-extern struct _Cursor* WindowGetDeviceCursor(
+extern _X_EXPORT struct _Cursor* WindowGetDeviceCursor(
     WindowPtr /*pWin*/,
     struct _DeviceIntRec* /*pDev*/);
 
@@ -150,16 +150,13 @@ extern struct _Cursor* WindowGetDeviceCursor(
 #define GetWindowAttributes(w,c,x) Darwin_X_GetWindowAttributes(w,c,x)
 extern void Darwin_X_GetWindowAttributes(
 #else
-extern void GetWindowAttributes(
+extern _X_EXPORT void GetWindowAttributes(
 #endif
     WindowPtr /*pWin*/,
     ClientPtr /*client*/,
     xGetWindowAttributesReply* /* wa */);
 
-extern RegionPtr CreateUnclippedWinSize(
-    WindowPtr /*pWin*/);
-
-extern void GravityTranslate(
+extern _X_EXPORT void GravityTranslate(
     int /*x*/,
     int /*y*/,
     int /*oldx*/,
@@ -170,103 +167,103 @@ extern void GravityTranslate(
     int* /*destx*/,
     int* /*desty*/);
 
-extern int ConfigureWindow(
+extern _X_EXPORT int ConfigureWindow(
     WindowPtr /*pWin*/,
     Mask /*mask*/,
     XID* /*vlist*/,
     ClientPtr /*client*/);
 
-extern int CirculateWindow(
+extern _X_EXPORT int CirculateWindow(
     WindowPtr /*pParent*/,
     int /*direction*/,
     ClientPtr /*client*/);
 
-extern int ReparentWindow(
+extern _X_EXPORT int ReparentWindow(
     WindowPtr /*pWin*/,
     WindowPtr /*pParent*/,
     int /*x*/,
     int /*y*/,
     ClientPtr /*client*/);
 
-extern int MapWindow(
+extern _X_EXPORT int MapWindow(
     WindowPtr /*pWin*/,
     ClientPtr /*client*/);
 
-extern void MapSubwindows(
+extern _X_EXPORT void MapSubwindows(
     WindowPtr /*pParent*/,
     ClientPtr /*client*/);
 
-extern int UnmapWindow(
+extern _X_EXPORT int UnmapWindow(
     WindowPtr /*pWin*/,
     Bool /*fromConfigure*/);
 
-extern void UnmapSubwindows(
+extern _X_EXPORT void UnmapSubwindows(
     WindowPtr /*pWin*/);
 
-extern void HandleSaveSet(
+extern _X_EXPORT void HandleSaveSet(
     ClientPtr /*client*/);
 
-extern Bool PointInWindowIsVisible(
+extern _X_EXPORT Bool PointInWindowIsVisible(
     WindowPtr /*pWin*/,
     int /*x*/,
     int /*y*/);
 
-extern RegionPtr NotClippedByChildren(
+extern _X_EXPORT RegionPtr NotClippedByChildren(
     WindowPtr /*pWin*/);
 
-extern void SendVisibilityNotify(
+extern _X_EXPORT void SendVisibilityNotify(
     WindowPtr /*pWin*/);
 
-extern int dixSaveScreens(
+extern _X_EXPORT int dixSaveScreens(
     ClientPtr client,
     int on,
     int mode);
 
-extern int SaveScreens(
+extern _X_EXPORT int SaveScreens(
     int on,
     int mode);
 
-extern WindowPtr FindWindowWithOptional(
+extern _X_EXPORT WindowPtr FindWindowWithOptional(
     WindowPtr /*w*/);
 
-extern void CheckWindowOptionalNeed(
+extern _X_EXPORT void CheckWindowOptionalNeed(
     WindowPtr /*w*/);
 
-extern Bool MakeWindowOptional(
+extern _X_EXPORT Bool MakeWindowOptional(
     WindowPtr /*pWin*/);
 
-extern WindowPtr MoveWindowInStack(
+extern _X_EXPORT WindowPtr MoveWindowInStack(
     WindowPtr /*pWin*/,
     WindowPtr /*pNextSib*/);
 
-void SetWinSize(
+extern _X_EXPORT void SetWinSize(
     WindowPtr /*pWin*/);
 
-void SetBorderSize(
+extern _X_EXPORT void SetBorderSize(
     WindowPtr /*pWin*/);
 
-void ResizeChildrenWinSize(
+extern _X_EXPORT void ResizeChildrenWinSize(
     WindowPtr /*pWin*/,
     int /*dx*/,
     int /*dy*/,
     int /*dw*/,
     int /*dh*/);
 
-extern void ShapeExtensionInit(void);
+extern _X_EXPORT void ShapeExtensionInit(void);
 
-extern void SendShapeNotify(
+extern _X_EXPORT void SendShapeNotify(
     WindowPtr /* pWin */,
     int /* which */ );
 
-extern RegionPtr CreateBoundingShape(
+extern _X_EXPORT RegionPtr CreateBoundingShape(
     WindowPtr /* pWin */ );
 
-extern RegionPtr CreateClipShape(
+extern _X_EXPORT RegionPtr CreateClipShape(
     WindowPtr /* pWin */ );
 
-extern void DisableMapUnmapEvents(
+extern _X_EXPORT void DisableMapUnmapEvents(
     WindowPtr /* pWin */ );
-extern void EnableMapUnmapEvents(
+extern _X_EXPORT void EnableMapUnmapEvents(
     WindowPtr /* pWin */ );
 
 #endif /* WINDOW_H */

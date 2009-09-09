@@ -80,7 +80,7 @@ static const struct extension_info known_glx_extensions[] = {
    { GLX(SGI_swap_control),            VER(0,0), N, },
    { GLX(SGIS_multisample),            VER(0,0), Y, },
    { GLX(SGIX_fbconfig),               VER(1,3), Y, },
-   { GLX(SGIX_pbuffer),                VER(1,3), N, },
+   { GLX(SGIX_pbuffer),                VER(1,3), Y, },
    { GLX(SGIX_visual_select_group),    VER(0,0), Y, },
    { NULL }
 };

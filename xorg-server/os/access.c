@@ -216,7 +216,7 @@ typedef struct _host {
 	int		requested;
 } HOST;
 
-#define MakeHost(h,l)	(h)=(HOST *) xalloc(sizeof *(h)+(l));\
+#define MakeHost(h,l)	(h)=xalloc(sizeof *(h)+(l));\
 			if (h) { \
 			   (h)->addr=(unsigned char *) ((h) + 1);\
 			   (h)->requested = FALSE; \
@@ -415,8 +415,7 @@ DefineSelf (int fd)
 		 */
 		if (family == FamilyInternet &&
 		    !(len == 4 &&
-		      ((addr[0] == 127 && addr[1] == 0 &&
-			addr[2] == 0 && addr[3] == 1) ||
+		      ((addr[0] == 127) ||
 		       (addr[0] == 0 && addr[1] == 0 &&
 			addr[2] == 0 && addr[3] == 0)))
 		      )
@@ -1095,7 +1094,7 @@ ResetHosts (char *display)
 }
 
 /* Is client on the local host */
-_X_EXPORT Bool LocalClient(ClientPtr client)
+Bool LocalClient(ClientPtr client)
 {
     int    		alen, family, notused;
     Xtransaddr		*from = NULL;
@@ -1109,12 +1108,12 @@ _X_EXPORT Bool LocalClient(ClientPtr client)
 	    &alen, (pointer *)&addr);
 	if (family == -1)
 	{
-	    xfree ((char *) from);
+	    xfree (from);
 	    return FALSE;
 	}
 	if (family == FamilyLocal)
 	{
-	    xfree ((char *) from);
+	    xfree (from);
 	    return TRUE;
 	}
 	for (host = selfhosts; host; host = host->next)
@@ -1122,7 +1121,7 @@ _X_EXPORT Bool LocalClient(ClientPtr client)
 	    if (addrEqual (family, addr, alen, host))
 		return TRUE;
 	}
-	xfree ((char *) from);
+	xfree (from);
     }
     return FALSE;
 }
@@ -1458,11 +1457,11 @@ GetHosts (
     for (host = validhosts; host; host = host->next)
     {
 	nHosts++;
-	n += (((host->len + 3) >> 2) << 2) + sizeof(xHostEntry);
+	n += pad_to_int32(host->len) + sizeof(xHostEntry);
     }
     if (n)
     {
-        *data = ptr = (pointer) xalloc (n);
+        *data = ptr = xalloc (n);
 	if (!ptr)
 	{
 	    return(BadAlloc);
@@ -1474,7 +1473,7 @@ GetHosts (
 	    ((xHostEntry *)ptr)->length = len;
 	    ptr += sizeof(xHostEntry);
 	    acopy (host->addr, ptr, len);
-	    ptr += ((len + 3) >> 2) << 2;
+	    ptr += pad_to_int32(len);
         }
     } else {
 	*data = NULL;
@@ -1721,7 +1720,7 @@ siTypeAdd(const char *typeName, siAddrMatchFunc addrMatch,
 	}
     }
 
-    s = (struct siType *) xalloc(sizeof(struct siType));
+    s = xalloc(sizeof(struct siType));
     if (s == NULL)
 	return BadAlloc;
 

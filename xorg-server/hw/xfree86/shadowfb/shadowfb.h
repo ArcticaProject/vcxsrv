@@ -19,7 +19,7 @@ typedef void (*RefreshAreaFuncPtr)(ScrnInfoPtr, int, BoxPtr);
  *
  * Returns FALSE in the event of an error.
  */
-Bool
+extern _X_EXPORT Bool
 ShadowFBInit (
     ScreenPtr		pScreen,
     RefreshAreaFuncPtr  refreshArea
@@ -33,7 +33,7 @@ ShadowFBInit (
  *
  * Returns FALSE in the event of an error
  */
-Bool
+extern _X_EXPORT Bool
 ShadowFBInit2 (
     ScreenPtr		pScreen,
     RefreshAreaFuncPtr  preRefreshArea,

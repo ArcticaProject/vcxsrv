@@ -8,27 +8,27 @@
 
 #include "panoramiX.h"
 
-extern int PanoramiXNumScreens;
-extern PanoramiXData *panoramiXdataPtr;
-extern int PanoramiXPixWidth;
-extern int PanoramiXPixHeight;
+extern _X_EXPORT int PanoramiXNumScreens;
+extern _X_EXPORT PanoramiXData *panoramiXdataPtr;
+extern _X_EXPORT int PanoramiXPixWidth;
+extern _X_EXPORT int PanoramiXPixHeight;
 
-extern VisualID PanoramiXTranslateVisualID(int screen, VisualID orig);
-extern void PanoramiXConsolidate(void);
-extern Bool PanoramiXCreateConnectionBlock(void);
-extern PanoramiXRes * PanoramiXFindIDByScrnum(RESTYPE, XID, int);
-extern Bool XineramaRegisterConnectionBlockCallback(void (*func)(void));
-extern int XineramaDeleteResource(pointer, XID);
+extern _X_EXPORT VisualID PanoramiXTranslateVisualID(int screen, VisualID orig);
+extern _X_EXPORT void PanoramiXConsolidate(void);
+extern _X_EXPORT Bool PanoramiXCreateConnectionBlock(void);
+extern _X_EXPORT PanoramiXRes * PanoramiXFindIDByScrnum(RESTYPE, XID, int);
+extern _X_EXPORT Bool XineramaRegisterConnectionBlockCallback(void (*func)(void));
+extern _X_EXPORT int XineramaDeleteResource(pointer, XID);
 
-extern void XineramaReinitData(ScreenPtr);
+extern _X_EXPORT void XineramaReinitData(ScreenPtr);
 
-extern RegionRec XineramaScreenRegions[MAXSCREENS];
+extern _X_EXPORT RegionRec XineramaScreenRegions[MAXSCREENS];
 
-extern unsigned long XRC_DRAWABLE;
-extern unsigned long XRT_WINDOW;
-extern unsigned long XRT_PIXMAP;
-extern unsigned long XRT_GC;
-extern unsigned long XRT_COLORMAP;
+extern _X_EXPORT unsigned long XRC_DRAWABLE;
+extern _X_EXPORT unsigned long XRT_WINDOW;
+extern _X_EXPORT unsigned long XRT_PIXMAP;
+extern _X_EXPORT unsigned long XRT_GC;
+extern _X_EXPORT unsigned long XRT_COLORMAP;
 
 /*
  * Drivers are allowed to wrap this function.  Each wrapper can decide that the
@@ -38,9 +38,9 @@ extern unsigned long XRT_COLORMAP;
  * screen 0.
  */
 typedef Bool (*XineramaVisualsEqualProcPtr)(VisualPtr, ScreenPtr, VisualPtr);
-extern XineramaVisualsEqualProcPtr XineramaVisualsEqualPtr;
+extern _X_EXPORT XineramaVisualsEqualProcPtr XineramaVisualsEqualPtr;
 
-extern void XineramaGetImageData(
+extern _X_EXPORT void XineramaGetImageData(
     DrawablePtr *pDrawables,
     int left,
     int top,

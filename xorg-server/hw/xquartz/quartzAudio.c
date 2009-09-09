@@ -211,14 +211,20 @@ QuartzAudioIOProc(
 
 
 /*
- * QuartzCoreAudioBell
- *  Play a tone using the CoreAudio API
+ * DDXRingBell
+ * Play a tone using the CoreAudio API
  */
-static void QuartzCoreAudioBell(
+void DDXRingBell(
     int volume,         // volume is % of max
     int pitch,          // pitch is Hz
     int duration )      // duration is milliseconds
 {
+    if (quartzUseSysBeep) {
+        if (volume)
+            NSBeep();
+        return;
+    }
+        
     if (quartzAudioDevice == kAudioDeviceUnknown) return;
 
     pthread_mutex_lock(&data.lock);
@@ -239,47 +245,13 @@ static void QuartzCoreAudioBell(
         OSStatus status;
         status = AudioDeviceStart(quartzAudioDevice, QuartzAudioIOProc);
         if (status) {
-            ErrorF("QuartzAudioBell: AudioDeviceStart returned %ld\n", (long)status);
+            ErrorF("DDXRingBell: AudioDeviceStart returned %ld\n", (long)status);
         } else {
             data.playing = TRUE;
         }
     }
     pthread_mutex_unlock(&data.lock);
 }
-
-
-/*
- * QuartzBell
- *  Ring the bell
- */
-void QuartzBell(
-    int volume,             // volume in percent of max
-    DeviceIntPtr pDevice,
-    pointer ctrl,
-    int class )
-{
-    int pitch;              // pitch in Hz
-    int duration;           // duration in milliseconds
-
-    if (class == BellFeedbackClass) {
-        pitch = ((BellCtrl*)ctrl)->pitch;
-        duration = ((BellCtrl*)ctrl)->duration;
-    } else if (class == KbdFeedbackClass) {
-        pitch = ((KeybdCtrl*)ctrl)->bell_pitch;
-        duration = ((KeybdCtrl*)ctrl)->bell_duration;    
-    } else {
-        ErrorF("QuartzBell: bad bell class %d\n", class);
-        return;
-    }
-
-    if (quartzUseSysBeep) {
-        if (volume)
-            NSBeep();
-    } else {
-        QuartzCoreAudioBell(volume, pitch, duration);
-    }
-}
-
 
 /*
  * QuartzAudioInit

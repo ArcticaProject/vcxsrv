@@ -23,8 +23,8 @@ Xephyr - X server outputting to a window on a pre-existing X display
 .IR ... ]
 .SH DESCRIPTION
 .B Xephyr
-is a a kdrive server that outputs to a window on a pre-existing
-'host' X display.
+is a a kdrive server that outputs to a window on a pre-existing "host"
+X display.
 Think
 .I Xnest
 but with support for modern extensions like composite, damage and randr.
@@ -75,7 +75,7 @@ round it. It doesn't appear to break anything however.
 .IP \(bu 2
 Keyboard handling is basic but works.
 .TP \(bu 2
-Mouse button 5 probably wont work.
+Mouse button 5 probably won't work.
 .SH "SEE ALSO"
 X(__miscmansuffix__), Xserver(__appmansuffix__)
 .SH AUTHOR

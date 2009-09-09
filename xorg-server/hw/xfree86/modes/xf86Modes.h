@@ -40,75 +40,75 @@
 #include "xf86Rename.h"
 #endif
 
-double xf86ModeHSync(const DisplayModeRec *mode);
-double xf86ModeVRefresh(const DisplayModeRec *mode);
-unsigned int xf86ModeBandwidth(DisplayModePtr mode, int depth);
+extern _X_EXPORT double xf86ModeHSync(const DisplayModeRec *mode);
+extern _X_EXPORT double xf86ModeVRefresh(const DisplayModeRec *mode);
+extern _X_EXPORT unsigned int xf86ModeBandwidth(DisplayModePtr mode, int depth);
 
-int
+extern _X_EXPORT int
 xf86ModeWidth (const DisplayModeRec *mode, Rotation rotation);
     
-int
+extern _X_EXPORT int
 xf86ModeHeight (const DisplayModeRec *mode, Rotation rotation);
 
-DisplayModePtr xf86DuplicateMode(const DisplayModeRec *pMode);
-DisplayModePtr xf86DuplicateModes(ScrnInfoPtr pScrn,
+extern _X_EXPORT DisplayModePtr xf86DuplicateMode(const DisplayModeRec *pMode);
+extern _X_EXPORT DisplayModePtr xf86DuplicateModes(ScrnInfoPtr pScrn,
 				       DisplayModePtr modeList);
-void xf86SetModeDefaultName(DisplayModePtr mode);
-void xf86SetModeCrtc(DisplayModePtr p, int adjustFlags);
-Bool xf86ModesEqual(const DisplayModeRec *pMode1,
+extern _X_EXPORT void xf86SetModeDefaultName(DisplayModePtr mode);
+extern _X_EXPORT void xf86SetModeCrtc(DisplayModePtr p, int adjustFlags);
+extern _X_EXPORT Bool xf86ModesEqual(const DisplayModeRec *pMode1,
 		    const DisplayModeRec *pMode2);
-void xf86PrintModeline(int scrnIndex,DisplayModePtr mode);
-DisplayModePtr xf86ModesAdd(DisplayModePtr modes, DisplayModePtr new);
+extern _X_EXPORT void xf86PrintModeline(int scrnIndex,DisplayModePtr mode);
+extern _X_EXPORT DisplayModePtr xf86ModesAdd(DisplayModePtr modes, DisplayModePtr new);
 
-DisplayModePtr xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC);
-DisplayModePtr xf86CVTMode(int HDisplay, int VDisplay, float VRefresh,
+extern _X_EXPORT DisplayModePtr xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC);
+extern _X_EXPORT DisplayModePtr xf86CVTMode(int HDisplay, int VDisplay, float VRefresh,
 			   Bool Reduced, Bool Interlaced);
-DisplayModePtr xf86GTFMode(int h_pixels, int v_lines, float freq, int interlaced, int margins);
+extern _X_EXPORT DisplayModePtr xf86GTFMode(int h_pixels, int v_lines, float freq, int interlaced, int margins);
 
-Bool
+extern _X_EXPORT Bool
 xf86ModeIsReduced(const DisplayModeRec *mode);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesFlags(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 		       int flags);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesClocks(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 			int *min, int *max, int n_ranges);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesSize(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 		      int maxX, int maxY, int maxPitch);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesSync(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 		      MonPtr mon);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesBandwidth(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 			   unsigned int bandwidth, int depth);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesReducedBlanking(ScrnInfoPtr pScrn, DisplayModePtr modeList);
 
-void
+extern _X_EXPORT void
 xf86PruneInvalidModes(ScrnInfoPtr pScrn, DisplayModePtr *modeList,
 		      Bool verbose);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesFlags(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 		       int flags);
 
-void
+extern _X_EXPORT void
 xf86ValidateModesUserConfig(ScrnInfoPtr pScrn, DisplayModePtr modeList);
 
-DisplayModePtr
+extern _X_EXPORT DisplayModePtr
 xf86GetMonitorModes (ScrnInfoPtr pScrn, XF86ConfMonitorPtr conf_monitor);
 
-DisplayModePtr
-xf86GetDefaultModes (Bool interlaceAllowed, Bool doubleScanAllowed);
+extern _X_EXPORT DisplayModePtr
+xf86GetDefaultModes (void);
 
-void
+extern _X_EXPORT void
 xf86DDCApplyQuirks(int scrnIndex, xf86MonPtr DDC);
 
 #endif /* _XF86MODES_H_ */

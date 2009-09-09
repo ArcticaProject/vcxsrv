@@ -28,8 +28,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <dix-config.h>
 #endif
 
-#define	NEED_EVENTS
-#define	NEED_REPLIES
 
 #include <stdio.h>
 #include <X11/X.h>
@@ -53,7 +51,7 @@ _XkbFreeGeomLeafElems(	Bool			freeAll,
     if ((freeAll)||(*elems==NULL)) {
 	*num_inout= *sz_inout= 0;
 	if (*elems!=NULL) {
-	    _XkbFree(*elems);
+	    xfree(*elems);
 	    *elems= NULL;
 	}	
 	return;
@@ -117,7 +115,7 @@ register char *ptr;
     if (freeAll) {
 	(*num_inout)= (*sz_inout)= 0;
 	if (*elems) {
-	    _XkbFree(*elems);
+	    xfree(*elems);
 	    *elems= NULL;
 	}
     }
@@ -140,11 +138,11 @@ _XkbClearProperty(char *prop_in)
 XkbPropertyPtr	prop= (XkbPropertyPtr)prop_in;
 
     if (prop->name) {
-	_XkbFree(prop->name);
+	xfree(prop->name);
 	prop->name= NULL;
     }
     if (prop->value) {
-	_XkbFree(prop->value);
+	xfree(prop->value);
 	prop->value= NULL;
     }
     return;
@@ -186,7 +184,7 @@ _XkbClearColor(char *color_in)
 XkbColorPtr	color= (XkbColorPtr)color_in;
 
     if (color->spec)
-	_XkbFree(color->spec);
+	xfree(color->spec);
     return;
 }
 
@@ -383,11 +381,11 @@ XkbDoodadPtr	doodad= (XkbDoodadPtr)doodad_in;
    	case XkbTextDoodad: 
 	    {
 		if (doodad->text.text!=NULL) {
-		    _XkbFree(doodad->text.text);
+		    xfree(doodad->text.text);
 		    doodad->text.text= NULL;
 		}
 		if (doodad->text.font!=NULL) {
-		    _XkbFree(doodad->text.font);
+		    xfree(doodad->text.font);
 		    doodad->text.font= NULL;
 		}
 	    }
@@ -395,7 +393,7 @@ XkbDoodadPtr	doodad= (XkbDoodadPtr)doodad_in;
    	case XkbLogoDoodad: 
 	    {
 		if (doodad->logo.logo_name!=NULL) {
-		    _XkbFree(doodad->logo.logo_name);
+		    xfree(doodad->logo.logo_name);
 		    doodad->logo.logo_name= NULL;
 		}
 	    }
@@ -415,7 +413,7 @@ register XkbDoodadPtr	doodad;
 	    _XkbClearDoodad((char *)doodad);
 	}
 	if (freeAll)
-	    _XkbFree(doodads);
+	    xfree(doodads);
     }
     return;
 }
@@ -444,10 +442,10 @@ XkbFreeGeometry(XkbGeometryPtr geom,unsigned which,Bool freeMap)
 	XkbFreeGeomKeyAliases(geom,0,geom->num_key_aliases,True);
     if (freeMap) {
 	if (geom->label_font!=NULL) {
-	    _XkbFree(geom->label_font);
+	    xfree(geom->label_font);
 	    geom->label_font= NULL;
 	}
-	_XkbFree(geom);
+	xfree(geom);
     }
     return;
 }
@@ -471,8 +469,8 @@ _XkbGeomAlloc(	void **		old,
 
     *total= (*num)+num_new;
     if ((*old)!=NULL)
-	 (*old)= _XkbRealloc((*old),(*total)*sz_elem);
-    else (*old)= _XkbCalloc((*total),sz_elem);
+	 (*old)= xrealloc((*old),(*total)*sz_elem);
+    else (*old)= xcalloc((*total),sz_elem);
     if ((*old)==NULL) {
 	*total= *num= 0;
 	return BadAlloc;
@@ -666,8 +664,8 @@ register XkbPropertyPtr prop;
     for (i=0,prop=geom->properties;i<geom->num_properties;i++,prop++) {
 	if ((prop->name)&&(strcmp(name,prop->name)==0)) {
 	    if (prop->value)
-		_XkbFree(prop->value);
-	    prop->value= (char *)_XkbAlloc(strlen(value)+1);
+		xfree(prop->value);
+	    prop->value= xalloc(strlen(value)+1);
 	    if (prop->value)
 		strcpy(prop->value,value);
 	    return prop;
@@ -678,13 +676,13 @@ register XkbPropertyPtr prop;
 	return NULL;
     }
     prop= &geom->properties[geom->num_properties];
-    prop->name= (char *)_XkbAlloc(strlen(name)+1);
+    prop->name= xalloc(strlen(name)+1);
     if (!name)
 	return NULL;
     strcpy(prop->name,name);
-    prop->value= (char *)_XkbAlloc(strlen(value)+1);
+    prop->value= xalloc(strlen(value)+1);
     if (!value) {
-	_XkbFree(prop->name);
+	xfree(prop->name);
 	prop->name= NULL;
 	return NULL;
     }
@@ -740,7 +738,7 @@ register XkbColorPtr color;
     }
     color= &geom->colors[geom->num_colors];
     color->pixel= pixel;
-    color->spec= (char *)_XkbAlloc(strlen(spec)+1);
+    color->spec= xalloc(strlen(spec)+1);
     if (!color->spec)
 	return NULL;
     strcpy(color->spec,spec);
@@ -854,7 +852,7 @@ XkbSectionPtr	section;
 	return NULL;
     if ((sz_doodads>0)&&(_XkbAllocDoodads(section,sz_doodads)!=Success)) {
 	if (section->rows) {
-	    _XkbFree(section->rows);
+	    xfree(section->rows);
 	    section->rows= NULL;
 	    section->sz_rows= section->num_rows= 0;
 	}

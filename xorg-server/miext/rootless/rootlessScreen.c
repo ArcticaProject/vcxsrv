@@ -200,10 +200,10 @@ RootlessGetImage(DrawablePtr pDrawable, int sx, int sy, int w, int h,
         x1 = x0 + w;
         y1 = y0 + h;
 
-        x0 = MAX (x0, winRec->x);
-        y0 = MAX (y0, winRec->y);
-        x1 = MIN (x1, winRec->x + winRec->width);
-        y1 = MIN (y1, winRec->y + winRec->height);
+        x0 = max (x0, winRec->x);
+        y0 = max (y0, winRec->y);
+        x1 = min (x1, winRec->x + winRec->width);
+        y1 = min (y1, winRec->y + winRec->height);
 
         sx = x0 - pDrawable->x;
         sy = y0 - pDrawable->y;
@@ -347,10 +347,10 @@ RootlessGlyphs(CARD8 op, PicturePtr pSrc, PicturePtr pDst,
                     x2 = x1 + glyph->info.width;
                     y2 = y1 + glyph->info.height;
 
-                    box.x1 = MAX (box.x1, x1);
-                    box.y1 = MAX (box.y1, y1);
-                    box.x2 = MAX (box.x2, x2);
-                    box.y2 = MAX (box.y2, y2);
+                    box.x1 = max (box.x1, x1);
+                    box.y1 = max (box.y1, y1);
+                    box.x2 = max (box.x2, x2);
+                    box.y2 = max (box.y2, y2);
 
                     x += glyph->info.xOff;
                     y += glyph->info.yOff;
@@ -475,14 +475,13 @@ RootlessMarkOverlappedWindows(WindowPtr pWin, WindowPtr pFirst,
     return result;
 }
 
-void expose_1 (WindowPtr pWin) {
+static void expose_1 (WindowPtr pWin) {
     WindowPtr pChild;
     
     if (!pWin->realized)
         return;
     
-    (*pWin->drawable.pScreen->PaintWindowBackground) (pWin, &pWin->borderClip,
-                                                      PW_BACKGROUND);
+    miPaintWindow(pWin, &pWin->borderClip, PW_BACKGROUND);
     
     /* FIXME: comments in windowstr.h indicate that borderClip doesn't
      include subwindow visibility. But I'm not so sure.. so we may

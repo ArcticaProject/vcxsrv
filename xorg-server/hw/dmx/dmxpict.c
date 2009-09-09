@@ -56,12 +56,6 @@
 #include "mipict.h"
 #include "fbpict.h"
 
-#undef Xmalloc
-#undef Xcalloc
-#undef Xrealloc
-#undef Xfree
-
-
 
 extern int RenderErrBase;
 extern int (*ProcRenderVector[RenderNumberRequests])(ClientPtr);

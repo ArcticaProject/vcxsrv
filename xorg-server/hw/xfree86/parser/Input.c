@@ -163,7 +163,7 @@ xf86freeInputList (XF86ConfInputPtr ptr)
 
 		prev = ptr;
 		ptr = ptr->list.next;
-		xf86conffree (prev);
+		free (prev);
 	}
 }
 

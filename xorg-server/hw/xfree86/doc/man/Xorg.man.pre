@@ -134,7 +134,7 @@ will use.  Without this option,
 .B __xservername__
 will pick the first available Virtual Terminal that it can locate.  This
 option applies only to platforms that have virtual terminal support, such
-as Linux, BSD, SVR3, and SVR4.
+as Linux, BSD, OpenSolaris, SVR3, and SVR4.
 .TP
 .B \-allowMouseOpenFail
 Allow the server to start up even if the mouse device can't be opened
@@ -313,10 +313,6 @@ file verbosity level.  When the
 value is supplied, the log file verbosity level is set to that value.
 The default log file verbosity level is 3.
 .TP 8
-.B \-modalias
-Print a list of device ids each installed driver module claims to support,
-in a format similar to Linux modalias.
-.TP 8
 .BI \-modulepath " searchpath"
 Set the module search path to
 .IR searchpath .
@@ -355,11 +351,6 @@ section specifies a core pointer.  In the absence of both a Layout
 section and this option, the first relevant
 .B InputDevice
 section is used for the core pointer.
-.TP 8
-.B \-probeonly
-Causes the server to exit after the device probing stage.  The
-__xconfigfile__(__filemansuffix__) file is still used when this option is
-given, so information that can be auto-detected should be commented out.
 .TP 8
 .B \-quiet
 Suppress most informational messages at startup.  The verbosity level
@@ -432,16 +423,11 @@ server is normally configured to recognize various special combinations
 of key presses that instruct the server to perform some action, rather
 than just sending the key press event to a client application.  The
 default XKEYBOARD keymap defines the key combinations listed below.
-The server also has these key combinations builtin to its event handler
+The kbd (__drivermansuffix__) driver also has these key combinations
+builtin to its event handler
 for cases where the XKEYBOARD extension is not being used.  When using
 the XKEYBOARD extension, which key combinations perform which actions
 is completely configurable.
-.PP
-For more information about when the builtin event handler
-is used to recognize the special key combinations, see
-the documentation on the
-.B HandleSpecialKeys
-option in the __xconfigfile__(__filemansuffix__) man page.
 .PP
 The special combinations of key presses recognized directly
 by

@@ -26,8 +26,6 @@ from The Open Group.
 
 */
 
-#define NEED_EVENTS
-#define NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -39,7 +37,7 @@ from The Open Group.
 #include "dixstruct.h"
 #include "extnsionst.h"
 #include "swaprep.h"
-#include <X11/extensions/xcmiscstr.h>
+#include <X11/extensions/xcmiscproto.h>
 #include "modinit.h"
 
 #if HAVE_STDINT_H
@@ -66,8 +64,7 @@ XCMiscExtensionInit(INITARGS)
 }
 
 static int
-ProcXCMiscGetVersion(client)
-    ClientPtr client;
+ProcXCMiscGetVersion(ClientPtr client)
 {
     xXCMiscGetVersionReply rep;
     int n;
@@ -88,8 +85,7 @@ ProcXCMiscGetVersion(client)
 }
 
 static int
-ProcXCMiscGetXIDRange(client)
-    ClientPtr client;
+ProcXCMiscGetXIDRange(ClientPtr client)
 {
     xXCMiscGetXIDRangeReply rep;
     int n;
@@ -112,8 +108,7 @@ ProcXCMiscGetXIDRange(client)
 }
 
 static int
-ProcXCMiscGetXIDList(client)
-    ClientPtr client;
+ProcXCMiscGetXIDList(ClientPtr client)
 {
     REQUEST(xXCMiscGetXIDListReq);
     xXCMiscGetXIDListReply rep;
@@ -152,8 +147,7 @@ ProcXCMiscGetXIDList(client)
 }
 
 static int
-ProcXCMiscDispatch (client)
-    ClientPtr	client;
+ProcXCMiscDispatch (ClientPtr client)
 {
     REQUEST(xReq);
     switch (stuff->data)
@@ -170,8 +164,7 @@ ProcXCMiscDispatch (client)
 }
 
 static int
-SProcXCMiscGetVersion(client)
-    ClientPtr	client;
+SProcXCMiscGetVersion(ClientPtr client)
 {
     int n;
     REQUEST(xXCMiscGetVersionReq);
@@ -184,8 +177,7 @@ SProcXCMiscGetVersion(client)
 }
 
 static int
-SProcXCMiscGetXIDRange(client)
-    ClientPtr	client;
+SProcXCMiscGetXIDRange(ClientPtr client)
 {
     int n;
     REQUEST(xReq);
@@ -195,8 +187,7 @@ SProcXCMiscGetXIDRange(client)
 }
 
 static int
-SProcXCMiscGetXIDList(client)
-    ClientPtr	client;
+SProcXCMiscGetXIDList(ClientPtr client)
 {
     int n;
     REQUEST(xXCMiscGetXIDListReq);
@@ -207,8 +198,7 @@ SProcXCMiscGetXIDList(client)
 }
 
 static int
-SProcXCMiscDispatch (client)
-    ClientPtr	client;
+SProcXCMiscDispatch (ClientPtr client)
 {
     REQUEST(xReq);
     switch (stuff->data)

@@ -38,13 +38,13 @@ from The Open Group.
 #include "migc.h"
 
 /* ARGSUSED */
-_X_EXPORT void
+void
 miChangeGC(GCPtr pGC, unsigned long mask)
 {
     return;
 }
 
-_X_EXPORT void
+void
 miDestroyGC(GCPtr pGC)
 {
     if (pGC->pRotatedPixmap)
@@ -53,7 +53,7 @@ miDestroyGC(GCPtr pGC)
 	REGION_DESTROY(pGC->pScreen, pGC->pCompositeClip);
 }
 
-_X_EXPORT void
+void
 miDestroyClip(GCPtr pGC)
 {
     if (pGC->clientClipType == CT_NONE)
@@ -74,7 +74,7 @@ miDestroyClip(GCPtr pGC)
     pGC->clientClipType = CT_NONE;
 }
 
-_X_EXPORT void
+void
 miChangeClip( GCPtr pGC, int type, pointer pvalue, int nrects)
 {
     (*pGC->funcs->DestroyClip) (pGC);
@@ -101,7 +101,7 @@ miChangeClip( GCPtr pGC, int type, pointer pvalue, int nrects)
     pGC->stateChanges |= GCClipMask;
 }
 
-_X_EXPORT void
+void
 miCopyClip(GCPtr pgcDst, GCPtr pgcSrc)
 {
     RegionPtr       prgnNew;
@@ -125,13 +125,13 @@ miCopyClip(GCPtr pgcDst, GCPtr pgcSrc)
 }
 
 /* ARGSUSED */
-_X_EXPORT void
+void
 miCopyGC(GCPtr pGCSrc, unsigned long changes, GCPtr pGCDst)
 {
     return;
 }
 
-_X_EXPORT void
+void
 miComputeCompositeClip( GCPtr pGC, DrawablePtr pDrawable)
 {
     ScreenPtr       pScreen;

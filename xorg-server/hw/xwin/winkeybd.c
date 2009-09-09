@@ -40,12 +40,7 @@
 #include "winconfig.h"
 #include "winmsg.h"
 
-#ifdef XKB
-#ifndef XKB_IN_SERVER
-#define XKB_IN_SERVER
-#endif
-#include <xkbsrv.h>
-#endif
+#include "xkbsrv.h"
 
 static Bool g_winKeyState[NUM_KEYCODES];
 
@@ -230,102 +225,48 @@ winKeybdCtrl (DeviceIntPtr pDevice, KeybdCtrl *pCtrl)
 int
 winKeybdProc (DeviceIntPtr pDeviceInt, int iState)
 {
-  KeySymsRec		keySyms;
-  CARD8 		modMap[MAP_LENGTH];
   DevicePtr		pDevice = (DevicePtr) pDeviceInt;
-#ifdef XKB
-  XkbComponentNamesRec names;
   XkbSrvInfoPtr       xkbi;
   XkbControlsPtr      ctrl;
-#endif
 
   switch (iState)
     {
     case DEVICE_INIT:
       winConfigKeyboard (pDeviceInt);
 
-      winGetKeyMappings (&keySyms, modMap);
-
-#ifdef XKB
       /* FIXME: Maybe we should use winGetKbdLeds () here? */
       defaultKeyboardControl.leds = g_winInfo.keyboard.leds;
-#else
-      defaultKeyboardControl.leds = g_winInfo.keyboard.leds;
-#endif
 
-#ifdef XKB
-      if (g_winInfo.xkb.disable) 
-	{
-#endif
-	  InitKeyboardDeviceStruct (pDevice,
-				    &keySyms,
-				    modMap,
-				    winKeybdBell,
-				    winKeybdCtrl);
-#ifdef XKB
-	} 
-      else 
-	{
+      winErrorFVerb(2, "Rules = \"%s\" Model = \"%s\" Layout = \"%s\""
+                    " Variant = \"%s\" Options = \"%s\"\n",
+                    g_winInfo.xkb.rules ? g_winInfo.xkb.rules : "none",
+                    g_winInfo.xkb.model ? g_winInfo.xkb.model : "none",
+                    g_winInfo.xkb.layout ? g_winInfo.xkb.layout : "none",
+                    g_winInfo.xkb.variant ? g_winInfo.xkb.variant : "none",
+                    g_winInfo.xkb.options ? g_winInfo.xkb.options : "none");
 
-          names.keymap = g_winInfo.xkb.keymap;
-          names.keycodes = g_winInfo.xkb.keycodes;
-          names.types = g_winInfo.xkb.types;
-          names.compat = g_winInfo.xkb.compat;
-          names.symbols = g_winInfo.xkb.symbols;
-          names.geometry = g_winInfo.xkb.geometry;
+      InitKeyboardDeviceStruct (pDeviceInt,
+                                &g_winInfo.xkb,
+                                winKeybdBell,
+                                winKeybdCtrl);
 
-	  winErrorFVerb(2, "Rules = \"%s\" Model = \"%s\" Layout = \"%s\""
-		 " Variant = \"%s\" Options = \"%s\"\n",
-		 g_winInfo.xkb.rules, g_winInfo.xkb.model,
-		 g_winInfo.xkb.layout, g_winInfo.xkb.variant,
-		 g_winInfo.xkb.options);
-          
-	  XkbSetRulesDflts (g_winInfo.xkb.rules, g_winInfo.xkb.model, 
-			    g_winInfo.xkb.layout, g_winInfo.xkb.variant, 
-			    g_winInfo.xkb.options);
-	  XkbInitKeyboardDeviceStruct (pDeviceInt, &names, &keySyms,
-				       modMap, winKeybdBell, winKeybdCtrl);
-	}
-#endif
-
-#ifdef XKB
-      if (!g_winInfo.xkb.disable)
-        {  
-          xkbi = pDeviceInt->key->xkbInfo;
-          if (xkbi != NULL)
-            {  
-              ctrl = xkbi->desc->ctrls;
-              ctrl->repeat_delay = g_winInfo.keyboard.delay;
-              ctrl->repeat_interval = 1000/g_winInfo.keyboard.rate;
-            }
-          else
-            {  
-              winErrorFVerb (1, "winKeybdProc - Error initializing keyboard AutoRepeat (No XKB)\n");
-            }
+      xkbi = pDeviceInt->key->xkbInfo;
+      if ((xkbi != NULL) && (xkbi->desc != NULL))
+        {
+          ctrl = xkbi->desc->ctrls;
+          ctrl->repeat_delay = g_winInfo.keyboard.delay;
+          ctrl->repeat_interval = 1000/g_winInfo.keyboard.rate;
+        }
+      else
+        {
+          winErrorFVerb (1, "winKeybdProc - Error initializing keyboard AutoRepeat\n");
+        }
 
 	  XkbSetExtension(pDeviceInt, ProcessKeyboardEvent);
-        }
-#endif
       break;
       
     case DEVICE_ON:
-    {
-      DeviceIntPtr master;
       pDevice->on = TRUE;
-
-      // immediately copy the state of this keyboard device to the VCK
-      // (which otherwise happens lazily after the first keypress)
-      master  = (!pDeviceInt->isMaster && pDeviceInt->u.master) ? pDeviceInt->u.master : NULL;
-      if (master)
-      {
-        /* Force a copy of the key class into the VCK so that the layout
-           is transferred. */
-        if (!master->key)
-          master = GetPairedDevice(master);
-        CopyKeyClass(pDeviceInt, master);
-      }
-    }
-
       break;
 
     case DEVICE_CLOSE:
@@ -385,7 +326,7 @@ winInitializeModeKeyStates (void)
  */
 
 void
-winRestoreModeKeyStates ()
+winRestoreModeKeyStates (void)
 {
   DWORD			dwKeyState;
   BOOL			processEvents = TRUE;
@@ -406,7 +347,7 @@ winRestoreModeKeyStates ()
   
   /* Read the mode key states of our X server */
   /* (stored in the virtual core keyboard) */
-  internalKeyStates = inputInfo.keyboard->key->state;
+  internalKeyStates = XkbStateFieldFromRec(&inputInfo.keyboard->key->xkbInfo->state);
   winDebug("winRestoreModeKeyStates: state %d\n", internalKeyStates);
 
   /* 
@@ -573,7 +514,7 @@ winIsFakeCtrl_L (UINT message, WPARAM wParam, LPARAM lParam)
  */
 
 void
-winKeybdReleaseKeys ()
+winKeybdReleaseKeys (void)
 {
   int				i;
 
@@ -605,8 +546,8 @@ winKeybdReleaseKeys ()
 void
 winSendKeyEvent (DWORD dwKey, Bool fDown)
 {
-  DeviceIntPtr pDev;
-  xEvent			xCurrentEvent;
+  EventListPtr events;
+  int i, nevents;
 
   /*
    * When alt-tabing between screens we can get phantom key up messages
@@ -616,23 +557,17 @@ winSendKeyEvent (DWORD dwKey, Bool fDown)
 
   /* Update the keyState map */
   g_winKeyState[dwKey] = fDown;
-  
-  ZeroMemory (&xCurrentEvent, sizeof (xCurrentEvent));
 
-  xCurrentEvent.u.u.type = fDown ? DeviceKeyPress : DeviceKeyRelease;
-  xCurrentEvent.u.keyButtonPointer.time =
-    g_c32LastInputEventTime = GetTickCount ();
-  xCurrentEvent.u.u.detail = dwKey + MIN_KEYCODE;
+  GetEventList(&events);
+  nevents = GetKeyboardEvents(events, g_pwinKeyboard, fDown ? KeyPress : KeyRelease, dwKey + MIN_KEYCODE);
+
+  for (i = 0; i < nevents; i++)
+    mieqEnqueue(g_pwinKeyboard, events[i].event);
 
 #if CYGDEBUG
-  ErrorF("winSendKeyEvent: xCurrentEvent.u.u.type: %d, xCurrentEvent.u.u.detail: %d\n",
-          xCurrentEvent.u.u.type, xCurrentEvent.u.u.detail);
+  ErrorF("winSendKeyEvent: dwKey: %d, fDown: %d, nEvents %d\n",
+          dwKey, fDown, nevents);
 #endif
-  for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
-    if ((pDev->coreEvents && pDev != inputInfo.keyboard) && pDev->key)
-      {
-	mieqEnqueue (pDev, &xCurrentEvent);
-      }
 }
 
 BOOL winCheckKeyPressed(WPARAM wParam, LPARAM lParam)

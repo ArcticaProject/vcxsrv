@@ -60,7 +60,7 @@ static int ia64_port_to_fd(unsigned long port)
     return (port >> 24) & 0xffffffff;
 }
 
-_X_EXPORT void outb(unsigned long port, unsigned char val)
+void outb(unsigned long port, unsigned char val)
 {
     int fd = ia64_port_to_fd(port);
 
@@ -80,7 +80,7 @@ _X_EXPORT void outb(unsigned long port, unsigned char val)
     return;
 }
 
-_X_EXPORT void outw(unsigned long port, unsigned short val)
+void outw(unsigned long port, unsigned short val)
 {
     int fd = ia64_port_to_fd(port);
 
@@ -100,7 +100,7 @@ _X_EXPORT void outw(unsigned long port, unsigned short val)
     return;
 }
 
-_X_EXPORT void outl(unsigned long port, unsigned int val)
+void outl(unsigned long port, unsigned int val)
 {
     int fd = ia64_port_to_fd(port);
 
@@ -120,7 +120,7 @@ _X_EXPORT void outl(unsigned long port, unsigned int val)
     return;
 }
 
-_X_EXPORT unsigned int inb(unsigned long port)
+unsigned int inb(unsigned long port)
 {
     int fd = ia64_port_to_fd(port);
     unsigned char val;
@@ -142,7 +142,7 @@ _X_EXPORT unsigned int inb(unsigned long port)
     return val;
 }
 
-_X_EXPORT unsigned int inw(unsigned long port)
+unsigned int inw(unsigned long port)
 {
     int fd = ia64_port_to_fd(port);
     unsigned short val;
@@ -164,7 +164,7 @@ _X_EXPORT unsigned int inw(unsigned long port)
     return val;
 }
 
-_X_EXPORT unsigned int inl(unsigned long port)
+unsigned int inl(unsigned long port)
 {
     int fd = ia64_port_to_fd(port);
     unsigned int val;

@@ -102,7 +102,7 @@ Author:  Adobe Systems Incorporated
  * argument is less than, equal to or greater than the second argument.
  */
 
-_X_EXPORT int
+int
 CompareTimeStamps(TimeStamp a, TimeStamp b)
 {
     if (a.months < b.months)
@@ -121,7 +121,7 @@ CompareTimeStamps(TimeStamp a, TimeStamp b)
  */
 
 #define HALFMONTH ((unsigned long) 1<<31)
-_X_EXPORT TimeStamp
+TimeStamp
 ClientTimeToServerTime(CARD32 c)
 {
     TimeStamp ts;
@@ -165,7 +165,7 @@ ISOLatin1ToLower (unsigned char source)
 }
 
 
-_X_EXPORT void
+void
 CopyISOLatin1Lowered(unsigned char *dest, unsigned char *source, int length)
 {
     int i;
@@ -203,7 +203,7 @@ CompareISOLatin1Lowered(unsigned char *s1, int s1len,
  * access mask values are defined in resource.h.  The type mask values are
  * defined in pixmap.h, with zero equivalent to M_DRAWABLE.
  */
-_X_EXPORT int
+int
 dixLookupDrawable(DrawablePtr *pDraw, XID id, ClientPtr client,
 		  Mask type, Mask access)
 {
@@ -229,7 +229,7 @@ dixLookupDrawable(DrawablePtr *pDraw, XID id, ClientPtr client,
     return Success;
 }
 
-_X_EXPORT int
+int
 dixLookupWindow(WindowPtr *pWin, XID id, ClientPtr client, Mask access)
 {
     int rc;
@@ -237,20 +237,15 @@ dixLookupWindow(WindowPtr *pWin, XID id, ClientPtr client, Mask access)
     return (rc == BadDrawable) ? BadWindow : rc;
 }
 
-_X_EXPORT int
+int
 dixLookupGC(GCPtr *pGC, XID id, ClientPtr client, Mask access)
 {
-    GCPtr pTmp = (GCPtr)SecurityLookupIDByType(client, id, RT_GC, access);
-    if (pTmp) {
-	*pGC = pTmp;
-	return Success;
-    }
-    client->errorValue = id;
-    *pGC = NULL;
-    return BadGC;
+    int rc;
+    rc = dixLookupResourceByType((pointer *)pGC, id, RT_GC, client, access);
+    return (rc == BadValue) ? BadGC : rc;
 }
 
-_X_EXPORT int
+int
 dixLookupClient(ClientPtr *pClient, XID rid, ClientPtr client, Mask access)
 {
     pointer pRes;
@@ -351,7 +346,7 @@ DeleteWindowFromAnySaveSet(WindowPtr pWin)
  * colormaps, if someone calls install colormap, it's easier to have a dummy
  * procedure to call than to check if there's a procedure 
  */
-_X_EXPORT void
+void
 NoopDDA(void)
 {
 }
@@ -441,7 +436,7 @@ WakeupHandler(int result, pointer pReadmask)
  * Reentrant with BlockHandler and WakeupHandler, except wakeup won't
  * get called until next time
  */
-_X_EXPORT Bool
+Bool
 RegisterBlockAndWakeupHandlers (BlockHandlerProcPtr blockHandler, 
                                 WakeupHandlerProcPtr wakeupHandler, 
                                 pointer blockData)
@@ -465,7 +460,7 @@ RegisterBlockAndWakeupHandlers (BlockHandlerProcPtr blockHandler,
     return TRUE;
 }
 
-_X_EXPORT void
+void
 RemoveBlockAndWakeupHandlers (BlockHandlerProcPtr blockHandler, 
                               WakeupHandlerProcPtr wakeupHandler, 
                               pointer blockData)
@@ -560,14 +555,14 @@ ProcessWorkQueueZombies(void)
     workQueueLast = p;
 }
 
-_X_EXPORT Bool
+Bool
 QueueWorkProc (
     Bool (*function)(ClientPtr /* pClient */, pointer /* closure */),
     ClientPtr client, pointer closure)
 {
     WorkQueuePtr    q;
 
-    q = (WorkQueuePtr) xalloc (sizeof *q);
+    q = xalloc (sizeof *q);
     if (!q)
 	return FALSE;
     q->function = function;
@@ -596,12 +591,12 @@ typedef struct _SleepQueue {
 
 static SleepQueuePtr	sleepQueue = NULL;
 
-_X_EXPORT Bool
+Bool
 ClientSleep (ClientPtr client, ClientSleepProcPtr function, pointer closure)
 {
     SleepQueuePtr   q;
 
-    q = (SleepQueuePtr) xalloc (sizeof *q);
+    q = xalloc (sizeof *q);
     if (!q)
 	return FALSE;
 
@@ -627,7 +622,7 @@ ClientSignal (ClientPtr client)
     return FALSE;
 }
 
-_X_EXPORT void
+void
 ClientWakeup (ClientPtr client)
 {
     SleepQueuePtr   q, *prev;
@@ -673,7 +668,7 @@ ClientIsAsleep (ClientPtr client)
 static int numCallbackListsToCleanup = 0;
 static CallbackListPtr **listsToCleanup = NULL;
 
-static Bool 
+static Bool
 _AddCallback(
     CallbackListPtr *pcbl,
     CallbackProcPtr callback,
@@ -681,7 +676,7 @@ _AddCallback(
 {
     CallbackPtr     cbr;
 
-    cbr = (CallbackPtr) xalloc(sizeof(CallbackRec));
+    cbr = xalloc(sizeof(CallbackRec));
     if (!cbr)
 	return FALSE;
     cbr->proc = callback;
@@ -824,7 +819,7 @@ CreateCallbackList(CallbackListPtr *pcbl)
     int i;
 
     if (!pcbl) return FALSE;
-    cbl = (CallbackListPtr) xalloc(sizeof(CallbackListRec));
+    cbl = xalloc(sizeof(CallbackListRec));
     if (!cbl) return FALSE;
     cbl->inCallback = 0;
     cbl->deleted = FALSE;
@@ -850,7 +845,7 @@ CreateCallbackList(CallbackListPtr *pcbl)
 
 /* ===== Public Procedures ===== */
 
-_X_EXPORT Bool 
+Bool
 AddCallback(CallbackListPtr *pcbl, CallbackProcPtr callback, pointer data)
 {
     if (!pcbl) return FALSE;
@@ -862,14 +857,14 @@ AddCallback(CallbackListPtr *pcbl, CallbackProcPtr callback, pointer data)
     return _AddCallback(pcbl, callback, data);
 }
 
-_X_EXPORT Bool 
+Bool
 DeleteCallback(CallbackListPtr *pcbl, CallbackProcPtr callback, pointer data)
 {
     if (!pcbl || !*pcbl) return FALSE;
     return _DeleteCallback(pcbl, callback, data);
 }
 
-void 
+void
 CallCallbacks(CallbackListPtr *pcbl, pointer call_data)
 {
     if (!pcbl || !*pcbl) return;
@@ -883,7 +878,7 @@ DeleteCallbackList(CallbackListPtr *pcbl)
     _DeleteCallbackList(pcbl);
 }
 
-void 
+void
 InitCallbackManager(void)
 {
     int i;

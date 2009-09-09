@@ -57,33 +57,86 @@ SOFTWARE.
 #include "privates.h"
 
 #define BitIsOn(ptr, bit) (((BYTE *) (ptr))[(bit)>>3] & (1 << ((bit) & 7)))
+#define SetBit(ptr, bit)  (((BYTE *) (ptr))[(bit)>>3] |= (1 << ((bit) & 7)))
+#define ClearBit(ptr, bit) (((BYTE *)(ptr))[(bit)>>3] &= ~(1 << ((bit) & 7)))
 
 #define SameClient(obj,client) \
 	(CLIENT_BITS((obj)->resource) == (client)->clientAsMask)
 
-#define EMASKSIZE	MAXDEVICES + 1
+#define EMASKSIZE	MAXDEVICES + 2
 
-extern DevPrivateKey CoreDevicePrivateKey;
+/* This is the last XI2 event supported by the server. If you add
+ * events to the protocol, the server will not support these events until
+ * this number here is bumped.
+ */
+#define XI2LASTEVENT    17 /* XI_RawMotion */
+#define XI2MASKSIZE     ((XI2LASTEVENT + 7)/8) /* no of bits for masks */
 
-/* Kludge: OtherClients and InputClients must be compatible, see code */
-
+/**
+ * This struct stores the core event mask for each client except the client
+ * that created the window.
+ *
+ * Each window that has events selected from other clients has at least one of
+ * these masks. If multiple clients selected for events on the same window,
+ * these masks are in a linked list.
+ *
+ * The event mask for the client that created the window is stored in
+ * win->eventMask instead.
+ *
+ * The resource id is simply a fake client ID to associate this mask with a
+ * client.
+ *
+ * Kludge: OtherClients and InputClients must be compatible, see code.
+ */
 typedef struct _OtherClients {
-    OtherClientsPtr	next;
-    XID			resource; /* id for putting into resource manager */
-    Mask		mask;
+    OtherClientsPtr	next; /**< Pointer to the next mask */
+    XID			resource; /**< id for putting into resource manager */
+    Mask		mask; /**< Core event mask */
 } OtherClients;
 
+/**
+ * This struct stores the XI event mask for each client.
+ *
+ * Each window that has events selected has at least one of these masks. If
+ * multiple client selected for events on the same window, these masks are in
+ * a linked list.
+ */
 typedef struct _InputClients {
-    InputClientsPtr	next;
-    XID			resource; /* id for putting into resource manager */
-    Mask		mask[EMASKSIZE];
+    InputClientsPtr	next; /**< Pointer to the next mask */
+    XID			resource; /**< id for putting into resource manager */
+    Mask		mask[EMASKSIZE]; /**< Actual XI event mask, deviceid is index */
+    /** XI2 event masks. One per device, each bit is a mask of (1 << type) */
+    unsigned char       xi2mask[EMASKSIZE][XI2MASKSIZE];
 } InputClients;
 
+/**
+ * Combined XI event masks from all devices.
+ *
+ * This is the XI equivalent of the deliverableEvents, eventMask and
+ * dontPropagate mask of the WindowRec (or WindowOptRec).
+ *
+ * A window that has an XI client selecting for events has exactly one
+ * OtherInputMasks struct and exactly one InputClients struct hanging off
+ * inputClients. Each further client appends to the inputClients list.
+ * Each Mask field is per-device, with the device id as the index.
+ * Exception: for non-device events (Presence events), the MAXDEVICES
+ * deviceid is used.
+ */
 typedef struct _OtherInputMasks {
+    /**
+     * Bitwise OR of all masks by all clients and the window's parent's masks.
+     */
     Mask		deliverableEvents[EMASKSIZE];
+    /**
+     * Bitwise OR of all masks by all clients on this window.
+     */
     Mask		inputEvents[EMASKSIZE];
+    /** The do-not-propagate masks for each device. */
     Mask		dontPropagateMask[EMASKSIZE];
+    /** The clients that selected for events */
     InputClientsPtr	inputClients;
+    /* XI2 event masks. One per device, each bit is a mask of (1 << type) */
+    unsigned char       xi2mask[EMASKSIZE][XI2MASKSIZE];
 } OtherInputMasks;
 
 /*
@@ -98,9 +151,21 @@ typedef struct _OtherInputMasks {
                                            3 buttons. */
 
 typedef struct _DetailRec {		/* Grab details may be bit masks */
-    unsigned short      exact;
+    unsigned int        exact;
     Mask                *pMask;
 } DetailRec;
+
+typedef enum {
+    GRABTYPE_CORE,
+    GRABTYPE_XI,
+    GRABTYPE_XI2
+} GrabType;
+
+union _GrabMask {
+    Mask core;
+    Mask xi;
+    char xi2mask[EMASKSIZE][XI2MASKSIZE];
+};
 
 /**
  * Central struct for device grabs. 
@@ -123,8 +188,7 @@ typedef struct _GrabRec {
     unsigned		ownerEvents:1;
     unsigned		keyboardMode:1;
     unsigned		pointerMode:1;
-    unsigned		coreGrab:1;	/* grab is on core device */
-    unsigned		coreMods:1;	/* modifiers are on core keyboard */
+    GrabType		grabtype;
     CARD8		type;		/* event type */
     DetailRec		modifiersDetail;
     DeviceIntPtr	modifierDevice;
@@ -133,24 +197,16 @@ typedef struct _GrabRec {
     CursorPtr		cursor;		/* always NULL for keyboards */
     Mask		eventMask;
     Mask                deviceMask;     
-    GenericMaskPtr      genericMasks;
+    /* XI2 event masks. One per device, each bit is a mask of (1 << type) */
+    unsigned char       xi2mask[EMASKSIZE][XI2MASKSIZE];
 } GrabRec;
 
 typedef struct _KeyClassRec {
+    int			sourceid;
     CARD8		down[DOWN_LENGTH];
     CARD8		postdown[DOWN_LENGTH];
-    KeyCode 		*modifierKeyMap;
-    KeySymsRec		curKeySyms;
-    int			modifierKeyCount[8];
-    CARD8		modifierMap[MAP_LENGTH];
-    CARD8		maxKeysPerModifier;
-    unsigned short	state;
-    unsigned short	prev_state;
-#ifdef XKB
+    int                 modifierKeyCount[8];
     struct _XkbSrvInfo *xkbInfo;
-#else
-    void               *pad0;
-#endif
 } KeyClassRec, *KeyClassPtr;
 
 typedef struct _AxisInfo {
@@ -159,6 +215,7 @@ typedef struct _AxisInfo {
     int		max_resolution;
     int		min_value;
     int		max_value;
+    Atom	label;
 } AxisInfo, *AxisInfoPtr;
 
 typedef struct _ValuatorAccelerationRec {
@@ -169,6 +226,7 @@ typedef struct _ValuatorAccelerationRec {
 } ValuatorAccelerationRec, *ValuatorAccelerationPtr;
 
 typedef struct _ValuatorClassRec {
+    int                   sourceid;
     int		 	  numMotionEvents;
     int                   first_motion;
     int                   last_motion;
@@ -178,12 +236,13 @@ typedef struct _ValuatorClassRec {
 
     AxisInfoPtr 	  axes;
     unsigned short	  numAxes;
-    int			  *axisVal; /* always absolute, but device-coord system */
+    double		  *axisVal; /* always absolute, but device-coord system */
     CARD8	 	  mode;
     ValuatorAccelerationRec	accelScheme;
 } ValuatorClassRec, *ValuatorClassPtr;
 
 typedef struct _ButtonClassRec {
+    int			sourceid;
     CARD8		numButtons;
     CARD8		buttonsDown;	/* number of buttons currently down
                                            This counts logical buttons, not
@@ -193,15 +252,14 @@ typedef struct _ButtonClassRec {
     unsigned short	state;
     Mask		motionMask;
     CARD8		down[DOWN_LENGTH];
+    CARD8		postdown[DOWN_LENGTH];
     CARD8		map[MAP_LENGTH];
-#ifdef XKB
     union _XkbAction    *xkb_acts;
-#else
-    void                *pad0;
-#endif
+    Atom		labels[MAX_BUTTONS];
 } ButtonClassRec, *ButtonClassPtr;
 
 typedef struct _FocusClassRec {
+    int		sourceid;
     WindowPtr	win; /* May be set to a int constant (e.g. PointerRootWin)! */
     int		revert;
     TimeStamp	time;
@@ -211,10 +269,12 @@ typedef struct _FocusClassRec {
 } FocusClassRec, *FocusClassPtr;
 
 typedef struct _ProximityClassRec {
+    int		sourceid;
     char	pad;
 } ProximityClassRec, *ProximityClassPtr;
 
 typedef struct _AbsoluteClassRec {
+    int         sourceid;
     /* Calibration. */
     int         min_x;
     int         max_x;
@@ -246,11 +306,7 @@ typedef struct _KbdFeedbackClassRec {
     KbdCtrlProcPtr	CtrlProc;
     KeybdCtrl	 	ctrl;
     KbdFeedbackPtr	next;
-#ifdef XKB
     struct _XkbSrvLedInfo *xkb_sli;
-#else
-    void                *pad0;
-#endif
 } KbdFeedbackClassRec;
 
 typedef struct _PtrFeedbackClassRec {
@@ -282,11 +338,7 @@ typedef struct _LedFeedbackClassRec {
     LedCtrlProcPtr	CtrlProc;
     LedCtrl	 	ctrl;
     LedFeedbackPtr	next;
-#ifdef XKB
     struct _XkbSrvLedInfo *xkb_sli;
-#else
-    void                *pad0;
-#endif
 } LedFeedbackClassRec;
 
 
@@ -405,8 +457,7 @@ typedef struct _GrabInfoRec {
 	Bool		frozen;
 	int		state;
 	GrabPtr		other;		/* if other grab has this frozen */
-	xEvent		*event;		/* saved to be replayed */
-	int		evcount;
+	DeviceEvent	*event;		/* saved to be replayed */
     } sync;
 } GrabInfoRec, *GrabInfoPtr;
 
@@ -420,6 +471,11 @@ typedef struct _SpriteInfoRec {
                                         pointer that owns the sprite. */ 
 } SpriteInfoRec, *SpriteInfoPtr;
 
+/* device types */
+#define MASTER_POINTER          1
+#define MASTER_KEYBOARD         2
+#define SLAVE                   3
+
 typedef struct _DeviceIntRec {
     DeviceRec	public;
     DeviceIntPtr next;
@@ -432,10 +488,10 @@ typedef struct _DeviceIntRec {
     Bool        enabled;                /* TRUE if ON returns Success */
     Bool        coreEvents;             /* TRUE if device also sends core */
     GrabInfoRec deviceGrab;             /* grab on the device */
-    Bool        isMaster;               /* TRUE if device is master */
-    Atom		type;
+    int         type;                   /* MASTER_POINTER, MASTER_KEYBOARD, SLAVE */
+    Atom		xinput_type;
     char		*name;
-    CARD8		id;
+    int			id;
     KeyClassPtr		key;
     ValuatorClassPtr	valuator;
     ButtonClassPtr	button;
@@ -448,19 +504,15 @@ typedef struct _DeviceIntRec {
     StringFeedbackPtr	stringfeed;
     BellFeedbackPtr	bell;
     LedFeedbackPtr	leds;
-#ifdef XKB
     struct _XkbInterest *xkb_interest;
-#else
-    void                *pad0;
-#endif
     char                *config_info; /* used by the hotplug layer */
     PrivateRec		*devPrivates;
     int			nPrivates;
     DeviceUnwrapProc    unwrapProc;
     SpriteInfoPtr       spriteInfo;
     union {
-    DeviceIntPtr        master;       /* master device */
-    DeviceIntPtr        lastSlave;    /* last slave device used */
+        DeviceIntPtr        master;     /* master device */
+        DeviceIntPtr        lastSlave;  /* last slave device used */
     } u;
 
     /* last valuator values recorded, not posted to client;
@@ -473,6 +525,7 @@ typedef struct _DeviceIntRec {
         int             valuators[MAX_VALUATORS];
         float           remainder[MAX_VALUATORS];
         int             numValuators;
+        DeviceIntPtr    slave;
     } last;
 
     /* Input device property handling. */
@@ -488,9 +541,11 @@ typedef struct {
     DeviceIntPtr	off_devices;	/* all devices turned off */
     DeviceIntPtr	keyboard;	/* the main one for the server */
     DeviceIntPtr	pointer;
+    DeviceIntPtr	all_devices;
+    DeviceIntPtr	all_master_devices;
 } InputInfo;
 
-extern InputInfo inputInfo;
+extern _X_EXPORT InputInfo inputInfo;
 
 /* for keeping the events for devices grabbed synchronously */
 typedef struct _QdEvent *QdEventPtr;
@@ -499,8 +554,7 @@ typedef struct _QdEvent {
     DeviceIntPtr	device;
     ScreenPtr		pScreen;	/* what screen the pointer was on */
     unsigned long	months;		/* milliseconds is in the event */
-    xEvent		*event;
-    int			evcount;
-} QdEventRec;    
+    InternalEvent	*event;
+} QdEventRec;
 
 #endif /* INPUTSTRUCT_H */

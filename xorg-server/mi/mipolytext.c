@@ -66,7 +66,7 @@ SOFTWARE.
 #include	"dixfontstr.h"
 #include	"mi.h"
 
-_X_EXPORT int
+int
 miPolyText8(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, char *chars)
 {
     unsigned long n, i;
@@ -83,7 +83,7 @@ miPolyText8(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, char *chars)
     return x+w;
 }
 
-_X_EXPORT int
+int
 miPolyText16(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, unsigned short *chars)
 {
     unsigned long n, i;
@@ -101,7 +101,7 @@ miPolyText16(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, unsigned sho
     return x+w;
 }
 
-_X_EXPORT void
+void
 miImageText8(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, char *chars)
 {
     unsigned long n;
@@ -114,7 +114,7 @@ miImageText8(DrawablePtr pDraw, GCPtr pGC, int x, int y, int count, char *chars)
         (*pGC->ops->ImageGlyphBlt)(pDraw, pGC, x, y, n, charinfo, FONTGLYPHS(font));
 }
 
-_X_EXPORT void
+void
 miImageText16(DrawablePtr pDraw, GCPtr pGC, int x, int y,
 		int count, unsigned short *chars)
 {

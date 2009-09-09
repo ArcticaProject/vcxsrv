@@ -87,12 +87,10 @@ typedef struct _DMXLocalInitInfo {
     KeySymsRec           keySyms;  /**< Key symbols */
     int                  freemap;  /**< If non-zero, free keySyms.map */
     CARD8                modMap[MAP_LENGTH]; /**< Modifier map */
-#ifdef XKB
     XkbDescPtr           xkb;       /**< XKB description */
     XkbComponentNamesRec names;     /**< XKB component names */
     int                  freenames; /**< Non-zero if names should be free'd */
     int                  force;     /**< Do not allow command line override */
-#endif
 
     int                  buttonClass; /**< Non-zero if buttons are present */
     int                  numButtons;  /**< Number of buttons */

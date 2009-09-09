@@ -292,9 +292,7 @@ mtrr_add_wc_region(int screenNum, unsigned long base, unsigned long size,
 		 lbase = lbase >> 1, d_size <<= 1);
 	    while (d_size > n_size)
 		d_size = d_size >> 1;
-#ifdef DEBUG
-	    ErrorF("WC_BASE: 0x%lx WC_END: 0x%lx\n",base,base+d_size-1);
-#endif
+	    DebugF("WC_BASE: 0x%lx WC_END: 0x%lx\n",base,base+d_size-1);
 	    n_base += d_size;
 	    n_size -= d_size;
 	    if (n_size) {
@@ -424,11 +422,9 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 
     realBase = Base & ~(getpagesize() - 1);
     alignOff = Base - realBase;
-#ifdef DEBUG
-    ErrorF("base: %lx, realBase: %lx, alignOff: %lx \n",
+    DebugF("base: %lx, realBase: %lx, alignOff: %lx \n",
 	   Base,realBase,alignOff);
-#endif
-    
+
 #if defined(__ia64__) || defined(__arm__) || defined(__s390__)
 #ifndef MAP_WRITECOMBINED
 #define MAP_WRITECOMBINED 0x00010000
@@ -469,9 +465,7 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 		   " (0x%08lx,0x%lx) (%s)\n", Base, Size,
 		   strerror(errno));
     }
-#ifdef DEBUG
-    ErrorF("base: %lx aligned base: %lx\n",base, base + alignOff);
-#endif
+    DebugF("base: %lx aligned base: %lx\n",base, base + alignOff);
     return (char *)base + alignOff;
 }
 #endif /* !(__sparc__) */
@@ -481,10 +475,8 @@ unmapVidMem(int ScreenNum, pointer Base, unsigned long Size)
 {
     memType alignOff = (memType)Base 
 	- ((memType)Base & ~(getpagesize() - 1));
-    
-#ifdef DEBUG
-    ErrorF("alignment offset: %lx\n",alignOff);
-#endif
+
+    DebugF("alignment offset: %lx\n",alignOff);
     munmap((caddr_t)((memType)Base - alignOff), (Size + alignOff));
 }
 
@@ -494,7 +486,7 @@ unmapVidMem(int ScreenNum, pointer Base, unsigned long Size)
 /***************************************************************************/
 
 #if defined(__powerpc__)
-_X_EXPORT volatile unsigned char *ioBase = NULL;
+volatile unsigned char *ioBase = NULL;
 
 #ifndef __NR_pciconfig_iobase
 #define __NR_pciconfig_iobase	200
@@ -502,7 +494,7 @@ _X_EXPORT volatile unsigned char *ioBase = NULL;
 
 #endif
 
-_X_EXPORT Bool
+Bool
 xf86EnableIO(void)
 {
 #if defined(__powerpc__)
@@ -551,7 +543,7 @@ xf86EnableIO(void)
 	return TRUE;
 }
 
-_X_EXPORT void
+void
 xf86DisableIO(void)
 {
 	if (!ExtendedEnabled)
@@ -869,23 +861,23 @@ writeSparseNB32(int Value, pointer Base, register unsigned long Offset)
     return;
 }
 
-_X_EXPORT void (*xf86WriteMmio8)(int Value, pointer Base, unsigned long Offset) 
+void (*xf86WriteMmio8)(int Value, pointer Base, unsigned long Offset)
      = writeDense8;
-_X_EXPORT void (*xf86WriteMmio16)(int Value, pointer Base, unsigned long Offset)
+void (*xf86WriteMmio16)(int Value, pointer Base, unsigned long Offset)
      = writeDense16;
-_X_EXPORT void (*xf86WriteMmio32)(int Value, pointer Base, unsigned long Offset)
+void (*xf86WriteMmio32)(int Value, pointer Base, unsigned long Offset)
      = writeDense32;
-_X_EXPORT void (*xf86WriteMmioNB8)(int Value, pointer Base, unsigned long Offset) 
+void (*xf86WriteMmioNB8)(int Value, pointer Base, unsigned long Offset)
      = writeDenseNB8;
-_X_EXPORT void (*xf86WriteMmioNB16)(int Value, pointer Base, unsigned long Offset)
+void (*xf86WriteMmioNB16)(int Value, pointer Base, unsigned long Offset)
      = writeDenseNB16;
-_X_EXPORT void (*xf86WriteMmioNB32)(int Value, pointer Base, unsigned long Offset)
+void (*xf86WriteMmioNB32)(int Value, pointer Base, unsigned long Offset)
      = writeDenseNB32;
-_X_EXPORT int  (*xf86ReadMmio8)(pointer Base, unsigned long Offset) 
+int  (*xf86ReadMmio8)(pointer Base, unsigned long Offset)
      = readDense8;
-_X_EXPORT int  (*xf86ReadMmio16)(pointer Base, unsigned long Offset)
+int  (*xf86ReadMmio16)(pointer Base, unsigned long Offset)
      = readDense16;
-_X_EXPORT int  (*xf86ReadMmio32)(pointer Base, unsigned long Offset)
+int  (*xf86ReadMmio32)(pointer Base, unsigned long Offset)
      = readDense32;
 
 #endif /* __alpha__ */

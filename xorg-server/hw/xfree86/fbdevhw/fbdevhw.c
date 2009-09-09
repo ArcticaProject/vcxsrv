@@ -17,16 +17,10 @@
 #include "fbdevhw.h"
 #include "fbpriv.h"
 
-#if 0
-/* kernel header doesn't work with -ansi */
-# include "asm/page.h"	/* #define for PAGE_* */
-#else
-# define PAGE_MASK               (~(getpagesize() - 1))
-#endif
+#define PAGE_MASK               (~(getpagesize() - 1))
 
 #include "globals.h"
-#define DPMS_SERVER
-#include <X11/extensions/dpms.h>
+#include <X11/extensions/dpmsconst.h>
 
 #define DEBUG 0
 
@@ -65,20 +59,7 @@ _X_EXPORT XF86ModuleData fbdevhwModuleData = {
 static pointer
 fbdevhwSetup(pointer module, pointer opts, int *errmaj, int *errmin)
 {
-	const char *osname;
-
-	/* Check that we're being loaded on a Linux system */
-	LoaderGetOS(&osname, NULL, NULL, NULL);
-	if (!osname || strcmp(osname, "linux") != 0) {
-		if (errmaj)
-			*errmaj = LDR_BADOS;
-		if (errmin)
-			*errmin = 0;
-		return NULL;
-	} else {
-		/* OK */
-		return (pointer)1;
-	}
+    return (pointer)1;
 }
 
 #include <fcntl.h>
@@ -152,6 +133,17 @@ fbdevHWFreeRec(ScrnInfoPtr pScrn)
 	FBDEVHWPTRLVAL(pScrn) = NULL;
 }
 
+int
+fbdevHWGetFD(ScrnInfoPtr pScrn)
+{
+    fbdevHWPtr fPtr;
+
+    fbdevHWGetRec(pScrn);
+    fPtr = FBDEVHWPTR(pScrn);
+
+    return fPtr->fd;
+}
+
 /* -------------------------------------------------------------------- */
 /* some helpers for printing debug informations                         */
 
@@ -223,10 +215,8 @@ xfree2fbdev_timing(DisplayModePtr mode, struct fb_var_screeninfo *var)
 		var->sync |= FB_SYNC_VERT_HIGH_ACT;
 	if (mode->Flags & V_PCSYNC)
 		var->sync |= FB_SYNC_COMP_HIGH_ACT;
-#if 1 /* Badly needed for PAL/NTSC on Amiga (amifb)!! [geert] */
 	if (mode->Flags & V_BCAST)
 		var->sync |= FB_SYNC_BROADCAST;
-#endif
 	if (mode->Flags & V_INTERLACE)
 		var->vmode = FB_VMODE_INTERLACED;
 	else if (mode->Flags & V_DBLSCAN)
@@ -270,10 +260,8 @@ fbdev2xfree_timing(struct fb_var_screeninfo *var, DisplayModePtr mode)
 	mode->Flags |= var->sync & FB_SYNC_HOR_HIGH_ACT ? V_PHSYNC : V_NHSYNC;
 	mode->Flags |= var->sync & FB_SYNC_VERT_HIGH_ACT ? V_PVSYNC : V_NVSYNC;
 	mode->Flags |= var->sync & FB_SYNC_COMP_HIGH_ACT ? V_PCSYNC : V_NCSYNC;
-#if 1 /* Badly needed for PAL/NTSC on Amiga (amifb)!! [geert] */
 	if (var->sync & FB_SYNC_BROADCAST)
 		mode->Flags |= V_BCAST;
-#endif
 	if ((var->vmode & FB_VMODE_MASK) == FB_VMODE_INTERLACED)
 		mode->Flags |= V_INTERLACE;
 	else if ((var->vmode & FB_VMODE_MASK) == FB_VMODE_DOUBLE)
@@ -332,10 +320,9 @@ fbdev_open_pci(struct pci_device * pPci, char **namep)
 
 		    return fd;
 		}
+		close(fd);
 	    }
 	}
-
-	close(fd);
     }
 
 

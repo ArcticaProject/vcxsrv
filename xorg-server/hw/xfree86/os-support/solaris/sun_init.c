@@ -38,13 +38,15 @@ static Bool Protect0 = FALSE;
 #ifdef HAS_USL_VTS
 static int VTnum = -1;
 static int xf86StartVT = -1;
+static int vtEnabled = 0;
 #endif
 
-#if defined(__SOL8__) || (!defined(__i386__) && !defined(__i386))
-static char fb_dev[PATH_MAX] = "/dev/fb";
-#else
-static char fb_dev[PATH_MAX] = "/dev/console";
-#endif
+/* Device to open as xf86Info.consoleFd */
+static char consoleDev[PATH_MAX] = "/dev/fb";
+
+/* Set by -dev argument on CLI
+   Used by hw/xfree86/common/xf86AutoConfig.c for VIS_GETIDENTIFIER */
+_X_HIDDEN char xf86SolarisFbDev[PATH_MAX] = "/dev/fb";
 
 void
 xf86OpenConsole(void)
@@ -93,86 +95,101 @@ xf86OpenConsole(void)
 	/*
 	 * Setup the virtual terminal manager
 	 */
-	if (VTnum != -1)
+	if ((fd = open("/dev/vt/0",O_RDWR,0)) == -1)
 	{
-	    xf86Info.vtno = VTnum;
-	    from = X_CMDLINE;
+	    xf86ErrorF("xf86OpenConsole: Cannot open /dev/vt/0 (%s)\n",
+		       strerror(errno));
+	    vtEnabled = 0;
 	}
 	else
 	{
-	    if ((fd = open("/dev/vt00",O_RDWR,0)) < 0)
-		FatalError("xf86OpenConsole: Cannot open /dev/vt00 (%s)\n",
-		    strerror(errno));
+	    if (ioctl(fd, VT_ENABLED, &vtEnabled) < 0)
+	    {
+		xf86ErrorF("xf86OpenConsole: VT_ENABLED failed (%s)\n",
+			   strerror(errno));
+		vtEnabled = 0;
+	    }
+	}
 
+
+	if (vtEnabled == 0)
+	{
+	    /* VT not enabled - kernel too old or Sparc platforms
+	       without visual_io support */
+	    xf86Msg(from, "VT infrastructure is not available\n");
+
+	    xf86StartVT = 0;
+	    xf86Info.vtno = 0;
+	    strlcpy(consoleDev, xf86SolarisFbDev, sizeof(consoleDev));
+	}
+	else
+	{
 	    if (ioctl(fd, VT_GETSTATE, &vtinfo) < 0)
 		FatalError("xf86OpenConsole: Cannot determine current VT\n");
 
 	    xf86StartVT = vtinfo.v_active;
 
-	    /*
-	     * There is a SEVERE problem with x86's VT's.  The VT_OPENQRY
-	     * ioctl() will panic the entire system if all 8 (7 VT's+Console)
-	     * terminals are used.  The only other way I've found to determine
-	     * if there is a free VT is to try activating all the the available
-	     * VT's and see if they all succeed - if they do, there there is no
-	     * free VT, and the Xserver cannot continue without panic'ing the
-	     * system.  (It's ugly, but it seems to work.)  Note there is a
-	     * possible race condition here.
-	     *
-	     * David Holland 2/23/94
-	     */
+	    if (VTnum != -1)
+	    {
+		xf86Info.vtno = VTnum;
+		from = X_CMDLINE;
+	    }
+	    else
+	    {
+		if ((ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) ||
+		    (xf86Info.vtno == -1)) {
+		    FatalError("xf86OpenConsole: Cannot find a free VT\n");
+		}
+	    }
 
-	    FreeVTslot = 0;
-	    for (i = 7; (i >= 0) && !FreeVTslot; i--)
-		if (ioctl(fd, VT_ACTIVATE, i) != 0)
-		    FreeVTslot = 1;
-
-	    if (!FreeVTslot ||
-	        (ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) ||
-		(xf86Info.vtno == -1))
-		FatalError("xf86OpenConsole: Cannot find a free VT\n");
-
-	    close(fd);
+	    xf86Msg(from, "using VT number %d\n\n", xf86Info.vtno);
+	    snprintf(consoleDev, PATH_MAX, "/dev/vt/%d", xf86Info.vtno);
 	}
 
-	xf86Msg(from, "using VT number %d\n\n", xf86Info.vtno);
-
-	sprintf(fb_dev, "/dev/vt%02d", xf86Info.vtno); /* Solaris 2.1 x86 */
+	if (fd != -1) {
+	    close(fd);
+	}
 
 #endif /* HAS_USL_VTS */
 
 	if (!KeepTty)
 	    setpgrp();
 
-	if (((xf86Info.consoleFd = open(fb_dev, O_RDWR | O_NDELAY, 0)) < 0))
+	if (((xf86Info.consoleFd = open(consoleDev, O_RDWR | O_NDELAY, 0)) < 0))
 	    FatalError("xf86OpenConsole: Cannot open %s (%s)\n",
-		       fb_dev, strerror(errno));
+		       consoleDev, strerror(errno));
 
 #ifdef HAS_USL_VTS
 
 	/* Change ownership of the vt */
-	chown(fb_dev, getuid(), getgid());
+	chown(consoleDev, getuid(), getgid());
 
-	/*
-	 * Now get the VT
-	 */
-	if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) != 0)
-	    xf86Msg(X_WARNING, "xf86OpenConsole: VT_ACTIVATE failed\n");
+	if (vtEnabled)
+	{
+	    /*
+	     * Now get the VT
+	     */
+	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) != 0)
+		xf86Msg(X_WARNING, "xf86OpenConsole: VT_ACTIVATE failed\n");
 
-	if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
-	    xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
+	    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
+		xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
 
-	if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) < 0)
-	    FatalError("xf86OpenConsole: VT_GETMODE failed\n");
+	    if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) < 0)
+		FatalError("xf86OpenConsole: VT_GETMODE failed\n");
 
-	signal(SIGUSR1, xf86VTRequest);
+	    OsSignal(SIGUSR1, xf86VTRequest);
 
-	VT.mode = VT_PROCESS;
-	VT.relsig = SIGUSR1;
-	VT.acqsig = SIGUSR1;
+	    VT.mode = VT_PROCESS;
+	    VT.relsig = SIGUSR1;
+	    VT.acqsig = SIGUSR1;
 
-	if (ioctl(xf86Info.consoleFd, VT_SETMODE, &VT) < 0)
-	    FatalError("xf86OpenConsole: VT_SETMODE VT_PROCESS failed\n");
+	    if (ioctl(xf86Info.consoleFd, VT_SETMODE, &VT) < 0)
+		FatalError("xf86OpenConsole: VT_SETMODE VT_PROCESS failed\n");
+
+	    if (ioctl(xf86Info.consoleFd, VT_SETDISPINFO, atoi(display)) < 0)
+		xf86Msg(X_WARNING, "xf86OpenConsole: VT_SETDISPINFO failed\n");
+	}
 #endif
 
 #ifdef KDSETMODE
@@ -180,30 +197,31 @@ xf86OpenConsole(void)
 	if (i < 0) {
 	    xf86Msg(X_WARNING,
 		    "xf86OpenConsole: KDSETMODE KD_GRAPHICS failed on %s (%s)\n",
-		    fb_dev, strerror(errno));
+		    consoleDev, strerror(errno));
 	}
 #endif
     }
     else /* serverGeneration != 1 */
     {
 #ifdef HAS_USL_VTS
-	/*
-	 * Now re-get the VT
-	 */
-	if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) != 0)
-	    xf86Msg(X_WARNING, "xf86OpenConsole: VT_ACTIVATE failed\n");
+	if (vtEnabled) {
+	    /*
+	     * Now re-get the VT
+	     */
+	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) != 0)
+		xf86Msg(X_WARNING, "xf86OpenConsole: VT_ACTIVATE failed\n");
 
-	if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
-	    xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
+	    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
+		xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
 
-	/*
-	 * If the server doesn't have the VT when the reset occurs,
-	 * this is to make sure we don't continue until the activate
-	 * signal is received.
-	 */
-	if (!xf86Screens[0]->vtSema)
-	    sleep(5);
-
+	    /*
+	     * If the server doesn't have the VT when the reset occurs,
+	     * this is to make sure we don't continue until the activate
+	     * signal is received.
+	     */
+	    if (!xf86Screens[0]->vtSema)
+		sleep(5);
+	}
 #endif /* HAS_USL_VTS */
 
     }
@@ -218,7 +236,7 @@ xf86CloseConsole(void)
 
 #if !defined(__i386__) && !defined(__i386) && !defined(__x86)
 
-    if (!xf86DoProbe && !xf86DoConfigure) {
+    if (!xf86DoConfigure) {
 	int fd;
 
 	/*
@@ -228,7 +246,7 @@ xf86CloseConsole(void)
 	 * at this point whether this should be done for all framebuffers in
 	 * the system, rather than only the console.
 	 */
-	if ((fd = open("/dev/fb", O_RDWR, 0)) < 0) {
+	if ((fd = open(xf86SolarisFbDev, O_RDWR, 0)) < 0) {
 	    xf86Msg(X_WARNING,
 		    "xf86CloseConsole():  unable to open framebuffer (%s)\n",
 		    strerror(errno));
@@ -267,30 +285,16 @@ xf86CloseConsole(void)
 #endif
 
 #ifdef HAS_USL_VTS
+    if (vtEnabled == 1) {
+	if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) != -1)
+	{
+	    VT.mode = VT_AUTO;		/* Set default vt handling */
+	    ioctl(xf86Info.consoleFd, VT_SETMODE, &VT);
+	}
 
-    /*
-     * Solaris 2.1 x86 doesn't seem to "switch" back to the console when the VT
-     * is relinquished and its mode is reset to auto.  Also, Solaris 2.1 seems
-     * to associate vt00 with the console so I've opened the "console" back up
-     * and made it the active vt again in text mode and then closed it.  There
-     * must be a better hack for this but I'm not aware of one at this time.
-     *
-     * Doug Anson 11/6/93
-     * danson@lgc.com
-     *
-     * Fixed - 12/5/93 - David Holland - davidh@dorite.use.com
-     * Did the whole thing similarly to the way linux does it
-     */
-
-    if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) != -1)
-    {
-	VT.mode = VT_AUTO;		/* Set default vt handling */
-	ioctl(xf86Info.consoleFd, VT_SETMODE, &VT);
+	/* Activate the VT that X was started on */
+	ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86StartVT);
     }
-
-    /* Activate the VT that X was started on */
-    ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86StartVT);
-
 #endif /* HAS_USL_VTS */
 
     close(xf86Info.consoleFd);
@@ -323,7 +327,7 @@ xf86ProcessArgument(int argc, char **argv, int i)
 
     if ((argv[i][0] == 'v') && (argv[i][1] == 't'))
     {
-	if (sscanf(argv[i], "vt%2d", &VTnum) == 0)
+	if (sscanf(argv[i], "vt%d", &VTnum) == 0)
 	{
 	    UseMsg();
 	    VTnum = -1;
@@ -337,8 +341,7 @@ xf86ProcessArgument(int argc, char **argv, int i)
 
     if ((i + 1) < argc) {
 	if (!strcmp(argv[i], "-dev")) {
-	    strncpy(fb_dev, argv[i+1], PATH_MAX);
-	    fb_dev[PATH_MAX - 1] = '\0';
+	    strlcpy(xf86SolarisFbDev, argv[i+1], sizeof(xf86SolarisFbDev));
 	    return 2;
 	}
     }
@@ -349,7 +352,7 @@ xf86ProcessArgument(int argc, char **argv, int i)
 void xf86UseMsg()
 {
 #ifdef HAS_USL_VTS
-    ErrorF("vtXX                   Use the specified VT number\n");
+    ErrorF("vtX                    Use the specified VT number\n");
 #endif
     ErrorF("-dev <fb>              Framebuffer device\n");
     ErrorF("-keeptty               Don't detach controlling tty\n");

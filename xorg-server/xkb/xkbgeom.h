@@ -311,8 +311,6 @@ typedef struct _XkbGeometrySizes {
 	unsigned short	num_key_aliases;
 } XkbGeometrySizesRec,*XkbGeometrySizesPtr;
 
-_XFUNCPROTOBEGIN
-
 extern	XkbPropertyPtr
 XkbAddGeomProperty(
     XkbGeometryPtr	/* geom */,
@@ -629,7 +627,5 @@ XkbFindOverlayForKey(
 	XkbSectionPtr		/* wanted */,
 	char *			/* under */
 );
-
-_XFUNCPROTOEND
 
 #endif /* _XKBGEOM_H_ */

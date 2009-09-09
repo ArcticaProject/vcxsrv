@@ -58,7 +58,6 @@
 # define WM_XBUTTONDBLCLK 525
 #endif
 
-#define NEED_EVENTS
 
 #define WIN_DEFAULT_BPP				0
 #define WIN_DEFAULT_WHITEPIXEL			255
@@ -645,12 +644,13 @@ extern DevPrivateKey		g_iGCPrivateKey;
 extern DevPrivateKey		g_iPixmapPrivateKey;
 extern DevPrivateKey		g_iWindowPrivateKey;
 extern unsigned long		g_ulServerGeneration;
-extern CARD32			g_c32LastInputEventTime;
 extern DWORD			g_dwEnginesSupported;
 extern HINSTANCE		g_hInstance;
 extern int                      g_copyROP[];
 extern int                      g_patternROP[];
 extern const char *		g_pszQueryHost;
+extern DeviceIntPtr             g_pwinPointer;
+extern DeviceIntPtr             g_pwinKeyboard;
 
 
 /*
@@ -964,6 +964,11 @@ winKeybdReleaseKeys (void);
 void
 winSendKeyEvent (DWORD dwKey, Bool fDown);
 
+BOOL
+winCheckKeyPressed(WPARAM wParam, LPARAM lParam);
+
+void
+winFixShiftKeys (int iScanCode);
 
 /*
  * winkeyhook.c
@@ -1006,22 +1011,15 @@ int
 winMouseProc (DeviceIntPtr pDeviceInt, int iState);
 
 int
-winMouseWheel (ScreenPtr pScreen, int iDeltaZ, int x, int y);
+winMouseWheel (ScreenPtr pScreen, int iDeltaZ);
 
 void
-winMouseButtonsSendEvent (int iEventType, int iButton, int x, int y);
-
-void winGetPtMouse(HWND hwnd, LPARAM lParam, POINT *ptMouse);
-void winGetPtMouseScreen(HWND hwnd, LPARAM lParam, POINT *ptMouse);
+winMouseButtonsSendEvent (int iEventType, int iButton);
 
 int
 winMouseButtonsHandle (ScreenPtr pScreen,
                        int iEventType, int iButton,
-                       WPARAM wParam, HWND hwnd, LPARAM lParam);
-int
-winMouseButtonsHandleScreen (ScreenPtr pScreen,
-                             int iEventType, int iButton,
-                             WPARAM wParam, HWND hwnd, LPARAM lParam);
+		       WPARAM wParam);
 
 void
 winEnqueueMotion(int x, int y);
@@ -1227,6 +1225,8 @@ winSetShapeRootless (WindowPtr pWindow);
 HICON
 winXIconToHICON (WindowPtr pWin, int iconSize);
 
+void
+winSelectIcons(WindowPtr pWin, HICON *pIcon, HICON *pSmallIcon);
 
 #ifdef XWIN_MULTIWINDOW
 /*

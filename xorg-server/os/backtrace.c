@@ -2,22 +2,23 @@
  * Copyright 2008 Red Hat, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software")
- * to deal in the software without restriction, including without limitation
- * on the rights to use, copy, modify, merge, publish, distribute, sub
- * license, and/or sell copies of the Software, and to permit persons to whom
- * them Software is furnished to do so, subject to the following conditions:
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice (including the next
  * paragraph) shall be included in all copies or substantial portions of the
  * Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTIBILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  IN NO EVENT SHALL
- * THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 #ifdef HAVE_DIX_CONFIG_H
@@ -28,19 +29,30 @@
 #include "misc.h"
 
 #ifdef HAVE_BACKTRACE
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+#include <dlfcn.h>
 #include <execinfo.h>
 
 void xorg_backtrace(void)
 {
-    void *array[32]; /* deeper nesting than this means something's wrong */
-    size_t size, i;
-    char **strings;
+    void *array[64];
+    char *mod;
+    int size, i;
+    Dl_info info;
     ErrorF("\nBacktrace:\n");
-    size = backtrace(array, 32);
-    strings = backtrace_symbols(array, size);
-    for (i = 0; i < size; i++)
-        ErrorF("%d: %s\n", i, strings[i]);
-    free(strings);
+    size = backtrace(array, 64);
+    for (i = 0; i < size; i++) {
+	dladdr(array[i], &info);
+	mod = (info.dli_fname && *info.dli_fname) ? info.dli_fname : "(vdso)";
+	if (info.dli_saddr)
+	    ErrorF("%d: %s (%s+0x%lx) [%p]\n", i, mod,
+		   info.dli_sname, array[i] - info.dli_saddr, array[i]);
+	else
+	    ErrorF("%d: %s (%p+0x%lx) [%p]\n", i, mod,
+		   info.dli_fbase, array[i] - info.dli_fbase, array[i]);
+    }
 }
 
 #else /* not glibc or glibc < 2.1 */

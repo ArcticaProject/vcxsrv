@@ -36,8 +36,7 @@
 #include "xf86.h"
 #include "vgaHW.h"
 
-#define _XF86DGA_SERVER_
-#include <X11/extensions/xf86dgastr.h>
+#include <X11/extensions/xf86dgaproto.h>
 #include "dgaproc.h"
 
 
@@ -277,8 +276,8 @@ vgaUninstallColormap(pmap)
   if ( pmap != miInstalledMaps[pmap->pScreen->myNum] )
     return;
 
-  defColormap = (ColormapPtr) LookupIDByType( pmap->pScreen->defColormap,
-					      RT_COLORMAP);
+  dixLookupResourceByType((pointer *)&defColormap, pmap->pScreen->defColormap,
+			  RT_COLORMAP, serverClient, DixInstallAccess);
 
   if (defColormap == miInstalledMaps[pmap->pScreen->myNum])
     return;

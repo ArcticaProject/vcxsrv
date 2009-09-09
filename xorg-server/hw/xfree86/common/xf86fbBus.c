@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2000-2001 by The XFree86 Project, Inc.
  *
@@ -41,36 +40,35 @@
 #include "os.h"
 #include "xf86.h"
 #include "xf86Priv.h"
-#include "xf86Resources.h"
 
 #include "xf86Bus.h"
 
 #define XF86_OS_PRIVS
-#define NEED_OS_RAC_PROTOS
 #include "xf86_OSproc.h"
-
-#include "xf86RAC.h"
 
 Bool fbSlotClaimed = FALSE;
 
-_X_EXPORT int
+int
 xf86ClaimFbSlot(DriverPtr drvp, int chipset, GDevPtr dev, Bool active)
 {
     EntityPtr p;
     int num;
+
+    if (pciSlotClaimed)
+	return -1;
+#if defined(__sparc__) || defined (__sparc64__)
+    if (sbusSlotClaimed)
+	return -1;
+#endif
     
     num = xf86AllocateEntity();
     p = xf86Entities[num];
     p->driver = drvp;
     p->chipset = 0;
-    p->busType = BUS_NONE;
+    p->bus.type = BUS_NONE;
     p->active = active;
     p->inUse = FALSE;
     xf86AddDevToEntity(num, dev);
-    p->access = xnfcalloc(1,sizeof(EntityAccessRec));
-    p->access->fallback = &AccessNULL;
-    p->access->pAccess = &AccessNULL;
-    p->busAcc = NULL;
 
     fbSlotClaimed = TRUE;
     return num;
@@ -88,7 +86,7 @@ xf86GetFbInfoForScreen(int scrnIndex)
     
     for (i = 0; i < xf86Screens[scrnIndex]->numEntities; i++) {
 	p = xf86Entities[xf86Screens[scrnIndex]->entityList[i]];
-  	if (p->busType == BUS_NONE) {
+  	if (p->bus.type == BUS_NONE) {
   	    num++;
   	}
     }

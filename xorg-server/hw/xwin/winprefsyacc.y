@@ -173,18 +173,18 @@ icons:	ICONS LB {OpenIcons();} newline_or_nada iconlist RB {CloseIcons();}
 group1:	TOPMOST { $$=STYLE_TOPMOST; }
 	| MAXIMIZE { $$=STYLE_MAXIMIZE; }
 	| MINIMIZE { $$=STYLE_MINIMIZE; }
- 	| BOTTOM { $$=STYLE_BOTTOM; }
+	| BOTTOM { $$=STYLE_BOTTOM; }
 	;
 
 group2:	NOTITLE { $$=STYLE_NOTITLE; }
- 	| OUTLINE { $$=STYLE_OUTLINE; }
+	| OUTLINE { $$=STYLE_OUTLINE; }
 	| NOFRAME { $$=STYLE_NOFRAME; }
 	;
 
 stylecombo:	group1 { $$=$1; }
 	| group2 { $$=$1; }
-	| group1 group2 { $$=$1+$2; }
-	| group2 group1 { $$=$1+$2; }
+	| group1 group2 { $$=$1|$2; }
+	| group2 group1 { $$=$1|$2; }
 	;
 
 styleline:	STRING stylecombo NEWLINE newline_or_nada { AddStyleLine($1, $2); free($1); }

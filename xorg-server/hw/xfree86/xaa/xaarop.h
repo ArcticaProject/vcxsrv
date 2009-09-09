@@ -294,18 +294,18 @@
 #define NO_SRC_ROP(rop) \
    ((rop == GXnoop) || (rop == GXset) || (rop == GXclear) || (rop == GXinvert))
 
-int XAAHelpSolidROP(ScrnInfoPtr pScrn, int *fg, int pm, int *rop);
-int XAAHelpPatternROP(ScrnInfoPtr pScrn, int *fg, int *bg, int pm, int *rop);
+extern _X_EXPORT int XAAHelpSolidROP(ScrnInfoPtr pScrn, int *fg, int pm, int *rop);
+extern _X_EXPORT int XAAHelpPatternROP(ScrnInfoPtr pScrn, int *fg, int *bg, int pm, int *rop);
 
 /* XXX These four should be static, but it breaks the 6.7.0 ABI. */
-extern int XAACopyROP[16];
-extern int XAACopyROP_PM[16];
-extern int XAAPatternROP[16];
-extern int XAAPatternROP_PM[16];
+extern _X_EXPORT int XAACopyROP[16];
+extern _X_EXPORT int XAACopyROP_PM[16];
+extern _X_EXPORT int XAAPatternROP[16];
+extern _X_EXPORT int XAAPatternROP_PM[16];
 
-extern int XAAGetCopyROP(int i);
-extern int XAAGetCopyROP_PM(int i);
-extern int XAAGetPatternROP(int i);
-extern int XAAGetPatternROP_PM(int i);
+extern _X_EXPORT int XAAGetCopyROP(int i);
+extern _X_EXPORT int XAAGetCopyROP_PM(int i);
+extern _X_EXPORT int XAAGetPatternROP(int i);
+extern _X_EXPORT int XAAGetPatternROP_PM(int i);
 
 #endif /* _XAAROP_H */

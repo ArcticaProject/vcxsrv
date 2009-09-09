@@ -65,10 +65,10 @@ SOFTWARE.
  *
  *****************************************************************/
 
-_X_EXPORT Selection *CurrentSelections;
+Selection *CurrentSelections;
 CallbackListPtr SelectionCallback;
 
-_X_EXPORT int
+int
 dixLookupSelection(Selection **result, Atom selectionName,
 		   ClientPtr client, Mask access_mode)
 {
@@ -243,6 +243,7 @@ ProcGetSelectionOwner(ClientPtr client)
         return BadAtom;
     }
 
+    memset(&reply, 0, sizeof(xGetSelectionOwnerReply));
     reply.type = X_Reply;
     reply.length = 0;
     reply.sequenceNumber = client->sequence;
@@ -284,6 +285,7 @@ ProcConvertSelection(ClientPtr client)
 
     rc = dixLookupSelection(&pSel, stuff->selection, client, DixReadAccess);
 
+    memset(&event, 0, sizeof(xEvent));
     if (rc != Success && rc != BadMatch)
 	return rc;
     else if (rc == Success && pSel->window != None) {

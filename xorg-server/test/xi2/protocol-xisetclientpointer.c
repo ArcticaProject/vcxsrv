@@ -1,0 +1,149 @@
+/**
+ * Copyright © 2009 Red Hat, Inc.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice (including the next
+ *  paragraph) shall be included in all copies or substantial portions of the
+ *  Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ *  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *  DEALINGS IN THE SOFTWARE.
+ */
+
+#ifdef HAVE_DIX_CONFIG_H
+#include <dix-config.h>
+#endif
+
+/*
+ * Protocol testing for XISetClientPointer request.
+ *
+ * Tests include:
+ * BadDevice of all devices except master pointers.
+ * Success for a valid window.
+ * Success for window None.
+ * BadWindow for invalid windows.
+ */
+#include <stdint.h>
+#include <X11/X.h>
+#include <X11/Xproto.h>
+#include <X11/extensions/XI2proto.h>
+#include "inputstr.h"
+#include "windowstr.h"
+#include "extinit.h" /* for XInputExtensionInit */
+#include "scrnintstr.h"
+#include "xisetclientpointer.h"
+#include "exevents.h"
+
+#include "protocol-common.h"
+#include <glib.h>
+
+static ClientRec client_window;
+static ClientRec client_request;
+
+int __wrap_dixLookupClient(ClientPtr *pClient, XID rid, ClientPtr client, Mask access)
+{
+    if (rid == ROOT_WINDOW_ID)
+        return BadWindow;
+
+    if (rid == CLIENT_WINDOW_ID)
+    {
+        *pClient = &client_window;
+        return Success;
+    }
+
+    return __real_dixLookupClient(pClient, rid, client, access);
+}
+
+static void request_XISetClientPointer(xXISetClientPointerReq* req, int error)
+{
+    char n;
+    int rc;
+    client_request = init_client(req->length, req);
+
+    rc = ProcXISetClientPointer(&client_request);
+    g_assert(rc == error);
+
+    if (rc == BadDevice)
+        g_assert(client_request.errorValue == req->deviceid);
+
+    client_request.swapped = TRUE;
+    swapl(&req->win, n);
+    swaps(&req->length, n);
+    swaps(&req->deviceid, n);
+    rc = SProcXISetClientPointer(&client_request);
+    g_assert(rc == error);
+
+    if (rc == BadDevice)
+        g_assert(client_request.errorValue == req->deviceid);
+
+}
+
+static void test_XISetClientPointer(void)
+{
+    int i;
+    xXISetClientPointerReq request;
+
+    request_init(&request, XISetClientPointer);
+
+    request.win = CLIENT_WINDOW_ID;
+
+    g_test_message("Testing BadDevice error for XIAllDevices and XIMasterDevices.");
+    request.deviceid = XIAllDevices;
+    request_XISetClientPointer(&request, BadDevice);
+
+    request.deviceid = XIAllMasterDevices;
+    request_XISetClientPointer(&request, BadDevice);
+
+    g_test_message("Testing Success for VCP and VCK.");
+    request.deviceid = devices.vcp->id; /* 2 */
+    request_XISetClientPointer(&request, Success);
+    g_assert(client_window.clientPtr->id == 2);
+
+    request.deviceid = devices.vck->id; /* 3 */
+    request_XISetClientPointer(&request, Success);
+    g_assert(client_window.clientPtr->id == 2);
+
+    g_test_message("Testing BadDevice error for all other devices.");
+    for (i = 4; i <= 0xFFFF; i++)
+    {
+        request.deviceid = i;
+        request_XISetClientPointer(&request, BadDevice);
+    }
+
+    g_test_message("Testing window None");
+    request.win = None;
+    request.deviceid = devices.vcp->id; /* 2 */
+    request_XISetClientPointer(&request, Success);
+    g_assert(client_request.clientPtr->id == 2);
+
+    g_test_message("Testing invalid window");
+    request.win = INVALID_WINDOW_ID;
+    request.deviceid = devices.vcp->id;
+    request_XISetClientPointer(&request, BadWindow);
+
+}
+
+
+int main(int argc, char** argv)
+{
+    g_test_init(&argc, &argv,NULL);
+    g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
+
+    init_simple();
+    client_window = init_client(0, NULL);
+
+    g_test_add_func("/xi2/protocol/XISetClientPointer", test_XISetClientPointer);
+
+    return g_test_run();
+}

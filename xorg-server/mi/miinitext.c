@@ -134,10 +134,6 @@ extern Bool noXFree86VidModeExtension;
 #ifdef XFIXES
 extern Bool noXFixesExtension;
 #endif
-#ifdef XKB
-/* |noXkbExtension| is defined in xc/programs/Xserver/xkb/xkbInit.c */
-extern Bool noXkbExtension;
-#endif
 #ifdef PANORAMIX
 extern Bool noPanoramiXExtension;
 #endif
@@ -160,19 +156,15 @@ typedef void (*InitExtension)(INITARGS);
 #endif
 
 #ifdef MITSHM
-#define _XSHM_SERVER_
-#include <X11/extensions/shmstr.h>
+#include <X11/extensions/shm.h>
 #endif
 #ifdef XTEST
-#define _XTEST_SERVER_
-#include <X11/extensions/XTest.h>
+#include <X11/extensions/xtestconst.h>
 #endif
-#ifdef XKB
 #include <X11/extensions/XKB.h>
-#endif
 #ifdef XCSECURITY
 #include "securitysrv.h"
-#include <X11/extensions/securstr.h>
+#include <X11/extensions/secur.h>
 #endif
 #ifdef XSELINUX
 #include "xselinux.h"
@@ -213,9 +205,7 @@ extern void XvExtensionInit(INITARGS);
 extern void XvMCExtensionInit(INITARGS);
 #endif
 extern void SyncExtensionInit(INITARGS);
-#ifdef XKB
 extern void XkbExtensionInit(INITARGS);
-#endif
 extern void XCMiscExtensionInit(INITARGS);
 #ifdef XRECORD
 extern void RecordExtensionInit(INITARGS);
@@ -340,9 +330,7 @@ static ExtensionToggle ExtensionToggleList[] =
     { "XINERAMA", &noPanoramiXExtension },
 #endif
     { "XInputExtension", NULL },
-#ifdef XKB
-    { "XKEYBOARD", &noXkbExtension },
-#endif
+    { "XKEYBOARD", NULL },
 #ifdef XSELINUX
     { "SELinux", &noSELinuxExtension },
 #endif
@@ -416,9 +404,7 @@ InitExtensions(int argc, char *argv[])
     }
 #endif
     SyncExtensionInit();
-#if defined(XKB)
-    if (!noXkbExtension) XkbExtensionInit();
-#endif
+    XkbExtensionInit();
     XCMiscExtensionInit();
 #ifdef XRECORD
     if (!noTestExtensions) RecordExtensionInit(); 
@@ -493,9 +479,7 @@ static ExtensionModule staticExtensions[] = {
 #endif
     { BigReqExtensionInit, "BIG-REQUESTS", NULL, NULL, NULL },
     { SyncExtensionInit, "SYNC", NULL, NULL, NULL },
-#ifdef XKB
-    { XkbExtensionInit, XkbName, &noXkbExtension, NULL, NULL },
-#endif
+    { XkbExtensionInit, XkbName, NULL, NULL, NULL },
     { XCMiscExtensionInit, "XC-MISC", NULL, NULL, NULL },
 #ifdef XCSECURITY
     { SecurityExtensionInit, SECURITY_EXTENSION_NAME, &noSecurityExtension, NULL, NULL },

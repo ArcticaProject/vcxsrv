@@ -34,6 +34,7 @@
 #include <xwin-config.h>
 #endif
 #include "winclipboard.h"
+#include "misc.h"
 
 
 /*
@@ -53,25 +54,20 @@ winClipboardFlushXEvents (HWND hwnd,
 			  Display *pDisplay,
 			  Bool fUseUnicode)
 {
-  static Atom atomLocalProperty, atomCompoundText;
-  static Atom atomUTF8String, atomTargets;
+  static Atom atomLocalProperty;
+  static Atom atomCompoundText;
+  static Atom atomUTF8String;
+  static Atom atomTargets;
+  static int generation;
 
-  if (atomLocalProperty == None)
-    atomLocalProperty = XInternAtom (pDisplay,
-				     WIN_LOCAL_PROPERTY,
-				     False);
-  if (atomUTF8String == None)
-    atomUTF8String = XInternAtom (pDisplay,
-				  "UTF8_STRING",
-				  False);
-  if (atomCompoundText == None)
-    atomCompoundText = XInternAtom (pDisplay,
-				    "COMPOUND_TEXT",
-				    False);
-  if (atomTargets == None)
-    atomTargets = XInternAtom (pDisplay,
-			       "TARGETS",
-			       False);
+  if (generation != serverGeneration)
+    {
+      generation = serverGeneration;
+      atomLocalProperty = XInternAtom (pDisplay, WIN_LOCAL_PROPERTY, False);
+      atomUTF8String = XInternAtom (pDisplay, "UTF8_STRING", False);
+      atomCompoundText = XInternAtom (pDisplay, "COMPOUND_TEXT", False);
+      atomTargets = XInternAtom (pDisplay, "TARGETS", False);
+    }
 
   /* Process all pending events */
   while (XPending (pDisplay))
@@ -196,8 +192,13 @@ winClipboardFlushXEvents (HWND hwnd,
 	  if (fUseUnicode
 	      && !IsClipboardFormatAvailable (CF_UNICODETEXT))
 	    {
-	      ErrorF ("winClipboardFlushXEvents - CF_UNICODETEXT is not "
-		      "available from Win32 clipboard.  Aborting.\n");
+	      static int count; /* Hack to stop acroread spamming the log */
+	      static HWND lasthwnd; /* I've not seen any other client get here repeatedly? */
+	      if (hwnd != lasthwnd) count = 0;
+	      count++;
+	      if (count < 6) ErrorF ("winClipboardFlushXEvents - CF_UNICODETEXT is not "
+		      "available from Win32 clipboard.  Aborting %d.\n", count);
+	      lasthwnd = hwnd;
 
 	      /* Abort */
 	      XUnlockDisplay (pDisplay);

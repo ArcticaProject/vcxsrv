@@ -331,7 +331,7 @@ static void kbdUSBConvert(DevicePtr pDev,
 
             /* No auto-repeat? */
             if ((feed && !feed->ctrl.autoRepeat)
-                || priv->pDevice->key->modifierMap[keyCode]
+                || priv->pDevice->key->xkbInfo->desc->map->modmap[keyCode]
                 || (feed
                     && !(feed->ctrl.autoRepeats[keyCode >> 3]
                          & (1 << (keyCode & 7))))) return; /* Ignore */
@@ -434,8 +434,6 @@ void kbdUSBGetInfo(DevicePtr pDev, DMXLocalInitInfoPtr info)
     kbdUSBGetMap(pDev, &info->keySyms, info->modMap);
     info->focusClass       = 1;
     info->kbdFeedbackClass = 1;
-#ifdef XKB
     info->names.keycodes   = xstrdup("powerpcps2");
     info->force            = 1;
-#endif
 }

@@ -74,22 +74,26 @@ void
 ExaCheckFillSpans (DrawablePtr pDrawable, GCPtr pGC, int nspans,
 		   DDXPointPtr ppt, int *pwidth, int fSorted)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
     exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
     exaPrepareAccessGC (pGC);
-    fbFillSpans (pDrawable, pGC, nspans, ppt, pwidth, fSorted);
+    pGC->ops->FillSpans (pDrawable, pGC, nspans, ppt, pwidth, fSorted);
     exaFinishAccessGC (pGC);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
 ExaCheckSetSpans (DrawablePtr pDrawable, GCPtr pGC, char *psrc,
 		 DDXPointPtr ppt, int *pwidth, int nspans, int fSorted)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
     exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
-    fbSetSpans (pDrawable, pGC, psrc, ppt, pwidth, nspans, fSorted);
+    pGC->ops->SetSpans (pDrawable, pGC, psrc, ppt, pwidth, nspans, fSorted);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
@@ -99,6 +103,7 @@ ExaCheckPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth,
 {
     ExaPixmapPriv(exaGetDrawablePixmap(pDrawable));
 
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
     if (exaGCReadsDestination(pDrawable, pGC->planemask, pGC->fillStyle,
 			      pGC->alu, pGC->clientClipType))
@@ -106,8 +111,30 @@ ExaCheckPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth,
     else
 	exaPrepareAccessReg (pDrawable, EXA_PREPARE_DEST, pExaPixmap->pDamage ?
 			     DamagePendingRegion(pExaPixmap->pDamage) : NULL);
-    fbPutImage (pDrawable, pGC, depth, x, y, w, h, leftPad, format, bits);
+    pGC->ops->PutImage (pDrawable, pGC, depth, x, y, w, h, leftPad, format, bits);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
+}
+
+void
+ExaCheckCopyNtoN (DrawablePtr pSrc, DrawablePtr pDst,  GCPtr pGC,
+	     BoxPtr	pbox, int nbox, int dx, int dy, Bool	reverse, 
+	     Bool upsidedown, Pixel bitplane, void *closure)
+{
+    EXA_GC_PROLOGUE(pGC);
+    EXA_FALLBACK(("from %p to %p (%c,%c)\n", pSrc, pDst,
+		  exaDrawableLocation(pSrc), exaDrawableLocation(pDst)));
+    exaPrepareAccess (pDst, EXA_PREPARE_DEST);
+    exaPrepareAccess (pSrc, EXA_PREPARE_SRC);
+    /* This will eventually call fbCopyNtoN, with some calculation overhead. */
+    while (nbox--) {
+	pGC->ops->CopyArea (pSrc, pDst, pGC, pbox->x1 - pSrc->x + dx, pbox->y1 - pSrc->y + dy, 
+			pbox->x2 - pbox->x1, pbox->y2 - pbox->y1, pbox->x1 - pDst->x, pbox->y1 - pDst->y);
+	pbox++;
+    }
+    exaFinishAccess (pSrc, EXA_PREPARE_SRC);
+    exaFinishAccess (pDst, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 RegionPtr
@@ -116,13 +143,15 @@ ExaCheckCopyArea (DrawablePtr pSrc, DrawablePtr pDst, GCPtr pGC,
 {
     RegionPtr ret;
 
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("from %p to %p (%c,%c)\n", pSrc, pDst,
 		  exaDrawableLocation(pSrc), exaDrawableLocation(pDst)));
     exaPrepareAccess (pDst, EXA_PREPARE_DEST);
     exaPrepareAccess (pSrc, EXA_PREPARE_SRC);
-    ret = fbCopyArea (pSrc, pDst, pGC, srcx, srcy, w, h, dstx, dsty);
+    ret = pGC->ops->CopyArea (pSrc, pDst, pGC, srcx, srcy, w, h, dstx, dsty);
     exaFinishAccess (pSrc, EXA_PREPARE_SRC);
     exaFinishAccess (pDst, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 
     return ret;
 }
@@ -134,14 +163,16 @@ ExaCheckCopyPlane (DrawablePtr pSrc, DrawablePtr pDst, GCPtr pGC,
 {
     RegionPtr ret;
 
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("from %p to %p (%c,%c)\n", pSrc, pDst,
 		  exaDrawableLocation(pSrc), exaDrawableLocation(pDst)));
     exaPrepareAccess (pDst, EXA_PREPARE_DEST);
     exaPrepareAccess (pSrc, EXA_PREPARE_SRC);
-    ret = fbCopyPlane (pSrc, pDst, pGC, srcx, srcy, w, h, dstx, dsty,
+    ret = pGC->ops->CopyPlane (pSrc, pDst, pGC, srcx, srcy, w, h, dstx, dsty,
 		       bitPlane);
     exaFinishAccess (pSrc, EXA_PREPARE_SRC);
     exaFinishAccess (pDst, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 
     return ret;
 }
@@ -150,85 +181,75 @@ void
 ExaCheckPolyPoint (DrawablePtr pDrawable, GCPtr pGC, int mode, int npt,
 		  DDXPointPtr pptInit)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
     exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
-    fbPolyPoint (pDrawable, pGC, mode, npt, pptInit);
+    pGC->ops->PolyPoint (pDrawable, pGC, mode, npt, pptInit);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
 ExaCheckPolylines (DrawablePtr pDrawable, GCPtr pGC,
 		  int mode, int npt, DDXPointPtr ppt)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c), width %d, mode %d, count %d\n",
 		  pDrawable, exaDrawableLocation(pDrawable),
 		  pGC->lineWidth, mode, npt));
 
-    if (pGC->lineWidth == 0) {
-	exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
-	exaPrepareAccessGC (pGC);
-	fbPolyLine (pDrawable, pGC, mode, npt, ppt);
-	exaFinishAccessGC (pGC);
-	exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
-	return;
-    }
-    /* fb calls mi functions in the lineWidth != 0 case. */
-    fbPolyLine (pDrawable, pGC, mode, npt, ppt);
+    exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
+    exaPrepareAccessGC (pGC);
+    pGC->ops->Polylines (pDrawable, pGC, mode, npt, ppt);
+    exaFinishAccessGC (pGC);
+    exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
 ExaCheckPolySegment (DrawablePtr pDrawable, GCPtr pGC,
 		    int nsegInit, xSegment *pSegInit)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c) width %d, count %d\n", pDrawable,
 		  exaDrawableLocation(pDrawable), pGC->lineWidth, nsegInit));
-    if (pGC->lineWidth == 0) {
-	exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
-	exaPrepareAccessGC (pGC);
-	fbPolySegment (pDrawable, pGC, nsegInit, pSegInit);
-	exaFinishAccessGC (pGC);
-	exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
-	return;
-    }
-    /* fb calls mi functions in the lineWidth != 0 case. */
-    fbPolySegment (pDrawable, pGC, nsegInit, pSegInit);
+
+    exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
+    exaPrepareAccessGC (pGC);
+    pGC->ops->PolySegment (pDrawable, pGC, nsegInit, pSegInit);
+    exaFinishAccessGC (pGC);
+    exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
 ExaCheckPolyArc (DrawablePtr pDrawable, GCPtr pGC,
 		int narcs, xArc *pArcs)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
 
-    /* Disable this as fbPolyArc can call miZeroPolyArc which in turn
-     * can call accelerated functions, that as yet, haven't been notified
-     * with exaFinishAccess().
-     */
-#if 0
-    if (pGC->lineWidth == 0)
-    {
-	exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
-	exaPrepareAccessGC (pGC);
-	fbPolyArc (pDrawable, pGC, narcs, pArcs);
-	exaFinishAccessGC (pGC);
-	exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
-	return;
-    }
-#endif
-    miPolyArc (pDrawable, pGC, narcs, pArcs);
+    exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
+    exaPrepareAccessGC (pGC);
+    pGC->ops->PolyArc (pDrawable, pGC, narcs, pArcs);
+    exaFinishAccessGC (pGC);
+    exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
 ExaCheckPolyFillRect (DrawablePtr pDrawable, GCPtr pGC,
 		     int nrect, xRectangle *prect)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
 
     exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
     exaPrepareAccessGC (pGC);
-    fbPolyFillRect (pDrawable, pGC, nrect, prect);
+    pGC->ops->PolyFillRect (pDrawable, pGC, nrect, prect);
     exaFinishAccessGC (pGC);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
@@ -236,13 +257,15 @@ ExaCheckImageGlyphBlt (DrawablePtr pDrawable, GCPtr pGC,
 		      int x, int y, unsigned int nglyph,
 		      CharInfoPtr *ppci, pointer pglyphBase)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c)\n", pDrawable,
 		  exaDrawableLocation(pDrawable)));
     exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
     exaPrepareAccessGC (pGC);
-    fbImageGlyphBlt (pDrawable, pGC, x, y, nglyph, ppci, pglyphBase);
+    pGC->ops->ImageGlyphBlt (pDrawable, pGC, x, y, nglyph, ppci, pglyphBase);
     exaFinishAccessGC (pGC);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
@@ -250,13 +273,15 @@ ExaCheckPolyGlyphBlt (DrawablePtr pDrawable, GCPtr pGC,
 		     int x, int y, unsigned int nglyph,
 		     CharInfoPtr *ppci, pointer pglyphBase)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("to %p (%c), style %d alu %d\n", pDrawable,
 		  exaDrawableLocation(pDrawable), pGC->fillStyle, pGC->alu));
     exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
     exaPrepareAccessGC (pGC);
-    fbPolyGlyphBlt (pDrawable, pGC, x, y, nglyph, ppci, pglyphBase);
+    pGC->ops->PolyGlyphBlt (pDrawable, pGC, x, y, nglyph, ppci, pglyphBase);
     exaFinishAccessGC (pGC);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
 }
 
 void
@@ -264,16 +289,64 @@ ExaCheckPushPixels (GCPtr pGC, PixmapPtr pBitmap,
 		   DrawablePtr pDrawable,
 		   int w, int h, int x, int y)
 {
+    EXA_GC_PROLOGUE(pGC);
     EXA_FALLBACK(("from %p to %p (%c,%c)\n", pBitmap, pDrawable,
 		  exaDrawableLocation(&pBitmap->drawable),
 		  exaDrawableLocation(pDrawable)));
     exaPrepareAccess (pDrawable, EXA_PREPARE_DEST);
     exaPrepareAccess (&pBitmap->drawable, EXA_PREPARE_SRC);
     exaPrepareAccessGC (pGC);
-    fbPushPixels (pGC, pBitmap, pDrawable, w, h, x, y);
+    pGC->ops->PushPixels (pGC, pBitmap, pDrawable, w, h, x, y);
     exaFinishAccessGC (pGC);
     exaFinishAccess (&pBitmap->drawable, EXA_PREPARE_SRC);
     exaFinishAccess (pDrawable, EXA_PREPARE_DEST);
+    EXA_GC_EPILOGUE(pGC);
+}
+
+void
+ExaCheckCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
+{
+    DrawablePtr pDrawable = &pWin->drawable;
+    ScreenPtr pScreen = pDrawable->pScreen;
+    ExaScreenPriv(pScreen);
+    EXA_FALLBACK(("from %p\n", pWin));
+
+    /* being both src and dest, src is safest. */
+    exaPrepareAccess(pDrawable, EXA_PREPARE_SRC);
+    swap(pExaScr, pScreen, CopyWindow);
+    pScreen->CopyWindow (pWin, ptOldOrg, prgnSrc);
+    swap(pExaScr, pScreen, CopyWindow);
+    exaFinishAccess (pDrawable, EXA_PREPARE_SRC);
+}
+
+void
+ExaCheckGetImage(DrawablePtr pDrawable, int x, int y, int w, int h,
+		unsigned int format, unsigned long planeMask, char *d)
+{
+    BoxRec Box;
+    RegionRec Reg;
+    int xoff, yoff;
+    ScreenPtr pScreen = pDrawable->pScreen;
+    PixmapPtr pPix = exaGetDrawablePixmap (pDrawable);
+    ExaScreenPriv(pScreen);
+
+    EXA_FALLBACK(("from %p (%c)\n", pDrawable,
+		  exaDrawableLocation(pDrawable)));
+
+    exaGetDrawableDeltas(pDrawable, pPix, &xoff, &yoff);
+
+    Box.x1 = pDrawable->y + x + xoff;
+    Box.y1 = pDrawable->y + y + yoff;
+    Box.x2 = Box.x1 + w;
+    Box.y2 = Box.y1 + h;
+
+    REGION_INIT(pScreen, &Reg, &Box, 1);
+
+    exaPrepareAccessReg (pDrawable, EXA_PREPARE_SRC, &Reg);
+    swap(pExaScr, pScreen, GetImage);
+    pScreen->GetImage (pDrawable, x, y, w, h, format, planeMask, d);
+    swap(pExaScr, pScreen, GetImage);
+    exaFinishAccess (pDrawable, EXA_PREPARE_SRC);
 }
 
 void
@@ -284,9 +357,14 @@ ExaCheckGetSpans (DrawablePtr pDrawable,
 		 int nspans,
 		 char *pdstStart)
 {
+    ScreenPtr pScreen = pDrawable->pScreen;
+    ExaScreenPriv(pScreen);
+
     EXA_FALLBACK(("from %p (%c)\n", pDrawable, exaDrawableLocation(pDrawable)));
     exaPrepareAccess (pDrawable, EXA_PREPARE_SRC);
-    fbGetSpans (pDrawable, wMax, ppt, pwidth, nspans, pdstStart);
+    swap(pExaScr, pScreen, GetSpans);
+    pScreen->GetSpans (pDrawable, wMax, ppt, pwidth, nspans, pdstStart);
+    swap(pExaScr, pScreen, GetSpans);
     exaFinishAccess (pDrawable, EXA_PREPARE_SRC);
 }
 
@@ -304,6 +382,11 @@ ExaCheckComposite (CARD8      op,
                    CARD16     width,
                    CARD16     height)
 {
+    ScreenPtr pScreen = pDst->pDrawable->pScreen;
+#ifdef RENDER
+    PictureScreenPtr	ps = GetPictureScreen(pScreen);
+#endif /* RENDER */
+    ExaScreenPriv(pScreen);
     RegionRec region;
     int xoff, yoff;
 
@@ -314,15 +397,15 @@ ExaCheckComposite (CARD8      op,
      * may be used for moving them out.
      */
     if (pSrc->alphaMap && pSrc->alphaMap->pDrawable)
-	exaPrepareAccess(pSrc->alphaMap->pDrawable, EXA_PREPARE_AUX2);
+	exaPrepareAccess(pSrc->alphaMap->pDrawable, EXA_PREPARE_AUX_SRC);
     if (pMask && pMask->alphaMap && pMask->alphaMap->pDrawable)
-	exaPrepareAccess(pMask->alphaMap->pDrawable, EXA_PREPARE_AUX1);
+	exaPrepareAccess(pMask->alphaMap->pDrawable, EXA_PREPARE_AUX_MASK);
 
     if (!exaOpReadsDestination(op)) {
 	if (!miComputeCompositeRegion (&region, pSrc, pMask, pDst,
 				       xSrc, ySrc, xMask, yMask, xDst, yDst,
 				       width, height))
-	    return;
+	    goto skip;
 
 	exaGetDrawableDeltas (pDst->pDrawable,
 			      exaGetDrawablePixmap(pDst->pDrawable),
@@ -331,13 +414,13 @@ ExaCheckComposite (CARD8      op,
 	REGION_TRANSLATE(pScreen, &region, xoff, yoff);
 
 	if (pDst->alphaMap && pDst->alphaMap->pDrawable)
-	    exaPrepareAccessReg(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX0,
+	    exaPrepareAccessReg(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX_DEST,
 				&region);
 
 	exaPrepareAccessReg (pDst->pDrawable, EXA_PREPARE_DEST, &region);
     } else {
 	if (pDst->alphaMap && pDst->alphaMap->pDrawable)
-	    exaPrepareAccess(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX0);
+	    exaPrepareAccess(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX_DEST);
 
 	exaPrepareAccess (pDst->pDrawable, EXA_PREPARE_DEST);
     }
@@ -349,7 +432,9 @@ ExaCheckComposite (CARD8      op,
 	exaPrepareAccess (pSrc->pDrawable, EXA_PREPARE_SRC);
     if (pMask && pMask->pDrawable != NULL)
 	exaPrepareAccess (pMask->pDrawable, EXA_PREPARE_MASK);
-    fbComposite (op,
+#ifdef RENDER
+    swap(pExaScr, ps, Composite);
+    ps->Composite (op,
                  pSrc,
                  pMask,
                  pDst,
@@ -361,17 +446,21 @@ ExaCheckComposite (CARD8      op,
                  yDst,
                  width,
                  height);
+    swap(pExaScr, ps, Composite);
+#endif /* RENDER */
     if (pMask && pMask->pDrawable != NULL)
 	exaFinishAccess (pMask->pDrawable, EXA_PREPARE_MASK);
-    if (pMask && pMask->alphaMap && pMask->alphaMap->pDrawable)
-	exaFinishAccess(pMask->alphaMap->pDrawable, EXA_PREPARE_AUX1);
     if (pSrc->pDrawable != NULL)
 	exaFinishAccess (pSrc->pDrawable, EXA_PREPARE_SRC);
-    if (pSrc->alphaMap && pSrc->alphaMap->pDrawable)
-	exaFinishAccess(pSrc->alphaMap->pDrawable, EXA_PREPARE_AUX2);
     exaFinishAccess (pDst->pDrawable, EXA_PREPARE_DEST);
     if (pDst->alphaMap && pDst->alphaMap->pDrawable)
-	exaFinishAccess(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX0);
+	exaFinishAccess(pDst->alphaMap->pDrawable, EXA_PREPARE_AUX_DEST);
+
+skip:
+    if (pSrc->alphaMap && pSrc->alphaMap->pDrawable)
+	exaFinishAccess(pSrc->alphaMap->pDrawable, EXA_PREPARE_AUX_SRC);
+    if (pMask && pMask->alphaMap && pMask->alphaMap->pDrawable)
+	exaFinishAccess(pMask->alphaMap->pDrawable, EXA_PREPARE_AUX_MASK);
 
     REGION_UNINIT(pScreen, &region);
 }
@@ -383,68 +472,57 @@ ExaCheckAddTraps (PicturePtr	pPicture,
 		  int		ntrap,
 		  xTrap		*traps)
 {
+    ScreenPtr pScreen = pPicture->pDrawable->pScreen;
+#ifdef RENDER
+    PictureScreenPtr	ps = GetPictureScreen(pScreen);
+#endif /* RENDER */
+    ExaScreenPriv(pScreen);
+
     EXA_FALLBACK(("to pict %p (%c)\n",
 		  exaDrawableLocation(pPicture->pDrawable)));
     exaPrepareAccess(pPicture->pDrawable, EXA_PREPARE_DEST);
-    fbAddTraps (pPicture, x_off, y_off, ntrap, traps);
+#ifdef RENDER
+    swap(pExaScr, ps, AddTraps);
+    ps->AddTraps (pPicture, x_off, y_off, ntrap, traps);
+    swap(pExaScr, ps, AddTraps);
+#endif /* RENDER */
     exaFinishAccess(pPicture->pDrawable, EXA_PREPARE_DEST);
 }
 
 /**
  * Gets the 0,0 pixel of a pixmap.  Used for doing solid fills of tiled pixmaps
  * that happen to be 1x1.  Pixmap must be at least 8bpp.
- *
- * XXX This really belongs in fb, so it can be aware of tiling and etc.
  */
 CARD32
 exaGetPixmapFirstPixel (PixmapPtr pPixmap)
 {
-    CARD32 pixel;
-    void *fb;
-    Bool need_finish = FALSE;
-    BoxRec box;
-    RegionRec migration;
-    ExaPixmapPriv (pPixmap);
-    Bool sys_valid = pExaPixmap->pDamage &&
-	!miPointInRegion(&pExaPixmap->validSys, 0, 0,  &box);
-    Bool damaged = pExaPixmap->pDamage &&
- 	miPointInRegion(DamageRegion(pExaPixmap->pDamage), 0, 0, &box);
-    Bool offscreen = exaPixmapIsOffscreen(pPixmap);
-
-    fb = pExaPixmap->sys_ptr;
-
-    /* Try to avoid framebuffer readbacks */
-    if ((!offscreen && !sys_valid && !damaged) ||
-	(offscreen && (!sys_valid || damaged)))
-    {
-	box.x1 = 0;
-	box.y1 = 0;
-	box.x2 = 1;
-	box.y2 = 1;
-	REGION_INIT(pScreen, &migration, &box, 1);
-
-	need_finish = TRUE;
-
-	exaPrepareAccessReg(&pPixmap->drawable, EXA_PREPARE_SRC, &migration);
-	fb = pPixmap->devPrivate.ptr;
-    }
-
     switch (pPixmap->drawable.bitsPerPixel) {
     case 32:
-	pixel = *(CARD32 *)fb;
-	break;
+	{
+	    CARD32 pixel;
+
+	    pPixmap->drawable.pScreen->GetImage(&pPixmap->drawable, 0, 0, 1, 1,
+						ZPixmap, ~0, (char*)&pixel);
+	    return pixel;
+	}
     case 16:
-	pixel = *(CARD16 *)fb;
-	break;
+	{
+	    CARD16 pixel;
+
+	    pPixmap->drawable.pScreen->GetImage(&pPixmap->drawable, 0, 0, 1, 1,
+						ZPixmap, ~0, (char*)&pixel);
+	    return pixel;
+	}
+    case 8:
+	{
+	    CARD8 pixel;
+
+	    pPixmap->drawable.pScreen->GetImage(&pPixmap->drawable, 0, 0, 1, 1,
+						ZPixmap, ~0, (char*)&pixel);
+	    return pixel;
+	}
     default:
-	pixel = *(CARD8 *)fb;
-	break;
+	FatalError("%s called for invalid bpp %d\n", __FUNCTION__,
+		   pPixmap->drawable.bitsPerPixel);
     }
-
-    if (need_finish) {
-	exaFinishAccess(&pPixmap->drawable, EXA_PREPARE_SRC);
-	REGION_UNINIT(pScreen, &migration);
-    }
-
-    return pixel;
 }

@@ -63,7 +63,7 @@
  * want that. -- libv
  *
  */
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86CVTMode(int HDisplay, int VDisplay, float VRefresh, Bool Reduced,
 	    Bool Interlaced)
 {

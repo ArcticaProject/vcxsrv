@@ -102,7 +102,7 @@
  * XServer of fbset mode descriptions, from what I can tell).
  */
 
-_X_EXPORT DisplayModePtr
+DisplayModePtr
 xf86GTFMode(int h_pixels, int v_lines, float freq, int interlaced, int margins)
 {
     DisplayModeRec *mode = xnfcalloc(1, sizeof(DisplayModeRec));

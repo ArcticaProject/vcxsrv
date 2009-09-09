@@ -23,8 +23,12 @@
  * Author: Peter Hutterer
  */
 
-#ifndef XIPROPERTY_C
-#define XIPROPERTY_C
+#ifdef HAVE_DIX_CONFIG_H
+#include <dix-config.h>
+#endif
+
+#ifndef XIPROPERTY_H
+#define XIPROPERTY_H 1
 
 int ProcXListDeviceProperties     (ClientPtr client);
 int ProcXChangeDeviceProperty     (ClientPtr client);
@@ -43,6 +47,19 @@ void SRepXListDeviceProperties(ClientPtr client, int size,
 void SRepXGetDeviceProperty(ClientPtr client, int size,
                             xGetDevicePropertyReply *rep);
 
-void XIInitKnownProperties(void);
+/* XI2 request/reply handling  */
+int ProcXIListProperties        (ClientPtr client);
+int ProcXIChangeProperty        (ClientPtr client);
+int ProcXIDeleteProperty        (ClientPtr client);
+int ProcXIGetProperty           (ClientPtr client);
 
-#endif /* XIPROPERTY_C */
+int SProcXIListProperties       (ClientPtr client);
+int SProcXIChangeProperty       (ClientPtr client);
+int SProcXIDeleteProperty       (ClientPtr client);
+int SProcXIGetProperty          (ClientPtr client);
+
+void SRepXIListProperties(ClientPtr client, int size,
+                          xXIListPropertiesReply *rep);
+void SRepXIGetProperty(ClientPtr client, int size,
+                       xXIGetPropertyReply *rep);
+#endif /* XIPROPERTY_H */

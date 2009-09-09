@@ -33,8 +33,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "quartzCommon.h"
 
-#define NEED_REPLIES
-#define NEED_EVENTS
 #include "misc.h"
 #include "dixstruct.h"
 #include "globals.h"
@@ -49,7 +47,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <X11/Xatom.h>
 #include "darwin.h"
 #define _APPLEWM_SERVER_
-#include "X11/extensions/applewmstr.h"
+#include <X11/extensions/applewmproto.h>
 #include "applewmExt.h"
 #include "X11Application.h"
 
@@ -139,7 +137,7 @@ AppleWMSetScreenOrigin(
     WindowPtr pWin
 )
 {
-    long data[2];
+    int32_t data[2];
 
     data[0] = (dixScreenOrigins[pWin->drawable.pScreen->myNum].x
                 + darwinMainScreenX);
@@ -495,6 +493,55 @@ ProcAppleWMSetWindowLevel(register ClientPtr client)
 }
 
 static int
+ProcAppleWMSendPSN(register ClientPtr client)
+{
+    REQUEST(xAppleWMSendPSNReq);
+    int err;
+    
+    REQUEST_SIZE_MATCH(xAppleWMSendPSNReq);
+    
+    if(!appleWMProcs->SendPSN)
+        return BadRequest;
+
+    err = appleWMProcs->SendPSN(stuff->psn_hi, stuff->psn_lo);
+    if (err != Success) {
+        return err;
+    }
+
+    return (client->noClientException);
+}
+
+static int
+ProcAppleWMAttachTransient(register ClientPtr client)
+{
+    WindowPtr pWinChild, pWinParent;
+    REQUEST(xAppleWMAttachTransientReq);
+    int err;
+    
+    REQUEST_SIZE_MATCH(xAppleWMAttachTransientReq);
+    
+    if(!appleWMProcs->AttachTransient)
+        return BadRequest;
+
+    if (Success != dixLookupWindow(&pWinChild, stuff->child, client, DixReadAccess))
+        return BadValue;
+
+    if(stuff->parent) {
+        if(Success != dixLookupWindow(&pWinParent, stuff->parent, client, DixReadAccess))
+            return BadValue;
+    } else {
+        pWinParent = NULL;
+    }
+
+    err = appleWMProcs->AttachTransient(pWinChild, pWinParent);
+    if (err != Success) {
+        return err;
+    }
+
+    return (client->noClientException);
+}
+
+static int
 ProcAppleWMSetCanQuit(
     register ClientPtr client
 )
@@ -654,6 +701,10 @@ ProcAppleWMDispatch (
         return ProcAppleWMFrameHitTest(client);
     case X_AppleWMFrameDraw:
         return ProcAppleWMFrameDraw(client);
+    case X_AppleWMSendPSN:
+        return ProcAppleWMSendPSN(client);
+    case X_AppleWMAttachTransient:
+        return ProcAppleWMAttachTransient(client);
     default:
         return BadRequest;
     }

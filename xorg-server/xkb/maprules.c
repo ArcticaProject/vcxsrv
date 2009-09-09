@@ -36,7 +36,6 @@
 #define XOS_USE_NO_LOCKING
 #include <X11/Xos_r.h>
 
-#define NEED_EVENTS
 #include <X11/Xproto.h>
 #include <X11/X.h>
 #include <X11/Xos.h>
@@ -52,6 +51,8 @@
 #include <xkbsrv.h>
 
 /***====================================================================***/
+
+
 
 #define DFLT_LINE_SIZE	128
 
@@ -77,7 +78,7 @@ static void
 FreeInputLine(InputLine *line)
 {
     if (line->line!=line->buf)
-	_XkbFree(line->line);
+	xfree(line->line);
     line->line_num= 1;
     line->num_line= 0;
     line->sz_line= DFLT_LINE_SIZE;
@@ -90,11 +91,11 @@ InputLineAddChar(InputLine *line,int ch)
 {
     if (line->num_line>=line->sz_line) {
 	if (line->line==line->buf) {
-	    line->line= (char *)_XkbAlloc(line->sz_line*2);
+	    line->line= xalloc(line->sz_line*2);
 	    memcpy(line->line,line->buf,line->sz_line);
 	}
 	else {
-	    line->line=(char *)_XkbRealloc((char *)line->line,line->sz_line*2);
+	    line->line= xrealloc((char *)line->line,line->sz_line*2);
 	}
 	line->sz_line*= 2;
     }
@@ -194,15 +195,14 @@ Bool	endOfFile,spacePending,slashPending,inComment;
 #define	TYPES		6
 #define	COMPAT		7
 #define	GEOMETRY	8
-#define	KEYMAP		9
-#define	MAX_WORDS	10
+#define	MAX_WORDS	9
 
 #define	PART_MASK	0x000F
 #define	COMPONENT_MASK	0x03F0
 
 static	char *	cname[MAX_WORDS] = {
 	"model", "layout", "variant", "option", 
-	"keycodes", "symbols", "types", "compat", "geometry", "keymap"
+	"keycodes", "symbols", "types", "compat", "geometry"
 };
 
 typedef	struct _RemapSpec {
@@ -337,13 +337,6 @@ Bool		found;
 	remap->num_remap= 0;
 	return;
    }
-   if (((present&COMPONENT_MASK)&(1<<KEYMAP))&&
-				((present&COMPONENT_MASK)!=(1<<KEYMAP))) {
-	DebugF("Keymap cannot appear with other components\n");
-	DebugF("Illegal mapping ignored\n");
-	remap->num_remap= 0;
-	return;
-   }
    remap->number++;
    return;
 }
@@ -460,7 +453,6 @@ Bool 		append = False;
     rule->types= _XkbDupString(tmp.name[TYPES]);
     rule->compat= _XkbDupString(tmp.name[COMPAT]);
     rule->geometry= _XkbDupString(tmp.name[GEOMETRY]);
-    rule->keymap= NULL;
 
     rule->layout_num = rule->variant_num = 0;
     for (i = 0; i < nread; i++) {
@@ -561,9 +553,9 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
 static void
 FreeMultiDefs(XkbRF_MultiDefsPtr defs)
 {
-  if (defs->options) _XkbFree(defs->options);
-  if (defs->layout[1])  _XkbFree(defs->layout[1]);
-  if (defs->variant[1])  _XkbFree(defs->variant[1]);
+  if (defs->options) xfree(defs->options);
+  if (defs->layout[1])  xfree(defs->layout[1]);
+  if (defs->variant[1])  xfree(defs->variant[1]);
 }
 
 static void
@@ -777,7 +769,7 @@ int	len, ndx;
 	}
 	str= index(&str[0],'%');
     }
-    name= (char *)_XkbAlloc(len+1);
+    name= xalloc(len+1);
     str= orig;
     outstr= name;
     while (*str!='\0') {
@@ -827,7 +819,7 @@ int	len, ndx;
     }
     *outstr++= '\0';
     if (orig!=name)
-	_XkbFree(orig);
+	xfree(orig);
     return name;
 }
 
@@ -860,15 +852,13 @@ XkbRF_GetComponents(	XkbRF_RulesPtr		rules,
 	names->compat= XkbRF_SubstituteVars(names->compat, &mdefs);
     if (names->geometry)
 	names->geometry= XkbRF_SubstituteVars(names->geometry, &mdefs);
-    if (names->keymap)	
-	names->keymap= XkbRF_SubstituteVars(names->keymap, &mdefs);
 
     FreeMultiDefs(&mdefs);
     return (names->keycodes && names->symbols && names->types &&
-		names->compat && names->geometry ) || names->keymap;
+		names->compat && names->geometry);
 }
 
-XkbRF_RulePtr
+static XkbRF_RulePtr
 XkbRF_AddRule(XkbRF_RulesPtr	rules)
 {
     if (rules->sz_rules<1) {
@@ -890,7 +880,7 @@ XkbRF_AddRule(XkbRF_RulesPtr	rules)
     return &rules->rules[rules->num_rules++];
 }
 
-XkbRF_GroupPtr
+static XkbRF_GroupPtr
 XkbRF_AddGroup(XkbRF_RulesPtr	rules)
 {
     if (rules->sz_groups<1) {
@@ -979,273 +969,13 @@ Bool		ok;
 
 /***====================================================================***/
 
-#define HEAD_NONE	0
-#define HEAD_MODEL	1
-#define HEAD_LAYOUT	2
-#define HEAD_VARIANT	3
-#define HEAD_OPTION	4
-#define	HEAD_EXTRA	5
-
-XkbRF_VarDescPtr
-XkbRF_AddVarDesc(XkbRF_DescribeVarsPtr	vars)
+XkbRF_RulesPtr
+XkbRF_Create(void)
 {
-    if (vars->sz_desc<1) {
-	vars->sz_desc= 16;
-	vars->num_desc= 0;
-	vars->desc= _XkbTypedCalloc(vars->sz_desc,XkbRF_VarDescRec);
-    }
-    else if (vars->num_desc>=vars->sz_desc) {
-	vars->sz_desc*= 2;
-	vars->desc= _XkbTypedRealloc(vars->desc,vars->sz_desc,XkbRF_VarDescRec);
-    }
-    if (!vars->desc) {
-	vars->sz_desc= vars->num_desc= 0;
-	DebugF("Allocation failure in XkbRF_AddVarDesc\n");
-	return NULL;
-    }
-    vars->desc[vars->num_desc].name= NULL;
-    vars->desc[vars->num_desc].desc= NULL;
-    return &vars->desc[vars->num_desc++];
-}
-
-XkbRF_VarDescPtr
-XkbRF_AddVarDescCopy(XkbRF_DescribeVarsPtr vars,XkbRF_VarDescPtr from)
-{
-XkbRF_VarDescPtr	nd;
-
-    if ((nd=XkbRF_AddVarDesc(vars))!=NULL) {
-	nd->name= _XkbDupString(from->name);
-	nd->desc= _XkbDupString(from->desc);
-    }
-    return nd;
-}
-
-XkbRF_DescribeVarsPtr 
-XkbRF_AddVarToDescribe(XkbRF_RulesPtr rules,char *name)
-{
-    if (rules->sz_extra<1) {
-	rules->num_extra= 0;
-	rules->sz_extra= 1;
-	rules->extra_names= _XkbTypedCalloc(rules->sz_extra,char *);
-	rules->extra= _XkbTypedCalloc(rules->sz_extra, XkbRF_DescribeVarsRec);
-    }
-    else if (rules->num_extra>=rules->sz_extra) {
-	rules->sz_extra*= 2;
-	rules->extra_names= _XkbTypedRealloc(rules->extra_names,rules->sz_extra,
-								char *);
-	rules->extra=_XkbTypedRealloc(rules->extra, rules->sz_extra,
-							XkbRF_DescribeVarsRec);
-    }
-    if ((!rules->extra_names)||(!rules->extra)) {
-	DebugF("allocation error in extra parts\n");
-	rules->sz_extra= rules->num_extra= 0;
-	rules->extra_names= NULL;
-	rules->extra= NULL;
-	return NULL;
-    }
-    rules->extra_names[rules->num_extra]= _XkbDupString(name);
-    bzero(&rules->extra[rules->num_extra],sizeof(XkbRF_DescribeVarsRec));
-    return &rules->extra[rules->num_extra++];
-}
-
-Bool
-XkbRF_LoadDescriptions(FILE *file,XkbRF_RulesPtr rules)
-{
-InputLine		line;
-XkbRF_VarDescRec	tmp;
-char			*tok;
-int			len,headingtype,extra_ndx = 0;
-
-    bzero((char *)&tmp, sizeof(XkbRF_VarDescRec));
-    headingtype = HEAD_NONE;
-    InitInputLine(&line);
-    for ( ; GetInputLine(file,&line,False); line.num_line= 0) {
-	if (line.line[0]=='!') {
-	    tok = strtok(&(line.line[1]), " \t");
-	    if (strcasecmp(tok,"model") == 0)
-		headingtype = HEAD_MODEL;
-	    else if (strcasecmp(tok,"layout") == 0)
-		headingtype = HEAD_LAYOUT;
-	    else if (strcasecmp(tok,"variant") == 0)
-		headingtype = HEAD_VARIANT;
-	    else if (strcasecmp(tok,"option") == 0)
-		headingtype = HEAD_OPTION;
-	    else {
-		int i;
-		headingtype = HEAD_EXTRA;
-		extra_ndx= -1;
-		for (i=0;(i<rules->num_extra)&&(extra_ndx<0);i++) {
-		    if (!strcasecmp(tok,rules->extra_names[i]))
-			extra_ndx= i;
-		}
-		if (extra_ndx<0) {
-		    XkbRF_DescribeVarsPtr	var;
-		    DebugF("Extra heading \"%s\" encountered\n",tok);
-		    var= XkbRF_AddVarToDescribe(rules,tok);
-		    if (var)
-			 extra_ndx= var-rules->extra;
-		    else headingtype= HEAD_NONE;
-		}
-	    }
-	    continue;
-	}
-
-	if (headingtype == HEAD_NONE) {
-	    DebugF("Must have a heading before first line of data\n");
-	    DebugF("Illegal line of data ignored\n");
-	    continue;
-	}
-
-	len = strlen(line.line);
-	if ((tmp.name= strtok(line.line, " \t")) == NULL) {
-	    DebugF("Huh? No token on line\n");
-	    DebugF("Illegal line of data ignored\n");
-	    continue;
-	}
-	if (strlen(tmp.name) == len) {
-	    DebugF("No description found\n");
-	    DebugF("Illegal line of data ignored\n");
-	    continue;
-	}
-
-	tok = line.line + strlen(tmp.name) + 1;
-	while ((*tok!='\n')&&isspace(*tok))
-		tok++;
-	if (*tok == '\0') {
-	    DebugF("No description found\n");
-	    DebugF("Illegal line of data ignored\n");
-	    continue;
-	}
-	tmp.desc= tok;
-	switch (headingtype) {
-	    case HEAD_MODEL:
-		XkbRF_AddVarDescCopy(&rules->models,&tmp);
-		break;
-	    case HEAD_LAYOUT:
-		XkbRF_AddVarDescCopy(&rules->layouts,&tmp);
-		break;
-	    case HEAD_VARIANT:
-		XkbRF_AddVarDescCopy(&rules->variants,&tmp);
-		break;
-	    case HEAD_OPTION:
-		XkbRF_AddVarDescCopy(&rules->options,&tmp);
-		break;
-	    case HEAD_EXTRA:
-		XkbRF_AddVarDescCopy(&rules->extra[extra_ndx],&tmp);
-		break;
-	}
-    }
-    FreeInputLine(&line);
-    if ((rules->models.num_desc==0) && (rules->layouts.num_desc==0) &&
-	(rules->variants.num_desc==0) && (rules->options.num_desc==0) &&
-	(rules->num_extra==0)) {
-	return False;
-    }
-    return True;
-}
-
-Bool
-XkbRF_LoadDescriptionsByName(char *base,char *locale,XkbRF_RulesPtr rules)
-{
-FILE *		file;
-char		buf[PATH_MAX];
-Bool		ok;
-
-    if ((!base)||(!rules))
-	return False;
-    if (locale) {
-	if (strlen(base)+strlen(locale)+6 > PATH_MAX)
-	    return False;
-	sprintf(buf,"%s-%s.lst", base, locale);
-    }
-    else {
-	if (strlen(base)+5 > PATH_MAX)
-	    return False;
-	sprintf(buf,"%s.lst", base);
-    }
-
-    file= fopen(buf, "r");
-    if ((!file)&&(locale)) { /* fallback if locale was specified */
-	sprintf(buf,"%s.lst", base);
-
-	file= fopen(buf, "r");
-    }
-    if (!file)
-	return False;
-    ok= XkbRF_LoadDescriptions(file,rules);
-    fclose(file);
-    return ok;
+    return _XkbTypedCalloc(1, XkbRF_RulesRec);
 }
 
 /***====================================================================***/
-
-XkbRF_RulesPtr
-XkbRF_Load(char *base,char *locale,Bool wantDesc,Bool wantRules)
-{
-XkbRF_RulesPtr	rules;
-
-    if ((!base)||((!wantDesc)&&(!wantRules)))
-	return NULL;
-    if ((rules=_XkbTypedCalloc(1,XkbRF_RulesRec))==NULL)
-	return NULL;
-    if (wantDesc&&(!XkbRF_LoadDescriptionsByName(base,locale,rules))) {
-	XkbRF_Free(rules,True);
-	return NULL;
-    }
-    if (wantRules&&(!XkbRF_LoadRulesByName(base,locale,rules))) {
-	XkbRF_Free(rules,True);
-	return NULL;
-    }
-    return rules;
-}
-
-XkbRF_RulesPtr
-XkbRF_Create(int szRules,int szExtra) 
-{
-XkbRF_RulesPtr rules;
-
-    if ((rules=_XkbTypedCalloc(1,XkbRF_RulesRec))==NULL)
-	return NULL;
-    if (szRules>0) {
-	rules->sz_rules= szRules; 
-	rules->rules= _XkbTypedCalloc(rules->sz_rules,XkbRF_RuleRec);
-	if (!rules->rules) {
-	    _XkbFree(rules);
-	    return NULL;
-	}
-    }
-    if (szExtra>0) {
-	rules->sz_extra= szExtra; 
-	rules->extra= _XkbTypedCalloc(rules->sz_extra,XkbRF_DescribeVarsRec);
-	if (!rules->extra) {
-	    if (rules->rules)
-		_XkbFree(rules->rules);
-	    _XkbFree(rules);
-	    return NULL;
-	}
-    }
-    return rules;
-}
-
-/***====================================================================***/
-
-static void
-XkbRF_ClearVarDescriptions(XkbRF_DescribeVarsPtr var)
-{
-register int i;
-    
-    for (i=0;i<var->num_desc;i++) {
-	if (var->desc[i].name)
-	    _XkbFree(var->desc[i].name);
-	if (var->desc[i].desc)
-	    _XkbFree(var->desc[i].desc);
-	var->desc[i].name= var->desc[i].desc= NULL;
-    }
-    if (var->desc)
-	_XkbFree(var->desc);
-    var->desc= NULL;
-    return;
-}
 
 void
 XkbRF_Free(XkbRF_RulesPtr rules,Bool freeRules)
@@ -1256,46 +986,34 @@ XkbRF_GroupPtr	group;
 
     if (!rules)
 	return;
-    XkbRF_ClearVarDescriptions(&rules->models);
-    XkbRF_ClearVarDescriptions(&rules->layouts);
-    XkbRF_ClearVarDescriptions(&rules->variants);
-    XkbRF_ClearVarDescriptions(&rules->options);
-    if (rules->extra) {
-	for (i = 0; i < rules->num_extra; i++) {
-	    XkbRF_ClearVarDescriptions(&rules->extra[i]);
-	}
-	_XkbFree(rules->extra);
-	rules->num_extra= rules->sz_extra= 0;
-	rules->extra= NULL;
-    }
     if (rules->rules) {
 	for (i=0,rule=rules->rules;i<rules->num_rules;i++,rule++) {
-	    if (rule->model)	_XkbFree(rule->model);
-	    if (rule->layout)	_XkbFree(rule->layout);
-	    if (rule->variant)	_XkbFree(rule->variant);
-	    if (rule->option)	_XkbFree(rule->option);
-	    if (rule->keycodes)	_XkbFree(rule->keycodes);
-	    if (rule->symbols)	_XkbFree(rule->symbols);
-	    if (rule->types)	_XkbFree(rule->types);
-	    if (rule->compat)	_XkbFree(rule->compat);
-	    if (rule->geometry)	_XkbFree(rule->geometry);
+	    if (rule->model)	xfree(rule->model);
+	    if (rule->layout)	xfree(rule->layout);
+	    if (rule->variant)	xfree(rule->variant);
+	    if (rule->option)	xfree(rule->option);
+	    if (rule->keycodes)	xfree(rule->keycodes);
+	    if (rule->symbols)	xfree(rule->symbols);
+	    if (rule->types)	xfree(rule->types);
+	    if (rule->compat)	xfree(rule->compat);
+	    if (rule->geometry)	xfree(rule->geometry);
 	    bzero((char *)rule,sizeof(XkbRF_RuleRec));
 	}
-	_XkbFree(rules->rules);
+	xfree(rules->rules);
 	rules->num_rules= rules->sz_rules= 0;
 	rules->rules= NULL;
     }
 
     if (rules->groups) {
 	for (i=0, group=rules->groups;i<rules->num_groups;i++,group++) {
-	    if (group->name)	_XkbFree(group->name);
-	    if (group->words)	_XkbFree(group->words);
+	    if (group->name)	xfree(group->name);
+	    if (group->words)	xfree(group->words);
 	}
-	_XkbFree(rules->groups);
+	xfree(rules->groups);
 	rules->num_groups= 0;
 	rules->groups= NULL;
     }
     if (freeRules)
-	_XkbFree(rules);
+	xfree(rules);
     return;
 }

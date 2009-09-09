@@ -50,8 +50,6 @@ SOFTWARE.
  *
  */
 
-#define	 NEED_EVENTS
-#define	 NEED_REPLIES
 #ifdef HAVE_DIX_CONFIG_H
 #include <dix-config.h>
 #endif
@@ -106,22 +104,22 @@ ProcXAllowDeviceEvents(ClientPtr client)
 
     switch (stuff->mode) {
     case ReplayThisDevice:
-	AllowSome(client, time, thisdev, NOT_GRABBED, FALSE);
+	AllowSome(client, time, thisdev, NOT_GRABBED);
 	break;
     case SyncThisDevice:
-	AllowSome(client, time, thisdev, FREEZE_NEXT_EVENT, FALSE);
+	AllowSome(client, time, thisdev, FREEZE_NEXT_EVENT);
 	break;
     case AsyncThisDevice:
-	AllowSome(client, time, thisdev, THAWED, FALSE);
+	AllowSome(client, time, thisdev, THAWED);
 	break;
     case AsyncOtherDevices:
-	AllowSome(client, time, thisdev, THAW_OTHERS, FALSE);
+	AllowSome(client, time, thisdev, THAW_OTHERS);
 	break;
     case SyncAll:
-	AllowSome(client, time, thisdev, FREEZE_BOTH_NEXT_EVENT, FALSE);
+	AllowSome(client, time, thisdev, FREEZE_BOTH_NEXT_EVENT);
 	break;
     case AsyncAll:
-	AllowSome(client, time, thisdev, THAWED_BOTH, FALSE);
+	AllowSome(client, time, thisdev, THAWED_BOTH);
 	break;
     default:
 	client->errorValue = stuff->mode;

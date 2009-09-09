@@ -448,11 +448,9 @@ winProcSetSelectionOwner (ClientPtr client)
    * an owned to not owned transition was detected,
    * and we currently own the Win32 clipboard.
    */
-  if (None == stuff->window
-      && (None == s_iOwners[CLIP_OWN_PRIMARY]
-	  || g_iClipboardWindow == s_iOwners[CLIP_OWN_PRIMARY])
-      && (None == s_iOwners[CLIP_OWN_CLIPBOARD]
-	  || g_iClipboardWindow == s_iOwners[CLIP_OWN_CLIPBOARD])
+  if (stuff->window == None
+      && s_iOwners[CLIP_OWN_PRIMARY] == None
+      && s_iOwners[CLIP_OWN_CLIPBOARD] == None
       && fOwnedToNotOwned
       && g_hwndClipboard != NULL
       && g_hwndClipboard == GetClipboardOwner ())
@@ -469,10 +467,6 @@ winProcSetSelectionOwner (ClientPtr client)
       EmptyClipboard ();
       CloseClipboard ();
 
-      /* Clear X selection ownership (might still be marked as us owning) */
-      s_iOwners[CLIP_OWN_PRIMARY] = None;
-      s_iOwners[CLIP_OWN_CLIPBOARD] = None;
-      
       goto winProcSetSelectionOwner_Done;
     }
 

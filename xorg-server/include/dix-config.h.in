@@ -124,6 +124,9 @@
 /* Have Quartz */
 #undef XQUARTZ
 
+/* Support application updating through sparkle. */
+#undef XQUARTZ_SPARKLE
+
 /* Build a standalone xpbproxy */
 #undef STANDALONE_XPBPROXY
 
@@ -314,15 +317,6 @@
 
 /* Support Xinerama extension */
 #undef XINERAMA
-
-/* Build XKB */
-#undef XKB
-
-/* Enable XKB per default */
-#undef XKB_DFLT_DISABLED
-
-/* Build XKB server */
-#undef XKB_IN_SERVER
 
 /* Vendor release */
 #undef XORG_RELEASE

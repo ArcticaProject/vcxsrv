@@ -63,6 +63,10 @@
 # include "xf86_OSlib.h"
 # include "inputstr.h"
 
+#ifdef HAVE_STROPTS_H
+# include <stropts.h>
+#endif
+
 /*
  * Linux libc5 defines FASYNC, but not O_ASYNC.  Don't know if it is
  * functional or not.
@@ -71,11 +75,11 @@
 #  define O_ASYNC FASYNC
 #endif
 
-#ifdef MAX_DEVICES
-/* MAX_DEVICES represents the maximimum number of input devices usable
+#ifdef MAXDEVICES
+/* MAXDEVICES represents the maximimum number of input devices usable
  * at the same time plus one entry for DRM support.
  */
-# define MAX_FUNCS   (MAX_DEVICES + 1)
+# define MAX_FUNCS   (MAXDEVICES + 1)
 #else
 # define MAX_FUNCS 16
 #endif
@@ -132,13 +136,14 @@ xf86IsPipe (int fd)
     return S_ISFIFO(buf.st_mode);
 }
 
-_X_EXPORT int
+int
 xf86InstallSIGIOHandler(int fd, void (*f)(int, void *), void *closure)
 {
     struct sigaction sa;
     struct sigaction osa;
     int	i;
     int blocked;
+    int installed = FALSE;
 
     for (i = 0; i < MAX_FUNCS; i++)
     {
@@ -147,15 +152,30 @@ xf86InstallSIGIOHandler(int fd, void (*f)(int, void *), void *closure)
 	    if (xf86IsPipe (fd))
 		return 0;
 	    blocked = xf86BlockSIGIO();
+#ifdef O_ASYNC
 	    if (fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_ASYNC) == -1) {
-		xf86Msg(X_WARNING, "fcntl(%d, O_ASYNC): %s\n", 
+		xf86Msg(X_WARNING, "fcntl(%d, O_ASYNC): %s\n",
 			fd, strerror(errno));
-		xf86UnblockSIGIO(blocked);
-		return 0;
+	    } else {
+		if (fcntl(fd, F_SETOWN, getpid()) == -1) {
+		    xf86Msg(X_WARNING, "fcntl(%d, F_SETOWN): %s\n",
+			    fd, strerror(errno));
+		} else {
+		    installed = TRUE;
+		}
 	    }
-	    if (fcntl(fd, F_SETOWN, getpid()) == -1) {
-		xf86Msg(X_WARNING, "fcntl(%d, F_SETOWN): %s\n", 
-			fd, strerror(errno));
+#endif
+#ifdef I_SETSIG /* System V Streams - used on Solaris for input devices */
+	    if (!installed && isastream(fd)) {
+		if (ioctl(fd, I_SETSIG, S_INPUT | S_ERROR | S_HANGUP) == -1) {
+		    xf86Msg(X_WARNING, "fcntl(%d, I_SETSIG): %s\n",
+			    fd, strerror(errno));
+		} else {
+		    installed = TRUE;
+		}
+	    }
+#endif
+	    if (!installed) {
 		xf86UnblockSIGIO(blocked);
 		return 0;
 	    }
@@ -186,7 +206,7 @@ xf86InstallSIGIOHandler(int fd, void (*f)(int, void *), void *closure)
     return 0;
 }
 
-_X_EXPORT int
+int
 xf86RemoveSIGIOHandler(int fd)
 {
     struct sigaction sa;
@@ -221,7 +241,17 @@ xf86RemoveSIGIOHandler(int fd)
     }
     if (ret)
     {
+#ifdef O_ASYNC
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~O_ASYNC);
+#endif
+#ifdef I_SETSIG
+	if (isastream(fd)) {
+	    if (ioctl(fd, I_SETSIG, 0) == -1) {
+		xf86Msg(X_WARNING, "fcntl(%d, I_SETSIG, 0): %s\n",
+			fd, strerror(errno));
+	    }
+	}
+#endif
 	xf86SigIOMax = max;
 	xf86SigIOMaxFd = maxfd;
 	if (!max)
@@ -236,7 +266,7 @@ xf86RemoveSIGIOHandler(int fd)
     return ret;
 }
 
-_X_EXPORT int
+int
 xf86BlockSIGIO (void)
 {
     sigset_t	set, old;
@@ -249,7 +279,7 @@ xf86BlockSIGIO (void)
     return ret; 
 }
 
-_X_EXPORT void
+void
 xf86UnblockSIGIO (int wasset)
 {
     sigset_t	set;

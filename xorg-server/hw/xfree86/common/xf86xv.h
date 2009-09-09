@@ -112,6 +112,8 @@ typedef int (* ReputImageFuncPtr)( ScrnInfoPtr pScrn, short drw_x, short drw_y,
 typedef int (*QueryImageAttributesFuncPtr)(ScrnInfoPtr pScrn, 
 	int image, unsigned short *width, unsigned short *height, 
 	int *pitches, int *offsets);
+typedef void (*ClipNotifyFuncPtr)(ScrnInfoPtr pScrn, pointer data,
+                                  WindowPtr window, int dx, int dy);
 
 typedef enum {
     XV_OFF,
@@ -165,6 +167,7 @@ typedef struct {
   PutImageFuncPtr PutImage;
   ReputImageFuncPtr ReputImage;
   QueryImageAttributesFuncPtr QueryImageAttributes;
+  ClipNotifyFuncPtr ClipNotify;
 } XF86VideoAdaptorRec, *XF86VideoAdaptorPtr;
 
 typedef struct {
@@ -191,7 +194,7 @@ typedef struct {
   XF86AttributePtr attributes;
 } XF86OffscreenImageRec, *XF86OffscreenImagePtr;
 
-Bool
+extern _X_EXPORT Bool
 xf86XVScreenInit(
    ScreenPtr pScreen, 
    XF86VideoAdaptorPtr 	*Adaptors,
@@ -201,41 +204,41 @@ xf86XVScreenInit(
 typedef int (* xf86XVInitGenericAdaptorPtr)(ScrnInfoPtr pScrn,
 	XF86VideoAdaptorPtr **Adaptors);
 
-int
+extern _X_EXPORT int
 xf86XVRegisterGenericAdaptorDriver(
     xf86XVInitGenericAdaptorPtr InitFunc
 );
 
-int
+extern _X_EXPORT int
 xf86XVListGenericAdaptors(
     ScrnInfoPtr          pScrn,
     XF86VideoAdaptorPtr  **Adaptors
 );
 
-Bool 
+extern _X_EXPORT Bool
 xf86XVRegisterOffscreenImages(
    ScreenPtr pScreen,
    XF86OffscreenImagePtr images,
    int num
 );
 
-XF86OffscreenImagePtr
+extern _X_EXPORT XF86OffscreenImagePtr
 xf86XVQueryOffscreenImages(
    ScreenPtr pScreen,
    int *num
 );
    
-XF86VideoAdaptorPtr xf86XVAllocateVideoAdaptorRec(ScrnInfoPtr pScrn);
+extern _X_EXPORT XF86VideoAdaptorPtr xf86XVAllocateVideoAdaptorRec(ScrnInfoPtr pScrn);
 
-void xf86XVFreeVideoAdaptorRec(XF86VideoAdaptorPtr ptr);
+extern _X_EXPORT void xf86XVFreeVideoAdaptorRec(XF86VideoAdaptorPtr ptr);
 
-void
+extern _X_EXPORT void
 xf86XVFillKeyHelper (ScreenPtr pScreen, CARD32 key, RegionPtr clipboxes);
 
-void
+extern _X_EXPORT void
 xf86XVFillKeyHelperDrawable (DrawablePtr pDraw, CARD32 key, RegionPtr clipboxes);
 
-Bool
+extern _X_EXPORT Bool
 xf86XVClipVideoHelper(
     BoxPtr dst,
     INT32 *xa,
@@ -247,7 +250,7 @@ xf86XVClipVideoHelper(
     INT32 height
 );
 
-void
+extern _X_EXPORT void
 xf86XVCopyYUV12ToPacked(
     const void *srcy,
     const void *srcv,
@@ -260,7 +263,7 @@ xf86XVCopyYUV12ToPacked(
     int w
 );
 
-void
+extern _X_EXPORT void
 xf86XVCopyPacked(
     const void *src,
     void *dst,
@@ -269,5 +272,9 @@ xf86XVCopyPacked(
     int h,
     int w
 );
+
+extern _X_EXPORT DevPrivateKey (*XvGetScreenKeyProc)(void);
+extern _X_EXPORT unsigned long (*XvGetRTPortProc)(void);
+extern _X_EXPORT int (*XvScreenInitProc)(ScreenPtr);
 
 #endif  /* _XF86XV_H_ */

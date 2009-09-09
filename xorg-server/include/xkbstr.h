@@ -29,12 +29,13 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <X11/extensions/XKB.h>
 
-#define	XkbCharToInt(v)		((v)&0x80?(int)((v)|(~0xff)):(int)((v)&0x7f))
-#define	XkbIntTo2Chars(i,h,l)	(((h)=((i>>8)&0xff)),((l)=((i)&0xff)))
+#define	XkbCharToInt(v) ((int) ((v) & 0x80 ? ((v) | (~0xff)) : ((v) & 0x7f)))
+#define	XkbIntTo2Chars(i, h, l) ((h) = (i >> 8) & 0xff, (l) = (i) & 0xff)
 
 #if defined(WORD64) && defined(UNSIGNEDBITFIELDS)
-#define	Xkb2CharsToInt(h,l)	((h)&0x80?(int)(((h)<<8)|(l)|(~0xffff)):\
-					  (int)(((h)<<8)|(l)&0x7fff))
+#define	Xkb2CharsToInt(h, l) ((int) ((h) & 0x80 ? \
+                              (((h) << 8) | (l) | (~0xffff)) : \
+                              (((h) << 8) | (l) & 0x7fff))
 #else
 #define	Xkb2CharsToInt(h,l)	((short)(((h)<<8)|(l)))
 #endif
@@ -44,20 +45,30 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 	 */
 
 typedef struct _XkbStateRec {
-	unsigned char	group;
+	unsigned char   group; /* base + latched + locked */
+	/* FIXME: Why are base + latched short and not char?? */
+	unsigned short  base_group; /* physically ... down? */
+	unsigned short  latched_group;
 	unsigned char   locked_group;
-	unsigned short	base_group;
-	unsigned short	latched_group;
-	unsigned char	mods;
-	unsigned char	base_mods;
-	unsigned char	latched_mods;
-	unsigned char	locked_mods;
-	unsigned char	compat_state;
-	unsigned char	grab_mods;
-	unsigned char	compat_grab_mods;
-	unsigned char	lookup_mods;
-	unsigned char	compat_lookup_mods;
-	unsigned short	ptr_buttons;
+
+	unsigned char   mods; /* base + latched + locked */
+	unsigned char   base_mods; /* physically down */
+	unsigned char   latched_mods;
+	unsigned char   locked_mods;
+
+	unsigned char   compat_state; /* mods + group for core state */
+
+	/* grab mods = all depressed and latched mods, _not_ locked mods */
+	unsigned char   grab_mods; /* grab mods minus internal mods */
+	unsigned char   compat_grab_mods; /* grab mods + group for core state,
+	                                     but not locked groups if
+                                             IgnoreGroupLocks set */
+
+	/* effective mods = all mods (depressed, latched, locked) */
+	unsigned char   lookup_mods; /* effective mods minus internal mods */
+	unsigned char   compat_lookup_mods; /* effective mods + group */
+
+	unsigned short  ptr_buttons; /* core pointer buttons */
 } XkbStateRec,*XkbStatePtr;
 #define	XkbStateFieldFromRec(s)	XkbBuildCoreState((s)->lookup_mods,(s)->group)
 #define	XkbGrabStateFromRec(s)	XkbBuildCoreState((s)->grab_mods,(s)->group)
@@ -88,7 +99,8 @@ typedef struct _XkbKeyType {
 #define	XkbOutOfRangeGroupInfo(g)	((g)&0xf0)
 #define	XkbOutOfRangeGroupAction(g)	((g)&0xc0)
 #define	XkbOutOfRangeGroupNumber(g)	(((g)&0x30)>>4)
-#define	XkbSetGroupInfo(g,w,n)	(((w)&0xc0)|(((n)&3)<<4)|((g)&0x0f))
+#define	XkbSetGroupInfo(g, w, n) (((w) & 0xc0) | (((n) & 3) << 4) | \
+                                  ((g) & 0x0f))
 #define	XkbSetNumGroups(g,n)	(((g)&0xf0)|((n)&0x0f))
 
 	/*
@@ -111,17 +123,19 @@ typedef struct _XkbModAction {
 	unsigned char	flags;
 	unsigned char	mask;
 	unsigned char	real_mods;
+        /* FIXME: Make this an int. */
 	unsigned char	vmods1;
 	unsigned char	vmods2;
 } XkbModAction;
-#define	XkbModActionVMods(a)      \
-	((short)(((a)->vmods1<<8)|((a)->vmods2)))
+#define	XkbModActionVMods(a) ((short) (((a)->vmods1 << 8) | (a)->vmods2))
 #define	XkbSetModActionVMods(a,v) \
-	(((a)->vmods1=(((v)>>8)&0xff)),(a)->vmods2=((v)&0xff))
+	((a)->vmods1 = (((v) >> 8) & 0xff), \
+         (a)->vmods2 = (v) & 0xff)
 
 typedef struct _XkbGroupAction {
 	unsigned char	type;
 	unsigned char	flags;
+        /* FIXME: Make this an int. */
 	char		group_XXX;
 } XkbGroupAction;
 #define	XkbSAGroup(a)		(XkbCharToInt((a)->group_XXX))
@@ -132,6 +146,7 @@ typedef struct _XkbISOAction {
 	unsigned char	flags;
 	unsigned char	mask;
 	unsigned char	real_mods;
+        /* FIXME: Make this an int. */
 	char		group_XXX;
 	unsigned char	affect;
 	unsigned char	vmods1;
@@ -141,6 +156,7 @@ typedef struct _XkbISOAction {
 typedef struct _XkbPtrAction {
 	unsigned char	type;
 	unsigned char	flags;
+        /* FIXME: Make this an int. */
 	unsigned char	high_XXX;
 	unsigned char	low_XXX;
 	unsigned char	high_YYY;
@@ -165,7 +181,7 @@ typedef struct _XkbPtrDfltAction {
 	char		valueXXX;
 } XkbPtrDfltAction;
 #define	XkbSAPtrDfltValue(a)		(XkbCharToInt((a)->valueXXX))
-#define	XkbSASetPtrDfltValue(a,c)	((a)->valueXXX= ((c)&0xff))
+#define	XkbSASetPtrDfltValue(a, c) ((a)->valueXXX = (c) & 0xff)
 
 typedef struct _XkbSwitchScreenAction {
 	unsigned char	type;
@@ -173,24 +189,25 @@ typedef struct _XkbSwitchScreenAction {
 	char		screenXXX;
 } XkbSwitchScreenAction;
 #define	XkbSAScreen(a)			(XkbCharToInt((a)->screenXXX))
-#define	XkbSASetScreen(a,s)		((a)->screenXXX= ((s)&0xff))
+#define	XkbSASetScreen(a, s) ((a)->screenXXX = (s) & 0xff)
 
 typedef struct _XkbCtrlsAction {
 	unsigned char	type;
 	unsigned char	flags;
+        /* FIXME: Make this an int. */
 	unsigned char	ctrls3;
 	unsigned char	ctrls2;
 	unsigned char	ctrls1;
 	unsigned char	ctrls0;
 } XkbCtrlsAction;
-#define	XkbActionSetCtrls(a,c)	(((a)->ctrls3=(((c)>>24)&0xff)),\
-					((a)->ctrls2=(((c)>>16)&0xff)),\
-					((a)->ctrls1=(((c)>>8)&0xff)),\
-					((a)->ctrls0=((c)&0xff)))
+#define	XkbActionSetCtrls(a, c) ((a)->ctrls3 = ((c) >> 24) & 0xff, \
+                                 (a)->ctrls2 = ((c) >> 16) & 0xff, \
+                                 (a)->ctrls1 = ((c) >> 8) & 0xff, \
+                                 (a)->ctrls0 = (c) & 0xff)
 #define	XkbActionCtrls(a) ((((unsigned int)(a)->ctrls3)<<24)|\
 			   (((unsigned int)(a)->ctrls2)<<16)|\
 			   (((unsigned int)(a)->ctrls1)<<8)|\
-			   ((unsigned int)((a)->ctrls0)))
+                           ((unsigned int) (a)->ctrls0))
 
 typedef struct _XkbMessageAction {
 	unsigned char	type;
@@ -203,6 +220,7 @@ typedef struct	_XkbRedirectKeyAction {
 	unsigned char	new_key;
 	unsigned char	mods_mask;
 	unsigned char	mods;
+        /* FIXME: Make this an int. */
 	unsigned char	vmods_mask0;
 	unsigned char	vmods_mask1;
 	unsigned char	vmods0;
@@ -211,6 +229,7 @@ typedef struct	_XkbRedirectKeyAction {
 
 #define	XkbSARedirectVMods(a)		((((unsigned int)(a)->vmods1)<<8)|\
 					((unsigned int)(a)->vmods0))
+/* FIXME: This is blatantly not setting vmods.   Yeesh. */
 #define	XkbSARedirectSetVMods(a,m)	(((a)->vmods_mask1=(((m)>>8)&0xff)),\
 					 ((a)->vmods_mask0=((m)&0xff)))
 #define	XkbSARedirectVModsMask(a)	((((unsigned int)(a)->vmods_mask1)<<8)|\
@@ -281,7 +300,8 @@ typedef	struct _XkbControls {
 
 #define	XkbAX_AnyFeedback(c)	((c)->enabled_ctrls&XkbAccessXFeedbackMask)
 #define	XkbAX_NeedOption(c,w)	((c)->ax_options&(w))
-#define	XkbAX_NeedFeedback(c,w)	(XkbAX_AnyFeedback(c)&&XkbAX_NeedOption(c,w))
+#define	XkbAX_NeedFeedback(c, w) (XkbAX_AnyFeedback((c)) && \
+                                  XkbAX_NeedOption((c), (w)))
 
 typedef struct _XkbServerMapRec {
 	unsigned short		 num_acts;
@@ -300,7 +320,7 @@ typedef struct _XkbServerMapRec {
 	unsigned short		*vmodmap;
 } XkbServerMapRec, *XkbServerMapPtr;
 
-#define	XkbSMKeyActionsPtr(m,k) (&(m)->acts[(m)->key_acts[k]])
+#define	XkbSMKeyActionsPtr(m, k) (&(m)->acts[(m)->key_acts[(k)]])
 
 	/*
 	 * Structures and access macros used primarily by clients
@@ -326,15 +346,16 @@ typedef struct _XkbClientMapRec {
 	unsigned char		*modmap;
 } XkbClientMapRec, *XkbClientMapPtr;
 
-#define	XkbCMKeyGroupInfo(m,k)  ((m)->key_sym_map[k].group_info)
-#define	XkbCMKeyNumGroups(m,k)	 (XkbNumGroups((m)->key_sym_map[k].group_info))
-#define	XkbCMKeyGroupWidth(m,k,g) (XkbCMKeyType(m,k,g)->num_levels)
-#define	XkbCMKeyGroupsWidth(m,k) ((m)->key_sym_map[k].width)
-#define	XkbCMKeyTypeIndex(m,k,g) ((m)->key_sym_map[k].kt_index[g&0x3])
-#define	XkbCMKeyType(m,k,g)	 (&(m)->types[XkbCMKeyTypeIndex(m,k,g)])
-#define	XkbCMKeyNumSyms(m,k) (XkbCMKeyGroupsWidth(m,k)*XkbCMKeyNumGroups(m,k))
-#define	XkbCMKeySymsOffset(m,k)	((m)->key_sym_map[k].offset)
-#define	XkbCMKeySymsPtr(m,k)	(&(m)->syms[XkbCMKeySymsOffset(m,k)])
+#define	XkbCMKeyGroupInfo(m, k) ((m)->key_sym_map[(k)].group_info)
+#define	XkbCMKeyNumGroups(m, k) (XkbNumGroups((m)->key_sym_map[(k)].group_info))
+#define	XkbCMKeyGroupWidth(m, k, g) (XkbCMKeyType((m), (k), (g))->num_levels)
+#define	XkbCMKeyGroupsWidth(m, k) ((m)->key_sym_map[(k)].width)
+#define	XkbCMKeyTypeIndex(m, k, g) ((m)->key_sym_map[(k)].kt_index[(g) & 0x3])
+#define	XkbCMKeyType(m, k, g) (&(m)->types[XkbCMKeyTypeIndex((m), (k), (g))])
+#define	XkbCMKeyNumSyms(m, k) (XkbCMKeyGroupsWidth((m), (k)) * \
+                               XkbCMKeyNumGroups((m), (k)))
+#define	XkbCMKeySymsOffset(m, k) ((m)->key_sym_map[(k)].offset)
+#define	XkbCMKeySymsPtr(m, k) (&(m)->syms[XkbCMKeySymsOffset((m), (k))])
 
 	/*
 	 * Compatibility structures and access macros
@@ -358,6 +379,8 @@ typedef struct _XkbCompatMapRec {
 
 typedef struct _XkbIndicatorMapRec {
 	unsigned char	flags;
+        /* FIXME: For some reason, interepretation of groups is wildly
+         *        different between which being base/latched/locked. */
 	unsigned char	which_groups;
 	unsigned char	groups;
 	unsigned char	which_mods;
@@ -365,12 +388,12 @@ typedef struct _XkbIndicatorMapRec {
 	unsigned int	ctrls;
 } XkbIndicatorMapRec, *XkbIndicatorMapPtr;
 
-#define	XkbIM_IsAuto(i)	((((i)->flags&XkbIM_NoAutomatic)==0)&&\
+#define	XkbIM_IsAuto(i)	(!((i)->flags & XkbIM_NoAutomatic) && \
 			    (((i)->which_groups&&(i)->groups)||\
 			     ((i)->which_mods&&(i)->mods.mask)||\
-			     ((i)->ctrls)))
-#define	XkbIM_InUse(i)	(((i)->flags)||((i)->which_groups)||\
-					((i)->which_mods)||((i)->ctrls))
+                          (i)->ctrls))
+#define	XkbIM_InUse(i)	((i)->flags || (i)->which_groups || (i)->which_mods || \
+                         (i)->ctrls)
 	
 
 typedef struct _XkbIndicatorRec {
@@ -428,28 +451,30 @@ typedef	struct _XkbDesc {
 	XkbCompatMapPtr		compat;
 	XkbGeometryPtr		geom;
 } XkbDescRec, *XkbDescPtr;
-#define	XkbKeyKeyTypeIndex(d,k,g)	(XkbCMKeyTypeIndex((d)->map,k,g))
-#define	XkbKeyKeyType(d,k,g)		(XkbCMKeyType((d)->map,k,g))
-#define	XkbKeyGroupWidth(d,k,g)		(XkbCMKeyGroupWidth((d)->map,k,g))
-#define	XkbKeyGroupsWidth(d,k)		(XkbCMKeyGroupsWidth((d)->map,k))
+#define	XkbKeyKeyTypeIndex(d, k, g)	(XkbCMKeyTypeIndex((d)->map, (k), (g)))
+#define	XkbKeyKeyType(d, k, g)		(XkbCMKeyType((d)->map, (k), (g)))
+#define	XkbKeyGroupWidth(d, k, g)	(XkbCMKeyGroupWidth((d)->map, (k), (g)))
+#define	XkbKeyGroupsWidth(d, k)		(XkbCMKeyGroupsWidth((d)->map, (k)))
 #define	XkbKeyGroupInfo(d,k)		(XkbCMKeyGroupInfo((d)->map,(k)))
 #define	XkbKeyNumGroups(d,k)		(XkbCMKeyNumGroups((d)->map,(k)))
 #define	XkbKeyNumSyms(d,k)		(XkbCMKeyNumSyms((d)->map,(k)))
 #define	XkbKeySymsPtr(d,k)		(XkbCMKeySymsPtr((d)->map,(k)))
-#define	XkbKeySym(d,k,n)		(XkbKeySymsPtr(d,k)[n])
+#define	XkbKeySym(d, k, n)		(XkbKeySymsPtr((d), (k))[(n)])
 #define	XkbKeySymEntry(d,k,sl,g) \
-	(XkbKeySym(d,k,((XkbKeyGroupsWidth(d,k)*(g))+(sl))))
+    (XkbKeySym((d), (k), (XkbKeyGroupsWidth((d), (k)) * (g)) + (sl)))
 #define	XkbKeyAction(d,k,n) \
-	(XkbKeyHasActions(d,k)?&XkbKeyActionsPtr(d,k)[n]:NULL)
+    (XkbKeyHasActions((d), (k)) ? & XkbKeyActionsPtr((d), (k))[(n)] : NULL)
 #define	XkbKeyActionEntry(d,k,sl,g) \
-	(XkbKeyHasActions(d,k)?\
-		XkbKeyAction(d,k,((XkbKeyGroupsWidth(d,k)*(g))+(sl))):NULL)
+    (XkbKeyHasActions((d), (k)) ? \
+     XkbKeyAction((d), (k), ((XkbKeyGroupsWidth((d), (k)) * (g)) + (sl))) : \
+     NULL)
 
-#define	XkbKeyHasActions(d,k)	((d)->server->key_acts[k]!=0)
-#define	XkbKeyNumActions(d,k)	(XkbKeyHasActions(d,k)?XkbKeyNumSyms(d,k):1)
-#define	XkbKeyActionsPtr(d,k)	(XkbSMKeyActionsPtr((d)->server,k))
-#define	XkbKeycodeInRange(d,k)	(((k)>=(d)->min_key_code)&&\
-				 ((k)<=(d)->max_key_code))
+#define	XkbKeyHasActions(d, k) (!!(d)->server->key_acts[(k)])
+#define	XkbKeyNumActions(d, k) (XkbKeyHasActions((d), (k)) ? \
+                                XkbKeyNumSyms((d), (k)) : 1)
+#define	XkbKeyActionsPtr(d, k) (XkbSMKeyActionsPtr((d)->server, (k)))
+#define	XkbKeycodeInRange(d, k) ((k) >= (d)->min_key_code && \
+				 (k) <= (d)->max_key_code)
 #define	XkbNumKeys(d)		((d)->max_key_code-(d)->min_key_code+1)
 
 
@@ -527,7 +552,6 @@ typedef struct _XkbChanges {
 	 * database.
 	 */
 typedef struct _XkbComponentNames {
-	char *			 keymap;
 	char *			 keycodes;
 	char *			 types;
 	char *			 compat;
@@ -588,9 +612,9 @@ typedef struct _XkbDeviceInfo {
 	XkbDeviceLedInfoPtr	leds;
 } XkbDeviceInfoRec,*XkbDeviceInfoPtr;
 
-#define	XkbXI_DevHasBtnActs(d)	(((d)->num_btns>0)&&((d)->btn_acts!=NULL))
-#define	XkbXI_LegalDevBtn(d,b)	(XkbXI_DevHasBtnActs(d)&&((b)<(d)->num_btns))
-#define	XkbXI_DevHasLeds(d)	(((d)->num_leds>0)&&((d)->leds!=NULL))
+#define	XkbXI_DevHasBtnActs(d)	((d)->num_btns > 0 && (d)->btn_acts)
+#define	XkbXI_LegalDevBtn(d,b)	(XkbXI_DevHasBtnActs(d) && (b) < (d)->num_btns)
+#define	XkbXI_DevHasLeds(d)	((d)->num_leds > 0 && (d)->leds)
 
 typedef struct _XkbDeviceLedChanges {
 	unsigned short		led_class;

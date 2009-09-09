@@ -31,21 +31,36 @@
 #include "property.h"
 #include "propertyst.h"
 #include "xf86DDC.h"
+#include <string.h>
 
 #define EDID1_ATOM_NAME         "XFree86_DDC_EDID1_RAWDATA"
 #define EDID2_ATOM_NAME         "XFree86_DDC_EDID2_RAWDATA"
 
 static void
+edidMakeAtom(int i, const char *name, CARD8 *data, int size)
+{
+    Atom atom;
+    unsigned char *atom_data;
+
+    if (!(atom_data = xalloc(size*sizeof(CARD8))))
+	return;
+
+    atom = MakeAtom(name, strlen(name), TRUE);
+    memcpy(atom_data, data, size);
+    xf86RegisterRootWindowProperty(i, atom, XA_INTEGER, 8, size, atom_data);
+}
+
+static void
 addRootWindowProperties(ScrnInfoPtr pScrn, xf86MonPtr DDC)
 {
-    Atom EDID1Atom=-1, EDID2Atom=-1;
-    CARD8 *EDID1rawdata = NULL;
-    CARD8 *EDID2rawdata = NULL;
     int i, scrnIndex = pScrn->scrnIndex;
     Bool makeEDID1prop = FALSE;
     Bool makeEDID2prop = FALSE;
 
-    if (DDC->ver.version == 1) {
+    if (DDC->flags & MONITOR_DISPLAYID) {
+	/* Don't bother, use RANDR already */
+	return;
+    } else if (DDC->ver.version == 1) {
 	makeEDID1prop = TRUE;
     } else if (DDC->ver.version == 2) {
 	int checksum1;
@@ -83,29 +98,14 @@ addRootWindowProperties(ScrnInfoPtr pScrn, xf86MonPtr DDC)
     }
 
     if (makeEDID1prop) {
-	int size = 128;
+	int size = 128 +
+	    (DDC->flags & EDID_COMPLETE_RAWDATA ? DDC->no_sections * 128 : 0);
 
-	if (DDC->flags & EDID_COMPLETE_RAWDATA)
-	    size += DDC->no_sections * 128;
-
-	if ((EDID1rawdata = xalloc(size*sizeof(CARD8)))==NULL)
-	    return;
-
-	EDID1Atom = MakeAtom(EDID1_ATOM_NAME, sizeof(EDID1_ATOM_NAME) - 1, TRUE);
-	memcpy(EDID1rawdata, DDC->rawData, size);
-	xf86RegisterRootWindowProperty(scrnIndex, EDID1Atom, XA_INTEGER, 8,
-		size, (unsigned char *)EDID1rawdata);
+	edidMakeAtom(scrnIndex, EDID1_ATOM_NAME, DDC->rawData, size);
     } 
 
-    if (makeEDID2prop) {
-	if ((EDID2rawdata = xalloc(256*sizeof(CARD8)))==NULL)
-	    return;
-
-	memcpy(EDID2rawdata, DDC->rawData, 256);
-	EDID2Atom = MakeAtom(EDID2_ATOM_NAME, sizeof(EDID2_ATOM_NAME) - 1, TRUE);
-	xf86RegisterRootWindowProperty(scrnIndex, EDID2Atom, XA_INTEGER, 8,
-		256, (unsigned char *)EDID2rawdata);
-    }
+    if (makeEDID2prop)
+	edidMakeAtom(scrnIndex, EDID2_ATOM_NAME, DDC->rawData, 256);
 }
 
 Bool
@@ -114,7 +114,10 @@ xf86SetDDCproperties(ScrnInfoPtr pScrn, xf86MonPtr DDC)
     if (!pScrn || !pScrn->monitor || !DDC)
         return FALSE;
 
-    xf86DDCMonitorSet(pScrn->scrnIndex, pScrn->monitor, DDC);
+    if (DDC->flags & MONITOR_DISPLAYID)
+	;
+    else
+	xf86EdidMonitorSet(pScrn->scrnIndex, pScrn->monitor, DDC);
 
     addRootWindowProperties(pScrn, DDC);
 

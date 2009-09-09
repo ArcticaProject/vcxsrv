@@ -614,7 +614,7 @@ GlyphExtents (int		nlist,
 
 #define NeedsComponent(f) (PICT_FORMAT_A(f) != 0 && PICT_FORMAT_RGB(f) != 0)
 
-_X_EXPORT void
+void
 CompositeGlyphs (CARD8		op,
 		 PicturePtr	pSrc,
 		 PicturePtr	pDst,
@@ -645,7 +645,7 @@ miUnrealizeGlyph (ScreenPtr pScreen,
 {
 }
 
-_X_EXPORT void
+void
 miGlyphs (CARD8		op,
 	  PicturePtr	pSrc,
 	  PicturePtr	pDst,

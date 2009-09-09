@@ -88,7 +88,7 @@ typedef struct _SppArc {
 
 /* mifpolycon.c */
 
-extern void miFillSppPoly(
+extern _X_EXPORT void miFillSppPoly(
     DrawablePtr /*dst*/,
     GCPtr /*pgc*/,
     int /*count*/,

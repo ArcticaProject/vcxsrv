@@ -630,7 +630,7 @@ GOT_EM:
 }
 
 
-void 
+void
 XAAInitPixmapCache(	
     ScreenPtr pScreen, 
     RegionPtr areas,
@@ -1556,7 +1556,7 @@ XAACacheMonoStipple(ScrnInfoPtr pScrn, PixmapPtr pPix)
    } else 		funcNo = 2;
 
    pad = BitmapBytePad(pCache->w * bpp);
-   dwords = pad >> 2;
+   dwords = bytes_to_int32(pad);
    dstPtr = data = (unsigned char*)xalloc(pad * pCache->h);
    srcPtr = (unsigned char*)pPix->devPrivate.ptr;
 
@@ -1658,7 +1658,10 @@ XAACachePlanarMonoStipple(ScrnInfoPtr pScrn, PixmapPtr pPix)
 }
 
 XAACachePlanarMonoStippleProc
-XAAGetCachePlanarMonoStipple(void) { return XAACachePlanarMonoStipple; }
+XAAGetCachePlanarMonoStipple(void)
+{
+    return XAACachePlanarMonoStipple;
+}
 
 XAACacheInfoPtr
 XAACacheStipple(ScrnInfoPtr pScrn, PixmapPtr pPix, int fg, int bg)
@@ -1840,7 +1843,7 @@ XAACacheColor8x8Pattern(ScrnInfoPtr pScrn, PixmapPtr pPix, int fg, int bg)
 }
 
 
-void 
+void
 XAAWriteBitmapToCache(
    ScrnInfoPtr pScrn,
    int x, int y, int w, int h,
@@ -1854,7 +1857,7 @@ XAAWriteBitmapToCache(
 					0, fg, bg, GXcopy, ~0);
 }
 
-void 
+void
 XAAWriteBitmapToCacheLinear(
    ScrnInfoPtr pScrn,
    int x, int y, int w, int h,
@@ -1892,7 +1895,7 @@ XAAWriteBitmapToCacheLinear(
 }
 
 
-void 
+void
 XAAWritePixmapToCache(
    ScrnInfoPtr pScrn,
    int x, int y, int w, int h,
@@ -1908,7 +1911,7 @@ XAAWritePixmapToCache(
 
 
 
-void 
+void
 XAAWritePixmapToCacheLinear(
    ScrnInfoPtr pScrn,
    int x, int y, int w, int h,
@@ -1952,7 +1955,7 @@ XAAWritePixmapToCacheLinear(
 }
 
 
-void 
+void
 XAAWriteMono8x8PatternToCache(
    ScrnInfoPtr pScrn, 
    XAACacheInfoPtr pCache
@@ -1994,7 +1997,7 @@ XAAWriteMono8x8PatternToCache(
    xfree(data);
 }
 
-void 
+void
 XAAWriteColor8x8PatternToCache(
    ScrnInfoPtr pScrn, 
    PixmapPtr pPix, 
@@ -2323,7 +2326,7 @@ static int RotateMasksY[4] = {
    0xFFFFFFFF, 0x00FFFFFF, 0x0000FFFF, 0x000000FF
 };
 
-void 
+void
 XAARotateMonoPattern(
     int *pat0, int *pat1,
     int xorg, int yorg,

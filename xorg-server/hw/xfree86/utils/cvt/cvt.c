@@ -25,6 +25,34 @@
 
 #include "xf86.h"
 
+/* xnfalloc implementation used by the server code we built in */
+pointer
+XNFalloc(unsigned long n)
+{
+    pointer r;
+
+    r = malloc(n);
+    if (!r) {
+        perror("malloc failed");
+        exit(1);
+    }
+    return r;
+}
+
+/* xnfcalloc implementation used by the server code we built in */
+pointer
+XNFcalloc(unsigned long n)
+{
+    pointer r;
+
+    r = calloc(1, n);
+    if (!r) {
+        perror("calloc failed");
+        exit(1);
+    }
+    return r;
+}
+
 /*
  * Quickly check wether this is a CVT standard mode.
  */
@@ -174,7 +202,7 @@ main (int argc, char *argv[])
 
     if ((argc < 3) || (argc > 7)) {
         PrintUsage(argv[0]);
-        return 0;
+        return 1;
     }
 
     /* This doesn't filter out bad flags properly. Bad flags get passed down
@@ -191,15 +219,30 @@ main (int argc, char *argv[])
         else if (!strcmp(argv[n], "-h") || !strcmp(argv[n], "--help")) {
             PrintUsage(argv[0]);
             return 0;
-        } else if (!HDisplay)
+        } else if (!HDisplay) {
             HDisplay = atoi(argv[n]);
-        else if (!VDisplay)
+	    if (!HDisplay) {
+		PrintUsage(argv[0]);
+		return 1;
+	    }
+	}
+        else if (!VDisplay) {
             VDisplay = atoi(argv[n]);
-        else if (!VRefresh)
+	    if (!VDisplay) {
+		PrintUsage(argv[0]);
+		return 1;
+	    }
+	}
+        else if (!VRefresh) {
             VRefresh = atof(argv[n]);
+	    if (!VRefresh) {
+		PrintUsage(argv[0]);
+		return 1;
+	    }
+	}
         else {
             PrintUsage(argv[0]);
-            return 0;
+            return 1;
         }
     }
 
@@ -218,11 +261,14 @@ main (int argc, char *argv[])
         HDisplay += 8;
     }
 
-    if (Reduced && (VRefresh != 60.0)) {
-        fprintf(stderr, "\nERROR: 60Hz refresh rate required for reduced"
-                " blanking.\n");
-        PrintUsage(argv[0]);
-        return 0;
+    if (Reduced) {
+	if ((VRefresh / 60.0) != floor(VRefresh / 60.0)) {
+	    fprintf(stderr,
+		    "\nERROR: Multiple of 60Hz refresh rate required for "
+		    " reduced blanking.\n");
+	    PrintUsage(argv[0]);
+	    return 0;
+	}
     }
 
     IsCVT = CVTCheckStandard(HDisplay, VDisplay, VRefresh, Reduced, Verbose);

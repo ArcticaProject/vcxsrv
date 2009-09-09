@@ -39,7 +39,7 @@
 # define DEV_MEM "/dev/mem"
 #endif
 
-_X_EXPORT int
+int
 xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 		int Len)
 {
