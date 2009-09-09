@@ -265,7 +265,7 @@ winKeybdProc (DeviceIntPtr pDeviceInt, int iState)
 	  XkbSetExtension(pDeviceInt, ProcessKeyboardEvent);
       break;
       
-    case DEVICE_ON:
+    case DEVICE_ON: 
       pDevice->on = TRUE;
       break;
 

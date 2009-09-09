@@ -1328,7 +1328,7 @@ winInitMultiWindowWM (WMInfoPtr pWMInfo, WMProcArgPtr pProcArg)
 				      False);
 
   pWMInfo->atmPrivMap  = XInternAtom (pWMInfo->pDisplay,
-				      "_WINDOWSWM_NATIVE_HWND",
+				      WINDOWSWM_NATIVE_HWND,
 				      False);
 
 

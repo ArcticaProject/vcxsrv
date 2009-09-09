@@ -112,8 +112,8 @@ winProcessXEventsTimeout (HWND hwnd, int iWindow, Display *pDisplay,
 			&tv);		/* No timeout */
       if (iReturn <= 0)
 	{
-	  ErrorF ("winProcessXEventsTimeout - Call to select () failed: %d.  "
-		  "Bailing.\n", iReturn);
+	  ErrorF ("winProcessXEventsTimeout - Call to select () failed: %d (%x).  "
+		  "Bailing.\n", iReturn, WSAGetLastError());
 	  break;
 	}
 

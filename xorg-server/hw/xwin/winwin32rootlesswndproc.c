@@ -522,7 +522,16 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
 #if CYGMULTIWINDOW_DEBUG && 0
       winDebug ("winMWExtWMWindowProc - WM_MOUSEMOVE\n");
 #endif
-      winGetPtMouse(hwnd,lParam,&ptMouse);
+      /* Unpack the client area mouse coordinates */
+      ptMouse.x = GET_X_LPARAM(lParam);
+      ptMouse.y = GET_Y_LPARAM(lParam);
+
+      /* Translate the client area mouse coordinates to screen coordinates */
+      ClientToScreen (hwnd, &ptMouse);
+
+      /* Screen Coords from (-X, -Y) -> Root Window (0, 0) */
+      ptMouse.x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
+      ptMouse.y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
 
       /* We can't do anything without privates */
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
@@ -622,7 +631,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       SetCapture (hwnd);
-      return winMouseButtonsHandle (pScreen, DeviceeButtonPress, Button1, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonPress, Button1, wParam);
       
     case WM_LBUTTONUP:
 #if CYGMULTIWINDOW_DEBUG
@@ -631,7 +640,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       ReleaseCapture ();
-      return winMouseButtonsHandle (pScreen, DeviceButtonRelease, Button1, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonRelease, Button1, wParam);
 
     case WM_MBUTTONDBLCLK:
     case WM_MBUTTONDOWN:
@@ -641,7 +650,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       SetCapture (hwnd);
-      return winMouseButtonsHandle (pScreen, DeviceButtonPress, Button2, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonPress, Button2, wParam);
       
     case WM_MBUTTONUP:
 #if CYGMULTIWINDOW_DEBUG
@@ -650,7 +659,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       ReleaseCapture ();
-      return winMouseButtonsHandle (pScreen, DeviceButtonRelease, Button2, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonRelease, Button2, wParam);
       
     case WM_RBUTTONDBLCLK:
     case WM_RBUTTONDOWN:
@@ -660,7 +669,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       SetCapture (hwnd);
-      return winMouseButtonsHandle (pScreen, DeviceButtonPress, Button3, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonPress, Button3, wParam);
       
     case WM_RBUTTONUP:
 #if CYGMULTIWINDOW_DEBUG
@@ -669,19 +678,19 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       ReleaseCapture ();
-      return winMouseButtonsHandle (pScreen, DeviceButtonRelease, Button3, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonRelease, Button3, wParam);
 
     case WM_XBUTTONDBLCLK:
     case WM_XBUTTONDOWN:
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       SetCapture (hwnd);
-      return winMouseButtonsHandle (pScreen, DeviceButtonPress, HIWORD(wParam) + 5, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonPress, HIWORD(wParam) + 5, wParam);
     case WM_XBUTTONUP:
       if (pScreenPriv == NULL || pScreenInfo->fIgnoreInput)
 	break;
       ReleaseCapture ();
-      return winMouseButtonsHandle (pScreen, DeviceButtonRelease, HIWORD(wParam) + 5, wParam, hwnd, lParam);
+      return winMouseButtonsHandle (pScreen, ButtonRelease, HIWORD(wParam) + 5, wParam);
 
     case WM_MOUSEWHEEL:
 #if CYGMULTIWINDOW_DEBUG

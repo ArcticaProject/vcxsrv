@@ -760,7 +760,7 @@ winWindowProc (HWND hwnd, UINT message,
 	  g_fCursor = TRUE;
 	  ShowCursor (TRUE);
 	}
-
+      
       /* Deliver absolute cursor position to X Server */
       winEnqueueMotion(GET_X_LPARAM(lParam)-s_pScreenInfo->dwXOffset,
 		       GET_Y_LPARAM(lParam)-s_pScreenInfo->dwYOffset);
@@ -901,15 +901,15 @@ winWindowProc (HWND hwnd, UINT message,
       switch (wParam)
 	{
 	case WIN_E3B_TIMER_ID:
-	    /* Send delayed button press */
-	    winMouseButtonsSendEvent (ButtonPress,
+	  /* Send delayed button press */
+	  winMouseButtonsSendEvent (ButtonPress,
 				    s_pScreenPriv->iE3BCachedPress);
 
-	    /* Kill this timer */
-	    KillTimer (s_pScreenPriv->hwndScreen, WIN_E3B_TIMER_ID);
+	  /* Kill this timer */
+	  KillTimer (s_pScreenPriv->hwndScreen, WIN_E3B_TIMER_ID);
 
-	    /* Clear screen privates flags */
-	    s_pScreenPriv->iE3BCachedPress = 0;
+	  /* Clear screen privates flags */
+	  s_pScreenPriv->iE3BCachedPress = 0;
 	  break;
 
 	case WIN_POLLING_MOUSE_TIMER_ID:
@@ -924,7 +924,7 @@ winWindowProc (HWND hwnd, UINT message,
 	    /* Map from screen (-X, -Y) to root (0, 0) */
 	    point.x -= GetSystemMetrics (SM_XVIRTUALSCREEN);
 	    point.y -= GetSystemMetrics (SM_YVIRTUALSCREEN);
-
+	    
 	    /* Deliver absolute cursor position to X Server */
 	    winEnqueueMotion(point.x , point.y);
 

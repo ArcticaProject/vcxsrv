@@ -48,6 +48,7 @@
 /*
  * Constant defines
  */
+
 #ifndef ULW_COLORKEY
 #define ULW_COLORKEY	0x00000001
 #endif

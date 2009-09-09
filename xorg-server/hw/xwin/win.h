@@ -1018,7 +1018,7 @@ winMouseButtonsSendEvent (int iEventType, int iButton);
 
 int
 winMouseButtonsHandle (ScreenPtr pScreen,
-                       int iEventType, int iButton,
+		       int iEventType, int iButton,
 		       WPARAM wParam);
 
 void

@@ -194,7 +194,7 @@ winInitDialog (HWND hwndDlg)
   HWND hwndDesk; 
   RECT rc, rcDlg, rcDesk;
   HICON hIcon, hIconSmall;
-
+ 
   hwndDesk = GetParent (hwndDlg);
   if (!hwndDesk || IsIconic (hwndDesk))
     hwndDesk = GetDesktopWindow (); 
@@ -237,21 +237,22 @@ winInitDialog (HWND hwndDlg)
   if (g_hIconX) hIcon=g_hIconX;
   else
 #endif
-   hIcon = LoadIcon (g_hInstance, MAKEINTRESOURCE(IDI_XWIN));
+  hIcon = LoadIcon (g_hInstance, MAKEINTRESOURCE(IDI_XWIN));
 
 #ifdef XWIN_MULTIWINDOW
   if (g_hSmallIconX) hIconSmall=g_hSmallIconX;
   else
 #endif
-    hIconSmall = LoadImage (g_hInstance,
-			    MAKEINTRESOURCE(IDI_XWIN), IMAGE_ICON,
-			    GetSystemMetrics(SM_CXSMICON),
-			    GetSystemMetrics(SM_CYSMICON),
-			    LR_SHARED);
+  hIconSmall = LoadImage (g_hInstance,
+                        MAKEINTRESOURCE(IDI_XWIN), IMAGE_ICON,
+                        GetSystemMetrics(SM_CXSMICON),
+                        GetSystemMetrics(SM_CYSMICON),
+                        LR_SHARED);
 
   PostMessage (hwndDlg, WM_SETICON, ICON_BIG, (LPARAM) hIcon);
   PostMessage (hwndDlg, WM_SETICON, ICON_SMALL, (LPARAM) hIconSmall);
 }
+
 
 /*
  * Display the Exit dialog box

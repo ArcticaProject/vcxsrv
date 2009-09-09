@@ -269,7 +269,7 @@ winClipboardFlushXEvents (HWND hwnd,
 	  if (!hGlobal)
 	    {
 	      ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
-		      "GetClipboardData () failed: %08x\n",
+		      "GetClipboardData () failed: 0x%08x\n",
 		      GetLastError ());
 
 	      /* Abort */
