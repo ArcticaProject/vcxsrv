@@ -36,13 +36,13 @@
 #include <stddef.h> /* For NULL */
 #include <limits.h> /* For CHAR_BIT */
 #include <assert.h>
-#include <X11/Xatom.h>
-#include <Xplugin.h>
 #ifdef __APPLE__
 //#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include "mi.h"
 #include "pixmapstr.h"
 #include "windowstr.h"
+#include <Xplugin.h>
 //#include <X11/extensions/applewm.h>
 extern int darwinMainScreenX, darwinMainScreenY;
 #endif
@@ -86,11 +86,9 @@ static inline int
 configure_window (xp_window_id id, unsigned int mask,
                   const xp_window_changes *values)
 {
-#ifdef __APPLE__
   if (!no_configure_window)
     return xp_configure_window (id, mask, values);
   else
-#endif
     return XP_Success;
 }
 
@@ -105,7 +103,6 @@ current_time_in_seconds (void)
   return t;
   } */
 
-#ifdef __APPLE__
 void
 RootlessNativeWindowStateChanged (WindowPtr pWin, unsigned int state)
 {
@@ -175,7 +172,6 @@ set_screen_origin (WindowPtr pWin)
   dixChangeWindowProperty(serverClient, pWin, xa_native_screen_origin(),
 			  XA_INTEGER, 32, PropModeReplace, 2, data, TRUE);
 }
-#endif /* __APPLE__ */
 
 /*
  * RootlessCreateWindow
