@@ -3042,12 +3042,9 @@ NotClippedByChildren(WindowPtr pWin)
 void
 SendVisibilityNotify(WindowPtr pWin)
 {
-#ifndef NO_XINERAMA_PORT
-    unsigned int visibility;
-#endif
     xEvent event;
 #ifndef NO_XINERAMA_PORT
-    visibility = pWin->visibility;
+    unsigned int visibility = pWin->visibility;
 #endif
     if (!MapUnmapEventsEnabled(pWin))
         return;

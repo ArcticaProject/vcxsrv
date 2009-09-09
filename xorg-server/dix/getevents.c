@@ -63,7 +63,11 @@
 #include "listdev.h" /* for sizing up DeviceClassesChangedEvent */
 
 #ifdef _MSC_VER
-#define lroundf(val)   ((int)(val<0.0f)?val-.5f:val+.5f)
+float roundf(float f)
+{
+  return ((f<0.0f) ? ceil(f-.5)  : floor (f+.5));
+}
+#define lroundf(val)   ((int)roundf(val))
 #endif
 
 /* Number of motion history events to store. */
@@ -129,13 +133,6 @@ key_autorepeats(DeviceIntPtr pDev, int key_code)
     return !!(pDev->kbdfeed->ctrl.autoRepeats[key_code >> 3] &
               (1 << (key_code & 7)));
 }
-
-#ifdef _MSC_VER
-float roundf(float f)
-{
-  return ((f<0.0f) ? ceil(f-.5)  : floor (f+.5));
-}
-#endif
 
 static void
 init_event(DeviceIntPtr dev, DeviceEvent* event, Time ms)

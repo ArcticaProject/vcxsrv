@@ -37,7 +37,6 @@
 
 #include <xserver-properties.h>
 
-
 /*****************************************************************************
  * Predictable pointer acceleration
  *
