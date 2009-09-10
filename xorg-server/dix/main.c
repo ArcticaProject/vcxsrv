@@ -116,6 +116,10 @@ Equipment Corporation.
 #include "dpmsproc.h"
 #endif
 
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
+
 extern void Dispatch(void);
 
 extern void InitProcVectors(void);
@@ -134,6 +138,17 @@ int main(int argc, char *argv[], char *envp[])
 {
     int		i;
     HWEventQueueType	alwaysCheckForInput[2];
+    #ifdef _DEBUG
+    //int TmpFlag=_CrtSetDbgFlag( _CRTDBG_REPORT_FLAG);
+    
+    //TmpFlag|=_CRTDBG_ALLOC_MEM_DF;
+    //TmpFlag|=_CRTDBG_DELAY_FREE_MEM_DF;
+    //TmpFlag|=_CRTDBG_CHECK_ALWAYS_DF;
+    //TmpFlag|=_CRTDBG_CHECK_CRT_DF;
+    //TmpFlag|=_CRTDBG_LEAK_CHECK_DF;
+    
+    //_CrtSetDbgFlag(TmpFlag);
+    #endif
 
     ptw32_processInitialize();
     display = "0";
