@@ -1,0 +1,9 @@
+Changes in 1.0.1
+----------------
+
+- installer: make sure the latest version of the installed MSVC run-time is used.
+- BUG: Solved mouse wheel not behaving correctly (especially when there are multiple monitors)
+- locale: swicth to the version of libX11/nls/C/makefile
+- clipboard: solved paste problem from X to windows (in Vista)
+- xkbcomp/listing.c: Solved uninitialised variable error in WIN32
+- xkbdata.src/symbols/level3: Removed warning when compiling for be keyboard.

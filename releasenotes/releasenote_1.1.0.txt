@@ -1,0 +1,38 @@
+Changes in 1.1.0
+----------------
+- Updated to the following packages:
+        libX11-1.2.99.901.tar.gz
+        xtrans-1.2.4.tar.gz
+        fontsproto-2.1.0.tar.gz
+        damageproto-1.2.0.tar.gz
+        xcmiscproto-1.2.0.tar.gz
+        bigreqsproto-1.1.0.tar.gz
+        scrnsaverproto-1.2.0.tar.gz
+        resourceproto-1.1.0.tar.gz
+        xextproto-7.1.1.tar.gz
+        recordproto-1.13.99.1.tar.gz
+        inputproto-1.9.99.902.tar.gz
+        font-util-1.0.2.tar.gz
+        xorg-server-1.6.99.900.tar.gz
+- Make sure clipboard thread is cleaned up correctly on error.
+  Solved clipboard thread exits causing the clipboard not to be working.
+- Solved some errors in the fonts directory due to makefile problems
+
+Changes in 1.0.2
+----------------
+
+- installer: Do not show details by default
+- xlaunch: show message box when display number is nto filled in.
+- BUG: Solved right mouse button not working in multi window mode.
+- Added plink tool in installation.
+- Xlaunch is now a windows application in stead of a console application
+
+Changes in 1.0.1
+----------------
+
+- installer: make sure the latest version of the installed MSVC run-time is used.
+- BUG: Solved mouse wheel not behaving correctly (especially when there are multiple monitors)
+- locale: swicth to the version of libX11/nls/C/makefile
+- clipboard: solved paste problem from X to windows (in Vista)
+- xkbcomp/listing.c: Solved uninitialised variable error in WIN32
+- xkbdata.src/symbols/level3: Removed warning when compiling for be keyboard.
