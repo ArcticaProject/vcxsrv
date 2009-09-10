@@ -45,7 +45,7 @@ FONT 8, "MS Shell Dlg 2"
 BEGIN
   CONTROL				IDI_XWIN, IDC_STATIC, "Static", SS_ICON, 8, 8, 32, 32
   LTEXT			"VcXsrv X Server ", IDC_STATIC, 36, 8, 220, 8
-  LTEXT			"Version 1.0.3 (31 Aug 2009)", IDC_STATIC, 36, 18, 220, 8
+  LTEXT			"Version 1.1.0 (10 Sept 2009)", IDC_STATIC, 36, 18, 220, 8
   DEFPUSHBUTTON		"OK", IDOK, 105, 75, 50, 15
 END
 

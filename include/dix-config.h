@@ -405,10 +405,10 @@
 /* #undef XORG_RELEASE */
 
 /* Current Xorg version */
-#define XORG_VERSION_CURRENT (((1) * 10000000) + ((0) * 100000) + ((2) * 1000) + 0)
+#define XORG_VERSION_CURRENT (((1) * 10000000) + ((1) * 100000) + ((0) * 1000) + 0)
 
 /* Xorg release date */
-#define XORG_DATE "2 August 2009"
+#define XORG_DATE "10 Sept 2009"
 
 /* Build Xv Extension */
 /* #undef XvExtension */
