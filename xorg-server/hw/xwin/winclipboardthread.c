@@ -43,7 +43,6 @@
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
-#define max __max
 #endif
 
 /*
@@ -125,13 +124,6 @@ winClipboardProc (void *pvNotUsed)
 
   /* Save the Unicode support flag in a global */
   g_fUseUnicode = fUseUnicode;
-
-  /* Allow multiple threads to access Xlib */
-  if (XInitThreads () == 0)
-    {
-      ErrorF ("winClipboardProc - XInitThreads failed.\n");
-      goto thread_errorexit;
-    }
 
   /* See if X supports the current locale */
   if (XSupportsLocale () == False)
@@ -315,6 +307,7 @@ winClipboardProc (void *pvNotUsed)
     goto thread_errorexit;
   }
 
+  ErrorF ("winClipboardProc - Started\n");
   /* Signal that the clipboard client has started */
   g_fClipboardStarted = TRUE;
 

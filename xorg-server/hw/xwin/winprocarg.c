@@ -1537,7 +1537,7 @@ winLogVersionInfo (void)
     return;
   s_fBeenHere = TRUE;
 
-  ErrorF ("Welcome to the XWin X Server\n");
+  ErrorF ("Welcome to the VcXsrv X Server\n");
   ErrorF ("Vendor: %s\n", VENDOR_STRING);
   ErrorF ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
   ErrorF ("Contact: %s\n\n", VENDOR_CONTACT);

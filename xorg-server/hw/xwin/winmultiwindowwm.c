@@ -900,13 +900,6 @@ winMultiWindowXMsgProc (void *pArg)
 
   ErrorF ("winMultiWindowXMsgProc - pthread_mutex_lock () returned.\n");
 
-  /* Allow multiple threads to access Xlib */
-  if (XInitThreads () == 0)
-    {
-      ErrorF ("winMultiWindowXMsgProc - XInitThreads () failed.  Exiting.\n");
-      pthread_exit (NULL);
-    }
-
   /* See if X supports the current locale */
   if (XSupportsLocale () == False)
     {
@@ -1228,13 +1221,6 @@ winInitMultiWindowWM (WMInfoPtr pWMInfo, WMProcArgPtr pProcArg)
     }
 
   ErrorF ("winInitMultiWindowWM - pthread_mutex_lock () returned.\n");
-
-  /* Allow multiple threads to access Xlib */
-  if (XInitThreads () == 0)
-    {
-      ErrorF ("winInitMultiWindowWM - XInitThreads () failed.  Exiting.\n");
-      pthread_exit (NULL);
-    }
 
   /* See if X supports the current locale */
   if (XSupportsLocale () == False)

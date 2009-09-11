@@ -153,6 +153,14 @@ int main(int argc, char *argv[], char *envp[])
     ptw32_processInitialize();
     display = "0";
 
+    #ifdef WIN32
+    /* In Win32 we have different threads call Xlib functions (depending
+       on the commandline options given).
+       XInitThreads has to be called before
+       any xlib function is called (aoccording to the man page) */
+    XInitThreads();
+    #endif
+
     InitRegions();
 
     pixman_disable_out_of_bounds_workaround();

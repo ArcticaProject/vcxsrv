@@ -342,20 +342,9 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if clipboard not completely initialized yet */
   if (!g_fClipboardStarted)
     {
-      if (g_fClipboardLaunched)
-      {
-         // Just wait until it is started
-        ErrorF ("winProcSetSelectionOwner - waiting to be started.\n");
-        while (g_fClipboardLaunched && !g_fClipboardStarted)
-          Sleep(0);
-        ErrorF ("winProcSetSelectionOwner - Clipboard started.\n");
-      }
-      else
-      {
         ErrorF ("winProcSetSelectionOwner - Clipboard not yet started, "
 	        "aborting.\n");
         goto winProcSetSelectionOwner_Done;
-      }
     }
   
   /* Grab window if we have one */
