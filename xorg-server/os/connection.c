@@ -1037,6 +1037,10 @@ CloseDownConnection(ClientPtr client)
 {
     OsCommPtr oc = (OsCommPtr)client->osPrivate;
 
+#ifdef DEBUG
+    ErrorF("CloseDownConnection: client index = %d, socket fd = %d\n",
+	   client->index, oc->fd);
+#endif
     if (oc->output && oc->output->count)
 	FlushClient(client, oc, (char *)NULL, 0);
 #ifdef XDMCP

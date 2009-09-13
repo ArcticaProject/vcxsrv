@@ -66,6 +66,7 @@ typedef int pid_t;
 #include "winprefs.h"
 #include "window.h"
 #include "pixmapstr.h"
+#include "winmsg.h"
 #include "windowstr.h"
 
 #ifdef XWIN_MULTIWINDOWEXTWM

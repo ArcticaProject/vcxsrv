@@ -39,7 +39,12 @@ void winDrvMsgVerb (int scrnIndex,
 void winDrvMsg (int scrnIndex, MessageType type, const char *format, ...);
 void winMsgVerb (MessageType type, int verb, const char *format, ...);
 void winMsg (MessageType type, const char *format, ...);
+#if !defined(_MSC_VER) || defined(_DEBUG)
 void winDebug (const char *format, ...);
+#else
+#define winDebug(...)
+#endif
+
 void winTrace (const char *format, ...);
 
 void winErrorFVerb (int verb, const char *format, ...);

@@ -98,6 +98,7 @@ winErrorFVerb (int verb, const char *format, ...)
   va_end (ap);
 }
 
+#if !defined(_MSC_VER) || defined(_DEBUG)
 void
 winDebug (const char *format, ...)
 {
@@ -106,6 +107,7 @@ winDebug (const char *format, ...)
   LogVMessageVerb(X_NONE, 3, format, ap);
   va_end (ap);
 }
+#endif
 
 void
 winTrace (const char *format, ...)

@@ -35,6 +35,7 @@
 #endif
 #include "winclipboard.h"
 #include "misc.h"
+#include "winmsg.h"
 
 
 /*
@@ -52,7 +53,8 @@ int
 winClipboardFlushXEvents (HWND hwnd,
 			  int iWindow,
 			  Display *pDisplay,
-			  Bool fUseUnicode)
+			  Bool fUseUnicode,
+			  Bool ClipboardOpened)
 {
   static Atom atomLocalProperty;
   static Atom atomCompoundText;
@@ -97,6 +99,8 @@ winClipboardFlushXEvents (HWND hwnd,
       /* Get the next event - will not block because one is ready */
       XNextEvent (pDisplay, &event);
 
+      winDebug ("Received event type %d\n",event.type);
+
       /* Branch on the event type */
       switch (event.type)
 	{
@@ -105,18 +109,20 @@ winClipboardFlushXEvents (HWND hwnd,
 	   */
 
 	case SelectionRequest:
-#if 0
+#ifdef _DEBUG
 	  {
 	    char			*pszAtomName = NULL;
 	    
-	    ErrorF ("SelectionRequest - target %d\n",
+	    winDebug ("SelectionRequest - target %d\n",
 		    event.xselectionrequest.target);
 	    
 	    pszAtomName = XGetAtomName (pDisplay,
 					event.xselectionrequest.target);
-	    ErrorF ("SelectionRequest - Target atom name %s\n", pszAtomName);
+	    winDebug ("SelectionRequest - Target atom name %s\n", pszAtomName);
 	    XFree (pszAtomName);
 	    pszAtomName = NULL;
+	    winDebug ("SelectionRequest - owner %d\n", event.xselectionrequest.owner);
+	    winDebug ("SelectionRequest - requestor %d\n", event.xselectionrequest.requestor);
 	  }
 #endif
 
@@ -214,27 +220,23 @@ winClipboardFlushXEvents (HWND hwnd,
 	      goto winClipboardFlushXEvents_SelectionRequest_Done;
 	    }
 
-	  /* Close clipboard if we have it open already */
-	  if (GetOpenClipboardWindow () == hwnd)
-	    {
-	      CloseClipboard ();
-	    }
-
 	  /* Access the clipboard */
-	  if (!OpenClipboard (hwnd))
-	    {
-	      ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
-		      "OpenClipboard () failed: %08x\n",
-		      GetLastError ());
+	  if (!ClipboardOpened)
+	  {
+	    if (!OpenClipboard (hwnd))
+	      {
+	        ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
+		        "OpenClipboard () failed: %08x\n",
+		        GetLastError ());
 
-	      /* Abort */
-	      fAbort = TRUE;
-	      goto winClipboardFlushXEvents_SelectionRequest_Done;
-	    }
+	        /* Abort */
+	        fAbort = TRUE;
+	         goto winClipboardFlushXEvents_SelectionRequest_Done;
+	      }
 	  
-	  /* Indicate that clipboard was opened */
-	  fCloseClipboard = TRUE;
-
+	    /* Indicate that clipboard was opened */
+	    fCloseClipboard = TRUE;
+	  }
 	  /* Setup the string style */
 	  if (event.xselectionrequest.target == XA_STRING)
 	    xiccesStyle = XStringStyle;
@@ -264,6 +266,15 @@ winClipboardFlushXEvents (HWND hwnd,
 	    }
 	  if (!hGlobal)
 	    {
+	      if (GetLastError()==ERROR_CLIPBOARD_NOT_OPEN && ClipboardOpened)
+	        {
+		ErrorF("We should not have received a SelectionRequest????\n"
+                        "The owner is the clipboard, but in reality it was"
+                        "an X window\n");
+                /* Set the owner to None */
+		XSetSelectionOwner (pDisplay, XA_PRIMARY, None, CurrentTime);
+		XSetSelectionOwner (pDisplay, XInternAtom (pDisplay, "CLIPBOARD", False), None, CurrentTime);
+	        }
 	      ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
 		      "GetClipboardData () failed: %08x\n",
 		      GetLastError ());
@@ -372,9 +383,11 @@ winClipboardFlushXEvents (HWND hwnd,
 	  /* Release the clipboard data */
 	  GlobalUnlock (hGlobal);
 	  pszGlobalData = NULL;
-	  fCloseClipboard = FALSE;
-	  CloseClipboard ();
-
+	  if (fCloseClipboard)
+	  {
+	    fCloseClipboard = FALSE;
+	    CloseClipboard ();
+	  }
 	  /* Clean up */
 	  XFree (xtpText.value);
 	  xtpText.value = NULL;
@@ -462,20 +475,42 @@ winClipboardFlushXEvents (HWND hwnd,
 
 
 	  /*
-	   * SelectionNotify
+	   * SelectionClear
 	   */ 
-
-	case SelectionNotify:
-#if 0
-	  ErrorF ("winClipboardFlushXEvents - SelectionNotify\n");
+	case SelectionClear:
+#ifdef _DEBUG
+	  winDebug ("winClipboardFlushXEvents - SelectionClear\n");
 	  {
 	    char		*pszAtomName;
 	    
 	    pszAtomName = XGetAtomName (pDisplay,
 					event.xselection.selection);
 
-	    ErrorF ("winClipboardFlushXEvents - SelectionNotify - ATOM: %s\n",
+	    winDebug ("SelectionClear - ATOM: %s\n",
 		    pszAtomName);
+	    winDebug ("SelectionClear - owner %d\n", event.xselectionrequest.owner);
+	    
+	    XFree (pszAtomName);
+	  }
+#endif
+	  return WIN_XEVENTS_CONVERT;
+	break;
+
+	  /*
+	   * SelectionNotify
+	   */ 
+	case SelectionNotify:
+#ifdef _DEBUG
+	  winDebug ("winClipboardFlushXEvents - SelectionNotify\n");
+	  {
+	    char		*pszAtomName;
+	    
+	    pszAtomName = XGetAtomName (pDisplay,
+					event.xselection.selection);
+
+	    winDebug ("SelectionNotify - ATOM: %s\n",
+		    pszAtomName);
+	    winDebug ("SelectionNotify - requestor %d\n", event.xselectionrequest.requestor);
 	    
 	    XFree (pszAtomName);
 	  }

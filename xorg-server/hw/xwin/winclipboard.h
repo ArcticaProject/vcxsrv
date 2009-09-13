@@ -150,5 +150,6 @@ int
 winClipboardFlushXEvents (HWND hwnd,
 			  int iWindow,
 			  Display *pDisplay,
-			  Bool fUnicodeSupport);
+			  Bool fUnicodeSupport,
+			  Bool ClipboardOpened);
 #endif

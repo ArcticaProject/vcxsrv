@@ -2140,7 +2140,7 @@ DamageRegionRendered (DrawablePtr pDrawable, DamagePtr pDamage, RegionPtr pOldDa
 /* This call is very odd, i'm leaving it intact for API sake, but please don't use it. */
 void
 DamageDamageRegion (DrawablePtr	pDrawable,
-		    RegionPtr	pRegion)
+		    const RegionPtr	pRegion)
 {
     damageRegionAppend (pDrawable, pRegion, FALSE, -1);
 

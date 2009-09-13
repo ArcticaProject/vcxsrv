@@ -40,6 +40,7 @@
 #endif
 #include "X11/Xauth.h"
 #include "misc.h"
+#include "winmsg.h"
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -216,6 +217,8 @@ winClipboardProc (void *pvNotUsed)
   /* Get our connection number */
   iConnectionNumber = ConnectionNumber (pDisplay);
 
+  winDebug("Clipboard is using socket %d\n",iConnectionNumber);
+
 #ifdef HAS_DEVWINDOWS
   /* Open a file descriptor for the windows message queue */
   fdMessageQueue = open (WIN_MSG_QUEUE_FNAME, _O_RDONLY);
@@ -234,6 +237,10 @@ winClipboardProc (void *pvNotUsed)
   /* Create atoms */
   atomClipboard = XInternAtom (pDisplay, "CLIPBOARD", False);
   atomClipboardManager = XInternAtom (pDisplay, "CLIPBOARD_MANAGER", False);
+  XInternAtom (pDisplay, WIN_LOCAL_PROPERTY, False);
+  XInternAtom (pDisplay, "UTF8_STRING", False);
+  XInternAtom (pDisplay, "COMPOUND_TEXT", False);
+  XInternAtom (pDisplay, "TARGETS", False);
 
   /* Create a messaging window */
   iWindow = XCreateSimpleWindow (pDisplay,
@@ -269,6 +276,7 @@ winClipboardProc (void *pvNotUsed)
   if (NULL != GetClipboardOwner ())
     {
       /* PRIMARY */
+      winDebug("winClipboardProc - asserted ownership.\n");
       iReturn = XSetSelectionOwner (pDisplay, XA_PRIMARY,
 				    iWindow, CurrentTime);
       if (iReturn == BadAtom || iReturn == BadWindow /*||
@@ -288,7 +296,6 @@ winClipboardProc (void *pvNotUsed)
           goto thread_errorexit;
 	}
     }
-
   /* Pre-flush X events */
   /* 
    * NOTE: Apparently you'll freeze if you don't do this,
@@ -301,6 +308,7 @@ winClipboardProc (void *pvNotUsed)
 			    fUseUnicode);
     */
   /* Pre-flush Windows messages */
+  winDebug ("Start flushing \n");
   if (!winClipboardFlushWindowsMessageQueue (hwnd))
   {
     ErrorF ("winClipboardFlushWindowsMessageQueue - returned 0\n");
@@ -362,21 +370,24 @@ winClipboardProc (void *pvNotUsed)
 	}
 
       /* Branch on which descriptor became active */
-      if (FD_ISSET (iConnectionNumber, &fdsRead))
-	{
+//      if (FD_ISSET (iConnectionNumber, &fdsRead))
+//	{ Also do it when no read since winClipboardFlushXEvents
+//    is sending the output.
 	  /* Process X events */
 	  /* Exit when we see that server is shutting down */
 	  iReturn = winClipboardFlushXEvents (hwnd,
 					      iWindow,
 					      pDisplay,
-					      fUseUnicode);
+					      fUseUnicode,
+					      FALSE
+					      );
 	  if (WIN_XEVENTS_SHUTDOWN == iReturn)
 	    {
 	      ErrorF ("winClipboardProc - winClipboardFlushXEvents "
 		      "trapped shutdown event, exiting main loop.\n");
 	      break;
 	    }
-	}
+//	}
 
 #ifdef HAS_DEVWINDOWS
       /* Check for Windows event ready */
@@ -436,7 +447,6 @@ winClipboardProc (void *pvNotUsed)
 
   g_iClipboardWindow = None;
   g_pClipboardDisplay = NULL;
-  g_hwndClipboard = NULL;
   g_fClipboardLaunched = FALSE;
   g_fClipboardStarted = FALSE;
 
@@ -452,7 +462,6 @@ thread_errorexit:
   }
   g_iClipboardWindow = None;
   g_pClipboardDisplay = NULL;
-  g_hwndClipboard = NULL;
   g_fClipboardLaunched = FALSE;
   g_fClipboardStarted = FALSE;
   //pthread_exit (NULL);
