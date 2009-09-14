@@ -563,7 +563,7 @@ static void
 winDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScr)
 {
   winScreenPriv(pScr);
-  return pScreenPriv->cursor.spriteFuncs->DeviceCursorCleanup(pDev, pScr);
+  pScreenPriv->cursor.spriteFuncs->DeviceCursorCleanup(pDev, pScr);
 }
 
 static miPointerSpriteFuncRec winSpriteFuncsRec = {
