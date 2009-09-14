@@ -316,7 +316,6 @@ winProcSetSelectionOwner (ClientPtr client)
   int			i;
   DrawablePtr		pDrawable;
   WindowPtr		pWindow = None;
-  Bool			fOwnedToNotOwned = FALSE;
   static Window		s_iOwners[CLIP_NUM_SELECTIONS] = {None};
   static unsigned long	s_ulServerGeneration = 0;
   REQUEST(xSetSelectionOwnerReq);
@@ -364,8 +363,6 @@ winProcSetSelectionOwner (ClientPtr client)
       if (None == stuff->window
 	  && None != s_iOwners[CLIP_OWN_PRIMARY])
 	{
-	  fOwnedToNotOwned = TRUE;
-
 	  winDebug ("winProcSetSelectionOwner - PRIMARY - Going from "
 		  "owned to not owned.\n");
 
@@ -388,8 +385,6 @@ winProcSetSelectionOwner (ClientPtr client)
       if (None == stuff->window
 	  && None != s_iOwners[CLIP_OWN_CLIPBOARD])
 	{
-	  fOwnedToNotOwned = TRUE;
-	  
 	  winDebug ("winProcSetSelectionOwner - CLIPBOARD - Going from "
 		  "owned to not owned.\n");
 
@@ -418,33 +413,6 @@ winProcSetSelectionOwner (ClientPtr client)
     s_iOwners[CLIP_OWN_PRIMARY] = None;
   if (g_iClipboardWindow == s_iOwners[CLIP_OWN_CLIPBOARD])
     s_iOwners[CLIP_OWN_CLIPBOARD] = None;
-
-  /*
-   * Handle case when selection is being disowned,
-   * WM_DRAWCLIPBOARD did not do the disowning,
-   * both monitored selections are no longer owned,
-   * an owned to not owned transition was detected,
-   * and we currently own the Win32 clipboard.
-   */
-  if (stuff->window == None
-      && s_iOwners[CLIP_OWN_PRIMARY] == None
-      && s_iOwners[CLIP_OWN_CLIPBOARD] == None
-      && fOwnedToNotOwned
-      && g_hwndClipboard != NULL
-      && g_hwndClipboard == GetClipboardOwner ())
-    {
-      winDebug ("winProcSetSelectionOwner - We currently own the "
-	      "clipboard and neither the PRIMARY nor the CLIPBOARD "
-	      "selections are owned, releasing ownership of Win32 "
-	      "clipboard.\n");
-      
-      /* Release ownership of the Windows clipboard */
-      OpenClipboard (NULL);
-      EmptyClipboard ();
-      CloseClipboard ();
-
-      goto winProcSetSelectionOwner_Done;
-    }
 
   /* Abort if no window at this point */
   if (None == stuff->window)

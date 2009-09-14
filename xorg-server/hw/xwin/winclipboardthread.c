@@ -149,7 +149,7 @@ winClipboardProc (void *pvNotUsed)
     {
       /* TODO: Cleanup the Win32 window and free any allocated memory */
       ErrorF ("winClipboardProc - setjmp returned for IO Error Handler.\n");
-      goto thread_errorexit;
+      //goto thread_errorexit;
     }
 
 #if defined(XCSECURITY)

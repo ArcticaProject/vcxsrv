@@ -466,7 +466,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 					    pDisplay,
 					    fConvertToUnicode,
 					    WIN_POLL_TIMEOUT);
-	while (WIN_XEVENTS_CONVERT == iReturn)
+	if (WIN_XEVENTS_CONVERT == iReturn)
 	  {
 	    /*
 	     * The selection was offered for conversion first, so we have

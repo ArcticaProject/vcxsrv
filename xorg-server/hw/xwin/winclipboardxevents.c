@@ -493,7 +493,6 @@ winClipboardFlushXEvents (HWND hwnd,
 	    XFree (pszAtomName);
 	  }
 #endif
-	  return WIN_XEVENTS_CONVERT;
 	break;
 
 	  /*
