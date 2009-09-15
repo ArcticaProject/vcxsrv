@@ -1,0 +1,131 @@
+.\"
+.\"
+.\" Copyright © 2007 Sun Microsystems, Inc.  All rights reserved.
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, provided that the above
+.\" copyright notice(s) and this permission notice appear in all copies of
+.\" the Software and that both the above copyright notice(s) and this
+.\" permission notice appear in supporting documentation.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+.\" OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+.\" HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+.\" INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+.\" FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+.\" NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+.\" WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of a copyright holder
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" of the copyright holder.
+.\"
+.\"
+.de TQ
+.br
+.ns
+.TP \\$1
+..
+.TH XINERAMA __libmansuffix__ __vendorversion__ 
+.SH NAME
+Xinerama \- API for Xinerama extension to X11 Protocol
+.SH SYNOPSIS
+\&#include <X11/extensions/Xinerama.h>
+.nf    
+.sp
+Bool XineramaQueryExtension \^(\^Display *\fIdpy\fP, 
+	int *\fIevent_base_return\fP, int *\fIerror_base_return\fP\^);
+.sp
+Status XineramaQueryVersion \^(\^Display *\fIdpy\fP,
+	int *\fImajor_version_return\fP,
+	int *\fIminor_version_return\fP\^);
+.sp
+Bool XineramaIsActive \^(\^Display *\fIdpy\fP\^);
+.sp
+XineramaScreenInfo * XineramaQueryScreens \^(\^Display *\fIdpy\fP, 
+	int *\fInumber\fP\^);
+.fi
+.SH ARGUMENTS
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_base_return\fP 1i
+Specifies the return location for the assigned base event code
+.IP \fIerror_base_return\fP 1i
+Specifies the return location for the assigned base error code
+.IP \fImajor_version_return\fP 1i
+Returns the major version supported by the server
+.IP \fIminor_version_return\fP 1i
+Returns the minor version supported by the server
+.IP \fInumber\fP 1i
+Returns the number of entries in the returned XineramaScreenInfo array.
+.SH DESCRIPTION
+.B Xinerama
+is a simple library designed to interface the Xinerama Extension for 
+retrieving information about physical output devices which may be combined
+into a single logical X screen.
+
+.SH FUNCTIONS
+
+.SS \fBXineramaQueryExtension()\fR
+
+.LP
+The XineramaQueryExtension function queries the Xserver to determine the 
+availability of the Xinerama Extension. If the extension is available, the 
+return value is True, and event_base_return and error_base_return are set to
+the base event number and base error number for the extension, respectively.
+Otherwise, the return value is False, and the values of event_base_return and
+error_base_return are undefined.
+.sp
+
+.SS \fBXineramaQueryVersion()\fR
+
+.LP
+The XineramaQueryVersion function returns the version of the Xinerama extension
+implemented by the Xserver. The version is returned in major_version_return
+and minor_version_return. The major version will be incremented for protocol
+incompatible changes, and the minor version will be incremented for small, 
+upwardly compatible changes.
+.LP
+If the Xinerama library is compatible with the version returned by the
+server, it returns nonzero. If the server does not support the
+XINERAMA extension, or if there was an error during communications
+with the server, or if the server and library protocol versions are
+incompatible, it returns zero.
+.sp
+
+.SS \fBXineramaIsActive()\fR
+
+.LP
+The XineramaIsActive function returns a Boolean operator used to determine if 
+Xinerama is activated on the screen. Returns True for active and False for 
+not active.
+.sp
+
+.SS \fBXineramaQueryScreens()\fR
+
+.LP
+The \fBXineramaQueryScreens()\fR function returns info about each
+individual output device within the Xinerama Screen.  The integer
+pointed to by the \fInumber\fR argument is updated to the number of
+output devices listed in the returned array of \fIXineramaScreenInfo\fR
+structures.  \fBXineramaQueryScreens()\fR returns NULL and sets \fInumber\fR 
+to 0 if Xinerama is not active.
+
+The pointer returned should be released with XFree(__libmansuffix__) 
+when no longer needed.
+.sp
+
+.SH NOTE
+The original API provided for interacting with the XINERAMA extension used
+function names beginning with \fIXPanoramiX\fR.   That API is now deprecated
+and this API should be used instead in new software.
+
+
+
