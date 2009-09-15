@@ -1,6 +1,7 @@
 LIBRARY=librandr
 
 CSRCS =	\
+ rrxinerama.c	\
 	mirandr.c	\
 	randr.c		\
 	rrcrtc.c	\

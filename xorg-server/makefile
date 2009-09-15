@@ -47,7 +47,8 @@ INCLUDELIBFILES =  \
  $(MHMAKECONF)\libx11\modules\lc\xlocale\$(OBJDIR)\libxlocale.lib \
  $(MHMAKECONF)\libfontenc\src\$(OBJDIR)\libfontenc.lib \
  $(MHMAKECONF)\libxfont\src\freetype\$(OBJDIR)\libft.lib \
- $(MHMAKECONF)\libxfont\src\stubs\$(OBJDIR)\libstubs.lib
+ $(MHMAKECONF)\libxfont\src\stubs\$(OBJDIR)\libstubs.lib \
+ $(MHMAKECONF)\libxinerama\src\$(OBJDIR)\libxinerama.lib
 
 LIBDIRS=$(dir $(INCLUDELIBFILES))
 

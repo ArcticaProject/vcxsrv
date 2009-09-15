@@ -12,16 +12,16 @@ xace.c \
 xcmisc.c \
 xres.c \
 xtest.c \
-geext.c
+geext.c \
+panoramiX.c \
+panoramiXprocs.c \
+panoramiXSwap.c 
 
 #shm.c \
 #appgroup.c \
 #fontcache.c \
 #mbufbf.c \
 #mbufpx.c \
-#panoramiX.c \
-#panoramiXprocs.c \
-#panoramiXSwap.c \
 #xcalibrate.c \
 #xf86bigfont.c \
 #xprint.c \

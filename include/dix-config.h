@@ -286,7 +286,7 @@
 #define PACKAGE "xorg-server"
 
 /* Internal define for Xinerama */
-/* #undef PANORAMIX */
+#define PANORAMIX 1
 
 /* Overall prefix */
 #define PROJECTROOT "."
@@ -387,7 +387,7 @@
 /* #undef XFreeXDGA */
 
 /* Support Xinerama extension */
-/* #undef XINERAMA */
+#define XINERAMA 1
 
 /* Support X Input extension */
 #define XINPUT 1
