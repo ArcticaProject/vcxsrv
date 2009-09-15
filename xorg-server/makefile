@@ -55,13 +55,15 @@ load_makefile $(LIBDIRS:%$(OBJDIR)\=%makefile MAKESERVER=$(MAKESERVER) DEBUG=$(D
 
 OBJS = dix\$(OBJDIR)\main.obj
 
-TTYAPP=vcxsrv
-
 ifeq ($(DEBUG),1)
+TTYAPP=vcxsrv_dbg
+
 LINKLIBS += $(MHMAKECONF)\openssl\out32_d\libeay32.lib \
             $(MHMAKECONF)\freetype\lib\freetype200b8MT_D.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2d.lib
 else
+TTYAPP=vcxsrv
+
 LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib \
             $(MHMAKECONF)\freetype\lib\freetype200b8MT.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2.lib
@@ -82,19 +84,19 @@ XKeysymDB: ..\libX11\src\XKeysymDB
 $(TTYAPP).exe: $(OBJDIR)\$(TTYAPP).exe
 	copy $< $@
 
-load_makefile hw\xwin\xlaunch\makefile MAKESERVER=0 DEBUG=$(DEBUG)
+load_makefile hw\xwin\xlaunch\makefile MAKESERVER=0 DEBUG=0
 
-xlaunch.exe: hw\xwin\xlaunch\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\xlaunch.exe
+xlaunch.exe: hw\xwin\xlaunch\obj\release\xlaunch.exe
 	copy $< $@
 
-load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=$(DEBUG)
+load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=0
 
-xkbcomp.exe: ..\xkbcomp\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\xkbcomp.exe
+xkbcomp.exe: ..\xkbcomp\obj\release\xkbcomp.exe
 	copy $< $@
 
-load_makefile ..\tools\plink\makefile MAKESERVER=0 DEBUG=$(DEBUG)
+load_makefile ..\tools\plink\makefile MAKESERVER=0 DEBUG=0
 
-plink.exe: ..\tools\plink\$(OBJDIR:obj\$(OBJDIRPREFIX)%=obj\%)\plink.exe
+plink.exe: ..\tools\plink\obj\release\plink.exe
 	copy $< $@
 
 load_makefile ..\libX11\nls\makefile MAKESERVER=0 DEBUG=0

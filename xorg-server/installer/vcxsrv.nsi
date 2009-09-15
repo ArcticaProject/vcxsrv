@@ -57,6 +57,8 @@ Section "VcXsrv (required)"
 
   ; Put files there
   File "..\obj\servrelease\vcxsrv.exe"
+  File "..\obj\servdebug\vcxsrv_dbg.exe"
+  File "..\obj\servdebug\vcxsrv_dbg.pdb"
   File "..\protocol.txt"
   File "..\system.XWinrc"
   File "..\..\xkbcomp\obj\release\xkbcomp.exe"
