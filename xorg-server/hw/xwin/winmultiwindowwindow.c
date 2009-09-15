@@ -99,7 +99,7 @@ void winInitMultiWindowClass(void)
     wcx.hIconSm = g_hSmallIconX;
 
 #if CYGMULTIWINDOW_DEBUG
-    ErrorF ("winCreateWindowsWindow - Creating class: %s\n", WINDOW_CLASS_X);
+    winDebug ("winCreateWindowsWindow - Creating class: %s\n", WINDOW_CLASS_X);
 #endif
 
     atomXWinClass = RegisterClassEx (&wcx);
@@ -119,7 +119,7 @@ winCreateWindowMultiWindow (WindowPtr pWin)
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG
-  winTrace ("winCreateWindowMultiWindow - pWin: %p\n", pWin);
+  winDebug ("winCreateWindowMultiWindow - pWin: %p\n", pWin);
 #endif
   
   WIN_UNWRAP(CreateWindow);
@@ -149,7 +149,7 @@ winDestroyWindowMultiWindow (WindowPtr pWin)
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winDestroyWindowMultiWindow - pWin: %p\n", pWin);
+  winDebug ("winDestroyWindowMultiWindow - pWin: %p\n", pWin);
 #endif
   
   WIN_UNWRAP(DestroyWindow); 
@@ -194,7 +194,7 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
   DWORD dwStyle;
 
 #if CYGMULTIWINDOW_DEBUG
-  winTrace ("winPositionWindowMultiWindow - pWin: %p\n", pWin);
+  winDebug ("winPositionWindowMultiWindow - pWin: %p\n", pWin);
 #endif
   
   WIN_UNWRAP(PositionWindow);
@@ -202,7 +202,7 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
   WIN_WRAP(PositionWindow, winPositionWindowMultiWindow);
   
 #if CYGWINDOWING_DEBUG
-  ErrorF ("winPositionWindowMultiWindow: (x, y) = (%d, %d)\n",
+  winDebug ("winPositionWindowMultiWindow: (x, y) = (%d, %d)\n",
 	  x, y);
 #endif
 
@@ -210,7 +210,7 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
   if (!hWnd)
     {
 #if CYGWINDOWING_DEBUG
-      ErrorF ("\timmediately return since hWnd is NULL\n");
+      winDebug ("\timmediately return since hWnd is NULL\n");
 #endif
       return fResult;
     }
@@ -232,7 +232,7 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
 
 #if CYGMULTIWINDOW_DEBUG
   lpRc = &rcNew;
-  ErrorF ("winPositionWindowMultiWindow - (%d ms)drawable (%d, %d)-(%d, %d)\n",
+  winDebug ("winPositionWindowMultiWindow - (%d ms)drawable (%d, %d)-(%d, %d)\n",
 	  GetTickCount (), lpRc->left, lpRc->top, lpRc->right, lpRc->bottom);
 #endif
 
@@ -250,15 +250,15 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
   GetClientRect (hWnd, &rcClient);
 
   lpRc = &rcNew;
-  ErrorF ("winPositionWindowMultiWindow - (%d ms)rcNew (%d, %d)-(%d, %d)\n",
+  winDebug ("winPositionWindowMultiWindow - (%d ms)rcNew (%d, %d)-(%d, %d)\n",
 	  GetTickCount (), lpRc->left, lpRc->top, lpRc->right, lpRc->bottom);
       
   lpRc = &rcOld;
-  ErrorF ("winPositionWindowMultiWindow - (%d ms)rcOld (%d, %d)-(%d, %d)\n",
+  winDebug ("winPositionWindowMultiWindow - (%d ms)rcOld (%d, %d)-(%d, %d)\n",
 	  GetTickCount (), lpRc->left, lpRc->top, lpRc->right, lpRc->bottom);
       
   lpRc = &rcClient;
-  ErrorF ("(%d ms)rcClient (%d, %d)-(%d, %d)\n",
+  winDebug ("(%d ms)rcClient (%d, %d)-(%d, %d)\n",
 	  GetTickCount (), lpRc->left, lpRc->top, lpRc->right, lpRc->bottom);
 #endif
 
@@ -266,11 +266,11 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
   if (!EqualRect (&rcNew, &rcOld))
     {
 #if CYGMULTIWINDOW_DEBUG
-      ErrorF ("winPositionWindowMultiWindow - Need to move\n");
+      winDebug ("winPositionWindowMultiWindow - Need to move\n");
 #endif
 
 #if CYGWINDOWING_DEBUG
-      ErrorF ("\tMoveWindow to (%ld, %ld) - %ldx%ld\n", rcNew.left, rcNew.top,
+      winDebug ("\tMoveWindow to (%ld, %ld) - %ldx%ld\n", rcNew.left, rcNew.top,
 	      rcNew.right - rcNew.left, rcNew.bottom - rcNew.top);
 #endif
       /* Change the position and dimensions of the Windows window */
@@ -282,7 +282,7 @@ winPositionWindowMultiWindow (WindowPtr pWin, int x, int y)
   else
     {
 #if CYGMULTIWINDOW_DEBUG
-      ErrorF ("winPositionWindowMultiWindow - Not need to move\n");
+      winDebug ("winPositionWindowMultiWindow - Not need to move\n");
 #endif
     }
 
@@ -302,7 +302,7 @@ winChangeWindowAttributesMultiWindow (WindowPtr pWin, unsigned long mask)
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winChangeWindowAttributesMultiWindow - pWin: %08x\n", pWin);
+  winDebug ("winChangeWindowAttributesMultiWindow - pWin: %08x\n", pWin);
 #endif
   
   WIN_UNWRAP(ChangeWindowAttributes); 
@@ -331,7 +331,7 @@ winUnmapWindowMultiWindow (WindowPtr pWin)
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winUnmapWindowMultiWindow - pWin: %08x\n", pWin);
+  winDebug ("winUnmapWindowMultiWindow - pWin: %08x\n", pWin);
 #endif
   
   WIN_UNWRAP(UnrealizeWindow); 
@@ -362,7 +362,7 @@ winMapWindowMultiWindow (WindowPtr pWin)
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winMapWindowMultiWindow - pWin: %08x\n", pWin);
+  winDebug ("winMapWindowMultiWindow - pWin: %08x\n", pWin);
 #endif
   
   WIN_UNWRAP(RealizeWindow); 
@@ -394,7 +394,7 @@ winReparentWindowMultiWindow (WindowPtr pWin, WindowPtr pPriorParent)
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winReparentMultiWindow - pWin: %08x\n", pWin);
+  winDebug ("winReparentMultiWindow - pWin: %08x\n", pWin);
 #endif
 
   WIN_UNWRAP(ReparentWindow);
@@ -424,7 +424,7 @@ winRestackWindowMultiWindow (WindowPtr pWin, WindowPtr pOldNextSib)
   winScreenPriv(pScreen);
 
 #if CYGMULTIWINDOW_DEBUG || CYGWINDOWING_DEBUG
-  winTrace ("winRestackMultiWindow - %08x\n", pWin);
+  winDebug ("winRestackMultiWindow - %08x\n", pWin);
 #endif
   
    WIN_UNWRAP(RestackWindow);
@@ -518,7 +518,7 @@ winCreateWindowsWindow (WindowPtr pWin)
   winInitMultiWindowClass();
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winCreateWindowsWindow - pWin: %08x\n", pWin);
+  winDebug ("winCreateWindowsWindow - pWin: %08x\n", pWin);
 #endif
 
   iX = pWin->drawable.x + GetSystemMetrics (SM_XVIRTUALSCREEN);
@@ -607,7 +607,7 @@ winDestroyWindowsWindow (WindowPtr pWin)
   BOOL			oldstate = winInDestroyWindowsWindow;
   
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winDestroyWindowsWindow\n");
+  winDebug ("winDestroyWindowsWindow\n");
 #endif
 
   /* Bail out if the Windows window handle is invalid */
@@ -635,7 +635,7 @@ winDestroyWindowsWindow (WindowPtr pWin)
   winInDestroyWindowsWindow = oldstate;
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("-winDestroyWindowsWindow\n");
+  winDebug ("-winDestroyWindowsWindow\n");
 #endif
 }
 
@@ -652,7 +652,7 @@ winUpdateWindowsWindow (WindowPtr pWin)
   HWND			hWnd = pWinPriv->hWnd;
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winUpdateWindowsWindow\n");
+  winDebug ("winUpdateWindowsWindow\n");
 #endif
 
   /* Check if the Windows window's parents have been destroyed */
@@ -681,7 +681,7 @@ winUpdateWindowsWindow (WindowPtr pWin)
     }
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("-winUpdateWindowsWindow\n");
+  winDebug ("-winUpdateWindowsWindow\n");
 #endif
 }
 
@@ -700,7 +700,7 @@ winGetWindowID (WindowPtr pWin)
   FindClientResourcesByType (c, RT_WINDOW, winFindWindow, &wi);
 
 #if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winGetWindowID - Window ID: %d\n", wi.id);
+  winDebug ("winGetWindowID - Window ID: %d\n", wi.id);
 #endif
 
   return wi.id;
@@ -739,14 +739,14 @@ winReorderWindowsMultiWindow (void)
   DWORD dwWindowProcessID = 0;
 
 #if CYGMULTIWINDOW_DEBUG || CYGWINDOWING_DEBUG
-  winTrace ("winReorderWindowsMultiWindow\n");
+  winDebug ("winReorderWindowsMultiWindow\n");
 #endif
 
   if (fRestacking)
     {
       /* It is a recusive call so immediately exit */
 #if CYGWINDOWING_DEBUG
-      ErrorF ("winReorderWindowsMultiWindow - "
+      winDebug ("winReorderWindowsMultiWindow - "
 	      "exit because fRestacking == TRUE\n");
 #endif
       return;
@@ -807,7 +807,7 @@ winMinimizeWindow (Window id)
   winScreenInfo *pScreenInfo = NULL;
 
 #if CYGWINDOWING_DEBUG
-  ErrorF ("winMinimizeWindow\n");
+  winDebug ("winMinimizeWindow\n");
 #endif
 
   pWin = (WindowPtr) LookupIDByType (id, RT_WINDOW);
@@ -851,7 +851,7 @@ winCopyWindowMultiWindow (WindowPtr pWin, DDXPointRec oldpt,
   winScreenPriv(pScreen);
 
 #if CYGWINDOWING_DEBUG
-  ErrorF ("CopyWindowMultiWindow\n");
+  winDebug ("CopyWindowMultiWindow\n");
 #endif
   WIN_UNWRAP(CopyWindow); 
   (*pScreen->CopyWindow)(pWin, oldpt, oldRegion);
@@ -870,7 +870,7 @@ winMoveWindowMultiWindow (WindowPtr pWin, int x, int y,
   winScreenPriv(pScreen);
 
 #if CYGWINDOWING_DEBUG
-  ErrorF ("MoveWindowMultiWindow to (%d, %d)\n", x, y);
+  winDebug ("MoveWindowMultiWindow to (%d, %d)\n", x, y);
 #endif
 
   WIN_UNWRAP(MoveWindow); 
@@ -890,7 +890,7 @@ winResizeWindowMultiWindow (WindowPtr pWin, int x, int y, unsigned int w,
   winScreenPriv(pScreen);
 
 #if CYGWINDOWING_DEBUG
-  ErrorF ("ResizeWindowMultiWindow to (%d, %d) - %dx%d\n", x, y, w, h);
+  winDebug ("ResizeWindowMultiWindow to (%d, %d) - %dx%d\n", x, y, w, h);
 #endif
   WIN_UNWRAP(ResizeWindow); 
   (*pScreen->ResizeWindow)(pWin, x, y, w, h, pSib);
@@ -922,13 +922,13 @@ winAdjustXWindow (WindowPtr pWin, HWND hwnd)
 #define HEIGHT(rc) (rc.bottom - rc.top)
   
 #if CYGWINDOWING_DEBUG
-  ErrorF ("winAdjustXWindow\n");
+  winDebug ("winAdjustXWindow\n");
 #endif
 
   if (IsIconic (hwnd))
     {
 #if CYGWINDOWING_DEBUG
-      ErrorF ("\timmediately return because the window is iconized\n");
+      winDebug ("\timmediately return because the window is iconized\n");
 #endif
       /*
        * If the Windows window is minimized, its WindowRect has
@@ -971,7 +971,7 @@ winAdjustXWindow (WindowPtr pWin, HWND hwnd)
   if (EqualRect (&rcDraw, &rcWin)) {
     /* Bail if no adjust is needed */
 #if CYGWINDOWING_DEBUG
-    ErrorF ("\treturn because already adjusted\n");
+    winDebug ("\treturn because already adjusted\n");
 #endif
     return 0;
   }
@@ -993,7 +993,7 @@ winAdjustXWindow (WindowPtr pWin, HWND hwnd)
   vlist[2] = pDraw->width + dW;
   vlist[3] = pDraw->height + dH;
 #if CYGWINDOWING_DEBUG
-  ErrorF ("\tConfigureWindow to (%ld, %ld) - %ldx%ld\n", vlist[0], vlist[1],
+  winDebug ("\tConfigureWindow to (%ld, %ld) - %ldx%ld\n", vlist[0], vlist[1],
 	  vlist[2], vlist[3]);
 #endif
   return ConfigureWindow (pWin, CWX | CWY | CWWidth | CWHeight,
