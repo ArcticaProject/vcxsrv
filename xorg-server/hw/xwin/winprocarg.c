@@ -39,7 +39,8 @@ from The Open Group.
 #include "winconfig.h"
 #include "winprefs.h"
 #include "winmsg.h"
-
+#define COMPILE_MULTIMON_STUBS
+#include <multimon.h>
 /*
  * References to external symbols
  */
@@ -77,30 +78,10 @@ struct GetMonitorInfoData {
     int  monitorWidth;
 };
 
-typedef wBOOL (*ENUMDISPLAYMONITORSPROC)(HDC,LPCRECT,MONITORENUMPROC,LPARAM);
-ENUMDISPLAYMONITORSPROC _EnumDisplayMonitors;
-
 wBOOL CALLBACK getMonitorInfo(HMONITOR hMonitor, HDC hdc, LPRECT rect, LPARAM _data);
 
 static Bool QueryMonitor(int index, struct GetMonitorInfoData *data)
 {
-    /* Load EnumDisplayMonitors from DLL */
-    HMODULE user32;
-    FARPROC func;
-    user32 = LoadLibrary("user32.dll");
-    if (user32 == NULL)
-    {
-        winW32Error(2, "Could not open user32.dll");
-        return FALSE;
-    }
-    func = GetProcAddress(user32, "EnumDisplayMonitors");
-    if (func == NULL)
-    {
-        winW32Error(2, "Could not resolve EnumDisplayMonitors: ");
-        return FALSE;
-    }
-    _EnumDisplayMonitors = (ENUMDISPLAYMONITORSPROC)func;
-    
     /* prepare data */
     if (data == NULL)
         return FALSE;
@@ -108,10 +89,8 @@ static Bool QueryMonitor(int index, struct GetMonitorInfoData *data)
     data->requestedMonitor = index;
 
     /* query information */
-    _EnumDisplayMonitors(NULL, NULL, getMonitorInfo, (LPARAM) data);
+    xEnumDisplayMonitors(NULL, NULL, getMonitorInfo, (LPARAM) data);
 
-    /* cleanup */
-    FreeLibrary(user32);
     return TRUE;
 }
 
