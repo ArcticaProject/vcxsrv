@@ -312,8 +312,11 @@ EnableDevice(DeviceIntPtr dev, BOOL sendevent)
                 PairDevices(NULL, other, dev);
         } else
         {
-            other = (IsPointerDevice(dev)) ? inputInfo.pointer :
-                inputInfo.keyboard;
+            if (dev->coreEvents)
+                other = (IsPointerDevice(dev)) ? inputInfo.pointer :
+                    inputInfo.keyboard;
+            else
+                other = NULL; /* auto-float non-core devices */
             AttachDevice(NULL, dev, other);
         }
     }
@@ -1131,7 +1134,7 @@ SetKeySymsMap(KeySymsPtr dst, KeySymsPtr src)
     return TRUE;
 }
 
-_X_EXPORT Bool
+Bool
 InitButtonClassDeviceStruct(DeviceIntPtr dev, int numButtons, Atom* labels,
                             CARD8 *map)
 {
@@ -1330,7 +1333,7 @@ InitFocusClassDeviceStruct(DeviceIntPtr dev)
     return TRUE;
 }
 
-_X_EXPORT Bool
+Bool
 InitPtrFeedbackClassDeviceStruct(DeviceIntPtr dev, PtrCtrlProcPtr controlProc)
 {
     PtrFeedbackPtr feedc;
@@ -2335,7 +2338,7 @@ AttachDevice(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr master)
         return BadDevice;
 
     /* set from floating to floating? */
-    if (!dev->u.master && !master)
+    if (!dev->u.master && !master && dev->enabled)
         return Success;
 
     /* free the existing sprite. */
@@ -2357,7 +2360,13 @@ AttachDevice(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr master)
      */
     if (!master)
     {
-        WindowPtr currentRoot = dev->spriteInfo->sprite->spriteTrace[0];
+        WindowPtr currentRoot;
+
+        if (dev->spriteInfo->sprite)
+            currentRoot = dev->spriteInfo->sprite->spriteTrace[0];
+        else /* new device auto-set to floating */
+            currentRoot = WindowTable[0];
+
         /* we need to init a fake sprite */
         screen = currentRoot->drawable.pScreen;
         screen->DeviceCursorInitialize(dev, screen);
@@ -2374,30 +2383,11 @@ AttachDevice(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr master)
         RecalculateMasterButtons(master);
     }
 
-    /* If we were connected to master device before, this MD may need to
-     * change back to it's original classes.
+    /* XXX: in theory, the MD should change back to its old, original
+     * classes when the last SD is detached. Thanks to the XTEST devices,
+     * we'll always have an SD attached until the MD is removed.
+     * So let's not worry about that.
      */
-    if (oldmaster)
-    {
-        DeviceIntPtr it;
-        for (it = inputInfo.devices; it; it = it->next)
-            if (!IsMaster(it) && it->u.master == oldmaster)
-                break;
-
-        if (!it)  /* no dev is paired with old master */
-        {
-            EventListPtr event = NULL;
-
-            /* XXX: reset master back to defaults */
-            event = InitEventList(1);
-            SetMinimumEventSize(event, 1, sizeof(DeviceChangedEvent));
-            CreateClassesChangedEvent(event, oldmaster, oldmaster,
-                                      DEVCHANGE_POINTER_EVENT | DEVCHANGE_KEYBOARD_EVENT);
-            XISendDeviceChangedEvent(oldmaster, oldmaster,
-                                     (DeviceChangedEvent*)event->event);
-            FreeEventList(event, 1);
-        }
-    }
 
     return Success;
 }

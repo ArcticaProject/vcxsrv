@@ -85,6 +85,7 @@
  * part of the Xserver tree.  All calls to the dmx* layer are #defined
  * here for the .c file.  The .h file will also have to be edited. */
 #include "usb-keyboard.h"
+#include <xkbsrv.h>
 
 #define GETPRIV       myPrivate *priv                            \
                       = ((DMXLocalInputInfoPtr)(pDev->devicePrivate))->private
@@ -296,7 +297,7 @@ static void kbdUSBConvert(DevicePtr pDev,
                           BLOCK block)
 {
     GETPRIV;
-    KeySymsPtr     pKeySyms = &priv->pDevice->key->curKeySyms;
+    XkbSrvInfoPtr  xkbi = priv->pKeyboard->key->xkbInfo;
     int            type;
     int            keyCode;
     KeySym         keySym   = NoSymbol;
@@ -308,9 +309,13 @@ static void kbdUSBConvert(DevicePtr pDev,
 
     /* Handle repeats */
 
-    if (keyCode >= pKeySyms->minKeyCode && keyCode <= pKeySyms->maxKeyCode) {
-        keySym = pKeySyms->map[(keyCode - pKeySyms->minKeyCode)
-                               * pKeySyms->mapWidth];
+    if (keyCode >= xkbi->desc->min_key_code &&
+        keyCode <= xkbi->desc->max_key_code) {
+
+        int effectiveGroup = XkbGetEffectiveGroup(xkbi,
+                                                  &xkbi->state,
+                                                  scanCode);
+        keySym = XkbKeySym(xkbi->desc, scanCode, effectiveGroup);
 #if 0
         switch (keySym) {
         case XK_Num_Lock:

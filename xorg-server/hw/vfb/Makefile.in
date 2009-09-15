@@ -65,6 +65,12 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
+AM_V_AR = $(am__v_AR_$(V))
+am__v_AR_ = $(am__v_AR_$(AM_DEFAULT_VERBOSITY))
+am__v_AR_0 = @echo "  AR    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 libfbcmap_a_AR = $(AR) $(ARFLAGS)
 libfbcmap_a_LIBADD =
 am_libfbcmap_a_OBJECTS = libfbcmap_a-fbcmap_mi.$(OBJEXT)
@@ -78,19 +84,31 @@ Xvfb_OBJECTS = $(am_Xvfb_OBJECTS)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = libfbcmap.a $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
-Xvfb_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(Xvfb_LDFLAGS) \
-	$(LDFLAGS) -o $@
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
+Xvfb_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(Xvfb_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libfbcmap_a_SOURCES) $(Xvfb_SOURCES)
 DIST_SOURCES = $(libfbcmap_a_SOURCES) $(Xvfb_SOURCES)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -123,9 +141,9 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
-APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
@@ -214,6 +232,7 @@ KDRIVE_LIBS = @KDRIVE_LIBS@
 KDRIVE_LOCAL_LIBS = @KDRIVE_LOCAL_LIBS@
 KDRIVE_PURE_INCS = @KDRIVE_PURE_INCS@
 KDRIVE_PURE_LIBS = @KDRIVE_PURE_LIBS@
+LAUNCHD_ID_PREFIX = @LAUNCHD_ID_PREFIX@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LD_EXPORT_SYMBOLS_FLAG = @LD_EXPORT_SYMBOLS_FLAG@
@@ -466,6 +485,8 @@ MANDEFS = \
 	-D__mandir__=$(mandir) \
 	-D__projectroot__=$(prefix) \
 	-D__xconfigfile__=$(__XCONFIGFILE__) -D__xconfigdir__=$(XCONFIGDIR) \
+	-D__xkbdir__=$(XKB_BASE_DIRECTORY) \
+	-D__modulepath__="$(DEFAULT_MODULE_PATH)" \
 	-D__xlogfile__=$(XLOGFILE) -D__xservername__=$(XSERVERNAME) 
 
 
@@ -515,9 +536,9 @@ $(am__aclocal_m4_deps):
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 libfbcmap.a: $(libfbcmap_a_OBJECTS) $(libfbcmap_a_DEPENDENCIES) 
-	-rm -f libfbcmap.a
-	$(libfbcmap_a_AR) libfbcmap.a $(libfbcmap_a_OBJECTS) $(libfbcmap_a_LIBADD)
-	$(RANLIB) libfbcmap.a
+	$(AM_V_at)-rm -f libfbcmap.a
+	$(AM_V_AR)$(libfbcmap_a_AR) libfbcmap.a $(libfbcmap_a_OBJECTS) $(libfbcmap_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libfbcmap.a
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -563,7 +584,7 @@ clean-binPROGRAMS:
 	rm -f $$list
 Xvfb$(EXEEXT): $(Xvfb_OBJECTS) $(Xvfb_DEPENDENCIES) 
 	@rm -f Xvfb$(EXEEXT)
-	$(Xvfb_LINK) $(Xvfb_OBJECTS) $(Xvfb_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(Xvfb_LINK) $(Xvfb_OBJECTS) $(Xvfb_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -579,78 +600,89 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stubs.Po@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
 libfbcmap_a-fbcmap_mi.o: $(top_srcdir)/fb/fbcmap_mi.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfbcmap_a_CFLAGS) $(CFLAGS) -MT libfbcmap_a-fbcmap_mi.o -MD -MP -MF $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo -c -o libfbcmap_a-fbcmap_mi.o `test -f '$(top_srcdir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_srcdir)/fb/fbcmap_mi.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo $(DEPDIR)/libfbcmap_a-fbcmap_mi.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfbcmap_a_CFLAGS) $(CFLAGS) -MT libfbcmap_a-fbcmap_mi.o -MD -MP -MF $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo -c -o libfbcmap_a-fbcmap_mi.o `test -f '$(top_srcdir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_srcdir)/fb/fbcmap_mi.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo $(DEPDIR)/libfbcmap_a-fbcmap_mi.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/fb/fbcmap_mi.c' object='libfbcmap_a-fbcmap_mi.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfbcmap_a_CFLAGS) $(CFLAGS) -c -o libfbcmap_a-fbcmap_mi.o `test -f '$(top_srcdir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_srcdir)/fb/fbcmap_mi.c
 
 libfbcmap_a-fbcmap_mi.obj: $(top_srcdir)/fb/fbcmap_mi.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfbcmap_a_CFLAGS) $(CFLAGS) -MT libfbcmap_a-fbcmap_mi.obj -MD -MP -MF $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo -c -o libfbcmap_a-fbcmap_mi.obj `if test -f '$(top_srcdir)/fb/fbcmap_mi.c'; then $(CYGPATH_W) '$(top_srcdir)/fb/fbcmap_mi.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/fb/fbcmap_mi.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo $(DEPDIR)/libfbcmap_a-fbcmap_mi.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfbcmap_a_CFLAGS) $(CFLAGS) -MT libfbcmap_a-fbcmap_mi.obj -MD -MP -MF $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo -c -o libfbcmap_a-fbcmap_mi.obj `if test -f '$(top_srcdir)/fb/fbcmap_mi.c'; then $(CYGPATH_W) '$(top_srcdir)/fb/fbcmap_mi.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/fb/fbcmap_mi.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfbcmap_a-fbcmap_mi.Tpo $(DEPDIR)/libfbcmap_a-fbcmap_mi.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/fb/fbcmap_mi.c' object='libfbcmap_a-fbcmap_mi.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfbcmap_a_CFLAGS) $(CFLAGS) -c -o libfbcmap_a-fbcmap_mi.obj `if test -f '$(top_srcdir)/fb/fbcmap_mi.c'; then $(CYGPATH_W) '$(top_srcdir)/fb/fbcmap_mi.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/fb/fbcmap_mi.c'; fi`
 
 dpmsstubs.o: $(top_srcdir)/Xext/dpmsstubs.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dpmsstubs.o -MD -MP -MF $(DEPDIR)/dpmsstubs.Tpo -c -o dpmsstubs.o `test -f '$(top_srcdir)/Xext/dpmsstubs.c' || echo '$(srcdir)/'`$(top_srcdir)/Xext/dpmsstubs.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/dpmsstubs.Tpo $(DEPDIR)/dpmsstubs.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dpmsstubs.o -MD -MP -MF $(DEPDIR)/dpmsstubs.Tpo -c -o dpmsstubs.o `test -f '$(top_srcdir)/Xext/dpmsstubs.c' || echo '$(srcdir)/'`$(top_srcdir)/Xext/dpmsstubs.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dpmsstubs.Tpo $(DEPDIR)/dpmsstubs.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/Xext/dpmsstubs.c' object='dpmsstubs.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dpmsstubs.o `test -f '$(top_srcdir)/Xext/dpmsstubs.c' || echo '$(srcdir)/'`$(top_srcdir)/Xext/dpmsstubs.c
 
 dpmsstubs.obj: $(top_srcdir)/Xext/dpmsstubs.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dpmsstubs.obj -MD -MP -MF $(DEPDIR)/dpmsstubs.Tpo -c -o dpmsstubs.obj `if test -f '$(top_srcdir)/Xext/dpmsstubs.c'; then $(CYGPATH_W) '$(top_srcdir)/Xext/dpmsstubs.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/Xext/dpmsstubs.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/dpmsstubs.Tpo $(DEPDIR)/dpmsstubs.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT dpmsstubs.obj -MD -MP -MF $(DEPDIR)/dpmsstubs.Tpo -c -o dpmsstubs.obj `if test -f '$(top_srcdir)/Xext/dpmsstubs.c'; then $(CYGPATH_W) '$(top_srcdir)/Xext/dpmsstubs.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/Xext/dpmsstubs.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dpmsstubs.Tpo $(DEPDIR)/dpmsstubs.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/Xext/dpmsstubs.c' object='dpmsstubs.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o dpmsstubs.obj `if test -f '$(top_srcdir)/Xext/dpmsstubs.c'; then $(CYGPATH_W) '$(top_srcdir)/Xext/dpmsstubs.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/Xext/dpmsstubs.c'; fi`
 
 stubs.o: $(top_srcdir)/Xi/stubs.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT stubs.o -MD -MP -MF $(DEPDIR)/stubs.Tpo -c -o stubs.o `test -f '$(top_srcdir)/Xi/stubs.c' || echo '$(srcdir)/'`$(top_srcdir)/Xi/stubs.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/stubs.Tpo $(DEPDIR)/stubs.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT stubs.o -MD -MP -MF $(DEPDIR)/stubs.Tpo -c -o stubs.o `test -f '$(top_srcdir)/Xi/stubs.c' || echo '$(srcdir)/'`$(top_srcdir)/Xi/stubs.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stubs.Tpo $(DEPDIR)/stubs.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/Xi/stubs.c' object='stubs.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o stubs.o `test -f '$(top_srcdir)/Xi/stubs.c' || echo '$(srcdir)/'`$(top_srcdir)/Xi/stubs.c
 
 stubs.obj: $(top_srcdir)/Xi/stubs.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT stubs.obj -MD -MP -MF $(DEPDIR)/stubs.Tpo -c -o stubs.obj `if test -f '$(top_srcdir)/Xi/stubs.c'; then $(CYGPATH_W) '$(top_srcdir)/Xi/stubs.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/Xi/stubs.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/stubs.Tpo $(DEPDIR)/stubs.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT stubs.obj -MD -MP -MF $(DEPDIR)/stubs.Tpo -c -o stubs.obj `if test -f '$(top_srcdir)/Xi/stubs.c'; then $(CYGPATH_W) '$(top_srcdir)/Xi/stubs.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/Xi/stubs.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stubs.Tpo $(DEPDIR)/stubs.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/Xi/stubs.c' object='stubs.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o stubs.obj `if test -f '$(top_srcdir)/Xi/stubs.c'; then $(CYGPATH_W) '$(top_srcdir)/Xi/stubs.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/Xi/stubs.c'; fi`
 
 miinitext.o: $(top_srcdir)/mi/miinitext.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT miinitext.o -MD -MP -MF $(DEPDIR)/miinitext.Tpo -c -o miinitext.o `test -f '$(top_srcdir)/mi/miinitext.c' || echo '$(srcdir)/'`$(top_srcdir)/mi/miinitext.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/miinitext.Tpo $(DEPDIR)/miinitext.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT miinitext.o -MD -MP -MF $(DEPDIR)/miinitext.Tpo -c -o miinitext.o `test -f '$(top_srcdir)/mi/miinitext.c' || echo '$(srcdir)/'`$(top_srcdir)/mi/miinitext.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/miinitext.Tpo $(DEPDIR)/miinitext.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/mi/miinitext.c' object='miinitext.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o miinitext.o `test -f '$(top_srcdir)/mi/miinitext.c' || echo '$(srcdir)/'`$(top_srcdir)/mi/miinitext.c
 
 miinitext.obj: $(top_srcdir)/mi/miinitext.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT miinitext.obj -MD -MP -MF $(DEPDIR)/miinitext.Tpo -c -o miinitext.obj `if test -f '$(top_srcdir)/mi/miinitext.c'; then $(CYGPATH_W) '$(top_srcdir)/mi/miinitext.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/mi/miinitext.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/miinitext.Tpo $(DEPDIR)/miinitext.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT miinitext.obj -MD -MP -MF $(DEPDIR)/miinitext.Tpo -c -o miinitext.obj `if test -f '$(top_srcdir)/mi/miinitext.c'; then $(CYGPATH_W) '$(top_srcdir)/mi/miinitext.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/mi/miinitext.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/miinitext.Tpo $(DEPDIR)/miinitext.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/mi/miinitext.c' object='miinitext.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o miinitext.obj `if test -f '$(top_srcdir)/mi/miinitext.c'; then $(CYGPATH_W) '$(top_srcdir)/mi/miinitext.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/mi/miinitext.c'; fi`

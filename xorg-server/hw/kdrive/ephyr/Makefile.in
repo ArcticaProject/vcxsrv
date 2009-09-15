@@ -72,6 +72,9 @@ am__objects_1 = ephyrdriext.lo ephyrdri.lo XF86dri.lo ephyrglxext.lo \
 	ephyrhostglx.lo
 @DRI_TRUE@am_libxephyr_hostdri_la_OBJECTS = $(am__objects_1)
 libxephyr_hostdri_la_OBJECTS = $(am_libxephyr_hostdri_la_OBJECTS)
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
 @DRI_TRUE@am_libxephyr_hostdri_la_rpath =
 libxephyr_hostx_la_LIBADD =
 am__objects_2 = hostx.lo
@@ -92,19 +95,31 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(appmandir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_Xephyr_OBJECTS = ephyrinit.$(OBJEXT)
 Xephyr_OBJECTS = $(am_Xephyr_OBJECTS)
-Xephyr_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(Xephyr_LDFLAGS) \
-	$(LDFLAGS) -o $@
+Xephyr_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(Xephyr_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libxephyr_hostdri_la_SOURCES) \
 	$(libxephyr_hostx_la_SOURCES) $(libxephyr_hostxv_la_SOURCES) \
 	$(libxephyr_la_SOURCES) $(Xephyr_SOURCES)
@@ -142,9 +157,9 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
-APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
@@ -233,6 +248,7 @@ KDRIVE_LIBS = @KDRIVE_LIBS@
 KDRIVE_LOCAL_LIBS = @KDRIVE_LOCAL_LIBS@
 KDRIVE_PURE_INCS = @KDRIVE_PURE_INCS@
 KDRIVE_PURE_LIBS = @KDRIVE_PURE_LIBS@
+LAUNCHD_ID_PREFIX = @LAUNCHD_ID_PREFIX@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LD_EXPORT_SYMBOLS_FLAG = @LD_EXPORT_SYMBOLS_FLAG@
@@ -527,6 +543,8 @@ MANDEFS = \
 	-D__mandir__=$(mandir) \
 	-D__projectroot__=$(prefix) \
 	-D__xconfigfile__=$(__XCONFIGFILE__) -D__xconfigdir__=$(XCONFIGDIR) \
+	-D__xkbdir__=$(XKB_BASE_DIRECTORY) \
+	-D__modulepath__="$(DEFAULT_MODULE_PATH)" \
 	-D__xlogfile__=$(XLOGFILE) -D__xservername__=$(XSERVERNAME) 
 
 CLEANFILES = $(appman_DATA) Xephyr.man
@@ -579,13 +597,13 @@ clean-noinstLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libxephyr-hostdri.la: $(libxephyr_hostdri_la_OBJECTS) $(libxephyr_hostdri_la_DEPENDENCIES) 
-	$(LINK) $(am_libxephyr_hostdri_la_rpath) $(libxephyr_hostdri_la_OBJECTS) $(libxephyr_hostdri_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(am_libxephyr_hostdri_la_rpath) $(libxephyr_hostdri_la_OBJECTS) $(libxephyr_hostdri_la_LIBADD) $(LIBS)
 libxephyr-hostx.la: $(libxephyr_hostx_la_OBJECTS) $(libxephyr_hostx_la_DEPENDENCIES) 
-	$(LINK)  $(libxephyr_hostx_la_OBJECTS) $(libxephyr_hostx_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK)  $(libxephyr_hostx_la_OBJECTS) $(libxephyr_hostx_la_LIBADD) $(LIBS)
 libxephyr-hostxv.la: $(libxephyr_hostxv_la_OBJECTS) $(libxephyr_hostxv_la_DEPENDENCIES) 
-	$(LINK) $(am_libxephyr_hostxv_la_rpath) $(libxephyr_hostxv_la_OBJECTS) $(libxephyr_hostxv_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(am_libxephyr_hostxv_la_rpath) $(libxephyr_hostxv_la_OBJECTS) $(libxephyr_hostxv_la_LIBADD) $(LIBS)
 libxephyr.la: $(libxephyr_la_OBJECTS) $(libxephyr_la_DEPENDENCIES) 
-	$(LINK)  $(libxephyr_la_OBJECTS) $(libxephyr_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK)  $(libxephyr_la_OBJECTS) $(libxephyr_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -631,7 +649,7 @@ clean-binPROGRAMS:
 	rm -f $$list
 Xephyr$(EXEEXT): $(Xephyr_OBJECTS) $(Xephyr_DEPENDENCIES) 
 	@rm -f Xephyr$(EXEEXT)
-	$(Xephyr_LINK) $(Xephyr_OBJECTS) $(Xephyr_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(Xephyr_LINK) $(Xephyr_OBJECTS) $(Xephyr_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -653,22 +671,25 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/os.Plo@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<

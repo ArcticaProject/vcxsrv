@@ -167,6 +167,7 @@
 #include "xf86Keymap.h"
 #endif
 #include <linux/keyboard.h>
+#include <xkbsrv.h>
 
 #define NUM_AT2LNX (sizeof(at2lnx) / sizeof(at2lnx[0]))
 #define NUM_STATE_ENTRIES (256/32)
@@ -660,7 +661,7 @@ static void kbdLinuxConvert(DevicePtr pDev,
                             BLOCK block)
 {
     GETPRIV;
-    KeySymsPtr     pKeySyms = &priv->pKeyboard->key->curKeySyms;
+    XkbSrvInfoPtr  xkbi = priv->pKeyboard->key->xkbInfo;
     int            type;
     KeySym         keySym   = NoSymbol;
     int            keyCode;
@@ -673,10 +674,14 @@ static void kbdLinuxConvert(DevicePtr pDev,
     keyCode = (scanCode & 0x7f) + MIN_KEYCODE;
 
     /* Handle repeats */
-    
-    if (keyCode >= pKeySyms->minKeyCode && keyCode <= pKeySyms->maxKeyCode) {
-        keySym = pKeySyms->map[(keyCode - pKeySyms->minKeyCode)
-                               * pKeySyms->mapWidth];
+
+    if (keyCode >= xkbi->desc->min_key_code &&
+        keyCode <= xkbi->desc->max_key_code) {
+
+        int effectiveGroup = XkbGetEffectiveGroup(xkbi,
+                                                  &xkbi->state,
+                                                  scanCode);
+        keySym = XkbKeySym(xkbi->desc, scanCode, effectiveGroup);
 #if 0
         switch (keySym) {
         case XK_Num_Lock:
@@ -690,7 +695,7 @@ static void kbdLinuxConvert(DevicePtr pDev,
             break;
         }
 #endif
-        
+
         /* If key is already down, ignore or autorepeat */
         if (type == KeyPress && kbdLinuxKeyDown(priv, keyCode)) {
             KbdFeedbackClassRec *feed = priv->pKeyboard->kbdfeed;

@@ -83,47 +83,50 @@ LTLIBRARIES = $(extsmodule_LTLIBRARIES) $(module_LTLIBRARIES) \
 libdbe_la_DEPENDENCIES = $(top_builddir)/dbe/libdbe.la
 am_libdbe_la_OBJECTS = dbemodule.lo
 libdbe_la_OBJECTS = $(am_libdbe_la_OBJECTS)
-libdbe_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
+libdbe_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libdbe_la_LDFLAGS) $(LDFLAGS) -o $@
 @DBE_TRUE@am_libdbe_la_rpath = -rpath $(extsmoduledir)
 libdixmods_la_LIBADD =
 am_libdixmods_la_OBJECTS = libdixmods_la-miinitext.lo
 libdixmods_la_OBJECTS = $(am_libdixmods_la_OBJECTS)
-libdixmods_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+libdixmods_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libdixmods_la_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 libfb_la_DEPENDENCIES = $(top_builddir)/fb/libfb.la
 am_libfb_la_OBJECTS = libfb_la-fbcmap_mi.lo libfb_la-fbmodule.lo
 libfb_la_OBJECTS = $(am_libfb_la_OBJECTS)
-libfb_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(libfb_la_CFLAGS) $(CFLAGS) \
-	$(libfb_la_LDFLAGS) $(LDFLAGS) -o $@
+libfb_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libfb_la_CFLAGS) \
+	$(CFLAGS) $(libfb_la_LDFLAGS) $(LDFLAGS) -o $@
 libglx_la_DEPENDENCIES = $(top_builddir)/glx/libglx.la \
 	$(GLXDRI_LIBRARY)
 am_libglx_la_OBJECTS = glxmodule.lo
 libglx_la_OBJECTS = $(am_libglx_la_OBJECTS)
-libglx_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+libglx_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libglx_la_LDFLAGS) $(LDFLAGS) -o $@
 @GLX_TRUE@am_libglx_la_rpath = -rpath $(extsmoduledir)
 librecord_la_DEPENDENCIES = $(top_builddir)/record/librecord.la
 am_librecord_la_OBJECTS = recordmod.lo
 librecord_la_OBJECTS = $(am_librecord_la_OBJECTS)
-librecord_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+librecord_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(librecord_la_LDFLAGS) $(LDFLAGS) -o $@
 @RECORD_TRUE@am_librecord_la_rpath = -rpath $(extsmoduledir)
 libshadow_la_DEPENDENCIES = $(top_builddir)/miext/shadow/libshadow.la
 am_libshadow_la_OBJECTS = shmodule.lo
 libshadow_la_OBJECTS = $(am_libshadow_la_OBJECTS)
-libshadow_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+libshadow_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libshadow_la_LDFLAGS) $(LDFLAGS) -o $@
 libwfb_la_DEPENDENCIES = $(top_builddir)/fb/libwfb.la
 am_libwfb_la_OBJECTS = libwfb_la-fbcmap_mi.lo libwfb_la-fbmodule.lo
 libwfb_la_OBJECTS = $(am_libwfb_la_OBJECTS)
-libwfb_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+libwfb_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libwfb_la_CFLAGS) \
 	$(CFLAGS) $(libwfb_la_LDFLAGS) $(LDFLAGS) -o $@
 libxorgxkb_la_DEPENDENCIES = $(top_builddir)/dix/libdix.la
@@ -135,10 +138,22 @@ am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libdbe_la_SOURCES) $(libdixmods_la_SOURCES) \
 	$(libfb_la_SOURCES) $(libglx_la_SOURCES) \
 	$(librecord_la_SOURCES) $(libshadow_la_SOURCES) \
@@ -193,9 +208,9 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
-APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
@@ -284,6 +299,7 @@ KDRIVE_LIBS = @KDRIVE_LIBS@
 KDRIVE_LOCAL_LIBS = @KDRIVE_LOCAL_LIBS@
 KDRIVE_PURE_INCS = @KDRIVE_PURE_INCS@
 KDRIVE_PURE_LIBS = @KDRIVE_PURE_LIBS@
+LAUNCHD_ID_PREFIX = @LAUNCHD_ID_PREFIX@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LD_EXPORT_SYMBOLS_FLAG = @LD_EXPORT_SYMBOLS_FLAG@
@@ -634,21 +650,21 @@ clean-noinstLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libdbe.la: $(libdbe_la_OBJECTS) $(libdbe_la_DEPENDENCIES) 
-	$(libdbe_la_LINK) $(am_libdbe_la_rpath) $(libdbe_la_OBJECTS) $(libdbe_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libdbe_la_LINK) $(am_libdbe_la_rpath) $(libdbe_la_OBJECTS) $(libdbe_la_LIBADD) $(LIBS)
 libdixmods.la: $(libdixmods_la_OBJECTS) $(libdixmods_la_DEPENDENCIES) 
-	$(libdixmods_la_LINK)  $(libdixmods_la_OBJECTS) $(libdixmods_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libdixmods_la_LINK)  $(libdixmods_la_OBJECTS) $(libdixmods_la_LIBADD) $(LIBS)
 libfb.la: $(libfb_la_OBJECTS) $(libfb_la_DEPENDENCIES) 
-	$(libfb_la_LINK) -rpath $(moduledir) $(libfb_la_OBJECTS) $(libfb_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libfb_la_LINK) -rpath $(moduledir) $(libfb_la_OBJECTS) $(libfb_la_LIBADD) $(LIBS)
 libglx.la: $(libglx_la_OBJECTS) $(libglx_la_DEPENDENCIES) 
-	$(libglx_la_LINK) $(am_libglx_la_rpath) $(libglx_la_OBJECTS) $(libglx_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libglx_la_LINK) $(am_libglx_la_rpath) $(libglx_la_OBJECTS) $(libglx_la_LIBADD) $(LIBS)
 librecord.la: $(librecord_la_OBJECTS) $(librecord_la_DEPENDENCIES) 
-	$(librecord_la_LINK) $(am_librecord_la_rpath) $(librecord_la_OBJECTS) $(librecord_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(librecord_la_LINK) $(am_librecord_la_rpath) $(librecord_la_OBJECTS) $(librecord_la_LIBADD) $(LIBS)
 libshadow.la: $(libshadow_la_OBJECTS) $(libshadow_la_DEPENDENCIES) 
-	$(libshadow_la_LINK) -rpath $(moduledir) $(libshadow_la_OBJECTS) $(libshadow_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libshadow_la_LINK) -rpath $(moduledir) $(libshadow_la_OBJECTS) $(libshadow_la_LIBADD) $(LIBS)
 libwfb.la: $(libwfb_la_OBJECTS) $(libwfb_la_DEPENDENCIES) 
-	$(libwfb_la_LINK) -rpath $(moduledir) $(libwfb_la_OBJECTS) $(libwfb_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libwfb_la_LINK) -rpath $(moduledir) $(libwfb_la_OBJECTS) $(libwfb_la_LIBADD) $(LIBS)
 libxorgxkb.la: $(libxorgxkb_la_OBJECTS) $(libxorgxkb_la_DEPENDENCIES) 
-	$(LINK)  $(libxorgxkb_la_OBJECTS) $(libxorgxkb_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK)  $(libxorgxkb_la_OBJECTS) $(libxorgxkb_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -670,60 +686,68 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xkbVT.Plo@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
 libdixmods_la-miinitext.lo: $(top_srcdir)/mi/miinitext.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdixmods_la_CFLAGS) $(CFLAGS) -MT libdixmods_la-miinitext.lo -MD -MP -MF $(DEPDIR)/libdixmods_la-miinitext.Tpo -c -o libdixmods_la-miinitext.lo `test -f '$(top_srcdir)/mi/miinitext.c' || echo '$(srcdir)/'`$(top_srcdir)/mi/miinitext.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libdixmods_la-miinitext.Tpo $(DEPDIR)/libdixmods_la-miinitext.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdixmods_la_CFLAGS) $(CFLAGS) -MT libdixmods_la-miinitext.lo -MD -MP -MF $(DEPDIR)/libdixmods_la-miinitext.Tpo -c -o libdixmods_la-miinitext.lo `test -f '$(top_srcdir)/mi/miinitext.c' || echo '$(srcdir)/'`$(top_srcdir)/mi/miinitext.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdixmods_la-miinitext.Tpo $(DEPDIR)/libdixmods_la-miinitext.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/mi/miinitext.c' object='libdixmods_la-miinitext.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdixmods_la_CFLAGS) $(CFLAGS) -c -o libdixmods_la-miinitext.lo `test -f '$(top_srcdir)/mi/miinitext.c' || echo '$(srcdir)/'`$(top_srcdir)/mi/miinitext.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdixmods_la_CFLAGS) $(CFLAGS) -c -o libdixmods_la-miinitext.lo `test -f '$(top_srcdir)/mi/miinitext.c' || echo '$(srcdir)/'`$(top_srcdir)/mi/miinitext.c
 
 libfb_la-fbcmap_mi.lo: $(top_builddir)/fb/fbcmap_mi.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -MT libfb_la-fbcmap_mi.lo -MD -MP -MF $(DEPDIR)/libfb_la-fbcmap_mi.Tpo -c -o libfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libfb_la-fbcmap_mi.Tpo $(DEPDIR)/libfb_la-fbcmap_mi.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -MT libfb_la-fbcmap_mi.lo -MD -MP -MF $(DEPDIR)/libfb_la-fbcmap_mi.Tpo -c -o libfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfb_la-fbcmap_mi.Tpo $(DEPDIR)/libfb_la-fbcmap_mi.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_builddir)/fb/fbcmap_mi.c' object='libfb_la-fbcmap_mi.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -c -o libfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -c -o libfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
 
 libfb_la-fbmodule.lo: fbmodule.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -MT libfb_la-fbmodule.lo -MD -MP -MF $(DEPDIR)/libfb_la-fbmodule.Tpo -c -o libfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libfb_la-fbmodule.Tpo $(DEPDIR)/libfb_la-fbmodule.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -MT libfb_la-fbmodule.lo -MD -MP -MF $(DEPDIR)/libfb_la-fbmodule.Tpo -c -o libfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfb_la-fbmodule.Tpo $(DEPDIR)/libfb_la-fbmodule.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fbmodule.c' object='libfb_la-fbmodule.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -c -o libfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libfb_la_CFLAGS) $(CFLAGS) -c -o libfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
 
 libwfb_la-fbcmap_mi.lo: $(top_builddir)/fb/fbcmap_mi.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -MT libwfb_la-fbcmap_mi.lo -MD -MP -MF $(DEPDIR)/libwfb_la-fbcmap_mi.Tpo -c -o libwfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwfb_la-fbcmap_mi.Tpo $(DEPDIR)/libwfb_la-fbcmap_mi.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -MT libwfb_la-fbcmap_mi.lo -MD -MP -MF $(DEPDIR)/libwfb_la-fbcmap_mi.Tpo -c -o libwfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libwfb_la-fbcmap_mi.Tpo $(DEPDIR)/libwfb_la-fbcmap_mi.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_builddir)/fb/fbcmap_mi.c' object='libwfb_la-fbcmap_mi.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -c -o libwfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -c -o libwfb_la-fbcmap_mi.lo `test -f '$(top_builddir)/fb/fbcmap_mi.c' || echo '$(srcdir)/'`$(top_builddir)/fb/fbcmap_mi.c
 
 libwfb_la-fbmodule.lo: fbmodule.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -MT libwfb_la-fbmodule.lo -MD -MP -MF $(DEPDIR)/libwfb_la-fbmodule.Tpo -c -o libwfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libwfb_la-fbmodule.Tpo $(DEPDIR)/libwfb_la-fbmodule.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -MT libwfb_la-fbmodule.lo -MD -MP -MF $(DEPDIR)/libwfb_la-fbmodule.Tpo -c -o libwfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libwfb_la-fbmodule.Tpo $(DEPDIR)/libwfb_la-fbmodule.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fbmodule.c' object='libwfb_la-fbmodule.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -c -o libwfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libwfb_la_CFLAGS) $(CFLAGS) -c -o libwfb_la-fbmodule.lo `test -f 'fbmodule.c' || echo '$(srcdir)/'`fbmodule.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

@@ -56,9 +56,7 @@
 
 #include "dmxextension.h"
 #include <X11/extensions/dmxproto.h>
-
-#define _DMX_SERVER_
-#include <X11/extensions/dmxext.h>
+#include <X11/extensions/dmx.h>
 
 #ifdef PANORAMIX
 #include "panoramiX.h"

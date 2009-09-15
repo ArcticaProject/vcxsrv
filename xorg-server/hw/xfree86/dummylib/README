@@ -1,7 +1,0 @@
-
-libdummy (dummylib) contains basic utility functions required by libxf86_os.a.
-There is one symbol per source/object so that each can be overriden
-individually by whatever uses this library.
-
-
-$XFree86$

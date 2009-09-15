@@ -1181,6 +1181,8 @@ ddxGiveUp(void)
 {
     int i;
 
+    xf86VGAarbiterFini();
+
 #ifdef XF86PM
     if (xf86OSPMClose)
 	xf86OSPMClose();

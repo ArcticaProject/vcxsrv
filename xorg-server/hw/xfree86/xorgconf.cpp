@@ -43,14 +43,10 @@ Section "Files"
 
 XCOMM Multiple FontPath entries are allowed (which are concatenated together),
 XCOMM as well as specifying multiple comma-separated entries in one FontPath
-XCOMM command (or a combination of both methods)
+XCOMM command (or a combination of both methods).
+XCOMM The default path is shown here.
 
-    FontPath	LOCALFONTPATH
-    FontPath	MISCFONTPATH
-    FontPath	T1FONTPATH
-    FontPath	TRUETYPEFONTPATH
-    FontPath	DPI75FONTPATH
-    FontPath	DPI100FONTPATH
+XCOMM    FontPath	DEFAULTFONTPATH
 
 XCOMM ModulePath can be used to set a search path for the X server modules.
 XCOMM The default path is shown here.
@@ -77,11 +73,6 @@ XCOMM initialisation of the XFree86-DGA extension within that module.
 	Option	"omit xfree86-dga"
     EndSubSection
 
-XCOMM This loads the Type1 and FreeType font modules
-
-    Load	"type1"
-    Load	"freetype"
-
 EndSection
 
 
@@ -103,8 +94,8 @@ XCOMM events.
 
 XCOMM    Option	"DontVTSwitch"
 
-XCOMM Uncomment this to enable the <Ctrl><Alt><BS> server abort sequence
-XCOMM The default allows clients to receive this key event.
+XCOMM Uncomment this to disable the <Ctrl><Alt><BS> server abort sequence
+XCOMM This allows clients to receive this key event.
 
 XCOMM    Option	"DontZap"	"false"
 
@@ -124,28 +115,18 @@ XCOMM Uncomment this to enable the use of a non-local xvidtune client.
 
 XCOMM    Option	"AllowNonLocalXvidtune"
 
-XCOMM Uncomment this to disable dynamically modifying the input device
-XCOMM (mouse and keyboard) settings.
-
-XCOMM    Option	"DisableModInDev"
-
-XCOMM Uncomment this to enable the use of a non-local client to
-XCOMM change the keyboard or mouse settings (currently only xset).
-
-XCOMM    Option	"AllowNonLocalModInDev"
-
 XCOMM Set the basic blanking screen saver timeout.
 
-    Option	"blank time"	"10"	# 10 minutes
+    Option	"BlankTime"	"10"	# 10 minutes
 
 XCOMM Set the DPMS timeouts.  These are set here because they are global
 XCOMM rather than screen-specific.  These settings alone don't enable DPMS.
 XCOMM It is enabled per-screen (or per-monitor), and even then only when
 XCOMM the driver supports it.
 
-    Option	"standby time"	"20"
-    Option	"suspend time"	"30"
-    Option	"off time"	"60"
+    Option	"StandbyTime"	"10"	# 10 minutes
+    Option	"SuspendTime"	"10"	# 10 minutes
+    Option	"OffTime"	"10"	# 10 minutes
 
 EndSection
 
@@ -170,10 +151,6 @@ XCOMM this.
 XCOMM Specifiy which keyboard LEDs can be user-controlled (eg, with xset(1)).
 
 XCOMM    Option	"Xleds"	"1 2 3"
-
-XCOMM To disable the XKEYBOARD extension, uncomment XkbDisable.
-
-XCOMM    Option	"XkbDisable"
 
 XCOMM To customise the XKB settings to suit your keyboard, modify the
 XCOMM lines below (which are the defaults).  For example, for a European
@@ -399,14 +376,14 @@ Section "Device"
 
 XCOMM The Identifier must be present.
 
-    Identifier	"Generic VGA"
+    Identifier	"Generic VESA"
 
 XCOMM The Driver line must be present.  When using run-time loadable driver
 XCOMM modules, this line instructs the server to load the specified driver
 XCOMM module.  Even when not using loadable driver modules, this line
 XCOMM indicates which driver should interpret the information in this section.
 
-    Driver	"vga"
+    Driver	"vesa"
 
 XCOMM The chipset line is optional in most cases.  It can be used to override
 XCOMM the driver's chipset detection, and should not normally be specified.
@@ -470,7 +447,7 @@ Section "Screen"
 XCOMM The Identifier, Device and Monitor lines must be present
 
     Identifier	"Screen 1"
-    Device	"Generic VGA"
+    Device	"Generic VESA"
     Monitor	"Generic Monitor"
 
 XCOMM The favoured Depth and/or Bpp may be specified here

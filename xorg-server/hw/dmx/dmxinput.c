@@ -71,10 +71,6 @@ void InitInput(int argc, char **argv)
     
     for (i = 0, dmxInput = &dmxInputs[0]; i < dmxNumInputs; i++, dmxInput++)
         dmxInputInit(dmxInput);
-    if (!dmxeqInitialized()) {
-        dmxLog(dmxWarning, "Use keyboard/mouse pair with the first -input\n");
-        dmxLog(dmxFatal,   "At least one core keyboard/mouse pair required\n");
-    }
 
     mieqInit();
 }

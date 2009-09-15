@@ -124,30 +124,11 @@ static XkbAction 	fake;
     }
     pActs= XkbKeyActionsPtr(xkb,key);
     col= 0;
-    effectiveGroup= xkbState->group;
-    if (effectiveGroup!=XkbGroup1Index) {
-	if (XkbKeyNumGroups(xkb,key)>(unsigned)1) {
-	    if (effectiveGroup>=XkbKeyNumGroups(xkb,key)) {
-		unsigned gi= XkbKeyGroupInfo(xkb,key);
-		switch (XkbOutOfRangeGroupAction(gi)) {
-		    default:
-		    case XkbWrapIntoRange:
-			effectiveGroup %= XkbKeyNumGroups(xkb,key);
-			break;
-		    case XkbClampIntoRange:
-			effectiveGroup = XkbKeyNumGroups(xkb,key)-1;
-			break;
-		    case XkbRedirectIntoRange:
-			effectiveGroup= XkbOutOfRangeGroupInfo(gi);
-			if (effectiveGroup>=XkbKeyNumGroups(xkb,key))
-			    effectiveGroup= 0;
-			break;
-		}
-	    }
-	}
-	else effectiveGroup= XkbGroup1Index;
-	col+= (effectiveGroup*XkbKeyGroupsWidth(xkb,key));
-    }
+
+    effectiveGroup = XkbGetEffectiveGroup(xkbi, xkbState, key);
+    if (effectiveGroup != XkbGroup1Index)
+        col += (effectiveGroup * XkbKeyGroupsWidth(xkb, key));
+
     type= XkbKeyKeyType(xkb,key,effectiveGroup);
     if (type->map!=NULL) {
 	register unsigned		i,mods;

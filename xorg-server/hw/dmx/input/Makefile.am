@@ -41,8 +41,6 @@ DMXSRCS = dmxinputinit.c \
 	  dmxxinput.c \
           dmxmotion.c \
           dmxmotion.h \
-          dmxeq.c \
-          dmxeq.h \
           dmxmap.c \
           dmxmap.h
 

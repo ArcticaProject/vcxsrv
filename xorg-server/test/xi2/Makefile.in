@@ -71,6 +71,9 @@ am__DEPENDENCIES_1 =
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_1)
 @UNITTESTS_TRUE@protocol_eventconvert_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
 am__protocol_xigetclientpointer_SOURCES_DIST = protocol-common.h \
 	protocol-common.c protocol-xigetclientpointer.c
 @UNITTESTS_TRUE@am__objects_1 = protocol_xigetclientpointer-protocol-common.$(OBJEXT)
@@ -81,7 +84,7 @@ protocol_xigetclientpointer_OBJECTS =  \
 	$(am_protocol_xigetclientpointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xigetclientpointer_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xigetclientpointer_LINK = $(LIBTOOL) --tag=CC \
+protocol_xigetclientpointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -95,7 +98,7 @@ protocol_xigetselectedevents_OBJECTS =  \
 	$(am_protocol_xigetselectedevents_OBJECTS)
 @UNITTESTS_TRUE@protocol_xigetselectedevents_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xigetselectedevents_LINK = $(LIBTOOL) --tag=CC \
+protocol_xigetselectedevents_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -107,8 +110,8 @@ am__protocol_xiquerydevice_SOURCES_DIST = protocol-common.h \
 protocol_xiquerydevice_OBJECTS = $(am_protocol_xiquerydevice_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiquerydevice_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xiquerydevice_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+protocol_xiquerydevice_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiquerydevice_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__protocol_xiquerypointer_SOURCES_DIST = protocol-common.h \
@@ -120,8 +123,8 @@ protocol_xiquerypointer_OBJECTS =  \
 	$(am_protocol_xiquerypointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiquerypointer_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xiquerypointer_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+protocol_xiquerypointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiquerypointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__protocol_xiqueryversion_SOURCES_DIST = protocol-common.h \
@@ -133,8 +136,8 @@ protocol_xiqueryversion_OBJECTS =  \
 	$(am_protocol_xiqueryversion_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiqueryversion_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xiqueryversion_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+protocol_xiqueryversion_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiqueryversion_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__protocol_xiselectevents_SOURCES_DIST = protocol-common.h \
@@ -146,8 +149,8 @@ protocol_xiselectevents_OBJECTS =  \
 	$(am_protocol_xiselectevents_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiselectevents_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xiselectevents_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+protocol_xiselectevents_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiselectevents_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__protocol_xisetclientpointer_SOURCES_DIST = protocol-common.h \
@@ -160,7 +163,7 @@ protocol_xisetclientpointer_OBJECTS =  \
 	$(am_protocol_xisetclientpointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xisetclientpointer_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xisetclientpointer_LINK = $(LIBTOOL) --tag=CC \
+protocol_xisetclientpointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -172,8 +175,8 @@ am__protocol_xiwarppointer_SOURCES_DIST = protocol-common.h \
 protocol_xiwarppointer_OBJECTS = $(am_protocol_xiwarppointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiwarppointer_DEPENDENCIES =  \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
-protocol_xiwarppointer_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+protocol_xiwarppointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiwarppointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
@@ -182,10 +185,22 @@ am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = protocol-eventconvert.c \
 	$(protocol_xigetclientpointer_SOURCES) \
 	$(protocol_xigetselectedevents_SOURCES) \
@@ -214,9 +229,9 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
-APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
@@ -305,6 +320,7 @@ KDRIVE_LIBS = @KDRIVE_LIBS@
 KDRIVE_LOCAL_LIBS = @KDRIVE_LOCAL_LIBS@
 KDRIVE_PURE_INCS = @KDRIVE_PURE_INCS@
 KDRIVE_PURE_LIBS = @KDRIVE_PURE_LIBS@
+LAUNCHD_ID_PREFIX = @LAUNCHD_ID_PREFIX@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LD_EXPORT_SYMBOLS_FLAG = @LD_EXPORT_SYMBOLS_FLAG@
@@ -575,31 +591,31 @@ clean-checkPROGRAMS:
 	rm -f $$list
 protocol-eventconvert$(EXEEXT): $(protocol_eventconvert_OBJECTS) $(protocol_eventconvert_DEPENDENCIES) 
 	@rm -f protocol-eventconvert$(EXEEXT)
-	$(LINK) $(protocol_eventconvert_OBJECTS) $(protocol_eventconvert_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(protocol_eventconvert_OBJECTS) $(protocol_eventconvert_LDADD) $(LIBS)
 protocol-xigetclientpointer$(EXEEXT): $(protocol_xigetclientpointer_OBJECTS) $(protocol_xigetclientpointer_DEPENDENCIES) 
 	@rm -f protocol-xigetclientpointer$(EXEEXT)
-	$(protocol_xigetclientpointer_LINK) $(protocol_xigetclientpointer_OBJECTS) $(protocol_xigetclientpointer_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xigetclientpointer_LINK) $(protocol_xigetclientpointer_OBJECTS) $(protocol_xigetclientpointer_LDADD) $(LIBS)
 protocol-xigetselectedevents$(EXEEXT): $(protocol_xigetselectedevents_OBJECTS) $(protocol_xigetselectedevents_DEPENDENCIES) 
 	@rm -f protocol-xigetselectedevents$(EXEEXT)
-	$(protocol_xigetselectedevents_LINK) $(protocol_xigetselectedevents_OBJECTS) $(protocol_xigetselectedevents_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xigetselectedevents_LINK) $(protocol_xigetselectedevents_OBJECTS) $(protocol_xigetselectedevents_LDADD) $(LIBS)
 protocol-xiquerydevice$(EXEEXT): $(protocol_xiquerydevice_OBJECTS) $(protocol_xiquerydevice_DEPENDENCIES) 
 	@rm -f protocol-xiquerydevice$(EXEEXT)
-	$(protocol_xiquerydevice_LINK) $(protocol_xiquerydevice_OBJECTS) $(protocol_xiquerydevice_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xiquerydevice_LINK) $(protocol_xiquerydevice_OBJECTS) $(protocol_xiquerydevice_LDADD) $(LIBS)
 protocol-xiquerypointer$(EXEEXT): $(protocol_xiquerypointer_OBJECTS) $(protocol_xiquerypointer_DEPENDENCIES) 
 	@rm -f protocol-xiquerypointer$(EXEEXT)
-	$(protocol_xiquerypointer_LINK) $(protocol_xiquerypointer_OBJECTS) $(protocol_xiquerypointer_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xiquerypointer_LINK) $(protocol_xiquerypointer_OBJECTS) $(protocol_xiquerypointer_LDADD) $(LIBS)
 protocol-xiqueryversion$(EXEEXT): $(protocol_xiqueryversion_OBJECTS) $(protocol_xiqueryversion_DEPENDENCIES) 
 	@rm -f protocol-xiqueryversion$(EXEEXT)
-	$(protocol_xiqueryversion_LINK) $(protocol_xiqueryversion_OBJECTS) $(protocol_xiqueryversion_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xiqueryversion_LINK) $(protocol_xiqueryversion_OBJECTS) $(protocol_xiqueryversion_LDADD) $(LIBS)
 protocol-xiselectevents$(EXEEXT): $(protocol_xiselectevents_OBJECTS) $(protocol_xiselectevents_DEPENDENCIES) 
 	@rm -f protocol-xiselectevents$(EXEEXT)
-	$(protocol_xiselectevents_LINK) $(protocol_xiselectevents_OBJECTS) $(protocol_xiselectevents_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xiselectevents_LINK) $(protocol_xiselectevents_OBJECTS) $(protocol_xiselectevents_LDADD) $(LIBS)
 protocol-xisetclientpointer$(EXEEXT): $(protocol_xisetclientpointer_OBJECTS) $(protocol_xisetclientpointer_DEPENDENCIES) 
 	@rm -f protocol-xisetclientpointer$(EXEEXT)
-	$(protocol_xisetclientpointer_LINK) $(protocol_xisetclientpointer_OBJECTS) $(protocol_xisetclientpointer_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xisetclientpointer_LINK) $(protocol_xisetclientpointer_OBJECTS) $(protocol_xisetclientpointer_LDADD) $(LIBS)
 protocol-xiwarppointer$(EXEEXT): $(protocol_xiwarppointer_OBJECTS) $(protocol_xiwarppointer_DEPENDENCIES) 
 	@rm -f protocol-xiwarppointer$(EXEEXT)
-	$(protocol_xiwarppointer_LINK) $(protocol_xiwarppointer_OBJECTS) $(protocol_xiwarppointer_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(protocol_xiwarppointer_LINK) $(protocol_xiwarppointer_OBJECTS) $(protocol_xiwarppointer_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -626,246 +642,281 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Po@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
 protocol_xigetclientpointer-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo -c -o protocol_xigetclientpointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo -c -o protocol_xigetclientpointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xigetclientpointer-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xigetclientpointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xigetclientpointer-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo -c -o protocol_xigetclientpointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo -c -o protocol_xigetclientpointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xigetclientpointer-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xigetclientpointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xigetclientpointer-protocol-xigetclientpointer.o: protocol-xigetclientpointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-xigetclientpointer.o -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo -c -o protocol_xigetclientpointer-protocol-xigetclientpointer.o `test -f 'protocol-xigetclientpointer.c' || echo '$(srcdir)/'`protocol-xigetclientpointer.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-xigetclientpointer.o -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo -c -o protocol_xigetclientpointer-protocol-xigetclientpointer.o `test -f 'protocol-xigetclientpointer.c' || echo '$(srcdir)/'`protocol-xigetclientpointer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xigetclientpointer.c' object='protocol_xigetclientpointer-protocol-xigetclientpointer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xigetclientpointer-protocol-xigetclientpointer.o `test -f 'protocol-xigetclientpointer.c' || echo '$(srcdir)/'`protocol-xigetclientpointer.c
 
 protocol_xigetclientpointer-protocol-xigetclientpointer.obj: protocol-xigetclientpointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-xigetclientpointer.obj -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo -c -o protocol_xigetclientpointer-protocol-xigetclientpointer.obj `if test -f 'protocol-xigetclientpointer.c'; then $(CYGPATH_W) 'protocol-xigetclientpointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xigetclientpointer.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xigetclientpointer-protocol-xigetclientpointer.obj -MD -MP -MF $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo -c -o protocol_xigetclientpointer-protocol-xigetclientpointer.obj `if test -f 'protocol-xigetclientpointer.c'; then $(CYGPATH_W) 'protocol-xigetclientpointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xigetclientpointer.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Tpo $(DEPDIR)/protocol_xigetclientpointer-protocol-xigetclientpointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xigetclientpointer.c' object='protocol_xigetclientpointer-protocol-xigetclientpointer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xigetclientpointer-protocol-xigetclientpointer.obj `if test -f 'protocol-xigetclientpointer.c'; then $(CYGPATH_W) 'protocol-xigetclientpointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xigetclientpointer.c'; fi`
 
 protocol_xigetselectedevents-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo -c -o protocol_xigetselectedevents-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo -c -o protocol_xigetselectedevents-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xigetselectedevents-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -c -o protocol_xigetselectedevents-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xigetselectedevents-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo -c -o protocol_xigetselectedevents-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo -c -o protocol_xigetselectedevents-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xigetselectedevents-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -c -o protocol_xigetselectedevents-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xigetselectedevents-protocol-xigetselectedevents.o: protocol-xigetselectedevents.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-xigetselectedevents.o -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo -c -o protocol_xigetselectedevents-protocol-xigetselectedevents.o `test -f 'protocol-xigetselectedevents.c' || echo '$(srcdir)/'`protocol-xigetselectedevents.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-xigetselectedevents.o -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo -c -o protocol_xigetselectedevents-protocol-xigetselectedevents.o `test -f 'protocol-xigetselectedevents.c' || echo '$(srcdir)/'`protocol-xigetselectedevents.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xigetselectedevents.c' object='protocol_xigetselectedevents-protocol-xigetselectedevents.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -c -o protocol_xigetselectedevents-protocol-xigetselectedevents.o `test -f 'protocol-xigetselectedevents.c' || echo '$(srcdir)/'`protocol-xigetselectedevents.c
 
 protocol_xigetselectedevents-protocol-xigetselectedevents.obj: protocol-xigetselectedevents.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-xigetselectedevents.obj -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo -c -o protocol_xigetselectedevents-protocol-xigetselectedevents.obj `if test -f 'protocol-xigetselectedevents.c'; then $(CYGPATH_W) 'protocol-xigetselectedevents.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xigetselectedevents.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -MT protocol_xigetselectedevents-protocol-xigetselectedevents.obj -MD -MP -MF $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo -c -o protocol_xigetselectedevents-protocol-xigetselectedevents.obj `if test -f 'protocol-xigetselectedevents.c'; then $(CYGPATH_W) 'protocol-xigetselectedevents.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xigetselectedevents.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Tpo $(DEPDIR)/protocol_xigetselectedevents-protocol-xigetselectedevents.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xigetselectedevents.c' object='protocol_xigetselectedevents-protocol-xigetselectedevents.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) -c -o protocol_xigetselectedevents-protocol-xigetselectedevents.obj `if test -f 'protocol-xigetselectedevents.c'; then $(CYGPATH_W) 'protocol-xigetselectedevents.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xigetselectedevents.c'; fi`
 
 protocol_xiquerydevice-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo -c -o protocol_xiquerydevice-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo -c -o protocol_xiquerydevice-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiquerydevice-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -c -o protocol_xiquerydevice-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xiquerydevice-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo -c -o protocol_xiquerydevice-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo -c -o protocol_xiquerydevice-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-common.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiquerydevice-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -c -o protocol_xiquerydevice-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xiquerydevice-protocol-xiquerydevice.o: protocol-xiquerydevice.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-xiquerydevice.o -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo -c -o protocol_xiquerydevice-protocol-xiquerydevice.o `test -f 'protocol-xiquerydevice.c' || echo '$(srcdir)/'`protocol-xiquerydevice.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-xiquerydevice.o -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo -c -o protocol_xiquerydevice-protocol-xiquerydevice.o `test -f 'protocol-xiquerydevice.c' || echo '$(srcdir)/'`protocol-xiquerydevice.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiquerydevice.c' object='protocol_xiquerydevice-protocol-xiquerydevice.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -c -o protocol_xiquerydevice-protocol-xiquerydevice.o `test -f 'protocol-xiquerydevice.c' || echo '$(srcdir)/'`protocol-xiquerydevice.c
 
 protocol_xiquerydevice-protocol-xiquerydevice.obj: protocol-xiquerydevice.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-xiquerydevice.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo -c -o protocol_xiquerydevice-protocol-xiquerydevice.obj `if test -f 'protocol-xiquerydevice.c'; then $(CYGPATH_W) 'protocol-xiquerydevice.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiquerydevice.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -MT protocol_xiquerydevice-protocol-xiquerydevice.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo -c -o protocol_xiquerydevice-protocol-xiquerydevice.obj `if test -f 'protocol-xiquerydevice.c'; then $(CYGPATH_W) 'protocol-xiquerydevice.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiquerydevice.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Tpo $(DEPDIR)/protocol_xiquerydevice-protocol-xiquerydevice.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiquerydevice.c' object='protocol_xiquerydevice-protocol-xiquerydevice.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerydevice_CFLAGS) $(CFLAGS) -c -o protocol_xiquerydevice-protocol-xiquerydevice.obj `if test -f 'protocol-xiquerydevice.c'; then $(CYGPATH_W) 'protocol-xiquerydevice.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiquerydevice.c'; fi`
 
 protocol_xiquerypointer-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo -c -o protocol_xiquerypointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo -c -o protocol_xiquerypointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiquerypointer-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -c -o protocol_xiquerypointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xiquerypointer-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo -c -o protocol_xiquerypointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo -c -o protocol_xiquerypointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-common.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiquerypointer-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -c -o protocol_xiquerypointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xiquerypointer-protocol-xiquerypointer.o: protocol-xiquerypointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-xiquerypointer.o -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo -c -o protocol_xiquerypointer-protocol-xiquerypointer.o `test -f 'protocol-xiquerypointer.c' || echo '$(srcdir)/'`protocol-xiquerypointer.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-xiquerypointer.o -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo -c -o protocol_xiquerypointer-protocol-xiquerypointer.o `test -f 'protocol-xiquerypointer.c' || echo '$(srcdir)/'`protocol-xiquerypointer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiquerypointer.c' object='protocol_xiquerypointer-protocol-xiquerypointer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -c -o protocol_xiquerypointer-protocol-xiquerypointer.o `test -f 'protocol-xiquerypointer.c' || echo '$(srcdir)/'`protocol-xiquerypointer.c
 
 protocol_xiquerypointer-protocol-xiquerypointer.obj: protocol-xiquerypointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-xiquerypointer.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo -c -o protocol_xiquerypointer-protocol-xiquerypointer.obj `if test -f 'protocol-xiquerypointer.c'; then $(CYGPATH_W) 'protocol-xiquerypointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiquerypointer.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -MT protocol_xiquerypointer-protocol-xiquerypointer.obj -MD -MP -MF $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo -c -o protocol_xiquerypointer-protocol-xiquerypointer.obj `if test -f 'protocol-xiquerypointer.c'; then $(CYGPATH_W) 'protocol-xiquerypointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiquerypointer.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Tpo $(DEPDIR)/protocol_xiquerypointer-protocol-xiquerypointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiquerypointer.c' object='protocol_xiquerypointer-protocol-xiquerypointer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiquerypointer_CFLAGS) $(CFLAGS) -c -o protocol_xiquerypointer-protocol-xiquerypointer.obj `if test -f 'protocol-xiquerypointer.c'; then $(CYGPATH_W) 'protocol-xiquerypointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiquerypointer.c'; fi`
 
 protocol_xiqueryversion-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo -c -o protocol_xiqueryversion-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo -c -o protocol_xiqueryversion-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiqueryversion-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -c -o protocol_xiqueryversion-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xiqueryversion-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo -c -o protocol_xiqueryversion-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo -c -o protocol_xiqueryversion-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-common.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiqueryversion-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -c -o protocol_xiqueryversion-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xiqueryversion-protocol-xiqueryversion.o: protocol-xiqueryversion.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-xiqueryversion.o -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo -c -o protocol_xiqueryversion-protocol-xiqueryversion.o `test -f 'protocol-xiqueryversion.c' || echo '$(srcdir)/'`protocol-xiqueryversion.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-xiqueryversion.o -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo -c -o protocol_xiqueryversion-protocol-xiqueryversion.o `test -f 'protocol-xiqueryversion.c' || echo '$(srcdir)/'`protocol-xiqueryversion.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiqueryversion.c' object='protocol_xiqueryversion-protocol-xiqueryversion.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -c -o protocol_xiqueryversion-protocol-xiqueryversion.o `test -f 'protocol-xiqueryversion.c' || echo '$(srcdir)/'`protocol-xiqueryversion.c
 
 protocol_xiqueryversion-protocol-xiqueryversion.obj: protocol-xiqueryversion.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-xiqueryversion.obj -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo -c -o protocol_xiqueryversion-protocol-xiqueryversion.obj `if test -f 'protocol-xiqueryversion.c'; then $(CYGPATH_W) 'protocol-xiqueryversion.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiqueryversion.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -MT protocol_xiqueryversion-protocol-xiqueryversion.obj -MD -MP -MF $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo -c -o protocol_xiqueryversion-protocol-xiqueryversion.obj `if test -f 'protocol-xiqueryversion.c'; then $(CYGPATH_W) 'protocol-xiqueryversion.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiqueryversion.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Tpo $(DEPDIR)/protocol_xiqueryversion-protocol-xiqueryversion.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiqueryversion.c' object='protocol_xiqueryversion-protocol-xiqueryversion.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiqueryversion_CFLAGS) $(CFLAGS) -c -o protocol_xiqueryversion-protocol-xiqueryversion.obj `if test -f 'protocol-xiqueryversion.c'; then $(CYGPATH_W) 'protocol-xiqueryversion.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiqueryversion.c'; fi`
 
 protocol_xiselectevents-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo -c -o protocol_xiselectevents-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo -c -o protocol_xiselectevents-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiselectevents-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -c -o protocol_xiselectevents-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xiselectevents-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo -c -o protocol_xiselectevents-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo -c -o protocol_xiselectevents-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-common.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiselectevents-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -c -o protocol_xiselectevents-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xiselectevents-protocol-xiselectevents.o: protocol-xiselectevents.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-xiselectevents.o -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo -c -o protocol_xiselectevents-protocol-xiselectevents.o `test -f 'protocol-xiselectevents.c' || echo '$(srcdir)/'`protocol-xiselectevents.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-xiselectevents.o -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo -c -o protocol_xiselectevents-protocol-xiselectevents.o `test -f 'protocol-xiselectevents.c' || echo '$(srcdir)/'`protocol-xiselectevents.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiselectevents.c' object='protocol_xiselectevents-protocol-xiselectevents.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -c -o protocol_xiselectevents-protocol-xiselectevents.o `test -f 'protocol-xiselectevents.c' || echo '$(srcdir)/'`protocol-xiselectevents.c
 
 protocol_xiselectevents-protocol-xiselectevents.obj: protocol-xiselectevents.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-xiselectevents.obj -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo -c -o protocol_xiselectevents-protocol-xiselectevents.obj `if test -f 'protocol-xiselectevents.c'; then $(CYGPATH_W) 'protocol-xiselectevents.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiselectevents.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -MT protocol_xiselectevents-protocol-xiselectevents.obj -MD -MP -MF $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo -c -o protocol_xiselectevents-protocol-xiselectevents.obj `if test -f 'protocol-xiselectevents.c'; then $(CYGPATH_W) 'protocol-xiselectevents.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiselectevents.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Tpo $(DEPDIR)/protocol_xiselectevents-protocol-xiselectevents.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiselectevents.c' object='protocol_xiselectevents-protocol-xiselectevents.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiselectevents_CFLAGS) $(CFLAGS) -c -o protocol_xiselectevents-protocol-xiselectevents.obj `if test -f 'protocol-xiselectevents.c'; then $(CYGPATH_W) 'protocol-xiselectevents.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiselectevents.c'; fi`
 
 protocol_xisetclientpointer-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo -c -o protocol_xisetclientpointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo -c -o protocol_xisetclientpointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xisetclientpointer-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xisetclientpointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xisetclientpointer-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo -c -o protocol_xisetclientpointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo -c -o protocol_xisetclientpointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xisetclientpointer-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xisetclientpointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xisetclientpointer-protocol-xisetclientpointer.o: protocol-xisetclientpointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-xisetclientpointer.o -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo -c -o protocol_xisetclientpointer-protocol-xisetclientpointer.o `test -f 'protocol-xisetclientpointer.c' || echo '$(srcdir)/'`protocol-xisetclientpointer.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-xisetclientpointer.o -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo -c -o protocol_xisetclientpointer-protocol-xisetclientpointer.o `test -f 'protocol-xisetclientpointer.c' || echo '$(srcdir)/'`protocol-xisetclientpointer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xisetclientpointer.c' object='protocol_xisetclientpointer-protocol-xisetclientpointer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xisetclientpointer-protocol-xisetclientpointer.o `test -f 'protocol-xisetclientpointer.c' || echo '$(srcdir)/'`protocol-xisetclientpointer.c
 
 protocol_xisetclientpointer-protocol-xisetclientpointer.obj: protocol-xisetclientpointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-xisetclientpointer.obj -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo -c -o protocol_xisetclientpointer-protocol-xisetclientpointer.obj `if test -f 'protocol-xisetclientpointer.c'; then $(CYGPATH_W) 'protocol-xisetclientpointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xisetclientpointer.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -MT protocol_xisetclientpointer-protocol-xisetclientpointer.obj -MD -MP -MF $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo -c -o protocol_xisetclientpointer-protocol-xisetclientpointer.obj `if test -f 'protocol-xisetclientpointer.c'; then $(CYGPATH_W) 'protocol-xisetclientpointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xisetclientpointer.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Tpo $(DEPDIR)/protocol_xisetclientpointer-protocol-xisetclientpointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xisetclientpointer.c' object='protocol_xisetclientpointer-protocol-xisetclientpointer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) -c -o protocol_xisetclientpointer-protocol-xisetclientpointer.obj `if test -f 'protocol-xisetclientpointer.c'; then $(CYGPATH_W) 'protocol-xisetclientpointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xisetclientpointer.c'; fi`
 
 protocol_xiwarppointer-protocol-common.o: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo -c -o protocol_xiwarppointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-common.o -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo -c -o protocol_xiwarppointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiwarppointer-protocol-common.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -c -o protocol_xiwarppointer-protocol-common.o `test -f 'protocol-common.c' || echo '$(srcdir)/'`protocol-common.c
 
 protocol_xiwarppointer-protocol-common.obj: protocol-common.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo -c -o protocol_xiwarppointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-common.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-common.obj -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo -c -o protocol_xiwarppointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-common.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-common.c' object='protocol_xiwarppointer-protocol-common.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -c -o protocol_xiwarppointer-protocol-common.obj `if test -f 'protocol-common.c'; then $(CYGPATH_W) 'protocol-common.c'; else $(CYGPATH_W) '$(srcdir)/protocol-common.c'; fi`
 
 protocol_xiwarppointer-protocol-xiwarppointer.o: protocol-xiwarppointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-xiwarppointer.o -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo -c -o protocol_xiwarppointer-protocol-xiwarppointer.o `test -f 'protocol-xiwarppointer.c' || echo '$(srcdir)/'`protocol-xiwarppointer.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-xiwarppointer.o -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo -c -o protocol_xiwarppointer-protocol-xiwarppointer.o `test -f 'protocol-xiwarppointer.c' || echo '$(srcdir)/'`protocol-xiwarppointer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiwarppointer.c' object='protocol_xiwarppointer-protocol-xiwarppointer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -c -o protocol_xiwarppointer-protocol-xiwarppointer.o `test -f 'protocol-xiwarppointer.c' || echo '$(srcdir)/'`protocol-xiwarppointer.c
 
 protocol_xiwarppointer-protocol-xiwarppointer.obj: protocol-xiwarppointer.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-xiwarppointer.obj -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo -c -o protocol_xiwarppointer-protocol-xiwarppointer.obj `if test -f 'protocol-xiwarppointer.c'; then $(CYGPATH_W) 'protocol-xiwarppointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiwarppointer.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -MT protocol_xiwarppointer-protocol-xiwarppointer.obj -MD -MP -MF $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo -c -o protocol_xiwarppointer-protocol-xiwarppointer.obj `if test -f 'protocol-xiwarppointer.c'; then $(CYGPATH_W) 'protocol-xiwarppointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiwarppointer.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Tpo $(DEPDIR)/protocol_xiwarppointer-protocol-xiwarppointer.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='protocol-xiwarppointer.c' object='protocol_xiwarppointer-protocol-xiwarppointer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(protocol_xiwarppointer_CFLAGS) $(CFLAGS) -c -o protocol_xiwarppointer-protocol-xiwarppointer.obj `if test -f 'protocol-xiwarppointer.c'; then $(CYGPATH_W) 'protocol-xiwarppointer.c'; else $(CYGPATH_W) '$(srcdir)/protocol-xiwarppointer.c'; fi`

@@ -2259,7 +2259,7 @@ static Window FindChildForEvent(DeviceIntPtr dev, WindowPtr event)
 {
     SpritePtr pSprite = dev->spriteInfo->sprite;
     WindowPtr w = pSprite->spriteTrace[pSprite->spriteTraceGood-1];
-    Window child;
+    Window child = None;
 
     /* If the search ends up past the root should the child field be
        set to none or should the value in the argument be passed

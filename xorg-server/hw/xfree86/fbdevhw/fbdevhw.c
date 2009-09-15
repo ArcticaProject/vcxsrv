@@ -306,7 +306,13 @@ fbdev_open_pci(struct pci_device * pPci, char **namep)
 		pPci->domain, pPci->bus, pPci->dev, pPci->func, i);
 
 	fd = open(filename, O_RDONLY, 0);
-	if (fd != -1) {
+        if (fd < 0) {
+            sprintf(filename,
+                    "/sys/bus/pci/devices/%04x:%02x:%02x.%d/graphics:fb%d",
+                    pPci->domain, pPci->bus, pPci->dev, pPci->func, i);
+            fd = open(filename, O_RDONLY, 0);
+        }
+	if (fd >= 0) {
 	    close(fd);
 	    sprintf(filename, "/dev/fb%d", i);
 

@@ -41,6 +41,7 @@
 struct propdata {
 	unsigned char *data;
 	size_t length;
+	int format;
 };
 
 struct atom_list {

@@ -2118,3 +2118,38 @@ XkbCopyDeviceKeymap(DeviceIntPtr dst, DeviceIntPtr src)
     return ret;
 }
 
+int
+XkbGetEffectiveGroup(XkbSrvInfoPtr xkbi, XkbStatePtr xkbState, CARD8 keycode)
+{
+    XkbDescPtr xkb = xkbi->desc;
+    int effectiveGroup = xkbState->group;
+
+    if (!XkbKeycodeInRange(xkb, keycode))
+        return -1;
+
+    if (effectiveGroup == XkbGroup1Index)
+        return effectiveGroup;
+
+    if (XkbKeyNumGroups(xkb,keycode) > 1U) {
+        if (effectiveGroup >= XkbKeyNumGroups(xkb,keycode)) {
+            unsigned int gi = XkbKeyGroupInfo(xkb,keycode);
+            switch (XkbOutOfRangeGroupAction(gi)) {
+                default:
+                case XkbWrapIntoRange:
+                    effectiveGroup %= XkbKeyNumGroups(xkb, keycode);
+                    break;
+                case XkbClampIntoRange:
+                    effectiveGroup = XkbKeyNumGroups(xkb, keycode) - 1;
+                    break;
+                case XkbRedirectIntoRange:
+                    effectiveGroup = XkbOutOfRangeGroupInfo(gi);
+                    if (effectiveGroup >= XkbKeyNumGroups(xkb, keycode))
+                        effectiveGroup = 0;
+                    break;
+            }
+        }
+    }
+    else effectiveGroup = XkbGroup1Index;
+
+    return effectiveGroup;
+}

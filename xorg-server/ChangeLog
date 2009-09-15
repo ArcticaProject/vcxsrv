@@ -1,3 +1,559 @@
+commit 663807ce0e65b51537540bb95fbf3c18988c04c7
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 14 16:44:52 2009 +1000
+
+    xserver 1.6.99.901 (xserver 1.7 RC1)
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit f450be999268d118b384c04ea070c87ad48c4c59
+Author: Soeren Sandmann <sandmann@daimi.au.dk>
+Date:   Fri Sep 11 04:03:06 2009 +0200
+
+    Add xoff and yoff to drawable->x and drawable->y in create_bits_picture().
+    
+    These are 0, except when the drawable is a redirected window.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2b00afec4b5b51851aee4cb0fba7baff3e10ef3f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Sep 14 15:59:41 2009 +1000
+
+    Update xorg.conf man page & sample for changes in Xorg 1.7
+    
+    AllowMouseOpenFail description changed to reflect actual behaviour
+    and point to AllowEmptyInput for previously described behaviour.
+    
+    Update default DPMS mode timeouts to match new defaults set
+    in April 2009 by commit d52fddefaeb43f15b677eefbea4a288a9948373b
+    
+    Update autoloaded module list to match ModuleDefaults in xf86Config.c
+    Update module subdir list to match stdSubdirs in loadmod.c
+    
+    Add xorg.conf options that were added to the code:
+    - XkbDir option added in February 2009
+      by commit 76f18b94bd2719a8199334742d021c4d0806187d
+    - DRI2 option added in April 2008
+      by 35982bc109d424c464551ab22ec90af69908c884
+    
+    Remove xorg.conf options that were removed from the code:
+    - XkbDisable option was removed in January 2009
+      by commit 40877c6680863bd6a8475f2bb0c54df55bcf0b0e
+    - PciProbe/Config options were removed in August 2008
+      by commit fdf7c747a8e1bc59dfb31b7f90dd5eab2687315b
+    - EstimateSizesAggressively was removed in August 2008
+      by commit cd1e8f26147919227e7624ac4c6b313d972a4d35
+    - loadable font modules were removed in July 2008
+      by commit affec10635343668839994ea2bac16c1d4524200
+    - ModInDev options were removed in December 2008
+      by commit 6de6ffff35ac03d49fa61de195d4a0605e0ef8bf
+    
+    (Also strips some trailing whitespaces to make git happier.)
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit b6f5c54fc61588c638b987bde914b0e5ff9b655e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Sep 14 15:49:01 2009 +1000
+
+    xfree86: Change default font path to match configure.ac's --default-font-path.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 23dc4678e9333ba0ee1a5374521905fa3f4f309c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 14 14:14:27 2009 +1000
+
+    dmx: use top_builddir, not top_srcdir to get libxfixes.la
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Byeong-ryeol Kim <brofkims@gmail.com>
+
+commit 4650e6ebe6e3ea48a026ace60b25daa165580467
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 14 12:00:18 2009 +1000
+
+    xkb: drop key presses for already repeating keys. (#23889)
+    
+    The event sequence for continuously pressed keys with the keyboard driver is
+    PRESS - PRESS - PRESS - ... - RELEASE.
+    The first press sets the repeatKey to the keycode and the matching timer.
+    The second press (on the same keycode) can be silently dropped instead of
+    overwriting the timer again.
+    
+    X.Org Bug 23889 <http://bugs.freedesktop.org/show_bug.cgi?id=23889>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Daniel Stone <daniel@fooishbar.org>
+
+commit c626a5578aa16c17ef68c1b15ed53828080d9d90
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Sun Sep 13 17:35:51 2009 +1000
+
+    xfree86: fix VT_WAITACTIVE control flow (#11477)
+    
+    Move misplaced } to get the flow of
+    
+    if (!ShareVTs)  {
+       VT_ACTIVATE
+       VT_WAITACTIVE
+    }
+    
+    X.Org Bug 11477 <http://bugs.freedesktop.org/show_bug.cgi?id=11477>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Daniel Stone <daniel@fooishbar.org>
+
+commit d3c66d6b69c04466b8388586090dc48a0aad7684
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 14 08:03:17 2009 +1000
+
+    dix: FindChildForEvent needs init child to None.
+    
+    silences compiler warning:
+    events.c: In function 'FixUpEventFromWindow':
+    events.c:2262: warning: 'child' may be used uninitialized in this function
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit e85775aa64d1e9322c82090a26256af5e1fede0a
+Author: Kevin E Martin <kem@redhat.com>
+Date:   Mon Sep 14 08:01:56 2009 +1000
+
+    Include <X11/extensions/dmx.h> and remove _DMX_SERVER_ define.
+    
+    Fixes build with newer dmx header files that have been split between dmx.h
+    and dmxext.h.  _DMX_SERVER_ is no longer needed with the split headers.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 232d43510e0f9f780a9f8eb857366e03acf2fcdc
+Author: Kevin E Martin <kem@redhat.com>
+Date:   Mon Sep 14 08:00:42 2009 +1000
+
+    dmx: Make description match default option.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 6389a190faa7c06bdedfd1cc3acb280ebb5cc04a
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Sat Sep 12 21:47:51 2009 +0300
+
+    shave: use CC tag variable on libtool
+    
+    This fix scratchbox compilation.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit dfb106c846c880a06fa5caada92f45576eab7b00
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 18:09:12 2009 +1000
+
+    configure: re-enable dmx build (default=auto)
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 72607960c136894c4533a54cef7a9be64246f1a3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 9 11:02:22 2009 +1000
+
+    dmx: Remove some dead code.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 88187ad889ab707fcae3f64890cdb291b567ec23
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 9 11:02:18 2009 +1000
+
+    dmx: purge DMX EQ leftovers
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit f3aaa46f27f802233e54b3c70ba827e0fcca2605
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 9 09:51:45 2009 +1000
+
+    dmx: formatting fix to improve readability
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 7a588c833e87dd07f167b9885d5ec43dde271ebe
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 18:14:43 2009 +1000
+
+    dmx: Default rules are now base, not xfree86
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 33243ae971db90477a29dfb0e51cc00c95e561bc
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Aug 4 17:04:08 2009 +1000
+
+    dmx: include xfixes lib, reshuffle include order to resolve linker errors.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2d46678762b12c9746fc8f89821c15705680ba35
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 17:46:06 2009 +1000
+
+    dmx: remove dmx-internal event queue.
+    
+    The EQ is in the DIX now.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 545f11139d600febf1c5fd46b11bea4352b82c32
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 17:14:53 2009 +1000
+
+    dmx: compiler warning fix (mixed declarations + code)
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 7d703af74ced36968f4480507a7eb54d249b5edc
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 17:13:38 2009 +1000
+
+    dmx: get the state from XKB for dmxCheckSpecialKeys
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 6e52f9233176986508356f6eee4fce86ba740e71
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 17:10:22 2009 +1000
+
+    dmx: fix dmxKeySymToKeyCode to work with mandatory XKB.
+    
+    Approach taken is inefficient, it converts the xkb symbol table to a core
+    symbol table first and then extracts the keycode from there.
+    Consider this a todo for a rainy afternoon when the beer fridge demands
+    emptying.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 61ae0a5ca5de24590f444c405445124404ba9753
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 17:05:12 2009 +1000
+
+    dmx: fix up dmxKeyCodeToKeySym for XKB-only.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 9caba3e2abceda0a1ff4ad4bf05708f0166c2218
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Aug 4 15:12:25 2009 +1000
+
+    dmx: fix two calls to InitKeyboardDeviceStruct.
+    
+    Takes RMLVO now instead of the keysyms directly.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 29b9a10dad1ca780dc90f4f1f63fd11fd7d1221b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Aug 4 15:04:45 2009 +1000
+
+    dmx: XkbComponentNamesRec doesn't have a keymap field anymore.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a6f3f6a63ae76afbe01eb9049a63609476d2ed4d
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 16:43:04 2009 +1000
+
+    dmx: switch lnx-input and usb-input over to xkb-only.
+    
+    kbd*Convert are nearly identical, it just asks for merging. Not today
+    though.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 5d81aee5f75e80ae9d3ac7cb32d293ade62d6c5c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Aug 4 15:24:02 2009 +1000
+
+    dmx: include xkbsrv.h to silence compiler.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 4da59f478686fa7e80a3837bf9fa61672c13c50b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 16:30:36 2009 +1000
+
+    xkb: split effectiveGroup calculation into separate utility function.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8fb3fa28a5a1b36cdaad38055a607400828b9e1c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 11 11:21:26 2009 -0700
+
+    compiler.h: include <string.h> before using memmove()
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit d908ee6e549fd8ff653e2c58e9637df347540ef9
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Thu Sep 10 20:56:18 2009 +0300
+
+    Revert "Make sys.c use compiler.h unaligned access functions"
+    
+    This reverts commit 1b30545c04a51bfa3ff95a26d64962907a62ff15.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 281ebb453d2f5254e057a24e580dafa9abf82305
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Thu Sep 10 17:52:32 2009 +0300
+
+    xfree86: vgaarb: close and cleanup vga arbiter
+    
+    So far there are no apparently issues on not closing the fd. But let's do the
+    right job here.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Acked-by: Dave Airlie <airlied@redhat.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit e62549b8d61cd739adbbd04487d96fe706da1370
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 9 16:03:38 2009 +1000
+
+    Xext: don't try to initialize XTEST device properties if they failed.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 744cdc897746dca86f5ab9e57be982621c2f0986
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 9 15:05:15 2009 +1000
+
+    dix: Remove two _X_EXPORT defines from the function definition.
+    
+    These two are defined _X_EXPORT in their declaration anyway.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 9871f9be4e5b184b151ce93458b2578cc8c7b962
+Author: Martin-Éric Racine <q-funk@iki.fi>
+Date:   Wed Sep 9 13:43:45 2009 +0300
+
+    Use lowercase PCI vendor ID for NSC.
+
+commit f4350c66b493d63fa06be87caa958d7033232ea4
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Sep 9 15:48:33 2009 +1000
+
+    fbdevhw: Test for graphics:fb%d as well as graphics/fb%d
+    
+    Apparently the kernel can't decide on an API to expose to userspace, so
+    let's just try both in the hope that one will work.
+    
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+
+commit 72f6be540840b46aa4b158b98fac11a6f90dc9d1
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 4 11:13:55 2009 +1000
+
+    xfree86: remove now unused xf86CrtcShadowClear
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 1f24638985ce053b696ca3359cc50b5bc26ccb03
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 9 09:28:46 2009 +1000
+
+    kdrive: output meaningful error message for HAL devices.
+    
+    kdrive ignores all devices from hal as they don't have the 'type' option
+    set. Instead of "Unrecognised device identifier!" print out "Ignoring
+    device from HAL." to indicate that the errors surrounding the device don't
+    really matter.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+
+commit ae812bb79668e59cda1f851fb1fabe9db9ea705f
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 13:53:26 2009 +1000
+
+    Xnest: set the default pointer accel to the host's values (#10013)
+    
+    The defaultPointerControl holds compile-time defaults for pointer
+    acceleration. If an Xnest instance is started, it resets the hosts pointer
+    accel values to these built-in defaults instead of using the host values.
+    
+    This patch queries the host for the values before initializing the device,
+    thus leaving the host values untouched.
+    
+    X.Org Bug 10013 <http://bugs.freedesktop.org/show_bug.cgi?id=10013>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 97e3f4316b1c917f93d324f05d3a4551c1d051a3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 09:55:22 2009 +1000
+
+    dix: auto-float SD's with SendCoreEvents "false"
+    
+    AlwaysCore and SendCoreEvents specify whether a device is to send core
+    events. A device that has either disabled is not supposed to send core
+    events.
+    
+    With MPX/XI2, a device that is attached automatically sends core events when
+    the event is routed through the master device. Floating a slave device
+    disables core events by breaking the route.
+    
+    This patch automatically floats devices that have coreEvents disabled in the
+    xorg.conf/HAL. This replicates the behaviour of a SendCoreEvents "false"
+    device in server 1.6 and earlier.
+    
+    The devices may still be reattached to a master at runtime.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 447bd4ce90113037a489ce55d9878523fe5294c7
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 7 16:02:50 2009 +1000
+
+    kdrive: fix sdl build by removing old keySymsRec references.
+    
+    These are set in kinput now through InitKeyboardDeviceStruct.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d8aadfa5af85ce6613289efe119e592aa687ab03
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 7 15:04:33 2009 +1000
+
+    dix: remove unused and half-broken code to restore original classes.
+    
+    In theory, the MD should change back to its old, original classes when the
+    last SD is detached. Thanks to the XTEST devices, we'll always have an SD
+    attached until the MD is removed.  So let's not worry about that and do
+    nothing instead of having some code that's essentially untested.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit e9a507acca01234de189f0f64da63bac32dc13fd
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 7 15:59:37 2009 +1000
+
+    kdrive: remove xkb member from KdKeyboardInfo
+    
+    Wasn't being used by anyone.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit cafa7c5f9017efdc33c348b6a55d80d44df0fe17
+Author: Martin-Éric Racine <q-funk@iki.fi>
+Date:   Tue Sep 8 23:52:52 2009 +0300
+
+    Added comment with the PCI device ID of Geode SCx200 series.
+
+commit d3ad1804a5216487b5837a80f3e53b81212dcf84
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Sep 8 15:25:19 2009 +0200
+
+    EXA: Only take special code path for 1x1 fill for pixmaps.
+    
+    It doesn't make sense for windows.
+    
+    Also double-check that the data pointer is valid.
+    
+    Fixes http://bugs.freedesktop.org/show_bug.cgi?id=23461 (not sure that could
+    happen on master even without this, but just in case)
+
+commit a9d30f6a038166052a4684308db205bd4e60799e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 8 17:43:24 2009 +1000
+
+    dix: GetKeyboardValuatorEvents doesn't recurse anymore - fix comment.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 1bdc9ec617d357b076c9e69296018bc212d91c7d
+Author: Eamon Walsh <efw@eamonwalsh.com>
+Date:   Fri Sep 4 21:49:29 2009 -0400
+
+    Fix "warning: left-hand operand of comma expression has no effect"
+    
+    Signed-off-by: Eamon Walsh <efw@eamonwalsh.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 9005ec4ce19d704d5055232d2a36acee3247be67
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 4 11:38:03 2009 +1000
+
+    dix: remove dixLookupResource - we don't have any users left.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Acked-by: Aaron Plattner <aplattner@nvidia.com>
+
+commit 1e0caf9a2ca983f171976822d9c04bacc14e9af7
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 6 14:02:53 2009 -0700
+
+    XQuartz: launchd: Fallback on :0 if prefix:0 gives an error for the socket name
+    (cherry picked from commit 647c871dc9f2d0adc172b401cde89ffbdfcc4d7a)
+
+commit 081f72390a25e2244561e238f772f98289a6a581
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 5 14:04:53 2009 -0700
+
+    XQuartz: Fix "warning: function declaration isn’t a prototype" noise
+    (cherry picked from commit 9a77905a975e562daa4230739937bbb0b4caf087)
+
+commit 7ece2cb220e4fe2c9a8c4c62361522a45adf22c1
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 5 14:03:19 2009 -0700
+
+    XQuartz: pbproxy: 64bit fixes: Properly process an array of Atoms
+    (cherry picked from commit 1b659cda1af02762a31cc7875e457b08c8dc68b5)
+
+commit 1747120043cc5b5d201b7efd06b75ef08b032922
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 5 02:51:09 2009 -0700
+
+    XQuartz: Fix a strcpy/strcmp typo
+    (cherry picked from commit 701c24da3ef76a05ccb2d7e84ccfa1b7c5d38e15)
+
+commit be37f339a9ed90b9b5e44aeb396ca73347078027
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Fri Sep 4 23:11:13 2009 +0200
+
+    EXA: Stop hiding solid or gradient pictures from the driver.
+    
+    Add support for solid pictures in exaTryDriverSolidFill(), but otherwise just
+    pass solid and gradient pictures to the driver Composite hook.
+    
+    While we're at it, clean up the logic to detect Composite operations which are
+    effectively solid fills or copies. This should also fix some false negatives
+    and positives.
+
+commit 1f61bbeffdf2ad5a2c54121c75f3b049baf01708
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Sep 4 00:38:58 2009 -0700
+
+    XQuartz: Check the DISPLAY environment variable to see if the socket at startup is ours.  If not, ignore it and fork/exec startx.
+    (cherry picked from commit 3d5e10cce360a04bf917227615fb9b825675124f)
+
+commit 0a361d0e5f896351b98dc9765b4a33c79efa6f02
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu Sep 3 19:40:11 2009 -0700
+
+    XQuartz: Use --with-launchd-id-prefix for consistency with xinit
+    
+    Also actually honor LAUNCHD_ID_PREFIX and APPLE_APPLICATION_NAME
+    (cherry picked from commit 990038ab006b2f5e03dcef385514ba4e4584bd25)
+
 commit e6e83d81ee7366779d600cbb128034e248815339
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Fri Sep 4 14:51:08 2009 +1000

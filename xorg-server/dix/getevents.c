@@ -858,10 +858,6 @@ GetKeyboardEvents(EventList *events, DeviceIntPtr pDev, int type, int key_code) 
  * that is done by SwitchCoreKeyboard, which is called from
  * mieqProcessInputEvents.  If replacing that function, take care to call
  * SetCoreKeyboard before processInputProc, so keymaps are altered to suit.
- *
- * Note that this function recurses!  If called for non-XKB, a repeating
- * key press will trigger a matching KeyRelease, as well as the
- * KeyPresses.
  */
 int
 GetKeyboardValuatorEvents(EventList *events, DeviceIntPtr pDev, int type,

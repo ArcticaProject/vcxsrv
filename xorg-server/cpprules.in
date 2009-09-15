@@ -37,6 +37,8 @@ MANDEFS = \
 	-D__mandir__=$(mandir) \
 	-D__projectroot__=$(prefix) \
 	-D__xconfigfile__=$(__XCONFIGFILE__) -D__xconfigdir__=$(XCONFIGDIR) \
+	-D__xkbdir__=$(XKB_BASE_DIRECTORY) \
+	-D__modulepath__="$(DEFAULT_MODULE_PATH)" \
 	-D__xlogfile__=$(XLOGFILE) -D__xservername__=$(XSERVERNAME) 
 
 .pre:

@@ -945,6 +945,11 @@ extern void XkbFilterEvents(
         int                     /* nEvents */,
         xEvent*                 /* xE */);
 
+extern int XkbGetEffectiveGroup(
+        XkbSrvInfoPtr           /* xkbi */,
+        XkbStatePtr             /* xkbstate */,
+        CARD8                   /* keycode */);
+
 #include "xkbfile.h"
 #include "xkbrules.h"
 

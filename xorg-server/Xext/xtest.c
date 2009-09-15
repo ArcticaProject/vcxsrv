@@ -642,20 +642,20 @@ int AllocXTestDevice (ClientPtr client, char* name,
     if ( retval == Success ){
         dixSetPrivate(&((*ptr)->devPrivates), XTestDevicePrivateKey, (void *)master_ptr->id);
         dixSetPrivate(&((*keybd)->devPrivates), XTestDevicePrivateKey, (void *)master_keybd->id);
+
+        XIChangeDeviceProperty(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
+                XA_INTEGER, 8, PropModeReplace, 1, &dummy,
+                FALSE);
+        XISetDevicePropertyDeletable(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE), FALSE);
+        XIRegisterPropertyHandler(*ptr, DeviceSetXTestProperty, NULL, NULL);
+        XIChangeDeviceProperty(*keybd, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
+                XA_INTEGER, 8, PropModeReplace, 1, &dummy,
+                FALSE);
+        XISetDevicePropertyDeletable(*keybd, XIGetKnownProperty(XI_PROP_XTEST_DEVICE), FALSE);
+        XIRegisterPropertyHandler(*keybd, DeviceSetXTestProperty, NULL, NULL);
     }
 
     xfree( xtestname );
-
-    XIChangeDeviceProperty(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
-                           XA_INTEGER, 8, PropModeReplace, 1, &dummy,
-                           FALSE);
-    XISetDevicePropertyDeletable(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE), FALSE);
-    XIRegisterPropertyHandler(*ptr, DeviceSetXTestProperty, NULL, NULL);
-    XIChangeDeviceProperty(*keybd, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
-                           XA_INTEGER, 8, PropModeReplace, 1, &dummy,
-                           FALSE);
-    XISetDevicePropertyDeletable(*keybd, XIGetKnownProperty(XI_PROP_XTEST_DEVICE), FALSE);
-    XIRegisterPropertyHandler(*keybd, DeviceSetXTestProperty, NULL, NULL);
 
     return retval;
 }

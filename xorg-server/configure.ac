@@ -26,7 +26,7 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.6.99.900, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+AC_INIT([xorg-server], 1.6.99.901, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
 RELEASE_DATE="(unreleased)"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([dist-bzip2 foreign])
@@ -523,10 +523,11 @@ AC_ARG_WITH(apple-application-name,AS_HELP_STRING([--with-apple-application-name
 				[ APPLE_APPLICATION_NAME="${withval}" ],
 				[ APPLE_APPLICATION_NAME="X11" ])
 AC_SUBST([APPLE_APPLICATION_NAME])
-AC_ARG_WITH(apple-application-id,AS_HELP_STRING([--with-apple-application-id=VALUE], [CFBundleIdentification for the .app (default: org.x.X11)]),
-				[ APPLE_APPLICATION_ID="${withval}" ],
-				[ APPLE_APPLICATION_ID="org.x.X11" ])
-AC_SUBST([APPLE_APPLICATION_ID])
+AC_ARG_WITH(launchd-id-prefix,  AS_HELP_STRING([--with-launchd-id-prefix=PATH], [Prefix to use for launchd identifiers (default: org.x)]),
+                                [ LAUNCHD_ID_PREFIX="${withval}" ],
+                                [ LAUNCHD_ID_PREFIX="org.x" ])
+AC_SUBST([LAUNCHD_ID_PREFIX])
+AC_DEFINE_UNQUOTED(LAUNCHD_ID_PREFIX, "$LAUNCHD_ID_PREFIX", [Prefix to use for launchd identifiers])
 AC_ARG_ENABLE(sparkle,AS_HELP_STRING([--enable-sparkle], [Enable updating of X11.app using the Sparkle Framework (default: disabled)]),
 				[ XQUARTZ_SPARKLE="${enableval}" ],
 				[ XQUARTZ_SPARKLE="no" ])
@@ -593,7 +594,7 @@ AC_ARG_ENABLE(int10-module,     AS_HELP_STRING([--enable-int10-module], [Build X
 
 dnl DDXes.
 AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
-AC_ARG_ENABLE(dmx,    	      AS_HELP_STRING([--enable-dmx], [Build DMX server (default: no)]), [DMX=$enableval], [DMX=no])
+AC_ARG_ENABLE(dmx,    	      AS_HELP_STRING([--enable-dmx], [Build DMX server (default: auto)]), [DMX=$enableval], [DMX=auto])
 AC_ARG_ENABLE(xvfb,    	      AS_HELP_STRING([--enable-xvfb], [Build Xvfb server (default: yes)]), [XVFB=$enableval], [XVFB=yes])
 AC_ARG_ENABLE(xnest,   	      AS_HELP_STRING([--enable-xnest], [Build Xnest server (default: yes)]), [XNEST=$enableval], [XNEST=yes])
 AC_ARG_ENABLE(xquartz,        AS_HELP_STRING([--enable-xquartz], [Build Xquartz server for OS-X (default: auto)]), [XQUARTZ=$enableval], [XQUARTZ=auto])
@@ -1735,7 +1736,7 @@ if test "x$DMX" = xyes; then
 	fi
 	DMX_INCLUDES="$XEXT_INC $RENDER_INC $RECORD_INC"
 	XDMX_CFLAGS="$DMXMODULES_CFLAGS"
-	XDMX_LIBS="$XEXT_LIB $FB_LIB $CONFIG_LIB $RENDER_LIB $RECORD_LIB $XI_LIB $XKB_LIB $XKB_STUB_LIB $MIEXT_SHADOW_LIB $MIEXT_DAMAGE_LIB"
+	XDMX_LIBS="$XEXT_LIB $FB_LIB $CONFIG_LIB $FIXES_LIB $RENDER_LIB $RECORD_LIB $XI_LIB $XKB_LIB $XKB_STUB_LIB $MIEXT_SHADOW_LIB $MIEXT_DAMAGE_LIB"
 	XDMX_SYS_LIBS="$DMXMODULES_LIBS"
 	AC_SUBST([XDMX_CFLAGS])
 	AC_SUBST([XDMX_LIBS])
