@@ -33,7 +33,7 @@
  * transparent stipple
  */
 #define LaneCases1(c,a)	    case c: \
-				while (n--) { (void)FbLaneCase(c,a); a++; } \
+				while (n--) { FbLaneCase(c,a); a++; } \
 				break
 #define LaneCases2(c,a)	    LaneCases1(c,a); LaneCases1(c+1,a)
 #define LaneCases4(c,a)	    LaneCases2(c,a); LaneCases2(c+2,a)

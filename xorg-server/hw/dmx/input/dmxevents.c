@@ -47,7 +47,6 @@
 #include "dmxcommon.h"
 #include "dmxcursor.h"
 #include "dmxmotion.h"
-#include "dmxeq.h"
 #include "dmxsigio.h"
 #include "dmxmap.h"
 
@@ -58,6 +57,7 @@
 #include "mi.h"
 #include "exglobals.h"
 
+#include "xkbsrv.h"
 #include "XIstubs.h"
 
 static int  dmxGlobalX, dmxGlobalY; /* Global cursor position */
@@ -154,59 +154,6 @@ static int dmxCheckFunctionKeys(DMXLocalInputInfoPtr dmxLocal,
     return 0;
 }
 
-static void dmxEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal, xEvent *e,
-                               DMXBlockType block)
-{
-    xEvent                 xE[2];
-    deviceKeyButtonPointer *xev      = (deviceKeyButtonPointer *)xE;
-    deviceValuator         *xv       = (deviceValuator *)xev+1;
-    DeviceIntPtr           pDevice   = dmxLocal->pDevice;
-    DMXInputInfo           *dmxInput = &dmxInputs[dmxLocal->inputIdx];
-    int                    type      = e->u.u.type;
-
-    switch (e->u.u.type) {
-    case KeyPress:
-        type = DeviceKeyPress;
-        break;
-    case KeyRelease:
-        type = DeviceKeyRelease;
-        break;
-    case ButtonPress:
-        type = DeviceButtonPress;
-        break;
-    case ButtonRelease:
-        type = DeviceButtonRelease;
-        break;
-    case MotionNotify:
-        dmxLog(dmxError,
-               "dmxEnqueueExtEvent: MotionNotify not allowed here\n");
-        return;
-    default:
-        if (e->u.u.type == ProximityIn || e->u.u.type == ProximityOut)
-            break;
-        dmxLogInput(dmxInput,
-                    "dmxEnqueueExtEvent: Unhandled %s event (%d)\n",
-                    e->u.u.type >= LASTEvent ? "extension" : "non-extension",
-                    e->u.u.type);
-        return;
-    }
-
-    xev->type          = type;
-    xev->detail        = e->u.u.detail;
-    xev->deviceid      = pDevice->id | MORE_EVENTS;
-    xev->time          = e->u.keyButtonPointer.time;
-
-    xv->type           = DeviceValuator;
-    xv->deviceid       = pDevice->id;
-    xv->num_valuators  = 0;
-    xv->first_valuator = 0;
-
-    if (block)
-        dmxSigioBlock();
-    dmxeqEnqueue(pDevice, xE);
-    if (block)
-        dmxSigioUnblock();
-}
 
 DMXScreenInfo *dmxFindFirstScreen(int x, int y)
 {
@@ -290,7 +237,7 @@ dmxCoreMotion(DevicePtr pDev, int x, int y, int delta, DMXBlockType block)
                     pScreen->myNum, dmxScreen->index, localX, localY);
             if (block)
                 dmxSigioBlock();
-            dmxeqProcessInputEvents();
+            mieqProcessInputEvents();
             miPointerSetScreen(inputInfo.pointer, dmxScreen->index,
                                localX, localY);
             if (pDev)
@@ -343,6 +290,8 @@ static void dmxExtMotion(DMXLocalInputInfoPtr dmxLocal,
     int                    thisY   = 0;
     int                    i;
     int                    count;
+    EventListPtr           events;
+    int                    nevents;
 
     memset(xE, 0, sizeof(xE));
 
@@ -421,8 +370,12 @@ static void dmxExtMotion(DMXLocalInputInfoPtr dmxLocal,
 
     if (block)
         dmxSigioBlock();
-    dmxPointerPutMotionEvent(pDevice, firstAxis, axesCount, v, xev->time);
-    dmxeqEnqueue(pDevice, xE);
+    GetEventList(&events);
+    nevents = GetPointerEvents(events, pDevice, MotionNotify, 0, POINTER_ABSOLUTE,
+                               firstAxis, axesCount, v);
+    for (i = 0; i < nevents; i++)
+        mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
+
     if (block)
         dmxSigioUnblock();
 }
@@ -430,14 +383,14 @@ static void dmxExtMotion(DMXLocalInputInfoPtr dmxLocal,
 static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
                                           XEvent *e, DMXBlockType block)
 {
-    xEvent                 xE[2];
-    deviceKeyButtonPointer *xev    = (deviceKeyButtonPointer *)xE;
-    deviceValuator         *xv     = (deviceValuator *)xev+1;
     int                    type;
     int                    event   = -1;
     XDeviceKeyEvent        *ke     = (XDeviceKeyEvent *)e;
     XDeviceMotionEvent     *me     = (XDeviceMotionEvent *)e;
     DeviceIntPtr           pDevice = dmxLocal->pDevice;
+    int                    valuators[6];
+    EventListPtr           events;
+    int                    nevents, i;
 
     if (!e)
         return -1;          /* No extended event passed, cannot handle */
@@ -462,11 +415,11 @@ static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
 
     switch (type) {
     case XI_DeviceValuator:          event = DeviceValuator;          break;
-    case XI_DeviceKeyPress:          event = DeviceKeyPress;          break;
-    case XI_DeviceKeyRelease:        event = DeviceKeyRelease;        break;
-    case XI_DeviceButtonPress:       event = DeviceButtonPress;       break;
-    case XI_DeviceButtonRelease:     event = DeviceButtonRelease;     break;
-    case XI_DeviceMotionNotify:      event = DeviceMotionNotify;      break;
+    case XI_DeviceKeyPress:          event = KeyPress;                break;
+    case XI_DeviceKeyRelease:        event = KeyRelease;              break;
+    case XI_DeviceButtonPress:       event = ButtonPress;             break;
+    case XI_DeviceButtonRelease:     event = ButtonRelease;           break;
+    case XI_DeviceMotionNotify:      event = MotionNotify;            break;
     case XI_DeviceFocusIn:           event = DeviceFocusIn;           break;
     case XI_DeviceFocusOut:          event = DeviceFocusOut;          break;
     case XI_ProximityIn:             event = ProximityIn;             break;
@@ -478,34 +431,61 @@ static int dmxTranslateAndEnqueueExtEvent(DMXLocalInputInfoPtr dmxLocal,
     case XI_DeviceButtonstateNotify: event = DeviceStateNotify;       break;
     }
 
+#define EXTRACT_VALUATORS(ke, valuators) \
+        valuators[0]       = ke->axis_data[0]; \
+        valuators[1]       = ke->axis_data[1]; \
+        valuators[2]       = ke->axis_data[2]; \
+        valuators[3]       = ke->axis_data[3]; \
+        valuators[4]       = ke->axis_data[4]; \
+        valuators[5]       = ke->axis_data[5]; \
+
     switch (type) {
-    case XI_DeviceKeyPress: 
+    case XI_DeviceKeyPress:
     case XI_DeviceKeyRelease:
-    case XI_DeviceButtonPress:
-    case XI_DeviceButtonRelease:
-    case XI_ProximityIn:
-    case XI_ProximityOut:
-        xev->type          = event;
-        xev->detail        = ke->keycode; /* same as ->button */
-        xev->deviceid      = dmxLocal->pDevice->id | MORE_EVENTS;
-        xev->time          = GetTimeInMillis();
-
-        xv->type           = DeviceValuator;
-        xv->deviceid       = dmxLocal->pDevice->id;
-        xv->num_valuators  = ke->axes_count;
-        xv->first_valuator = ke->first_axis;
-        xv->valuator0      = ke->axis_data[0];
-        xv->valuator1      = ke->axis_data[1];
-        xv->valuator2      = ke->axis_data[2];
-        xv->valuator3      = ke->axis_data[3];
-        xv->valuator4      = ke->axis_data[4];
-        xv->valuator5      = ke->axis_data[5];
-
+        EXTRACT_VALUATORS(ke, valuators);
         if (block)
             dmxSigioBlock();
-        dmxeqEnqueue(pDevice, xE);
+        GetEventList(&events);
+        nevents = GetKeyboardValuatorEvents(events, pDevice, event,
+                                            ke->keycode, ke->first_axis,
+                                            ke->axes_count, valuators);
+        for (i = 0; i < nevents; i++)
+            mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
+
         if (block)
             dmxSigioUnblock();
+        break;
+    case XI_DeviceButtonPress:
+    case XI_DeviceButtonRelease:
+        EXTRACT_VALUATORS(ke, valuators);
+        if (block)
+            dmxSigioBlock();
+        GetEventList(&events);
+        nevents = GetPointerEvents(events, pDevice, event, ke->keycode,
+                                   POINTER_ABSOLUTE, ke->first_axis,
+                                   ke->axes_count, valuators);
+        for (i = 0; i < nevents; i++)
+            mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
+
+        if (block)
+            dmxSigioUnblock();
+        break;
+    case XI_ProximityIn:
+    case XI_ProximityOut:
+        EXTRACT_VALUATORS(ke, valuators);
+        if (block)
+            dmxSigioBlock();
+        GetEventList(&events);
+        nevents = GetProximityEvents(events, pDevice, event,
+                                     ke->first_axis, ke->axes_count,
+                                     valuators);
+        for (i = 0; i < nevents; i++)
+            mieqEnqueue(pDevice, (InternalEvent*)(events + i)->event);
+
+        if (block)
+            dmxSigioUnblock();
+        break;
+
         break;
 
     case XI_DeviceMotionNotify:
@@ -600,36 +580,40 @@ void dmxMotion(DevicePtr pDev, int *v, int firstAxes, int axesCount,
 static KeySym dmxKeyCodeToKeySym(DMXLocalInputInfoPtr dmxLocal,
                                  KeyCode keyCode)
 {
-    KeySymsPtr pKeySyms = NULL;
+    KeySym keysym = NoSymbol;
+    int effectiveGroup;
+    XkbSrvInfoPtr xkbi;
 
     if (!dmxLocal || !dmxLocal->pDevice || !dmxLocal->pDevice->key)
-        return NoSymbol;
-    pKeySyms = &dmxLocal->pDevice->key->curKeySyms;
-    if (!pKeySyms)
-        return NoSymbol;
-    
-    if (keyCode > pKeySyms->minKeyCode && keyCode <= pKeySyms->maxKeyCode) {
-        DMXDBG2("dmxKeyCodeToKeySym: Translated keyCode=%d to keySym=0x%04x\n",
-                keyCode,
-                pKeySyms->map[(keyCode - pKeySyms->minKeyCode)
-                              * pKeySyms->mapWidth]);
-               
-        return pKeySyms->map[(keyCode - pKeySyms->minKeyCode)
-                             * pKeySyms->mapWidth];
-    }
-    return NoSymbol;
+        goto out;
+
+    xkbi = dmxLocal->pDevice->key->xkbInfo;
+    effectiveGroup = XkbGetEffectiveGroup(xkbi, &xkbi->state, keyCode);
+
+    if (effectiveGroup == -1)
+        goto out;
+
+    keysym = XkbKeySym(xkbi->desc, keyCode, effectiveGroup);
+    DMXDBG2("dmxKeyCodeToKeySym: Translated keyCode=%d to keySym=0x%04x\n",
+            keyCode, keysym);
+
+out:
+    return keysym;
 }
 
 static KeyCode dmxKeySymToKeyCode(DMXLocalInputInfoPtr dmxLocal, KeySym keySym,
                                   int tryFirst)
 {
-    KeySymsPtr pKeySyms = &dmxLocal->pDevice->key->curKeySyms;
+    /* FIXME: this is quite ineffective, converting to a core map first and
+     * then extracting the info from there. It'd be better to run the actual
+     * xkb map */
+    XkbSrvInfoPtr xkbi = dmxLocal->pDevice->key->xkbInfo;
+    KeySymsPtr pKeySyms = XkbGetCoreMap(dmxLocal->pDevice);
     int        i;
 
                                 /* Optimize for similar maps */
-    if (tryFirst >= pKeySyms->minKeyCode
-        && tryFirst <= pKeySyms->maxKeyCode
-        && pKeySyms->map[(tryFirst - pKeySyms->minKeyCode)
+    if (XkbKeycodeInRange(xkbi->desc, tryFirst)
+        && pKeySyms->map[(tryFirst - xkbi->desc->min_key_code)
                          * pKeySyms->mapWidth] == keySym)
         return tryFirst;
 
@@ -747,17 +731,6 @@ void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
         return;
     }
 
-#if 00 /* dead code? */
-    memset(&xE, 0, sizeof(xE));
-    xE.u.u.type                = type;
-    xE.u.u.detail              = detail;
-    xE.u.keyButtonPointer.time = GetTimeInMillis();
-
-    if (!dmxLocal->sendsCore)
-        dmxEnqueueExtEvent(dmxLocal, &xE, block);
-    else
-        dmxeqEnqueue(&xE);
-#endif /*00*/
 }
 
 /** A pointer to this routine is passed to low-level input drivers so
@@ -773,9 +746,9 @@ int dmxCheckSpecialKeys(DevicePtr pDev, KeySym keySym)
     unsigned short state = 0;
 
     if (dmxLocal->sendsCore)
-        state = dmxLocalCoreKeyboard->pDevice->key->state;
+        state = XkbStateFieldFromRec(&dmxLocalCoreKeyboard->pDevice->key->xkbInfo->state);
     else if (dmxLocal->pDevice->key)
-        state = dmxLocal->pDevice->key->state;
+        state = XkbStateFieldFromRec(&dmxLocal->pDevice->key->xkbInfo->state);
 
     if (!dmxLocal->sendsCore) return 0; /* Only for core devices */
 

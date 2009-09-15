@@ -127,6 +127,9 @@
 /* Support application updating through sparkle. */
 #undef XQUARTZ_SPARKLE
 
+/* Prefix to use for launchd identifiers */
+#undef LAUNCHD_ID_PREFIX
+
 /* Build a standalone xpbproxy */
 #undef STANDALONE_XPBPROXY
 

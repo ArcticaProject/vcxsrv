@@ -390,6 +390,9 @@
 /* Build VESA-based kdrive servers */
 #undef KDRIVEVESA
 
+/* Prefix to use for launchd identifiers */
+#undef LAUNCHD_ID_PREFIX
+
 /* Support os-specific local connections */
 #undef LOCALCONN
 

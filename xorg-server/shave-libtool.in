@@ -12,7 +12,7 @@ lt_unmangle ()
 }
 
 # the real libtool to use
-LIBTOOL="$1"
+LIBTOOL="$1 --tag=CC"
 shift
 
 # if 1, don't print anything, the underlaying wrapper will do it

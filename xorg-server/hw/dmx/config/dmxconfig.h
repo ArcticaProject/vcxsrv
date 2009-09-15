@@ -36,7 +36,7 @@
 
 #ifndef _DMXCONFIG_H_
 #define _DMXCONFIG_H_
-#define DMX_DEFAULT_XKB_RULES  "xfree86"
+#define DMX_DEFAULT_XKB_RULES  "base"
 #define DMX_DEFAULT_XKB_MODEL  "pc101"
 #define DMX_DEFAULT_XKB_LAYOUT "us"
 #define DMX_DEFAULT_XKB_VARIANT NULL

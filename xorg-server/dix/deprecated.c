@@ -162,22 +162,4 @@ LookupIDByClass(XID id, RESTYPE classes)
     return val;
 }
 
-/* replaced by dixLookupResourceBy{Type,Class} */
-_X_EXPORT int
-dixLookupResource (pointer *result, XID id, RESTYPE rtype,
-		   ClientPtr client, Mask mode)
-{
-    Bool istype = ((rtype & TypeMask) && (rtype != RC_ANY)) || (rtype == RT_NONE);
-
-    static int warn = 1;
-    if (warn > 0 && --warn)
-	ErrorF("Warning: dixLookupResource() "
-	       "is deprecated.  Please convert your driver/module "
-	       "to use dixLookupResourceByType/dixLookupResourceByClass().\n");
-    if (istype)
-	return dixLookupResourceByType (result, id, rtype, client, mode);
-    else
-	return dixLookupResourceByClass (result, id, rtype, client, mode);
-}
-
 /* end deprecated functions */

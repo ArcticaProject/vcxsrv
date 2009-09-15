@@ -257,14 +257,6 @@ extern _X_EXPORT RESTYPE TypeMask;
 #define X_DEPRECATED
 #endif
 
-/* replaced by dixLookupResourceByType or dixLookupResourceByClass */
-extern int dixLookupResource(
-    pointer *result,
-    XID id,
-    RESTYPE rtype,
-    ClientPtr client,
-    Mask access_mode) X_DEPRECATED;
-
 /* replaced by dixLookupResourceByType */
 extern _X_EXPORT pointer SecurityLookupIDByType(
     ClientPtr client,

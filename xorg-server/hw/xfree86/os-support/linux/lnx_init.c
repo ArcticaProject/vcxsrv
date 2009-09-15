@@ -296,11 +296,11 @@ xf86OpenConsole(void)
 	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) < 0)
 	        xf86Msg(X_WARNING, "xf86OpenConsole: VT_ACTIVATE failed %s\n",
 		        strerror(errno));
-        }
 
 	    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) < 0)
 	        xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed %s\n",
 		        strerror(errno));
+        }
     }
     return;
 }

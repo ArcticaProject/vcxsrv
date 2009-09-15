@@ -59,7 +59,7 @@
     
 #ifndef FBNOPIXADDR
     
-#define LaneCases1(n,a)	    case n: (void)FbLaneCase(n,a); break
+#define LaneCases1(n,a)	    case n: FbLaneCase(n,a); break
 #define LaneCases2(n,a)	    LaneCases1(n,a); LaneCases1(n+1,a)
 #define LaneCases4(n,a)	    LaneCases2(n,a); LaneCases2(n+2,a)
 #define LaneCases8(n,a)	    LaneCases4(n,a); LaneCases4(n+4,a)

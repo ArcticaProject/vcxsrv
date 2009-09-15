@@ -1018,6 +1018,7 @@ exaFillRegionSolid (DrawablePtr	pDrawable, RegionPtr pRegion, Pixel pixel,
 	exaMarkSync(pDrawable->pScreen);
 
 	if (pExaPixmap->pDamage &&
+	    pExaPixmap->sys_ptr && pDrawable->type == DRAWABLE_PIXMAP &&
 	    pDrawable->width == 1 && pDrawable->height == 1 &&
 	    pDrawable->bitsPerPixel != 24) {
 	    ExaPixmapPriv(pPixmap);

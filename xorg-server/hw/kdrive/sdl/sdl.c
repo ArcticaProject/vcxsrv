@@ -49,121 +49,6 @@ void sdlTimer(void);
 KdKeyboardInfo *sdlKeyboard = NULL;
 KdPointerInfo *sdlPointer = NULL;
 
-KeySym sdlKeymap[]={
-	0, 			/* 8 */
-	0, 
-	XK_Escape, NoSymbol, 	/* escape */
-	XK_1, XK_exclam,
-	XK_2, XK_at,
-	XK_3, XK_numbersign,
-	XK_4, XK_dollar,
-	XK_5, XK_percent,
-	XK_6, XK_asciicircum,
-	XK_7, XK_ampersand,
-	XK_8, XK_asterisk,
-	XK_9, XK_parenleft,
-	XK_0, XK_parenright, 
-	XK_minus, XK_underscore,
-	XK_equal, XK_plus, 
-	XK_BackSpace, NoSymbol,		/* backspace */
-	XK_Tab, NoSymbol, 
-	XK_q, XK_Q, 
-	XK_w, XK_W, 
-	XK_e, XK_E, 
-	XK_r, XK_R, 
-	XK_t, XK_T, 
-	XK_y, XK_Y, 
-	XK_u, XK_U, 
-	XK_i, XK_I, 
-	XK_o, XK_O, 
-	XK_p, XK_P, 
-	XK_bracketleft, XK_braceleft, 		/* [, { */
-	XK_bracketright, XK_braceright,		/* ]. } */ 
-	XK_Return, NoSymbol,
-	XK_Control_L, NoSymbol, 
-	XK_a, XK_A,
-	XK_s, XK_S,
-	XK_d, XK_D,
-	XK_f, XK_F,
-	XK_g, XK_G,
-	XK_h, XK_H,
-	XK_j, XK_J,
-	XK_k, XK_K,
-	XK_l, XK_L,
-	XK_semicolon, XK_colon,
-	XK_apostrophe, XK_quotedbl,
-	XK_grave, XK_asciitilde,
-	XK_Shift_L, NoSymbol,
-	XK_backslash, XK_bar, 
-	XK_z, XK_z, 
-	XK_x, XK_X, 
-	XK_c, XK_C, 
-	XK_v, XK_V, 
-	XK_b, XK_B, 
-	XK_n, XK_N, 
-	XK_m, XK_M, 
-	XK_comma, XK_less,
-	XK_period, XK_greater, 
-	XK_slash, XK_question, 
-	XK_Shift_R, NoSymbol, 
-	XK_KP_Multiply, NoSymbol,	
-	XK_Meta_L, XK_Alt_L,
-	XK_space, NoSymbol, 
-	XK_Caps_Lock, NoSymbol, 
-	XK_F1, NoSymbol,
-	XK_F2, NoSymbol,
-	XK_F3, NoSymbol,
-	XK_F4, NoSymbol,
-	XK_F5, NoSymbol,
-	XK_F6, NoSymbol,
-	XK_F7, NoSymbol,
-	XK_F8, NoSymbol,
-	XK_F9, NoSymbol,
-	XK_F10, NoSymbol,
-	XK_Num_Lock, NoSymbol,
-	XK_Scroll_Lock, NoSymbol,
-	XK_KP_Home, XK_KP_7, 
-	XK_KP_Up, XK_KP_8, 
-	XK_KP_Page_Up, XK_KP_9, 
-	XK_KP_Subtract, NoSymbol, 
-	XK_KP_Left, XK_KP_4,
-	XK_KP_5, NoSymbol,
-	XK_KP_Right, XK_KP_6,
-	XK_KP_Add, NoSymbol,
-	XK_KP_End, XK_KP_1,
-	XK_KP_Down, XK_KP_2,
-	XK_KP_Page_Down, XK_KP_3, 
-	XK_KP_Insert, XK_KP_0, 
-	XK_KP_Delete, XK_KP_Decimal, 
-	NoSymbol, NoSymbol, 		/* 92 */
-	NoSymbol, NoSymbol, 		/* 93 */
-	NoSymbol, NoSymbol, 		/* 94 */
-	XK_F11, NoSymbol, 		/* 95 */
-	XK_F12, NoSymbol, 		/* 96 */
-	XK_Home, NoSymbol, 		/* 97 */
-	XK_Up, NoSymbol, 		/* 98 */
-	XK_Page_Up, NoSymbol, 		/* 99 */
-	XK_Left, NoSymbol, 		/* 100 */
-	NoSymbol, NoSymbol, 		/* 101 */
-	XK_Right, NoSymbol, 		/* 102 */
-	NoSymbol, NoSymbol, 		/* 103 */
-	XK_Down, NoSymbol, 		/* 104 */
-	XK_Page_Down, NoSymbol, 		/* 105 */
-	XK_Insert, NoSymbol, 		/* 106 */
-	NoSymbol, NoSymbol, 		/* 107 */
-	NoSymbol, NoSymbol, 		/* 108 */
-	XK_Meta_R, XK_Alt_R, 		/* 109 */
-	XK_Pause, XK_Break, 		/* 110 */
-	XK_Sys_Req, XK_Print,		/* 111 */
-	NoSymbol, NoSymbol,		/* 112 */
-	XK_Control_R, NoSymbol,		/* 113 */
-	NoSymbol, NoSymbol,		/* 114 */
-	XK_Super_L, NoSymbol,		/* 115 */
-	XK_Super_R, NoSymbol,		/* 116 */
-	XK_Menu, NoSymbol,		/* 117 */
-	NoSymbol, NoSymbol		/* 118 */
-};
-
 KdKeyboardDriver sdlKeyboardDriver = {
     .name = "keyboard",
     .Init = sdlKeyboardInit,
@@ -304,10 +189,6 @@ static Bool sdlKeyboardInit(KdKeyboardInfo *ki)
 {
         ki->minScanCode = 8;
         ki->maxScanCode = 255;
-        ki->keySyms.minKeyCode = 8;
-        ki->keySyms.maxKeyCode = 255;
-        ki->keySyms.mapWidth = 2;
-        memcpy(ki->keySyms.map, sdlKeymap, sizeof(sdlKeymap));
 
 	sdlKeyboard = ki;
 

@@ -368,8 +368,8 @@ exaDoMoveInPixmap (ExaMigrationPtr migrate)
 void
 exaMoveInPixmap_classic (PixmapPtr pPixmap)
 {
-    static ExaMigrationRec migrate = { .as_dst = FALSE, .as_src = TRUE,
-				       .pReg = NULL };
+    static ExaMigrationRec migrate = { FALSE, TRUE,
+				       NULL, NULL };
 
     migrate.pPix = pPixmap;
     exaDoMoveInPixmap (&migrate);
@@ -409,8 +409,8 @@ exaDoMoveOutPixmap (ExaMigrationPtr migrate)
 void
 exaMoveOutPixmap_classic (PixmapPtr pPixmap)
 {
-    static ExaMigrationRec migrate = { .as_dst = FALSE, .as_src = TRUE,
-				       .pReg = NULL };
+    static ExaMigrationRec migrate = { FALSE, TRUE,
+				       NULL, NULL };
 
     migrate.pPix = pPixmap;
     exaDoMoveOutPixmap (&migrate);
@@ -608,7 +608,7 @@ exaDoMigration_classic (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 	for (i = 0; i < npixmaps; i++) {
 	    if (!exaPixmapIsDirty (pixmaps[i].pPix) &&
 		!exaAssertNotDirty (pixmaps[i].pPix))
-		ErrorF("%s: Pixmap %d dirty but not marked as such!\n", __func__, i);
+		ErrorF("%s: Pixmap %d dirty but not marked as such!\n", __FUNCTION__, i);
 	}
     }
     /* If anything is pinned in system memory, we won't be able to

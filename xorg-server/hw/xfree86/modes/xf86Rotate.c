@@ -145,37 +145,6 @@ xf86RotateCrtcRedisplay (xf86CrtcPtr crtc, RegionPtr region)
 }
 
 static void
-xf86CrtcShadowClear (xf86CrtcPtr crtc)
-{
-    PixmapPtr		dst_pixmap = crtc->rotatedPixmap;
-    ScrnInfoPtr		scrn = crtc->scrn;
-    ScreenPtr		screen = scrn->pScreen;
-    PicturePtr		dst;
-    PictFormatPtr	format = compWindowFormat (WindowTable[screen->myNum]);
-    static xRenderColor black = { 0, 0, 0, 0 };
-    xRectangle		rect;
-    int			error;
-
-    if (!dst_pixmap)
-	return;
-    dst = CreatePicture (None,
-			 &dst_pixmap->drawable,
-			 format,
-			 0L,
-			 NULL,
-			 serverClient,
-			 &error);
-    if (!dst)
-	return;
-    rect.x = 0;
-    rect.y = 0;
-    rect.width = dst_pixmap->drawable.width;
-    rect.height = dst_pixmap->drawable.height;
-    CompositeRects (PictOpSrc, dst, &black, 1, &rect);
-    FreePicture (dst, None);
-}
-
-static void
 xf86CrtcDamageShadow (xf86CrtcPtr crtc)
 {
     ScrnInfoPtr	pScrn = crtc->scrn;

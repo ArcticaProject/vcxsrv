@@ -295,7 +295,6 @@ struct _KdKeyboardInfo {
     char                *name;
     char                *path;
     int                 inputClass;
-    XkbDescPtr          xkb;
     char                *xkbRules;
     char                *xkbModel;
     char                *xkbLayout;

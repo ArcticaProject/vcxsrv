@@ -61,6 +61,12 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
+AM_V_AR = $(am__v_AR_$(V))
+am__v_AR_ = $(am__v_AR_$(AM_DEFAULT_VERBOSITY))
+am__v_AR_0 = @echo "  AR    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 libdmxconfig_a_AR = $(AR) $(ARFLAGS)
 libdmxconfig_a_LIBADD =
 am__objects_1 = parser.$(OBJEXT) scanner.$(OBJEXT) dmxparse.$(OBJEXT) \
@@ -71,12 +77,15 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(appmandir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_dmxtodmx_OBJECTS = dmxtodmx.$(OBJEXT)
 dmxtodmx_OBJECTS = $(am_dmxtodmx_OBJECTS)
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
 am_vdltodmx_OBJECTS = vdltodmx.$(OBJEXT)
 vdltodmx_OBJECTS = $(am_vdltodmx_OBJECTS)
 am_xdmxconfig_OBJECTS = xdmxconfig-xdmxconfig.$(OBJEXT) \
 	xdmxconfig-dmxlog.$(OBJEXT) xdmxconfig-Canvas.$(OBJEXT)
 xdmxconfig_OBJECTS = $(am_xdmxconfig_OBJECTS)
-xdmxconfig_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+xdmxconfig_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(xdmxconfig_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
@@ -85,19 +94,34 @@ am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
 @MAINTAINER_MODE_FALSE@am__skiplex = test -f $@ ||
 LEXCOMPILE = $(LEX) $(LFLAGS) $(AM_LFLAGS)
-LTLEXCOMPILE = $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(LEX) $(LFLAGS) $(AM_LFLAGS)
+LTLEXCOMPILE = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(LEX) $(LFLAGS) $(AM_LFLAGS)
+AM_V_LEX = $(am__v_LEX_$(V))
+am__v_LEX_ = $(am__v_LEX_$(AM_DEFAULT_VERBOSITY))
+am__v_LEX_0 = @echo "  LEX   " $@;
 YLWRAP = $(top_srcdir)/ylwrap
 @MAINTAINER_MODE_FALSE@am__skipyacc = test -f $@ ||
 YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
-LTYACCCOMPILE = $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(YACC) $(YFLAGS) $(AM_YFLAGS)
+LTYACCCOMPILE = $(LIBTOOL) $(AM_V_lt) $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(YACC) $(YFLAGS) $(AM_YFLAGS)
+AM_V_YACC = $(am__v_YACC_$(V))
+am__v_YACC_ = $(am__v_YACC_$(AM_DEFAULT_VERBOSITY))
+am__v_YACC_0 = @echo "  YACC  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libdmxconfig_a_SOURCES) $(dmxtodmx_SOURCES) \
 	$(vdltodmx_SOURCES) $(xdmxconfig_SOURCES)
 DIST_SOURCES = $(libdmxconfig_a_SOURCES) $(dmxtodmx_SOURCES) \
@@ -132,9 +156,9 @@ ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
-APPLE_APPLICATION_ID = @APPLE_APPLICATION_ID@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
@@ -223,6 +247,7 @@ KDRIVE_LIBS = @KDRIVE_LIBS@
 KDRIVE_LOCAL_LIBS = @KDRIVE_LOCAL_LIBS@
 KDRIVE_PURE_INCS = @KDRIVE_PURE_INCS@
 KDRIVE_PURE_LIBS = @KDRIVE_PURE_LIBS@
+LAUNCHD_ID_PREFIX = @LAUNCHD_ID_PREFIX@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LD_EXPORT_SYMBOLS_FLAG = @LD_EXPORT_SYMBOLS_FLAG@
@@ -523,9 +548,9 @@ $(am__aclocal_m4_deps):
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 libdmxconfig.a: $(libdmxconfig_a_OBJECTS) $(libdmxconfig_a_DEPENDENCIES) 
-	-rm -f libdmxconfig.a
-	$(libdmxconfig_a_AR) libdmxconfig.a $(libdmxconfig_a_OBJECTS) $(libdmxconfig_a_LIBADD)
-	$(RANLIB) libdmxconfig.a
+	$(AM_V_at)-rm -f libdmxconfig.a
+	$(AM_V_AR)$(libdmxconfig_a_AR) libdmxconfig.a $(libdmxconfig_a_OBJECTS) $(libdmxconfig_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libdmxconfig.a
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -571,13 +596,13 @@ clean-binPROGRAMS:
 	rm -f $$list
 dmxtodmx$(EXEEXT): $(dmxtodmx_OBJECTS) $(dmxtodmx_DEPENDENCIES) 
 	@rm -f dmxtodmx$(EXEEXT)
-	$(LINK) $(dmxtodmx_OBJECTS) $(dmxtodmx_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(dmxtodmx_OBJECTS) $(dmxtodmx_LDADD) $(LIBS)
 vdltodmx$(EXEEXT): $(vdltodmx_OBJECTS) $(vdltodmx_DEPENDENCIES) 
 	@rm -f vdltodmx$(EXEEXT)
-	$(LINK) $(vdltodmx_OBJECTS) $(vdltodmx_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(vdltodmx_OBJECTS) $(vdltodmx_LDADD) $(LIBS)
 xdmxconfig$(EXEEXT): $(xdmxconfig_OBJECTS) $(xdmxconfig_DEPENDENCIES) 
 	@rm -f xdmxconfig$(EXEEXT)
-	$(xdmxconfig_LINK) $(xdmxconfig_OBJECTS) $(xdmxconfig_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(xdmxconfig_LINK) $(xdmxconfig_OBJECTS) $(xdmxconfig_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -598,73 +623,82 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xdmxconfig-xdmxconfig.Po@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
 xdmxconfig-xdmxconfig.o: xdmxconfig.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-xdmxconfig.o -MD -MP -MF $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo -c -o xdmxconfig-xdmxconfig.o `test -f 'xdmxconfig.c' || echo '$(srcdir)/'`xdmxconfig.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo $(DEPDIR)/xdmxconfig-xdmxconfig.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-xdmxconfig.o -MD -MP -MF $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo -c -o xdmxconfig-xdmxconfig.o `test -f 'xdmxconfig.c' || echo '$(srcdir)/'`xdmxconfig.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo $(DEPDIR)/xdmxconfig-xdmxconfig.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xdmxconfig.c' object='xdmxconfig-xdmxconfig.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -c -o xdmxconfig-xdmxconfig.o `test -f 'xdmxconfig.c' || echo '$(srcdir)/'`xdmxconfig.c
 
 xdmxconfig-xdmxconfig.obj: xdmxconfig.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-xdmxconfig.obj -MD -MP -MF $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo -c -o xdmxconfig-xdmxconfig.obj `if test -f 'xdmxconfig.c'; then $(CYGPATH_W) 'xdmxconfig.c'; else $(CYGPATH_W) '$(srcdir)/xdmxconfig.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo $(DEPDIR)/xdmxconfig-xdmxconfig.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-xdmxconfig.obj -MD -MP -MF $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo -c -o xdmxconfig-xdmxconfig.obj `if test -f 'xdmxconfig.c'; then $(CYGPATH_W) 'xdmxconfig.c'; else $(CYGPATH_W) '$(srcdir)/xdmxconfig.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmxconfig-xdmxconfig.Tpo $(DEPDIR)/xdmxconfig-xdmxconfig.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xdmxconfig.c' object='xdmxconfig-xdmxconfig.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -c -o xdmxconfig-xdmxconfig.obj `if test -f 'xdmxconfig.c'; then $(CYGPATH_W) 'xdmxconfig.c'; else $(CYGPATH_W) '$(srcdir)/xdmxconfig.c'; fi`
 
 xdmxconfig-dmxlog.o: $(top_srcdir)/hw/dmx/dmxlog.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-dmxlog.o -MD -MP -MF $(DEPDIR)/xdmxconfig-dmxlog.Tpo -c -o xdmxconfig-dmxlog.o `test -f '$(top_srcdir)/hw/dmx/dmxlog.c' || echo '$(srcdir)/'`$(top_srcdir)/hw/dmx/dmxlog.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xdmxconfig-dmxlog.Tpo $(DEPDIR)/xdmxconfig-dmxlog.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-dmxlog.o -MD -MP -MF $(DEPDIR)/xdmxconfig-dmxlog.Tpo -c -o xdmxconfig-dmxlog.o `test -f '$(top_srcdir)/hw/dmx/dmxlog.c' || echo '$(srcdir)/'`$(top_srcdir)/hw/dmx/dmxlog.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmxconfig-dmxlog.Tpo $(DEPDIR)/xdmxconfig-dmxlog.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/hw/dmx/dmxlog.c' object='xdmxconfig-dmxlog.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -c -o xdmxconfig-dmxlog.o `test -f '$(top_srcdir)/hw/dmx/dmxlog.c' || echo '$(srcdir)/'`$(top_srcdir)/hw/dmx/dmxlog.c
 
 xdmxconfig-dmxlog.obj: $(top_srcdir)/hw/dmx/dmxlog.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-dmxlog.obj -MD -MP -MF $(DEPDIR)/xdmxconfig-dmxlog.Tpo -c -o xdmxconfig-dmxlog.obj `if test -f '$(top_srcdir)/hw/dmx/dmxlog.c'; then $(CYGPATH_W) '$(top_srcdir)/hw/dmx/dmxlog.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/hw/dmx/dmxlog.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xdmxconfig-dmxlog.Tpo $(DEPDIR)/xdmxconfig-dmxlog.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-dmxlog.obj -MD -MP -MF $(DEPDIR)/xdmxconfig-dmxlog.Tpo -c -o xdmxconfig-dmxlog.obj `if test -f '$(top_srcdir)/hw/dmx/dmxlog.c'; then $(CYGPATH_W) '$(top_srcdir)/hw/dmx/dmxlog.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/hw/dmx/dmxlog.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmxconfig-dmxlog.Tpo $(DEPDIR)/xdmxconfig-dmxlog.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/hw/dmx/dmxlog.c' object='xdmxconfig-dmxlog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -c -o xdmxconfig-dmxlog.obj `if test -f '$(top_srcdir)/hw/dmx/dmxlog.c'; then $(CYGPATH_W) '$(top_srcdir)/hw/dmx/dmxlog.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/hw/dmx/dmxlog.c'; fi`
 
 xdmxconfig-Canvas.o: Canvas.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-Canvas.o -MD -MP -MF $(DEPDIR)/xdmxconfig-Canvas.Tpo -c -o xdmxconfig-Canvas.o `test -f 'Canvas.c' || echo '$(srcdir)/'`Canvas.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xdmxconfig-Canvas.Tpo $(DEPDIR)/xdmxconfig-Canvas.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-Canvas.o -MD -MP -MF $(DEPDIR)/xdmxconfig-Canvas.Tpo -c -o xdmxconfig-Canvas.o `test -f 'Canvas.c' || echo '$(srcdir)/'`Canvas.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmxconfig-Canvas.Tpo $(DEPDIR)/xdmxconfig-Canvas.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='Canvas.c' object='xdmxconfig-Canvas.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -c -o xdmxconfig-Canvas.o `test -f 'Canvas.c' || echo '$(srcdir)/'`Canvas.c
 
 xdmxconfig-Canvas.obj: Canvas.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-Canvas.obj -MD -MP -MF $(DEPDIR)/xdmxconfig-Canvas.Tpo -c -o xdmxconfig-Canvas.obj `if test -f 'Canvas.c'; then $(CYGPATH_W) 'Canvas.c'; else $(CYGPATH_W) '$(srcdir)/Canvas.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xdmxconfig-Canvas.Tpo $(DEPDIR)/xdmxconfig-Canvas.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -MT xdmxconfig-Canvas.obj -MD -MP -MF $(DEPDIR)/xdmxconfig-Canvas.Tpo -c -o xdmxconfig-Canvas.obj `if test -f 'Canvas.c'; then $(CYGPATH_W) 'Canvas.c'; else $(CYGPATH_W) '$(srcdir)/Canvas.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmxconfig-Canvas.Tpo $(DEPDIR)/xdmxconfig-Canvas.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='Canvas.c' object='xdmxconfig-Canvas.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmxconfig_CFLAGS) $(CFLAGS) -c -o xdmxconfig-Canvas.obj `if test -f 'Canvas.c'; then $(CYGPATH_W) 'Canvas.c'; else $(CYGPATH_W) '$(srcdir)/Canvas.c'; fi`
 
 .l.c:
-	$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
+	$(AM_V_LEX)$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
 
 .y.c:
-	$(am__skipyacc) $(SHELL) $(YLWRAP) $< y.tab.c $@ y.tab.h $*.h y.output $*.output -- $(YACCCOMPILE)
+	$(AM_V_YACC)$(am__skipyacc) $(SHELL) $(YLWRAP) $< y.tab.c $@ y.tab.h $*.h y.output $*.output -- $(YACCCOMPILE)
 
 mostlyclean-libtool:
 	-rm -f *.lo

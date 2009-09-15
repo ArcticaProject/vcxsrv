@@ -77,7 +77,7 @@ static struct {
 
 @implementation x_selection
 
-static struct propdata null_propdata = {NULL, 0};
+static struct propdata null_propdata = {NULL, 0, 0};
 
 #ifdef DEBUG
 static void
@@ -212,6 +212,7 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
     
     pdata->data = buf;
     pdata->length = buflen;
+    pdata->format = format;
 
     return /*success*/ False;
 }
@@ -223,21 +224,20 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 - (Atom) find_preferred:(struct propdata *)pdata
 {
     Atom a = None;
-    size_t i;
+    size_t i, step;
     Bool png = False, jpeg = False, utf8 = False, string = False;
 
     TRACE ();
 
-    if (pdata->length % sizeof (a))
+    if (pdata->format != 32)
     {
-	fprintf(stderr, "Atom list is not a multiple of the size of an atom!\n");
+	fprintf(stderr, "Atom list is expected to be formatted as an array of 32bit values.\n");
 	return None;
     }
 
-    for (i = 0; i < pdata->length; i += sizeof (a))
+    for (i = 0, step = pdata->format >> 3; i < pdata->length; i += step)
     {
-	a = None;
-	memcpy (&a, pdata->data + i, sizeof (a));
+	a = (Atom)*(uint32_t *)(pdata->data + i);
 
 	if (a == atoms->image_png)
 	{

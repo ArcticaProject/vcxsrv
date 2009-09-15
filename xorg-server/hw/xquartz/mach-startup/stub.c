@@ -40,14 +40,10 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-static char *server_bootstrap_name = "org.x.X11";
-
-/* The launchd startup is only designed for the primary X11.app that is
- * org.x.X11... server_bootstrap_name might be differnet if we were triggered to
- * start by another X11.app.
- */
-#define kX11AppBundleId "org.x.X11"
+#define kX11AppBundleId LAUNCHD_ID_PREFIX".X11"
 #define kX11AppBundlePath "/Contents/MacOS/X11"
+
+static char *server_bootstrap_name = kX11AppBundleId;
 
 #include <mach/mach.h>
 #include <mach/mach_error.h>

@@ -1,4 +1,3 @@
-.\" $XdotOrg: xserver/xorg/hw/xfree86/doc/man/xorg.conf.man.pre,v 1.7 2006/05/26 00:12:18 reed Exp $
 .\" shorthand for double quote that works everywhere.
 .ds q \N'34'
 .TH __xconfigfile__ __filemansuffix__ __vendorversion__
@@ -96,7 +95,8 @@ is the machine's hostname as reported by
 .PP
 The
 .I __xconfigfile__
-file is composed of a number of sections which may be present in any order.
+file is composed of a number of sections which may be present in any order,
+or omitted to use default configuration values.
 Each section has the form:
 .PP
 .RS 4
@@ -147,21 +147,21 @@ section is no longer recognised.
 .PP
 The
 .B ServerLayout
-sections are at the highest level.  
-They bind together the input and output devices that will be used in a session.  
+sections are at the highest level.
+They bind together the input and output devices that will be used in a session.
 The input devices are described in the
 .B InputDevice
-sections.  
+sections.
 Output devices usually consist of multiple independent components (e.g.,
-a graphics board and a monitor).  
+a graphics board and a monitor).
 These multiple components are bound together in the
 .B Screen
 sections, and it is these that are referenced by the
 .B ServerLayout
-section.  
+section.
 Each
 .B Screen
-section binds together a graphics board and a monitor.  
+section binds together a graphics board and a monitor.
 The graphics boards are described in the
 .B Device
 sections, and the monitors are described in the
@@ -169,15 +169,15 @@ sections, and the monitors are described in the
 sections.
 .PP
 Config file keywords are case\-insensitive, and \(lq_\(rq characters are
-ignored.  
+ignored.
 Most strings (including
 .B Option
 names) are also case-insensitive, and insensitive to white space and
 \(lq_\(rq characters.
 .PP
-Each config file entry usually takes up a single line in the file.  They 
-consist of a keyword, which is possibly followed by one or more arguments, 
-with the number and types of the arguments depending on the keyword.  
+Each config file entry usually takes up a single line in the file.  They
+consist of a keyword, which is possibly followed by one or more arguments,
+with the number and types of the arguments depending on the keyword.
 The argument types are:
 .PP
 .RS 4
@@ -358,23 +358,10 @@ font path elements (which can be set inside a catalogue directory):
 .nf
 .I __projectroot__/lib/X11/fonts/misc/
 .I __projectroot__/lib/X11/fonts/TTF/
+.I __projectroot__/lib/X11/fonts/OTF/
 .I __projectroot__/lib/X11/fonts/Type1/
-.I __projectroot__/lib/X11/fonts/75dpi/
 .I __projectroot__/lib/X11/fonts/100dpi/
-.fi
-.RE
-.PP
-The recommended font path contains the following font path elements:
-.PP
-.RS 4
-.nf
-.I __projectroot__/lib/X11/fonts/local/
-.I __projectroot__/lib/X11/fonts/misc/
-.I __projectroot__/lib/X11/fonts/75dpi/:unscaled
-.I __projectroot__/lib/X11/fonts/100dpi/:unscaled
-.I __projectroot__/lib/X11/fonts/Type1/
 .I __projectroot__/lib/X11/fonts/75dpi/
-.I __projectroot__/lib/X11/fonts/100dpi/
 .fi
 .RE
 .PP
@@ -389,7 +376,11 @@ searches for loadable modules loading in the order specified.
 Multiple
 .B ModulePath
 entries may be specified, and they will be concatenated to build the
-module search path used by the server.
+module search path used by the server.  The default module path is
+.PP
+.RS 11
+__modulepath__
+.RE
 .\" The LogFile keyword is not currently implemented
 .ig
 .TP 7
@@ -406,17 +397,26 @@ where
 .I <n>
 is the display number for the __xservername__ server.
 ..
+.TP 7
+.BI "XkbDir \*q" path \*q
+sets the base directory for keyboard layout files.  The
+.B \-xkbdir
+command line option can be used to override this.  The default directory is
+.PP
+.RS 11
+__xkbdir__
+.RE
 .SH "SERVERFLAGS SECTION"
 In addition to options specific to this section (described below), the
 .B ServerFlags
 section is used to specify some global
-__xservername__ server options.  
+__xservername__ server options.
 All of the entries in this section are
 .BR Options ,
 although for compatibility purposes some of the old style entries are
-still recognised.  
-Those old style entries are not documented here, and using them is 
-discouraged.  
+still recognised.
+Those old style entries are not documented here, and using them is
+discouraged.
 The
 .B ServerFlags
 section is optional, as are the entries that may be specified in it.
@@ -492,8 +492,12 @@ extension) to connect from another host.
 Default: off.
 .TP 7
 .BI "Option \*qAllowMouseOpenFail\*q  \*q" boolean \*q
-This allows the server to start up even if the mouse device can't be
-opened/initialised.
+This tells the mousedrv(__drivermansuffix__) and vmmouse(__drivermansuffix__)
+drivers to not report failure if the mouse device can't be opened/initialised.
+It has no effect on the evdev(__drivermansuffix__) or other drivers.
+The previous functionality of allowing the server to start up even if
+the mouse device can't be opened/initialised is now handled by the
+AllowEmptyInput option.
 Default: false.
 .TP 7
 .BI "Option \*qVTSysReq\*q  \*q" boolean \*q
@@ -507,30 +511,6 @@ This prevents the __xservername__ server trapping the
 keys used for the default VT switch sequence, which means that clients can
 access them.
 Default: off.
-.TP 7
-.BI "Option \*qXkbDisable\*q \*q" boolean \*q
-disable/enable the XKEYBOARD extension.
-The \-kb command line option overrides this config file option.
-Default: XKB is enabled.
-.\" The following four options are "undocumented".
-.ig
-.TP 7
-.BI "Option \*qPciProbe1\*q"
-Use PCI probe method 1.
-Default: set.
-.TP 7
-.BI "Option \*qPciProbe2\*q"
-Use PCI probe method 2.
-Default: not set.
-.TP 7
-.BI "Option \*qPciForceConfig1\*q"
-Force the use PCI config type 1.
-Default: not set.
-.TP 7
-.BI "Option \*qPciForceConfig2\*q"
-Force the use PCI config type 2. 
-Default: not set.
-..
 .TP 7
 .BI "Option \*qBlankTime\*q  \*q" time \*q
 sets the inactivity timeout for the
@@ -551,7 +531,7 @@ phase of DPMS mode.
 .I time
 is in minutes, and the value can be changed at run\-time with
 .BR xset(__appmansuffix__).
-Default: 20 minutes.
+Default: 10 minutes.
 This is only suitable for VESA DPMS compatible monitors, and may not be
 supported by all video drivers.
 It is only enabled for screens that have the
@@ -565,7 +545,7 @@ phase of DPMS mode.
 .I time
 is in minutes, and the value can be changed at run\-time with
 .BR xset(__appmansuffix__).
-Default: 30 minutes.
+Default: 10 minutes.
 This is only suitable for VESA DPMS compatible monitors, and may not be
 supported by all video drivers.
 It is only enabled for screens that have the
@@ -579,7 +559,7 @@ phase of DPMS mode.
 .I time
 is in minutes, and the value can be changed at run\-time with
 .BR xset(__appmansuffix__).
-Default: 40 minutes. 
+Default: 10 minutes.
 This is only suitable for VESA DPMS compatible monitors, and may not be
 supported by all video drivers.
 It is only enabled for screens that have the
@@ -599,13 +579,6 @@ Specify that the machine is a Japanese PC\-98 machine.
 This should not be enabled for anything other than the Japanese\-specific
 PC\-98 architecture.
 Default: auto\-detected.
-.\" Doubt this should be documented.
-.ig
-.TP 7
-.BI "Option \*qEstimateSizesAggressively\*q  \*q" value \*q
-This option affects the way that bus resource sizes are estimated.
-Default: 0.
-..
 .TP 7
 .BI "Option \*qNoPM\*q  \*q" boolean \*q
 Disables something to do with power management events.
@@ -617,6 +590,9 @@ Default is disabled.
 .TP 7
 .BI "Option \*qAIGLX\*q \*q" boolean \*q
 enable or disable AIGLX. AIGLX is enabled by default.
+.TP 7
+.BI "Option \*qDRI2\*q \*q" boolean \*q
+enable or disable DRI2. DRI2 is disabled by default.
 .TP 7
 .BI "Option \*qGlxVisuals\*q \*q" string \*q
 This option controls how many GLX visuals the GLX modules sets up.
@@ -667,8 +643,8 @@ The
 .B Module
 section is used to specify which __xservername__ server modules should be loaded.
 This section is ignored when the __xservername__ server is built in static form.
-The types of modules normally loaded in this section are __xservername__ server
-extension modules, and font rasteriser modules.
+The type of modules normally loaded in this section are __xservername__ server
+extension modules.
 Most other module types are loaded automatically when they are needed via
 other mechanisms.
 The
@@ -690,10 +666,10 @@ The standard name is case\-sensitive, and does not include the \(lqlib\(rq
 prefix, or the \(lq.a\(rq, \(lq.o\(rq, or \(lq.so\(rq suffixes.
 .PP
 .RS 7
-Example: the FreeType font rasteriser can be loaded with the following entry:
+Example: the DRI extension module can be loaded with the following entry:
 .PP
 .RS 4
-.B "Load \*qfreetype\*q"
+.B "Load \*qdri\*q"
 .RE
 .RE
 .TP 7
@@ -703,7 +679,7 @@ This instructs the server to not load the module called
 Some modules are loaded by default in the server, and this overrides that
 default. If a
 .B Load
-instruction is given for the same module, it overrides the 
+instruction is given for the same module, it overrides the
 .B Disable
 instruction and the module is loaded. The module name given should be the
 module's standard name, not the module file name. As with the
@@ -733,23 +709,23 @@ disabled by using the following entry:
 .PP
 Modules are searched for in each directory specified in the
 .B ModulePath
-search path, and in the drivers, input, extensions, fonts, and
-internal subdirectories of each of those directories.
+search path, and in the drivers, extensions, input, internal, and
+multimedia subdirectories of each of those directories.
 In addition to this, operating system specific subdirectories of all
 the above are searched first if they exist.
 .PP
-To see what font and extension modules are available, check the contents
-of the following directories:
+To see what extension modules are available, check the contents
+of the following directory:
 .PP
 .RS 4
 .nf
-__projectroot__/lib/modules/fonts
 __projectroot__/lib/modules/extensions
 .fi
 .RE
 .PP
-The \(lqextmod\(rq, \(lqdbe\(rq, \(lqglx\(rq, and \(lqdri\(rq extension
-modules are loaded automatically, unless disabled with \*qDisable\*q entries.
+The \(lqextmod\(rq, \(lqdbe\(rq, \(lqdri\(rq, \(lqdri2\(rq, \(lqglx\(rq,
+and \(lqrecord\(rq extension modules are loaded automatically, if they
+are present, unless disabled with \*qDisable\*q entries.
 It is recommended
 that at very least the \(lqextmod\(rq extension module be loaded.
 If it isn't, some commonly used server extensions (like the SHAPE
@@ -784,7 +760,8 @@ Example: the MIT-SHM extension can be disabled with the following entry:
 The config file may have multiple
 .B InputDevice
 sections.
-There will normally be at least two: one for the core (primary) keyboard,
+If HAL is not being used for input device configuration, there will normally
+be at least two: one for the core (primary) keyboard,
 and one of the core pointer.
 If either of these two is missing, a default configuration for the missing
 ones will be used.
@@ -1157,7 +1134,7 @@ following format:
 
 .B Option \*qMonitor-outputname\*q \*qmonitorsection\*q
 
-(for example, 
+(for example,
 .B Option \*qMonitor-VGA\*q \*qVGA monitor\*q
 for a VGA output)
 .PP
@@ -2108,7 +2085,7 @@ section for a dual headed configuration with two mice:
 .RE
 .SH "DRI SECTION"
 This optional section is used to provide some information for the
-Direct Rendering Infrastructure.  
+Direct Rendering Infrastructure.
 Details about the format of this section
 can be found in the README.DRI document, which is also available on-line at
 .IR <http://dri.freedesktop.org/> .
@@ -2122,7 +2099,7 @@ sections may be present, and they may contain an
 .B Identifier
 entry and multiple
 .B Option
-flags.  
+flags.
 The data therein is not used in this release.
 .PP
 .SH "SEE ALSO"

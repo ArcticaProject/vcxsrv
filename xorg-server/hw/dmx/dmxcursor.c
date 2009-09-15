@@ -195,8 +195,8 @@ miPointerScreenFuncRec dmxPointerCursorFuncs =
     dmxCursorOffScreen,
     dmxCrossScreen,
     dmxWarpCursor,
-    dmxeqEnqueue,        /*XXX incompatible type/function! */
-    dmxeqSwitchScreen
+    NULL,
+    NULL,
 };
 
 

@@ -1143,7 +1143,6 @@ KdParseKeyboard (char *arg)
     ki->path = NULL;
     ki->driver = NULL;
     ki->driverPrivate = NULL;
-    ki->xkb = NULL;
     ki->next = NULL;
 
     if (!arg)
@@ -2298,6 +2297,14 @@ NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
                 return BadValue;
             }
         }
+#ifdef CONFIG_HAL
+        else if (strcmp(option->key, "_source") == 0 &&
+                 strcmp(option->value, "server/hal") == 0)
+        {
+            ErrorF("Ignoring device from HAL.\n");
+            return BadValue;
+        }
+#endif
     }
 
     if (!ki && !pi) {

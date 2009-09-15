@@ -263,6 +263,8 @@ static __inline__ void stw_u(uint16_t val, uint16_t *p)
 }
 #  else /* !__GNUC__ */
 
+#include <string.h> /* needed for memmove */
+
 static __inline__ uint64_t ldq_u(uint64_t *p)
 {
 	uint64_t ret;

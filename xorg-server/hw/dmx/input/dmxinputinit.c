@@ -51,7 +51,6 @@
 #include "dmxcommon.h"
 #include "dmxevents.h"
 #include "dmxmotion.h"
-#include "dmxeq.h"
 #include "dmxprop.h"
 #include "config/dmxconfig.h"
 #include "dmxcursor.h"
@@ -72,6 +71,7 @@
 #include "mipointer.h"
 #include "windowstr.h"
 #include "mi.h"
+#include "xkbsrv.h"
 
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
@@ -361,7 +361,6 @@ void dmxKeyboardBellProc(int percent, DeviceIntPtr pDevice,
 
 static void dmxKeyboardFreeNames(XkbComponentNamesPtr names)
 {
-    if (names->keymap)   XFree(names->keymap);
     if (names->keycodes) XFree(names->keycodes);
     if (names->types)    XFree(names->types);
     if (names->compat)   XFree(names->compat);
@@ -418,9 +417,7 @@ static int dmxKeyboardOn(DeviceIntPtr pDevice, DMXLocalInitInfo *info)
                     dmxConfigGetXkbOptions()
                     ? dmxConfigGetXkbOptions() : "");
     }
-    XkbInitKeyboardDeviceStruct(pDevice,
-                                &info->names,
-                                &info->keySyms,
+    InitKeyboardDeviceStruct(pDevice, &rmlvo,
                                 dmxKeyboardBellProc,
                                 dmxKeyboardKbdCtrlProc);
 
@@ -453,9 +450,16 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
             break;
         }
         if (info.keyClass) {
-            DevicePtr pDev = (DevicePtr) pDevice;
-            InitKeyboardDeviceStruct(pDev,
-                                     &info.keySyms,
+            XkbRMLVOSet rmlvo;
+
+            rmlvo.rules = dmxConfigGetXkbRules();
+            rmlvo.model = dmxConfigGetXkbModel();
+            rmlvo.layout = dmxConfigGetXkbLayout();
+            rmlvo.variant = dmxConfigGetXkbVariant();
+            rmlvo.options = dmxConfigGetXkbOptions();
+
+            InitKeyboardDeviceStruct(pDevice,
+                                     &rmlvo,
                                      dmxBell, dmxKbdCtrl);
         }
         if (info.buttonClass) {
@@ -540,7 +544,7 @@ static void dmxProcessInputEvents(DMXInputInfo *dmxInput)
 {
     int i;
 
-    dmxeqProcessInputEvents();
+    mieqProcessInputEvents();
 #if 00 /*BP*/
     miPointerUpdate();
 #endif
@@ -600,8 +604,7 @@ static void dmxCollectAll(DMXInputInfo *dmxInput)
         return;
     for (i = 0; i < dmxInput->numDevs; i += dmxInput->devs[i]->binding)
         if (dmxInput->devs[i]->collect_events)
-            dmxInput->devs[i]->collect_events(&dmxInput->devs[i]
-                                              ->pDevice->public,
+            dmxInput->devs[i]->collect_events(&dmxInput->devs[i]->pDevice->public,
                                               dmxMotion,
                                               dmxEnqueue,
                                               dmxCheckSpecialKeys, DMX_BLOCK);
@@ -1066,12 +1069,6 @@ void dmxInputInit(DMXInputInfo *dmxInput)
         }
     }
     
-    if (pPointer && pKeyboard) {
-        if (dmxeqInit(&pKeyboard->public, &pPointer->public))
-            dmxLogInput(dmxInput, "Using %s and %s as true core devices\n",
-                        pKeyboard->name, pPointer->name);
-    }
-
     dmxInput->processInputEvents    = dmxProcessInputEvents;
     dmxInput->detached              = False;
     

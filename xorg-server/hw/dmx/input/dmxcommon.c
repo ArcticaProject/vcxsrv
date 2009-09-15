@@ -264,7 +264,6 @@ void dmxCommonKbdGetInfo(DevicePtr pDev, DMXLocalInitInfoPtr info)
 
     dmxCommonSaveState(priv);
     if (priv->xkb) {
-        info->names.keymap   = NULL;
 #define NAME(x) \
  priv->xkb->names->x ? XGetAtomName(priv->display,priv->xkb->names->x) : NULL
         info->names.keycodes = NAME(keycodes);
