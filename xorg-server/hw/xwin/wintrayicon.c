@@ -36,39 +36,43 @@
 #include <shellapi.h>
 #include "winprefs.h"
 
+static NOTIFYICONDATA nid;
 /*
  * Initialize the tray icon
  */
 
 void
-winInitNotifyIcon (winPrivScreenPtr pScreenPriv)
+winInitNotifyIcon (winPrivScreenPtr pScreenPriv, Bool Modify)
 {
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
-  NOTIFYICONDATA	nid = {0};
   char HostName[256];
   
-  nid.cbSize = sizeof (NOTIFYICONDATA);
-  nid.hWnd = pScreenPriv->hwndScreen;
-  nid.uID = pScreenInfo->dwScreen;
-  nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-  nid.uCallbackMessage = WM_TRAYICON;
-  nid.hIcon = winTaskbarIcon ();
+  if (!Modify)
+  {
+    nid.cbSize = sizeof (NOTIFYICONDATA);
+    nid.hWnd = pScreenPriv->hwndScreen;
+    nid.uID = pScreenInfo->dwScreen;
+    nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+    nid.uCallbackMessage = WM_TRAYICON;
+    nid.hIcon = winTaskbarIcon ();
 
-  /* Save handle to the icon so it can be freed later */
-  pScreenPriv->hiconNotifyIcon = nid.hIcon;
-  
+    /* Save handle to the icon so it can be freed later */
+    pScreenPriv->hiconNotifyIcon = nid.hIcon;
+  }
+
   gethostname(HostName,256);
 
   /* Set display and screen-specific tooltip text */
   snprintf (nid.szTip,
 	    sizeof (nid.szTip),
-	    PROJECT_NAME " Server - %s:%s.%d",
+	    PROJECT_NAME " Server - %s:%s.%d - %d clients",
 	    HostName,
 	    display, 
-	    (int) pScreenInfo->dwScreen);
+	    (int) pScreenInfo->dwScreen,
+            pScreenPriv->iConnectedClients);
 
   /* Add the tray icon */
-  if (!Shell_NotifyIcon (NIM_ADD, &nid))
+  if (!Shell_NotifyIcon ((Modify) ? NIM_MODIFY : NIM_ADD, &nid))
     ErrorF ("winInitNotifyIcon - Shell_NotifyIcon Failed\n");
 }
 
@@ -123,6 +127,17 @@ winHandleIconMessage (HWND hwnd, UINT message,
 
   switch (lParam)
     {
+    case WM_MOUSEMOVE:
+    {
+      static int PrevNrClients;
+      int NrClients=GetLiveClients(pScreenPriv);
+      if (NrClients!=PrevNrClients)
+      {
+        PrevNrClients=NrClients;
+        winInitNotifyIcon (pScreenPriv, TRUE);
+      }
+    }
+    break;
     case WM_LBUTTONUP:
       /* Restack and bring all windows to top */
       SetForegroundWindow (hwnd);

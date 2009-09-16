@@ -254,12 +254,8 @@ winInitDialog (HWND hwndDlg)
 }
 
 
-/*
- * Display the Exit dialog box
- */
-
-void
-winDisplayExitDialog (winPrivScreenPtr pScreenPriv)
+int
+GetLiveClients (winPrivScreenPtr pScreenPriv)
 {
   int i;
   int liveClients = 0;
@@ -280,7 +276,21 @@ winDisplayExitDialog (winPrivScreenPtr pScreenPriv)
 
   /* A user reported that this sometimes drops below zero. just eye-candy. */ 
   if (liveClients < 0)
-    liveClients = 0;      
+    liveClients = 0;
+
+  pScreenPriv->iConnectedClients = liveClients;
+
+  return liveClients;
+}
+
+/*
+ * Display the Exit dialog box
+ */
+
+void
+winDisplayExitDialog (winPrivScreenPtr pScreenPriv)
+{
+  int liveClients = GetLiveClients(pScreenPriv);
 
   /* Don't show the exit confirmation dialog if SilentExit is enabled */
   if (pref.fSilentExit && liveClients <= 0)
@@ -294,8 +304,6 @@ winDisplayExitDialog (winPrivScreenPtr pScreenPriv)
       return;
     }
 
-  pScreenPriv->iConnectedClients = liveClients;
-  
   /* Check if dialog already exists */
   if (g_hDlgExit != NULL)
     {
@@ -323,7 +331,7 @@ winDisplayExitDialog (winPrivScreenPtr pScreenPriv)
   
   /* Set focus to the Cancel button */
   PostMessage (g_hDlgExit, WM_NEXTDLGCTL,
-	       GetDlgItem (g_hDlgExit, IDCANCEL), TRUE);
+	       (WPARAM)GetDlgItem (g_hDlgExit, IDCANCEL), TRUE);
 }
 
 #define CONNECTED_CLIENTS_FORMAT	"There are currently %d clients connected."
@@ -591,7 +599,7 @@ winDisplayAboutDialog (winPrivScreenPtr pScreenPriv)
   
   /* Set focus to the OK button */
   PostMessage (g_hDlgAbout, WM_NEXTDLGCTL,
-	       GetDlgItem (g_hDlgAbout, IDOK), TRUE);
+	       (WPARAM)GetDlgItem (g_hDlgAbout, IDOK), TRUE);
 }
 
 
@@ -672,7 +680,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 
 	case ID_ABOUT_CHANGELOG:
 	  {
-	    HINSTANCE iReturn;
+	    int iReturn;
 #ifdef __CYGWIN__
 	    const char *	pszCygPath = "/usr/X11R6/share/doc/"
 	      "xorg-x11-xwin/changelog.html";
@@ -685,7 +693,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 		    "devel/server/changelog.html";
 #endif
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszWinPath,
                                     NULL,
@@ -705,7 +713,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 	    const char *	pszPath = __VENDORDWEBSUPPORT__;
 	    int			iReturn;
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszPath,
                                     NULL,
@@ -725,7 +733,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 	    const char *	pszPath = "http://x.cygwin.com/docs/ug/";
 	    int			iReturn;
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszPath,
                                     NULL,
@@ -745,7 +753,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 	    const char *	pszPath = "http://x.cygwin.com/docs/faq/";
 	    int			iReturn;
 	    
-	    iReturn = ShellExecute (NULL,
+	    iReturn = (int)ShellExecute (NULL,
                                     "open",
                                     pszPath,
                                     NULL,

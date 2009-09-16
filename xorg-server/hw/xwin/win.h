@@ -841,6 +841,9 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen);
  * windialogs.c
  */
 
+int
+GetLiveClients (winPrivScreenPtr pScreenPriv);
+
 void
 winDisplayExitDialog (winPrivScreenPtr pScreenPriv);
 
@@ -1311,7 +1314,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
  */
 
 void
-winInitNotifyIcon (winPrivScreenPtr pScreenPriv);
+winInitNotifyIcon (winPrivScreenPtr pScreenPriv, Bool Modify);
 
 void
 winDeleteNotifyIcon (winPrivScreenPtr pScreenPriv);

@@ -159,7 +159,7 @@ winWindowProc (HWND hwnd, UINT message,
 	  
 	  s_pScreenPriv->hwndScreen = hwnd;
 
-	  winInitNotifyIcon (s_pScreenPriv);
+	  winInitNotifyIcon (s_pScreenPriv,FALSE);
 	}
       return 0;
 
@@ -1272,7 +1272,7 @@ winWindowProc (HWND hwnd, UINT message,
     default:
       if(message == s_uTaskbarRestart)
 	{
-	  winInitNotifyIcon (s_pScreenPriv);
+	  winInitNotifyIcon (s_pScreenPriv,FALSE);
 	}
       break;
     }
