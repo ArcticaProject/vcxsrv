@@ -285,7 +285,11 @@ void xcb_disconnect(xcb_connection_t *c)
         return;
 
     free(c->setup);
+#ifdef _MSC_VER
+    closesocket(c->fd);
+#else
     close(c->fd);
+#endif
 
     pthread_mutex_destroy(&c->iolock);
     _xcb_in_destroy(&c->in);
