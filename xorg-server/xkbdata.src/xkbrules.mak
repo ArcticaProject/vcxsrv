@@ -1,7 +1,7 @@
 DIRFILE=$(THISDIR:%=$(DESTDIR)\..\%.dir)
 all: $(DESTDIR) $(DATA_FILES) $(DIRFILE)
 
-$(DESTDIR)\default: default
+$(DESTDIR)\default: default.in
 	copy $< $@
 
 $(DESTDIR)\%: %
