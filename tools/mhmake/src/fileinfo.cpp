@@ -33,6 +33,51 @@ ZEROTIME g_ZeroTime;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
+string QuoteFileName(const string &Filename)
+{
+  string Ret(Filename);
+#if OSPATHSEP=='\\'
+  /* Put quotes around the string if there are spaces in it */
+  if (Ret.find_first_of(' ')!=string::npos && Ret[0]!='"')
+  {
+    Ret=g_QuoteString+Ret+g_QuoteString;
+  }
+#else
+  int Pos=0;
+  /* Escape the spaces with a backslash */
+  while ((Pos=Ret.find_first_of(' ',Pos))!=string::npos)
+  {
+    Ret=Ret.replace(Pos,1,"\\ ");
+    Pos+=2;
+  }
+#endif
+  return Ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+string UnquoteFileName(const string &Filename)
+{
+  int Pos=0;
+  string Name(Filename);
+#if OSPATHSEP=='\\'
+  /* Remove all the quotes from the filename */
+  while ((Pos=Name.find_first_of('"',Pos))!=string::npos)
+  {
+    Name=Name.replace(Pos,1,"");
+  }
+#else
+  /* Remove the escaped spaces */
+  while ((Pos=Name.find_first_of("\\",Pos))!=string::npos)
+  {
+    if (Name[Pos+1]==' ')
+      Name=Name.replace(Pos,2," ");
+    Pos+=1;
+  }
+#endif
+  return Name;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 refptr<fileinfo> fileinfo::GetDir() const
 {
   return GetAbsFileInfo(m_AbsFileName.substr(0,m_AbsFileName.find_last_of(OSPATHSEP)));
@@ -145,7 +190,7 @@ string fileinfo::GetPrerequisits() const
       {
         Ret+=g_SpaceString;
       }
-      Ret+=(*DepIt)->GetFullFileName();
+      Ret+=(*DepIt)->GetQuotedFullFileName();
     }
     Deps.insert(*DepIt);
     DepIt++;
@@ -185,8 +230,8 @@ bool fileinfo::IsAutoDepExtention(void) const
 ///////////////////////////////////////////////////////////////////////////////
 void fileinfo::DumpErrorMessageDuplicateRule(const refptr<rule>&pRule)
 {
-  cerr << m_AbsFileName << ": rule is defined multiple times\n";
-  cerr << "First ("<<m_pRule->GetMakefile()->GetMakeDir()->GetFullFileName()<<") :\n";
+  cerr << GetQuotedFullFileName() << ": rule is defined multiple times\n";
+  cerr << "First ("<<m_pRule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<<") :\n";
 
   vector<string>::const_iterator It=m_pRule->GetCommands().begin();
   while (It!=m_pRule->GetCommands().end())
@@ -194,7 +239,7 @@ void fileinfo::DumpErrorMessageDuplicateRule(const refptr<rule>&pRule)
     cerr << "    " << m_pRule->GetMakefile()->ExpandExpression(*It) << endl;
     It++;
   }
-  cerr << "Second ("<<pRule->GetMakefile()->GetMakeDir()->GetFullFileName()<<") :\n";
+  cerr << "Second ("<<pRule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<<") :\n";
   It=pRule->GetCommands().begin();
   while (It!=pRule->GetCommands().end())
   {
@@ -205,7 +250,7 @@ void fileinfo::DumpErrorMessageDuplicateRule(const refptr<rule>&pRule)
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-static inline string &GetFullLowerPathName(string &Name)
+static inline string &NormalizePathName(string &Name)
 {
   const char *pPtr=Name.c_str();
   const char *pBeg=pPtr;
@@ -258,7 +303,11 @@ static inline string &GetFullLowerPathName(string &Name)
     }
     else
     {
+      #ifdef WIN32
       *pWr++ = tolower(Char);
+      #else
+      *pWr++ = Char;
+      #endif
     }
     Char=*pPtr++;
   }
@@ -272,8 +321,9 @@ static inline string &GetFullLowerPathName(string &Name)
 ///////////////////////////////////////////////////////////////////////////////
 const refptr<fileinfo> &GetFileInfo(const string &NameIn,const refptr<fileinfo> &RelDir)
 {
-  string Name=NameIn;
+  string Name=UnquoteFileName(NameIn);
   bool DoesExist=true;
+
   //Only concatenate if szName is not already a full name
 #ifdef WIN32
   if (!Name.empty() && Name[1]!=':')
@@ -293,14 +343,7 @@ const refptr<fileinfo> &GetFileInfo(const string &NameIn,const refptr<fileinfo> 
     }
     #endif
   }
-  const refptr<fileinfo> &Ret=GetAbsFileInfo(GetFullLowerPathName(Name));
-  #ifdef _DEBUG
-  if (Ret->GetFullFileName().find(' ')!=string::npos)
-  {
-    cerr << "Spaces are not allowed in filenames: "<< Ret->GetFullFileName() << endl;
-    exit(1);
-  }
-  #endif
+  const refptr<fileinfo> &Ret=GetAbsFileInfo(NormalizePathName(Name));
   if (!DoesExist)
     Ret->SetNotExist();
   return Ret;
@@ -313,14 +356,14 @@ void PrintFileInfos()
   set<refptr<fileinfo>,less_refptrfileinfo>::iterator pIt=g_FileInfos.begin();
   while (pIt!=g_FileInfos.end())
   {
-    cout<<(*pIt)->GetFullFileName()<<" :";
+    cout<<(*pIt)->GetQuotedFullFileName()<<" :";
     if ((*pIt)->IsPhony())
       cout<<" (phony)";
     vector< refptr<fileinfo> > &Deps=(*pIt)->GetDeps();
     vector< refptr<fileinfo> >::iterator pDepIt=Deps.begin();
     while (pDepIt!=Deps.end())
     {
-      cout<<g_SpaceString<<(*pDepIt)->GetFullFileName();
+      cout<<g_SpaceString<<(*pDepIt)->GetQuotedFullFileName();
       pDepIt++;
     }
     cout<<endl;
@@ -328,7 +371,7 @@ void PrintFileInfos()
     refptr<rule> pRule=(*pIt)->GetRule();
     if (pRule)
     {
-      cout<<g_SpaceString<<"Run in: "<<pRule->GetMakefile()->GetMakeDir()->GetFullFileName()<<endl;
+      cout<<g_SpaceString<<"Run in: "<<pRule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<<endl;
       pRule->PrintCommands();
     }
     pIt++;

@@ -58,7 +58,7 @@ file : statements
        {
          if (m_pCurrentItems)
          {
-           PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetFullFileName().c_str()));
+           PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
            AddRule();
          }
        }
@@ -92,7 +92,7 @@ includemak:
          {
            if (m_pCurrentItems)
            {
-             PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetFullFileName().c_str()));
+             PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
              AddRule();
            }
          } INCLUDEMAK
@@ -102,7 +102,7 @@ ruledef: expression_nocolorequal rulecolon maybeemptyexpression
          {
            if (m_pCurrentItems)
            {
-             PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetFullFileName().c_str()));
+             PRINTF(("Adding rule : %s\n",(*m_pCurrentItems)[0]->GetQuotedFullFileName().c_str()));
              AddRule();
            }
 

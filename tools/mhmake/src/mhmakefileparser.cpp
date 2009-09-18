@@ -47,14 +47,14 @@ int mhmakefileparser::ParseFile(const refptr<fileinfo> &FileInfo,bool SetMakeDir
   if (SetMakeDir)
   {
     m_MakeDir=curdir::GetCurDir();
-    m_Variables[CURDIR]=m_MakeDir->GetFullFileName();
+    m_Variables[CURDIR]=m_MakeDir->GetQuotedFullFileName();
   }
   theLexer.m_InputFileName=FileInfo->GetFullFileName();
   theLexer.m_pParser=(mhmakeparser*)this;
   theLexer.yyin=::fopen(FileInfo->GetFullFileName().c_str(),"r");
   if (!theLexer.yyin)
   {
-    cerr << "Error opening makefile: "<<FileInfo->GetFullFileName()<<endl;
+    cerr << "Error opening makefile: "<<FileInfo->GetQuotedFullFileName()<<endl;
     return 1;
   }
   int Ret=yyparse();
@@ -236,6 +236,11 @@ string mhmakefileparser::ExpandMacro(const string &Expr) const
   { // We have a match for the regular expression ^([^ \\t:]+)([: \\t])[ \\t]*(.+)
     if (Type==':')
     {
+      #ifdef WIN32
+      bool IsFileName=false;
+      if (pVarEnd-pVar == 1 && (*pVar=='<' || *pVar =='@'))
+        IsFileName=true;
+      #endif
       string ToSubst=ExpandExpression(ExpandVar(string(pVar,pVarEnd)));
       const char *pSrc=pTmp;
       const char *pStop=pSrc;
@@ -243,6 +248,10 @@ string mhmakefileparser::ExpandMacro(const string &Expr) const
       const char *pTo=pStop+1;
       string SrcStr(pSrc,pStop);
       string ToStr(pTo);
+      #ifdef WIN32
+      if (IsFileName)
+        return QuoteFileName(Substitute(UnquoteFileName(ToSubst),SrcStr,ToStr));
+      #endif
       return Substitute(ToSubst,SrcStr,ToStr);
     }
     else if (Type==' ' || Type == '\t')
@@ -302,9 +311,9 @@ string mhmakefileparser::ExpandVar(const string &Var) const
               return "<No Dependencies defined.>";
             }
 #endif
-            return m_RuleThatIsBuild->GetDeps()[0]->GetFullFileName();
+            return m_RuleThatIsBuild->GetDeps()[0]->GetQuotedFullFileName();
           case '@': // return full target file name
-            return m_RuleThatIsBuild->GetFullFileName();
+            return m_RuleThatIsBuild->GetQuotedFullFileName();
           case '*': // return stem
             return m_RuleThatIsBuild->GetRule()->GetStem();
           case '^': // return all prerequisits
@@ -359,10 +368,6 @@ void SplitToItems(const string &String,vector< refptr<fileinfo> > &Items,refptr<
     pTmp=NextItem(pTmp,Item);
     if (!Item.empty())
     {
-      if (Item[0]=='"')
-      {
-        Item=Item.substr(1,Item.size()-2);
-      }
       Items.push_back(GetFileInfo(Item,Dir));
     }
   }
@@ -669,14 +674,14 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
 #ifdef _DEBUG
   if (!pIn)
   {
-    cerr << "Error opening autodep file "<<DepFile->GetFullFileName()<<endl;
+    cerr << "Error opening autodep file "<<DepFile->GetQuotedFullFileName()<<endl;
     return;
   }
 #endif
   fread(&m_EnvMd5_32,sizeof(m_EnvMd5_32),1,pIn);
 #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
-    cout << "Reading Env Md5 from "<<DepFile->GetFullFileName()<<": "<<hex<<m_EnvMd5_32<<endl;
+    cout << "Reading Env Md5 from "<<DepFile->GetQuotedFullFileName()<<": "<<hex<<m_EnvMd5_32<<endl;
 #endif
   char UsedEnvVars[1024];
   ReadStr(pIn,UsedEnvVars);
@@ -711,9 +716,9 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
     {
       #ifdef _DEBUG
       if (!(*pPair.first)->CompareMd5_32(Md5_32) && !(*pPair.first)->CompareMd5_32(0))
-        cout << "Warning: trying to set to different md5's for Target "<<(*pPair.first)->GetFullFileName()<<" Old: "<<hex<<(*pPair.first)->GetCommandsMd5_32()<<" New: "<<Md5_32<<endl;
+        cout << "Warning: trying to set to different md5's for Target "<<(*pPair.first)->GetQuotedFullFileName()<<" Old: "<<hex<<(*pPair.first)->GetCommandsMd5_32()<<" New: "<<Md5_32<<endl;
       if (g_PrintAdditionalInfo)
-        cout << "Setting Md5 for Target "<<(*pPair.first)->GetFullFileName()<<" to "<<hex<<Md5_32<<endl;
+        cout << "Setting Md5 for Target "<<(*pPair.first)->GetQuotedFullFileName()<<" to "<<hex<<Md5_32<<endl;
       #endif
       (*pPair.first)->SetCommandsMd5_32(Md5_32);  // If it was already there, just update the md5 value
     }
@@ -753,18 +758,19 @@ void mhmakefileparser::SaveAutoDepsFile()
   {
     return;
   }
+  refptr<fileinfo> pDepFile=GetFileInfo(DepFile);
 
 #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
     cout<<"Saving automatic dependency file "<<DepFile<<endl;
 #endif
 
-  FILE *pOut=fopen(DepFile.c_str(),"wb");
+  FILE *pOut=fopen(pDepFile->GetFullFileName().c_str(),"wb");
   if (!pOut)
   {
     /* Maybe it is because the directory does not exist, so try to create this first */
-    MakeDirs(GetAbsFileInfo(DepFile.substr(0,DepFile.find_last_of(OSPATHSEP))));
-    pOut=fopen(DepFile.c_str(),"wb");
+    MakeDirs(pDepFile->GetDir());
+    pOut=fopen(pDepFile->GetFullFileName().c_str(),"wb");
 
     if (!pOut)
     {
@@ -964,7 +970,7 @@ uint32 mhmakefileparser::CreateEnvMd5_32() const
       string Val=GetFromEnv(Var,false);
       transform(Var.begin(),Var.end(),Var.begin(),(int(__CDECL *)(int))toupper);
       transform(Val.begin(),Val.end(),Val.begin(),(int(__CDECL *)(int))toupper);
-      DBGOUT(cout << GetMakeDir()->GetFullFileName() << " -> Setting GetFromEnv var " << Var << " to " << Val << endl);
+      DBGOUT(cout << GetMakeDir()->GetQuotedFullFileName() << " -> Setting GetFromEnv var " << Var << " to " << Val << endl);
       Variables[Var]=Val;
     }
   }
@@ -978,7 +984,7 @@ uint32 mhmakefileparser::CreateEnvMd5_32() const
       transform(Var.begin(),Var.end(),Var.begin(),(int(__CDECL *)(int))toupper);
       string Val=It->second;
       transform(Val.begin(),Val.end(),Val.begin(),(int(__CDECL *)(int))toupper);
-      DBGOUT(cout << GetMakeDir()->GetFullFileName() << " -> Setting Commandline var " << Var << " to " << Val << endl);
+      DBGOUT(cout << GetMakeDir()->GetQuotedFullFileName() << " -> Setting Commandline var " << Var << " to " << Val << endl);
       Variables[Var]=Val;
     }
     It++;
@@ -987,7 +993,7 @@ uint32 mhmakefileparser::CreateEnvMd5_32() const
   // Now create the md5 string
   md5_starts( &ctx );
 
-  DBGOUT(cout << "MD5 of " << m_MakeDir->GetFullFileName() << endl);
+  DBGOUT(cout << "MD5 of " << m_MakeDir->GetQuotedFullFileName() << endl);
 
   map<string,string>::const_iterator VarIt=Variables.begin();
   map<string,string>::const_iterator VarItEnd=Variables.end();

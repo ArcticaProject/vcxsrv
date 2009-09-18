@@ -265,8 +265,9 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
   const char *pEnv=getenv(MHMAKECONF);
   if (pEnv)
   {
-    m_GlobalCommandLineVars[MHMAKECONF]=pEnv;
-    m_MhMakeConf=GetFileInfo(pEnv);
+    string Env(QuoteFileName(pEnv));
+    m_GlobalCommandLineVars[MHMAKECONF]=Env;
+    m_MhMakeConf=GetFileInfo(Env);
 
     // Get the revision of the working copy
     // We do it with the svn info command
@@ -276,7 +277,7 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
     try
     {
       string SvnCommand=SearchCommand("svn",EXEEXT);
-      Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetFullFileName(),false,&Output);
+      Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetQuotedFullFileName(),false,&Output);
     }
     catch (int)
     {
@@ -464,7 +465,7 @@ void loadedmakefile::LoadMakefile()
 
   #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
-    cout << "Loading makefile "<<m_Makefile->GetFullFileName()<<endl;
+    cout << "Loading makefile "<<m_Makefile->GetQuotedFullFileName()<<endl;
   #endif
 
   m_pParser=refptr<mhmakeparser>(new mhmakeparser(m_CommandLineVars));
@@ -501,7 +502,7 @@ void loadedmakefile::LoadMakefile()
     int result=m_pParser->ParseFile(BeforeMakefile,true);
     if (result)
     {
-      printf("Error parsing %s\n",BeforeMakefile->GetFullFileName().c_str());
+      printf("Error parsing %s\n",BeforeMakefile->GetQuotedFullFileName().c_str());
       throw(1);
     }
     m_pParser->UpdateDate(BeforeMakefile->GetDate());
@@ -514,7 +515,7 @@ void loadedmakefile::LoadMakefile()
       throw(1);
     }
     DepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR MAKEDEPFILE);
-    m_pParser->SetVariable(AUTODEPFILE,DepFile->GetFullFileName().c_str());
+    m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
   }
   else
   {
@@ -536,7 +537,7 @@ void loadedmakefile::LoadMakefile()
     sprintf(ID,"_%x",md5_finish32( &ctx));
 
     DepFile=GetFileInfo(string(MAKEDEPFILE)+ID);
-    m_pParser->SetVariable(AUTODEPFILE,DepFile->GetFullFileName().c_str());
+    m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
   }
 
   if (DepFile->Exists())
@@ -546,24 +547,24 @@ void loadedmakefile::LoadMakefile()
   int result=m_pParser->ParseFile(m_Makefile,true);
   if (result)
   {
-    printf("Error parsing %s\n",m_Makefile->GetFullFileName().c_str());
+    printf("Error parsing %s\n",m_Makefile->GetQuotedFullFileName().c_str());
     throw(1);
   }
   #ifdef _DEBUG
   /* Check if the makefile has changed the AUTODEPFILE variable, if so generate a warning that a
    * rebuild could happen for the rules defined for making included makefiles */
-  if (m_pParser->ExpandVar(AUTODEPFILE)!=DepFile->GetFullFileName())
+  if (m_pParser->ExpandVar(AUTODEPFILE)!=DepFile->GetQuotedFullFileName())
   {
-    cout << "\n\nWARNING:\n  makefile '"<< m_Makefile->GetFullFileName() <<"' re-defines AUTODEPFILE\n  from '"<< DepFile->GetFullFileName() <<"'\n  to '"<<
+    cout << "\n\nWARNING:\n  makefile '"<< m_Makefile->GetQuotedFullFileName() <<"' re-defines AUTODEPFILE\n  from '"<< DepFile->GetQuotedFullFileName() <<"'\n  to '"<<
             m_pParser->ExpandVar(AUTODEPFILE) << "'\n  (may cause needless rebuilds when having rules for included makefiles!!!!!)\n\n\n";
   }
 
   if (g_PrintAdditionalInfo)
   {
     if (m_pParser->GetFirstTarget())
-      cout<<"First target of "<<m_Makefile->GetFullFileName()<<" is "<<m_pParser->GetFirstTarget()->GetFullFileName()<<endl;
+      cout<<"First target of "<<m_Makefile->GetQuotedFullFileName()<<" is "<<m_pParser->GetFirstTarget()->GetQuotedFullFileName()<<endl;
     else
-      cout<<"No First target for "<<m_Makefile->GetFullFileName()<<endl;
+      cout<<"No First target for "<<m_Makefile->GetQuotedFullFileName()<<endl;
   }
   #endif
   m_pParser->UpdateDate(m_Makefile->GetDate());
@@ -573,7 +574,7 @@ void loadedmakefile::LoadMakefile()
     refptr<fileinfo> AfterMakefile=GetFileInfo(BaseAutoMak+".after",sm_Statics.m_MhMakeConf);
     int result=m_pParser->ParseFile(AfterMakefile);
     if (result) {
-      printf("Error parsing %s\n",AfterMakefile->GetFullFileName().c_str());
+      printf("Error parsing %s\n",AfterMakefile->GetQuotedFullFileName().c_str());
       throw(1);
     }
     m_pParser->UpdateDate(AfterMakefile->GetDate());
@@ -606,7 +607,7 @@ void loadedmakefile::LoadMakefile()
     {
       #ifdef _DEBUG
       if (g_PrintAdditionalInfo)
-        cout << "Makefile already loaded: "<<Found->m_Makefile->GetFullFileName()<<endl;
+        cout << "Makefile already loaded: "<<Found->m_Makefile->GetQuotedFullFileName()<<endl;
       #endif
     }
     else
@@ -625,7 +626,7 @@ void loadedmakefile::LoadMakefile()
   {
     #ifdef _DEBUG
     if (!g_GenProjectTree)
-      cout << "Rebuilding everything of "<< m_Makefile->GetFullFileName() <<" because environment and/or command-line variables have been changed.\n";
+      cout << "Rebuilding everything of "<< m_Makefile->GetQuotedFullFileName() <<" because environment and/or command-line variables have been changed.\n";
     #endif
     m_pParser->SetRebuildAll();
   }
@@ -642,7 +643,7 @@ void DumpVarsAndRules()
   {
     for (i=0; i<80; i++) cout << "_";
     cout << endl;
-    cout << "Variables of makefile " << (*LoadMakIt)->m_Makefile->GetFullFileName() << endl;
+    cout << "Variables of makefile " << (*LoadMakIt)->m_Makefile->GetQuotedFullFileName() << endl;
     for (i=0; i<80; i++) cout << "_";
     cout << endl;
     (*LoadMakIt)->m_pParser->PrintVariables(true);

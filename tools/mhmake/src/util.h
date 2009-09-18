@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "1.3.22"
+#define MHMAKEVER    "1.4.0"
 
 #define MAKEDEPFILE  ".makefile.dep"
 
@@ -73,39 +73,49 @@ inline const char *NextItem(const char *pTmp,string &Output, const char *pToks="
   const char *pStart;
   const char *pStop;
   while (strchr(pToks,*pTmp)&&*pTmp) pTmp++;
-  if (*pTmp=='"')
+  pStart=pTmp;
+  while (1)
   {
-    pStart=pTmp++;
-    while (*pTmp && *pTmp!='"') pTmp++;
-    if (*pTmp) pTmp++;
-    pStop=pTmp;
-  }
-  else if (*pTmp=='\'')
-  {
-    pStart=pTmp++;
-    while (*pTmp && *pTmp!='\'') pTmp++;
-    if (*pTmp) pTmp++;
-    pStop=pTmp;
-  }
-  else if (!*pTmp)
-  {
-    pStart=pStop=pTmp;
-  }
-  else
-  {
-    pStart=pTmp++;
-    #if OSPATHSEP=='/'
-    while (*pTmp)
+    if (*pTmp=='"')
     {
-      if (!strchr(pToks,*pTmp) || (*(pTmp-1)=='\\'))
-        pTmp++;
-      else
+      pTmp++;
+      while (*pTmp && *pTmp!='"') pTmp++;
+      if (*pTmp) pTmp++;
+      pStop=pTmp;
+      if (!*pTmp || strchr(pToks,*pTmp))
         break;
     }
-    #else
-    while (!strchr(pToks,*pTmp)) pTmp++;
-    #endif
-    pStop=pTmp;
+    else if (*pTmp=='\'')
+    {
+      pTmp++;
+      while (*pTmp && *pTmp!='\'') pTmp++;
+      if (*pTmp) pTmp++;
+      pStop=pTmp;
+      if (!*pTmp || strchr(pToks,*pTmp))
+        break;
+    }
+    else if (!*pTmp)
+    {
+      pStop=pTmp;
+      break;
+    }
+    else
+    {
+      pTmp++;
+      #if OSPATHSEP=='/'
+      while (*pTmp)
+      {
+        if (!strchr(pToks,*pTmp) || (*(pTmp-1)=='\\'))
+          pTmp++;
+        else
+          break;
+      }
+      #else
+      while (!strchr(pToks,*pTmp)) pTmp++;
+      #endif
+      pStop=pTmp;
+      break;
+    }
   }
   Output=string(pStart,pStop);
   // skip trailing space

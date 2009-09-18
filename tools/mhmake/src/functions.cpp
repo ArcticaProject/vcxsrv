@@ -449,7 +449,7 @@ string mhmakefileparser::f_filesindirs(const string & Arg) const
     {
       first=false;
     }
-    Ret+=pFile->GetFullFileName();
+    Ret+=pFile->GetQuotedFullFileName();
   }
 
   return Ret;
@@ -460,7 +460,7 @@ string mhmakefileparser::f_fullname(const string & Arg) const
 {
   string File=TrimString(Arg);
   refptr<fileinfo> pFile=GetFileInfo(File);
-  return pFile->GetFullFileName();
+  return pFile->GetQuotedFullFileName();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -491,7 +491,7 @@ static string IterList(const string &List,string (*iterFunc)(const string &FileN
 static string basename(const string &FileName,const string &)
 {
   string Ret=FileName.substr(0,FileName.find_last_of('.'));
-  if (FileName[0]=='"')
+  if (FileName[0]=='"' && FileName.end()[-1]=='"')
     Ret+=s_QuoteString;
   return Ret;
 }
@@ -513,7 +513,7 @@ static string notdir(const string &FileName,const string &)
   else
   {
     string Ret=g_EmptyString;
-    if (FileName[0]=='"')
+    if (FileName[0]=='"' && FileName.end()[-1]=='"')
       Ret+=s_QuoteString;
     Ret+=FileName.substr(Pos+1);
     return Ret;
@@ -651,7 +651,7 @@ static string dir(const string &FileName,const string &)
   {
     string Ret=g_EmptyString;
     Ret+=FileName.substr(0,Pos+1);
-    if (FileName[0]=='"')
+    if (FileName[0]=='"' && FileName.end()[-1]=='"')
       Ret+=s_QuoteString;
     return Ret;
   }
@@ -715,10 +715,8 @@ static string relpath(const string &FileName,const string &)
         retPath+=OSPATHSEPSTR"..";
       pCur++;
     }
-    if (!pPath)
-      return retPath;
-    else
-      return retPath+OSPATHSEPSTR+pLast;
+    if (pPath)
+      retPath=retPath+OSPATHSEPSTR+pLast;
   }
   else
   {
@@ -731,12 +729,12 @@ static string relpath(const string &FileName,const string &)
       pCur++;
     }
     retPath+=pLast;
-    return retPath;
   }
+  return QuoteFileName(retPath);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Make a path name relative to the curren directory
+// Make a path name relative to the current directory
 string mhmakefileparser::f_relpath(const string & FileNames) const
 {
   return IterList(FileNames,relpath);

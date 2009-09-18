@@ -53,6 +53,10 @@ extern bool g_PrintMultipleDefinedRules;
 
 extern const string g_EmptyString;
 extern const string g_SpaceString;
+extern const string g_QuoteString;
+
+string QuoteFileName(const string &Filename);
+string UnquoteFileName(const string &Filename);
 
 #define TIMESAFETY 3
 class mh_time
@@ -138,12 +142,12 @@ public:
   {
     m_IsPhony=false;
     m_IsBuild=false;
-    m_AbsFileName=AbsFileName;
+    m_AbsFileName=UnquoteFileName(AbsFileName);
     InvalidateDate();
     m_CommandsMd5_32=Md5_32;
     #ifdef _DEBUG
     if (g_PrintAdditionalInfo)
-      cout << "Initialising Md5 of "<<GetFullFileName().c_str()<<" to 0x"<<hex<<Md5_32<<endl;
+      cout << "Initialising Md5 of "<<GetQuotedFullFileName().c_str()<<" to 0x"<<hex<<Md5_32<<endl;
     #endif
   }
   fileinfo(const string &AbsFileName)
@@ -153,7 +157,7 @@ public:
   /* The following constructor is only used for name comparisons, and should only be used for that */
   fileinfo(int Dummy,const string &AbsFileName)
   {
-    m_AbsFileName=AbsFileName;
+    m_AbsFileName=UnquoteFileName(AbsFileName);
   }
 
   fileinfo(const char *szFile)
@@ -171,9 +175,13 @@ public:
   {
     return m_AbsFileName;
   }
+  string GetQuotedFullFileName(void) const
+  {
+    return QuoteFileName(m_AbsFileName);
+  }
   void SetFullFileName(const string &strAbsName)
   {
-    m_AbsFileName=strAbsName;
+    m_AbsFileName=UnquoteFileName(strAbsName);
     // If the last char is path sep strip it
     if (!m_AbsFileName.empty() && m_AbsFileName[m_AbsFileName.length()-1]==OSPATHSEP)
       m_AbsFileName.resize(m_AbsFileName.length()-1);
@@ -235,7 +243,7 @@ public:
     if (&*Dep==this)
     {
       #ifdef _DEBUG
-      cout << GetFullFileName()<<" is directly dependent on itself\n";
+      cout << GetQuotedFullFileName()<<" is directly dependent on itself\n";
       #endif
       return;
     }
@@ -253,7 +261,7 @@ public:
       if (&**It==this)
       {
         #ifdef _DEBUG
-        cout << GetFullFileName()<<" is directly dependent on itself\n";
+        cout << GetQuotedFullFileName()<<" is directly dependent on itself\n";
         #endif
       }
       else
@@ -268,7 +276,7 @@ public:
     if (&*MainDep==this)
     {
       #ifdef _DEBUG
-      cout << GetFullFileName()<<" is directly dependent on itself\n";
+      cout << GetQuotedFullFileName()<<" is directly dependent on itself\n";
       #endif
       return;
     }
@@ -338,7 +346,7 @@ public:
   {
     #ifdef _DEBUG
     if (g_PrintAdditionalInfo)
-      cout << "Setting Md5 of "<<GetFullFileName().c_str()<<" to 0x"<<hex<<Md5_32<<endl;
+      cout << "Setting Md5 of "<<GetQuotedFullFileName()<<" to 0x"<<hex<<Md5_32<<endl;
     #endif
     m_CommandsMd5_32=Md5_32;
   }

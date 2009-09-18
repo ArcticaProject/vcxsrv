@@ -30,6 +30,7 @@ refptr<rule> NullRule;
 map< string, vector<pair<string,refptr<rule> > > > IMPLICITRULE::m_ImplicitRules;
 
 makecommand g_MakeCommand;  // Order is important since sm_Statics is using g_MakeCommand
+const string g_QuoteString("\""); // Order is important since sm_Statics is using g_QuoteString
 loadedmakefile::loadedmakefile_statics loadedmakefile::sm_Statics;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,7 +53,7 @@ static bool FindDep(const string &DepName,vector<pair<string,refptr<rule> > >&Im
           cerr << "Implicit Rule '"<< DepName << "' defined twice with different commands\n";
         else
           cerr << "Implicit Rule '"<< DepName << "' defined twice with same commands\n";
-        cerr << "Command 1: makedir = " << SecIt->second->GetMakefile()->GetMakeDir()->GetFullFileName()<< endl;
+        cerr << "Command 1: makedir = " << SecIt->second->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<< endl;
 
         vector<string>::const_iterator It;
         if (bCommandsDifferent)
@@ -63,7 +64,7 @@ static bool FindDep(const string &DepName,vector<pair<string,refptr<rule> > >&Im
             cerr << "  " << *It << endl;
           }
         }
-        cerr << "Command 2: makedir = "<< Rule->GetMakefile()->GetMakeDir()->GetFullFileName()<< endl;
+        cerr << "Command 2: makedir = "<< Rule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<< endl;
         if (bCommandsDifferent)
         {
           It=NewCommands.begin();
@@ -83,9 +84,9 @@ static bool FindDep(const string &DepName,vector<pair<string,refptr<rule> > >&Im
         if (pOldMakefile->ExpandExpression(*OldIt)!=pNewMakefile->ExpandExpression(*NewIt))
         {
           cerr << "Implicit Rule '"<< DepName << "' defined twice with different commands\n";
-          cerr << "Command 1: makedir = " << pOldMakefile->GetMakeDir()->GetFullFileName()<< endl;
+          cerr << "Command 1: makedir = " << pOldMakefile->GetMakeDir()->GetQuotedFullFileName()<< endl;
           cerr << "  " << pOldMakefile->ExpandExpression(*OldIt) << endl;
-          cerr << "Command 2: makedir = "<< pNewMakefile->GetMakeDir()->GetFullFileName()<< endl;
+          cerr << "Command 2: makedir = "<< pNewMakefile->GetMakeDir()->GetQuotedFullFileName()<< endl;
           cerr << "  " << pNewMakefile->ExpandExpression(*NewIt) << endl;
           throw(1);
         }

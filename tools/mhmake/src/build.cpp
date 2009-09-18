@@ -305,7 +305,7 @@ string SearchCommand(const string &Command, const string &Extension="")
     pExt=NULL;
   else
     pExt=Extension.c_str();
-  if (SearchPath(NULL,Command.c_str(),pExt,MAX_PATH,FullCommand,NULL))
+  if (SearchPath(NULL,UnquoteFileName(Command).c_str(),pExt,MAX_PATH,FullCommand,NULL))
     return FullCommand;
 #ifdef WIN32
   /* See if we have a path for python.exe in the registry */
@@ -570,13 +570,13 @@ exit:
       {
         if (pNewDest->Exists())
         {
-          cerr << pNewDest->GetFullFileName() << " exists and is not a directory.\n";
+          cerr << pNewDest->GetQuotedFullFileName() << " exists and is not a directory.\n";
           Error = false;
           goto exit;
         }
         if (-1==mkdir(pNewDest->GetFullFileName().c_str(),0777))
         {
-          cerr << "Error creating directory " << pNewDest->GetFullFileName() << endl;
+          cerr << "Error creating directory " << pNewDest->GetQuotedFullFileName() << endl;
           Error = false;
           goto exit;
         }
@@ -816,7 +816,7 @@ static const string &GetPythonExe()
     string FullCommand=SearchCommand(PYTHONEXE);
     if (!FullCommand.empty())
     {
-      PythonExe="\""+FullCommand+"\" ";
+      PythonExe=QuoteFileName(FullCommand)+" ";
     }
     else
     {
@@ -964,42 +964,20 @@ string mhmakefileparser::GetFullCommand(string Command)
             {
               s_Py2ExeInstalled=false;
               cout << "\nWarning: cannot convert "<<FullCommand<<".\nCompilation will be faster by installing py2exe.\n\n";
-              Command=GetPythonExe()+"\""+FullCommand+"\"";
+              Command=GetPythonExe()+QuoteFileName(FullCommand);
             }
             else
               Command=ExeFullCommand;
           }
           else
           #endif
-            Command=GetPythonExe()+FullCommand;
+            Command=GetPythonExe()+QuoteFileName(FullCommand);
         }
       }
     }
     if (!Found)
     {
-      if (Command.find(" ")!=string::npos)
-      {
-        #ifdef WIN32
-        Command=GetComspec()+"\""+Command+"\"";
-        #else
-        // In linux excape the spaces in commands
-        const char *pTmp=Command.c_str();
-        string NewCommand="";
-        string Space="";
-        string SpaceString="\\ ";
-        while (*pTmp)
-        {
-          string Item;
-          pTmp=NextItem(pTmp,Item);
-          NewCommand+=Space;
-          NewCommand+=Item;
-          Space=SpaceString;
-        }
-        Command=GetComspec()+NewCommand;
-        #endif
-      }
-      else
-        Command=GetComspec()+Command;
+      Command=GetComspec()+QuoteFileName(Command);
     }
     m_CommandCache[OriCommand]=Command;
     return Command;
@@ -1009,29 +987,25 @@ string mhmakefileparser::GetFullCommand(string Command)
 
 bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,string *pOutput)
 {
+  string FullCommandLine;
+  string ComSpec=GetComspec();
 #ifdef WIN32
   STARTUPINFO StartupInfo;
   memset(&StartupInfo,0,sizeof(StartupInfo));
   StartupInfo.cb=sizeof(STARTUPINFO);
   PROCESS_INFORMATION ProcessInfo;
-  string FullCommandLine;
-  string ComSpec=GetComspec();
 
   if (Command.substr(0,ComSpec.size())==ComSpec)
   {
     string tmpCommand=Command.substr(ComSpec.size(),Command.size());
     FullCommandLine=ComSpec;
-    if (tmpCommand.find(' ')!=string::npos)
-      FullCommandLine+="\""+tmpCommand+"\""+Params;
-    else
-      FullCommandLine+=tmpCommand+Params;
+    FullCommandLine+=QuoteFileName(tmpCommand)+Params;
   }
   else
   {
     const string PythonExe=GetPythonExe();
-    if (Command.find(' ')!=string::npos &&
-    !(Command.substr(0,PythonExe.size())==PythonExe))
-      FullCommandLine="\""+Command+"\""+Params;
+    if (!(Command.substr(0,PythonExe.size())==PythonExe))
+      FullCommandLine=QuoteFileName(Command)+Params;
     else
       FullCommandLine=Command+Params;
   }
@@ -1139,9 +1113,19 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
   CloseHandle(ProcessInfo.hProcess);
   return true;
 #else
-  string FullCommandLine=Command+Params;
   int pipeto[2];      /* pipe to feed the exec'ed program input */
   int pipefrom[2];    /* pipe to get the exec'ed program output */
+
+  if (Command.substr(0,ComSpec.size())==ComSpec)
+  {
+    string tmpCommand=Command.substr(ComSpec.size(),Command.size());
+    FullCommandLine=ComSpec;
+    FullCommandLine+=QuoteFileName(tmpCommand)+Params;
+  }
+  else
+  {
+    FullCommandLine=Command+Params;
+  }
 
   if (pOutput || g_Quiet)
   {
@@ -1324,15 +1308,14 @@ bool mhmakefileparser::ExecuteCommand(string Command,string *pOutput)
     StartCommandPos=1;
     EndCommandPos=1;
     while (pCom[EndCommandPos]!='"') EndCommandPos++;
-    BeginParamPos=EndCommandPos+1;
   }
   else
   {
     StartCommandPos=0;
     EndCommandPos=0;
-    while (!strchr(" \t",pCom[EndCommandPos])) EndCommandPos++;
-    BeginParamPos=EndCommandPos;
   }
+  while (!strchr(" \t",pCom[EndCommandPos])) EndCommandPos++;
+  BeginParamPos=EndCommandPos;
   string Params=Command.substr(BeginParamPos);
   Command=Command.substr(StartCommandPos,EndCommandPos-StartCommandPos);
 
@@ -1430,7 +1413,7 @@ void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, const refptr
     {
       #ifdef _DEBUG
       if (pRule&&g_pPrintDependencyCheck && DepDate.IsExistingFile() && TargetDate.IsExistingFile())
-        cout<<"Going to build "<<Target->GetFullFileName()<<" because "<<(*pDepIt)->GetFullFileName()<<" is more recent\n";
+        cout<<"Going to build "<<Target->GetQuotedFullFileName()<<" because "<<(*pDepIt)->GetQuotedFullFileName()<<" is more recent\n";
       #endif
       MakeTarget=true;
     }
@@ -1447,12 +1430,12 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
     deque< refptr<fileinfo> >::const_iterator pFind=find(m_TargetStack.begin(),m_TargetStack.end(),Target);
     if (pFind!=m_TargetStack.end())
     {
-      cout << "Circular dependency detected.\n"<<Target->GetFullFileName()<<" depending on itself.\n";
+      cout << "Circular dependency detected.\n"<<Target->GetQuotedFullFileName()<<" depending on itself.\n";
       cout << "Dependency stack:\n";
       deque< refptr<fileinfo> >::const_iterator pIt=m_TargetStack.begin();
       while (pIt!=m_TargetStack.end())
       {
-        cout << "  " << (*pIt)->GetFullFileName() << endl;
+        cout << "  " << (*pIt)->GetQuotedFullFileName() << endl;
         pIt++;
       }
     }
@@ -1471,7 +1454,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
     {
       for (int i=0; i<Indent; i++)
         cout<<"  ";
-      cout<<"  Already build "<<Target->GetFullFileName()<<" : "<<Target->GetDate()<<endl;
+      cout<<"  Already build "<<Target->GetQuotedFullFileName()<<" : "<<Target->GetDate()<<endl;
     }
     #endif
     return Target->GetDate();
@@ -1479,14 +1462,14 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
 
   #ifdef _DEBUG
   if (g_GenProjectTree)
-    cout << Target->GetFullFileName() << endl;
+    cout << Target->GetQuotedFullFileName() << endl;
 
   Indent++;
   if (g_pPrintDependencyCheck)
   {
     for (int i=0; i<Indent; i++)
       cout<<"  ";
-    cout<<"Building dependencies of "<<Target->GetFullFileName()<<endl;
+    cout<<"Building dependencies of "<<Target->GetQuotedFullFileName()<<endl;
   }
   #endif
 
@@ -1535,7 +1518,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
         #ifdef _DEBUG
         if (g_PrintAdditionalInfo)
         {
-          cout<<"Found implicit rule for "<<Target->GetFullFileName()<<endl;
+          cout<<"Found implicit rule for "<<Target->GetQuotedFullFileName()<<endl;
           pRule->PrintCommands(Target);
         }
         #endif
@@ -1559,7 +1542,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           #ifdef _DEBUG
           if (g_PrintAdditionalInfo)
           {
-            cout<<"Found implicit rule for "<<Target->GetFullFileName()<<". Dependent "<<ResultIt->first->GetFullFileName()<<endl;
+            cout<<"Found implicit rule for "<<Target->GetQuotedFullFileName()<<". Dependent "<<ResultIt->first->GetQuotedFullFileName()<<endl;
             pRule->PrintCommands(Target);
           }
           #endif
@@ -1567,7 +1550,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           {
             #ifdef _DEBUG
             if (pRule,g_pPrintDependencyCheck && DepDate.IsExistingFile() && TargetDate.IsExistingFile())
-              cout<<"Going to build "<<Target->GetFullFileName()<<" because "<<ResultIt->first->GetFullFileName()<<" is more recent\n";
+              cout<<"Going to build "<<Target->GetQuotedFullFileName()<<" because "<<ResultIt->first->GetQuotedFullFileName()<<" is more recent\n";
             #endif
             MakeTarget=true;
           }
@@ -1595,7 +1578,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
     {
       for (int i=0; i<Indent; i++)
         cout<<"  ";
-      cout<<"Building "<<Target->GetFullFileName()<<endl;
+      cout<<"Building "<<Target->GetQuotedFullFileName()<<endl;
     }
     #endif
     if (!MakeTarget)
@@ -1608,11 +1591,11 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           if (!TargetDate.DoesExist())
           {
             if (!m_ImplicitSearch && !Target->IsPhony())
-              cout<<"Building "<<Target->GetFullFileName()<<" because it does not exist yet\n";
+              cout<<"Building "<<Target->GetQuotedFullFileName()<<" because it does not exist yet\n";
           }
           else if (TargetDate.IsOlder(m_sBuildTime))
           {
-            cout<<"Building "<<Target->GetFullFileName()<<" because need to rebuild all (-a)\n";
+            cout<<"Building "<<Target->GetQuotedFullFileName()<<" because need to rebuild all (-a)\n";
           }
         }
         #endif
@@ -1637,7 +1620,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
 #else
        if (!g_Quiet)
 #endif
-        cout << "Building " << Target->GetFullFileName()<<endl;
+        cout << "Building " << Target->GetQuotedFullFileName()<<endl;
       }
 
       curdir::ChangeCurDir(pMakefile->GetMakeDir());
@@ -1664,7 +1647,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           if (!pMakefile->ExecuteCommand(Command))
           {
             cerr << "Error running command: "<<Command<<endl;
-            cerr << "Command defined in makefile: "<<GetMakeDir()->GetFullFileName()<<endl;
+            cerr << "Command defined in makefile: "<<GetMakeDir()->GetQuotedFullFileName()<<endl;
             Target->SetCommandsMd5_32(0);  /* Clear the md5 to make sure that the target is rebuild the next time mhmake is ran */
             m_AutoDepsDirty=true;  /* We need to update the autodeps file if the md5 has been changed */
             throw(1);
@@ -1705,7 +1688,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
         {
           #ifdef _DEBUG
           if (!g_GenProjectTree)
-            cout << "Md5 is different for " << Target->GetFullFileName() << " Old:"<<hex<<Target->GetCommandsMd5_32()<<", New: "<<Md5_32<<". Commandline must have been changed so recompiling\n";
+            cout << "Md5 is different for " << Target->GetQuotedFullFileName() << " Old:"<<hex<<Target->GetCommandsMd5_32()<<", New: "<<Md5_32<<". Commandline must have been changed so recompiling\n";
           #endif
           MakeTarget=true;
         }
@@ -1720,7 +1703,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
   {
     for (int i=0; i<Indent; i++)
       cout<<"  ";
-    cout<<"Building "<<Target->GetFullFileName()<<" finished : "<< YoungestDate << endl;
+    cout<<"Building "<<Target->GetQuotedFullFileName()<<" finished : "<< YoungestDate << endl;
   }
   Indent--;
   if (g_CheckCircularDeps)
@@ -1731,7 +1714,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
   if (!m_ImplicitSearch && !Target->Exists() && !Target->IsPhony() && !g_DoNotExecute && !g_GenProjectTree)
   {
     // This is only a warning for phony messages
-    cout<<"Warning: don't know how to make "<<Target->GetFullFileName()<<"\nMake the rule a phony rule to avoid this warning (but only do it when it is really phony).\n";;
+    cout<<"Warning: don't know how to make "<<Target->GetQuotedFullFileName()<<"\nMake the rule a phony rule to avoid this warning (but only do it when it is really phony).\n";;
   }
   #endif
   Target->SetDate(YoungestDate); /* This is especially needed for phony targets in between real targets */
@@ -1746,7 +1729,7 @@ void mhmakefileparser::BuildIncludedMakefiles()
   {
     #ifdef _DEBUG
     if (g_PrintAdditionalInfo)
-      cout<<"Building include file "<<(*MakefileIt)->GetFullFileName()<<endl;
+      cout<<"Building include file "<<(*MakefileIt)->GetQuotedFullFileName()<<endl;
     #endif
     BuildTarget(*MakefileIt);
     MakefileIt++;
