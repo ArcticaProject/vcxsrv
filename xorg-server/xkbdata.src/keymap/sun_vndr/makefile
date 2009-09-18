@@ -13,7 +13,7 @@ us
 DATA_FILES=$(dist_keymap_DATA:%=$(DESTDIR)\%)
 
 # We need to make the rule for all explicit since searching it in the implicit rules doesn't work for all
-$(DESTDIR)\all: all
+$(DESTDIR)\all: all.in
 	copy $< $@
 
 
