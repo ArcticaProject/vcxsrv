@@ -48,9 +48,9 @@ $(EXE) :  $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) $(MANIFESTFILE)
 endif  # End WINAPP or TTYAPP stuff
 
 ifeq ($(DEBUG),1)
-COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I"%") -Fo"$(relpath $@)" -Fd"$(PDB)" "$<"
+COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I%) -Fo$(relpath $@) -Fd"$(PDB)" $<
 else
-COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I"%") -Fo"$(relpath $@)" "$<"
+COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I%) -Fo$(relpath $@) $<
 PDB=   # There is no PDB file generated in a release build
 endif
 
@@ -76,7 +76,7 @@ $(OBJDIR)\%$(OBJEXT) : %.cc
 	$(CC) $(CCFLAGS) /EHsc $(COMMONCFLAGS)
 
 $(OBJDIR)\%.res : %.rc
-	$(RC) $(RCFLAGS) $(RCDEFINES:%=-d "%") $(RCINCLUDES:%=-i "%") -Fo"$(relpath $@)" "$<"
+	$(RC) $(RCFLAGS) $(RCDEFINES:%=-d "%") $(RCINCLUDES:%=-i %) -Fo$(relpath $@) $<
 
 ifdef INC_BDF_RULES
 load_makefile $(MHMAKECONF)\bdftopcf\makefile MAKESERVER=0 DEBUG=$(DEBUG)

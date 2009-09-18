@@ -18,7 +18,7 @@ WINAPP = xlaunch
 RESOURCES = resources.rc
 
 $(OBJDIR)\%.res : resources\%.rc
-	$(RC) $(RCFLAGS) $(RCDEFINES:%=-d "%") $(RCINCLUDES:%=-i "%") -Fo"$(relpath $@)" "$<"
+	$(RC) $(RCFLAGS) $(RCDEFINES:%=-d "%") $(RCINCLUDES:%=-i %) -Fo$(relpath $@) $<
 
 LIBDIRS=$(dir $(INCLUDELIBFILES))
 
