@@ -1,16 +1,9 @@
 
-transform_files=layoutRename.lst variantRename.lst
-
-transform_scripts= \
-ln_s.sh \
-lnv_s.sh \
-ml_s.sh \
-mlv_s.sh \
-ml1_s.sh \
-ml1v_s.sh \
-ml1v1_s.sh
+transform_files=layoutsMapping.lst variantsMapping.lst
 
 dist_parts=base.o_s.part
+
+scripts_dir=$(srcdir)/../bin
 
 scripts= \
 base.l2_s.part \
@@ -35,36 +28,36 @@ noinst_SCRIPTS=
 
 endif
 
-base.l2_s.part: ln_s.sh $(transform_files)
-	sh $< 2
+base.l2_s.part: $(scripts_dir)/ln_s.sh $(transform_files)
+	sh $< 2 $(srcdir)
 
-base.l3_s.part: ln_s.sh $(transform_files)
-	sh $< 3
+base.l3_s.part: $(scripts_dir)/ln_s.sh $(transform_files)
+	sh $< 3 $(srcdir)
 
-base.l4_s.part: ln_s.sh $(transform_files)
-	sh $< 4
+base.l4_s.part: $(scripts_dir)/ln_s.sh $(transform_files)
+	sh $< 4 $(srcdir)
 
-base.l2v2_s.part: lnv_s.sh $(transform_files)
-	sh $< 2
+base.l2v2_s.part: $(scripts_dir)/lnv_s.sh $(transform_files)
+	sh $< 2 $(srcdir)
 
-base.l3v3_s.part: lnv_s.sh $(transform_files)
-	sh $< 3
+base.l3v3_s.part: $(scripts_dir)/lnv_s.sh $(transform_files)
+	sh $< 3 $(srcdir)
 
-base.l4v4_s.part: lnv_s.sh $(transform_files)
-	sh $< 4
+base.l4v4_s.part: $(scripts_dir)/lnv_s.sh $(transform_files)
+	sh $< 4 $(srcdir)
 
-base.ml_s.part: ml_s.sh $(transform_files)
-	sh $<
+base.ml_s.part: $(scripts_dir)/ml_s.sh $(transform_files)
+	sh $< $(srcdir)
 
-base.ml1_s.part: ml1_s.sh $(transform_files)
-	sh $<
+base.ml1_s.part: $(scripts_dir)/ml1_s.sh $(transform_files)
+	sh $< $(srcdir)
 
-base.mlv_s.part: mlv_s.sh $(transform_files)
-	sh $<
+base.mlv_s.part: $(scripts_dir)/mlv_s.sh $(transform_files)
+	sh $< $(srcdir)
 
-base.ml1v1_s.part: ml1v1_s.sh $(transform_files)
-	sh $<
+base.ml1v1_s.part: $(scripts_dir)/ml1v1_s.sh $(transform_files)
+	sh $< $(srcdir)
 
-EXTRA_DIST=base.lists.part $(transform_files) $(transform_scripts) $(dist_parts)
+EXTRA_DIST=base.lists.part $(transform_files) $(dist_parts)
 
 CLEANFILES=$(scripts)

@@ -1,4 +1,4 @@
-AC_INIT(xkeyboard-config, 1.6)
+AC_INIT(xkeyboard-config, 1.6.99)
 AC_CONFIG_SRCDIR(rules/base.xml.in)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
@@ -66,7 +66,9 @@ keymap/sgi_vndr/Makefile
 keymap/sun_vndr/Makefile
 semantics/Makefile
 rules/Makefile
+rules/bin/Makefile
 rules/compat/Makefile
+rules/extras/Makefile
 symbols/Makefile
 symbols/digital_vndr/Makefile
 symbols/fujitsu_vndr/Makefile
@@ -77,6 +79,7 @@ symbols/sgi_vndr/Makefile
 symbols/sony_vndr/Makefile
 symbols/sun_vndr/Makefile
 symbols/xfree68_vndr/Makefile
+symbols/extras/Makefile
 types/Makefile
 xkeyboard-config.spec
 docs/Makefile

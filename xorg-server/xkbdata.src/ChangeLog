@@ -1,3 +1,144 @@
+2009-09-15 Sergey Udaltsov
+
+	* symbols/es: addind dead_tilde,
+	https://bugs.freedesktop.org/show_bug.cgi?id=23876
+	* keycodes/sun, rules/base.m_k.part, rules/base.ml_s.part,
+	symbols/sun_vndr/us: fixed Sun keyboard model for type6,
+	https://bugs.freedesktop.org/show_bug.cgi?id=3952
+
+2009-09-08 Gaetan Nadon
+
+	* **/.cvsignore: remove cvsignore files.
+
+2009-09-02 Sergey Udaltsov
+
+	* rules/base.xml.in, symbols/by: restructured Belarussian variants,
+	https://bugs.freedesktop.org/show_bug.cgi?id=23604
+
+2009-08-28 Sergey Udaltsov
+
+	* symbols/no: updated layout,
+	http://bugs.freedesktop.org/show_bug.cgi?id=23518
+
+2009-08-20 Sergey Udaltsov
+
+	* rules/base.o_s.part, rules/base.xml.in, symbols/capslock: added
+	caps:numlock, http://bugs.freedesktop.org/show_bug.cgi?id=23323
+
+2009-08-18 Peter Hutterer
+
+	* rules/base.o_s.part, rules/base.xml.in, symbols/capslock: added
+	caps:hyper, http://bugs.freedesktop.org/show_bug.cgi?id=23356
+
+2009-08-14 Sergey Udaltsov
+
+	* rules/base.o_s.part, rules/base.xml.in, symbols/capslock: added
+	caps:none option, http://bugs.freedesktop.org/show_bug.cgi?id=23243
+	* rules/base.xml.in, symbols/it: added it(us),
+	http://bugs.freedesktop.org/show_bug.cgi?id=23263
+
+2009-08-04 Sergey Udaltsov
+
+	* geometry/Makefile.am, rules/base.lists.part, rules/base.m_g.part,
+	rules/base.xml.in: added TypeMatrix geometries,
+	http://bugs.freedesktop.org/show_bug.cgi?id=23136
+
+2009-07-19 Sergey Udaltsov
+
+	* symbols/vn: fixed accent typing,
+	http://bugs.freedesktop.org/show_bug.cgi?id=22847
+
+2009-07-18 Sergey Udaltsov
+
+	* symbols/gb: fixed gb(colemak), several mappings added,
+	http://bugs.freedesktop.org/show_bug.cgi?id=22735
+
+2009-07-14 Sergey Udaltsov
+
+	* rules/base.extras.xml.in, rules/extras/variantsMapping.lst,
+	symbols/extras/us: added us(crd) to extras,
+	http://bugs.freedesktop.org/show_bug.cgi?id=22635
+
+2009-07-09 Sergey Udaltsov
+
+	* rules/base.xml.in, symbols/bg: updated bg variants,
+	http://bugs.freedesktop.org/show_bug.cgi?id=22666
+
+2009-06-27 Sergey Udaltsov
+
+	* symbols/extras/us, rules/base.extras.xml.in,
+	rules/extras/variantsMapping.lst, symbols/extras/Makefile.am: Added 3
+	exotic us variants: ats, intl-unicode, alt-intl-unicode
+	http://bugs.freedesktop.org/show_bug.cgi?id=22004
+	http://bugs.freedesktop.org/show_bug.cgi?id=22446
+
+2009-06-22 Sergey Udaltsov
+
+	* .gitignore, configure.in, rules/Makefile.am,
+	rules/base.extras.xml.in, rules/base.l2_s.part, rules/base.l3_s.part,
+	rules/base.l4_s.part, rules/base.lists.part, rules/base.ml_s.part,
+	rules/bin/Makefile.am, rules/compat/ln_s.sh -> rules/bin/ln_s.sh,
+	rules/compat/lnv_s.sh -> rules/bin/lnv_s.sh, rules/compat/ml1_s.sh ->
+	rules/bin/ml1_s.sh, rules/compat/ml1v1_s.sh -> rules/bin/ml1v1_s.sh,
+	rules/compat/ml1v_s.sh -> rules/bin/ml1v_s.sh, rules/compat/ml_s.sh ->
+	rules/bin/ml_s.sh, rules/compat/mlv_s.sh -> rules/bin/mlv_s.sh,
+	rules/compat/Makefile.am, rules/compat/layoutsMapping.lst,
+	rules/compat/variantsMapping.lst, rules/extras/Makefile.am,
+	rules/extras/layoutsMapping.lst, symbols/extras/Makefile.am,
+	symbols/extras/rs: serious restructuring of the rules generation
+	scripts, for compat and extras. Also, adding exotic rs(combiningkeys)
+	variant, http://bugs.freedesktop.org/show_bug.cgi?id=21047
+
+2009-06-20 Sergey Udaltsov
+
+	* symbols/by: missing mappings,
+	https://bugs.freedesktop.org/show_bug.cgi?id=22386
+	* symbols/ca: fixed a couple of mappings in ca(shs)
+	http://bugs.freedesktop.org/show_bug.cgi?id=22388
+
+2009-06-19 Sergey Udaltsov
+
+	* symbols/de: small fix for a numbersign key,
+	http://bugs.freedesktop.org/show_bug.cgi?id=19934
+
+2009-06-15 Sergey Udaltsov
+
+	* symbols/inet: fixing ABNT2-specific mapping for keypad dot key,
+	http://bugs.freedesktop.org/show_bug.cgi?id=22303
+
+2009-06-14 Sergey Udaltsov
+
+	* rules/base.lists.part, rules/base.xml.in, symbols/inet: added
+	creativedw7000 model,
+	http://bugs.freedesktop.org/show_bug.cgi?id=22261
+
+2009-06-12 Sergey Udaltsov
+
+	* symbols/us: added extra symbols to us(altgr-intl),
+	http://bugs.freedesktop.org/show_bug.cgi?id=22249
+
+2009-06-11 Sergey Udaltsov
+
+	* rules/base.o_s.part, rules/base.xml.in, symbols/capslock: added
+	caps:super, http://bugs.freedesktop.org/show_bug.cgi?id=22184
+
+2009-06-09 Sergey Udaltsov
+
+	* symbols/ng: fixing 'e with dot below' in ng(olpc),
+	https://bugs.freedesktop.org/show_bug.cgi?id=20010
+	* rules/base.ml1_s.part: fixing misspeled variant name,
+	https://bugs.freedesktop.org/show_bug.cgi?id=15782
+	* symbols/tr: lost credits added,
+	https://bugs.freedesktop.org/show_bug.cgi?id=22079
+	* rules/base.xml.in, symbols/ru: added ru(bak),
+	https://bugs.freedesktop.org/show_bug.cgi?id=22101
+
+2009-05-31 Sergey Udaltsov
+
+	* symbols/altwin: setting explicit TWO_LEVEL on sections mapping RALT
+	, it is often ONE_LEVEL because of LEVEL3. Fixed
+	http://bugs.freedesktop.org/show_bug.cgi?id=21761
+
 2009-05-24 Sergey Udaltsov
 
 	* symbols/ua: fixed all references, from ua(basic) to ua(legacy),

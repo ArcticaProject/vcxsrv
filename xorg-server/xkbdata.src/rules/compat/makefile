@@ -1,14 +1,6 @@
+TRANSFORM_FILES=layoutsMapping.lst variantsMapping.lst
 
-TRANSFORM_FILES=layoutRename.lst variantRename.lst
-
-TRANSFORM_SCRIPTS= \
-ln_s.sh \
-lnv_s.sh \
-ml_s.sh \
-mlv_s.sh \
-ml1_s.sh \
-ml1v_s.sh \
-ml1v1_s.sh
+scripts_dir=..\bin
 
 SCRIPTS= \
 base.l2_s.part \
@@ -25,7 +17,7 @@ base.ml_s.part
 
 SH=cmd /c
 
-%.bat: %.sh
+%.bat: $(scripts_dir)\%.sh
 	copy $< $@
 
 base.l2_s.part: ln_s.bat $(TRANSFORM_FILES)

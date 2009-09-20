@@ -257,6 +257,8 @@ xkb_symbols "type6" {
     include "eurosign(4)"
 
     key <SYRQ> { [ SunSys_Req 			]};
+    key <LSGT> { [ less, greater, bar, brokenbar ] };
+
 };
 
 xkb_symbols "pc101" {

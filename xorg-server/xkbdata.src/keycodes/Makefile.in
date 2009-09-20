@@ -550,7 +550,7 @@ uninstall-am: uninstall-dist_dirDATA uninstall-dist_keycodesDATA
 
 $(subdir).dir: $(dir_data)
 	-rm -f $@
-	here=$$(pwd); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
+	here=$(abs_builddir); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

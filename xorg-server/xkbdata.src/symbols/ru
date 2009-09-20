@@ -438,3 +438,28 @@ xkb_symbols "dos" {
     key        <AB10> {        [   Cyrillic_io, Cyrillic_IO ] };
 };
 
+partial alphanumeric_keys
+xkb_symbols "bak" {
+    include "ru(winkeys)"
+
+    name[Group1]= "Russia - Bashkirian";
+    key.type[group1]="FOUR_LEVEL";
+
+    key <TLDE> { [     0x010004d9,       0x010004d8,   Cyrillic_io,   Cyrillic_IO      ] };
+    key <AE01> { [     exclam,           quotedbl,      1,       1       ] };
+    key <AE02> { [     0x010004e9,       0x010004e8,    2,       2 ] };
+    key <AE03> { [     0x010004a1,       0x010004a0,    3,       3 ] };
+    key <AE04> { [     0x01000493,       0x01000492,    4,       4 ] };
+    key <AE05> { [     0x010004ab,       0x010004aa,    5,       5 ] };
+    key <AE06> { [     colon,            semicolon,     6,       6 ] };
+    key <AE07> { [     0x01000499,       0x01000498,    7,       7 ] };
+    key <AE08> { [     0x010004bb,       0x010004ba,    8,       8 ] };
+    key <AE09> { [     question,         parenleft,     9,       9 ] };
+    key <AE10> { [     numerosign,       parenright,    0,       0 ] };
+    key <AE11> { [     minus,            percent,       minus,    underscore     ]};
+    key <AE12> { [     0x010004af, 0x010004ae,    equal,  plus    ]};
+    key <BKSL> { [     0x010004a3, 0x010004a2,    backslash,        slash     ]};	
+	
+    include "level3(ralt_switch)"
+};
+

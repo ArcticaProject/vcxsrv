@@ -77,7 +77,7 @@ xkb_symbols "olpc" {
    key <AE11> { [     minus, underscore,     0x1000304,        0x1000304 ] }; // combining macron above
    key <AE12> { [     equal,       plus,     0x1000303,        0x1000303 ] }; // combining tilde above
 
-   key <AD02> { [         w,          W,     0x1000,       0x1000 ] }; // E with dot below
+   key <AD02> { [         w,          W,     0x1001EB9, 0x1001EB8 ] }; // E with dot below
    key <AD03> { [         e,          E,     0x10001DD, 0x100018E ] }; // reversed E
    key <AD04> { [         r,          R,     0x10001B4, 0x10001B3 ] }; // Y with hook
    key <AD05> { [         t,          T,     0x1000327, 0x1000327 ] }; // combining cedilla

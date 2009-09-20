@@ -41,3 +41,25 @@ xkb_symbols "backspace" {
     key <CAPS> {        [       BackSpace  ]       };
 };
 
+partial hidden modifier_keys
+xkb_symbols "super" {
+    key <CAPS> {        [       Super_L  ]       };
+    modifier_map Mod4   { <CAPS> };
+};
+
+partial hidden modifier_keys
+xkb_symbols "hyper" {
+    key <CAPS> {        [       Hyper_L  ]       };
+    modifier_map Mod4   { <CAPS> };
+};
+
+partial hidden modifier_keys
+xkb_symbols "none" {
+    key <CAPS> {        [       VoidSymbol  ]       };
+};
+
+partial hidden modifier_keys
+xkb_symbols "numlock" {
+    key <CAPS> {        [       Num_Lock  ]       };
+};
+

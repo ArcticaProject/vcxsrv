@@ -8,7 +8,7 @@ dirdir = $(xkb_base)
 
 $(subdir).dir: $(dir_data)
 	-rm -f $@
-	here=$$(pwd); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
+	here=$(abs_builddir); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
 
 CLEANFILES = $(subdir).dir
 

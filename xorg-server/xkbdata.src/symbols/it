@@ -176,3 +176,43 @@ xkb_symbols "olpc" {
     key <I219> { [ less,        greater, guillemotleft, guillemotright ] };
 };
 
+partial alphanumeric_keys modifier_keys
+xkb_symbols "us" {
+
+    name[Group1]= "Italy - US keyboard with Italian letters";
+    
+    include "us(euro)"
+    
+    // Alphanumeric section
+
+    key <TLDE> { [     grave, asciitilde,    dead_grave,       dead_tilde ] };
+    key <AE01> { [         1,     exclam,   onesuperior                   ] };
+    key <AE02> { [         2,         at,   twosuperior                   ] };
+    key <AE03> { [         3, numbersign, threesuperior                   ] };
+    key <AE06> { [         6,asciicircum,dead_circumflex                  ] };
+    key <AE10> { [         0, parenright,        degree                   ] };
+    key <AE11> { [     minus, underscore,   dead_macron                   ] };
+
+    key <AD03> { [         e,          E,        egrave,           Egrave ] };
+    key <AD04> { [         r,          R,    registered                   ] };
+    key <AD07> { [         u,          U,        ugrave,           Ugrave ] };
+    key <AD08> { [         i,          I,        igrave,           Igrave ] };
+    key <AD09> { [         o,          O,        ograve,           Ograve ] };
+
+    key <AC01> { [         a,          A,        agrave,           Agrave ] };
+    key <AC03> { [         d,          D,        eacute,           Eacute ] };
+    key <AC07> { [         j,          J,        uacute,           Uacute ] };
+    key <AC08> { [         k,          K,        iacute,           Iacute ] };
+    key <AC09> { [         l,          L,        oacute,           Oacute ] };
+    key <AC10> { [ semicolon,      colon,dead_diaeresis,   dead_diaeresis ] };
+    key <AC11> { [apostrophe,   quotedbl,    dead_acute                   ] };
+
+    key <AB01> { [         z,          Z,        aacute,           Aacute ] };
+    key <AB03> { [         c,          C,     copyright                   ] };
+    key <AB06> { [         n,          N,        ntilde,           Ntilde ] };
+    key <AB08> { [     comma,       less,   guillemotleft                 ] };
+    key <AB09> { [    period,    greater,  guillemotright                 ] };
+
+    include "level3(ralt_switch)"
+};
+

@@ -17,7 +17,7 @@ xkb_symbols "basic" {
     key <AE04>	{ [         4,     dollar,   asciitilde,       dollar ]	};
     key <AE06>	{ [         6,  ampersand,      notsign,  fiveeighths ]	};
     key <AE11>	{ [apostrophe,   question,    backslash, questiondown ]	};
-    key <AE12>	{ [exclamdown, questiondown, asciitilde,   asciitilde ]	};
+    key <AE12>	{ [exclamdown, questiondown, dead_tilde,   asciitilde ]	};
 
     key <AD11>	{ [dead_grave, dead_circumflex, bracketleft, dead_abovering ] };
     key <AD12>	{ [      plus,   asterisk, bracketright,  dead_macron ]	};

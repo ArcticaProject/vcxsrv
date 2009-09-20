@@ -3,6 +3,7 @@
   sun4		=	sun(type4_euro)
   sun5		=	sun(type5_euro)
   sun6		=	sun(type6_usb)
+  sun6euro	=	sun(type6tuv_usb)
   pc98		=	xfree98(pc98)
   evdev		=	evdev
   olpc		=	evdev

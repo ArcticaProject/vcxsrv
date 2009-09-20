@@ -91,7 +91,7 @@ xkb_symbols "intl" {
     key <AE02> { [	   2,         at,   twosuperior, dead_doubleacute ] };
     key <AE03> { [	   3, numbersign, threesuperior,      dead_macron ] };
     key <AE04> { [	   4,     dollar,      currency,         sterling ] };
-    key <AE05> { [	   5,    percent,      EuroSign                   ] };
+    key <AE05> { [	   5,    percent,      EuroSign,     dead_cedilla ] };
     key <AE06> { [    6, dead_circumflex,    onequarter,      asciicircum ] };
     key <AE07> { [	   7,  ampersand,       onehalf,	dead_horn ] };
     key <AE08> { [	   8,   asterisk, threequarters,      dead_ogonek ] };
@@ -765,11 +765,11 @@ xkb_symbols "altgr-intl" {
    key <AB02> { [        x, X,           oe,           OE              ] };
    key <AB04> { [        v, V,           registered,   registered      ] };
 
-// onequarter etc (not in iso8859-15) deleted to get three unshifted deadkeys:
+// onequarter etc (not in iso8859-15) moved to get three unshifted deadkeys:
 
-   key <AE06> { [        6, asciicircum,       dead_circumflex         ] };
-   key <AE07> { [        7, ampersand,         dead_horn               ] };
-   key <AE08> { [        8, asterisk,          dead_ogonek             ] };
+   key <AE06> { [        6, asciicircum, dead_circumflex, onequarter    ] };
+   key <AE07> { [        7, ampersand,   dead_horn,       onehalf       ] };
+   key <AE08> { [        8, asterisk,    dead_ogonek,     threequarters ] };
 
    include "level3(ralt_switch)"
 };

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry>
+  <modelList/>
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>apl</name>
+        <_shortDescription>APL</_shortDescription>
+        <_description>APL</_description>
+        <languageList><iso639Id>eng</iso639Id></languageList>
+      </configItem>
+      <variantList/>
+    </layout>
+    <layout>
+      <configItem>
+        <name>us</name>
+        <_shortDescription>USA</_shortDescription>
+        <_description>USA</_description>
+        <languageList><iso639Id>eng</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>intl-unicode</name>
+            <_description>International (AltGr Unicode combining)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>alt-intl-unicode</name>
+            <_description>International (AltGr Unicode combining, alternative)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>ats</name>
+            <_description>Atsina</_description>
+            <!-- No ISO code in ISO639-2, only draft ISO693-3 -->
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>crd</name>
+            <_description>Couer D'alene Salish</_description>
+            <languageList><iso639Id>crd</iso639Id></languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
+        <name>rs</name>
+        <_shortDescription>SRB</_shortDescription>
+        <_description>Serbia</_description>
+        <languageList><iso639Id>srp</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>combiningkeys</name>
+            <_description>Combining accents instead of dead keys</_description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+  </layoutList>
+  <optionList/>
+</xkbConfigRegistry>

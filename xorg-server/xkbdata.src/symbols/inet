@@ -122,7 +122,7 @@ xkb_symbols "evdev" {
 
 //  key <I120>   {      [ ]       }; // KEY_MACRO 
     key <I126>   {      [ plusminus             ]       };
-    key <I129>   {      [ KP_Separator          ]       };
+    key <I129>   {      [ KP_Decimal            ]       };
     key <I147>   {      [ XF86MenuKB            ]       };
     key <I148>   {      [ XF86Calculator        ]       };
 //  key <I149>   {      [ ]       }; // KEY_SETUP
@@ -174,7 +174,7 @@ xkb_symbols "evdev" {
     key <I213>   {      [ XF86Suspend           ]       };
     key <I214>   {      [ XF86Close             ]       };
     key <I215>   {      [ XF86AudioPlay         ]       };
-    key <I216>   {      [ XF86Forward           ]       };
+    key <I216>   {      [ XF86AudioForward      ]       };
 //  key <I217>   {      [ ]       }; // KEY_BASSBOOST
     key <I218>   {      [ Print                 ]       };
 //  key <I219>   {      [ ]       }; // KEY_HP
@@ -1795,6 +1795,15 @@ xkb_symbols "unitekkb1925" {
     key <I16> { [ XF86WakeUp ] };
     key <I18> { [ XF86Search ] };
     key <I1A> { [ XF86Reload ] };
+};
+
+// Creative
+
+// Creative Desktop Wireless 7000
+partial alphanumeric_keys
+xkb_symbols "creativedw7000" {
+    include "inet(media_nav_acpi_common)"
+    key <I66>   {       [ XF86Pictures ]       };
 };
 
 // Compal
