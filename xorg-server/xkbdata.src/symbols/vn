@@ -6,6 +6,8 @@
 // August 1999
 // Further modified by Ashley Clark <aclark@debian.org>
 // July 2000 for X 4.0
+// Fix accents into combining marks by Samuel Thibault <samuel.thibault@ens-lyon.org>
+// July 2009
 
 
 partial default alphanumeric_keys  
@@ -21,11 +23,11 @@ xkb_symbols "basic" {
     key <AE02> { [	   acircumflex,  Acircumflex	] };
     key <AE03> { [	   ecircumflex,	Ecircumflex	] };
     key <AE04> { [	   ocircumflex,	Ocircumflex	] };
-    key <AE05> { [	   dead_grave,	percent		] };
-    key <AE06> { [	   dead_hook,	asciicircum	] };
-    key <AE07> { [	   dead_tilde,	ampersand	] };
-    key <AE08> { [	   dead_acute,	asterisk	] };
-    key <AE09> { [	   dead_belowdot,parenleft	] };
+    key <AE05> { [	   0x1000300,	percent,	dead_grave,	percent		] };
+    key <AE06> { [	   0x1000309,	asciicircum,	dead_hook,	asciicircum	] };
+    key <AE07> { [	   0x1000303,	ampersand,	dead_tilde,	ampersand	] };
+    key <AE08> { [	   0x1000301,	asterisk,	dead_acute,	asterisk	] };
+    key <AE09> { [	   0x1000323,	parenleft,	dead_belowdot,	parenleft	] };
     key <AE10> { [	   dstroke,	Dstroke		] };
     key <AE11> { [     minus, underscore  ]	};
     key <AE12> { [     DongSign, plus ]	};

@@ -189,7 +189,7 @@ dell everex fujitsu \
 hhk hp keytronic kinesis \
 macintosh microsoft nec \
 northgate pc sony thinkpad \
-sun winbook README
+sun typematrix winbook README
 
 dir_data = $(dist_geom_DATA)
 dist_dir_DATA = $(subdir).dir
@@ -542,7 +542,7 @@ uninstall-am: uninstall-dist_dirDATA uninstall-dist_geomDATA
 
 $(subdir).dir: $(dir_data)
 	-rm -f $@
-	here=$$(pwd); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
+	here=$(abs_builddir); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

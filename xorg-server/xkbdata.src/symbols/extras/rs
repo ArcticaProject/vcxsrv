@@ -1,0 +1,15 @@
+xkb_symbols "combiningkeys" {
+  // Raw combining characters instead of dead keys,
+  // especially good for post-accenting texts.
+
+  name[Group1]= "Serbia - Combining accents instead of dead keys";
+
+  include "rs(basic)"
+
+  key <AE03> {   [ any,any,     U0302, dead_circumflex    ]   }; // 3, U0302 = COMBINING CIRCUMFLEX ACCENT
+  key <AE07> {   [ any,any,     U0300, NoSymbol           ]   }; // 7, U0300 = COMBINING GRAVE ACCENT
+  key <AE08> {   [ any,any,     U030F, NoSymbol           ]   }; // 8, U030F = COMBINING DOUBLE GRAVE ACCENT
+  key <AE09> {   [ any,any,     U0301, NoSymbol           ]   }; // 9, U0301 = COMBINING ACUTE ACCENT
+  key <AE10> {   [ any,any,     U0311, NoSymbol           ]   }; // 0, U0311 = COMBINING INVERTED BREVE
+  key <AE11> {   [ any,any,     U0304, NoSymbol           ]   }; // -, U0304 = COMBINING MACRON
+};

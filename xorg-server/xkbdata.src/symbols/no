@@ -15,6 +15,12 @@ xkb_symbols "basic" {
 
     name[Group1]="Norway";
 
+    key <AB09>	{ [    period,      colon, ellipsis,   periodcentered ]	};
+    key <AB10>	{ [     minus, underscore,       endash,       emdash ]	};
+    key <AD04>	{ [         r,          R,   registered,    trademark ]	};
+    key <AD10>	{ [         p,          P,        Greek_pi,        Greek_PI ]	};
+    key <AE05>	{ [         5,    percent,      onehalf,         0x1002030 ]	};
+
     key <AE11>	{ [      plus,   question,    plusminus, questiondown ]	};
     key <AE12>	{ [ backslash, dead_grave,   dead_acute,      notsign ]	};
 
@@ -26,6 +32,8 @@ xkb_symbols "basic" {
     key <BKSL>	{ [apostrophe,   asterisk, dead_doubleacute, multiply ]	};
     key <LSGT>	{ [      less,    greater,      onehalf, threequarters]	};
 
+    include "nbsp(level3n)"
+    include "keypad(ossmath)"
     include "kpdl(comma)"
 
     include "level3(ralt_switch)"

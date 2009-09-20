@@ -5,7 +5,8 @@
 partial modifier_keys 
 xkb_symbols "meta_alt" {
     key <LALT> {	[ 	Alt_L,	Meta_L		]	};
-    key <RALT> {	[ 	Alt_R,	Meta_R		]	};
+    key <RALT> { type[Group1] = "TWO_LEVEL",
+                 symbols[Group1] = [ Alt_R, Meta_R ] };
     modifier_map Mod1	{ Alt_L, Alt_R, Meta_L, Meta_R };
 //  modifier_map Mod4	{};
 };
@@ -22,7 +23,8 @@ xkb_symbols "ctrl_win" {
 partial modifier_keys 
 xkb_symbols "ctrl_alt_win" {
     key <LALT> {	[ 	Control_L, Control_L		]	};
-    key <RALT> {	[ 	Control_R, Control_R		]	};
+    key <RALT> { type[Group1] = "TWO_LEVEL",
+                 symbols[Group1] = [ Control_R, Control_R ] };
     key <LWIN> {	[	Alt_L, Meta_L    	]	};
     key <RWIN> {	[	Alt_R, Meta_R		]	};
     modifier_map Control { <RALT>, <LALT> };
@@ -33,7 +35,8 @@ xkb_symbols "ctrl_alt_win" {
 partial modifier_keys 
 xkb_symbols "meta_win" {
     key <LALT> {	[ 	Alt_L,	Alt_L		]	};
-    key <RALT> {	[ 	Alt_R,	Alt_R		]	};
+    key <RALT> { type[Group1] = "TWO_LEVEL",
+                 symbols[Group1] = [ Alt_R, Alt_R ] };
     key <LWIN> {	[ 	Meta_L			]	};
     key <RWIN> {	[ 	Meta_R			]	};
     modifier_map Mod1	{ Alt_L, Alt_R };

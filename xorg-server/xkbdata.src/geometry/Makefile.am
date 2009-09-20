@@ -8,7 +8,7 @@ dell everex fujitsu \
 hhk hp keytronic kinesis \
 macintosh microsoft nec \
 northgate pc sony thinkpad \
-sun winbook README
+sun typematrix winbook README
 
 dir_data = $(dist_geom_DATA)
 

@@ -590,7 +590,7 @@ xkb_keycodes "type6_usb" {
 
 xkb_keycodes "type6tuv_usb" {
     include "sun(type6_usb)"
-//    <LSGT> = 94;
+    <LSGT> = 94;
 //    <BKSL> = 51;
 };
 

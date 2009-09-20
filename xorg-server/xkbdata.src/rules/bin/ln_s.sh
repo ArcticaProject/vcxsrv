@@ -2,7 +2,7 @@
 
 variant=$1
 
-INDIR=`dirname $0`
+INDIR=$2
 OUTFILE=base.l${variant}_s.part
 
 > $OUTFILE
@@ -13,8 +13,8 @@ awk '{
   } else {
     printf "  %s		=	+%s:'${variant}'\n", $1, $2; 
   }
-}' < $INDIR/layoutRename.lst >> $OUTFILE
+}' < $INDIR/layoutsMapping.lst >> $OUTFILE
 
 awk '{ 
   printf "  %s(%s)	=	+%s(%s):'${variant}'\n", $1, $2, $3, $4; 
-}' < $INDIR/variantRename.lst >> $OUTFILE
+}' < $INDIR/variantsMapping.lst >> $OUTFILE

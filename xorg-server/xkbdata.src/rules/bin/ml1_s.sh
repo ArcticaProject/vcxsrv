@@ -1,6 +1,6 @@
 #!/bin/sh
 
-INDIR=`dirname $0`
+INDIR=$1
 OUTFILE=base.ml1_s.part
 
 > $OUTFILE
@@ -11,8 +11,8 @@ awk '{
   } else {
     printf "  *		%s			=	pc+%s\n", $1, $2; 
   }
-}' < $INDIR/layoutRename.lst >> $OUTFILE
+}' < $INDIR/layoutsMapping.lst >> $OUTFILE
 
 awk '{ 
   printf "  *		%s(%s)			=	pc+%s(%s)\n", $1, $2, $3, $4; 
-}' < $INDIR/variantRename.lst >> $OUTFILE
+}' < $INDIR/variantsMapping.lst >> $OUTFILE

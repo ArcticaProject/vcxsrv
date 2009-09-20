@@ -38,7 +38,7 @@ xkb_symbols "basic" {
     key <AC11>	{ [adiaeresis, Adiaeresis, dead_circumflex, dead_caron ] };
     key <TLDE>	{ [dead_circumflex, degree,	U2032,    U2033	] };
 
-    key <BKSL>	{ [numbersign, apostrophe,   dead_grave,   dead_breve ]	};
+    key <BKSL>	{ [numbersign, apostrophe, rightsinglequotemark,   dead_breve ]	};
     key <AB01>	{ [         y,          Y,       guillemotright,    U203A 	] };
     key <AB02>	{ [         x,          X,        guillemotleft,    U2039 	] };
     key <AB04>	{ [         v,          V,   doublelowquotemark, singlelowquotemark ]	};

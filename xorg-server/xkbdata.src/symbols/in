@@ -739,53 +739,129 @@ xkb_symbols "tam_unicode" {
 // Description: A keymap based on the TamilNet'99 typewriter keyboard 
 // Encoding: Unicode (http://www.unicode.org)
 // Author: Thuraiappah Vaseeharan <vasee@ieee.org>
-// Date  : Sat Feb  9 21:10:48 CST 2002
+// Modifed by: Malathi S <malathiramya@gmail.com>
+// Secondary contact: Sri Ramadoss M <amachu@au-kbc.org>
+// Date  : Fri Sep 4 11:32:00 CST 2009
 // Mapping:
   
     name[Group1]= "India - Tamil Unicode";
 
     // granthas
-    key <AE01> {  [ U0b83 ] } ;
-    key <AE03> {  [ U0b9c ] } ;
-    key <AE04> {  [ U0bb7 ] } ;
-    key <AE05> {  [ U0bb8 ] } ;
-    key <AE06> {  [ U0bb9 ] } ;
-	
+    key <TLDE> {  [ apostrophe, asciitilde ] };
+    key <AE01> {  [ U0031, exclam ] } ;
+    key <AE02> {  [ U0032, at ] } ;
+    key <AE03> {  [ U0033, numbersign ] } ;
+    key <AE04> {  [ U0034, U0BF9 ] } ;
+    key <AE05> {  [ U0035, percent ] } ;
+    key <AE06> {  [ U0036, asciicircum ] } ;
+    key <AE07> {  [ U0037, ampersand ] } ;
+    key <AE08> {  [ U0038, asterisk ] } ;
+    key <AE09> {  [ U0039, parenleft ] } ;
+    key <AE10> {  [ U0030, parenright ] } ;
+    key <AE11> {  [ minus, underscore ] };
+    key <AE12> {  [ equal, plus	] };
+
+
     // Qrow
-    key <AD01> {  [ U0b9e ] };
-    key <AD02> {  [ U0bb1 ] };
-    key <AD03> {  [ U0ba8 ] };
-    key <AD04> {  [ U0b9a ] };
-    key <AD05> {  [ U0bb5 ] };
-    key <AD06> {  [ U0bb2 ] };
-    key <AD07> {  [ U0bb0 ] };
-    key <AD08> {  [ U0bc8, U0b90 ] };
-    key <AD09> {  [ U0bca, U0bcb ] };
-    key <AD10> {  [ U0bbf, U0bc0 ] };
-    key <AD11> {  [ U0bc1, U0bc2 ] };
+    key <AD01> {  [ U0B9E, U0BB6 ] };
+    key <AD02> {  [ U0BB1, U0BB7 ] };
+    key <AD03> {  [ U0BA8, U0BB8 ] };
+    key <AD04> {  [ U0B9A, U0BB9 ] };
+    key <AD05> {  [ U0BB5, U0B9C ] };
+    key <AD06> {  [ U0BB2 ] };
+    key <AD07> {  [ U0BB0 ] };
+    key <AD08> {  [ U0BC8, U0B90 ] };
+    key <AD09> {  [ U0BCA, U0BCB ] };
+    key <AD10> {  [ U0BBF, U0BC0 ] };
+    key <AD11> {  [ U0BC1, U0BC2 ] };
 
     // Arow
-    key <AC01> { [ U0baf ] };
-    key <AC02> { [ U0bb3 ] };
-    key <AC03> { [ U0ba9 ] };
-    key <AC04> { [ U0b95 ] };
-    key <AC05> { [ U0baa ] };
-    key <AC06> { [ U0bbe, U0bb4 ] };
-    key <AC07> { [ U0ba4 ] };
-    key <AC08> { [ U0bae ] };
-    key <AC09> { [ U0b9f ] };
-    key <AC10> { [ U0bcd ] };
-    key <AC11> { [ U0b99 ] };
+    key <AC01> { [ U0BAF ] };
+    key <AC02> { [ U0BB3 ] };
+    key <AC03> { [ U0BA9 ] };
+    key <AC04> { [ U0B95 ] };
+    key <AC05> { [ U0BAA ] };
+    key <AC06> { [ U0BBE, U0BB4 ] };
+    key <AC07> { [ U0BA4 ] };
+    key <AC08> { [ U0BAE ] };
+    key <AC09> { [ U0B9F ] };
+    key <AC10> { [ U0BCD, U0B83 ] };
+    key <AC11> { [ U0B99 ] };
     
     // Zrow
-    key <AB01> { [ U0ba3 ]  };
-    key <AB02> { [ U0b92, U0b93 ]  };
-    key <AB03> { [ U0b89, U0b8a ]  };
-    key <AB04> { [ U0b8e, U0b8f ]  };
-    key <AB05> { [ U0bc6, U0bc7 ]  };
-    key <AB06> { [ U0b94, U0bcc ]  };
-    key <AB07> { [ U0b85, U0b86 ]  };
-    key <AB08> { [ U0b87, U0b88 ]  };
+    key <AB01> { [ U0BA3 ]  };
+    key <AB02> { [ U0B92, U0B93 ]  };
+    key <AB03> { [ U0B89, U0B8A ]  };
+    key <AB04> { [ U0B8E, U0B8F ]  };
+    key <AB05> { [ U0BC6, U0BC7 ]  };
+    key <AB06> { [ U0B94, U0BCC ]  };
+    key <AB07> { [ U0B85, U0B86 ]  };
+    key <AB08> { [ U0B87, U0B88 ]  };
+};
+
+partial alphanumeric_keys
+xkb_symbols "tam_keyboard_with_numerals" {
+
+// Description: A keymap based on the TamilNet'99 typewriter keyboard 
+// Encoding: Unicode (http://www.unicode.org)
+// Author: Malathi S <malathiramya@gmail.com>
+// Secondary contact: Sri Ramadoss M <amachu@au-kbc.org>
+// Date  : Fri Sep 4 11:33:00 CST 2009
+// Mapping:
+
+      name[Group1]= "India - Tamil Keyboard with Numerals";
+
+      // Mainly numbers.
+      key <TLDE> { [ apostrophe, asciitilde ] };
+      key <AE01> { [ U0BE7, exclam ] };
+      key <AE02> { [ U0BE8, at ] };
+      key <AE03> { [ U0BE9, numbersign ] };
+      key <AE04> { [ U0BEA, U0BF9 ] };
+      key <AE05> { [ U0BEB, percent ] };
+      key <AE06> { [ U0BEC, asciicircum ] };
+      key <AE07> { [ U0BED, ampersand ] };
+      key <AE08> { [ U0BEE, asterisk ] };
+      key <AE09> { [ U0BEF, parenleft ] };
+      key <AE10> { [ U0BE6, parenright ] };
+      key <AE11> { [ minus, underscore ] };
+      key <AE12> { [ equal, plus ] };
+
+
+    // Qrow
+    key <AD01> {  [ U0B9E, U0BB6 ] };
+    key <AD02> {  [ U0BB1, U0BB7 ] };
+    key <AD03> {  [ U0BA8, U0BB8 ] };
+    key <AD04> {  [ U0B9a, U0BB9 ] };
+    key <AD05> {  [ U0BB5, U0B9c ] };
+    key <AD06> {  [ U0BB2 ] };
+    key <AD07> {  [ U0BB0 ] };
+    key <AD08> {  [ U0BC8, U0B90 ] };
+    key <AD09> {  [ U0BCA, U0BCB ] };
+    key <AD10> {  [ U0BBF, U0BC0 ] };
+    key <AD11> {  [ U0BC1, U0BC2 ] };
+
+    // Arow
+    key <AC01> { [ U0BAF ] };
+    key <AC02> { [ U0BB3 ] };
+    key <AC03> { [ U0BA9 ] };
+    key <AC04> { [ U0B95 ] };
+    key <AC05> { [ U0BAA ] };
+    key <AC06> { [ U0BBE, U0BB4 ] };
+    key <AC07> { [ U0BA4 ] };
+    key <AC08> { [ U0BAE ] };
+    key <AC09> { [ U0B9F ] };
+    key <AC10> { [ U0BCD, U0B83 ] };
+    key <AC11> { [ U0B99 ] };
+
+    // Zrow
+    key <AB01> { [ U0BA3 ]  };
+    key <AB02> { [ U0B92, U0B93 ]  };
+    key <AB03> { [ U0B89, U0B8A ]  };
+    key <AB04> { [ U0B8E, U0B8F ]  };
+    key <AB05> { [ U0BC6, U0BC7 ]  };
+    key <AB06> { [ U0B94, U0BCC ]  };
+    key <AB07> { [ U0B85, U0B86 ]  };
+    key <AB08> { [ U0B87, U0B88 ]  };
 };
 
 partial alphanumeric_keys 

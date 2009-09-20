@@ -1,17 +1,38 @@
 // $XKeyboardConfig$
-// Iranian keyboard layout,
-// based on National Iranian Keyboard Standard (ISIRI 2901:1994),
-// with additions.
+
+// Iranian keyboard layout
+
+////////////////////////////////////////
+// Persian layout,
+// based on
+// Information Technology – Layout of Persian Letters and Symbols on Computer Keyboards
+// ISIRI 9147 – 1st Edition
+// Institute of Standards and Industrial Research of Iran
+// http://www.isiri.org/UserStd/DownloadStd.aspx?id=9147
+// http://behnam.esfahbod.info/standards/isiri-keyboard-9147.pdf
 //
 // Author: Behnam Esfahbod <behnam@esfahbod.info>
 //
 
-
-// 3-Level layout
-
 partial default alphanumeric_keys
-xkb_symbols "basic" {
+xkb_symbols "pes" {
+    include "ir(pes_part_basic)"
+    include "ir(pes_part_ext)"
+
     name[Group1]= "Iran";
+};
+
+
+partial alphanumeric_keys
+xkb_symbols "pes_keypad" {
+    include "ir(pes_part_basic)"
+    include "ir(pes_part_keypad)"
+
+    name[Group1]= "Iran - Persian, with Persian Keypad";
+};
+
+partial hidden alphanumeric_keys
+xkb_symbols "pes_part_basic" {
 
     // Persian digits
     key <AE01> { [ 0x10006f1,	exclam,		quoteleft		] };
@@ -25,13 +46,7 @@ xkb_symbols "basic" {
     key <AE09> { [ 0x10006f9,	parenright,	0x100200e		] };
     key <AE10> { [ 0x10006f0,	parenleft,	0x100200f		] };
 
-    // Other 3-Level symbols
-    key <TLDE> { [ 0x100200d,		division,		asciitilde	] };
-    key <AE11> { [ minus,		Arabic_tatweel,		underscore	] };
-    key <AE12> { [ equal,		plus,			0x1002212	] };
-    key <BKSL> { [ backslash,		bar,			0x1002010	] };
-    key <SPCE> { [ space,		0x100200c,		nobreakspace	] };
-
+    // Persian letters and symbols
     key <AD01> { [ Arabic_dad,		Arabic_sukun,		degree		] };
     key <AD02> { [ Arabic_sad,		Arabic_dammatan,	VoidSymbol	] };
     key <AD03> { [ Arabic_theh,		Arabic_kasratan,	0x13a4		] };
@@ -68,14 +83,20 @@ xkb_symbols "basic" {
     key <AB09> { [ period,		less,			apostrophe	] };
     key <AB10> { [ slash,		Arabic_question_mark,	question	] };
 
+    key <TLDE> { [ 0x100200d,		division,		asciitilde	] };
+    key <AE11> { [ minus,		Arabic_tatweel,		underscore	] };
+    key <AE12> { [ equal,		plus,			0x1002212	] };
+    key <BKSL> { [ backslash,		bar,			0x1002010	] };
+
+    key <SPCE> { [ space,		0x100200c,		nobreakspace	] };
+
     include "level3(ralt_switch)"
 };
 
-
 partial hidden alphanumeric_keys
-xkb_symbols "part_pro" {
+xkb_symbols "pes_part_ext" {
 
-    // Persian and English (ASCII) digits
+    // Persian and ASCII digits
     key <AE01> { [ 0x10006f1,	exclam,		quoteleft,		1	] };
     key <AE02> { [ 0x10006f2,	0x100066c,	at,			2	] };
     key <AE03> { [ 0x10006f3,	0x100066b,	numbersign,		3	] };
@@ -86,10 +107,12 @@ xkb_symbols "part_pro" {
     key <AE08> { [ 0x10006f8,	asterisk,	enfilledcircbullet,	8	] };
     key <AE09> { [ 0x10006f9,	parenright,	0x100200e,		9	] };
     key <AE10> { [ 0x10006f0,	parenleft,	0x100200f,		0	] };
+
+    key <SPCE> { [ space,	0x100200c,	nobreakspace,	0x100202F	] };
 };
 
 partial hidden alphanumeric_keys
-xkb_symbols "part_keypad" {
+xkb_symbols "pes_part_keypad" {
 
     // Persian digits and Mathematical operators
     key <KPDV> { [ division,	XF86_Ungrab	] };
@@ -116,39 +139,9 @@ xkb_symbols "part_keypad" {
     key <KPDL> { [ KP_Delete,	0x100066b	] };
 };
 
-// 4-Level leyout
 
-partial alphanumeric_keys
-xkb_symbols "pro" {
-    include "ir(basic)"
-    include "ir(part_pro)"
-
-    name[Group1]= "Iran - Pro";
-};
-
-
-// Persian Keypad leyout
-
-partial alphanumeric_keys
-xkb_symbols "keypad" {
-    include "ir(basic)"
-    include "ir(part_keypad)"
-
-    name[Group1]= "Iran - Keypad";
-};
-
-
-// 4-Level leyout with Persian Keypad leyout
-
-partial alphanumeric_keys
-xkb_symbols "pro_keypad" {
-    include "ir(basic)"
-    include "ir(part_keypad)"
-    include "ir(part_pro)"
-
-    name[Group1]= "Iran - Pro Keypad";
-
-};
+////////////////////////////////////////
+// Kurdish Layout
 
 partial alphanumeric_keys
 xkb_symbols "ku" {
@@ -168,6 +161,7 @@ xkb_symbols "ku_alt" {
     name[Group1]= "Iran - Kurdish, Latin Alt-Q";
 };
 
+////////////////////////////////////////
 // Kurdish Soranî Bahdînî (Arabic) keyboard layout,
 // based on the Kurdî Soranî Bahdînî keyboard from KurdITGroup
 // which is based on National Iranian Keyboard Standard (ISIRI 2901:1994),
@@ -182,6 +176,7 @@ xkb_symbols "ku_alt" {
 // Author: Erdal Ronahî  <erdal.ronahi@gmail.com>
 //
 // Kurdish Arabic-Latin Layout for Soranî
+
 partial alphanumeric_keys
 xkb_symbols "ku_ara" {
     name[Group1]= "Iran - Kurdish, Arabic-Latin";
@@ -242,5 +237,5 @@ xkb_symbols "ku_ara" {
     key <AB10> { [ slash,		Arabic_question_mark, 	question	] };
 
     include "level3(ralt_switch)"
-
 };
+

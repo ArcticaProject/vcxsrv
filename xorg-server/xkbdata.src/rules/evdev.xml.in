@@ -981,6 +981,41 @@
     </model>
     <model>
       <configItem>
+        <name>tm2020</name>
+        <description>TypeMatrix EZ-Reach 2020</description>
+        <vendor>TypeMatrix</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>tm2030PS2</name>
+        <description>TypeMatrix EZ-Reach 2030 PS2</description>
+        <vendor>TypeMatrix</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>tm2030USB</name>
+        <description>TypeMatrix EZ-Reach 2030 USB</description>
+        <vendor>TypeMatrix</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>tm2030USB-102</name>
+        <description>TypeMatrix EZ-Reach 2030 USB (102/105:EU mode)</description>
+        <vendor>TypeMatrix</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>tm2030USB-106</name>
+        <description>TypeMatrix EZ-Reach 2030 USB (106:JP mode)</description>
+        <vendor>TypeMatrix</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
         <name>yahoo</name>
         <_description>Yahoo! Internet Keyboard</_description>
 	<vendor>Yahoo!</vendor>
@@ -1152,6 +1187,13 @@
         <name>compalfl90</name>
         <_description>FL90</_description>
         <vendor>Compal Electronics Inc.</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>creativedw7000</name>
+        <_description>Creative Desktop Wireless 7000</_description>
+        <vendor>Creative</vendor>
       </configItem>
     </model>
   </modelList>
@@ -1455,8 +1497,8 @@
       <variantList>
         <variant>
           <configItem>
-            <name>winkeys</name>
-            <_description>Winkeys</_description>
+            <name>legacy</name>
+            <_description>Legacy</_description>
           </configItem>
         </variant>
         <variant>
@@ -1615,6 +1657,13 @@
         </variant>
         <variant>
           <configItem>
+            <name>tam_keyboard_with_numerals</name>
+            <description>Tamil Keyboard with Numerals</description>
+            <languageList><iso639Id>tam</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
             <name>tam_TAB</name>
             <_description>Tamil TAB Typewriter</_description>
             <languageList><iso639Id>tam</iso639Id></languageList>
@@ -1764,7 +1813,7 @@
         <variant>
           <configItem>
             <name>phonetic</name>
-            <_description>Traditional Phonetic</_description>
+            <_description>Traditional phonetic</_description>
           </configItem>
         </variant>
       </variantList>
@@ -1772,7 +1821,7 @@
         <variant>
           <configItem>
             <name>bas_phonetic</name>
-            <_description>Standard Phonetic</_description>
+            <_description>New phonetic</_description>
           </configItem>
         </variant>
       </variantList>
@@ -2119,20 +2168,8 @@
       <variantList>
         <variant>
           <configItem>
-            <name>pro</name>
-            <_description>Pro</_description>
-          </configItem>
-        </variant>
-        <variant>
-          <configItem>
-            <name>keypad</name>
-            <_description>Keypad</_description>
-          </configItem>
-        </variant>
-        <variant>
-          <configItem>
-            <name>pro_keypad</name>
-            <_description>Pro Keypad</_description>
+            <name>pes_keypad</name>
+            <_description>Persian, with Persian Keypad</_description>
           </configItem>
         </variant>
         <variant>
@@ -2797,6 +2834,12 @@
         </variant>
         <variant>
           <configItem>
+            <name>us</name>
+            <_description>US keyboard with Italian letters</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
             <name>geo</name>
             <_description>Georgian</_description>
             <languageList><iso639Id>geo</iso639Id></languageList>
@@ -3429,6 +3472,13 @@
           <configItem>
             <name>dos</name>
             <_description>DOS</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>bak</name>
+            <_description>Bashkirian</_description>
+            <languageList><iso639Id>bak</iso639Id></languageList>
           </configItem>
         </variant>
       </variantList>
@@ -4750,6 +4800,12 @@
       </option>
       <option>
         <configItem>
+          <name>caps:numlock</name>
+          <_description>Make CapsLock an additional NumLock</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
           <name>caps:swapescape</name>
           <_description>Swap ESC and CapsLock</_description>
         </configItem>
@@ -4768,8 +4824,26 @@
       </option>
       <option>
         <configItem>
+          <name>caps:super</name>
+          <_description>Make CapsLock an additional Super</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>caps:hyper</name>
+          <_description>Make CapsLock an additional Hyper</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
           <name>caps:shiftlock</name>
           <_description>CapsLock toggles Shift so all keys are affected</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>caps:none</name>
+          <_description>CapsLock is disabled</_description>
         </configItem>
       </option>
     </group>

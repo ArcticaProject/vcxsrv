@@ -181,7 +181,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 xkb_base = @xkb_base@
 xkb_rules_symlink = @xkb_rules_symlink@
-SUBDIRS = digital_vndr fujitsu_vndr hp_vndr macintosh_vndr nec_vndr sgi_vndr sony_vndr sun_vndr xfree68_vndr
+SUBDIRS = digital_vndr fujitsu_vndr hp_vndr macintosh_vndr nec_vndr sgi_vndr sony_vndr sun_vndr xfree68_vndr extras
 symbolsdir = $(xkb_base)/symbols
 dist_symbols_DATA = \
 ad af al \
@@ -567,7 +567,7 @@ uninstall-am: uninstall-dist_dirDATA uninstall-dist_symbolsDATA
 
 $(subdir).dir: $(dir_data)
 	-rm -f $@
-	here=$$(pwd); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
+	here=$(abs_builddir); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

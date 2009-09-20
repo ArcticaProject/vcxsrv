@@ -14,10 +14,6 @@
 
 @SET_MAKE@
 
-# Common rules for building *.dir files in all xkb subdirectories
-# Replaces Imake's MakeXkbDir() rule
-# svu: taken from xkbdata
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -34,10 +30,9 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-DIST_COMMON = $(dist_dir_DATA) $(dist_semantics_DATA) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(top_srcdir)/xkbrules.am
-subdir = semantics
+subdir = symbols/extras
+DIST_COMMON = $(dist_symbols_DATA) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -52,10 +47,9 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(dirdir)" "$(DESTDIR)$(semanticsdir)"
-dist_dirDATA_INSTALL = $(INSTALL_DATA)
-dist_semanticsDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(dist_dir_DATA) $(dist_semantics_DATA)
+am__installdirs = "$(DESTDIR)$(symbolsdir)"
+dist_symbolsDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(dist_symbols_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -169,19 +163,15 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 xkb_base = @xkb_base@
 xkb_rules_symlink = @xkb_rules_symlink@
-semanticsdir = $(xkb_base)/semantics
-dist_semantics_DATA = \
-basic complete default \
-xtest
+symbolsdir = $(xkb_base)/symbols/extras
+dist_symbols_DATA = apl \
+		    rs \
+		    us
 
-dir_data = $(dist_semantics_DATA)
-dist_dir_DATA = $(subdir).dir
-dirdir = $(xkb_base)
-CLEANFILES = $(subdir).dir
 all: all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/xkbrules.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -190,9 +180,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  semantics/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  symbols/extras/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  semantics/Makefile
+	  $(AUTOMAKE) --gnu  symbols/extras/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -210,39 +200,22 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-install-dist_dirDATA: $(dist_dir_DATA)
+install-dist_symbolsDATA: $(dist_symbols_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(dirdir)" || $(MKDIR_P) "$(DESTDIR)$(dirdir)"
-	@list='$(dist_dir_DATA)'; for p in $$list; do \
+	test -z "$(symbolsdir)" || $(MKDIR_P) "$(DESTDIR)$(symbolsdir)"
+	@list='$(dist_symbols_DATA)'; for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  f=$(am__strip_dir) \
-	  echo " $(dist_dirDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(dirdir)/$$f'"; \
-	  $(dist_dirDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(dirdir)/$$f"; \
+	  echo " $(dist_symbolsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(symbolsdir)/$$f'"; \
+	  $(dist_symbolsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(symbolsdir)/$$f"; \
 	done
 
-uninstall-dist_dirDATA:
+uninstall-dist_symbolsDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_dir_DATA)'; for p in $$list; do \
+	@list='$(dist_symbols_DATA)'; for p in $$list; do \
 	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(dirdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(dirdir)/$$f"; \
-	done
-install-dist_semanticsDATA: $(dist_semantics_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(semanticsdir)" || $(MKDIR_P) "$(DESTDIR)$(semanticsdir)"
-	@list='$(dist_semantics_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(dist_semanticsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(semanticsdir)/$$f'"; \
-	  $(dist_semanticsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(semanticsdir)/$$f"; \
-	done
-
-uninstall-dist_semanticsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_semantics_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(semanticsdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(semanticsdir)/$$f"; \
+	  echo " rm -f '$(DESTDIR)$(symbolsdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(symbolsdir)/$$f"; \
 	done
 tags: TAGS
 TAGS:
@@ -281,7 +254,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(dirdir)" "$(DESTDIR)$(semanticsdir)"; do \
+	for dir in "$(DESTDIR)$(symbolsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -301,7 +274,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -327,7 +299,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_dirDATA install-dist_semanticsDATA
+install-data-am: install-dist_symbolsDATA
 
 install-dvi: install-dvi-am
 
@@ -361,26 +333,22 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_dirDATA uninstall-dist_semanticsDATA
+uninstall-am: uninstall-dist_symbolsDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic distclean \
 	distclean-generic distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
-	install-dist_dirDATA install-dist_semanticsDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am \
-	uninstall-dist_dirDATA uninstall-dist_semanticsDATA
+	install-dist_symbolsDATA install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am uninstall uninstall-am \
+	uninstall-dist_symbolsDATA
 
-
-$(subdir).dir: $(dir_data)
-	-rm -f $@
-	here=$(abs_builddir); cd $(srcdir) && $(XKBCOMP) -lfhlpR -o $${here}/$@ '*'
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

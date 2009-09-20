@@ -12,6 +12,7 @@
   thinkpad	=	thinkpad(intl)
   thinkpad60	=	thinkpad(60)
   thinkpadz60	=	thinkpad(60)
+ $tmgeometries	=	typematrix(%m)
   winbook	=	winbook(XP5)
   pc98		=	nec(pc98)
  $macbooks      =       macintosh(%m)

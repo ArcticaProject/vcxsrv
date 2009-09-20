@@ -467,7 +467,12 @@ xkb_symbols "shs" {
     //q, l, t, s, m, g, k, p, w, y, r
     //XCompose key is used for the other accute and grave.
 
-    key <AB08> {        [ comma, less, U0313    ]	};
+    key <AB08>	{ [ comma, less, U0313    ]	};
+    key <AC01>	{ [ a, A, aacute, Aacute  ]	};
+    key <AD03>	{ [ e, E, eacute, Eacute  ]	};
+    key <AD07>	{ [ u, U, uacute, Uacute  ]	};
+    key <AD08>	{ [ i, I, iacute, Iacute  ]	};
+    key <AD09>	{ [ o, O, oacute, Oacute  ]	};
 
     include "level3(ralt_switch)"
     include "compose(rctrl)"
