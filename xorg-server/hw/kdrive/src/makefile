@@ -3,13 +3,12 @@ LIBRARY = libkdrive
 CSRCS =	\
 	kcmap.c		\
 	kcurscol.c	\
+	kdrive.c	\
 	kinfo.c		\
-	kkeymap.c	\
+	kinput.c	\
 	kmap.c		\
 	kmode.c		\
-	kshadow.c	\
-	kinput.c	\
-	kdrive.c
+	kshadow.c
 
 
 
