@@ -395,6 +395,8 @@ extern void ProcessKeyboardEvent(
     InternalEvent* /*ev*/,
     DeviceIntPtr   /*keybd*/);
 
+extern void InputDevicesClosed(void);
+
 extern Bool LegalModifier(
     unsigned int /*key*/, 
     DeviceIntPtr /*pDev*/);

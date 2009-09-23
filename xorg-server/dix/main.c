@@ -331,6 +331,7 @@ int main(int argc, char *argv[], char *envp[])
 
         memset(WindowTable, 0, sizeof(WindowTable));
 	CloseDownDevices();
+        InputDevicesClosed();
 	CloseDownEvents();
 
 	for (i = screenInfo.numScreens - 1; i >= 0; i--)
