@@ -133,6 +133,12 @@ winClipboardProc (void *pvNotUsed)
       goto thread_errorexit;
     }
 
+  /* Create Windows messaging window */
+  hwnd = winClipboardCreateMessagingWindow ();
+  
+  /* Save copy of HWND in screen privates */
+  g_hwndClipboard = hwnd;
+
   /* Set jump point for Error exits */
   iReturn = setjmp (g_jmpEntry);
   
@@ -265,12 +271,6 @@ winClipboardProc (void *pvNotUsed)
 
   /* Save the window in the screen privates */
   g_iClipboardWindow = iWindow;
-
-  /* Create Windows messaging window */
-  hwnd = winClipboardCreateMessagingWindow ();
-  
-  /* Save copy of HWND in screen privates */
-  g_hwndClipboard = hwnd;
 
   /* Assert ownership of selections if Win32 clipboard is owned */
   if (NULL != GetClipboardOwner ())
