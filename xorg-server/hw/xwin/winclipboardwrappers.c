@@ -424,7 +424,7 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if invalid selection */
   if (!ValidAtom (stuff->selection))
     {
-      ErrorF ("winProcSetSelectionOwner - Found BadAtom, aborting.\n");
+      winDebug ("winProcSetSelectionOwner - Found BadAtom, aborting.\n");
       goto winProcSetSelectionOwner_Done;
     }
 
@@ -434,7 +434,7 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if clipboard manager is owning the selection */
   if (pDrawable->id == g_iClipboardWindow)
     {
-      ErrorF ("winProcSetSelectionOwner - We changed ownership, "
+      winDebug ("winProcSetSelectionOwner - We changed ownership, "
 	      "aborting.\n");
       goto winProcSetSelectionOwner_Done;
     }
@@ -442,7 +442,7 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if root window is taking ownership */
   if (pDrawable->id == 0)
     {
-      ErrorF ("winProcSetSelectionOwner - Root window taking ownership, "
+      winDebug ("winProcSetSelectionOwner - Root window taking ownership, "
 	      "aborting\n");
       goto winProcSetSelectionOwner_Done;
     }
