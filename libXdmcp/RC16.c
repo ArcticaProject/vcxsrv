@@ -36,9 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 int
-XdmcpReadCARD16 (buffer, valuep)
-    XdmcpBufferPtr  buffer;
-    CARD16Ptr	    valuep;
+XdmcpReadCARD16 (XdmcpBufferPtr buffer, CARD16Ptr valuep)
 {
     CARD8   high, low;
 

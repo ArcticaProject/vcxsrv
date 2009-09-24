@@ -71,6 +71,7 @@
 #include "gcstruct.h"
 #include "dixfontstr.h"
 #include "extnsionst.h"
+#include "protocol-versions.h"
 
 #include <X11/extensions/xf86bigfproto.h>
 
@@ -338,8 +339,8 @@ ProcXF86BigfontQueryVersion(
     reply.type = X_Reply;
     reply.length = 0;
     reply.sequenceNumber = client->sequence;
-    reply.majorVersion = XF86BIGFONT_MAJOR_VERSION;
-    reply.minorVersion = XF86BIGFONT_MINOR_VERSION;
+    reply.majorVersion = SERVER_XF86BIGFONT_MAJOR_VERSION;
+    reply.minorVersion = SERVER_XF86BIGFONT_MINOR_VERSION;
     reply.uid = geteuid();
     reply.gid = getegid();
 #ifdef HAS_SHM

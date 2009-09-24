@@ -42,6 +42,8 @@ from The Open Group.
 
 static DISPATCH_PROC(ProcBigReqDispatch);
 
+void BigReqExtensionInit(INITARGS);
+
 void
 BigReqExtensionInit(INITARGS)
 {

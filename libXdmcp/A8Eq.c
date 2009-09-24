@@ -36,8 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 int
-XdmcpARRAY8Equal (array1, array2)
-    ARRAY8Ptr	array1, array2;
+XdmcpARRAY8Equal (ARRAY8Ptr array1, ARRAY8Ptr array2)
 {
     int	i;
 

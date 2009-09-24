@@ -430,6 +430,8 @@ LoaderSortExtensions(void)
     }
     if (sorted)
 	free_nodes(sorted);
+    if (graph)
+	free_nodes(graph);
     newList[i].name = NULL;
     xfree(ExtensionModuleList);
     ExtensionModuleList = newList;

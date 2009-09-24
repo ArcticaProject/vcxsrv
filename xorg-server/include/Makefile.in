@@ -455,7 +455,8 @@ top_srcdir = @top_srcdir@
 AM_CFLAGS = $(DIX_CFLAGS)
 EXTRA_DIST = \
 	dix-config-apple-verbatim.h \
-	eventconvert.h eventstr.h
+	eventconvert.h eventstr.h \
+	protocol-versions.h
 
 all: do-not-use-config.h xorg-server.h dix-config.h xorg-config.h xkb-config.h xwin-config.h kdrive-config.h version-config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am

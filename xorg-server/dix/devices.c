@@ -246,7 +246,7 @@ AddInputDevice(ClientPtr client, DeviceProc deviceProc, Bool autoStart)
     return dev;
 }
 
-static void
+void
 SendDevicePresenceEvent(int deviceid, int type)
 {
     DeviceIntRec dummyDev;
@@ -281,9 +281,6 @@ EnableDevice(DeviceIntPtr dev, BOOL sendevent)
     DeviceIntPtr *prev;
     int ret;
     DeviceIntPtr other;
-    int evsize  = sizeof(xEvent);
-    int listlen;
-    EventListPtr evlist;
     BOOL enabled;
     int flags[MAXDEVICES] = {0};
 
@@ -325,16 +322,6 @@ EnableDevice(DeviceIntPtr dev, BOOL sendevent)
      * list's events have enough memory for a ClassesChangedEvent from the
      * device
      */
-
-    evsize += SizeDeviceClasses(dev);
-
-    listlen = GetEventList(&evlist);
-    OsBlockSignals();
-    SetMinimumEventSize(evlist, listlen, evsize);
-    mieqResizeEvents(evsize);
-    OsReleaseSignals();
-
-
     if ((*prev != dev) || !dev->inited ||
 	((ret = (*dev->deviceProc)(dev, DEVICE_ON)) != Success)) {
         ErrorF("[dix] couldn't enable device %d\n", dev->id);

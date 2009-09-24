@@ -440,10 +440,6 @@ get_property(Window win, Atom property, struct propdata *pdata, Bool delete, Ato
 	    [self x_copy_request_targets];
 	}
     }
-    else
-    {
-	XBell (xpbproxy_dpy, 0);
-    }
 }
 
 /* Set pbproxy as owner of the SELECTION_MANAGER selection.

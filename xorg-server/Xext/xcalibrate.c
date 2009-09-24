@@ -32,6 +32,7 @@
 #include "dixstruct.h"
 #include "extnsionst.h"
 #include "swaprep.h"
+#include "protocol-versions.h"
 
 #include <X11/extensions/xcalibrateproto.h>
 #include <X11/extensions/xcalibratewire.h>
@@ -79,8 +80,8 @@ ProcXCalibrateQueryVersion (ClientPtr client)
   rep.type = X_Reply;
   rep.length = 0;
   rep.sequenceNumber = client->sequence;
-  rep.majorVersion = XCALIBRATE_MAJOR_VERSION;
-  rep.minorVersion = XCALIBRATE_MINOR_VERSION;   
+  rep.majorVersion = SERVER_XCALIBRATE_MAJOR_VERSION;
+  rep.minorVersion = SERVER_XCALIBRATE_MINOR_VERSION;
   if (client->swapped) { 
     int n;
     swaps(&rep.sequenceNumber, n);

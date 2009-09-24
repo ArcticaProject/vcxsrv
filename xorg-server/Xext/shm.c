@@ -54,6 +54,7 @@ in this Software without prior written authorization from The Open Group.
 #include "xace.h"
 #include <X11/extensions/shmproto.h>
 #include <X11/Xfuncproto.h>
+#include "protocol-versions.h"
 
 /* Needed for Solaris cross-zone shared memory extension */
 #ifdef HAVE_SHMCTL64
@@ -313,8 +314,8 @@ ProcShmQueryVersion(ClientPtr client)
     rep.sequenceNumber = client->sequence;
     rep.sharedPixmaps = sharedPixmaps;
     rep.pixmapFormat = sharedPixmaps ? ZPixmap : 0;
-    rep.majorVersion = SHM_MAJOR_VERSION;
-    rep.minorVersion = SHM_MINOR_VERSION;
+    rep.majorVersion = SERVER_SHM_MAJOR_VERSION;
+    rep.minorVersion = SERVER_SHM_MINOR_VERSION;
     rep.uid = geteuid();
     rep.gid = getegid();
     if (client->swapped) {

@@ -36,8 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 void
-XdmcpDisposeARRAY32 (array)
-    ARRAY32Ptr	array;
+XdmcpDisposeARRAY32 (ARRAY32Ptr array)
 {
     if (array->data != NULL) Xfree (array->data);
     array->length = 0;

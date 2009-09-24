@@ -25,6 +25,7 @@
 #endif
 
 #include "damageextint.h"
+#include "protocol-versions.h"
 
 static unsigned char	DamageReqCode;
 static int		DamageEventBase;
@@ -34,13 +35,6 @@ static RESTYPE		DamageExtWinType;
 
 static int DamageClientPrivateKeyIndex;
 static DevPrivateKey DamageClientPrivateKey = &DamageClientPrivateKeyIndex;
-
-/* Version of the damage extension supported by the server, as opposed to the
- * DAMAGE_* defines from damageproto for what version the proto header
- * supports.
- */
-#define SERVER_DAMAGE_MAJOR	1
-#define SERVER_DAMAGE_MINOR	1
 
 #define prScreen	screenInfo.screens[0]
 
@@ -148,16 +142,16 @@ ProcDamageQueryVersion(ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    if (stuff->majorVersion < SERVER_DAMAGE_MAJOR) {
+    if (stuff->majorVersion < SERVER_DAMAGE_MAJOR_VERSION) {
 	rep.majorVersion = stuff->majorVersion;
 	rep.minorVersion = stuff->minorVersion;
     } else {
-	rep.majorVersion = SERVER_DAMAGE_MAJOR;
-	if (stuff->majorVersion == SERVER_DAMAGE_MAJOR && 
-	    stuff->minorVersion < SERVER_DAMAGE_MINOR)
+	rep.majorVersion = SERVER_DAMAGE_MAJOR_VERSION;
+	if (stuff->majorVersion == SERVER_DAMAGE_MAJOR_VERSION &&
+	    stuff->minorVersion < SERVER_DAMAGE_MINOR_VERSION)
 	    rep.minorVersion = stuff->minorVersion;
 	else
-	    rep.minorVersion = SERVER_DAMAGE_MINOR;
+	    rep.minorVersion = SERVER_DAMAGE_MINOR_VERSION;
     }
     pDamageClient->major_version = rep.majorVersion;
     pDamageClient->minor_version = rep.minorVersion;

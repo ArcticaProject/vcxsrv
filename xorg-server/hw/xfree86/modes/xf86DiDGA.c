@@ -72,8 +72,7 @@ xf86_dga_get_modes (ScreenPtr pScreen)
 	mode = modes + num++;
 
 	mode->mode = display_mode;
-	mode->flags = DGA_CONCURRENT_ACCESS | DGA_PIXMAP_AVAILABLE;
-        mode->flags |= DGA_FILL_RECT | DGA_BLIT_RECT;
+	mode->flags = DGA_CONCURRENT_ACCESS;
 	if (display_mode->Flags & V_DBLSCAN)
 	    mode->flags |= DGA_DOUBLESCAN;
 	if (display_mode->Flags & V_INTERLACE)
@@ -91,14 +90,14 @@ xf86_dga_get_modes (ScreenPtr pScreen)
 	mode->yViewportStep = 1;
 	mode->viewportFlags = DGA_FLIP_RETRACE;
 	mode->offset = 0;
-	mode->address = (unsigned char *) xf86_config->dga_address;
-	mode->bytesPerScanline = xf86_config->dga_stride;
-	mode->imageWidth = xf86_config->dga_width;
-	mode->imageHeight = xf86_config->dga_height;
+	mode->address = 0;
+	mode->imageWidth = mode->viewportWidth;
+	mode->imageHeight = mode->viewportHeight;
+	mode->bytesPerScanline = (mode->imageWidth * scrn->bitsPerPixel) >> 3;
 	mode->pixmapWidth = mode->imageWidth;
 	mode->pixmapHeight = mode->imageHeight;
-	mode->maxViewportX = mode->imageWidth -	mode->viewportWidth;
-	mode->maxViewportY = mode->imageHeight - mode->viewportHeight;
+	mode->maxViewportX = 0;
+	mode->maxViewportY = 0;
 
 	display_mode = display_mode->next;
 	if (display_mode == scrn->modes)
@@ -149,93 +148,11 @@ xf86_dga_set_viewport(ScrnInfoPtr scrn, int x, int y, int flags)
 }
 
 static Bool
-xf86_dga_get_drawable_and_gc (ScrnInfoPtr scrn, DrawablePtr *ppDrawable, GCPtr *ppGC)
-{
-    ScreenPtr		pScreen = scrn->pScreen;
-    xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
-    PixmapPtr		pPixmap;
-    GCPtr		pGC;
-    
-    pPixmap = GetScratchPixmapHeader (pScreen, xf86_config->dga_width, xf86_config->dga_height,
-				      scrn->depth, scrn->bitsPerPixel, xf86_config->dga_stride, 
-				      (char *) scrn->memPhysBase + scrn->fbOffset);
-    if (!pPixmap)
-	return FALSE;
-    pGC  = GetScratchGC (scrn->depth, pScreen);
-    if (!pGC)
-    {
-	FreeScratchPixmapHeader (pPixmap);
-	return FALSE;
-    }
-    *ppDrawable = &pPixmap->drawable;
-    *ppGC = pGC;
-    return TRUE;
-}
-
-static void
-xf86_dga_release_drawable_and_gc (ScrnInfoPtr scrn, DrawablePtr pDrawable, GCPtr pGC)
-{
-    FreeScratchGC (pGC);
-    FreeScratchPixmapHeader ((PixmapPtr) pDrawable);
-}
-
-static void
-xf86_dga_fill_rect(ScrnInfoPtr scrn, int x, int y, int w, int h, unsigned long color)
-{
-    GCPtr		pGC;
-    DrawablePtr		pDrawable;
-    XID			vals[1];
-    xRectangle		r;
-
-    if (!xf86_dga_get_drawable_and_gc (scrn, &pDrawable, &pGC))
-	return;
-    vals[0] = color;
-    ChangeGC (pGC, GCForeground, vals);
-    ValidateGC (pDrawable, pGC);
-    r.x = x;
-    r.y = y;
-    r.width = w;
-    r.height = h;
-    pGC->ops->PolyFillRect (pDrawable, pGC, 1, &r);
-    xf86_dga_release_drawable_and_gc (scrn, pDrawable, pGC);
-}
-
-static void
-xf86_dga_sync(ScrnInfoPtr scrn)
-{
-    ScreenPtr	pScreen = scrn->pScreen;
-    WindowPtr	pRoot = WindowTable [pScreen->myNum];
-    char	buffer[4];
-
-    pScreen->GetImage (&pRoot->drawable, 0, 0, 1, 1, ZPixmap, ~0L, buffer);
-}
-
-static void
-xf86_dga_blit_rect(ScrnInfoPtr scrn, int srcx, int srcy, int w, int h, int dstx, int dsty)
-{
-    DrawablePtr	pDrawable;
-    GCPtr	pGC;
-
-    if (!xf86_dga_get_drawable_and_gc (scrn, &pDrawable, &pGC))
-	return;
-    ValidateGC (pDrawable, pGC);
-    pGC->ops->CopyArea (pDrawable, pDrawable, pGC, srcx, srcy, w, h, dstx, dsty);
-    xf86_dga_release_drawable_and_gc (scrn, pDrawable, pGC);
-}
-
-static Bool
 xf86_dga_open_framebuffer(ScrnInfoPtr scrn,
 			  char **name,
 			  unsigned char **mem, int *size, int *offset, int *flags)
 {
-    xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
-    
-    *size = xf86_config->dga_stride * xf86_config->dga_height;
-    *mem = (unsigned char *) (xf86_config->dga_address);
-    *offset = 0;
-    *flags = DGA_NEED_ROOT;
-
-    return TRUE;
+    return FALSE;
 }
 
 static void
@@ -249,9 +166,9 @@ static DGAFunctionRec xf86_dga_funcs = {
    xf86_dga_set_mode,
    xf86_dga_set_viewport,
    xf86_dga_get_viewport,
-   xf86_dga_sync,
-   xf86_dga_fill_rect,
-   xf86_dga_blit_rect,
+   NULL,
+   NULL,
+   NULL,
    NULL
 };
 
@@ -261,6 +178,9 @@ xf86DiDGAReInit (ScreenPtr pScreen)
     ScrnInfoPtr		scrn = xf86Screens[pScreen->myNum];
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
     
+    if (!DGAAvailable(pScreen->myNum))
+	return TRUE;
+
     if (!xf86_dga_get_modes (pScreen))
 	return FALSE;
     
@@ -273,11 +193,14 @@ xf86DiDGAInit (ScreenPtr pScreen, unsigned long dga_address)
     ScrnInfoPtr		scrn = xf86Screens[pScreen->myNum];
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
 
+    if (DGAAvailable(pScreen->myNum))
+	return TRUE;
+
     xf86_config->dga_flags = 0;
-    xf86_config->dga_address = dga_address;
-    xf86_config->dga_width = scrn->virtualX;
-    xf86_config->dga_height = scrn->virtualY;
-    xf86_config->dga_stride = scrn->displayWidth * scrn->bitsPerPixel >> 3;
+    xf86_config->dga_address = 0;
+    xf86_config->dga_width = 0;
+    xf86_config->dga_height = 0;
+    xf86_config->dga_stride = 0;
     
     if (!xf86_dga_get_modes (pScreen))
 	return FALSE;

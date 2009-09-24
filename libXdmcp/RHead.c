@@ -36,9 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 int
-XdmcpReadHeader (buffer, header)
-    XdmcpBufferPtr  buffer;
-    XdmcpHeaderPtr  header;
+XdmcpReadHeader (XdmcpBufferPtr buffer, XdmcpHeaderPtr header)
 {
     if (XdmcpReadCARD16 (buffer, &header->version) &&
         XdmcpReadCARD16 (buffer, &header->opcode) &&

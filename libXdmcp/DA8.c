@@ -36,8 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 void
-XdmcpDisposeARRAY8 (array)
-    ARRAY8Ptr	array;
+XdmcpDisposeARRAY8 (ARRAY8Ptr array)
 {
     if (array->data != NULL) Xfree (array->data);
     array->length = 0;

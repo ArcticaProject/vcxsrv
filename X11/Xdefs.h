@@ -1,5 +1,3 @@
-/* $XFree86: xc/include/Xdefs.h,v 1.2 1999/08/22 06:21:20 dawes Exp $ */
-
 /***********************************************************
 
 Copyright (c) 1999  The XFree86 Project Inc.

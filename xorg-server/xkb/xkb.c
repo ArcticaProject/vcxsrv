@@ -38,6 +38,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "extnsionst.h"
 #include "xace.h"
 #include "xkb.h"
+#include "protocol-versions.h"
 
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XKMformat.h>
@@ -161,9 +162,9 @@ ProcXkbUseExtension(ClientPtr client)
     int	supported;
 
     REQUEST_SIZE_MATCH(xkbUseExtensionReq);
-    if (stuff->wantedMajor != XkbMajorVersion) {
+    if (stuff->wantedMajor != SERVER_XKB_MAJOR_VERSION) {
 	/* pre-release version 0.65 is compatible with 1.00 */
-	supported= ((XkbMajorVersion==1)&&
+	supported= ((SERVER_XKB_MAJOR_VERSION==1)&&
 		    (stuff->wantedMajor==0)&&(stuff->wantedMinor==65));
     }
     else supported = 1;
@@ -178,15 +179,15 @@ ProcXkbUseExtension(ClientPtr client)
 					client->index,
 					(long)client->clientAsMask,
 					stuff->wantedMajor,stuff->wantedMinor,
-					XkbMajorVersion,XkbMinorVersion);
+					SERVER_XKB_MAJOR_VERSION,SERVER_XKB_MINOR_VERSION);
     }
     memset(&rep, 0, sizeof(xkbUseExtensionReply));
     rep.type = X_Reply;
     rep.supported = supported;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.serverMajor = XkbMajorVersion;
-    rep.serverMinor = XkbMinorVersion;
+    rep.serverMajor = SERVER_XKB_MAJOR_VERSION;
+    rep.serverMinor = SERVER_XKB_MINOR_VERSION;
     if ( client->swapped ) {
 	swaps(&rep.sequenceNumber, n);
 	swaps(&rep.serverMajor, n);

@@ -55,6 +55,8 @@ static DISPATCH_PROC(SProcXCMiscGetVersion);
 static DISPATCH_PROC(SProcXCMiscGetXIDList);
 static DISPATCH_PROC(SProcXCMiscGetXIDRange);
 
+void XCMiscExtensionInit(INITARGS);
+
 void
 XCMiscExtensionInit(INITARGS)
 {

@@ -37,8 +37,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xfuncs.h>
 
 int
-XdmcpCopyARRAY8 (src, dst)
-    ARRAY8Ptr	src, dst;
+XdmcpCopyARRAY8 (ARRAY8Ptr src, ARRAY8Ptr dst)
 {
     dst->length = src->length;
     dst->data = (CARD8 *) Xalloc (dst->length * sizeof (CARD8));

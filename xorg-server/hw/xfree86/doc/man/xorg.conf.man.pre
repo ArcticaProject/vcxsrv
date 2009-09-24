@@ -450,6 +450,15 @@ core file.
 In general you never want to use this option unless you are debugging an __xservername__
 server problem and know how to deal with the consequences.
 .TP 7
+.BI "Option \*qUseSIGIO\*q  \*q" boolean \*q
+This controls whether the __xservername__ server requests that events from
+input devices be reported via a SIGIO signal handler (also known as SIGPOLL
+on some platforms), or only reported via the standard select(3) loop.
+The default behaviour is platform specific.   In general you do not want to
+use this option unless you are debugging the __xservername__ server, or
+working around a specific bug until it is fixed, and understand the
+consequences.
+.TP 7
 .BI "Option \*qDontVTSwitch\*q  \*q" boolean \*q
 This disallows the use of the
 .BI Ctrl+Alt+F n
@@ -714,12 +723,12 @@ multimedia subdirectories of each of those directories.
 In addition to this, operating system specific subdirectories of all
 the above are searched first if they exist.
 .PP
-To see what extension modules are available, check the contents
-of the following directory:
+To see what extension modules are available, check the extensions
+subdirectory under:
 .PP
 .RS 4
 .nf
-__projectroot__/lib/modules/extensions
+__modulepath__
 .fi
 .RE
 .PP

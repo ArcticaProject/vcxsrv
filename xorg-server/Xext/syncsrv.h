@@ -173,4 +173,5 @@ extern void SyncDestroySystemCounter(
 );
 extern void InitServertime(void);
 
+extern void SyncExtensionInit(void);
 #endif /* _SYNCSRV_H_ */

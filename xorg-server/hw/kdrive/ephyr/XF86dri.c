@@ -63,7 +63,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <X11/extensions/extutil.h>
 #include <GL/glx.h>
 #include "xf86dri.h"
-#include <X11/dri/xf86dristr.h>
+#include <X11/dri/xf86driproto.h>
 
 static XExtensionInfo _xf86dri_info_data;
 static XExtensionInfo *xf86dri_info = &_xf86dri_info_data;

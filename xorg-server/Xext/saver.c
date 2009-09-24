@@ -54,6 +54,7 @@ in this Software without prior written authorization from the X Consortium.
 #ifdef DPMSExtension
 #include <X11/extensions/dpmsconst.h>
 #endif
+#include "protocol-versions.h"
 
 #include <stdio.h>
 
@@ -727,8 +728,8 @@ ProcScreenSaverQueryVersion (ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.majorVersion = ScreenSaverMajorVersion;
-    rep.minorVersion = ScreenSaverMinorVersion;
+    rep.majorVersion = SERVER_SAVER_MAJOR_VERSION;
+    rep.minorVersion = SERVER_SAVER_MINOR_VERSION;
     if (client->swapped) {
     	swaps(&rep.sequenceNumber, n);
     	swapl(&rep.length, n);

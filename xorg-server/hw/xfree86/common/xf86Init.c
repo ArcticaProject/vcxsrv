@@ -439,7 +439,7 @@ probe_devices_from_device_sections(DriverPtr drvp)
 	    }
 	}
     }
-
+    xfree(devList);
 
     return foundScreen;
 }
@@ -1111,6 +1111,8 @@ InitInput(int argc, char **argv)
     xf86Info.vtRequestsPending = FALSE;
 
     mieqInit();
+
+    GetEventList(&xf86Events);
 
     /* Call the PreInit function for each input device instance. */
     for (pDev = xf86ConfigLayout.inputs; pDev && *pDev; pDev++) {

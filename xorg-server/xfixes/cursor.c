@@ -1049,13 +1049,11 @@ createInvisibleCursor (void)
     unsigned char *psrcbits, *pmaskbits;
     CursorMetricRec cm;
 
-    psrcbits = (unsigned char *) xalloc(4);
-    pmaskbits = (unsigned char *) xalloc(4);
+    psrcbits = (unsigned char *) xcalloc(4, 1);
+    pmaskbits = (unsigned char *) xcalloc(4, 1);
     if (psrcbits == NULL || pmaskbits == NULL) {
 	return NULL;
     }
-    *psrcbits = 0;
-    *pmaskbits = 0;
 
     cm.width = 1;
     cm.height = 1;

@@ -53,9 +53,7 @@
 
 #include "compint.h"
 #include "xace.h"
-
-#define SERVER_COMPOSITE_MAJOR	0
-#define SERVER_COMPOSITE_MINOR	4
+#include "protocol-versions.h"
 
 static CARD8	CompositeReqCode;
 static int CompositeClientPrivateKeyIndex;
@@ -124,12 +122,12 @@ ProcCompositeQueryVersion (ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    if (stuff->majorVersion < SERVER_COMPOSITE_MAJOR) {
+    if (stuff->majorVersion < SERVER_COMPOSITE_MAJOR_VERSION) {
 	rep.majorVersion = stuff->majorVersion;
 	rep.minorVersion = stuff->minorVersion;
     } else {
-	rep.majorVersion = SERVER_COMPOSITE_MAJOR;
-        rep.minorVersion = SERVER_COMPOSITE_MINOR;
+	rep.majorVersion = SERVER_COMPOSITE_MAJOR_VERSION;
+        rep.minorVersion = SERVER_COMPOSITE_MINOR_VERSION;
     }
     pCompositeClient->major_version = rep.majorVersion;
     pCompositeClient->minor_version = rep.minorVersion;

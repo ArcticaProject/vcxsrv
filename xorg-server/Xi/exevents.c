@@ -944,7 +944,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     int ret = 0;
     int state, i;
     DeviceIntPtr mouse = NULL, kbd = NULL;
-    DeviceEvent *event = (DeviceEvent*)ev;
+    DeviceEvent *event = &ev->device_event;
 
     CHECKEVENT(ev);
 
@@ -954,7 +954,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
         ev->any.type == ET_RawButtonRelease ||
         ev->any.type == ET_RawMotion)
     {
-        ProcessRawEvent((RawDeviceEvent*)ev, device);
+        ProcessRawEvent(&ev->raw_event, device);
         return;
     }
 

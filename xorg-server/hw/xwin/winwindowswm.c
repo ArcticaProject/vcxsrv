@@ -41,6 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "swaprep.h"
 #define _WINDOWSWM_SERVER_
 #include <X11/extensions/windowswmstr.h>
+#include "protocol-versions.h"
 
 static int WMErrorBase;
 
@@ -114,9 +115,9 @@ ProcWindowsWMQueryVersion(register ClientPtr client)
   rep.type = X_Reply;
   rep.length = 0;
   rep.sequenceNumber = client->sequence;
-  rep.majorVersion = WINDOWS_WM_MAJOR_VERSION;
-  rep.minorVersion = WINDOWS_WM_MINOR_VERSION;
-  rep.patchVersion = WINDOWS_WM_PATCH_VERSION;
+  rep.majorVersion = SERVER_WINDOWSWM_MAJOR_VERSION;
+  rep.minorVersion = SERVER_WINDOWSWM_MINOR_VERSION;
+  rep.patchVersion = SERVER_WINDOWSWM_PATCH_VERSION;
   if (client->swapped)
     {
       swaps(&rep.sequenceNumber, n);

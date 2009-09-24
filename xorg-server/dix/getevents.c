@@ -964,30 +964,6 @@ InitEventList(int num_events)
 }
 
 /**
- * Allocs min_size memory for each event in the list.
- */
-void
-SetMinimumEventSize(EventListPtr list, int num_events, int min_size)
-{
-    if (!list)
-        return;
-
-    while(num_events--)
-    {
-        if (list[num_events].evlen < min_size)
-        {
-            list[num_events].evlen = min_size;
-            list[num_events].event = realloc(list[num_events].event, min_size);
-            if (!list[num_events].event)
-            {
-                FatalError("[dix] Failed to set event list's "
-                        "min_size to %d.\n", min_size);
-            }
-        }
-    }
-}
-
-/**
  * Free an event list.
  *
  * @param list The list to be freed.

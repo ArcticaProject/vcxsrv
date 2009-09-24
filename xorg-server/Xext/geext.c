@@ -32,10 +32,7 @@
 
 #include "geint.h"
 #include "geext.h"
-
-/* Currently supported XGE version */
-#define SERVER_GE_MAJOR 1
-#define SERVER_GE_MINOR 0
+#include "protocol-versions.h"
 
 #define rClient(obj) (clients[CLIENT_ID((obj)->resource)])
 
@@ -81,8 +78,8 @@ ProcGEQueryVersion(ClientPtr client)
     rep.sequenceNumber = client->sequence;
 
     /* return the supported version by the server */
-    rep.majorVersion = SERVER_GE_MAJOR;
-    rep.minorVersion = SERVER_GE_MINOR;
+    rep.majorVersion = SERVER_GE_MAJOR_VERSION;
+    rep.minorVersion = SERVER_GE_MINOR_VERSION;
 
     /* Remember version the client requested */
     pGEClient->major_version = stuff->majorVersion;

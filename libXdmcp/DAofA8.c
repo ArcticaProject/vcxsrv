@@ -36,8 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 void
-XdmcpDisposeARRAYofARRAY8 (array)
-    ARRAYofARRAY8Ptr	array;
+XdmcpDisposeARRAYofARRAY8 (ARRAYofARRAY8Ptr array)
 {
     int	i;
 

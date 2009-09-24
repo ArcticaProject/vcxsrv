@@ -55,11 +55,7 @@ in this Software without prior written authorization from The Open Group.
 #endif
 
 int
-XdmcpFill (fd, buffer, from, fromlen)
-    int		    fd;
-    XdmcpBufferPtr  buffer;
-    XdmcpNetaddr    from;	/* return */
-    int		    *fromlen;	/* return */
+XdmcpFill (int fd, XdmcpBufferPtr buffer, XdmcpNetaddr from, int *fromlen)
 {
     BYTE    *newBuf;
 #ifdef STREAMSCONN

@@ -23,7 +23,7 @@ Xephyr - X server outputting to a window on a pre-existing X display
 .IR ... ]
 .SH DESCRIPTION
 .B Xephyr
-is a a kdrive server that outputs to a window on a pre-existing "host"
+is a kdrive server that outputs to a window on a pre-existing "host"
 X display.
 Think
 .I Xnest

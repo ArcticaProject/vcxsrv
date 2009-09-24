@@ -1,5 +1,3 @@
-/* $Xorg: Xalloca.h,v 1.4 2001/02/09 02:03:22 xorgcvs Exp $ */
-
 /*
 
 Copyright 1995, 1998  The Open Group
@@ -27,8 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/include/Xalloca.h,v 3.10 2001/12/14 19:53:25 dawes Exp $ */
-
 /*
  * The purpose of this header is to define the macros ALLOCATE_LOCAL and
  * DEALLOCATE_LOCAL appropriately for the platform being compiled on.
@@ -78,19 +74,6 @@ from The Open Group.
  * If you want something other than (DE)ALLOCATE_LOCAL_FALLBACK
  * for ALLOCATE/DEALLOCATE_LOCAL then you add that in here.
  */
-#  if defined(__HIGHC__)
-#    ifndef NCR
-       extern char *alloca();
-#      if HCVERSION < 21003
-#        define ALLOCATE_LOCAL(size)	alloca((int)(size))
-         pragma on(alloca);
-#      else /* HCVERSION >= 21003 */
-#        define	ALLOCATE_LOCAL(size)	_Alloca((int)(size))
-#      endif /* HCVERSION < 21003 */
-#    else /* NCR */
-#      define ALLOCATE_LOCAL(size)	alloca(size)
-#    endif
-#  endif /* defined(__HIGHC__) */
 
 
 #  ifdef __GNUC__
@@ -105,24 +88,18 @@ from The Open Group.
  * Test is easy, the new one is named __builtin_alloca and comes
  * from alloca.h which #defines alloca.
  */
-#    ifndef NCR
-#      if defined(vax) || defined(sun) || defined(apollo) || defined(stellar) || defined(alloca)
+#      if defined(__sun) || defined(alloca)
 /*
  * Some System V boxes extract alloca.o from /lib/libPW.a; if you
  * decide that you don't want to use alloca, you might want to fix it here.
  */
 /* alloca might be a macro taking one arg (hi, Sun!), so give it one. */
-#        if !defined(__sgi) && !defined(__QNX__) && !defined(__cplusplus)
+#        if !defined(__cplusplus)
 #          define __Xnullarg		/* as nothing */
-#          ifndef X_NOT_STDC_ENV
-             extern void *alloca(__Xnullarg);
-#          else
-             extern char *alloca(__Xnullarg);
-#          endif
-#        endif /* !__sgi && !__QNX && !__cplusplus */
+           extern void *alloca(__Xnullarg);
+#        endif
 #        define ALLOCATE_LOCAL(size) alloca((int)(size))
 #      endif /* who does alloca */
-#    endif /* NCR */
 #  endif /* __GNUC__ */
 
 #endif /* NO_ALLOCA */

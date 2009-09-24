@@ -21,18 +21,20 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(bdftopcf, [1.0.1], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], bdftopcf)
+AC_INIT(bdftopcf, [1.0.2], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], bdftopcf)
 AM_INIT_AUTOMAKE([dist-bzip2 foreign])
 AM_MAINTAINER_MODE
 
 AM_CONFIG_HEADER(config.h)
 
-# Require xorg-macros version 1.1.0 or newer for XORG_WITH_LINT macro
+# Require xorg-macros: XORG_WITH_LINT, XORG_DEFAULT_OPTIONS
 m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.1 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.1)
+XORG_MACROS_VERSION(1.3)
 
 AC_PROG_CC
 AC_PROG_INSTALL
+
+XORG_DEFAULT_OPTIONS
 
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(BDFTOPCF, xfont)
@@ -40,7 +42,5 @@ AC_SUBST(BDFTOPCF_CFLAGS)
 AC_SUBST(BDFTOPCF_LIBS)
 
 XORG_WITH_LINT
-XORG_MANPAGE_SECTIONS
-XORG_RELEASE_VERSION
 
 AC_OUTPUT([Makefile])

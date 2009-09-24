@@ -50,6 +50,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <X11/extensions/applewmproto.h>
 #include "applewmExt.h"
 #include "X11Application.h"
+#include "protocol-versions.h"
 
 #define DEFINE_ATOM_HELPER(func,atom_name)                      \
 static Atom func (void) {                                       \
@@ -183,9 +184,9 @@ ProcAppleWMQueryVersion(
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.majorVersion = APPLE_WM_MAJOR_VERSION;
-    rep.minorVersion = APPLE_WM_MINOR_VERSION;
-    rep.patchVersion = APPLE_WM_PATCH_VERSION;
+    rep.majorVersion = SERVER_APPLEWM_MAJOR_VERSION;
+    rep.minorVersion = SERVER_APPLEWM_MINOR_VERSION;
+    rep.patchVersion = SERVER_APPLEWM_PATCH_VERSION;
     if (client->swapped) {
         swaps(&rep.sequenceNumber, n);
         swapl(&rep.length, n);

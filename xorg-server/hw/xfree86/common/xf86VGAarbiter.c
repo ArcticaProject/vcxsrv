@@ -35,6 +35,7 @@
 #ifdef HAVE_PCI_DEVICE_VGAARB_INIT
 #include "xf86VGAarbiterPriv.h"
 #include "xf86Bus.h"
+#include "xf86Priv.h"
 #include "pciaccess.h"
 
 #ifdef DEBUG
@@ -153,59 +154,79 @@ xf86VGAarbiterDeviceDecodes(ScrnInfoPtr pScrn)
 }
 
 Bool
-xf86VGAarbiterWrapFunctions(ScreenPtr pScreen)
+xf86VGAarbiterWrapFunctions(void)
 {
     ScrnInfoPtr pScrn;
     VGAarbiterScreenPtr pScreenPriv;
     miPointerScreenPtr PointPriv;
 #ifdef RENDER
-    PictureScreenPtr    ps = GetPictureScreenIfSet(pScreen);
+    PictureScreenPtr    ps;
 #endif
+    ScreenPtr pScreen;
+    int vga_count, i;
 
     if (vga_no_arb)
-	return FALSE;
+        return FALSE;
 
-    pScrn = xf86Screens[pScreen->myNum];
-    PointPriv = dixLookupPrivate(&pScreen->devPrivates, miPointerScreenKey);
+    /*
+     * we need to wrap the arbiter if we have more than
+     * one VGA card - hotplug cries.
+     */
+    pci_device_vgaarb_get_info(NULL, &vga_count, NULL);
+    if (vga_count < 2 || !xf86Screens)
+        return FALSE;
 
-    DPRINT_S("VGAarbiterWrapFunctions",pScreen->myNum);
+    xf86Msg(X_INFO,"Found %d VGA devices: arbiter wrapping enabled\n",
+            vga_count);
 
-    if (!dixRequestPrivate(VGAarbiterGCKey, sizeof(VGAarbiterGCRec)))
-    	return FALSE;
-
-    if (!(pScreenPriv = xalloc(sizeof(VGAarbiterScreenRec))))
-    	return FALSE;
-
-    dixSetPrivate(&pScreen->devPrivates, VGAarbiterScreenKey, pScreenPriv);
-
-    WRAP_SCREEN(CloseScreen, VGAarbiterCloseScreen);
-    WRAP_SCREEN(SaveScreen, VGAarbiterSaveScreen);
-    WRAP_SCREEN(WakeupHandler, VGAarbiterWakeupHandler);
-    WRAP_SCREEN(BlockHandler, VGAarbiterBlockHandler);
-    WRAP_SCREEN(CreateGC, VGAarbiterCreateGC);
-    WRAP_SCREEN(GetImage, VGAarbiterGetImage);
-    WRAP_SCREEN(GetSpans, VGAarbiterGetSpans);
-    WRAP_SCREEN(SourceValidate, VGAarbiterSourceValidate);
-    WRAP_SCREEN(CopyWindow, VGAarbiterCopyWindow);
-    WRAP_SCREEN(ClearToBackground, VGAarbiterClearToBackground);
-    WRAP_SCREEN(CreatePixmap, VGAarbiterCreatePixmap);
-    WRAP_SCREEN(StoreColors, VGAarbiterStoreColors);
-    WRAP_SCREEN(DisplayCursor, VGAarbiterDisplayCursor);
-    WRAP_SCREEN(RealizeCursor, VGAarbiterRealizeCursor);
-    WRAP_SCREEN(UnrealizeCursor, VGAarbiterUnrealizeCursor);
-    WRAP_SCREEN(RecolorCursor, VGAarbiterRecolorCursor);
-    WRAP_SCREEN(SetCursorPosition, VGAarbiterSetCursorPosition);
+    for (i = 0; i < xf86NumScreens; i++) {
+        pScreen = xf86Screens[i]->pScreen;
 #ifdef RENDER
-    WRAP_PICT(Composite,VGAarbiterComposite);
-    WRAP_PICT(Glyphs,VGAarbiterGlyphs);
-    WRAP_PICT(CompositeRects,VGAarbiterCompositeRects);
+        ps = GetPictureScreenIfSet(pScreen);
 #endif
-    WRAP_SCREEN_INFO(AdjustFrame, VGAarbiterAdjustFrame);
-    WRAP_SCREEN_INFO(SwitchMode, VGAarbiterSwitchMode);
-    WRAP_SCREEN_INFO(EnterVT, VGAarbiterEnterVT);
-    WRAP_SCREEN_INFO(LeaveVT, VGAarbiterLeaveVT);
-    WRAP_SCREEN_INFO(FreeScreen, VGAarbiterFreeScreen);
-    WRAP_SPRITE;
+        pScrn = xf86Screens[pScreen->myNum];
+        PointPriv = dixLookupPrivate(&pScreen->devPrivates, miPointerScreenKey);
+
+        DPRINT_S("VGAarbiterWrapFunctions",pScreen->myNum);
+
+        if (!dixRequestPrivate(VGAarbiterGCKey, sizeof(VGAarbiterGCRec)))
+            return FALSE;
+
+        if (!(pScreenPriv = xalloc(sizeof(VGAarbiterScreenRec))))
+            return FALSE;
+
+        dixSetPrivate(&pScreen->devPrivates, VGAarbiterScreenKey, pScreenPriv);
+
+        WRAP_SCREEN(CloseScreen, VGAarbiterCloseScreen);
+        WRAP_SCREEN(SaveScreen, VGAarbiterSaveScreen);
+        WRAP_SCREEN(WakeupHandler, VGAarbiterWakeupHandler);
+        WRAP_SCREEN(BlockHandler, VGAarbiterBlockHandler);
+        WRAP_SCREEN(CreateGC, VGAarbiterCreateGC);
+        WRAP_SCREEN(GetImage, VGAarbiterGetImage);
+        WRAP_SCREEN(GetSpans, VGAarbiterGetSpans);
+        WRAP_SCREEN(SourceValidate, VGAarbiterSourceValidate);
+        WRAP_SCREEN(CopyWindow, VGAarbiterCopyWindow);
+        WRAP_SCREEN(ClearToBackground, VGAarbiterClearToBackground);
+        WRAP_SCREEN(CreatePixmap, VGAarbiterCreatePixmap);
+        WRAP_SCREEN(StoreColors, VGAarbiterStoreColors);
+        WRAP_SCREEN(DisplayCursor, VGAarbiterDisplayCursor);
+        WRAP_SCREEN(RealizeCursor, VGAarbiterRealizeCursor);
+        WRAP_SCREEN(UnrealizeCursor, VGAarbiterUnrealizeCursor);
+        WRAP_SCREEN(RecolorCursor, VGAarbiterRecolorCursor);
+        WRAP_SCREEN(SetCursorPosition, VGAarbiterSetCursorPosition);
+#ifdef RENDER
+        WRAP_PICT(Composite,VGAarbiterComposite);
+        WRAP_PICT(Glyphs,VGAarbiterGlyphs);
+        WRAP_PICT(CompositeRects,VGAarbiterCompositeRects);
+#endif
+        WRAP_SCREEN_INFO(AdjustFrame, VGAarbiterAdjustFrame);
+        WRAP_SCREEN_INFO(SwitchMode, VGAarbiterSwitchMode);
+        WRAP_SCREEN_INFO(EnterVT, VGAarbiterEnterVT);
+        WRAP_SCREEN_INFO(LeaveVT, VGAarbiterLeaveVT);
+        WRAP_SCREEN_INFO(FreeScreen, VGAarbiterFreeScreen);
+        WRAP_SPRITE;
+    }
+
     return TRUE;
 }
 
@@ -1152,6 +1173,6 @@ void xf86VGAarbiterUnlock(ScrnInfoPtr pScrn) {}
 Bool xf86VGAarbiterAllowDRI(ScreenPtr pScreen) { return TRUE; }
 void xf86VGAarbiterScrnInit(ScrnInfoPtr pScrn) {}
 void xf86VGAarbiterDeviceDecodes(ScrnInfoPtr pScrn) {}
-Bool xf86VGAarbiterWrapFunctions(ScreenPtr pScreen) { return FALSE; }
+Bool xf86VGAarbiterWrapFunctions(void) { return FALSE; }
 
 #endif

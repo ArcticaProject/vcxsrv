@@ -126,6 +126,8 @@ RRDestroyOutputProperty (RRPropertyPtr prop)
 	xfree(prop->current.data);
     if (prop->pending.data)
 	xfree(prop->pending.data);
+    if (prop->valid_values)
+	xfree(prop->valid_values);
     xfree(prop);
 }
 

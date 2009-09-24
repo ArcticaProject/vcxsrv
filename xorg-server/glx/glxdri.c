@@ -43,7 +43,7 @@
 #define _XF86DRI_SERVER_
 #include <drm_sarea.h>
 #include <xf86drm.h>
-#include <xf86dristr.h>
+#include <X11/dri/xf86driproto.h>
 #include <xf86str.h>
 #include <xf86.h>
 #include <dri.h>

@@ -26,6 +26,7 @@
 #include "swaprep.h"
 #include "dgaproc.h"
 #include "xf86dgaext.h"
+#include "protocol-versions.h"
 
 #include <string.h>
 
@@ -122,8 +123,8 @@ ProcXDGAQueryVersion(ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.majorVersion = XDGA_MAJOR_VERSION;
-    rep.minorVersion = XDGA_MINOR_VERSION;
+    rep.majorVersion = SERVER_XDGA_MAJOR_VERSION;
+    rep.minorVersion = SERVER_XDGA_MINOR_VERSION;
 
     WriteToClient(client, sizeof(xXDGAQueryVersionReply), (char *)&rep);
     return (client->noClientException);

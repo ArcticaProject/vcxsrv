@@ -409,9 +409,6 @@ extern _X_EXPORT int GetMaximumEventsNum(void);
 
 extern _X_EXPORT int GetEventList(EventListPtr* list);
 extern _X_EXPORT EventListPtr InitEventList(int num_events);
-extern _X_EXPORT void SetMinimumEventSize(EventListPtr list,
-                                int num_events,
-                                int min_size);
 extern _X_EXPORT void FreeEventList(EventListPtr list, int num_events);
 
 extern void CreateClassesChangedEvent(EventListPtr event,
@@ -503,6 +500,7 @@ extern int AllocXTestDevice(ClientPtr client,
                              DeviceIntPtr master_keybd);
 extern BOOL IsXTestDevice(DeviceIntPtr dev, DeviceIntPtr master);
 extern DeviceIntPtr GetXTestDevice(DeviceIntPtr master);
+extern void SendDevicePresenceEvent(int deviceid, int type);
 
 /* misc event helpers */
 extern Mask GetEventFilter(DeviceIntPtr dev, xEvent *event);

@@ -50,6 +50,7 @@
 #include "indirect_dispatch.h"
 #include "indirect_table.h"
 #include "indirect_util.h"
+#include "protocol-versions.h"
 
 static int
 validGlxScreen(ClientPtr client, int screen, __GLXscreen **pGlxScreen, int *err)
@@ -738,8 +739,8 @@ int __glXDisp_QueryVersion(__GLXclientState *cl, GLbyte *pc)
     ** client if it wants to work with older clients; however, in this
     ** implementation the server just returns its version number.
     */
-    reply.majorVersion = GLX_SERVER_MAJOR_VERSION;
-    reply.minorVersion = GLX_SERVER_MINOR_VERSION;
+    reply.majorVersion = SERVER_GLX_MAJOR_VERSION;
+    reply.minorVersion = SERVER_GLX_MINOR_VERSION;
     reply.length = 0;
     reply.type = X_Reply;
     reply.sequenceNumber = client->sequence;

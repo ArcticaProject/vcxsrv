@@ -64,10 +64,6 @@ typedef struct __GLXcontext __GLXcontext;
 #include "glxdrawable.h"
 #include "glxcontext.h"
 
-
-#define GLX_SERVER_MAJOR_VERSION 1
-#define GLX_SERVER_MINOR_VERSION 2
-
 #ifndef True
 #define True 1
 #endif

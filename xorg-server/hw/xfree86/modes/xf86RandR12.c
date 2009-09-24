@@ -1,5 +1,5 @@
 /*
- * Copyright © 2002 Keith Packard, member of The XFree86 Project, Inc.
+ * Copyright Â© 2002 Keith Packard, member of The XFree86 Project, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -467,9 +467,6 @@ xf86RandR12GetInfo (ScreenPtr pScreen, Rotation *rotations)
     {
 	xf86ProbeOutputModes (scrp, 0, 0);
 	xf86SetScrnInfoModes (scrp);
-#ifdef XFreeXDGA
-	xf86DiDGAReInit (pScreen);
-#endif
     }
 
     for (mode = scrp->modes; ; mode = mode->next)
@@ -1528,9 +1525,6 @@ xf86RandR12GetInfo12 (ScreenPtr pScreen, Rotation *rotations)
 	return TRUE;
     xf86ProbeOutputModes (pScrn, 0, 0);
     xf86SetScrnInfoModes (pScrn);
-#ifdef XFreeXDGA
-    xf86DiDGAReInit (pScreen);
-#endif
     return xf86RandR12SetInfo12 (pScreen);
 }
 

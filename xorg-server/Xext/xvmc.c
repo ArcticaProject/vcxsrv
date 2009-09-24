@@ -20,6 +20,7 @@
 #include <X11/extensions/Xvproto.h>
 #include <X11/extensions/XvMCproto.h>
 #include "xvmcext.h"
+#include "protocol-versions.h"
 
 #ifdef HAS_XVMCSHM
 #include <sys/ipc.h>
@@ -116,8 +117,8 @@ ProcXvMCQueryVersion(ClientPtr client)
     rep.type = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.length = 0;
-    rep.major = XvMCVersion;
-    rep.minor = XvMCRevision;
+    rep.major = SERVER_XVMC_MAJOR_VERSION;
+    rep.minor = SERVER_XVMC_MINOR_VERSION;
     WriteToClient(client, sizeof(xvmcQueryVersionReply), (char*)&rep);
     return Success;
 }
