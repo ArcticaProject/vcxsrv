@@ -59,7 +59,9 @@
 
 #include <X11/Xos.h>                /* For gettimeofday */
 #include "dixstruct.h"
+#ifdef PANORAMIX
 #include "panoramiXsrv.h"
+#endif
 
 #include <signal.h>             /* For SIGQUIT */
 

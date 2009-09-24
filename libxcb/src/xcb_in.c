@@ -38,12 +38,10 @@
 #include "xcb.h"
 #include "xcbext.h"
 #include "xcbint.h"
-#ifndef _MSC_VER
 #if USE_POLL
 #include <poll.h>
 #else
 #include <sys/select.h>
-#endif
 #endif
 
 #define XCB_ERROR 0

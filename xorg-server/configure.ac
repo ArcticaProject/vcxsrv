@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.6.99.901, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="(unreleased)"
+AC_INIT([xorg-server], 1.6.99.902, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="2009-9-22"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([dist-bzip2 foreign])
 AM_MAINTAINER_MODE
@@ -379,6 +379,7 @@ AM_CONDITIONAL(PPC_VIDEO, [test "x$PPC_VIDEO" = xyes])
 AM_CONDITIONAL(SPARC64_VIDEO, [test "x$SPARC64_VIDEO" = xyes])
 
 DRI=no
+USE_SIGIO_BY_DEFAULT="yes"
 dnl it would be nice to autodetect these *CONS_SUPPORTs
 case $host_os in
   *freebsd* | *dragonfly*)
@@ -408,6 +409,9 @@ case $host_os in
 	;;
   *solaris*)
 	PKG_CHECK_EXISTS(libdrm, DRI=yes, DRI=no)
+	# Disable use of SIGIO by default until some system bugs are
+	# fixed - see Sun/OpenSolaris bug id 6879897
+	USE_SIGIO_BY_DEFAULT="no"
 	;;
   darwin*)
 	AC_DEFINE(CSRG_BASED, 1, [System is BSD-like])
@@ -442,6 +446,9 @@ AC_ARG_ENABLE(debug,         AS_HELP_STRING([--enable-debug],
 AC_ARG_ENABLE(unit-tests,    AS_HELP_STRING([--enable-unit-tests],
                                   [Enable unit-tests (default: auto)]),
                                 [UNITTESTS=$enableval], [UNITTESTS=auto])
+AC_ARG_ENABLE(sigio-default, AS_HELP_STRING([--enable-use-sigio-by-default]
+  [Enable SIGIO input handlers by default (default: $USE_SIGIO_BY_DEFAULT)]),
+                                [USE_SIGIO_BY_DEFAULT=$enableval], [])
 AC_ARG_WITH(int10,           AS_HELP_STRING([--with-int10=BACKEND], [int10 backend: vm86, x86emu or stub]),
 				[INT10="$withval"],
 				[INT10="$DEFAULT_INT10"])
@@ -485,6 +492,7 @@ esac
 AC_ARG_WITH(default-font-path, AS_HELP_STRING([--with-default-font-path=PATH], [Comma separated list of font dirs]),
 				[ FONTPATH="$withval" ],
 				[ FONTPATH="${DEFAULT_FONT_PATH}" ])
+
 AC_ARG_WITH(xkb-path,         AS_HELP_STRING([--with-xkb-path=PATH], [Path to XKB base dir (default: ${datadir}/X11/xkb)]),
 				[ XKBPATH="$withval" ],
 				[ XKBPATH="${datadir}/X11/xkb" ])
@@ -708,8 +716,26 @@ XEXT_INC='-I$(top_srcdir)/Xext'
 XEXT_LIB='$(top_builddir)/Xext/libXext.la'
 XEXTXORG_LIB='$(top_builddir)/Xext/libXextbuiltin.la'
 
+dnl Optional modules
+VIDEOPROTO="videoproto"
+COMPOSITEPROTO="compositeproto >= 0.4"
+RECORDPROTO="recordproto >= 1.13.99.1"
+SCRNSAVERPROTO="scrnsaverproto >= 1.1"
+RESOURCEPROTO="resourceproto"
+DRIPROTO="xf86driproto >= 2.1.0"
+DRI2PROTO="dri2proto >= 2.1"
+XINERAMAPROTO="xineramaproto"
+BIGFONTPROTO="xf86bigfontproto >= 1.2.0"
+XCALIBRATEPROTO="xcalibrateproto"
+DGAPROTO="xf86dgaproto >= 2.0.99.1"
+GLPROTO="glproto >= 1.4.9"
+DMXPROTO="dmxproto >= 2.2.99.1"
+VIDMODEPROTO="xf86vidmodeproto >= 2.2.99.1"
+WINDOWSWMPROTO="windowswmproto"
+APPLEWMPROTO="applewmproto >= 1.4"
+
 dnl Core modules for most extensions, et al.
-REQUIRED_MODULES="[randrproto >= 1.2.99.3] [renderproto >= 0.11] [fixesproto >= 4.0] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xextproto >= 7.0.99.3] [xproto >= 7.0.13] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] resourceproto fontsproto [inputproto >= 1.9.99.902] [kbproto >= 1.0.3]"
+REQUIRED_MODULES="[randrproto >= 1.2.99.3] [renderproto >= 0.11] [fixesproto >= 4.1] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xextproto >= 7.0.99.3] [xproto >= 7.0.13] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] fontsproto [inputproto >= 1.9.99.902] [kbproto >= 1.0.3]"
 REQUIRED_LIBS="xfont xau [pixman-1 >= 0.15.20]"
 
 dnl HAVE_DBUS is true if we actually have the D-Bus library, whereas
@@ -755,6 +781,14 @@ if test "x$CONFIG_NEED_DBUS" = xyes; then
 fi
 AM_CONDITIONAL(CONFIG_NEED_DBUS, [test "x$CONFIG_NEED_DBUS" = xyes])
 CONFIG_LIB='$(top_builddir)/config/libconfig.la'
+
+if test "x$USE_SIGIO_BY_DEFAULT" = xyes; then
+	USE_SIGIO_BY_DEFAULT_VALUE=TRUE
+else
+	USE_SIGIO_BY_DEFAULT_VALUE=FALSE
+fi
+AC_DEFINE_UNQUOTED([USE_SIGIO_BY_DEFAULT], [$USE_SIGIO_BY_DEFAULT_VALUE],
+		   [Use SIGIO handlers for input device events by default])
 
 AC_MSG_CHECKING([for glibc...])
 AC_PREPROC_IFELSE([
@@ -817,7 +851,7 @@ AM_CONDITIONAL(XV, [test "x$XV" = xyes])
 if test "x$XV" = xyes; then
 	AC_DEFINE(XV, 1, [Support Xv extension])
 	AC_DEFINE(XvExtension, 1, [Build Xv extension])
-	REQUIRED_MODULES="$REQUIRED_MODULES videoproto"
+	REQUIRED_MODULES="$REQUIRED_MODULES $VIDEOPROTO"
 else
 	XVMC=no
 fi
@@ -835,7 +869,7 @@ fi
 AM_CONDITIONAL(COMPOSITE, [test "x$COMPOSITE" = xyes])
 if test "x$COMPOSITE" = xyes; then
 	AC_DEFINE(COMPOSITE, 1, [Support Composite Extension])
-	REQUIRED_MODULES="$REQUIRED_MODULES [compositeproto >= 0.4]"
+	REQUIRED_MODULES="$REQUIRED_MODULES $COMPOSITEPROTO"
 	COMPOSITE_LIB='$(top_builddir)/composite/libcomposite.la'
 	COMPOSITE_INC='-I$(top_srcdir)/composite'
 fi
@@ -849,25 +883,25 @@ fi
 AM_CONDITIONAL(RECORD, [test "x$RECORD" = xyes])
 if test "x$RECORD" = xyes; then
 	AC_DEFINE(XRECORD, 1, [Support Record extension])
-	REQUIRED_MODULES="$REQUIRED_MODULES [recordproto >= 1.13.99.1]"
+	REQUIRED_MODULES="$REQUIRED_MODULES $RECORDPROTO"
 	RECORD_LIB='$(top_builddir)/record/librecord.la'
 fi
 
 AM_CONDITIONAL(SCREENSAVER, [test "x$SCREENSAVER" = xyes])
 if test "x$SCREENSAVER" = xyes; then
 	AC_DEFINE(SCREENSAVER, 1, [Support MIT-SCREEN-SAVER extension])
-	REQUIRED_MODULES="$REQUIRED_MODULES [scrnsaverproto >= 1.1]"
+	REQUIRED_MODULES="$REQUIRED_MODULES $SCRNSAVERPROTO"
 fi
 
 AM_CONDITIONAL(RES, [test "x$RES" = xyes])
 if test "x$RES" = xyes; then
 	AC_DEFINE(RES, 1, [Support X resource extension])
-	REQUIRED_MODULES="$REQUIRED_MODULES resourceproto"
+	REQUIRED_MODULES="$REQUIRED_MODULES $RESOURCEPROTO"
 fi
 
 if test "x$GLX" = xyes; then
 	PKG_CHECK_MODULES([XLIB], [x11])
-	PKG_CHECK_MODULES([GL], [glproto >= 1.4.9 gl >= 7.1.0])
+	PKG_CHECK_MODULES([GL], $GLPROTO [gl >= 7.1.0])
 	AC_SUBST(XLIB_CFLAGS)
 	AC_DEFINE(GLXEXT, 1, [Build GLX extension])
 	GLX_LIBS='$(top_builddir)/glx/libglx.la'
@@ -893,12 +927,12 @@ AC_SUBST([GLX_DEFINES])
 AM_CONDITIONAL(DRI, test "x$DRI" = xyes)
 if test "x$DRI" = xyes; then
 	AC_DEFINE(XF86DRI, 1, [Build DRI extension])
-	PKG_CHECK_MODULES([DRIPROTO], [xf86driproto])
-	PKG_CHECK_MODULES([DRI], [glproto >= 1.4.1 dri >= 7.1.0])
+	PKG_CHECK_MODULES([DRIPROTO], [$DRIPROTO])
+	PKG_CHECK_MODULES([DRI], $GLPROTO [dri >= 7.1.0])
 	AC_SUBST(DRIPROTO_CFLAGS)
 fi
 
-PKG_CHECK_MODULES([DRI2PROTO], [dri2proto >= 2.1],
+PKG_CHECK_MODULES([DRI2PROTO], $DRI2PROTO,
                   [HAVE_DRI2PROTO=yes], [HAVE_DRI2PROTO=no])
 case "$DRI2,$HAVE_DRI2PROTO" in
 	yes,no)
@@ -943,7 +977,7 @@ AM_CONDITIONAL(XINERAMA, [test "x$XINERAMA" = xyes])
 if test "x$XINERAMA" = xyes; then
 	AC_DEFINE(XINERAMA, 1, [Support Xinerama extension])
 	AC_DEFINE(PANORAMIX, 1, [Internal define for Xinerama])
-	REQUIRED_MODULES="$REQUIRED_MODULES xineramaproto"
+	REQUIRED_MODULES="$REQUIRED_MODULES $XINERAMAPROTO"
 fi
 
 AM_CONDITIONAL(XACE, [test "x$XACE" = xyes])
@@ -991,7 +1025,7 @@ fi
 AM_CONDITIONAL(XF86BIGFONT, [test "x$XF86BIGFONT" = xyes])
 if test "x$XF86BIGFONT" = xyes; then
 	AC_DEFINE(XF86BIGFONT, 1, [Support XF86 Big font extension])
-	REQUIRED_MODULES="$REQUIRED_MODULES [xf86bigfontproto >= 1.2.0]"
+	REQUIRED_MODULES="$REQUIRED_MODULES $BIGFONTPROTO"
 fi
 
 AM_CONDITIONAL(DPMSExtension, [test "x$DPMSExtension" = xyes])
@@ -1001,7 +1035,7 @@ fi
 
 if test "x$XCALIBRATE" = xyes && test "$KDRIVE" = yes; then
    AC_DEFINE(XCALIBRATE, 1, [Build XCalibrate extension])
-   REQUIRED_MODULES="$REQUIRED_MODULES xcalibrateproto"
+   REQUIRED_MODULES="$REQUIRED_MODULES $XCALIBRATEPROTO"
 else
    XCALIBRATE=no
 fi
@@ -1157,20 +1191,45 @@ if test "x$DEBUGGING" = xyes; then
 fi
 AM_CONDITIONAL(DEBUG, [test "x$DEBUGGING" = xyes])
 
+# If unittests aren't explicitly disabled, check for required support
+if test "x$UNITTESTS" != xno ; then
+       PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16],
+                         [HAVE_GLIB=yes], [HAVE_GLIB=no])
+
+       # Check if linker supports -wrap, passed via compiler flags
+       # When cross-compiling, reports no, since unit tests run from
+       # "make check", so would be running on build machine,  not target
+       AC_MSG_CHECKING([whether the linker supports -wrap])
+       save_LDFLAGS="$LDFLAGS"
+       LDFLAGS="$LDFLAGS -Wl,-wrap,exit"
+       AC_RUN_IFELSE([AC_LANG_PROGRAM([[
+	void __wrap_exit (int s)
+	{
+	    __real_exit (0);
+	}]],
+	[[exit (1);]])],
+                     [linker_can_wrap="yes"],
+                     [linker_can_wrap="no"],
+                     [linker_can_wrap="no"])
+       AC_MSG_RESULT([$linker_can_wrap])
+       LDFLAGS="$save_LDFLAGS"
+fi
+
 if test "x$UNITTESTS" = xauto; then
-       PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16], [HAVE_GLIB=yes], [HAVE_GLIB=no])
-       if test "x$HAVE_GLIB" = xyes && test "x$with_gnu_ld" = xyes; then
+       if test "x$HAVE_GLIB" = xyes && test "x$linker_can_wrap" = xyes; then
            UNITTESTS=yes
        else
            UNITTESTS=no
        fi
 fi
 if test "x$UNITTESTS" = xyes; then
-       AC_DEFINE(UNITTESTS, 1, [Enable unit tests])
-       PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16])
-       if test "x$with_gnu_ld" = xno; then
-           AC_MSG_ERROR([GNU ld required to build unit tests])
+       if test "x$HAVE_GLIB" = xno; then
+           AC_MSG_ERROR([glib required to build unit tests])
        fi
+       if test "x$linker_can_wrap" = xno; then
+           AC_MSG_ERROR([ld -wrap support required to build unit tests])
+       fi
+       AC_DEFINE(UNITTESTS, 1, [Enable unit tests])
        AC_SUBST([GLIB_LIBS])
        AC_SUBST([GLIB_CFLAGS])
 fi
@@ -1514,21 +1573,21 @@ if test "x$XORG" = xyes; then
 		XORG_OS_PCI=$XORG_OS
 	fi
 	if test "x$DGA" = xauto; then
-		PKG_CHECK_MODULES(DGA, [xf86dgaproto >= 2.0.99.1], [DGA=yes], [DGA=no])
+		PKG_CHECK_MODULES(DGA, $DGAPROTO, [DGA=yes], [DGA=no])
 	fi
 	if test "x$DGA" = xyes; then
-		XORG_MODULES="$XORG_MODULES [xf86dgaproto >= 2.0.99.1]"
-		PKG_CHECK_MODULES(DGA, xf86dgaproto)
+		XORG_MODULES="$XORG_MODULES $DGAPROTO"
+		PKG_CHECK_MODULES(DGA, $DGAPROTO)
 		AC_DEFINE(DGA, 1, [Support DGA extension])
 		AC_DEFINE(XFreeXDGA, 1, [Build XDGA support])
 	fi
 
 	if test "x$XF86VIDMODE" = xauto; then
-		PKG_CHECK_MODULES(XF86VIDMODE, [xf86vidmodeproto >= 2.2.99.1], [XF86VIDMODE=yes], [XF86VIDMODE=no])
+		PKG_CHECK_MODULES(XF86VIDMODE, $VIDMODEPROTO, [XF86VIDMODE=yes], [XF86VIDMODE=no])
 	fi
 	if test "x$XF86VIDMODE" = xyes; then
-		XORG_MODULES="$XORG_MODULES xf86vidmodeproto"
-		PKG_CHECK_MODULES(XF86VIDMODE, [xf86vidmodeproto >= 2.2.99.1])
+		XORG_MODULES="$XORG_MODULES $VIDMODEPROTO"
+		PKG_CHECK_MODULES(XF86VIDMODE, $VIDMODEPROTO)
 		AC_DEFINE(XF86VIDMODE, 1, [Support XFree86 Video Mode extension])
 	fi
 
@@ -1625,7 +1684,7 @@ fi
 AC_MSG_RESULT([$XWIN])
 
 if test "x$XWIN" = xyes; then
-	PKG_CHECK_EXISTS([windowswmproto], [WINDOWSWM=yes], [WINDOWSWM=no])
+	PKG_CHECK_EXISTS($WINDOWSWMPROTO, [WINDOWSWM=yes], [WINDOWSWM=no])
 	AC_DEFINE_UNQUOTED(XORG_VERSION_CURRENT, [$VENDOR_RELEASE], [Current Xorg version])
 	AC_CHECK_TOOL(WINDRES, windres)
 	case $host_os in
@@ -1687,7 +1746,7 @@ if test "x$XQUARTZ" = xyes; then
 
 	CFLAGS="${CFLAGS} -DROOTLESS_WORKAROUND -DROOTLESS_SAFEALPHA -DNO_ALLOCA"
 
-	PKG_CHECK_MODULES(XPBPROXY, [applewmproto >= 1.4] [applewm >= 1.4] xfixes fixesproto x11)
+	PKG_CHECK_MODULES(XPBPROXY, $APPLEWMPROTO [applewm >= 1.4] xfixes x11)
 
         if test "x$XQUARTZ_SPARKLE" = xyes ; then
                 AC_DEFINE(XQUARTZ_SPARKLE,1,[Support application updating through sparkle.])
@@ -1716,7 +1775,7 @@ AM_CONDITIONAL(STANDALONE_XPBPROXY, [test "x$STANDALONE_XPBPROXY" = xyes])
 dnl DMX DDX
 
 PKG_CHECK_MODULES([DMXMODULES],
-    [xmuu xext x11 xrender xfixes xfont xi >= 1.2.99.1 dmxproto xau $XDMCP_MODULES],
+    [xmuu xext x11 xrender xfixes xfont xi >= 1.2.99.1 $DMXPROTO xau $XDMCP_MODULES],
     [have_dmx=yes], [have_dmx=no])
 AC_MSG_CHECKING([whether to build Xdmx DDX])
 if test "x$DMX" = xauto; then
@@ -1799,19 +1858,19 @@ if test "$KDRIVE" = yes; then
         KDRIVEFBDEVLIB=yes
         AC_DEFINE(KDRIVEFBDEV, 1, [Build fbdev-based kdrive server])
     fi
-    
-    # tslib...
-    AC_CHECK_LIB(ts, ts_open, [HAVE_TSLIB="yes"])
-    if test "x$TSLIB" = xauto && test "x$HAVE_TSLIB" = xyes; then
-        TSLIB=yes
+
+
+    PKG_CHECK_MODULES([TSLIB], [tslib-0.0], [HAVE_TSLIB="yes"], [HAVE_TSLIB="no"])
+    if test "x$HAVE_TSLIB" = xauto; then
+        TSLIB="$HAVE_TSLIB"
     fi
 
     if test "x$TSLIB" = xyes; then
         if ! test "x$HAVE_TSLIB" = xyes; then
-            AC_MSG_ERROR([tslib must be installed to build the tslib input driver.])
+            AC_MSG_ERROR([tslib must be installed to build the tslib driver. See http://tslib.berlios.de/])
+        else
+            AC_DEFINE(TSLIB, 1, [Have tslib support])
         fi
-        TSLIB_LIBS="-lts"
-        AC_DEFINE(TSLIB, 1, [Have tslib support])
     fi
 
     AC_CHECK_HEADERS([SDL/SDL.h])
@@ -1843,14 +1902,6 @@ if test "$KDRIVE" = yes; then
     AC_CHECK_FUNC([nanosleep], [],
         AC_CHECK_LIB([rt], [nanosleep], XEPHYR_LIBS="$XEPHYR_LIBS -lrt"))
     
-    if test "x$TSLIB" = xyes; then
-        PKG_CHECK_MODULES([TSLIB], [tslib-1.0], [HAVE_TSLIB="yes"], [HAVE_TSLIB="no"])
-        if test "x$HAVE_TSLIB" = xno; then
-            AC_MSG_ERROR([tslib must be installed to build the tslib driver. See http://tslib.berlios.de/])
-        fi
-        AC_DEFINE(TSLIB, 1, [Have tslib support])
-    fi
-
     # damage shadow extension glx (NOTYET) fb mi
     KDRIVE_INC='-I$(top_srcdir)/hw/kdrive/src'
     KDRIVE_PURE_INCS="$KDRIVE_INC $MIEXT_DAMAGE_INC $MIEXT_SHADOW_INC $XEXT_INC $FB_INC $MI_INC"

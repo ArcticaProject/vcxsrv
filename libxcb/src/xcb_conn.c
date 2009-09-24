@@ -28,8 +28,8 @@
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+#include <stdlib.h>
 #ifdef _MSC_VER
 #include <X11/Xwinsock.h>
 #define STDERR_FILENO stderr

@@ -148,7 +148,7 @@ ProcessKeyboardEvent(InternalEvent *ev, DeviceIntPtr keybd)
     XkbSrvInfoPtr xkbi = NULL;
     ProcessInputProc backup_proc;
     xkbDeviceInfoPtr xkb_priv = XKBDEVICEINFO(keybd);
-    DeviceEvent *event = (DeviceEvent*)ev;
+    DeviceEvent *event = &ev->device_event;
     int is_press = (event->type == ET_KeyPress);
     int is_release = (event->type == ET_KeyRelease);
 

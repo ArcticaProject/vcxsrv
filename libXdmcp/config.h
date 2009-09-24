@@ -46,13 +46,13 @@
 /* #undef HAVE_LAUNCHD */
 
 /* Define to 1 if you have the `lrand48' function. */
-#define HAVE_LRAND48 1
+#undef HAVE_LRAND48
 
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `srand48' function. */
-#define HAVE_SRAND48 1
+#undef HAVE_SRAND48
 
 /* Define to 1 if you have the `poll' function. */
 #define HAVE_POLL 1
@@ -119,13 +119,13 @@
 #define PACKAGE_NAME "libXdmcp"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libXdmcp 1.0.2"
+#define PACKAGE_STRING "libXdmcp 1.0.3"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libXdmcp"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.0.2"
+#define PACKAGE_VERSION "1.0.3"
 
 /* Major version of this package */
 #define PACKAGE_VERSION_MAJOR 1
@@ -134,7 +134,7 @@
 #define PACKAGE_VERSION_MINOR 0
 
 /* Patch version of this package */
-#define PACKAGE_VERSION_PATCHLEVEL 2
+#define PACKAGE_VERSION_PATCHLEVEL 3
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 /* #undef RETSIGTYPE */
@@ -167,7 +167,7 @@
 #define USE_XCB 1
 
 /* Version number of package */
-#define VERSION "1.0.2"
+#define VERSION "1.0.3"
 
 /* Support bdf format bitmap font files */
 #define XFONT_BDFFORMAT 1

@@ -130,4 +130,7 @@
 /* Path to text files containing PCI IDs */
 #undef PCI_TXT_IDS_PATH
 
+/* Use SIGIO handlers for input device events by default */
+#undef USE_SIGIO_BY_DEFAULT
+
 #endif /* _XORG_CONFIG_H_ */

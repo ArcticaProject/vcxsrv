@@ -283,11 +283,6 @@ xf86ProcessCommonOptions(LocalDevicePtr local,
 
     /* Backwards compatibility. */
     local->history_size = GetMotionHistorySize();
-    /* Preallocate xEvent store */
-    if (!xf86Events)
-        GetEventList(&xf86Events);
-    if (!xf86Events)
-        FatalError("Couldn't allocate event store\n");
 }
 
 /***********************************************************************
@@ -769,7 +764,6 @@ xf86PostMotionEventP(DeviceIntPtr	device,
     }
 #endif
 
-    GetEventList(&xf86Events);
     nevents = GetPointerEvents(xf86Events, device, MotionNotify, 0,
                                flags, first_valuator, num_valuators,
                                valuators);
@@ -819,7 +813,6 @@ xf86PostProximityEventP(DeviceIntPtr	device,
 
     XI_VERIFY_VALUATORS(num_valuators);
 
-    GetEventList(&xf86Events);
     nevents = GetProximityEvents(xf86Events, device,
                                  is_in ? ProximityIn : ProximityOut, 
                                  first_valuator, num_valuators, valuators);
@@ -881,7 +874,6 @@ xf86PostButtonEventP(DeviceIntPtr	device,
     }
 #endif
 
-    GetEventList(&xf86Events);
     nevents = GetPointerEvents(xf86Events, device,
                                is_down ? ButtonPress : ButtonRelease, button,
                                flags, first_valuator, num_valuators, valuators);
@@ -940,7 +932,6 @@ xf86PostKeyEventP(DeviceIntPtr	device,
     XI_VERIFY_VALUATORS(num_valuators);
 
     if (is_absolute) {
-        GetEventList(&xf86Events);
         nevents = GetKeyboardValuatorEvents(xf86Events, device,
                                             is_down ? KeyPress : KeyRelease,
                                             key_code, first_valuator,
@@ -1074,22 +1065,12 @@ xf86InitValuatorDefaults(DeviceIntPtr dev, int axnum)
 void
 xf86DisableDevice(DeviceIntPtr dev, Bool panic)
 {
-    devicePresenceNotify ev;
-    DeviceIntRec dummyDev;
-
     if(!panic)
     {
         DisableDevice(dev, TRUE);
     } else
     {
-        ev.type = DevicePresenceNotify;
-        ev.time = currentTime.milliseconds;
-        ev.devchange = DeviceUnrecoverable;
-        ev.deviceid = dev->id;
-        dummyDev.id = 0;
-        SendEventToAllWindows(&dummyDev, DevicePresenceNotifyMask,
-                (xEvent *) &ev, 1);
-
+        SendDevicePresenceEvent(dev->id, DeviceUnrecoverable);
         DeleteInputDeviceRequest(dev);
     }
 }

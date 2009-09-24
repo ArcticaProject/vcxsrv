@@ -1,3 +1,587 @@
+commit 9c1a18377afdb919a648a96c4195113121902cfe
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 22 12:44:19 2009 +1000
+
+    xserver 1.6.99.902 (xserver 1.7 RC2)
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 66ece3bfb19642bf0f1ef73c3caa8a99c3dfb5a9
+Author: Kevin E Martin <kem@redhat.com>
+Date:   Tue Sep 22 11:42:24 2009 +1000
+
+    dmx: only free the default pixmaps that we actually allocated.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 20fb8c2e2fccb28c1b89e6e2a5c685e1287baedb
+Author: Kevin E Martin <kem@redhat.com>
+Date:   Tue Sep 22 11:41:33 2009 +1000
+
+    dmx: disable Get/SetWindowPixmap, we don't support composite/redirected windows
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit fcdc1d78cca3b8bb6b77d53eda7e21d649df6943
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Sep 21 19:16:59 2009 +0200
+
+    Fix sporadic segfault on resume due to accidentally freeing cursor.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 91e1fe5863a180b2d70a6943e83b98bbd4c9ebce
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Mon Sep 21 19:13:31 2009 +0200
+
+    Revert fe31f9c + 977953b to fix issue for good.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 90aa0e4a49cdd637178a771365e1e8dab8bceb87
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 18 10:03:02 2009 +1000
+
+    input: don't use typecasts to access members of InternalEvent.
+    
+    To avoid confusion, the member names are now postfixed with _event.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 693d4fdb1c7b7c789a812790122454e718602449
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 22 11:13:58 2009 +1000
+
+    Xext: switch mbuf.c to dixLookupResourceByType
+    
+    Resolves a linker error caused by LookupIDByType.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 493d2f9c2fc56dd3b4c03451c07cd25e3012142e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 22 11:05:07 2009 +1000
+
+    Xext: remove DisplayImageBuffers from mbuf.c
+    
+    Not referenced by anything.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit fff40b3353c7025c1d1e3dd14b5c78f7c9f5de7c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 22 10:53:47 2009 +1000
+
+    Xext: fix up multibuffer compiler errors.
+    
+    Triggered by the xextproto 7.1 change, fixed by moving the matching
+    declarations from the header file to here.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 4c8f834da6c8c84849313453fe223a8165c6afc0
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 21 14:52:31 2009 +1000
+
+    configure: fix up check for tslib.
+    
+    Reduce the tslib-check to the pkg-config check only instead of the previous
+    library symbol check followd by a pkg-config check.
+    
+    This patch also reduces the required version of tslib back down to
+    tslib-0.0. Unfortunately, the 1.0 tarball available through
+    http://tslib.berlios.de/ still announces itself as 0.0.2.
+    
+    Reported-by: Werner Landgraf
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 977953bf14858d17c22208c848854ddbe7e86527
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Mon Sep 21 15:44:00 2009 +0200
+
+    Less intrusive workaround for sporadic segfault on resume.
+    
+    Hopefully fixes fdo #24010 (memleak).
+
+commit 55747d256d759850141e4a9c4dec965616a31dc8
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 18 16:27:54 2009 +1000
+
+    input: define server-supported protocol versions in one single file.
+    
+    include/protocol-versions.h specifies each extension version as supported by
+    the server and sent back on the wire to the client.
+    
+    This fixes up several issues with the server potentially reporting a higher
+    version of the protocol if recompiled against a newer version of the
+    protocol.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Rémi Cardona <remi@gentoo.org>
+    Acked-by: Julien Cristau <jcristau@debian.org>
+
+commit 0b7c6c728c2e2d8433a188315cc591308a89cd85
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Sep 18 21:12:17 2009 -0700
+
+    xfree86/modes: Remove all framebuffer support from DGA
+    
+    This removes all rendering and mapping code from xf86DiDGA, leaving
+    just mode setting and raw input device access. The mapping code didn't
+    have the offset within /dev/mem for the frame buffer and the pixmap
+    support assumed that the framebuffer was never reallocated.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d3a3c904e5e3b5e8bb3c51ca6a563880ff589bf3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 21 09:41:46 2009 +1000
+
+    configure: resourceproto is optional.
+    
+    Although a --disable-xres flag is provided, resourceproto was listed in
+    REQUIRED_MODULES since 2005 (5b218617fa8ba52bf65aef35da39e06c662495e6).
+    Remove, make conditional on the xres flag only.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit b9ae1b91f316a98eb3bbefe1fc61f3e0faa861e0
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 21 09:22:53 2009 +1000
+
+    dmx: silence 'implicit declaration of function ‘XFixesSetPictureClipRegion’
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit aa71e268f55ac39351814ab6840196c4f58bad39
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 18 11:35:47 2009 +1000
+
+    Xext: silence 'warning: no previous prototype' for sync, bigreq and xcmisc.
+    
+    xcmisc and bigreq don't have their own header so just declare it here to
+    shut up the compiler.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 00dfe69aab786ea650b41dfefc031f0e0fc72b0c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 17 14:48:51 2009 +1000
+
+    randr: reply with the server or client version, whichever is lower.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8b75d0f9d347d7c3aad1e53809e0a2bed03b92fc
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 17 14:17:54 2009 +1000
+
+    render: reply with the server or client version, whichever is lower.
+    
+    Protocol requires that the lower of [server version, client version] is
+    returned to the client.
+    
+    The other part of the issue discussed in reply to [1] remains.
+    [1] http://lists.freedesktop.org/archives/xorg-devel/2009-September/001990.html
+    
+    Reported-by: Julien Cristau
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 20ccc66708bcd55372bff03fa0d78a7846e8c82d
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Sun Sep 20 21:12:31 2009 +1000
+
+    xfree86: silence warning: ‘ramplen’ may be used uninitialized
+    
+    'ramplen' is only set and used if stuff->size > 0 but the compiler doesn't
+    pick that up.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2df10a49867635c341b1d1a9faadf4dbae043a0f
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:38 2009 -0700
+
+    RRDestroyOutputProperty: Free randr property valid values
+    
+    These were leaked when the property was destroyed.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d3a84906c00b8fe4a4e33fa89bff3ed66ceafdec
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:37 2009 -0700
+
+    Free randr crtc and output pointer arrays
+    
+    All of the crts and outputs were freed, but not the arrays full of
+    pointers to them.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 6086a6065666fb9ded5d99919ddfa51c66b76246
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:36 2009 -0700
+
+    xf8CrtcSetModeTransform: free adjusted_mode name too
+    
+    The adjusted mode was freed, but any name allocated for that was leaked.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 088107827347cee05a6e5317bcebdbc282b9a3bc
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:35 2009 -0700
+
+    LoaderSortExtensions: free graph nodes
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d5959d37cd36895898786e4ea5bf72c480b79832
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:34 2009 -0700
+
+    Free libpciaccess iterator in xf86PciProbe
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit ded35b7bf7a5ad27de152476c657a56a4f232800
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:33 2009 -0700
+
+    xf86Xinput.c: get DIX event queue pointer once at InitInput time
+    
+    The DIX event queue is allocated before InitInput is called, so fetch
+    the pointer there and not randomly at other times. This avoids failing
+    to fetch the pointer sometimes during server regen and then smashing
+    memory through the stale pointer from the previous server generation.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 54f15a414130f89832b5c2604b0b44e7e4c6709f
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:32 2009 -0700
+
+    probe_devices_from_device_sections: don't leak list of devices
+    
+    xf86MatchDevice returned malloc'd storage containing the list of
+    devices to look at; make sure that gets freed.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8b5086250aa5dae8de8b763408ff480d7beac819
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Sep 17 18:14:31 2009 -0700
+
+    Eliminate bogus event resizing.
+    
+    Now that all event queues hold internal events only, they never need
+    to be resized. Resizing them led to memory corruption as they would
+    get sized for an appropriate xEvent, not an internal event.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit c7987660fd665f32406b14db7078a3f5f7b76e9c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 17 15:33:19 2009 +1000
+
+    xfree86: fix up wrong use of OptionRec for AutoAddDevices andAutoEnableDevices
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 971d4eac1274db78efa546ea50ca5e01a80bbd81
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Sat Sep 19 15:48:30 2009 -0400
+
+    Xext: include security protocol header instead of client header
+    
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a62664bc07b35aedb6b11b984c94341deb4486ca
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Sat Sep 19 16:01:52 2009 -0400
+
+    Bump fixesproto requirement to 4.1
+    
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2a890d85e923e1da0331b02e58e95f98b11f5de0
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Sun Sep 20 01:31:59 2009 -0400
+
+    fixes: Make sure invisible cursor is inialized with zero src/mask
+    
+    This fixes a regression introduced in 9040dab76182d1a019ca7fef7b29733d2c199e61.
+    
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2bb3f0c87119e73157141431d7c00ab104d4b34b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 18 10:27:14 2009 +1000
+
+    xfree86: remove now unused variable
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 1888d7d3e3ae81b5cb23e3a0852317362c8e215a
+Author: Carl Worth <cworth@cworth.org>
+Date:   Fri Sep 18 10:39:19 2009 -0700
+
+    configure: Fix broken quoting for initialization of REQUIRED_MODULES
+    
+    A recent change switched to C-style automatic string concatenation,
+    (presumably for better readability and maintainability), but this
+    doesn't actually work for the shell. So we revert to the previously
+    working initialization.
+    
+    This commit reverts one hunk of c947605eda082fbca0821efc0cc14fec8f958fd0
+
+commit 4982bbc3b49b1b61e63a8461ea803e41318c8187
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Fri Sep 18 12:36:11 2009 +0300
+
+    xfree86: vgaarb: missing wrapping macro
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+
+commit af1af50de621bc451e6413fa5602ae5db2dc9809
+Author: Martin-Éric Racine <q-funk@iki.fi>
+Date:   Fri Sep 18 09:33:37 2009 +0300
+
+    xserver: added more Geode oddities to xf86AutoConfig.c
+
+commit ec0ad408ef8d5a2cf7a2bd65d13de3ef3147308c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 17 16:01:29 2009 +1000
+
+    xfree86: use SendDevicePresenceEvents instead of manual event handling.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d0440275108920f5cb5d630f55fc9a3320c496d3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 16 10:58:52 2009 +1000
+
+    Require dmxproto 2.2.99.1
+    
+    This requirement was introduced in code with commit
+    e85775aa64d1e9322c82090a26256af5e1fede0a.
+    
+    Reported-by: Marvin Schmidt
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit c947605eda082fbca0821efc0cc14fec8f958fd0
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 15 15:05:27 2009 +1000
+
+    configure.ac: move all protocol requirements to a single location.
+    
+    Protocol requirements were spread throughout configure.ac, leaving us with a
+    few locations where one DDX asked for a different version of the package
+    than another.
+    For each protocol, define <NAME>PROTO="[<name>proto >= version]" and
+    assemble REQUIRED_MODULES based on these.
+    
+    Future changes to protocol versions need to only be done in a single place.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 4d6b20c25af5f590f19530b6c007e3648a8037c3
+Author: Shunichi Fuji <palglowr@gmail.com>
+Date:   Wed Sep 16 12:02:00 2009 +1000
+
+    dri: use noPanoramiXExtension directly.
+    
+    xf86LoaderCheckSymbol() is never useful if using externed variable directly.
+    noPanoramiXExtension will be just used through dlopen() like other extension modules.
+    
+    Signed-off-by: Shunichi Fuji <palglowr@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 3853314d13b503684c9922715323f8033febe5de
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Sep 17 08:11:27 2009 -0700
+
+    Fix typo in Xephyr man page
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 2edf967b00963559552d061bb98b15243d978279
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Thu Sep 17 15:24:01 2009 +1000
+
+    xserver: SIGIO option handling was incorrect.
+    
+    reported by a user on #radeon when DRI1 broke.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+
+commit 715953bf5c00b4605dd6ab45c92140c0e81174ee
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Sep 15 21:13:00 2009 -0700
+
+    Check for -wrap support in the linker
+    
+    Allows unit tests to be built with non-gnu-linkers that
+    also have -wrap support
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit e2c64551808988657069006f74c6780973ec0557
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Sep 15 21:13:48 2009 -0700
+
+    Add configuration option for use of SIGIO handlers for input events
+    
+    Boolean option to enable/disable SIGIO handlers is set by the first
+    of these found:
+      - UseSIGIO option is set in xorg.conf ServerFlags
+      - Default set at build time by ./configure --enable-use-sigio-by-default
+      - Platform default value: Solaris = no, all others = yes
+    
+    This matches the current settings on all platforms except Solaris.
+    This reverts Solaris (for now) to the settings used in Xorg 1.6, before
+    SIGIO support for Solaris was added, due to some system level bugs that
+    won't be resolved in time for Xorg 1.7 release, but allows us to enable
+    when those are resolved (or when we need to test if they're resolved).
+    See http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6879897
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 3bdf36476179257561b9409c3f49a77640fbb9f9
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Wed Sep 16 16:03:46 2009 +0200
+
+    Work around sporadic segfault on resume with intel/KMS due to cursor->bits == NULL.
+    
+    Apparently SavedCursor is sometime tried to be set while already being set.
+
+commit fe31f9c646bc26163497f29c3b833c090df0b3f9
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Sep 14 19:51:23 2009 -0700
+
+    Change xf86dristr.h includes to use xf86driproto.h instead
+    
+    Clears warnings about obsolete headers, but raises minimum
+    required version of xf86driproto to 2.1.0
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 159e03204093991ccd4133133c50c0cae88c828f
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 15 11:39:09 2009 +1000
+
+    dmx: don't include panoramiXsrv.h if building w/o Xinerama
+    
+    Reported-by: Marvin Schmidt
+    Tested-by: Marvin Schmidt
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit f56cbe1ef24415d0142b9a7d0ab0a031069ccb52
+Author: Rémi Cardona <remi@gentoo.org>
+Date:   Mon Sep 14 17:09:59 2009 +0200
+
+    dix: append "built-ins" to the font path in SetDefaultFontPath
+    
+    49b93df8a3002db7196aa3fc1fd8dca1c12a55d6 made the hard dependency on
+    a "fixed" font go away but only Xorg could use the built-ins fonts by
+    default.
+    
+    With this commit, all DDXs get "built-ins" appended to their FontPath, not
+    just Xorg.
+    
+    Tested with Xorg, Xvfb and Xnest.
+    
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Tested-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 139368f7ae192b592e24d013e8ca5ce4175effe1
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Sep 15 17:53:50 2009 -0700
+
+    Fix num_masks/length overflow test for XiSelectEvents
+    
+    Have to set windowid to a valid value first, since that check
+    appears earlier in the code than the masks/length check.
+    
+    Also have to have data[] set large enough so that reading mask
+    data for 0xFFFF masks doesn't overflow past the end of the array
+    into uninitialized data.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 13decf5efe76e735a003227c951e58a41e36a8b5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Sep 15 13:54:51 2009 -0700
+
+    test_convert_XIRawEvent: Don't write more data than the struct holds
+    
+    sizeof(in.valuators.mask) * 8 == 40, but the valuators arrays only
+    holds 36 entries, so the test was smashing the stack when 36 < i < 40
+    (leading to core dumps on Solaris x86, since the return address was
+     overwritten with an invalid pointer).
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 38a61e9a7cf616e26a79dba815bf67737317d1eb
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Sep 15 13:54:50 2009 -0700
+
+    Remove stray semi-colon in protocol-common.c
+    
+    Caused Sun compilers to issue warning:
+    "protocol-common.c", line 141: warning: syntax error:  empty declaration
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit e320736c457ea7b2f19a4c7c2dfc0c461d0dd405
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Sep 14 19:51:22 2009 -0700
+
+    Fix module path in xorg.conf man page
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 49b98d092ec3d032e657eeff62c22fce243b1e8b
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Thu Sep 10 17:52:33 2009 +0300
+
+    xfree86: vgaarb: rework wrapping function
+    
+    No semantical changes.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 422cd7a674e6831f40be14ee853bd946cb62eadc
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Sep 14 13:52:53 2009 -0700
+
+    XQuartz: pbproxy: Remove debugging XBell()
+    (cherry picked from commit 1fd7c1fd4740393a32e261af33e64c19be48ca9a)
+
 commit 663807ce0e65b51537540bb95fbf3c18988c04c7
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Mon Sep 14 16:44:52 2009 +1000

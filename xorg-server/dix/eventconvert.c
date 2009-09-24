@@ -107,7 +107,7 @@ EventToCore(InternalEvent *event, xEvent *core)
         case ET_KeyPress:
         case ET_KeyRelease:
             {
-                DeviceEvent *e = (DeviceEvent*)event;
+                DeviceEvent *e = &event->device_event;
 
                 if (e->detail.key > 0xFF)
                     return BadMatch;
@@ -167,7 +167,7 @@ EventToXI(InternalEvent *ev, xEvent **xi, int *count)
         case ET_KeyRelease:
         case ET_ProximityIn:
         case ET_ProximityOut:
-            return eventToKeyButtonPointer((DeviceEvent*)ev, xi, count);
+            return eventToKeyButtonPointer(&ev->device_event, xi, count);
         case ET_DeviceChanged:
         case ET_RawKeyPress:
         case ET_RawKeyRelease:
@@ -215,19 +215,19 @@ EventToXI2(InternalEvent *ev, xEvent **xi)
         case ET_ButtonRelease:
         case ET_KeyPress:
         case ET_KeyRelease:
-            return eventToDeviceEvent((DeviceEvent*)ev, xi);
+            return eventToDeviceEvent(&ev->device_event, xi);
         case ET_ProximityIn:
         case ET_ProximityOut:
             *xi = NULL;
             return BadMatch;
         case ET_DeviceChanged:
-            return eventToDeviceChanged((DeviceChangedEvent*)ev, xi);
+            return eventToDeviceChanged(&ev->changed_event, xi);
         case ET_RawKeyPress:
         case ET_RawKeyRelease:
         case ET_RawButtonPress:
         case ET_RawButtonRelease:
         case ET_RawMotion:
-            return eventToRawEvent((RawDeviceEvent*)ev, xi);
+            return eventToRawEvent(&ev->raw_event, xi);
         default:
             break;
     }

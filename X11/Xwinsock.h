@@ -1,4 +1,3 @@
-/* $Xorg: Xwinsock.h,v 1.4 2001/02/09 02:03:23 xorgcvs Exp $ */
 /*
 
 Copyright 1996, 1998  The Open Group
@@ -36,8 +35,8 @@ The Open Group.
 
 #undef _XFree86Server
 #ifdef XFree86Server 
-#define _XFree86Server
-#undef XFree86Server
+# define _XFree86Server
+# undef XFree86Server
 #endif
 
 #define BOOL wBOOL
@@ -60,7 +59,7 @@ The Open Group.
 #undef RT_CURSOR
 
 #ifdef _XFree86Server
-#define XFree86Server
-#undef _XFree86Server
+# define XFree86Server
+# undef _XFree86Server
 #endif
 

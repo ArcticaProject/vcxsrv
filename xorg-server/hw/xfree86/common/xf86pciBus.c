@@ -124,7 +124,7 @@ xf86PciProbe(void)
 	    info->user_data = 0;
 	}
     }
-
+    free(iter);
 
     /* If we haven't found a primary device try a different heuristic */
     if (primaryBus.type == BUS_NONE && num) {
@@ -212,6 +212,7 @@ xf86PciProbe(void)
 
 	xf86ErrorF("\n");
     }
+    xfree(xf86PciVideoInfo);
 }
 
 /*

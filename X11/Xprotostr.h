@@ -1,4 +1,3 @@
-/* $Xorg: Xprotostr.h,v 1.4 2001/02/09 02:03:23 xorgcvs Exp $ */
 #ifndef XPROTOSTRUCTS_H
 #define XPROTOSTRUCTS_H
 

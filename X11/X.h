@@ -1,7 +1,3 @@
-/*
- *	$Xorg: X.h,v 1.4 2001/02/09 02:03:22 xorgcvs Exp $
- */
-
 /* Definitions for the X window system likely to be used by applications */
 
 #ifndef X_H
@@ -53,7 +49,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/include/X.h,v 1.6 2003/07/09 15:27:28 tsi Exp $ */
 
 #define X_PROTOCOL	11		/* current protocol version */
 #define X_PROTOCOL_REVISION 0		/* current minor version */

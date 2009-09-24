@@ -71,9 +71,7 @@
 #include "randrstr.h"
 #include "swaprep.h"
 #include <X11/extensions/panoramiXproto.h>
-
-#define RR_XINERAMA_MAJOR_VERSION   1
-#define RR_XINERAMA_MINOR_VERSION   1
+#include "protocol-versions.h"
 
 /* Xinerama is not multi-screen capable; just report about screen 0 */
 #define RR_XINERAMA_SCREEN  0
@@ -98,8 +96,8 @@ ProcRRXineramaQueryVersion(ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.majorVersion = RR_XINERAMA_MAJOR_VERSION;
-    rep.minorVersion = RR_XINERAMA_MINOR_VERSION;
+    rep.majorVersion = SERVER_RRXINERAMA_MAJOR_VERSION;
+    rep.minorVersion = SERVER_RRXINERAMA_MINOR_VERSION;
     if(client->swapped) {
         swaps(&rep.sequenceNumber, n);
         swapl(&rep.length, n);

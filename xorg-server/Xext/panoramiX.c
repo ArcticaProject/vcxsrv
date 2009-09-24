@@ -56,9 +56,7 @@ Equipment Corporation.
 #include "picturestr.h"
 #endif
 #include "modinit.h"
-
-#define SERVER_PANORAMIX_MAJOR_VERSION	1
-#define SERVER_PANORAMIX_MINOR_VERSION	1
+#include "protocol-versions.h"
 
 #ifdef GLXPROXY
 extern VisualPtr glxMatchVisual(ScreenPtr pScreen,

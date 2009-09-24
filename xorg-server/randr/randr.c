@@ -98,6 +98,8 @@ RRCloseScreen (int i, ScreenPtr pScreen)
     for (j = pScrPriv->numOutputs - 1; j >= 0; j--)
 	RROutputDestroy (pScrPriv->outputs[j]);
     
+    xfree (pScrPriv->crtcs);
+    xfree (pScrPriv->outputs);
     xfree (pScrPriv);
     RRNScreens -= 1;	/* ok, one fewer screen with RandR running */
     return (*pScreen->CloseScreen) (i, pScreen);    

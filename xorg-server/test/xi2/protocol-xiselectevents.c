@@ -60,7 +60,7 @@
 #include "protocol-common.h"
 #include <glib.h>
 
-static unsigned char *data[4096 * 16]; /* the request data buffer */
+static unsigned char *data[4096 * 20]; /* the request data buffer */
 
 int __wrap_XISetEventMask(DeviceIntPtr dev, WindowPtr win, int len, unsigned char* mask)
 {
@@ -284,6 +284,7 @@ static void test_XISelectEvents(void)
     request_XISelectEvent(req, BadWindow);
 
     g_test_message("Triggering num_masks/length overflow");
+    req->win = ROOT_WINDOW_ID;
     /* Integer overflow - req->length can't hold that much */
     req->num_masks = 0xFFFF;
     request_XISelectEvent(req, BadLength);

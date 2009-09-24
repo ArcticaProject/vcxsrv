@@ -4,3 +4,27 @@ the file is structured to allow one particular architecture to read
 them directly without reformatting.  This allows fast reading on the
 appropriate machine, but the files are still portable (but read more
 slowly) on other machines.
+
+All questions regarding this software should be directed at the
+Xorg mailing list:
+
+        http://lists.freedesktop.org/mailman/listinfo/xorg
+
+Please submit bug reports to the Xorg bugzilla:
+
+        https://bugs.freedesktop.org/enter_bug.cgi?product=xorg
+
+The master development code repository can be found at:
+
+        git://anongit.freedesktop.org/git/xorg/app/bdftopcf
+
+        http://cgit.freedesktop.org/xorg/app/bdftopcf
+
+For patch submission instructions, see:
+
+	http://www.x.org/wiki/Development/Documentation/SubmittingPatches
+
+For more information on the git code manager, see:
+
+        http://wiki.x.org/wiki/GitPage
+

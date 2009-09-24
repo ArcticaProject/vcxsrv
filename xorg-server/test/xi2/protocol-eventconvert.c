@@ -247,7 +247,7 @@ static void test_convert_XIRawEvent(void)
         XIClearMask(in.valuators.mask, i);
     }
 
-    for (i = 0; i < sizeof(in.valuators.mask) * 8; i++)
+    for (i = 0; i < MAX_VALUATORS; i++)
     {
         XISetMask(in.valuators.mask, i);
 

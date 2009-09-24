@@ -138,7 +138,7 @@ void init_window(WindowPtr window, WindowPtr parent, int id)
 
 /* Needed for the screen setup, otherwise we crash during sprite initialization */
 static Bool device_cursor_init(DeviceIntPtr dev, ScreenPtr screen) { return TRUE; }
-static Bool set_cursor_pos(DeviceIntPtr dev, ScreenPtr screen, int x, int y, Bool event) { return TRUE; };
+static Bool set_cursor_pos(DeviceIntPtr dev, ScreenPtr screen, int x, int y, Bool event) { return TRUE; }
 void init_simple(void)
 {
     screenInfo.arraySize = MAXSCREENS;

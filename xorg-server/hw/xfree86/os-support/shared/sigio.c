@@ -145,6 +145,9 @@ xf86InstallSIGIOHandler(int fd, void (*f)(int, void *), void *closure)
     int blocked;
     int installed = FALSE;
 
+    if (!xf86Info.useSIGIO)
+	return 0;
+
     for (i = 0; i < MAX_FUNCS; i++)
     {
 	if (!xf86SigIOFuncs[i].f)
@@ -215,6 +218,9 @@ xf86RemoveSIGIOHandler(int fd)
     int max;
     int maxfd;
     int ret;
+
+    if (!xf86Info.useSIGIO)
+	return 0;
 
     max = 0;
     maxfd = -1;

@@ -196,9 +196,7 @@ extern _X_EXPORT Bool mieqInit(
     void
 );
 
-extern _X_EXPORT void mieqResizeEvents(
-    int /* min_size */
-);
+extern _X_EXPORT void mieqFini(void);
 
 extern _X_EXPORT void mieqEnqueue(
     DeviceIntPtr /*pDev*/,

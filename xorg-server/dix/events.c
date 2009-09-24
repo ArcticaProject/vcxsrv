@@ -809,7 +809,7 @@ CheckVirtualMotion(
 
     if (qe)
     {
-        ev = (DeviceEvent*)qe->event;
+        ev = &qe->event->device_event;
         switch(ev->type)
         {
             case ET_Motion:
@@ -1130,7 +1130,7 @@ EnqueueEvent(InternalEvent *ev, DeviceIntPtr device)
     QdEventPtr	qe;
     SpritePtr	pSprite = device->spriteInfo->sprite;
     int		eventlen;
-    DeviceEvent *event = (DeviceEvent*)ev;
+    DeviceEvent *event = &ev->device_event;
 
     NoticeTime((InternalEvent*)event);
 
@@ -1179,7 +1179,7 @@ EnqueueEvent(InternalEvent *ev, DeviceIntPtr device)
             (tail->device == device) &&
 	    (tail->pScreen == pSprite->hotPhys.pScreen))
 	{
-            DeviceEvent *tailev = (DeviceEvent*)tail->event;
+            DeviceEvent *tailev = &tail->event->device_event;
 	    tailev->root_x = pSprite->hotPhys.x;
 	    tailev->root_y = pSprite->hotPhys.y;
 	    tailev->time = event->time;
@@ -1238,7 +1238,7 @@ PlayReleasedEvents(void)
 	      will translate from sprite screen to screen 0 upon reentry
 	      to the DIX layer */
 	    if(!noPanoramiXExtension) {
-                DeviceEvent *ev = (DeviceEvent*)(qe->event);
+                DeviceEvent *ev = &qe->event->device_event;
                 switch(ev->type)
                 {
                     case ET_Motion:
@@ -3993,7 +3993,7 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
 	    FreezeThaw(thisDev, TRUE);
 	    if (!grabinfo->sync.event)
 		grabinfo->sync.event = xcalloc(1, sizeof(InternalEvent));
-	    *grabinfo->sync.event = *(DeviceEvent*)event;
+	    *grabinfo->sync.event = event->device_event;
 	    break;
 	}
     }

@@ -24,15 +24,15 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(libXdmcp, 1.0.2, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],libXdmcp)
+AC_INIT(libXdmcp, 1.0.3, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],libXdmcp)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
 AM_CONFIG_HEADER(config.h)
 
-# Require xorg-macros version 1.1.0 or newer for XORG_WITH_LINT macro
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.1 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.1)
+# Require xorg-macros: XORG_WITH_LINT, XORG_CWARNFLAGS, XORG_CHANGELOG
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.3)
 
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -46,6 +46,8 @@ AC_CHECK_FUNCS([srand48 lrand48])
 AC_SEARCH_LIBS([recvfrom],[socket])
 
 PKG_CHECK_MODULES(XDMCP, xproto)
+XORG_DEFAULT_OPTIONS
+XDMCP_CFLAGS="$CWARNFLAGS $XDMCP_CFLAGS"
 AC_SUBST(XDMCP_CFLAGS)
 AC_SUBST(XDMCP_LIBS)
 
@@ -61,8 +63,6 @@ AM_CONDITIONAL(HASXDMAUTH,test x$HASXDMAUTH = xyes)
 dnl Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
 XORG_LINT_LIBRARY([Xdmcp])
-
-XORG_RELEASE_VERSION
 
 AC_OUTPUT([Makefile
            xdmcp.pc])

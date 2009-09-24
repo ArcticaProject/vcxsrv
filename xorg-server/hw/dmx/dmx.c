@@ -57,6 +57,7 @@
 #include "dmxextension.h"
 #include <X11/extensions/dmxproto.h>
 #include <X11/extensions/dmx.h>
+#include "protocol-versions.h"
 
 #ifdef PANORAMIX
 #include "panoramiX.h"
@@ -223,9 +224,9 @@ static int ProcDMXQueryVersion(ClientPtr client)
     rep.type           = X_Reply;
     rep.sequenceNumber = client->sequence;
     rep.length         = 0;
-    rep.majorVersion   = DMX_EXTENSION_MAJOR;
-    rep.minorVersion   = DMX_EXTENSION_MINOR;
-    rep.patchVersion   = DMX_EXTENSION_PATCH;
+    rep.majorVersion   = SERVER_DMX_MAJOR_VERSION;
+    rep.minorVersion   = SERVER_DMX_MINOR_VERSION;
+    rep.patchVersion   = SERVER_DMX_PATCH_VERSION;
     if (client->swapped) {
     	swaps(&rep.sequenceNumber, n);
         swapl(&rep.length, n);

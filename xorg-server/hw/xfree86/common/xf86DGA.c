@@ -1193,7 +1193,7 @@ DGAGetOldDGAMode(int index)
 static void
 DGAHandleEvent(int screen_num, InternalEvent *ev, DeviceIntPtr device)
 {
-    DGAEvent	    *event= (DGAEvent*)ev;
+    DGAEvent	    *event= &ev->dga_event;
     ScreenPtr       pScreen = screenInfo.screens[screen_num];
     DGAScreenPtr    pScreenPriv;
 

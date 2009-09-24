@@ -36,9 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 int
-XdmcpReadARRAY16 (buffer, array)
-    XdmcpBufferPtr  buffer;
-    ARRAY16Ptr	    array;
+XdmcpReadARRAY16 (XdmcpBufferPtr buffer, ARRAY16Ptr array)
 {
     int	    i;
 

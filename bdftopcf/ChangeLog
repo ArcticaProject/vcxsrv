@@ -1,3 +1,48 @@
+commit 74b5dca54052c778d49e96b92fc2ef888a80cf8f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Sep 21 19:57:36 2009 -0700
+
+    bdftopcf 1.0.2
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 4f63878eab32d41c8a010d5e187f0c4cdc7eff32
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Sep 21 19:51:44 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 96a182df6f4168ec0b5585f08b088bfd58a383f6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Sep 21 19:43:10 2009 -0700
+
+    Add pointers to mailing list, bugzilla, wiki & git repo to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 7f1a66ecbe983e83e91941706218cde705b6cc0b
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Jan 15 18:18:52 2009 -0200
+
+    Ansification and compile warning fixes.
+    
+      This also uses XORG_CHANGELOG and XORG_CWARNFLAGS, corrects
+    make distcheck. There weren't any gcc 4.3 or sparse warnings.
+
+commit 74541609dccff6e8405286b3f27661e2f4a00b29
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 15:51:03 2007 -0500
+
+    Add missing PHONY line for automatic ChangeLog generation
+
+commit d6286044123ff787acf494a376dc22b2265623e2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Apr 25 17:05:43 2007 -0700
+
+    Version bump: 1.0.1
+
 commit 963c88d67500b581fd4d44d4f561089c66bf7c56
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Tue Apr 24 20:04:39 2007 -0700

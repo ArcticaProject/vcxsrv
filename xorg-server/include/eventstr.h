@@ -221,12 +221,12 @@ union _InternalEvent {
             int length;           /**< Length in bytes */
             Time time;            /**< Time in ms. */
         } any;
-        DeviceEvent device;
-        DeviceChangedEvent changed;
+        DeviceEvent device_event;
+        DeviceChangedEvent changed_event;
 #if XFreeXDGA
-        DGAEvent dga;
+        DGAEvent dga_event;
 #endif
-        RawDeviceEvent raw;
+        RawDeviceEvent raw_event;
 };
 
 #endif

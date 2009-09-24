@@ -1,5 +1,3 @@
-/* $Xorg: keysymdef.h,v 1.4 2001/02/09 02:03:23 $ */
-
 /***********************************************************
 Copyright 1987, 1994, 1998  The Open Group
 
@@ -47,7 +45,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: $ */
 
 /*
  * The "X11 Window System Protocol" standard defines in Appendix A the

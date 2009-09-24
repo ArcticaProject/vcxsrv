@@ -35,14 +35,9 @@
 
 #include <sys/types.h>
 
-#ifndef _MSC_VER
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#else
-typedef unsigned short sa_family_t;
-typedef unsigned short in_port_t;
-#endif
 
 #ifndef AF_INET6
 #define AF_INET6 (AF_INET + 1)

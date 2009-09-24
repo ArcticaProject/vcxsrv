@@ -21,7 +21,7 @@
 
 bin_PROGRAMS = bdftopcf
 
-bdftopcf_CFLAGS = @BDFTOPCF_CFLAGS@
+bdftopcf_CFLAGS = $(CWARNFLAGS) @BDFTOPCF_CFLAGS@
 bdftopcf_LDADD  = @BDFTOPCF_LIBS@
 
 bdftopcf_SOURCES = bdftopcf.c
@@ -59,8 +59,10 @@ SUFFIXES = .$(APP_MAN_SUFFIX) .man
 .man.$(APP_MAN_SUFFIX):
 	sed $(MAN_SUBSTS) < $< > $@
 
+.PHONY: ChangeLog
+
 ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
+	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog
 

@@ -1,4 +1,3 @@
-/* $Xorg: HPkeysym.h,v 1.5 2001/02/09 02:03:22 xorgcvs Exp $ */
 /*
 
 Copyright 1987, 1998  The Open Group

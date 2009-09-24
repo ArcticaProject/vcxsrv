@@ -50,7 +50,9 @@
 #include "pixmapstr.h"
 #include "dixfontstr.h"
 
+#ifdef PANORAMIX
 #include "panoramiXsrv.h"
+#endif
 
 #define DMX_GCOPS_SET_DRAWABLE(_pDraw, _draw)				\
 do {									\

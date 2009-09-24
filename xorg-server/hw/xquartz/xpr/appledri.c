@@ -55,6 +55,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dristruct.h"
 #include "xpr.h"
 #include "x-hash.h"
+#include "protocol-versions.h"
 
 static int DRIErrorBase = 0;
 
@@ -119,9 +120,9 @@ ProcAppleDRIQueryVersion(
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.majorVersion = APPLE_DRI_MAJOR_VERSION;
-    rep.minorVersion = APPLE_DRI_MINOR_VERSION;
-    rep.patchVersion = APPLE_DRI_PATCH_VERSION;
+    rep.majorVersion = SERVER_APPLEDRI_MAJOR_VERSION;
+    rep.minorVersion = SERVER_APPLEDRI_MINOR_VERSION;
+    rep.patchVersion = SERVER_APPLEDRI_PATCH_VERSION;
     if (client->swapped) {
         swaps(&rep.sequenceNumber, n);
         swapl(&rep.length, n);

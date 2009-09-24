@@ -21,6 +21,7 @@
 #include "windowstr.h"
 #include "gcstruct.h"
 #include "modinit.h"
+#include "protocol-versions.h"
 
 static int
 ProcXResQueryVersion (ClientPtr client)
@@ -39,8 +40,8 @@ ProcXResQueryVersion (ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.server_major = XRES_MAJOR_VERSION;
-    rep.server_minor = XRES_MINOR_VERSION;   
+    rep.server_major = SERVER_XRES_MAJOR_VERSION;
+    rep.server_minor = SERVER_XRES_MINOR_VERSION;
     if (client->swapped) { 
         int n;
         swaps(&rep.sequenceNumber, n);

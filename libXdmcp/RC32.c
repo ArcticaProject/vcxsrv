@@ -36,9 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 int
-XdmcpReadCARD32 (buffer, valuep)
-    XdmcpBufferPtr  buffer;
-    CARD32Ptr	    valuep;
+XdmcpReadCARD32 (XdmcpBufferPtr buffer, CARD32Ptr valuep)
 {
     CARD8   byte0, byte1, byte2, byte3;
     if (XdmcpReadCARD8 (buffer, &byte0) &&

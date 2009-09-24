@@ -45,6 +45,7 @@
 #include "xf86drm.h"
 #include "xfixes.h"
 #include "dri2.h"
+#include "protocol-versions.h"
 
 /* The only xf86 include */
 #include "xf86Module.h"
@@ -79,8 +80,8 @@ ProcDRI2QueryVersion(ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.majorVersion = 1;
-    rep.minorVersion = 1;
+    rep.majorVersion = SERVER_DRI2_MAJOR_VERSION;
+    rep.minorVersion = SERVER_DRI2_MAJOR_VERSION;
 
     if (client->swapped) {
     	swaps(&rep.sequenceNumber, n);

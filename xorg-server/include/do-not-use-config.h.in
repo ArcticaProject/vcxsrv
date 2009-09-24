@@ -555,6 +555,9 @@
 /* BSD i386 iopl */
 #undef USE_I386_IOPL
 
+/* Use SIGIO handlers for input device events by default */
+#undef USE_SIGIO_BY_DEFAULT
+
 /* Define to use byteswap macros from <sys/endian.h> */
 #undef USE_SYS_ENDIAN_H
 

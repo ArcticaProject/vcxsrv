@@ -480,10 +480,10 @@ xf86_use_hw_cursor_argb (ScreenPtr screen, CursorPtr cursor)
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
     xf86CursorInfoPtr	cursor_info = xf86_config->cursor_info;
     
+    ++cursor->refcnt;
     if (xf86_config->cursor)
 	FreeCursor (xf86_config->cursor, None);
     xf86_config->cursor = cursor;
-    ++cursor->refcnt;
     
     /* Make sure ARGB support is available */
     if ((cursor_info->Flags & HARDWARE_CURSOR_ARGB) == 0)

@@ -72,6 +72,7 @@ SOFTWARE.
 #include "swaprep.h"
 #include "registry.h"
 #include "privates.h"
+#include "protocol-versions.h"
 
 /* modules local to Xi */
 #include "allowev.h"
@@ -379,11 +380,6 @@ Mask PropagateMask[MAXDEVICES];
 
 static int XIClientPrivateKeyIndex;
 DevPrivateKey XIClientPrivateKey = &XIClientPrivateKeyIndex;
-
-static XExtensionVersion thisversion = { XI_Present,
-    XI_2_Major,
-    XI_2_Minor
-};
 
 
 /*****************************************************************
@@ -1255,6 +1251,10 @@ void
 XInputExtensionInit(void)
 {
     ExtensionEntry *extEntry;
+    XExtensionVersion thisversion = { XI_Present,
+        SERVER_XI_MAJOR_VERSION,
+        SERVER_XI_MINOR_VERSION,
+    };
 
     if (!dixRequestPrivate(XIClientPrivateKey, sizeof(XIClientRec)))
         FatalError("Cannot request private for XI.\n");

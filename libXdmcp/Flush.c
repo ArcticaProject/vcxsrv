@@ -55,11 +55,7 @@ in this Software without prior written authorization from The Open Group.
 #endif
 
 int
-XdmcpFlush (fd, buffer, to, tolen)
-    int		    fd;
-    XdmcpBufferPtr  buffer;
-    XdmcpNetaddr    to;
-    int		    tolen;
+XdmcpFlush (int fd, XdmcpBufferPtr buffer, XdmcpNetaddr to, int tolen)
 {
     int result;
 #ifdef STREAMSCONN

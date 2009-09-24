@@ -54,12 +54,6 @@ getbits (long data, unsigned char *dst)
 #define srandom srand48
 #define random lrand48
 #endif
-#ifdef WIN32
-#include <process.h>
-#define srandom srand
-#define random rand
-#define getpid(x) _getpid(x)
-#endif
 
 void
 XdmcpGenerateKey (XdmAuthKeyPtr key)

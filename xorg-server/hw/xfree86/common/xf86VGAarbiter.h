@@ -34,7 +34,7 @@
 extern void xf86VGAarbiterInit(void);
 extern void xf86VGAarbiterFini(void);
 void xf86VGAarbiterScrnInit(ScrnInfoPtr pScrn);
-extern Bool xf86VGAarbiterWrapFunctions(ScreenPtr pScreen);
+extern Bool xf86VGAarbiterWrapFunctions(void);
 extern void xf86VGAarbiterLock(ScrnInfoPtr pScrn);
 extern void xf86VGAarbiterUnlock(ScrnInfoPtr pScrn);
 

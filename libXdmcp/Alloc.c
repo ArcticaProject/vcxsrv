@@ -40,7 +40,20 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 #include <stdlib.h>
 
-void *
+/* this probably works for Mach-O too, but probably not for PE */
+#if defined(__ELF__) && defined(__GNUC__) && (__GNUC__ >= 3)
+#define weak __attribute__((weak))
+#else
+#define weak
+#endif
+
+#ifdef __SUNPRO_C
+#pragma weak Xalloc
+#pragma weak Xrealloc
+#pragma weak Xfree
+#endif
+
+weak void *
 Xalloc (unsigned long amount)
 {
     if (amount == 0)
@@ -48,7 +61,7 @@ Xalloc (unsigned long amount)
     return malloc (amount);
 }
 
-void *
+weak void *
 Xrealloc (void *old, unsigned long amount)
 {
     if (amount == 0)
@@ -58,7 +71,7 @@ Xrealloc (void *old, unsigned long amount)
     return realloc ((char *) old, amount);
 }
 
-void
+weak void
 Xfree (void *old)
 {
     if (old)

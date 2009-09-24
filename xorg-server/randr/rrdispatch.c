@@ -21,9 +21,7 @@
  */
 
 #include "randrstr.h"
-
-#define SERVER_RANDR_MAJOR	1
-#define SERVER_RANDR_MINOR	3
+#include "protocol-versions.h"
 
 Bool
 RRClientKnowsRates (ClientPtr	pClient)
@@ -48,12 +46,18 @@ ProcRRQueryVersion (ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    /*
-     * Report the current version; the current
-     * spec says they're all compatible after 1.0
-     */
-    rep.majorVersion = SERVER_RANDR_MAJOR;
-    rep.minorVersion = SERVER_RANDR_MINOR;
+
+    if ((stuff->majorVersion * 1000 + stuff->minorVersion) <
+        (SERVER_RANDR_MAJOR_VERSION * 1000 + SERVER_RANDR_MINOR_VERSION))
+    {
+	rep.majorVersion = stuff->majorVersion;
+	rep.minorVersion = stuff->minorVersion;
+    } else
+    {
+        rep.majorVersion = SERVER_RANDR_MAJOR_VERSION;
+        rep.minorVersion = SERVER_RANDR_MINOR_VERSION;
+    }
+
     if (client->swapped) {
     	swaps(&rep.sequenceNumber, n);
     	swapl(&rep.length, n);

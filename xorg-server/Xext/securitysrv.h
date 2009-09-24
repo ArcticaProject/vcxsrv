@@ -40,7 +40,7 @@ from The Open Group.
 # define NEED_UNDEF_Display
 #endif
 
-#include <X11/extensions/security.h>
+#include <X11/extensions/secur.h>
 
 #ifdef NEED_UNDEF_Status
 # undef Status

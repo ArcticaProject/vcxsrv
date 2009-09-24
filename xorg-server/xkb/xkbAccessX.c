@@ -690,7 +690,7 @@ XkbSrvInfoPtr	xkbi = NULL;
 unsigned 	changed = 0;
 ProcessInputProc backupproc;
 xkbDeviceInfoPtr xkbPrivPtr = XKBDEVICEINFO(mouse);
-DeviceEvent     *event = (DeviceEvent*)ev;
+DeviceEvent     *event = &ev->device_event;
 
     dev = (IsMaster(mouse) || mouse->u.master) ? GetMaster(mouse, MASTER_KEYBOARD) : mouse;
 

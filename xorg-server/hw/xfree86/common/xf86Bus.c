@@ -521,30 +521,15 @@ xf86PostProbe(void)
 void
 xf86PostScreenInit(void)
 {
-#ifdef HAVE_PCI_DEVICE_VGAARB_INIT
-    int vga_count;
-#endif
     if (doFramebufferMode) {
 	SetSIGIOForState(OPERATING);
 	return;
     }
 
-    /*
-     * we need to wrap the arbiter if we have more than
-     * one VGA card - hotplug cries.
-     */
-#ifdef HAVE_PCI_DEVICE_VGAARB_INIT
-    pci_device_vgaarb_get_info(NULL, &vga_count, NULL);
-    if (vga_count > 1 && xf86Screens) {
-	int i;
-	xf86Msg(X_INFO,"Number of VGA devices: %d: arbiter wrapping enabled\n", vga_count);
-        for (i = 0; i < xf86NumScreens; i++)
-	    xf86VGAarbiterWrapFunctions(xf86Screens[i]->pScreen);
-    }
-#endif
+    xf86VGAarbiterWrapFunctions();
+
     DebugF("PostScreenInit  generation: %i\n",serverGeneration);
     xf86EnterServerState(OPERATING);
-    
 }
 
 /*

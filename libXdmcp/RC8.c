@@ -36,9 +36,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xdmcp.h>
 
 int
-XdmcpReadCARD8 (buffer, valuep)
-    XdmcpBufferPtr  buffer;
-    CARD8Ptr	    valuep;
+XdmcpReadCARD8 (XdmcpBufferPtr buffer, CARD8Ptr valuep)
 {
     if (buffer->pointer >= buffer->count)
 	return FALSE;
