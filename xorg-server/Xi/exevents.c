@@ -1690,6 +1690,10 @@ RecalculateDeviceDeliverableEvents(WindowPtr pWin)
     }
 }
 
+#ifdef _MSC_VER
+#pragma warning(disable:4715) /* Not all control paths return a value */
+#endif
+
 int
 InputClientGone(WindowPtr pWin, XID id)
 {

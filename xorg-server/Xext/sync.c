@@ -1095,6 +1095,10 @@ FreeAwait(void *addr, XID id)
     return Success;
 }
 
+#ifdef _MSC_VER
+#pragma warning(disable:4715) /* Not all control paths return a value */
+#endif
+
 /* loosely based on dix/events.c/OtherClientGone */
 static int
 FreeAlarmClient(void *value, XID id)
