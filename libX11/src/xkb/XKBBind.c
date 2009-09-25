@@ -34,23 +34,6 @@ from The Open Group.
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "XKBlib.h"
-#include <X11/Xlibint.h>
-#include <X11/Xutil.h>
-#include <X11/keysym.h>
-#include <stdio.h>
-#include <ctype.h>
-
-#include <X11/extensions/XKBproto.h>
-#include "XKBlibint.h"
-
-#ifdef USE_OWN_COMPOSE
-#define	COMPOSE_NO_CONST_MEMBERS
-#include "imComp.h"
-#endif
-
-#define AllMods (ShiftMask|LockMask|ControlMask| \
-		 Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask)
 
 #ifdef XKB_IN_SERVER
 #define XkbAllocClientMap   SrvXkbAllocClientMap
@@ -79,7 +62,24 @@ from The Open Group.
 #define XkbApplyVirtualModChanges SrvXkbApplyVirtualModChanges
 #endif
 
-                 
+#include "XKBlib.h"
+#include <X11/Xlibint.h>
+#include <X11/Xutil.h>
+#include <X11/keysym.h>
+#include <stdio.h>
+#include <ctype.h>
+
+#include <X11/extensions/XKBproto.h>
+#include "XKBlibint.h"
+
+#ifdef USE_OWN_COMPOSE
+#define	COMPOSE_NO_CONST_MEMBERS
+#include "imComp.h"
+#endif
+
+#define AllMods (ShiftMask|LockMask|ControlMask| \
+		 Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask)
+
 static int _XkbLoadDpy(
     Display *dpy
 );

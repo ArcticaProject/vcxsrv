@@ -48,6 +48,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <X11/X.h>
 #define	NEED_EVENTS
 #define	NEED_REPLIES
+#define XkbVirtualModsToReal    SrvXkbVirtualModsToReal
 #include <X11/Xproto.h>
 #include "misc.h"
 #include "inputstr.h"
@@ -55,7 +56,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define	XKBSRV_NEED_FILE_FUNCS
 #include <X11/extensions/XKBsrv.h>
 
-#define XkbVirtualModsToReal    SrvXkbVirtualModsToReal
 #endif /* XKB_IN_SERVER */
 
 /***====================================================================***/

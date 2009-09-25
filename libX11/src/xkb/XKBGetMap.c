@@ -33,9 +33,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "Xlibint.h"
-#include <X11/extensions/XKBproto.h>
-#include "XKBlibint.h"
 
 #ifdef XKB_IN_SERVER
 #define XkbAllocClientMap   SrvXkbAllocClientMap
@@ -63,6 +60,10 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define XkbChangeKeycodeRange   SrvXkbChangeKeycodeRange
 #define XkbApplyVirtualModChanges SrvXkbApplyVirtualModChanges
 #endif
+
+#include "Xlibint.h"
+#include <X11/extensions/XKBproto.h>
+#include "XKBlibint.h"
 
 static Status
 _XkbReadKeyTypes(XkbReadBufferPtr buf,XkbDescPtr xkb,xkbGetMapReply *rep)

@@ -32,13 +32,14 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #define NEED_REPLIES
 #define NEED_EVENTS
-#include "Xlibint.h"
-#include <X11/extensions/XKBproto.h>
-#include "XKBlibint.h"
 
 #ifdef XKB_IN_SERVER
 #define XkbVirtualModsToReal    SrvXkbVirtualModsToReal
 #endif
+
+#include "Xlibint.h"
+#include <X11/extensions/XKBproto.h>
+#include "XKBlibint.h"
 
 XkbInternAtomFunc	_XkbInternAtomFunc= XInternAtom;
 XkbGetAtomNameFunc	_XkbGetAtomNameFunc= XGetAtomName;
