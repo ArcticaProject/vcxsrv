@@ -262,7 +262,7 @@ LogSetParameter(LogParameter param, int value)
 void
 LogVWrite(int verb, const char *f, va_list args)
 {
-    static char tmpBuffer[1024];
+    char tmpBuffer[1024];
     int len = 0;
 
     /*
