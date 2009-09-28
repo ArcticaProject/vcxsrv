@@ -452,9 +452,9 @@ winDisplayDepthChangeDialog (winPrivScreenPtr pScreenPriv)
   /* Show the dialog box */
   ShowWindow (g_hDlgDepthChange, SW_SHOW);
   
-  ErrorF ("winDisplayDepthChangeDialog - DialogBox returned: %d\n",
+  winDebug ("winDisplayDepthChangeDialog - DialogBox returned: %d\n",
 	  (int) g_hDlgDepthChange);
-  ErrorF ("winDisplayDepthChangeDialog - GetLastError: %d\n",
+  winDebug ("winDisplayDepthChangeDialog - GetLastError: %d\n",
 	  (int) GetLastError ());
 	      
   /* Minimize the display window */
@@ -475,53 +475,43 @@ winChangeDepthDlgProc (HWND hwndDialog, UINT message,
   static winScreenInfo		*s_pScreenInfo = NULL;
   static ScreenPtr		s_pScreen = NULL;
 
-#if CYGDEBUG
   winDebug ("winChangeDepthDlgProc\n");
-#endif
 
   /* Branch on message type */
   switch (message)
     {
     case WM_INITDIALOG:
-#if CYGDEBUG
       winDebug ("winChangeDepthDlgProc - WM_INITDIALOG\n");
-#endif
 
       /* Store pointers to private structures for future use */
       s_pScreenPriv = (winPrivScreenPtr) lParam;
       s_pScreenInfo = s_pScreenPriv->pScreenInfo;
       s_pScreen = s_pScreenInfo->pScreen;
 
-#if CYGDEBUG
       winDebug ("winChangeDepthDlgProc - WM_INITDIALOG - s_pScreenPriv: %08x, "
 	      "s_pScreenInfo: %08x, s_pScreen: %08x\n",
 	      s_pScreenPriv, s_pScreenInfo, s_pScreen);
-#endif
 
-#if CYGDEBUG
       winDebug ("winChangeDepthDlgProc - WM_INITDIALOG - orig bpp: %d, "
 	      "last bpp: %d\n",
 	      s_pScreenInfo->dwBPP,
 	      s_pScreenPriv->dwLastWindowsBitsPixel);
-#endif
       
       winInitDialog( hwndDialog );
 
       return TRUE;
 
     case WM_DISPLAYCHANGE:
-#if CYGDEBUG
       winDebug ("winChangeDepthDlgProc - WM_DISPLAYCHANGE - orig bpp: %d, "
 	      "last bpp: %d, new bpp: %d\n",
 	      s_pScreenInfo->dwBPP,
 	      s_pScreenPriv->dwLastWindowsBitsPixel,
 	      wParam);
-#endif
 
       /* Dismiss the dialog if the display returns to the original depth */
       if (wParam == s_pScreenInfo->dwBPP)
 	{
-	  ErrorF ("winChangeDelthDlgProc - wParam == s_pScreenInfo->dwBPP\n");
+	  winDebug ("winChangeDelthDlgProc - wParam == s_pScreenInfo->dwBPP\n");
 
 	  /* Depth has been restored, dismiss dialog */
 	  DestroyWindow (g_hDlgDepthChange);
@@ -549,7 +539,7 @@ winChangeDepthDlgProc (HWND hwndDialog, UINT message,
       break;
 
     case WM_CLOSE:
-      ErrorF ("winChangeDepthDlgProc - WM_CLOSE\n");
+      winDebug ("winChangeDepthDlgProc - WM_CLOSE\n");
 
       DestroyWindow (g_hDlgAbout);
       g_hDlgAbout = NULL;
@@ -615,17 +605,13 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
   static winScreenInfo		*s_pScreenInfo = NULL;
   static ScreenPtr		s_pScreen = NULL;
 
-#if CYGDEBUG
   winDebug ("winAboutDlgProc\n");
-#endif
 
   /* Branch on message type */
   switch (message)
     {
     case WM_INITDIALOG:
-#if CYGDEBUG
       winDebug ("winAboutDlgProc - WM_INITDIALOG\n");
-#endif
 
       /* Store pointers to private structures for future use */
       s_pScreenPriv = (winPrivScreenPtr) lParam;
@@ -662,7 +648,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 	{
 	case IDOK:
 	case IDCANCEL:
-	  ErrorF ("winAboutDlgProc - WM_COMMAND - IDOK or IDCANCEL\n");
+	  winDebug ("winAboutDlgProc - WM_COMMAND - IDOK or IDCANCEL\n");
 
 	  DestroyWindow (g_hDlgAbout);
 	  g_hDlgAbout = NULL;

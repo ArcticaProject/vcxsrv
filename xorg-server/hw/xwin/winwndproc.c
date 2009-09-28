@@ -86,9 +86,7 @@ winWindowProc (HWND hwnd, UINT message,
   int				iScanCode;
   int				i;
 
-#if CYGDEBUG
   winDebugWin32Message("winWindowProc", hwnd, message, wParam, lParam);
-#endif
   
   /* Watch for server regeneration */
   if (g_ulServerGeneration != s_ulServerGeneration)
@@ -101,9 +99,7 @@ winWindowProc (HWND hwnd, UINT message,
   if ((s_pScreenPriv == NULL || hwnd != s_hwndLastPrivates)
       && (s_pScreenPriv = GetProp (hwnd, WIN_SCR_PROP)) != NULL)
     {
-#if CYGDEBUG
       winDebug ("winWindowProc - Setting privates handle\n");
-#endif
       s_pScreenInfo = s_pScreenPriv->pScreenInfo;
       s_pScreen = s_pScreenInfo->pScreen;
       s_hwndLastPrivates = hwnd;
@@ -124,9 +120,7 @@ winWindowProc (HWND hwnd, UINT message,
 				   s_pScreenPriv);
 
     case WM_CREATE:
-#if CYGDEBUG
       winDebug ("winWindowProc - WM_CREATE\n");
-#endif
       
       /*
        * Add a property to our display window that references
@@ -195,13 +189,13 @@ winWindowProc (HWND hwnd, UINT message,
 	  break;
 	}
       
-      ErrorF ("winWindowProc - WM_DISPLAYCHANGE - orig bpp: %d, last bpp: %d, "
+      winDebug ("winWindowProc - WM_DISPLAYCHANGE - orig bpp: %d, last bpp: %d, "
 	      "new bpp: %d\n",
 	      (int) s_pScreenInfo->dwBPP,
 	      (int) s_pScreenPriv->dwLastWindowsBitsPixel,
 	      wParam);
 
-      ErrorF ("winWindowProc - WM_DISPLAYCHANGE - new width: %d "
+      winDebug ("winWindowProc - WM_DISPLAYCHANGE - new width: %d "
 	      "new height: %d\n",
 	      LOWORD (lParam), HIWORD (lParam));
 
@@ -241,7 +235,7 @@ winWindowProc (HWND hwnd, UINT message,
 	      ))
 	{
 	  /* Cannot display the visual until the depth is restored */
-	  ErrorF ("winWindowProc - Disruptive change in depth\n");
+	  winDebug ("winWindowProc - Disruptive change in depth\n");
 
 	  /* Display Exit dialog */
 	  winDisplayDepthChangeDialog (s_pScreenPriv);
@@ -274,25 +268,19 @@ winWindowProc (HWND hwnd, UINT message,
 	   * relevant to the current engine (e.g., Shadow GDI).
 	   */
 
-#if CYGDEBUG
 	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Dimensions changed\n");
-#endif
 	  
 	  /* Release the old primary surface */
 	  (*s_pScreenPriv->pwinReleasePrimarySurface) (s_pScreen);
 
-#if CYGDEBUG
 	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Released "
 		  "primary surface\n");
-#endif
 
 	  /* Create the new primary surface */
 	  (*s_pScreenPriv->pwinCreatePrimarySurface) (s_pScreen);
 
-#if CYGDEBUG
 	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Recreated "
 		  "primary surface\n");
-#endif
 
 #if 0
 	  /* Multi-Window mode uses RandR for resizes */
@@ -304,10 +292,8 @@ winWindowProc (HWND hwnd, UINT message,
 	}
       else
 	{
-#if CYGDEBUG
 	  winDebug ("winWindowProc - WM_DISPLAYCHANGE - Dimensions did not "
 		  "change\n");
-#endif
 	}
 
       /* Store the new display dimensions and depth */
@@ -335,9 +321,7 @@ winWindowProc (HWND hwnd, UINT message,
 	RECT			rcWindow;
 	int			iWidth, iHeight;
 
-#if CYGDEBUG
 	winDebug ("winWindowProc - WM_SIZE\n");
-#endif
 
 	/* Break if we do not use scrollbars */
 	if (!s_pScreenInfo->fScrollbars
@@ -373,7 +357,7 @@ winWindowProc (HWND hwnd, UINT message,
 	iWidth = rcWindow.right - rcWindow.left;
 	iHeight = rcWindow.bottom - rcWindow.top;
 
-	ErrorF ("winWindowProc - WM_SIZE - window w: %d h: %d, "
+	winDebug ("winWindowProc - WM_SIZE - window w: %d h: %d, "
 		"new client area w: %d h: %d\n",
 		iWidth, iHeight, LOWORD (lParam), HIWORD (lParam));
 
@@ -437,9 +421,7 @@ winWindowProc (HWND hwnd, UINT message,
 	SCROLLINFO		si;
 	int			iVertPos;
 
-#if CYGDEBUG
 	winDebug ("winWindowProc - WM_VSCROLL\n");
-#endif
       
 	/* Get vertical scroll bar info */
 	si.cbSize = sizeof (si);
@@ -522,9 +504,7 @@ winWindowProc (HWND hwnd, UINT message,
 	SCROLLINFO		si;
 	int			iHorzPos;
 
-#if CYGDEBUG
 	winDebug ("winWindowProc - WM_HSCROLL\n");
-#endif
       
 	/* Get horizontal scroll bar info */
 	si.cbSize = sizeof (si);
@@ -608,10 +588,8 @@ winWindowProc (HWND hwnd, UINT message,
 	int			iCaptionHeight;
 	int			iBorderHeight, iBorderWidth;
 
-#if CYGDEBUG	
 	winDebug ("winWindowProc - WM_GETMINMAXINFO - pScreenInfo: %08x\n",
 		s_pScreenInfo);
-#endif
 
 	/* Can't do anything without screen info */
 	if (s_pScreenInfo == NULL
@@ -654,9 +632,7 @@ winWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_ERASEBKGND:
-#if CYGDEBUG
       winDebug ("winWindowProc - WM_ERASEBKGND\n");
-#endif
       /*
        * Pretend that we did erase the background but we don't care,
        * the application uses the full window estate. This avoids some
@@ -665,9 +641,7 @@ winWindowProc (HWND hwnd, UINT message,
       return TRUE;
 
     case WM_PAINT:
-#if CYGDEBUG
       winDebug ("winWindowProc - WM_PAINT\n");
-#endif
       /* Only paint if we have privates and the server is enabled */
       if (s_pScreenPriv == NULL
 	  || !s_pScreenPriv->fEnabled
@@ -688,9 +662,7 @@ winWindowProc (HWND hwnd, UINT message,
 
     case WM_PALETTECHANGED:
       {
-#if CYGDEBUG
 	winDebug ("winWindowProc - WM_PALETTECHANGED\n");
-#endif
 	/*
 	 * Don't process if we don't have privates or a colormap,
 	 * or if we have an invalid depth.
@@ -954,9 +926,7 @@ winWindowProc (HWND hwnd, UINT message,
     case WM_MOUSEWHEEL:
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
-#if CYGDEBUG
       winDebug ("winWindowProc - WM_MOUSEWHEEL\n");
-#endif
       winMouseWheel (s_pScreen, GET_WHEEL_DELTA_WPARAM(wParam));
       break;
 
@@ -1014,7 +984,7 @@ winWindowProc (HWND hwnd, UINT message,
 	   * user enters Alt + F4 and is surprised when the application
 	   * quits.
 	   */
-	  ErrorF ("winWindowProc - WM_*KEYDOWN - Closekey hit, quitting\n");
+	  winDebug ("winWindowProc - WM_*KEYDOWN - Closekey hit, quitting\n");
 	  
 	  /* Display Exit dialog */
 	  winDisplayExitDialog (s_pScreenPriv);
@@ -1107,7 +1077,7 @@ winWindowProc (HWND hwnd, UINT message,
       /* TODO: Override display of window when we have a bad depth */
       if (LOWORD(wParam) != WA_INACTIVE && s_pScreenPriv->fBadDepth)
 	{
-	  ErrorF ("winWindowProc - WM_ACTIVATE - Bad depth, trying "
+	  winDebug ("winWindowProc - WM_ACTIVATE - Bad depth, trying "
 		  "to override window activation\n");
 
 	  /* Minimize the window */
@@ -1129,9 +1099,7 @@ winWindowProc (HWND hwnd, UINT message,
 	  return 0;
 	}
 
-#if CYGDEBUG
       winDebug ("winWindowProc - WM_ACTIVATE\n");
-#endif
 
       /*
        * Focus is being changed to another window.
@@ -1157,9 +1125,7 @@ winWindowProc (HWND hwnd, UINT message,
 	  || s_pScreenInfo->fIgnoreInput)
 	break;
 
-#if CYGDEBUG || TRUE
       winDebug ("winWindowProc - WM_ACTIVATEAPP\n");
-#endif
 
       /* Activate or deactivate */
       s_pScreenPriv->fActive = wParam;
@@ -1247,7 +1213,7 @@ winWindowProc (HWND hwnd, UINT message,
 
 #ifdef XWIN_MULTIWINDOWEXTWM
     case WM_MANAGE:
-      ErrorF ("winWindowProc - WM_MANAGE\n");
+      winDebug ("winWindowProc - WM_MANAGE\n");
       s_pScreenInfo->fAnotherWMRunning = FALSE;
 
       if (s_pScreenInfo->fInternalWM)
@@ -1258,7 +1224,7 @@ winWindowProc (HWND hwnd, UINT message,
       break;
 
     case WM_UNMANAGE:
-      ErrorF ("winWindowProc - WM_UNMANAGE\n");
+      winDebug ("winWindowProc - WM_UNMANAGE\n");
       s_pScreenInfo->fAnotherWMRunning = TRUE;
 
       if (s_pScreenInfo->fInternalWM)

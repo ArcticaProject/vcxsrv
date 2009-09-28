@@ -36,7 +36,7 @@
 #include "winclipboard.h"
 #include "misc.h"
 #include "winmsg.h"
-
+#include <unistd.h>
 
 /*
  * References to external symbols
@@ -275,7 +275,7 @@ winClipboardFlushXEvents (HWND hwnd,
 		XSetSelectionOwner (pDisplay, XA_PRIMARY, None, CurrentTime);
 		XSetSelectionOwner (pDisplay, XInternAtom (pDisplay, "CLIPBOARD", False), None, CurrentTime);
 	        }
-	      ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
+	        ErrorF ("winClipboardFlushXEvents - SelectionRequest - "
 		      "GetClipboardData () failed: %08x\n",
 		      GetLastError ());
 
@@ -523,18 +523,14 @@ winClipboardFlushXEvents (HWND hwnd,
 	    {
 	      if (event.xselection.target == XA_STRING)
 		{
-#if 0
-		  ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
+		  winDebug ("winClipboardFlushXEvents - SelectionNotify - "
 			  "XA_STRING\n");
-#endif
 		  return WIN_XEVENTS_CONVERT;
 		}
 	      else if (event.xselection.target == atomUTF8String)
 		{
-#if 0
-		  ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
+		  winDebug ("winClipboardFlushXEvents - SelectionNotify - "
 			  "Requesting conversion of UTF8 target.\n");
-#endif
 		  iReturn = XConvertSelection (pDisplay,
 					       event.xselection.selection,
 					       XA_STRING,
@@ -557,10 +553,8 @@ winClipboardFlushXEvents (HWND hwnd,
 #ifdef X_HAVE_UTF8_STRING
 	      else if (event.xselection.target == atomCompoundText)
 		{
-#if 0
-		  ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
+		  winDebug ("winClipboardFlushXEvents - SelectionNotify - "
 			  "Requesting conversion of CompoundText target.\n");
-#endif
 		  iReturn = XConvertSelection (pDisplay,
 					       event.xselection.selection,
 					       atomUTF8String,
@@ -611,10 +605,8 @@ winClipboardFlushXEvents (HWND hwnd,
 	      break;
 	    }
 
-#if 0
-	  ErrorF ("SelectionNotify - returned data %d left %d\n",
+	  winDebug ("SelectionNotify - returned data %d left %d\n",
 		  xtpText.nitems, ulReturnBytesLeft);
-#endif
 
 	  /* Request the selection data */
 	  iReturn = XGetWindowProperty (pDisplay,
@@ -637,15 +629,15 @@ winClipboardFlushXEvents (HWND hwnd,
 	      break;
 	    }
 
-#if 0
+#ifdef WINDBG
 	    {
 	      char		*pszAtomName = NULL;
 
-	      ErrorF ("SelectionNotify - returned data %d left %d\n",
+	      winDebug ("SelectionNotify - returned data %d left %d\n",
 		      xtpText.nitems, ulReturnBytesLeft);
 	      
 	      pszAtomName = XGetAtomName(pDisplay, xtpText.encoding);
-	      ErrorF ("Notify atom name %s\n", pszAtomName);
+	      winDebug ("Notify atom name %s\n", pszAtomName);
 	      XFree (pszAtomName);
 	      pszAtomName = NULL;
 	    }

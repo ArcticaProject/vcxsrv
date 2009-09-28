@@ -46,9 +46,7 @@ winSetShapeMultiWindow (WindowPtr pWin)
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winScreenPriv(pScreen);
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winSetShapeMultiWindow - pWin: %08x\n", pWin);
-#endif
+  winDebug ("winSetShapeMultiWindow - pWin: %08x\n", pWin);
   
   WIN_UNWRAP(SetShape); 
   (*pScreen->SetShape)(pWin);
@@ -90,9 +88,7 @@ winReshapeMultiWindow (WindowPtr pWin)
   HRGN		hRgn, hRgnRect;
   winWindowPriv(pWin);
 
-#if CYGDEBUG
   winDebug ("winReshape ()\n");
-#endif
   
   /* Bail if the window is the root window */
   if (pWin->parent == NULL)

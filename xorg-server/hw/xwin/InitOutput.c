@@ -215,9 +215,7 @@ ddxGiveUp (void)
 {
   int		i;
 
-#if CYGDEBUG
   winDebug ("ddxGiveUp\n");
-#endif
 
   /* Perform per-screen deinitialization */
   for (i = 0; i < g_iNumScreens; ++i)
@@ -289,9 +287,7 @@ ddxGiveUp (void)
 void
 AbortDDX (void)
 {
-#if CYGDEBUG
   winDebug ("AbortDDX\n");
-#endif
   ddxGiveUp ();
 }
 
@@ -375,8 +371,10 @@ winCheckMount(void)
     return;
   }
   
- if (!binary) 
-   winMsg(X_WARNING, "/tmp mounted int textmode\n"); 
+#ifdef WINDBG
+  if (!binary) 
+    winDebug("/tmp mounted int textmode\n"); 
+#endif
 }
 #else
 static void
@@ -611,7 +609,7 @@ winFixupPaths (void)
     }
 #endif /* RELOCATE_PROJECTROOT */
     if (changed_fontpath)
-        winMsg (font_from, "FontPath set to \"%s\"\n", defaultFontPath);
+        winDebug ("FontPath set to \"%s\"\n", defaultFontPath);
 
 #ifdef RELOCATE_PROJECTROOT
     if (getenv("XKEYSYMDB") == NULL)
@@ -672,7 +670,7 @@ winFixupPaths (void)
             putenv(buffer);
         } else
         {
-            winMsg (X_ERROR, "Can not determine HOME directory\n");
+            ErrorF ("Can not determine HOME directory\n");
         } 
         if (shfolder != NULL)
             FreeLibrary(shfolder);
@@ -687,7 +685,7 @@ winFixupPaths (void)
             buffer[sizeof(buffer)-1] = 0;
             g_pszLogFile = buffer;
             GetLongPathName(buffer, buffer, MAX_PATH);
-            winMsg (X_DEFAULT, "Logfile set to \"%s\"\n", g_pszLogFile);
+            winDebug ("Logfile set to \"%s\"\n", g_pszLogFile);
         }
     }
     {
@@ -951,9 +949,7 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
   /* Log the command line */
   winLogCommandLine (argc, argv);
 
-#if CYGDEBUG
   winDebug ("InitOutput\n");
-#endif
 
   /* Validate command-line arguments */
   if (serverGeneration == 1 && !winValidateArgs ())
@@ -974,7 +970,7 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
 #ifdef XWIN_XF86CONFIG
   /* Try to read the xorg.conf-style configuration file */
   if (!winReadConfigfile ())
-    winErrorFVerb (1, "InitOutput - Error reading config file\n");
+    ErrorF ("InitOutput - Error reading config file\n");
 #else
   winConfigFiles ();
 #endif
@@ -1009,7 +1005,7 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
 					 "_TrackMouseEvent");
   if (g_fpTrackMouseEvent == NULL)
     {
-      winErrorFVerb (1, "InitOutput - Could not get pointer to function\n"
+      ErrorF ("InitOutput - Could not get pointer to function\n"
 	      "\t_TrackMouseEvent in comctl32.dll.  Try installing\n"
 	      "\tInternet Explorer 3.0 or greater if you have not\n"
 	      "\talready.\n");
@@ -1056,9 +1052,7 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
     }
 #endif
 
-#if CYGDEBUG || YES
   winDebug ("InitOutput - Returning.\n");
-#endif
 }
 
 

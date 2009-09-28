@@ -87,10 +87,6 @@ winDeleteNotifyIcon (winPrivScreenPtr pScreenPriv)
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
   NOTIFYICONDATA	nid = {0};
   
-#if 0
-  ErrorF ("winDeleteNotifyIcon\n");
-#endif
-
   nid.cbSize = sizeof (NOTIFYICONDATA);
   nid.hWnd = pScreenPriv->hwndScreen;
   nid.uID = pScreenInfo->dwScreen;

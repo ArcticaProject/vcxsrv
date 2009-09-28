@@ -42,9 +42,7 @@ winRealizeFontNativeGDI (ScreenPtr pScreen, FontPtr pFont)
   BOOL			fResult = TRUE;
   winScreenPriv(pScreen);
   
-#if CYGDEBUG
-  winTrace ("winRealizeFont (%p, %p)\n", pScreen, pFont);
-#endif
+  winDebug ("winRealizeFont (%p, %p)\n", pScreen, pFont);
 
   WIN_UNWRAP(RealizeFont);
   if (pScreen->RealizeFont)
@@ -62,9 +60,7 @@ winUnrealizeFontNativeGDI (ScreenPtr pScreen, FontPtr pFont)
   BOOL			fResult = TRUE;
   winScreenPriv(pScreen);
   
-#if CYGDEBUG
-  winTrace ("winUnrealizeFont (%p, %p)\n", pScreen, pFont);
-#endif
+  winDebug ("winUnrealizeFont (%p, %p)\n", pScreen, pFont);
 
   WIN_UNWRAP(UnrealizeFont);
   if (pScreen->UnrealizeFont)
@@ -72,9 +68,5 @@ winUnrealizeFontNativeGDI (ScreenPtr pScreen, FontPtr pFont)
   WIN_WRAP(UnrealizeFont, winUnrealizeFontNativeGDI);
   
   return fResult;
-#if CYGDEBUG
-  winDebug ("winUnrealizeFont()\n");
-#endif
-  return TRUE;
 }
 #endif

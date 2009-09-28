@@ -33,23 +33,19 @@
 /*
  * Function prototypes
  */
+ 
+#include "os.h"
 
-void winDrvMsgVerb (int scrnIndex,
-		    MessageType type, int verb, const char *format, ...);
-void winDrvMsg (int scrnIndex, MessageType type, const char *format, ...);
-void winMsgVerb (MessageType type, int verb, const char *format, ...);
-void winMsg (MessageType type, const char *format, ...);
 #if !defined(_MSC_VER) || defined(_DEBUG)
+#define WINDBG
 void winDebug (const char *format, ...);
+void winDebugWin32Message(const char* function, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 #else
 #define winDebug(...)
+#define winDebugWin32Message(...)
 #endif
 
-void winTrace (const char *format, ...);
-
-void winErrorFVerb (int verb, const char *format, ...);
-void winW32Error(int verb, const char *message);
-void winW32ErrorEx(int verb, const char *message, DWORD errorcode);
-void winDebugWin32Message(const char* function, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+void winW32Error(const char *message);
+void winW32ErrorEx(const char *message, DWORD errorcode);
 
 #endif

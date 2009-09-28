@@ -33,72 +33,12 @@
 #endif
 #include "win.h"
 #include "winmsg.h"
-#if CYGDEBUG
+#ifdef WINDBG
 #include "winmessages.h"
 #endif
 #include <stdarg.h>
 
-void winVMsg (int, MessageType, int verb, const char *, va_list);
-
-void
-winVMsg (int scrnIndex, MessageType type, int verb, const char *format,
-	 va_list ap)
-{
-  LogVMessageVerb(type, verb, format, ap);
-}
-
-
-void
-winDrvMsg (int scrnIndex, MessageType type, const char *format, ...)
-{
-  va_list ap;
-  va_start (ap, format);
-  LogVMessageVerb(type, 0, format, ap);
-  va_end (ap);
-}
-
-
-void
-winMsg (MessageType type, const char *format, ...)
-{
-  va_list ap;
-  va_start (ap, format);
-  LogVMessageVerb(type, 1, format, ap);
-  va_end (ap);
-}
-
-
-void
-winDrvMsgVerb (int scrnIndex, MessageType type, int verb, const char *format,
-	       ...)
-{
-  va_list ap;
-  va_start (ap, format);
-  LogVMessageVerb(type, verb, format, ap);
-  va_end (ap);
-}
-
-
-void
-winMsgVerb (MessageType type, int verb, const char *format, ...)
-{
-  va_list ap;
-  va_start (ap, format);
-  LogVMessageVerb(type, verb, format, ap);
-  va_end (ap);
-}
-
-
-void
-winErrorFVerb (int verb, const char *format, ...)
-{
-  va_list ap;
-  va_start (ap, format);
-  LogVMessageVerb(X_NONE, verb, format, ap);
-  va_end (ap);
-}
-
-#if !defined(_MSC_VER) || defined(_DEBUG)
+#ifdef WINDBG
 void
 winDebug (const char *format, ...)
 {
@@ -110,22 +50,13 @@ winDebug (const char *format, ...)
 #endif
 
 void
-winTrace (const char *format, ...)
+winW32Error(const char *msg)
 {
-  va_list ap;
-  va_start (ap, format);
-  LogVMessageVerb(X_NONE, 10, format, ap);
-  va_end (ap);
+    winW32ErrorEx(msg, GetLastError());
 }
 
 void
-winW32Error(int verb, const char *msg)
-{
-    winW32ErrorEx(verb, msg, GetLastError());
-}
-
-void
-winW32ErrorEx(int verb, const char *msg, DWORD errorcode)
+winW32ErrorEx(const char *msg, DWORD errorcode)
 {
     LPVOID buffer;
     if (!FormatMessage( 
@@ -139,16 +70,17 @@ winW32ErrorEx(int verb, const char *msg, DWORD errorcode)
                 0,
                 NULL ))
     {
-        winErrorFVerb(verb, "Unknown error in FormatMessage!\n"); 
+        ErrorF(msg); 
+        ErrorF("Unknown error in FormatMessage!\n"); 
     }
     else
     {
-        winErrorFVerb(verb, "%s %s", msg, (char *)buffer); 
+        ErrorF("%s %s", msg, (char *)buffer); 
         LocalFree(buffer);
     }
 }
 
-#if CYGDEBUG
+#ifdef WINDBG
 void winDebugWin32Message(const char* function, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   static int force = 0;
@@ -173,9 +105,5 @@ void winDebugWin32Message(const char* function, HWND hwnd, UINT message, WPARAM 
         winDebug("\thwnd 0x%x wParam 0x%x lParam 0x%x\n", hwnd, wParam, lParam);
       }
     }
-}
-#else
-void winDebugWin32Message(const char* function, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
 }
 #endif

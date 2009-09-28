@@ -113,6 +113,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "winprefs.h"
+#include "winmsg.h"
 
 /* The following give better error messages in bison at the cost of a few KB */
 #define YYERROR_VERBOSE 1
@@ -1821,7 +1822,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 218 "winprefsyacc.y"
-    { ErrorF("LoadPreferences: %s\n", (yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
+    { winDebug("LoadPreferences: %s\n", (yyvsp[(2) - (3)].sVal)); free((yyvsp[(2) - (3)].sVal)); }
     break;
 
 
@@ -2147,7 +2148,7 @@ static void
 OpenIcons (void)
 {
   if (pref.icon != NULL) {
-    ErrorF("LoadPreferences: Redefining icon mappings\n");
+    winDebug("LoadPreferences: Redefining icon mappings\n");
     free(pref.icon);
     pref.icon = NULL;
   }
@@ -2183,7 +2184,7 @@ static void
 OpenStyles (void)
 {
   if (pref.style != NULL) {
-    ErrorF("LoadPreferences: Redefining window style\n");
+    winDebug("LoadPreferences: Redefining window style\n");
     free(pref.style);
     pref.style = NULL;
   }
@@ -2216,7 +2217,7 @@ static void
 OpenSysMenu (void)
 {
   if (pref.sysMenu != NULL) {
-    ErrorF("LoadPreferences: Redefining system menu\n");
+    winDebug("LoadPreferences: Redefining system menu\n");
     free(pref.sysMenu);
     pref.sysMenu = NULL;
   }

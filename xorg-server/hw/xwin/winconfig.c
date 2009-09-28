@@ -129,11 +129,11 @@ winReadConfigfile ()
 
   if (filename)
     {
-      winMsg (from, "Using config file: \"%s\"\n", filename);
+      winDebug ("Using config file: \"%s\"\n", filename);
     }
   else
     {
-      winMsg (X_ERROR, "Unable to locate/open config file");
+      ErrorF ("Unable to locate/open config file");
       if (xf86ConfigFile)
 	ErrorF (": \"%s\"", xf86ConfigFile);
       ErrorF ("\n");
@@ -141,7 +141,7 @@ winReadConfigfile ()
     }
   if ((g_xf86configptr = xf86readConfigFile ()) == NULL)
     {
-      winMsg (X_ERROR, "Problem parsing the config file\n");
+      ErrorF ("Problem parsing the config file\n");
       return FALSE;
     }
   xf86closeConfigFile ();
@@ -154,13 +154,12 @@ winReadConfigfile ()
     {
       if (g_cmdline.screenname == NULL)
 	{
-	  winMsg (X_WARNING,
-		  "No Layout section. Using the first Screen section.\n");
+	  winDebug ("No Layout section. Using the first Screen section.\n");
 	}
       if (!configImpliedLayout (&g_winConfigLayout,
 				g_xf86configptr->conf_screen_lst))
 	{
-	  winMsg (X_ERROR, "Unable to determine the screen layout\n");
+	  ErrorF ("Unable to determine the screen layout\n");
 	  return FALSE;
 	}
     }
@@ -180,7 +179,7 @@ winReadConfigfile ()
 			     g_xf86configptr->conf_layout_lst,
 			     dfltlayout))
 	    {
-	      winMsg (X_ERROR, "Unable to determine the screen layout\n");
+	      ErrorF ("Unable to determine the screen layout\n");
 	      return FALSE;
 	    }
 	}
@@ -190,7 +189,7 @@ winReadConfigfile ()
 			     g_xf86configptr->conf_layout_lst,
 			     NULL))
 	    {
-	      winMsg (X_ERROR, "Unable to determine the screen layout\n");
+	      ErrorF ("Unable to determine the screen layout\n");
 	      return FALSE;
 	    }
 	}
@@ -241,7 +240,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
             case 3:  g_winInfo.keyboard.delay = 1000; break;
           }
         g_winInfo.keyboard.rate = (kbd_speed>0)?kbd_speed:1;
-        winMsgVerb(X_PROBED, 1, "Setting autorepeat to delay=%d, rate=%d\n",
+        winDebug("Setting autorepeat to delay=%d, rate=%d\n",
                 g_winInfo.keyboard.delay, g_winInfo.keyboard.rate);
       }
   }
@@ -267,12 +266,12 @@ winConfigKeyboard (DeviceIntPtr pDevice)
 	       such as the lack of WM_KEYUP for Caps Lock key.
 	       Loading US layout fixes this problem. */
 	    if (LoadKeyboardLayout("00000409", KLF_ACTIVATE) != NULL)
-	      winMsg (X_INFO, "Loading US keyboard layout.\n");
+	      winDebug("Loading US keyboard layout.\n");
 	    else
-	      winMsg (X_ERROR, "LoadKeyboardLaout failed.\n");
+	      ErrorF ("LoadKeyboardLaout failed.\n");
 	  }
     }
-    winMsg (X_PROBED, "winConfigKeyboard - Layout: \"%s\" (%08x) \n", 
+    winDebug ("winConfigKeyboard - Layout: \"%s\" (%08x) \n", 
             layoutName, layoutNum);
 
     for (pLayout = winKBLayouts; pLayout->winlayout != -1; pLayout++)
@@ -283,9 +282,8 @@ winConfigKeyboard (DeviceIntPtr pDevice)
 	  continue;
 	
         bfound = TRUE;
-	winMsg (X_PROBED,
-		"Using preset keyboard for \"%s\" (%x), type \"%d\"\n",
-		pLayout->layoutname, pLayout->winlayout, keyboardType);
+	winDebug ("Using preset keyboard for \"%s\" (%x), type \"%d\"\n",
+		  pLayout->layoutname, pLayout->winlayout, keyboardType);
 	
 	g_winInfo.xkb.model = pLayout->xkbmodel;
 	g_winInfo.xkb.layout = pLayout->xkblayout;
@@ -310,8 +308,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
         if (!RegOpenKey(HKEY_LOCAL_MACHINE, regpath, &regkey) &&
           !RegQueryValueEx(regkey, "Layout Text", 0, NULL, lname, &namesize))
           {
-	    winMsg (X_ERROR,
-		"Keyboardlayout \"%s\" (%s) is unknown\n", lname, layoutName);
+	    ErrorF ("Keyboardlayout \"%s\" (%s) is unknown\n", lname, layoutName);
           }
 
 	/* Close registry key */
@@ -351,7 +348,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
     {
 
       if (kbd->inp_identifier)
-	winMsg (kbdfrom, "Using keyboard \"%s\" as primary keyboard\n",
+	winDebug ("Using keyboard \"%s\" as primary keyboard\n",
 		kbd->inp_identifier);
 
       if ((s = winSetStrOption(kbd->inp_option_lst, "AutoRepeat", NULL)))
@@ -362,12 +359,12 @@ winConfigKeyboard (DeviceIntPtr pDevice)
                   (g_winInfo.keyboard.rate == 0) || 
                   (1000 / g_winInfo.keyboard.rate) < 1) 
             {
-              winErrorFVerb (2, "\"%s\" is not a valid AutoRepeat value", s);
+              ErrorF ("\"%s\" is not a valid AutoRepeat value", s);
               xfree(s);
               return FALSE;
             }
           xfree(s);
-          winMsg (X_CONFIG, "AutoRepeat: %ld %ld\n", 
+          winDebug ("AutoRepeat: %ld %ld\n", 
                   g_winInfo.keyboard.delay, g_winInfo.keyboard.rate);
         }
 #endif
@@ -388,7 +385,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
         if (s)
           {
             g_winInfo.xkb.rules = NULL_IF_EMPTY (s);
-            winMsg (from, "XKB: rules: \"%s\"\n", s);
+            winDebug ("XKB: rules: \"%s\"\n", s);
 	  }
           
         s = NULL;
@@ -407,7 +404,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
         if (s)
 	  {
 	    g_winInfo.xkb.model = NULL_IF_EMPTY (s);
-	    winMsg (from, "XKB: model: \"%s\"\n", s);
+	    winDebug ("XKB: model: \"%s\"\n", s);
 	  }
 
         s = NULL;
@@ -426,7 +423,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
         if (s)
           {
 	    g_winInfo.xkb.layout = NULL_IF_EMPTY (s);
-	    winMsg (from, "XKB: layout: \"%s\"\n", s);
+	    winDebug ("XKB: layout: \"%s\"\n", s);
 	  }
 
         s = NULL;
@@ -445,7 +442,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
 	if (s)
 	  {
 	    g_winInfo.xkb.variant = NULL_IF_EMPTY (s);
-	    winMsg (from, "XKB: variant: \"%s\"\n", s);
+	    winDebug ("XKB: variant: \"%s\"\n", s);
 	  }
 
         s = NULL;
@@ -464,7 +461,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
         if (s)
 	  {
 	    g_winInfo.xkb.options = NULL_IF_EMPTY (s);
-	    winMsg (from, "XKB: options: \"%s\"\n", s);
+	    winDebug ("XKB: options: \"%s\"\n", s);
 	  }
 
 #ifdef XWIN_XF86CONFIG
@@ -506,7 +503,7 @@ winConfigMouse (DeviceIntPtr pDevice)
   if (mouse != NULL)
     {
       if (mouse->inp_identifier)
-	winMsg (mousefrom, "Using pointer \"%s\" as primary pointer\n",
+	winDebug ("Using pointer \"%s\" as primary pointer\n",
 		mouse->inp_identifier);
 
       g_winInfo.pointer.emulate3Buttons =
@@ -521,8 +518,8 @@ winConfigMouse (DeviceIntPtr pDevice)
     }
   else
     {
-      winMsg (X_ERROR, "No primary pointer configured\n");
-      winMsg (X_DEFAULT, "Using compiletime defaults for pointer\n");
+      winDebug ("No primary pointer configured\n");
+      winDebug ("Using compiletime defaults for pointer\n");
     }
 
   return TRUE;
@@ -555,7 +552,7 @@ winConfigFiles ()
       from = X_CONFIG;
       defaultFontPath = xstrdup (filesptr->file_fontpath);
     }
-  winMsg (from, "FontPath set to \"%s\"\n", defaultFontPath);
+  winDebug ("FontPath set to \"%s\"\n", defaultFontPath);
 
   return TRUE;
 }
@@ -567,7 +564,7 @@ winConfigFiles (void)
   if (g_cmdline.fontPath)
     {
       defaultFontPath = g_cmdline.fontPath;
-      winMsg (X_CMDLINE, "FontPath set to \"%s\"\n", defaultFontPath);
+      winDebug("FontPath set to \"%s\"\n", defaultFontPath);
     }
 
   return TRUE;
@@ -747,8 +744,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	case OPTV_INTEGER:
 	  if (*s == '\0')
 	    {
-	      winDrvMsg (scrnIndex, X_WARNING,
-			 "Option \"%s\" requires an integer value\n",
+	      winDebug ( "Option \"%s\" requires an integer value\n",
 			 p->name);
 	      p->found = FALSE;
 	    }
@@ -761,8 +757,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 		}
 	      else
 		{
-		  winDrvMsg (scrnIndex, X_WARNING,
-			     "Option \"%s\" requires an integer value\n",
+		  winDebug ( "Option \"%s\" requires an integer value\n",
 			     p->name);
 		  p->found = FALSE;
 		}
@@ -771,8 +766,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	case OPTV_STRING:
 	  if (*s == '\0')
 	    {
-	      winDrvMsg (scrnIndex, X_WARNING,
-			 "Option \"%s\" requires an string value\n", p->name);
+	      winDebug ( "Option \"%s\" requires an string value\n", p->name);
 	      p->found = FALSE;
 	    }
 	  else
@@ -788,8 +782,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	case OPTV_REAL:
 	  if (*s == '\0')
 	    {
-	      winDrvMsg (scrnIndex, X_WARNING,
-			 "Option \"%s\" requires a floating point value\n",
+	      winDebug ( "Option \"%s\" requires a floating point value\n",
 			 p->name);
 	      p->found = FALSE;
 	    }
@@ -802,8 +795,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 		}
 	      else
 		{
-		  winDrvMsg (scrnIndex, X_WARNING,
-			     "Option \"%s\" requires a floating point value\n",
+		  winDebug ( "Option \"%s\" requires a floating point value\n",
 			     p->name);
 		  p->found = FALSE;
 		}
@@ -816,16 +808,14 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	    }
 	  else
 	    {
-	      winDrvMsg (scrnIndex, X_WARNING,
-			 "Option \"%s\" requires a boolean value\n", p->name);
+	      winDebug ( "Option \"%s\" requires a boolean value\n", p->name);
 	      p->found = FALSE;
 	    }
 	  break;
 	case OPTV_FREQ:
 	  if (*s == '\0')
 	    {
-	      winDrvMsg (scrnIndex, X_WARNING,
-			 "Option \"%s\" requires a frequency value\n",
+	      winDebug ( "Option \"%s\" requires a frequency value\n",
 			 p->name);
 	      p->found = FALSE;
 	    }
@@ -847,8 +837,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 		    units = 1000000;
 		  else
 		    {
-		      winDrvMsg (scrnIndex, X_WARNING,
-				 "Option \"%s\" requires a frequency value\n",
+		      winDebug ( "Option \"%s\" requires a frequency value\n",
 				 p->name);
 		      p->found = FALSE;
 		    }
@@ -857,8 +846,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 		}
 	      else
 		{
-		  winDrvMsg (scrnIndex, X_WARNING,
-			     "Option \"%s\" requires a frequency value\n",
+		  winDebug ( "Option \"%s\" requires a frequency value\n",
 			     p->name);
 		  p->found = FALSE;
 		}
@@ -876,12 +864,12 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	}
       if (p->found)
 	{
-	  winDrvMsgVerb (scrnIndex, X_CONFIG, 2, "Option \"%s\"", p->name);
+	  winDebug ("Option \"%s\"", p->name);
 	  if (!(p->type == OPTV_BOOLEAN && *s == 0))
 	    {
-	      winErrorFVerb (2, " \"%s\"", s);
+	      winDebug (" \"%s\"", s);
 	    }
-	  winErrorFVerb (2, "\n");
+	  winDebug ("\n");
 	}
     }
   else if (p->type == OPTV_BOOLEAN)
@@ -922,8 +910,7 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	    }
 	  else
 	    {
-	      winDrvMsg (scrnIndex, X_WARNING,
-			 "Option \"%s\" requires a boolean value\n", newn);
+	      winDebug ( "Option \"%s\" requires a boolean value\n", newn);
 	      p->found = FALSE;
 	    }
 	}
@@ -933,12 +920,12 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	}
       if (p->found)
 	{
-	  winDrvMsgVerb (scrnIndex, X_CONFIG, 2, "Option \"%s\"", newn);
+	  winDebug ("Option \"%s\"", newn);
 	  if (*s != 0)
 	    {
-	      winErrorFVerb (2, " \"%s\"", s);
+	      winDebug (" \"%s\"", s);
 	    }
-	  winErrorFVerb (2, "\n");
+	  winDebug ("\n");
 	}
       free (n);
     }

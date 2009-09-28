@@ -56,30 +56,30 @@ winClipboardDetectUnicodeSupport (void)
       if (osvi.dwMajorVersion >= 6)
       {
 	if (osvi.wProductType == VER_NT_WORKSTATION)
-	   ErrorF ("OS: Windows Vista\n");
+	   winDebug ("OS: Windows Vista\n");
 	else
-	   ErrorF ("OS: Windows Server 2008\n");
+	   winDebug ("OS: Windows Server 2008\n");
 	fReturn = TRUE;
       }
       else if (osvi.dwMajorVersion == 5)
       {
 	if (osvi.dwMinorVersion == 2)
 	{
-	  ErrorF ("OS: Windows 2003\n");
+	  winDebug ("OS: Windows 2003\n");
 	  fReturn = TRUE;
 	}
 	else if (osvi.dwMinorVersion == 1)
 	{
-	  ErrorF ("OS: Windows XP\n");
+	  winDebug ("OS: Windows XP\n");
 	  fReturn = TRUE;
 	}
-	else if (osvi.dwMinorVersion == 0) ErrorF ("OS: Windows 2000\n");
+	else if (osvi.dwMinorVersion == 0) winDebug ("OS: Windows 2000\n");
       }
-      else if (osvi.dwMajorVersion <= 4) ErrorF ("OS: Windows NT\n");
+      else if (osvi.dwMajorVersion <= 4) winDebug ("OS: Windows NT\n");
       break;
 
     case VER_PLATFORM_WIN32_WINDOWS:
-      ErrorF ("OS: Windows 95/98/Me\n");
+      winDebug ("OS: Windows 95/98/Me\n");
       break;
     }
 

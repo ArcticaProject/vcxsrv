@@ -63,9 +63,7 @@ winCreateWindowNativeGDI (WindowPtr pWin)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winCreateWindowNativeGDI (%p)\n", pWin);
-#endif
+  winDebug ("winCreateWindowNativeGDI (%p)\n", pWin);
 
   WIN_UNWRAP(CreateWindow);
   fResult = (*pScreen->CreateWindow) (pWin);
@@ -86,9 +84,7 @@ winDestroyWindowNativeGDI (WindowPtr pWin)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winDestroyWindowNativeGDI (%p)\n", pWin);
-#endif
+  winDebug ("winDestroyWindowNativeGDI (%p)\n", pWin);
 
   WIN_UNWRAP(DestroyWindow); 
   fResult = (*pScreen->DestroyWindow)(pWin);
@@ -109,9 +105,7 @@ winPositionWindowNativeGDI (WindowPtr pWin, int x, int y)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winPositionWindowNativeGDI (%p)\n", pWin);
-#endif
+  winDebug ("winPositionWindowNativeGDI (%p)\n", pWin);
 
   WIN_UNWRAP(PositionWindow);
   fResult = (*pScreen->PositionWindow)(pWin, x, y);
@@ -139,10 +133,6 @@ winCopyWindowNativeGDI (WindowPtr pWin,
   BoxPtr		pBoxDst;
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winScreenPriv(pScreen);
-
-#if 0
-  ErrorF ("winCopyWindow\n");
-#endif
 
   /* Get a pointer to the root window */
   pwinRoot = WindowTable[pWin->drawable.pScreen->myNum];
@@ -183,19 +173,9 @@ winCopyWindowNativeGDI (WindowPtr pWin,
   pBoxDst = REGION_RECTS(prgnDst);
   ppt = pptSrc;
 
-#if 0
-  ErrorF ("winCopyWindow - x1\tx2\ty1\ty2\tx\ty\n");
-#endif
-
   /* BitBlt each source to the destination point */
   for (i = nbox; --i >= 0; pBoxDst++, ppt++)
     {
-#if 0
-      ErrorF ("winCopyWindow - %d\t%d\t%d\t%d\t%d\t%d\n",
-	      pBoxDst->x1, pBoxDst->x2, pBoxDst->y1, pBoxDst->y2,
-	      ppt->x, ppt->y);
-#endif
-
       BitBlt (pScreenPriv->hdcScreen,
 	      pBoxDst->x1, pBoxDst->y1,
 	      pBoxDst->x2 - pBoxDst->x1, pBoxDst->y2 - pBoxDst->y1,
@@ -221,9 +201,7 @@ winChangeWindowAttributesNativeGDI (WindowPtr pWin, unsigned long mask)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winChangeWindowAttributesNativeGDI (%p)\n", pWin);
-#endif
+  winDebug ("winChangeWindowAttributesNativeGDI (%p)\n", pWin);
   
   WIN_UNWRAP(ChangeWindowAttributes); 
   fResult = (*pScreen->ChangeWindowAttributes)(pWin, mask);
@@ -249,9 +227,7 @@ winUnmapWindowNativeGDI (WindowPtr pWin)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winUnmapWindowNativeGDI (%p)\n", pWin);
-#endif
+  winDebug ("winUnmapWindowNativeGDI (%p)\n", pWin);
 
   WIN_UNWRAP(UnrealizeWindow); 
   fResult = (*pScreen->UnrealizeWindow)(pWin);
@@ -273,9 +249,7 @@ winMapWindowNativeGDI (WindowPtr pWin)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winMapWindowNativeGDI (%p)\n", pWin);
-#endif
+  winDebug ("winMapWindowNativeGDI (%p)\n", pWin);
 
   WIN_UNWRAP(RealizeWindow); 
   fResult = (*pScreen->RealizeWindow)(pWin);
@@ -298,9 +272,7 @@ winCreateWindowRootless (WindowPtr pWin)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winCreateWindowRootless (%p)\n", pWin);
-#endif
+  winDebug ("winCreateWindowRootless (%p)\n", pWin);
 
   WIN_UNWRAP(CreateWindow);
   fResult = (*pScreen->CreateWindow) (pWin);
@@ -323,9 +295,7 @@ winDestroyWindowRootless (WindowPtr pWin)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winDestroyWindowRootless (%p)\n", pWin);
-#endif
+  winDebug ("winDestroyWindowRootless (%p)\n", pWin);
 
   WIN_UNWRAP(DestroyWindow); 
   fResult = (*pScreen->DestroyWindow)(pWin);
@@ -353,10 +323,7 @@ winPositionWindowRootless (WindowPtr pWin, int x, int y)
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winScreenPriv(pScreen);
 
-
-#if CYGDEBUG
-  winTrace ("winPositionWindowRootless (%p)\n", pWin);
-#endif
+  winDebug ("winPositionWindowRootless (%p)\n", pWin);
 
   WIN_UNWRAP(PositionWindow);
   fResult = (*pScreen->PositionWindow)(pWin, x, y);
@@ -378,9 +345,7 @@ winChangeWindowAttributesRootless (WindowPtr pWin, unsigned long mask)
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winChangeWindowAttributesRootless (%p)\n", pWin);
-#endif
+  winDebug ("winChangeWindowAttributesRootless (%p)\n", pWin);
 
   WIN_UNWRAP(ChangeWindowAttributes); 
   fResult = (*pScreen->ChangeWindowAttributes)(pWin, mask);
@@ -404,9 +369,7 @@ winUnmapWindowRootless (WindowPtr pWin)
   winWindowPriv(pWin);
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winUnmapWindowRootless (%p)\n", pWin);
-#endif
+  winDebug ("winUnmapWindowRootless (%p)\n", pWin);
 
   WIN_UNWRAP(UnrealizeWindow); 
   fResult = (*pScreen->UnrealizeWindow)(pWin);
@@ -435,9 +398,7 @@ winMapWindowRootless (WindowPtr pWin)
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winMapWindowRootless (%p)\n", pWin);
-#endif
+  winDebug ("winMapWindowRootless (%p)\n", pWin);
 
   WIN_UNWRAP(RealizeWindow); 
   fResult = (*pScreen->RealizeWindow)(pWin);
@@ -457,9 +418,7 @@ winSetShapeRootless (WindowPtr pWin)
   ScreenPtr		pScreen = pWin->drawable.pScreen;
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
-  winTrace ("winSetShapeRootless (%p)\n", pWin);
-#endif
+  winDebug ("winSetShapeRootless (%p)\n", pWin);
 
   WIN_UNWRAP(SetShape); 
   (*pScreen->SetShape)(pWin);
@@ -488,9 +447,7 @@ winAddRgn (WindowPtr pWin, pointer data)
   /* If pWin is not Root */
   if (pWin->parent != NULL) 
     {
-#if CYGDEBUG
       winDebug ("winAddRgn ()\n");
-#endif
       if (pWin->mapped)
 	{
 	  iBorder = wBorderWidth (pWin);
@@ -505,8 +462,8 @@ winAddRgn (WindowPtr pWin, pointer data)
 	  
 	  if (hRgnWin == NULL)
 	    {
-	      ErrorF ("winAddRgn - CreateRectRgn () failed\n");
-	      ErrorF ("  Rect %d %d %d %d\n",
+	      winDebug ("winAddRgn - CreateRectRgn () failed\n");
+	      winDebug ("  Rect %d %d %d %d\n",
 		      iX, iY, iX + iWidth, iY + iHeight);
 	    }
 	  
@@ -571,9 +528,7 @@ winReshapeRootless (WindowPtr pWin)
   HRGN		hRgn, hRgnRect;
   winWindowPriv(pWin);
 
-#if CYGDEBUG
   winDebug ("winReshapeRootless ()\n");
-#endif
 
   /* Bail if the window is the root window */
   if (pWin->parent == NULL)

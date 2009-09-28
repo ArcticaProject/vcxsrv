@@ -109,7 +109,7 @@ winQueryScreenDIBFormat (ScreenPtr pScreen, BITMAPINFOHEADER *pbmih)
 {
   winScreenPriv(pScreen);
   HBITMAP		hbmp;
-#if CYGDEBUG
+#ifdef WINDBG
   LPDWORD		pdw = NULL;
 #endif
   
@@ -138,7 +138,7 @@ winQueryScreenDIBFormat (ScreenPtr pScreen, BITMAPINFOHEADER *pbmih)
       return FALSE;
     }
 
-#if CYGDEBUG
+#ifdef WINDBG
   /* Get a pointer to bitfields */
   pdw = (DWORD*) ((CARD8*)pbmih + sizeof (BITMAPINFOHEADER));
 
@@ -199,7 +199,7 @@ winQueryRGBBitsAndMasks (ScreenPtr pScreen)
   if (GetDeviceCaps (pScreenPriv->hdcScreen, PLANES)
       * GetDeviceCaps (pScreenPriv->hdcScreen, BITSPIXEL) == 24)
     {
-      ErrorF ("winQueryRGBBitsAndMasks - GetDeviceCaps (BITSPIXEL) "
+      winDebug ("winQueryRGBBitsAndMasks - GetDeviceCaps (BITSPIXEL) "
 	      "returned 24 for the screen.  Using default 24bpp masks.\n");
 
       /* 8 bits per primary color */
@@ -228,7 +228,7 @@ winQueryRGBBitsAndMasks (ScreenPtr pScreen)
       /* Get a pointer to bitfields */
       pdw = (DWORD*) ((CARD8*)pbmih + sizeof (BITMAPINFOHEADER));
       
-#if CYGDEBUG
+#ifdef WINDBG
       winDebug ("%s - Masks: %08x %08x %08x\n", __FUNCTION__,
 	      pdw[0], pdw[1], pdw[2]);
       winDebug ("%s - Bitmap: %dx%d %d bpp %d planes\n", __FUNCTION__,
@@ -372,7 +372,7 @@ winAllocateFBShadowGDI (ScreenPtr pScreen)
   pbmih->biWidth = pScreenInfo->dwWidth;
   pbmih->biHeight = -pScreenInfo->dwHeight;
   
-  ErrorF ("winAllocateFBShadowGDI - Creating DIB with width: %d height: %d "
+  winDebug ("winAllocateFBShadowGDI - Creating DIB with width: %d height: %d "
 	  "depth: %d\n",
 	  (int) pbmih->biWidth, (int) -pbmih->biHeight, pbmih->biBitCount);
 
@@ -385,14 +385,12 @@ winAllocateFBShadowGDI (ScreenPtr pScreen)
 					      0);
   if (pScreenPriv->hbmpShadow == NULL || pScreenInfo->pfb == NULL)
     {
-      winW32Error (2, "winAllocateFBShadowGDI - CreateDIBSection failed:");
+      winW32Error ("winAllocateFBShadowGDI - CreateDIBSection failed:");
       return FALSE;
     }
   else
     {
-#if CYGDEBUG
       winDebug ("winAllocateFBShadowGDI - Shadow buffer allocated\n");
-#endif
     }
 
   /* Get information about the bitmap that was allocated */
@@ -400,22 +398,18 @@ winAllocateFBShadowGDI (ScreenPtr pScreen)
 	     sizeof (dibsection),
 	     &dibsection);
 
-#if CYGDEBUG || YES
   /* Print information about bitmap allocated */
   winDebug ("winAllocateFBShadowGDI - Dibsection width: %d height: %d "
 	  "depth: %d size image: %d\n",
 	  (int) dibsection.dsBmih.biWidth, (int) dibsection.dsBmih.biHeight,
 	  dibsection.dsBmih.biBitCount,
 	  (int) dibsection.dsBmih.biSizeImage);
-#endif
 
   /* Select the shadow bitmap into the shadow DC */
   SelectObject (pScreenPriv->hdcShadow,
 		pScreenPriv->hbmpShadow);
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowGDI - Attempting a shadow blit\n");
-#endif
 
   /* Do a test blit from the shadow to the screen, I think */
   fReturn = BitBlt (pScreenPriv->hdcScreen,
@@ -426,21 +420,15 @@ winAllocateFBShadowGDI (ScreenPtr pScreen)
 		    SRCCOPY);
   if (fReturn)
     {
-#if CYGDEBUG
       winDebug ("winAllocateFBShadowGDI - Shadow blit success\n");
-#endif
     }
   else
     {
-      winW32Error (2, "winAllocateFBShadowGDI - Shadow blit failure\n");
-#if 0      
-      return FALSE;
-#else 
+      winW32Error ("winAllocateFBShadowGDI - Shadow blit failure\n");
       /* ago: ignore this error. The blit fails with wine, but does not 
        * cause any problems later. */
 
       fReturn = TRUE;
-#endif      
     }
 
   /* Look for height weirdness */
@@ -454,10 +442,8 @@ winAllocateFBShadowGDI (ScreenPtr pScreen)
 			    / dibsection.dsBmih.biHeight)
 			   * 8) / pScreenInfo->dwBPP;
 
-#if CYGDEBUG || YES
   winDebug ("winAllocateFBShadowGDI - Created shadow stride: %d\n",
 	  (int) pScreenInfo->dwStride);
-#endif
 
   /* See if the shadow bitmap will be larger than the DIB size limit */
   if (pScreenInfo->dwWidth * pScreenInfo->dwHeight * pScreenInfo->dwBPP
@@ -524,15 +510,17 @@ winShadowUpdateGDI (ScreenPtr pScreen,
   if (dwBox != 1)
     {
       ++s_dwNonUnitRegions;
-      ErrorF ("winShadowUpdatGDI - dwBox: %d\n", dwBox);
+      winDebug ("winShadowUpdatGDI - dwBox: %d\n", dwBox);
     }
   
   if ((s_dwTotalUpdates % 100) == 0)
-    ErrorF ("winShadowUpdateGDI - %d%% non-unity regions, avg boxes: %d "
+  {
+    winDebug ("winShadowUpdateGDI - %d%% non-unity regions, avg boxes: %d "
 	    "nu: %d tu: %d\n",
 	    (s_dwNonUnitRegions * 100) / s_dwTotalUpdates,
 	    s_dwTotalBoxes / s_dwTotalUpdates,
 	    s_dwNonUnitRegions, s_dwTotalUpdates);
+  }
 #endif /* XWIN_UPDATESTATS */
 
   /*
@@ -625,9 +613,7 @@ winCloseScreenShadowGDI (int nIndex, ScreenPtr pScreen)
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
   Bool			fReturn;
 
-#if CYGDEBUG
   winDebug ("winCloseScreenShadowGDI - Freeing screen resources\n");
-#endif
 
   /* Flag that the screen is closed */
   pScreenPriv->fClosed = TRUE;
@@ -700,7 +686,7 @@ winInitVisualsShadowGDI (ScreenPtr pScreen)
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
 
   /* Display debugging information */
-  ErrorF ("winInitVisualsShadowGDI - Masks %08x %08x %08x BPRGB %d d %d "
+  winDebug ("winInitVisualsShadowGDI - Masks %08x %08x %08x BPRGB %d d %d "
 	  "bpp %d\n",
 	  (unsigned int) pScreenPriv->dwRedMask,
 	  (unsigned int) pScreenPriv->dwGreenMask,
@@ -816,9 +802,7 @@ winInitVisualsShadowGDI (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winInitVisualsShadowGDI - Returning\n");
-#endif
 
   return TRUE;
 }
@@ -852,7 +836,7 @@ winAdjustVideoModeShadowGDI (ScreenPtr pScreen)
   if (pScreenInfo->dwBPP == WIN_DEFAULT_BPP)
     {
       /* No -depth parameter passed, let the user know the depth being used */
-      ErrorF ("winAdjustVideoModeShadowGDI - Using Windows display "
+      winDebug ("winAdjustVideoModeShadowGDI - Using Windows display "
 	      "depth of %d bits per pixel\n", (int) dwBPP);
 
       /* Use GDI's depth */
@@ -861,7 +845,7 @@ winAdjustVideoModeShadowGDI (ScreenPtr pScreen)
   else if (dwBPP != pScreenInfo->dwBPP)
     {
       /* Warn user if GDI depth is different than -depth parameter */
-      ErrorF ("winAdjustVideoModeShadowGDI - Command line bpp: %d, "\
+      winDebug ("winAdjustVideoModeShadowGDI - Command line bpp: %d, "\
 	      "using bpp: %d\n", (int) pScreenInfo->dwBPP, (int) dwBPP);
 
       /* We'll use GDI's depth */
@@ -1010,17 +994,13 @@ winRealizeInstalledPaletteShadowGDI (ScreenPtr pScreen)
   winScreenPriv(pScreen);
   winPrivCmapPtr	pCmapPriv = NULL;
 
-#if CYGDEBUG
   winDebug ("winRealizeInstalledPaletteShadowGDI\n");
-#endif
 
   /* Don't do anything if there is not a colormap */
   if (pScreenPriv->pcmapInstalled == NULL)
     {
-#if CYGDEBUG
       winDebug ("winRealizeInstalledPaletteShadowGDI - No colormap "
 	      "installed\n");
-#endif
       return TRUE;
     }
 
@@ -1247,10 +1227,8 @@ winDestroyColormapShadowGDI (ColormapPtr pColormap)
    */
   if (pColormap->flags & IsDefault)
     {
-#if CYGDEBUG
       winDebug ("winDestroyColormapShadowGDI - Destroying default "
 	      "colormap\n");
-#endif
       
       /*
        * FIXME: Walk the list of all screens, popping the default

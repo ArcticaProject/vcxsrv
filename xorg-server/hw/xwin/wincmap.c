@@ -119,17 +119,13 @@ winInstallColormap (ColormapPtr pColormap)
   winScreenPriv(pScreen);
   ColormapPtr		oldpmap = pScreenPriv->pcmapInstalled;
 
-#if CYGDEBUG
   winDebug ("winInstallColormap\n");
-#endif
  
   /* Did the colormap actually change? */
   if (pColormap != oldpmap)
     {
-#if CYGDEBUG
       winDebug ("winInstallColormap - Colormap has changed, attempt "
 	      "to install.\n");
-#endif
       
       /* Was there a previous colormap? */
       if (oldpmap != (ColormapPtr) None)
@@ -145,7 +141,7 @@ winInstallColormap (ColormapPtr pColormap)
       /* Call the engine specific colormap install procedure */
       if (!((*pScreenPriv->pwinInstallColormap) (pColormap)))
 	{
-	  winErrorFVerb (2, "winInstallColormap - Screen specific colormap install "
+	  ErrorF ("winInstallColormap - Screen specific colormap install "
 		  "procedure failed.  Continuing, but colors may be "
 		  "messed up from now on.\n");
 	}
@@ -163,9 +159,7 @@ winUninstallColormap (ColormapPtr pmap)
   winScreenPriv(pmap->pScreen);
   ColormapPtr curpmap = pScreenPriv->pcmapInstalled;
 
-#if CYGDEBUG
   winDebug ("winUninstallColormap\n");
-#endif
 
   /* Is the colormap currently installed? */
   if (pmap != curpmap)
@@ -204,7 +198,7 @@ winStoreColors (ColormapPtr pmap,
   int			i;
   unsigned short	nRed, nGreen, nBlue;
 
-#if CYGDEBUG
+#ifdef WINDBG
   if (ndef != 1)
     winDebug ("winStoreColors - ndef: %d\n",
 	    ndef);
@@ -228,16 +222,14 @@ winStoreColors (ColormapPtr pmap,
       pCmapPriv->rgbColors[pdefs[0].pixel + i].rgbGreen = nGreen;
       pCmapPriv->rgbColors[pdefs[0].pixel + i].rgbBlue = nBlue;
 
-#if CYGDEBUG
       winDebug ("winStoreColors - nRed %d nGreen %d nBlue %d\n",
 	      nRed, nGreen, nBlue);
-#endif
     }
 
   /* Call the engine specific store colors procedure */
   if (!((pScreenPriv->pwinStoreColors) (pmap, ndef, pdefs)))
     {
-      winErrorFVerb (2, "winStoreColors - Engine cpecific color storage procedure "
+      ErrorF ("winStoreColors - Engine cpecific color storage procedure "
 	      "failed.  Continuing, but colors may be messed up from now "
 	      "on.\n");
     }
@@ -251,9 +243,7 @@ winResolveColor (unsigned short *pred,
 		 unsigned short *pblue,
 		 VisualPtr	pVisual)
 {
-#if CYGDEBUG
   winDebug ("winResolveColor ()\n");
-#endif
 
   miResolveColor (pred, pgreen, pblue, pVisual);
 }
@@ -267,9 +257,7 @@ winCreateColormap (ColormapPtr pmap)
   ScreenPtr		pScreen = pmap->pScreen;
   winScreenPriv(pScreen);
 
-#if CYGDEBUG
   winDebug ("winCreateColormap\n");
-#endif
 
   /* Allocate colormap privates */
   if (!winAllocateCmapPrivates (pmap))
@@ -319,7 +307,7 @@ winDestroyColormap (ColormapPtr pColormap)
   /* Call the engine specific colormap destruction procedure */
   if (!((*pScreenPriv->pwinDestroyColormap) (pColormap)))
     {
-      winErrorFVerb (2, "winDestroyColormap - Engine specific colormap destruction "
+      ErrorF ("winDestroyColormap - Engine specific colormap destruction "
 	      "procedure failed.  Continuing, but it is possible that memory "
 	      "was leaked, or that colors will be messed up from now on.\n");
     }
@@ -328,9 +316,7 @@ winDestroyColormap (ColormapPtr pColormap)
   free (pCmapPriv);
   winSetCmapPriv (pColormap, NULL);
 
-#if CYGDEBUG
   winDebug ("winDestroyColormap - Returning\n");
-#endif
 }
 
 
@@ -359,10 +345,8 @@ winGetPaletteDIB (ScreenPtr pScreen, ColormapPtr pcmap)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winGetPaletteDIB - Retrieved %d colors from DIB\n",
 	  uiColorsRetrieved);
-#endif
 
   /* Set the DIB color table to the default screen palette */
   if (SetDIBColorTable (pScreenPriv->hdcShadow,
@@ -384,11 +368,9 @@ winGetPaletteDIB (ScreenPtr pScreen, ColormapPtr pcmap)
       nGreen = rgbColors[i].rgbGreen << 8;
       nBlue = rgbColors[i].rgbBlue << 8;
 
-#if CYGDEBUG
       winDebug ("winGetPaletteDIB - Allocating a color: %d; "
 	      "%d %d %d\n",
 	      pixel, nRed, nGreen, nBlue);
-#endif
 
       /* Allocate a entry in the X colormap */
       if (AllocColor (pcmap,
@@ -460,10 +442,8 @@ winGetPaletteDD (ScreenPtr pScreen, ColormapPtr pcmap)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winGetPaletteDD - uiSystemPaletteEntries %d\n",
 	  uiSystemPaletteEntries);
-#endif
   
   /* Allocate palette entries structure */
   ppeColors = malloc (uiSystemPaletteEntries * sizeof (PALETTEENTRY));
@@ -486,11 +466,9 @@ winGetPaletteDD (ScreenPtr pScreen, ColormapPtr pcmap)
       nRed = ppeColors[i].peRed << 8;
       nGreen = ppeColors[i].peGreen << 8;
       nBlue = ppeColors[i].peBlue << 8;
-#if CYGDEBUG
       winDebug ("winGetPaletteDD - Allocating a color: %d; "
 	      "%d %d %d\n",
 	      pixel, nRed, nGreen, nBlue);
-#endif
       if (AllocColor (pcmap,
 		      &nRed,
 		      &nGreen,
@@ -548,9 +526,7 @@ winCreateDefColormap (ScreenPtr pScreen)
   ColormapPtr		pcmap = NULL;
   Pixel			wp, bp;
 
-#if CYGDEBUG
   winDebug ("winCreateDefColormap\n");
-#endif
 
   /* Use standard fb colormaps for non palettized color modes */
   if (pScreenInfo->dwBPP > 8)
@@ -570,10 +546,8 @@ winCreateDefColormap (ScreenPtr pScreen)
    * to be changed by clients.
    */
 
-#if CYGDEBUG
   winDebug ("winCreateDefColormap - defColormap: %d\n",
 	  pScreen->defColormap);
-#endif
 
   /* Allocate an X colormap, owned by client 0 */
   if (CreateColormap (pScreen->defColormap, 
@@ -592,9 +566,7 @@ winCreateDefColormap (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winCreateDefColormap - Created a colormap\n");
-#endif
 
   /* Branch on the visual class */
   if (!(pVisual->class & DynamicClass))
@@ -639,36 +611,12 @@ winCreateDefColormap (ScreenPtr pScreen)
       pScreen->whitePixel = wp;
       pScreen->blackPixel = bp;
 
-#if 0
-      /* Have to reserve first 10 and last ten pixels in DirectDraw windowed */
-      if (pScreenInfo->dwEngine != WIN_SERVER_SHADOW_GDI)
-	{
-	  int		k;
-	  Pixel		p;
-
-	  for (k = 1; k < 10; ++k)
-	    {
-	      p = k;
-	      if (AllocColor (pcmap, &ones, &ones, &ones, &p, 0) != Success)
-		FatalError ("Foo!\n");
-	    }
-	  
-	  for (k = 245; k < 255; ++k)
-	    {
-	      p = k;
-	      if (AllocColor (pcmap, &zero, &zero, &zero, &p, 0) != Success)
-		FatalError ("Baz!\n");
-	    }
-	}
-#endif
     }
 
   /* Install the created colormap */
   (*pScreen->InstallColormap)(pcmap);
 
-#if CYGDEBUG
   winDebug ("winCreateDefColormap - Returning\n");
-#endif
 
   return TRUE;
 }

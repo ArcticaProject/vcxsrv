@@ -37,6 +37,6 @@
 RegionPtr
 winPixmapToRegionNativeGDI (PixmapPtr pPix)
 {
-  ErrorF ("winPixmapToRegion()\n");
+  winDebug ("winPixmapToRegion()\n");
   return NULL;
 }

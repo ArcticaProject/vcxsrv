@@ -115,7 +115,7 @@ winClipboardProc (void *pvNotUsed)
   char			szDisplay[512];
   int			iSelectError;
 
-  ErrorF ("winClipboardProc - Hello\n");
+  winDebug ("winClipboardProc - Hello\n");
 
   /* Do we have Unicode support? */
   g_fUnicodeSupport = winClipboardDetectUnicodeSupport ();
@@ -187,7 +187,7 @@ winClipboardProc (void *pvNotUsed)
 	    display);
 
   /* Print the display connection string */
-  ErrorF ("winClipboardProc - DISPLAY=%s\n", szDisplay);
+  winDebug ("winClipboardProc - DISPLAY=%s\n", szDisplay);
 
   /* Open the X display */
   do
@@ -217,7 +217,7 @@ winClipboardProc (void *pvNotUsed)
   /* Save the display in the screen privates */
   g_pClipboardDisplay = pDisplay;
 
-  ErrorF ("winClipboardProc - XOpenDisplay () returned and "
+  winDebug ("winClipboardProc - XOpenDisplay () returned and "
 	  "successfully opened the display.\n");
 
   /* Get our connection number */
@@ -315,7 +315,7 @@ winClipboardProc (void *pvNotUsed)
     goto thread_errorexit;
   }
 
-  ErrorF ("winClipboardProc - Started\n");
+  winDebug ("winClipboardProc - Started\n");
   /* Signal that the clipboard client has started */
   g_fClipboardStarted = TRUE;
 
@@ -413,8 +413,10 @@ winClipboardProc (void *pvNotUsed)
       iReturn = XDestroyWindow (pDisplay, iWindow);
       if (iReturn == BadWindow)
 	ErrorF ("winClipboardProc - XDestroyWindow returned BadWindow.\n");
+#ifdef WINDBG
       else
-	ErrorF ("winClipboardProc - XDestroyWindow succeeded.\n");
+	winDebug ("winClipboardProc - XDestroyWindow succeeded.\n");
+#endif
     }
 
 
@@ -457,15 +459,17 @@ thread_errorexit:
     iReturn = XDestroyWindow (g_pClipboardDisplay, g_iClipboardWindow);
     if (iReturn == BadWindow)
 	    ErrorF ("winClipboardProc - XDestroyWindow returned BadWindow.\n");
+#ifdef WINDBG
     else
-	    ErrorF ("winClipboardProc - XDestroyWindow succeeded.\n");
+	    winDebug ("winClipboardProc - XDestroyWindow succeeded.\n");
+#endif
   }
   g_iClipboardWindow = None;
   g_pClipboardDisplay = NULL;
   g_fClipboardLaunched = FALSE;
   g_fClipboardStarted = FALSE;
   //pthread_exit (NULL);
-  ErrorF ("Clipboard thread died.\n");
+  winDebug ("Clipboard thread died.\n");
   return NULL;
 }
 

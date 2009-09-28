@@ -55,11 +55,11 @@ winGetRegistryDWORD (HKEY hkey, char *pszRegistryKey)
 
   if (dwDisposition == REG_CREATED_NEW_KEY)
     {
-      ErrorF ("winGetRegistryDWORD - Created new key: %s\n", pszRegistryKey);
+      winDebug ("winGetRegistryDWORD - Created new key: %s\n", pszRegistryKey);
     }
   else if (dwDisposition == REG_OPENED_EXISTING_KEY)
     {
-      ErrorF ("winGetRegistryDWORD - Opened existing key: %s\n",
+      winDebug ("winGetRegistryDWORD - Opened existing key: %s\n",
 	      pszRegistryKey);
     }
 

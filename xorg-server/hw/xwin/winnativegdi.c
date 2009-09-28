@@ -111,7 +111,7 @@ winCloseScreenNativeGDI (int nIndex, ScreenPtr pScreen)
   winScreenPriv(pScreen);
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
 
-  ErrorF ("winCloseScreenNativeGDI - Freeing screen resources\n");
+  winDebug ("winCloseScreenNativeGDI - Freeing screen resources\n");
 
   /* Flag that the screen is closed */
   pScreenPriv->fClosed = TRUE;
@@ -125,7 +125,7 @@ winCloseScreenNativeGDI (int nIndex, ScreenPtr pScreen)
   /* Delete the window property */
   RemoveProp (pScreenPriv->hwndScreen, WIN_SCR_PROP);
   
-  ErrorF ("winCloseScreenNativeGDI - Destroying window\n");
+  winDebug ("winCloseScreenNativeGDI - Destroying window\n");
   
   /* Delete tray icon, if we have one */
   if (!pScreenInfo->fNoTrayIcon)
@@ -151,7 +151,7 @@ winCloseScreenNativeGDI (int nIndex, ScreenPtr pScreen)
   /* Free the screen privates for this screen */
   free (pScreenPriv);
 
-  ErrorF ("winCloseScreenNativeGDI - Returning\n");
+  winDebug ("winCloseScreenNativeGDI - Returning\n");
 
   return TRUE;
 }
@@ -210,7 +210,7 @@ winInitVisualsNativeGDI (ScreenPtr pScreen)
     }
 
   /* Tell the user how many bits per RGB we are using */
-  ErrorF ("winInitVisualsNativeGDI - Using dwBitsPerRGB: %d\n",
+  winDebug ("winInitVisualsNativeGDI - Using dwBitsPerRGB: %d\n",
 	  (int) pScreenPriv->dwBitsPerRGB);
 
   /* Create a single visual according to the Windows screen depth */
@@ -233,7 +233,7 @@ winInitVisualsNativeGDI (ScreenPtr pScreen)
       break;
 
     case 8:
-      ErrorF ("winInitVisuals - Calling miSetVisualTypesAndMasks\n");
+      winDebug ("winInitVisuals - Calling miSetVisualTypesAndMasks\n");
       if (!miSetVisualTypesAndMasks (pScreenInfo->dwDepth,
 				     StaticColorMask,
 				     pScreenPriv->dwBitsPerRGB,
@@ -252,9 +252,7 @@ winInitVisualsNativeGDI (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if 1
-  ErrorF ("winInitVisualsNativeGDI - Returning\n");
-#endif
+  winDebug ("winInitVisualsNativeGDI - Returning\n");
 
   return TRUE;
 }
@@ -300,7 +298,7 @@ winAdjustVideoModeNativeGDI (ScreenPtr pScreen)
   if (pScreenInfo->dwBPP == WIN_DEFAULT_BPP)
     {
       /* No -depth parameter passed, let the user know the depth being used */
-      ErrorF ("winAdjustVideoModeNativeGDI - Using Windows display "
+      winDebug ("winAdjustVideoModeNativeGDI - Using Windows display "
 	      "depth of %d bits per pixel, %d depth\n",
 	      (int) dwBPP, (int) pScreenInfo->dwDepth);
 
@@ -310,7 +308,7 @@ winAdjustVideoModeNativeGDI (ScreenPtr pScreen)
   else if (dwBPP != pScreenInfo->dwBPP)
     {
       /* Warn user if GDI depth is different than -depth parameter */
-      ErrorF ("winAdjustVideoModeNativeGDI - Command line bpp: %d, "\
+      winDebug ("winAdjustVideoModeNativeGDI - Command line bpp: %d, "\
 	      "using bpp: %d\n",
 	      (int) pScreenInfo->dwBPP, (int) dwBPP);
 

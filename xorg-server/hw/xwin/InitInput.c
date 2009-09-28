@@ -32,7 +32,7 @@
 #include "win.h"
 #include "dixstruct.h"
 #include "inputstr.h"
-
+#include <unistd.h>
 
 /*
  * Local function prototypes
@@ -98,15 +98,7 @@ LegalModifier (unsigned int uiKey, DeviceIntPtr pDevice)
 void
 ProcessInputEvents (void)
 {
-#if 0
-  ErrorF ("ProcessInputEvents\n");
-#endif
-
   mieqProcessInputEvents ();
-
-#if 0
-  ErrorF ("ProcessInputEvents - returning\n");
-#endif
 }
 
 
@@ -121,9 +113,7 @@ void DDXRingBell(int volume, int pitch, int duration)
 void
 InitInput (int argc, char *argv[])
 {
-#if CYGDEBUG
   winDebug ("InitInput\n");
-#endif
 
 #ifdef XWIN_CLIPBOARD
   /*
@@ -174,7 +164,5 @@ InitInput (int argc, char *argv[])
     }
 #endif
 
-#if CYGDEBUG
   winDebug ("InitInput - returning\n");
-#endif
 }

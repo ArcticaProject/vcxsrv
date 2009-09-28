@@ -290,27 +290,22 @@ winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
   WMEventPtr		*pHead, pEvent;
   ClientPtr		client;
   xWindowsWMNotifyEvent se;
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("winWindowsWMSendEvent %d %d %d %d,  %d %d - %d %d\n",
+  winDebug ("winWindowsWMSendEvent %d %d %d %d,  %d %d - %d %d\n",
 	  type, mask, which, arg, x, y, w, h);
-#endif
   pHead = (WMEventPtr *) LookupIDByType(eventResource, eventResourceType);
   if (!pHead)
     return;
   for (pEvent = *pHead; pEvent; pEvent = pEvent->next)
     {
       client = pEvent->client;
-#if CYGMULTIWINDOW_DEBUG
-      ErrorF ("winWindowsWMSendEvent - x%08x\n", (int) client);
-#endif
+      winDebug ("winWindowsWMSendEvent - x%08x\n", (int) client);
       if ((pEvent->mask & mask) == 0
 	  || client == serverClient || client->clientGone)
 	{
 	  continue;
 	}
-#if CYGMULTIWINDOW_DEBUG 
-      ErrorF ("winWindowsWMSendEvent - send\n");
-#endif
+      winDebug ("winWindowsWMSendEvent - send\n");
+
       se.type = type + WMEventBase;
       se.kind = which;
       se.window = window;
@@ -379,10 +374,8 @@ ProcWindowsWMFrameGetRect (register ClientPtr client)
   RECT rcNew;
   REQUEST(xWindowsWMFrameGetRectReq);
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameGetRect %d %d\n",
+  winDebug ("ProcWindowsWMFrameGetRect %d %d\n",
 	  (sizeof(xWindowsWMFrameGetRectReq) >> 2), (int) client->req_len);
-#endif
   
   REQUEST_SIZE_MATCH(xWindowsWMFrameGetRectReq);
   rep.type = X_Reply;
@@ -401,10 +394,8 @@ ProcWindowsWMFrameGetRect (register ClientPtr client)
   SetRect (&rcNew, stuff->ix, stuff->iy,
 	   stuff->ix + stuff->iw, stuff->iy + stuff->ih);
     
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameGetRect - %d %d %d %d\n",
+  winDebug ("ProcWindowsWMFrameGetRect - %d %d %d %d\n",
 	  stuff->ix, stuff->iy, stuff->ix + stuff->iw, stuff->iy + stuff->ih);
-#endif
 
   /*
    * Calculate the required size of the Windows window rectangle,
@@ -415,10 +406,8 @@ ProcWindowsWMFrameGetRect (register ClientPtr client)
   rep.y = rcNew.top;
   rep.w = rcNew.right - rcNew.left;
   rep.h = rcNew.bottom - rcNew.top;
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameGetRect - %d %d %d %d\n",
+  winDebug ("ProcWindowsWMFrameGetRect - %d %d %d %d\n",
 	  rep.x, rep.y, rep.w, rep.h);
-#endif
 
   WriteToClient(client, sizeof(xWindowsWMFrameGetRectReply), (char *)&rep);
   return (client->noClientException);
@@ -438,26 +427,22 @@ ProcWindowsWMFrameDraw (register ClientPtr client)
 
   REQUEST_SIZE_MATCH (xWindowsWMFrameDrawReq);
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameDraw\n");
-#endif
+  winDebug ("ProcWindowsWMFrameDraw\n");
+
   rc = dixLookupWindow(&pWin, stuff->window, client, DixReadAccess);
   if (rc != Success)
       return rc;
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameDraw - Window found\n");
-#endif
+
+  winDebug ("ProcWindowsWMFrameDraw - Window found\n");
 
   pRLWinPriv = (win32RootlessWindowPtr) RootlessFrameForWindow (pWin, TRUE);
   if (pRLWinPriv == 0) return BadWindow;
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameDraw - HWND 0x%08x 0x%08x 0x%08x\n",
+  winDebug ("ProcWindowsWMFrameDraw - HWND 0x%08x 0x%08x 0x%08x\n",
 	  (int) pRLWinPriv->hWnd, (int) stuff->frame_style,
 	  (int) stuff->frame_style_ex);
-  ErrorF ("ProcWindowsWMFrameDraw - %d %d %d %d\n",
+  winDebug ("ProcWindowsWMFrameDraw - %d %d %d %d\n",
 	  stuff->ix, stuff->iy, stuff->iw, stuff->ih);
-#endif
 
   /* Store the origin, height, and width in a rectangle structure */
   SetRect (&rcNew, stuff->ix, stuff->iy,
@@ -510,9 +495,7 @@ ProcWindowsWMFrameDraw (register ClientPtr client)
       winMWExtWMReshapeFrame (pRLWinPriv, &newShape);
       REGION_UNINIT(pScreen, &newShape);
     }
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameDraw - done\n");
-#endif
+  winDebug ("ProcWindowsWMFrameDraw - done\n");
 
   return (client->noClientException);
 }
@@ -529,18 +512,14 @@ ProcWindowsWMFrameSetTitle(
   win32RootlessWindowPtr pRLWinPriv;
   int rc;
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameSetTitle\n");
-#endif
+  winDebug ("ProcWindowsWMFrameSetTitle\n");
 
   REQUEST_AT_LEAST_SIZE(xWindowsWMFrameSetTitleReq);
 
   rc = dixLookupWindow(&pWin, stuff->window, client, DixReadAccess);
   if (rc != Success)
       return rc;
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameSetTitle - Window found\n");
-#endif
+  winDebug ("ProcWindowsWMFrameSetTitle - Window found\n");
 
   title_length = stuff->title_length;
   title_max = (stuff->length << 2) - sizeof(xWindowsWMFrameSetTitleReq);
@@ -548,9 +527,7 @@ ProcWindowsWMFrameSetTitle(
   if (title_max < title_length)
     return BadValue;
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameSetTitle - length is valid\n");
-#endif
+  winDebug ("ProcWindowsWMFrameSetTitle - length is valid\n");
 
   title_bytes = malloc (title_length+1);
   strncpy (title_bytes, (unsigned char *) &stuff[1], title_length);
@@ -569,9 +546,7 @@ ProcWindowsWMFrameSetTitle(
 
   free (title_bytes);
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("ProcWindowsWMFrameSetTitle - done\n");
-#endif
+  winDebug ("ProcWindowsWMFrameSetTitle - done\n");
 
   return (client->noClientException);
 }

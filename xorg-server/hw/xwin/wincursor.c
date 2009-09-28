@@ -45,12 +45,6 @@ extern Bool	g_fSoftwareCursor;
 
 #define BRIGHTNESS(x) (x##Red * 0.299 + x##Green * 0.587 + x##Blue * 0.114)
 
-#if 0
-# define WIN_DEBUG_MSG winDebug
-#else
-# define WIN_DEBUG_MSG(...)
-#endif
-
 #ifdef _MSC_VER
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -92,7 +86,7 @@ winPointerWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
       /* Don't ignore subsequent warps */
       s_fInitialWarp = FALSE;
 
-      winErrorFVerb (2, "winPointerWarpCursor - Discarding first warp: %d %d\n",
+      winDebug ("winPointerWarpCursor - Discarding first warp: %d %d\n",
 	      x, y);
       
       return;
@@ -177,7 +171,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   BITMAPINFO *pbmi;
   unsigned long *lpBits;
 
-  WIN_DEBUG_MSG("winLoadCursor: Win32: %dx%d X11: %dx%d hotspot: %d,%d\n", 
+  winDebug("winLoadCursor: Win32: %dx%d X11: %dx%d hotspot: %d,%d\n", 
           pScreenPriv->cursor.sm_cx, pScreenPriv->cursor.sm_cy,
           pCursor->bits->width, pCursor->bits->height,
           pCursor->bits->xhot, pCursor->bits->yhot
@@ -193,7 +187,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   if (pScreenPriv->cursor.sm_cx < pCursor->bits->width || 
       pScreenPriv->cursor.sm_cy < pCursor->bits->height)
     {
-      winErrorFVerb (2, "winLoadCursor - Windows requires %dx%d cursor\n"
+      ErrorF ("winLoadCursor - Windows requires %dx%d cursor\n"
 	      "\tbut X requires %dx%d\n",
 	      pScreenPriv->cursor.sm_cx, pScreenPriv->cursor.sm_cy,
 	      pCursor->bits->width, pCursor->bits->height);
@@ -256,7 +250,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   /* We have a truecolor alpha-blended cursor and can use it! */
   if (pCursor->bits->argb) 
     {
-      WIN_DEBUG_MSG("winLoadCursor: Trying truecolor alphablended cursor\n"); 
+      winDebug("winLoadCursor: Trying truecolor alphablended cursor\n"); 
       memset (&bi, 0, sizeof (BITMAPV4HEADER));
       bi.bV4Size = sizeof(BITMAPV4HEADER);
       bi.bV4Width = pScreenPriv->cursor.sm_cx;
@@ -287,7 +281,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   if (!lpBits)
     {
       /* Bicolor, use a palettized DIB */
-      WIN_DEBUG_MSG("winLoadCursor: Trying two color cursor\n"); 
+      winDebug("winLoadCursor: Trying two color cursor\n"); 
       pbmi = (BITMAPINFO*)&bi;
       memset (pbmi, 0, sizeof (BITMAPINFOHEADER));
       pbmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -351,7 +345,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   /* If one of the previous two methods gave us the bitmap we need, make a cursor */
   if (lpBits)
     {
-      WIN_DEBUG_MSG("winLoadCursor: Creating bitmap cursor: hotspot %d,%d\n",
+      winDebug("winLoadCursor: Creating bitmap cursor: hotspot %d,%d\n",
               pCursor->bits->xhot, pCursor->bits->yhot);
 
       hAnd = NULL;
@@ -379,14 +373,14 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
 	  hCursor = (HCURSOR) CreateIconIndirect( &ii );
 
 	  if (hCursor == NULL)
-	    winW32Error(2, "winLoadCursor - CreateIconIndirect failed:");
+	    winW32Error("winLoadCursor - CreateIconIndirect failed:");
 	  else 
 	    {
 	      if (GetIconInfo(hCursor, &ii))
 		{
 		  if (ii.fIcon)
 		    {
-		      WIN_DEBUG_MSG("winLoadCursor: CreateIconIndirect returned  no cursor. Trying again.\n");
+		      winDebug("winLoadCursor: CreateIconIndirect returned  no cursor. Trying again.\n");
 		      
 		      DestroyCursor(hCursor);
 		      
@@ -396,7 +390,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
 		      hCursor = (HCURSOR) CreateIconIndirect( &ii );
 		      
 		      if (hCursor == NULL)
-			winW32Error(2, "winLoadCursor - CreateIconIndirect failed:");
+			winW32Error("winLoadCursor - CreateIconIndirect failed:");
 		    }
 		  /* GetIconInfo creates new bitmaps. Destroy them again */
 		  if (ii.hbmMask)
@@ -422,7 +416,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
 			      pScreenPriv->cursor.sm_cx, pScreenPriv->cursor.sm_cy,
 			      pAnd, pXor);
       if (hCursor == NULL)
-	winW32Error(2, "winLoadCursor - CreateCursor failed:");
+	winW32Error("winLoadCursor - CreateCursor failed:");
     }
   free (pAnd);
   free (pXor);
@@ -477,7 +471,7 @@ winSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, in
   RECT  rcClient;
   BOOL  bInhibit;
   winScreenPriv(pScreen);
-  WIN_DEBUG_MSG("winSetCursor: cursor=%p\n", pCursor); 
+  winDebug("winSetCursor: cursor=%p\n", pCursor); 
   
   /* Inhibit changing the cursor if the mouse is not in a client area */
   bInhibit = FALSE;
@@ -528,7 +522,7 @@ winSetCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor, int x, in
 	}
       pScreenPriv->cursor.handle =
 	winLoadCursor (pScreen, pCursor, pScreen->myNum);
-      WIN_DEBUG_MSG("winSetCursor: handle=%p\n", pScreenPriv->cursor.handle); 
+      winDebug("winSetCursor: handle=%p\n", pScreenPriv->cursor.handle); 
 
       if (!bInhibit)
 	SetCursor (pScreenPriv->cursor.handle);

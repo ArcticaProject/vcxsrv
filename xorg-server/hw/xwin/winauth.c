@@ -78,10 +78,10 @@ winGenerateAuthorization ()
       ErrorF ("winGenerateAuthorization - GenerateAuthorization failed\n");
       goto auth_bailout;
     }
-#if 0
+#ifdef WINDBG
   else
     {
-      ErrorF ("winGenerateAuthorization - GenerateAuthorization success!\n"
+      winDebug ("winGenerateAuthorization - GenerateAuthorization success!\n"
 	      "AuthDataLen: %d AuthData: %s\n",
 	      g_uiAuthDataLen, g_pAuthData);
     }

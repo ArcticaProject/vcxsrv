@@ -106,10 +106,8 @@ winScreenInit (int index,
   winPrivScreenPtr	pScreenPriv;
   HDC			hdc;
 
-#if CYGDEBUG || YES
   winDebug ("winScreenInit - dwWidth: %ld dwHeight: %ld\n",
 	  pScreenInfo->dwWidth, pScreenInfo->dwHeight);
-#endif
 
   /* Allocate privates for this screen */
   if (!winAllocatePrivates (pScreen))
@@ -234,12 +232,12 @@ winScreenInit (int index,
 
   if (!g_fSoftwareCursor)
     winInitCursor(pScreen);
+#ifdef WINDBG
   else
-    winErrorFVerb(2, "winScreenInit - Using software cursor\n");  
-
-#if CYGDEBUG || YES
-  winDebug ("winScreenInit - returning\n");
+    winDebug("winScreenInit - Using software cursor\n");  
 #endif
+
+  winDebug ("winScreenInit - returning\n");
 
   return TRUE;
 }
@@ -295,7 +293,7 @@ winFinishScreenInitFB (int index,
       + winCountBits (pScreenPriv->dwGreenMask)
       + winCountBits (pScreenPriv->dwBlueMask);
   
-  winErrorFVerb (2, "winFinishScreenInitFB - Masks: %08x %08x %08x\n",
+  winDebug ("winFinishScreenInitFB - Masks: %08x %08x %08x\n",
 	  (unsigned int) pScreenPriv->dwRedMask,
 	  (unsigned int) pScreenPriv->dwGreenMask,
 	  (unsigned int) pScreenPriv->dwBlueMask);
@@ -404,16 +402,12 @@ winFinishScreenInitFB (int index,
 
   /* KDrive does miDCInitialize right after miInitializeBackingStore */
   /* Setup the cursor routines */
-#if CYGDEBUG
   winDebug ("winFinishScreenInitFB - Calling miDCInitialize ()\n");
-#endif
   miDCInitialize (pScreen, &g_winPointerCursorFuncs);
 
   /* KDrive does winCreateDefColormap right after miDCInitialize */
   /* Create a default colormap */
-#if CYGDEBUG
   winDebug ("winFinishScreenInitFB - Calling winCreateDefColormap ()\n");
-#endif
   if (!winCreateDefColormap (pScreen))
     {
       ErrorF ("winFinishScreenInitFB - Could not create colormap\n");
@@ -429,9 +423,7 @@ winFinishScreenInitFB (int index,
 #endif
       )
     {
-#if CYGDEBUG
       winDebug ("winFinishScreenInitFB - Calling shadowSetup ()\n");
-#endif
       if (!shadowSetup(pScreen))
 	{
 	  ErrorF ("winFinishScreenInitFB - shadowSetup () failed\n");
@@ -586,9 +578,7 @@ winFinishScreenInitFB (int index,
 #endif
       )
     { 
-#if CYGDEBUG || YES
       winDebug ("winFinishScreenInitFB - Calling winInitWM.\n");
-#endif
 
       /* Initialize multi window mode */
       if (!winInitWM (&pScreenPriv->pWMInfo,
@@ -614,9 +604,7 @@ winFinishScreenInitFB (int index,
   /* Tell the server that we have a valid depth */
   pScreenPriv->fBadDepth = FALSE;
 
-#if CYGDEBUG || YES
   winDebug ("winFinishScreenInitFB - returning\n");
-#endif
 
   return TRUE;
 }
@@ -732,7 +720,7 @@ winFinishScreenInitNativeGDI (int index,
   /* Bitmap */
   pScreen->BitmapToRegion = winPixmapToRegionNativeGDI;
 
-  ErrorF ("winFinishScreenInitNativeGDI - calling miDCInitialize\n");
+  winDebug ("winFinishScreenInitNativeGDI - calling miDCInitialize\n");
 
   /* Set the default white and black pixel positions */
   pScreen->whitePixel = pScreen->blackPixel = (Pixel) 0;
@@ -752,7 +740,7 @@ winFinishScreenInitNativeGDI (int index,
 	return FALSE;
     }
 
-  ErrorF ("winFinishScreenInitNativeGDI - miCreateDefColormap () "
+  winDebug ("winFinishScreenInitNativeGDI - miCreateDefColormap () "
 	  "returned\n");
   
   /* mi doesn't use a CloseScreen procedure, so no need to wrap */
@@ -761,7 +749,7 @@ winFinishScreenInitNativeGDI (int index,
   /* Tell the server that we are enabled */
   pScreenPriv->fEnabled = TRUE;
 
-  ErrorF ("winFinishScreenInitNativeGDI - Successful addition of "
+  winDebug ("winFinishScreenInitNativeGDI - Successful addition of "
 	  "screen %08x\n",
 	  (unsigned int) pScreen);
 

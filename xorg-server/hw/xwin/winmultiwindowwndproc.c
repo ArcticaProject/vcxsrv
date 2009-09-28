@@ -338,9 +338,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
   Bool			needRestack = FALSE;
   LRESULT		ret;
 
-#if CYGDEBUG
   winDebugWin32Message("winTopLevelWindowProc", hwnd, message, wParam, lParam);
-#endif
   
   /* Check if the Windows window property for our X window pointer is valid */
   if ((pWin = GetProp (hwnd, WIN_WINDOW_PROP)) != NULL)
@@ -373,31 +371,6 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 
       fWMMsgInitialized = TRUE;
 
-#if 0
-      /*
-       * Print some debugging information
-       */
-
-      ErrorF ("hWnd %08X\n", hwnd);
-      ErrorF ("pWin %08X\n", pWin);
-      ErrorF ("pDraw %08X\n", pDraw);
-      ErrorF ("\ttype %08X\n", pWin->drawable.type);
-      ErrorF ("\tclass %08X\n", pWin->drawable.class);
-      ErrorF ("\tdepth %08X\n", pWin->drawable.depth);
-      ErrorF ("\tbitsPerPixel %08X\n", pWin->drawable.bitsPerPixel);
-      ErrorF ("\tid %08X\n", pWin->drawable.id);
-      ErrorF ("\tx %08X\n", pWin->drawable.x);
-      ErrorF ("\ty %08X\n", pWin->drawable.y);
-      ErrorF ("\twidth %08X\n", pWin->drawable.width);
-      ErrorF ("\thenght %08X\n", pWin->drawable.height);
-      ErrorF ("\tpScreen %08X\n", pWin->drawable.pScreen);
-      ErrorF ("\tserialNumber %08X\n", pWin->drawable.serialNumber);
-      ErrorF ("g_iWindowPrivateKey %p\n", g_iWindowPrivateKey);
-      ErrorF ("pWinPriv %08X\n", pWinPriv);
-      ErrorF ("s_pScreenPriv %08X\n", s_pScreenPriv);
-      ErrorF ("s_pScreenInfo %08X\n", s_pScreenInfo);
-      ErrorF ("hwndScreen %08X\n", hwndScreen);
-#endif
     }
 
   /* Branch on message type */
@@ -746,7 +719,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       if (wParam == VK_F4 && (GetKeyState (VK_MENU) & 0x8000))
 	  break;
 
-#if CYGWINDOWING_DEBUG
+#ifdef WINDBG
       if (wParam == VK_ESCAPE)
 	{
 	  /* Place for debug: put any tests and dumps here */
@@ -757,27 +730,27 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	  windPlace.length = sizeof (WINDOWPLACEMENT);
 	  GetWindowPlacement (hwnd, &windPlace);
 	  pRect = &windPlace.rcNormalPosition;
-	  ErrorF ("\nCYGWINDOWING Dump:\n"
+	  winDebug ("\nCYGWINDOWING Dump:\n"
 		  "\tdrawable: (%hd, %hd) - %hdx%hd\n", pDraw->x,
 		  pDraw->y, pDraw->width, pDraw->height);
-	  ErrorF ("\twindPlace: (%ld, %ld) - %ldx%ld\n", pRect->left,
+	  winDebug ("\twindPlace: (%ld, %ld) - %ldx%ld\n", pRect->left,
 		  pRect->top, pRect->right - pRect->left,
 		  pRect->bottom - pRect->top);
 	  if (GetClientRect (hwnd, &rc))
 	    {
 	      pRect = &rc;
-	      ErrorF ("\tClientRect: (%ld, %ld) - %ldx%ld\n", pRect->left,
+	      winDebug ("\tClientRect: (%ld, %ld) - %ldx%ld\n", pRect->left,
 		      pRect->top, pRect->right - pRect->left,
 		      pRect->bottom - pRect->top);
 	    }
 	  if (GetWindowRect (hwnd, &rc))
 	    {
 	      pRect = &rc;
-	      ErrorF ("\tWindowRect: (%ld, %ld) - %ldx%ld\n", pRect->left,
+	      winDebug ("\tWindowRect: (%ld, %ld) - %ldx%ld\n", pRect->left,
 		      pRect->top, pRect->right - pRect->left,
 		      pRect->bottom - pRect->top);
 	    }
-	  ErrorF ("\n");
+	  winDebug ("\n");
 	}
 #endif
       
@@ -852,7 +825,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       /* Branch on if the window was killed in X already */
       if (pWinPriv && !pWinPriv->fXKilled)
 	{
-	  ErrorF ("winTopLevelWindowProc - WM_DESTROY - WM_WM_KILL\n");
+	  winDebug ("winTopLevelWindowProc - WM_DESTROY - WM_WM_KILL\n");
 	  
 	  /* Tell our Window Manager thread to kill the window */
 	  wmMsg.msg = WM_WM_KILL;
@@ -905,9 +878,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       else /* It is an overridden window so make it top of Z stack */
 	{
 	  HWND forHwnd = GetForegroundWindow();
-#if CYGWINDOWING_DEBUG
-	  ErrorF ("overridden window is shown\n");
-#endif
+	  winDebug ("overridden window is shown\n");
 	  if (forHwnd != NULL)
 	  {
 	    if (GetWindowLongPtr(forHwnd, GWLP_USERDATA) & (LONG_PTR)VCXSRV_SIGNATURE)
@@ -996,7 +967,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 
     case WM_SIZE:
       /* see dix/window.c */
-#if CYGWINDOWING_DEBUG
+#ifdef WINDBG
       {
 	char buf[64];
 	switch (wParam)
@@ -1013,7 +984,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	  default:
 	    strcpy(buf, "UNKNOWN_FLAG");
 	  }
-	ErrorF ("winTopLevelWindowProc - WM_SIZE to %dx%d (%s) - %d ms\n",
+	winDebug ("winTopLevelWindowProc - WM_SIZE to %dx%d (%s) - %d ms\n",
 		(int)LOWORD(lParam), (int)HIWORD(lParam), buf,
 		(int)(GetTickCount ()));
       }
@@ -1039,10 +1010,8 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       /* Check if this window needs to be made active when clicked */
       if (!GetProp (pWinPriv->hWnd, WIN_NEEDMANAGE_PROP))
 	{
-#if CYGMULTIWINDOW_DEBUG
-	  ErrorF ("winTopLevelWindowProc - WM_MOUSEACTIVATE - "
+	  winDebug ("winTopLevelWindowProc - WM_MOUSEACTIVATE - "
 		  "MA_NOACTIVATE\n");
-#endif
 
 	  /* */
 	  return MA_NOACTIVATE;

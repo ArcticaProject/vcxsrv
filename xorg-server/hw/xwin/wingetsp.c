@@ -59,10 +59,8 @@ winGetSpansNativeGDI (DrawablePtr	pDrawable,
   switch (pDrawable->type)
     {
     case DRAWABLE_PIXMAP:
-#if 0
-      ErrorF ("winGetSpans - DRAWABLE_PIXMAP %08x\n",
+      winDebug ("winGetSpans - DRAWABLE_PIXMAP %08x\n",
 	      pDrawable);
-#endif
 
       pPixmap = (PixmapPtr) pDrawable;
       pPixmapPriv = winGetPixmapPriv (pPixmap);
@@ -107,12 +105,6 @@ winGetSpansNativeGDI (DrawablePtr	pDrawable,
       	  SelectObject (hdcMem, hbmpOrig);
 	  DeleteObject (hbmpWindow);
 
-#if 0
-	  ErrorF ("(%dx%dx%d) (%d,%d) w: %d\n",
-		  pDrawable->width, pDrawable->height, pDrawable->depth,
-		  pPoint->x, pPoint->y, *piWidth);
-#endif
-
 	  /* Calculate offset of next bit destination */
 	  pDst += PixmapBytePad (*piWidth, pDrawable->depth);
 	}
@@ -126,9 +118,6 @@ winGetSpansNativeGDI (DrawablePtr	pDrawable,
       break;
 
     case DRAWABLE_WINDOW:
-#if 0
-      ErrorF ("winGetSpans - DRAWABLE_WINDOW\n");
-#endif
 
       /* Open a memory HDC */
       hdcMem = CreateCompatibleDC (NULL);
@@ -162,12 +151,6 @@ winGetSpansNativeGDI (DrawablePtr	pDrawable,
       	  SelectObject (hdcMem, hbmpOrig);
 
 	  DeleteObject (hbmpWindow);
-
-#if 0
-	  ErrorF ("(%dx%dx%d) (%d,%d) w: %d\n",
-		  pDrawable->width, pDrawable->height, pDrawable->depth,
-		  pPoint->x, pPoint->y, *piWidth);
-#endif
 
 	  /* Calculate offset of next bit destination */
 	  pDst += PixmapBytePad (*piWidth, pDrawable->depth);

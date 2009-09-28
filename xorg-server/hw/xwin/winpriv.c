@@ -126,7 +126,7 @@ extern void winGetWindowInfo(WindowPtr pWin, winWindowInfoPtr pWinInfo)
             return;
         }
 
-        ErrorF("winGetWindowInfo: returning root window\n");
+        winDebug("winGetWindowInfo: returning root window\n");
 
         pWinInfo->hwnd = pWinScreen->hwndScreen;
     }

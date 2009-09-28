@@ -371,7 +371,7 @@ NetWMToWinIcon(int bpp, uint32_t *icon)
       hasIconAlphaChannel = VerifyVersionInfo(&osvi, VER_MAJORVERSION | VER_MINORVERSION, dwlConditionMask);
       versionChecked = TRUE;
 
-      ErrorF("OS has icon alpha channel support: %s\n", hasIconAlphaChannel ? "yes" : "no");
+      winDebug("OS has icon alpha channel support: %s\n", hasIconAlphaChannel ? "yes" : "no");
     }
 
   if (hasIconAlphaChannel && (bpp==32))

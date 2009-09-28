@@ -42,11 +42,6 @@
 #define YES					1
 #endif
 
-/* Turn debug messages on or off */
-#ifndef CYGDEBUG
-#define CYGDEBUG				NO
-#endif
-
 /* WM_XBUTTON Messages. They should go into w32api. */
 #ifndef WM_XBUTTONDOWN
 # define WM_XBUTTONDOWN 523
@@ -214,43 +209,6 @@ typedef int pid_t;
 /* Local includes */
 #include "winwindow.h"
 #include "winmsg.h"
-
-
-/*
- * Debugging macros
- */
-
-#if CYGDEBUG
-#define DEBUG_MSG(str,...) \
-if (fDebugProcMsg) \
-{ \
-  char *pszTemp; \
-  int iLength; \
-  pszTemp = Xprintf (str, ##__VA_ARGS__); \
-  MessageBox (NULL, pszTemp, szFunctionName, MB_OK); \
-  xfree (pszTemp); \
-}
-#else
-#define DEBUG_MSG(str,...)
-#endif
-
-#if CYGDEBUG
-#define DEBUG_FN_NAME(str) PTSTR szFunctionName = str
-#else
-#define DEBUG_FN_NAME(str)
-#endif
-
-#if CYGDEBUG || YES
-#define DEBUGVARS BOOL fDebugProcMsg = FALSE
-#else
-#define DEBUGVARS
-#endif
-
-#if CYGDEBUG || YES
-#define DEBUGPROC_MSG fDebugProcMsg = TRUE
-#else
-#define DEBUGPROC_MSG
-#endif
 
 #define PROFILEPOINT(point,thresh)\
 {\

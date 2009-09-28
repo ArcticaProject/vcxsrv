@@ -237,13 +237,13 @@ winKeybdProc (DeviceIntPtr pDeviceInt, int iState)
       /* FIXME: Maybe we should use winGetKbdLeds () here? */
       defaultKeyboardControl.leds = g_winInfo.keyboard.leds;
 
-      winErrorFVerb(2, "Rules = \"%s\" Model = \"%s\" Layout = \"%s\""
-                    " Variant = \"%s\" Options = \"%s\"\n",
-                    g_winInfo.xkb.rules ? g_winInfo.xkb.rules : "none",
-                    g_winInfo.xkb.model ? g_winInfo.xkb.model : "none",
-                    g_winInfo.xkb.layout ? g_winInfo.xkb.layout : "none",
-                    g_winInfo.xkb.variant ? g_winInfo.xkb.variant : "none",
-                    g_winInfo.xkb.options ? g_winInfo.xkb.options : "none");
+      winDebug("Rules = \"%s\" Model = \"%s\" Layout = \"%s\""
+               " Variant = \"%s\" Options = \"%s\"\n",
+               g_winInfo.xkb.rules ? g_winInfo.xkb.rules : "none",
+               g_winInfo.xkb.model ? g_winInfo.xkb.model : "none",
+               g_winInfo.xkb.layout ? g_winInfo.xkb.layout : "none",
+               g_winInfo.xkb.variant ? g_winInfo.xkb.variant : "none",
+               g_winInfo.xkb.options ? g_winInfo.xkb.options : "none");
 
       InitKeyboardDeviceStruct (pDeviceInt,
                                 &g_winInfo.xkb,
@@ -259,7 +259,7 @@ winKeybdProc (DeviceIntPtr pDeviceInt, int iState)
         }
       else
         {
-          winErrorFVerb (1, "winKeybdProc - Error initializing keyboard AutoRepeat\n");
+          winDebug ("winKeybdProc - Error initializing keyboard AutoRepeat\n");
         }
 
 	  XkbSetExtension(pDeviceInt, ProcessKeyboardEvent);
@@ -562,12 +562,10 @@ winSendKeyEvent (DWORD dwKey, Bool fDown)
   nevents = GetKeyboardEvents(events, g_pwinKeyboard, fDown ? KeyPress : KeyRelease, dwKey + MIN_KEYCODE);
 
   for (i = 0; i < nevents; i++)
-    mieqEnqueue(g_pwinKeyboard, events[i].event);
+    mieqEnqueue(g_pwinKeyboard, (InternalEvent*)(events + i)->event);
 
-#if CYGDEBUG
-  ErrorF("winSendKeyEvent: dwKey: %d, fDown: %d, nEvents %d\n",
+  winDebug("winSendKeyEvent: dwKey: %d, fDown: %d, nEvents %d\n",
           dwKey, fDown, nevents);
-#endif
 }
 
 BOOL winCheckKeyPressed(WPARAM wParam, LPARAM lParam)

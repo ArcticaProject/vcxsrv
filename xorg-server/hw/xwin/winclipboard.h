@@ -79,15 +79,13 @@ typedef int pid_t;
 
 #define WM_WM_REINIT                           (WM_USER + 1)
 
+#include "winmsg.h"
+
 /*
  * References to external symbols
  */
 
 extern char *display;
-extern void ErrorF (const char* /*f*/, ...);
-extern void winDebug (const char *format, ...);
-extern void winErrorFVerb (int verb, const char *format, ...);
-
 
 /*
  * winclipboardinit.c

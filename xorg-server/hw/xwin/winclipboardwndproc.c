@@ -278,7 +278,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	    /* Attempt to break the nesting by getting out of the chain, twice?, and then fix and bail */
 	    ChangeClipboardChain (hwnd, s_hwndNextViewer);
 	    winFixClipboardChain();
-	    winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+	    ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 			   "Nested calls detected.  Re-initing.\n");
 	    winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD: Exit\n");
 	    s_fProcessingDrawClipboard = FALSE;
@@ -316,7 +316,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 				    CurrentTime);
 	      }
 	    else if (BadWindow == iReturn || BadAtom == iReturn)
-	      winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+	      ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 		      "XGetSelection failed for PRIMARY: %d\n", iReturn);
 
 	    /* Release CLIPBOARD selection if owned */
@@ -332,7 +332,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 				    CurrentTime);
 	      }
 	    else if (BadWindow == iReturn || BadAtom == iReturn)
-	      winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+	      ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 		      "XGetSelection failed for CLIPBOARD: %d\n", iReturn);
 
 	    winDebug ("winClipboardWindowProc - WM_DRAWCLIPBOARD: Exit\n");
@@ -352,7 +352,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	  if (iReturn == BadAtom || iReturn == BadWindow ||
 	      XGetSelectionOwner (pDisplay, XA_PRIMARY) != iWindow)
 	    {
-	      winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+	      ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 		      "Could not reassert ownership of PRIMARY\n");
 	    }
 	  else
@@ -370,7 +370,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	  if (iReturn == BadAtom || iReturn == BadWindow ||
 	      XGetSelectionOwner (pDisplay, atomClipboard) != iWindow)
 	    {
-	      winErrorFVerb (1, "winClipboardWindowProc - WM_DRAWCLIPBOARD - "
+	      ErrorF ("winClipboardWindowProc - WM_DRAWCLIPBOARD - "
 		      "Could not reassert ownership of CLIPBOARD\n");
 	    }
 	  else
@@ -433,7 +433,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 				     CurrentTime);
 	if (iReturn == BadAtom || iReturn == BadWindow)
 	  {
-	    winErrorFVerb (1, "winClipboardWindowProc - WM_RENDER*FORMAT - "
+	    ErrorF ("winClipboardWindowProc - WM_RENDER*FORMAT - "
 		    "XConvertSelection () failed\n");
 	    break;
 	  }
@@ -444,7 +444,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	    /* We must open and empty the clipboard */
 	    if (!OpenClipboard (hwnd))
 	      {
-		winErrorFVerb (1, "winClipboardWindowProc - WM_RENDER*FORMATS - "
+		ErrorF ("winClipboardWindowProc - WM_RENDER*FORMATS - "
 			"OpenClipboard () failed: %08x\n",
 			GetLastError ());
 		break;
@@ -452,7 +452,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	    
 	    if (!EmptyClipboard ())
 	      {
-		winErrorFVerb (1, "winClipboardWindowProc - WM_RENDER*FORMATS - "
+		ErrorF ("winClipboardWindowProc - WM_RENDER*FORMATS - "
 			"EmptyClipboard () failed: %08x\n",
 		      GetLastError ());
 		CloseClipboard ();
@@ -504,7 +504,7 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	    
 	    if (!CloseClipboard ())
 	      {
-	      winErrorFVerb (1, "winClipboardWindowProc - WM_RENDERALLFORMATS - "
+	      ErrorF ("winClipboardWindowProc - WM_RENDERALLFORMATS - "
 		      "CloseClipboard () failed: %08x\n",
 		      GetLastError ());
 	      break;

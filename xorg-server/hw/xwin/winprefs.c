@@ -753,7 +753,9 @@ LoadPreferences (void)
       
       prefFile = fopen (fname, "r");
       if (prefFile)
-	ErrorF ("winPrefsLoadPreferences: %s\n", fname);
+      {
+	winDebug ("winPrefsLoadPreferences: %s\n", fname);
+      }
     }
 
   /* No home file found, check system default */
@@ -768,7 +770,9 @@ LoadPreferences (void)
       buffer[sizeof(buffer)-1] = 0;
       prefFile = fopen (buffer, "r");
       if (prefFile)
-	ErrorF ("winPrefsLoadPreferences: %s\n", buffer);
+      {
+	winDebug ("winPrefsLoadPreferences: %s\n", buffer);
+      }
     }
 
   /* If we could open it, then read the settings and close it */

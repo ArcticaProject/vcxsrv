@@ -66,9 +66,7 @@ winCreateBoundingWindowFullScreen (ScreenPtr pScreen)
   WNDCLASSEX		wc;
   char			szTitle[256];
 
-#if CYGDEBUG
   winDebug ("winCreateBoundingWindowFullScreen\n");
-#endif
 
   /* Setup our window class */
   wc.cbSize=sizeof(WNDCLASSEX);
@@ -241,10 +239,8 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
   if (pScreenInfo->fUserGaveHeightAndWidth)
     {
       /* User gave a desired height and width, try to accomodate */
-#if CYGDEBUG
       winDebug ("winCreateBoundingWindowWindowed - User gave height "
 	      "and width\n");
-#endif
       
       /* Adjust the window width and height for borders and title bar */
       if (pScreenInfo->fDecoration
@@ -257,16 +253,12 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 #endif
 	  )
 	{
-#if CYGDEBUG
 	  winDebug ("winCreateBoundingWindowWindowed - Window has decoration\n");
-#endif
 	  /* Are we using scrollbars? */
 	  if (pScreenInfo->fScrollbars)
 	    {
-#if CYGDEBUG
 	      winDebug ("winCreateBoundingWindowWindowed - Window has "
 		      "scrollbars\n");
-#endif
 
 	      iWidth += 2 * GetSystemMetrics (SM_CXSIZEFRAME);
 	      iHeight += 2 * GetSystemMetrics (SM_CYSIZEFRAME) 
@@ -274,10 +266,8 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
 	    }
 	  else
 	    {
-#if CYGDEBUG
 	      winDebug ("winCreateBoundingWindowWindowed - Window does not have "
 		      "scrollbars\n");
-#endif
 
 	      iWidth += 2 * GetSystemMetrics (SM_CXFIXEDFRAME);
 	      iHeight += 2 * GetSystemMetrics (SM_CYFIXEDFRAME) 
@@ -288,10 +278,8 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
   else
     {
       /* By default, we are creating a window that is as large as possible */
-#if CYGDEBUG
       winDebug ("winCreateBoundingWindowWindowed - User did not give "
 	      "height and width\n");
-#endif
       /* Defaults are wrong if we have multiple monitors */
       if (pScreenInfo->fMultipleMonitors)
 	{
@@ -333,11 +321,9 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
       if (iHeight >= (rcWorkArea.bottom - rcWorkArea.top))
         iHeight = rcWorkArea.bottom - rcWorkArea.top;
   
-#if CYGDEBUG
       winDebug ("winCreateBoundingWindowWindowed - Adjusted width: %d "\
 	      "height: %d\n",
     	  iWidth, iHeight);
-#endif
     }
 
   /* Set display and screen-specific tooltip text */
@@ -379,9 +365,7 @@ winCreateBoundingWindowWindowed (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winCreateBoundingWindowWindowed - CreateWindowEx () returned\n");
-#endif
 
   if (fForceShowWindow)
   {

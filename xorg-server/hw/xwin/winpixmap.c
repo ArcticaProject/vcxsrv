@@ -70,11 +70,9 @@ winCreatePixmapNativeGDI (ScreenPtr pScreen,
       return NullPixmap;
     }
 
-#if CYGDEBUG
   winDebug ("winCreatePixmap () - w %d h %d d %d uh %d bw %d\n",
 	  iWidth, iHeight, iDepth, usage_hint,
 	  PixmapBytePad (iWidth, iDepth));
-#endif
 
   /* Setup pixmap values */
   pPixmap->drawable.type = DRAWABLE_PIXMAP;
@@ -114,11 +112,9 @@ winCreatePixmapNativeGDI (ScreenPtr pScreen,
 						&pPixmapPriv->pbBits,
 						(BITMAPINFO **) &pPixmapPriv->pbmih);
 
-#if CYGDEBUG
   winDebug ("winCreatePixmap () - Created a pixmap %08x, %dx%dx%d, for " \
 	  "screen: %08x\n",
 	  pPixmapPriv->hBitmap, iWidth, iHeight, iDepth, pScreen);
-#endif
 
   return pPixmap;
 }
@@ -135,9 +131,7 @@ winDestroyPixmapNativeGDI (PixmapPtr pPixmap)
 {
   winPrivPixmapPtr		pPixmapPriv = NULL;
   
-#if CYGDEBUG
   winDebug ("winDestroyPixmapNativeGDI ()\n");
-#endif
 
   /* Bail early if there is not a pixmap to destroy */
   if (pPixmap == NULL)
@@ -149,10 +143,8 @@ winDestroyPixmapNativeGDI (PixmapPtr pPixmap)
   /* Get a handle to the pixmap privates */
   pPixmapPriv = winGetPixmapPriv (pPixmap);
 
-#if CYGDEBUG
   winDebug ("winDestroyPixmapNativeGDI - pPixmapPriv->hBitmap: %08x\n",
 	  pPixmapPriv->hBitmap);
-#endif
 
   /* Decrement reference count, return if nonzero */
   --pPixmap->refcnt;
@@ -193,43 +185,3 @@ winModifyPixmapHeaderNativeGDI (PixmapPtr pPixmap,
   return TRUE;
 }
 
-
-#if 0
-/* 
- * Not used yet.
- * See cfb/cfbpixmap.c
- */
-
-static void
-winXRotatePixmapNativeGDI (PixmapPtr pPix, int rw)
-{
-  ErrorF ("winXRotatePixmap()\n");
-  /* fill in this function, look at CFB */
-}
-
-
-/*
- * Not used yet.
- * See cfb/cfbpixmap.c
- */
-static void
-winYRotatePixmapNativeGDI (PixmapPtr pPix, int rh)
-{
-  ErrorF ("winYRotatePixmap()\n");
-  /* fill in this function, look at CFB */
-}
-
-
-/* 
- * Not used yet.
- * See cfb/cfbpixmap.c
- */
-
-static void
-winCopyRotatePixmapNativeGDI (PixmapPtr psrcPix, PixmapPtr *ppdstPix,
-			      int xrot, int yrot)
-{
-  ErrorF ("winCopyRotatePixmap()\n");
-  /* fill in this function, look at CFB */
-}
-#endif

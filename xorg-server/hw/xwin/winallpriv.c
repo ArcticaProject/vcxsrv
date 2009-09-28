@@ -48,11 +48,9 @@ winAllocatePrivates (ScreenPtr pScreen)
 {
   winPrivScreenPtr	pScreenPriv;
 
-#if CYGDEBUG
   winDebug ("winAllocateScreenPrivates - g_ulServerGeneration: %d "
 	  "serverGeneration: %d\n",
 	  g_ulServerGeneration, serverGeneration);
-#endif
 
   /* We need a new slot for our privates if the screen gen has changed */
   if (g_ulServerGeneration != serverGeneration)
@@ -111,9 +109,7 @@ winAllocatePrivates (ScreenPtr pScreen)
 Bool
 winInitCmapPrivates (ColormapPtr pcmap, int index)
 {
-#if CYGDEBUG
   winDebug ("winInitCmapPrivates\n");
-#endif
   
   /*
    * I see no way that this function can do anything useful
@@ -139,9 +135,7 @@ winAllocateCmapPrivates (ColormapPtr pCmap)
   winPrivCmapPtr		pCmapPriv;
   static unsigned long		s_ulPrivateGeneration = 0;
 
-#if CYGDEBUG
   winDebug ("winAllocateCmapPrivates\n");
-#endif
 
   /* Get a new privates index when the server generation changes */
   if (s_ulPrivateGeneration != serverGeneration)
@@ -164,9 +158,7 @@ winAllocateCmapPrivates (ColormapPtr pCmap)
   /* Save the cmap private pointer */
   winSetCmapPriv (pCmap, pCmapPriv);
 
-#if CYGDEBUG
   winDebug ("winAllocateCmapPrivates - Returning\n");
-#endif
 
   return TRUE;
 }

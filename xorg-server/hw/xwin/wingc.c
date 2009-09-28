@@ -41,47 +41,14 @@ winPushPixels (GCPtr pGC, PixmapPtr pBitMap, DrawablePtr pDrawable, int dx, int 
  * Local prototypes
  */
 
-#if 0
-static void
-winChangeGCNativeGDI (GCPtr pGC, unsigned long ulChanges);
-#endif
-
 static void
 winValidateGCNativeGDI (GCPtr pGC,
 			unsigned long changes,
 			DrawablePtr pDrawable);
 
-#if 0
-static void
-winCopyGCNativeGDI (GCPtr pGCsrc, unsigned long ulMask, GCPtr pGCdst);
-#endif
-
 static void
 winDestroyGCNativeGDI (GCPtr pGC);
 
-#if 0
-static void
-winChangeClipNativeGDI (GCPtr pGC, int nType, pointer pValue, int nRects);
-
-static void
-winDestroyClipNativeGDI (GCPtr pGC);
-
-static void
-winCopyClipNativeGDI (GCPtr pGCdst, GCPtr pGCsrc);
-#endif
-
-#if 0
-/* GC Handling Routines */
-const GCFuncs winGCFuncs = {
-  winValidateGCNativeGDI,
-  winChangeGCNativeGDI,
-  winCopyGCNativeGDI,
-  winDestroyGCNativeGDI,
-  winChangeClipNativeGDI,
-  winDestroyClipNativeGDI,
-  winCopyClipNativeGDI,
-};
-#else
 const GCFuncs winGCFuncs = {
   winValidateGCNativeGDI,
   miChangeGC,
@@ -91,7 +58,6 @@ const GCFuncs winGCFuncs = {
   miDestroyClip,
   miCopyClip,
 };
-#endif
 
 /* Drawing Primitives */
 const GCOps winGCOps = {
@@ -112,13 +78,8 @@ const GCOps winGCOps = {
   miPolyText16,
   miImageText8,
   miImageText16,
-#if 0
-  winImageGlyphBltNativeGDI,
-  winPolyGlyphBltNativeGDI,
-#else
   miImageGlyphBlt,
   miPolyGlyphBlt,
-#endif
   miPushPixels,
 };
 
@@ -132,10 +93,8 @@ winCreateGCNativeGDI (GCPtr pGC)
   winPrivGCPtr		pGCPriv = NULL;
   winPrivScreenPtr	pScreenPriv = NULL;
 
-#if 0
-  ErrorF ("winCreateGCNativeGDI - depth: %d\n",
+  winDebug ("winCreateGCNativeGDI - depth: %d\n",
 	  pGC->depth);
-#endif
 
   pGC->clientClip = NULL;
   pGC->clientClipType = CT_NONE;
@@ -166,19 +125,6 @@ winCreateGCNativeGDI (GCPtr pGC)
   return TRUE;
 }
 
-
-#if 0
-/* See Porting Layer Definition - p. 45 */
-static void
-winChangeGCNativeGDI (GCPtr pGC, unsigned long ulChanges)
-{
-#if 0
-  ErrorF ("winChangeGCNativeGDI () - Doing nothing\n");
-#endif
-}
-#endif
-
-
 static void
 winValidateGCNativeGDI (GCPtr pGC,
 			unsigned long ulChanges,
@@ -190,16 +136,6 @@ winValidateGCNativeGDI (GCPtr pGC,
     miComputeCompositeClip (pGC, pDrawable);
   }
 }
-
-
-#if 0
-/* See Porting Layer Definition - p. 46 */
-static void
-winCopyGCNativeGDI (GCPtr pGCsrc, unsigned long ulMask, GCPtr pGCdst)
-{
-
-}
-#endif
 
 
 /* See Porting Layer Definition - p. 46 */
@@ -229,28 +165,3 @@ winDestroyGCNativeGDI (GCPtr pGC)
   /* Invalidate the GC privates pointer */
   winSetGCPriv (pGC, NULL);
 }
-
-#if 0
-/* See Porting Layer Definition - p. 46 */
-static void
-winChangeClipNativeGDI (GCPtr pGC, int nType, pointer pValue, int nRects)
-{
-
-}
-
-
-/* See Porting Layer Definition - p. 47 */
-static void
-winDestroyClipNativeGDI (GCPtr pGC)
-{
-
-}
-
-
-/* See Porting Layer Definition - p. 47 */
-static void
-winCopyClipNativeGDI (GCPtr pGCdst, GCPtr pGCsrc)
-{
-
-}
-#endif

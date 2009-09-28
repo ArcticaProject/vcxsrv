@@ -149,9 +149,7 @@ winCreatePrimarySurfaceShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
   
-#if CYGDEBUG
   winDebug ("winCreatePrimarySurfaceShadowDD - Created primary surface\n");
-#endif
 
   /*
    * Attach a clipper to the primary surface that will clip our blits to our
@@ -167,10 +165,8 @@ winCreatePrimarySurfaceShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winCreatePrimarySurfaceShadowDD - Attached clipper to "
 	  "primary surface\n");
-#endif
 
   /* Everything was correct */
   return TRUE;
@@ -187,7 +183,7 @@ winReleasePrimarySurfaceShadowDD (ScreenPtr pScreen)
 {
   winScreenPriv(pScreen);
 
-  ErrorF ("winReleasePrimarySurfaceShadowDD - Hello\n");
+  winDebug ("winReleasePrimarySurfaceShadowDD - Hello\n");
 
   /* Release the primary surface and clipper, if they exist */
   if (pScreenPriv->pddsPrimary)
@@ -199,14 +195,14 @@ winReleasePrimarySurfaceShadowDD (ScreenPtr pScreen)
       IDirectDrawSurface2_SetClipper (pScreenPriv->pddsPrimary,
 				      NULL);
 
-      ErrorF ("winReleasePrimarySurfaceShadowDD - Detached clipper\n");
+      winDebug ("winReleasePrimarySurfaceShadowDD - Detached clipper\n");
 
       /* Release the primary surface */
       IDirectDrawSurface2_Release (pScreenPriv->pddsPrimary);
       pScreenPriv->pddsPrimary = NULL;
     }
 
-  ErrorF ("winReleasePrimarySurfaceShadowDD - Released primary surface\n");
+  winDebug ("winReleasePrimarySurfaceShadowDD - Released primary surface\n");
 
   return TRUE;
 }
@@ -229,9 +225,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
   DDSURFACEDESC		ddsd;
   DDSURFACEDESC		*pddsdShadow = NULL;
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD\n");
-#endif
 
   /* Create a clipper */
   ddrval = (*g_fpDirectDrawCreateClipper) (0,
@@ -244,9 +238,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD - Created a clipper\n");
-#endif
 
   /* Get a device context for the screen  */
   pScreenPriv->hdcScreen = GetDC (pScreenPriv->hwndScreen);
@@ -263,9 +255,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD - Attached clipper to window\n");
-#endif
 
   /* Create a DirectDraw object, store the address at lpdd */
   ddrval = (*g_fpDirectDrawCreate) (NULL, &pScreenPriv->pdd, NULL);
@@ -276,9 +266,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD () - Created and initialized DD\n");
-#endif
 
   /* Get a DirectDraw2 interface pointer */
   ddrval = IDirectDraw_QueryInterface (pScreenPriv->pdd,
@@ -361,7 +349,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
 	      || pScreenInfo->dwBPP != GetDeviceCaps (hdc, BITSPIXEL)
 	      || pScreenInfo->dwRefreshRate != 0))
 	{
-	  ErrorF ("winAllocateFBShadowDD - Changing video mode\n");
+	  winDebug ("winAllocateFBShadowDD - Changing video mode\n");
 
 	  /* Change the video mode to the mode requested, and use the driver default refresh rate on failure */
 	  ddrval = IDirectDraw2_SetDisplayMode (pScreenPriv->pdd2,
@@ -393,7 +381,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
 	}
       else
 	{
-	  ErrorF ("winAllocateFBShadowDD - Not changing video mode\n");
+	  winDebug ("winAllocateFBShadowDD - Not changing video mode\n");
 	}
 
       /* Release our DC */
@@ -450,9 +438,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
   
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD - Created shadow\n");
-#endif
 
   /* Allocate a DD surface description for our screen privates */
   pddsdShadow = pScreenPriv->pddsdShadow = malloc (sizeof (DDSURFACEDESC));
@@ -465,9 +451,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
   ZeroMemory (pddsdShadow, sizeof (*pddsdShadow));
   pddsdShadow->dwSize = sizeof (*pddsdShadow);
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD - Locking shadow\n");
-#endif
 
   /* Lock the shadow surface */
   ddrval = IDirectDrawSurface2_Lock (pScreenPriv->pddsShadow,
@@ -482,9 +466,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD - Locked shadow\n");
-#endif
 
   /* We don't know how to deal with anything other than RGB */
   if (!(pddsdShadow->ddpfPixelFormat.dwFlags & DDPF_RGB))
@@ -505,9 +487,7 @@ winAllocateFBShadowDD (ScreenPtr pScreen)
   pScreenPriv->dwGreenMask = pddsdShadow->ddpfPixelFormat.u3.dwGBitMask;
   pScreenPriv->dwBlueMask = pddsdShadow->ddpfPixelFormat.u4.dwBBitMask;
 
-#if CYGDEBUG
   winDebug ("winAllocateFBShadowDD - Returning\n");
-#endif
 
   return TRUE;
 }
@@ -690,9 +670,7 @@ winCloseScreenShadowDD (int nIndex, ScreenPtr pScreen)
   winScreenInfo		*pScreenInfo = pScreenPriv->pScreenInfo;
   Bool			fReturn;
   
-#if CYGDEBUG
   winDebug ("winCloseScreenShadowDD - Freeing screen resources\n");
-#endif
 
   /* Flag that the screen is closed */
   pScreenPriv->fClosed = TRUE;
@@ -816,7 +794,7 @@ winInitVisualsShadowDD (ScreenPtr pScreen)
   else
     pScreenPriv->dwBitsPerRGB = dwBlueBits;
   
-  ErrorF ("winInitVisualsShadowDD - Masks %08x %08x %08x BPRGB %d d %d "
+  winDebug ("winInitVisualsShadowDD - Masks %08x %08x %08x BPRGB %d d %d "
 	  "bpp %d\n",
 	  (unsigned int) pScreenPriv->dwRedMask,
 	  (unsigned int) pScreenPriv->dwGreenMask,
@@ -935,9 +913,7 @@ winInitVisualsShadowDD (ScreenPtr pScreen)
       return FALSE;
     }
 
-#if CYGDEBUG
   winDebug ("winInitVisualsShadowDD - Returning\n");
-#endif
 
   return TRUE;
 }
@@ -970,7 +946,7 @@ winAdjustVideoModeShadowDD (ScreenPtr pScreen)
   if (pScreenInfo->dwBPP == WIN_DEFAULT_BPP)
     {
       /* No -depth parameter passed, let the user know the depth being used */
-      ErrorF ("winAdjustVideoModeShadowDD - Using Windows display "
+      winDebug ("winAdjustVideoModeShadowDD - Using Windows display "
 	      "depth of %d bits per pixel\n", (int) dwBPP);
 
       /* Use GDI's depth */
@@ -980,13 +956,13 @@ winAdjustVideoModeShadowDD (ScreenPtr pScreen)
 	   && pScreenInfo->dwBPP != dwBPP)
     {
       /* FullScreen, and GDI depth differs from -depth parameter */
-      ErrorF ("winAdjustVideoModeShadowDD - FullScreen, using command line "
+      winDebug ("winAdjustVideoModeShadowDD - FullScreen, using command line "
 	      "bpp: %d\n", (int) pScreenInfo->dwBPP);
     }
   else if (dwBPP != pScreenInfo->dwBPP)
     {
       /* Windowed, and GDI depth differs from -depth parameter */
-      ErrorF ("winAdjustVideoModeShadowDD - Windowed, command line bpp: "
+      winDebug ("winAdjustVideoModeShadowDD - Windowed, command line bpp: "
 	      "%d, using bpp: %d\n", (int) pScreenInfo->dwBPP, (int) dwBPP);
 
       /* We'll use GDI's depth */
@@ -1382,10 +1358,8 @@ winDestroyColormapShadowDD (ColormapPtr pColormap)
    */
   if (pColormap->flags & IsDefault)
     {
-#if CYGDEBUG
       winDebug ("winDestroyColormapShadowDD - Destroying default "
 	      "colormap\n");
-#endif
       
       /*
        * FIXME: Walk the list of all screens, popping the default

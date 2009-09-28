@@ -95,7 +95,7 @@ winMouseProc (DeviceIntPtr pDeviceInt, int iState)
        */
       if (lngMouseButtons < 3)
         lngMouseButtons = 3;
-      winMsg(X_PROBED, "%d mouse buttons found\n", lngMouseButtons);
+      winDebug("%d mouse buttons found\n", lngMouseButtons);
 
       /* allocate memory: 
        * number of buttons + 2x mouse wheel event + 1 extra (offset for map) 
@@ -250,12 +250,10 @@ winMouseButtonsSendEvent (int iEventType, int iButton)
 			     POINTER_RELATIVE, 0, 0, NULL);
 
   for (i = 0; i < nevents; i++)
-    mieqEnqueue(g_pwinPointer, events[i].event);
+    mieqEnqueue(g_pwinPointer, (InternalEvent*)(events + i)->event);
 
-#if CYGDEBUG
-  ErrorF("winMouseButtonsSendEvent: iEventType: %d, iButton: %d, nEvents %d\n",
+  winDebug("winMouseButtonsSendEvent: iEventType: %d, iButton: %d, nEvents %d\n",
           iEventType, iButton, nevents);
-#endif
 }
 
 
@@ -384,5 +382,5 @@ void winEnqueueMotion(int x, int y)
 			     POINTER_ABSOLUTE, 0, 2, valuators);
 
   for (i = 0; i < nevents; i++)
-    mieqEnqueue(g_pwinPointer, events[i].event);
+    mieqEnqueue(g_pwinPointer, (InternalEvent*)(events + i)->event);
 }

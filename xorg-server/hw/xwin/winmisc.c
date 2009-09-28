@@ -44,7 +44,7 @@ void
 winQueryBestSizeNativeGDI (int class, unsigned short *pWidth,
 			   unsigned short *pHeight, ScreenPtr pScreen)
 {
-  ErrorF ("winQueryBestSizeNativeGDI\n");
+  winDebug ("winQueryBestSizeNativeGDI\n");
 }
 #endif
 

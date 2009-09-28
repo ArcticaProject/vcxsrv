@@ -88,7 +88,7 @@ winProcQueryTree (ClientPtr client)
 {
   int			iReturn;
 
-  ErrorF ("winProcQueryTree - Hello\n");
+  winDebug ("winProcQueryTree - Hello\n");
 
   /*
    * This procedure is only used for initialization.
@@ -116,7 +116,7 @@ winProcQueryTree (ClientPtr client)
   /* Do nothing if clipboard is not enabled */
   if (!g_fClipboard)
     {
-      ErrorF ("winProcQueryTree - Clipboard is not enabled, "
+      winDebug ("winProcQueryTree - Clipboard is not enabled, "
 	      "returning.\n");
       return iReturn;
     }
@@ -124,7 +124,7 @@ winProcQueryTree (ClientPtr client)
   /* If the clipboard client has already been started, abort */
   if (g_fClipboardLaunched)
     {
-      ErrorF ("winProcQueryTree - Clipboard client already "
+      winDebug ("winProcQueryTree - Clipboard client already "
 	      "launched, returning.\n");
       return iReturn;
     }
@@ -166,7 +166,7 @@ winProcQueryTree (ClientPtr client)
 	  return iReturn;
 	}
       
-      ErrorF ("winProcQueryTree - winInitClipboard returned.\n");
+      winDebug ("winProcQueryTree - winInitClipboard returned.\n");
     }
   
   /* Flag that clipboard client has been launched */
@@ -189,12 +189,14 @@ winProcEstablishConnection (ClientPtr client)
   static int		s_iCallCount = 0;
   static unsigned long	s_ulServerGeneration = 0;
 
-  if (s_iCallCount == 0 || s_iCallCount == CLIP_NUM_CALLS) ErrorF ("winProcEstablishConnection - Hello\n");
+  #ifdef WINDBG
+  if (s_iCallCount == 0 || s_iCallCount == CLIP_NUM_CALLS) winDebug ("winProcEstablishConnection - Hello\n");
+  #endif
 
   /* Do nothing if clipboard is not enabled */
   if (!g_fClipboard)
     {
-      ErrorF ("winProcEstablishConnection - Clipboard is not enabled, "
+      winDebug ("winProcEstablishConnection - Clipboard is not enabled, "
 	      "returning.\n");
       
       /* Unwrap the original function, call it, and return */
@@ -222,10 +224,12 @@ winProcEstablishConnection (ClientPtr client)
       && !g_fClipboardLaunched
       && s_iCallCount < CLIP_NUM_CALLS)
     {
-      if (s_iCallCount == 1) ErrorF ("winProcEstablishConnection - Xdmcp, waiting to "
+      #ifdef WINDBG
+      if (s_iCallCount == 1) winDebug ("winProcEstablishConnection - Xdmcp, waiting to "
 	      "start clipboard client until %dth call", CLIP_NUM_CALLS);
-      if (s_iCallCount == CLIP_NUM_CALLS - 1) ErrorF (".\n");
-      else ErrorF (".");
+      if (s_iCallCount == CLIP_NUM_CALLS - 1) winDebug (".\n");
+      else winDebug (".");
+      #endif
       return (*winProcEstablishConnectionOrig) (client);
     }
 
@@ -256,7 +260,7 @@ winProcEstablishConnection (ClientPtr client)
   /* If the clipboard client has already been started, abort */
   if (g_fClipboardLaunched)
     {
-      ErrorF ("winProcEstablishConnection - Clipboard client already "
+      winDebug ("winProcEstablishConnection - Clipboard client already "
 	      "launched, returning.\n");
       return iReturn;
     }
@@ -296,7 +300,7 @@ winProcEstablishConnection (ClientPtr client)
 	  return iReturn;
 	}
       
-      ErrorF ("winProcEstablishConnection - winInitClipboard returned.\n");
+      winDebug ("winProcEstablishConnection - winInitClipboard returned.\n");
     }
   
   /* Flag that clipboard client has been launched */
@@ -338,7 +342,7 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if clipboard not completely initialized yet */
   if (!g_fClipboardStarted)
     {
-        ErrorF ("winProcSetSelectionOwner - Clipboard not yet started, "
+        winDebug ("winProcSetSelectionOwner - Clipboard not yet started, "
 	        "aborting.\n");
         goto winProcSetSelectionOwner_Done;
     }

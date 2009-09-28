@@ -69,12 +69,12 @@ winDetectSupportedEngines (void)
     {
     case VER_PLATFORM_WIN32_NT:
       /* Engine 4 is supported on NT only */
-      winErrorFVerb (2, "winDetectSupportedEngines - Windows NT/2000/XP\n");
+      winDebug ("winDetectSupportedEngines - Windows NT/2000/XP\n");
       break;
 
     case VER_PLATFORM_WIN32_WINDOWS:
       /* Engine 4 is supported on NT only */
-      winErrorFVerb (2, "winDetectSupportedEngines - Windows 95/98/Me\n");
+      winDebug ("winDetectSupportedEngines - Windows 95/98/Me\n");
       break;
     }
 
@@ -100,13 +100,13 @@ winDetectSupportedEngines (void)
       if (FAILED (ddrval))
 	{
 	  /* No DirectDraw support */
-	  winErrorFVerb (2, "winDetectSupportedEngines - DirectDraw not installed\n");
+	  winDebug ("winDetectSupportedEngines - DirectDraw not installed\n");
 	  return;
 	}
       else
 	{
 	  /* We have DirectDraw */
-	  winErrorFVerb (2, "winDetectSupportedEngines - DirectDraw installed\n");
+	  winDebug ("winDetectSupportedEngines - DirectDraw installed\n");
 	  g_dwEnginesSupported |= WIN_SERVER_SHADOW_DD;
 
 #ifdef XWIN_PRIMARYFB
@@ -114,7 +114,7 @@ winDetectSupportedEngines (void)
 	  if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT)
 	    {
 	      g_dwEnginesSupported |= WIN_SERVER_PRIMARY_DD;
-	      winErrorFVerb (2, "winDetectSupportedEngines - Allowing PrimaryDD\n");
+	      winDebug ("winDetectSupportedEngines - Allowing PrimaryDD\n");
 	    }
 #endif
 	}
@@ -126,7 +126,7 @@ winDetectSupportedEngines (void)
       if (SUCCEEDED (ddrval))
 	{
 	  /* We have DirectDraw4 */
-	  winErrorFVerb (2, "winDetectSupportedEngines - DirectDraw4 installed\n");
+	  winDebug ("winDetectSupportedEngines - DirectDraw4 installed\n");
 	  g_dwEnginesSupported |= WIN_SERVER_SHADOW_DDNL;
 	}
 
@@ -137,7 +137,7 @@ winDetectSupportedEngines (void)
 	IDirectDraw_Release (lpdd);
     }
 
-  winErrorFVerb (2, "winDetectSupportedEngines - Returning, supported engines %08x\n",
+  winDebug ("winDetectSupportedEngines - Returning, supported engines %08x\n",
 	  (unsigned int) g_dwEnginesSupported);
 }
 
@@ -178,7 +178,7 @@ winSetEngine (ScreenPtr pScreen)
   /* ShadowGDI is the only engine that supports windowed PseudoColor */
   if (dwBPP == 8 && !pScreenInfo->fFullScreen)
     {
-      winErrorFVerb (2, "winSetEngine - Windowed && PseudoColor => ShadowGDI\n");
+      winDebug ("winSetEngine - Windowed && PseudoColor => ShadowGDI\n");
       pScreenInfo->dwEngine = WIN_SERVER_SHADOW_GDI;
 
       /* Set engine function pointers */
@@ -200,7 +200,7 @@ winSetEngine (ScreenPtr pScreen)
 #endif
       )
     {
-      winErrorFVerb (2, "winSetEngine - Multi Window or Rootless => ShadowGDI\n");
+      winDebug ("winSetEngine - Multi Window or Rootless => ShadowGDI\n");
       pScreenInfo->dwEngine = WIN_SERVER_SHADOW_GDI;
 
       /* Set engine function pointers */
@@ -211,7 +211,7 @@ winSetEngine (ScreenPtr pScreen)
   /* If the user's choice is supported, we'll use that */
   if (g_dwEnginesSupported & pScreenInfo->dwEnginePreferred)
     {
-      winErrorFVerb (2, "winSetEngine - Using user's preference: %d\n",
+      winDebug ("winSetEngine - Using user's preference: %d\n",
 	      (int) pScreenInfo->dwEnginePreferred);
       pScreenInfo->dwEngine = pScreenInfo->dwEnginePreferred;
 
@@ -246,7 +246,7 @@ winSetEngine (ScreenPtr pScreen)
   /* ShadowDDNL has good performance, so why not */
   if (g_dwEnginesSupported & WIN_SERVER_SHADOW_DDNL)
     {
-      winErrorFVerb (2, "winSetEngine - Using Shadow DirectDraw NonLocking\n");
+      winDebug ("winSetEngine - Using Shadow DirectDraw NonLocking\n");
       pScreenInfo->dwEngine = WIN_SERVER_SHADOW_DDNL;
 
       /* Set engine function pointers */
@@ -257,7 +257,7 @@ winSetEngine (ScreenPtr pScreen)
   /* ShadowDD is next in line */
   if (g_dwEnginesSupported & WIN_SERVER_SHADOW_DD)
     {
-      winErrorFVerb (2, "winSetEngine - Using Shadow DirectDraw\n");
+      winDebug ("winSetEngine - Using Shadow DirectDraw\n");
       pScreenInfo->dwEngine = WIN_SERVER_SHADOW_DD;
 
       /* Set engine function pointers */
@@ -268,7 +268,7 @@ winSetEngine (ScreenPtr pScreen)
   /* ShadowGDI is next in line */
   if (g_dwEnginesSupported & WIN_SERVER_SHADOW_GDI)
     {
-      winErrorFVerb (2, "winSetEngine - Using Shadow GDI DIB\n");
+      winDebug ("winSetEngine - Using Shadow GDI DIB\n");
       pScreenInfo->dwEngine = WIN_SERVER_SHADOW_GDI;
 
       /* Set engine function pointers */

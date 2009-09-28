@@ -75,7 +75,7 @@ winValidateArgs (void)
       if (g_ScreenInfo[i].fExplicitScreen)
 	iMaxConsecutiveScreen = i + 1;
     }
-  winErrorFVerb (2, "winValidateArgs - g_iNumScreens: %d "
+  winDebug ("winValidateArgs - g_iNumScreens: %d "
 		 "iMaxConsecutiveScreen: %d\n",
 		 g_iNumScreens, iMaxConsecutiveScreen);
   if (g_iNumScreens < iMaxConsecutiveScreen)

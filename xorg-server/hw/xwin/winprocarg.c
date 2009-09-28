@@ -136,7 +136,7 @@ winInitializeDefaultScreens (void)
   dwWidth = GetSystemMetrics (SM_CXSCREEN);
   dwHeight = GetSystemMetrics (SM_CYSCREEN);
 
-  winErrorFVerb (2, "winInitializeDefaultScreens - w %d h %d\n",
+  winDebug ("winInitializeDefaultScreens - w %d h %d\n",
 	  (int) dwWidth, (int) dwHeight);
 
   /* Set a default DPI, if no parameter was passed */
@@ -191,7 +191,7 @@ winInitializeDefaultScreens (void)
   /* Signal that the default screens have been initialized */
   g_fInitializedDefaultScreens = TRUE;
 
-  winErrorFVerb (2, "winInitializeDefaultScreens - Returning\n");
+  winDebug ("winInitializeDefaultScreens - Returning\n");
 }
 
 /* See Porting Layer Definition - p. 57 */
@@ -253,15 +253,13 @@ ddxProcessArgument (int argc, char *argv[], int i)
 	   * OsVendorInit () gets called, otherwise we will overwrite
 	   * settings changed by parameters such as -fullscreen, etc.
 	   */
-	  winErrorFVerb (2, "ddxProcessArgument - Initializing default "
+	  winDebug ("ddxProcessArgument - Initializing default "
 			 "screens\n");
 	  winInitializeDefaultScreens ();
 	}
     }
 
-#if CYGDEBUG
   winDebug ("ddxProcessArgument - arg: %s\n", argv[i]);
-#endif
 
   /*
    * Look for the '-help' and similar options
@@ -295,10 +293,8 @@ ddxProcessArgument (int argc, char *argv[], int i)
       int		iWidth, iHeight, iX, iY;
       int		iMonitor;
 
-#if CYGDEBUG
       winDebug ("ddxProcessArgument - screen - argc: %d i: %d\n",
 	      argc, i);
-#endif
 
       /* Display the usage message if the argument is malformed */
       if (i + 1 >= argc)
@@ -329,7 +325,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
                     "Querying monitors is not supported on NT4 and Win95\n");
         } else if (data.bMonitorSpecifiedExists == TRUE) 
         {
-		  winErrorFVerb(2, "ddxProcessArgument - screen - Found Valid ``@Monitor'' = %d arg\n", iMonitor);
+		  winDebug("ddxProcessArgument - screen - Found Valid ``@Monitor'' = %d arg\n", iMonitor);
 		  iArgsProcessed = 3;
 		  g_ScreenInfo[nScreenNum].fUserGaveHeightAndWidth = FALSE;
 		  g_ScreenInfo[nScreenNum].fUserGavePosition = TRUE;
@@ -357,7 +353,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 			  (int *) &iWidth,
 			  (int *) &iHeight))
 	{
-	  winErrorFVerb (2, "ddxProcessArgument - screen - Found ``WxD'' arg\n");
+	  winDebug ("ddxProcessArgument - screen - Found ``WxD'' arg\n");
 	  iArgsProcessed = 3;
 	  g_ScreenInfo[nScreenNum].fUserGaveHeightAndWidth = TRUE;
 	  g_ScreenInfo[nScreenNum].dwWidth = iWidth;
@@ -369,7 +365,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 			   (int *) &iX,
 			   (int *) &iY))
 	  {
-	    winErrorFVerb (2, "ddxProcessArgument - screen - Found ``X+Y'' arg\n");
+	    winDebug("ddxProcessArgument - screen - Found ``X+Y'' arg\n");
 	    g_ScreenInfo[nScreenNum].fUserGavePosition = TRUE;
 	    g_ScreenInfo[nScreenNum].dwInitialX = iX;
 	    g_ScreenInfo[nScreenNum].dwInitialY = iY;
@@ -412,7 +408,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
                   "Querying monitors is not supported on NT4 and Win95\n");
         } else if (data.bMonitorSpecifiedExists == TRUE) 
         {
-		  winErrorFVerb (2, "ddxProcessArgument - screen - Found Valid ``@Monitor'' = %d arg\n", iMonitor);
+		  winDebug ("ddxProcessArgument - screen - Found Valid ``@Monitor'' = %d arg\n", iMonitor);
 		  g_ScreenInfo[nScreenNum].fUserGavePosition = TRUE;
 		  g_ScreenInfo[nScreenNum].dwInitialX = data.monitorOffsetX;
 		  g_ScreenInfo[nScreenNum].dwInitialY = data.monitorOffsetY;
@@ -435,7 +431,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 	       && 1 == sscanf (argv[i + 3], "%d",
 			       (int *) &iHeight))
 	{
-	  winErrorFVerb (2, "ddxProcessArgument - screen - Found ``W D'' arg\n");
+	  winDebug ("ddxProcessArgument - screen - Found ``W D'' arg\n");
 	  iArgsProcessed = 4;
 	  g_ScreenInfo[nScreenNum].fUserGaveHeightAndWidth = TRUE;
 	  g_ScreenInfo[nScreenNum].dwWidth = iWidth;
@@ -448,7 +444,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 	      && 1 == sscanf (argv[i + 5], "%d",
 			      (int *) &iY))
 	  {
-	    winErrorFVerb (2, "ddxProcessArgument - screen - Found ``X Y'' arg\n");
+	    winDebug ("ddxProcessArgument - screen - Found ``X Y'' arg\n");
 	    iArgsProcessed = 6;
 	    g_ScreenInfo[nScreenNum].fUserGavePosition = TRUE;
 	    g_ScreenInfo[nScreenNum].dwInitialX = iX;
@@ -457,7 +453,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 	}
       else
 	{
-	  winErrorFVerb (2, "ddxProcessArgument - screen - Did not find size arg. "
+	  ErrorF ("ddxProcessArgument - screen - Did not find size arg. "
 		  "dwWidth: %d dwHeight: %d\n",
 		  (int) g_ScreenInfo[nScreenNum].dwWidth,
 		  (int) g_ScreenInfo[nScreenNum].dwHeight);
@@ -1498,7 +1494,7 @@ winLogCommandLine (int argc, char *argv[])
       iCurrLen += strlen (argv[i]);
     }
 
-  ErrorF ("XWin was started with the following command line:\n\n"
+  winDebug ("XWin was started with the following command line:\n\n"
 	  "%s\n\n", g_pszCommandLine);
 }
 
@@ -1510,18 +1506,19 @@ winLogCommandLine (int argc, char *argv[])
 void
 winLogVersionInfo (void)
 {
+#ifdef WINDBG
   static Bool		s_fBeenHere = FALSE;
 
   if (s_fBeenHere)
     return;
   s_fBeenHere = TRUE;
 
-  ErrorF ("Welcome to the VcXsrv X Server\n");
-  ErrorF ("Vendor: %s\n", VENDOR_STRING);
-  ErrorF ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
-  ErrorF ("Contact: %s\n\n", VENDOR_CONTACT);
+  winDebug ("Welcome to the VcXsrv X Server\n");
+  winDebug ("Vendor: %s\n", VENDOR_STRING);
+  winDebug ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
+  winDebug ("Contact: %s\n\n", VENDOR_CONTACT);
+#endif
 }
-
 /*
  * getMonitorInfo - callback function used to return information from the enumeration of monitors attached
  */

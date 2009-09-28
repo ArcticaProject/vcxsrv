@@ -441,7 +441,6 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       wmMsg.iHeight	= pRLWinPriv->pFrame->height;
 
       fWMMsgInitialized = TRUE;
-#if CYGDEBUG
       winDebugWin32Message("winMWExtWMWindowProc", hwnd, message, wParam, lParam);
 
       winDebug ("\thWnd %08X\n", hwnd);
@@ -450,7 +449,6 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       winDebug ("\thwndScreen %08X\n", hwndScreen);
       winDebug ("winMWExtWMWindowProc (%08x) %08x %08x %08x\n",
 	      pRLWinPriv, message, wParam, lParam);
-#endif
     }
   /* Branch on message type */
   switch (message)
@@ -784,9 +782,7 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       return 0;
 
     case WM_ERASEBKGND:
-#if CYGDEBUG
       winDebug ("winMWExtWMWindowProc - WM_ERASEBKGND\n");
-#endif
       /*
        * Pretend that we did erase the background but we don't care,
        * since we repaint the entire region anyhow
@@ -1324,11 +1320,11 @@ winMWExtWMWindowProc (HWND hwnd, UINT message,
       break;
 
     case WM_MANAGE:
-      ErrorF ("winMWExtWMWindowProc - WM_MANAGE\n");
+      winDebug ("winMWExtWMWindowProc - WM_MANAGE\n");
       break;
 
     case WM_UNMANAGE:
-      ErrorF ("winMWExtWMWindowProc - WM_UNMANAGE\n");
+      winDebug ("winMWExtWMWindowProc - WM_UNMANAGE\n");
       break;
 
     default:
