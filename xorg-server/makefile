@@ -82,6 +82,9 @@ $(OBJDIR)\$(TTYAPP).exe: $(LINKLIBS)
 XKeysymDB: ..\libX11\src\XKeysymDB
 	copy $< $@
 
+XErrorDB: ..\libX11\src\XErrorDB
+	copy $< $@
+
 $(TTYAPP).exe: $(OBJDIR)\$(TTYAPP).exe
 	copy $< $@
 
@@ -104,8 +107,8 @@ load_makefile ..\libX11\nls\makefile MAKESERVER=0 DEBUG=0
 load_makefile fonts.src\makefile MAKESERVER=0 DEBUG=0
 load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
-all: $(TTYAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB ..\libX11\nls\all fonts.src\all xkbdata.src\all \
-     plink.exe
+all: $(TTYAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
+     ..\libX11\nls\all fonts.src\all xkbdata.src\all plink.exe
 
 protocol.txt: dix\protocol.txt
 	copy $< $@
