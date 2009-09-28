@@ -1,4 +1,6 @@
+ifeq ($(DEBUG),1)
 DEFINES += FONTDEBUG
+endif
 
 LIBRARY=libdix
 
