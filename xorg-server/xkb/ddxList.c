@@ -214,7 +214,12 @@ char	tmpname[PATH_MAX];
     }
     buf = xalloc(PATH_MAX * sizeof(char));
     if (!buf)
-        return BadAlloc;
+    {
+#ifdef WIN32
+	unlink(tmpname);
+#endif
+	return BadAlloc;
+    }
     while ((status==Success)&&((tmp=fgets(buf,PATH_MAX,in))!=NULL)) {
 	unsigned flags;
 	register unsigned int i;

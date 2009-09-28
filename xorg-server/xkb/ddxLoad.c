@@ -269,6 +269,10 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 	    }
             if (buf != NULL)
                 xfree (buf);
+#ifdef WIN32
+        /* remove the temporary file */
+        unlink(tmpname);
+#endif
 	    return True;
 	}
 	else
