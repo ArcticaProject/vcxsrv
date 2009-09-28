@@ -51,6 +51,10 @@
 #include <dix-config.h>
 #endif
 
+#ifdef CreateWindow
+#undef CreateWindow
+#endif
+
 #include "compint.h"
 #include "xace.h"
 
