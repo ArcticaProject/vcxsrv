@@ -1683,7 +1683,7 @@ mmx_composite_over_8888_0565 (pixman_implementation_t *imp,
 	    vdest = pack_565 (
 		over (vsrc, expand_alpha (vsrc), vdest), vdest, 0);
 
-	    *dst = UINT64 (vdest);
+	    *dst = UINT64 (vdest) & 0xffff;
 
 	    w--;
 	    dst++;
@@ -1726,7 +1726,7 @@ mmx_composite_over_8888_0565 (pixman_implementation_t *imp,
 
 	    vdest = pack_565 (over (vsrc, expand_alpha (vsrc), vdest), vdest, 0);
 
-	    *dst = UINT64 (vdest);
+	    *dst = UINT64 (vdest) & 0xffff;
 
 	    w--;
 	    dst++;
@@ -1949,7 +1949,7 @@ pixman_fill_mmx (uint32_t *bits,
 
 	while (w >= 2 && ((unsigned long)d & 3))
 	{
-	    *(uint16_t *)d = xor;
+	    *(uint16_t *)d = (xor & 0xffff);
 	    w -= 2;
 	    d += 2;
 	}
@@ -2002,7 +2002,7 @@ pixman_fill_mmx (uint32_t *bits,
 	}
 	while (w >= 2)
 	{
-	    *(uint16_t *)d = xor;
+	    *(uint16_t *)d = (xor & 0xffff);
 	    w -= 2;
 	    d += 2;
 	}
