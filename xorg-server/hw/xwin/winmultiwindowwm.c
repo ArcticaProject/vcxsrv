@@ -1287,7 +1287,7 @@ winMultiWindowWMErrorHandler (Display *pDisplay, XErrorEvent *pErr)
           "  minorCode %d\n"
           , pszErrorMsg
           , pErr->error_code
-          , pErr->serial,
+          , pErr->serial
           , pErr->resourceid
           , pErr->request_code
           , pErr->minor_code);
@@ -1336,7 +1336,7 @@ winMultiWindowXMsgProcErrorHandler (Display *pDisplay, XErrorEvent *pErr)
           "  minorCode %d\n"
           , pszErrorMsg
           , pErr->error_code
-          , pErr->serial,
+          , pErr->serial
           , pErr->resourceid
           , pErr->request_code
           , pErr->minor_code);
