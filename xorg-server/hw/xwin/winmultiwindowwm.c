@@ -1279,7 +1279,18 @@ winMultiWindowWMErrorHandler (Display *pDisplay, XErrorEvent *pErr)
 		 pErr->error_code,
 		 pszErrorMsg,
 		 sizeof (pszErrorMsg));
-  ErrorF ("winMultiWindowWMErrorHandler - ERROR: %s\n", pszErrorMsg);
+  ErrorF ("winMultiWindowWMErrorHandler - ERROR: %s\n"
+          "  errorCode %d\n"
+          "  serial %d\n"
+          "  resourceID %d\n"
+          "  majorCode %d\n"
+          "  minorCode %d\n"
+          , pszErrorMsg
+          , pErr->error_code
+          , pErr->serial,
+          , pErr->resourceid
+          , pErr->request_code
+          , pErr->minor_code);
 
   return 0;
 }
@@ -1319,11 +1330,13 @@ winMultiWindowXMsgProcErrorHandler (Display *pDisplay, XErrorEvent *pErr)
 		 sizeof (pszErrorMsg));
   ErrorF ("winMultiWindowXMsgProcErrorHandler - ERROR: %s\n"
           "  errorCode %d\n"
+          "  serial %d\n"
           "  resourceID %d\n"
           "  majorCode %d\n"
           "  minorCode %d\n"
           , pszErrorMsg
           , pErr->error_code
+          , pErr->serial,
           , pErr->resourceid
           , pErr->request_code
           , pErr->minor_code);

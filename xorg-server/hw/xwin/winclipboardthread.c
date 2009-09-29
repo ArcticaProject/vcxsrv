@@ -488,11 +488,17 @@ winClipboardErrorHandler (Display *pDisplay, XErrorEvent *pErr)
 		 pszErrorMsg,
 		 sizeof (pszErrorMsg));
   ErrorF ("winClipboardErrorHandler - ERROR: \n\t%s\n"
-	  "\tSerial: %d, Request Code: %d, Minor Code: %d\n",
-	  pszErrorMsg,
-	  pErr->serial,
-	  pErr->request_code,
-	  pErr->minor_code);
+          "  errorCode %d\n"
+          "  serial %d\n"
+          "  resourceID %d\n"
+          "  majorCode %d\n"
+          "  minorCode %d\n"
+          , pszErrorMsg
+          , pErr->error_code
+          , pErr->serial,
+          , pErr->resourceid
+          , pErr->request_code
+          , pErr->minor_code);
   return 0;
 }
 
