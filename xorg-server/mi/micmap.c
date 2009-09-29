@@ -134,18 +134,29 @@ miInitializeColormap(ColormapPtr pmap)
 	unsigned limr, limg, limb;
 
 	limr = pVisual->redMask >> pVisual->offsetRed;
-	limg = pVisual->greenMask >> pVisual->offsetGreen;
-	limb = pVisual->blueMask >> pVisual->offsetBlue;
-	for(i = 0; i <= maxent; i++)
+	for(i = 0; i <= min(limr,maxent); i++)
 	{
 	    /* rescale to [0..65535] then rgb bits */
 	    pmap->red[i].co.local.red =
 		((((i * 65535) / limr) >> shift) * 65535) / lim;
+	}
+	for(; i <= maxent; i++) pmap->red[i].co.local.red = 65535;
+	limg = pVisual->greenMask >> pVisual->offsetGreen;
+	for(i = 0; i <= min(limg,maxent); i++)
+	{
+	    /* rescale to [0..65535] then rgb bits */
 	    pmap->green[i].co.local.green =
 		((((i * 65535) / limg) >> shift) * 65535) / lim;
+	}
+	for(; i <= maxent; i++) pmap->green[i].co.local.green = 65535;
+	limb = pVisual->blueMask >> pVisual->offsetBlue;
+	for(i = 0; i <= min(limb,maxent); i++)
+	{
+	    /* rescale to [0..65535] then rgb bits */
 	    pmap->blue[i].co.local.blue =
 		((((i * 65535) / limb) >> shift) * 65535) / lim;
 	}
+	for(; i <= maxent; i++) pmap->blue[i].co.local.blue = 65535;
     }
     else if (pVisual->class == StaticColor)
     {
