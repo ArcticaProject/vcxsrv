@@ -594,10 +594,6 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
 void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Target)
 {
   m_AutoDepsDirty=true; /* Always assume dirty since in the autodeps file, the md5 strings are also saved. */
-  const char *pName=Target->GetFullFileName().c_str();
-  const char *pExt=strrchr(pName,'.');
-  if (!pExt)
-    return;
   if (Target->IsAutoDepExtention())
   {
     // we have to search for the include files in the first dependency of Target
