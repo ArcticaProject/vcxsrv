@@ -406,9 +406,7 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
           break;
 #endif
         default:
-          cerr << "\nUnknown option: "<<*ArgIt<<endl<<endl;
-          cerr << s_UsageString;
-          throw(1);
+          throw string("\nUnknown option: ")+*ArgIt+"\n\n"+ s_UsageString;
       }
     }
     else
@@ -502,8 +500,7 @@ void loadedmakefile::LoadMakefile()
     int result=m_pParser->ParseFile(BeforeMakefile,true);
     if (result)
     {
-      printf("Error parsing %s\n",BeforeMakefile->GetQuotedFullFileName().c_str());
-      throw(1);
+      throw string("Error parsing ")+BeforeMakefile->GetQuotedFullFileName();
     }
     m_pParser->UpdateDate(BeforeMakefile->GetDate());
 
@@ -511,8 +508,7 @@ void loadedmakefile::LoadMakefile()
     string ObjDirName=m_pParser->ExpandExpression("$(OBJDIR)");
     if (!ObjDirName.size())
     {
-      printf("When making use of MHMAKECONF, you have to define OBJDIR in makefile.before");
-      throw(1);
+      throw string("When making use of MHMAKECONF, you have to define OBJDIR in makefile.before");
     }
     DepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR MAKEDEPFILE);
     m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
@@ -547,8 +543,7 @@ void loadedmakefile::LoadMakefile()
   int result=m_pParser->ParseFile(m_Makefile,true);
   if (result)
   {
-    printf("Error parsing %s\n",m_Makefile->GetQuotedFullFileName().c_str());
-    throw(1);
+    throw string("Error parsing ")+m_Makefile->GetQuotedFullFileName();
   }
   #ifdef _DEBUG
   /* Check if the makefile has changed the AUTODEPFILE variable, if so generate a warning that a
@@ -574,8 +569,7 @@ void loadedmakefile::LoadMakefile()
     refptr<fileinfo> AfterMakefile=GetFileInfo(BaseAutoMak+".after",sm_Statics.m_MhMakeConf);
     int result=m_pParser->ParseFile(AfterMakefile);
     if (result) {
-      printf("Error parsing %s\n",AfterMakefile->GetQuotedFullFileName().c_str());
-      throw(1);
+      throw string("Error parsing ")+AfterMakefile->GetQuotedFullFileName();
     }
     m_pParser->UpdateDate(AfterMakefile->GetDate());
   }

@@ -268,8 +268,7 @@ string mhmakefileparser::ExpandMacro(const string &Expr) const
       }
       else
       {
-        cerr << "Unknown function specified in macro: "<<Func<<endl;
-        throw 1;
+        throw string("Unknown function specified in macro: ")+Func;
       }
       #else
       return (this->*pFunc)(Arg);
@@ -278,8 +277,7 @@ string mhmakefileparser::ExpandMacro(const string &Expr) const
     else
     {
     #ifdef _DEBUG
-      cerr << "Fatal error in ExpandMacro (bug in mhmake ? ? ?)";
-      throw 1;
+      throw string("Fatal error in ExpandMacro (bug in mhmake ? ? ?)");
     #else
       return g_EmptyString;
     #endif
@@ -382,8 +380,7 @@ void mhmakefileparser::ParseBuildedIncludeFiles()
     int result=ParseFile(GetFileInfo(*It));
     if (result)
     {
-      fprintf(stderr,"Error parsing %s\n",It->c_str());
-      throw(1);
+      throw string("Error parsing ")+*It;
     }
     It++;
   }
@@ -461,7 +458,7 @@ void mhmakefileparser::AddRule()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<fileinfo> > &Autodeps)
+void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Autodeps)
 {
   /* Here we have to scan only c/c++ headers so skip certain extensions */
   const char *pFullName=FirstDep->GetFullFileName().c_str();
@@ -553,11 +550,11 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
           /* Add the dependency when the file alrady exist or there is a rule available to be build */
           if (BuildTarget(pInclude).DoesExist())  // Try to build the target, and add it if it exists after building
           {
-            set< refptr<fileinfo> >::iterator pFind=Autodeps.find(pInclude);
+            deps_t::const_iterator pFind=Autodeps.find(pInclude);
             if (pFind==Autodeps.end())
             {
               Autodeps.insert(pInclude);
-              GetAutoDeps(pInclude,Autodeps);
+              GetAutoDepsIfNeeded(pInclude,pInclude);
             }
           }
         }
@@ -568,11 +565,11 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
           refptr<fileinfo> pInclude=GetFileInfo(IncludeFile,*It);
           if (BuildTarget(pInclude).DoesExist()) // Try to build the target, and add it if it exists after building
           {
-            set< refptr<fileinfo> >::iterator pFind=Autodeps.find(pInclude);
+            deps_t::const_iterator pFind=Autodeps.find(pInclude);
             if (pFind==Autodeps.end())
             {
               Autodeps.insert(pInclude);
-              GetAutoDeps(pInclude,Autodeps);
+              GetAutoDepsIfNeeded(pInclude,pInclude);
             }
             break;
           }
@@ -591,6 +588,28 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void mhmakefileparser::GetAutoDepsIfNeeded(const refptr<fileinfo> &Target, const refptr<fileinfo>&FirstDep)
+{
+  autodeps_entry_t &Autodeps=m_AutoDeps[Target];
+  if (!Autodeps.first)
+  {
+    Autodeps.first=true;
+    /* We are going to rescan, so throw away the old. */
+    Autodeps.second.clear();
+    GetAutoDeps(FirstDep,Autodeps.second);
+    // Now add these dependencies also to the rules
+    deps_t::iterator It=Autodeps.second.begin();
+    while (It!=Autodeps.second.end())
+    {
+      Target->AddDep(*It);
+      It++;
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Target)
 {
   m_AutoDepsDirty=true; /* Always assume dirty since in the autodeps file, the md5 strings are also saved. */
@@ -601,17 +620,7 @@ void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Targe
     if (!Deps.size())
       return; // There is no first dep
     refptr<fileinfo> FirstDep=Deps[0];
-
-    set< refptr<fileinfo> > &Autodeps=m_AutoDeps[Target];
-    Autodeps.clear(); // We are going to scan again, so clear the list
-    GetAutoDeps(FirstDep,Autodeps);
-    // Now add these dependencies also to the rules
-    set< refptr<fileinfo> >::iterator It=Autodeps.begin();
-    while (It!=Autodeps.end())
-    {
-      Target->AddDep(*It);
-      It++;
-    }
+    GetAutoDepsIfNeeded(Target,FirstDep);
   }
 }
 
@@ -688,14 +697,14 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
   while (FileName[0])
   {
     refptr<fileinfo> Target=GetFileInfo(FileName);
-    set< refptr<fileinfo> > &Autodeps=m_AutoDeps[Target];
+    autodeps_entry_t &Autodeps=m_AutoDeps[Target];
     ReadStr(pIn,FileName);
     while (FileName[0])
     {
       if (!g_ForceAutoDepRescan)  /* If we are forcing the autodepscan we do not have to load the dependencies. */
       {
         refptr<fileinfo> Dep=GetFileInfo(FileName);
-        Autodeps.insert(Dep);
+        Autodeps.second.insert(Dep);
         Target->AddDep(Dep);
       }
       ReadStr(pIn,FileName);
@@ -783,17 +792,20 @@ void mhmakefileparser::SaveAutoDepsFile()
   fwrite(&Md5_32,sizeof(Md5_32),1,pOut);
   fprintf(pOut,"%s\n",m_Variables[USED_ENVVARS].c_str());
 
-  map< refptr<fileinfo>, set< refptr<fileinfo> > >::const_iterator It=m_AutoDeps.begin();
+  autodeps_t::const_iterator It=m_AutoDeps.begin();
   while (It!=m_AutoDeps.end())
   {
-    fprintf(pOut,"%s\n",It->first->GetFullFileName().c_str());
-    set< refptr<fileinfo> >::const_iterator DepIt=It->second.begin();
-    while (DepIt!=It->second.end())
+    if (!It->second.second.empty())
     {
-      fprintf(pOut,"%s\n",(*DepIt)->GetFullFileName().c_str());
-      DepIt++;
+      fprintf(pOut,"%s\n",It->first->GetFullFileName().c_str());
+      deps_t::const_iterator DepIt=It->second.second.begin();
+      while (DepIt!=It->second.second.end())
+      {
+        fprintf(pOut,"%s\n",(*DepIt)->GetFullFileName().c_str());
+        DepIt++;
+      }
+      fprintf(pOut,"\n");
     }
-    fprintf(pOut,"\n");
     It++;
   }
   /* Now save the Md5 strings */

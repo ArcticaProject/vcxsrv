@@ -42,6 +42,7 @@
 #include <set>
 #include <stack>
 #include <algorithm>
+#include <sstream>
 
 #ifdef _MSC_VER
 #include <io.h>

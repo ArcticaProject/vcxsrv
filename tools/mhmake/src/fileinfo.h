@@ -49,6 +49,7 @@ extern bool g_CheckCircularDeps;
 extern bool g_ForceAutoDepRescan;
 extern bool g_PrintLexYacc;
 extern bool g_Clean;
+extern bool g_StopCompiling;
 extern bool g_PrintMultipleDefinedRules;
 
 extern const string g_EmptyString;
@@ -57,6 +58,14 @@ extern const string g_QuoteString;
 
 string QuoteFileName(const string &Filename);
 string UnquoteFileName(const string &Filename);
+
+template<typename T>
+inline string stringify(const T& x)
+{
+  ostringstream o;
+  o << x;
+  return o.str();
+} 
 
 #define TIMESAFETY 3
 class mh_time
@@ -196,7 +205,7 @@ public:
   string GetName() const;
   bool IsDir() const;
 
-  void DumpErrorMessageDuplicateRule(const refptr<rule> &pRule);
+  string GetErrorMessageDuplicateRule(const refptr<rule> &pRule);
 
   void SetRule(refptr<rule> &pRule)
   {
@@ -222,12 +231,11 @@ public:
       {
         if (*m_pRule!=*pRule)
         {
-          DumpErrorMessageDuplicateRule(pRule);
-          throw(1);
+          throw(GetErrorMessageDuplicateRule(pRule));
         }
         else if (g_PrintMultipleDefinedRules)
         {
-          DumpErrorMessageDuplicateRule(pRule);
+          cerr<<GetErrorMessageDuplicateRule(pRule);
         }
       }
       #endif

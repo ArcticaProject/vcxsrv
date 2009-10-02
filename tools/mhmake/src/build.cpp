@@ -287,8 +287,7 @@ found:
   int CommandLen=FullCommand.size();
   if (CommandLen>Len-1)
   {
-    cerr << "Fatal error: Command to long: "<<FullCommand<<endl;
-    throw(1);
+    throw string("Command to long: ") + FullCommand;
   }
   strcpy(szFullCommand,FullCommand.c_str());
   return 1;
@@ -915,9 +914,9 @@ string mhmakefileparser::GetFullCommand(string Command)
           }
           if (!bBuild)
           {
-            set< refptr<fileinfo> > Autodeps;
+            deps_t Autodeps;
             GetAutoDeps(pPyFile, Autodeps);
-            set< refptr<fileinfo> >::iterator It=Autodeps.begin();
+            deps_t::iterator It=Autodeps.begin();
             while (It!=Autodeps.end())
             {
               if (pExeFile->GetDate().IsOlder((*It)->GetDate()))
@@ -1063,9 +1062,11 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
     if (!CreateProcess(NULL,pFullCommand,NULL,NULL,TRUE,CREATE_NO_WINDOW,NULL,curdir::GetCurDir()->GetFullFileName().c_str(),&StartupInfo,&ProcessInfo))
     {
       delete[] pFullCommand;
-      cerr << "Error starting command: "<<FullCommandLine<<" : "<<GetLastError()<<endl;
-      if (!IgnoreError)
-        throw(1);
+      string ErrorMessage=string("Error starting command: ") + FullCommandLine + " : " + stringify(GetLastError());
+      if (IgnoreError)
+        cerr << ErrorMessage << endl;
+      else
+        throw ErrorMessage;
     }
     delete[] pFullCommand;
     if (!CloseHandle(hChildStdinRd)) return false;
@@ -1091,9 +1092,11 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
     if (!CreateProcess(NULL,pFullCommand,NULL,NULL,TRUE,0,NULL,curdir::GetCurDir()->GetFullFileName().c_str(),&StartupInfo,&ProcessInfo))
     {
       delete[] pFullCommand;
-      cerr << "Error starting command: "<<Command<<" : "<<GetLastError()<<endl;
-      if (!IgnoreError)
-        throw(1);
+      string ErrorMessage=string("Error starting command: ") + Command + " : " + stringify(GetLastError());
+      if (IgnoreError)
+        cerr << ErrorMessage << endl;
+      else
+        throw ErrorMessage;
     }
     delete[] pFullCommand;
     CloseHandle(ProcessInfo.hThread);
@@ -1447,6 +1450,11 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
   static int Indent;
   #endif
 
+  if (g_StopCompiling)
+  {
+    throw string("Compilation Interrupted by user.");
+  }
+
   if (Target->IsBuild())
   {
     #ifdef _DEBUG
@@ -1646,11 +1654,11 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           #endif
           if (!pMakefile->ExecuteCommand(Command))
           {
-            cerr << "Error running command: "<<Command<<endl;
-            cerr << "Command defined in makefile: "<<GetMakeDir()->GetQuotedFullFileName()<<endl;
+            string ErrorMessage = string("Error running command: ")+ Command +"\n";
+            ErrorMessage += "Command defined in makefile: " + GetMakeDir()->GetQuotedFullFileName();
             Target->SetCommandsMd5_32(0);  /* Clear the md5 to make sure that the target is rebuild the next time mhmake is ran */
             m_AutoDepsDirty=true;  /* We need to update the autodeps file if the md5 has been changed */
-            throw(1);
+            throw ErrorMessage;
           }
         }
         CommandIt++;

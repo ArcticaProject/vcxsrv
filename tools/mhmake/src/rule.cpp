@@ -49,11 +49,12 @@ static bool FindDep(const string &DepName,vector<pair<string,refptr<rule> > >&Im
       bool bCommandsDifferent=OldCommands.size()!=NewCommands.size();
       if (g_PrintMultipleDefinedRules || bCommandsDifferent)
       {
+        string ErrorMessage;
         if (bCommandsDifferent)
-          cerr << "Implicit Rule '"<< DepName << "' defined twice with different commands\n";
+          ErrorMessage += "Implicit Rule '"+ DepName + "' defined twice with different commands\n";
         else
-          cerr << "Implicit Rule '"<< DepName << "' defined twice with same commands\n";
-        cerr << "Command 1: makedir = " << SecIt->second->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<< endl;
+          ErrorMessage += "Implicit Rule '"+ DepName + "' defined twice with same commands\n";
+        ErrorMessage += "Command 1: makedir = " + SecIt->second->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()+ "\n";
 
         vector<string>::const_iterator It;
         if (bCommandsDifferent)
@@ -61,19 +62,21 @@ static bool FindDep(const string &DepName,vector<pair<string,refptr<rule> > >&Im
           It=OldCommands.begin();
           while (It!=OldCommands.end())
           {
-            cerr << "  " << *It << endl;
+            ErrorMessage += "  " + *It + "\n";
           }
         }
-        cerr << "Command 2: makedir = "<< Rule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<< endl;
+        cerr << "Command 2: makedir = "+ Rule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()+ "\n";
         if (bCommandsDifferent)
         {
           It=NewCommands.begin();
           while (It!=NewCommands.end())
           {
-            cerr << "  " << *It << endl;
+            ErrorMessage += "  " + *It + "\n";
           }
-          throw(1);
+          throw ErrorMessage;
         }
+        else
+          cerr << ErrorMessage << endl;
       }
       mhmakeparser *pOldMakefile=SecIt->second->GetMakefile();
       mhmakeparser *pNewMakefile=Rule->GetMakefile();
@@ -83,12 +86,12 @@ static bool FindDep(const string &DepName,vector<pair<string,refptr<rule> > >&Im
       {
         if (pOldMakefile->ExpandExpression(*OldIt)!=pNewMakefile->ExpandExpression(*NewIt))
         {
-          cerr << "Implicit Rule '"<< DepName << "' defined twice with different commands\n";
-          cerr << "Command 1: makedir = " << pOldMakefile->GetMakeDir()->GetQuotedFullFileName()<< endl;
-          cerr << "  " << pOldMakefile->ExpandExpression(*OldIt) << endl;
-          cerr << "Command 2: makedir = "<< pNewMakefile->GetMakeDir()->GetQuotedFullFileName()<< endl;
-          cerr << "  " << pNewMakefile->ExpandExpression(*NewIt) << endl;
-          throw(1);
+          string ErrorMessage = string("Implicit Rule '") + DepName + "' defined twice with different commands\n";
+          ErrorMessage += "Command 1: makedir = " + pOldMakefile->GetMakeDir()->GetQuotedFullFileName()+ "\n";
+          ErrorMessage += "  " + pOldMakefile->ExpandExpression(*OldIt) + "\n";
+          ErrorMessage += "Command 2: makedir = " + pNewMakefile->GetMakeDir()->GetQuotedFullFileName()+ "\n";
+          ErrorMessage += "  " + pNewMakefile->ExpandExpression(*NewIt);
+          throw ErrorMessage;
         }
         OldIt++;
         NewIt++;
@@ -141,8 +144,7 @@ void IMPLICITRULE::SearchImplicitRule(const refptr<fileinfo> &Target,vector< pai
 #ifdef _DEBUG
         if (!ResIt->second)
         {
-          cerr << "No rhs for implicit rule : "<< ImpRegExIt->first << endl;
-          throw(1);
+          throw string("No rhs for implicit rule : ") + ImpRegExIt->first;
         }
 #endif
         ResIt->second->SetStem(Res.m_Stem);

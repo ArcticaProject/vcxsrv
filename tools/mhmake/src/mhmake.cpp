@@ -25,6 +25,15 @@
 #include "util.h"
 
 bool g_Clean=false;
+bool g_StopCompiling=false;
+
+#ifdef WIN32
+BOOL WINAPI ControlCHandler(DWORD dwCtrlType)
+{
+  g_StopCompiling=true;
+  return TRUE;
+}
+#endif
 
 int __CDECL main(int argc, char* argv[])
 {
@@ -57,6 +66,9 @@ int __CDECL main(int argc, char* argv[])
    * output to fail.
    */
   putenv("VS_UNICODE_OUTPUT=");
+
+  SetConsoleCtrlHandler(ControlCHandler, TRUE);
+
   #endif
 
   try
@@ -120,9 +132,9 @@ int __CDECL main(int argc, char* argv[])
     }
 
   }
-  catch (int Error)
+  catch (string Message)
   {
-    printf("Error occured %d\n",Error);
+    cerr << "Error occured: " << Message << endl;
     #ifdef _DEBUG
     if (g_DumpOnError)
     {

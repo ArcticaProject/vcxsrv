@@ -174,12 +174,12 @@ string fileinfo::GetPrerequisits() const
   // Build a string with all prerequisits, but make sure that every dependency
   // is only in there once (we do this be building a set in parallel
   vector< refptr<fileinfo> >::const_iterator DepIt=m_Deps.begin();
-  set< refptr<fileinfo> > Deps;
+  deps_t Deps;
   bool first=true;
   string Ret=g_EmptyString;
   while (DepIt!=m_Deps.end())
   {
-    set< refptr<fileinfo> >::iterator pFound=Deps.find(*DepIt);
+    deps_t::iterator pFound=Deps.find(*DepIt);
     if (pFound==Deps.end())
     {
       if (first)
@@ -228,24 +228,26 @@ bool fileinfo::IsAutoDepExtention(void) const
 
 #ifdef _DEBUG
 ///////////////////////////////////////////////////////////////////////////////
-void fileinfo::DumpErrorMessageDuplicateRule(const refptr<rule>&pRule)
+string fileinfo::GetErrorMessageDuplicateRule(const refptr<rule>&pRule)
 {
-  cerr << GetQuotedFullFileName() << ": rule is defined multiple times\n";
-  cerr << "First ("<<m_pRule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<<") :\n";
+  string Ret;
+  Ret = GetQuotedFullFileName() + ": rule is defined multiple times\n";
+  Ret += "First (" + m_pRule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName() + ") :\n";
 
   vector<string>::const_iterator It=m_pRule->GetCommands().begin();
   while (It!=m_pRule->GetCommands().end())
   {
-    cerr << "    " << m_pRule->GetMakefile()->ExpandExpression(*It) << endl;
+    Ret+= "    " + m_pRule->GetMakefile()->ExpandExpression(*It) + "\n";
     It++;
   }
-  cerr << "Second ("<<pRule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName()<<") :\n";
+  Ret += "Second (" + pRule->GetMakefile()->GetMakeDir()->GetQuotedFullFileName() + ") :\n";
   It=pRule->GetCommands().begin();
   while (It!=pRule->GetCommands().end())
   {
-    cerr << "    " << pRule->GetMakefile()->ExpandExpression(*It) << endl;
+    Ret += "    " + pRule->GetMakefile()->ExpandExpression(*It) +"\n";
     It++;
   }
+  return Ret;
 }
 #endif
 

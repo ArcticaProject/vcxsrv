@@ -52,8 +52,7 @@ void curdir::ChangeCurDir(const refptr<fileinfo>&NewDir)
     #endif
     if (-1==chdir(NewDir->GetFullFileName().c_str()))
     {
-      cerr<<"Error changing to directory "<<NewDir->GetQuotedFullFileName()<<endl;
-      throw(1);
+      throw string("Error changing to directory ") + NewDir->GetQuotedFullFileName();
     }
     m_pCurrentDir=NewDir;
   }

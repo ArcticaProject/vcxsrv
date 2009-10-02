@@ -47,8 +47,7 @@ static void SaveMakMd5(refptr<fileinfo> &Target)
   FILE *pFile=fopen(FileName.c_str(),"wb");
   if (!pFile)
   {
-    cout << "Error creating file "<<FileName<<endl;
-    throw(1);
+    throw string("Error creating file ")+FileName;
   }
   Target->WriteMd5_32(pFile);
   fclose(pFile);
@@ -189,8 +188,7 @@ load_makefile {
     pTmp=NextCharItem(pTmp,Item,';');
     if (Item.empty())
     {
-      cerr << m_InputFileName << "("<<m_Line<<"): Error in load_makefile statement\n";
-      throw(1);
+      throw m_InputFileName + "(" + stringify(m_Line) + "): Error in load_makefile statement";
     }
     GetParser()->AddMakefileToMakefilesToLoad(Item);
   }
@@ -319,8 +317,7 @@ load_makefile {
   }
   else
   {
-     cerr << "Unexpected endif at line "<<m_Line<<" of "<<m_InputFileName.c_str()<<endl;
-     throw(1);
+     throw string("Unexpected endif at line ") + stringify(m_Line) + " of " + m_InputFileName;
   }
 }
 
@@ -399,8 +396,7 @@ load_makefile {
   }
   else
   {
-     cerr << "Unexpected else at line "<<m_Line<<" of file "<< m_InputFileName.c_str() << endl;
-     throw(1);
+     throw string("Unexpected else at line ") + stringify(m_Line) + " of file " + m_InputFileName;
   }
 }
 
@@ -501,8 +497,7 @@ load_makefile {
   m_Line++;
   if (!m_IndentStack.size())
   {
-    cerr << "Unexpected endif at line "<<m_Line<<" of "<<m_InputFileName.c_str()<<endl;
-    throw(1);
+    throw string("Unexpected endif at line ") + stringify(m_Line) + " of " + m_InputFileName;
   }
   else
   {
@@ -518,8 +513,7 @@ load_makefile {
   PRINTF(("%s %d: else: depth %d\n",m_InputFileName.c_str(),m_Line,m_IndentStack.size()));
   if (m_IndentStack.top())
   {
-    cerr << "Unexpected else at line "<<m_Line<<" of file "<< m_InputFileName.c_str() << endl;
-    throw(1);
+    throw string("Unexpected else at line ") + stringify(m_Line) + " of file " + m_InputFileName;
   }
   m_IndentStack.top()=1;
   if (m_IndentStack.size()==m_IndentSkip)
@@ -794,8 +788,7 @@ export {
   {
     PRINTF(("%s %d: ERRORMACRO: %s\n",m_InputFileName.c_str(),m_Line,yytext));
     yyless(0);
-    cerr<<GetParser()->ExpandExpression((const char*)yytext)<<endl;
-    throw(1);
+    throw GetParser()->ExpandExpression((const char*)yytext);
   } else {
     yymore();
   }
@@ -876,22 +869,19 @@ export {
 }
 
 <SKIPUNTILELSEORENDIF><<EOF>> {
-  cerr << "Missing endif or else statement. #else or #endif used?\n";
-  throw(1);
+  throw string("Missing endif or else statement. #else or #endif used?");
 }
 
 <<EOF>> {
   if (m_BraceIndent)
   {
-    cerr << "Missing closing ) of macro usage in "<<m_InputFileName.c_str()<<".\n";
-    throw(1);
+    throw string("Missing closing ) of macro usage in ") + m_InputFileName;
   }
   if (!m_IncludeStack.size())
   {
     if (m_IndentStack.size())
     {
-      cerr << "Missing endif or else statement in "<<m_InputFileName.c_str()<<". #else or #endif used?\n";
-      throw(1);
+      throw string("Missing endif or else statement in ") + m_InputFileName + ". #else or #endif used";
     }
     yyterminate();
   }

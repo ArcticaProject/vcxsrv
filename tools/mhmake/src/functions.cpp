@@ -83,8 +83,7 @@ string mhmakefileparser::f_filter(const string & Arg) const
   int ipos=Arg.find(',');
   #ifdef _DEBUG
   if (ipos==string::npos) {
-    cerr << "filter func should have 2 arguments: "<<Arg<<endl;
-    throw 1;
+    throw string("filter func should have 2 arguments: ")+Arg;
   }
   #endif
   string Str=TrimString(Arg.substr(0,ipos));
@@ -123,8 +122,7 @@ string mhmakefileparser::f_filterout(const string & Arg) const
   int ipos=Arg.find(',');
   #ifdef _DEBUG
   if (ipos==string::npos) {
-    cerr << "filter func should have 2 arguments: "<<Arg<<endl;
-    throw 1;
+    throw string("filter func should have 2 arguments: ")+Arg;
   }
   #endif
   string Str=TrimString(Arg.substr(0,ipos));
@@ -170,8 +168,7 @@ string mhmakefileparser::f_call(const string & Arg) const
   #ifdef _DEBUG
   if (pFunc==m_Variables.end())
   {
-    fprintf(stderr,"call to non existing function %s\n",Func.c_str());
-    throw(1);
+    throw string("call to non existing function ")+Func;
   }
   #endif
   Func=pFunc->second;
@@ -205,8 +202,7 @@ string mhmakefileparser::f_subst(const string & Arg) const
   pTmp=NextCharItem(pTmp,FromString,',');
   #ifdef _DEBUG
   if (!*pTmp) {
-    cerr << "Wrong number of arguments in function subst" << endl;
-    throw(1);
+    throw string("Wrong number of arguments in function subst");
   }
   #endif
 
@@ -242,8 +238,7 @@ string mhmakefileparser::f_patsubst(const string & Arg) const
   pTmp=NextCharItem(pTmp,FromString,',');
   #ifdef _DEBUG
   if (!*pTmp) {
-    cerr << "Wrong number of arguments in function subst" << endl;
-    throw(1);
+    throw string("Wrong number of arguments in function subst");
   }
   #endif
 
@@ -408,8 +403,7 @@ string mhmakefileparser::f_filesindirs(const string & Arg) const
   pTmp=NextCharItem(pTmp,strFiles,',');
   #ifdef _DEBUG
   if (!*pTmp) {
-    cerr << "Wrong number of arguments in function filesindirs" << endl;
-    throw(1);
+    throw string("Wrong number of arguments in function filesindirs");
   }
   #endif
   string strDirs;
@@ -541,8 +535,7 @@ string mhmakefileparser::f_addprefix(const string & Arg) const
   pTmp=NextCharItem(pTmp,PreFix,',');
   #ifdef _DEBUG
   if (!*pTmp) {
-    cerr << "Wrong number of arguments in function addprefix" << endl;
-    throw(1);
+    throw ("Wrong number of arguments in function addprefix");
   }
   #endif
   string FileNames;
@@ -564,8 +557,7 @@ string mhmakefileparser::f_addsuffix(const string & Arg) const
   pTmp=NextCharItem(pTmp,SufFix,',');
   #ifdef _DEBUG
   if (!*pTmp) {
-    cerr << "Wrong number of arguments in function addsuffix" << endl;
-    throw(1);
+    throw string("Wrong number of arguments in function addsuffix");
   }
   #endif
   string FileNames;
@@ -588,8 +580,7 @@ string mhmakefileparser::f_word(const string & Arg) const
   if (!WordNbr)
   {
     if (!WordNbr) {
-      cerr << "Expecting a number bigger then 0 for the word function"<<endl;
-      throw(1);
+      throw string ("Expecting a number bigger then 0 for the word function");
     }
   }
   #endif

@@ -111,8 +111,7 @@ ruledef: expression_nocolorequal rulecolon maybeemptyexpression
            #ifdef _DEBUG
            if (!ExpandExpression($1).size())
            {
-             printf("Empty left hand side in rule: %s : %s\n",$1.c_str(),$3.c_str());
-             throw(1);
+             throw string("Empty left hand side in rule: ") + $1 + " : " + $3;
            }
            #endif
            SplitToItems(ExpandExpression($1),*m_pCurrentItems,m_MakeDir);
