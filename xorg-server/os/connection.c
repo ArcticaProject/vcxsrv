@@ -67,6 +67,9 @@ SOFTWARE.
 
 #ifdef WIN32
 #include <X11/Xwinsock.h>
+#ifdef _DEBUG
+#define DEBUG
+#endif
 #endif
 #include <X11/X.h>
 #include <X11/Xproto.h>
