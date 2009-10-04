@@ -31,18 +31,11 @@
 .SH NAME
 XkbAllocCompatMap \- Allocate a new compatibility map if you do not already have one available
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocCompatMap
-(
-.I xkb,
-.I which,
-.I num_si
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      unsigned int \fInum_si\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "unsigned int " "num_si" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -33,15 +33,10 @@ XkbKeySymsOffset \- Returns the offset of the two-dimensional array of keysyms
 for the key corresponding to 
 .I keycode
 .SH SYNOPSIS
-.B int XkbKeySymsOffset macro
-(
-.I xkb,
-.I keycode
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
+.HP
+.B int XkbKeySymsOffset
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

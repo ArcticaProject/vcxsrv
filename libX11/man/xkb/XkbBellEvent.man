@@ -32,21 +32,12 @@
 XkbBellEvent \- Provides a function that initiates a bell event for the keyboard 
 without ringing the bell
 .SH SYNOPSIS
+.HP
 .B Bool XkbBellEvent
-(
-.I display,
-.I window,
-.I percent,
-.I name
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      Window \fI window \fP\^;
-.br
-      int \fI percent \fP\^;
-.br
-      Atom \fI name \fP\^;                  
+.BI "(\^Display *" "display" "\^,"
+.BI "Window " "window" "\^,"
+.BI "int " "percent" "\^,"
+.BI "Atom " "name" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

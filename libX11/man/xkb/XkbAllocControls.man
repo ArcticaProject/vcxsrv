@@ -31,15 +31,10 @@
 .SH NAME
 XkbAllocControls \- Allocates an XkbControlsRec structure in the XkbDescRec
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocControls
-(
-.I xkb,
-.I which
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

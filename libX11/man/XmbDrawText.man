@@ -248,10 +248,10 @@ typedef struct {
 } XwcTextItem;
 .De
 .SH "SEE ALSO"
-XDrawImageString(3X11),
-XDrawString(3X11),
-XDrawText(3X11),
-XmbDrawImageString(3X11),
-XmbDrawString(3X11)
+XDrawImageString(__libmansuffix__),
+XDrawString(__libmansuffix__),
+XDrawText(__libmansuffix__),
+XmbDrawImageString(__libmansuffix__),
+XmbDrawString(__libmansuffix__)
 .br
 \fI\*(xL\fP

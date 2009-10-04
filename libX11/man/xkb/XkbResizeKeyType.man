@@ -31,24 +31,13 @@
 .SH NAME
 XkbResizeKeyType \- Change the number of levels in a key type
 .SH SYNOPSIS
+.HP
 .B Status XkbResizeKeyType
-(
-.I xkb,
-.I type_ndx,
-.I map_count,
-.I want_preserve,
-.I new_num_lvls
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      int \fItype_ndx\fP\^;
-.br
-      int \fImap_count\fP\^;
-.br
-      Bool \fIwant_preserve\fP\^;
-.br
-      int \fInew_num_lvls\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "int " "type_ndx" "\^,"
+.BI "int " "map_count" "\^,"
+.BI "Bool " "want_preserve" "\^,"
+.BI "int " "new_num_lvls" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -53,7 +53,7 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info);
 /* Provided for darwinEvents.c */
 extern darwinKeyboardInfo keyInfo;
 extern pthread_mutex_t keyInfo_mutex;
-void DarwinKeyboardReloadHandler(int screenNum, xEventPtr xe, DeviceIntPtr dev, int nevents);
+void DarwinKeyboardReloadHandler(void);
 int DarwinModifierNXKeycodeToNXKey(unsigned char keycode, int *outSide);
 int DarwinModifierNXKeyToNXKeycode(int key, int side);
 int DarwinModifierNXKeyToNXMask(int key);

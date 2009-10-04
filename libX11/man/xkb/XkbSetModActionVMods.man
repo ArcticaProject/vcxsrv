@@ -32,15 +32,10 @@
 XkbSetModActionVMods \- Sets the vmods1 and vmods2 fields of act using the vmods 
 format of an Xkb modifier description
 .SH SYNOPSIS
-.B void XkbSetModActionVMods macro
-(
-.I act,
-.I vmods
-)
-.br
-      XkbAction \fIact\fP\^;
-.br
-      unsigned short \fIvmods\fP\^;
+.HP
+.B void XkbSetModActionVMods
+.BI "(\^XkbAction " "act" "\^,"
+.BI "unsigned short " "vmods" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

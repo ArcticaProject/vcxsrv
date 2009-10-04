@@ -30,18 +30,11 @@
 .SH NAME
 XkbSetDetectableAutorepeat \- Sets DetectableAutorepeat
 .SH SYNTAX
+.HP
 .B Bool XkbSetDetectableAutorepeat
-(
-.I display,
-.I detectable,
-.I supported_rtrn
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      Bool \fI detectable \fP\^;
-.br
-      Bool *\fI supported_rtrn \fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "Bool " "detectable" "\^,"
+.BI "Bool *" "supported_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

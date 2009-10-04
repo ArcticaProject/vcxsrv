@@ -194,10 +194,10 @@ function frees the memory used for the specified CCC.
 Note that default CCCs and those currently associated with colormaps
 are ignored.
 .SH "SEE ALSO"
-DisplayOfCCC(3X11),
-XcmsCCCOfColormap(3X11),
-XcmsConvertColors(3X11),
-XcmsDefaultCCC(3X11),
-XcmsSetWhitePoint(3X11)
+DisplayOfCCC(__libmansuffix__),
+XcmsCCCOfColormap(__libmansuffix__),
+XcmsConvertColors(__libmansuffix__),
+XcmsDefaultCCC(__libmansuffix__),
+XcmsSetWhitePoint(__libmansuffix__)
 .br
 \fI\*(xL\fP

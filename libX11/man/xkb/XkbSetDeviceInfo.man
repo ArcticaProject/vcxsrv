@@ -32,18 +32,11 @@
 XkbSetDeviceInfo \- Modify some or all of the characteristics of an X Input 
 Extension device
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetDeviceInfo
-(
-.I dpy,
-.I which,
-.I device_info
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDeviceInfoPtr " "device_info" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

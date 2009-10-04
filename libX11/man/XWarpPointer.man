@@ -213,6 +213,6 @@ error.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XSetInputFocus(3X11)
+XSetInputFocus(__libmansuffix__)
 .br
 \fI\*(xL\fP

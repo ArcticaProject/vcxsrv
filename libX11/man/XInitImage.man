@@ -310,6 +310,6 @@ function deallocates the memory associated with the
 .ZN XImage
 structure.
 .SH "SEE ALSO"
-XPutImage(3X11)
+XPutImage(__libmansuffix__)
 .br
 \fI\*(xL\fP

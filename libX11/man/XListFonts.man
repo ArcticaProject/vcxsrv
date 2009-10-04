@@ -260,7 +260,7 @@ is not thread-safe. If other threads make X requests on the same
 .ZN Display ,
 then this function's behavior is undefined.
 .SH "SEE ALSO"
-XLoadFont(3X11),
-XSetFontPath(3X11)
+XLoadFont(__libmansuffix__),
+XSetFontPath(__libmansuffix__)
 .br
 \fI\*(xL\fP

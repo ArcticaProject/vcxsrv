@@ -30,18 +30,11 @@
 .SH NAME
 XkbAddGeomOverlayRow \- Add a row to an existing overlay
 .SH SYNOPSIS
+.HP
 .B XkbOverlayRowPtr XkbAddGeomOverlayRow
-(
-.I overlay,
-.I row_under,
-.I sz_keys
-)
-.br
-      XkbOverlayPtr \fIoverlay\fP\^;
-.br
-      XkbRowPtr \fIrow_under\fP\^;
-.br
-      int \fIsz_keys\fP\^;
+.BI "(\^XkbOverlayPtr " "overlay" "\^,"
+.BI "XkbRowPtr " "row_under" "\^,"
+.BI "int " "sz_keys" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

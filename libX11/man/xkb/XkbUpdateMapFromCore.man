@@ -32,27 +32,14 @@
 XkbUpdateMapFromCore \-  Update a local Xkb keyboard map to reflect the mapping 
 expressed by a core format mapping
 .SH SYNOPSIS
+.HP
 .B Bool XkbUpdateMapFromCore
-(
-.I xkb,
-.I first_key,
-.I num_keys,
-.I map_width,
-.I core_keysyms,
-.I changes
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIfirst_key\fP\^;
-.br
-      int \fInum_keys\fP\^;
-.br
-      int \fImap_width\fP\^;
-.br
-      KeySym * \fIcore_keysyms\fP\^;
-.br
-      XkbChangesPtr \fIchanges\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "first_key" "\^,"
+.BI "int " "num_keys" "\^,"
+.BI "int " "map_width" "\^,"
+.BI "KeySym *" "core_keysyms" "\^,"
+.BI "XkbChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

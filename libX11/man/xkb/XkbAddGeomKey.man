@@ -30,12 +30,9 @@
 .SH NAME
 XkbAddGeomKey \- Add one key at the end of an existing row of keys
 .SH SYNOPSIS
+.HP
 .B XkbKeyPtr XkbAddGeomKey
-(
-.I row
-)
-.br
-      XkbRowPtr \fIrow\fP\^;
+.BI "(\^XkbRowPtr " "row" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

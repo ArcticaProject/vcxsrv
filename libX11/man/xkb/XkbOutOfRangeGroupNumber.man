@@ -32,12 +32,9 @@
 XkbOutOfRangeGroupNumber \- Returns the out-of-range group number, represented 
 as a group index, from the group_info field of an XkbSymMapRec structure
 .SH SYNOPSIS
-.B unsigned char XkbOutOfRangeGroupNumber macro
-(
-.I grp_inf
-)
-.br
-      unsigned char \fIgrp_inf\fP\^;
+.HP
+.B unsigned char XkbOutOfRangeGroupNumber
+.BI "(\^unsigned char " "grp_inf" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

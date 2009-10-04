@@ -249,6 +249,6 @@ Unless a specific range is specified for an argument, the full range defined
 by the argument's type is accepted.  Any argument defined as a set of
 alternatives can generate this error.
 .SH "SEE ALSO"
-XFree(3X11)
+XFree(__libmansuffix__)
 .br
 \fI\*(xL\fP

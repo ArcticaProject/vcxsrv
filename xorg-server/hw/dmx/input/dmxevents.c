@@ -183,7 +183,7 @@ static void enqueueMotion(DevicePtr pDev, int x, int y)
 
     GetEventList(&events);
     nevents = GetPointerEvents(events, p, MotionNotify, detail,
-                               POINTER_ABSOLUTE, 0, 2, valuators);
+                               POINTER_ABSOLUTE | POINTER_SCREEN, 0, 2, valuators);
     for (i = 0; i < nevents; i++)
        mieqEnqueue(p, (InternalEvent*)(events + i)->event);
     return;
@@ -688,7 +688,7 @@ void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
         detail = dmxGetButtonMapping(dmxLocal, detail);
         GetEventList(&events);
         nevents = GetPointerEvents(events, p, type, detail,
-                                   POINTER_ABSOLUTE,
+                                   POINTER_ABSOLUTE | POINTER_SCREEN,
                                    0,   /* first_valuator = 0 */
                                    0,   /* num_valuators = 0 */
                                    valuators);
@@ -700,9 +700,9 @@ void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
         GetEventList(&events);
         valuators[0] = e->xmotion.x;
         valuators[1] = e->xmotion.y;
-        valuators[2] = e->xmotion.state;
+        valuators[2] = e->xmotion.state; /* FIXME: WTF?? */
         nevents = GetPointerEvents(events, p, type, detail, 
-                                   POINTER_ABSOLUTE, 0, 3, valuators);
+                                   POINTER_ABSOLUTE | POINTER_SCREEN, 0, 3, valuators);
         for (i = 0; i < nevents; i++)
             mieqEnqueue(p, (InternalEvent*)(events + i)->event);
         return;

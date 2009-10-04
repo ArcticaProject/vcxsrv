@@ -31,12 +31,9 @@
 .SH NAME
 XkbSAScreen \- Returns the screenXXX field of act converted to a signed int
 .SH SYNOPSIS
+.HP
 .B int XkbSAScreen 
-(
-.I act
-)
-.br
-      XkbSwitchScreenAction \fIact\fP\^;
+.BI "(\^XkbSwitchScreenAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

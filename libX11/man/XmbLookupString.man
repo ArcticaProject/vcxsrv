@@ -306,6 +306,6 @@ release. Its presence is
 indicated by the macro
 .ZN X_HAVE_UTF8_STRING .
 .SH "SEE ALSO"
-XLookupKeysym(3X11)
+XLookupKeysym(__libmansuffix__)
 .br
 \fI\*(xL\fP

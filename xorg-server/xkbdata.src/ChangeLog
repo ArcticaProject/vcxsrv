@@ -1,3 +1,7 @@
+2009-09-29 Sergey Udaltsov
+
+	* configure.in, NEWS, po/*.po: preparing 1.7
+
 2009-09-15 Sergey Udaltsov
 
 	* symbols/es: addind dead_tilde,

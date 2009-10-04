@@ -266,6 +266,10 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
 
     xDst += pDst->pDrawable->x;
     yDst += pDst->pDrawable->y;
+    if (pSrc->pDrawable) {
+	xSrc += pSrc->pDrawable->x;
+	ySrc += pSrc->pDrawable->y;
+    }
 
     if (!miComputeCompositeRegion (&region, pSrc, NULL, pDst,
 				   xSrc, ySrc, 0, 0, xDst, yDst,
@@ -277,9 +281,6 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
     REGION_TRANSLATE(pScreen, &region, dst_off_x, dst_off_y);
 
     if (pSrc->pDrawable) {
-	xSrc += pSrc->pDrawable->x;
-	ySrc += pSrc->pDrawable->y;
-
 	pSrcPix = exaGetDrawablePixmap (pSrc->pDrawable);
 	pixel = exaGetPixmapFirstPixel (pSrcPix);
     } else
@@ -340,7 +341,8 @@ exaTryDriverCompositeRects(CARD8	       op,
 			   ExaCompositeRectPtr rects)
 {
     ExaScreenPriv (pDst->pDrawable->pScreen);
-    int src_off_x, src_off_y, mask_off_x, mask_off_y, dst_off_x, dst_off_y;
+    int src_off_x = 0, src_off_y = 0, mask_off_x = 0, mask_off_y = 0;
+    int dst_off_x, dst_off_y;
     PixmapPtr pSrcPix = NULL, pMaskPix = NULL, pDstPix;
     ExaPixmapPrivPtr pSrcExaPix = NULL, pMaskExaPix = NULL, pDstExaPix;
 
@@ -656,7 +658,7 @@ exaTryDriverComposite(CARD8		op,
      */
     if (pDstExaPix->accel_blocked ||
 	(pSrcExaPix && pSrcExaPix->accel_blocked) ||
-	(pMask && (pMaskExaPix->accel_blocked)))
+	(pMaskExaPix && (pMaskExaPix->accel_blocked)))
     {
 	return -1;
     }

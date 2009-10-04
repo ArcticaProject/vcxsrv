@@ -32,18 +32,11 @@
 XkbGetControlsChanges \- Updates a local copy of a keyboard description with the 
 changes previously noted by one or more calls to XkbNoteControlsChanges
 .SH SYNOPSIS
+.HP
 XkbGetControlsChanges
-(
-.I dpy,
-.I xkb,
-.I changes
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      XkbNameChangesPtr \fIchanges\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDescPtr " "xkb" "\^,"
+.BI "XkbNameChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

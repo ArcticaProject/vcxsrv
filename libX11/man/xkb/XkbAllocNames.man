@@ -31,21 +31,12 @@
 .SH NAME
 XkbAllocNames \- Allocate symbolic names structures
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocNames
-(
-.I xkb,
-.I which,
-.I num_rg,
-.I num_key_aliases
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      int \fInum_rg\fP\^;
-.br
-      int \fInum_key_aliases\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "int " "num_rg" "\^,"
+.BI "int " "num_key_aliases" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

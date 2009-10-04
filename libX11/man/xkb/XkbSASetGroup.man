@@ -27,19 +27,14 @@
 .\" or other dealings in this Software without prior written authorization
 .\" of the copyright holder.
 .\"
-.TH XkbSASetGroup 3Xkb "Release 6.1" "X Version 11" "XKBLIB FUNCTION"
+.TH XkbSASetGroup __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
 .SH NAME
 XkbSASetGroup \- Sets the group_XXX field of act from the group index grp
 .SH SYNTAX
-.B void XkbSASetGroup macro
-(
-.I act,
-.I grp
-)
-.br
-      XkbAction \fIact\fP\^;
-.br
-      int \fIgrp\fP\^;      
+.HP
+.B void XkbSASetGroup
+.BI "(\^XkbAction " "act" "\^,"
+.BI "int " "grp" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

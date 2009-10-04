@@ -217,7 +217,7 @@ is called before the next call to
 .ZN XNextEvent .
 
 .SH "SEE ALSO"
-XNextEvent(3X11),
+XNextEvent(__libmansuffix__),
 .br
 \fI\*(xL\fP
 

@@ -31,18 +31,11 @@
 .SH NAME
 XkbGetControls \- Finds the current state of Xkb server controls
 .SH SYNOPSIS
+.HP
 .B Status XkbGetControls
-(
-.I display,
-.I which,
-.I xkb
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned long \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned long " "which" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

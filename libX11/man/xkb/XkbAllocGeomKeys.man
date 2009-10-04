@@ -30,15 +30,10 @@
 .SH NAME
 XkbAllocGeomKeys \- Allocate space for an arbitrary number of keys to a row
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomKeys
-(
-.I row,
-.I num_needed
-)
-.br
-      XkbRowPtr \fIrow\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbRowPtr " "row" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

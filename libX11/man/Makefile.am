@@ -199,8 +199,6 @@ libman_PRE = \
 if MANPAGES
 libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
 	      $(all_shadows:=.@LIB_MAN_SUFFIX@)
-
-BUILT_SOURCES = shadows.DONE
 endif
 
 EXTRA_DIST = $(libman_PRE)
@@ -220,7 +218,7 @@ MANDEFS = -D__libmansuffix__=$(LIB_MAN_SUFFIX) \
 CPP_MAN_FLAGS = $(MANDEFS) $(EXTRAMANDEFS)
 
 .man.$(LIB_MAN_SUFFIX):
-	$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
+	$(cpp_verbose)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
 
 # Generate man page shadow files (Replaces InstallManPageAliases from Imake)
 all_shadows =                                \
@@ -1083,431 +1081,570 @@ XmbTextPerCharExtents_shadows =             \
     XwcTextPerCharExtents                   \
     Xutf8TextPerCharExtents
 
-shadows.DONE:
-	-rm -f $(all_aliases:=.@LIB_MAN_SUFFIX@)
-	(for i in $(AllPlanes_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/AllPlanes.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(BlackPixelOfScreen_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/BlackPixelOfScreen.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(DisplayOfCCC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/DisplayOfCCC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(ImageByteOrder_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/ImageByteOrder.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(IsCursorKey_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/IsCursorKey.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAllocClassHint_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAllocClassHint.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAllocIconSize_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAllocIconSize.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAllocStandardColormap_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAllocStandardColormap.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAllocSizeHints_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAllocSizeHints.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAllocWMHints_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAllocWMHints.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAddHost_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAddHost.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAllocColor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAllocColor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAnyEvent_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAnyEvent.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XButtonEvent_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XButtonEvent.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XChangeKeyboardControl_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XChangeKeyboardControl.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XChangeKeyboardMapping_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XChangeKeyboardMapping.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XChangePointerControl_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XChangePointerControl.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XChangeSaveSet_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XChangeSaveSet.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XChangeWindowAttributes_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XChangeWindowAttributes.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XClearArea_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XClearArea.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XConfigureWindow_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XConfigureWindow.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCopyArea_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCopyArea.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateColormap_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateColormap.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateFontCursor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateFontCursor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateFontSet_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateFontSet.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateGC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateGC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateIC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateIC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XInitImage_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XInitImage.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateOC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateOC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreatePixmap_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreatePixmap.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateRegion_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateRegion.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XCreateWindow_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XCreateWindow.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDefineCursor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDefineCursor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDestroyWindow_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDestroyWindow.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDrawArc_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDrawArc.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDrawImageString_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDrawImageString.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDrawLine_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDrawLine.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDrawPoint_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDrawPoint.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDrawRectangle_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDrawRectangle.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDrawString_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDrawString.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XDrawText_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XDrawText.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XEmptyRegion_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XEmptyRegion.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XFillRectangle_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XFillRectangle.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XFlush_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XFlush.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XFontsOfFontSet_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XFontsOfFontSet.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGraphicsExposeEvent_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGraphicsExposeEvent.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XrmGetFileDatabase_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XrmGetFileDatabase.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XrmGetResource_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XrmGetResource.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGetEventData_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGetEventData.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGetVisualInfo_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGetVisualInfo.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGetWindowAttributes_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGetWindowAttributes.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGetWindowProperty_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGetWindowProperty.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGrabButton_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGrabButton.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGrabKey_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGrabKey.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGrabKeyboard_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGrabKeyboard.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGrabPointer_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGrabPointer.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XGrabServer_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XGrabServer.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XIconifyWindow_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XIconifyWindow.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XIfEvent_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XIfEvent.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XrmInitialize_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XrmInitialize.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XInstallColormap_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XInstallColormap.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XAddConnectionWatch_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XAddConnectionWatch.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XIntersectRegion_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XIntersectRegion.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XInternAtom_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XInternAtom.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XListFonts_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XListFonts.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XLoadFont_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XLoadFont.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XLookupKeysym_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XLookupKeysym.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XrmMergeDatabases_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XrmMergeDatabases.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XMapEvent_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XMapEvent.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XMapWindow_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XMapWindow.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XNextEvent_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XNextEvent.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XOpenDisplay_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XOpenDisplay.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XOpenIM_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XOpenIM.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XOpenOM_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XOpenOM.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XParseGeometry_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XParseGeometry.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XPolygonRegion_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XPolygonRegion.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XPutImage_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XPutImage.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XrmPutResource_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XrmPutResource.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XQueryBestSize_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XQueryBestSize.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XQueryColor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XQueryColor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XQueryExtension_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XQueryExtension.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XResourceManagerString_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XResourceManagerString.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XRaiseWindow_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XRaiseWindow.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XReadBitmapFile_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XReadBitmapFile.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XRecolorCursor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XRecolorCursor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSaveContext_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSaveContext.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetICFocus_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetICFocus.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetICValues_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetICValues.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XStringListToTextProperty_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XStringListToTextProperty.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetArcMode_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetArcMode.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetClipOrigin_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetClipOrigin.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetCloseDownMode_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetCloseDownMode.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetCommand_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetCommand.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetErrorHandler_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetErrorHandler.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSendEvent_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSendEvent.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetFillStyle_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetFillStyle.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetFontPath_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetFontPath.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetInputFocus_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetInputFocus.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetLineAttributes_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetLineAttributes.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetPointerMapping_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetPointerMapping.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetScreenSaver_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetScreenSaver.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetSelectionOwner_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetSelectionOwner.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetState_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetState.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetTransientForHint_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetTransientForHint.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetTextProperty_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetTextProperty.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetTile_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetTile.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetWMClientMachine_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetWMClientMachine.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetWMColormapWindows_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetWMColormapWindows.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetWMIconName_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetWMIconName.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetWMName_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetWMName.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetWMProperties_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetWMProperties.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSetWMProtocols_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSetWMProtocols.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XStoreBytes_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XStoreBytes.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XStoreColors_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XStoreColors.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XStringToKeysym_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XStringToKeysym.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSupportsLocale_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSupportsLocale.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XSynchronize_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XSynchronize.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbTextListToTextProperty_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbTextListToTextProperty.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XTextExtents_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XTextExtents.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XTextWidth_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XTextWidth.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XInitThreads_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XInitThreads.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XrmUniqueQuark_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XrmUniqueQuark.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XUnmapWindow_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XUnmapWindow.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsCCCOfColormap_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsCCCOfColormap.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsAllocColor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsAllocColor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsColor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsColor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsCreateCCC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsCreateCCC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsCIELabQueryMaxC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsCIELabQueryMaxC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsCIELuvQueryMaxC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsCIELuvQueryMaxC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsQueryBlack_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsQueryBlack.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsQueryColor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsQueryColor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsStoreColor_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsStoreColor.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsSetWhitePoint_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsSetWhitePoint.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XcmsTekHVCQueryMaxC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XcmsTekHVCQueryMaxC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbDrawImageString_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbDrawImageString.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbDrawString_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbDrawString.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbDrawText_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbDrawText.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbLookupString_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbLookupString.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbResetIC_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbResetIC.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbTextEscapement_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbTextEscapement.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbTextExtents_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbTextExtents.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
-	(for i in $(XmbTextPerCharExtents_shadows:=.@LIB_MAN_SUFFIX@) ; do \
-	 echo .so man$(LIB_MAN_DIR_SUFFIX)/XmbTextPerCharExtents.$(LIB_MAN_SUFFIX) > $$i; \
-	 done)
+AllPlanes_shadowmen = $(AllPlanes_shadows:=.@LIB_MAN_SUFFIX@)
+$(AllPlanes_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/AllPlanes.$(LIB_MAN_SUFFIX)" > $@
+
+BlackPixelOfScreen_shadowmen = $(BlackPixelOfScreen_shadows:=.@LIB_MAN_SUFFIX@)
+$(BlackPixelOfScreen_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/BlackPixelOfScreen.$(LIB_MAN_SUFFIX)" > $@
+
+DisplayOfCCC_shadowmen = $(DisplayOfCCC_shadows:=.@LIB_MAN_SUFFIX@)
+$(DisplayOfCCC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/DisplayOfCCC.$(LIB_MAN_SUFFIX)" > $@
+
+ImageByteOrder_shadowmen = $(ImageByteOrder_shadows:=.@LIB_MAN_SUFFIX@)
+$(ImageByteOrder_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/ImageByteOrder.$(LIB_MAN_SUFFIX)" > $@
+
+IsCursorKey_shadowmen = $(IsCursorKey_shadows:=.@LIB_MAN_SUFFIX@)
+$(IsCursorKey_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/IsCursorKey.$(LIB_MAN_SUFFIX)" > $@
+
+XAllocClassHint_shadowmen = $(XAllocClassHint_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAllocClassHint_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAllocClassHint.$(LIB_MAN_SUFFIX)" > $@
+
+XAllocIconSize_shadowmen = $(XAllocIconSize_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAllocIconSize_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAllocIconSize.$(LIB_MAN_SUFFIX)" > $@
+
+XAllocStandardColormap_shadowmen = $(XAllocStandardColormap_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAllocStandardColormap_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAllocStandardColormap.$(LIB_MAN_SUFFIX)" > $@
+
+XAllocSizeHints_shadowmen = $(XAllocSizeHints_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAllocSizeHints_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAllocSizeHints.$(LIB_MAN_SUFFIX)" > $@
+
+XAllocWMHints_shadowmen = $(XAllocWMHints_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAllocWMHints_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAllocWMHints.$(LIB_MAN_SUFFIX)" > $@
+
+XAddHost_shadowmen = $(XAddHost_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAddHost_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAddHost.$(LIB_MAN_SUFFIX)" > $@
+
+XAllocColor_shadowmen = $(XAllocColor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAllocColor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAllocColor.$(LIB_MAN_SUFFIX)" > $@
+
+XAnyEvent_shadowmen = $(XAnyEvent_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAnyEvent_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAnyEvent.$(LIB_MAN_SUFFIX)" > $@
+
+XButtonEvent_shadowmen = $(XButtonEvent_shadows:=.@LIB_MAN_SUFFIX@)
+$(XButtonEvent_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XButtonEvent.$(LIB_MAN_SUFFIX)" > $@
+
+XChangeKeyboardControl_shadowmen = $(XChangeKeyboardControl_shadows:=.@LIB_MAN_SUFFIX@)
+$(XChangeKeyboardControl_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XChangeKeyboardControl.$(LIB_MAN_SUFFIX)" > $@
+
+XChangeKeyboardMapping_shadowmen = $(XChangeKeyboardMapping_shadows:=.@LIB_MAN_SUFFIX@)
+$(XChangeKeyboardMapping_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XChangeKeyboardMapping.$(LIB_MAN_SUFFIX)" > $@
+
+XChangePointerControl_shadowmen = $(XChangePointerControl_shadows:=.@LIB_MAN_SUFFIX@)
+$(XChangePointerControl_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XChangePointerControl.$(LIB_MAN_SUFFIX)" > $@
+
+XChangeSaveSet_shadowmen = $(XChangeSaveSet_shadows:=.@LIB_MAN_SUFFIX@)
+$(XChangeSaveSet_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XChangeSaveSet.$(LIB_MAN_SUFFIX)" > $@
+
+XChangeWindowAttributes_shadowmen = $(XChangeWindowAttributes_shadows:=.@LIB_MAN_SUFFIX@)
+$(XChangeWindowAttributes_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XChangeWindowAttributes.$(LIB_MAN_SUFFIX)" > $@
+
+XClearArea_shadowmen = $(XClearArea_shadows:=.@LIB_MAN_SUFFIX@)
+$(XClearArea_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XClearArea.$(LIB_MAN_SUFFIX)" > $@
+
+XConfigureWindow_shadowmen = $(XConfigureWindow_shadows:=.@LIB_MAN_SUFFIX@)
+$(XConfigureWindow_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XConfigureWindow.$(LIB_MAN_SUFFIX)" > $@
+
+XCopyArea_shadowmen = $(XCopyArea_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCopyArea_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCopyArea.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateColormap_shadowmen = $(XCreateColormap_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateColormap_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateColormap.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateFontCursor_shadowmen = $(XCreateFontCursor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateFontCursor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateFontCursor.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateFontSet_shadowmen = $(XCreateFontSet_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateFontSet_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateFontSet.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateGC_shadowmen = $(XCreateGC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateGC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateGC.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateIC_shadowmen = $(XCreateIC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateIC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateIC.$(LIB_MAN_SUFFIX)" > $@
+
+XInitImage_shadowmen = $(XInitImage_shadows:=.@LIB_MAN_SUFFIX@)
+$(XInitImage_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XInitImage.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateOC_shadowmen = $(XCreateOC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateOC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateOC.$(LIB_MAN_SUFFIX)" > $@
+
+XCreatePixmap_shadowmen = $(XCreatePixmap_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreatePixmap_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreatePixmap.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateRegion_shadowmen = $(XCreateRegion_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateRegion_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateRegion.$(LIB_MAN_SUFFIX)" > $@
+
+XCreateWindow_shadowmen = $(XCreateWindow_shadows:=.@LIB_MAN_SUFFIX@)
+$(XCreateWindow_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XCreateWindow.$(LIB_MAN_SUFFIX)" > $@
+
+XDefineCursor_shadowmen = $(XDefineCursor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDefineCursor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDefineCursor.$(LIB_MAN_SUFFIX)" > $@
+
+XDestroyWindow_shadowmen = $(XDestroyWindow_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDestroyWindow_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDestroyWindow.$(LIB_MAN_SUFFIX)" > $@
+
+XDrawArc_shadowmen = $(XDrawArc_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDrawArc_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDrawArc.$(LIB_MAN_SUFFIX)" > $@
+
+XDrawImageString_shadowmen = $(XDrawImageString_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDrawImageString_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDrawImageString.$(LIB_MAN_SUFFIX)" > $@
+
+XDrawLine_shadowmen = $(XDrawLine_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDrawLine_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDrawLine.$(LIB_MAN_SUFFIX)" > $@
+
+XDrawPoint_shadowmen = $(XDrawPoint_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDrawPoint_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDrawPoint.$(LIB_MAN_SUFFIX)" > $@
+
+XDrawRectangle_shadowmen = $(XDrawRectangle_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDrawRectangle_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDrawRectangle.$(LIB_MAN_SUFFIX)" > $@
+
+XDrawString_shadowmen = $(XDrawString_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDrawString_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDrawString.$(LIB_MAN_SUFFIX)" > $@
+
+XDrawText_shadowmen = $(XDrawText_shadows:=.@LIB_MAN_SUFFIX@)
+$(XDrawText_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XDrawText.$(LIB_MAN_SUFFIX)" > $@
+
+XEmptyRegion_shadowmen = $(XEmptyRegion_shadows:=.@LIB_MAN_SUFFIX@)
+$(XEmptyRegion_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XEmptyRegion.$(LIB_MAN_SUFFIX)" > $@
+
+XFillRectangle_shadowmen = $(XFillRectangle_shadows:=.@LIB_MAN_SUFFIX@)
+$(XFillRectangle_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XFillRectangle.$(LIB_MAN_SUFFIX)" > $@
+
+XFlush_shadowmen = $(XFlush_shadows:=.@LIB_MAN_SUFFIX@)
+$(XFlush_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XFlush.$(LIB_MAN_SUFFIX)" > $@
+
+XFontsOfFontSet_shadowmen = $(XFontsOfFontSet_shadows:=.@LIB_MAN_SUFFIX@)
+$(XFontsOfFontSet_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XFontsOfFontSet.$(LIB_MAN_SUFFIX)" > $@
+
+XGraphicsExposeEvent_shadowmen = $(XGraphicsExposeEvent_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGraphicsExposeEvent_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGraphicsExposeEvent.$(LIB_MAN_SUFFIX)" > $@
+
+XrmGetFileDatabase_shadowmen = $(XrmGetFileDatabase_shadows:=.@LIB_MAN_SUFFIX@)
+$(XrmGetFileDatabase_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XrmGetFileDatabase.$(LIB_MAN_SUFFIX)" > $@
+
+XrmGetResource_shadowmen = $(XrmGetResource_shadows:=.@LIB_MAN_SUFFIX@)
+$(XrmGetResource_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XrmGetResource.$(LIB_MAN_SUFFIX)" > $@
+
+XGetEventData_shadowmen = $(XGetEventData_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGetEventData_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGetEventData.$(LIB_MAN_SUFFIX)" > $@
+
+XGetVisualInfo_shadowmen = $(XGetVisualInfo_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGetVisualInfo_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGetVisualInfo.$(LIB_MAN_SUFFIX)" > $@
+
+XGetWindowAttributes_shadowmen = $(XGetWindowAttributes_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGetWindowAttributes_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGetWindowAttributes.$(LIB_MAN_SUFFIX)" > $@
+
+XGetWindowProperty_shadowmen = $(XGetWindowProperty_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGetWindowProperty_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGetWindowProperty.$(LIB_MAN_SUFFIX)" > $@
+
+XGrabButton_shadowmen = $(XGrabButton_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGrabButton_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGrabButton.$(LIB_MAN_SUFFIX)" > $@
+
+XGrabKey_shadowmen = $(XGrabKey_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGrabKey_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGrabKey.$(LIB_MAN_SUFFIX)" > $@
+
+XGrabKeyboard_shadowmen = $(XGrabKeyboard_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGrabKeyboard_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGrabKeyboard.$(LIB_MAN_SUFFIX)" > $@
+
+XGrabPointer_shadowmen = $(XGrabPointer_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGrabPointer_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGrabPointer.$(LIB_MAN_SUFFIX)" > $@
+
+XGrabServer_shadowmen = $(XGrabServer_shadows:=.@LIB_MAN_SUFFIX@)
+$(XGrabServer_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XGrabServer.$(LIB_MAN_SUFFIX)" > $@
+
+XIconifyWindow_shadowmen = $(XIconifyWindow_shadows:=.@LIB_MAN_SUFFIX@)
+$(XIconifyWindow_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XIconifyWindow.$(LIB_MAN_SUFFIX)" > $@
+
+XIfEvent_shadowmen = $(XIfEvent_shadows:=.@LIB_MAN_SUFFIX@)
+$(XIfEvent_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XIfEvent.$(LIB_MAN_SUFFIX)" > $@
+
+XrmInitialize_shadowmen = $(XrmInitialize_shadows:=.@LIB_MAN_SUFFIX@)
+$(XrmInitialize_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XrmInitialize.$(LIB_MAN_SUFFIX)" > $@
+
+XInstallColormap_shadowmen = $(XInstallColormap_shadows:=.@LIB_MAN_SUFFIX@)
+$(XInstallColormap_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XInstallColormap.$(LIB_MAN_SUFFIX)" > $@
+
+XAddConnectionWatch_shadowmen = $(XAddConnectionWatch_shadows:=.@LIB_MAN_SUFFIX@)
+$(XAddConnectionWatch_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XAddConnectionWatch.$(LIB_MAN_SUFFIX)" > $@
+
+XIntersectRegion_shadowmen = $(XIntersectRegion_shadows:=.@LIB_MAN_SUFFIX@)
+$(XIntersectRegion_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XIntersectRegion.$(LIB_MAN_SUFFIX)" > $@
+
+XInternAtom_shadowmen = $(XInternAtom_shadows:=.@LIB_MAN_SUFFIX@)
+$(XInternAtom_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XInternAtom.$(LIB_MAN_SUFFIX)" > $@
+
+XListFonts_shadowmen = $(XListFonts_shadows:=.@LIB_MAN_SUFFIX@)
+$(XListFonts_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XListFonts.$(LIB_MAN_SUFFIX)" > $@
+
+XLoadFont_shadowmen = $(XLoadFont_shadows:=.@LIB_MAN_SUFFIX@)
+$(XLoadFont_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XLoadFont.$(LIB_MAN_SUFFIX)" > $@
+
+XLookupKeysym_shadowmen = $(XLookupKeysym_shadows:=.@LIB_MAN_SUFFIX@)
+$(XLookupKeysym_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XLookupKeysym.$(LIB_MAN_SUFFIX)" > $@
+
+XrmMergeDatabases_shadowmen = $(XrmMergeDatabases_shadows:=.@LIB_MAN_SUFFIX@)
+$(XrmMergeDatabases_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XrmMergeDatabases.$(LIB_MAN_SUFFIX)" > $@
+
+XMapEvent_shadowmen = $(XMapEvent_shadows:=.@LIB_MAN_SUFFIX@)
+$(XMapEvent_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XMapEvent.$(LIB_MAN_SUFFIX)" > $@
+
+XMapWindow_shadowmen = $(XMapWindow_shadows:=.@LIB_MAN_SUFFIX@)
+$(XMapWindow_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XMapWindow.$(LIB_MAN_SUFFIX)" > $@
+
+XNextEvent_shadowmen = $(XNextEvent_shadows:=.@LIB_MAN_SUFFIX@)
+$(XNextEvent_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XNextEvent.$(LIB_MAN_SUFFIX)" > $@
+
+XOpenDisplay_shadowmen = $(XOpenDisplay_shadows:=.@LIB_MAN_SUFFIX@)
+$(XOpenDisplay_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XOpenDisplay.$(LIB_MAN_SUFFIX)" > $@
+
+XOpenIM_shadowmen = $(XOpenIM_shadows:=.@LIB_MAN_SUFFIX@)
+$(XOpenIM_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XOpenIM.$(LIB_MAN_SUFFIX)" > $@
+
+XOpenOM_shadowmen = $(XOpenOM_shadows:=.@LIB_MAN_SUFFIX@)
+$(XOpenOM_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XOpenOM.$(LIB_MAN_SUFFIX)" > $@
+
+XParseGeometry_shadowmen = $(XParseGeometry_shadows:=.@LIB_MAN_SUFFIX@)
+$(XParseGeometry_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XParseGeometry.$(LIB_MAN_SUFFIX)" > $@
+
+XPolygonRegion_shadowmen = $(XPolygonRegion_shadows:=.@LIB_MAN_SUFFIX@)
+$(XPolygonRegion_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XPolygonRegion.$(LIB_MAN_SUFFIX)" > $@
+
+XPutImage_shadowmen = $(XPutImage_shadows:=.@LIB_MAN_SUFFIX@)
+$(XPutImage_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XPutImage.$(LIB_MAN_SUFFIX)" > $@
+
+XrmPutResource_shadowmen = $(XrmPutResource_shadows:=.@LIB_MAN_SUFFIX@)
+$(XrmPutResource_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XrmPutResource.$(LIB_MAN_SUFFIX)" > $@
+
+XQueryBestSize_shadowmen = $(XQueryBestSize_shadows:=.@LIB_MAN_SUFFIX@)
+$(XQueryBestSize_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XQueryBestSize.$(LIB_MAN_SUFFIX)" > $@
+
+XQueryColor_shadowmen = $(XQueryColor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XQueryColor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XQueryColor.$(LIB_MAN_SUFFIX)" > $@
+
+XQueryExtension_shadowmen = $(XQueryExtension_shadows:=.@LIB_MAN_SUFFIX@)
+$(XQueryExtension_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XQueryExtension.$(LIB_MAN_SUFFIX)" > $@
+
+XResourceManagerString_shadowmen = $(XResourceManagerString_shadows:=.@LIB_MAN_SUFFIX@)
+$(XResourceManagerString_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XResourceManagerString.$(LIB_MAN_SUFFIX)" > $@
+
+XRaiseWindow_shadowmen = $(XRaiseWindow_shadows:=.@LIB_MAN_SUFFIX@)
+$(XRaiseWindow_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XRaiseWindow.$(LIB_MAN_SUFFIX)" > $@
+
+XReadBitmapFile_shadowmen = $(XReadBitmapFile_shadows:=.@LIB_MAN_SUFFIX@)
+$(XReadBitmapFile_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XReadBitmapFile.$(LIB_MAN_SUFFIX)" > $@
+
+XRecolorCursor_shadowmen = $(XRecolorCursor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XRecolorCursor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XRecolorCursor.$(LIB_MAN_SUFFIX)" > $@
+
+XSaveContext_shadowmen = $(XSaveContext_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSaveContext_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSaveContext.$(LIB_MAN_SUFFIX)" > $@
+
+XSetICFocus_shadowmen = $(XSetICFocus_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetICFocus_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetICFocus.$(LIB_MAN_SUFFIX)" > $@
+
+XSetICValues_shadowmen = $(XSetICValues_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetICValues_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetICValues.$(LIB_MAN_SUFFIX)" > $@
+
+XStringListToTextProperty_shadowmen = $(XStringListToTextProperty_shadows:=.@LIB_MAN_SUFFIX@)
+$(XStringListToTextProperty_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XStringListToTextProperty.$(LIB_MAN_SUFFIX)" > $@
+
+XSetArcMode_shadowmen = $(XSetArcMode_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetArcMode_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetArcMode.$(LIB_MAN_SUFFIX)" > $@
+
+XSetClipOrigin_shadowmen = $(XSetClipOrigin_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetClipOrigin_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetClipOrigin.$(LIB_MAN_SUFFIX)" > $@
+
+XSetCloseDownMode_shadowmen = $(XSetCloseDownMode_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetCloseDownMode_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetCloseDownMode.$(LIB_MAN_SUFFIX)" > $@
+
+XSetCommand_shadowmen = $(XSetCommand_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetCommand_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetCommand.$(LIB_MAN_SUFFIX)" > $@
+
+XSetErrorHandler_shadowmen = $(XSetErrorHandler_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetErrorHandler_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetErrorHandler.$(LIB_MAN_SUFFIX)" > $@
+
+XSendEvent_shadowmen = $(XSendEvent_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSendEvent_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSendEvent.$(LIB_MAN_SUFFIX)" > $@
+
+XSetFillStyle_shadowmen = $(XSetFillStyle_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetFillStyle_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetFillStyle.$(LIB_MAN_SUFFIX)" > $@
+
+XSetFontPath_shadowmen = $(XSetFontPath_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetFontPath_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetFontPath.$(LIB_MAN_SUFFIX)" > $@
+
+XSetInputFocus_shadowmen = $(XSetInputFocus_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetInputFocus_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetInputFocus.$(LIB_MAN_SUFFIX)" > $@
+
+XSetLineAttributes_shadowmen = $(XSetLineAttributes_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetLineAttributes_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetLineAttributes.$(LIB_MAN_SUFFIX)" > $@
+
+XSetPointerMapping_shadowmen = $(XSetPointerMapping_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetPointerMapping_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetPointerMapping.$(LIB_MAN_SUFFIX)" > $@
+
+XSetScreenSaver_shadowmen = $(XSetScreenSaver_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetScreenSaver_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetScreenSaver.$(LIB_MAN_SUFFIX)" > $@
+
+XSetSelectionOwner_shadowmen = $(XSetSelectionOwner_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetSelectionOwner_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetSelectionOwner.$(LIB_MAN_SUFFIX)" > $@
+
+XSetState_shadowmen = $(XSetState_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetState_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetState.$(LIB_MAN_SUFFIX)" > $@
+
+XSetTransientForHint_shadowmen = $(XSetTransientForHint_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetTransientForHint_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetTransientForHint.$(LIB_MAN_SUFFIX)" > $@
+
+XSetTextProperty_shadowmen = $(XSetTextProperty_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetTextProperty_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetTextProperty.$(LIB_MAN_SUFFIX)" > $@
+
+XSetTile_shadowmen = $(XSetTile_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetTile_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetTile.$(LIB_MAN_SUFFIX)" > $@
+
+XSetWMClientMachine_shadowmen = $(XSetWMClientMachine_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetWMClientMachine_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetWMClientMachine.$(LIB_MAN_SUFFIX)" > $@
+
+XSetWMColormapWindows_shadowmen = $(XSetWMColormapWindows_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetWMColormapWindows_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetWMColormapWindows.$(LIB_MAN_SUFFIX)" > $@
+
+XSetWMIconName_shadowmen = $(XSetWMIconName_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetWMIconName_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetWMIconName.$(LIB_MAN_SUFFIX)" > $@
+
+XSetWMName_shadowmen = $(XSetWMName_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetWMName_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetWMName.$(LIB_MAN_SUFFIX)" > $@
+
+XSetWMProperties_shadowmen = $(XSetWMProperties_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetWMProperties_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetWMProperties.$(LIB_MAN_SUFFIX)" > $@
+
+XSetWMProtocols_shadowmen = $(XSetWMProtocols_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSetWMProtocols_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSetWMProtocols.$(LIB_MAN_SUFFIX)" > $@
+
+XStoreBytes_shadowmen = $(XStoreBytes_shadows:=.@LIB_MAN_SUFFIX@)
+$(XStoreBytes_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XStoreBytes.$(LIB_MAN_SUFFIX)" > $@
+
+XStoreColors_shadowmen = $(XStoreColors_shadows:=.@LIB_MAN_SUFFIX@)
+$(XStoreColors_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XStoreColors.$(LIB_MAN_SUFFIX)" > $@
+
+XStringToKeysym_shadowmen = $(XStringToKeysym_shadows:=.@LIB_MAN_SUFFIX@)
+$(XStringToKeysym_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XStringToKeysym.$(LIB_MAN_SUFFIX)" > $@
+
+XSupportsLocale_shadowmen = $(XSupportsLocale_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSupportsLocale_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSupportsLocale.$(LIB_MAN_SUFFIX)" > $@
+
+XSynchronize_shadowmen = $(XSynchronize_shadows:=.@LIB_MAN_SUFFIX@)
+$(XSynchronize_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XSynchronize.$(LIB_MAN_SUFFIX)" > $@
+
+XmbTextListToTextProperty_shadowmen = $(XmbTextListToTextProperty_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbTextListToTextProperty_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbTextListToTextProperty.$(LIB_MAN_SUFFIX)" > $@
+
+XTextExtents_shadowmen = $(XTextExtents_shadows:=.@LIB_MAN_SUFFIX@)
+$(XTextExtents_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XTextExtents.$(LIB_MAN_SUFFIX)" > $@
+
+XTextWidth_shadowmen = $(XTextWidth_shadows:=.@LIB_MAN_SUFFIX@)
+$(XTextWidth_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XTextWidth.$(LIB_MAN_SUFFIX)" > $@
+
+XInitThreads_shadowmen = $(XInitThreads_shadows:=.@LIB_MAN_SUFFIX@)
+$(XInitThreads_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XInitThreads.$(LIB_MAN_SUFFIX)" > $@
+
+XrmUniqueQuark_shadowmen = $(XrmUniqueQuark_shadows:=.@LIB_MAN_SUFFIX@)
+$(XrmUniqueQuark_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XrmUniqueQuark.$(LIB_MAN_SUFFIX)" > $@
+
+XUnmapWindow_shadowmen = $(XUnmapWindow_shadows:=.@LIB_MAN_SUFFIX@)
+$(XUnmapWindow_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XUnmapWindow.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsCCCOfColormap_shadowmen = $(XcmsCCCOfColormap_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsCCCOfColormap_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsCCCOfColormap.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsAllocColor_shadowmen = $(XcmsAllocColor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsAllocColor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsAllocColor.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsColor_shadowmen = $(XcmsColor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsColor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsColor.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsCreateCCC_shadowmen = $(XcmsCreateCCC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsCreateCCC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsCreateCCC.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsCIELabQueryMaxC_shadowmen = $(XcmsCIELabQueryMaxC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsCIELabQueryMaxC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsCIELabQueryMaxC.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsCIELuvQueryMaxC_shadowmen = $(XcmsCIELuvQueryMaxC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsCIELuvQueryMaxC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsCIELuvQueryMaxC.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsQueryBlack_shadowmen = $(XcmsQueryBlack_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsQueryBlack_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsQueryBlack.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsQueryColor_shadowmen = $(XcmsQueryColor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsQueryColor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsQueryColor.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsStoreColor_shadowmen = $(XcmsStoreColor_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsStoreColor_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsStoreColor.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsSetWhitePoint_shadowmen = $(XcmsSetWhitePoint_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsSetWhitePoint_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsSetWhitePoint.$(LIB_MAN_SUFFIX)" > $@
+
+XcmsTekHVCQueryMaxC_shadowmen = $(XcmsTekHVCQueryMaxC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XcmsTekHVCQueryMaxC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XcmsTekHVCQueryMaxC.$(LIB_MAN_SUFFIX)" > $@
+
+XmbDrawImageString_shadowmen = $(XmbDrawImageString_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbDrawImageString_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbDrawImageString.$(LIB_MAN_SUFFIX)" > $@
+
+XmbDrawString_shadowmen = $(XmbDrawString_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbDrawString_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbDrawString.$(LIB_MAN_SUFFIX)" > $@
+
+XmbDrawText_shadowmen = $(XmbDrawText_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbDrawText_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbDrawText.$(LIB_MAN_SUFFIX)" > $@
+
+XmbLookupString_shadowmen = $(XmbLookupString_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbLookupString_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbLookupString.$(LIB_MAN_SUFFIX)" > $@
+
+XmbResetIC_shadowmen = $(XmbResetIC_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbResetIC_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbResetIC.$(LIB_MAN_SUFFIX)" > $@
+
+XmbTextEscapement_shadowmen = $(XmbTextEscapement_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbTextEscapement_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbTextEscapement.$(LIB_MAN_SUFFIX)" > $@
+
+XmbTextExtents_shadowmen = $(XmbTextExtents_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbTextExtents_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbTextExtents.$(LIB_MAN_SUFFIX)" > $@
+
+XmbTextPerCharExtents_shadowmen = $(XmbTextPerCharExtents_shadows:=.@LIB_MAN_SUFFIX@)
+$(XmbTextPerCharExtents_shadowmen):
+	echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbTextPerCharExtents.$(LIB_MAN_SUFFIX)" > $@

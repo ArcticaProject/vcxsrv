@@ -103,7 +103,7 @@ static void handleStencilModes(struct glCapabilitiesConfig *c, GLint smodes) {
 }
 
 static int handleColorAndAccumulation(struct glColorBufCapabilities *c, 
-				       GLint cmodes) {
+				       GLint cmodes, int forAccum) {
     int offset = 0;
         
     /*1*/
@@ -204,8 +204,9 @@ static int handleColorAndAccumulation(struct glColorBufCapabilities *c,
 	++offset;
     }
 
-#if 0
-    /* 
+    if(forAccum) {
+//#if 0
+    /* FIXME
      * Disable this path, because some part of libGL, X, or Xplugin 
      * doesn't work with sizes greater than 8.
      * When this is enabled and visuals are chosen using depths
@@ -274,7 +275,8 @@ static int handleColorAndAccumulation(struct glColorBufCapabilities *c,
 	c[offset].a = 16;
 	++offset;
     }
-#endif
+    }
+//#endif
 
     /* FIXME should we handle the floating point color modes, and if so, how? */
       
@@ -284,14 +286,14 @@ static int handleColorAndAccumulation(struct glColorBufCapabilities *c,
 
 static void handleColorModes(struct glCapabilitiesConfig *c, GLint cmodes) {
     c->total_color_buffers = handleColorAndAccumulation(c->color_buffers,
-							cmodes);
+							cmodes, 0);
     
     assert(c->total_color_buffers < GLCAPS_COLOR_BUFFERS);
 }
 
 static void handleAccumulationModes(struct glCapabilitiesConfig *c, GLint cmodes) {
     c->total_accum_buffers = handleColorAndAccumulation(c->accum_buffers,
-							cmodes);
+							cmodes, 1);
     assert(c->total_accum_buffers < GLCAPS_COLOR_BUFFERS);
 }
 

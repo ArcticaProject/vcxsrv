@@ -359,13 +359,13 @@ in_over_2x128 (__m128i* src_lo,
 static force_inline void
 cache_prefetch (__m128i* addr)
 {
-    _mm_prefetch (addr, _MM_HINT_T0);
+    _mm_prefetch ((void const*)addr, _MM_HINT_T0);
 }
 
 static force_inline void
 cache_prefetch_next (__m128i* addr)
 {
-    _mm_prefetch (addr + 4, _MM_HINT_T0); /* 64 bytes ahead */
+    _mm_prefetch ((void const *)(addr + 4), _MM_HINT_T0); /* 64 bytes ahead */
 }
 
 /* load 4 pixels from a 16-byte boundary aligned address */
@@ -2628,12 +2628,18 @@ create_mask_2x32_64 (uint32_t mask0,
     return _mm_set_pi32 (mask0, mask1);
 }
 
+/* Work around a code generation bug in Sun Studio 12. */
+#if defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590)
+# define create_mask_2x32_128(mask0, mask1) \
+	(_mm_set_epi32 ((mask0), (mask1), (mask0), (mask1)))
+#else
 static force_inline __m128i
 create_mask_2x32_128 (uint32_t mask0,
                       uint32_t mask1)
 {
     return _mm_set_epi32 (mask0, mask1, mask0, mask1);
 }
+#endif
 
 /* SSE2 code patch for fbcompose.c */
 
@@ -5600,7 +5606,7 @@ static const pixman_fast_path_t sse2_fast_paths[] =
     { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, sse2_composite_over_x888_8_8888,    0 },
     { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, sse2_composite_over_x888_8_8888,    0 },
     { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8,       PIXMAN_x8b8g8r8, sse2_composite_over_x888_8_8888,    0 },
-    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8,       PIXMAN_a8r8g8b8, sse2_composite_over_x888_8_8888,    0 },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8,       PIXMAN_a8b8g8r8, sse2_composite_over_x888_8_8888,    0 },
 #endif
     { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, sse2_composite_over_x888_n_8888,    NEED_SOLID_MASK },
     { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, sse2_composite_over_x888_n_8888,    NEED_SOLID_MASK },

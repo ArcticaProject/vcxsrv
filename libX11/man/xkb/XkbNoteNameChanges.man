@@ -31,18 +31,11 @@
 .SH NAME
 XkbNoteNameChanges \- Note the changed names in a changes structure
 .SH SYNOPSIS
+.HP
 .B void XkbNoteNameChanges
-(
-.I old,
-.I new,
-.I wanted
-)
-.br
-      XkbNameChangesPtr \fIold\fP\^;
-.br
-      XkbNamesNotifyEvent * \fInew\fP\^;
-.br
-      unsigned int \fIwanted\fP\^;
+.BI "(\^XkbNameChangesPtr " "old" "\^,"
+.BI "XkbNamesNotifyEvent *" "new" "\^,"
+.BI "unsigned int " "wanted" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

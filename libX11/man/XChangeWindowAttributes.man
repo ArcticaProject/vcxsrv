@@ -395,12 +395,12 @@ alternatives can generate this error.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XConfigureWindow(3X11),
-XCreateWindow(3X11),
-XDestroyWindow(3X11),
-XInstallColormap(3X11),
-XMapWindow(3X11),
-XRaiseWindow(3X11),
-XUnmapWindow(3X11)
+XConfigureWindow(__libmansuffix__),
+XCreateWindow(__libmansuffix__),
+XDestroyWindow(__libmansuffix__),
+XInstallColormap(__libmansuffix__),
+XMapWindow(__libmansuffix__),
+XRaiseWindow(__libmansuffix__),
+XUnmapWindow(__libmansuffix__)
 .br
 \fI\*(xL\fP

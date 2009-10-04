@@ -120,8 +120,22 @@ DGAInit(
 
     DGAScreenKey = &DGAScreenKeyIndex;
 
-    if(!(pScreenPriv = (DGAScreenPtr)xalloc(sizeof(DGAScreenRec))))
-	return FALSE;
+    pScreenPriv = DGA_GET_SCREEN_PRIV(pScreen);
+
+    if (!pScreenPriv)
+    {
+	if(!(pScreenPriv = (DGAScreenPtr)xalloc(sizeof(DGAScreenRec))))
+	    return FALSE;
+	dixSetPrivate(&pScreen->devPrivates, DGAScreenKey, pScreenPriv);
+	pScreenPriv->CloseScreen = pScreen->CloseScreen;
+	pScreen->CloseScreen = DGACloseScreen;
+	pScreenPriv->DestroyColormap = pScreen->DestroyColormap;
+	pScreen->DestroyColormap = DGADestroyColormap;
+	pScreenPriv->InstallColormap = pScreen->InstallColormap;
+	pScreen->InstallColormap = DGAInstallColormap;
+	pScreenPriv->UninstallColormap = pScreen->UninstallColormap;
+	pScreen->UninstallColormap = DGAUninstallColormap;
+    }
 
     pScreenPriv->pScrn = pScrn;
     pScreenPriv->numModes = num;
@@ -145,17 +159,6 @@ DGAInit(
 	for(i = 0; i < num; i++)
 	    modes[i].flags &= ~DGA_PIXMAP_AVAILABLE;
 #endif
-
-    dixSetPrivate(&pScreen->devPrivates, DGAScreenKey, pScreenPriv);
-    pScreenPriv->CloseScreen = pScreen->CloseScreen;
-    pScreen->CloseScreen = DGACloseScreen;
-    pScreenPriv->DestroyColormap = pScreen->DestroyColormap;
-    pScreen->DestroyColormap = DGADestroyColormap;
-    pScreenPriv->InstallColormap = pScreen->InstallColormap;
-    pScreen->InstallColormap = DGAInstallColormap;
-    pScreenPriv->UninstallColormap = pScreen->UninstallColormap;
-    pScreen->UninstallColormap = DGAUninstallColormap;
-
 
     return TRUE;
 }

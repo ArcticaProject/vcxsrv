@@ -38,7 +38,7 @@ host_triplet = @host@
 @SECURE_RPC_TRUE@am__append_1 = $(SECURERPC_SRCS)
 @XDMCP_TRUE@am__append_2 = $(XDMCP_SRCS)
 @NEED_STRLCAT_TRUE@am__append_3 = $(STRLCAT_SRCS)
-@XSERVER_DTRACE_TRUE@noinst_PROGRAMS = os.O$(EXEEXT)
+@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@noinst_PROGRAMS = os.O$(EXEEXT)
 subdir = os
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -473,6 +473,9 @@ clean-noinstPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
+@XQUARTZ_TRUE@os.O$(EXEEXT): $(os_O_OBJECTS) $(os_O_DEPENDENCIES) 
+@XQUARTZ_TRUE@	@rm -f os.O$(EXEEXT)
+@XQUARTZ_TRUE@	$(AM_V_CCLD)$(LINK) $(os_O_OBJECTS) $(os_O_LDADD) $(LIBS)
 @XSERVER_DTRACE_FALSE@os.O$(EXEEXT): $(os_O_OBJECTS) $(os_O_DEPENDENCIES) 
 @XSERVER_DTRACE_FALSE@	@rm -f os.O$(EXEEXT)
 @XSERVER_DTRACE_FALSE@	$(AM_V_CCLD)$(LINK) $(os_O_OBJECTS) $(os_O_LDADD) $(LIBS)
@@ -736,11 +739,11 @@ uninstall-am:
 
 
 # Generate dtrace object code for probes in libos & libdix
-@XSERVER_DTRACE_TRUE@dtrace.o: $(top_srcdir)/dix/Xserver.d $(am_libos_la_OBJECTS)
-@XSERVER_DTRACE_TRUE@	$(DTRACE) -G -C -o $@ -s $(top_srcdir)/dix/Xserver.d .libs/*.o ../dix/.libs/*.o
+@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@dtrace.o: $(top_srcdir)/dix/Xserver.d $(am_libos_la_OBJECTS)
+@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@	$(DTRACE) -G -C -o $@ -s $(top_srcdir)/dix/Xserver.d .libs/*.o ../dix/.libs/*.o
 
-@XSERVER_DTRACE_TRUE@os.O: dtrace.o $(am_libos_la_OBJECTS)
-@XSERVER_DTRACE_TRUE@	ld -r -o $@ dtrace.o .libs/*.o
+@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@os.O: dtrace.o $(am_libos_la_OBJECTS)
+@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@	ld -r -o $@ dtrace.o .libs/*.o
 
 os.c:
 	touch $@

@@ -221,19 +221,19 @@ The server failed to allocate the requested resource or server memory.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XAllocClassHint(3X11),
-XAllocIconSize(3X11),
-XAllocSizeHints(3X11),
-XAllocWMHints(3X11),
-XFree(3X11),
-XSetCommand(3X11),
-XSetTransientForHint(3X11),
-XSetTextProperty(3X11),
-XSetWMClientMachine(3X11),
-XSetWMIconName(3X11),
-XSetWMName(3X11),
-XSetWMProperties(3X11),
-XSetWMProtocols(3X11),
-XStringListToTextProperty(3X11)
+XAllocClassHint(__libmansuffix__),
+XAllocIconSize(__libmansuffix__),
+XAllocSizeHints(__libmansuffix__),
+XAllocWMHints(__libmansuffix__),
+XFree(__libmansuffix__),
+XSetCommand(__libmansuffix__),
+XSetTransientForHint(__libmansuffix__),
+XSetTextProperty(__libmansuffix__),
+XSetWMClientMachine(__libmansuffix__),
+XSetWMIconName(__libmansuffix__),
+XSetWMName(__libmansuffix__),
+XSetWMProperties(__libmansuffix__),
+XSetWMProtocols(__libmansuffix__),
+XStringListToTextProperty(__libmansuffix__)
 .br
 \fI\*(xL\fP

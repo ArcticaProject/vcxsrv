@@ -245,9 +245,9 @@ is not in the Host Portable Character Encoding,
 the result is implementation-dependent.
 Note that comment lines are not stored.
 .SH "SEE ALSO"
-XrmGetResource(3X11),
-XrmInitialize(3X11),
-XrmMergeDatabases(3X11),
-XrmUniqueQuark(3X11)
+XrmGetResource(__libmansuffix__),
+XrmInitialize(__libmansuffix__),
+XrmMergeDatabases(__libmansuffix__),
+XrmUniqueQuark(__libmansuffix__)
 .br
 \fI\*(xL\fP

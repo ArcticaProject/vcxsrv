@@ -31,15 +31,10 @@
 XkbGetDetectableAutorepeat \- Determines whether or not the server supports 
 DetectableAutorepeat
 .SH SYNOPSIS
+.HP
 .B Bool XkbGetDetectableAutorepeat
-(
-.I display,
-.I supported_rtrn
-)
-.br
-      Display * \fIdisplay\fP\^;
-.br
-      Bool * \fIsupported_rtrn\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "Bool *" "supported_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

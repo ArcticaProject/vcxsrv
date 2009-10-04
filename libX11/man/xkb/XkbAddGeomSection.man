@@ -30,24 +30,13 @@
 .SH NAME
 XkbAddGeomSection \- Add one section to an existing keyboard geometry
 .SH SYNOPSIS
+.HP
 .B XkbSectionPtr XkbAddGeomSection
-(
-.I geom,
-.I name,
-.I sz_rows,
-.I sz_doodads,
-.I sz_overlays
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      Atom \fIname\fP\^;
-.br
-      int \fIsz_rows\fP\^;
-.br
-      int \fIsz_doodads\fP\^;
-.br
-      int \fIsz_overlays\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "Atom " "name" "\^,"
+.BI "int " "sz_rows" "\^,"
+.BI "int " "sz_doodads" "\^,"
+.BI "int " "sz_overlays" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

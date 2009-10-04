@@ -388,8 +388,8 @@ Unless a specific range is specified for an argument, the full range defined
 by the argument's type is accepted.  Any argument defined as a set of
 alternatives can generate this error.
 .SH "SEE ALSO"
-XDrawArc(3X11),
-XDrawPoint(3X11),
-XDrawRectangle(3X11)
+XDrawArc(__libmansuffix__),
+XDrawPoint(__libmansuffix__),
+XDrawRectangle(__libmansuffix__)
 .br
 \fI\*(xL\fP

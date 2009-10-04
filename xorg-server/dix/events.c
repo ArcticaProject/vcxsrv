@@ -4414,10 +4414,12 @@ DeviceEnterLeaveEvent(
                         filter, grab);
     } else {
         if (!GetWindowXI2Mask(mouse, pWin, (xEvent*)event))
-            return;
+            goto out;
         DeliverEventsToWindow(mouse, pWin, (xEvent*)event, 1, filter,
                               NullGrab);
     }
+
+out:
     xfree(event);
 }
 

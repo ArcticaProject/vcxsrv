@@ -253,6 +253,6 @@ alternatives can generate this error.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XCopyArea(3X11)
+XCopyArea(__libmansuffix__)
 .br
 \fI\*(xL\fP

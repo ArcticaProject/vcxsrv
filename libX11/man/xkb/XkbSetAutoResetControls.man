@@ -31,21 +31,12 @@
 XkbSetAutoResetControls \- Changes the current values of the AutoReset control 
 attributes
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetAutoResetControls
-(
-.I dpy,
-.I changes,
-.I auto_ctrls,
-.I auto_values
-)
-.br
-      Display *\fI dpy \fP\^;
-.br
-      unsigned int \fI changes \fP\^;
-.br
-      unsigned int *\fI auto_ctrls \fP\^;
-.br
-      unsigned int *\fI auto_values \fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "changes" "\^,"
+.BI "unsigned int *" "auto_ctrls" "\^,"
+.BI "unsigned int *" "auto_values" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

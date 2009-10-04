@@ -219,8 +219,8 @@ function reduces the specified region by a specified amount.
 Positive values shrink the size of the region,
 and negative values expand the region.
 .SH "SEE ALSO"
-XCreateRegion(3X11),
-XDrawRectangle(3X11),
-XEmptyRegion(3X11)
+XCreateRegion(__libmansuffix__),
+XDrawRectangle(__libmansuffix__),
+XEmptyRegion(__libmansuffix__)
 .br
 \fI\*(xL\fP

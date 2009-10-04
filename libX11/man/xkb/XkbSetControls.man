@@ -32,18 +32,11 @@
 XkbSetControls \- Copies changes to the X server based on a modified ctrls 
 structure in a local copy of the keyboard description
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetControls
-(
-.I display,
-.I which,
-.I xkb
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned long \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned long " "which" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

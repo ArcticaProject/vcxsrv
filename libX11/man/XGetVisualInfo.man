@@ -310,6 +310,6 @@ typedef struct {
 } XVisualInfo;
 .De
 .SH "SEE ALSO"
-XFree(3X11)
+XFree(__libmansuffix__)
 .br
 \fI\*(xL\fP

@@ -31,18 +31,11 @@
 .SH NAME
 XkbFreeControls \- Frees memory used by the ctrls member of an XkbDescRec structure
 .SH SYNOPSIS
+.HP
 .B void XkbFreeControls
-(
-.I xkb,
-.I which,
-.I free_all
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

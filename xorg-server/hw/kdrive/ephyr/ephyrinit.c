@@ -148,6 +148,7 @@ processScreenArg (char *screen_size, char *parent_id)
 int
 ddxProcessArgument (int argc, char **argv, int i)
 {
+  static char* parent = NULL;
   EPHYR_DBG("mark argv[%d]='%s'", i, argv[i] );
 
   if (i == 1)
@@ -159,6 +160,18 @@ ddxProcessArgument (int argc, char **argv, int i)
     {
       if(i+1 < argc)
 	{
+	  int j;
+	  /* If parent is specified and a screen argument follows, don't do
+           * anything, let the -screen handling init the rest */
+	  for (j = i; j < argc; j++)
+	    {
+	      if (!strcmp(argv[j], "-screen"))
+		{
+		  parent = argv[i + 1];
+		  return 2;
+		}
+	    }
+
 	  processScreenArg ("100x100", argv[i+1]);
 	  return 2;
 	}
@@ -170,7 +183,8 @@ ddxProcessArgument (int argc, char **argv, int i)
     {
       if ((i+1) < argc)
 	{
-	  processScreenArg (argv[i+1], NULL);
+	  processScreenArg (argv[i+1], parent);
+	  parent = NULL;
 	  return 2;
 	}
 

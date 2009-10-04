@@ -497,15 +497,40 @@ doShmPutImage(DrawablePtr dst, GCPtr pGC,
 	      char *data)
 {
     PixmapPtr pPixmap;
-  
-    pPixmap = GetScratchPixmapHeader(dst->pScreen, w, h, depth,
-				     BitsPerPixel(depth),
-				     PixmapBytePad(w, depth),
-				     data);
-    if (!pPixmap)
-	return;
-    pGC->ops->CopyArea((DrawablePtr)pPixmap, dst, pGC, sx, sy, sw, sh, dx, dy);
-    FreeScratchPixmapHeader(pPixmap);
+
+    if (format == ZPixmap || depth == 1) {
+	pPixmap = GetScratchPixmapHeader(dst->pScreen, w, h, depth,
+					 BitsPerPixel(depth),
+					 PixmapBytePad(w, depth),
+					 data);
+	if (!pPixmap)
+	    return;
+	pGC->ops->CopyArea((DrawablePtr)pPixmap, dst, pGC, sx, sy, sw, sh, dx, dy);
+	FreeScratchPixmapHeader(pPixmap);
+    } else {
+	GCPtr putGC = GetScratchGC(depth, dst->pScreen);
+
+	if (!putGC)
+	    return;
+
+	pPixmap = (*dst->pScreen->CreatePixmap)(dst->pScreen, sw, sh, depth,
+						CREATE_PIXMAP_USAGE_SCRATCH);
+	if (!pPixmap) {
+	    FreeScratchGC(putGC);
+	    return;
+	}
+	ValidateGC(&pPixmap->drawable, putGC);
+	(*putGC->ops->PutImage)(&pPixmap->drawable, putGC, depth, -sx, -sy, w, h, 0,
+				(format == XYPixmap) ? XYPixmap : ZPixmap, data);
+	FreeScratchGC(putGC);
+	if (format == XYBitmap)
+	    (void)(*pGC->ops->CopyPlane)(&pPixmap->drawable, dst, pGC, 0, 0, sw, sh,
+					 dx, dy, 1L);
+	else
+	    (void)(*pGC->ops->CopyArea)(&pPixmap->drawable, dst, pGC, 0, 0, sw, sh,
+					dx, dy);
+	(*pPixmap->drawable.pScreen->DestroyPixmap)(pPixmap);
+    }
 }
 
 #ifdef PANORAMIX

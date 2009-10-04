@@ -33,15 +33,10 @@ XkbKeySymsPtr \- Returns the pointer to the two-dimensional array of keysyms for
 the key corresponding to 
 .I keycode
 .SH SYNOPSIS
-.B KeySym * XkbKeySymsPtr macro
-(
-.I xkb,
-.I keycode
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
+.HP
+.B KeySym * XkbKeySymsPtr
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

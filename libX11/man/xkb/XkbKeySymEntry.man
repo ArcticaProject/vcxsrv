@@ -35,21 +35,12 @@ and group
 from the two-dimensional array of keysyms for the key corresponding to 
 .I keycode
 .SH SYNOPSIS
-.B KeySym XkbKeySymEntry macro
-(
-.I xkb,
-.I keycode,
-.I shift,
-.I grp
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
-.br
-      int \fIshift\fP\^;
-.br
-      int \fIgrp\fP\^;
+.HP
+.B KeySym XkbKeySymEntry
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^,"
+.BI "int " "shift" "\^,"
+.BI "int " "grp" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

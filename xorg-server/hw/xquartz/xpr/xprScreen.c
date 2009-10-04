@@ -317,11 +317,11 @@ xprAddScreen(int index, ScreenPtr pScreen)
 
     if (noPseudoramiXExtension)
     {
-        ErrorF("Warning: noPseudoramiXExtension!\n");
-        
         CGDirectDisplayID dpy;
         CGRect frame;
 
+        ErrorF("Warning: noPseudoramiXExtension!\n");
+        
         dpy = displayAtIndex(index);
 
         frame = displayScreenBounds(dpy);

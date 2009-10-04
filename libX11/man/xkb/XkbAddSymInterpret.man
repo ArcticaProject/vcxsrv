@@ -31,21 +31,12 @@
 XkbAddSymInterpret \- Add a symbol interpretation to the list of symbol 
 interpretations in an XkbCompatRec
 .SH SYNOPSIS
+.HP
 .B XkbSymInterpretPtr XkbAddSymInterpret
-(
-.I xkb,
-.I si,
-.I updateMap,
-.I changes
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      XkbSymInterpretPtr \fIsi\fP\^;
-.br
-      Bool \fIupdateMap\fP\^;
-.br
-      XkbChangesPtr \fIchanges\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "XkbSymInterpretPtr " "si" "\^,"
+.BI "Bool " "updateMap" "\^,"
+.BI "XkbChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

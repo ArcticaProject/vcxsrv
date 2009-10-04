@@ -31,12 +31,9 @@
 XkbSARedirectVModsMask \- Returns the vmods_mask0 and vmods_mask1 fields of act 
 converted to an unsigned int
 .SH SYNOPSIS
-.B unsigned int XkbSARedirectVModsMask macro
-(
-.I act
-)
-.br
-      XkbRedirectKeyAction \fIact\fP\^;
+.HP
+.B unsigned int XkbSARedirectVModsMask
+.BI "(\^XkbRedirectKeyAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

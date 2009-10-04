@@ -32,18 +32,11 @@
 XkbGetBounceKeysDelay \- Queries the current BounceKeys delay for a keyboard 
 device.
 .SH SYNOPSIS
+.HP
 .B Bool XkbGetBounceKeysDelay
-(
-.I display,
-.I device_spec,
-.I delay_rtrn
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int *\fIdelay_rtrn\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int *" "delay_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

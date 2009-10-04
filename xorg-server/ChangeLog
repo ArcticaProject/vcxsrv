@@ -1,3 +1,611 @@
+commit 4257023c1e40387aff096d5f00d746d3f7a521b4
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 2 14:05:43 2009 +1000
+
+    xserver 1.7.0
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 15b4faff281ad8abce6b32fe2fc855eb6da42476
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Oct 1 21:19:11 2009 +1000
+
+    dix: force a minimum of 0 for screen coordinates.
+    
+    Currently the root coordinates may fall into ]-1..0] if the subpixel
+    remainder is less than 0. Screen coordinates mustn't go below 0, so use
+    miPointerSetPosition to cap off the remainder if the coordinates are below
+    0.
+    
+    This is cheating a bit, a more comprehensive solution to deal with subpixels
+    correctly when crossing screens is needed. For now, this'll do.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Simon Thum <simon.thum@gmx.de>
+    (cherry picked from commit 45f447dafded5adfe11b7df3325c2d8f6ae0639b)
+
+commit 3788113618977bdc83e3ec1e7ca3160bad9a0d13
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 2 09:34:24 2009 +1000
+
+    configure: if xnest was requested but modules weren't found, fail.
+    
+    Tested-by: Xavier Chantry <shiningxc@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Julien Cristau <jcristau@debian.org>
+    (cherry picked from commit 64fe5784b49347e1fd27b0c463be5c16557594c9)
+
+commit c3034dc3af450802dda156136d9fabbc1cc58836
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Thu Oct 1 15:25:55 2009 +1000
+
+    rotate: drop unwrapping inside block handler.
+    
+    Keith has shown half the block handlers wrappers are wrong, also
+    dynamic wrapping/unwrapping from what I can see will happen after
+    the drivers, so its really accidental ABI, that we can't change
+    now without modifing drivers. So be safe for 1.7.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+    Declared-as-sane-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 3ebb82d61c2b56e8f7145443a552a4e913bbfc80)
+
+commit 47c0b80915d67346ec63b36b659a96b77e777a71
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Oct 1 10:03:42 2009 +1000
+
+    render: Fix crash in RenderAddGlyphs (#23645)
+    
+    This patch fixes two bugs:
+    size is calculated as glyph height * padded_width. If the client submits
+    garbage, this may get above INT_MAX, resulting in a negative size if size is
+    unsigned. The sanity checks don't trigger for negative sizes and the server
+    goes and writes into random memory locations.
+    
+    If the client submits glyphs with a width or height 0, the destination
+    pixmap is NULL, causing a null-pointer dereference. Since there's nothing to
+    composite if the width/height is 0, we might as well skip the whole thing
+    anyway.
+    
+    Tested with Xvfb, Xephyr and Xorg.
+    
+    X.Org Bug 23645 <http://bugs.freedesktop.org/show_bug.cgi?id=23645>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 622fc98fd08aba98369e6933c3ab8c9ff85385d5)
+
+commit 30ebee3bfcadf915be98d407610c615e3e00f9c1
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Oct 1 15:22:19 2009 +1000
+
+    render: set the glyph picture to NULL by default.
+    
+    In a follow-up patch we may have glyphs with a NULL picture. To cope with
+    that, always set the pictures for glyphs to NULL at creation time and cope
+    with cleaning up such glyphs. Also, since compositing a NULL source doesn't
+    do a lot anyway, skip trying to do so.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 758ab55d2defc78d0169fd61a7036eb9f889e9e7)
+
+commit 8026c5a08584419be3adecd5965dd03e793ddf81
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Thu Oct 1 15:17:11 2009 +1000
+
+    exa: avoid infinite loops if UTS sw fallbacks.
+    
+    The upload in finish access can cause an infinite loop if
+    UTS returns FALSE in here.
+    
+    Fixes fd.o bug #24246.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit b5fcc5553eb784c9f4826936e839079c0cdee55a)
+
+commit e182c1b4368c6958579732dd4ddc59de2b46359b
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Sep 30 11:40:19 2009 -0700
+
+    Re-fix DGA removal.
+    
+    Removing DGA ended up breaking any drivers calling into the old
+    xf86DiDGAInit function as it tried to see if DGA was already enabled
+    and ended up crashing if the VT wasn't completely initialized. Oops.
+    
+    Also, if the driver initializes DGA itself, have the DiDGA
+    initialization overwrite that information as the DiDGA code will call
+    ReInit on mode detect.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit db98b26ee145f70e732e2cf4a6ac3de77fdf4adc)
+
+commit 369b5d526b699cd1c5cd38bb5a823ec66c5286ef
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Tue Sep 29 11:49:09 2009 +1000
+
+    dix/glx/composite: consolidate visual resize in one place.
+    
+    The previous code was copied and in both cases incorrectly fixed
+    up the colormaps after resizing the visuals, this patch consolidates
+    the visual resize + colormaps fixups in one place. This version
+    also consolidates the vid allocation for the DepthPtr inside the
+    function.
+    
+    I'm not 100% sure colormap.[ch] is the correct place for this but
+    visuals are mostly created in fb and I know thats not the place to
+    be resizing them.
+    
+    Fixes fd.o bug #19470.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 6ffda5aae75272fabdc27d6f693ae827be119e95)
+
+commit d3ba814884154150ed3e6a71254dec7312593488
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Sep 29 08:56:59 2009 +0200
+
+    Fix ShmPutImage non-ZPixmap case.
+    
+    Fixes http://bugs.freedesktop.org/show_bug.cgi?id=23298 .
+    (cherry picked from commit 11817a881cb93a89788105d1e575a468f2a8d27c)
+
+commit 8fc0d54cbaf791d947c7bab23f2e982cabd7c958
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 14:18:45 2009 +1000
+
+    ephyr: if -parent is given, check for a trailing -screen. (#24144)
+    
+    If -parent is given, don't open up a new window if -screen is given as well.
+    The commandline option -screen allows to set the depth of the embedded
+    Xephry instance, even though width and height are autoscaled on -parent.
+    
+    This patch checks for a -screen parameter after -parent and - if one is
+    found - delays initializing the screen. The parent window id is stored
+    temporarily but re-set after a -screen argument.
+    The following command is thus valid:
+    
+    Xephyr -parent 1234 -screen 640x480@8 -screen 1024x768
+    
+    It embeds the first 8-bit screen into window 1234 and opens up a new window
+    for the second screen. Multiple parent arguments are possible, the screens
+    are embedded in-order.
+    
+    X.Org Bug 24144 <http://bugs.freedesktop.org/show_bug.cgi?id=24144>
+    
+    Tested-by: Vic Lee
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 19be992d9dc542b61fa3f4fd32a09071c9e64880)
+
+commit 857ec3e6fff571398dfcd9b4728b5c38cbcd3fcb
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 13:59:25 2009 +1000
+
+    xfree86: use the DDC size if either width or height of DisplaySize is bogus.
+    
+    If either width or height of DisplaySize is invalid, assume that the
+    configuration is invalid and use the DDC-reported values instead.
+    
+    See Comment 9, Bug 9758.
+    http://bugs.freedesktop.org/show_bug.cgi?id=9758#c9
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Dave Airlie <airlied@redhat.com>
+    (cherry picked from commit 83023ffd09a84ff48e6b99f57ebad101a00478db)
+
+commit 2d4bab18c0d894619f044f29769c67c2f63b540a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 23 10:53:51 2009 +1000
+
+    render: Plug a memory leak in AddGlyph. (#23286)
+    
+    AddGlyph was missing the FreePicture() call that DeleteGlyph used, resulting
+    in a memory leak when more than one Glyph was added in a RenderAddGlyphs
+    request.
+    
+    Since the code in AddGlyph and DeleteGlyph is identical, move into a static
+    function to avoid such mistakes in the future.
+    
+    X.Org Bug 23286 <http://bugs.freedesktop.org/show_bug.cgi?id=23286>
+    (cherry picked from commit f772014c435f56db56520ca13ffa39431684f122)
+
+commit 290a9639db3e420ec4caf0e6aee9f7386724c765
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 21:05:11 2009 +1000
+
+    xserver 1.6.99.903 (xserver 1.7 RC3)
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8c83457c60a4e02ca61086c7218dcd0e054926ba
+Merge: 6af44db b49dba3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 16:48:46 2009 +1000
+
+    Merge remote branch 'origin/xorg-server-1.7-apple' into server-1.7-branch
+
+commit 6af44db315121ea24cec390d144514bf56908b2c
+Author: Tilman Sauerbeck <tilman@code-monkey.de>
+Date:   Thu Sep 24 12:57:02 2009 +0200
+
+    configure: make XNEST default to auto.
+    
+    When we're checking whether to build Xnest, we're comparing the
+    variable to auto but before it never was assigned that.
+    
+    Signed-off-by: Tilman Sauerbeck <tilman@code-monkey.de>
+    
+    [Xnest was enabled to yes to increase build exposure and catch compiler
+    errors early. The requirements to Xnest are quite low and I expect most
+    developers have them, so Xnext will be enabled on most boxes. Anyone
+    missing those requires probably doesn't want to build Xnest anyway.]
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 3db28f92b0c810b452506abbed299a204c90ba0b)
+
+commit b49dba33f94b51ba9a14803f0d81ccde2cb778f8
+Author: Ben Byer <bbyer@freedesktop.org>
+Date:   Sun Sep 27 10:35:53 2009 -0700
+
+    Add (ok, fix) support for DTrace under OS X
+    (cherry picked from commit 8428a57184f542941d2c8c90e97d18e111a69dd2)
+
+commit cf2e3312cff3f341e9edba8c321a4ca7ffd8748e
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 23:09:51 2009 -0700
+
+    Rootless: Correct border rendering on parent-relative windows
+    
+    Resurected code from the punted RootlessPaintBackground/Border and added it conditionally to miPaintWindow
+
+commit dadab5a2279a19dcf709402d7f22f0cd48670db0
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 23:00:59 2009 -0700
+
+    XQuartz: Fix QuartzSetCursor to match the expected prototype.
+
+commit 54000bdcbca52a2de31f7c1a1147de6d8e9dbbb8
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 22:57:25 2009 -0700
+
+    XQuartz: Fix a bunch of compilation warnings about style
+
+commit 29cb904e4de2411a9b6dbe68694954788f0525f7
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 22:29:49 2009 -0700
+
+    XQuartz: Nuke TSM
+    
+    It's deprecated in SnowLeopard.  Ben and I both have no idea what it is for.  It says something about unicode input, but urxvt seems fine taking in unicode, so /shrug... bye.
+
+commit de6cee11e1c335a0e5f708e7641e81d3cfe52529
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 22:26:22 2009 -0700
+
+    XQuartz: Fix inverse map from mode_switch to alt
+
+commit 7e6640b55503b6ee797ab2589f7debcbfa531958
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 12:20:03 2009 +1000
+
+    Revert "alpha: kill xf86SlowBCopyToBus and xf86SlowBCopyFromBus"
+    
+    The vesa driver still uses slowbcopy_frombus and slowbcopy_tobus.
+    
+    This reverts commit 5ef53a94ce4e48e11de26290cd677266308640c8.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit ceaa5c779ceed3de5ea53727649613be3133b24e
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 18:25:57 2009 -0700
+
+    XQuartz: Force a keymap resync on the first keypress to workaround XKB mucking with our keymap.
+    
+    We need to find a better way to work with XKB on this.
+
+commit a3dbde2de87ee4f577748a8c447501a3ea462559
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 17:08:12 2009 -0700
+
+    XQuartz: Transition from xEvent based mieq to InternalEvent
+
+commit 4aeac52c495c4cf691de7ef7d9e4030e90b3c8b8
+Merge: 498135f 77099b9
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 09:54:53 2009 +1000
+
+    Merge remote branch 'origin/xorg-server-1.7-apple' into server-1.7-branch
+
+commit 498135f26e8504e103ffe4512acf6fddca8e92e8
+Author: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Date:   Sun Sep 27 17:30:23 2009 +0200
+
+    xfree86: Hurd fix
+    
+    I hadn't paid attention that the parameters order had changed, here is a
+    trivial patch, please apply.
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    (cherry picked from commit 78ad6ca9a97440b74019c00a28144ea7d1e03431)
+
+commit 77099b933a0362d40a28f9afea46c5cc97c29e13
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 26 23:41:45 2009 -0700
+
+    XQuartz: Stop checking version numbers of the bundle because CFBundleGetVersionNumber is gimpish
+    (cherry picked from commit 9f5bdd89608ec12012592ff395b82e954fbb4da8)
+
+commit 7958f6b75b3c6b8a827188af2e684f181bdd7688
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 26 22:52:39 2009 -0700
+
+    XQuartz: Add pressure/tilt property labels
+
+commit 29b2d9cdf5095399b79d9ff2a2f12f5a9c49cf1f
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 26 22:48:49 2009 -0700
+
+    XQuartz: Fix a brain-o array indexing problem
+    
+    /bop Peter
+
+commit fd1adc21a931e2dd1ff2e52b60a77c2153a30fe0
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 26 22:17:09 2009 -0700
+
+    XQuartz: Nuke duplicate locks that make painful headaches
+
+commit 6e4fc5d066d9c1ea4fca444cfee1e73147c5fefb
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Sep 26 22:13:49 2009 -0700
+
+    Xi: CopyKeyClass is not static for XQuartz
+
+commit e0e2eaf1f30ebce4c0ff28416259d8e976fdf0d7
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Aug 7 00:02:21 2009 -0700
+
+    XQuartz: Use internal xshm header for new xextproto
+    (cherry picked from commit 1755239330c0bdac820d88a3e06ff391d65f29be)
+    (cherry picked from commit 697be460d0e555e2c75eed6889293650e02d423c)
+
+commit 1a0dfde2d102d845f1ceda66ad7a078aa1b42ef9
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Sep 23 17:41:28 2009 -0700
+
+    XQuartz: GLX capabilities: Allow 16bit accumulation buffers
+    
+    http://xquartz.macosforge.org/trac/ticket/308
+    (cherry picked from commit e9e63a2118b76b6c31c4081fec08a99e4d796e22)
+
+commit 0c6423b3d52af85cd990811f7be982c0b6ed7c32
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Sun Sep 27 02:08:10 2009 +0200
+
+    EXA: Fix mixed pixmaps crash with missing / failing UploadToScreen hook.
+    
+    For the recent mixed pixmaps changes, I failed to realize (or hit in my
+    testing) a problem which can occur if the driver doesn't provide an
+    UploadToScreen hook or provides one which can fail: There can be a crash
+    in exaMemcpyBox() because exaCopyDirtyToFb() passes pExaPixmap->fb_ptr to
+    exaCopyDirty(), but that's normally NULL with driver allocated pixmaps.
+    
+    The solution is to make exaCopyDirty*() no longer rely on pExaPixmap->fb_ptr
+    but use pPixmap->devPrivate.ptr after PrepareAccess instead.
+    
+    Fixes http://bugs.freedesktop.org/show_bug.cgi?id=24167 .
+    (cherry picked from commit 73ae547d5e687ef10dea45801fc627e10ac4b659)
+
+commit bb7c26e38c262614c5d1c21fc7a04c71a9028e51
+Author: Kevin E Martin <kem@redhat.com>
+Date:   Sat Sep 26 13:10:54 2009 +1000
+
+    dmx: undefine MITSHM, move undefs to miinitext.c.
+    
+    This patch undefines MITSHM for dmx - we don't support the required
+    screen->ModifyPixmapHeaders. All undefines are moved from dmx-config to
+    miinitext.c, where they belong.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit c9ec2bab2f258798fd6e6676698c732f09571a60)
+
+commit 72f0194be1558f244bad85197ccc50e17561df50
+Author: Kevin E Martin <kem@redhat.com>
+Date:   Sat Sep 26 13:09:52 2009 +1000
+
+    dmx: reshuffle linker order to avoid errors when MITSHM is undefined.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit fc9d733bab3ff0e4e51b19c73b66196dca563a70)
+
+commit e4edb4f2e6ca960b68629783459920faa86d8671
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 25 14:53:33 2009 +1000
+
+    dmx: core events are always in screen coordinates when passed to GPE.
+    
+    This fixes input in dmx, the pointer appears at the right positions to the
+    clients now.
+    
+    Also mark the spot where we pass in the button state as valuator to GPE
+    with a FIXME. (??)
+    
+    Tested-by: Kevin Martin
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit e7c2598f565e8252dd66ee3e6212b310856476cb)
+
+commit 7c9e0b07780b664ebbcee2d6be4bce645cb8c5b2
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 24 14:07:26 2009 +1000
+
+    Xi: update axisVals with the right subpixel data.
+    
+    Subpixel data in data_frac is stored as FP32.32, hence we need to get that
+    down again before adding it to the current value.
+    
+    Reported-by: Thomas Jaeger
+    Tested-by: Thomas Jaeger
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 9bd08c690fc687c4d69bb70536f3079a9184476d)
+
+commit 1745808c2939d7dc08d3d8acae425e5eeb6a16ca
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 23 21:49:11 2009 +1000
+
+    configure: Unify all library defines that require a specific version.
+    
+    This patch moves all libraries that require a specific version into a single
+    location instead or duplicating them across the configure.ac file.
+    Libraries that do not require specific versions are left where they are.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 43a2eb794f19a2ba56d653f465fc5f6b2ff0d3d3)
+
+commit e5371c7fc895c51092bd5b2d303e4835c123bd5c
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Sat Sep 26 01:59:39 2009 +0200
+
+    EXA: Extend mixed pixmaps scheme to allow driver PrepareAccess hook to fail.
+    
+    If the PrepareAccess hook fails, use the DownloadFromScreen hook to retrieve
+    driver pixmap contents to a system RAM copy, perform software rendering on that
+    and copy the results back using the UploadToScreen hook. Use the classic
+    migration logic to minimize transfers (which as a bonus allows slightly
+    cleaning up some of the existing mixed pixmap code).
+    
+    This enables things that weren't possible before with driver-allocated pixmap
+    storage: If some (or all) GPU pixmap storage can't be mapped directly by the
+    CPU, this can be handled between the PrepareAccess and
+    DownloadFrom/UploadToScreen hooks, e.g.:
+    
+    * Radeon KMS on big endian machines can fail PrepareAccess if the pixmap
+      requires byte-swapping and swap bytes in DownloadFrom/UploadToScreen.
+    * Environments where GPU and CPU don't have a shared address space at all.
+      Here the driver PrepareAccess hook will always fail and leave all transfers
+      between GPU / CPU storage to the Download/From/UploadToScreen hooks.
+    
+    Drivers which can handle all pixmaps in the PrepareAccess hook should notice
+    little if any difference.
+    (cherry picked from commit 1818cbd70fc1f2e1487b4c678e67e28f1265c0ef)
+
+commit cecd484fbb3db273472d0bf0ec45d8604ff0cde2
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Sep 22 20:34:54 2009 +1000
+
+    Require libXext >= 1.0.99.4
+    
+    Reported-by: Tilman Sauerbeck
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 9fa73be9fa543a686ea35c861084f5af37d44caa)
+
+commit f188fabfe264dfec1950c168e2d9c22f13797b93
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 23 11:43:27 2009 +1000
+
+    kdrive: plug two memory leaks when freeing the KdKeyboard/Pointer.
+    
+    xkbRules, xkbModel and xkbLayout are strdup'd in KdNewKeyboard, need to be
+    freed.
+    
+    The ephyr driver strdups the name on top of the already allocated
+    kdrive-assigned name. Memory must be freed beforehand.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit a9c274df5c37cb4ece6449e934342d8ff8e61705)
+
+commit 48ab48a6ce12605c7353b45dff4e3a4338b9132e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 23 11:44:12 2009 +1000
+
+    dix: plug memory leak in DeviceEnterLeaveEvents.
+    
+    'event' must be freed before exiting.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit fd913136732ff14a0484ca28f60ac1fbf49be81d)
+
+commit 9e39491166eb4540bbc72e963e673c976301e936
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 24 14:05:52 2009 +1000
+
+    Xi: fix length calculation for ValuatorState in QueryDeviceState reply.
+    
+    The length field needs to include the bytes required for the valuators
+    (INT32) as well.
+    
+    The reply length has the right value and since the valuator state is always
+    last, clients didn't notice the wrong offset.
+    
+    Tested-by: Thomas Jaeger
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 6ee796e9bb4e46782b50a69c7b4fa5b49576f139)
+
+commit a9e2f7ac15f426560ac01689ec66f2db32424884
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 23 12:32:44 2009 +1000
+
+    configure: fix up tslib check once again.
+    
+    This patch addresses two issues:
+    The check for HAVE_TSLIB = xauto can never be true, the check has been
+    corrected to TSLIB = xauto.
+    
+    Pre-pkgconfig versions of tslib fail to be found, this patch restores the
+    additional AC_CHECK_LIB. However, the pgk-config check must happen before
+    AC_CHECK_LIB, as AC_CHECK_LIB does not seem to honour the LD_LIBRARY_PATH.
+    Thus, if tslib is installed outside of the default paths, AC_CHECK_LIB
+    fails.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked--by: Daniel Stone <daniel@fooishbar.org>
+    (cherry picked from commit 3b5bbb149d4c932d9624336f5cbe9fe71c87bea3)
+
+commit 1f74cfdeacb88b466d8f2005af191db30dde2a86
+Author: Thomas Jaeger <thjaeger@gmail.com>
+Date:   Tue Sep 22 20:16:21 2009 -0400
+
+    dix: report XI1 axis values correctly if first_valuator != 0
+    
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 5402f18d9c3f7ba19cc05b3a814e3a9e94c8d551)
+
+commit 8867c60782909816826054ed0587094e58eb39e6
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Wed Sep 23 13:10:05 2009 +0200
+
+    render: Don't add b8g8r8x8 format for depth 24.
+    
+    The components are required to be packed in the bottom of the pixel, so this
+    format can't fit in depth 24.
+    
+    Also fix up a comment for the addition of BGRA formats.
+    (cherry picked from commit ce1fe8ddb4a4dbe6cfd909e5b1b73b459d742bec)
+
+commit ac1490b651a251407e1bbc98e3ccd265a9e491b5
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Wed Sep 23 08:24:06 2009 +0200
+
+    EXA: Fix some issues pointed out by clang.
+    
+    Remove dead variables, fix use of uninitialized values, that kind of thing.
+    (cherry picked from commit 096f21bb7a1217443d8a03529b1a2938518eb24f)
+
+commit 6b656c3498fa1bdbf93b2951b27cc8ff00e65990
+Author: Simon Thum <simon.thum@gmx.de>
+Date:   Mon Sep 21 15:23:27 2009 +0200
+
+    dix: move bounds check before access
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 824a09d856a5f750694e11d2fd2faaa3de705eaa)
+
 commit 9c1a18377afdb919a648a96c4195113121902cfe
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Tue Sep 22 12:44:19 2009 +1000

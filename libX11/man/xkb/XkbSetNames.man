@@ -31,24 +31,13 @@
 .SH NAME
 XkbSetNames \- Change the symbolic names in the server
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetNames
-(
-.I dpy,
-.I which,
-.I first_type,
-.I num_types ,
-.I xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      unsigned int \fIfirst_type\fP\^;
-.br
-      unsigned int \fInum_types\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "unsigned int " "first_type" "\^,"
+.BI "unsigned int " "num_types" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

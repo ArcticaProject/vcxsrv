@@ -244,9 +244,9 @@ After finding a match, the predicate procedure must return
 If it did not find a match, it must return
 .ZN False .
 .SH "SEE ALSO"
-XAnyEvent(3X11),
-XNextEvent(3X11),
-XPutBackEvent(3X11)
-XSendEvent(3X11)
+XAnyEvent(__libmansuffix__),
+XNextEvent(__libmansuffix__),
+XPutBackEvent(__libmansuffix__)
+XSendEvent(__libmansuffix__)
 .br
 \fI\*(xL\fP

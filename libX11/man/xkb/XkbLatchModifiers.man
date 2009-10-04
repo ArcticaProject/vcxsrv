@@ -32,21 +32,12 @@
 XkbLatchModifiers \-  Latches and unlatches any of the eight real keyboard 
 modifiers
 .SH SYNOPSIS
+.HP
 .B Bool XkbLatchModifiers
-(
-.I display,
-.I device_spec,
-.I affect,
-.I values
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int \fIaffect\fP\^;
-.br
-      unsigned int \fIvalues\fP\^;      
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "affect" "\^,"
+.BI "unsigned int " "values" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

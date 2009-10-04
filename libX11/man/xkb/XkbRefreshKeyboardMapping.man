@@ -31,12 +31,9 @@
 XkbRefreshKeyboardMapping \- Update the keyboard description that is internal to the X 
 library
 .SH SYNOPSIS
+.HP
 .B Status XkbRefreshKeyboardMapping
-(
-.I event
-)
-.br
-      XkbMapNotifyEvent * \fIevent\fP\^;
+.BI "(\^XkbMapNotifyEvent *" "event" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -75,4 +72,4 @@ type and range, but is otherwise invalid
 .BR XkbChangeMap (__libmansuffix__),
 .BR XkbGetKeyboardByName (__libmansuffix__),
 .BR XkbSetMap (__libmansuffix__),
-.BR XRefreshKeyboardMapping (3X11)
+.BR XRefreshKeyboardMapping (__libmansuffix__)

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "pixman.h"
+#include <config.h>
 
 #define SIZE 1024
 
@@ -34,8 +35,13 @@ testcase_t testcases[] = {
 	.format = PIXMAN_g1,
 	.width = 8, .height = 2,
 	.stride = 4,
+#ifdef WORDS_BIGENDIAN
+	.src = { 0xaa000000,
+		 0x55000000 },
+#else
 	.src = { 0x00000055, 
 	         0x000000aa },
+#endif
 	.dst = { 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000,
 	         0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff, 0x00000000, 0x00ffffff },
 	.indexed = &mono_pallete,
@@ -51,14 +57,24 @@ testcase_t testcases[] = {
 	         0x00898989, 0x00ababab, 0x00cdcdcd, 0x00efefef, },
     },
 #endif
+    /* FIXME: make this work on big endian */
     {
 	.format = PIXMAN_yv12,
 	.width = 8, .height = 2,
 	.stride = 8,
+#ifdef WORDS_BIGENDIAN
+	.src = { 0x00ff00ff, 0x00ff00ff, 
+	         0xff00ff00, 0xff00ff00, 
+	         0x80ff8000, 
+		 0x800080ff
+	},
+#else
 	.src = { 0xff00ff00, 0xff00ff00, 
 	         0x00ff00ff, 0x00ff00ff, 
 	         0x0080ff80, 
-		 0xff800080},
+		 0xff800080
+	 },
+#endif
 	.dst = { 
 		0xff000000, 0xffffffff, 0xffb80000, 0xffffe113,
 		0xff000000, 0xffffffff, 0xff0023ee, 0xff4affff,

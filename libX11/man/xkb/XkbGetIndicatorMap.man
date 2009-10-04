@@ -31,18 +31,11 @@
 XkbGetIndicatorMap \- Gets the map for one or more indicators, using a mask to 
 specify the indicators
 .SH SYNOPSIS
+.HP
 .B Status XkbGetIndicatorMap
-(
-.I dpy,
-.I which,
-.I desc
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIdesc\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescPtr " "desc" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

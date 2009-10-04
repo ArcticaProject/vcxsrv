@@ -30,10 +30,9 @@
 .SH NAME
 XkbAllocKeyboard \-  Creates a keyboard description from scratch
 .SH SYNOPSIS
+.HP
 .B XkbDescRec XkbAllocKeyboard
-(
-.I void
-)
+.BI "(\^void\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH DESCRIPTION

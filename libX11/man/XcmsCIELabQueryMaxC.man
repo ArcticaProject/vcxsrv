@@ -215,8 +215,8 @@ An
 return value usually indicates that the given chroma
 is beyond maximum for the given hue angle.
 .SH "SEE ALSO"
-XcmsCIELuvQueryMaxC(3X11),
-XcmsTekHVCQueryMaxC(3X11),
-XcmsQueryBlack(3X11)
+XcmsCIELuvQueryMaxC(__libmansuffix__),
+XcmsTekHVCQueryMaxC(__libmansuffix__),
+XcmsQueryBlack(__libmansuffix__)
 .br
 \fI\*(xL\fP

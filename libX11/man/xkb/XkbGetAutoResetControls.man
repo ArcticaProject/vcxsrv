@@ -30,18 +30,11 @@
 .SH NAME
 XkbGetAutoResetControls \- Gets the current values of the auto-reset controls
 .SH SYNOPSIS
+.HP
 .B Bool XkbGetAutoResetControls
-(
-.I dpy,
-.I auto_ctrls,
-.I auto_values 
-)
-.br
-      Display *\fI dpy \fP\^;
-.br
-      unsigned int  *\fI auto_ctrls \fP\^;
-.br
-      unsigned int  *\fI auto_values \fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int  *" "auto_ctrls" "\^,"
+.BI "unsigned int  *" "auto_values" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

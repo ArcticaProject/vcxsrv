@@ -61,7 +61,7 @@ am_libXquartz_la_OBJECTS = fbcmap_mi.lo miinitext.lo X11Application.lo \
 	X11Controller.lo applewm.lo darwin.lo darwinEvents.lo \
 	darwinXinput.lo keysym2ucs.lo pseudoramiX.lo quartz.lo \
 	quartzAudio.lo quartzCocoa.lo quartzKeyboard.lo \
-	quartzPasteboard.lo quartzStartup.lo threadSafety.lo
+	quartzStartup.lo threadSafety.lo
 libXquartz_la_OBJECTS = $(am_libXquartz_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -465,7 +465,6 @@ libXquartz_la_SOURCES = \
 	quartzAudio.c \
 	quartzCocoa.m \
 	quartzKeyboard.c \
-	quartzPasteboard.c \
 	quartzStartup.c \
 	threadSafety.c
 
@@ -482,7 +481,6 @@ EXTRA_DIST = \
 	quartzAudio.h \
 	quartzCommon.h \
 	quartzKeyboard.h \
-	quartzPasteboard.h \
 	sanitizedCarbon.h \
 	sanitizedCocoa.h \
 	threadSafety.h
@@ -553,7 +551,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quartzAudio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quartzCocoa.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quartzKeyboard.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quartzPasteboard.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quartzStartup.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/threadSafety.Plo@am__quote@
 

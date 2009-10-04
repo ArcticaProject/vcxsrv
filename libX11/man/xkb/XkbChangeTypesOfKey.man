@@ -31,27 +31,14 @@
 .SH NAME
 XkbChangeTypesOfKey \- Change the number of groups and the types bound to a key 
 .SH SYNOPSIS
+.HP
 .B Status XkbChangeTypesOfKey
-(
-.I xkb,
-.I key,
-.I n_groups,
-.I groups,
-.I new_types_in,
-.I p_changes
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      int \fIkey\fP\^;
-.br
-      int \fIn_groups\fP\^;
-.br
-      unsigned int \fIgroups\fP\^;
-.br
-      int * \fInew_types_in\fP\^;
-.br
-      XkbMapChangesPtr \fIp_changes\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "int " "key" "\^,"
+.BI "int " "n_groups" "\^,"
+.BI "unsigned int " "groups" "\^,"
+.BI "int *" "new_types_in" "\^,"
+.BI "XkbMapChangesPtr " "p_changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

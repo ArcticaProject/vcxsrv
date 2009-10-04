@@ -31,18 +31,11 @@
 .SH NAME
 XkbFreeDeviceInfo \- Free an XkbDeviceInfoRec structure
 .SH SYNOPSIS
+.HP
 .B void XkbFreeDeviceInfo
-(
-.I device_info,
-.I which,
-.I free_all
-)
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbDeviceInfoPtr " "device_info" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

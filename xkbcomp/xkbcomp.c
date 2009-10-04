@@ -1192,11 +1192,19 @@ main(int argc, char *argv[])
         }
         if (outputFormat != WANT_X_SERVER)
         {
-            fclose(out);
-            if (!ok)
+            if (fclose(out))
+            {
+                ERROR1("Cannot close \"%s\" properly (not enough space?)\n",
+                       outputFile);
+                ok= False;
+            }
+            else if (!ok)
             {
                 ERROR2("%s in %s\n", _XkbErrMessages[_XkbErrCode],
                        _XkbErrLocation ? _XkbErrLocation : "unknown");
+            }
+            if (!ok)
+            {
                 ACTION1("Output file \"%s\" removed\n", outputFile);
                 unlink(outputFile);
             }

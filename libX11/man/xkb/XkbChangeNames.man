@@ -31,18 +31,11 @@
 .SH NAME
 XkbChangeNames \- _summary-line_
 .SH SYNOPSIS
+.HP
 .B Bool XkbChangeNames
-(
-.I dpy,
-.I which,
-.I Xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIXkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescPtr " "Xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

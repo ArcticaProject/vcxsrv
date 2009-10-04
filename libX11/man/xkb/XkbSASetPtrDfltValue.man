@@ -31,15 +31,10 @@
 .SH NAME
 XkbSASetPtrDfltValue \- Sets the valueXXX field of act from val
 .SH SYNOPSIS
-.B void XkbSASetPtrDfltValue macro
-(
-.I act,
-.I val
-)
-.br
-      XkbAction \fIact\fP\^;
-.br
-      int \fIval\fP\^;      
+.HP
+.B void XkbSASetPtrDfltValue
+.BI "(\^XkbAction " "act" "\^,"
+.BI "int " "val" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -31,18 +31,11 @@
 XkbAddGeomDoodad \- Add one doodad to a section of a keyboard geometry or to the 
 top-level geometry
 .SH SYNOPSIS
+.HP
 .B XkbDoodadPtr XkbAddGeomDoodad
-(
-.I geom ,
-.I section,
-.I name
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      XkbSectionPtr \fIsection\fP\^;
-.br
-      Atom \fIname\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "XkbSectionPtr " "section" "\^,"
+.BI "Atom " "name" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

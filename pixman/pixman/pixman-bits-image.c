@@ -612,14 +612,14 @@ source_image_needs_out_of_bounds_workaround (bits_image_t *image)
     {
 	if (!image->common.client_clip)
 	{
-	    /* There is no client clip, so the drawable in question
-	     * is a window if the clip region extends beyond the
-	     * drawable geometry.
+	    /* There is no client clip, so if the clip region extends beyond the
+	     * drawable geometry, it must be because the X server generated the
+	     * bogus clip region.
 	     */
 	    const pixman_box32_t *extents = pixman_region32_extents (&image->common.clip_region);
 
-	    if (extents->x1 >= 0 && extents->x2 < image->width &&
-		extents->y1 >= 0 && extents->y2 < image->height)
+	    if (extents->x1 >= 0 && extents->x2 <= image->width &&
+		extents->y1 >= 0 && extents->y2 <= image->height)
 	    {
 		return FALSE;
 	    }

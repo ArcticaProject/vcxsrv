@@ -180,10 +180,10 @@ The
 macro returns the client white point of the screen associated with
 the specified CCC.
 .SH "SEE ALSO"
-XcmsCCCOfColormap(3X11),
-XcmsConvertColors(3X11),
-XcmsCreateCCC(3X11),
-XcmsDefaultCCC(3X11),
-XcmsSetWhitePoint(3X11)
+XcmsCCCOfColormap(__libmansuffix__),
+XcmsConvertColors(__libmansuffix__),
+XcmsCreateCCC(__libmansuffix__),
+XcmsDefaultCCC(__libmansuffix__),
+XcmsSetWhitePoint(__libmansuffix__)
 .br
 \fI\*(xL\fP

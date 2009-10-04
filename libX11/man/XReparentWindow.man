@@ -224,6 +224,6 @@ errors.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XChangeSaveSet(3X11)
+XChangeSaveSet(__libmansuffix__)
 .br
 \fI\*(xL\fP

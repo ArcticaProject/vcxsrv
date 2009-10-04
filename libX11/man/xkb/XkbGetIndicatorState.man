@@ -30,18 +30,11 @@
 .SH NAME
 XkbGetIndicatorState \- Obtains the current state of the keyboard indicators
 .SH SYNOPSIS
+.HP
 .B Status XkbGetIndicatorState
-(
-.I display,
-.I device_spec,
-.I state_return
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int \fIstate_return\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "state_return" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

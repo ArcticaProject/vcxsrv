@@ -32,12 +32,9 @@
 XkbPtrActionX \- Returns the high_XXX and low_XXX fields of act converted to a 
 signed int
 .SH SYNOPSIS
-.B int XkbPtrActionX macro
-(
-.I act
-)
-.br
-      XkbPtrAction \fIact\fP\^;
+.HP
+.B int XkbPtrActionX
+.BI "(\^XkbPtrAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

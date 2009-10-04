@@ -31,15 +31,10 @@
 XkbKeysymToModifiers \- Finds the set of modifiers bound to a particular keysym 
 on the core keyboard
 .SH SYNOPSIS
+.HP
 .B unsigned int XkbKeysymToModifiers
-(
-.I dpy,
-.I ks
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      KeySym \fIks\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "KeySym " "ks" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

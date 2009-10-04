@@ -31,21 +31,12 @@
 XkbGetKeyModifierMap \- Update the modifier map for one or more of the keys in a 
 keyboard description
 .SH SYNOPSIS
+.HP
 .B Status XkbGetKeyModifierMap
-(
-.I dpy,
-.I first,
-.I num,
-.I xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIfirst\fP\^;
-.br
-      unsigned int \fInum\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "first" "\^,"
+.BI "unsigned int " "num" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

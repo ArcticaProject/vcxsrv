@@ -2690,3 +2690,67 @@ IsMapInstalled(Colormap map, WindowPtr pWin)
     xfree(pmaps);
     return (found);
 }
+
+struct colormap_lookup_data {
+    ScreenPtr pScreen;
+    VisualPtr visuals;
+};
+
+static void _colormap_find_resource(pointer value, XID id,
+				    pointer cdata)
+{
+    struct colormap_lookup_data *cmap_data = cdata;
+    VisualPtr visuals = cmap_data->visuals;
+    ScreenPtr pScreen = cmap_data->pScreen;
+    ColormapPtr cmap = value;
+    int j;
+
+    j = cmap->pVisual - pScreen->visuals;
+    cmap->pVisual = &visuals[j];
+}
+
+/* something has realloced the visuals, instead of breaking
+   ABI fix it up here - glx and compsite did this wrong */
+Bool
+ResizeVisualArray(ScreenPtr pScreen, int new_visual_count,
+		  DepthPtr depth)
+{
+    struct colormap_lookup_data cdata;
+    int numVisuals;
+    VisualPtr visuals;
+    XID *vids, vid;
+    int first_new_vid, first_new_visual, i;
+
+    first_new_vid = depth->numVids;
+    first_new_visual = pScreen->numVisuals;
+
+    vids = xrealloc(depth->vids, (depth->numVids + new_visual_count) * sizeof(XID));
+    if (!vids)
+        return FALSE;
+
+    /* its realloced now no going back if we fail the next one */
+    depth->vids = vids;
+
+    numVisuals = pScreen->numVisuals + new_visual_count;
+    visuals = xrealloc(pScreen->visuals, numVisuals * sizeof(VisualRec));
+    if (!visuals) {
+	return FALSE;
+    }
+
+    cdata.visuals = visuals;
+    cdata.pScreen = pScreen;
+    FindClientResourcesByType(serverClient, RT_COLORMAP, _colormap_find_resource, &cdata);
+
+    pScreen->visuals = visuals;
+
+    for (i = 0; i < new_visual_count; i++) {
+	vid = FakeClientID(0);
+	pScreen->visuals[first_new_visual + i].vid = vid;
+	vids[first_new_vid + i] = vid;
+    }
+
+    depth->numVids += new_visual_count;
+    pScreen->numVisuals += new_visual_count;
+
+    return TRUE;
+}

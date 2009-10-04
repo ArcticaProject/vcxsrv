@@ -31,18 +31,11 @@
 XkbFindOverlayForKey \- Find the alternate name by using the primary name for a 
 key that is part of an overlay
 .SH SYNOPSIS
+.HP
 .B char * XkbFindOverlayForKey
-(
-.I geom,
-.I section,
-.I under
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      XkbSectionPtr \fIsection\fP\^;
-.br
-      char * \fIunder\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "XkbSectionPtr " "section" "\^,"
+.BI "char *" "under" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

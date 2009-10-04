@@ -31,15 +31,10 @@
 .SH NAME
 XkbAllocGeometry \- Allocate an entire geometry
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeometry
-(
-.I xkb,
-.I sizes
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      XkbGeometrySizesPtr \fIsizes\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "XkbGeometrySizesPtr " "sizes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

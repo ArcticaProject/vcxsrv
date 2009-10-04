@@ -33,18 +33,11 @@ XkbGetNameChanges \- Update the local copy of the keyboard description with the
 actual values of the results of one or more calls to 
 .I XkbNoteNameChanges
 .SH SYNOPSIS
+.HP
 .B Status XkbGetNameChanges
-(
-.I dpy,
-.I xkb,
-.I changes
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      XkbNameChangesPtr \fIchanges\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDescPtr " "xkb" "\^,"
+.BI "XkbNameChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

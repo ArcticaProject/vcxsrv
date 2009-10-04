@@ -222,8 +222,6 @@ pixman_bool_t pixman_transform_from_pixman_f_transform (struct pixman_transform 
 							const struct pixman_f_transform *ft);
 void          pixman_f_transform_from_pixman_transform (struct pixman_f_transform       *ft,
 							const struct pixman_transform   *t);
-pixman_bool_t pixman_transform_from_pixman_f_transform (struct pixman_transform         *t,
-							const struct pixman_f_transform *ft);
 pixman_bool_t pixman_f_transform_invert                (struct pixman_f_transform       *dst,
 							const struct pixman_f_transform *src);
 pixman_bool_t pixman_f_transform_point                 (const struct pixman_f_transform *t,

@@ -31,18 +31,11 @@
 .SH NAME
 XkbSetXlibControls \- Changes the state of the Library Controls
 .SH SYNOPSIS
+.HP
 .B unsigned int XkbSetXlibControls
-(
-.I display,
-.I bits_to_change,
-.I values_for_bits
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned long \fIbits_to_change\fP\^;
-.br
-      unsigned long \fIvalues_for_bits\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned long " "bits_to_change" "\^,"
+.BI "unsigned long " "values_for_bits" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

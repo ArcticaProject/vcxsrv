@@ -30,18 +30,11 @@
 .SH NAME
 XkbGetStickyKeysOptions \- Queries the current StickyKeys attributes for a keyboard device
 .SH SYNOPSIS
+.HP
 .B Bool XkbGetStickyKeysOptions
-(
-.I display,
-.I device_spec,
-.I options_rtrn
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int *\fIoptions_rtrn\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int *" "options_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -230,14 +230,14 @@ Unless a specific range is specified for an argument, the full range defined
 by the argument's type is accepted.  Any argument defined as a set of
 alternatives can generate this error.
 .SH "SEE ALSO"
-XCopyArea(3X11),
-XCreateGC(3X11),
-XQueryBestSize(3X11),
-XSetClipOrigin(3X11),
-XSetFillStyle(3X11),
-XSetFont(3X11),
-XSetLineAttributes(3X11),
-XSetState(3X11),
-XSetTile(3X11)
+XCopyArea(__libmansuffix__),
+XCreateGC(__libmansuffix__),
+XQueryBestSize(__libmansuffix__),
+XSetClipOrigin(__libmansuffix__),
+XSetFillStyle(__libmansuffix__),
+XSetFont(__libmansuffix__),
+XSetLineAttributes(__libmansuffix__),
+XSetState(__libmansuffix__),
+XSetTile(__libmansuffix__)
 .br
 \fI\*(xL\fP

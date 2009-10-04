@@ -31,12 +31,9 @@
 .SH NAME
 XkbActionCtrls \- Returns the ctrls fields of act converted to an unsigned int
 .SH SYNOPSIS
-.B unsigned int XkbActionCtrls macro
-(
-.I act
-)
-.br
-      XkbCtrlsAction \fIact\fP\^;
+.HP
+.B unsigned int XkbActionCtrls
+.BI "(\^XkbCtrlsAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

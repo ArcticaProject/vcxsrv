@@ -31,12 +31,9 @@
 .SH NAME
 XkbSAPtrDfltValue \- Returns the valueXXX field of act converted to a signed int
 .SH SYNOPSIS
-.B int XkbSAPtrDfltValue macro
-(
-.I act
-)
-.br
-      XkbAction \fIact\fP\^;
+.HP
+.B int XkbSAPtrDfltValue
+.BI "(\^XkbAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

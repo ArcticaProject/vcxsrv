@@ -279,6 +279,6 @@ of zero to be returned.
 The caller may pass the address of the hints win_gravity field 
 as gravity_return to update the hints directly.
 .SH "SEE ALSO"
-XSetWMProperties(3X11)
+XSetWMProperties(__libmansuffix__)
 .br
 \fI\*(xL\fP

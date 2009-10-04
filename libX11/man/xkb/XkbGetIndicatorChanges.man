@@ -31,21 +31,12 @@
 XkbGetIndicatorChanges \- Updates a local copy of the keyboard description with 
 the actual values of one or more calls to XkbNoteIndicatorChanges
 .SH SYNOPSIS
+.HP
 .B Status XkbGetIndicatorChanges
-(
-.I dpy,
-.I xkb,
-.I changes,
-.I state
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      XkbIndicatorChangesPtr \fIchanges\fP\^;
-.br
-      unsigned int \fIstate\fP\^;                  
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDescPtr " "xkb" "\^,"
+.BI "XkbIndicatorChangesPtr " "changes" "\^,"
+.BI "unsigned int " "state" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

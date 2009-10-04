@@ -31,21 +31,12 @@
 .SH NAME
 XkbBell \- Rings the bell on the default keyboard
 .SH SYNOPSIS
+.HP
 .B Bool XkbBell
-(
-.I display,
-.I window,
-.I percent,
-.I name
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      Window \fIwindow\fP\^;
-.br
-      int \fIpercent\fP\^;
-.br
-      Atom \fIname\fP\^;                        
+.BI "(\^Display *" "display" "\^,"
+.BI "Window " "window" "\^,"
+.BI "int " "percent" "\^,"
+.BI "Atom " "name" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -330,7 +321,7 @@ receives
 a bell event, use the window ID in the XkbBellNotifyEvent, if present.
 
 .SH "SEE ALSO"
-.BR XBell (3X11),
+.BR XBell (__libmansuffix__),
 .BR XkbBellNotify (__libmansuffix__),
 .BR XkbChangeEnabledControls (__libmansuffix__),
 .BR XkbDeviceBell (__libmansuffix__),

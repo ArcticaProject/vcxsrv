@@ -30,15 +30,10 @@
 .SH NAME
 XkbComputeShapeTop \- Determines the bounding box of the top surface of a shape
 .SH SYNOPSIS
+.HP
 .B Bool XkbComputeShapeTop
-(
-.I shape,
-.I bounds_rtrn
-)
-.br
-      XkbShapePtr \fIshape\fP\^;
-.br
-      XkbBoundsPtr \fIbounds_rtrn\fP\^;
+.BI "(\^XkbShapePtr " "shape" "\^,"
+.BI "XkbBoundsPtr " "bounds_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

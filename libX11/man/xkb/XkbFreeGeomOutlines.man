@@ -30,21 +30,12 @@
 .SH NAME
 XkbFreeGeomOutlines \- Free geometry outlines
 .SH SYNOPSIS
+.HP
 .B void XkbFreeGeomOutlines
-(
-.I shape,
-.I first,
-.I count,
-.I free_all
-)
-.br
-      XkbShapePtr \fIshape\fP\^;
-.br
-      int \fIfirst\fP\^;
-.br
-      int \fIcount\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbShapePtr " "shape" "\^,"
+.BI "int " "first" "\^,"
+.BI "int " "count" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

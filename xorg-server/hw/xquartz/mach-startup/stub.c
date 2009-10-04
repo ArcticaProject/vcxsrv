@@ -69,13 +69,12 @@ static char x11_path[PATH_MAX + 1];
 
 static pid_t x11app_pid = 0;
 
-static void set_x11_path() {
+static void set_x11_path(void) {
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
 
     CFURLRef appURL = NULL;
     CFBundleRef bundle = NULL;
     OSStatus osstatus = LSFindApplicationForInfo(kLSUnknownCreator, CFSTR(kX11AppBundleId), nil, nil, &appURL);
-    UInt32 ver;
 
     switch (osstatus) {
         case noErr:
@@ -94,20 +93,6 @@ static void set_x11_path() {
             if (!CFURLGetFileSystemRepresentation(appURL, true, (unsigned char *)x11_path, sizeof(x11_path))) {
                 fprintf(stderr, "Xquartz: Error resolving URL for %s\n", kX11AppBundleId);
                 exit(3);
-            }
-
-            ver = CFBundleGetVersionNumber(bundle);
-            if( !(ver >= 0x02308000 || (ver >= 0x02168000 && ver < 0x02208000))) {
-                CFStringRef versionStr = CFBundleGetValueForInfoDictionaryKey(bundle, kCFBundleVersionKey);
-                const char * versionCStr = "Unknown";
-
-                if(versionStr) 
-                    versionCStr = CFStringGetCStringPtr(versionStr, kCFStringEncodingMacRoman);
-
-                fprintf(stderr, "Xquartz: Could not find a new enough X11.app LSFindApplicationForInfo() returned\n");
-                fprintf(stderr, "         X11.app = %s\n", x11_path);
-                fprintf(stderr, "         Version = %s (%x), Expected Version > 2.3.0 or 2.1.6\n", versionCStr, (unsigned)ver);
-                exit(9);
             }
 
             strlcat(x11_path, kX11AppBundlePath, sizeof(x11_path));
@@ -162,15 +147,17 @@ static void send_fd_handoff(int connected_fd, int launchd_fd) {
     char databuf[] = "display";
     struct iovec iov[1];
     
-    iov[0].iov_base = databuf;
-    iov[0].iov_len  = sizeof(databuf);
-
     union {
         struct cmsghdr hdr;
         char bytes[CMSG_SPACE(sizeof(int))];
     } buf;
     
     struct msghdr msg;
+    struct cmsghdr *cmsg;
+
+    iov[0].iov_base = databuf;
+    iov[0].iov_len  = sizeof(databuf);
+
     msg.msg_iov = iov;
     msg.msg_iovlen = 1;
     msg.msg_control = buf.bytes;
@@ -179,7 +166,7 @@ static void send_fd_handoff(int connected_fd, int launchd_fd) {
     msg.msg_namelen = 0;
     msg.msg_flags = 0;
 
-    struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
+    cmsg = CMSG_FIRSTHDR (&msg);
     cmsg->cmsg_level = SOL_SOCKET;
     cmsg->cmsg_type = SCM_RIGHTS;
     cmsg->cmsg_len = CMSG_LEN(sizeof(int));
@@ -245,10 +232,11 @@ int main(int argc, char **argv, char **envp) {
 
     kr = bootstrap_look_up(bootstrap_port, server_bootstrap_name, &mp);
     if(kr != KERN_SUCCESS) {
+        pid_t child;
         set_x11_path();
 
         /* This forking is ugly and will be cleaned up later */
-        pid_t child = fork();
+        child = fork();
         if(child == -1) {
             fprintf(stderr, "Xquartz: Could not fork: %s\n", strerror(errno));
             return EXIT_FAILURE;

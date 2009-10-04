@@ -257,9 +257,9 @@ with the mode
 .ZN QueuedAfterFlush
 specified.
 .SH "SEE ALSO"
-AllPlanes(3X11),
-XIfEvent(3X11),
-XNextEvent(3X11),
-XPutBackEvent(3X11)
+AllPlanes(__libmansuffix__),
+XIfEvent(__libmansuffix__),
+XNextEvent(__libmansuffix__),
+XPutBackEvent(__libmansuffix__)
 .br
 \fI\*(xL\fP

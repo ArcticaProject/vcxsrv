@@ -286,11 +286,10 @@ exaGetOffscreenPixmap (DrawablePtr pDrawable, int *xp, int *yp)
  * Returns TRUE if pixmap can be accessed offscreen.
  */
 Bool
-ExaDoPrepareAccess(DrawablePtr pDrawable, int index)
+ExaDoPrepareAccess(PixmapPtr pPixmap, int index)
 {
-    ScreenPtr pScreen = pDrawable->pScreen;
+    ScreenPtr pScreen = pPixmap->drawable.pScreen;
     ExaScreenPriv (pScreen);
-    PixmapPtr pPixmap = exaGetDrawablePixmap (pDrawable);
     ExaPixmapPriv(pPixmap);
     Bool offscreen;
     int i;
@@ -324,7 +323,7 @@ ExaDoPrepareAccess(DrawablePtr pDrawable, int index)
 
     offscreen = exaPixmapIsOffscreen(pPixmap);
 
-    if (offscreen)
+    if (offscreen && pExaPixmap->fb_ptr)
 	pPixmap->devPrivate.ptr = pExaPixmap->fb_ptr;
     else
 	pPixmap->devPrivate.ptr = pExaPixmap->sys_ptr;
@@ -333,20 +332,10 @@ ExaDoPrepareAccess(DrawablePtr pDrawable, int index)
     pExaScr->access[index].pixmap = pPixmap;
     pExaScr->access[index].count = 1;
 
-    if (!offscreen) {
-	/* Do we need to allocate our system buffer? */
-	if ((pExaScr->info->flags & EXA_HANDLES_PIXMAPS) && (pExaScr->info->flags & EXA_MIXED_PIXMAPS)) {
-	    if (!pExaPixmap->sys_ptr && !exaPixmapIsPinned(pPixmap)) {
-		pExaPixmap->sys_ptr = malloc(pExaPixmap->sys_pitch * pDrawable->height);
-		if (!pExaPixmap->sys_ptr)
-		    FatalError("EXA: malloc failed for size %d bytes\n", pExaPixmap->sys_pitch * pDrawable->height);
-		pPixmap->devPrivate.ptr = pExaPixmap->sys_ptr;
-	    }
-	}
+    if (!offscreen)
 	return FALSE;
-    }
 
-    exaWaitSync (pDrawable->pScreen);
+    exaWaitSync (pScreen);
 
     if (pExaScr->info->PrepareAccess == NULL)
 	return TRUE;
@@ -360,7 +349,8 @@ ExaDoPrepareAccess(DrawablePtr pDrawable, int index)
     }
 
     if (!(*pExaScr->info->PrepareAccess) (pPixmap, index)) {
-	if (pExaPixmap->score == EXA_PIXMAP_SCORE_PINNED)
+	if (pExaPixmap->score == EXA_PIXMAP_SCORE_PINNED &&
+	    !(pExaScr->info->flags & EXA_MIXED_PIXMAPS))
 	    FatalError("Driver failed PrepareAccess on a pinned pixmap.\n");
 	exaMoveOutPixmap (pPixmap);
 
@@ -368,31 +358,6 @@ ExaDoPrepareAccess(DrawablePtr pDrawable, int index)
     }
 
     return TRUE;
-}
-
-void
-exaPrepareAccessReg(DrawablePtr pDrawable, int index, RegionPtr pReg)
-{
-    PixmapPtr pPixmap = exaGetDrawablePixmap (pDrawable);
-    ExaScreenPriv(pPixmap->drawable.pScreen);
-
-    if (pExaScr->do_migration) {
-	ExaMigrationRec pixmaps[1];
-
-	if (index == EXA_PREPARE_DEST || index == EXA_PREPARE_AUX_DEST) {
-	    pixmaps[0].as_dst = TRUE;
-	    pixmaps[0].as_src = FALSE;
-	} else {
-	    pixmaps[0].as_dst = FALSE;
-	    pixmaps[0].as_src = TRUE;
-	}
-	pixmaps[0].pPix = pPixmap;
-	pixmaps[0].pReg = pReg;
-
-	exaDoMigration(pixmaps, 1, FALSE);
-    }
-
-    ExaDoPrepareAccess(pDrawable, index);
 }
 
 /**
@@ -404,7 +369,13 @@ exaPrepareAccessReg(DrawablePtr pDrawable, int index, RegionPtr pReg)
 void
 exaPrepareAccess(DrawablePtr pDrawable, int index)
 {
-    exaPrepareAccessReg(pDrawable, index, NULL);
+    PixmapPtr pPixmap = exaGetDrawablePixmap(pDrawable);
+    ExaScreenPriv(pDrawable->pScreen);
+
+    if (pExaScr->prepare_access_reg)
+	pExaScr->prepare_access_reg(pPixmap, index, NULL);
+    else
+	(void)ExaDoPrepareAccess(pPixmap, index);
 }
 
 /**
@@ -432,7 +403,6 @@ exaFinishAccess(DrawablePtr pDrawable, int index)
 	if (pExaScr->access[i].pixmap == pPixmap) {
 	    if (--pExaScr->access[i].count > 0)
 		return;
-	    index = i;
 	    break;
 	}
     }
@@ -442,25 +412,25 @@ exaFinishAccess(DrawablePtr pDrawable, int index)
 	EXA_FatalErrorDebug(("EXA bug: FinishAccess called without PrepareAccess for pixmap 0x%p.\n",
 			     pPixmap));
 
-    pExaScr->access[index].pixmap = NULL;
+    pExaScr->access[i].pixmap = NULL;
 
     /* We always hide the devPrivate.ptr. */
     pPixmap->devPrivate.ptr = NULL;
 
-    if (pExaScr->info->FinishAccess == NULL)
+    if (pExaScr->finish_access)
+	pExaScr->finish_access(pPixmap, index);
+
+    if (!pExaScr->info->FinishAccess || !exaPixmapIsOffscreen(pPixmap))
 	return;
 
-    if (!exaPixmapIsOffscreen (pPixmap))
-	return;
-
-    if (index >= EXA_PREPARE_AUX_DEST &&
+    if (i >= EXA_PREPARE_AUX_DEST &&
 	!(pExaScr->info->flags & EXA_SUPPORTS_PREPARE_AUX)) {
 	ErrorF("EXA bug: Trying to call driver FinishAccess hook with "
 	       "unsupported index EXA_PREPARE_AUX*\n");
 	return;
     }
 
-    (*pExaScr->info->FinishAccess) (pPixmap, index);
+    (*pExaScr->info->FinishAccess) (pPixmap, i);
 }
 
 /**
@@ -537,7 +507,7 @@ exaCreatePixmapWithPrepare(ScreenPtr pScreen, int w, int h, int depth,
      * For EXA_HANDLES_PIXMAPS the driver will handle whatever is needed.
      * We want to signal that the pixmaps will be used as destination.
      */
-    ExaDoPrepareAccess(&pPixmap->drawable, EXA_PREPARE_AUX_DEST);
+    ExaDoPrepareAccess(pPixmap, EXA_PREPARE_AUX_DEST);
 
     return pPixmap;
 }
@@ -1071,6 +1041,8 @@ exaDriverInit (ScreenPtr		pScreen,
 		pExaScr->pixmap_is_offscreen = exaPixmapIsOffscreen_mixed;
 		pExaScr->do_move_in_pixmap = exaMoveInPixmap_mixed;
 		pExaScr->do_move_out_pixmap = NULL;
+		pExaScr->prepare_access_reg = exaPrepareAccessReg_mixed;
+		pExaScr->finish_access = exaFinishAccess_mixed;
 	    } else {
 		wrap(pExaScr, pScreen, CreatePixmap, exaCreatePixmap_driver);
 		wrap(pExaScr, pScreen, DestroyPixmap, exaDestroyPixmap_driver);
@@ -1079,6 +1051,8 @@ exaDriverInit (ScreenPtr		pScreen,
 		pExaScr->pixmap_is_offscreen = exaPixmapIsOffscreen_driver;
 		pExaScr->do_move_in_pixmap = NULL;
 		pExaScr->do_move_out_pixmap = NULL;
+		pExaScr->prepare_access_reg = NULL;
+		pExaScr->finish_access = NULL;
 	    }
 	} else {
 	    wrap(pExaScr, pScreen, CreatePixmap, exaCreatePixmap_classic);
@@ -1088,6 +1062,8 @@ exaDriverInit (ScreenPtr		pScreen,
 	    pExaScr->pixmap_is_offscreen = exaPixmapIsOffscreen_classic;
 	    pExaScr->do_move_in_pixmap = exaMoveInPixmap_classic;
 	    pExaScr->do_move_out_pixmap = exaMoveOutPixmap_classic;
+	    pExaScr->prepare_access_reg = exaPrepareAccessReg_classic;
+	    pExaScr->finish_access = NULL;
 	}
 	if (!(pExaScr->info->flags & EXA_HANDLES_PIXMAPS)) {
 	    LogMessage(X_INFO, "EXA(%d): Offscreen pixmap area of %lu bytes\n",

@@ -441,8 +441,8 @@ Unless a specific range is specified for an argument, the full range defined
 by the argument's type is accepted.  Any argument defined as a set of
 alternatives can generate this error.
 .SH "SEE ALSO"
-XCreateColormap(3X11), 
-XQueryColor(3X11),
-XStoreColors(3X11) 
+XCreateColormap(__libmansuffix__), 
+XQueryColor(__libmansuffix__),
+XStoreColors(__libmansuffix__) 
 .br
 \fI\*(xL\fP

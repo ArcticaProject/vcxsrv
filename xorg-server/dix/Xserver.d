@@ -29,8 +29,13 @@
 /*
  * Xserver dtrace provider definition
  */
-
+#ifdef __APPLE__
+#define string char *
+#define pid_t uint32_t
+#define zoneid_t uint32_t
+#else
 #include <sys/types.h>
+#endif
 
 provider Xserver {
 	/* reqType, data, length, client id, request buffer */

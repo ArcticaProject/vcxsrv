@@ -31,30 +31,15 @@
 XkbGetAccessXTimeout \- Queries the current AccessXTimeout options for a 
 keyboard device
 .SH SYNOPSIS
+.HP
 .B Bool XkbGetAccessXTimeout
-(
-.I display,
-.I device_spec,
-.I timeout_rtrn,
-.I ctrls_mask_rtrn,
-.I ctrls_values_rtrn,
-.I options_mask_rtrn,
-.I options_values_rtrn
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      unsigned int \fI device_spec \fP\^;
-.br
-      unsigned short *\fI timeout_rtrn \fP\^;
-.br
-      unsigned int *\fI ctrls_mask_rtrn \fP\^;                  
-.br
-      unsigned int *\fI ctrls_values_rtrn \fP\^;
-.br
-      unsigned short *\fI options_mask_rtrn \fP\^; 
-.br
-      unsigned short *\fI options_values_rtrn \fP\^;                             
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned short *" "timeout_rtrn" "\^,"
+.BI "unsigned int *" "ctrls_mask_rtrn" "\^,"
+.BI "unsigned int *" "ctrls_values_rtrn" "\^,"
+.BI "unsigned short *" "options_mask_rtrn" "\^,"
+.BI "unsigned short *" "options_values_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

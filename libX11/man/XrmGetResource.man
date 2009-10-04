@@ -318,9 +318,9 @@ entries that match using the character ``?''.
 An entry preceded by a tight binding takes precedence over entries
 preceded by a loose binding.
 .SH "SEE ALSO"
-XrmInitialize(3X11),
-XrmMergeDatabases(3X11),
-XrmPutResource(3X11),
-XrmUniqueQuark(3X11)
+XrmInitialize(__libmansuffix__),
+XrmMergeDatabases(__libmansuffix__),
+XrmPutResource(__libmansuffix__),
+XrmUniqueQuark(__libmansuffix__)
 .br
 \fI\*(xL\fP

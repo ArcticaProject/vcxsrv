@@ -250,8 +250,8 @@ can generate a
 .ZN BadGC
 error.
 .SH "SEE ALSO"
-AllPlanes(3X11),
-XFlush(3X11),
-XSetCloseDownMode(3X11)
+AllPlanes(__libmansuffix__),
+XFlush(__libmansuffix__),
+XSetCloseDownMode(__libmansuffix__)
 .br
 \fI\*(xL\fP

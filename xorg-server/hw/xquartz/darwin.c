@@ -67,8 +67,7 @@
 #include <IOKit/hidsystem/IOHIDLib.h>
 
 #ifdef MITSHM
-#define _XSHM_SERVER_
-#include <X11/extensions/XShm.h>
+#include "shmint.h"
 #endif
 
 #include "darwin.h"
@@ -291,8 +290,8 @@ static int DarwinMouseProc(DeviceIntPtr pPointer, int what) {
 #define NAXES 2
 	// 7 buttons: left, right, middle, then four scroll wheel "buttons"
     CARD8 map[NBUTTONS + 1] = {0, 1, 2, 3, 4, 5, 6, 7};
-    Atom btn_labels[NAXES] = {0};
-    Atom axes_labels[NBUTTONS] = {0};
+    Atom btn_labels[NBUTTONS] = {0};
+    Atom axes_labels[NAXES] = {0};
 
     switch (what) {
         case DEVICE_INIT:
@@ -341,8 +340,8 @@ static int DarwinTabletProc(DeviceIntPtr pPointer, int what) {
 #define NBUTTONS 3
 #define NAXES 5
     CARD8 map[NBUTTONS + 1] = {0, 1, 2, 3};
-    Atom axes_labels[NAXES] = {0};
     Atom btn_labels[NBUTTONS] = {0};
+    Atom axes_labels[NAXES] = {0};
 
     switch (what) {
         case DEVICE_INIT:
@@ -354,6 +353,9 @@ static int DarwinTabletProc(DeviceIntPtr pPointer, int what) {
 
             axes_labels[0] = XIGetKnownProperty(AXIS_LABEL_PROP_ABS_X);
             axes_labels[1] = XIGetKnownProperty(AXIS_LABEL_PROP_ABS_Y);
+            axes_labels[2] = XIGetKnownProperty(AXIS_LABEL_PROP_ABS_PRESSURE);
+            axes_labels[3] = XIGetKnownProperty(AXIS_LABEL_PROP_ABS_TILT_X);
+            axes_labels[4] = XIGetKnownProperty(AXIS_LABEL_PROP_ABS_TILT_Y);
 
             // Set button map.
             InitPointerDeviceStruct((DevicePtr)pPointer, map, NBUTTONS,

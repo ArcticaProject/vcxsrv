@@ -30,18 +30,11 @@
 .SH NAME
 XkbFreeGeomDoodads \- Free geometry doodads
 .SH SYNOPSIS
+.HP
 .B void XkbFreeGeomDoodads
-(
-.I doodads,
-.I count,
-.I free_all
-)
-.br
-      XkbDoodadPtr \fIdoodads\fP\^;
-.br
-      int \fIcount\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbDoodadPtr " "doodads" "\^,"
+.BI "int " "count" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -31,21 +31,12 @@
 XkbSetAutoRepeatRate \- Sets the attributes of the RepeatKeys control for a 
 keyboard device
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetAutoRepeatRate
-(
-.I display,
-.I device_spec,
-.I timeout,
-.I interval
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      unsigned int \fI device_spec \fP\^;
-.br
-      unsigned int \fI timeout \fP\^;
-.br
-      unsigned int \fI interval \fP\^;                  
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "timeout" "\^,"
+.BI "unsigned int " "interval" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

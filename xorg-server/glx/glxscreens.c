@@ -250,12 +250,8 @@ GLint glxConvertToXVisualType(int visualType)
 static VisualPtr
 AddScreenVisuals(ScreenPtr pScreen, int count, int d)
 {
-    XID		*installedCmaps, *vids, vid;
-    int		 numInstalledCmaps, numVisuals, i, j;
-    VisualPtr	 visuals;
-    ColormapPtr	 installedCmap;
+    int		 i;
     DepthPtr	 depth;
-    int		 rc;
 
     depth = NULL;
     for (i = 0; i < pScreen->numDepths; i++) {
@@ -267,56 +263,8 @@ AddScreenVisuals(ScreenPtr pScreen, int count, int d)
     if (depth == NULL)
 	return NULL;
 
-    /* Find the installed colormaps */
-    installedCmaps = xalloc (pScreen->maxInstalledCmaps * sizeof (XID));
-    if (!installedCmaps)
-	return NULL;
-
-    numInstalledCmaps = pScreen->ListInstalledColormaps(pScreen, installedCmaps);
-
-    /* realloc the visual array to fit the new one in place */
-    numVisuals = pScreen->numVisuals;
-    visuals = xrealloc(pScreen->visuals, (numVisuals + count) * sizeof(VisualRec));
-    if (!visuals) {
-	xfree(installedCmaps);
-	return NULL;
-    }
-
-    vids = xrealloc(depth->vids, (depth->numVids + count) * sizeof(XID));
-    if (vids == NULL) {
-	xfree(installedCmaps);
-	xfree(visuals);
-	return NULL;
-    }
-
-    /*
-     * Fix up any existing installed colormaps -- we'll assume that
-     * the only ones created so far have been installed.  If this
-     * isn't true, we'll have to walk the resource database looking
-     * for all colormaps.
-     */
-    for (i = 0; i < numInstalledCmaps; i++) {
-	rc = dixLookupResourceByType((pointer *)&installedCmap,
-				     installedCmaps[i], RT_COLORMAP,
-				     serverClient, DixReadAccess);
-	if (rc != Success)
-	    continue;
-	j = installedCmap->pVisual - pScreen->visuals;
-	installedCmap->pVisual = &visuals[j];
-    }
-
-    xfree(installedCmaps);
-
-    for (i = 0; i < count; i++) {
-	vid = FakeClientID(0);
-	visuals[pScreen->numVisuals + i].vid = vid;
-	vids[depth->numVids + i] = vid;
-    }
-
-    pScreen->visuals = visuals;
-    pScreen->numVisuals += count;
-    depth->vids = vids;
-    depth->numVids += count;
+    if (ResizeVisualArray(pScreen, count, depth) == FALSE)
+        return NULL;
 
     /* Return a pointer to the first of the added visuals. */ 
     return pScreen->visuals + pScreen->numVisuals - count;

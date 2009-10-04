@@ -45,7 +45,7 @@ void xprHideWindows(Bool hide);
 
 Bool QuartzInitCursor(ScreenPtr pScreen);
 void QuartzSuspendXCursor(ScreenPtr pScreen);
-void QuartzResumeXCursor(ScreenPtr pScreen, int x, int y);
+void QuartzResumeXCursor(ScreenPtr pScreen);
 
 /* If we are rooted, we need the root window and desktop levels to be below
  * the menubar (24) but above native windows.  Normal window level is 0.

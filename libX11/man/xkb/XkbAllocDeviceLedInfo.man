@@ -31,15 +31,10 @@
 .SH NAME
 XkbAllocDeviceLedInfo \- Obtain an XkbDeviceLedInfoRec structure
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocDeviceLedInfo
-(
-.I device_info,
-.I num_needed
-)
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbDeviceInfoPtr " "device_info" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

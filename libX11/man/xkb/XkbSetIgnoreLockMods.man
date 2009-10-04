@@ -32,27 +32,14 @@
 XkbSetIgnoreLockMods \- Sets the modifiers that, if locked, are not to be 
 reported in matching events to passive grabs
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetIgnoreLockMods
-(
-.I display,
-.I device_spec,
-.I affect_real,
-.I real_values,
-.I affect_virtual,
-.I virtual_values
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int \fIaffect_real\fP\^;
-.br
-      unsigned int \fIreal_values\fP\^;
-.br
-      unsigned int \fIaffect_virtual\fP\^;
-.br
-      unsigned int \fIvirtual_values\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "affect_real" "\^,"
+.BI "unsigned int " "real_values" "\^,"
+.BI "unsigned int " "affect_virtual" "\^,"
+.BI "unsigned int " "virtual_values" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

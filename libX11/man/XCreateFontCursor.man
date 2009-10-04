@@ -310,8 +310,8 @@ Unless a specific range is specified for an argument, the full range defined
 by the argument's type is accepted.  Any argument defined as a set of
 alternatives can generate this error.
 .SH "SEE ALSO"
-XDefineCursor(3X11),
-XLoadFont(3X11),
-XRecolorCursor(3X11)
+XDefineCursor(__libmansuffix__),
+XLoadFont(__libmansuffix__),
+XRecolorCursor(__libmansuffix__)
 .br
 \fI\*(xL\fP

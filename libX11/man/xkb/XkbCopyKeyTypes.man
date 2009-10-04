@@ -30,18 +30,11 @@
 .SH NAME
 XkbCopyKeyTypes \- Copy more than one XkbKeyTypeRec structure
 .SH SYNOPSIS
+.HP
 .B Status XkbCopyKeyTypes
-(
-.I from,
-.I into,
-.I num_types
-)
-.br
-      XkbKeyTypePtr \fIfrom\fP\^;
-.br
-      XkbKeyTypePtr \fIinto\fP\^;
-.br
-      int \fInum_types\fP\^;
+.BI "(\^XkbKeyTypePtr " "from" "\^,"
+.BI "XkbKeyTypePtr " "into" "\^,"
+.BI "int " "num_types" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

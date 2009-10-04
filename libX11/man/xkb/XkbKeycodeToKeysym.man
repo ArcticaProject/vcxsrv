@@ -31,21 +31,12 @@
 XkbKeycodeToKeysym \- Finds the keysym bound to a particular key at a specified 
 group and shift level
 .SH SYNOPSIS
+.HP
 .B KeySym XkbKeycodeToKeysym
-(
-.I dpy,
-.I kc,
-.I group,
-.I level
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      KeyCode \fIkc\fP\^;
-.br
-      unsigned int \fIgroup\fP\^;
-.br
-      unsigned int \fIlevel\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "KeyCode " "kc" "\^,"
+.BI "unsigned int " "group" "\^,"
+.BI "unsigned int " "level" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

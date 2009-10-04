@@ -32,15 +32,10 @@
 XkbSARedirectSetVModsMask \- Sets the vmods_mask0 and vmods_mask1 fields of act 
 from vm
 .SH SYNOPSIS
-.B void XkbSARedirectSetVModsMask macro
-(
-.I act,
-.I vm
-)
-.br
-      XkbRedirectKeyAction \fIact\fP\^;
-.br
-      unsigned int \fIvm\fP\^;      
+.HP
+.B void XkbSARedirectSetVModsMask
+.BI "(\^XkbRedirectKeyAction " "act" "\^,"
+.BI "unsigned int " "vm" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

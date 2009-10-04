@@ -31,21 +31,12 @@
 XkbChangeIndicators \- Changes indicator maps or state without passing the 
 entire keyboard description
 .SH SYNOPSIS
+.HP
 .B Bool XkbChangeIndicators
-(
-.I dpy,
-.I xkb,
-.I changes,
-.I state
-)
-.br
-      Display *\fI dpy \fP\^;
-.br
-      XkbDescPtr \fI xkb \fP\^;
-.br
-      XkbIndicatorChangesPtr \fI changes \fP\^;
-.br
-      unsigned int \fI state \fP\^;                  
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDescPtr " "xkb" "\^,"
+.BI "XkbIndicatorChangesPtr " "changes" "\^,"
+.BI "unsigned int " "state" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

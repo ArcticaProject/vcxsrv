@@ -337,11 +337,11 @@ alternatives can generate this error.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XChangeWindowAttributes(3X11),
-XConfigureWindow(3X11),
-XCreateWindow(3X11),
-XDestroyWindow(3X11),
-XMapWindow(3X11),
-XUnmapWindow(3X11)
+XChangeWindowAttributes(__libmansuffix__),
+XConfigureWindow(__libmansuffix__),
+XCreateWindow(__libmansuffix__),
+XDestroyWindow(__libmansuffix__),
+XMapWindow(__libmansuffix__),
+XUnmapWindow(__libmansuffix__)
 .br
 \fI\*(xL\fP

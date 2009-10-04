@@ -957,7 +957,7 @@ xf86EdidMonitorSet(int scrnIndex, MonPtr Monitor, xf86MonPtr DDC)
 
     quirks = xf86DDCDetectQuirks(scrnIndex, DDC, FALSE);
 
-    if (Monitor->widthmm <= 0 && Monitor->heightmm <= 0) {
+    if (Monitor->widthmm <= 0 || Monitor->heightmm <= 0) {
 	Monitor->widthmm = 10 * DDC->features.hsize;
 	Monitor->heightmm = 10 * DDC->features.vsize;
     }

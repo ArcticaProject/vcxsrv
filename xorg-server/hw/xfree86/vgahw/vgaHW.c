@@ -793,7 +793,7 @@ vgaHWRestoreFonts(ScrnInfoPtr scrninfp, vgaRegPtr restore)
     if (hwp->FontInfo1) {
 	hwp->writeSeq(hwp, 0x02, 0x04);	/* write to plane 2 */
 	hwp->writeGr(hwp, 0x04, 0x02);	/* read plane 2 */
-	xf86SlowBcopy(hwp->FontInfo1, hwp->Base, FONT_AMOUNT);
+	slowbcopy_tobus(hwp->FontInfo1, hwp->Base, FONT_AMOUNT);
     }
 #endif
 
@@ -801,7 +801,7 @@ vgaHWRestoreFonts(ScrnInfoPtr scrninfp, vgaRegPtr restore)
     if (hwp->FontInfo2) {
 	hwp->writeSeq(hwp, 0x02, 0x08);	/* write to plane 3 */
 	hwp->writeGr(hwp, 0x04, 0x03);	/* read plane 3 */
-	xf86SlowBcopy(hwp->FontInfo2, hwp->Base, FONT_AMOUNT);
+	slowbcopy_tobus(hwp->FontInfo2, hwp->Base, FONT_AMOUNT);
     }
 #endif
 
@@ -809,10 +809,10 @@ vgaHWRestoreFonts(ScrnInfoPtr scrninfp, vgaRegPtr restore)
     if (hwp->TextInfo) {
 	hwp->writeSeq(hwp, 0x02, 0x01);	/* write to plane 0 */
 	hwp->writeGr(hwp, 0x04, 0x00);	/* read plane 0 */
-	xf86SlowBcopy(hwp->TextInfo, hwp->Base, TEXT_AMOUNT);
+	slowbcopy_tobus(hwp->TextInfo, hwp->Base, TEXT_AMOUNT);
 	hwp->writeSeq(hwp, 0x02, 0x02);	/* write to plane 1 */
 	hwp->writeGr(hwp, 0x04, 0x01);	/* read plane 1 */
-	xf86SlowBcopy((unsigned char *)hwp->TextInfo + TEXT_AMOUNT,
+	slowbcopy_tobus((unsigned char *)hwp->TextInfo + TEXT_AMOUNT,
 			hwp->Base, TEXT_AMOUNT);
     }
 #endif
@@ -971,24 +971,24 @@ vgaHWSaveFonts(ScrnInfoPtr scrninfp, vgaRegPtr save)
     if (hwp->FontInfo1 || (hwp->FontInfo1 = xalloc(FONT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x04);	/* write to plane 2 */
 	hwp->writeGr(hwp, 0x04, 0x02);	/* read plane 2 */
-	xf86SlowBcopy(hwp->Base, hwp->FontInfo1, FONT_AMOUNT);
+	slowbcopy_frombus(hwp->Base, hwp->FontInfo1, FONT_AMOUNT);
     }
 #endif /* SAVE_FONT1 */
 #if SAVE_FONT2
     if (hwp->FontInfo2 || (hwp->FontInfo2 = xalloc(FONT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x08);	/* write to plane 3 */
 	hwp->writeGr(hwp, 0x04, 0x03);	/* read plane 3 */
-	xf86SlowBcopy(hwp->Base, hwp->FontInfo2, FONT_AMOUNT);
+	slowbcopy_frombus(hwp->Base, hwp->FontInfo2, FONT_AMOUNT);
     }
 #endif /* SAVE_FONT2 */
 #if SAVE_TEXT
     if (hwp->TextInfo || (hwp->TextInfo = xalloc(2 * TEXT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x01);	/* write to plane 0 */
 	hwp->writeGr(hwp, 0x04, 0x00);	/* read plane 0 */
-	xf86SlowBcopy(hwp->Base, hwp->TextInfo, TEXT_AMOUNT);
+	slowbcopy_frombus(hwp->Base, hwp->TextInfo, TEXT_AMOUNT);
 	hwp->writeSeq(hwp, 0x02, 0x02);	/* write to plane 1 */
 	hwp->writeGr(hwp, 0x04, 0x01);	/* read plane 1 */
-	xf86SlowBcopy(hwp->Base,
+	slowbcopy_frombus(hwp->Base,
 		(unsigned char *)hwp->TextInfo + TEXT_AMOUNT, TEXT_AMOUNT);
     }
 #endif /* SAVE_TEXT */

@@ -46,6 +46,11 @@ sets the screen size.
 .BI -parent " id"
 uses exiting window
 .I id .
+If a 
+.BI -screen 
+argument follows a 
+.BI -parent
+argument, this screen is embedded into the given window.
 .TP 8
 .B -host-cursor
 set 'cursor acceleration':

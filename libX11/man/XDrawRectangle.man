@@ -246,8 +246,8 @@ window is used as a Drawable.
 Some argument or pair of arguments has the correct type and range but fails
 to match in some other way required by the request.
 .SH "SEE ALSO"
-XDrawArc(3X11),
-XDrawLine(3X11),
-XDrawPoint(3X11)
+XDrawArc(__libmansuffix__),
+XDrawLine(__libmansuffix__),
+XDrawPoint(__libmansuffix__)
 .br
 \fI\*(xL\fP

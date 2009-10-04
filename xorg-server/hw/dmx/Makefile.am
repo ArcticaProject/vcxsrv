@@ -84,10 +84,7 @@ XDMX_LIBS = \
 	@XDMX_LIBS@ \
 	$(GLX_LIBS) \
         input/libdmxinput.a \
-        config/libdmxconfig.a \
-	$(MAIN_LIB) \
-	$(XSERVER_LIBS) \
-	$(top_builddir)/xfixes/libxfixes.la
+        config/libdmxconfig.a
 
 Xdmx_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 Xdmx_DEPENDENCIES= $(XDMX_LIBS)

@@ -27,20 +27,14 @@
 .\" or other dealings in this Software without prior written authorization
 .\" of the copyright holder.
 .\"
-.TH XkbAllocGeomSectionDoodads 3Xkb "Release 6.1" "X Version 11" "XKBLIB 
-FUNCTION"
+.TH XkbAllocGeomSectionDoodads __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
 .SH NAME
 XkbAllocGeomSectionDoodads \- Allocate doodads that are specific to a section
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomSectionDoodads
-(
-.I section,
-.I num_needed
-)
-.br
-      XkbSectionPtr \fIsection\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbSectionPtr " "section" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

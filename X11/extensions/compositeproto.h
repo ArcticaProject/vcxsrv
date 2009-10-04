@@ -51,6 +51,7 @@
 
 #define Window CARD32
 #define Region CARD32
+#define Pixmap CARD32
 
 /* 
  * requests and replies
@@ -187,5 +188,6 @@ typedef struct {
 
 #undef Window
 #undef Region
+#undef Pixmap
 
 #endif /* _COMPOSITEPROTO_H_ */

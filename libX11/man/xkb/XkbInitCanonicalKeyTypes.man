@@ -32,18 +32,11 @@
 XkbInitCanonicalKeyTypes \- Set the definitions of the canonical key types in a 
 client map to their default values
 .SH SYNOPSIS
+.HP
 .B Status XkbInitCanonicalKeyTypes
-(
-.I xkb,
-.I which,
-.I keypadVMod
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      int \fIkeypadVMod\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "int " "keypadVMod" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

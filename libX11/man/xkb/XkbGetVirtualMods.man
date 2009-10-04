@@ -32,18 +32,11 @@
 XkbGetVirtualMods \- Obtain a subset of the virtual modifier bindings (the vmods 
 array) in a keyboard description
 .SH SYNOPSIS
+.HP
 .B Status XkbGetVirtualMods
-(
-.I dpy,
-.I which,
-.I xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

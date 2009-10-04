@@ -223,9 +223,8 @@ PictureCreateDefaultFormats (ScreenPtr pScreen, int *nformatp)
 	    b = Ones (pVisual->blueMask);
 	    type = PICT_TYPE_OTHER;
 	    /*
-	     * Current rendering code supports only two direct formats,
+	     * Current rendering code supports only three direct formats,
 	     * fields must be packed together at the bottom of the pixel
-	     * and must be either RGB or BGR
 	     */
 	    if (pVisual->offsetBlue == 0 &&
 		pVisual->offsetGreen == b &&
@@ -322,8 +321,6 @@ PictureCreateDefaultFormats (ScreenPtr pScreen, int *nformatp)
 				      PICT_x8r8g8b8, pDepth->depth);
 		nformats = addFormat (formats, nformats,
 				      PICT_x8b8g8r8, pDepth->depth);
-		nformats = addFormat (formats, nformats,
-				      PICT_b8g8r8x8, pDepth->depth);
 	    }
 	    if (pDepth->depth >= 30)
 	    {

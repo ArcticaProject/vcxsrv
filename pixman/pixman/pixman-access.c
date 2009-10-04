@@ -230,7 +230,7 @@ fetch_scanline_a2r10g10b10 (pixman_image_t *image,
     const uint32_t *pixel = bits + x;
     const uint32_t *end = pixel + width;
     uint64_t *buffer = (uint64_t *)b;
-    
+
     while (pixel < end)
     {
 	uint32_t p = READ (image, pixel++);
@@ -238,16 +238,16 @@ fetch_scanline_a2r10g10b10 (pixman_image_t *image,
 	uint64_t r = (p >> 20) & 0x3ff;
 	uint64_t g = (p >> 10) & 0x3ff;
 	uint64_t b = p & 0x3ff;
-	
+
 	r = r << 6 | r >> 4;
 	g = g << 6 | g >> 4;
 	b = b << 6 | b >> 4;
-	
-	a <<= 62;
+
+	a <<= 14;
 	a |= a >> 2;
 	a |= a >> 4;
 	a |= a >> 8;
-	
+
 	*buffer++ = a << 48 | r << 32 | g << 16 | b;
     }
 }
@@ -309,11 +309,11 @@ fetch_scanline_a2b10g10r10 (pixman_image_t *image,
 	g = g << 6 | g >> 4;
 	b = b << 6 | b >> 4;
 	
-	a <<= 62;
+	a <<= 14;
 	a |= a >> 2;
 	a |= a >> 4;
 	a |= a >> 8;
-	
+
 	*buffer++ = a << 48 | r << 32 | g << 16 | b;
     }
 }
@@ -1115,18 +1115,18 @@ fetch_scanline_yv12 (pixman_image_t *image,
     {
 	int16_t y, u, v;
 	int32_t r, g, b;
-	
+
 	y = y_line[x + i] - 16;
 	u = u_line[(x + i) >> 1] - 128;
 	v = v_line[(x + i) >> 1] - 128;
-	
+
 	/* R = 1.164(Y - 16) + 1.596(V - 128) */
 	r = 0x012b27 * y + 0x019a2e * v;
 	/* G = 1.164(Y - 16) - 0.813(V - 128) - 0.391(U - 128) */
 	g = 0x012b27 * y - 0x00d0f2 * v - 0x00647e * u;
 	/* B = 1.164(Y - 16) + 2.018(U - 128) */
 	b = 0x012b27 * y + 0x0206a2 * u;
-	
+
 	*buffer++ = 0xff000000 |
 	    (r >= 0 ? r < 0x1000000 ? r         & 0xff0000 : 0xff0000 : 0) |
 	    (g >= 0 ? g < 0x1000000 ? (g >> 8)  & 0x00ff00 : 0x00ff00 : 0) |
@@ -1148,16 +1148,16 @@ fetch_pixel_a2r10g10b10 (bits_image_t *image,
     uint64_t r = (p >> 20) & 0x3ff;
     uint64_t g = (p >> 10) & 0x3ff;
     uint64_t b = p & 0x3ff;
-    
+
     r = r << 6 | r >> 4;
     g = g << 6 | g >> 4;
     b = b << 6 | b >> 4;
-    
-    a <<= 62;
+
+    a <<= 14;
     a |= a >> 2;
     a |= a >> 4;
     a |= a >> 8;
-    
+
     return a << 48 | r << 32 | g << 16 | b;
 }
 
@@ -1197,7 +1197,7 @@ fetch_pixel_a2b10g10r10 (bits_image_t *image,
     g = g << 6 | g >> 4;
     b = b << 6 | b >> 4;
     
-    a <<= 62;
+    a <<= 14;
     a |= a >> 2;
     a |= a >> 4;
     a |= a >> 8;

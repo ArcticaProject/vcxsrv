@@ -33,15 +33,10 @@ XkbKeyGroupInfo \- Returns the number of groups of symbols bound to the key
 corresponding to 
 keycode
 .SH SYNOPSIS
-.B unsigned char XkbKeyGroupInfo macro
-(
-.I xkb,
-.I keycode
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
+.HP
+.B unsigned char XkbKeyGroupInfo
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

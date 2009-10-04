@@ -222,6 +222,6 @@ release. Its presence is
 indicated by the macro
 .ZN X_HAVE_UTF8_STRING .
 .SH "SEE ALSO"
-XmbTextEscapement(3X11),
-XmbTextPerCharExtents(3X11)
+XmbTextEscapement(__libmansuffix__),
+XmbTextPerCharExtents(__libmansuffix__)
 \fI\*(xL\fP

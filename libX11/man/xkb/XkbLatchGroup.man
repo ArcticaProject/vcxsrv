@@ -31,18 +31,11 @@
 .SH NAME
 XkbLatchGroup \-  Latches the keysym group
 .SH SYNOPSIS
+.HP
 .B Bool XkbLatchGroup
-(
-.I display,
-.I device_spec,
-.I group
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int \fIgroup\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "group" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

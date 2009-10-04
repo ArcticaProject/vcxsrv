@@ -30,18 +30,11 @@
 .SH NAME
 XkbAddGeomShape \- Add a shape to a keyboard geometry
 .SH SYNOPSIS
+.HP
 .B XkbShapePtr XkbAddGeomShape
-(
-.I geom,
-.I name,
-.I sz_outlines
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      Atom \fIname\fP\^;
-.br
-      int \fIsz_outlines\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "Atom " "name" "\^,"
+.BI "int " "sz_outlines" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

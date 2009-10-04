@@ -83,10 +83,9 @@ am_Xdmx_OBJECTS = dmx.$(OBJEXT) dmxcb.$(OBJEXT) dmxcmap.$(OBJEXT) \
 	dmxsync.$(OBJEXT) dmxvisual.$(OBJEXT) dmxwindow.$(OBJEXT) \
 	miinitext.$(OBJEXT) fbcmap_mi.$(OBJEXT) $(am__objects_2)
 Xdmx_OBJECTS = $(am_Xdmx_OBJECTS)
-am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = $(GLX_LIBS) input/libdmxinput.a \
-	config/libdmxconfig.a $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(top_builddir)/xfixes/libxfixes.la
+am__DEPENDENCIES_1 = $(GLX_LIBS) input/libdmxinput.a \
+	config/libdmxconfig.a
+am__DEPENDENCIES_2 =
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
@@ -364,10 +363,7 @@ XDMX_LIBS = \
 	@XDMX_LIBS@ \
 	$(GLX_LIBS) \
         input/libdmxinput.a \
-        config/libdmxconfig.a \
-	$(MAIN_LIB) \
-	$(XSERVER_LIBS) \
-	$(top_builddir)/xfixes/libxfixes.la
+        config/libdmxconfig.a
 
 XDMX_SYS_LIBS = @XDMX_SYS_LIBS@
 XEPHYR_CFLAGS = @XEPHYR_CFLAGS@

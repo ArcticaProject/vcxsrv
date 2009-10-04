@@ -30,27 +30,14 @@
 .SH NAME
 XkbQueryExtension \-  Determines the compatibility of a library at runtime.
 .SH SYNOPSIS
+.HP
 .B Bool XkbQueryExtension
-(
-.I dpy,
-.I opcode_rtrn,
-.I event_rtrn,
-.I error_rtrn,
-.I major_in_out,
-.I minor_in_out
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      int \fIopcode_rtrn\fP\^;
-.br
-      int \fIevent_rtrn\fP\^;
-.br
-      int *\fIerror_rtrn\fP\^;
-.br
-      int \fImajor_in_out\fP\^;
-.br
-      int \fIminor_in_out\fP\^;            
+.BI "(\^Display *" "dpy" "\^,"
+.BI "int *" "opcode_rtrn" "\^,"
+.BI "int *" "event_rtrn" "\^,"
+.BI "int *" "error_rtrn" "\^,"
+.BI "int *" "major_in_out" "\^,"
+.BI "int *" "minor_in_out" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

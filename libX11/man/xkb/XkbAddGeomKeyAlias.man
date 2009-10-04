@@ -31,18 +31,11 @@
 XkbAddGeomKeyAlias \- Add one key alias to an existing keyboard geometry 
 description
 .SH SYNOPSIS
+.HP
 .B XkbKeyAliasPtr XkbAddGeomKeyAlias
-(
-.I geom,
-.I alias,
-.I real
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      char * \fIalias\fP\^;
-.br
-      char * \fIreal\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "char *" "alias" "\^,"
+.BI "char *" "real" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

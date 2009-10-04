@@ -33,18 +33,11 @@ XkbChangeMap \- Update only partial components of a keyboard description, modify
 the appropriate fields in the server and map components of a local copy of the 
 keyboard description
 .SH SYNOPSIS
+.HP
 .B Bool XkbChangeMap
-(
-.I dpy,
-.I xkb,
-.I changes
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      XkbMapChangesPtr \fIchanges\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDescPtr " "xkb" "\^,"
+.BI "XkbMapChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

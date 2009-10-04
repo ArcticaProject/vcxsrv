@@ -32,12 +32,9 @@
 XkbOutOfRangeGroupInfo \- Returns only the out-of-range processing information 
 from the group_info field of an XkbSymMapRec structure
 .SH SYNOPSIS
-.B unsigned char XkbOutOfRangeGroupInfo macro
-(
-.I grp_inf
-)
-.br
-      unsigned char \fIgrp_inf\fP\^;
+.HP
+.B unsigned char XkbOutOfRangeGroupInfo
+.BI "(\^unsigned char " "grp_inf" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -30,18 +30,11 @@
 .SH NAME
 XkbComputeRowBounds \-  Update the bounding box of a row
 .SH SYNOPSIS
+.HP
 .B Bool XkbComputeRowBounds
-(
-.I geom,
-.I section,
-.I row
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      XkbSectionPtr \fIsection\fP\^;
-.br
-      XkbRowPtr \fIrow\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "XkbSectionPtr " "section" "\^,"
+.BI "XkbRowPtr " "row" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

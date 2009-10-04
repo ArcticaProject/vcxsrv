@@ -32,21 +32,12 @@
 XkbSelectEvents \-  Selects and / or deselects for delivery of one or more Xkb 
 events and has them delivered under all conditions 
 .SH SYNOPSIS
+.HP
 .B Bool XkbSelectEvents
-(
-.I display,
-.I device_spec,
-.I bits_to_change,
-.I values_for_bits
-)
-.br
-      Display * \fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned long int \fIbits_to_change\fP\^;
-.br
-      unsigned long int \fIvalues_for_bits\fP\^;      
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned long int " "bits_to_change" "\^,"
+.BI "unsigned long int " "values_for_bits" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -31,18 +31,11 @@
 XkbAddGeomProperty \- Add one property to an existing keyboard geometry 
 description
 .SH SYNOPSIS
+.HP
 .B XkbPropertyPtr XkbAddGeomProperty
-(
-.I geom,
-.I name,
-.I value
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      char * \fIname\fP\^;
-.br
-      char * \fIvalue\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "char *" "name" "\^,"
+.BI "char *" "value" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

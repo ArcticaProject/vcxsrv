@@ -212,9 +212,9 @@ A value for a Pixmap argument does not name a defined Pixmap.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XOpenIM(3X11),
-XSetICFocus(3X11),
-XSetICValues(3X11),
-XmbResetIC(3X11)
+XOpenIM(__libmansuffix__),
+XSetICFocus(__libmansuffix__),
+XSetICValues(__libmansuffix__),
+XmbResetIC(__libmansuffix__)
 .br
 \fI\*(xL\fP

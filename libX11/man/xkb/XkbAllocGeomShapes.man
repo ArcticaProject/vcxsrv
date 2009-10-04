@@ -30,15 +30,10 @@
 .SH NAME
 XkbAllocGeomShapes \- Allocate space for an arbitrary number of geometry shapes
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomShapes
-(
-.I geom,
-.I num_needed
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

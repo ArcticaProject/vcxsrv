@@ -245,9 +245,9 @@ window is used as a Drawable.
 Some argument or pair of arguments has the correct type and range but fails
 to match in some other way required by the request.
 .SH "SEE ALSO"
-XDrawString(3X11),
-XDrawText(3X11),
-XLoadFont(3X11),
-XTextExtents(3X11)
+XDrawString(__libmansuffix__),
+XDrawText(__libmansuffix__),
+XLoadFont(__libmansuffix__),
+XTextExtents(__libmansuffix__)
 .br
 \fI\*(xL\fP

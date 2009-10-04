@@ -389,15 +389,11 @@ fast_composite_add_n_8888_8888_ca (pixman_implementation_t *imp,
 	{
 	    ma = *mask++;
 
-	    if (ma == 0xffffffff && srca == 0xff)
-	    {
-		*dst = src;
-	    }
-	    else if (ma)
+	    if (ma)
 	    {
 		d = *dst;
 		s = src;
-		
+
 		UN8x4_MUL_UN8x4_ADD_UN8x4 (s, ma, d);
 
 		*dst = s;

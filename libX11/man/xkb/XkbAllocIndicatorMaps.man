@@ -32,12 +32,9 @@ XkbAllocIndicatorMaps \- Allocates, directly, the
 .I indicators 
 member of the keyboard description record 
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocIndicatorMaps
-(
-.I xkb
-)
-.br
-      variable_type *\fIxkb\fP\^;
+.BI "(\^variable_type *" "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -351,7 +351,7 @@ An
 .ZN InputOnly
 window is used as a Drawable.
 .SH "SEE ALSO"
-XCreatePixmap(3X11),
-XPutImage(3X11)
+XCreatePixmap(__libmansuffix__),
+XPutImage(__libmansuffix__)
 .br
 \fI\*(xL\fP

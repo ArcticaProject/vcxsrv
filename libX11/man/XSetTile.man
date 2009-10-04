@@ -230,13 +230,13 @@ to match in some other way required by the request.
 .ZN BadPixmap
 A value for a Pixmap argument does not name a defined Pixmap.
 .SH "SEE ALSO"
-XCreateGC(3X11),
-XQueryBestSize(3X11),
-XSetArcMode(3X11),
-XSetClipOrigin(3X11),
-XSetFillStyle(3X11),
-XSetFont(3X11),
-XSetLineAttributes(3X11),
-XSetState(3X11)
+XCreateGC(__libmansuffix__),
+XQueryBestSize(__libmansuffix__),
+XSetArcMode(__libmansuffix__),
+XSetClipOrigin(__libmansuffix__),
+XSetFillStyle(__libmansuffix__),
+XSetFont(__libmansuffix__),
+XSetLineAttributes(__libmansuffix__),
+XSetState(__libmansuffix__)
 .br
 \fI\*(xL\fP

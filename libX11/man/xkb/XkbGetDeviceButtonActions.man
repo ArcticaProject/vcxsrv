@@ -32,24 +32,13 @@
 XkbGetDeviceButtonActions \- Query the button actions associated with an X Input 
 Extension device
 .SH SYNOPSIS
+.HP
 .B Status XkbGetDeviceButtonActions
-(
-.I dpy,
-.I device_info,
-.I all_buttons,
-.I first_button,
-.I num_buttons
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
-.br
-      Bool \fIall_buttons\fP\^;
-.br
-      unsigned int \fIfirst_button\fP\^;
-.br
-      unsigned int \fInum_buttons\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDeviceInfoPtr " "device_info" "\^,"
+.BI "Bool " "all_buttons" "\^,"
+.BI "unsigned int " "first_button" "\^,"
+.BI "unsigned int " "num_buttons" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

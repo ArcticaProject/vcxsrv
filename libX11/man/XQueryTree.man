@@ -176,11 +176,20 @@ The children are listed in current stacking order, from bottom-most
 returns zero if it fails and nonzero if it succeeds.
 To free a non-NULL children list when it is no longer needed, use 
 .ZN XFree .
+.LP
+.ZN XQueryTree
+can generate a
+.ZN BadWindow
+error.
 .SH BUGS
 This really should return a screen *, not a root window ID.
+.SH DIAGNOSTICS
+.TP 1i
+.ZN BadWindow
+A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XFree(3X11),
-XGetWindowAttributes(3X11),
-XQueryPointer(3X11)
+XFree(__libmansuffix__),
+XGetWindowAttributes(__libmansuffix__),
+XQueryPointer(__libmansuffix__)
 .br
 \fI\*(xL\fP

@@ -32,18 +32,11 @@
 XkbGetUpdatedMap \-  Update the client or server map information in an existing 
 keyboard description
 .SH SYNOPSIS
+.HP
 .B Status XkbGetUpdatedMap
-(
-.I display,
-.I which,
-.I xkb
-)
-.br
-      Display * \fIdisplay\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

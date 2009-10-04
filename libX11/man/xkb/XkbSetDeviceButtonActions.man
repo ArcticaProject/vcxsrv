@@ -27,28 +27,16 @@
 .\" or other dealings in this Software without prior written authorization
 .\" of the copyright holder.
 .\"
-.TH XkbSetDeviceButtonActions 3Xkb "Release 6.1" "X Version 11" "XKBLIB FUNCTION"
+.TH XkbSetDeviceButtonActions __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
 .SH NAME
 XkbSetDeviceButtonActions \- Change only the button actions for an input extension device
 .SH SYNTAX
+.HP
 .B Bool XkbSetDeviceButtonActions
-(
-.I dpy,
-.I device,
-.I first_button,
-.I num_buttons,
-.I actions
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDeviceInfoPtr \fIdevice\fP\^;
-.br
-      unsigned int \fIfirst_button\fP\^;
-.br
-      unsigned int \fInum_buttons\fP\^;
-.br
-      *** MISSING *** \fIactions\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDeviceInfoPtr " "device" "\^,"
+.BI "unsigned int " "first_button" "\^,"
+.BI "unsigned int " "num_buttons" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -64,9 +52,6 @@ number of first button to update, 0 relative
 .TP
 .I \- num_buttons
 number of buttons to update
-.TP
-.I \- actions
-*** MISSING ***
 .SH DESCRIPTION
 .LP
 .I XkbSetDeviceButtonActions 

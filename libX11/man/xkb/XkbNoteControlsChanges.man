@@ -32,18 +32,11 @@
 XkbNoteControlsChanges \- Notes the changes in a changes structure when a client receives an XkbControlsNotify 
 event
 .SH SYNOPSIS
+.HP
 .B void XkbNoteControlsChanges
-(
-.I changes,
-.I new,
-.I wanted
-)
-.br
-      XkbControlsChangesPtr \fIchanges\fP\^;
-.br
-      XkbControlsNotifyEvent *\fInew\fP\^;
-.br
-      unsigned int \fIwanted\fP\^;
+.BI "(\^XkbControlsChangesPtr " "changes" "\^,"
+.BI "XkbControlsNotifyEvent *" "new" "\^,"
+.BI "unsigned int " "wanted" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

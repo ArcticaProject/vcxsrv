@@ -301,7 +301,7 @@ Unless a specific range is specified for an argument, the full range defined
 by the argument's type is accepted.  Any argument defined as a set of
 alternatives can generate this error.
 .SH "SEE ALSO"
-XcmsAllocColor(3X11),
-XcmsQueryColor(3X11)
+XcmsAllocColor(__libmansuffix__),
+XcmsQueryColor(__libmansuffix__)
 .br
 \fI\*(xL\fP

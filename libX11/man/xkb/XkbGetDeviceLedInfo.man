@@ -32,24 +32,13 @@
 XkbGetDeviceLedInfo \- Query the indicator names, maps, and state associated 
 with an LED feedback of an input extension device
 .SH SYNOPSIS
+.HP
 .B Status XkbGetDeviceLedInfo
-(
-.I dpy,
-.I device_info,
-.I led_class,
-.I led_id,
-.I which
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
-.br
-      unsigned int \fIled_class\fP\^;
-.br
-      unsigned int \fIled_id\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDeviceInfoPtr " "device_info" "\^,"
+.BI "unsigned int " "led_class" "\^,"
+.BI "unsigned int " "led_id" "\^,"
+.BI "unsigned int " "which" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
