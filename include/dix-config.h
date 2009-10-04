@@ -505,7 +505,7 @@
 #undef MONOTONIC_CLOCK
 
 /* Define to 1 if the DTrace Xserver provider probes should be built in */
-#undef XSERVER_DTRACE
+/* #undef XSERVER_DTRACE */
 
 /* Define to 16-bit byteswap macro */
 #undef bswap_16
