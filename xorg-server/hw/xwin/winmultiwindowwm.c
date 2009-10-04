@@ -1282,7 +1282,7 @@ winMultiWindowWMErrorHandler (Display *pDisplay, XErrorEvent *pErr)
   ErrorF ("winMultiWindowWMErrorHandler - ERROR: %s\n"
           "  errorCode %d\n"
           "  serial %d\n"
-          "  resourceID %d\n"
+          "  resourceID 0x%x\n"
           "  majorCode %d\n"
           "  minorCode %d\n"
           , pszErrorMsg
@@ -1331,7 +1331,7 @@ winMultiWindowXMsgProcErrorHandler (Display *pDisplay, XErrorEvent *pErr)
   ErrorF ("winMultiWindowXMsgProcErrorHandler - ERROR: %s\n"
           "  errorCode %d\n"
           "  serial %d\n"
-          "  resourceID %d\n"
+          "  resourceID 0x%x\n"
           "  majorCode %d\n"
           "  minorCode %d\n"
           , pszErrorMsg
