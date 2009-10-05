@@ -31,18 +31,11 @@
 .SH NAME
 XkbKeyType \- Obtain the index of a key type or the pointer to a key type
 .SH SYNOPSIS
+.HP
 .B XkbKeyTypePtr XkbKeyType
-(
-.I xkb,
-.I keycode,
-.I group
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
-.br
-      int \fIgroup\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^,"
+.BI "int " "group" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

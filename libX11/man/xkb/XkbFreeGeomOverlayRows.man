@@ -30,21 +30,12 @@
 .SH NAME
 XkbFreeGeomOverlayRows \- Free rows in an overlay
 .SH SYNOPSIS
+.HP
 .B void XkbFreeGeomOverlayRows
-(
-.I overlay,
-.I first,
-.I count,
-.I free_all
-)
-.br
-      XkbSectionPtr \fIoverlay\fP\^;
-.br
-      int \fIfirst\fP\^;
-.br
-      int \fIcount\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbSectionPtr " "overlay" "\^,"
+.BI "int " "first" "\^,"
+.BI "int " "count" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

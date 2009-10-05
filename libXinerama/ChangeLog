@@ -1,3 +1,19 @@
+commit ee877cebfea0773a91337439d32ece12444cf0a6
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 2 13:27:04 2009 +1000
+
+    libXinerama 1.1
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit c5f1f903ddf1f2216bb31408caec3e87ea795dd9
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 2 13:26:17 2009 +1000
+
+    Require macros 1.3 for XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
 commit 46e5273f34fd950cb4757583e06d5687d1f10407
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Aug 27 11:47:34 2009 +1000

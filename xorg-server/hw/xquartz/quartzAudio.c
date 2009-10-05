@@ -311,8 +311,10 @@ void QuartzAudioInit(void)
 
     // Prepare for playback
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
+    {
     AudioDeviceIOProcID sInputIOProcID = NULL;
     status = AudioDeviceCreateIOProcID( outputDevice, QuartzAudioIOProc, &data, &sInputIOProcID );
+    }
 #else
     status = AudioDeviceAddIOProc(outputDevice, QuartzAudioIOProc, &data);
 #endif

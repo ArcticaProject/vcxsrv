@@ -31,15 +31,10 @@
 .SH NAME
 XkbAllocGeomOverlayKeys \- Allocate keys in an overlay row
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomOverlayKeys
-(
-.I row,
-.I num_needed
-)
-.br
-      XkbRowPtr \fIrow\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbOverlayRowPtr " "row" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

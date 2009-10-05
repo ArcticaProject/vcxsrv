@@ -352,17 +352,17 @@ getValuatorEvents(DeviceEvent *ev, deviceValuator *xv)
         xv->device_state = state;
         switch (xv->num_valuators) {
         case 6:
-            xv->valuator5 = ev->valuators.data[i + 5];
+            xv->valuator5 = ev->valuators.data[xv->first_valuator + 5];
         case 5:
-            xv->valuator4 = ev->valuators.data[i + 4];
+            xv->valuator4 = ev->valuators.data[xv->first_valuator + 4];
         case 4:
-            xv->valuator3 = ev->valuators.data[i + 3];
+            xv->valuator3 = ev->valuators.data[xv->first_valuator + 3];
         case 3:
-            xv->valuator2 = ev->valuators.data[i + 2];
+            xv->valuator2 = ev->valuators.data[xv->first_valuator + 2];
         case 2:
-            xv->valuator1 = ev->valuators.data[i + 1];
+            xv->valuator1 = ev->valuators.data[xv->first_valuator + 1];
         case 1:
-            xv->valuator0 = ev->valuators.data[i + 0];
+            xv->valuator0 = ev->valuators.data[xv->first_valuator + 0];
         }
 
         if (i + 6 < num_valuators)

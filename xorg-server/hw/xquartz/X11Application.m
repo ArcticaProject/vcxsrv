@@ -184,9 +184,6 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
 }
 
 - (void) activateX:(OSX_BOOL)state {
-    /* Create a TSM document that supports full Unicode input, and
-     have it activated while X is active */
-    static TSMDocumentID x11_document;
     size_t i;
     DEBUG_LOG("state=%d, _x_active=%d, \n", state, _x_active)
     if (state) {
@@ -195,16 +192,6 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
             bgMouseLocationUpdated = FALSE;
         }
         DarwinSendDDXEvent(kXquartzActivate, 0);
-
-        if (!_x_active) {
-            if (x11_document == 0) {
-                OSType types[1];
-                types[0] = kUnicodeDocument;
-                NewTSMDocument (1, types, &x11_document, 0);
-            }
-
-            if (x11_document != 0)	ActivateTSMDocument (x11_document);
-        }
     } else {
 
         if(darwin_all_modifier_flags)
@@ -217,9 +204,6 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
         }
         
         DarwinSendDDXEvent(kXquartzDeactivate, 0);
-
-        if (_x_active && x11_document != 0)
-            DeactivateTSMDocument (x11_document);
     }
 
     _x_active = state;
@@ -259,23 +243,26 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
             if(!for_appkit) {
                 NSPoint NSlocation = [e locationInWindow];
                 NSWindow *window = [e window];
-                
+                NSRect NSframe, NSvisibleFrame;
+                CGRect CGframe, CGvisibleFrame;
+                CGPoint CGlocation;
+
                 if (window != nil)	{
                     NSRect frame = [window frame];
                     NSlocation.x += frame.origin.x;
                     NSlocation.y += frame.origin.y;
                 }
 
-                NSRect NSframe = [[NSScreen mainScreen] frame];
-                NSRect NSvisibleFrame = [[NSScreen mainScreen] visibleFrame];
+                NSframe = [[NSScreen mainScreen] frame];
+                NSvisibleFrame = [[NSScreen mainScreen] visibleFrame];
                 
-                CGRect CGframe = CGRectMake(NSframe.origin.x, NSframe.origin.y,
+                CGframe = CGRectMake(NSframe.origin.x, NSframe.origin.y,
                                             NSframe.size.width, NSframe.size.height);
-                CGRect CGvisibleFrame = CGRectMake(NSvisibleFrame.origin.x,
+                CGvisibleFrame = CGRectMake(NSvisibleFrame.origin.x,
                                                    NSvisibleFrame.origin.y,
                                                    NSvisibleFrame.size.width,
                                                    NSvisibleFrame.size.height);
-                CGPoint CGlocation = CGPointMake(NSlocation.x, NSlocation.y);
+                CGlocation = CGPointMake(NSlocation.x, NSlocation.y);
                 
                 if(CGRectContainsPoint(CGframe, CGlocation) &&
                    !CGRectContainsPoint(CGvisibleFrame, CGlocation))
@@ -350,6 +337,7 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                 case NSApplicationActivatedEventType:
                     for_x = NO;
                     if ([self modalWindow] == nil) {
+                        BOOL switch_on_activate, ok;
                         for_appkit = NO;
                         
                         /* FIXME: hack to avoid having to pass the event to appkit,
@@ -360,7 +348,6 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
                         
                         /* Get the Spaces preference for SwitchOnActivate */
                         (void)CFPreferencesAppSynchronize(CFSTR(".GlobalPreferences"));
-                        BOOL switch_on_activate, ok;
                         switch_on_activate = CFPreferencesGetAppBooleanValue(CFSTR("AppleSpacesSwitchOnActivate"), CFSTR(".GlobalPreferences"), &ok);
                         if(!ok)
                             switch_on_activate = YES;
@@ -1180,6 +1167,17 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
             break;
             
         case NSKeyDown: case NSKeyUp:
+            {
+                /* XKB clobbers our keymap at startup, so we need to force it on the first keypress.
+                 * TODO: Make this less of a kludge.
+                 */
+                static int force_resync_keymap = YES;
+                if(force_resync_keymap) {
+                    DarwinSendDDXEvent(kXquartzReloadKeymap, 0);
+                    force_resync_keymap = NO;
+                }
+            }
+
             if(darwinSyncKeymap) {
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
                 TISInputSourceRef key_layout = TISCopyCurrentKeyboardLayoutInputSource();

@@ -45,17 +45,14 @@ void DarwinUpdateModKeys(int flags);
 void DarwinListenOnOpenFD(int fd);
 
 /*
- * Special ddx events understood by the X server
+ * Subtypes for the ET_XQuartz event type
  */
 enum {
-    kXquartzReloadKeymap      // Reload system keymap
-    = LASTEvent+1,    // (from X.h list of event names)
+    kXquartzReloadKeymap,     // Reload system keymap
     kXquartzActivate,         // restore X drawing and cursor
     kXquartzDeactivate,       // clip X drawing and switch to Aqua cursor
     kXquartzSetRootClip,      // enable or disable drawing to the X screen
     kXquartzQuit,             // kill the X server and release the display
-    kXquartzReadPasteboard,   // copy Mac OS X pasteboard into X cut buffer
-    kXquartzWritePasteboard,  // copy X cut buffer onto Mac OS X pasteboard
     kXquartzBringAllToFront,  // bring all X windows to front
     kXquartzToggleFullscreen, // Enable/Disable fullscreen mode
     kXquartzSetRootless,      // Set rootless mode

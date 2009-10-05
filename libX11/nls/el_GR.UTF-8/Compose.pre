@@ -1923,10 +1923,10 @@ XCOMM Miscellaneous extensions.
 <dead_acute> <underscore>		: "´"	acute
 <dead_tilde> <underscore>		: "~"	asciitilde
 
-<Multi_key> <less> <apostrophe>		: "‘"	leftsinglequotemark
-<Multi_key> <apostrophe> <less>		: "‘"	leftsinglequotemark
-<Multi_key> <greater> <apostrophe>	: "’"	rightsinglequotemark
-<Multi_key> <apostrophe> <greater>	: "’"	rightsinglequotemark
+<Multi_key> <less> <apostrophe> <space>	: "‘"	leftsinglequotemark
+<Multi_key> <apostrophe> <less> <space>	: "‘"	leftsinglequotemark
+<Multi_key> <greater> <apostrophe> <space>	: "’"	rightsinglequotemark
+<Multi_key> <apostrophe> <greater> <space>	: "’"	rightsinglequotemark
 <Multi_key> <asciitilde> <asciitilde>	: "―"	Greek_horizbar
 <Multi_key> <asciicircum> <asciicircum>	: "˘"	breve
 

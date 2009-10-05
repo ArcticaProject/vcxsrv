@@ -347,7 +347,7 @@ SetupWildMatch(FontTablePtr table, FontNamePtr pat,
 	    result = strcmpn(name, table->entries[center].name.name);
 	    if (result == 0)
 		return center;
-	    if (result < 0)
+ 	    if (result < 0)
 		right = center;
 	    else
 		left = center + 1;

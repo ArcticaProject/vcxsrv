@@ -32,18 +32,11 @@
 XkbSetMap \- Send a complete new set of values for entire components to the 
 server. 
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetMap
-(
-.I dpy,
-.I which,
-.I xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

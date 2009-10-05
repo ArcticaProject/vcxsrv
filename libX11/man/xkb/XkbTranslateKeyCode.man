@@ -30,24 +30,13 @@
 .SH NAME
 XkbTranslateKeyCode \-  Translate a keycode to a key symbol and modifiers
 .SH SYNOPSIS
+.HP
 .B Bool XkbTranslateKeyCode
-(
-.I xkb,
-.I key,
-.I mods,
-.I mods_rtrn,
-.I keysym_rtrn
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkey\fP\^;
-.br
-      unsigned int \fImods\fP\^;
-.br
-      unsigned int * \fImods_rtrn\fP\^;
-.br
-      KeySym * \fIkeysym_rtrn\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "key" "\^,"
+.BI "unsigned int " "mods" "\^,"
+.BI "unsigned int *" "mods_rtrn" "\^,"
+.BI "KeySym *" "keysym_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -86,4 +75,4 @@ to consume the Shift and Lock modifiers when processing all keys, even if the
 definition for the key type does not specify these modifiers. The 
 AlwaysConsumeShiftAndLock control is unset by default. 
 .SH "SEE ALSO"
-.BR XLookupString (3X11)
+.BR XLookupString (__libmansuffix__)

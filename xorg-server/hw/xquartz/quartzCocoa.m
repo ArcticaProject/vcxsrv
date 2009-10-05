@@ -40,65 +40,8 @@
 
 #include "quartzCommon.h"
 #include "inputstr.h"
-#include "quartzPasteboard.h"
 
 #include "darwin.h"
-
-/*
- * QuartzWriteCocoaPasteboard
- *  Write text to the Mac OS X pasteboard.
- */
-void QuartzWriteCocoaPasteboard(
-    char *text)
-{
-    NSPasteboard *pasteboard;
-    NSArray *pasteboardTypes;
-    NSString *string;
-
-    if (! text) return;
-    pasteboard = [NSPasteboard generalPasteboard];
-    if (! pasteboard) return;
-    string = [NSString stringWithCString:text];
-    if (! string) return;
-    pasteboardTypes = [NSArray arrayWithObject:NSStringPboardType];
-
-    // nil owner because we don't provide type translations
-    [pasteboard declareTypes:pasteboardTypes owner:nil];
-    [pasteboard setString:string forType:NSStringPboardType];
-}
-
-
-/*
- * QuartzReadCocoaPasteboard
- *  Read text from the Mac OS X pasteboard and return it as a heap string.
- *  The caller must free the string.
- */
-char *QuartzReadCocoaPasteboard(void)
-{
-    NSPasteboard *pasteboard;
-    NSArray *pasteboardTypes;
-    NSString *existingType;
-    char *text = NULL;
-
-    pasteboardTypes = [NSArray arrayWithObject:NSStringPboardType];
-    pasteboard = [NSPasteboard generalPasteboard];
-    if (! pasteboard) return NULL;
-
-    existingType = [pasteboard availableTypeFromArray:pasteboardTypes];
-    if (existingType) {
-        NSString *string = [pasteboard stringForType:existingType];
-        char *buffer;
-
-        if (! string) return NULL;
-        buffer = (char *) [string UTF8String];
-        text = (char *) malloc(strlen(buffer)+1);
-        if (text)
-            strcpy(text, buffer);
-    }
-
-    return text;
-}
-
 
 /*
  * QuartzFSUseQDCursor

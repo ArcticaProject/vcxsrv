@@ -30,27 +30,14 @@
 .SH NAME
 XkbLookupKeyBinding \- Find the string bound to a key by XRebindKeySym
 .SH SYNOPSIS
+.HP
 .B int XkbLookupKeyBinding
-(
-.I dpy,
-.I sym,
-.I state,
-.I buf,
-.I nbytes,
-.I extra_rtrn
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      KeySym \fIsym\fP\^;
-.br
-      unsigned int \fIstate\fP\^;
-.br
-      char * \fIbuf\fP\^;
-.br
-      int \fInbytes\fP\^;
-.br
-      int * \fIextra_rtrn\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "KeySym " "sym" "\^,"
+.BI "unsigned int " "state" "\^,"
+.BI "char *" "buf" "\^,"
+.BI "int " "nbytes" "\^,"
+.BI "int *" "extra_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -100,5 +87,5 @@ returns the number of bytes that it placed into
 .I buf.
 .SH "SEE ALSO"
 .BR XkbTranslateKeySym (__libmansuffix__),
-.BR XLookupString (3X11),
-.BR XRebindKeysym (3X11)
+.BR XLookupString (__libmansuffix__),
+.BR XRebindKeysym (__libmansuffix__)

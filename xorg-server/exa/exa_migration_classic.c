@@ -104,9 +104,8 @@ exaPixmapShouldBeInFB (PixmapPtr pPix)
 static void
 exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 	     Bool (*transfer) (PixmapPtr pPix, int x, int y, int w, int h,
-			       char *sys, int sys_pitch), CARD8 *fallback_src,
-	     CARD8 *fallback_dst, int fallback_srcpitch, int fallback_dstpitch,
-	     int fallback_index, void (*sync) (ScreenPtr pScreen))
+			       char *sys, int sys_pitch), int fallback_index,
+	     void (*sync) (ScreenPtr pScreen))
 {
     PixmapPtr pPixmap = migrate->pPix;
     ExaPixmapPriv (pPixmap);
@@ -120,7 +119,7 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
     Bool need_sync = FALSE;
 
     /* Damaged bits are valid in current copy but invalid in other one */
-    if (exaPixmapIsOffscreen(pPixmap)) {
+    if (pExaPixmap->offscreen) {
 	REGION_UNION(pScreen, &pExaPixmap->validFB, &pExaPixmap->validFB,
 		     damage);
 	REGION_SUBTRACT(pScreen, &pExaPixmap->validSys, &pExaPixmap->validSys,
@@ -225,22 +224,23 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 				    pExaPixmap->sys_pitch))
 	{
 	    if (!access_prepared) {
-		ExaDoPrepareAccess(&pPixmap->drawable, fallback_index);
+		ExaDoPrepareAccess(pPixmap, fallback_index);
 		access_prepared = TRUE;
 	    }
-	    exaMemcpyBox (pPixmap, pBox,
-			  fallback_src, fallback_srcpitch,
-			  fallback_dst, fallback_dstpitch);
+	    if (fallback_index == EXA_PREPARE_DEST) {
+		exaMemcpyBox (pPixmap, pBox,
+			      pExaPixmap->sys_ptr, pExaPixmap->sys_pitch,
+			      pPixmap->devPrivate.ptr, pPixmap->devKind);
+	    } else {
+		exaMemcpyBox (pPixmap, pBox,
+			      pPixmap->devPrivate.ptr, pPixmap->devKind,
+			      pExaPixmap->sys_ptr, pExaPixmap->sys_pitch);
+	    }
 	} else
 	    need_sync = TRUE;
 
 	pBox++;
     }
-
-    if (access_prepared)
-	exaFinishAccess(&pPixmap->drawable, fallback_index);
-    else if (need_sync && sync)
-	sync (pPixmap->drawable.pScreen);
 
     pExaPixmap->offscreen = save_offscreen;
     pPixmap->devKind = save_pitch;
@@ -256,6 +256,11 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
     REGION_UNION(pScreen, pValidDst, pValidDst, &CopyReg);
 
     REGION_UNINIT(pScreen, &CopyReg);
+
+    if (access_prepared)
+	exaFinishAccess(&pPixmap->drawable, fallback_index);
+    else if (need_sync && sync)
+	sync (pPixmap->drawable.pScreen);
 }
 
 /**
@@ -263,7 +268,7 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
  * the framebuffer  memory copy to the system memory copy.  Both areas must be
  * allocated.
  */
-static void
+void
 exaCopyDirtyToSys (ExaMigrationPtr migrate)
 {
     PixmapPtr pPixmap = migrate->pPix;
@@ -271,9 +276,8 @@ exaCopyDirtyToSys (ExaMigrationPtr migrate)
     ExaPixmapPriv (pPixmap);
 
     exaCopyDirty(migrate, &pExaPixmap->validSys, &pExaPixmap->validFB,
-		 pExaScr->info->DownloadFromScreen, pExaPixmap->fb_ptr,
-		 pExaPixmap->sys_ptr, pExaPixmap->fb_pitch,
-		 pExaPixmap->sys_pitch, EXA_PREPARE_SRC, exaWaitSync);
+		 pExaScr->info->DownloadFromScreen, EXA_PREPARE_SRC,
+		 exaWaitSync);
 }
 
 /**
@@ -281,7 +285,7 @@ exaCopyDirtyToSys (ExaMigrationPtr migrate)
  * the system memory copy to the framebuffer memory copy.  Both areas must be
  * allocated.
  */
-static void
+void
 exaCopyDirtyToFb (ExaMigrationPtr migrate)
 {
     PixmapPtr pPixmap = migrate->pPix;
@@ -289,9 +293,7 @@ exaCopyDirtyToFb (ExaMigrationPtr migrate)
     ExaPixmapPriv (pPixmap);
 
     exaCopyDirty(migrate, &pExaPixmap->validFB, &pExaPixmap->validSys,
-		 pExaScr->info->UploadToScreen, pExaPixmap->sys_ptr,
-		 pExaPixmap->fb_ptr, pExaPixmap->sys_pitch,
-		 pExaPixmap->fb_pitch, EXA_PREPARE_DEST, NULL);
+		 pExaScr->info->UploadToScreen, EXA_PREPARE_DEST, NULL);
 }
 
 /**
@@ -545,7 +547,7 @@ exaAssertNotDirty (PixmapPtr pPixmap)
     pExaPixmap->offscreen = TRUE;
     pPixmap->devKind = pExaPixmap->fb_pitch;
 
-    if (!ExaDoPrepareAccess(&pPixmap->drawable, EXA_PREPARE_SRC))
+    if (!ExaDoPrepareAccess(pPixmap, EXA_PREPARE_SRC))
 	goto skip;
 
     while (nbox--) {
@@ -717,4 +719,24 @@ exaDoMigration_classic (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 	    ExaOffscreenMarkUsed (pixmaps[i].pPix);
 	}
     }
+}
+
+void
+exaPrepareAccessReg_classic(PixmapPtr pPixmap, int index, RegionPtr pReg)
+{
+    ExaMigrationRec pixmaps[1];
+
+    if (index == EXA_PREPARE_DEST || index == EXA_PREPARE_AUX_DEST) {
+	pixmaps[0].as_dst = TRUE;
+	pixmaps[0].as_src = FALSE;
+    } else {
+	pixmaps[0].as_dst = FALSE;
+	pixmaps[0].as_src = TRUE;
+    }
+    pixmaps[0].pPix = pPixmap;
+    pixmaps[0].pReg = pReg;
+
+    exaDoMigration(pixmaps, 1, FALSE);
+
+    (void)ExaDoPrepareAccess(pPixmap, index);
 }

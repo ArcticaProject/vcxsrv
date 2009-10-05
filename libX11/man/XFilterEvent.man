@@ -182,6 +182,6 @@ returns
 .ZN True ,
 the client should ungrab the keyboard.
 .SH "SEE ALSO"
-XNextEvent(3X11)
+XNextEvent(__libmansuffix__)
 .br
 \fI\*(xL\fP

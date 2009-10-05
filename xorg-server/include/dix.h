@@ -592,6 +592,7 @@ extern Bool IsKeyboardDevice(DeviceIntPtr dev);
 extern Bool IsPointerEvent(InternalEvent *event);
 extern Bool IsMaster(DeviceIntPtr dev);
 
+extern _X_HIDDEN void CopyKeyClass(DeviceIntPtr device, DeviceIntPtr master);
 extern _X_HIDDEN int CorePointerProc(DeviceIntPtr dev, int what);
 extern _X_HIDDEN int CoreKeyboardProc(DeviceIntPtr dev, int what);
 

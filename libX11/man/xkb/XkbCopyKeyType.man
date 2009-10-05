@@ -30,15 +30,10 @@
 .SH NAME
 XkbCopyKeyType \- Copy one XkbKeyTypeRec structures
 .SH SYNOPSIS
+.HP
 .B Status XkbCopyKeyType
-(
-.I from,
-.I into
-)
-.br
-      XkbKeyTypePtr \fIfrom\fP\^;
-.br
-      XkbKeyTypePtr \fIinto\fP\^;
+.BI "(\^XkbKeyTypePtr " "from" "\^,"
+.BI "XkbKeyTypePtr " "into" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -33,18 +33,11 @@ XkbSetIndicatorMap \- Downloads the changes to the server based on modifications
 to a local copy of the keyboard description which will update the maps for one 
 or more indicators
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetIndicatorMap
-(
-.I dpy,
-.I which,
-.I desc
-)
-.br
-      Display *\fI dpy \fP\^;
-.br
-      unsigned int \fI which \fP\^;
-.br
-      XkbDescPtr \fI desc \fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescPtr " "desc" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

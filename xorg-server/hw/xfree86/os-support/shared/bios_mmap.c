@@ -131,7 +131,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 		return(-1);
 	}
 
-	xf86SlowBcopy((unsigned char *)(base+Offset), Buf, Len);
+	xf86SlowBCopyFromBus((unsigned char *)(base+Offset), Buf, Len);
 
 	munmap((caddr_t)base, mlen);
 	close(fd);

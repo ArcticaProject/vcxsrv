@@ -284,8 +284,8 @@ An
 .ZN InputOnly
 window is used as a Drawable.
 .SH "SEE ALSO"
-XDrawImageString(3X11),
-XDrawString(3X11),
-XLoadFont(3X11)
+XDrawImageString(__libmansuffix__),
+XDrawString(__libmansuffix__),
+XLoadFont(__libmansuffix__)
 .br
 \fI\*(xL\fP

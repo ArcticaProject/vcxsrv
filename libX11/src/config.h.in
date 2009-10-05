@@ -39,6 +39,9 @@
 /* launchd support available */
 #undef HAVE_LAUNCHD
 
+/* Define to 1 if you have the `ws2_32' library (-lws2_32). */
+#undef HAVE_LIBWS2_32
+
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 

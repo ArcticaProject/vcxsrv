@@ -1684,3 +1684,29 @@ RootlessShowAllWindows (void)
         RootlessScreenExpose (pScreen);
     }
 }
+
+/*
+ * SetPixmapOfAncestors
+ *  Set the Pixmaps on all ParentRelative windows up the ancestor chain.
+ */
+void
+RootlessSetPixmapOfAncestors(WindowPtr pWin)
+{
+    ScreenPtr pScreen = pWin->drawable.pScreen;
+    WindowPtr topWin = TopLevelParent(pWin);
+    RootlessWindowRec *topWinRec = WINREC(topWin);
+    
+    while (pWin->backgroundState == ParentRelative) {
+        if (pWin == topWin) {
+            // disallow ParentRelative background state on top level
+            XID pixel = 0;
+            ChangeWindowAttributes(pWin, CWBackPixel, &pixel, serverClient);
+            RL_DEBUG_MSG("Cleared ParentRelative on 0x%x.\n", pWin);
+            break;
+        }
+        
+        pWin = pWin->parent;
+        pScreen->SetWindowPixmap(pWin, topWinRec->pixmap);
+    }
+}
+

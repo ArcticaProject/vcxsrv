@@ -248,15 +248,9 @@ static Bool
 compAddAlternateVisual(ScreenPtr pScreen, CompScreenPtr cs,
 		       CompAlternateVisual *alt)
 {
-    VisualPtr	    visual, visuals;
-    int		    i;
-    int		    numVisuals;
-    XID		    *installedCmaps;
-    ColormapPtr	    installedCmap;
-    int		    numInstalledCmaps;
+    VisualPtr	    visual;
     DepthPtr	    depth;
     PictFormatPtr   pPictFormat;
-    VisualID	    *vid;
     unsigned long   alphaMask;
 
     /*
@@ -277,54 +271,13 @@ compAddAlternateVisual(ScreenPtr pScreen, CompScreenPtr cs,
 	pPictFormat->direct.red != pScreen->visuals[0].offsetRed)
 	return FALSE;
 
-    vid = xalloc(sizeof(VisualID));
-    if (!vid)
-	return FALSE;
-
-    /* Find the installed colormaps */
-    installedCmaps = xalloc (pScreen->maxInstalledCmaps * sizeof (XID));
-    if (!installedCmaps) {
-	xfree(vid);
-	return FALSE;
-    }
-    numInstalledCmaps = pScreen->ListInstalledColormaps(pScreen, 
-	    installedCmaps);
-
-    /* realloc the visual array to fit the new one in place */
-    numVisuals = pScreen->numVisuals;
-    visuals = xrealloc(pScreen->visuals, (numVisuals + 1) * sizeof(VisualRec));
-    if (!visuals) {
-	xfree(vid);
-	xfree(installedCmaps);
-	return FALSE;
+    if (ResizeVisualArray(pScreen, 1, depth) == FALSE) {
+        return FALSE;
     }
 
-    /*
-     * Fix up any existing installed colormaps -- we'll assume that
-     * the only ones created so far have been installed.  If this
-     * isn't true, we'll have to walk the resource database looking
-     * for all colormaps.
-     */
-    for (i = 0; i < numInstalledCmaps; i++) {
-	int j, rc;
-
-	rc = dixLookupResourceByType((pointer *)&installedCmap,
-				     installedCmaps[i], RT_COLORMAP,
-				     serverClient, DixReadAccess);
-	if (rc != Success)
-	    continue;
-	j = installedCmap->pVisual - pScreen->visuals;
-	installedCmap->pVisual = &visuals[j];
-    }
-
-    xfree(installedCmaps);
-
-    pScreen->visuals = visuals;
-    visual = visuals + pScreen->numVisuals; /* the new one */
-    pScreen->numVisuals++;
+    visual = pScreen->visuals + (pScreen->numVisuals - 1); /* the new one */
 
     /* Initialize the visual */
-    visual->vid = FakeClientID (0);
     visual->bitsPerRGBValue = 8;
     if (PICT_FORMAT_TYPE(alt->format) == PICT_TYPE_COLOR) {
 	visual->class = PseudoColor;
@@ -357,10 +310,6 @@ compAddAlternateVisual(ScreenPtr pScreen, CompScreenPtr cs,
     /* remember the visual ID to detect auto-update windows */
     compRegisterAlternateVisuals(cs, &visual->vid, 1);
 
-    /* Fix up the depth */
-    *vid = visual->vid;
-    depth->numVids = 1;
-    depth->vids = vid;
     return TRUE;
 }
 

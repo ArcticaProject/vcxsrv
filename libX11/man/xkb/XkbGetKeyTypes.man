@@ -32,21 +32,12 @@
 XkbGetKeyTypes \- Obtain the list of available key types in the server's 
 keyboard mapping
 .SH SYNOPSIS
+.HP
 .B Status XkbGetKeyTypes
-(
-.I dpy,
-.I first,
-.I num,
-.I xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIfirst\fP\^;
-.br
-      unsigned int \fInum\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "first" "\^,"
+.BI "unsigned int " "num" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

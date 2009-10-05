@@ -32,12 +32,9 @@
 XkbModActionVMods \- Returns the vmods1 and vmods2 fields of act converted to the vmods format of an 
 Xkb modifier description
 .SH SYNOPSIS
-.B unsigned short XkbModActionVMods macro
-(
-.I act
-)
-.br
-      XkbAction \fIact\fP\^;
+.HP
+.B unsigned short XkbModActionVMods
+.BI "(\^XkbAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

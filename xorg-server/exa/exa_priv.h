@@ -176,6 +176,8 @@ typedef struct {
     Bool (*pixmap_is_offscreen) (PixmapPtr pPixmap);
     void (*do_move_in_pixmap) (PixmapPtr pPixmap);
     void (*do_move_out_pixmap) (PixmapPtr pPixmap);
+    void (*prepare_access_reg)(PixmapPtr pPixmap, int index, RegionPtr pReg);
+    void (*finish_access)(PixmapPtr pPixmap, int index);
 
     Bool			 swappedOut;
     enum ExaMigrationHeuristic	 migration;
@@ -511,10 +513,7 @@ ExaOffscreenFini (ScreenPtr pScreen);
 
 /* exa.c */
 Bool
-ExaDoPrepareAccess(DrawablePtr pDrawable, int index);
-
-void
-exaPrepareAccessReg(DrawablePtr pDrawable, int index, RegionPtr pReg);
+ExaDoPrepareAccess(PixmapPtr pPixmap, int index);
 
 void
 exaPrepareAccess(DrawablePtr pDrawable, int index);
@@ -609,6 +608,12 @@ exaDoMigration_mixed(ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel);
 void
 exaMoveInPixmap_mixed(PixmapPtr pPixmap);
 
+void
+exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg);
+
+void
+exaFinishAccess_mixed(PixmapPtr pPixmap, int index);
+
 /* exa_render.c */
 Bool
 exaOpReadsDestination (CARD8 op);
@@ -665,6 +670,12 @@ exaGlyphs (CARD8	op,
 
 /* exa_migration_classic.c */
 void
+exaCopyDirtyToSys (ExaMigrationPtr migrate);
+
+void
+exaCopyDirtyToFb (ExaMigrationPtr migrate);
+
+void
 exaDoMigration_classic (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel);
 
 void
@@ -675,5 +686,8 @@ exaMoveOutPixmap_classic (PixmapPtr pPixmap);
 
 void
 exaMoveInPixmap_classic (PixmapPtr pPixmap);
+
+void
+exaPrepareAccessReg_classic(PixmapPtr pPixmap, int index, RegionPtr pReg);
 
 #endif /* EXAPRIV_H */

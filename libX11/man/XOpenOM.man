@@ -252,7 +252,7 @@ The
 .ZN XLocaleOfOM
 returns the locale associated with the specified output method.
 .SH "SEE ALSO"
-XCreateOC(3X11),
-XCreateFontSet(3X11)
+XCreateOC(__libmansuffix__),
+XCreateFontSet(__libmansuffix__)
 .br
 \fI\*(xL\fP

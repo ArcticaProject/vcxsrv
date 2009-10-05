@@ -32,15 +32,10 @@
 XkbForceBell \- Overrides user preference settings for audible bells to ring the 
 bell on the default keyboard
 .SH SYNOPSIS
+.HP
 .B Bool XkbForceBell
-(
-.I display,
-.I percent
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      int \fI percent \fP\^;                        
+.BI "(\^Display *" "display" "\^,"
+.BI "int " "percent" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -318,7 +313,7 @@ receives
 a bell event, use the window ID in the XkbBellNotifyEvent, if present.
 
 .SH "SEE ALSO"
-.BR XBell (3X11),
+.BR XBell (__libmansuffix__),
 .BR XkbBell (__libmansuffix__),
 .BR XkbChangeEnabledControls (__libmansuffix__),
 .BR XkbForceDeviceBell (__libmansuffix__),

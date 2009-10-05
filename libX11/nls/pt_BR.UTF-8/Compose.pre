@@ -198,6 +198,7 @@ XCOMM There are some conflicts among sequences, but I left them alone.
 XCOMM
 XCOMM group 1: cluster jamos made of three basic jamos
 
+/* The following block gets overridden by later shorter compositions
   <Multi_key> <U1107> <U1109> <U1100> : "ᄢ"  	U1122	 : ᄇᅠ ᄉᅠ ᄀᅠ  = ᄢᅠ
   <Multi_key> <U1107> <U1109> <U1103> : "ᄣ"  	U1123	 : ᄇᅠ ᄉᅠ ᄃᅠ  = ᄣᅠ
   <Multi_key> <U1107> <U1109> <U1107> : "ᄤ"  	U1124	 : ᄇᅠ ᄉᅠ ᄇᅠ  = ᄤᅠ
@@ -220,6 +221,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
   <Multi_key> <U11af> <U11ba> <U11ba> : "ᇖ"  	U11d6	 : ᅟᅠᆯ ᅟᅠᆺ ᅟᅠᆺ  = ᅟᅠᇖ
   <Multi_key> <U11b7> <U11ba> <U11ba> : "ᇞ"  	U11de	 : ᅟᅠᆷ ᅟᅠᆺ ᅟᅠᆺ  = ᅟᅠᇞ
   <Multi_key> <U11bc> <U11a8> <U11a8> : "ᇭ"  	U11ed	 : ᅟᅠᆼ ᅟᅠᆨ ᅟᅠᆨ  = ᅟᅠᇭ
+ */
   <Multi_key> <U1100> <U1100> : "ᄁ"  	U1101	 : ᄀᅠ ᄀᅠ   = ᄁᅠ
   <Multi_key> <U1103> <U1103> : "ᄄ"  	U1104	 : ᄃᅠ ᄃᅠ   = ᄄᅠ
   <Multi_key> <U1107> <U1107> : "ᄈ"  	U1108	 : ᄇᅠ ᄇᅠ   = ᄈᅠ
@@ -1048,18 +1050,18 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_acute> <dead_abovering> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
 <dead_acute> <Multi_key> <o> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
 <Multi_key> <acute> <dead_abovering> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
-<Multi_key> <acute> <o> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
+XCOMM <Multi_key> <acute> <o> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
 <Multi_key> <apostrophe> <dead_abovering> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
-<Multi_key> <apostrophe> <o> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
+XCOMM <Multi_key> <apostrophe> <o> <A>	: "Ǻ" U01FA # LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE
 <dead_acute> <aring>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
 <Multi_key> <acute> <aring>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
 <Multi_key> <apostrophe> <aring>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
 <dead_acute> <dead_abovering> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
 <dead_acute> <Multi_key> <o> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
 <Multi_key> <acute> <dead_abovering> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
-<Multi_key> <acute> <o> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
+XCOMM <Multi_key> <acute> <o> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
 <Multi_key> <apostrophe> <dead_abovering> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
-<Multi_key> <apostrophe> <o> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
+XCOMM <Multi_key> <apostrophe> <o> <a>	: "ǻ" U01FB # LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
 <dead_acute> <AE>	: "Ǽ" U01FC # LATIN CAPITAL LETTER AE WITH ACUTE
 <Multi_key> <acute> <AE>	: "Ǽ" U01FC # LATIN CAPITAL LETTER AE WITH ACUTE
 <Multi_key> <apostrophe> <AE>	: "Ǽ" U01FC # LATIN CAPITAL LETTER AE WITH ACUTE
@@ -1506,14 +1508,12 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <Multi_key> <U0cc6> <U0cd6>	: "ೈ" U0CC8 # KANNADA VOWEL SIGN AI
 <Multi_key> <U0cc6> <U0cc2>	: "ೊ" U0CCA # KANNADA VOWEL SIGN O
 <Multi_key> <U0cca> <U0cd5>	: "ೋ" U0CCB # KANNADA VOWEL SIGN OO
-<Multi_key> <U0cc6> <U0cc2> <U0cd5>	: "ೋ" U0CCB # KANNADA VOWEL SIGN OO
 <Multi_key> <U0d46> <U0d3e>	: "ൊ" U0D4A # MALAYALAM VOWEL SIGN O
 <Multi_key> <U0d47> <U0d3e>	: "ോ" U0D4B # MALAYALAM VOWEL SIGN OO
 <Multi_key> <U0d46> <U0d57>	: "ൌ" U0D4C # MALAYALAM VOWEL SIGN AU
 <Multi_key> <U0dd9> <U0dca>	: "ේ" U0DDA # SINHALA VOWEL SIGN DIGA KOMBUVA
 <Multi_key> <U0dd9> <U0dcf>	: "ො" U0DDC # SINHALA VOWEL SIGN KOMBUVA HAA AELA-PILLA
 <Multi_key> <U0ddc> <U0dca>	: "ෝ" U0DDD # SINHALA VOWEL SIGN KOMBUVA HAA DIGA AELA-PILLA
-<Multi_key> <U0dd9> <U0dcf> <U0dca>	: "ෝ" U0DDD # SINHALA VOWEL SIGN KOMBUVA HAA DIGA AELA-PILLA
 <Multi_key> <U0dd9> <U0ddf>	: "ෞ" U0DDE # SINHALA VOWEL SIGN KOMBUVA HAA GAYANUKITTA
 <Multi_key> <U0fb7> <U0f42>	: "གྷ" U0F43 # TIBETAN LETTER GHA
 <Multi_key> <U0fb7> <U0f4c>	: "ཌྷ" U0F4D # TIBETAN LETTER DDHA
@@ -1555,7 +1555,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <Multi_key> <acute> <comma> <C>	: "Ḉ" U1E08 # LATIN CAPITAL LETTER C WITH CEDILLA AND ACUTE
 <Multi_key> <acute> <cedilla> <C>	: "Ḉ" U1E08 # LATIN CAPITAL LETTER C WITH CEDILLA AND ACUTE
 <Multi_key> <apostrophe> <dead_cedilla> <C>	: "Ḉ" U1E08 # LATIN CAPITAL LETTER C WITH CEDILLA AND ACUTE
-<Multi_key> <apostrophe> <comma> <C>	: "Ḉ" U1E08 # LATIN CAPITAL LETTER C WITH CEDILLA AND ACUTE
+XCOMM <Multi_key> <apostrophe> <comma> <C>	: "Ḉ" U1E08 # LATIN CAPITAL LETTER C WITH CEDILLA AND ACUTE
 <Multi_key> <apostrophe> <cedilla> <C>	: "Ḉ" U1E08 # LATIN CAPITAL LETTER C WITH CEDILLA AND ACUTE
 <dead_acute> <ccedilla>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
 <Multi_key> <acute> <ccedilla>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
@@ -1567,7 +1567,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <Multi_key> <acute> <comma> <c>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
 <Multi_key> <acute> <cedilla> <c>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
 <Multi_key> <apostrophe> <dead_cedilla> <c>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
-<Multi_key> <apostrophe> <comma> <c>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
+XCOMM <Multi_key> <apostrophe> <comma> <c>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
 <Multi_key> <apostrophe> <cedilla> <c>	: "ḉ" U1E09 # LATIN SMALL LETTER C WITH CEDILLA AND ACUTE
 <dead_abovedot> <D>	: "Ḋ" U1E0A # LATIN CAPITAL LETTER D WITH DOT ABOVE
 <Multi_key> <period> <D>	: "Ḋ" U1E0A # LATIN CAPITAL LETTER D WITH DOT ABOVE
@@ -1906,13 +1906,13 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_abovedot> <dead_caron> <S>	: "Ṧ" U1E66 # LATIN CAPITAL LETTER S WITH CARON AND DOT ABOVE
 <dead_abovedot> <Multi_key> <c> <S>	: "Ṧ" U1E66 # LATIN CAPITAL LETTER S WITH CARON AND DOT ABOVE
 <Multi_key> <period> <dead_caron> <S>	: "Ṧ" U1E66 # LATIN CAPITAL LETTER S WITH CARON AND DOT ABOVE
-<Multi_key> <period> <c> <S>	: "Ṧ" U1E66 # LATIN CAPITAL LETTER S WITH CARON AND DOT ABOVE
+XCOMM <Multi_key> <period> <c> <S>	: "Ṧ" U1E66 # LATIN CAPITAL LETTER S WITH CARON AND DOT ABOVE
 <dead_abovedot> <scaron>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
 <Multi_key> <period> <scaron>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
 <dead_abovedot> <dead_caron> <s>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
-<dead_abovedot> <Multi_key> <c> <s>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
+XCOMM <dead_abovedot> <Multi_key> <c> <s>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
 <Multi_key> <period> <dead_caron> <s>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
-<Multi_key> <period> <c> <s>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
+XCOMM <Multi_key> <period> <c> <s>	: "ṧ" U1E67 # LATIN SMALL LETTER S WITH CARON AND DOT ABOVE
 <dead_abovedot> <U1e62>	: "Ṩ" U1E68 # LATIN CAPITAL LETTER S WITH DOT BELOW AND DOT ABOVE
 <Multi_key> <period> <U1e62>	: "Ṩ" U1E68 # LATIN CAPITAL LETTER S WITH DOT BELOW AND DOT ABOVE
 <dead_abovedot> <dead_belowdot> <S>	: "Ṩ" U1E68 # LATIN CAPITAL LETTER S WITH DOT BELOW AND DOT ABOVE
@@ -2119,10 +2119,10 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_acute> <Multi_key> <U> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
 <dead_acute> <Multi_key> <b> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <acute> <dead_breve> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
-<Multi_key> <acute> <U> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
+XCOMM <Multi_key> <acute> <U> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <acute> <b> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <apostrophe> <dead_breve> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
-<Multi_key> <apostrophe> <U> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
+XCOMM <Multi_key> <apostrophe> <U> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <apostrophe> <b> <A>	: "Ắ" U1EAE # LATIN CAPITAL LETTER A WITH BREVE AND ACUTE
 <dead_acute> <abreve>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <acute> <abreve>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
@@ -2131,10 +2131,10 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_acute> <Multi_key> <U> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
 <dead_acute> <Multi_key> <b> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <acute> <dead_breve> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
-<Multi_key> <acute> <U> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
+XCOMM <Multi_key> <acute> <U> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <acute> <b> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <apostrophe> <dead_breve> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
-<Multi_key> <apostrophe> <U> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
+XCOMM <Multi_key> <apostrophe> <U> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
 <Multi_key> <apostrophe> <b> <a>	: "ắ" U1EAF # LATIN SMALL LETTER A WITH BREVE AND ACUTE
 <dead_grave> <Abreve>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
 <Multi_key> <grave> <Abreve>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
@@ -2142,7 +2142,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_grave> <Multi_key> <U> <A>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
 <dead_grave> <Multi_key> <b> <A>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
 <Multi_key> <grave> <dead_breve> <A>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
-<Multi_key> <grave> <U> <A>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
+XCOMM <Multi_key> <grave> <U> <A>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
 <Multi_key> <grave> <b> <A>	: "Ằ" U1EB0 # LATIN CAPITAL LETTER A WITH BREVE AND GRAVE
 <dead_grave> <abreve>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
 <Multi_key> <grave> <abreve>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
@@ -2150,7 +2150,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_grave> <Multi_key> <U> <a>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
 <dead_grave> <Multi_key> <b> <a>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
 <Multi_key> <grave> <dead_breve> <a>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
-<Multi_key> <grave> <U> <a>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
+XCOMM <Multi_key> <grave> <U> <a>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
 <Multi_key> <grave> <b> <a>	: "ằ" U1EB1 # LATIN SMALL LETTER A WITH BREVE AND GRAVE
 <dead_hook> <Abreve>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
 <Multi_key> <question> <Abreve>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
@@ -2158,7 +2158,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_hook> <Multi_key> <U> <A>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
 <dead_hook> <Multi_key> <b> <A>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
 <Multi_key> <question> <dead_breve> <A>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
-<Multi_key> <question> <U> <A>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
+XCOMM <Multi_key> <question> <U> <A>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
 <Multi_key> <question> <b> <A>	: "Ẳ" U1EB2 # LATIN CAPITAL LETTER A WITH BREVE AND HOOK ABOVE
 <dead_hook> <abreve>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
 <Multi_key> <question> <abreve>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
@@ -2166,7 +2166,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_hook> <Multi_key> <U> <a>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
 <dead_hook> <Multi_key> <b> <a>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
 <Multi_key> <question> <dead_breve> <a>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
-<Multi_key> <question> <U> <a>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
+XCOMM <Multi_key> <question> <U> <a>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
 <Multi_key> <question> <b> <a>	: "ẳ" U1EB3 # LATIN SMALL LETTER A WITH BREVE AND HOOK ABOVE
 <dead_tilde> <Abreve>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
 <Multi_key> <asciitilde> <Abreve>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
@@ -2174,7 +2174,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_tilde> <Multi_key> <U> <A>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
 <dead_tilde> <Multi_key> <b> <A>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
 <Multi_key> <asciitilde> <dead_breve> <A>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
-<Multi_key> <asciitilde> <U> <A>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
+XCOMM <Multi_key> <asciitilde> <U> <A>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
 <Multi_key> <asciitilde> <b> <A>	: "Ẵ" U1EB4 # LATIN CAPITAL LETTER A WITH BREVE AND TILDE
 <dead_tilde> <abreve>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
 <Multi_key> <asciitilde> <abreve>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
@@ -2182,7 +2182,7 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <dead_tilde> <Multi_key> <U> <a>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
 <dead_tilde> <Multi_key> <b> <a>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
 <Multi_key> <asciitilde> <dead_breve> <a>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
-<Multi_key> <asciitilde> <U> <a>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
+XCOMM <Multi_key> <asciitilde> <U> <a>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
 <Multi_key> <asciitilde> <b> <a>	: "ẵ" U1EB5 # LATIN SMALL LETTER A WITH BREVE AND TILDE
 <dead_breve> <U1ea0>	: "Ặ" U1EB6 # LATIN CAPITAL LETTER A WITH BREVE AND DOT BELOW
 <Multi_key> <U> <U1ea0>	: "Ặ" U1EB6 # LATIN CAPITAL LETTER A WITH BREVE AND DOT BELOW
@@ -3645,9 +3645,9 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <Multi_key> <underscore> <parenright>	: "₎" U208E # SUBSCRIPT RIGHT PARENTHESIS
 <Multi_key> <underbar> <parenright>	: "₎" U208E # SUBSCRIPT RIGHT PARENTHESIS
 <dead_circumflex> <Multi_key> <S> <M>	: "℠" U2120 # SERVICE MARK
-<Multi_key> <asciicircum> <S> <M>	: "℠" U2120 # SERVICE MARK
+<Multi_key> <S> <M>			: "℠" U2120 # SERVICE MARK
 <dead_circumflex> <Multi_key> <T> <M>	: "™" U2122 # TRADE MARK SIGN
-<Multi_key> <asciicircum> <T> <M>	: "™" U2122 # TRADE MARK SIGN
+<Multi_key> <T> <M>			: "™" U2122 # TRADE MARK SIGN
 <Multi_key> <1> <3>			: "⅓"	U2153 # VULGAR FRACTION ONE THIRD
 <Multi_key> <2> <3>			: "⅔"	U2154 # VULGAR FRACTION TWO THIRDS
 <Multi_key> <1> <5>			: "⅕"	U2155 # VULGAR FRACTION ONE FIFTH
@@ -4235,25 +4235,25 @@ XCOMM group 1: cluster jamos made of three basic jamos
 <Multi_key> <U1d157> <U1d165>	: "𝅗𝅥" U1D15E # MUSICAL SYMBOL HALF NOTE
 <Multi_key> <U1d158> <U1d165>	: "𝅘𝅥" U1D15F # MUSICAL SYMBOL QUARTER NOTE
 <Multi_key> <U1d15f> <U1d16e>	: "𝅘𝅥𝅮" U1D160 # MUSICAL SYMBOL EIGHTH NOTE
-<Multi_key> <U1d158> <U1d165> <U1d16e>	: "𝅘𝅥𝅮" U1D160 # MUSICAL SYMBOL EIGHTH NOTE
+XCOMM <Multi_key> <U1d158> <U1d165> <U1d16e>	: "𝅘𝅥𝅮" U1D160 # MUSICAL SYMBOL EIGHTH NOTE
 <Multi_key> <U1d15f> <U1d16f>	: "𝅘𝅥𝅯" U1D161 # MUSICAL SYMBOL SIXTEENTH NOTE
-<Multi_key> <U1d158> <U1d165> <U1d16f>	: "𝅘𝅥𝅯" U1D161 # MUSICAL SYMBOL SIXTEENTH NOTE
+XCOMM <Multi_key> <U1d158> <U1d165> <U1d16f>	: "𝅘𝅥𝅯" U1D161 # MUSICAL SYMBOL SIXTEENTH NOTE
 <Multi_key> <U1d15f> <U1d170>	: "𝅘𝅥𝅰" U1D162 # MUSICAL SYMBOL THIRTY-SECOND NOTE
-<Multi_key> <U1d158> <U1d165> <U1d170>	: "𝅘𝅥𝅰" U1D162 # MUSICAL SYMBOL THIRTY-SECOND NOTE
+XCOMM <Multi_key> <U1d158> <U1d165> <U1d170>	: "𝅘𝅥𝅰" U1D162 # MUSICAL SYMBOL THIRTY-SECOND NOTE
 <Multi_key> <U1d15f> <U1d171>	: "𝅘𝅥𝅱" U1D163 # MUSICAL SYMBOL SIXTY-FOURTH NOTE
-<Multi_key> <U1d158> <U1d165> <U1d171>	: "𝅘𝅥𝅱" U1D163 # MUSICAL SYMBOL SIXTY-FOURTH NOTE
+XCOMM <Multi_key> <U1d158> <U1d165> <U1d171>	: "𝅘𝅥𝅱" U1D163 # MUSICAL SYMBOL SIXTY-FOURTH NOTE
 <Multi_key> <U1d15f> <U1d172>	: "𝅘𝅥𝅲" U1D164 # MUSICAL SYMBOL ONE HUNDRED TWENTY-EIGHTH NOTE
-<Multi_key> <U1d158> <U1d165> <U1d172>	: "𝅘𝅥𝅲" U1D164 # MUSICAL SYMBOL ONE HUNDRED TWENTY-EIGHTH NOTE
+XCOMM <Multi_key> <U1d158> <U1d165> <U1d172>	: "𝅘𝅥𝅲" U1D164 # MUSICAL SYMBOL ONE HUNDRED TWENTY-EIGHTH NOTE
 <Multi_key> <U1d1b9> <U1d165>	: "𝆹𝅥" U1D1BB # MUSICAL SYMBOL MINIMA
 <Multi_key> <U1d1ba> <U1d165>	: "𝆺𝅥" U1D1BC # MUSICAL SYMBOL MINIMA BLACK
 <Multi_key> <U1d1bb> <U1d16e>	: "𝆹𝅥𝅮" U1D1BD # MUSICAL SYMBOL SEMIMINIMA WHITE
-<Multi_key> <U1d1b9> <U1d165> <U1d16e>	: "𝆹𝅥𝅮" U1D1BD # MUSICAL SYMBOL SEMIMINIMA WHITE
+XCOMM <Multi_key> <U1d1b9> <U1d165> <U1d16e>	: "𝆹𝅥𝅮" U1D1BD # MUSICAL SYMBOL SEMIMINIMA WHITE
 <Multi_key> <U1d1bc> <U1d16e>	: "𝆺𝅥𝅮" U1D1BE # MUSICAL SYMBOL SEMIMINIMA BLACK
-<Multi_key> <U1d1ba> <U1d165> <U1d16e>	: "𝆺𝅥𝅮" U1D1BE # MUSICAL SYMBOL SEMIMINIMA BLACK
+XCOMM <Multi_key> <U1d1ba> <U1d165> <U1d16e>	: "𝆺𝅥𝅮" U1D1BE # MUSICAL SYMBOL SEMIMINIMA BLACK
 <Multi_key> <U1d1bb> <U1d16f>	: "𝆹𝅥𝅯" U1D1BF # MUSICAL SYMBOL FUSA WHITE
-<Multi_key> <U1d1b9> <U1d165> <U1d16f>	: "𝆹𝅥𝅯" U1D1BF # MUSICAL SYMBOL FUSA WHITE
+XCOMM <Multi_key> <U1d1b9> <U1d165> <U1d16f>	: "𝆹𝅥𝅯" U1D1BF # MUSICAL SYMBOL FUSA WHITE
 <Multi_key> <U1d1bc> <U1d16f>	: "𝆺𝅥𝅯" U1D1C0 # MUSICAL SYMBOL FUSA BLACK
-<Multi_key> <U1d1ba> <U1d165> <U1d16f>	: "𝆺𝅥𝅯" U1D1C0 # MUSICAL SYMBOL FUSA BLACK
+XCOMM <Multi_key> <U1d1ba> <U1d165> <U1d16f>	: "𝆺𝅥𝅯" U1D1C0 # MUSICAL SYMBOL FUSA BLACK
 
 XCOMM
 XCOMM Khmer digraphs

@@ -255,10 +255,10 @@ ProcAppleDRIDestroySurface(
     register ClientPtr client
 )
 {
+    int rc;
     REQUEST(xAppleDRIDestroySurfaceReq);
     DrawablePtr pDrawable;
     REQUEST_SIZE_MATCH(xAppleDRIDestroySurfaceReq);
-    int rc;
 
     rc = dixLookupDrawable(&pDrawable, stuff->drawable, client, 0,
 			   DixReadAccess);

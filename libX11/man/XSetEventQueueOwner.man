@@ -52,7 +52,7 @@ clients.  Clients can call \fIXSetEventQueueOwner\fP immediately after
 call \fIXSetEventQueueOwner\fP at any other time, as this will potentially
 lose responses.
 .SH "SEE ALSO"
-XOpenDisplay(3X11),
-XGetXCBConnection(3X11),
+XOpenDisplay(__libmansuffix__),
+XGetXCBConnection(__libmansuffix__),
 .br
 \fIXlib \- C Language X Interface\fP

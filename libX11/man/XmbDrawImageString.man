@@ -208,10 +208,10 @@ release. Its presence is
 indicated by the macro
 .ZN X_HAVE_UTF8_STRING .
 .SH "SEE ALSO"
-XDrawImageString(3X11),
-XDrawString(3X11),
-XDrawText(3X11),
-XmbDrawString(3X11),
-XmbDrawText(3X11)
+XDrawImageString(__libmansuffix__),
+XDrawString(__libmansuffix__),
+XDrawText(__libmansuffix__),
+XmbDrawString(__libmansuffix__),
+XmbDrawText(__libmansuffix__)
 .br
 \fI\*(xL\fP

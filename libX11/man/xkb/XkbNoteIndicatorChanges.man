@@ -30,18 +30,11 @@
 .SH NAME
 XkbNoteIndicatorChanges \- Notes the changes in a changes structure 
 .SH SYNOPSIS
+.HP
 .B void XkbNoteIndicatorChanges
-(
-.I old,
-.I new,
-.I wanted
-)
-.br
-      XkbIndicatorChangesPtr \fIold\fP\^;
-.br
-      XkbIndicatorNotifyEvent *\fInew\fP\^;
-.br
-      unsigned int \fIwanted\fP\^;
+.BI "(\^XkbIndicatorChangesPtr " "old" "\^,"
+.BI "XkbIndicatorNotifyEvent *" "new" "\^,"
+.BI "unsigned int " "wanted" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

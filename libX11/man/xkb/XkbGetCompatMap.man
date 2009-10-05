@@ -32,18 +32,11 @@
 XkbGetCompatMap \- Fetch any combination of the current compatibility map 
 components from the server
 .SH SYNOPSIS
+.HP
 .B Status XkbGetCompatMap
-(
-.I display,
-.I which,
-.I xkb
-)
-.br
-      Display * \fIdisplay\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDescRec * \fIxkb\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescRec *" "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

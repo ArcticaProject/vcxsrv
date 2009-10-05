@@ -33,21 +33,12 @@ level lvl from the
 two-dimensional table of key actions associated with the key corresponding to 
 keycode
 .SH SYNOPSIS
-.B XkbAction XkbKeyActionEntry macro
-(
-.I xkb,
-.I keycode,
-.I shift,
-.I grp
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
-.br
-      int \fIshift\fP\^;
-.br
-      int \fIgrp\fP\^;
+.HP
+.B XkbAction XkbKeyActionEntry
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^,"
+.BI "int " "shift" "\^,"
+.BI "int " "grp" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

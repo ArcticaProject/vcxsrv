@@ -33,18 +33,11 @@ XkbChangeControls \- Provides a flexible method for updating the controls in a
 server to match those in 
 the changed keyboard description
 .SH SYNOPSIS
+.HP
 .B Bool XkbChangeControls
-(
-.I dpy,
-.I xkb,
-.I changes
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      XkbControlsChangesPtr \fIchanges\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDescPtr " "xkb" "\^,"
+.BI "XkbControlsChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

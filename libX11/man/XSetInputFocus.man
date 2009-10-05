@@ -271,6 +271,6 @@ alternatives can generate this error.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XWarpPointer(3X11)
+XWarpPointer(__libmansuffix__)
 .br
 \fI\*(xL\fP

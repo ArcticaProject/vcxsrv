@@ -204,9 +204,9 @@ release. Its presence is
 indicated by the macro
 .ZN X_HAVE_UTF8_STRING .
 .SH "SEE ALSO"
-XCreateIC(3X11),
-XOpenIM(3X11),
-XSetICFocus(3X11),
-XSetICValues(3X11)
+XCreateIC(__libmansuffix__),
+XOpenIM(__libmansuffix__),
+XSetICFocus(__libmansuffix__),
+XSetICValues(__libmansuffix__)
 .br
 \fI\*(xL\fP

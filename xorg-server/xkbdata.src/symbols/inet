@@ -119,6 +119,7 @@ xkb_symbols "evdev" {
 
     key <HNGL>   {      [ Hangul                ]       };
     key <HJCV>   {      [ Hangul_Hanja          ]       };
+    key <FK22>   {      [ XF86TouchpadToggle    ]       };
 
 //  key <I120>   {      [ ]       }; // KEY_MACRO 
     key <I126>   {      [ plusminus             ]       };

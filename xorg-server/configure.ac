@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.6.99.902, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2009-9-22"
+AC_INIT([xorg-server], 1.7.0, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="2009-10-2"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([dist-bzip2 foreign])
 AM_MAINTAINER_MODE
@@ -85,12 +85,6 @@ dnl ISDN trace program named dtrace
 AC_ARG_WITH(dtrace, AS_HELP_STRING([--with-dtrace=PATH],
 	     [Enable dtrace probes (default: enabled if dtrace found)]),
 	     [WDTRACE=$withval], [WDTRACE=auto])
-dnl Darwin 9 has dtrace, but it doesn't support compilation into ELF...
-if test "x$WDTRACE" = xauto; then
-	case $host_os in
-		darwin*) WDTRACE="no" ;;
-	esac
-fi
 if test "x$WDTRACE" = "xyes" -o "x$WDTRACE" = "xauto" ; then
 	AC_PATH_PROG(DTRACE, [dtrace], [not_found], [$PATH:/usr/sbin])
 	if test "x$DTRACE" = "xnot_found" ; then
@@ -604,7 +598,7 @@ dnl DDXes.
 AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
 AC_ARG_ENABLE(dmx,    	      AS_HELP_STRING([--enable-dmx], [Build DMX server (default: auto)]), [DMX=$enableval], [DMX=auto])
 AC_ARG_ENABLE(xvfb,    	      AS_HELP_STRING([--enable-xvfb], [Build Xvfb server (default: yes)]), [XVFB=$enableval], [XVFB=yes])
-AC_ARG_ENABLE(xnest,   	      AS_HELP_STRING([--enable-xnest], [Build Xnest server (default: yes)]), [XNEST=$enableval], [XNEST=yes])
+AC_ARG_ENABLE(xnest,   	      AS_HELP_STRING([--enable-xnest], [Build Xnest server (default: auto)]), [XNEST=$enableval], [XNEST=auto])
 AC_ARG_ENABLE(xquartz,        AS_HELP_STRING([--enable-xquartz], [Build Xquartz server for OS-X (default: auto)]), [XQUARTZ=$enableval], [XQUARTZ=auto])
 AC_ARG_ENABLE(standalone-xpbproxy, AS_HELP_STRING([--enable-standalone-xpbproxy], [Build a standalone xpbproxy (in addition to the one integrated into Xquartz as a separate thread) (default: no)]), [STANDALONE_XPBPROXY=$enableval], [STANDALONE_XPBPROXY=no])
 AC_ARG_ENABLE(xwin,    	      AS_HELP_STRING([--enable-xwin], [Build XWin server (default: auto)]), [XWIN=$enableval], [XWIN=auto])
@@ -737,6 +731,16 @@ APPLEWMPROTO="applewmproto >= 1.4"
 dnl Core modules for most extensions, et al.
 REQUIRED_MODULES="[randrproto >= 1.2.99.3] [renderproto >= 0.11] [fixesproto >= 4.1] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xextproto >= 7.0.99.3] [xproto >= 7.0.13] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] fontsproto [inputproto >= 1.9.99.902] [kbproto >= 1.0.3]"
 REQUIRED_LIBS="xfont xau [pixman-1 >= 0.15.20]"
+
+dnl List of libraries that require a specific version
+LIBAPPLEWM="applewm >= 1.4"
+LIBDRI="dri >= 7.1.0"
+LIBDRM="libdrm >= 2.3.0"
+LIBGL="gl >= 7.1.0"
+LIBXEXT="xext >= 1.0.99.4"
+LIBXI="xi >= 1.2.99.1"
+LIBPCIACCESS="pciaccess >= 0.8.0"
+LIBGLIB="glib-2.0 >= 2.16"
 
 dnl HAVE_DBUS is true if we actually have the D-Bus library, whereas
 dnl CONFIG_DBUS_API is true if we want to enable the D-Bus config
@@ -901,7 +905,7 @@ fi
 
 if test "x$GLX" = xyes; then
 	PKG_CHECK_MODULES([XLIB], [x11])
-	PKG_CHECK_MODULES([GL], $GLPROTO [gl >= 7.1.0])
+	PKG_CHECK_MODULES([GL], $GLPROTO $LIBGL)
 	AC_SUBST(XLIB_CFLAGS)
 	AC_DEFINE(GLXEXT, 1, [Build GLX extension])
 	GLX_LIBS='$(top_builddir)/glx/libglx.la'
@@ -928,7 +932,7 @@ AM_CONDITIONAL(DRI, test "x$DRI" = xyes)
 if test "x$DRI" = xyes; then
 	AC_DEFINE(XF86DRI, 1, [Build DRI extension])
 	PKG_CHECK_MODULES([DRIPROTO], [$DRIPROTO])
-	PKG_CHECK_MODULES([DRI], $GLPROTO [dri >= 7.1.0])
+	PKG_CHECK_MODULES([DRI], $GLPROTO $LIBDRI)
 	AC_SUBST(DRIPROTO_CFLAGS)
 fi
 
@@ -946,7 +950,7 @@ esac
 AM_CONDITIONAL(DRI2, test "x$DRI2" = xyes)
 
 if test "x$DRI" = xyes || test "x$DRI2" = xyes; then
-	PKG_CHECK_MODULES([LIBDRM], [libdrm >= 2.3.0])
+	PKG_CHECK_MODULES([LIBDRM], $LIBDRM)
 	AC_SUBST(LIBDRM_CFLAGS)
 	AC_SUBST(LIBDRM_LIBS)
 fi
@@ -1193,7 +1197,7 @@ AM_CONDITIONAL(DEBUG, [test "x$DEBUGGING" = xyes])
 
 # If unittests aren't explicitly disabled, check for required support
 if test "x$UNITTESTS" != xno ; then
-       PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16],
+       PKG_CHECK_MODULES([GLIB], $LIBGLIB,
                          [HAVE_GLIB=yes], [HAVE_GLIB=no])
 
        # Check if linker supports -wrap, passed via compiler flags
@@ -1240,7 +1244,7 @@ AC_DEFINE(XSYNC, 1, [Support XSync extension])
 AC_DEFINE(XCMISC, 1, [Support XCMisc extension])
 AC_DEFINE(BIGREQS, 1, [Support BigRequests extension])
 
-if test "x$WDTRACE" != "xno" ; then
+if test "x$WDTRACE" != "xno" && test "x$XQUARTZ" = "xno"; then
   DIX_LIB='$(top_builddir)/dix/dix.O'
   OS_LIB='$(top_builddir)/os/os.O'
 else
@@ -1360,7 +1364,7 @@ fi
 
 dnl Xnest DDX
 
-PKG_CHECK_MODULES(XNESTMODULES, [xfont xext x11 xau $XDMCP_MODULES], [have_xnest=yes], [have_xnest=no])
+PKG_CHECK_MODULES(XNESTMODULES, [xfont $LIBXEXT x11 xau $XDMCP_MODULES], [have_xnest=yes], [have_xnest=no])
 AC_MSG_CHECKING([whether to build Xnest DDX])
 if test "x$XNEST" = xauto; then
 	XNEST="$have_xnest"
@@ -1369,6 +1373,9 @@ AC_MSG_RESULT([$XNEST])
 AM_CONDITIONAL(XNEST, [test "x$XNEST" = xyes])
 
 if test "x$XNEST" = xyes; then
+	if test "x$have_xnest" = xno; then
+		AC_MSG_ERROR([Xnest build explicitly requested, but required modules not found.])
+	fi
 	XNEST_LIBS="$FB_LIB $FIXES_LIB $MI_LIB $XEXT_LIB $DBE_LIB $RECORD_LIB $GLX_LIBS $RANDR_LIB $RENDER_LIB $DAMAGE_LIB $MIEXT_DAMAGE_LIB $MIEXT_SHADOW_LIB $XI_LIB $XKB_LIB $XKB_STUB_LIB $COMPOSITE_LIB $DIX_LIB $MAIN_LIB $OS_LIB $CONFIG_LIB"
 	XNEST_SYS_LIBS="$XNESTMODULES_LIBS $GLX_SYS_LIBS"
 	AC_SUBST([XNEST_LIBS])
@@ -1440,7 +1447,7 @@ if test "x$XORG" = xyes; then
 	AC_SUBST([symbol_visibility])
 	dnl ===================================================================
 
-	PKG_CHECK_MODULES([PCIACCESS], [pciaccess >= 0.8.0])
+	PKG_CHECK_MODULES([PCIACCESS], $LIBPCIACCESS)
 	SAVE_LIBS=$LIBS
 	SAVE_CFLAGS=$CFLAGS
 	CFLAGS=$PCIACCESS_CFLAGS
@@ -1746,7 +1753,7 @@ if test "x$XQUARTZ" = xyes; then
 
 	CFLAGS="${CFLAGS} -DROOTLESS_WORKAROUND -DROOTLESS_SAFEALPHA -DNO_ALLOCA"
 
-	PKG_CHECK_MODULES(XPBPROXY, $APPLEWMPROTO [applewm >= 1.4] xfixes x11)
+	PKG_CHECK_MODULES(XPBPROXY, $APPLEWMPROTO $LIBAPPLEWM xfixes x11)
 
         if test "x$XQUARTZ_SPARKLE" = xyes ; then
                 AC_DEFINE(XQUARTZ_SPARKLE,1,[Support application updating through sparkle.])
@@ -1775,7 +1782,7 @@ AM_CONDITIONAL(STANDALONE_XPBPROXY, [test "x$STANDALONE_XPBPROXY" = xyes])
 dnl DMX DDX
 
 PKG_CHECK_MODULES([DMXMODULES],
-    [xmuu xext x11 xrender xfixes xfont xi >= 1.2.99.1 $DMXPROTO xau $XDMCP_MODULES],
+    [xmuu $LIBXEXT x11 xrender xfixes xfont $LIBXI $DMXPROTO xau $XDMCP_MODULES],
     [have_dmx=yes], [have_dmx=no])
 AC_MSG_CHECKING([whether to build Xdmx DDX])
 if test "x$DMX" = xauto; then
@@ -1795,7 +1802,7 @@ if test "x$DMX" = xyes; then
 	fi
 	DMX_INCLUDES="$XEXT_INC $RENDER_INC $RECORD_INC"
 	XDMX_CFLAGS="$DMXMODULES_CFLAGS"
-	XDMX_LIBS="$XEXT_LIB $FB_LIB $CONFIG_LIB $FIXES_LIB $RENDER_LIB $RECORD_LIB $XI_LIB $XKB_LIB $XKB_STUB_LIB $MIEXT_SHADOW_LIB $MIEXT_DAMAGE_LIB"
+	XDMX_LIBS="$FB_LIB $MI_LIB $RENDER_LIB $RECORD_LIB $XI_LIB $XKB_LIB $XKB_STUB_LIB $MIEXT_SHADOW_LIB $MIEXT_DAMAGE_LIB $XEXT_LIB $MAIN_LIB $DIX_LIB $CONFIG_LIB $OS_LIB $FIXES_LIB"
 	XDMX_SYS_LIBS="$DMXMODULES_LIBS"
 	AC_SUBST([XDMX_CFLAGS])
 	AC_SUBST([XDMX_LIBS])
@@ -1810,17 +1817,17 @@ dnl Linux sources in DMX require <linux/keyboard.h>
 	PKG_CHECK_MODULES([XDMXCONFIG_DEP], [xaw7 xmu xt xpm x11])
 	AC_SUBST(XDMXCONFIG_DEP_CFLAGS)
 	AC_SUBST(XDMXCONFIG_DEP_LIBS)
-	PKG_CHECK_MODULES([DMXEXAMPLES_DEP], [dmx xext x11])
+	PKG_CHECK_MODULES([DMXEXAMPLES_DEP], [dmx $LIBXEXT x11])
 	AC_SUBST(DMXEXAMPLES_DEP_LIBS)
-	PKG_CHECK_MODULES([DMXXMUEXAMPLES_DEP], [dmx xmu xext x11])
+	PKG_CHECK_MODULES([DMXXMUEXAMPLES_DEP], [dmx xmu $LIBXEXT x11])
 	AC_SUBST(DMXXMUEXAMPLES_DEP_LIBS)
-	PKG_CHECK_MODULES([DMXXIEXAMPLES_DEP], [dmx xi xext x11])
+	PKG_CHECK_MODULES([DMXXIEXAMPLES_DEP], [dmx $LIBXI $LIBXEXT x11])
 	AC_SUBST(DMXXIEXAMPLES_DEP_LIBS)
-	PKG_CHECK_MODULES([XTSTEXAMPLES_DEP], [xtst xext x11])
+	PKG_CHECK_MODULES([XTSTEXAMPLES_DEP], [xtst $LIBXEXT x11])
 	AC_SUBST(XTSTEXAMPLES_DEP_LIBS)
-	PKG_CHECK_MODULES([XRESEXAMPLES_DEP], [xres xext x11])
+	PKG_CHECK_MODULES([XRESEXAMPLES_DEP], [xres $LIBXEXT x11])
 	AC_SUBST(XRESEXAMPLES_DEP_LIBS)
-	PKG_CHECK_MODULES([X11EXAMPLES_DEP], [xext x11])
+	PKG_CHECK_MODULES([X11EXAMPLES_DEP], [$LIBXEXT x11])
 	AC_SUBST(X11EXAMPLES_DEP_LIBS)
 fi
 AM_CONDITIONAL([DMX_BUILD_LNX], [test "x$DMX_BUILD_LNX" = xyes])
@@ -1861,7 +1868,11 @@ if test "$KDRIVE" = yes; then
 
 
     PKG_CHECK_MODULES([TSLIB], [tslib-0.0], [HAVE_TSLIB="yes"], [HAVE_TSLIB="no"])
-    if test "x$HAVE_TSLIB" = xauto; then
+    if test "x$HAVE_TSLIB" = xno; then
+        AC_CHECK_LIB(ts, ts_open, [HAVE_TSLIB="yes"])
+    fi
+
+    if test "xTSLIB" = xauto; then
         TSLIB="$HAVE_TSLIB"
     fi
 
@@ -1885,12 +1896,12 @@ if test "$KDRIVE" = yes; then
        XSDL_INCS="`sdl-config --cflags` $XSERVER_CFLAGS"
     fi
 
-    XEPHYR_REQUIRED_LIBS="x11 xext xfont xau xdmcp"
+    XEPHYR_REQUIRED_LIBS="x11 $LIBXEXT xfont xau xdmcp"
     if test "x$XV" = xyes; then
         XEPHYR_REQUIRED_LIBS="$XEPHYR_REQUIRED_LIBS xv"
     fi
     if test "x$DRI" = xyes && test "x$GLX" = xyes; then
-        XEPHYR_REQUIRED_LIBS="$XEPHYR_REQUIRED_LIBS gl libdrm"
+        XEPHYR_REQUIRED_LIBS="$XEPHYR_REQUIRED_LIBS $LIBGL libdrm"
     fi
 
     PKG_CHECK_MODULES(XEPHYR, $XEPHYR_REQUIRED_LIBS, [xephyr="yes"], [xephyr="no"])

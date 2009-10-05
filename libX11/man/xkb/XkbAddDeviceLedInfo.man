@@ -31,18 +31,11 @@
 .SH NAME
 XkbAddDeviceLedInfo \- Initialize an XkbDeviceLedInfoRec structure
 .SH SYNOPSIS
+.HP
 .B XkbDeviceLedInfoPtr XkbAddDeviceLedInfo
-(
-.I device_info,
-.I led_class,
-.I led_id
-)
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
-.br
-      unsigned int \fIled_class\fP\^;
-.br
-      unsigned int \fIled_id\fP\^;
+.BI "(\^XkbDeviceInfoPtr " "device_info" "\^,"
+.BI "unsigned int " "led_class" "\^,"
+.BI "unsigned int " "led_id" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

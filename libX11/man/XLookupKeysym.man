@@ -265,8 +265,8 @@ No text conversions are performed;
 the client is responsible for supplying appropriately encoded strings.
 Note that you can rebind a KeySym that may not exist.
 .SH "SEE ALSO"
-XButtonEvent(3X11),
-XMapEvent(3X11),
-XStringToKeysym(3X11)
+XButtonEvent(__libmansuffix__),
+XMapEvent(__libmansuffix__),
+XStringToKeysym(__libmansuffix__)
 .br
 \fI\*(xL\fP

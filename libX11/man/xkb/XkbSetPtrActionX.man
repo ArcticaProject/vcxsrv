@@ -32,15 +32,10 @@
 XkbSetPtrActionX \- Sets the high_XXX and low_XXX fields of act from the signed 
 integer value x
 .SH SYNOPSIS
-.B void XkbSetPtrActionX macro
-(
-.I act,
-.I x
-)
-.br
-      XkbPtrAction \fIact\fP\^;
-.br
-      int \fIx\fP\^;      
+.HP
+.B void XkbSetPtrActionX
+.BI "(\^XkbPtrAction " "act" "\^,"
+.BI "int " "x" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

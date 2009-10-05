@@ -34,18 +34,11 @@ XkbKeyGroupWidth \-  Computes the width of the type associated with the group
 for the key corresponding to 
 .I keycode
 .SH SYNOPSIS
-.B int XkbKeyGroupWidth macro
-(
-.I xkb,
-.I keycode,
-.I grp
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
-.br
-      int \fIgrp\fP\^;
+.HP
+.B int XkbKeyGroupWidth
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^,"
+.BI "int " "grp" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -174,7 +174,7 @@ The
 .ZN XDestroyRegion
 function deallocates the storage associated with a specified region.
 .SH "SEE ALSO"
-XEmptyRegion(3X11),
-XIntersectRegion(3X11)
+XEmptyRegion(__libmansuffix__),
+XIntersectRegion(__libmansuffix__)
 .br
 \fI\*(xL\fP

@@ -31,12 +31,9 @@
 .SH NAME
 XkbGetXlibControls \- Determines the current state of the Library Controls
 .SH SYNOPSIS
+.HP
 .B unsigned int XkbGetXlibControls
-(
-.I display
-)
-.br
-      Display  *\fIdisplay\fP\^;
+.BI "(\^Display  *" "display" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

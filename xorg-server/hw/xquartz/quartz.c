@@ -231,7 +231,7 @@ RREditConnectionInfo (ScreenPtr pScreen)
 }
 #endif
 
-static void QuartzUpdateScreens(void) {
+void QuartzUpdateScreens(void) {
     ScreenPtr pScreen;
     WindowPtr pRoot;
     int x, y, width, height, sx, sy;
@@ -297,14 +297,6 @@ static void QuartzUpdateScreens(void) {
 #ifdef FAKE_RANDR
     RREditConnectionInfo(pScreen);
 #endif    
-}
-
-/*
- * QuartzDisplayChangeHandler
- *  Adjust for screen arrangement changes.
- */
-void QuartzDisplayChangedHandler(int screenNum, xEventPtr xe, DeviceIntPtr dev, int nevents) {
-    QuartzUpdateScreens();
 }
 
 void QuartzSetFullscreen(Bool state) {
@@ -374,10 +366,7 @@ void QuartzSetRootless(Bool state) {
  *  Calls mode specific screen resume to restore the X clip regions
  *  (if needed) and the X server cursor state.
  */
-void QuartzShow(
-    int x,      // cursor location
-    int y )
-{
+void QuartzShow(void) {
     int i;
 
     if (quartzServerVisible)
@@ -386,7 +375,7 @@ void QuartzShow(
     quartzServerVisible = TRUE;
     for (i = 0; i < screenInfo.numScreens; i++) {
         if (screenInfo.screens[i]) {
-            quartzProcs->ResumeScreen(screenInfo.screens[i], x, y);
+            quartzProcs->ResumeScreen(screenInfo.screens[i]);
         }
     }
     

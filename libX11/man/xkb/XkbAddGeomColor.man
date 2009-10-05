@@ -31,18 +31,11 @@
 XkbAddGeomColor \-  Add one color name to an existing keyboard geometry 
 description
 .SH SYNOPSIS
+.HP
 .B XkbColorPtr XkbAddGeomColor
-(
-.I geom,
-.I spec,
-.I pixel
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      char * \fIspec\fP\^;
-.br
-      unsigned int \fIpixel\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "char *" "spec" "\^,"
+.BI "unsigned int " "pixel" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

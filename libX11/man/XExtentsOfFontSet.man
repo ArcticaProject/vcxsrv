@@ -167,8 +167,8 @@ with the associated
 .ZN XFontSet .
 Until freed, its contents will not be modified by Xlib.
 .SH "SEE ALSO"
-XCreateFontSet(3X11),
-XFontsOfFontSet(3X11),
-XFontSetExtents(3X11)
+XCreateFontSet(__libmansuffix__),
+XFontsOfFontSet(__libmansuffix__),
+XFontSetExtents(__libmansuffix__)
 .br
 \fI\*(xL\fP

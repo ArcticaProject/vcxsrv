@@ -1043,7 +1043,7 @@ ProcRenderAddGlyphs (ClientPtr client)
     CARD32	    *gids;
     xGlyphInfo	    *gi;
     CARD8	    *bits;
-    int		    size;
+    unsigned int    size;
     int		    err;
     int		    i, screen;
     PicturePtr	    pSrc = NULL, pDst = NULL;
@@ -1130,6 +1130,10 @@ ProcRenderAddGlyphs (ClientPtr client)
 		int	    depth = glyphSet->format->depth;
 		ScreenPtr   pScreen;
 		int	    error;
+
+		/* Skip work if it's invisibly small anyway */
+		if (!width || !height)
+		    break;
 
 		pScreen = screenInfo.screens[screen];
 		pSrcPix = GetScratchPixmapHeader (pScreen,

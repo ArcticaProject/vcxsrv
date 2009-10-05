@@ -33,24 +33,13 @@ XkbGetDeviceInfo \- Determine whether the X server allows Xkb access to particul
 the core X keyboard, or to determine the status of indicator maps, indicator names or button actions on a non-KeyClass 
 extension device
 .SH SYNOPSIS
+.HP
 .B XkbDeviceInfoPtr XkbGetDeviceInfo
-(
-.I dpy,
-.I which,
-.I device_spec,
-.I ind_class,
-.I ind_id
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int \fIind_class\fP\^;
-.br
-      unsigned int \fIind_id\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "ind_class" "\^,"
+.BI "unsigned int " "ind_id" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -262,4 +251,4 @@ typedef struct {
 .fi
 .SH "SEE ALSO"
 .BR XkbAllocDeviceInfo (__libmansuffix__),
-.BR XListInputDevices (3X11)
+.BR XListInputDevices (__libmansuffix__)

@@ -31,18 +31,11 @@
 .SH NAME
 XkbNoteDeviceChanges \- Note device changes reported in an XkbExtensionDeviceNotify event
 .SH SYNOPSIS
+.HP
 .B void XkbNoteDeviceChanges
-(
-.I old,
-.I new,
-.I wanted
-)
-.br
-      XkbDeviceChangesPtr \fIold\fP\^;
-.br
-      XkbExtensionDeviceNotifyEvent * \fInew\fP\^;
-.br
-      unsigned int \fIwanted\fP\^;
+.BI "(\^XkbDeviceChangesPtr " "old" "\^,"
+.BI "XkbExtensionDeviceNotifyEvent *" "new" "\^,"
+.BI "unsigned int " "wanted" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

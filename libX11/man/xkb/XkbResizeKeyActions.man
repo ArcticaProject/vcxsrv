@@ -31,18 +31,11 @@
 .SH NAME
 XkbResizeKeyActions \- Change the number of actions bound to a key
 .SH SYNOPSIS
+.HP
 .B XkbAction * XkbResizeKeyActions
-(
-.I xkb,
-.I key,
-.I needed
-)
-.br
-      XkbDescRec * \fIxkb\fP\^;
-.br
-      int \fIkey\fP\^;
-.br
-      int \fIneeded\fP\^;
+.BI "(\^XkbDescRec *" "xkb" "\^,"
+.BI "int " "key" "\^,"
+.BI "int " "needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -334,8 +334,8 @@ window is used as a Drawable.
 Some argument or pair of arguments has the correct type and range but fails
 to match in some other way required by the request.
 .SH "SEE ALSO"
-XDrawLine(3X11),
-XDrawPoint(3X11),
-XDrawRectangle(3X11)
+XDrawLine(__libmansuffix__),
+XDrawPoint(__libmansuffix__),
+XDrawRectangle(__libmansuffix__)
 .br
 \fI\*(xL\fP

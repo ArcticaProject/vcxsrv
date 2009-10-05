@@ -317,8 +317,8 @@ the octal value specified by the sequence.
 Finally, the two-character sequence ``\^\\\\'' is recognized
 and replaced with a single backslash.
 .SH "SEE ALSO"
-XrmGetResource(3X11),
-XrmInitialize(3X11),
-XrmPutResource(3X11)
+XrmGetResource(__libmansuffix__),
+XrmInitialize(__libmansuffix__),
+XrmPutResource(__libmansuffix__)
 .br
 \fI\*(xL\fP

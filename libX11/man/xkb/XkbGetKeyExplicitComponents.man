@@ -27,27 +27,17 @@
 .\" or other dealings in this Software without prior written authorization
 .\" of the copyright holder.
 .\"
-.TH XkbGetKeyExplicitComponents 3Xkb "20 Jul 1999" "X v11 Rel. 6.4" "XKB 
-FUNCTION"
+.TH XkbGetKeyExplicitComponents __libmansuffix__ "20 Jul 1999" "X v11 Rel. 6.4" "XKB FUNCTION"
 .SH NAME
 XkbGetKeyExplicitComponents \- Obtain the explicit components (the explicit 
 array) for a subset of the keys in a keyboard description
 .SH SYNOPSIS
+.HP
 .B Status XkbGetKeyExplicitComponents
-(
-.I dpy,
-.I first,
-.I num,
-.I xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIfirst\fP\^;
-.br
-      unsigned int \fInum\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "first" "\^,"
+.BI "unsigned int " "num" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

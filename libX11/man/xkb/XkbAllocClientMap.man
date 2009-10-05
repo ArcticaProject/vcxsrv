@@ -32,18 +32,11 @@
 XkbAllocClientMap \- Allocate and initialize an empty client map description 
 record
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocClientMap
-(
-.I xkb,
-.I which,
-.I type_count
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      unsigned int \fItype_count\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "unsigned int " "type_count" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

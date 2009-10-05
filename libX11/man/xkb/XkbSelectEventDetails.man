@@ -32,24 +32,13 @@ XkbSelectEventDetails \-  Selects or deselects for a specific Xkb event and
 optionally places conditions on when events of that type are reported to your 
 client 
 .SH SYNOPSIS
+.HP
 .B Bool XkbSelectEventDetails
-(
-.I display,
-.I device_spec,
-.I event_type,
-.I bits_to_change,
-.I values_for_bits
-)
-.br
-      Display * \fIdisplay\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      unsigned int \fIevent_type\fP\^;      
-.br
-      unsigned long int \fIbits_to_change\fP\^;
-.br
-      unsigned long int \fIvalues_for_bits\fP\^;      
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "event_type" "\^,"
+.BI "unsigned long int " "bits_to_change" "\^,"
+.BI "unsigned long int " "values_for_bits" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

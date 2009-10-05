@@ -31,12 +31,9 @@
 XkbSARedirectVMods \- Returns the vmods0 and vmods1 fields of act converted to 
 an unsigned int
 .SH SYNOPSIS
-.B unsigned int XkbSARedirectVMods macro
-(
-.I act
-)
-.br
-      XkbRedirectKeyAction \fIact\fP\^;      
+.HP
+.B unsigned int XkbSARedirectVMods
+.BI "(\^XkbRedirectKeyAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

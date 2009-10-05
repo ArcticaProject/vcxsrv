@@ -32,18 +32,11 @@
 XkbApplyCompatMapToKey \- Apply the new compatibility mapping to an individual 
 key to get its semantics updated
 .SH SYNOPSIS
+.HP
 .B Bool XkbApplyCompatMapToKey
-(
-.I xkb,
-.I key,
-.I changes
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkey\fP\^;
-.br
-      XkbChangesPtr \fIchanges\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "key" "\^,"
+.BI "XkbChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

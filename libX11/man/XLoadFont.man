@@ -534,8 +534,8 @@ A value for a Font or GContext argument does not name a defined Font.
 .ZN BadName
 A font or color of the specified name does not exist.
 .SH "SEE ALSO"
-XCreateGC(3X11),
-XListFonts(3X11),
-XSetFontPath(3X11)
+XCreateGC(__libmansuffix__),
+XListFonts(__libmansuffix__),
+XSetFontPath(__libmansuffix__)
 .br
 \fI\*(xL\fP

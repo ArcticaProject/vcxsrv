@@ -32,12 +32,9 @@
 XkbFreeComponentList \- Free the structure returned by 
 .I XkbListComponents
 .SH SYNOPSIS
+.HP
 .B void XkbFreeComponentList
-(
-.I list
-)
-.br
-      XkbComponentListPtr \fIlist\fP\^;
+.BI "(\^XkbComponentListPtr " "list" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

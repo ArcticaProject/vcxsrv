@@ -30,21 +30,12 @@
 .SH NAME
 XkbFreeGeomKeys \-  Free geometry keys
 .SH SYNOPSIS
+.HP
 .B void XkbFreeGeomKeys
-(
-.I row,
-.I first,
-.I count,
-.I free_all
-)
-.br
-      XkbRowPtr \fIrow\fP\^;
-.br
-      int \fIfirst\fP\^;
-.br
-      int \fIcount\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbRowPtr " "row" "\^,"
+.BI "int " "first" "\^,"
+.BI "int " "count" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

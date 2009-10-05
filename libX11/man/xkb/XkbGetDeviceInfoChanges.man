@@ -33,18 +33,11 @@ XkbGetDeviceInfoChanges \- Query the changes that have occurred in the button
 actions or indicator names and indicator maps associated with an input extension 
 device
 .SH SYNOPSIS
+.HP
 .B Status XkbGetDeviceInfoChanges
-(
-.I dpy,
-.I device_info,
-.I changes
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
-.br
-      XkbDeviceChangesPtr \fIchanges\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDeviceInfoPtr " "device_info" "\^,"
+.BI "XkbDeviceChangesPtr " "changes" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

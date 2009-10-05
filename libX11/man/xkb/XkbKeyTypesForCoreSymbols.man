@@ -32,27 +32,14 @@
 XkbKeyTypesForCoreSymbols \- Determine the Xkb key types appropriate for the 
 symbols bound to a key in a core keyboard mapping
 .SH SYNOPSIS
+.HP
 .B int XkbKeyTypesForCoreSymbols
-(
-.I xkb,
-.I map_width,
-.I core_syms,
-.I protected,
-.I types_inout,
-.I xkb_syms_rtrn
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      int \fImap_width\fP\^;
-.br
-      KeySym * \fIcore_syms\fP\^;
-.br
-      unsigned int \fIprotected\fP\^;
-.br
-      int * \fItypes_inout\fP\^;
-.br
-      KeySym * \fIxkb_syms_rtrn\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "int " "map_width" "\^,"
+.BI "KeySym *" "core_syms" "\^,"
+.BI "unsigned int " "protected" "\^,"
+.BI "int *" "types_inout" "\^,"
+.BI "KeySym *" "xkb_syms_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

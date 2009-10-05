@@ -51,7 +51,7 @@ in this Software without prior written authorization from The Open Group.
 #endif
 
 #if defined(hpux)
-typedef shl_dt	XModuleType;
+typedef shl_t	XModuleType;
 #else
 #ifdef _MSC_VER
 #include <X11/XWindows.h>

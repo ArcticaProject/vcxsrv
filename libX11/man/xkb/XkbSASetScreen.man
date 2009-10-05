@@ -31,15 +31,10 @@
 .SH NAME
 XkbSASetScreen \- Sets the screenXXX field of act from s
 .SH SYNOPSIS
-.B void XkbSASetScreen macro
-(
-.I act,
-.I s
-)
-.br
-      XkbSwitchScreenAction \fIact\fP\^;
-.br
-      int \fIs\fP\^;      
+.HP
+.B void XkbSASetScreen
+.BI "(\^XkbSwitchScreenAction " "act" "\^,"
+.BI "int " "s" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

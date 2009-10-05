@@ -31,15 +31,10 @@
 XkbAllocGeomOutlines \- Allocate space for an arbitrary number of outlines to a 
 shape
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomOutlines
-(
-.I shape,
-.I num_needed
-)
-.br
-      XkbShapePtr \fIshape\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbShapePtr " "shape" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

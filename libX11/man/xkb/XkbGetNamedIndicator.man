@@ -31,30 +31,15 @@
 XkbGetNamedIndicator \- Look up the indicator map and other information for an 
 indicator by name
 .SH SYNOPSIS
+.HP
 .B Bool XkbGetNamedIndicator
-(
-.I dpy,
-.I dev_spec,
-.I name,
-.I ndx_rtrn,
-.I state_rtrn,
-.I map_rtrn,
-.I real_rtrn
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      unsigned int \fIdev_spec\fP\^;
-.br
-      Atom \fIname\fP\^;
-.br
-      int *\fIndx_rtrn\fP\^;
-.br
-      Bool *\fIstate_rtrn\fP\^;
-.br
-      XkbIndicatorMapPtr \fImap_rtrn\fP\^;
-.br
-      Bool *\fIreal_rtrn\fP\^;                        
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "dev_spec" "\^,"
+.BI "Atom " "name" "\^,"
+.BI "int *" "ndx_rtrn" "\^,"
+.BI "Bool *" "state_rtrn" "\^,"
+.BI "XkbIndicatorMapPtr " "map_rtrn" "\^,"
+.BI "Bool *" "real_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

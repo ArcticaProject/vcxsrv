@@ -31,21 +31,12 @@
 .SH NAME
 XkbListComponents \- List of components for one or more component types
 .SH SYNOPSIS
+.HP
 .B XkbComponentListPtr XkbListComponents
-(
-.I dpy,
-.I device_spec,
-.I ptrns,
-.I max_inout
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      XkbComponentNamesPtr \fIptrnst\fP\^;
-.br
-      int * \fImax_inout\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "XkbComponentNamesPtr " "ptrns" "\^,"
+.BI "int *" "max_inout" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

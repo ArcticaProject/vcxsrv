@@ -32,30 +32,15 @@
 XkbSetAccessXTimeout \- Configures the AccessXTimeout options for a keyboard 
 device
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetAccessXTimeout
-(
-.I display,
-.I device_spec,
-.I timeout,
-.I ctrls_mask,
-.I ctrls_values,
-.I opts_mask,
-.I opts_values
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      unsigned int \fI device_spec \fP\^;
-.br
-      unsigned short \fI timeout \fP\^;
-.br
-      unsigned int \fI ctrls_mask \fP\^;
-.br
-      unsigned int \fI ctrls_values \fP\^;
-.br
-      unsigned short \fI opts_mask \fP\^;
-.br
-      unsigned short \fI opts_values \fP\^;      
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned short " "timeout" "\^,"
+.BI "unsigned int " "ctrls_mask" "\^,"
+.BI "unsigned int " "ctrls_values" "\^,"
+.BI "unsigned short " "opts_mask" "\^,"
+.BI "unsigned short " "opts_values" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

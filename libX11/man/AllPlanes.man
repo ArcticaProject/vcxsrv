@@ -372,9 +372,9 @@ The
 .ZN VendorRelease
 macro returns a number related to a vendor's release of the X server.
 .SH "SEE ALSO"
-BlackPixelOfScreen(3X11),
-ImageByteOrder(3X11),
-IsCursorKey(3X11),
-XOpenDisplay(3X11)
+BlackPixelOfScreen(__libmansuffix__),
+ImageByteOrder(__libmansuffix__),
+IsCursorKey(__libmansuffix__),
+XOpenDisplay(__libmansuffix__)
 .br
 \fI\*(xL\fP

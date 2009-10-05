@@ -161,9 +161,9 @@ would rather deal with it later.
 There is no limit to the number of times in succession that you can call
 .ZN XPutBackEvent .
 .SH "SEE ALSO"
-XAnyEvent(3X11),
-XIfEvent(3X11),
-XNextEvent(3X11),
-XSendEvent(3X11)
+XAnyEvent(__libmansuffix__),
+XIfEvent(__libmansuffix__),
+XNextEvent(__libmansuffix__),
+XSendEvent(__libmansuffix__)
 .br
 \fI\*(xL\fP

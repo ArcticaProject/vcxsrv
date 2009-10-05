@@ -175,6 +175,6 @@ The specified procedure is called with only a display pointer.
 .ZN XSetAfterFunction
 returns the previous after function.
 .SH "SEE ALSO"
-XSetErrorHandler(3X11)
+XSetErrorHandler(__libmansuffix__)
 .br
 \fI\*(xL\fP

@@ -297,9 +297,9 @@ The function returns
 if it succeeds; otherwise, it returns 
 .ZN False .
 .SH "SEE ALSO"
-XCreateIC(3X11),
-XSetICFocus(3X11),
-XSetICValues(3X11),
-XmbResetIC(3X11)
+XCreateIC(__libmansuffix__),
+XSetICFocus(__libmansuffix__),
+XSetICValues(__libmansuffix__),
+XmbResetIC(__libmansuffix__)
 .br
 \fI\*(xL\fP

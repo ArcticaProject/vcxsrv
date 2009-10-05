@@ -31,15 +31,10 @@
 .SH NAME
 XkbResizeDeviceButtonActions \- Allocate additional space for button actions in an XkbDeviceInfoRec structure
 .SH SYNOPSIS
+.HP
 .B Status XkbResizeDeviceButtonActions
-(
-.I device_info,
-.I new_total
-)
-.br
-      XkbDeviceInfoPtr \fIdevice_info\fP\^;
-.br
-      unsigned int \fInew_total\fP\^;
+.BI "(\^XkbDeviceInfoPtr " "device_info" "\^,"
+.BI "unsigned int " "new_total" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

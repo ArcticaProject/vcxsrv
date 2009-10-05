@@ -30,12 +30,9 @@
 .SH NAME
 XkbComputeShapeBounds \- Updates the bounding box of a shape
 .SH SYNOPSIS
+.HP
 .B Bool XkbComputeShapeBounds
-(
-.I shape
-)
-.br
-      XkbShapePtr \fIshape\fP\^;
+.BI "(\^XkbShapePtr " "shape" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

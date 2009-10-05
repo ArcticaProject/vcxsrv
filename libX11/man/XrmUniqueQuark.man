@@ -296,9 +296,9 @@ quarks	a	b	c
 bindings	loose	tight	loose
 .TE
 .SH "SEE ALSO"
-XrmGetResource(3X11),
-XrmInitialize(3X11),
-XrmMergeDatabases(3X11),
-XrmPutResource(3X11)
+XrmGetResource(__libmansuffix__),
+XrmInitialize(__libmansuffix__),
+XrmMergeDatabases(__libmansuffix__),
+XrmPutResource(__libmansuffix__)
 .LP
 \fI\*(xL\fP

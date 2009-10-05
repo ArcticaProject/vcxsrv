@@ -701,7 +701,6 @@ exaGlyphs (CARD8 	 op,
 	   GlyphListPtr	 list,
 	   GlyphPtr	*glyphs)
 {
-    PicturePtr	pPicture;
     PixmapPtr   pMaskPixmap = 0;
     PicturePtr  pMask = NULL;
     ScreenPtr   pScreen = pDst->pDrawable->pScreen;
@@ -803,7 +802,6 @@ exaGlyphs (CARD8 	 op,
 	while (n--)
 	{
 	    glyph = *glyphs++;
-	    pPicture = GlyphPicture (glyph)[pScreen->myNum];
 
 	    if (glyph->info.width > 0 && glyph->info.height > 0)
 	    {

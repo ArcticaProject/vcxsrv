@@ -72,7 +72,7 @@ X_PFX (cvt_vptr_to_uint) (void * val) __attribute__((always_inline));
 static __inline__ void *
 X_PFX (cvt_uint_to_vptr) (unsigned int val)
 {
-	return (void*)((size_t)(val));
+	return (void*)((unsigned long)(val));
 }
 
 static __inline__ unsigned int

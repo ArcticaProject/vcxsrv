@@ -1,3 +1,205 @@
+commit d54caf1c9c55af8247621b7ba6afb20b23699839
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 2 10:59:08 2009 +1000
+
+    libX11 1.3
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit dd201bcf9e7f8863b7ef32273a5ef021678133c1
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 2 12:10:29 2009 +1000
+
+    nls: remove duplicate Compose sequences from pt_BR.UTF-8
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a293ae9e83739067fc92db1a39c262857bc2283e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Sep 25 11:19:41 2009 +1000
+
+    Add XF86TouchpadToggle to XKeysymDB
+    
+    Lenovo laptops provide a key to enable or disable the touchpad and the
+    trackstick. This key is usually located on Fn + F8.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit 69839f8903a24eab08f17a781b3797fb64dce9cf
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun Sep 27 10:34:16 2009 -0700
+
+    Bug 24173: libX11 from git fails to build with automake older then 1.11
+    
+    AM_CONDITIONAL must come *before* the AC_OUTPUT that creates the
+    Makefiles, instead of after.
+    <http://bugs.freedesktop.org/show_bug.cgi?id=24173>
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit f5effd041f58ef07703cca2b4f396758811e1eec
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Apr 15 10:59:23 2009 -0700
+
+    Resolve conflicting Compose sequences in iso8859-2, el_GR.UTF-8 & pt_BR.UTF-8
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 3843778358d3a0cd6a2d07dba5dd061248053ac9
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Apr 15 10:56:09 2009 -0700
+
+    Add perl script to check for duplicate or conflicting compose file entries
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 19cc5e1fa17a285045662820a8b4de2a0f9a194d
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 18 17:10:04 2009 -0700
+
+    Use make rules instead of shell for loops to generate shadow man pages
+    
+    Allows parallel make and simpler build logs/error reporting
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 7dabcac973d0b6692a3cd62bd6d8e0467b24200b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 18 16:58:53 2009 -0700
+
+    Add AM_SILENT_RULES support for cpp rules for man & nls files
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit bfa19cddd8546b4930a773f3bbd81137c362d82b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Sep 18 16:58:16 2009 -0700
+
+    Update to using xorg-macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 51396066c8003a96a6399c9a4bed2a81e512b582
+Author: Mikko Niskanen <mikko.niskanen@iki.fi>
+Date:   Fri Sep 4 10:11:15 2009 +1000
+
+    Fix wrong typedef on HP-UX (#18998)
+    
+    shl_dt doesn't exist, the type is shl_t.
+    
+    X.Org Bug 18998 <http://bugs.freedesktop.org/show_bug.cgi?id=18998>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 615220a312b9430a580fe6dcf51703c6ef244f66
+Author: Paul Bender <pebender@gmail.com>
+Date:   Fri Sep 4 09:57:10 2009 +1000
+
+    Don't require xdmcp in configure.ac (#22583)
+    
+    X.Org Bug 22583 <http://bugs.freedesktop.org/show_bug.cgi?id=22583>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 20f9ecd86ad2a9ac6966f7eee32234cb5ef77c29
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 3 14:02:44 2009 +1000
+
+    man: fix parameters to XkbAllocGeomOverlay{Rows|Keys} (#23499)
+    
+    X.Org Bug 23499 <http://bugs.freedesktop.org/show_bug.cgi?id=23499>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit c2814a614dc4d9409bfa0f44c18bfd69ad7f7b85
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 3 12:05:25 2009 +1000
+
+    man: XQueryTree may return BadWindow. (#23416)
+    
+    X.Org Bug 23416 <http://bugs.freedesktop.org/show_bug.cgi?id=XXX>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit dbe98d456ccc6eeca9fa3e241a3db0a4d83c5a65
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 28 23:07:58 2009 +0800
+
+    Fix version tag in .TH line of several XKB man pages
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit bf24400936c10af6f5aa0c75cfe2207ab9b680b4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 28 23:04:38 2009 +0800
+
+    XkbSetDeviceButtonActions.man: remove non-existent actions argument
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 53affa9335116f2d367f041e6502a411d4619e47
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 28 23:00:17 2009 +0800
+
+    XkbQueryExtension.man: Arguments should be pointers
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 6233948885acc5873a5abddfff235afec555f3c2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 28 22:53:03 2009 +0800
+
+    XkbSAActionSetCtrls.man: Fix typo in formatting macro
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 28a9ca57cdec4aa9ca92322f963b01f0c2daf47a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Aug 28 22:49:31 2009 +0800
+
+    Convert Xkb API man pages to ANSI prototypes
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit fa2eecca85baab9616f7143cc1a853a594b4a90c
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Aug 24 06:35:17 2009 -0400
+
+    Add some (Serbian) Cyrillic NFD sequences.
+    
+    A number of characters in use in the various countries which use the
+    Cyrillic script do not appear as pre-composed characters in The UCS
+    or Unicode; they are only available as combining-character sequences.
+    
+    This commit adds support for using (prefix) dead keys and Multi_key-
+    initiated sequences to enter a number of these combining-character
+    sequences.  This ensures that users can enter these scripts even
+    when using the current Cyrillic keymaps, which lack support for
+    the combining characters.
+    
+    Please see the discussions on the xkb mailing list.
+    
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+
+commit d1bdc909f9246119696c8b0d9afb7bd8afb71b60
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Wed Aug 5 18:14:23 2009 +0200
+
+    man/xkb: delete spurious newline in .TH headers
+
+commit ee723b83b24682db833a2f0abd96cd319b8a62af
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Wed Aug 5 16:45:19 2009 +0200
+
+    man: use __libmansuffix__ instead of 3X11 for references to other pages
+
+commit 595e204feb82c798a92eea41fea03be6476ac181
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Wed Aug 5 16:43:36 2009 +0200
+
+    man/xkb: use __libmansuffix__ instead of hardcoding 3Xkb for manpage sections
+
 commit 9da7e230d5320e1556ad2084fcd06ee7994385ea
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Wed Aug 5 14:15:02 2009 +1000

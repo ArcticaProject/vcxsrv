@@ -177,9 +177,9 @@ does not affect the focus window value;
 the client may still receive 
 events from the input method that are directed to the focus window.
 .SH "SEE ALSO"
-XCreateIC(3X11),
-XOpenIM(3X11),
-XSetICValues(3X11),
-XmbResetIC(3X11)
+XCreateIC(__libmansuffix__),
+XOpenIM(__libmansuffix__),
+XSetICValues(__libmansuffix__),
+XmbResetIC(__libmansuffix__)
 .br
 \fI\*(xL\fP

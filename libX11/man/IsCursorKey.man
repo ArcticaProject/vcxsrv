@@ -205,8 +205,8 @@ macro returns
 .ZN True
 if the specified KeySym is a vendor-private keypad key.
 .SH "SEE ALSO"
-AllPlanes(3X11),
-BlackPixelOfScreen(3X11),
-ImageByteOrder(3X11)
+AllPlanes(__libmansuffix__),
+BlackPixelOfScreen(__libmansuffix__),
+ImageByteOrder(__libmansuffix__)
 .br
 \fI\*(xL\fP

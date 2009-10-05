@@ -30,15 +30,10 @@
 .SH NAME
 XkbLibraryVersion \-  Determines the compatibility of a library at runtime.
 .SH SYNOPSIS
+.HP
 .B Bool XkbLibraryVersion
-(
-.I lib_major_in_out,
-.I lib_minor_in_out
-)
-.br
-      int *\fIlib_major_in_out\fP\^;
-.br
-      int *\fIlib_minor_in_out\fP\^;
+.BI "(\^int *" "lib_major_in_out" "\^,"
+.BI "int *" "lib_minor_in_out" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

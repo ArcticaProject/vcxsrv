@@ -31,18 +31,11 @@
 XkbFreeKeyboard \-  Destroys either an entire XkbDescRec or just some of its 
 members
 .SH SYNOPSIS
+.HP
 .B void XkbFreeKeyboard
-(
-.I xkb,
-.I which,
-.I free_all
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

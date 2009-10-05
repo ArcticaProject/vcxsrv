@@ -31,18 +31,11 @@
 XkbVirtualModsToReal \- Determines the mapping of virtual modifiers to core X 
 protocol modifiers
 .SH SYNOPSIS
+.HP
 .B Bool XkbVirtualModsToReal
-(
-.I xkb,
-.I virtual_mask,
-.I mask_rtrn
-)
-.br
-      XkbDescPtr \fI xkb \fP\^;
-.br
-      unsigned int \fI virtual_mask \fP\^;
-.br
-      unsigned int *\fI mask_rtrn \fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "virtual_mask" "\^,"
+.BI "unsigned int *" "mask_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

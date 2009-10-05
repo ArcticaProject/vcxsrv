@@ -214,7 +214,7 @@ error.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XGetWindowAttributes(3X11),
-XQueryTree(3X11)
+XGetWindowAttributes(__libmansuffix__),
+XQueryTree(__libmansuffix__)
 .br
 \fI\*(xL\fP

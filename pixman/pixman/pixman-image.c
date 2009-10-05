@@ -312,7 +312,7 @@ pixman_image_set_transform (pixman_image_t *          image,
     {
 	{ { pixman_fixed_1, 0, 0 },
 	  { 0, pixman_fixed_1, 0 },
-	  { 0, 0, pixman_fixed_1 }}
+	  { 0, 0, pixman_fixed_1 } }
     };
 
     image_common_t *common = (image_common_t *)image;
@@ -342,10 +342,12 @@ pixman_image_set_transform (pixman_image_t *          image,
 
     memcpy (common->transform, transform, sizeof(pixman_transform_t));
 
+    result = TRUE;
+
 out:
     image_property_changed (image);
 
-    return TRUE;
+    return result;
 }
 
 PIXMAN_EXPORT void

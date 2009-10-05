@@ -36,7 +36,7 @@
 
 #include "launchd_fd.h"
 
-int launchd_display_fd() {
+int launchd_display_fd(void) {
     launch_data_t sockets_dict, checkin_request, checkin_response;
     launch_data_t listening_fd_array, listening_fd;
 

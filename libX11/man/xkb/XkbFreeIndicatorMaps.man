@@ -32,12 +32,9 @@ XkbFreeIndicatorMaps \- Frees memory used by the
 .I indicators 
 member of an XkbDescRec structure
 .SH SYNOPSIS
+.HP
 .B void XkbFreeIndicatorMaps
-(
-.I xkb
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

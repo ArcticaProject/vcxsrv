@@ -30,15 +30,10 @@
 .SH NAME
 XkbAllocGeomPoints \- Allocate points in an outline
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomPoints
-(
-.I outline,
-.I num_needed
-)
-.br
-      XkbOutlinePtr \fIoutline\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbOutlinePtr " "outline" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

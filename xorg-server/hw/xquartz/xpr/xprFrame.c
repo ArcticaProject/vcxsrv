@@ -215,10 +215,10 @@ xprDestroyFrame(RootlessFrameID wid)
 static void
 xprMoveFrame(RootlessFrameID wid, ScreenPtr pScreen, int newX, int newY)
 {
-    TA_SERVER();
-    
     xp_window_changes wc;
 
+    TA_SERVER();
+    
     wc.x = newX;
     wc.y = newY;
     //    ErrorF("xprMoveFrame(%d, %p, %d, %d)\n", wid, pScreen, newX, newY);
@@ -272,7 +272,7 @@ static void xprRestackFrame(RootlessFrameID wid, RootlessFrameID nextWid) {
     }
 
     if(window_hash) {
-        RootlessWindowRec *winRec = x_hash_table_lookup(window_hash, x_cvt_uint_to_vptr((xp_window_id)wid), NULL);
+        RootlessWindowRec *winRec = x_hash_table_lookup(window_hash, wid, NULL);
 
         if(winRec) {
             if(quartzEnableRootless)
@@ -566,8 +566,8 @@ xprHideWindows(Bool hide)
     TA_SERVER();
     
     for (screen = 0; screen < screenInfo.numScreens; screen++) {
-        pRoot = WindowTable[screenInfo.screens[screen]->myNum];
         RootlessFrameID prevWid = NULL;
+        pRoot = WindowTable[screenInfo.screens[screen]->myNum];
 
         for (pWin = pRoot->firstChild; pWin; pWin = pWin->nextSib) {
             RootlessWindowRec *winRec = WINREC(pWin);

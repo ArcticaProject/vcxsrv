@@ -30,21 +30,12 @@
 .SH NAME
 XkbFreeGeomSections \- Free geometry sections
 .SH SYNOPSIS
+.HP
 .B void XkbFreeGeomSections
-(
-.I geom,
-.I first,
-.I count,
-.I free_all
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      int \fIfirst\fP\^;
-.br
-      int \fIcount\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "int " "first" "\^,"
+.BI "int " "count" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

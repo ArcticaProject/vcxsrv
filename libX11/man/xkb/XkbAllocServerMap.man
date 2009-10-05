@@ -31,18 +31,11 @@
 .SH NAME
 XkbAllocServerMap \- Allocate and initialize an empty server map description record
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocServerMap
-(
-.I xkb,
-.I which,
-.I count_acts
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      unsigned int \fIcount_acts\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "unsigned int " "count_acts" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

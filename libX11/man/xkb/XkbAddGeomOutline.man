@@ -30,15 +30,10 @@
 .SH NAME
 XkbAddGeomOutline \- Add one outline to an existing shape
 .SH SYNOPSIS
+.HP
 .B XkbOutlinePtr XkbAddGeomOutline
-(
-.I shape,
-.I sz_points
-)
-.br
-      XkbShapePtr \fIshape\fP\^;
-.br
-      int \fIsz_points\fP\^;
+.BI "(\^XkbShapePtr " "shape" "\^,"
+.BI "int " "sz_points" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -33,15 +33,10 @@ XkbKeyNumSyms \- Returns the total number of keysyms for the key corresponding
 to 
 .I keycode
 .SH SYNOPSIS
-.B int XkbKeyNumSyms macro
-(
-.I xkb,
-.I keycode
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
+.HP
+.B int XkbKeyNumSyms
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

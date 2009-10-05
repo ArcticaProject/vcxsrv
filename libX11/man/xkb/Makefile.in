@@ -54,6 +54,12 @@ CONFIG_HEADER = $(top_builddir)/src/config.h \
 	$(top_builddir)/include/X11/XlibConf.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 SOURCES =
 DIST_SOURCES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -84,6 +90,7 @@ ACLOCAL = @ACLOCAL@
 ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
 AR = @AR@
@@ -160,6 +167,7 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
@@ -474,6 +482,11 @@ CPP_SED_MAGIC = $(SED) -e '/^\#  *[0-9][0-9]*  *.*$$/d' \
                        -e 's,X11_LOCALEDATADIR,$(X11_LOCALEDATADIR),g' \
                        -e '/\@\@$$/s/\@\@$$/\\/'
 
+
+# Support for automake 1.11 AM_SILENT_RULES
+@HAVE_AM_SILENT_RULES_TRUE@cpp_verbose = $(cpp_verbose_$(V))
+@HAVE_AM_SILENT_RULES_TRUE@cpp_verbose_ = $(cpp_verbose_$(AM_DEFAULT_VERBOSITY))
+@HAVE_AM_SILENT_RULES_TRUE@cpp_verbose_0 = @echo "  CPP   " $@;
 XORGRELSTRING = @PACKAGE_STRING@
 XORGMANNAME = X Version 11
 MANDEFS = -D__libmansuffix__=$(LIB_MAN_SUFFIX) \
@@ -692,10 +705,10 @@ uninstall-am: uninstall-libmanDATA
 
 
 .pre:
-	$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
+	$(cpp_verbose)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
 
 .man.$(LIB_MAN_SUFFIX):
-	$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
+	$(cpp_verbose)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

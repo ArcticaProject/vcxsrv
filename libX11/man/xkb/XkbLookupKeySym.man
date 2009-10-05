@@ -30,24 +30,13 @@
 .SH NAME
 XkbLookupKeySym \- Find the symbol associated with a key for a particular state
 .SH SYNOPSIS
+.HP
 .B Bool XkbLookupKeySym
-(
-.I dpy,
-.I key,
-.I state,
-.I mods_rtrn,
-.I sym_rtrn
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      KeyCode \fIkey\fP\^;
-.br
-      unsigned int \fIstate\fP\^;
-.br
-      unsigned int *\fImods_rtrn\fP\^;
-.br
-      KeySym *\fIsym_rtrn\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "KeyCode " "key" "\^,"
+.BI "unsigned int " "state" "\^,"
+.BI "unsigned int *" "mods_rtrn" "\^,"
+.BI "KeySym *" "sym_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -85,5 +74,5 @@ parameter is the state from a KeyPress or KeyRelease event.
 .I XkbLookupKeySym 
 returns True if it succeeds.
 .SH "SEE ALSO"
-.BR XLookupKeySym (3X11)
+.BR XLookupKeySym (__libmansuffix__)
 

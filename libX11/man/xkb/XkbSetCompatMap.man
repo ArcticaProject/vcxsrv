@@ -31,21 +31,12 @@
 .SH NAME
 XkbSetCompatMap \- Modify the server's compatibility map
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetCompatMap
-(
-.I display,
-.I which,
-.I xkb,
-.I update_actions
-)
-.br
-      Display * \fIdisplay\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      Bool \fIupdate_actions\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "XkbDescPtr " "xkb" "\^,"
+.BI "Bool " "update_actions" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

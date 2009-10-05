@@ -147,7 +147,7 @@ ProcXQueryDeviceState(ClientPtr client)
     if (v != NULL) {
 	tv = (xValuatorState *) buf;
 	tv->class = ValuatorClass;
-	tv->length = sizeof(xValuatorState);
+	tv->length = sizeof(xValuatorState) + v->numAxes * 4;
 	tv->num_valuators = v->numAxes;
 	tv->mode = v->mode;
 	buf += sizeof(xValuatorState);

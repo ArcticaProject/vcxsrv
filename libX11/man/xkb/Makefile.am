@@ -230,5 +230,5 @@ MANDEFS = -D__libmansuffix__=$(LIB_MAN_SUFFIX) \
 CPP_MAN_FLAGS = $(MANDEFS) $(EXTRAMANDEFS)
 
 .man.$(LIB_MAN_SUFFIX):
-	$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
+	$(cpp_verbose)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
 

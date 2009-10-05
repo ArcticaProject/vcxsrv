@@ -632,6 +632,8 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 
 - (IBAction)prefs_changed:sender
 {
+    BOOL pbproxy_active;
+
     darwinFakeButtons = [fake_buttons intValue];
     quartzUseSysBeep = [use_sysbeep intValue];
     X11EnableKeyEquivalents = [enable_keyequivs intValue];
@@ -653,7 +655,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
     [NSApp prefs_set_boolean:@PREFS_NO_TCP value:![enable_tcp intValue]];
     [NSApp prefs_set_integer:@PREFS_DEPTH value:[depth selectedTag]];
 
-    BOOL pbproxy_active = [sync_pasteboard intValue];
+    pbproxy_active = [sync_pasteboard intValue];
 
     [NSApp prefs_set_boolean:@PREFS_SYNC_PB value:pbproxy_active];
     [NSApp prefs_set_boolean:@PREFS_SYNC_PB_TO_CLIPBOARD value:[sync_pasteboard_to_clipboard intValue]];

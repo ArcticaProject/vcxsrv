@@ -32,15 +32,10 @@ XkbKeyGroupsWidth \- Computes the maximum width associated with the key
 corresponding to 
 .I keycode
 .SH SYNOPSIS
-.B int XkbKeyGroupsWidth macro
-(
-.I xkb,
-.I keycode
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
+.HP
+.B int XkbKeyGroupsWidth
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

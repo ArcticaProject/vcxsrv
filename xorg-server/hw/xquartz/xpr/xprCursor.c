@@ -392,7 +392,7 @@ QuartzSuspendXCursor(ScreenPtr pScreen)
  *  X server is showing. Restore the X cursor.
  */
 void
-QuartzResumeXCursor(ScreenPtr pScreen, int x, int y)
+QuartzResumeXCursor(ScreenPtr pScreen)
 {
     WindowPtr pWin;
     CursorPtr pCursor;
@@ -407,5 +407,5 @@ QuartzResumeXCursor(ScreenPtr pScreen, int x, int y)
     if (pCursor == NULL)
         return;
 
-    QuartzSetCursor(darwinPointer, pScreen, pCursor, x, y);
+    QuartzSetCursor(darwinPointer, pScreen, pCursor, /* x */ 0, /* y */ 0);
 }

@@ -30,6 +30,9 @@ typedef struct _DeviceChangedEvent DeviceChangedEvent;
 typedef struct _DGAEvent DGAEvent;
 #endif
 typedef struct _RawDeviceEvent RawDeviceEvent;
+#ifdef XQUARTZ
+typedef struct _XQuartzEvent XQuartzEvent;
+#endif
 typedef union _InternalEvent InternalEvent;
 
 #endif

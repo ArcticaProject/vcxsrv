@@ -32,15 +32,10 @@ XkbKeyHasActions \- Determines if the key corresponding to
 .I keycode
 has any actions associated with it
 .SH SYNOPSIS
-.B int XkbKeyHasActions macro
-(
-.I xkb,
-.I keycode
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      KeyCode \fIkeycode\fP\^;
+.HP
+.B int XkbKeyHasActions
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "KeyCode " "keycode" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

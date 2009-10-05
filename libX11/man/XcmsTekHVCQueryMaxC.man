@@ -237,8 +237,8 @@ determines the minimum Value in TekHVC color space displayable by the screen.
 It returns the minimum Value and the actual Hue and Chroma at which
 the minimum Value was found.
 .SH "SEE ALSO"
-XcmsCIELabQueryMaxC(3X11),
-XcmsCIELuvQueryMaxC(3X11),
-XcmsQueryBlack(3X11)
+XcmsCIELabQueryMaxC(__libmansuffix__),
+XcmsCIELuvQueryMaxC(__libmansuffix__),
+XcmsQueryBlack(__libmansuffix__)
 .br
 \fI\*(xL\fP

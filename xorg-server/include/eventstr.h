@@ -66,6 +66,9 @@ enum EventType {
     ET_RawButtonPress,
     ET_RawButtonRelease,
     ET_RawMotion,
+#ifdef XQUARTZ
+    ET_XQuartz,
+#endif
     ET_Internal = 0xFF /* First byte */
 };
 
@@ -210,6 +213,18 @@ struct _RawDeviceEvent
     } valuators;
 };
 
+#ifdef XQUARTZ
+#define XQUARTZ_EVENT_MAXARGS 5
+struct _XQuartzEvent {
+    unsigned char header; /**< Always ET_Internal */
+    enum EventType type;  /**< Always ET_XQuartz */
+    int length;           /**< Length in bytes */
+    Time time;            /**< Time in ms. */
+    int subtype;          /**< Subtype defined by XQuartz DDX */
+    uint32_t data[XQUARTZ_EVENT_MAXARGS]; /**< Up to 5 32bit values passed to handler */
+};
+#endif
+
 /**
  * Event type used inside the X server for input event
  * processing.
@@ -227,6 +242,9 @@ union _InternalEvent {
         DGAEvent dga_event;
 #endif
         RawDeviceEvent raw_event;
+#ifdef XQUARTZ
+        XQuartzEvent xquartz_event;
+#endif
 };
 
 #endif

@@ -281,8 +281,8 @@ The
 .ZN WidthMMOfScreen
 macro returns the width of the specified screen in millimeters.
 .SH "SEE ALSO"
-AllPlanes(3X11),
-ImageByteOrder(3X11),
-IsCursorKey(3X11)
+AllPlanes(__libmansuffix__),
+ImageByteOrder(__libmansuffix__),
+IsCursorKey(__libmansuffix__)
 .br
 \fI\*(xL\fP

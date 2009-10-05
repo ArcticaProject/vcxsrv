@@ -325,7 +325,7 @@ pixman_have_arm_neon (void)
  * that would lead to SIGILL instructions on old CPUs that don't have
  * it.
  */
-#if !defined(__amd64__) && !defined(__x86_64__)
+#if !defined(__amd64__) && !defined(__x86_64__) && !defined(_M_AMD64)
 
 #ifdef HAVE_GETISAX
 #include <sys/auxv.h>

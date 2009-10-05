@@ -303,6 +303,6 @@ Unless a specific range is specified for an argument, the full range defined
 by the argument's type is accepted.  Any argument defined as a set of
 alternatives can generate this error.
 .SH "SEE ALSO"
-XClearArea(3X11)
+XClearArea(__libmansuffix__)
 .br
 \fIXlib \- C Language X Interface\fP

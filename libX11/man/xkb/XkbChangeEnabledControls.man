@@ -31,21 +31,12 @@
 .SH NAME
 XkbChangeEnabledControls \- Manipulates the EnabledControls control
 .SH SYNOPSIS
+.HP
 .B Bool XkbChangeEnabledControls
-(
-.I dpy,
-.I device_spec,
-.I mask,
-.I values 
-)
-.br
-      Display *\fI dpy \fP\^;
-.br
-      unsigned int \fI device_spec \fP\^;
-.br
-      unsigned int \fI mask \fP\^;
-.br
-      unsigned int \fI values \fP\^;                  
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "mask" "\^,"
+.BI "unsigned int " "values" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

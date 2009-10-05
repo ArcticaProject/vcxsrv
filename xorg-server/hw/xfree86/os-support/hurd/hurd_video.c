@@ -42,7 +42,7 @@
  * Video Memory Mapping section                                            
  ***************************************************************************/
 static pointer
-mapVidMem(int ScreenNum,int Flags, unsigned long Base, unsigned long Size)
+mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int Flags)
 {
     mach_port_t device,iopl_dev;
     memory_object_t iopl_mem;

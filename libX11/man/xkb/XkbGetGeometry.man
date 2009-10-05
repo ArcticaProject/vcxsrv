@@ -31,15 +31,10 @@
 XkbGetGeometry \- Loads a keyboard geometry if you already have the keyboard 
 description
 .SH SYNOPSIS
+.HP
 .B Status XkbGetGeometry
-(
-.I dpy,
-.I xkb
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      XkbDescPtr \fIxkb\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "XkbDescPtr " "xkb" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

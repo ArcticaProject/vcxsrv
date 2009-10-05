@@ -280,10 +280,10 @@ if the drawing functions implement implicit text directionality;
 otherwise, it returns
 .ZN False .
 .SH "SEE ALSO"
-XCreateFontSet(3X11),
-XCreateOM(3X11),
-XCreateOC(3X11),
-XExtentsOfFontSet(3X11),
-XFontSetExtents(3X11)
+XCreateFontSet(__libmansuffix__),
+XCreateOM(__libmansuffix__),
+XCreateOC(__libmansuffix__),
+XExtentsOfFontSet(__libmansuffix__),
+XFontSetExtents(__libmansuffix__)
 .br
 \fI\*(xL\fP

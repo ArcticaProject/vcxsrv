@@ -518,6 +518,14 @@ miWindowExposures( WindowPtr pWin, RegionPtr prgn, RegionPtr other_exposed)
 	REGION_DESTROY( pWin->drawable.pScreen, exposures);
 }
 
+#ifdef ROOTLESS
+/* Ugly, ugly, but we lost our hooks into miPaintWindow... =/ */
+void RootlessSetPixmapOfAncestors(WindowPtr pWin);
+void RootlessStartDrawing(WindowPtr pWin);
+void RootlessDamageRegion(WindowPtr pWin, RegionPtr prgn);
+Bool IsFramedWindow(WindowPtr pWin);
+#endif 
+
 void
 miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
 {
@@ -543,6 +551,19 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
     Bool	solid = TRUE;
     DrawablePtr	drawable = &pWin->drawable;
 
+#ifdef ROOTLESS
+    if(IsFramedWindow(pWin)) {
+        RootlessStartDrawing(pWin);
+        RootlessDamageRegion(pWin, prgn);
+    
+        if(pWin->backgroundState == ParentRelative) {
+            if((what == PW_BACKGROUND) || 
+               (what == PW_BORDER && !pWin->borderIsPixel))
+                RootlessSetPixmapOfAncestors(pWin);
+        }
+    }
+#endif
+    
     if (what == PW_BACKGROUND)
     {
 	while (pWin->backgroundState == ParentRelative)

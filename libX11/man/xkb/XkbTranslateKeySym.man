@@ -31,27 +31,14 @@
 XkbTranslateKeySym \- Find the string and symbol associated with a keysym for a 
 given keyboard state
 .SH SYNOPSIS
+.HP
 .B int XkbTranslateKeySym
-(
-.I dpy ,
-.I sym_inout ,
-.I mods ,
-.I buf ,
-.I nbytes ,
-.I extra_rtrn
-)
-.br
-      Display *\fIdpy\fP\^;
-.br
-      KeySym *\fIsym_inout\fP\^;
-.br
-      unsigned int  \fImods\fP\^;
-.br
-      char *\fIbuf\fP\^;
-.br
-      int \fInbytes\fP\^;
-.br
-      int *\fIextra_rtrn\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "KeySym *" "sym_inout" "\^,"
+.BI "unsigned int " "mods" "\^,"
+.BI "char *" "buf" "\^,"
+.BI "int " "nbytes" "\^,"
+.BI "int *" "extra_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

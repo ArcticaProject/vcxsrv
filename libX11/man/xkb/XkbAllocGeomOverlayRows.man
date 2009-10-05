@@ -26,19 +26,14 @@
 .\" or other dealings in this Software without prior written authorization
 .\" of the copyright holder.
 .\"
-.TH XkbAllocGeomOverlayRows 3Xkb "Release 6.1" "X Version 11" "XKBLIB FUNCTION"
+.TH XkbAllocGeomOverlayRows __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
 .SH NAME
 XkbAllocGeomOverlayRows \- Allocate rows in a overlay
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomOverlayRows
-(
-.I overlay,
-.I num_needed
-)
-.br
-      XkbSectionPtr \fIoverlay\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbOverlayPtr " "overlay" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

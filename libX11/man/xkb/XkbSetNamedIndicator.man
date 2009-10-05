@@ -32,30 +32,15 @@ XkbSetNamedIndicator \- Names an indicator if it is not already named; toggles
 the state of the indicator; sets the indicator to a specified state and sets the 
 indicator map for the indicator
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetNamedIndicator
-(
-.I dpy,
-.I device_spec,
-.I name,
-.I change_state,
-.I state,
-.I create_new,
-.I map
-)
-.br
-      Display *\fI dpy \fP\^;
-.br
-      unsigned int \fI device_spec \fP\^;
-.br
-      Atom \fI name \fP\^;
-.br
-      Bool \fI change_state \fP\^;
-.br
-      Bool \fI state \fP\^;
-.br
-      Bool \fI create_new \fP\^;
-.br
-      XkbIndicatorMapPtr \fI map \fP\^;                  
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "Atom " "name" "\^,"
+.BI "Bool " "change_state" "\^,"
+.BI "Bool " "state" "\^,"
+.BI "Bool " "create_new" "\^,"
+.BI "XkbIndicatorMapPtr " "map" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

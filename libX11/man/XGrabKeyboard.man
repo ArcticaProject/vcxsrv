@@ -290,9 +290,9 @@ alternatives can generate this error.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XAllowEvents(3X11),
-XGrabButton(3X11),
-XGrabKey(3X11),
-XGrabPointer(3X11)
+XAllowEvents(__libmansuffix__),
+XGrabButton(__libmansuffix__),
+XGrabKey(__libmansuffix__),
+XGrabPointer(__libmansuffix__)
 .br
 \fI\*(xL\fP

@@ -31,33 +31,16 @@
 .SH NAME
 XkbSetDebuggingFlags \- Change the values of any of the debug controls
 .SH SYNOPSIS
+.HP
 .B Bool XkbSetDebuggingFlags
-(
-.I display,
-.I mask,
-.I flags,
-.I msg,
-.I ctrls_mask,
-.I ctrls,
-.I ret_flags,
-.I ret_ctrls
-)
-.br
-      Display *\fIdisplay\fP\^;
-.br
-      unsigned int \fImask\fP\^;
-.br
-      unsigned int \fIflags\fP\^;
-.br
-      char *\fImsg\fP\^;
-.br
-      unsigned int \fIctrls_mask\fP\^;
-.br
-      unsigned int \fIctrls\fP\^;
-.br
-      unsigned int *\fIret_flags\fP\^;
-.br
-      unsigned int *\fIret_ctrls\fP\^;      
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "mask" "\^,"
+.BI "unsigned int " "flags" "\^,"
+.BI "char *" "msg" "\^,"
+.BI "unsigned int " "ctrls_mask" "\^,"
+.BI "unsigned int " "ctrls" "\^,"
+.BI "unsigned int *" "ret_flags" "\^,"
+.BI "unsigned int *" "ret_ctrls" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

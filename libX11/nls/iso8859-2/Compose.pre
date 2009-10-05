@@ -139,8 +139,8 @@ XCOMM are for compose sequences.
 <Multi_key> <apostrophe> <z>		: "\274"	zacute
 <Multi_key> <z> <acute>			: "\274"	zacute
 <Multi_key> <acute> <z>			: "\274"	zacute
-<Multi_key> <apostrophe> <apostrophe>	: "\275"	doubleacute
-<Multi_key> <acute> <acute>		: "\275"	doubleacute
+<Multi_key> <apostrophe> <apostrophe> <space>	: "\275"	doubleacute
+<Multi_key> <acute> <acute> <space>		: "\275"	doubleacute
 <Multi_key> <z> <less>			: "\276"	zcaron
 <Multi_key> <less> <z>			: "\276"	zcaron
 <Multi_key> <z> <caron>			: "\276"	zcaron

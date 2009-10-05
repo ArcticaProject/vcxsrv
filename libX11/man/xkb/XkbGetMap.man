@@ -33,18 +33,11 @@ XkbGetMap \- Allocate an XkbDescRec structure and populate it with the server's
 keyboard 
 client map and server map
 .SH SYNOPSIS
+.HP
 .B XkbDescPtr XkbGetMap
-(
-.I display,
-.I which,
-.I device_spec
-)
-.br
-      Display * \fIdisplay\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "unsigned int " "device_spec" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

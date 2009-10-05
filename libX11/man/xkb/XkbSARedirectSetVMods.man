@@ -30,15 +30,10 @@
 .SH NAME
 XkbSARedirectSetVMods \- Sets the vmods0 and vmods1 of act from v
 .SH SYNOPSIS
-.B void XkbSARedirectSetVMods macro
-(
-.I act,
-.I v
-)
-.br
-      XkbRedirectKeyAction \fIact\fP\^;
-.br
-      unsigned int \fIv\fP\^;            
+.HP
+.B void XkbSARedirectSetVMods
+.BI "(\^XkbRedirectKeyAction " "act" "\^,"
+.BI "unsigned int " "v" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

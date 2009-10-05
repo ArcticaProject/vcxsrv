@@ -399,9 +399,9 @@ A value for an Atom argument does not name a defined Atom.
 .ZN BadWindow
 A value for a Window argument does not name a defined Window.
 .SH "SEE ALSO"
-XAllocColor(3X11),
-XCreateColormap(3X11),
-XFree(3X11),
-XSetCloseDownMode(3X11)
+XAllocColor(__libmansuffix__),
+XCreateColormap(__libmansuffix__),
+XFree(__libmansuffix__),
+XSetCloseDownMode(__libmansuffix__)
 .br
 \fI\*(xL\fP

@@ -1,3 +1,24 @@
+commit a5160032d7e46473b8702b87a546071fc0c0978c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Sat Oct 3 21:12:47 2009 +1000
+
+    xkbcomp 1.1.1
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a36ca5ba61e2b97398a79713922644fee1a263d1
+Author: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+Date:   Wed Aug 5 17:16:16 2009 +0300
+
+    xkbcomp: Remove output file if closing fails.
+    
+    Without the fix xkbcomp may leave a truncated file in the filesystem
+    if there is not enough disk space. Using the truncated file leads to
+    problems.
+    
+    Signed-off-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
 commit 2cc1dc9a327a5100043d3d54e899b98b81cdf5f5
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Jul 9 08:34:21 2009 +1000

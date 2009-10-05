@@ -221,7 +221,7 @@ The
 function returns the output method associated with the
 specified output context.
 .SH "SEE ALSO"
-XCreateOM(3X11),
-XCreateFontSet(3X11)
+XCreateOM(__libmansuffix__),
+XCreateFontSet(__libmansuffix__)
 .br
 \fI\*(xL\fP

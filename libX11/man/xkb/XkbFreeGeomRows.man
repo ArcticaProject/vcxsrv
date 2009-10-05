@@ -30,21 +30,12 @@
 .SH NAME
 XkbFreeGeomRows \- Free rows in a section
 .SH SYNOPSIS
+.HP
 .B void XkbFreeGeomRows
-(
-.I section,
-.I first,
-.I count,
-.I free_all
-)
-.br
-      XkbSectionPtr \fIsection\fP\^;
-.br
-      int \fIfirst\fP\^;
-.br
-      int \fIcount\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbSectionPtr " "section" "\^,"
+.BI "int " "first" "\^,"
+.BI "int " "count" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

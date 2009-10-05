@@ -30,21 +30,12 @@
 .SH NAME
 XkbFreeGeomPoints \- Free points in a outline
 .SH SYNOPSIS
+.HP
 .B void XkbFreeGeomPoints
-(
-.I outline,
-.I first,
-.I count,
-.I free_all
-)
-.br
-      XkbOutlinePtr \fIoutline\fP\^;
-.br
-      int \fIfirst\fP\^;
-.br
-      int \fIcount\fP\^;
-.br
-      Bool \fIfree_all\fP\^;
+.BI "(\^XkbOutlinePtr " "outline" "\^,"
+.BI "int " "first" "\^,"
+.BI "int " "count" "\^,"
+.BI "Bool " "free_all" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

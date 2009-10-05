@@ -30,15 +30,10 @@
 .SH NAME
 XkbComputeSectionBounds \- Update the bounding box of a section
 .SH SYNOPSIS
+.HP
 .B Bool XkbComputeSectionBounds
-(
-.I geom,
-.I section
-)
-.br
-      XkbGeometryPtr \fIgeom\fP\^;
-.br
-      XkbSectionPtr \fIsection\fP\^;
+.BI "(\^XkbGeometryPtr " "geom" "\^,"
+.BI "XkbSectionPtr " "section" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

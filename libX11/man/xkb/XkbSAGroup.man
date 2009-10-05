@@ -31,12 +31,9 @@
 .SH NAME
 XkbSAGroup \- Returns the group_XXX field of act converted to a signed int
 .SH SYNOPSIS
-.B int XkbSAGroup macro
-(
-.I act
-)
-.br
-      XkbAction \fIact\fP\^;
+.HP
+.B int XkbSAGroup
+.BI "(\^XkbAction " "act" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

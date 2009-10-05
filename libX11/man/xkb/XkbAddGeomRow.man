@@ -30,15 +30,10 @@
 .SH NAME
 XkbAddGeomRow \- Add a row to a section
 .SH SYNOPSIS
+.HP
 .B XkbRowPtr XkbAddGeomRow
-(
-.I section,
-.I sz_keys
-)
-.br
-      XkbSectionPtr \fIsection\fP\^;
-.br
-      int \fIsz_keys\fP\^;
+.BI "(\^XkbSectionPtr " "section" "\^,"
+.BI "int " "sz_keys" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

@@ -31,18 +31,11 @@
 .SH NAME
 XkbFreeCompatMap \- Free an entire compatibility map or selected portions of one
 .SH SYNOPSIS
+.HP
 .B void XkbFreeCompatMap
-(
-.I xkb,
-.I which,
-.I free_map
-)
-.br
-      XkbDescPtr \fIxkb\fP\^;
-.br
-      unsigned int \fIwhich\fP\^;
-.br
-      Bool \fIfree_map\fP\^;
+.BI "(\^XkbDescPtr " "xkb" "\^,"
+.BI "unsigned int " "which" "\^,"
+.BI "Bool " "free_map" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

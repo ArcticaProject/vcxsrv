@@ -31,30 +31,15 @@
 .SH NAME
 XkbDeviceBell \- Rings the bell on an X input extension device or the default keyboard
 .SH SYNOPSIS
+.HP
 .B Bool XkbDeviceBell
-(
-.I display,
-.I window,
-.I device_spec,
-.I bell_class,
-.I bell_id,
-.I percent,
-.I name
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      Window \fI window \fP\^;
-.br
-      unsigned int \fI device_spec \fP\^;
-.br
-      unsigned int \fI bell_class \fP\^;                  
-.br
-      unsigned int \fI bell_id \fP\^;
-.br
-      int \fI percent \fP\^;
-.br
-      Atom \fI name \fP\^;                        
+.BI "(\^Display *" "display" "\^,"
+.BI "Window " "window" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int " "bell_class" "\^,"
+.BI "unsigned int " "bell_id" "\^,"
+.BI "int " "percent" "\^,"
+.BI "Atom " "name" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
@@ -302,7 +287,7 @@ If your application needs to generate visual bell feedback on the screen when it
 a bell event, use the window ID in the XkbBellNotifyEvent, if present.
 
 .SH "SEE ALSO"
-.BR XBell (3X11),
+.BR XBell (__libmansuffix__),
 .BR XkbBellNotify (__libmansuffix__),
 .BR XkbChangeEnabledControls (__libmansuffix__),
 .BR XkbDeviceBell (__libmansuffix__),

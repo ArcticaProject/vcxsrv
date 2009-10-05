@@ -33,27 +33,14 @@ XkbGetKeyboardByName \- Build a new keyboard description from a set of named
 components, and to optionally have the server use the resulting description to 
 replace an active one
 .SH SYNOPSIS
+.HP
 .B XkbDescPtr XkbGetKeyboardByName
-(
-.I dpy,
-.I device_spec,
-.I names,
-.I want,
-.I need,
-.I load
-)
-.br
-      Display * \fIdpy\fP\^;
-.br
-      unsigned int \fIdevice_spec\fP\^;
-.br
-      XkbComponentNamesPtr \fInames\fP\^;
-.br
-      unsigned int \fIwant\fP\^;
-.br
-      unsigned int \fIneed\fP\^;
-.br
-      Bool \fIload\fP\^;
+.BI "(\^Display *" "dpy" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "XkbComponentNamesPtr " "names" "\^,"
+.BI "unsigned int " "want" "\^,"
+.BI "unsigned int " "need" "\^,"
+.BI "Bool " "load" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

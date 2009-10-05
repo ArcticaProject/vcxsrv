@@ -31,21 +31,12 @@
 XkbGetAutoRepeatRate \- Gets the current attributes of the RepeatKeys control 
 for a keyboard device
 .SH SYNOPSIS
+.HP
 .B Bool XkbGetAutoRepeatRate
-(
-.I display,
-.I device_spec,
-.I timeout_rtrn,
-.I interval_rtrn
-)
-.br
-      Display *\fI display \fP\^;
-.br
-      unsigned int \fI device_spec \fP\^;
-.br
-      unsigned int *\fI timeout_rtrn \fP\^;
-.br
-      unsigned int *\fI interval_rtrn \fP\^;                  
+.BI "(\^Display *" "display" "\^,"
+.BI "unsigned int " "device_spec" "\^,"
+.BI "unsigned int *" "timeout_rtrn" "\^,"
+.BI "unsigned int *" "interval_rtrn" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

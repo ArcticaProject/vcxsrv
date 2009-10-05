@@ -38,7 +38,7 @@ XCB library, just as they would with an XCB connection created with XCB.
 Callers of this function must link to libX11-xcb and a version of Xlib built
 with XCB support.
 .SH "SEE ALSO"
-XOpenDisplay(3X11),
-XSetEventQueueOwner(3X11),
+XOpenDisplay(__libmansuffix__),
+XSetEventQueueOwner(__libmansuffix__),
 .br
 \fIXlib \- C Language X Interface\fP

@@ -55,6 +55,18 @@ SOFTWARE.
 
 #ifdef HAVE_DMX_CONFIG_H
 #include <dmx-config.h>
+#undef MULTIBUFFER
+#undef XV
+#undef DBE
+#undef XF86VIDMODE
+#undef XFreeXDGA
+#undef XF86DRI
+#undef SCREENSAVER
+#undef RANDR
+#undef XFIXES
+#undef DAMAGE
+#undef COMPOSITE
+#undef MITSHM
 #endif
 
 #ifdef HAVE_XNEST_CONFIG_H

@@ -323,7 +323,8 @@ CopyGetMasterEvent(DeviceIntPtr sdev,
 
     CHECKEVENT(original);
 
-    if (!sdev->u.master)
+    /* ET_XQuartz has sdev == NULL */
+    if (!sdev || !sdev->u.master)
         return NULL;
 
     switch(original->any.type)

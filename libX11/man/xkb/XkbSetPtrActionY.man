@@ -32,15 +32,10 @@
 XkbSetPtrActionY \- Sets the high_YYY and low_YYY fields of act from the signed 
 integer value y
 .SH SYNOPSIS
-.B void XkbSetPtrActionY macro
-(
-.I act,
-.I y
-)
-.br
-      XkbPtrAction \fIact\fP\^;
-.br
-      int \fIy\fP\^;      
+.HP
+.B void XkbSetPtrActionY
+.BI "(\^XkbPtrAction " "act" "\^,"
+.BI "int " "y" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS

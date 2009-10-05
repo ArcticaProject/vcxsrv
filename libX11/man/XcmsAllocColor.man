@@ -250,7 +250,7 @@ errors.
 .ZN BadColor
 A value for a Colormap argument does not name a defined Colormap.
 .SH "SEE ALSO"
-XcmsQueryColor(3X11),
-XcmsStoreColor(3X11)
+XcmsQueryColor(__libmansuffix__),
+XcmsStoreColor(__libmansuffix__)
 .br
 \fI\*(xL\fP

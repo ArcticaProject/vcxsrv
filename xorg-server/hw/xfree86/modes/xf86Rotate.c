@@ -268,13 +268,9 @@ xf86RotateBlockHandler(int screenNum, pointer blockData,
     rotation_active = xf86RotateRedisplay(pScreen);
     pScreen->BlockHandler = xf86_config->BlockHandler;
     (*pScreen->BlockHandler) (screenNum, blockData, pTimeout, pReadmask);
-    if (rotation_active) {
-	/* Re-wrap if rotation is still happening */
-	xf86_config->BlockHandler = pScreen->BlockHandler;
-	pScreen->BlockHandler = xf86RotateBlockHandler;
-    } else {
-	xf86_config->BlockHandler = NULL;
-    }
+    /* cannot avoid re-wrapping until all wrapping is audited */
+    xf86_config->BlockHandler = pScreen->BlockHandler;
+    pScreen->BlockHandler = xf86RotateBlockHandler;
 }
 
 void

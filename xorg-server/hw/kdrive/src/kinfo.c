@@ -166,6 +166,12 @@ KdFreeKeyboard(KdKeyboardInfo *ki)
         xfree(ki->name);
     if (ki->path)
         xfree(ki->path);
+    if (ki->xkbRules)
+        xfree(ki->xkbRules);
+    if (ki->xkbModel)
+        xfree(ki->xkbModel);
+    if (ki->xkbLayout)
+        xfree(ki->xkbLayout);
     ki->next = NULL;
     xfree(ki);
 }

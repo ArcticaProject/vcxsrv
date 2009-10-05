@@ -149,15 +149,17 @@ static int accept_fd_handoff(int connected_fd) {
     char databuf[] = "display";
     struct iovec iov[1];
     
-    iov[0].iov_base = databuf;
-    iov[0].iov_len  = sizeof(databuf);
-    
     union {
         struct cmsghdr hdr;
         char bytes[CMSG_SPACE(sizeof(int))];
     } buf;
     
     struct msghdr msg;
+    struct cmsghdr *cmsg;
+
+    iov[0].iov_base = databuf;
+    iov[0].iov_len  = sizeof(databuf);
+    
     msg.msg_iov = iov;
     msg.msg_iovlen = 1;
     msg.msg_control = buf.bytes;
@@ -166,7 +168,7 @@ static int accept_fd_handoff(int connected_fd) {
     msg.msg_namelen = 0;
     msg.msg_flags = 0;
     
-    struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
+    cmsg = CMSG_FIRSTHDR (&msg);
     cmsg->cmsg_level = SOL_SOCKET;
     cmsg->cmsg_type = SCM_RIGHTS;
     cmsg->cmsg_len = CMSG_LEN(sizeof(int));
@@ -197,6 +199,7 @@ static void socket_handoff_thread(void *arg) {
     socket_handoff_t *handoff_data = (socket_handoff_t *)arg;
     int launchd_fd = -1;
     int connected_fd;
+    unsigned remain;
 
     /* Now actually get the passed file descriptor from this connection
      * If we encounter an error, keep listening.
@@ -229,7 +232,7 @@ static void socket_handoff_thread(void *arg) {
      * into it.
      */
     
-    unsigned remain = 3000000;
+    remain = 3000000;
     fprintf(stderr, "X11.app: Received new $DISPLAY fd: %d ... sleeping to allow xinitrc to catchup.\n", launchd_fd);
     while((remain = usleep(remain)) > 0);
     
@@ -626,11 +629,11 @@ static char *command_from_prefs(const char *key, const char *default_value) {
     
     if ((PlistRef == NULL) || (CFGetTypeID(PlistRef) != CFStringGetTypeID())) {
         CFStringRef cfDefaultValue = CFStringCreateWithCString(NULL, default_value, kCFStringEncodingASCII);
+        int len = strlen(default_value) + 1;
 
         CFPreferencesSetAppValue(cfKey, cfDefaultValue, kCFPreferencesCurrentApplication);
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
         
-        int len = strlen(default_value) + 1;
         command = (char *)malloc(len * sizeof(char));
         if(!command)
             return NULL;

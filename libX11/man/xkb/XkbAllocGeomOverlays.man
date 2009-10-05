@@ -30,15 +30,10 @@
 .SH NAME
 XkbAllocGeomOverlays \- Allocate overlays in a section
 .SH SYNOPSIS
+.HP
 .B Status XkbAllocGeomOverlays
-(
-.I section,
-.I num_needed
-)
-.br
-      XkbSectionPtr \fIsection\fP\^;
-.br
-      int \fInum_needed\fP\^;
+.BI "(\^XkbSectionPtr " "section" "\^,"
+.BI "int " "num_needed" "\^);"
 .if n .ti +5n
 .if t .ti +.5i
 .SH ARGUMENTS
