@@ -413,6 +413,9 @@ Dispatch(void)
 	    start_tick = SmartScheduleTime;
 	    while (!isItTimeToYield)
 	    {
+#ifdef XSERVER_DTRACE
+	      CARD8 StartMajorOp;
+#endif
 	        if (*icheck[0] != *icheck[1])
 		    ProcessInputEvents();
 		
@@ -437,7 +440,8 @@ Dispatch(void)
 
 		client->sequence++;
 #ifdef XSERVER_DTRACE
-		XSERVER_REQUEST_START(LookupMajorName(MAJOROP), MAJOROP,
+		StartMajorOp=MAJOROP;
+		XSERVER_REQUEST_START(LookupMajorName(StartMajorOp), StartMajorOp,
 			      ((xReq *)client->requestBuffer)->length,
 			      client->index, client->requestBuffer);
 #endif
@@ -450,8 +454,28 @@ Dispatch(void)
 		    XaceHookAuditEnd(client, result);
 		}
 #ifdef XSERVER_DTRACE
-		XSERVER_REQUEST_DONE(LookupMajorName(MAJOROP), MAJOROP,
-			      client->sequence, client->index, result);
+		if (result!=Success)
+		{
+		  char Message[255];
+		  sprintf(Message,"ERROR: %s (0x%x)",LookupMajorName(StartMajorOp),client->errorValue);
+		  XSERVER_REQUEST_DONE(Message, MAJOROP,
+		                       client->sequence, client->index, result);
+		}
+		else
+		{
+		  if (StartMajorOp!=MAJOROP)
+		  {
+		    char Message[255];
+		    sprintf(Message,"Changed request: %s -> %s",LookupMajorName(StartMajorOp),LookupMajorName(MAJOROP));
+		    XSERVER_REQUEST_DONE(Message, MAJOROP,
+		                         client->sequence, client->index, result);
+		  }
+		  else
+		  {
+		    XSERVER_REQUEST_DONE(LookupMajorName(MAJOROP), MAJOROP,
+		                         client->sequence, client->index, result);
+		  }
+		}
 #endif
 
 		if (result != Success) 
