@@ -300,9 +300,7 @@ PopMessage (WMMsgQueuePtr pQueue, WMInfoPtr pWMInfo)
   /* Drop the number of elements in the queue by one */
   --(pQueue->nQueueSize);
 
-#if CYGMULTIWINDOW_DEBUG
-  ErrorF ("Queue Size %d %d\n", pQueue->nQueueSize, QueueSize(pQueue));
-#endif
+  winDebug ("Queue Size %d %d\n", pQueue->nQueueSize, QueueSize(pQueue));
   
   /* Release the queue mutex */
   pthread_mutex_unlock (&pQueue->pmMutex);
@@ -963,7 +961,7 @@ winMultiWindowXMsgProc (void *pArg)
       XNextEvent (pProcArg->pDisplay, &event);
 
       /* Branch on event type */
-      if (event.type == CreateNotify)
+      if (event.type == MapNotify /* CreateNotify */)
 	{
 	  XWindowAttributes	attr;
 
