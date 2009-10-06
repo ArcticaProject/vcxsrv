@@ -55,12 +55,6 @@
 #endif
 #define WIN_WID_PROP		"vcxsrv_wid_prop_rl"
 #define WIN_NEEDMANAGE_PROP	"vcxsrv_override_redirect_prop_rl"
-#ifndef CYGMULTIWINDOW_DEBUG
-#define CYGMULTIWINDOW_DEBUG    NO
-#endif
-#ifndef CYGWINDOWING_DEBUG
-#define CYGWINDOWING_DEBUG	NO
-#endif
 
 #define VCXSRV_SIGNATURE		0xdeaddeadL
 
