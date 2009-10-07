@@ -1,13 +1,13 @@
 	       The X Resize, Rotate and Reflect Extension
-			      Version 1.3
-			       2006-20-7
-      
+			     Version 1.3.1
+			       2009-10-5
+
 			      Jim Gettys
 			   Jim.Gettys@hp.com
 		     Cambridge Research Laboratory
 				HP Labs
 			Hewlett Packard Company
-      
+
 			     Keith Packard
 			keith.packard@intel.com
 		     Open Source Technology Center
@@ -35,13 +35,13 @@ These events include:
 	on laptops or desktop systems
       ► The continued decline of legacy toolkits whose design would have
         required depth switching to support migration
-      ► The lack of depth switching implementation experience in the 
+      ► The lack of depth switching implementation experience in the
         intervening time, due to events beyond our control
 
 Additionally, the requirement to support depth switching might
 complicate other re-engineering of the device independent part of the
 X server that is currently being contemplated.
-	
+
 Rather than further delaying RandR's widespread deployment for a feature
 long wanted by the community (resizing of screens, particularly on laptops),
 or the deployment of a protocol design that might be flawed due to lack of
@@ -61,7 +61,7 @@ monitors display portions of a common underlying screen. In this environment,
 zero or more video outputs are associated with each CRT controller which
 defines both a set of video timings and a 'viewport' within the larger
 screen. This viewport is independent of the overall size of the screen, and
-may be located anywhere within the screen. 
+may be located anywhere within the screen.
 
 The effect is to decouple the reported size of the screen from the size
 presented by each video output, and to permit multiple outputs to present
@@ -85,7 +85,7 @@ Additional requests and events are provided for this new functionality.
     ┃   ┏━━━╋━━━━━━━━━━━━━━━┫       ║        ║ ║        ║
     ┣━━━╋━━━┛               ┃       ╚════════╝ ╚════════╝
     │   ┃         2         ┃─────────────────┐
-    │   ┃                   ┃        ╔═══════════════════╗ 
+    │   ┃                   ┃        ╔═══════════════════╗
     │   ┃                   ┃        ║                   ║
     │   ┗━━━━━━━━━━━━━━━━━━━┫        ║        C          ║
     └───────────────────────┘        ║                   ║
@@ -215,7 +215,7 @@ RRCONFIGSTATUS { Success
 	A value of type RRCONFIGSTATUS returned when manipulating the output
 	configuration or querying information from the server that has some
 	time-dependency.
-	
+
 	InvalidConfigTime indicates that the supplied configuration
 	timestamp does not match the current X server configuration
 	timestamp. Usually this means that the output configuration has
@@ -249,7 +249,7 @@ ROTATION { Rotate_0
 
 RRSELECTMASK { RRScreenChangeNotifyMask
 	       RRCrtcChangeNotifyMask (New in version 1.2)
-	       RROutputChangeNotifyMask (New in version 1.2) 
+	       RROutputChangeNotifyMask (New in version 1.2)
 	       RROutputPropertyNotifyMask (New in version 1.2) }
 
 SIZEID { CARD16 }
@@ -342,25 +342,25 @@ The name of this extension is "RANDR".
 	the client connected, to avoid race conditions.
 
 	New for version 1.2:
-	
+
 	If 'enable' contains RRCrtcChangeMask, RRCrtcChangeNotify events
 	will be sent when a the configuration for a CRTC associated with the
 	screen changes, either through this protocol extension or due to
 	detected external changes. RRCrtcChangeNotify may also be sent when
 	this request executes if the CRTC configuration has changed since
-	the client connected, to avoid race conditions. 
-	
+	the client connected, to avoid race conditions.
+
 	If 'enable' contains RROutputChangeMask, RROutputChangeNotify events
 	will be sent when a the configuration for an output associated with
 	the screen changes, either through this protocol extension or due to
 	detected external changes. RROutputChangeNotify may also be sent
 	when this request executes if the output configuration has changed
-	since the client connected, to avoid race conditions. 
+	since the client connected, to avoid race conditions.
 
 	If 'enable' contains RROutputPropertyNotifyMask,
 	RROutputPropertyNotify events will be sent when properties change on
 	this output.
-	
+
 ┌───
     RRSetScreenConfig
 	window: WINDOW
@@ -381,7 +381,7 @@ The name of this extension is "RANDR".
 	If 'timestamp' is less than the time when the configuration was last
 	successfully set, the request is ignored and InvalidTime returned in
 	status.
-	
+
 	If 'config-timestamp' is not equal to when the server's screen
 	configurations last changed, the request is ignored and
 	InvalidConfigTime returned in status. This could occur if the
@@ -396,19 +396,19 @@ The name of this extension is "RANDR".
 	This request may fail for other indeterminate reasons, in which case
 	'status' will be set to Failed and no configuration change will be
 	made.
-	
+
 	This request sets the screen to the specified size, rate, rotation
 	and reflection.
 
 	When this request succeeds, 'status' contains Success and the
 	requested changes to configuration will have been made.
-	
+
 	'new-time-stamp' contains the time at which this request was
 	executed.
-	
+
 	'config-timestamp' contains the time when the possible screen
 	configurations were last changed.
-	
+
 	'root' contains the root window for the screen indicated by the
 	window.
 
@@ -421,7 +421,7 @@ The name of this extension is "RANDR".
 ┌───
     RRGetScreenInfo
 	window: WINDOW
-      ▶	
+      ▶
 	rotations: SETofROTATION
 	root: WINDOW
 	timestamp: TIMESTAMP
@@ -442,15 +442,15 @@ The name of this extension is "RANDR".
 	by the screen.
 
 	'root' is the root window of the screen.
-	
+
 	'config-timestamp' indicates when the screen configuration
 	information last changed: requests to set the screen will fail
 	unless the timestamp indicates that the information the client
 	is using is up to date, to ensure clients can be well behaved
-	in the face of race conditions. 
-	
+	in the face of race conditions.
+
 	'timestamp' indicates when the configuration was last set.
-	
+
 	'size-id' indicates which size is active.
 
 	'rate' is the current refresh rate. This is zero when the refresh
@@ -533,7 +533,7 @@ dynamic changes in the display environment.
 	to the screen associated with 'window'.
 
 	'timestamp' indicates when the configuration was last set.
-	
+
 	'config-timestamp' indicates when the configuration information last
 	changed. Requests to configure the output will fail unless the
 	timestamp indicates that the information the client is using is up
@@ -545,7 +545,7 @@ dynamic changes in the display environment.
 	'outputs' contains the list of outputs associated with the screen.
 
 	'modes' contains the list of modes associated with the screen
-	
+
 	This request explicitly asks the server to ensure that the
 	configuration data is up-to-date wrt the hardware. If that requires
 	polling, this is when such polling would take place.  If the
@@ -560,7 +560,7 @@ dynamic changes in the display environment.
 	status: RRCONFIGSTATUS
 	timestamp: TIMESTAMP
 	crtc: CRTC
-	
+
 	name: STRING
 	connection: CONNECTION
 	subpixel-order: SUBPIXELORDER
@@ -573,15 +573,15 @@ dynamic changes in the display environment.
 	Errors: Output
 
 	RRGetOutputInfo returns information about the current and available
-	configurations 'output'. 
-	
+	configurations 'output'.
+
 	If 'config-timestamp' does not match the current configuration
 	timestamp (as returned by RRGetScreenResources), 'status' is set to
 	InvalidConfigTime and the remaining reply data is empty. Otherwise,
 	'status' is set to Success.
 
 	'timestamp' indicates when the configuration was last set.
-	
+
 	'crtc' is the current source CRTC for video data, or Disabled if the
 	output is not connected to any CRTC.
 
@@ -592,7 +592,7 @@ dynamic changes in the display environment.
 	device connected to this output. If the hardware cannot determine
 	whether something is connected, it will set this to
 	UnknownConnection.
-	
+
 	'subpixel-order' contains the resulting subpixel order of the
 	connected device to allow correct subpixel rendering.
 
@@ -648,7 +648,7 @@ dynamic changes in the display environment.
 	and be automatically copied to the current value on the next
 	RRSetCrtcConfig request involving the named output. If 'pending' is
 	FALSE, changes are copied immediately.
-	
+
 	If 'range' is TRUE, then the valid-values list will contain
 	precisely two values indicating the minimum and maximum allowed
 	values. If 'range' is FALSE, then the valid-values list will contain
@@ -658,7 +658,7 @@ dynamic changes in the display environment.
 	If 'immutable' is TRUE, then the property configuration cannot be
 	changed by clients. Immutable properties are interpreted by the X
 	server.
-	
+
 ┌───
     RRConfigureOutputProperty
 	output: OUTPUT
@@ -687,7 +687,7 @@ dynamic changes in the display environment.
 	data: LISTofINT8 or LISTofINT16 or LISTofINT32
 └───
 	Errors: Alloc, Atom, Match, Value, Output
-	
+
 	This request alters the value of the property for the specified
 	output. If the property is marked as a 'pending' property, only the
 	pending value of the property is changed. Otherwise, changes are
@@ -702,7 +702,7 @@ dynamic changes in the display environment.
 	match the existing property value (or a Match error results).  If
 	the property is undefined, it is treated as defined with the correct
 	type and format with zero-length data.
-	
+
 	For Prepend, the data is tacked on to the beginning of the existing
 	data, and for Append, it is tacked on to the end of the existing data.
 
@@ -713,7 +713,7 @@ dynamic changes in the display environment.
 	destroyed, or until server reset (see section 10).
 
 	The maximum size of a property is server-dependent and may vary
-	dynamically.  
+	dynamically.
 
 ┌───
     RRDeleteOutputProperty
@@ -721,7 +721,7 @@ dynamic changes in the display environment.
 	property: ATOM
 └───
 	Errors: Atom, Output
-	
+
 	This request deletes the property from the specified window if the
 	property exists and generates a OutputPropertyNotify event unless
 	the property does not exist.
@@ -745,28 +745,28 @@ dynamic changes in the display environment.
 	If the specified property does not exist for the specified output,
 	then the return type is None, the format and bytes-after are zero,
 	and the value is empty.  The delete argument is ignored in this
-	case.  
-	
+	case.
+
 	If the specified property exists but its type does not match the
 	specified type, then the return type is the actual type of the
 	property, the format is the actual format of the property (never
 	zero), the bytes-after is the length of the property in bytes (even
 	if the format is 16 or 32), and the value is empty.  The delete
-	argument is ignored in this case.  
-	
+	argument is ignored in this case.
+
 	If the specified property exists and either AnyPropertyType is
 	specified or the specified type matches the actual type of the
 	property, then the return type is the actual type of the property,
 	the format is the actual format of the property (never zero), and
 	the bytes-after and value are as follows, given:
 
-		N = actual length of the stored property in bytes 
+		N = actual length of the stored property in bytes
 				  (even if the format is 16 or 32)
 		I = 4 × offset
 		T = N - I
 		L = MINIMUM(T, 4 × long-length)
 		A = N - (I + L)
-	
+
 	If 'pending' is true, and if the property holds a pending value,
 	then the value returned will be the pending value of the property
 	rather than the current value.  The returned value starts at byte
@@ -785,14 +785,14 @@ dynamic changes in the display environment.
       	mode: MODE
 └───
 	Errors: Window, Name, Value
-	
+
 	'modeinfo' provides a new mode for outputs on the screen
 	associated with 'window'. If the name of 'modeinfo' names an
 	existing mode, a Name error is returned.  If some parameter of the
 	mode is not valid in some other way, a Value error is returned.
 
 	The returned 'mode' provides the id for the mode.
-	
+
 ┌───
     RRDestroyMode
       	mode: MODE
@@ -803,7 +803,7 @@ dynamic changes in the display environment.
 	defined with RRCreateMode, else an Match error is returned.  If
 	'mode' is in use by some CRTC or Output, then an Access error is
 	returned.
-	
+
 ┌───
     RRAddOutputMode
 	output: OUTPUT
@@ -814,10 +814,10 @@ dynamic changes in the display environment.
 	'output' indicates which output is to be configured.
 
 	'mode' specifies which mode to add. If 'mode' is not valid for
-	'output', then a Match error is generated. 
+	'output', then a Match error is generated.
 
 	This request generates OutputChangeNotify events.
-	
+
 ┌───
     RRDeleteOutputMode
 	output: OUTPUT
@@ -845,7 +845,7 @@ dynamic changes in the display environment.
 	mode: MODE
 	rotation: ROTATION
 	outputs: LISTofOUTPUT
-	
+
 	rotations: SETofROTATION
 	possible-outputs: LISTofOUTPUT
 └───
@@ -860,23 +860,23 @@ dynamic changes in the display environment.
 	timestamp (as returned by RRGetScreenResources), 'status' is set to
 	InvalidConfigTime and the remaining reply data is empty. Otherwise,
 	'status' is set to Success.
-	
+
 	'timestamp' indicates when the configuration was last set.
-	
+
 	'x' and 'y' indicate the position of this CRTC within the screen
 	region. They will be set to 0 when the CRTC is disabled.
 
 	'width' and 'height' indicate the size of the area within the screen
 	presented by this CRTC. This may be different than the size of the
-	mode due to rotation. They will be set to 0 when the CRTC is
-	disabled.
-	
+	mode due to rotation. They will be set to 0 when the CRTC
+	is disabled.
+
 	'mode' indicates which mode is active, or None indicating that the
 	CRTC has been disabled and is not displaying the screen contents.
 
 	'rotation' indicates the active rotation. It is set to Rotate_0
 	when the CRTC is disabled.
-	
+
 	'outputs' is the list of outputs currently connected to this CRTC
 	and is empty when the CRTC is disabled.
 
@@ -904,7 +904,7 @@ dynamic changes in the display environment.
 	If 'timestamp' is less than the time when the configuration was last
 	successfully set, the request is ignored and InvalidTime returned in
 	status.
-	
+
 	If 'config-timestamp' is not equal to when the monitor's
 	configuration last changed, the request is ignored and
 	InvalidConfigTime returned in status. This could occur if the
@@ -929,16 +929,16 @@ dynamic changes in the display environment.
 
 	'outputs' contains the set of outputs that this CRTC should be
 	connected to. The set must be among the list of acceptable output
-	sets for this CRTC or a Match error results. 
-	
+	sets for this CRTC or a Match error results.
+
 	If 'mode' is None, then 'outputs' must be empty, else a Match error
 	results. Conversely, if 'mode' is not None, then 'outputs' must not be
 	empty, else a Match error results.
-	
+
 	This request may fail for other indeterminate reasons, in which case
 	'status' will be set to Failed and no configuration change will be
 	made.
-	
+
 	This request sets the CRTC to the specified position, mode, rotation
 	and reflection. The entire area of the CRTC must fit within the
 	screen size, else a Match error results. As an example, rotating the
@@ -955,10 +955,10 @@ dynamic changes in the display environment.
 
 	When this request succeeds, 'status' contains Success and the
 	requested changes to configuration will have been made.
-	
+
 	'new-time-stamp' contains the time at which this request was
 	executed.
-	
+
 ┌───
     RRGetCrtcGammaSize
 	crtc: CRTC
@@ -976,13 +976,13 @@ dynamic changes in the display environment.
       	red: LISTofCARD16
 	green: LISTofCARD16
 	blue: LISTofCARD16
-└─── 
+└───
 	Errors: Crtc
-	
+
 	This request returns the currently set gamma ramps for 'crtc'.  All
 	three lists will be the size returned by the RRGetCrtcGammaSize
 	request.
-	
+
 ┌───
     RRSetCrtcGamma
 	crtc: CRTC
@@ -991,7 +991,7 @@ dynamic changes in the display environment.
 	blue: LISTofCARD16
 └───
 	Errors: Crtc, Match
-	
+
 	This request sets the gamma ramps for 'crtc'. All three lists
 	must be the size returned by RRGetCrtcGammaSize else a Value error
 	results.
@@ -1014,7 +1014,7 @@ dynamic changes in the display environment.
 	connected to the screen associated with 'window'.
 
 	'timestamp' indicates when the configuration was last set.
-	
+
 	'config-timestamp' indicates when the configuration information last
 	changed. Requests to configure the output will fail unless the
 	timestamp indicates that the information the client is using is up
@@ -1025,8 +1025,8 @@ dynamic changes in the display environment.
 
 	'outputs' contains the list of outputs associated with the screen.
 
-	'modes' contains the list of modes associated with the screen
-	
+	'modes' contains the list of modes associated with the screen.
+
 	Unlike RRGetScreenResources, this merely returns the current
 	configuration, and does not poll for hardware changes.
 
@@ -1211,10 +1211,6 @@ dynamic changes in the display environment.
 	desktop environments to mark the screen that should hold the primary
 	menu bar or panel.
 
-	If the named output is not connected to any CRTC, or if the Window
-	and Output are not attached to the same screen, BadMatch is generated.
-	In the latter case, errorValue will be the Window, not the Output.
-
 	As this changes the logical layout of the screen, ConfigureNotify
 	and RRScreenChangeNotify will be generated on the appropriate root
 	window when the primary output is changed by this call. This request
@@ -1238,7 +1234,7 @@ dynamic changes in the display environment.
 └───
 	Errors: Window
 
-	RRGetOutputPrimary returns the primary output for the system.
+	RRGetOutputPrimary returns the primary output for the screen.
 
                               ❧❧❧❧❧❧❧❧❧❧❧
 
@@ -1401,6 +1397,83 @@ doesn't handle a mandatory property correctly.
 
 9.1 Known properties
 
+    "Backlight"			aka RR_PROPERTY_BACKLIGHT
+	Type:			int32
+	Flags:			-
+	Range/List:		0-x (driver specific)
+
+	This property controls the brightness on laptop panels and equivalent
+	displays with a backlight controller. The driver specific maximum
+	value MUST turn the backlight to full brightness, 1 SHOULD turn the
+	backlight to minimum brightness, 0 SHOULD turn the backlight off.
+
+    "CloneList"			aka RR_PROPERTY_CLONE_LIST
+	Type:			int32 [2*n] / Atom pairs
+	Flags:			Immutable
+	Range/List:		0-
+
+	Some combinations of outputs on some cards cannot be served
+	independently from each other, because they are wired up to the same
+	encoder outputs.
+	This property lists all output + signal format pairs that are
+	driven together with this output, and thus can only be programmed in
+	clone mode with the same CRTC.
+	This property MUST be symmetric, but may change with changing signal
+	format. I.e. if the property for DVI-1/VGA specifies VGA-1/VGA to be
+	cloned, VGA-1/VGA has to list DVI-1/VGA as well.
+	Outputs / format pairs listed in this property MUST be included in the
+	CompatibilityList.
+
+    "CompatibilityList"		aka RR_PROPERTY_COMPATIBILITY_LIST
+	Type:			int32 [2*n] / Atom pairs
+	Flags:			Immutable
+	Range/List:		0-
+
+	Some combinations of outputs on some cards cannot be served at all,
+	because the according encoder is only capable of driving one output at
+	a time.
+	This property lists all output + signal format pairs that can be
+	driven together with this output. NULL atoms specify any output / any
+	signal format, respectively.
+	This property MUST be symmetric, but may change with changing signal
+	format. I.e. if the property for DVI-1/TMDS specifies VGA-1/VGA to be
+	available, VGA-1/VGA has to list DVI-1/TMDS as well.
+
+    "ConnectorNumber"		aka RR_PROPERTY_CONNECTOR_NUMBER
+	Type:			int32
+	Flags:			Immutable, Static
+	Range/List:		0-
+
+	Outputs that route their signal to the same connector MUST
+	have the same connector number. Outputs with the same
+	connector number MUST route their signal to the same
+	connector, except if it is 0, which indicates unknown
+	connectivity. 1 is called the primary connector, 2 the
+	secondary. 3 is typically a TV connector, but that is completely
+	driver / hardware dependent.
+	Outputs with the same connector number SHOULD have the same
+	connector type. Meaning and client behavior for mismatching
+	connector types is undefined at the moment.
+
+    "ConnectorType"		aka RR_PROPERTY_CONNECTOR_TYPE
+	Type:			int32 / Atom
+	Flags:			Immutable, Static
+	Range/List:		unknown VGA DVI DVI‐I DVI‐A DVI‐D HDMI Panel
+				TV TV-Composite TV-SVideo TV-Component
+				TV-SCART TV-C4 DisplayPort
+
+	Connector type, as far as known to the driver.
+	Values with dashes (TV‐Composite) describe more specific versions of
+	the base values (TV). The former SHOULD be used if the connector is
+	not capable of producing other signal formats. The later SHOULD be
+	used if the exact connector is unknown, or the connector is a
+	multi‐format connector that is not described otherwise. DVI, for
+	instance, SHOULD be handled like a DVI‐I connector, unless additional
+	information is available to the user agent. PANEL describes
+	laptop‐internal (normally LVDS) displays. TV, TV‐SCART, TV‐Component,
+	and TV‐C4 with signal format VGA are valid combinations and describe
+	RGB TV signals.
+
     "EDID"			aka RR_PROPERTY_RANDR_EDID
 	Type:			int8 [n]
 	Flags:			Immutable
@@ -1408,7 +1481,7 @@ doesn't handle a mandatory property correctly.
 
 	Raw EDID data from the device attached to the according
 	output. Should include main EDID data and all extension
-	blocks.
+	blocks. Previously known as EdidData.
 
     "SignalFormat"		aka RR_PROPERTY_SIGNAL_FORMAT
 	Type:			int32 / Atom
@@ -1454,93 +1527,32 @@ doesn't handle a mandatory property correctly.
 	a signal change (e.g. TV formats).  Clients are allowed to change the
 	properties in order to select a different signal subformat.
 
-    "ConnectorType"		aka RR_PROPERTY_CONNECTOR_TYPE
-	Type:			int32 / Atom
-	Flags:			Immutable, Static
-	Range/List:		unknown VGA DVI DVI‐I DVI‐A DVI‐D HDMI Panel
-				TV TV-Composite TV-SVideo TV-Component
-				TV-SCART TV-C4 DisplayPort
-
-	Connector type, as far as known to the driver.
-	Values with dashes (TV‐Composite) describe more specific versions of
-	the base values (TV). The former SHOULD be used if the connector is
-	not capable of producing other signal formats. The later SHOULD be
-	used if the exact connector is unknown, or the connector is a
-	multi‐format connector that is not described otherwise. DVI, for
-	instance, SHOULD be handled like a DVI‐I connector, unless additional
-	information is available to the user agent. PANEL describes
-	laptop‐internal (normally LVDS) displays. TV, TV‐SCART, TV‐Component,
-	and TV‐C4 with signal format VGA are valid combinations and describe
-	RGB TV signals.
-
-    "ConnectorNumber"		aka RR_PROPERTY_CONNECTOR_NUMBER
-	Type:			int32
-	Flags:			Immutable, Static
-	Range/List:		0-
-
-	Outputs that route their signal to the same connector MUST
-	have the same connector number. Outputs with the same
-	connector number MUST route their signal to the same
-	connector, except if it is 0, which indicates unknown
-	connectivity. 1 is called the primary connector, 2 the
-	secondary. 3 is typically a TV connector, but that is completely
-	driver / hardware dependent.
-	Outputs with the same connector number SHOULD have the same
-	connector type. Meaning and client behavior for mismatching
-	connector types is undefined at the moment.
-
-    "CompatibilityList"		aka RR_PROPERTY_COMPATIBILITY_LIST
-	Type:			int32 [2*n] / Atom pairs
-	Flags:			Immutable
-	Range/List:		0-
-
-	Some combinations of outputs on some cards cannot be served at all,
-	because the according encoder is only capable of driving one output at
-	a time.
-	This property lists all output + signal format pairs that can be
-	driven together with this output. NULL atoms specify any output / any
-	signal format, respectively.
-	This property MUST be symmetric, but may change with changing signal
-	format. I.e. if the property for DVI-1/TMDS specifies VGA-1/VGA to be
-	available, VGA-1/VGA has to list DVI-1/TMDS as well.
-
-    "CloneList"			aka RR_PROPERTY_CLONE_LIST
-	Type:			int32 [2*n] / Atom pairs
-	Flags:			Immutable
-	Range/List:		0-
-
-	Some combinations of outputs on some cards cannot be served
-	independently from each other, because they are wired up to the same
-	encoder outputs.
-	This property lists all output + signal format pairs that are
-	driven together with this output, and thus can only be programmed in
-	clone mode with the same CRTC.
-	This property MUST be symmetric, but may change with changing signal
-	format. I.e. if the property for DVI-1/VGA specifies VGA-1/VGA to be
-	cloned, VGA-1/VGA has to list DVI-1/VGA as well.
-	Outputs / format pairs listed in this property MUST be included in the
-	CompatibilityList.
-
 
 9.2 Properties introduced with version 1.2 of the RandR extension
 
 Property			Immutable	Mandatory since
 ────────			─────────	───────────────
-EdidData			yes		n/a
+EDID				yes		n/a
 
-EdidData is provided by the RandR frontend, thus not driver specific.
+EDID is provided by the RandR frontend, thus not driver specific.
 
 
 9.3 Properties introduced with version 1.3 of the RandR extension
 
 Property			Immutable	Mandatory since
 ────────			─────────	───────────────
+CloneList			yes		not mandatory
+CompatibilityList		yes		not mandatory
+ConnectorNumber			yes: static	not mandatory
+ConnectorType			yes: static	RandR 1.3
 SignalFormat			no		RandR 1.3
 SignalProperties		no		not mandatory
-ConnectorType			yes: static	RandR 1.3
-ConnectorNumber			yes: static	not mandatory
-CompatibilityList		yes		not mandatory
-CloneList			yes		not mandatory
+
+9.4 Properties introduced with version 1.4 of the RandR extension
+
+Property			Immutable	Mandatory since
+────────			─────────	───────────────
+Backlight			no		not mandatory
 
                               ❧❧❧❧❧❧❧❧❧❧❧
 
@@ -1655,7 +1667,7 @@ A.1 Common Types
 	0x0008	OutputPropertyNotifyMask	Added in version 1.2
 └───
       Event select mask for RRSelectInput
-      
+
 ┌───
     RRCONFIGSTATUS
 	0x0 Success
@@ -1664,7 +1676,7 @@ A.1 Common Types
 	0x3 Failed
 └───
 	Return status for requests which depend on time.
-	
+
 ┌───
     MODEINFO (32)				Added in version 1.2
 	4	CARD32		id
@@ -1681,7 +1693,7 @@ A.1 Common Types
 	2	CARD16		name length
 	4	SETofMODEFLAG	mode flags
 └───
-	
+
 	An output mode specifies the complete CRTC timings for
 	a specific mode. The vertical and horizontal synchronization rates
 	can be computed given the dot clock and the h total/v total
@@ -1689,7 +1701,7 @@ A.1 Common Types
 	parameters and flags are not used, and must be zero as this
 	indicates that the timings are unknown or otherwise unused.
 	The name itself will be encoded separately in each usage.
-	
+
 ┌───
     MODEFLAG
 	0x00000001	HSyncPositive
@@ -1738,7 +1750,7 @@ errors if used in version 1.0.
 └───
 ┌───
     RRSetScreenConfig
-	
+
 	1	CARD8			major opcode
 	1	2			RandR opcode
 	2	6			length
@@ -2171,7 +2183,7 @@ A.2.2 Protocol Requests added with version 1.3
 	p				unused, p=pad(n)
 	4v	FIXED			filter params
 └───
-    
+
 ┌───
     RRGetCrtcTransform
 	1	CARD8			major opcode
@@ -2199,7 +2211,7 @@ A.2.2 Protocol Requests added with version 1.3
 	cnp				unused, cnp=pad(cn)
 	4*cf	FIXED			current filter params
 └───
-    
+
 ┌───
     RRGetPanning
 	1	CARD8			major opcode
@@ -2261,7 +2273,7 @@ A.2.2 Protocol Requests added with version 1.3
 	4	WINDOW			window
 	4	OUTPUT			output
 └───
-    
+
 ┌───
     RRGetOutputPrimary
 	1	CARD8			major opcode
@@ -2355,13 +2367,13 @@ A.4 Protocol Errors
 	Base + 1		Crtc
 	Base + 2		Mode
 └───
-	
+
 Bibliography
 
 [RANDR] Gettys, Jim and Keith Packard, "The X Resize and Rotate
 	Extension - RandR", Proceedings of the 2001 USENIX Annual
 	Technical Conference, Boston, MA
 
-[RENDER] 
+[RENDER]
 	Packard, Keith, "The X Rendering Extension", work in progress,
-	documents found in xc/specs/Render.
+	http://cgit.freedesktop.org/xorg/proto/renderproto/tree/renderproto.txt

@@ -137,6 +137,14 @@ InputLineAddChar(InputLine *line,int ch)
 				(int)((l)->line[(l)->num_line++]= (c)):\
 				InputLineAddChar(l,c))
 
+#ifdef HAVE_UNLOCKED_STDIO
+#undef getc
+#define getc(x) getc_unlocked(x)
+#else
+#define flockfile(x) do {} while (0)
+#define funlockfile(x) do {} while (0)
+#endif
+
 static Bool
 GetInputLine(FILE *file,InputLine *line,Bool checkbang)
 {
@@ -144,6 +152,7 @@ int	ch;
 Bool	endOfFile,spacePending,slashPending,inComment;
 
      endOfFile= False;
+     flockfile(file);
      while ((!endOfFile)&&(line->num_line==0)) {
 	spacePending= slashPending= inComment= False;
 	while (((ch=getc(file))!='\n')&&(ch!=EOF)) {
@@ -208,6 +217,7 @@ Bool	endOfFile,spacePending,slashPending,inComment;
 	     endOfFile= True;
 /*	else line->num_line++;*/
      }
+     funlockfile(file);
      if ((line->num_line==0)&&(endOfFile))
 	return False;
       ADD_CHAR(line,'\0');
@@ -891,6 +901,7 @@ XkbRF_GetComponents(	XkbRF_RulesPtr		rules,
     XkbRF_CheckApplyRules(rules, &mdefs, names, XkbRF_Append);
     XkbRF_ApplyPartialMatches(rules, names);
     XkbRF_CheckApplyRules(rules, &mdefs, names, XkbRF_Option);
+    XkbRF_ApplyPartialMatches(rules, names);
 
     if (names->keycodes)
 	names->keycodes= XkbRF_SubstituteVars(names->keycodes, &mdefs);

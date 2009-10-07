@@ -23,27 +23,31 @@ dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
 
-AC_INIT(libxkbfile, 1.0.5, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libxkbfile)
+AC_INIT(libxkbfile, 1.0.6, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libxkbfile)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.3)
 AM_CONFIG_HEADER(config.h)
 
 # Check for progs
 AC_PROG_CC
 AC_PROG_LIBTOOL
 
+XORG_DEFAULT_OPTIONS
+
 AC_CHECK_FUNC(strcasecmp, [], AC_DEFINE([NEED_STRCASECMP], 1,
-                                        [Do not have `strcasecmp'.]))
+                                        [Do not have 'strcasecmp'.]))
+AC_CHECK_FUNC(getc_unlocked, AC_DEFINE([HAVE_UNLOCKED_STDIO], 1,
+				       ['Unlocked stdio']), [])
 
 # Check for dependencies
 PKG_CHECK_MODULES(XKBFILE, x11 kbproto)
-
 AC_SUBST(XKBFILE_CFLAGS)
 AC_SUBST(XKBFILE_LIBS)
 		  
-XORG_RELEASE_VERSION
-
 AC_OUTPUT([Makefile
 	   src/Makefile
            xkbfile.pc])

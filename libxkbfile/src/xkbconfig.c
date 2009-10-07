@@ -340,7 +340,7 @@ XkbCFAddModByName(	XkbConfigRtrnPtr	rtrn,
 						  XkbConfigUnboundModRec);
 	if (rtrn->unbound_mods==NULL) {
 	    rtrn->error= XkbCF_BadAlloc;
-	    return False;
+	    return NULL;
 	}
     }
     if (last==NULL) {

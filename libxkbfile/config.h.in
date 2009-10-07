@@ -30,7 +30,10 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Do not have `strcasecmp'. */
+/* 'Unlocked stdio' */
+#undef HAVE_UNLOCKED_STDIO
+
+/* Do not have 'strcasecmp'. */
 #undef NEED_STRCASECMP
 
 /* Name of package */

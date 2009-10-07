@@ -14,5 +14,5 @@ CSRCS =  cout.c \
          xkmout.c \
          xkmread.c
 
-INCLUDES := . $(MHMAKECONF)\X11\extensions $(MHMAKECONF)
+INCLUDES := . $(MHMAKECONF)\X11\extensions $(MHMAKECONF) $(MHMAKECONF)\include
 

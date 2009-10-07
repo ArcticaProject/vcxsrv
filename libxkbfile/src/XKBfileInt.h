@@ -30,6 +30,7 @@
 /* $XFree86$ */
 
 #include "XKBfile.h"
+#include <string.h>
 
 #ifdef DEBUG
 #define	_XkbLibError(c,l,d) \
@@ -62,11 +63,18 @@
 
 #endif
 
+#include <unistd.h>
+#ifdef _MSC_VER
+#define inline __inline
+#endif
+
 _XFUNCPROTOBEGIN
 
-extern char *	_XkbDupString(
-	char *	/* old_str */
-);
+static inline
+char *_XkbDupString(const char *s)
+{
+    return s ? strdup(s) : NULL;
+}
 
 #define _XkbStrCaseEqual(s1,s2)	(_XkbStrCaseCmp(s1,s2)==0)
 
