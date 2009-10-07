@@ -151,6 +151,7 @@ typedef unsigned long	XRandrModeFlags;
 
 /* Conventional RandR output properties */
 
+#define RR_PROPERTY_BACKLIGHT		"Backlight"
 #define RR_PROPERTY_RANDR_EDID		"EDID"
 #define RR_PROPERTY_SIGNAL_FORMAT	"SignalFormat"
 #define RR_PROPERTY_SIGNAL_PROPERTIES	"SignalProperties"

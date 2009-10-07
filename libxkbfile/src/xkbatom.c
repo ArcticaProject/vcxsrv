@@ -178,8 +178,8 @@ static char *
 _XkbNameForAtom(Atom atom)
 {
     NodePtr node;
-    if (atom > lastAtom) return 0;
-    if ((node = nodeTable[atom]) == (NodePtr)NULL) return 0;
+    if (atom > lastAtom) return NULL;
+    if ((node = nodeTable[atom]) == (NodePtr)NULL) return NULL;
     return strdup(node->string);
 }
 

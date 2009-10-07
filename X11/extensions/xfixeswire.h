@@ -1,6 +1,4 @@
 /*
- * $XFree86: xc/include/extensions/xfixeswire.h,v 1.1 2002/11/30 06:21:43 keithp Exp $
- *
  * Copyright © 2006 Sun Microsystems
  *
  * Permission to use, copy, modify, distribute, and sell this software and its

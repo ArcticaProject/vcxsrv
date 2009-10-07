@@ -132,13 +132,17 @@ WriteTypeInitFunc(FILE *file,Display *dpy,XkbDescPtr xkb)
 register unsigned 	i,n;
 XkbKeyTypePtr		type;
 Atom *			names;
-char			prefix[32];
+char *			prefix = NULL;
 
     fprintf(file,"\n\nstatic void\n");
     fprintf(file,"initTypeNames(DPYTYPE dpy)\n");
     fprintf(file,"{\n");
     for (i=0,type=xkb->map->types;i<xkb->map->num_types;i++,type++) {
-	strcpy(prefix,XkbAtomText(dpy,type->name,XkbCFile));
+	if (!(prefix = strdup(XkbAtomText(dpy,type->name,XkbCFile)))) {
+		_XkbLibError(_XkbErrBadAlloc,"WriteTypeInitFunc",0);
+		fprintf(file,"#error XkbErrBadAlloc WriteTypeInitFunc\n");
+		break;
+	}
 	if (type->name!=None)
 	    fprintf(file,"    dflt_types[%d].name= GET_ATOM(dpy,\"%s\");\n",i,
 					XkbAtomText(dpy,type->name,XkbCFile));
@@ -155,6 +159,8 @@ char			prefix[32];
 		fprintf(file,"GET_ATOM(dpy,\"%s\");\n",tmp);
 	    }
 	}
+	free(prefix);
+	prefix = NULL;
     }
     fprintf(file,"}\n");
     return;
@@ -166,7 +172,7 @@ WriteCHdrKeyTypes(FILE *file,Display *dpy,XkbDescPtr xkb)
 register unsigned	i,n;
 XkbClientMapPtr		map;
 XkbKeyTypePtr		type;
-char 			prefix[32];
+char * 			prefix = NULL;
 
     if ((!xkb)||(!xkb->map)||(!xkb->map->types)) {
 	_XkbLibError(_XkbErrMissingTypes,"WriteCHdrKeyTypes",0);
@@ -182,7 +188,10 @@ char 			prefix[32];
 				XkbAtomText(dpy,xkb->names->types,XkbCFile));
     }
     for (i=0,type=map->types;i<map->num_types;i++,type++) {
-	strcpy(prefix,XkbAtomText(dpy,type->name,XkbCFile));
+	if (!(prefix = strdup(XkbAtomText(dpy,type->name,XkbCFile)))) {
+		_XkbLibError(_XkbErrBadAlloc,"WriteCHdrKeyTypes",0);
+		return False;
+	}
 
 	if (type->map_count>0) {
 	    XkbKTMapEntryPtr	entry;
@@ -209,10 +218,15 @@ char 			prefix[32];
 							 type->num_levels);
 	}
 	fprintf(file,"\n");
+	free(prefix);
+	prefix = NULL;
     }
     fprintf(file,"static XkbKeyTypeRec dflt_types[]= {\n");
     for (i=0,type=map->types;i<(unsigned)map->num_types;i++,type++) {
-	strcpy(prefix,XkbAtomText(dpy,type->name,XkbCFile));
+	if (!(prefix = strdup(XkbAtomText(dpy,type->name,XkbCFile)))) {
+		_XkbLibError(_XkbErrBadAlloc,"WriteCHdrKeyTypes",0);
+		return False;
+	}
 	if (i!=0)	fprintf(file,",\n");
 	fprintf(file,"    {\n	{ %15s, %15s, %15s },\n",
 			XkbModMaskText(type->mods.mask,XkbCFile),
@@ -229,6 +243,8 @@ char 			prefix[32];
 	if (type->level_names!=NULL)
 	     fprintf(file,"	None,	lnames_%s\n    }",prefix);
 	else fprintf(file,"	None,	NULL\n    }");
+	free(prefix);
+	prefix = NULL;
     }
     fprintf(file,"\n};\n");
     fprintf(file,"#define num_dflt_types (sizeof(dflt_types)/sizeof(XkbKeyTypeRec))\n");
