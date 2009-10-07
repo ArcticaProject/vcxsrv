@@ -57,7 +57,7 @@ parse_threshold(const char *str)
 
 	if (!isdigit((unsigned char)*str))
 		return 1;
-	if (str[0] == 0 && (str[1] == 'x' || str[1] == 'X'))
+	if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
 		base = 16;
 	else
 		base = 10;
@@ -140,7 +140,7 @@ main(int argc, char **argv)
 	if (argc != 1 || (opt_plus_w && opt_minus_w))
 		usage();
 	if (parse_threshold(*argv)) {
-		fprintf(stderr, "Illegal threshold %s", *argv);
+		fprintf(stderr, "Illegal threshold %s\n", *argv);
 		usage();
 	}
 
