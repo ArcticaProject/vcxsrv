@@ -26,6 +26,20 @@ DEFINES += XWIN_MULTIWINDOW
 #	winwindowswm.c
 #DEFINES += XWIN_MULTIWINDOWEXTWM
 
+SRCS_NATIVEGDI = \
+	winclip.c \
+	winfillsp.c \
+	winfont.c \
+	wingc.c \
+	wingetsp.c \
+	winnativegdi.c \
+	winpixmap.c \
+	winpolyline.c \
+	winrop.c \
+	winsetsp.c
+DEFINES +=  XWIN_NATIVEGDI
+
+
 SRCS_RANDR = \
 	winrandr.c
 DEFINES += XWIN_RANDR RELOCATE_PROJECTROOT
@@ -61,9 +75,15 @@ CSRCS = InitInput.c \
 	winvalargs.c \
 	winwakeup.c \
 	winwindow.c \
-        winprefslex.c \
-        winprefsyacc.c \
-	winwndproc.c $(SRCS_RANDR) $(SRCS_MULTIWINDOW) $(SRCS_MULTIWINDOWEXTWM) $(SRCS_CLIPBOARD)
+	winprefslex.c \
+	winprefsyacc.c \
+	winwndproc.c \
+	$(SRCS_RANDR) \
+	$(SRCS_CLIPBOARD) \
+	$(SRCS_MULTIWINDOW) \
+	$(SRCS_MULTIWINDOWEXTWM) \
+	$(SRCS_NATIVEGDI)
+
 
 DEFINES += YY_NO_UNISTD_H
 
@@ -72,30 +92,10 @@ DEFINES += YY_NO_UNISTD_H
 #	$(top_srcdir)/Xi/stubs.c \
 #	$(top_srcdir)/mi/miinitext.c \
 #	$(top_srcdir)/fb/fbcmap_mi.c \
-#	$(SRCS_CLIPBOARD) \
-#	$(SRCS_GLX_WINDOWS) \
-#	$(SRCS_MULTIWINDOW) \
-#	$(SRCS_MULTIWINDOWEXTWM) \
-#	$(SRCS_NATIVEGDI) \
 #	$(SRCS_PRIMARYFB) \
-#	$(SRCS_RANDR) \
 #	$(SRCS_XV)
 
 INCLUDES += ..\..\miext\rootless
-
-SRCS_NATIVEGDI = \
-	winclip.c \
-	winfillsp.c \
-	winfont.c \
-	wingc.c \
-	wingetsp.c \
-	winnativegdi.c \
-	winpixmap.c \
-	winpolyline.c \
-	winrop.c \
-	winsetsp.c
-CSRCS += $(SRCS_NATIVEGDI)
-DEFINES +=  XWIN_NATIVEGDI
 
 #.rc.o:
 
