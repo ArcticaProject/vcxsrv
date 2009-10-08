@@ -358,7 +358,7 @@ int __glXDispSwap_CreateGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_DestroyPbuffer(__GLXclientState *cl, GLbyte *pc)
 {
-    xGLXDestroyPbufferReq *req = (xGLXDestroyPbufferReq *) req;
+    xGLXDestroyPbufferReq *req = (xGLXDestroyPbufferReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
 
     __GLX_SWAP_INT(&req->pbuffer);
@@ -368,7 +368,7 @@ int __glXDispSwap_DestroyPbuffer(__GLXclientState *cl, GLbyte *pc)
 
 int __glXDispSwap_DestroyGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
 {
-    xGLXDestroyGLXPbufferSGIXReq *req = (xGLXDestroyGLXPbufferSGIXReq *) req;
+    xGLXDestroyGLXPbufferSGIXReq *req = (xGLXDestroyGLXPbufferSGIXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
 
     __GLX_SWAP_INT(&req->pbuffer);
@@ -379,7 +379,7 @@ int __glXDispSwap_DestroyGLXPbufferSGIX(__GLXclientState *cl, GLbyte *pc)
 int __glXDispSwap_ChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 {
     xGLXChangeDrawableAttributesReq *req =
-	(xGLXChangeDrawableAttributesReq *) req;
+	(xGLXChangeDrawableAttributesReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
     __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     CARD32 *attribs;
@@ -396,7 +396,7 @@ int __glXDispSwap_ChangeDrawableAttributesSGIX(__GLXclientState *cl,
 					       GLbyte *pc)
 {
     xGLXChangeDrawableAttributesSGIXReq *req =
-	(xGLXChangeDrawableAttributesSGIXReq *) req;
+	(xGLXChangeDrawableAttributesSGIXReq *) pc;
     __GLX_DECLARE_SWAP_VARIABLES;
     __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
     CARD32 *attribs;
