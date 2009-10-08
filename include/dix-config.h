@@ -57,7 +57,7 @@
 #define DPMSExtension 1
 
 /* Build GLX extension */
-#undef GLXEXT
+#define GLXEXT
 
 /* Build GLX DRI loader */
 #undef GLX_DRI
