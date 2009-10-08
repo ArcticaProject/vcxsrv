@@ -470,12 +470,15 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     screen->base.swapInterval   = NULL;
     screen->base.pScreen       = pScreen;
 
+#ifdef _MSC_VER
+    snprintf(filename, sizeof filename,
+	     "%s%s_dri.dll", dri_driver_path, driverName);
+
+    screen->driver = LoadLibrary(filename);
+#else
     snprintf(filename, sizeof filename,
 	     "%s/%s_dri.so", dri_driver_path, driverName);
 
-#ifdef _MSC_VER
-    screen->driver = LoadLibrary(filename);
-#else
     screen->driver = dlopen(filename, RTLD_LAZY | RTLD_LOCAL);
 #endif
     if (screen->driver == NULL) {
