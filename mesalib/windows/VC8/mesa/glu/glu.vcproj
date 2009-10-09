@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9,00"
 	Name="glu"
 	ProjectGUID="{2E50FDAF-430B-475B-AE6B-60B68F2875BA}"
 	RootNamespace="glu"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -75,6 +76,8 @@
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\glu\sgi\glu.def"
 				ProgramDatabaseFile="$(TargetDir)GLU32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -93,9 +96,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -164,6 +164,8 @@
 				ModuleDefinitionFile="..\..\..\..\src\glu\sgi\glu.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(TargetDir)GLU32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -182,9 +184,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -253,6 +252,8 @@
 				ModuleDefinitionFile="..\..\..\..\src\glu\sgi\glu.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(TargetDir)GLU32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -271,9 +272,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -341,6 +339,8 @@
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\glu\sgi\glu.def"
 				ProgramDatabaseFile="$(TargetDir)GLU32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -359,9 +359,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -598,11 +595,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\glimports.h"
+				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\interface\glimports.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\interface\glimports.h"
+				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\glimports.h"
 				>
 			</File>
 			<File
@@ -698,19 +695,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\mystdio.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\interface\mystdio.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\mystdlib.h"
+				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\mystdio.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\interface\mystdlib.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\mystdlib.h"
 				>
 			</File>
 			<File

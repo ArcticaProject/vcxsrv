@@ -121,7 +121,7 @@ _mesa_wait_sync(GLcontext *ctx, struct gl_sync_object *syncObj,
 }
 
 
-void
+void GLAPIENTRY
 _mesa_init_sync_object_functions(struct dd_function_table *driver)
 {
    driver->NewSyncObject = _mesa_new_sync_object;
@@ -139,7 +139,7 @@ _mesa_init_sync_object_functions(struct dd_function_table *driver)
 /**
  * Allocate/init the context state related to sync objects.
  */
-void
+void GLAPIENTRY
 _mesa_init_sync(GLcontext *ctx)
 {
    (void) ctx;
@@ -149,7 +149,7 @@ _mesa_init_sync(GLcontext *ctx)
 /**
  * Free the context state related to sync objects.
  */
-void
+void GLAPIENTRY
 _mesa_free_sync_data(GLcontext *ctx)
 {
    (void) ctx;
@@ -165,7 +165,7 @@ _mesa_validate_sync(struct gl_sync_object *syncObj)
 }
 
 
-void
+void GLAPIENTRY
 _mesa_ref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj)
 {
    _glthread_LOCK_MUTEX(ctx->Shared->Mutex);
@@ -174,7 +174,7 @@ _mesa_ref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj)
 }
 
 
-void
+void GLAPIENTRY
 _mesa_unref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj)
 {
    _glthread_LOCK_MUTEX(ctx->Shared->Mutex);
@@ -190,7 +190,7 @@ _mesa_unref_sync_object(GLcontext *ctx, struct gl_sync_object *syncObj)
 }
 
 
-GLboolean
+GLboolean GLAPIENTRY
 _mesa_IsSync(GLsync sync)
 {
    GET_CURRENT_CONTEXT(ctx);
@@ -201,7 +201,7 @@ _mesa_IsSync(GLsync sync)
 }
 
 
-void
+void GLAPIENTRY
 _mesa_DeleteSync(GLsync sync)
 {
    GET_CURRENT_CONTEXT(ctx);
@@ -231,7 +231,7 @@ _mesa_DeleteSync(GLsync sync)
 }
 
 
-GLsync
+GLsync GLAPIENTRY
 _mesa_FenceSync(GLenum condition, GLbitfield flags)
 {
    GET_CURRENT_CONTEXT(ctx);
@@ -278,7 +278,7 @@ _mesa_FenceSync(GLenum condition, GLbitfield flags)
 }
 
 
-GLenum
+GLenum GLAPIENTRY
 _mesa_ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
    GET_CURRENT_CONTEXT(ctx);
@@ -319,7 +319,7 @@ _mesa_ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 }
 
 
-void
+void GLAPIENTRY
 _mesa_WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
    GET_CURRENT_CONTEXT(ctx);
@@ -348,7 +348,7 @@ _mesa_WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 }
 
 
-void
+void GLAPIENTRY
 _mesa_GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length,
 		GLint *values)
 {

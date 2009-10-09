@@ -35,6 +35,13 @@
 #include <GL/internal/dri_interface.h>
 #include "main/mtypes.h"
 
+#ifdef _MSC_VER
+#ifdef PUBLIC
+#undef PUBLIC
+#endif
+#define PUBLIC __declspec(dllexport)
+#endif
+
 
 /**
  * Debugging

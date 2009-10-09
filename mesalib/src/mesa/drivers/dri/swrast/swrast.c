@@ -31,6 +31,11 @@
  * The back-buffer is allocated by the driver and is private.
  */
 
+#ifdef _MSC_VER
+#define WIN32_LEAN_AND_MEAN 1
+#include <windows.h>
+#endif
+
 #include "main/context.h"
 #include "main/extensions.h"
 #include "main/framebuffer.h"
@@ -189,7 +194,7 @@ swrastFillInModes(__DRIscreen *psp,
 	fb_type = GL_UNSIGNED_INT_8_8_8_8_REV;
 	break;
     default:
-	fprintf(stderr, "[%s:%u] bad depth %d\n", __func__, __LINE__,
+	fprintf(stderr, "[%s:%u] bad depth %d\n", __FUNCTION__, __LINE__,
 		pixel_bits);
 	return NULL;
     }
@@ -199,7 +204,7 @@ swrastFillInModes(__DRIscreen *psp,
 			       depth_buffer_factor, back_buffer_modes,
 			       back_buffer_factor, msaa_samples_array, 1);
     if (configs == NULL) {
-	fprintf(stderr, "[%s:%u] Error creating FBConfig!\n", __func__,
+	fprintf(stderr, "[%s:%u] Error creating FBConfig!\n", __FUNCTION__,
 		__LINE__);
 	return NULL;
     }

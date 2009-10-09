@@ -41,7 +41,7 @@
 #define DRI_INTERFACE_H
 
 /* For archs with no drm.h */
-#if !defined(__APPLE__) && !defined(__CYGWIN__) && !defined(__GNU__)
+#if !defined(__APPLE__) && !defined(__CYGWIN__) && !defined(__GNU__) && !defined(_MSC_VER)
 #include <drm.h>
 #else
 typedef unsigned int drm_context_t;
@@ -314,6 +314,8 @@ struct __DRIgetDrawableInfoExtensionRec {
 	int * numBackClipRects, drm_clip_rect_t ** pBackClipRects,
 	void *loaderPrivate);
 };
+
+typedef int int32_t;
 
 /**
  * Callback to get system time for media stream counter extensions.

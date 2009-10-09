@@ -180,7 +180,7 @@ buffer_object_subdata_range_good( GLcontext * ctx, GLenum target,
  * 
  * Default callback for the \c dd_function_table::NewBufferObject() hook.
  */
-static struct gl_buffer_object *
+struct gl_buffer_object *
 _mesa_new_buffer_object( GLcontext *ctx, GLuint name, GLenum target )
 {
    struct gl_buffer_object *obj;
@@ -198,7 +198,7 @@ _mesa_new_buffer_object( GLcontext *ctx, GLuint name, GLenum target )
  * 
  * Default callback for the \c dd_function_table::DeleteBuffer() hook.
  */
-static void
+void
 _mesa_delete_buffer_object( GLcontext *ctx, struct gl_buffer_object *bufObj )
 {
    (void) ctx;
@@ -317,7 +317,7 @@ _mesa_initialize_buffer_object( struct gl_buffer_object *obj,
  * \return GL_TRUE for success, GL_FALSE for failure
  * \sa glBufferDataARB, dd_function_table::BufferData.
  */
-static GLboolean
+GLboolean
 _mesa_buffer_data( GLcontext *ctx, GLenum target, GLsizeiptrARB size,
 		   const GLvoid * data, GLenum usage,
 		   struct gl_buffer_object * bufObj )
@@ -361,7 +361,7 @@ _mesa_buffer_data( GLcontext *ctx, GLenum target, GLsizeiptrARB size,
  *
  * \sa glBufferSubDataARB, dd_function_table::BufferSubData.
  */
-static void
+void
 _mesa_buffer_subdata( GLcontext *ctx, GLenum target, GLintptrARB offset,
 		      GLsizeiptrARB size, const GLvoid * data,
 		      struct gl_buffer_object * bufObj )
@@ -394,7 +394,7 @@ _mesa_buffer_subdata( GLcontext *ctx, GLenum target, GLintptrARB offset,
  *
  * \sa glBufferGetSubDataARB, dd_function_table::GetBufferSubData.
  */
-static void
+void
 _mesa_buffer_get_subdata( GLcontext *ctx, GLenum target, GLintptrARB offset,
 			  GLsizeiptrARB size, GLvoid * data,
 			  struct gl_buffer_object * bufObj )
@@ -421,7 +421,7 @@ _mesa_buffer_get_subdata( GLcontext *ctx, GLenum target, GLintptrARB offset,
  *
  * \sa glMapBufferARB, dd_function_table::MapBuffer
  */
-static void *
+void *
 _mesa_buffer_map( GLcontext *ctx, GLenum target, GLenum access,
 		  struct gl_buffer_object *bufObj )
 {
@@ -486,7 +486,7 @@ _mesa_buffer_flush_mapped_range( GLcontext *ctx, GLenum target,
  *
  * \sa glUnmapBufferARB, dd_function_table::UnmapBuffer
  */
-static GLboolean
+GLboolean
 _mesa_buffer_unmap( GLcontext *ctx, GLenum target,
                     struct gl_buffer_object *bufObj )
 {

@@ -20,3 +20,10 @@ fcg .\include\xcb\bigreq.h   .\libxcb\src
 fcg .\libX11\include\X11\Xcms.h   .\X11
 fcg .\libX11\include\X11\Xregion.h   .\X11
 fcg .\libX11\include\X11\ImUtil.h   .\X11
+fcg .\gl\glext.h                  .\mesalib\include\gl\glext.h
+fcg .\gl\glx.h                    .\mesalib\include\gl\glx.h
+fcg .\gl\glxext.h                 .\mesalib\include\gl\glxext.h
+fcg .\gl\glx_mangle.h             .\mesalib\include\gl\glx_mangle.h
+fcg .\gl\gl_mangle.h              .\mesalib\include\gl\gl_mangle.h
+fcg .\gl\internal\dri_interface.h .\mesalib\include\gl\internal\dri_interface.h
+fcg .\gl\internal\glcore.h        .\mesalib\include\gl\internal\glcore.h

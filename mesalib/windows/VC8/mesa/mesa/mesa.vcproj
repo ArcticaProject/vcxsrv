@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9,00"
 	Name="mesa"
 	ProjectGUID="{2120C974-2717-4709-B44F-D6E6D0A56448}"
 	RootNamespace="mesa"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -555,6 +556,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\shader\hash_table.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\main\hint.c"
 				>
 			</File>
@@ -569,6 +574,18 @@
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\imports.c"
 				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\lex.yy.c"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\light.c"
@@ -679,6 +696,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\shader\prog_parameter_layout.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\shader\prog_print.c"
 				>
 			</File>
@@ -692,6 +713,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\shader\program.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\program_parse.tab.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\program_parse_extra.c"
 				>
 			</File>
 			<File
@@ -944,6 +973,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\stencil.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\symbol_table.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\main\syncobj.c"
 				>
 			</File>
 			<File

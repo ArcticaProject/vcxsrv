@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9,00"
 	Name="osmesa"
 	ProjectGUID="{8D6CD423-383B-49E7-81BC-D20C70B07DF5}"
 	RootNamespace="osmesa"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -78,6 +79,8 @@
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\osmesa\osmesa.def"
 				ProgramDatabaseFile="$(TargetDir)OSMESA32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -96,9 +99,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -170,6 +170,8 @@
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\osmesa\osmesa.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(TargetDir)OSMESA32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -188,9 +190,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -262,6 +261,8 @@
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\osmesa\osmesa.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(TargetDir)OSMESA32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -280,9 +281,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -353,6 +351,8 @@
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\osmesa\osmesa.def"
 				ProgramDatabaseFile="$(TargetDir)OSMESA32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -371,9 +371,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
