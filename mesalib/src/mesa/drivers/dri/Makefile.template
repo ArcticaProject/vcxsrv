@@ -1,0 +1,99 @@
+# -*-makefile-*-
+
+MESA_MODULES = $(TOP)/src/mesa/libmesa.a
+
+COMMON_GALLIUM_SOURCES = \
+        ../common/utils.c \
+        ../common/vblank.c \
+        ../common/dri_util.c \
+        ../common/xmlconfig.c
+
+COMMON_SOURCES = $(COMMON_GALLIUM_SOURCES) \
+        ../../common/driverfuncs.c \
+        ../common/texmem.c \
+        ../common/drirenderbuffer.c \
+	../common/dri_metaops.c
+
+ifeq ($(WINDOW_SYSTEM),dri)
+WINOBJ=
+WINLIB=
+INCLUDES = $(SHARED_INCLUDES) $(EXPAT_INCLUDES)
+
+OBJECTS = $(C_SOURCES:.c=.o) \
+	  $(ASM_SOURCES:.S=.o) 
+
+else
+# miniglx
+WINOBJ=
+WINLIB=-L$(MESA)/src/glx/mini
+MINIGLX_INCLUDES = -I$(TOP)/src/glx/mini
+INCLUDES = $(MINIGLX_INCLUDES) \
+	   $(SHARED_INCLUDES) \
+	   $(PCIACCESS_CFLAGS)
+
+OBJECTS = $(C_SOURCES:.c=.o) \
+	  $(MINIGLX_SOURCES:.c=.o) \
+	  $(ASM_SOURCES:.S=.o) 
+endif
+
+
+### Include directories
+SHARED_INCLUDES = \
+	-I. \
+	-I$(TOP)/src/mesa/drivers/dri/common \
+	-Iserver \
+	-I$(TOP)/include \
+	-I$(TOP)/src/mesa \
+	-I$(TOP)/src/egl/main \
+	-I$(TOP)/src/egl/drivers/dri \
+	$(LIBDRM_CFLAGS)
+
+
+##### RULES #####
+
+.c.o:
+	$(CC) -c $(INCLUDES) $(CFLAGS) $(DRIVER_DEFINES) $< -o $@
+
+.S.o:
+	$(CC) -c $(INCLUDES) $(CFLAGS) $(DRIVER_DEFINES)  $< -o $@
+
+
+##### TARGETS #####
+
+default: symlinks depend $(LIBNAME) $(TOP)/$(LIB_DIR)/$(LIBNAME)
+
+
+$(LIBNAME): $(OBJECTS) $(MESA_MODULES) $(PIPE_DRIVERS) $(WINOBJ) Makefile $(TOP)/src/mesa/drivers/dri/Makefile.template
+	$(MKLIB) -o $@ -noprefix -linker '$(CC)' -ldflags '$(LDFLAGS)' \
+		$(OBJECTS) $(PIPE_DRIVERS) $(MESA_MODULES) $(WINOBJ) $(DRI_LIB_DEPS)
+
+
+$(TOP)/$(LIB_DIR)/$(LIBNAME): $(LIBNAME)
+	$(INSTALL) $(LIBNAME) $(TOP)/$(LIB_DIR) 
+
+
+depend: $(C_SOURCES) $(ASM_SOURCES) $(SYMLINKS)
+	@ echo "running $(MKDEP)"
+	@ rm -f depend
+	@ touch depend
+	@ $(MKDEP) $(MKDEP_OPTIONS) $(DRIVER_DEFINES) $(INCLUDES) $(C_SOURCES) \
+		$(ASM_SOURCES) > /dev/null 2>/dev/null
+
+
+# Emacs tags
+tags:
+	etags `find . -name \*.[ch]` `find ../include`
+
+
+# Remove .o and backup files
+clean:
+	-rm -f *.o */*.o *~ *.so *~ server/*.o $(SYMLINKS)
+	-rm -f depend depend.bak
+
+
+install: $(LIBNAME)
+	$(INSTALL) -d $(DESTDIR)$(DRI_DRIVER_INSTALL_DIR)
+	$(MINSTALL) -m 755 $(LIBNAME) $(DESTDIR)$(DRI_DRIVER_INSTALL_DIR)
+
+
+-include depend
