@@ -108,7 +108,14 @@ load_makefile fonts.src\makefile MAKESERVER=0 DEBUG=0
 load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
 all: $(TTYAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
-     ..\libX11\nls\all fonts.src\all xkbdata.src\all plink.exe
+     ..\libX11\nls\all fonts.src\all xkbdata.src\all plink.exe \
+     opengl32.dll swrast_dri.dll
+
+swrast_dri.dll: ..\mesalib\lib\swrast_dri.dll
+	copy $< $@
+
+opengl32.dll: ..\mesalib\lib\opengl32.dll
+	copy $< $@
 
 protocol.txt: dix\protocol.txt
 	copy $< $@
