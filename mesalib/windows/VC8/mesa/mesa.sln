@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gdi", "gdi\gdi.vcproj", "{A1B24907-E196-4826-B6AF-26723629B633}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2120C974-2717-4709-B44F-D6E6D0A56448} = {2120C974-2717-4709-B44F-D6E6D0A56448}
@@ -56,18 +56,15 @@ Global
 		{2120C974-2717-4709-B44F-D6E6D0A56448}.Release|Win32.ActiveCfg = Release|Win32
 		{2120C974-2717-4709-B44F-D6E6D0A56448}.Release|Win32.Build.0 = Release|Win32
 		{8D6CD423-383B-49E7-81BC-D20C70B07DF5}.Debug Static CRT|Win32.ActiveCfg = Debug Static CRT|Win32
-		{8D6CD423-383B-49E7-81BC-D20C70B07DF5}.Debug Static CRT|Win32.Build.0 = Debug Static CRT|Win32
 		{8D6CD423-383B-49E7-81BC-D20C70B07DF5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8D6CD423-383B-49E7-81BC-D20C70B07DF5}.Debug|Win32.Build.0 = Debug|Win32
 		{8D6CD423-383B-49E7-81BC-D20C70B07DF5}.Release Static CRT|Win32.ActiveCfg = Release Static CRT|Win32
-		{8D6CD423-383B-49E7-81BC-D20C70B07DF5}.Release Static CRT|Win32.Build.0 = Release Static CRT|Win32
 		{8D6CD423-383B-49E7-81BC-D20C70B07DF5}.Release|Win32.ActiveCfg = Release|Win32
-		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Debug Static CRT|Win32.ActiveCfg = Debug|Win32
-		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Debug Static CRT|Win32.Build.0 = Debug|Win32
+		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Debug Static CRT|Win32.ActiveCfg = Debug Static CRT|Win32
+		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Debug Static CRT|Win32.Build.0 = Debug Static CRT|Win32
 		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Debug|Win32.Build.0 = Debug|Win32
-		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Release Static CRT|Win32.ActiveCfg = Release|Win32
-		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Release Static CRT|Win32.Build.0 = Release|Win32
+		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Release Static CRT|Win32.ActiveCfg = Release Static CRT|Win32
+		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Release Static CRT|Win32.Build.0 = Release Static CRT|Win32
 		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Release|Win32.ActiveCfg = Release|Win32
 		{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection

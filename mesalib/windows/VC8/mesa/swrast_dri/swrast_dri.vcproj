@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="gdi"
-	ProjectGUID="{A1B24907-E196-4826-B6AF-26723629B633}"
-	RootNamespace="gdi"
+	Name="swrast_dri"
+	ProjectGUID="{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}"
+	RootNamespace="swrast_dri"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -43,13 +43,13 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/gdi.tlb"
+				TypeLibraryName=".\Debug/swrast_dri.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../include,../../../../src/mesa,../../../../src/mesa/main,../../../../src/mesa/glapi,../../../../src/mesa/swrast,../../../../src/mesa/shader"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;GDI_EXPORTS;_DLL;BUILD_GL32;MESA_MINWARN"
+				AdditionalIncludeDirectories="../../../../include;../../../../src/mesa/drivers/dri/common;../../../../src/mesa"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;SWRAST_DRI_EXPORTS;_DLL;BUILD_GL32;MESA_MINWARN;IN_DRI_DRIVER"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BrowseInformation="1"
@@ -73,13 +73,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\swrast_dri.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
-				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)swrast_dri.pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -103,7 +102,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)swrast_dri.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -134,19 +133,22 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/gdi.tlb"
+				TypeLibraryName=".\Release/swrast_dri.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../../main,../../../../include,../../../../src/mesa,../../../../src/mesa/main,../../../../src/mesa/glapi,../../../../src/mesa/swrast,../../../../src/mesa/shader"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;GDI_EXPORTS;_DLL;BUILD_GL32;MESA_MINWARN"
+				AdditionalIncludeDirectories="../../../../include;../../../../src/mesa/drivers/dri/common;../../../../src/mesa"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;SWRAST_DRI_EXPORTS;_DLL;BUILD_GL32;MESA_MINWARN;IN_DRI_DRIVER"
 				StringPooling="true"
+				ExceptionHandling="0"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/gdi.pch"
+				EnableEnhancedInstructionSet="2"
+				PrecompiledHeaderFile=".\Release/swrast_dri.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				CompileAs="0"
@@ -166,12 +168,11 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\swrast_dri.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
-				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)swrast_dri.pdb"
 				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -196,7 +197,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)swrast_dri.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -227,13 +228,13 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/gdi.tlb"
+				TypeLibraryName=".\Debug/swrast_dri.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../include,../../../../src/mesa,../../../../src/mesa/main,../../../../src/mesa/glapi,../../../../src/mesa/swrast,../../../../src/mesa/shader"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;GDI_EXPORTS;BUILD_GL32;MESA_MINWARN"
+				AdditionalIncludeDirectories="../../../../include;../../../../src/mesa/drivers/dri/common;../../../../src/mesa"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;SWRAST_DRI_EXPORTS;BUILD_GL32;MESA_MINWARN;IN_DRI_DRIVER"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				BrowseInformation="1"
@@ -257,13 +258,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\swrast_dri.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
-				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)swrast_dri.pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -287,7 +287,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.lib&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.dll&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)swrast_dri.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -318,22 +318,22 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/gdi.tlb"
+				TypeLibraryName=".\Release/swrast_dri.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../../main,../../../../include,../../../../src/mesa,../../../../src/mesa/main,../../../../src/mesa/glapi,../../../../src/mesa/swrast,../../../../src/mesa/shader"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;GDI_EXPORTS;BUILD_GL32;MESA_MINWARN"
+				AdditionalIncludeDirectories="../../../../include;../../../../src/mesa/drivers/dri/common;../../../../src/mesa"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;SWRAST_DRI_EXPORTS;BUILD_GL32;MESA_MINWARN;IN_DRI_DRIVER"
 				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				EnableEnhancedInstructionSet="2"
-				PrecompiledHeaderFile=".\Release/gdi.pch"
+				PrecompiledHeaderFile=".\Release/swrast_dri.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				CompileAs="0"
@@ -353,12 +353,11 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\swrast_dri.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
-				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)swrast_dri.pdb"
 				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -383,7 +382,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)swrast_dri.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)swrast_dri.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -395,19 +394,19 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\..\..\..\src\mesa\drivers\common\driverfuncs.c"
+				RelativePath="..\..\..\..\src\mesa\drivers\dri\swrast\swrast.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
+				RelativePath="..\..\..\..\src\mesa\drivers\dri\swrast\swrast_priv.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\drivers\windows\gdi\wgl.c"
+				RelativePath="..\..\..\..\src\mesa\drivers\dri\swrast\swrast_span.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\drivers\windows\gdi\wmesa.c"
+				RelativePath="..\..\..\..\src\mesa\drivers\dri\common\utils.c"
 				>
 			</File>
 		</Filter>
@@ -415,22 +414,6 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath="..\..\..\..\src\mesa\drivers\windows\gdi\colors.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\mesa\drivers\common\driverfuncs.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\include\GL\wmesa.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\mesa\drivers\windows\gdi\wmesadef.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

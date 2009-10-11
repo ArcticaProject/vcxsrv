@@ -47,7 +47,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="1"
+				InlineFunctionExpansion="2"
+				OmitFramePointers="true"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../../../include;../../../../src/glu/sgi/include;../../../../src/glu/sgi/libnurbs/interface;../../../../src/glu/sgi/libnurbs/internals;../../../../src/glu/sgi/libnurbs/nurbtess"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;GLU_EXPORTS;BUILD_GLU32;LIBRARYBUILD;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
@@ -76,6 +78,7 @@
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\glu\sgi\glu.def"
 				ProgramDatabaseFile="$(TargetDir)GLU32.pdb"
+				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -310,12 +313,17 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="1"
+				InlineFunctionExpansion="2"
+				OmitFramePointers="true"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../../../include;../../../../src/glu/sgi/include;../../../../src/glu/sgi/libnurbs/interface;../../../../src/glu/sgi/libnurbs/internals;../../../../src/glu/sgi/libnurbs/nurbtess"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;GLU_EXPORTS;BUILD_GLU32;LIBRARYBUILD;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
+				ExceptionHandling="0"
 				RuntimeLibrary="0"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
+				EnableEnhancedInstructionSet="2"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -339,6 +347,7 @@
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\glu\sgi\glu.def"
 				ProgramDatabaseFile="$(TargetDir)GLU32.pdb"
+				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>

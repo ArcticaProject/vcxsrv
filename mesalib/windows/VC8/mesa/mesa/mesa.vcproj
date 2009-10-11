@@ -43,7 +43,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm1000 "
-				InlineFunctionExpansion="1"
+				InlineFunctionExpansion="2"
+				OmitFramePointers="true"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../../../include,../../../../src/mesa,../../../../src/mesa/glapi,../../../../src/mesa/main,../../../../src/mesa/shader,../../../../src/mesa/shader/slang,../../../../src/mesa/shader/grammar"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_DLL;BUILD_GL32;MESA_MINWARN;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
@@ -256,12 +258,17 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm1000 "
-				InlineFunctionExpansion="1"
+				InlineFunctionExpansion="2"
+				OmitFramePointers="true"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../../../../include,../../../../src/mesa,../../../../src/mesa/glapi,../../../../src/mesa/main,../../../../src/mesa/shader,../../../../src/mesa/shader/slang,../../../../src/mesa/shader/grammar"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;BUILD_GL32;MESA_MINWARN;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
+				ExceptionHandling="0"
 				RuntimeLibrary="0"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
+				EnableEnhancedInstructionSet="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -580,6 +587,30 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Static CRT|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Static CRT|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
