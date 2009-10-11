@@ -22,25 +22,30 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(font-arabic-misc, [1.0.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-arabic-misc)
+AC_INIT(font-misc-misc, [1.1.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-misc-misc)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+	  [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.3)
+XORG_DEFAULT_OPTIONS
+
 AC_PROG_INSTALL
 
-AC_PATH_PROG(BDFTOPCF, bdftopcf)
-AC_PATH_PROG(MKFONTSCALE, mkfontscale)
-AC_PATH_PROG(MKFONTDIR, mkfontdir)
+# Require X.Org's font util macros 1.1 or later
+m4_ifndef([XORG_FONT_MACROS_VERSION],
+	  [m4_fatal([must install X.Org font-util 1.1 or later before running autoconf/autogen])])
+XORG_FONT_MACROS_VERSION(1.1)
 
-m4_ifdef([AS_HELP_STRING], , [m4_define([AS_HELP_STRING], m4_defn([AC_HELP_STRING]))])
+XORG_FONTDIR([misc])
+XORG_FONT_BDF_UTILS
+XORG_FONT_UCS2ANY
 
-DEFAULT_FONTDIR=${libdir}/X11/fonts/misc
-AC_ARG_WITH(fontdir,
-	AS_HELP_STRING([--with-fontdir=FONTDIR], [Path to install fonts]),
-	[FONTDIR="$withval"],
-	[FONTDIR="$DEFAULT_FONTDIR"])
-AC_SUBST(FONTDIR)
-
-XORG_RELEASE_VERSION
+XORG_FONT_CHECK_ENCODING_LIST([ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4
+			       ISO8859-5 ISO8859-7 ISO8859-8 ISO8859-9
+			       ISO8859-10 ISO8859-11 ISO8859-13 ISO8859-14
+			       ISO8859-15 ISO8859-16 KOI8-R JISX0201])
 
 AC_OUTPUT([Makefile])

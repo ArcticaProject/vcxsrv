@@ -1,3 +1,33 @@
+commit 34a5a7ae5dc6c8d5f8cb50755d16ef0f573ff2f2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 22:31:00 2009 -0700
+
+    mkfontscale 1.0.7
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit acedad9e929c1edfa17fc1cb9d37a19701cd200d
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 22:29:08 2009 -0700
+
+    Add link to SubmittingPatches wiki page to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 245160adaca3957ead8fc278387c20e11b9bb7d2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 22:26:24 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 2ff1863a387a393e237e9f05525a48806e900368
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Fri Jan 16 20:17:08 2009 -0200
+
+    Silence sparse warnings and update .gitignore.
+
 commit a34031ea9074a453aee217b5845d07333019f26c
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Thu Dec 18 16:56:12 2008 -0800

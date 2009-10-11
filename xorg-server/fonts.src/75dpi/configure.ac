@@ -22,40 +22,29 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(font-adobe-75dpi, [1.0.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-adobe-75dpi)
+AC_INIT(font-adobe-75dpi, [1.0.1], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-adobe-75dpi)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+	  [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.3)
+XORG_DEFAULT_OPTIONS
+
 AC_PROG_INSTALL
 
-AC_PATH_PROG(BDFTOPCF, bdftopcf)
-AC_PATH_PROG(UCS2ANY, ucs2any)
-AC_PATH_PROG(MKFONTSCALE, mkfontscale)
-AC_PATH_PROG(MKFONTDIR, mkfontdir)
+# Require X.Org's font util macros 1.1 or later
+m4_ifndef([XORG_FONT_MACROS_VERSION],
+	  [m4_fatal([must install X.Org font-util 1.1 or later before running autoconf/autogen])])
+XORG_FONT_MACROS_VERSION(1.1)
 
-m4_ifdef([AS_HELP_STRING], , [m4_define([AS_HELP_STRING], m4_defn([AC_HELP_STRING]))])
+XORG_FONTDIR([75dpi])
+XORG_FONT_BDF_UTILS
+XORG_FONT_UCS2ANY
 
-DEFAULT_FONTDIR=${libdir}/X11/fonts/75dpi
-AC_ARG_WITH(fontdir,
-	AS_HELP_STRING([--with-fontdir=FONTDIR], [Path to install fonts]),
-	[FONTDIR="$withval"],
-	[FONTDIR="$DEFAULT_FONTDIR"])
-AC_SUBST(FONTDIR)
-
-PKG_CHECK_MODULES(MAPS, [fontutil])
-MAPFILES_PATH=$(pkg-config --variable=mapdir fontutil)
-AC_SUBST(MAPFILES_PATH)
-
-XORG_FONT_CHECK_ISO8859_1
-XORG_FONT_CHECK_ISO8859_2
-XORG_FONT_CHECK_ISO8859_3
-XORG_FONT_CHECK_ISO8859_4
-XORG_FONT_CHECK_ISO8859_9
-XORG_FONT_CHECK_ISO8859_10
-XORG_FONT_CHECK_ISO8859_13
-XORG_FONT_CHECK_ISO8859_14
-XORG_FONT_CHECK_ISO8859_15
-
-XORG_RELEASE_VERSION
+XORG_FONT_CHECK_ENCODING_LIST([ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4
+			       ISO8859-9 ISO8859-10 ISO8859-13 ISO8859-14
+			       ISO8859-15])
 
 AC_OUTPUT([Makefile])

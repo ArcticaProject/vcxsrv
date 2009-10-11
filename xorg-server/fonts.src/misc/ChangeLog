@@ -1,26 +1,236 @@
-2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 5f02a1eff46ccc10c9d5386b63c3c12659f224b0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 17:44:02 2009 -0700
 
-	* configure.ac:
-	Update package version number for final X11R7 release candidate.
+    font-misc-misc 1.1.0
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 3cad1053b737550b1de3dfd1cf59f2ac28aad9c2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 19:19:41 2009 -0700
 
-	* configure.ac:
-	Add m4 magic to allow AS_HELP_STRING to work with older versions
-	of autoconf 2.57.
+    Migrate to xorg macros 1.3 & font-util 1.1 macros
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit d1af8ca25b42c1b9cab635272bbe8d291452b16b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 19:14:29 2009 -0700
 
-	* configure.ac:
-	Update package version number for X11R7 RC3 release.
+    Add pointers to mailing lists, bugzilla, & git to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-11-23  Eric Anholt  <anholt@FreeBSD.org>
+commit 2451849abb8d4510770ec8fa560989013feabd30
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Sep 23 23:37:32 2009 -0700
 
-	* Makefile.am:
-	Use $< instead of $^ to be portable to FreeBSD's make.
+    Stop trying to run bdftruncate with perl now that it's a C program
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit dbb841ba7079d84be87343c78f6c139157d532a3
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Tue Apr 7 10:46:05 2009 +0100
 
-	* Makefile.am:
-	* configure.ac:
-	Add configure option to change the installed font dir.
+    Changes from http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html since 2008-04-21
+    
+      6x12.bdf:
+        - another 1273 glyphs added by Mikael Öhman <micketeer@gmail.com>
+        - removing 207 wide and full-width characters
+      6x13.bdf:
+        - completed Latin Extended Additional
+        - added some Supplemental Punctuation
+      9x15.bdf:
+        - added some Latin Extended Additional, including capital sharp s
+        - added some math symbols and operators, including perpendicular and
+          finite part integral (for ISO 80000-2 coverage)
+        - centered some older math operators properly (subset, superset, etc.)
+        - adding some Supplemental Punctuation
+      9x18.bdf:
+        - completed Latin Extended Additional
+        - added some Supplemental Punctuation
+      10x20.bdf:
+        - Unicode 5.1 TARGET3 completed by Henning Brunzel <muhgnu@yahoo.de>
+
+commit 36a7c774bd10b5e5466e9c029a348595590fd978
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:08 2009 -0200
+
+    Janitor: Correct make distcheck and configure.ac simplification
+
+commit 8034d7b20d1fe9adf5c15c6c0d9c2e1f1d19f79a
+Author: Andres Salomon <dilinger@debian.org>
+Date:   Sat Oct 25 20:50:21 2008 +0200
+
+    Bug#5176: cause configure to bail if mkfontscale or mkfontdir are not found
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit a61f543f77ed6edef2c28d9c0eb772bcab160b6c
+Author: Jeremy Lainé <jeremy.laine@m4x.org>
+Date:   Sat Oct 25 20:05:42 2008 +0200
+
+    Respect the $PKG_CONFIG variable (bug#8185)
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit faa833f4a5e68355626812e63246c8396322c02b
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Mon Apr 21 20:07:43 2008 +0100
+
+    6x12.bdf: 1698 glyphs added by Mikael Öhman <micketeer@gmail.com>
+
+commit 19ec4053d83383cd3fd3e4dba2dd146f5386d8e6
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Sat Apr 19 23:02:04 2008 +0100
+
+    fixed swapped U+2198/2199: http://bugs.freedesktop.org/show_bug.cgi?id=9666
+
+commit 27508d9b715018d72da71e861934ea36cae928da
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Sat Apr 19 21:34:02 2008 +0100
+
+    Changes from http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html since 2004-11-29
+    
+    - removed from all non-Asian fonts all wide and full-width characters
+    
+    - many fonts: moved wide angle brackets U+2329/232A to
+      mathematical angle brackets U+27E8/27E9
+    
+    - 10x20.bdf: Thomas Wolff <towo@towo.net> suggested a change of U+21B5
+      to distinguish it from U+21B2.
+    
+    - 7x14.bdf: Artis Rozentals: Fixed precomposed variants of "a" to look like
+      the base character
+    
+    - adding AUTHORS file
+
+commit 5bfa8d4f2ba9201030be4509b704b51c8e25a820
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:38:02 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit c161cea1a127891f4d406710b97a6ca3d6256213
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:53:18 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit 65b2e979e49f31a8b1b6741c0a30fcf7cf345205
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:26:42 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 83e55e564c7d90f4957e6ef5c47cf2da7950dd13
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:25 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 0d7099a437558e438b69774b566da8f6af18ed48
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 17:08:53 2005 +0000
+
+    Add m4 magic to allow AS_HELP_STRING to work with older versions of
+        autoconf 2.57.
+
+commit dabaf80c2b2e0d4d5a9fb984ac758f933a3707da
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:40 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit b9437b541607c6b95781a096012c2bfb0dfba135
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Thu Nov 24 05:21:15 2005 +0000
+
+    Bug #5122: Use $< instead of $^ to be portable to FreeBSD's make.
+
+commit 7f96a8f898ae2dc4b72183ba641665f1191b6bc9
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:21 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit e22fa79a4d033febd367151359413241da5127ea
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 15 08:26:47 2005 +0000
+
+    Add configure options to change the installed font dir and disable
+        ISO8859-* fonts.
+
+commit 17e91c27a45599c2fd5a31b552d1f9fa82b22d3a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:07 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit e75aadd2e702dcbd483949dcec22aa6d39942f3d
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun Oct 2 18:19:54 2005 +0000
+
+    Add explicit all-local targets so Solaris make can build, since it won't
+        recursively follow the implicit targets (.bdf -> -ISO-8859-1.bdf ->
+        pcf.gz)
+    Fix a couple of remaining GNU-make-isms
+
+commit 04b0e0ddc2593fec6cb33e1e2cae2d38493c3385
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:49 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 117bc5fe9abe46a735e4501186739cbf47c9267a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 22 04:13:44 2005 +0000
+
+    Fix distcheck for fonts with multiple encodings
+
+commit 4229e49298ca8fc455520d24155148d4539c056b
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Jul 19 02:40:06 2005 +0000
+
+    Convert $(foreach...) to more portable suffix substitution rules
+
+commit e24aaf48b4c8e9f52681893c52cab4222361b95b
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Jun 30 22:28:08 2005 +0000
+
+    Initial build system files for font module
+
+commit 991f1ff9647f185e6156eb77d54b10af5992d1b5
+Author: Markus Kuhn <Markus.Kuhn@cl.cam.ac.uk>
+Date:   Sun Nov 28 20:29:27 2004 +0000
+
+    Updated Misc-Fixed-*-ISO10646-1 BDF fonts to incorporate all extensions
+        from http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html since 2002-11-11.
+
+commit aae41769110a4af8641a913dcf5f0b55488859e0
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 28161a26bbcda7a8373bc27fcb2fd9d6976d46e9
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:41 2003 +0000
+
+    Initial revision
+
+commit 5100da70e588ddd38c1b83c9424e65a637d170f8
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:35 2003 +0000
+
+    R6.6 is the Xorg base-line

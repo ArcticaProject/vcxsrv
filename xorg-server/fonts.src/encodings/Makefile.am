@@ -47,23 +47,25 @@ if GZIP_SMALL
 DATA_FILES = $(COMPRESSED)
 CLEANFILES += $(COMPRESSED)
 else
-DATA_FILES = $(ENCODING_FILES) encodings.dir
+DATA_FILES = $(ENCODING_FILES)
 endif
 
 SUFFIXES = .enc .enc.gz
 
 .enc.enc.gz:
-	@GZIP@ -c < $< > $@
+	$(AM_V_GEN)$(GZIP) -c < $< > $@
 
 encodings.dir: $(DATA_FILES)
-	@MKFONTSCALE@ -b -s -l -n -r -p $(encodingsdir) -e . -e large .
+	$(AM_V_GEN)$(MKFONTSCALE) -b -s -l -n -r -p $(encodingsdir) -e . -e large .
 
 encodings_DATA = $(DATA_FILES) encodings.dir
 
 MAINTAINERCLEANFILES=ChangeLog
 
+.PHONY: ChangeLog
+
 ChangeLog:
-	git-log > ChangeLog
+	$(CHANGELOG_CMD)
 
 dist-hook: ChangeLog
 

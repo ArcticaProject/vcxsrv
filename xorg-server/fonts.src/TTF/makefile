@@ -29,7 +29,8 @@ FONT_FILES = \
 	VeraMoIt.ttf \
 	VeraMono.ttf \
 	VeraSe.ttf \
-	VeraSeBd.ttf
+	VeraSeBd.ttf \
+	GohaTibebZemen.ttf
 
 fontdir = .
 font_DATA = $(FONT_FILES:%=$(DESTDIR)\%)

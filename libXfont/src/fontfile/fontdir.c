@@ -747,10 +747,11 @@ FontFileAddFontFile (FontDirectoryPtr dir, char *fontName, char *fileName)
 	{
 	    FontResolutionPtr resolution;
 	    int num;
+	    int default_point_size = GetDefaultPointSize();
 
 	    extra->defaults.point_matrix[0] =
 		extra->defaults.point_matrix[3] =
-		    (double)GetDefaultPointSize() / 10.0;
+	            (double)default_point_size / 10.0;
 	    extra->defaults.point_matrix[1] =
 		extra->defaults.point_matrix[2] = 0.0;
 	    extra->defaults.values_supplied =

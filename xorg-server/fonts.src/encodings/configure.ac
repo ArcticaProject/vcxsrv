@@ -1,29 +1,40 @@
 AC_PREREQ([2.57])
-AC_INIT([encodings], [1.0.2], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
+AC_INIT([encodings], [1.0.3], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
-m4_ifdef([AS_HELP_STRING], , [m4_define([AS_HELP_STRING], m4_defn([AC_HELP_STRING]))])
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+	  [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.3)
+XORG_DEFAULT_OPTIONS
+
+AC_PROG_INSTALL
+
+# Require X.Org's font util macros 1.1 or later
+m4_ifndef([XORG_FONT_MACROS_VERSION],
+	  [m4_fatal([must install X.Org font-util 1.1 or later before running autoconf/autogen])])
+XORG_FONT_MACROS_VERSION(1.1)
 
 # mkfontscale
-
-AC_PATH_PROG(MKFONTSCALE, mkfontscale)
-if [[ -z $MKFONTSCALE ]]; then
-   AC_MSG_ERROR([mkfontscale is needed to build fontenc. Please install the app/mkfontscale package from X.Org.])
-fi
+XORG_FONT_REQUIRED_PROG(MKFONTSCALE, mkfontscale)
 
 # Choose whether or not to compress encodings - default is to compress all
 
+AC_MSG_CHECKING([if small encodings should be compressed])
 AC_ARG_ENABLE(gzip-small-encodings,
-	AS_HELP_STRING([--disable-gzip-small-encodings],
+	AC_HELP_STRING([--disable-gzip-small-encodings],
 			[Disable compression of small encoding files]),
 	[GZIP_SMALL="$enableval"], [GZIP_SMALL="yes"]) 
 AM_CONDITIONAL(GZIP_SMALL, [test x$GZIP_SMALL = xyes])
+AC_MSG_RESULT([${GZIP_SMALL}])
 
+AC_MSG_CHECKING([if large encodings should be compressed])
 AC_ARG_ENABLE(gzip-large-encodings,
-	AS_HELP_STRING([--disable-gzip-large-encodings],
+	AC_HELP_STRING([--disable-gzip-large-encodings],
 			[Disable compression of large encoding files]),
 	[GZIP_LARGE="$enableval"], [GZIP_LARGE="yes"]) 
 AM_CONDITIONAL(GZIP_LARGE, [test x$GZIP_LARGE = xyes])
+AC_MSG_RESULT([${GZIP_LARGE}])
 
 # gzip
 
@@ -34,13 +45,6 @@ if test x$GZIP_SMALL = xyes -o x$GZIP_LARGE = xyes ; then
     fi
 fi
 
-DEFAULT_ENCODINGSDIR=${libdir}/X11/fonts/encodings
-AC_ARG_WITH(encodingsdir,
-	AS_HELP_STRING([--with-encodingsdir=ENCODINGSDIR], [Path to install font encodings]),
-	[ENCODINGSDIR="$withval"],
-	[ENCODINGSDIR="$DEFAULT_ENCODINGSDIR"])
-AC_SUBST(ENCODINGSDIR)
-
-XORG_RELEASE_VERSION
+XORG_FONTSUBDIR([ENCODINGSDIR], [encodingsdir], [encodings])
 
 AC_OUTPUT([Makefile large/Makefile])

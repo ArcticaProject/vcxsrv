@@ -1,9 +1,4 @@
-FONTENCDIR=@ENCODINGSDIR@
-FONTENCDEFS = -DFONT_ENCODINGS_DIRECTORY=\"$(FONTENCDIR)/encodings.dir\"
-
-INCLUDES =			\
-	-I${top_srcdir}/include \
-	$(FONTENCDEFS)		
+INCLUDES = -I${top_srcdir}/include
 
 AM_CFLAGS = $(XFONT_CFLAGS) $(OS_CFLAGS) $(CWARNFLAGS)
 

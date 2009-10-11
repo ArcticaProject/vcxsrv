@@ -28,7 +28,8 @@ FONT_FILES = \
 	SyrCOMTalada.otf \
 	SyrCOMTurAbdin.otf \
 	SyrCOMUrhoyBold.otf \
-	SyrCOMUrhoy.otf
+	SyrCOMUrhoy.otf \
+	GohaTibebZemen.otf
 
 fontdir = .
 font_DATA = $(FONT_FILES:%=$(DESTDIR)\%)

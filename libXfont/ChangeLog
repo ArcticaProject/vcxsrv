@@ -1,3 +1,60 @@
+commit 64f21944c5f374b0da63657f01e289b34d00904c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 9 17:38:33 2009 -0700
+
+    libXfont 1.4.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 947d3162f5edaaa05bbbfcfe2303d0c8b796f9ca
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 13:05:26 2009 -0700
+
+    Remove unused setting of ENCODINGSDIR
+    
+    Seems to have been a leftover from before the encoding code was split
+    out into libfontenc by XFree86
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 18053ffbf92473ffce23a3c5182de92b608b9cdf
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 10:44:27 2009 -0700
+
+    Convert documentation from troff to DocBook/XML
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 96a4daad7097ce94d4340a4e9ce779e378f9b83c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 08:31:54 2009 -0700
+
+    Move fontlib.ms from xorg-docs
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit b7be4a976a59f3149590cf62a2ea8144aa729c2a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 13:03:25 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 18c5e2ff1097880e8dea951079ae49a93ec315b0
+Author: Bob Ham <rah@bash.sh>
+Date:   Tue Sep 15 14:28:12 2009 +1000
+
+     Fixed int(*)()->double cast warning
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 0045b2555b288099c90b65f97bd4b4a5ebc8c688
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Feb 18 13:53:14 2009 -0500
+
+    libXfont 1.4.0
+
 commit 04ced93e997b185b5d9124cacc96fa39a77b2ab7
 Author: Peter Astrand <astrand@maggie.lkpg.cendio.se>
 Date:   Wed Feb 4 22:09:25 2009 +0100

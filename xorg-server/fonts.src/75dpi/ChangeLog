@@ -1,33 +1,152 @@
-2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 179839390211a2077f5a8b69ff062f52247e1fc3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 16:47:26 2009 -0700
 
-	* configure.ac:
-	Update package version number for final X11R7 release candidate.
+    font-adobe-75dpi 1.0.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit fcbd2abe73d5556cc30a103e3d5af08d7396010d
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 13:31:51 2009 -0700
 
-	* configure.ac:
-	Add m4 magic to allow AS_HELP_STRING to work with older versions
-	of autoconf 2.57.
+    Migrate to xorg macros 1.3 & font-util 1.1 macros
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 77064f9c963cd7600102eecbab73fe23cf27095c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 19:14:24 2009 -0700
 
-	* configure.ac:
-	Update package version number for X11R7 RC3 release.
+    Add pointers to mailing lists, bugzilla, & git to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-11-23  Eric Anholt  <anholt@FreeBSD.org>
+commit c6625ab14650c7ce049d96ead9fd52e0822ad58c
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:06 2009 -0200
 
-	* Makefile.am:
-	Use $< instead of $^ to be portable to FreeBSD's make.
+    Janitor: Correct make distcheck and configure.ac simplification
 
-2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit c839df40fa5f386546d6694fa03006f1ce5b1521
+Author: Andres Salomon <dilinger@debian.org>
+Date:   Sat Oct 25 20:50:21 2008 +0200
 
-	* Makefile.am:
-	* configure.ac:
-	Add configure options to change the installed font dir and
-	disable ISO8859-* fonts.
+    Bug#5176: cause configure to bail if mkfontscale or mkfontdir are not found
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
 
-2005-10-18  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 0bb68e3cbfbc59a227f1322a51e4dd54ec9a500e
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:37:38 2007 -0500
 
-	* configure.ac:
-	Update package version number for RC1 release.
+    Replace static ChangeLog with dist-hook to generate from git log
 
+commit 2f091765f8e5e347af1f0d63ca223460e75af7ac
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:52:53 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit 889b34735aebf4cb681b78e5b621c7810af4c9ec
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:26:06 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 806e6c2dfddc1185002a87fd43a7031140f22757
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:22 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 0b3c563c1c39de3a13b99f4b31401ffdab8a0bb2
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 17:08:50 2005 +0000
+
+    Add m4 magic to allow AS_HELP_STRING to work with older versions of
+        autoconf 2.57.
+
+commit 3d35a0a7a908b6003bd8fb5d5a63600b9bc51328
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:37 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit deb86daf05657dd051539d9b0a0273f459688cc1
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Thu Nov 24 05:21:13 2005 +0000
+
+    Bug #5122: Use $< instead of $^ to be portable to FreeBSD's make.
+
+commit 59ff8f3a940fdde80ecf0dc51eb3c2d6ed2d7109
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:18 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit 10d06c459e3d0b97ed4ed1c018e697cbc793fb82
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 15 08:26:46 2005 +0000
+
+    Add configure options to change the installed font dir and disable
+        ISO8859-* fonts.
+
+commit 23c31430537fe316609a183998014c8496ca10c4
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:06 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit b9781c0ff8a8cf3bb90249408eea61a27f14f890
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun Oct 2 18:19:53 2005 +0000
+
+    Add explicit all-local targets so Solaris make can build, since it won't
+        recursively follow the implicit targets (.bdf -> -ISO-8859-1.bdf ->
+        pcf.gz)
+    Fix a couple of remaining GNU-make-isms
+
+commit 2f4aca90ccc891a851e83e281172145b601291b1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:46 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 20cb7cb7d13614233f5249edf0b423e83b06c760
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 22 04:13:43 2005 +0000
+
+    Fix distcheck for fonts with multiple encodings
+
+commit a8db61d7c6535a1d984feac52fc94063ae8d9836
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Jul 19 02:40:05 2005 +0000
+
+    Convert $(foreach...) to more portable suffix substitution rules
+
+commit 25d6cb9d29bed4b045c0b20773306aa2eb941c0b
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Jun 30 22:28:05 2005 +0000
+
+    Initial build system files for font module
+
+commit 28ec2947a4b94cbcf79ba538a113c1d75b5b7d9c
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:41 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 2509b1b776e7552465ad7351fe039645f2489acd
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:34 2003 +0000
+
+    R6.6 is the Xorg base-line

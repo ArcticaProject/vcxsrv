@@ -1,27 +1,108 @@
-2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit c7858f59cbb79f3eb2c8b2720d57913dd19ee6ff
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 17:30:43 2009 -0700
 
-	* configure.ac:
-	Update package version number for final X11R7 release candidate.
+    font-bitstream-speedo 1.0.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit b93eb2b4db7f307dda02e28baeeae758fa809895
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 15:14:02 2009 -0700
 
-	* configure.ac:
-	Add m4 magic to allow AS_HELP_STRING to work with older versions
-	of autoconf 2.57.
+    Migrate to xorg macros 1.3 & font-util 1.1 macros
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 609a2a67135ae1be0b86b75fea2fcb04a2acac7c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 19:14:27 2009 -0700
 
-	* configure.ac:
-	Update package version number for X11R7 RC3 release.
+    Add pointers to mailing lists, bugzilla, & git to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit b0b37116ede2b080957357ac15b928aafe58ca34
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:07 2009 -0200
 
-	* Makefile.am:
-	* configure.ac:
-	Add configure option to change the installed font dir.
+    Janitor: Correct make distcheck and configure.ac simplification
 
-2005-10-18  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 3f8e1466a142201b0e68200bc1e0d387eb2cdbd9
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sat Oct 25 21:38:40 2008 +0200
 
-	* configure.ac:
-	Update package version number for RC1 release.
+    cause configure to bail if mkfontdir is not found
 
+commit 73f71f7a5f87376bb07d1700b778e1309de5472f
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:37:51 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit f0aed51c969e8aa82e5cd5897b88a93a1180bfc8
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:53:05 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit ef4bc48a0fec14a5777f4b14f0f03ab0aa228696
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:26:25 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 6ca6f5cdf6d705c7c0f261d4279c65cebdc2c644
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:23 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit edd856cf72d8a77e995fd034fbdba7ca63862194
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 17:08:52 2005 +0000
+
+    Add m4 magic to allow AS_HELP_STRING to work with older versions of
+        autoconf 2.57.
+
+commit 98ba1984a54660dab2c25b255274431de7852bf1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:39 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 7c145337e00a982b3cacb66c2905a403a5b5c867
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:19 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit f72272f3950f3c5e503a2971e7ffdbe4d34c8639
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 15 08:29:17 2005 +0000
+
+    Add configure option to change the installed font dir.
+
+commit 633f26575d06995a8a4fd66ebaeb59563e15ea3c
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:07 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit d52a0ae217ac47ac6b52607c5373959c5808fc90
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Sep 28 19:49:16 2005 +0000
+
+    Add Ethiopic, Meltho and Speedo fonts and their build systems
+
+commit e4ce0a24995b2866bc271c5cbbbbff914bba60aa
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 086ea4b5c2988fa97ca0c6bce32a7b850ba5f80e
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:35 2003 +0000
+
+    R6.6 is the Xorg base-line

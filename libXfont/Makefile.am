@@ -52,3 +52,24 @@ ChangeLog:
 
 dist-hook: ChangeLog
 
+# Developer documentation - not installed on system
+EXTRA_DIST += doc/fontlib.xml doc/fontlib.xsl doc/fontlib.css
+
+if MAKE_DEVEL_DOCS
+if HAVE_XMLTO
+noinst_DATA = doc/fontlib.txt doc/fontlib.html $(srcdir)/doc/fontlib.css
+CLEANFILES = doc/fontlib.txt doc/fontlib.html doc/fontlib.pdf doc/fontlib.ps
+
+doc/fontlib.txt: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
+	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc txt $(srcdir)/doc/fontlib.xml
+
+doc/fontlib.html: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
+	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc xhtml-nochunks $(srcdir)/doc/fontlib.xml
+
+doc/fontlib.pdf: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
+	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc pdf $(srcdir)/doc/fontlib.xml
+
+doc/fontlib.ps: $(srcdir)/doc/fontlib.xml $(srcdir)/doc/fontlib.xsl
+	$(AM_V_GEN)$(XMLTO) -m $(srcdir)/doc/fontlib.xsl -o doc ps $(srcdir)/doc/fontlib.xml
+endif HAVE_XMLTO
+endif MAKE_DEVEL_DOCS
