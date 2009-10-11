@@ -33,7 +33,7 @@ FONT_FILES = \
 fontdir = @FONTDIR@
 font_DATA = $(FONT_FILES)
 
-EXTRA_DIST = $(FONT_FILES) COPYRIGHT autogen.sh
+EXTRA_DIST = $(FONT_FILES) COPYRIGHT
 
 # Note that the fonts.scale is not generated; rather, it is copied above
 install-data-hook:
@@ -42,3 +42,13 @@ install-data-hook:
 
 distuninstallcheck:
 	@:
+
+EXTRA_DIST += ChangeLog
+MAINTAINERCLEANFILES = ChangeLog
+
+.PHONY: ChangeLog
+
+ChangeLog:
+	$(CHANGELOG_CMD)
+
+dist-hook: ChangeLog

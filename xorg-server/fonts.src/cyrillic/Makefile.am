@@ -20,7 +20,6 @@
 #  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 FONT_FILES = \
-	proof9x16 \
 	koi12x24b \
 	koi12x24 \
 	koi5x8 \
@@ -35,94 +34,37 @@ FONT_FILES = \
 	koi9x15b \
 	koi9x15 \
 	koi9x18b \
-	koi9x18 \
-	screen8x16b \
-	screen8x16 \
-	crox1cb \
-	crox1c \
-	crox1cbo \
-	crox1co \
-	crox1hb \
-	crox1h \
-	crox1hbo \
-	crox1ho \
-	crox1tb \
-	crox1t \
-	crox1tbo \
-	crox1to \
-	crox2cb \
-	crox2c \
-	crox2cbo \
-	crox2co \
-	crox2hb \
-	crox2h \
-	crox2hbo \
-	crox2ho \
-	crox2tb \
-	crox2t \
-	crox2tbo \
-	crox2to \
-	crox3cb \
-	crox3c \
-	crox3cbo \
-	crox3co \
-	crox3hb \
-	crox3h \
-	crox3hbo \
-	crox3ho \
-	crox3tb \
-	crox3t \
-	crox3tbo \
-	crox3to \
-	crox4hb \
-	crox4h \
-	crox4hbo \
-	crox4ho \
-	crox4tb \
-	crox4t \
-	crox4tbo \
-	crox4to \
-	crox5hb \
-	crox5h \
-	crox5hbo \
-	crox5ho \
-	crox5tb \
-	crox5t \
-	crox5tbo \
-	crox5to \
-	crox6hb \
-	crox6h \
-	crox6hbo \
-	crox6ho \
-	crox6tb \
-	crox6t \
-	crox6tbo \
-	crox6to \
-	koi10x16b \
-	koi10x20 \
-	koi6x10 \
-	koinil2
+	koi9x18
 
 BDF_FILES = $(FONT_FILES:%=%.bdf)
-PCF_FILES = $(FONT_FILES:%=%.pcf.gz)
+PCF_FILES = $(FONT_FILES:%=%.pcf$(COMPRESS_SUFFIX))
 
-SUFFIXES = .bdf .pcf.gz
+SUFFIXES = .bdf .pcf$(COMPRESS_SUFFIX)
 
-.bdf.pcf.gz:
+.bdf.pcf$(COMPRESS_SUFFIX):
 	@rm -f $@
-	$(BDFTOPCF) -t $< | gzip > $@
+	$(AM_V_GEN)$(BDFTOPCF) -t $< | $(COMPRESS) > $@
 
 fontdir = @FONTDIR@
 font_DATA = $(PCF_FILES)
 CLEANFILES = $(font_DATA)
 
-EXTRA_DIST = $(BDF_FILES) COPYRIGHT autogen.sh
+EXTRA_DIST = $(BDF_FILES)
 
 install-data-hook:
-	@rm -f $(DESTDIR)$(fontdir)/fonts.scale
-	$(MKFONTSCALE) $(DESTDIR)$(fontdir)
 	@rm -f $(DESTDIR)$(fontdir)/font.dir
 	$(MKFONTDIR) $(DESTDIR)$(fontdir)
+	@RUN_FCCACHE@
 
 distuninstallcheck:
 	@:
+
+EXTRA_DIST += ChangeLog
+MAINTAINERCLEANFILES = ChangeLog
+
+.PHONY: ChangeLog
+
+ChangeLog:
+	$(CHANGELOG_CMD)
+
+dist-hook: ChangeLog

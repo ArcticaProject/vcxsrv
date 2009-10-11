@@ -1,3 +1,45 @@
+commit b10044e1cdb8f1656b6f61d79512bf4d49ee3339
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 20:23:36 2009 -0700
+
+    font-util 1.1.0: Add new macros to replace code common to many font modules
+    
+    XORG_FONT_MACROS_VERSION(required-version)
+    XORG_FONT_CHECK_ENCODING(encoding)
+    XORG_FONT_CHECK_ENCODING_LIST(encoding1 encoding2....)
+    XORG_FONT_REQUIRED_PROG(VARNAME, progname)
+    XORG_FONT_FCCACHE()
+    XORG_FONT_COMMON_UTILS()
+    XORG_FONT_BDF_UTILS()
+    XORG_FONT_SCALED_UTILS()
+    XORG_FONT_CHECK_COMPRESSION()
+    XORG_FONT_UCS2ANY()
+    XORG_FONTROOTDIR()
+    XORG_FONTSUBDIR(variable, flag, subdir)
+    XORG_FONTDIR(subdir)
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+    Acked-by: Rémi Cardona <remi@gentoo.org>
+
+commit 59557a6f4a28f38edcb6251ac04c9cb0e582bb3e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 14:19:57 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 032e3cb6c41c720412ab3403dad2ab800f45a817
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Sep 23 23:12:08 2009 -0700
+
+    Fix parsing of hexadecimal arguments to bdftruncate
+    
+    Since bdftruncate suggests running itself with "0x3200", that should work.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
 commit ca16bc230e73bfbf651acb9010ba695bbbef0e8a
 Author: Julien Cristau <jcristau@debian.org>
 Date:   Fri Aug 7 21:47:25 2009 +0200

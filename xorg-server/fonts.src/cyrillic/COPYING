@@ -1,13 +1,19 @@
-This package contains a set of Russian fonts for X11 Release 6.
-Copyright (C) 1994-1995 Cronyx Ltd.
-Changes Copyright (C) 1996 by Sergey Vovk
-Changes Copyright (C) 1999-2000 by Serge Winitzki
-Changes Copyright (C) 1996-2000 by Andrey A. Chernov, Moscow, Russia.
+koi12x24b.bdf, koi8x16b.bdf and koi8x16.bdf:
+--------------------------------------------
+May be distributed and modified without restrictions.
 
-Version: 2.3.1
 
-This software may be used, modified, copied, distributed and sold,
-in both source and binary form provided that the above copyright
+koi12x24.bdf and koi6x13.bdf:
+-----------------------------
+Changes 1999-2000 by Serge Winitzki.
+This software may be used, modified, copied, distributed, and sold,
+in both source and binary form provided that the copyright
 and these terms are retained. Under no circumstances is the author
 responsible for the proper functioning of this software, nor does
 the author assume any responsibility for damages incurred with its use.
+
+
+koi5x8.bdf, koi6x13b.bdf, koi6x9.bdf, koi7x14b.bdf, koi7x14.bdf,
+koi8x13.bdf, koi9x15b.bdf, koi9x15.bdf, koi9x18b.bdf and koi9x18.bdf:
+---------------------------------------------------------------------
+"Public domain font.  Share and enjoy."

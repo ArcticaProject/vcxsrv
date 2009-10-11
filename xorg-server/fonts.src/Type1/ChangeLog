@@ -1,21 +1,118 @@
-2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit fe3926ad56179c0e22623c11e07c447fc11df463
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 17:13:10 2009 -0700
 
-	* configure.ac:
-	Update package version number for final X11R7 release candidate.
+    font-bh-type1 1.0.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit a6edf75a6b4a14802e3159c74c899b3dcc240002
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 15:10:23 2009 -0700
 
-	* configure.ac:
-	Add m4 magic to allow AS_HELP_STRING to work with older versions
-	of autoconf 2.57.
+    Migrate to xorg macros 1.3 & font-util 1.1 macros
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 0baac9f6b4ef09df10e1899e2e85dcab092d8ef0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 15:09:43 2009 -0700
 
-	* configure.ac:
-	Update package version number for X11R7 RC3 release.
+    Add pointers to mailing lists, bugzilla, & git to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 8227767d2554c7746a9bcaf0f5a0327de0ced507
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:07 2009 -0200
 
-	* Makefile.am:
-	* configure.ac:
-	Add configure option to change the installed font dir.
+    Janitor: Correct make distcheck and configure.ac simplification
+
+commit 1740b989521030f5391a922b0fec97dfb71fddb9
+Author: Andres Salomon <dilinger@debian.org>
+Date:   Sat Oct 25 20:50:21 2008 +0200
+
+    Bug#5176: cause configure to bail if mkfontscale or mkfontdir are not found
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit fd9c9cca0e01db9e0d3c6501522e16c44e07778f
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:37:48 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit d21593ad533b3ab61bd893023d4d60bb089da108
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:53:03 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit 24f6cfb85a2b057f25bb3b5ff1238bcd3749bd15
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:26:22 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit b1b1bd24d427bf82ac83c4b8e291de1253460988
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:23 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit d5f858778844056cf1ecf7b8981120947470035c
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 17:08:51 2005 +0000
+
+    Add m4 magic to allow AS_HELP_STRING to work with older versions of
+        autoconf 2.57.
+
+commit 8a54af08672f8a44a17689b61f1bd780ecb036fa
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:38 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit ed73654e87359d946f74b25220048ad1204a18df
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:19 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit 5d9afa91e39b969fb98232699fa2b0f6c77c7aa2
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 15 08:29:16 2005 +0000
+
+    Add configure option to change the installed font dir.
+
+commit c25e4dcea10a5840455f3a4e8747994167c6d2d7
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:47 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 1603b6116c6a4d5a0e56955171ea0f4987f5aa4c
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Jun 30 22:28:06 2005 +0000
+
+    Initial build system files for font module
+
+commit 81c84aedf79092bf82b3041b2dfcf62050829171
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit d8482c8cf71edad5f381f8090194ea7169abe14a
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    Initial revision

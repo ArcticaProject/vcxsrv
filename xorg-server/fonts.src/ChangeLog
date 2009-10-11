@@ -1,0 +1,157 @@
+commit 0b43084d10596794a23760b4e43fce6f0cf58f58
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 16:53:57 2009 -0700
+
+    font-alias 1.0.2
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit a3f949590e752adc43a22c86f02d24ac02c597ba
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 14:20:13 2009 -0700
+
+    Migrate to xorg macros 1.3 & font-util 1.1 macros
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 70faca34b52a6b53b746e34c1f06bc4358266204
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 19:14:25 2009 -0700
+
+    Add pointers to mailing lists, bugzilla, & git to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 6912df83bc761a6ecd902d03883bffd536a41416
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:06 2009 -0200
+
+    Janitor: Correct make distcheck and configure.ac simplification
+
+commit e3321d06ca1772a79a9ea947711fbabaa6b690ab
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:10:57 2009 -0200
+
+    Janitor: Correct make distcheck and configure.ac simplification
+
+commit 6a059e8b817333e738317f3a148e24fa1d61f6ae
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:37:42 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit 1223e5a4b5f0f7f1f5ed9ca4ec656a0f61fe3c30
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:52:57 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit e7e161150c83f1d273707e4d840b632c99b8fc26
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:26:12 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 45dc59e6d2162d8fa81901e49740181fa13f7648
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Dec 21 02:30:05 2005 +0000
+
+    Update package version for X11R7 release.
+
+commit ae366e7094154d17990c6d80d2f131c27835bda4
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Dec 19 16:26:49 2005 +0000
+
+    Stub COPYING files
+
+commit 05ef0e2ad65985e5c45c61e1740e2fc41213ee36
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:22 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 97350d6338fd9f14a5fbe15d77701aa39b868741
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Dec 9 20:11:25 2005 +0000
+
+    Bug #5293: Use --with-top-fontdir instead of --with-aliasdir.
+
+commit c16cca19ed1fed6541c63d8e59830caf88facb88
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Dec 9 05:31:36 2005 +0000
+
+    Bug #5293: Make aliasdir configurable (Donnie Berkholz).
+
+commit cc0188ab131000dd893f165153efbc81d7bb936f
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:19 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit 655a0d27c1503f00fabe644df558c23f85a8bac7
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:47 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 7188b27551b11a11e797b1093fe02d968ee4890d
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Jul 12 04:23:08 2005 +0000
+
+    Add build system for font.alias files
+
+commit 1b2fef911e2eca971c6f8a9cd23403b4d40feeef
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:01 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit d2b134646d3d0dc15e38f874997ececb4a9edecc
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:31:08 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit c60589ba6eadb3f2b5ec67f96afb56d319f69d66
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:10:49 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit d8a444f96cc8077eacaf5b4a9f4df4dbad4f9d02
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:10 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 79f46f23e9ca4e1e40881c0858c8da4f4c78e2ca
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:20 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit e9230055b9a0674dd8d7a479abee1106c65508a1
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:42 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 4cd3412a2d8778a74a6567bcbe49c45f20183770
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:41 2003 +0000
+
+    Initial revision
+
+commit 806fa2721e3e289455295a03197e699fa2514bfd
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:34 2003 +0000
+
+    R6.6 is the Xorg base-line

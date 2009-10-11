@@ -1,3 +1,57 @@
+commit 37d2a7c362a330d6aaa4d348a5db81da844ef7a8
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 17:56:53 2009 -0700
+
+    encodings 1.0.3
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit ba904c20fa5e80449d515c8c8f04953db5a64a06
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 16:46:52 2009 -0700
+
+    Migrate to xorg macros 1.3 & font-util 1.1 macros
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 8053655dd5714014ecca5182471c96f5223feb29
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 19:15:31 2009 -0700
+
+    Add pointers to mailing lists, bugzilla, & git to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 6a86a2a95a40350ce19a6f5e802452cc28f1b968
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:08 2009 -0200
+
+    Janitor: Correct make distcheck and configure.ac simplification
+
+commit 862d94a9b9931361c546d951b7026258d944fdad
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:10:58 2009 -0200
+
+    Janitor: Correct make distcheck and configure.ac simplification
+
+commit d1546d162b4fe12c5d01479ded02b00bff5a9c64
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 15:51:13 2007 -0500
+
+    Add missing PHONY line for automatic ChangeLog generation
+
+commit 0feb027d6c94a7896c5d2fb861de8c69340998db
+Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
+Date:   Mon Jul 23 22:55:01 2007 +0200
+
+    Replace generic copyright statement.
+
+commit 6e799b71a736588a5aeb274851bc8a81323d661e
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Nov 8 16:01:11 2006 +0200
+
+    bump to 1.0.2
+
 commit 1963f4ab3ce7625ff687cbd4a94605aef86c7c03
 Author: Juliusz Chroboczek <jch@pps.jussieu.fr>
 Date:   Mon Nov 6 19:55:15 2006 +0100

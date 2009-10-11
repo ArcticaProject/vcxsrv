@@ -1,26 +1,174 @@
-2005-12-14  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 5b71faa26c5e52e7e9d382999f41429b22b11b72
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 17:41:17 2009 -0700
 
-	* configure.ac:
-	Update package version number for final X11R7 release candidate.
+    font-misc-cyrillic 1.0.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 2c277efff7d670333d9f8641ffade31614433e5c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 17:46:12 2009 -0700
 
-	* configure.ac:
-	Add m4 magic to allow AS_HELP_STRING to work with older versions
-	of autoconf 2.57.
+    Migrate to xorg macros 1.3 & font-util 1.1 macros
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-12-03  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 1054d693e96006db97ec8e16c7fdb8276c4e3cef
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 20:37:00 2009 -0700
 
-	* configure.ac:
-	Update package version number for X11R7 RC3 release.
+    Add missing newline in .gitignore between "missing" and "*~"
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-11-23  Eric Anholt  <anholt@FreeBSD.org>
+commit f769ca2dde4b2fead16485966356de1f4be2a351
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Oct 6 19:14:29 2009 -0700
 
-	* Makefile.am:
-	Use $< instead of $^ to be portable to FreeBSD's make.
+    Add pointers to mailing lists, bugzilla, & git to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
-2005-11-15  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+commit 4cd80d59d8755f43dcaff47f4e281ea4fdf7391b
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Tue Jan 27 19:11:08 2009 -0200
 
-	* Makefile.am:
-	* configure.ac:
-	Add configure option to change the installed font dir.
+    Janitor: Correct make distcheck and configure.ac simplification
+
+commit 03ef482871c0972ec0b29f342e15ba04af71d5c6
+Author: Andres Salomon <dilinger@debian.org>
+Date:   Sat Oct 25 20:50:21 2008 +0200
+
+    Bug#5176: cause configure to bail if mkfontscale or mkfontdir are not found
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit b65b4c6d9f3d7401c7962adabdf5f6a7ace4eff4
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:38:00 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit 7f79d42461851cb266a4f0dc6f0a6b37597e66f9
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:53:14 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit 4feae691c2040437b43f50f02d555ddcf8044d1e
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Aug 23 19:26:37 2007 -0400
+
+    Rename .cvsignore to .gitignore
+
+commit 3d8dde235824146070757aecc2531d2ffb5449fa
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:25 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 49ec5678565848aee0c47e8bd59d0a78c012583f
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 17:08:53 2005 +0000
+
+    Add m4 magic to allow AS_HELP_STRING to work with older versions of
+        autoconf 2.57.
+
+commit e4062756abb6aa70734ea42d08c8cf9edcc0dae0
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:40 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit bbebb43a798e254baf38b7c9a64d28ec4dd88914
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Thu Nov 24 05:21:15 2005 +0000
+
+    Bug #5122: Use $< instead of $^ to be portable to FreeBSD's make.
+
+commit a98aed681d6b9e83255f06c0aafe2f6bbae08840
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue Nov 22 02:00:20 2005 +0000
+
+    Add .cvsignores for fonts.
+
+commit 031639facd5527a073bf73026908c5fd4bbd50e8
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Nov 15 08:29:19 2005 +0000
+
+    Add configure option to change the installed font dir.
+
+commit 137e55b38e06e0a9d4096d33c7e82791a891c480
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:48 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 72c76794c7fed9db4aa3ceb3c9032b436ba58a68
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Jul 19 02:40:06 2005 +0000
+
+    Convert $(foreach...) to more portable suffix substitution rules
+
+commit b4bc7920c657165fb96c0941f501f1ff942bcc82
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Jun 30 22:28:08 2005 +0000
+
+    Initial build system files for font module
+
+commit a546be63238ca48e3feb9589917b682df506b0f8
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:01 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit c2c90f55c796d69a70ff00896a172a414166107b
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:31:10 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit c83f0f3f640c5453a8a2150b02b22547e050fcd7
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:10:49 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 7a92ea0390d915c320c1bb59a0b22af952ee596e
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:10 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 54c0eba6c9c7520756d9559013cad1c23963b712
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:22 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit d4b0aae1b047e517ece3c361c878dfa44a98673e
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:27:48 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 9c2fa80219caccc932733c321f309bb827a6f058
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:41 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 70b717151a779ddc0482f513129ce19ea1145d52
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:41 2003 +0000
+
+    Initial revision

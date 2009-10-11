@@ -20,96 +20,6 @@
 #  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 BDF2UCS_FONT_FILES = \
-	lutBS08 \
-	lutBS10 \
-	lutBS12 \
-	lutBS14 \
-	lutBS18 \
-	lutBS19 \
-	lutBS24 \
-	lutRS08 \
-	lutRS10 \
-	lutRS12 \
-	lutRS14 \
-	lutRS18 \
-	lutRS19 \
-	lutRS24 \
-	lubB08 \
-	lubB10 \
-	lubB12 \
-	lubB14 \
-	lubB18 \
-	lubB19 \
-	lubB24 \
-	lubBI08 \
-	lubBI10 \
-	lubBI12 \
-	lubBI14 \
-	lubBI18 \
-	lubBI19 \
-	lubBI24 \
-	lubI08 \
-	lubI10 \
-	lubI12 \
-	lubI14 \
-	lubI18 \
-	lubI19 \
-	lubI24 \
-	luBIS08 \
-	luBIS10 \
-	luBIS12 \
-	luBIS14 \
-	luBIS18 \
-	luBIS19 \
-	luBIS24 \
-	lubR08 \
-	lubR10 \
-	lubR12 \
-	lubR14 \
-	lubR18 \
-	lubR19 \
-	lubR24 \
-	luBS08 \
-	luBS10 \
-	luBS12 \
-	luBS14 \
-	luBS18 \
-	luBS19 \
-	luBS24 \
-	luIS08 \
-	luIS10 \
-	luIS12 \
-	luIS14 \
-	luIS18 \
-	luIS19 \
-	luIS24 \
-	luRS08 \
-	luRS10 \
-	luRS12 \
-	luRS14 \
-	luRS18 \
-	luRS19 \
-	luRS24 \
-	UTB___10 \
-	UTB___12 \
-	UTB___14 \
-	UTB___18 \
-	UTB___24 \
-	UTBI__10 \
-	UTBI__12 \
-	UTBI__14 \
-	UTBI__18 \
-	UTBI__24 \
-	UTI___10 \
-	UTI___12 \
-	UTI___14 \
-	UTI___18 \
-	UTI___24 \
-	UTRG__10 \
-	UTRG__12 \
-	UTRG__14 \
-	UTRG__18 \
-	UTRG__24 \
 	courB08 \
 	courB10 \
 	courB12 \
@@ -212,88 +122,60 @@ EXTRA_FONT_FILES = \
 	symb12 \
 	symb14 \
 	symb18 \
-	symb24 \
-	charB08 \
-	charB10 \
-	charB12 \
-	charB14 \
-	charB18 \
-	charB24 \
-	charBI08 \
-	charBI10 \
-	charBI12 \
-	charBI14 \
-	charBI18 \
-	charBI24 \
-	charI08 \
-	charI10 \
-	charI12 \
-	charI14 \
-	charI18 \
-	charI24 \
-	charR08 \
-	charR10 \
-	charR12 \
-	charR14 \
-	charR18 \
-	charR24 \
-	tech14 \
-	techB14 \
-	term14 \
-	termB14
+	symb24
 FONT_FILES = $(BDF2UCS_FONT_FILES) $(EXTRA_FONT_FILES)
 
 BDF_FILES = $(FONT_FILES:%=%.bdf)
-PCF_FILES = $(FONT_FILES:%=%.pcf.gz)
+PCF_FILES = $(FONT_FILES:%=%.pcf$(COMPRESS_SUFFIX))
 
 if ISO8859_1
 ISO8859_1_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-1.bdf)
-ISO8859_1_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-1.pcf.gz)
+ISO8859_1_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-1.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_2
 ISO8859_2_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-2.bdf)
-ISO8859_2_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-2.pcf.gz)
+ISO8859_2_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-2.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_3
 ISO8859_3_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-3.bdf)
-ISO8859_3_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-3.pcf.gz)
+ISO8859_3_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-3.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_4
 ISO8859_4_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-4.bdf)
-ISO8859_4_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-4.pcf.gz)
+ISO8859_4_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-4.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_9
 ISO8859_9_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-9.bdf)
-ISO8859_9_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-9.pcf.gz)
+ISO8859_9_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-9.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_10
 ISO8859_10_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-10.bdf)
-ISO8859_10_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-10.pcf.gz)
+ISO8859_10_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-10.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_13
 ISO8859_13_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-13.bdf)
-ISO8859_13_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-13.pcf.gz)
+ISO8859_13_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-13.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_14
 ISO8859_14_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-14.bdf)
-ISO8859_14_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-14.pcf.gz)
+ISO8859_14_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-14.pcf$(COMPRESS_SUFFIX))
 endif
 
 if ISO8859_15
 ISO8859_15_BDF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-15.bdf)
-ISO8859_15_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-15.pcf.gz)
+ISO8859_15_PCF_FILES = $(BDF2UCS_FONT_FILES:%=%-ISO8859-15.pcf$(COMPRESS_SUFFIX))
 endif
 
 UTIL_DIR = @MAPFILES_PATH@
 
-SUFFIXES = .bdf .pcf.gz \
+SUFFIXES = .bdf .pcf$(COMPRESS_SUFFIX) \
 	-ISO8859-1.bdf \
 	-ISO8859-2.bdf \
 	-ISO8859-3.bdf \
@@ -304,45 +186,45 @@ SUFFIXES = .bdf .pcf.gz \
 	-ISO8859-14.bdf \
 	-ISO8859-15.bdf
 
-.bdf.pcf.gz:
+.bdf.pcf$(COMPRESS_SUFFIX):
 	@rm -f $@
-	$(BDFTOPCF) -t $< | gzip > $@
+	$(AM_V_GEN)$(BDFTOPCF) -t $< | $(COMPRESS) > $@
 
 .bdf-ISO8859-1.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-1 ISO8859-1
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-1 ISO8859-1
 
 .bdf-ISO8859-2.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-2 ISO8859-2
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-2 ISO8859-2
 
 .bdf-ISO8859-3.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-3 ISO8859-3
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-3 ISO8859-3
 
 .bdf-ISO8859-4.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-4 ISO8859-4
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-4 ISO8859-4
 
 .bdf-ISO8859-9.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-9 ISO8859-9
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-9 ISO8859-9
 
 .bdf-ISO8859-10.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-10 ISO8859-10
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-10 ISO8859-10
 
 .bdf-ISO8859-13.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-13 ISO8859-13
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-13 ISO8859-13
 
 .bdf-ISO8859-14.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-14 ISO8859-14
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-14 ISO8859-14
 
 .bdf-ISO8859-15.bdf:
 	@rm -f $@
-	$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-15 ISO8859-15
+	$(AM_V_GEN)$(UCS2ANY) $< $(UTIL_DIR)/map-ISO8859-15 ISO8859-15
 
 fontdir = @FONTDIR@
 font_DATA = \
@@ -368,15 +250,24 @@ BUILT_BDF_FILES = \
 	$(ISO8859_15_BDF_FILES)
 CLEANFILES = $(font_DATA) $(BUILT_BDF_FILES)
 
-EXTRA_DIST = $(BDF_FILES) autogen.sh
+EXTRA_DIST = $(BDF_FILES)
 
 all-local: $(BUILT_BDF_FILES) $(font_DATA)
 
 install-data-hook:
-	@rm -f $(DESTDIR)$(fontdir)/fonts.scale
-	$(MKFONTSCALE) $(DESTDIR)$(fontdir)
 	@rm -f $(DESTDIR)$(fontdir)/font.dir
 	$(MKFONTDIR) $(DESTDIR)$(fontdir)
+	@RUN_FCCACHE@
 
 distuninstallcheck:
 	@:
+
+EXTRA_DIST += ChangeLog
+MAINTAINERCLEANFILES = ChangeLog
+
+.PHONY: ChangeLog
+
+ChangeLog:
+	$(CHANGELOG_CMD)
+
+dist-hook: ChangeLog
