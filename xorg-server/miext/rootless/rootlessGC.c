@@ -49,6 +49,9 @@
 
 #include "rootlessCommon.h"
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
 
 // GC functions
 static void RootlessValidateGC(GCPtr pGC, unsigned long changes,

@@ -51,6 +51,12 @@ extern int darwinMainScreenX, darwinMainScreenY;
 #include "rootlessCommon.h"
 #include "rootlessWindow.h"
 
+#ifdef _MSC_VER
+#define inline __inline
+#include "xplugin.h"
+extern int darwinMainScreenX, darwinMainScreenY;
+#endif
+
 #ifdef ROOTLESS_GLOBAL_COORDS
 #define SCREEN_TO_GLOBAL_X \
     (dixScreenOrigins[pScreen->myNum].x + rootlessGlobalOffsetX)
@@ -73,6 +79,7 @@ extern int darwinMainScreenX, darwinMainScreenY;
     }                                                           \
     return atom;                                                \
   }
+
 
 DEFINE_ATOM_HELPER (xa_native_screen_origin, "_NATIVE_SCREEN_ORIGIN")
 DEFINE_ATOM_HELPER (xa_native_window_id, "_NATIVE_WINDOW_ID")
