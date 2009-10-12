@@ -11,7 +11,7 @@
 Name "VcXsrv"
 
 ; The file to write
-OutFile "vcxsrv.1.7.0.installer.exe"
+OutFile "vcxsrv.1.7.0.1.installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\VcXsrv
