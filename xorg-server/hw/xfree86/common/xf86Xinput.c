@@ -896,11 +896,6 @@ xf86PostKeyEvent(DeviceIntPtr	device,
     int i = 0;
     static int valuators[MAX_VALUATORS];
 
-    /* instil confidence in the user */
-    DebugF("this function has never been tested properly.  if things go quite "
-           "badly south after this message, then xf86PostKeyEvent is "
-           "broken.\n");
-
     XI_VERIFY_VALUATORS(num_valuators);
 
     va_start(var, num_valuators);
@@ -923,11 +918,6 @@ xf86PostKeyEventP(DeviceIntPtr	device,
                   int		*valuators)
 {
     int i = 0, nevents = 0;
-
-    /* instil confidence in the user */
-    DebugF("this function has never been tested properly.  if things go quite "
-           "badly south after this message, then xf86PostKeyEvent is "
-           "broken.\n");
 
     XI_VERIFY_VALUATORS(num_valuators);
 

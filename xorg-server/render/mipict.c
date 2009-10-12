@@ -318,14 +318,14 @@ miClipPictureSrc (RegionPtr	pRegion,
 	Bool result;
 	
 	pixman_region_translate ( pPicture->clientClip,
-				  pPicture->clipOrigin.x - dx,
-				  pPicture->clipOrigin.y - dy);
+				  pPicture->clipOrigin.x + dx,
+				  pPicture->clipOrigin.y + dy);
 
 	result = REGION_INTERSECT (pScreen, pRegion, pRegion, pPicture->clientClip);
 	
 	pixman_region_translate ( pPicture->clientClip,
-				  - (pPicture->clipOrigin.x - dx),
-				  - (pPicture->clipOrigin.y - dy));
+				  - (pPicture->clipOrigin.x + dx),
+				  - (pPicture->clipOrigin.y + dy));
 
 	if (!result)
 	    return FALSE;

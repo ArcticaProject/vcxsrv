@@ -205,7 +205,7 @@ int main(int argc, char **argv, char **envp) {
     sig_t handler;
 
     if(argc == 2 && !strcmp(argv[1], "-version")) {
-        fprintf(stderr, "X.org Release 7.4\n");
+        fprintf(stderr, "X.org Release 7.5\n");
         fprintf(stderr, "X.Org X Server %s\n", XSERVER_VERSION);
         fprintf(stderr, "Build Date: %s\n", BUILD_DATE);
         return EXIT_SUCCESS;

@@ -17,6 +17,10 @@ INCLUDES = @XORG_INCS@
 TEST_LDADD=../libxservertest.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS) $(GLIB_LIBS)
 COMMON_SOURCES=protocol-common.h protocol-common.c
 
+if SPECIAL_DTRACE_OBJECTS
+TEST_LDADD += $(OS_LIB) $(DIX_LIB)
+endif
+
 protocol_xiqueryversion_LDADD=$(TEST_LDADD)
 protocol_xiquerydevice_LDADD=$(TEST_LDADD)
 protocol_xiselectevents_LDADD=$(TEST_LDADD)

@@ -1046,7 +1046,7 @@ doListFontsWithInfo(ClientPtr client, LFWIclosurePtr c)
 		    err = AllocError;
 		    break;
 		}
-		memset(reply + c->length, 0, length - c->length);
+		memset((char*)reply + c->length, 0, length - c->length);
 		c->reply = reply;
 		c->length = length;
 	    }

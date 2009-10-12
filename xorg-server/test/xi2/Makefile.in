@@ -42,6 +42,7 @@ host_triplet = @host@
 @UNITTESTS_TRUE@	protocol-xiquerypointer$(EXEEXT) \
 @UNITTESTS_TRUE@	protocol-xiwarppointer$(EXEEXT) \
 @UNITTESTS_TRUE@	protocol-eventconvert$(EXEEXT)
+@SPECIAL_DTRACE_OBJECTS_TRUE@@UNITTESTS_TRUE@am__append_1 = $(OS_LIB) $(DIX_LIB)
 subdir = test/xi2
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -66,11 +67,13 @@ CONFIG_CLEAN_VPATH_FILES =
 protocol_eventconvert_SOURCES = protocol-eventconvert.c
 protocol_eventconvert_OBJECTS = protocol-eventconvert.$(OBJEXT)
 am__DEPENDENCIES_1 =
-@UNITTESTS_TRUE@am__DEPENDENCIES_2 = ../libxservertest.la \
+@SPECIAL_DTRACE_OBJECTS_TRUE@@UNITTESTS_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) \
+@SPECIAL_DTRACE_OBJECTS_TRUE@@UNITTESTS_TRUE@	$(am__DEPENDENCIES_1)
+@UNITTESTS_TRUE@am__DEPENDENCIES_3 = ../libxservertest.la \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_1)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
 @UNITTESTS_TRUE@protocol_eventconvert_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
@@ -83,7 +86,7 @@ am__protocol_xigetclientpointer_SOURCES_DIST = protocol-common.h \
 protocol_xigetclientpointer_OBJECTS =  \
 	$(am_protocol_xigetclientpointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xigetclientpointer_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xigetclientpointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xigetclientpointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -97,7 +100,7 @@ am__protocol_xigetselectedevents_SOURCES_DIST = protocol-common.h \
 protocol_xigetselectedevents_OBJECTS =  \
 	$(am_protocol_xigetselectedevents_OBJECTS)
 @UNITTESTS_TRUE@protocol_xigetselectedevents_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xigetselectedevents_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xigetselectedevents_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -109,7 +112,7 @@ am__protocol_xiquerydevice_SOURCES_DIST = protocol-common.h \
 @UNITTESTS_TRUE@	protocol_xiquerydevice-protocol-xiquerydevice.$(OBJEXT)
 protocol_xiquerydevice_OBJECTS = $(am_protocol_xiquerydevice_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiquerydevice_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xiquerydevice_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiquerydevice_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -122,7 +125,7 @@ am__protocol_xiquerypointer_SOURCES_DIST = protocol-common.h \
 protocol_xiquerypointer_OBJECTS =  \
 	$(am_protocol_xiquerypointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiquerypointer_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xiquerypointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiquerypointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -135,7 +138,7 @@ am__protocol_xiqueryversion_SOURCES_DIST = protocol-common.h \
 protocol_xiqueryversion_OBJECTS =  \
 	$(am_protocol_xiqueryversion_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiqueryversion_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xiqueryversion_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiqueryversion_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -148,7 +151,7 @@ am__protocol_xiselectevents_SOURCES_DIST = protocol-common.h \
 protocol_xiselectevents_OBJECTS =  \
 	$(am_protocol_xiselectevents_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiselectevents_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xiselectevents_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiselectevents_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -162,7 +165,7 @@ am__protocol_xisetclientpointer_SOURCES_DIST = protocol-common.h \
 protocol_xisetclientpointer_OBJECTS =  \
 	$(am_protocol_xisetclientpointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xisetclientpointer_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xisetclientpointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xisetclientpointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -174,7 +177,7 @@ am__protocol_xiwarppointer_SOURCES_DIST = protocol-common.h \
 @UNITTESTS_TRUE@	protocol_xiwarppointer-protocol-xiwarppointer.$(OBJEXT)
 protocol_xiwarppointer_OBJECTS = $(am_protocol_xiwarppointer_OBJECTS)
 @UNITTESTS_TRUE@protocol_xiwarppointer_DEPENDENCIES =  \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_3)
 protocol_xiwarppointer_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(protocol_xiwarppointer_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -268,6 +271,7 @@ DEPDIR = @DEPDIR@
 DGA_CFLAGS = @DGA_CFLAGS@
 DGA_LIBS = @DGA_LIBS@
 DIX_CFLAGS = @DIX_CFLAGS@
+DIX_LIB = @DIX_LIB@
 DLLTOOL = @DLLTOOL@
 DMXEXAMPLES_DEP_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 DMXEXAMPLES_DEP_LIBS = @DMXEXAMPLES_DEP_LIBS@
@@ -360,6 +364,7 @@ OBJCFLAGS = @OBJCFLAGS@
 OBJCLINK = @OBJCLINK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OS_LIB = @OS_LIB@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
@@ -476,7 +481,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -519,7 +523,9 @@ top_srcdir = @top_srcdir@
 @UNITTESTS_TRUE@TESTS = $(check_PROGRAMS)
 @UNITTESTS_TRUE@AM_CFLAGS = $(DIX_CFLAGS) $(GLIB_CFLAGS) @XORG_CFLAGS@
 @UNITTESTS_TRUE@INCLUDES = @XORG_INCS@
-@UNITTESTS_TRUE@TEST_LDADD = ../libxservertest.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS) $(GLIB_LIBS)
+@UNITTESTS_TRUE@TEST_LDADD = ../libxservertest.la $(XORG_SYS_LIBS) \
+@UNITTESTS_TRUE@	$(XSERVER_SYS_LIBS) $(GLIB_LIBS) \
+@UNITTESTS_TRUE@	$(am__append_1)
 @UNITTESTS_TRUE@COMMON_SOURCES = protocol-common.h protocol-common.c
 @UNITTESTS_TRUE@protocol_xiqueryversion_LDADD = $(TEST_LDADD)
 @UNITTESTS_TRUE@protocol_xiquerydevice_LDADD = $(TEST_LDADD)

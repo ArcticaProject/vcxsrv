@@ -39,7 +39,7 @@ font-schumacher-misc-1.1.0
 font-screen-cyrillic-1.0.2
 font-sony-misc-1.0.1
 font-sun-misc-1.0.1
-font-util-1.1.0
+font-util-1.1.1
 font-winitzki-cyrillic-1.0.1
 font-xfree86-type1-1.0.2
 fontsproto-2.1.0
@@ -72,7 +72,7 @@ xextproto-7.1.1
 xineramaproto-1.2
 xkbcomp-1.1.1
 xkeyboard-config-1.7
-xorg-server-1.7.0
+xorg-server-1.7.0.901
 xproto-7.0.16
 xtrans-1.2.4
 zlib-1.2.3

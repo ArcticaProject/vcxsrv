@@ -1,3 +1,22 @@
+commit 640a11b930dde29a5a74bcecec858d0a8255c013
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 12 08:49:02 2009 -0700
+
+    font-util 1.1.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit e1a84f5c30de633767dc4c05a38a34c3f114a138
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 10 21:50:26 2009 -0700
+
+    Make fontrootdir capitalization consistently lowercase
+    
+    Fixes installation of mapfiles, which were going to /util because
+    ${fontrootdir} was undefined in Makefile.   Found by tinderbox.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
 commit b10044e1cdb8f1656b6f61d79512bf4d49ee3339
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Wed Oct 7 20:23:36 2009 -0700

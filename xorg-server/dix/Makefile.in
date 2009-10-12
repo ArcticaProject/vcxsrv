@@ -36,7 +36,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@noinst_PROGRAMS = dix.O$(EXEEXT)
+@SPECIAL_DTRACE_OBJECTS_TRUE@noinst_PROGRAMS = dix.O$(EXEEXT)
 subdir = dix
 DIST_COMMON = $(dist_miscconfig_DATA) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -173,6 +173,7 @@ DEPDIR = @DEPDIR@
 DGA_CFLAGS = @DGA_CFLAGS@
 DGA_LIBS = @DGA_LIBS@
 DIX_CFLAGS = @DIX_CFLAGS@
+DIX_LIB = @DIX_LIB@
 DLLTOOL = @DLLTOOL@
 DMXEXAMPLES_DEP_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 DMXEXAMPLES_DEP_LIBS = @DMXEXAMPLES_DEP_LIBS@
@@ -265,6 +266,7 @@ OBJCFLAGS = @OBJCFLAGS@
 OBJCLINK = @OBJCLINK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OS_LIB = @OS_LIB@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
@@ -381,7 +383,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -527,12 +528,9 @@ clean-noinstPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-@XQUARTZ_TRUE@dix.O$(EXEEXT): $(dix_O_OBJECTS) $(dix_O_DEPENDENCIES) 
-@XQUARTZ_TRUE@	@rm -f dix.O$(EXEEXT)
-@XQUARTZ_TRUE@	$(AM_V_CCLD)$(LINK) $(dix_O_OBJECTS) $(dix_O_LDADD) $(LIBS)
-@XSERVER_DTRACE_FALSE@dix.O$(EXEEXT): $(dix_O_OBJECTS) $(dix_O_DEPENDENCIES) 
-@XSERVER_DTRACE_FALSE@	@rm -f dix.O$(EXEEXT)
-@XSERVER_DTRACE_FALSE@	$(AM_V_CCLD)$(LINK) $(dix_O_OBJECTS) $(dix_O_LDADD) $(LIBS)
+@SPECIAL_DTRACE_OBJECTS_FALSE@dix.O$(EXEEXT): $(dix_O_OBJECTS) $(dix_O_DEPENDENCIES) 
+@SPECIAL_DTRACE_OBJECTS_FALSE@	@rm -f dix.O$(EXEEXT)
+@SPECIAL_DTRACE_OBJECTS_FALSE@	$(AM_V_CCLD)$(LINK) $(dix_O_OBJECTS) $(dix_O_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -836,11 +834,11 @@ uninstall-am: uninstall-dist_miscconfigDATA
 @XSERVER_DTRACE_TRUE@		|| cp Xserver-dtrace.h.in $@
 
 # Generate dtrace object code for probes in libdix
-@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@dtrace-dix.o: $(top_srcdir)/dix/Xserver.d $(am_libdix_la_OBJECTS)
-@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@	$(DTRACE) -G -C -o $@ -s $(top_srcdir)/dix/Xserver.d .libs/*.o
+@SPECIAL_DTRACE_OBJECTS_TRUE@dtrace-dix.o: $(top_srcdir)/dix/Xserver.d $(am_libdix_la_OBJECTS)
+@SPECIAL_DTRACE_OBJECTS_TRUE@	$(DTRACE) -G -C -o $@ -s $(top_srcdir)/dix/Xserver.d $(am_libdix_la_OBJECTS:%.lo=.libs/%.o)
 
-@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@dix.O: dtrace-dix.o $(am_libdix_la_OBJECTS)
-@XQUARTZ_FALSE@@XSERVER_DTRACE_TRUE@	ld -r -o $@ .libs/*.o
+@SPECIAL_DTRACE_OBJECTS_TRUE@dix.O: dtrace-dix.o $(am_libdix_la_OBJECTS)
+@SPECIAL_DTRACE_OBJECTS_TRUE@	ld -r -o $@ $(am_libdix_la_OBJECTS:%.lo=.libs/%.o)
 
 dix.c:
 	touch $@

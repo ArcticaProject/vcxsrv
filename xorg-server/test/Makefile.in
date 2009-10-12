@@ -35,6 +35,7 @@ build_triplet = @build@
 host_triplet = @host@
 @UNITTESTS_TRUE@check_PROGRAMS = xkb$(EXEEXT) input$(EXEEXT) \
 @UNITTESTS_TRUE@	xtest$(EXEEXT)
+@SPECIAL_DTRACE_OBJECTS_TRUE@@UNITTESTS_TRUE@am__append_1 = $(OS_LIB) $(DIX_LIB)
 subdir = test
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -80,16 +81,18 @@ am__v_lt_0 = --silent
 @UNITTESTS_TRUE@am_libxservertest_la_rpath =
 input_SOURCES = input.c
 input_OBJECTS = input.$(OBJEXT)
-@UNITTESTS_TRUE@am__DEPENDENCIES_2 = libxservertest.la \
+@SPECIAL_DTRACE_OBJECTS_TRUE@@UNITTESTS_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) \
+@SPECIAL_DTRACE_OBJECTS_TRUE@@UNITTESTS_TRUE@	$(am__DEPENDENCIES_1)
+@UNITTESTS_TRUE@am__DEPENDENCIES_3 = libxservertest.la \
 @UNITTESTS_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-@UNITTESTS_TRUE@	$(am__DEPENDENCIES_1)
-@UNITTESTS_TRUE@input_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@input_DEPENDENCIES = $(am__DEPENDENCIES_3)
 xkb_SOURCES = xkb.c
 xkb_OBJECTS = xkb.$(OBJEXT)
-@UNITTESTS_TRUE@xkb_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@xkb_DEPENDENCIES = $(am__DEPENDENCIES_3)
 xtest_SOURCES = xtest.c
 xtest_OBJECTS = xtest.$(OBJEXT)
-@UNITTESTS_TRUE@xtest_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@UNITTESTS_TRUE@xtest_DEPENDENCIES = $(am__DEPENDENCIES_3)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -201,6 +204,7 @@ DEPDIR = @DEPDIR@
 DGA_CFLAGS = @DGA_CFLAGS@
 DGA_LIBS = @DGA_LIBS@
 DIX_CFLAGS = @DIX_CFLAGS@
+DIX_LIB = @DIX_LIB@
 DLLTOOL = @DLLTOOL@
 DMXEXAMPLES_DEP_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 DMXEXAMPLES_DEP_LIBS = @DMXEXAMPLES_DEP_LIBS@
@@ -293,6 +297,7 @@ OBJCFLAGS = @OBJCFLAGS@
 OBJCLINK = @OBJCLINK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OS_LIB = @OS_LIB@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
@@ -409,7 +414,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -454,7 +458,9 @@ top_srcdir = @top_srcdir@
 @UNITTESTS_TRUE@TESTS = $(check_PROGRAMS)
 @UNITTESTS_TRUE@AM_CFLAGS = $(DIX_CFLAGS) $(GLIB_CFLAGS) @XORG_CFLAGS@
 @UNITTESTS_TRUE@INCLUDES = @XORG_INCS@
-@UNITTESTS_TRUE@TEST_LDADD = libxservertest.la $(XORG_SYS_LIBS) $(XSERVER_SYS_LIBS) $(GLIB_LIBS)
+@UNITTESTS_TRUE@TEST_LDADD = libxservertest.la $(XORG_SYS_LIBS) \
+@UNITTESTS_TRUE@	$(XSERVER_SYS_LIBS) $(GLIB_LIBS) \
+@UNITTESTS_TRUE@	$(am__append_1)
 @UNITTESTS_TRUE@xkb_LDADD = $(TEST_LDADD)
 @UNITTESTS_TRUE@input_LDADD = $(TEST_LDADD)
 @UNITTESTS_TRUE@xtest_LDADD = $(TEST_LDADD)

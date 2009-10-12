@@ -238,7 +238,6 @@ static CompAlternateVisual  altVisuals[] = {
     {	24,	PICT_r8g8b8 },
 #endif
     {	32,	PICT_a8r8g8b8 },
-    {	32,	PICT_b8g8r8a8 },
 };
 
 static const int NUM_COMP_ALTERNATE_VISUALS = sizeof(altVisuals) /
@@ -267,8 +266,7 @@ compAddAlternateVisual(ScreenPtr pScreen, CompScreenPtr cs,
 	return TRUE;
 
     pPictFormat = PictureMatchFormat (pScreen, alt->depth, alt->format);
-    if (!pPictFormat ||
-	pPictFormat->direct.red != pScreen->visuals[0].offsetRed)
+    if (!pPictFormat)
 	return FALSE;
 
     if (ResizeVisualArray(pScreen, 1, depth) == FALSE) {

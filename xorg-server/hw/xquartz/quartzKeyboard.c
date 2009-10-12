@@ -280,98 +280,123 @@ static void DarwinBuildModifierMaps(darwinKeyboardInfo *info) {
 }
 
 /*
- * DarwinLoadKeyboardMapping
- *  Load the keyboard map from a file or system and convert
- *  it to an equivalent X keyboard map and modifier map.
- */
-static void DarwinLoadKeyboardMapping(KeySymsRec *keySyms) {    
-    DarwinBuildModifierMaps(&keyInfo);
-
-    keySyms->map        = keyInfo.keyMap;
-    keySyms->mapWidth   = GLYPHS_PER_KEY;
-    keySyms->minKeyCode = MIN_KEYCODE;
-    keySyms->maxKeyCode = MAX_KEYCODE;
-}
-
-/*
- * DarwinKeyboardSetDeviceKeyMap
- * Load a keymap into the keyboard device
- */
-static void DarwinKeyboardSetDeviceKeyMap(KeySymsRec *keySyms, CARD8 *modmap) {
-    DeviceIntPtr pDev;
-
-    for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
-        if ((pDev->coreEvents || pDev == inputInfo.keyboard) && pDev->key)
-            XkbApplyMappingChange(pDev, keySyms, keySyms->minKeyCode,
-                                  keySyms->maxKeyCode - keySyms->minKeyCode + 1,
-                                  modmap, serverClient);
-}
-
-/*
  * DarwinKeyboardInit
  *      Get the Darwin keyboard map and compute an equivalent
  *      X keyboard map and modifier map. Set the new keyboard
  *      device structure.
  */
 void DarwinKeyboardInit(DeviceIntPtr pDev) {
-    KeySymsRec keySyms;
-    XkbComponentNamesRec names;
-    CFIndex value;
-    BOOL ok;
-
     // Open a shared connection to the HID System.
     // Note that the Event Status Driver is really just a wrapper
     // for a kIOHIDParamConnectType connection.
     assert(darwinParamConnect = NXOpenEventStatus());
-
-    bzero(&names, sizeof(names));
 
     /* We need to really have rules... or something... */
     //XkbSetRulesDflts("base", "pc105", "us", NULL, NULL);
 
     InitKeyboardDeviceStruct(pDev, NULL, NULL, DarwinChangeKeyboardControl);
 
-    pthread_mutex_lock(&keyInfo_mutex);   
-    DarwinLoadKeyboardMapping(&keySyms);    
-    DarwinKeyboardSetDeviceKeyMap(&keySyms, keyInfo.modMap);
-    pthread_mutex_unlock(&keyInfo_mutex);
-
-    /* Get our key repeat settings from GlobalPreferences */
-    (void)CFPreferencesAppSynchronize(CFSTR(".GlobalPreferences"));
-    value = CFPreferencesGetAppIntegerValue(CFSTR("InitialKeyRepeat"), CFSTR(".GlobalPreferences"), &ok);
-    if(!ok)
-        value = 35;
-
-    if(value == 300000) { // off
-        XkbSetRepeatKeys(pDev, -1, AutoRepeatModeOff);
-    } else {
-        pDev->key->xkbInfo->desc->ctrls->repeat_delay = value * 15;
-
-        value = CFPreferencesGetAppIntegerValue(CFSTR("KeyRepeat"), CFSTR(".GlobalPreferences"), &ok);
-        if(!ok)
-            value = 6;
-        pDev->key->xkbInfo->desc->ctrls->repeat_interval = value * 15;
-
-        XkbSetRepeatKeys(pDev, -1, AutoRepeatModeOn);
-    }
+    DarwinKeyboardReloadHandler();
 
     CopyKeyClass(pDev, inputInfo.keyboard);
 }
 
+/* Set the repeat rates based on global preferences and keycodes for modifiers.
+ * Precondition: Has the keyInfo_mutex lock.
+ */
+static void DarwinKeyboardSetRepeat(DeviceIntPtr pDev, int initialKeyRepeatValue, int keyRepeatValue) {
+    if(initialKeyRepeatValue == 300000) { // off
+        /* Turn off repeats globally */
+        XkbSetRepeatKeys(pDev, -1, AutoRepeatModeOff);
+    } else {
+        int i;
+        XkbControlsPtr      ctrl;
+        XkbControlsRec      old;
+
+        /* Turn on repeats globally */
+        XkbSetRepeatKeys(pDev, -1, AutoRepeatModeOn);
+        
+        /* Setup the bit mask for individual key repeats */
+        ctrl = pDev->key->xkbInfo->desc->ctrls;
+        old= *ctrl;
+        
+        ctrl->repeat_delay = initialKeyRepeatValue * 15;
+        ctrl->repeat_interval = keyRepeatValue * 15;
+
+        /* Turn off key-repeat for modifier keys, on for others */
+        /* First set them all on */
+        for(i=0; i < XkbPerKeyBitArraySize; i++)
+            ctrl->per_key_repeat[i] = -1;
+
+        /* Now turn off the modifiers */
+        for(i=0; i < 32; i++) {
+            unsigned char keycode;
+            
+            keycode = keyInfo.modifierKeycodes[i][0];
+            if(keycode)
+                ClearBit(ctrl->per_key_repeat, keycode + MIN_KEYCODE);
+
+            keycode = keyInfo.modifierKeycodes[i][1];
+            if(keycode)
+                ClearBit(ctrl->per_key_repeat, keycode + MIN_KEYCODE);
+        }
+
+        /* Hurray for data duplication */
+        if (pDev->kbdfeed)
+            memcpy(pDev->kbdfeed->ctrl.autoRepeats, ctrl->per_key_repeat, XkbPerKeyBitArraySize);
+
+        //fprintf(stderr, "per_key_repeat =\n");
+        //for(i=0; i < XkbPerKeyBitArraySize; i++)
+        //    fprintf(stderr, "%02x%s", ctrl->per_key_repeat[i], (i + 1) & 7 ? "" : "\n");
+
+        /* And now we notify the puppies about the changes */
+        XkbDDXChangeControls(pDev, &old, ctrl);
+    }
+}
+
 void DarwinKeyboardReloadHandler(void) {
     KeySymsRec keySyms;
+    CFIndex initialKeyRepeatValue, keyRepeatValue;
+    BOOL ok;
+    DeviceIntPtr pDev = darwinKeyboard;
 
     DEBUG_LOG("DarwinKeyboardReloadHandler\n");
-//    if (pDev->key) {
-//        if (pDev->key->curKeySyms.map) xfree(pDev->key->curKeySyms.map);
-//        xfree(pDev->key);
-//    }
 
+    /* Get our key repeat settings from GlobalPreferences */
+    (void)CFPreferencesAppSynchronize(CFSTR(".GlobalPreferences"));
     
-    pthread_mutex_lock(&keyInfo_mutex);
-    DarwinLoadKeyboardMapping(&keySyms);
-    DarwinKeyboardSetDeviceKeyMap(&keySyms, keyInfo.modMap);
-    pthread_mutex_unlock(&keyInfo_mutex);
+    initialKeyRepeatValue = CFPreferencesGetAppIntegerValue(CFSTR("InitialKeyRepeat"), CFSTR(".GlobalPreferences"), &ok);
+    if(!ok)
+        initialKeyRepeatValue = 35;
+    
+    keyRepeatValue = CFPreferencesGetAppIntegerValue(CFSTR("KeyRepeat"), CFSTR(".GlobalPreferences"), &ok);
+    if(!ok)
+        keyRepeatValue = 6;
+    
+    pthread_mutex_lock(&keyInfo_mutex); {
+        /* Initialize our keySyms */
+        DarwinBuildModifierMaps(&keyInfo);
+        keySyms.map = keyInfo.keyMap;
+        keySyms.mapWidth   = GLYPHS_PER_KEY;
+        keySyms.minKeyCode = MIN_KEYCODE;
+        keySyms.maxKeyCode = MAX_KEYCODE;
+
+        /* Apply the mappings to darwinKeyboard */
+        XkbApplyMappingChange(darwinKeyboard, &keySyms, keySyms.minKeyCode,
+                              keySyms.maxKeyCode - keySyms.minKeyCode + 1,
+                              keyInfo.modMap, serverClient);
+        DarwinKeyboardSetRepeat(darwinKeyboard, initialKeyRepeatValue, keyRepeatValue);
+
+        /* Apply the mappings to the core keyboard */
+        for (pDev = inputInfo.devices; pDev; pDev = pDev->next) {
+            if ((pDev->coreEvents || pDev == inputInfo.keyboard) && pDev->key) {
+                XkbApplyMappingChange(pDev, &keySyms, keySyms.minKeyCode,
+                                      keySyms.maxKeyCode - keySyms.minKeyCode + 1,
+                                      keyInfo.modMap, serverClient);
+                DarwinKeyboardSetRepeat(pDev, initialKeyRepeatValue, keyRepeatValue);    
+            }
+        }
+    } pthread_mutex_unlock(&keyInfo_mutex);
 }
 
 //-----------------------------------------------------------------------------

@@ -44,7 +44,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 bin_PROGRAMS = Xorg$(EXEEXT)
 
 # Re-add dtrace object code that gets lost when building static libraries
-@XSERVER_DTRACE_TRUE@am__append_1 = $(XSERVER_LIBS)
+@SPECIAL_DTRACE_OBJECTS_TRUE@am__append_1 = $(XSERVER_LIBS)
 
 # Needs to be built before any files are compiled when using Sun compilers
 # so in*/out* inline definitions are properly processed.
@@ -80,7 +80,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_Xorg_OBJECTS = xorg.$(OBJEXT)
 Xorg_OBJECTS = $(am_Xorg_OBJECTS)
-@XSERVER_DTRACE_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+@SPECIAL_DTRACE_OBJECTS_TRUE@am__DEPENDENCIES_2 =  \
+@SPECIAL_DTRACE_OBJECTS_TRUE@	$(am__DEPENDENCIES_1)
 Xorg_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(Xorg_LDFLAGS) $(LDFLAGS) -o $@
@@ -192,6 +193,7 @@ DEPDIR = @DEPDIR@
 DGA_CFLAGS = @DGA_CFLAGS@
 DGA_LIBS = @DGA_LIBS@
 DIX_CFLAGS = @DIX_CFLAGS@
+DIX_LIB = @DIX_LIB@
 DLLTOOL = @DLLTOOL@
 DMXEXAMPLES_DEP_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 DMXEXAMPLES_DEP_LIBS = @DMXEXAMPLES_DEP_LIBS@
@@ -284,6 +286,7 @@ OBJCFLAGS = @OBJCFLAGS@
 OBJCLINK = @OBJCLINK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OS_LIB = @OS_LIB@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
@@ -400,7 +403,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
