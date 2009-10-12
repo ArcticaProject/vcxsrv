@@ -1247,7 +1247,7 @@ dnl of the copyright holder.
 # See the "minimum version" comment for each macro you use to see what 
 # version you require.
 m4_defun([XORG_MACROS_VERSION],[
-m4_define([vers_have], [1.3.0])
+m4_define([vers_have], [1.3.1])
 m4_define([maj_have], m4_substr(vers_have, 0, m4_index(vers_have, [.])))
 m4_define([maj_needed], m4_substr([$1], 0, m4_index([$1], [.])))
 m4_if(m4_cmp(maj_have, maj_needed), 0,,
@@ -1775,11 +1775,11 @@ AC_DEFUN([XORG_RELEASE_VERSION],[
 # Arrange that distcleancheck ignores ChangeLog left over by distclean.
 #
 AC_DEFUN([XORG_CHANGELOG], [
-CHANGELOG_CMD="(GIT_DIR=\$(top_srcdir)/.git git log > .changelog.tmp && \
-mv .changelog.tmp ChangeLog) || (rm -f .changelog.tmp; touch ChangeLog; \
+CHANGELOG_CMD="(GIT_DIR=\$(top_srcdir)/.git git log > \$(top_srcdir)/.changelog.tmp && \
+mv \$(top_srcdir)/.changelog.tmp \$(top_srcdir)/ChangeLog) \
+|| (rm -f \$(top_srcdir)/.changelog.tmp; touch \$(top_srcdir)/ChangeLog; \
 echo 'git directory not found: installing possibly empty changelog.' >&2)"
 AC_SUBST([CHANGELOG_CMD])
-AC_SUBST([distcleancheck_listfiles], ['find . -type f ! -name ChangeLog -print'])
 ]) # XORG_CHANGELOG
 
 dnl $XdotOrg: lib/xtrans/xtrans.m4,v 1.6 2005/07/26 18:59:11 alanc Exp $

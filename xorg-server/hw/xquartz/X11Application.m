@@ -986,7 +986,7 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
     isMouseOrTabletEvent =  [e type] == NSLeftMouseDown    ||  [e type] == NSOtherMouseDown    ||  [e type] == NSRightMouseDown    ||
                             [e type] == NSLeftMouseUp      ||  [e type] == NSOtherMouseUp      ||  [e type] == NSRightMouseUp      ||
                             [e type] == NSLeftMouseDragged ||  [e type] == NSOtherMouseDragged ||  [e type] == NSRightMouseDragged ||
-                            [e type] == NSMouseMoved       ||  [e type] == NSTabletPoint;
+                            [e type] == NSMouseMoved       ||  [e type] == NSTabletPoint       ||  [e type] == NSScrollWheel;
 
     isTabletEvent = ([e type] == NSTabletPoint) ||
                     (isMouseOrTabletEvent && ([e subtype] == NSTabletPointEventSubtype || [e subtype] == NSTabletProximityEventSubtype));

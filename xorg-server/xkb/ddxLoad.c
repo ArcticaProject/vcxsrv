@@ -158,10 +158,9 @@ OutputDirectory(
     size_t size)
 {
 #ifndef WIN32
-    if (getuid() == 0 && (strlen(XKM_OUTPUT_DIR) < size))
+    /* Can we write an xkm and then open it too? */
+    if (access(XKM_OUTPUT_DIR, W_OK | X_OK) == 0 && (strlen(XKM_OUTPUT_DIR) < size))
     {
-	/* if server running as root it *may* be able to write */
-	/* FIXME: check whether directory is writable at all */
 	(void) strcpy (outdir, XKM_OUTPUT_DIR);
     } else
 #else

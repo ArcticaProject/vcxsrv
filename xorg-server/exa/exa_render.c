@@ -185,41 +185,56 @@ exaGetRGBAFromPixel(CARD32	pixel,
 		    CARD16	*green,
 		    CARD16	*blue,
 		    CARD16	*alpha,
-		    PictFormatPtr pFormat)
+		    PictFormatPtr pFormat,
+		    PictFormatShort format)
 {
     int rbits, bbits, gbits, abits;
     int rshift, bshift, gshift, ashift;
 
-    if (!PICT_FORMAT_COLOR(pFormat->format) &&
-	PICT_FORMAT_TYPE(pFormat->format) != PICT_TYPE_A)
+    if (!PICT_FORMAT_COLOR(format) && PICT_FORMAT_TYPE(format) != PICT_TYPE_A)
 	return FALSE;
 
-    rbits = PICT_FORMAT_R(pFormat->format);
-    gbits = PICT_FORMAT_G(pFormat->format);
-    bbits = PICT_FORMAT_B(pFormat->format);
-    abits = PICT_FORMAT_A(pFormat->format);
+    rbits = PICT_FORMAT_R(format);
+    gbits = PICT_FORMAT_G(format);
+    bbits = PICT_FORMAT_B(format);
+    abits = PICT_FORMAT_A(format);
 
-    rshift = pFormat->direct.red;
-    gshift = pFormat->direct.green;
-    bshift = pFormat->direct.blue;
-    ashift = pFormat->direct.alpha;
+    if (pFormat) {
+	rshift = pFormat->direct.red;
+	gshift = pFormat->direct.green;
+	bshift = pFormat->direct.blue;
+	ashift = pFormat->direct.alpha;
+    } else if (format == PICT_a8r8g8b8) {
+	rshift = 16;
+	gshift = 8;
+	bshift = 0;
+	ashift = 24;
+    } else
+	FatalError("EXA bug: exaGetRGBAFromPixel() doesn't match "
+		   "createSourcePicture()\n");
 
-    *red = ((pixel >> rshift ) & ((1 << rbits) - 1)) << (16 - rbits);
-    while (rbits < 16) {
-	*red |= *red >> rbits;
-	rbits <<= 1;
-    }
+    if (rbits) {
+	*red = ((pixel >> rshift ) & ((1 << rbits) - 1)) << (16 - rbits);
+	while (rbits < 16) {
+	    *red |= *red >> rbits;
+	    rbits <<= 1;
+	}
 
-    *green = ((pixel >> gshift ) & ((1 << gbits) - 1)) << (16 - gbits);
-    while (gbits < 16) {
-	*green |= *green >> gbits;
-	gbits <<= 1;
-    }
+	*green = ((pixel >> gshift ) & ((1 << gbits) - 1)) << (16 - gbits);
+	while (gbits < 16) {
+	    *green |= *green >> gbits;
+	    gbits <<= 1;
+	}
 
-    *blue = ((pixel >> bshift ) & ((1 << bbits) - 1)) << (16 - bbits);
-    while (bbits < 16) {
-	*blue |= *blue >> bbits;
-	bbits <<= 1;
+	*blue = ((pixel >> bshift ) & ((1 << bbits) - 1)) << (16 - bbits);
+	while (bbits < 16) {
+	    *blue |= *blue >> bbits;
+	    bbits <<= 1;
+	}
+    } else {
+	*red = 0x0000;
+	*green = 0x0000;
+	*blue = 0x0000;
     }
 
     if (abits) {
@@ -287,7 +302,7 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
 	pixel = pSrc->pSourcePict->solidFill.color;
 
     if (!exaGetRGBAFromPixel(pixel, &red, &green, &blue, &alpha,
-			     pSrc->pFormat) ||
+			     pSrc->pFormat, pSrc->format) ||
 	!exaGetPixelFromRGBA(&pixel, red, green, blue, alpha,
 			     pDst->pFormat))
     {

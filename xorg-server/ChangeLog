@@ -1,3 +1,214 @@
+commit 5411e78bd51df86f6cdf925f65fd3725f943b6bb
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Oct 12 14:12:45 2009 +1000
+
+    xserver 1.7.0.901
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit b6e723eaebe79116dfa15162851b02bbdc29be2a
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Fri Oct 9 11:31:44 2009 +0200
+
+    EXA: Fix exaTryDriverSolidFill() for solid source pictures.
+    
+    Solid pictures have a NULL pFormat field, but their format is always
+    PICT_a8r8g8b8.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 1088073b11ed488c0df45af3867b900ef93c6fe1)
+
+commit 2e37bda8d6b0203973893d8440d9917975f53d97
+Author: Ben Skeggs <bskeggs@redhat.com>
+Date:   Fri Oct 9 16:08:15 2009 -0700
+
+    EXA: fix exaGetRGBAFromPixel to not loop forever on PICT_a8 picture
+    
+    Easily reproducible by running "rendercheck -t fill".
+    
+    It should be safe to just test against rbits for all colour components
+    as we should always have values for r/g/bbits for PICT_FORMAT_COLOR
+    formats.
+    
+    Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+    Signed-off-by: Michel Dänzer <daenzer@vmware
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 55305cf8db7787883bc80b7348eb626e609626f8)
+
+commit 6d99a7de3f2c60bf90faf604b1a39d4aa5bdfd09
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Fri Oct 9 11:31:46 2009 +0200
+
+    composite: Revert changes from adding support for BGRA picture formats.
+    
+    They were aimed towards a since abandoned approach for making radeon KMS work
+    on big endian machines, and Aaron Plattner pointed out that they break the
+    Composite extension when the X server runs in 16bpp.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Tested-by: Aaron Plattner <aplattner@nvidia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit b375be9285c40467578fac2f1360c29a75306ab4)
+
+commit 398b5e01a7976ee8940105cf2be7c28ce57c3858
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 7 22:10:55 2009 -0700
+
+    Fix make warning: overriding commands for target `dix.O'
+    
+    Not only does automake generate unnecessary rules for dix.O on platforms
+    for which SPECIAL_DTRACE_OBJECTS is false, it generates duplicate sets
+    when "if SPECIAL_DTRACE_OBJECTS" is nested inside "if XSERVER_DTRACE"
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit c0a1bb511a4629bf5683d8a710dc4a1c577a5d44)
+
+commit b916ac74e27ce8998ac0866bb2b39dcd378e0182
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Oct 2 18:58:35 2009 -0700
+
+    XQuartz: Send mouse location with scroll events.
+    
+    This fixes the problem where (0, 0) was sent as the mouse location with scroll
+    button events causing the event to not reach the client.
+    (cherry picked from commit c4886fbabc1d8b4054654b227fcad83f58e8e798)
+
+commit a4ce2aa6348ecca3a5b1ac8d87caf974bdad3455
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 5 16:52:19 2009 -0700
+
+    Add platform tests for Dtrace linker magic
+    
+    Replaces special handling for Xquartz DDX and scales better to handling
+    the multiple platforms that now have some level of Dtrace support available.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 22fd21a71d3dc98a94cc5f6592832e1d19bb479a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Sep 15 19:17:48 2009 -0700
+
+    Fix build of unit tests when dtrace probes are enabled
+    
+    ar loses the dtrace probe magic when building static libraries, so we
+    have to link with the .O files in order to resolve the dtrace probe symbols.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 8e3299eee8c2d909f34ec070f6f606a278c46330
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 2 20:44:19 2009 -0700
+
+    Set XQUARTZ to no on non-Darwin OS'es
+    
+    Fixes build with dtrace probes on Solaris after efacd7bfd08ffc0725de6f639c6afbf3b2f6c9fe
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit f496e0042b1174d8831f061cd156ac7bbbb76a7c
+Author: Kim Woelders <kim@woelders.dk>
+Date:   Fri Oct 2 19:31:15 2009 +0200
+
+    render: Fix clip region translation in miClipPictureSrc().
+    
+    Signed-off-by: Kim Woelders <kim@woelders.dk>
+    Reviewed-by:  Soren Sandmann Pedersen <sandmann@redhat.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit cbc886a3513079c084fb7ce47b87c3e5bba19f3f)
+
+commit 5bc90ffdee0e95727767ce3df9154ea3ff3d6f95
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Oct 5 15:31:54 2009 +1000
+
+    xfree86: remove log-spamming DebugF
+    
+    All input drivers use xf86PostKeyEventP indirectly now and have been since
+    it exists. I guess that qualifies it as tested - no need to spam the logs.
+    
+    Reported-by: Felix Wenk
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+    (cherry picked from commit bd7430a32e63df8cd60352764744076448ee623f)
+
+commit 5c35d07c3b0fc8cc60fc622d6eb444bea2be0acc
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Oct 5 10:44:43 2009 +1000
+
+    Require libXtst >= 1.0.99.2 and libdmx >= 1.0.99.1
+    
+    libXtst requirement is already implicit since we require xextproto 7.1 and
+    that doesn't go well with pre 1.0.99.2 versions of libXtst. Nonetheless,
+    list it explicitly.
+    
+    Since d0440275108920f5cb5d630f55fc9a3320c496d3 we require dmxproto 2.2.99.1.
+    Complementing that is libdmx 1.0.99.1 with the dmxext.h header file.
+    
+    Reported-by: Mark Rosenstand
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit c629e0fc50dfaffaa40a56709da7f035c289fed2)
+
+commit b6016134b53587b8f942243d95729bb902c58db4
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Sep 28 17:05:29 2009 -0700
+
+    XQuartz: Set the proper bitmap for key repeats...
+    
+    XkbSetRepeatKeys lies and doesn't do what it says it will...
+    
+    (cherry picked from commits b9dfed9e88389cbd29406a20d38ee4297638649b and
+                                873467adad479be02cd9cc6b43685919f5612d91)
+
+commit 3808ecc99a8d64cdbe3fb4a3b57c59e7545e362c
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Sep 28 17:47:31 2009 -0700
+
+    XQuartz: Query the BundleIdentifier from the bundle in X11.bin rather than using the configure option.
+    
+    This lets X11.bin drop into any .app ... the Info.plist and Xquartz binary need to have it hardcoded still.
+    (cherry picked from commit 9ad16b8e50b13eb6d0cd20386d07aa8d7320f671)
+
+commit 80735dbf560ba156e53cd2a46190b334de281dd6
+Author: Nirbheek Chauhan <nirbheek@gentoo.org>
+Date:   Tue Sep 29 22:35:06 2009 +0530
+
+    xkb: check permissions on XKM_OUTPUT_DIR
+    
+    Checking just for root is insufficient since that does not guarantee write/read
+    permissions in XKM_OUTPUT_DIR (for example with sandbox).
+    
+    Check if we can write a file, as well as read it later. Otherwise, invoke the
+    fallback to /tmp
+    
+    Signed-off-by: Nirbheek Chauhan <nirbheek@gentoo.org>
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 9bc7cbf9c02656982c2525836b5498993f708e02)
+
+commit 616c7a009d9c4e84a8882ac797092d61619c1339
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu Oct 1 11:58:18 2009 -0700
+
+    XQuartz: Update version strings to be X11R7.5 and the bundle 2.5.0
+    
+    Is fink really _still_ relying on this X11R7.x version string?
+    (cherry picked from commit 3d7cf468df96c0130a862f0d93fec990b9110c2f)
+
+commit 19592ee7748a32388d90d802bb4f5e2bff15863e
+Author: Kim Woelders <kim@woelders.dk>
+Date:   Tue Sep 29 20:31:45 2009 +0200
+
+    dix: Fix potential memory corruption in doListFontsWithInfo.
+    
+    Signed-off-by: Kim Woelders <kim@woelders.dk>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    (cherry picked from commit 4970666827e65424ee17ccf6341ff84aac974383)
+
 commit 4257023c1e40387aff096d5f00d746d3f7a521b4
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Fri Oct 2 14:05:43 2009 +1000

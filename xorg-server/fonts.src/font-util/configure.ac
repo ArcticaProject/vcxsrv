@@ -22,7 +22,7 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(font-util, [1.1.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-util)
+AC_INIT(font-util, [1.1.1], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], font-util)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
@@ -42,9 +42,8 @@ fontrootdir='${datadir}/fonts/X11'
 AC_ARG_WITH(fontrootdir, [AC_HELP_STRING([--with-fontrootdir=DIR],
 	[Path to parent of font subdirectories [DATADIR/fonts/X11]])],
 	[fontrootdir="${withval}"])
-FONTROOTDIR="${fontrootdir}"
-AC_SUBST(FONTROOTDIR)
-AC_MSG_RESULT([${FONTROOTDIR}])
+AC_SUBST(fontrootdir)
+AC_MSG_RESULT([${fontrootdir}])
 
 mapdir='${fontrootdir}/util'
 AC_ARG_WITH(mapdir, [AC_HELP_STRING([--with-mapdir=DIR],

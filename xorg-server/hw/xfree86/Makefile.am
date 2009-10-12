@@ -80,7 +80,7 @@ BUILT_SOURCES = xorg.conf.example
 DISTCLEANFILES += xorg.conf.example xorg.conf.example.pre
 EXTRA_DIST = xorgconf.cpp
 
-if XSERVER_DTRACE
+if SPECIAL_DTRACE_OBJECTS
 # Re-add dtrace object code that gets lost when building static libraries
 Xorg_LDADD += $(XSERVER_LIBS)
 endif

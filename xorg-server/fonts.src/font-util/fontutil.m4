@@ -1,6 +1,6 @@
 dnl fontutil.m4.  Generated from fontutil.m4.in by configure.
 dnl
-dnl This file comes from X.Org's font-util 1.1.0
+dnl This file comes from X.Org's font-util 1.1.1
 dnl
 dnl Copyright 2005 Red Hat, Inc
 dnl
@@ -71,7 +71,7 @@ dnl of the copyright holder.
 # See the "minimum version" comment for each macro you use to see what
 # version you require.
 m4_defun([XORG_FONT_MACROS_VERSION],[
-m4_define([vers_have], [1.1.0])
+m4_define([vers_have], [1.1.1])
 m4_define([maj_have], m4_substr(vers_have, 0, m4_index(vers_have, [.])))
 m4_define([maj_needed], m4_substr([$1], 0, m4_index([$1], [.])))
 m4_if(m4_cmp(maj_have, maj_needed), 0,,
