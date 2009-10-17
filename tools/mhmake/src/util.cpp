@@ -279,7 +279,7 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
       string SvnCommand=SearchCommand("svn",EXEEXT);
       Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetQuotedFullFileName(),false,&Output);
     }
-    catch (int)
+    catch (string Message)
     {
       Ret=false;
     }
