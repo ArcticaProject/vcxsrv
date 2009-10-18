@@ -273,21 +273,28 @@ XOpenDisplay (
 #ifndef XLIBMINBUFSIZE
 #define XLIBMINBUFSIZE BUFSIZE /* old default buffer size */
 #endif
-    if ((xlib_buffer_size = getenv("XLIBBUFFERSIZE")) == NULL)
-        conn_buf_size = XLIBDEFAULTBUFSIZE;
-    else
-        conn_buf_size = 1024 * strtol(xlib_buffer_size, NULL, 10);
-    if (conn_buf_size < XLIBMINBUFSIZE)
-        conn_buf_size = XLIBMINBUFSIZE;
+	xlib_buffer_size = getenv("XLIBBUFFERSIZE");
 
-    if ((dpy->bufptr = dpy->buffer = Xcalloc(1, conn_buf_size)) == NULL) {
-         OutOfMemory (dpy, setup);
-         return(NULL);
-    }
-    dpy->bufmax = dpy->buffer + conn_buf_size;
+#ifdef __sun /* Backwards compatibility for old Solaris libX11 name */
+	if (xlib_buffer_size == NULL)
+	    xlib_buffer_size = getenv("XSUNBUFFERSIZE");
+#endif
+
+	if (xlib_buffer_size == NULL)
+	    conn_buf_size = XLIBDEFAULTBUFSIZE;
+	else
+	    conn_buf_size = 1024 * strtol(xlib_buffer_size, NULL, 10);
+	if (conn_buf_size < XLIBMINBUFSIZE)
+	    conn_buf_size = XLIBMINBUFSIZE;
+
+	if ((dpy->bufptr = dpy->buffer = Xcalloc(1, conn_buf_size)) == NULL) {
+	    OutOfMemory (dpy, setup);
+	    return(NULL);
+	}
+	dpy->bufmax = dpy->buffer + conn_buf_size;
 #if USE_XCB
-    dpy->xcb->real_bufmax = dpy->bufmax;
-    dpy->bufmax = dpy->buffer;
+	dpy->xcb->real_bufmax = dpy->bufmax;
+	dpy->bufmax = dpy->buffer;
 #endif
 
 	/* Set up the input event queue and input event queue parameters. */

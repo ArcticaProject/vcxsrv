@@ -1,0 +1,604 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBAppendix A\fP\s-1
+
+\s+1\fBXlib Functions and Protocol Requests\fP\s-1
+.sp 2
+.na
+.LP
+.XS
+Appendix A: Xlib Functions and Protocol Requests
+.XE
+This appendix provides two tables that relate to Xlib functions 
+and the X protocol.
+The following table lists each Xlib function (in alphabetical order)
+and the corresponding protocol request that it generates.
+.LP
+.TS H
+lw(2.5i) lw(2.5i).
+_
+.sp 6p
+.B
+Xlib Function	Protocol Request
+.sp 6p
+_
+.sp 6p
+.TH
+.R
+XActivateScreenSaver	ForceScreenSaver
+XAddHost	ChangeHosts
+XAddHosts	ChangeHosts
+XAddToSaveSet	ChangeSaveSet
+XAllocColor	AllocColor
+XAllocColorCells	AllocColorCells
+XAllocColorPlanes	AllocColorPlanes
+XAllocNamedColor	AllocNamedColor
+XAllowEvents	AllowEvents
+XAutoRepeatOff	ChangeKeyboardControl
+XAutoRepeatOn	ChangeKeyboardControl
+XBell	Bell
+XChangeActivePointerGrab	ChangeActivePointerGrab
+XChangeGC	ChangeGC
+XChangeKeyboardControl	ChangeKeyboardControl
+XChangeKeyboardMapping	ChangeKeyboardMapping
+XChangePointerControl	ChangePointerControl
+XChangeProperty	ChangeProperty
+XChangeSaveSet	ChangeSaveSet
+XChangeWindowAttributes	ChangeWindowAttributes
+XCirculateSubwindows	CirculateWindow
+XCirculateSubwindowsDown	CirculateWindow
+XCirculateSubwindowsUp	CirculateWindow
+XClearArea	ClearArea
+XClearWindow	ClearArea
+XConfigureWindow	ConfigureWindow
+XConvertSelection	ConvertSelection
+XCopyArea	CopyArea
+XCopyColormapAndFree	CopyColormapAndFree
+XCopyGC	CopyGC
+XCopyPlane	CopyPlane
+XCreateBitmapFromData	CreateGC
+	CreatePixmap
+	FreeGC
+	PutImage
+XCreateColormap	CreateColormap
+XCreateFontCursor	CreateGlyphCursor
+XCreateGC	CreateGC
+XCreateGlyphCursor	CreateGlyphCursor
+XCreatePixmap	CreatePixmap
+XCreatePixmapCursor	CreateCursor
+XCreatePixmapFromData	CreateGC
+	CreatePixmap
+	FreeGC
+	PutImage
+XCreateSimpleWindow	CreateWindow
+XCreateWindow	CreateWindow
+XDefineCursor	ChangeWindowAttributes
+XDeleteProperty	DeleteProperty
+XDestroySubwindows	DestroySubwindows
+XDestroyWindow	DestroyWindow
+XDisableAccessControl	SetAccessControl
+XDrawArc	PolyArc
+XDrawArcs	PolyArc
+XDrawImageString	ImageText8
+XDrawImageString16	ImageText16
+XDrawLine	PolySegment
+XDrawLines	PolyLine
+XDrawPoint	PolyPoint 
+XDrawPoints	PolyPoint
+XDrawRectangle	PolyRectangle
+XDrawRectangles	PolyRectangle
+XDrawSegments	PolySegment
+XDrawString	PolyText8
+XDrawString16	PolyText16
+XDrawText	PolyText8
+XDrawText16	PolyText16
+XEnableAccessControl	SetAccessControl
+XFetchBytes	GetProperty
+XFetchName	GetProperty
+XFillArc	PolyFillArc
+XFillArcs	PolyFillArc
+XFillPolygon	FillPoly
+XFillRectangle	PolyFillRectangle
+XFillRectangles	PolyFillRectangle
+XForceScreenSaver	ForceScreenSaver
+XFreeColormap	FreeColormap
+XFreeColors	FreeColors
+XFreeCursor	FreeCursor
+XFreeFont	CloseFont
+XFreeGC	FreeGC
+XFreePixmap	FreePixmap
+XGetAtomName	GetAtomName
+XGetClassHint	GetProperty
+XGetFontPath	GetFontPath
+XGetGeometry	GetGeometry
+XGetIconName	GetProperty
+XGetIconSizes	GetProperty
+XGetImage	GetImage
+XGetInputFocus	GetInputFocus
+XGetKeyboardControl	GetKeyboardControl
+XGetKeyboardMapping	GetKeyboardMapping
+XGetModifierMapping	GetModifierMapping
+XGetMotionEvents	GetMotionEvents
+XGetNormalHints	GetProperty
+XGetPointerControl	GetPointerControl
+XGetPointerMapping	GetPointerMapping
+XGetRGBColormaps	GetProperty
+XGetScreenSaver	GetScreenSaver
+XGetSelectionOwner	GetSelectionOwner
+XGetSizeHints	GetProperty
+XGetTextProperty	GetProperty
+XGetTransientForHint	GetProperty
+XGetWMClientMachine	GetProperty
+XGetWMColormapWindows	GetProperty
+	InternAtom
+XGetWMHints	GetProperty
+XGetWMIconName	GetProperty
+XGetWMName	GetProperty
+XGetWMNormalHints	GetProperty
+XGetWMProtocols	GetProperty
+	InternAtom
+XGetWMSizeHints	GetProperty
+XGetWindowAttributes	GetWindowAttributes
+	GetGeometry
+XGetWindowProperty	GetProperty
+XGetZoomHints	GetProperty
+XGrabButton	GrabButton
+XGrabKey	GrabKey
+XGrabKeyboard	GrabKeyboard
+XGrabPointer	GrabPointer
+XGrabServer	GrabServer
+XIconifyWindow	InternAtom
+	SendEvent
+XInitExtension	QueryExtension
+XInstallColormap	InstallColormap
+XInternAtom	InternAtom
+XKillClient	KillClient
+XListExtensions	ListExtensions
+XListFonts	ListFonts
+XListFontsWithInfo	ListFontsWithInfo
+XListHosts	ListHosts
+XListInstalledColormaps	ListInstalledColormaps
+XListProperties	ListProperties
+XLoadFont	OpenFont
+XLoadQueryFont	OpenFont
+	QueryFont
+XLookupColor	LookupColor
+XLowerWindow	ConfigureWindow
+XMapRaised	ConfigureWindow
+	MapWindow
+XMapSubwindows	MapSubwindows
+XMapWindow	MapWindow
+XMoveResizeWindow	ConfigureWindow
+XMoveWindow	ConfigureWindow
+XNoOp	NoOperation
+XOpenDisplay	CreateGC
+XParseColor	LookupColor
+XPutImage	PutImage
+XQueryBestCursor	QueryBestSize
+XQueryBestSize	QueryBestSize
+XQueryBestStipple	QueryBestSize
+XQueryBestTile	QueryBestSize
+XQueryColor	QueryColors 
+XQueryColors	QueryColors
+XQueryExtension	QueryExtension
+XQueryFont	QueryFont
+XQueryKeymap	QueryKeymap
+XQueryPointer	QueryPointer
+XQueryTextExtents	QueryTextExtents
+XQueryTextExtents16	QueryTextExtents
+XQueryTree	QueryTree
+XRaiseWindow	ConfigureWindow
+XReadBitmapFile	CreateGC
+	CreatePixmap
+	FreeGC
+	PutImage
+XRecolorCursor	RecolorCursor
+XReconfigureWMWindow	ConfigureWindow
+	SendEvent
+XRemoveFromSaveSet	ChangeSaveSet
+XRemoveHost	ChangeHosts
+XRemoveHosts	ChangeHosts
+XReparentWindow	ReparentWindow
+XResetScreenSaver	ForceScreenSaver
+XResizeWindow	ConfigureWindow 
+XRestackWindows    	ConfigureWindow
+XRotateBuffers	RotateProperties
+XRotateWindowProperties	RotateProperties
+XSelectInput	ChangeWindowAttributes
+XSendEvent	SendEvent
+XSetAccessControl	SetAccessControl
+XSetArcMode	ChangeGC
+XSetBackground	ChangeGC 
+XSetClassHint	ChangeProperty
+XSetClipMask	ChangeGC
+XSetClipOrigin	ChangeGC
+XSetClipRectangles	SetClipRectangles
+XSetCloseDownMode	SetCloseDownMode
+XSetCommand	ChangeProperty
+XSetDashes	SetDashes
+XSetFillRule	ChangeGC
+XSetFillStyle	ChangeGC
+XSetFont	ChangeGC 
+XSetFontPath	SetFontPath
+XSetForeground	ChangeGC 
+XSetFunction	ChangeGC 
+XSetGraphicsExposures	ChangeGC
+XSetIconName	ChangeProperty
+XSetIconSizes	ChangeProperty
+XSetInputFocus	SetInputFocus
+XSetLineAttributes	ChangeGC
+XSetModifierMapping	SetModifierMapping
+XSetNormalHints	ChangeProperty
+XSetPlaneMask	ChangeGC 
+XSetPointerMapping	SetPointerMapping
+XSetRGBColormaps	ChangeProperty
+XSetScreenSaver	SetScreenSaver
+XSetSelectionOwner	SetSelectionOwner
+XSetSizeHints	ChangeProperty
+XSetStandardProperties	ChangeProperty
+XSetState	ChangeGC
+XSetStipple	ChangeGC
+XSetSubwindowMode	ChangeGC
+XSetTextProperty	ChangeProperty
+XSetTile	ChangeGC
+XSetTransientForHint	ChangeProperty
+XSetTSOrigin	ChangeGC
+XSetWMClientMachine	ChangeProperty
+XSetWMColormapWindows	ChangeProperty
+	InternAtom
+XSetWMHints	ChangeProperty
+XSetWMIconName	ChangeProperty
+XSetWMName	ChangeProperty
+XSetWMNormalHints	ChangeProperty
+XSetWMProperties	ChangeProperty
+XSetWMProtocols	ChangeProperty
+	InternAtom
+XSetWMSizeHints	ChangeProperty
+XSetWindowBackground	ChangeWindowAttributes
+XSetWindowBackgroundPixmap	ChangeWindowAttributes
+XSetWindowBorder	ChangeWindowAttributes
+XSetWindowBorderPixmap	ChangeWindowAttributes
+XSetWindowBorderWidth	ConfigureWindow
+XSetWindowColormap	ChangeWindowAttributes
+XSetZoomHints	ChangeProperty
+XStoreBuffer	ChangeProperty
+XStoreBytes	ChangeProperty
+XStoreColor	StoreColors 
+XStoreColors	StoreColors
+XStoreName	ChangeProperty
+XStoreNamedColor	StoreNamedColor
+XSync	GetInputFocus
+XSynchronize	GetInputFocus
+XTranslateCoordinates	TranslateCoordinates
+XUndefineCursor	ChangeWindowAttributes
+XUngrabButton	UngrabButton
+XUngrabKey	UngrabKey
+XUngrabKeyboard	UngrabKeyboard
+XUngrabPointer	UngrabPointer
+XUngrabServer	UngrabServer
+XUninstallColormap	UninstallColormap
+XUnloadFont	CloseFont
+XUnmapSubwindows	UnmapSubwindows
+XUnmapWindow	UnmapWindow
+XWarpPointer	WarpPointer
+XWithdrawWindow	SendEvent
+	UnmapWindow
+.TE
+.bp
+.LP
+The following table lists each X protocol request (in alphabetical
+order) and the Xlib functions that reference it.
+.TS H
+lw(2.5i) lw(2.5i).
+_
+.sp 6p
+.B
+Protocol Request	Xlib Function
+.sp 6p
+_
+.sp 6p
+.TH
+.R
+AllocColor	XAllocColor
+AllocColorCells	XAllocColorCells
+AllocColorPlanes	XAllocColorPlanes
+AllocNamedColor	XAllocNamedColor
+AllowEvents	XAllowEvents
+Bell	XBell
+ChangeActivePointerGrab	XChangeActivePointerGrab
+ChangeGC	XChangeGC
+	XSetArcMode
+	XSetBackground
+	XSetClipMask
+	XSetClipOrigin
+	XSetFillRule
+	XSetFillStyle
+	XSetFont
+	XSetForeground
+	XSetFunction
+	XSetGraphicsExposures
+	XSetLineAttributes
+	XSetPlaneMask
+	XSetState
+	XSetStipple
+	XSetSubwindowMode
+	XSetTile
+	XSetTSOrigin
+ChangeHosts	XAddHost
+	XAddHosts
+	XRemoveHost
+	XRemoveHosts
+ChangeKeyboardControl	XAutoRepeatOff
+	XAutoRepeatOn
+	XChangeKeyboardControl
+ChangeKeyboardMapping	XChangeKeyboardMapping
+ChangePointerControl	XChangePointerControl
+ChangeProperty	XChangeProperty
+	XSetClassHint
+	XSetCommand
+	XSetIconName
+	XSetIconSizes
+	XSetNormalHints
+	XSetRGBColormaps
+	XSetSizeHints
+	XSetStandardProperties
+	XSetTextProperty
+	XSetTransientForHint
+	XSetWMClientMachine
+	XSetWMColormapWindows
+	XSetWMHints
+	XSetWMIconName
+	XSetWMName
+	XSetWMNormalHints
+	XSetWMProperties
+	XSetWMProtocols
+	XSetWMSizeHints
+	XSetZoomHints
+	XStoreBuffer
+	XStoreBytes
+	XStoreName
+ChangeSaveSet	XAddToSaveSet
+	XChangeSaveSet
+	XRemoveFromSaveSet
+ChangeWindowAttributes	XChangeWindowAttributes
+	XDefineCursor
+	XSelectInput
+	XSetWindowBackground
+	XSetWindowBackgroundPixmap
+	XSetWindowBorder
+	XSetWindowBorderPixmap
+	XSetWindowColormap
+	XUndefineCursor
+CirculateWindow	XCirculateSubwindowsDown
+	XCirculateSubwindowsUp
+	XCirculateSubwindows
+ClearArea	XClearArea
+	XClearWindow
+CloseFont	XFreeFont
+	XUnloadFont
+ConfigureWindow	XConfigureWindow
+	XLowerWindow
+	XMapRaised
+	XMoveResizeWindow
+	XMoveWindow
+	XRaiseWindow
+	XReconfigureWMWindow
+	XResizeWindow
+	XRestackWindows
+	XSetWindowBorderWidth
+ConvertSelection	XConvertSelection
+CopyArea	XCopyArea
+CopyColormapAndFree	XCopyColormapAndFree
+CopyGC	XCopyGC
+CopyPlane	XCopyPlane
+CreateColormap	XCreateColormap
+CreateCursor	XCreatePixmapCursor
+CreateGC	XCreateGC
+	XCreateBitmapFromData
+	XCreatePixmapFromData
+	XOpenDisplay
+	XReadBitmapFile
+CreateGlyphCursor	XCreateFontCursor
+	XCreateGlyphCursor
+CreatePixmap	XCreatePixmap
+	XCreateBitmapFromData
+	XCreatePixmapFromData
+	XReadBitmapFile
+CreateWindow	XCreateSimpleWindow
+	XCreateWindow
+DeleteProperty	XDeleteProperty
+DestroySubwindows	XDestroySubwindows
+DestroyWindow	XDestroyWindow
+FillPoly	XFillPolygon
+ForceScreenSaver	XActivateScreenSaver
+	XForceScreenSaver
+	XResetScreenSaver
+FreeColormap	XFreeColormap
+FreeColors	XFreeColors
+FreeCursor	XFreeCursor
+FreeGC	XFreeGC
+	XCreateBitmapFromData
+	XCreatePixmapFromData
+	XReadBitmapFile
+FreePixmap	XFreePixmap
+GetAtomName	XGetAtomName
+GetFontPath	XGetFontPath
+GetGeometry	XGetGeometry
+	XGetWindowAttributes
+GetImage	XGetImage
+GetInputFocus	XGetInputFocus
+	XSync
+	XSynchronize
+GetKeyboardControl	XGetKeyboardControl
+GetKeyboardMapping	XGetKeyboardMapping
+GetModifierMapping	XGetModifierMapping
+GetMotionEvents	XGetMotionEvents
+GetPointerControl	XGetPointerControl
+GetPointerMapping	XGetPointerMapping
+GetProperty	XFetchBytes
+	XFetchName
+	XGetClassHint
+	XGetIconName
+	XGetIconSizes
+	XGetNormalHints
+	XGetRGBColormaps
+	XGetSizeHints
+	XGetTextProperty
+	XGetTransientForHint
+	XGetWMClientMachine
+	XGetWMColormapWindows
+	XGetWMHints
+	XGetWMIconName
+	XGetWMName
+	XGetWMNormalHints
+	XGetWMProtocols
+	XGetWMSizeHints
+	XGetWindowProperty
+	XGetZoomHints
+GetSelectionOwner	XGetSelectionOwner
+GetWindowAttributes	XGetWindowAttributes
+GrabButton	XGrabButton
+GrabKey	XGrabKey
+GrabKeyboard	XGrabKeyboard
+GrabPointer	XGrabPointer
+GrabServer	XGrabServer
+ImageText8	XDrawImageString
+ImageText16	XDrawImageString16
+InstallColormap	XInstallColormap
+InternAtom	XGetWMColormapWindows
+	XGetWMProtocols
+	XIconifyWindow
+	XInternAtom
+	XSetWMColormapWindows
+	XSetWMProtocols
+KillClient	XKillClient
+ListExtensions	XListExtensions
+ListFonts	XListFonts
+ListFontsWithInfo	XListFontsWithInfo
+ListHosts	XListHosts
+ListInstalledColormaps	XListInstalledColormaps
+ListProperties	XListProperties
+LookupColor	XLookupColor
+	XParseColor
+MapSubwindows	XMapSubwindows
+MapWindow	XMapRaised
+	XMapWindow
+NoOperation	XNoOp
+OpenFont	XLoadFont
+	XLoadQueryFont
+PolyArc	XDrawArc
+	XDrawArcs
+PolyFillArc	XFillArc
+	XFillArcs
+PolyFillRectangle	XFillRectangle
+	XFillRectangles
+PolyLine	XDrawLines
+PolyPoint	XDrawPoint
+	XDrawPoints
+PolyRectangle	XDrawRectangle
+	XDrawRectangles
+PolySegment	XDrawLine
+	XDrawSegments
+PolyText8	XDrawString
+	XDrawText
+PolyText16	XDrawString16
+	XDrawText16
+PutImage	XPutImage
+	XCreateBitmapFromData
+	XCreatePixmapFromData
+	XReadBitmapFile
+QueryBestSize	XQueryBestCursor
+	XQueryBestSize
+	XQueryBestStipple
+	XQueryBestTile
+QueryColors	XQueryColor
+	XQueryColors
+QueryExtension	XInitExtension
+	XQueryExtension
+QueryFont	XLoadQueryFont
+	XQueryFont
+QueryKeymap	XQueryKeymap
+QueryPointer	XQueryPointer
+QueryTextExtents	XQueryTextExtents
+	XQueryTextExtents16
+QueryTree	XQueryTree
+RecolorCursor	XRecolorCursor
+ReparentWindow	XReparentWindow
+RotateProperties	XRotateBuffers
+	XRotateWindowProperties
+SendEvent	XIconifyWindow
+	XReconfigureWMWindow
+	XSendEvent
+	XWithdrawWindow
+SetAccessControl	XDisableAccessControl
+	XEnableAccessControl
+	XSetAccessControl
+SetClipRectangles	XSetClipRectangles
+SetCloseDownMode	XSetCloseDownMode
+SetDashes	XSetDashes
+SetFontPath	XSetFontPath
+SetInputFocus	XSetInputFocus
+SetModifierMapping	XSetModifierMapping
+SetPointerMapping	XSetPointerMapping
+SetScreenSaver	XGetScreenSaver
+	XSetScreenSaver
+SetSelectionOwner	XSetSelectionOwner
+StoreColors	XStoreColor
+	XStoreColors
+StoreNamedColor	XStoreNamedColor
+TranslateCoordinates	XTranslateCoordinates
+UngrabButton	XUngrabButton
+UngrabKey	XUngrabKey
+UngrabKeyboard	XUngrabKeyboard
+UngrabPointer	XUngrabPointer
+UngrabServer	XUngrabServer
+UninstallColormap	XUninstallColormap
+UnmapSubwindows	XUnmapSubWindows
+UnmapWindow	XUnmapWindow
+	XWithdrawWindow
+WarpPointer	XWarpPointer
+.TE
+.bp

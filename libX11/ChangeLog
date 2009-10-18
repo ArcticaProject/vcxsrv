@@ -1,3 +1,110 @@
+commit ad15e1a89d30ccc11d80745897b83def1448e8c0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 17 16:14:34 2009 -0700
+
+    libX11 1.3.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 0cbf98c17a7484bb58b2464b98d63bb3b4ea2594
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 17 16:28:25 2009 -0700
+
+    Fix make distcheck
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 082e62ad268ef16a3bebc5a3c9fa008dbdc483ed
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 16 19:25:35 2009 -0700
+
+    Use $(AM_V_GEN) to silence echo commands for generating shadow man pages
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 4e66da0783b2e5e3b288aaecd3c89396ed425c20
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 14 16:18:24 2009 -0700
+
+    Move libX11 & XIM/locale specs from xorg-docs
+    
+    If groff is found, and --disable-specs is not passed to configure,
+    specs will be converted to text, html and ps (or pdf if ps2pdf is
+    found) and installed to $(docdir)
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 5d3d817a42ddcc8d0c6efd33efd1442fe14f5c6b
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Tue Oct 13 19:15:51 2009 -0500
+
+    Provide _Xsetlocale compat wrappers on Cygwin
+    
+    Previous versions of Cygwin did not have proper locale support, so Cygwin/X
+    defined X_LOCALE, using _Xsetlocale instead.  Cygwin 1.7 has added locale
+    support, but we can't remove the _Xsetlocale entry point without breaking
+    ABI.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+commit 2c8b3a877a713bb66a6316a7051b43c46af6e1a0
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Tue Oct 13 19:15:49 2009 -0500
+
+    dolt: add Cygwin to supported platforms
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+commit a2c8e3e34b15b57ff881a52101fc961a602f35e4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Oct 14 13:23:30 2009 -0700
+
+    Recognize XSUNBUFFERSIZE alias for XLIBBUFFERSIZE on Solaris
+    
+    Also fix indenting of the XLIBBUFFERSIZE code to match surrounding code
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 34ddfca7b7d58240b0fe74bec6b2e0652d15c051
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Tue Feb 10 17:47:25 2009 +0000
+
+    Include sys/select.h for select() and struct timeval, if it exists
+    
+    This is a cygwin build fix
+
+commit 383165916ddac91740d4c780174d4c0d07cdb994
+Author: Xake <xake@rymdraket.net>
+Date:   Sun Sep 27 11:16:36 2009 +0200
+
+    Use AM_V_GEN instead of customized macros for AM_SILENT_RULES
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 854269d55cdda8caf425515bfed2855e211a5ada
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Oct 6 16:11:24 2009 +0200
+
+    configure: quote argument to m4_pattern_forbid
+    
+    Without this, configure spits out
+    ../configure: line 12364: ac_fn_c_check_member: command not found
+    ../configure: line 12378: ac_fn_c_check_type: command not found
+    
+    Also anchor the pattern to make it stricter.
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit 3bb020587ce74e0737ec7aceb20041f1e77d3b87
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu Oct 1 22:20:38 2009 -0700
+
+    Split CFLAGS into CPPFLAGS and CFLAGS
+    
+    On some build systems, CPPFLAGS is set to "-I/some/prefix/include".  If older
+    X11 headers are in /some/prefix/include, they will be preferred over the
+    shipped headers.  This corrects that problem.
+
 commit d54caf1c9c55af8247621b7ba6afb20b23699839
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Fri Oct 2 10:59:08 2009 +1000
@@ -1739,7 +1846,7 @@ Date:   Tue Jun 10 20:07:30 2008 +0300
     Add some Khmer digraphs to all locales with a Compose.pre.
 
 commit e54cffb649b1622c17457e470cfab8cc56d38c97
-Merge: 19802cc 721b574
+Merge: 19802cc... 721b574...
 Author: Daniel Stone <daniel@fooishbar.org>
 Date:   Tue Jun 10 20:04:30 2008 +0300
 
@@ -1758,7 +1865,7 @@ Date:   Wed May 28 17:31:59 2008 +0930
     Require xproto 7.0.13 and libxcb 1.1.90 (for GenericEvents)
 
 commit e9195db7257e418f83707233baeeb84b225caf4f
-Merge: c34f76f a7f8556
+Merge: c34f76f... a7f8556...
 Author: Peter Hutterer <peter@cs.unisa.edu.au>
 Date:   Thu May 22 12:14:28 2008 +0930
 
@@ -1794,7 +1901,7 @@ Date:   Mon May 12 21:46:24 2008 +0930
     Build with xcb as transport layer highly recommended.
 
 commit c9b2ff1e6a607463993afa4a8d085857d97cc2f3
-Merge: 17d7dcb 9129057
+Merge: 17d7dcb... 9129057...
 Author: Peter Hutterer <peter@cs.unisa.edu.au>
 Date:   Mon May 12 17:58:37 2008 +0930
 
@@ -2001,7 +2108,7 @@ Date:   Sat Dec 22 21:45:23 2007 +0100
     X.Org bug#13786 <http://bugs.freedesktop.org/show_bug.cgi?id=13786>
 
 commit 32115c563b87d2f37e3f9de70fbd0f4d9e424aea
-Merge: 8f0bd3f e8d4cef
+Merge: 8f0bd3f... e8d4cef...
 Author: James Cloos <cloos@jhcloos.com>
 Date:   Fri Dec 14 22:43:47 2007 -0500
 
@@ -2032,14 +2139,14 @@ Date:   Mon Dec 10 23:00:44 2007 -0800
     Added launchd support.
 
 commit 17d7dcbfced4a9417b33507bd3fd9b7dd8268242
-Merge: 5dfefd3 13ac804
+Merge: 5dfefd3... 13ac804...
 Author: Peter Hutterer <peter@cs.unisa.edu.au>
 Date:   Thu Dec 6 14:08:29 2007 +1030
 
     Merge branch 'master' into xge
 
 commit 5dfefd3829d3ba7e41d5db0ad28e9dfee92fadd5
-Merge: a68a1cd eff33ae
+Merge: a68a1cd... eff33ae...
 Author: Peter Hutterer <peter@cs.unisa.edu.au>
 Date:   Thu Dec 6 13:57:09 2007 +1030
 
@@ -2095,7 +2202,7 @@ Date:   Tue Dec 4 17:25:39 2007 -0500
     2] https://bugs.freedesktop.org/show_bug.cgi?id=5129
 
 commit 02e04059c89e175f51647e3b031344f743286b34
-Merge: 1254c57 b57129e
+Merge: 1254c57... b57129e...
 Author: James Cloos <cloos@jhcloos.com>
 Date:   Tue Dec 4 06:55:04 2007 -0500
 
@@ -2273,7 +2380,7 @@ Date:   Tue Jan 2 08:40:00 2007 -0800
     X.Org Bugzilla #9516 <https://bugs.freedesktop.org/show_bug.cgi?id=9516>
 
 commit d8fe979fc929833e8c754aed32641786d5a0622b
-Merge: 21ca953 4ec1723
+Merge: 21ca953... 4ec1723...
 Author: James Cloos <cloos@jhcloos.com>
 Date:   Mon Aug 20 15:34:50 2007 -0400
 
@@ -2893,7 +3000,7 @@ Date:   Sat Dec 16 00:45:19 2006 +0200
     Since XlibConf.h is built by configure, don't distribute it.
 
 commit dd1705ced2cac6b4b6b21e79272fcf9bed4bf376
-Merge: 129bbb9 769b985
+Merge: 129bbb9... 769b985...
 Author: Jeremy C. Reed <reed@glacier.reedmedia.net>
 Date:   Thu Dec 14 14:23:20 2006 -0600
 
@@ -3133,7 +3240,7 @@ Date:   Sat Oct 7 21:00:36 2006 -0700
     Release libX11 1.1 RC1 (1.0.99.1).
 
 commit bf237409c5fce32c557d298f62f44d456c2b5bc8
-Merge: ba47719 2d426d1
+Merge: ba47719... 2d426d1...
 Author: Jamey Sharp <jamey@minilop.net>
 Date:   Sat Oct 7 21:07:16 2006 -0700
 
@@ -3570,7 +3677,7 @@ Date:   Sat Jun 3 13:51:51 2006 +0300
     (cherry picked from e3acee88cfcc4ef0fa8a7db39763a5ebe2e985cb commit)
 
 commit c336eb6b80a6f91da1d0b3d28634a2cfde324670
-Merge: 33556ca ad9ebbd
+Merge: 33556ca... ad9ebbd...
 Author: Donnie Berkholz <donnie@comet.(none)>
 Date:   Thu Jun 22 14:25:35 2006 -0700
 
@@ -3583,14 +3690,14 @@ Date:   Thu Jun 22 17:20:59 2006 +0300
     Bump to 1.0.99.0 to avoid confusion.
 
 commit efedfd68e31bcee2d21ac340be8dc9e1825ec890
-Merge: e3acee8 4b8eb5d
+Merge: e3acee8... 4b8eb5d...
 Author: Daniel Stone <daniel@fooishbar.org>
 Date:   Thu Jun 22 16:53:45 2006 +0300
 
     Merge branch 'master' of git+ssh://git.freedesktop.org/srv/git.freedesktop.org/git/xorg/lib/libX11
 
 commit 4b8eb5d4a1da73a94b5a6ab12e34784aae4c79c5
-Merge: 5169d0e eff50c9
+Merge: 5169d0e... eff50c9...
 Author: Matthieu Herrb <matthieu@deville.herrb.com>
 Date:   Tue Jun 20 21:05:15 2006 +0200
 
@@ -3923,7 +4030,7 @@ Date:   Wed May 10 14:51:37 2006 +0300
     Fix typo (be_BG.UTF-8 rather than bg_BG.UTF-8) in locale.alias.pre.
 
 commit 9cac8c9824874ca7d835f001a4efa910b7fdd822
-Merge: 19b8840 e514bc8
+Merge: 19b8840... e514bc8...
 Author: Daniel Stone <daniels@preemptive.fooishbar.org>
 Date:   Wed May 10 14:50:37 2006 +0300
 
@@ -4016,7 +4123,7 @@ Date:   Fri Mar 17 15:58:39 2006 +0200
     Properly clip bounds when only one point is defining an outline.
 
 commit e876efb8aa410f2f5c87aaaa7042f847c4ff96f7
-Merge: be266b2 f71ea0b
+Merge: be266b2... f71ea0b...
 Author: Matthieu Herrb <matthieu@bluenote.herrb.com>
 Date:   Sat Mar 11 15:40:35 2006 +0100
 

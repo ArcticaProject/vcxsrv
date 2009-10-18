@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.60)
 AC_INIT([libX11],
-        1.3,
+        1.3.1,
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         libX11)
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -94,7 +94,7 @@ dnl If you're seeing an error here, be sure you installed the lib/xtrans module
 dnl first and if it's not in the default location, that you set the ACLOCAL
 dnl environment variable to find it, such as:
 dnl	ACLOCAL="aclocal -I ${PREFIX}/share/aclocal"
-m4_pattern_forbid(XTRANS_CONNECTION_FLAGS)
+m4_pattern_forbid([^XTRANS_CONNECTION_FLAGS$])
 
 # Transport selection macro from xtrans.m4
 XTRANS_CONNECTION_FLAGS
@@ -181,7 +181,7 @@ AC_MSG_RESULT($XLIB_LOADABLE_XCURSOR)
 
 # Checks for header files.
 AC_HEADER_STDC
-dnl AC_CHECK_HEADERS([stdio.h stdlib.h math.h])
+AC_CHECK_HEADERS([sys/select.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 
@@ -428,9 +428,30 @@ AC_DEFINE_DIR(XERRORDB, XERRORDB, [Location of error message database])
 
 XORG_CHECK_MALLOC_ZERO
 
-# Support AM_SILENT_RULES if automake-1.11 or later is used
-m4_ifdef([AM_SILENT_RULES],[HAVE_AM_SILENT_RULES=yes])
-AM_CONDITIONAL(HAVE_AM_SILENT_RULES, test x$HAVE_AM_SILENT_RULES != x)
+# Specification documents are currently provided in troff format
+AC_PATH_PROGS([GROFF], [groff], [none], [$PATH:/usr/gnu/bin])
+AC_PATH_PROGS([PS2PDF], [ps2pdf], [none], [$PATH:/usr/gnu/bin])
+
+AC_MSG_CHECKING([whether to build specifications])
+AC_ARG_ENABLE(specs, AC_HELP_STRING([--enable-specs],
+                                   [Enable building of specification docs]),
+              [build_specs="${enableval}"], [build_specs="auto"])
+
+if test "x${build_specs}" = xauto; then
+    if test "x${GROFF}" = xnone ; then
+        build_specs=no
+    else
+        build_specs=yes
+    fi
+fi
+AC_MSG_RESULT([${build_specs}])
+if test "x${build_specs}" = xyes && test "x${GROFF}" = xnone ; then
+    AC_MSG_ERROR([can't build documentation without groff])
+fi
+
+AM_CONDITIONAL(BUILD_SPECS, [test x$build_specs = xyes])
+AM_CONDITIONAL(HAVE_PS2PDF, [test x$PS2PDF != xnone])
+
 
 AC_OUTPUT([Makefile
            include/Makefile
@@ -512,6 +533,10 @@ AC_OUTPUT([Makefile
 	   nls/zh_TW/Makefile
 	   nls/zh_TW.big5/Makefile
 	   nls/zh_TW.UTF-8/Makefile
+	   specs/Makefile
+	   specs/i18n/Makefile
+	   specs/libX11/Makefile
+	   specs/XIM/Makefile
 	   x11.pc
 	   x11-xcb.pc])
 

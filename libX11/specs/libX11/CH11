@@ -1,0 +1,1664 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 11\fP\s-1
+
+\s+1\fBEvent Handling Functions\fP\s-1
+.sp 2
+.nr H1 11
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 11: Event Handling Functions 
+.XE
+This chapter discusses the Xlib functions you can use to:
+.IP \(bu 5
+Select events
+.IP \(bu 5
+Handle the output buffer and the event queue
+.IP \(bu 5
+Select events from the event queue 
+.IP \(bu 5
+Send and get events
+.IP \(bu 5
+Handle protocol errors
+.NT Note
+Some toolkits use their own event-handling functions
+and do not allow you to interchange these event-handling functions
+with those in Xlib.
+For further information, 
+see the documentation supplied with the toolkit.
+.NE
+.LP
+Most applications simply are event loops:
+they wait for an event, decide what to do with it,
+execute some amount of code that results in changes to the display,
+and then wait for the next event.
+.NH 2
+Selecting Events
+.XS
+\*(SN Selecting Events 
+.XE
+.LP
+There are two ways to select the events you want reported to your client
+application.
+One way is to set the event_mask member of the
+.PN XSetWindowAttributes
+structure when you call
+.PN XCreateWindow
+and
+.PN XChangeWindowAttributes .
+Another way is to use
+.PN XSelectInput . 
+.IN "XSelectInput" "" "@DEF@"
+.sM
+.FD 0
+XSelectInput\^(\^\fIdisplay\fP, \fIw\fP\^, \fIevent_mask\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      long \fIevent_mask\fP\^;
+.FN	
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose events you are interested in
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIevent_mask\fP 1i
+Specifies the event mask.
+.LP
+.eM 
+The
+.PN XSelectInput
+function requests that the X server report the events associated with the 
+specified event mask.
+Initially, X will not report any of these events.
+Events are reported relative to a window.
+If a window is not interested in a device event, it usually propagates to
+the closest ancestor that is interested,
+unless the do_not_propagate mask prohibits it.
+.IN "Event" "propagation"
+.LP
+Setting the event-mask attribute of a window overrides any previous call
+for the same window but not for other clients.
+Multiple clients can select for the same events on the same window
+with the following restrictions:
+.IP \(bu 5
+Multiple clients can select events on the same window because their event masks
+are disjoint.
+When the X server generates an event, it reports it
+to all interested clients.
+.IP \(bu 5
+Only one client at a time can select
+.PN CirculateRequest ,
+.PN ConfigureRequest ,
+or
+.PN MapRequest
+events, which are associated with
+the event mask
+.PN SubstructureRedirectMask . 
+.IP \(bu 5
+Only one client at a time can select
+a
+.PN ResizeRequest
+event, which is associated with
+the event mask
+.PN ResizeRedirectMask . 
+.IP \(bu 5
+Only one client at a time can select a 
+.PN ButtonPress 
+event, which is associated with
+the event mask
+.PN ButtonPressMask .
+.LP
+The server reports the event to all interested clients.
+.LP
+.PN XSelectInput
+can generate a
+.PN BadWindow 
+error.
+.NH 2
+Handling the Output Buffer
+.XS
+\*(SN Handling the Output Buffer
+.XE
+.LP
+The output buffer is an area used by Xlib to store requests.
+The functions described in this section flush the output buffer
+if the function would block or not return an event.
+That is, all requests residing in the output buffer that
+have not yet been sent are transmitted to the X server.
+These functions differ in the additional tasks they might perform.
+.LP
+.sp
+To flush the output buffer, use 
+.PN XFlush .
+.IN "XFlush" "" "@DEF@"
+.sM
+.FD 0
+XFlush\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XFlush
+function
+flushes the output buffer.
+Most client applications need not use this function because the output
+buffer is automatically flushed as needed by calls to
+.PN XPending ,
+.PN XNextEvent ,
+and
+.PN XWindowEvent .
+.IN "XPending"
+.IN "XNextEvent"
+.IN "XWindowEvent"
+Events generated by the server may be enqueued into the library's event queue.
+.LP
+.sp
+To flush the output buffer and then wait until all requests have been processed,
+use 
+.PN XSync .
+.IN "XSync" "" "@DEF@"
+.sM
+.FD 0
+XSync\^(\^\fIdisplay\fP, \fIdiscard\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Bool \fIdiscard\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdiscard\fP 1i
+Specifies a Boolean value that indicates whether 
+.PN XSync
+discards all events on the event queue.
+.LP
+.eM
+The
+.PN XSync
+function
+flushes the output buffer and then waits until all requests have been received
+and processed by the X server.
+Any errors generated must be handled by the error handler.
+For each protocol error received by Xlib,
+.PN XSync
+calls the client application's error handling routine (see section 11.8.2).
+Any events generated by the server are enqueued into the library's 
+event queue.
+.LP
+Finally, if you passed 
+.PN False ,
+.PN XSync
+does not discard the events in the queue.
+If you passed 
+.PN True ,
+.PN XSync 
+discards all events in the queue,
+including those events that were on the queue before
+.PN XSync
+was called.
+Client applications seldom need to call
+.PN XSync .
+.NH 2
+Event Queue Management
+.XS
+\*(SN Event Queue Management
+.XE
+.LP
+Xlib maintains an event queue.
+However, the operating system also may be buffering data 
+in its network connection that is not yet read into the event queue.
+.LP
+.sp
+To check the number of events in the event queue, use
+.PN XEventsQueued .
+.IN "XEventsQueued" "" "@DEF@"
+.sM
+.FD 0
+int XEventsQueued\^(\^\fIdisplay\fP, \fImode\fP\^)
+.br
+     Display *\fIdisplay\fP\^;
+.br
+     int \fImode\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fImode\fP 1i
+Specifies the mode.
+You can pass
+.PN QueuedAlready ,
+.PN QueuedAfterFlush ,
+or
+.PN QueuedAfterReading .
+.LP
+.eM
+If mode is 
+.PN QueuedAlready ,
+.PN XEventsQueued 
+returns the number of events
+already in the event queue (and never performs a system call).
+If mode is 
+.PN QueuedAfterFlush , 
+.PN XEventsQueued
+returns the number of events already in the queue if the number is nonzero.
+If there are no events in the queue, 
+.PN XEventsQueued
+flushes the output buffer, 
+attempts to read more events out of the application's connection,
+and returns the number read.
+If mode is 
+.PN QueuedAfterReading , 
+.PN XEventsQueued
+returns the number of events already in the queue if the number is nonzero. 
+If there are no events in the queue, 
+.PN XEventsQueued
+attempts to read more events out of the application's connection 
+without flushing the output buffer and returns the number read.
+.LP
+.PN XEventsQueued
+always returns immediately without I/O if there are events already in the
+queue.
+.PN XEventsQueued
+with mode 
+.PN QueuedAfterFlush
+is identical in behavior to
+.PN XPending .
+.PN XEventsQueued
+with mode
+.PN QueuedAlready
+is identical to the
+.PN XQLength
+function.
+.LP
+.sp
+To return the number of events that are pending, use 
+.PN XPending .
+.IN "XPending" "" "@DEF@"
+.sM
+.FD 0
+int XPending\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN	
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XPending
+function returns the number of events that have been received from the
+X server but have not been removed from the event queue.
+.PN XPending
+is identical to
+.PN XEventsQueued
+with the mode
+.PN QueuedAfterFlush
+specified.
+.NH 2
+Manipulating the Event Queue
+.XS
+\*(SN Manipulating the Event Queue 
+.XE
+.LP
+Xlib provides functions that let you manipulate the event queue.
+This section discusses how to:
+.IP \(bu 5
+Obtain events, in order, and remove them from the queue
+.IP \(bu 5
+Peek at events in the queue without removing them
+.IP \(bu 5
+Obtain events that match the event mask or the arbitrary
+predicate procedures that you provide
+.NH 3
+Returning the Next Event
+.XS
+\*(SN Returning the Next Event
+.XE
+.LP
+To get the next event and remove it from the queue, use
+.PN XNextEvent .
+.IN "XNextEvent" "" "@DEF@"
+.sM
+.FD 0
+XNextEvent\^(\^\fIdisplay\fP, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_return\fP 1i
+Returns the next event in the queue.
+.LP
+.eM
+The
+.PN XNextEvent
+function copies the first event from the event queue into the specified
+.PN XEvent
+structure and then removes it from the queue.
+If the event queue is empty,
+.PN XNextEvent
+flushes the output buffer and blocks until an event is received.
+.LP
+.sp
+To peek at the event queue, use
+.PN XPeekEvent .
+.IN "XPeekEvent" "" "@DEF@"
+.sM
+.FD 0
+XPeekEvent\^(\^\fIdisplay\fP, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_return\fP 1i
+Returns a copy of the matched event's associated structure.
+.LP
+.eM
+The
+.PN XPeekEvent
+function returns the first event from the event queue,
+but it does not remove the event from the queue.
+If the queue is empty,
+.PN XPeekEvent
+flushes the output buffer and blocks until an event is received.
+It then copies the event into the client-supplied
+.PN XEvent
+structure without removing it from the event queue.
+.NH 3
+Selecting Events Using a Predicate Procedure
+.XS
+\*(SN Selecting Events Using a Predicate Procedure
+.XE
+.LP
+Each of the functions discussed in this section requires you to
+pass a predicate procedure that determines if an event matches 
+what you want.
+Your predicate procedure must decide if the event is useful
+without calling any Xlib functions.
+If the predicate directly or indirectly causes the state of the event queue
+to change, the result is not defined.
+If Xlib has been initialized for threads, the predicate is called with
+the display locked and the result of a call by the predicate to any
+Xlib function that locks the display is not defined unless the caller
+has first called
+.PN XLockDisplay .
+.LP
+The predicate procedure and its associated arguments are:
+.sM
+.FD 0
+Bool (\^*\fIpredicate\fP\^)\^(\^\fIdisplay\fP, \fIevent\fP, \fIarg\fP\^)
+.br
+     Display *\fIdisplay\fP\^;
+.br
+     XEvent *\fIevent\fP\^;
+.br
+     XPointer \fIarg\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent\fP 1i
+Specifies the
+.PN XEvent
+structure.
+.IP \fIarg\fP 1i
+Specifies the argument passed in from the 
+.PN XIfEvent ,
+.PN XCheckIfEvent ,
+or
+.PN XPeekIfEvent 
+function.
+.LP
+.eM
+The predicate procedure is called once for each
+event in the queue until it finds a match. 
+After finding a match, the predicate procedure must return 
+.PN True .
+If it did not find a match, it must return
+.PN False .
+.LP
+.sp
+To check the event queue for a matching event
+and, if found, remove the event from the queue, use
+.PN XIfEvent .
+.IN "XIfEvent" "" "@DEF@"
+.sM
+.FD 0
+XIfEvent\^(\^\fIdisplay\fP, \fIevent_return\fP, \fIpredicate\fP, \fIarg\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.br
+      Bool (\^*\fIpredicate\fP\^)\^(\^)\^;
+.br
+      XPointer \fIarg\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_return\fP 1i
+Returns the matched event's associated structure.
+.IP \fIpredicate\fP 1i
+Specifies the procedure that is to be called to determine
+if the next event in the queue matches what you want.
+.IP \fIarg\fP 1i
+Specifies the user-supplied argument that will be passed to the predicate procedure.
+.LP
+.eM
+The
+.PN XIfEvent
+function completes only when the specified predicate
+procedure returns 
+.PN True 
+for an event, 
+which indicates an event in the queue matches.
+.PN XIfEvent
+flushes the output buffer if it blocks waiting for additional events.
+.PN XIfEvent
+removes the matching event from the queue 
+and copies the structure into the client-supplied
+.PN XEvent
+structure.
+.LP
+.sp
+To check the event queue for a matching event without blocking, use
+.PN XCheckIfEvent .
+.IN "XCheckIfEvent" "" "@DEF@"
+.sM
+.FD 0
+Bool XCheckIfEvent\^(\^\fIdisplay\fP, \fIevent_return\fP, \fIpredicate\fP, \fIarg\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.br
+      Bool (\^*\fIpredicate\fP\^)\^(\^)\^;
+.br
+      XPointer \fIarg\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_return\fP 1i
+Returns a copy of the matched event's associated structure.
+.IP \fIpredicate\fP 1i
+Specifies the procedure that is to be called to determine
+if the next event in the queue matches what you want.
+.IP \fIarg\fP 1i
+Specifies the user-supplied argument that will be passed to the predicate procedure.
+.LP
+.eM
+When the predicate procedure finds a match,
+.PN XCheckIfEvent
+copies the matched event into the client-supplied
+.PN XEvent
+structure and returns 
+.PN True .
+(This event is removed from the queue.)
+If the predicate procedure finds no match,
+.PN XCheckIfEvent
+returns
+.PN False ,
+and the output buffer will have been flushed.
+All earlier events stored in the queue are not discarded.
+.LP
+.sp
+To check the event queue for a matching event
+without removing the event from the queue, use
+.PN XPeekIfEvent .
+.IN "XPeekIfEvent" "" "@DEF@"
+.sM
+.FD 0
+XPeekIfEvent\^(\^\fIdisplay\fP, \fIevent_return\fP, \fIpredicate\fP, \fIarg\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.br
+      Bool (\^*\fIpredicate\fP\^)\^(\^)\^;
+.br
+      XPointer \fIarg\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_return\fP 1i
+Returns a copy of the matched event's associated structure.
+.IP \fIpredicate\fP 1i
+Specifies the procedure that is to be called to determine
+if the next event in the queue matches what you want.
+.IP \fIarg\fP 1i
+Specifies the user-supplied argument that will be passed to the predicate procedure.
+.LP
+.eM
+The
+.PN XPeekIfEvent
+function returns only when the specified predicate
+procedure returns 
+.PN True
+for an event.
+After the predicate procedure finds a match,
+.PN XPeekIfEvent
+copies the matched event into the client-supplied
+.PN XEvent
+structure without removing the event from the queue.
+.PN XPeekIfEvent
+flushes the output buffer if it blocks waiting for additional events.
+.NH 3
+Selecting Events Using a Window or Event Mask
+.XS
+\*(SN Selecting Events Using a Window or Event Mask
+.XE
+.LP
+The functions discussed in this section let you select events by window 
+or event types, allowing you to process events out of order.
+.LP
+.sp
+To remove the next event that matches both a window and an event mask, use
+.PN XWindowEvent .
+.IN "XWindowEvent" "" "@DEF@"
+.sM
+.FD 0
+XWindowEvent\^(\^\fIdisplay\fP, \fIw\fP\^, \fIevent_mask\fP\^, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      long \fIevent_mask\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose events you are interested in
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIevent_mask\fP 1i
+Specifies the event mask.
+.IP \fIevent_return\fP 1i
+Returns the matched event's associated structure.
+.LP
+.eM
+The
+.PN XWindowEvent
+function searches the event queue for an event that matches both the specified
+window and event mask.
+When it finds a match,
+.PN XWindowEvent
+removes that event from the queue and copies it into the specified
+.PN XEvent
+structure.
+The other events stored in the queue are not discarded.
+If a matching event is not in the queue,
+.PN XWindowEvent
+flushes the output buffer and blocks until one is received.
+.LP
+.sp
+To remove the next event that matches both a window and an event mask (if any),
+use
+.PN XCheckWindowEvent .
+.IN "XCheckWindowEvent"
+This function is similar to
+.PN XWindowEvent 
+except that it never blocks and it returns a 
+.PN Bool 
+indicating if the event was returned.
+.IN "XCheckWindowEvent" "" "@DEF@"
+.sM
+.FD 0
+Bool XCheckWindowEvent\^(\^\fIdisplay\fP, \fIw\fP\^, \fIevent_mask\fP\^, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      long \fIevent_mask\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose events you are interested in
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIevent_mask\fP 1i
+Specifies the event mask.
+.IP \fIevent_return\fP 1i
+Returns the matched event's associated structure.
+.LP
+.eM
+The
+.PN XCheckWindowEvent
+function searches the event queue and then the events available 
+on the server connection for the first event that matches the specified window
+and event mask.
+If it finds a match,
+.PN XCheckWindowEvent
+removes that event, copies it into the specified
+.PN XEvent
+structure, and returns
+.PN True .
+The other events stored in the queue are not discarded.
+If the event you requested is not available,
+.PN XCheckWindowEvent
+returns
+.PN False ,
+and the output buffer will have been flushed.
+.LP
+.sp
+To remove the next event that matches an event mask, use
+.PN XMaskEvent .
+.IN "XMaskEvent" "" "@DEF@"
+.sM
+.FD 0
+XMaskEvent\^(\^\fIdisplay\fP, \fIevent_mask\fP\^, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      long \fIevent_mask\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_mask\fP 1i
+Specifies the event mask.
+.IP \fIevent_return\fP 1i
+Returns the matched event's associated structure.
+.LP
+.eM
+The
+.PN XMaskEvent
+function searches the event queue for the events associated with the 
+specified mask.
+When it finds a match,
+.PN XMaskEvent
+removes that event and copies it into the specified
+.PN XEvent
+structure.
+The other events stored in the queue are not discarded.
+If the event you requested is not in the queue,
+.PN XMaskEvent
+flushes the output buffer and blocks until one is received.
+.LP
+.sp
+To return and remove the next event that matches an event mask (if any), use
+.PN XCheckMaskEvent .
+This function is similar to 
+.PN XMaskEvent 
+except that it never blocks and it returns a 
+.PN Bool 
+indicating if the event was returned.
+.IN "XCheckMaskEvent" "" "@DEF@"
+.sM
+.FD 0
+Bool XCheckMaskEvent\^(\^\fIdisplay\fP, \fIevent_mask\fP\^, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      long \fIevent_mask\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_mask\fP 1i
+Specifies the event mask.
+.IP \fIevent_return\fP 1i
+Returns the matched event's associated structure.
+.LP
+.eM
+The
+.PN XCheckMaskEvent
+function searches the event queue and then any events available on the
+server connection for the first event that matches the specified mask.
+If it finds a match,
+.PN XCheckMaskEvent
+removes that event, copies it into the specified
+.PN XEvent
+structure, and returns
+.PN True .
+The other events stored in the queue are not discarded.
+If the event you requested is not available,
+.PN XCheckMaskEvent
+returns
+.PN False ,
+and the output buffer will have been flushed.
+.LP
+.sp 
+To return and remove the next event in the queue that matches an event type, use
+.PN XCheckTypedEvent .
+.IN "XCheckTypedEvent" "" "@DEF@"
+.sM
+.FD 0
+Bool XCheckTypedEvent\^(\^\fIdisplay\fP, \fIevent_type\fP\^, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIevent_type\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_type\fP 1i
+Specifies the event type to be compared.
+
+.IP \fIevent_return\fP 1i
+Returns the matched event's associated structure.
+.LP
+.eM
+The
+.PN XCheckTypedEvent
+function searches the event queue and then any events available  
+on the server connection for the first event that matches the specified type.
+If it finds a match,
+.PN XCheckTypedEvent
+removes that event, copies it into the specified
+.PN XEvent
+structure, and returns
+.PN True .
+The other events in the queue are not discarded.
+If the event is not available,
+.PN XCheckTypedEvent
+returns
+.PN False ,
+and the output buffer will have been flushed.
+.LP
+.sp
+To return and remove the next event in the queue that matches an event type 
+and a window, use
+.PN XCheckTypedWindowEvent .
+.IN "XCheckTypedWindowEvent" "" "@DEF@"
+.sM
+.FD 0
+Bool XCheckTypedWindowEvent\^(\^\fIdisplay\fP, \fIw\fP\^, \fIevent_type\fP\^, \fIevent_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      int \fIevent_type\fP\^;
+.br
+      XEvent *\fIevent_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIevent_type\fP 1i
+Specifies the event type to be compared.
+
+.IP \fIevent_return\fP 1i
+Returns the matched event's associated structure.
+.LP
+.eM
+The
+.PN XCheckTypedWindowEvent
+function searches the event queue and then any events available  
+on the server connection for the first event that matches the specified
+type and window.
+If it finds a match,
+.PN XCheckTypedWindowEvent
+removes the event from the queue, copies it into the specified
+.PN XEvent
+structure, and returns
+.PN True .
+The other events in the queue are not discarded.
+If the event is not available,
+.PN XCheckTypedWindowEvent
+returns
+.PN False ,
+and the output buffer will have been flushed.
+.NH 2
+Putting an Event Back into the Queue
+.XS
+\*(SN Putting an Event Back into the Queue 
+.XE
+.LP
+To push an event back into the event queue, use
+.PN XPutBackEvent .
+.IN "XPutBackEvent" "" "@DEF@"
+.sM
+.FD 0
+XPutBackEvent\^(\^\fIdisplay\fP, \fIevent\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XEvent *\fIevent\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent\fP 1i
+Specifies the event.
+.LP
+.eM 
+The
+.PN XPutBackEvent
+function pushes an event back onto the head of the display's event queue
+by copying the event into the queue.
+This can be useful if you read an event and then decide that you
+would rather deal with it later.
+There is no limit to the number of times in succession that you can call
+.PN XPutBackEvent .
+.NH 2
+Sending Events to Other Applications
+.XS
+\*(SN Sending Events to Other Applications
+.XE
+.LP
+To send an event to a specified window, use
+.PN XSendEvent .
+.IN "XSendEvent"
+This function is often used in selection processing.
+For example, the owner of a selection should use
+.PN XSendEvent
+to send a
+.PN SelectionNotify
+event to a requestor when a selection has been converted 
+and stored as a property.
+.IN "XSendEvent" "" "@DEF@"
+.sM
+.FD 0
+Status XSendEvent\^(\^\fIdisplay\fP, \fIw\fP\^, \fIpropagate\fP\^, \fIevent_mask\fP\^, \fIevent_send\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Bool \fIpropagate\fP\^;
+.br
+      long \fIevent_mask\fP\^;
+.br
+      XEvent *\fIevent_send\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window the event is to be sent to, or
+.PN PointerWindow ,
+or
+.PN InputFocus .
+.IP \fIpropagate\fP 1i
+Specifies a Boolean value.
+.IP \fIevent_mask\fP 1i
+Specifies the event mask.
+.IP \fIevent_send\fP 1i
+Specifies the event that is to be sent.
+.LP
+.eM
+The
+.PN XSendEvent
+function identifies the destination window, 
+determines which clients should receive the specified events, 
+and ignores any active grabs.
+This function requires you to pass an event mask.
+For a discussion of the valid event mask names,
+see section 10.3.
+This function uses the w argument to identify the destination window as follows:
+.IP \(bu 5
+If w is
+.PN PointerWindow ,
+the destination window is the window that contains the pointer.
+.IP \(bu 5
+If w is
+.PN InputFocus 
+and if the focus window contains the pointer, 
+the destination window is the window that contains the pointer; 
+otherwise, the destination window is the focus window.
+.LP
+To determine which clients should receive the specified events,
+.PN XSendEvent
+uses the propagate argument as follows:
+.IP \(bu 5
+If event_mask is the empty set,
+the event is sent to the client that created the destination window.
+If that client no longer exists,
+no event is sent.
+.IP \(bu 5
+If propagate is 
+.PN False ,
+the event is sent to every client selecting on destination any of the event
+types in the event_mask argument.
+.IP \(bu 5
+If propagate is 
+.PN True 
+and no clients have selected on destination any of
+the event types in event-mask, the destination is replaced with the
+closest ancestor of destination for which some client has selected a
+type in event-mask and for which no intervening window has that type in its
+do-not-propagate-mask. 
+If no such window exists or if the window is
+an ancestor of the focus window and 
+.PN InputFocus 
+was originally specified
+as the destination, the event is not sent to any clients.
+Otherwise, the event is reported to every client selecting on the final
+destination any of the types specified in event_mask.
+.LP
+The event in the
+.PN XEvent
+structure must be one of the core events or one of the events
+defined by an extension (or a 
+.PN BadValue
+error results) so that the X server can correctly byte-swap 
+the contents as necessary.  
+The contents of the event are
+otherwise unaltered and unchecked by the X server except to force send_event to
+.PN True
+in the forwarded event and to set the serial number in the event correctly;
+therefore these fields
+and the display field are ignored by
+.PN XSendEvent .
+.LP
+.PN XSendEvent
+returns zero if the conversion to wire protocol format failed
+and returns nonzero otherwise.
+.LP
+.PN XSendEvent
+can generate
+.PN BadValue
+and 
+.PN BadWindow 
+errors.
+.NH 2
+Getting Pointer Motion History
+.XS
+\*(SN Getting Pointer Motion History
+.XE
+.LP
+Some X server implementations will maintain a more complete
+history of pointer motion than is reported by event notification.
+The pointer position at each pointer hardware interrupt may be
+stored in a buffer for later retrieval.
+This buffer is called the motion history buffer.
+For example, a few applications, such as paint programs,
+want to have a precise history of where the pointer
+traveled. 
+However, this historical information is highly excessive for most applications.
+.LP
+.sp
+To determine the approximate maximum number of elements in the motion buffer, 
+use
+.PN XDisplayMotionBufferSize .
+.IN "XDisplayMotionBufferSize" "" "@DEF@"
+.sM
+.FD 0
+unsigned long XDisplayMotionBufferSize\^(\^\fIdisplay\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The server may retain the recent history of the pointer motion
+and do so to a finer granularity than is reported by
+.PN MotionNotify
+events.
+The
+.PN XGetMotionEvents
+function makes this history available.
+.LP
+.sp
+To get the motion history for a specified window and time, use
+.PN XGetMotionEvents .
+.IN "XGetMotionEvents" "" "@DEF@"
+.sM
+.FD 0
+XTimeCoord *XGetMotionEvents\^(\^\fIdisplay\fP, \fIw\fP\^, \fIstart\fP\^, \fIstop\fP\^, \fInevents_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Time \fIstart\fP\^, \fIstop\fP\^;	
+.br
+      int *\fInevents_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIstart\fP 1i
+.br
+.ns
+.IP \fIstop\fP 1i
+Specify the time interval in which the events are returned from the motion
+history buffer.
+You can pass a timestamp or
+.PN CurrentTime .
+.IP \fInevents_return\fP 1i
+Returns the number of events from the motion history buffer.
+.LP
+.eM
+The
+.PN XGetMotionEvents
+function returns all events in the motion history buffer that fall between the
+specified start and stop times, inclusive, and that have coordinates
+that lie within the specified window (including its borders) at its present
+placement.
+If the server does not support motion history, 
+if the start time is later than the stop time,
+or if the start time is in the future, 
+no events are returned;
+.PN XGetMotionEvents
+returns NULL.
+If the stop time is in the future, it is equivalent to specifying
+.PN CurrentTime .
+The return type for this function is a structure defined as follows:
+.LP
+.IN "XTimeCoord" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i
+.ta .5i
+typedef struct {
+	Time time;
+	short x, y;
+} XTimeCoord;
+.De
+.LP
+.eM
+The time member is set to the time, in milliseconds. 
+The x and y members are set to the coordinates of the pointer and
+are reported relative to the origin
+of the specified window.
+To free the data returned from this call, use
+.PN XFree .
+.LP
+.PN XGetMotionEvents
+can generate a
+.PN BadWindow 
+error.
+.NH 2
+Handling Protocol Errors
+.XS
+\*(SN Handling Protocol Errors
+.XE
+.LP
+Xlib provides functions that you can use to enable or disable synchronization
+and to use the default error handlers.
+.NH 3
+Enabling or Disabling Synchronization
+.XS
+\*(SN Enabling or Disabling Synchronization 
+.XE
+.LP
+When debugging X applications, 
+it often is very convenient to require Xlib to behave synchronously
+so that errors are reported as they occur.
+The following function lets you disable or enable synchronous behavior.
+Note that graphics may occur 30 or more times more slowly when 
+synchronization is enabled.
+.IN "_Xdebug"
+On POSIX-conformant systems,
+there is also a global variable 
+.PN _Xdebug 
+that, if set to nonzero before starting a program under a debugger, will force
+synchronous library behavior.
+.LP
+After completing their work,
+all Xlib functions that generate protocol requests call what is known as
+an after function.
+.PN XSetAfterFunction
+sets which function is to be called.
+.IN "XSetAfterFunction" "" "@DEF@"
+.sM
+.FD 0
+int (*XSetAfterFunction\^(\^\fIdisplay\fP, \fIprocedure\fP\^))()
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int (\^*\^\fIprocedure\fP\^)\^();
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIprocedure\fP 1i
+Specifies the procedure to be called.
+.LP
+.eM
+The specified procedure is called with only a display pointer.
+.PN XSetAfterFunction
+returns the previous after function.
+.LP
+To enable or disable synchronization, use 
+.PN XSynchronize .
+.IN "Debugging" "synchronous mode"
+.IN "XSynchronize" "" "@DEF@"
+.sM
+.FD 0
+int (*XSynchronize\^(\^\fIdisplay\fP, \fIonoff\fP\^)\^)()
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Bool \fIonoff\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIonoff\fP 1i
+Specifies a Boolean value that indicates whether to enable 
+or disable synchronization.
+.LP
+.eM
+The
+.PN XSynchronize
+function returns 
+the previous after function.
+If onoff is 
+.PN True , 
+.PN XSynchronize
+turns on synchronous behavior.
+If onoff is
+.PN False ,
+.PN XSynchronize 
+turns off synchronous behavior.
+.NH 3
+Using the Default Error Handlers
+.XS
+\*(SN Using the Default Error Handlers 
+.XE
+.LP
+.IN "Debugging" "error handlers"
+.IN "Error" "handlers"
+There are two default error handlers in Xlib: 
+one to handle typically fatal conditions (for example, 
+the connection to a display server dying because a machine crashed) 
+and one to handle protocol errors from the X server.
+These error handlers can be changed to user-supplied routines if you
+prefer your own error handling and can be changed as often as you like.
+If either function is passed a NULL pointer, it will
+reinvoke the default handler.
+The action of the default handlers is to print an explanatory
+message and exit.
+.LP
+.sp
+To set the error handler, use
+.PN XSetErrorHandler .
+.IN "XSetErrorHandler" "" "@DEF@"
+.sM
+.FD 0
+int (*XSetErrorHandler\^(\^\fIhandler\fP\^)\^)\^(\^)
+.br
+      int (\^*\^\fIhandler\fP\^)\^(Display *, XErrorEvent *)
+.FN
+.IP \fIhandler\fP 1i
+Specifies the program's supplied error handler.
+.LP
+.eM 
+Xlib generally calls the program's
+supplied error handler whenever an error is received.
+It is not called on
+.PN BadName
+errors from
+.PN OpenFont ,
+.PN LookupColor ,
+or
+.PN AllocNamedColor
+protocol requests or on
+.PN BadFont
+errors from a
+.PN QueryFont
+protocol request.
+These errors generally are reflected back to the program through the
+procedural interface.
+Because this condition is not assumed to be fatal, 
+it is acceptable for your error handler to return;
+the returned value is ignored.
+However, the error handler should not
+call any functions (directly or indirectly) on the display
+that will generate protocol requests or that will look for input events.
+The previous error handler is returned.
+.LP
+The 
+.PN XErrorEvent
+structure contains:
+.IN "Debugging" "error event"
+.LP
+.IN "XErrorEvent" "" "@DEF"
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	int type;
+	Display *display;	/* Display the event was read from */
+	unsigned long serial;		/* serial number of failed request */
+	unsigned char error_code;	/* error code of failed request */
+	unsigned char request_code;	/* Major op-code of failed request */
+	unsigned char minor_code;	/* Minor op-code of failed request */
+	XID resourceid;		/* resource id */
+} XErrorEvent;
+.De
+.LP
+.IN "Serial Number"
+The serial member is the number of requests, starting from one, 
+sent over the network connection since it was opened. 
+It is the number that was the value of 
+.PN NextRequest 
+immediately before the failing call was made.  
+The request_code member is a protocol request
+of the procedure that failed, as defined in 
+.hN X11/Xproto.h .
+The following error codes can be returned by the functions described in this
+chapter:
+.br
+.ne 13
+.IN "Debugging" "error numbers"
+.IN "Error" "codes"
+.\".CP T 3
+.\"Error Codes
+.IN "BadAccess" "" "@DEF@"
+.IN "BadAlloc" "" "@DEF@"
+.IN "BadAtom" "" "@DEF@"
+.IN "BadColor" "" "@DEF@"
+.IN "BadCursor" "" "@DEF@"
+.IN "BadDrawable" "" "@DEF@"
+.IN "BadFont" "" "@DEF@"
+.IN "BadGC" "" "@DEF@"
+.IN "BadIDChoice" "" "@DEF@"
+.TS H
+l c
+lw(1.75i) lw(4i).
+_
+.sp 6p
+.B
+Error Code	Description
+.sp 6p
+_
+.sp 6p
+.TH
+.R
+T{
+.PN BadAccess
+T}	T{
+A client attempts to grab a key/button combination already grabbed 
+by another client.
+.sp 3p
+A client attempts to free a colormap entry that it had not already allocated
+or to free an entry in a colormap that was created with all entries writable.
+.sp 3p
+A client attempts to store into a read-only or unallocated colormap entry.
+.sp 3p
+A client attempts to modify the access control list from other than the local 
+(or otherwise authorized) host.
+.sp 3p
+A client attempts to select an event type that another client 
+has already selected.
+T}
+.sp 3p
+T{
+.PN BadAlloc
+T}	T{
+The server fails to allocate the requested resource.
+Note that the explicit listing of
+.PN BadAlloc
+errors in requests only covers allocation errors at a very coarse level
+and is not intended to (nor can it in practice hope to) cover all cases of
+a server running out of allocation space in the middle of service.
+The semantics when a server runs out of allocation space are left unspecified,
+but a server may generate a
+.PN BadAlloc
+error on any request for this reason,
+and clients should be prepared to receive such errors and handle or discard
+them.
+T}
+.sp 3p
+T{
+.PN BadAtom
+T}	T{
+A value for an atom argument does not name a defined atom.
+T}
+.sp 3p
+T{
+.PN BadColor
+T}	T{
+A value for a colormap argument does not name a defined colormap.
+T}
+.sp 3p
+T{
+.PN BadCursor
+T}	T{
+A value for a cursor argument does not name a defined cursor.
+T}
+.sp 3p
+T{
+.PN BadDrawable
+T}	T{
+A value for a drawable argument does not name a defined window or pixmap.
+T}
+.sp 3p
+T{
+.PN BadFont
+T}	T{
+A value for a font argument does not name a defined font (or, in some cases, 
+.PN GContext ).
+T}
+.sp 3p
+T{
+.PN BadGC
+T}	T{
+A value for a 
+.PN GContext 
+argument does not name a defined 
+.PN GContext .
+T}
+.sp 3p
+T{
+.PN BadIDChoice
+T}	T{
+The value chosen for a resource identifier either is not included in the 
+range assigned to the client or is already in use.
+Under normal circumstances,
+this cannot occur and should be considered a server or Xlib error.
+T}
+.sp 3p
+T{
+.PN BadImplementation
+T}	T{
+The server does not implement some aspect of the request.
+A server that generates this error for a core request is deficient.
+As such, this error is not listed for any of the requests,
+but clients should be prepared to receive such errors 
+and handle or discard them.
+T}
+.sp 3p
+T{
+.PN BadLength
+T}	T{
+The length of a request is shorter or longer than that required to 
+contain the arguments.
+This is an internal Xlib or server error.
+.sp 3p
+The length of a request exceeds the maximum length accepted by the server.
+T}
+.sp 3p
+T{
+.PN BadMatch
+T}	T{
+In a graphics request,
+the root and depth of the graphics context do not match those of the drawable.
+.sp 3p
+An 
+.PN InputOnly 
+window is used as a drawable.
+.sp 3p
+Some argument or pair of arguments has the correct type and range,
+but it fails to match in some other way required by the request.
+.sp 3p
+An 
+.PN InputOnly 
+window lacks this attribute.
+T}
+.sp 3p
+T{
+.PN BadName
+T}	T{
+A font or color of the specified name does not exist.
+T}
+.sp 3p
+T{
+.PN BadPixmap
+T}	T{
+A value for a pixmap argument does not name a defined pixmap.
+T}
+.sp 3p
+T{
+.PN BadRequest
+T}	T{
+The major or minor opcode does not specify a valid request.
+This usually is an Xlib or server error.
+T}
+.sp 3p
+T{
+.PN BadValue
+T}	T{
+Some numeric value falls outside of the range of values accepted 
+by the request.  
+Unless a specific range is specified for an argument,
+the full range defined by the argument's type is accepted.
+Any argument defined as a set of alternatives typically can generate
+this error (due to the encoding).
+T}
+.sp 3p
+T{
+.PN BadWindow
+T}	T{
+A value for a window argument does not name a defined window.
+T}
+.sp 6p
+_
+.TE
+.IN "BadImplementation" "" "@DEF@"
+.IN "BadLength" "" "@DEF@"
+.IN "BadMatch" "" "@DEF@"
+.IN "BadName" "" "@DEF@"
+.IN "BadPixmap" "" "@DEF@"
+.IN "BadRequest" "" "@DEF@"
+.IN "BadValue" "" "@DEF@"
+.IN "BadWindow" "" "@DEF@"
+.NT Note
+The 
+.PN BadAtom , 
+.PN BadColor , 
+.PN BadCursor , 
+.PN BadDrawable , 
+.PN BadFont , 
+.PN BadGC , 
+.PN BadPixmap , 
+and 
+.PN BadWindow
+errors are also used when the argument type is extended by a set of
+fixed alternatives.
+.NE
+.sp
+.LP
+To obtain textual descriptions of the specified error code, use 
+.PN XGetErrorText .
+.IN "XGetErrorText" "" "@DEF@"
+.IN "Debugging" "error message strings"
+.sM
+.FD 0
+XGetErrorText\^(\^\fIdisplay\fP, \fIcode\fP, \fIbuffer_return\fP, \fIlength\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIcode\fP\^;
+.br
+      char *\fIbuffer_return\fP\^;
+.br
+      int \fIlength\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcode\fP 1i
+Specifies the error code for which you want to obtain a description.
+.IP \fIbuffer_return\fP 1i
+Returns the error description.
+.IP \fIlength\fP 1i
+Specifies the size of the buffer.
+.LP
+.eM 
+The
+.PN XGetErrorText
+function copies a null-terminated string describing the specified error code
+into the specified buffer.
+The returned text is in the encoding of the current locale.
+It is recommended that you use this function to obtain an error description
+because extensions to Xlib may define their own error codes
+and error strings.
+.LP
+.sp
+To obtain error messages from the error database, use
+.PN XGetErrorDatabaseText .
+.IN "XGetErrorDatabaseText" "" "@DEF@"
+.sM
+.FD 0
+XGetErrorDatabaseText\^(\^\fIdisplay\fP, \fIname\fP, \fImessage\fP, \fIdefault_string\fP, \fIbuffer_return\fP, \fIlength\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIname\fP, *\fImessage\fP\^;
+.br
+      char *\fIdefault_string\fP\^;
+.br
+      char *\fIbuffer_return\fP\^;
+.br
+      int \fIlength\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIname\fP 1i
+Specifies the name of the application.
+.IP \fImessage\fP 1i
+Specifies the type of the error message.
+.IP \fIdefault_string\fP 1i
+Specifies the default error message if none is found in the database.
+.IP \fIbuffer_return\fP 1i
+Returns the error description.
+.IP \fIlength\fP 1i
+Specifies the size of the buffer.
+.LP
+.eM
+The
+.PN XGetErrorDatabaseText
+function returns a null-terminated message
+(or the default message) from the error message
+database.
+Xlib uses this function internally to look up its error messages.
+The text in the default_string argument is assumed
+to be in the encoding of the current locale,
+and the text stored in the buffer_return argument
+is in the encoding of the current locale.
+.LP
+The name argument should generally be the name of your application.
+The message argument should indicate which type of error message you want.
+If the name and message are not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+Xlib uses three predefined ``application names'' to report errors.
+In these names,
+uppercase and lowercase matter.
+.IP XProtoError 1i
+The protocol error number is used as a string for the message argument.
+.IP XlibMessage 1i
+These are the message strings that are used internally by the library.
+.IP XRequest 1i
+For a core protocol request,
+the major request protocol number is used for the message argument.
+For an extension request,
+the extension name (as given by
+.PN InitExtension )
+followed by a period (\.) and the minor request protocol number 
+is used for the message argument.
+If no string is found in the error database,
+the default_string is returned to the buffer argument.
+.LP
+.sp
+To report an error to the user when the requested display does not exist, use
+.PN XDisplayName .
+.IN "XDisplayName" "" "@DEF@"
+.sM
+.FD 0
+char *XDisplayName\^(\^\fIstring\fP\^)
+.br
+      char *\fIstring\fP\^;
+.FN
+.IP \fIstring\fP 1i
+Specifies the character string.
+.LP
+.eM
+The
+.PN XDisplayName
+function returns the name of the display that 
+.PN XOpenDisplay
+would attempt to use.
+If a NULL string is specified,
+.PN XDisplayName
+looks in the environment for the display and returns the display name that
+.PN XOpenDisplay
+would attempt to use.
+This makes it easier to report to the user precisely which display the
+program attempted to open when the initial connection attempt failed.
+.LP
+.sp
+To handle fatal I/O errors, use
+.PN XSetIOErrorHandler .
+.IN "XSetIOErrorHandler" "" "@DEF@"
+.sM
+.FD 0
+int (*XSetIOErrorHandler\^(\^\fIhandler\fP\^)\^)\^(\^)
+.br
+      int (\^*\^\fIhandler\fP\^)(Display *);
+.FN
+.IP \fIhandler\fP 1i
+Specifies the program's supplied error handler.
+.LP
+.eM
+The
+.PN XSetIOErrorHandler
+sets the fatal I/O error handler.
+Xlib calls the program's supplied error handler if any sort of system call
+error occurs (for example, the connection to the server was lost).
+This is assumed to be a fatal condition,
+and the called routine should not return.
+If the I/O error handler does return,
+the client process exits.
+.LP
+Note that the previous error handler is returned.
+.bp

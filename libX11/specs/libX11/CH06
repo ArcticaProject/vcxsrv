@@ -1,0 +1,4773 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 6\fP\s-1
+
+\s+1\fBColor Management Functions\fP\s-1
+.sp 2
+.nr H1 6
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 6: Color Management Functions 
+.XE
+Each X window always has an associated colormap that
+provides a level of indirection between pixel values and colors displayed
+on the screen.
+Xlib provides functions that you can use to manipulate a colormap.
+The X protocol defines colors using values in the RGB color space.
+The RGB color space is device dependent;
+rendering an RGB value on differing output devices typically results
+in different colors.
+Xlib also provides a means for clients to specify color using
+device-independent color spaces for consistent results across devices.
+Xlib supports device-independent color spaces derivable from the CIE XYZ
+color space.
+This includes the CIE XYZ, xyY, L*u*v*, and L*a*b* color spaces as well as
+the TekHVC color space.
+.LP
+This chapter discusses how to:
+.IP \(bu 5
+Create, copy, and destroy a colormap
+.IP \(bu 5
+Specify colors by name or value
+.IP \(bu 5
+Allocate, modify, and free color cells
+.IP \(bu 5
+Read entries in a colormap
+.IP \(bu 5
+Convert between color spaces
+.IP \(bu 5
+Control aspects of color conversion
+.IP \(bu 5
+Query the color gamut of a screen
+.IP \(bu 5
+Add new color spaces
+.LP
+All functions, types, and symbols in this chapter with the prefix ``Xcms''
+are defined in
+.hN X11/Xcms.h .
+The remaining functions and types are defined in
+.hN X11/Xlib.h .
+.LP
+Functions in this chapter manipulate the representation of color on the
+screen.
+For each possible value that a pixel can take in a window,
+there is a color cell in the colormap.
+For example, 
+if a window is 4 bits deep, pixel values 0 through 15 are defined. 
+A colormap is a collection of color cells.
+A color cell consists of a triple of red, green, and blue (RGB) values.
+The hardware imposes limits on the number of significant
+bits in these values.
+As each pixel is read out of display memory, the pixel
+is looked up in a colormap.
+The RGB value of the cell determines what color is displayed on the screen.
+On a grayscale display with a black-and-white monitor, 
+the values are combined to determine the brightness on the screen.
+.LP
+Typically, an application allocates color cells or sets of color cells
+to obtain the desired colors.
+The client can allocate read-only cells.
+In which case, 
+the pixel values for these colors can be shared among multiple applications, 
+and the RGB value of the cell cannot be changed.
+If the client allocates read/write cells,
+they are exclusively owned by the client,
+and the color associated with the pixel value can be changed at will.
+Cells must be allocated (and, if read/write, initialized with an RGB value)
+by a client to obtain desired colors.
+The use of pixel value for an
+unallocated cell results in an undefined color.
+.LP
+Because colormaps are associated with windows, X supports displays
+with multiple colormaps and, indeed, different types of colormaps.
+If there are insufficient colormap resources in the display,
+some windows will display in their true colors, and others
+will display with incorrect colors.
+A window manager usually controls which windows are displayed
+in their true colors if more than one colormap is required for
+the color resources the applications are using.
+At any time, there is a set of installed colormaps for a screen.
+Windows using one of the installed colormaps display with true colors, and
+windows using other colormaps generally display with incorrect colors.
+You can control the set of installed colormaps by using
+.PN XInstallColormap
+and
+.PN XUninstallColormap .
+.LP
+Colormaps are local to a particular screen.
+Screens always have a default colormap,
+and programs typically allocate cells out of this colormap.
+Generally, you should not write applications that monopolize 
+color resources.
+Although some hardware supports multiple colormaps installed at one time,
+many of the hardware displays
+built today support only a single installed colormap, so the primitives
+are written to encourage sharing of colormap entries between applications.
+.LP
+The 
+.PN DefaultColormap 
+macro returns the default colormap.
+The 
+.PN DefaultVisual 
+macro
+returns the default visual type for the specified screen.
+.IN "Color map"
+Possible visual types are 
+.PN StaticGray , 
+.PN GrayScale , 
+.PN StaticColor ,
+.PN PseudoColor , 
+.PN TrueColor , 
+or 
+.PN DirectColor 
+(see section 3.1).
+.NH 2
+Color Structures
+.XS
+\*(SN Color Structures
+.XE
+.LP
+Functions that operate only on RGB color space values use an
+.PN XColor
+structure, which contains:
+.LP
+.IN "XColor" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	unsigned long pixel;	/* pixel value */
+	unsigned short red, green, blue;	/* rgb values */
+	char flags;	/* DoRed, DoGreen, DoBlue */	
+	char pad;
+} XColor;
+.De
+.LP
+.eM
+The red, green, and blue values are always in the range 0 to 65535
+inclusive, independent of the number of bits actually used in the
+display hardware.
+The server scales these values down to the range used by the hardware.
+Black is represented by (0,0,0), 
+and white is represented by (65535,65535,65535).
+.IN "Color"
+In some functions,
+the flags member controls which of the red, green, and blue members is used 
+and can be the inclusive OR of zero or more of
+.PN DoRed ,
+.PN DoGreen ,
+and 
+.PN DoBlue .
+.LP
+.sp
+Functions that operate on all color space values use an
+.PN XcmsColor
+structure.
+This structure contains a union of substructures,
+each supporting color specification encoding for a particular color space.
+Like the
+.PN XColor
+structure, the
+.PN XcmsColor
+structure contains pixel
+and color specification information (the spec member in the 
+.PN XcmsColor
+structure).
+.IN "XcmsColor" "" "@DEF@"
+.sM
+.LP
+.Ds 0
+.TA .5i 1i 2.5i
+.ta .5i 1i 2.5i
+typedef unsigned long XcmsColorFormat;			/* Color Specification Format */
+
+typedef struct {
+	union {
+		XcmsRGB RGB;
+		XcmsRGBi RGBi;
+		XcmsCIEXYZ CIEXYZ;
+		XcmsCIEuvY CIEuvY;
+		XcmsCIExyY CIExyY;
+		XcmsCIELab CIELab;
+		XcmsCIELuv CIELuv;
+		XcmsTekHVC TekHVC;
+		XcmsPad Pad;
+	} spec;
+	unsigned long pixel;
+	XcmsColorFormat format;
+} XcmsColor;			/* Xcms Color Structure */
+.De
+.LP
+.eM
+Because the color specification can be encoded for the various color spaces, 
+encoding for the spec member is identified by the format member,
+which is of type
+.PN XcmsColorFormat .
+The following macros define standard formats.
+.sM
+.TS
+lw(.5i) lw(1.6i) lw(1.4i) lw(1.5i).
+T{
+#define
+T}	T{
+.PN XcmsUndefinedFormat
+T}	T{
+0x00000000
+T}
+T{
+#define
+T}	T{
+.PN XcmsCIEXYZFormat
+T}	T{
+0x00000001
+T}	T{
+/* CIE XYZ */
+T}
+T{
+#define
+T}	T{
+.PN XcmsCIEuvYFormat
+T}	T{
+0x00000002
+T}	T{
+/* CIE u'v'Y */
+T}
+T{
+#define
+T}	T{
+.PN XcmsCIExyYFormat
+T}	T{
+0x00000003
+T}	T{
+/* CIE xyY */
+T}
+T{
+#define
+T}	T{
+.PN XcmsCIELabFormat
+T}	T{
+0x00000004
+T}	T{
+/* CIE L*a*b* */
+T}
+T{
+#define
+T}	T{
+.PN XcmsCIELuvFormat
+T}	T{
+0x00000005
+T}	T{
+/* CIE L*u*v* */
+T}
+T{
+#define
+T}	T{
+.PN XcmsTekHVCFormat
+T}	T{
+0x00000006
+T}	T{
+/* TekHVC */
+T}
+T{
+#define
+T}	T{
+.PN XcmsRGBFormat
+T}	T{
+0x80000000
+T}	T{
+/* RGB Device */
+T}
+T{
+#define
+T}	T{
+.PN XcmsRGBiFormat
+T}	T{
+0x80000001
+T}	T{
+/* RGB Intensity */
+T}
+.TE
+.LP
+.eM
+Formats for device-independent color spaces are
+distinguishable from those for device-dependent spaces by the 32nd bit.
+If this bit is set,
+it indicates that the color specification is in a device-dependent form;
+otherwise, it is in a device-independent form.
+If the 31st bit is set,
+this indicates that the color space has been added to Xlib at run time
+(see section 6.12.4).
+The format value for a color space added at run time may be different each
+time the program is executed.
+If references to such a color space must be made outside the client
+(for example, storing a color specification in a file),
+then reference should be made by color space string prefix
+(see 
+.PN XcmsFormatOfPrefix
+and
+.PN XcmsPrefixOfFormat ).
+.LP
+Data types that describe the color specification encoding for the various
+color spaces are defined as follows:
+.sM
+.IN "XcmsRGB" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef double XcmsFloat;
+
+typedef struct {
+	unsigned short red;	/* 0x0000 to 0xffff */
+	unsigned short green;	/* 0x0000 to 0xffff */
+	unsigned short blue;	/* 0x0000 to 0xffff */
+} XcmsRGB;		/* RGB Device */
+.De
+.IN "XcmsRGBi" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat red;	/* 0.0 to 1.0 */
+	XcmsFloat green;	/* 0.0 to 1.0 */
+	XcmsFloat blue;	/* 0.0 to 1.0 */
+} XcmsRGBi;		/* RGB Intensity */
+.De
+.IN "XcmsCIEXYZ" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat X;
+	XcmsFloat Y;	/* 0.0 to 1.0 */
+	XcmsFloat Z;
+} XcmsCIEXYZ;		/* CIE XYZ */
+.De
+.IN "XcmsCIEuvY" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat u_prime;	/* 0.0 to ~0.6 */
+	XcmsFloat v_prime;	/* 0.0 to ~0.6 */
+	XcmsFloat Y; 	/* 0.0 to 1.0 */
+} XcmsCIEuvY;		/* CIE u'v'Y */
+.De
+.IN "XcmsCIExyY" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat x; 	/* 0.0 to ~.75 */
+	XcmsFloat y; 	/* 0.0 to ~.85 */
+	XcmsFloat Y; 	/* 0.0 to 1.0 */
+} XcmsCIExyY;		/* CIE xyY */
+.De
+.IN "XcmsCIELab" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat L_star; 	/* 0.0 to 100.0 */
+	XcmsFloat a_star;
+	XcmsFloat b_star;
+} XcmsCIELab;		/* CIE L*a*b* */
+.De
+.IN "XcmsCIELuv" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat L_star; 	/* 0.0 to 100.0 */
+	XcmsFloat u_star;
+	XcmsFloat v_star;
+} XcmsCIELuv;		/* CIE L*u*v* */
+.De
+.IN "XcmsTekHVC" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat H; 	/* 0.0 to 360.0 */
+	XcmsFloat V; 	/* 0.0 to 100.0 */
+	XcmsFloat C; 	/* 0.0 to 100.0 */
+} XcmsTekHVC;		/* TekHVC */
+.De
+.IN "XcmsPad" "" "@DEF@"
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	XcmsFloat pad0;
+	XcmsFloat pad1;
+	XcmsFloat pad2;
+	XcmsFloat pad3;
+} XcmsPad;		/* four doubles */
+.De
+.LP
+.eM
+The device-dependent formats provided allow color specification in:
+.IP \(bu 5
+RGB Intensity
+.Pn ( XcmsRGBi )
+.IP
+Red, green, and blue linear intensity values,
+floating-point values from 0.0 to 1.0,
+where 1.0 indicates full intensity, 0.5 half intensity, and so on.
+.IP \(bu 5
+RGB Device
+.Pn ( XcmsRGB )
+.IP
+Red, green, and blue values appropriate for the specified output device.
+.PN XcmsRGB
+values are of type unsigned short,
+scaled from 0 to 65535 inclusive,
+and are interchangeable with the red, green, and blue values in an 
+.PN XColor
+structure. 
+.LP
+It is important to note that RGB Intensity values are not gamma corrected
+values.
+In contrast,
+RGB Device values generated as a result of converting color specifications 
+are always gamma corrected, and
+RGB Device values acquired as a result of querying a colormap
+or passed in by the client are assumed by Xlib to be gamma corrected.
+The term \fIRGB value\fP in this manual always refers to an RGB Device value.
+.NH 2
+Color Strings
+.XS
+\*(SN Color Strings
+.XE
+.LP
+Xlib provides a mechanism for using string names for colors.
+A color string may either contain an abstract color name
+or a numerical color specification.
+Color strings are case-insensitive.
+.LP
+Color strings are used in the following functions:
+.IP \(bu 5
+.PN XAllocNamedColor
+.IP \(bu 5
+.PN XcmsAllocNamedColor
+.IP \(bu 5
+.PN XLookupColor
+.IP \(bu 5
+.PN XcmsLookupColor
+.IP \(bu 5
+.PN XParseColor
+.IP \(bu 5
+.PN XStoreNamedColor
+.LP
+Xlib supports the use of abstract color names, for example, red or blue.
+A value for this abstract name is obtained by searching one or more color
+name databases.
+Xlib first searches zero or more client-side databases;
+the number, location, and content of these databases is
+implementation-dependent and might depend on the current locale.
+If the name is not found, Xlib then looks for the color in the
+X server's database.
+If the color name is not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+.LP
+A numerical color specification
+consists of a color space name and a set of values in the following syntax:
+.LP
+.sM
+.Ds 0
+\fI<color_space_name>\fP:\fI<value>/.../<value>\fP
+.De
+.LP
+.eM
+The following are examples of valid color strings.
+.LP
+.Ds 0
+"CIEXYZ:0.3227/0.28133/0.2493"
+"RGBi:1.0/0.0/0.0"
+"rgb:00/ff/00"
+"CIELuv:50.0/0.0/0.0"
+.De
+The syntax and semantics of numerical specifications are given
+for each standard color space in the following sections.
+.NH 3
+RGB Device String Specification
+.XS
+\*(SN RGB Device String Specification
+.XE
+.LP
+An RGB Device specification is identified by
+the prefix ``rgb:'' and conforms to the following syntax:
+.LP
+.\" Start marker code here
+.Ds 0
+rgb:\fI<red>/<green>/<blue>\fP
+
+    \fI<red>\fP, \fI<green>\fP, \fI<blue>\fP := \fIh\fP | \fIhh\fP | \fIhhh\fP | \fIhhhh\fP
+    \fIh\fP := single hexadecimal digits (case insignificant)
+.De
+.\" End marker code here
+.LP
+Note that \fIh\fP indicates the value scaled in 4 bits, 
+\fIhh\fP the value scaled in 8 bits,
+\fIhhh\fP the value scaled in 12 bits,
+and \fIhhhh\fP the value scaled in 16 bits, respectively.
+.LP
+Typical examples are the strings ``rgb:ea/75/52'' and ``rgb:ccc/320/320'',
+but mixed numbers of hexadecimal digit strings 
+(``rgb:ff/a5/0'' and ``rgb:ccc/32/0'')
+are also allowed.
+.LP
+For backward compatibility, an older syntax for RGB Device is
+supported, but its continued use is not encouraged.
+The syntax is an initial sharp sign character followed by
+a numeric specification, in one of the following formats:
+.LP
+.\" Start marker code here
+.Ds 0
+.TA 2i
+.ta 2i
+#RGB	(4 bits each)
+#RRGGBB	(8 bits each)
+#RRRGGGBBB	(12 bits each)
+#RRRRGGGGBBBB	(16 bits each)
+.De
+.\" End marker code here
+.LP
+The R, G, and B represent single hexadecimal digits.
+When fewer than 16 bits each are specified, 
+they represent the most significant bits of the value
+(unlike the ``rgb:'' syntax, in which values are scaled).
+For example, the string ``#3a7'' is the same as ``#3000a0007000''.
+.NH 3
+RGB Intensity String Specification
+.XS
+\*(SN RGB Intensity String Specification
+.XE
+.LP
+An RGB intensity specification is identified
+by the prefix ``rgbi:'' and conforms to the following syntax:
+.LP
+.\" Start marker code here
+.Ds 0
+rgbi:\fI<red>/<green>/<blue>\fP
+.De
+.\" End marker code here
+.LP
+Note that red, green, and blue are floating-point values
+between 0.0 and 1.0, inclusive.
+The input format for these values is an optional sign,
+a string of numbers possibly containing a decimal point,
+and an optional exponent field containing an E or e 
+followed by a possibly signed integer string.
+.NH 3
+Device-Independent String Specifications
+.XS
+\*(SN Device-Independent String Specifications
+.XE
+.LP
+The standard device-independent string specifications have
+the following syntax:
+.LP
+.\" Start marker code here
+.Ds 0
+CIEXYZ:\fI<X>/<Y>/<Z>\fP
+CIEuvY:\fI<u>/<v>/<Y>\fP
+CIExyY:\fI<x>/<y>/<Y>\fP
+CIELab:\fI<L>/<a>/<b>\fP
+CIELuv:\fI<L>/<u>/<v>\fP
+TekHVC:\fI<H>/<V>/<C>\fP
+.De
+.\" End marker code here
+.LP
+All of the values (C, H, V, X, Y, Z, a, b, u, v, y, x) are
+floating-point values.
+The syntax for these values is an optional plus or minus sign,
+a string of digits possibly containing a decimal point,
+and an optional exponent field consisting of an ``E'' or ``e''
+followed by an optional plus or minus followed by a string of digits.
+.NH 2
+Color Conversion Contexts and Gamut Mapping
+.XS
+\*(SN Color Conversion Contexts and Gamut Mapping
+.XE
+.LP
+When Xlib converts device-independent color specifications
+into device-dependent specifications and vice versa,
+it uses knowledge about the color limitations of the screen hardware.
+This information, typically called the device profile,
+.IN "Device profile"
+is available in a Color Conversion Context (CCC).
+.IN "Color Conversion Context"
+.IN "CCC"
+.LP
+Because a specified color may be outside the color gamut of the target screen
+and the white point associated with the color specification may differ
+from the white point inherent to the screen,
+Xlib applies gamut mapping when it encounters certain conditions:
+.IN "White point"
+.IP \(bu 5
+Gamut compression occurs when conversion of device-independent
+color specifications to device-dependent color specifications
+results in a color out of the target screen's gamut.
+.IP \(bu 5
+White adjustment occurs when the inherent white point of the screen
+differs from the white point assumed by the client.
+.LP
+Gamut handling methods are stored as callbacks in the CCC,
+which in turn are used by the color space conversion routines.
+Client data is also stored in the CCC for each callback.
+The CCC also contains the white point the client assumes to be
+associated with color specifications (that is, the Client White Point).
+.IN "Client White Point"
+.IN "Gamut compression"
+.IN "Gamut handling"
+.IN "White point adjustment"
+The client can specify the gamut handling callbacks and client data
+as well as the Client White Point.
+Xlib does not preclude the X client from performing other
+forms of gamut handling (for example, gamut expansion); 
+however, Xlib does not provide direct support for gamut handling
+other than white adjustment and gamut compression.
+.LP
+Associated with each colormap is an initial CCC transparently generated by
+Xlib.
+.IN "Color Conversion Context" "creation"
+Therefore,
+when you specify a colormap as an argument to an Xlib function,
+you are indirectly specifying a CCC.
+.IN "CCC" "of colormap"
+.IN "Color Conversion Context" "of colormap"
+There is a default CCC associated with each screen.
+Newly created CCCs inherit attributes from the default CCC,
+so the default CCC attributes can be modified to affect new CCCs.
+.IN "CCC" "default"
+.IN "Color Conversion Context" "default"
+.LP
+Xcms functions in which gamut mapping can occur return
+.PN Status 
+and have specific status values defined for them, 
+as follows:
+.IP \(bu 5
+.PN XcmsFailure
+indicates that the function failed.
+.IP \(bu 5
+.PN XcmsSuccess
+indicates that the function succeeded.
+In addition,
+if the function performed any color conversion,
+the colors did not need to be compressed.
+.IP \(bu 5
+.PN XcmsSuccessWithCompression
+indicates the function performed color conversion
+and at least one of the colors needed to be compressed.
+The gamut compression method is determined by the gamut compression
+procedure in the CCC that is specified directly as a function argument
+or in the CCC indirectly specified by means of the colormap argument.
+.NH 2
+Creating, Copying, and Destroying Colormaps
+.XS
+\*(SN Creating, Copying, and Destroying Colormaps
+.XE
+.LP
+To create a colormap for a screen, use
+.PN XCreateColormap .
+.IN "XCreateColormap" "" "@DEF@"
+.sM
+.FD 0
+Colormap XCreateColormap\^(\^\fIdisplay\fP, \fIw\fP\^, \fIvisual\fP\^, \fIalloc\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Visual *\fIvisual\fP\^;
+.br
+      int \fIalloc\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi on whose screen you want to create a colormap
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIvisual\fP 1i
+Specifies a visual type supported on the screen.
+If the visual type is not one supported by the screen, 
+a
+.PN BadMatch
+error results.
+.IP \fIalloc\fP 1i
+Specifies the colormap entries to be allocated.
+You can pass 
+.PN AllocNone 
+or 
+.PN AllocAll .
+.LP
+.eM
+The
+.PN XCreateColormap
+function creates a colormap of the specified visual type for the screen 
+on which the specified window resides and returns the colormap ID 
+associated with it.
+Note that the specified window is only used to determine the screen.
+.LP
+The initial values of the colormap entries are undefined for the 
+visual classes
+.PN GrayScale ,
+.PN PseudoColor ,
+and
+.PN DirectColor .
+For
+.PN StaticGray ,
+.PN StaticColor ,
+and
+.PN TrueColor ,
+the entries have defined values,
+but those values are specific to the visual and are not defined by X.
+For
+.PN StaticGray ,
+.PN StaticColor ,
+and
+.PN TrueColor ,
+alloc must be
+.PN AllocNone ,
+or a
+.PN BadMatch
+error results.
+For the other visual classes,
+if alloc is
+.PN AllocNone ,
+the colormap initially has no allocated entries,
+and clients can allocate them.
+For information about the visual types,
+see section 3.1.
+.LP
+If alloc is
+.PN AllocAll ,
+the entire colormap is allocated writable.
+The initial values of all allocated entries are undefined.
+For
+.PN GrayScale
+and
+.PN PseudoColor ,
+the effect is as if an
+.PN XAllocColorCells
+call returned all pixel values from zero to N \- 1,
+where N is the colormap entries value in the specified visual.
+For
+.PN DirectColor ,
+the effect is as if an
+.PN XAllocColorPlanes
+call returned a pixel value of zero and red_mask, green_mask, 
+and blue_mask values containing the same bits as the corresponding
+masks in the specified visual.
+However, in all cases,
+none of these entries can be freed by using
+.PN XFreeColors .
+.LP
+.PN XCreateColormap
+can generate
+.PN BadAlloc ,
+.PN BadMatch ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To create a new colormap when the allocation out of a previously
+shared colormap has failed because of resource exhaustion, use
+.PN XCopyColormapAndFree .
+.IN "XCopyColormapAndFree" "" "@DEF@"
+.sM
+.FD 0
+Colormap XCopyColormapAndFree\^(\^\fIdisplay\fP, \fIcolormap\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.LP
+.eM
+The
+.PN XCopyColormapAndFree
+function creates a colormap of the same visual type and for the same screen
+as the specified colormap and returns the new colormap ID.
+It also moves all of the client's existing allocation from the specified
+colormap to the new colormap with their color values intact 
+and their read-only or writable characteristics intact and frees those entries 
+in the specified colormap.
+Color values in other entries in the new colormap are undefined.
+If the specified colormap was created by the client with alloc set to
+.PN AllocAll ,
+the new colormap is also created with 
+.PN AllocAll ,
+all color values for all entries are copied from the specified colormap,
+and then all entries in the specified colormap are freed.
+If the specified colormap was not created by the client with
+.PN AllocAll ,
+the allocations to be moved are all those pixels and planes
+that have been allocated by the client using
+.PN XAllocColor ,
+.PN XAllocNamedColor ,
+.PN XAllocColorCells ,
+or
+.PN XAllocColorPlanes
+and that have not been freed since they were allocated.
+.LP
+.PN XCopyColormapAndFree
+can generate
+.PN BadAlloc
+and
+.PN BadColor 
+errors.
+.LP
+.sp
+To destroy a colormap, use 
+.PN XFreeColormap .
+.IN "XFreeColormap" "" "@DEF@"
+.sM
+.FD 0
+XFreeColormap\^(\^\fIdisplay\fP, \fIcolormap\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Cm that you want to destroy
+.IP \fIcolormap\fP 1i
+Specifies the colormap \*(Cm.
+.LP
+.eM
+The
+.PN XFreeColormap
+function deletes the association between the colormap resource ID 
+and the colormap and frees the colormap storage.
+However, this function has no effect on the default colormap for a screen.
+If the specified colormap is an installed map for a screen,
+it is uninstalled (see
+.PN XUninstallColormap ).
+If the specified colormap is defined as the colormap for a window (by
+.PN XCreateWindow ,
+.PN XSetWindowColormap ,
+or
+.PN XChangeWindowAttributes ),
+.PN XFreeColormap
+changes the colormap associated with the window to
+.PN None 
+and generates a
+.PN ColormapNotify
+event.
+X does not define the colors displayed for a window with a colormap of
+.PN None .
+.LP
+.PN XFreeColormap
+can generate a
+.PN BadColor 
+error.
+.NH 2
+Mapping Color Names to Values
+.XS
+\*(SN Mapping Color Names to Values
+.XE
+.LP
+.sp
+To map a color name to an RGB value, use
+.PN XLookupColor .
+.IN "Color" "naming"
+.IN "XLookupColor" "" "@DEF@"
+.sM
+.FD 0
+Status XLookupColor\^(\^\fIdisplay\fP, \fIcolormap\fP, \fIcolor_name\fP, \
+\fIexact_def_return\fP\^, \fIscreen_def_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      char *\fIcolor_name\fP\^;
+.br
+      XColor *\fIexact_def_return\fP\^, *\fIscreen_def_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor_name\fP 1i
+Specifies the color name string (for example, red) whose color 
+definition structure you want returned.
+.IP \fIexact_def_return\fP 1i
+Returns the exact RGB values.
+.IP \fIscreen_def_return\fP 1i
+Returns the closest RGB values provided by the hardware.
+.LP
+.eM
+The
+.PN XLookupColor
+function looks up the string name of a color with respect to the screen
+associated with the specified colormap.
+It returns both the exact color values and
+the closest values provided by the screen 
+with respect to the visual type of the specified colormap.
+If the color name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+.PN XLookupColor
+returns nonzero if the name is resolved;
+otherwise, it returns zero.
+.LP
+.PN XLookupColor
+can generate a
+.PN BadColor 
+error.
+.LP
+.sp
+To map a color name to the exact RGB value, use
+.PN XParseColor .
+.IN "Color" "naming"
+.IN "XParseColor" "" "@DEF@"
+.sM
+.FD 0
+Status XParseColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \^\fIspec\fP\^, \fIexact_def_return\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.br
+        Colormap \fIcolormap\fP\^;
+.br
+        char *\fIspec\fP\^;
+.br
+        XColor *\fIexact_def_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIspec\fP 1i
+Specifies the color name string;
+case is ignored.
+.IP \fIexact_def_return\fP 1i
+Returns the exact color value for later use and sets the
+.PN DoRed ,
+.PN DoGreen ,
+and
+.PN DoBlue
+flags.
+.LP
+.eM 
+The
+.PN XParseColor
+function looks up the string name of a color with respect to the screen
+associated with the specified colormap.
+It returns the exact color value.
+If the color name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+.PN XParseColor
+returns nonzero if the name is resolved;
+otherwise, it returns zero.
+.LP
+.PN XParseColor
+can generate a
+.PN BadColor 
+error.
+.LP
+.sp
+To map a color name to a value in an arbitrary color space, use
+.PN XcmsLookupColor .
+.IN "Color" "naming"
+.IN "XcmsLookupColor" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsLookupColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolor_string\fP\^, \fIcolor_exact_return\fP\^, \fIcolor_screen_return\fP\^,
+.br
+			 \fIresult_format\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      char *\fIcolor_string\fP\^;
+.br
+      XcmsColor *\fIcolor_exact_return\fP\^, *\fIcolor_screen_return\fP\^;
+.br
+      XcmsColorFormat \fIresult_format\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.ds St
+.IP \fIcolor_string\fP 1i
+Specifies the color string\*(St.
+.IP \fIcolor_exact_return\fP 1i
+Returns the color specification parsed from the color string
+or parsed from the corresponding string found in a color-name database.
+.IP \fIcolor_screen_return\fP 1i
+Returns the color that can be reproduced on the screen.
+.IP \fIresult_format\fP 1i
+Specifies the color format for the returned color
+specifications (color_screen_return and color_exact_return arguments).
+If the format is
+.PN XcmsUndefinedFormat
+and the color string contains a
+numerical color specification,
+the specification is returned in the format used in that numerical
+color specification.
+If the format is
+.PN XcmsUndefinedFormat
+and the color string contains a color name,
+the specification is returned in the format used 
+to store the color in the database.
+.LP
+.eM
+The
+.PN XcmsLookupColor
+function looks up the string name of a color with respect to the screen
+associated with the specified colormap.
+It returns both the exact color values and
+the closest values provided by the screen 
+with respect to the visual type of the specified colormap.
+The values are returned in the format specified by result_format.
+If the color name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+.PN XcmsLookupColor
+returns
+.PN XcmsSuccess
+or
+.PN XcmsSuccessWithCompression
+if the name is resolved; otherwise, it returns
+.PN XcmsFailure .
+If
+.PN XcmsSuccessWithCompression
+is returned, the color specification returned in 
+color_screen_return is the result of gamut compression.
+.NH 2
+Allocating and Freeing Color Cells
+.XS
+\*(SN Allocating and Freeing Color Cells
+.XE
+.LP
+There are two ways of allocating color cells: 
+explicitly as read-only entries, one pixel value at a time,
+or read/write,
+where you can allocate a number of color cells and planes simultaneously.
+.IN "Read-only colormap cells"
+A read-only cell has its RGB value set by the server.
+.IN "Read/write colormap cells"
+Read/write cells do not have defined colors initially;
+functions described in the next section must be used to store values into them.
+Although it is possible for any client to store values into a read/write
+cell allocated by another client,
+read/write cells normally should be considered private to the client
+that allocated them.
+.LP
+Read-only colormap cells are shared among clients.
+The server counts each allocation and freeing of the cell by clients.
+When the last client frees a shared cell, the cell is finally deallocated.
+If a single client allocates the same read-only cell multiple
+times, the server counts each such allocation, not just the first one.
+.LP
+.sp
+To allocate a read-only color cell with an RGB value, use
+.PN XAllocColor .
+.IN "Allocation" "read-only colormap cells"
+.IN "Read-only colormap cells" "allocating"
+.IN "Color" "allocation"
+.IN "XAllocColor" "" "@DEF@"
+.sM
+.FD 0
+Status XAllocColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIscreen_in_out\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XColor *\fIscreen_in_out\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIscreen_in_out\fP 1i
+Specifies and returns the values actually used in the colormap.
+.LP
+.eM
+The
+.PN XAllocColor
+function allocates a read-only colormap entry corresponding to the closest
+RGB value supported by the hardware.
+.PN XAllocColor
+returns the pixel value of the color closest to the specified
+RGB elements supported by the hardware
+and returns the RGB value actually used.
+The corresponding colormap cell is read-only.
+In addition,
+.PN XAllocColor
+returns nonzero if it succeeded or zero if it failed.
+.IN "Color map"
+.IN "Color" "allocation"
+.IN "Allocation" "colormap"
+.IN "read-only colormap cells"
+Multiple clients that request the same effective RGB value can be assigned
+the same read-only entry, thus allowing entries to be shared.
+When the last client deallocates a shared cell, it is deallocated.
+.PN XAllocColor
+does not use or affect the flags in the
+.PN XColor
+structure.
+.LP
+.PN XAllocColor
+can generate a
+.PN BadColor 
+error.
+.EQ
+delim %%
+.EN
+.LP
+.sp
+To allocate a read-only color cell with a color in arbitrary format, use
+.PN XcmsAllocColor .
+.IN "Allocation" "read-only colormap cells"
+.IN "Read-only colormap cells" "allocating"
+.IN "Color" "allocation"
+.IN "XcmsAllocColor" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsAllocColor\^(\^\fIdisplay\fP\^, \fIcolormap\fP\^, \fIcolor_in_out\fP\^, \fIresult_format\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XcmsColor *\fIcolor_in_out\fP\^;
+.br
+      XcmsColorFormat \fIresult_format\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor_in_out\fP 1i
+Specifies the color to allocate and returns the pixel and color 
+that is actually used in the colormap.
+.IP \fIresult_format\fP 1i
+Specifies the color format for the returned color specification.
+.LP
+.eM
+The
+.PN XcmsAllocColor
+function is similar to
+.PN XAllocColor
+except the color can be specified in any format.
+The
+.PN XcmsAllocColor
+function ultimately calls 
+.PN XAllocColor
+to allocate a read-only color cell (colormap entry) with the specified color.
+.PN XcmsAllocColor
+first converts the color specified
+to an RGB value and then passes this to
+.PN XAllocColor .
+.PN XcmsAllocColor
+returns the pixel value of the color cell and the color specification
+actually allocated.
+This returned color specification is the result of converting the RGB value
+returned by 
+.PN XAllocColor 
+into the format specified with the result_format argument.
+If there is no interest in a returned color specification, 
+unnecessary computation can be bypassed if result_format is set to
+.PN XcmsRGBFormat .
+The corresponding colormap cell is read-only.
+If this routine returns 
+.PN XcmsFailure , 
+the color_in_out color specification is left unchanged.
+.LP
+.PN XcmsAllocColor
+can generate a
+.PN BadColor
+error.
+.LP
+.sp
+To allocate a read-only color cell using a color name and return the closest
+color supported by the hardware in RGB format, use
+.PN XAllocNamedColor .
+.IN "Allocation" "read-only colormap cells"
+.IN "Read-only colormap cells" "allocating"
+.IN "Color" "naming"
+.IN "Color" "allocation"
+.IN "XAllocNamedColor" "" "@DEF@"
+.sM
+.FD 0
+Status XAllocNamedColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \
+\fIcolor_name\fP\^, \fIscreen_def_return\fP\^, \fIexact_def_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      char *\fIcolor_name\fP\^;
+.br
+      XColor *\fIscreen_def_return\fP\^, *\fIexact_def_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor_name\fP 1i
+Specifies the color name string (for example, red) whose color 
+definition structure you want returned.
+.IP \fIscreen_def_return\fP 1i
+Returns the closest RGB values provided by the hardware.
+.IP \fIexact_def_return\fP 1i
+Returns the exact RGB values.
+.LP
+.eM 
+The
+.PN XAllocNamedColor
+function looks up the named color with respect to the screen that is
+associated with the specified colormap.
+It returns both the exact database definition and
+the closest color supported by the screen.
+The allocated color cell is read-only.
+The pixel value is returned in screen_def_return.
+If the color name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+If screen_def_return and exact_def_return
+point to the same structure, the pixel field will be set correctly,
+but the color values are undefined.
+.PN XAllocNamedColor
+returns nonzero if a cell is allocated;
+otherwise, it returns zero.
+.LP
+.PN XAllocNamedColor
+can generate a
+.PN BadColor
+error. 
+.LP
+.sp
+To allocate a read-only color cell using a color name and return the closest
+color supported by the hardware in an arbitrary format, use
+.PN XcmsAllocNamedColor .
+.IN "Allocation" "read-only colormap cells"
+.IN "Read-only colormap cells" "allocating"
+.IN "Color" "naming"
+.IN "Color" "allocation"
+.IN "XcmsAllocNamedColor" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsAllocNamedColor\^(\^\fIdisplay\fP\^, \fIcolormap\fP\^, \fIcolor_string\fP\^, \fIcolor_screen_return\fP\^, \fIcolor_exact_return\fP\^,
+.br
+                            \fIresult_format\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      char *\fIcolor_string\fP\^;
+.br
+      XcmsColor *\fIcolor_screen_return\fP\^;
+.br
+      XcmsColor *\fIcolor_exact_return\fP\^;
+.br
+      XcmsColorFormat \fIresult_format\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.ds St \ whose color definition structure is to be returned
+.IP \fIcolor_string\fP 1i
+Specifies the color string\*(St.
+.IP \fIcolor_screen_return\fP 1i
+Returns the pixel value of the color cell and color specification 
+that actually is stored for that cell.
+.IP \fIcolor_exact_return\fP 1i
+Returns the color specification parsed from the color string
+or parsed from the corresponding string found in a color-name database.
+.IP \fIresult_format\fP 1i
+Specifies the color format for the returned color
+specifications (color_screen_return and color_exact_return arguments).
+If the format is
+.PN XcmsUndefinedFormat
+and the color string contains a
+numerical color specification,
+the specification is returned in the format used in that numerical
+color specification.
+If the format is
+.PN XcmsUndefinedFormat
+and the color string contains a color name,
+the specification is returned in the format used 
+to store the color in the database.
+.LP
+.eM
+The
+.PN XcmsAllocNamedColor
+function is similar to
+.PN XAllocNamedColor
+except that the color returned can be in any format specified.
+This function
+ultimately calls
+.PN XAllocColor
+to allocate a read-only color cell with
+the color specified by a color string.
+The color string is parsed into an
+.PN XcmsColor
+structure (see
+.PN XcmsLookupColor ),
+converted
+to an RGB value, and finally passed to
+.PN XAllocColor .
+If the color name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+.LP
+This function returns both the color specification as a result
+of parsing (exact specification) and the actual color specification
+stored (screen specification).
+This screen specification is the result of converting the RGB value
+returned by
+.PN XAllocColor
+into the format specified in result_format.
+If there is no interest in a returned color specification,
+unnecessary computation can be bypassed if result_format is set to
+.PN XcmsRGBFormat .
+If color_screen_return and color_exact_return
+point to the same structure, the pixel field will be set correctly,
+but the color values are undefined.
+.LP
+.PN XcmsAllocNamedColor
+can generate a
+.PN BadColor
+error.
+.LP
+.sp
+To allocate read/write color cell and color plane combinations for a
+.PN PseudoColor
+model, use
+.PN XAllocColorCells .
+.IN "Read/write colormap cells" "allocating"
+.IN "Allocation" "read/write colormap cells"
+.IN "Color" "allocation"
+.IN "XAllocColorCells" "" "@DEF@"
+.sM
+.FD 0
+Status XAllocColorCells\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcontig\fP\^, \
+\fIplane_masks_return\fP\^, \fInplanes\fP\^, 
+.br
+                          \fIpixels_return\fP\^, \fInpixels\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      Bool \fIcontig\fP\^;
+.br
+      unsigned long \fIplane_masks_return\fP[\^]\^;
+.br
+      unsigned int \fInplanes\fP\^;
+.br
+      unsigned long \fIpixels_return\fP[\^]\^;
+.br
+      unsigned int \fInpixels\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcontig\fP 1i
+Specifies a Boolean value that indicates whether the planes must be contiguous.
+.IP \fIplane_mask_return\fP 1i
+Returns an array of plane masks.
+.\" *** JIM: NEED MORE INFO FOR THIS. ***
+.IP \fInplanes\fP 1i
+Specifies the number of plane masks that are to be returned in the plane masks 
+array. 
+.IP \fIpixels_return\fP 1i
+Returns an array of pixel values. 
+.IP \fInpixels\fP 1i
+Specifies the number of pixel values that are to be returned in the 
+pixels_return array. 
+.LP
+.eM
+.EQ
+delim %%
+.EN
+The
+.PN XAllocColorCells
+function allocates read/write color cells.
+The number of colors must be positive and the number of planes nonnegative,
+or a
+.PN BadValue
+error results.
+If ncolors and nplanes are requested, 
+then ncolors pixels
+and nplane plane masks are returned.
+No mask will have any bits set to 1 in common with
+any other mask or with any of the pixels.
+By ORing together each pixel with zero or more masks,
+ncolors * %2 sup nplanes% distinct pixels can be produced.
+All of these are
+allocated writable by the request.
+For 
+.PN GrayScale 
+or 
+.PN PseudoColor , 
+each mask has exactly one bit set to 1. 
+For 
+.PN DirectColor , 
+each has exactly three bits set to 1.
+If contig is 
+.PN True 
+and if all masks are ORed
+together, a single contiguous set of bits set to 1 will be formed for 
+.PN GrayScale
+or 
+.PN PseudoColor 
+and three contiguous sets of bits set to 1 (one within each
+pixel subfield) for 
+.PN DirectColor .
+The RGB values of the allocated
+entries are undefined.
+.PN XAllocColorCells
+returns nonzero if it succeeded or zero if it failed.
+.LP
+.PN XAllocColorCells
+can generate
+.PN BadColor
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To allocate read/write color resources for a
+.PN DirectColor
+model, use
+.PN XAllocColorPlanes .
+.IN "Read/write colormap planes" "allocating"
+.IN "Allocation" "read/write colormap planes"
+.IN "Color" "allocation"
+.IN "XAllocColorPlanes" "" "@DEF@"
+.sM
+.FD 0
+Status XAllocColorPlanes\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcontig\fP\^, \fIpixels_return\fP\^, \fIncolors\fP\^, \fInreds\fP\^, \fIngreens\fP\^, 
+.br
+                           \fInblues\fP\^, \fIrmask_return\fP\^, \fIgmask_return\fP\^, \fIbmask_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      Bool \fIcontig\fP\^;
+.br
+      unsigned long \fIpixels_return\fP[\^]\^;
+.br
+      int \fIncolors\fP\^;
+.br
+      int \fInreds\fP\^, \fIngreens\fP\^, \fInblues\fP\^;
+.br
+      unsigned long *\fIrmask_return\fP\^, *\fIgmask_return\fP\^, *\fIbmask_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcontig\fP 1i
+Specifies a Boolean value that indicates whether the planes must be contiguous.
+.IP \fIpixels_return\fP 1i
+Returns an array of pixel values. 
+.PN XAllocColorPlanes
+returns the pixel values in this array.
+.IP \fIncolors\fP 1i
+Specifies the number of pixel values that are to be returned in the 
+pixels_return array. 
+.IP \fInreds\fP 1i
+.br
+.ns
+.IP \fIngreens\fP 1i
+.br
+.ns
+.IP \fInblues\fP 1i
+.br
+.ns
+Specify the number of red, green, and blue planes.
+The value you pass must be nonnegative. 
+.IP \fIrmask_return\fP 1i
+.br
+.ns
+.IP \fIgmask_return\fP 1i
+.br
+.ns
+.IP \fIbmask_return\fP 1i
+Return bit masks for the red, green, and blue planes.
+.LP
+.eM
+.EQ
+delim %%
+.EN
+The specified ncolors must be positive; 
+and nreds, ngreens, and nblues must be nonnegative,
+or a
+.PN BadValue
+error results.
+If ncolors colors, nreds reds, ngreens greens, and nblues blues are requested, 
+ncolors pixels are returned; and the masks have nreds, ngreens, and 
+nblues bits set to 1, respectively.
+If contig is 
+.PN True , 
+each mask will have
+a contiguous set of bits set to 1.
+No mask will have any bits set to 1 in common with
+any other mask or with any of the pixels.
+For 
+.PN DirectColor , 
+each mask
+will lie within the corresponding pixel subfield.
+By ORing together
+subsets of masks with each pixel value, 
+ncolors * %2 sup (nreds+ngreens+nblues)% distinct pixel values can be produced. 
+All of these are allocated by the request.
+However, in the
+colormap, there are only ncolors * %2 sup nreds% independent red entries, 
+ncolors * %2 sup ngreens% independent green entries, 
+and ncolors * %2 sup nblues% independent blue entries. 
+This is true even for 
+.PN PseudoColor .
+When the colormap entry of a pixel
+value is changed (using 
+.PN XStoreColors ,
+.PN XStoreColor ,
+or 
+.PN XStoreNamedColor ),
+the pixel is decomposed according to the masks, 
+and the corresponding independent entries are updated.
+.PN XAllocColorPlanes
+returns nonzero if it succeeded or zero if it failed.
+.LP
+.PN XAllocColorPlanes
+can generate
+.PN BadColor
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+.IN "Freeing" "colors"
+To free colormap cells, use
+.PN XFreeColors .
+.IN "XFreeColors" "" "@DEF@"
+.IN "Color" "deallocation"
+.sM
+.FD 0
+XFreeColors\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIpixels\fP\^, \fInpixels\fP\^, \fIplanes\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      unsigned long \fIpixels\fP\^[\^];
+.br
+      int \fInpixels\fP\^;
+.br
+      unsigned long \fIplanes\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.ds Pi that map to the cells in the specified colormap
+.IP \fIpixels\fP 1i
+Specifies an array of pixel values \*(Pi. 
+.IP \fInpixels\fP 1i
+Specifies the number of pixels. 
+.IP \fIplanes\fP 1i
+Specifies the planes you want to free.
+.LP
+.eM
+The
+.PN XFreeColors
+function frees the cells represented by pixels whose values are in the
+pixels array.
+The planes argument should not have any bits set to 1 in common with any of the
+pixels. 
+The set of all pixels is produced by ORing together subsets of
+the planes argument with the pixels.
+The request frees all of these pixels that
+were allocated by the client (using 
+.IN XAllocColor
+.IN XAllocNamedColor
+.IN XAllocColorCells
+.IN XAllocColorPlanes
+.PN XAllocColor , 
+.PN XAllocNamedColor ,
+.PN XAllocColorCells ,
+and 
+.PN XAllocColorPlanes ).
+Note that freeing an
+individual pixel obtained from 
+.PN XAllocColorPlanes 
+may not actually allow
+it to be reused until all of its related pixels are also freed.
+Similarly,
+a read-only entry is not actually freed until it has been freed by all clients,
+and if a client allocates the same read-only entry multiple times,
+it must free the entry that many times before the entry is actually freed.
+.LP
+All specified pixels that are allocated by the client in the colormap are
+freed, even if one or more pixels produce an error. 
+If a specified pixel is not a valid index into the colormap, a 
+.PN BadValue 
+error results.
+If a specified pixel is not allocated by the
+client (that is, is unallocated or is only allocated by another client)
+or if the colormap was created with all entries writable (by passing
+.PN AllocAll
+to
+.PN XCreateColormap ),
+a
+.PN BadAccess
+error results. 
+If more than one pixel is in error, 
+the one that gets reported is arbitrary.
+.LP
+.PN XFreeColors
+can generate
+.PN BadAccess ,
+.PN BadColor ,
+and
+.PN BadValue 
+errors.
+.NH 2
+Modifying and Querying Colormap Cells
+.XS
+\*(SN Modifying and Querying Colormap Cells 
+.XE
+.LP
+.sp
+To store an RGB value in a single colormap cell, use
+.PN XStoreColor .
+.IN "Color" "storing"
+.IN "XStoreColor" "" "@DEF@"
+.sM
+.FD 0
+XStoreColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolor\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XColor *\fIcolor\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor\fP 1i
+Specifies the pixel and RGB values.
+.LP
+.eM
+The
+.PN XStoreColor
+function changes the colormap entry of the pixel value specified in the
+pixel member of the
+.PN XColor
+structure.
+You specified this value in the
+pixel member of the
+.PN XColor
+structure.
+This pixel value must be a read/write cell and a valid index into the colormap.
+If a specified pixel is not a valid index into the colormap,
+a
+.PN BadValue
+error results.
+.PN XStoreColor
+also changes the red, green, and/or blue color components.
+You specify which color components are to be changed by setting
+.PN DoRed ,
+.PN DoGreen ,
+and/or
+.PN DoBlue
+in the flags member of the
+.PN XColor
+structure.
+If the colormap is an installed map for its screen, 
+the changes are visible immediately.
+.LP
+.PN XStoreColor
+can generate
+.PN BadAccess ,
+.PN BadColor ,
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To store multiple RGB values in multiple colormap cells, use
+.PN XStoreColors .
+.IN "Color" "storing"
+.IN "XStoreColors" "" "@DEF@"
+.sM
+.FD 0
+XStoreColors\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolor\fP\^, \fIncolors\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XColor \fIcolor\fP\^[\^]\^;
+.br
+      int \fIncolors\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor\fP 1i
+Specifies an array of color definition structures to be stored.
+.IP \fIncolors\fP 1i
+.\"Specifies the number of color definition structures. 
+Specifies the number of 
+.PN XColor
+structures in the color definition array.
+.LP
+.eM
+The
+.PN XStoreColors
+function changes the colormap entries of the pixel values
+specified in the pixel members of the
+.PN XColor
+structures.
+You specify which color components are to be changed by setting 
+.PN DoRed ,
+.PN DoGreen ,
+and/or
+.PN DoBlue
+in the flags member of the
+.PN XColor
+structures.
+If the colormap is an installed map for its screen, the
+changes are visible immediately.
+.PN XStoreColors 
+changes the specified pixels if they are allocated writable in the colormap 
+by any client, even if one or more pixels generates an error.
+If a specified pixel is not a valid index into the colormap, a
+.PN BadValue
+error results.
+If a specified pixel either is unallocated or is allocated read-only, a
+.PN BadAccess
+error results.
+If more than one pixel is in error, 
+the one that gets reported is arbitrary.
+.LP
+.PN XStoreColors
+can generate
+.PN BadAccess ,
+.PN BadColor ,
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To store a color of arbitrary format in a single colormap cell, use
+.PN XcmsStoreColor .
+.IN "Color" "storing"
+.IN "XcmsStoreColor" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsStoreColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolor\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XcmsColor *\fIcolor\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor\fP 1i
+Specifies the color cell and the color to store.
+Values specified in this
+.PN XcmsColor
+structure remain unchanged on return.
+.LP
+.eM
+The
+.PN XcmsStoreColor
+function converts the color specified in the
+.PN XcmsColor
+structure into RGB values.
+It then uses this RGB specification in an
+.PN XColor
+structure, whose three flags 
+.Pn ( DoRed , 
+.PN DoGreen ,
+and
+.PN DoBlue )
+are set, in a call to
+.PN XStoreColor
+to change the color cell specified by the pixel member of the
+.PN XcmsColor
+structure.
+This pixel value must be a valid index for the specified colormap,
+and the color cell specified by the pixel value must be a read/write cell.
+If the pixel value is not a valid index, a
+.PN BadValue
+error results.
+If the color cell is unallocated or is allocated read-only, a
+.PN BadAccess
+error results.
+If the colormap is an installed map for its screen, 
+the changes are visible immediately.
+.LP
+Note that 
+.PN XStoreColor
+has no return value; therefore, an
+.PN XcmsSuccess
+return value from this function indicates that the conversion 
+to RGB succeeded and the call to
+.PN XStoreColor
+was made.
+To obtain the actual color stored, use
+.PN XcmsQueryColor .
+Because of the screen's hardware limitations or gamut compression,
+the color stored in the colormap may not be identical
+to the color specified.
+.LP
+.PN XcmsStoreColor
+can generate
+.PN BadAccess ,
+.PN BadColor ,
+and
+.PN BadValue
+errors.
+.LP
+.sp
+To store multiple colors of arbitrary format in multiple colormap cells, use
+.PN XcmsStoreColors .
+.IN "Color" "storing"
+.IN "XcmsStoreColors" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsStoreColors\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolors\fP\^, \fIncolors\fP\^, \fIcompression_flags_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XcmsColor \fIcolors\fP\^[\^]\^;
+.br
+      int \fIncolors\fP\^;
+.br
+      Bool \fIcompression_flags_return\fP\^[\^]\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolors\fP 1i
+Specifies the color specification array of
+.PN XcmsColor
+structures, each specifying a color cell and the color to store in that
+cell.
+Values specified in the array remain unchanged upon return.
+.IP \fIncolors\fP 1i
+Specifies the number of 
+.PN XcmsColor
+structures in the color-specification array.
+.IP \fIcompression_flags_return\fP 1i
+Returns an array of Boolean values indicating compression status.
+If a non-NULL pointer is supplied,
+each element of the array is set to
+.PN True
+if the corresponding color was compressed and
+.PN False
+otherwise.
+Pass NULL if the compression status is not useful.
+.LP
+.eM
+The
+.PN XcmsStoreColors
+function converts the colors specified in the array of
+.PN XcmsColor
+structures into RGB values and then uses these RGB specifications in
+.PN XColor
+structures, whose three flags 
+.Pn ( DoRed , 
+.PN DoGreen ,
+and
+.PN DoBlue )
+are set, in a call to
+.PN XStoreColors
+to change the color cells specified by the pixel member of the corresponding
+.PN XcmsColor
+structure.
+Each pixel value must be a valid index for the specified colormap,
+and the color cell specified by each pixel value must be a read/write cell.
+If a pixel value is not a valid index, a
+.PN BadValue
+error results.
+If a color cell is unallocated or is allocated read-only, a
+.PN BadAccess
+error results.
+If more than one pixel is in error,
+the one that gets reported is arbitrary.
+If the colormap is an installed map for its screen, 
+the changes are visible immediately.
+.LP
+Note that 
+.PN XStoreColors
+has no return value; therefore, an
+.PN XcmsSuccess
+return value from this function indicates that conversions 
+to RGB succeeded and the call to
+.PN XStoreColors
+was made.
+To obtain the actual colors stored, use
+.PN XcmsQueryColors .
+Because of the screen's hardware limitations or gamut compression,
+the colors stored in the colormap may not be identical
+to the colors specified.
+.LP
+.PN XcmsStoreColors
+can generate
+.PN BadAccess ,
+.PN BadColor ,
+and
+.PN BadValue
+errors.
+.LP
+.sp
+To store a color specified by name in a single colormap cell, use
+.PN XStoreNamedColor .
+.IN "Color" "storing"
+.IN "Color" "naming"
+.IN "XStoreNamedColor" "" "@DEF@"
+.sM
+.FD 0
+XStoreNamedColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolor\fP\^, \fIpixel\fP\^, \fIflags\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      char *\^\fIcolor\fP\^;
+.br
+      unsigned long \fIpixel\fP\^;
+.br
+      int \fIflags\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor\fP 1i
+Specifies the color name string (for example, red). 
+.IP \fIpixel\fP 1i
+Specifies the entry in the colormap. 
+.IP \fIflags\fP 1i
+Specifies which red, green, and blue components are set.
+.LP
+.eM 
+The
+.PN XStoreNamedColor
+function looks up the named color with respect to the screen associated with
+the colormap and stores the result in the specified colormap.
+The pixel argument determines the entry in the colormap.
+The flags argument determines which of the red, green, and blue components 
+are set. 
+You can set this member to the
+bitwise inclusive OR of the bits 
+.PN DoRed , 
+.PN DoGreen , 
+and 
+.PN DoBlue .
+If the color name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+If the specified pixel is not a valid index into the colormap, a
+.PN BadValue
+error results.
+If the specified pixel either is unallocated or is allocated read-only, a
+.PN BadAccess
+error results.
+.LP
+.PN XStoreNamedColor
+can generate
+.PN BadAccess ,
+.PN BadColor ,
+.PN BadName ,
+and 
+.PN BadValue 
+errors.
+.LP
+The
+.PN XQueryColor
+and
+.PN XQueryColors
+functions take pixel values in the pixel member of
+.PN XColor
+structures and store in the structures the RGB values for those
+pixels from the specified colormap.
+The values returned for an unallocated entry are undefined.
+These functions also set the flags member in the
+.PN XColor
+structure to all three colors.
+If a pixel is not a valid index into the specified colormap, a
+.PN BadValue
+error results.
+If more than one pixel is in error,
+the one that gets reported is arbitrary.
+.LP
+.sp
+To query the RGB value of a single colormap cell, use
+.PN XQueryColor .
+.IN "Color" "querying"
+.IN "XQueryColor" "" "@DEF@"
+.sM
+.FD 0
+XQueryColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIdef_in_out\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XColor *\fIdef_in_out\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIdef_in_out\fP 1i
+Specifies and returns the RGB values for the pixel specified in the structure.
+.LP
+.eM
+The
+.PN XQueryColor
+function returns the current RGB value for the pixel in the
+.PN XColor
+structure and sets the
+.PN DoRed ,
+.PN DoGreen ,
+and
+.PN DoBlue
+flags.
+.LP
+.PN XQueryColor
+can generate
+.PN BadColor
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To query the RGB values of multiple colormap cells, use
+.PN XQueryColors .
+.IN "Color" "querying"
+.IN "XQueryColors" "" "@DEF@"
+.sM
+.FD 0
+XQueryColors\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIdefs_in_out\fP\^, \fIncolors\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XColor \fIdefs_in_out\fP[\^]\^;
+.br
+      int \fIncolors\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIdefs_in_out\fP 1i
+Specifies and returns an array of color definition structures for the pixel
+specified in the structure.
+.IP \fIncolors\fP 1i
+.\"Specifies the number of color definition structures. 
+Specifies the number of 
+.PN XColor
+structures in the color definition array.
+.LP
+.eM
+The
+.PN XQueryColors
+function returns the RGB value for each pixel in each
+.PN XColor
+structure and sets the
+.PN DoRed ,
+.PN DoGreen ,
+and
+.PN DoBlue
+flags in each structure.
+
+.LP
+.PN XQueryColors
+can generate
+.PN BadColor
+and
+.PN BadValue 
+errors.
+.sp
+.LP
+To query the color of a single colormap cell in an arbitrary format, use
+.PN XcmsQueryColor .
+.IN "Color" "querying"
+.IN "XcmsQueryColor" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsQueryColor\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolor_in_out\fP\^, \fIresult_format\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XcmsColor *\fIcolor_in_out\fP\^;
+.br
+      XcmsColorFormat \fIresult_format\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolor_in_out\fP 1i
+Specifies the pixel member that indicates the color cell to query.
+The color specification stored for the color cell is returned in this
+.PN XcmsColor
+structure.
+.IP \fIresult_format\fP 1i
+Specifies the color format for the returned color specification.
+.LP
+.eM
+The
+.PN XcmsQueryColor
+function obtains the RGB value
+for the pixel value in the pixel member of the specified
+.PN XcmsColor
+structure and then
+converts the value to the target format as
+specified by the result_format argument.
+If the pixel is not a valid index in the specified colormap, a
+.PN BadValue
+error results.
+.LP
+.PN XcmsQueryColor
+can generate
+.PN BadColor
+and
+.PN BadValue
+errors.
+.sp
+.LP
+To query the color of multiple colormap cells in an arbitrary format, use
+.PN XcmsQueryColors .
+.IN "Color" "querying"
+.IN "XcmsQueryColors" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsQueryColors\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIcolors_in_out\fP\^, \fIncolors\fP\^, \fIresult_format\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XcmsColor \fIcolors_in_out\fP\^[\^]\^;
+.br
+      unsigned int \fIncolors\fP\^;
+.br
+      XcmsColorFormat \fIresult_format\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIcolors_in_out\fP 1i
+Specifies an array of
+.PN XcmsColor
+structures, each pixel member indicating the color cell to query.
+The color specifications for the color cells are returned in these structures.
+.IP \fIncolors\fP 1i
+Specifies the number of 
+.PN XcmsColor
+structures in the color-specification array.
+.IP \fIresult_format\fP 1i
+Specifies the color format for the returned color specification.
+.LP
+.eM
+The
+.PN XcmsQueryColors
+function obtains the RGB values
+for pixel values in the pixel members of
+.PN XcmsColor
+structures and then
+converts the values to the target format as
+specified by the result_format argument.
+If a pixel is not a valid index into the specified colormap, a
+.PN BadValue
+error results.
+If more than one pixel is in error,
+the one that gets reported is arbitrary.
+.LP
+.PN XcmsQueryColors
+can generate
+.PN BadColor
+and
+.PN BadValue
+errors.
+.NH 2
+Color Conversion Context Functions
+.XS
+\*(SN Color Conversion Context Functions
+.XE
+.LP
+This section describes functions to create, modify,
+and query Color Conversion Contexts (CCCs).
+.LP
+Associated with each colormap is an initial CCC transparently generated by
+Xlib.
+.IN "Color Conversion Context" "creation"
+Therefore, when you specify a colormap as an argument to a function,
+you are indirectly specifying a CCC.
+.IN "CCC" "of colormap"
+.IN "Color Conversion Context" "of colormap"
+The CCC attributes that can be modified by the X client are:
+.IP \(bu 5
+Client White Point
+.IP \(bu 5
+Gamut compression procedure and client data
+.IP \(bu 5
+White point adjustment procedure and client data
+.LP
+The initial values for these attributes are implementation specific.
+The CCC attributes for subsequently created CCCs can be defined
+by changing the CCC attributes of the default CCC.
+.IN "CCC" "default"
+.IN "Color Conversion Context" "default"
+There is a default CCC associated with each screen.
+.NH 3
+Getting and Setting the Color Conversion Context of a Colormap
+.XS
+\*(SN Getting and Setting the Color Conversion Context of a Colormap
+.XE
+.LP
+.sp
+To obtain the CCC associated with a colormap, use
+.PN XcmsCCCOfColormap .
+.IN "XcmsCCCOfColormap" "" "@DEF@"
+.IN "Colormap" "CCC of"
+.IN "CCC" "of colormap"
+.IN "Color Conversion Context" "of colormap"
+.sM
+.FD 0
+XcmsCCC XcmsCCCOfColormap\^(\^\fIdisplay\fP, \fIcolormap\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.LP
+.eM
+The
+.PN XcmsCCCOfColormap
+function returns the CCC associated with the specified colormap.
+Once obtained, 
+the CCC attributes can be queried or modified.
+Unless the CCC associated with the specified colormap is changed with
+.PN XcmsSetCCCOfColormap ,
+this CCC is used when the specified colormap is used as an argument 
+to color functions.
+.sp
+.LP
+To change the CCC associated with a colormap, use
+.PN XcmsSetCCCOfColormap .
+.IN "XcmsSetCCCOfColormap" "" "@DEF@"
+.IN "Colormap" "CCC of"
+.IN "CCC" "of colormap"
+.IN "Color Conversion Context" "of colormap"
+.sM
+.FD 0
+XcmsCCC XcmsSetCCCOfColormap\^(\^\fIdisplay\fP, \fIcolormap\fP\^, \fIccc\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.br
+      XcmsCCC \fIccc\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.LP
+.eM
+The
+.PN XcmsSetCCCOfColormap
+function changes the CCC associated with the specified colormap.
+It returns the CCC previously associated with the colormap.
+If they are not used again in the application,
+CCCs should be freed by calling
+.PN XcmsFreeCCC .
+Several colormaps may share the same CCC without restriction; this
+includes the CCCs generated by Xlib with each colormap.  Xlib, however,
+creates a new CCC with each new colormap.
+.NH 3
+Obtaining the Default Color Conversion Context
+.XS
+\*(SN Obtaining the Default Color Conversion Context
+.XE
+.LP
+You can change the default CCC attributes for subsequently created CCCs
+by changing the CCC attributes of the default CCC.
+.IN "CCC" "default"
+.IN "Color Conversion Context" "default"
+A default CCC is associated with each screen.
+.sp
+.LP
+To obtain the default CCC for a screen, use
+.PN XcmsDefaultCCC .
+.IN "XcmsDefaultCCC" "" "@DEF@"
+.IN "Color Conversion Context" "default"
+.IN "CCC" "default"
+.sM
+.FD 0
+XcmsCCC XcmsDefaultCCC\^(\^\fIdisplay\fP, \fIscreen_number\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIscreen_number\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIscreen_number\fP 1i
+Specifies the appropriate screen number on the host server.
+.LP
+.eM
+The
+.PN XcmsDefaultCCC
+function returns the default CCC for the specified screen.
+Its visual is the default visual of the screen.
+Its initial gamut compression and white point
+adjustment procedures as well as the associated client data are implementation
+specific.
+.NH 3
+Color Conversion Context Macros
+.XS
+\*(SN Color Conversion Context Macros
+.XE
+.LP
+Applications should not directly modify any part of the
+.PN XcmsCCC .
+The following lists the C language macros, their corresponding function
+equivalents for other language bindings, and what data they both
+can return.
+.sp
+.LP
+.IN "DisplayOfCCC" "" "@DEF@"
+.IN "XcmsDisplayOfCCC" "" "@DEF@"
+.sM
+.FD 0
+DisplayOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.sp
+Display *XcmsDisplayOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.LP
+.eM
+Both return the display associated with the specified CCC.
+.LP
+.sp
+.IN "VisualOfCCC" "" "@DEF@"
+.IN "XcmsVisualOfCCC" "" "@DEF@"
+.sM
+.FD 0
+VisualOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.sp
+Visual *XcmsVisualOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.LP
+.eM
+Both return the visual associated with the specified CCC.
+.sp
+.LP
+.IN "ScreenNumberOfCCC" "" "@DEF@"
+.IN "XcmsScreenNumberOfCCC" "" "@DEF@"
+.sM
+.FD 0
+ScreenNumberOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.sp
+int XcmsScreenNumberOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.LP
+.eM
+Both return the number of the screen associated with the specified CCC.
+.sp
+.LP
+.IN "ScreenWhitePointOfCCC" "" "@DEF@"
+.IN "XcmsScreenWhitePointOfCCC" "" "@DEF@"
+.sM
+.FD 0
+ScreenWhitePointOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.sp
+XcmsColor *XcmsScreenWhitePointOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.LP
+.eM
+Both return the white point of the screen associated with the specified CCC.
+.sp
+.LP
+.IN "ClientWhitePointOfCCC" "" "@DEF@"
+.IN "XcmsClientWhitePointOfCCC" "" "@DEF@"
+.sM
+.FD 0
+ClientWhitePointOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.sp
+XcmsColor *XcmsClientWhitePointOfCCC\^(\^\fIccc\fP\^)
+.br
+     XcmsCCC \fIccc\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.LP
+.eM
+Both return the Client White Point of the specified CCC.
+.NH 3
+Modifying Attributes of a Color Conversion Context
+.XS
+\*(SN Modifying Attributes of a Color Conversion Context
+.XE
+.LP
+To set the Client White Point in the CCC, use
+.PN XcmsSetWhitePoint .
+.IN "XcmsSetWhitePoint" "" "@DEF@"
+.IN "Client White Point" "of Color Conversion Context"
+.sM
+.FD 0
+Status XcmsSetWhitePoint\^(\^\fIccc\fP\^, \fIcolor\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColor *\fIcolor\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.ds Co new Client White Point
+.IP \fIcolor\fP 1i
+Specifies the \*(Co.
+.LP
+.eM
+The
+.PN XcmsSetWhitePoint
+function changes the Client White Point in the specified CCC.
+Note that the pixel member is ignored 
+and that the color specification is left unchanged upon return.
+The format for the new white point must be
+.PN XcmsCIEXYZFormat ,
+.PN XcmsCIEuvYFormat ,
+.PN XcmsCIExyYFormat ,
+or
+.PN XcmsUndefinedFormat .
+If the color argument is NULL, this function sets the format component of the
+Client White Point specification to
+.PN XcmsUndefinedFormat ,
+indicating that the Client White Point is assumed to be the same as the
+Screen White Point.
+.LP
+This function returns nonzero status
+if the format for the new white point is valid;
+otherwise, it returns zero.
+
+.sp
+.LP
+To set the gamut compression procedure and corresponding client data
+in a specified CCC, use
+.PN XcmsSetCompressionProc .
+.IN "XcmsSetCompressionProc" "" "@DEF@"
+.IN "Gamut compression" "setting in Color Conversion Context"
+.IN "Gamut compression" "procedure"
+.IN "Gamut compression" "client data"
+.sM
+.FD 0
+XcmsCompressionProc XcmsSetCompressionProc\^(\^\fIccc\fP\^, \fIcompression_proc\fP\^, \fIclient_data\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsCompressionProc \fIcompression_proc\fP\^;
+.br
+      XPointer \fIclient_data\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.IP \fIcompression_proc\fP 1i
+Specifies the gamut compression procedure that is to be applied 
+when a color lies outside the screen's color gamut.
+If NULL is specified and a function using this CCC must convert
+a color specification to a device-dependent format and encounters a color
+that lies outside the screen's color gamut, 
+that function will return
+.PN XcmsFailure .
+.ds Cd the gamut compression procedure
+.IP \fIclient_data\fP 1i
+Specifies client data for \*(Cd or NULL.
+.LP
+.eM
+The
+.PN XcmsSetCompressionProc
+function first sets the gamut compression procedure and client data 
+in the specified CCC with the newly specified procedure and client data
+and then returns the old procedure.
+.sp
+.LP
+To set the white point adjustment procedure and corresponding client data
+in a specified CCC, use
+.PN XcmsSetWhiteAdjustProc .
+.IN "XcmsSetWhiteAdjustProc" "" "@DEF@"
+.IN "White point adjustment" "setting in Color Conversion Context"
+.IN "White point adjustment" "procedure"
+.IN "White point adjustment" "client data"
+.FD 0
+.sM
+XcmsWhiteAdjustProc XcmsSetWhiteAdjustProc\^(\^\fIccc\fP\^, \fIwhite_adjust_proc\fP\^, \fIclient_data\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsWhiteAdjustProc \fIwhite_adjust_proc\fP\^;
+.br
+      XPointer \fIclient_data\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.IP \fIwhite_adjust_proc\fP 1i
+Specifies the white point adjustment procedure.
+.ds Cd the white point adjustment procedure
+.IP \fIclient_data\fP 1i
+Specifies client data for \*(Cd or NULL.
+.LP
+.eM
+The
+.PN XcmsSetWhiteAdjustProc
+function first sets the white point adjustment procedure and client data 
+in the specified CCC with the newly specified procedure and client data
+and then returns the old procedure.
+.NH 3
+Creating and Freeing a Color Conversion Context
+.XS
+\*(SN Creating and Freeing a Color Conversion Context
+.XE
+.LP
+You can explicitly create a CCC within your application by calling
+.PN XcmsCreateCCC .
+These created CCCs can then be used by those functions that explicitly
+call for a CCC argument.
+Old CCCs that will not be used by the application should be freed using
+.PN XcmsFreeCCC .
+.sp
+.LP
+To create a CCC, use
+.PN XcmsCreateCCC .
+.IN "XcmsCreateCCC" "" "@DEF@"
+.IN "Color Conversion Context" "creation"
+.IN "CCC" "creation"
+.sM
+.FD 0
+XcmsCCC XcmsCreateCCC\^(\^\fIdisplay\fP, \fIscreen_number\fP\^, \fIvisual\fP\^, \fIclient_white_point\fP\^, \fIcompression_proc\fP\^,
+.br
+                    \fIcompression_client_data\fP\^, \fIwhite_adjust_proc\fP\^, \fIwhite_adjust_client_data\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIscreen_number\fP\^;
+.br
+      Visual *\fIvisual\fP\^;
+.br
+      XcmsColor *\fIclient_white_point\fP\^;
+.br
+      XcmsCompressionProc \fIcompression_proc\fP\^;
+.br
+      XPointer \fIcompression_client_data\fP\^;
+.br
+      XcmsWhiteAdjustProc \fIwhite_adjust_proc\fP\^;
+.br
+      XPointer \fIwhite_adjust_client_data\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIscreen_number\fP 1i
+Specifies the appropriate screen number on the host server.
+.IP \fIvisual\fP 1i
+Specifies the visual type.
+.IP \fIclient_white_point\fP 1i
+Specifies the Client White Point.
+If NULL is specified, 
+the Client White Point is to be assumed to be the same as the
+Screen White Point.
+Note that the pixel member is ignored.
+.IP \fIcompression_proc\fP 1i
+Specifies the gamut compression procedure that is to be applied 
+when a color lies outside the screen's color gamut.
+If NULL is specified and a function using this CCC must convert
+a color specification to a device-dependent format and encounters a color
+that lies outside the screen's color gamut, 
+that function will return
+.PN XcmsFailure .
+.IP \fIcompression_client_data\fP 1i
+Specifies client data for use by the gamut compression procedure or NULL.
+.IP \fIwhite_adjust_proc\fP 1i
+Specifies the white adjustment procedure that is to be applied
+when the Client White Point differs from the Screen White Point.
+NULL indicates that no white point adjustment is desired.
+.IP \fIwhite_adjust_client_data\fP 1i
+Specifies client data for use with the white point adjustment procedure or NULL.
+.LP
+.eM
+The
+.PN XcmsCreateCCC
+function creates a CCC for the specified display, screen, and visual.
+.LP
+.sp
+To free a CCC, use
+.PN XcmsFreeCCC .
+.IN "XcmsFreeCCC" "" "@DEF@"
+.IN "Color Conversion Context" "freeing"
+.IN "CCC" "freeing"
+.sM
+.FD 0
+void XcmsFreeCCC\^(\^\fIccc\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.LP
+.eM
+The
+.PN XcmsFreeCCC
+function frees the memory used for the specified CCC.
+Note that default CCCs and those currently associated with colormaps
+are ignored.
+.NH 2
+Converting between Color Spaces
+.XS
+\*(SN Converting between Color Spaces
+.XE
+.LP
+.sp
+To convert an array of color specifications in arbitrary color formats
+to a single destination format, use
+.PN XcmsConvertColors .
+.IN "Color conversion"
+.IN "Color" "conversion"
+.IN "XcmsConvertColors" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsConvertColors\^(\^\fIccc\fP\^, \fIcolors_in_out\fP\^, \fIncolors\fP\^, \fItarget_format\fP\^, \fIcompression_flags_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColor \fIcolors_in_out\fP\^[\^]\^;
+.br
+      unsigned int \fIncolors\fP\^;
+.br
+      XcmsColorFormat \fItarget_format\fP\^;
+.br
+      Bool \fIcompression_flags_return\fP\^[\^]\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+If conversion is between device-independent color spaces only
+(for example, TekHVC to CIELuv),
+the CCC is necessary only to specify the Client White Point.
+.IP \fIcolors_in_out\fP 1i
+Specifies an array of color specifications.
+Pixel members are ignored and remain unchanged upon return.
+.IP \fIncolors\fP 1i
+Specifies the number of 
+.PN XcmsColor
+structures in the color-specification array.
+.IP \fItarget_format\fP 1i
+Specifies the target color specification format.
+.IP \fIcompression_flags_return\fP 1i
+Returns an array of Boolean values indicating compression status.
+If a non-NULL pointer is supplied,
+each element of the array is set to
+.PN True
+if the corresponding color was compressed and
+.PN False
+otherwise.
+Pass NULL if the compression status is not useful.
+.LP
+.eM
+The
+.PN XcmsConvertColors
+function converts the color specifications in the specified array of
+.PN XcmsColor
+structures from their current format to a single target format,
+using the specified CCC.
+When the return value is
+.PN XcmsFailure ,
+the contents of the color specification array are left unchanged.
+.LP
+The array may contain a mixture of color specification formats
+(for example, 3 CIE XYZ, 2 CIE Luv, and so on).
+When the array contains both device-independent and
+device-dependent color specifications and the target_format argument specifies
+a device-dependent format (for example,
+.PN XcmsRGBiFormat ,
+.PN XcmsRGBFormat ),
+all specifications are converted to CIE XYZ format and then to the target
+device-dependent format.
+.NH 2
+Callback Functions
+.XS
+\*(SN Callback Functions
+.XE
+.LP
+This section describes the gamut compression and white point
+adjustment callbacks.
+.LP
+The gamut compression procedure specified in the CCC
+is called when an attempt to convert a color specification from
+.PN XcmsCIEXYZ
+to a device-dependent format (typically
+.PN XcmsRGBi )
+results in a color that lies outside the screen's color gamut.
+If the gamut compression procedure requires client data, this data is passed
+via the gamut compression client data in the CCC.
+.LP
+During color specification conversion between device-independent
+and device-dependent color spaces,
+if a white point adjustment procedure is specified in the CCC,
+it is triggered when the Client White Point and Screen White Point differ.
+If required, the client data is obtained from the CCC.
+.NH 3
+Prototype Gamut Compression Procedure
+.XS
+\*(SN Prototype Gamut Compression Procedure
+.XE
+.LP
+The gamut compression callback interface must adhere to the
+following:
+.IN "XcmsCompressionProc" "" "@DEF@"
+.sM
+.FD 0
+typedef Status (*\^XcmsCompressionProc\^)\^(\^\fIccc\fP\^, \fIcolors_in_out\fP\^, \fIncolors\fP\^, \fIindex\fP\^, \fIcompression_flags_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColor \fIcolors_in_out[]\fP\^;
+.br
+      unsigned int \fIncolors\fP\^;
+.br
+      unsigned int \fIindex\fP\^;
+.br
+      Bool \fIcompression_flags_return[]\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.IP \fIcolors_in_out\fP 1i
+Specifies an array of color specifications.
+Pixel members should be ignored and must remain unchanged upon return.
+.IP \fIncolors\fP 1i
+Specifies the number of 
+.PN XcmsColor
+structures in the color-specification array.
+.IP \fIindex\fP 1i
+Specifies the index into the array of
+.PN XcmsColor
+structures for the encountered color specification that lies outside the 
+screen's color gamut.
+Valid values are 0 (for the first element) to ncolors \- 1.
+.IP \fIcompression_flags_return\fP 1i
+Returns an array of Boolean values for indicating compression status.
+If a non-NULL pointer is supplied
+and a color at a given index is compressed, then
+.PN True
+should be stored at the corresponding index in this array;
+otherwise, the array should not be modified.
+.LP
+.eM
+When implementing a gamut compression procedure, consider the following
+rules and assumptions:
+.IP \(bu 5
+The gamut compression procedure can attempt to compress one or multiple
+specifications at a time.
+.IP \(bu 5
+When called, elements 0 to index \- 1 in the color specification
+array can be assumed to fall within the screen's color gamut.
+In addition, these color specifications are already in some device-dependent
+format (typically
+.PN XcmsRGBi ).
+If any modifications are made to these color specifications,
+they must be in their initial device-dependent format upon return.
+.IP \(bu 5
+When called, the element in the color specification array specified
+by the index argument contains the color specification outside the 
+screen's color gamut encountered by the calling routine.
+In addition, this color specification can be assumed to be in
+.PN XcmsCIEXYZ .
+Upon return, this color specification must be in
+.PN XcmsCIEXYZ .
+.IP \(bu 5
+When called, elements from index to ncolors \- 1 
+in the color specification array may or may not fall within the
+screen's color gamut.
+In addition, these color specifications can be assumed to be in
+.PN XcmsCIEXYZ .
+If any modifications are made to these color specifications, 
+they must be in
+.PN XcmsCIEXYZ
+upon return.
+.IP \(bu 5
+The color specifications passed to the gamut compression procedure
+have already been adjusted to the Screen White Point.
+This means that at this point the color specification's white point
+is the Screen White Point.
+.IP \(bu 5
+If the gamut compression procedure uses a device-independent color space not
+initially accessible for use in the color management system, use 
+.PN XcmsAddColorSpace
+to ensure that it is added.
+.NH 3
+Supplied Gamut Compression Procedures
+.XS
+\*(SN Supplied Gamut Compression Procedures
+.XE
+.LP
+The following equations are useful in describing gamut compression
+functions:
+.EQ
+delim %%
+.EN
+.LP
+.Ds 0
+%CIELab~Psychometric~Chroma ~=~ sqrt(a_star sup 2 ~+~ b_star sup 2 )%
+
+%CIELab~Psychometric~Hue ~=~ tan sup -1 left [ b_star over a_star right ]%
+
+%CIELuv~Psychometric~Chroma ~=~ sqrt(u_star sup 2 ~+~ v_star sup 2 )%
+
+%CIELuv~Psychometric~Hue ~=~ tan sup -1 left [ v_star over u_star right ]%
+.De
+.LP
+The gamut compression callback procedures provided by Xlib are as follows:
+.IP \(bu 5
+.PN XcmsCIELabClipL
+.IP
+This brings the encountered out-of-gamut color specification into the 
+screen's color gamut by reducing or increasing CIE metric lightness (L*) 
+in the CIE L*a*b* color space until the color is within the gamut.
+If the Psychometric Chroma of the color specification 
+is beyond maximum for the Psychometric Hue Angle,
+then while maintaining the same Psychometric Hue Angle,
+the color will be clipped to the CIE L*a*b* coordinates of maximum
+Psychometric Chroma.
+See
+.PN XcmsCIELabQueryMaxC .
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsCIELabClipab
+.IP
+This brings the encountered out-of-gamut color specification into the 
+screen's color gamut by reducing Psychometric Chroma,
+while maintaining Psychometric Hue Angle,
+until the color is within the gamut.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsCIELabClipLab
+.IP
+This brings the encountered out-of-gamut color specification into the
+screen's color gamut by replacing it with CIE L*a*b* coordinates
+that fall within the color gamut while maintaining the original
+Psychometric Hue
+Angle and whose vector to the original coordinates is the shortest attainable.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsCIELuvClipL
+.IP
+This brings the encountered out-of-gamut color specification into the 
+screen's color gamut by reducing or increasing CIE metric lightness (L*)
+in the CIE L*u*v* color space until the color is within the gamut.
+If the Psychometric Chroma of the color specification
+is beyond maximum for the Psychometric Hue Angle,
+then, while maintaining the same Psychometric Hue Angle,
+the color will be clipped to the CIE L*u*v* coordinates of maximum
+Psychometric Chroma.
+See
+.PN XcmsCIELuvQueryMaxC .
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsCIELuvClipuv
+.IP
+This brings the encountered out-of-gamut color specification into the
+screen's color gamut by reducing
+Psychometric Chroma, while maintaining Psychometric Hue Angle,
+until the color is within the gamut.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsCIELuvClipLuv
+.IP
+This brings the encountered out-of-gamut color specification into the
+screen's color gamut by replacing it with CIE L*u*v* coordinates
+that fall within the color gamut while maintaining the original
+Psychometric Hue
+Angle and whose vector to the original coordinates is the shortest attainable.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsTekHVCClipV
+.IP
+This brings the encountered out-of-gamut color specification into the
+screen's color gamut by reducing or increasing the Value dimension
+in the TekHVC color space until the color is within the gamut.
+If Chroma of the color specification is beyond maximum for the particular Hue,
+then, while maintaining the same Hue,
+the color will be clipped to the Value and Chroma coordinates
+that represent maximum Chroma for that particular Hue.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsTekHVCClipC
+.IP
+This brings the encountered out-of-gamut color specification into the
+screen's color gamut by reducing the Chroma dimension
+in the TekHVC color space until the color is within the gamut.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsTekHVCClipVC
+.IP
+This brings the encountered out-of-gamut color specification into the
+screen's color gamut by replacing it with TekHVC coordinates
+that fall within the color gamut while maintaining the original Hue
+and whose vector to the original coordinates is the shortest attainable.
+No client data is necessary.
+.NH 3
+Prototype White Point Adjustment Procedure
+.XS
+\*(SN Prototype White Point Adjustment Procedure
+.XE
+.LP
+The white point adjustment procedure interface must adhere to the following:
+.IN "XcmsWhiteAdjustProc" "" "@DEF@"
+.sM
+.FD 0
+typedef Status (*\^XcmsWhiteAdjustProc\^)\^(\^\fIccc\fP\^, \fIinitial_white_point\fP\^, \fItarget_white_point\fP\^, \fItarget_format\fP\^,
+.br
+                \fIcolors_in_out\fP\^, \fIncolors\fP\^, \fIcompression_flags_return\fP\^)
+.br
+       XcmsCCC \fIccc\fP\^;
+.br
+       XcmsColor *\fIinitial_white_point\fP\^;
+.br
+       XcmsColor *\fItarget_white_point\fP\^;
+.br
+       XcmsColorFormat \fItarget_format\fP\^;
+.br
+       XcmsColor \fIcolors_in_out[]\fP\^;
+.br
+       unsigned int \fIncolors\fP\^;
+.br
+       Bool \fIcompression_flags_return[]\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.IP \fIinitial_white_point\fP 1i
+Specifies the initial white point.
+.IP \fItarget_white_point\fP 1i
+Specifies the target white point.
+.IP \fItarget_format\fP 1i
+Specifies the target color specification format.
+.IP \fIcolors_in_out\fP 1i
+Specifies an array of color specifications.
+Pixel members should be ignored and must remain unchanged upon return.
+.IP \fIncolors\fP 1i
+Specifies the number of 
+.PN XcmsColor
+structures in the color-specification array.
+.IP \fIcompression_flags_return\fP 1i
+Returns an array of Boolean values for indicating compression status.
+If a non-NULL pointer is supplied
+and a color at a given index is compressed, then
+.PN True
+should be stored at the corresponding index in this array;
+otherwise, the array should not be modified.
+.LP
+.eM
+.NH 3
+Supplied White Point Adjustment Procedures
+.XS
+\*(SN Supplied White Point Adjustment Procedures
+.XE
+.LP
+White point adjustment procedures provided by Xlib are as follows:
+.IP \(bu 5
+.PN XcmsCIELabWhiteShiftColors
+.IP
+This uses the CIE L*a*b* color space for adjusting the chromatic character
+of colors to compensate for the chromatic differences between the source
+and destination white points.
+This procedure simply converts the color specifications to 
+.PN XcmsCIELab
+using the source white point and then converts to the target specification
+format using the destination's white point.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsCIELuvWhiteShiftColors
+.IP
+This uses the CIE L*u*v* color space for adjusting the chromatic character
+of colors to compensate for the chromatic differences between the source
+and destination white points.
+This procedure simply converts the color specifications to 
+.PN XcmsCIELuv
+using the source white point and then converts to the target specification
+format using the destination's white point.
+No client data is necessary.
+.IP \(bu 5
+.PN XcmsTekHVCWhiteShiftColors
+.IP
+This uses the TekHVC color space for adjusting the chromatic character
+of colors to compensate for the chromatic differences between the source
+and destination white points.
+This procedure simply converts the color specifications to
+.PN XcmsTekHVC
+using the source white point and then converts to the target specification
+format using the destination's white point.
+An advantage of this procedure over those previously described
+is an attempt to minimize hue shift.
+No client data is necessary.
+.LP
+From an implementation point of view,
+these white point adjustment procedures convert the color specifications
+to a device-independent but white-point-dependent color space 
+(for example, CIE L*u*v*, CIE L*a*b*, TekHVC) using one white point
+and then converting those specifications to the target color space 
+using another white point.
+In other words,
+the specification goes in the color space with one white point 
+but comes out with another white point, 
+resulting in a chromatic shift based on the chromatic displacement
+between the initial white point and target white point.
+The CIE color spaces that are assumed to be white-point-independent
+are CIE u'v'Y, CIE XYZ, and CIE xyY.
+When developing a custom white point adjustment procedure that uses a
+device-independent color space not initially accessible for use in the
+color management system, use
+.PN XcmsAddColorSpace
+to ensure that it is added.
+.LP
+As an example, 
+if the CCC specifies a white point adjustment procedure
+and if the Client White Point and Screen White Point differ, the
+.PN XcmsAllocColor
+function will use the white point adjustment
+procedure twice: 
+.IP \(bu 5
+Once to convert to
+.PN XcmsRGB
+.IP \(bu  5
+A second time to convert from
+.PN XcmsRGB 
+.LP
+For example, assume the specification is in
+.PN XcmsCIEuvY
+and the adjustment procedure is
+.PN XcmsCIELuvWhiteShiftColors .
+During conversion to
+.PN XcmsRGB ,
+the call to 
+.PN XcmsAllocColor 
+results in the following series of color specification conversions:
+.\" Do these need to be font coded?
+.IP \(bu 5
+From 
+.PN XcmsCIEuvY
+to
+.PN XcmsCIELuv
+using the Client White Point
+.IP \(bu 5
+From 
+.PN XcmsCIELuv
+to
+.PN XcmsCIEuvY
+using the Screen White Point
+.IP \(bu 5
+From
+.PN XcmsCIEuvY
+to
+.PN XcmsCIEXYZ
+(CIE u'v'Y and XYZ are white-point-independent color spaces)
+.IP \(bu 5
+From 
+.PN XcmsCIEXYZ
+to 
+.PN XcmsRGBi
+.IP \(bu 5
+From 
+.PN XcmsRGBi
+to
+.PN XcmsRGB
+.LP
+The resulting RGB specification is passed to
+.PN XAllocColor ,
+and the RGB
+specification returned by
+.PN XAllocColor
+is converted back to 
+.PN XcmsCIEuvY
+by reversing the color conversion sequence.
+.NH 2
+Gamut Querying Functions
+.XS
+\*(SN Gamut Querying Functions
+.XE
+.LP
+This section describes the gamut querying functions that Xlib provides.
+These functions allow the client to query the boundary 
+of the screen's color gamut in terms of the CIE L*a*b*, CIE L*u*v*, 
+and TekHVC color spaces.
+.IN "Gamut querying"
+Functions are also provided that allow you to query 
+the color specification of:
+.IP \(bu 5
+White (full-intensity red, green, and blue)
+.IP \(bu 5
+Red (full-intensity red while green and blue are zero)
+.IP \(bu 5
+Green (full-intensity green while red and blue are zero)
+.IP \(bu 5
+Blue (full-intensity blue while red and green are zero)
+.IP \(bu 5
+Black (zero-intensity red, green, and blue)
+.LP
+The white point associated with color specifications passed to 
+and returned from these gamut querying
+functions is assumed to be the Screen White Point.
+.IN "Screen White Point"
+This is a reasonable assumption,
+because the client is trying to query the screen's color gamut.
+.LP
+The following naming convention is used for the Max and Min functions:
+.LP
+.Ds 0
+Xcms\fI<color_space>\fPQueryMax\fI<dimensions>\fP
+
+Xcms\fI<color_space>\fPQueryMin\fI<dimensions>\fP
+.De
+.LP
+The <dimensions> consists of a letter or letters 
+that identify the dimensions of the color space 
+that are not fixed.
+For example, 
+.PN XcmsTekHVCQueryMaxC
+is given a fixed Hue and Value for which maximum Chroma is found.
+.NH 3
+Red, Green, and Blue Queries
+.XS
+\*(SN Red, Green, and Blue Queries
+.XE
+.LP
+To obtain the color specification for black 
+(zero-intensity red, green, and blue), use
+.PN XcmsQueryBlack .
+.IN "XcmsQueryBlack" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsQueryBlack\^(\^\fIccc\fP\^, \fItarget_format\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColorFormat \fItarget_format\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.IP \fItarget_format\fP 1i
+Specifies the target color specification format.
+.ds Cs zero-intensity red, green, and blue
+.IP \fIcolor_return\fP 1i
+Returns the color specification in the specified target format
+for \*(Cs.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsQueryBlack
+function returns the color specification in the specified target format
+for zero-intensity red, green, and blue.
+.sp
+.LP
+To obtain the color specification for blue 
+(full-intensity blue while red and green are zero), use
+.PN XcmsQueryBlue .
+.IN "XcmsQueryBlue" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsQueryBlue\^(\^\fIccc\fP\^, \fItarget_format\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColorFormat \fItarget_format\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.IP \fItarget_format\fP 1i
+Specifies the target color specification format.
+.ds Cs full-intensity blue while red and green are zero
+.IP \fIcolor_return\fP 1i
+Returns the color specification in the specified target format
+for \*(Cs.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsQueryBlue
+function returns the color specification in the specified target format
+for full-intensity blue while red and green are zero.
+.sp
+.LP
+To obtain the color specification for green
+(full-intensity green while red and blue are zero), use
+.PN XcmsQueryGreen .
+.IN "XcmsQueryGreen" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsQueryGreen\^(\^\fIccc\fP\^, \fItarget_format\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColorFormat \fItarget_format\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.IP \fItarget_format\fP 1i
+Specifies the target color specification format.
+.ds Cs full-intensity green while red and blue are zero
+.IP \fIcolor_return\fP 1i
+Returns the color specification in the specified target format
+for \*(Cs.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsQueryGreen
+function returns the color specification in the specified target format
+for full-intensity green while red and blue are zero.
+.sp
+.LP
+To obtain the color specification for red
+(full-intensity red while green and blue are zero), use
+.PN XcmsQueryRed .
+.IN "XcmsQueryRed" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsQueryRed\^(\^\fIccc\fP\^, \fItarget_format\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColorFormat \fItarget_format\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.IP \fItarget_format\fP 1i
+Specifies the target color specification format.
+.ds Cs full-intensity red while green and blue are zero
+.IP \fIcolor_return\fP 1i
+Returns the color specification in the specified target format
+for \*(Cs.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsQueryRed
+function returns the color specification in the specified target format
+for full-intensity red while green and blue are zero.
+.LP
+.sp
+To obtain the color specification for white
+(full-intensity red, green, and blue), use
+.PN XcmsQueryWhite .
+.IN "XcmsQueryWhite" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsQueryWhite\^(\^\fIccc\fP\^, \fItarget_format\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColorFormat \fItarget_format\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.IP \fItarget_format\fP 1i
+Specifies the target color specification format.
+.ds Cs full-intensity red, green, and blue
+.IP \fIcolor_return\fP 1i
+Returns the color specification in the specified target format
+for \*(Cs.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsQueryWhite
+function returns the color specification in the specified target format
+for full-intensity red, green, and blue.
+.NH 3
+CIELab Queries
+.XS
+\*(SN CIELab Queries
+.XE
+.LP
+The following equations are useful in describing the CIELab query functions:
+.EQ
+delim %%
+.EN
+.LP
+.IN "Psychometric Hue Angle"
+.IN "CIE metric lightness"
+.IN "Psychometric Chroma"
+.IN "Psychometric Chroma" "maximum"
+.Ds 0
+%CIELab~Psychometric~Chroma ~=~ sqrt(a_star sup 2 ~+~ b_star sup 2 )%
+
+%CIELab~Psychometric~Hue ~=~ tan sup -1 left [ b_star over a_star right ]%
+.De
+.sp
+To obtain the CIE L*a*b* coordinates of maximum Psychometric Chroma
+for a given Psychometric Hue Angle and CIE metric lightness (L*), use
+.PN XcmsCIELabQueryMaxC .
+.IN "XcmsCIELabQueryMaxC" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELabQueryMaxC\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIL_star\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsFloat \fIL_star\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha maximum chroma
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Ls maximum chroma
+.IP \fIL_star\fP 1i
+Specifies the lightness (L*) at which to find \*(Ls.
+.ds Lc maximum chroma
+.ds lC hue angle and lightness
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*a*b* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsCIELabQueryMaxC
+function, given a hue angle and lightness,
+finds the point of maximum chroma displayable by the screen.
+It returns this point in CIE L*a*b* coordinates.
+.LP
+.sp
+To obtain the CIE L*a*b* coordinates of maximum CIE metric lightness (L*)
+for a given Psychometric Hue Angle and Psychometric Chroma, use
+.PN XcmsCIELabQueryMaxL .
+.IN "Psychometric Hue Angle"
+.IN "CIE metric lightness"
+.IN "CIE metric lightness" "maximum"
+.IN "XcmsCIELabQueryMaxL" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELabQueryMaxL\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIchroma\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsFloat \fIchroma\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha maximum lightness
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Ch maximum lightness
+.IP \fIchroma\fP 1i
+Specifies the chroma at which to find \*(Ch.
+.ds Lc maximum lightness
+.ds lC hue angle and chroma
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*a*b* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsCIELabQueryMaxL
+function, given a hue angle and chroma,
+finds the point in CIE L*a*b* color space of maximum 
+lightness (L*) displayable by the screen.
+It returns this point in CIE L*a*b* coordinates.
+An 
+.PN XcmsFailure
+return value usually indicates that the given chroma
+is beyond maximum for the given hue angle.
+.sp
+.LP
+To obtain the CIE L*a*b* coordinates of maximum Psychometric Chroma
+for a given Psychometric Hue Angle, use
+.PN XcmsCIELabQueryMaxLC .
+.IN "Psychometric Hue Angle"
+.IN "Psychometric Chroma"
+.IN "CIE metric lightness"
+.IN "Psychometric Chroma" "maximum"
+.IN "CIE metric lightness" "maximum"
+.IN "XcmsCIELabQueryMaxLC" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELabQueryMaxLC\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha maximum chroma
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Lc maximum chroma
+.ds lC hue angle
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*a*b* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsCIELabQueryMaxLC
+function, given a hue angle,
+finds the point of maximum chroma displayable by the screen.
+It returns this point in CIE L*a*b* coordinates.
+.sp
+.LP
+To obtain the CIE L*a*b* coordinates of minimum CIE metric lightness (L*)
+for a given Psychometric Hue Angle and Psychometric Chroma, use
+.PN XcmsCIELabQueryMinL .
+.IN "Psychometric Hue Angle"
+.IN "CIE metric lightness"
+.IN "CIE metric lightness" "minimum"
+.IN "XcmsCIELabQueryMinL" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELabQueryMinL\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIchroma\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsFloat \fIchroma\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha minimum lightness
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Ch minimum lightness
+.IP \fIchroma\fP 1i
+Specifies the chroma at which to find \*(Ch.
+.ds Lc minimum lightness
+.ds lC hue angle and chroma
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*a*b* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsCIELabQueryMinL
+function, given a hue angle and chroma,
+finds the point of minimum lightness (L*) displayable by the screen.
+It returns this point in CIE L*a*b* coordinates.
+An 
+.PN XcmsFailure
+return value usually indicates that the given chroma
+is beyond maximum for the given hue angle.
+.NH 3
+CIELuv Queries
+.XS
+\*(SN CIELuv Queries
+.XE
+.LP
+The following equations are useful in describing the CIELuv query functions:
+.EQ
+delim %%
+.EN
+.LP
+.IN "Psychometric Hue Angle"
+.IN "CIE metric lightness"
+.IN "Psychometric Chroma"
+.IN "Psychometric Chroma" "maximum"
+.Ds 0
+%CIELuv~Psychometric~Chroma ~=~ sqrt(u_star sup 2 ~+~ v_star sup 2 )%
+
+%CIELuv~Psychometric~Hue ~=~ tan sup -1 left [ v_star over u_star right ]%
+.De
+.sp
+.LP
+To obtain the CIE L*u*v* coordinates of maximum Psychometric Chroma
+for a given Psychometric Hue Angle and CIE metric lightness (L*), use
+.PN XcmsCIELuvQueryMaxC .
+.IN "XcmsCIELuvQueryMaxC" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELuvQueryMaxC\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIL_star\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsFloat \fIL_star\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha maximum chroma
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Ls maximum chroma
+.IP \fIL_star\fP 1i
+Specifies the lightness (L*) at which to find \*(Ls.
+.ds Lc maximum chroma
+.ds lC hue angle and lightness
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*u*v* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsCIELuvQueryMaxC
+function, given a hue angle and lightness,
+finds the point of maximum chroma displayable by the screen.
+It returns this point in CIE L*u*v* coordinates.
+.sp
+.LP
+To obtain the CIE L*u*v* coordinates of maximum CIE metric lightness (L*)
+for a given Psychometric Hue Angle and Psychometric Chroma, use
+.PN XcmsCIELuvQueryMaxL .
+.IN "Psychometric Hue Angle"
+.IN "CIE metric lightness"
+.IN "CIE metric lightness" "maximum"
+.IN "XcmsCIELuvQueryMaxL" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELuvQueryMaxL\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIchroma\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsFloat \fIchroma\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha maximum lightness
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Ls maximum lightness
+.IP \fIL_star\fP 1i
+Specifies the lightness (L*) at which to find \*(Ls.
+.ds Lc maximum lightness
+.ds lC hue angle and chroma
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*u*v* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsCIELuvQueryMaxL
+function, given a hue angle and chroma,
+finds the point in CIE L*u*v* color space of maximum 
+lightness (L*) displayable by the screen.
+It returns this point in CIE L*u*v* coordinates.
+An 
+.PN XcmsFailure
+return value usually indicates that the given chroma
+is beyond maximum for the given hue angle.
+.sp
+.LP
+To obtain the CIE L*u*v* coordinates of maximum Psychometric Chroma
+for a given Psychometric Hue Angle, use
+.PN XcmsCIELuvQueryMaxLC .
+.IN "Psychometric Hue Angle"
+.IN "Psychometric Chroma"
+.IN "CIE metric lightness"
+.IN "Psychometric Chroma" "maximum"
+.IN "CIE metric lightness" "maximum"
+.IN "XcmsCIELuvQueryMaxLC" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELuvQueryMaxLC\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha maximum chroma
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Lc maximum chroma
+.ds lC hue angle
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*u*v* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsCIELuvQueryMaxLC
+function, given a hue angle,
+finds the point of maximum chroma displayable by the screen.
+It returns this point in CIE L*u*v* coordinates.
+.sp
+.LP
+To obtain the CIE L*u*v* coordinates of minimum CIE metric lightness (L*)
+for a given Psychometric Hue Angle and Psychometric Chroma, use
+.PN XcmsCIELuvQueryMinL .
+.IN "Psychometric Hue Angle"
+.IN "CIE metric lightness"
+.IN "CIE metric lightness" "minimum"
+.IN "XcmsCIELuvQueryMinL" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsCIELuvQueryMinL\^(\^\fIccc\fP\^, \fIhue_angle\fP\^, \fIchroma\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue_angle\fP\^;
+.br
+      XcmsFloat \fIchroma\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Ha minimum lightness
+.IP \fIhue_angle\fP 1i
+Specifies the hue angle (in degrees) at which to find \*(Ha.
+.ds Ch minimum lightness
+.IP \fIchroma\fP 1i
+Specifies the chroma at which to find \*(Ch.
+.ds Lc minimum lightness
+.ds lC hue angle and chroma
+.IP \fIcolor_return\fP 1i
+Returns the CIE L*u*v* coordinates of \*(Lc
+displayable by the screen for the given \*(lC.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM
+The
+.PN XcmsCIELuvQueryMinL
+function, given a hue angle and chroma,
+finds the point of minimum lightness (L*) displayable by the screen.
+It returns this point in CIE L*u*v* coordinates.
+An 
+.PN XcmsFailure
+return value usually indicates that the given chroma
+is beyond maximum for the given hue angle.
+.NH 3
+TekHVC Queries
+.XS
+\*(SN TekHVC Queries
+.XE
+.LP
+To obtain the maximum Chroma for a given Hue and Value, use
+.PN XcmsTekHVCQueryMaxC .
+.IN "Chroma"
+.IN "Chroma" "maximum"
+.IN "XcmsTekHVCQueryMaxC" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsTekHVCQueryMaxC\^(\^\fIccc\fP\^, \fIhue\fP\^, \fIvalue\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue\fP\^;
+.br
+      XcmsFloat \fIvalue\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Hu in which to find the maximum Chroma
+.IP \fIhue\fP 1i
+Specifies the Hue \*(Hu.
+.ds Va maximum Chroma
+.IP \fIvalue\fP 1i
+Specifies the Value in which to find the \*(Va.
+.ds Lc maximum Chroma along with the actual Hue and Value 
+.ds lC maximum Chroma
+.IP \fIcolor_return\fP 1i
+Returns the \*(Lc at which the \*(lC was found.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsTekHVCQueryMaxC
+function, given a Hue and Value,
+determines the maximum Chroma in TekHVC color space
+displayable by the screen.
+It returns the maximum Chroma along with the actual Hue
+and Value at which the maximum Chroma was found.
+.sp
+.LP
+To obtain the maximum Value for a given Hue and Chroma, use
+.PN XcmsTekHVCQueryMaxV .
+.IN "Value"
+.IN "Value" "maximum"
+.IN "XcmsTekHVCQueryMaxV" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsTekHVCQueryMaxV\^(\^\fIccc\fP\^, \fIhue\fP\^, \fIchroma\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue\fP\^;
+.br
+      XcmsFloat \fIchroma\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Hu in which to find the maximum Value
+.IP \fIhue\fP 1i
+Specifies the Hue \*(Hu.
+.ds Ch maximum Value
+.IP \fIchroma\fP 1i
+Specifies the chroma at which to find \*(Ch.
+.ds Lc maximum Value along with the Hue and Chroma
+.ds lC maximum Value
+.IP \fIcolor_return\fP 1i
+Returns the \*(Lc at which the \*(lC was found.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsTekHVCQueryMaxV
+function, given a Hue and Chroma,
+determines the maximum Value in TekHVC color space
+displayable by the screen.
+It returns the maximum Value and the actual Hue and Chroma
+at which the maximum Value was found.
+.sp
+.LP
+To obtain the maximum Chroma and Value at which it is reached
+for a specified Hue, use
+.PN XcmsTekHVCQueryMaxVC .
+.IN "Chroma"
+.IN "Value"
+.IN "Chroma"  "maximum"
+.IN "Value" "maximum"
+.IN "XcmsTekHVCQueryMaxVC" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsTekHVCQueryMaxVC\^(\^\fIccc\fP\^, \fIhue\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Hu in which to find the maximum Chroma
+.IP \fIhue\fP 1i
+Specifies the Hue \*(Hu.
+.ds Lc color specification in \
+XcmsTekHVC for the maximum Chroma, the Value at which \
+that maximum Chroma is reached, and the actual Hue
+.ds lC maximum Chroma
+.IP \fIcolor_return\fP 1i
+Returns the \*(Lc at which the \*(lC was found.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsTekHVCQueryMaxVC
+function, given a Hue,
+determines the maximum Chroma in TekHVC color space displayable by the screen
+and the Value at which that maximum Chroma is reached.
+It returns the maximum Chroma,
+the Value at which that maximum Chroma is reached,
+and the actual Hue for which the maximum Chroma was found.
+.sp
+.LP
+To obtain a specified number of TekHVC specifications such that they
+contain maximum Values for a specified Hue and the
+Chroma at which the maximum Values are reached, use
+.PN XcmsTekHVCQueryMaxVSamples .
+.IN "Chroma"
+.IN "Value"
+.IN "Chroma"  "maximum"
+.IN "Value" "maximum"
+.IN "XcmsTekHVCQueryMaxVSamples" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsTekHVCQueryMaxVSamples\^(\^\fIccc\fP\^, \fIhue\fP\^, \fIcolors_return\fP\^, \fInsamples\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue\fP\^;
+.br
+      XcmsColor \fIcolors_return[]\fP\^;
+.br
+      unsigned int \fInsamples\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Hu for maximum Chroma/Value samples
+.IP \fIhue\fP 1i
+Specifies the Hue \*(Hu.
+.IP \fInsamples\fP 1i
+Specifies the number of samples.
+.IP \fIcolors_return\fP 1i
+Returns nsamples of color specifications in XcmsTekHVC
+such that the Chroma is the maximum attainable for the Value and Hue.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsTekHVCQueryMaxVSamples
+returns nsamples of maximum Value, the Chroma at which that maximum Value
+is reached, and the actual Hue for which the maximum Chroma was found.
+These sample points may then be used to plot the maximum Value/Chroma
+boundary of the screen's color gamut for the specified Hue in TekHVC color
+space.
+.sp
+.LP
+To obtain the minimum Value for a given Hue and Chroma, use
+.PN XcmsTekHVCQueryMinV .
+.IN "Value"
+.IN "Value" "minimum"
+.IN "XcmsTekHVCQueryMinV" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsTekHVCQueryMinV\^(\^\fIccc\fP\^, \fIhue\fP\^, \fIchroma\fP\^, \fIcolor_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsFloat \fIhue\fP\^;
+.br
+      XcmsFloat \fIchroma\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+The CCC's Client White Point and white point adjustment procedures
+are ignored.
+.ds Hu in which to find the minimum Value
+.IP \fIhue\fP 1i
+Specifies the Hue \*(Hu.
+.ds Va minimum Value
+.IP \fIvalue\fP 1i
+Specifies the Value in which to find the \*(Va.
+.ds Lc minimum Value and the actual Hue and Chroma
+.ds lC minimum Value
+.IP \fIcolor_return\fP 1i
+Returns the \*(Lc at which the \*(lC was found.
+The white point associated with the returned
+color specification is the Screen White Point.
+The value returned in the pixel member is undefined.
+.LP
+.eM 
+The
+.PN XcmsTekHVCQueryMinV
+function, given a Hue and Chroma,
+determines the minimum Value in TekHVC color space displayable by the screen.
+It returns the minimum Value and the actual Hue and Chroma at which
+the minimum Value was found.
+.NH 2
+Color Management Extensions
+.XS
+\*(SN Color Management Extensions
+.XE
+.LP
+The Xlib color management facilities can be extended in two ways:
+.IP \(bu 5
+Device-Independent Color Spaces
+.IP
+Device-independent color spaces that are derivable to CIE XYZ
+space can be added using the
+.PN XcmsAddColorSpace
+function.
+.IP \(bu 5
+Color Characterization Function Set
+.IP
+A Color Characterization Function Set consists of
+device-dependent color spaces and their functions that
+convert between these color spaces and the CIE XYZ
+color space, bundled together for a specific class of output devices.
+A function set can be added using the
+.PN XcmsAddFunctionSet
+function.
+.NH 3
+Color Spaces
+.XS
+\*(SN Color Spaces
+.XE
+.LP
+The CIE XYZ color space serves as the hub for all
+conversions between device-independent and device-dependent color spaces.
+Therefore, the knowledge to convert an 
+.PN XcmsColor
+structure to and from CIE XYZ format is associated with each color space.
+For example, conversion from CIE L*u*v* to RGB requires the knowledge
+to convert from CIE L*u*v* to CIE XYZ and from CIE XYZ to RGB.
+This knowledge is stored as an array of functions that,
+when applied in series, will convert the 
+.PN XcmsColor
+structure to or from CIE XYZ format.
+This color specification conversion mechanism facilitates
+the addition of color spaces.
+.LP
+Of course, when converting between only device-independent color spaces
+or only device-dependent color spaces,
+shortcuts are taken whenever possible.
+For example, conversion from TekHVC to CIE L*u*v* is performed 
+by intermediate conversion to CIE u*v*Y and then to CIE L*u*v*, 
+thus bypassing conversion between CIE u*v*Y and CIE XYZ.
+.NH 3
+Adding Device-Independent Color Spaces
+.XS
+\*(SN Adding Device-Independent Color Spaces
+.XE
+.LP
+To add a device-independent color space, use
+.PN XcmsAddColorSpace .
+.IN  "XcmsAddColorSpace" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsAddColorSpace\^(\^\fIcolor_space\fP\^)
+.br
+      XcmsColorSpace *\fIcolor_space\fP\^;
+.FN
+.IP \fIcolor_space\fP 1i
+Specifies the device-independent color space to add.
+.LP
+.eM
+The
+.PN XcmsAddColorSpace
+function makes a device-independent color space (actually an
+.PN XcmsColorSpace
+structure) accessible by the color management system.
+Because format values for unregistered color spaces are assigned at run time,
+they should be treated as private to the client.
+If references to an unregistered color space must be made
+outside the client (for example, storing color specifications 
+in a file using the unregistered color space), 
+then reference should be made by color space prefix
+(see
+.PN XcmsFormatOfPrefix
+and
+.PN XcmsPrefixOfFormat ).
+.LP
+If the 
+.PN XcmsColorSpace
+structure is already accessible in the color management system, 
+.PN XcmsAddColorSpace
+returns 
+.PN XcmsSuccess .
+.LP
+Note that added 
+.PN XcmsColorSpaces
+must be retained for reference by Xlib.
+.NH 3
+Querying Color Space Format and Prefix
+.XS
+\*(SN Querying Color Space Format and Prefix
+.XE
+.LP
+To obtain the format associated with the color space
+associated with a specified color string prefix, use
+.PN XcmsFormatOfPrefix .
+.IN  "XcmsFormatOfPrefix" "" "@DEF@"
+.sM
+.FD 0
+XcmsColorFormat XcmsFormatOfPrefix\^(\^\fIprefix\fP\^)
+.br
+      char *\fIprefix\fP\^;
+.FN
+.IP \fIprefix\fP 1i
+Specifies the string that contains the color space prefix.
+.LP
+.eM
+The
+.PN XcmsFormatOfPrefix
+function returns the format for the specified color space prefix
+(for example, the string ``CIEXYZ'').
+The prefix is case-insensitive.
+If the color space is not accessible in the color management system,
+.PN XcmsFormatOfPrefix
+returns 
+.PN XcmsUndefinedFormat .
+.LP
+.sp
+To obtain the color string prefix associated with the color space
+specified by a color format, use
+.PN XcmsPrefixOfFormat .
+.IN  "XcmsPrefixOfFormat" "" "@DEF@"
+.sM
+.FD 0
+char *XcmsPrefixOfFormat\^(\^\fIformat\fP\^)
+.br
+      XcmsColorFormat \fIformat\fP\^;
+.FN
+.IP \fIformat\fP 1i
+Specifies the color specification format.
+.LP
+.eM
+The
+.PN XcmsPrefixOfFormat
+function returns the string prefix associated with the color specification
+encoding specified by the format argument.
+Otherwise, if no encoding is found, it returns NULL.
+The returned string must be treated as read-only.
+.NH 3
+Creating Additional Color Spaces
+.XS
+\*(SN Creating Additional Color Spaces
+.XE
+.LP
+Color space specific information necessary 
+for color space conversion and color string parsing is stored in an
+.PN XcmsColorSpace
+structure.
+Therefore, a new structure containing this information is required
+for each additional color space.
+In the case of device-independent color spaces,
+a handle to this new structure (that is, by means of a global variable)
+is usually made accessible to the client program for use with the
+.PN XcmsAddColorSpace
+function.
+.LP
+If a new 
+.PN XcmsColorSpace
+structure specifies a color space not registered with the X Consortium,
+they should be treated as private to the client
+because format values for unregistered color spaces are assigned at run time.
+If references to an unregistered color space must be made outside the
+client (for example, storing color specifications in a file using the
+unregistered color space), then reference should be made by color space prefix
+(see
+.PN XcmsFormatOfPrefix
+and
+.PN XcmsPrefixOfFormat ).
+.sM
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef (*XcmsConversionProc)();
+typedef XcmsConversionProc *XcmsFuncListPtr;
+		/* A NULL terminated list of function pointers*/
+
+typedef struct _XcmsColorSpace {
+	char *prefix;
+	XcmsColorFormat format;
+	XcmsParseStringProc parseString;
+	XcmsFuncListPtr to_CIEXYZ;
+	XcmsFuncListPtr from_CIEXYZ;
+	int inverse_flag;
+} XcmsColorSpace;
+.De
+.LP
+.eM
+The prefix member specifies the prefix that indicates a color string 
+is in this color space's string format.
+For example, the strings ``ciexyz'' or ``CIEXYZ'' for CIE XYZ,
+and ``rgb'' or ``RGB'' for RGB.
+The prefix is case insensitive.
+The format member specifies the color specification format.
+Formats for unregistered color spaces are assigned at run time.
+The parseString member contains a pointer to the function 
+that can parse a color string into an 
+.PN XcmsColor
+structure.
+This function returns an integer (int): nonzero if it succeeded
+and zero otherwise.
+The to_CIEXYZ and from_CIEXYZ members contain pointers,
+each to a NULL terminated list of function pointers.
+When the list of functions is executed in series,
+it will convert the color specified in an 
+.PN XcmsColor
+structure from/to the current color space format to/from the CIE XYZ format.
+Each function returns an integer (int): nonzero if it succeeded
+and zero otherwise.
+The white point to be associated with the colors is specified
+explicitly, even though white points can be found in the CCC.
+The inverse_flag member, if nonzero, specifies that for each function listed 
+in to_CIEXYZ,
+its inverse function can be found in from_CIEXYZ such that:
+.LP
+.Ds 0
+Given:  n = number of functions in each list
+
+for each i, such that 0 <= i < n
+    from_CIEXYZ[n - i - 1] is the inverse of to_CIEXYZ[i].
+.De
+.LP
+This allows Xlib to use the shortest conversion path,
+thus bypassing CIE XYZ if possible (for example, TekHVC to CIE L*u*v*).
+.NH 3
+Parse String Callback
+.XS
+\*(SN Parse String Callback
+.XE
+.LP
+The callback in the
+.PN XcmsColorSpace
+structure for parsing a color string for the particular color space must
+adhere to the following software interface specification:
+.IN  "XcmsParseStringProc" "" "@DEF@"
+.sM
+.FD 0
+typedef int (*XcmsParseStringProc)\^(\^\fIcolor_string\fP, \fIcolor_return\fP\^)
+.br
+      char *\fIcolor_string\fP\^;
+.br
+      XcmsColor *\fIcolor_return\fP\^;
+.FN
+.IP \fIcolor_string\fP 1i
+Specifies the color string to parse.
+.IP \fIcolor_return\fP 1i
+Returns the color specification in the color space's format.
+.LP
+.eM
+.NH 3
+Color Specification Conversion Callback
+.XS
+\*(SN Color Specification Conversion Callback
+.XE
+.LP
+Callback functions in the
+.PN XcmsColorSpace
+structure for converting a color specification between device-independent
+spaces must adhere to the
+following software interface specification:
+.sM
+.FD 0
+Status ConversionProc\^(\^\fIccc\fP, \fIwhite_point\fP, \fIcolors_in_out\fP, \fIncolors\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColor *\fIwhite_point\fP\^;
+.br
+      XcmsColor *\fIcolors_in_out\fP\^;
+.br
+      unsigned int \fIncolors\fP\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.IP \fIwhite_point\fP 1i
+Specifies the white point associated with color specifications.
+The pixel member should be ignored,
+and the entire structure remain unchanged upon return.
+.IP \fIcolors_in_out\fP 1i
+Specifies an array of color specifications.
+Pixel members should be ignored and must remain unchanged upon return.
+.IP \fIncolors\fP 1i
+Specifies the number of 
+.PN XcmsColor
+structures in the color-specification array.
+.LP
+.eM
+.sp
+Callback functions in the
+.PN XcmsColorSpace
+structure for converting a color specification to or from a device-dependent
+space must adhere to the
+following software interface specification:
+.sM
+.FD 0
+Status ConversionProc\^(\^\fIccc\fP, \fIcolors_in_out\fP, \fIncolors\fP, \fIcompression_flags_return\fP\^)
+.br
+      XcmsCCC \fIccc\fP\^;
+.br
+      XcmsColor *\fIcolors_in_out\fP\^;
+.br
+      unsigned int \fIncolors\fP\^;
+.br
+      Bool \fIcompression_flags_return\fP\^[\^]\^;
+.FN
+.IP \fIccc\fP 1i
+Specifies the CCC.
+.IP \fIcolors_in_out\fP 1i
+Specifies an array of color specifications.
+Pixel members should be ignored and must remain unchanged upon return.
+.IP \fIncolors\fP 1i
+Specifies the number of 
+.PN XcmsColor
+structures in the color-specification array.
+.IP \fIcompression_flags_return\fP 1i
+Returns an array of Boolean values for indicating compression status.
+If a non-NULL pointer is supplied
+and a color at a given index is compressed, then
+.PN True
+should be stored at the corresponding index in this array;
+otherwise, the array should not be modified.
+.LP
+.eM
+Conversion functions are available globally for use by other color
+spaces.
+The conversion functions provided by Xlib are:
+.TS H
+lw(1.8i) lw(1.8i) lw(1.8i).
+_
+.sp 6p
+.B
+Function	Converts from	Converts to
+.sp 6p
+_
+.sp 6p
+.TH
+.R
+T{
+.PN XcmsCIELabToCIEXYZ
+T}	T{
+.PN XcmsCIELabFormat
+T}	T{
+.PN XcmsCIEXYZFormat
+T}
+T{
+.PN XcmsCIELuvToCIEuvY
+T}	T{
+.PN XcmsCIELuvFormat
+T}	T{
+.PN XcmsCIEuvYFormat
+T}
+T{
+.PN XcmsCIEXYZToCIELab
+T}	T{
+.PN XcmsCIEXYZFormat
+T}	T{
+.PN XcmsCIELabFormat
+T}
+T{
+.PN XcmsCIEXYZToCIEuvY
+T}	T{
+.PN XcmsCIEXYZFormat
+T}	T{
+.PN XcmsCIEuvYFormat
+T}
+T{
+.PN XcmsCIEXYZToCIExyY
+T}	T{
+.PN XcmsCIEXYZFormat
+T}	T{
+.PN XcmsCIExyYFormat
+T}
+T{
+.PN XcmsCIEXYZToRGBi
+T}	T{
+.PN XcmsCIEXYZFormat
+T}	T{
+.PN XcmsRGBiFormat
+T}
+T{
+.PN XcmsCIEuvYToCIELuv
+T}	T{
+.PN XcmsCIEuvYFormat
+T}	T{
+.PN XcmsCIELabFormat
+T}
+T{
+.PN XcmsCIEuvYToCIEXYZ
+T}	T{
+.PN XcmsCIEuvYFormat
+T}	T{
+.PN XcmsCIEXYZFormat
+T}
+T{
+.PN XcmsCIEuvYToTekHVC
+T}	T{
+.PN XcmsCIEuvYFormat
+T}	T{
+.PN XcmsTekHVCFormat
+T}
+T{
+.PN XcmsCIExyYToCIEXYZ
+T}	T{
+.PN XcmsCIExyYFormat
+T}	T{
+.PN XcmsCIEXYZFormat
+T}
+T{
+.PN XcmsRGBToRGBi
+T}	T{
+.PN XcmsRGBFormat
+T}	T{
+.PN XcmsRGBiFormat
+T}
+T{
+.PN XcmsRGBiToCIEXYZ
+T}	T{
+.PN XcmsRGBiFormat
+T}	T{
+.PN XcmsCIEXYZFormat
+T}
+T{
+.PN XcmsRGBiToRGB
+T}	T{
+.PN XcmsRGBiFormat
+T}	T{
+.PN XcmsRGBFormat
+T}
+T{
+.PN XcmsTekHVCToCIEuvY
+T}	T{
+.PN XcmsTekHVCFormat
+T}	T{
+.PN XcmsCIEuvYFormat
+T}
+.sp 6p
+_
+.TE
+.NH 3
+Function Sets
+.XS
+\*(SN Function Sets
+.XE
+.IN "Function set"
+.IN "Function set" "LINEAR_RGB"
+.LP
+Functions to convert between device-dependent color spaces
+and CIE XYZ may differ for different classes of output devices
+(for example, color versus gray monitors).
+Therefore, the notion of a Color Characterization Function Set
+has been developed.
+A function set consists of device-dependent color spaces
+and the functions that convert color specifications 
+between these device-dependent color spaces and the CIE XYZ color space
+appropriate for a particular class of output devices.
+The function set also contains a function that reads
+color characterization data off root window properties.
+It is this characterization data that will differ between devices within
+a class of output devices.
+.IN "Device Color Characterization"
+For details about how color characterization data is
+stored in root window properties,
+see the section on Device Color Characterization in the
+\fIInter-Client Communication Conventions Manual\fP.
+The LINEAR_RGB function set is provided by Xlib
+and will support most color monitors.
+Function sets may require data that differs
+from those needed for the LINEAR_RGB function set.
+In that case, 
+its corresponding data may be stored on different root window properties.
+.NH 3
+Adding Function Sets
+.XS
+\*(SN Adding Function Sets
+.XE
+.LP
+To add a function set, use
+.PN XcmsAddFunctionSet .
+.IN  "XcmsAddFunctionSet" "" "@DEF@"
+.sM
+.FD 0
+Status XcmsAddFunctionSet\^(\^\fIfunction_set\fP\^)
+.br
+      XcmsFunctionSet *\fIfunction_set\fP\^;
+.FN
+.IP \fIfunction_set\fP 1i
+Specifies the function set to add.
+.LP
+.eM
+The
+.PN XcmsAddFunctionSet
+function adds a function set to the color management system.
+If the function set uses device-dependent 
+.PN XcmsColorSpace
+structures not accessible in the color management system,
+.PN XcmsAddFunctionSet
+adds them.
+If an added
+.PN XcmsColorSpace
+structure is for a device-dependent color space not registered
+with the X Consortium,
+they should be treated as private to the client
+because format values for unregistered color spaces are assigned at run time.
+If references to an unregistered color space must be made outside the
+client (for example, storing color specifications in a file
+using the unregistered color space),
+then reference should be made by color space prefix
+(see 
+.PN XcmsFormatOfPrefix
+and
+.PN XcmsPrefixOfFormat ).
+.LP
+Additional function sets should be added before any calls to other
+Xlib routines are made.
+If not, the 
+.PN XcmsPerScrnInfo
+member of a previously created 
+.PN XcmsCCC
+does not have the opportunity to initialize
+with the added function set.
+.NH 3
+Creating Additional Function Sets
+.XS
+\*(SN Creating Additional Function Sets
+.XE
+.LP
+The creation of additional function sets should be
+required only when an output device does not conform to existing 
+function sets or when additional device-dependent color spaces are necessary.
+A function set consists primarily of a collection of device-dependent
+.PN XcmsColorSpace
+structures and a means to read and store a 
+screen's color characterization data.
+This data is stored in an
+.PN XcmsFunctionSet
+structure.
+A handle to this structure (that is, by means of global variable)
+is usually made accessible to the client program for use with
+.PN XcmsAddFunctionSet .
+.LP
+If a function set uses new device-dependent 
+.PN XcmsColorSpace
+structures,
+they will be transparently processed into the color management system.
+Function sets can share an 
+.PN XcmsColorSpace
+structure for a device-dependent color space.
+In addition, multiple 
+.PN XcmsColorSpace
+structures are allowed for a device-dependent color space;
+however, a function set can reference only one of them.
+These 
+.PN XcmsColorSpace
+structures will differ in the functions to convert to and from CIE XYZ,
+thus tailored for the specific function set.
+.sM
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct _XcmsFunctionSet {
+	XcmsColorSpace **DDColorSpaces;
+	XcmsScreenInitProc screenInitProc;
+	XcmsScreenFreeProc screenFreeProc;
+} XcmsFunctionSet;
+.De
+.LP
+.eM
+The DDColorSpaces member is a pointer to a NULL terminated list
+of pointers to 
+.PN XcmsColorSpace
+structures for the device-dependent color spaces that are supported
+by the function set.
+The screenInitProc member is set to the callback procedure (see the following
+interface specification) that initializes the 
+.PN XcmsPerScrnInfo
+structure for a particular screen.
+.LP
+The screen initialization callback must adhere to the following software
+interface specification:
+.IN  "XcmsScreenInitProc" "" "@DEF@"
+.sM
+.FD 0
+typedef Status (*XcmsScreenInitProc)\^(\^\fIdisplay\fP, \fIscreen_number\fP, \fIscreen_info\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIscreen_number\fP\^;
+.br
+      XcmsPerScrnInfo *\fIscreen_info\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIscreen_number\fP 1i
+Specifies the appropriate screen number on the host server.
+.IP \fIscreen_info\fP 1i
+Specifies the 
+.PN XcmsPerScrnInfo 
+structure, which contains the per screen information.
+.LP
+.eM
+The screen initialization callback in the
+.PN XcmsFunctionSet
+structure fetches the color characterization data (device profile) for
+the specified screen,
+typically off properties on the 
+screen's root window.
+It then initializes the specified
+.PN XcmsPerScrnInfo
+structure.
+.IN "Device profile"
+.IN "Color Characterization Data"
+If successful, the procedure fills in the 
+.PN XcmsPerScrnInfo
+structure as follows:
+.IP \(bu 5
+It sets the screenData member to the address 
+of the created device profile data structure 
+(contents known only by the function set).
+.IP \(bu 5
+It next sets the screenWhitePoint member.
+.IP \(bu 5
+It next sets the functionSet member to the address of the
+.PN XcmsFunctionSet
+structure.
+.IP \(bu 5
+It then sets the state member to 
+.PN XcmsInitSuccess 
+and finally returns
+.PN XcmsSuccess .
+.LP
+If unsuccessful, the procedure sets the state member to 
+.PN XcmsInitFailure
+and returns
+.PN XcmsFailure .
+.LP
+The
+.PN XcmsPerScrnInfo
+structure contains:
+.sM
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct _XcmsPerScrnInfo {
+	XcmsColor screenWhitePoint;
+	XPointer functionSet;
+	XPointer screenData;
+	unsigned char state;
+	char pad[3];
+} XcmsPerScrnInfo;
+.De
+.LP
+.eM
+The screenWhitePoint member specifies the white point inherent to
+the screen.
+The functionSet member specifies the appropriate function set.
+The screenData member specifies the device profile.
+The state member is set to one of the following:
+.IP \(bu 5
+.PN XcmsInitNone
+indicates initialization has not been previously attempted.
+.IP \(bu 5
+.PN XcmsInitFailure
+indicates initialization has been previously attempted but failed.
+.IP \(bu 5
+.PN XcmsInitSuccess
+indicates initialization has been previously attempted and succeeded.
+.LP
+The screen free callback must adhere to the following software
+interface specification:
+.IN  "XcmsScreenFreeProc" "" "@DEF@"
+.sM
+.FD 0
+typedef void (*XcmsScreenFreeProc)\^(\^\fIscreenData\fP\^)
+.br
+      XPointer \fIscreenData\fP\^;
+.FN
+.IP \fIscreenData\fP 1i
+Specifies the data to be freed.
+.LP
+.eM
+This function is called to free the screenData stored in an
+.PN XcmsPerScrnInfo
+structure.
+.bp

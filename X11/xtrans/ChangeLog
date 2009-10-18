@@ -1,3 +1,76 @@
+commit 1127b8ec766ed8c48cc49b0779647fb697a07ebd
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 17 13:14:03 2009 -0700
+
+    xtrans 1.2.5
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 628b125ff9c72ec93090005b06228690f0dd6004
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Oct 17 13:06:26 2009 -0700
+
+    Move Xtrans interface docs from xorg-docs module
+    
+    Only built/installed if --enable-docs is requested, since few people should
+    be writing code using xtrans interfaces directly.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 3b0fc7a5a6d4b4b6903a9ad6685e2441f9fe83a7
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Oct 15 17:07:10 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 69334376346a96beb3df120a3eeeb7935923c388
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 15:25:58 2009 -0500
+
+    Silence root ownership warnings on Cygwin
+    
+    XWin need not be run as root, nor do Administrators have uid of 0.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+commit d009d995d85dc499dc3f1add34da551fdf703b60
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 15:25:57 2009 -0500
+
+    Don't use -lws2_32 on Cygwin
+    
+    On Cygwin, both the (builtin) *NIX socket API and WinSock (via w32api) are
+    available, but they cannot be mixed.  We use *NIX APIs for everything else,
+    so we do not want to mix in WinSock here.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+commit 773478581913bafa5e98a7bff3260efb0c4f2ab6
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Sep 26 04:39:20 2009 +0700
+
+    Move xtrans.pc to /usr/share/pkg-config
+    
+    This fixes configuration in cross-compilation mode:
+    pkg-config does not look for .pc in /usr/lib/pkg-config during
+    cross-compilation to avoid picking up wrong libraries.
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Acked-by: Julien Cristau <jcristau@debian.org>
+
+commit 336d4cfb58c784a81beca74fe03a0af0abb224ba
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri Aug 7 16:58:58 2009 +0200
+
+    Xtranssock: assume that we have getaddrinfo if ipv6 is enabled
+    
+    If IPv6 is enabled at build time, assume that the C library will have
+    getaddrinfo at runtime.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
 commit 4f82ca502d8ec33b0038700675d54539d85d723c
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Fri Jul 31 17:24:25 2009 -0700

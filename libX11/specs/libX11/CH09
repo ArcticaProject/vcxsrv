@@ -1,0 +1,1290 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996, 2002 The Open Group
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of The Open Group shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from The Open Group.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 9\fP\s-1
+
+\s+1\fBWindow and Session Manager Functions\fP\s-1
+.sp 2
+.nr H1 9
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 9: Window and Session Manager Functions 
+.XE
+Although it is difficult to categorize functions as exclusively
+for an application, a window manager, or a session manager,
+the functions in this chapter are most often used by window managers
+and session managers.
+It is not expected that these functions will be used by most 
+application programs.
+Xlib provides management functions to:
+.IP \(bu 5
+Change the parent of a window
+.IP \(bu 5
+Control the lifetime of a window
+.IP \(bu 5
+Manage installed colormaps
+.IP \(bu 5
+Set and retrieve the font search path
+.IP \(bu 5
+Grab the server
+.IP \(bu 5
+Kill a client
+.IP \(bu 5
+Control the screen saver
+.IP \(bu 5
+Control host access
+.NH 2
+Changing the Parent of a Window
+.XS
+\*(SN Changing the Parent of a Window 
+.XE
+.LP
+To change a window's parent to another window on the same screen, use
+.PN XReparentWindow .
+There is no way to move a window between screens.
+.IN "XReparentWindow" "" "@DEF@"
+.sM
+.FD 0
+XReparentWindow\^(\^\fIdisplay\fP, \fIw\fP\^, \fIparent\fP\^, \fIx\fP\^, \fIy\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Window \fIparent\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIparent\fP 1i
+Specifies the parent window.
+.ds Xy \ of the position in the new parent window
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.LP
+.eM
+If the specified window is mapped,
+.PN XReparentWindow
+automatically performs an
+.PN UnmapWindow
+request on it, removes it from its current position in the hierarchy,
+and inserts it as the child of the specified parent.
+The window is placed in the stacking order on top with respect to
+sibling windows.
+.LP
+After reparenting the specified window,
+.PN XReparentWindow
+causes the X server to generate a
+.PN ReparentNotify
+event.
+The override_redirect member returned in this event is
+set to the window's corresponding attribute.
+Window manager clients usually should ignore this window if this member
+is set to
+.PN True .
+Finally, if the specified window was originally mapped,
+the X server automatically performs a
+.PN MapWindow
+request on it.
+.LP
+The X server performs normal exposure processing on formerly obscured
+windows.
+The X server might not generate 
+.PN Expose 
+events for regions from the initial
+.PN UnmapWindow
+request that are immediately obscured by the final
+.PN MapWindow
+request.
+A
+.PN BadMatch
+error results if:
+.IP \(bu 5
+The new parent window is not on the same screen as
+the old parent window.
+.IP \(bu 5
+The new parent window is the specified window or an inferior of the
+specified window.
+.IP \(bu 5
+The new parent is
+.PN InputOnly ,
+and the window is not.
+.IP \(bu 5
+The specified window has a
+.PN ParentRelative
+background, and the new parent window is not the same depth as the
+specified window.
+.LP
+.PN XReparentWindow
+can generate
+.PN BadMatch
+and
+.PN BadWindow 
+errors.
+.NH 2
+Controlling the Lifetime of a Window
+.XS
+\*(SN Controlling the Lifetime of a Window 
+.XE
+.LP
+The save-set of a client is a list of other clients' windows that,
+if they are inferiors of one of the client's windows at connection close,
+should not be destroyed and should be remapped if they are unmapped.
+For further information about close-connection processing,
+see section 2.6.
+To allow an application's window to survive when a window manager that
+has reparented a window fails,
+Xlib provides the save-set functions that you can 
+use to control the longevity of subwindows
+that are normally destroyed when the parent is destroyed.
+For example, a window manager that wants to add decoration
+to a window by adding a frame might reparent an application's
+window. 
+When the frame is destroyed,
+the application's window should not be destroyed 
+but be returned to its previous place in the window hierarchy.
+.LP
+The X server automatically removes windows from the save-set
+when they are destroyed.
+.LP
+.sp
+To add or remove a window from the client's save-set, use
+.PN XChangeSaveSet .
+.IN "XChangeSaveSet" "" "@DEF@"
+.sM
+.FD 0
+XChangeSaveSet\^(\^\fIdisplay\fP, \fIw\fP\^, \fIchange_mode\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      int \fIchange_mode\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi that you want to add to or delete from the client's save-set
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIchange_mode\fP 1i
+Specifies the mode.
+You can pass
+.PN SetModeInsert 
+or
+.PN SetModeDelete .
+.LP
+.eM
+Depending on the specified mode,
+.PN XChangeSaveSet
+either inserts or deletes the specified window from the client's save-set. 
+The specified window must have been created by some other client,
+or a
+.PN BadMatch
+error results.
+.LP
+.PN XChangeSaveSet
+can generate
+.PN BadMatch ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To add a window to the client's save-set, use
+.PN XAddToSaveSet .
+.IN "XAddToSaveSet" "" "@DEF@"
+.sM
+.FD 0
+XAddToSaveSet\^(\^\fIdisplay\fP, \fIw\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi that you want to add to the client's save-set
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.LP
+.eM
+The
+.PN XAddToSaveSet
+function adds the specified window to the client's save-set.
+The specified window must have been created by some other client,
+or a
+.PN BadMatch
+error results.
+.LP
+.PN XAddToSaveSet
+can generate
+.PN BadMatch
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To remove a window from the client's save-set, use
+.PN XRemoveFromSaveSet .
+.IN "XRemoveFromSaveSet" "" "@DEF@"
+.sM
+.FD 0
+XRemoveFromSaveSet\^(\^\fIdisplay\fP, \fIw\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi that you want to delete from the client's save-set
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.LP
+.eM
+The
+.PN XRemoveFromSaveSet
+function removes the specified window from the client's save-set.
+The specified window must have been created by some other client,
+or a
+.PN BadMatch
+error results.
+.LP
+.PN XRemoveFromSaveSet
+can generate
+.PN BadMatch 
+and
+.PN BadWindow 
+errors.
+.NH 2
+Managing Installed Colormaps
+.XS
+\*(SN Managing Installed Colormaps
+.XE
+.LP
+The X server maintains a list of installed colormaps.
+Windows using these colormaps are guaranteed to display with
+correct colors; windows using other colormaps may or may not display
+with correct colors.
+Xlib provides functions that you can use to install a colormap, 
+uninstall a colormap, and obtain a list of installed colormaps.
+.LP
+At any time,
+there is a subset of the installed maps that is viewed as an ordered list
+and is called the required list.
+The length of the required list is at most M,
+where M is the minimum number of installed colormaps specified for the screen
+in the connection setup.
+The required list is maintained as follows.
+When a colormap is specified to
+.PN XInstallColormap ,
+it is added to the head of the list;
+the list is truncated at the tail, if necessary, to keep its length to 
+at most M.
+When a colormap is specified to
+.PN XUninstallColormap
+and it is in the required list,
+it is removed from the list.
+A colormap is not added to the required list when it is implicitly installed
+by the X server,
+and the X server cannot implicitly uninstall a colormap that is in the
+required list.
+.LP
+.sp
+To install a colormap, use
+.PN XInstallColormap .
+.IN "XInstallColormap" "" "@DEF@"
+.sM
+.FD 0
+XInstallColormap\^(\^\fIdisplay\fP, \fIcolormap\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.LP
+.eM
+The
+.PN XInstallColormap
+function installs the specified colormap for its associated screen.
+All windows associated with this colormap immediately display with
+true colors.
+You associated the windows with this colormap when you created them by calling
+.PN XCreateWindow ,
+.PN XCreateSimpleWindow ,
+.PN XChangeWindowAttributes ,
+or
+.PN XSetWindowColormap .
+.LP
+If the specified colormap is not already an installed colormap, 
+the X server generates a
+.PN ColormapNotify
+event on each window that has that colormap.
+In addition, for every other colormap that is installed as 
+a result of a call to
+.PN XInstallColormap ,
+the X server generates a
+.PN ColormapNotify
+event on each window that has that colormap.
+.LP
+.PN XInstallColormap
+can generate a
+.PN BadColor 
+error.
+.LP
+.sp
+To uninstall a colormap, use
+.PN XUninstallColormap .
+.IN "XUninstallColormap" "" "@DEF@"
+.sM
+.FD 0
+XUninstallColormap\^(\^\fIdisplay\fP, \fIcolormap\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Colormap \fIcolormap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.LP
+.eM
+The
+.PN XUninstallColormap
+function removes the specified colormap from the required
+list for its screen.
+As a result,
+the specified colormap might be uninstalled, 
+and the X server might implicitly install or uninstall additional colormaps.
+Which colormaps get installed or uninstalled is server dependent
+except that the required list must remain installed.
+.LP
+If the specified colormap becomes uninstalled, 
+the X server generates a
+.PN ColormapNotify
+event on each window that has that colormap.
+In addition, for every other colormap that is installed or uninstalled as a 
+result of a call to 
+.PN XUninstallColormap ,
+the X server generates a
+.PN ColormapNotify
+event on each window that has that colormap.
+.LP
+.PN XUninstallColormap
+can generate a
+.PN BadColor 
+error.
+.LP
+.sp
+To obtain a list of the currently installed colormaps for a given screen, use
+.PN XListInstalledColormaps .
+.IN "XListInstalledColormaps" "" "@DEF@"
+.sM
+.FD 0
+Colormap *XListInstalledColormaps\^(\^\fIdisplay\fP, \fIw\fP, \fInum_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      int *\fInum_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi that determines the screen
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fInum_return\fP 1i
+Returns the number of currently installed colormaps.
+.LP
+.eM
+The
+.PN XListInstalledColormaps
+function returns a list of the currently installed colormaps for the screen 
+of the specified window.
+The order of the colormaps in the list is not significant
+and is no explicit indication of the required list.
+When the allocated list is no longer needed,
+free it by using
+.PN XFree .
+.LP
+.PN XListInstalledColormaps
+can generate a
+.PN BadWindow 
+error.
+.NH 2
+Setting and Retrieving the Font Search Path
+.XS
+\*(SN Setting and Retrieving the Font Search Path 
+.XE
+.LP
+The set of fonts available from a server depends on a font
+search path.  Xlib provides functions to set and retrieve the
+search path for a server.
+.LP
+.sp
+To set the font search path, use
+.PN XSetFontPath .
+.IN "XSetFontPath" "" "@DEF@"
+.sM
+.FD 0
+XSetFontPath\^(\^\fIdisplay\fP, \fIdirectories\fP\^, \fIndirs\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char **\fIdirectories\fP\^;
+.br
+      int \fIndirs\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdirectories\fP 1i
+Specifies the directory path used to look for a font.
+Setting the path to the empty list restores the default path defined
+for the X server.
+.IP \fIndirs\fP 1i
+Specifies the number of directories in the path.
+.LP
+.eM
+The
+.PN XSetFontPath
+function defines the directory search path for font lookup.
+There is only one search path per X server, not one per client.
+The encoding and interpretation of the strings are implementation-dependent,
+but typically they specify directories or font servers to be searched 
+in the order listed.
+An X server is permitted to cache font information internally;
+for example, it might cache an entire font from a file and not
+check on subsequent opens of that font to see if the underlying
+font file has changed.
+However,
+when the font path is changed,
+the X server is guaranteed to flush all cached information about fonts 
+for which there currently are no explicit resource IDs allocated.
+The meaning of an error from this request is implementation-dependent.
+.LP
+.PN XSetFontPath
+can generate a
+.PN BadValue 
+error.
+.LP
+.sp
+To get the current font search path, use
+.PN XGetFontPath .
+.IN "XGetFontPath" "" "@DEF@"
+.sM
+.FD 0
+char **XGetFontPath\^(\^\fIdisplay\fP, \fInpaths_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int *\fInpaths_return\fP\^;
+
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fInpaths_return\fP 1i
+Returns the number of strings in the font path array.
+.LP
+.eM
+The
+.PN XGetFontPath
+function allocates and returns an array of strings containing the search path.
+The contents of these strings are implementation-dependent
+and are not intended to be interpreted by client applications.
+When it is no longer needed,
+the data in the font path should be freed by using
+.PN XFreeFontPath .
+.LP
+.sp
+To free data returned by
+.PN XGetFontPath ,
+use
+.PN XFreeFontPath .
+.IN "XFreeFontPath" "" "@DEF@"
+.sM
+.FD 0
+XFreeFontPath\^(\^\fIlist\fP\^)
+.br
+      char **\fIlist\fP\^;
+
+.FN
+.IP \fIlist\fP 1i
+Specifies the array of strings you want to free.
+.LP
+.eM
+The
+.PN XFreeFontPath
+function
+frees the data allocated by
+.PN XGetFontPath .
+.NH 2
+Grabbing the Server 
+.XS
+\*(SN Grabbing the Server 
+.XE
+.LP
+Xlib provides functions that you can use to grab and ungrab the server.
+These functions can be used to control processing of output on other
+connections by the window system server.
+While the server is grabbed,
+no processing of requests or close downs on any other connection will occur.
+A client closing its connection automatically ungrabs the server.
+.IN "Menus"
+.IN "Window" "managers"
+Although grabbing the server is highly discouraged, it is sometimes necessary.
+.LP
+.sp
+To grab the server, use
+.PN XGrabServer .
+.IN "Server" "grabbing"
+.IN "Grabbing" "server"
+.IN "XGrabServer" "" "@DEF@"
+.sM
+.FD 0
+XGrabServer\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XGrabServer
+function disables processing of requests and close downs on all other 
+connections than the one this request arrived on.
+You should not grab the X server any more than is absolutely necessary.
+.LP
+.sp
+To ungrab the server, use
+.PN XUngrabServer .
+.IN "XUngrabServer" "" "@DEF@"
+.sM
+.FD 0
+XUngrabServer\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XUngrabServer
+function restarts processing of requests and close downs on other connections.
+You should avoid grabbing the X server as much as possible.
+.NH 2
+Killing Clients
+.XS
+\*(SN Killing Clients 
+.XE
+.LP
+Xlib provides a function to cause the connection to
+a client to be closed and its resources to be destroyed.
+To destroy a client, use
+.PN XKillClient .
+.IN "XKillClient" "" "@DEF@"
+.sM
+.FD 0
+XKillClient\^(\^\fIdisplay\fP, \fIresource\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XID \fIresource\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIresource\fP 1i
+Specifies any resource associated with the client that you want to destroy or
+.PN AllTemporary .
+.LP
+.eM
+The
+.PN XKillClient
+function
+forces a close down of the client
+that created the resource
+if a valid resource is specified.
+If the client has already terminated in
+either 
+.PN RetainPermanent 
+or 
+.PN RetainTemporary 
+mode, all of the client's
+resources are destroyed.
+If 
+.PN AllTemporary 
+is specified, the resources of all clients that have terminated in
+.PN RetainTemporary 
+are destroyed (see section 2.5).
+This permits implementation of window manager facilities that aid debugging.
+A client can set its close-down mode to
+.PN RetainTemporary .
+If the client then crashes,
+its windows would not be destroyed. 
+The programmer can then inspect the application's window tree 
+and use the window manager to destroy the zombie windows.
+.LP
+.PN XKillClient
+can generate a
+.PN BadValue 
+error.
+.NH 2
+Controlling the Screen Saver 
+.XS
+\*(SN Controlling the Screen Saver 
+.XE
+.LP
+Xlib provides functions that you can use to set or reset the mode 
+of the screen saver, to force or activate the screen saver,
+or to obtain the current screen saver values.
+.LP
+.sp
+To set the screen saver mode, use
+.PN XSetScreenSaver .
+.IN "XSetScreenSaver" "" "@DEF@"
+.sM
+.FD 0
+XSetScreenSaver\^(\^\fIdisplay\fP, \fItimeout\fP\^, \fIinterval\fP\^, \fIprefer_blanking\fP\^, \fIallow_exposures\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fItimeout\fP\^, \fIinterval\fP\^;
+.br
+      int \fIprefer_blanking\fP\^; 
+.br
+      int \fIallow_exposures\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fItimeout\fP 1i
+Specifies the timeout, in seconds, until the screen saver turns on.
+.IP \fIinterval\fP 1i
+Specifies the interval, in seconds, between screen saver alterations.
+.IP \fIprefer_blanking\fP 1i
+Specifies how to enable screen blanking.
+You can pass
+.PN DontPreferBlanking ,
+.PN PreferBlanking ,
+or
+.PN DefaultBlanking .
+.IP \fIallow_exposures\fP 1i
+Specifies the screen save control values.
+You can pass
+.PN DontAllowExposures ,
+.PN AllowExposures ,
+or
+.PN DefaultExposures .
+.LP
+.eM
+Timeout and interval are specified in seconds. 
+A timeout of 0 disables the screen saver 
+(but an activated screen saver is not deactivated),
+and a timeout of \-1 restores the default.
+Other negative values generate a
+.PN BadValue
+error.
+If the timeout value is nonzero, 
+.PN XSetScreenSaver
+enables the screen saver.
+An interval of 0 disables the random-pattern motion.
+If no input from devices (keyboard, mouse, and so on) is generated 
+for the specified number of timeout seconds once the screen saver is enabled,
+the screen saver is activated.
+.LP
+For each screen, 
+if blanking is preferred and the hardware supports video blanking, 
+the screen simply goes blank.  
+Otherwise, if either exposures are allowed or the screen can be regenerated 
+without sending 
+.PN Expose 
+events to clients, 
+the screen is tiled with the root window background tile randomly 
+re-origined each interval seconds.
+Otherwise, the screens' state do not change, 
+and the screen saver is not activated.
+The screen saver is deactivated,
+and all screen states are restored at the next
+keyboard or pointer input or at the next call to
+.PN XForceScreenSaver
+with mode
+.PN ScreenSaverReset .  
+.LP
+If the server-dependent screen saver method supports periodic change,
+the interval argument serves as a hint about how long the change period
+should be, and zero hints that no periodic change should be made.
+Examples of ways to change the screen include scrambling the colormap
+periodically, moving an icon image around the screen periodically, or tiling
+the screen with the root window background tile, randomly re-origined
+periodically.
+.LP
+.PN XSetScreenSaver
+can generate a
+.PN BadValue 
+error.
+.LP
+.sp
+To force the screen saver on or off, use
+.PN XForceScreenSaver .
+.IN "XForceScreenSaver" "" "@DEF@"
+.sM
+.FD 0
+XForceScreenSaver\^(\^\fIdisplay\fP\^, \fImode\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fImode\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fImode\fP 1i
+Specifies the mode that is to be applied.
+You can pass
+.PN ScreenSaverActive
+or
+.PN ScreenSaverReset .
+.LP
+.eM
+If the specified mode is 
+.PN ScreenSaverActive 
+and the screen saver currently is deactivated,
+.PN XForceScreenSaver
+activates the screen saver even if the screen saver had been disabled
+with a timeout of zero.
+If the specified mode is 
+.PN ScreenSaverReset 
+and the screen saver currently is enabled,
+.PN XForceScreenSaver
+deactivates the screen saver if it was activated,
+and the activation timer is reset to its initial state 
+(as if device input had been received).
+.LP
+.PN XForceScreenSaver
+can generate a
+.PN BadValue 
+error.
+.LP
+.sp
+To activate the screen saver, use
+.PN XActivateScreenSaver .
+.IN "XActivateScreenSaver" "" "@DEF@"
+.sM
+.FD 0
+XActivateScreenSaver\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+.sp
+To reset the screen saver, use
+.PN XResetScreenSaver .
+.IN "XResetScreenSaver" "" "@DEF@"
+.sM
+.FD 0
+XResetScreenSaver\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+.sp
+To get the current screen saver values, use
+.PN XGetScreenSaver .
+.IN "XGetScreenSaver" "" "@DEF@"
+.sM
+.FD 0
+XGetScreenSaver\^(\^\fIdisplay\fP, \fItimeout_return\fP\^, \fIinterval_return\fP\^, \fIprefer_blanking_return\fP\^, 
+.br
+                  \fIallow_exposures_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int *\fItimeout_return\fP\^, *\fIinterval_return\fP\^;
+.br
+      int *\fIprefer_blanking_return\fP\^;
+.br
+      int *\fIallow_exposures_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fItimeout_return\fP 1i
+Returns the timeout, in seconds, until the screen saver turns on.
+.IP \fIinterval_return\fP 1i
+Returns the interval between screen saver invocations.
+.IP \fIprefer_blanking_return\fP 1i
+Returns the current screen blanking preference
+.Pn ( DontPreferBlanking ,
+.PN PreferBlanking ,
+or
+.PN DefaultBlanking ).
+.IP \fIallow_exposures_return\fP 1i
+Returns the current screen save control value
+.Pn ( DontAllowExposures ,
+.PN AllowExposures ,
+or
+.PN DefaultExposures ).
+.LP
+.eM
+.NH 2
+Controlling Host Access
+.XS
+\*(SN Controlling Host Access 
+.XE
+.LP
+This section discusses how to:
+.IP \(bu 5
+Add, get, or remove hosts from the access control list
+.IP \(bu 5
+Change, enable, or disable access
+.LP
+.IN "Access control list"
+.IN "Authentication"
+X does not provide any protection on a per-window basis.
+If you find out the resource ID of a resource, you can manipulate it.
+To provide some minimal level of protection, however,
+connections are permitted only from machines you trust.
+This is adequate on single-user workstations but obviously
+breaks down on timesharing machines.
+Although provisions exist in the X protocol for proper connection
+authentication, the lack of a standard authentication server
+leaves host-level access control as the only common mechanism.
+.LP
+.IN "Default Protection"
+The initial set of hosts allowed to open connections typically consists of:
+.IP \(bu 5
+The host the window system is running on.
+.IP \(bu 5
+On POSIX-conformant systems, each host listed in the
+.PN /etc/X?.hosts 
+file.
+The ? indicates the number of the
+display.
+.IN "Files" "/etc/X?.hosts"
+This file should consist of host names separated by newlines.
+DECnet nodes must terminate in :: to distinguish them from Internet hosts.
+.LP
+If a host is not in the access control list when the access control 
+mechanism is enabled and if the host attempts to establish a connection,
+the server refuses the connection.
+To change the access list,
+the client must reside on the same host as the server and/or must
+have been granted permission in the initial authorization at connection
+setup.
+.LP
+Servers also can implement other access control policies in addition to
+or in place of this host access facility.
+For further information about other access control implementations,
+see ``X Window System Protocol.''
+.NH 3
+Adding, Getting, or Removing Hosts
+.XS
+\*(SN Adding, Getting, or Removing Hosts 
+.XE
+.LP
+Xlib provides functions that you can use to add, get, or remove hosts
+from the access control list.
+All the host access control functions use the 
+.PN XHostAddress 
+structure, which contains:
+.LP
+.IN "XHostAddress" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	int family;	/* for example FamilyInternet */
+	int length;	/* length of address, in bytes */
+	char *address;	/* pointer to where to find the address */
+} XHostAddress;
+.De
+.LP
+.eM
+The family member specifies which protocol address family to use 
+(for example, TCP/IP or DECnet) and can be
+.PN FamilyInternet ,
+.PN FamilyInternet6 ,
+.PN FamilyServerInterpreted ,
+.PN FamilyDECnet ,
+or
+.PN FamilyChaos .
+The length member specifies the length of the address in bytes.
+The address member specifies a pointer to the address.
+.LP
+For TCP/IP, the address should be in network byte order.
+For IP version 4 addresses, the family should be FamilyInternet
+and the length should be 4 bytes.  For IP version 6 addresses, the
+family should be FamilyInternet6 and the length should be 16 bytes.
+.LP
+For the DECnet family, 
+the server performs no automatic swapping on the address bytes.
+A Phase IV address is 2 bytes long.
+The first byte contains the least significant 8 bits of the node number.
+The second byte contains the most significant 2 bits of the
+node number in the least significant 2 bits of the byte
+and the area in the most significant 6 bits of the byte.
+.LP
+For the ServerInterpreted family, the length is ignored and the address 
+member is a pointer to a 
+.PN XServerInterpretedAddress
+structure, which contains:
+.LP
+.IN "XServerInterpretedAddress" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	int typelength;	/* length of type string, in bytes */
+	int valuelength;/* length of value string, in bytes */
+	char *type;	/* pointer to where to find the type string */
+	char *value;	/* pointer to where to find the address */
+} XServerInterpretedAddress;
+.De
+.LP
+.eM
+The type and value members point to strings representing the type and value of
+the server interpreted entry.  These strings may not be NULL-terminated so care
+should be used when accessing them.  The typelength and valuelength members
+specify the length in byte of the type and value strings.
+.LP
+.sp
+To add a single host, use
+.PN XAddHost .
+.IN "XAddHost" "" "@DEF@"
+.sM
+.FD 0
+XAddHost\^(\^\fIdisplay\fP, \fIhost\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XHostAddress *\fIhost\fP\^;	
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Ho added
+.IP \fIhost\fP 1i
+Specifies the host that is to be \*(Ho.
+.LP
+.eM
+The
+.PN XAddHost
+function adds the specified host to the access control list for that display.
+The server must be on the same host as the client issuing the command, or a
+.PN BadAccess
+error results.
+.LP
+.PN XAddHost
+can generate
+.PN BadAccess
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To add multiple hosts at one time, use
+.PN XAddHosts .
+.IN "XAddHosts" "" "@DEF@"
+.sM
+.FD 0
+XAddHosts\^(\^\fIdisplay\fP, \fIhosts\fP, \fInum_hosts\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XHostAddress *\fIhosts\fP\^;
+.br
+      int \fInum_hosts\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Ho added
+.IP \fIhosts\fP 1i
+Specifies each host that is to be \*(Ho.
+.IP \fInum_hosts\fP 1i
+Specifies the number of hosts.
+.LP
+.eM
+The
+.PN XAddHosts
+function adds each specified host to the access control list for that display.
+The server must be on the same host as the client issuing the command, or a
+.PN BadAccess
+error results.
+.LP
+.PN XAddHosts
+can generate
+.PN BadAccess
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To obtain a host list, use
+.PN XListHosts .
+.IN "XListHosts" "" "@DEF@"
+.sM
+.FD 0
+XHostAddress *XListHosts\^(\^\fIdisplay\fP, \fInhosts_return\fP, \fIstate_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int *\fInhosts_return\fP\^;
+.br
+      Bool *\fIstate_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fInhosts_return\fP 1i
+Returns the number of hosts currently in the access control list.
+.IP \fIstate_return\fP 1i
+Returns the state of the access control.
+.LP
+.eM
+The
+.PN XListHosts
+function returns the current access control list as well as whether the use 
+of the list at connection setup was enabled or disabled.
+.PN XListHosts
+allows a program to find out what machines can make connections.
+It also returns a pointer to a list of host structures that
+were allocated by the function. 
+When no longer needed,
+this memory should be freed by calling
+.PN XFree .
+.LP
+.sp
+To remove a single host, use
+.PN XRemoveHost .
+.IN "XRemoveHost" "" "@DEF@"
+.sM
+.FD 0
+XRemoveHost\^(\^\fIdisplay\fP, \fIhost\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XHostAddress *\fIhost\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Ho removed
+.IP \fIhost\fP 1i
+Specifies the host that is to be \*(Ho.
+.LP
+.eM
+The
+.PN XRemoveHost
+function removes the specified host from the access control list 
+for that display.
+The server must be on the same host as the client process, or a
+.PN BadAccess
+error results.
+If you remove your machine from the access list,
+you can no longer connect to that server,
+and this operation cannot be reversed unless you reset the server.
+.LP
+.PN XRemoveHost
+can generate
+.PN BadAccess
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To remove multiple hosts at one time, use
+.PN XRemoveHosts .
+.IN "XRemoveHosts" "" "@DEF@"
+.sM
+.FD 0
+XRemoveHosts\^(\^\fIdisplay\fP, \fIhosts\fP, \fInum_hosts\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XHostAddress *\fIhosts\fP\^;
+.br
+      int \fInum_hosts\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Ho removed
+.IP \fIhosts\fP 1i
+Specifies each host that is to be \*(Ho.
+.IP \fInum_hosts\fP 1i
+Specifies the number of hosts.
+.LP
+.eM
+The
+.PN XRemoveHosts
+function removes each specified host from the access control list for that 
+display.  
+The X server must be on the same host as the client process, or a
+.PN BadAccess
+error results.
+If you remove your machine from the access list, 
+you can no longer connect to that server,
+and this operation cannot be reversed unless you reset the server.
+.LP
+.PN XRemoveHosts
+can generate
+.PN BadAccess
+and
+.PN BadValue 
+errors.
+.NH 3
+Changing, Enabling, or Disabling Access Control
+.XS
+\*(SN Changing, Enabling, or Disabling Access Control 
+.XE
+.LP
+Xlib provides functions that you can use to enable, disable, 
+or change access control.
+.LP
+For these functions to execute successfully,
+the client application must reside on the same host as the X server
+and/or have been given permission in the initial authorization
+at connection setup.
+.LP
+.sp
+To change access control, use
+.PN XSetAccessControl .
+.IN "XSetAccessControl" "" "@DEF@"
+.sM
+.FD 0
+XSetAccessControl\^(\^\fIdisplay\fP, \fImode\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fImode\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fImode\fP 1i
+Specifies the mode.
+You can pass
+.PN EnableAccess
+or
+.PN DisableAccess .
+.LP
+.eM
+The
+.PN XSetAccessControl
+function either enables or disables the use of the access control list 
+at each connection setup.
+.LP
+.PN XSetAccessControl
+can generate
+.PN BadAccess
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To enable access control, use
+.PN XEnableAccessControl .
+.IN "XEnableAccessControl" "" "@DEF@"
+.sM
+.FD 0
+XEnableAccessControl\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XEnableAccessControl
+function enables the use of the access control list at each connection setup.
+.LP
+.PN XEnableAccessControl
+can generate a
+.PN BadAccess 
+error.
+.LP
+.sp
+To disable access control, use
+.PN XDisableAccessControl .
+.IN "XDisableAccessControl" "" "@DEF@"
+.sM
+.FD 0
+XDisableAccessControl\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XDisableAccessControl
+function disables the use of the access control list at each connection setup.
+.LP
+.PN XDisableAccessControl
+can generate a
+.PN BadAccess 
+error.
+.bp

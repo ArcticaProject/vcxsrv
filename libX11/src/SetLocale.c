@@ -121,7 +121,7 @@ _Xsetlocale(
 
 #else /* X_LOCALE */
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__CYGWIN__)
 char *
 _Xsetlocale(
     int           category,
@@ -130,7 +130,7 @@ _Xsetlocale(
 {
     return setlocale(category, name);
 }
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || __CYGWIN__ */
 
 /*
  * _XlcMapOSLocaleName is an implementation dependent routine that derives

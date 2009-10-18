@@ -1,0 +1,1183 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBAppendix D\fP\s-1
+
+\s+1\fBCompatibility Functions\fP\s-1
+.sp 2
+.na
+.LP
+.XS
+Appendix D: Compatibility Functions
+.XE
+.LP
+The X Version 11 and X Version 10 functions discussed in this appendix 
+are obsolete, have been superseded by newer X Version 11 functions,
+and are maintained for compatibility reasons only.
+.SH
+X Version 11 Compatibility Functions
+.LP
+You can use the X Version 11 compatibility functions to:
+.IP \(bu 5
+Set standard properties 
+.IP \(bu 5
+Set and get window sizing hints 
+.IP \(bu 5
+Set and get an
+.PN XStandardColormap
+structure 
+.IP \(bu 5
+Parse window geometry
+.IP \(bu 5
+Get X environment defaults
+.SH
+Setting Standard Properties
+.LP
+To specify a minimum set of properties describing the simplest application,
+use
+.PN XSetStandardProperties .
+This function has been superseded by
+.PN XSetWMProperties
+and sets all or portions of the 
+WM_NAME, WM_ICON_NAME, WM_HINTS, WM_COMMAND, 
+and WM_NORMAL_HINTS properties.
+.IN "XSetStandardProperties" "" "@DEF@"
+.sM
+.FD 0
+XSetStandardProperties\^(\^\fIdisplay\fP, \fIw\fP, \fIwindow_name\fP, \fIicon_name\fP, \fIicon_pixmap\fP, \fIargv\fP, \fIargc\fP, \fIhints\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      char *\fIwindow_name\fP\^;
+.br
+      char *\fIicon_name\fP\^;
+.br
+      Pixmap \fIicon_pixmap\fP\^;
+.br
+      char **\fIargv\fP\^;
+.br
+      int \fIargc\fP\^;
+.br
+      XSizeHints *\fIhints\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIwindow_name\fP 1i
+Specifies the window name,
+which should be a null-terminated string.
+.IP \fIicon_name\fP 1i
+Specifies the icon name,
+which should be a null-terminated string.
+.IP \fIicon_pixmap\fP 1i
+Specifies the bitmap that is to be used for the icon or
+.PN None .
+.IP \fIargv\fP 1i
+Specifies the application's argument list.
+.IP \fIargc\fP 1i
+Specifies the number of arguments.
+.IP \fIhints\fP 1i
+Specifies a pointer to the size hints for the window in its normal state.
+.LP
+.eM
+The
+.PN XSetStandardProperties
+function provides a means by which simple applications set the
+most essential properties with a single call.
+.PN XSetStandardProperties
+should be used to give a window manager some information about 
+your program's preferences. 
+It should not be used by applications that need
+to communicate more information than is possible with
+.PN XSetStandardProperties .
+(Typically, argv is the argv array of your main program.)
+If the strings are not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+.LP
+.PN XSetStandardProperties
+can generate
+.PN BadAlloc
+and
+.PN BadWindow 
+errors.
+.SH
+Setting and Getting Window Sizing Hints
+.LP
+Xlib provides functions that you can use to set or get window sizing hints.
+The functions discussed in this section use the flags and the
+.PN XSizeHints 
+structure, as defined in the
+.hN X11/Xutil.h
+header file and use the WM_NORMAL_HINTS property.
+.LP
+.sp
+To set the size hints for a given window in its normal state, use
+.PN XSetNormalHints .
+This function has been superseded by
+.PN XSetWMNormalHints .
+.IN "XSetNormalHints" "" "@DEF@"
+.sM
+.FD 0
+XSetNormalHints\^(\^\fIdisplay\fP, \fIw\fP, \fIhints\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XSizeHints *\fIhints\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIhints\fP 1i
+Specifies a pointer to the size hints for the window in its normal state.
+.LP
+.eM
+The
+.PN XSetNormalHints
+function sets the size hints structure for the specified window.
+Applications use
+.PN XSetNormalHints
+to inform the window manager of the size
+or position desirable for that window.
+In addition, 
+an application that wants to move or resize itself should call
+.PN XSetNormalHints
+and specify its new desired location and size
+as well as making direct Xlib calls to move or resize.  
+This is because window managers may ignore redirected
+configure requests, but they pay attention to property changes.
+.LP
+To set size hints, 
+an application not only must assign values to the appropriate members
+in the hints structure but also must set the flags member of the structure 
+to indicate which information is present and where it came from.  
+A call to
+.PN XSetNormalHints
+is meaningless, unless the flags member is set to indicate which members of
+the structure have been assigned values.
+.LP
+.PN XSetNormalHints
+can generate
+.PN BadAlloc
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To return the size hints for a window in its normal state, use
+.PN XGetNormalHints .
+This function has been superseded by
+.PN XGetWMNormalHints .
+.IN "XGetNormalHints" "" "@DEF@"
+.sM
+.FD 0
+Status XGetNormalHints\^(\^\fIdisplay\fP, \fIw\fP, \fIhints_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XSizeHints *\fIhints_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIhints_return\fP 1i
+Returns the size hints for the window in its normal state.
+.LP
+.eM
+The
+.PN XGetNormalHints
+function returns the size hints for a window in its normal state.
+It returns a nonzero status if it succeeds or zero if
+the application specified no normal size hints for this window.
+.LP
+.PN XGetNormalHints
+can generate a
+.PN BadWindow 
+error.
+.LP
+.sp
+The next two functions set and read the WM_ZOOM_HINTS property.
+.LP
+To set the zoom hints for a window, use
+.PN XSetZoomHints .
+This function is no longer supported by the
+\fIInter-Client Communication Conventions Manual\fP.
+.IN "XSetZoomHints" "" "@DEF@"
+.sM
+.FD 0
+XSetZoomHints\^(\^\fIdisplay\fP, \fIw\fP, \fIzhints\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XSizeHints *\fIzhints\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIzhints\fP 1i
+Specifies a pointer to the zoom hints.
+.LP
+.eM
+Many window managers think of windows in one of three states:
+iconic, normal, or zoomed.
+The
+.PN XSetZoomHints
+function provides the window manager with information for the window in the
+zoomed state.
+.LP
+.PN XSetZoomHints
+can generate
+.PN BadAlloc
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To read the zoom hints for a window, use
+.PN XGetZoomHints .
+This function is no longer supported by the
+\fIInter-Client Communication Conventions Manual\fP.
+.IN "XGetZoomHints" "" "@DEF@"
+.sM
+.FD 0
+Status XGetZoomHints\^(\^\fIdisplay\fP, \fIw\fP, \fIzhints_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XSizeHints *\fIzhints_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIzhints_return\fP 1i
+Returns the zoom hints.
+.LP
+.eM
+The
+.PN XGetZoomHints
+function returns the size hints for a window in its zoomed state.
+It returns a nonzero status if it succeeds or zero if
+the application specified no zoom size hints for this window.
+.LP
+.PN XGetZoomHints
+can generate a
+.PN BadWindow 
+error.
+.LP
+.sp
+To set the value of any property of type WM_SIZE_HINTS, use
+.PN XSetSizeHints .
+This function has been superseded by
+.PN XSetWMSizeHints .
+.IN "XSetSizeHints" "" "@DEF@"
+.sM
+.FD 0
+XSetSizeHints\^(\^\fIdisplay\fP, \fIw\fP, \fIhints\fP, \fIproperty\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XSizeHints *\fIhints\fP\^;
+.br
+      Atom \fIproperty\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIhints\fP 1i
+Specifies a pointer to the size hints.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+.LP
+.eM
+The
+.PN XSetSizeHints
+function sets the
+.PN XSizeHints
+structure for the named property and the specified window.
+This is used by
+.PN XSetNormalHints
+and
+.PN XSetZoomHints
+and can be used to set the value of any property of type WM_SIZE_HINTS.
+Thus, it may be useful if other properties of that type get defined.
+.LP
+.PN XSetSizeHints
+can generate
+.PN BadAlloc ,
+.PN BadAtom ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To read the value of any property of type WM_SIZE_HINTS, use
+.PN XGetSizeHints .
+This function has been superseded by
+.PN XGetWMSizeHints .
+.IN "XGetSizeHints" "" "@DEF@"
+.sM
+.FD 0
+Status XGetSizeHints\^(\^\fIdisplay\fP, \fIw\fP, \fIhints_return\fP, \fIproperty\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XSizeHints *\fIhints_return\fP\^;
+.br
+      Atom \fIproperty\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIhints_return\fP 1i
+Returns the size hints.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+.LP
+.eM
+The
+.PN XGetSizeHints
+function returns the
+.PN XSizeHints
+structure for the named property and the specified window.
+This is used by
+.PN XGetNormalHints
+and
+.PN XGetZoomHints .
+It also can be used to retrieve the value of any property of type
+WM_SIZE_HINTS.
+Thus, it may be useful if other properties of that type get defined.
+.PN XGetSizeHints
+returns a nonzero status if a size hint was defined
+or zero otherwise.
+.LP
+.PN XGetSizeHints
+can generate
+.PN BadAtom
+and 
+.PN BadWindow 
+errors.
+.SH
+Getting and Setting an XStandardColormap Structure
+.LP
+To get the 
+.PN XStandardColormap 
+structure associated with one of the described atoms, use
+.PN XGetStandardColormap .
+This function has been superseded by
+.PN XGetRGBColormap .
+.IN "XGetStandardColormap" "" "@DEF@"
+.sM
+.FD 0
+Status XGetStandardColormap(\^\fIdisplay\fP, \fIw\fP, \fIcolormap_return\fP, \fIproperty\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XStandardColormap *\fIcolormap_return\fP\^;
+.br
+      Atom \fIproperty\fP\^;	/* RGB_BEST_MAP, etc. */
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIcolormap_return\fP 1i
+Returns the colormap associated with the specified atom.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+.LP
+.eM
+The
+.PN XGetStandardColormap
+function returns the colormap definition associated with the atom supplied
+as the property argument.
+.PN XGetStandardColormap
+returns a nonzero status if successful and zero otherwise.
+For example,
+to fetch the standard
+.PN GrayScale
+colormap for a display,
+you use
+.PN XGetStandardColormap
+with the following syntax:
+.LP
+.sM
+.Ds 0
+.TA .5i 1.5i
+.ta .5i 1.5i
+XGetStandardColormap(dpy, DefaultRootWindow(dpy), &cmap, XA_RGB_GRAY_MAP);
+.De
+.LP
+.eM
+See section 14.3 for the semantics of standard colormaps.
+.LP
+.PN XGetStandardColormap
+can generate
+.PN BadAtom
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To set a standard colormap, use
+.PN XSetStandardColormap .
+This function has been superseded by
+.PN XSetRGBColormap .
+.IN "XSetStandardColormap" "" "@DEF@"
+.sM
+.FD 0
+XSetStandardColormap(\^\fIdisplay\fP, \fIw\fP, \fIcolormap\fP, \fIproperty\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XStandardColormap *\fIcolormap\fP\^;
+.br
+      Atom \fIproperty\fP\^;	/* RGB_BEST_MAP, etc. */
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIcolormap\fP 1i
+Specifies the colormap.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+.LP
+.eM
+The
+.PN XSetStandardColormap
+function usually is only used by window or session managers.
+.LP
+.PN XSetStandardColormap
+can generate
+.PN BadAlloc ,
+.PN BadAtom ,
+.PN BadDrawable ,
+and
+.PN BadWindow 
+errors.
+.SH
+Parsing Window Geometry
+.LP
+To parse window geometry given a user-specified position 
+and a default position, use
+.PN XGeometry .
+This function has been superseded by
+.PN XWMGeometry .
+.IN "Window" "determining location"
+.IN "XGeometry" "" "@DEF@"
+.sM
+.FD 0
+int XGeometry\^(\^\fIdisplay\fP, \fIscreen\fP, \fIposition\fP\^, \fIdefault_position\fP\^, \fIbwidth\fP\^, \fIfwidth\fP\^, \fIfheight\fP\^, \fIxadder\fP\^, 
+.br
+                  \fIyadder\fP\^, \fIx_return\fP\^, \fIy_return\fP\^, \fIwidth_return\fP\^, \fIheight_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIscreen\fP\^;
+.br
+      char *\fIposition\fP\^, *\fIdefault_position\fP\^;	
+.br
+      unsigned int \fIbwidth\fP\^;
+.br
+      unsigned int \fIfwidth\fP\^, \fIfheight\fP\^;	
+.br
+      int \fIxadder\fP\^, \fIyadder\fP\^;	
+.br
+      int *\fIx_return\fP\^, *\fIy_return\fP\^;
+.br
+      int *\fIwidth_return\fP\^, *\fIheight_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIscreen\fP 1i
+Specifies the screen.
+.IP \fIposition\fP 1i
+.br
+.ns
+.IP \fIdefault_position\fP 1i
+Specify the geometry specifications.
+.IP \fIbwidth\fP 1i
+Specifies the border width.
+.IP \fIfheight\fP 1i
+.br
+.ns
+.IP \fIfwidth\fP 1i
+Specify the font height and width in pixels (increment size).
+.IP \fIxadder\fP 1i
+.br
+.ns
+.IP \fIyadder\fP 1i
+Specify additional interior padding needed in the window.
+.IP \fIx_return\fP 1i
+.br
+.ns
+.IP \fIy_return\fP 1i
+Return the x and y offsets.
+.IP \fIwidth_return\fP 1i
+.br
+.ns
+.IP \fIheight_return\fP 1i
+Return the width and height determined.
+.LP
+.eM
+You pass in the border width (bwidth),
+size of the increments fwidth and fheight
+(typically font width and height),
+and any additional interior space (xadder and yadder)
+to make it easy to compute the resulting size.
+The
+.PN XGeometry 
+function returns the position the window should be placed given a position and
+a default position.
+.PN XGeometry
+determines the placement of
+a window using a geometry specification as specified by
+.PN XParseGeometry 
+and the additional information about the window.
+Given a fully qualified default geometry specification and
+an incomplete geometry specification, 
+.PN XParseGeometry
+returns a bitmask value as defined above in the 
+.PN XParseGeometry
+call,
+by using the position argument.
+.LP
+The returned width and height will be the width and height specified
+by default_position as overridden by any user-specified position.
+They are not affected by fwidth, fheight, xadder, or yadder.
+The x and y coordinates are computed by using the border width,
+the screen width and height, padding as specified by xadder and yadder,
+and the fheight and fwidth times the width and height from the
+geometry specifications.
+.SH
+Getting the X Environment Defaults
+.LP
+The
+.PN XGetDefault
+function provides a primitive interface to the resource manager facilities 
+discussed in chapter 15.
+It is only useful in very simple applications.
+.LP
+.sp
+.IN "XGetDefault" "" "@DEF@"
+.sM
+.FD 0
+char *XGetDefault\^(\^\fIdisplay\fP, \fIprogram\fP\^, \fIoption\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIprogram\fP\^;
+.br
+      char *\fIoption\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIprogram\fP 1i
+Specifies the program name for the Xlib defaults (usually argv[0] 
+of the main program).
+.IP \fIoption\fP 1i
+Specifies the option name.
+.LP
+.eM
+The
+.PN XGetDefault
+function returns the value of the resource \fIprog\fP.\fIoption\fP,
+where \fIprog\fP is the program argument with the directory prefix removed
+and \fIoption\fP must be a single component.
+Note that multilevel resources cannot be used with
+.PN XGetDefault .
+The class "Program.Name" is always used for the resource lookup.
+If the specified option name does not exist for this program,
+.PN XGetDefault
+returns NULL.
+The strings returned by
+.PN XGetDefault
+are owned by Xlib and should not be modified or freed by the client.
+.LP
+If a database has been set with 
+.PN XrmSetDatabase , 
+that database is used for the lookup.
+Otherwise, a database is created
+and is set in the display (as if by calling 
+.PN XrmSetDatabase ).
+The database is created in the current locale.
+To create a database,
+.PN XGetDefault
+uses resources from the RESOURCE_MANAGER property on the root
+window of screen zero.
+If no such property exists,
+a resource file in the user's home directory is used.
+On a POSIX-conformant system, 
+this file is
+.PN "$HOME/.Xdefaults" .
+.IN "Files" "$HOME/.Xdefaults"
+After loading these defaults,
+.PN XGetDefault
+merges additional defaults specified by the XENVIRONMENT
+environment variable.
+If XENVIRONMENT is defined,
+it contains a full path name for the additional resource file.
+If XENVIRONMENT is not defined,
+.PN XGetDefault
+looks for
+.PN "$HOME/.Xdefaults-\fIname\fP" ,
+where \fIname\fP specifies the name of the machine on which the application
+is running.
+.SH
+X Version 10 Compatibility Functions
+.LP
+You can use the X Version 10 compatibility functions to:
+.IP \(bu 5
+Draw and fill polygons and curves
+.IP \(bu 5
+Associate user data with a value
+.SH
+Drawing and Filling Polygons and Curves
+.LP
+Xlib provides functions that you can use to draw or fill
+arbitrary polygons or curves.  
+These functions are provided mainly for compatibility with X Version 10 
+and have no server support.  
+That is, they call other Xlib functions, not the server directly.  
+Thus, if you just have straight lines to draw, using 
+.PN XDrawLines 
+.IN "XDrawLines"
+or
+.PN XDrawSegments 
+.IN "XDrawSegments" 
+is much faster.
+.LP
+The functions discussed here provide all the functionality of the 
+X Version 10 functions 
+.PN XDraw , 
+.IN "X10 compatibility" "XDraw" 
+.PN XDrawFilled , 
+.IN "X10 compatibility" "XDrawFilled"
+.PN XDrawPatterned , 
+.IN "X10 compatibility" "XDrawPatterned" 
+.PN XDrawDashed , 
+.IN "X10 compatibility" "XDrawDashed"
+and
+.PN XDrawTiled .  
+.IN "X10 compatibility" "XDrawTiled"
+They are as compatible as possible given X Version 11's new line-drawing 
+functions.  
+One thing to note, however, is that
+.PN VertexDrawLastPoint 
+is no longer supported. 
+Also, the error status returned is the opposite of what it was under 
+X Version 10 (this is the X Version 11 standard error status).  
+.PN XAppendVertex 
+and 
+.PN XClearVertexFlag 
+from X Version 10 also are not supported.
+.LP
+Just how the graphics context you use is set up actually
+determines whether you get dashes or not, and so on.  
+Lines are properly joined if they connect and include
+the closing of a closed figure  (see 
+.PN XDrawLines ).
+The functions discussed here fail (return zero) only if they run out of memory
+or are passed a 
+.PN Vertex 
+list that has a 
+.PN Vertex 
+with 
+.PN VertexStartClosed
+set that is not followed by a 
+.PN Vertex 
+with 
+.PN VertexEndClosed 
+set.
+.LP
+.sp
+To achieve the effects of the X Version 10
+.PN XDraw , 
+.IN "X10 compatibility" "XDraw" 
+.PN XDrawDashed , 
+.IN "X10 compatibility" "XDrawDashed"
+and 
+.PN XDrawPatterned , 
+.IN "X10 compatibility" "XDrawPatterned" 
+use
+.PN XDraw .  
+.IN "XDraw" "" "@DEF@" 
+.sM
+.FD 0
+#include <X11/X10.h>
+
+Status XDraw(\^\fIdisplay\fP, \fId\fP, \fIgc\fP, \fIvlist\fP, \fIvcount\fP\^)
+.br
+	Display *\fIdisplay\fP\^;
+.br
+	Drawable \fId\fP\^;
+.br
+	GC \fIgc\fP\^;
+.br
+	Vertex *\fIvlist\fP\^;
+.br
+	int \fIvcount\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIvlist\fP 1i
+Specifies a pointer to the list of vertices that indicate what to draw.
+.IP \fIvcount\fP 1i
+Specifies how many vertices are in vlist.
+.LP
+.eM
+The
+.PN XDraw 
+function draws an arbitrary polygon or curve.  
+The figure drawn is defined by the specified list of vertices (vlist).
+The points are connected by lines as specified in the flags in the
+vertex structure.
+.LP
+Each Vertex, as defined in
+.hN X11/X10.h ,
+is a structure with the following members:
+.LP
+.IN "Vertex" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 1.5i
+.ta .5i 1.5i
+typedef struct _Vertex {
+	short x,y;
+	unsigned short flags;
+} Vertex;
+.De
+.LP
+.eM
+The x and y members are the coordinates of the vertex 
+that are relative to either the upper left inside corner of the drawable 
+(if 
+.PN VertexRelative 
+is zero) or the previous vertex (if 
+.PN VertexRelative 
+is one).
+.LP
+The flags, as defined in 
+.hN X11/X10.h , 
+are as follows:
+.IN "VertexRelative" "" "@DEF@"
+.IN "VertexDontDraw" "" "@DEF@"
+.IN "VertexCurved" "" "@DEF@"
+.IN "VertexStartClosed" "" "@DEF@"
+.IN "VertexEndClosed" "" "@DEF@"
+.sM
+.TS
+l l l.
+T{
+.PN VertexRelative
+T}	T{
+0x0001
+T}	T{
+/* else absolute */
+T}
+T{
+.PN VertexDontDraw
+T}	T{
+0x0002
+T}	T{
+/* else draw */
+T}
+T{
+.PN VertexCurved
+T}	T{
+0x0004
+T}	T{
+/* else straight */
+T}
+T{
+.PN VertexStartClosed
+T}	T{
+0x0008
+T}	T{
+/* else not */
+T}
+T{
+.PN VertexEndClosed
+T}	T{
+0x0010
+T}	T{
+/* else not */
+T}
+.TE
+.LP
+.eM
+.IP \(bu 5
+If 
+.PN VertexRelative 
+is not set,  
+the coordinates are absolute (that is, relative to the drawable's origin).  
+The first vertex must be an absolute vertex.
+.IP \(bu 5
+If
+.PN VertexDontDraw 
+is one, 
+no line or curve is drawn from the previous vertex to this one.  
+This is analogous to picking up the pen and moving to another place 
+before drawing another line.
+.IP \(bu 5
+If 
+.PN VertexCurved 
+is one, 
+a spline algorithm is used to draw a smooth curve from the previous vertex
+through this one to the next vertex.  
+Otherwise, a straight line is drawn from the previous vertex to this one.  
+It makes sense to set 
+.PN VertexCurved 
+to one only if a previous and next vertex are both defined
+(either explicitly in the array or through the definition of a closed 
+curve).
+.IP \(bu 5
+It is permissible for 
+.PN VertexDontDraw 
+bits and 
+.PN VertexCurved
+bits both to be one. 
+This is useful if you want to define the previous point for the smooth curve
+but do not want an actual curve drawing to start until this point.
+.IP \(bu 5
+If 
+.PN VertexStartClosed 
+is one, 
+then this point marks the beginning of a closed curve.  
+This vertex must be followed later in the array by another vertex 
+whose effective coordinates are identical
+and that has a
+.PN VertexEndClosed 
+bit of one.
+The points in between form a cycle to determine predecessor 
+and successor vertices for the spline algorithm.
+.LP
+This function uses these GC components:
+function, plane-mask, line-width, line-style, cap-style, join-style,
+fill-style, subwindow-mode, clip-x-origin, clip-y-origin, and
+clip-mask.
+It also uses these GC mode-dependent components: 
+foreground, background, tile, stipple,
+tile-stipple-x-origin, tile-stipple-y-origin, dash-offset, and dash-list.
+.LP
+.sp
+To achieve the effects of the X Version 10
+.PN XDrawTiled 
+.IN "X10 compatibility" "XDrawTiled"
+and 
+.PN XDrawFilled , 
+.IN "X10 compatibility" "XDrawFilled"
+use
+.PN XDrawFilled .
+.IN "XDrawFilled" "" "@DEF@"
+.sM
+.FD 0
+#include <X11/X10.h>
+
+Status XDrawFilled(\^\fIdisplay\fP, \fId\fP, \fIgc\fP, \fIvlist\fP, \fIvcount\fP\^)
+.br
+	Display *\fIdisplay\fP\^;
+.br
+	Drawable \fId\fP\^;
+.br
+	GC \fIgc\fP\^;
+.br
+	Vertex *\fIvlist\fP\^;
+.br
+	int \fIvcount\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIvlist\fP 1i
+Specifies a pointer to the list of vertices that indicate what to draw.
+.IP \fIvcount\fP 1i
+Specifies how many vertices are in vlist.
+.LP
+.eM
+The
+.PN XDrawFilled 
+function draws arbitrary polygons or curves and then fills them.
+.LP
+This function uses these GC components:
+function, plane-mask, line-width, line-style, cap-style, join-style,
+fill-style, subwindow-mode, clip-x-origin, clip-y-origin, and
+clip-mask.
+It also uses these GC mode-dependent components: 
+foreground, background, tile, stipple,
+tile-stipple-x-origin, tile-stipple-y-origin, 
+dash-offset, dash-list, fill-style, and fill-rule.
+.SH
+Associating User Data with a Value
+.LP
+These functions have been superseded by the context management functions
+(see section 16.10). 
+It is often necessary to associate arbitrary information with resource IDs.
+Xlib provides the 
+.PN XAssocTable 
+functions that you can use to make such an association.
+.IN "Hash Lookup"
+.IN "Window" "IDs"
+.IN "Resource IDs"
+Application programs often need to be able to easily refer to
+their own data structures when an event arrives.
+The 
+.PN XAssocTable
+system provides users of the X library with a method
+for associating their own data structures with X resources
+.Pn ( Pixmaps , 
+.PN Fonts , 
+.PN Windows , 
+and so on).
+.LP
+An 
+.PN XAssocTable
+can be used to type X resources.  
+For example, the user
+may want to have three or four types of windows,
+each with different properties. 
+This can be accomplished by associating each X window ID
+with a pointer to a window property data structure  defined  by  the
+user.
+A generic type has been defined in the X library for resource IDs.
+It is called an XID.
+.LP
+There are a few  guidelines  that  should be observed when using an
+.PN XAssocTable :
+.IP \(bu 5
+All  XIDs  are  relative  to  the  specified display.
+.IP \(bu 5
+Because  of  the  hashing  scheme  used  by  the  association mechanism,
+the following rules for determining the size of a
+.PN XAssocTable
+should be followed.  
+Associations will be  made  and  looked  up  more
+efficiently  if  the  table  size  (number  of  buckets in the hashing
+system) is a power of two and if there are not more than 8 XIDs  per
+bucket.
+.LP
+.sp
+To return a pointer to a new
+.PN XAssocTable , 
+use 
+.PN XCreateAssocTable .
+.IN "XCreateAssocTable" "" "@DEF@"
+.sM
+.FD 0
+XAssocTable *XCreateAssocTable\^(\^\fIsize\fP\^)
+.br
+      int \fIsize\fP\^;	
+.FN
+.IP \fIsize\fP 1i
+Specifies the number of buckets in the hash system of
+.PN XAssocTable .
+.LP
+.eM
+The size argument specifies the number of buckets in the 
+hash system of
+.PN XAssocTable .
+For  reasons  of  efficiency  the number of buckets
+should be a power of two.
+Some size  suggestions  might  be:  use  32 buckets  per  100  objects,
+and a reasonable maximum number of objects per buckets is 8.
+If  an  error  allocating  memory  for  the
+.PN XAssocTable 
+occurs, 
+a NULL pointer is returned. 
+.LP
+.sp
+To create an entry in a given 
+.PN XAssocTable ,
+use 
+.PN XMakeAssoc .
+.IN "XMakeAssoc" "" "@DEF@"
+.sM
+.FD 0
+XMakeAssoc\^(\^\fIdisplay\fP, \fItable\fP\^, \fIx_id\fP\^, \fIdata\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XAssocTable *\fItable\fP\^;	
+.br
+      XID \fIx_id\fP\^;
+.br
+      char *\fIdata\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fItable\fP 1i
+Specifies the assoc table. 
+.IP \fIx_id\fP 1i
+Specifies the X resource ID.
+.IP \fIdata\fP 1i
+Specifies the data to be associated with the X resource ID.
+.LP
+.eM
+The
+.PN XMakeAssoc
+function inserts data into an 
+.PN XAssocTable
+keyed on an XID.
+Data is inserted into the table only once.
+Redundant inserts are ignored.
+The queue in each association bucket is sorted from the lowest XID to 
+the highest XID.
+.LP
+.sp
+To obtain data from a given 
+.PN XAssocTable ,
+use 
+.PN XLookUpAssoc .
+.IN "XLookUpAssoc" "" "@DEF@"
+.sM
+.FD 0
+char *XLookUpAssoc\^(\^\fIdisplay\fP, \fItable\fP\^, \fIx_id\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XAssocTable *\fItable\fP\^;
+.br
+      XID \fIx_id\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fItable\fP 1i
+Specifies the assoc table. 
+.IP \fIx_id\fP 1i
+Specifies the X resource ID.
+.LP
+.eM
+The
+.PN XLookUpAssoc
+function retrieves the data stored in an 
+.PN XAssocTable
+by its XID.  
+If  an appropriately  matching XID can be found in the table,
+.PN XLookUpAssoc
+returns the data associated with it.
+If the x_id cannot be found in the table,
+it returns NULL.
+.LP
+.sp
+To delete an entry from a given 
+.PN XAssocTable ,
+use 
+.PN XDeleteAssoc .
+.IN "XDeleteAssoc" "" "@DEF@"
+.sM
+.FD 0
+XDeleteAssoc\^(\^\fIdisplay\fP, \fItable\fP\^, \fIx_id\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XAssocTable *\fItable\fP\^;
+.br
+      XID \fIx_id\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fItable\fP 1i
+Specifies the assoc table. 
+.IP \fIx_id\fP 1i
+Specifies the X resource ID.
+.LP
+.eM
+The
+.PN XDeleteAssoc
+function deletes an association in an 
+.PN XAssocTable
+keyed on its XID.
+Redundant deletes (and deletes of nonexistent XIDs) are ignored.
+Deleting associations in no way impairs the performance of an 
+.PN XAssocTable .
+.LP
+.sp
+To free the memory associated with a given 
+.PN XAssocTable ,
+use 
+.PN XDestroyAssocTable .
+.IN "XDestroyAssocTable" "" "@DEF@"
+.sM
+.FD 0
+XDestroyAssocTable\^(\^\fItable\fP\^)
+.br
+      XAssocTable *\fItable\fP\^;
+.FN
+.IP \fItable\fP 1i
+Specifies the assoc table. 
+.LP
+.eM
+.bp

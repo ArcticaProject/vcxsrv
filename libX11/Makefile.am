@@ -3,7 +3,7 @@ ORDER=src modules
 else
 ORDER=modules src
 endif
-SUBDIRS=include $(ORDER) nls man
+SUBDIRS=include $(ORDER) nls man specs
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = x11.pc

@@ -1,0 +1,1595 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 4\fP\s-1
+
+\s+1\fBWindow Information Functions\fP\s-1
+.sp 2
+.nr H1 4
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 4: Window Information Functions 
+.XE
+After you connect the display to the X server and create a window,
+you can use the Xlib window information functions to:
+.IP \(bu 5
+Obtain information about a window
+.IP \(bu 5
+Translate screen coordinates
+.IP \(bu 5
+Manipulate property lists
+.IP \(bu 5
+Obtain and change window properties
+.IP \(bu 5
+Manipulate selections
+.NH 2
+Obtaining Window Information
+.XS
+\*(SN Obtaining Window Information 
+.XE
+.LP
+Xlib provides functions that you can use to obtain information about 
+the window tree, the window's current attributes, 
+the window's current geometry, or the current pointer coordinates.
+Because they are most frequently used by window managers,
+these functions all return a status to indicate whether the window still
+exists.
+.LP
+.sp
+To obtain the parent, a list of children, and number of children for 
+a given window, use 
+.PN XQueryTree .
+.IN "Child Window"
+.IN "Parent Window"
+.IN "XQueryTree" "" "@DEF@"
+.sM
+.FD 0
+Status XQueryTree\^(\^\fIdisplay\fP, \fIw\fP\^, \fIroot_return\fP\^, \fIparent_return\fP\^, \fIchildren_return\fP\^, \fInchildren_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Window *\fIroot_return\fP\^;
+.br
+      Window *\fIparent_return\fP\^;
+.br
+      Window **\fIchildren_return\fP\^;
+.br
+      unsigned int *\fInchildren_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose list of children, root, parent, and number of children \
+you want to obtain
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIroot_return\fP 1i
+Returns the root window.
+.IP \fIparent_return\fP 1i
+Returns the parent window.
+.IP \fIchildren_return\fP 1i
+Returns the list of children.
+.IP \fInchildren_return\fP 1i
+Returns the number of children.
+.LP
+.eM
+The
+.PN XQueryTree
+function returns the root ID, the parent window ID, 
+a pointer to the list of children windows
+(NULL when there are no children), 
+and the number of children in the list for the specified window.
+The children are listed in current stacking order, from bottom-most 
+(first) to top-most (last).
+.PN XQueryTree
+returns zero if it fails and nonzero if it succeeds.
+To free a non-NULL children list when it is no longer needed, use 
+.PN XFree .
+.LP
+.PN XQueryTree
+can generate a
+.PN BadWindow
+error.
+.LP
+.sp
+To obtain the current attributes of a given window, use 
+.PN XGetWindowAttributes .
+.IN "XGetWindowAttributes" "" "@DEF@"
+.sM
+.FD 0
+Status XGetWindowAttributes\^(\^\fIdisplay\fP, \fIw\fP\^, \fIwindow_attributes_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      XWindowAttributes *\fIwindow_attributes_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose current attributes you want to obtain
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIwindow_attributes_return\fP 1i
+Returns the specified window's attributes in the
+.PN XWindowAttributes
+structure.
+.LP
+.eM
+The
+.PN XGetWindowAttributes
+function returns the current attributes for the specified window to an
+.PN XWindowAttributes
+structure.
+.LP
+.IN "XWindowAttributes" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	int x, y;	/* location of window */
+	int width, height;	/* width and height of window */
+	int border_width;	/* border width of window */
+	int depth;	/* depth of window */
+	Visual *visual;	/* the associated visual structure */
+	Window root;	/* root of screen containing window */
+	int class;	/* InputOutput, InputOnly*/
+	int bit_gravity;	/* one of the bit gravity values */
+	int win_gravity;	/* one of the window gravity values */
+	int backing_store;	/* NotUseful, WhenMapped, Always */
+	unsigned long backing_planes;	/* planes to be preserved if possible */
+	unsigned long backing_pixel;	/* value to be used when restoring planes */
+	Bool save_under;	/* boolean, should bits under be saved? */
+	Colormap colormap;	/* color map to be associated with window */
+	Bool map_installed;	/* boolean, is color map currently installed*/
+	int map_state;	/* IsUnmapped, IsUnviewable, IsViewable */
+	long all_event_masks;	/* set of events all people have interest in*/
+	long your_event_mask;	/* my event mask */
+	long do_not_propagate_mask;	/* set of events that should not propagate */
+	Bool override_redirect;	/* boolean value for override-redirect */
+	Screen *screen;	/* back pointer to correct screen */
+} XWindowAttributes;
+.De
+.LP
+.eM
+The x and y members are set to the upper-left outer
+corner relative to the parent window's origin.
+The width and height members are set to the inside size of the window, 
+not including the border.
+The border_width member is set to the window's border width in pixels.
+The depth member is set to the depth of the window 
+(that is, bits per pixel for the object).
+The visual member is a pointer to the screen's associated
+.PN Visual
+structure.
+The root member is set to the root window of the screen containing the window.
+The class member is set to the window's class and can be either
+.PN InputOutput
+or
+.PN InputOnly .
+.LP
+The bit_gravity member is set to the window's bit gravity
+and can be one of the following:
+.LP
+.TS
+lw(1.5i) lw(1.5i).
+T{
+.PN ForgetGravity
+T}	T{
+.PN EastGravity
+T}
+T{
+.PN NorthWestGravity
+T}	T{
+.PN SouthWestGravity
+T}
+T{
+.PN NorthGravity
+T}	T{
+.PN SouthGravity
+T}
+T{
+.PN NorthEastGravity
+T}	T{
+.PN SouthEastGravity
+T}
+T{
+.PN WestGravity
+T}	T{
+.PN StaticGravity
+T}
+.PN CenterGravity
+.TE
+.LP
+The win_gravity member is set to the window's window gravity
+and can be one of the following:
+.LP
+.TS
+lw(1.5i) lw(1.5i).
+T{
+.PN UnmapGravity
+T}	T{
+.PN EastGravity
+T}
+T{
+.PN NorthWestGravity
+T}	T{
+.PN SouthWestGravity
+T}
+T{
+.PN NorthGravity
+T}	T{
+.PN SouthGravity
+T}
+T{
+.PN NorthEastGravity
+T}	T{
+.PN SouthEastGravity
+T}
+T{
+.PN WestGravity
+T}	T{
+.PN StaticGravity
+T}
+.PN CenterGravity
+.TE
+.LP
+For additional information on gravity,
+see section 3.2.3.
+.LP
+The backing_store member is set to indicate how the X server should maintain
+the contents of a window 
+and can be 
+.PN WhenMapped ,
+.PN Always ,
+or
+.PN NotUseful .
+The backing_planes member is set to indicate (with bits set to 1) which bit 
+planes of the window hold dynamic data that must be preserved in backing_stores 
+and during save_unders.
+The backing_pixel member is set to indicate what values to use 
+for planes not set in backing_planes.
+.LP
+The save_under member is set to 
+.PN True
+or
+.PN False .
+The colormap member is set to the colormap for the specified window and can be
+a colormap ID or 
+.PN None .
+The map_installed member is set to indicate whether the colormap is 
+currently installed and can be 
+.PN True
+or
+.PN False .
+The map_state member is set to indicate the state of the window and can be
+.PN IsUnmapped ,
+.PN IsUnviewable ,
+or
+.PN IsViewable .
+.PN IsUnviewable
+is used if the window is mapped but some ancestor is unmapped.
+.LP
+The all_event_masks member is set to the bitwise inclusive OR of all event 
+masks selected on the window by all clients.
+The your_event_mask member is set to the bitwise inclusive OR of all event 
+masks selected by the querying client.
+The do_not_propagate_mask member is set to the bitwise inclusive OR of the 
+set of events that should not propagate.
+.LP
+The override_redirect member is set to indicate whether this window overrides
+structure control facilities and can be 
+.PN True
+or
+.PN False .
+Window manager clients should ignore the window if this member is
+.PN True .
+.LP
+The screen member is set to a screen pointer that gives you a back pointer 
+to the correct screen.
+This makes it easier to obtain the screen information without
+having to loop over the root window fields to see which field matches.
+.LP
+.PN XGetWindowAttributes
+can generate
+.PN BadDrawable
+and
+.PN BadWindow
+errors.
+.LP
+.sp
+To obtain the current geometry of a given drawable, use 
+.PN XGetGeometry .
+.IN "XGetGeometry" "" "@DEF@"
+.sM
+.FD 0
+Status XGetGeometry\^(\^\fIdisplay\fP, \fId\fP\^, \^\fIroot_return\fP\^, \fIx_return\fP\^, \fIy_return\fP\^, \fIwidth_return\fP\^, 
+.br
+                      \fIheight_return\fP\^, \fIborder_width_return\fP\^, \fIdepth_return\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.br
+        Drawable \fId\fP\^;
+.br
+        Window *\fIroot_return\fP\^;
+.br
+        int *\fIx_return\fP\^, *\fIy_return\fP\^;
+.br
+        unsigned int *\fIwidth_return\fP\^, *\fIheight_return\fP\^;
+.br
+        unsigned int *\fIborder_width_return\fP\^;
+.br
+        unsigned int *\fIdepth_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Dr , which can be a window or a pixmap
+.IP \fId\fP 1i
+Specifies the drawable\*(Dr. 
+.IP \fIroot_return\fP 1i
+Returns the root window.
+.IP \fIx_return\fP 1i
+.br
+.ns
+.IP \fIy_return\fP 1i
+Return the x and y coordinates that define the location of the drawable.
+For a window, 
+these coordinates specify the upper-left outer corner relative to
+its parent's origin.
+For pixmaps, these coordinates are always zero.
+.IP \fIwidth_return\fP 1i
+.br
+.ns
+.IP \fIheight_return\fP 1i
+Return the drawable's dimensions (width and height).
+For a window, 
+these dimensions specify the inside size, not including the border.
+.IP \fIborder_width_return\fP 1i
+Returns the border width in pixels. 
+If the drawable is a pixmap, it returns zero.
+.IP \fIdepth_return\fP 1i
+Returns the depth of the drawable (bits per pixel for the object).
+.LP
+.eM
+The
+.PN XGetGeometry
+function returns the root window and the current geometry of the drawable.
+The geometry of the drawable includes the x and y coordinates, width and height,
+border width, and depth.
+These are described in the argument list.
+It is legal to pass to this function a window whose class is
+.PN InputOnly .
+.LP
+.PN XGetGeometry
+can generate a
+.PN BadDrawable
+error.
+.NH 2
+Translating Screen Coordinates
+.XS
+\*(SN Translating Screen Coordinates 
+.XE
+.LP
+Applications sometimes
+need to perform a coordinate transformation from the coordinate
+space of one window to another window or need to determine which
+window the pointing device is in.
+.PN XTranslateCoordinates
+and
+.PN XQueryPointer
+fulfill these needs (and avoid any race conditions) by
+asking the X server to perform these operations.
+.LP
+.sp
+To translate a coordinate in one window to the coordinate
+space of another window, use
+.PN XTranslateCoordinates .
+.IN "XTranslateCoordinates" "" "@DEF@"
+.sM
+.FD 0
+Bool XTranslateCoordinates\^(\^\fIdisplay\fP, \fIsrc_w\fP\^, \fIdest_w\fP\^, \fIsrc_x\fP\^, \fIsrc_y\fP\^, \fIdest_x_return\fP\^, 
+.br
+                            \fIdest_y_return\fP\^, \fIchild_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIsrc_w\fP\^, \fIdest_w\fP\^;
+.br
+      int \fIsrc_x\fP\^, \fIsrc_y\fP\^;
+.br
+      int *\fIdest_x_return\fP\^, *\fIdest_y_return\fP\^;
+.br
+      Window *\fIchild_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIsrc_w\fP 1i
+Specifies the source window.
+.IP \fIdest_w\fP 1i
+Specifies the destination window.
+.IP \fIsrc_x\fP 1i
+.br
+.ns
+.IP \fIsrc_y\fP 1i
+Specify the x and y coordinates within the source window.
+.IP \fIdest_x_return\fP 1i
+.br
+.ns
+.IP \fIdest_y_return\fP 1i
+Return the x and y coordinates within the destination window.
+.IP \fIchild_return\fP 1i
+Returns the child if the coordinates are contained in a mapped child of the
+destination window.
+.LP
+.eM
+If
+.PN XTranslateCoordinates
+returns
+.PN True ,
+it takes the src_x and src_y coordinates relative
+to the source window's origin and returns these coordinates to 
+dest_x_return and dest_y_return
+relative to the destination window's origin.
+If
+.PN XTranslateCoordinates
+returns 
+.PN False , 
+src_w and dest_w are on different screens,
+and dest_x_return and dest_y_return are zero.
+If the coordinates are contained in a mapped child of dest_w,
+that child is returned to child_return.
+Otherwise, child_return is set to
+.PN None .
+.LP
+.PN XTranslateCoordinates
+can generate a
+.PN BadWindow 
+error.
+.LP
+.sp
+To obtain the screen coordinates of the pointer
+or to determine the pointer coordinates relative to a specified window, use 
+.PN XQueryPointer .
+.IN "XQueryPointer" "" "@DEF@"
+.sM
+.FD 0
+Bool XQueryPointer\^(\^\fIdisplay\fP, \fIw\fP\^, \fIroot_return\fP\^, \fIchild_return\fP\^, \fIroot_x_return\fP\^, \fIroot_y_return\fP\^, 
+.br
+                     \fIwin_x_return\fP\^, \fIwin_y_return\fP\^, \fImask_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Window *\fIroot_return\fP\^, *\fIchild_return\fP\^;
+.br
+      int *\fIroot_x_return\fP\^, *\fIroot_y_return\fP\^;
+.br
+      int *\fIwin_x_return\fP\^, *\fIwin_y_return\fP\^;
+.br
+      unsigned int *\fImask_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.ds Ro that the pointer is in
+.IP \fIroot_return\fP 1i
+Returns the root window \*(Ro.
+.IP \fIchild_return\fP 1i
+Returns the child window that the pointer is located in, if any.
+.IP \fIroot_x_return\fP 1i
+.br
+.ns
+.IP \fIroot_y_return\fP 1i
+Return the pointer coordinates relative to the root window's origin.
+.IP \fIwin_x_return\fP 1i
+.br
+.ns
+.IP \fIwin_y_return\fP 1i
+Return the pointer coordinates relative to the specified window.
+.IP \fImask_return\fP 1i
+Returns the current state of the modifier keys and pointer buttons.
+.LP
+.eM
+The
+.PN XQueryPointer
+function returns the root window the pointer is logically on and the pointer
+coordinates relative to the root window's origin.
+If
+.PN XQueryPointer
+returns 
+.PN False , 
+the pointer is not on the same screen as the specified window, and
+.PN XQueryPointer
+returns 
+.PN None
+to child_return and zero to win_x_return and win_y_return.
+If 
+.PN XQueryPointer
+returns 
+.PN True , 
+the pointer coordinates returned to win_x_return and win_y_return
+are relative to the origin of the specified window.
+In this case, 
+.PN XQueryPointer
+returns the child that contains the pointer, if any,
+or else
+.PN None
+to child_return.
+.LP
+.PN XQueryPointer
+returns the current logical state of the keyboard buttons 
+and the modifier keys in mask_return.
+It sets mask_return to the bitwise inclusive OR of one or more
+of the button or modifier key bitmasks to match 
+the current state of the mouse buttons and the modifier keys.
+.LP
+Note that the logical state of a device (as seen through Xlib)
+may lag the physical state if device event processing is frozen
+(see section 12.1).
+.LP
+.PN XQueryPointer
+can generate a
+.PN BadWindow 
+error.
+.NH 2
+Properties and Atoms
+.XS
+\*(SN Properties and Atoms 
+.XE
+.LP
+A property is a collection of named, typed data.
+The window system has a set of predefined properties
+.IN "Atom" "predefined"
+(for example, the name of a window, size hints, and so on), and users can
+define any other arbitrary information and associate it with windows.
+Each property has a name,
+which is an ISO Latin-1 string.
+For each named property,
+a unique identifier (atom) is associated with it. 
+A property also has a type, for example, string or integer.
+These types are also indicated using atoms, so arbitrary new
+types can be defined.
+Data of only one type may be associated with a single
+property name.
+Clients can store and retrieve properties associated with windows.
+For efficiency reasons,
+an atom is used rather than a character string.
+.PN XInternAtom
+can be used to obtain the atom for property names.
+.IN "Atom" 
+.LP
+A property is also stored in one of several possible formats.
+The X server can store the information as 8-bit quantities, 16-bit
+quantities, or 32-bit quantities.
+This permits the X server to present the data in the byte order that the
+client expects.
+.NT Note
+If you define further properties of complex type, 
+you must encode and decode them yourself.
+These functions must be carefully written if they are to be portable.
+For further information about how to write a library extension,
+see appendix C.
+.NE
+The type of a property is defined by an atom, which allows for
+arbitrary extension in this type scheme.
+.IN "Atom" 
+.LP
+Certain property names are
+predefined in the server for commonly used functions.
+The atoms for these properties are defined in 
+.hN X11/Xatom.h .
+To avoid name clashes with user symbols, the 
+.PN #define 
+name for each atom has the XA_ prefix.
+For an explanation of the functions that let you get and set
+much of the information stored in these predefined properties,
+see chapter 14.
+.LP
+The core protocol imposes no semantics on these property names,
+but semantics are specified in other X Consortium standards,
+such as the \fIInter-Client Communication Conventions Manual\fP
+and the \fIX Logical Font Description Conventions\fP.
+.LP
+You can use properties to communicate other information between
+applications.
+The functions described in this section let you define new properties 
+and get the unique atom IDs in your applications.
+.LP
+Although any particular atom can have some client interpretation 
+within each of the name spaces, 
+atoms occur in five distinct name spaces within the protocol: 
+.IP \(bu 5
+Selections
+.IP \(bu 5
+Property names
+.IP \(bu 5
+Property types
+.IP \(bu 5
+Font properties 
+.IP \(bu 5
+Type of a 
+.PN ClientMessage 
+event (none are built into the X server)
+.LP
+.LP
+The built-in selection property names are:
+.LP
+.Ds 0
+.TA .5i 1.5i 3i
+.ta .5i 1.5i 3i
+.R
+PRIMARY
+SECONDARY
+.De
+.LP
+The built-in property names are: 
+.TS
+lw(2i) lw(2i).
+.sp 6p
+CUT_BUFFER0	RESOURCE_MANAGER
+CUT_BUFFER1	WM_CLASS
+CUT_BUFFER2	WM_CLIENT_MACHINE
+CUT_BUFFER3	WM_COLORMAP_WINDOWS
+CUT_BUFFER4	WM_COMMAND
+CUT_BUFFER5	WM_HINTS
+CUT_BUFFER6	WM_ICON_NAME
+CUT_BUFFER7	WM_ICON_SIZE
+RGB_BEST_MAP	WM_NAME
+RGB_BLUE_MAP	WM_NORMAL_HINTS
+RGB_DEFAULT_MAP	WM_PROTOCOLS
+RGB_GRAY_MAP	WM_STATE
+RGB_GREEN_MAP	WM_TRANSIENT_FOR
+RGB_RED_MAP	WM_ZOOM_HINTS
+.sp 6p
+.TE
+.LP
+The built-in property types are: 
+.LP
+.TS
+lw(2i) lw(2i).
+.sp 6p
+ARC	POINT
+ATOM	RGB_COLOR_MAP
+BITMAP	RECTANGLE
+CARDINAL	STRING
+COLORMAP	VISUALID
+CURSOR	WINDOW
+DRAWABLE	WM_HINTS
+FONT	WM_SIZE_HINTS
+INTEGER	
+PIXMAP
+.sp 6p
+.TE
+.LP
+The built-in font property names are: 
+.TS
+lw(2i) lw(2i).
+.sp 6p
+MIN_SPACE	STRIKEOUT_DESCENT
+NORM_SPACE	STRIKEOUT_ASCENT
+MAX_SPACE	ITALIC_ANGLE
+END_SPACE	X_HEIGHT
+SUPERSCRIPT_X	QUAD_WIDTH
+SUPERSCRIPT_Y	WEIGHT
+SUBSCRIPT_X	POINT_SIZE
+SUBSCRIPT_Y	RESOLUTION
+UNDERLINE_POSITION	COPYRIGHT
+UNDERLINE_THICKNESS	NOTICE
+FONT_NAME	FAMILY_NAME
+FULL_NAME	CAP_HEIGHT
+.sp 6p
+.TE
+.LP
+For further information about font properties,
+see section 8.5.
+.LP
+.sp
+To return an atom for a given name, use 
+.PN XInternAtom .
+.IN "Atom" "interning"
+.IN "XInternAtom" "" "@DEF@"
+.sM
+.FD 0
+Atom XInternAtom\^(\^\fIdisplay\fP, \fIatom_name\fP\^, \fIonly_if_exists\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIatom_name\fP\^;
+.br
+      Bool \fIonly_if_exists\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIatom_name\fP 1i
+Specifies the name associated with the atom you want returned.
+.IP \fIonly_if_exists\fP 1i
+Specifies a Boolean value that indicates whether the atom must be created.
+.LP
+.eM
+The
+.PN XInternAtom
+function returns the atom identifier associated with the specified atom_name
+string.
+If only_if_exists is 
+.PN False ,
+the atom is created if it does not exist.
+Therefore,
+.PN XInternAtom
+can return
+.PN None .
+If the atom name is not in the Host Portable Character Encoding, 
+the result is implementation-dependent.
+Uppercase and lowercase matter;
+the strings ``thing'', ``Thing'', and ``thinG'' 
+all designate different atoms.  
+The atom will remain defined even after the client's connection closes.
+It will become undefined only when the last connection to
+the X server closes.
+.LP
+.PN XInternAtom
+can generate
+.PN BadAlloc
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To return atoms for an array of names, use 
+.PN XInternAtoms .
+.IN "Atom" "interning"
+.IN "XInternAtoms" "" "@DEF@"
+.sM
+.FD 0
+Status XInternAtoms\^(\^\fIdisplay\fP, \fInames\fP\^, \fIcount\fP\^, \fIonly_if_exists\fP, \fIatoms_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char **\fInames\fP\^;
+.br
+      int \fIcount\fP\^;
+.br
+      Bool \fIonly_if_exists\fP\^;
+.br
+      Atom *\fIatoms_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fInames\fP 1i
+Specifies the array of atom names.
+.ds Cn atom names in the array
+.IP \fIcount\fP 1i
+Specifies the number of \*(Cn.
+.IP \fIonly_if_exists\fP 1i
+Specifies a Boolean value that indicates whether the atom must be created.
+.IP \fIatoms_return\fP 1i
+Returns the atoms.
+.LP
+.eM
+The
+.PN XInternAtoms
+function returns the atom identifiers associated with the specified names.
+The atoms are stored in the atoms_return array supplied by the caller.
+Calling this function is equivalent to calling
+.PN XInternAtom
+for each of the names in turn with the specified value of only_if_exists,
+but this function minimizes the number of round-trip protocol exchanges
+between the client and the X server.
+.LP
+This function returns a nonzero status if atoms are returned for
+all of the names;
+otherwise, it returns zero.
+.LP
+.PN XInternAtoms
+can generate
+.PN BadAlloc
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To return a name for a given atom identifier, use 
+.PN XGetAtomName .
+.IN "Atom" "getting name"
+.IN "XGetAtomName" "" "@DEF@"
+.sM
+.FD 0
+char *XGetAtomName\^(\^\fIdisplay\fP, \fIatom\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Atom \fIatom\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIatom\fP 1i
+Specifies the atom for the property name you want returned.
+.LP
+.eM
+The
+.PN XGetAtomName
+function returns the name associated with the specified atom.
+If the data returned by the server is in the Latin Portable Character Encoding,
+then the returned string is in the Host Portable Character Encoding.
+Otherwise, the result is implementation-dependent.
+To free the resulting string,
+call
+.PN XFree .
+.LP
+.PN XGetAtomName
+can generate a
+.PN BadAtom 
+error.
+.LP
+.sp
+To return the names for an array of atom identifiers, use 
+.PN XGetAtomNames .
+.IN "Atom" "getting name"
+.IN "XGetAtomNames" "" "@DEF@"
+.sM
+.FD 0
+Status XGetAtomNames\^(\^\fIdisplay\fP, \fIatoms\fP, \fIcount\fP\^, \fInames_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Atom *\fIatoms\fP\^;
+.br
+      int \fIcount\fP\^;
+.br
+      char **\fInames_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIatoms\fP 1i
+Specifies the array of atoms.
+.ds Cn atoms in the array
+.IP \fIcount\fP 1i
+Specifies the number of \*(Cn.
+.IP \fInames_return\fP 1i
+Returns the atom names.
+.LP
+.eM
+The
+.PN XGetAtomNames
+function returns the names associated with the specified atoms.
+The names are stored in the names_return array supplied by the caller.
+Calling this function is equivalent to calling
+.PN XGetAtomName
+for each of the atoms in turn,
+but this function minimizes the number of round-trip protocol exchanges
+between the client and the X server.
+.LP
+This function returns a nonzero status if names are returned for
+all of the atoms;
+otherwise, it returns zero.
+.LP
+.PN XGetAtomNames
+can generate a
+.PN BadAtom 
+error.
+.NH 2
+Obtaining and Changing Window Properties
+.XS
+\*(SN Obtaining and Changing Window Properties 
+.XE
+.LP
+You can attach a property list to every window.
+Each property has a name, a type, and a value (see section 4.3).
+The value is an array of 8-bit, 16-bit, or 32-bit quantities,
+whose interpretation is left to the clients.  The type
+.PN char
+is used to represent 8-bit quantities, the type
+.PN short
+is used to represent 16-bit quantities, and the type
+.PN long
+is used to represent 32-bit quantities.
+.LP
+Xlib provides functions that you can use to obtain, 
+change, update, or interchange window properties.
+In addition, Xlib provides other utility functions for inter-client
+communication (see chapter 14).
+.LP
+.sp
+To obtain the type, format, and value of a property of a given window, use 
+.PN XGetWindowProperty .
+.IN "Property" "getting"
+.LP
+.IN "XGetWindowProperty" "" "@DEF@"
+.sM
+.FD 0
+int XGetWindowProperty\^(\^\fIdisplay\fP, \fIw\fP\^, \fIproperty\fP\^, \fIlong_offset\fP\^, \fIlong_length\fP\^, \fIdelete\fP\^, \fIreq_type\fP\^, 
+.br
+                        \fIactual_type_return\fP\^, \fIactual_format_return\fP\^, \fInitems_return\fP\^, \fIbytes_after_return\fP\^, 
+.br
+                        \fIprop_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Atom \fIproperty\fP\^;
+.br
+      long \fIlong_offset\fP\^, \fIlong_length\fP\^;
+.br
+      Bool \fIdelete\fP\^;
+.br
+      Atom \fIreq_type\fP\^; 
+.br
+      Atom *\fIactual_type_return\fP\^;
+.br
+      int *\fIactual_format_return\fP\^;
+.br
+      unsigned long *\fInitems_return\fP\^;
+.br
+      unsigned long *\fIbytes_after_return\fP\^;
+.br
+      unsigned char **\fIprop_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose property you want to obtain
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+.IP \fIlong_offset\fP 1i
+Specifies the offset in the specified property (in 32-bit quantities) 
+where the data is to be retrieved.
+.IP \fIlong_length\fP 1i
+Specifies the length in 32-bit multiples of the data to be retrieved.
+.IP \fIdelete\fP 1i
+Specifies a Boolean value that determines whether the property is deleted.
+.IP \fIreq_type\fP 1i
+Specifies the atom identifier associated with the property type or
+.PN AnyPropertyType .
+.IP \fIactual_type_return\fP 1i
+Returns the atom identifier  that defines the actual type of the property.
+.IP \fIactual_format_return\fP 1i
+Returns the actual format of the property.
+.IP \fInitems_return\fP 1i
+Returns the actual number of 8-bit, 16-bit, or 32-bit items 
+stored in the prop_return data.
+.IP \fIbytes_after_return\fP 1i
+Returns the number of bytes remaining to be read in the property if 
+a partial read was performed.
+.IP \fIprop_return\fP 1i
+Returns the data in the specified format.
+.LP
+.eM
+The
+.PN XGetWindowProperty
+function returns the actual type of the property; the actual format of the property;
+the number of 8-bit, 16-bit, or 32-bit items transferred; the number of bytes remaining
+to be read in the property; and a pointer to the data actually returned.
+.PN XGetWindowProperty
+sets the return arguments as follows:
+.IP \(bu 5
+If the specified property does not exist for the specified window,
+.PN XGetWindowProperty 
+returns 
+.PN None
+to actual_type_return and the value zero to 
+actual_format_return and bytes_after_return.
+The nitems_return argument is empty.
+In this case, the delete argument is ignored.
+.IP \(bu 5
+If the specified property exists 
+but its type does not match the specified type,
+.PN XGetWindowProperty 
+returns the actual property type to actual_type_return, 
+the actual property format (never zero) to actual_format_return, 
+and the property length in bytes
+(even if the actual_format_return is 16 or 32) 
+to bytes_after_return.
+It also ignores the delete argument.
+The nitems_return argument is empty.
+.IP \(bu 5
+If the specified property exists and either you assign 
+.PN AnyPropertyType 
+to the req_type argument or the specified type matches the actual property type,
+.PN XGetWindowProperty 
+returns the actual property type to actual_type_return and the actual
+property format (never zero) to actual_format_return. 
+It also returns a value to bytes_after_return and nitems_return, by 
+defining the following
+values:
+.IP
+.nf
+	N = actual length of the stored property in bytes
+	     (even if the format is 16 or 32)
+	I = 4 * long_offset
+	T = N - I
+	L = MINIMUM(T, 4 * long_length)
+	A = N - (I + L)
+.fi
+.IP
+The returned value starts at byte index I in the property (indexing
+from zero), and its length in bytes is L.
+If the value for long_offset causes L to be negative,
+a
+.PN BadValue
+error results. 
+The value of bytes_after_return is A, 
+giving the number of trailing unread bytes in the stored property.
+.LP
+If the returned format is 8, the returned data is represented as a
+.PN char
+array.
+If the returned format is 16, the returned data is represented as a
+.PN short
+array and should be cast to that type to obtain the elements.
+If the returned format is 32, the returned data is represented as a
+.PN long
+array and should be cast to that type to obtain the elements.
+.LP
+.PN XGetWindowProperty
+always allocates one extra byte in prop_return 
+(even if the property is zero length) 
+and sets it to zero so that simple properties consisting of characters
+do not have to be copied into yet another string before use.
+.LP
+If delete is 
+.PN True 
+and bytes_after_return is zero, 
+.PN XGetWindowProperty
+deletes the property 
+from the window and generates a 
+.PN PropertyNotify 
+event on the window.
+.LP
+The function returns
+.PN Success
+if it executes successfully.
+To free the resulting data,
+use
+.PN XFree .
+.LP
+.PN XGetWindowProperty
+can generate
+.PN BadAtom ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To obtain a given window's property list, use 
+.PN XListProperties .
+.IN "Property" "listing"
+.IN "XListProperties" "" "@DEF@"
+.sM
+.FD 0
+Atom *XListProperties\^(\^\fIdisplay\fP, \fIw\fP\^, \fInum_prop_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      int *\fInum_prop_return\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose property list you want to obtain
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fInum_prop_return\fP 1i
+Returns the length of the properties array.
+.LP
+.eM
+The
+.PN XListProperties
+function returns a pointer to an array of atom properties that are defined for 
+the specified window or returns NULL if no properties were found.
+To free the memory allocated by this function, use
+.PN XFree .
+.LP
+.PN XListProperties
+can generate a
+.PN BadWindow 
+error.
+.LP
+.sp
+To change a property of a given window, use
+.PN XChangeProperty .
+.IN "Property" "changing"
+.IN "Property" "appending"
+.IN "Property" "prepending"
+.IN "Property" "replacing"
+.IN "Property" "format"
+.IN "Property" "type"
+.IN "XChangeProperty" "" "@DEF@"
+.sM
+.FD 0
+XChangeProperty\^(\^\fIdisplay\fP, \fIw\fP\^, \fIproperty\fP\^, \fItype\fP\^, \fIformat\fP\^, \fImode\fP\^, \fIdata\fP\^, \fInelements\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Atom \fIproperty\fP\^, \fItype\fP\^;
+.br
+      int \fIformat\fP\^;
+.br
+      int \fImode\fP\^;
+.br
+      unsigned char *\fIdata\fP\^;
+.br
+      int \fInelements\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose property you want to change
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+.IP \fItype\fP 1i
+Specifies the type of the property.
+The X server does not interpret the type but simply
+passes it back to an application that later calls 
+.PN XGetWindowProperty .
+.IP \fIformat\fP 1i
+Specifies whether the data should be viewed as a list
+of 8-bit, 16-bit, or 32-bit quantities.
+Possible values are 8, 16, and 32.
+This information allows the X server to correctly perform
+byte-swap operations as necessary.
+If the format is 16-bit or 32-bit,
+you must explicitly cast your data pointer to an (unsigned char *) in the call
+to 
+.PN XChangeProperty .
+.\" Changed name of this file to prop_mode.a on 1/13/87
+.IP \fImode\fP 1i
+Specifies the mode of the operation.
+You can pass
+.PN PropModeReplace ,
+.PN PropModePrepend ,
+or
+.PN PropModeAppend .
+.IP \fIdata\fP 1i
+Specifies the property data.
+.IP \fInelements\fP 1i
+Specifies the number of elements of the specified data format.
+.LP
+.eM
+The
+.PN XChangeProperty
+function alters the property for the specified window and
+causes the X server to generate a
+.PN PropertyNotify
+event on that window.
+.PN XChangeProperty
+performs the following:
+.IP \(bu 5
+If mode is
+.PN PropModeReplace ,
+.PN XChangeProperty
+discards the previous property value and stores the new data.
+.IP \(bu 5
+If mode is
+.PN PropModePrepend
+or
+.PN PropModeAppend ,
+.PN XChangeProperty
+inserts the specified data before the beginning of the existing data
+or onto the end of the existing data, respectively.
+The type and format must match the existing property value,
+or a
+.PN BadMatch
+error results.
+If the property is undefined, 
+it is treated as defined with the correct type and
+format with zero-length data.
+.LP
+If the specified format is 8, the property data must be a
+.PN char
+array.
+If the specified format is 16, the property data must be a
+.PN short
+array.
+If the specified format is 32, the property data must be a
+.PN long
+array.
+.LP
+The lifetime of a property is not tied to the storing client.
+Properties remain until explicitly deleted, until the window is destroyed,
+or until the server resets.
+For a discussion of what happens when the connection to the X server is closed,
+see section 2.6. 
+The maximum size of a property is server dependent and can vary dynamically
+depending on the amount of memory the server has available.
+(If there is insufficient space, a
+.PN BadAlloc
+error results.)
+.LP
+.PN XChangeProperty
+can generate
+.PN BadAlloc ,
+.PN BadAtom ,
+.PN BadMatch ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To rotate a window's property list, use
+.PN XRotateWindowProperties .
+.LP
+.IN "XRotateWindowProperties" "" "@DEF@"
+.sM
+.FD 0
+XRotateWindowProperties\^(\^\fIdisplay\fP, \fIw\fP, \fIproperties\fP, \fInum_prop\fP, \fInpositions\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Atom \fIproperties\fP\^[]\^;
+.br
+      int \fInum_prop\fP\^;
+.br
+      int \fInpositions\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.IP \fIproperties\fP 1i
+Specifies the array of properties that are to be rotated.
+.IP \fInum_prop\fP 1i
+Specifies the length of the properties array.
+.IP \fInpositions\fP 1i
+Specifies the rotation amount.
+.LP
+.eM
+The
+.PN XRotateWindowProperties
+function allows you to rotate properties on a window and causes
+the X server to generate
+.PN PropertyNotify
+events.
+If the property names in the properties array are viewed as being numbered 
+starting from zero and if there are num_prop property names in the list,
+then the value associated with property name I becomes the value associated 
+with property name (I + npositions) mod N for all I from zero to N \- 1.
+The effect is to rotate the states by npositions places around the virtual ring
+of property names (right for positive npositions, 
+left for negative npositions).
+If npositions mod N is nonzero,
+the X server generates a
+.PN PropertyNotify
+event for each property in the order that they are listed in the array.
+If an atom occurs more than once in the list or no property with that 
+name is defined for the window,
+a 
+.PN BadMatch 
+error results.
+If a 
+.PN BadAtom 
+or 
+.PN BadMatch 
+error results,
+no properties are changed.
+.LP
+.PN XRotateWindowProperties
+can generate
+.PN BadAtom ,
+.PN BadMatch ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To delete a property on a given window, use 
+.PN XDeleteProperty .
+.IN "Property" "deleting"
+.IN "XDeleteProperty" "" "@DEF@"
+.sM
+.FD 0
+XDeleteProperty\^(\^\fIdisplay\fP, \fIw\fP\^, \fIproperty\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      Atom \fIproperty\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Wi whose property you want to delete
+.IP \fIw\fP 1i
+Specifies the window \*(Wi.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+.LP
+.eM
+The
+.PN XDeleteProperty
+function deletes the specified property only if the
+property was defined on the specified window
+and causes the X server to generate a
+.PN PropertyNotify
+event on the window unless the property does not exist.
+.LP
+.PN XDeleteProperty
+can generate
+.PN BadAtom
+and
+.PN BadWindow 
+errors.
+.NH 2
+Selections
+.XS
+\*(SN Selections
+.XE
+.LP
+.IN "Selection"
+Selections are one method used by applications to exchange data.
+By using the property mechanism,
+applications can exchange data of arbitrary types and can negotiate
+the type of the data.
+A selection can be thought of as an indirect property with a dynamic type.
+That is, rather than having the property stored in the X server,
+the property is maintained by some client (the owner).
+A selection is global in nature (considered to belong to the user 
+but be maintained by clients) rather than being private to a particular 
+window subhierarchy or a particular set of clients.
+.LP
+Xlib provides functions that you can use to set, get, or request conversion
+of selections.
+This allows applications to implement the notion of current selection,
+which requires that notification be sent to applications when they no 
+longer own the selection.
+Applications that support selection often highlight the current selection
+and so must be informed when another application has
+acquired the selection so that they can unhighlight the selection.
+.LP
+When a client asks for the contents of
+a selection, it specifies a selection target type.
+This target type
+can be used to control the transmitted representation of the contents.
+For example, if the selection is ``the last thing the user clicked on''
+and that is currently an image, then the target type might specify
+whether the contents of the image should be sent in XY format or Z format.
+.LP
+The target type can also be used to control the class of
+contents transmitted, for example, 
+asking for the ``looks'' (fonts, line
+spacing, indentation, and so forth) of a paragraph selection, not the
+text of the paragraph.
+The target type can also be used for other
+purposes.
+The protocol does not constrain the semantics.
+.LP
+.sp
+To set the selection owner, use 
+.PN XSetSelectionOwner .
+.IN "Selection" "setting the owner"
+.IN "XSetSelectionOwner" "" "@DEF@"
+.sM
+.FD 0
+XSetSelectionOwner\^(\^\fIdisplay\fP, \fIselection\fP\^, \fIowner\fP\^, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Atom \fIselection\fP\^;
+.br
+      Window \fIowner\fP\^; 
+.br
+      Time \fItime\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIselection\fP 1i
+Specifies the selection atom.
+.IP \fIowner\fP 1i
+Specifies the owner of the specified selection atom.
+You can pass a window or
+.PN None .
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XSetSelectionOwner
+function changes the owner and last-change time for the specified selection
+and has no effect if the specified time is earlier than the current
+last-change time of the specified selection 
+or is later than the current X server time.
+Otherwise, the last-change time is set to the specified time,
+with
+.PN CurrentTime
+replaced by the current server time.
+If the owner window is specified as
+.PN None ,
+then the owner of the selection becomes 
+.PN None
+(that is, no owner).
+Otherwise, the owner of the selection becomes the client executing
+the request.
+.LP 
+If the new owner (whether a client or
+.PN None )
+is not
+the same as the current owner of the selection and the current
+owner is not
+.PN None ,
+the current owner is sent a 
+.PN SelectionClear 
+event.
+If the client that is the owner of a selection is later
+terminated (that is, its connection is closed)
+or if the owner window it has specified in the request is later
+destroyed,
+the owner of the selection automatically
+reverts to
+.PN None ,
+but the last-change time is not affected.
+The selection atom is uninterpreted by the X server.
+.PN XGetSelectionOwner
+returns the owner window, which is reported in 
+.PN SelectionRequest
+and
+.PN SelectionClear
+events.
+Selections are global to the X server.
+.LP
+.PN XSetSelectionOwner
+can generate
+.PN BadAtom
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To return the selection owner, use 
+.PN XGetSelectionOwner .
+.IN "Selection" "getting the owner"
+.IN "XGetSelectionOwner" "" "@DEF@"
+.sM
+.FD 0
+Window XGetSelectionOwner\^(\^\fIdisplay\fP, \fIselection\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Atom \fIselection\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Se whose owner you want returned
+.IP \fIselection\fP 1i
+Specifies the selection atom \*(Se.
+.LP
+.eM
+The
+.PN XGetSelectionOwner
+function
+returns the window ID associated with the window that currently owns the
+specified selection.
+If no selection was specified, the function returns the constant
+.PN None .
+If
+.PN None
+is returned,
+there is no owner for the selection.
+.LP
+.PN XGetSelectionOwner
+can generate a
+.PN BadAtom 
+error.
+.LP
+.sp
+To request conversion of a selection, use 
+.PN XConvertSelection .
+.IN "Selection" "converting"
+.IN "XConvertSelection" "" "@DEF@"
+.sM
+.FD 0
+XConvertSelection\^(\^\fIdisplay\fP, \fIselection\fP\^, \fItarget\fP\^, \fIproperty\fP\^, \fIrequestor\fP\^, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Atom \fIselection\fP\^, \fItarget\fP\^;
+.br
+      Atom \fIproperty\fP\^;
+.br
+      Window \fIrequestor\fP\^;
+.br
+      Time \fItime\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIselection\fP 1i
+Specifies the selection atom.
+.IP \fItarget\fP 1i
+Specifies the target atom.
+.IP \fIproperty\fP 1i
+Specifies the property name.
+You also can pass 
+.PN None .
+.IP \fIrequestor\fP 1i
+Specifies the requestor.
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+.PN XConvertSelection
+requests that the specified selection be converted to the specified target
+type:
+.IP \(bu 5
+If the specified selection has an owner, the X server sends a
+.PN SelectionRequest
+event to that owner.
+.IP \(bu 5
+If no owner for the specified
+selection exists, the X server generates a
+.PN SelectionNotify
+event to the
+requestor with property
+.PN None .
+.LP
+The arguments are passed on unchanged in either of the events.
+There are two predefined selection atoms: PRIMARY and SECONDARY.
+.LP
+.PN XConvertSelection
+can generate
+.PN BadAtom
+and
+.PN BadWindow 
+errors.
+.bp

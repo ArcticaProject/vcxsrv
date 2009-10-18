@@ -1,0 +1,2230 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBAppendix C\fP\s-1
+
+\s+1\fBExtensions\fP\s-1
+.sp 2
+.na
+.LP
+.XS
+Appendix C: Extensions
+.XE
+Because X can evolve by extensions to the core protocol, 
+it is important that extensions not be perceived as second-class citizens.
+At some point, 
+your favorite extensions may be adopted as additional parts of the 
+X Standard.
+.LP
+Therefore, there should be little to distinguish the use of an extension from 
+that of the core protocol.
+To avoid having to initialize extensions explicitly in application programs, 
+it is also important that extensions perform lazy evaluations,
+automatically initializing themselves when called for the first time.  
+.LP
+This appendix describes techniques for writing extensions to Xlib that will
+run at essentially the same performance as the core protocol requests.
+.NT
+It is expected that a given extension to X consists of multiple
+requests.
+Defining 10 new features as 10 separate extensions is a bad practice.
+Rather, they should be packaged into a single extension
+and should use minor opcodes to distinguish the requests.
+.NE
+.LP
+The symbols and macros used for writing stubs to Xlib are listed in
+.hN X11/Xlibint.h .
+.SH
+Basic Protocol Support Routines
+.LP
+The basic protocol requests for extensions are 
+.PN XQueryExtension
+and
+.PN XListExtensions .
+.IN "XQueryExtension" "" "@DEF@"
+.sM
+.FD 0
+Bool XQueryExtension(\^\fIdisplay\fP, \fIname\fP, \fImajor_opcode_return\fP, \
+\fIfirst_event_return\fP, \fIfirst_error_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIname;\fP\^
+.br
+      int *\fImajor_opcode_return\fP\^;
+.br
+      int *\fIfirst_event_return\fP\^;
+.br
+      int *\fIfirst_error_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIname\fP 1i
+Specifies the extension name.
+.IP \fImajor_opcode_return\fP 1i
+Returns the major opcode.
+.IP \fIfirst_event_return\fP 1i
+Returns the first event code, if any.
+.IP \fIfirst_error_return\fP 1i
+Returns the first error code, if any.
+.LP
+.eM
+The
+.PN XQueryExtension
+function determines if the named extension is present.  
+If the extension is not present,
+.PN XQueryExtension
+returns
+.PN False ;
+otherwise, it returns
+.PN True .
+If the extension is present,
+.PN XQueryExtension
+returns the major opcode for the extension to major_opcode_return;
+otherwise,
+it returns zero.
+Any minor opcode and the request formats are specific to the
+extension.  
+If the extension involves additional event types, 
+.PN XQueryExtension
+returns the base event type code to first_event_return;
+otherwise, 
+it returns zero.  
+The format of the events is specific to the extension.  
+If the extension involves additional error codes, 
+.PN XQueryExtension
+returns the base error code to first_error_return;
+otherwise, 
+it returns zero.  
+The format of additional data in the errors is specific to the extension.
+.LP
+If the extension name is not in the Host Portable Character Encoding
+the result is implementation-dependent.
+Uppercase and lowercase matter;
+the strings ``thing'', ``Thing'', and ``thinG'' 
+are all considered different names.
+.IN "XListExtensions" "" "@DEF@"
+.sM
+.FD 0
+char **XListExtensions(\^\fIdisplay\fP, \fInextensions_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int *\fInextensions_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fInextensions_return\fP 1i
+Returns the number of extensions listed.
+.LP
+.eM
+The
+.PN XListExtensions   
+function returns a list of all extensions supported by the server.
+If the data returned by the server is in the Latin Portable Character Encoding,
+then the returned strings are in the Host Portable Character Encoding.
+Otherwise, the result is implementation-dependent.
+.IN "XFreeExtensionList" "" "@DEF@"
+.sM
+.FD 0
+XFreeExtensionList(\^\fIlist\fP\^)
+.br
+      char **\fIlist\fP\^;
+.FN
+.IP \fIlist\fP 1i
+Specifies the list of extension names.
+.LP
+.eM
+The
+.PN XFreeExtensionList
+function frees the memory allocated by 
+.PN XListExtensions .
+.SH
+Hooking into Xlib 
+.LP
+These functions allow you to hook into the library.  
+They are not normally used by application programmers but are used 
+by people who need to extend the core X protocol and
+the X library interface.
+The functions, which generate protocol requests for X, are typically
+called stubs.
+.LP
+In extensions, stubs first should check to see if they have initialized 
+themselves on a connection.
+If they have not, they then should call 
+.PN XInitExtension 
+to attempt to initialize themselves on the connection.
+.LP
+If the extension needs to be informed of GC/font allocation or
+deallocation or if the extension defines new event types, 
+the functions described here allow the extension to be 
+called when these events occur.
+.LP
+The
+.PN XExtCodes
+structure returns the information from 
+.PN XInitExtension 
+and is defined in
+.hN X11/Xlib.h : 
+.LP
+.IN "XExtCodes" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct _XExtCodes {	/* public to extension, cannot be changed */
+	int extension;	/* extension number */
+	int major_opcode;	/* major op-code assigned by server */
+	int first_event;	/* first event number for the extension */
+	int first_error;	/* first error number for the extension */
+} XExtCodes;
+.De
+.LP
+.eM
+.IN "XInitExtension" "" "@DEF@"
+.sM
+.FD 0
+XExtCodes *XInitExtension(\^\fIdisplay\fP, \fIname\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIname\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIname\fP 1i
+Specifies the extension name.
+.LP
+.eM
+The
+.PN XInitExtension
+function determines if the named extension exists. 
+Then, it allocates storage for maintaining the 
+information about the extension on the connection, 
+chains this onto the extension list for the connection,
+and returns the information the stub implementor will need to access
+the extension.
+If the extension does not exist,
+.PN XInitExtension
+returns NULL.
+.LP
+If the extension name is not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+Uppercase and lowercase matter;
+the strings ``thing'', ``Thing'', and ``thinG'' 
+are all considered different names.
+.LP
+The extension number in the 
+.PN XExtCodes 
+structure is
+needed in the other calls that follow.  
+This extension number is unique only to a single connection.
+.LP
+.IN "XAddExtension" "" "@DEF@"
+.sM
+.FD 0
+XExtCodes *XAddExtension\^(\^\fIdisplay\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+For local Xlib extensions, the
+.PN XAddExtension
+function allocates the
+.PN XExtCodes
+structure, bumps the extension number count,
+and chains the extension onto the extension list.
+(This permits extensions to Xlib without requiring server extensions.)
+.SH
+Hooks into the Library
+.LP
+These functions allow you to define procedures that are to be
+called when various circumstances occur.
+The procedures include the creation of a new GC for a connection,
+the copying of a GC, the freeing of a GC, the creating and freeing of fonts,
+the conversion of events defined by extensions to and from wire
+format, and the handling of errors.
+.LP
+All of these functions return the previous procedure defined for this
+extension.
+.IN "XESetCloseDisplay" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetCloseDisplay(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when the display is closed.
+.LP
+.eM
+The
+.PN XESetCloseDisplay
+function defines a procedure to be called whenever
+.PN XCloseDisplay 
+is called.  
+It returns any previously defined procedure, usually NULL.
+.LP
+When 
+.PN XCloseDisplay 
+is called, 
+your procedure is called 
+with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIcodes\fP\^)
+	Display *\fIdisplay\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+.De
+.LP
+.eM
+.IN "XESetCreateGC" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetCreateGC(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when a GC is closed.
+.LP
+.eM
+The
+.PN XESetCreateGC
+function defines a procedure to be called whenever
+a new GC is created.  
+It returns any previously defined procedure, usually NULL.
+.LP
+When a GC is created, 
+your procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIgc\fP, \fIcodes\fP\^)
+	Display *\fIdisplay\fP\^;
+	GC \fIgc\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+.De
+.LP
+.eM
+.IN "XESetCopyGC" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetCopyGC(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when GC components are copied.
+.LP
+.eM
+The
+.PN XESetCopyGC
+function defines a procedure to be called whenever
+a GC is copied.  
+It returns any previously defined procedure, usually NULL.
+.LP
+When a GC is copied, 
+your procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIgc\fP, \fIcodes\fP\^)
+	Display *\fIdisplay\fP\^;
+	GC \fIgc\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+.De
+.LP
+.eM
+.IN "XESetFreeGC" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetFreeGC(\^\fIdisplay\fP, \fIextension\fP, \fIproc)\fP\^)(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when a GC is freed.
+.LP
+.eM
+The
+.PN XESetFreeGC
+function defines a procedure to be called whenever
+a GC is freed.  
+It returns any previously defined procedure, usually NULL.
+.LP
+When a GC is freed, 
+your procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIgc\fP, \fIcodes\fP\^)
+	Display *\fIdisplay\fP\^;
+	GC \fIgc\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+.De
+.LP
+.eM
+.IN "XESetCreateFont" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetCreateFont(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when a font is created.
+.LP
+.eM
+The
+.PN XESetCreateFont
+function defines a procedure to be called whenever
+.PN XLoadQueryFont 
+and
+.PN XQueryFont
+are called.  
+It returns any previously defined procedure, usually NULL.
+.LP
+When 
+.PN XLoadQueryFont 
+or
+.PN XQueryFont
+is called, 
+your procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIfs\fP, \fIcodes\fP\^)
+	Display *\fIdisplay\fP\^;
+	XFontStruct *\fIfs\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+.De
+.LP
+.eM
+.IN "XESetFreeFont" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetFreeFont(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int (\^*\fIproc\fP)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when a font is freed.
+.LP
+.eM
+The
+.PN XESetFreeFont
+function defines a procedure to be called whenever
+.PN XFreeFont 
+is called.  
+It returns any previously defined procedure, usually NULL.
+.LP
+When 
+.PN XFreeFont 
+is called, your procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIfs\fP, \fIcodes\fP\^)
+	Display *\fIdisplay\fP\^;
+	XFontStruct *\fIfs\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+.De
+.LP
+.eM
+The 
+.PN XESetWireToEvent
+and
+.PN XESetEventToWire
+functions allow you to define new events to the library.
+An 
+.PN XEvent
+structure always has a type code (type
+.PN int )
+as the first component.
+This uniquely identifies what kind of event it is.
+The second component is always the serial number (type
+.PN unsigned
+.PN long )
+of the last request processed by the server.
+The third component is always a Boolean (type
+.PN Bool )
+indicating whether the event came from a
+.PN SendEvent
+protocol request.
+The fourth component is always a pointer to the display
+the event was read from.
+The fifth component is always a resource ID of one kind or another,
+usually a window, carefully selected to be useful to toolkit dispatchers.
+The fifth component should always exist, even if
+the event does not have a natural destination;
+if there is no value
+from the protocol to put in this component, initialize it to zero.
+.NT
+There is an implementation limit such that your host event
+structure size cannot be bigger than the size of the
+.PN XEvent 
+union of structures.
+There also is no way to guarantee that more than 24 elements or 96 characters
+in the structure will be fully portable between machines.
+.NE
+.IN "XESetWireToEvent" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetWireToEvent(\^\fIdisplay\fP, \fIevent_number\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIevent_number\fP\^;
+.br
+      Status (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_number\fP 1i
+Specifies the event code.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when converting an event.
+.LP
+.eM
+The
+.PN XESetWireToEvent
+function defines a procedure to be called when an event
+needs to be converted from wire format 
+.Pn ( xEvent )
+to host format 
+.Pn ( XEvent ).
+The event number defines which protocol event number to install a
+conversion procedure for.
+.PN XESetWireToEvent
+returns any previously defined procedure.
+.NT
+You can replace a core event conversion function with one
+of your own, although this is not encouraged.
+It would, however, allow you to intercept a core event 
+and modify it before being placed in the queue or otherwise examined.
+.NE
+When Xlib needs to convert an event from wire format to host
+format, your procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+Status (*\fIproc\fP\^)(\^\fIdisplay\fP, \fIre\fP, \fIevent\fP\^)
+	Display *\fIdisplay\fP\^;
+	XEvent *\fIre\fP\^;
+	xEvent *\fIevent\fP\^;
+.De
+.LP
+.eM
+Your procedure must return status to indicate if the conversion succeeded.
+The re argument is a pointer to where the host format event should be stored,
+and the event argument is the 32-byte wire event structure.
+In the 
+.PN XEvent 
+structure you are creating, 
+you must fill in the five required members of the event structure.
+You should fill in the type member with the type specified for the 
+.PN xEvent 
+structure.
+You should copy all other members from the 
+.PN xEvent 
+structure (wire format) to the
+.PN XEvent 
+structure (host format).
+Your conversion procedure should return 
+.PN True
+if the event should be placed in the queue or
+.PN False
+if it should not be placed in the queue.
+.LP
+To initialize the serial number component of the event, call
+.PN _XSetLastRequestRead
+with the event and use the return value.
+.LP
+.IN "_XSetLastRequestRead" "" "@DEF@"
+.sM
+.FD 0
+unsigned long _XSetLastRequestRead(\^\fIdisplay\fP, \fIrep\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      xGenericReply *\fIrep\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIrep\fP 1i
+Specifies the wire event structure.
+.LP
+.eM
+The
+.PN _XSetLastRequestRead
+function computes and returns a complete serial number from the partial
+serial number in the event.
+.sp
+.LP
+.IN "XESetEventToWire" "" "@DEF@"
+.sM
+.FD 0
+Status (*XESetEventToWire(\^\fIdisplay\fP, \fIevent_number\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIevent_number\fP\^;
+.br
+      int (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_number\fP 1i
+Specifies the event code.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when converting an event.
+.LP
+.eM
+The
+.PN XESetEventToWire
+function defines a procedure to be called when an event
+needs to be converted from host format
+.Pn ( XEvent ) 
+to wire format
+.Pn ( xEvent )
+form.  
+The event number defines which protocol event number to install a
+conversion procedure for.
+.PN XESetEventToWire
+returns any previously defined procedure.
+It returns zero if the conversion fails or nonzero otherwise.
+.NT
+You can replace a core event conversion function with one
+of your own, although this is not encouraged.  
+It would, however, allow you to intercept a core event 
+and modify it before being sent to another client.
+.NE
+When Xlib needs to convert an event from host format to wire format, 
+your procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIre\fP, \fIevent\fP\^)
+	Display *\fIdisplay\fP\^;
+	XEvent *\fIre\fP\^;
+	xEvent *\fIevent\fP\^;
+.De
+.LP
+.eM
+The re argument is a pointer to the host format event,
+and the event argument is a pointer to where the 32-byte wire event 
+structure should be stored.
+You should fill in the type with the type from the 
+.PN XEvent 
+structure.
+All other members then should be copied from the host format to the 
+.PN xEvent 
+structure.
+.IN "XESetWireToError" "" "@DEF@"
+.sM
+.FD 0
+Bool (*XESetWireToError(\^\fIdisplay\fP, \fIerror_number\fP, \fIproc\fP\^)(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIerror_number\fP\^;
+.br
+      Bool (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIerror_number\fP 1i
+Specifies the error code.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when an error is received.
+.LP
+.eM
+The
+.PN XESetWireToError
+function defines a procedure to be called when an extension
+error needs to be converted from wire format to host format.
+The error number defines which protocol error code to install
+the conversion procedure for.
+.PN XESetWireToError
+returns any previously defined procedure.
+.LP
+Use this function for extension errors that contain additional error values
+beyond those in a core X error, when multiple wire errors must be combined
+into a single Xlib error, or when it is necessary to intercept an
+X error before it is otherwise examined.
+.LP
+When Xlib needs to convert an error from wire format to host format,
+the procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+Bool (*\fIproc\fP\^)(\^\fIdisplay\fP, \fIhe\fP, \fIwe\fP\^)
+	Display *\fIdisplay\fP\^;
+	XErrorEvent *\fIhe\fP\^;
+	xError *\fIwe\fP\^;
+.De
+.LP
+.eM
+The he argument is a pointer to where the host format error should be stored.
+The structure pointed at by he is guaranteed to be as large as an
+.PN XEvent
+structure and so can be cast to a type larger than an
+.PN XErrorEvent
+to store additional values.
+If the error is to be completely ignored by Xlib
+(for example, several protocol error structures will be combined into
+one Xlib error),
+then the function should return
+.PN False ;
+otherwise, it should return
+.PN True .
+.IN "XESetError" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetError(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when an error is received.
+.LP
+.eM
+Inside Xlib, there are times that you may want to suppress the
+calling of the external error handling when an error occurs.
+This allows status to be returned on a call at the cost of the call
+being synchronous (though most such functions are query operations, in any
+case, and are typically programmed to be synchronous).
+.LP
+When Xlib detects a protocol error in 
+.PN _XReply , 
+it calls your procedure with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+int (*\fIproc\fP\^)(\fIdisplay\fP, \fIerr\fP, \fIcodes\fP, \fIret_code\fP\^)
+	Display *\fIdisplay\fP\^;
+	xError *\fIerr\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+	int *\fIret_code\fP\^;
+.De
+.LP
+.eM
+The err argument is a pointer to the 32-byte wire format error.
+The codes argument is a pointer to the extension codes structure.
+The ret_code argument is the return code you may want 
+.PN _XReply 
+returned to.
+.LP
+If your procedure returns a zero value, 
+the error is not suppressed, and 
+the client's error handler is called.
+(For further information, see section 11.8.2.)
+If your procedure returns nonzero, 
+the error is suppressed, and 
+.PN _XReply 
+returns the value of ret_code.
+.IN "XESetErrorString" "" "@DEF@"
+.sM
+.FD 0
+char  *(*XESetErrorString(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      char *(\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call to obtain an error string.
+.LP
+.eM
+The 
+.PN XGetErrorText 
+function returns a string to the user for an error.
+.PN XESetErrorString
+allows you to define a procedure to be called that
+should return a pointer to the error message.
+The following is an example.
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+(*\fIproc\fP\^)(\^\fIdisplay\fP, \fIcode\fP, \fIcodes\fP, \fIbuffer\fP, \fInbytes\fP\^)
+	Display *\fIdisplay\fP\^;
+	int \fIcode\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+	char *\fIbuffer\fP\^;
+	int \fInbytes\fP\^;
+.De
+.LP
+.eM
+Your procedure is called with the error code for every error detected.
+You should copy nbytes of a null-terminated string containing the
+error message into buffer.
+.IN "XESetPrintErrorValues" "" "@DEF@"
+.sM
+.FD 0
+void (*XESetPrintErrorValues(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      void (\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when an error is printed.
+.LP
+.eM
+The
+.PN XESetPrintErrorValues
+function defines a procedure to be called when an extension
+error is printed, to print the error values.
+Use this function for extension errors that contain additional error values
+beyond those in a core X error.
+It returns any previously defined procedure.
+.LP
+When Xlib needs to print an error,
+the procedure is called with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+void (*\fIproc\fP\^)(\^\fIdisplay\fP, \fIev\fP, \fIfp\fP\^)
+	Display *\fIdisplay\fP\^;
+	XErrorEvent *\fIev\fP\^;
+	void *\fIfp\fP\^;
+.De
+.LP
+.eM
+The structure pointed at by ev is guaranteed to be as large as an
+.PN XEvent
+structure and so can be cast to a type larger than an
+.PN XErrorEvent
+to obtain additional values set by using
+.PN XESetWireToError .
+The underlying type of the fp argument is system dependent;
+on a POSIX-compliant system, fp should be cast to type FILE*.
+.IN "XESetFlushGC" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetFlushGC(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int *(\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when a GC is flushed.
+.LP
+.eM
+The procedure set by the
+.PN XESetFlushGC
+function has the same interface as the procedure set by the
+.PN XESetCopyGC
+function, but is called when a GC cache needs to be updated in the server.
+.IN "XESetBeforeFlush" "" "@DEF@"
+.sM
+.FD 0
+int (*XESetBeforeFlush(\^\fIdisplay\fP, \fIextension\fP, \fIproc\fP\^))(\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIextension\fP\^;
+.br
+      int *(\^*\fIproc\fP\^)(\^);
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIextension\fP 1i
+Specifies the extension number.
+.IP \fIproc\fP 1i
+Specifies the procedure to call when a buffer is flushed.
+.LP
+.eM
+The
+.PN XESetBeforeFlush
+function defines a procedure to be called when data is about to be
+sent to the server.  When data is about to be sent, your procedure is  
+called one or more times with these arguments:
+.LP
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+.R
+void (*\fIproc\fP\^)(\^\fIdisplay\fP, \fIcodes\fP, \fIdata\fP, \fIlen\fP\^)
+	Display *\fIdisplay\fP\^;
+	XExtCodes *\fIcodes\fP\^;
+	char *\fIdata\fP\^;
+	long \fIlen\fP\^;
+.De
+.LP
+.eM
+The data argument specifies a portion of the outgoing data buffer,
+and its length in bytes is specified by the len argument.
+Your procedure must not alter the contents of the data and must not
+do additional protocol requests to the same display.
+.SH
+Hooks onto Xlib Data Structures
+.LP
+Various Xlib data structures have provisions for extension procedures
+to chain extension supplied data onto a list.
+These structures are
+.PN GC , 
+.PN Visual , 
+.PN Screen , 
+.PN ScreenFormat , 
+.PN Display , 
+and 
+.PN XFontStruct .
+Because the list pointer is always the first member in the structure, 
+a single set of procedures can be used to manipulate the data
+on these lists.
+.LP
+The following structure is used in the functions in this section
+and is defined in 
+.hN X11/Xlib.h :
+.LP
+.IN "XExtData" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct _XExtData {
+	int number;	/* number returned by XInitExtension */
+	struct _XExtData *next;	/* next item on list of data for structure */
+	int (*free_private)();	/* if defined,  called to free private */
+	XPointer private_data;	/* data private to this extension. */
+} XExtData;
+.De
+.LP
+.eM
+When any of the data structures listed above are freed, 
+the list is walked, and the structure's free procedure (if any) is called. 
+If free is NULL, 
+then the library frees both the data pointed to by the private_data member
+and the structure itself. 
+.LP
+.sM
+.Ds 0
+.TA .5i
+.ta .5i
+union {	Display *display;
+	GC gc;
+	Visual *visual;
+	Screen *screen;
+	ScreenFormat *pixmap_format;
+	XFontStruct *font } XEDataObject;
+.De
+.LP
+.eM
+.IN "XEHeadOfExtensionList" "" "@DEF@"
+.sM
+.FD 0
+XExtData **XEHeadOfExtensionList(\^\fIobject\fP\^)
+	XEDataObject \fIobject\fP\^;
+.FN
+.IP \fIobject\fP 1i
+Specifies the object.
+.LP
+.eM
+The
+.PN XEHeadOfExtensionList
+function returns a pointer to the list of extension structures attached
+to the specified object.
+In concert with 
+.PN XAddToExtensionList ,
+.PN XEHeadOfExtensionList
+allows an extension to attach arbitrary data to any of the structures
+of types contained in
+.PN XEDataObject .
+.LP
+.IN "XAddToExtensionList" "" "@DEF@"
+.sM
+.FD 0
+XAddToExtensionList(\^\fIstructure\fP, \fIext_data\fP\^)
+.br
+      XExtData **\fIstructure\fP\^;
+.br
+      XExtData *\fIext_data\fP\^;
+.FN
+.IP \fIstructure\fP 1i
+Specifies the extension list.
+.IP \fIext_data\fP 1i
+Specifies the extension data structure to add.
+.LP
+.eM
+The structure argument is a pointer to one of the data structures
+enumerated above.
+You must initialize ext_data->number with the extension number
+before calling this function.
+.IN "XFindOnExtensionList" "" "@DEF@"
+.sM
+.FD 0
+XExtData *XFindOnExtensionList(\^\fIstructure\fP, \fInumber\fP\^)
+.br
+      struct _XExtData **\fIstructure\fP\^;
+.br
+      int \fInumber\fP\^;
+.FN
+.IP \fIstructure\fP 1i
+Specifies the extension list.
+.IP \fInumber\fP 1i
+Specifies the extension number from
+.PN XInitExtension .
+.LP
+.eM
+The
+.PN XFindOnExtensionList
+function returns the first extension data structure
+for the extension numbered number.
+It is expected that an extension will add at most one extension
+data structure to any single data structure's extension data list.
+There is no way to find additional structures.
+.LP
+The 
+.PN XAllocID 
+macro, which allocates and returns a resource ID, is defined in 
+.hN X11/Xlib.h .
+.IN "XAllocID" "" "@DEF@"
+.sM
+.FD 0
+XAllocID\^(\fIdisplay\fP\^)
+.br
+     Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+This macro is a call through the 
+.PN Display
+structure to an internal resource ID allocator.
+It returns a resource ID that you can use when creating new resources.
+.LP
+The 
+.PN XAllocIDs
+macro allocates and returns an array of resource ID.
+.IN "XAllocIDs" "" "@DEF@"
+.sM
+.FD 0
+XAllocIDs\^(\fIdisplay\fP, \fIids_return\fP, \fIcount\fP\^)
+.br
+     Display *\fIdisplay\fP\^;
+.br
+     XID *\fIids_return\fP\^;
+.br
+     int \fIcount\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIids_return\fP 1i
+Returns the resource IDs.
+.IP \fIrep\fP 1i
+Specifies the number of resource IDs requested.
+.LP
+.eM
+This macro is a call through the 
+.PN Display
+structure to an internal resource ID allocator.
+It returns resource IDs to the array supplied by the caller.
+To correctly handle automatic reuse of resource IDs, you must call
+.PN XAllocIDs
+when requesting multiple resource IDs.  This call might generate
+protocol requests.
+.SH
+GC Caching
+.LP
+GCs are cached by the library to allow merging of independent change
+requests to the same GC into single protocol requests.
+This is typically called a write-back cache.
+Any extension procedure whose behavior depends on the contents of a GC
+must flush the GC cache to make sure the server has up-to-date contents
+in its GC.
+.LP
+The 
+.PN FlushGC
+macro checks the dirty bits in the library's GC structure and calls
+.PN _XFlushGCCache 
+if any elements have changed.
+The
+.PN FlushGC
+macro is defined as follows:
+.IN "FlushGC" "" "@DEF@"
+.sM
+.FD 0
+FlushGC\^(\^\fIdisplay\fP\^, \fIgc\fP\^)
+.br
+      Display *\^\fIdisplay\fP\^;
+.br
+      GC \fIgc\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIgc\fP 1i
+Specifies the GC.
+.LP
+.eM
+Note that if you extend the GC to add additional resource ID components,
+you should ensure that the library stub sends the change request immediately.
+This is because a client can free a resource immediately after
+using it, so if you only stored the value in the cache without
+forcing a protocol request, the resource might be destroyed before being
+set into the GC.
+You can use the
+.PN _XFlushGCCache 
+procedure 
+to force the cache to be flushed.
+The
+.PN _XFlushGCCache 
+procedure
+is defined as follows:
+.IN "_XFlushGCCache" "" "@DEF@"
+.sM
+.FD 0
+_XFlushGCCache\^(\^\fIdisplay\fP\^, \fIgc\fP\^)
+.br
+      Display *\^\fIdisplay\fP\^;
+.br
+      GC \fIgc\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIgc\fP 1i
+Specifies the GC.
+.LP
+.eM
+.SH
+Graphics Batching
+.LP
+If you extend X to add more poly graphics primitives, you may be able to
+take advantage of facilities in the library to allow back-to-back 
+single calls to be transformed into poly requests.
+This may dramatically improve performance of programs that are not
+written using poly requests. 
+A pointer to an 
+.PN xReq ,
+called last_req in the display structure, is the last request being processed.  
+By checking that the last request
+type, drawable, gc, and other options are the same as the new one
+and that there is enough space left in the buffer, you may be able
+to just extend the previous graphics request by extending the length
+field of the request and appending the data to the buffer.  
+This can improve performance by five times or more in naive programs.  
+For example, here is the source for the 
+.PN XDrawPoint 
+stub.
+(Writing extension stubs is discussed in the next section.)
+.IP
+.sM
+.nf
+
+#include <X11/Xlibint.h>
+
+/* precompute the maximum size of batching request allowed */
+
+static int size = sizeof(xPolyPointReq) + EPERBATCH * sizeof(xPoint);
+
+XDrawPoint(dpy, d, gc, x, y)
+    register Display *dpy;
+    Drawable d;
+    GC gc;
+    int x, y; /* INT16 */
+{
+    xPoint *point;
+    LockDisplay(dpy);
+    FlushGC(dpy, gc);
+    {
+    register xPolyPointReq *req = (xPolyPointReq *) dpy->last_req;
+    /* if same as previous request, with same drawable, batch requests */
+    if (
+          (req->reqType == X_PolyPoint)
+       && (req->drawable == d)
+       && (req->gc == gc->gid)
+       && (req->coordMode == CoordModeOrigin)
+       && ((dpy->bufptr + sizeof (xPoint)) <= dpy->bufmax)
+       && (((char *)dpy->bufptr - (char *)req) < size) ) {
+         point = (xPoint *) dpy->bufptr;
+         req->length += sizeof (xPoint) >> 2;
+         dpy->bufptr += sizeof (xPoint);
+         }
+
+    else {
+        GetReqExtra(PolyPoint, 4, req); /* 1 point = 4 bytes */
+        req->drawable = d;
+        req->gc = gc->gid;
+        req->coordMode = CoordModeOrigin;
+        point = (xPoint *) (req + 1);
+        }
+    point->x = x;
+    point->y = y;
+    }
+    UnlockDisplay(dpy);
+    SyncHandle();
+}
+.fi
+.LP
+.eM
+To keep clients from generating very long requests that may monopolize the 
+server,
+there is a symbol defined in
+.hN X11/Xlibint.h
+of EPERBATCH on the number of requests batched.
+Most of the performance benefit occurs in the first few merged requests.
+Note that 
+.PN FlushGC 
+is called \fIbefore\fP picking up the value of last_req,
+because it may modify this field.
+.SH
+Writing Extension Stubs
+.LP
+All X requests always contain the length of the request,
+expressed as a 16-bit quantity of 32 bits.
+This means that a single request can be no more than 256K bytes in
+length.
+Some servers may not support single requests of such a length.
+The value of dpy->max_request_size contains the maximum length as
+defined by the server implementation.
+For further information,
+see ``X Window System Protocol.''
+.SH
+Requests, Replies, and Xproto.h
+.LP
+The 
+.hN X11/Xproto.h
+file contains three sets of definitions that
+are of interest to the stub implementor:  
+request names, request structures, and reply structures.
+.LP
+You need to generate a file equivalent to 
+.hN X11/Xproto.h
+for your extension and need to include it in your stub procedure.
+Each stub procedure also must include 
+.hN X11/Xlibint.h .
+.LP
+The identifiers are deliberately chosen in such a way that, if the
+request is called X_DoSomething, then its request structure is
+xDoSomethingReq, and its reply is xDoSomethingReply.  
+The GetReq family of macros, defined in 
+.hN X11/Xlibint.h , 
+takes advantage of this naming scheme.
+.LP
+For each X request, 
+there is a definition in 
+.hN X11/Xproto.h
+that looks similar to this:
+.LP
+.Ds 
+.R
+#define X_DoSomething   42
+.De
+In your extension header file, 
+this will be a minor opcode, 
+instead of a major opcode.
+.SH
+Request Format
+.LP
+Every request contains an 8-bit major opcode and a 16-bit length field
+expressed in units of 4 bytes.  
+Every request consists of 4 bytes of header
+(containing the major opcode, the length field, and a data byte) followed by
+zero or more additional bytes of data. 
+The length field defines the total length of the request, including the header.
+The length field in a request must equal the minimum length required to contain 
+the request. 
+If the specified length is smaller or larger than the required length, 
+the server should generate a 
+.PN BadLength 
+error.
+Unused bytes in a request are not required to be zero.  
+Extensions should be designed in such a way that long protocol requests
+can be split up into smaller requests,
+if it is possible to exceed the maximum request size of the server.
+The protocol guarantees the maximum request size to be no smaller than
+4096 units (16384 bytes).
+.LP
+Major opcodes 128 through 255 are reserved for extensions.
+Extensions are intended to contain multiple requests, 
+so extension requests typically have an additional minor opcode encoded 
+in the second data byte in the request header, 
+but the placement and interpretation of this minor opcode as well as all
+other fields in extension requests are not defined by the core protocol.
+Every request is implicitly assigned a sequence number (starting with one)
+used in replies, errors, and events.
+.LP
+To help but not cure portability problems to certain machines, the
+.PN B16
+and
+.PN B32
+macros have been defined so that they can become bitfield specifications 
+on some machines.
+For example, on a Cray,
+these should be used for all 16-bit and 32-bit quantities, as discussed below.
+.LP
+Most protocol requests have a corresponding structure typedef in
+.hN X11/Xproto.h ,
+which looks like:
+.LP
+.IN "xDoSomethingReq" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct _DoSomethingReq {
+	CARD8 reqType;	/* X_DoSomething */
+	CARD8 someDatum;	/* used differently in different requests */
+	CARD16 length B16;	/* total # of bytes in request, divided by 4 */
+	...
+	/* request-specific data */
+	...
+} xDoSomethingReq;
+.De
+.LP
+.eM
+If a core protocol request has a single 32-bit argument, 
+you need not declare a request structure in your extension header file.
+Instead, such requests use the
+.PN xResourceReq
+structure in
+.hN X11/Xproto.h .
+This structure is used for any request whose single argument is a 
+.PN Window , 
+.PN Pixmap ,
+.PN Drawable , 
+.PN GContext , 
+.PN Font , 
+.PN Cursor , 
+.PN Colormap , 
+.PN Atom , 
+or
+.PN VisualID .
+.LP
+.IN "xResourceReq" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct _ResourceReq {
+	CARD8 reqType;	/* the request type, e.g. X_DoSomething */
+	BYTE pad;	/* not used */
+	CARD16 length B16;	/* 2 (= total # of bytes in request, divided by 4) */
+	CARD32 id B32;	/* the Window, Drawable, Font, GContext, etc. */
+} xResourceReq;
+.De
+.LP
+.eM
+If convenient,
+you can do something similar in your extension header file. 
+.LP
+In both of these structures, 
+the reqType field identifies the type of the request (for example, 
+X_MapWindow or X_CreatePixmap).  
+The length field tells how long the request is
+in units of 4-byte longwords. 
+This length includes both the request structure itself and any
+variable-length data, such as strings or lists, that follow the
+request structure.  
+Request structures come in different sizes, 
+but all requests are padded to be multiples of four bytes long.
+.LP
+A few protocol requests take no arguments at all. 
+Instead, they use the
+.PN xReq 
+structure in
+.hN X11/Xproto.h ,
+which contains only a reqType and a length (and a pad byte).
+.LP 
+If the protocol request requires a reply, 
+then
+.hN X11/Xproto.h
+also contains a reply structure typedef:
+.LP
+.IN "xDoSomethingReply" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct _DoSomethingReply {
+	BYTE type;	/* always X_Reply */
+	BYTE someDatum;	/* used differently in different requests */
+	CARD16 sequenceNumber B16;	/* # of requests sent so far */
+	CARD32 length B32;	/* # of additional bytes, divided by 4 */
+	...
+	/* request-specific data */
+	...
+} xDoSomethingReply;
+.De
+.LP
+.eM
+Most of these reply structures are 32 bytes long. 
+If there are not that many reply values, 
+then they contain a sufficient number of pad fields
+to bring them up to 32 bytes.  
+The length field is the total number of bytes in the request minus 32, 
+divided by 4.  
+This length will be nonzero only if:
+.IP \(bu 5
+The reply structure is followed by variable-length data,
+such as a list or string.
+.IP \(bu 5
+The reply structure is longer than 32 bytes.
+.LP
+Only 
+.PN GetWindowAttributes , 
+.PN QueryFont , 
+.PN QueryKeymap , 
+and
+.PN GetKeyboardControl 
+have reply structures longer than 32 bytes in the core protocol.
+.LP
+A few protocol requests return replies that contain no data.  
+.hN X11/Xproto.h
+does not define reply structures for these.
+Instead, they use the 
+.PN xGenericReply
+structure, which contains only a type, length,
+and sequence number (and sufficient padding to make it 32 bytes long).
+.SH
+Starting to Write a Stub Procedure
+.LP
+An Xlib stub procedure should start like this:
+.LP
+.Ds 
+.R
+#include "<X11/Xlibint.h>
+
+XDoSomething (arguments, ... )
+/* argument declarations */
+{
+
+register XDoSomethingReq *req;
+\^...
+.De
+If the protocol request has a reply, 
+then the variable declarations should include the reply structure for the request.
+The following is an example:
+.LP
+.Ds 
+.R
+xDoSomethingReply rep;
+.De 
+.SH
+Locking Data Structures
+.LP
+To lock the display structure for systems that
+want to support multithreaded access to a single display connection,
+each stub will need to lock its critical section.
+Generally, this section is the point from just before the appropriate GetReq
+call until all arguments to the call have been stored into the buffer.
+The precise instructions needed for this locking depend upon the machine
+architecture. 
+Two calls, which are generally implemented as macros, have been provided.
+.IN "LockDisplay" "" "@DEF@"
+.sM
+.FD 0
+LockDisplay(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.LP
+.IN "UnlockDisplay" "" "@DEF@"
+.FD 0
+UnlockDisplay(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+.SH
+Sending the Protocol Request and Arguments
+.LP
+After the variable declarations, 
+a stub procedure should call one of four macros defined in 
+.hN X11/Xlibint.h : 
+.PN GetReq , 
+.PN GetReqExtra , 
+.PN GetResReq , 
+or 
+.PN GetEmptyReq .  
+All of these macros take, as their first argument,
+the name of the protocol request as declared in 
+.hN X11/Xproto.h
+except with X_ removed.   
+Each one declares a 
+.PN Display 
+structure pointer,
+called dpy, and a pointer to a request structure, called req,
+which is of the appropriate type.
+The macro then appends the request structure to the output buffer, 
+fills in its type and length field, and sets req to point to it.
+.LP
+If the protocol request has no arguments (for instance, X_GrabServer),
+then use 
+.PN GetEmptyReq .
+.LP
+.Ds
+.R 
+GetEmptyReq (DoSomething, req);
+.De
+If the protocol request has a single 32-bit argument (such as a
+.PN Pixmap , 
+.PN Window , 
+.PN Drawable , 
+.PN Atom , 
+and so on),
+then use 
+.PN GetResReq .  
+The second argument to the macro is the 32-bit object.  
+.PN X_MapWindow 
+is a good example.
+.LP
+.Ds
+.R
+GetResReq (DoSomething, rid, req);
+.De
+The rid argument is the 
+.PN Pixmap , 
+.PN Window , 
+or other resource ID.
+.LP
+If the protocol request takes any other argument list, 
+then call 
+.PN GetReq .  
+After the 
+.PN GetReq , 
+you need to set all the other fields in the request structure,
+usually from arguments to the stub procedure.
+.LP
+.Ds 
+.R
+GetReq (DoSomething, req);
+/* fill in arguments here */
+req->arg1 = arg1;
+req->arg2 = arg2;
+\^...
+.De
+A few stub procedures (such as 
+.PN XCreateGC 
+and 
+.PN XCreatePixmap ) 
+return a resource ID to the caller but pass a resource ID as an argument
+to the protocol request.   
+Such procedures use the macro 
+.PN XAllocID 
+to allocate a resource ID from the range of IDs 
+that were assigned to this client when it opened the connection.
+.LP
+.Ds 
+.R
+rid = req->rid = XAllocID();
+\^...
+return (rid);
+.De
+Finally, some stub procedures transmit a fixed amount of variable-length
+data after the request.  
+Typically, these procedures (such as
+.PN XMoveWindow 
+and 
+.PN XSetBackground ) 
+are special cases of more general functions like 
+.PN XMoveResizeWindow 
+and 
+.PN XChangeGC .   
+These procedures use 
+.PN GetReqExtra , 
+which is the same as 
+.PN GetReq
+except that it takes an additional argument (the number of
+extra bytes to allocate in the output buffer after the request structure).  
+This number should always be a multiple of four.
+.SH
+Variable Length Arguments
+.LP
+Some protocol requests take additional variable-length data that
+follow the 
+.PN xDoSomethingReq 
+structure.    
+The format of this data varies from request to request. 
+Some requests require a sequence of 8-bit bytes, 
+others a sequence of 16-bit or 32-bit entities, 
+and still others a sequence of structures.
+.LP
+It is necessary to add the length of any variable-length data to the
+length field of the request structure.  
+That length field is in units of 32-bit longwords.  
+If the data is a string or other sequence of 8-bit bytes, 
+then you must round the length up and shift it before adding:
+.LP
+.Ds
+.R
+req->length += (nbytes+3)>>2;
+.De
+To transmit variable-length data, use the 
+.PN Data 
+macros.
+If the data fits into the output buffer, 
+then this macro copies it to the buffer.  
+If it does not fit, however,
+the 
+.PN Data 
+macro calls 
+.PN _XSend , 
+which transmits first the contents of the buffer and then your data.
+The 
+.PN Data 
+macros take three arguments:  
+the display, a pointer to the beginning of the data, 
+and the number of bytes to be sent.
+.sM
+.FD 0
+Data(\^\fIdisplay\fP, (char *) \fIdata\fP, \fInbytes\fP\^);
+.sp
+Data16(\^\fIdisplay\fP, (short *) \fIdata\fP, \fInbytes\fP\^);
+.sp
+Data32(\^\fIdisplay\fP, (long *) \fIdata\fP, \fInbytes\fP\^);
+.FN
+.LP
+.eM
+.PN Data ,
+.PN Data16 ,
+and
+.PN Data32
+are macros that may use their last argument
+more than once, so that argument should be a variable rather than
+an expression such as ``nitems*sizeof(item)''.  
+You should do that kind of computation in a separate statement before calling 
+them.
+Use the appropriate macro when sending byte, short, or long data.
+.LP
+If the protocol request requires a reply, 
+then call the procedure 
+.PN _XSend 
+instead of the 
+.PN Data 
+macro.  
+.PN _XSend 
+takes the same arguments, but because it sends your data immediately instead of 
+copying it into the output buffer (which would later be flushed
+anyway by the following call on 
+.PN _XReply ), 
+it is faster.
+.SH
+Replies
+.LP
+If the protocol request has a reply, 
+then call 
+.PN _XReply 
+after you have finished dealing with 
+all the fixed-length and variable-length arguments.  
+.PN _XReply 
+flushes the output buffer and waits for an 
+.PN xReply 
+packet to arrive.  
+If any events arrive in the meantime,
+.PN _XReply 
+places them in the queue for later use.
+.IN "_XReply" "" "@DEF@"
+.sM
+.FD 0
+Status _XReply(\^\fIdisplay\fP, \fIrep\fP, \fIextra\fP, \fIdiscard\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      xReply *\fIrep\fP\^;
+.br
+      int \fIextra\fP\^;
+.br
+      Bool \fIdiscard\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIrep\fP 1i
+Specifies the reply structure.
+.IP \fIextra\fP 1i
+Specifies the number of 32-bit words expected after the replay.
+.IP \fIdiscard\fP 1i
+Specifies if any data beyond that specified in the extra argument
+should be discarded.
+.LP
+.eM
+The
+.PN _XReply 
+function waits for a reply packet and copies its contents into the
+specified rep.  
+.PN _XReply 
+handles error and event packets that occur before the reply is received.
+.PN _XReply 
+takes four arguments:
+.IP \(bu 5
+A 
+.PN Display 
+* structure
+.IP \(bu 5
+A pointer to a reply structure (which must be cast to an 
+.PN xReply 
+*)
+.IP \(bu 5
+The number of additional 32-bit words (beyond 
+.Pn sizeof( xReply ) 
+= 32 bytes)
+in the reply structure
+.IP \(bu 5
+A Boolean that indicates whether
+.PN _XReply 
+is to discard any additional bytes
+beyond those it was told to read
+.LP
+Because most reply structures are 32 bytes long, 
+the third argument is usually 0.  
+The only core protocol exceptions are the replies to 
+.PN GetWindowAttributes , 
+.PN QueryFont , 
+.PN QueryKeymap , 
+and 
+.PN GetKeyboardControl ,
+which have longer replies.
+.LP
+The last argument should be 
+.PN False 
+if the reply structure is followed
+by additional variable-length data (such as a list or string).  
+It should be 
+.PN True 
+if there is not any variable-length data.
+.NT
+This last argument is provided for upward-compatibility reasons
+to allow a client to communicate properly with a hypothetical later
+version of the server that sends more data than the client expected.
+For example, some later version of 
+.PN GetWindowAttributes 
+might use a
+larger, but compatible, 
+.PN xGetWindowAttributesReply 
+that contains additional attribute data at the end.
+.NE
+.PN _XReply 
+returns 
+.PN True
+if it received a reply successfully or 
+.PN False 
+if it received any sort of error. 
+.LP
+For a request with a reply that is not followed by variable-length
+data, you write something like:
+.LP
+.Ds 
+.R
+_XReply(display, (xReply *)&rep, 0, True);
+*ret1 = rep.ret1;
+*ret2 = rep.ret2;
+*ret3 = rep.ret3;
+\^...
+UnlockDisplay(dpy);
+SyncHandle();
+return (rep.ret4);
+}
+.De
+If there is variable-length data after the reply, 
+change the 
+.PN True 
+to 
+.PN False , 
+and use the appropriate
+.PN _XRead 
+function to read the variable-length data.
+.LP
+.sM
+.FD 0
+_XRead(\^\fIdisplay\fP, \fIdata_return\fP, \fInbytes\fP\^)
+       Display *\fIdisplay\fP\^;
+       char *\fIdata_return\fP\^;
+       long \fInbytes\fP\^;	
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdata_return\fP 1i
+Specifies the buffer.
+.IP \fInbytes\fP 1i
+Specifies the number of bytes required.
+.LP
+.eM
+The
+.PN _XRead
+function reads the specified number of bytes into data_return.
+.LP
+.sM
+.FD 0
+_XRead16(\^\fIdisplay\fP, \fIdata_return\fP, \fInbytes\fP\^)
+       Display *\fIdisplay\fP\^;
+       short *\fIdata_return\fP\^;
+       long \fInbytes\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdata_return\fP 1i
+Specifies the buffer.
+.IP \fInbytes\fP 1i
+Specifies the number of bytes required.
+.LP
+.eM
+The
+.PN _XRead16
+function reads the specified number of bytes,
+unpacking them as 16-bit quantities,
+into the specified array as shorts.
+.LP
+.sM
+.FD 0
+_XRead32(\^\fIdisplay\fP, \fIdata_return\fP, \fInbytes\fP\^)
+       Display *\fIdisplay\fP\^;
+       long *\fIdata_return\fP\^;
+       long \fInbytes\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdata_return\fP 1i
+Specifies the buffer.
+.IP \fInbytes\fP 1i
+Specifies the number of bytes required.
+.LP
+.eM
+The
+.PN _XRead32
+function reads the specified number of bytes,
+unpacking them as 32-bit quantities,
+into the specified array as longs.
+.LP
+.sM
+.FD 0
+_XRead16Pad(\^\fIdisplay\fP, \fIdata_return\fP, \fInbytes\fP\^)
+       Display *\fIdisplay\fP\^;
+       short *\fIdata_return\fP\^;
+       long \fInbytes\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdata_return\fP 1i
+Specifies the buffer.
+.IP \fInbytes\fP 1i
+Specifies the number of bytes required.
+.LP
+.eM
+The
+.PN _XRead16Pad
+function reads the specified number of bytes,
+unpacking them as 16-bit quantities,
+into the specified array as shorts.
+If the number of bytes is not a multiple of four,
+.PN _XRead16Pad
+reads and discards up to two additional pad bytes.
+.LP
+.sM
+.FD 0
+_XReadPad(\^\fIdisplay\fP, \fIdata_return\fP, \fInbytes\fP\^)
+       Display *\fIdisplay\fP\^;
+       char *\fIdata_return\fP\^;
+       long \fInbytes\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdata_return\fP 1i
+Specifies the buffer.
+.IP \fInbytes\fP 1i
+Specifies the number of bytes required.
+.LP
+.eM
+The
+.PN _XReadPad
+function reads the specified number of bytes into data_return.
+If the number of bytes is not a multiple of four,
+.PN _XReadPad
+reads and discards up to three additional pad bytes.
+.LP
+Each protocol request is a little different. 
+For further information,
+see the Xlib sources for examples.
+.SH
+Synchronous Calling
+.LP
+Each procedure should have a call, just before returning to the user, 
+to a macro called
+.PN SyncHandle .
+If synchronous mode is enabled (see 
+.PN XSynchronize ), 
+the request is sent immediately.
+The library, however, waits until any error the procedure could generate
+at the server has been handled.
+.SH
+Allocating and Deallocating Memory
+.LP
+To support the possible reentry of these procedures, 
+you must observe several conventions when allocating and deallocating memory,
+most often done when returning data to the user from the window
+system of a size the caller could not know in advance
+(for example, a list of fonts or a list of extensions).
+The standard C library functions on many systems
+are not protected against signals or other multithreaded uses.
+The following analogies to standard I/O library functions
+have been defined:
+.TS
+l l.
+T{
+.PN Xmalloc ()
+T}	T{
+Replaces 
+.PN malloc ()
+T}
+T{
+.PN XFree ()
+T}	T{
+Replaces 
+.PN free ()
+T}
+T{
+.PN Xcalloc ()
+T}	T{
+Replaces 
+.PN calloc ()
+T}
+.TE
+.LP
+These should be used in place of any calls you would make to the normal
+C library functions.
+.LP
+If you need a single scratch buffer inside a critical section 
+(for example, to pack and unpack data to and from the wire protocol),
+the general memory allocators may be too expensive to use
+(particularly in output functions, which are performance critical).  
+The following function returns a scratch buffer for use within a
+critical section:
+.IN "_XAllocScratch" "" "@DEF@"
+.sM
+.FD 0
+char *_XAllocScratch(\^\fIdisplay\fP, \fInbytes\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned long \fInbytes\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fInbytes\fP 1i
+Specifies the number of bytes required.
+.LP
+.eM
+This storage must only be used inside of a critical section of your
+stub.  The returned pointer cannot be assumed valid after any call
+that might permit another thread to execute inside Xlib.  For example,
+the pointer cannot be assumed valid after any use of the
+.PN GetReq
+or
+.PN Data
+families of macros,
+after any use of
+.PN _XReply ,
+or after any use of the
+.PN _XSend
+or
+.PN _XRead
+families of functions.
+.LP
+.sp
+The following function returns a scratch buffer for use across
+critical sections:
+.IN "_XAllocTemp" "" "@DEF@"
+.sM
+.FD 0
+char *_XAllocTemp(\^\fIdisplay\fP, \fInbytes\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned long \fInbytes\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fInbytes\fP 1i
+Specifies the number of bytes required.
+.LP
+.eM
+This storage can be used across calls that might permit another thread to
+execute inside Xlib.  The storage must be explicitly returned to Xlib.
+The following function returns the storage:
+.IN "_XFreeTemp" "" "@DEF@"
+.sM
+.FD 0
+void _XFreeTemp(\^\fIdisplay\fP, \fIbuf\fP, \fInbytes\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIbuf\fP\^;
+.br
+      unsigned long \fInbytes\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIbuf\fP 1i
+Specifies the buffer to return.
+.IP \fInbytes\fP 1i
+Specifies the size of the buffer.
+.LP
+.eM
+You must pass back the same pointer and size that were returned by
+.PN _XAllocTemp .
+.SH
+Portability Considerations
+.LP
+Many machine architectures, 
+including many of the more recent RISC architectures, 
+do not correctly access data at unaligned locations; 
+their compilers pad out structures to preserve this characteristic.
+Many other machines capable of unaligned references pad inside of structures
+as well to preserve alignment, because accessing aligned data is
+usually much faster.
+Because the library and the server use structures to access data at
+arbitrary points in a byte stream,
+all data in request and reply packets \fImust\fP be naturally aligned;
+that is, 16-bit data starts on 16-bit boundaries in the request
+and 32-bit data on 32-bit boundaries.
+All requests \fImust\fP be a multiple of 32 bits in length to preserve
+the natural alignment in the data stream.
+You must pad structures out to 32-bit boundaries.
+Pad information does not have to be zeroed unless you want to
+preserve such fields for future use in your protocol requests.
+Floating point varies radically between machines and should be
+avoided completely if at all possible.
+.LP
+This code may run on machines with 16-bit ints.  
+So, if any integer argument, variable, or return value either can take 
+only nonnegative values or is declared as a
+.PN CARD16
+in the protocol, be sure to declare it as
+.PN unsigned
+.PN int
+and not as
+.PN int .
+(This, of course, does not apply to Booleans or enumerations.)
+.LP
+Similarly, 
+if any integer argument or return value is declared
+.PN CARD32
+in the protocol, 
+declare it as an
+.PN unsigned
+.PN long
+and not as
+.PN int
+or
+.PN long .
+This also goes for any internal variables that may
+take on values larger than the maximum 16-bit
+.PN unsigned
+.PN int .
+.LP
+The library currently assumes that a
+.PN char
+is 8 bits, a
+.PN short
+is 16 bits, an
+.PN int
+is 16 or 32 bits, and a
+.PN long
+is 32 bits.  
+The 
+.PN PackData 
+macro is a half-hearted attempt to deal with the possibility of 32 bit shorts. 
+However, much more work is needed to make this work properly.
+.SH
+Deriving the Correct Extension Opcode
+.LP
+The remaining problem a writer of an extension stub procedure faces that
+the core protocol does not face is to map from the call to the proper
+major and minor opcodes.  
+While there are a number of strategies, 
+the simplest and fastest is outlined below.
+.IP 1. 5
+Declare an array of pointers, _NFILE long (this is normally found
+in 
+.hN stdio.h
+and is the number of file descriptors supported on the system)
+of type 
+.PN XExtCodes .
+Make sure these are all initialized to NULL.
+.IP 2. 5
+When your stub is entered, your initialization test is just to use
+the display pointer passed in to access the file descriptor and an index
+into the array.  
+If the entry is NULL, then this is the first time you
+are entering the procedure for this display.  
+Call your initialization procedure and pass to it the display pointer.
+.IP 3. 5
+Once in your initialization procedure, call 
+.PN XInitExtension ;
+if it succeeds, store the pointer returned into this array.  
+Make sure to establish a close display handler to allow you to zero the entry.
+Do whatever other initialization your extension requires.
+(For example, install event handlers and so on.)
+Your initialization procedure would normally return a pointer to the
+.PN XExtCodes 
+structure for this extension, which is what would normally
+be found in your array of pointers.
+.IP 4. 5
+After returning from your initialization procedure, 
+the stub can now continue normally, because it has its major opcode safely 
+in its hand in the 
+.PN XExtCodes 
+structure.
+.bp
