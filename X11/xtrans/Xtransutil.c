@@ -491,7 +491,7 @@ trans_mkdir(const char *path, int mode)
 	}
 	/* Dir doesn't exist. Try to create it */
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__CYGWIN__)
 	/*
 	 * 'sticky' bit requested: assume application makes
 	 * certain security implications. If effective user ID
@@ -616,7 +616,7 @@ trans_mkdir(const char *path, int mode)
 		    return -1;
 		}
 #endif
-#ifndef __APPLE_CC__
+#if !defined(__APPLE_CC__) && !defined(__CYGWIN__)
 	  	PRMSG(1, "mkdir: Owner of %s should be set to root\n",
 		      path, 0, 0);
 #endif

@@ -1,0 +1,2680 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 12\fP\s-1
+
+\s+1\fBInput Device Functions\fP\s-1
+.sp 2
+.nr H1 12
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 12: Input Device Functions
+.XE
+You can use the Xlib input device functions to:
+.IP \(bu 5
+Grab the pointer and individual buttons on the pointer
+.IP \(bu 5
+Grab the keyboard and individual keys on the keyboard
+.IP \(bu 5
+Resume event processing
+.IP \(bu 5
+Move the pointer
+.IP \(bu 5
+Set the input focus
+.IP \(bu 5
+Manipulate the keyboard and pointer settings
+.IP \(bu 5
+Manipulate the keyboard encoding
+.NH 2
+Pointer Grabbing 
+.XS
+\*(SN Pointer Grabbing  
+.XE
+.LP
+Xlib provides functions that you can use to control input from the pointer,
+which usually is a mouse.
+Usually, as soon as keyboard and mouse events occur,
+the X server delivers them to the appropriate client,
+which is determined by the window and input focus.
+The X server provides sufficient control over event delivery to
+allow window managers to support mouse ahead and various other
+styles of user interface.
+Many of these user interfaces depend on synchronous delivery of events.
+The delivery of  pointer and keyboard events can be controlled
+independently.
+.LP
+When mouse buttons or keyboard keys are grabbed, events
+will be sent to the grabbing client rather than the normal
+client who would have received the event.
+If the keyboard or pointer is in asynchronous mode,
+further mouse and keyboard events will continue to be processed.
+If the keyboard or pointer is in synchronous mode, no
+further events are processed until the grabbing client
+allows them (see
+.PN XAllowEvents ).
+The keyboard or pointer is considered frozen during this
+interval.
+The event that triggered the grab can also be replayed.
+.LP
+Note that the logical state of a device (as seen by client applications)
+may lag the physical state if device event processing is frozen.
+.LP
+.IN "Active grab" "" "@DEF@"
+There are two kinds of grabs:
+active and passive.
+An active grab occurs when a single client grabs the keyboard and/or pointer
+explicitly (see
+.PN XGrabPointer
+and
+.PN XGrabKeyboard ).
+.IN "Passive grab"
+A passive grab occurs when clients grab a particular keyboard key 
+or pointer button in a window,
+and the grab will activate when the key or button is actually pressed.
+Passive grabs are convenient for implementing reliable pop-up menus.
+For example, you can guarantee that the pop-up is mapped 
+before the up pointer button event occurs by
+grabbing a button requesting synchronous behavior.
+The down event will trigger the grab and freeze further
+processing of pointer events until you have the chance to
+map the pop-up window.
+You can then allow further event processing.
+The up event will then be correctly processed relative to the
+pop-up window.
+.LP
+For many operations,
+there are functions that take a time argument.
+The X server includes a timestamp in various events.
+One special time, called
+.IN "CurrentTime" "" "@DEF@"
+.IN "Time" "" "@DEF@"
+.PN CurrentTime ,
+represents the current server time.
+The X server maintains the time when the input focus was last changed,
+when the keyboard was last grabbed,
+when the pointer was last grabbed,
+or when a selection was last changed.
+Your
+application may be slow reacting to an event.
+You often need some way to specify that your
+request should not occur if another application has in the meanwhile
+taken control of the keyboard, pointer, or selection.
+By providing the timestamp from the event in the request, 
+you can arrange that the operation not take effect
+if someone else has performed an operation in the meanwhile.
+.LP
+A timestamp is a time value, expressed in milliseconds. 
+It typically is the time since the last server reset.
+Timestamp values wrap around (after about 49.7 days).
+The server, given its current time is represented by timestamp T, 
+always interprets timestamps from clients by treating half of the timestamp 
+space as being later in time than T.
+One timestamp value, named
+.PN CurrentTime ,
+is never generated by the server.
+This value is reserved for use in requests to represent the current server time.
+.LP
+For many functions in this section,
+you pass pointer event mask bits.
+The valid pointer event mask bits are:
+.PN ButtonPressMask ,
+.PN ButtonReleaseMask ,
+.PN EnterWindowMask ,
+.PN LeaveWindowMask ,
+.PN PointerMotionMask ,
+.PN PointerMotionHintMask ,
+.PN Button1MotionMask ,
+.PN Button2MotionMask ,
+.PN Button3MotionMask ,
+.PN Button4MotionMask ,
+.PN Button5MotionMask ,
+.PN ButtonMotionMask ,
+and
+.PN KeyMapStateMask .
+For other functions in this section,
+you pass keymask bits.
+The valid keymask bits are:
+.PN ShiftMask ,
+.PN LockMask ,
+.PN ControlMask ,
+.PN Mod1Mask ,
+.PN Mod2Mask ,
+.PN Mod3Mask ,
+.PN Mod4Mask ,
+and
+.PN Mod5Mask .
+.LP
+.sp
+To grab the pointer, use
+.PN XGrabPointer .
+.IN "Grabbing" "pointer"
+.IN "Pointer" "grabbing"
+.IN "XGrabPointer" "" "@DEF@"
+.sM
+.FD 0
+int XGrabPointer\^(\^\fIdisplay\fP, \fIgrab_window\fP\^, \fIowner_events\fP\^, \fIevent_mask\fP\^, \fIpointer_mode\fP\^,
+               \fIkeyboard_mode\fP\^, \fIconfine_to\fP\^, \fIcursor\fP\^, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIgrab_window\fP\^;
+.br
+      Bool \fIowner_events\fP\^;
+.br
+      unsigned int \fIevent_mask\fP\^;	
+.br
+      int \fIpointer_mode\fP\^, \fIkeyboard_mode\fP\^; 
+.br
+      Window \fIconfine_to\fP\^; 
+.br
+      Cursor \fIcursor\fP\^; 
+.br
+      Time \fItime\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIgrab_window\fP 1i
+Specifies the grab window.
+.IP \fIowner_events\fP 1i
+Specifies a Boolean value that indicates whether the pointer 
+events are to be reported as usual or reported with respect to the grab window 
+if selected by the event mask.
+.IP \fIevent_mask\fP 1i
+Specifies which pointer events are reported to the client.
+The mask is the bitwise inclusive OR of the valid pointer event mask bits.
+.IP \fIpointer_mode\fP 1i
+Specifies further processing of pointer events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.IP \fIkeyboard_mode\fP 1i
+Specifies further processing of keyboard events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.IP \fIconfine_to\fP 1i
+Specifies the window to confine the pointer in or
+.PN None .
+.IP \fIcursor\fP 1i
+Specifies the cursor that is to be displayed during the grab or
+.PN None . 
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XGrabPointer
+function actively grabs control of the pointer and returns
+.PN GrabSuccess
+if the grab was successful.
+Further pointer events are reported only to the grabbing client.
+.PN XGrabPointer
+overrides any active pointer grab by this client.
+If owner_events is 
+.PN False , 
+all generated pointer events
+are reported with respect to grab_window and are reported only if
+selected by event_mask.
+If owner_events is 
+.PN True
+and if a generated
+pointer event would normally be reported to this client, 
+it is reported as usual. 
+Otherwise, the event is reported with respect to the
+grab_window and is reported only if selected by event_mask.
+For either value of owner_events, unreported events are discarded.
+.LP
+If the pointer_mode is 
+.PN GrabModeAsync , 
+pointer event processing continues as usual.
+If the pointer is currently frozen by this client, 
+the processing of events for the pointer is resumed.
+If the pointer_mode is 
+.PN GrabModeSync , 
+the state of the pointer, as seen by
+client applications,
+appears to freeze, and the X server generates no further pointer events
+until the grabbing client calls 
+.PN XAllowEvents
+or until the pointer grab is released.
+Actual pointer changes are not lost while the pointer is frozen;
+they are simply queued in the server for later processing.
+.LP
+If the keyboard_mode is 
+.PN GrabModeAsync , 
+keyboard event processing is unaffected by activation of the grab.
+If the keyboard_mode is 
+.PN GrabModeSync , 
+the state of the keyboard, as seen by
+client applications,
+appears to freeze, and the X server generates no further keyboard events
+until the grabbing client calls 
+.PN XAllowEvents
+or until the pointer grab is released.
+Actual keyboard changes are not lost while the pointer is frozen;
+they are simply queued in the server for later processing.
+.LP
+If a cursor is specified, it is displayed regardless of what
+window the pointer is in.  
+If 
+.PN None
+is specified,
+the normal cursor for that window is displayed
+when the pointer is in grab_window or one of its subwindows;
+otherwise, the cursor for grab_window is displayed.
+.LP
+If a confine_to window is specified,
+the pointer is restricted to stay contained in that window.
+The confine_to window need have no relationship to the grab_window.
+If the pointer is not initially in the confine_to window, 
+it is warped automatically to the closest edge 
+just before the grab activates and enter/leave events are generated as usual. 
+If the confine_to window is subsequently reconfigured, 
+the pointer is warped automatically, as necessary, 
+to keep it contained in the window.
+.LP
+The time argument allows you to avoid certain circumstances that come up
+if applications take a long time to respond or if there are long network
+delays.
+Consider a situation where you have two applications, both
+of which normally grab the pointer when clicked on.
+If both applications specify the timestamp from the event, 
+the second application may wake up faster and successfully grab the pointer
+before the first application. 
+The first application then will get an indication that the other application 
+grabbed the pointer before its request was processed.
+.LP
+.PN XGrabPointer 
+generates
+.PN EnterNotify 
+and
+.PN LeaveNotify 
+events.
+.LP
+Either if grab_window or confine_to window is not viewable
+or if the confine_to window lies completely outside the boundaries of the root
+window,
+.PN XGrabPointer
+fails and returns
+.PN GrabNotViewable .
+If the pointer is actively grabbed by some other client,
+it fails and returns
+.PN AlreadyGrabbed .
+If the pointer is frozen by an active grab of another client,
+it fails and returns
+.PN GrabFrozen .
+If the specified time is earlier than the last-pointer-grab time or later 
+than the current X server time, it fails and returns
+.PN GrabInvalidTime .
+Otherwise, the last-pointer-grab time is set to the specified time
+.Pn ( CurrentTime 
+is replaced by the current X server time).
+.LP
+.PN XGrabPointer
+can generate
+.PN BadCursor ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To ungrab the pointer, use
+.PN XUngrabPointer .
+.IN "Ungrabbing" "pointer"
+.IN "Pointer" "ungrabbing"
+.IN "XUngrabPointer" "" "@DEF@"
+.sM
+.FD 0
+XUngrabPointer\^(\^\fIdisplay\fP, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Time \fItime\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XUngrabPointer
+function releases the pointer and any queued events
+if this client has actively grabbed the pointer from
+.PN XGrabPointer ,
+.PN XGrabButton ,
+or from a normal button press.
+.PN XUngrabPointer
+does not release the pointer if the specified
+time is earlier than the last-pointer-grab time or is later than the
+current X server time.
+It also generates 
+.PN EnterNotify 
+and 
+.PN LeaveNotify 
+events.
+The X server performs an 
+.PN UngrabPointer 
+request automatically if the event window or confine_to window 
+for an active pointer grab becomes not viewable
+or if window reconfiguration causes the confine_to window to lie completely
+outside the boundaries of the root window.
+.LP
+.sp
+To change an active pointer grab, use
+.PN XChangeActivePointerGrab .
+.IN "Pointer" "grabbing"
+.IN "Changing" "pointer grab" 
+.IN "XChangeActivePointerGrab" "" "@DEF@"
+.sM
+.FD 0
+XChangeActivePointerGrab\^(\^\fIdisplay\fP, \fIevent_mask\fP\^, \fIcursor\fP\^, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned int \fIevent_mask\fP\^;
+.br
+      Cursor \fIcursor\fP\^;
+.br
+      Time \fItime\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_mask\fP 1i
+Specifies which pointer events are reported to the client.
+The mask is the bitwise inclusive OR of the valid pointer event mask bits.
+.IP \fIcursor\fP 1i
+Specifies the cursor that is to be displayed or
+.PN None .
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XChangeActivePointerGrab
+function changes the specified dynamic parameters if the pointer is actively
+grabbed by the client and if the specified time is no earlier than the
+last-pointer-grab time and no later than the current X server time.
+This function has no effect on the passive parameters of an
+.PN XGrabButton .
+The interpretation of event_mask and cursor is the same as described in
+.PN XGrabPointer .
+.LP
+.PN XChangeActivePointerGrab
+can generate
+.PN BadCursor 
+and
+.PN BadValue
+errors.
+.LP
+.sp
+To grab a pointer button, use
+.PN XGrabButton .
+.IN "Grabbing" "buttons"
+.IN "Button" "grabbing"
+.IN "XGrabButton" "" "@DEF@"
+.sM
+.FD 0
+XGrabButton\^(\^\fIdisplay\fP, \fIbutton\fP\^, \fImodifiers\fP\^, \fIgrab_window\fP\^, \fIowner_events\fP\^, \fIevent_mask\fP\^, 
+.br
+                \fIpointer_mode\fP\^, \fIkeyboard_mode\fP\^, \fIconfine_to\fP\^, \fIcursor\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned int \fIbutton\fP\^;
+.br
+      unsigned int \fImodifiers\fP\^;
+.br
+      Window \fIgrab_window\fP\^;
+.br
+      Bool \fIowner_events\fP\^;
+.br
+      unsigned int \fIevent_mask\fP\^;	
+.br
+      int \fIpointer_mode\fP\^, \fIkeyboard_mode\fP\^;
+.br
+      Window \fIconfine_to\fP\^; 
+.br
+      Cursor \fIcursor\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Bu grabbed
+.IP \fIbutton\fP 1i
+Specifies the pointer button that is to be \*(Bu or
+.PN AnyButton .
+.IP \fImodifiers\fP 1i
+Specifies the set of keymasks or
+.PN AnyModifier .
+The mask is the bitwise inclusive OR of the valid keymask bits.
+.IP \fIgrab_window\fP 1i
+Specifies the grab window.
+.IP \fIowner_events\fP 1i
+Specifies a Boolean value that indicates whether the pointer 
+events are to be reported as usual or reported with respect to the grab window 
+if selected by the event mask.
+.IP \fIevent_mask\fP 1i
+Specifies which pointer events are reported to the client.
+The mask is the bitwise inclusive OR of the valid pointer event mask bits.
+.IP \fIpointer_mode\fP 1i
+Specifies further processing of pointer events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.IP \fIkeyboard_mode\fP 1i
+Specifies further processing of keyboard events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.IP \fIconfine_to\fP 1i
+Specifies the window to confine the pointer in or
+.PN None .
+.IP \fIcursor\fP 1i
+Specifies the cursor that is to be displayed or
+.PN None .
+.LP
+.eM
+The
+.PN XGrabButton
+function establishes a passive grab.
+In the future,
+the pointer is actively grabbed (as for
+.PN XGrabPointer ),
+the last-pointer-grab time is set to the time at which the button was pressed
+(as transmitted in the
+.PN ButtonPress
+event), and the
+.PN ButtonPress
+event is reported if all of the following conditions are true:
+.IP \(bu 5
+The pointer is not grabbed, and the specified button is logically pressed
+when the specified modifier keys are logically down,
+and no other buttons or modifier keys are logically down.
+.IP \(bu 5
+The grab_window contains the pointer.
+.IP \(bu 5
+The confine_to window (if any) is viewable.
+.IP \(bu 5
+A passive grab on the same button/key combination does not exist
+on any ancestor of grab_window.
+.LP
+The interpretation of the remaining arguments is as for
+.PN XGrabPointer .
+The active grab is terminated automatically when the logical state of the
+pointer has all buttons released
+(independent of the state of the logical modifier keys).
+.LP
+Note that the logical state of a device (as seen by client applications)
+may lag the physical state if device event processing is frozen.
+.LP
+This request overrides all previous grabs by the same client on the same
+button/key combinations on the same window.
+A modifiers of 
+.PN AnyModifier 
+is equivalent to issuing the grab request for all
+possible modifier combinations (including the combination of no modifiers).  
+It is not required that all modifiers specified have currently assigned 
+KeyCodes.
+A button of 
+.PN AnyButton 
+is equivalent to
+issuing the request for all possible buttons.
+Otherwise, it is not required that the specified button currently be assigned
+to a physical button.
+.LP
+If some other client has already issued an
+.PN XGrabButton
+with the same button/key combination on the same window, a
+.PN BadAccess 
+error results.
+When using 
+.PN AnyModifier 
+or 
+.PN AnyButton , 
+the request fails completely,
+and a
+.PN BadAccess
+error results (no grabs are
+established) if there is a conflicting grab for any combination.
+.PN XGrabButton
+has no effect on an active grab.
+.LP
+.PN XGrabButton
+can generate
+.PN BadCursor ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To ungrab a pointer button, use
+.PN XUngrabButton .
+.IN "Ungrabbing" "buttons"
+.IN "Button" "ungrabbing"
+.IN "XUngrabButton" "" "@DEF@"
+.sM
+.FD 0
+XUngrabButton\^(\^\fIdisplay\fP, \fIbutton\fP\^, \fImodifiers\fP\^, \fIgrab_window\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned int \fIbutton\fP\^;
+.br
+      unsigned int \fImodifiers\fP\^;
+.br
+      Window \fIgrab_window\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Bu released
+.IP \fIbutton\fP 1i
+Specifies the pointer button that is to be \*(Bu or
+.PN AnyButton .
+.IP \fImodifiers\fP 1i
+Specifies the set of keymasks or
+.PN AnyModifier .
+The mask is the bitwise inclusive OR of the valid keymask bits.
+.IP \fIgrab_window\fP 1i
+Specifies the grab window.
+.LP
+.eM
+The
+.PN XUngrabButton
+function releases the passive button/key combination on the specified window if
+it was grabbed by this client.
+A modifiers of 
+.PN AnyModifier 
+is
+equivalent to issuing 
+the ungrab request for all possible modifier combinations, including 
+the combination of no modifiers.
+A button of 
+.PN AnyButton 
+is equivalent to issuing the
+request for all possible buttons.
+.PN XUngrabButton
+has no effect on an active grab.
+.LP
+.PN XUngrabButton
+can generate
+.PN BadValue
+and
+.PN BadWindow 
+errors.
+.NH 2
+Keyboard Grabbing 
+.XS
+\*(SN Keyboard Grabbing 
+.XE
+.LP
+Xlib provides functions that you can use to grab or ungrab the keyboard
+as well as allow events.
+.LP
+For many functions in this section,
+you pass keymask bits.
+The valid keymask bits are:
+.PN ShiftMask ,
+.PN LockMask ,
+.PN ControlMask ,
+.PN Mod1Mask ,
+.PN Mod2Mask ,
+.PN Mod3Mask ,
+.PN Mod4Mask ,
+and
+.PN Mod5Mask .
+.LP
+.sp
+To grab the keyboard, use
+.PN XGrabKeyboard .
+.IN "Keyboard" "grabbing"
+.IN "Grabbing" "keyboard"
+.IN "XGrabKeyboard" "" "@DEF@"
+.sM
+.FD 0
+int XGrabKeyboard\^(\^\fIdisplay\fP, \fIgrab_window\fP\^, \fIowner_events\fP\^, \fIpointer_mode\fP\^, \fIkeyboard_mode\fP\^, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIgrab_window\fP\^;
+.br
+      Bool \fIowner_events\fP\^;
+.br
+      int \fIpointer_mode\fP\^, \fIkeyboard_mode\fP\^;
+.br
+      Time \fItime\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIgrab_window\fP 1i
+Specifies the grab window.
+.IP \fIowner_events\fP 1i
+Specifies a Boolean value that indicates whether the keyboard events 
+are to be reported as usual.
+.IP \fIpointer_mode\fP 1i
+Specifies further processing of pointer events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.IP \fIkeyboard_mode\fP 1i
+Specifies further processing of keyboard events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XGrabKeyboard
+function actively grabs control of the keyboard and generates
+.PN FocusIn
+and
+.PN FocusOut
+events.
+Further key events are reported only to the
+grabbing client.
+.PN XGrabKeyboard
+overrides any active keyboard grab by this client.
+If owner_events is 
+.PN False , 
+all generated key events are reported with
+respect to grab_window.  
+If owner_events is 
+.PN True  
+and if a generated
+key event would normally be reported to this client, it is reported
+normally; otherwise, the event is reported with respect to the
+grab_window.  
+Both 
+.PN KeyPress 
+and 
+.PN KeyRelease 
+events are always reported,
+independent of any event selection made by the client.
+.LP
+If the keyboard_mode argument is 
+.PN GrabModeAsync ,
+keyboard event processing continues
+as usual. 
+If the keyboard is currently frozen by this client, 
+then processing of keyboard events is resumed.
+If the keyboard_mode  argument is
+.PN GrabModeSync ,
+the state of the keyboard (as seen by client applications) appears to freeze,
+and the X server generates no further keyboard events until the
+grabbing client issues a releasing 
+.PN XAllowEvents 
+call or until the keyboard grab is released.
+Actual keyboard changes are not lost while the keyboard is frozen; 
+they are simply queued in the server for later processing.
+.LP
+If pointer_mode is 
+.PN GrabModeAsync ,
+pointer event processing is unaffected
+by activation of the grab.  
+If pointer_mode is 
+.PN GrabModeSync ,
+the state of the pointer (as seen by client applications) appears to freeze, 
+and the X server generates no further pointer events 
+until the grabbing client issues a releasing 
+.PN XAllowEvents 
+call or until the keyboard grab is released.
+Actual pointer changes are not lost while the pointer is frozen; 
+they are simply queued in the server for later processing.
+.LP
+If the keyboard is actively grabbed by some other client,
+.PN XGrabKeyboard
+fails and returns
+.PN AlreadyGrabbed .
+If grab_window is not viewable,
+it fails and returns
+.PN GrabNotViewable .
+If the keyboard is frozen by an active grab of another client,
+it fails and returns
+.PN GrabFrozen .
+If the specified time is earlier than the last-keyboard-grab time 
+or later than the current X server time,
+it fails and returns
+.PN GrabInvalidTime .
+Otherwise, the last-keyboard-grab time is set to the specified time
+.Pn ( CurrentTime 
+is replaced by the current X server time).
+.LP
+.PN XGrabKeyboard
+can generate
+.PN BadValue
+and 
+.PN BadWindow 
+errors.
+.LP
+.sp
+To ungrab the keyboard, use
+.PN XUngrabKeyboard .
+.IN "Keyboard" "ungrabbing"
+.IN "Ungrabbing" "keyboard"
+.IN "XUngrabKeyboard" "" "@DEF@"
+.sM
+.FD 0
+XUngrabKeyboard\^(\^\fIdisplay\fP, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Time \fItime\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XUngrabKeyboard
+function
+releases the keyboard and any queued events if this client has it actively grabbed from
+either
+.PN XGrabKeyboard
+or
+.PN XGrabKey .
+.PN XUngrabKeyboard
+does not release the keyboard and any queued events
+if the specified time is earlier than
+the last-keyboard-grab time or is later than the current X server time.
+It also generates
+.PN FocusIn 
+and 
+.PN FocusOut 
+events.
+The X server automatically performs an 
+.PN UngrabKeyboard 
+request if the event window for an
+active keyboard grab becomes not viewable.
+.LP
+.sp
+To passively grab a single key of the keyboard, use
+.PN XGrabKey .
+.IN "Key" "grabbing"
+.IN "Grabbing" "keys"
+.IN "XGrabKey" "" "@DEF@"
+.sM
+.FD 0
+XGrabKey\^(\^\fIdisplay\fP, \fIkeycode\fP\^, \fImodifiers\fP\^, \fIgrab_window\fP\^, \fIowner_events\fP\^, \fIpointer_mode\fP\^, 
+.br
+             \fIkeyboard_mode\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIkeycode\fP\^;
+.br
+      unsigned int \fImodifiers\fP\^;
+.br
+      Window \fIgrab_window\fP\^;
+.br
+      Bool \fIowner_events\fP\^;
+.br
+      int \fIpointer_mode\fP\^, \fIkeyboard_mode\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIkeycode\fP 1i
+Specifies the KeyCode or
+.PN AnyKey .
+.IP \fImodifiers\fP 1i
+Specifies the set of keymasks or
+.PN AnyModifier .
+The mask is the bitwise inclusive OR of the valid keymask bits.
+.IP \fIgrab_window\fP 1i
+Specifies the grab window.
+.IP \fIowner_events\fP 1i
+Specifies a Boolean value that indicates whether the keyboard events 
+are to be reported as usual.
+.IP \fIpointer_mode\fP 1i
+Specifies further processing of pointer events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.IP \fIkeyboard_mode\fP 1i
+Specifies further processing of keyboard events.
+You can pass 
+.PN GrabModeSync 
+or
+.PN GrabModeAsync .
+.LP
+.eM
+The
+.PN XGrabKey
+function establishes a passive grab on the keyboard.
+In the future,
+the keyboard is actively grabbed (as for
+.PN XGrabKeyboard ),
+the last-keyboard-grab time is set to the time at which the key was pressed
+(as transmitted in the
+.PN KeyPress
+event), and the
+.PN KeyPress
+event is reported if all of the following conditions are true:
+.IP \(bu 5
+The keyboard is not grabbed and the specified key
+(which can itself be a modifier key) is logically pressed
+when the specified modifier keys are logically down,
+and no other modifier keys are logically down.
+.IP \(bu 5
+Either the grab_window is an ancestor of (or is) the focus window,
+or the grab_window is a descendant of the focus window and contains the pointer.
+.IP \(bu 5
+A passive grab on the same key combination does not exist
+on any ancestor of grab_window.
+.LP
+The interpretation of the remaining arguments is as for 
+.PN XGrabKeyboard .
+The active grab is terminated automatically when the logical state of the
+keyboard has the specified key released
+(independent of the logical state of the modifier keys).
+.LP
+Note that the logical state of a device (as seen by client applications)
+may lag the physical state if device event processing is frozen.
+.LP
+A modifiers argument of 
+.PN AnyModifier
+is equivalent to issuing the request for all
+possible modifier combinations (including the combination of no
+modifiers).  
+It is not required that all modifiers specified have
+currently assigned KeyCodes.
+A keycode argument of 
+.PN AnyKey
+is equivalent to issuing
+the request for all possible KeyCodes.
+Otherwise, the specified keycode must be in
+the range specified by min_keycode and max_keycode in the connection
+setup, 
+or a
+.PN BadValue
+error results.
+.LP
+If some other client has issued a 
+.PN XGrabKey
+with the same key combination on the same window, a 
+.PN BadAccess 
+error results.
+When using
+.PN AnyModifier
+or 
+.PN AnyKey ,
+the request fails completely,
+and a
+.PN BadAccess 
+error results (no grabs are established) 
+if there is a conflicting grab for any combination.
+.LP
+.PN XGrabKey
+can generate
+.PN BadAccess ,
+.PN BadValue , 
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To ungrab a key, use
+.PN XUngrabKey .
+.IN "Key" "ungrabbing"
+.IN "Ungrabbing" "keys"
+.IN "XUngrabKey" "" "@DEF@"
+.sM
+.FD 0
+XUngrabKey\^(\^\fIdisplay\fP, \fIkeycode\fP\^, \fImodifiers\fP\^, \fIgrab_window\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIkeycode\fP\^;
+.br
+      unsigned int \fImodifiers\fP\^;
+.br
+      Window \fIgrab_window\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIkeycode\fP 1i
+Specifies the KeyCode or
+.PN AnyKey .
+.IP \fImodifiers\fP 1i
+Specifies the set of keymasks or
+.PN AnyModifier .
+The mask is the bitwise inclusive OR of the valid keymask bits.
+.IP \fIgrab_window\fP 1i
+Specifies the grab window.
+.LP
+.eM
+The
+.PN XUngrabKey
+function releases the key combination on the specified window if it was grabbed
+by this client.
+It has no effect on an active grab.
+A modifiers of
+.PN AnyModifier
+is equivalent to issuing
+the request for all possible modifier combinations
+(including the combination of no modifiers).
+A keycode argument of
+.PN AnyKey
+is equivalent to issuing the request for all possible key codes.
+.LP
+.PN XUngrabKey
+can generate
+.PN BadValue
+and
+.PN BadWindow 
+errors.
+.NH 2
+Resuming Event Processing
+.XS
+\*(SN Resuming Event Processing
+.XE
+.LP
+The previous sections discussed grab mechanisms with which processing
+of events by the server can be temporarily suspended.  This section
+describes the mechanism for resuming event processing.
+.LP
+.sp
+To allow further events to be processed when the device has been frozen, use
+.PN XAllowEvents .
+.IN "XAllowEvents" "" "@DEF@"
+.sM
+.FD 0
+XAllowEvents\^(\^\fIdisplay\fP, \fIevent_mode\fP\^, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIevent_mode\fP\^; 
+.br
+      Time \fItime\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIevent_mode\fP 1i
+Specifies the event mode.
+You can pass 
+.PN AsyncPointer , 
+.PN SyncPointer , 
+.PN AsyncKeyboard , 
+.PN SyncKeyboard ,
+.PN ReplayPointer , 
+.PN ReplayKeyboard ,
+.PN AsyncBoth ,
+or
+.PN SyncBoth .
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XAllowEvents
+function releases some queued events if the client has caused a device 
+to freeze.
+It has no effect if the specified time is earlier than the last-grab
+time of the most recent active grab for the client or if the specified time
+is later than the current X server time.
+Depending on the event_mode argument, the following occurs:
+.TS
+lw(1.25i) lw(4.5i).
+T{
+.PN AsyncPointer
+T}	T{
+If the pointer is frozen by the client,
+pointer event processing continues as usual.
+If the pointer is frozen twice by the client on behalf of two separate grabs,
+.PN AsyncPointer 
+thaws for both.
+.PN AsyncPointer
+has no effect if the pointer is not frozen by the client,
+but the pointer need not be grabbed by the client.
+T}
+.sp 6p
+T{
+.PN SyncPointer 
+T}	T{
+If the pointer is frozen and actively grabbed by the client,
+pointer event processing continues as usual until the next 
+.PN ButtonPress 
+or 
+.PN ButtonRelease 
+event is reported to the client.
+At this time, 
+the pointer again appears to freeze.
+However, if the reported event causes the pointer grab to be released,
+the pointer does not freeze.
+.PN SyncPointer 
+has no effect if the pointer is not frozen by the client
+or if the pointer is not grabbed by the client.
+T}
+.sp 6p
+T{
+.PN ReplayPointer
+T}	T{
+If the pointer is actively grabbed by the client and is frozen as the result of
+an event having been sent to the client (either from the activation of an 
+.PN XGrabButton 
+or from a previous 
+.PN XAllowEvents 
+with mode 
+.PN SyncPointer
+but not from an 
+.PN XGrabPointer ),
+the pointer grab is released and that event is completely reprocessed.
+This time, however, the function ignores any passive grabs at or above 
+(toward the root of) the grab_window of the grab just released.
+The request has no effect if the pointer is not grabbed by the client
+or if the pointer is not frozen as the result of an event.
+T}
+.sp 6p
+T{
+.PN AsyncKeyboard 
+T}	T{
+If the keyboard is frozen by the client,
+keyboard event processing continues as usual.
+If the keyboard is frozen twice by the client on behalf of two separate grabs,
+.PN AsyncKeyboard 
+thaws for both.
+.PN AsyncKeyboard 
+has no effect if the keyboard is not frozen by the client,
+but the keyboard need not be grabbed by the client.
+T}
+.sp 6p
+T{
+.PN SyncKeyboard
+T}	T{
+If the keyboard is frozen and actively grabbed by the client,
+keyboard event processing continues as usual until the next 
+.PN KeyPress 
+or 
+.PN KeyRelease 
+event is reported to the client.
+At this time,
+the keyboard again appears to freeze.
+However, if the reported event causes the keyboard grab to be released,
+the keyboard does not freeze.
+.PN SyncKeyboard 
+has no effect if the keyboard is not frozen by the client
+or if the keyboard is not grabbed by the client.
+T}
+.sp 6p
+T{
+.PN ReplayKeyboard
+T}	T{
+If the keyboard is actively grabbed by the client and is frozen 
+as the result of an event having been sent to the client (either from the
+activation of an 
+.PN XGrabKey 
+or from a previous 
+.PN XAllowEvents 
+with mode 
+.PN SyncKeyboard 
+but not from an 
+.PN XGrabKeyboard ),
+the keyboard grab is released and that event is completely reprocessed.
+This time, however, the function ignores any passive grabs at or above 
+(toward the root of)
+the grab_window of the grab just released.
+The request has no effect if the keyboard is not grabbed by the client
+or if the keyboard is not frozen as the result of an event.
+T}
+.sp 6p
+T{
+.PN SyncBoth
+T}	T{
+If both pointer and keyboard are frozen by the client,
+event processing for both devices continues as usual until the next
+.PN ButtonPress , 
+.PN ButtonRelease , 
+.PN KeyPress , 
+or 
+.PN KeyRelease 
+event is reported to the client for a grabbed device 
+(button event for the pointer, key event for the keyboard), 
+at which time the devices again appear to freeze.  
+However, if the reported event causes the grab to be released,
+then the devices do not freeze (but if the other device is still
+grabbed, then a subsequent event for it will still cause both devices
+to freeze).  
+.PN SyncBoth
+has no effect unless both pointer and keyboard
+are frozen by the client.
+If the pointer or keyboard is frozen twice
+by the client on behalf of two separate grabs, 
+.PN SyncBoth 
+thaws for both (but a subsequent freeze for 
+.PN SyncBoth 
+will only freeze each device once).
+T}
+.sp 6p
+T{
+.PN AsyncBoth
+T}	T{
+If the pointer and the keyboard are frozen by the
+client, event processing for both devices continues as usual.
+If a device is frozen twice by the client on behalf of two separate grabs,
+.PN AsyncBoth 
+thaws for both.
+.PN AsyncBoth 
+has no effect unless both
+pointer and keyboard are frozen by the client.
+T}
+.TE
+.LP
+.PN AsyncPointer , 
+.PN SyncPointer , 
+and 
+.PN ReplayPointer 
+have no effect on the
+processing of keyboard events.
+.PN AsyncKeyboard , 
+.PN SyncKeyboard , 
+and 
+.PN ReplayKeyboard 
+have no effect on the
+processing of pointer events.
+It is possible for both a pointer grab and a keyboard grab (by the same 
+or different clients) to be active simultaneously.
+If a device is frozen on behalf of either grab,
+no event processing is performed for the device.
+It is possible for a single device to be frozen because of both grabs.
+In this case,
+the freeze must be released on behalf of both grabs before events can 
+again be processed.
+If a device is frozen twice by a single client,
+then a single
+.PN AllowEvents
+releases both.
+.LP
+.PN XAllowEvents
+can generate a
+.PN BadValue 
+error.
+.NH 2
+Moving the Pointer
+.XS
+\*(SN Moving the Pointer
+.XE
+.LP
+Although movement of the pointer normally should be left to the
+control of the end user, sometimes it is necessary to move the
+pointer to a new position under program control.
+.LP
+.sp
+To move the pointer to an arbitrary point in a window, use
+.PN XWarpPointer .
+.IN "XWarpPointer" "" "@DEF@"
+.sM
+.FD 0
+XWarpPointer\^(\^\fIdisplay\fP, \fIsrc_w\fP\^, \fIdest_w\fP\^, \fIsrc_x\fP\^, \fIsrc_y\fP\^, \fIsrc_width\fP\^, \fIsrc_height\fP\^, \fIdest_x\fP\^, 
+.br
+                \fIdest_y\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.br
+        Window \fIsrc_w\fP\^, \fIdest_w\fP\^;
+.br
+        int \fIsrc_x\fP\^, \fIsrc_y\fP\^;
+.br
+        unsigned int \fIsrc_width\fP\^, \fIsrc_height\fP\^;
+.br
+        int \fIdest_x\fP\^, \fIdest_y\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIsrc_w\fP 1i
+Specifies the source window or
+.PN None .
+.IP \fIdest_w\fP 1i
+Specifies the destination window or
+.PN None .
+.IP \fIsrc_x\fP 1i
+.br
+.ns
+.IP \fIsrc_y\fP 1i
+.br
+.ns
+.IP \fIsrc_width\fP 1i
+.br
+.ns
+.IP \fIsrc_height\fP 1i
+Specify a rectangle in the source window.
+.IP \fIdest_x\fP 1i
+.br
+.ns
+.IP \fIdest_y\fP 1i
+Specify the x and y coordinates within the destination window.
+.LP
+.eM
+If dest_w is
+.PN None ,
+.PN XWarpPointer
+moves the pointer by the offsets (dest_x, dest_y) relative to the current
+position of the pointer.
+If dest_w is a window,
+.PN XWarpPointer
+moves the pointer to the offsets (dest_x, dest_y) relative to the origin of
+dest_w.
+However, if src_w is a window,
+the move only takes place if the window src_w contains the pointer 
+and if the specified rectangle of src_w contains the pointer.
+.LP
+The src_x and src_y coordinates are relative to the origin of src_w.
+If src_height is zero,
+it is replaced with the current height of src_w minus src_y.
+If src_width is zero,
+it is replaced with the current width of src_w minus src_x.
+.LP
+There is seldom any reason for calling this function. 
+The pointer should normally be left to the user.
+If you do use this function, however, it generates events just as if the user
+had instantaneously moved the pointer from one position to another.
+Note that you cannot use
+.PN XWarpPointer
+to move the pointer outside the confine_to window of an active pointer grab.
+An attempt to do so will only move the pointer as far as the closest edge of the
+confine_to window. 
+.LP
+.PN XWarpPointer
+can generate a
+.PN BadWindow 
+error.
+.NH 2
+Controlling Input Focus
+.XS
+\*(SN Controlling Input Focus 
+.XE
+.LP
+Xlib provides functions that you can use to set and get the input focus.
+The input focus is a shared resource, and cooperation among clients is
+required for correct interaction.  See the
+\fIInter-Client Communication Conventions Manual\fP 
+for input focus policy.
+.LP
+.sp
+To set the input focus, use
+.PN XSetInputFocus .
+.IN "XSetInputFocus" "" "@DEF@"
+.sM
+.FD 0
+XSetInputFocus\^(\^\fIdisplay\fP, \fIfocus\fP\^, \fIrevert_to\fP\^, \fItime\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIfocus\fP\^;
+.br
+      int \fIrevert_to\fP\^; 
+.br
+      Time \fItime\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIfocus\fP 1i
+Specifies the window,
+.PN PointerRoot ,
+or
+.PN None .
+.IP \fIrevert_to\fP 1i
+Specifies where the input focus reverts to if the window becomes not
+viewable.
+You can pass 
+.PN RevertToParent , 
+.PN RevertToPointerRoot , 
+or 
+.PN RevertToNone .
+.IP \fItime\fP 1i
+Specifies the time.
+You can pass either a timestamp or
+.PN CurrentTime .
+.LP
+.eM
+The
+.PN XSetInputFocus
+function changes the input focus and the last-focus-change time.
+It has no effect if the specified time is earlier than the current
+last-focus-change time or is later than the current X server time.
+Otherwise, the last-focus-change time is set to the specified time
+.Pn ( CurrentTime 
+is replaced by the current X server time).
+.PN XSetInputFocus
+causes the X server to generate
+.PN FocusIn 
+and 
+.PN FocusOut 
+events.
+.LP
+Depending on the focus argument,
+the following occurs: 
+.IP \(bu 5
+If focus is
+.PN None ,
+all keyboard events are discarded until a new focus window is set,
+and the revert_to argument is ignored.
+.IP \(bu 5
+If focus is a window, 
+it becomes the keyboard's focus window.
+If a generated keyboard event would normally be reported to this window
+or one of its inferiors, the event is reported as usual. 
+Otherwise, the event is reported relative to the focus window.
+.IP \(bu 5
+If focus is
+.PN PointerRoot ,
+the focus window is dynamically taken to be the root window of whatever screen 
+the pointer is on at each keyboard event.  
+In this case, the revert_to argument is ignored.
+.LP
+The specified focus window must be viewable at the time 
+.PN XSetInputFocus
+is called,
+or a
+.PN BadMatch
+error results.
+If the focus window later becomes not viewable, 
+the X server
+evaluates the revert_to argument to determine the new focus window as follows: 
+.IP \(bu 5
+If revert_to is
+.PN RevertToParent ,
+the focus reverts to the parent (or the closest viewable ancestor), 
+and the new revert_to value is taken to be
+.PN RevertToNone .  
+.IP \(bu 5
+If revert_to is
+.PN RevertToPointerRoot 
+or 
+.PN RevertToNone ,
+the focus reverts to
+.PN PointerRoot
+or
+.PN None ,
+respectively.
+When the focus reverts,
+the X server generates
+.PN FocusIn
+and
+.PN FocusOut
+events, but the last-focus-change time is not affected.
+.LP
+.PN XSetInputFocus
+can generate
+.PN BadMatch ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To obtain the current input focus, use
+.PN XGetInputFocus .
+.IN "XGetInputFocus" "" "@DEF@"
+.sM
+.FD 0
+XGetInputFocus\^(\^\fIdisplay\fP, \fIfocus_return\fP\^, \fIrevert_to_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window *\fIfocus_return\fP\^;
+.br
+      int *\fIrevert_to_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIfocus_return\fP 1i
+Returns the focus window,
+.PN PointerRoot ,
+or 
+.PN None .
+.IP \fIrevert_to_return\fP 1i
+Returns the current focus state
+.Pn ( RevertToParent , 
+.PN RevertToPointerRoot , 
+or 
+.PN RevertToNone ).
+.LP
+.eM
+The
+.PN XGetInputFocus
+function returns the focus window and the current focus state.
+.NH 2
+Manipulating the Keyboard and Pointer Settings
+.XS
+\*(SN Manipulating the Keyboard and Pointer Settings 
+.XE
+.LP
+Xlib provides functions that you can use to
+change the keyboard control, obtain a list of the auto-repeat keys,
+turn keyboard auto-repeat on or off, ring the bell, 
+set or obtain the pointer button or keyboard mapping, 
+and obtain a bit vector for the keyboard.
+.LP
+.IN "Keyboard" "bell volume"
+.IN "Keyboard" "keyclick volume"
+.IN "Keyboard" "bit vector"
+.IN "Mouse" "programming"
+This section discusses 
+the user-preference options of bell, key click,
+pointer behavior, and so on.
+The default values for many of these options are server dependent.
+Not all implementations will actually be able to control all of these
+parameters.
+.LP
+The
+.PN XChangeKeyboardControl
+function changes control of a keyboard and operates on a
+.PN XKeyboardControl
+structure:
+.sM
+.LP
+/* Mask bits for ChangeKeyboardControl */
+.TS
+lw(.5i) lw(2.5i) lw(.8i).
+T{
+#define
+T}	T{
+.PN KBKeyClickPercent
+T}	T{
+(1L<<0)
+T}
+T{
+#define
+T}	T{
+.PN KBBellPercent
+T}	T{
+(1L<<1)
+T}
+T{
+#define
+T}	T{
+.PN KBBellPitch
+T}	T{
+(1L<<2)
+T}
+T{
+#define
+T}	T{
+.PN KBBellDuration
+T}	T{
+(1L<<3)
+T}
+T{
+#define
+T}	T{
+.PN KBLed
+T}	T{
+(1L<<4)
+T}
+T{
+#define
+T}	T{
+.PN KBLedMode
+T}	T{
+(1L<<5)
+T}
+T{
+#define
+T}	T{
+.PN KBKey
+T}	T{
+(1L<<6)
+T}
+T{
+#define
+T}	T{
+.PN KBAutoRepeatMode
+T}	T{
+(1L<<7)
+T}
+.TE
+.IN "XKeyboardControl" "" "@DEF@"
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+/* Values */
+
+typedef struct {
+	int key_click_percent;
+	int bell_percent;
+	int bell_pitch;
+	int bell_duration;
+	int led;
+	int led_mode;	/* LedModeOn, LedModeOff */
+	int key;
+	int auto_repeat_mode;	/* AutoRepeatModeOff, AutoRepeatModeOn, 
+                            	AutoRepeatModeDefault */
+} XKeyboardControl;
+.De
+.LP
+.eM
+The key_click_percent member sets the volume for key clicks between 0 (off) 
+and 100 (loud) inclusive, if possible.  
+A setting of \-1 restores the default.
+Other negative values generate a
+.PN BadValue
+error.
+.LP
+The bell_percent sets the base volume for the bell between 0 (off) and 100
+(loud) inclusive, if possible.  
+A setting of \-1 restores the default.
+Other negative values generate a
+.PN BadValue
+error.
+The bell_pitch member sets the pitch (specified in Hz) of the bell, if possible.
+A setting of \-1 restores the default.
+Other negative values generate a
+.PN BadValue
+error.
+The bell_duration member sets the duration of the
+bell specified in milliseconds, if possible.  
+A setting of \-1 restores the default.
+Other negative values generate a
+.PN BadValue
+error.
+.LP
+If both the led_mode and led members are specified,
+the state of that LED is changed, if possible.  
+The led_mode member can be set to
+.PN LedModeOn
+or
+.PN LedModeOff .
+If only led_mode is specified, the state of
+all LEDs are changed, if possible.  
+At most 32 LEDs numbered from one are supported. 
+No standard interpretation of LEDs is defined.
+If led is specified without led_mode, a
+.PN BadMatch
+error results. 
+.LP
+If both the auto_repeat_mode and key members are specified, 
+the auto_repeat_mode of that key is changed (according to
+.PN AutoRepeatModeOn ,
+.PN AutoRepeatModeOff ,
+or
+.PN AutoRepeatModeDefault ),
+if possible.
+If only auto_repeat_mode is
+specified, the global auto_repeat_mode for the entire keyboard is
+changed, if possible, and does not affect the per-key settings.
+If a key is specified without an auto_repeat_mode, a
+.PN BadMatch
+error results.
+Each key has an individual mode of whether or not it should auto-repeat
+and a default setting for the mode.
+In addition,
+there is a global mode of whether auto-repeat should be enabled or not
+and a default setting for that mode.
+When global mode is
+.PN AutoRepeatModeOn ,
+keys should obey their individual auto-repeat modes.
+When global mode is
+.PN AutoRepeatModeOff ,
+no keys should auto-repeat.
+An auto-repeating key generates alternating
+.PN KeyPress
+and
+.PN KeyRelease
+events.
+When a key is used as a modifier,
+it is desirable for the key not to auto-repeat,
+regardless of its auto-repeat setting.
+.LP
+A bell generator connected with the console but not directly on a
+keyboard is treated as if it were part of the keyboard.
+The order in which controls are verified and altered is server-dependent.
+If an error is generated, a subset of the controls may have been altered.
+.LP
+.sp
+.IN "XChangeKeyboardControl" "" "@DEF@"
+.sM
+.FD 0
+XChangeKeyboardControl\^(\^\fIdisplay\fP, \fIvalue_mask\fP\^, \fIvalues\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned long \fIvalue_mask\fP\^;
+.br
+      XKeyboardControl *\fIvalues\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIvalue_mask\fP 1i
+Specifies which controls to change.
+This mask is the bitwise inclusive OR of the valid control mask bits.
+.IP \fIvalues\fP 1i
+Specifies one value for each bit set to 1 in the mask.
+.LP
+.eM
+The
+.PN XChangeKeyboardControl
+function controls the keyboard characteristics defined by the
+.PN XKeyboardControl
+structure.
+The value_mask argument specifies which values are to be changed.
+.LP
+.PN XChangeKeyboardControl
+can generate
+.PN BadMatch
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To obtain the current control values for the keyboard, use
+.PN XGetKeyboardControl .
+.IN "XGetKeyboardControl" "" "@DEF@"
+.sM
+.FD 0
+XGetKeyboardControl\^(\^\fIdisplay\fP, \fIvalues_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XKeyboardState *\fIvalues_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIvalues_return\fP 1i
+Returns the current keyboard controls in the specified
+.PN XKeyboardState 
+structure.
+.LP
+.eM
+The
+.PN XGetKeyboardControl
+function returns the current control values for the keyboard to the
+.PN XKeyboardState
+structure.
+.LP
+.IN "XGetKeyboardControl"
+.IN "XKeyboardState" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 
+.ta .5i
+typedef struct {
+	int key_click_percent;
+	int bell_percent;
+	unsigned int bell_pitch, bell_duration;
+	unsigned long led_mask;
+	int global_auto_repeat;
+	char auto_repeats[32];
+} XKeyboardState;
+.De
+.LP
+.eM
+For the LEDs, 
+the least significant bit of led_mask corresponds to LED one,
+and each bit set to 1 in led_mask indicates an LED that is lit.
+The global_auto_repeat member can be set to
+.PN AutoRepeatModeOn
+or
+.PN AutoRepeatModeOff .
+The auto_repeats member is a bit vector.
+Each bit set to 1 indicates that auto-repeat is enabled 
+for the corresponding key.
+The vector is represented as 32 bytes.  
+Byte N (from 0) contains the bits for keys 8N to 8N + 7
+with the least significant bit in the byte representing key 8N.
+.LP
+.sp
+To turn on keyboard auto-repeat, use
+.PN XAutoRepeatOn .
+.IN "XAutoRepeatOn" "" "@DEF@"
+.sM
+.FD 0
+XAutoRepeatOn\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XAutoRepeatOn
+function turns on auto-repeat for the keyboard on the specified display.
+.LP
+.sp
+To turn off keyboard auto-repeat, use
+.PN XAutoRepeatOff .
+.IN "XAutoRepeatOff" "" "@DEF@"
+.sM
+.FD 0
+XAutoRepeatOff\^(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XAutoRepeatOff
+function turns off auto-repeat for the keyboard on the specified display.
+.LP
+.sp
+To ring the bell, use
+.PN XBell .
+.IN "XBell" "" "@DEF@"
+.sM
+.FD 0
+XBell\^(\^\fIdisplay\fP, \fIpercent\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIpercent\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIpercent\fP 1i
+Specifies the volume for the bell,
+which can range from \-100 to 100 inclusive. 
+.LP
+.eM
+The
+.PN XBell
+function rings the bell on the keyboard on the specified display, if possible.
+The specified volume is relative to the base volume for the keyboard.
+If the value for the percent argument is not in the range \-100 to 100
+inclusive, a
+.PN BadValue
+error results.
+The volume at which the bell rings
+when the percent argument is nonnegative is:
+.IP
+base \- [(base * percent) / 100] + percent
+.LP
+The volume at which the bell rings
+when the percent argument is negative is:
+.IP
+base + [(base * percent) / 100]
+.LP
+To change the base volume of the bell, use
+.PN XChangeKeyboardControl .
+.LP
+.PN XBell
+can generate a
+.PN BadValue 
+error.
+.LP
+.sp
+To obtain a bit vector that describes the state of the keyboard, use
+.PN XQueryKeymap .
+.IN "XQueryKeymap" "" "@DEF@"
+.sM
+.FD 0
+XQueryKeymap\^(\^\fIdisplay\fP, \fIkeys_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char \fIkeys_return\fP[32]\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIkeys_return\fP 1i
+Returns an array of bytes that identifies which keys are pressed down.
+Each bit represents one key of the keyboard.
+.LP
+.eM
+The
+.PN XQueryKeymap
+function returns a bit vector for the logical state of the keyboard, 
+where each bit set to 1 indicates that the corresponding key is currently 
+pressed down.
+The vector is represented as 32 bytes.
+Byte N (from 0) contains the bits for keys 8N to 8N + 7 
+with the least significant bit in the byte representing key 8N.
+.LP
+Note that the logical state of a device (as seen by client applications)
+may lag the physical state if device event processing is frozen.
+.LP
+.sp
+To set the mapping of the pointer buttons, use
+.PN XSetPointerMapping .
+.IN "XSetPointerMapping" "" "@DEF@"
+.sM
+.FD 0
+int XSetPointerMapping\^(\^\fIdisplay\fP, \fImap\fP, \fInmap\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned char \fImap\fP\^[]\^;
+.br
+      int \fInmap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fImap\fP 1i
+Specifies the mapping list.
+.IP \fInmap\fP 1i
+Specifies the number of items in the mapping list.
+.LP
+.eM
+The
+.PN XSetPointerMapping
+function sets the mapping of the pointer.
+If it succeeds, the X server generates a
+.PN MappingNotify
+event, and
+.PN XSetPointerMapping
+returns
+.PN MappingSuccess .
+Element map[i] defines the logical button number for the physical button
+i+1.
+The length of the list must be the same as
+.PN XGetPointerMapping
+would return,
+or a
+.PN BadValue
+error results.
+A zero element disables a button, and elements are not restricted in
+value by the number of physical buttons.
+However, no two elements can have the same nonzero value,
+or a
+.PN BadValue
+error results.
+If any of the buttons to be altered are logically in the down state,
+.PN XSetPointerMapping
+returns
+.PN MappingBusy ,
+and the mapping is not changed.
+.LP
+.PN XSetPointerMapping
+can generate a
+.PN BadValue 
+error.
+.LP
+.sp
+To get the pointer mapping, use
+.PN XGetPointerMapping .
+.IN "XGetPointerMapping" "" "@DEF@"
+.sM
+.FD 0
+int XGetPointerMapping\^(\^\fIdisplay\fP, \fImap_return\fP, \fInmap\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      unsigned char \fImap_return\fP\^[]\^;
+.br
+      int \fInmap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fImap_return\fP 1i
+Returns the mapping list.
+.IP \fInmap\fP 1i
+Specifies the number of items in the mapping list.
+.LP
+.eM
+The
+.PN XGetPointerMapping
+function returns the current mapping of the pointer.
+Pointer buttons are numbered starting from one.
+.PN XGetPointerMapping
+returns the number of physical buttons actually on the pointer.
+The nominal mapping for a pointer is map[i]=i+1.
+The nmap argument specifies the length of the array where the pointer
+mapping is returned, and only the first nmap elements are returned 
+in map_return.
+.LP
+.sp
+To control the pointer's interactive feel, use
+.PN XChangePointerControl .
+.IN "XChangePointerControl" "" "@DEF@"
+.sM
+.FD 0
+XChangePointerControl\^(\^\fIdisplay\fP, \fIdo_accel\fP\^, \fIdo_threshold\fP\^, \fIaccel_numerator\fP\^, 
+.br
+                        \fIaccel_denominator\fP\^, \fIthreshold\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Bool \fIdo_accel\fP\^, \fIdo_threshold\fP\^;
+.br
+      int \fIaccel_numerator\fP\^, \fIaccel_denominator\fP\^;
+.br
+      int \fIthreshold\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIdo_accel\fP 1i
+Specifies a Boolean value that controls whether the values for 
+the accel_numerator or accel_denominator are used.
+.IP \fIdo_threshold\fP 1i
+Specifies a Boolean value that controls whether the value for the 
+threshold is used.
+.IP \fIaccel_numerator\fP 1i
+Specifies the numerator for the acceleration multiplier.
+.IP \fIaccel_denominator\fP 1i
+Specifies the denominator for the acceleration multiplier.
+.IP \fIthreshold\fP 1i
+Specifies the acceleration threshold.
+.LP
+.eM
+The
+.PN XChangePointerControl
+function defines how the pointing device moves.
+The acceleration, expressed as a fraction, is a
+multiplier for movement. 
+For example,
+specifying 3/1 means the pointer moves three times as fast as normal.
+The fraction may be rounded arbitrarily by the X server.  
+Acceleration
+only takes effect if the pointer moves more than threshold pixels at
+once and only applies to the amount beyond the value in the threshold argument.
+Setting a value to \-1 restores the default.
+The values of the do_accel and do_threshold arguments must be 
+.PN True 
+for the pointer values to be set,
+or the parameters are unchanged.
+Negative values (other than \-1) generate a
+.PN BadValue
+error, as does a zero value
+for the accel_denominator argument.
+.LP
+.PN XChangePointerControl
+can generate a
+.PN BadValue 
+error.
+.LP
+.sp
+To get the current pointer parameters, use
+.PN XGetPointerControl .
+.IN "XGetPointerControl" "" "@DEF@"
+.sM
+.FD 0
+XGetPointerControl\^(\^\fIdisplay\fP, \fIaccel_numerator_return\fP\^, \fIaccel_denominator_return\fP\^, 
+.br
+                       \fIthreshold_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int *\fIaccel_numerator_return\fP\^, *\fIaccel_denominator_return\fP\^;
+.br
+      int *\fIthreshold_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIaccel_numerator_return\fP 1i
+Returns the numerator for the acceleration multiplier.
+.IP \fIaccel_denominator_return\fP 1i
+Returns the denominator for the acceleration multiplier.
+.IP \fIthreshold_return\fP 1i
+Returns the acceleration threshold.
+.LP
+.eM
+The
+.PN XGetPointerControl
+function returns the pointer's current acceleration multiplier
+and acceleration threshold.
+.NH 2
+Manipulating the Keyboard Encoding
+.XS
+\*(SN Manipulating the Keyboard Encoding 
+.XE
+.LP
+A KeyCode represents a physical (or logical) key.  
+KeyCodes lie in the inclusive range [8,255].  
+A KeyCode value carries no intrinsic information,
+although server implementors may attempt to encode geometry 
+(for example, matrix) information in some fashion so that it can
+be interpreted in a server-dependent fashion.
+The mapping between keys and KeyCodes cannot be changed.
+.LP
+A KeySym is an encoding of a symbol on the cap of a key.  
+The set of defined KeySyms includes the ISO Latin character sets (1\-4), 
+Katakana, Arabic, Cyrillic, Greek, Technical,
+Special, Publishing, APL, Hebrew, Thai, Korean
+and a miscellany of keys found
+on keyboards (Return, Help, Tab, and so on).  
+To the extent possible, these sets are derived from international
+standards. 
+In areas where no standards exist,
+some of these sets are derived from Digital Equipment Corporation standards.
+The list of defined symbols can be found in
+.hN X11/keysymdef.h .
+Unfortunately, some C preprocessors have
+limits on the number of defined symbols.
+If you must use KeySyms not
+in the Latin 1\-4, Greek, and miscellaneous classes,
+you may have to define a symbol for those sets.
+Most applications usually only include 
+.hN X11/keysym.h ,
+which defines symbols for ISO Latin 1\-4, Greek, and miscellaneous.
+.LP
+A list of KeySyms is associated with each KeyCode.
+The list is intended to convey the set of symbols on the corresponding key.
+If the list (ignoring trailing
+.PN NoSymbol
+entries) is 
+a single KeySym ``\fIK\fP'',
+then the list is treated as if it were the list 
+``\fIK\fP NoSymbol \fIK\fP NoSymbol''.
+If the list (ignoring trailing
+.PN NoSymbol
+entries) is a pair of KeySyms ``\fIK1 K2\fP'',
+then the list is treated as if it were the list ``\fIK1 K2 K1 K2\fP''.
+If the list (ignoring trailing
+.PN NoSymbol
+entries) is a triple of KeySyms ``\fIK1 K2 K3\fP'',
+then the list is treated as if it were the list ``\fIK1 K2 K3\fP NoSymbol''.
+When an explicit ``void'' element is desired in the list,
+the value
+.PN VoidSymbol
+can be used.
+.LP
+The first four elements of the list are split into two groups of KeySyms.
+Group 1 contains the first and second KeySyms;
+Group 2 contains the third and fourth KeySyms.
+Within each group,
+if the second element of the group is
+.PN NoSymbol ,
+then the group should be treated as if the second element were 
+the same as the first element,
+except when the first element is an alphabetic KeySym ``\fIK\fP'' 
+for which both lowercase and uppercase forms are defined.
+In that case,
+the group should be treated as if the first element were 
+the lowercase form of ``\fIK\fP'' and the second element were 
+the uppercase form of ``\fIK\fP''.
+.LP
+The standard rules for obtaining a KeySym from a
+.PN KeyPress
+event make use of only the Group 1 and Group 2 KeySyms;
+no interpretation of other KeySyms in the list is given.
+Which group to use is determined by the modifier state.
+Switching between groups is controlled by the KeySym named MODE SWITCH,
+by attaching that KeySym to some KeyCode and attaching 
+that KeyCode to any one of the modifiers
+.PN Mod1
+through
+.PN Mod5 .
+This modifier is called the \fIgroup modifier\fP\^.
+For any KeyCode,
+Group 1 is used when the group modifier is off,
+and Group 2 is used when the group modifier is on.
+.LP
+The
+.PN Lock
+modifier is interpreted as CapsLock when the KeySym named XK_Caps_Lock
+is attached to some KeyCode and that KeyCode is attached to the
+.PN Lock
+modifier.  The
+.PN Lock
+modifier is interpreted as ShiftLock when the KeySym named XK_Shift_Lock
+is attached to some KeyCode and that KeyCode is attached to the
+.PN Lock 
+modifier.  If the
+.PN Lock 
+modifier could be interpreted as both
+CapsLock and ShiftLock, the CapsLock interpretation is used.
+.LP
+The operation of keypad keys is controlled by the KeySym named XK_Num_Lock,
+by attaching that KeySym to some KeyCode and attaching that KeyCode to any
+one of the modifiers
+.PN Mod1 
+through
+.PN Mod5 . 
+This modifier is called the
+\fInumlock modifier\fP\^.  The standard KeySyms with the prefix ``XK_KP_''
+in their
+name are called keypad KeySyms; these are KeySyms with numeric value in
+the hexadecimal range 0xFF80 to 0xFFBD inclusive.  In addition,
+vendor-specific KeySyms in the hexadecimal range 0x11000000 to 0x1100FFFF
+are also keypad KeySyms.
+.LP
+Within a group, the choice of KeySym is determined by applying the first
+rule that is satisfied from the following list:
+.IP \(bu 5
+The numlock modifier is on and the second KeySym is a keypad KeySym.  In
+this case, if the
+.PN Shift 
+modifier is on, or if the
+.PN Lock 
+modifier is on and
+is interpreted as ShiftLock, then the first KeySym is used, otherwise the
+second KeySym is used.
+.IP \(bu 5
+The
+.PN Shift 
+and
+.PN Lock 
+modifiers are both off.  In this case, the first
+KeySym is used.
+.IP \(bu 5
+The
+.PN Shift 
+modifier is off, and the
+.PN Lock 
+modifier is on and is
+interpreted as CapsLock.  In this case, the first KeySym is used, but if
+that KeySym is lowercase alphabetic, then the corresponding uppercase
+KeySym is used instead.
+.IP \(bu 5
+The
+.PN Shift 
+modifier is on, and the
+.PN Lock 
+modifier is on and is interpreted
+as CapsLock.  In this case, the second KeySym is used, but if that KeySym
+is lowercase alphabetic, then the corresponding uppercase KeySym is used
+instead.
+.IP \(bu 5
+The
+.PN Shift 
+modifier is on, or the
+.PN Lock 
+modifier is on and is interpreted
+as ShiftLock, or both.  In this case, the second KeySym is used.
+.LP
+No spatial geometry of the symbols on the key is defined by
+their order in the KeySym list, 
+although a geometry might be defined on a
+server-specific basis.
+The X server does not use the mapping between KeyCodes and KeySyms.
+Rather, it merely stores it for reading and writing by clients.
+.sp
+.LP
+To obtain the legal KeyCodes for a display, use
+.PN XDisplayKeycodes .
+.IN "XDisplayKeycodes" "" "@DEF@"
+.sM
+.FD 0
+XDisplayKeycodes\^(\^\fIdisplay\fP\^, \fImin_keycodes_return\fP\^, \
+\fImax_keycodes_return\fP\^)
+.br
+        Display *\^\fIdisplay\fP\^;
+.br
+        int *\^\fImin_keycodes_return\fP\^, *\^\fImax_keycodes_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fImin_keycodes_return\fP 1i
+Returns the minimum number of KeyCodes.
+.IP \fImax_keycodes_return\fP 1i
+Returns the maximum number of KeyCodes.
+.LP
+.eM
+The
+.PN XDisplayKeycodes
+function returns the min-keycodes and max-keycodes supported by the
+specified display.
+The minimum number of KeyCodes returned is never less than 8,
+and the maximum number of KeyCodes returned is never greater than 255.
+Not all KeyCodes in this range are required to have corresponding keys.
+.sp
+.LP
+To obtain the symbols for the specified KeyCodes, use
+.PN XGetKeyboardMapping .
+.IN "XGetKeyboardMapping" "" "@DEF@"
+.sM
+.FD 0
+KeySym *XGetKeyboardMapping(\^\fIdisplay\fP, \fIfirst_keycode\fP, \fIkeycode_count\fP, 
+.br
+                            \fIkeysyms_per_keycode_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      KeyCode \fIfirst_keycode\fP\^;
+.br
+      int \fIkeycode_count\fP\^;
+.br
+      int *\fIkeysyms_per_keycode_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Kc returned
+.IP \fIfirst_keycode\fP 1i
+Specifies the first KeyCode that is to be \*(Kc.
+.IP \fIkeycode_count\fP 1i
+Specifies the number of KeyCodes that are to be returned.
+.IP \fIkeysyms_per_keycode_return\fP 1i
+Returns the number of KeySyms per KeyCode.
+.LP
+.eM
+The
+.PN XGetKeyboardMapping
+function returns the symbols for the specified number of KeyCodes
+starting with first_keycode.
+The value specified in first_keycode must be greater than 
+or equal to min_keycode as returned by
+.PN XDisplayKeycodes ,
+or a
+.PN BadValue 
+error results.
+In addition, the following expression must be less than or equal 
+to max_keycode as returned by
+.PN XDisplayKeycodes :
+.LP
+.Ds 
+first_keycode + keycode_count \- 1
+.De
+.LP
+If this is not the case, a 
+.PN BadValue 
+error results. 
+The number of elements in the KeySyms list is:
+.LP
+.Ds 
+keycode_count * keysyms_per_keycode_return
+.De
+.LP
+KeySym number N, counting from zero, for KeyCode K has the following index
+in the list, counting from zero: 
+.Ds
+(K \- first_code) * keysyms_per_code_return + N
+.De
+.LP
+The X server arbitrarily chooses the keysyms_per_keycode_return value 
+to be large enough to report all requested symbols. 
+A special KeySym value of 
+.PN NoSymbol 
+is used to fill in unused elements for
+individual KeyCodes.
+To free the storage returned by 
+.PN XGetKeyboardMapping ,
+use
+.PN XFree .
+.LP
+.PN XGetKeyboardMapping
+can generate a
+.PN BadValue 
+error.
+.LP
+.sp
+To change the keyboard mapping, use
+.PN XChangeKeyboardMapping .
+.IN "XChangeKeyboardMapping" "" "@DEF@"
+.sM
+.FD 0
+XChangeKeyboardMapping(\^\fIdisplay\fP, \fIfirst_keycode\fP, \fIkeysyms_per_keycode\fP, \fIkeysyms\fP, \fInum_codes\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      int \fIfirst_keycode\fP\^;
+.br
+      int \fIkeysyms_per_keycode\fP\^;
+.br
+      KeySym *\fIkeysyms\fP\^;
+.br
+      int \fInum_codes\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.ds Kc changed
+.IP \fIfirst_keycode\fP 1i
+Specifies the first KeyCode that is to be \*(Kc.
+.IP \fIkeysyms_per_keycode\fP 1i
+Specifies the number of KeySyms per KeyCode.
+.IP \fIkeysyms\fP 1i
+Specifies an array of KeySyms.
+.IP \fInum_codes\fP 1i
+Specifies the number of KeyCodes that are to be changed.
+.LP
+.eM
+The
+.PN XChangeKeyboardMapping
+function defines the symbols for the specified number of KeyCodes
+starting with first_keycode.
+The symbols for KeyCodes outside this range remain unchanged.  
+The number of elements in keysyms must be:
+.LP
+.Ds
+num_codes * keysyms_per_keycode
+.De
+.LP
+The specified first_keycode must be greater than or equal to min_keycode 
+returned by
+.PN XDisplayKeycodes ,
+or a 
+.PN BadValue 
+error results.
+In addition, the following expression must be less than or equal to 
+max_keycode as returned by
+.PN XDisplayKeycodes ,
+or a
+.PN BadValue 
+error results:
+.LP
+.Ds
+first_keycode + num_codes \- 1
+.De
+.LP
+KeySym number N, counting from zero, for KeyCode K has the following index
+in keysyms, counting from zero: 
+.LP
+.Ds 
+(K \- first_keycode) * keysyms_per_keycode + N
+.De
+.LP
+The specified keysyms_per_keycode can be chosen arbitrarily by the client
+to be large enough to hold all desired symbols. 
+A special KeySym value of 
+.PN NoSymbol 
+should be used to fill in unused elements 
+for individual KeyCodes.  
+It is legal for 
+.PN NoSymbol 
+to appear in nontrailing positions
+of the effective list for a KeyCode.
+.PN XChangeKeyboardMapping
+generates a 
+.PN MappingNotify 
+event.
+.LP
+There is no requirement that the X server interpret this mapping. 
+It is merely stored for reading and writing by clients.
+.LP
+.PN XChangeKeyboardMapping
+can generate
+.PN BadAlloc 
+and
+.PN BadValue 
+errors.
+.LP
+The next six functions make use of the 
+.PN XModifierKeymap
+data structure, which contains:
+.LP
+.IN "XModifierKeymap" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+typedef struct {
+	int max_keypermod;	/* This server's max number of keys per modifier */
+	KeyCode *modifiermap;	/* An 8 by max_keypermod array of the modifiers */
+} XModifierKeymap;
+.De
+.LP
+.eM
+To create an
+.PN XModifierKeymap
+structure, use
+.PN XNewModifiermap .
+.IN "XNewModifiermap" "" "@DEF@"
+.sM
+.FD 0
+XModifierKeymap *XNewModifiermap(\^\fImax_keys_per_mod\fP\^)
+.br
+        int \fImax_keys_per_mod\fP\^;
+.FN
+.IP \fImax_keys_per_mod\fP 1i
+Specifies the number of KeyCode entries preallocated to the modifiers
+in the map.
+.LP
+.eM
+The
+.PN XNewModifiermap
+function returns a pointer to
+.PN XModifierKeymap
+structure for later use.
+.LP
+.sp
+To add a new entry to an 
+.PN XModifierKeymap
+structure, use
+.PN XInsertModifiermapEntry .
+.IN "XInsertModifiermapEntry" "" "@DEF@"
+.sM
+.FD 0
+XModifierKeymap *XInsertModifiermapEntry\^(\^\fImodmap\fP, \
+\fIkeycode_entry\fP, \fImodifier\fP\^)
+.br
+     XModifierKeymap *\fImodmap\fP\^;
+.br
+     KeyCode \fIkeycode_entry\fP\^;
+.br
+     int \fImodifier\fP\^;
+.FN
+.IP \fImodmap\fP 1i
+Specifies the 
+.PN XModifierKeymap
+structure.
+.IP \fIkeycode_entry\fP 1i
+Specifies the KeyCode. 
+.IP \fImodifier\fP 1i
+Specifies the modifier.
+.LP
+.eM
+The
+.PN XInsertModifiermapEntry
+function adds the specified KeyCode to the set that controls the specified
+modifier and returns the resulting
+.PN XModifierKeymap
+structure (expanded as needed).
+.LP
+.sp
+To delete an entry from an 
+.PN XModifierKeymap
+structure, use
+.PN XDeleteModifiermapEntry .
+.IN "XDeleteModifiermapEntry" "" "@DEF@"
+.sM
+.FD 0
+XModifierKeymap *XDeleteModifiermapEntry\^(\^\fImodmap\fP, \
+\fIkeycode_entry\fP, \fImodifier\fP\^)
+.br
+     XModifierKeymap *\fImodmap\fP\^;
+.br
+     KeyCode \fIkeycode_entry\fP\^;
+.br
+     int \fImodifier\fP\^;
+.FN
+.IP \fImodmap\fP 1i
+Specifies the 
+.PN XModifierKeymap
+structure.
+.IP \fIkeycode_entry\fP 1i
+Specifies the KeyCode. 
+.IP \fImodifier\fP 1i
+Specifies the modifier.
+.LP
+.eM
+The
+.PN XDeleteModifiermapEntry
+function deletes the specified KeyCode from the set that controls the
+specified modifier and returns a pointer to the resulting
+.PN XModifierKeymap
+structure.
+.LP
+.sp
+To destroy an
+.PN XModifierKeymap
+structure, use
+.PN XFreeModifiermap .
+.IN "XFreeModifiermap" "" "@DEF@"
+.sM
+.FD 0
+XFreeModifiermap(\^\fImodmap\fP\^)
+.br
+        XModifierKeymap *\fImodmap\fP;
+.FN
+.IP \fImodmap\fP 1i
+Specifies the 
+.PN XModifierKeymap
+structure.
+.LP
+.eM
+The
+.PN XFreeModifiermap
+function frees the specified
+.PN XModifierKeymap
+structure.
+.LP
+.sp
+To set the KeyCodes to be used as modifiers, use
+.PN XSetModifierMapping .
+.IN "XSetModifierMapping" "" "@DEF@"
+.sM
+.FD 0
+int XSetModifierMapping(\^\fIdisplay\fP, \fImodmap\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.br
+        XModifierKeymap *\fImodmap\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fImodmap\fP 1i
+Specifies the 
+.PN XModifierKeymap
+structure.
+.LP
+.eM
+The
+.PN XSetModifierMapping
+function specifies the KeyCodes of the keys (if any) that are to be used 
+as modifiers.
+If it succeeds,
+the X server generates a
+.PN MappingNotify
+event, and
+.PN XSetModifierMapping
+returns
+.PN MappingSuccess .
+X permits at most 8 modifier keys.
+If more than 8 are specified in the
+.PN XModifierKeymap
+structure, a
+.PN BadLength
+error results.
+.LP
+The modifiermap member of the 
+.PN XModifierKeymap
+structure contains 8 sets of max_keypermod KeyCodes, 
+one for each modifier in the order 
+.PN Shift , 
+.PN Lock , 
+.PN Control , 
+.PN Mod1 , 
+.PN Mod2 , 
+.PN Mod3 , 
+.PN Mod4 , 
+and 
+.PN Mod5 .
+Only nonzero KeyCodes have meaning in each set, 
+and zero KeyCodes are ignored.
+In addition, all of the nonzero KeyCodes must be in the range specified by 
+min_keycode and max_keycode in the 
+.PN Display 
+structure,
+or a 
+.PN BadValue 
+error results.
+.LP
+An X server can impose restrictions on how modifiers can be changed, 
+for example,
+if certain keys do not generate up transitions in hardware,
+if auto-repeat cannot be disabled on certain keys,
+or if multiple modifier keys are not supported.  
+If some such restriction is violated, 
+the status reply is
+.PN MappingFailed ,
+and none of the modifiers are changed.
+If the new KeyCodes specified for a modifier differ from those
+currently defined and any (current or new) keys for that modifier are
+in the logically down state, 
+.PN XSetModifierMapping
+returns
+.PN MappingBusy , 
+and none of the modifiers is changed.
+.LP
+.PN XSetModifierMapping
+can generate
+.PN BadAlloc
+and 
+.PN BadValue 
+errors.
+.LP
+.sp
+To obtain the KeyCodes used as modifiers, use
+.PN XGetModifierMapping .
+.IN "XGetModifierMapping" "" "@DEF@"
+.sM
+.FD 0
+XModifierKeymap *XGetModifierMapping(\^\fIdisplay\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.LP
+.eM
+The
+.PN XGetModifierMapping
+function returns a pointer to a newly created
+.PN XModifierKeymap
+structure that contains the keys being used as modifiers.
+The structure should be freed after use by calling
+.PN XFreeModifiermap .
+If only zero values appear in the set for any modifier, 
+that modifier is disabled.
+.bp

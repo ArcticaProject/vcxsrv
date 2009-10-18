@@ -76,6 +76,9 @@ i?86-*-linux*|x86_64-*-linux*|powerpc-*-linux* \
 |amd64-*-freebsd*|i?86-*-freebsd*|ia64-*-freebsd*)
     pic_options='-fPIC'
     ;;
+i?86-pc-cygwin*)
+    pic_options='-DDLL_EXPORT'
+    ;;
 i?86-apple-darwin*)
     pic_options='-fno-common'
     ;;

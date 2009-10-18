@@ -1,4 +1,4 @@
-AM_CFLAGS= \
+AM_CPPFLAGS= \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/include/X11 \
 	-I$(top_builddir)/include \
@@ -7,10 +7,12 @@ AM_CFLAGS= \
 	-I$(top_srcdir)/src/xkb \
 	-I$(top_srcdir)/src/xlibi18n \
 	-I$(top_srcdir)/src \
+	-D_BSD_SOURCE
+
+AM_CFLAGS= \
 	$(X11_CFLAGS) \
 	$(BIGFONT_CFLAGS) \
 	$(XDMCP_CFLAGS) \
-	-D_BSD_SOURCE \
 	$(XMALLOC_ZERO_CFLAGS)
 
 noinst_LTLIBRARIES = libi18n.la

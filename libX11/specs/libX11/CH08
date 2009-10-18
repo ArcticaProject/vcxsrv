@@ -1,0 +1,3468 @@
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included
+.\" in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" Copyright \(co 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+.\" Digital Equipment Corporation
+.\"
+.\" Portions Copyright \(co 1990, 1991 by
+.\" Tektronix, Inc.
+.\"
+.\" Permission to use, copy, modify and distribute this documentation for
+.\" any purpose and without fee is hereby granted, provided that the above
+.\" copyright notice appears in all copies and that both that copyright notice
+.\" and this permission notice appear in all copies, and that the names of
+.\" Digital and Tektronix not be used in in advertising or publicity pertaining
+.\" to this documentation without specific, written prior permission.
+.\" Digital and Tektronix makes no representations about the suitability
+.\" of this documentation for any purpose.
+.\" It is provided ``as is'' without express or implied warranty.
+.\" 
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 8\fP\s-1
+
+\s+1\fBGraphics Functions\fP\s-1
+.sp 2
+.nr H1 8
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 8: Graphics Functions 
+.XE
+Once you have established a connection to a display,
+you can use the Xlib graphics functions to:
+.IP \(bu 5
+Clear and copy areas
+.IP \(bu 5
+Draw points, lines, rectangles, and arcs
+.IP \(bu 5
+Fill areas
+.IP \(bu 5
+Manipulate fonts
+.IP \(bu 5
+Draw text
+.IP \(bu 5
+Transfer images between clients and the server
+.LP
+If the same drawable and GC is used for each call,
+Xlib batches back-to-back calls to
+.PN XDrawPoint ,
+.PN XDrawLine ,
+.PN XDrawRectangle ,
+.PN XFillArc ,
+and
+.PN XFillRectangle .
+Note that this reduces the total number of requests sent to the server.
+.NH 2
+Clearing Areas
+.XS
+\*(SN Clearing Areas 
+.XE
+.LP
+Xlib provides functions that you can use to clear an area or the entire window.
+Because pixmaps do not have defined backgrounds, 
+they cannot be filled by using the functions described in this section.
+Instead, to accomplish an analogous operation on a pixmap,
+you should use 
+.PN XFillRectangle ,
+which sets the pixmap to a known value.
+.LP
+.sp
+To clear a rectangular area of a given window, use
+.PN XClearArea .
+.IN "Areas" "clearing"
+.IN "Clearing" "areas"
+.IN "XClearArea" "" "@DEF@"
+.sM
+.FD 0
+XClearArea\^(\^\fIdisplay\fP, \fIw\fP\^, \fIx\fP\^, \fIy\fP\^, \fIwidth\fP\^, \fIheight\fP\^, \fIexposures\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.br
+      Bool \fIexposures\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.ds Xy , which are relative to the origin of the window \
+and specify the upper-left corner of the rectangle
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.ds Wh , which are the dimensions of the rectangle
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.IP \fIexposures\fP 1i
+Specifies a Boolean value that indicates if
+.PN Expose
+events are to be generated.
+.LP
+.eM
+The
+.PN XClearArea
+function paints a rectangular area in the specified window according to the
+specified dimensions with the window's background pixel or pixmap.
+The subwindow-mode effectively is
+.PN ClipByChildren . 
+If width is zero, it
+is replaced with the current width of the window minus x.
+If height is
+zero, it is replaced with the current height of the window minus y.
+If the window has a defined background tile, 
+the rectangle clipped by any children is filled with this tile.
+If the window has
+background 
+.PN None , 
+the contents of the window are not changed.  
+In either
+case, if exposures is 
+.PN True , 
+one or more 
+.PN Expose 
+events are generated for regions of the rectangle that are either visible or are
+being retained in a backing store.
+If you specify a window whose class is
+.PN InputOnly ,
+a
+.PN BadMatch
+error results.
+.LP
+.PN XClearArea
+can generate
+.PN BadMatch ,
+.PN BadValue ,
+and
+.PN BadWindow 
+errors.
+.LP
+.sp
+To clear the entire area in a given window, use
+.PN XClearWindow .
+.IN "Window" "clearing"
+.IN "Clearing" "windows"
+.IN "XClearWindow" "" "@DEF@"
+.sM
+.FD 0
+XClearWindow\^(\^\fIdisplay\fP, \fIw\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Window \fIw\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIw\fP 1i
+Specifies the window.
+.LP
+.eM
+The
+.PN XClearWindow
+function clears the entire area in the specified window and is
+equivalent to
+.PN XClearArea
+(display, w, 0, 0, 0, 0, 
+.PN False ).
+If the window has a defined background tile, the rectangle is tiled with a
+plane-mask of all ones and 
+.PN GXcopy
+function.
+If the window has
+background 
+.PN None , 
+the contents of the window are not changed.  
+If you specify a window whose class is
+.PN InputOnly ,
+a
+.PN BadMatch
+error results. 
+.LP
+.PN XClearWindow
+can generate
+.PN BadMatch
+and
+.PN BadWindow 
+errors.
+.NH 2
+Copying Areas
+.XS
+\*(SN Copying Areas 
+.XE
+.LP
+Xlib provides functions that you can use to copy an area or a bit plane.
+.LP
+.sp
+To copy an area between drawables of the same
+root and depth, use
+.PN XCopyArea .
+.IN "Areas" "copying"
+.IN "Copying" "areas"
+.IN "XCopyArea" "" "@DEF@"
+.sM
+.FD 0
+XCopyArea\^(\^\fIdisplay\fP, \fIsrc\fP\^, \fIdest\fP\^, \fIgc\fP\^, \fIsrc_x\fP\^, \fIsrc_y\fP\^, \fIwidth\fP\^, \fIheight\fP\^,  \fIdest_x\fP\^, \fIdest_y\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fIsrc\fP\^, \fIdest\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIsrc_x\fP\^, \fIsrc_y\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.br
+      int \fIdest_x\fP\^, \fIdest_y\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIsrc\fP 1i
+.br
+.ns
+.IP \fIdest\fP 1i
+Specify the source and destination rectangles to be combined. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIsrc_x\fP 1i
+.br
+.ns
+.IP \fIsrc_y\fP 1i
+Specify the x and y coordinates, 
+which are relative to the origin of the source rectangle
+and specify its upper-left corner.
+.ds Wh , which are the dimensions of both the source \
+and destination rectangles
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.ds Dx , which are relative to the origin of the destination rectangle \
+and specify its upper-left corner
+.IP \fIdest_x\fP 1i
+.br
+.ns
+.IP \fIdest_y\fP 1i
+Specify the x and y coordinates\*(Dx. 
+.LP
+.eM
+The
+.PN XCopyArea
+function combines the specified rectangle of src with the specified rectangle 
+of dest.
+The drawables must have the same root and depth,
+or a
+.PN BadMatch
+error results.
+.LP
+If regions of the source rectangle are obscured and have not been
+retained in backing store 
+or if regions outside the boundaries of the source drawable are specified, 
+those regions are not copied. 
+Instead, the 
+following occurs on all corresponding destination regions that are either
+visible or are retained in backing store.  
+If the destination is a window with a background other than 
+.PN None , 
+corresponding regions
+of the destination are tiled with that background
+(with plane-mask of all ones and
+.PN GXcopy 
+function).
+Regardless of tiling or whether the destination is a window or a pixmap,
+if graphics-exposures is 
+.PN True ,
+then
+.PN GraphicsExpose
+events for all corresponding destination regions are generated.
+If graphics-exposures is 
+.PN True 
+but no
+.PN GraphicsExpose
+events are generated, a
+.PN NoExpose 
+event is generated.
+Note that by default graphics-exposures is
+.PN True
+in new GCs.
+.LP
+This function uses these GC components: function, plane-mask, 
+subwindow-mode, graphics-exposures, clip-x-origin,
+clip-y-origin, and clip-mask.
+.LP
+.PN XCopyArea
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.sp
+.LP
+To copy a single bit plane of a given drawable, use
+.PN XCopyPlane .
+.IN "Plane" "copying"
+.IN "Copying" "planes"
+.IN "XCopyPlane" "" "@DEF@"
+.sM
+.FD 0
+XCopyPlane\^(\^\fIdisplay\fP, \fIsrc\fP\^, \fIdest\fP\^, \fIgc\fP\^, \fIsrc_x\fP\^, \fIsrc_y\fP\^, \fIwidth\fP\^, \fIheight\fP\^, \fIdest_x\fP\^, \fIdest_y\fP\^, \fIplane\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fIsrc\fP\^, \fIdest\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIsrc_x\fP\^, \fIsrc_y\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.br
+      int \fIdest_x\fP\^, \fIdest_y\fP\^;
+.br
+      unsigned long \fIplane\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIsrc\fP 1i
+.br
+.ns
+.IP \fIdest\fP 1i
+Specify the source and destination rectangles to be combined. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIsrc_x\fP 1i
+.br
+.ns
+.IP \fIsrc_y\fP 1i
+Specify the x and y coordinates, 
+which are relative to the origin of the source rectangle
+and specify its upper-left corner.
+.ds Wh , which are the dimensions of both the source and destination rectangles
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.ds Dx , which are relative to the origin of the destination rectangle \
+and specify its upper-left corner
+.IP \fIdest_x\fP 1i
+.br
+.ns
+.IP \fIdest_y\fP 1i
+Specify the x and y coordinates\*(Dx. 
+.IP \fIplane\fP 1i
+Specifies the bit plane.
+You must set exactly one bit to 1.
+.LP
+.eM
+The
+.PN XCopyPlane
+function uses a single bit plane of the specified source rectangle
+combined with the specified GC to modify the specified rectangle of dest.
+The drawables must have the same root but need not have the same depth.
+If the drawables do not have the same root, a
+.PN BadMatch
+error results.
+If plane does not have exactly one bit set to 1 and the value of plane
+is not less than %2 sup n%, where \fIn\fP is the depth of src, a
+.PN BadValue
+error results.
+.LP
+Effectively, 
+.PN XCopyPlane
+forms a pixmap of the same depth as the rectangle of dest and with a
+size specified by the source region. 
+It uses the foreground/background pixels in the GC (foreground
+everywhere the bit plane in src contains a bit set to 1,
+background everywhere the bit plane in src contains a bit set to 0)
+and the equivalent of a 
+.PN CopyArea
+protocol request is performed with all the same exposure semantics.
+This can also be thought of as using the specified region of the source 
+bit plane as a stipple with a fill-style of
+.PN FillOpaqueStippled
+for filling a rectangular area of the destination.
+.LP
+This function uses these GC components: function, plane-mask, foreground,
+background, subwindow-mode, graphics-exposures, clip-x-origin, clip-y-origin,
+and clip-mask.
+.LP
+.PN XCopyPlane
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+.PN BadMatch ,
+and 
+.PN BadValue 
+errors.
+.NH 2
+Drawing Points, Lines, Rectangles, and Arcs
+.XS
+\*(SN Drawing Points, Lines, Rectangles, and Arcs 
+.XE
+.LP
+Xlib provides functions that you can use to draw:
+.IP \(bu 5
+A single point or multiple points
+.IP \(bu 5
+A single line or multiple lines
+.IP \(bu 5
+A single rectangle or multiple rectangles
+.IP \(bu 5
+A single arc or multiple arcs
+.LP
+Some of the functions described in the following sections
+use these structures:
+.LP
+.IN "XSegment" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i
+.ta .5i
+typedef struct {
+	short x1, y1, x2, y2;
+} XSegment;
+.De
+.LP
+.eM
+.IN "XPoint" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i
+.ta .5i
+typedef struct {
+	short x, y;
+} XPoint;
+.De
+.LP
+.eM
+.IN "XRectangle" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i
+.ta .5i
+typedef struct {
+	short x, y;
+	unsigned short width, height;
+} XRectangle;
+.De
+.LP
+.eM
+.IN "XArc" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	short x, y;
+	unsigned short width, height;
+	short angle1, angle2;             /* Degrees * 64 */
+} XArc;
+.De
+.LP
+.eM
+All x and y members are signed integers.
+The width and height members are 16-bit unsigned integers.
+You should be careful not to generate coordinates and sizes
+out of the 16-bit ranges, because the protocol only has 16-bit fields
+for these values.
+.NH 3
+Drawing Single and Multiple Points
+.XS
+\*(SN Drawing Single and Multiple Points 
+.XE
+.LP
+.IN "Points" "drawing"
+.IN "Drawing" "points"
+.IN "XDrawPoints"
+.IN "XDrawPoint"
+.LP
+To draw a single point in a given drawable, use
+.PN XDrawPoint .
+.IN "XDrawPoint" "" "@DEF@"
+.sM
+.FD 0
+XDrawPoint\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates where you want the point drawn.
+.LP
+.eM
+.sp
+To draw multiple points in a given drawable, use
+.PN XDrawPoints .
+.IN "XDrawPoints" "" "@DEF@"
+.sM
+.FD 0
+XDrawPoints\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIpoints\fP\^, \fInpoints\fP\^, \fImode\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XPoint *\fIpoints\fP\^;
+.br
+      int \fInpoints\fP\^;
+.br
+      int \fImode\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIpoints\fP 1i
+Specifies an array of points.
+.IP \fInpoints\fP 1i
+Specifies the number of points in the array.
+.IP \fImode\fP 1i
+Specifies the coordinate mode. 
+You can pass
+.PN CoordModeOrigin
+or
+.PN CoordModePrevious .
+.LP
+.eM
+The
+.PN XDrawPoint
+function uses the foreground pixel and function components of the
+GC to draw a single point into the specified drawable; 
+.PN XDrawPoints
+draws multiple points this way.
+.PN CoordModeOrigin
+treats all coordinates as relative to the origin,
+and
+.PN CoordModePrevious
+treats all coordinates after the first as relative to the previous point.
+.PN XDrawPoints
+draws the points in the order listed in the array.
+.LP
+Both functions use these GC components: function, plane-mask,
+foreground, subwindow-mode, clip-x-origin, clip-y-origin, and clip-mask.
+.LP
+.PN XDrawPoint
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and 
+.PN BadMatch 
+errors.
+.PN XDrawPoints
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+.PN BadMatch ,
+and
+.PN BadValue 
+errors.
+.NH 3
+Drawing Single and Multiple Lines
+.XS
+\*(SN Drawing Single and Multiple Lines
+.XE
+.LP
+.IN "Lines" "drawing"
+.IN "Drawing" "lines"
+.IN "XDrawLine"
+.IN "XDrawLines"
+.IN "Polygons" "drawing"
+.IN "Drawing" "polygons"
+.IN "XDrawSegments"
+.LP
+To draw a single line between two points in a given drawable, use
+.PN XDrawLine .
+.IN "XDrawLine" "" "@DEF@"
+.sM
+.FD 0
+XDrawLine\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx1\fP\^, \fIy1\fP\^, \fIx2\fP\^, \fIy2\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx1\fP\^, \fIy1\fP\^, \fIx2\fP\^, \fIy2\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIx1\fP 1i
+.br
+.ns
+.IP \fIy1\fP 1i
+.br
+.ns
+.IP \fIx2\fP 1i
+.br
+.ns
+.IP \fIy2\fP 1i
+Specify the points (x1, y1) and (x2, y2) to be connected.
+.LP
+.eM
+.sp
+To draw multiple lines in a given drawable, use
+.PN XDrawLines .
+.IN "XDrawLines" "" "@DEF@"
+.sM
+.FD 0
+XDrawLines\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIpoints\fP\^, \fInpoints\fP\^, \fImode\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XPoint *\fIpoints\fP\^;
+.br
+      int \fInpoints\fP\^;
+.br
+      int \fImode\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIpoints\fP 1i
+Specifies an array of points.
+.IP \fInpoints\fP 1i
+Specifies the number of points in the array.
+.IP \fImode\fP 1i
+Specifies the coordinate mode. 
+You can pass
+.PN CoordModeOrigin
+or
+.PN CoordModePrevious .
+.LP
+.eM
+.sp
+To draw multiple, unconnected lines in a given drawable,
+use
+.PN XDrawSegments .
+.IN "XDrawSegments" "" "@DEF@"
+.sM
+.FD 0
+XDrawSegments\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIsegments\fP\^, \fInsegments\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XSegment *\fIsegments\fP\^;
+.br
+      int \fInsegments\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIsegments\fP 1i
+Specifies an array of segments.
+.IP \fInsegments\fP 1i
+Specifies the number of segments in the array.
+.LP
+.eM
+The
+.PN XDrawLine
+function uses the components of the specified GC to
+draw a line between the specified set of points (x1, y1) and (x2, y2).
+It does not perform joining at coincident endpoints.
+For any given line, 
+.PN XDrawLine 
+does not draw a pixel more than once.
+If lines intersect, the intersecting pixels are drawn multiple times.  
+.LP
+The
+.PN XDrawLines
+function uses the components of the specified GC to draw 
+npoints\-1 lines between each pair of points (point[i], point[i+1]) 
+in the array of
+.PN XPoint
+structures.
+It draws the lines in the order listed in the array.
+The lines join correctly at all intermediate points, and if the first and last
+points coincide, the first and last lines also join correctly.
+For any given line, 
+.PN XDrawLines
+does not draw a pixel more than once.
+If thin (zero line-width) lines intersect, 
+the intersecting pixels are drawn multiple times.
+If wide lines intersect, the intersecting pixels are drawn only once, as though
+the entire 
+.PN PolyLine 
+protocol request were a single, filled shape.
+.PN CoordModeOrigin
+treats all coordinates as relative to the origin,
+and
+.PN CoordModePrevious
+treats all coordinates after the first as relative to the previous point.
+.LP
+The
+.PN XDrawSegments 
+function draws multiple, unconnected lines. 
+For each segment, 
+.PN XDrawSegments 
+draws a
+line between (x1, y1) and (x2, y2).
+It draws the lines in the order listed in the array of
+.PN XSegment
+structures and does not perform joining at coincident endpoints.
+For any given line, 
+.PN XDrawSegments
+does not draw a pixel more than once.  
+If lines intersect, the intersecting pixels are drawn multiple times.  
+.LP
+All three functions use these GC components:
+function, plane-mask, line-width,
+line-style, cap-style, fill-style, subwindow-mode,
+clip-x-origin, clip-y-origin, and clip-mask.
+The
+.PN XDrawLines
+function also uses the join-style GC component.
+All three functions also use these GC mode-dependent components:
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+tile-stipple-y-origin, dash-offset, and dash-list.
+.LP
+.PN XDrawLine ,
+.PN XDrawLines ,
+and
+.PN XDrawSegments
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.PN XDrawLines
+also can generate
+.PN BadValue 
+errors.
+.NH 3
+Drawing Single and Multiple Rectangles 
+.XS
+\*(SN Drawing Single and Multiple Rectangles 
+.XE
+.LP
+.IN "Rectangles" "drawing"
+.IN "Drawing" "rectangles"
+.IN "XDrawRectangle"
+.IN "XDrawRectangles"
+.LP
+To draw the outline of a single rectangle in a given drawable, use
+.PN XDrawRectangle .
+.IN "XDrawRectangle" "" "@DEF@"
+.sM
+.FD 0
+XDrawRectangle\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIwidth\fP\^, \fIheight\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which specify the upper-left corner of the rectangle
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.ds Wh , which specify the dimensions of the rectangle
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.LP
+.eM
+.sp
+To draw the outline of multiple rectangles
+in a given drawable, use
+.PN XDrawRectangles .
+.IN "XDrawRectangles" "" "@DEF@"
+.sM
+.FD 0
+XDrawRectangles\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIrectangles\fP\^, \fInrectangles\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XRectangle \fIrectangles\fP\^[\^]\^;
+.br
+      int \fInrectangles\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIrectangles\fP 1i
+Specifies an array of rectangles.
+.IP \fInrectangles\fP 1i
+Specifies the number of rectangles in the array.
+.LP
+.eM
+The
+.PN XDrawRectangle
+and
+.PN XDrawRectangles
+functions draw the outlines of the specified rectangle or rectangles as
+if a five-point 
+.PN PolyLine 
+protocol request were specified for each rectangle:
+.IP
+[x,y] [x+width,y] [x+width,y+height] [x,y+height] [x,y]
+.LP 
+For the specified rectangle or rectangles, 
+these functions do not draw a pixel more than once.
+.PN XDrawRectangles
+draws the rectangles in the order listed in the array.
+If rectangles intersect,
+the intersecting pixels are drawn multiple times.
+.LP
+Both functions use these GC components: 
+function, plane-mask, line-width,
+line-style, cap-style, join-style, fill-style, 
+subwindow-mode, clip-x-origin, clip-y-origin, and clip-mask.
+They also use these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+tile-stipple-y-origin, dash-offset, and dash-list.
+.LP
+.PN XDrawRectangle
+and
+.PN XDrawRectangles
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.NH 3
+Drawing Single and Multiple Arcs
+.XS
+\*(SN Drawing Single and Multiple Arcs 
+.XE
+.LP
+.IN "Drawing" "arcs"
+.IN "XDrawArc"
+.IN "Arcs" "drawing"
+.IN "XDrawArcs"
+.LP
+.sp
+To draw a single arc in a given drawable, use
+.PN XDrawArc .
+.IN "XDrawArc" "" "@DEF@"
+.sM
+.FD 0
+XDrawArc\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIwidth\fP\^, \fIheight\fP\^, \fIangle1\fP\^, \fIangle2\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.br
+      int \fIangle1\fP\^, \fIangle2\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the drawable \
+and specify the upper-left corner of the bounding rectangle
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.ds Wh , which are the major and minor axes of the arc
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.IP \fIangle1\fP 1i
+Specifies the start of the arc relative to the three-o'clock position
+from the center, in units of degrees * 64.
+.IP \fIangle2\fP 1i
+Specifies the path and extent of the arc relative to the start of the
+arc, in units of degrees * 64.
+.LP
+.eM
+.sp
+To draw multiple arcs in a given drawable, use
+.PN XDrawArcs .
+.IN "XDrawArcs" "" "@DEF@"
+.sM
+.FD 0
+XDrawArcs\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIarcs\fP\^, \fInarcs\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XArc *\fIarcs\fP\^;
+.br
+      int \fInarcs\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIarcs\fP 1i
+Specifies an array of arcs.
+.IP \fInarcs\fP 1i
+Specifies the number of arcs in the array.
+.LP
+.eM
+.EQ
+delim %%
+.EN
+.PN XDrawArc
+draws a single circular or elliptical arc, and 
+.PN XDrawArcs
+draws multiple circular or elliptical arcs.
+Each arc is specified by a rectangle and two angles.  
+The center of the circle or ellipse is the center of the
+rectangle, and the major and minor axes are specified by the width and height.
+Positive angles indicate counterclockwise motion, 
+and negative angles indicate clockwise motion.  
+If the magnitude of angle2 is greater than 360 degrees, 
+.PN XDrawArc
+or 
+.PN XDrawArcs
+truncates it to 360 degrees.
+.LP
+For an arc specified as %[ ~x, ~y, ~width , ~height, ~angle1, ~angle2 ]%, 
+the origin of the major and minor axes is at 
+% [ x +^ {width over 2} , ~y +^ {height over 2}  ]%, 
+and the infinitely thin path describing the entire circle or ellipse 
+intersects the horizontal axis at % [ x, ~y +^ {height over 2}  ]% and 
+% [ x +^ width , ~y +^ { height over 2 }] %
+and intersects the vertical axis at % [ x +^ { width over 2 } , ~y ]% and 
+% [ x +^ { width over 2 }, ~y +^ height ]%.
+These coordinates can be fractional
+and so are not truncated to discrete coordinates.
+The path should be defined by the ideal mathematical path.  
+For a wide line with line-width lw, 
+the bounding outlines for filling are given        
+by the two infinitely thin paths consisting of all points whose perpendicular
+distance from the path of the circle/ellipse is equal to lw/2
+(which may be a fractional value).
+The cap-style and join-style are applied the same as for a line
+corresponding to the tangent of the circle/ellipse at the endpoint.
+.LP
+For an arc specified as % [ ~x, ~y, ~width, ~height, ~angle1, ~angle2  ]%,
+the angles must be specified
+in the effectively skewed coordinate system of the ellipse (for a
+circle, the angles and coordinate systems are identical).  The
+relationship between these angles and angles expressed in the normal
+coordinate system of the screen (as measured with a protractor) is as
+follows:
+.LP
+.Ds
+% roman "skewed-angle" ~ = ~ atan left ( tan ( roman "normal-angle" )
+ * width over height right ) +^ adjust%
+.De
+.LP
+The skewed-angle and normal-angle are expressed in radians (rather
+than in degrees scaled by 64) in the range % [ 0 , ~2 pi  ]% and where atan
+returns a value in the range % [ - pi over 2 , ~pi over 2  ] %
+and adjust is:
+.LP
+.Ds
+.TA 1i 2i
+.ta 1i 2i
+%0%	for normal-angle in the range % [ 0 , ~pi over 2  ]%
+%pi%	for normal-angle in the range % [ pi over 2 , ~{3 pi} over 2  ]%
+%2 pi%	for normal-angle in the range % [ {3 pi} over 2 , ~2 pi  ]%
+.De
+.LP
+For any given arc, 
+.PN XDrawArc
+and
+.PN XDrawArcs
+do not draw a pixel more than once.  
+If two arcs join correctly and if the line-width is greater than zero 
+and the arcs intersect, 
+.PN XDrawArc
+and
+.PN XDrawArcs
+do not draw a pixel more than once.
+Otherwise, 
+the intersecting pixels of intersecting arcs are drawn multiple times.
+Specifying an arc with one endpoint and a clockwise extent draws the same pixels
+as specifying the other endpoint and an equivalent counterclockwise extent,
+except as it affects joins.
+.LP
+If the last point in one arc coincides with the first point in the following 
+arc, the two arcs will join correctly.  
+If the first point in the first arc coincides with the last point in the last 
+arc, the two arcs will join correctly.
+By specifying one axis to be zero, a horizontal or vertical line can be
+drawn.
+Angles are computed based solely on the coordinate system and ignore the
+aspect ratio.
+.LP
+Both functions use these GC components: 
+function, plane-mask, line-width, line-style, cap-style, join-style, 
+fill-style, subwindow-mode, clip-x-origin, clip-y-origin, and clip-mask.
+They also use these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+tile-stipple-y-origin, dash-offset, and dash-list.
+.LP
+.PN XDrawArc
+and
+.PN XDrawArcs
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.NH 2
+Filling Areas
+.XS
+\*(SN Filling Areas 
+.XE
+.LP
+Xlib provides functions that you can use to fill:
+.IP \(bu 5
+A single rectangle or multiple rectangles
+.IP \(bu 5
+A single polygon
+.IP \(bu 5
+A single arc or multiple arcs
+.NH 3
+Filling Single and Multiple Rectangles
+.XS
+\*(SN Filling Single and Multiple Rectangles 
+.XE
+.LP
+.IN "Filling" "rectangles"
+.IN "XFillRectangle"
+.IN "Rectangle" "filling"
+.IN "XFillRectangles"
+.LP
+.sp
+To fill a single rectangular area in a given drawable, use
+.PN XFillRectangle .
+.IN "XFillRectangle" "" "@DEF@"
+.sM
+.FD 0 
+XFillRectangle\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIwidth\fP\^, \fIheight\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the drawable \
+and specify the upper-left corner of the rectangle
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.ds Wh , which are the dimensions of the rectangle to be filled
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.LP
+.eM
+.sp
+To fill multiple rectangular areas in a given drawable, use
+.PN XFillRectangles .
+.IN "XFillRectangles" "" "@DEF@"
+.sM
+.FD 0 
+XFillRectangles\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIrectangles\fP\^, \fInrectangles\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XRectangle *\fIrectangles\fP\^;
+.br
+      int \fInrectangles\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIrectangles\fP 1i
+Specifies an array of rectangles.
+.IP \fInrectangles\fP 1i
+Specifies the number of rectangles in the array.
+.LP
+.eM
+The
+.PN XFillRectangle
+and
+.PN XFillRectangles
+functions fill the specified rectangle or rectangles
+as if a four-point 
+.PN FillPolygon
+protocol request were specified for each rectangle:
+.LP
+.Ds
+[x,y] [x+width,y] [x+width,y+height] [x,y+height]
+.De
+.LP
+Each function uses the x and y coordinates,
+width and height dimensions, and GC you specify.
+.LP
+.PN XFillRectangles
+fills the rectangles in the order listed in the array.  
+For any given rectangle,
+.PN XFillRectangle
+and
+.PN XFillRectangles
+do not draw a pixel more than once.  
+If rectangles intersect, the intersecting pixels are
+drawn multiple times.
+.LP
+Both functions use these GC components: 
+function, plane-mask, fill-style, subwindow-mode, 
+clip-x-origin, clip-y-origin, and clip-mask.
+They also use these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+and tile-stipple-y-origin.
+.LP
+.PN XFillRectangle
+and
+.PN XFillRectangles
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.NH 3
+Filling a Single Polygon
+.XS
+\*(SN Filling a Single Polygon 
+.XE
+.LP
+.sp
+To fill a polygon area in a given drawable, use
+.PN XFillPolygon .
+.IN "Polygons" "filling"
+.IN "Filling" "polygon"
+.IN "XFillPolygon" "" "@DEF@"
+.sM
+.FD 0 
+XFillPolygon\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIpoints\fP\^, \fInpoints\fP\^, \fIshape\fP\^, \fImode\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XPoint *\fIpoints\fP\^;
+.br
+      int \fInpoints\fP\^;
+.br
+      int \fIshape\fP\^; 
+.br
+      int \fImode\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIpoints\fP 1i
+Specifies an array of points.
+.IP \fInpoints\fP 1i
+Specifies the number of points in the array.
+.IP \fIshape\fP 1i
+Specifies a shape that helps the server to improve performance.
+You can pass 
+.PN Complex , 
+.PN Convex , 
+or 
+.PN Nonconvex .
+.IP \fImode\fP 1i
+Specifies the coordinate mode. 
+You can pass
+.PN CoordModeOrigin
+or
+.PN CoordModePrevious .
+.LP
+.eM
+.PN XFillPolygon 
+fills the region closed by the specified path.
+The path is closed
+automatically if the last point in the list does not coincide with the
+first point.
+.PN XFillPolygon
+does not draw a pixel of the region more than once.
+.PN CoordModeOrigin
+treats all coordinates as relative to the origin,
+and
+.PN CoordModePrevious
+treats all coordinates after the first as relative to the previous point.
+.LP
+Depending on the specified shape, the following occurs: 
+.IP \(bu 5
+If shape is
+.PN Complex , 
+the path may self-intersect. 
+Note that contiguous coincident points in the path are not treated 
+as self-intersection.
+.IP \(bu 5
+If shape is
+.PN Convex , 
+for every pair of points inside the polygon,
+the line segment connecting them does not intersect the path.
+If known by the client,
+specifying 
+.PN Convex 
+can improve performance.  
+If you specify
+.PN Convex 
+for a path that is not convex, 
+the graphics results are undefined.
+.IP \(bu 5
+If shape is
+.PN Nonconvex , 
+the path does not self-intersect, but the shape is not
+wholly convex. 
+If known by the client, 
+specifying 
+.PN Nonconvex 
+instead of
+.PN Complex 
+may improve performance.  
+If you specify
+.PN Nonconvex 
+for a self-intersecting path, the graphics results are undefined.
+.LP
+The fill-rule of the GC controls the filling behavior of 
+self-intersecting polygons.
+.LP
+This function uses these GC components: 
+function, plane-mask, fill-style, fill-rule, subwindow-mode, clip-x-origin, 
+clip-y-origin, and clip-mask.
+It also uses these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+and tile-stipple-y-origin.
+.LP
+.PN XFillPolygon
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+.PN BadMatch ,
+and
+.PN BadValue 
+errors.
+.NH 3
+Filling Single and Multiple Arcs
+.XS
+\*(SN Filling Single and Multiple Arcs 
+.XE
+.LP
+.IN "XFillArc"
+.IN "Arcs" "filling"
+.IN "Filling" "arcs"
+To fill a single arc in a given drawable, use
+.PN XFillArc .
+.IN "XFillArc" "" "@DEF@"
+.sM
+.FD 0
+XFillArc\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^,  \fIx\fP\^, \fIy\fP\^, \fIwidth\fP\^, \fIheight\fP\^, \fIangle1\fP\^, \fIangle2\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.br
+      int \fIangle1\fP\^, \fIangle2\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the drawable \
+and specify the upper-left corner of the bounding rectangle
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.ds Wh , which are the major and minor axes of the arc
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.IP \fIangle1\fP 1i
+Specifies the start of the arc relative to the three-o'clock position
+from the center, in units of degrees * 64.
+.IP \fIangle2\fP 1i
+Specifies the path and extent of the arc relative to the start of the
+arc, in units of degrees * 64.
+.LP
+.eM
+.sp
+To fill multiple arcs in a given drawable, use
+.PN XFillArcs .
+.IN "XFillArcs" "" "@DEF@"
+.sM
+.FD 0
+XFillArcs\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIarcs\fP\^, \fInarcs\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      XArc *\fIarcs\fP\^;
+.br
+      int \fInarcs\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIarcs\fP 1i
+Specifies an array of arcs.
+.IP \fInarcs\fP 1i
+Specifies the number of arcs in the array.
+.LP
+.eM
+For each arc, 
+.PN XFillArc
+or
+.PN XFillArcs
+fills the region closed by the infinitely thin path
+described by the specified arc and, depending on the 
+arc-mode specified in the GC, one or two line segments. 
+For 
+.PN ArcChord , 
+the single line segment joining the endpoints of the arc is used.  
+For 
+.PN ArcPieSlice ,
+the two line segments joining the endpoints of the arc with the center
+point are used.  
+.PN XFillArcs
+fills the arcs in the order listed in the array.  
+For any given arc,  
+.PN XFillArc
+and
+.PN XFillArcs
+do not draw a pixel more than once.  
+If regions intersect, 
+the intersecting pixels are drawn multiple times.
+.LP
+Both functions use these GC components: 
+function, plane-mask, fill-style, arc-mode, subwindow-mode, clip-x-origin, 
+clip-y-origin, and clip-mask.
+They also use these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+and tile-stipple-y-origin.
+.LP
+.PN XFillArc
+and
+.PN XFillArcs
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.NH 2
+Font Metrics
+.XS
+\*(SN Font Metrics 
+.XE
+.LP
+.IN "Font"
+A font is a graphical description of a set of characters that are used to 
+increase efficiency whenever a set of small, similar sized patterns are 
+repeatedly used.
+.LP
+This section discusses how to:
+.IP \(bu 5
+Load and free fonts
+.IP \(bu 5
+Obtain and free font names
+.IP \(bu 5
+Compute character string sizes
+.IP \(bu 5
+Compute logical extents
+.IP \(bu 5
+Query character string sizes
+.LP
+The X server loads fonts whenever a program requests a new font.
+The server can cache fonts for quick lookup.
+Fonts are global across all screens in a server.
+Several levels are possible when dealing with fonts.
+Most applications simply use 
+.PN XLoadQueryFont
+to load a font and query the font metrics.
+.LP
+Characters in fonts are regarded as masks.
+Except for image text requests,
+the only pixels modified are those in which bits are set to 1 in the character.
+This means that it makes sense to draw text using stipples or tiles
+(for example, many menus gray-out unusable entries).
+.LP
+.sM
+The
+.PN XFontStruct
+structure contains all of the information for the font
+and consists of the font-specific information as well as
+a pointer to an array of
+.PN XCharStruct
+structures for the
+characters contained in the font.
+The
+.PN XFontStruct ,
+.PN XFontProp ,
+and
+.PN XCharStruct
+structures contain:
+.LP
+.IN "XCharStruct" "" "@DEF@"
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	short lbearing;	/* origin to left edge of raster */
+	short rbearing;	/* origin to right edge of raster */
+	short width;	/* advance to next char's origin */
+	short ascent;	/* baseline to top edge of raster */
+	short descent;	/* baseline to bottom edge of raster */
+	unsigned short attributes;	/* per char flags (not predefined) */
+} XCharStruct;
+.De
+.LP
+.IN "XFontProp" "" "@DEF@"
+.Ds 0
+.TA .5i 1i 3i
+.ta .5i 1i 3i
+typedef struct {
+	Atom	name;
+	unsigned long card32;
+} XFontProp;
+.De
+.LP
+.IN "XChar2b" "" "@DEF@"
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {	/* normal 16 bit characters are two bytes */
+    unsigned char byte1;
+    unsigned char byte2;
+} XChar2b;
+.De
+.LP
+.IN "XFontStruct" "" "@DEF@"
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	XExtData *ext_data;	/* hook for extension to hang data */
+	Font fid;	/* Font id for this font */
+	unsigned direction;	/* hint about the direction font is painted */
+	unsigned min_char_or_byte2;	/* first character */
+	unsigned max_char_or_byte2;	/* last character */
+	unsigned min_byte1;	/* first row that exists */
+	unsigned max_byte1;	/* last row that exists */
+	Bool all_chars_exist;	/* flag if all characters have nonzero size */
+	unsigned default_char;	/* char to print for undefined character */
+	int n_properties;	/* how many properties there are */
+	XFontProp *properties;	/* pointer to array of additional properties */
+	XCharStruct min_bounds;	/* minimum bounds over all existing char */
+	XCharStruct max_bounds;	/* maximum bounds over all existing char */
+	XCharStruct *per_char;	/* first_char to last_char information */
+	int ascent;	/* logical extent above baseline for spacing */
+	int descent;	/* logical descent below baseline for spacing */
+} XFontStruct;
+.De
+.LP
+.eM
+X supports single byte/character, two bytes/character matrix,
+and 16-bit character text operations.
+Note that any of these forms can be used with a font, but a
+single byte/character text request can only specify a single byte
+(that is, the first row of a 2-byte font).
+You should view 2-byte fonts as a two-dimensional matrix of defined
+characters: byte1 specifies the range of defined rows and
+byte2 defines the range of defined columns of the font.
+Single byte/character fonts have one row defined, and the byte2 range
+specified in the structure defines a range of characters.
+.LP
+The bounding box of a character is defined by the 
+.PN XCharStruct 
+of that character.
+When characters are absent from a font,
+the default_char is used.
+When fonts have all characters of the same size,
+only the information in the
+.PN XFontStruct
+min and max bounds are used.
+.LP
+The members of the 
+.PN XFontStruct 
+have the following semantics:
+.IP \(bu 5
+The direction member can be either 
+.PN FontLeftToRight 
+or 
+.PN FontRightToLeft . 
+It is just a hint as to whether most 
+.PN XCharStruct 
+elements 
+have a positive 
+.Pn ( FontLeftToRight ) 
+or a negative 
+.Pn ( FontRightToLeft )
+character width 
+metric.
+The core protocol defines no support for vertical text.
+.IP \(bu 5
+If the min_byte1 and max_byte1 members are both zero, min_char_or_byte2
+specifies the linear character index corresponding to the first element
+of the per_char array, and max_char_or_byte2 specifies the linear character
+index of the last element.
+.IP
+If either min_byte1 or max_byte1 are nonzero, both
+min_char_or_byte2 and max_char_or_byte2 are less than 256, 
+and the 2-byte character index values corresponding to the
+per_char array element N (counting from 0) are:
+.IP
+.nf
+	byte1 = N/D + min_byte1
+.br
+	byte2 = N\\D + min_char_or_byte2
+.IP
+.fi
+where:
+.IP
+.nf
+        D = max_char_or_byte2 \- min_char_or_byte2 + 1
+        / = integer division
+        \\ = integer modulus
+.fi
+.IP \(bu 5
+If the per_char pointer is NULL, 
+all glyphs between the first and last character indexes
+inclusive have the same information,
+as given by both min_bounds and max_bounds.
+.IP \(bu 5
+If all_chars_exist is 
+.PN True ,
+all characters in the per_char array have nonzero bounding boxes.
+.IP \(bu 5
+The default_char member specifies the character that will be used when an
+undefined or nonexistent character is printed.  
+The default_char is a 16-bit character (not a 2-byte character).
+For a font using 2-byte matrix format, 
+the default_char has byte1 in the most-significant byte
+and byte2 in the least significant byte.
+If the default_char itself specifies an undefined or nonexistent character, 
+no printing is performed for an undefined or nonexistent character.
+.IP \(bu 5
+The min_bounds and max_bounds members contain the most extreme values of
+each individual 
+.PN XCharStruct 
+component over all elements of this array
+(and ignore nonexistent characters).
+The bounding box of the font (the smallest
+rectangle enclosing the shape obtained by superimposing all of the
+characters at the same origin [x,y]) has its upper-left coordinate at:
+.Ds
+	[x + min_bounds.lbearing, y \- max_bounds.ascent]
+.De
+.IP
+Its width is:
+.Ds
+	max_bounds.rbearing \- min_bounds.lbearing
+.De
+.IP
+Its height is:
+.Ds
+	max_bounds.ascent + max_bounds.descent
+.De
+.IP \(bu 5
+The ascent member is the logical extent of the font above the baseline that is
+used for determining line spacing.
+Specific characters may extend beyond
+this.
+.IP \(bu 5
+The descent member is the logical extent of the font at or below the
+baseline that is used for determining line spacing.
+Specific characters may extend beyond this.
+.IP \(bu 5
+If the baseline is at Y-coordinate y,
+the logical extent of the font is inclusive between the Y-coordinate 
+values (y \- font.ascent) and (y + font.descent \- 1).
+Typically,
+the minimum interline spacing between rows of text is given
+by ascent + descent.
+.LP
+For a character origin at [x,y],
+the bounding box of a character (that is, 
+the smallest rectangle that encloses the character's shape)
+described in terms of 
+.PN XCharStruct 
+components is a rectangle with its upper-left corner at:
+.LP
+.Ds
+[x + lbearing, y \- ascent]
+.De
+.LP
+Its width is:
+.LP
+.Ds
+rbearing \- lbearing
+.De
+.LP
+Its height is:
+.LP
+.Ds
+ascent + descent
+.De
+.LP
+The origin for the next character is defined to be:
+.LP
+.Ds
+[x + width, y]
+.De
+.LP
+The lbearing member defines the extent of the left edge of the character ink
+from the origin.
+The rbearing member defines the extent of the right edge of the character ink
+from the origin.
+The ascent member defines the extent of the top edge of the character ink
+from the origin.
+The descent member defines the extent of the bottom edge of the character ink
+from the origin.
+The width member defines the logical width of the character.
+.LP
+Note that the baseline (the y position of the character origin) 
+is logically viewed as being the scanline just below nondescending characters. 
+When descent is zero,
+only pixels with Y-coordinates less than y are drawn,
+and the origin is logically viewed as being coincident with the left edge of
+a nonkerned character. 
+When lbearing is zero,
+no pixels with X-coordinate less than x are drawn.
+Any of the
+.PN XCharStruct
+metric members could be negative.
+If the width is negative,
+the next character will be placed to the left of the current origin.
+.LP
+The X protocol does not define the interpretation of the attributes member 
+in the
+.PN XCharStruct
+structure.
+A nonexistent character is represented with all members of its
+.PN XCharStruct
+set to zero.
+.LP
+A font is not guaranteed to have any properties.
+The interpretation of the property value (for example, long or unsigned long)
+must be derived from \fIa priori\fP knowledge of the property. 
+A basic set of font properties is specified in the X Consortium standard
+\fIX Logical Font Description Conventions\fP.
+.NH 3
+Loading and Freeing Fonts
+.XS
+\*(SN Loading and Freeing Fonts 
+.XE
+.LP
+Xlib provides functions that you can use to load fonts, get font information,
+unload fonts, and free font information.
+.IN "Fonts" "getting information"
+.IN "Fonts" "unloading"
+.IN "Fonts" "freeing font information"
+A few font functions use a 
+.PN GContext 
+resource ID or a font ID interchangeably.
+.LP
+.sp
+To load a given font, use
+.PN XLoadFont .
+.IN "XLoadFont" "" "@DEF@"
+.sM
+.FD 0
+Font XLoadFont\^(\^\fIdisplay\fP, \fIname\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIname\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIname\fP 1i
+Specifies the name of the font,
+which is a null-terminated string.
+.LP
+.eM
+The
+.PN XLoadFont
+function loads the specified font and returns its associated font ID.
+If the font name is not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+When the characters ``?'' and ``*'' are used in a font name, a
+pattern match is performed and any matching font is used.
+In the pattern, 
+the ``?'' character will match any single character, 
+and the ``*'' character will match any number of characters.
+A structured format for font names is specified in the X Consortium standard 
+\fIX Logical Font Description Conventions\fP.
+If 
+.PN XLoadFont
+was unsuccessful at loading the specified font, 
+a 
+.PN BadName 
+error results.
+Fonts are not associated with a particular screen 
+and can be stored as a component
+of any GC.
+When the font is no longer needed, call 
+.PN XUnloadFont .
+.LP
+.PN XLoadFont
+can generate
+.PN BadAlloc
+and
+.PN BadName 
+errors.
+.LP
+.sp
+To return information about an available font, use
+.PN XQueryFont .
+.IN "XQueryFont" "" "@DEF@"
+.sM
+.FD 0
+XFontStruct *XQueryFont\^(\^\fIdisplay\fP, \fIfont_ID\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XID \fIfont_ID\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIfont_ID\fP 1i
+Specifies the font ID or the 
+.PN GContext
+ID.
+.LP
+.eM
+The
+.PN XQueryFont
+function returns a pointer to the
+.PN XFontStruct
+structure, which contains information associated with the font.
+You can query a font or the font stored in a GC.
+The font ID stored in the 
+.PN XFontStruct
+structure will be the 
+.PN GContext 
+ID, and you need to be careful when using this ID in other functions
+(see
+.PN XGContextFromGC ).
+If the font does not exist,
+.PN XQueryFont
+returns NULL.
+To free this data, use
+.PN XFreeFontInfo .
+.LP
+.sp
+To perform a
+.PN XLoadFont
+and
+.PN XQueryFont
+in a single operation, use
+.PN XLoadQueryFont .
+.IN "XLoadQueryFont" "" "@DEF@"
+.sM
+.FD 0
+XFontStruct *XLoadQueryFont\^(\^\fIdisplay\fP, \fIname\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIname\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIname\fP 1i
+Specifies the name of the font,
+which is a null-terminated string.
+.LP
+.eM
+The
+.PN XLoadQueryFont
+function provides the most common way for accessing a font.
+.PN XLoadQueryFont
+both opens (loads) the specified font and returns a pointer to the
+appropriate
+.PN XFontStruct
+structure.
+If the font name is not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+If the font does not exist,
+.PN XLoadQueryFont
+returns NULL.
+.LP
+.PN XLoadQueryFont
+can generate a
+.PN BadAlloc 
+error.
+.LP
+.sp
+To unload the font and free the storage used by the font structure
+that was allocated by
+.PN XQueryFont
+or
+.PN XLoadQueryFont ,
+use
+.PN XFreeFont .
+.IN "XFreeFont" "" "@DEF@"
+.sM
+.FD 0
+XFreeFont\^(\^\fIdisplay\fP, \fIfont_struct\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XFontStruct *\fIfont_struct\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIfont_struct\fP 1i
+Specifies the storage associated with the font.
+.LP
+.eM 
+The
+.PN XFreeFont
+function deletes the association between the font resource ID and the specified 
+font and frees the
+.PN XFontStruct
+structure.
+The font itself will be freed when no other resource references it.
+The data and the font should not be referenced again.
+.LP
+.PN XFreeFont
+can generate a
+.PN BadFont 
+error.
+.LP
+.sp
+To return a given font property, use
+.PN XGetFontProperty .
+.IN "XGetFontProperty" "" "@DEF@"
+.sM
+.FD 0
+Bool XGetFontProperty\^(\^\fIfont_struct\fP\^, \^\fIatom\fP\^, \^\fIvalue_return\fP\^)
+.br
+      XFontStruct *\fIfont_struct\fP\^;
+.br
+      Atom \fIatom\fP\^;
+.br
+      unsigned long *\fIvalue_return\fP\^;
+.FN
+.IP \fIfont_struct\fP 1i
+Specifies the storage associated with the font.
+.IP \fIatom\fP 1i
+Specifies the atom for the property name you want returned.
+.IP \fIvalue_return\fP 1i
+Returns the value of the font property.
+.LP
+.eM
+Given the atom for that property,
+the
+.PN XGetFontProperty
+function returns the value of the specified font property. 
+.PN XGetFontProperty
+also returns 
+.PN False
+if the property was not defined or 
+.PN True
+if it was defined.
+A set of predefined atoms exists for font properties,
+which can be found in
+.hN X11/Xatom.h .
+This set contains the standard properties associated with
+a font.
+Although it is not guaranteed,
+it is likely that the predefined font properties will be present.
+.LP
+.sp
+To unload a font that was loaded by
+.PN XLoadFont , 
+use
+.PN XUnloadFont .
+.IN "XUnloadFont" "" "@DEF@"
+.sM
+.FD 0
+XUnloadFont\^(\^\fIdisplay\fP, \fIfont\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Font \fIfont\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIfont\fP 1i
+Specifies the font.
+.LP
+.eM
+The
+.PN XUnloadFont
+function deletes the association between the font resource ID and the specified font.
+The font itself will be freed when no other resource references it.
+The font should not be referenced again.
+.LP
+.PN XUnloadFont
+can generate a
+.PN BadFont 
+error.
+.NH 3
+Obtaining and Freeing Font Names and Information
+.XS
+\*(SN Obtaining and Freeing Font Names and Information
+.XE
+.LP
+You obtain font names and information by matching a wildcard specification
+when querying a font type for a list of available sizes and so on.
+.LP
+.sp
+To return a list of the available font names, use
+.PN XListFonts .
+.IN "XListFonts" "" "@DEF@"
+.sM
+.FD 0
+char **XListFonts\^(\^\fIdisplay\fP, \fIpattern\fP\^, \fImaxnames\fP, \fIactual_count_return\fP\^)
+.br
+      Display *\^\fIdisplay\fP\^;
+.br
+      char *\^\fIpattern\fP\^;
+.br
+      int \fImaxnames\fP\^;
+.br
+      int *\^\fIactual_count_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIpattern\fP 1i
+Specifies the null-terminated pattern string that can contain wildcard 
+characters.
+.IP \fImaxnames\fP 1i
+Specifies the maximum number of names to be returned.
+.IP \fIactual_count_return\fP 1i
+Returns the actual number of font names.
+.LP
+.eM
+The
+.PN XListFonts
+function returns an array of available font names 
+(as controlled by the font search path; see
+.PN XSetFontPath )
+that match the string you passed to the pattern argument.
+The pattern string can contain any characters,
+but each asterisk (*) is a wildcard for any number of characters,
+and each question mark (?) is a wildcard for a single character.
+If the pattern string is not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+Each returned string is null-terminated.
+If the data returned by the server is in the Latin Portable Character Encoding,
+then the returned strings are in the Host Portable Character Encoding.
+Otherwise, the result is implementation-dependent.
+If there are no matching font names,
+.PN XListFonts
+returns NULL.
+The client should call
+.PN XFreeFontNames
+when finished with the result to free the memory.
+.LP
+.sp
+To free a font name array, use
+.PN XFreeFontNames .
+.IN "XFreeFontNames" "" "@DEF@"
+.sM
+.FD 0
+XFreeFontNames\^(\^\fIlist\fP\^)
+.br
+      char *\fIlist\fP\^[\^]\^;
+.FN
+.IP \fIlist\fP 1i
+Specifies the array of strings you want to free.
+.LP
+.eM
+The
+.PN XFreeFontNames
+function frees the array and strings returned by
+.PN XListFonts 
+or
+.PN XListFontsWithInfo .
+.LP
+.sp
+To obtain the names and information about available fonts, use
+.PN XListFontsWithInfo .
+.IN "XListFontsWithInfo" "" "@DEF@"
+.sM
+.FD 0
+char **XListFontsWithInfo\^(\^\fIdisplay\fP, \fIpattern\fP, \fImaxnames\fP, \fIcount_return\fP, \fIinfo_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      char *\fIpattern\fP\^;
+.br
+      int \fImaxnames\fP\^;
+.br
+      int *\fIcount_return\fP\^;
+.br
+      XFontStruct **\fIinfo_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIpattern\fP 1i
+Specifies the null-terminated pattern string that can contain wildcard 
+characters.
+.IP \fImaxnames\fP 1i
+Specifies the maximum number of names to be returned.
+.IP \fIcount_return\fP 1i
+Returns the actual number of matched font names.
+.IP \fIinfo_return\fP 1i
+Returns the font information.
+.LP
+.eM
+The
+.PN XListFontsWithInfo
+function returns a list of font names that match the specified pattern and their
+associated font information.
+The list of names is limited to size specified by maxnames.
+The information returned for each font is identical to what
+.PN XLoadQueryFont
+would return except that the per-character metrics are not returned.
+The pattern string can contain any characters,
+but each asterisk (*) is a wildcard for any number of characters,
+and each question mark (?) is a wildcard for a single character.
+If the pattern string is not in the Host Portable Character Encoding,
+the result is implementation-dependent.
+Use of uppercase or lowercase does not matter.
+Each returned string is null-terminated.
+If the data returned by the server is in the Latin Portable Character Encoding,
+then the returned strings are in the Host Portable Character Encoding.
+Otherwise, the result is implementation-dependent.
+If there are no matching font names,
+.PN XListFontsWithInfo
+returns NULL.
+.LP
+To free only the allocated name array,
+the client should call
+.PN XFreeFontNames .
+To free both the name array and the font information array
+or to free just the font information array,
+the client should call
+.PN XFreeFontInfo .
+.LP
+.sp
+To free font structures and font names, use
+.PN XFreeFontInfo .
+.IN "XFreeFontInfo" "" "@DEF@"
+.sM
+.FD 0
+XFreeFontInfo(\^\fInames\fP, \fIfree_info\fP, \fIactual_count\fP\^)
+.br
+      char **\fInames\fP\^;
+.br
+      XFontStruct *\fIfree_info\fP;
+.br
+      int \fIactual_count\fP\^;
+.FN
+.IP \fInames\fP 1i
+Specifies the list of font names.
+
+.IP \fIfree_info\fP 1i
+Specifies the font information.
+
+.IP \fIactual_count\fP 1i
+Specifies the actual number of font names.
+
+.LP
+.eM
+The
+.PN XFreeFontInfo
+function frees a font structure or an array of font structures
+and optionally an array of font names.
+If NULL is passed for names, no font names are freed.
+If a font structure for an open font (returned by
+.PN XLoadQueryFont )
+is passed, the structure is freed,
+but the font is not closed; use
+.PN XUnloadFont
+to close the font.
+.NH 3
+Computing Character String Sizes
+.XS
+\*(SN Computing Character String Sizes 
+.XE
+.LP
+Xlib provides functions that you can use to compute the width,
+the logical extents, 
+and the server information about 8-bit and 2-byte text strings.
+.IN "XTextWidth"
+.IN "XTextWidth16"
+The width is computed by adding the character widths of all the characters.
+It does not matter if the font is an 8-bit or 2-byte font.
+These functions return the sum of the character metrics in pixels.
+.LP
+.sp
+To determine the width of an 8-bit character string, use
+.PN XTextWidth .
+.IN "XTextWidth" "" "@DEF@"
+.sM
+.FD 0
+int XTextWidth\^(\^\fIfont_struct\fP\^, \fIstring\fP, \fIcount\fP\^)
+.br
+      XFontStruct *\fIfont_struct\fP\^;
+.br
+      char *\fIstring\fP\^;
+.br
+      int \fIcount\fP\^;
+.FN
+.IP \fIfont_struct\fP 1i
+Specifies the font used for the width computation.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fIcount\fP 1i
+Specifies the character count in the specified string.
+.LP
+.eM
+.sp
+To determine the width of a 2-byte character string, use
+.PN XTextWidth16 .
+.IN "XTextWidth16" "" "@DEF@"
+.sM
+.FD 0
+int XTextWidth16\^(\^\fIfont_struct\fP\^, \fIstring\fP, \fIcount\fP\^)
+.br
+      XFontStruct *\fIfont_struct\fP\^;
+.br
+      XChar2b *\fIstring\fP\^;
+.br
+      int \fIcount\fP\^;
+.FN
+.IP \fIfont_struct\fP 1i
+Specifies the font used for the width computation.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fIcount\fP 1i
+Specifies the character count in the specified string.
+.LP
+.eM
+.NH 3
+Computing Logical Extents
+.XS
+\*(SN Computing Logical Extents 
+.XE
+.LP
+To compute the bounding box of an 8-bit character string in a given font, use
+.PN XTextExtents .
+.IN "XTextExtents" "" "@DEF@"
+.sM
+.FD 0
+XTextExtents\^(\^\fIfont_struct\fP\^, \fIstring\fP\^, \fInchars\fP\^, \
+\fIdirection_return\fP, \fIfont_ascent_return\fP,
+.br
+              \fIfont_descent_return\fP, \fIoverall_return\fP\^)
+.br
+      XFontStruct *\fIfont_struct\fP\^;
+.br
+      char *\fIstring\fP\^;
+.br
+      int \fInchars\fP\^;
+.br
+      int *\fIdirection_return\fP\^;
+.br
+      int *\fIfont_ascent_return\fP, *\fIfont_descent_return\fP\^;
+.br
+      XCharStruct *\fIoverall_return\fP\^;
+
+.FN
+.IP \fIfont_struct\fP 1i
+Specifies the 
+.PN XFontStruct 
+structure.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fInchars\fP 1i
+Specifies the number of characters in the character string.
+.IP \fIdirection_return\fP 1i
+Returns the value of the direction hint
+.Pn ( FontLeftToRight
+or
+.PN FontRightToLeft ).
+.IP \fIfont_ascent_return\fP 1i
+Returns the font ascent.
+.IP \fIfont_descent_return\fP 1i
+Returns the font descent.
+.IP \fIoverall_return\fP 1i
+Returns the overall size in the specified
+.PN XCharStruct 
+structure.
+.LP
+.eM
+.sp
+To compute the bounding box of a 2-byte character string in a given font, use
+.PN XTextExtents16 .
+.IN "XTextExtents16" "" "@DEF@"
+.sM
+.FD 0
+XTextExtents16\^(\^\fIfont_struct\fP\^, \fIstring\fP\^, \fInchars\fP\^, \
+\fIdirection_return\fP, \fIfont_ascent_return\fP, 
+.br
+                \fIfont_descent_return\fP, \fIoverall_return\fP\^)
+.br
+      XFontStruct *\fIfont_struct\fP\^;
+.br
+      XChar2b *\fIstring\fP\^;
+.br
+      int \fInchars\fP\^;
+.br
+      int *\fIdirection_return\fP\^;
+.br
+      int *\fIfont_ascent_return\fP, *\fIfont_descent_return\fP\^;
+.br
+      XCharStruct *\fIoverall_return\fP\^;
+
+.FN
+.IP \fIfont_struct\fP 1i
+Specifies the 
+.PN XFontStruct 
+structure.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fInchars\fP 1i
+Specifies the number of characters in the character string.
+.IP \fIdirection_return\fP 1i
+Returns the value of the direction hint
+.Pn ( FontLeftToRight
+or
+.PN FontRightToLeft ).
+.IP \fIfont_ascent_return\fP 1i
+Returns the font ascent.
+.IP \fIfont_descent_return\fP 1i
+Returns the font descent.
+.IP \fIoverall_return\fP 1i
+Returns the overall size in the specified
+.PN XCharStruct 
+structure.
+.LP
+.eM
+The
+.PN XTextExtents
+and
+.PN XTextExtents16
+functions 
+perform the size computation locally and, thereby,
+avoid the round-trip overhead of
+.PN XQueryTextExtents 
+and
+.PN XQueryTextExtents16 .
+Both functions return an
+.PN XCharStruct
+structure, whose members are set to the values as follows.
+.LP
+The ascent member is set to the maximum of the ascent metrics of all
+characters in the string.
+The descent member is set to the maximum of the descent metrics.
+The width member is set to the sum of the character-width metrics of all
+characters in the string.
+For each character in the string,
+let W be the sum of the character-width metrics of all characters preceding 
+it in the string.
+Let L be the left-side-bearing metric of the character plus W.
+Let R be the right-side-bearing metric of the character plus W.
+The lbearing member is set to the minimum L of all characters in the string.
+The rbearing member is set to the maximum R.
+.LP
+For fonts defined with linear indexing rather than 2-byte matrix indexing,
+each 
+.PN XChar2b 
+structure is interpreted as a 16-bit number with byte1 as the 
+most significant byte.
+If the font has no defined default character,
+undefined characters in the string are taken to have all zero metrics.
+.NH 3
+Querying Character String Sizes
+.XS
+\*(SN Querying Character String Sizes 
+.XE
+.LP
+To query the server for the bounding box of an 8-bit character string in a 
+given font, use 
+.PN XQueryTextExtents .
+.IN "XQueryTextExtents" "" "@DEF@"
+.sM
+.FD 0
+XQueryTextExtents\^(\^\fIdisplay\fP, \fIfont_ID\fP, \fIstring\fP, \
+\fInchars\fP, \fIdirection_return\fP, \fIfont_ascent_return\fP, 
+.br
+                    \fIfont_descent_return\fP, \fIoverall_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XID \fIfont_ID\fP\^;
+.br
+      char *\fIstring\fP\^;
+.br
+      int \fInchars\fP\^;
+.br
+      int *\fIdirection_return\fP\^;
+.br
+      int *\fIfont_ascent_return\fP, *\fIfont_descent_return\fP\^;
+.br
+      XCharStruct *\fIoverall_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIfont_ID\fP 1i
+Specifies either the font ID or the 
+.PN GContext
+ID that contains the font.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fInchars\fP 1i
+Specifies the number of characters in the character string.
+.IP \fIdirection_return\fP 1i
+Returns the value of the direction hint
+.Pn ( FontLeftToRight
+or
+.PN FontRightToLeft ).
+.IP \fIfont_ascent_return\fP 1i
+Returns the font ascent.
+.IP \fIfont_descent_return\fP 1i
+Returns the font descent.
+.IP \fIoverall_return\fP 1i
+Returns the overall size in the specified
+.PN XCharStruct 
+structure.
+.LP
+.eM
+.sp
+To query the server for the bounding box of a 2-byte character string
+in a given font, use
+.PN XQueryTextExtents16 .
+.IN "XQueryTextExtents16" "" "@DEF@"
+.sM
+.FD 0
+XQueryTextExtents16\^(\^\fIdisplay\fP, \fIfont_ID\fP, \fIstring\fP, \
+\fInchars\fP, \fIdirection_return\fP, \fIfont_ascent_return\fP, 
+.br
+                        \fIfont_descent_return\fP, \fIoverall_return\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      XID \fIfont_ID\fP\^;
+.br
+      XChar2b *\fIstring\fP\^;
+.br
+      int \fInchars\fP\^;
+.br
+      int *\fIdirection_return\fP\^;
+.br
+      int *\fIfont_ascent_return\fP, *\fIfont_descent_return\fP\^;
+.br
+      XCharStruct *\fIoverall_return\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIfont_ID\fP 1i
+Specifies either the font ID or the 
+.PN GContext
+ID that contains the font.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fInchars\fP 1i
+Specifies the number of characters in the character string.
+.IP \fIdirection_return\fP 1i
+Returns the value of the direction hint
+.Pn ( FontLeftToRight
+or
+.PN FontRightToLeft ).
+.IP \fIfont_ascent_return\fP 1i
+Returns the font ascent.
+.IP \fIfont_descent_return\fP 1i
+Returns the font descent.
+.IP \fIoverall_return\fP 1i
+Returns the overall size in the specified
+.PN XCharStruct 
+structure.
+.LP
+.eM
+The
+.PN XQueryTextExtents
+and
+.PN XQueryTextExtents16
+functions return the bounding box of the specified 8-bit and 16-bit
+character string in the specified font or the font contained in the
+specified GC.
+These functions query the X server and, therefore, suffer the round-trip
+overhead that is avoided by
+.PN XTextExtents
+and 
+.PN XTextExtents16 .
+Both functions return a
+.PN XCharStruct 
+structure, whose members are set to the values as follows.
+.LP
+The ascent member is set to the maximum of the ascent metrics 
+of all characters in the string.
+The descent member is set to the maximum of the descent metrics.
+The width member is set to the sum of the character-width metrics 
+of all characters in the string.
+For each character in the string,
+let W be the sum of the character-width metrics of all characters preceding
+it in the string.
+Let L be the left-side-bearing metric of the character plus W.
+Let R be the right-side-bearing metric of the character plus W.
+The lbearing member is set to the minimum L of all characters in the string.
+The rbearing member is set to the maximum R.
+.LP
+For fonts defined with linear indexing rather than 2-byte matrix indexing,
+each 
+.PN XChar2b 
+structure is interpreted as a 16-bit number with byte1 as the 
+most significant byte.
+If the font has no defined default character,
+undefined characters in the string are taken to have all zero metrics.
+.LP
+Characters with all zero metrics are ignored.
+If the font has no defined default_char,
+the undefined characters in the string are also ignored.
+.LP
+.PN XQueryTextExtents
+and
+.PN XQueryTextExtents16
+can generate
+.PN BadFont
+and
+.PN BadGC 
+errors.
+.NH 2
+Drawing Text
+.XS
+\*(SN Drawing Text
+.XE
+.LP
+This section discusses how to draw:
+.IP \(bu 5
+Complex text 
+.IP \(bu 5
+Text characters
+.IP \(bu 5
+Image text characters
+.LP
+The fundamental text functions
+.PN XDrawText
+and
+.PN XDrawText16
+use the following structures:
+.LP
+.IN "XTextItem" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	char *chars;	/* pointer to string */
+	int nchars;	/* number of characters */
+	int delta;	/* delta between strings */
+	Font font;	/* Font to print it in, None don't change */
+} XTextItem;
+.De
+.LP
+.IN "XTextItem16" "" "@DEF@"
+.Ds 0
+.TA .5i 3i
+.ta .5i 3i
+typedef struct {
+	XChar2b *chars;	/* pointer to two-byte characters */
+	int nchars;	/* number of characters */
+	int delta;	/* delta between strings */
+	Font font;	/* font to print it in, None don't change */
+} XTextItem16;
+.De
+.LP
+.eM
+If the font member is not
+.PN None ,
+the font is changed before printing and also is stored in the GC.
+If an error was generated during text drawing,
+the previous items may have been drawn.
+The baseline of the characters are drawn starting at the x and y
+coordinates that you pass in the text drawing functions.
+.LP
+For example, consider the background rectangle drawn by
+.PN XDrawImageString .
+If you want the upper-left corner of the background rectangle
+to be at pixel coordinate (x,y), pass the (x,y + ascent)
+as the baseline origin coordinates to the text functions.
+The ascent is the font ascent, as given in the
+.PN XFontStruct
+structure.
+If you want the lower-left corner of the background rectangle
+to be at pixel coordinate (x,y), pass the (x,y \- descent + 1)
+as the baseline origin coordinates to the text functions.
+The descent is the font descent, as given in the
+.PN XFontStruct
+structure.
+.NH 3
+Drawing Complex Text
+.XS
+\*(SN Drawing Complex Text 
+.XE
+.LP
+.IN "Text" "drawing"
+.IN "Drawing" "text items"
+.LP
+To draw 8-bit characters in a given drawable, use
+.PN XDrawText .
+.IN "XDrawText" "" "@DEF@"
+.sM
+.FD 0
+XDrawText\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIitems\fP\^, \fInitems\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      XTextItem *\fIitems\fP\^;
+.br
+      int \fInitems\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the specified drawable \
+and define the origin of the first character
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.IP \fIitems\fP 1i
+Specifies an array of text items.
+.IP \fInitems\fP 1i
+Specifies the number of text items in the array.
+.LP
+.eM
+.sp
+To draw 2-byte characters in a given drawable, use
+.PN XDrawText16 .
+.IN "XDrawText16" "" "@DEF@"
+.sM
+.FD 0
+XDrawText16\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIitems\fP\^, \fInitems\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      XTextItem16 *\fIitems\fP\^;
+.br
+      int \fInitems\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the specified drawable \
+and define the origin of the first character
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.IP \fIitems\fP 1i
+Specifies an array of text items.
+.IP \fInitems\fP 1i
+Specifies the number of text items in the array.
+.LP
+.eM
+The
+.PN XDrawText16
+function is similar to
+.PN XDrawText 
+except that it uses 2-byte or 16-bit characters.
+Both functions allow complex spacing and font shifts between counted strings.
+.LP
+Each text item is processed in turn.
+A font member other than 
+.PN None
+in an item causes the font to be stored in the GC
+and used for subsequent text.  
+A text element delta specifies an additional change
+in the position along the x axis before the string is drawn. 
+The delta is always added to the character origin
+and is not dependent on any characteristics of the font.
+Each character image, as defined by the font in the GC, is treated as an
+additional mask for a fill operation on the drawable.
+The drawable is modified only where the font character has a bit set to 1.
+If a text item generates a
+.PN BadFont
+error, the previous text items may have been drawn.
+.LP
+For fonts defined with linear indexing rather than 2-byte matrix indexing,
+each 
+.PN XChar2b
+structure is interpreted as a 16-bit number with byte1 as the 
+most significant byte.
+.LP
+Both functions use these GC components:
+function, plane-mask, fill-style, font, subwindow-mode, 
+clip-x-origin, clip-y-origin, and clip-mask.
+They also use these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+and tile-stipple-y-origin.
+.LP
+.PN XDrawText
+and
+.PN XDrawText16
+can generate
+.PN BadDrawable ,
+.PN BadFont ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.NH 3
+Drawing Text Characters
+.XS
+\*(SN Drawing Text Characters 
+.XE
+.LP
+.IN "Strings" "drawing"
+.IN "Drawing" "strings"
+To draw 8-bit characters in a given drawable, use
+.PN XDrawString .
+.IN "XDrawString" "" "@DEF@"
+.sM
+.FD 0
+XDrawString\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIstring\fP\^, \fIlength\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      char *\fIstring\fP\^;
+.br
+      int \fIlength\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the specified drawable \
+and define the origin of the first character
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fIlength\fP 1i
+Specifies the number of characters in the string argument.
+.LP
+.eM
+.sp
+To draw 2-byte characters in a given drawable, use
+.PN XDrawString16 .
+.IN "XDrawString16" "" "@DEF@"
+.sM
+.FD 0
+XDrawString16\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIstring\fP\^, \fIlength\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      XChar2b *\fIstring\fP\^;
+.br
+      int \fIlength\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the specified drawable \
+and define the origin of the first character
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fIlength\fP 1i
+Specifies the number of characters in the string argument.
+.LP
+.eM
+Each character image, as defined by the font in the GC, is treated as an
+additional mask for a fill operation on the drawable.
+The drawable is modified only where the font character has a bit set to 1.
+For fonts defined with 2-byte matrix indexing
+and used with
+.PN XDrawString16 ,
+each byte is used as a byte2 with a byte1 of zero.
+.LP
+Both functions use these GC components: 
+function, plane-mask, fill-style, font, subwindow-mode, clip-x-origin, 
+clip-y-origin, and clip-mask.
+They also use these GC mode-dependent components: 
+foreground, background, tile, stipple, tile-stipple-x-origin, 
+and tile-stipple-y-origin.
+.LP
+.PN XDrawString
+and
+.PN XDrawString16
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.NH 3
+Drawing Image Text Characters
+.XS
+\*(SN Drawing Image Text Characters 
+.XE
+.LP
+.IN "Image text" "drawing"
+.IN "Drawing" "image text"
+Some applications, in particular terminal emulators, need to
+print image text in which both the foreground and background bits of
+each character are painted.
+This prevents annoying flicker on many displays.
+.IN "XDrawImageString"
+.IN "XDrawImageString16"
+.LP
+.sp
+To draw 8-bit image text characters in a given drawable, use
+.PN XDrawImageString .
+.IN "XDrawImageString" "" "@DEF@"
+.sM
+.FD 0
+XDrawImageString\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIstring\fP\^, \fIlength\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      char *\fIstring\fP\^;
+.br
+      int \fIlength\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the specified drawable \
+and define the origin of the first character
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fIlength\fP 1i
+Specifies the number of characters in the string argument.
+.LP
+.eM
+.sp
+To draw 2-byte image text characters in a given drawable, use
+.PN XDrawImageString16 .
+.IN "XDrawImageString16" "" "@DEF@"
+.sM
+.FD 0
+XDrawImageString16\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIx\fP\^, \fIy\fP\^, \fIstring\fP\^, \fIlength\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      GC \fIgc\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      XChar2b *\fIstring\fP\^;
+.br
+      int \fIlength\fP\^; 
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.ds Xy , which are relative to the origin of the specified drawable \
+and define the origin of the first character
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.IP \fIstring\fP 1i
+Specifies the character string.
+.IP \fIlength\fP 1i
+Specifies the number of characters in the string argument.
+.LP
+.eM
+The
+.PN XDrawImageString16
+function is similar to
+.PN XDrawImageString 
+except that it uses 2-byte or 16-bit characters.
+Both functions also use both the foreground and background pixels 
+of the GC in the destination.
+.LP
+The effect is first to fill a
+destination rectangle with the background pixel defined in the GC and then
+to paint the text with the foreground pixel.
+The upper-left corner of the filled rectangle is at:
+.LP
+.Ds
+[x, y \- font-ascent]
+.De
+.LP
+The width is:
+.LP
+.Ds
+overall-width
+.De
+.LP
+The height is:
+.LP
+.Ds
+font-ascent + font-descent
+.De
+.LP
+The overall-width, font-ascent, and font-descent
+are as would be returned by 
+.PN XQueryTextExtents 
+using gc and string.
+The function and fill-style defined in the GC are ignored for these functions. 
+The effective function is 
+.PN GXcopy ,
+and the effective fill-style is
+.PN FillSolid .
+.LP
+For fonts defined with 2-byte matrix indexing
+and used with
+.PN XDrawImageString ,
+each byte is used as a byte2 with a byte1 of zero.
+.LP
+Both functions use these GC components: 
+plane-mask, foreground, background, font, subwindow-mode, clip-x-origin, 
+clip-y-origin, and clip-mask.
+.LP
+.PN XDrawImageString
+and
+.PN XDrawImageString16
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+and
+.PN BadMatch 
+errors.
+.LP
+.NH 2
+Transferring Images between Client and Server
+.XS
+\*(SN Transferring Images between Client and Server 
+.XE
+.LP
+Xlib provides functions that you can use to transfer images between a client 
+and the server.
+Because the server may require diverse data formats, 
+Xlib provides an image object that fully describes the data in memory 
+and that provides for basic operations on that data.  
+You should reference the data 
+through the image object rather than referencing the data directly.
+However, some implementations of the Xlib library may efficiently deal with 
+frequently used data formats by replacing
+functions in the procedure vector with special case functions.
+Supported operations include destroying the image, getting a pixel,
+storing a pixel, extracting a subimage of an image, and adding a constant
+to an image (see section 16.8).
+.LP
+All the image manipulation functions discussed in this section make use of 
+the 
+.PN XImage 
+structure,
+which describes an image as it exists in the client's memory.
+.LP
+.IN "XImage" "" "@DEF@"
+.sM
+.Ds 0
+.TA .5i 1i 3i
+.ta .5i 1i 3i
+typedef struct _XImage {
+	int width, height;		/* size of image */
+	int xoffset;		/* number of pixels offset in X direction */
+	int format;		/* XYBitmap, XYPixmap, ZPixmap */
+	char *data;		/* pointer to image data */
+	int byte_order;		/* data byte order, LSBFirst, MSBFirst */
+	int bitmap_unit;		/* quant. of scanline 8, 16, 32 */
+	int bitmap_bit_order;		/* LSBFirst, MSBFirst */
+	int bitmap_pad;		/* 8, 16, 32 either XY or ZPixmap */
+	int depth;		/* depth of image */
+	int bytes_per_line;		/* accelerator to next scanline */
+	int bits_per_pixel;		/* bits per pixel (ZPixmap) */
+	unsigned long red_mask;		/* bits in z arrangement */
+	unsigned long green_mask;
+	unsigned long blue_mask;
+	XPointer obdata;	/* hook for the object routines to hang on */
+	struct funcs {		/* image manipulation routines */
+		struct _XImage *(*create_image)();
+		int (*destroy_image)();
+		unsigned long (*get_pixel)();
+		int (*put_pixel)();
+		struct _XImage *(*sub_image)();
+		int (*add_pixel)();
+	} f;
+} XImage;
+.De
+.LP
+.eM
+.sp
+To initialize the image manipulation routines of an image structure, use
+.PN XInitImage .
+.IN "XInitImage" "" "@DEF@"
+.sM
+.FD 0
+Status XInitImage\^(\^\fIimage\fP\^)
+.br
+      XImage *\fIimage\fP\^;
+.FN
+.IP \fIximage\fP 1i
+Specifies the image.
+.LP
+.eM
+The
+.PN XInitImage
+function initializes the internal image manipulation routines of an
+image structure, based on the values of the various structure members.
+All fields other than the manipulation routines must already be initialized.
+If the bytes_per_line member is zero,
+.PN XInitImage
+will assume the image data is contiguous in memory and set the
+bytes_per_line member to an appropriate value based on the other
+members; otherwise, the value of bytes_per_line is not changed.
+All of the manipulation routines are initialized to functions
+that other Xlib image manipulation functions need to operate on the
+type of image specified by the rest of the structure.
+.LP
+This function must be called for any image constructed by the client
+before passing it to any other Xlib function.
+Image structures created or returned by Xlib do not need to be
+initialized in this fashion.
+.LP
+This function returns a nonzero status if initialization of the
+structure is successful.  It returns zero if it detected some error
+or inconsistency in the structure, in which case the image is not changed.
+.LP
+.sp
+To combine an image with a rectangle of a drawable on the display,
+use
+.PN XPutImage .
+.IN "XPutImage" "" "@DEF@"
+.sM
+.FD 0
+XPutImage\^(\^\fIdisplay\fP, \fId\fP\^, \fIgc\fP\^, \fIimage\fP\^, \fIsrc_x\fP, \fIsrc_y\fP, \fIdest_x\fP\^, \fIdest_y\fP\^, \fIwidth\fP\^, \fIheight\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.br
+        Drawable \fId\fP\^;
+.br
+        GC \fIgc\fP\^;
+.br
+        XImage *\fIimage\fP\^;
+.br
+        int \fIsrc_x\fP\^, \fIsrc_y\fP\^;
+.br
+        int \fIdest_x\fP\^, \fIdest_y\fP\^;
+.br
+        unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.IP \fIgc\fP 1i
+Specifies the GC.
+.IP \fIimage\fP 1i
+Specifies the image you want combined with the rectangle. 
+.IP \fIsrc_x\fP 1i
+Specifies the offset in X from the left edge of the image defined
+by the 
+.PN XImage 
+structure.
+.IP \fIsrc_y\fP 1i
+Specifies the offset in Y from the top edge of the image defined
+by the 
+.PN XImage 
+structure.
+.ds Dx , which are relative to the origin of the drawable \
+and are the coordinates of the subimage
+.IP \fIdest_x\fP 1i
+.br
+.ns
+.IP \fIdest_y\fP 1i
+Specify the x and y coordinates\*(Dx. 
+.ds Wh \ of the subimage, which define the dimensions of the rectangle
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.LP
+.eM
+The
+.PN XPutImage
+function
+combines an image with a rectangle of the specified drawable.
+The section of the image defined by the src_x, src_y, width, and height 
+arguments is drawn on the specified part of the drawable.
+If 
+.PN XYBitmap 
+format is used, the depth of the image must be one,
+or a
+.PN BadMatch 
+error results.
+The foreground pixel in the GC defines the source for the one bits in the image,
+and the background pixel defines the source for the zero bits.
+For 
+.PN XYPixmap 
+and 
+.PN ZPixmap , 
+the depth of the image must match the depth of the drawable,
+or a
+.PN BadMatch
+error results.
+.LP
+If the characteristics of the image (for example, byte_order and bitmap_unit)
+differ from what the server requires,
+.PN XPutImage 
+automatically makes the appropriate
+conversions.
+.LP
+This function uses these GC components: 
+function, plane-mask, subwindow-mode, clip-x-origin, clip-y-origin, 
+and clip-mask.
+It also uses these GC mode-dependent components:
+foreground and background.
+.LP
+.PN XPutImage
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+.PN BadMatch ,
+and
+.PN BadValue 
+errors.
+.LP
+.sp
+To return the contents of a rectangle in a given drawable on the display,
+use
+.PN XGetImage .
+This function specifically supports rudimentary screen dumps.
+.IN "XGetImage" "" "@DEF@"
+.sM
+.FD 0
+XImage *XGetImage\^(\^\fIdisplay\fP, \fId\fP\^, \fIx\fP\^, \fIy\fP\^, \fIwidth\fP\^, \fIheight\fP\^, \fIplane_mask\fP, \fIformat\fP\^)
+.br
+        Display *\fIdisplay\fP\^;
+.br
+        Drawable \fId\fP\^;
+.br
+        int \fIx\fP\^, \fIy\fP\^;
+.br
+        unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.br
+        unsigned long \fIplane_mask\fP\^;
+.br
+        int \fIformat\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.ds Xy , which are relative to the origin of the drawable \
+and define the upper-left corner of the rectangle
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.ds Wh \ of the subimage, which define the dimensions of the rectangle
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.IP \fIplane_mask\fP 1i
+Specifies the plane mask.
+.\" *** JIM: NEED MORE INFO FOR THIS. ***
+.IP \fIformat\fP 1i
+Specifies the format for the image.
+You can pass
+.PN XYPixmap
+or 
+.PN ZPixmap .
+.LP
+.eM
+The
+.PN XGetImage
+function returns a pointer to an
+.PN XImage
+structure.
+This structure provides you with the contents of the specified rectangle of
+the drawable in the format you specify.
+If the format argument is 
+.PN XYPixmap ,
+the image contains only the bit planes you passed to the plane_mask argument.
+If the plane_mask argument only requests a subset of the planes of the
+display, the depth of the returned image will be the number of planes
+requested.
+If the format argument is 
+.PN ZPixmap ,
+.PN XGetImage
+returns as zero the bits in all planes not 
+specified in the plane_mask argument.
+The function performs no range checking on the values in plane_mask and ignores
+extraneous bits.
+.LP
+.PN XGetImage
+returns the depth of the image to the depth member of the
+.PN XImage
+structure.
+The depth of the image is as specified when the drawable was created,
+except when getting a subset of the planes in 
+.PN XYPixmap
+format, when the depth is given by the number of bits set to 1 in plane_mask.
+.LP
+If the drawable is a pixmap, 
+the given rectangle must be wholly contained within the pixmap, 
+or a
+.PN BadMatch
+error results.
+If the drawable is a window, 
+the window must be viewable, 
+and it must be the case that if there were no inferiors or overlapping windows,
+the specified rectangle of the window would be fully visible on the screen
+and wholly contained within the outside edges of the window,
+or a
+.PN BadMatch
+error results.
+Note that the borders of the window can be included and read with
+this request.
+If the window has backing-store, the backing-store contents are
+returned for regions of the window that are obscured by noninferior
+windows. 
+If the window does not have backing-store,
+the returned contents of such obscured regions are undefined.
+The returned contents of visible regions of inferiors
+of a different depth than the specified window's depth are also undefined.
+The pointer cursor image is not included in the returned contents.
+If a problem occurs,
+.PN XGetImage
+returns NULL.
+.LP
+.PN XGetImage
+can generate
+.PN BadDrawable ,
+.PN BadMatch ,
+and
+.PN BadValue 
+errors.
+.sp
+.LP
+To copy the contents of a rectangle on the display
+to a location within a preexisting image structure, use
+.PN XGetSubImage .
+.IN "XGetSubImage" "" "@DEF@"
+.sM
+.FD 0
+XImage *XGetSubImage\^(\^\fIdisplay\fP, \fId\fP\^, \fIx\fP\^, \fIy\fP\^, \fIwidth\fP\^, \fIheight\fP\^, \fIplane_mask\fP, \fIformat\fP\^, \fIdest_image\fP\^, \fIdest_x\fP\^, 
+.br
+                     \fIdest_y\fP\^)
+.br
+      Display *\fIdisplay\fP\^;
+.br
+      Drawable \fId\fP\^;
+.br
+      int \fIx\fP\^, \fIy\fP\^;
+.br
+      unsigned int \fIwidth\fP\^, \fIheight\fP\^;
+.br
+      unsigned long \fIplane_mask\fP\^;
+.br
+      int \fIformat\fP\^;
+.br
+      XImage *\fIdest_image\fP\^;
+.br
+      int \fIdest_x\fP\^, \fIdest_y\fP\^;
+.FN
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fId\fP 1i
+Specifies the drawable. 
+.ds Xy , which are relative to the origin of the drawable \
+and define the upper-left corner of the rectangle
+.IP \fIx\fP 1i
+.br
+.ns
+.IP \fIy\fP 1i
+Specify the x and y coordinates\*(Xy.
+.ds Wh \ of the subimage, which define the dimensions of the rectangle
+.IP \fIwidth\fP 1i
+.br
+.ns
+.IP \fIheight\fP 1i
+Specify the width and height\*(Wh.
+.IP \fIplane_mask\fP 1i
+Specifies the plane mask.
+.\" *** JIM: NEED MORE INFO FOR THIS. ***
+.IP \fIformat\fP 1i
+Specifies the format for the image.
+You can pass
+.PN XYPixmap
+or 
+.PN ZPixmap .
+.IP \fIdest_image\fP 1i
+Specifies the destination image.
+.ds Dx , which are relative to the origin of the destination rectangle, \
+specify its upper-left corner, and determine where the subimage \
+is placed in the destination image
+.IP \fIdest_x\fP 1i
+.br
+.ns
+.IP \fIdest_y\fP 1i
+Specify the x and y coordinates\*(Dx. 
+.LP
+.eM
+The 
+.PN XGetSubImage 
+function updates dest_image with the specified subimage in the same manner as 
+.PN XGetImage . 
+If the format argument is 
+.PN XYPixmap ,
+the image contains only the bit planes you passed to the plane_mask argument.
+If the format argument is 
+.PN ZPixmap ,
+.PN XGetSubImage
+returns as zero the bits in all planes not 
+specified in the plane_mask argument.
+The function performs no range checking on the values in plane_mask and ignores
+extraneous bits.
+As a convenience,
+.PN XGetSubImage
+returns a pointer to the same
+.PN XImage
+structure specified by dest_image.
+.LP
+The depth of the destination
+.PN XImage
+structure must be the same as that of the drawable.
+If the specified subimage does not fit at the specified location
+on the destination image, the right and bottom edges are clipped.
+If the drawable is a pixmap,
+the given rectangle must be wholly contained within the pixmap,
+or a
+.PN BadMatch
+error results.
+If the drawable is a window, 
+the window must be viewable, 
+and it must be the case that if there were no inferiors or overlapping windows,
+the specified rectangle of the window would be fully visible on the screen
+and wholly contained within the outside edges of the window,
+or a
+.PN BadMatch
+error results.
+If the window has backing-store, 
+then the backing-store contents are returned for regions of the window 
+that are obscured by noninferior windows. 
+If the window does not have backing-store, 
+the returned contents of such obscured regions are undefined.
+The returned contents of visible regions of inferiors
+of a different depth than the specified window's depth are also undefined.
+If a problem occurs,
+.PN XGetSubImage
+returns NULL.
+.LP
+.PN XGetSubImage
+can generate
+.PN BadDrawable ,
+.PN BadGC ,
+.PN BadMatch ,
+and
+.PN BadValue 
+errors.
+.bp

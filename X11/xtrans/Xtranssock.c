@@ -229,19 +229,6 @@ static int TRANS(SocketINETClose) (XtransConnInfo ciptr);
 #endif
 
 /*
- * This provides compatibility for apps linked against system libraries
- * that don't have IPv6 support.
- */
-#if defined(IPv6) && defined(AF_INET6)
-static const struct in6_addr local_in6addr_any = IN6ADDR_ANY_INIT;
-#pragma weak in6addr_any = local_in6addr_any
-#ifndef __USLC__
-#pragma weak getaddrinfo
-#endif
-static int haveIPv6 = 1;
-#endif
-
-/*
  * These are some utility function used by the real interface function below.
  */
 
@@ -274,25 +261,21 @@ TRANS(SocketINETGetAddr) (XtransConnInfo ciptr)
 {
 #if defined(IPv6) && defined(AF_INET6)
     struct sockaddr_storage socknamev6;
-#endif
+#else
     struct sockaddr_in socknamev4;
+#endif
     void *socknamePtr;
     SOCKLEN_T namelen;
 
     PRMSG (3,"SocketINETGetAddr(%p)\n", ciptr, 0, 0);
 
 #if defined(IPv6) && defined(AF_INET6)
-    if (haveIPv6)
-    {
-	namelen = sizeof(socknamev6);
-	socknamePtr = &socknamev6;
-    }
-    else
+    namelen = sizeof(socknamev6);
+    socknamePtr = &socknamev6;
+#else
+    namelen = sizeof(socknamev4);
+    socknamePtr = &socknamev4;
 #endif
-    {
-	namelen = sizeof(socknamev4);
-	socknamePtr = &socknamev4;
-    }
 
     bzero(socknamePtr, namelen);
     
@@ -320,15 +303,10 @@ TRANS(SocketINETGetAddr) (XtransConnInfo ciptr)
     }
 
 #if defined(IPv6) && defined(AF_INET6)
-    if (haveIPv6)
-    {
-	ciptr->family = ((struct sockaddr *)socknamePtr)->sa_family;
-    }
-    else
+    ciptr->family = ((struct sockaddr *)socknamePtr)->sa_family;
+#else
+    ciptr->family = socknamev4.sin_family;
 #endif
-    {
-	ciptr->family = socknamev4.sin_family;
-    }
     ciptr->addrlen = namelen;
     memcpy (ciptr->addr, socknamePtr, ciptr->addrlen);
 
@@ -353,7 +331,7 @@ TRANS(SocketINETGetPeerAddr) (XtransConnInfo ciptr)
     SOCKLEN_T namelen;
 
 #if defined(IPv6) && defined(AF_INET6)
-    if (haveIPv6 && ciptr->family == AF_INET6)
+    if (ciptr->family == AF_INET6)
     {
 	namelen = sizeof(socknamev6);
 	socknamePtr = &socknamev6;
@@ -406,14 +384,6 @@ TRANS(SocketOpen) (int i, int type)
     XtransConnInfo	ciptr;
 
     PRMSG (3,"SocketOpen(%d,%d)\n", i, type, 0);
-
-#if defined(IPv6) && defined(AF_INET6)
-    if (getaddrinfo == NULL)
-	haveIPv6 = 0;
-
-    if (!haveIPv6 && Sockettrans2devtab[i].family == AF_INET6)
-	return NULL;
-#endif
 
     if ((ciptr = (XtransConnInfo) xcalloc (
 	1, sizeof(struct _XtransConnInfo))) == NULL)
@@ -1483,7 +1453,7 @@ TRANS(SocketINETConnect) (XtransConnInfo ciptr, char *host, char *port)
 #endif
 
 #if defined(IPv6) && defined(AF_INET6)
-    if (haveIPv6) {
+    {
 	if (addrlist != NULL) {
 	    if (strcmp(host,addrlist->host) || strcmp(port,addrlist->port)) {
 		if (addrlist->firstaddr)
@@ -1625,8 +1595,8 @@ TRANS(SocketINETConnect) (XtransConnInfo ciptr, char *host, char *port)
 		addrlist->addr = addrlist->addr->ai_next;
 	    }
 	} 
-    } else
-#endif
+    }
+#else
     {
 	/*
 	 * Build the socket name.
@@ -1700,6 +1670,7 @@ TRANS(SocketINETConnect) (XtransConnInfo ciptr, char *host, char *port)
 	socketaddr = (struct sockaddr *) &sockname;
 	socketaddrlen = sizeof(sockname);
     }
+#endif
 
     /*
      * Turn on socket keepalive so the client process will eventually
@@ -1750,7 +1721,7 @@ TRANS(SocketINETConnect) (XtransConnInfo ciptr, char *host, char *port)
 
 	if (olderrno == ECONNREFUSED || olderrno == EINTR
 #if defined(IPv6) && defined(AF_INET6)
-	  || (haveIPv6 && ((addrlist->addr->ai_next != NULL) || 
+	  || (((addrlist->addr->ai_next != NULL) ||
 	        (addrlist->addr != addrlist->firstaddr)) &&
                (olderrno == ENETUNREACH || olderrno == EAFNOSUPPORT ||
 		 olderrno == EADDRNOTAVAIL || olderrno == ETIMEDOUT
@@ -1796,7 +1767,7 @@ TRANS(SocketINETConnect) (XtransConnInfo ciptr, char *host, char *port)
     }
 
 #if defined(IPv6) && defined(AF_INET6)
-   if (haveIPv6 && res != 0) { 
+   if (res != 0) {
 	addrlist->addr = addrlist->addr->ai_next;
    }
 #endif
@@ -1820,20 +1791,13 @@ UnixHostReallyLocal (char *host)
 {
     char hostnamebuf[256];
 
-#if defined(IPv6) && defined(AF_INET6)
-    if (getaddrinfo == NULL)
-	haveIPv6 = 0;
-#endif
-
     TRANS(GetHostname) (hostnamebuf, sizeof (hostnamebuf));
 
     if (strcmp (hostnamebuf, host) == 0)
     {
 	return (1);
-    }
+    } else {
 #if defined(IPv6) && defined(AF_INET6)
-    else if (haveIPv6)
-    {
 	struct addrinfo *localhostaddr;
 	struct addrinfo *otherhostaddr;
 	struct addrinfo *i, *j;
@@ -1879,10 +1843,7 @@ UnixHostReallyLocal (char *host)
 	freeaddrinfo(localhostaddr);
 	freeaddrinfo(otherhostaddr);
 	return equiv;
-    }
-#endif
-    else
-    {
+#else
 	/*
 	 * A host may have more than one network address.  If any of the
 	 * network addresses of 'host' (specified to the connect call)
@@ -1951,6 +1912,7 @@ UnixHostReallyLocal (char *host)
 	    i++;
 	}
 	return (equiv);
+#endif
     }
 }
 

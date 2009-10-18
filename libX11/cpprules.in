@@ -25,13 +25,5 @@ CPP_SED_MAGIC = $(SED) -e '/^\#  *[0-9][0-9]*  *.*$$/d' \
                        -e 's,X11_LOCALEDATADIR,$(X11_LOCALEDATADIR),g' \
                        -e '/\@\@$$/s/\@\@$$/\\/'
 
-
-if HAVE_AM_SILENT_RULES
-# Support for automake 1.11 AM_SILENT_RULES
-cpp_verbose = $(cpp_verbose_$(V))
-cpp_verbose_ = $(cpp_verbose_$(AM_DEFAULT_VERBOSITY))
-cpp_verbose_0 = @echo "  CPP   " $@;
-endif HAVE_AM_SILENT_RULES
-
 .pre:
-	$(cpp_verbose)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
+	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $< | $(CPP_SED_MAGIC) > $@

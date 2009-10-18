@@ -1,6 +1,10 @@
 /* Copyright (C) 2003-2006 Jamey Sharp, Josh Triplett
  * This file is licensed under the MIT license. See the file COPYING. */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "Xlibint.h"
 #include "locking.h"
 #include "Xprivate.h"
@@ -12,6 +16,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
 
 static void return_socket(void *closure)
 {
