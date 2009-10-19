@@ -351,6 +351,13 @@ typedef void (*RootlessCopyWindowProc)
     (RootlessFrameID wid, int dstNrects, const BoxRec *dstRects,
      int dx, int dy);
 
+
+typedef void (*RootlessHideWindowProc)
+     (RootlessFrameID wid);
+
+typedef void (*RootlessUpdateColormapProc)
+     (RootlessFrameID wid, ScreenPtr pScreen);
+
 /*
  * Rootless implementation function list
  */
@@ -374,6 +381,8 @@ typedef struct _RootlessFrameProcs {
     /* Optional frame functions */
     RootlessSwitchWindowProc SwitchWindow;
     RootlessDoReorderWindowProc DoReorderWindow;
+    RootlessHideWindowProc HideWindow;
+    RootlessUpdateColormapProc UpdateColormap;
 
     /* Optional acceleration functions */
     RootlessCopyBytesProc CopyBytes;

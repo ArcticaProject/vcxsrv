@@ -1,3 +1,242 @@
+commit 37b5f41ccea3473b830cc0c4afb5d609e47004cb
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Oct 19 11:48:05 2009 +1000
+
+    xserver 1.7.0.902
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 37f857eb4cd30c6499a2735f59ddec87d1b7de57
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Oct 19 11:50:56 2009 +1000
+
+    Revert "Xming: Remove unused X-boxed icon resource"
+    
+    Breaks make dist.
+    make[2]: *** No rule to make target `X-boxed.ico', needed by `distdir'.  Stop.
+    
+    This reverts commit 2969eaa88c4422fedf1b069e6fe055904b233db2.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 650ac84a0cf62c139fa6254fb7a44157d551e8e3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 16 22:29:26 2009 -0700
+
+    Fix segfault when -extension XKEYBOARD is passed on the command line
+    
+    Users should be told they can't disable XKB or XInput via error messages,
+    not core dumps.
+    
+    Reported by T`2 on #xorg irc
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 2bd71a6db241924bd17ac9dd4aa38e7e563ee5c1)
+
+commit a8bfbd81b8aaac31b87d15257273d82174912b37
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Oct 15 13:50:36 2009 +1000
+
+    kdrive: fix Xfake build by removing the old keysym stuff
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit a32b2420d85f076282721afe005e85fff7d9837e)
+
+commit 64faf44f36b09780737c06781dadcf8fcbcaf836
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 01:53:42 2009 -0500
+
+    Remove duplicates from Xfake_LDADD
+    
+    KDRIVE_LIBS already contains the libs in XSERVER_LIBS, so linking against
+    both leads to multiple-definition errors when linking on Cygwin.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit a2f27b97900f335cd5f6a3e5bf8fa1d0ec9eb9ac)
+
+commit 4b419c1651bbe7fbd3e87c3d71ba9fe642672ca2
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 01:53:41 2009 -0500
+
+    Fix XWIN_LIBS definition
+    
+    Move XWIN_LIBS from XWIN=auto conditional to XWIN=yes conditional,
+    otherwise the build breaks if an explicit --enable-xwin is passed to
+    configure.
+    
+    Also remove obsolete library values from the definition.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit ed4c6bc79a797830895ad6c3601318b2d1c4bdcb)
+
+commit 7d5282dd597eb9353ca7a7697604d81228254d4a
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 01:53:40 2009 -0500
+
+    Install SDK pkg-config and aclocal files only if XORG
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit bcd0c02cfd0707b5f8b1ca91dfbe4412df2c643e)
+
+commit 1b88e4eb2e605fd1d3adffaf38dc40be6a28970d
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Tue Jul 21 02:23:21 2009 +0100
+
+    Cygwin/X: Make -logverbose affect the verbosity of logging to the log file
+    
+    Make -logverbose affect the verbosity of logging to the log file, not just the
+    verbosity of logging to the console
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+    (cherry picked from commit 1b0dfd8dee639870725d3bd9b70c3bd589d09e5a)
+
+commit 2969eaa88c4422fedf1b069e6fe055904b233db2
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Fri Sep 25 17:49:59 2009 +0100
+
+    Xming: Remove unused X-boxed icon resource
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    (cherry picked from commit 78c87bdad1feab91c2a39e01513b4b0826665f06)
+
+commit 92253b0f2028c6c243be5f444b59568b0c15ae1f
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Fri Sep 25 17:46:40 2009 +0100
+
+    Xming: update .rc file
+    
+    Remove the obsolete DISCARDABLE flag in the .rc file
+    Replace the obsolete DIALOG resource with DIALOGEX in the .rc file
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    (cherry picked from commit fdf7f7e95c852734c620f58df408a324902172cf)
+
+commit 237bc0c2558bdda5c7ec44cbc86a65af21344ba2
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sat Oct 3 13:07:23 2009 +0100
+
+    Cygwin/X: Don't build rootless extension code unless we need it
+    
+    Only try to build rootless extension code if we really need it (i.e. mwextwm mode is enabled)
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    (cherry picked from commit 5ddfd9d0898629627e8ab10e65ea2e082be3af37)
+
+commit c163126f06720a4bca1d073a2fb6d138ca6f0f00
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Tue Oct 13 20:14:58 2009 -0500
+
+    dolt: add Cygwin to supported platforms
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 25344ba7f7845654364d62bf15322b3b79465bd9)
+
+commit 07229cd6da6a9b7acedb994275fed5b512fe48b1
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Tue Oct 13 20:42:14 2009 -0400
+
+    [alpha] assume we have __NR_pciconfig_iobase
+    
+    The code path if we didn't have support has been broken since before we
+    switched to git.
+    
+    The pciconfig_iobase syscall has been supported since 2000.
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    (cherry picked from commit 5e762f0e2f203b5121a3de3b9af3c8981b31a77f)
+
+commit 13c5e2fe9c7ce82dfdc026a392327b115d8c6a15
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Tue Oct 13 20:40:59 2009 -0400
+
+    [alpha] don't return from void functions
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    (cherry picked from commit 46785c04bca16f495af3ed8d685aee939a1a8f39)
+
+commit fff0b2013ad40c6116e92a9c5e233da4a34e6943
+Author: Michael Cree <mcree@orcon.net.nz>
+Date:   Wed Oct 7 18:33:29 2009 -0400
+
+    Fix undefined symbols on alpha
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    (cherry picked from commit 34eddbbb73bb16395dba0818247909c1b4bee4c2)
+
+commit a08186fe59f003fc9e1edceb1d95d2e316766e2a
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Tue Oct 6 20:58:30 2009 -0400
+
+    Fix breakage on alpha caused by c7680befe5ae
+    
+    Pinpointed by by Michael Cree.
+    
+    Commit c7680befe5ae removed Jensen support, but at the same time broke
+    support for dense memory systems.
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    (cherry picked from commit 9625f6d328d6f516520930227b218979309938bc)
+
+commit e116bebb1324c5cdb806a70683ca747321c536b0
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Oct 13 13:15:05 2009 +1000
+
+    dix: extend IsPointerDevice check to valuator-only devices.
+    
+    A device with valuators but no keys is definitely a pointer device and needs
+    to be attached to the VCP. Otherwise, the class copying happens on the VCK
+    and the VCP isn't updated with the events that are to be sent through it.
+    This addresses the trigger for #24441, not the actual issue.
+    Jury is still out on valuator+key devices.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    (cherry picked from commit 72f5874434c0c015b671c492c1318f35f1793668)
+
+commit f6cb78e476132b201334655f0015a2c727434fbf
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Oct 13 12:54:56 2009 -0700
+
+    Rootless: src drawable window can now be NULL
+    
+    Fix a possible crash when pSrc->pDrawable is NULL.
+    
+    Signed-off-by: Colin Harrison <colin.harrison@virgin.net>
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+    (cherry picked from commit 7e178ffbed7c8557faf8d471ad275aa2b0365e1d)
+
+commit 496350bd6832e595e42620da76d2f1e2e4c9e91d
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Oct 13 12:54:11 2009 -0700
+
+    Rootless: Abstract some of the Xplugin specific stuff which has crept into rootlessWindow.c
+    
+    The rootless extension now directly calls some Xplugin functions, and relies
+    on types defined in Xplugin.h, which isn't very abstracted :-)
+    
+    This patch is a start at abstracting some of the Xplugin specific stuff which
+    has crept into rootlessWindow.c.  This has been done in a pretty mindless fashion,
+    without much thought as to if the additions to the generic rootless interface are
+    the correct ones
+    
+    There is some confusion as to if RootlesscolormapCallback() returns a Bool or
+    xp_error_enum value (not so abstact), but I have no way of checking, of finding
+    out if Xplugin actually checks the result :-)
+    
+    Based on patches from Colin Harrison, Jon Turney and Yaakov Selkowitz
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+    (cherry picked from commit 6980f77892e0409b44bd8f33ba82e7273c6462a4)
+
 commit 5411e78bd51df86f6cdf925f65fd3725f943b6bb
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Mon Oct 12 14:12:45 2009 +1000

@@ -72,7 +72,7 @@ xextproto-7.1.1
 xineramaproto-1.2
 xkbcomp-1.1.1
 xkeyboard-config-1.7
-xorg-server-1.7.0.901
+xorg-server-1.7.0.902
 xproto-7.0.16
 xtrans-1.2.5
 zlib-1.2.3
