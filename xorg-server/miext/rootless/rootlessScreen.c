@@ -257,7 +257,7 @@ RootlessComposite(CARD8 op, PicturePtr pSrc, PicturePtr pMask, PicturePtr pDst,
         maskWin = (pMask->pDrawable->type == DRAWABLE_WINDOW) ?
                   (WindowPtr)pMask->pDrawable :  NULL;
     }
-    srcWin  = (pSrc->pDrawable->type  == DRAWABLE_WINDOW) ?
+    srcWin  = (pSrc->pDrawable && pSrc->pDrawable->type  == DRAWABLE_WINDOW) ?
               (WindowPtr)pSrc->pDrawable  :  NULL;
     dstWin  = (pDst->pDrawable->type == DRAWABLE_WINDOW) ?
               (WindowPtr)pDst->pDrawable  :  NULL;
@@ -297,7 +297,7 @@ RootlessGlyphs(CARD8 op, PicturePtr pSrc, PicturePtr pDst,
     GlyphPtr glyph;
     WindowPtr srcWin, dstWin;
 
-    srcWin = (pSrc->pDrawable->type == DRAWABLE_WINDOW) ?
+    srcWin = (pSrc->pDrawable && pSrc->pDrawable->type == DRAWABLE_WINDOW) ?
              (WindowPtr)pSrc->pDrawable  :  NULL;
     dstWin = (pDst->pDrawable->type == DRAWABLE_WINDOW) ?
              (WindowPtr)pDst->pDrawable  :  NULL;

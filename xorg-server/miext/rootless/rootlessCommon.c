@@ -146,6 +146,7 @@ void RootlessStartDrawing(WindowPtr pWindow)
     ScreenPtr pScreen = pWindow->drawable.pScreen;
     WindowPtr top = TopLevelParent(pWindow);
     RootlessWindowRec *winRec;
+    PixmapPtr curPixmap;
 
     if (top == NULL)
         return;
@@ -172,7 +173,7 @@ void RootlessStartDrawing(WindowPtr pWindow)
         winRec->is_drawing = TRUE;
     }
 
-    PixmapPtr curPixmap = pScreen->GetWindowPixmap(pWindow);
+    curPixmap = pScreen->GetWindowPixmap(pWindow);
     if (curPixmap == winRec->pixmap)
     {
         RL_DEBUG_MSG("Window %p already has winRec->pixmap %p; not pushing\n", pWindow, winRec->pixmap);

@@ -125,12 +125,12 @@ extern unsigned int _dense_inb(unsigned long);
 extern unsigned int _dense_inw(unsigned long);
 extern unsigned int _dense_inl(unsigned long);
 
-void (*_alpha_outb)(char, unsigned long) = _outb;
-void (*_alpha_outw)(short, unsigned long) = _outw;
-void (*_alpha_outl)(int, unsigned long) = _outl;
-unsigned int (*_alpha_inb)(unsigned long) = _inb;
-unsigned int (*_alpha_inw)(unsigned long) = _inw;
-unsigned int (*_alpha_inl)(unsigned long) = _inl;
+_X_EXPORT void (*_alpha_outb)(char, unsigned long) = _outb;
+_X_EXPORT void (*_alpha_outw)(short, unsigned long) = _outw;
+_X_EXPORT void (*_alpha_outl)(int, unsigned long) = _outl;
+_X_EXPORT unsigned int (*_alpha_inb)(unsigned long) = _inb;
+_X_EXPORT unsigned int (*_alpha_inw)(unsigned long) = _inw;
+_X_EXPORT unsigned int (*_alpha_inl)(unsigned long) = _inl;
 
 static long _alpha_iobase_query(unsigned, int, int, int);
 long (*_iobase)(unsigned, int, int, int) = _alpha_iobase_query;
@@ -138,16 +138,12 @@ long (*_iobase)(unsigned, int, int, int) = _alpha_iobase_query;
 static long
 _alpha_iobase(unsigned flags, int hose, int bus, int devfn)
 {
-#ifdef __NR_pciconfig_iobase
   if (bus < 0) {
     bus = hose;
     flags |= IOBASE_FROM_HOSE;
   }
 
   return syscall(__NR_pciconfig_iobase, flags, bus, devfn);
-#else
-  return -ENOSYS
-#endif
 }
 
 static long

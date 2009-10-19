@@ -83,6 +83,8 @@ static void xprDamageRects(RootlessFrameID wid, int nrects, const BoxRec *rects,
                int shift_x, int shift_y);
 static void xprSwitchWindow(RootlessWindowPtr pFrame, WindowPtr oldWin);
 static Bool xprDoReorderWindow(RootlessWindowPtr pFrame);
+static void xprHideWindow(RootlessFrameID wid);
+static void xprUpdateColormap(RootlessFrameID wid, ScreenPtr pScreen);
 static void xprCopyWindow(RootlessFrameID wid, int dstNrects, const BoxRec *dstRects,
               int dx, int dy);
 
@@ -117,6 +119,11 @@ xprSetNativeProperty(RootlessWindowPtr pFrame)
     }
 }
 
+static xp_error
+xprColormapCallback(void *data, int first_color, int n_colors, uint32_t *colors)
+{
+    return (RootlessResolveColormap (data, first_color, n_colors, colors) ? XP_Success : XP_BadMatch);
+}
 
 /*
  * Create and display a new frame.
@@ -142,7 +149,7 @@ xprCreateFrame(RootlessWindowPtr pFrame, ScreenPtr pScreen,
     if (pWin->drawable.depth == 8)
     {
         wc.depth = XP_DEPTH_INDEX8;
-        wc.colormap = RootlessColormapCallback;
+        wc.colormap = xprColormapCallback;
         wc.colormap_data = pScreen;
         mask |= XP_COLORMAP;
     }
@@ -447,6 +454,8 @@ static RootlessFrameProcsRec xprRootlessProcs = {
     xprDamageRects,
     xprSwitchWindow,
     xprDoReorderWindow,
+    xprHideWindow,
+    xprUpdateColormap,
     xp_copy_bytes,
     xp_fill_bytes,
     xp_composite_pixels,
@@ -592,4 +601,40 @@ xprHideWindows(Bool hide)
             }
         }
     }
+}
+
+// XXX: identical to x_cvt_vptr_to_uint ?
+#define MAKE_WINDOW_ID(x)		((xp_window_id)((size_t)(x)))
+
+Bool no_configure_window;
+
+static inline int
+configure_window (xp_window_id id, unsigned int mask,
+                  const xp_window_changes *values)
+{
+  if (!no_configure_window)
+    return xp_configure_window (id, mask, values);
+  else
+    return XP_Success;
+}
+
+
+static
+void xprUpdateColormap(RootlessFrameID wid, ScreenPtr pScreen)
+{
+  /* This is how we tell xp that the colormap may have changed. */
+  xp_window_changes wc;
+  wc.colormap = xprColormapCallback;
+  wc.colormap_data = pScreen;
+
+  configure_window(MAKE_WINDOW_ID(wid), XP_COLORMAP, &wc);
+}
+
+static
+void xprHideWindow(RootlessFrameID wid)
+{
+  xp_window_changes wc;
+  wc.stack_mode = XP_UNMAPPED;
+  wc.sibling = 0;
+  configure_window(MAKE_WINDOW_ID(wid), XP_STACKING, &wc);
 }

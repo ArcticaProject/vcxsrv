@@ -466,10 +466,10 @@ SUBDIRS = \
 	hw \
 	test
 
-aclocaldir = $(datadir)/aclocal
-aclocal_DATA = xorg-server.m4
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = xorg-server.pc
+@XORG_TRUE@aclocaldir = $(datadir)/aclocal
+@XORG_TRUE@aclocal_DATA = xorg-server.m4
+@XORG_TRUE@pkgconfigdir = $(libdir)/pkgconfig
+@XORG_TRUE@pkgconfig_DATA = xorg-server.pc
 EXTRA_DIST = xorg-server.pc.in xorg-server.m4 ChangeLog autogen.sh
 DISTCLEANFILES = doltcompile doltlibtool
 MAINTAINERCLEANFILES = ChangeLog

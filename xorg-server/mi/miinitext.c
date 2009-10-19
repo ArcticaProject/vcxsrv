@@ -359,8 +359,14 @@ Bool EnableDisableExtension(char *name, Bool enable)
 
     for (ext = &ExtensionToggleList[0]; ext->name != NULL; ext++) {
 	if (strcmp(name, ext->name) == 0) {
-	    *ext->disablePtr = !enable;
-	    return TRUE;
+	    if (ext->disablePtr != NULL) {
+		*ext->disablePtr = !enable;
+		return TRUE;
+	    } else {
+		/* Extension is always on, impossible to disable */
+		return enable; /* okay if they wanted to enable,
+				  fail if they tried to disable */
+	    }
 	}
     }
 
@@ -370,12 +376,24 @@ Bool EnableDisableExtension(char *name, Bool enable)
 void EnableDisableExtensionError(char *name, Bool enable)
 {
     ExtensionToggle *ext = &ExtensionToggleList[0];
+    Bool found = FALSE;
 
-    ErrorF("[mi] Extension \"%s\" is not recognized\n", name);
+    for (ext = &ExtensionToggleList[0]; ext->name != NULL; ext++) {
+	if ((strcmp(name, ext->name) == 0) && (ext->disablePtr == NULL)) {
+	    ErrorF("[mi] Extension \"%s\" can not be disabled\n", name);
+	    found = TRUE;
+	    break;
+	}
+    }
+    if (found == FALSE)
+	ErrorF("[mi] Extension \"%s\" is not recognized\n", name);
     ErrorF("[mi] Only the following extensions can be run-time %s:\n",
 	   enable ? "enabled" : "disabled");
-    for (ext = &ExtensionToggleList[0]; ext->name != NULL; ext++)
-	ErrorF("[mi]    %s\n", ext->name);
+    for (ext = &ExtensionToggleList[0]; ext->name != NULL; ext++) {
+	if (ext->disablePtr != NULL) {
+	    ErrorF("[mi]    %s\n", ext->name);
+	}
+    }
 }
 
 #ifndef XFree86LOADER
