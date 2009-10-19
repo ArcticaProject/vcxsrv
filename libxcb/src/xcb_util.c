@@ -249,6 +249,19 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
     }
 #endif
 
+#ifdef WIN32
+    {
+      static WSADATA wsadata;
+
+      if (!wsadata.wVersion)
+      {
+        if (WSAStartup(0x0202, &wsadata))
+	  return -1;
+        ptw32_processInitialize();
+      }
+    }
+#endif
+
     snprintf(service, sizeof(service), "%hu", port);
     if(getaddrinfo(host, service, &hints, &results))
         /* FIXME: use gai_strerror, and fill in error connection */
