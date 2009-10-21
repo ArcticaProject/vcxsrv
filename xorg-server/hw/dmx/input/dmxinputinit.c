@@ -474,9 +474,9 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
                                               Relative);
                 for (i = 0; i < info.numRelAxes; i++)
                     InitValuatorAxisStruct(pDevice, i, axis_labels[i],
-                                           info.minval[0], info.maxval[0],
-                                           info.res[0],
-                                           info.minres[0], info.maxres[0]);
+                                           info.minval[i], info.maxval[i],
+                                           info.res[i],
+                                           info.minres[i], info.maxres[i]);
             } else if (info.numRelAxes) {
                 InitValuatorClassDeviceStruct(pDevice, info.numRelAxes,
                                               axis_labels,
@@ -484,20 +484,20 @@ static int dmxDeviceOnOff(DeviceIntPtr pDevice, int what)
                                               Relative);
                 for (i = 0; i < info.numRelAxes; i++)
                     InitValuatorAxisStruct(pDevice, i, axis_labels[i],
-                                           info.minval[0],
-                                           info.maxval[0], info.res[0],
-                                           info.minres[0], info.maxres[0]);
+                                           info.minval[i],
+                                           info.maxval[i], info.res[i],
+                                           info.minres[i], info.maxres[i]);
             } else if (info.numAbsAxes) {
                 InitValuatorClassDeviceStruct(pDevice, info.numAbsAxes,
                                               axis_labels,
                                               dmxPointerGetMotionBufferSize(),
                                               Absolute);
                 for (i = 0; i < info.numAbsAxes; i++)
-                    InitValuatorAxisStruct(pDevice, i+info.numRelAxes,
-                                           axis_labels[i + info.numRelAxes],
-                                           info.minval[i+1], info.maxval[i+1],
-                                           info.res[i+1], info.minres[i+1],
-                                           info.maxres[i+1]);
+                    InitValuatorAxisStruct(pDevice, i,
+                                           axis_labels[i],
+                                           info.minval[i], info.maxval[i],
+                                           info.res[i], info.minres[i],
+                                           info.maxres[i]);
             }
         }
         if (info.focusClass)       InitFocusClassDeviceStruct(pDevice);
@@ -933,7 +933,7 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
 }
 
 /** Re-initialize all the devices described in \a dmxInput.  Called from
-    #dmxReconfig before the cursor is redisplayed. */ 
+    #dmxAdjustCursorBoundaries before the cursor is redisplayed. */
 void dmxInputReInit(DMXInputInfo *dmxInput)
 {
     int i;
@@ -946,7 +946,7 @@ void dmxInputReInit(DMXInputInfo *dmxInput)
 }
 
 /** Re-initialize all the devices described in \a dmxInput.  Called from
-    #dmxReconfig after the cursor is redisplayed. */ 
+    #dmxAdjustCursorBoundaries after the cursor is redisplayed. */
 void dmxInputLateReInit(DMXInputInfo *dmxInput)
 {
     int i;

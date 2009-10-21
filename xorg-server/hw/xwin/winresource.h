@@ -37,7 +37,6 @@
 
 #define IDC_STATIC		-1
 #define IDI_XWIN		101
-#define IDI_XWIN_BOXED		102
 #define IDM_TRAYICON_MENU	103
 #define IDC_CLIENTS_CONNECTED	104
 

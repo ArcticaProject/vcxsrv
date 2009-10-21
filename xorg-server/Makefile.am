@@ -51,6 +51,11 @@ endif
 
 EXTRA_DIST = xorg-server.pc.in xorg-server.m4 ChangeLog autogen.sh
 
+DISTCHECK_CONFIGURE_FLAGS=\
+	--with-xkb-path=$(XKB_BASE_DIRECTORY) \
+	--with-xkb-bin-directory=$(XKB_BIN_DIRECTORY) \
+	--with-xkb-output='$${datadir}/X11/xkb/compiled'
+
 DISTCLEANFILES = doltcompile doltlibtool
 MAINTAINERCLEANFILES=ChangeLog
 

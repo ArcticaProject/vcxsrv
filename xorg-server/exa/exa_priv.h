@@ -188,6 +188,7 @@ typedef struct {
     unsigned			 numOffscreenAvailable;
     CARD32			 lastDefragment;
     CARD32			 nextDefragment;
+    PixmapPtr			 deferred_mixed_pixmap;
 
     /* Reference counting for accessed pixmaps */
     struct {

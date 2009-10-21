@@ -336,7 +336,7 @@ mtrr_undo_wc_region(int screenNum, struct mtrr_wc_region *wcr)
 {
 	struct mtrr_wc_region *p, *prev;
 
-	if (mtrr_fd > 0) {
+	if (mtrr_fd >= 0) {
 		p = wcr;
 		while (p) {
 			if (p->added)

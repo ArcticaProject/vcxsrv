@@ -24,7 +24,6 @@
 #include <kdrive-config.h>
 #endif
 #include "kdrive.h"
-#include "klinux.h"
 #include <errno.h>
 #include <signal.h>
 #include <linux/vt.h>
@@ -123,110 +122,6 @@ LinuxInit (void)
     }
 
     return 1;
-}
-
-Bool
-LinuxFindPci (CARD16 vendor, CARD16 device, CARD32 count, KdCardAttr *attr)
-{
-    FILE    *f;
-    char    line[2048], *l, *end;
-    CARD32  bus, id, addr;
-    int	    n;
-    CARD32  ven_dev;
-    Bool    ret = FALSE;
-    int	    i;
-
-    attr->vendorID = vendor;
-    attr->deviceID = device;
-    ven_dev = (((CARD32) vendor) << 16) | ((CARD32) device);
-    f = fopen ("/proc/bus/pci/devices", "r");
-    if (!f)
-	return FALSE;
-    attr->io = 0;
-    while (fgets (line, sizeof (line)-1, f))
-    {
-	line[sizeof(line)-1] = '\0';
-	l = line;
-	bus = strtoul (l, &end, 16);
-	if (end == l)
-	    continue;
-	l = end;
-	id = strtoul (l, &end, 16);
-	if (end == l)
-	    continue;
-	l = end;
-	if (id != ven_dev)
-	    continue;
-	if (count--)
-	    continue;
-	(void) strtoul (l, &end, 16);	/* IRQ */
-	if (end == l)
-	    continue;
-	l = end;
-	n = 0;
-	for (i = 0; i < 6; i++)
-	{
-	    addr = strtoul (l, &end, 16);
-	    if (end == l)
-		break;
-	    if (addr & 1)
-		attr->io = addr & ~0xf;
-	    else
-	    {
-		if (n == KD_MAX_CARD_ADDRESS)
-		    break;
-		attr->address[n++] = addr & ~0xf;
-	    }
-	    l = end;
-	}
-	while (n > 0)
-	{
-	    if (attr->address[n-1] != 0)
-		break;
-	    n--;
-	}
-	attr->naddr = n;
-	attr->domain = 0; /* XXX */
-	attr->bus = (bus >> 8) & 0xff;
-	attr->slot = (bus >> 3) & 0x1f;
-	attr->func = bus & 0x07;
-	ret = TRUE;
-	break;
-    }
-    fclose (f);
-    return ret;
-}
-
-unsigned char *
-LinuxGetPciCfg(KdCardAttr *attr) 
-{
-    char filename[256];
-    FILE *f;
-    unsigned char *cfg;
-    int r;
-
-    snprintf(filename, 255, "/proc/bus/pci/%02x/%02x.%x",
-             attr->bus >> 8, (attr->bus & 0xff) >> 3, attr->bus & 7);
-/*     fprintf(stderr,"Find card on path %s\n",filename); */
-
-    if (!(f=fopen(filename,"r"))) 
-        return NULL;
-
-    if (!(cfg=xalloc(256))) 
-    {
-        fclose(f);
-        return NULL;
-    }
-
-    if (256 != (r=fread(cfg, 1, 256, f)))
-    {
-        fprintf(stderr,"LinuxGetPciCfg: read %d, expected 256\n",r);
-        free(cfg);
-        cfg=NULL;
-    }
-    fclose(f);
-/*     fprintf(stderr,"LinuxGetPciCfg: success, returning %p\n",cfg); */
-    return cfg;
 }
 
 static void

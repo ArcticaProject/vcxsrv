@@ -32,7 +32,7 @@
  */
 
 /** \file
- * Provide configuration #define's and #undef's to build Xdmx in X.Org's
+ * Provide configuration define's and undef's to build Xdmx in X.Org's
  * modular source tree.
  */
 

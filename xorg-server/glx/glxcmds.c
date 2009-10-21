@@ -54,7 +54,6 @@
 #include "indirect_dispatch.h"
 #include "indirect_table.h"
 #include "indirect_util.h"
-#include "protocol-versions.h"
 
 static int
 validGlxScreen(ClientPtr client, int screen, __GLXscreen **pGlxScreen, int *err)
@@ -743,8 +742,8 @@ int __glXDisp_QueryVersion(__GLXclientState *cl, GLbyte *pc)
     ** client if it wants to work with older clients; however, in this
     ** implementation the server just returns its version number.
     */
-    reply.majorVersion = SERVER_GLX_MAJOR_VERSION;
-    reply.minorVersion = SERVER_GLX_MINOR_VERSION;
+    reply.majorVersion = glxMajorVersion;
+    reply.minorVersion = glxMinorVersion;
     reply.length = 0;
     reply.type = X_Reply;
     reply.sequenceNumber = client->sequence;
@@ -2062,7 +2061,7 @@ int __glXDisp_BindSwapBarrierSGIX(__GLXclientState *cl, GLbyte *pc)
             if (ret == Success) {
                 if (barrier)
                     /* add source for cleanup when drawable is gone */
-                    AddResource(drawable, __glXSwapBarrierRes, (pointer)screen);
+                    AddResource(drawable, __glXSwapBarrierRes, (pointer)(intptr_t)screen);
                 else
                     /* delete source */
                     FreeResourceByType(drawable, __glXSwapBarrierRes, FALSE);
@@ -2364,6 +2363,7 @@ int __glXDisp_QueryServerString(__GLXclientState *cl, GLbyte *pc)
     char *buf;
     __GLXscreen *pGlxScreen;
     int err;
+    char ver_str[16];
 
     if (!validGlxScreen(client, req->screen, &pGlxScreen, &err))
 	return err;
@@ -2373,7 +2373,11 @@ int __glXDisp_QueryServerString(__GLXclientState *cl, GLbyte *pc)
 	    ptr = pGlxScreen->GLXvendor;
 	    break;
 	case GLX_VERSION:
-	    ptr = pGlxScreen->GLXversion;
+	    /* Return to the server version rather than the screen version
+	     * to prevent confusion when they do not match.
+	     */
+	    snprintf(ver_str, 16, "%d.%d", glxMajorVersion, glxMinorVersion);
+	    ptr = ver_str;
 	    break;
 	case GLX_EXTENSIONS:
 	    ptr = pGlxScreen->GLXextensions;

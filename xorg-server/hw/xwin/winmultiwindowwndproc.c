@@ -377,9 +377,7 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
   switch (message)
     {
     case WM_CREATE:
-{
-      RECT rWindow;
-      HRGN hRgnWindow;
+
       /* */
       SetProp (hwnd,
 	       WIN_WINDOW_PROP,
@@ -398,13 +396,17 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       winReorderWindowsMultiWindow ();
 
       /* Fix a 'round title bar corner background should be transparent not black' problem when first painted */
-      GetWindowRect(hwnd, &rWindow);
-      hRgnWindow = CreateRectRgnIndirect(&rWindow);
-      SetWindowRgn (hwnd, hRgnWindow, TRUE);
-      DeleteObject(hRgnWindow);
+      {
+        RECT rWindow;
+        HRGN hRgnWindow;
+        GetWindowRect(hwnd, &rWindow);
+        hRgnWindow = CreateRectRgnIndirect(&rWindow);
+        SetWindowRgn (hwnd, hRgnWindow, TRUE);
+        DeleteObject(hRgnWindow);
+      }
 
       SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)VCXSRV_SIGNATURE);
-}
+
       return 0;
 
     case WM_INIT_SYS_MENU:

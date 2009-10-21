@@ -151,10 +151,6 @@ TslibDisable (KdPointerInfo *pi)
 static Status
 TslibInit (KdPointerInfo *pi)
 {
-    int		        fd = 0, i = 0;
-    DIR                 *inputdir = NULL;
-    struct dirent       *inputent = NULL;
-    struct tsdev        *tsDev = NULL;
     struct TslibPrivate *private = NULL;
 
     if (!pi || !pi->dixdev)

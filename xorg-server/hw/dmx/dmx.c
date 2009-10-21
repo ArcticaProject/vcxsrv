@@ -37,7 +37,7 @@
  * most all of the useful functions in this file are declared static and
  * do not appear in the doxygen documentation.
  *
- * Much of the low-level work is done by functions in #dmxextension.c
+ * Much of the low-level work is done by functions in \a dmxextension.c
  *
  * Please see the Client-to-Server DMX Extension to the X Protocol
  * document for details about the protocol.  */

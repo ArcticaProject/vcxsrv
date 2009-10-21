@@ -1462,7 +1462,7 @@ static DevPrivateKey GrabPrivateKey = &GrabPrivateKeyIndex;
 static void
 DetachFromMaster(DeviceIntPtr dev)
 {
-    int id;
+    intptr_t id;
     if (!dev->u.master)
         return;
 
@@ -1484,7 +1484,7 @@ ReattachToOldMaster(DeviceIntPtr dev)
 
 
     p = dixLookupPrivate(&dev->devPrivates, GrabPrivateKey);
-    id = (int)p; /* silence gcc warnings */
+    id = (intptr_t) p; /* silence gcc warnings */
     dixLookupDevice(&master, id, serverClient, DixUseAccess);
 
     if (master)
@@ -2507,9 +2507,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
                                                        filter, grab);
                     if (deliveries > 0)
                         goto unwind;
-                } else if (rc != BadMatch)
-                    ErrorF("[dix] %s: XI conversion failed in DDE (%d, %d). Skipping delivery.\n",
-                            dev->name, event->any.type, rc);
+                }
             }
 
             /* Core event */
@@ -2525,9 +2523,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
                             filter, grab);
                     if (deliveries > 0)
                         goto unwind;
-                } else if (rc != BadMatch)
-                        ErrorF("[dix] %s: Core conversion failed in DDE (%d, %d).\n",
-                                dev->name, event->any.type, rc);
+                }
             }
 
             if ((deliveries < 0) || (pWin == stopAt) ||
@@ -3811,9 +3807,7 @@ DeliverFocusedEvent(DeviceIntPtr keybd, InternalEvent *event, WindowPtr window)
             deliveries = DeliverEventsToWindow(keybd, focus, &core, 1,
                                                GetEventFilter(keybd, &core),
                                                NullGrab);
-        } else if (rc != BadMatch)
-            ErrorF("[dix] %s: core conversion failed DFE (%d, %d). Skipping delivery.\n",
-                    keybd->name, event->any.type, rc);
+        }
     }
 
 unwind:
@@ -4974,7 +4968,7 @@ ProcQueryPointer(ClientPtr client)
     if (rc != Success)
 	return rc;
     rc = XaceHook(XACE_DEVICE_ACCESS, client, mouse, DixReadAccess);
-    if (rc != Success)
+    if (rc != Success && rc != BadAccess)
 	return rc;
 
     keyboard = GetPairedDevice(mouse);
@@ -5021,6 +5015,15 @@ ProcQueryPointer(ClientPtr client)
 	}
     }
 #endif
+
+    if (rc == BadAccess) {
+	rep.mask = 0;
+	rep.child = None;
+	rep.rootX = 0;
+	rep.rootY = 0;
+	rep.winX = 0;
+	rep.winY = 0;
+    }
 
     WriteReplyToClient(client, sizeof(xQueryPointerReply), &rep);
 

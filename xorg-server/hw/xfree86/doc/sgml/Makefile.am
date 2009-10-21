@@ -33,19 +33,19 @@ SUFFIXES = .sgml .txt .html .ps .pdf
 
 .sgml.txt:
 	@rm -f $@
-	$(MAKE_TEXT) $<
+	$(AM_V_GEN)$(MAKE_TEXT) $<
 
 .sgml.ps:
 	@rm -f $@
-	$(MAKE_PS) $<
+	$(AM_V_GEN)$(MAKE_PS) $<
 
 .ps.pdf:
 	@rm -f $@
-	$(MAKE_PDF) $<
+	$(AM_V_GEN)$(MAKE_PDF) $<
 
 .sgml.html:
 	@rm -f $@
-	$(MAKE_HTML) $<
+	$(AM_V_GEN)$(MAKE_HTML) $<
 
 noinst_DATA = $(TXT_FILES) $(PS_FILES) $(PDF_FILES) $(HTML_FILES)
 CLEANFILES = $(TXT_FILES) $(PS_FILES) $(PDF_FILES) $(HTML_FILES)

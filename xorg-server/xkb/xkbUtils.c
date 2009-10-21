@@ -343,13 +343,13 @@ CARD8 *			repeat;
     repeat= xkb->ctrls->per_key_repeat;
 
     if (pXDev->kbdfeed)
-	memcpy(repeat,pXDev->kbdfeed->ctrl.autoRepeats,32);
+	memcpy(repeat,pXDev->kbdfeed->ctrl.autoRepeats,XkbPerKeyBitArraySize);
 
     XkbUpdateDescActions(xkb,first,num,changes);
 
     if ((pXDev->kbdfeed)&&
 	(changes->ctrls.enabled_ctrls_changes&XkbPerKeyRepeatMask)) {
-        memcpy(pXDev->kbdfeed->ctrl.autoRepeats,repeat, 32);
+        memcpy(pXDev->kbdfeed->ctrl.autoRepeats,repeat, XkbPerKeyBitArraySize);
 	(*pXDev->kbdfeed->CtrlProc)(pXDev, &pXDev->kbdfeed->ctrl);
     }
     return;

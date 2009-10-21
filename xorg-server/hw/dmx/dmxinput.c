@@ -88,7 +88,7 @@ void ProcessInputEvents(void)
             dmxInput->processInputEvents(dmxInput);
 }
 
-/** This routine is called from #dmxwindow.c whenever the layout of
+/** This routine is called from \a dmxwindow.c whenever the layout of
  * windows on the display might have changed.  This information is used
  * by input drivers (currently only the console driver) that provide
  * information about window layout to the user. */

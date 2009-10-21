@@ -1516,7 +1516,7 @@ static void dmxBEDestroyScratchGCs(int scrnNum)
 /** Destroy window hierachy on back-end server.  To ensure that all
  *  XDestroyWindow() calls succeed, they must be performed in a bottom
  *  up order so that windows are not destroyed before their children.
- *  XDestroyWindow(), which is called from #dmxBEDestrowWindow(), will
+ *  XDestroyWindow(), which is called from #dmxBEDestroyWindow(), will
  *  destroy a window as well as all of it's children. */
 static void dmxBEDestroyWindowTree(int idx)
 {

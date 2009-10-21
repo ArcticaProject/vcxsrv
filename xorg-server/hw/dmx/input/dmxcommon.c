@@ -519,7 +519,7 @@ void dmxCommonMouOff(DevicePtr pDev)
 /** Given the global coordinates \a x and \a y, determine the screen
  * with the lowest number on which those coordinates lie.  If they are
  * not on any screen, return -1.  The number returned is an index into
- * #dmxScreenInfo and is between -1 and #dmxNumScreens - 1,
+ * \a dmxScreenInfo and is between -1 and \a dmxNumScreens - 1,
  * inclusive. */
 int dmxFindPointerScreen(int x, int y)
 {

@@ -685,6 +685,18 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 				       screen->base.GLXextensions);
     }
 
+    /* We're going to assume (perhaps incorrectly?) that all DRI2-enabled
+     * drivers support the required extensions for GLX 1.4.  The extensions
+     * we're assuming are:
+     *
+     *    - GLX_SGI_make_current_read (1.3)
+     *    - GLX_SGIX_fbconfig (1.3)
+     *    - GLX_SGIX_pbuffer (1.3)
+     *    - GLX_ARB_multisample (1.4)
+     */
+    screen->base.GLXmajor = 1;
+    screen->base.GLXminor = 4;
+    
     screen->enterVT = pScrn->EnterVT;
     pScrn->EnterVT = glxDRIEnterVT; 
     screen->leaveVT = pScrn->LeaveVT;

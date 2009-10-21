@@ -60,7 +60,7 @@ ISOLatin1ToLower(unsigned char source)
     return source;
 }
 
-_X_HIDDEN void
+void
 CopyISOLatin1Lowered(char *dest, char *source, int length)
 {
     int i;

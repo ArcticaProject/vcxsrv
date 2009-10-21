@@ -192,6 +192,9 @@ exaDestroyPixmap_mixed(PixmapPtr pPixmap)
     {
 	ExaPixmapPriv (pPixmap);
 
+	if (pExaScr->deferred_mixed_pixmap == pPixmap)
+	    pExaScr->deferred_mixed_pixmap = NULL;
+
 	if (pExaPixmap->driverPriv)
 	    pExaScr->info->DestroyPixmap(pScreen, pExaPixmap->driverPriv);
 	pExaPixmap->driverPriv = NULL;

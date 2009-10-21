@@ -552,7 +552,7 @@ void dmxInvalidateGlobalPosition(void)
  * allowed to move outside the global boundaires).
  *
  * If \a block is set to \a DMX_BLOCK, then the SIGIO handler will be
- * blocked around calls to #dmxeqEnqueue(). */
+ * blocked around calls to \a enqueueMotion(). */
 void dmxMotion(DevicePtr pDev, int *v, int firstAxes, int axesCount,
                DMXMotionType type, DMXBlockType block)
 {
@@ -652,8 +652,9 @@ static int dmxFixup(DevicePtr pDev, int detail, KeySym keySym)
  * specified \a type and \a detail.  If the event is a KeyPress or
  * KeyRelease event, then the \a keySym is also specified.
  *
+ * FIXME: make the code do what the comment says, or remove this comment.
  * If \a block is set to \a DMX_BLOCK, then the SIGIO handler will be
- * blocked around calls to #dmxeqEnqueue(). */
+ * blocked around calls to dmxeqEnqueue(). */
     
 void dmxEnqueue(DevicePtr pDev, int type, int detail, KeySym keySym,
                 XEvent *e, DMXBlockType block)

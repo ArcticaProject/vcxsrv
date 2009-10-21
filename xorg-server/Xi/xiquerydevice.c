@@ -45,7 +45,8 @@
 #include "xiquerydevice.h"
 
 static Bool ShouldSkipDevice(ClientPtr client, int deviceid, DeviceIntPtr d);
-static int ListDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info);
+static int
+ListDeviceInfo(ClientPtr client, DeviceIntPtr dev, xXIDeviceInfo* info);
 static int SizeDeviceInfo(DeviceIntPtr dev);
 static void SwapDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info);
 int
@@ -119,7 +120,7 @@ ProcXIQueryDevice(ClientPtr client)
     ptr = info;
     if (dev)
     {
-        len = ListDeviceInfo(dev, (xXIDeviceInfo*)info);
+        len = ListDeviceInfo(client, dev, (xXIDeviceInfo*)info);
         if (client->swapped)
             SwapDeviceInfo(dev, (xXIDeviceInfo*)info);
         info += len;
@@ -131,7 +132,7 @@ ProcXIQueryDevice(ClientPtr client)
         {
             if (!skip[i])
             {
-                len = ListDeviceInfo(dev, (xXIDeviceInfo*)info);
+                len = ListDeviceInfo(client, dev, (xXIDeviceInfo*)info);
                 if (client->swapped)
                     SwapDeviceInfo(dev, (xXIDeviceInfo*)info);
                 info += len;
@@ -143,7 +144,7 @@ ProcXIQueryDevice(ClientPtr client)
         {
             if (!skip[i])
             {
-                len = ListDeviceInfo(dev, (xXIDeviceInfo*)info);
+                len = ListDeviceInfo(client, dev, (xXIDeviceInfo*)info);
                 if (client->swapped)
                     SwapDeviceInfo(dev, (xXIDeviceInfo*)info);
                 info += len;
@@ -240,7 +241,7 @@ SizeDeviceClasses(DeviceIntPtr dev)
  * @return Number of bytes written into info.
  */
 int
-ListButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info)
+ListButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info, Bool reportState)
 {
     unsigned char *bits;
     int mask_len;
@@ -257,9 +258,11 @@ ListButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info)
     bits = (unsigned char*)&info[1];
     memset(bits, 0, mask_len * 4);
 
-    for (i = 0; dev && dev->button && i < dev->button->numButtons; i++)
-        if (BitIsOn(dev->button->down, i))
-            SetBit(bits, i);
+    if (reportState)
+	for (i = 0; dev && dev->button && i < dev->button->numButtons; i++)
+	    if (BitIsOn(dev->button->down, i))
+		SetBit(bits, i);
+
     bits += mask_len * 4;
     memcpy(bits, dev->button->labels, dev->button->numButtons * sizeof(Atom));
 
@@ -327,7 +330,8 @@ SwapKeyInfo(DeviceIntPtr dev, xXIKeyInfo* info)
  * @return The number of bytes written into info.
  */
 int
-ListValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info, int axisnumber)
+ListValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info, int axisnumber,
+		 Bool reportState)
 {
     ValuatorClassPtr v = dev->valuator;
 
@@ -344,6 +348,9 @@ ListValuatorInfo(DeviceIntPtr dev, xXIValuatorInfo* info, int axisnumber)
     info->number = axisnumber;
     info->mode = v->mode; /* Server doesn't have per-axis mode yet */
     info->sourceid = v->sourceid;
+
+    if (!reportState)
+	info->value = info->min;
 
     return info->length * 4;
 }
@@ -389,7 +396,7 @@ int GetDeviceUse(DeviceIntPtr dev, uint16_t *attachment)
  * @return The number of bytes used.
  */
 static int
-ListDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info)
+ListDeviceInfo(ClientPtr client, DeviceIntPtr dev, xXIDeviceInfo* info)
 {
     char *any = (char*)&info[1];
     int len = 0, total_len = 0;
@@ -407,7 +414,8 @@ ListDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info)
     any += len;
     total_len += len;
 
-    return total_len + ListDeviceClasses(dev, any, &info->num_classes);
+    total_len += ListDeviceClasses(client, dev, any, &info->num_classes);
+    return total_len;
 }
 
 /**
@@ -416,16 +424,21 @@ ListDeviceInfo(DeviceIntPtr dev, xXIDeviceInfo* info)
  * written.
  */
 int
-ListDeviceClasses(DeviceIntPtr dev, char *any, uint16_t *nclasses)
+ListDeviceClasses(ClientPtr client, DeviceIntPtr dev,
+		  char *any, uint16_t *nclasses)
 {
     int total_len = 0;
     int len;
     int i;
+    int rc;
+
+    /* Check if the current device state should be suppressed */
+    rc = XaceHook(XACE_DEVICE_ACCESS, client, dev, DixReadAccess);
 
     if (dev->button)
     {
         (*nclasses)++;
-        len = ListButtonInfo(dev, (xXIButtonInfo*)any);
+        len = ListButtonInfo(dev, (xXIButtonInfo*)any, rc == Success);
         any += len;
         total_len += len;
     }
@@ -441,7 +454,7 @@ ListDeviceClasses(DeviceIntPtr dev, char *any, uint16_t *nclasses)
     for (i = 0; dev->valuator && i < dev->valuator->numAxes; i++)
     {
         (*nclasses)++;
-        len = ListValuatorInfo(dev, (xXIValuatorInfo*)any, i);
+        len = ListValuatorInfo(dev, (xXIValuatorInfo*)any, i, rc == Success);
         any += len;
         total_len += len;
     }

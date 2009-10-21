@@ -490,9 +490,8 @@ void dmxConfigSetMaxScreens(void)
      return (char *)(dmx##glob ? dmx##glob : def);                            \
  }
 
-GEN(rules,   XkbRules,   DMX_DEFAULT_XKB_RULES)
-GEN(model,   XkbModel,   DMX_DEFAULT_XKB_MODEL)
-GEN(layout,  XkbLayout,  DMX_DEFAULT_XKB_LAYOUT)
-GEN(variant, XkbVariant, DMX_DEFAULT_XKB_VARIANT)
-GEN(options, XkbOptions, DMX_DEFAULT_XKB_OPTIONS)
-    
+GEN(rules,   XkbRules,   XKB_DFLT_RULES)
+GEN(model,   XkbModel,   XKB_DFLT_MODEL)
+GEN(layout,  XkbLayout,  XKB_DFLT_LAYOUT)
+GEN(variant, XkbVariant, XKB_DFLT_VARIANT)
+GEN(options, XkbOptions, XKB_DFLT_OPTIONS)
