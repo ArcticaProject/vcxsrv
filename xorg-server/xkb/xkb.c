@@ -554,7 +554,7 @@ ProcXkbGetState(ClientPtr client)
     if (!(client->xkbClientFlags&_XkbClientInitialized))
 	return BadAccess;
 
-    CHK_KBD_DEVICE(dev, stuff->deviceSpec, client, DixReadAccess);
+    CHK_KBD_DEVICE(dev, stuff->deviceSpec, client, DixGetAttrAccess);
 
     xkb= &dev->key->xkbInfo->state;
     bzero(&rep,sizeof(xkbGetStateReply));

@@ -52,7 +52,7 @@ int __glXDisp_GetCompressedTexImageARB(struct __GLXclientStateRec *cl, GLbyte *p
 	const GLenum target = *(GLenum *)(pc + 0);
 	const GLint  level  = *(GLint  *)(pc + 4);
 	GLint compsize = 0;
-	char *answer, answerBuffer[200];
+	char *answer = NULL, answerBuffer[200];
 
 	CALL_GetTexLevelParameteriv(GET_DISPATCH(), (target, level, GL_TEXTURE_COMPRESSED_IMAGE_SIZE, &compsize));
 
@@ -92,7 +92,7 @@ int __glXDispSwap_GetCompressedTexImageARB(struct __GLXclientStateRec *cl, GLbyt
 	const GLenum target = (GLenum) bswap_32( *(int *)(pc + 0) );
 	const GLint  level =  (GLint ) bswap_32( *(int *)(pc + 4) );
 	GLint compsize = 0;
-	char *answer, answerBuffer[200];
+	char *answer = NULL, answerBuffer[200];
 
 	CALL_GetTexLevelParameteriv(GET_DISPATCH(), (target, level, GL_TEXTURE_COMPRESSED_IMAGE_SIZE, &compsize));
 

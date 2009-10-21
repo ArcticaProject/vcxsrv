@@ -898,11 +898,11 @@ KdNewKeyboard (void)
     ki->bellDuration = 200;
     ki->next = NULL;
     ki->options = NULL;
-    ki->xkbRules = strdup("base");
-    ki->xkbModel = strdup("pc105");
-    ki->xkbLayout = strdup("us");
-    ki->xkbVariant = NULL;
-    ki->xkbOptions = NULL;
+    ki->xkbRules = strdup(XKB_DFLT_RULES);
+    ki->xkbModel = strdup(XKB_DFLT_MODEL);
+    ki->xkbLayout = strdup(XKB_DFLT_LAYOUT);
+    ki->xkbVariant = strdup(XKB_DFLT_VARIANT);
+    ki->xkbOptions = strdup(XKB_DFLT_OPTIONS);
 
     return ki;
 }

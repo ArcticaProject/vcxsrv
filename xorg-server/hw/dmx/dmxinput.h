@@ -78,7 +78,7 @@ typedef enum {
     DMX_ACTIVESIGIO             /**< Device is currently using SIGIO. */
 } dmxSigioState;
 
-/** DMXInputInfo is typedef'd in #dmx.h so that all routines can have
+/** DMXInputInfo is typedef'd in \a dmx.h so that all routines can have
  * access to the global pointers.  However, the elements are only
  * available to input-related routines. */
 struct _DMXInputInfo {

@@ -116,7 +116,7 @@ Window dmxCreateRootWindow(WindowPtr pWindow)
 }
 
 /** Change the location and size of the "screen" window.  Called from
- *  #dmxReconfigureScreenWindow(). */
+ *  #dmxConfigureScreenWindow(). */
 void dmxResizeScreenWindow(ScreenPtr pScreen,
 			   int x, int y, int w, int h)
 {
@@ -139,7 +139,7 @@ void dmxResizeScreenWindow(ScreenPtr pScreen,
 }
 
 /** Change the location and size of the "root" window.  Called from
- *  #dmxReconfigureRootWindow(). */
+ *  #dmxConfigureRootWindow. */
 void dmxResizeRootWindow(WindowPtr pRoot,
 			 int x, int y, int w, int h)
 {
@@ -419,10 +419,9 @@ Bool dmxDestroyWindow(WindowPtr pWindow)
 	pWinPriv->windowDestroyed(pWindow);
 #endif
 
-#if 0
     if (pScreen->DestroyWindow)
 	ret = pScreen->DestroyWindow(pWindow);
-#endif
+
     DMX_WRAP(DestroyWindow, dmxDestroyWindow, dmxScreen, pScreen);
 
     return ret;

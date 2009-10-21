@@ -72,7 +72,7 @@ BusInit (KdPointerInfo *pi)
     {
         for (i = 0; i < NUM_BUS_NAMES; i++)
         {
-            if ((fd = open (BusNames[i], 0)) > 0)
+            if ((fd = open (BusNames[i], 0)) >= 0)
             {
                 close(fd);
                 if (pi->path)
@@ -84,7 +84,7 @@ BusInit (KdPointerInfo *pi)
     }
     else
     {
-        if ((fd = open(pi->path, 0)) > 0)
+        if ((fd = open(pi->path, 0)) >= 0)
         {
             close(fd);
             return Success;
@@ -99,7 +99,7 @@ BusEnable (KdPointerInfo *pi)
 {
     int fd = open(pi->path, 0);
 
-    if (fd > 0)
+    if (fd >= 0)
     {
         KdRegisterFd(fd, BusRead, pi);
         pi->driverPrivate = (void *)fd;

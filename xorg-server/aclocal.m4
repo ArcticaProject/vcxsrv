@@ -13,8 +13,8 @@
 
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.63],,
-[m4_warning([this file was generated for autoconf 2.63.
+m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.64],,
+[m4_warning([this file was generated for autoconf 2.64.
 You have another version of autoconf.  It may work, but is not guaranteed to.
 If you have problems, you may need to regenerate the build system entirely.
 To do so, use the procedure documented by the package, typically `autoreconf'.])])
@@ -87,14 +87,16 @@ fi])
 # _PKG_CONFIG([VARIABLE], [COMMAND], [MODULES])
 # ---------------------------------------------
 m4_define([_PKG_CONFIG],
-[if test -n "$$1"; then
-    pkg_cv_[]$1="$$1"
- elif test -n "$PKG_CONFIG"; then
-    PKG_CHECK_EXISTS([$3],
-                     [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`],
-		     [pkg_failed=yes])
- else
-    pkg_failed=untried
+[if test -n "$PKG_CONFIG"; then
+    if test -n "$$1"; then
+        pkg_cv_[]$1="$$1"
+    else
+        PKG_CHECK_EXISTS([$3],
+                         [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`],
+			 [pkg_failed=yes])
+    fi
+else
+	pkg_failed=untried
 fi[]dnl
 ])# _PKG_CONFIG
 
@@ -138,9 +140,9 @@ See the pkg-config man page for more details.])
 if test $pkg_failed = yes; then
         _PKG_SHORT_ERRORS_SUPPORTED
         if test $_pkg_short_errors_supported = yes; then
-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "$2" 2>&1`
+	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "$2"`
         else 
-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors "$2" 2>&1`
+	        $1[]_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$$1[]_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
@@ -1201,7 +1203,6 @@ m4_include([m4/ltoptions.m4])
 m4_include([m4/ltsugar.m4])
 m4_include([m4/ltversion.m4])
 m4_include([m4/lt~obsolete.m4])
-m4_include([m4/shave.m4])
 dnl xorg-macros.m4.  Generated from xorg-macros.m4.in xorgversion.m4 by configure.
 dnl
 dnl Copyright 2005-2006 Sun Microsystems, Inc.  All rights reserved.
@@ -1247,7 +1248,7 @@ dnl of the copyright holder.
 # See the "minimum version" comment for each macro you use to see what 
 # version you require.
 m4_defun([XORG_MACROS_VERSION],[
-m4_define([vers_have], [1.3.1])
+m4_define([vers_have], [1.3.0])
 m4_define([maj_have], m4_substr(vers_have, 0, m4_index(vers_have, [.])))
 m4_define([maj_needed], m4_substr([$1], 0, m4_index([$1], [.])))
 m4_if(m4_cmp(maj_have, maj_needed), 0,,
@@ -1775,11 +1776,11 @@ AC_DEFUN([XORG_RELEASE_VERSION],[
 # Arrange that distcleancheck ignores ChangeLog left over by distclean.
 #
 AC_DEFUN([XORG_CHANGELOG], [
-CHANGELOG_CMD="(GIT_DIR=\$(top_srcdir)/.git git log > \$(top_srcdir)/.changelog.tmp && \
-mv \$(top_srcdir)/.changelog.tmp \$(top_srcdir)/ChangeLog) \
-|| (rm -f \$(top_srcdir)/.changelog.tmp; touch \$(top_srcdir)/ChangeLog; \
+CHANGELOG_CMD="(GIT_DIR=\$(top_srcdir)/.git git log > .changelog.tmp && \
+mv .changelog.tmp ChangeLog) || (rm -f .changelog.tmp; touch ChangeLog; \
 echo 'git directory not found: installing possibly empty changelog.' >&2)"
 AC_SUBST([CHANGELOG_CMD])
+AC_SUBST([distcleancheck_listfiles], ['find . -type f ! -name ChangeLog -print'])
 ]) # XORG_CHANGELOG
 
 dnl $XdotOrg: lib/xtrans/xtrans.m4,v 1.6 2005/07/26 18:59:11 alanc Exp $

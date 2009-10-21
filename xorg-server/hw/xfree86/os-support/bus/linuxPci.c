@@ -445,7 +445,7 @@ xf86MapLegacyIO(struct pci_device *dev)
 						  PCIIOC_MMAP_IS_IO);
 	}
 	else { /* legacy_io file exists, encode fd */
-	    DomainMmappedIO[domain] = (pointer)(fd << 24);
+	    DomainMmappedIO[domain] = (pointer)(intptr_t)(fd << 24);
 	}
     }
 

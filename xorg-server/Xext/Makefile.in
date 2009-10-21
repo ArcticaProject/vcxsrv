@@ -57,7 +57,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
 	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/shave.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -79,7 +79,8 @@ am__libXext_la_SOURCES_DIST = bigreq.c geext.c shape.c sleepuntil.c \
 	panoramiXprocs.c panoramiXSwap.c xace.c xace.h xacestr.h \
 	security.c securitysrv.h xcalibrate.c xf86bigfont.c xvmain.c \
 	xvdisp.c xvmc.c xvdix.h xvmcext.h xvdisp.h xres.c saver.c \
-	xselinux.c xselinux.h mbuf.c dpms.c dpmsproc.h
+	xselinux_ext.c xselinux_hooks.c xselinux_label.c xselinux.h \
+	xselinuxint.h mbuf.c dpms.c dpmsproc.h
 am__objects_1 = shm.lo
 @MITSHM_TRUE@am__objects_2 = $(am__objects_1)
 am__objects_3 = panoramiX.lo panoramiXprocs.lo panoramiXSwap.lo
@@ -102,7 +103,7 @@ am__objects_16 = xres.lo
 @RES_TRUE@am__objects_17 = $(am__objects_16)
 am__objects_18 = saver.lo
 @SCREENSAVER_TRUE@am__objects_19 = $(am__objects_18)
-am__objects_20 = xselinux.lo
+am__objects_20 = xselinux_ext.lo xselinux_hooks.lo xselinux_label.lo
 @XSELINUX_TRUE@am__objects_21 = $(am__objects_20)
 am__objects_22 = mbuf.lo
 @MULTIBUFFER_TRUE@am__objects_23 = $(am__objects_22)
@@ -128,8 +129,9 @@ libXextbuiltin_la_OBJECTS = $(am_libXextbuiltin_la_OBJECTS)
 @XORG_TRUE@am_libXextbuiltin_la_rpath =
 libXextmodule_la_LIBADD =
 am__libXextmodule_la_SOURCES_DIST = xvmain.c xvdisp.c xvmc.c xvdix.h \
-	xvmcext.h xvdisp.h xres.c saver.c xselinux.c xselinux.h mbuf.c \
-	dpms.c dpmsproc.h
+	xvmcext.h xvdisp.h xres.c saver.c xselinux_ext.c \
+	xselinux_hooks.c xselinux_label.c xselinux.h xselinuxint.h \
+	mbuf.c dpms.c dpmsproc.h
 @XORG_TRUE@am_libXextmodule_la_OBJECTS = $(am__objects_26)
 libXextmodule_la_OBJECTS = $(am_libXextmodule_la_OBJECTS)
 @XORG_TRUE@am_libXextmodule_la_rpath =
@@ -194,7 +196,6 @@ ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
-AM_MAKEFLAGS = @AM_MAKEFLAGS@
 APPLE_APPLICATIONS_DIR = @APPLE_APPLICATIONS_DIR@
 APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
@@ -219,7 +220,6 @@ COMPILEDDEFAULTFONTPATH = @COMPILEDDEFAULTFONTPATH@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CWARNFLAGS = @CWARNFLAGS@
-CXX = @CXX@
 CYGPATH_W = @CYGPATH_W@
 DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
@@ -243,6 +243,7 @@ DMXXIEXAMPLES_DEP_LIBS = @DMXXIEXAMPLES_DEP_LIBS@
 DMXXMUEXAMPLES_DEP_CFLAGS = @DMXXMUEXAMPLES_DEP_CFLAGS@
 DMXXMUEXAMPLES_DEP_LIBS = @DMXXMUEXAMPLES_DEP_LIBS@
 DOLT_BASH = @DOLT_BASH@
+DOXYGEN = @DOXYGEN@
 DRI2PROTO_CFLAGS = @DRI2PROTO_CFLAGS@
 DRI2PROTO_LIBS = @DRI2PROTO_LIBS@
 DRIPROTO_CFLAGS = @DRIPROTO_CFLAGS@
@@ -260,8 +261,6 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-F77 = @F77@
-FC = @FC@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
@@ -307,7 +306,6 @@ LTCXXCOMPILE = @LTCXXCOMPILE@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAIN_LIB = @MAIN_LIB@
-MAKEFLAGS = @MAKEFLAGS@
 MAKEINFO = @MAKEINFO@
 MAKE_HTML = @MAKE_HTML@
 MAKE_PDF = @MAKE_PDF@
@@ -333,6 +331,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PCIACCESS_CFLAGS = @PCIACCESS_CFLAGS@
@@ -342,7 +341,6 @@ PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PROJECTROOT = @PROJECTROOT@
 PS2PDF = @PS2PDF@
-Q = @Q@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
@@ -356,7 +354,6 @@ STRIP = @STRIP@
 TSLIB_CFLAGS = @TSLIB_CFLAGS@
 TSLIB_LIBS = @TSLIB_LIBS@
 UTILS_SYS_LIBS = @UTILS_SYS_LIBS@
-V = @V@
 VENDOR_NAME_SHORT = @VENDOR_NAME_SHORT@
 VERSION = @VERSION@
 WINDRES = @WINDRES@
@@ -398,8 +395,6 @@ XPBPROXY_LIBS = @XPBPROXY_LIBS@
 XQUARTZ_SPARKLE = @XQUARTZ_SPARKLE@
 XRESEXAMPLES_DEP_CFLAGS = @XRESEXAMPLES_DEP_CFLAGS@
 XRESEXAMPLES_DEP_LIBS = @XRESEXAMPLES_DEP_LIBS@
-XSDL_INCS = @XSDL_INCS@
-XSDL_LIBS = @XSDL_LIBS@
 XSERVERCFLAGS_CFLAGS = @XSERVERCFLAGS_CFLAGS@
 XSERVERCFLAGS_LIBS = @XSERVERCFLAGS_LIBS@
 XSERVERLIBS_CFLAGS = @XSERVERLIBS_CFLAGS@
@@ -442,6 +437,7 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
+distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -473,7 +469,6 @@ psdir = @psdir@
 sbindir = @sbindir@
 sdkdir = @sdkdir@
 sharedstatedir = @sharedstatedir@
-shavedir = @shavedir@
 srcdir = @srcdir@
 symbol_visibility = @symbol_visibility@
 sysconfdir = @sysconfdir@
@@ -528,7 +523,7 @@ XACE_SRCS = xace.c xace.h xacestr.h
 
 # SELinux extension: provides SELinux policy support for X objects
 # requires X-ACE extension
-XSELINUX_SRCS = xselinux.c xselinux.h
+XSELINUX_SRCS = xselinux_ext.c xselinux_hooks.c xselinux_label.c xselinux.h xselinuxint.h
 
 # Security extension: multi-level security to protect clients from each other
 XCSECURITY_SRCS = security.c securitysrv.h
@@ -556,6 +551,7 @@ EXTRA_DIST = \
 	$(SCREENSAVER_SRCS) \
 	$(XACE_SRCS) \
 	$(XCSECURITY_SRCS) \
+	$(XSELINUX_SRCS) \
 	$(XCALIBRATE_SRCS) \
 	$(XINERAMA_SRCS) \
 	$(MULTIBUFFER_SRCS) \
@@ -639,7 +635,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xcmisc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xf86bigfont.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xres.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xselinux.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xselinux_ext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xselinux_hooks.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xselinux_label.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xtest.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xvdisp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xvmain.Plo@am__quote@

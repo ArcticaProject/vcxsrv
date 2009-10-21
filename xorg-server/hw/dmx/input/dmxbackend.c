@@ -236,7 +236,7 @@ static int dmxBackendOffscreen(int screen, int x, int y)
 }
 
 /** This routine is called from #dmxCoreMotion for each motion
- * event. #x and #y are global coordinants. */
+ * event. \a x and \a y are global coordinants. */
 void dmxBackendUpdatePosition(pointer private, int x, int y)
 {
     GETPRIVFROMPRIVATE;

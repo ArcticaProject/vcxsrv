@@ -40,7 +40,7 @@
 #define _DMXEXTENSION_H_
 
 /** Screen attributes.  Used by #ProcDMXGetScreenAttributes and
- * #ProcDMXChangeScreenAttributes. */
+ * \a ProcDMXChangeScreensAttributes. */
 typedef struct {
     const char   *displayName;
     int          logicalScreen;
@@ -59,7 +59,7 @@ typedef struct {
     int          rootWindowYorigin;    /* global coordinate system */
 } DMXScreenAttributesRec, *DMXScreenAttributesPtr;
 
-/** Window attributes.  Used by #ProcDMXGetWidowAttributes. */
+/** Window attributes.  Used by #ProcDMXGetWindowAttributes. */
 typedef struct {
     int          screen;
     Window       window;

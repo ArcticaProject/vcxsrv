@@ -360,12 +360,18 @@ void GlxExtensionInit(void)
 	pScreen = screenInfo.screens[i];
 
 	for (p = __glXProviderStack; p != NULL; p = p->next) {
-	    if (p->screenProbe(pScreen) != NULL) {
+	    __GLXscreen *glxScreen;
+
+	    glxScreen = p->screenProbe(pScreen);
+	    if (glxScreen != NULL) {
+	        if (glxScreen->GLXminor < glxMinorVersion)
+		    glxMinorVersion = glxScreen->GLXminor;
 		LogMessage(X_INFO,
 			   "GLX: Initialized %s GL provider for screen %d\n",
 			   p->name, i);
 		break;
 	    }
+
 	}
 
 	if (!p)

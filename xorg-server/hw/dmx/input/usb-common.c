@@ -33,8 +33,8 @@
 
 /** \file
  *
- * Routines that are common between #usb-keyboard.c, #usb-mouse.c, and
- * #usb-other.c */
+ * Routines that are common between \a usb-keyboard.c, \a usb-mouse.c, and
+ * \a usb-other.c */
 
 #ifdef HAVE_DMX_CONFIG_H
 #include <dmx-config.h>

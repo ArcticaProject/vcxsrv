@@ -37,7 +37,7 @@
  * might be necessary.  However, since XSync() requires a two way
  * communication with the other X server, eliminating unnecessary
  * XSync() calls is a key performance optimization.  Support for this
- * optimization is provided in #dmxsync.c.  This file provides routines
+ * optimization is provided in \a dmxsync.c.  This file provides routines
  * that evaluate this optimization by counting the number of XSync()
  * calls and monitoring their latency.  This functionality can be turned
  * on using the -stat command-line parameter. */
@@ -102,7 +102,7 @@ static unsigned long avg(DMXStatAvg *data, unsigned long *max)
  * interval is NULL, 1 will be used.  If \a displays is NULL, 0 will be
  * used (meaning a line for every display will be printed).  Note that
  * this function takes string arguments because it will usually be
- * called from #ddxProcessArgument in #dmxinit.c. */
+ * called from #ddxProcessArgument in \a dmxinit.c. */
 void dmxStatActivate(const char *interval, const char *displays)
 {
     dmxStatInterval = (interval ? atoi(interval) : 1) * 1000;
@@ -135,7 +135,7 @@ static void dmxStatValue(DMXStatAvg *data, unsigned long value)
 /** Note that a XSync() was just done on \a dmxScreen with the \a start
  * and \a stop times (from gettimeofday()) and the number of
  * pending-but-not-yet-processed XSync requests.  This routine is called
- * from #dmxDoSync in #dmxsync.c */
+ * from #dmxDoSync in \a dmxsync.c */
 void dmxStatSync(DMXScreenInfo *dmxScreen,
                  struct timeval *stop, struct timeval *start,
                  unsigned long pending)

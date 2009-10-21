@@ -80,7 +80,7 @@ endif
 
 # SELinux extension: provides SELinux policy support for X objects
 # requires X-ACE extension
-XSELINUX_SRCS = xselinux.c xselinux.h
+XSELINUX_SRCS = xselinux_ext.c xselinux_hooks.c xselinux_label.c xselinux.h xselinuxint.h
 if XSELINUX
 MODULE_SRCS += $(XSELINUX_SRCS)
 endif
@@ -133,6 +133,7 @@ EXTRA_DIST = \
 	$(SCREENSAVER_SRCS) \
 	$(XACE_SRCS) \
 	$(XCSECURITY_SRCS) \
+	$(XSELINUX_SRCS) \
 	$(XCALIBRATE_SRCS) \
 	$(XINERAMA_SRCS) \
 	$(MULTIBUFFER_SRCS) \

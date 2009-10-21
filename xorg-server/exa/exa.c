@@ -774,9 +774,17 @@ ExaBlockHandler(int screenNum, pointer blockData, pointer pTimeout,
     ScreenPtr pScreen = screenInfo.screens[screenNum];
     ExaScreenPriv(pScreen);
 
+    /* Move any deferred results from a software fallback to the driver pixmap */
+    if (pExaScr->deferred_mixed_pixmap)
+	exaMoveInPixmap_mixed(pExaScr->deferred_mixed_pixmap);
+
     unwrap(pExaScr, pScreen, BlockHandler);
     (*pScreen->BlockHandler) (screenNum, blockData, pTimeout, pReadmask);
     wrap(pExaScr, pScreen, BlockHandler, ExaBlockHandler);
+
+    /* The rest only applies to classic EXA */
+    if (pExaScr->info->flags & EXA_HANDLES_PIXMAPS)
+	return;
 
     /* Try and keep the offscreen memory area tidy every now and then (at most 
      * once per second) when the server has been idle for at least 100ms.
@@ -991,10 +999,12 @@ exaDriverInit (ScreenPtr		pScreen,
      * Replace various fb screen functions
      */
     if ((pExaScr->info->flags & EXA_OFFSCREEN_PIXMAPS) &&
-	!(pExaScr->info->flags & EXA_HANDLES_PIXMAPS)) {
+	(!(pExaScr->info->flags & EXA_HANDLES_PIXMAPS) ||
+	 (pExaScr->info->flags & EXA_MIXED_PIXMAPS)))
 	wrap(pExaScr, pScreen, BlockHandler, ExaBlockHandler);
+    if ((pExaScr->info->flags & EXA_OFFSCREEN_PIXMAPS) &&
+	!(pExaScr->info->flags & EXA_HANDLES_PIXMAPS))
 	wrap(pExaScr, pScreen, WakeupHandler, ExaWakeupHandler);
-    }
     wrap(pExaScr, pScreen, CreateGC, exaCreateGC);
     wrap(pExaScr, pScreen, CloseScreen, exaCloseScreen);
     wrap(pExaScr, pScreen, GetImage, exaGetImage);

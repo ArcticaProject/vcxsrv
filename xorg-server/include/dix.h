@@ -173,11 +173,6 @@ extern _X_EXPORT void MarkClientException(
 extern _X_HIDDEN Bool CreateConnectionBlock(void);
 /* dixutils.c */
 
-extern _X_EXPORT void CopyISOLatin1Lowered(
-    unsigned char * /*dest*/,
-    unsigned char * /*source*/,
-    int /*length*/);
-
 extern _X_EXPORT int CompareISOLatin1Lowered(
     unsigned char * /*a*/,
     int alen,
@@ -587,8 +582,8 @@ typedef struct {
 
 extern int XItoCoreType(int xi_type);
 extern Bool DevHasCursor(DeviceIntPtr pDev);
-extern Bool IsPointerDevice( DeviceIntPtr dev);
-extern Bool IsKeyboardDevice(DeviceIntPtr dev);
+extern Bool _X_EXPORT IsPointerDevice( DeviceIntPtr dev);
+extern Bool _X_EXPORT IsKeyboardDevice(DeviceIntPtr dev);
 extern Bool IsPointerEvent(InternalEvent *event);
 extern Bool IsMaster(DeviceIntPtr dev);
 

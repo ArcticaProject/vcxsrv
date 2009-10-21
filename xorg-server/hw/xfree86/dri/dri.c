@@ -1277,7 +1277,7 @@ DRICreateDrawable(ScreenPtr pScreen, ClientPtr client, DrawablePtr pDrawable,
 
 	/* track this in case the client dies */
 	AddResource(FakeClientID(client->index), DRIDrawablePrivResType,
-		    (pointer)pDrawable->id);
+		    (pointer)(intptr_t)pDrawable->id);
 
 	if (pDRIDrawablePriv->hwDrawable) {
 	    drmUpdateDrawableInfo(pDRIPriv->drmFD,
@@ -1348,7 +1348,7 @@ DRIDestroyDrawable(ScreenPtr pScreen, ClientPtr client, DrawablePtr pDrawable)
     if (pDrawable->type == DRAWABLE_WINDOW) {
 	LookupClientResourceComplex(client, DRIDrawablePrivResType,
 				    DRIDestroyDrawableCB,
-				    (pointer)pDrawable->id);
+				    (pointer)(intptr_t)pDrawable->id);
     }
     else { /* pixmap (or for GLX 1.3, a PBuffer) */
 	/* NOT_DONE */
@@ -1364,7 +1364,9 @@ DRIDrawablePrivDelete(pointer pResource, XID id)
     WindowPtr pWin;
     int rc;
 
-    id = (XID)pResource;
+    /* For DRIDrawablePrivResType, the XID is the client's fake ID. The
+     * important XID is the value in pResource. */
+    id = (XID)(intptr_t)pResource;
     rc = dixLookupWindow(&pWin, id, serverClient, DixGetAttrAccess);
 
     if (rc == Success) {

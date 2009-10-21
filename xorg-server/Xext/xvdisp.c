@@ -1912,7 +1912,7 @@ void XineramifyXv(void)
 	    if((pAdapt->type & XvImageMask) && (pAdapt->nImages > 0)) {
 	      hasOverlay = FALSE;
               for(l = 0; l < pAdapt->nAttributes; l++) {
-	         if(!strcmp(pAdapt->name, "XV_COLORKEY")) {
+	         if(!strcmp(pAdapt->pAttributes[l].name, "XV_COLORKEY")) {
 		   hasOverlay = TRUE;
 		   break;
 		 }

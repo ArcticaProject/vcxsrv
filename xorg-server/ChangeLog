@@ -1,25 +1,191 @@
-commit 37b5f41ccea3473b830cc0c4afb5d609e47004cb
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Mon Oct 19 11:48:05 2009 +1000
+commit 26f4d8a2c12ff06c4beb06842cd8d9c0d9ddd4aa
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Oct 22 01:04:42 2009 +0900
 
-    xserver 1.7.0.902
+    Make sure dmx docs are built for distribution.
+    
+    Ok, dmx docs are driving me slightly nuts. We probably shouldn't
+    include the built versions in the tarball, but we do, so this is an
+    attempt to make that work by having both the 'all' and 'dist' targets
+    depends on the doxygen output.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 4114854893ff57a1be525ec099a4b33e5f9963b1
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Oct 22 00:17:37 2009 +0900
+
+    Don't attempt to build hw/kdrive/sdl/Makefile anymore
+    
+    With sdl removed, there's no way to build the sdl Makefile.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 4d333c5121818754356853724333eadec2dcd18c
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Oct 22 00:16:12 2009 +0900
+
+    Always check for doxygen so that distcheck gets dmx docs
+    
+    make distcheck wants the built dmx documentation so that users don't
+    have to install doxygen. This means that even if dmx isn't built, the
+    docs need to be so that the tarball can include them.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 7e92bac5f769aca99bd20e21fe2811f0480b647b
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Oct 22 00:00:35 2009 +0900
+
+    Make sure HAVE_DOXYGEN is defined when not building dmx
+    
+    The DMX docs are build using doxygen if present, so configure.ac
+    checks to see if that is available. However, when not building dmx
+    (the default), this conditional must still be defined to make automake
+    happy.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 1228e2d052f0bb98175c55c194340773b5fedb40
+Merge: 08e7f62 52bc6d9
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Oct 21 22:46:53 2009 +0900
+
+    Merge remote branch 'whot/master'
+
+commit 08e7f62faf72540cb3a6f1023024c145f7fa1a23
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Oct 21 16:46:55 2009 +0900
+
+    Fix 'distcheck' to use host xkb files but install to build dir
+    
+    'make distcheck' needs to read xkb files and write out compiled
+    versions as a part of the 'make check' phase. This patch passes
+    suitable options to the configure stage of the distcheck process to
+    read xkb files from the system location and write them to the
+    distcheck _inst directory.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 52bc6d944946e66ea2cc685feaeea40bb496ea83
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 16 11:03:09 2009 +1000
+
+    kdrive: Purge Xsdl
+    
+    From the original Xsdl commit:
+    "sdl x server so that we can x-on-x the fb stuff for ease of debugging. if
+    anyone uses this in production, a big scary monster will eat them.
+    hrm, perhaps i should make it have a --i-know-what-i'm-doing
+    param that it doens't start without, heh"
+    
+    That should be reason enough to not spend time maintaing it. Also, no more
+    elephants.
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 
-commit 37f857eb4cd30c6499a2735f59ddec87d1b7de57
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Mon Oct 19 11:50:56 2009 +1000
+commit f713f447a2110718dfc091380699362d76f0cd6c
+Author: Lee Leahu <freedesktop-bugs@dyweni.com>
+Date:   Mon Oct 19 15:43:59 2009 -0500
 
-    Revert "Xming: Remove unused X-boxed icon resource"
+    dmxDestroyWindow() - must call the X's native DetroyWindow()
     
-    Breaks make dist.
-    make[2]: *** No rule to make target `X-boxed.ico', needed by `distdir'.  Stop.
+    Don't really know why this section was disabled, but without it,
+    certain pPicture resources do not get free'd until later in the
+    FreeClientResources() process after the screen has been free'd -
+    resulting in seg fault.
     
-    This reverts commit 2969eaa88c4422fedf1b069e6fe055904b233db2.
+    With this patch, all resources normally free'd using vanilla X are
+    now also being freed correctly by Xdmx.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=24576
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 
-commit 650ac84a0cf62c139fa6254fb7a44157d551e8e3
+commit 664a8e37fd83141974b772980f680b94e48b4f87
+Author: Lee Leahu <freedesktop-bugs@dyweni.com>
+Date:   Sat Oct 17 00:45:44 2009 -0500
+
+    dmx: when setting up device axis, use the correct counter number
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 010d5e28655d619693632938e9e4325eef938295
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 16 10:01:13 2009 +1000
+
+    dmx: remove doxygen-generated files.
+    
+    These can be recreated by simply running 'doxygen doxygen.conf' in
+    hw/dmx/doc. Some of the files do not exist anymore, these have been removed.
+    Some other files have a different naming scheme.
+    Doxygen warnings about missing links fixed, two warnings remain:
+    
+    /home/whot/xorg/xserver/hw/dmx/dmxwindow.c:142: Warning: explicit link
+    request to 'dmxConfigureRootWindow' could not be resolved
+    /home/whot/xorg/xserver/hw/dmx/dmxwindow.c:119: Warning: explicit link
+    request to 'dmxConfigureScreenWindow()' could not be resolved
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit ff3e171568c8b604fc5eacd5f7e9b7ee9417f172
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 16 10:26:21 2009 +1000
+
+    xkb: don't conditionally include xkb-config.h.
+    
+    If HAVE_XKB_CONFIG_H is ever undefined, we fail to build anyway.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 0b9dbd4bf2d1061514bebd28648538a5fc0b60e6
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 16 08:24:37 2009 +1000
+
+    Use the default XKB settings for dmx and kdrive.
+    
+    Drop the dmx-specific defines, there's no reason to have separate ones
+    considering they're about as hardcoded as the default rules anyway.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit e08d8a2b043e5be821c5e8b2dbf37b09102b5d01
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 24 11:25:28 2009 +1000
+
+    kdrive: silence tslib compiler warnings
+    
+    tslib.c: In function 'TslibInit':
+    tslib.c:157: warning: unused variable 'tsDev'
+    tslib.c:156: warning: unused variable 'inputent'
+    tslib.c:155: warning: unused variable 'inputdir'
+    tslib.c:154: warning: unused variable 'i'
+    tslib.c:154: warning: unused variable 'fd'
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 522ca8179ad2b2b935993f08c9382cd5ad1d8b2f
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Tue Oct 20 04:18:01 2009 +0700
+
+    Remove unused LinuxFindPci and LinuxGetPciCfg
+    
+    These two functions are not referenced from inside xserver.
+    Remove now-empty klinux.h too.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 63f4bf39170eb2262617ef2dc95fd6d337b9dad5
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Mon Oct 19 13:07:26 2009 +1000
+
+    Fix make dist after 78c87bdad1feab91c2a39e01513b4b0826665f06
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 2bd71a6db241924bd17ac9dd4aa38e7e563ee5c1
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Fri Oct 16 22:29:26 2009 -0700
 
@@ -32,9 +198,8 @@ Date:   Fri Oct 16 22:29:26 2009 -0700
     
     Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit 2bd71a6db241924bd17ac9dd4aa38e7e563ee5c1)
 
-commit a8bfbd81b8aaac31b87d15257273d82174912b37
+commit a32b2420d85f076282721afe005e85fff7d9837e
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Oct 15 13:50:36 2009 +1000
 
@@ -43,9 +208,38 @@ Date:   Thu Oct 15 13:50:36 2009 +1000
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Acked-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit a32b2420d85f076282721afe005e85fff7d9837e)
 
-commit 64faf44f36b09780737c06781dadcf8fcbcaf836
+commit 7c31dd5db8b43c7796bf97a07e08213af5afd2ae
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 04:24:25 2009 -0500
+
+    Remove CopyISOLatin1Lowered
+    
+    This function was moved verbatim into libXfont-1.4, and it is not used
+    by the server or any drivers.  Exporting it in both places leads to
+    multiple definition linking errors on Cygwin, where we need to use a
+    static libXfont due to poor weak-symbol handling.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 9bc4e88d84daf0f4faf0599b575675e74c75f4b8
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 01:53:43 2009 -0500
+
+    Define ddxBeforeReset stubs in platform-neutral DDXs
+    
+    XWin uses ddxBeforeReset, which is called in DIX.  Other DDXs need to
+    define these in order to avoid an undefined symbol error at link time
+    when building alongside XWin.  Xnest and Xvfb already provide empty stubs;
+    this does the same for Xdmx and the platform-neutral KDrive servers.
+    
+    Also add a prototype to avoid a warning in all DDXs.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit a2f27b97900f335cd5f6a3e5bf8fa1d0ec9eb9ac
 Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
 Date:   Thu Oct 15 01:53:42 2009 -0500
 
@@ -56,9 +250,8 @@ Date:   Thu Oct 15 01:53:42 2009 -0500
     
     Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit a2f27b97900f335cd5f6a3e5bf8fa1d0ec9eb9ac)
 
-commit 4b419c1651bbe7fbd3e87c3d71ba9fe642672ca2
+commit ed4c6bc79a797830895ad6c3601318b2d1c4bdcb
 Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
 Date:   Thu Oct 15 01:53:41 2009 -0500
 
@@ -72,9 +265,8 @@ Date:   Thu Oct 15 01:53:41 2009 -0500
     
     Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit ed4c6bc79a797830895ad6c3601318b2d1c4bdcb)
 
-commit 7d5282dd597eb9353ca7a7697604d81228254d4a
+commit bcd0c02cfd0707b5f8b1ca91dfbe4412df2c643e
 Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
 Date:   Thu Oct 15 01:53:40 2009 -0500
 
@@ -82,9 +274,124 @@ Date:   Thu Oct 15 01:53:40 2009 -0500
     
     Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit bcd0c02cfd0707b5f8b1ca91dfbe4412df2c643e)
 
-commit 1b88e4eb2e605fd1d3adffaf38dc40be6a28970d
+commit 264ce9e8360374b3a43442c8bdea08abde705446
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Oct 14 20:33:53 2009 -0400
+
+    xselinux: Use the now-exported IsPointerDevice() instead of a copy.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit 0ae1632be045bfbb288bb57190c830f94247460f
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Oct 14 20:32:28 2009 -0400
+
+    dix: Export IsPointerDevice() and IsKeyboardDevice().
+    
+    Makes the functions available to extmod for extensions to call.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit 6c2ae5fec552366e11ad64a27626eb5dec4becf0
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Tue Sep 22 13:31:49 2009 -0700
+
+    xselinux: switch from x_device to separate x_pointer and x_keyboard classes.
+    
+    This will allow separate controls over pointer and keyboard without having
+    to relabel the devices to separate types.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit 4be354c4c2da5168b302601b91bd80cfaca7e193
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Tue Sep 22 13:18:44 2009 -0700
+
+    Remove some debug messages that trigger on XACE event delivery failure.
+    
+    It is normal for XACE to deny an event delivery, so these log messages
+    shouldn't trigger when that happens.  Just drop them for now.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit c4ffce4dc84a0a9d134a59b7e7765c99ed767e53
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Tue Sep 22 13:13:03 2009 -0700
+
+    xace: Relax permissions on XkbGetState from Read to Getattr.
+    
+    This request is used to get the current keyboard group and is called from
+    GTK.  It does not return an actual keymap (aside from modifiers) so it
+    should be safe to relax the permission on it.  However it does return
+    button state information which should be controlled through a separate
+    pointer Read check.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit 0ff28319906eeb3f236acd72201c416ce01f2c6e
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Tue Sep 15 19:41:04 2009 -0400
+
+    xselinux: Stop special-casing QueryPointer access checks.
+    
+    XACE has been changed to not return BadAccess on device read failures.
+    Thus, no need for this workaround code.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit 8502c06e19a4c00bf1311f54f9a365ee9e026e97
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Tue Sep 15 19:29:34 2009 -0400
+
+    xace: Fake return values on denials in input polling requests.
+    
+    Instead of returning BadAccess when "read" permission is denied
+    on a device, falsify the device state (buttons down, keys pressed).
+    This is nicer to applications, but may still have undesired side
+    effects.  The long-term solution is not to use these requests in
+    event-driven code!
+    
+    Requests affected: QueryPointer, QueryKeymap, XiQueryDevice.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit 0493935691e925ae137af7636fa15befa76c8b45
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Mon Aug 31 21:20:53 2009 -0400
+
+    xselinux: Factor out some dynamic array code into common helpers.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit ae8891ba0b63bfe6941a324e201d9ab7c645c0f3
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Mon Aug 31 18:46:23 2009 -0400
+
+    xselinux: refactor extension code into smaller files.
+    
+    New files:
+    xselinux_ext.c: Extension init and request handlers.
+    xselinux_hooks.c: XACE hook functions and other callbacks.
+    xselinux_label.c: Object security-labeling code.
+    xselinuxint.h: Shared internal functions.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit 22b38f513c93c2f2aea5909878c3c9acae7d35c1
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sat Oct 3 12:44:50 2009 +0100
+
+    Cygwin/X: Avoid a potential null pointer dereference before input initialization
+    
+    Avoid a null pointer dereference if WM_MOUSEMOVE occurred before
+    the input device had been initialized (a timing sensitive bug
+    occassionally seen during initialization)
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 1b0dfd8dee639870725d3bd9b70c3bd589d09e5a
 Author: Jon TURNEY <jon.turney@dronecode.org.uk>
 Date:   Tue Jul 21 02:23:21 2009 +0100
 
@@ -95,18 +402,24 @@ Date:   Tue Jul 21 02:23:21 2009 +0100
     
     Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
     Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
-    (cherry picked from commit 1b0dfd8dee639870725d3bd9b70c3bd589d09e5a)
 
-commit 2969eaa88c4422fedf1b069e6fe055904b233db2
+commit 83d120b90482d356be730f63aead0f8e44a4e846
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Thu Oct 1 14:47:22 2009 +0100
+
+    Xming: Fix various 'ISO C90 forbids mixed declarations and code' warnings
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 78c87bdad1feab91c2a39e01513b4b0826665f06
 Author: Colin Harrison <colin.harrison@virgin.net>
 Date:   Fri Sep 25 17:49:59 2009 +0100
 
     Xming: Remove unused X-boxed icon resource
     
     Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
-    (cherry picked from commit 78c87bdad1feab91c2a39e01513b4b0826665f06)
 
-commit 92253b0f2028c6c243be5f444b59568b0c15ae1f
+commit fdf7f7e95c852734c620f58df408a324902172cf
 Author: Colin Harrison <colin.harrison@virgin.net>
 Date:   Fri Sep 25 17:46:40 2009 +0100
 
@@ -116,9 +429,8 @@ Date:   Fri Sep 25 17:46:40 2009 +0100
     Replace the obsolete DIALOG resource with DIALOGEX in the .rc file
     
     Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
-    (cherry picked from commit fdf7f7e95c852734c620f58df408a324902172cf)
 
-commit 237bc0c2558bdda5c7ec44cbc86a65af21344ba2
+commit 5ddfd9d0898629627e8ab10e65ea2e082be3af37
 Author: Jon TURNEY <jon.turney@dronecode.org.uk>
 Date:   Sat Oct 3 13:07:23 2009 +0100
 
@@ -127,9 +439,8 @@ Date:   Sat Oct 3 13:07:23 2009 +0100
     Only try to build rootless extension code if we really need it (i.e. mwextwm mode is enabled)
     
     Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
-    (cherry picked from commit 5ddfd9d0898629627e8ab10e65ea2e082be3af37)
 
-commit c163126f06720a4bca1d073a2fb6d138ca6f0f00
+commit 25344ba7f7845654364d62bf15322b3b79465bd9
 Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
 Date:   Tue Oct 13 20:14:58 2009 -0500
 
@@ -137,9 +448,22 @@ Date:   Tue Oct 13 20:14:58 2009 -0500
     
     Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit 25344ba7f7845654364d62bf15322b3b79465bd9)
 
-commit 07229cd6da6a9b7acedb994275fed5b512fe48b1
+commit 6e158003e80534ce007290f75c89d698aec1d00b
+Merge: 2b14e14 5e762f0
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Oct 13 18:40:42 2009 -0700
+
+    Merge remote branch 'mattst88/master'
+    
+    * mattst88/master:
+      [alpha] assume we have __NR_pciconfig_iobase
+      [alpha] don't return from void functions
+      Fix undefined symbols on alpha
+      Fix breakage on alpha caused by c7680befe5ae
+      Revert "alpha: kill xf86SlowBCopyToBus and xf86SlowBCopyFromBus"
+
+commit 5e762f0e2f203b5121a3de3b9af3c8981b31a77f
 Author: Matt Turner <mattst88@gmail.com>
 Date:   Tue Oct 13 20:42:14 2009 -0400
 
@@ -151,57 +475,16 @@ Date:   Tue Oct 13 20:42:14 2009 -0400
     The pciconfig_iobase syscall has been supported since 2000.
     
     Signed-off-by: Matt Turner <mattst88@gmail.com>
-    (cherry picked from commit 5e762f0e2f203b5121a3de3b9af3c8981b31a77f)
 
-commit 13c5e2fe9c7ce82dfdc026a392327b115d8c6a15
+commit 46785c04bca16f495af3ed8d685aee939a1a8f39
 Author: Matt Turner <mattst88@gmail.com>
 Date:   Tue Oct 13 20:40:59 2009 -0400
 
     [alpha] don't return from void functions
     
     Signed-off-by: Matt Turner <mattst88@gmail.com>
-    (cherry picked from commit 46785c04bca16f495af3ed8d685aee939a1a8f39)
 
-commit fff0b2013ad40c6116e92a9c5e233da4a34e6943
-Author: Michael Cree <mcree@orcon.net.nz>
-Date:   Wed Oct 7 18:33:29 2009 -0400
-
-    Fix undefined symbols on alpha
-    
-    Signed-off-by: Matt Turner <mattst88@gmail.com>
-    (cherry picked from commit 34eddbbb73bb16395dba0818247909c1b4bee4c2)
-
-commit a08186fe59f003fc9e1edceb1d95d2e316766e2a
-Author: Matt Turner <mattst88@gmail.com>
-Date:   Tue Oct 6 20:58:30 2009 -0400
-
-    Fix breakage on alpha caused by c7680befe5ae
-    
-    Pinpointed by by Michael Cree.
-    
-    Commit c7680befe5ae removed Jensen support, but at the same time broke
-    support for dense memory systems.
-    
-    Signed-off-by: Matt Turner <mattst88@gmail.com>
-    (cherry picked from commit 9625f6d328d6f516520930227b218979309938bc)
-
-commit e116bebb1324c5cdb806a70683ca747321c536b0
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Tue Oct 13 13:15:05 2009 +1000
-
-    dix: extend IsPointerDevice check to valuator-only devices.
-    
-    A device with valuators but no keys is definitely a pointer device and needs
-    to be attached to the VCP. Otherwise, the class copying happens on the VCK
-    and the VCP isn't updated with the events that are to be sent through it.
-    This addresses the trigger for #24441, not the actual issue.
-    Jury is still out on valuator+key devices.
-    
-    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit 72f5874434c0c015b671c492c1318f35f1793668)
-
-commit f6cb78e476132b201334655f0015a2c727434fbf
+commit 2b14e142039193ea854a02706662204f4f5f6db8
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Tue Oct 13 12:54:56 2009 -0700
 
@@ -211,9 +494,9 @@ Date:   Tue Oct 13 12:54:56 2009 -0700
     
     Signed-off-by: Colin Harrison <colin.harrison@virgin.net>
     Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
-    (cherry picked from commit 7e178ffbed7c8557faf8d471ad275aa2b0365e1d)
+    Signed-off-by: Keith Packard <keithp@keithp.com>
 
-commit 496350bd6832e595e42620da76d2f1e2e4c9e91d
+commit 5b91dfac6fbdf35288a4558638d4923e230ab8d3
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Tue Oct 13 12:54:11 2009 -0700
 
@@ -235,17 +518,24 @@ Date:   Tue Oct 13 12:54:11 2009 -0700
     
     Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
     Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
-    (cherry picked from commit 6980f77892e0409b44bd8f33ba82e7273c6462a4)
+    Signed-off-by: Keith Packard <keithp@keithp.com>
 
-commit 5411e78bd51df86f6cdf925f65fd3725f943b6bb
+commit 72f5874434c0c015b671c492c1318f35f1793668
 Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Mon Oct 12 14:12:45 2009 +1000
+Date:   Tue Oct 13 13:15:05 2009 +1000
 
-    xserver 1.7.0.901
+    dix: extend IsPointerDevice check to valuator-only devices.
+    
+    A device with valuators but no keys is definitely a pointer device and needs
+    to be attached to the VCP. Otherwise, the class copying happens on the VCK
+    and the VCP isn't updated with the events that are to be sent through it.
+    This addresses the trigger for #24441, not the actual issue.
+    Jury is still out on valuator+key devices.
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
 
-commit b6e723eaebe79116dfa15162851b02bbdc29be2a
+commit 1088073b11ed488c0df45af3867b900ef93c6fe1
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Fri Oct 9 11:31:44 2009 +0200
 
@@ -256,9 +546,8 @@ Date:   Fri Oct 9 11:31:44 2009 +0200
     
     Signed-off-by: Michel Dänzer <daenzer@vmware.com>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit 1088073b11ed488c0df45af3867b900ef93c6fe1)
 
-commit 2e37bda8d6b0203973893d8440d9917975f53d97
+commit 55305cf8db7787883bc80b7348eb626e609626f8
 Author: Ben Skeggs <bskeggs@redhat.com>
 Date:   Fri Oct 9 16:08:15 2009 -0700
 
@@ -273,9 +562,8 @@ Date:   Fri Oct 9 16:08:15 2009 -0700
     Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
     Signed-off-by: Michel Dänzer <daenzer@vmware
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit 55305cf8db7787883bc80b7348eb626e609626f8)
 
-commit 6d99a7de3f2c60bf90faf604b1a39d4aa5bdfd09
+commit b375be9285c40467578fac2f1360c29a75306ab4
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Fri Oct 9 11:31:46 2009 +0200
 
@@ -288,9 +576,8 @@ Date:   Fri Oct 9 11:31:46 2009 +0200
     Signed-off-by: Michel Dänzer <daenzer@vmware.com>
     Tested-by: Aaron Plattner <aplattner@nvidia.com>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit b375be9285c40467578fac2f1360c29a75306ab4)
 
-commit 398b5e01a7976ee8940105cf2be7c28ce57c3858
+commit c0a1bb511a4629bf5683d8a710dc4a1c577a5d44
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Wed Oct 7 22:10:55 2009 -0700
 
@@ -303,19 +590,142 @@ Date:   Wed Oct 7 22:10:55 2009 -0700
     Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
     Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
     Signed-off-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit c0a1bb511a4629bf5683d8a710dc4a1c577a5d44)
 
-commit b916ac74e27ce8998ac0866bb2b39dcd378e0182
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Fri Oct 2 18:58:35 2009 -0700
+commit b0dd6be2c8703f7062d45ac9fd646550c7d54e3b
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Oct 8 13:38:44 2009 +1100
 
-    XQuartz: Send mouse location with scroll events.
+    Cast small-int values through intptr_t when passed as pointers
     
-    This fixes the problem where (0, 0) was sent as the mouse location with scroll
-    button events causing the event to not reach the client.
-    (cherry picked from commit c4886fbabc1d8b4054654b227fcad83f58e8e798)
+    On 64-bit systems, int and pointers don't have the same size, so GCC gives
+    warnings about casts between int and pointer types. However, in the cases
+    covered by this patch, it's always a value that fits in int being stored
+    temporarily as a pointer and then converted back later, which is safe.
+    Casting through the pointer-sized integer type intptr_t convinces the
+    compiler that this is OK.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
 
-commit a4ce2aa6348ecca3a5b1ac8d87caf974bdad3455
+commit b680a89262efcfef4644adb4a61ae42ea0db0c93
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Oct 8 13:38:01 2009 +1100
+
+    Fix GCC warnings in xorg_backtrace
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 9bf2ff4faf730913de3073f346646a8727be41d4
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Oct 8 13:36:44 2009 +1100
+
+    Fix "possibly uninitialized" warnings in glx
+    
+    In both functions, "answer" was uninitialized if "compsize" was 0, but in
+    that case __GLX_SEND_VOID_ARRAY(compsize) results in a call to
+    WriteToClient for 0 bytes, which returns immediately without examining the
+    "answer" argument. So initializing to a null pointer is as good as
+    anything else.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+
+commit b422b532f3dcab54c53f61a66f2ad76059d1874a
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Thu Oct 8 13:29:27 2009 +1100
+
+    Remove static MAXSCREENS limit from Xext/shm.c
+    
+    Dynamically allocate per-screen data in the SHM extension, instead of
+    having a single static-sized array.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 4df3e8c8053d9d4b3043f339a73d0de97020d884
+Author: Martin Ettl <ettl.martin@gmx.de>
+Date:   Thu Oct 8 13:27:30 2009 +1100
+
+    Resource leakage: 0 is a valid file descriptor
+    
+    When testing if an fd is valid, the required construct is >= 0, not > 0.
+    
+    [Daniel: Fixed up the Linux MTRR case as well.]
+    
+    Signed-off-by: Martin Ettl <ettl.martin@gmx.de>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 4151a13c80f3afa43f88afcf19a7aeb16dace93a
+Author: Francisco Jerez <currojerez@riseup.net>
+Date:   Mon Oct 5 02:39:03 2009 +0200
+
+    dix: Fix a double free in dixFreePrivates.
+    
+    It can be reproduced when the server is regenerated and for some
+    reason the private keys are reassigned in a different order: a
+    manually allocated private may get an index formerly used by a
+    preallocated private. In that case it will first be manually freed and
+    then again by dixFreePrivates, as items[i].size was never zeroed
+    out. Do it in dixResetPrivates.
+    
+    Signed-off-by: Francisco Jerez <currojerez@riseup.net>
+    Acked-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 34eddbbb73bb16395dba0818247909c1b4bee4c2
+Author: Michael Cree <mcree@orcon.net.nz>
+Date:   Wed Oct 7 18:33:29 2009 -0400
+
+    Fix undefined symbols on alpha
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+
+commit 44efcdde501d54ca9c3e33ab5b1f699956fc3f9f
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 7 09:07:03 2009 -0700
+
+    Fix overlay detection when matching Xv adaptors across screens.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 68304215e25876ee639015969b4f07e1c9c515e0
+Merge: 6676f49 315aaef
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Oct 6 22:41:42 2009 -0700
+
+    Merge remote branch 'alanc/master'
+    
+    Conflicts:
+    	configure.ac
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 315aaef55750a863c08a16ad9120ffb76f9b48e0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 2 21:54:53 2009 -0700
+
+    Use $(AM_V_GEN) to silence more commands when AM_SILENT_RULES is active
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Eric Anholt <eric@anholt.net>
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2e294380b64b6362173d0590c4292f290e50af50
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 2 16:51:24 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Eric Anholt <eric@anholt.net>
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 4b0911565d18b1aefca564315d0f1b9b4a17aa65
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Mon Oct 5 16:52:19 2009 -0700
 
@@ -327,29 +737,38 @@ Date:   Mon Oct 5 16:52:19 2009 -0700
     Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
     Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
 
-commit 22fd21a71d3dc98a94cc5f6592832e1d19bb479a
-Author: Alan Coopersmith <alan.coopersmith@sun.com>
-Date:   Tue Sep 15 19:17:48 2009 -0700
+commit 8c51b886400c5962b31ff565771be1b01a3ca8fb
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Oct 6 16:08:42 2009 +0200
 
-    Fix build of unit tests when dtrace probes are enabled
+    configure: quote argument to m4_pattern_forbid
     
-    ar loses the dtrace probe magic when building static libraries, so we
-    have to link with the .O files in order to resolve the dtrace probe symbols.
+    Without this, configure spits out
+    ../configure: line 15460: ac_fn_c_check_member: command not found
+    
+    Also anchor the pattern to make it stricter.
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 6ee61578ddb9f880ef12bbe9c3671d7dd53f2809
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 5 17:27:27 2009 -0700
+
+    Remove shave now that automake-1.11 has AM_SILENT_RULES
+    
+    Revert "Add shave so that we can see the steaming piles of warnings generated."
+    This reverts commit 181cc08c8908a119fc403f970dea8cc98d3e0b9b.
+    
+    shave was left in the xserver 1.7 release/branch to allow developers &
+    distros time to transition to automake-1.11.   xserver 1.8 series will
+    require automake-1.11 for silencing build noise.
     
     Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
 
-commit 8e3299eee8c2d909f34ec070f6f606a278c46330
-Author: Alan Coopersmith <alan.coopersmith@sun.com>
-Date:   Fri Oct 2 20:44:19 2009 -0700
-
-    Set XQUARTZ to no on non-Darwin OS'es
-    
-    Fixes build with dtrace probes on Solaris after efacd7bfd08ffc0725de6f639c6afbf3b2f6c9fe
-    
-    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
-    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
-
-commit f496e0042b1174d8831f061cd156ac7bbbb76a7c
+commit d5d960f57834f16164457dab2e80290717dbf2cd
 Author: Kim Woelders <kim@woelders.dk>
 Date:   Fri Oct 2 19:31:15 2009 +0200
 
@@ -358,9 +777,8 @@ Date:   Fri Oct 2 19:31:15 2009 +0200
     Signed-off-by: Kim Woelders <kim@woelders.dk>
     Reviewed-by:  Soren Sandmann Pedersen <sandmann@redhat.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit cbc886a3513079c084fb7ce47b87c3e5bba19f3f)
 
-commit 5bc90ffdee0e95727767ce3df9154ea3ff3d6f95
+commit d2118c8ca94fc7bcb8e0de547e63cf022f53a8a9
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Mon Oct 5 15:31:54 2009 +1000
 
@@ -372,9 +790,8 @@ Date:   Mon Oct 5 15:31:54 2009 +1000
     Reported-by: Felix Wenk
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Signed-off-by: Daniel Stone <daniel@fooishbar.org>
-    (cherry picked from commit bd7430a32e63df8cd60352764744076448ee623f)
 
-commit 5c35d07c3b0fc8cc60fc622d6eb444bea2be0acc
+commit bf116057c7efd43c247c93f2f5d733a5db857cc9
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Mon Oct 5 10:44:43 2009 +1000
 
@@ -389,74 +806,138 @@ Date:   Mon Oct 5 10:44:43 2009 +1000
     
     Reported-by: Mark Rosenstand
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit c629e0fc50dfaffaa40a56709da7f035c289fed2)
 
-commit b6016134b53587b8f942243d95729bb902c58db4
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Mon Sep 28 17:05:29 2009 -0700
+commit 9625f6d328d6f516520930227b218979309938bc
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Tue Oct 6 20:58:30 2009 -0400
 
-    XQuartz: Set the proper bitmap for key repeats...
+    Fix breakage on alpha caused by c7680befe5ae
     
-    XkbSetRepeatKeys lies and doesn't do what it says it will...
+    Pinpointed by by Michael Cree.
     
-    (cherry picked from commits b9dfed9e88389cbd29406a20d38ee4297638649b and
-                                873467adad479be02cd9cc6b43685919f5612d91)
+    Commit c7680befe5ae removed Jensen support, but at the same time broke
+    support for dense memory systems.
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
 
-commit 3808ecc99a8d64cdbe3fb4a3b57c59e7545e362c
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Mon Sep 28 17:47:31 2009 -0700
+commit aa07957373fd7cbe67458a001e4afd6a7f1ea37f
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 12:20:03 2009 +1000
 
-    XQuartz: Query the BundleIdentifier from the bundle in X11.bin rather than using the configure option.
+    Revert "alpha: kill xf86SlowBCopyToBus and xf86SlowBCopyFromBus"
     
-    This lets X11.bin drop into any .app ... the Info.plist and Xquartz binary need to have it hardcoded still.
-    (cherry picked from commit 9ad16b8e50b13eb6d0cd20386d07aa8d7320f671)
-
-commit 80735dbf560ba156e53cd2a46190b334de281dd6
-Author: Nirbheek Chauhan <nirbheek@gentoo.org>
-Date:   Tue Sep 29 22:35:06 2009 +0530
-
-    xkb: check permissions on XKM_OUTPUT_DIR
+    The vesa driver still uses slowbcopy_frombus and slowbcopy_tobus.
     
-    Checking just for root is insufficient since that does not guarantee write/read
-    permissions in XKM_OUTPUT_DIR (for example with sandbox).
+    This reverts commit 5ef53a94ce4e48e11de26290cd677266308640c8.
     
-    Check if we can write a file, as well as read it later. Otherwise, invoke the
-    fallback to /tmp
-    
-    Signed-off-by: Nirbheek Chauhan <nirbheek@gentoo.org>
-    Signed-off-by: Rémi Cardona <remi@gentoo.org>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 9bc7cbf9c02656982c2525836b5498993f708e02)
 
-commit 616c7a009d9c4e84a8882ac797092d61619c1339
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Thu Oct 1 11:58:18 2009 -0700
+commit 6676f49e34f8db7ef5767a6dbf6c2a4d2087f79c
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Oct 6 16:08:42 2009 +0200
 
-    XQuartz: Update version strings to be X11R7.5 and the bundle 2.5.0
+    configure: quote argument to m4_pattern_forbid
     
-    Is fink really _still_ relying on this X11R7.x version string?
-    (cherry picked from commit 3d7cf468df96c0130a862f0d93fec990b9110c2f)
+    Without this, configure spits out
+    ../configure: line 15460: ac_fn_c_check_member: command not found
+    
+    Also anchor the pattern to make it stricter.
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
 
-commit 19592ee7748a32388d90d802bb4f5e2bff15863e
+commit a0363bf7b135d816e73849c91fa53d98fd6072d1
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 5 17:27:27 2009 -0700
+
+    Remove shave now that automake-1.11 has AM_SILENT_RULES
+    
+    Revert "Add shave so that we can see the steaming piles of warnings generated."
+    This reverts commit 181cc08c8908a119fc403f970dea8cc98d3e0b9b.
+    
+    shave was left in the xserver 1.7 release/branch to allow developers &
+    distros time to transition to automake-1.11.   xserver 1.8 series will
+    require automake-1.11 for silencing build noise.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit cbc886a3513079c084fb7ce47b87c3e5bba19f3f
 Author: Kim Woelders <kim@woelders.dk>
-Date:   Tue Sep 29 20:31:45 2009 +0200
+Date:   Fri Oct 2 19:31:15 2009 +0200
 
-    dix: Fix potential memory corruption in doListFontsWithInfo.
+    render: Fix clip region translation in miClipPictureSrc().
     
     Signed-off-by: Kim Woelders <kim@woelders.dk>
-    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Reviewed-by:  Soren Sandmann Pedersen <sandmann@redhat.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 4970666827e65424ee17ccf6341ff84aac974383)
 
-commit 4257023c1e40387aff096d5f00d746d3f7a521b4
+commit bd7430a32e63df8cd60352764744076448ee623f
 Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Fri Oct 2 14:05:43 2009 +1000
+Date:   Mon Oct 5 15:31:54 2009 +1000
 
-    xserver 1.7.0
+    xfree86: remove log-spamming DebugF
     
+    All input drivers use xf86PostKeyEventP indirectly now and have been since
+    it exists. I guess that qualifies it as tested - no need to spam the logs.
+    
+    Reported-by: Felix Wenk
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 1a2dde3335864abfbbc133dbc709f564272dd540
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 2 20:44:19 2009 -0700
+
+    Set XQUARTZ to no on non-Darwin OS'es
+    
+    Fixes build with dtrace probes on Solaris after efacd7bfd08ffc0725de6f639c6afbf3b2f6c9fe
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit c629e0fc50dfaffaa40a56709da7f035c289fed2
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Oct 5 10:44:43 2009 +1000
+
+    Require libXtst >= 1.0.99.2 and libdmx >= 1.0.99.1
+    
+    libXtst requirement is already implicit since we require xextproto 7.1 and
+    that doesn't go well with pre 1.0.99.2 versions of libXtst. Nonetheless,
+    list it explicitly.
+    
+    Since d0440275108920f5cb5d630f55fc9a3320c496d3 we require dmxproto 2.2.99.1.
+    Complementing that is libdmx 1.0.99.1 with the dmxext.h header file.
+    
+    Reported-by: Mark Rosenstand
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 
-commit 15b4faff281ad8abce6b32fe2fc855eb6da42476
+commit 24e640e1fa6cfb3917ba90dcdabf1fadddff20aa
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Oct 2 19:20:24 2009 -0700
+
+    XQuartz: Fix a possible minor memory leak
+
+commit c4886fbabc1d8b4054654b227fcad83f58e8e798
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Oct 2 18:58:35 2009 -0700
+
+    XQuartz: Send mouse location with scroll events.
+    
+    This fixes the problem where (0, 0) was sent as the mouse location with scroll
+    button events causing the event to not reach the client.
+
+commit 4c6bfa2c09ae2b0cffdf9211a6dfbcaefe0366b5
+Author: Ian Romanick <ian.d.romanick@intel.com>
+Date:   Thu Oct 1 10:39:19 2009 -0700
+
+    GLX: More clearly document the GLX protocol version handling
+    
+    Signed-off-by: Ian Romanick <ian.d.romanick@intel.com>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 45f447dafded5adfe11b7df3325c2d8f6ae0639b
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Oct 1 21:19:11 2009 +1000
 
@@ -472,9 +953,8 @@ Date:   Thu Oct 1 21:19:11 2009 +1000
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Acked-by: Simon Thum <simon.thum@gmx.de>
-    (cherry picked from commit 45f447dafded5adfe11b7df3325c2d8f6ae0639b)
 
-commit 3788113618977bdc83e3ec1e7ca3160bad9a0d13
+commit 64fe5784b49347e1fd27b0c463be5c16557594c9
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Fri Oct 2 09:34:24 2009 +1000
 
@@ -483,9 +963,8 @@ Date:   Fri Oct 2 09:34:24 2009 +1000
     Tested-by: Xavier Chantry <shiningxc@gmail.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Acked-by: Julien Cristau <jcristau@debian.org>
-    (cherry picked from commit 64fe5784b49347e1fd27b0c463be5c16557594c9)
 
-commit c3034dc3af450802dda156136d9fabbc1cc58836
+commit 3ebb82d61c2b56e8f7145443a552a4e913bbfc80
 Author: Dave Airlie <airlied@redhat.com>
 Date:   Thu Oct 1 15:25:55 2009 +1000
 
@@ -499,9 +978,49 @@ Date:   Thu Oct 1 15:25:55 2009 +1000
     Signed-off-by: Dave Airlie <airlied@redhat.com>
     Declared-as-sane-by: Keith Packard <keithp@keithp.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 3ebb82d61c2b56e8f7145443a552a4e913bbfc80)
 
-commit 47c0b80915d67346ec63b36b659a96b77e777a71
+commit cb54cf1b3e8c4109541cfb698542c00f2473e731
+Author: Dave Airlie <airlied@linux.ie>
+Date:   Wed Sep 30 11:33:16 2009 +1000
+
+    glx: fixup deref of null pointer when glx screen init fails.
+    
+    I think this is what the original author wanted.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+    Acked-by: Ian Romanick <ian.d.romanick@intel.com>
+
+commit 3d7cf468df96c0130a862f0d93fec990b9110c2f
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu Oct 1 11:58:18 2009 -0700
+
+    XQuartz: Update version strings to be X11R7.5 and the bundle 2.5.0
+    
+    Is fink really _still_ relying on this X11R7.x version string?
+
+commit 85b831f701d085e514afcf8a5ce9b11f8a57984e
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Thu Oct 1 17:27:11 2009 +0200
+
+    xfree86: fix xorg.conf manpage formatting error
+
+commit 9bc7cbf9c02656982c2525836b5498993f708e02
+Author: Nirbheek Chauhan <nirbheek@gentoo.org>
+Date:   Tue Sep 29 22:35:06 2009 +0530
+
+    xkb: check permissions on XKM_OUTPUT_DIR
+    
+    Checking just for root is insufficient since that does not guarantee write/read
+    permissions in XKM_OUTPUT_DIR (for example with sandbox).
+    
+    Check if we can write a file, as well as read it later. Otherwise, invoke the
+    fallback to /tmp
+    
+    Signed-off-by: Nirbheek Chauhan <nirbheek@gentoo.org>
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 622fc98fd08aba98369e6933c3ab8c9ff85385d5
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Oct 1 10:03:42 2009 +1000
 
@@ -524,9 +1043,8 @@ Date:   Thu Oct 1 10:03:42 2009 +1000
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Reviewed-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit 622fc98fd08aba98369e6933c3ab8c9ff85385d5)
 
-commit 30ebee3bfcadf915be98d407610c615e3e00f9c1
+commit 758ab55d2defc78d0169fd61a7036eb9f889e9e7
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Oct 1 15:22:19 2009 +1000
 
@@ -539,9 +1057,8 @@ Date:   Thu Oct 1 15:22:19 2009 +1000
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Reviewed-by: Keith Packard <keithp@keithp.com>
-    (cherry picked from commit 758ab55d2defc78d0169fd61a7036eb9f889e9e7)
 
-commit 8026c5a08584419be3adecd5965dd03e793ddf81
+commit b5fcc5553eb784c9f4826936e839079c0cdee55a
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Thu Oct 1 15:17:11 2009 +1000
 
@@ -554,9 +1071,8 @@ Date:   Thu Oct 1 15:17:11 2009 +1000
     
     Signed-off-by: Dave Airlie <airlied@redhat.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit b5fcc5553eb784c9f4826936e839079c0cdee55a)
 
-commit e182c1b4368c6958579732dd4ddc59de2b46359b
+commit db98b26ee145f70e732e2cf4a6ac3de77fdf4adc
 Author: Keith Packard <keithp@keithp.com>
 Date:   Wed Sep 30 11:40:19 2009 -0700
 
@@ -572,9 +1088,32 @@ Date:   Wed Sep 30 11:40:19 2009 -0700
     
     Signed-off-by: Keith Packard <keithp@keithp.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit db98b26ee145f70e732e2cf4a6ac3de77fdf4adc)
 
-commit 369b5d526b699cd1c5cd38bb5a823ec66c5286ef
+commit 873467adad479be02cd9cc6b43685919f5612d91
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Sep 30 00:22:02 2009 -0700
+
+    XQuartz: Set the proper bitmap for key repeats...
+    
+    XkbSetRepeatKeys lies and doesn't do what it says it will...
+
+commit 7bef78e199a4e4f7916be506807513efcd8fd4cb
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Sep 29 23:40:47 2009 -0700
+
+    xkb: Use XkbPerKeyBitArraySize instead of hardcoded value of 32
+
+commit 4970666827e65424ee17ccf6341ff84aac974383
+Author: Kim Woelders <kim@woelders.dk>
+Date:   Tue Sep 29 20:31:45 2009 +0200
+
+    dix: Fix potential memory corruption in doListFontsWithInfo.
+    
+    Signed-off-by: Kim Woelders <kim@woelders.dk>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 6ffda5aae75272fabdc27d6f693ae827be119e95
 Author: Dave Airlie <airlied@redhat.com>
 Date:   Tue Sep 29 11:49:09 2009 +1000
 
@@ -595,18 +1134,53 @@ Date:   Tue Sep 29 11:49:09 2009 +1000
     Signed-off-by: Dave Airlie <airlied@redhat.com>
     Reviewed-by: Keith Packard <keithp@keithp.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 6ffda5aae75272fabdc27d6f693ae827be119e95)
 
-commit d3ba814884154150ed3e6a71254dec7312593488
+commit ad5c0d9efa47476ed5cf75c82265c73919e468b4
+Author: Ian Romanick <ian.d.romanick@intel.com>
+Date:   Tue Sep 29 16:43:43 2009 -0700
+
+    GLX: Enable GLX 1.4 on DRI2
+    
+    Return the minimum GLX version supported by all screens.  Assume that
+    DRI2 screens have all the required features for GLX 1.4.  Assume that
+    everyone else can only support GLX 1.2.
+    
+    Reviewed-by: Kristian Høgsberg <krh@redhat.com>
+    Reviewed-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+
+commit f11a356bcef1bc0a6440325019d5967b745a42dd
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Sep 28 17:05:29 2009 -0700
+
+    XQuartz: Cleaned up keymap setting for easier maintenance
+    (cherry picked from commit b9dfed9e88389cbd29406a20d38ee4297638649b)
+
+commit f3223c71cfc638e695981e527517d48ea00d124d
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Sep 28 23:01:59 2009 -0700
+
+    XQuartz: Remove the redundant xquartz_resetenv_display
+      unsetenv(DISPLAY) takes care of this for us anyway
+    (cherry picked from commit d2263645d839c9edeedea0835d26f1f41b37f70e)
+
+commit 9b98b883227ed23d5470e8de689afeec4a0fd742
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Sep 28 17:47:31 2009 -0700
+
+    XQuartz: Query the BundleIdentifier from the bundle in X11.bin rather than using the configure option.
+    
+    This lets X11.bin drop into any .app ... the Info.plist and Xquartz binary need to have it hardcoded still.
+    (cherry picked from commit 9ad16b8e50b13eb6d0cd20386d07aa8d7320f671)
+
+commit 11817a881cb93a89788105d1e575a468f2a8d27c
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Tue Sep 29 08:56:59 2009 +0200
 
     Fix ShmPutImage non-ZPixmap case.
     
     Fixes http://bugs.freedesktop.org/show_bug.cgi?id=23298 .
-    (cherry picked from commit 11817a881cb93a89788105d1e575a468f2a8d27c)
 
-commit 8fc0d54cbaf791d947c7bab23f2e982cabd7c958
+commit 19be992d9dc542b61fa3f4fd32a09071c9e64880
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Mon Sep 28 14:18:45 2009 +1000
 
@@ -631,9 +1205,80 @@ Date:   Mon Sep 28 14:18:45 2009 +1000
     
     Tested-by: Vic Lee
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 19be992d9dc542b61fa3f4fd32a09071c9e64880)
 
-commit 857ec3e6fff571398dfcd9b4728b5c38cbcd3fcb
+commit efacd7bfd08ffc0725de6f639c6afbf3b2f6c9fe
+Author: Ben Byer <bbyer@freedesktop.org>
+Date:   Sun Sep 27 10:35:53 2009 -0700
+
+    Add (ok, fix) support for DTrace under OS X
+    (cherry picked from commit 8428a57184f542941d2c8c90e97d18e111a69dd2)
+
+commit b3415187e92960cbff784108b5a3a8d130dc34c5
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 23:09:51 2009 -0700
+
+    Rootless: Correct border rendering on parent-relative windows
+    
+    Resurected code from the punted RootlessPaintBackground/Border and added it conditionally to miPaintWindow
+    (cherry picked from commit cf2e3312cff3f341e9edba8c321a4ca7ffd8748e)
+
+commit 6df00917cab5c1096070625385fd76ee6c52e0f1
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 23:00:59 2009 -0700
+
+    XQuartz: Fix QuartzSetCursor to match the expected prototype.
+    (cherry picked from commit dadab5a2279a19dcf709402d7f22f0cd48670db0)
+
+commit 67a51cd9ef60b4c9f25fdde84f9eb352936c8c67
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 22:57:25 2009 -0700
+
+    XQuartz: Fix a bunch of compilation warnings about style
+    (cherry picked from commit 54000bdcbca52a2de31f7c1a1147de6d8e9dbbb8)
+
+commit 96780eaf32636c94a9cf33f22eb9f01d984ff754
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 22:29:49 2009 -0700
+
+    XQuartz: Nuke TSM
+    
+    It's deprecated in SnowLeopard.  Ben and I both have no idea what it is for.  It says something about unicode input, but urxvt seems fine taking in unicode, so /shrug... bye.
+    (cherry picked from commit 29cb904e4de2411a9b6dbe68694954788f0525f7)
+
+commit 15e15816a2f011d0aeeaff9e394d30a147c973ce
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 22:26:22 2009 -0700
+
+    XQuartz: Fix inverse map from mode_switch to alt
+    (cherry picked from commit de6cee11e1c335a0e5f708e7641e81d3cfe52529)
+
+commit 558d803b2966c2e44345a80e635e091dc3e49f02
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 18:25:57 2009 -0700
+
+    XQuartz: Force a keymap resync on the first keypress to workaround XKB mucking with our keymap.
+    
+    We need to find a better way to work with XKB on this.
+    (cherry picked from commit ceaa5c779ceed3de5ea53727649613be3133b24e)
+
+commit 226b1033b48807fd6871ba626e20ef1411904939
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 17:08:12 2009 -0700
+
+    XQuartz: Transition from xEvent based mieq to InternalEvent
+    (cherry picked from commit a3dbde2de87ee4f577748a8c447501a3ea462559)
+
+commit 0c2731596f27f2cdf5000ba41de37e7eb86ad6f9
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Sep 28 15:07:48 2009 +1000
+
+    Put tests for zero-sized strings in quotes (#24060)
+    
+    X.Org Bug 24060 <http://bugs.freedesktop.org/show_bug.cgi?id=24060>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 83023ffd09a84ff48e6b99f57ebad101a00478db
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Mon Sep 28 13:59:25 2009 +1000
 
@@ -647,9 +1292,8 @@ Date:   Mon Sep 28 13:59:25 2009 +1000
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Acked-by: Dave Airlie <airlied@redhat.com>
-    (cherry picked from commit 83023ffd09a84ff48e6b99f57ebad101a00478db)
 
-commit 2d4bab18c0d894619f044f29769c67c2f63b540a
+commit f772014c435f56db56520ca13ffa39431684f122
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Wed Sep 23 10:53:51 2009 +1000
 
@@ -663,24 +1307,8 @@ Date:   Wed Sep 23 10:53:51 2009 +1000
     function to avoid such mistakes in the future.
     
     X.Org Bug 23286 <http://bugs.freedesktop.org/show_bug.cgi?id=23286>
-    (cherry picked from commit f772014c435f56db56520ca13ffa39431684f122)
 
-commit 290a9639db3e420ec4caf0e6aee9f7386724c765
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Mon Sep 28 21:05:11 2009 +1000
-
-    xserver 1.6.99.903 (xserver 1.7 RC3)
-    
-    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-
-commit 8c83457c60a4e02ca61086c7218dcd0e054926ba
-Merge: 6af44db b49dba3
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Mon Sep 28 16:48:46 2009 +1000
-
-    Merge remote branch 'origin/xorg-server-1.7-apple' into server-1.7-branch
-
-commit 6af44db315121ea24cec390d144514bf56908b2c
+commit 3db28f92b0c810b452506abbed299a204c90ba0b
 Author: Tilman Sauerbeck <tilman@code-monkey.de>
 Date:   Thu Sep 24 12:57:02 2009 +0200
 
@@ -696,83 +1324,8 @@ Date:   Thu Sep 24 12:57:02 2009 +0200
     developers have them, so Xnext will be enabled on most boxes. Anyone
     missing those requires probably doesn't want to build Xnest anyway.]
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 3db28f92b0c810b452506abbed299a204c90ba0b)
 
-commit b49dba33f94b51ba9a14803f0d81ccde2cb778f8
-Author: Ben Byer <bbyer@freedesktop.org>
-Date:   Sun Sep 27 10:35:53 2009 -0700
-
-    Add (ok, fix) support for DTrace under OS X
-    (cherry picked from commit 8428a57184f542941d2c8c90e97d18e111a69dd2)
-
-commit cf2e3312cff3f341e9edba8c321a4ca7ffd8748e
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Sun Sep 27 23:09:51 2009 -0700
-
-    Rootless: Correct border rendering on parent-relative windows
-    
-    Resurected code from the punted RootlessPaintBackground/Border and added it conditionally to miPaintWindow
-
-commit dadab5a2279a19dcf709402d7f22f0cd48670db0
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Sun Sep 27 23:00:59 2009 -0700
-
-    XQuartz: Fix QuartzSetCursor to match the expected prototype.
-
-commit 54000bdcbca52a2de31f7c1a1147de6d8e9dbbb8
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Sun Sep 27 22:57:25 2009 -0700
-
-    XQuartz: Fix a bunch of compilation warnings about style
-
-commit 29cb904e4de2411a9b6dbe68694954788f0525f7
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Sun Sep 27 22:29:49 2009 -0700
-
-    XQuartz: Nuke TSM
-    
-    It's deprecated in SnowLeopard.  Ben and I both have no idea what it is for.  It says something about unicode input, but urxvt seems fine taking in unicode, so /shrug... bye.
-
-commit de6cee11e1c335a0e5f708e7641e81d3cfe52529
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Sun Sep 27 22:26:22 2009 -0700
-
-    XQuartz: Fix inverse map from mode_switch to alt
-
-commit 7e6640b55503b6ee797ab2589f7debcbfa531958
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Mon Sep 28 12:20:03 2009 +1000
-
-    Revert "alpha: kill xf86SlowBCopyToBus and xf86SlowBCopyFromBus"
-    
-    The vesa driver still uses slowbcopy_frombus and slowbcopy_tobus.
-    
-    This reverts commit 5ef53a94ce4e48e11de26290cd677266308640c8.
-    
-    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-
-commit ceaa5c779ceed3de5ea53727649613be3133b24e
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Sun Sep 27 18:25:57 2009 -0700
-
-    XQuartz: Force a keymap resync on the first keypress to workaround XKB mucking with our keymap.
-    
-    We need to find a better way to work with XKB on this.
-
-commit a3dbde2de87ee4f577748a8c447501a3ea462559
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Sun Sep 27 17:08:12 2009 -0700
-
-    XQuartz: Transition from xEvent based mieq to InternalEvent
-
-commit 4aeac52c495c4cf691de7ef7d9e4030e90b3c8b8
-Merge: 498135f 77099b9
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Mon Sep 28 09:54:53 2009 +1000
-
-    Merge remote branch 'origin/xorg-server-1.7-apple' into server-1.7-branch
-
-commit 498135f26e8504e103ffe4512acf6fddca8e92e8
+commit 78ad6ca9a97440b74019c00a28144ea7d1e03431
 Author: Samuel Thibault <samuel.thibault@ens-lyon.org>
 Date:   Sun Sep 27 17:30:23 2009 +0200
 
@@ -782,42 +1335,52 @@ Date:   Sun Sep 27 17:30:23 2009 +0200
     trivial patch, please apply.
     
     Signed-off-by: Julien Cristau <jcristau@debian.org>
-    (cherry picked from commit 78ad6ca9a97440b74019c00a28144ea7d1e03431)
 
-commit 77099b933a0362d40a28f9afea46c5cc97c29e13
+commit fb7938315bed9d4cb5641ee9acebf78a13bc109e
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Sep 27 09:48:43 2009 -0700
+
+    Xi: Make CopyKeyClass X_HIDDEN to avoid ugly ifdef-fu
+    (cherry picked from commit 6d436e17a9ae7f4ce8537f3fabc052d4f07ca75f)
+
+commit a2cd21177859eb45320a94c96dde7d9058ab7650
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Sat Sep 26 23:41:45 2009 -0700
 
     XQuartz: Stop checking version numbers of the bundle because CFBundleGetVersionNumber is gimpish
     (cherry picked from commit 9f5bdd89608ec12012592ff395b82e954fbb4da8)
 
-commit 7958f6b75b3c6b8a827188af2e684f181bdd7688
+commit fbfbf93405222322571e15e78dea57c8f2755eae
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Sat Sep 26 22:52:39 2009 -0700
 
     XQuartz: Add pressure/tilt property labels
+    (cherry picked from commit 84ea67130ef6b4086042aad6036ce66f93ea3e56)
 
-commit 29b2d9cdf5095399b79d9ff2a2f12f5a9c49cf1f
+commit 65f14840898dd7e9d61d8c966f3ff11ae3e82d4f
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Sat Sep 26 22:48:49 2009 -0700
 
     XQuartz: Fix a brain-o array indexing problem
     
     /bop Peter
+    (cherry picked from commit 494a6b046a258ad83dc98eb92b7c3d8f1d2626bb)
 
-commit fd1adc21a931e2dd1ff2e52b60a77c2153a30fe0
+commit 7159381881e5da33a49e8735811b93cbfe4f681e
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Sat Sep 26 22:17:09 2009 -0700
 
     XQuartz: Nuke duplicate locks that make painful headaches
+    (cherry picked from commit 1dd56322bd1722f2427fb2d833c5608248b60cf0)
 
-commit 6e4fc5d066d9c1ea4fca444cfee1e73147c5fefb
+commit fba8c702ba6aa8fac27682e0838fd744e197d54f
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Sat Sep 26 22:13:49 2009 -0700
 
     Xi: CopyKeyClass is not static for XQuartz
+    (cherry picked from commit 85d6402354cdf143c6490f2725744c2f08b5605b)
 
-commit e0e2eaf1f30ebce4c0ff28416259d8e976fdf0d7
+commit dc1e1bebff8b9d1eb6196dfd4b2f52f1e4200efa
 Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
 Date:   Fri Aug 7 00:02:21 2009 -0700
 
@@ -825,16 +1388,7 @@ Date:   Fri Aug 7 00:02:21 2009 -0700
     (cherry picked from commit 1755239330c0bdac820d88a3e06ff391d65f29be)
     (cherry picked from commit 697be460d0e555e2c75eed6889293650e02d423c)
 
-commit 1a0dfde2d102d845f1ceda66ad7a078aa1b42ef9
-Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
-Date:   Wed Sep 23 17:41:28 2009 -0700
-
-    XQuartz: GLX capabilities: Allow 16bit accumulation buffers
-    
-    http://xquartz.macosforge.org/trac/ticket/308
-    (cherry picked from commit e9e63a2118b76b6c31c4081fec08a99e4d796e22)
-
-commit 0c6423b3d52af85cd990811f7be982c0b6ed7c32
+commit 73ae547d5e687ef10dea45801fc627e10ac4b659
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Sun Sep 27 02:08:10 2009 +0200
 
@@ -850,9 +1404,8 @@ Date:   Sun Sep 27 02:08:10 2009 +0200
     but use pPixmap->devPrivate.ptr after PrepareAccess instead.
     
     Fixes http://bugs.freedesktop.org/show_bug.cgi?id=24167 .
-    (cherry picked from commit 73ae547d5e687ef10dea45801fc627e10ac4b659)
 
-commit bb7c26e38c262614c5d1c21fc7a04c71a9028e51
+commit c9ec2bab2f258798fd6e6676698c732f09571a60
 Author: Kevin E Martin <kem@redhat.com>
 Date:   Sat Sep 26 13:10:54 2009 +1000
 
@@ -863,18 +1416,16 @@ Date:   Sat Sep 26 13:10:54 2009 +1000
     miinitext.c, where they belong.
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit c9ec2bab2f258798fd6e6676698c732f09571a60)
 
-commit 72f0194be1558f244bad85197ccc50e17561df50
+commit fc9d733bab3ff0e4e51b19c73b66196dca563a70
 Author: Kevin E Martin <kem@redhat.com>
 Date:   Sat Sep 26 13:09:52 2009 +1000
 
     dmx: reshuffle linker order to avoid errors when MITSHM is undefined.
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit fc9d733bab3ff0e4e51b19c73b66196dca563a70)
 
-commit e4edb4f2e6ca960b68629783459920faa86d8671
+commit e7c2598f565e8252dd66ee3e6212b310856476cb
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Fri Sep 25 14:53:33 2009 +1000
 
@@ -888,9 +1439,20 @@ Date:   Fri Sep 25 14:53:33 2009 +1000
     
     Tested-by: Kevin Martin
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit e7c2598f565e8252dd66ee3e6212b310856476cb)
 
-commit 7c9e0b07780b664ebbcee2d6be4bce645cb8c5b2
+commit 43a2eb794f19a2ba56d653f465fc5f6b2ff0d3d3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 23 21:49:11 2009 +1000
+
+    configure: Unify all library defines that require a specific version.
+    
+    This patch moves all libraries that require a specific version into a single
+    location instead or duplicating them across the configure.ac file.
+    Libraries that do not require specific versions are left where they are.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 9bd08c690fc687c4d69bb70536f3079a9184476d
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Sep 24 14:07:26 2009 +1000
 
@@ -902,22 +1464,30 @@ Date:   Thu Sep 24 14:07:26 2009 +1000
     Reported-by: Thomas Jaeger
     Tested-by: Thomas Jaeger
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 9bd08c690fc687c4d69bb70536f3079a9184476d)
 
-commit 1745808c2939d7dc08d3d8acae425e5eeb6a16ca
-Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Wed Sep 23 21:49:11 2009 +1000
+commit abb8108fb44cc9b08fe4ae7d805a0a22564ca6bb
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Sat Sep 26 02:05:24 2009 +0200
 
-    configure: Unify all library defines that require a specific version.
+    EXA: Only calculate cache position once for each glyph.
+
+commit c11678cc189551f2a01eaa7a63969c16950739b4
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Sat Sep 26 02:05:06 2009 +0200
+
+    EXA: Accumulate arbitrary number of glyphs without flushing.
+
+commit 0369eeeb6bf8a808fa2df503fc8b8df81e6e07b8
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Sat Sep 26 02:04:48 2009 +0200
+
+    EXA: Try to minimize UploadToScreen calls for mixed pixmaps.
     
-    This patch moves all libraries that require a specific version into a single
-    location instead or duplicating them across the configure.ac file.
-    Libraries that do not require specific versions are left where they are.
-    
-    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 43a2eb794f19a2ba56d653f465fc5f6b2ff0d3d3)
+    If there are several software fallbacks affecting the system memory copy of the
+    same pixmap, only copy the results back to the driver pixmap when it's used for
+    acceleration again, or in the BlockHandler, whichever happens first.
 
-commit e5371c7fc895c51092bd5b2d303e4835c123bd5c
+commit 1818cbd70fc1f2e1487b4c678e67e28f1265c0ef
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Sat Sep 26 01:59:39 2009 +0200
 
@@ -942,9 +1512,19 @@ Date:   Sat Sep 26 01:59:39 2009 +0200
     
     Drivers which can handle all pixmaps in the PrepareAccess hook should notice
     little if any difference.
-    (cherry picked from commit 1818cbd70fc1f2e1487b4c678e67e28f1265c0ef)
 
-commit cecd484fbb3db273472d0bf0ec45d8604ff0cde2
+commit e23bffc41b007f1bc2b8f5cd4ac54213062c95cc
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Sep 15 19:17:48 2009 -0700
+
+    Fix build of unit tests when dtrace probes are enabled
+    
+    ar loses the dtrace probe magic when building static libraries, so we
+    have to link with the .O files in order to resolve the dtrace probe symbols.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 9fa73be9fa543a686ea35c861084f5af37d44caa
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Tue Sep 22 20:34:54 2009 +1000
 
@@ -952,9 +1532,8 @@ Date:   Tue Sep 22 20:34:54 2009 +1000
     
     Reported-by: Tilman Sauerbeck
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 9fa73be9fa543a686ea35c861084f5af37d44caa)
 
-commit f188fabfe264dfec1950c168e2d9c22f13797b93
+commit a9c274df5c37cb4ece6449e934342d8ff8e61705
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Wed Sep 23 11:43:27 2009 +1000
 
@@ -967,9 +1546,8 @@ Date:   Wed Sep 23 11:43:27 2009 +1000
     kdrive-assigned name. Memory must be freed beforehand.
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit a9c274df5c37cb4ece6449e934342d8ff8e61705)
 
-commit 48ab48a6ce12605c7353b45dff4e3a4338b9132e
+commit fd913136732ff14a0484ca28f60ac1fbf49be81d
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Wed Sep 23 11:44:12 2009 +1000
 
@@ -978,9 +1556,8 @@ Date:   Wed Sep 23 11:44:12 2009 +1000
     'event' must be freed before exiting.
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit fd913136732ff14a0484ca28f60ac1fbf49be81d)
 
-commit 9e39491166eb4540bbc72e963e673c976301e936
+commit 6ee796e9bb4e46782b50a69c7b4fa5b49576f139
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Sep 24 14:05:52 2009 +1000
 
@@ -994,9 +1571,8 @@ Date:   Thu Sep 24 14:05:52 2009 +1000
     
     Tested-by: Thomas Jaeger
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 6ee796e9bb4e46782b50a69c7b4fa5b49576f139)
 
-commit a9e2f7ac15f426560ac01689ec66f2db32424884
+commit 3b5bbb149d4c932d9624336f5cbe9fe71c87bea3
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Wed Sep 23 12:32:44 2009 +1000
 
@@ -1014,9 +1590,8 @@ Date:   Wed Sep 23 12:32:44 2009 +1000
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Acked--by: Daniel Stone <daniel@fooishbar.org>
-    (cherry picked from commit 3b5bbb149d4c932d9624336f5cbe9fe71c87bea3)
 
-commit 1f74cfdeacb88b466d8f2005af191db30dde2a86
+commit 5402f18d9c3f7ba19cc05b3a814e3a9e94c8d551
 Author: Thomas Jaeger <thjaeger@gmail.com>
 Date:   Tue Sep 22 20:16:21 2009 -0400
 
@@ -1024,9 +1599,17 @@ Date:   Tue Sep 22 20:16:21 2009 -0400
     
     Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 5402f18d9c3f7ba19cc05b3a814e3a9e94c8d551)
 
-commit 8867c60782909816826054ed0587094e58eb39e6
+commit 33bf9cb69dccbb6889b2f83e6db61f40dc644e17
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Sep 23 17:41:28 2009 -0700
+
+    XQuartz: GLX capabilities: Allow 16bit accumulation buffers
+    
+    http://xquartz.macosforge.org/trac/ticket/308
+    (cherry picked from commit e9e63a2118b76b6c31c4081fec08a99e4d796e22)
+
+commit ce1fe8ddb4a4dbe6cfd909e5b1b73b459d742bec
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Wed Sep 23 13:10:05 2009 +0200
 
@@ -1036,31 +1619,30 @@ Date:   Wed Sep 23 13:10:05 2009 +0200
     format can't fit in depth 24.
     
     Also fix up a comment for the addition of BGRA formats.
-    (cherry picked from commit ce1fe8ddb4a4dbe6cfd909e5b1b73b459d742bec)
 
-commit ac1490b651a251407e1bbc98e3ccd265a9e491b5
+commit 096f21bb7a1217443d8a03529b1a2938518eb24f
 Author: Michel Dänzer <daenzer@vmware.com>
 Date:   Wed Sep 23 08:24:06 2009 +0200
 
     EXA: Fix some issues pointed out by clang.
     
     Remove dead variables, fix use of uninitialized values, that kind of thing.
-    (cherry picked from commit 096f21bb7a1217443d8a03529b1a2938518eb24f)
 
-commit 6b656c3498fa1bdbf93b2951b27cc8ff00e65990
+commit 824a09d856a5f750694e11d2fd2faaa3de705eaa
 Author: Simon Thum <simon.thum@gmx.de>
 Date:   Mon Sep 21 15:23:27 2009 +0200
 
     dix: move bounds check before access
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
-    (cherry picked from commit 824a09d856a5f750694e11d2fd2faaa3de705eaa)
 
-commit 9c1a18377afdb919a648a96c4195113121902cfe
+commit 9edb9e9b4dde6f73dc5241d078425a7a70699ec9
 Author: Peter Hutterer <peter.hutterer@who-t.net>
-Date:   Tue Sep 22 12:44:19 2009 +1000
+Date:   Tue Sep 22 12:56:17 2009 +1000
 
-    xserver 1.6.99.902 (xserver 1.7 RC2)
+    Bump to 1.7.99.1
+    
+    X Server 1.7 has branched off.
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 

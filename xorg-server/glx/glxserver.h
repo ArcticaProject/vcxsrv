@@ -248,4 +248,7 @@ extern int __glXImageSize(GLenum format, GLenum type,
     GLint imageHeight, GLint rowLength, GLint skipImages, GLint skipRows,
     GLint alignment);
 
+extern unsigned glxMajorVersion;
+extern unsigned glxMinorVersion;
+
 #endif /* !__GLX_server_h__ */

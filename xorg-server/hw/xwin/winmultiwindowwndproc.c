@@ -282,11 +282,11 @@ static void winRaiseWindow(WindowPtr pWin)
   if (!winInDestroyWindowsWindow && !winInRaiseWindow)
   {
     BOOL oldstate = winInRaiseWindow;
+    XID vlist[1] = { 0 };
     winInRaiseWindow = TRUE;
     /* Call configure window directly to make sure it gets processed 
      * in time
      */
-    XID vlist[1] = { 0 };
     ConfigureWindow(pWin, CWStackMode, vlist, serverClient); 
     winInRaiseWindow = oldstate;
   }
@@ -416,12 +416,14 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
       winReorderWindowsMultiWindow ();
 
       /* Fix a 'round title bar corner background should be transparent not black' problem when first painted */
-      RECT rWindow;
-      HRGN hRgnWindow;
-      GetWindowRect(hwnd, &rWindow);
-      hRgnWindow = CreateRectRgnIndirect(&rWindow);
-      SetWindowRgn (hwnd, hRgnWindow, TRUE);
-      DeleteObject(hRgnWindow);
+      {
+        RECT rWindow;
+        HRGN hRgnWindow;
+        GetWindowRect(hwnd, &rWindow);
+        hRgnWindow = CreateRectRgnIndirect(&rWindow);
+        SetWindowRgn (hwnd, hRgnWindow, TRUE);
+        DeleteObject(hRgnWindow);
+      }
 
       SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)XMING_SIGNATURE);
 
@@ -897,10 +899,10 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	}
       else /* It is an overridden window so make it top of Z stack */
 	{
+	  HWND forHwnd = GetForegroundWindow();
 #if CYGWINDOWING_DEBUG
 	  ErrorF ("overridden window is shown\n");
 #endif
-	  HWND forHwnd = GetForegroundWindow();
 	  if (forHwnd != NULL)
 	  {
 	    if (GetWindowLongPtr(forHwnd, GWLP_USERDATA) & (LONG_PTR)XMING_SIGNATURE)

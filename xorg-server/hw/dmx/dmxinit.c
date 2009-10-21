@@ -846,6 +846,12 @@ void AbortDDX(void)
     }
 }
 
+#ifdef DDXBEFORERESET
+void ddxBeforeReset(void)
+{
+}
+#endif
+
 /** This function is called in Xserver/dix/main.c from \a main() when
  * dispatchException & DE_TERMINATE (which is the only way to exit the
  * main loop without an interruption. */

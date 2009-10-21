@@ -717,6 +717,10 @@ winWindowProc (HWND hwnd, UINT message,
       if (s_pScreenPriv == NULL || s_pScreenInfo->fIgnoreInput)
 	break;
 
+      /* We can't do anything without g_pwinPointer */
+      if (g_pwinPointer == NULL)
+        break;
+
       /* Has the mouse pointer crossed screens? */
       if (s_pScreen != miPointerGetScreen(g_pwinPointer))
 	miPointerSetScreen (g_pwinPointer, s_pScreenInfo->dwScreen,

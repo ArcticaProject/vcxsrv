@@ -640,8 +640,8 @@ int AllocXTestDevice (ClientPtr client, char* name,
 
     retval = AllocDevicePair( client, xtestname, ptr, keybd, CorePointerProc, CoreKeyboardProc, FALSE);
     if ( retval == Success ){
-        dixSetPrivate(&((*ptr)->devPrivates), XTestDevicePrivateKey, (void *)master_ptr->id);
-        dixSetPrivate(&((*keybd)->devPrivates), XTestDevicePrivateKey, (void *)master_keybd->id);
+        dixSetPrivate(&((*ptr)->devPrivates), XTestDevicePrivateKey, (void *)(intptr_t)master_ptr->id);
+        dixSetPrivate(&((*keybd)->devPrivates), XTestDevicePrivateKey, (void *)(intptr_t)master_keybd->id);
 
         XIChangeDeviceProperty(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
                 XA_INTEGER, 8, PropModeReplace, 1, &dummy,
@@ -677,7 +677,7 @@ IsXTestDevice(DeviceIntPtr dev, DeviceIntPtr master)
         return is_XTest;
 
     tmp = dixLookupPrivate(&dev->devPrivates, XTestDevicePrivateKey);
-    mid = (int)tmp;
+    mid = (intptr_t)tmp;
 
     /* deviceid 0 is reserved for XIAllDevices, non-zero mid means XTest
      * device */

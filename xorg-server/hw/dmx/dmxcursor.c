@@ -339,7 +339,7 @@ static void dmxComputeScreenOrigins(void)
 }
 
 /** Recompute origin information in the #dmxScreens list.  This is
- * either called from #dmxInitOrigins() or from #dmxReconfig(). */
+ * called from #dmxInitOrigins. */
 void dmxReInitOrigins(void)
 {
     int        i;
@@ -464,7 +464,7 @@ static int dmxDoesOverlap(DMXScreenInfo *a, DMXScreenInfo *b)
     return 0;
 }
 
-/** Used with #dmxInterateOverlap to print out a list of screens which
+/** Used with \a dmxInterateOverlap to print out a list of screens which
  * overlap each other. */
 static void *dmxPrintOverlap(DMXScreenInfo *dmxScreen, void *closure)
 {

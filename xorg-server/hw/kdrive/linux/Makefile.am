@@ -17,7 +17,6 @@ KDRIVE_HW_SOURCES =	\
 
 liblinux_la_SOURCES = 	\
 	bus.c		\
-	klinux.h	\
 	mouse.c		\
 	ms.c		\
 	ps2.c		\

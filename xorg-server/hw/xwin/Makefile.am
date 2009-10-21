@@ -196,7 +196,6 @@ EXTRA_DIST = \
 	$(GLX_EXTRAS) \
 	$(MAN_SRCS) \
 	_usr_X11R6_lib_X11_system.XWinrc \
-	X-boxed.ico \
 	X.ico \
 	XWin.rc \
 	xlaunch/config.cc \

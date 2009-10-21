@@ -371,16 +371,15 @@ winMouseButtonsHandle (ScreenPtr pScreen,
  */
 void winEnqueueMotion(int x, int y)
 {
-  miPointerSetPosition(g_pwinPointer, &x, &y);
-
   int i, nevents;
   int valuators[2];
-
   EventListPtr events;
-  GetEventList(&events);
 
+  miPointerSetPosition(g_pwinPointer, &x, &y);
   valuators[0] = x;
   valuators[1] = y;
+
+  GetEventList(&events);
   nevents = GetPointerEvents(events, g_pwinPointer, MotionNotify, 0,
 			     POINTER_ABSOLUTE, 0, 2, valuators);
 

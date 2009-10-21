@@ -38,7 +38,7 @@
  * communication with the other X server, eliminating unnecessary
  * XSync() calls is a key performance optimization.  Support for this
  * optimization is provided here.  Statistics about XSync() calls and
- * latency are gathered in #dmxstat.c.
+ * latency are gathered in \a dmxstat.c.
  *
  * During the initial conversion from calling XSync() immediately to the
  * XSync() batching method implemented in this file, it was noted that,
@@ -111,7 +111,7 @@ static void dmxSyncWakeupHandler(pointer blockData, int result,
  * turn off the default 100mS XSync() batching).
  *
  * Note that the parameter to this routine is a string, since it will
- * usually be called from #ddxProcessArgument in #dmxinit.c */
+ * usually be called from #ddxProcessArgument in \a dmxinit.c */
 void dmxSyncActivate(const char *interval)
 {
     dmxSyncInterval = (interval ? atoi(interval) : 100);

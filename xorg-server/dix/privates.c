@@ -303,6 +303,7 @@ dixResetPrivates(void)
     /* reset private descriptors */
     for (i = 1; i < nextPriv; i++) {
 	*items[i].key = 0;
+	items[i].size = 0;
 	DeleteCallbackList(&items[i].initfuncs);
 	DeleteCallbackList(&items[i].deletefuncs);
     }
