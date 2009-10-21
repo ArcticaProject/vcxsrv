@@ -67,16 +67,22 @@ X11_LOCALEDATADIR = ..\..\xorg-server\locale
 $(X11_LOCALEDATADIR)\locale.alias: locale.alias.pre
 	cl /nologo /EP $< -DXCOMM\#\# > locale.alias.l1
 	sed -e "/^[^\#][^        ]*:/s/://" -e "/^[^\#].*[        ].*:/d" < locale.alias.l1 > locale.alias.l2
-	cat locale.alias.l2 locale.alias.l1 > $@
+	type locale.alias.l2 locale.alias.l1 > $@
+	del locale.alias.l1
+	del locale.alias.l2
 
 $(X11_LOCALEDATADIR)\compose.dir: compose.dir.pre
 	cl /nologo /EP $< -DXCOMM\#\# > compose.dir.l1
 	sed -e "/^[^\#][^        ]*:/s/://" -e "/^[^\#].*[        ].*:/d" < compose.dir.l1 > compose.dir.l2
-	cat compose.dir.l2 compose.dir.l1 > $@
+	type compose.dir.l2 compose.dir.l1 > $@
+	del compose.dir.l1
+	del compose.dir.l2
 
 $(X11_LOCALEDATADIR)\locale.dir: locale.dir.pre
 	cl /nologo /EP $< -DXCOMM\#\# > locale.dir.l1
 	sed -e "/^[^\#][^        ]*:/s/://" -e "/^[^\#].*[        ].*:/d" < locale.dir.l1 > locale.dir.l2
-	cat locale.dir.l2 locale.dir.l1 > $@
+	type locale.dir.l2 locale.dir.l1 > $@
+	del locale.dir.l1
+	del locale.dir.l2
 
 all: $(X11_LOCALEDATADIR)\locale.alias $(X11_LOCALEDATADIR)\compose.dir $(X11_LOCALEDATADIR)\locale.dir
