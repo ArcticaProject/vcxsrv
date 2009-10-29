@@ -267,6 +267,10 @@ Note that you can rebind a KeySym that may not exist.
 .SH "SEE ALSO"
 XButtonEvent(__libmansuffix__),
 XMapEvent(__libmansuffix__),
-XStringToKeysym(__libmansuffix__)
+XStringToKeysym(__libmansuffix__),
+XmbLookupString(__libmansuffix__),
+XwcLookupString(__libmansuffix__),
+Xutf8LookupString(__libmansuffix__),
+Compose(__filemansuffix__)
 .br
 \fI\*(xL\fP

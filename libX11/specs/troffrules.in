@@ -46,7 +46,7 @@ MOSTLYCLEANFILES = index.*
 GROFF_DEFS = -dxV="$(PACKAGE_STRING)"
 
 # -e to run through eqn, -t to run through tbl
-GROFF_FLAGS = -e -t -ms $(GROFF_DEFS) $(top_srcdir)/specs/macros.t
+GROFF_FLAGS = -e -t -ms $(GROFF_DEFS) -I$(srcdir) $(top_srcdir)/specs/macros.t
 
 SUFFIXES = .ms .ps .txt .html .pdf
 

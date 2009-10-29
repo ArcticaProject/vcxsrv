@@ -48,7 +48,7 @@ glproto-1.4.10
 inputproto-2.0
 kbproto-1.0.3
 libfontenc-1.0.5
-libX11-1.3.1
+libX11-1.3.2
 libXau-1.0.5
 libxcb-1.4
 libXdmcp-1.0.3

@@ -320,7 +320,7 @@ EXTRA_DIST = $(doc_sources)
 @BUILD_SPECS_TRUE@GROFF_DEFS = -dxV="$(PACKAGE_STRING)"
 
 # -e to run through eqn, -t to run through tbl
-@BUILD_SPECS_TRUE@GROFF_FLAGS = -e -t -ms $(GROFF_DEFS) $(top_srcdir)/specs/macros.t
+@BUILD_SPECS_TRUE@GROFF_FLAGS = -e -t -ms $(GROFF_DEFS) -I$(srcdir) $(top_srcdir)/specs/macros.t
 @BUILD_SPECS_TRUE@SUFFIXES = .ms .ps .txt .html .pdf
 all: all-am
 
