@@ -194,30 +194,39 @@ libman_PRE = \
 	XmbTextExtents.man \
 	XmbTextPerCharExtents.man
 
+filemandir = $(FILE_MAN_DIR)
+fileman_PRE = Compose.man
+
 # What we actually install 
 
 if MANPAGES
 libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
 	      $(all_shadows:=.@LIB_MAN_SUFFIX@)
+
+fileman_DATA = $(fileman_PRE:man=@FILE_MAN_SUFFIX@)
 endif
 
-EXTRA_DIST = $(libman_PRE)
+EXTRA_DIST = $(libman_PRE) $(fileman_PRE)
 
-CLEANFILES = $(libman_DATA)
+CLEANFILES = $(libman_DATA) $(fileman_DATA)
 
 include $(top_srcdir)/cpprules.in
 
-SUFFIXES += .$(LIB_MAN_SUFFIX) .man
+SUFFIXES += .$(LIB_MAN_SUFFIX) .$(FILE_MAN_SUFFIX) .man
 
 XORGRELSTRING = @PACKAGE_STRING@
   XORGMANNAME = X Version 11
 
 MANDEFS = -D__libmansuffix__=$(LIB_MAN_SUFFIX) \
+	-D__appmansuffix__=$(APP_MAN_SUFFIX) \
+	-D__filemansuffix__=$(FILE_MAN_SUFFIX) \
+	-D__miscmansuffix__=$(MISC_MAN_SUFFIX) \
+	-D__xlocaledir__="$(X11_LOCALEDATADIR)" \
 	-D__xorgversion__="\"$(XORGRELSTRING)\" \"$(XORGMANNAME)\""
 
 CPP_MAN_FLAGS = $(MANDEFS) $(EXTRAMANDEFS)
 
-.man.$(LIB_MAN_SUFFIX):
+.man.$(LIB_MAN_SUFFIX) .man.$(FILE_MAN_SUFFIX):
 	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
 
 # Generate man page shadow files (Replaces InstallManPageAliases from Imake)

@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.60)
 AC_INIT([libX11],
-        1.3.1,
+        1.3.2,
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         libX11)
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -429,8 +429,22 @@ AC_DEFINE_DIR(XERRORDB, XERRORDB, [Location of error message database])
 XORG_CHECK_MALLOC_ZERO
 
 # Specification documents are currently provided in troff format
+AC_ARG_VAR([GROFF], [Path to a groff executable that supports -ms])
 AC_PATH_PROGS([GROFF], [groff], [none], [$PATH:/usr/gnu/bin])
+
+AC_ARG_VAR([PS2PDF], [Path to a ps2pdf executable])
 AC_PATH_PROGS([PS2PDF], [ps2pdf], [none], [$PATH:/usr/gnu/bin])
+
+if test "x${GROFF}" != xnone ; then
+    AC_MSG_CHECKING([whether ${GROFF} -ms works])
+    if ${GROFF} -ms -I. /dev/null >/dev/null 2>&1 ; then
+        groff_ms_works=yes
+    else
+        groff_ms_works=no
+        GROFF=none
+    fi
+    AC_MSG_RESULT([${groff_ms_works}])
+fi
 
 AC_MSG_CHECKING([whether to build specifications])
 AC_ARG_ENABLE(specs, AC_HELP_STRING([--enable-specs],

@@ -90,8 +90,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(libmandir)"
-DATA = $(libman_DATA)
+am__installdirs = "$(DESTDIR)$(filemandir)" "$(DESTDIR)$(libmandir)"
+DATA = $(fileman_DATA) $(libman_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -486,14 +486,17 @@ libman_PRE = \
 	XmbTextExtents.man \
 	XmbTextPerCharExtents.man
 
+filemandir = $(FILE_MAN_DIR)
+fileman_PRE = Compose.man
 
 # What we actually install 
 @MANPAGES_TRUE@libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
 @MANPAGES_TRUE@	      $(all_shadows:=.@LIB_MAN_SUFFIX@)
 
-EXTRA_DIST = $(libman_PRE)
-CLEANFILES = $(libman_DATA)
-SUFFIXES = .pre .$(LIB_MAN_SUFFIX) .man
+@MANPAGES_TRUE@fileman_DATA = $(fileman_PRE:man=@FILE_MAN_SUFFIX@)
+EXTRA_DIST = $(libman_PRE) $(fileman_PRE)
+CLEANFILES = $(libman_DATA) $(fileman_DATA)
+SUFFIXES = .pre .$(LIB_MAN_SUFFIX) .$(FILE_MAN_SUFFIX) .man
 WCHAR32_FLAGS = -DWCHAR32=@WCHAR32@
 CPP_FILES_FLAGS = $(WCHAR32_FLAGS)
 
@@ -514,6 +517,10 @@ CPP_SED_MAGIC = $(SED) -e '/^\#  *[0-9][0-9]*  *.*$$/d' \
 XORGRELSTRING = @PACKAGE_STRING@
 XORGMANNAME = X Version 11
 MANDEFS = -D__libmansuffix__=$(LIB_MAN_SUFFIX) \
+	-D__appmansuffix__=$(APP_MAN_SUFFIX) \
+	-D__filemansuffix__=$(FILE_MAN_SUFFIX) \
+	-D__miscmansuffix__=$(MISC_MAN_SUFFIX) \
+	-D__xlocaledir__="$(X11_LOCALEDATADIR)" \
 	-D__xorgversion__="\"$(XORGRELSTRING)\" \"$(XORGMANNAME)\""
 
 CPP_MAN_FLAGS = $(MANDEFS) $(EXTRAMANDEFS)
@@ -1523,7 +1530,7 @@ XmbTextPerCharExtents_shadowmen = $(XmbTextPerCharExtents_shadows:=.@LIB_MAN_SUF
 all: all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .pre .$(LIB_MAN_SUFFIX) .man
+.SUFFIXES: .pre .$(LIB_MAN_SUFFIX) .$(FILE_MAN_SUFFIX) .man
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/cpprules.in $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -1560,6 +1567,26 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-filemanDATA: $(fileman_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(filemandir)" || $(MKDIR_P) "$(DESTDIR)$(filemandir)"
+	@list='$(fileman_DATA)'; test -n "$(filemandir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(filemandir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(filemandir)" || exit $$?; \
+	done
+
+uninstall-filemanDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(fileman_DATA)'; test -n "$(filemandir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(filemandir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(filemandir)" && rm -f $$files
 install-libmanDATA: $(libman_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(libmandir)" || $(MKDIR_P) "$(DESTDIR)$(libmandir)"
@@ -1779,7 +1806,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(libmandir)"; do \
+	for dir in "$(DESTDIR)$(filemandir)" "$(DESTDIR)$(libmandir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -1828,7 +1855,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-libmanDATA
+install-data-am: install-filemanDATA install-libmanDATA
 
 install-dvi: install-dvi-recursive
 
@@ -1872,7 +1899,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-libmanDATA
+uninstall-am: uninstall-filemanDATA uninstall-libmanDATA
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
 	install-am install-strip tags-recursive
@@ -1883,20 +1910,21 @@ uninstall-am: uninstall-libmanDATA
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libmanDATA install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-recursive uninstall uninstall-am \
+	install-exec-am install-filemanDATA install-html \
+	install-html-am install-info install-info-am \
+	install-libmanDATA install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
+	uninstall uninstall-am uninstall-filemanDATA \
 	uninstall-libmanDATA
 
 
 .pre:
 	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
 
-.man.$(LIB_MAN_SUFFIX):
+.man.$(LIB_MAN_SUFFIX) .man.$(FILE_MAN_SUFFIX):
 	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_MAN_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
 $(AllPlanes_shadowmen):
 	$(AM_V_GEN)echo ".so man$(LIB_MAN_DIR_SUFFIX)/AllPlanes.$(LIB_MAN_SUFFIX)" > $@
