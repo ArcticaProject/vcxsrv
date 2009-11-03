@@ -622,10 +622,10 @@ string mhmakefileparser::f_strip(const string & Arg) const
 {
   string::const_iterator pFirst=Arg.begin();
   string::const_iterator pLast=Arg.end();
-  while (strchr(" \t",*pFirst) && pFirst!=pLast) pFirst++;
+  while (strchr(" \t\r\n",*pFirst) && pFirst!=pLast) pFirst++;
   if (pFirst==pLast)
     return "";
-  while (strchr(" \t",*(--pLast)));
+  while (strchr(" \t\r\n",*(--pLast)));
   pLast++;
   return Arg.substr(pFirst-Arg.begin(),pLast-pFirst);
 }

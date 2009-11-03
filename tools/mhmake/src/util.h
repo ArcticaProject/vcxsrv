@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "1.4.2"
+#define MHMAKEVER    "1.4.4"
 
 #define MAKEDEPFILE  ".makefile.dep"
 

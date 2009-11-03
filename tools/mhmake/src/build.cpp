@@ -1655,7 +1655,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           if (!pMakefile->ExecuteCommand(Command))
           {
             string ErrorMessage = string("Error running command: ")+ Command +"\n";
-            ErrorMessage += "Command defined in makefile: " + GetMakeDir()->GetQuotedFullFileName();
+            ErrorMessage += "Command defined in makefile: " + pMakefile->GetMakeDir()->GetQuotedFullFileName();
             Target->SetCommandsMd5_32(0);  /* Clear the md5 to make sure that the target is rebuild the next time mhmake is ran */
             m_AutoDepsDirty=true;  /* We need to update the autodeps file if the md5 has been changed */
             throw ErrorMessage;

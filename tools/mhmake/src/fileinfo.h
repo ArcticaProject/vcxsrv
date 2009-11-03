@@ -65,7 +65,7 @@ inline string stringify(const T& x)
   ostringstream o;
   o << x;
   return o.str();
-} 
+}
 
 #define TIMESAFETY 3
 class mh_time
