@@ -272,6 +272,6 @@ $(OBJDIR)\$(LIBRARY).lib: $(OBJDIR)\ks_tables.h
 load_makefile util\makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG)
 
 $(OBJDIR)\ks_tables.h: $(KEYSYMDEF) util\$(OBJDIR)\makekeys.exe
-	util\$(OBJDIR)\makekeys < $(KEYSYMDEF) > $@
+	util\$(OBJDIR)\makekeys < $(relpath $<) > $(relpath $@)
 
 
