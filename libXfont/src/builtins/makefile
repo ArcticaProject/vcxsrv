@@ -6,5 +6,5 @@ CSRCS = dir.c			\
 	fpe.c			\
 	render.c
 
-INCLUDES := ../../../../build $(INCLUDES)
+INCLUDES := ../.. $(INCLUDES)
 

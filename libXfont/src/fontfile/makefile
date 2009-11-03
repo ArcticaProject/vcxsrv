@@ -21,5 +21,6 @@ CSRCS = bitsource.c		\
 	renderers.c		\
 	catalogue.c
 
-INCLUDES := ../../../../build $(INCLUDES)
+INCLUDES := ../.. $(INCLUDES)
+
 

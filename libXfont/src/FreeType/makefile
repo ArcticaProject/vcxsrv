@@ -10,5 +10,6 @@ INCLUDES += $(MHMAKECONF)\freetype\include\freetype  $(MHMAKECONF)\freetype\incl
 
 DEFINES += strcasecmp=_stricmp
 
-INCLUDES := ../../../../build $(INCLUDES)
+INCLUDES := ../.. $(INCLUDES)
+
 

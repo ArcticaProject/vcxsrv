@@ -5,5 +5,5 @@ CSRCS = fsconvert.c		\
 	fsio.c			\
 	fstrans.c
 
-INCLUDES := ../../../../build $(INCLUDES)
+INCLUDES := ../.. $(INCLUDES)
 

@@ -21,5 +21,6 @@ CSRCS = 		\
 
 CSRCS:=$(filter-out %.h,$(CSRCS))
 
-INCLUDES := ../../../../build $(INCLUDES)
+INCLUDES := ../.. $(INCLUDES)
+
 
