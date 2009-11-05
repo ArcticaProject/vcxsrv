@@ -1,0 +1,294 @@
+.\" $Xorg: XtExtEvDis.man,v 1.3 2000/08/17 19:42:00 cpqbld Exp $
+.\" $XdotOrg: $
+.\"
+.\" Copyright (c) 1993, 1994  X Consortium
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the "Software"), 
+.\" to deal in the Software without restriction, including without limitation 
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+.\" and/or sell copies of the Software, and to permit persons to whom the 
+.\" Software furnished to do so, subject to the following conditions:
+.\" 
+.\" The above copyright notice and this permission notice shall be included in
+.\" all copies or substantial portions of the Software.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
+.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+.\" SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of the X Consortium shall not 
+.\" be used in advertising or otherwise to promote the sale, use or other 
+.\" dealing in this Software without prior written authorization from the 
+.\" X Consortium.
+.\"
+.\" $XFree86: xc/doc/man/Xt/XtExtEvDis.man,v 1.3 2001/02/09 03:47:50 tsi Exp $
+.\"
+.ds tk X Toolkit
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xI Intrinsics
+.ds xW X Toolkit Athena Widgets \- C Language Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.ds Rn 3
+.ds Vn 2.2
+.hw XtInsert-Event-Type-Handler XtRemove-Event-Type-Handler XtSet-Event-Dispatcher XtDispatch-Event-To-Widget wid-get
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XtInsertEventTypeHandler __libmansuffix__ __xorgversion__ "XT FUNCTIONS"
+.SH NAME
+XtInsertEventTypeHandler, XtRemoveEventTypeHandler,
+XtRegisterExtensionSelector, XtSetEventDispatcher, XtDispatchEventToWidget
+\- extension event handling
+.SH SYNTAX
+.HP
+void XtInsertEventTypeHandler(Widget \fIwidget\fP, int \fIevent_type\fP,
+XtPointer \fIselect_data\fP, XtEventHandler \fIproc\fP, XtPointer
+\fIclient_data\fP, XtListPosition \fIposition\fP); 
+.HP
+void XtRemoveEventTypeHandler(Widget \fIwidget\fP, int \fIevent_type\fP,
+XtPointer \fIselect_data\fP, XtEventHandler \fIproc\fP, XtPointer
+\fIclient_data\fP); 
+.HP
+void XtRegisterExtensionSelector(Display* \fIdisplay\fP, int
+\fImin_event_type\fP, int \fImax_event_type\fP, XtExtensionSelectProc
+\fIproc\fP, XtPointer \fIclient_data\fP); 
+.HP
+XtEventDispatchProc XtSetEventDispatcher(Widget \fIwidget\fP, int
+\fIevent_type\fP, XtEventDispatchProc \fIproc\fP);
+.HP
+Boolean XtDispatchEventToWidget(Widget \fIwidget\fP, XEvent* \fIevent\fP); 
+.SH ARGUMENTS
+.IP \fIwidget\fP 1i
+Specifies the widget for this event handler.
+Must be of class Core or any subclass thereof.
+.IP \fIevent_type\fP 1i
+Specifies the event type.
+.IP \fIselect_data\fP 1i
+Specifies data used to select or deselect events from the server.
+.IP \fIproc\fP 1i
+Specifies the proc.
+.IP \fIclient_data\fP 1i
+Specifies additional data to be passed to the event handler.
+.IP \fIposition\fP 1i
+Specifies when the event handler is to be called relative to other
+previously registered handlers.
+.IP \fIdisplay\fP 1i
+Specifies the display.
+.IP \fImin_event_type,\ max_event_type\fP 1i
+Specifies the range of event types for this extension.
+.IP \fIevent\fP 1i
+Specifies a pointer to the event to be dispatched.
+.SH DESCRIPTION
+The
+.ZN XtInsertEventTypeHandler
+function registers a procedure with the dispatch mechanism that is to
+be called when an event that matches the specified \fIevent_type\fP is
+dispatched to the specified \fIwidget\fP.
+.LP
+If \fIevent_type\fP is one of the core X protocol events then 
+\fIselect_data\fP must be a pointer to a value of type
+.ZN EventMask ,
+indicating the event mask to be used to select for the desired event.
+This event mask will be included in the value returned by
+.ZN XtBuildEventMask .
+If the widget is realized
+.ZN XtInsertEventTypeHandler
+calls
+.ZN XSelectInput
+if necessary. Specifying NULL for \fIselect_data\fP is equivalent to
+specifying a pointer to an event mask containing 0. This is similar to the 
+.ZN XtInsertRawEventHandler
+function.
+.LP
+If \fIevent_type\fP specifies an extension event type then the semantics
+of the data pointed to by \fIselect_data\fP are defined by the extension
+selector registered for the specified event type.
+.LP
+In either case the Intrinsics are not required to copy the data pointed
+to by \fIselect_data\fP, so the caller must ensure that it remains valid
+as long as the event handler remains registered with this value of
+\fIselect_data\fP.
+.LP
+The \fIposition\fP argument allows the client to control the order of the
+invocation of event handlers registered for the same event type. If the
+client does not care about the order, it should normally specify
+.ZN XtListTail ,
+which registers this event handler after any previously registered
+handlers for this event type.
+.LP
+The
+.ZN XtRemoveEventTypeHandler
+function unregisters an even handler registered with
+.ZN XtInsertEventTypeHandler
+for the specified event type. The request is ignored if \fIclient_data\fP
+does not match the value given with the handler was registered.
+.LP
+If \fIevent_type\fP specifies on of the core X protocol events,
+\fIselect_data\fP must be a pointer to a value of type
+.ZN EventMask ,
+indicating the mask to be used to deselect for the appropriate event.
+If the widget is realized,
+.ZN XtRemoveEventTypeHandler
+calls
+.ZN XSelectInput
+if necessary. Specifying NULL for \fIselect_data\fP is equivalent to
+specifying a pointer to an event mask containing 0. This is similar to the
+.ZN XtRemoveRawEventHandler
+function.
+.LP
+If \fIevent_type\fP specifies an extension event type then the semantics
+of the data pointed to by \fIselect_data\fP are defined by the extension
+selector registered for the specified event type.
+.LP
+The
+.ZN XtRegisterExtensionSelector
+function registers a procedure to arrange for the delivery of extension
+events to widgets.
+.LP
+If \fImin_event_type\fP and \fImax_event_type\fP match the parameters to
+a previous call to
+.ZN XtRegisterExtensionSelector
+for the same display, the \fIproc\fP and \fIclient_data\fP replace the
+previously registered values. If the range specified by \fImin_event_type\fP
+and \fImax_event_type\fP overlaps the range of the parameters to a
+previous call for the same display in any other way, an error results.
+.LP
+The
+.ZN XtSetEventDispatcher
+function registers the event dispatcher procedure specified by \fIproc\fP
+for events with the type \fIevent_type\fP. The previously registered
+dispatcher (or the default dispatcher if there was no previously registered
+dispatcher) is returned. If \fIproc\fP is NULL, the default procedure is
+restored for the specified type.
+.LP
+In the future, when
+.ZN XtDispatchEvent
+is called with an event of \fIevent_type\fP, the specified \fIproc\fP (or
+the default dispatcher) will be invoked to determine a widget ot which
+to dispatch the event.
+.LP
+The
+.ZN XtDispatchEventToWidget
+function scans the list of registered event handlers for the specified
+widget and calls each handler that has been registered for the specified
+event type, subject to the \fIcontinue_to_dispatch\fP value returned by
+each handler. The Intrinsics behave as if event handlers were registered
+at the head of the list for
+.ZN Expose ,
+.ZN NoExpose ,
+.ZN GraphicsExpose ,
+and
+.ZN VisibilityNotify
+events to invoke the widget's expose procedure according to the exposure
+compression rules and to update the widget's \fIvisible\fP field if
+\fIvisible_interest\fP is
+.ZN True .
+These internal event handlers never set \fIcontinue_to_dispatch\fP to
+.ZN False .
+.LP
+.ZN XtDispatchEventToWidget
+returns
+.ZN True
+if any event handler was called and
+.ZN False
+otherwise.
+.LP
+.SH "SEE ALSO"
+XtGetKeyboardFocusWidget(3Xt)
+.br
+\fI\*(xT\fP
+.br
+\fI\*(xL\fP

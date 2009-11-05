@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+appdefaultdir=@appdefaultdir@
+
+Name: Xt
+Description: X Toolkit Library
+Version: @VERSION@
+Requires: xproto x11 sm
+Requires.private: x11 sm
+Cflags: -I${includedir}
+Libs: -L${libdir} -lXt

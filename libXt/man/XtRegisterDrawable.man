@@ -1,0 +1,174 @@
+.\" $Xorg: XtRegDraw.man,v 1.3 2000/08/17 19:42:02 cpqbld Exp $
+.\" $XdotOrg: $
+.\"
+.\" Copyright (c) 1993, 1994  X Consortium
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the "Software"), 
+.\" to deal in the Software without restriction, including without limitation 
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+.\" and/or sell copies of the Software, and to permit persons to whom the 
+.\" Software furnished to do so, subject to the following conditions:
+.\" 
+.\" The above copyright notice and this permission notice shall be included in
+.\" all copies or substantial portions of the Software.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
+.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+.\" SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of the X Consortium shall not 
+.\" be used in advertising or otherwise to promote the sale, use or other 
+.\" dealing in this Software without prior written authorization from the 
+.\" X Consortium.
+.\"
+.\" $XFree86: xc/doc/man/Xt/XtRegDraw.man,v 1.2 2001/01/27 18:20:29 dawes Exp $
+.\"
+.ds tk X Toolkit
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xI Intrinsics
+.ds xW X Toolkit Athena Widgets \- C Language Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.ds Rn 3
+.ds Vn 2.2
+.hw XtRegister-Drawable XtUnregister-Drawable XtWindow-To-Widget wid-get
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XtRegisterDrawable __libmansuffix__ __xorgversion__ "XT FUNCTIONS"
+.SH NAME
+XtRegisterDrawable \- register a drawable with the Intrinsics event dispatcher
+.SH SYNTAX
+.HP
+void XtRegisterDrawable(Display* \fIdisplay\fP, Drawable \fIdrawable\fP,
+Widget \fIwidget\fP); 
+.HP
+void XtUnregisterDrawable(Display* \fIdisplay\fP, Drawable \fIdrawable\fP); 
+.SH ARGUMENTS
+.IP \fIdisplay\fP 1i
+Specifies the drawable's display.
+.IP \fIdrawable\fP 1i
+Specifies the drawable to register.
+.IP \fIwidget\fP 1i
+Specifies the widget to register the drawable for.
+.SH DESCRIPTION
+.ZN XtRegisterDrawable
+associates the specified drawable with the specified widget so that
+future calls to
+.ZN XtWindowToWidget
+with the drawable will return the widget. The default event dispatcher
+will dispatch future core events that arrive with the drawable to the
+widget as though the event contained the widget's window, but the event
+itself will not be changed in any way when being passed to even handler
+or action procedures.
+.LP
+If the drawable is already registered with another widget, or if the
+drawable is the window of a widget in the client's widget tree, the
+results of calling
+.ZN XtRegisterDrawable
+are undefined.
+.LP
+.ZN XtUnregisterDrawable
+removes an association created with
+.ZN XtRegisterDrawable .
+If the drawable is the window of a widget in the client's widget tree
+the results of calling
+.ZN XtUnregisterDrawable
+are undefined.
+.SH "SEE ALSO"
+.br
+\fI\*(xT\fP
+.br
+\fI\*(xL\fP
