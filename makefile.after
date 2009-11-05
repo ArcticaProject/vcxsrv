@@ -25,6 +25,10 @@ endif # End static library stuff
 ifeq (1,$(call OR, $(call NE,$(WINAPP)_,_) $(call NE,$(TTYAPP)_,_)))
 
 ifdef WINAPP
+
+load_makefile $(MHMAKECONF)\libwinmain\makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG)
+EXTRALIB := $(MHMAKECONF)\libwinmain\$(OBJDIR)\libwinmain.lib
+
 EXE := $(WINAPP:%=$(OBJDIR)\%.exe)
 LINKFLAGS += /SUBSYSTEM:WINDOWS
 else
@@ -41,8 +45,8 @@ all: $(EXE)
 $(MANIFESTFILE):
 	$(MHMAKECONF)/tools/genruntimemanifest $@ $(DEBUG)
 
-$(EXE) :  $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) $(MANIFESTFILE)
-	$(LINK) $(LINKFLAGS) /MANIFEST:NO /OUT:$(relpath $@) $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(OBJS) $(RESOBJS)
+$(EXE) :  $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) $(MANIFESTFILE) $(EXTRALIB)
+	$(LINK) $(LINKFLAGS) /MANIFEST:NO /OUT:$(relpath $@) $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(EXTRALIB) $(OBJS) $(RESOBJS)
 	mt -nologo -manifest $(MANIFESTFILE) -outputresource:$(relpath $@);\#1
 
 endif  # End WINAPP or TTYAPP stuff
