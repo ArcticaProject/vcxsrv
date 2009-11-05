@@ -1,0 +1,192 @@
+.\" $Xorg: XtSetSP.man,v 1.3 2000/08/17 19:42:03 cpqbld Exp $
+.\" $XdotOrg: $
+.\"
+.\" Copyright (c) 1993, 1994  X Consortium
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the "Software"), 
+.\" to deal in the Software without restriction, including without limitation 
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+.\" and/or sell copies of the Software, and to permit persons to whom the 
+.\" Software furnished to do so, subject to the following conditions:
+.\" 
+.\" The above copyright notice and this permission notice shall be included in
+.\" all copies or substantial portions of the Software.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
+.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+.\" SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of the X Consortium shall not 
+.\" be used in advertising or otherwise to promote the sale, use or other 
+.\" dealing in this Software without prior written authorization from the 
+.\" X Consortium.
+.\"
+.\" $XFree86: xc/doc/man/Xt/XtSetSP.man,v 1.4 2003/04/28 22:18:21 herrb Exp $
+.\"
+.ds tk X Toolkit
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xI Intrinsics
+.ds xW X Toolkit Athena Widgets \- C Language Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.ds Rn 3
+.ds Vn 2.2
+.hw XtSet-Selection-Parameters XtGet-Selection-Parameters wid-get
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XtSetSelectionParameters __libmansuffix__ __xorgversion__ "XT FUNCTIONS"
+.SH NAME
+XtSetSelectionParameters \- specify target parameters for a selection request with a single target
+.SH SYNTAX
+.HP
+void XtSetSelectionParameters(Widget \fIrequestor\fP, Atom \fIselection\fP,
+Atom \fItype\fP, XtPointer \fIvalue\fP, unsigned long \fIlength\fP, int
+\fIformat\fP); 
+.SH ARGUMENTS
+.IP \fIrequestor\fP 1i
+Specifies the widget making the request. Must be of class Core or any
+subclass thereof.
+.IP \fIselection\fP 1i
+Specifies the atom that names the selection.
+.IP \fItype\fP 1i
+Specifies the type of the property in which the parameters will be passed.
+.IP \fIvalue\fP 1i
+Specifies a pointer to the parameters.
+.IP \fIlength\fP 1i
+Specifies the number of elements containing data in \fIvalue\fP, each
+element of a sized indicated by \fIformat\fP.
+.IP \fIformat\fP 1i
+Specifies the size in bits of the data in the elements of \fIvalue\fP.
+.SH DESCRIPTION
+The specified parameters will be copied and stored in a new property of
+the specified type and format on the requestor's window. To initiate a
+selection request with a target and these parameters, a subsequent call to
+.ZN XtGetSelectionValue
+or to
+.ZN XtGetSelectionValueIncremental
+specifying the same requestor widget and selection atom will generate a
+.ZN ConvertSelection
+request referring referring to the property containing the parameters. If
+.ZN XtSetSelectionParameters
+is called more than once with the same widget and selection without a
+call to specify a request, the most recently specified parameters are
+used in the subsequent request.
+.LP
+The possible values of \fIformat\fP may be 8, 16, or 32. If the \fIformat\fP
+is 8, the elements of \fIvalue\fP are assumed to be sizeof(char); if 16,
+sizeof(short); if 32, sizeof(long).
+.LP
+To generate a MULTIPLE target request with parameters for any of the
+multiple targets of the selection request, precede individual calls to
+.ZN XtGetSelectionValue
+and
+.ZN XtGetSelectionValueIncremental
+with corresponding individual calls to
+.ZN XtSetSelectionParameters ,
+and enclose these all within
+.ZN XtCreateSelectionRequest
+and
+.ZN XtSendSelectionRequest .
+.ZN XtGetSelectionValues 
+and
+.ZN XtGetSelectionValuesIncremental
+cannot be used  to make selection requests with parameterized targets.
+.SH "SEE ALSO"
+XtGetSelectionParameters(3Xt)
+.br
+\fI\*(xT\fP
+.br
+\fI\*(xL\fP

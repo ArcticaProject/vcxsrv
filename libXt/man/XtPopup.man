@@ -1,0 +1,328 @@
+.\" $Xorg: XtPopup.man,v 1.3 2000/08/17 19:42:02 cpqbld Exp $
+.\"
+.\" Copyright 1993 X Consortium
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining
+.\" a copy of this software and associated documentation files (the
+.\" "Software"), to deal in the Software without restriction, including
+.\" without limitation the rights to use, copy, modify, merge, publish,
+.\" distribute, sublicense, and/or sell copies of the Software, and to
+.\" permit persons to whom the Software is furnished to do so, subject to
+.\" the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be
+.\" included in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+.\" EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+.\" OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+.\" ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+.\" OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the X Consortium shall
+.\" not be used in advertising or otherwise to promote the sale, use or
+.\" other dealings in this Software without prior written authorization
+.\" from the X Consortium.
+.\"
+.\" $XFree86: xc/doc/man/Xt/XtPopup.man,v 1.2 2001/01/27 18:20:29 dawes Exp $
+.\"
+.ds tk X Toolkit
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xI Intrinsics
+.ds xW X Toolkit Athena Widgets \- C Language Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.ds Rn 3
+.ds Vn 2.2
+.hw XtPopup-Spring-Loaded XtCallback-None XtCallback-Nonexclusive XtCallback-Exclusive wid-get
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XtPopup __libmansuffix__ __xorgversion__ "XT FUNCTIONS"
+.SH NAME
+XtPopup, XtPopupSpringLoaded, XtCallbackNone, XtCallbackNonexclusive, XtCallbackExclusive \- map a pop-up
+.SH SYNTAX
+.HP
+void XtPopup(Widget \fIpopup_shell\fP, XtGrabKind \fIgrab_kind\fP); 
+.HP
+void XtPopupSpringLoaded(Widget \fIpopup_shell\fP); 
+.HP
+void XtCallbackNone(Widget \fIw\fP, XtPointer \fIclient_data\fP, XtPointer
+\fIcall_data\fP): 
+.HP
+void XtCallbackNonexclusive(Widget \fIw\fP, XtPointer \fIclient_data\fP,
+XtPointer \fIcall_data\fP); 
+.HP
+void XtCallbackExclusive(Widget \fIw\fP, XtPointer \fIclient_data\fP,
+XtPointer \fIcall_data\fP); 
+.HP
+void MenuPopup(String \fIshell_name\fP); 
+.SH ARGUMENTS
+.IP \fIcall_data\fP 1i
+Specifies the callback data,
+which is not used by this procedure.
+.IP \fIclient_data\fP 1i
+Specifies the pop-up shell.
+.IP \fIgrab_kind\fP 1i
+Specifies the way in which user events should be constrained.
+.IP \fIpopup_shell\fP 1i
+Specifies the widget shell\*(Ps.
+.IP \fIw\fP 1i
+Specifies the widget.
+.SH DESCRIPTION
+The
+.ZN XtPopup
+function performs the following:
+.IP \(bu 5
+Calls
+.ZN XtCheckSubclass
+.\".ZN XtCheckSubclass(popup_shell, popupShellWidgetClass)
+to ensure popup_shell is a subclass of
+.ZN Shell .
+.IP \(bu 5
+Generates an error if the shell's popped_up field is already 
+.ZN True .
+.IP \(bu 5
+Calls the callback procedures on the shell's popup_callback list.
+.IP \(bu 5
+Sets the shell popped_up field to 
+.ZN True ,
+the shell spring_loaded field to 
+.ZN False ,
+and the shell grab_kind field from grab_kind.
+.IP \(bu 5
+If the shell's create_popup_child field is non-NULL,
+.ZN XtPopup
+calls it with popup_shell as the parameter.
+.IP \(bu 5
+If grab_kind is either
+.ZN XtGrabNonexclusive
+or
+.ZN XtGrabExclusive ,
+it calls:
+.LP
+.Ds
+XtAddGrab(popup_shell, (grab_kind == XtGrabExclusive), False)
+.De
+.IP \(bu 5
+Calls
+.ZN XtRealizeWidget 
+with popup_shell specified.
+.IP \(bu 5
+Calls
+.ZN XMapWindow 
+with popup_shell specified.
+.LP
+The
+.ZN XtPopupSpringLoaded
+function performs exactly as
+.ZN XtPopup
+except that it sets the shell \fIspring_loaded\fP field to
+.ZN True
+and always calls
+.ZN XtAddGrab
+with \fIexclusive\fP
+.ZN True
+and \fIspring_loaded\fP
+.ZN True .
+.LP
+The
+.ZN XtCallbackNone ,
+.ZN XtCallbackNonexclusive ,
+and
+.ZN XtCallbackExclusive
+functions call
+.ZN XtPopup
+with the shell specified by the client data argument
+and grab_kind set as the name specifies.
+.ZN XtCallbackNone ,
+.ZN XtCallbackNonexclusive ,
+and
+.ZN XtCallbackExclusive
+specify
+.ZN XtGrabNone ,
+.ZN XtGrabNonexclusive ,
+and
+.ZN XtGrabExclusive ,
+respectively.
+Each function then sets the widget that executed the callback list 
+to be insensitive by using
+.ZN XtSetSensitive .
+Using these functions in callbacks is not required.
+In particular,
+an application must provide customized code for
+callbacks that create pop-up shells dynamically or that must do more than
+desensitizing the button.
+.LP
+.ZN MenuPopup
+is known to the translation manager,
+which must perform special actions for spring-loaded pop-ups.
+Calls to
+.ZN MenuPopup
+in a translation specification are mapped into calls to a
+nonexported action procedure,
+and the translation manager fills in parameters
+based on the event specified on the left-hand side of a translation.
+.LP
+If
+.ZN MenuPopup
+is invoked on
+.ZN ButtonPress
+(possibly with modifiers),
+the translation manager pops up the shell with grab_kind set to
+.ZN XtGrabExclusive
+and spring_loaded set to 
+.ZN True .
+If
+.ZN MenuPopup
+is invoked on
+.ZN EnterWindow
+(possibly with modifiers),
+the translation manager pops up the shell with grab_kind set to
+.ZN XtGrabNonexclusive
+and spring_loaded set to 
+.ZN False .
+Otherwise, the translation manager generates an error.
+When the widget is popped up,
+the following actions occur:
+.IP \(bu 5
+Calls
+.ZN XtCheckSubclass
+.\".ZN XtCheckSubclass(popup_shell, popupShellWidgetClass)
+to ensure popup_shell is a subclass of
+.ZN Shell .
+.IP \(bu 5
+Generates an error if the shell's popped_up field is already 
+.ZN True .
+.IP \(bu 5
+Calls the callback procedures on the shell's popup_callback list.
+.IP \(bu 5
+Sets the shell popped_up field to 
+.ZN True
+and the shell grab_kind and spring_loaded fields appropriately.
+.IP \(bu 5
+If the shell's create_popup_child field is non-NULL,
+it is called with popup_shell as the parameter.
+.IP \(bu 5
+Calls:
+.LP
+.Ds
+XtAddGrab(popup_shell, (grab_kind == XtGrabExclusive), spring_loaded)
+.De
+.IP \(bu 5
+Calls
+.ZN XtRealizeWidget 
+with popup_shell specified.
+.IP \(bu 5
+Calls
+.ZN XMapWindow 
+with popup_shell specified.
+.LP
+(Note that these actions are the same as those for
+.ZN XtPopup .)
+.ZN MenuPopup
+tries to find the shell by searching the widget tree starting at
+the parent of the widget in which it is invoked.
+If it finds a shell with the specified name in the pop-up children of
+that parent, it pops up the shell with the appropriate parameters.
+Otherwise, it moves up the parent chain as needed.
+If
+.ZN MenuPopup
+gets to the application widget and cannot find a matching shell,
+it generates an error.
+.SH "SEE ALSO"
+XtCreatePopupShell(3Xt),
+XtPopdown(3Xt)
+.br
+\fI\*(xT\fP
+.br
+\fI\*(xL\fP

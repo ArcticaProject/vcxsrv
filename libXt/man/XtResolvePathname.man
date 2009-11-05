@@ -1,0 +1,285 @@
+.\" $Xorg: XtResPath.man,v 1.3 2000/08/17 19:42:02 cpqbld Exp $
+.\"
+.\" Copyright (c) 1993, 1994  X Consortium
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the "Software"), 
+.\" to deal in the Software without restriction, including without limitation 
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+.\" and/or sell copies of the Software, and to permit persons to whom the 
+.\" Software furnished to do so, subject to the following conditions:
+.\" 
+.\" The above copyright notice and this permission notice shall be included in
+.\" all copies or substantial portions of the Software.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
+.\" THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+.\" SOFTWARE.
+.\" 
+.\" Except as contained in this notice, the name of the X Consortium shall not 
+.\" be used in advertising or otherwise to promote the sale, use or other 
+.\" dealing in this Software without prior written authorization from the 
+.\" X Consortium.
+.\"
+.\" $XFree86: xc/doc/man/Xt/XtResPath.man,v 1.4 2002/10/12 16:06:41 herrb Exp $
+.\"
+.ds tk X Toolkit
+.ds xT X Toolkit Intrinsics \- C Language Interface
+.ds xI Intrinsics
+.ds xW X Toolkit Athena Widgets \- C Language Interface
+.ds xL Xlib \- C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.ds Rn 3
+.ds Vn 2.2
+.hw XtResolve-Pathname wid-get
+.na
+.de Ds
+.nf
+.\\$1D \\$2 \\$1
+.ft 1
+.ps \\n(PS
+.\".if \\n(VS>=40 .vs \\n(VSu
+.\".if \\n(VS<=39 .vs \\n(VSp
+..
+.de De
+.ce 0
+.if \\n(BD .DF
+.nr BD 0
+.in \\n(OIu
+.if \\n(TM .ls 2
+.sp \\n(DDu
+.fi
+..
+.de FD
+.LP
+.KS
+.TA .5i 3i
+.ta .5i 3i
+.nf
+..
+.de FN
+.fi
+.KE
+.LP
+..
+.de IN		\" send an index entry to the stderr
+..
+.de C{
+.KS
+.nf
+.D
+.\"
+.\"	choose appropriate monospace font
+.\"	the imagen conditional, 480,
+.\"	may be changed to L if LB is too
+.\"	heavy for your eyes...
+.\"
+.ie "\\*(.T"480" .ft L
+.el .ie "\\*(.T"300" .ft L
+.el .ie "\\*(.T"202" .ft PO
+.el .ie "\\*(.T"aps" .ft CW
+.el .ft R
+.ps \\n(PS
+.ie \\n(VS>40 .vs \\n(VSu
+.el .vs \\n(VSp
+..
+.de C}
+.DE
+.R
+..
+.de Pn
+.ie t \\$1\fB\^\\$2\^\fR\\$3
+.el \\$1\fI\^\\$2\^\fP\\$3
+..
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.de NT
+.ne 7
+.ds NO Note
+.if \\n(.$>$1 .if !'\\$2'C' .ds NO \\$2
+.if \\n(.$ .if !'\\$1'C' .ds NO \\$1
+.ie n .sp
+.el .sp 10p
+.TB
+.ce
+\\*(NO
+.ie n .sp
+.el .sp 5p
+.if '\\$1'C' .ce 99
+.if '\\$2'C' .ce 99
+.in +5n
+.ll -5n
+.R
+..
+.		\" Note End -- doug kraft 3/85
+.de NE
+.ce 0
+.in -5n
+.ll +5n
+.ie n .sp
+.el .sp 10p
+..
+.ny0
+.TH XtResolvePathname __libmansuffix__ __xorgversion__ "XT FUNCTIONS"
+.SH NAME
+XtResolvePathname \- search for a file using standard substitution
+.SH SYNTAX
+.HP
+String XtResolvePathname(Display *\fIdisplay\fP, String \fItype\fP, String
+\fIfilename\fP, String \fIsuffix\fP, String \fIpath\fP, Substitution
+\fIsubstitutions\fP, Cardinal \fInum_substitutions\fP, XtFilePredicate
+\fIpredicate\fP); 
+.SH ARGUMENTS
+.IP \fIdisplay\fP 1.2i
+Specifies the display to use to find the language for language substitutions.
+.IP \fItype\fP
+.br
+.ns
+.IP \fIfilename\fP
+.br
+.ns
+.IP \fIsuffix\fP 1.2i
+Specify values to substitute into the path.
+.IP \fIpath\fP 1.2i
+Specifies the list of file specifications, or NULL.
+.IP \fIsubstitutions\fP 1.2i
+Specifies a list of additional substitutions to make into the path, or NULL.
+.IP \fInum_substitutions\fP 1.2i
+Specifies the number of entries in \fIsubstitutions\fP.
+.IP \fIpredicate\fP 1.2i
+Specifies a procedure called to judge each potential file name, or NULL.
+.SH DESCRIPTION
+The substitutions specified by
+.ZN XtResolvePathname
+are determined from the value of the language string retrieved by
+.ZN XtDisplayInitialize
+for the specified display.
+To set the
+language for all applications specify ``*xnlLanguage: \fIlang\fP'' in the
+resource database. 
+.IN "xnlLanguage"
+The format and content of the language string are
+implementation-defined.   One suggested syntax is to compose
+the language string of three parts;  a  ``language  part'',  a
+``territory  part'' and a ``codeset part''.  The manner in which
+this composition is accomplished is implementation-defined
+and the \*(xI make no interpretation of the parts other
+than to use them in substitutions as described below.
+.LP
+.ZN XtResolvePathname
+calls
+.ZN XtFindFile
+with the following substitutions
+in addition to any passed by the caller and returns the value returned by
+.ZN XtFindFile :
+.IP %N 5
+The value of the \fIfilename\fP parameter, or the application's
+class name if \fIfilename\fP is NULL.
+.IP %T 5
+The value of the \fItype\fP parameter.
+.IP %S 5
+The value of the \fIsuffix\fP parameter.
+.IP %L 5
+The language string associated with the specified display.
+.IP %l 5
+The language part of the display's language string.
+.IP %t 5
+The territory part of the display's language string.
+.IP %c 5
+The codeset part of the display's language string.
+.IP %C 5
+The customization string retrieved from the resource
+database associated with \fIdisplay\fP.
+.IP %D 5
+The value of the implementation-specific default path.
+.LP
+If a path is passed to
+.ZN XtResolvePathname ,
+it will be passed along to
+.ZN XtFindFile .
+If the \fIpath\fP argument is NULL, the value of the
+.ZN \s-1XFILESEARCHPATH\s+1
+.IN "XFILESEARCHPATH" "" "@DEF@"
+environment variable will be passed to
+.ZN XtFindFile .
+If
+.ZN \s-1XFILESEARCHPATH\s+1
+is not defined, an implementation-specific default path will be used
+which contains at least 6 entries.  These entries
+must contain the following substitutions:
+
+.nf
+.ta 3n 23n 27n
+1.	%C, %N, %S, %T, %L	or	%C, %N, %S, %T, %l, %t, %c
+2.	%C, %N, %S, %T, %l
+3.	%C, %N, %S, %T
+4.	%N, %S, %T, %L	or	%N, %S, %T, %l, %t, %c
+5.	%N, %S, %T, %l
+6.	%N, %S, %T
+.fi
+
+The order of these six entries within the path must be as given above.
+The order and use of substitutions within a given entry is implementation
+dependent.
+If the path begins
+with a colon, it will be preceded by %N%S.  If the path includes two
+adjacent colons, \fB%N%S\fP will be inserted between them.
+.LP
+The \fItype\fP parameter is intended to be a category of files, usually
+being translated into a directory in the pathname.  Possible values
+might include ``app-defaults'', ``help'', and ``bitmap''.
+.LP
+The \fIsuffix\fP parameter is intended to be appended to the file name.
+Possible values might include ``.txt'', ``.dat'', and ``.bm''.
+.LP
+A suggested value for the default path on POSIX-based systems is
+.IP
+__projectroot__/lib/X11/%L/%T/%N%C%S:__projectroot__/lib/X11/%l/%T/%N%C%S:\\
+.br
+__projectroot__/lib/X11/%T/%N%C%S:__projectroot__/lib/X11/%L/%T/%N%S:\\
+.br
+__projectroot__/lib/X11/%l/%T/%N%S:__projectroot__/lib/X11/%T/%N%S
+.LP
+Using this example, if the user has specified a language, it will be
+used as a subdirectory of __projectroot__/lib/X11 that will be searched
+for other files.  If the desired file is not found there, the lookup
+will be tried again using just the language part of the specification.
+If the file is not there, it will be looked for in
+__projectroot__/lib/X11.  The \fItype\fP parameter is used as a
+subdirectory of the language directory or of __projectroot__/lib/X11,
+and \fIsuffix\fP is appended to the file name.
+.LP
+The %D substitution allows the addition of path
+elements to the implementation-specific default path, typically to
+allow additional directories to be searched without preventing
+resources in the system directories from being found.  For example, a
+user installing resource files under a directory called ``ourdir''
+might set
+.ZN \s-1XFILESEARCHPATH\s+1
+to
+.IP
+%D:ourdir/%T/%N%C:ourdir/%T/%N
+.LP
+The customization string is obtained by querying the resource database
+currently associated with the display (the database returned by
+.ZN XrmGetDatabase )
+for the resource \fIapplication_name\fP.customization, class
+\fIapplication_class\fP.Customization where \fIapplication_name\fP
+and \fIapplication_class\fP are the values returned by
+.ZN XtGetApplicationNameAndClass .
+If no value is specified in the database, the empty string is used.
+.LP
+It is the responsibility of the caller to free the returned string using
+.ZN XtFree
+when it is no longer needed.
+.SH "SEE ALSO"
+.br
+\fI\*(xT\fP
+.br
+\fI\*(xL\fP

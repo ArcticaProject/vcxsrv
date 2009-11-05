@@ -55,6 +55,7 @@ libXdmcp-1.0.3
 libXfont-1.4.1
 libXinerama-1.1
 libxkbfile-1.0.6
+libXt-1.0.7
 MesaLib-7.6
 mkfontscale-1.0.7
 openssl-0.9.8k
