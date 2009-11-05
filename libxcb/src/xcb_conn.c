@@ -78,8 +78,10 @@ size_t writev(int fildes, const struct iovec *iov, int iovcnt)
         errno =WSAGetLastError();
         if(errno == WSAEWOULDBLOCK)
           errno = EAGAIN;
-        assert(sum == 0);
-        return r;
+        if (sum)
+          return sum;
+        else
+          return r;
       }
       p += r;
       l -= r;
