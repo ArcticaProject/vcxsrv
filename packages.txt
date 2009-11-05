@@ -52,6 +52,7 @@ libX11-1.3.2
 libXau-1.0.5
 libxcb-1.4
 libXdmcp-1.0.3
+libXext-1.1.1
 libXfont-1.4.1
 libXinerama-1.1
 libxkbfile-1.0.6
