@@ -1,0 +1,80 @@
+.\" $XdotOrg: $
+.\" 
+.\" Copyright \(co 1986-1997   The Open Group    All Rights Reserved
+.\" Copyright 1999, 2005 Sun Microsystems, Inc.  All Rights Reserved
+.\" 
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the "Software"),
+.\" to deal in the Software without restriction, including without limitation
+.\" the rights to use, copy, modify, merge, publish, distribute,
+.\" sublicense, and/or sell copies of the Software, and to permit persons
+.\" to whom the Software is furnished to do so, subject to the following
+.\" conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be
+.\" included in all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+.\" EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+.\" IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+.\" DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+.\" OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+.\" THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+.\"
+.\" Except as contained in this notice, the names of the copyright holders
+.\" shall not be used in advertising or otherwise to promote the sale, use
+.\" or other dealings in this Software without prior written authorization
+.\" from said copyright holders.
+.\" 
+.\" X Window System is a trademark of The Open Group.
+.\" 
+.de ZN
+.ie t \fB\^\\$1\^\fR\\$2
+.el \fI\^\\$1\^\fP\\$2
+..
+.TH XCUP __libmansuffix__ __xorgversion__ "X FUNCTIONS"
+.SH NAME
+XcupGetReservedColormapEntries \- list colormap entries reserved by the system
+.SH SYNOPSIS
+.PP
+.nf
+\fBcc\fR [ \fIflag\fR \&.\&.\&. ] \fIfile\fR \&.\&.\&. -\fBlXext\fR [ \fIlibrary\fR \&.\&.\&. ]
+\&#include <X11/extensions/Xcup.h>
+.HP
+Status \fBXcupGetReservedColormapEntries\fP\^(\^Display *\fIdisplay\fP\^, 
+int \fIscreen\fP\^, XColor **\fIcolors_out\fP\^, int *\fIncolors\fP\^);
+.if n .ti +5n
+.if t .ti +.5i
+.SH ARGUMENTS
+.IP \fIdisplay\fP 1i
+Specifies the connection to the X server.
+.IP \fIscreen\fP 1i
+Screen number on the host server.
+.IP \fIcolors_out\fP 1i
+Returns the values reserved by the server.
+.IP \fIncolors\fP 1i
+Returns the number of items in \fIcolors_out\fP.
+.SH DESCRIPTION
+.LP
+The 
+.ZN XcupGetReservedColormapEntries 
+function returns a list of colormap entries (pixels) that are reserved
+by the system. This list will, at a minimum, contain entries for the 
+BlackPixel and WhitePixel of the specified screen. Use 
+.ZN XFree 
+to free 
+.I colors_out.
+.LP
+To minimize colormap flash, an application which installs its own private
+colormap should query the special colors by calling
+.ZN XCupGetReservedColormapEntries , 
+and can then store those entries (in the
+proper location) in its private colormap using 
+.ZN XCupStoreColors .
+.SH "SEE ALSO"
+.BR XcupQueryVersion (3Xext),
+.BR XcupStoreColors (3Xext),
+.BR XFree (3X11),
+.br
+\fIColormap Utilization Policy and Extension\fP
