@@ -80,7 +80,6 @@ xineramaproto-1.2
 xkbcomp-1.1.1
 xkeyboard-config-1.7
 xorg-server-1.7.99.1
-xload-1.0.2
 xproto-7.0.16
 xtrans-1.2.5
 zlib-1.2.3
