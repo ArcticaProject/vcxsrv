@@ -387,8 +387,8 @@ HandleCustomWM_COMMAND (unsigned long hwndIn,
 
 		    memset (&start, 0, sizeof (start));
 		    start.cb = sizeof (start);
-		    start.dwFlags = STARTF_USESHOWWINDOW;
-		    start.wShowWindow = SW_HIDE;
+		    //start.dwFlags = STARTF_USESHOWWINDOW;
+		    //start.wShowWindow = SW_HIDE;
 
 		    memset (&child, 0, sizeof (child));
 

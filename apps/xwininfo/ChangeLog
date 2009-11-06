@@ -1,0 +1,346 @@
+commit 1569f4d692443bf0658dbe12902f995693b13dcf
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 12 16:08:57 2009 -0700
+
+    xwininfo 1.0.5
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 28b34ed17506540a793a85e03c01a7b4d9aa3588
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 12 16:06:55 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit b6837aadf7a2c30fb8c2c811d45c48047e0769e8
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Oct 12 15:58:09 2009 -0700
+
+    Fill in COPYING file
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 98ac096e2edae243ce2119fb70112c3c6b2bb688
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Oct 1 14:54:32 2009 -0700
+
+    Add README with pointers to mailing lists, bugzilla, & git
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 347ba641db84c66cd332f398423e87a882580575
+Author: Yann Droneaud <ydroneaud@mandriva.com>
+Date:   Fri Mar 27 16:41:00 2009 +0100
+
+    Update manpage for visual id
+    
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+
+commit ee03cf70e9e92d0e9adebaddc6b065de496cc561
+Author: Yann Droneaud <ydroneaud@mandriva.com>
+Date:   Fri Mar 27 16:35:14 2009 +0100
+
+    Report visual id along visual class for -stat switch
+    
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+
+commit a42690b24d828ec4cfae1bf40cac08f07c6202af
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Jan 15 14:27:14 2009 -0200
+
+    Ansification and compile warning fixes.
+    
+      This also uses XORG_CHANGELOG and XORG_CWARNFLAGS, corrects
+    make distcheck and most gcc 4.3 and sparse warnings.
+
+commit 67a74f540cdbb7ded7aa44c751f5f0c8833c688f
+Author: Branden Robinson <branden@debian.org>
+Date:   Fri Feb 11 02:14:27 2005 -0500
+
+    Do not spew usage on connection error
+    
+    General philosophy:
+    
+    The user should only be shown a usage message when:
+      * it is asked for with a --help option or the like.
+      * the command line is syntactically invalid.
+
+commit b8115ee0e43c6c03025cad72219481e3fdb119d4
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Sun Jun 29 10:49:33 2008 -0400
+
+    xwininfo 1.0.4
+
+commit c229611bcb7ee94bea5c075f5e15447e14c0f6ce
+Author: Kim Woelders <kim@woelders.dk>
+Date:   Sun Jun 22 01:12:13 2008 -0400
+
+    Fix window selection by pointer.
+    
+    This should fix things in WM’s using virtual roots as well as in tabbing WM’s.
+    
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+
+commit b7e88cd9d28a3d3e467b769f3efe87f7c2f4c0a5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 27 14:20:35 2007 -0700
+
+    Version bump: 1.0.3
+
+commit 56f0b5dfb1486e262eb514fac44c73cea4bb4471
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 27 14:20:02 2007 -0700
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit c8d205c30547ca526404a0b257c3cc5d40970be6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 7 15:50:13 2007 -0700
+
+    Add static & const qualifiers to xwininfo.c
+
+commit 77d50c0bf824f847bd9ede30c21618845258de76
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 7 15:38:23 2007 -0700
+
+    Replace sprintf's with snprintf & strlcat
+
+commit 118bd50a9bbc10cab7846fb6ac1a0d25ba4c3422
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 6 19:52:13 2007 -0700
+
+    dsimple.c: ANSIfy function declarations
+
+commit e093e4be56bb2be385a972962cf89f234e987ab4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 6 19:44:24 2007 -0700
+
+    Purge unused code from dsimple.c
+    
+    dsimple.c was originally shared source among several X apps.
+    Since modularization gave each app it's own copy, much of the code is
+    no longer needed in each app.
+
+commit 59bbe12a40fdb3d39429d0d0ce809ad28116e7ed
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 6 19:18:57 2007 -0700
+
+    Rename xwininfo_CFLAGS to AM_CFLAGS to make automake-1.10 happier
+    
+    Makefile.am:27: compiling `dsimple.c' with per-target flags requires `AM_PROG_CC_C_O' in `configure.ac'
+
+commit 5a251886c0f158f4c8a342b6fbdeebf3dbd1c0fd
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu May 24 18:20:11 2007 -0700
+
+    Man page formatting: make -geometry bold like other options
+
+commit 07459b14b36f15cfdfc6384019aaf020c7920cd4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu May 24 18:17:28 2007 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 24fc2a569df9eaa776bcdddbb26bf4ea97b69d13
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu May 24 18:16:53 2007 -0700
+
+    X.Org bug #10616: Add all the X info commands to See Also in man page
+    
+    X.Org Bugzilla #10616: <https://bugs.freedesktop.org/show_bug.cgi?id=10616>
+    Reported upstream from
+    Debian bug #350313 <http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=350313>
+
+commit 412a3232373131634072df0d0b4843abf360def4
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Sun Apr 2 01:19:53 2006 +0000
+
+    Bump to 1.0.2.
+
+commit 8d62050702532be39688d468663466199492510b
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Mar 10 02:37:18 2006 +0000
+
+    Clear two tiny memory leaks. (Coverity ids #900 & 901)
+
+commit 609828be5a05bc71fffaf8fc129a0cae8082fd57
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Dec 21 02:29:55 2005 +0000
+
+    Update package version for X11R7 release.
+
+commit a4169ffa7eb6eb9a28fd64a0686a813da975736c
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Dec 19 16:22:48 2005 +0000
+
+    Stub COPYING files
+
+commit b9403df95678e568a326fe3f37bf29285a6a211e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:12 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 6f9523999cc4eb34accfe0bcc2c7a74bae9259ef
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:27 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit 28c0455ea50bdf37f1d9d53c6756beebed429f0e
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:29 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 988471c67e10a5ca309b90146b37a6037f5b2efc
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:01:48 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit 4496e95380b2f0ad7e9bdca02ec192dbb6d5e2e5
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Mon Nov 21 10:35:09 2005 +0000
+
+    Another pass at .cvsignores for apps.
+
+commit 296d8e6ab8a86e5653529d0497ca5751d89f23b5
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 21 03:14:17 2005 +0000
+
+    Change dependency from xmu to xmuu since the full xmu (with all its baggage
+        like Xt) is not needed here.
+
+commit 27898506332f1a4e698cbd65aecc47fdbc6d0a7b
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Nov 20 22:08:56 2005 +0000
+
+    Add/improve .cvsignore files for apps.
+
+commit ee7bf4989434ba5f30451c3f07e4a6e01e6532d4
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:38 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit 4e58b0e12d46503c5f75ead9a859694aafd5b9b7
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:47:58 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit fc097904a8d7ded9a60df35fd58b9f5b5e226e17
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 17 23:56:25 2005 +0000
+
+    Use @APP_MAN_SUFFIX@ instead of $(APP_MAN_SUFFIX) in macro substitutions to
+        work better with BSD make
+
+commit 22feb546d5bf499ec0bc726c60a6c46f2e2cbd1c
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Oct 14 00:25:48 2005 +0000
+
+    Use sed to fill in variables in man page
+
+commit 9b1a4cbaf609bb102adec047934ad4c1b05f01ab
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Aug 1 20:25:33 2005 +0000
+
+    Install man pages to section 1 instead of section m (Patch from Donnie
+        Berkholz)
+
+commit 70ed22f5e63d5759a0b7c6574a92d124c0777562
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:39 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 270145dc0f3ad5c7ad7d6086da19c0a25ea853a9
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Jul 20 19:32:05 2005 +0000
+
+    Use a unique token for PKG_CHECK_MODULES. Otherwise, if you use a global
+        configure cache, you cache it, and the cached value is probably wrong.
+
+commit 97aa768841e147fde3cf16ba9a4c852358085d27
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Fri Jul 8 21:00:46 2005 +0000
+
+    Build system for xwininfo
+
+commit 5cd08344c43c739c9a6837f1a60ae7c42e5afabe
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Wed Oct 6 19:29:59 2004 +0000
+
+    Fix for https://freedesktop.org/bugzilla/show_bug.cgi?id=1518 - Add filter
+        support to "xlsfonts" that it can filter builtin-, glyph- and/or other
+        kinds of printer fonts (controlled by the xp-listfonts-modes attribute
+        as described in the CDE DtPrint and Xprint specifications).
+
+commit ac7cc196b722ee4653326aee459f40ad16a260c1
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 19:55:09 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 43e099d499d4dbabb32ca0410175e0e1b814cd94
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:35:54 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit cd710399eb415673c180f65080d685ee8d149361
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:13:20 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 436a7ecb4b764394abcdd06fd99d6232c633cad1
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:36:32 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 6dfbd3f819f10e4d04653df2074526860007968e
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:24:18 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit a2fa980ce0e98c2bbc503d1d9fe51ab539b7ea46
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Jan 29 08:09:21 2004 +0000
+
+    Importing vendor version xf86-012804-2330 on Thu Jan 29 00:06:33 PST 2004
+
+commit 429530ba6f7699436d6f789a17550ec1a691c675
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:29:23 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit be0f398fee08e03ab73ec0d580df688cc989fbaa
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:49:24 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 5e5a590668dc3ebe7e2cb568aad4c9c14021f2a2
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:55 2003 +0000
+
+    R6.6 is the Xorg base-line

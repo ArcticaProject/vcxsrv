@@ -81,6 +81,7 @@
 menu apps {
 	xcalc	exec	"xcalc"
 	xclock	exec	"xclock"
+  xwininfo exec "xwininfo -pause"
 }
 
 menu root {

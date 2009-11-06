@@ -113,6 +113,9 @@ xcalc.exe: ..\apps\xcalc\obj\release\xcalc.exe XCalc XCalc-color
 xclock.exe: ..\apps\xclock\obj\release\xclock.exe
 	copy $< $@
 
+xwininfo.exe: ..\apps\xwininfo\obj\release\xwininfo.exe
+	copy $< $@
+
 load_makefile ..\tools\plink\makefile MAKESERVER=0 DEBUG=0
 
 plink.exe: ..\tools\plink\obj\release\plink.exe
@@ -124,7 +127,7 @@ load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
 all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
      ..\libX11\nls\all fonts.src\all xkbdata.src\all plink.exe xclock.exe xcalc.exe \
-     opengl32.dll swrast_dri.dll
+     xwininfo.exe opengl32.dll swrast_dri.dll
 
 swrast_dri.dll: ..\mesalib\lib\swrast_dri.dll
 	copy $< $@
