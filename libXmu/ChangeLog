@@ -1,0 +1,357 @@
+commit c2c76abe51878f55e22c44c747f1243e56a4344b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Sep 23 17:53:41 2009 -0700
+
+    libXmu 1.0.5
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 5b31bee92b56147e2c17d19e46e09145d765fdb4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Sep 23 17:49:27 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit fef063d82e332b96bcb12ce41abefce868821577
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Sep 23 17:47:16 2009 -0700
+
+    Add pointer to API docs in xorg-docs to README
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 88bd2d387fbb068339b65506331136085082def6
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Mar 31 00:01:48 2009 +0200
+
+    libXmu: check for LONG64, not LONG_64
+    
+    The latter isn't defined anywhere, so editres hasn't been able to read a
+    pointer on 64bit since about 10 years.
+    Admittedly, this should be using stdint types, but...
+    
+    Debian bug#521887 <http://bugs.debian.org/521887>
+    
+    Reported-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit f1ccbcffc9171868256b5813aa558f6756aca508
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Feb 2 20:34:34 2009 -0800
+
+    Add README with pointers to mailing list, bugzilla & git repos
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 049534f4eb409bea62b590b436bef78e5eef5b8e
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Jan 29 20:02:33 2009 -0200
+
+    Janitor: make distcheck, compiler warnings, .gitignore.
+
+commit fc2096538ff7424bfeb171b1a36e860070594627
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 4 19:42:22 2008 -0700
+
+    Add libX11 to libXmu dependencies
+
+commit 85f77401635dfa57d40de89aa2c9f39a344a8d3b
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Tue Apr 29 13:13:06 2008 +0100
+
+    Fix build problems on WIN32 platforms
+
+commit aa6e9793fbb8621ce1f1ed580298621e29638619
+Author: Colin Harrison <colin.harrison-at-virgin.net>
+Date:   Sat Apr 26 08:51:54 2008 +0100
+
+    Switch to winsock2
+
+commit cbfab9d91e17239084ab24b99751bdd1610fcc1b
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Mar 9 08:32:59 2008 +0100
+
+    nuke RCS Ids
+
+commit 3fe753215b6186e588246220a473417810f82b05
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Thu Feb 28 18:55:23 2008 -0300
+
+    Compile warning fix by using Cardinal instead of int.
+    
+    This also matches the function prototype.
+
+commit e2735131202e7801e72ce33def666b6a0a543e26
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jan 14 14:11:43 2008 -0800
+
+    Version bump: 1.0.4
+
+commit f11b5a161944dc694ee059f88acb20826bd6d90b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jan 14 11:21:36 2008 -0800
+
+    Coverity #52: Dead code in get_os_name()
+
+commit 6f5ea6a2a0b56674f08f58d95085c0e9a8797fe2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sun Jan 13 01:58:12 2008 -0800
+
+    Clear sparse warnings: Using plain integer as NULL pointer
+
+commit 6f76ccc70a5f5ae834a3e63c9f4f35704837a4d1
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jan 11 20:43:26 2008 -0800
+
+    Add hooks for checking sources with tools like lint & sparse
+
+commit 43ec402bcd6a2333a4e213de3a82d7e3392b0fb0
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:38:32 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit 7e35135e9ad1ea2ef101402ea26bec62c3cbb69a
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Mon Sep 3 05:53:43 2007 -0400
+
+    Add *~ to .gitignore to skip patch/emacs droppings
+
+commit a3e01af0f4b56b3b8891040cf0f7208265bbea2a
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Wed Nov 8 20:01:35 2006 +0200
+
+    bump to 1.0.3
+
+commit 7beb4c2909af805e61d073a6f2b93234eb91834d
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Fri Oct 13 16:22:06 2006 -0400
+
+    Bump to 1.0.2
+
+commit 339368b404a807d1c494b260314da16d044986ff
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 14:59:01 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 60620a4b7eeb004e55ba57aef8df33f6adc930f0
+Author: Matthias Hopf <mhopf@suse.de>
+Date:   Mon Jul 3 19:33:05 2006 +0200
+
+    Added README missing from CVS conversion.
+
+commit 05a5c96fcef9822ff3c0312427d2c2672f73b551
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Apr 30 14:22:53 2006 +0000
+
+    Define BITMAPDIR for the case where ${prefix} != /usr
+
+commit 0aa6a46099fb319c82da51b8a73566007ad5acbd
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu Apr 27 00:18:38 2006 +0000
+
+    Bump to 1.0.1
+
+commit 7bb6398aa024d782706125bebd93468f9cc8a0ec
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Mar 20 19:57:04 2006 +0000
+
+    Bug #6276: Fix build on Cygwin. (Yaakov Selkowitz)
+
+commit 78ab364fec59fa84ac914d51628dfb8ac4a048a5
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:30 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 1d93f5a9968e6e9af8f15c60107b1691009d1bd8
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:44 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 5a807bcce047a8072db2c0cef05a84aa6e6cd3ca
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:42 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit c50ca633b633d25ba672fb19ac182cea40242069
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:11 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 8c5b2278580193578cdd0da8c8e948e74f8a3f26
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 5 19:57:36 2005 +0000
+
+    Add missing file to EXTRA_DIST
+
+commit bf4087e453d8fd83630976cd6e7e31c63737a4a1
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Mon Oct 3 20:55:36 2005 +0000
+
+    Remvoe README file that is symlinked from monolith
+
+commit 82b5da0b34780df3fe91c4b617cb541ee767d794
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 30 19:15:16 2005 +0000
+
+    Add -D flags to clear various warnings (Stefan Dirsch)
+
+commit 43f43567e3c8c63f6b70d7e529827cd5f15e15d3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:52 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit e9ee49d99a20458e5f36bba48a7ea65bb5230a8d
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jul 16 07:16:27 2005 +0000
+
+    Set soversions to 6.2.0 and 1.0.0 with -version-number.
+
+commit 81f5815d0c42b7065eb8e5aeef8e115e7398128f
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 06:43:26 2005 +0000
+
+    Add .cvsignore files
+
+commit 56ef5803a7def4f0d08ce8863e317b250c9c0ce4
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sun Jul 3 07:00:57 2005 +0000
+
+    Add Xtrans definitions (FONT_t, TRANS_CLIENT) to clean up warnings.
+    Add XSERV_t, TRANS_SERVER, TRANS_REOPEN to quash warnings.
+    Add #include <dix-config.h> or <xorg-config.h>, as appropriate, to all
+        source files in the xserver/xorg tree, predicated on defines of
+        HAVE_{DIX,XORG}_CONFIG_H. Change all Xfont includes to
+        <X11/fonts/foo.h>.
+
+commit 5a64c1de0a1d620039afbb0805ae23f10470e815
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun May 22 19:06:20 2005 +0000
+
+    Add XTRANS_CONNECTION_FLAGS to get network transport #defines for
+        CvdStdSel.c
+    Add libXmuu_la_LIBADD
+
+commit 506a8f64c84b3db3ad64d03ee698c1de227247de
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun May 22 04:36:38 2005 +0000
+
+    Move #ifdef HAVE_CONFIG_H outside of #ifdef SYSVNET
+
+commit 9ca353477c403ab1341e994a5a42a998d29e9a58
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:22:32 2005 +0000
+
+    revert last change, didn't do right thing at all, sorry for the noise
+
+commit 0a662934f050cff90e82d463ec809c3758b260b1
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu May 19 00:10:08 2005 +0000
+
+    Require automake 1.7 in AM_INIT_AUTOMAKE
+
+commit 2e403190ff21b0bb277391a73741cfc6d5005ac3
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed May 18 19:38:36 2005 +0000
+
+    - Add Xmu build system
+
+commit 7cea083d37cfaaad321bddca0fb75b3308956938
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed May 18 19:30:41 2005 +0000
+
+    - Add Xmu to symlink.sh
+    - Conditionally include config.h in Xmu sources
+
+commit ab0973b4595cfe27c81202bfb4a148780b05bb02
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Wed Dec 22 08:28:16 2004 +0000
+
+    Bug #2123 <https://bugs.freedesktop.org/show_bug.cgi?id=2123> Attachment
+        #1587 <https://bugs.freedesktop.org/attachment.cgi?id=1587> Call to
+        uname should not check for return == 0, but for >= 0 instead
+
+commit ece6cefc8e0238071f89de520d4a969fede53bd6
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Tue May 18 04:45:29 2004 +0000
+
+    Remove Xaw header dependency from Xmu library build.
+    http://freedesktop.org/cgi-bin/bugzilla/attachment.cgi?bugid=634
+
+commit 51156051e17f4ec53cbfe34f3a79f38d5884b78d
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:43:45 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 832c5a7d7b07b88f6468daabae56d9daeeee0db8
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:32:24 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit 410cf462f4a8733c58303de686f07fbd98f2e30e
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:11:29 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit b00bc81852e56578939fb4d63796f8e0cd187cbf
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:35:33 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit aa59d04a1a50b5978e886c2e7248f77bea515ce0
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:22:44 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit 0d10732a71487293bd70c2675ced6bffb6093c8d
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Jan 29 08:08:06 2004 +0000
+
+    Importing vendor version xf86-012804-2330 on Thu Jan 29 00:06:33 PST 2004
+
+commit 6b975651aef1797eb795bd876486c565c52f66fd
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:28:15 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit 865329b4e079334b4cb846347ab9a572ac946228
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:49 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 709dda59a506e0c4ad17b085aa381f35cd86176f
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:49 2003 +0000
+
+    Initial revision
+
+commit e3925d3087dc381a24b47c5602e086645e942fcf
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 15:54:39 2003 +0000
+
+    R6.6 is the Xorg base-line

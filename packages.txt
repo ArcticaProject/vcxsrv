@@ -57,6 +57,7 @@ libXext-1.1.1
 libXfont-1.4.1
 libXinerama-1.1
 libxkbfile-1.0.6
+libXmu-1.0.5
 libXpm-3.5.8
 libXt-1.0.7
 MesaLib-7.6
