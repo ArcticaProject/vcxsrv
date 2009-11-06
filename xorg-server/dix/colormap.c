@@ -2710,7 +2710,10 @@ static void _colormap_find_resource(pointer value, XID id,
     int j;
 
     j = cmap->pVisual - pScreen->visuals;
-    cmap->pVisual = &visuals[j];
+    /* Only remap if j is between 0 and the number of available visuals, otherwise the cmap
+       does not correspond to the correct visual. */
+    if (j>=0 && j<pScreen->numVisuals)
+      cmap->pVisual = &visuals[j];
 }
 
 /* something has realloced the visuals, instead of breaking
