@@ -142,6 +142,29 @@ libXaw\include\X11\Xaw\Viewport.h                 X11\Xaw\Viewport.h
 libXaw\include\X11\Xaw\ViewportP.h                X11\Xaw\ViewportP.h
 libXaw\include\X11\Xaw\XawImP.h                   X11\Xaw\XawImP.h
 libXaw\include\X11\Xaw\XawInit.h                  X11\Xaw\XawInit.h
+libXmu\include\X11\Xmu\Atoms.h                    X11\Xmu\Atoms.h
+libXmu\include\X11\Xmu\CharSet.h                  X11\Xmu\CharSet.h
+libXmu\include\X11\Xmu\CloseHook.h                X11\Xmu\CloseHook.h
+libXmu\include\X11\Xmu\Converters.h               X11\Xmu\Converters.h
+libXmu\include\X11\Xmu\CurUtil.h                  X11\Xmu\CurUtil.h
+libXmu\include\X11\Xmu\CvtCache.h                 X11\Xmu\CvtCache.h
+libXmu\include\X11\Xmu\DisplayQue.h               X11\Xmu\DisplayQue.h
+libXmu\include\X11\Xmu\Drawing.h                  X11\Xmu\Drawing.h
+libXmu\include\X11\Xmu\Editres.h                  X11\Xmu\Editres.h
+libXmu\include\X11\Xmu\EditresP.h                 X11\Xmu\EditresP.h
+libXmu\include\X11\Xmu\Error.h                    X11\Xmu\Error.h
+libXmu\include\X11\Xmu\ExtAgent.h                 X11\Xmu\ExtAgent.h
+libXmu\include\X11\Xmu\Initer.h                   X11\Xmu\Initer.h
+libXmu\include\X11\Xmu\Lookup.h                   X11\Xmu\Lookup.h
+libXmu\include\X11\Xmu\Misc.h                     X11\Xmu\Misc.h
+libXmu\include\X11\Xmu\StdCmap.h                  X11\Xmu\StdCmap.h
+libXmu\include\X11\Xmu\StdSel.h                   X11\Xmu\StdSel.h
+libXmu\include\X11\Xmu\SysUtil.h                  X11\Xmu\SysUtil.h
+libXmu\include\X11\Xmu\WhitePoint.h               X11\Xmu\WhitePoint.h
+libXmu\include\X11\Xmu\WidgetNode.h               X11\Xmu\WidgetNode.h
+libXmu\include\X11\Xmu\WinUtil.h                  X11\Xmu\WinUtil.h
+libXmu\include\X11\Xmu\Xct.h                      X11\Xmu\Xct.h
+libXmu\include\X11\Xmu\Xmu.h                      X11\Xmu\Xmu.h
 """
 
 Files=FilesStr.split()
