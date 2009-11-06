@@ -5,17 +5,29 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
   int argc=1;
   char ProgramName[255];
   #define MAXNRARGS 100
-  char *argv[MAXNRARGS]={"plink"};
-  char *pTmp=lpCmdLine;
+  char *argv[MAXNRARGS];
+  char *pTmp;
+  char *pProgramName;
   
   GetModuleFileName(NULL,ProgramName,255);
-  argv[0]=ProgramName;
+  pTmp=strrchr(ProgramName,'\\');
+  if (pTmp)
+    pProgramName=pTmp+1;
+  else
+    pProgramName=ProgramName;
+  pTmp=strrchr(pProgramName,'.');
+  if (pTmp)
+    *pTmp=0;
+  argv[0]=pProgramName;
+
+  pTmp=lpCmdLine;
   while (*pTmp && argc<MAXNRARGS-1)
   {
     char *pEnd;
     if (*pTmp=='"')
     {
-      pEnd=strchr(pTmp+1,'"');
+      pTmp++;
+      pEnd=strchr(pTmp,'"');
     }
     else if (*pTmp!=' ')
     {
