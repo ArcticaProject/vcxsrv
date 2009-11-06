@@ -79,9 +79,8 @@
 
 // Make some menus...
 menu apps {
-	xterm	exec	"xterm"
-	notepad	exec	notepad
-	xload	exec	"xload -display %display%"  # Comment
+	xcalc	exec	"xcalc"
+	xclock	exec	"xclock"
 }
 
 menu root {

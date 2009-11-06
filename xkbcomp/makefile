@@ -15,7 +15,11 @@ LIBDIRS=$(dir $(INCLUDELIBFILES))
 
 load_makefile $(LIBDIRS:%$(OBJDIR)\=%makefile MAKESERVER=$(MAKESERVER) DEBUG=$(DEBUG);)
 
+ifeq $(DEBUG),1
 TTYAPP = xkbcomp
+else
+WINAPP = xkbcomp
+endif
 
 DEFINES += DFLT_XKB_CONFIG_ROOT="\".\""
 

@@ -399,7 +399,7 @@ HandleCustomWM_COMMAND (unsigned long hwndIn,
 			CloseHandle (child.hProcess);
 		    }
 		    else
-			MessageBox(NULL, m->menuItem[j].param, "Mingrc Exec Command Error!", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(NULL, m->menuItem[j].param, "VcXsrv Exec Command Error!", MB_OK | MB_ICONEXCLAMATION);
                   }
 		  return TRUE;
 #endif
