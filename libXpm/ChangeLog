@@ -1,0 +1,452 @@
+commit 130b2fb0ea716143c63ba30856eecb351bc2af2a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 9 10:32:08 2009 -0700
+
+    libXpm 3.5.8
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit a195bd6d375c311b9bf6d7cce477f1d131425757
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Oct 8 21:29:45 2009 -0700
+
+    Migrate to xorg macros 1.3 & XORG_DEFAULT_OPTIONS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit f4c43f70dff3cb9702fd62bc388353d02589e618
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Oct 8 20:27:49 2009 -0700
+
+    Replace AC_DEFINE_DIR with AX_DEFINE_DIR from Autoconf Archive
+
+commit d846316822ba8eb545d41140007ef98a7de9274e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue May 19 01:34:19 2009 -0700
+
+    Update AC_DEFINE_DIR to latest version from Autoconf Archive
+
+commit 53f8b42f89214b85804ae9e64c49d1a9c2a7553d
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Feb 2 20:34:35 2009 -0800
+
+    Add README with pointers to mailing list, bugzilla & git repos
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 6697e31fbb616656b7f34515a79454af394b500a
+Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
+Date:   Fri Jan 30 15:45:20 2009 -0200
+
+    Janitor: ansification, make distcheck, .gitignore
+    
+      The ansification code is minor edit of the patch (by me) at
+    https://bugs.freedesktop.org/show_bug.cgi?id=14727
+    as it would not apply cleanly anymore.
+
+commit 41e4e2de4d73d098d332ece0410e9f8fda4fe10d
+Author: Peter Breitenlohner <peb@mppmu.mpg.de>
+Date:   Mon Oct 20 19:36:52 2008 -0700
+
+    X.Org Bug 17944: avoid gcc warning for libXpm
+    
+    <http://bugs.freedesktop.org/show_bug.cgi?id=17944>
+    
+    Avoid the gcc warning
+    cxpm/cxpm.c:102: warning: no previous prototype for 'ErrorMessage'
+
+commit 64323668c07b4768c57649f5ec7e2888265d1aeb
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Mar 9 08:57:47 2008 +0100
+
+    nuke RCS Ids
+
+commit 6ef45c37160079a9aa551adcd841abdb55eabae3
+Author: Benjamin Close <Benjamin.Close@clearchain.com>
+Date:   Thu Jan 31 14:42:41 2008 +1030
+
+    Use libtools SED check rather than autoconf's SED check.
+    AC_PROG_SED required autoconf 2.60, libtool's should work
+    regardless. This keeps us supporting 2.57 of autoconf
+    
+    Found by: Tinderbox (1.4.1 compile)
+
+commit 3f7624048aa6064c69e2320a70fb7fc89e0bb7ef
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 24 14:26:34 2008 -0800
+
+    Bug 14171: sxpm/Makefile.am:21: SED was already defined
+    
+    <http://bugs.freedesktop.org/show_bug.cgi?id=14171>
+
+commit 503843fd3066031adbd4a362c686acc721787b7d
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Thu Dec 6 16:38:36 2007 -0500
+
+    Replace static ChangeLog with dist-hook to generate from git log
+
+commit 3e37dd39b6169af9928d5b959c40ba79a07450ee
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Aug 22 13:23:30 2007 -0700
+
+    Version bump: 3.5.7
+
+commit d82244497b54889f91c78585374d1ad6a0cef2cf
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Aug 22 13:08:42 2007 -0700
+
+    Replace strcpy with strncpy to match previous code block
+
+commit 47c974872b51b8c1d6965eff4599f8ce739bcedc
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 6 14:22:48 2007 -0700
+
+    Use srcdir in paths passed to xgettext when making .po files
+
+commit 6e003fd5f174a8e312d799d7f8812c2a5b87e433
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Aug 6 12:59:04 2007 -0700
+
+    Replace index/rindex with C89 standard strchr/strrchr
+
+commit 43dfc6be8128139888426d8c709aa78efc207953
+Author: Jason Rumney <jasonr@gnu.org>
+Date:   Mon Aug 6 12:52:52 2007 -0700
+
+    X.Org Bug #11863: Build libXpm on MS Windows (with MinGW)
+    
+        * src/XpmI.h [FOR_MSW]: Include simx.h instead of real X headers.
+    
+        * src/simx.h (_XFUNCPROTOBEGIN, _XFUNCPROTOEND, NO_ZPIPE): Define.
+        (XAllocColor): Fix arg list in prototype.
+        (bzero, close, fdopen, index, rindex, open, strdup, O_RDONLY):
+        Map to W32 equivalents.
+    
+        * src/RdFToI.c [FOR_MSW]: Include fcntl.h.
+
+commit 290f0b9115428dab0cbf2880d154468c557b3e7e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jul 25 17:45:15 2007 -0700
+
+    Include comment/copyright/license for AC_DEFINE_DIR in acinclude.m4
+
+commit d4bc7dc0dea218cea380aba972f10f60dc1e86ac
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Jun 27 13:54:07 2007 -0700
+
+    Use AM_CFLAGS & AM_CPPFLAGS to replace per-program and obsolete macros
+    
+    Clears some warnings from automake-1.10
+
+commit 85a87de3c03ca8be526dedc0a2973f9426518c39
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Nov 21 17:12:18 2006 -0800
+
+    Sun bug 4486226: Xpm is not internationalized
+    
+    <http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=4486226>
+    Use gettext() to allow translated messages in sxpm & cxpm
+    (cherry picked from bcda4f17ab3fa9f0572f876dbeb09b45fbc23f3d commit)
+
+commit 3c881daddcc251d6e806715d267e4e55934abd1a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Nov 21 15:13:44 2006 -0800
+
+    Add *~ to .gitignore to skip over emacs/patch droppings
+
+commit 60817dd28774540622ea404f650db8389c66da54
+Author: Adam Jackson <ajax@benzedrine.nwnk.net>
+Date:   Fri Oct 13 16:23:49 2006 -0400
+
+    Bump to 3.5.6
+
+commit 12dc4dc15234ae818a21c20ebf7b2d053b7a94be
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jul 13 14:59:03 2006 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit 4daea919c3aa104b6caf8c0f42f49ae755545986
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jun 3 06:11:30 2006 +0000
+
+    Always initialize atomTable to NULL, so xpmHashTableFree() doesn't try to
+        free a random value from the stack if xpmHashTableInit returns an
+        error.
+
+commit 19855d6e09aa36db7686ad6f538179bf87e9c6ea
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Jun 2 19:48:01 2006 +0000
+
+    Coverity #1432: Returned without freeing storage "hints_cmt" (in error case
+        when xpmHashTableInit failed)
+
+commit 000abcd371d0c4b1d0a5380023d74bf5bfc47685
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Jun 2 19:33:29 2006 +0000
+
+    Coverity #1415: Returned without freeing storage "hints_cmt" (in error case
+        when xpmHashTableInit failed)
+
+commit 5c70c99833d4040aaf595d0005b861e0a930ee66
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Thu Apr 27 00:19:37 2006 +0000
+
+    Bump to 3.5.5
+
+commit 2dcc187c92c1a579e6e9f0bad999a3b4e47228c3
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sat Mar 18 15:18:56 2006 +0000
+
+    doublecheck that a pointer is not NULL before dereferencing it. (Coverity
+        CID 121).
+
+commit 93421a53ccf159ff39bc9f8ff72c57246f9cb90c
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:31 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit 2b229ddcb52a3bf9bef32e764f93cc57c1351420
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:44 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit 50214deb692a9af760088f8e7a51955c7d3f1707
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:44 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 19881d3c88ff0713ef550382fd0dfb03123dabed
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:03:06 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit a6fbdb403efd3bf7e1179660959fd0e66a301ce0
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Nov 19 07:15:42 2005 +0000
+
+    Update pkgconfig files to separate library build-time dependencies from
+        application build-time dependencies, and update package deps to work
+        with separate build roots.
+
+commit 82513d04a8381da8d2281d7581f6b0d65901aede
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun Nov 13 02:08:07 2005 +0000
+
+    Use sed to substitute variables in man pages
+
+commit d1b430289b2ddb6c1f3383c5288aa125b058508a
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Nov 9 21:19:13 2005 +0000
+
+    Update package version number for X11R7 RC2 release.
+
+commit e2c9276ccc1ef619dcfbdeb414ef0dec5113c1ee
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Oct 29 02:26:49 2005 +0000
+
+    Add --enable-stat-zfile (on by default) to replace Imake's ZFILEDEF =
+        -DSTAT_ZFILE to enable automatically searching for file.xpm.Z &
+        file.xpm.gz when file.xpm is requested.
+
+commit 2f57ab95012d9221cca1af6c0a1ccea5d308c66f
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:48:11 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit 72bf88ed120fb888c57ed3223faa316403031b36
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 5 20:24:14 2005 +0000
+
+    Add missing files to EXTRA_DIST
+    Fix man page installation
+
+commit 08c43c5f1f851c1acad360a28767670dc62d8a66
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Mon Oct 3 19:53:58 2005 +0000
+
+    Last argument of variable parameter list needs to be casted to a pointer
+        type.
+
+commit 5ecad7c12c3104d653972385f548e3f86532cbe3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:52 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 703207d3b3718223d4b2711fb77fc96a4f3909ef
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Jul 17 10:32:57 2005 +0000
+
+    fix build outside of $(srcdir)
+
+commit 5a0177d4474787951c0cae56e285bb075ab405f3
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 16 21:11:25 2005 +0000
+
+    Accept autoconf HAVE_STRLCPY as alias for HAS_STRLCAT
+
+commit fd38ee667976855150d3c1231a1acc2cf1a89330
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sat Jul 16 21:10:44 2005 +0000
+
+    Check for strlcat() for use in parse.c
+
+commit 9b3eed6e4f7ee542149ecec0d017a3a460f7c084
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Sat Jul 16 07:23:39 2005 +0000
+
+    Set soversion to 4.11.0 with -version-number.
+
+commit a705a1cd9dc4c4ba1940c9b59d2107ba59360e39
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Jul 9 06:45:44 2005 +0000
+
+    Add .cvsignore files
+
+commit b1d84a9fc9b15232c09b6ce5d96c097fdd4f0a15
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Thu Jun 9 13:42:36 2005 +0000
+
+    Use $(top_srcdir)/src instead of $(top_builddir)/src in INCLUDES
+
+commit 769751fba3e32f49272d19799929e1ad5a3d2cd0
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Thu May 19 17:09:13 2005 +0000
+
+    Add $(top_builddir)/include to INCLUDES
+
+commit 2cc1896c61eef5739bb6a8ffa89e58ba5c175a05
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Thu May 19 15:02:48 2005 +0000
+
+    - Add build system for lib/Xpm
+    - Add Xpm to symlink.sh
+    - Conditionally include config.h in xc/extras/Xpm
+
+commit cf0d69c7ace679f27f105c582760b9be14923aba
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Thu May 19 14:37:53 2005 +0000
+
+    Thu May 19 10:36:54 2005 Søren Sandmann <sandmann@redhat.com>
+    Add "../lib" to INCLUDES.
+    Replace #include "../lib/foo" with #include "foo".
+
+commit 639b3598cd0e7214010248efb62b75ef85a8e5c5
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Mon Feb 21 20:52:32 2005 +0000
+
+    Avoid inifite loops. From Chris Gilbert in bug #1920.
+
+commit f1908d7ee5e2d2d44db2116b3c88213da9dfb854
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sat Dec 11 16:14:05 2004 +0000
+
+    Fix incomplete merge.
+
+commit b041980732f6a6002001cfe079fdfb982937d4a8
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sat Dec 11 16:08:59 2004 +0000
+
+    more s_open() cleanup.
+
+commit 90d0638a42553786f54df333f0da4d008e9a0573
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sat Dec 11 16:04:34 2004 +0000
+
+    Replace s_popen() by a more specific function that allows only one command
+        in the pipe. Remove extraneous tests on file names that broke some
+        applications. From Alex Reisen in Bugzilla #1920.
+
+commit 2c23dbf2cafaad72b1f45da915eb87a8f792fdb0
+Author: Roland Mainz <roland.mainz@nrubsig.org>
+Date:   Wed Dec 8 01:16:48 2004 +0000
+
+    //bugs.freedesktop.org/show_bug.cgi?id=830): Fix libXpm header (xpm.h) to
+        use the X11 function begin/end marker macros (_XFUNCPROTOBEGIN,
+        _XFUNCPROTOEND) instead of homegrown (native) C++ code. Patch by Kevin
+        DeKorte <kdekorte@yahoo.com>.
+
+commit 50986a34f231fbc7a4b62466bd89bd4ae4027d2e
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Thu Nov 25 21:19:11 2004 +0000
+
+    Fixes for CAN-2004-0914 (Thomas Biege).
+
+commit a983dafac59dcb425666a5a5556da4734e50c6c5
+Author: Egbert Eich <eich@suse.de>
+Date:   Tue Sep 21 17:57:35 2004 +0000
+
+    Merged over libXpm security fix provided by Chris Evans, Matthieu Herrb and
+        Alan Coopersmith from release 6.8.1.
+    Fail during initialization with error if font/fontset is not set for
+        widget. This prevents a sig11 later when the non-existent font/fontset
+        structs are referenced.
+    Check if xf86Info.kbdProc pointer is really set before calling it on abort
+        as this pointer won't be set if the new modular keyboard driver is used
+        (Matthias Hopf).
+    Added new libs to the bindist control files.
+    Removed inclusion of unnecessary kernel header on Linux. This may fail in
+        an -ansi environment.
+
+commit 2773a7214e282f6f673483f5233b880505947c3f
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 18:42:32 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit 65c64a2eaa8698434f1869dcdcb5d9ccb21c6932
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:28:26 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit 0b313707a677523fed9ac485445e8b09d2a85c13
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:09:53 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 658f8e9a9094ba5d18743694cad7275be53c7a25
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:34:33 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 9971f91864e8f722b42c58f2ff19025715f33b98
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:21:31 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit fbfe965054d8144946651b19085684af7f6715b9
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:27:16 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit c037348b5df0ac94ad4daba59f8bc9acf12ef623
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:24 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit aafaabc4a0bfab6544e085ee504ad69de4a5ddb1
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:24 2003 +0000
+
+    Initial revision
