@@ -1,0 +1,122 @@
+.\" $Xorg: Label,v 1.3 2000/08/17 19:42:27 cpqbld Exp $
+.NH 2
+Label Widget
+.XS
+	Label Widget
+.XE
+.IN "Label widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application header file	<X11/Xaw/Label.h>
+.IN "Label.h" ""
+Class header file	<X11/Xaw/LabelP.h>
+.IN "LabelP.h" ""
+Class	labelWidgetClass
+.IN "labelWidgetClass" ""
+Class Name	Label
+.IN "Label widget" "class name"
+Superclass	Simple
+.sp
+.De
+.LP
+A Label widget holds a graphic displayed within a
+rectangular region of the screen.  The graphic may be a
+text string containing multiple lines of characters in an
+8 bit or 16 bit character set (to be displayed with a
+\fIfont\fP), or in a multi-byte encoding (for use with a
+\fIfontset\fP).  The graphic may also be a bitmap or
+pixmap.  The Label widget will allow its graphic to be
+left, right, or center justified.  Normally, this widget
+can be neither selected nor directly edited by the user.
+It is intended for use as an output device only.
+.NH 3
+Resources
+.LP
+When creating a Label widget instance, the following resources are
+retrieved from the argument list or from the resource database:
+.LP
+.IN "Label widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+bitmap	Bitmap	Pixmap		None
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+colormap	Colormap	Colormap		Parent's Colormap
+cursor	Cursor	Cursor		None
+cursorName	Cursor	String		NULL
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+encoding	Encoding	UnsignedChar		XawTextEncoding8bit
+font	Font	XFontStruct		XtDefaultFont
+fontSet	FontSet	XFontSet		XtDefaultFontSet
+foreground	Foreground	Pixel		XtDefaultForeground
+height	Height	Dimension	A	graphic height + 2 * \fBinternalHeight\fP
+insensitiveBorder	Insensitive	Pixmap		GreyPixmap
+internalHeight	Height	Dimension		2
+internalWidth	Width	Dimension		4
+international	International	Boolean	C	False
+justify	Justify	Justify		XtJustifyCenter (center)
+label	Label	String		name of widget
+leftBitmap	LeftBitmap	Bitmap		None
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+pointerColor	Foreground	Pixel		XtDefaultForeground
+pointerColorBackground	Background	Pixel		XtDefaultBackground
+resize	Resize	Boolean		True
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+translations	Translations	TranslationTable		See above
+width	Width	Dimension	A	graphic width + 2 * \fBinternalWidth\fP
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.Bg
+.Gp
+.Bm Bold
+.Bc
+.Bp
+.Bw
+.Cm
+.Cu
+.Cn
+.Dp
+.Dc
+.Le Bold
+.Lf Bold
+.Ls Bold
+.Lg Bold
+.Hw
+.Ib
+.Ih Bold
+.In
+.Ju Bold
+.La Bold
+.Ll Bold
+.Mm
+.Pf
+.Pb
+.Re Bold
+.Sc
+.Se
+.Tr
+.Xy

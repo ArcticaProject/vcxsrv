@@ -1,0 +1,315 @@
+.\" $Xorg: SimpleMenu,v 1.3 2000/08/17 19:42:27 cpqbld Exp $
+.NH 2
+SimpleMenu Widget
+.XS
+	SimpleMenu Widget
+.XE
+.IN "SimpleMenu widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/SimpleMenu.h>
+.IN "SimpleMenu.h" ""
+Class Header file	<X11/Xaw/SimpleMenP.h>
+.IN "SimpleMenP.h" ""
+Class		simpleMenuWidgetClass
+.IN "simpleMenuWidgetClass" ""
+Class Name	SimpleMenu
+.IN "SimpleMenu widget" "class name"
+Superclass	OverrideShell
+.sp
+.De
+.LP
+The SimpleMenu widget is a container for the menu entries.  It is a
+direct subclass of shell, and is should be created with
+\fBXtCreatePopupShell\fP, not \fBXtCreateManagedWidget\fP.  This is the
+only part of the menu that
+actually is associated with a window.  The SimpleMenu serves as the glue to bind
+the individual menu entries together into a menu.
+.NH 3
+Resources
+.LP
+.IN "SimpleMenu widget" "resources"
+.LP
+The resources associated with the SimpleMenu widget control aspects
+that will affect the entire menu.
+.TS H
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+allowShellResize	AllowShellResize	Boolean		True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+backingStore	BackingStore	BackingStore		see below
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+bottomMargin	VerticalMargins	Dimension		0
+children	ReadOnly	WidgetList	R	NULL
+createPopupChildProc	CreatePopupChildProc	Function		NULL
+colormap	Colormap	Colormap		Parent's Colormap
+cursor	Cursor	Cursor		None
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+geometry	Geometry	String		NULL
+height	Height	Dimension		Enough space to contain all entries
+label	Label	String		NULL
+labelClass	LabelClass	Pointer		SmeBSBObjectClass
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+menuOnScreen	MenuOnScreen	Boolean		True
+numChildren	ReadOnly	Cardinal	R	0
+overrideRedirect	OverrideRedirect	Boolean		True
+popdownCallback	Callback	XtCallbackList		NULL
+popupCallback	Callback	XtCallbackList		NULL
+popupOnEntry	PopupOnEntry	Widget	A	Label or first entry
+rowHeight	RowHeight	Dimension		0
+saveUnder	SaveUnder	Boolean		False
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+topMargin	VerticalMargins	Dimension		0
+translations	Translations	TranslationTable		See below
+visual	Visual	Visual		CopyFromParent
+width	Width	Dimension		Width of widest entry
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.IP \fBbackingStore\fP 1.5i
+.IN "conversions" "BackingStore"
+Determines what type of backing store will be used for the menu.  Legal
+values for this resource are \fBNotUseful\fP, \fBWhenMapped\fP, and
+\fBAlways\fP.  These values are the backing-store integers defined in
+<X11/X.h>.
+.Rs "notUseful, whenMapped, always, \fPand\fP default"
+If \fBdefault\fP is specified (the default behavior) the server will use
+whatever it thinks is appropriate.
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.IP \fBbottomMargin\fP 1.5i
+.br
+.ns
+.IP \fBtopMargin\fP 1.5i
+The amount of space between the top or bottom of the menu and the menu entry
+closest to that edge.
+.Ch
+.Cm
+.IP \fBcursor\fP 1.5i
+The shape of the mouse pointer whenever it is in this widget.
+.Dp
+.Dc
+.IP geometry 1.5i
+If this resource is specified it will override the x, y, width and
+height of this widget.  The format of this string is
+[<\fIwidth\fP>x<\fIheight\fP>][{+ -} <\fIxoffset\fP> {+ -}<\fIyoffset\fP>].
+.Hw
+.IP \fBlabel\fP 1.5i
+This label will be placed at the top of the SimpleMenu, and may not be
+highlighted.  The name of the
+label object is \fBmenuLabel\fP.  Using this name it is possible to
+modify the label's attributes through the resource database.  When the label
+is created, the \fBlabel\fP is hard coded to the value of \fBlabel\fP, and
+\fBjustify\fP is hard coded as \fBXtJustifyCenter\fP.
+.IP \fBlabelClass\fP 1.5i
+Specifies the type of Sme object created as the menu label.
+.Mm
+.IP \fBmenuOnScreen\fP 1.5i
+If the menu is automatically positioned under the cursor with the
+\fBXawPositionSimpleMenu\fP action, and this resource is \fBTrue\fP,
+then the menu will always be fully visible on the screen.
+.Nc
+.IP overrideRedirect 1.5i
+Determines the value of the override_redirect attribute of the
+SimpleMenu's window.  The override_redirect attribute of a window
+determines whether or not a window manager may interpose itself between
+this window and the root window of the display.  For more information
+see the \fIInterclient Communications Conventions Manual\fP.
+.IP popdownCallback 1.5i
+.br
+.ns
+.IP popupCallback 1.5i
+These callback functions are called by the Xt Intrinsics whenever the
+shell is popped up or down (See \fI\*(xT\fP for details).
+.IP \fBpopupOnEntry\fP 1.5i
+The \fBXawPositionSimpleMenu\fP action will, by default, popup the
+SimpleMenu with its label (or first entry) directly under the
+pointer.  To popup the menu under
+another entry, set this resource to the menu entry that should be
+under the pointer, when the menu is popped up.  This allows the
+application to offer the user a default menu entry that can be selected
+with out moving the pointer.
+.IP \fBrowHeight\fP 1.5i
+If this resources is zero (the default) then each menu entry will be
+given its desired height.  If this resource has any other value then
+all menu entries will be forced to be \fBrowHeight\fP pixels high.
+.IP saveUnder 1.5i
+If this is \fBTrue\fP then save unders will be active on the menu's window.
+.Sc
+.Se
+.Tr
+.Xy
+.NH 3
+SimpleMenu Actions
+.IN "SimpleMenu widget" "actions"
+.LP
+The SimpleMenu widget supports the following actions:
+.IP \(bu 5
+Switching the entry under the mouse pointer between
+the foreground and background colors with \fBhighlight\fP
+and \fBunhighlight\fP
+.IP \(bu 5
+Processing menu entry callbacks with \fBnotify\fP
+.sp
+.LP
+.IN "SimpleMenu widget" "default translations"
+The following are the default translation bindings used
+by the SimpleMenu widget:
+.LP
+.sp
+.Ds 0
+.TA .5i 2.25i
+.ta .5i 2.25i
+	<EnterWindow>:	highlight(\|)
+	<LeaveWindow>:	unhighlight(\|)
+	<BtnMotion>:	highlight(\|)
+	<BtnUp>:	MenuPopdown(\|) notify(\|) unhighlight(\|)
+.De
+.sp
+.LP
+.IN "SimpleMenu widget" "MenuPopdown routine"
+The user can pop down the menu without activating any of the callback
+functions by releasing the pointer button when no menu item is
+highlighted.
+.sp
+.LP
+The full list of actions supported by SimpleMenu is:
+.IP \fBhighlight\fP() 1.5i
+Highlight the menu entry that is currently under the pointer.
+Only a item that is highlighted will be notified when the \fBnotify\fP
+action is invoked.  The look of a highlighted entry is determined by
+the menu entry.
+.IP \fBunhighlight\fP(\|) 1.5i
+Unhighlights the currently highlighted menu item, and returns it to
+its normal look.
+.IP \fBnotify\fP(\|) 1.5i
+Notifies the menu entry that is currently highlighted that is has been
+selected.  It is the responsibility of the menu entry to take the
+appropriate action.
+.IP \fBMenuPopdown\fP(\fImenu\fP)
+This action is defined in \fI\*(xT\fP.
+.IN "SimpleMenu widget" "MenuPopdown routine"
+.NH 3
+Positioning the SimpleMenu
+.IN "XawPositionSimpleMenu" "" "@DEF@"
+.IN "SimpleMenu widget" "positioning" "@DEF@"
+.LP
+If the SimpleMenu widget is to be used as a pulldown menu then the
+MenuButton widget, or some other outside means should be used to place
+the menu when it is popped up.
+.LP
+If popup menus are desired it will be necessary to add the
+\fBXawPositionSimpleMenu\fP and \fBMenuPopup\fP actions to the
+translation table of the widget that will be popping up the menu.  The
+\fBMenuPopup\fP action is described in \fI\*(xT\fP.
+\fBXawPositionSimpleMenu\fP is a global action procedure registered by
+the SimpleMenu widget when the first one is created or the convenience
+routine \fBXawSimpleMenuAddGlobalActions\fP is called.
+.LP
+Translation writers should be aware that Xt does not register grabs on
+``don't care'' modifiers, and therefore the left hand side of the
+production should be written to exclude unspecified modifiers.
+For example these are the translations needed to popup some of
+\fBxterm's\fP menus:
+.sp
+.LP
+.Ds 0
+.TA .5i 2.25i
+.ta .5i 2.25i
+	!Ctrl<Btn1Down>: XawPositionSimpleMenu(xterm) MenuPopup(xterm)
+	!Ctrl<Btn2Down>: XawPositionSimpleMenu(modes) MenuPopup(modes)
+.De
+.sp 1
+.LP
+.IP \fBXawPositionSimpleMenu\fP(\fImenu\fP) 2.25i
+The \fBXawPositionSimpleMenu\fP routine will search for the menu name
+passed to it using \fBXtNameToWidget\fP starting with the widget
+invoking the action as the reference widget.  If it is unsuccessful it
+will continue up the widget tree using each of the invoking widget's
+ancestors as the reference widget.  If it is still unsuccessful it will
+print a warning message and give up.  \fBXawPositionSimpleMenu\fP will
+position the menu directly under the pointer cursor.  The menu will be
+placed so that the pointer cursor is centered on the entry named by the
+\fBpopupOnEntry\fP resource.  If the \fBmenuOnScreen\fP resource is
+\fBTrue\fP then the menu will always be fully visible on the screen.
+.NH 3
+Convenience Routines
+.NH 4
+Registering the Global Action Routines
+.LP
+.IN "XawPositionSimpleMenu" ""
+The \fBXawPositionSimpleMenu\fP action routine may often be invoked
+before any menus have been created.  This can occur when an
+application uses dynamic menu creation.  In these cases an application will
+need to register this global action routine by calling
+\fBXawSimpleMenuAddGlobalActions\fP:
+.IN "XawSimpleMenuAddGlobalActions" "" "@DEF@"
+.FD 0
+void XawSimpleMenuAddGlobalActions(\fIapp_con\fP)
+.br
+      XtAppContext \fIapp_con\fP;
+.FN
+.IP \fIapp_con\fP 1i
+Specifies the application context in which this action should be registered.
+.LP
+This function need only be called once per application and must be
+called before any widget that uses \fBXawPositionSimpleMenu\fP action
+is realized.
+.NH 4
+Getting and Clearing the Current Menu Entry
+.LP
+To get the currently highlighted menu entry use
+\fBXawSimpleMenuGetActiveEntry\fP:
+.IN "XawSimpleMenuGetActiveEntry" "" "@DEF@"
+.FD 0
+Widget XawSimpleMenuGetActiveEntry(\fIw\fP)
+.br
+      Widget \fIw\fP;
+.FN
+.IP \fIw\fP 1i
+Specifies the SimpleMenu widget.
+.LP
+This function returns the menu entry that is
+currently highlighted, or NULL if no entry is highlighted.
+.LP
+.sp
+To clear the SimpleMenu widget's internal information about the
+currently highlighted menu entry use
+\fBXawSimpleMenuClearActiveEntry\fP:
+.IN "XawSimpleMenuClearActiveEntry" "" "@DEF@"
+.FD 0
+Widget XawSimpleMenuClearActiveEntry(\fIw\fP)
+.br
+      Widget \fIw\fP;
+.FN
+.IP \fIw\fP 1i
+Specifies the SimpleMenu widget.
+.LP
+This function unsets all internal references to the currently
+highlighted menu entry.  It does not \fIunhighlight\fP or otherwise
+alter the appearance of the active entry.  This function is primarily
+for use by implementors of menu entries.

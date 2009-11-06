@@ -1,0 +1,160 @@
+.\" $Xorg: StripChart,v 1.3 2000/08/17 19:42:28 cpqbld Exp $
+.NH 2
+StripChart Widget
+.XS
+	StripChart Widget
+.XE
+.IN "StripChart widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<Xaw/StripChart.h>
+.IN "StripChart.h" ""
+Class Header file	<Xaw/StripCharP.h>
+.IN "StripCharP.h" ""
+Class		stripChartWidgetClass
+.IN "stripChartWidgetClass" ""
+Class Name	StripChart
+.IN "StripChart widget" "class name"
+Superclass	Simple
+.sp
+.De
+.LP
+The StripChart widget is used to provide a roughly real
+time graphical chart of a single value.  For example,
+it is used by the common client program \fBxload\fP
+to provide a graph of processor load.  The StripChart
+reads data from an application, and updates the chart
+at the \fBupdate\fP interval specified.
+.NH 3
+Resources
+.LP
+When creating a StripChart widget instance, the following resources are
+retrieved from the argument list or from the resource database:
+.LP
+.IN "StripChart widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+colormap	Colormap	Colormap		Parent's Colormap
+cursor	Cursor	Cursor		None
+cursorName	Cursor	String		NULL
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+foreground	Foreground	Pixel		XtDefaultForeground
+getValue	Callback	XtCallbackList		NULL
+height	Height	Dimension		120
+highlight	Foreground	Pixel		XtDefaultForeground
+insensitiveBorder	Insensitive	Pixmap		GreyPixmap
+international	International	Boolean	C	False
+jumpScroll	JumpScroll	int	A	half the width of the widget
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+minScale	Scale	int		1
+pointerColor	Foreground	Pixel		XtDefaultForeground
+pointerColorBackground	Background	Pixel		XtDefaultBackground
+screen	Screen	Pointer	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+translations	Translations	TranslationTable		NULL
+update	Interval	int		10
+width	Width	Dimension		120
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.Cm
+.Cu
+.Cn
+.Dp
+.Dc
+.IP \fBforeground\fP 1.5i
+A pixel value which indexes the widget's colormap to derive the color
+that will be used to draw the graph.
+.IP \fBgetValue\fP 1.5i
+A list of callback functions to call every \fBupdate\fP seconds.
+This list should contain one function, which returns the
+value to be graphed by the StripChart widget.  The following
+section describes the procedural interface.  Behavior when this list has
+more than one function is undefined.
+.Hw
+.IP \fBhighlight\fP 1.5i
+A pixel value which indexes the widget's colormap to derive the color
+that will be used to draw the scale lines on the graph.
+.Ib
+.Ix
+.IP \fBjumpScroll\fP 1.5i
+When the graph reaches the right edge of the window it must be
+scrolled to the left.  This resource specifies the number of pixels
+it will jump.  Smooth scrolling can be achieved by setting this resource
+to 1.
+.Mm
+.IP \fBminScale\fP 1.5i
+The minimum scale for the graph.  The number of divisions on the graph
+will always be greater than or equal to this value.
+.Pf
+.Pb
+.Sc
+.Se
+.Tr
+.IP \fBupdate\fP
+The number of seconds between graph updates.  Each update is
+represented on the graph as a 1 pixel wide line.  Every \fBupdate\fP seconds
+the \fBgetValue\fP procedure will be used to get a new graph point,
+and this point will be added to the right end of the StripChart.
+.Xy
+.NH 3
+Getting the StripChart Value
+.IN "StripChart widget" "getting the value"
+.LP
+The StripChart widget will call the application routine passed to it
+as the \fBgetValue\fP callback function every \fBupdate\fP seconds to
+obtain another point for the StripChart graph.
+.LP
+The calling interface for the \fBgetValue\fP callback is:
+.IN "StripChart widget" "getValue callback" "@DEF@"
+.FD 0
+void (*\fIgetValueProc\fP)(\fIw\fP, \fIclient_data\fP, \fIvalue\fP)
+.br
+     Widget \fIw\fP;
+.br
+     XtPointer \fIclient_data\fP;
+.br
+     XtPointer \fIvalue\fP;    /* double * */
+.FN
+.IP \fIw\fP 1i
+Specifies the StripChart widget.
+.IP \fIclient_data\fP 1i
+Specifies the client data.
+.IP \fIvalue\fP 1i
+Returns a pointer to a double.  The application should set the address
+pointed to by this argument to a double containing the value to be
+graphed on the StripChart.
+.LP
+This function is used by the StripChart to call an application routine.
+The routine will pass the value to be graphed back to the the StripChart
+in the \fBvalue\fP field of this routine.
+

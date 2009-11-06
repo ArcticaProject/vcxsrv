@@ -1,0 +1,280 @@
+.\" $Xorg: Dialog,v 1.3 2000/08/17 19:42:26 cpqbld Exp $
+.NH 2
+Dialog Widget
+.LP
+.XS
+	Dialog Widget
+.XE
+.IN "Dialog widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/Dialog.h>
+.IN "Dialog.h" ""
+Class Header file	<X11/Xaw/DialogP.h>
+.IN "DialogP.h" ""
+Class		dialogWidgetClass
+.IN "dialogWidgetClass" ""
+Class Name	Dialog
+.IN "Dialog widget" "class name"
+Superclass	Form
+.sp
+.De
+.LP
+The Dialog widget implements a commonly used interaction semantic to
+prompt for auxiliary input from a user.  For example, you can use a
+Dialog widget when an application requires a small piece of information,
+such as a filename, from the user.  A Dialog widget, which is simply a
+special case of the Form widget, provides a convenient way to create a
+preconfigured form.
+.LP
+The typical Dialog widget contains three areas.  The first line
+contains a description of the function of the Dialog widget, for
+example, the string \fIFilename:\fP.  The second line contains an area
+into which the user types input.  The third line can contain buttons
+that let the user confirm or cancel the Dialog input.  Any of these
+areas may be omitted by the application.
+.NH 3
+Resources
+.LP
+When creating a Dialog widget instance, the following resources are
+retrieved from the argument list or the resource database:
+.IN "Dialog widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+children	ReadOnly	WidgetList	R	NULL
+colormap	Colormap	Colormap		Parent's Colormap
+defaultDistance	Thickness	int		4
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+height	Height	Dimension	A	Enough space to contain all children
+icon	Icon	Bitmap		None
+label	Label	String		"label"
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+numChildren	ReadOnly	Cardinal	R	0
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+translations	Translations	TranslationTable		NULL
+value	Value	String		no value widget
+width	Width	Dimension	A	Enough space to contain all children
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.Ch
+.Cm
+.Dd
+.Dp
+.Dc
+.Hw
+.IP \fBicon\fP 1.5i
+A pixmap image to be displayed immediately to the left of the
+Dialog widget's label.
+.IP \fBlabel\fP 1.5i
+A string to be displayed at the top of the Dialog widget.
+.Mm
+.Nc
+.Sc
+.Se
+.Tr
+.IP \fBvalue\fP 1.5i
+An initial value for the string field that the user will enter text
+into.  By default, no text entry field is available to the user.
+Specifying an initial value for \fBvalue\fP activates the text entry
+field.  If string input is desired, but no initial value is to be
+specified then set this resource to "" (empty string).
+.Xy
+.NH 3
+Constraint Resources
+.LP
+.IN "Dialog widget" "constraint resources"
+Each child of the Dialog widget may request special layout resources
+be applied to it.  These \fIconstraint\fP resources allow the Dialog
+widget's children to specify individual layout requirements.
+.LP
+.TS H
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+bottom	Edge	XawEdgeType		XawRubber
+fromHoriz	Widget	Widget		NULL (left edge of Dialog)
+fromVert	Widget	Widget 		NULL (top edge of Dialog)
+horizDistance	Thickness	int		\fBdefaultDistance\fP resource
+left	Edge	XawEdgeType		XawRubber
+.IN "XawEdgeType" ""
+resizable	Boolean	Boolean		FALSE
+right	Edge	XawEdgeType		XawRubber
+.IN "XawRubber" ""
+top	Edge	XawEdgeType		XawRubber
+vertDistance	Thickness	int		\fBdefaultDistance\fP resource
+.sp 3p
+_
+.TE
+.Bt
+.Fh
+.Hd
+.Rl
+.NH 3
+Layout Semantics
+.IN "Dialog widget" "layout semantics"
+.LP
+.Lt Dialog
+.LP
+.TS H
+lw(1.5i) lw(1i) lw(3i).
+_
+.sp 3p
+.TB
+Edge Type	Resource Name	Description
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+XawChainBottom	ChainBottom	Edge remains a fixed distance from bottom of Dialog
+.IN "XawChainBottom" ""
+XawChainLeft	ChainLeft	Edge remains a fixed distance from left of Dialog
+.IN "XawChainLeft" ""
+XawChainRight	ChainRight	Edge remains a fixed distance from right of Dialog
+.IN "XawChainRight" ""
+XawChainTop	ChainTop	Edge remains a fixed distance from top of Dialog
+.IN "XawChainTop" ""
+XawRubber	Rubber	Edges will move a proportional distance
+.IN "XawRubber" ""
+.sp 3p
+_
+.TE
+.NH 4
+Example
+.LP
+If you wish to force the Dialog to never resize one or more of its children
+then set \fBleft\fP and \fBright\fP to \fBXawChainLeft\fP and
+\fBtop\fP and \fBbottom\fP to \fBXawChainTop\fP.  This will cause
+the child to remain a fixed distance from the top and left
+edges of the Dialog, and to never resize.
+.NH 4
+Special Considerations
+.IN "Dialog widget" "special considerations"
+.LP
+The Dialog widget automatically sets the \fBtop\fP and \fBbottom\fP
+resources for all Children that are subclasses of the Command widget,
+as well as the widget children that are used to contain the \fBlabel\fP,
+\fBvalue\fP, and \fBicon\fP.  This policy allows the buttons at the
+bottom of the Dialog to interact correctly with the predefined children,
+and makes it possible for a client to simply create and manage a new
+Command button without having to specify its constraints.
+.LP
+The Dialog will also set \fBfromLeft\fP to the last button in the
+.IN "fromLeft" ""
+Dialog for each new button added to the Dialog widget.
+.LP
+The automatically added constraints cannot be overridden, as they are
+policy decisions of the Dialog widget.  If a more flexible Dialog is
+desired, the application is free to use the Form widget to create its
+own Dialog policy.
+.NH 3
+Automatically Created Children.
+.IN "Dialog widget" "automatically created children"
+.LP
+The Dialog uses Label widgets to contain the \fBlabel\fP and \fBicon\fP.
+These widgets are named \fIlabel\fP and \fIicon\fP respectively.  The
+Dialog \fBvalue\fP is contained in an AsciiText widget whose name is
+\fIvalue\fP.  Using \fBXtNameToWidget\fP the application can change
+.IN "XtNameToWidget" ""
+those resources associated with each of these widgets that are not
+available through the Dialog widget itself.
+.LP
+.NH 3
+Convenience Routines
+.LP
+To return the character string in the text field, use
+.PN XawDialogGetValueString .
+.IN "XawDialogGetValueString" "" "@DEF@"
+.FD 0
+String XawDialogGetValueString(\fIw\fP)
+.br
+	Widget \fIw\fP;
+.FN
+.IP \fIw\fP 1i
+Specifies the Dialog widget.
+.LP
+This function returns a copy of the value string of the Dialog
+widget.  This string is allocated by the AsciiText widget and will
+remain valid and unchanged until another call to
+\fBXawDialogGetValueString\fP or an \fBXtGetValues\fP call on the
+\fBvalue\fP widget, when the string will be automatically freed, and
+a new string is returned.  This string may be freed earlier by calling
+the function \fBXawAsciiSourceFreeString\fP.
+.IN "XawAsciiSourceFreeString" ""
+.LP
+.sp
+To add a new button to the Dialog widget use
+\fBXawDialogAddButton\fP.
+.IN "XawDialogAddButton" "" "@DEF@"
+.FD 0
+void XawDialogAddButton(\fIw\fP, \fIname\fP, \fIfunc\fP, \fIclient_data\fP)
+.br
+	Widget \fIw\fP;
+.br
+	String \fIname\fP;
+.br
+	XtCallbackProc \fIfunc\fP;
+.br
+	XtPointer \fIclient_data\fP;
+.FN
+.IP \fIw\fP 1i
+Specifies the Dialog widget.
+.IP \fIname\fP 1i
+Specifies the name of the new Command button to be added to the Dialog.
+.IP \fIfunc\fP 1i
+Specifies a callback function to be called when this button is activated.  If
+NULL is specified then no callback is added.
+.IP \fIclient_data\fP 1i
+Specifies the client_data to be passed to the \fIfunc\fP.
+.LP
+This function is merely a shorthand for the code sequence:
+.sp
+.Ds 0
+.SM
+.TA 1i 2i
+.ta 1i 2i
+{
+	Widget button = XtCreateManagedWidget(name, commandWidgetClass, w, NULL, ZERO);
+	XtAddCallback(button, XtNcallback, func, client_data);
+}
+.NL
+.De
+.sp

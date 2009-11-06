@@ -1,0 +1,714 @@
+.\" $Xorg: strings.xaw,v 1.3 2000/08/17 19:42:29 cpqbld Exp $
+\" These macros are not associated with any widget.
+
+.de Rs \" Resource Conversion message
+A converter is registered for this resource that will convert
+the following strings: \fB\\$1\fP.
+..
+.de Sk \" This is a resource of the associated sink.
+.if 'AsciiText'\\$1' This is a resource of the associated sink.
+..
+.de So \" This is a resource of the associated source.
+.if 'AsciiText'\\$1' This is a resource of the associated source.
+..
+
+\" Object Resources
+.de Dc \" Object destroyCallback
+.IP destroyCallback 1.5i
+All functions on this list are called when this widget is destroyed.
+..
+
+\" RectObj Resources
+.de As \" RectObj ancestorSensitive
+.IP ancestorSensitive 1.5i
+The sensitivity state of the ancestors of this widget.  A widget is
+insensitive if either it or any of its ancestors is insensitive.
+This resource should not be changed with \fBXtSetValues\fP, although it
+may be queried.
+..
+.de Bw \" RectObj borderWidth
+.IP borderWidth 1.5i
+The width of this widget's window border.
+..
+.de Hw \" RectObj height and width
+.IP height 1.5i
+.br
+.ns
+.IP width 1.5i
+The height and width of this widget in pixels.
+..
+.de Se \" RectObj sensitive
+.IP sensitive 1.5i
+Whether or not the toolkit should pass user events to this widget.  The
+widget will not get input events if either \fBancestorSensitive\fP or
+\fBsensitive\fP is \fBFalse\fP.
+..
+.de Xy \" RectObj x and y
+.IP x 1.5i
+.br
+.ns
+.IP y 1.5i
+The location of the upper left outside corner of this widget in its parent.
+..
+
+\" Core Resources
+
+.de Ac \" Core accelerators
+.IP accelerators 1.5i
+A list of event to action bindings to be executed by this widget, even
+though the event occurred in another widget.  (See the \fI\*(xT\fP for
+details).
+..
+.de Bg \" Core background
+.ie 'Bold'\\$1' .IP \fBbackground\fP 1.5i
+.el .IP background 1.5i
+A pixel value which indexes the widget's colormap to derive the
+background color of the widget's window.
+..
+.de Gp \" Core backgroundPixmap
+.IP backgroundPixmap 1.5i
+The background pixmap of this widget's window.  If this resource is set to
+anything other than \fBXtUnspecifiedPixmap\fP, the pixmap specified will be
+used instead of the background color.
+..
+.de Bc \" Core borderColor
+.IP borderColor 1.5i
+A pixel value which indexes the widget's colormap to derive the border
+color of the widget's window.
+..
+.de Bp \" Core borderPixmap
+.IP borderPixmap 1.5i
+The border pixmap of this widget's window.  If this resource is set to
+anything other than \fBXtUnspecifiedPixmap\fP, the pixmap specified will be
+used instead of the border color.
+..
+.de Cm \" Core colormap
+.IP colormap 1.5i
+The colormap that this widget will use.
+..
+.de Dp \" Core depth
+.IP depth 1.5i
+The depth of this widget's window.
+..
+.de Mm \" Core mappedWhenManaged
+.IP mappedWhenManaged 1.5i
+If this resource is \fBTrue\fP, then the widget's window will
+automatically be mapped by the Toolkit when it is realized and managed.
+..
+.de Sc \" Core screen
+.IP screen 1.5i
+The screen on which this widget is displayed.  This is not a settable
+resource.
+..
+.de Tr \" Core translations
+.IP translations 1.5i
+The event bindings associated with this widget.
+..
+
+\" Simple Widget Resource Definitions
+
+.de Cu \" Simple cursor
+.ie 'Bold'\\$1' .IP \fBcursor\fP 1.5i
+.el .IP cursor 1.5i
+The image that will be displayed as the pointer cursor whenever it is in
+this widget.  The use of this resource is deprecated in favor
+of \fBcursorName\fP.
+..
+.de Cn \" Simple cursorName
+.ie 'Bold'\\$1' .IP \fBcursorName\fP 1.5i
+.el .IP cursorName 1.5i
+The name of the symbol to use to represent the pointer cursor.  This resource
+will override the \fBcursor\fP resource if both are specified. (See 2.4.1)
+..
+.de Ib \" Simple insensitiveBorder
+.ie 'Bold'\\$1' .IP \fBinsensitiveBorder\fP 1.5i
+.el .IP insensitiveBorder 1.5i
+This pixmap will be tiled into the widget's border if the widget becomes
+insensitive.
+..
+.de In \" Simple international
+.ie 'Bold'\\$1' .IP \fBinternational\fP 1.5i
+.el .IP international 1.5i
+This is a boolean flag, only settable at widget creation
+time.  A value of \fBfalse\fP signals the widget to use
+pre-R6 internationalization (specifically, the lack thereof),
+such as using fonts for displaying text, etc.  A value of
+\fBtrue\fP directs the widget to act in an internationalized
+manner, such as utilizing font sets for displaying text, etc.
+..
+.de Ix \" Simple international
+.ie 'Bold'\\$1' .IP \fBinternational\fP 1.5i
+.el .IP international 1.5i
+This is a boolean flag, only settable at widget creation
+time.  While not utilized in this widget, it can and should
+be checked by any subclasses that have behavior that
+should vary with locale.
+..
+.de Pf \" Simple pointerColor
+.ie 'Bold'\\$1' .IP \fBpointerColor\fP 1.5i
+.el .IP pointerColor 1.5i
+A pixel value which indexes the widget's colormap to derive the foreground
+color of the pointer symbol specified by the \fBcursorName\fP resource.
+..
+.de Pb \" Simple pointerColorBackground
+.ie 'Bold'\\$1' .IP \fBpointerColorBackground\fP 1.75i
+.el .IP pointerColorBackground 1.75i
+A pixel value which indexes the widget's colormap to derive the background
+color of the pointer symbol specified by the \fBcursorName\fP resource.
+..
+
+\" Label Widget Resource Definitions
+
+.de Bm \" Label bitmap
+.ie 'Bold'\\$1' .IP \fBbitmap\fP 1.5i
+.el .IP bitmap 1.5i
+A bitmap to display instead of the \fBlabel\fP.  The default size of the
+widget will be just large enough to contain the bitmap and the widget's
+internal width and height.  The resource converter for this resource
+constructs bitmaps from the contents of files.  (See \fBConverting
+Bitmaps\fP for details.)  If this bitmap is one bit deep then the 1's
+will be rendered in the foreground color, and the 0's in the background
+color.  If \fBbitmap\fP has a depth greater than one, it is copied
+directly into the window.
+..
+.de Le \" Label encoding
+.ie 'Bold'\\$1' .IP \fBencoding\fP 1.5i
+.el .IP encoding 1.5i
+The encoding method used by the value of the \fBlabel\fP resource.
+The value may be \fBXawTextEncoding8bit\fP or \fBXawTextEncodingChar2b\fP.
+When \fBinternational\fP is set to \fBtrue\fP this resource is not used.
+..
+.de Lf \" Label font
+.ie 'Bold'\\$1' .IP \fBfont\fP 1.5i
+.el .IP font 1.5i
+The text font to use when displaying the \fBlabel\fP, when the
+\fBinternational\fP resource is \fBfalse\fP.
+..
+.de Ls \" Label fontSet
+.ie 'Bold'\\$1' .IP \fBfontSet\fP 1.5i
+.el .IP fontSet 1.5i
+The text font set to use when displaying the \fBlabel\fP, when the
+\fBinternational\fP resource is \fBtrue\fP.
+..
+.de Lg \" Label foreground
+.ie 'Bold'\\$1' .IP \fBforeground\fP 1.5i
+.el .IP foreground 1.5i
+A pixel value which indexes the widget's colormap to derive the
+foreground color of the widget's window.  This color is also
+used to render all 1's in a \fBbitmap\fP one plane deep.
+..
+.de Ih \" Label internalHeight
+.ie 'Bold'\\$1' .IP \fBinternalHeight\fP 1.5i
+.el .IP internalHeight 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBinternalWidth\fP 1.5i
+.el .IP internalWidth 1.5i
+The minimum amount of space to leave between the graphic
+and the vertical and horizontal edges of the window.
+..
+.de Ju \" Label justify
+.ie 'Bold'\\$1' .IP \fBjustify\fP 1.5i
+.el .IP justify 1.5i
+.IN "conversions" "Justify"
+Specifies left, center, or right alignment of graphic within the
+widget.  This resource may be specified with the values
+\fBXtJustifyLeft\fP, \fBXtJustifyCenter\fP, or \fBXtJustifyRight\fP.
+.Rs "left, right, \fPand\fB center".
+This resource only has noticeable effect when the width of the widget
+is larger than necessary to display the graphic.  Note that when the
+graphic is a multi-line \fBlabel\fP, the longest line will obey this
+justification while shorter lines will be left-justified with the longest
+one.
+
+..
+.de La \" Label label
+.ie 'Bold'\\$1' .IP \fBlabel\fP 1.5i
+.el .IP label 1.5i
+Specifies the text string to be displayed in the widget's window
+if no bitmap is specified.  The default is the name of this widget.
+Regardless of the value of \fBencoding\fP or \fBinternational\fP,
+a single newline character (1 byte) will cause a line break.
+..
+.de Ll \" Label leftBitmap
+.ie 'Bold'\\$1' .IP \fBleftBitmap\fP 1.5i
+.el .IP leftBitmap 1.5i
+Specifies a bitmap to display to the left of the graphic in the widget's
+window.
+..
+.de Re \" Label resize
+.ie 'Bold'\\$1' .IP \fBresize\fP 1.5i
+.el .IP resize 1.5i
+Specifies whether the widget should attempt to resize to its
+preferred dimensions whenever its resources are modified with
+\fBXtSetValues\fP.  This attempt to resize may be denied by the parent
+of this widget.  The parent is always free to resize the widget
+regardless of the state of this resource.
+..
+
+\" Command Widget Resource Definitions
+
+.de Cb \" Command callback
+.ie 'Bold'\\$1' .IP \fBcallback\fP 1.5i
+.el .IP callback 1.5i
+A list of routines to be called when the \fBnotify\fP action is invoked.
+..
+.de Cr \" Command cornerRoundPercent
+.ie 'Bold'\\$1' .IP \fBcornerRoundPercent\fP 1.5i
+.el .IP cornerRoundPercent 1.5i
+When a \fBShapeStyle\fP of \fBroundedRectangle\fP is used, this
+resource controls the radius of the rounded corner.  The radius of the
+rounded corners is specified as a percentage of the length of the
+shortest side of the widget.
+..
+.de Ht \" Command highlightThickness
+.ie 'Bold'\\$1' .IP \fBhighlightThickness\fP 1.5i
+.el .IP highlightThickness 1.5i
+The thickness of the rectangle that is used to highlight the internal
+border of this widget, alerting the user that it is ready to be
+selected.  The default value is 2 pixels if the \fBshapeStyle\fP is
+\fBrectangle\fP, and 0 Pixels (no highlighting) otherwise.
+..
+.de Ss \" Command shapeStyle
+.ie 'Bold'\\$1' .IP \fBshapeStyle\fP 1.5i
+.el .IP shapeStyle 1.5i
+.IN "conversions" "ShapeStyle"
+Nonrectangular widgets may be created using this resource.
+Nonrectangular widgets are supported only on a server that supports the
+\fBShape Extension\fP.  If nonrectangular widgets are specified
+for a server lacking this extension, the shape is ignored and the
+widgets will be rectangular.  The following shapes are currently
+supported: \fBXmuShapeRectangle\fP, \fBXmuShapeOval\fP,
+\fBXmuShapeEllipse\fP, and \fBXmuShapeRoundedRectangle\fP.
+.Rs "rectangle, oval, ellipse, \fPand\fP roundedRectangle"
+..
+
+\" Composite Resources
+
+.de Ch \" Composite children
+.IP children 1.5i
+A list of all this composite widget's current children.
+..
+.de Ip \" Composite insertPosition
+.IP insertPosition 1.5i
+A function which allows the application programmer to specify the position
+of a new child.
+..
+.de Nc \" Composite numChildren
+.IP numChildren 1.5i
+The number of children in this composite widget.
+..
+
+\" Form Resources
+
+.de Dd \" Form defaultDistance
+.ie 'Bold'\\$1' .IP \fBdefaultDistance\fP 1.5i
+.el .IP defaultDistance 1.5i
+The default internal spacing for the children.  This is
+the default value for the constraint resources \fBhorizDistance\fP and
+\fBvertDistance\fP.
+..
+
+\" Form Constraints
+
+.de Bt \" Form bottom, left, right, and top
+.ie 'Bold'\\$1' .IP \fBbottom\fP 1.5i
+.el .IP bottom 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBleft\fP 1.5i
+.el .IP left 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBright\fP 1.5i
+.el .IP right 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBtop\fP 1.5i
+.el .IP top 1.5i
+What to do with this edge of the child when the parent is resized.  This
+resource may be any \fBedgeType\fP.  See \fBLayout Semantics\fP for
+details.
+..
+.de Fh \" Form fromHoriz and fromVert
+.ie 'Bold'\\$1' .IP \fBfromHoriz\fP 1.5i
+.el .IP fromHoriz 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBfromVert\fP 1.5i
+.el .IP fromVert 1.5i
+Which widget this child should be placed underneath (or to the right
+of).  If a value of NULL is specified then this widget will be positioned
+relative to the edge of the parent.
+..
+.de Hd \" Form horizDistance and vertDistance
+.ie 'Bold'\\$1' .IP \fBhorizDistance\fP 1.5i
+.el .IP horizDistance 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBvertDistance\fP 1.5i
+.el .IP vertDistance 1.5i
+The amount of space, in pixels, between this child and its left or
+upper neighbor.
+..
+.de Rl \" Form resizable
+.ie 'Bold'\\$1' .IP \fBresizable\fP 1.5i
+.el .IP resizable 1.5i
+If this resource is \fBFalse\fP then the parent widget will ignore all
+geometry request made by this child.  The parent may still resize this
+child itself, however.
+..
+
+.de Lt \" Form Section on Layout semantics
+The \\$1 widget uses two different sets of layout semantics.  One is
+used when initially laying out the children.  The other is used when
+the \\$1 is resized.
+.LP
+The first layout method uses the \fBfromVert\fP and \fPfromHoriz\fP
+.IN "fromVert" "
+.IN "fromHoriz" ""
+resources to place the children of the \\$1.  A single pass is made
+through the \\$1 widget's children in the order that they were created.
+Each child is then placed in the \\$1 widget below or to the right of
+the widget specified by the \fBfromVert\fP and \fBfromHoriz\fP resources.
+The distance the new child is placed from its left or upper neighbor is
+determined by the \fBhorizDistance\fP and \fBvertDistance\fP resources.
+.IN "horizDistance" ""
+.IN "vertDistance" ""
+.IN "conversions" "Widget"
+This implies some things about how the order of creation affects the
+possible placement of the children.  The Form widget registers a
+string to widget converter which does not postpone conversion and
+does not cache conversion results.
+.LP
+The second layout method is used when the \\$1 is resized.  It does not
+matter what causes this resize, and it is possible for a resize to
+happen before the widget becomes visible (due to constraints imposed by
+the parent of the \\$1).  This layout method uses the \fBbottom\fP,
+\fBtop\fP, \fBleft\fP, and \fBright\fP resources.  These resources are
+used to determine what will happen to each edge of the child when the
+\\$1 is resized.  If a value of \fBXawChain\fP\fI<something>\fP is
+.IN "XawChain" ""
+specified, the the edge of the child will remain a fixed distance from
+the \fIchain\fP edge of the \\$1.  For example if \fBXawChainLeft\fP is
+specified for the \fBright\fP resource of a child then the right edge of
+that child will remain a fixed distance from the left edge of the \\$1
+widget.  If a value of \fBXawRubber\fP is specified, that edge will grow
+.IN "XawRubber" ""
+by the same percentage that the \\$1 grew.  For instance if the \\$1
+grows by 50% the left edge of the child (if specified as \fBXawRubber\fP
+will be 50% farther from the left edge of the \\$1).  One must be very
+careful when specifying these resources, for when they are specified
+incorrectly children may overlap or completely occlude other children
+when the \\$1 widget is resized.
+..
+
+\" Text Resources
+
+.de Af \" Text autoFill
+.ie 'Bold'\\$1' .IP \fBautoFill\fP 1.5i
+.el .IP autoFill 1.5i
+If this resource is \fBTrue\fP the text widget will automatically break a line
+when the user attempts to type into the right margin.  The attribute has
+no effect on files or text inserted into the text widget.  It only
+checks to see if the action should be taken when a user enters a new
+character via the \fIinsert-character\fP action.
+..
+.de Tm \" Text margin resources
+.ie 'Bold'\\$1' .IP \fBbottomMargin\fP 1.5i
+.el .IP bottomMargin 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBleftMargin\fP 1.5i
+.el .IP leftMargin 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBrightMargin\fP 1.5i
+.el .IP rightMargin 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBtopMargin\fP 1.5i
+.el .IP topMargin 1.5i
+The amount of space, in pixels, between the edge of the window
+and the corresponding edge of the text within the window.  If there is
+a scrollbar active on this edge, then this is the space between the text and
+the scrollbar.
+..
+.de Tc \" Text displayCaret
+.ie 'Bold'\\$1' .IP \fBdisplayCaret\fP 1.5i
+.el .IP displayCaret 1.5i
+Whether or not to display the text insert point.
+..
+.de Td \" Text displayPosition
+.ie 'Bold'\\$1' .IP \fBdisplayPosition\fP 1.5i
+.el .IP displayPosition 1.5i
+The position in the text buffer of the character that is currently
+displayed in the upper left hand corner of the text display.
+..
+.de Ti \" Text insertPosition
+.ie 'Bold'\\$1' .IP \fBinsertPosition\fP 1.5i
+.el .IP insertPosition 1.5i
+This is the location of the insert point.  It is expressed in
+characters from the beginning of the file.  The cursor will always be
+forced to be on the screen.  This resource may therefore be used to
+scroll the text display to a certain character position.
+..
+.de Tz \" Text resize
+.ie 'Bold'\\$1' .IP \fBresize\fP 1.5i
+.el .IP resize 1.5i
+.IN "conversions" "XawTextResizeMode"
+Controls whether or not the Text widget attempts to resize itself when
+it is no longer able to display the full text buffer in the associated
+window.  Any attempt by the Text widget to resize itself is always
+subject to the constraints imposed by its parent.  The values
+\fBXawtextResizeNever\fP, \fBXawtextResizeWidth\fP,
+.IN "XawtextResizeNever" ""
+.IN "XawtextResizeWidth" ""
+\fBXawtextResizeHeight\fP, and \fBXawtextResizeBoth\fP are all
+.IN "XawtextResizeHeight" ""
+.IN "XawtextResizeBoth" ""
+acceptable for this resource.
+.Rs "never, height, width, \fPand\fB both"
+..
+.de Ts \" Text scrollHorizontal and scrollVertical
+.ie 'Bold'\\$1' .IP \fBscrollHorizontal\fP 1.5i
+.el .IP scrollHorizontal 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBscrollVertical\fP 1.5i
+.el .IP scrollVertical 1.5i
+.IN "conversions" "XawTextScrollMode"
+These resources control the placement of scrollbars on the left and
+bottom edge of the text widget.  These resources accept the
+values \fBXawtextScrollAlways\fP, \fBXawtextScrollWhenNeeded\fP, and
+.IN "XawtextScrollAlways" ""
+.IN "XawtextScrollWhenNeeded" ""
+\fBXawtextScrollNever\fP.
+.IN "XawtextScrollNever" ""
+.Rs "always, never, \fPand\fB whenNeeded"
+If \fBXawtextScrollWhenNeeded\fP is specified, the appropriate scrollbar
+will only appear when there is text in the buffer that is not able to
+fit within the bounds of the current window.  The scrollbar will
+disappear when the text once again fits within the window.
+..
+.de St \" Text selectTypes
+.ie 'Bold'\\$1' .IP \fBselectTypes\fP 1.5i
+.el .IP selectTypes 1.5i
+Specifies the selection type array that is used when
+multi-click is activated (see \fBText Selections for Application
+Programmers\fP for details).  This resource is used in place, and must
+not be freed until the widget is destroyed.  There is no
+type converter registered for this resource, so it may not be set from
+the resource manager.
+..
+.de To \" Text Source and Sink Objects
+.ie 'Bold'\\$1' .IP \fBtextSink\fP 1.5i
+.el .IP textSink 1.5i
+.br
+.ns
+.ie 'Bold'\\$1' .IP \fBtextSource\fP 1.5i
+.el .IP textSource 1.5i
+These are the TextSink or TextSource objects used by this widget.
+.ie 'Bold'\\$1' When using the Text widget these MUST be set by the \
+application programmer.
+.el \{\
+When \fBinternational\fP is set to \fBtrue\fP
+the AsciiText widget initializes these resources to point
+to an MultiSink and MultiSrc respectively.
+When \fBinternational\fP is set to \fBfalse\fP
+the AsciiText widget initializes these resources to point
+to an AsciiSink and AsciiSrc respectively.
+.\}
+..
+.de Tw \" Text wrap
+.ie 'Bold'\\$1' .IP \fBwrap\fP 1.5i
+.el .IP wrap 1.5i
+When the text in any one line is wider than the window there are several
+possible actions.  This resource allows the user to decide what will
+happen.  The accepted values for this resource are
+\fBXawtextWrapNever\fP, \fBXawtextWrapLine\fP, and
+.IN "XawtextWrapNever" ""
+.IN "XawtextWrapLine" ""
+\fBXawtextWrapWord\fP.  With \fBXawtextWrapLine\fP all text
+.IN "XawtextWrapWord" ""
+.IN "WrapMode"
+that is beyond the right edge of the window will be displayed on the
+next line.  With \fBXawtextWrapWord\fP the
+same action occurs but the text is broken at a word boundary if
+possible.  If no wrapping is enabled then the text will extend off
+the edge of the window, and a small rectangle will be painted in the
+right margin to alert the user that this line is too long.
+.Rs "never, word, \fPand\fB line"
+..
+.de Tu \" Text unrealizeCallback
+.ie 'Bold'\\$1' .IP \fBunrealizeCallback\fP 1.5i
+.el .IP unrealizeCallback 1.5i
+A list of callback functions which will be executed when the Text widget
+is unrealized.
+..
+
+\" Text Sink Resources
+
+.de Sb \" TextSink background
+.ie 'Bold'\\$1 .IP \fBbackground\fP 1.5i
+.el .IP background 1.5i
+A pixel value which indexes the Text widget's colormap to derive the
+background color used by the text sink.
+..
+.de Sg \" TextSink foreground
+.ie 'Bold'\\$1' .IP \fBforeground\fP 1.5i
+.el .IP foreground 1.5i
+A pixel value which indexes the Text widget's colormap to derive the
+foreground color used by the text sink.
+.Sk \\$1
+..
+
+\" Ascii Sink Resources
+
+.de Sd \" AsciiSink displayNonprinting
+.ie 'Bold'\\$1' .IP \fBdisplayNonprinting\fP 1.5i
+.el .IP displayNonprinting 1.5i
+If this resource is \fBTrue\fP, the Text widget will display all
+non-printable characters as the string \fI^@\fP.  If \fBFalse\fP, the
+Text widget
+will just leave a blank space where a non-printable character exists
+in the text buffer.
+.Sk \\$1
+..
+.de Sh \" AsciiSink echo
+.ie 'Bold'\\$1' .IP \fBecho\fP 1.5i
+.el .IP echo 1.5i
+Whether or not to echo characters to the screen.  The buffer can still
+be edited, but nothing is displayed.  This mode can be useful for
+entering passwords and other sensitive information.
+.Sk \\$1
+..
+.de Sf \" AsciiSink font
+.ie 'Bold'\\$1' .IP \fBfont\fP 1.5i
+.el .IP font 1.5i
+The text font to use when displaying the \fBstring\fP, when the
+\fBinternational\fP resource is \fBfalse\fP.
+.Sk \\$1
+..
+.de Sn \" MultiSink fontSet
+.ie 'Bold'\\$1' .IP \fBfont\fP 1.5i
+.el .IP font 1.5i
+The text font set to use when displaying the \fBstring\fP, when the
+\fBinternational\fP resource is \fBtrue\fP.
+.Sk \\$1
+..
+
+\" TextSrc Resources
+
+.de Oe \" TextSrc editType
+.ie 'Bold'\\$1' .IP \fBeditType\fP 1.5i
+.el .IP editType 1.5i
+This is the type of editing that will be allowed in this text widget.
+Legal values are \fBXawtextRead\fP, \fBXawtextEdit\fP, and
+.IN "XawtextRead" ""
+.IN "XawtextEdit" ""
+\fBXawtextAppend\fP.
+.IN "XawtextAppend" ""
+.IN "conversions" "XawTextEditType"
+.Rs "read, edit, \fPand\fB append"
+.So \\$1
+..
+
+\" AsciiSrc Resources
+
+
+.de Oc \" AsciiSrc callback
+.ie 'Bold'\\$1' .IP \fBcallback\fP 1.5i
+.el .IP callback 1.5i
+The callbacks registered on this resource will be called every time the
+text buffer changes, after the text has been updated.
+.So \\$1
+..
+.de Od \" AsciiSrc dataCompression
+.ie 'Bold'\\$1' .IP \fBdataCompression\fP 1.5i
+.el .IP dataCompression 1.5i
+The AsciiSrc uses an algorithm that may cause the text buffer to grow
+to about twice the size of the actual text over time, as the text is
+edited.  On systems where CPU cycles are cheaper than memory, it is helpful to
+spend some extra time to compress this buffer back to its minimum size.
+If this resource is \fBTrue\fP, the AsciiSrc will compress its data
+to the minimum size required every time the text string is saved, or the
+value of the string is queried.
+.So \\$1
+..
+.de Ol \" AsciiSrc length
+.ie 'Bold'\\$1' .IP \fBlength\fP 1.5i
+.el .IP length 1.5i
+If the \fBuseStringInPlace\fP resource is \fBFalse\fP this attribute has no
+effect.  If that resource is \fBTrue\fP, however, then the \fBlength\fP
+resource specifies the length of the buffer passed to the text widget
+in the \fBstring\fP resource.
+.So \\$1
+..
+.de Op \" AsciiSrc pieceSize
+.ie 'Bold'\\$1' .IP \fBpieceSize\fP 1.5i
+.el .IP pieceSize 1.5i
+This is the size of the internal chunks into which the text buffer is
+broken down for memory management.  The larger this value the less segmented
+your memory will be, but the slower your editing will be.  The text
+widgets will always allocate a chunk of memory this size to stuff the
+\fBstring\fP into, so when using small strings, having this buffer
+large can waste memory.  This resource has no effect if
+\fBuseStringInPlace\fP is \fBTrue\fP.
+.So \\$1
+..
+.de Os \" AsciiSrc string
+.ie 'Bold'\\$1' .IP \fBstring\fP 1.5i
+.el .IP string 1.5i
+If \fBtype\fP is \fBXawAsciiString\fP then this string contains the
+buffer to be displayed in the widget.  If \fBtype\fP is
+\fBXawAsciiFile\fP then the string contains the name of the file to be
+displayed.  This string is normally copied by the text widget into
+internal memory, but may be used in place by setting the
+\fBuseStringInPlace\fP resource.  As of X11R4 this is a settable resource.
+.So \\$1
+When the \fBstring\fP resource is queried, using \fBXtGetValues\fP, and
+\fBuseStringInPlace\fP is false, the value returned is valid until
+the next time the \fBstring\fP resource is queried, or until the application
+writer calls \fBXawAsciiSourceFreeString\fP.  If \fBuseStringInPlace\fP is
+true, a pointer to the actual string is returned.  See also section 5.6.
+..
+.de Ot \" AsciiSrc type
+.ie 'Bold'\\$1' .IP \fBtype\fP 1.5i
+.el .IP type 1.5i
+This resource may be either \fBXawAsciiString\fP or
+\fBXawAsciiFile\fP.  The value of this resource determines whether the
+\fBstring\fP resource contains the name of a file to be opened or a buffer to
+be displayed by the text widget.  A converter has been registered for
+this resource and accepts the values \fBstring\fP and \fBfile\fP.
+.IN "conversions" "AsciiType"
+.So \\$1
+..
+.de Ou \" AsciiSrc useStringInPlace
+.ie 'Bold'\\$1' .IP \fBuseStringInPlace\fP 1.5i
+.el .IP useStringInPlace 1.5i
+Setting this resource to \fBTrue\fP will disable the memory management
+provided by the Text widget, updating the \fBstring\fP resource in
+place.  Using the string in place can
+be much more efficient for text widgets that display static data, or
+where the programmer wishes to impose strict constraints on the
+contents of the \fBstring\fP.  When using the string in place be sure that:
+the length of the string is specified by setting the \fBlength\fP resource,
+the \fBtype\fP of the Text widget is \fBXawAsciiString\fP, and that
+the \fBstring\fP exists for the lifetime of the text widget, or until it has
+been reset.  \fINote: Since the MultiSrc and AsciiSrc have different data
+formats, use of this resource forces application code to be cognisant as to
+which of the two is being used.  Application programming is simplified when
+use of this resource is avoided.\fP
+.So \\$1
+..
+.\" .TB is used throughout this manual.  Don't know what it is,
+.\" but I'll guess "table bold".
+.\" Note that I've also used it to set the size, rather than
+.\" have (incorrect) commands sprinkled throughout the document.
+.\"   -gildea April 1994
+.de TB
+.B
+.ps 9
+.vs 11
+..

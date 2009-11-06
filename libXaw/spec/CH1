@@ -1,0 +1,411 @@
+.\" $Xorg: CH1,v 1.3 2000/08/17 19:42:26 cpqbld Exp $
+.ps 11
+.nr PS 11
+.ds LH \fBAthena Widget Set\fP
+.ds CH
+.ds RH \fB\*(xV\fP
+.bp 1
+.af PN 1
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 1\fP\s-1
+
+\s+1\fBAthena Widgets and The Intrinsics\fP\s-1
+.sp 2
+.nr H1 1
+.if \n(GS .nr nh*hl 1
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.LP
+.XS
+Chapter 1 \- Athena Widgets and The \*(xI
+.XE
+The X Toolkit is made up of two distinct pieces, the Xt \*(xI and a
+widget set.  The Athena widget set is a sample implementation of a
+widget set built upon the \*(xI.  In the \*(tk, a widget is the
+combination of an X window or subwindow and its associated input and
+output semantics.
+.LP
+Because the \*(xI provide the same basic functionality to all widget
+sets it may be possible to use widgets from the Athena widget set with
+other widget sets based upon the \*(xI.  Since widget sets may also
+implement private protocols, all functionality may not be available when
+mixing and matching widget sets.  For information about the \*(xI, see
+the \fI\*(xT\fP.
+.LP
+The Athena widget set is a library package layered on top of the \*(xI
+and Xlib that provides a set of user interface tools sufficient to build
+a wide variety of applications.  This layer extends the basic
+abstractions provided by X and provides the next layer of functionality
+primarily by supplying a cohesive set of sample widgets.  Although the
+\*(xI are a Consortium standard, there is no standard widget set.
+.LP
+To the extent possible, the \*(xI are "policy-free".  The application
+environment and widget set, not the \*(xI, define, implement, and
+enforce:
+.IP \(bu 5
+Policy
+.IP \(bu 5
+Consistency
+.IP \(bu 5
+Style
+.LP
+Each individual widget implementation defines its own policy.  The \*(tk
+design allows for, but does not necessarily encourage, the free mixing
+of radically differing widget implementations.
+.NH 2
+Introduction to the \*(tk
+.LP
+.XS
+	Introduction to the \*(tk
+.XE
+.IN "introduction" "" "@DEF@"
+The \*(tk provides tools that simplify the design of
+application user interfaces in the X Window System programming environment.
+It assists application programmers by providing a set of common
+underlying user-interface functions.  It also lets widget programmers
+modify existing widgets, by subclassing, or add new widgets.  By using
+the \*(tk in their applications, programmers can present a similar
+user interface across applications to all workstation users.
+.LP
+The \*(tk consists of:
+.IP \(bu 5
+A set of \*(xI functions for building widgets
+.IP \(bu 5
+An architectural model for constructing widgets
+.IP \(bu 5
+A widget set for application programming
+.LP
+While the majority of the \*(xI functions are intended
+for the widget programmer,
+a subset of the \*(xI functions are to be used by application programmers
+(see  \fI\*(xT\fP).
+The architectural model lets the widget programmer design new widgets
+by using the \*(xI and by combining other widgets.
+The application interface layers built on top of the \*(tk include a
+coordinated set of widgets and composition policies.
+Some of these widgets and policies are specific to a single
+application domain, and others are common to a variety of
+applications.
+.LP
+The remainder of this chapter discusses the \*(tk and Athena widget set:
+.IP \(bu 5
+Terminology
+.IP \(bu 5
+Model
+.IP \(bu 5
+Conventions used in this manual
+.IP \(bu 5
+Format of the Widget Reference Chapters
+.NH 2
+Terminology
+.LP
+.XS
+	Terminology
+.XE
+.LP
+In addition to the terms already defined for X programming (see \fI\*(xL\fP),
+the following terms are specific to the \*(xI and Athena widget set
+and used throughout this document.
+.LP
+\fBApplication programmer\fP
+.IN "application programmer" "" "@DEF@"
+.IP
+A programmer who uses the \*(tk to produce an application user interface.
+.LP
+\fBChild\fP
+.IN "child" "" "@DEF"
+.IP
+A widget that is contained within another "parent" widget.
+.LP
+\fBClass\fP
+.IN "class" "" "@DEF@"
+.IP
+The general group to which a specific object belongs.
+.LP
+\fBClient\fP
+.IN "client" "" "@DEF@"
+.IP
+A function that uses a widget in an application or for composing
+other widgets.
+.LP
+\fBFullName\fP
+.IN "FullName" "" "@DEF"
+.IP
+The name of a widget instance appended to the full name of its parent.
+.LP
+\fBInstance\fP
+.IN "instance" "" "@DEF@"
+.IP
+A specific widget object as opposed to a general widget class.
+.LP
+\fBMethod\fP
+.IN "method" "" "@DEF@"
+.IP
+A function or procedure implemented by a widget class.
+.LP
+\fBName\fP
+.IN "name" "widget" "@DEF@"
+.IP
+The name that is specific to an instance of a widget for a given client.
+This name is specified at creation time and cannot be modified.
+.LP
+\fBObject\fP
+.IN "object" "" "@DEF@"
+.IP
+A data abstraction consisting of private data and private and public
+functions that operate on the private data.
+Users of the abstraction can interact with the object only through calls
+to the object's public functions.
+In the \*(tk,
+some of the object's public functions are called directly by the application,
+while others are called indirectly when the application calls the common
+\*(xI functions.
+In general, if a function is common to all widgets,
+an application uses a single \*(xI function to invoke the function for all
+types of widgets.
+If a function is unique to a single widget type,
+the widget exports the function.
+.LP
+\fBParent\fP
+.IN "parent" "" "@DEF@"
+.IP
+A widget that contains at least one other ("child") widget.
+A parent widget is also known as a composite widget.
+.LP
+\fBResource\fP
+.IN "resource" "" "@DEF@"
+.IP
+A named piece of data in a widget that can be set by a client,
+by an application, or by user defaults.
+.LP
+\fBSuperclass\fP
+.IN "superclass" "" "@DEF@"
+.IP
+A larger class of which a specific class is a member.
+All members of a class are also members of the superclass.
+.LP
+\fBUser\fP
+.IN "user" "" "@DEF@"
+.IP
+A person interacting with a workstation.
+.LP
+\fBWidget\fP
+.IN "widget" "" "@DEF@"
+.IP
+An object providing a user-interface abstraction (for example, a Scrollbar
+widget).
+.LP
+\fBWidget class\fP
+.IN "widget class" "" "@DEF@"
+.IP
+The general group to which a specific widget belongs,
+otherwise known as the type of the widget.
+.LP
+\fBWidget programmer\fP
+.IN "widget programmer" "" "@DEF@"
+.IP
+A programmer who adds new widgets to the \*(tk.
+.NH 2
+Underlying Model
+.LP
+.XS
+	Underlying Model
+.XE
+.IN "underlying model" "" "@DEF@"
+The underlying architectural model is based on the following premises:
+.KS
+.IP "Widgets are X windows"
+.IP
+Every user-interface widget is associated with an X window.
+The X window ID for a widget is readily available from the widget.
+Standard Xlib calls can be used by widgets for many of their input and
+output operations.
+.KE
+.KS
+.IP "Information hiding"
+.IP
+The data for every widget is private to the widget and its subclasses.
+That is, the data is neither directly accessible
+nor visible outside of the module implementing the widget.
+All program interaction with the widget is performed by a set of operations
+(methods) that are defined for the widget.
+.KE
+.KS
+.IP "Widget semantics and widget layout geometry"
+.IP
+Widget semantics are clearly separated from widget layout geometry.
+Widgets are concerned with implementing specific user-interface
+semantics.  They have little control over issues such as their size or
+placement relative to other widget peers.  Mechanisms are provided for
+associating geometric managers with widgets and for widgets to make
+suggestions about their own geometry.
+.KE
+.NH 2
+Conventions Used in this Manual
+.IP \(bu 5
+.IN "conventions" "used in manual" "@DEF@"
+All resources available to the widgets are listed with each widget.  Many
+of these are available to more than one widget class due to the object
+oriented nature of the \*(xI.  The new resources for each widget are
+listed in bold text, and the inherited resources are listed in plain text.
+.IP \(bu 5
+Global symbols are printed in \fBbold\fP and can be function names,
+symbols defined in include files, or structure names.  Arguments are
+printed in \fIitalics\fP.
+.IP \(bu 5
+Each function is introduced by a general discussion that distinguishes
+it from other functions.  The function declaration itself follows, and
+each argument is specifically explained.  General discussion of the
+function, if any is required, follows the arguments.  Where
+applicable, the last paragraph of the explanation lists the return values
+of the function.
+.IP \(bu 5
+To eliminate any ambiguity between those arguments that you pass and
+those that a function returns to you, the explanations for all
+arguments that you pass start with the word \fIspecifies\fP or, in the
+case of multiple arguments, the word \fIspecify\fP. The explanations
+for all arguments that are returned to you start with the word
+\fIreturns\fP or, in the case of multiple arguments, the word
+\fIreturn\fP.  The explanations for all arguments that you can pass
+and are returned start with the words \fIspecifies and returns\fP.
+.IP \(bu 5
+Any pointer to a structure that is used to return a value is
+designated as such by the \fI_return\fP suffix as part of its name.
+All other pointers passed to these functions are used for reading
+only.  A few arguments use pointers to structures that are used for
+both input and output and are indicated by using the \fI_in_out\fP
+suffix.
+.IN "_return" "" "@DEF@"
+.IN "_in_out" "" "@DEF@"
+.NH 2
+Format of the Widget Reference Chapters
+.LP
+.IN "conventions" "chapter format" "@DEF@"
+.IN "chapter format" "" "@DEF@"
+The majority of this document is a reference guide for the Athena
+widget set.  Chapters three through six give the programmer all
+information necessary to use the widgets.  The layout of the chapters
+follows a specific pattern to allow the programmer to easily find the
+desired information.
+.LP
+The first few pages of every chapter give an overview of the widgets
+in that section.  Widgets are grouped into chapters by functionality.
+.IP "Chapter 3" .75i
+Simple Widgets
+.IP "Chapter 4" .75i
+Menus
+.IP "Chapter 5" .75i
+Text Widgets
+.IP "Chapter 6" .75i
+Composite and Constraint Widget
+.LP
+Following the introduction will be a description of each widget in that
+chapter.  When no functional grouping is obvious the widgets are listed
+in alphabetical order, such as in chapters three and six.
+.LP
+The first section of each widget's description is a table that
+contains general information about this widget class.  Here is the
+table for the Box widget, and an explanation of all the entries.
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/Box.h>
+Class Header file	<X11/Xaw/BoxP.h>
+Class		boxWidgetClass
+Class Name	Box
+Superclass	Composite
+.sp
+.De
+.IP "\fBApplication Header File\fP" 2.0i
+.IN "application header file" "" "@DEF@"
+This file must be included when an application uses this widget.
+It usually contains the class definition, and some resource macros.
+This is often called the ``public'' header file.
+.IN "class header file" "" "@DEF@"
+.IP "\fBClass Header File\fP" 2.0i
+This file will only be used by widget programmers.  It will need to be
+included by any widget that subclasses this widget.  This is often
+called the ``private'' header file.
+.IN "class" "" "@DEF@"
+.IP \fBClass\fP 2.0i
+This is the widget class of this widget.  This global symbol is passed to
+\fBXtCreateWidget\fP so that the \*(xI will know which type of widget
+to create.
+.IN "class name" "" "@DEF@"
+.IP "\fBClass Name\fP" 2.0i
+This is the resource name of this class.  This name can be used in
+a resource file to match any widget of this class.
+.IN "superclass" ""
+.IP \fBSuperclass\fP 2.0i
+This is the superclass that this widget class is descended from.  If
+you understand how the superclass works it will allow you to more quickly
+understand what this widget does, since much of its functionality may be
+inherited from its superclass.
+.sp
+.LP
+After this table follows a general description of the default behavior of
+this widget, as seen by the user.  In many cases this functionality
+may be overridden by the application programmer, or by the user.
+.LP
+The next section is a table showing the
+name, class, type and default value of each resource that is available
+to this widget.  There is also a column containing notes describing
+special restrictions placed upon individual resources.
+.IN "notes" "" "@DEF@"
+.IN "A, note" "" "@DEF@"
+.IN "D, note" "" "@DEF@"
+.IN "C, note" "" "@DEF@"
+.IN "R, note" "" "@DEF@"
+.IP A .5i
+This resource may be automatically adjusted when another
+resource is changed.
+.IP C .5i
+This resource is only settable at widget creation time, and may not
+be modified with \fBXtSetValues\fP.
+.IP D .5i
+Do not modify this resource.  While setting this resource will
+work, it can cause unexpected behavior.  When this symbol appears
+there is another, preferred, interface provided by the \*(tk.
+.IP R .5i
+This resource is READ-ONLY, and may not be modified.
+.LP
+After the resource table is a detailed description of every resource
+available to that widget.  Many of these are redundant, but printing
+them with each widget saves page flipping.  The names of the resources
+that are inherited are printed in plain text, while the names of the
+resources that are new to this class are printed in \fBbold\fP.
+If you have already read the description of the superclass you need
+only pay attention to the resources printed in bold.
+.LP
+For each composite widget there is a section on layout semantics that
+follows the resource description.  This section will describe the
+effect of constraint resources on the layout of the children, as well
+as a general description of where it prefers to place its children.
+.LP
+Descriptions of default translations and action routines come next, for
+widgets to which they apply.  The last item in each widget's
+documentation is the description of all convenience routines provided by
+the widget.
+.NH 2
+Input Focus
+.XS
+	Input Focus
+.XE
+.IN "input focus" "" "@DEF@"
+.IN "input" "" "@DEF@"
+.IN "XtNinput" "" "@DEF@"
+.LP
+The \*(xI define a resource on all Shell widgets that interact with
+the window manager called \fBinput\fP.  This resource requests the
+assistance of window manager in acquiring the input focus.  The
+resource defaults to \fBFalse\fP in the \*(xI, but is redefined to
+default to \fBTrue\fP when an application is using the Athena widget
+set.  An application programmer may override this default and set the
+resource back to \fBFalse\fP if the application does not need the window
+manager to give it the input focus.  See the \fI\*(xT\fP for details
+on the \fIinput\fP resource.

@@ -1,0 +1,84 @@
+.LP
+.bp
+.if e .bp  \" make sure we break on an odd page.
+\&
+.sp 1
+.ce 3
+\s+1\fBChapter 6\fP\s-1
+
+\s+1\fBComposite and Constraint Widgets\fP\s-1
+.sp 2
+.nr H1 6
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 6 - Composite and Constraint Widgets
+.XE
+.LP
+These widgets may contain arbitrary widget children.  They implement a
+policy for the size and location of their children.
+.IP \fBBox\fP 1i
+.IN "Box widget" ""
+This widget will pack its children as tightly as possible in
+non-overlapping rows.
+.IP \fBDialog\fP 1i
+.IN "Dialog widget" ""
+An implementation of a commonly used interaction semantic to prompt for
+auxiliary input from the user, such as a filename.
+.IP \fBForm\fP 1i
+.IN "Form widget" ""
+A more sophisticated layout widget that allows the children to specify
+their positions relative to the other children, or to the edges of the Form.
+.IP \fBPaned\fP 1i
+.IN "Paned widget" ""
+Allows children to be tiled vertically or horizontally.  Controls are
+also provided to allow the user to dynamically resize the individual panes.
+.IP \fBPorthole\fP 1i
+.IN "Porthole widget" ""
+Allows viewing of a managed child which is as large as, or larger than its
+parent, typically under control of a Panner widget.
+.IP \fBTree\fP 1i
+.IN "Tree widget" ""
+Provides geometry management of widgets arranged in a directed, acyclic graph.
+.IP \fBViewport\fP 1i
+.IN "Viewport widget" ""
+Consists of a frame, one or two scrollbars, and an inner window.  The
+inner window can contain all the data that is to be displayed.  This inner
+window will be clipped by the frame with the scrollbars controlling
+which section of the inner window is currently visible.
+.LP
+.NH 3
+A Brief Note on Geometry Management
+.IN "geometry management" ""
+.LP
+The geometry management semantics provided by the X Toolkit give full
+control of the size and position of a widget to the parent of that
+widget.  While the children are allowed to request a certain size or
+location, it is the parent who makes the final decision.  Many of the
+composite widgets here will deny any geometry request from their
+children by default.  If a child widget is not getting the expected size
+or location, it is most likely the parent disallowing a request, or
+implementing semantics slightly different than those expected by the
+application programmer.
+.LP
+If the application wishes to change the size or location of
+any widget it should make a call to \fBXtSetValues\fP.  This will
+.IN "XtSetValues" ""
+allow the widget to ask its parent for the new size or location.
+As noted above the parent is allowed to refuse this request,
+and the child must live with the result.  If the
+application is unable to achieve the desired semantics, then perhaps it
+should use a different composite widget.  Under no circumstances
+should an application programmer resort to \fBXtMoveWidget\fP or
+.IN "XtMoveWidget" ""
+\fBXtResizeWidget\fP; these functions are exclusively for the use of
+.IN "XtResizeWidget" ""
+Composite widget implementors.
+.LP
+For more information on geometry management consult the \fI\*(xT\fP.
+
+

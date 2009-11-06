@@ -1,0 +1,157 @@
+.\" $Xorg: Grip,v 1.3 2000/08/17 19:42:26 cpqbld Exp $
+.NH 2
+Grip Widget
+.XS
+	Grip Widget
+.XE
+.IN "Grip widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application header file	<X11/Xaw/Grip.h>
+.IN "Grip.h" ""
+Class header file	<X11/Xaw/GripP.h>
+.IN "GripP.h" ""
+Class	gripWidgetClass
+.IN "gripWidgetClass" ""
+Class Name	Grip
+.IN "Grip widget" "class name"
+Superclass	Simple
+.sp
+.De
+.LP
+The Grip widget provides a small rectangular region in which user input
+events (such as ButtonPress or ButtonRelease) may be handled.  The most
+common use for the Grip widget is as an attachment point for visually
+repositioning an object, such as the pane border in a Paned widget.
+.NH 3
+Resources
+.LP
+When creating a Grip widget instance, the following resources are
+retrieved from the argument list or from the resource database:
+.LP
+.IN "Grip widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		0
+callback	Callback	Callback		NULL
+colormap	Colormap	Colormap		Parent's Colormap
+cursor	Cursor	Cursor		None
+cursorName	Cursor	String		NULL
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+foreground	Foreground	Pixel		XtDefaultForeground
+height	Height	Dimension		8
+insensitiveBorder	Insensitive	Pixmap		GreyPixmap
+international	International	Boolean	C	False
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+pointerColor	Foreground	Pixel		XtDefaultForeground
+pointerColorBackground	Background	Pixel		XtDefaultBackground
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+translations	Translations	TranslationTable		NULL
+width	Width	Dimension		8
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.IP \fBcallback\fP 1.5i
+All routines on this list are called whenever the \fBGripAction\fP
+action routine is invoked.  The \fIcall_data\fP contains all
+information passed to the action routine.  A detailed description
+is given below in the \fBGrip Actions\fP section.
+.Cm
+.Cu
+.Cn
+.Dp
+.Dc
+.IP \fBforeground\fP 1.5i
+A pixel value which indexes the widget's colormap to derive the color
+used to flood fill the entire Grip widget.
+.Hw
+.Ib
+.Ix
+.Mm
+.Pf
+.Pb
+.Sc
+.Se
+.Tr
+.Xy
+.NH 3
+Grip Actions
+.IN "Grip widget" "actions"
+.LP
+The Grip widget does not declare any default event translation bindings,
+but it does declare a single action routine named \fBGripAction\fP.  The
+.IN "Grip widget" "GripAction routine"
+client specifies an arbitrary event translation table, optionally giving
+parameters to the \fBGripAction\fP routine.
+.LP
+The \fBGripAction\fP routine executes the callbacks on the
+\fBcallback\fP list, passing as \fIcall_data\fP a pointer to a
+\fBXawGripCallData\fP structure, defined in the Grip widget's application
+header file.
+.LP
+.Ds 0
+.TA .5i 2.25i
+.ta .5i 2.25i
+.IN "XawGripCallData" "" "@DEF@"
+.IN "XawGripCallDataRec" "" "@DEF@"
+.sp
+typedef struct _XawGripCallData {
+	XEvent *event;
+	String *params;
+	Cardinal num_params;
+} XawGripCallDataRec, *XawGripCallData,
+  GripCallDataRec, *GripCallData; /* supported for R4 compatibility */
+.IN "XawGripCallDataRec" ""
+.IN "XawGripCallData" ""
+.IN "GripCallData" ""
+.sp
+.De
+.LP
+In this structure, the \fIevent\fP is a pointer to the input event that
+triggered the action.  \fIparams\fP and \fInum_params\fP give the string
+parameters specified in the translation table for the particular event
+binding.
+.IN "Grip widget" "GripAction table"
+.LP
+The following is an example of a translation table that uses the GripAction:
+.LP
+.Ds 0
+.TA .5i 2.5i
+.ta .5i 2.5i
+.sp
+	<Btn1Down>:	GripAction(press)
+	<Btn1Motion>:	GripAction(move)
+	<Btn1Up>:	GripAction(release)
+.sp
+.De
+For a complete description of the format of translation tables, see the
+\fI\*(xT\fP.

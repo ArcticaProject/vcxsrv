@@ -1,0 +1,99 @@
+.LP
+.bp
+.if e .bp  \" make sure we break on an odd page.
+\&
+.sp 1
+.ce 5
+\s+1\fBChapter 7\fP\s-1
+
+\s+1\fBCreating New Widgets (Subclassing)\fP\s-1
+
+\s+1Written By: Ralph Swick\s-1
+.sp 2
+.nr H1 7
+.nr H2 0
+.nr H3 0
+.nr H4 0
+.nr H5 0
+.na
+.LP
+.XS
+Chapter 7 - Creating New Widgets (Subclassing)
+.XE
+.IN "subclassing" "" "@DEF@"
+.IN "creating new widgets" "" "@DEF@"
+.LP
+Although the task of creating a new widget may at first appear a little
+daunting, there is a basic simple pattern that all widgets follow.  The
+Athena Widget library contains a special widget called the
+\fITemplate\fP widget that is intended to assist the novice widget
+programmer in writing a custom widget.
+.LP
+Reasons for wishing to write a custom widget include:
+.IP \(bu 3
+Providing a graphical interface not currently supported by any existing
+widget set.
+.IP \(bu 3
+Convenient access to resource management procedures to obtain fonts,
+colors, etc., even if user customization is not desired.
+.IP \(bu 3
+Convenient access to user input dispatch and translation management procedures.
+.IP \(bu 3
+Access to callback mechanism for building higher-level application libraries.
+.IP \(bu 3
+Customizing the interface or behavior of an existing widget to suit a
+special application need.
+.IP \(bu 3
+Desire to allow user customization of resources such as fonts, colors,
+etc., or to allow convenient re-binding of keys and buttons to internal
+functions.
+.IP \(bu 3
+Converting a non-Toolkit application to use the Toolkit.
+.LP
+In each of these cases, the operation needed to create a new widget is
+to "subclass" an existing one.  If the desired semantics of the new
+widget are similar to an existing one, then the implementation of the
+existing widget should be examined to see how much work would be
+required to create a subclass that will then be
+able to share the existing class methods.  Much time will be saved in
+writing the new widget if an existing widget class Expose, Resize and/or
+GeometryManager method can be used by the subclass.
+.LP
+Note that some trivial uses of a ``bare-bones'' widget may be achieved by
+simply creating an instance of the Core
+widget.  The class variable to use when creating a Core widget is
+.PN widgetClass .
+The geometry of the Core widget is determined entirely by the parent
+widget.
+.LP
+It is very often the case than an application will have a special need
+for a certain set of functions and that many copies of these functions
+will be needed.  For example, when converting an older application to use
+the Toolkit, it may be desirable to have a "Window Widget" class that
+might have the following semantics:
+.IN "Window widget"
+.IN "Core widget"
+.IN "widgetClass"
+.IP \(bu 3
+Allocate 2 drawing colors in addition to a background color.
+.IP \(bu 3
+Allocate a text font.
+.IP \(bu 3
+Execute an application-supplied function to handle exposure events.
+.IP \(bu 3
+Execute an application-supplied function to handle user input events.
+.LP
+It is obvious that a completely general-purpose WindowWidgetClass could
+be constructed that would export all class methods as callbacks lists,
+but such a widget would be very large and would have to choose some
+arbitrary number of resources such as colors to allocate.  An application
+that used many instances of the general-purpose widget would therefore
+un-necessarily waste many resources.
+.LP
+.sp
+In this section, an outline will be given of the procedure to follow to
+construct a special-purpose widget to address the items listed above.
+The reader should refer to the appropriate sections of the \fI\*(xT\fP
+for complete details of the material outlined here.  Section 1.4 of
+the \fI\*(xI\fP should be read in conjunction with this section.
+.LP

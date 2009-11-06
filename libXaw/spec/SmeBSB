@@ -1,0 +1,125 @@
+.\" $Xorg: SmeBSB,v 1.3 2000/08/17 19:42:28 cpqbld Exp $
+.NH 2
+SmeBSB Object
+.LP
+.XS
+	SmeBSB Object
+.XE
+.IN "SmeBSB object" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/SmeBSB.h>
+.IN "SmeBSB.h" ""
+Class Header file	<X11/Xaw/SmeBSBP.h>
+.IN "SmeBSBP.h" ""
+Class		smeBSBObjectClass
+.IN "smeBSBObjectClass" ""
+Class Name	SmeBSB
+.IN "SmeBSB object" "class name"
+Superclass	Sme
+.sp
+.De
+.LP
+The SmeBSB object is used to create a menu entry that contains a string,
+and optional bitmaps in its left and right margins.  Since each menu
+entry is an independent object, the application is able to change the
+font, color, height, and other attributes of the menu entries, on an
+entry by entry basis.  The format of the string may either be the encoding
+of the 8 bit \fBfont\fP utilized, or in a multi-byte encoding for use with a
+\fBfontSet\fP.
+.NH 3
+Resources
+.IN "SmeBSB object" "resources"
+.LP
+The resources associated with the SmeBSB object are defined in this section,
+and affect only the single menu entry specified by this object.
+.TS H
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+callback	Callback	Callback		NULL
+destroyCallback	Callback	XtCallbackList		NULL
+font	Font	FontStruct		XtDefaultFont
+fontSet	FontSet	XFontSet		XtDefaultFontSet
+foreground	Foreground	Pixel		XtDefaultForeground
+height	Height	Dimension	A	Font height + \fBvertSpace\fP
+international	International	Boolean	C	False
+justify	Justify	Justify		XtjustifyLeft
+label	Label	String		NULL
+leftBitmap	LeftBitmap	Pixmap		XtUnspecifiedPixmap
+leftMargin	leftMargin	Dimension		4
+rightBitmap	RightBitmap	Pixmap		XtUnspecifiedPixmap
+rightMargin	rightMargin	Dimension		4
+sensitive	Sensitive	Boolean		True
+vertSpace	VertSpace	int		25
+width	Width	Dimension	A	TextWidth + margins
+.sp 3p
+_
+.TE
+.As
+.IP \fBcallback\fP 1.5i
+All callback functions on this list are called when the SimpleMenu
+\fInotifies\fP this entry that the user has selected it.
+.Dc
+.IP \fBfont\fP 1.5i
+The text font to use when displaying the \fBlabel\fP, when the
+\fBinternational\fP resource is \fBfalse\fP.
+.IP \fBfontSet\fP 1.5i
+The text font set to use when displaying the \fBlabel\fP, when the
+\fBinternational\fP resource is \fBtrue\fP.
+.IP \fBforeground\fP 1.5i
+A pixel value which indexes the SimpleMenu's colormap to derive the
+foreground color of the menu entry's window.  This color is also
+used to render all 1's in the left and right \fBbitmaps\fP.
+.Hw
+Keep in mind that the SimpleMenu widget will force the width of all
+menu entries to be the width of the longest entry.
+.In
+.IP \fBjustify\fP 1.5i
+How the label is to be rendered between the left and right margins when
+the space is wider than the actual text.  This resource may be
+specified with the values \fBXtJustifyLeft\fP, \fBXtJustifyCenter\fP,
+or \fBXtJustifyRight\fP.  When specifying the justification from a
+resource file the values \fBleft\fP, \fBcenter\fP, or \fBright\fP may be
+used.
+.IP \fBlabel\fP 1.5i
+This is a the string that will be displayed in the menu entry.  The
+exact location of this string within the bounds of the menu entry is
+controlled by the \fBleftMargin\fP, \fBrightMargin\fP, \fBvertSpace\fP,
+and \fBjustify\fP resources.
+.IP \fBleftBitmap\fP 1.5i
+.br
+.ns
+.IP \fBrightBitmap\fP 1.5i
+This is a name of a bitmap to display in the left or right margin of the
+menu entry.  All 1's in the bitmap will be rendered in the foreground
+color, and all 0's will be drawn in the background color of the
+SimpleMenu widget.  It is the
+programmers' responsibility to make sure that the menu entry is tall
+enough, and the appropriate margin wide enough to accept the bitmap.
+If care is not taken the bitmap may extend into another menu entry, or
+into this entry's label.
+.IP \fBleftMargin\fP 1.5i
+.br
+.ns
+.IP \fBrightMargin\fP 1.5i
+This is the amount of space (in pixels) that will be left between the
+edge of the menu entry and the label string.
+.Se
+.IP \fBvertSpace\fP 1.5i
+This is the amount of vertical padding, expressed as a percentage of
+the height of the font, that is to be placed around the label of a
+menu entry.. The label and bitmaps are always centered vertically
+within the menu.  The default value for this
+resource (25) causes the default height to be 125% of the height of the
+font.
