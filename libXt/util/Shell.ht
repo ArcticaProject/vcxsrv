@@ -52,7 +52,7 @@ SOFTWARE.
 #define _XtShell_h
 
 #ifndef XT_NO_SM
-include <X11/SM/SMlib.h>
+#include <X11/SM/SMlib.h>
 #endif
 #include <X11/Intrinsic.h>
 
