@@ -1,0 +1,200 @@
+.\" $Xorg: Form,v 1.3 2000/08/17 19:42:26 cpqbld Exp $
+.NH 2
+Form Widget
+.LP
+.XS
+	Form Widget
+.XE
+.IN "Form widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/Form.h>
+.IN "Form.h" ""
+Class Header file	<X11/Xaw/FormP.h>
+.IN "FormP.h" ""
+Class		formWidgetClass
+.IN "formWidgetClass" ""
+Class Name	Form
+.IN "Form widget" "class name"
+Superclass	Constraint
+.sp
+.De
+.LP
+The Form widget can contain an arbitrary number of children or
+subwidgets.  The Form provides geometry management for its children,
+which allows individual control of the position of each child.  Any
+combination of children can be added to a Form.  The initial positions
+of the children may be computed relative to the positions of previously
+created children.  When the Form is resized, it computes new positions and
+sizes for its children.  This computation is based upon information
+provided when a child is added to the Form.
+.LP
+The default width of the Form is the minimum width needed to
+enclose the children after computing their initial layout, with a
+margin of \fBdefaultDistance\fP
+at the right and bottom edges.  If a width and height is assigned
+to the Form that is too small for the layout, the children will
+be clipped by the right and bottom edges of the Form.
+.NH 3
+Resources
+.LP
+When creating a Form widget instance, the following resources are
+retrieved from the argument list or from the resource database:
+.LP
+.IN "Form widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+children	ReadOnly	WidgetList	R	NULL
+colormap	Colormap	Colormap		Parent's Colormap
+defaultDistance	Thickness	int		4
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+height	Height	Dimension	A	Enough space to contain all children
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+numChildren	ReadOnly	Cardinal	R	0
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+translations	Translations	TranslationTable		NULL
+width	Width	Dimension	A	Enough space to contain all children
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.Ch
+.Cm
+.Dd Bold
+.Dp
+.Dc
+.Hw
+.Mm
+.Nc
+.Sc
+.Se
+.Tr
+.Xy
+.NH 3
+Constraint Resources
+.LP
+.IN "Form widget" "constraint resources"
+Each child of the Form widget may request special layout resources
+be applied to it.  These \fIconstraint\fP resources allow the Form
+widget's children to specify individual layout requirements.
+.LP
+.LP
+.TS H
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+bottom	Edge	XawEdgeType		XawRubber
+fromHoriz	Widget	Widget		NULL (left edge of Form)
+fromVert	Widget	Widget 		NULL (top edge of Form)
+horizDistance	Thickness	int		\fBdefaultDistance\fP resource
+left	Edge	XawEdgeType		XawRubber
+.IN "XawEdgeType" ""
+resizable	Boolean	Boolean		FALSE
+right	Edge	XawEdgeType		XawRubber
+.IN "XawRubber" ""
+top	Edge	XawEdgeType		XawRubber
+vertDistance	Thickness	int		\fBdefaultDistance\fP resource
+.sp 3p
+_
+.TE
+.Bt Bold
+.Fh Bold
+.Hd Bold
+.Rl Bold
+.NH 3
+Layout Semantics
+.LP
+.Lt Form
+.LP
+.TS H
+lw(1.5i) lw(1i) lw(3i).
+_
+.sp 3p
+.TB
+Edge Type	Resource Name	Description
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+XawChainBottom	ChainBottom	Edge remains a fixed distance from bottom of Form
+.IN "XawChainBottom" ""
+XawChainLeft	ChainLeft	Edge remains a fixed distance from left of Form
+.IN "XawChainLeft" ""
+XawChainRight	ChainRight	Edge remains a fixed distance from right of Form
+.IN "XawChainRight" ""
+XawChainTop	ChainTop	Edge remains a fixed distance from top of Form
+.IN "XawChainTop" ""
+XawRubber	Rubber	Edges will move a proportional distance
+.IN "XawRubber" ""
+.sp 3p
+_
+.TE
+.NH 4
+Example
+.LP
+If you wish to force the Form to never resize one or more of its
+children, then set \fBleft\fP and \fBright\fP to \fBXawChainLeft\fP and
+\fBtop\fP and \fBbottom\fP to \fBXawChainTop\fP.  This will cause the
+child to remain a fixed distance from the top and left edges of the
+Form, and never to resize.
+.NH 3
+Convenience Routines
+.LP
+To force or defer a re-layout of the Form, use
+.PN XawFormDoLayout .
+.IN "Form widget" "re-layout"
+.IN "XawFormDoLayout" "" "@DEF@"
+.FD 0
+void XawFormDoLayout(\fIw\fP, \fIdo_layout\fP)
+.br
+     Widget \fIw\fP;
+.br
+     Boolean \fIdo_layout\fP;
+.FN
+.IP \fIw\fP 1i
+Specifies the Form widget.
+.IP \fIdo_layout\fP 1i
+Specifies whether the layout of the Form widget is enabled (\fBTrue\fP)
+or disabled (\fBFalse\fP).
+.LP
+When making several changes to the children of a Form widget
+after the Form has been realized, it is a good idea to disable
+relayout until after all changes have been made.
+

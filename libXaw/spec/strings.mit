@@ -1,0 +1,10 @@
+.\" $Xorg: strings.mit,v 1.3 2000/08/17 19:42:29 cpqbld Exp $
+.ds tk X Toolkit
+.ds xT X Toolkit Intrinsics \(em C Language Interface
+.ds xI Intrinsics
+.ds xW Athena Widget Set \(em C Language Interface
+.ds xL Xlib \(em C Language X Interface
+.ds xC Inter-Client Communication Conventions Manual
+.ds Rn 4
+.ds Vn 2.2
+.hw XtMake-Geometry-Request XtQuery-Geometry wid-get sub-class sub-classes

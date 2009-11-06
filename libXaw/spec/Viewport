@@ -1,0 +1,156 @@
+.\" $Xorg: Viewport,v 1.3 2000/08/17 19:42:29 cpqbld Exp $
+.NH 2
+Viewport Widget
+.LP
+.XS
+	Viewport Widget
+.XE
+.IN "Viewport widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/Viewport.h>
+.IN "Viewport.h" ""
+Class Header file	<X11/Xaw/ViewportP.h>
+.IN "ViewportP.h" ""
+Class		viewportWidgetClass
+.IN "viewportWidgetClass" ""
+Class Name	Viewport
+.IN "Viewport widget" "class name"
+Superclass	Form
+.sp
+.De
+.LP
+The Viewport widget consists of a frame window, one or two Scrollbars,
+and an inner window.  The size of the frame window is determined by the
+viewing size of the data that is to be displayed and the dimensions to
+which the Viewport is created.  The inner window is the full size of the
+data that is to be displayed and is clipped by the frame window.  The
+Viewport widget controls the scrolling of the data directly.  No
+application callbacks are required for scrolling.
+.LP
+When the geometry of the frame window is equal in size to the inner
+window, or when the data does not require scrolling, the Viewport widget
+automatically removes any scrollbars.  The \fBforceBars\fP option causes
+the Viewport widget to display all scrollbars permanently.
+.NH 3
+Resources
+.LP
+When creating a Viewport widget instance, the following resources are
+retrieved from the argument list or the resource database:
+.LP
+.IN "Viewport widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+allowHoriz	Boolean	Boolean		False
+allowVert	Boolean	Boolean		False
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+children	ReadOnly	WidgetList	R	NULL
+colormap	Colormap	Colormap		Parent's Colormap
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+forceBars	Boolean	Boolean		False
+height	Height	Dimension		height of the child
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+numChildren	ReadOnly	Cardinal	R	0
+reportCallback	ReportCallback	XtCallbackList		NULL
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+translations	Translations	TranslationTable		NULL
+useBottom	Boolean	Boolean		False
+useRight	Boolean	Boolean		False
+width	Width	Dimension		width of the child
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.IP \fBallowHoriz\fP 1.5i
+.br
+.ns
+.IP \fBallowVert\fP 1.5i
+If these resources are \fBFalse\fP then the Viewport will never create
+a scrollbar in this direction.  If it is \fBTrue\fP then the scrollbar will
+only appear when it is needed, unless \fBforceBars\fP is \fBTrue\fP.
+.As
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.Ch
+.Cm
+.Dp
+.Dc
+.IP \fBforceBars\fP 1.5i
+When \fBTrue\fP the scrollbars that have been \fIallowed\fP will always be
+visible on the screen.  If \fBFalse\fP the scrollbars will be visible only
+when the inner window is larger than the frame.
+.Hw
+.Mm
+.Nc
+.IP \fBreportCallback\fP 1.5i
+These callbacks will be executed whenever the Viewport adjusts the viewed
+area of the child.  The call_data parameter is a pointer to an XawPannerReport
+structure.
+.Sc
+.Se
+.Tr
+.IP \fBuseBottom\fP 1.5i
+.br
+.ns
+.IP \fBuseRight\fP 1.5i
+By default the scrollbars appear on the left and top of the screen.
+These resources allow the vertical scrollbar to be placed on the right
+edge of the Viewport, and the horizontal scrollbar on the bottom edge of
+the Viewport.
+.Xy
+.NH 3
+Layout Semantics
+.LP
+.IN "Viewport widget" "layout semantics"
+The Viewport widget manages a single child widget.  When the size of the
+child is larger than the size of the Viewport, the user can interactively
+move the child within the Viewport by repositioning the scrollbars.
+.LP
+The default size of the Viewport before it is realized is the width and/or
+height of the child.  After it is realized, the Viewport will allow its
+child to grow vertically or horizontally if \fBallowVert\fP or
+\fBallowHoriz\fP are set, respectively.  If the corresponding vertical
+or horizontal scrollbar is not enabled, the Viewport will propagate the
+geometry request to its own parent and the child will be allowed to change
+size only if the Viewport's parent allows it.  Regardless of whether or not
+scrollbars are enabled in the corresponding direction, if the child requests
+a new size smaller than the Viewport size, the change will be allowed only
+if the parent of the Viewport allows the Viewport to shrink to the
+appropriate dimension.
+.LP
+The scrollbar children of the Viewport are named \fBhorizontal\fP and
+\fBvertical\fP.  By using these names the programmer can specify resources
+for the individual scrollbars.  \fBXtSetValues\fP can be used to modify
+the resources dynamically once the widget ID has been obtained with
+\fBXtNameToWidget\fP.
+.IN "XtNameToWidget" ""
+.NT
+Although the Viewport is a Subclass of the Form, no resources for the Form
+may be supplied for any of the children of the Viewport.  These constraints
+are managed internally and are not meant for public consumption.
+.NE

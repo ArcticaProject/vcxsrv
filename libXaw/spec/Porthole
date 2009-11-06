@@ -1,0 +1,125 @@
+.\" $Xorg: Porthole,v 1.3 2000/08/17 19:42:27 cpqbld Exp $
+.NH 2
+Porthole Widget
+.LP
+.XS
+	Porthole Widget
+.XE
+.IN "Porthole widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/Porthole.h>
+.IN "Porthole.h" ""
+Class Header file	<X11/Xaw/PortholeP.h>
+.IN "PortholeP.h" ""
+Class		portholeWidgetClass
+.IN "portholeWidgetClass" ""
+Class Name	Porthole
+.IN "Porthole widget" "class name"
+Superclass	Composite
+.sp
+.De
+.LP
+The Porthole widget provides geometry management of a list of arbitrary
+widgets, only one of which may be managed at any particular time.
+The managed child widget is reparented within the porthole and is moved around
+by the application (typically under the control of a Panner widget).
+.NH 3
+Resources
+.LP
+When creating a Porthole widget instance, the following resources are
+retrieved from the argument list or from the resource database:
+.LP
+.IN "Porthole widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+children	ReadOnly	WidgetList	R	NULL
+colormap	Colormap	Colormap		Parent's Colormap
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+height	Height	Dimension	A	see \fBLayout Semantics\fP
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+numChildren	ReadOnly	Cardinal	R	0
+reportCallback	ReportCallback	Callback		NULL
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+translations	Translations	TranslationTable		NULL
+width	Width	Dimension	A	see \fBLayout Semantics\fP
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.Ch
+.Cm
+.Dp
+.Dc
+.Hw
+.Mm
+.Nc
+.IP \fBreportCallback\fP 1.5i
+A list of functions to invoke whenever the managed child widget changes
+size or position.
+.Sc
+.Se
+.Tr
+.Xy
+.NH 3
+Layout Semantics
+.IN "Porthole widget" "layout semantics"
+.LP
+The Porthole widget allows its managed child to request any size
+that is as large
+or larger than the Porthole itself and any location so long as the child
+still obscures all of the Porthole.  This widget typically is used with a
+Panner widget.
+.NH 3
+Porthole Callbacks
+.IN "Porthole widget" "callbacks"
+.LP
+The functions registered on the \fBreportCallback\fP list are invoked whenever
+the managed child changes size or position:
+.IN "ReportProc" "" "@DEF@"
+.FD 0
+void ReportProc(\fIporthole\fP, \fIclient_data\fP, \fIreport\fP)
+.br
+	Widget \fIporthole\fP;
+.br
+	XtPointer \fIclient_data\fP;
+.br
+	XtPointer \fIreport\fP;    /* (XawPannerReport *) */
+.FN
+.IP \fIporthole\fP 1i
+Specifies the Porthole widget.
+.IP \fIclient_data\fP 1i
+Specifies the client data.
+.IP \fIreport\fP 1i
+Specifies a pointer to an \fBXawPannerReport\fP structure containing
+the location and size of the slider and the size of the canvas.
+

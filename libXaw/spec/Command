@@ -1,0 +1,205 @@
+.\" $Xorg: Command,v 1.3 2000/08/17 19:42:26 cpqbld Exp $
+.NH 2
+Command Widget
+.XS
+	Command Widget
+.XE
+.IN "Command widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application header file	<X11/Xaw/Command.h>
+.IN "Command.h" ""
+Class header file	<X11/Xaw/CommandP.h>
+.IN "CommandP.h" ""
+Class	commandWidgetClass
+.IN "commandWidgetClass" ""
+Class Name	Command
+.IN "Command widget" "class name"
+Superclass	Label
+.sp
+.De
+.LP
+The Command widget is an area, often rectangular, that contains text
+or a graphical image. Command widgets are often referred to as
+``push buttons.''  When the pointer is over a Command widget, the
+widget becomes highlighted by drawing a rectangle around its perimeter.
+This highlighting indicates that the widget is ready for selection.
+When mouse button 1 is pressed, the Command widget indicates that
+it has been selected by reversing its foreground and background colors.
+When the mouse button is released, the Command widget's \fBnotify\fP
+action is invoked, calling all functions on its callback list.  If
+the pointer is moved off of the widget before the pointer button is
+released, the widget reverts to its normal foreground and background
+colors, and releasing the pointer button has no effect.  This behavior
+allows the user to cancel an action.
+.NH 3
+Resources
+.LP
+When creating a Command widget instance, the following resources are
+retrieved from the argument list or from the resource database:
+.LP
+.IN "Command widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+bitmap	Bitmap	Pixmap		None
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+callback	Callback	XtCallbackList		NULL
+colormap	Colormap	Colormap		Parent's Colormap
+cornerRoundPercent	CornerRoundPercent	Dimension		25
+cursor	Cursor	Cursor		None
+cursorName	Cursor	String		NULL
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+encoding	Encoding	UnsignedChar		XawTextEncoding8bit
+font	Font	XFontStruct		XtDefaultFont
+foreground	Foreground	Pixel		XtDefaultForeground
+height	Height	Dimension	A	graphic height + 2 * \fBinternalHeight\fP
+highlightThickness	Thickness	Dimension	A	2 (0 if Shaped)
+insensitiveBorder	Insensitive	Pixmap		GreyPixmap
+internalHeight	Height	Dimension		2
+internalWidth	Width	Dimension		4
+international	International	Boolean	C	False
+justify	Justify	Justify		XtJustifyCenter (center)
+label	Label	String		name of widget
+leftBitmap	LeftBitmap	Bitmap		None
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+pointerColor	Foreground	Pixel		XtDefaultForeground
+pointerColorBackground	Background	Pixel		XtDefaultBackground
+resize	Resize	Boolean		True
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+shapeStyle	ShapeStyle	ShapeStyle		Rectangle
+translations	Translations	TranslationTable		See below
+width	Width	Dimension	A	graphic width + 2 * \fBinternalWidth\fP
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+\" Resource Descriptions
+.Ac
+.As
+.Bg
+.Gp
+.Bm
+.Bc
+.Bp
+.Bw
+.Cb Bold
+.Cm
+.Cr Bold
+.Cu
+.Cn
+.Dp
+.Dc
+.Le
+.Lf
+.Ls
+.Lg
+.Hw
+.Ht Bold
+.Ib
+.Ih
+.In
+.Ju
+.La
+.Ll
+.Mm
+.Pf
+.Pb
+.Re
+.Sc
+.Se
+.Ss Bold
+.Tr
+.Xy
+.NH 3
+Command Actions
+.IN "Command widget" "actions"
+.LP
+The Command widget supports the following actions:
+.IP \(bu 5
+Switching the button's interior between the foreground and background
+colors with \fBset\fP, \fBunset\fP, and \fBreset\fP.
+.IP \(bu 5
+Processing application callbacks with \fBnotify\fP
+.IP \(bu 5
+Switching the internal border between highlighted
+and unhighlighted states with \fBhighlight\fP and \fBunhighlight\fP
+.LP
+.IN "Command widget" "translation bindings"
+The following are the default translation bindings used by the
+Command widget:
+.LP
+.Ds 0
+.TA .5i 2.25i
+.ta .5i 2.25i
+	<EnterWindow>:	highlight(\|)
+	<LeaveWindow>:	reset(\|)
+	<Btn1Down>:	set(\|)
+	<Btn1Up>:	notify(\|) unset(\|)
+.De
+.LP
+The full list of actions supported by Command is:
+.IP \fBhighlight\fP(\fIcondition\fP) 1.5i
+Displays the internal highlight border in the color (\fBforeground\fP
+or \fBbackground\fP ) that contrasts with the interior color of the
+Command widget.  The conditions \fBWhenUnset\fP and \fBAlways\fP are
+understood by this action procedure.  If no argument is passed,
+\fBWhenUnset\fP is assumed.
+.IP \fBunhighlight\fP(\|) 1.5i
+Displays the internal highlight border in the color (\fBforeground\fP
+or \fBbackground\fP ) that matches the interior color of the
+Command widget.
+.IP \fBset\fP(\|) 1.5i
+Enters the \fIset\fP state, in which \fBnotify\fP is possible.  This
+action causes the button to display its interior in the
+\fBforeground\fP color.  The label or bitmap is displayed in the
+\fBbackground\fP color.
+.IP \fBunset\fP(\|) 1.5i
+Cancels the \fIset\fP state and displays the interior of the button in the
+\fBbackground\fP color.  The label or bitmap is displayed in the
+\fBforeground\fP color.
+.IP \fBreset\fP(\|) 1.5i
+Cancels any \fIset\fP or \fIhighlight\fP and displays the interior of the
+button in the \fBbackground\fP color, with the label or bitmap displayed
+in the \fBforeground\fP color.
+.IP \fBnotify\fP(\|) 1.5i
+When the button is in the \fBset\fP state this action calls all functions in
+the callback list named by the \fBcallback\fP resource.  The value of
+the \fIcall_data\fP argument passed to these functions is undefined.
+.LP
+A very common alternative to registering callbacks is to augment a
+Command's translations with an action performing the desired
+function.  This often takes the form of:
+.LP
+.Ds 0
+.TA .5i 2.25i
+.ta .5i 2.25i
+*Myapp*save.translations: #augment <Btn1Down>,<Btn1Up>: Save()
+.De
+.LP
+.NT
+When a bitmap of depth greater that one (1) is specified the
+\fIset\fP(), \fIunset\fP(), and \fIreset\fP() actions have no effect,
+since there are no foreground and background colors used in a
+multi-plane pixmap.
+.NE

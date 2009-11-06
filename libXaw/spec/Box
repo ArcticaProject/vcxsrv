@@ -1,0 +1,139 @@
+.\" $Xorg: Box,v 1.3 2000/08/17 19:42:26 cpqbld Exp $
+.NH 2
+Box Widget
+.LP
+.XS
+	Box Widget
+.XE
+.IN "Box widget" "" "@DEF@"
+.Ds 0
+.TA 2.0i
+.ta 2.0i
+.sp
+Application Header file	<X11/Xaw/Box.h>
+.IN "Box.h" ""
+Class Header file	<X11/Xaw/BoxP.h>
+.IN "BoxP.h" ""
+Class		boxWidgetClass
+.IN "boxWidgetClass" ""
+Class Name	Box
+.IN "Box widget" "class name"
+Superclass	Composite
+.sp
+.De
+.LP
+The Box widget provides geometry management of arbitrary widgets in a
+box of a specified dimension.  The children are rearranged when
+resizing events occur either on the Box or its children, or when
+children are managed or unmanaged.  The Box widget always attempts to
+pack its children as tightly as possible within the geometry allowed by
+its parent.
+.LP
+Box widgets are commonly used to manage a related set of buttons and
+are often called ButtonBox widgets, but the children are not
+limited to buttons.  The Box's children are arranged on a background that
+has its own specified dimensions and color.
+.NH 3
+Resources
+.LP
+When creating a Box widget instance, the following resources are
+retrieved from the argument list or from the resource database:
+.LP
+.IN "Box widget" "resources"
+.TS H
+expand;
+lw(1i) lw(1i) lw(1i) lw(.5i) lw(2i).
+_
+.sp 3p
+.TB
+Name	Class	Type	Notes	Default Value
+.sp 3p
+_
+.TH
+.R
+.sp 3p
+accelerators	Accelerators	AcceleratorTable		NULL
+ancestorSensitive	AncestorSensitive	Boolean	D	True
+background	Background	Pixel		XtDefaultBackground
+backgroundPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderColor	BorderColor	Pixel		XtDefaultForeground
+borderPixmap	Pixmap	Pixmap		XtUnspecifiedPixmap
+borderWidth	BorderWidth	Dimension		1
+children	ReadOnly	WidgetList	R	NULL
+colormap	Colormap	Colormap		Parent's Colormap
+depth	Depth	int	C	Parent's Depth
+destroyCallback	Callback	XtCallbackList		NULL
+height	Height	Dimension	A	see \fBLayout Semantics\fP
+hSpace	HSpace	Dimension		4
+mappedWhenManaged	MappedWhenManaged	Boolean		True
+numChildren	ReadOnly	Cardinal	R	0
+orientation	Orientation	Orientation		XtorientVertical
+screen	Screen	Screen	R	Parent's Screen
+sensitive	Sensitive	Boolean		True
+vSpace	VSpace	Dimension		4
+translations	Translations	TranslationTable		NULL
+width	Width	Dimension	A	see \fBLayout Semantics\fP
+x	Position	Position		0
+y	Position	Position		0
+.sp 3p
+_
+.TE
+.Ac
+.As
+.Bg
+.Gp
+.Bc
+.Bp
+.Bw
+.Ch
+.Cm
+.Dp
+.Dc
+.Hw
+.IP \fBhSpace\fP 1.5i
+.br
+.ns
+.IP \fBvSpace\fP 1.5i
+The amount of space, in pixels, to leave between the children.  This
+resource specifies the amount of space left between the outermost
+children and the edge of the box.
+.Mm
+.Nc
+.IP \fBorientation\fP 1.5i
+Specifies whether the preferred shape of the box (i.e. the result
+returned by the query_geometry class method) is tall and narrow
+\fBXtorientVertical\fP or short and wide \fPXtorientHorizontal\fP.
+.IN "XtorientVertical" ""
+.IN "XtorientHorizontal" ""
+.IN "conversions" "Orientation"
+When the Box is a child of a parent which enforces width constraints, it
+is usually better to specify \fBXtorientVertical\fP (the default).
+When the parent enforces height constraints, it is usually better to
+specify \fBXtorientHorizontal\fP.
+.Rs "horizontal \fPand\fB vertical"
+.Sc
+.Se
+.Tr
+.Xy
+.NH 3
+Layout Semantics
+.IN "Box widget" "layout semantics"
+.LP
+Each time a child is managed or unmanaged, the Box widget will attempt
+to reposition the remaining children to compact the box.  Children are
+positioned in order left to right, top to bottom.  The packing
+algorithm used depends on the \fBorientation\fP of the Box.
+.IP \fBXtorientVertical\fP 1.5i
+.IN "XtorientVertical" "" @DEF@
+When the next child does not fit on the current row, a new row is
+started.  If a child is wider than the width of the box, the box will
+request a larger width from its parent and will begin the layout
+process from the beginning if a new width is granted.
+.IP \fBXtorientHorizontal\fP 1.5i
+.IN "XtorientHorizontal" "" @DEF@
+When the next child does not fit on the current row, the Box widens if
+possible (so as to keep children on a single row); otherwise a new row is
+started.
+.LP
+After positioning all children, the Box widget attempts to shrink its
+own size to the minimum dimensions required for the layout.
