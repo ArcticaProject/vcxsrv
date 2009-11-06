@@ -58,16 +58,22 @@ OBJS = dix\$(OBJDIR)\main.obj
 
 ifeq ($(DEBUG),1)
 TTYAPP=vcxsrv_dbg
+APP:=$(TTYAPP)
 
 LINKLIBS += $(MHMAKECONF)\openssl\out32_d\libeay32.lib \
             $(MHMAKECONF)\freetype\lib\freetype200b8MT_D.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2d.lib
+
+$(OBJDIR)\$(TTYAPP).exe: $(LINKLIBS)
+
 else
-TTYAPP=vcxsrv
+WINAPP=vcxsrv
+APP:=$(WINAPP)
 
 LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib \
             $(MHMAKECONF)\freetype\lib\freetype200b8MT.lib \
             $(MHMAKECONF)\pthreads\pthreadVC2.lib
+
 endif
 
 RCINCLUDES += hw\xwin $(MHMAKECONF)\include $(MHMAKECONF)
@@ -77,7 +83,7 @@ XWin.rc: hw\xwin\XWin.rc
 
 RESOURCES = XWin.rc
 
-$(OBJDIR)\$(TTYAPP).exe: $(LINKLIBS)
+$(OBJDIR)\$(APP).exe: $(LINKLIBS)
 
 XKeysymDB: ..\libX11\src\XKeysymDB
 	copy $< $@
@@ -85,7 +91,7 @@ XKeysymDB: ..\libX11\src\XKeysymDB
 XErrorDB: ..\libX11\src\XErrorDB
 	copy $< $@
 
-$(TTYAPP).exe: $(OBJDIR)\$(TTYAPP).exe
+%.exe: $(OBJDIR)\%.exe
 	copy $< $@
 
 load_makefile hw\xwin\xlaunch\makefile MAKESERVER=0 DEBUG=0
@@ -107,7 +113,7 @@ load_makefile ..\libX11\nls\makefile MAKESERVER=0 DEBUG=0
 load_makefile fonts.src\makefile MAKESERVER=0 DEBUG=0
 load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
-all: $(TTYAPP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
+all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
      ..\libX11\nls\all fonts.src\all xkbdata.src\all plink.exe \
      opengl32.dll swrast_dri.dll
 

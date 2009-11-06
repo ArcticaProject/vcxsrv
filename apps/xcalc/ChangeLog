@@ -1,0 +1,238 @@
+commit 19fad31ddef4c1063ee2315dfee94e4ebb5f0ff0
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 21 11:23:52 2007 -0700
+
+    Version bump: 1.0.2
+
+commit c4ada4a7ee46f8ab0dfeb2cd311758d9197a59a8
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 21 11:19:09 2007 -0700
+
+    Fill in COPYING with copyright/license notices from source files
+
+commit 5ee182a964d0ba16315935ec9bfd91779ed4a2a1
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 21 11:15:50 2007 -0700
+
+    Replace static changelog with dist-hook to generate from git log
+
+commit 3c9230230e88f6421ea3549f813eabceb4120734
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 21 11:03:07 2007 -0700
+
+    renamed: .cvsignore -> .gitignore
+
+commit b2c489924708b202f33f6528d3269911662f906c
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Aug 21 11:02:19 2007 -0700
+
+    Change xcalc_CFLAGS to AM_CFLAGS to make automake-1.10 happier
+
+commit b586f35824d7c3bc061ba96e82b48744041dac59
+Author: Mike Markowski <mm@udel.edu>
+Date:   Wed Jul 12 11:28:40 2006 -0700
+
+    Bug #4914: Add HP mode resources to XCalc-color app-defaults
+    
+    X.Org bug #4914 <https://bugs.freedesktop.org/show_bug.cgi?id=4914>
+    Patch #3658 <https://bugs.freedesktop.org/attachment.cgi?id=3658>
+
+commit 322a3bd493b99164925e852df5ffa8e1a650f496
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Dec 21 02:29:48 2005 +0000
+
+    Update package version for X11R7 release.
+
+commit 8b7933c8192364e55b863b3e88ad64dbd6004bcc
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Mon Dec 19 16:22:42 2005 +0000
+
+    Stub COPYING files
+
+commit 543045f1c5effcafe60ee86ab02663ea5253d7b1
+Author: Kevin E Martin <kem@kem.org>
+Date:   Thu Dec 15 00:24:05 2005 +0000
+
+    Update package version number for final X11R7 release candidate.
+
+commit ffb4bc9e1bbff3648d9a60d29c8efe8292b2e6d2
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Dec 7 16:17:58 2005 +0000
+
+    Change to use the app-defaults default dir configured in libXt.
+
+commit f8c6b6ee02de9f4991e4894386fd1f914e71f295
+Author: Kevin E Martin <kem@kem.org>
+Date:   Tue Dec 6 22:48:19 2005 +0000
+
+    Change *man_SOURCES ==> *man_PRE to fix autotools warnings.
+
+commit db75d5541e32a82c1a200f5db94258c55144aee9
+Author: Kevin E Martin <kem@kem.org>
+Date:   Sat Dec 3 05:49:18 2005 +0000
+
+    Update package version number for X11R7 RC3 release.
+
+commit 217c43175b253fb436dfe2c17c258440efbf1b4d
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Nov 28 22:01:39 2005 +0000
+
+    Change *mandir targets to use new *_MAN_DIR variables set by xorg-macros.m4
+        update to fix bug #5167 (Linux prefers *.1x man pages in man1 subdir)
+
+commit 35347991b10472019e814b4346f9f55f33fa6850
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Mon Nov 21 10:34:58 2005 +0000
+
+    Another pass at .cvsignores for apps.
+
+commit ec23a703b3dd3ca07bcb67599d2aa20186b812db
+Author: Eric Anholt <anholt@freebsd.org>
+Date:   Sun Nov 20 22:08:50 2005 +0000
+
+    Add/improve .cvsignore files for apps.
+
+commit 4b974526a94abe02297f7ecf427cb78681c9bfb3
+Author: Kevin E Martin <kem@kem.org>
+Date:   Wed Oct 19 02:47:52 2005 +0000
+
+    Update package version number for RC1 release.
+
+commit b0d618388ae24bb2bbcfbb43b313306b3b8d342f
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Oct 18 00:32:54 2005 +0000
+
+    Change default install dir for app-default files from
+        $(sysconfdir)/X11/app-defaults to $(libdir)/X11/app-defaults to match
+        the monolith & allow localization
+
+commit 933a86b8c6d64e974b314c5e3617fa2cbb213cce
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Oct 17 23:56:21 2005 +0000
+
+    Use @APP_MAN_SUFFIX@ instead of $(APP_MAN_SUFFIX) in macro substitutions to
+        work better with BSD make
+
+commit 203bc6e49653660050a874508da2c57e089c3c54
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Fri Oct 14 00:25:43 2005 +0000
+
+    Use sed to fill in variables in man page
+
+commit e70773cb5c4269627e0d8750f7852ed865fd8eaf
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Thu Oct 13 20:11:00 2005 +0000
+
+    Fix app-default files to install under the same names as in the monolith
+        instead of their short names used only for 14-character filename length
+        limited ancient filesystems
+
+commit 9648bcddee6779eed395d60f17a13bcf13fa9042
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Mon Aug 1 20:25:29 2005 +0000
+
+    Install man pages to section 1 instead of section m (Patch from Donnie
+        Berkholz)
+
+commit cdd93a4e3c1dac5f23ad21c5fac4fbc054e0a42d
+Author: Kevin E Martin <kem@kem.org>
+Date:   Fri Jul 29 21:22:31 2005 +0000
+
+    Various changes preparing packages for RC0:
+    - Verify and update package version numbers as needed
+    - Implement versioning scheme
+    - Change bug address to point to bugzilla bug entry form
+    - Disable loadable i18n in libX11 by default (use --enable-loadable-i18n to
+        reenable it)
+    - Fix makedepend to use pkgconfig and pass distcheck
+    - Update build script to build macros first
+    - Update modular Xorg version
+
+commit 2347df01911fc8061071cb80018963b79514e4b4
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Tue Jul 26 15:44:01 2005 +0000
+
+    Replace more GNU make-ism's with more portable macros
+
+commit b7161f370dbabeb536e9dc078f05e1ffd67847fb
+Author: Adam Jackson <ajax@nwnk.net>
+Date:   Wed Jul 20 19:31:51 2005 +0000
+
+    Use a unique token for PKG_CHECK_MODULES. Otherwise, if you use a global
+        configure cache, you cache it, and the cached value is probably wrong.
+
+commit 526ab098fe73f9dde13b651ae8c70fbec56594c2
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Sun Jul 17 20:11:02 2005 +0000
+
+    fix rules to work with non-GNU make and outside of $srcdir
+
+commit 392f5dd1907a5110c89b308ef51122b39b23dde5
+Author: Søren Sandmann Pedersen <sandmann@daimi.au.dk>
+Date:   Wed Jun 29 23:12:07 2005 +0000
+
+    Build system for Xcalc
+
+commit a72c79567a4f550dfafb532b03be79339c5a4a30
+Author: Alexander Gottwald <alexander.gottwald@s1999.tu-chemnitz.de>
+Date:   Tue Jul 6 09:24:58 2004 +0000
+
+    Bugzilla #665: bugs in xcalc -rpn mode decimal_point is a const char* not
+        char. the patch uses strcmp instead of plain char == char operator and
+        allows decimal_point to be of any length. localeconv() is only called
+        if X_LOCALE is _not_ defined
+
+commit bbcc481006d4b5f4e8d1276db2220cf96a355985
+Author: Alan Coopersmith <Alan.Coopersmith@sun.com>
+Date:   Sun May 23 20:03:49 2004 +0000
+
+    xc/programs/xcalc/math.c
+    xcalc -rpn mode errors (Geoffery Coram)
+
+commit ed6ab3f1b45a5101a4cddfca754291b4523520a1
+Author: Egbert Eich <eich@suse.de>
+Date:   Fri Apr 23 19:54:38 2004 +0000
+
+    Merging XORG-CURRENT into trunk
+
+commit bb536859850357b05511068fab838dd3a1436ef6
+Author: Egbert Eich <eich@suse.de>
+Date:   Sun Mar 14 08:35:00 2004 +0000
+
+    Importing vendor version xf86-4_4_99_1 on Sun Mar 14 00:26:39 PST 2004
+
+commit fecd81156f60db136eaf9cf79a34b7d076bbae06
+Author: Egbert Eich <eich@suse.de>
+Date:   Wed Mar 3 12:12:55 2004 +0000
+
+    Importing vendor version xf86-4_4_0 on Wed Mar 3 04:09:24 PST 2004
+
+commit 3acc8a33b8eec4fe9164e12507cafb3c161d3cbe
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 13:36:16 2004 +0000
+
+    readding XFree86's cvs IDs
+
+commit 70f4b224345cc7c43d1960858c27a11541ea55c4
+Author: Egbert Eich <eich@suse.de>
+Date:   Thu Feb 26 09:23:58 2004 +0000
+
+    Importing vendor version xf86-4_3_99_903 on Wed Feb 26 01:21:00 PST 2004
+
+commit c61023614eb9182293f5c26c22a3babf65f1dee1
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Tue Nov 25 19:29:03 2003 +0000
+
+    XFree86 4.3.99.16 Bring the tree up to date for the Cygwin folks
+
+commit c538606166a71ab7b711de7394cc61add265a209
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:58 2003 +0000
+
+    XFree86 4.3.0.1
+
+commit 411b0e9e319550a394b0a5945543f39a5affc6a6
+Author: Kaleb Keithley <kaleb@freedesktop.org>
+Date:   Fri Nov 14 16:48:58 2003 +0000
+
+    Initial revision
