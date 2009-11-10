@@ -106,6 +106,7 @@ int __CDECL main(int argc, char* argv[])
     {
       (*LoadMakIt)->m_pParser->BuildIncludedMakefiles();
       (*LoadMakIt)->m_pParser->ParseBuildedIncludeFiles();
+      (*LoadMakIt)->m_pParser->CheckEnv();
       LoadMakIt++;
     }
 

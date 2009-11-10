@@ -616,15 +616,6 @@ void loadedmakefile::LoadMakefile()
   }
   curdir::ChangeCurDir(CurDir);
 
-  if (m_pParser->CompareEnv())
-  {
-    #ifdef _DEBUG
-    if (!g_GenProjectTree)
-      cout << "Rebuilding everything of "<< m_Makefile->GetQuotedFullFileName() <<" because environment and/or command-line variables have been changed.\n";
-    #endif
-    m_pParser->SetRebuildAll();
-  }
-
 }
 
 #ifdef _DEBUG

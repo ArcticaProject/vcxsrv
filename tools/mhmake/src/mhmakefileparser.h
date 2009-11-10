@@ -129,6 +129,7 @@ public:
 
   void SaveEnv();
   void RestoreEnv() const;
+  void CheckEnv(void);
 
   void SetRebuildAll()
   {

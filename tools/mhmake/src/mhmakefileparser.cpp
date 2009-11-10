@@ -936,6 +936,26 @@ void mhmakefileparser::RestoreEnv() const
   m_spCurEnv=NULL;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//Checks if the variables retreived from the environment or command-line have been
+//changed. Do this at late as possible because they can also be changed in theLexer
+//makefiles.
+//
+void mhmakefileparser::CheckEnv(void)
+{
+  if (CompareEnv())
+  {
+    #ifdef _DEBUG
+    if (!g_GenProjectTree)
+      cout << "Rebuilding everything of "<< m_MakeDir->GetQuotedFullFileName() <<" because environment and/or command-line variables have been changed.\n";
+    #endif
+    SetRebuildAll();
+  }
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 //Create a Md5 string from m_GlobalCommandLineVars and USED_ENVVARS
@@ -961,13 +981,13 @@ uint32 mhmakefileparser::CreateEnvMd5_32() const
   string Md5;
   string EnvVars=ExpandVar(USED_ENVVARS);
   const char *pTmp=EnvVars.c_str();
-  map<string,string> Variables;
 
   RestoreEnv();  // Restore the environment before creating the md5, so that we have the original environment when the makefile was parsed.
 
-  /* First create a list of variables to put in the md5 string. This is needed because a variable could be in the
-   * environment and passed on the command-line. This is especially important when switching environments were a certain
-   * variable sometimes is passed with the environment and sometimes on the command line */
+  // Now create the md5 string
+  md5_starts( &ctx );
+
+  DBGOUT(cout << "MD5 of " << m_MakeDir->GetQuotedFullFileName() << endl);
 
   while (*pTmp)
   {
@@ -975,48 +995,13 @@ uint32 mhmakefileparser::CreateEnvMd5_32() const
     pTmp=NextItem(pTmp,Var,";");
     if (!SkipVar(Var))
     {
-      string Val=GetFromEnv(Var,false);
-      transform(Var.begin(),Var.end(),Var.begin(),(int(__CDECL *)(int))toupper);
+      string Val=ExpandVar(Var);
       transform(Val.begin(),Val.end(),Val.begin(),(int(__CDECL *)(int))toupper);
       DBGOUT(cout << GetMakeDir()->GetQuotedFullFileName() << " -> Setting GetFromEnv var " << Var << " to " << Val << endl);
-      Variables[Var]=Val;
-    }
-  }
-  map<string,string>::const_iterator ItEnd=loadedmakefile::sm_Statics.m_GlobalCommandLineVars.end();
-  map<string,string>::const_iterator It=loadedmakefile::sm_Statics.m_GlobalCommandLineVars.begin();
-  while (It!=ItEnd)
-  {
-    if (!SkipVar(It->first))
-    {
-      string Var=It->first;
-      transform(Var.begin(),Var.end(),Var.begin(),(int(__CDECL *)(int))toupper);
-      string Val=It->second;
-      transform(Val.begin(),Val.end(),Val.begin(),(int(__CDECL *)(int))toupper);
-      DBGOUT(cout << GetMakeDir()->GetQuotedFullFileName() << " -> Setting Commandline var " << Var << " to " << Val << endl);
-      Variables[Var]=Val;
-    }
-    It++;
-  }
-
-  // Now create the md5 string
-  md5_starts( &ctx );
-
-  DBGOUT(cout << "MD5 of " << m_MakeDir->GetQuotedFullFileName() << endl);
-
-  map<string,string>::const_iterator VarIt=Variables.begin();
-  map<string,string>::const_iterator VarItEnd=Variables.end();
-  while (VarIt!=VarItEnd)
-  {
-    md5_update( &ctx, (uint8 *) VarIt->first.c_str(), (unsigned long)VarIt->first.size());
-
-    if (!VarIt->second.empty())
-    {
+      md5_update( &ctx, (uint8 *) Var.c_str(), (unsigned long)Var.size());
       md5_update( &ctx, (uint8 *) "=", 1);
-      md5_update( &ctx, (uint8 *) VarIt->second.c_str(), (unsigned long)VarIt->second.size());
-      DBGOUT(cout << VarIt->first << "=" << VarIt->second << endl);
+      md5_update( &ctx, (uint8 *) Val.c_str(), (unsigned long)Val.size());
     }
-    DBGOUT(else cout << VarIt->first << endl;)
-    VarIt++;
   }
 
   return md5_finish32( &ctx);
@@ -1082,8 +1067,38 @@ string mhmakefileparser::GetFromEnv(const string &Var, bool Cache) const
 
 void mhmakefileparser::CreateUSED_ENVVARS()
 {
+
+  set<string> Variables;
+
   set<string>::const_iterator It=m_UsedEnvVars.begin();
   set<string>::const_iterator ItEnd=m_UsedEnvVars.end();
+
+  while (It!=ItEnd)
+  {
+    string Var=*It;
+    if (!SkipVar(Var))
+    {
+      transform(Var.begin(),Var.end(),Var.begin(),(int(__CDECL *)(int))toupper);
+      Variables.insert(Var);
+    }
+    It++;
+  }
+
+  map<string,string>::const_iterator CLItEnd=loadedmakefile::sm_Statics.m_GlobalCommandLineVars.end();
+  map<string,string>::const_iterator CLIt=loadedmakefile::sm_Statics.m_GlobalCommandLineVars.begin();
+  while (CLIt!=CLItEnd)
+  {
+    string Var=CLIt->first;
+    if (!SkipVar(Var))
+    {
+      transform(Var.begin(),Var.end(),Var.begin(),(int(__CDECL *)(int))toupper);
+      Variables.insert(Var);
+    }
+    CLIt++;
+  }
+
+  It=Variables.begin();
+  ItEnd=Variables.end();
   string Val;
   while (It!=ItEnd)
   {
@@ -1091,6 +1106,7 @@ void mhmakefileparser::CreateUSED_ENVVARS()
     Val+=";";
     It++;
   }
+
   m_Variables[USED_ENVVARS]=Val;
 }
 
