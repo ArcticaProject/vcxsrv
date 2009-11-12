@@ -95,29 +95,29 @@ XErrorDB: ..\libX11\src\XErrorDB
 	copy $< $@
 
 load_makefile hw\xwin\xlaunch\makefile MAKESERVER=0 DEBUG=0
-
 xlaunch.exe: hw\xwin\xlaunch\obj\release\xlaunch.exe
 	copy $< $@
 
 load_makefile ..\xkbcomp\makefile MAKESERVER=0 DEBUG=0
-
 xkbcomp.exe: ..\xkbcomp\obj\release\xkbcomp.exe
 	copy $< $@
 
 %: ..\apps\xcalc\%.ad
 	copy $< $@
 
+load_makefile ..\apps\xcalc\makefile MAKESERVER=0 DEBUG=0
 xcalc.exe: ..\apps\xcalc\obj\release\xcalc.exe XCalc XCalc-color
 	copy $< $@
 
+load_makefile ..\apps\xclock\makefile MAKESERVER=0 DEBUG=0
 xclock.exe: ..\apps\xclock\obj\release\xclock.exe
 	copy $< $@
 
+load_makefile ..\apps\xwininfo\makefile MAKESERVER=0 DEBUG=0
 xwininfo.exe: ..\apps\xwininfo\obj\release\xwininfo.exe
 	copy $< $@
 
 load_makefile ..\tools\plink\makefile MAKESERVER=0 DEBUG=0
-
 plink.exe: ..\tools\plink\obj\release\plink.exe
 	copy $< $@
 
