@@ -998,7 +998,7 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
   {
     string tmpCommand=Command.substr(ComSpec.size(),Command.size());
     FullCommandLine=ComSpec;
-    FullCommandLine+=QuoteFileName(tmpCommand)+Params;
+    FullCommandLine+=g_QuoteString+QuoteFileName(tmpCommand)+Params+g_QuoteString;
   }
   else
   {
