@@ -89,6 +89,20 @@ Section "VcXsrv (required)"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
+  
+  ; Register the xlaunch file extension
+  WriteRegStr HKCR ".xlaunch" "" "XLaunchFile"
+  WriteRegStr HKCR "XLaunchFile" "" "XLaunch Configuration"
+  WriteRegStr HKCR "XLaunchFile\DefaultIcon" "" "$INSTDIR\xlaunch.exe,0"
+  WriteRegStr HKCR "XLaunchFile\shell\open\command" "" '"$INSTDIR\XLaunch.exe" -run "%1"'
+  WriteRegStr HKCR "XLaunchFile\shell\open\ddeexec\Application" "" "XLaunch"
+  WriteRegStr HKCR "XLaunchFile\shell\open\ddeexec\Topic" "" "System"
+  WriteRegStr HKCR "XLaunchFile\shell\edit\command" "" '"$INSTDIR\XLaunch.exe" -load "%1"'
+  WriteRegStr HKCR "XLaunchFile\shell\edit\ddeexec\Application" "" "XLaunch"
+  WriteRegStr HKCR "XLaunchFile\shell\edit\ddeexec\Topic" "" "System"
+  WriteRegStr HKCR "XLaunchFile\shell\Validate\command" "" '"$INSTDIR\XLaunch.exe" -validate "%1"'
+  WriteRegStr HKCR "XLaunchFile\shell\Validate\ddeexec\Application" "" "XLaunch"
+  WriteRegStr HKCR "XLaunchFile\shell\Validate\ddeexec\Topic" "" "System"
 
   InitPluginsDir
   SetOutPath $PLUGINSDIR
@@ -158,6 +172,10 @@ Section "Uninstall"
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VcXsrv"
   DeleteRegKey HKLM SOFTWARE\VcXsrv
+
+  ; Register the xlaunch file extension
+  DeleteRegKey HKCR ".xlaunch"
+  DeleteRegKey HKCR "XLaunchFile"
 
   ; Remove files and uninstaller
   Delete "$INSTDIR\vcxsrv.exe"
