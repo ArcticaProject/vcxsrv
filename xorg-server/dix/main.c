@@ -159,6 +159,20 @@ int main(int argc, char *argv[], char *envp[])
        XInitThreads has to be called before
        any xlib function is called (aoccording to the man page) */
     XInitThreads();
+    /* change the current directory to the directory where the vcxsrv.exe executable is installed.
+       This is needed because the font directories are relative to the current directory.
+     */
+     {
+       char ModuleFilename[MAX_PATH];
+       char *pSlash;
+       GetModuleFileName(NULL,ModuleFilename,sizeof(ModuleFilename));
+       pSlash=strrchr(ModuleFilename,'\\');
+       if (pSlash)
+       {
+         *pSlash='\0';
+         chdir(ModuleFilename);
+       }
+     }
     #endif
 
     InitRegions();
