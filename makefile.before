@@ -1,6 +1,9 @@
 ifndef DEBUG
 DEBUG=0
 endif
+ifndef MAKESERVER
+MAKESERVER=0
+endif
 
 default: all
 .PHONY : default
