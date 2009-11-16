@@ -41,8 +41,6 @@ extern YYSTYPE yylval;
 extern char *yytext;
 extern int yyparse(void);
 
-extern void ErrorF (const char* /*f*/, ...);
-
 int yylineno;
 
 /* Copy the parsed string, must be free()d in yacc parser */
@@ -88,7 +86,7 @@ ATSTART                 { return ATSTART; }
 ATEND                   { return ATEND; }
 EXEC                    { return EXEC; }
 ALWAYSONTOP             { return ALWAYSONTOP; }
-DEBUG                   { return DEBUG; }
+DEBUG                   { return DEBUGTOK; }
 RELOAD                  { return RELOAD; }
 TRAYICON                { return TRAYICON; }
 SILENTEXIT		{ return SILENTEXIT; }

@@ -39,6 +39,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "winprefs.h"
+#include "winmsg.h"
 
 /* The following give better error messages in bison at the cost of a few KB */
 #define YYERROR_VERBOSE 1
@@ -80,9 +81,11 @@ static void CloseSysMenu(void);
 
 static int yyerror (char *s);
 
-extern void ErrorF (const char* /*f*/, ...);
 extern char *yytext;
 extern int yylex(void);
+
+#define YYMALLOC malloc
+#define YYFREE   free
 
 %}
 
@@ -94,7 +97,7 @@ extern int yylex(void);
 
 %token NEWLINE MENU LB RB ICONDIRECTORY DEFAULTICON ICONS STYLES
 %token TOPMOST MAXIMIZE MINIMIZE BOTTOM NOTITLE OUTLINE NOFRAME DEFAULTSYSMENU
-%token SYSMENU ROOTMENU SEPARATOR ATSTART ATEND EXEC ALWAYSONTOP DEBUG
+%token SYSMENU ROOTMENU SEPARATOR ATSTART ATEND EXEC ALWAYSONTOP DEBUGTOK
 %token RELOAD TRAYICON SILENTEXIT
 
 %token <sVal> STRING
@@ -215,7 +218,7 @@ sysmenu:	SYSMENU LB NEWLINE {OpenSysMenu();} newline_or_nada sysmenulist RB {Clo
 silentexit:	SILENTEXIT NEWLINE { pref.fSilentExit = TRUE; }
 	;
 
-debug: 	DEBUG STRING NEWLINE { ErrorF("LoadPreferences: %s\n", $2); free($2); }
+debug: 	DEBUGTOK STRING NEWLINE { winDebug("LoadPreferences: %s\n", $2); free($2); }
 	;
 
 
@@ -326,7 +329,7 @@ static void
 OpenIcons (void)
 {
   if (pref.icon != NULL) {
-    ErrorF("LoadPreferences: Redefining icon mappings\n");
+    winDebug("LoadPreferences: Redefining icon mappings\n");
     free(pref.icon);
     pref.icon = NULL;
   }
@@ -362,7 +365,7 @@ static void
 OpenStyles (void)
 {
   if (pref.style != NULL) {
-    ErrorF("LoadPreferences: Redefining window style\n");
+    winDebug("LoadPreferences: Redefining window style\n");
     free(pref.style);
     pref.style = NULL;
   }
@@ -395,7 +398,7 @@ static void
 OpenSysMenu (void)
 {
   if (pref.sysMenu != NULL) {
-    ErrorF("LoadPreferences: Redefining system menu\n");
+    winDebug("LoadPreferences: Redefining system menu\n");
     free(pref.sysMenu);
     pref.sysMenu = NULL;
   }

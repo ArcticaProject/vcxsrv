@@ -105,3 +105,8 @@ DEFINES += HAVE_XWIN_CONFIG_H BUILD_DATE=0-0-0000 PTW32_STATIC_LIB
 
 #CSRCS=winkeybd.c
 
+winprefslex.c: winprefslex.l winprefsyacc.h
+	flex -i -o$@ $<
+
+winprefsyacc.c winprefsyacc.h: winprefsyacc.y
+	bison -d -owinprefsyacc.c $<
