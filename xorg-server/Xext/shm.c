@@ -141,7 +141,6 @@ int BadShmSegCode;
 RESTYPE ShmSegType;
 static ShmDescPtr Shmsegs;
 static Bool sharedPixmaps;
-static DrawablePtr *drawables;
 static int shmScrPrivateKeyIndex;
 static DevPrivateKey shmScrPrivateKey = &shmScrPrivateKeyIndex;
 static int shmPixmapPrivateIndex;
@@ -258,13 +257,6 @@ ShmExtensionInit(INITARGS)
 	return;
     }
 #endif
-
-    drawables = xcalloc(screenInfo.numScreens, sizeof(DrawablePtr));
-    if (!drawables)
-    {
-	ErrorF("MIT-SHM extension disabled: no memory for per-screen drawables\n");
-	return;
-    }
 
     sharedPixmaps = xFalse;
     {
@@ -618,6 +610,7 @@ static int
 ProcPanoramiXShmGetImage(ClientPtr client)
 {
     PanoramiXRes	*draw;
+    DrawablePtr 	*drawables;
     DrawablePtr 	pDraw;
     xShmGetImageReply	xgi;
     ShmDescPtr		shmdesc;
@@ -678,12 +671,19 @@ ProcPanoramiXShmGetImage(ClientPtr client)
 	    return(BadMatch);
     }
 
+    drawables = xcalloc(PanoramiXNumScreens, sizeof(DrawablePtr));
+    if(!drawables)
+	return(BadAlloc);
+
     drawables[0] = pDraw;
     for(i = 1; i < PanoramiXNumScreens; i++) {
 	rc = dixLookupDrawable(drawables+i, draw->info[i].id, client, 0, 
 			       DixReadAccess);
 	if (rc != Success)
+	{
+	    xfree(drawables);
 	    return rc;
+	}
     }
 
     xgi.visual = wVisual(((WindowPtr)pDraw));
@@ -722,6 +722,7 @@ ProcPanoramiXShmGetImage(ClientPtr client)
 	    }
 	}
     }
+    xfree(drawables);
     
     if (client->swapped) {
 	int n;

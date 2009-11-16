@@ -344,24 +344,30 @@ extern _X_EXPORT RESTYPE RRCrtcType, RRModeType, RROutputType;
     {\
 	int rc = dixLookupResourceByType((pointer *)&(ptr), id,\
 	                                 RROutputType, client, a);\
-	if (rc != Success)\
+	if (rc != Success) {\
+	    client->errorValue = id;\
 	    return (rc == BadValue) ? RRErrorBase + BadRROutput : rc;\
+	}\
     }
 
 #define VERIFY_RR_CRTC(id, ptr, a)\
     {\
 	int rc = dixLookupResourceByType((pointer *)&(ptr), id,\
 	                                 RRCrtcType, client, a);\
-	if (rc != Success)\
+	if (rc != Success) {\
+	    client->errorValue = id;\
 	    return (rc == BadValue) ? RRErrorBase + BadRRCrtc : rc;\
+	}\
     }
 
 #define VERIFY_RR_MODE(id, ptr, a)\
     {\
 	int rc = dixLookupResourceByType((pointer *)&(ptr), id,\
 	                                 RRModeType, client, a);\
-	if (rc != Success)\
+	if (rc != Success) {\
+	    client->errorValue = id;\
 	    return (rc == BadValue) ? RRErrorBase + BadRRMode : rc;\
+	}\
     }
 
 #define GetRRClient(pClient)    ((RRClientPtr)dixLookupPrivate(&(pClient)->devPrivates, RRClientPrivateKey))

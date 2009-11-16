@@ -38,7 +38,6 @@
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
 #include "xf86OSpriv.h"
-#include "lnx.h"
 #ifdef __alpha__
 #include "shared/xf86Axp.h"
 #endif

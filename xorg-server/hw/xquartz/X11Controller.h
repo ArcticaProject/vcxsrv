@@ -55,7 +55,11 @@ typedef unsigned int NSUInteger;
 #endif
 #endif
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
+@interface X11Controller : NSObject <NSTableViewDataSource>
+#else
 @interface X11Controller : NSObject
+#endif
 {
     IBOutlet NSPanel *prefs_panel;
 
@@ -120,6 +124,7 @@ typedef unsigned int NSUInteger;
 #endif
 - (void) set_can_quit:(OSX_BOOL)state;
 - (void) server_ready;
+- (OSX_BOOL) application:(NSApplication *)app openFile:(NSString *)filename;
 
 - (IBAction) apps_table_show:(id)sender;
 - (IBAction) apps_table_done:(id)sender;

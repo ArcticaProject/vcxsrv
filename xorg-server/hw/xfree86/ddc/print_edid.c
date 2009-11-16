@@ -334,129 +334,147 @@ print_detailed_timings(int scrnIndex, struct detailed_timings *t)
     }
 }
 
+/* This function handle all detailed patchs,
+ * including EDID and EDID-extension
+ */
+struct det_print_parameter{
+  xf86MonPtr m;
+  int index;
+  ddc_quirk_t quirks;
+};
+
 static void
-print_detailed_monitor_section(int scrnIndex,
-			       struct detailed_monitor_section *m)
+handle_detailed_print(struct detailed_monitor_section *det_mon,
+                      void *data)
 {
-    int i,j;
-  
-    for (i=0;i<DET_TIMINGS;i++) {
-	switch (m[i].type) {
-	case DT:
-	    print_detailed_timings(scrnIndex,&m[i].section.d_timings);
-	    break;
-	case DS_SERIAL:
-	    xf86DrvMsg(scrnIndex,X_INFO,"Serial No: %s\n",m[i].section.serial);
-	    break;
-	case DS_ASCII_STR:
-	    xf86DrvMsg(scrnIndex,X_INFO," %s\n",m[i].section.ascii_data);
-	    break;
-	case DS_NAME:
-	    xf86DrvMsg(scrnIndex,X_INFO,"Monitor name: %s\n",m[i].section.name);
-	    break;
-	case DS_RANGES:
-	{
-	    struct monitor_ranges *r = &m[i].section.ranges;
-	    xf86DrvMsg(scrnIndex,X_INFO,
-		       "Ranges: V min: %i V max: %i Hz, H min: %i H max: %i kHz,",
-		       r->min_v, r->max_v, r->min_h, r->max_h);
-	    if (r->max_clock_khz != 0) {
-		xf86ErrorF(" PixClock max %i kHz\n", r->max_clock_khz);
-		if (r->maxwidth)
-		    xf86DrvMsg(scrnIndex, X_INFO, "Maximum pixel width: %d\n",
-			       r->maxwidth);
-		xf86DrvMsg(scrnIndex, X_INFO, "Supported aspect ratios:");
-		if (r->supported_aspect & SUPPORTED_ASPECT_4_3)
-		    xf86ErrorF(" 4:3%s",
-			r->preferred_aspect == PREFERRED_ASPECT_4_3?"*":"");
-		if (r->supported_aspect & SUPPORTED_ASPECT_16_9)
-		    xf86ErrorF(" 16:9%s",
-			r->preferred_aspect == PREFERRED_ASPECT_16_9?"*":"");
-		if (r->supported_aspect & SUPPORTED_ASPECT_16_10)
-		    xf86ErrorF(" 16:10%s",
-			r->preferred_aspect == PREFERRED_ASPECT_16_10?"*":"");
-		if (r->supported_aspect & SUPPORTED_ASPECT_5_4)
-		    xf86ErrorF(" 5:4%s",
-			r->preferred_aspect == PREFERRED_ASPECT_5_4?"*":"");
-		if (r->supported_aspect & SUPPORTED_ASPECT_15_9)
-		    xf86ErrorF(" 15:9%s",
-			r->preferred_aspect == PREFERRED_ASPECT_15_9?"*":"");
-		xf86ErrorF("\n");
-		xf86DrvMsg(scrnIndex, X_INFO, "Supported blankings:");
-		if (r->supported_blanking & CVT_STANDARD)
-		    xf86ErrorF(" standard");
-		if (r->supported_blanking & CVT_REDUCED)
-		    xf86ErrorF(" reduced");
-		xf86ErrorF("\n");
-		xf86DrvMsg(scrnIndex, X_INFO, "Supported scalings:");
-		if (r->supported_scaling & SCALING_HSHRINK)
-		    xf86ErrorF(" hshrink");
-		if (r->supported_scaling & SCALING_HSTRETCH)
-		    xf86ErrorF(" hstretch");
-		if (r->supported_scaling & SCALING_VSHRINK)
-		    xf86ErrorF(" vshrink");
-		if (r->supported_scaling & SCALING_VSTRETCH)
-		    xf86ErrorF(" vstretch");
-		xf86ErrorF("\n");
-		if (r->preferred_refresh)
-		    xf86DrvMsg(scrnIndex, X_INFO, "Preferred refresh rate: %d\n",
-			       r->preferred_refresh);
-		else
-		    xf86DrvMsg(scrnIndex, X_INFO, "Buggy monitor, no preferred "
-			       "refresh rate given\n");
-	    } else if (r->max_clock != 0) {
-		xf86ErrorF(" PixClock max %i MHz\n", r->max_clock);
-	    } else {
-		xf86ErrorF("\n");
-	    }
-	    if (r->gtf_2nd_f > 0)
-		xf86DrvMsg(scrnIndex,X_INFO," 2nd GTF parameters: f: %i kHz "
-			   "c: %i m: %i k %i j %i\n", r->gtf_2nd_f,
-			   r->gtf_2nd_c, r->gtf_2nd_m, r->gtf_2nd_k,
-			   r->gtf_2nd_j);
-	    break;
-	}
-	case DS_STD_TIMINGS:
-	    for (j = 0; j<5; j++) 
-		xf86DrvMsg(scrnIndex,X_INFO,"#%i: hsize: %i  vsize %i  refresh: %i  "
-			   "vid: %i\n",i,m[i].section.std_t[i].hsize,
-			   m[i].section.std_t[j].vsize,m[i].section.std_t[j].refresh,
-			   m[i].section.std_t[j].id);
-	    break;
-	case DS_WHITE_P:
-	    for (j = 0; j<2; j++)
-		if (m[i].section.wp[j].index != 0)
-		    xf86DrvMsg(scrnIndex,X_INFO,
-			       "White point %i: whiteX: %f, whiteY: %f; gamma: %f\n",
-			       m[i].section.wp[j].index,m[i].section.wp[j].white_x,
-			       m[i].section.wp[j].white_y,
-			       m[i].section.wp[j].white_gamma);
-	    break;
-	case DS_CMD:
-	    xf86DrvMsg(scrnIndex, X_INFO,
-		       "Color management data: (not decoded)\n");
-	    break;
-	case DS_CVT:
-	    xf86DrvMsg(scrnIndex, X_INFO,
-		       "CVT 3-byte-code modes:\n");
-	    print_cvt_timings(scrnIndex, m[i].section.cvt);
-	    break;
-	case DS_EST_III:
-	    xf86DrvMsg(scrnIndex, X_INFO,
-		       "Established timings III: (not decoded)\n");
-	    break;
-	case DS_DUMMY:
-	default:
-	    break;
-	}
-	if (m[i].type >= DS_VENDOR && m[i].type <= DS_VENDOR_MAX) {
-	    xf86DrvMsg(scrnIndex, X_INFO,
-		       "Unknown vendor-specific block %hx\n",
-		       m[i].type - DS_VENDOR);
-	}
+    int j, scrnIndex;
+    struct det_print_parameter *p;
+
+    p = (struct det_print_parameter *)data;
+    scrnIndex = p->m->scrnIndex;
+    xf86DetTimingApplyQuirks(det_mon,p->quirks,
+                             p->m->features.hsize,
+                             p->m->features.vsize);
+
+    switch (det_mon->type) {
+    case DT:
+        print_detailed_timings(scrnIndex,&det_mon->section.d_timings);
+        break;
+    case DS_SERIAL:
+        xf86DrvMsg(scrnIndex,X_INFO,"Serial No: %s\n",det_mon->section.serial);
+        break;
+    case DS_ASCII_STR:
+        xf86DrvMsg(scrnIndex,X_INFO," %s\n",det_mon->section.ascii_data);
+        break;
+    case DS_NAME:
+        xf86DrvMsg(scrnIndex,X_INFO,"Monitor name: %s\n",det_mon->section.name);
+        break;
+    case DS_RANGES:
+    {
+        struct monitor_ranges *r = &det_mon->section.ranges;
+        xf86DrvMsg(scrnIndex,X_INFO,
+                   "Ranges: V min: %i V max: %i Hz, H min: %i H max: %i kHz,",
+                   r->min_v, r->max_v, r->min_h, r->max_h);
+        if (r->max_clock_khz != 0) {
+            xf86ErrorF(" PixClock max %i kHz\n", r->max_clock_khz);
+        if (r->maxwidth)
+            xf86DrvMsg(scrnIndex, X_INFO, "Maximum pixel width: %d\n",
+                       r->maxwidth);
+	xf86DrvMsg(scrnIndex, X_INFO, "Supported aspect ratios:");
+	if (r->supported_aspect & SUPPORTED_ASPECT_4_3)
+	    xf86ErrorF(" 4:3%s",
+                       r->preferred_aspect == PREFERRED_ASPECT_4_3?"*":"");
+	if (r->supported_aspect & SUPPORTED_ASPECT_16_9)
+	    xf86ErrorF(" 16:9%s",
+                       r->preferred_aspect == PREFERRED_ASPECT_16_9?"*":"");
+        if (r->supported_aspect & SUPPORTED_ASPECT_16_10)
+            xf86ErrorF(" 16:10%s",
+                       r->preferred_aspect == PREFERRED_ASPECT_16_10?"*":"");
+	if (r->supported_aspect & SUPPORTED_ASPECT_5_4)
+	    xf86ErrorF(" 5:4%s",
+                       r->preferred_aspect == PREFERRED_ASPECT_5_4?"*":"");
+	if (r->supported_aspect & SUPPORTED_ASPECT_15_9)
+	    xf86ErrorF(" 15:9%s",
+                       r->preferred_aspect == PREFERRED_ASPECT_15_9?"*":"");
+        xf86ErrorF("\n");
+	xf86DrvMsg(scrnIndex, X_INFO, "Supported blankings:");
+	if (r->supported_blanking & CVT_STANDARD)
+	    xf86ErrorF(" standard");
+	if (r->supported_blanking & CVT_REDUCED)
+	    xf86ErrorF(" reduced");
+	xf86ErrorF("\n");
+	xf86DrvMsg(scrnIndex, X_INFO, "Supported scalings:");
+	if (r->supported_scaling & SCALING_HSHRINK)
+	    xf86ErrorF(" hshrink");
+	if (r->supported_scaling & SCALING_HSTRETCH)
+	    xf86ErrorF(" hstretch");
+	if (r->supported_scaling & SCALING_VSHRINK)
+	    xf86ErrorF(" vshrink");
+	if (r->supported_scaling & SCALING_VSTRETCH)
+	    xf86ErrorF(" vstretch");
+        xf86ErrorF("\n");
+	if (r->preferred_refresh)
+	    xf86DrvMsg(scrnIndex, X_INFO, "Preferred refresh rate: %d\n",
+		    r->preferred_refresh);
+	else
+	    xf86DrvMsg(scrnIndex, X_INFO, "Buggy monitor, no preferred "
+		       "refresh rate given\n");
+        } else if (r->max_clock != 0) {
+	    xf86ErrorF(" PixClock max %i MHz\n", r->max_clock);
+        } else {
+	    xf86ErrorF("\n");
+        }
+        if (r->gtf_2nd_f > 0)
+            xf86DrvMsg(scrnIndex,X_INFO," 2nd GTF parameters: f: %i kHz "
+                       "c: %i m: %i k %i j %i\n", r->gtf_2nd_f,
+                       r->gtf_2nd_c, r->gtf_2nd_m, r->gtf_2nd_k,
+                       r->gtf_2nd_j);
+        break;
     }
+    case DS_STD_TIMINGS:
+        for (j = 0; j<5; j++)
+	    xf86DrvMsg(scrnIndex,X_INFO,
+		    "#%i: hsize: %i  vsize %i  refresh: %i  "
+		    "vid: %i\n",p->index ,det_mon->section.std_t[j].hsize,
+		    det_mon->section.std_t[j].vsize,
+		    det_mon->section.std_t[j].refresh,
+		    det_mon->section.std_t[j].id);
+        break;
+    case DS_WHITE_P:
+        for (j = 0; j<2; j++)
+        if (det_mon->section.wp[j].index != 0)
+            xf86DrvMsg(scrnIndex,X_INFO,
+                       "White point %i: whiteX: %f, whiteY: %f; gamma: %f\n",
+                       det_mon->section.wp[j].index,det_mon->section.wp[j].white_x,
+                       det_mon->section.wp[j].white_y,
+                       det_mon->section.wp[j].white_gamma);
+        break;
+    case DS_CMD:
+        xf86DrvMsg(scrnIndex, X_INFO,
+                   "Color management data: (not decoded)\n");
+        break;
+    case DS_CVT:
+        xf86DrvMsg(scrnIndex, X_INFO,
+                   "CVT 3-byte-code modes:\n");
+        print_cvt_timings(scrnIndex, det_mon->section.cvt);
+        break;
+    case DS_EST_III:
+        xf86DrvMsg(scrnIndex, X_INFO,
+                   "Established timings III: (not decoded)\n");
+        break;
+    case DS_DUMMY:
+    default:
+        break;
+    }
+    if (det_mon->type >= DS_VENDOR && det_mon->type <= DS_VENDOR_MAX) {
+        xf86DrvMsg(scrnIndex, X_INFO,
+                   "Unknown vendor-specific block %hx\n",
+                   det_mon->type - DS_VENDOR);
+    }
+
+    p->index = p->index + 1;
 }
-  
+
 static void
 print_number_sections(int scrnIndex, int num)
 {
@@ -470,6 +488,7 @@ xf86PrintEDID(xf86MonPtr m)
 {
     CARD16 i, j, n;
     char buf[EDID_WIDTH * 2 + 1];
+    struct det_print_parameter p;
 
     if (!m) return NULL;
 
@@ -478,7 +497,12 @@ xf86PrintEDID(xf86MonPtr m)
     print_display(m->scrnIndex, &m->features, &m->ver);
     print_established_timings(m->scrnIndex, &m->timings1);
     print_std_timings(m->scrnIndex, m->timings2);
-    print_detailed_monitor_section(m->scrnIndex, m->det_mon);
+    p.m = m;
+    p.index = 0;
+    p.quirks = xf86DDCDetectQuirks(m->scrnIndex, m, FALSE);
+    xf86ForEachDetailedBlock(m,
+                             handle_detailed_print ,
+                             &p);
     print_number_sections(m->scrnIndex, m->no_sections);
 
     /* extension block section stuff */
@@ -495,6 +519,6 @@ xf86PrintEDID(xf86MonPtr m)
 	}
 	xf86DrvMsg(m->scrnIndex, X_INFO, "\t%s\n", buf);
     }
-    
+
     return m;
 }

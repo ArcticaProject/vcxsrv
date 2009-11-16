@@ -16,7 +16,6 @@ extern PMClose lnxACPIOpen(void);
 
 #ifdef HAVE_APM
 
-#include "lnx.h"
 #include <linux/apm_bios.h>
 #include <unistd.h>
 #include <sys/ioctl.h>

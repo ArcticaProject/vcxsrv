@@ -766,10 +766,9 @@ winAllocateCmapPrivates (ColormapPtr pCmap);
  */
 
 #if defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
-# if defined(XCSECURITY)  
 Bool
 winGenerateAuthorization (void);
-# endif
+void winSetAuthorization(void);
 #endif
 
 

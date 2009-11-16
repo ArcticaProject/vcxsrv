@@ -71,6 +71,7 @@ void X11ApplicationSetFrontProcess (void);
 void X11ApplicationSetCanQuit (int state);
 void X11ApplicationServerReady (void);
 void X11ApplicationShowHideMenubar (int state);
+void X11ApplicationLaunchClient (const char *cmd);
 
 void X11ApplicationMain(int argc, char **argv, char **envp);
 

@@ -249,6 +249,15 @@ xf86ShowClockRanges(ScrnInfoPtr scrp, ClockRangePtr clockRanges)
     }
 }
 
+static Bool
+modeInClockRange(ClockRangePtr cp, DisplayModePtr p)
+{
+    return ((p->Clock >= cp->minClock) &&
+	    (p->Clock <= cp->maxClock) &&
+	    (cp->interlaceAllowed || !(p->Flags & V_INTERLACE)) &&
+	    (cp->doubleScanAllowed ||
+	     ((p->VScan <= 1) && !(p->Flags & V_DBLSCAN))));
+}
 
 /*
  * xf86FindClockRangeForMode()    [... like the name says ...]
@@ -259,12 +268,7 @@ xf86FindClockRangeForMode(ClockRangePtr clockRanges, DisplayModePtr p)
     ClockRangePtr cp;
 
     for (cp = clockRanges; ; cp = cp->next)
-	if (!cp ||
-	    ((p->Clock >= cp->minClock) &&
-	     (p->Clock <= cp->maxClock) &&
-	     (cp->interlaceAllowed || !(p->Flags & V_INTERLACE)) &&
-	     (cp->doubleScanAllowed ||
-	      ((p->VScan <= 1) && !(p->Flags & V_DBLSCAN)))))
+	if (!cp || modeInClockRange(cp, p))
 	    return cp;
 }
 
@@ -979,11 +983,7 @@ xf86CheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode, int flags)
     if (scrp->progClock) {
 	/* Check clock is in range */
 	for (cp = scrp->clockRanges; cp != NULL; cp = cp->next) {
-	    if ((cp->minClock <= mode->Clock) &&
-		(cp->maxClock >= mode->Clock) &&
-		(cp->interlaceAllowed || !(mode->Flags & V_INTERLACE)) &&
-		(cp->doubleScanAllowed ||
-		 ((!(mode->Flags & V_DBLSCAN)) && (mode->VScan <= 1))))
+	    if (modeInClockRange(cp, mode))
 	        break;
 	}
 	if (cp == NULL) {
@@ -999,12 +999,7 @@ xf86CheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode, int flags)
 	 status = MODE_CLOCK_RANGE;
 	/* Check clock is in range */
 	for (cp = scrp->clockRanges; cp != NULL; cp = cp->next) {
-	    if ((cp->minClock <= mode->Clock) &&
-		(cp->maxClock >= mode->Clock) &&
-		(cp->interlaceAllowed || !(mode->Flags & V_INTERLACE)) &&
-		(cp->doubleScanAllowed ||
-		 ((!(mode->Flags & V_DBLSCAN)) && (mode->VScan <= 1)))) {
-
+	    if (modeInClockRange(cp, mode)) {
 		/*
 	 	 * Clock is in range, so if it is not a programmable clock,
 		 * find a matching clock.

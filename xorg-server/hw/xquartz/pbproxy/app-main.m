@@ -37,7 +37,11 @@
 static const char *app_prefs_domain = "org.x.X11";
 CFStringRef app_prefs_domain_cfstr;
 
+/* Stubs */
 char *display = NULL;
+BOOL serverInitComplete = YES;
+pthread_mutex_t serverInitCompleteMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t serverInitCompleteCond = PTHREAD_COND_INITIALIZER;
 
 static void signal_handler (int sig) {
     switch(sig) {

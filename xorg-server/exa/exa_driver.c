@@ -204,11 +204,13 @@ exaPixmapIsOffscreen_driver(PixmapPtr pPixmap)
 {
     ScreenPtr pScreen = pPixmap->drawable.pScreen;
     ExaScreenPriv(pScreen);
+    pointer saved_ptr;
     Bool ret;
 
+    saved_ptr = pPixmap->devPrivate.ptr;
     pPixmap->devPrivate.ptr = ExaGetPixmapAddress(pPixmap);
     ret = pExaScr->info->PixmapIsOffscreen(pPixmap);
-    pPixmap->devPrivate.ptr = NULL;
+    pPixmap->devPrivate.ptr = saved_ptr;
 
     return ret;
 }

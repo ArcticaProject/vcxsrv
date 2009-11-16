@@ -811,7 +811,8 @@ DefineSelf (int fd)
 		continue;
 #endif
 	    if ((ifr->ifa_flags & IFF_BROADCAST) &&
-		(ifr->ifa_flags & IFF_UP))
+		(ifr->ifa_flags & IFF_UP) &&
+                ifr->ifa_broadaddr)
 		broad_addr = *ifr->ifa_broadaddr;
 	    else
 		continue;

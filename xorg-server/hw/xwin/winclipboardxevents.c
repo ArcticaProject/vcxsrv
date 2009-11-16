@@ -105,20 +105,17 @@ winClipboardFlushXEvents (HWND hwnd,
 	   */
 
 	case SelectionRequest:
-#if 0
 	  {
 	    char			*pszAtomName = NULL;
-	    
-	    ErrorF ("SelectionRequest - target %d\n",
-		    event.xselectionrequest.target);
-	    
+	    winDebug("SelectionRequest - target %d\n",
+                     event.xselectionrequest.target);
+
 	    pszAtomName = XGetAtomName (pDisplay,
 					event.xselectionrequest.target);
-	    ErrorF ("SelectionRequest - Target atom name %s\n", pszAtomName);
+	    winDebug("SelectionRequest - Target atom name %s\n", pszAtomName);
 	    XFree (pszAtomName);
 	    pszAtomName = NULL;
 	  }
-#endif
 
 	  /* Abort if invalid target type */
 	  if (event.xselectionrequest.target != XA_STRING
@@ -466,21 +463,17 @@ winClipboardFlushXEvents (HWND hwnd,
 	   */ 
 
 	case SelectionNotify:
-#if 0
-	  ErrorF ("winClipboardFlushXEvents - SelectionNotify\n");
+
+	  winDebug ("winClipboardFlushXEvents - SelectionNotify\n");
 	  {
 	    char		*pszAtomName;
-	    
 	    pszAtomName = XGetAtomName (pDisplay,
 					event.xselection.selection);
 
-	    ErrorF ("winClipboardFlushXEvents - SelectionNotify - ATOM: %s\n",
-		    pszAtomName);
-	    
+	    winDebug("winClipboardFlushXEvents - SelectionNotify - ATOM: %s\n",
+                     pszAtomName);
 	    XFree (pszAtomName);
 	  }
-#endif
-
 
 	  /*
 	   * Request conversion of UTF8 and CompoundText targets.
@@ -489,32 +482,22 @@ winClipboardFlushXEvents (HWND hwnd,
 	    {
 	      if (event.xselection.target == XA_STRING)
 		{
-#if 0
-		  ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
-			  "XA_STRING\n");
-#endif
+		  winDebug ("winClipboardFlushXEvents - SelectionNotify - "
+                            "XA_STRING\n");
+
 		  return WIN_XEVENTS_CONVERT;
 		}
 	      else if (event.xselection.target == atomUTF8String)
 		{
-#if 0
-		  ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
-			  "Requesting conversion of UTF8 target.\n");
-#endif
-		  iReturn = XConvertSelection (pDisplay,
-					       event.xselection.selection,
-					       XA_STRING,
-					       atomLocalProperty,
-					       iWindow,
-					       CurrentTime);
-		  if (iReturn != Success)
-		    {
-		      ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
-			      "XConvertSelection () failed for UTF8String, "
-			      "aborting: %d\n",
-			      iReturn);
-		      break;
-		    }
+		  winDebug("winClipboardFlushXEvents - SelectionNotify - "
+                           "Requesting conversion of UTF8 target.\n");
+
+		  XConvertSelection (pDisplay,
+				     event.xselection.selection,
+				     XA_STRING,
+				     atomLocalProperty,
+				     iWindow,
+				     CurrentTime);
 
 		  /* Process the ConvertSelection event */
 		  XFlush (pDisplay);
@@ -523,24 +506,15 @@ winClipboardFlushXEvents (HWND hwnd,
 #ifdef X_HAVE_UTF8_STRING
 	      else if (event.xselection.target == atomCompoundText)
 		{
-#if 0
-		  ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
-			  "Requesting conversion of CompoundText target.\n");
-#endif
-		  iReturn = XConvertSelection (pDisplay,
-					       event.xselection.selection,
-					       atomUTF8String,
-					       atomLocalProperty,
-					       iWindow,
-					       CurrentTime);
-		  if (iReturn != Success)
-		    {
-		      ErrorF ("winClipboardFlushXEvents - SelectionNotify - "
-			      "XConvertSelection () failed for CompoundText, "
-			      "aborting: %d\n",
-			      iReturn);
-		      break;
-		    }
+		  winDebug("winClipboardFlushXEvents - SelectionNotify - "
+                           "Requesting conversion of CompoundText target.\n");
+
+		  XConvertSelection (pDisplay,
+				     event.xselection.selection,
+				     atomUTF8String,
+				     atomLocalProperty,
+				     iWindow,
+				     CurrentTime);
 
 		  /* Process the ConvertSelection event */
 		  XFlush (pDisplay);
@@ -577,10 +551,8 @@ winClipboardFlushXEvents (HWND hwnd,
 	      break;
 	    }
 
-#if 0
-	  ErrorF ("SelectionNotify - returned data %d left %d\n",
-		  xtpText.nitems, ulReturnBytesLeft);
-#endif
+	  winDebug("SelectionNotify - returned data %d left %d\n",
+                   xtpText.nitems, ulReturnBytesLeft);
 
 	  /* Request the selection data */
 	  iReturn = XGetWindowProperty (pDisplay,
@@ -603,19 +575,16 @@ winClipboardFlushXEvents (HWND hwnd,
 	      break;
 	    }
 
-#if 0
 	    {
 	      char		*pszAtomName = NULL;
 
-	      ErrorF ("SelectionNotify - returned data %d left %d\n",
-		      xtpText.nitems, ulReturnBytesLeft);
-	      
+	      winDebug("SelectionNotify - returned data %d left %d\n",
+                       xtpText.nitems, ulReturnBytesLeft);
 	      pszAtomName = XGetAtomName(pDisplay, xtpText.encoding);
-	      ErrorF ("Notify atom name %s\n", pszAtomName);
+	      winDebug("Notify atom name %s\n", pszAtomName);
 	      XFree (pszAtomName);
 	      pszAtomName = NULL;
 	    }
-#endif
 
 	  if (fUseUnicode)
 	    {
@@ -816,7 +785,15 @@ winClipboardFlushXEvents (HWND hwnd,
 	    SetClipboardData (CF_TEXT, NULL);
 	  return WIN_XEVENTS_NOTIFY;
 
+        case SelectionClear:
+          winDebug("SelectionClear - doing nothing\n");
+          break;
+
+	case PropertyNotify:
+	  break;
+
 	default:
+          ErrorF ("winClipboardFlushXEvents - unexpected event type %d\n", event.type);
 	  break;
 	}
     }

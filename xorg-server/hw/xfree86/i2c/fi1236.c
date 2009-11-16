@@ -225,7 +225,7 @@ m->f_ifbw=f_ifbw;
 m->f_step=f_step;
 
 m->f_lo1=f_rf+f_if1;
-m->LO1I=(int)floor((m->f_lo1/f_ref)+0.5);
+m->LO1I=lrint(m->f_lo1/f_ref);
 m->f_lo1=f_ref*m->LO1I;
 
 m->f_lo2=m->f_lo1-f_rf-f_if2;
@@ -258,10 +258,10 @@ if(m->f_lo1<1890.0)m->SEL=1;
 	m->SEL=0;
 
 /* calculate the rest of the registers */
-m->LO2I=(int)floor(m->f_lo2/f_ref);
-m->STEP=(int)floor(3780.0*f_step/f_ref);
-m->NUM=(int)floor(3780.0*(m->f_lo2/f_ref-m->LO2I));
-m->NUM=m->STEP*(int)floor((1.0*m->NUM)/(1.0*m->STEP)+0.5);
+m->LO2I=floor(m->f_lo2/f_ref);
+m->STEP=floor(3780.0*f_step/f_ref);
+m->NUM=floor(3780.0*(m->f_lo2/f_ref-m->LO2I));
+m->NUM=m->STEP*lrint((1.0*m->NUM)/(1.0*m->STEP));
 }
 
 static int MT2032_wait_for_lock(FI1236Ptr f)

@@ -45,6 +45,9 @@
 
 #define		WIN_KEYMAP_COLS		3
 
+/* Rows 160 through 165 correspond to software-generated codes, which
+ * may not be associated with the appropriate scan code.
+ */
 const int
 g_iKeyMap [] = {
   /* count	Windows VK,	ASCII,		ASCII when extended VK */
@@ -208,12 +211,12 @@ g_iKeyMap [] = {
   /* 157 */	0,		0,		0,
   /* 158 */	0,		0,		0,
   /* 159 */	0,		0,		0,
-  /* 160 */	0,		0,		0,
-  /* 161 */	0,		0,		0,
-  /* 162 */	0,		0,		0,
-  /* 163 */	0,		0,		0,
-  /* 164 */	0,		0,		0,
-  /* 165 */	0,		0,		0,
+  /* 160 */	VK_LSHIFT,	KEY_ShiftL,	0,
+  /* 161 */	VK_RSHIFT,	KEY_ShiftR,	0,
+  /* 162 */	VK_LCONTROL,	KEY_LCtrl,	0,
+  /* 163 */	VK_RCONTROL,	KEY_RCtrl,	0,
+  /* 164 */	VK_LMENU,	KEY_Alt,	0,
+  /* 165 */	VK_RMENU,	KEY_AltLang,	0,
   /* 166 */	0,		0,		0,
   /* 167 */	0,		0,		0,
   /* 168 */	0,		0,		0,

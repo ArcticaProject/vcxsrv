@@ -1673,7 +1673,7 @@ AllowSome(ClientPtr client,
     thisGrabbed = grabinfo->grab && SameClient(grabinfo->grab, client);
     thisSynced = FALSE;
     otherGrabbed = FALSE;
-    othersFrozen = TRUE;
+    othersFrozen = FALSE;
     grabTime = grabinfo->grabTime;
     for (dev = inputInfo.devices; dev; dev = dev->next)
     {
@@ -1689,11 +1689,9 @@ AllowSome(ClientPtr client,
 	    otherGrabbed = TRUE;
 	    if (grabinfo->sync.other == devgrabinfo->grab)
 		thisSynced = TRUE;
-	    if (devgrabinfo->sync.state < FROZEN)
-		othersFrozen = FALSE;
+	    if (devgrabinfo->sync.state >= FROZEN)
+		othersFrozen = TRUE;
 	}
-	else if (!devgrabinfo->sync.other || !SameClient(devgrabinfo->sync.other, client))
-	    othersFrozen = FALSE;
     }
     if (!((thisGrabbed && grabinfo->sync.state >= FROZEN) || thisSynced))
 	return;

@@ -84,9 +84,7 @@ winClipboardUNIXtoDOS (unsigned char **ppszData, int iLength)
   unsigned char		*pszEnd = pszSrc + iLength;
   unsigned char		*pszDest = NULL, *pszDestBegin = NULL;
 
-#if 0
-  ErrorF ("UNIXtoDOS () - Original data:\n%s\n", *ppszData);
-#endif
+  winDebug("UNIXtoDOS () - Original data:'%s'\n", *ppszData);
 
   /* Count \n characters without leading \r */
   while (pszSrc < pszEnd)
@@ -153,7 +151,5 @@ winClipboardUNIXtoDOS (unsigned char **ppszData, int iLength)
   free (*ppszData);
   *ppszData = pszDestBegin;
 
-#if 0
-  ErrorF ("UNIXtoDOS () - Final string:\n%s\n", pszDestBegin);
-#endif
+  winDebug("UNIXtoDOS () - Final string:'%s'\n", pszDestBegin);
 }

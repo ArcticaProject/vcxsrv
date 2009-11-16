@@ -148,7 +148,8 @@ WMFreeClient (pointer data, XID id)
   WMEventPtr   *pHead, pCur, pPrev;
 
   pEvent = (WMEventPtr) data;
-  pHead = (WMEventPtr *) LookupIDByType(eventResource, eventResourceType);
+  dixLookupResourceByType((pointer) &pHead, eventResource, eventResourceType,
+				NullClient, DixUnknownAccess);
   if (pHead)
     {
       pPrev = 0;
@@ -193,8 +194,7 @@ ProcWindowsWMSelectInput (register ClientPtr client)
   XID			clientResource;
 
   REQUEST_SIZE_MATCH (xWindowsWMSelectInputReq);
-  pHead = (WMEventPtr *)SecurityLookupIDByType(client, eventResource,
-					       eventResourceType, DixWriteAccess);
+  dixLookupResourceByType((pointer) &pHead, eventResource, eventResourceType, client, DixWriteAccess);
   if (stuff->mask != 0)
     {
       if (pHead)
@@ -294,7 +294,8 @@ winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
   ErrorF ("winWindowsWMSendEvent %d %d %d %d,  %d %d - %d %d\n",
 	  type, mask, which, arg, x, y, w, h);
 #endif
-  pHead = (WMEventPtr *) LookupIDByType(eventResource, eventResourceType);
+  dixLookupResourceByType((pointer) &pHead, eventResource, eventResourceType,
+				NullClient, DixUnknownAccess);
   if (!pHead)
     return;
   for (pEvent = *pHead; pEvent; pEvent = pEvent->next)

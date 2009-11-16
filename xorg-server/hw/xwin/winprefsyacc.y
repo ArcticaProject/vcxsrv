@@ -92,10 +92,34 @@ extern int yylex(void);
   int iVal;
 }
 
-%token NEWLINE MENU LB RB ICONDIRECTORY DEFAULTICON ICONS STYLES
-%token TOPMOST MAXIMIZE MINIMIZE BOTTOM NOTITLE OUTLINE NOFRAME DEFAULTSYSMENU
-%token SYSMENU ROOTMENU SEPARATOR ATSTART ATEND EXEC ALWAYSONTOP DEBUG
-%token RELOAD TRAYICON SILENTEXIT
+%token NEWLINE
+%token MENU
+%token LB
+%token RB
+%token ICONDIRECTORY
+%token DEFAULTICON
+%token ICONS
+%token STYLES
+%token TOPMOST
+%token MAXIMIZE
+%token MINIMIZE
+%token BOTTOM
+%token NOTITLE
+%token OUTLINE
+%token NOFRAME
+%token DEFAULTSYSMENU
+%token SYSMENU
+%token ROOTMENU
+%token SEPARATOR
+%token ATSTART
+%token ATEND
+%token EXEC
+%token ALWAYSONTOP
+%token DEBUG
+%token RELOAD
+%token TRAYICON
+%token FORCEEXIT
+%token SILENTEXIT
 
 %token <sVal> STRING
 %type <uVal>  group1
@@ -128,6 +152,7 @@ command:	defaulticon
 	| defaultsysmenu
 	| debug
 	| trayicon
+	| forceexit
 	| silentexit
 	;
 
@@ -210,6 +235,9 @@ sysmenulist:	sysmenuline
 	;
 
 sysmenu:	SYSMENU LB NEWLINE {OpenSysMenu();} newline_or_nada sysmenulist RB {CloseSysMenu();}
+	;
+
+forceexit:	FORCEEXIT NEWLINE { pref.fForceExit = TRUE; }
 	;
 
 silentexit:	SILENTEXIT NEWLINE { pref.fSilentExit = TRUE; }

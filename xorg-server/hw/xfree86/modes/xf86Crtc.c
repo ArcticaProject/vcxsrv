@@ -1377,34 +1377,6 @@ xf86InitialPanning (ScrnInfoPtr scrn)
     }
 }
 
-/*
- * XXX walk the monitor mode list and prune out duplicates that
- * are inserted by xf86DDCMonitorSet. In an ideal world, that
- * function would do this work by itself.
- */
-
-static void
-xf86PruneDuplicateMonitorModes (MonPtr Monitor)
-{
-    DisplayModePtr  master, clone, next;
-
-    for (master = Monitor->Modes; 
-	 master && master != Monitor->Last; 
-	 master = master->next)
-    {
-	for (clone = master->next; clone && clone != Monitor->Modes; clone = next)
-	{
-	    next = clone->next;
-	    if (xf86ModesEqual (master, clone))
-	    {
-		if (Monitor->Last == clone)
-		    Monitor->Last = clone->prev;
-		xf86DeleteMode (&Monitor->Modes, clone);
-	    }
-	}
-    }
-}
-
 /** Return - 0 + if a should be earlier, same or later than b in list
  */
 static int
@@ -1523,6 +1495,42 @@ GuessRangeFromModes(MonPtr mon, DisplayModePtr mode)
        mon->vrefresh[0].lo = 58.0;
 }
 
+struct det_monrec_parameter {
+    MonRec *mon_rec;
+    int *max_clock;
+    Bool set_hsync;
+    Bool set_vrefresh;
+    enum { sync_config, sync_edid, sync_default } *sync_source;
+};
+
+static void handle_detailed_monrec(struct detailed_monitor_section *det_mon,
+                                   void *data)
+{
+    enum { sync_config, sync_edid, sync_default };
+    struct det_monrec_parameter *p;
+    p = (struct det_monrec_parameter *)data;
+
+    if (det_mon->type == DS_RANGES) {
+        struct monitor_ranges *ranges = &det_mon->section.ranges;
+        if (p->set_hsync && ranges->max_h) {
+            p->mon_rec->hsync[p->mon_rec->nHsync].lo = ranges->min_h;
+            p->mon_rec->hsync[p->mon_rec->nHsync].hi = ranges->max_h;
+            p->mon_rec->nHsync++;
+            if (*p->sync_source == sync_default)
+                *p->sync_source = sync_edid;
+        }
+        if (p->set_vrefresh && ranges->max_v) {
+            p->mon_rec->vrefresh[p->mon_rec->nVrefresh].lo = ranges->min_v;
+            p->mon_rec->vrefresh[p->mon_rec->nVrefresh].hi = ranges->max_v;
+            p->mon_rec->nVrefresh++;
+            if (*p->sync_source == sync_default)
+                *p->sync_source = sync_edid;
+        }
+        if (ranges->max_clock * 1000 > *p->max_clock)
+            *p->max_clock = ranges->max_clock * 1000;
+    }
+}
+
 void
 xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 {
@@ -1539,9 +1547,6 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	maxY = config->maxHeight;
     }
 
-    /* Elide duplicate modes before defaulting code uses them */
-    xf86PruneDuplicateMonitorModes (scrn->monitor);
-    
     /* Probe the list of modes for each output. */
     for (o = 0; o < config->num_output; o++) 
     {
@@ -1556,6 +1561,8 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	int		    max_clock = 0;
 	double		    clock;
 	Bool                add_default_modes = TRUE;
+	Bool		    debug_modes = config->debug_modes ||
+					  xf86Initialising;
 	enum { sync_config, sync_edid, sync_default } sync_source = sync_default;
 	
 	while (output->probed_modes != NULL)
@@ -1601,42 +1608,24 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	
 	edid_monitor = output->MonInfo;
 	
-	if (edid_monitor)
-	{
-	    int			    i;
-	    Bool		    set_hsync = mon_rec.nHsync == 0;
-	    Bool		    set_vrefresh = mon_rec.nVrefresh == 0;
-	    struct disp_features    *features = &edid_monitor->features;
+        if (edid_monitor)
+        {
+            struct det_monrec_parameter p;
+            struct disp_features    *features = &edid_monitor->features;
 
 	    /* if display is not continuous-frequency, don't add default modes */
 	    if (!GTF_SUPPORTED(features->msc))
 		add_default_modes = FALSE;
 
-	    for (i = 0; i < sizeof (edid_monitor->det_mon) / sizeof (edid_monitor->det_mon[0]); i++)
-	    {
-		if (edid_monitor->det_mon[i].type == DS_RANGES)
-		{
-		    struct monitor_ranges   *ranges = &edid_monitor->det_mon[i].section.ranges;
-		    if (set_hsync && ranges->max_h)
-		    {
-			mon_rec.hsync[mon_rec.nHsync].lo = ranges->min_h;
-			mon_rec.hsync[mon_rec.nHsync].hi = ranges->max_h;
-			mon_rec.nHsync++;
-			if (sync_source == sync_default)
-			    sync_source = sync_edid;
-		    }
-		    if (set_vrefresh && ranges->max_v)
-		    {
-			mon_rec.vrefresh[mon_rec.nVrefresh].lo = ranges->min_v;
-			mon_rec.vrefresh[mon_rec.nVrefresh].hi = ranges->max_v;
-			mon_rec.nVrefresh++;
-			if (sync_source == sync_default)
-			    sync_source = sync_edid;
-		    }
-		    if (ranges->max_clock * 1000 > max_clock)
-			max_clock = ranges->max_clock * 1000;
-		}
-	    }
+	    p.mon_rec = &mon_rec;
+	    p.max_clock = &max_clock;
+	    p.set_hsync = mon_rec.nHsync == 0;
+	    p.set_vrefresh = mon_rec.nVrefresh == 0;
+	    p.sync_source = &sync_source;
+
+	    xf86ForEachDetailedBlock(edid_monitor,
+			             handle_detailed_monrec,
+			             &p);
 	}
 
 	if (xf86GetOptValFreq (output->options, OPTION_MIN_CLOCK,
@@ -1725,8 +1714,7 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	    if (mode->status == MODE_OK)
 		mode->status = (*output->funcs->mode_valid)(output, mode);
 	
-	xf86PruneInvalidModes(scrn, &output->probed_modes,
-			      config->debug_modes);
+	xf86PruneInvalidModes(scrn, &output->probed_modes, debug_modes);
 	
 	output->probed_modes = xf86SortModes (output->probed_modes);
 	
@@ -1758,7 +1746,7 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	
 	output->initial_rotation = xf86OutputInitialRotation (output);
 
-	if (config->debug_modes) {
+	if (debug_modes) {
 	    if (output->probed_modes != NULL) {
 		xf86DrvMsg(scrn->scrnIndex, X_INFO,
 			   "Printing probed modes for output %s\n",
@@ -1777,7 +1765,7 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	    mode->VRefresh = xf86ModeVRefresh(mode);
 	    xf86SetModeCrtc(mode, INTERLACE_HALVE_V);
 
-	    if (config->debug_modes)
+	    if (debug_modes)
 		xf86PrintModeline(scrn->scrnIndex, mode);
 	}
     }
@@ -2900,6 +2888,35 @@ xf86OutputSetEDIDProperty (xf86OutputPtr output, void *data, int data_len)
 
 #endif
 
+/* Pull out a phyiscal size from a detailed timing if available. */
+struct det_phySize_parameter {
+    xf86OutputPtr output;
+    ddc_quirk_t quirks;
+    Bool ret;
+};
+
+static void  handle_detailed_physical_size(struct detailed_monitor_section
+		                          *det_mon, void *data)
+{
+    struct det_phySize_parameter *p;
+    p = (struct det_phySize_parameter *)data;
+
+    if (p->ret == TRUE )
+        return ;
+
+    xf86DetTimingApplyQuirks(det_mon, p->quirks,
+                             p->output->MonInfo->features.hsize,
+                             p->output->MonInfo->features.vsize);
+    if (det_mon->type == DT &&
+        det_mon->section.d_timings.h_size != 0 &&
+        det_mon->section.d_timings.v_size != 0) {
+
+        p->output->mm_width = det_mon->section.d_timings.h_size;
+        p->output->mm_height = det_mon->section.d_timings.v_size;
+        p->ret = TRUE;
+    }
+}
+
 /**
  * Set the EDID information for the specified output
  */
@@ -2908,7 +2925,7 @@ xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
 {
     ScrnInfoPtr		scrn = output->scrn;
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(scrn);
-    int			i;
+    Bool		debug_modes = config->debug_modes || xf86Initialising;
 #ifdef RANDR_12_INTERFACE
     int			size;
 #endif
@@ -2918,7 +2935,7 @@ xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
     
     output->MonInfo = edid_mon;
 
-    if (config->debug_modes) {
+    if (debug_modes) {
 	xf86DrvMsg(scrn->scrnIndex, X_INFO, "EDID for output %s\n",
 		   output->name);
 	xf86PrintEDID(edid_mon);
@@ -2943,20 +2960,15 @@ xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
     xf86OutputSetEDIDProperty (output, edid_mon ? edid_mon->rawData : NULL, size);
 #endif
 
-    if (edid_mon)
-    {
-	/* Pull out a phyiscal size from a detailed timing if available. */
-	for (i = 0; i < 4; i++) {
-	    if (edid_mon->det_mon[i].type == DT &&
-		edid_mon->det_mon[i].section.d_timings.h_size != 0 &&
-		edid_mon->det_mon[i].section.d_timings.v_size != 0)
-	    {
-		output->mm_width = edid_mon->det_mon[i].section.d_timings.h_size;
-		output->mm_height = edid_mon->det_mon[i].section.d_timings.v_size;
-		break;
-	    }
-	}
-    
+    if (edid_mon) {
+
+        struct det_phySize_parameter p;
+        p.output = output;
+        p.quirks = xf86DDCDetectQuirks(scrn->scrnIndex,edid_mon, FALSE);
+        p.ret = FALSE;
+        xf86ForEachDetailedBlock(edid_mon,
+                                 handle_detailed_physical_size, &p);
+
 	/* if no mm size is available from a detailed timing, check the max size field */
 	if ((!output->mm_width || !output->mm_height) &&
 	    (edid_mon->features.hsize && edid_mon->features.vsize))

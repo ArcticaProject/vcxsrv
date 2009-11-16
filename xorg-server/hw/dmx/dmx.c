@@ -362,7 +362,8 @@ static int ProcDMXGetScreenAttributes(ClientPtr client)
     paddedLength            = pad_to_int32(length);
     rep.type                = X_Reply;
     rep.sequenceNumber      = client->sequence;
-    rep.length              = bytes_to_int32(paddedLength);
+    rep.length              = bytes_to_int32((sizeof(xDMXGetScreenAttributesReply) - sizeof(xGenericReply))
+                                             + paddedLength);
     rep.displayNameLength   = length;
 
     if (client->swapped) {

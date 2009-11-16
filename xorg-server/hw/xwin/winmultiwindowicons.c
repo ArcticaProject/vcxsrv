@@ -462,7 +462,8 @@ winXIconToHICON (WindowPtr pWin, int iconSize)
   winMultiWindowGetWMHints (pWin, &hints);
   if (!hints.icon_pixmap) return NULL;
 
-  iconPtr = (PixmapPtr) LookupIDByType (hints.icon_pixmap, RT_PIXMAP);
+  dixLookupResourceByType((pointer) &iconPtr, hints.icon_pixmap, RT_PIXMAP,
+				NullClient, DixUnknownAccess);
   
   if (!iconPtr) return NULL;
 
@@ -484,7 +485,8 @@ winXIconToHICON (WindowPtr pWin, int iconSize)
   mask = calloc (maskStride, iconSize);
   
   winScaleXBitmapToWindows (iconSize, effBPP, iconPtr, image);
-  maskPtr = (PixmapPtr) LookupIDByType (hints.icon_mask, RT_PIXMAP);
+  dixLookupResourceByType((pointer) &maskPtr, hints.icon_mask, RT_PIXMAP,
+				NullClient, DixUnknownAccess);
 
   if (maskPtr) 
     {
@@ -542,7 +544,7 @@ winUpdateIcon (Window id)
   WindowPtr		pWin;
   HICON			hIcon, hIconSmall=NULL, hIconOld;
 
-  pWin = (WindowPtr) LookupIDByType (id, RT_WINDOW);
+  dixLookupResourceByType((pointer) &pWin, id, RT_WINDOW, NullClient, DixUnknownAccess);
   if (pWin)
     {
       winWindowPriv(pWin);

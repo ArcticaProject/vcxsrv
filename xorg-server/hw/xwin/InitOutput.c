@@ -1,6 +1,7 @@
 /*
 
 Copyright 1993, 1998  The Open Group
+Copyright (C) Colin Harrison 2005-2008
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
@@ -73,6 +74,7 @@ extern int			g_iLogVerbose;
 Bool				g_fLogInited;
 
 extern Bool			g_fXdmcpEnabled;
+extern Bool			g_fAuthEnabled;
 #ifdef HAS_DEVWINDOWS
 extern int			g_fdMessageQueue;
 #endif
@@ -332,7 +334,7 @@ winCheckMount(void)
 
   while ((ent = getmntent(mnt)) != NULL)
   {
-    BOOL system = (strcmp(ent->mnt_type, "system") == 0);
+    BOOL system = (winCheckMntOpt(ent, "user") != NULL);
     BOOL root = (strcmp(ent->mnt_dir, "/") == 0);
     BOOL tmp = (strcmp(ent->mnt_dir, "/tmp") == 0);
     
@@ -359,7 +361,8 @@ winCheckMount(void)
       continue;
     level = curlevel;
 
-    if (winCheckMntOpt(ent, "binmode") == NULL)
+    if ((winCheckMntOpt(ent, "binary") == NULL) ||
+        (winCheckMntOpt(ent, "binmode") == NULL))
       binary = 0;
     else
       binary = 1;
@@ -372,7 +375,7 @@ winCheckMount(void)
   }
   
  if (!binary) 
-   winMsg(X_WARNING, "/tmp mounted int textmode\n"); 
+   winMsg(X_WARNING, "/tmp mounted in textmode\n");
 }
 #else
 static void
@@ -808,9 +811,8 @@ winUseMsg (void)
 	  "\tmonitors are present.\n");
 
 #ifdef XWIN_CLIPBOARD
-  ErrorF ("-clipboard\n"
-	  "\tRun the clipboard integration module.\n"
-	  "\tDo not use at the same time as 'xwinclip'.\n");
+  ErrorF ("-[no]clipboard\n"
+	  "\tEnable [disable] the clipboard integration. Default is enabled.\n");
 
   ErrorF ("-nounicodeclipboard\n"
 	  "\tDo not use Unicode clipboard even if NT-based platform.\n");
@@ -1020,11 +1022,9 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
 
 #if defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
 
-#if defined(XCSECURITY)
   /* Generate a cookie used by internal clients for authorization */
-  if (g_fXdmcpEnabled)
+  if (g_fXdmcpEnabled || g_fAuthEnabled)
     winGenerateAuthorization ();
-#endif
 
   /* Perform some one time initialization */
   if (1 == serverGeneration)

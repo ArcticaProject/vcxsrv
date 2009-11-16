@@ -58,6 +58,8 @@ if DRI2_AIGLX
 libglxdri_la_SOURCES += glxdri2.c
 endif
 
+libglxdri_la_LIBADD = $(DLOPEN_LIBS)
+
 libglx_la_SOURCES = \
 	$(indirect_sources) \
 	$(glapi_sources) \
@@ -95,3 +97,5 @@ libglx_la_SOURCES = \
         swap_interval.c \
         unpack.h \
         xfont.c
+
+libglx_la_LIBADD = $(DLOPEN_LIBS)

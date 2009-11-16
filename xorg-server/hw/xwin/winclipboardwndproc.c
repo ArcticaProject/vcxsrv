@@ -104,13 +104,13 @@ winProcessXEventsTimeout (HWND hwnd, int iWindow, Display *pDisplay,
       if (tv.tv_sec < 0)
 	return WIN_XEVENTS_SUCCESS;
 
-      /* Wait for a Windows event or an X event */
+      /* Wait for an X event */
       iReturn = select (iConnNumber + 1,/* Highest fds number */
 			&fdsRead,	/* Read mask */
 			NULL,		/* No write mask */
 			NULL,		/* No exception mask */
 			&tv);		/* No timeout */
-      if (iReturn <= 0)
+      if (iReturn < 0)
 	{
 	  ErrorF ("winProcessXEventsTimeout - Call to select () failed: %d.  "
 		  "Bailing.\n", iReturn);
@@ -440,8 +440,8 @@ winClipboardWindowProc (HWND hwnd, UINT message,
        * follow this message and reassert ownership of the X11
        * selections, handling the issue for us.
        */
+      winDebug ("winClipboardWindowProc - WM_DESTROYCLIPBOARD - Ignored.\n");
       return 0;
-
 
     case WM_RENDERFORMAT:
     case WM_RENDERALLFORMATS:
@@ -536,6 +536,8 @@ winClipboardWindowProc (HWND hwnd, UINT message,
 	    if (g_fUnicodeSupport)
 	      SetClipboardData (CF_UNICODETEXT, NULL);
 	    SetClipboardData (CF_TEXT, NULL);
+
+            ErrorF("winClipboardWindowProc - timed out waiting for WIN_XEVENTS_NOTIFY\n");
 	  }
 
 	/* BPS - Post ourselves a user message whose handler will reset the

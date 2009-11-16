@@ -114,10 +114,15 @@ warn(void)
    }
 }
 
+#if defined(__GNUC__) && (__GNUC__ > 2)
+#define possibly_unused __attribute((unused))
+#else
+#define possibly_unused
+#endif
 
 #define KEYWORD1 static
 #define KEYWORD1_ALT static
-#define KEYWORD2 GLAPIENTRY
+#define KEYWORD2 GLAPIENTRY possibly_unused
 #define NAME(func)  NoOp##func
 
 #define F NULL

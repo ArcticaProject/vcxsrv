@@ -426,8 +426,8 @@
   [[columns objectAtIndex:2] setIdentifier:@"2"];
 	
   [apps_table setDataSource:self];
-  [apps_table selectRow:0 byExtendingSelection:NO];
-	
+  [apps_table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+
   [[apps_table window] makeKeyAndOrderFront:sender];
   [apps_table reloadData];
   if(oldapps != nil)
@@ -474,7 +474,7 @@
   [item release];
 	
   [apps_table reloadData];
-  [apps_table selectRow:row byExtendingSelection:NO];
+  [apps_table selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 }
 
 - (IBAction) apps_table_duplicate:sender
@@ -497,7 +497,7 @@
   [item release];
 	
   [apps_table reloadData];
-  [apps_table selectRow:row+1 byExtendingSelection:NO];
+  [apps_table selectRowIndexes:[NSIndexSet indexSetWithIndex:row+1] byExtendingSelection:NO];
 }
 
 - (IBAction) apps_table_delete:sender
@@ -519,10 +519,10 @@
 	
   row = MIN (row, [table_apps count] - 1);
   if (row >= 0)
-    [apps_table selectRow:row byExtendingSelection:NO];
+    [apps_table selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 }
 
-- (int) numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger) numberOfRowsInTableView:(NSTableView *)tableView
 {
   if (table_apps == nil) return 0;
   
@@ -530,7 +530,7 @@
 }
 
 - (id) tableView:(NSTableView *)tableView
-objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
+objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
   NSArray *item;
   int col;
@@ -547,7 +547,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 }
 
 - (void) tableView:(NSTableView *)tableView setObjectValue:(id)object
-    forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+    forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
   NSMutableArray *item;
   int col;

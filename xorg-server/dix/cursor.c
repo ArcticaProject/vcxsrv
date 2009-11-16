@@ -86,6 +86,8 @@ FreeCursorBits(CursorBitsPtr bits)
 #ifdef ARGB_CURSOR
     xfree(bits->argb);
 #endif
+    dixFreePrivates(bits->devPrivates);
+    bits->devPrivates = NULL;
     if (bits->refcnt == 0)
     {
 	GlyphSharePtr *prev, this;
@@ -100,7 +102,6 @@ FreeCursorBits(CursorBitsPtr bits)
 	    CloseFont(this->font, (Font)0);
 	    xfree(this);
 	}
-	dixFreePrivates(bits->devPrivates);
 	xfree(bits);
     }
 }

@@ -95,6 +95,9 @@ extern _X_EXPORT void
 xf86PruneInvalidModes(ScrnInfoPtr pScrn, DisplayModePtr *modeList,
 		      Bool verbose);
 
+extern _X_EXPORT DisplayModePtr
+xf86PruneDuplicateModes(DisplayModePtr modes);
+
 extern _X_EXPORT void
 xf86ValidateModesFlags(ScrnInfoPtr pScrn, DisplayModePtr modeList,
 		       int flags);

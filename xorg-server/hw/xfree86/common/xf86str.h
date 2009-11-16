@@ -299,6 +299,7 @@ typedef struct {
 /* GET_REQUIRED_HW_INTERFACES */
 #define HW_IO 1
 #define HW_MMIO 2
+#define HW_SKIP_CONSOLE 4
 #define NEED_IO_ENABLED(x) (x & HW_IO)
 
 typedef CARD32 xorgHWFlags;

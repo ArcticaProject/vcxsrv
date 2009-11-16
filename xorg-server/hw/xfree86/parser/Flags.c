@@ -434,7 +434,7 @@ xf86uLongToString(unsigned long i)
 	char *s;
 	int l;
 
-	l = (int)(ceil(log10((double)i) + 2.5));
+	l = ceil(log10((double)i) + 2.5);
 	s = malloc(l);
 	if (!s)
 		return NULL;

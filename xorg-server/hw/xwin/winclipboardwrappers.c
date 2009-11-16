@@ -324,9 +324,7 @@ winProcSetSelectionOwner (ClientPtr client)
   
   REQUEST_SIZE_MATCH(xSetSelectionOwnerReq);
 
-#if 0
-  ErrorF ("winProcSetSelectionOwner - Hello.\n");
-#endif
+  winDebug("winProcSetSelectionOwner - Hello.\n");
 
   /* Watch for server reset */
   if (s_ulServerGeneration != serverGeneration)
@@ -369,10 +367,8 @@ winProcSetSelectionOwner (ClientPtr client)
 	{
 	  fOwnedToNotOwned = TRUE;
 
-#if 0
-	  ErrorF ("winProcSetSelectionOwner - PRIMARY - Going from "
+	  winDebug("winProcSetSelectionOwner - PRIMARY - Going from "
 		  "owned to not owned.\n");
-#endif
 
 	  /* Adjust last owned selection */
 	  if (None != s_iOwners[CLIP_OWN_CLIPBOARD])
@@ -384,10 +380,8 @@ winProcSetSelectionOwner (ClientPtr client)
       /* Save new selection owner or None */
       s_iOwners[CLIP_OWN_PRIMARY] = stuff->window;
 
-#if 0
-      ErrorF ("winProcSetSelectionOwner - PRIMARY - Now owned by: %d\n",
+      winDebug("winProcSetSelectionOwner - PRIMARY - Now owned by: %d\n",
 	      stuff->window);
-#endif
     }
   else if (MakeAtom ("CLIPBOARD", 9, TRUE) == stuff->selection)
     {
@@ -396,11 +390,9 @@ winProcSetSelectionOwner (ClientPtr client)
 	  && None != s_iOwners[CLIP_OWN_CLIPBOARD])
 	{
 	  fOwnedToNotOwned = TRUE;
-	  
-#if 0
-	  ErrorF ("winProcSetSelectionOwner - CLIPBOARD - Going from "
-		  "owned to not owned.\n");
-#endif
+
+	  winDebug("winProcSetSelectionOwner - CLIPBOARD - Going from "
+                   "owned to not owned.\n");
 
 	  /* Adjust last owned selection */
 	  if (None != s_iOwners[CLIP_OWN_PRIMARY])
@@ -412,10 +404,9 @@ winProcSetSelectionOwner (ClientPtr client)
       /* Save new selection owner or None */
       s_iOwners[CLIP_OWN_CLIPBOARD] = stuff->window;
 
-#if 0
-      ErrorF ("winProcSetSelectionOwner - CLIPBOARD - Now owned by: %d\n",
-	      stuff->window);
-#endif
+      winDebug("winProcSetSelectionOwner - CLIPBOARD - Now owned by: %d\n",
+               stuff->window);
+
     }
   else
     goto winProcSetSelectionOwner_Done;
@@ -444,13 +435,11 @@ winProcSetSelectionOwner (ClientPtr client)
       && g_hwndClipboard != NULL
       && g_hwndClipboard == GetClipboardOwner ())
     {
-#if 0
-      ErrorF ("winProcSetSelectionOwner - We currently own the "
-	      "clipboard and neither the PRIMARY nor the CLIPBOARD "
-	      "selections are owned, releasing ownership of Win32 "
-	      "clipboard.\n");
-#endif
-      
+      winDebug("winProcSetSelectionOwner - We currently own the "
+               "clipboard and neither the PRIMARY nor the CLIPBOARD "
+               "selections are owned, releasing ownership of Win32 "
+               "clipboard.\n");
+
       /* Release ownership of the Windows clipboard */
       OpenClipboard (NULL);
       EmptyClipboard ();
@@ -462,9 +451,7 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if no window at this point */
   if (None == stuff->window)
     {
-#if 0
-      ErrorF ("winProcSetSelectionOwner - No window, returning.\n");
-#endif
+      winDebug("winProcSetSelectionOwner - No window, returning.\n");
       goto winProcSetSelectionOwner_Done;
     }
 
@@ -481,10 +468,8 @@ winProcSetSelectionOwner (ClientPtr client)
   /* Abort if clipboard manager is owning the selection */
   if (pDrawable->id == g_iClipboardWindow)
     {
-#if 0
-      ErrorF ("winProcSetSelectionOwner - We changed ownership, "
-	      "aborting.\n");
-#endif
+      winDebug("winProcSetSelectionOwner - We changed ownership, "
+               "aborting.\n");
       goto winProcSetSelectionOwner_Done;
     }
 

@@ -185,8 +185,8 @@ winUninstallColormap (ColormapPtr pmap)
   /* Install the default cmap in place of the cmap to be uninstalled */
   if (pmap->mid != pmap->pScreen->defColormap)
     {
-      curpmap = (ColormapPtr) LookupIDByType(pmap->pScreen->defColormap,
-					     RT_COLORMAP);
+      dixLookupResourceByType((pointer) &curpmap, pmap->pScreen->defColormap,
+				RT_COLORMAP, NullClient, DixUnknownAccess);
       (*pmap->pScreen->InstallColormap) (curpmap);
     }
 }

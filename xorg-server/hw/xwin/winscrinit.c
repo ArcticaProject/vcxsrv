@@ -239,6 +239,16 @@ winScreenInit (int index,
   else
     winErrorFVerb(2, "winScreenInit - Using software cursor\n");  
 
+  /*
+     Note the screen origin in a normalized coordinate space where (0,0) is at the top left
+     of the native virtual desktop area
+  */
+  dixScreenOrigins[index].x = pScreenInfo->dwInitialX - GetSystemMetrics(SM_XVIRTUALSCREEN);
+  dixScreenOrigins[index].y = pScreenInfo->dwInitialY - GetSystemMetrics(SM_YVIRTUALSCREEN);
+
+  ErrorF("Screen %d added at XINERAMA coordinate (%d,%d).\n",
+         index, dixScreenOrigins[index].x, dixScreenOrigins[index].y);
+
 #if CYGDEBUG || YES
   winDebug ("winScreenInit - returning\n");
 #endif

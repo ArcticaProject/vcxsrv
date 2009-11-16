@@ -119,7 +119,7 @@ SysMenu {
 # 	"xterm"	"uninstall.ico"
 # }
 
-# SilentExit
+SilentExit
 
 DEBUG "Done parsing the configuration file..."
 

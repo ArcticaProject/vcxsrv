@@ -2705,6 +2705,9 @@ static void _colormap_find_resource(pointer value, XID id,
     ColormapPtr cmap = value;
     int j;
 
+    if (pScreen != cmap->pScreen)
+	return;
+
     j = cmap->pVisual - pScreen->visuals;
     cmap->pVisual = &visuals[j];
 }

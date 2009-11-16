@@ -1,5 +1,6 @@
 /*
  *Copyright (C) 2003-2004 Harold L Hunt II All Rights Reserved.
+ *Copyright (C) Colin Harrison 2005-2008
  *
  *Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -26,6 +27,7 @@
  *from Harold L Hunt II.
  *
  * Authors:	Harold L Hunt II
+ *              Colin Harrison
  */
 
 #ifdef HAVE_XWIN_CONFIG_H
@@ -63,6 +65,7 @@ HWND		g_hDlgExit = NULL;
 HWND		g_hDlgAbout = NULL;
 const char *	g_pszQueryHost = NULL;
 Bool		g_fXdmcpEnabled = FALSE;
+Bool           g_fAuthEnabled = FALSE;
 HICON		g_hIconX = NULL;
 HICON		g_hSmallIconX = NULL;
 #ifndef RELOCATE_PROJECTROOT
@@ -111,7 +114,7 @@ winDispatchProcPtr	winProcSetSelectionOwnerOrig = NULL;
  */
 
 Bool			g_fUnicodeClipboard = TRUE;
-Bool			g_fClipboard = FALSE;
+Bool			g_fClipboard = TRUE;
 Bool			g_fClipboardLaunched = FALSE;
 Bool			g_fClipboardStarted = FALSE;
 pthread_t		g_ptClipboardProc;
