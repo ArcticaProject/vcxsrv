@@ -17,9 +17,13 @@ Template=r"""<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 
 import glob,re,sys
 
-Files=glob.glob(r"c:\windows\winsxs\x86_Microsoft.VC90.CRT_1fc8b3b9a1e18e3b_9.0.*")
+if len(sys.argv)==3 and sys.argv[2]=="1":
+  Files=glob.glob(r"c:\windows\winsxs\x86_Microsoft.VC90.DebugCRT_1fc8b3b9a1e18e3b_9.0.*")
+  SearchRe=re.compile(r"c:\\windows\\winsxs\\x86_Microsoft\.VC90\.DebugCRT_1fc8b3b9a1e18e3b_9\.0\.([0-9]+)\.([0-9]+)_",re.I)
+else:
+  Files=glob.glob(r"c:\windows\winsxs\x86_Microsoft.VC90.CRT_1fc8b3b9a1e18e3b_9.0.*")
+  SearchRe=re.compile(r"c:\\windows\\winsxs\\x86_Microsoft\.VC90\.CRT_1fc8b3b9a1e18e3b_9\.0\.([0-9]+)\.([0-9]+)_",re.I)
 
-SearchRe=re.compile(r"c:\\windows\\winsxs\\x86_Microsoft\.VC90\.CRT_1fc8b3b9a1e18e3b_9\.0\.([0-9]+)\.([0-9]+)_",re.I)
 
 MajorVersion=0
 MinorVersion=0
