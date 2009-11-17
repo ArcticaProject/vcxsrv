@@ -25,7 +25,7 @@
 /* #undef NEED_SNPRINTF */
 
 /* Vendor web address for support */
-#define __VENDORDWEBSUPPORT__ "http://www.hmca.be/"
+#define __VENDORDWEBSUPPORT__ "http://www.hc-consult.be/"
 
 /* Default log location */
 #define DEFAULT_LOGDIR "."

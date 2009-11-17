@@ -12,7 +12,7 @@
 #define BIGREQS 1
 
 /* Builder address */
-#define BUILDERADDR "hmca@telenet.be"
+#define BUILDERADDR "marc@hc-consult.be"
 
 /* Operating System Name */
 #define OSNAME "Win32"
@@ -396,7 +396,7 @@
 #undef XORG_RELEASE
 
 /* Current Xorg version */
-#define XORG_VERSION_CURRENT (((1) * 10000000) + ((7) * 100000) + ((99) * 1000) + 2)
+#define XORG_VERSION_CURRENT (((1) * 10000000) + ((7) * 100000) + ((99) * 1000) + 3)
 
 /* Xorg release date */
 #define XORG_DATE "10 Sept 2009"

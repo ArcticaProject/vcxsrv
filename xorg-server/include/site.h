@@ -52,7 +52,7 @@ SOFTWARE.
  * server executable.
  */
 #ifndef VENDOR_STRING
-#define VENDOR_STRING "HMCA"
+#define VENDOR_STRING "HC-Consult"
 #endif
 
 /*

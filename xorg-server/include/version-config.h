@@ -7,7 +7,7 @@
 #undef VENDOR_MAN_VERSION
 
 /* Vendor name */
-#define VENDOR_NAME  "HMCA"
+#define VENDOR_NAME  "HC-Consult"
 
 /* Vendor release */
 #define VENDOR_RELEASE  XORG_VERSION_CURRENT
