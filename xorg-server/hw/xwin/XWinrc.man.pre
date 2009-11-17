@@ -65,8 +65,13 @@ system tray area.
 .TP 8
 .B SILENTEXIT
 The \fBSILENTEXIT\fP keyword, which takes no parameters, disables the
-exit confirmation dialog.
+exit confirmation dialog if no clients are connected.
 
+.TP 8
+.B FORCEEXIT
+The \fBFORCEEXIT\fP keyword, which takes no parameters, disables the
+exit confirmation dialog always.  Unsaved client work may be lost but
+this may be useful if you want no dialogs.
 
 .SH Menu instructions
 .TP 8

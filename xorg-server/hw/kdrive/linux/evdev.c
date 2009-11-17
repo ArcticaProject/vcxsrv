@@ -243,7 +243,9 @@ EvdevPtrEnable (KdPointerInfo *pi)
     if (fd < 0)
         return BadMatch;
 
-        
+    if (ioctl (fd, EVIOCGRAB, 1) < 0)
+        perror ("Grabbing evdev mouse device failed");
+
     if (ioctl (fd, EVIOCGBIT(0 /*EV*/, sizeof (ev)), ev) < 0)
     {
         perror ("EVIOCGBIT 0");
@@ -335,6 +337,10 @@ EvdevPtrDisable (KdPointerInfo *pi)
         return;
 
     KdUnregisterFd (pi, ke->fd, TRUE);
+
+    if (ioctl (ke->fd, EVIOCGRAB, 0) < 0)
+        perror ("Ungrabbing evdev mouse device failed");
+
     xfree (ke);
     pi->driverPrivate = 0;
 }
@@ -425,6 +431,9 @@ EvdevKbdEnable (KdKeyboardInfo *ki)
     if (fd < 0)
         return BadMatch;
 
+    if (ioctl (fd, EVIOCGRAB, 1) < 0)
+        perror ("Grabbing evdev keyboard device failed");
+
     if (ioctl (fd, EVIOCGBIT(0 /*EV*/, sizeof (ev)), ev) < 0) {
         perror ("EVIOCGBIT 0");
         close (fd);
@@ -496,6 +505,10 @@ EvdevKbdDisable (KdKeyboardInfo *ki)
         return;
 
     KdUnregisterFd (ki, ke->fd, TRUE);
+
+    if (ioctl (ke->fd, EVIOCGRAB, 0) < 0)
+        perror ("Ungrabbing evdev keyboard device failed");
+
     xfree (ke);
     ki->driverPrivate = 0;
 }

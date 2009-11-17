@@ -9,7 +9,7 @@ libx86emu_la_SOURCES = debug.c \
                       sys.c \
                       x86emu.h
 
-INCLUDES = 
+INCLUDES = $(XORG_INCS)
 
 AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
 

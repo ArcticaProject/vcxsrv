@@ -97,6 +97,7 @@ static Bool add_matching_devices_to_configure_list(DriverPtr drvp);
 #ifdef XF86PM
 void (*xf86OSPMClose)(void) = NULL;
 #endif
+static Bool xorgHWOpenConsole = FALSE;
 
 /* Common pixmap formats */
 
@@ -601,8 +602,6 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
     if (xf86DoShowOptions)
         DoShowOptions();
 
-    xf86OpenConsole();
-
     /* Do a general bus probe.  This will be a PCI probe for x86 platforms */
     xf86BusProbe();
 
@@ -676,19 +675,28 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
      */
 
     for (i = 0; i < xf86NumDrivers; i++) {
-	xorgHWFlags flags;
-
 	if (xf86DriverList[i]->Identify != NULL)
 	    xf86DriverList[i]->Identify(0);
 
-	if (!xorgHWAccess
-	    && (!xf86DriverList[i]->driverFunc
+	if (!xorgHWAccess || !xorgHWOpenConsole) {
+	    xorgHWFlags flags;
+	    if(!xf86DriverList[i]->driverFunc
 		|| !xf86DriverList[i]->driverFunc(NULL,
 						  GET_REQUIRED_HW_INTERFACES,
-						  &flags)
-		|| NEED_IO_ENABLED(flags)))
-	    xorgHWAccess = TRUE;
+						  &flags))
+		flags = HW_IO;
+
+	    if(NEED_IO_ENABLED(flags))
+		xorgHWAccess = TRUE;
+	    if(!(flags & HW_SKIP_CONSOLE))
+		xorgHWOpenConsole = TRUE;
+	}
     }
+
+    if (xorgHWOpenConsole)
+	xf86OpenConsole();
+    else
+	xf86Info.dontVTSwitch = TRUE;
 
     /* Enable full I/O access */
     if (xorgHWAccess)
@@ -966,7 +974,8 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
     /*
      * serverGeneration != 1; some OSs have to do things here, too.
      */
-    xf86OpenConsole();
+    if (xorgHWOpenConsole)
+	xf86OpenConsole();
 
 #ifdef XF86PM
     /*
@@ -1203,7 +1212,8 @@ ddxGiveUp(void)
     DGAShutdown();
 #endif
 
-    xf86CloseConsole();
+    if (xorgHWOpenConsole)
+	xf86CloseConsole();
 
     xf86CloseLog();
 

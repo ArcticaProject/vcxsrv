@@ -54,8 +54,8 @@ endif  # End WINAPP or TTYAPP stuff
 ifeq ($(DEBUG),1)
 COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I%) -Fo$(relpath $@) -Fd"$(PDB)" $<
 else
-COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I%) -Fo$(relpath $@) $<
-PDB=   # There is no PDB file generated in a release build
+COMMONCFLAGS += $(DEFINES:%=-D%) $(INCLUDES:%=-I%) -Fo$(relpath $@) -Fd"$(PDB)" $<
+#PDB=   # There is no PDB file generated in a release build
 endif
 
 .PHONY: all cleanall clean clean$(OBJDIRPREFIX)

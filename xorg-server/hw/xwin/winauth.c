@@ -1,7 +1,3 @@
-#ifdef HAVE_XWIN_CONFIG_H
-#include <xwin-config.h>
-#endif
-#if defined(XCSECURITY)
 /*
  *Copyright (C) 2003-2004 Harold L Hunt II All Rights Reserved.
  *
@@ -32,13 +28,14 @@
  * Authors:	Harold L Hunt II
  */
 
+#ifdef HAVE_XWIN_CONFIG_H
+#include <xwin-config.h>
+#endif
+
 #include "win.h"
 
 /* Includes for authorization */
-#include <X11/Xauth.h>
 #include "securitysrv.h"
-#include <X11/extensions/securstr.h>
-
 
 /*
  * Constants
@@ -48,13 +45,89 @@
 
 
 /*
- * Globals
+ * Locals
  */
 
-XID		g_authId = 0;
-unsigned int	g_uiAuthDataLen = 0;
-char		*g_pAuthData = NULL;
+static XID g_authId = 0;
+static unsigned int g_uiAuthDataLen = 0;
+static char *g_pAuthData = NULL;
 
+/*
+ * Code to generate a MIT-MAGIC-COOKIE-1, copied from under XCSECURITY
+ */
+
+
+
+#ifndef XCSECURITY
+static
+void
+GenerateRandomData (int len, char *buf)
+{
+    int fd;
+#ifdef _MSC_VER
+    static HANDLE hAdvApi32;
+    static BOOLEAN (_stdcall * RtlGenRandom)(void *,unsigned long);
+
+    if (!hAdvApi32)
+    {
+      hAdvApi32=LoadLibrary("advapi32.dll");
+      RtlGenRandom=(BOOLEAN (_stdcall *)(void*,unsigned long))GetProcAddress(hAdvApi32,"SystemFunction036");
+    }
+    RtlGenRandom(buf, len);
+#else
+    fd = open("/dev/urandom", O_RDONLY);
+    read(fd, buf, len);
+    close(fd);
+#endif
+}
+
+
+static char cookie[16]; /* 128 bits */
+
+XID
+static MitGenerateCookie (
+    unsigned	data_length,
+    char	*data,
+    XID		id,
+    unsigned	*data_length_return,
+    char	**data_return)
+{
+    int i = 0;
+    int status;
+
+    while (data_length--)
+    {
+	cookie[i++] += *data++;
+	if (i >= sizeof (cookie)) i = 0;
+    }
+    GenerateRandomData(sizeof (cookie), cookie);
+    status = MitAddCookie(sizeof (cookie), cookie, id);
+    if (!status)
+    {
+	id = -1;
+    }
+    else
+    {
+	*data_return = cookie;
+	*data_length_return = sizeof (cookie);
+    }
+    return id;
+}
+
+static
+XID
+GenerateAuthorization(
+	unsigned name_length,
+	char	*name,
+	unsigned data_length,
+	char	*data,
+	unsigned *data_length_return,
+	char	**data_return)
+{
+    return MitGenerateCookie(data_length, data,
+                             FakeClientID(0), data_length_return, data_return);
+}
+#endif
 
 /*
  * Generate authorization cookie for internal server clients
@@ -81,12 +154,13 @@ winGenerateAuthorization ()
 #ifdef WINDBG
   else
     {
-      winDebug ("winGenerateAuthorization - GenerateAuthorization success!\n"
+      winDebug("winGenerateAuthorization - GenerateAuthorization success!\n"
 	      "AuthDataLen: %d AuthData: %s\n",
 	      g_uiAuthDataLen, g_pAuthData);
     }
 #endif
-  
+
+#ifdef XCSECURITY
   /* Allocate structure for additional auth information */
   pAuth = (SecurityAuthorizationPtr) 
     xalloc (sizeof (SecurityAuthorizationRec));
@@ -119,7 +193,8 @@ winGenerateAuthorization ()
   
   /* Don't free the auth data, since it is still used internally */
   pAuth = NULL;
-  
+#endif
+
   return TRUE;
 
  auth_bailout:
@@ -128,4 +203,13 @@ winGenerateAuthorization ()
   
   return FALSE;
 }
-#endif
+
+/* Use our generated cookie for authentication */
+void
+winSetAuthorization(void)
+{
+  XSetAuthorization (AUTH_NAME,
+		     strlen (AUTH_NAME),
+		     g_pAuthData,
+		     g_uiAuthDataLen);
+}

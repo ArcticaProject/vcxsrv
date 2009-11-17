@@ -263,13 +263,14 @@ xf86Wakeup(pointer blockData, int err, pointer pReadmask)
 		    (FD_ISSET(pInfo->fd, &devicesWithInput) != 0)) {
 		    int sigstate = xf86BlockSIGIO();
 
-		    pInfo->read_input(pInfo);
-		    xf86UnblockSIGIO(sigstate);
 		    /*
 		     * Remove the descriptior from the set because more than one
 		     * device may share the same file descriptor.
 		     */
 		    FD_CLR(pInfo->fd, &devicesWithInput);
+
+		    pInfo->read_input(pInfo);
+		    xf86UnblockSIGIO(sigstate);
 		}
 		pInfo = pInfo->next;
 	    }

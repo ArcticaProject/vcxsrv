@@ -213,10 +213,11 @@ static int
 WMFreeClient (pointer data, XID id) {
     WMEventPtr   pEvent;
     WMEventPtr   *pHead, pCur, pPrev;
+    int i;
 
     pEvent = (WMEventPtr) data;
-    pHead = (WMEventPtr *) LookupIDByType(eventResource, EventType);
-    if (pHead) {
+    i = dixLookupResourceByType((pointer *)&pHead, eventResource, EventType, serverClient, DixReadAccess | DixWriteAccess | DixDestroyAccess);
+    if (i == Success && pHead) {
         pPrev = 0;
         for (pCur = *pHead; pCur && pCur != pEvent; pCur=pCur->next)
             pPrev = pCur;
@@ -254,12 +255,12 @@ ProcAppleWMSelectInput (register ClientPtr client)
     REQUEST(xAppleWMSelectInputReq);
     WMEventPtr      pEvent, pNewEvent, *pHead;
     XID             clientResource;
+    int             i;
 
     REQUEST_SIZE_MATCH (xAppleWMSelectInputReq);
-    pHead = (WMEventPtr *)SecurityLookupIDByType(client,
-                        eventResource, EventType, DixWriteAccess);
+    i = dixLookupResourceByType((pointer *)&pHead, eventResource, EventType, client, DixWriteAccess);
     if (stuff->mask != 0) {
-        if (pHead) {
+        if (i == Success && pHead) {
             /* check for existing entry. */
             for (pEvent = *pHead; pEvent; pEvent = pEvent->next)
             {
@@ -293,7 +294,7 @@ ProcAppleWMSelectInput (register ClientPtr client)
          * the list may be arbitrarily rearranged which cannot be
          * done through the resource database.
          */
-        if (!pHead)
+        if (i != Success || !pHead)
         {
             pHead = (WMEventPtr *) xalloc (sizeof (WMEventPtr));
             if (!pHead ||
@@ -309,7 +310,7 @@ ProcAppleWMSelectInput (register ClientPtr client)
         updateEventMask (pHead);
     } else if (stuff->mask == 0) {
         /* delete the interest */
-        if (pHead) {
+        if (i == Success && pHead) {
             pNewEvent = 0;
             for (pEvent = *pHead; pEvent; pEvent = pEvent->next) {
                 if (pEvent->client == client)
@@ -342,9 +343,10 @@ AppleWMSendEvent (int type, unsigned int mask, int which, int arg) {
     WMEventPtr      *pHead, pEvent;
     ClientPtr       client;
     xAppleWMNotifyEvent se;
+    int             i;
 
-    pHead = (WMEventPtr *) LookupIDByType(eventResource, EventType);
-    if (!pHead)
+    i = dixLookupResourceByType((pointer *)&pHead, eventResource, EventType, serverClient, DixReadAccess);
+    if (i != Success || !pHead)
         return;
     for (pEvent = *pHead; pEvent; pEvent = pEvent->next) {
         client = pEvent->client;

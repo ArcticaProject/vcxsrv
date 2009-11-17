@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS=dist-bzip2 foreign nostdinc
+AUTOMAKE_OPTIONS=nostdinc
 ACLOCAL_AMFLAGS = -I m4
 
 if COMPOSITE
@@ -49,7 +49,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xorg-server.pc
 endif
 
-EXTRA_DIST = xorg-server.pc.in xorg-server.m4 ChangeLog autogen.sh
+EXTRA_DIST = xorg-server.pc.in xorg-server.m4 autogen.sh
 
 DISTCHECK_CONFIGURE_FLAGS=\
 	--with-xkb-path=$(XKB_BASE_DIRECTORY) \
@@ -57,14 +57,16 @@ DISTCHECK_CONFIGURE_FLAGS=\
 	--with-xkb-output='$${datadir}/X11/xkb/compiled'
 
 DISTCLEANFILES = doltcompile doltlibtool
-MAINTAINERCLEANFILES=ChangeLog
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL
 
 DIST_SUBDIRS = \
 	doc \

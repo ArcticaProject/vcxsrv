@@ -47,6 +47,20 @@ BOOL xpbproxy_is_standalone = NO;
 
 x_selection *_selection_object;
 
+extern BOOL serverInitComplete;
+extern pthread_mutex_t serverInitCompleteMutex;
+extern pthread_cond_t serverInitCompleteCond;
+
+static inline void wait_for_server_init(void) {
+    /* If the server hasn't finished initializing, wait for it... */
+    if(!serverInitComplete) {
+        pthread_mutex_lock(&serverInitCompleteMutex);
+        while(!serverInitComplete)
+            pthread_cond_wait(&serverInitCompleteCond, &serverInitCompleteMutex);
+        pthread_mutex_unlock(&serverInitCompleteMutex);
+    }
+}
+
 static int x_io_error_handler (Display *dpy) {
     /* We lost our connection to the server. */
     
@@ -84,6 +98,8 @@ static inline pthread_t create_thread(void *func, void *arg) {
 static void *xpbproxy_x_thread(void *args) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     size_t i;
+
+    wait_for_server_init();
 
     for(i=0, xpbproxy_dpy=NULL; !xpbproxy_dpy && i<5; i++) {
         xpbproxy_dpy = XOpenDisplay(NULL);

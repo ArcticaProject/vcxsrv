@@ -332,7 +332,7 @@ winCheckMount(void)
 
   while ((ent = getmntent(mnt)) != NULL)
   {
-    BOOL system = (strcmp(ent->mnt_type, "system") == 0);
+    BOOL system = (winCheckMntOpt(ent, "user") != NULL);
     BOOL root = (strcmp(ent->mnt_dir, "/") == 0);
     BOOL tmp = (strcmp(ent->mnt_dir, "/tmp") == 0);
     
@@ -359,7 +359,8 @@ winCheckMount(void)
       continue;
     level = curlevel;
 
-    if (winCheckMntOpt(ent, "binmode") == NULL)
+    if ((winCheckMntOpt(ent, "binary") == NULL) ||
+        (winCheckMntOpt(ent, "binmode") == NULL))
       binary = 0;
     else
       binary = 1;
@@ -373,7 +374,7 @@ winCheckMount(void)
   
 #ifdef WINDBG
   if (!binary) 
-    winDebug("/tmp mounted int textmode\n"); 
+    winDebug("/tmp mounted in textmode\n");
 #endif
 }
 #else
@@ -826,9 +827,8 @@ winUseMsg (void)
 	  "\tmonitors are present.\n");
 
 #ifdef XWIN_CLIPBOARD
-  ErrorF ("-clipboard\n"
-	  "\tRun the clipboard integration module.\n"
-	  "\tDo not use at the same time as 'xwinclip'.\n");
+  ErrorF ("-[no]clipboard\n"
+	  "\tEnable [disable] the clipboard integration. Default is enabled.\n");
 
   ErrorF ("-nounicodeclipboard\n"
 	  "\tDo not use Unicode clipboard even if NT-based platform.\n");
@@ -1033,11 +1033,9 @@ InitOutput (ScreenInfo *screenInfo, int argc, char *argv[])
 
 #if defined(XWIN_CLIPBOARD) || defined(XWIN_MULTIWINDOW)
 
-#if defined(XCSECURITY)
   /* Generate a cookie used by internal clients for authorization */
   if (g_fXdmcpEnabled || g_fAuthEnabled)
     winGenerateAuthorization ();
-#endif
 
   /* Perform some one time initialization */
   if (1 == serverGeneration)

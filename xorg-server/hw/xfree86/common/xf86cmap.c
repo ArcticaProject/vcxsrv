@@ -115,7 +115,9 @@ static void CMapDestroyColormap (ColormapPtr);
 
 static Bool CMapEnterVT(int, int);
 static Bool CMapSwitchMode(int, DisplayModePtr, int);
+#ifdef XFreeXDGA
 static int  CMapSetDGAMode(int, int, DGADevicePtr);
+#endif
 static int  CMapChangeGamma(int, Gamma);
 
 static void ComputeGamma(CMapScreenPtr);

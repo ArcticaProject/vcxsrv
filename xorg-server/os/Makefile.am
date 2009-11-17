@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libos.la
 
-AM_CFLAGS = $(DIX_CFLAGS)
+AM_CFLAGS = $(DIX_CFLAGS) $(SHA1_CFLAGS)
 
 SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
@@ -22,9 +22,11 @@ libos_la_SOURCES = 	\
 	strcasecmp.c	\
 	strcasestr.c	\
 	xdmauth.c	\
+	xsha1.c		\
 	xstrans.c	\
 	xprintf.c	\
 	$(XORG_SRCS)
+libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS)
 
 if SECURE_RPC
 libos_la_SOURCES += $(SECURERPC_SRCS)

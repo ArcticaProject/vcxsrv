@@ -42,9 +42,9 @@ OBJDIR ?= obj\$(OBJDIRPREFIX)debug
 DEFINES += _DEBUG DEBUG
 RCFLAGS += -d "_DEBUG"
 else
-CCFLAGS   += -MD -O2 -Ob2 -Oi -Ox -Oy -Ot
+CCFLAGS   += -MD -O2 -Ob2 -Oi -Ox -Oy -Ot -Zi
 DEFINES   +=  NDEBUG
-LINKFLAGS += /OPT:REF /OPT:ICF
+LINKFLAGS += /OPT:REF /OPT:ICF /DEBUG
 OBJDIR ?= obj\$(OBJDIRPREFIX)release
 RCFLAGS += -d "NDEBUG"
 endif

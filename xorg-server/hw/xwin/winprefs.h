@@ -143,6 +143,9 @@ typedef struct WINPREFS
   STYLEITEM *style;
   int styleItems;
 
+  /* Force exit flag */
+  Bool fForceExit;
+
   /* Silent exit flag */
   Bool fSilentExit;
 

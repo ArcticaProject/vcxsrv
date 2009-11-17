@@ -92,7 +92,8 @@ if SOLARIS_ASM_INLINE
 BUILT_SOURCES += os-support/solaris/solaris-@SOLARIS_INOUT_ARCH@.il
 
 os-support/solaris/solaris-@SOLARIS_INOUT_ARCH@.il:
-	cd os-support/solaris ; make solaris-@SOLARIS_INOUT_ARCH@.il
+	cd os-support/solaris ; \
+	 $(MAKE) $(AM_MAKEFLAGS) solaris-@SOLARIS_INOUT_ARCH@.il
 endif
 
 # do not use $(mkdir_p) if you want automake 1.7 to work

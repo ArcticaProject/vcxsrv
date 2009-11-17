@@ -41,13 +41,6 @@ extern long (*_iobase)(unsigned, int, int, int);
 #  endif
 # endif /* __alpha__ */
 
-# if defined(DO_OS_FONTRESTORE)
-Bool lnx_savefont(void);
-Bool lnx_restorefont(void);
-Bool lnx_switchaway(void);
-void lnx_freefontdata(void);
-# endif
-
 #define LNX_H_
 
 #endif

@@ -154,10 +154,6 @@ exaModifyPixmapHeader_mixed(PixmapPtr pPixmap, int width, int height, int depth,
     if (pExaScr->info->ModifyPixmapHeader && pExaPixmap->driverPriv) {
 	ret = pExaScr->info->ModifyPixmapHeader(pPixmap, width, height, depth,
 						bitsPerPixel, devKind, pPixData);
-	/* For EXA_HANDLES_PIXMAPS, we set pPixData to NULL.
-	 * If pPixmap->devPrivate.ptr is non-NULL, then we've got a non-offscreen pixmap.
-	 * We need to store the pointer, because PrepareAccess won't be called.
-	 */
 	if (ret == TRUE)
 	    goto out;
     }

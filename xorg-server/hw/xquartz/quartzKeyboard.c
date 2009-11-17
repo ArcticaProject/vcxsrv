@@ -40,6 +40,7 @@
 #define HACK_MISSING 1
 #define HACK_KEYPAD 1
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -51,6 +52,8 @@
 
 #include "quartzKeyboard.h"
 #include "quartzAudio.h"
+
+#include "X11Application.h"
 
 #include "threadSafety.h"
 
@@ -181,6 +184,12 @@ static void DarwinChangeKeyboardControl(DeviceIntPtr device, KeybdCtrl *ctrl) {
     // keyclick, bell volume / pitch, autorepead, LED's
 }
 
+static void DarwinKeyboardBell(int volume, DeviceIntPtr pDev, pointer arg, int something) {
+    KeybdCtrl *ctrl = arg;
+
+    DDXRingBell(volume, ctrl->bell_pitch, ctrl->bell_duration);
+}
+
 //-----------------------------------------------------------------------------
 // Utility functions to help parse Darwin keymap
 //-----------------------------------------------------------------------------
@@ -294,7 +303,7 @@ void DarwinKeyboardInit(DeviceIntPtr pDev) {
     /* We need to really have rules... or something... */
     //XkbSetRulesDflts("base", "pc105", "us", NULL, NULL);
 
-    InitKeyboardDeviceStruct(pDev, NULL, NULL, DarwinChangeKeyboardControl);
+    InitKeyboardDeviceStruct(pDev, NULL, DarwinKeyboardBell, DarwinChangeKeyboardControl);
 
     DarwinKeyboardReloadHandler();
 
@@ -359,6 +368,10 @@ void DarwinKeyboardReloadHandler(void) {
     CFIndex initialKeyRepeatValue, keyRepeatValue;
     BOOL ok;
     DeviceIntPtr pDev = darwinKeyboard;
+    const char *xmodmap = PROJECTROOT "/bin/xmodmap";
+    const char *sysmodmap = PROJECTROOT "/lib/X11/xinit/.Xmodmap";
+    const char *homedir = getenv("HOME");
+    char usermodmap[PATH_MAX], cmd[PATH_MAX];
 
     DEBUG_LOG("DarwinKeyboardReloadHandler\n");
 
@@ -381,6 +394,7 @@ void DarwinKeyboardReloadHandler(void) {
         keySyms.minKeyCode = MIN_KEYCODE;
         keySyms.maxKeyCode = MAX_KEYCODE;
 
+	// TODO: We should build the entire XkbDescRec and use XkbCopyKeymap
         /* Apply the mappings to darwinKeyboard */
         XkbApplyMappingChange(darwinKeyboard, &keySyms, keySyms.minKeyCode,
                               keySyms.maxKeyCode - keySyms.minKeyCode + 1,
@@ -397,6 +411,23 @@ void DarwinKeyboardReloadHandler(void) {
             }
         }
     } pthread_mutex_unlock(&keyInfo_mutex);
+
+    /* Check for system .Xmodmap */
+    if (access(xmodmap, F_OK) == 0) {
+        if (access(sysmodmap, F_OK) == 0) {
+            snprintf (cmd, sizeof(cmd), "%s %s", xmodmap, sysmodmap);
+            X11ApplicationLaunchClient(cmd);
+        }
+    }
+        
+    /* Check for user's local .Xmodmap */
+    if (homedir != NULL) {
+        snprintf (usermodmap, sizeof(usermodmap), "%s/.Xmodmap", homedir);
+        if (access(usermodmap, F_OK) == 0) {
+            snprintf (cmd, sizeof(cmd), "%s %s", xmodmap, usermodmap);
+            X11ApplicationLaunchClient(cmd);
+        }
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -744,9 +775,12 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
 #endif
         }
 
-        if (k[3] == k[2]) k[3] = NoSymbol;
-        if (k[1] == k[0]) k[1] = NoSymbol;
-        if (k[0] == k[2] && k[1] == k[3]) k[2] = k[3] = NoSymbol;
+        // There seems to be an issue with this in 1.5+, shift-space is not
+        // producing space, it's sending NoSymbol... ?
+        //if (k[3] == k[2]) k[3] = NoSymbol;
+        //if (k[1] == k[0]) k[1] = NoSymbol;
+        //if (k[0] == k[2] && k[1] == k[3]) k[2] = k[3] = NoSymbol;
+        //if (k[3] == k[0] && k[2] == k[1] && k[2] == NoSymbol) k[3] = NoSymbol;
     }
 
     /* Fix up some things that are normally missing.. */
@@ -757,7 +791,7 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
 
             if    (k[0] == NoSymbol && k[1] == NoSymbol
                 && k[2] == NoSymbol && k[3] == NoSymbol)
-	      k[0] = known_keys[i].keysym;
+	      k[0] = k[1] = k[2] = k[3] = known_keys[i].keysym;
         }
     }
 
@@ -770,7 +804,7 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
             k = info->keyMap + known_numeric_keys[i].keycode * GLYPHS_PER_KEY;
 
             if (k[0] == known_numeric_keys[i].normal)
-                k[0] = known_numeric_keys[i].keypad;
+                k[0] = k[1] = k[2] = k[3] = known_numeric_keys[i].keypad;
         }
     }
 

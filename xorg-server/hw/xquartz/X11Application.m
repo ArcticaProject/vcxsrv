@@ -411,6 +411,9 @@ static void message_kit_thread (SEL selector, NSObject *arg) {
         SetSystemUIMode(kUIModeAllHidden, quartzFullscreenMenu ? kUIOptionAutoShowMenuBar : 0); // kUIModeAllSuppressed or kUIOptionAutoShowMenuBar can be used to allow "mouse-activation"
 }
 
+- (void) launch_client:(NSString *)cmd {
+    (void)[_controller application:self openFile:cmd];
+}
 
 /* user preferences */
 
@@ -854,6 +857,16 @@ void X11ApplicationShowHideMenubar (int state) {
     message_kit_thread (@selector (show_hide_menubar:), n);
 	
     [n release];
+}
+
+void X11ApplicationLaunchClient (const char *cmd) {
+    NSString *string;
+    
+    string = [[NSString alloc] initWithUTF8String:cmd];
+	
+    message_kit_thread (@selector (launch_client:), string);
+	
+    [string release];
 }
 
 static void check_xinitrc (void) {

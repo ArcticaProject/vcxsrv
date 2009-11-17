@@ -21,6 +21,7 @@ libloader_la_SOURCES = \
         dlloader.c \
 	os.c \
 	sdksyms.c
+libloader_la_LIBADD = $(DLOPEN_LIBS)
 
 CLEANFILES = sdksyms.c sdksyms.dep
 

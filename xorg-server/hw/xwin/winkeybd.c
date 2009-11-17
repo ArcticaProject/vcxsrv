@@ -73,7 +73,8 @@ winTranslateKey (WPARAM wParam, LPARAM lParam, int *piScanCode)
 {
   int		iKeyFixup = g_iKeyMap[wParam * WIN_KEYMAP_COLS + 1];
   int		iKeyFixupEx = g_iKeyMap[wParam * WIN_KEYMAP_COLS + 2];
-  int		iParamScanCode = LOBYTE (HIWORD (lParam));
+  int		iParam = HIWORD (lParam);
+  int		iParamScanCode = LOBYTE (iParam);
 
 /* WM_ key messages faked by Vista speech recognition (WSR) don't have a
  * scan code.
@@ -84,13 +85,19 @@ winTranslateKey (WPARAM wParam, LPARAM lParam, int *piScanCode)
  */
   if (iParamScanCode <= 1)
     {
-      iParamScanCode = MapVirtualKeyEx(wParam,
-				       /*MAPVK_VK_TO_VSC*/0,
-				       GetKeyboardLayout(0));
+      if (VK_PRIOR <= wParam && wParam <= VK_DOWN)
+        /* Trigger special case table to translate to extended
+         * keycode, otherwise if num_lock is on, we can get keypad
+         * numbers instead of navigation keys. */
+        iParam |= KF_EXTENDED;
+      else
+        iParamScanCode = MapVirtualKeyEx(wParam,
+                         /*MAPVK_VK_TO_VSC*/0,
+                         GetKeyboardLayout(0));
     }
 
   /* Branch on special extended, special non-extended, or normal key */
-  if ((HIWORD (lParam) & KF_EXTENDED) && iKeyFixupEx)
+  if ((iParam & KF_EXTENDED) && iKeyFixupEx)
     *piScanCode = iKeyFixupEx;
   else if (iKeyFixup)
     *piScanCode = iKeyFixup;

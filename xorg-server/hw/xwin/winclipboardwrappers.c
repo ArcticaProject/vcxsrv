@@ -439,7 +439,7 @@ winProcSetSelectionOwner (ClientPtr client)
   if (pDrawable->id == g_iClipboardWindow)
     {
       winDebug ("winProcSetSelectionOwner - We changed ownership, "
-	      "aborting.\n");
+               "aborting.\n");
       goto winProcSetSelectionOwner_Done;
     }
 

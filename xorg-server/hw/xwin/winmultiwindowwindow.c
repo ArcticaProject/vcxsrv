@@ -64,18 +64,6 @@ winUpdateWindowsWindow (WindowPtr pWin);
 static void
 winFindWindow (pointer value, XID id, pointer cdata);
 
-/*
- * Macros
- */
-
-#define SubSend(pWin) \
-    ((pWin->eventMask|wOtherEventMasks(pWin)) & SubstructureNotifyMask)
-
-#define StrSend(pWin) \
-    ((pWin->eventMask|wOtherEventMasks(pWin)) & StructureNotifyMask)
-
-#define SubStrSend(pWin,pParent) (StrSend(pWin) || SubSend(pParent))
-
 static
 void winInitMultiWindowClass(void)
 {
@@ -445,26 +433,27 @@ winCreateWindowsWindow (WindowPtr pWin)
   iX = pWin->drawable.x + GetSystemMetrics (SM_XVIRTUALSCREEN);
   iY = pWin->drawable.y + GetSystemMetrics (SM_YVIRTUALSCREEN);
 
-  /* Default positions if none specified */
-  if (!winMultiWindowGetWMNormalHints(pWin, &hints))
-    hints.flags = 0;
-  if ( !(hints.flags & (USPosition|PPosition)) &&
-       !winMultiWindowGetTransientFor (pWin, NULL) &&
-       !pWin->overrideRedirect )
-    {
-      iX = CW_USEDEFAULT;
-      iY = CW_USEDEFAULT;
-    }
-
   iWidth = pWin->drawable.width;
   iHeight = pWin->drawable.height;
 
-    if (winMultiWindowGetTransientFor (pWin, &pDaddy))
+  if (winMultiWindowGetTransientFor (pWin, &pDaddy))
     {
       if (pDaddy)
       {
         hFore = GetForegroundWindow();
         if (hFore && (pDaddy != (WindowPtr)GetProp(hFore, WIN_WID_PROP))) hFore = NULL;
+      }
+    }
+  else
+    {
+      /* Default positions if none specified */
+      if (!winMultiWindowGetWMNormalHints(pWin, &hints))
+        hints.flags = 0;
+      if (!(hints.flags & (USPosition|PPosition)) &&
+          !pWin->overrideRedirect)
+      {
+        iX = CW_USEDEFAULT;
+        iY = CW_USEDEFAULT;
       }
     }
 
@@ -725,7 +714,7 @@ winMinimizeWindow (Window id)
 
   winDebug ("winMinimizeWindow\n");
 
-  pWin = (WindowPtr) LookupIDByType (id, RT_WINDOW);
+  dixLookupResourceByType((pointer) &pWin, id, RT_WINDOW, NullClient, DixUnknownAccess);
   if (!pWin) 
   { 
       ErrorF("%s: NULL pWin. Leaving\n", __FUNCTION__); 

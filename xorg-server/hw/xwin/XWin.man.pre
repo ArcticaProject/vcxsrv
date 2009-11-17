@@ -80,10 +80,9 @@ In addition to the normal server options described in the \fIXserver(1)\fP
 manual page, \fIXWin\fP accepts the following command line switches,
 \fIall\fP of which are optional:
 .TP 8
-.B \-clipboard
-Enables the integration
-between the Cygwin/X clipboard and Windows clipboard.  Do not use in
-conjunction with the \fIxwinclip\fP program.
+.B \-[no]clipboard
+Enables [disables] the integration between the Cygwin/X clipboard and
+Windows clipboard.  The default is enabled.
 .TP 8
 .B "\-clipupdates \fInum_boxes\fP"
 Specify an optional threshold, above which the boxes in a shadow

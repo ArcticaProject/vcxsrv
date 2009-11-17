@@ -36,9 +36,7 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef _MSC_VER
 #include <unistd.h>
-#endif
 #ifdef __CYGWIN__
 #include <sys/select.h>
 #endif
@@ -92,8 +90,6 @@ extern void winUpdateRgnMultiWindow(WindowPtr pWin);
 #endif
 #define WIN_JMP_OKAY		0
 #define WIN_JMP_ERROR_IO	2
-#define AUTH_NAME		"MIT-MAGIC-COOKIE-1"
-
 
 /*
  * Local structures
@@ -142,11 +138,6 @@ typedef struct _XMsgProcArgRec {
 
 extern char *display;
 extern void ErrorF (const char* /*f*/, ...);
-#if defined(XCSECURITY)
-extern unsigned int	g_uiAuthDataLen;
-extern char		*g_pAuthData;
-#endif
-
 
 /*
  * Prototypes for local functions
@@ -211,7 +202,7 @@ static jmp_buf			g_jmpWMEntry;
 static jmp_buf			g_jmpXMsgProcEntry;
 static Bool			g_shutdown = FALSE;
 static Bool			redirectError = FALSE;
-static Bool			g_fAnotherWMRunnig = FALSE;
+static Bool			g_fAnotherWMRunning = FALSE;
 
 /*
  * PushMessage - Push a message onto the queue
@@ -591,7 +582,7 @@ winMultiWindowWMProc (void *pArg)
     {
       WMMsgNodePtr	pNode;
 
-      if(g_fAnotherWMRunnig)/* Another Window manager exists. */
+      if(g_fAnotherWMRunning)/* Another Window manager exists. */
 	{
 	  Sleep (1000);
 	  continue;
@@ -850,6 +841,9 @@ winMultiWindowXMsgProc (void *pArg)
 
   /* Print the display connection string */
   winDebug ("winMultiWindowXMsgProc - DISPLAY=%s\n", pszDisplay);
+
+  /* Use our generated cookie for authentication */
+  winSetAuthorization();
   
   /* Initialize retry count */
   iRetries = 0;
@@ -885,26 +879,15 @@ winMultiWindowXMsgProc (void *pArg)
 	  "successfully opened the display.\n");
 
   /* Check if another window manager is already running */
-  if (pProcArg->pWMInfo->fAllowOtherWM)
-  {
-    g_fAnotherWMRunnig = CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen);
-  } else {
-    redirectError = FALSE;
-    XSetErrorHandler (winRedirectErrorHandler); 	 
-    XSelectInput(pProcArg->pDisplay, 	 
-        RootWindow (pProcArg->pDisplay, pProcArg->dwScreen), 	 
-        SubstructureNotifyMask | ButtonPressMask); 	 
-    XSync (pProcArg->pDisplay, 0); 	 
-    XSetErrorHandler (winMultiWindowXMsgProcErrorHandler); 	 
-    if (redirectError) 	 
-    { 	 
-      ErrorF ("winMultiWindowXMsgProc - " 	 
-          "another window manager is running.  Exiting.\n"); 	 
-      pthread_exit (NULL); 	 
+  g_fAnotherWMRunning = CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen);
+
+  if (g_fAnotherWMRunning && !pProcArg->pWMInfo->fAllowOtherWM)
+    {
+      ErrorF ("winMultiWindowXMsgProc - "
+          "another window manager is running.  Exiting.\n");
+      pthread_exit (NULL);
     }
-    g_fAnotherWMRunnig = FALSE;
-  }
-  
+
   /* Set up the supported icon sizes */
   xis = XAllocIconSize ();
   if (xis)
@@ -929,6 +912,16 @@ winMultiWindowXMsgProc (void *pArg)
 			      "WM_CHANGE_STATE",
 			      False);
 
+  /*
+    iiimxcf had a bug until 2009-04-27, assuming that the
+    WM_STATE atom exists, causing clients to fail with
+    a BadAtom X error if it doesn't.
+
+    Since this is on in the default Solaris 10 install,
+    workaround this by making sure it does exist...
+   */
+  XInternAtom(pProcArg->pDisplay, "WM_STATE", 0);
+
   /* Loop until we explicitly break out */
   while (1)
     {
@@ -939,17 +932,17 @@ winMultiWindowXMsgProc (void *pArg)
 	{
 	  if (CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen))
 	    {
-	      if (!g_fAnotherWMRunnig)
+	      if (!g_fAnotherWMRunning)
 		{
-		  g_fAnotherWMRunnig = TRUE;
+		  g_fAnotherWMRunning = TRUE;
 		  SendMessage(*(HWND*)pProcArg->hwndScreen, WM_UNMANAGE, 0, 0);
 		}
 	    }
 	  else
 	    {
-	      if (g_fAnotherWMRunnig)
+	      if (g_fAnotherWMRunning)
 		{
-		  g_fAnotherWMRunnig = FALSE;
+		  g_fAnotherWMRunning = FALSE;
 		  SendMessage(*(HWND*)pProcArg->hwndScreen, WM_MANAGE, 0, 0);
 		}
 	    }
@@ -979,6 +972,60 @@ winMultiWindowXMsgProc (void *pArg)
 				  event.xcreatewindow.window,
 				  0);
 	}
+      else if (event.type == MapNotify)
+        {
+          /* Fake a reparentNotify event as SWT/Motif expects a
+             Window Manager to reparent a top-level window when
+             it is mapped and waits until they do.
+
+             We don't actually need to reparent, as the frame is
+             a native window, not an X window
+
+             We do this on MapNotify, not MapRequest like a real
+             Window Manager would, so we don't have do get involved
+             in actually mapping the window via it's (non-existent)
+             parent...
+
+             See sourceware bugzilla #9848
+          */
+
+          XWindowAttributes attr;
+          Window root;
+          Window parent;
+          Window *children;
+          unsigned int nchildren;
+
+          if (XGetWindowAttributes(event.xmap.display,
+                                   event.xmap.window,
+                                   &attr) &&
+              XQueryTree(event.xmap.display,
+                         event.xmap.window,
+                         &root, &parent, &children, &nchildren))
+            {
+              if (children) XFree(children);
+
+              /*
+                It's a top-level window if the parent window is a root window
+                Only non-override_redirect windows can get reparented
+              */
+              if ((attr.root == parent) && !event.xmap.override_redirect)
+                {
+                  XEvent event_send;
+
+                  event_send.type = ReparentNotify;
+                  event_send.xreparent.event = event.xmap.window;
+                  event_send.xreparent.window = event.xmap.window;
+                  event_send.xreparent.parent = parent;
+                  event_send.xreparent.x = attr.x;
+                  event_send.xreparent.y = attr.y;
+
+                  XSendEvent(event.xmap.display,
+                             event.xmap.window,
+                             True, StructureNotifyMask,
+                             &event_send);
+                }
+            }
+        }
       else if (event.type == PropertyNotify
 	       && event.xproperty.atom == atmWmName)
 	{
@@ -1173,14 +1220,9 @@ winInitMultiWindowWM (WMInfoPtr pWMInfo, WMProcArgPtr pProcArg)
   /* Print the display connection string */
   winDebug ("winInitMultiWindowWM - DISPLAY=%s\n", pszDisplay);
 
-#if defined(XCSECURITY)
   /* Use our generated cookie for authentication */
-  XSetAuthorization (AUTH_NAME,
-		     strlen (AUTH_NAME),
-		     g_pAuthData,
-		     g_uiAuthDataLen);
-#endif
-  
+  winSetAuthorization();
+
   /* Open the X display */
   do
     {
@@ -1378,27 +1420,23 @@ winRedirectErrorHandler (Display *pDisplay, XErrorEvent *pErr)
 static Bool
 CheckAnotherWindowManager (Display *pDisplay, DWORD dwScreen)
 {
+  /*
+    Try to select the events which only one client at a time is allowed to select.
+    If this causes an error, another window manager is already running...
+   */
   redirectError = FALSE;
   XSetErrorHandler (winRedirectErrorHandler);
   XSelectInput(pDisplay, RootWindow (pDisplay, dwScreen),
-	       // SubstructureNotifyMask | ButtonPressMask
-	       ColormapChangeMask | EnterWindowMask | PropertyChangeMask |
-	       SubstructureRedirectMask | KeyPressMask |
-	       ButtonPressMask | ButtonReleaseMask);
+               ResizeRedirectMask | SubstructureRedirectMask | ButtonPressMask);
   XSync (pDisplay, 0);
   XSetErrorHandler (winMultiWindowXMsgProcErrorHandler);
-  XSelectInput(pDisplay, RootWindow (pDisplay, dwScreen),
-	       SubstructureNotifyMask);
+
+  /*
+    Side effect: select the events we are actually interested in...
+  */
+  XSelectInput(pDisplay, RootWindow (pDisplay, dwScreen), SubstructureNotifyMask);
   XSync (pDisplay, 0);
-  if (redirectError)
-    {
-      //ErrorF ("CheckAnotherWindowManager() - another window manager is running.  Exiting.\n");
-      return TRUE;
-    }
-  else
-    {
-      return FALSE;
-    }
+  return redirectError;
 }
 
 /*

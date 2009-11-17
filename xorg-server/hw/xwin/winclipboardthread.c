@@ -38,7 +38,6 @@
 #ifdef __CYGWIN__
 #include <errno.h>
 #endif
-#include "X11/Xauth.h"
 #include "misc.h"
 #include "winmsg.h"
 
@@ -47,22 +46,11 @@
 #endif
 
 /*
- * Constants
- */
-
-#define AUTH_NAME	"MIT-MAGIC-COOKIE-1"
-
-
-/*
  * References to external symbols
  */
 
 extern Bool		g_fUnicodeClipboard;
 extern unsigned long	serverGeneration;
-#if defined(XCSECURITY)
-extern unsigned int	g_uiAuthDataLen;
-extern char		*g_pAuthData;
-#endif
 extern Bool		g_fClipboardLaunched;
 extern Bool		g_fClipboardStarted;
 extern HWND		g_hwndClipboard;
@@ -158,13 +146,8 @@ winClipboardProc (void *pvNotUsed)
       //goto thread_errorexit;
     }
 
-#if defined(XCSECURITY)
   /* Use our generated cookie for authentication */
-  XSetAuthorization (AUTH_NAME,
-		     strlen (AUTH_NAME),
-		     g_pAuthData,
-		     g_uiAuthDataLen);
-#endif
+  winSetAuthorization();
 
   /* Set error handler */
   XSetErrorHandler (winClipboardErrorHandler);

@@ -47,7 +47,7 @@
 ** Fetch a double from potentially unaligned memory.
 */
 #ifdef __GLX_ALIGN64
-#define __GLX_MEM_COPY(dst,src,n)	if (src && dst) memcpy(dst,src,n)
+#define __GLX_MEM_COPY(dst,src,n)	if (src != NULL && dst != NULL) memcpy(dst,src,n)
 #define __GLX_GET_DOUBLE(dst,src)	__GLX_MEM_COPY(&dst,src,8)
 #else
 #define __GLX_GET_DOUBLE(dst,src)	(dst) = *((GLdouble*)(src))

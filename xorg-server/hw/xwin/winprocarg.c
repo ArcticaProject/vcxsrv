@@ -864,7 +864,19 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-clipboard"))
     {
+      /* Now the default, we still accept the arg for backwards compatibility */
       g_fClipboard = TRUE;
+
+      /* Indicate that we have processed this argument */
+      return 1;
+    }
+
+  /*
+   * Look for the '-noclipboard' argument
+   */
+  if (IS_OPTION ("-noclipboard"))
+    {
+      g_fClipboard = FALSE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -1270,20 +1282,6 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-auth"))
     {
-#ifdef  __MINGW32__
-      HANDLE hFile;
-      char * pszFile;
-      CHECK_ARGS (1);
-      pszFile = argv[++i];
-      hFile = CreateFile(pszFile,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-      if (hFile == INVALID_HANDLE_VALUE)
-	winMessageBoxF ("This authorization file for the -auth option could not be opened...\n"
-			"\"%s\"\n"
-			"You should use an \"Xauthority\" file in your HOME directory.\n"
-			"\nIgnoring and continuing.\n",
-			MB_ICONINFORMATION,
-			pszFile);
-#endif
       g_fAuthEnabled = TRUE;
       return 0; /* Let DIX parse this again */
     }

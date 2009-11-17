@@ -45,20 +45,23 @@
 #include <string.h>
 #include <math.h>
 
+static void handle_detailed_rblank(struct detailed_monitor_section *det_mon,
+                                   void *data)
+{
+    if (det_mon->type == DS_RANGES)
+        if (det_mon->section.ranges.supported_blanking & CVT_REDUCED)
+            *(Bool*)data = TRUE;
+}
+
 static Bool
 xf86MonitorSupportsReducedBlanking(xf86MonPtr DDC)
 {
     /* EDID 1.4 explicitly defines RB support */
     if (DDC->ver.revision >= 4) {
-	int i;
-	for (i = 0; i < DET_TIMINGS; i++) {
-	    struct detailed_monitor_section *det_mon = &DDC->det_mon[i];
-	    if (det_mon->type == DS_RANGES)
-		if (det_mon->section.ranges.supported_blanking & CVT_REDUCED)
-		    return TRUE;
-	}
-	
-	return FALSE;
+        Bool ret = FALSE;
+
+        xf86ForEachDetailedBlock(DDC, handle_detailed_rblank, &ret);
+        return ret;
     }
 
     /* For anything older, assume digital means RB support. Boo. */
@@ -67,34 +70,6 @@ xf86MonitorSupportsReducedBlanking(xf86MonPtr DDC)
 
     return FALSE;
 }
-
-/*
- * Quirks to work around broken EDID data from various monitors.
- */
-
-typedef enum {
-    DDC_QUIRK_NONE = 0,
-    /* First detailed mode is bogus, prefer largest mode at 60hz */
-    DDC_QUIRK_PREFER_LARGE_60 = 1 << 0,
-    /* 135MHz clock is too high, drop a bit */
-    DDC_QUIRK_135_CLOCK_TOO_HIGH = 1 << 1,
-    /* Prefer the largest mode at 75 Hz */
-    DDC_QUIRK_PREFER_LARGE_75 = 1 << 2,
-    /* Convert detailed timing's horizontal from units of cm to mm */
-    DDC_QUIRK_DETAILED_H_IN_CM = 1 << 3,
-    /* Convert detailed timing's vertical from units of cm to mm */
-    DDC_QUIRK_DETAILED_V_IN_CM = 1 << 4,
-    /* Detailed timing descriptors have bogus size values, so just take the
-     * maximum size and use that.
-     */
-    DDC_QUIRK_DETAILED_USE_MAXIMUM_SIZE = 1 << 5,
-    /* Monitor forgot to set the first detailed is preferred bit. */
-    DDC_QUIRK_FIRST_DETAILED_PREFERRED = 1 << 6,
-    /* use +hsync +vsync for detailed mode */
-    DDC_QUIRK_DETAILED_SYNC_PP = 1 << 7,
-    /* Force single-link DVI bandwidth limit */
-    DDC_QUIRK_DVI_SINGLE_LINK = 1 << 8,
-} ddc_quirk_t;
 
 static Bool quirk_prefer_large_60 (int scrnIndex, xf86MonPtr DDC)
 {
@@ -266,7 +241,7 @@ static const ddc_quirk_map_t ddc_quirks[] = {
     },
     {
 	quirk_detailed_use_maximum_size,   DDC_QUIRK_DETAILED_USE_MAXIMUM_SIZE,
-	"Detailed timings give sizes in cm."
+	"Use maximum size instead of detailed timing sizes."
     },
     {
 	quirk_first_detailed_preferred, DDC_QUIRK_FIRST_DETAILED_PREFERRED,
@@ -498,8 +473,10 @@ DDCModesFromStandardTiming(struct std_timings *timing, ddc_quirk_t quirks,
 	vsize = timing[i].vsize;
 	refresh = timing[i].refresh;
 
-	/* HDTV hack.  Hooray. */
-	if (hsize == 1360 && vsize == 765 && refresh == 60) {
+	/* HDTV hack, because you can't say 1366 */
+	if (refresh == 60 &&
+	    ((hsize == 1360 && vsize == 765) ||
+	     (hsize == 1368 && vsize == 769))) {
 	    Mode = xf86CVTMode(1366, 768, 60, FALSE, FALSE);
 	    Mode->HDisplay = 1366;
 	    Mode->VSyncStart--;
@@ -525,6 +502,45 @@ DDCModesFromStandardTiming(struct std_timings *timing, ddc_quirk_t quirks,
     }
 
     return Modes;
+}
+
+static void
+DDCModeDoInterlaceQuirks(DisplayModePtr mode)
+{
+    /*
+     * EDID is delightfully ambiguous about how interlaced modes are to be
+     * encoded.  X's internal representation is of frame height, but some
+     * HDTV detailed timings are encoded as field height.
+     *
+     * The format list here is from CEA, in frame size.  Technically we
+     * should be checking refresh rate too.  Whatever.
+     */
+    static const struct {
+	int w, h;
+    } cea_interlaced[] = {
+	{ 1920, 1080 },
+	{  720,  480 },
+	{ 1440,  480 },
+	{ 2880,  480 },
+	{  720,  576 },
+	{ 1440,  576 },
+	{ 2880,  576 },
+    };
+    static const int n_modes = sizeof(cea_interlaced)/sizeof(cea_interlaced[0]);
+    int i;
+
+    for (i = 0; i < n_modes; i++) {
+	if ((mode->HDisplay == cea_interlaced[i].w) &&
+	    (mode->VDisplay == cea_interlaced[i].h / 2)) {
+	    mode->VDisplay *= 2;
+	    mode->VSyncStart *= 2;
+	    mode->VSyncEnd *= 2;
+	    mode->VTotal *= 2;
+	    mode->VTotal |= 1;
+	}
+    }
+
+    mode->Flags |= V_INTERLACE;
 }
 
 /*
@@ -591,12 +607,10 @@ DDCModeFromDetailedTiming(int scrnIndex, struct detailed_timings *timing,
 	return NULL;
     }
 
-    xf86SetModeDefaultName(Mode);
-
     /* We ignore h/v_size and h/v_border for now. */
 
     if (timing->interlaced)
-        Mode->Flags |= V_INTERLACE;
+	DDCModeDoInterlaceQuirks(Mode);
 
     if (quirks & DDC_QUIRK_DETAILED_SYNC_PP)
 	Mode->Flags |= V_PVSYNC | V_PHSYNC;
@@ -611,6 +625,8 @@ DDCModeFromDetailedTiming(int scrnIndex, struct detailed_timings *timing,
 	else
 	    Mode->Flags |= V_NHSYNC;
     }
+
+    xf86SetModeDefaultName(Mode);
 
     return Mode;
 }
@@ -774,7 +790,7 @@ DDCGuessRangesFromModes(int scrnIndex, MonPtr Monitor, DisplayModePtr Modes)
     }
 }
 
-static ddc_quirk_t
+ddc_quirk_t
 xf86DDCDetectQuirks(int scrnIndex, xf86MonPtr DDC, Bool verbose)
 {
     ddc_quirk_t	quirks;
@@ -794,6 +810,25 @@ xf86DDCDetectQuirks(int scrnIndex, xf86MonPtr DDC, Bool verbose)
     return quirks;
 }
 
+void xf86DetTimingApplyQuirks(struct detailed_monitor_section *det_mon,
+                              ddc_quirk_t quirks,
+                              int hsize, int vsize)
+{
+    if (det_mon->type != DT)
+        return;
+
+    if (quirks & DDC_QUIRK_DETAILED_H_IN_CM)
+        det_mon->section.d_timings.h_size *= 10;
+
+    if (quirks & DDC_QUIRK_DETAILED_V_IN_CM)
+        det_mon->section.d_timings.v_size *= 10;
+
+    if (quirks & DDC_QUIRK_DETAILED_USE_MAXIMUM_SIZE) {
+        det_mon->section.d_timings.h_size = 10 * hsize;
+        det_mon->section.d_timings.v_size = 10 * vsize;
+    }
+}
+
 /**
  * Applies monitor-specific quirks to the decoded EDID information.
  *
@@ -807,21 +842,9 @@ xf86DDCApplyQuirks(int scrnIndex, xf86MonPtr DDC)
     int i;
 
     for (i = 0; i < DET_TIMINGS; i++) {
-	struct detailed_monitor_section *det_mon = &DDC->det_mon[i];
-
-	if (det_mon->type != DT)
-	    continue;
-
-	if (quirks & DDC_QUIRK_DETAILED_H_IN_CM)
-	    det_mon->section.d_timings.h_size *= 10;
-
-	if (quirks & DDC_QUIRK_DETAILED_V_IN_CM)
-	    det_mon->section.d_timings.v_size *= 10;
-
-	if (quirks & DDC_QUIRK_DETAILED_USE_MAXIMUM_SIZE) {
-	    det_mon->section.d_timings.h_size = 10 * DDC->features.hsize;
-	    det_mon->section.d_timings.v_size = 10 * DDC->features.vsize;
-	}
+        xf86DetTimingApplyQuirks(DDC->det_mon + i, quirks,
+                                 DDC->features.hsize,
+                                 DDC->features.vsize);
     }
 }
 
@@ -866,14 +889,156 @@ xf86DDCSetPreferredRefresh(int scrnIndex, DisplayModePtr modes,
 	    best->type |= M_T_PREFERRED;
 }
 
+#define CEA_VIDEO_MODES_NUM  64
+static const DisplayModeRec CEAVideoModes[CEA_VIDEO_MODES_NUM] = {
+    { MODEPREFIX,    25175,  640,  656,  752,  800, 0,  480,  490,  492,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 1:640x480@60Hz */
+    { MODEPREFIX,    27000,  720,  736,  798,  858, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 2:720x480@60Hz */
+    { MODEPREFIX,    27000,  720,  736,  798,  858, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 3:720x480@60Hz */
+    { MODEPREFIX,    74250, 1280, 1390, 1430, 1650, 0,  720,  725,  730,  750, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 4: 1280x720@60Hz */
+    { MODEPREFIX,    74250, 1920, 2008, 2052, 2200, 0, 1080, 1084, 1094, 1125, 0, V_PHSYNC | V_PVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 5:1920x1080i@60Hz */
+    { MODEPREFIX,    27000, 1440, 1478, 1602, 1716, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 6:1440x480i@60Hz */
+    { MODEPREFIX,    27000, 1440, 1478, 1602, 1716, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 7:1440x480i@60Hz */
+    { MODEPREFIX,    27000, 1440, 1478, 1602, 1716, 0,  240,  244,  247,  262, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 8:1440x240@60Hz */
+    { MODEPREFIX,    27000, 1440, 1478, 1602, 1716, 0,  240,  244,  247,  262, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 9:1440x240@60Hz */
+    { MODEPREFIX,    54000, 2880, 2956, 3204, 3432, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 10:2880x480i@60Hz */
+    { MODEPREFIX,    54000, 2880, 2956, 3204, 3432, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 11:2880x480i@60Hz */
+    { MODEPREFIX,    54000, 2880, 2956, 3204, 3432, 0,  240,  244,  247,  262, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 12:2880x240@60Hz */
+    { MODEPREFIX,    54000, 2880, 2956, 3204, 3432, 0,  240,  244,  247,  262, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 13:2880x240@60Hz */
+    { MODEPREFIX,    54000, 1440, 1472, 1596, 1716, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 14:1440x480@60Hz */
+    { MODEPREFIX,    54000, 1440, 1472, 1596, 1716, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 15:1440x480@60Hz */
+    { MODEPREFIX,   148500, 1920, 2008, 2052, 2200, 0, 1080, 1084, 1089, 1125, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 16:1920x1080@60Hz */
+    { MODEPREFIX,    27000,  720,  732,  796,  864, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 17:720x576@50Hz */
+    { MODEPREFIX,    27000,  720,  732,  796,  864, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 18:720x576@50Hz */
+    { MODEPREFIX,    74250, 1280, 1720, 1760, 1980, 0,  720,  725,  730,  750, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 19: 1280x720@50Hz */
+    { MODEPREFIX,    74250, 1920, 2448, 2492, 2640, 0, 1080, 1084, 1094, 1125, 0, V_PHSYNC | V_PVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 20:1920x1080i@50Hz */
+    { MODEPREFIX,    27000, 1440, 1464, 1590, 1728, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 21:1440x576i@50Hz */
+    { MODEPREFIX,    27000, 1440, 1464, 1590, 1728, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 22:1440x576i@50Hz */
+    { MODEPREFIX,    27000, 1440, 1464, 1590, 1728, 0,  288,  290,  293,  312, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 23:1440x288@50Hz */
+    { MODEPREFIX,    27000, 1440, 1464, 1590, 1728, 0,  288,  290,  293,  312, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 24:1440x288@50Hz */
+    { MODEPREFIX,    54000, 2880, 2928, 3180, 3456, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 25:2880x576i@50Hz */
+    { MODEPREFIX,    54000, 2880, 2928, 3180, 3456, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 26:2880x576i@50Hz */
+    { MODEPREFIX,    54000, 2880, 2928, 3180, 3456, 0,  288,  290,  293,  312, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 27:2880x288@50Hz */
+    { MODEPREFIX,    54000, 2880, 2928, 3180, 3456, 0,  288,  290,  293,  312, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 28:2880x288@50Hz */
+    { MODEPREFIX,    54000, 1440, 1464, 1592, 1728, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 29:1440x576@50Hz */
+    { MODEPREFIX,    54000, 1440, 1464, 1592, 1728, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 30:1440x576@50Hz */
+    { MODEPREFIX,   148500, 1920, 2448, 2492, 2640, 0, 1080, 1084, 1089, 1125, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 31:1920x1080@50Hz */
+    { MODEPREFIX,    74250, 1920, 2558, 2602, 2750, 0, 1080, 1084, 1089, 1125, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 32:1920x1080@24Hz */
+    { MODEPREFIX,    74250, 1920, 2448, 2492, 2640, 0, 1080, 1084, 1089, 1125, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 33:1920x1080@25Hz */
+    { MODEPREFIX,    74250, 1920, 2008, 2052, 2200, 0, 1080, 1084, 1089, 1125, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 34:1920x1080@30Hz */
+    { MODEPREFIX,   108000, 2880, 2944, 3192, 3432, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 35:2880x480@60Hz */
+    { MODEPREFIX,   108000, 2880, 2944, 3192, 3432, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 36:2880x480@60Hz */
+    { MODEPREFIX,   108000, 2880, 2928, 3184, 3456, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 37:2880x576@50Hz */
+    { MODEPREFIX,   108000, 2880, 2928, 3184, 3456, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 38:2880x576@50Hz */
+    { MODEPREFIX,    72000, 1920, 1952, 2120, 2304, 0, 1080, 1126, 1136, 1250, 0, V_PHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 39:1920x1080i@50Hz */
+    { MODEPREFIX,   148500, 1920, 2448, 2492, 2640, 0, 1080, 1084, 1094, 1125, 0, V_PHSYNC | V_PVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 40:1920x1080i@100Hz */
+    { MODEPREFIX,   148500, 1280, 1720, 1760, 1980, 0,  720,  725,  730,  750, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 41:1280x720@100Hz */
+    { MODEPREFIX,    54000,  720,  732,  796,  864, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 42:720x576@100Hz */
+    { MODEPREFIX,    54000,  720,  732,  796,  864, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 43:720x576@100Hz */
+    { MODEPREFIX,    54000, 1440, 1464, 1590, 1728, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 44:1440x576i@100Hz */
+    { MODEPREFIX,    54000, 1440, 1464, 1590, 1728, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 45:1440x576i@100Hz */
+    { MODEPREFIX,   148500, 1920, 2008, 2052, 2200, 0, 1080, 1084, 1094, 1125, 0, V_PHSYNC | V_PVSYNC | V_INTERLACE, MODESUFFIX }, /* VIC 46:1920x1080i@120Hz */
+    { MODEPREFIX,   148500, 1280, 1390, 1430, 1650, 0,  720,  725,  730,  750, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 47:1280x720@120Hz */
+    { MODEPREFIX,    54000,  720,  736,  798,  858, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 48:720x480@120Hz */
+    { MODEPREFIX,    54000,  720,  736,  798,  858, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 49:720x480@120Hz */
+    { MODEPREFIX,    54000, 1440, 1478, 1602, 1716, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX },/* VIC 50:1440x480i@120Hz */
+    { MODEPREFIX,    54000, 1440, 1478, 1602, 1716, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX },/* VIC 51:1440x480i@120Hz */
+    { MODEPREFIX,   108000,  720,  732,  796,  864, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 52:720x576@200Hz */
+    { MODEPREFIX,   108000,  720,  732,  796,  864, 0,  576,  581,  586,  625, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 53:720x576@200Hz */
+    { MODEPREFIX,   108000, 1440, 1464, 1590, 1728, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX },/* VIC 54:1440x576i@200Hz */
+    { MODEPREFIX,   108000, 1440, 1464, 1590, 1728, 0,  576,  580,  586,  625, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX },/* VIC 55:1440x576i@200Hz */
+    { MODEPREFIX,   108000,  720,  736,  798,  858, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 56:720x480@240Hz */
+    { MODEPREFIX,   108000,  720,  736,  798,  858, 0,  480,  489,  495,  525, 0, V_NHSYNC | V_NVSYNC, MODESUFFIX }, /* VIC 57:720x480@240Hz */
+    { MODEPREFIX,   108000, 1440, 1478, 1602, 1716, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX },/* VIC 58:1440x480i@240 */
+    { MODEPREFIX,   108000, 1440, 1478, 1602, 1716, 0,  480,  488,  494,  525, 0, V_NHSYNC | V_NVSYNC | V_INTERLACE, MODESUFFIX },/* VIC 59:1440x480i@240 */
+    { MODEPREFIX,    59400, 1280, 3040, 3080, 3300, 0,  720,  725,  730,  750, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 60: 1280x720@24Hz */
+    { MODEPREFIX,    74250, 3700, 3740, 1430, 3960, 0,  720,  725,  730,  750, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 61: 1280x720@25Hz */
+    { MODEPREFIX,    74250, 1280, 3040, 3080, 3300, 0,  720,  725,  730,  750, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 62: 1280x720@30Hz */
+    { MODEPREFIX,   297000, 1920, 2008, 2052, 2200, 0, 1080, 1084, 1089, 1125, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 63: 1920x1080@120Hz */
+    { MODEPREFIX,   297000, 1920, 2448, 2492, 2640, 0, 1080, 1084, 1094, 1125, 0, V_PHSYNC | V_PVSYNC, MODESUFFIX }, /* VIC 64:1920x1080@100Hz */
+};
+
+/* chose mode line by cea short video descriptor*/
+static void handle_cea_svd(struct cea_video_block *video, void *data)
+{
+    DisplayModePtr Mode;
+    DisplayModePtr *Modes = (DisplayModePtr *) data;
+    int vid;
+
+    vid = video ->video_code & 0x7f;
+    if (vid < CEA_VIDEO_MODES_NUM) {
+	Mode = xf86DuplicateMode(CEAVideoModes + vid);
+	*Modes = xf86ModesAdd(*Modes, Mode);
+    }
+}
+
+static DisplayModePtr
+DDCModesFromCEAExtension(int scrnIndex, xf86MonPtr MonPtr)
+{
+    DisplayModePtr Modes = NULL;
+
+    xf86ForEachVideoBlock(MonPtr,
+                          handle_cea_svd,
+                          &Modes);
+
+    return Modes;
+}
+
+struct det_modes_parameter {
+    xf86MonPtr DDC;
+    ddc_quirk_t quirks;
+    DisplayModePtr  Modes;
+    Bool rb;
+    Bool preferred;
+    int timing_level;
+};
+
+static void handle_detailed_modes(struct detailed_monitor_section *det_mon,
+	                          void *data)
+{
+    DisplayModePtr  Mode;
+    struct det_modes_parameter *p = (struct det_modes_parameter *)data;
+
+    xf86DetTimingApplyQuirks(det_mon,p->quirks,
+                             p->DDC->features.hsize,
+                             p->DDC->features.vsize);
+
+    switch (det_mon->type) {
+    case DT:
+        Mode = DDCModeFromDetailedTiming(p->DDC->scrnIndex,
+                                         &det_mon->section.d_timings,
+                                         p->preferred,
+                                         p->quirks);
+        p->preferred = FALSE;
+        p->Modes = xf86ModesAdd(p->Modes, Mode);
+        break;
+    case DS_STD_TIMINGS:
+        Mode = DDCModesFromStandardTiming(det_mon->section.std_t,
+                                          p->quirks, p->timing_level,p->rb);
+        p->Modes = xf86ModesAdd(p->Modes, Mode);
+        break;
+#if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
+    case DS_CVT:
+        Mode = DDCModesFromCVT(p->DDC->scrnIndex, det_mon->section.cvt);
+        p->Modes = xf86ModesAdd(p->Modes, Mode);
+        break;
+#endif
+    case DS_EST_III:
+	Mode = DDCModesFromEstIII(det_mon->section.est_iii);
+	p->Modes = xf86ModesAdd(p->Modes, Mode);
+	break;
+    default:
+        break;
+    }
+}
+
 DisplayModePtr
 xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC)
 {
-    int		    i;
     DisplayModePtr  Modes = NULL, Mode;
     ddc_quirk_t	    quirks;
     Bool	    preferred, rb;
     int		    timing_level;
+    struct det_modes_parameter p;
 
     xf86DrvMsg (scrnIndex, X_INFO, "EDID vendor \"%s\", prod id %d\n",
 		DDC->vendor.name, DDC->vendor.prod_id);
@@ -892,35 +1057,14 @@ xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC)
 
     timing_level = MonitorStandardTimingLevel(DDC);
 
-    for (i = 0; i < DET_TIMINGS; i++) {
-	struct detailed_monitor_section *det_mon = &DDC->det_mon[i];
-
-	Mode = NULL;
-        switch (det_mon->type) {
-        case DT:
-            Mode = DDCModeFromDetailedTiming(scrnIndex,
-                                             &det_mon->section.d_timings,
-					     preferred,
-					     quirks);
-	    preferred = FALSE;
-            break;
-        case DS_STD_TIMINGS:
-            Mode = DDCModesFromStandardTiming(det_mon->section.std_t,
-					      quirks, timing_level, rb);
-            break;
-#if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
-	case DS_CVT:
-	    Mode = DDCModesFromCVT(scrnIndex, det_mon->section.cvt);
-	    break;
-#endif
-	case DS_EST_III:
-	    Mode = DDCModesFromEstIII(det_mon->section.est_iii);
-	    break;
-        default:
-            break;
-        }
-	Modes = xf86ModesAdd(Modes, Mode);
-    }
+    p.quirks = quirks;
+    p.DDC = DDC;
+    p.Modes = Modes;
+    p.rb = rb;
+    p.preferred = preferred;
+    p.timing_level = timing_level;
+    xf86ForEachDetailedBlock(DDC, handle_detailed_modes, &p);
+    Modes = p.Modes;
 
     /* Add established timings */
     Mode = DDCModesFromEstablished(scrnIndex, &DDC->timings1, quirks);
@@ -930,13 +1074,76 @@ xf86DDCGetModes(int scrnIndex, xf86MonPtr DDC)
     Mode = DDCModesFromStandardTiming(DDC->timings2, quirks, timing_level, rb);
     Modes = xf86ModesAdd(Modes, Mode);
 
+    /* Add cea-extension mode timings */
+    Mode = DDCModesFromCEAExtension(scrnIndex,DDC);
+    Modes = xf86ModesAdd(Modes, Mode);
+
     if (quirks & DDC_QUIRK_PREFER_LARGE_60)
 	xf86DDCSetPreferredRefresh(scrnIndex, Modes, 60);
 
     if (quirks & DDC_QUIRK_PREFER_LARGE_75)
 	xf86DDCSetPreferredRefresh(scrnIndex, Modes, 75);
 
+    Modes = xf86PruneDuplicateModes(Modes);
+
     return Modes;
+}
+
+struct det_mon_parameter {
+    MonPtr Monitor;
+    ddc_quirk_t quirks;
+    Bool have_hsync;
+    Bool have_vrefresh;
+    Bool have_maxpixclock;
+};
+
+static void handle_detailed_monset(struct detailed_monitor_section *det_mon,
+                                   void *data)
+{
+    int clock;
+    struct det_mon_parameter *p = (struct det_mon_parameter *)data;
+    int scrnIndex = ((xf86MonPtr)(p->Monitor->DDC))->scrnIndex;
+
+    switch (det_mon->type) {
+    case DS_RANGES:
+        if (!p->have_hsync) {
+            if (!p->Monitor->nHsync)
+                xf86DrvMsg(scrnIndex, X_INFO,
+                    "Using EDID range info for horizontal sync\n");
+                p->Monitor->hsync[p->Monitor->nHsync].lo =
+                    det_mon->section.ranges.min_h;
+                p->Monitor->hsync[p->Monitor->nHsync].hi =
+                    det_mon->section.ranges.max_h;
+                p->Monitor->nHsync++;
+        } else {
+            xf86DrvMsg(scrnIndex, X_INFO,
+                "Using hsync ranges from config file\n");
+        }
+
+        if (!p->have_vrefresh) {
+            if (!p->Monitor->nVrefresh)
+                xf86DrvMsg(scrnIndex, X_INFO,
+                    "Using EDID range info for vertical refresh\n");
+            p->Monitor->vrefresh[p->Monitor->nVrefresh].lo =
+                det_mon->section.ranges.min_v;
+            p->Monitor->vrefresh[p->Monitor->nVrefresh].hi =
+                det_mon->section.ranges.max_v;
+            p->Monitor->nVrefresh++;
+        } else {
+            xf86DrvMsg(scrnIndex, X_INFO,
+                "Using vrefresh ranges from config file\n");
+        }
+
+        clock = det_mon->section.ranges.max_clock * 1000;
+        if (p->quirks & DDC_QUIRK_DVI_SINGLE_LINK)
+            clock = min(clock, 165000);
+        if (!p->have_maxpixclock && clock > p->Monitor->maxPixClock)
+            p->Monitor->maxPixClock = clock;
+
+        break;
+    default:
+        break;
+    }
 }
 
 /*
@@ -946,16 +1153,12 @@ void
 xf86EdidMonitorSet(int scrnIndex, MonPtr Monitor, xf86MonPtr DDC)
 {
     DisplayModePtr Modes = NULL, Mode;
-    int i, clock;
-    Bool have_hsync = FALSE, have_vrefresh = FALSE, have_maxpixclock = FALSE;
-    ddc_quirk_t quirks;
+    struct det_mon_parameter p;
 
     if (!Monitor || !DDC)
         return;
 
     Monitor->DDC = DDC;
-
-    quirks = xf86DDCDetectQuirks(scrnIndex, DDC, FALSE);
 
     if (Monitor->widthmm <= 0 || Monitor->heightmm <= 0) {
 	Monitor->widthmm = 10 * DDC->features.hsize;
@@ -966,54 +1169,13 @@ xf86EdidMonitorSet(int scrnIndex, MonPtr Monitor, xf86MonPtr DDC)
 
     Modes = xf86DDCGetModes(scrnIndex, DDC);
 
-    /* Skip EDID ranges if they were specified in the config file */
-    have_hsync = (Monitor->nHsync != 0);
-    have_vrefresh = (Monitor->nVrefresh != 0);
-    have_maxpixclock = (Monitor->maxPixClock != 0);
-
     /* Go through the detailed monitor sections */
-    for (i = 0; i < DET_TIMINGS; i++) {
-        switch (DDC->det_mon[i].type) {
-        case DS_RANGES:
-	    if (!have_hsync) {
-		if (!Monitor->nHsync)
-		    xf86DrvMsg(scrnIndex, X_INFO,
-			    "Using EDID range info for horizontal sync\n");
-		Monitor->hsync[Monitor->nHsync].lo =
-		    DDC->det_mon[i].section.ranges.min_h;
-		Monitor->hsync[Monitor->nHsync].hi =
-		    DDC->det_mon[i].section.ranges.max_h;
-		Monitor->nHsync++;
-	    } else {
-		xf86DrvMsg(scrnIndex, X_INFO,
-			"Using hsync ranges from config file\n");
-	    }
-
-	    if (!have_vrefresh) {
-		if (!Monitor->nVrefresh)
-		    xf86DrvMsg(scrnIndex, X_INFO,
-			    "Using EDID range info for vertical refresh\n");
-		Monitor->vrefresh[Monitor->nVrefresh].lo =
-		    DDC->det_mon[i].section.ranges.min_v;
-		Monitor->vrefresh[Monitor->nVrefresh].hi =
-		    DDC->det_mon[i].section.ranges.max_v;
-		Monitor->nVrefresh++;
-	    } else {
-		xf86DrvMsg(scrnIndex, X_INFO,
-			"Using vrefresh ranges from config file\n");
-	    }
-
-	    clock = DDC->det_mon[i].section.ranges.max_clock * 1000;
-	    if (quirks & DDC_QUIRK_DVI_SINGLE_LINK)
-		clock = min(clock, 165000);
-	    if (!have_maxpixclock && clock > Monitor->maxPixClock)
-		Monitor->maxPixClock = clock;
-
-            break;
-        default:
-            break;
-        }
-    }
+    p.Monitor = Monitor;
+    p.quirks = xf86DDCDetectQuirks(scrnIndex, Monitor->DDC, FALSE);
+    p.have_hsync = (Monitor->nHsync != 0);
+    p.have_vrefresh = (Monitor->nVrefresh != 0);
+    p.have_maxpixclock = (Monitor->maxPixClock != 0);
+    xf86ForEachDetailedBlock(DDC, handle_detailed_monset, &p);
 
     if (Modes) {
         /* Print Modes */

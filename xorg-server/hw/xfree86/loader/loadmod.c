@@ -399,8 +399,11 @@ FindModuleInSubdir(const char *dirpath, const char *module)
     while ((direntry = readdir(dir))) {
         if (direntry->d_name[0] == '.')
             continue;
-        if ((stat(direntry->d_name, &stat_buf) == 0) && S_ISDIR(stat_buf.st_mode)) {
-            snprintf(tmpBuf, PATH_MAX, "%s/%s", dirpath, direntry->d_name);
+        snprintf(tmpBuf, PATH_MAX, "%s%s/", dirpath, direntry->d_name);
+	/* the stat with the appended / fails for normal files,
+	   and works for sub dirs fine, looks a bit strange in strace
+	   but does seem to work */
+        if ((stat(tmpBuf, &stat_buf) == 0) && S_ISDIR(stat_buf.st_mode)) {
             if ((ret = FindModuleInSubdir(tmpBuf, module)))
                 break;
             continue;

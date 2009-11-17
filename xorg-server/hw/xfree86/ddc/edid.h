@@ -562,4 +562,101 @@ typedef struct {
 
 extern _X_EXPORT xf86MonPtr ConfiguredMonitor;
 
+#define EXT_TAG 0
+#define EXT_REV 1
+#define CEA_EXT   0x02
+#define VTB_EXT   0x10
+#define DI_EXT    0x40
+#define LS_EXT    0x50
+#define MI_EXT    0x60
+
+#define CEA_EXT_MIN_DATA_OFFSET 4
+#define CEA_EXT_MAX_DATA_OFFSET 127
+#define CEA_EXT_DET_TIMING_NUM 6
+
+#define IEEE_ID_HDMI    0x000C03
+#define CEA_AUDIO_BLK   1
+#define CEA_VIDEO_BLK   2
+#define CEA_VENDOR_BLK  3
+#define CEA_SPEAKER_ALLOC_BLK 4
+#define CEA_VESA_DTC_BLK 5
+#define VENDOR_SUPPORT_AI(x) ((x) >> 7)
+#define VENDOR_SUPPORT_DC_48bit(x)  ( ( (x) >> 6) & 0x01)
+#define VENDOR_SUPPORT_DC_36bit(x)  ( ( (x) >> 5) & 0x01)
+#define VENDOR_SUPPORT_DC_30bit(x)  ( ( (x) >> 4) & 0x01)
+#define VENDOR_SUPPORT_DC_Y444(x)   ( ( (x) >> 3) & 0x01)
+#define VENDOR_LATENCY_PRESENT(x)     ( (x) >> 7)
+#define VENDOR_LATENCY_PRESENT_I(x) ( ( (x) >> 6) & 0x01)
+#define HDMI_MAX_TMDS_UNIT   (5000)
+
+struct cea_video_block {
+  Uchar video_code;
+};
+
+struct cea_audio_block_descriptor {
+  Uchar audio_code[3];
+};
+
+struct cea_audio_block {
+  struct cea_audio_block_descriptor descriptor[10];
+};
+
+struct cea_vendor_block_hdmi {
+  Uchar  portB:4;
+  Uchar  portA:4;
+  Uchar  portD:4;
+  Uchar  portC:4;
+  Uchar  support_flags;
+  Uchar  max_tmds_clock;
+  Uchar  latency_present;
+  Uchar  video_latency;
+  Uchar  audio_latency;
+  Uchar  interlaced_video_latency;
+  Uchar  interlaced_audio_latency;
+};
+
+struct cea_vendor_block {
+  unsigned char ieee_id[3];
+  union {
+      struct cea_vendor_block_hdmi hdmi;
+      /* any other vendor blocks we know about */
+  };
+};
+
+struct cea_speaker_block
+{
+  Uchar FLR:1;
+  Uchar LFE:1;
+  Uchar FC:1;
+  Uchar RLR:1;
+  Uchar RC:1;
+  Uchar FLRC:1;
+  Uchar RLRC:1;
+  Uchar FLRW:1;
+  Uchar FLRH:1;
+  Uchar TC:1;
+  Uchar FCH:1;
+  Uchar Resv:5;
+  Uchar ResvByte;
+};
+
+struct cea_data_block {
+  Uchar len:5;
+  Uchar tag:3;
+  union{
+    struct cea_video_block video;
+    struct cea_audio_block audio;
+    struct cea_vendor_block vendor;
+    struct cea_speaker_block speaker;
+  }u;
+};
+
+struct cea_ext_body {
+  Uchar tag;
+  Uchar rev;
+  Uchar dt_offset;
+  Uchar flags;
+  struct cea_data_block data_collection;
+};
+
 #endif /* _EDID_H_ */

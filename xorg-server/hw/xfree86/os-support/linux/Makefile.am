@@ -40,13 +40,7 @@ AM_CFLAGS = -DUSESTDRES -DHAVE_SYSV_IPC $(DIX_CFLAGS) $(XORG_CFLAGS) $(PLATFORM_
 
 INCLUDES = $(XORG_INCS) $(PLATFORM_INCLUDES) $(LIBDRM_CFLAGS)
 
-# FIXME: These need to be added to the build
-LNX_EXTRA_SRCS = \
-	lnx_font.c
-
 EXTRA_DIST = \
-	$(LNX_EXTRA_SRCS) \
-	lnx.h \
 	$(srcdir)/../shared/xf86Axp.h
 
 if LINUX_ALPHA

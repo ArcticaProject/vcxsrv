@@ -42,6 +42,8 @@ static void get_display_section(Uchar*, struct disp_features *,
 static void get_established_timing_section(Uchar*, struct established_timings *);
 static void get_std_timing_section(Uchar*, struct std_timings *,
 				   struct edid_version *);
+static void fetch_detailed_block(Uchar *c, struct edid_version *ver,
+                                 struct detailed_monitor_section *det_mon);
 static void get_dt_md_section(Uchar *, struct edid_version *,
 			      struct detailed_monitor_section *det_mon);
 static void copy_string(Uchar *, Uchar *);
@@ -53,11 +55,25 @@ static void get_detailed_timing_section(Uchar*, struct 	detailed_timings *);
 static Bool validate_version(int scrnIndex, struct edid_version *);
 
 static void
+find_ranges_section(struct detailed_monitor_section *det, void *ranges)
+{
+   if (det->type == DS_RANGES && det->section.ranges.max_clock)
+       *(struct monitor_ranges **)ranges = &det->section.ranges;
+}
+
+static void
+find_max_detailed_clock(struct detailed_monitor_section *det, void *ret)
+{
+    if (det->type == DT) {
+        *(int *)ret = max(*((int *)ret),
+                          det->section.d_timings.clock);
+    }
+}
+
+static void
 handle_edid_quirks(xf86MonPtr m)
 {
-    int i, j;
-    struct detailed_timings *preferred_timing;
-    struct monitor_ranges *ranges;
+    struct monitor_ranges *ranges = NULL;
 
     /*
      * max_clock is only encoded in EDID in tens of MHz, so occasionally we
@@ -65,28 +81,49 @@ handle_edid_quirks(xf86MonPtr m)
      * similar.  Strictly we should refuse to round up too far, but let's
      * see how well this works.
      */
-    for (i = 0; i < 4; i++) {
-	if (m->det_mon[i].type == DS_RANGES) {
-	    ranges = &m->det_mon[i].section.ranges;
-	    for (j = 0; j < 4; j++) {
-		if (m->det_mon[j].type == DT) {
-		    preferred_timing = &m->det_mon[j].section.d_timings;
-		    if (!ranges->max_clock) continue; /* zero is legal */
-		    if (ranges->max_clock * 1000000 < preferred_timing->clock) {
-			xf86Msg(X_WARNING,
-			    "EDID preferred timing clock %.2fMHz exceeds "
-			    "claimed max %dMHz, fixing\n",
-			    preferred_timing->clock / 1.0e6,
-			    ranges->max_clock);
-			ranges->max_clock =
-			    (preferred_timing->clock+999999)/1000000;
-			return;
-		    }
-		}
-	    }
-	}
-    }
 
+    /* Try to find Monitor Range and max clock, then re-set range value*/
+    xf86ForEachDetailedBlock(m, find_ranges_section, &ranges);
+    if (ranges && ranges->max_clock) {
+        int clock = 0;
+        xf86ForEachDetailedBlock(m, find_max_detailed_clock, &clock);
+        if (clock && (ranges->max_clock * 1e6 < clock)) {
+            xf86Msg(X_WARNING, "EDID timing clock %.2f exceeds claimed max "
+                    "%dMHz, fixing\n", clock / 1.0e6, ranges->max_clock);
+            ranges->max_clock = (clock+999999)/1e6;
+        }
+    }
+}
+
+struct det_hv_parameter {
+    int real_hsize;
+    int real_vsize;
+    float target_aspect;
+};
+
+static void handle_detailed_hvsize(struct detailed_monitor_section *det_mon,
+                                   void *data)
+{
+    struct det_hv_parameter *p = (struct det_hv_parameter *)data;
+    float timing_aspect;
+
+    if (det_mon->type == DT) {
+        struct detailed_timings *timing;
+        timing = &det_mon->section.d_timings;
+
+        if (!timing->v_size)
+            return;
+
+        timing_aspect = (float)timing->h_size / timing->v_size;
+        if (fabs(1 - (timing_aspect / p->target_aspect)) < 0.05) {
+            p->real_hsize = max(p->real_hsize, timing->h_size);
+            p->real_vsize = max(p->real_vsize, timing->v_size);
+        }
+    }
+}
+
+static void encode_aspect_ratio(xf86MonPtr m)
+{
     /*
      * some monitors encode the aspect ratio instead of the physical size.
      * try to find the largest detailed timing that matches that aspect
@@ -96,38 +133,26 @@ handle_edid_quirks(xf86MonPtr m)
 	(m->features.hsize == 16 && m->features.vsize == 10) ||
 	(m->features.hsize == 4 && m->features.vsize == 3) ||
 	(m->features.hsize == 5 && m->features.vsize == 4)) {
-	int real_hsize = 0, real_vsize = 0;
-	float target_aspect, timing_aspect;
-	
-	target_aspect = (float)m->features.hsize / (float)m->features.vsize;
-	for (i = 0; i < 4; i++) {
-	    if (m->det_mon[i].type == DT) {
-		struct detailed_timings *timing;
-		timing = &m->det_mon[i].section.d_timings;
 
-		if (!timing->v_size)
-		    continue;
+        struct det_hv_parameter p;
+        p.real_hsize = 0;
+        p.real_vsize = 0;
+        p.target_aspect = (float)m->features.hsize /m->features.vsize;
 
-		timing_aspect = (float)timing->h_size / (float)timing->v_size;
-		if (fabs(1 - (timing_aspect / target_aspect)) < 0.05) {
-		    real_hsize = max(real_hsize, timing->h_size);
-		    real_vsize = max(real_vsize, timing->v_size);
-		}
-	    }
-	}
+        xf86ForEachDetailedBlock(m, handle_detailed_hvsize, &p);
 
-	if (!real_hsize || !real_vsize) {
+	if (!p.real_hsize || !p.real_vsize) {
 	    m->features.hsize = m->features.vsize = 0;
-	} else if ((m->features.hsize * 10 == real_hsize) &&
-		   (m->features.vsize * 10 == real_vsize)) {
+	} else if ((m->features.hsize * 10 == p.real_hsize) &&
+		   (m->features.vsize * 10 == p.real_vsize)) {
 	    /* exact match is just unlikely, should do a better check though */
 	    m->features.hsize = m->features.vsize = 0;
 	} else {
 	    /* convert mm to cm */
-	    m->features.hsize = (real_hsize + 5) / 10;
-	    m->features.vsize = (real_vsize + 5) / 10;
+	    m->features.hsize = (p.real_hsize + 5) / 10;
+	    m->features.vsize = (p.real_vsize + 5) / 10;
 	}
-	
+
 	xf86Msg(X_INFO, "Quirked EDID physical size to %dx%d cm\n",
 		m->features.hsize, m->features.vsize);
     }
@@ -156,12 +181,148 @@ xf86InterpretEDID(int scrnIndex, Uchar *block)
     m->no_sections = (int)*(char *)SECTION(NO_EDID,block);
 
     handle_edid_quirks(m);
+    encode_aspect_ratio(m);
 
     return (m);
 
  error:
     xfree(m);
     return NULL;
+}
+
+static int get_cea_detail_timing(Uchar *blk, xf86MonPtr mon,
+                                 struct detailed_monitor_section *det_mon)
+{
+    int dt_num;
+    int dt_offset = ((struct cea_ext_body *)blk)->dt_offset;
+
+    dt_num = 0;
+
+    if (dt_offset < CEA_EXT_MIN_DATA_OFFSET)
+        return dt_num;
+
+    for (; dt_offset < (CEA_EXT_MAX_DATA_OFFSET - DET_TIMING_INFO_LEN) &&
+           dt_num < CEA_EXT_DET_TIMING_NUM;
+	   _NEXT_DT_MD_SECTION(dt_offset)) {
+
+        fetch_detailed_block(blk + dt_offset, &mon->ver, det_mon + dt_num);
+        dt_num = dt_num + 1 ;
+    }
+
+    return dt_num;
+}
+
+static void handle_cea_detail_block(Uchar *ext, xf86MonPtr mon,
+                                    handle_detailed_fn fn,
+                                    void *data)
+{
+    int i;
+    struct detailed_monitor_section det_mon[CEA_EXT_DET_TIMING_NUM];
+    int det_mon_num;
+
+    det_mon_num = get_cea_detail_timing(ext, mon, det_mon);
+
+    for (i = 0; i < det_mon_num; i++)
+        fn(det_mon + i, data);
+}
+
+void xf86ForEachDetailedBlock(xf86MonPtr mon,
+                              handle_detailed_fn fn,
+                              void *data)
+{
+    int i;
+    Uchar *ext;
+
+    if (mon == NULL)
+        return;
+
+    for (i = 0; i < DET_TIMINGS; i++)
+        fn(mon->det_mon + i, data);
+
+    for (i = 0; i < mon->no_sections; i++) {
+        ext = mon->rawData + EDID1_LEN * (i + 1);
+        switch (ext[EXT_TAG]){
+        case CEA_EXT:
+            handle_cea_detail_block(ext, mon, fn, data);
+            break;
+        case VTB_EXT:
+        case DI_EXT:
+        case LS_EXT:
+        case MI_EXT:
+	    break;
+        }
+    }
+}
+
+static struct cea_data_block *
+extract_cea_data_block(Uchar *ext, int data_type)
+{
+    struct cea_ext_body *cea;
+    struct cea_data_block *data_collection;
+    struct cea_data_block *data_end;
+
+    cea = (struct cea_ext_body *)ext;
+
+    if (cea->dt_offset <= CEA_EXT_MIN_DATA_OFFSET)
+        return NULL;
+
+    data_collection = &cea->data_collection;
+    data_end = (struct cea_data_block *)(cea->dt_offset + ext);
+
+    for ( ;data_collection < data_end;) {
+
+	if (data_type == data_collection->tag) {
+	    return data_collection;
+	}
+	data_collection = (void *)((unsigned char *)data_collection +
+	    data_collection->len + 1);
+    }
+
+    return NULL;
+}
+
+static void handle_cea_video_block(Uchar *ext, handle_video_fn fn, void *data)
+{
+    struct cea_video_block *video;
+    struct cea_video_block *video_end;
+    struct cea_data_block *data_collection;
+
+    data_collection = extract_cea_data_block(ext, CEA_VIDEO_BLK);
+    if (data_collection == NULL)
+        return;
+
+    video = &data_collection->u.video;
+    video_end = (struct cea_video_block *)
+	((Uchar *)video + data_collection->len);
+
+    for (; video < video_end; video = video + 1) {
+	fn(video, data);
+    }
+}
+
+void xf86ForEachVideoBlock(xf86MonPtr mon,
+	                   handle_video_fn fn,
+                           void *data)
+{
+    int i;
+    Uchar *ext;
+
+    if (mon == NULL)
+	return;
+
+    for (i = 0; i < mon->no_sections; i++) {
+	ext = mon->rawData + EDID1_LEN * (i + 1);
+	switch (ext[EXT_TAG]) {
+	case CEA_EXT:
+	    handle_cea_video_block(ext, fn, data);
+	    break;
+	case VTB_EXT:
+	case DI_EXT:
+	case LS_EXT:
+	case MI_EXT:
+	    break;
+	}
+    }
 }
 
 xf86MonPtr
@@ -288,66 +449,72 @@ get_std_timing_section(Uchar *c, struct std_timings *r,
 static const unsigned char empty_block[18];
 
 static void
-get_dt_md_section(Uchar *c, struct edid_version *ver, 
+fetch_detailed_block(Uchar *c, struct edid_version *ver,
+                     struct detailed_monitor_section *det_mon)
+{
+    if (ver->version == 1 && ver->revision >= 1 && IS_MONITOR_DESC) {
+        switch (MONITOR_DESC_TYPE) {
+        case SERIAL_NUMBER:
+            det_mon->type = DS_SERIAL;
+            copy_string(c,det_mon->section.serial);
+            break;
+        case ASCII_STR:
+            det_mon->type = DS_ASCII_STR;
+            copy_string(c,det_mon->section.ascii_data);
+            break;
+        case MONITOR_RANGES:
+            det_mon->type = DS_RANGES;
+            get_monitor_ranges(c,&det_mon->section.ranges);
+            break;
+        case MONITOR_NAME:
+            det_mon->type = DS_NAME;
+            copy_string(c,det_mon->section.name);
+            break;
+        case ADD_COLOR_POINT:
+            det_mon->type = DS_WHITE_P;
+            get_whitepoint_section(c,det_mon->section.wp);
+            break;
+        case ADD_STD_TIMINGS:
+            det_mon->type = DS_STD_TIMINGS;
+            get_dst_timing_section(c,det_mon->section.std_t, ver);
+            break;
+        case COLOR_MANAGEMENT_DATA:
+            det_mon->type = DS_CMD;
+            break;
+        case CVT_3BYTE_DATA:
+            det_mon->type = DS_CVT;
+            get_cvt_timing_section(c, det_mon->section.cvt);
+            break;
+        case ADD_EST_TIMINGS:
+            det_mon->type = DS_EST_III;
+	    memcpy(det_mon->section.est_iii, c + 6, 6);
+            break;
+        case ADD_DUMMY:
+            det_mon->type = DS_DUMMY;
+            break;
+        default:
+            det_mon->type = DS_UNKOWN;
+            break;
+        }
+	if (c[3] <= 0x0F && memcmp(c, empty_block, sizeof(empty_block))) {
+            det_mon->type = DS_VENDOR + c[3];
+        }
+    } else {
+        det_mon->type = DT;
+        get_detailed_timing_section(c, &det_mon->section.d_timings);
+    }
+}
+
+static void
+get_dt_md_section(Uchar *c, struct edid_version *ver,
 		  struct detailed_monitor_section *det_mon)
 {
-  int i;
- 
-  for (i=0;i<DET_TIMINGS;i++) {  
-    if (ver->version == 1 && ver->revision >= 1 && IS_MONITOR_DESC) {
+    int i;
 
-      switch (MONITOR_DESC_TYPE) {
-      case SERIAL_NUMBER:
-	det_mon[i].type = DS_SERIAL;
-	copy_string(c,det_mon[i].section.serial);
-	break;
-      case ASCII_STR:
-	det_mon[i].type = DS_ASCII_STR;
-	copy_string(c,det_mon[i].section.ascii_data);
-	break;
-      case MONITOR_RANGES:
-	det_mon[i].type = DS_RANGES;
-	get_monitor_ranges(c,&det_mon[i].section.ranges);
-	break;
-      case MONITOR_NAME:
-	det_mon[i].type = DS_NAME;
-	copy_string(c,det_mon[i].section.name);
-	break;
-      case ADD_COLOR_POINT:
-	det_mon[i].type = DS_WHITE_P;
-	get_whitepoint_section(c,det_mon[i].section.wp);
-	break;
-      case ADD_STD_TIMINGS:
-	det_mon[i].type = DS_STD_TIMINGS;
-	get_dst_timing_section(c,det_mon[i].section.std_t, ver);
-	break;
-      case COLOR_MANAGEMENT_DATA:
-	det_mon[i].type = DS_CMD;
-	break;
-      case CVT_3BYTE_DATA:
-	det_mon[i].type = DS_CVT;
-	get_cvt_timing_section(c, det_mon[i].section.cvt);
-	break;
-      case ADD_EST_TIMINGS:
-	det_mon[i].type = DS_EST_III;
-	memcpy(det_mon[i].section.est_iii, c + 6, 6);
-	break;
-      case ADD_DUMMY:
-	det_mon[i].type = DS_DUMMY;
-        break;
-      default:
-        det_mon[i].type = DS_UNKOWN;
-        break;
-      }
-      if (c[3] <= 0x0F && memcmp(c, empty_block, sizeof(empty_block))) {
-	det_mon[i].type = DS_VENDOR + c[3];
-      }
-    } else {
-      det_mon[i].type = DT;
-      get_detailed_timing_section(c,&det_mon[i].section.d_timings);
+    for (i=0; i < DET_TIMINGS; i++) {
+        fetch_detailed_block(c, ver, det_mon + i);
+        NEXT_DT_MD_SECTION;
     }
-    NEXT_DT_MD_SECTION;
-  }
 }
 
 static void
