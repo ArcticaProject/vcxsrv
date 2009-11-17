@@ -779,7 +779,10 @@ CheckPhysLimits(
     {
 #ifdef PANORAMIX
         if (!noPanoramiXExtension)
-            XineramaSetCursorPosition (pDev, new.x, new.y, generateEvents);
+        {
+            if (pScreen && ((new.x != pSprite->hotPhys.x) || (new.y != pSprite->hotPhys.y)))
+              XineramaSetCursorPosition (pDev, new.x, new.y, generateEvents);
+        }
         else
 #endif
         {
