@@ -1,10 +1,20 @@
-; example2.nsi
-;
-; This script is based on example1.nsi, but it remember the directory, 
-; has uninstall support and (optionally) installs start menu shortcuts.
-;
-; It will install example2.nsi into a directory that the user selects,
-
+/*  This file is part of vcxsrv.
+ *
+ *  Copyright (C) 2009 Marc Haesen
+ *
+ *  vcxsrv is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  vcxsrv is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with vcxsrv.  If not, see <http://www.gnu.org/licenses/>.
+*/
 ;--------------------------------
 
 ; The name of the installer
