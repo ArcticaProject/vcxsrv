@@ -58,7 +58,7 @@ typedef struct {
 static const int error_connection = 1;
 
 #ifdef _MSC_VER
-
+#undef close
 #define close(fd) closesocket(fd)
 
 size_t writev(int fildes, const struct iovec *iov, int iovcnt)
