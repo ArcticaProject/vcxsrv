@@ -139,9 +139,10 @@ Section "VcXsrv (required)"
   Pop $2
   # IAssemblyCache::InstallAssembly(0, manifestPath, fir)
   System::Call "$0->7(i 0, w '$PLUGINSDIR\${MSVC_MANIFEST_PART}', i r2) i.r1"
+  StrCmp $1 0 0 failcrt
   System::Call "$0->7(i 0, w '$PLUGINSDIR\${MSVC_MANIFEST_PART_D}', i r2) i.r1"
+  StrCmp $1 0 0 faildebugcrt
   System::Free $2
-  StrCmp $1 0 0 fail2
   System::Call "$0->2()"
   Goto end
   
@@ -150,8 +151,12 @@ fail:
   DetailPrint $1
   Goto end
 
-fail2:
-  DetailPrint "InstallAssembly failed."
+failcrt:
+  DetailPrint "InstallAssembly CRT failed."
+  DetailPrint $1
+  Goto end
+faildebugcrt:
+  DetailPrint "InstallAssembly Debug CRT failed."
   DetailPrint $1
   Goto end
 end:
@@ -222,17 +227,23 @@ Section "Uninstall"
   System::Call "*(i 32, i 0, i 2364391957, i 1217113163, i 178634899, i 3090139977, w 'nsissxs', w '') i.s"
   Pop $2
   System::Call "$0->3(i 0, w 'Microsoft.VC90.CRT,version=$\"9.0.${MSVC_VERSION}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
+  StrCmp $1 0 0 failcrt
   System::Call "$0->3(i 0, w 'Microsoft.VC90.DebugCRT,version=$\"9.0.${MSVC_VERSION_D}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
-  StrCmp $1 0 0 fail2
+  StrCmp $1 0 0 faildebugcrt
   DetailPrint "Disposition returned is $3"
+  System::Free $2
   System::Call "$0->2()"
   Goto end
   fail:
   DetailPrint "CreateAssemblyCache failed."
   DetailPrint $1
   Goto end
-  fail2:
-  DetailPrint "UninstallAssembly failed."
+  failcrt:
+  DetailPrint "UninstallAssembly CRT failed."
+  DetailPrint $1
+  Goto end
+  faildebugcrt:
+  DetailPrint "UninstallAssembly Debug CRT failed."
   DetailPrint $1
   Goto end
 end:
