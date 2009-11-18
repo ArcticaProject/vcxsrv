@@ -111,6 +111,11 @@ Section "VcXsrv (required)"
   File "${MSVCP90_DLL}"
   File "${MSVC_CAT}"
   File "${MSVC_MANIFEST}"
+  File "${MSVCR90_DLL_D}"
+  File "${MSVCM90_DLL_D}"
+  File "${MSVCP90_DLL_D}"
+  File "${MSVC_CAT_D}"
+  File "${MSVC_MANIFEST_D}"
   DetailPrint "Installing CRT assembly..."
   System::Call "sxs::CreateAssemblyCache(*i .r0, i 0) i.r1"
   StrCmp $1 0 0 fail
@@ -124,6 +129,7 @@ Section "VcXsrv (required)"
   Pop $2
   # IAssemblyCache::InstallAssembly(0, manifestPath, fir)
   System::Call "$0->7(i 0, w '$PLUGINSDIR\${MSVC_MANIFEST_PART}', i r2) i.r1"
+  System::Call "$0->7(i 0, w '$PLUGINSDIR\${MSVC_MANIFEST_PART_D}', i r2) i.r1"
   System::Free $2
   StrCmp $1 0 0 fail2
   System::Call "$0->2()"
@@ -206,6 +212,7 @@ Section "Uninstall"
   System::Call "*(i 32, i 0, i 2364391957, i 1217113163, i 178634899, i 3090139977, w 'nsissxs', w '') i.s"
   Pop $2
   System::Call "$0->3(i 0, w 'Microsoft.VC90.CRT,version=$\"9.0.${MSVC_VERSION}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
+  System::Call "$0->3(i 0, w 'Microsoft.VC90.DebugCRT,version=$\"9.0.${MSVC_VERSION_D}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
   StrCmp $1 0 0 fail2
   DetailPrint "Disposition returned is $3"
   System::Call "$0->2()"
