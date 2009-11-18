@@ -58,6 +58,9 @@ typedef struct {
 static const int error_connection = 1;
 
 #ifdef _MSC_VER
+
+#define close(fd) closesocket(fd)
+
 size_t writev(int fildes, const struct iovec *iov, int iovcnt)
 {
   int i, r;
@@ -287,11 +290,7 @@ void xcb_disconnect(xcb_connection_t *c)
         return;
 
     free(c->setup);
-#ifdef _MSC_VER
-    closesocket(c->fd);
-#else
     close(c->fd);
-#endif
 
     pthread_mutex_destroy(&c->iolock);
     _xcb_in_destroy(&c->in);
