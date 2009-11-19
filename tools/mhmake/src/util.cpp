@@ -510,7 +510,7 @@ void loadedmakefile::LoadMakefile()
     {
       throw string("When making use of MHMAKECONF, you have to define OBJDIR in makefile.before");
     }
-    DepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR MAKEDEPFILE);
+    DepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR "." + m_Makefile->GetName()+ ".dep");
     m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
   }
   else
@@ -532,7 +532,7 @@ void loadedmakefile::LoadMakefile()
     char ID[10];
     sprintf(ID,"_%x",md5_finish32( &ctx));
 
-    DepFile=GetFileInfo(string(MAKEDEPFILE)+ID);
+    DepFile=GetFileInfo(string(".") + m_Makefile->GetName()+ ".dep"+ID);
     m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
   }
 
