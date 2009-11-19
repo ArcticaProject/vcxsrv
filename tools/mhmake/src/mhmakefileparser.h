@@ -172,7 +172,7 @@ public:
     SaveAutoDepsFile();
   }
   virtual int yylex(void);
-  virtual void yyerror(char *m);
+  virtual void yyerror(const char *m);
   virtual int yyparse()=0;
 
   int ParseFile(const refptr<fileinfo> &FileInfo,bool SetMakeDir=false);

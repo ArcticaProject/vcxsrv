@@ -75,7 +75,8 @@ int __CDECL main(int argc, char* argv[])
   {
     mhmakefileparser::InitBuildTime();
 
-    putenv("PLATFORM="PLATFORM);
+    char PlatformEnv[]="PLATFORM="PLATFORM;
+    putenv(PlatformEnv);
 
     vector<string> CmdLineArgs;
     for (int i=1; i<argc; i++)

@@ -348,7 +348,7 @@ int  YY_@_CLASS::yy___input(char * buffer,int &result,int max_size)
 }
 #endif
 #ifndef YY_@_FATAL_ERROR_NOCODE
-void YY_@_CLASS::yy___fatal_error(char *msg)
+void YY_@_CLASS::yy___fatal_error(const char *msg)
 {
   YY_@_FATAL_ERROR_CODE
 }

@@ -361,7 +361,7 @@ protected:/* non virtual */
    =0
 #endif
   ;
-  virtual void  YY_@_FATAL_ERROR(char *msg)
+  virtual void  YY_@_FATAL_ERROR(const char *msg)
 #ifdef YY_@_FATAL_ERROR_PURE
   =0
 #endif

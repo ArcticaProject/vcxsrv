@@ -34,7 +34,7 @@ int mhmakefileparser::yylex(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::yyerror(char *m)
+void mhmakefileparser::yyerror(const char *m)
 {
   cerr << this->m_ptheLexer->m_InputFileName<< " ("<<m_yyloc<<"): "<<m<<endl;
 }

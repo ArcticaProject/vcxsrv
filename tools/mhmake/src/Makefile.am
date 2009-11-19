@@ -24,26 +24,26 @@ mhmakeparser.cpp: mhmakeparser.y
 mhmakeparser.h: mhmakeparser.y
 
 .l.cpp:
-	$(LEXCOMPILE) -S$(dir $<)flexskel.cc -H$(dir $<)flexskel.h -h$(@:%.cpp=%.h) -otemp1234.456 $<
+	$(LEXCOMPILE) -S$(srcdir)/flexskel.cc -H$(srcdir)/flexskel.h -h$(@:%.cpp=%.h) -otemp1234.456 $<
 	echo '#include "stdafx.h"' > $@
 	cat temp1234.456 >> $@
 	rm temp1234.456
 
 .y.cpp:
-	$(YACCCOMPILE) -S$(dir $<)bison.cc -H$(dir $<)bison.h -h$(@:%.cpp=%.h) -otemp1234.456 $<
+	$(YACCCOMPILE) -S$(srcdir)/bison.cc -H$(srcdir)/bison.h -h$(@:%.cpp=%.h) -otemp1234.456 $<
 	echo '#include "stdafx.h"' > $@
 	cat temp1234.456 >> $@
 	rm temp1234.456
 
 
 .l.h:
-	$(LEXCOMPILE) -S$(dir $<)flexskel.cc -H$(dir $<)flexskel.h -h$@ -otemp1234.456 $<
+	$(LEXCOMPILE) -S$(srcdir)/flexskel.cc -H$(srcdir)/flexskel.h -h$@ -otemp1234.456 $<
 	echo '#include "stdafx.h"' > $(@:%.h=%.cpp)
 	cat temp1234.456 >> $(@:%.h=%.cpp)
 	rm temp1234.456
 
 .y.h:
-	$(YACCCOMPILE) -S$(dir $<)bison.cc -H$(dir $<)bison.h -h$@ -otemp1234.456 $<
+	$(YACCCOMPILE) -S$(srcdir)/bison.cc -H$(srcdir)/bison.h -h$@ -otemp1234.456 $<
 	echo '#include "stdafx.h"' > $(@:%.h=%.cpp)
 	cat temp1234.456 >> $(@:%.h=%.cpp)
 	rm temp1234.456
