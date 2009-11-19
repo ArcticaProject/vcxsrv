@@ -8,11 +8,8 @@ INCLUDELIBFILES =  \
  damageext\$(OBJDIR)\libdamageext.lib \
  dbe\$(OBJDIR)\libdbe.lib \
  dix\$(OBJDIR)\libdix.lib \
- exa\$(OBJDIR)\libexa.lib \
  fb\$(OBJDIR)\libfb.lib \
  glx\$(OBJDIR)\libglx.lib \
- hw\kdrive\ephyr\$(OBJDIR)\libxephyr.lib \
- hw\kdrive\src\$(OBJDIR)\libkdrive.lib \
  hw\xwin\$(OBJDIR)\libxwin.lib \
  mi\$(OBJDIR)\libmi.lib \
  miext\damage\$(OBJDIR)\libdamage.lib \

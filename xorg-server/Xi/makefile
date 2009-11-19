@@ -48,7 +48,8 @@ CSRCS=allowev.c \
 	xiselectev.c \
 	xisetclientpointer.c \
 	xisetdevfocus.c \
-	xiwarppointer.c
-  
+	xiwarppointer.c \
+	stubs.c
+
 LIBRARY=libXi
 
