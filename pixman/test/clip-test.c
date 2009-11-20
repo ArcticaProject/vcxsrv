@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "pixman.h"
-#include "utils.h"
+#include "gtk-utils.h"
 
 #define WIDTH 200
 #define HEIGHT 200
@@ -31,9 +31,11 @@ main (int argc, char **argv)
 	    { pixman_int_to_fixed (0), { 0xffff, 0x0000, 0x0000, 0xffff } },
 	    { pixman_int_to_fixed (1), { 0xffff, 0xffff, 0x0000, 0xffff } }
 	};
+#if 0
     pixman_point_fixed_t p1 = { 0, 0 };
     pixman_point_fixed_t p2 = { pixman_int_to_fixed (WIDTH),
 				pixman_int_to_fixed (HEIGHT) };
+#endif
     pixman_point_fixed_t c_inner;
     pixman_point_fixed_t c_outer;
     pixman_fixed_t r_inner;

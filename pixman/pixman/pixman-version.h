@@ -32,10 +32,10 @@
 #endif
 
 #define PIXMAN_VERSION_MAJOR 0
-#define PIXMAN_VERSION_MINOR 16
+#define PIXMAN_VERSION_MINOR 17
 #define PIXMAN_VERSION_MICRO 2
 
-#define PIXMAN_VERSION_STRING "0.16.2"
+#define PIXMAN_VERSION_STRING "0.17.2"
 
 #define PIXMAN_VERSION_ENCODE(major, minor, micro) (	\
 	  ((major) * 10000)				\

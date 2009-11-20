@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <config.h>
-#include "pixman.h"
 #include "pixman-private.h"
+#include "pixman.h"
 
 #define FALSE 0
 #define TRUE 1

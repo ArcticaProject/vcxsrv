@@ -358,6 +358,9 @@ PIXMAN_RASTERIZE_EDGES (pixman_image_t *image,
     case 8:
 	rasterize_edges_8 (image, l, r, t, b);
 	break;
+
+    default:
+        break;
     }
 }
 

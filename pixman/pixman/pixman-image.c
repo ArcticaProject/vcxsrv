@@ -48,8 +48,6 @@ _pixman_init_gradient (gradient_t *                  gradient,
     gradient->n_stops = n_stops;
 
     gradient->stop_range = 0xffff;
-    gradient->color_table = NULL;
-    gradient->color_table_size = 0;
     gradient->common.class = SOURCE_IMAGE_CLASS_UNKNOWN;
 
     return TRUE;
@@ -593,6 +591,10 @@ _pixman_image_is_opaque (pixman_image_t *image)
 	if (ALPHA_8 (image->solid.color) != 0xff)
 	    return FALSE;
 	break;
+
+    default:
+        return FALSE;
+        break;
     }
 
     /* Convolution filters can introduce translucency if the sum of the

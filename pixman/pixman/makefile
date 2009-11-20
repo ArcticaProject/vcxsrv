@@ -1,5 +1,4 @@
 LIBRARY = libpixman-1
-DEFINES += PIXMAN_DISABLE_DEPRECATED
 
 CSRCS =			\
 	pixman-access.c				\

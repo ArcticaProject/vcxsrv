@@ -156,7 +156,7 @@ _pixman_implementation_create (pixman_implementation_t *delegate)
     imp->blt = delegate_blt;
     imp->fill = delegate_fill;
 
-    for (i = 0; i < PIXMAN_OP_LAST; ++i)
+    for (i = 0; i < PIXMAN_N_OPERATORS; ++i)
     {
 	imp->combine_32[i] = delegate_combine_32;
 	imp->combine_64[i] = delegate_combine_64;

@@ -133,15 +133,27 @@ general_composite_rect  (pixman_implementation_t *imp,
     /* Skip the store step and composite directly into the
      * destination if the output format of the compose func matches
      * the destination format.
+     *
+     * If the destination format is a8r8g8b8 then we can always do
+     * this. If it is x8r8g8b8, then we can only do it if the
+     * operator doesn't make use of destination alpha.
      */
-    if (!wide &&
-        !dest->common.alpha_map &&
-        !dest->bits.write_func &&
-        (op == PIXMAN_OP_ADD || op == PIXMAN_OP_OVER) &&
-        (dest->bits.format == PIXMAN_a8r8g8b8 ||
-         dest->bits.format == PIXMAN_x8r8g8b8))
+    if ((dest->bits.format == PIXMAN_a8r8g8b8)	||
+	(dest->bits.format == PIXMAN_x8r8g8b8	&&
+	 (op == PIXMAN_OP_OVER		||
+	  op == PIXMAN_OP_ADD		||
+	  op == PIXMAN_OP_SRC		||
+	  op == PIXMAN_OP_CLEAR		||
+	  op == PIXMAN_OP_IN_REVERSE	||
+	  op == PIXMAN_OP_OUT_REVERSE	||
+	  op == PIXMAN_OP_DST)))
     {
-	store = NULL;
+	if (!wide &&
+	    !dest->common.alpha_map &&
+	    !dest->bits.write_func)
+	{
+	    store = NULL;
+	}
     }
 
     if (!store)

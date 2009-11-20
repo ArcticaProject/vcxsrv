@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "pixman.h"
-#include "utils.h"
+#include "gtk-utils.h"
 
 #define WIDTH	60
 #define HEIGHT	60
@@ -77,6 +77,9 @@ writer (void *src, uint32_t value, int size)
     case 4:
 	*(uint32_t *)src = value;
 	break;
+
+    default:
+        break;
     }
 }
 
@@ -113,7 +116,7 @@ main (int argc, char **argv)
 
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-    gtk_window_set_default_size (window, 800, 600);
+    gtk_window_set_default_size (GTK_WINDOW (window), 800, 600);
     
     g_signal_connect (window, "delete-event",
 		      G_CALLBACK (gtk_main_quit),

@@ -1,3 +1,8 @@
+  - Testing
+    - Test implementations against each other
+    - Test both with and without the operator strength reduction.
+      They shold be identical.
+
   - SSE 2 issues:
 
       - Use MM_HINT_NTA instead of MM_HINT_T0

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "pixman.h"
-#include "utils.h"
+#include "gtk-utils.h"
 
 int
 main (int argc, char **argv)
@@ -21,18 +21,20 @@ main (int argc, char **argv)
     pixman_point_fixed_t p1 = { pixman_double_to_fixed (0), 0 };
     pixman_point_fixed_t p2 = { pixman_double_to_fixed (WIDTH / 8.),
 				pixman_int_to_fixed (0) };
+#if 0
     pixman_transform_t trans = {
 	{ { pixman_double_to_fixed (2), pixman_double_to_fixed (0.5), pixman_double_to_fixed (-100), },
 	  { pixman_double_to_fixed (0), pixman_double_to_fixed (3), pixman_double_to_fixed (0), },
 	  { pixman_double_to_fixed (0), pixman_double_to_fixed (0.000), pixman_double_to_fixed (1.0) } 
 	}
     };
-
-    pixman_transform_t id = {
+#else
+    pixman_transform_t trans = {
 	{ { pixman_fixed_1, 0, 0 },
 	  { 0, pixman_fixed_1, 0 },
 	  { 0, 0, pixman_fixed_1 } }
     };
+#endif
 
     pixman_point_fixed_t c_inner;
     pixman_point_fixed_t c_outer;
@@ -67,7 +69,7 @@ main (int argc, char **argv)
     src_img = pixman_image_create_linear_gradient  (&p1, &p2,
 						    stops, 2);
     
-    pixman_image_set_transform (src_img, &id);
+    pixman_image_set_transform (src_img, &trans);
     pixman_image_set_repeat (src_img, PIXMAN_REPEAT_PAD);
     
     pixman_image_composite (PIXMAN_OP_OVER, src_img, NULL, dest_img,
