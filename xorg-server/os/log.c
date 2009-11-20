@@ -271,7 +271,8 @@ LogVWrite(int verb, const char *f, va_list args)
      * stream(s).
      */
     if (verb < 0 || logFileVerbosity >= verb || logVerbosity >= verb) {
-	vsnprintf(tmpBuffer, sizeof(tmpBuffer), f, args);
+	vsnprintf(tmpBuffer, sizeof(tmpBuffer)-1, f, args);
+        tmpBuffer[sizeof(tmpBuffer)-1]=0;
 	len = strlen(tmpBuffer);
     }
     if ((verb < 0 || logVerbosity >= verb) && len > 0)
