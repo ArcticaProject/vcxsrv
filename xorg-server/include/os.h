@@ -114,6 +114,8 @@ extern _X_EXPORT int WriteToClient(ClientPtr /*who*/, int /*count*/, const void*
 
 extern _X_EXPORT void ResetOsBuffers(void);
 
+extern _X_EXPORT int TransIsListening(char *protocol);
+
 extern _X_EXPORT void InitConnectionLimits(void);
 
 extern _X_EXPORT void NotifyParentProcess(void);

@@ -73,13 +73,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\mesaopengl32.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)mesaopengl32.pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -103,7 +103,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.lib&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -166,12 +166,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\mesaopengl32.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)mesaopengl32.pdb"
 				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -196,7 +196,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.lib&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -257,13 +257,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\mesaopengl32.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)mesaopengl32.pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 			/>
@@ -287,7 +287,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.lib&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -353,12 +353,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="gdi32.lib user32.lib"
-				OutputFile="$(OutDir)\OPENGL32.dll"
+				OutputFile="$(OutDir)\mesaopengl32.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(TargetDir)"
 				ModuleDefinitionFile="..\..\..\..\src\mesa\drivers\windows\gdi\mesa.def"
-				ProgramDatabaseFile="$(TargetDir)OPENGL32.pdb"
+				ProgramDatabaseFile="$(TargetDir)mesaopengl32.pdb"
 				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -383,7 +383,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.LIB&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)OPENGL32.DLL&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
+				CommandLine="if not exist ..\..\..\..\lib md ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.lib&quot; ..\..\..\..\lib&#x0D;&#x0A;copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\lib&#x0D;&#x0A;if exist ..\..\..\..\progs\demos copy &quot;$(TargetDir)mesaopengl32.dll&quot; ..\..\..\..\progs\demos&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

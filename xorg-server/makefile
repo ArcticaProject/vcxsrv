@@ -11,6 +11,7 @@ INCLUDELIBFILES =  \
  fb\$(OBJDIR)\libfb.lib \
  glx\$(OBJDIR)\libglx.lib \
  hw\xwin\$(OBJDIR)\libxwin.lib \
+ hw\xwin\glx\$(OBJDIR)\libwinglx.lib \
  mi\$(OBJDIR)\libmi.lib \
  miext\damage\$(OBJDIR)\libdamage.lib \
  miext\shadow\$(OBJDIR)\libshadow.lib \
@@ -124,12 +125,12 @@ load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
 all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
      ..\libX11\nls\all fonts.src\all xkbdata.src\all plink.exe xclock.exe xcalc.exe \
-     xwininfo.exe opengl32.dll swrast_dri.dll
+     xwininfo.exe mesaopengl32.dll swrast_dri.dll
 
 swrast_dri.dll: ..\mesalib\lib\swrast_dri.dll
 	copy $< $@
 
-opengl32.dll: ..\mesalib\lib\opengl32.dll
+mesaopengl32.dll: ..\mesalib\lib\mesaopengl32.dll
 	copy $< $@
 
 protocol.txt: dix\protocol.txt

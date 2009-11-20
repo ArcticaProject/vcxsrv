@@ -239,7 +239,7 @@ for w in sorted(wrappers.keys()) :
         if wrappers[w]['category'].startswith('VERSION_1_0') or wrappers[w]['category'].startswith('VERSION_1_1') :
                 if staticwrappers :
                         print 'static',
-                print returntype + ' ' + funcname + 'Wrapper(' + arglist + ')'
+                print returntype + ' __stdcall ' + funcname + 'Wrapper(' + arglist + ')'
                 print '{'
                 print '  if (glxWinDebugSettings.enable' + prefix.upper() + 'callTrace) ErrorF("'+ funcname + '\\n");'
                 print '  glWinDirectProcCalls++;'
@@ -257,7 +257,7 @@ for w in sorted(wrappers.keys()) :
         else:
                 if staticwrappers :
                         print 'static',
-                print returntype + ' ' + funcname + 'Wrapper(' + arglist + ')'
+                print returntype + ' __stdcall ' + funcname + 'Wrapper(' + arglist + ')'
                 print '{'
 
                 stringname = funcname

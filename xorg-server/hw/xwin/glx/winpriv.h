@@ -10,6 +10,8 @@
 typedef struct
 {
     HWND    hwnd;
+    HRGN    hrgn;
+    RECT    rect;
 } winWindowInfoRec, *winWindowInfoPtr;
 
 void winGetWindowInfo(WindowPtr pWin, winWindowInfoPtr pWinInfo);

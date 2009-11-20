@@ -484,6 +484,10 @@ winCreateWindowsWindow (WindowPtr pWin)
   if (hIcon) SendMessage (hWnd, WM_SETICON, ICON_BIG, (LPARAM) hIcon);
   if (hIconSmall) SendMessage (hWnd, WM_SETICON, ICON_SMALL, (LPARAM) hIconSmall);
  
+  /* If we asked the native WM to place the window, synchronize the X window position */
+  if ((iX == CW_USEDEFAULT) || (iY == CW_USEDEFAULT))
+    winAdjustXWindow(pWin, hWnd);
+
   /* Change style back to popup, already placed... */
   SetWindowLongPtr(hWnd, GWL_STYLE, WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
   SetWindowPos (hWnd, 0, 0, 0, 0, 0,

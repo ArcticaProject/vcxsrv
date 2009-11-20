@@ -103,7 +103,7 @@ glWinResolveHelper(PROC *cache, char *symbol)
 
 #define RESOLVE_RET(proctype, symbol, retval) \
     static PROC cache = NULL; \
-    __stdcall proctype proc = (proctype)glWinResolveHelper(&cache, symbol); \
+    proctype proc = (proctype)glWinResolveHelper(&cache, symbol); \
     if (proc == NULL) { \
         __glXErrorCallBack(0); \
         return retval; \

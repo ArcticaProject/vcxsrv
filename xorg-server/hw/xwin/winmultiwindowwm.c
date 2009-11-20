@@ -836,8 +836,7 @@ winMultiWindowXMsgProc (void *pArg)
   XSetIOErrorHandler (winMultiWindowXMsgProcIOErrorHandler);
 
   /* Setup the display connection string x */
-  snprintf (pszDisplay,
-	    512, "127.0.0.1:%s.%d", display, (int)pProcArg->dwScreen);
+  winGetDisplayName(pszDisplay, (int)pProcArg->dwScreen);
 
   /* Print the display connection string */
   winDebug ("winMultiWindowXMsgProc - DISPLAY=%s\n", pszDisplay);
@@ -1211,11 +1210,7 @@ winInitMultiWindowWM (WMInfoPtr pWMInfo, WMProcArgPtr pProcArg)
   XSetIOErrorHandler (winMultiWindowWMIOErrorHandler);
 
   /* Setup the display connection string x */
-  snprintf (pszDisplay,
-	    512,
-	    "127.0.0.1:%s.%d",
-	    display,
-	    (int) pProcArg->dwScreen);
+  winGetDisplayName(pszDisplay, (int)pProcArg->dwScreen);
 
   /* Print the display connection string */
   winDebug ("winInitMultiWindowWM - DISPLAY=%s\n", pszDisplay);

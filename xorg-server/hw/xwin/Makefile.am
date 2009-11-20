@@ -13,9 +13,10 @@ DEFS_CLIPBOARD = -DXWIN_CLIPBOARD
 endif
 
 if XWIN_GLX_WINDOWS
-SRCS_GLX_WINDOWS = \
-	winpriv.c
+GLX_DIR = glx
 DEFS_GLX_WINDOWS = -DXWIN_GLX_WINDOWS
+XWIN_GLX_LIBS = $(top_builddir)/hw/xwin/glx/libXwinGLX.la
+XWIN_GLX_LINK_FLAGS = -lopengl32
 endif
 
 if XWIN_MULTIWINDOW
@@ -120,13 +121,13 @@ SRCS =	InitInput.c \
 	winpriv.h \
 	winresource.h \
 	winwindow.h \
+	windisplay.c \
 	XWin.rc \
 	$(top_srcdir)/Xext/dpmsstubs.c \
 	$(top_srcdir)/Xi/stubs.c \
 	$(top_srcdir)/mi/miinitext.c \
 	$(top_srcdir)/fb/fbcmap_mi.c \
 	$(SRCS_CLIPBOARD) \
-	$(SRCS_GLX_WINDOWS) \
 	$(SRCS_MULTIWINDOW) \
 	$(SRCS_MULTIWINDOWEXTWM) \
 	$(SRCS_NATIVEGDI) \
@@ -147,13 +148,12 @@ XWin_SOURCES = $(SRCS)
 
 INCLUDES = -I$(top_srcdir)/miext/rootless
 
-XWin_DEPENDENCIES = $(XWIN_LIBS)
-XWin_LDADD = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_LIBS) $(MAIN_LIB) $(XSERVER_LIBS) $(XSERVER_SYS_LIBS) $(XWIN_SYS_LIBS)
+XWin_DEPENDENCIES = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_GLX_LIBS) $(XWIN_LIBS) $(MAIN_LIB) $(XSERVER_LIBS)
+XWin_LDADD = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_GLX_LIBS) $(XWIN_GLX_LINK_FLAGS) $(XWIN_LIBS) $(MAIN_LIB) $(XSERVER_LIBS) $(XSERVER_SYS_LIBS) $(XWIN_SYS_LIBS)
+XWin_LDFLAGS = -mwindows
 
 .rc.o:
-	$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -DPROJECT_NAME=\"$(VENDOR_NAME_SHORT)\"
-
-XWin_LDFLAGS = -mwindows -static
+	$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include -DPROJECT_NAME=\"$(VENDOR_NAME_SHORT)\"
 
 winprefsyacc.h: winprefsyacc.c
 winprefslex.c: winprefslex.l winprefsyacc.c winprefsyacc.h
@@ -165,12 +165,8 @@ AM_YFLAGS = -d
 AM_LFLAGS = -i
 AM_CFLAGS = -DHAVE_XWIN_CONFIG_H $(DIX_CFLAGS) \
             $(XWINMODULES_CFLAGS) \
-            -DXFree86Server
-
-GLX_EXTRAS = \
-	glx/glwindows.h \
-	glx/glwrap.c \
-	glx/indirect.c
+            -DXFree86Server \
+            -I$(top_srcdir)
 
 MAN_SRCS = XWin.man.pre XWinrc.man.pre
 
@@ -193,7 +189,6 @@ EXTRAMANDEFS = -D__logdir__=$(logdir) -D__sysconfdir__=$(sysconfdir) -D__datadir
 include $(top_srcdir)/cpprules.in
 
 EXTRA_DIST = \
-	$(GLX_EXTRAS) \
 	$(MAN_SRCS) \
 	_usr_X11R6_lib_X11_system.XWinrc \
 	X.ico \
@@ -221,3 +216,6 @@ EXTRA_DIST = \
 
 relink:
 	rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)
+
+SUBDIRS = $(GLX_DIR) .
+DIST_SUBDIRS = glx .

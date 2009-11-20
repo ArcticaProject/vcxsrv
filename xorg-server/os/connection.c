@@ -277,6 +277,23 @@ lookup_trans_conn (int fd)
     return (NULL);
 }
 
+int
+TransIsListening(char *protocol)
+{
+  /* look for this transport in the list of listeners */
+  int i;
+  for (i = 0; i < ListenTransCount; i++)
+    {
+      if (!strcmp(protocol, ListenTransConns[i]->transptr->TransName))
+        {
+          return 1;
+        }
+    }
+
+  return 0;
+}
+
+
 /* Set MaxClients and lastfdesc, and allocate ConnectionTranslation */
 
 void

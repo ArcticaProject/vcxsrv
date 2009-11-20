@@ -38,50 +38,50 @@ void wglResolveExtensionProcs(void);
   XXX: should be automatically generated as well
 */
 
-const char *wglGetExtensionsStringARBWrapper(HDC hdc);
-BOOL wglMakeContextCurrentARBWrapper(HDC hDrawDC, HDC hReadDC, HGLRC hglrc);
-HDC wglGetCurrentReadDCARBWrapper(VOID);
+const char * __stdcall wglGetExtensionsStringARBWrapper(HDC hdc);
+BOOL __stdcall wglMakeContextCurrentARBWrapper(HDC hDrawDC, HDC hReadDC, HGLRC hglrc);
+HDC __stdcall wglGetCurrentReadDCARBWrapper(VOID);
 
-BOOL wglGetPixelFormatAttribivARBWrapper(HDC hdc,
+BOOL __stdcall wglGetPixelFormatAttribivARBWrapper(HDC hdc,
                                           int iPixelFormat,
                                           int iLayerPlane,
                                           UINT nAttributes,
                                           const int *piAttributes,
                                           int *piValues);
 
-BOOL wglGetPixelFormatAttribfvARBWrapper(HDC hdc,
+BOOL __stdcall wglGetPixelFormatAttribfvARBWrapper(HDC hdc,
                                           int iPixelFormat,
                                           int iLayerPlane,
                                           UINT nAttributes,
                                           const int *piAttributes,
                                           FLOAT *pfValues);
 
-BOOL wglChoosePixelFormatARBWrapper(HDC hdc,
+BOOL __stdcall wglChoosePixelFormatARBWrapper(HDC hdc,
                                      const int *piAttribIList,
                                      const FLOAT *pfAttribFList,
                                      UINT nMaxFormats,
                                      int *piFormats,
                                      UINT *nNumFormats);
 
-HPBUFFERARB wglCreatePbufferARBWrapper(HDC hDC,
+HPBUFFERARB __stdcall wglCreatePbufferARBWrapper(HDC hDC,
                                        int iPixelFormat,
                                        int iWidth,
                                        int iHeight,
                                        const int *piAttribList);
 
-HDC wglGetPbufferDCARBWrapper(HPBUFFERARB hPbuffer);
+HDC __stdcall wglGetPbufferDCARBWrapper(HPBUFFERARB hPbuffer);
 
-int wglReleasePbufferDCARBWrapper(HPBUFFERARB hPbuffer,
+int __stdcall wglReleasePbufferDCARBWrapper(HPBUFFERARB hPbuffer,
                                   HDC hDC);
 
-BOOL wglDestroyPbufferARBWrapper(HPBUFFERARB hPbuffer);
+BOOL __stdcall wglDestroyPbufferARBWrapper(HPBUFFERARB hPbuffer);
 
-BOOL wglQueryPbufferARBWrapper(HPBUFFERARB hPbuffer,
+BOOL __stdcall wglQueryPbufferARBWrapper(HPBUFFERARB hPbuffer,
                                 int iAttribute,
                                 int *piValue);
 
-BOOL wglSwapIntervalEXTWrapper(int interval);
+BOOL __stdcall wglSwapIntervalEXTWrapper(int interval);
 
-int wglGetSwapIntervalEXTWrapper(void);
+int __stdcall wglGetSwapIntervalEXTWrapper(void);
 
 #endif /* wgl_ext_api_h */

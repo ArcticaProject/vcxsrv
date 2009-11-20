@@ -100,8 +100,8 @@ extern HMODULE			g_hmodCommonControls;
 extern FARPROC			g_fpTrackMouseEvent;
 extern Bool			g_fNoHelpMessageBox;                     
 extern Bool			g_fSilentDupError;                     
-  
-  
+extern Bool                     g_fNativeGl;
+
 /*
  * Function prototypes
  */
@@ -908,6 +908,11 @@ winUseMsg (void)
   ErrorF ("-swcursor\n"
 	  "\tDisable the usage of the windows cursor and use the X11 software "
 	  "cursor instead\n");
+
+#ifdef XWIN_GLX_WINDOWS
+  ErrorF ("-[no]wgl\n"
+	  "\tEnable the GLX extension to use the native Windows WGL interface for accelerated OpenGL\n");
+#endif
 }
 
 /* See Porting Layer Definition - p. 57 */

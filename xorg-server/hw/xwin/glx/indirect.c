@@ -79,6 +79,8 @@
 #include <winpriv.h>
 #include <wgl_ext_api.h>
 
+extern Bool g_fNativeGl;
+
 #define NUM_ELEMENTS(x) (sizeof(x)/ sizeof(x[1]))
 
 /* ---------------------------------------------------------------------- */
@@ -408,7 +410,8 @@ __GLXprovider __glXWGLProvider = {
 void
 glxWinPushNativeProvider(void)
 {
-  GlxPushProvider(&__glXWGLProvider);
+  if (g_fNativeGl)
+    GlxPushProvider(&__glXWGLProvider);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -934,7 +937,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
 
   __GLXconfig *config = gc->base.config;
   GLXWinConfig *winConfig = (GLXWinConfig *)config;
-
+  
   GLWIN_DEBUG_MSG("glxWinSetPixelFormat: pixelFormatIndex %d", winConfig->pixelFormatIndex);
 
   /*
@@ -978,7 +981,7 @@ glxWinSetPixelFormat(__GLXWinContext *gc, HDC hdc, int bppOverride, int drawable
     {
       PIXELFORMATDESCRIPTOR pfd;
       int pixelFormat;
-
+      
       /* convert fbConfig to PFD */
       if (fbConfigToPixelFormat(gc->base.config, &pfd, drawableTypeOverride))
         {
@@ -1190,6 +1193,9 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
     {
       if (draw->hPbuffer == NULL)
         {
+          __GLXscreen *screen;
+          glxWinScreen *winScreen;
+          int pixelFormat;
           // XXX: which DC are supposed to use???
           HDC screenDC = GetDC(NULL);
 
@@ -1198,10 +1204,10 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
               ErrorF("glxWinDeferredCreateContext: tried to attach a context whose fbConfig doesn't have drawableType GLX_PBUFFER_BIT to a GLX_DRAWABLE_PBUFFER drawable\n");
             }
 
-          __GLXscreen *screen = gc->base.pGlxScreen;
-          glxWinScreen *winScreen = (glxWinScreen *)screen;
+          screen = gc->base.pGlxScreen;
+          winScreen = (glxWinScreen *)screen;
 
-          int pixelFormat = fbConfigToPixelFormatIndex(screenDC, gc->base.config, GLX_DRAWABLE_PBUFFER, winScreen);
+          pixelFormat = fbConfigToPixelFormatIndex(screenDC, gc->base.config, GLX_DRAWABLE_PBUFFER, winScreen);
           if (pixelFormat == 0)
             {
               ErrorF("wglChoosePixelFormat error: %s\n", glxWinErrorMessage());
@@ -1445,13 +1451,14 @@ glxWinContextDestroy(__GLXcontext *base)
 
       if (gc->ctx)
         {
+          BOOL ret;
           /* It's bad style to delete the context while it's still current */
           if (wglGetCurrentContext() == gc->ctx)
             {
               wglMakeCurrent(NULL, NULL);
             }
 
-          BOOL ret = wglDeleteContext(gc->ctx);
+          ret = wglDeleteContext(gc->ctx);
           if (!ret)
             ErrorF("wglDeleteContext error: %s\n", glxWinErrorMessage());
           gc->ctx = NULL;
@@ -1988,11 +1995,14 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen *screen)
   /* fill in configs */
   for (i = 0;  i < numConfigs; i++)
     {
+      int sizevalues=num_attrs*sizeof(int);
+      int *values=(int*)_alloca(sizevalues);
+
+      memset(values,0,sizevalues);
+
       c = &(result[i]);
       c->base.next = NULL;
       c->pixelFormatIndex = i+1;
-
-      int values[num_attrs];
 
       if (!wglGetPixelFormatAttribivARBWrapper(hdc, i+1, 0, num_attrs, attrs, values))
         {

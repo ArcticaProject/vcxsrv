@@ -78,6 +78,7 @@ CSRCS = InitInput.c \
 	winprefslex.c \
 	winprefsyacc.c \
 	winwndproc.c \
+	windisplay.c \
 	$(SRCS_RANDR) \
 	$(SRCS_CLIPBOARD) \
 	$(SRCS_MULTIWINDOW) \

@@ -50,8 +50,14 @@ void glAddSwapHintRectWINWrapperNonstatic(GLint x, GLint y, GLsizei width, GLsiz
 void glWinSetupDispatchTable(void);
 
 #if 1
+#ifdef _MSC_VER
+#define GLWIN_TRACE_MSG(msg, ...) if (glxWinDebugSettings.enableTrace) ErrorF(msg " [%s:%d]\n" , __VA_ARGS__ , __FUNCTION__, __LINE__ )
+#define GLWIN_DEBUG_MSG(msg, ...) if (glxWinDebugSettings.enableDebug) ErrorF(msg " [%s:%d]\n" , __VA_ARGS__ , __FUNCTION__, __LINE__ )
+#else
 #define GLWIN_TRACE_MSG(msg, args...) if (glxWinDebugSettings.enableTrace) ErrorF(msg " [%s:%d]\n" , ##args , __FUNCTION__, __LINE__ )
 #define GLWIN_DEBUG_MSG(msg, args...) if (glxWinDebugSettings.enableDebug) ErrorF(msg " [%s:%d]\n" , ##args , __FUNCTION__, __LINE__ )
+#endif
+
 #else
 #define GLWIN_TRACE_MSG(a, ...)
 #define GLWIN_DEBUG_MSG(a, ...)

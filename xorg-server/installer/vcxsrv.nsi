@@ -65,6 +65,10 @@ Section "VcXsrv (required)"
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
+  ; Remove old opengl32.dll file if it extits
+  IfFileExists "$INSTDIR\opengl32.dll" 0 +2
+    Delete "$INSTDIR\opengl32.dll"
+
   ; Put files there
   File "..\obj\servrelease\vcxsrv.exe"
   File "..\obj\servdebug\vcxsrv_dbg.exe"
@@ -81,7 +85,7 @@ Section "VcXsrv (required)"
   File "..\XErrorDB"
   File "..\hw\xwin\xlaunch\obj\release\xlaunch.exe"
   File "..\..\tools\plink\obj\release\plink.exe"
-  File "..\..\mesalib\windows\VC8\mesa\Release\opengl32.dll"
+  File "..\..\mesalib\windows\VC8\mesa\Release\mesaopengl32.dll"
   File "..\..\mesalib\windows\VC8\mesa\Release\swrast_dri.dll"
   SetOutPath $INSTDIR\fonts
   File /r "..\fonts\*.*"

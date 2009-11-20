@@ -18,6 +18,9 @@
 #                               ^^ This command will have any "%display%"
 #                                  string replaced with the proper display
 #                                  variable (i.e. 127.0.0.1:<display>.0)
+#                                  (This should only rarely be needed as
+#                                  the DISPLAY environment variable is also
+#                                  set correctly)
 #  or	<Menu Text>	MENU	<name-of-some-prior-defined-menu>
 #  or	<Menu Text>	ALWAYSONTOP
 #                         ^^ Sets the window to display above all others
@@ -80,7 +83,7 @@
 // Make some menus...
 menu apps {
 	xterm	exec	"xterm"
-	"Emacs"		exec	"emacs"
+	"Emacs"	exec	"emacs"
 	notepad	exec	notepad
 	xload	exec	"xload -display %display%"  # Comment
 }

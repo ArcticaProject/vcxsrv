@@ -490,7 +490,10 @@ InitExtensions(int argc, char *argv[])
 
 #ifdef GLXEXT
     if (serverGeneration == 1)
+    {
 	GlxPushProvider(&__glXDRISWRastProvider);
+	glxWinPushNativeProvider();
+    }
     if (!noGlxExtension) GlxExtensionInit();
 #endif
 }
