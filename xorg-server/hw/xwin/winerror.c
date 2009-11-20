@@ -41,7 +41,7 @@
 
 /* References to external symbols */
 extern char *		g_pszCommandLine;
-extern char *		g_pszLogFile;
+extern const char *	g_pszLogFile;
 extern Bool		g_fSilentFatalError;
 extern Bool		g_fSilentDupError;
 extern Bool		g_fLogInited;

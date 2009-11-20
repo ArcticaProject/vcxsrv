@@ -42,7 +42,7 @@
  */
 
 extern HWND			g_hDlgExit;
-extern char *g_pszLogFile;
+extern const char *g_pszLogFile;
 
 /*
  * FIXME: Headers are broken, DEFINE_GUID doesn't work correctly,
@@ -628,7 +628,7 @@ winShadowUpdateDD (ScreenPtr pScreen,
   /* Has our memory pointer changed? */
   if (pScreenInfo->pfb != pScreenPriv->pddsdShadow->lpSurface)
     {
-      extern char *g_pszLogFile;
+      extern const char *g_pszLogFile;
       ErrorF ("winShadowUpdateDD - Memory location of the shadow "
 	      "surface has changed, trying to update the root window "
 	      "pixmap header to point to the new address.  If you get "
