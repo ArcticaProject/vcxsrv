@@ -39,10 +39,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
-#undef LT_OBJDIR
-
 /* Name of package */
 #undef PACKAGE
 
@@ -64,10 +60,13 @@
 /* enable TIMER_BEGIN/TIMER_END macros */
 #undef PIXMAN_TIMERS
 
+/* The size of `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
-/* use ARM NEON compiler intrinsics */
+/* use ARM NEON assembly optimizations */
 #undef USE_ARM_NEON
 
 /* use ARM SIMD compiler intrinsics */

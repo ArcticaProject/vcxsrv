@@ -5,6 +5,9 @@
 #ifndef PIXMAN_PRIVATE_H
 #define PIXMAN_PRIVATE_H
 
+#define PIXMAN_DISABLE_DEPRECATED
+#define PIXMAN_USE_INTERNAL_API
+
 #include "pixman.h"
 #include <time.h>
 #include <assert.h>
@@ -120,8 +123,6 @@ struct gradient
     int                     n_stops;
     pixman_gradient_stop_t *stops;
     int                     stop_range;
-    uint32_t *              color_table;
-    int                     color_table_size;
 };
 
 struct linear_gradient
@@ -437,10 +438,10 @@ struct pixman_implementation_t
     pixman_blt_func_t        blt;
     pixman_fill_func_t       fill;
 
-    pixman_combine_32_func_t combine_32[PIXMAN_OP_LAST];
-    pixman_combine_32_func_t combine_32_ca[PIXMAN_OP_LAST];
-    pixman_combine_64_func_t combine_64[PIXMAN_OP_LAST];
-    pixman_combine_64_func_t combine_64_ca[PIXMAN_OP_LAST];
+    pixman_combine_32_func_t combine_32[PIXMAN_N_OPERATORS];
+    pixman_combine_32_func_t combine_32_ca[PIXMAN_N_OPERATORS];
+    pixman_combine_64_func_t combine_64[PIXMAN_N_OPERATORS];
+    pixman_combine_64_func_t combine_64_ca[PIXMAN_N_OPERATORS];
 };
 
 pixman_implementation_t *
@@ -556,15 +557,15 @@ _pixman_choose_implementation (void);
  * Utilities
  */
 
-/* These "formats" both have depth 0, so they
+/* These "formats" all have depth 0, so they
  * will never clash with any real ones
  */
 #define PIXMAN_null             PIXMAN_FORMAT (0, 0, 0, 0, 0, 0)
 #define PIXMAN_solid            PIXMAN_FORMAT (0, 1, 0, 0, 0, 0)
-
-#define NEED_COMPONENT_ALPHA            (1 << 0)
-#define NEED_PIXBUF                     (1 << 1)
-#define NEED_SOLID_MASK                 (1 << 2)
+#define PIXMAN_a8r8g8b8_ca	PIXMAN_FORMAT (0, 2, 0, 0, 0, 0)
+#define PIXMAN_a8b8g8r8_ca	PIXMAN_FORMAT (0, 3, 0, 0, 0, 0)
+#define PIXMAN_pixbuf		PIXMAN_FORMAT (0, 4, 0, 0, 0, 0)
+#define PIXMAN_rpixbuf		PIXMAN_FORMAT (0, 5, 0, 0, 0, 0)
 
 typedef struct
 {
@@ -573,7 +574,6 @@ typedef struct
     pixman_format_code_t    mask_format;
     pixman_format_code_t    dest_format;
     pixman_composite_func_t func;
-    uint32_t                flags;
 } pixman_fast_path_t;
 
 /* Memory allocation helpers */
@@ -612,14 +612,14 @@ _pixman_walk_composite_region (pixman_implementation_t *imp,
                                pixman_image_t *         src_image,
                                pixman_image_t *         mask_image,
                                pixman_image_t *         dst_image,
-                               int16_t                  src_x,
-                               int16_t                  src_y,
-                               int16_t                  mask_x,
-                               int16_t                  mask_y,
-                               int16_t                  dest_x,
-                               int16_t                  dest_y,
-                               uint16_t                 width,
-                               uint16_t                 height,
+                               int32_t                  src_x,
+                               int32_t                  src_y,
+                               int32_t                  mask_x,
+                               int32_t                  mask_y,
+                               int32_t                  dest_x,
+                               int32_t                  dest_y,
+                               int32_t                  width,
+                               int32_t                  height,
                                pixman_composite_func_t  composite_rect);
 
 void

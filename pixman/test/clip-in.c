@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pixman.h"
-#include "utils.h"
+#include "gtk-utils.h"
 
 /* This test demonstrates that clipping is done totally different depending
  * on whether the source is transformed or not.

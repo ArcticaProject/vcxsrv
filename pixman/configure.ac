@@ -53,13 +53,16 @@ AC_PREREQ([2.57])
 #
 
 m4_define([pixman_major], 0)
-m4_define([pixman_minor], 16)
+m4_define([pixman_minor], 17)
 m4_define([pixman_micro], 2)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
 AC_INIT(pixman, pixman_version, "sandmann@daimi.au.dk", pixman)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
+
+# Suppress verbose compile lines
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AM_CONFIG_HEADER(config.h)
 
@@ -68,10 +71,13 @@ AC_CANONICAL_HOST
 test_CFLAGS=${CFLAGS+set} # We may override autoconf default CFLAGS.
 
 AC_PROG_CC
+AM_PROG_AS
 AC_PROG_LIBTOOL
 AC_CHECK_FUNCS([getisax])
 AC_C_BIGENDIAN
 AC_C_INLINE
+
+AC_CHECK_SIZEOF(long)
 
 # Checks for Sun Studio compilers
 AC_CHECK_DECL([__SUNPRO_C], [SUNCC="yes"], [SUNCC="no"])
@@ -395,19 +401,20 @@ AC_SUBST(ARM_SIMD_CFLAGS)
 AM_CONDITIONAL(USE_ARM_SIMD, test $have_arm_simd = yes)
 
 dnl ==========================================================================
-dnl Check for ARM NEON instructions
-ARM_NEON_CFLAGS="-mfpu=neon -mcpu=cortex-a8"
-
+dnl Check if assembler is gas compatible and supports NEON instructions
 have_arm_neon=no
-AC_MSG_CHECKING(whether to use ARM NEON)
+AC_MSG_CHECKING(whether to use ARM NEON assembler)
 xserver_save_CFLAGS=$CFLAGS
-CFLAGS="$ARM_NEON_CFLAGS $CFLAGS"
-AC_COMPILE_IFELSE([
-#include <arm_neon.h>
-int main () {
-    uint8x8_t neon_test=vmov_n_u8(0);
-    return 0;
-}], have_arm_neon=yes)
+CFLAGS="-x assembler-with-cpp"
+AC_COMPILE_IFELSE([[
+.text
+.fpu neon
+.altmacro
+#ifndef __ARM_EABI__
+#error EABI is required (to be sure that calling conventions are compatible)
+#endif
+pld [r0]
+vmovn.u16 d0, q0]], have_arm_neon=yes)
 CFLAGS=$xserver_save_CFLAGS
 
 AC_ARG_ENABLE(arm-neon,
@@ -420,12 +427,8 @@ if test $enable_arm_neon = no ; then
 fi
 
 if test $have_arm_neon = yes ; then
-   AC_DEFINE(USE_ARM_NEON, 1, [use ARM NEON compiler intrinsics])
-else
-   ARM_NEON_CFLAGS=
+   AC_DEFINE(USE_ARM_NEON, 1, [use ARM NEON assembly optimizations])
 fi
-
-AC_SUBST(ARM_NEON_CFLAGS)
 
 AM_CONDITIONAL(USE_ARM_NEON, test $have_arm_neon = yes)
 
