@@ -661,6 +661,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
           if (screen->has_WGL_ARB_multisample)
             {
               screen->base.GLXversion = xstrdup("1.4");
+              screen->base.GLXminor=4;
               /*
                 XXX: this just controls the version string returned to glXQueryServerString()
                 there is currently no way to control the version number the server returns to
@@ -670,6 +671,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
           else
             {
               screen->base.GLXversion = xstrdup("1.3");
+              screen->base.GLXminor=3;
             }
           LogMessage(X_INFO, "AIGLX: Set GLX version to %s\n", screen->base.GLXversion);
         }
