@@ -2,10 +2,16 @@ Prerequisits:
 - Microsoft Visual C++ 2008 Express Edition with SP1 (http://www.microsoft.com/express/vc/)
 - Perl (cygwin perl (http://www.cygwin.com/)  or activestate perl (http://www.activestate.com/activeperl/) )
 - Python (2.5 used: http://www.python.org/)
-- Gnuwin32 gawk and gzip (http://gnuwin32.sourceforge.net/)
-  Copy gawk.exe to awk.exe
-- Make sure python, perl, gzip and awk are in the environment PATH
+- Gnuwin32 gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/)
+- Copy gawk.exe to awk.exe
+- Make sure that the gnuwin32 binaries are in a directory path with no spaces, like 'C:\gnuwin32\bin'
+- Make sure the environment PATH includes the directory where the gnuwin32 binaries are
+- Make sure python, perl are in the environment PATH
 - make sure the command prompt is set for compiling with the visual studio compiler (vcvars32.bat)
+
+When you want to use the tools/cleantree.py script, also install svn command line client:
+- Download/install a command line version of svn. http://www.sliksvn.com/en/download (other versions are fine too).
+- Make sure that the directory where the svn.exe file is, is added to the System PATH
 
 Building freetype:
 - open freetype\freetype.sln in Visual C++ 2008 Express Edition
@@ -42,4 +48,6 @@ Building vcxsrv:
 To build installer:
 - install http://nsis.sourceforge.net
 - run 'packageall.bat' in xorg-server\installer
+
+To clean the project tree (uses svn) go to the top directory at a command prompt and type in 'python tools\cleantree.py -r'
 
