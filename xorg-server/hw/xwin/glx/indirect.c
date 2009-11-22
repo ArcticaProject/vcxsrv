@@ -2044,6 +2044,10 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen *screen)
         case WGL_TYPE_RGBA_FLOAT_ARB:
           GLWIN_DEBUG_MSG("pixelFormat %d is WGL_TYPE_RGBA_FLOAT_ARB, skipping", i+1);
           continue;
+          
+        case WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT:
+          GLWIN_DEBUG_MSG("pixelFormat %d is WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT, skipping", i+1);
+          continue;
 
         case WGL_TYPE_RGBA_ARB:
           c->base.indexBits = 0;
