@@ -73,6 +73,11 @@ typedef void (*_glapi_warning_func)(void *ctx, const char *str, ...);
  */
 #define MAX_EXTENSION_FUNCS 300
 
+#ifdef _MSC_VER
+#define EXTERN _declspec(dllexport)
+#else
+#define EXTERN extern
+#endif
 
 /**
  ** Define the GET_CURRENT_CONTEXT() macro.
@@ -90,8 +95,8 @@ extern __thread void * _glapi_tls_Context
 
 #else
 
-extern void *_glapi_Context;
-extern struct _glapi_table *_glapi_Dispatch;
+EXTERN void *_glapi_Context;
+EXTERN struct _glapi_table *_glapi_Dispatch;
 
 # ifdef THREADS
 #  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) (_glapi_Context ? _glapi_Context : _glapi_get_context())
@@ -106,29 +111,29 @@ extern struct _glapi_table *_glapi_Dispatch;
  ** GL API public functions
  **/
 
-extern void
+EXTERN void
 _glapi_noop_enable_warnings(GLboolean enable);
 
-extern void
+EXTERN void
 _glapi_set_warning_func(_glapi_warning_func func);
 
-extern void
+EXTERN void
 _glapi_check_multithread(void);
 
 
-extern void
+EXTERN void
 _glapi_set_context(void *context);
 
 
-extern void *
+EXTERN void *
 _glapi_get_context(void);
 
 
-extern void
+EXTERN void
 _glapi_set_dispatch(struct _glapi_table *dispatch);
 
 
-extern struct _glapi_table *
+EXTERN struct _glapi_table *
 _glapi_get_dispatch(void);
 
 
@@ -144,7 +149,7 @@ struct _glapi_table *
 _glapi_get_override_dispatch(int layer);
 
 
-extern GLuint
+EXTERN GLuint
 _glapi_get_dispatch_table_size(void);
 
 
@@ -152,11 +157,11 @@ extern void
 _glapi_check_table(const struct _glapi_table *table);
 
 
-extern int
+EXTERN int
 _glapi_add_dispatch( const char * const * function_names,
 		     const char * parameter_signature );
 
-extern GLint
+EXTERN GLint
 _glapi_get_proc_offset(const char *funcName);
 
 

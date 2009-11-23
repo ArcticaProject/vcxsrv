@@ -28,11 +28,6 @@ Building pthreads:
 - run 'nmake VC-static'
 - run 'nmake VC-static-debug'
 
-Building mesa
-- goto mesalib\windows\VC8\mesa
-- open mesa.sln
-- Build configuration 'Release'
-
 Building mhmake
 - open tools\mhmake\mhmake.sln in Visual C++ 2008 Express Edition
 - Build the Debug and Release configurations

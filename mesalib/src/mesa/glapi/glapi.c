@@ -223,16 +223,18 @@ void FreeAllTSD(void)
 
 #endif /* defined(THREADS) */
 
+#ifndef INSERVER
 PUBLIC struct _glapi_table *_glapi_Dispatch = 
   (struct _glapi_table *) __glapi_noop_table;
 PUBLIC void *_glapi_Context = NULL;
+#endif
 
 #endif /* defined(GLX_USE_TLS) */
 /*@}*/
 
 
 
-
+#ifndef INSERVER
 /**
  * We should call this periodically from a function such as glXMakeCurrent
  * in order to test if multiple threads are being used.
@@ -264,7 +266,7 @@ _glapi_check_multithread(void)
    CHECK_MULTITHREAD_UNLOCK();
 #endif
 }
-
+#endif
 
 
 /**

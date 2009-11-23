@@ -90,8 +90,14 @@ extern __thread void * _glapi_tls_Context
 
 #else
 
-extern void *_glapi_Context;
-extern struct _glapi_table *_glapi_Dispatch;
+#ifdef INSERVER
+#define EXTERN _declspec(dllimport)
+#else
+#define EXTERN extern
+#endif
+
+EXTERN void *_glapi_Context;
+EXTERN struct _glapi_table *_glapi_Dispatch;
 
 # ifdef THREADS
 #  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) (_glapi_Context ? _glapi_Context : _glapi_get_context())

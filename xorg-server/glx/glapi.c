@@ -54,7 +54,11 @@
 
 #include <dix-config.h>
 #include <X11/Xfuncproto.h>
+#ifdef _MSC_VER
+#define PUBLIC _declspec(dllexport)
+#else
 #define PUBLIC _X_EXPORT
+#endif
 
 #else
 

@@ -19,7 +19,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osmesa", "osmesa\osmesa.vcp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "swrast_dri", "swrast_dri\swrast_dri.vcproj", "{FEF62E6F-A7E0-47BE-99A0-2494717DBDB7}"
 	ProjectSection(ProjectDependencies) = postProject
-		{A1B24907-E196-4826-B6AF-26723629B633} = {A1B24907-E196-4826-B6AF-26723629B633}
 		{2120C974-2717-4709-B44F-D6E6D0A56448} = {2120C974-2717-4709-B44F-D6E6D0A56448}
 	EndProjectSection
 EndProject
@@ -32,21 +31,13 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A1B24907-E196-4826-B6AF-26723629B633}.Debug Static CRT|Win32.ActiveCfg = Debug Static CRT|Win32
-		{A1B24907-E196-4826-B6AF-26723629B633}.Debug Static CRT|Win32.Build.0 = Debug Static CRT|Win32
 		{A1B24907-E196-4826-B6AF-26723629B633}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A1B24907-E196-4826-B6AF-26723629B633}.Debug|Win32.Build.0 = Debug|Win32
 		{A1B24907-E196-4826-B6AF-26723629B633}.Release Static CRT|Win32.ActiveCfg = Release Static CRT|Win32
-		{A1B24907-E196-4826-B6AF-26723629B633}.Release Static CRT|Win32.Build.0 = Release Static CRT|Win32
 		{A1B24907-E196-4826-B6AF-26723629B633}.Release|Win32.ActiveCfg = Release|Win32
-		{A1B24907-E196-4826-B6AF-26723629B633}.Release|Win32.Build.0 = Release|Win32
 		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Debug Static CRT|Win32.ActiveCfg = Debug Static CRT|Win32
-		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Debug Static CRT|Win32.Build.0 = Debug Static CRT|Win32
 		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Debug|Win32.Build.0 = Debug|Win32
 		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Release Static CRT|Win32.ActiveCfg = Release Static CRT|Win32
-		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Release Static CRT|Win32.Build.0 = Release Static CRT|Win32
 		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Release|Win32.ActiveCfg = Release|Win32
-		{2E50FDAF-430B-475B-AE6B-60B68F2875BA}.Release|Win32.Build.0 = Release|Win32
 		{2120C974-2717-4709-B44F-D6E6D0A56448}.Debug Static CRT|Win32.ActiveCfg = Debug Static CRT|Win32
 		{2120C974-2717-4709-B44F-D6E6D0A56448}.Debug Static CRT|Win32.Build.0 = Debug Static CRT|Win32
 		{2120C974-2717-4709-B44F-D6E6D0A56448}.Debug|Win32.ActiveCfg = Debug|Win32

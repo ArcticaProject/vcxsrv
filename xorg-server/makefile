@@ -125,9 +125,11 @@ load_makefile xkbdata.src\makefile MAKESERVER=0 DEBUG=0
 
 all: $(APP).exe xlaunch.exe xkbcomp.exe protocol.txt XKeysymDB XErrorDB \
      ..\libX11\nls\all fonts.src\all xkbdata.src\all plink.exe xclock.exe xcalc.exe \
-     xwininfo.exe mesaopengl32.dll swrast_dri.dll
+     xwininfo.exe swrast_dri.dll
 
-swrast_dri.dll: ..\mesalib\lib\swrast_dri.dll
+
+load_makefile ..\mesalib\windows\VC8\mesa\makefile MAKESERVER=0 DEBUG=0
+swrast_dri.dll: ..\mesalib\windows\VC8\mesa\Release\swrast_dri.dll
 	copy $< $@
 
 mesaopengl32.dll: ..\mesalib\lib\mesaopengl32.dll

@@ -85,7 +85,6 @@ Section "VcXsrv (required)"
   File "..\XErrorDB"
   File "..\hw\xwin\xlaunch\obj\release\xlaunch.exe"
   File "..\..\tools\plink\obj\release\plink.exe"
-  File "..\..\mesalib\windows\VC8\mesa\Release\mesaopengl32.dll"
   File "..\..\mesalib\windows\VC8\mesa\Release\swrast_dri.dll"
   SetOutPath $INSTDIR\fonts
   File /r "..\fonts\*.*"
