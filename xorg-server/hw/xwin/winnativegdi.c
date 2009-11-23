@@ -398,11 +398,13 @@ winCreateDIBNativeGDI (int iWidth, int iHeight, int iDepth,
   pbmih->biPlanes = 1;
   pbmih->biBitCount = iDepth;
   pbmih->biCompression = BI_RGB;
+  /*
   pbmih->biSizeImage = 0;
   pbmih->biXPelsPerMeter = 0;
   pbmih->biYPelsPerMeter = 0;
   pbmih->biClrUsed = 0;
   pbmih->biClrImportant = 0;
+  */
 
   /* Setup color table for mono DIBs */
   if (iDepth == 1)
