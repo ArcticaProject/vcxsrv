@@ -1236,11 +1236,16 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
     {
       if (draw->dibDC == NULL)
         {
-          BITMAPINFOHEADER bmpHeader = { sizeof(bmpHeader),
-                                         draw->base.pDraw->width, draw->base.pDraw->height,
-                                         1, draw->base.pDraw->bitsPerPixel,
-                                         BI_RGB};
+          BITMAPINFOHEADER bmpHeader;
           void *pBits;
+          
+          ZeroMemory(&bmpHeader,sizeof(bmpHeader));
+          bmpHeader.biSize=sizeof(bmpHeader);
+          bmpHeader.biWidth=draw->base.pDraw->width;
+          bmpHeader.biHeight=draw->base.pDraw->height;
+          bmpHeader.biPlanes=1;
+          bmpHeader.biBitCount=draw->base.pDraw->bitsPerPixel;
+          bmpHeader.biCompression=BI_RGB;
 
           if (!(gc->base.config->drawableType & GLX_PIXMAP_BIT))
             {
