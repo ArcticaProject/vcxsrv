@@ -7,21 +7,23 @@ all: debug\mhmake_dbg.exe release\mhmake.exe
 DEPS=$(wildcard src\*)
 
 ifneq $(which devenv.com),
-VCSTUDIO=devenv.com
+VCSTUDIO_DBG=devenv.com $(MHMAKESLNFILE) /build Debug
+VCSTUDIO_REL=devenv.com $(MHMAKESLNFILE) /build Release
 endif
-ifneq $(which vcexpress.exe),
-VCSTUDIO=vcexpress
+ifneq $(which vcbuild.exe),
+VCSTUDIO_DBG=vcbuild $(MHMAKESLNFILE) "Debug|Win32"
+VCSTUDIO_REL=vcbuild $(MHMAKESLNFILE) "Release|Win32"
 endif
 
-ifndef VCSTUDIO
+ifndef VCSTUDIO_DBG
 $(error Environment not set correctly for building Visual Studio projects)
 endif
 
 debug\mhmake_dbg.exe: $(DEPS)
-	$(VCSTUDIO) $(MHMAKESLNFILE) /build Debug
+	$(VCSTUDIO_DBG) 
 
 release\mhmake.exe: $(DEPS)
-	$(VCSTUDIO) $(MHMAKESLNFILE) /build Release
+	$(VCSTUDIO_REL) 
 
 clean: cleanthis
 
