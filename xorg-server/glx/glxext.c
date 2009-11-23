@@ -129,8 +129,10 @@ static int glxBlockClients;
 static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
 {
     __GLXcontext *c;
+    __GLXcontext *cnext;
 
-    for (c = glxAllContexts; c; c = c->next) {
+    for (c = glxAllContexts; c; c = cnext) {
+	cnext=c->next; /* Safe because c is going to be freed */
 	if (c->isCurrent && (c->drawPriv == glxPriv || c->readPriv == glxPriv)) {
 	    int i;
 
