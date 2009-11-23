@@ -525,6 +525,8 @@ glxWinScreenProbe(ScreenPtr pScreen)
     gl_extensions = (const char *)glGetStringWrapperNonstatic(GL_EXTENSIONS);
     ErrorF("GL_EXTENSIONS: %s\n", gl_extensions);
     wgl_extensions = wglGetExtensionsStringARBWrapper(hdc);
+    if (!wgl_extensions)
+      wgl_extensions="";
     ErrorF("WGL_EXTENSIONS:%s\n", wgl_extensions);
 
     // Can you see the problem here?  The extensions string is DC specific
