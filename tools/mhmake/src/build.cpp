@@ -295,7 +295,7 @@ found:
 #endif
 
 /*****************************************************************************/
-string SearchCommand(const string &Command, const string &Extension="")
+string SearchCommand(const string &Command, const string &Extension)
 {
   char FullCommand[MAX_PATH]="";
   unsigned long Size=sizeof(FullCommand);

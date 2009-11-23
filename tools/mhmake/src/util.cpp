@@ -256,7 +256,6 @@ refptr<loadedmakefile> LOADEDMAKEFILES::find(const loadedmakefile &ToSearch)
 LOADEDMAKEFILES g_LoadedMakefiles;
 
 bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,string *pOutput);
-string SearchCommand(const string &Command, const string &Extension="");
 
 ///////////////////////////////////////////////////////////////////////////////
 loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()

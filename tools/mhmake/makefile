@@ -6,7 +6,16 @@ all: debug\mhmake_dbg.exe release\mhmake.exe
 
 DEPS=$(wildcard src\*)
 
-VCSTUDIO:=vcexpress # choose devenv.com  if you have the commercial edition
+ifneq $(which devenv.com),
+VCSTUDIO=devenv.com
+endif
+ifneq $(which vcexpress.exe),
+VCSTUDIO=vcexpress
+endif
+
+ifndef VCSTUDIO
+$(error Environment not set correctly for building Visual Studio projects)
+endif
 
 debug\mhmake_dbg.exe: $(DEPS)
 	$(VCSTUDIO) $(MHMAKESLNFILE) /build Debug

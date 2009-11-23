@@ -52,6 +52,7 @@ funcdef mhmakefileparser::m_FunctionsDef[]= {
  ,{"word"       ,&mhmakefileparser::f_word}
  ,{"words"      ,&mhmakefileparser::f_words}
  ,{"strip"      ,&mhmakefileparser::f_strip}
+ ,{"which"      ,&mhmakefileparser::f_which}
 };
 
 map<string,function_f> mhmakefileparser::m_Functions;
@@ -614,6 +615,13 @@ string mhmakefileparser::f_words(const string & Arg) const
   sprintf(szNumber,"%d",NrWords);
 
   return szNumber;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Search for a command in the enivornment path
+string mhmakefileparser::f_which(const string & Arg) const
+{
+  return SearchCommand(Arg);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

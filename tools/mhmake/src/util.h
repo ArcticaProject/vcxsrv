@@ -50,7 +50,9 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "1.4.7"
+#define MHMAKEVER    "1.4.8"
+
+string SearchCommand(const string &Command, const string &Extension="");
 
 class makecommand
 {
