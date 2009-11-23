@@ -79,11 +79,21 @@ void winGetWindowInfo(WindowPtr pWin, winWindowInfoPtr pWinInfo)
                 pWinInfo->hwnd = pWinPriv->hWnd;
 
                 /* Copy window region */
-                if (pWinInfo->hrgn)
-                    DeleteObject(pWinInfo->hrgn);
-                pWinInfo->hrgn = CreateRectRgn(0,0,0,0);
-                CombineRgn(pWinInfo->hrgn, pWinPriv->hRgn, pWinPriv->hRgn, 
-                        RGN_COPY);
+                if (pWinPriv->hRgn)
+                {
+                  if (!pWinInfo->hrgn)
+                  {
+                    pWinInfo->hrgn = CreateRectRgn(0,0,0,0);
+                  }
+                  CombineRgn(pWinInfo->hrgn, pWinPriv->hRgn, pWinPriv->hRgn, 
+                          RGN_COPY);
+                }
+                else if (pWinInfo->hrgn)
+                {
+                  DeleteObject(pWinInfo->hrgn);
+                  pWinInfo->hrgn=NULL;
+                }
+
             }
             
             return;
