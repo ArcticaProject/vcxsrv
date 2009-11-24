@@ -224,32 +224,34 @@ Section "Uninstall"
   RMDir "$SMPROGRAMS\VcXsrv"
   RMDir "$INSTDIR"
 
-  DetailPrint "Removing CRT assembly..."
-  System::Call "sxs::CreateAssemblyCache(*i .r0, i 0) i.r1"
-  StrCmp $1 0 0 fail
-  System::Call "*(i 32, i 0, i 2364391957, i 1217113163, i 178634899, i 3090139977, w 'nsissxs', w '') i.s"
-  Pop $2
-  System::Call "$0->3(i 0, w 'Microsoft.VC90.CRT,version=$\"9.0.${MSVC_VERSION}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
-  StrCmp $1 0 0 failcrt
-  System::Call "$0->3(i 0, w 'Microsoft.VC90.DebugCRT,version=$\"9.0.${MSVC_VERSION_D}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
-  StrCmp $1 0 0 faildebugcrt
-  DetailPrint "Disposition returned is $3"
-  System::Free $2
-  System::Call "$0->2()"
-  Goto end
-  fail:
-  DetailPrint "CreateAssemblyCache failed."
-  DetailPrint $1
-  Goto end
-  failcrt:
-  DetailPrint "UninstallAssembly CRT failed."
-  DetailPrint $1
-  Goto end
-  faildebugcrt:
-  DetailPrint "UninstallAssembly Debug CRT failed."
-  DetailPrint $1
-  Goto end
-end:
+;  Currently disable uninstalling the run-time; because sometimes it is removing
+;  the run-time although other applications are using them
+;  DetailPrint "Removing CRT assembly..."
+;  System::Call "sxs::CreateAssemblyCache(*i .r0, i 0) i.r1"
+;  StrCmp $1 0 0 fail
+;  System::Call "*(i 32, i 0, i 2364391957, i 1217113163, i 178634899, i 3090139977, w 'nsissxs', w '') i.s"
+;  Pop $2
+;  System::Call "$0->3(i 0, w 'Microsoft.VC90.CRT,version=$\"9.0.${MSVC_VERSION}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
+;  StrCmp $1 0 0 failcrt
+;  System::Call "$0->3(i 0, w 'Microsoft.VC90.DebugCRT,version=$\"9.0.${MSVC_VERSION_D}$\",type=$\"win32$\",processorArchitecture=$\"x86$\",publicKeyToken=$\"${MSVC_PUBLICTOKEN}$\"', i r2, *i . r3) i.r1"
+;  StrCmp $1 0 0 faildebugcrt
+;  DetailPrint "Disposition returned is $3"
+;  System::Free $2
+;  System::Call "$0->2()"
+;  Goto end
+;  fail:
+;  DetailPrint "CreateAssemblyCache failed."
+;  DetailPrint $1
+;  Goto end
+;  failcrt:
+;  DetailPrint "UninstallAssembly CRT failed."
+;  DetailPrint $1
+;  Goto end
+;  faildebugcrt:
+;  DetailPrint "UninstallAssembly Debug CRT failed."
+;  DetailPrint $1
+;  Goto end
+;end:
 
 SectionEnd
 
