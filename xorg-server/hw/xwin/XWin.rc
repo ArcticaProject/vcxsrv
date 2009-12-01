@@ -47,7 +47,7 @@ BEGIN
   LTEXT			"VcXsrv X Server ", IDC_STATIC, 36, 8, 220, 8
   LTEXT			"http://www.hc-consult.be", IDC_STATIC, 36, 18, 220, 8
   LTEXT			"marc@hc-consult.be", IDC_STATIC, 36, 28, 220, 8
-  LTEXT			"Version 1.7.99.3 (17 Nov 2009)", IDC_STATIC, 36, 38, 220, 8
+  LTEXT			"Version 1.7.99.4 (2 Dec 2009)", IDC_STATIC, 36, 38, 220, 8
   DEFPUSHBUTTON		"OK", IDOK, 105, 75, 50, 15
 END
 
