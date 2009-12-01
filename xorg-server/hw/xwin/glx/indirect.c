@@ -78,7 +78,9 @@
 
 #include <winpriv.h>
 #include <wgl_ext_api.h>
+#include "win.h"
 
+extern Bool			g_fXdmcpEnabled;
 extern Bool g_fNativeGl;
 
 #define NUM_ELEMENTS(x) (sizeof(x)/ sizeof(x[1]))
@@ -98,6 +100,7 @@ struct __GLXWinContext {
   HGLRC ctx;                         /* Windows GL Context */
   __GLXWinContext *shareContext;     /* Context with which we will share display lists and textures */
   HWND hwnd;                         /* For detecting when HWND has changed */
+  BOOL GlCtxWnd;                     /* TRUE when we should destroy the window when the context is destroyed. */
 };
 
 struct __GLXWinDrawable
@@ -132,6 +135,7 @@ struct __GLXWinScreen
   RealizeWindowProcPtr RealizeWindow;
   UnrealizeWindowProcPtr UnrealizeWindow;
   CopyWindowProcPtr CopyWindow;
+  PositionWindowProcPtr PositionWindow;
 };
 
 struct __GLXWinConfig
@@ -387,6 +391,7 @@ static __GLXdrawable *glxWinCreateDrawable(__GLXscreen *screen,
 static Bool glxWinRealizeWindow(WindowPtr pWin);
 static Bool glxWinUnrealizeWindow(WindowPtr pWin);
 static void glxWinCopyWindow(WindowPtr pWindow, DDXPointRec ptOldOrg, RegionPtr prgnSrc);
+static Bool glxWinPositionWindow(WindowPtr pWindow, int x, int y);
 
 static HDC glxWinMakeDC(__GLXWinContext *gc, __GLXWinDrawable *draw, HDC *hdc, HWND *hwnd);
 static void glxWinReleaseDC(HWND hwnd, HDC hdc, __GLXWinDrawable *draw);
@@ -438,6 +443,16 @@ glxWinScreenSwapInterval(__GLXdrawable *drawable, int interval)
   return ret;
 }
 
+static LRESULT CALLBACK GlxWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+  if (uMsg== WM_NCHITTEST)
+  {
+    return HTTRANSPARENT;
+  }
+  else
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
 /* This is called by GlxExtensionInit() asking the GLX provider if it can handle the screen... */
 static __GLXscreen *
 glxWinScreenProbe(ScreenPtr pScreen)
@@ -474,27 +489,29 @@ glxWinScreenProbe(ScreenPtr pScreen)
     pScreen->UnrealizeWindow = glxWinUnrealizeWindow;
     screen->CopyWindow = pScreen->CopyWindow;
     pScreen->CopyWindow = glxWinCopyWindow;
+    screen->PositionWindow = pScreen->PositionWindow;
+    pScreen->PositionWindow = glxWinPositionWindow;
 
     /* Dump out some useful information about the native renderer */
 
     // create window class
-#define WIN_GL_TEST_WINDOW_CLASS "XWinGLTest"
     {
       static wATOM glTestWndClass = 0;
       if (glTestWndClass == 0)
         {
           WNDCLASSEX wc;
+          glTestWndClass=1;
           wc.cbSize = sizeof(WNDCLASSEX);
-          wc.style = CS_HREDRAW | CS_VREDRAW;
-          wc.lpfnWndProc = DefWindowProc;
+          wc.style = CS_OWNDC ;
+          wc.lpfnWndProc = GlxWindowProc;
           wc.cbClsExtra = 0;
           wc.cbWndExtra = 0;
           wc.hInstance = GetModuleHandle(NULL);
           wc.hIcon = 0;
           wc.hCursor = 0;
-          wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+          wc.hbrBackground = 0;
           wc.lpszMenuName = NULL;
-          wc.lpszClassName = WIN_GL_TEST_WINDOW_CLASS;
+          wc.lpszClassName = WIN_GL_WINDOW_CLASS;
           wc.hIconSm = 0;
           RegisterClassEx (&wc);
       }
@@ -502,7 +519,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
 
     // create an invisible window for a scratch DC
     hwnd = CreateWindowExA(0,
-                           WIN_GL_TEST_WINDOW_CLASS,
+                           WIN_GL_WINDOW_CLASS,
                            "XWin GL Renderer Capabilities Test Window",
                            0, 0, 0, 0, 0, NULL, NULL, GetModuleHandle(NULL), NULL);
     if (hwnd == NULL)
@@ -698,6 +715,7 @@ glxWinRealizeWindow(WindowPtr pWin)
     Bool result;
     ScreenPtr pScreen = pWin->drawable.pScreen;
     glxWinScreen *screenPriv = (glxWinScreen *) glxGetScreen(pScreen);
+    winWindowPriv(pWin);
 
     GLWIN_DEBUG_MSG("glxWinRealizeWindow");
 
@@ -705,7 +723,12 @@ glxWinRealizeWindow(WindowPtr pWin)
     pScreen->RealizeWindow = screenPriv->RealizeWindow;
     result = pScreen->RealizeWindow(pWin);
     pScreen->RealizeWindow = glxWinRealizeWindow;
-
+    
+    // Check if ze need to move the window\n
+    if (g_fXdmcpEnabled && pWinPriv->hWnd)
+    {
+       ShowWindow(pWinPriv->hWnd,SW_SHOW);
+    }
     return result;
 }
 
@@ -741,7 +764,34 @@ glxWinCopyWindow(WindowPtr pWindow, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
     pScreen->CopyWindow = screenPriv->CopyWindow;
     pScreen->CopyWindow(pWindow, ptOldOrg, prgnSrc);
     pScreen->CopyWindow = glxWinCopyWindow;
+
 }
+
+static Bool
+glxWinPositionWindow(WindowPtr pWin, int x, int y)
+{
+    Bool result;
+    __GLXWinDrawable *pGlxDraw;
+    ScreenPtr pScreen = pWin->drawable.pScreen;
+    glxWinScreen *screenPriv = (glxWinScreen *) glxGetScreen(pScreen);
+    winWindowPriv(pWin);
+
+    pScreen->PositionWindow = screenPriv->PositionWindow;
+    result = pScreen->PositionWindow(pWin, x, y);
+    pScreen->PositionWindow = glxWinPositionWindow;
+
+    if (g_fXdmcpEnabled && pWinPriv->hWnd)
+    {
+       MoveWindow(pWinPriv->hWnd,
+                  pWin->drawable.x,
+                  pWin->drawable.y,
+                  pWin->drawable.width,
+                  pWin->drawable.height,
+                  FALSE);
+    }
+    return result;
+}
+
 
 static Bool
 glxWinUnrealizeWindow(WindowPtr pWin)
@@ -749,12 +799,16 @@ glxWinUnrealizeWindow(WindowPtr pWin)
     Bool result;
     ScreenPtr pScreen = pWin->drawable.pScreen;
     glxWinScreen *screenPriv = (glxWinScreen *)glxGetScreen(pScreen);
+    winWindowPriv(pWin);
 
     GLWIN_DEBUG_MSG("glxWinUnrealizeWindow");
 
     pScreen->UnrealizeWindow = screenPriv->UnrealizeWindow;
     result = pScreen->UnrealizeWindow(pWin);
     pScreen->UnrealizeWindow = glxWinUnrealizeWindow;
+
+    if (g_fXdmcpEnabled && pWinPriv->hWnd)
+      ShowWindow(pWinPriv->hWnd,SW_HIDE);
 
     return result;
 }
@@ -1162,6 +1216,7 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
 {
   HDC dc;
   HWND hwnd;
+  winWindowPriv(((WindowPtr) draw->base.pDraw));
   GLWIN_DEBUG_MSG("glxWinDeferredCreateContext: attach context %p to drawable %p", gc, draw);
 
   switch (draw->base.type)
@@ -1297,6 +1352,8 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
 
   dc = glxWinMakeDC(gc, draw, &dc, &hwnd);
   gc->ctx = wglCreateContext(dc);
+  gc->GlCtxWnd = pWinPriv->GlCtxWnd;
+
   glxWinReleaseDC(hwnd, dc, draw);
 
   if (gc->ctx == NULL)
@@ -1471,6 +1528,7 @@ glxWinContextDestroy(__GLXcontext *base)
           if (!ret)
             ErrorF("wglDeleteContext error: %s\n", glxWinErrorMessage());
           gc->ctx = NULL;
+          if (gc->GlCtxWnd) DestroyWindow(gc->hwnd);
         }
 
       xfree(gc);

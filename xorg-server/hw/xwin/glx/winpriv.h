@@ -7,6 +7,8 @@
 #include <X11/Xwindows.h>
 #include <windowstr.h>
 
+#define WIN_GL_WINDOW_CLASS "XWinGLTest"
+
 typedef struct
 {
     HWND    hwnd;

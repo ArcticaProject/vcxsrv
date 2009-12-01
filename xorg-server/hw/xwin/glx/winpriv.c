@@ -11,6 +11,8 @@
 #include "winpriv.h"
 #include "winwindow.h"
 
+extern Bool			g_fXdmcpEnabled;
+
 void
 winCreateWindowsWindow (WindowPtr pWin);
 /**
@@ -72,8 +74,8 @@ void winGetWindowInfo(WindowPtr pWin, winWindowInfoPtr pWinInfo)
               winCreateWindowsWindow(pWin);
               ErrorF("winGetWindowInfo: forcing window to exist...\n");
             }
-            if (pWinPriv->hWnd != NULL) { 
-                
+            if (pWinPriv->hWnd != NULL)
+            { 
                 /* copy size and window handle */
                 pWinInfo->rect = rect_extends;
                 pWinInfo->hwnd = pWinPriv->hWnd;
@@ -97,6 +99,59 @@ void winGetWindowInfo(WindowPtr pWin, winWindowInfoPtr pWinInfo)
             }
             
             return;
+        }
+        else if (g_fXdmcpEnabled)
+        {
+            winWindowPriv(pWin);
+
+            if (pWinPriv == NULL)
+            {
+                ErrorF("winGetWindowInfo: window has no privates\n");
+                return;
+            }
+            if (pWinPriv->hWnd == NULL)
+            {
+              if (!((pWin->drawable.x==0) &&
+                     (pWin->drawable.y==0) &&
+                     (pWin->drawable.width==pScreen->width) &&
+                     (pWin->drawable.height==pScreen->height)
+                    )
+                  )
+              {
+                int ExtraClass=(pWin->realized)?WS_VISIBLE:0;
+                pWinPriv->hWnd=CreateWindowExA(WS_EX_TRANSPARENT,
+                             WIN_GL_WINDOW_CLASS,
+                             "",
+                             WS_CHILD |WS_CLIPSIBLINGS | WS_CLIPCHILDREN  | ExtraClass,
+                             pWin->drawable.x,
+                             pWin->drawable.y,
+                             pWin->drawable.width,
+                             pWin->drawable.height,
+                             pWinScreen->hwndScreen,
+                             NULL,
+                             GetModuleHandle(NULL),
+                             NULL);
+                pWinPriv->GlCtxWnd=TRUE;
+                /* copy size and window handle */
+                pWinInfo->hwnd = pWinPriv->hWnd;
+              }
+              else
+              {
+                pWinInfo->hwnd = pWinScreen->hwndScreen;
+              }
+              pWinInfo->rect = rect_extends;
+              if (pWinInfo->hrgn)
+              {
+                DeleteObject(pWinInfo->hrgn);
+                pWinInfo->hrgn = NULL;
+              }
+            }
+            else
+            {
+              pWinInfo->rect = rect_extends;
+              pWinInfo->hwnd = pWinPriv->hWnd;
+              pWinInfo->hrgn = NULL;
+            }
         }
 #endif
 #ifdef XWIN_MULTIWINDOWEXTWM
@@ -159,6 +214,9 @@ winCheckScreenAiglxIsSupported(ScreenPtr pScreen)
   if (pScreenInfo->fMWExtWM)
     return TRUE;
 #endif
+
+  if (g_fXdmcpEnabled)
+    return TRUE;
 
   return FALSE;
 }

@@ -117,6 +117,7 @@ winCreateWindowMultiWindow (WindowPtr pWin)
   /* Initialize some privates values */
   pWinPriv->hRgn = NULL;
   pWinPriv->hWnd = NULL;
+  pWinPriv->GlCtxWnd = FALSE;
   pWinPriv->pScreenPriv = winGetScreenPriv(pWin->drawable.pScreen);
   pWinPriv->fXKilled = FALSE;
  

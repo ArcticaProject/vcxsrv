@@ -70,6 +70,7 @@ typedef struct
   DWORD			dwDummy;
   HRGN			hRgn;
   HWND			hWnd;
+  BOOL			GlCtxWnd;
   winPrivScreenPtr	pScreenPriv;
   Bool			fXKilled;
 
