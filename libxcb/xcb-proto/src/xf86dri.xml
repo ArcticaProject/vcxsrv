@@ -62,8 +62,6 @@ authorization from the authors.
 	<field type="CARD32" name="screen" />
 	<reply>
 	    <pad bytes="1" />
-	    <field type="CARD32" name="drm_client_key_low" />
-	    <field type="CARD32" name="drm_client_key_high" />
 	    <field type="CARD32" name="sarea_handle_low" />
 	    <field type="CARD32" name="sarea_handle_high" />
 	    <field type="CARD32" name="bus_id_len" />
@@ -94,8 +92,8 @@ authorization from the authors.
     </request>
 
     <request name="CreateContext" opcode="5">
-	<field type="CARD32" name="visual" />
 	<field type="CARD32" name="screen" />
+	<field type="CARD32" name="visual" />
 	<field type="CARD32" name="context" />
 	<reply>
 	    <pad bytes="1" />

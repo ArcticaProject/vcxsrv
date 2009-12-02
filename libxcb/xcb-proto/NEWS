@@ -1,3 +1,14 @@
+Release 1.6 (2009-12-02)
+=======================
+* Add DRI2 protocol, based off of dri2proto.h and the server code. (v2)
+* xf86dri.xml seems to have been wrong forever. Fixes bug #16894.
+* shape: add missing padding bytes to GetRectangles
+* Add XML description for the Generic Event extension.
+* Add XML description for the XFree86VidMode extension.
+* Fix typo in xf86vidmode.xml
+* Fix length calculation for xfixes/FetchRegion reply
+* Add pre-defined atoms to Atom enum
+
 Release 1.5 (2009-05-09)
 ========================
 * Add support for mod mask Any
