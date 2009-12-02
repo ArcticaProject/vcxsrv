@@ -1235,6 +1235,8 @@ InitPointerAccelerationScheme(DeviceIntPtr dev,
     if(-1 == i)
         return FALSE;
 
+    if (val->accelScheme.AccelCleanupProc)
+        val->accelScheme.AccelCleanupProc(dev);
 
     /* init scheme-specific data */
     switch(scheme){

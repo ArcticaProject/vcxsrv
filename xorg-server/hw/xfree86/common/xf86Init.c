@@ -1151,8 +1151,10 @@ OsVendorInit(void)
   signal(SIGCHLD, SIG_DFL);	/* Need to wait for child processes */
 #endif
 
-  if (!beenHere)
+  if (!beenHere) {
+    umask(022);
     xf86LogInit();
+  }
 
         /* Set stderr to non-blocking. */
 #ifndef O_NONBLOCK

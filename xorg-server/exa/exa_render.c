@@ -320,7 +320,7 @@ exaTryDriverSolidFill(PicturePtr	pSrc,
 	exaDoMigration(pixmaps, 1, TRUE);
     }
 
-    if (!exaPixmapIsOffscreen(pDstPix)) {
+    if (!exaPixmapHasGpuCopy(pDstPix)) {
 	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
 	return 0;
     }
@@ -540,7 +540,7 @@ exaCompositeRects(CARD8	              op,
 	/* We have to manage the damage ourselves, since CompositeRects isn't
 	 * something in the screen that can be managed by the damage extension,
 	 * and EXA depends on damage to track what needs to be migrated between
-	 * offscreen and onscreen.
+	 * the gpu and the cpu.
 	 */
 
 	/* Compute the overall extents of the composited region - we're making
@@ -752,7 +752,7 @@ exaTryDriverComposite(CARD8		op,
 	}
     }
 
-    if (!exaPixmapIsOffscreen(pDstPix)) {
+    if (!exaPixmapHasGpuCopy(pDstPix)) {
 	REGION_UNINIT(pDst->pDrawable->pScreen, &region);
 	return 0;
     }

@@ -3,15 +3,8 @@
 #include <xorg-config.h>
 #endif
 
-#include <X11/X.h>
-#include "input.h"
-#include "scrnintstr.h"
-#include "compiler.h"
-
 #include "xf86.h"
-#include "xf86Priv.h"
-#include "xf86_OSlib.h"
-#include "xf86OSpriv.h"
+#include "compiler.h"
 
 int readDense8(pointer Base, register unsigned long Offset);
 int readDense16(pointer Base, register unsigned long Offset);
@@ -88,67 +81,3 @@ writeDense32(int Value, pointer Base, register unsigned long Offset)
     write_mem_barrier();
     *(volatile CARD32 *)((unsigned long)Base+(Offset)) = Value;
 }
-
-
-
-void
-_dense_outb(char val, unsigned long port)
-{
-  if ((port & ~0xffff) == 0) {
-  _outb(val, port);
-  } else {
-  write_mem_barrier();
-  *(volatile CARD8 *)port = val;
-  }
-}
-
-void
-_dense_outw(short val, unsigned long port)
-{
-  if ((port & ~0xffff) == 0) {
-  _outw(val, port);
-  } else {
-  write_mem_barrier();
-  *(volatile CARD16 *)port = val;
-  }
-}
-
-void
-_dense_outl(int val, unsigned long port)
-{
-  if ((port & ~0xffff) == 0) {
-  _outl(val, port);
-  } else {
-  write_mem_barrier();
-  *(volatile CARD32 *)port = val;
-  }
-}
-
-unsigned int
-_dense_inb(unsigned long port)
-{
-  if ((port & ~0xffff) == 0) return _inb(port);
-
-  mem_barrier();
-  return *(volatile CARD8 *)port;
-}
-
-unsigned int
-_dense_inw(unsigned long port)
-{
-  if ((port & ~0xffff) == 0) return _inw(port);
-
-  mem_barrier();
-  return *(volatile CARD16 *)port;
-}
-
-unsigned int
-_dense_inl(unsigned long port)
-{
-  if ((port & ~0xffff) == 0) return _inl(port);
-
-  mem_barrier();
-  return *(volatile CARD32 *)port;
-}
-
-

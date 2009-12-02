@@ -71,8 +71,8 @@ exaCreatePixmap_driver(ScreenPtr pScreen, int w, int h, int depth,
 
     bpp = pPixmap->drawable.bitsPerPixel;
 
-    /* Set this before driver hooks, to allow for !offscreen pixmaps.
-     * !offscreen pixmaps have a valid pointer at all times.
+    /* Set this before driver hooks, to allow for driver pixmaps without gpu
+     * memory to back it. These pixmaps have a valid pointer at all times.
      */
     pPixmap->devPrivate.ptr = NULL;
 
@@ -115,6 +115,10 @@ exaCreatePixmap_driver(ScreenPtr pScreen, int w, int h, int depth,
     exaSetAccelBlock(pExaScr, pExaPixmap,
                      w, h, bpp);
 
+    /* During a fallback we must prepare access. */
+    if (pExaScr->fallback_counter)
+	exaPrepareAccess(&pPixmap->drawable, EXA_PREPARE_AUX_DEST);
+
     return pPixmap;
 }
 
@@ -153,8 +157,9 @@ exaModifyPixmapHeader_driver(PixmapPtr pPixmap, int width, int height, int depth
 	ret = pExaScr->info->ModifyPixmapHeader(pPixmap, width, height, depth,
 						bitsPerPixel, devKind, pPixData);
 	/* For EXA_HANDLES_PIXMAPS, we set pPixData to NULL.
-	 * If pPixmap->devPrivate.ptr is non-NULL, then we've got a non-offscreen pixmap.
-	 * We need to store the pointer, because PrepareAccess won't be called.
+	 * If pPixmap->devPrivate.ptr is non-NULL, then we've got a
+	 * !has_gpu_copy pixmap. We need to store the pointer,
+	 * because PrepareAccess won't be called.
 	 */
 	if (!pPixData && pPixmap->devPrivate.ptr && pPixmap->devKind) {
 	    pExaPixmap->sys_ptr = pPixmap->devPrivate.ptr;
@@ -187,6 +192,10 @@ exaDestroyPixmap_driver (PixmapPtr pPixmap)
     {
 	ExaPixmapPriv (pPixmap);
 
+	/* During a fallback we must finish access, but we don't know the index. */
+	if (pExaScr->fallback_counter)
+	    exaFinishAccess(&pPixmap->drawable, -1);
+
 	if (pExaPixmap->driverPriv)
 	    pExaScr->info->DestroyPixmap(pScreen, pExaPixmap->driverPriv);
 	pExaPixmap->driverPriv = NULL;
@@ -200,7 +209,7 @@ exaDestroyPixmap_driver (PixmapPtr pPixmap)
 }
 
 Bool
-exaPixmapIsOffscreen_driver(PixmapPtr pPixmap)
+exaPixmapHasGpuCopy_driver(PixmapPtr pPixmap)
 {
     ScreenPtr pScreen = pPixmap->drawable.pScreen;
     ExaScreenPriv(pScreen);

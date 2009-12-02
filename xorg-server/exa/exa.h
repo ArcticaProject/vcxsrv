@@ -624,13 +624,13 @@ typedef struct _ExaDriver {
 
     /**
      * PixmapIsOffscreen() is an optional driver replacement to
-     * exaPixmapIsOffscreen(). Set to NULL if you want the standard behaviour
-     * of exaPixmapIsOffscreen().
+     * exaPixmapHasGpuCopy(). Set to NULL if you want the standard behaviour
+     * of exaPixmapHasGpuCopy().
      *
      * @param pPix the pixmap
      * @return TRUE if the given drawable is in framebuffer memory.
      *
-     * exaPixmapIsOffscreen() is used to determine if a pixmap is in offscreen
+     * exaPixmapHasGpuCopy() is used to determine if a pixmap is in offscreen
      * memory, meaning that acceleration could probably be done to it, and that it
      * will need to be wrapped by PrepareAccess()/FinishAccess() when accessing it
      * with the CPU.

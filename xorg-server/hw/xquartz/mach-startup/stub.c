@@ -232,6 +232,7 @@ int main(int argc, char **argv, char **envp) {
 
     kr = bootstrap_look_up(bootstrap_port, server_bootstrap_name, &mp);
     if(kr != KERN_SUCCESS) {
+        fprintf(stderr, "Xquartz: Unable to locate waiting server: %s\n", server_bootstrap_name);
         pid_t child;
         set_x11_path();
 

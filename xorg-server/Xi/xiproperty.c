@@ -630,6 +630,8 @@ XIDeleteAllDeviceProperties (DeviceIntPtr device)
         xfree(curr_handler);
         curr_handler = next_handler;
     }
+
+    device->properties.handlers = NULL;
 }
 
 
@@ -642,6 +644,9 @@ XIDeleteDeviceProperty (DeviceIntPtr device, Atom property, Bool fromClient)
     for (prev = &device->properties.properties; (prop = *prev); prev = &(prop->next))
         if (prop->propertyName == property)
             break;
+
+    if (!prop)
+        return Success;
 
     if (fromClient && !prop->deletable)
         return BadAccess;

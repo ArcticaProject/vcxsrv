@@ -456,7 +456,7 @@ AC_ARG_ENABLE(debug,         AS_HELP_STRING([--enable-debug],
 AC_ARG_ENABLE(unit-tests,    AS_HELP_STRING([--enable-unit-tests],
                                   [Enable unit-tests (default: auto)]),
                                 [UNITTESTS=$enableval], [UNITTESTS=auto])
-AC_ARG_ENABLE(sigio-default, AS_HELP_STRING([--enable-use-sigio-by-default]
+AC_ARG_ENABLE(use-sigio-by-default, AS_HELP_STRING([--enable-use-sigio-by-default]
   [Enable SIGIO input handlers by default (default: $USE_SIGIO_BY_DEFAULT)]),
                                 [USE_SIGIO_BY_DEFAULT=$enableval], [])
 AC_ARG_WITH(int10,           AS_HELP_STRING([--with-int10=BACKEND], [int10 backend: vm86, x86emu or stub]),
@@ -1881,10 +1881,11 @@ AM_CONDITIONAL(XQUARTZ_SPARKLE, [test "x$XQUARTZ_SPARKLE" != "xno"])
 AM_CONDITIONAL(STANDALONE_XPBPROXY, [test "x$STANDALONE_XPBPROXY" = xyes])
 
 dnl DMX DDX
-
 PKG_CHECK_MODULES([DMXMODULES],
     [xmuu $LIBXEXT x11 xrender xfixes xfont $LIBXI $DMXPROTO xau $XDMCP_MODULES],
-    [have_dmx=yes], [have_dmx=no])
+    PKG_CHECK_MODULES([XDMXCONFIG_DEP], [xaw7 xmu xt xpm x11], [have_dmx=yes],
+                      [have_dmx=no]),
+    [have_dmx=no])
 AC_MSG_CHECKING([whether to build Xdmx DDX])
 if test "x$DMX" = xauto; then
 	DMX="$have_dmx"
@@ -1917,7 +1918,6 @@ dnl USB sources in DMX require <linux/input.h>
 dnl Linux sources in DMX require <linux/keyboard.h>
 	AC_CHECK_HEADER([linux/keyboard.h], DMX_BUILD_LNX="yes",
 			DMX_BUILD_LNX="no")
-	PKG_CHECK_MODULES([XDMXCONFIG_DEP], [xaw7 xmu xt xpm x11])
 	AC_SUBST(XDMXCONFIG_DEP_CFLAGS)
 	AC_SUBST(XDMXCONFIG_DEP_LIBS)
 	PKG_CHECK_MODULES([DMXEXAMPLES_DEP], [$LIBDMX $LIBXEXT x11])
@@ -1952,16 +1952,6 @@ AM_CONDITIONAL(KDRIVE, [test x$KDRIVE = xyes])
 if test "$KDRIVE" = yes; then
     AC_DEFINE(KDRIVESERVER,1,[Build Kdrive X server])
     AC_DEFINE(KDRIVEDDXACTIONS,,[Build kdrive ddx])
-
-    AC_CHECK_HEADERS([sys/vm86.h sys/io.h])
-    if test "$ac_cv_header_sys_vm86_h" = yes && test "x$KDRIVEVESA" = xauto; then
-        KDRIVEVESA=yes
-    fi
-
-    if test "x$KDRIVEVESA" = xyes; then
-        KDRIVEFBDEVLIB=yes
-        AC_DEFINE(KDRIVEVESA, 1, [Build VESA-based kdrive servers])
-    fi
 
     AC_CHECK_HEADERS([linux/fb.h])
     if test "$ac_cv_header_linux_fb_h" = yes && test "x$XFBDEV" = xauto; then
@@ -2041,7 +2031,6 @@ AC_SUBST([KDRIVE_LOCAL_LIBS])
 AC_SUBST([KDRIVE_LIBS])
 AM_CONDITIONAL(KDRIVELINUX, [test "x$KDRIVELINUX" = xyes])
 AM_CONDITIONAL(TSLIB, [test "x$HAVE_TSLIB" = xyes])
-AM_CONDITIONAL(KDRIVEVESA, [test "x$KDRIVEVESA" = xyes])
 AM_CONDITIONAL(KDRIVEFBDEV, [test "x$XFBDEV" = xyes])
 AM_CONDITIONAL(XEPHYR, [test "x$KDRIVE" = xyes && test "x$XEPHYR" = xyes])
 AM_CONDITIONAL(BUILD_KDRIVEFBDEVLIB, [test "x$KDRIVE" = xyes && test "x$KDRIVEFBDEVLIB" = xyes])
