@@ -5,6 +5,7 @@ xcbinclude_HEADERS = \
 	composite.xml \
 	damage.xml \
 	dpms.xml \
+	dri2.xml \
 	glx.xml \
 	randr.xml \
 	record.xml \

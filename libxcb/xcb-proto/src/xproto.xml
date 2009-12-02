@@ -588,6 +588,75 @@ authorization from the authors.
 
   <enum name="Atom">
     <item name="None"> <value>0</value></item>
+    <item name="Any">  <value>0</value></item>
+    <item name="PRIMARY" />
+    <item name="SECONDARY" />
+    <item name="ARC" />
+    <item name="ATOM" />
+    <item name="BITMAP" />
+    <item name="CARDINAL" />
+    <item name="COLORMAP" />
+    <item name="CURSOR" />
+    <item name="CUT_BUFFER0" />
+    <item name="CUT_BUFFER1" />
+    <item name="CUT_BUFFER2" />
+    <item name="CUT_BUFFER3" />
+    <item name="CUT_BUFFER4" />
+    <item name="CUT_BUFFER5" />
+    <item name="CUT_BUFFER6" />
+    <item name="CUT_BUFFER7" />
+    <item name="DRAWABLE" />
+    <item name="FONT" />
+    <item name="INTEGER" />
+    <item name="PIXMAP" />
+    <item name="POINT" />
+    <item name="RECTANGLE" />
+    <item name="RESOURCE_MANAGER" />
+    <item name="RGB_COLOR_MAP" />
+    <item name="RGB_BEST_MAP" />
+    <item name="RGB_BLUE_MAP" />
+    <item name="RGB_DEFAULT_MAP" />
+    <item name="RGB_GRAY_MAP" />
+    <item name="RGB_GREEN_MAP" />
+    <item name="RGB_RED_MAP" />
+    <item name="STRING" />
+    <item name="VISUALID" />
+    <item name="WINDOW" />
+    <item name="WM_COMMAND" />
+    <item name="WM_HINTS" />
+    <item name="WM_CLIENT_MACHINE" />
+    <item name="WM_ICON_NAME" />
+    <item name="WM_ICON_SIZE" />
+    <item name="WM_NAME" />
+    <item name="WM_NORMAL_HINTS" />
+    <item name="WM_SIZE_HINTS" />
+    <item name="WM_ZOOM_HINTS" />
+    <item name="MIN_SPACE" />
+    <item name="NORM_SPACE" />
+    <item name="MAX_SPACE" />
+    <item name="END_SPACE" />
+    <item name="SUPERSCRIPT_X" />
+    <item name="SUPERSCRIPT_Y" />
+    <item name="SUBSCRIPT_X" />
+    <item name="SUBSCRIPT_Y" />
+    <item name="UNDERLINE_POSITION" />
+    <item name="UNDERLINE_THICKNESS" />
+    <item name="STRIKEOUT_ASCENT" />
+    <item name="STRIKEOUT_DESCENT" />
+    <item name="ITALIC_ANGLE" />
+    <item name="X_HEIGHT" />
+    <item name="QUAD_WIDTH" />
+    <item name="WEIGHT" />
+    <item name="POINT_SIZE" />
+    <item name="RESOLUTION" />
+    <item name="COPYRIGHT" />
+    <item name="NOTICE" />
+    <item name="FONT_NAME" />
+    <item name="FAMILY_NAME" />
+    <item name="FULL_NAME" />
+    <item name="CAP_HEIGHT" />
+    <item name="WM_CLASS" />
+    <item name="WM_TRANSIENT_FOR" />
   </enum>
 
   <event name="SelectionRequest" number="30">
@@ -866,9 +935,10 @@ authorization from the authors.
   <request name="ConfigureWindow" opcode="12">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
+    <field type="CARD16" name="value_mask" />
+    <pad bytes="2" />
     <valueparam value-mask-type="CARD16"
                 value-mask-name="value_mask"
-                value-mask-pad="2"
                 value-list-name="value_list" />
   </request>
 

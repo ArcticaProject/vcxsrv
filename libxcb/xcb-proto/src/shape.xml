@@ -146,6 +146,7 @@ authorization from the authors.
     <reply>
       <field type="BYTE" name="ordering" enum="ClipOrdering" />
       <field type="CARD32" name="rectangles_len" />
+      <pad bytes="20" />
       <list type="RECTANGLE" name="rectangles">
         <fieldref>rectangles_len</fieldref>
       </list>

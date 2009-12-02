@@ -112,8 +112,6 @@ authorization from the authors.
     <xsd:complexType>
       <xsd:attribute name="value-mask-type" type="xsd:string" use="required" />
       <xsd:attribute name="value-mask-name" type="xsd:string" use="required" />
-      <!-- This pad is currently needed only by ConfigureWindow.  Sigh. -->
-      <xsd:attribute name="value-mask-pad" type="xsd:integer" use="optional" />
       <xsd:attribute name="value-list-name" type="xsd:string" use="required" />
     </xsd:complexType>
   </xsd:element>

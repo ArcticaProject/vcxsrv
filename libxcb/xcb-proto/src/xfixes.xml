@@ -229,7 +229,10 @@ authorization from the authors.
       <field type="RECTANGLE" name="extents" />
       <pad bytes="16" />
       <list  type="RECTANGLE" name="rectangles">
+	<op op='/'>
 		<fieldref>length</fieldref>
+		<value>2</value>
+	</op>
       </list>
     </reply>
   </request>
