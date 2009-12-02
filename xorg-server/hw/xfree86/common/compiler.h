@@ -316,46 +316,47 @@ static __inline__ void stw_u(uint16_t val, uint16_t *p)
 /* note that the appropriate setup via "ioperm" needs to be done */
 /*  *before* any inx/outx is done. */
 
-extern _X_EXPORT void (*_alpha_outb)(char val, unsigned long port);
+extern _X_EXPORT void _outb(unsigned char val, unsigned long port);
+extern _X_EXPORT void _outw(unsigned short val, unsigned long port);
+extern _X_EXPORT void _outl(unsigned int val, unsigned long port);
+extern _X_EXPORT unsigned int _inb(unsigned long port);
+extern _X_EXPORT unsigned int _inw(unsigned long port);
+extern _X_EXPORT unsigned int _inl(unsigned long port);
+
 static __inline__ void
 outb(unsigned long port, unsigned char val)
 {
-    _alpha_outb(val, port);
+    _outb(val, port);
 }
 
-extern _X_EXPORT void (*_alpha_outw)(short val, unsigned long port);
 static __inline__ void
 outw(unsigned long port, unsigned short val)
 {
-    _alpha_outw(val, port);
+    _outw(val, port);
 }
 
-extern _X_EXPORT void (*_alpha_outl)(int val, unsigned long port);
 static __inline__ void
 outl(unsigned long port, unsigned int val)
 {
-    _alpha_outl(val, port);
+    _outl(val, port);
 }
 
-extern _X_EXPORT unsigned int (*_alpha_inb)(unsigned long port);
 static __inline__ unsigned int
 inb(unsigned long port)
 {
-  return _alpha_inb(port);
+  return _inb(port);
 }
 
-extern _X_EXPORT unsigned int (*_alpha_inw)(unsigned long port);
 static __inline__ unsigned int
 inw(unsigned long port)
 {
-  return _alpha_inw(port);
+  return _inw(port);
 }
 
-extern _X_EXPORT unsigned int (*_alpha_inl)(unsigned long port);
 static __inline__ unsigned int
 inl(unsigned long port)
 {
-  return _alpha_inl(port);
+  return _inl(port);
 }
 
 #    endif /* linux */

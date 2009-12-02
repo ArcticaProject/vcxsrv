@@ -716,6 +716,59 @@ static void include_byte_padding_macros(void)
 
 }
 
+static void xi_unregister_handlers(void)
+{
+    DeviceIntRec dev;
+    int handler;
+
+    memset(&dev, 0, sizeof(dev));
+
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 1);
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 2);
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 3);
+
+    g_test_message("Unlinking from front.");
+
+    XIUnregisterPropertyHandler(&dev, 4); /* NOOP */
+    g_assert(dev.properties.handlers->id == 3);
+    XIUnregisterPropertyHandler(&dev, 3);
+    g_assert(dev.properties.handlers->id == 2);
+    XIUnregisterPropertyHandler(&dev, 2);
+    g_assert(dev.properties.handlers->id == 1);
+    XIUnregisterPropertyHandler(&dev, 1);
+    g_assert(dev.properties.handlers == NULL);
+
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 4);
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 5);
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 6);
+    XIUnregisterPropertyHandler(&dev, 3); /* NOOP */
+    g_assert(dev.properties.handlers->next->next->next == NULL);
+    XIUnregisterPropertyHandler(&dev, 4);
+    g_assert(dev.properties.handlers->next->next == NULL);
+    XIUnregisterPropertyHandler(&dev, 5);
+    g_assert(dev.properties.handlers->next == NULL);
+    XIUnregisterPropertyHandler(&dev, 6);
+    g_assert(dev.properties.handlers == NULL);
+
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 7);
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 8);
+    handler = XIRegisterPropertyHandler(&dev, NULL, NULL, NULL);
+    g_assert(handler == 9);
+
+    XIDeleteAllDeviceProperties(&dev);
+    g_assert(dev.properties.handlers == NULL);
+    XIUnregisterPropertyHandler(&dev, 7); /* NOOP */
+
+}
+
 int main(int argc, char** argv)
 {
     g_test_init(&argc, &argv,NULL);
@@ -727,6 +780,7 @@ int main(int argc, char** argv)
     g_test_add_func("/dix/input/xi2-struct-sizes", xi2_struct_sizes);
     g_test_add_func("/dix/input/grab_matching", dix_grab_matching);
     g_test_add_func("/include/byte_padding_macros", include_byte_padding_macros);
+    g_test_add_func("/Xi/xiproperty/register-unregister", xi_unregister_handlers);
 
     return g_test_run();
 }

@@ -62,10 +62,15 @@
  */
 #define CACHE_PICTURE_WIDTH 1024
 
+/* Maximum number of glyphs we buffer on the stack before flushing
+ * rendering to the mask or destination surface.
+ */
+#define GLYPH_BUFFER_SIZE 256
+
 typedef struct {
     PicturePtr mask;
+    ExaCompositeRectRec rects[GLYPH_BUFFER_SIZE];
     int count;
-    ExaCompositeRectRec rects[0];
 } ExaGlyphBuffer, *ExaGlyphBufferPtr;
 
 typedef enum {
@@ -347,11 +352,11 @@ exaGlyphCacheHashRemove(ExaGlyphCachePtr cache,
 
 /* The most efficient thing to way to upload the glyph to the screen
  * is to use the UploadToScreen() driver hook; this allows us to
- * pipeline glyph uploads and to avoid creating offscreen pixmaps for
+ * pipeline glyph uploads and to avoid creating gpu backed pixmaps for
  * glyphs that we'll never use again.
  *
- * If we can't do it with UploadToScreen (because the glyph is offscreen, etc),
- * we fall back to CompositePicture.
+ * If we can't do it with UploadToScreen (because the glyph has a gpu copy,
+ * etc), we fall back to CompositePicture.
  *
  * We need to damage the cache pixmap manually in either case because the damage
  * layer unwrapped the picture screen before calling exaGlyphs.
@@ -374,7 +379,7 @@ exaGlyphCacheUploadGlyph(ScreenPtr         pScreen,
 
     /* If the glyph pixmap is already uploaded, no point in doing
      * things this way */
-    if (exaPixmapIsOffscreen(pGlyphPixmap))
+    if (exaPixmapHasGpuCopy(pGlyphPixmap))
 	goto composite;
 
     /* UploadToScreen only works if bpp match */
@@ -384,7 +389,7 @@ exaGlyphCacheUploadGlyph(ScreenPtr         pScreen,
     if (pExaScr->do_migration) {
 	ExaMigrationRec pixmaps[1];
 
-	/* cache pixmap must be offscreen. */
+	/* cache pixmap must have a gpu copy. */
 	pixmaps[0].as_dst = TRUE;
 	pixmaps[0].as_src = FALSE;
 	pixmaps[0].pPix = pCachePixmap;
@@ -392,7 +397,7 @@ exaGlyphCacheUploadGlyph(ScreenPtr         pScreen,
 	exaDoMigration (pixmaps, 1, TRUE);
     }
 
-    if (!exaPixmapIsOffscreen(pCachePixmap))
+    if (!exaPixmapHasGpuCopy(pCachePixmap))
 	goto composite;
 
     /* x,y are in pixmap coordinates, no need for cache{X,Y}off */
@@ -552,12 +557,15 @@ exaBufferGlyph(ScreenPtr         pScreen,
 	       INT16             yDst)
 {
     ExaScreenPriv(pScreen);
-    PicturePtr mask = GlyphPicture(pGlyph)[pScreen->myNum];
-    unsigned int format = mask->format;
+    unsigned int format = (GlyphPicture(pGlyph)[pScreen->myNum])->format;
     int width = pGlyph->info.width;
     int height = pGlyph->info.height;
     ExaCompositeRectPtr rect;
+    PicturePtr mask;
     int i;
+
+    if (buffer->count == GLYPH_BUFFER_SIZE)
+	return ExaGlyphNeedFlush;
 
     if (PICT_FORMAT_BPP(format) == 1)
 	format = PICT_a8;
@@ -589,6 +597,7 @@ exaBufferGlyph(ScreenPtr         pScreen,
 
     /* Couldn't find the glyph in the cache, use the glyph picture directly */
 
+    mask = GlyphPicture(pGlyph)[pScreen->myNum];
     if (buffer->mask && buffer->mask != mask)
 	return ExaGlyphNeedFlush;
 
@@ -702,18 +711,12 @@ exaGlyphs (CARD8 	 op,
     int		width = 0, height = 0;
     int		x, y;
     int		first_xOff = list->xOff, first_yOff = list->yOff;
-    int		i, n;
+    int		n;
     GlyphPtr	glyph;
     int		error;
     BoxRec	extents = {0, 0, 0, 0};
     CARD32	component_alpha;
-    ExaGlyphBufferPtr buffer;
-
-    for (i = 0, n = 0; i < nlist; i++)
-	n += list[i].len;
-    buffer = alloca(sizeof(ExaGlyphBuffer) + n * sizeof(ExaCompositeRectRec));
-    if (!buffer)
-	return;
+    ExaGlyphBuffer buffer;
 
     if (maskFormat)
     {
@@ -793,8 +796,8 @@ exaGlyphs (CARD8 	 op,
 	x = 0;
 	y = 0;
     }
-    buffer->count = 0;
-    buffer->mask = NULL;
+    buffer.count = 0;
+    buffer.mask = NULL;
     while (nlist--)
     {
 	x += list->xOff;
@@ -809,23 +812,23 @@ exaGlyphs (CARD8 	 op,
 		/* pGlyph->info.{x,y} compensate for empty space in the glyph. */
 		if (maskFormat)
 		{
-		    if (exaBufferGlyph(pScreen, buffer, glyph, NULL, pMask,
+		    if (exaBufferGlyph(pScreen, &buffer, glyph, NULL, pMask,
 				       0, 0, 0, 0, x - glyph->info.x, y - glyph->info.y) == ExaGlyphNeedFlush)
 		    {
-			exaGlyphsToMask(pMask, buffer);
-			exaBufferGlyph(pScreen, buffer, glyph, NULL, pMask,
+			exaGlyphsToMask(pMask, &buffer);
+			exaBufferGlyph(pScreen, &buffer, glyph, NULL, pMask,
 				       0, 0, 0, 0, x - glyph->info.x, y - glyph->info.y);
 		    }
 		}
 		else
 		{
-		    if (exaBufferGlyph(pScreen, buffer, glyph, pSrc, pDst,
+		    if (exaBufferGlyph(pScreen, &buffer, glyph, pSrc, pDst,
 				       xSrc + (x - glyph->info.x) - first_xOff, ySrc + (y - glyph->info.y) - first_yOff,
 				       0, 0, x - glyph->info.x, y - glyph->info.y)
 			== ExaGlyphNeedFlush)
 		    {
-			exaGlyphsToDst(pSrc, pDst, buffer);
-			exaBufferGlyph(pScreen, buffer, glyph, pSrc, pDst,
+			exaGlyphsToDst(pSrc, pDst, &buffer);
+			exaBufferGlyph(pScreen, &buffer, glyph, pSrc, pDst,
 				       xSrc + (x - glyph->info.x) - first_xOff, ySrc + (y - glyph->info.y) - first_yOff,
 				       0, 0, x - glyph->info.x, y - glyph->info.y);
 		    }
@@ -838,11 +841,11 @@ exaGlyphs (CARD8 	 op,
 	list++;
     }
     
-    if (buffer->count) {
+    if (buffer.count) {
         if (maskFormat)
-	    exaGlyphsToMask(pMask, buffer);
+	    exaGlyphsToMask(pMask, &buffer);
         else
-	    exaGlyphsToDst(pSrc, pDst, buffer);
+	    exaGlyphsToDst(pSrc, pDst, &buffer);
     }
 
     if (maskFormat)

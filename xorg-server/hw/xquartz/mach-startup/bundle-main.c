@@ -333,8 +333,10 @@ kern_return_t do_start_x11_server(mach_port_t port, string_array_t argv,
     /* If we didn't get handed a launchd DISPLAY socket, we should
      * unset DISPLAY or we can run into problems with pbproxy
      */
-    if(!launchd_socket_handed_off)
+    if(!launchd_socket_handed_off) {
+        fprintf(stderr, "X11.app: No launchd socket handed off, unsetting DISPLAY\n");
         unsetenv("DISPLAY");
+    }
     
     if(!_argv || !_envp) {
         return KERN_FAILURE;
@@ -473,7 +475,7 @@ static void setup_env(void) {
 
     server_bootstrap_name = malloc(sizeof(char) * (strlen(pds) + 1));
     if(!server_bootstrap_name) {
-        fprintf(stderr, "Memory allocation error.\n");
+        fprintf(stderr, "X11.app: Memory allocation error.\n");
         exit(1);
     }
     strcpy(server_bootstrap_name, pds);
@@ -482,7 +484,7 @@ static void setup_env(void) {
     len = strlen(server_bootstrap_name);
     launchd_id_prefix = malloc(sizeof(char) * (len - 3));
     if(!launchd_id_prefix) {
-        fprintf(stderr, "Memory allocation error.\n");
+        fprintf(stderr, "X11.app: Memory allocation error.\n");
         exit(1);
     }
     strlcpy(launchd_id_prefix, server_bootstrap_name, len - 3);
@@ -497,21 +499,27 @@ static void setup_env(void) {
         }
 
         if(s && *s) {
-            temp = (char *)malloc(sizeof(char) * len);
-            if(!temp) {
-                fprintf(stderr, "Memory allocation error creating space for socket name test.\n");
-                exit(1);
-            }
-            strlcpy(temp, launchd_id_prefix, len);
-            strlcat(temp, ":0", len);
+            if(strcmp(launchd_id_prefix, "org.x") == 0 && strcmp(s, ":0") == 0) {
+                fprintf(stderr, "X11.app: Detected old style launchd DISPLAY, please update xinit.\n");
+            } else {
+                temp = (char *)malloc(sizeof(char) * len);
+                if(!temp) {
+                    fprintf(stderr, "X11.app: Memory allocation error creating space for socket name test.\n");
+                    exit(1);
+                }
+                strlcpy(temp, launchd_id_prefix, len);
+                strlcat(temp, ":0", len);
             
-            if(strcmp(temp, s) != 0) {
-                /* If we don't have a match, unset it. */
-                unsetenv("DISPLAY");
+                if(strcmp(temp, s) != 0) {
+                    /* If we don't have a match, unset it. */
+                    fprintf(stderr, "X11.app: DISPLAY (\"%s\") does not match our id (\"%s\"), unsetting.\n", disp, launchd_id_prefix);
+                    unsetenv("DISPLAY");
+                }
+                free(temp);
             }
-            free(temp);
         } else {
             /* The DISPLAY environment variable is not formatted like a launchd socket, so reset. */
+            fprintf(stderr, "X11.app: DISPLAY does not look like a launchd set variable, unsetting.\n");
             unsetenv("DISPLAY");
         }
     }

@@ -109,6 +109,9 @@ FreeVelocityData(DeviceVelocityPtr vel);
 extern _X_INTERNAL BOOL
 InitializePredictableAccelerationProperties(DeviceIntPtr dev);
 
+extern _X_INTERNAL BOOL
+DeletePredictableAccelerationProperties(DeviceIntPtr dev);
+
 extern _X_EXPORT int
 SetAccelerationProfile(DeviceVelocityPtr vel, int profile_num);
 

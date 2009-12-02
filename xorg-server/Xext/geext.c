@@ -168,12 +168,6 @@ GEClientCallback(CallbackListPtr *list,
     ClientPtr		pClient = clientinfo->client;
     GEClientInfoPtr     pGEClient = GEGetClient(pClient);
 
-    if (pGEClient == NULL)
-    {
-        pGEClient = xcalloc(1, sizeof(GEClientInfoRec));
-        dixSetPrivate(&pClient->devPrivates, GEClientPrivateKey, pGEClient);
-    }
-
     pGEClient->major_version = 0;
     pGEClient->minor_version = 0;
 }
@@ -221,6 +215,9 @@ void
 GEExtensionInit(void)
 {
     ExtensionEntry *extEntry;
+
+    if (!dixRequestPrivate(GEClientPrivateKey, sizeof(GEClientInfoRec)))
+        FatalError("GEExtensionInit: GE private request failed.\n");
 
     if(!AddCallback(&ClientStateCallback, GEClientCallback, 0))
     {

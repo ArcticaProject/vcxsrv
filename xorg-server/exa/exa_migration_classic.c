@@ -111,7 +111,7 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
     ExaPixmapPriv (pPixmap);
     RegionPtr damage = DamageRegion (pExaPixmap->pDamage);
     RegionRec CopyReg;
-    Bool save_offscreen;
+    Bool save_use_gpu_copy;
     int save_pitch;
     BoxPtr pBox;
     int nbox;
@@ -119,7 +119,7 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
     Bool need_sync = FALSE;
 
     /* Damaged bits are valid in current copy but invalid in other one */
-    if (pExaPixmap->offscreen) {
+    if (pExaPixmap->use_gpu_copy) {
 	REGION_UNION(pScreen, &pExaPixmap->validFB, &pExaPixmap->validFB,
 		     damage);
 	REGION_SUBTRACT(pScreen, &pExaPixmap->validSys, &pExaPixmap->validSys,
@@ -200,9 +200,9 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
     pBox = REGION_RECTS(&CopyReg);
     nbox = REGION_NUM_RECTS(&CopyReg);
 
-    save_offscreen = pExaPixmap->offscreen;
+    save_use_gpu_copy = pExaPixmap->use_gpu_copy;
     save_pitch = pPixmap->devKind;
-    pExaPixmap->offscreen = TRUE;
+    pExaPixmap->use_gpu_copy = TRUE;
     pPixmap->devKind = pExaPixmap->fb_pitch;
 
     while (nbox--) {
@@ -242,7 +242,7 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 	pBox++;
     }
 
-    pExaPixmap->offscreen = save_offscreen;
+    pExaPixmap->use_gpu_copy = save_use_gpu_copy;
     pPixmap->devKind = save_pitch;
 
     /* Try to prevent source valid region from growing too many rects by
@@ -351,7 +351,7 @@ exaDoMoveInPixmap (ExaMigrationPtr migrate)
 
     exaCopyDirtyToFb (migrate);
 
-    if (exaPixmapIsOffscreen(pPixmap))
+    if (exaPixmapHasGpuCopy(pPixmap))
 	return;
 
     DBG_MIGRATE (("-> %p (0x%x) (%dx%d) (%c)\n", pPixmap,
@@ -361,7 +361,7 @@ exaDoMoveInPixmap (ExaMigrationPtr migrate)
 		  pPixmap->drawable.height,
 		  exaPixmapIsDirty(pPixmap) ? 'd' : 'c'));
 
-    pExaPixmap->offscreen = TRUE;
+    pExaPixmap->use_gpu_copy = TRUE;
 
     pPixmap->devKind = pExaPixmap->fb_pitch;
     pPixmap->drawable.serialNumber = NEXT_SERIAL_NUMBER;
@@ -392,7 +392,7 @@ exaDoMoveOutPixmap (ExaMigrationPtr migrate)
 
     exaCopyDirtyToSys (migrate);
 
-    if (exaPixmapIsOffscreen(pPixmap)) {
+    if (exaPixmapHasGpuCopy(pPixmap)) {
 
 	DBG_MIGRATE (("<- %p (%p) (%dx%d) (%c)\n", pPixmap,
 		      (void*)(ExaGetPixmapPriv(pPixmap)->area ?
@@ -401,7 +401,7 @@ exaDoMoveOutPixmap (ExaMigrationPtr migrate)
 		      pPixmap->drawable.height,
 		      exaPixmapIsDirty(pPixmap) ? 'd' : 'c'));
 
-	pExaPixmap->offscreen = FALSE;
+	pExaPixmap->use_gpu_copy = FALSE;
 
 	pPixmap->devKind = pExaPixmap->sys_pitch;
 	pPixmap->drawable.serialNumber = NEXT_SERIAL_NUMBER;
@@ -468,12 +468,12 @@ exaMigrateTowardFb (ExaMigrationPtr migrate)
 	pExaPixmap->score++;
 
     if (pExaPixmap->score >= EXA_PIXMAP_SCORE_MOVE_IN &&
-	!exaPixmapIsOffscreen(pPixmap))
+	!exaPixmapHasGpuCopy(pPixmap))
     {
 	exaDoMoveInPixmap(migrate);
     }
 
-    if (exaPixmapIsOffscreen(pPixmap)) {
+    if (exaPixmapHasGpuCopy(pPixmap)) {
 	exaCopyDirtyToFb (migrate);
 	ExaOffscreenMarkUsed (pPixmap);
     } else
@@ -504,7 +504,7 @@ exaMigrateTowardSys (ExaMigrationPtr migrate)
     if (pExaPixmap->score <= EXA_PIXMAP_SCORE_MOVE_OUT && pExaPixmap->area)
 	exaDoMoveOutPixmap(migrate);
 
-    if (exaPixmapIsOffscreen(pPixmap)) {
+    if (exaPixmapHasGpuCopy(pPixmap)) {
 	exaCopyDirtyToFb (migrate);
 	ExaOffscreenMarkUsed (pPixmap);
     } else
@@ -523,7 +523,7 @@ exaAssertNotDirty (PixmapPtr pPixmap)
     RegionRec ValidReg;
     int dst_pitch, src_pitch, cpp, y, nbox, save_pitch;
     BoxPtr pBox;
-    Bool ret = TRUE, save_offscreen;
+    Bool ret = TRUE, save_use_gpu_copy;
 
     if (exaPixmapIsPinned(pPixmap) || pExaPixmap->area == NULL)
 	return ret;
@@ -542,9 +542,9 @@ exaAssertNotDirty (PixmapPtr pPixmap)
     src_pitch = pExaPixmap->fb_pitch;
     cpp = pPixmap->drawable.bitsPerPixel / 8;
 
-    save_offscreen = pExaPixmap->offscreen;
+    save_use_gpu_copy = pExaPixmap->use_gpu_copy;
     save_pitch = pPixmap->devKind;
-    pExaPixmap->offscreen = TRUE;
+    pExaPixmap->use_gpu_copy = TRUE;
     pPixmap->devKind = pExaPixmap->fb_pitch;
 
     if (!ExaDoPrepareAccess(pPixmap, EXA_PREPARE_SRC))
@@ -579,7 +579,7 @@ exaAssertNotDirty (PixmapPtr pPixmap)
 skip:
     exaFinishAccess(&pPixmap->drawable, EXA_PREPARE_SRC);
 
-    pExaPixmap->offscreen = save_offscreen;
+    pExaPixmap->use_gpu_copy = save_use_gpu_copy;
     pPixmap->devKind = save_pitch;
 
 out:
@@ -618,7 +618,7 @@ exaDoMigration_classic (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
      */
     for (i = 0; i < npixmaps; i++) {
 	if (exaPixmapIsPinned (pixmaps[i].pPix) &&
-	    !exaPixmapIsOffscreen (pixmaps[i].pPix))
+	    !exaPixmapHasGpuCopy (pixmaps[i].pPix))
 	{
 	    EXA_FALLBACK(("Pixmap %p (%dx%d) pinned in sys\n", pixmaps[i].pPix,
 		      pixmaps[i].pPix->drawable.width,
@@ -680,7 +680,7 @@ exaDoMigration_classic (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 	}
 
 	for (i = 0; i < npixmaps; i++) {
-	    if (exaPixmapIsOffscreen(pixmaps[i].pPix)) {
+	    if (exaPixmapHasGpuCopy(pixmaps[i].pPix)) {
 		/* Found one in FB, so move all to FB. */
 		for (j = 0; j < npixmaps; j++)
 		    exaMigrateTowardFb(pixmaps + i);
@@ -709,12 +709,12 @@ exaDoMigration_classic (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 
 	/* If we couldn't fit everything in, abort */
 	for (i = 0; i < npixmaps; i++) {
-	    if (!exaPixmapIsOffscreen(pixmaps[i].pPix)) {
+	    if (!exaPixmapHasGpuCopy(pixmaps[i].pPix)) {
 		return;
 	    }
 	}
 
-	/* Yay, everything's offscreen, mark memory as used */
+	/* Yay, everything has a gpu copy, mark memory as used */
 	for (i = 0; i < npixmaps; i++) {
 	    ExaOffscreenMarkUsed (pixmaps[i].pPix);
 	}

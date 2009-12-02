@@ -329,9 +329,11 @@ create_bits_picture (PicturePtr pict,
     pixman_image_t *image;
     DrawablePtr drawable;
 
-    if (is_src && pict->pDrawable->type == DRAWABLE_WINDOW)
+    if (is_src && pict->pDrawable->type == DRAWABLE_WINDOW) {
 	drawable = copy_drawable (pict->pDrawable);
-    else
+	if (!drawable)
+	    return NULL;
+    } else
 	drawable = pict->pDrawable;
     
     fbGetDrawable (drawable, bits, stride, bpp, xoff, yoff);

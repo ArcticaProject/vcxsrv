@@ -551,10 +551,10 @@ the following font path:
 .I /etc/X\fBn\fP.hosts
 Initial access control list for display number \fBn\fP
 .TP 30
-.IR __projectroot__/lib/X11/fonts/misc , __projectroot__/lib/X11/fonts/75dpi , __projectroot__/lib/X11/fonts/100dpi
+.IR __datadir__/fonts/X11/misc , __datadir__/fonts/X11/75dpi , __datadir__/fonts/X11/100dpi
 Bitmap font directories
 .TP 30
-.IR __projectroot__/lib/X11/fonts/TTF , __projectroot__/lib/X11/fonts/Type1
+.IR __datadir__/fonts/X11/TTF , __datadir__/fonts/X11/Type1
 Outline font directories
 .TP 30
 .I /tmp/.X11-unix/X\fBn\fP
