@@ -15,7 +15,7 @@ check_all_SOURCES =  check_all.c check_suites.h check_public.c
 all-local::
 	$(RM) CheckLog*.xml
 
-check-local:
+check-local: check-TESTS
 	$(RM) CheckLog.html
 	if test x$(HTML_CHECK_RESULT) = xtrue; then \
 		$(XSLTPROC) $(srcdir)/CheckLog.xsl CheckLog*.xml > CheckLog.html; \

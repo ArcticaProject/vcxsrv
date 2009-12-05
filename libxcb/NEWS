@@ -1,3 +1,10 @@
+Release 1.5 (2009-12-03)
+========================
+- setsockopt(SO_KEEPALIVE) on TCP display connections
+- Add DRI2 support
+- Fix check dependency
+- Cygwin build fix: Add -no-undefined to libtool flags
+
 Release 1.4 (2009-07-15)
 ========================
 * Add majorCode, minorCode and resourceID fields to X generic error

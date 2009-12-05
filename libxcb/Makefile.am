@@ -13,6 +13,9 @@ endif
 if BUILD_DPMS
 pkgconfig_DATA += xcb-dpms.pc
 endif
+if BUILD_DRI2
+pkgconfig_DATA += xcb-dri2.pc
+endif
 if BUILD_GLX
 pkgconfig_DATA += xcb-glx.pc
 endif
