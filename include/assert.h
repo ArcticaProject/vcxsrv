@@ -6,7 +6,7 @@
 static __inline void __assert(int Cond)
 {
 #ifdef _DEBUG
-  if (Cond)
+  if (!Cond)
   {
     printf("assertion occured.\n");
     __asm int 3;
