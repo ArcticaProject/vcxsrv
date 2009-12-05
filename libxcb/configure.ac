@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.57)
 AC_INIT([libxcb],
-        1.4,
+        1.5,
         [xcb@lists.freedesktop.org])
 AC_CONFIG_SRCDIR([xcb.pc.in])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
@@ -132,6 +132,7 @@ esac
 XCB_EXTENSION(Composite, "yes")
 XCB_EXTENSION(Damage, "yes")
 XCB_EXTENSION(DPMS, "yes")
+XCB_EXTENSION(DRI2, "yes")
 XCB_EXTENSION(GLX, "yes")
 XCB_EXTENSION(RandR, "yes")
 XCB_EXTENSION(Record, "yes")
@@ -174,6 +175,7 @@ xcb.pc
 xcb-composite.pc
 xcb-damage.pc
 xcb-dpms.pc
+xcb-dri2.pc
 xcb-glx.pc
 xcb-randr.pc
 xcb-record.pc

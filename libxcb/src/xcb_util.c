@@ -260,6 +260,7 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
         if(fd >= 0) {
             int on = 1;
             setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(on));
+	    setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(on));
 
             if (connect(fd, addr->ai_addr, addr->ai_addrlen) >= 0)
                 break;

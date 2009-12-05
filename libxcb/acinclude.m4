@@ -102,6 +102,11 @@ AC_ARG_WITH(
        AC_MSG_WARN(
           [Warning: no doxygen detected. Documentation will not be built])
     fi])
+    AC_PATH_PROG(DOT, dot, no)
+    if test "$DOT" = "no"; then
+        AC_MSG_WARN([Warning: no dot detected. Documentation will not be built])
+	BUILD_DOCS="no"
+    fi
 fi
 AC_MSG_CHECKING([whether documentation is built])
 AC_MSG_RESULT([${BUILD_DOCS}])
