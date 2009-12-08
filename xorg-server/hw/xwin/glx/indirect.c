@@ -1392,7 +1392,8 @@ glxWinContextMakeCurrent(__GLXcontext *base)
   HDC readDC = NULL;
   __GLXdrawable *drawPriv;
   __GLXdrawable *readPriv;
-  HWND hwnd;
+  HWND hdrawwnd;
+  HWND hreadwnd;
 
   GLWIN_TRACE_MSG("glxWinContextMakeCurrent context %p (native ctx %p)", gc, gc->ctx);
   glWinCallDelta();
@@ -1412,7 +1413,7 @@ glxWinContextMakeCurrent(__GLXcontext *base)
       return FALSE;
     }
 
-  drawDC = glxWinMakeDC(gc, (__GLXWinDrawable *)drawPriv, &drawDC, &hwnd);
+  drawDC = glxWinMakeDC(gc, (__GLXWinDrawable *)drawPriv, &drawDC, &hdrawwnd);
   if (drawDC == NULL)
     {
       ErrorF("glxWinMakeDC failed for drawDC\n");
@@ -1428,11 +1429,11 @@ glxWinContextMakeCurrent(__GLXcontext *base)
         to one DC and reading from the other
       */
       readPriv = gc->base.readPriv;
-      readDC = glxWinMakeDC(gc, (__GLXWinDrawable *)readPriv, &readDC, &hwnd);
+      readDC = glxWinMakeDC(gc, (__GLXWinDrawable *)readPriv, &readDC, &hreadwnd);
       if (readDC == NULL)
         {
           ErrorF("glxWinMakeDC failed for readDC\n");
-          glxWinReleaseDC(hwnd, drawDC, (__GLXWinDrawable *)readPriv);
+          glxWinReleaseDC(hdrawwnd, drawDC, (__GLXWinDrawable *)drawPriv);
           return FALSE;
         }
 
@@ -1455,9 +1456,9 @@ glxWinContextMakeCurrent(__GLXcontext *base)
   // apparently make current could fail if the context is current in a different thread,
   // but that shouldn't be able to happen in the current server...
 
-  glxWinReleaseDC(hwnd, drawDC, (__GLXWinDrawable *)drawPriv);
+  glxWinReleaseDC(hdrawwnd, drawDC, (__GLXWinDrawable *)drawPriv);
   if (readDC)
-    glxWinReleaseDC(hwnd, drawDC, (__GLXWinDrawable *)readPriv);
+    glxWinReleaseDC(hreadwnd, readDC, (__GLXWinDrawable *)readPriv);
 
   return ret;
 }
