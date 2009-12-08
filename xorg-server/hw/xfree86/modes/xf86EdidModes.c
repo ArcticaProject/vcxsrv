@@ -135,6 +135,16 @@ static Bool quirk_detailed_v_in_cm (int scrnIndex, xf86MonPtr DDC)
 	DDC->vendor.prod_id == 47360)
 	return TRUE;
 
+    /* Bug #10304: LGPhilipsLCD LP154W01-A5 */
+    if (memcmp(DDC->vendor.name, "LPL", 4) == 0 &&
+	DDC->vendor.prod_id == 0)
+	return TRUE;
+
+    /* Bug #24482: LGPhilipsLCD LP154W01-TLA1 */
+    if (memcmp(DDC->vendor.name, "LPL", 4) == 0 &&
+	DDC->vendor.prod_id == 0x2a00)
+	return TRUE;
+
     /* Bug #21750: Samsung Syncmaster 2333HD */
     if (memcmp (DDC->vendor.name, "SAM", 4) == 0 &&
 	DDC->vendor.prod_id == 1157)
@@ -145,11 +155,6 @@ static Bool quirk_detailed_v_in_cm (int scrnIndex, xf86MonPtr DDC)
 
 static Bool quirk_detailed_use_maximum_size (int scrnIndex, xf86MonPtr DDC)
 {
-    /* Bug #10304: LGPhilipsLCD LP154W01-A5 */
-    if (memcmp (DDC->vendor.name, "LPL", 4) == 0 &&
-	(DDC->vendor.prod_id == 0 || DDC->vendor.prod_id == 0x2a00))
-	return TRUE;
-
     /* Bug #21324: Iiyama Vision Master 450 */
     if (memcmp (DDC->vendor.name, "IVM", 4) == 0 &&
 	DDC->vendor.prod_id == 6400)

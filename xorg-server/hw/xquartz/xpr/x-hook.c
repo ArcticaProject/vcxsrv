@@ -34,6 +34,7 @@
 #include "x-hook.h"
 #include <stdlib.h>
 #include <assert.h>
+#include "os.h"
 
 #define CELL_NEW(f,d) X_PFX (list_prepend) ((x_list *) (f), (d))
 #define CELL_FREE(c)  X_PFX (list_free_1) (c)
@@ -79,9 +80,13 @@ X_PFX (hook_run) (x_list *lst, void *arg)
     int length, i;
 
     length = X_PFX (list_length) (lst);
-    fun = alloca (sizeof (x_hook_function *) * length);
-    data = alloca (sizeof (void *) * length);
+    fun = xalloc (sizeof (x_hook_function *) * length);
+    data = xalloc (sizeof (void *) * length);
 
+    if(!fun || !data) {
+        FatalError("Failed to allocate memory in %s\n", __func__);
+    }
+    
     for (i = 0, node = lst; node != NULL; node = node->next, i++)
     {
 	cell = node->data;
@@ -93,6 +98,9 @@ X_PFX (hook_run) (x_list *lst, void *arg)
     {
 	(*fun[i]) (arg, data[i]);
     }
+    
+    xfree(fun);
+    xfree(data);
 }
 
 X_EXTERN void

@@ -1297,7 +1297,7 @@ xf86XVAdjustFrame(int index, int x, int y, int flags)
       for(i = pa->nPorts; i > 0; i--, pPort++) {
 	pPriv = (XvPortRecPrivatePtr)pPort->devPriv.ptr;
 
-	if(!pPriv->type && (pPriv->isOn == XV_ON)) { /* overlaid still/image */
+	if(!pPriv->type && (pPriv->isOn != XV_OFF)) { /* overlaid still/image */
 
 	  if(pPriv->pCompositeClip && pPriv->FreeCompositeClip)
 	     REGION_DESTROY(pScreen, pPriv->pCompositeClip);
@@ -1311,7 +1311,7 @@ xf86XVAdjustFrame(int index, int x, int y, int flags)
 	      (pWin->visibility == VisibilityPartiallyObscured)))
 	  {
 	      xf86XVReputImage(pPriv);
-	  } else {
+	  } else if (pPriv->isOn == XV_ON) {
 	     (*pPriv->AdaptorRec->StopVideo)(
 				 pPriv->pScrn, pPriv->DevPriv.ptr, FALSE);
 	     xf86XVRemovePortFromWindow(pWin, pPriv);

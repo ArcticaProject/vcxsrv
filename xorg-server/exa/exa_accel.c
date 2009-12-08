@@ -506,11 +506,9 @@ exaHWCopyNtoN (DrawablePtr    pSrcDrawable,
 	    exaMarkSync (pDstDrawable->pScreen);
 	/* UTS: mainly for SHM PutImage's secondary path.
 	 *
-	 * Not taking this path for mixed pixmaps: It could only save one CPU
-	 * copy between cached memory and risks causing a more expensive
-	 * DownloadFromScreen later on.
+	 * Only taking this path for directly accessible pixmaps.
 	 */
-	} else if (!(pExaScr->info->flags & EXA_MIXED_PIXMAPS)) {
+	} else if (!pDstExaPixmap->pDamage) {
 	    int bpp = pSrcDrawable->bitsPerPixel;
 	    int src_stride = exaGetPixmapPitch(pSrcPixmap);
 	    CARD8 *src = NULL;

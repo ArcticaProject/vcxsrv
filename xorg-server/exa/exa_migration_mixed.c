@@ -101,6 +101,15 @@ exaDoMigration_mixed(ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 	if (pExaPixmap->pDamage && exaPixmapHasGpuCopy(pPixmap)) {
 	    ExaScreenPriv(pPixmap->drawable.pScreen);
 
+	    /* This pitch is needed for proper acceleration. For some reason
+	     * there are pixmaps without pDamage and a bad fb_pitch value.
+	     * So setting devKind when only exaPixmapHasGpuCopy() is true
+	     * causes corruption. Pixmaps without pDamage are not migrated
+	     * and should have a valid devKind at all times, so that's why this
+	     * isn't causing problems. Pixmaps have their gpu pitch set the
+	     * first time in the MPH call from exaCreateDriverPixmap_mixed().
+	     */
+	    pPixmap->devKind = pExaPixmap->fb_pitch;
 	    exaCopyDirtyToFb(pixmaps + i);
 
 	    if (pExaScr->deferred_mixed_pixmap == pPixmap)
@@ -108,10 +117,6 @@ exaDoMigration_mixed(ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 	}
 
 	pExaPixmap->use_gpu_copy = exaPixmapHasGpuCopy(pPixmap);
-	if (pExaPixmap->use_gpu_copy)
-	    pPixmap->devKind = pExaPixmap->fb_pitch;
-	else
-	    pPixmap->devKind = pExaPixmap->sys_pitch;
     }
 }
 
@@ -136,8 +141,9 @@ exaMoveInPixmap_mixed(PixmapPtr pPixmap)
 void
 exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg)
 {
+    ExaPixmapPriv(pPixmap);
+
     if (!ExaDoPrepareAccess(pPixmap, index)) {
-	ExaPixmapPriv(pPixmap);
 	Bool has_gpu_copy = exaPixmapHasGpuCopy(pPixmap);
 	ExaMigrationRec pixmaps[1];
 
@@ -198,6 +204,22 @@ exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg)
 	pPixmap->devPrivate.ptr = pExaPixmap->sys_ptr;
 	pPixmap->devKind = pExaPixmap->sys_pitch;
 	pExaPixmap->use_gpu_copy = FALSE;
+    /* We have a gpu pixmap that can be accessed, we don't need the cpu copy
+     * anymore. Drivers that prefer DFS, should fail prepare access. */
+    } else if (pExaPixmap->pDamage && exaPixmapHasGpuCopy(pPixmap)) {
+	ExaScreenPriv(pPixmap->drawable.pScreen);
+
+	/* Copy back any deferred content if needed. */
+	if (pExaScr->deferred_mixed_pixmap &&
+	    pExaScr->deferred_mixed_pixmap == pPixmap)
+	    exaMoveInPixmap_mixed(pPixmap);
+
+	DamageUnregister(&pPixmap->drawable, pExaPixmap->pDamage);
+	DamageDestroy(pExaPixmap->pDamage);
+	pExaPixmap->pDamage = NULL;
+
+	free(pExaPixmap->sys_ptr);
+	pExaPixmap->sys_ptr = NULL;
     }
 }
 
@@ -222,6 +244,7 @@ void exaFinishAccess_mixed(PixmapPtr pPixmap, int index)
 		pExaScr->deferred_mixed_pixmap != pPixmap)
 		exaMoveInPixmap_mixed(pExaScr->deferred_mixed_pixmap);
 	    pExaScr->deferred_mixed_pixmap = pPixmap;
+	    pPixmap->devKind = pExaPixmap->fb_pitch;
 	} else
 	    exaMoveInPixmap_mixed(pPixmap);
     }

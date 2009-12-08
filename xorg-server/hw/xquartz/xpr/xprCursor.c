@@ -95,7 +95,10 @@ load_cursor(CursorPtr src, int screen)
         const uint32_t *be_data=(uint32_t *) src->bits->argb;
         unsigned i;
         rowbytes = src->bits->width * sizeof (CARD32);
-        data=alloca (rowbytes * src->bits->height);
+        data = xalloc(rowbytes * src->bits->height);
+        if(!data) {
+            FatalError("Failed to allocate memory in %s\n", __func__);
+        }
         for(i=0;i<(src->bits->width*src->bits->height);i++)
             data[i]=ntohl(be_data[i]);
 #endif
@@ -118,8 +121,11 @@ load_cursor(CursorPtr src, int screen)
 
         /* round up to 8 pixel boundary so we can convert whole bytes */
         rowbytes = ((src->bits->width * 4) + 31) & ~31;
-        data = alloca(rowbytes * src->bits->height);
-
+        data = xalloc(rowbytes * src->bits->height);
+        if(!data) {
+            FatalError("Failed to allocate memory in %s\n", __func__);
+        }
+        
         if (!src->bits->emptyMask)
         {
             ycount = src->bits->height;
@@ -168,6 +174,7 @@ load_cursor(CursorPtr src, int screen)
     }
 
     err = xp_set_cursor(width, height, hot_x, hot_y, data, rowbytes);
+    xfree(data);
     return err == Success;
 }
 

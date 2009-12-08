@@ -356,12 +356,12 @@ font path elements (which can be set inside a catalogue directory):
 .PP
 .RS 4
 .nf
-.I __projectroot__/lib/X11/fonts/misc/
-.I __projectroot__/lib/X11/fonts/TTF/
-.I __projectroot__/lib/X11/fonts/OTF/
-.I __projectroot__/lib/X11/fonts/Type1/
-.I __projectroot__/lib/X11/fonts/100dpi/
-.I __projectroot__/lib/X11/fonts/75dpi/
+.I __datadir__/fonts/X11/misc/
+.I __datadir__/fonts/X11/TTF/
+.I __datadir__/fonts/X11/OTF/
+.I __datadir__/fonts/X11/Type1/
+.I __datadir__/fonts/X11/100dpi/
+.I __datadir__/fonts/X11/75dpi/
 .fi
 .RE
 .PP
@@ -1378,7 +1378,7 @@ monitors do not require it.  The default is off.
 .BI "Option " "\*qPrimary\*q  " \*qbool\*q
 This optional entry specifies that the monitor should be treated as the primary
 monitor. (RandR 1.2-supporting drivers only)
-.TP7
+.TP 7
 .BI "Option " "\*qPreferredMode\*q  " \*qstring\*q
 This optional entry specifies a mode to be marked as the preferred initial mode
 of the monitor.
