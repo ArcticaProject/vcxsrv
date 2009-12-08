@@ -44,7 +44,9 @@
 #include <glx/glapi.h>
 #include <glx/dispatch.h>
 #include <glwindows.h>
+#include <winmsg.h>
 
+#ifdef _DEBUG
 static unsigned int glWinIndirectProcCalls = 0;
 static unsigned int glWinDirectProcCalls = 0;
 
@@ -66,6 +68,7 @@ glWinCallDelta(void)
       glWinIndirectProcCallsLast = glWinIndirectProcCalls;
     }
 }
+#endif
 
 static PROC
 glWinResolveHelper(PROC *cache, char *symbol)
@@ -78,12 +81,12 @@ glWinResolveHelper(PROC *cache, char *symbol)
       proc = wglGetProcAddress(symbol);
       if (proc == NULL)
         {
-          ErrorF("glwrap: Can't resolve \"%s\"\n", symbol);
+          winDebug("glwrap: Can't resolve \"%s\"\n", symbol);
           (*cache) = (PROC)-1;
         }
       else
         {
-          ErrorF("glwrap: Resolved \"%s\"\n", symbol);
+          winDebug("glwrap: Resolved \"%s\"\n", symbol);
           (*cache) = proc;
         }
     }
@@ -101,6 +104,12 @@ glWinResolveHelper(PROC *cache, char *symbol)
   return proc;
 }
 
+#ifdef _DEBUG
+#define INCPROCCALLS   glWinIndirectProcCalls++;
+#else
+#define INCPROCCALLS
+#endif
+
 #define RESOLVE_RET(proctype, symbol, retval) \
     static PROC cache = NULL; \
     proctype proc = (proctype)glWinResolveHelper(&cache, symbol); \
@@ -108,7 +117,7 @@ glWinResolveHelper(PROC *cache, char *symbol)
         __glXErrorCallBack(0); \
         return retval; \
     } \
-    glWinIndirectProcCalls++;
+    INCPROCCALLS
 
 #define RESOLVE(proctype, symbol) RESOLVE_RET(proctype, symbol,)
 

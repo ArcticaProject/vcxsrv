@@ -241,8 +241,10 @@ for w in sorted(wrappers.keys()) :
                         print 'static',
                 print returntype + ' __stdcall ' + funcname + 'Wrapper(' + arglist + ')'
                 print '{'
+                print '#ifdef _DEBUG'
                 print '  if (glxWinDebugSettings.enable' + prefix.upper() + 'callTrace) ErrorF("'+ funcname + '\\n");'
                 print '  glWinDirectProcCalls++;'
+                print '#endif'
                 if returntype.lower() == 'void' :
                         print '  ' +  funcname + '(',
                 else :
@@ -287,11 +289,15 @@ for w in sorted(wrappers.keys()) :
 
                 if returntype.lower() == 'void' :
                         print '  RESOLVE(' + pfntypename + ', "' + stringname + '");'
+                        print '#ifdef _DEBUG'
                         print '  if (glxWinDebugSettings.enable' + prefix.upper() + 'callTrace) ErrorF("'+ funcname + '\\n");'
+                        print '#endif'
                         print '  RESOLVED_PROC(' + pfntypename + ')(',
                 else :
                         print '  RESOLVE_RET(' + pfntypename + ', "' + stringname + '", FALSE);'
+                        print '#ifdef _DEBUG'
                         print '  if (glxWinDebugSettings.enable' + prefix.upper() + 'callTrace) ErrorF("'+ funcname + '\\n");'
+                        print '#endif'
                         print '  return RESOLVED_PROC(' + pfntypename + ')(',
 
                 if arglist != 'void' :

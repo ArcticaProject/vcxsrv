@@ -42,12 +42,17 @@
 #define RESOLVE_DECL(type) \
     static type type##proc = NULL;
 
+#ifdef _DEBUG
 #define PRERESOLVE(type, symbol) \
     type##proc = (type)wglGetProcAddress(symbol); \
     if (type##proc == NULL) \
         ErrorF("wglwrap: Can't resolve \"%s\"\n", symbol); \
     else \
         ErrorF("wglwrap: Resolved \"%s\"\n", symbol);
+#else
+#define PRERESOLVE(type, symbol) \
+    type##proc = (type)wglGetProcAddress(symbol);
+#endif
 
 #define RESOLVE_RET(type, symbol, retval) \
   if (type##proc == NULL) { \
