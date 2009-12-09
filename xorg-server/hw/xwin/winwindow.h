@@ -71,6 +71,7 @@ typedef struct
   HRGN			hRgn;
   HWND			hWnd;
   BOOL			GlCtxWnd;
+  BOOL			PixelFormatSet;
   winPrivScreenPtr	pScreenPriv;
   Bool			fXKilled;
 
