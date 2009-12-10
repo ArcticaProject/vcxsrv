@@ -1456,7 +1456,7 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 #ifdef CONFIG_HAL
 	xf86Msg(X_INFO, "The server relies on HAL to provide the list of "
 	                "input devices.\n\tIf no devices become available, "
-	                "reconfigure HAL or disable AllowEmptyInput.\n");
+	                "reconfigure HAL or disable AutoAddDevices.\n");
 #else
 	xf86Msg(X_INFO, "HAL is disabled and no input devices were configured.\n"
 			"\tTry disabling AllowEmptyInput.\n");

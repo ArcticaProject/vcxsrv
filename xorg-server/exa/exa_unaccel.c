@@ -414,7 +414,9 @@ ExaCheckComposite (CARD8      op,
 	PixmapPtr pDstPix;
 
 	if (!miComputeCompositeRegion (&region, pSrc, pMask, pDst,
-				       xSrc, ySrc, xMask, yMask, xDst, yDst,
+				       xSrc, ySrc, xMask, yMask,
+				       xDst + pDst->pDrawable->x,
+				       yDst + pDst->pDrawable->y,
 				       width, height))
 	    goto skip;
 

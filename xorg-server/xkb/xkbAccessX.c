@@ -131,6 +131,8 @@ AccessXKeyboardEvent(DeviceIntPtr	keybd,
     event.time = GetTimeInMillis();
     event.length = sizeof(DeviceEvent);
     event.key_repeat = isRepeat;
+    event.sourceid = keybd->id;
+    event.deviceid = keybd->id;
 
     if (xkbDebugFlags&0x8) {
 	DebugF("[xkb] AXKE: Key %d %s\n", keyCode,

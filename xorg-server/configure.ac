@@ -1881,11 +1881,15 @@ AM_CONDITIONAL(XQUARTZ_SPARKLE, [test "x$XQUARTZ_SPARKLE" != "xno"])
 AM_CONDITIONAL(STANDALONE_XPBPROXY, [test "x$STANDALONE_XPBPROXY" = xyes])
 
 dnl DMX DDX
-PKG_CHECK_MODULES([DMXMODULES],
-    [xmuu $LIBXEXT x11 xrender xfixes xfont $LIBXI $DMXPROTO xau $XDMCP_MODULES],
-    PKG_CHECK_MODULES([XDMXCONFIG_DEP], [xaw7 xmu xt xpm x11], [have_dmx=yes],
-                      [have_dmx=no]),
-    [have_dmx=no])
+PKG_CHECK_MODULES(
+	[DMXMODULES],
+	[xmuu $LIBXEXT x11 xrender xfixes xfont $LIBXI $DMXPROTO xau $XDMCP_MODULES],
+	[PKG_CHECK_MODULES(
+		[XDMXCONFIG_DEP],
+		[xaw7 xmu xt xpm x11],
+		[have_dmx=yes],
+		[have_dmx=no])],
+	[have_dmx=no])
 AC_MSG_CHECKING([whether to build Xdmx DDX])
 if test "x$DMX" = xauto; then
 	DMX="$have_dmx"

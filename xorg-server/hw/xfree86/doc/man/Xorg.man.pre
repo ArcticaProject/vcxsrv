@@ -525,7 +525,7 @@ Header files.
 .B __projectroot__/lib/\(**
 Libraries.
 .TP 30
-.B __projectroot__/lib/X11/fonts/\(**
+.B __datadir__/fonts/X11/\(**
 Fonts.
 .TP 30
 .B __projectroot__/share/X11/XErrorDB

@@ -686,7 +686,6 @@ FreeDeviceClass(int type, pointer *class)
             {
                 ValuatorClassPtr *v = (ValuatorClassPtr*)class;
 
-                /* Counterpart to 'biggest hack ever' in init. */
                 if ((*v)->motion)
                     xfree((*v)->motion);
                 xfree((*v));
@@ -907,6 +906,9 @@ CloseDownDevices(void)
 	next = dev->next;
         DeleteInputDeviceRequest(dev);
     }
+
+    CloseDevice(inputInfo.pointer);
+    CloseDevice(inputInfo.keyboard);
 
     inputInfo.devices = NULL;
     inputInfo.off_devices = NULL;

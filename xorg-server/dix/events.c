@@ -5083,12 +5083,9 @@ InitEvents(void)
 void
 CloseDownEvents(void)
 {
-    int len;
-    EventListPtr list;
-
-    len = GetEventList(&list);
-    while(len--)
-        xfree(list[len].event);
+    FreeEventList(InputEventList, InputEventListLen);
+    InputEventListLen = 0;
+    InputEventList = NULL;
 }
 
 /**
