@@ -329,7 +329,7 @@ class YY_@_CLASS YY_@_INHERIT
 private:/* data */
   YY_@_CHAR  *yy_c_buf_p;
   YY_@_CHAR  yy_hold_char;
-  int yy_n_chars;
+  size_t yy_n_chars;
   int yy_init;
   int yy_start;
   int yy_did_buffer_switch_on_eof;
@@ -356,7 +356,7 @@ protected:/* non virtual */
   =0
 #endif
   ;
-  virtual int  YY_@_INPUT(char  *buf,int &result,int max_size)
+  virtual size_t  YY_@_INPUT(char  *buf,size_t &result,size_t max_size)
 #ifdef YY_@_INPUT_PURE
    =0
 #endif
@@ -373,7 +373,7 @@ protected:/* non virtual */
   ;
 public:
   YY_@_CHAR  *YY_@_TEXT;
-  int YY_@_LENG;
+  size_t YY_@_LENG;
   YY_@_IFILE *YY_@_IN;
   YY_@_OFILE *YY_@_OUT;
   YY_@_LEX_RETURN YY_@_LEX ( YY_@_LEX_PARAM);

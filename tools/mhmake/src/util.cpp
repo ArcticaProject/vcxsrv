@@ -231,7 +231,7 @@ bool PercentMatchList(const string &String,const string &ExprList,matchres *pRes
 string ReplaceWithStem(const string &String,const string &Stem)
 {
   string Ret=String;
-  int Pos=Ret.find('%');
+  size_t Pos=Ret.find('%');
   while (Pos!=string::npos)
   {
     Ret=Ret.substr(0,Pos)+Stem+Ret.substr(Pos+1);
@@ -309,7 +309,7 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
   vector<string>::iterator ArgIt=Args.begin();
   while (ArgIt!=Args.end())
   {
-    int EqPos=ArgIt->find('=');
+    size_t EqPos=ArgIt->find('=');
     if (EqPos!=string::npos)
     {
       string Var=ArgIt->substr(0,EqPos);

@@ -211,7 +211,7 @@ public:
   {
     #if defined(_DEBUG) && defined(_MSC_VER)
     if (m_pRule && m_pRule->GetCommands().size()) {
-      _asm int 3;
+      DebugBreak();
     }
     #endif
     m_pRule=pRule;

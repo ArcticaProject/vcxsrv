@@ -73,7 +73,7 @@ static string TrimString(const string &Input)
   while (strchr(" \t",Input[Start])) Start++;
   if (Start>=Input.size())
     return g_EmptyString;
-  unsigned Stop=Input.size()-1;
+  size_t Stop=Input.size()-1;
   while (strchr(" \t",Input[Stop])) Stop--;
   return Input.substr(Start,Stop-Start+1);
 }
@@ -81,7 +81,7 @@ static string TrimString(const string &Input)
 ///////////////////////////////////////////////////////////////////////////////
 string mhmakefileparser::f_filter(const string & Arg) const
 {
-  int ipos=Arg.find(',');
+  size_t ipos=Arg.find(',');
   #ifdef _DEBUG
   if (ipos==string::npos) {
     throw string("filter func should have 2 arguments: ")+Arg;
@@ -120,7 +120,7 @@ string mhmakefileparser::f_filter(const string & Arg) const
 ///////////////////////////////////////////////////////////////////////////////
 string mhmakefileparser::f_filterout(const string & Arg) const
 {
-  int ipos=Arg.find(',');
+  size_t ipos=Arg.find(',');
   #ifdef _DEBUG
   if (ipos==string::npos) {
     throw string("filter func should have 2 arguments: ")+Arg;
@@ -182,8 +182,8 @@ string mhmakefileparser::f_call(const string & Arg) const
     i++;
     char Tmp[10];
     ::sprintf(Tmp,"$(%d)",i);
-    int Len=::strlen(Tmp);
-    int Pos=Func.find(Tmp);
+    size_t Len=::strlen(Tmp);
+    size_t Pos=Func.find(Tmp);
     while (Func.npos!=Pos)
     {
       Func=Func.substr(0,Pos)+Repl+Func.substr(Pos+Len);
@@ -216,8 +216,8 @@ string mhmakefileparser::f_subst(const string & Arg) const
     return Text;
 
   string Ret;
-  int Pos=Text.find(FromString);
-  int PrevPos=0;
+  size_t Pos=Text.find(FromString);
+  size_t PrevPos=0;
   while (Pos!=string::npos)
   {
     Ret+=Text.substr(PrevPos,Pos-PrevPos);
@@ -334,11 +334,11 @@ string mhmakefileparser::f_firstword(const string & Arg) const
 string mhmakefileparser::f_wildcard(const string & Arg) const
 {
   string FileSpec=TrimString(Arg);
-  int LastSep=FileSpec.find_last_of(OSPATHSEP)+1;
+  size_t LastSep=FileSpec.find_last_of(OSPATHSEP)+1;
   string Dir=FileSpec.substr(0,LastSep);
 #ifdef WIN32
   struct _finddata_t FileInfo;
-  long hFile=_findfirst(FileSpec.c_str(),&FileInfo);
+  intptr_t hFile=_findfirst(FileSpec.c_str(),&FileInfo);
   if (hFile==-1)
     return g_EmptyString;
 
@@ -500,7 +500,7 @@ string mhmakefileparser::f_basename(const string & FileNames) const
 ///////////////////////////////////////////////////////////////////////////////
 static string notdir(const string &FileName,const string &)
 {
-  int Pos=FileName.find_last_of(OSPATHSEP);
+  size_t Pos=FileName.find_last_of(OSPATHSEP);
   if (Pos==string::npos)
   {
     return FileName;
@@ -641,7 +641,7 @@ string mhmakefileparser::f_strip(const string & Arg) const
 ///////////////////////////////////////////////////////////////////////////////
 static string dir(const string &FileName,const string &)
 {
-  int Pos=FileName.find_last_of(OSPATHSEP);
+  size_t Pos=FileName.find_last_of(OSPATHSEP);
   if (Pos==string::npos)
   {
     return g_EmptyString;

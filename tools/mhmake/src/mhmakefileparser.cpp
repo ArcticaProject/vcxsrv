@@ -79,14 +79,14 @@ bool mhmakefileparser::IsDefined(const string &Var) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static inline int SkipUntilQuote(const string &Expr,int i,char Char)
+static inline size_t SkipUntilQuote(const string &Expr,size_t i,char Char)
 {
   while (Expr[i++]!=Char) ;
   return i;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static inline int SkipMakeExpr(const string &Expr,int i)
+static inline size_t SkipMakeExpr(const string &Expr,size_t i)
 {
   char Char=Expr[i++];
   if (Char!='(')
@@ -108,7 +108,7 @@ static inline int SkipMakeExpr(const string &Expr,int i)
 // a macro or quoted string
 static pair<string,string> SplitExpr(const string &Expr,char Item)
 {
-  int i=0;
+  size_t i=0;
   char Char=Expr[i++];
   while (Char!=Item)
   {
@@ -132,8 +132,8 @@ bool mhmakefileparser::IsEqual(const string &EqualExpr) const
   const char *pStr=Expr.c_str();
   const char *pTmp=pStr;
   while (*pTmp && *pTmp!=',') pTmp++;
-  int Pos=pTmp-pStr;
-  int Size=Expr.size();
+  ptrdiff_t Pos=pTmp-pStr;
+  size_t Size=Expr.size();
   pTmp=pStr+Size-1;
   while (pTmp>pStr && strchr(" \t",*pTmp))
   {
@@ -164,8 +164,8 @@ bool mhmakefileparser::IsEqual(const string &EqualExpr) const
 string mhmakefileparser::ExpandExpression(const string &Expr) const
 {
   ((mhmakefileparser*)this)->m_InExpandExpression++;
-  int i=0;
-  int Length=Expr.size();
+  size_t i=0;
+  size_t Length=Expr.size();
   string Ret;
   string ToAdd;
   while (i<Length)
@@ -181,7 +181,7 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
       }
       else
       {
-        int inew=SkipMakeExpr(Expr,i);
+        size_t inew=SkipMakeExpr(Expr,i);
         i++;
         if (inew>i)
         {
@@ -206,7 +206,7 @@ string mhmakefileparser::ExpandExpression(const string &Expr) const
       // Here we do a special case in case we still have a $ within a %
     if (Ret.find('$')!=string::npos)
       Ret=ExpandExpression(Ret);
-    int Pos;
+    size_t Pos;
     while ((Pos=Ret.find("$$"))!=string::npos)
     {
       Ret=Ret.replace(Pos,2,"$");
@@ -458,7 +458,7 @@ void mhmakefileparser::AddRule()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Autodeps)
+void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<fileinfo> > &Autodeps)
 {
   /* Here we have to scan only c/c++ headers so skip certain extensions */
   const char *pFullName=FirstDep->GetFullFileName().c_str();
@@ -550,11 +550,11 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Aut
           /* Add the dependency when the file alrady exist or there is a rule available to be build */
           if (BuildTarget(pInclude).DoesExist())  // Try to build the target, and add it if it exists after building
           {
-            deps_t::const_iterator pFind=Autodeps.find(pInclude);
+            set< refptr<fileinfo> >::iterator pFind=Autodeps.find(pInclude);
             if (pFind==Autodeps.end())
             {
               Autodeps.insert(pInclude);
-              GetAutoDepsIfNeeded(pInclude,pInclude);
+              GetAutoDeps(pInclude,Autodeps);
             }
           }
         }
@@ -565,11 +565,11 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Aut
           refptr<fileinfo> pInclude=GetFileInfo(IncludeFile,*It);
           if (BuildTarget(pInclude).DoesExist()) // Try to build the target, and add it if it exists after building
           {
-            deps_t::const_iterator pFind=Autodeps.find(pInclude);
+            set< refptr<fileinfo> >::iterator pFind=Autodeps.find(pInclude);
             if (pFind==Autodeps.end())
             {
               Autodeps.insert(pInclude);
-              GetAutoDepsIfNeeded(pInclude,pInclude);
+              GetAutoDeps(pInclude,Autodeps);
             }
             break;
           }
@@ -588,31 +588,12 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Aut
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-void mhmakefileparser::GetAutoDepsIfNeeded(const refptr<fileinfo> &Target, const refptr<fileinfo>&FirstDep)
-{
-  autodeps_entry_t &Autodeps=m_AutoDeps[Target];
-  if (!Autodeps.first)
-  {
-    Autodeps.first=true;
-    /* We are going to rescan, so throw away the old. */
-    Autodeps.second.clear();
-    GetAutoDeps(FirstDep,Autodeps.second);
-    // Now add these dependencies also to the rules
-    deps_t::iterator It=Autodeps.second.begin();
-    while (It!=Autodeps.second.end())
-    {
-      Target->AddDep(*It);
-      It++;
-    }
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Target)
 {
-  m_AutoDepsDirty=true; /* Always assume dirty since in the autodeps file, the md5 strings are also saved. */
+  const char *pName=Target->GetFullFileName().c_str();
+  const char *pExt=strrchr(pName,'.');
+  if (!pExt)
+    return;
   if (Target->IsAutoDepExtention())
   {
     // we have to search for the include files in the first dependency of Target
@@ -620,7 +601,18 @@ void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Targe
     if (!Deps.size())
       return; // There is no first dep
     refptr<fileinfo> FirstDep=Deps[0];
-    GetAutoDepsIfNeeded(Target,FirstDep);
+
+    set< refptr<fileinfo> > &Autodeps=m_AutoDeps[Target];
+    Autodeps.clear(); // We are going to scan again, so clear the list
+    GetAutoDeps(FirstDep,Autodeps);
+    // Now add these dependencies also to the rules
+    set< refptr<fileinfo> >::iterator It=Autodeps.begin();
+    while (It!=Autodeps.end())
+    {
+      Target->AddDep(*It);
+      It++;
+    }
+    m_AutoDepsDirty=true;
   }
 }
 
@@ -697,14 +689,14 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
   while (FileName[0])
   {
     refptr<fileinfo> Target=GetFileInfo(FileName);
-    autodeps_entry_t &Autodeps=m_AutoDeps[Target];
+    set< refptr<fileinfo> > &Autodeps=m_AutoDeps[Target];
     ReadStr(pIn,FileName);
     while (FileName[0])
     {
       if (!g_ForceAutoDepRescan)  /* If we are forcing the autodepscan we do not have to load the dependencies. */
       {
         refptr<fileinfo> Dep=GetFileInfo(FileName);
-        Autodeps.second.insert(Dep);
+        Autodeps.insert(Dep);
         Target->AddDep(Dep);
       }
       ReadStr(pIn,FileName);
@@ -713,12 +705,15 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
   }
 
   uint32 Md5_32;
+  bool MakeNotDirty=true;
   while (fread(&Md5_32,sizeof(Md5_32),1,pIn))
   {
     ReadStr(pIn,FileName);
     pair <set<refptr<fileinfo>,less_refptrfileinfo >::iterator, bool> pPair=g_FileInfos.insert(new fileinfo(FileName,Md5_32));
     if (!pPair.second)
     {
+      if (!(*pPair.first)->CompareMd5_32(Md5_32) && !(*pPair.first)->CompareMd5_32(0))
+        MakeNotDirty=false; /* BuildTarget had set the dirty flag, but since the md5 did not change it was a false dirty. This is for BuildTargets called before this routine */
       #ifdef _DEBUG
       if (!(*pPair.first)->CompareMd5_32(Md5_32) && !(*pPair.first)->CompareMd5_32(0))
         cout << "Warning: trying to set to different md5's for Target "<<(*pPair.first)->GetQuotedFullFileName()<<" Old: "<<hex<<(*pPair.first)->GetCommandsMd5_32()<<" New: "<<Md5_32<<endl;
@@ -729,6 +724,8 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
     }
     AddTarget(*pPair.first);
   }
+  if (MakeNotDirty)
+    m_AutoDepsDirty=false;
 
   fclose(pIn);
 }
@@ -792,20 +789,17 @@ void mhmakefileparser::SaveAutoDepsFile()
   fwrite(&Md5_32,sizeof(Md5_32),1,pOut);
   fprintf(pOut,"%s\n",m_Variables[USED_ENVVARS].c_str());
 
-  autodeps_t::const_iterator It=m_AutoDeps.begin();
+  map< refptr<fileinfo>, set< refptr<fileinfo> > >::const_iterator It=m_AutoDeps.begin();
   while (It!=m_AutoDeps.end())
   {
-    if (!It->second.second.empty())
+    fprintf(pOut,"%s\n",It->first->GetFullFileName().c_str());
+    set< refptr<fileinfo> >::const_iterator DepIt=It->second.begin();
+    while (DepIt!=It->second.end())
     {
-      fprintf(pOut,"%s\n",It->first->GetFullFileName().c_str());
-      deps_t::const_iterator DepIt=It->second.second.begin();
-      while (DepIt!=It->second.second.end())
-      {
-        fprintf(pOut,"%s\n",(*DepIt)->GetFullFileName().c_str());
-        DepIt++;
-      }
-      fprintf(pOut,"\n");
+      fprintf(pOut,"%s\n",(*DepIt)->GetFullFileName().c_str());
+      DepIt++;
     }
+    fprintf(pOut,"\n");
     It++;
   }
   /* Now save the Md5 strings */

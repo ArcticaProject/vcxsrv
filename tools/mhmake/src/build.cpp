@@ -481,7 +481,7 @@ static bool CopyFile(refptr<fileinfo> pSrc, refptr<fileinfo> pDest)
     return false;
   }
   char Buf[4096];
-  int Ret;
+  size_t Ret;
 
   while ( (Ret=fread(Buf,1,sizeof(Buf),pSrcFile)) > 0)
   {
@@ -602,7 +602,7 @@ exit:
 static bool EchoCommand(const string &Params)
 {
     // Find the first > character
-  int Pos=Params.find_first_of('>');
+  size_t Pos=Params.find_first_of('>');
   if (Pos==string::npos)
   {
     // Just echo it
@@ -651,7 +651,7 @@ static bool CopyFiles(const string &Params)
 
   SplitToItems(Params,Files);
 
-  int NrSrcs=Files.size()-1;
+  size_t NrSrcs=Files.size()-1;
 
   if (NrSrcs<1)
   {
@@ -666,7 +666,7 @@ static bool CopyFiles(const string &Params)
     return false;
   }
 
-  for (int i=0; i<NrSrcs; i++)
+  for (size_t i=0; i<NrSrcs; i++)
   {
     refptr<fileinfo> pSrc=Files[i];
 
@@ -914,9 +914,9 @@ string mhmakefileparser::GetFullCommand(string Command)
           }
           if (!bBuild)
           {
-            deps_t Autodeps;
+            set< refptr<fileinfo> > Autodeps;
             GetAutoDeps(pPyFile, Autodeps);
-            deps_t::iterator It=Autodeps.begin();
+            set< refptr<fileinfo> >::iterator It=Autodeps.begin();
             while (It!=Autodeps.end())
             {
               if (pExeFile->GetDate().IsOlder((*It)->GetDate()))
@@ -1074,7 +1074,7 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
 
     CloseHandle(ProcessInfo.hThread);
     char Buf[256];
-    int Nbr;
+    size_t Nbr;
     while ( (Nbr=fread(Buf,1,sizeof(Buf)-1,pStdOut)) > 0)
     {
       if (pOutput)
@@ -1679,6 +1679,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
 
         Target->SetCommandsMd5_32(Md5_32);  /* If the rule of the target was added with an implicit rule the targets in the rule is empty */
         pMakefile->AddTarget(Target);
+        pMakefile->m_AutoDepsDirty=true;
         pRule->SetTargetsIsBuild(Md5_32);
         break;
       }
@@ -1689,7 +1690,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           // Only rebuild if it is not yet rebuild in this current run. This may happen for implicit rules that have multiple targets (implicit rules that build more then one target at the same time
           Target->SetCommandsMd5_32(Md5_32);
           pMakefile->AddTarget(Target);
-          m_AutoDepsDirty=true;  /* We need to update the autodeps file if the md5 has been changed */
+          pMakefile->m_AutoDepsDirty=true;  /* We need to update the autodeps file if the md5 has been changed */
           break;
         }
         else

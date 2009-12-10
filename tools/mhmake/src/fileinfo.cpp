@@ -57,7 +57,7 @@ string QuoteFileName(const string &Filename)
 ///////////////////////////////////////////////////////////////////////////////
 string UnquoteFileName(const string &Filename)
 {
-  int Pos=0;
+  size_t Pos=0;
   string Name(Filename);
 #if OSPATHSEP=='\\'
   /* Remove all the quotes from the filename */

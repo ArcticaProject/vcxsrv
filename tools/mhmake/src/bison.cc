@@ -503,7 +503,7 @@ int YY_@_DEBUG_FLAG;                    /*  nonzero means print parse trace     
    in available built-in functions on various systems.  */
 
 #ifdef __cplusplus
-static void __yy_bcopy (char *from, char *to, int count)
+static void __yy_bcopy (char *from, char *to, size_t count)
 #else
 #ifdef __STDC__
 static void __yy_bcopy (char *from, char *to, int count)
@@ -517,7 +517,7 @@ static void __yy_bcopy (from, to, count)
 {
   register char *f = from;
   register char *t = to;
-  register int i = count;
+  register size_t i = count;
 
   while (i-- > 0)
     *t++ = *f++;
@@ -618,7 +618,7 @@ YYLABEL(yynewstate)
 #endif
 
     /* Get the current used size of the three stacks, in elements.  */
-    int size = yyssp - yyss + 1;
+    size_t size = yyssp - yyss + 1;
 
 #ifdef yyoverflow
       /* Each stack pointer address is followed by the size of
@@ -884,7 +884,7 @@ YYLABEL(yyerrlab)   /* here on detecting error */
 
     if (yyn > YYFLAG && yyn < YYLAST)
     {
-      int size = 0;
+      size_t size = 0;
       char *msg;
       int x, count;
 

@@ -210,7 +210,7 @@ static uint8 md5_padding[64] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-void md5_update( md5_context *ctx, uint8 *input, uint32 length )
+void md5_update( md5_context *ctx, uint8 *input, size_t length )
 {
   uint32 left, fill;
 
@@ -224,8 +224,7 @@ void md5_update( md5_context *ctx, uint8 *input, uint32 length )
   left = ctx->total[0] & 0x3F;
   fill = 64 - left;
 
-  ctx->total[0] += length;
-  ctx->total[0] &= 0xFFFFFFFF;
+  ctx->total[0] = (uint32)((ctx->total[0] + length)& 0xFFFFFFFF);
 
   if( ctx->total[0] < length )
       ctx->total[1]++;

@@ -277,7 +277,7 @@ struct yy_buffer_state
   int yy_buf_size;
 
   /* number of characters read into yy_ch_buf, not including EOB characters */
-  int yy_n_chars;
+  size_t yy_n_chars;
 
   int yy_eof_status;          /* whether we've seen an EOF on this buffer */
 #define EOF_NOT_SEEN 0
@@ -307,7 +307,7 @@ static int yy_n_chars;          /* number of characters read into yy_ch_buf */
 
 /* GLOBAL */
 YY_@_CHAR *yy___text;
-int yy___leng;
+size_t yy___leng;
 
 YY_@_IFILE  *yy___in = (YY_@_IFILE  *) 0;
 YY_@_OFILE *yy___out = (YY_@_OFILE  *) 0;
@@ -342,7 +342,7 @@ void YY_@_CLASS::yy___echo()
 }
 #endif
 #ifndef YY_@_INPUT_NOCODE
-int  YY_@_CLASS::yy___input(char * buffer,int &result,int max_size)
+size_t  YY_@_CLASS::yy___input(char * buffer,size_t &result,size_t max_size)
 {
   YY_@_INPUT_CODE
 }
@@ -514,7 +514,7 @@ do_action:      /* this label is used only to access EOF actions */
     case YY_END_OF_BUFFER:
     {
       /* amount of text matched not including the EOB char */
-      int yy_amount_of_matched_text = yy_cp - yy___text - 1;
+      int yy_amount_of_matched_text = (int)(yy_cp - yy___text - 1);
 
       /* undo the effects of YY_DO_BEFORE_ACTION */
       *yy_cp = yy_hold_char;
@@ -643,7 +643,7 @@ int YY_@_CLASS::yy_get_next_buffer()
 {
   register YY_@_CHAR *dest = YY_@_CURRENT_BUFFER->yy_ch_buf;
   register YY_@_CHAR *source = yy___text - 1; /* copy prev. char, too */
-  register int number_to_move, i;
+  register ptrdiff_t number_to_move, i;
   int ret_val;
 
   if ( yy_c_buf_p > &YY_@_CURRENT_BUFFER->yy_ch_buf[yy_n_chars + 1] )
@@ -665,7 +665,7 @@ int YY_@_CLASS::yy_get_next_buffer()
 
   else
   {
-    int num_to_read = YY_@_CURRENT_BUFFER->yy_buf_size - number_to_move - 1;
+    ptrdiff_t num_to_read = YY_@_CURRENT_BUFFER->yy_buf_size - number_to_move - 1;
 
     if ( num_to_read > YY_READ_BUF_SIZE )
       num_to_read = YY_READ_BUF_SIZE;
@@ -791,7 +791,7 @@ void YY_@_CLASS::yyunput( YY_@_CHAR c, YY_@_CHAR *yy_bp )
 
   if ( yy_cp < YY_@_CURRENT_BUFFER->yy_ch_buf + 2 )
   { /* need to shift things up to make room */
-    register int number_to_move = yy_n_chars + 2; /* +2 for EOB chars */
+    register ptrdiff_t number_to_move = yy_n_chars + 2; /* +2 for EOB chars */
     register YY_@_CHAR *dest = &YY_@_CURRENT_BUFFER->yy_ch_buf[YY_@_CURRENT_BUFFER->yy_buf_size + 2];
     register YY_@_CHAR *source = &YY_@_CURRENT_BUFFER->yy_ch_buf[number_to_move];
 

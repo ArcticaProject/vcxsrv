@@ -48,9 +48,6 @@ class fileinfoarray : public refbase,public vector<refptr<fileinfo> >
 };
 
 typedef set< refptr<fileinfo> > deps_t;
-typedef pair< bool, deps_t > autodeps_entry_t;
-typedef map< refptr<fileinfo>, autodeps_entry_t > autodeps_t;
-
 class mhmakefileparser : public refbase
 {
 
@@ -81,7 +78,7 @@ protected:
   fileinfoarray m_IncludedMakefiles;
   refptr< fileinfoarray > m_pIncludeDirs;
   string m_IncludeDirs;
-  autodeps_t m_AutoDeps;
+  map< refptr<fileinfo>, set< refptr<fileinfo> > > m_AutoDeps;
   set< const fileinfo* , less_fileinfo > m_Targets; // List of targets that are build by this makefile
   bool m_DoubleColonRule;
   bool m_AutoDepsDirty;
@@ -158,10 +155,9 @@ public:
   {
     m_RuleThatIsBuild=NULL;
   }
-  void GetAutoDepsIfNeeded(const refptr<fileinfo> &Target, const refptr<fileinfo>&FirstDep);
   void UpdateAutomaticDependencies(const refptr<fileinfo> &Target);
   const refptr<fileinfoarray> GetIncludeDirs() const;
-  void GetAutoDeps(const refptr<fileinfo> &FirstDep, deps_t &Autodeps);
+  void GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<fileinfo> > &Autodeps);
   void SaveAutoDepsFile();
   void LoadAutoDepsFile(refptr<fileinfo> &DepFile);
   bool SkipHeaderFile(const string &FileName);

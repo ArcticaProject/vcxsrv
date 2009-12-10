@@ -67,7 +67,7 @@ static void SaveMakMd5(refptr<fileinfo> &Target)
         };\
         int m_Line;\
         int m_BraceIndent;\
-        int m_IndentSkip;\
+        size_t m_IndentSkip;\
         iterstack<int> m_IndentStack;\
         bool m_IgnoreIncludeError;\
         string m_InputFileName; \
@@ -567,7 +567,7 @@ export {
 
  /*---------------------------------------------------------------------------*/
 [a-zA-Z]:[a-zA-Z0-9\\\._\~\-%\@<&/]+\\[ \t\r]*\n {
-  int EndIndex=::strlen((const char*)yytext);
+  size_t EndIndex=::strlen((const char*)yytext);
   while (strchr(" \t\r\n\\",yytext[--EndIndex]));
   yyless(EndIndex+1);
 
@@ -584,7 +584,7 @@ export {
 
  /*---------------------------------------------------------------------------*/
 ([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*]|\\\ |\\#)+\\[ \t\r]*\n  {
-  int EndIndex=::strlen((const char*)yytext);
+  size_t EndIndex=::strlen((const char*)yytext);
   while (strchr(" \t\r\n\\",yytext[--EndIndex]));
   yyless(EndIndex+1);
 
@@ -594,7 +594,7 @@ export {
 }
 
 ([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*]|\\\ |\\#)+\+=  {
-  int Len;
+  size_t Len;
   PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   Len=strlen((const char *)yytext)-2;
   yyless(Len);
@@ -727,7 +727,7 @@ export {
 <COMMANDPARSE>[ \t]*\\#[^\n]* {
   char ToAdd[100];
   int i=0;
-  int nChars=(strchr((const char *)yytext,'#')-(char*)yytext)+1;
+  int nChars=(int)((strchr((const char *)yytext,'#')-(char*)yytext))+1;
   while (strchr(" \t",yytext[i]))
   {
     ToAdd[i]=yytext[i];
