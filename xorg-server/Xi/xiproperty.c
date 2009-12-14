@@ -622,6 +622,8 @@ XIDeleteAllDeviceProperties (DeviceIntPtr device)
         XIDestroyDeviceProperty(prop);
     }
 
+    device->properties.properties = NULL;
+
     /* Now free all handlers */
     curr_handler = device->properties.handlers;
     while(curr_handler)

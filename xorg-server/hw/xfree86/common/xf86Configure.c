@@ -577,7 +577,6 @@ static void handle_detailed_input(struct detailed_monitor_section *det_mon,
 static XF86ConfMonitorPtr
 configureDDCMonitorSection (int screennum)
 {
-    int i = 0;
     int len, mon_width, mon_height;
 #define displaySizeMaxLen 80
     char displaySize_string[displaySizeMaxLen];

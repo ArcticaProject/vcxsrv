@@ -48,10 +48,10 @@ void xorg_backtrace(void)
 	mod = (info.dli_fname && *info.dli_fname) ? info.dli_fname : "(vdso)";
 	if (info.dli_saddr)
 	    ErrorF("%d: %s (%s+0x%lx) [%p]\n", i, mod,
-		   info.dli_sname, (char *) array[i] - (char *) info.dli_saddr, array[i]);
+		   info.dli_sname, (long unsigned int)((char *) array[i] - (char *) info.dli_saddr), array[i]);
 	else
 	    ErrorF("%d: %s (%p+0x%lx) [%p]\n", i, mod,
-		   info.dli_fbase, (char *) array[i] - (char *) info.dli_fbase, array[i]);
+		   info.dli_fbase, (long unsigned int)((char *) array[i] - (char *) info.dli_fbase), array[i]);
     }
 }
 

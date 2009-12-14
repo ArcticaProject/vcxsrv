@@ -194,6 +194,7 @@ typedef struct {
     struct {
 	PixmapPtr pixmap;
 	int count;
+	Bool retval;
     } access[EXA_NUM_PREPARE_INDICES];
 
     /* Holds information on fallbacks that cannot be relayed otherwise. */

@@ -745,12 +745,14 @@ XkbFlushLedEvents(	DeviceIntPtr			dev,
 			XkbDDXAccessXBeep(dev, _BEEP_LED_OFF, XkbAccessXFeedbackMask);
 	}
     }
-    if (ed && (ed->reason)) {
-	if ((dev!=kbd)&&(ed->reason&XkbXI_IndicatorStateMask))
-	    XkbDDXUpdateDeviceIndicators(dev,sli,sli->effectiveState);
-	XkbSendExtensionDeviceNotify(dev,cause->client,ed);
+    if (ed) {
+	if (ed->reason) {
+	    if ((dev!=kbd)&&(ed->reason&XkbXI_IndicatorStateMask))
+		XkbDDXUpdateDeviceIndicators(dev,sli,sli->effectiveState);
+	    XkbSendExtensionDeviceNotify(dev,cause->client,ed);
+	}
+	bzero((char *)ed,sizeof(XkbExtensionDeviceNotify));
     }
-    bzero((char *)ed,sizeof(XkbExtensionDeviceNotify));
     return;
 }
 
