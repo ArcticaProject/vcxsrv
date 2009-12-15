@@ -3273,20 +3273,21 @@ _XkbFindNamedIndicatorMap(XkbSrvLedInfoPtr sli, Atom indicator,
                           int *led_return)
 {
     XkbIndicatorMapPtr  map;
-    int                 led;
 
     /* search for the right indicator */
     map = NULL;
     if (sli->names && sli->maps) {
+	int led;
+
 	for (led = 0; (led < XkbNumIndicators) && (map == NULL); led++) {
 	    if (sli->names[led] == indicator) {
 		map= &sli->maps[led];
+		*led_return = led;
 		break;
 	    }
 	}
     }
 
-    *led_return = led;
     return map;
 }
 
@@ -4298,9 +4299,12 @@ ProcXkbSetNames(ClientPtr client)
 static char *
 XkbWriteCountedString(char *wire,char *str,Bool swap)
 {
-CARD16	len,*pLen;
+    CARD16 len,*pLen;
 
-    len= (str?strlen(str):0);
+    if (!str)
+        return wire;
+
+    len= strlen(str);
     pLen= (CARD16 *)wire;
     *pLen= len;
     if (swap) {

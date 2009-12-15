@@ -431,7 +431,7 @@ RootlessMarkOverlappedWindows(WindowPtr pWin, WindowPtr pFirst,
 
         register WindowPtr pChild;
         Bool anyMarked = FALSE;
-        void (* MarkWindow)() = pScreen->MarkWindow;
+        MarkWindowProcPtr MarkWindow = pScreen->MarkWindow;
 
         RL_DEBUG_MSG("is top level! ");
         /* single layered systems are easy */

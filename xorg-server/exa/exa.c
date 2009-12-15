@@ -283,7 +283,7 @@ exaGetOffscreenPixmap (DrawablePtr pDrawable, int *xp, int *yp)
 }
 
 /**
- * Returns TRUE if pixmap can be accessed offscreen.
+ * Returns TRUE if the pixmap GPU copy is being accessed.
  */
 Bool
 ExaDoPrepareAccess(PixmapPtr pPixmap, int index)
@@ -291,7 +291,7 @@ ExaDoPrepareAccess(PixmapPtr pPixmap, int index)
     ScreenPtr pScreen = pPixmap->drawable.pScreen;
     ExaScreenPriv (pScreen);
     ExaPixmapPriv(pPixmap);
-    Bool has_gpu_copy;
+    Bool has_gpu_copy, ret;
     int i;
 
     if (!(pExaScr->info->flags & EXA_OFFSCREEN_PIXMAPS))
@@ -304,7 +304,7 @@ ExaDoPrepareAccess(PixmapPtr pPixmap, int index)
     for (i = 0; i < EXA_NUM_PREPARE_INDICES; i++) {
 	if (pExaScr->access[i].pixmap == pPixmap) {
 	    pExaScr->access[i].count++;
-	    return TRUE;
+	    return pExaScr->access[i].retval;
 	}
     }
 
@@ -323,29 +323,33 @@ ExaDoPrepareAccess(PixmapPtr pPixmap, int index)
 
     has_gpu_copy = exaPixmapHasGpuCopy(pPixmap);
 
-    if (has_gpu_copy && pExaPixmap->fb_ptr)
+    if (has_gpu_copy && pExaPixmap->fb_ptr) {
 	pPixmap->devPrivate.ptr = pExaPixmap->fb_ptr;
-    else
+	ret = TRUE;
+    } else {
 	pPixmap->devPrivate.ptr = pExaPixmap->sys_ptr;
+	ret = FALSE;
+    }
 
     /* Store so we can handle repeated / nested calls. */
     pExaScr->access[index].pixmap = pPixmap;
     pExaScr->access[index].count = 1;
 
     if (!has_gpu_copy)
-	return FALSE;
+	goto out;
 
     exaWaitSync (pScreen);
 
     if (pExaScr->info->PrepareAccess == NULL)
-	return TRUE;
+	goto out;
 
     if (index >= EXA_PREPARE_AUX_DEST &&
 	!(pExaScr->info->flags & EXA_SUPPORTS_PREPARE_AUX)) {
 	if (pExaPixmap->score == EXA_PIXMAP_SCORE_PINNED)
 	    FatalError("Unsupported AUX indices used on a pinned pixmap.\n");
 	exaMoveOutPixmap (pPixmap);
-	return FALSE;
+	ret = FALSE;
+	goto out;
     }
 
     if (!(*pExaScr->info->PrepareAccess) (pPixmap, index)) {
@@ -353,11 +357,15 @@ ExaDoPrepareAccess(PixmapPtr pPixmap, int index)
 	    !(pExaScr->info->flags & EXA_MIXED_PIXMAPS))
 	    FatalError("Driver failed PrepareAccess on a pinned pixmap.\n");
 	exaMoveOutPixmap (pPixmap);
-
-	return FALSE;
+	ret = FALSE;
+	goto out;
     }
 
-    return TRUE;
+    ret = TRUE;
+
+out:
+    pExaScr->access[index].retval = ret;
+    return ret;
 }
 
 /**

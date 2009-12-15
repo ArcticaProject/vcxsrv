@@ -15,6 +15,9 @@ if STANDALONE_XPBPROXY
 bin_PROGRAMS = xpbproxy
 xpbproxy_SOURCES = app-main.m
 xpbproxy_LDADD = libxpbproxy.la
+xpbproxy_LDFLAGS = -Wl,-framework,Cocoa
+
+AM_CPPFLAGS += -DSTANDALONE_XPBPROXY
 
 endif
 

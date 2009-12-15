@@ -700,38 +700,41 @@ typedef struct {
 #define __fbPixOffXPix(pPix)	(__fbPixDrawableX(pPix))
 #define __fbPixOffYPix(pPix)	(__fbPixDrawableY(pPix))
 
-#define fbGetDrawable(pDrawable, pointer, stride, bpp, xoff, yoff) { \
-    PixmapPtr   _pPix; \
-    if ((pDrawable)->type != DRAWABLE_PIXMAP) { \
-	_pPix = fbGetWindowPixmap(pDrawable); \
-	(xoff) = __fbPixOffXWin(_pPix); \
-	(yoff) = __fbPixOffYWin(_pPix); \
-    } else { \
-	_pPix = (PixmapPtr) (pDrawable); \
-	(xoff) = __fbPixOffXPix(_pPix); \
-	(yoff) = __fbPixOffYPix(_pPix); \
-    } \
-    fbPrepareAccess(pDrawable); \
-    (pointer) = (FbBits *) _pPix->devPrivate.ptr; \
-    (stride) = ((int) _pPix->devKind) / sizeof (FbBits); (void)(stride); \
-    (bpp) = _pPix->drawable.bitsPerPixel;  (void)(bpp); \
+#define fbGetDrawablePixmap(pDrawable, pixmap, xoff, yoff) {			\
+    if ((pDrawable)->type != DRAWABLE_PIXMAP) { 				\
+	(pixmap) = fbGetWindowPixmap(pDrawable);				\
+	(xoff) = __fbPixOffXWin(pixmap); 					\
+	(yoff) = __fbPixOffYWin(pixmap); 					\
+    } else { 									\
+	(pixmap) = (PixmapPtr) (pDrawable);					\
+	(xoff) = __fbPixOffXPix(pixmap); 					\
+	(yoff) = __fbPixOffYPix(pixmap); 					\
+    } 										\
+    fbPrepareAccess(pDrawable); 						\
 }
 
-#define fbGetStipDrawable(pDrawable, pointer, stride, bpp, xoff, yoff) { \
-    PixmapPtr   _pPix; \
-    if ((pDrawable)->type != DRAWABLE_PIXMAP) { \
-	_pPix = fbGetWindowPixmap(pDrawable); \
-	(xoff) = __fbPixOffXWin(_pPix); \
-	(yoff) = __fbPixOffYWin(_pPix); \
-    } else { \
-	_pPix = (PixmapPtr) (pDrawable); \
-	(xoff) = __fbPixOffXPix(_pPix); \
-	(yoff) = __fbPixOffYPix(_pPix); \
-    } \
-    fbPrepareAccess(pDrawable); \
-    (pointer) = (FbStip *) _pPix->devPrivate.ptr; \
-    (stride) = ((int) _pPix->devKind) / sizeof (FbStip); (void)(stride); \
-    (bpp) = _pPix->drawable.bitsPerPixel; (void)(bpp); \
+#define fbGetPixmapBitsData(pixmap, pointer, stride, bpp) {			\
+    (pointer) = (FbBits *) (pixmap)->devPrivate.ptr; 			       	\
+    (stride) = ((int) (pixmap)->devKind) / sizeof (FbBits); (void)(stride);	\
+    (bpp) = (pixmap)->drawable.bitsPerPixel;  (void)(bpp); 			\
+}
+
+#define fbGetPixmapStipData(pixmap, pointer, stride, bpp) {			\
+    (pointer) = (FbStip *) (pixmap)->devPrivate.ptr; 			       	\
+    (stride) = ((int) (pixmap)->devKind) / sizeof (FbStip); (void)(stride);	\
+    (bpp) = (pixmap)->drawable.bitsPerPixel;  (void)(bpp); 			\
+}
+
+#define fbGetDrawable(pDrawable, pointer, stride, bpp, xoff, yoff) { 		\
+    PixmapPtr   _pPix; 								\
+    fbGetDrawablePixmap(pDrawable, _pPix, xoff, yoff); 				\
+    fbGetPixmapBitsData(_pPix, pointer, stride, bpp);				\
+}
+
+#define fbGetStipDrawable(pDrawable, pointer, stride, bpp, xoff, yoff) { 	\
+    PixmapPtr   _pPix; 								\
+    fbGetDrawablePixmap(pDrawable, _pPix, xoff, yoff);				\
+    fbGetPixmapStipData(_pPix, pointer, stride, bpp);				\
 }
 
 /*
@@ -2079,9 +2082,11 @@ fbFillRegionSolid (DrawablePtr	pDrawable,
 		   FbBits	xor);
 
 extern _X_EXPORT pixman_image_t *
-image_from_pict (PicturePtr pict,
-		 Bool       has_clip,
-		 Bool	    is_src);
+image_from_pict (PicturePtr	pict,
+		 Bool		has_clip,
+		 int		*xoff,
+		 int		*yoff);
+
 extern _X_EXPORT void free_pixman_pict (PicturePtr, pixman_image_t *);
 
 #endif /* _FB_H_ */
