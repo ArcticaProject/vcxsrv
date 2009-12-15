@@ -471,8 +471,13 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     screen->base.pScreen       = pScreen;
 
 #ifdef _MSC_VER
+#ifdef _DEBUG
+#define DLLNAME "%s%s_dri_dbg.dll"
+#else
+#define DLLNAME "%s%s_dri.dll"
+#endif
     snprintf(filename, sizeof filename,
-	     "%s%s_dri.dll", dri_driver_path, driverName);
+	     DLLNAME, dri_driver_path, driverName);
 
     screen->driver = LoadLibrary(filename);
 #else
@@ -488,7 +493,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     }
 
 #ifdef _MSC_VER
-    extensions = GetProcAddress(screen->driver, __DRI_DRIVER_EXTENSIONS);
+    extensions = (const __DRIextension **)GetProcAddress(screen->driver, __DRI_DRIVER_EXTENSIONS);
 #else
     extensions = dlsym(screen->driver, __DRI_DRIVER_EXTENSIONS);
 #endif
@@ -532,6 +537,8 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs);
 
     __glXScreenInit(&screen->base, pScreen);
+    screen->base.GLXmajor = 1;
+    screen->base.GLXminor = 4;
 
     LogMessage(X_INFO,
 	       "AIGLX: Loaded and initialized %s\n", filename);
