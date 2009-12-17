@@ -537,6 +537,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs);
 
     __glXScreenInit(&screen->base, pScreen);
+
     screen->base.GLXmajor = 1;
     screen->base.GLXminor = 4;
 

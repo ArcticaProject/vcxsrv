@@ -1,10 +1,12 @@
 The following is the 'standard copyright' agreed upon by most contributors,
-and is currently the canonical license, though a modification is currently
-under discussion.  Copyright holders of new code should use this license
-statement where possible, and append their name to this list.  Please sort
-by surname for people, and by the full name for other entities (e.g.
-Juliusz Chroboczek sorts before Intel Corporation sorts before Daniel
-Stone).
+and is currently the canonical license preferred by the X.Org Foundation.
+This is a slight variant of the common MIT license form published by the
+Open Source Initiative at http://www.opensource.org/licenses/mit-license.php
+
+Copyright holders of new code should use this license statement where
+possible, and insert their name to this list.  Please sort by surname
+for people, and by the full name for other entities (e.g.  Juliusz
+Chroboczek sorts before Intel Corporation sorts before Daniel Stone).
 
 Copyright © 2000-2001 Juliusz Chroboczek
 Copyright © 1998 Egbert Eich
@@ -17,6 +19,7 @@ Copyright © 1999 Keith Packard
 Copyright © 2007-2009 Red Hat, Inc.
 Copyright © 2005-2008 Daniel Stone
 Copyright © 2006-2009 Simon Thum
+Copyright © 1987, 2003-2006, 2008-2009 Sun Microsystems, Inc.
 Copyright © 2006 Luc Verhaegen
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -160,32 +163,6 @@ BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
 OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
-
-Copyright 1987 by Sun Microsystems, Inc. Mountain View, CA.
-All Rights Reserved
-
-Permission  to  use,  copy,  modify,  and  distribute   this
-software  and  its documentation for any purpose and without
-fee is hereby granted, provided that the above copyright no-
-tice  appear  in all copies and that both that copyright no-
-tice and this permission notice appear in  supporting  docu-
-mentation,  and  that the names of Sun or X Consortium
-not be used in advertising or publicity pertaining to
-distribution  of  the software  without specific prior
-written permission. Sun and X Consortium make no
-representations about the suitability of this software for
-any purpose. It is provided "as is" without any express or
-implied warranty.
-
-SUN DISCLAIMS ALL WARRANTIES WITH REGARD TO  THIS  SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FIT-
-NESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SUN BE  LI-
-ABLE  FOR  ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
-ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,  DATA  OR
-PROFITS,  WHETHER  IN  AN  ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
-THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 Copyright 1987-1991, 1993 by Digital Equipment Corporation, Maynard, Massachusetts.
@@ -1383,7 +1360,6 @@ Copyright 1987, 1998  The Open Group
 Copyright © 1998-1999, 2001 The XFree86 Project, Inc.
 Copyright © 2000 VA Linux Systems, Inc.
 Copyright (c) 2000, 2001 Nokia Home Communications
-Copyright 2003-2006, 2008 Sun Microsystems, Inc.
 Copyright © 2007, 2008 Red Hat, Inc.
 All rights reserved.
 

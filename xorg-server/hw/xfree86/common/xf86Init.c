@@ -133,7 +133,7 @@ static void
 xf86PrintBanner(void)
 {
 #if PRE_RELEASE
-  ErrorF("\n"
+  xf86ErrorFVerb(0, "\n"
     "This is a pre-release version of the X server from " XVENDORNAME ".\n"
     "It is not supported in any way.\n"
     "Bugs may be filed in the bugzilla at http://bugs.freedesktop.org/.\n"
@@ -142,12 +142,12 @@ xf86PrintBanner(void)
     "latest version in the X.Org Foundation git repository.\n"
     "See http://wiki.x.org/wiki/GitPage for git access instructions.\n");
 #endif
-  ErrorF("\nX.Org X Server %d.%d.%d",
+  xf86ErrorFVerb(0, "\nX.Org X Server %d.%d.%d",
 	 XORG_VERSION_MAJOR,
 	 XORG_VERSION_MINOR,
 	 XORG_VERSION_PATCH);
 #if XORG_VERSION_SNAP > 0
-  ErrorF(".%d", XORG_VERSION_SNAP);
+  xf86ErrorFVerb(0, ".%d", XORG_VERSION_SNAP);
 #endif
 
 #if XORG_VERSION_SNAP >= 900
@@ -159,26 +159,28 @@ xf86PrintBanner(void)
    * candidate for the next point release.  (X.Y.Z)
    */
 #if XORG_VERSION_MINOR >= 99
-  ErrorF(" (%d.0.0 RC %d)", XORG_VERSION_MAJOR+1, XORG_VERSION_SNAP - 900);
+  xf86ErrorFVerb(0, " (%d.0.0 RC %d)", XORG_VERSION_MAJOR+1,
+                 XORG_VERSION_SNAP - 900);
 #elif XORG_VERSION_PATCH == 99
-  ErrorF(" (%d.%d.0 RC %d)", XORG_VERSION_MAJOR, XORG_VERSION_MINOR + 1,
-				XORG_VERSION_SNAP - 900);
+  xf86ErrorFVerb(0, " (%d.%d.0 RC %d)", XORG_VERSION_MAJOR,
+                 XORG_VERSION_MINOR + 1, XORG_VERSION_SNAP - 900);
 #else
-  ErrorF(" (%d.%d.%d RC %d)", XORG_VERSION_MAJOR, XORG_VERSION_MINOR,
- 			 XORG_VERSION_PATCH + 1, XORG_VERSION_SNAP - 900);
+  xf86ErrorFVerb(0, " (%d.%d.%d RC %d)", XORG_VERSION_MAJOR,
+                 XORG_VERSION_MINOR, XORG_VERSION_PATCH + 1,
+                 XORG_VERSION_SNAP - 900);
 #endif
 #endif
 
 #ifdef XORG_CUSTOM_VERSION
-  ErrorF(" (%s)", XORG_CUSTOM_VERSION);
+  xf86ErrorFVerb(0, " (%s)", XORG_CUSTOM_VERSION);
 #endif
 #ifndef XORG_DATE
 # define XORG_DATE "Unknown"
 #endif
-  ErrorF("\nRelease Date: %s\n", XORG_DATE);
-  ErrorF("X Protocol Version %d, Revision %d\n",
+  xf86ErrorFVerb(0, "\nRelease Date: %s\n", XORG_DATE);
+  xf86ErrorFVerb(0, "X Protocol Version %d, Revision %d\n",
          X_PROTOCOL, X_PROTOCOL_REVISION);
-  ErrorF("Build Operating System: %s %s\n", OSNAME, OSVENDOR);
+  xf86ErrorFVerb(0, "Build Operating System: %s %s\n", OSNAME, OSVENDOR);
 #ifdef HAS_UTSNAME
   {
     struct utsname name;
@@ -188,17 +190,17 @@ xf86PrintBanner(void)
        All agree that failure is represented by a negative number.
      */
     if (uname(&name) >= 0) {
-      ErrorF("Current Operating System: %s %s %s %s %s\n",
+      xf86ErrorFVerb(0, "Current Operating System: %s %s %s %s %s\n",
 	name.sysname, name.nodename, name.release, name.version, name.machine);
 #ifdef linux
       do {
 	  char buf[80];
 	  int fd = open("/proc/cmdline", O_RDONLY);
 	  if (fd != -1) {
-	    ErrorF("Kernel command line: ");
+	    xf86ErrorFVerb(0, "Kernel command line: ");
 	    memset(buf, 0, 80);
 	    while (read(fd, buf, 80) > 0) {
-		ErrorF("%.80s", buf);
+		xf86ErrorFVerb(0, "%.80s", buf);
 		memset(buf, 0, 80);
 	    }
 	    close(fd);
@@ -223,19 +225,21 @@ xf86PrintBanner(void)
     t.tm_min = (BUILD_TIME / 100) % 100;
     t.tm_hour = (BUILD_TIME / 10000) % 100;
     if (strftime(buf, sizeof(buf), "%d %B %Y  %I:%M:%S%p", &t))
-       ErrorF("Build Date: %s\n", buf);
+       xf86ErrorFVerb(0, "Build Date: %s\n", buf);
 #else
     if (strftime(buf, sizeof(buf), "%d %B %Y", &t))
-       ErrorF("Build Date: %s\n", buf);
+       xf86ErrorFVerb(0, "Build Date: %s\n", buf);
 #endif
   }
 #endif
 #if defined(BUILDERSTRING)
-  ErrorF("%s \n",BUILDERSTRING);
+  xf86ErrorFVerb(0, "%s \n", BUILDERSTRING);
 #endif
-  ErrorF("Current version of pixman: %s\n", pixman_version_string());
-  ErrorF("\tBefore reporting problems, check "__VENDORDWEBSUPPORT__"\n"
-	 "\tto make sure that you have the latest version.\n");
+  xf86ErrorFVerb(0, "Current version of pixman: %s\n",
+                 pixman_version_string());
+  xf86ErrorFVerb(0, "\tBefore reporting problems, check "
+                 ""__VENDORDWEBSUPPORT__"\n"
+                 "\tto make sure that you have the latest version.\n");
 }
 
 static void
@@ -1444,7 +1448,7 @@ ddxProcessArgument(int argc, char **argv, int i)
   }
   if (!strcmp(argv[i],"-quiet"))
   {
-    xf86SetVerbosity(0);
+    xf86SetVerbosity(-1);
     return 1;
   }
   if (!strcmp(argv[i],"-showconfig") || !strcmp(argv[i],"-version"))

@@ -1,4 +1,6 @@
+if INT10_X86EMU
 noinst_LTLIBRARIES = libx86emu.la
+endif
 
 libx86emu_la_SOURCES = debug.c \
                       decode.c \
