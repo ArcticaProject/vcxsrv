@@ -510,6 +510,9 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
     __glXScreenInit(&screen->base, pScreen);
 
+    screen->base.GLXmajor = 1;
+    screen->base.GLXminor = 4;
+
     LogMessage(X_INFO,
 	       "AIGLX: Loaded and initialized %s\n", filename);
 

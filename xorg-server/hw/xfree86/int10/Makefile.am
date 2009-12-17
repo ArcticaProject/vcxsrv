@@ -38,6 +38,7 @@ endif
 
 if INT10_STUB
 AM_CFLAGS = $(I386_VIDEO_CFLAGS) -D_VM86_LINUX $(DIX_CFLAGS) $(XORG_CFLAGS) $(EXTRA_CFLAGS)
+INCLUDES = $(XORG_INCS)
 libint10_la_SOURCES = stub.c xf86int10module.c
 endif
 

@@ -70,4 +70,4 @@ endif
 dix.c:
 	touch $@
 
-CLEANFILES = dix.c
+CLEANFILES = dix.c Xserver-dtrace.h

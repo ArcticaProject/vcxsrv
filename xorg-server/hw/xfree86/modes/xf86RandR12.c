@@ -871,7 +871,12 @@ xf86RandR12Init (ScreenPtr pScreen)
 #ifdef PANORAMIX
     /* XXX disable RandR when using Xinerama */
     if (!noPanoramiXExtension)
-	return TRUE;
+    {
+        if (xf86NumScreens == 1)
+            noPanoramiXExtension = TRUE;
+        else
+            return TRUE;
+    }
 #endif
 
     if (xf86RandR12Generation != serverGeneration)

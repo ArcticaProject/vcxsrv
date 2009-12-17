@@ -1282,7 +1282,7 @@ AC_DEFINE(BIGREQS, 1, [Support BigRequests extension])
 
 if test "x$SPECIAL_DTRACE_OBJECTS" = "xyes" ; then
   DIX_LIB='$(top_builddir)/dix/dix.O'
-  OS_LIB='$(top_builddir)/os/os.O'
+  OS_LIB='$(top_builddir)/os/os.O $(SHA1_LIBS)'
 else
   DIX_LIB='$(top_builddir)/dix/libdix.la'
   OS_LIB='$(top_builddir)/os/libos.la'
