@@ -343,13 +343,14 @@ void GlxExtensionInit(void)
     __GLXprovider *p;
     Bool glx_provided = False;
 
-    __glXContextRes = CreateNewResourceType((DeleteType)ContextGone);
-    __glXDrawableRes = CreateNewResourceType((DeleteType)DrawableGone);
-    __glXSwapBarrierRes = CreateNewResourceType((DeleteType)SwapBarrierGone);
-
-    RegisterResourceName(__glXContextRes, "GLXContext");
-    RegisterResourceName(__glXDrawableRes, "GLXDrawable");
-    RegisterResourceName(__glXSwapBarrierRes, "GLXSwapBarrier");
+    __glXContextRes = CreateNewResourceType((DeleteType)ContextGone,
+					    "GLXContext");
+    __glXDrawableRes = CreateNewResourceType((DeleteType)DrawableGone,
+					     "GLXDrawable");
+    __glXSwapBarrierRes = CreateNewResourceType((DeleteType)SwapBarrierGone,
+						"GLXSwapBarrier");
+    if (!__glXContextRes || !__glXDrawableRes || !__glXSwapBarrierRes)
+	return;
 
     if (!dixRequestPrivate(glxClientPrivateKey, sizeof (__GLXclientState)))
 	return;

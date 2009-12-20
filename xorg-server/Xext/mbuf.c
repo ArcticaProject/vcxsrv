@@ -467,10 +467,15 @@ MultibufferExtensionInit()
      * create the resource types
      */
     MultibufferDrawableResType =
-	CreateNewResourceType(MultibufferDrawableDelete)|RC_DRAWABLE;
-    MultibufferResType = CreateNewResourceType(MultibufferDelete);
-    MultibuffersResType = CreateNewResourceType(MultibuffersDelete);
-    OtherClientResType = CreateNewResourceType(OtherClientDelete);
+	CreateNewResourceType(MultibufferDrawableDelete, "MultibufferDrawable");
+    if (MultiBufferDrawableResType)
+	MultibufferDrawableResType |= RC_DRAWABLE;
+    MultibufferResType = CreateNewResourceType(MultibufferDelete,
+					       "MultibufferBuffer");
+    MultibuffersResType = CreateNewResourceType(MultibuffersDelete,
+						"MultibufferWindow");
+    OtherClientResType = CreateNewResourceType(OtherClientDelete,
+					       "MultibufferOtherClient");
     if (MultibufferDrawableResType && MultibufferResType &&
 	MultibuffersResType && 	OtherClientResType &&
 	(extEntry = AddExtension(MULTIBUFFER_PROTOCOL_NAME,

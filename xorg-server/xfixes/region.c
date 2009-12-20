@@ -63,8 +63,9 @@ XFixesRegionCopy (RegionPtr pRegion)
 Bool
 XFixesRegionInit (void)
 {
-    RegionResType = CreateNewResourceType(RegionResFree);
-    return TRUE;
+    RegionResType = CreateNewResourceType(RegionResFree, "XFixesRegion");
+
+    return (RegionResType != 0);
 }
 
 int

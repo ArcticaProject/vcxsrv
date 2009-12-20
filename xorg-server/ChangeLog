@@ -1,3 +1,1953 @@
+commit 3c30c5b6d321f34736c442c9cd982308d9b8b93a
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Dec 18 22:58:59 2009 -0800
+
+    Set release date for 1.7.99.2
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 895f40792a14d8b88923bf3b428d31ae3bb31e46
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Dec 2 17:43:01 2009 -0800
+
+    Add type name argument to CreateNewResourceType
+    
+    Convert all calls of CreateNewResourceType to pass name argument
+    
+    Breaks DIX ABI.
+    
+    ABI versions bumped:
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit a11c58fa0c5809f918b36b84be53385cb2d8ea59
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Dec 11 00:58:25 2009 -0800
+
+    Ensure all resource types created have names registered
+    
+    Calls RegisterResourceName to record the type name for
+    use by X-Resource, XACE/SELinux/XTsol, and DTrace.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit eb750f8b5e14751d4c40b50499baec5d2ba79db9
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Dec 11 00:46:22 2009 -0800
+
+    Check for failures from CreateNewResourceType
+    
+    Make sure to check return value before setting bitmask flags.
+    For most calls, just fails to init the extension.   Since Xinput
+    already calls FatalError() on initialization failure, so does
+    failure to allocate Xinput's resource type.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 1df4bd6011e110dcf0649b15bfffd4ab9e6961d6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 17 18:24:40 2009 -0800
+
+    Change default xkb model from pc104 to pc105
+    
+    PC105 is a more useful default for non-American keyboard users,
+    not harmful for American PC101/PC104 keyboard users.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 1d2e189cdc1d65c9ca2aa0a950780dc18e6c50f1
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 17 18:24:39 2009 -0800
+
+    Change sysconfdir brackets to avoid some shells trying to run it as a command
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 48749cc21b074ee8e68c3854bd3977ec7c408225
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 17 18:24:38 2009 -0800
+
+    Add platform compatibility defines for Sun Studio compilers
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b63912ed4c69fedd1bea92274d6cae0429a79677
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Dec 17 18:24:37 2009 -0800
+
+    Convert checks for PC98 support from platform #ifdefs to configure flag
+    
+    Default remains the same - on for most OS'es on i386 (except Solaris),
+    off for everyone else.   Can be manually toggled via --enable-pc98 or
+    --disable-pc98.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0cb638dc6822e54567a1731ea1cf588475a226e9
+Merge: 6a6a041 fbdf493
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Dec 16 21:58:44 2009 -0800
+
+    Merge remote branch 'alanc/master'
+
+commit 6a6a041c2d8d32f6355db77cd59cff371038c683
+Merge: 8127465 d503195
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Dec 16 21:57:32 2009 -0800
+
+    Merge remote branch 'jeremyhu/master'
+
+commit 8127465f44fee99181f37a5e55dafc90bfafe3d8
+Author: Ville Syrjälä <ville.syrjala@nokia.com>
+Date:   Mon Dec 14 19:19:01 2009 +0200
+
+    xf86xv: Fix off-by-one in viewport clipping
+    
+    Most of the Xv Put/Get operations have an off by one error in the
+    viewport clipping.
+    
+    Apparently PutImage was fixed at some point but the same code was
+    already copy-pasted all over the place, and so the other operations
+    still suffer from the bug.
+    
+    Signed-off-by: Ville Syrjälä <ville.syrjala@nokia.com>
+    Reviewed-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit faca1bc582e374d32ee9d63d10e072fbef4940a3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Dec 14 11:05:20 2009 +1000
+
+    xfree86: belately init RandR12 if xinerama fails. (#24627)
+    
+    On Fri, Dec 11, 2009 at 10:19:01AM -0800, Keith Packard wrote:
+    > On Wed, 9 Dec 2009 11:55:14 +1000, Peter Hutterer <peter.hutterer@who-t.net> wrote:
+    > > On Tue, Dec 08, 2009 at 05:24:06PM -0800, Aaron Plattner wrote:
+    > > > On Tue, Dec 08, 2009 at 03:52:27PM -0800, Peter Hutterer wrote:
+    > > > > Xorg +xinerama crashes immediately due to whacky dependency between Xinerama
+    > > > > and RandR12. The latter doesn't initialize if Xinerama is enabled, but if
+    > > > > only one screen is found, Xinerama is disabled again and RandR12 tries to
+    > > > > access data it never initialized.
+    >
+    > I'd sure like to have RandR get enabled when xinerama doesn't; is there
+    > an easy way of making that happen here? Perhaps having the RandR12 code
+    > disable Xinerama when only one screen is found? Or some other kludge?
+    
+    you know the dependency better than I do so any hints are apreciated.
+    afaict, the screenInfo.numScreens (the check used by Xinerama) isn't
+    necessarily initialized at this point so we can't use the same check.
+    The following seems to work though:
+    
+    From 670b3ebdb7312a6433a8f093d0820785db2aea20 Mon Sep 17 00:00:00 2001
+    From: Peter Hutterer <peter.hutterer@who-t.net>
+    Date: Mon, 14 Dec 2009 11:00:58 +1000
+    Subject: [PATCH] xfree86: if only one screen was found, disable Xinerama (#24627)
+    
+    Xorg +xinerama crashes immediately due to whacky dependency between Xinerama
+    and RandR12. The latter doesn't initialize if Xinerama is enabled, but if
+    only one screen is found, Xinerama is disabled again and RandR12 tries to
+    access data it never initialized.
+    
+    Dependency chain is:
+    - ProcessCommandLine sets noPanoramiXExtension to FALSE
+    - xf86RandR12Init() is a noop
+    - PanoramiXExtensionInit sets noPanoramiXExtension to TRUE
+    - xf86RandR12CreateScreenResources tries to use the devPrivates key it never
+      initialized.
+    
+    This hack checks if there's only one screen at the time RandR12 is
+    initialized. If so, we expect Xinerama to fail anyhow so we disable it
+    ourselves and proceed as planned.
+    
+    X.Org Bug 24627 <http://bugs.freedesktop.org/show_bug.cgi?id=24627>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 5f898ddbaa7df01d2479e40238d8c7954fc4b67a
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Fri Dec 11 17:04:14 2009 +0200
+
+    xfree86: fix -quiet option behaviour
+    
+    Previously it was trying to set the same value as the default one. Sigh.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Acked-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 7284e198619cdacb38d0ad715e932acff86c8367
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Fri Dec 11 17:04:13 2009 +0200
+
+    os: print log markers only if log level is >= 0
+    
+    FWIW default log verbosity is 0, so this will affect only if one start the
+    server with a different -verbose argument.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Acked-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f57240a0a8c05e0a2589d0127f8888db140d6974
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Fri Dec 11 17:04:12 2009 +0200
+
+    xfree86: spam output but with verbose level checked instead
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Acked-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit fbdf493a3e7e48039a0826531e11aa33b04bf391
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Dec 14 18:46:00 2009 -0800
+
+    Add freetype & type1 to the LoadModules ignore list
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit c9726bbe3148c7a8adb4dfde483741545d59c3dc
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Dec 15 15:54:22 2009 -0800
+
+    Update Sun license notices to current X.Org standard form
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d50319550458f8127298cf8672b47f914b74ab1f
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Dec 11 16:42:43 2009 -0800
+
+    Xfake: Nuke -Wl,-undefined=InitExtensions from LDFLAGS
+    
+    This is not portable, and accodring to Paulo should not be required any more.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit ed7d2527190ec56aed38db19d9e958abe88441b9
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Dec 11 11:53:28 2009 -0800
+
+    dtrace: Add Xserver-dtrace.h to CLEANFILES
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 44f102ed64e2552a0e04714c7574f74ca5ee66e2
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Nov 23 22:24:44 2009 -0800
+
+    COPYING: Update license preamble
+    
+    Update the comment about "a modification is currently under discussion"
+    since there hasn't been any such discussion for some time and this is
+    the consensus agreed upon preferred format.
+    
+    Also throw in a pointer to the OSI discussion page about the MIT license.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 00a7252fe3e519e3e4d62cdd8746833ca59bce77
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Nov 20 13:38:30 2009 -0800
+
+    Fix dtrace object builds of libos to link with SHA1_LIBS
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit dd2c83d03ecedce8b546d583e436c12f92510754
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Wed Nov 11 14:42:20 2009 -0800
+
+    Fix builds with --with-int10=stub
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit 77221c9155a3c96cb63b210a048db1ea71a5e359
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Oct 29 14:01:29 2009 -0400
+
+    glx: swrast can do GLX 1.4 too
+    
+    Reviewed-by: Ian Romanick <ian.d.romanick@intel.com>
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit a72c65e9176c51de95db2fdbf4c5d946a4911695
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Dec 2 08:37:20 2009 -0800
+
+    fb: Adjust transform or composite coordinates for pixman operations
+    
+    Windows (or even pixmaps, in some cases) may not sit at the origin of
+    the containing pixmap, so any coordinates relative to the drawable
+    must be adjusted. For destinations and untransformed sources, the
+    operation coordinates are adjusted. For transformed sources, the
+    transform matrix is adjusted.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Acked-by: Soeren Sandmann <sandmann@daimi.au.dk>
+
+commit bd567061c8b84b268d9bbb01bc4d8981feefb862
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Dec 2 15:51:22 2009 -0800
+
+    Split fbGetDrawable into fbGetDrawablePixmap and fbGetPixmapBitsData
+    
+    These two sub-macros each perform half of the original macro work and
+    the old macro is now implemented in terms of the new ones. This makes
+    way for new code which wants to know the underlying pixmap for a
+    window instead of just getting a pointer to the bits.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Acked-by: Soeren Sandmann <sandmann@daimi.au.dk>
+
+commit 61335052972a78d67c0ba74f902273b34c63a198
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Dec 1 11:09:32 2009 -0800
+
+    Revert "Fix clipping when windows are used as sources"
+    
+    This reverts commit e9aa61e9f0d663d5b34a397b943b4d1df44e873d.
+    
+    Conflicts:
+    
+    	fb/fbpict.c
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Acked-by: Soeren Sandmann <sandmann@daimi.au.dk>
+
+commit 071b3c1810d9f2602173acc8578caac20e0b771e
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Dec 1 11:05:04 2009 -0800
+
+    Revert "Use IncludeInferiors when copying windows before compositing."
+    
+    This reverts commit 7c7f0c2c6a04f7044d5ce69e97a615735e5831f1.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Acked-by: Soeren Sandmann <sandmann@daimi.au.dk>
+
+commit 8e640d6b131d2865a9725d8997023865b0ef3d69
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Dec 1 11:04:49 2009 -0800
+
+    Revert "Reserve space for two GC values in copy_drawable()."
+    
+    This reverts commit 08df24555cb432eb0d90a3f63275e9485e777c4c.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Acked-by: Soeren Sandmann <sandmann@daimi.au.dk>
+
+commit 0816c5482c25251da8af5978cc348e1c547bf731
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Dec 1 11:04:06 2009 -0800
+
+    Revert "fb: Don't crash if copy_drawable() returns NULL."
+    
+    This reverts commit 66a9616d645f5a23225251d197e00b94c79274f6.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+    Acked-by: Soeren Sandmann <sandmann@daimi.au.dk>
+
+commit d3e054ac07dae12a82ad764b0622fddbef4b9ec5
+Merge: 12fb318 97a6454
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Dec 11 09:22:22 2009 -0800
+
+    Merge remote branch 'jeremyhu/master'
+
+commit 12fb31815db9de9c01f2d4155a2b74531777c0bf
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Dec 7 12:58:57 2009 +1000
+
+    xkb: don't assign garbage value to led_return.
+    
+    As the comment for the function states, led_return is undefined if map is
+    NULL. We might as well skip writing to it then.
+    
+    Found by clang.
+    
+    Reported-by: Tomas Carnecky <tom@dbservice.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Jamey Sharp <jamey@minilop.net>
+
+commit ea14a418214ba4c58910f5650d8b25b3fc3a7099
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Dec 3 11:21:31 2009 +1000
+
+    Xi: reset device properties to NULL after deleting them. (#25374)
+    
+    Commit 0e6cee853d8e5bef3274e632ef034d37f14674a9 introduced cleanup code to
+    remove the accel properties when switching schemes. The same code is
+    triggered by the default closedown code but only after unconditionally
+    removing all device properties (as part of the cleanup). The properties,
+    although deleted never got reset to NULL.
+    
+    X.Org Bug 25374 <http://bugs.freedesktop.org/show_bug.cgi?id=25374>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Andy Furniss <lists@andyfurniss.entadsl.com>
+    Reviewed-by: Dave Airlie <airlied@redhat.com>
+
+commit 9ac6a048efaec51f158bbc1a4a3f448cbe5658ad
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Dec 9 11:43:34 2009 +1000
+
+    xfree86: remove unused variable in configureDDMonitorSection.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dave Airlie <airlied@redhat.com>
+
+commit 3fad969a90ccab604359ec4de05e745bb4b909e1
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sun Dec 6 20:27:06 2009 +0100
+
+    Move config_init() after CreateWellKnownSockets() and InitCoreDevices()
+    
+    config_init() can now add devices directly instead of scheduling a
+    timer.
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 886140787852c660978a9bb3abc7cc2702cbaed1
+Author: Tomas Carnecky <tom@dbservice.com>
+Date:   Mon Dec 7 05:54:57 2009 +0100
+
+    Fix possible NULL dereference in XkbFlushLedEvents()
+    
+    Through some code paths it is possible that NULL is being passed in the
+    'ed' parameter to XkbFlushLedEvents(). Make sure we don't pass it along
+    to bzero().
+    
+    Signed-off-by: Tomas Carnecky <tom@dbservice.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 92d9cb7e1340b259294ba317ea3a7d18487498b5
+Author: Tomas Carnecky <tom@dbservice.com>
+Date:   Sun Dec 6 23:52:54 2009 +0100
+
+    XkbWriteCountedString(): return early if str is NULL
+    
+    This avoids NULL from being passed to memcpy() later in the code. While
+    that wasn't an issue before - that value being NULL implied 'size == 0'
+    so memcpy() wouldn't try to dereference it - it made the code harder
+    to read and also confused clang.
+    
+    Signed-off-by: Tomas Carnecky <tom@dbservice.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit df2635d4644d1fa2772ff58d8d34cdf788ece412
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Thu Dec 10 00:04:53 2009 +0100
+
+    EXA/mixed: Don't consider devKind for detecting dimension change.
+    
+    Fixes http://bugs.freedesktop.org/show_bug.cgi?id=25536 .
+    
+    There should be no reason for the pitch to actually change when none of the
+    other dimensions do, and this could lead to incorrectly freeing the system
+    memory copy when allocating a GPU copy, resulting in loss of valid pixmap
+    contents.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 97a6454ea57587db490873fee8ff0f899882972d
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Dec 9 18:27:31 2009 -0800
+
+    XQuartz: pbproxy: Fix building of standalone xpbproxy executable
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 1b8f90aa8b1017c74b254db2f398131b857323d4
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Dec 8 15:50:28 2009 -0800
+
+    Miscellaneous compilation warning fixes
+    
+    main.c:134: warning: no previous prototype for 'dix_main'
+    rootlessScreen.c: In function 'RootlessMarkOverlappedWindows':
+    rootlessScreen.c:434: warning: function declaration isn't a prototype
+    backtrace.c:51: warning: format '%lx' expects type 'long unsigned int', but argument 5 has type 'int'
+    backtrace.c:54: warning: format '%lx' expects type 'long unsigned int', but argument 5 has type 'int'
+    set.c: In function 'RecordSetMemoryRequirements':
+    set.c:413: warning: old-style function definition
+    set.c: In function 'RecordCreateSet':
+    set.c:425: warning: old-style function definition
+    stub.c: In function ‘main’:
+    stub.c:236: warning: ISO C90 forbids mixed declarations and code
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 955b9f23a34cc79a5cd9676b45b3df4ffcc7302b
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Dec 8 20:25:02 2009 +0100
+
+    EXA: ModifyPixmapHeader_mixed fixes.
+    
+    * Better detection of dimension changes.
+    * Make sure to re-create the system memory copy when the pixmap dimensions
+      change (e.g. the screen pixmap on screen resize).
+    * Clear the valid regions.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c1503861cf75654d4f7b22e6f7f6487c47a0a395
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Dec 8 20:25:01 2009 +0100
+
+    EXA: ExaDoPrepareAccess return value fixes.
+    
+    Only return TRUE if the GPU copy is being accessed, and preserve the return
+    value on repeated / nested calls for the same pixmap.
+    
+    exaPrepareAccessReg_mixed could get inconsistent return values e.g. when the
+    same pixmap is both the destination and source of an operation, potentially
+    resulting in a crash.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit fd867387335b6175d76bbe93118bbe5e1e45ce88
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Sat Dec 5 03:18:31 2009 +0100
+
+    exa/mixed: pixmaps that succeed prepare access have no need for a cpu copy
+    
+    - When they have a gpu copy ofcource.
+    - Use the presence of a cpu copy as a hint to fall back instead of UTS'ing in
+    exaHWCopyNtoN.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit bb7acfbcfbc37869c2215c26791c6175a5a6c526
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Fri Dec 4 08:37:14 2009 +0100
+
+    EXA: Use correct coordinate system for calculating Composite fallback region.
+    
+    Fixes incorrectly skipped rendering of some Composite operations to windows.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0f4ef7123d3e6e09e04dc55e8edb47aecf017648
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Thu Dec 3 19:28:13 2009 +0100
+
+    exa/mixed: setting devKind before exaCopyDirty* is not needed
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 8ea415d417b3ef6b8a288d10da76ff4bc334e08b
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Wed Dec 2 20:24:02 2009 +0100
+
+    Revert "exa: a few small pitch related changes"
+    
+    This reverts commit 99d88ef69d5f7dbf99ca605eceb92f42230a89f4.
+    
+    - Some pixmaps under classic have a sys_pitch which is 0, no idea why. This is
+    causing rendering corruption.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 98c8b752254a27ab1aaf881b36bfda0f74929d0a
+Merge: 0e084d8 91c1bd7
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Dec 2 15:28:07 2009 -0800
+
+    Merge remote branch 'whot/master'
+
+commit 91c1bd78f7240c92702828f8e5a6b6ce944b9e36
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Nov 28 21:32:47 2009 -0500
+
+    configure.ac: error while checking for XDMXCONFIG_DEP
+    
+    Introduced in commit 9998105a387e0294054502331a56e1e020cd93e4
+    The replacement third parameters to PKG_CHECK_MODULES([DMXMODULES]
+    was not quoted.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Tested-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 761ae22f880bd79550ccf93d321b8a28b3755956
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Dec 1 14:38:19 2009 +1000
+
+    xfree86: tell users to disable AutoAddDevices, not AllowEmptyInput.
+    
+    Technically, disabling AEI is the right suggestion. AEI off forces the
+    server to init the built-in defaults for input devices (or pick the first
+    one from the config file). At the same time, hotplugging is still available
+    with AEI off.
+    
+    Unfortunatly, in the vast majority of cases users want to simply disable
+    hotplugging or have a working server while the local HAL configuration is
+    broken or missing. Disabling AEI will lead to duplicate events, triple
+    keystrokes, etc. once the configuration works again.
+    It's not actually required to remove AEI once hotplugging works again,
+    though it will in many cases lead to a setup that appears broken.
+    
+    Asking users to disable AutoAddDevices instead means those users disable
+    hotplugging, can then fix the HAL setup and they _must_ remove the config
+    line again to test if hotplugging works again. Which doesn't leave them with
+    a broken config once everything is working nice and dandy. Less bugreports,
+    everybody wins.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+    Acked-by: Daniel Stone <daniel@fooishbar.org>
+    Acked-by: Rémi Cardona <remi@gentoo.org>
+    Acked-by: James Cloos <cloos@jhcloos.com>
+
+commit b584c224a888c9e7f92d7e49021f74232a727c7f
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 30 12:11:41 2009 +1000
+
+    Set the source and deviceid for key repeat events (#24785)
+    
+    X.Org Bug 24785 <http://bugs.freedesktop.org/show_bug.cgi?id=24785>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit 66bb8c6fbdfc0fc0d971aac4ec6f949bb9288c1b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Nov 27 16:20:13 2009 +1000
+
+    dix: remove core devices when shutting down. (#25028)
+    
+    NewInputDeviceRequest (and RemoveDevice) have checks in place to not allow
+    removal of the VCP/VCK. When shutting down, they need to be cleaned up
+    nonetheless to free the memory associated.
+    
+    X.Org Bug 25028 <http://bugs.freedesktop.org/show_bug.cgi?id=25028>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 83d90b90bcb71c89750f92a177361e53dd261414
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Nov 27 16:08:44 2009 +1000
+
+    dix: remove some obsolete comment.
+    
+    The "counterpart to biggest hack" included checking for the motion history
+    function - which is unified in 1.7. Hence the check (which is already
+    removed) would evaluate to true anyway, and this comment isn't needed.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit c20c8897272427cb3f755a3e28e80a9ad46f08a1
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Nov 27 16:01:53 2009 +1000
+
+    dix: fix memory leak, free event list on shutdown. (#25028)
+    
+    X.Org Bug 25028 <http://bugs.freedesktop.org/show_bug.cgi?id=25028>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 0e084d8c71e697a5cf5d5d7c749455ae14bd6eb7
+Author: Luc Verhaegen <libv@skynet.be>
+Date:   Wed Nov 11 15:59:27 2009 +0100
+
+    Xv: Fix AdjustFrame when driver implements ReputImage.
+    
+    Should probably also be applied to stabler xserver branches too.
+    
+    Luc Verhaegen.
+    
+    From a22bc20721bad506d8fa9772b1258568cbffe7d2 Mon Sep 17 00:00:00 2001
+    From: Luc Verhaegen <libv@skynet.be>
+    Date: Wed, 11 Nov 2009 15:52:39 +0100
+    Subject: [PATCH] Xv: Fix AdjustFrame when driver implements ReputImage.
+    
+    Finally fixes fd.o #4653, filed more than 4 years ago.
+    
+    Patch can be happily applied to all modular Xorg versions.
+    
+    Signed-off-by: Luc Verhaegen <libv@skynet.be>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f4fc3406720410e37a2bce1b782cba0f0b734e42
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Mon Nov 30 11:03:59 2009 -0800
+
+    XQuartz: Drop calls to alloca
+    
+    This makes us more consistent with the rest of the codebase, using xalloc/xfree
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 66a9616d645f5a23225251d197e00b94c79274f6
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Mon Nov 30 13:17:53 2009 +0100
+
+    fb: Don't crash if copy_drawable() returns NULL.
+    
+    Fixes http://bugs.freedesktop.org/show_bug.cgi?id=24634 .
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 8754db77d8169e5ea506a963cebee1a651bcf094
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Mon Nov 30 13:17:52 2009 +0100
+
+    EXA: Don't defragment offscreen memory at allocation time.
+    
+    Fixes http://bugs.freedesktop.org/show_bug.cgi?id=24300 .
+    
+    Offscreen memory allocation can occur from various places, and apparently
+    doing defragmentation from at least some of them can confuse some driver
+    acceleration code.
+    
+    There's still the regular background defragmentation in the WakeupHandler,
+    which should manage to keep fragmentation at a reasonable level.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0e555a1033e5deed1db8582ca075455a6a2d4228
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Mon Nov 30 13:17:51 2009 +0100
+
+    Revert "EXA: Accumulate arbitrary number of glyphs without flushing."
+    
+    This reverts commit c11678cc189551f2a01eaa7a63969c16950739b4.
+    
+    Not sure what I was thinking, turns out alloca() of a size derived from client
+    input is a bad idea.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 99d88ef69d5f7dbf99ca605eceb92f42230a89f4
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Sat Nov 28 10:34:45 2009 +0100
+
+    exa: a few small pitch related changes
+    
+    - Setting pitch before exaCopyDirty* is not needed.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit a54c23fe647cb4d610d871094193ae5959606008
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Sat Nov 28 10:34:44 2009 +0100
+
+    exa: s/PixmapIsOffscreen/PixmapHasGpuCopy and s/pExaPixmap->offscreen/pExaPixmap->use_gpu_copy
+    
+    - Fixup some variable names as well.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 342f3689d17256c92cbfee079d24501d27aa1153
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Sat Nov 28 10:34:43 2009 +0100
+
+    exa: handle pixmap create/destroy in lower layers
+    
+    - Pixmaps that are created during a fallback are automatically prepared access.
+    - During the fallback accelerated ops are blocked to prevent new/scratch gc's
+      from triggering accelerated ops on mapped pixmaps.
+    - A few cases of incorrect wrapping (on the top level pointer instead of
+      between damage and (w)fb) have been removed.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b54bc14ce0ae38c4863794bc3096ca86cdb23908
+Author: Ingmar Vanhassel <ingmar@exherbo.org>
+Date:   Wed Nov 25 20:31:48 2009 +0100
+
+    Update man-pages for new default font paths
+    
+    Signed-off-by: Ingmar Vanhassel <ingmar@exherbo.org>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c0367028ac02b3ccfbc245863dc6b7295a4014d6
+Author: Ingmar Vanhassel <ingmar@exherbo.org>
+Date:   Wed Nov 25 20:31:47 2009 +0100
+
+    Update COMPILEDDEFAULTFONTPATH to match the new default font path
+    
+    Signed-off-by: Ingmar Vanhassel <ingmar@exherbo.org>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0e6cee853d8e5bef3274e632ef034d37f14674a9
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Nov 18 14:39:25 2009 +1000
+
+    dix: clean up accel old scheme data when switching schemes.
+    
+    InitValuatorClassDeviceStruct always initializes with the default profile.
+    The default profile allocs data and adds a few properties which become
+    obsolete if the profile is changed lateron by the driver.
+    
+    The property handlers are stored in the device's devPrivates and cleaned up.
+    Ideally, the property handler ID's could be stored somewhere more obvious,
+    but that seems to require breaking the ABI.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Simon Thum <simon.thum@gmx.de>
+
+commit 1b127ab8429616adf9ec31ba4d8bdd9af6e104a9
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Nov 24 15:31:48 2009 +1000
+
+    Xi: when deleting all properties, reset property handler to NULL.
+    
+    Trying to unregister property handlers during the device closure process
+    leads to invalid memory accesses.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 8806375ed72a3cd465fe0a49ead079a334accd6b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Nov 17 09:25:47 2009 +1000
+
+    Move xdmxconfig modules into DMX conditionals (#25102)
+    
+    xdmxconfig requires additional modules not checked for if Xdmx build is set
+    to auto (the default). This may lead to build errors if the Xdmx modules are
+    installed, but not the extra ones required for xdmxconfig.
+    
+    X.Org Bug 25102 <http://bugs.freedesktop.org/show_bug.cgi?id=25102>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Remi Cardona <remi@gentoo.org>
+    Acked-by: Julien Cristau <jcristau@debian.org>
+
+commit a2adda7ab3defd953cf0f48f5372efb037786a9e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Nov 19 16:35:55 2009 +1000
+
+    Revert "Move xdmxconfig modules into DMX conditionals (#25102)"
+    
+    New package dependency unnecessarily links in a few libraries that Xdmx
+    doesn't need. This can be fixed more elegantly.
+    
+    This reverts commit 0ef15ca9d2d9c78c79a2771c550563bc6931b365.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit eb967ca36cfe0409972ac987a74d498cd6f6bafb
+Author: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+Date:   Tue Nov 17 17:13:43 2009 +0200
+
+    Xext: Fix a memory leak on GE client disconnect.
+    
+    Add a call to dixRequestPrivate to inform dixFreePrivates that memory
+    allocated in GEClientCallback should be released when client
+    disconnects. Otherwise there is a leak of sizeof(GEClientInfoRec) for
+    every client connect/disconnect.
+    
+    Also remove the explicit allocation and let GEGetClient /
+    dixLookupPrivate do it. This makes GEClientCallback similar to the
+    other extension callbacks.
+    
+    Signed-off-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 55f60e192318132157d3dfdd6732f141bd9dc352
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Mon Nov 23 22:17:43 2009 +0100
+
+    Revert "exa/mixed: be more thorough about setting fb_pitch when needed"
+    
+    This reverts commit d4fc245115eb2cb323e06a82f9dd52518d9b6a16.
+    
+    - This is causing crashes/problems for some.
+    
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 4677b5a80025b50ba2a3e953fd487a549586ae9f
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Nov 23 16:33:00 2009 -0800
+
+    XQuartz: Allow better compatability with older versions of xinit
+    
+    If we are id="org.x" and the launchd socket is ":0", we will claim
+    the socket to match the old behavior before we prefixed the
+    socket name with our id.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit ec16357edaba23694b12fd234ffa12fd58a73dfa
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Mon Nov 23 17:00:06 2009 +0200
+
+    configure: remove unused kdrive Xvesa config variable
+    
+    Xvesa was gone in commit 6d21fbf0 and this should be there as well.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit a30e739a144912a68adcaa9f426d600c6ecbd529
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Nov 23 13:07:56 2009 +1000
+
+    Xi: don't crash when deleting invalid device properties.
+    
+    Deleting a property that was not set on a device leads to a null-pointer
+    reference. The protocol allows deleting those properties - it has to be a
+    noop.
+    
+    Reproducible:
+    xinput --set-prop "My device" --type=int --format=8 "my property" 1
+    xinput --delete-prop "My other device" "my property"
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 19f7c15e2008dab3c46ba3e14dfa353d01c74f72
+Author: Zhao Yakui <yakui.zhao@intel.com>
+Date:   Fri Nov 20 14:43:35 2009 +0800
+
+    xfree86: Edid quirk for Philips LCD LP154W01
+    
+    v1->v2: Make one condition case for one quirk instead of merging them
+    together. This is based on the Keithp's suggestion.
+    
+    Move the EDID quirk for Philips LCD LP154W01 as the panel reports the vertical
+    size in cm.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=24482
+    
+    Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b8b8db98353760738eead612fe846c2ce1c174fa
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Thu Nov 19 10:46:30 2009 +0100
+
+    EXA: Don't use UploadToScreen for CopyNtoN with mixed pixmaps.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+
+commit d4fc245115eb2cb323e06a82f9dd52518d9b6a16
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Wed Nov 18 21:23:09 2009 +0100
+
+    exa/mixed: be more thorough about setting fb_pitch when needed
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+
+commit 647b79f87a9891225678dc6fc2fbda3bdef8fa9d
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Wed Nov 18 21:23:08 2009 +0100
+
+    exa/mixed: avoid copying back pixmap data when no migration took place
+    
+    - When the driver handles the prepare access no copying is needed.
+    - Delayed pixmap creation should be fine, because it's handled by the
+      first prepare access, but the exaPixmapIsOffscreen check in finish access
+      will return FALSE without a driver pixmap.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+
+commit 30be7ceaf228497ac1ff0a1123c1b35e3aa1fc73
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sat Nov 14 18:39:00 2009 +0100
+
+    xfree86: set a sane umask before opening the log
+    
+    Xorg creates its log file following the umask of the user running
+    startx, which may result in a world-writable log.  Set umask to 022 to
+    prevent this.
+    
+    Debian bug#555308 <http://bugs.debian.org/555308>
+    See also http://thread.gmane.org/gmane.comp.security.oss.general/2299
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit fb95090730360b6b7f5429c40937e8fc9dfe5c14
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Mon Nov 9 03:33:45 2009 +0000
+
+    Use glibc's in/out routines
+    
+    Let's let glibc do the right thing for dense/sparse selection.
+    
+    The _alpha_iobase code has been unused since the switch to libpciaccess. It
+    really should have been killed by fba700f1f6a8976.
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    Tested-by: Michael Cree <mcree@orcon.net.nz>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0ef15ca9d2d9c78c79a2771c550563bc6931b365
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Nov 17 11:48:35 2009 +1000
+
+    Move xdmxconfig modules into DMX conditionals (#25102)
+    
+    xdmxconfig requires additional modules not checked for if Xdmx build is set
+    to auto (the default). This may lead to build errors if the Xdmx modules are
+    installed, but not the extra ones required for xdmxconfig.
+    
+    X.Org Bug 25102 <http://bugs.freedesktop.org/show_bug.cgi?id=25102>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Adrian Bunk <bunk@stusta.de>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit df95be4d3d9a744720e37a16fd89d9569bf6e188
+Author: Paulo Ricardo Zanoni <pzanoni@mandriva.com>
+Date:   Thu Nov 12 11:27:34 2009 -0200
+
+    configure: change 'sigio-default' to 'use-sigio-by-default'
+    
+    This was discussed in this thread:
+    http://lists.x.org/archives/xorg-devel/2009-September/002025.html
+    The patch sent fixed the help string but not the configure option.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 801f0e59800ea4a3f6c85b22dea6f2c400bda703
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:11 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+    
+    Reviewed-By: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c93f516e850c2ef2b47cc2e282f9081ae7165ac7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Oct 27 15:07:26 2009 -0400
+
+    Deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+    
+    Reviewed-By: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0f38159cdd154a29caab0342aee41378e9921929
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Nov 10 09:12:27 2009 -0500
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+    
+    Reviewed-By: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c739beb439bb813e4c82b3216daee7e89aa96f2f
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Nov 10 08:56:21 2009 -0500
+
+    .gitignore: use common defaults with custom section #24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+    
+    Reviewed-By: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 9071b0d69748cfa7ecca17b4cb0e431bbb0ef2a4
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Nov 9 13:09:55 2009 -0800
+
+    XQuartz: Explicitly pass a bellProc to make XBell() work again.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit e87a03fd531ce7974877688680d3bf9b85c2d835
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Oct 27 17:16:57 2009 -0700
+
+    XQuartz: pbproxy: Wait for the server to finish starting up, so display is valid.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 15fc56addcc906592af7c0f4c0a5ac906fa5c389
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sun Nov 8 20:25:42 2009 -0800
+
+    XQuartz: Buildfix for Leopard and older
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit b5aa2e0a5fe233dc883084a5026013472e85bca4
+Author: Chase Douglas <chasedouglas@gmail.com>
+Date:   Mon Nov 9 22:54:39 2009 -0500
+
+    Move FD_CLR above pInfo->read_input
+    
+    The event fd may be invalidated by the pInfo->read_input call. If it is
+    invalidated, the subsequent FD_CLR call will segfault. Thus, the FD_CLR
+    call must precede the pInfo->read_input call.
+    
+    Signed-off-by: Chase Douglas <chasedouglas@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 982f6648fd29d085265bf6035c1bf4d1b2499316
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Nov 10 09:50:50 2009 +1000
+
+    dix: increase default number of buttons to 10.
+    
+    Currently the XTEST device is limited to the same number of buttons the core
+    device has. This breaks if a user has a mouse with more than 3 buttons
+    connected and is using a core client to fake button 8+ presses.
+    
+    Rather than expecting all clients to fix themselves, just increase the
+    default number of buttons to 10, which is somewhat a compromise. Ideally,
+    the XTEST devices should adjust themselves to the highest number of buttons
+    available on the slave devices (like the master pointers already do), but
+    that's a taks for another day.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit ec5417b965616e60b51466fe9fd2b44cb5abb349
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sun Jul 12 23:58:32 2009 +0100
+
+    Cygwin/X: Ensure WM_STATE atom exists in multiwindow mode
+    
+    Workaround a bug in iiimxcf (assuming the WM_STATE atom exists),
+    which can cause many Solaris clients to simply fail with a BadAtom
+    error
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit aa860552fd7e2888258a7b48b8c3bd4af527dc6c
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Sun Nov 1 18:19:08 2009 +0000
+
+    Cygwin/X: Enable clipboard integration by default
+    
+    Enable clipboard integration by default, can be turned off with -noclipboard.
+    We still accept -clipboard for backwards compatibility.  If both are passed,
+    the last one is accepted (just as other arguments are handled).
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 87b00ced3d308a9168828c0e38ecffa0640621a0
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sun Nov 1 18:18:48 2009 +0000
+
+    Cygwin/X: Setup screen layout in Xinerama mode
+    
+    Setup screen layout according to the screen window native window
+    positions in Xinerama mode
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 0fe2e8c64e7a5a9140c77b88b266d7ae58b0bca2
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Sun Nov 1 18:18:31 2009 +0000
+
+    Cygwin/X: Allow composite to be enabled for Xwin
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 26a69bbd9b6f415c443d6d6f8f450329f348edc3
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Sun Nov 1 18:19:04 2009 +0000
+
+    Cygwin/X: Mount options have changed in cygwin-1.7
+    
+    Mount options have changed in cygwin-1.7
+    
+    Also fix a typo in the warning issued if /tmp is a textmode mount
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 35901ece6a49e5f8e245364c27723da2f9009a1d
+Author: Paul Loewenstein <paul.loewenstein@gmail.com>
+Date:   Sun Nov 1 18:18:45 2009 +0000
+
+    Cygwin/X: Handle fake keypresses generated by speech recognizers
+    
+    Apparently, fake keypresses generated by speech recognizers may not bother
+    with a scan code, so look up what scan code corresponds to the virtual key
+    code if this occurs.
+    
+    Patch by Paul Loewenstein <paul.loewenstein@gmail.com>
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 0866322b574b1f3695467535ed5fa8f9e629ad1d
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Mon Jul 13 13:46:45 2009 +0100
+
+    Cygwin/X: Always use an authorization cookie for internal clients
+    
+    Don't conditionalize use of an authorization cookie for internal client
+    threads on XCSECURITY, always use one (this avoids certain problems
+    with XDMCP setups where the XDMCP host removes localhost from the access
+    list etc.)
+    
+    Conditionalize the use of a XCSECURITY authorization descriptor on XCSECURITY
+    
+    Consolidate the various places where the authorization cookie is set
+    for internal threads into a new function, winSetAuthorization()
+    
+    Use authorization cookie for multiwindow WM X message thread as well
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 72f81f4e449defb0654e9bdb2c9ec014475a3977
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Fri Nov 6 17:46:58 2009 +0000
+
+    Xming: Make -auth option work in with -multiwindow
+    
+    Use an internally generated cookie for authentication of the internal
+    window manager client when using the -auth option in -multiwindow mode.
+    
+    Copyright (C) Colin Harrison 2005-2008
+    http://www.straightrunning.com/XmingNotes/
+    http://sourceforge.net/projects/xming/
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 6dbf8f27c885ea3a761548183fb00ba3df2df553
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Tue Jul 21 01:15:25 2009 +0100
+
+    Xming: Tidy up code for initial native window positioning
+    
+    Tidy up code for initial native window positioning and avoid a
+    duplicate call to winMultiWindowGetTransientFor()
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 28eb61fc04811bb9bbb523e0a252933313bb16ce
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sun Nov 1 18:19:14 2009 +0000
+
+    Avoid a null dereference if IFF_BROADCAST is set but there is no broadcast address
+    
+    It seems that the getifaddrs() function can return interfaces with
+    IFF_BROADCAST & IFF_UP set, but no broadcast address (at least
+    under Cygwin 1.7, this seems to happen for v6 mapped v4 addresses)
+    
+    Avoid a null dereference if this ever happens
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 091cbbaed7aafab6f9839a40fe977ab067d1ace1
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Mon Oct 12 13:40:11 2009 +0100
+
+    Xming: Fix UT8String and CompoundText clipboard text sharing with windows clipboard
+    
+    XConvertSelection() in libX11 always returns 1, so there is no point in
+    testing it incorrectly against Success. This is possibly a bug in
+    XConvertSelection()
+    
+    This should fix UTF8String and CompoundText selection via the clipboard.
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 9657eae5d65eff289089afc46dfb629758ebbdf7
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sun Nov 1 18:18:51 2009 +0000
+
+    Cygwin/X: Clearly diagnose a timeout while waiting for SelectionNotify event
+    
+    Clearly diagnose a timeout while waiting for SelectionNotify event
+    in the clipboard integration internal client.
+    (which seems to be behind some of the reported failures)
+    
+    Turn useless #if 0/ErrorF()/#endif into useful winDebug()
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 062f49a8e0d1afb4dd32e9451a47ab2792639e7f
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Wed Nov 4 17:36:54 2009 +0000
+
+    Cygwin/X: Add a workaround for a SWT/Motif bug to internal window manager
+    
+    SWT/Motif expects all top-level windows to get reparented, and waits until they
+    do. So workaround that in our internal WM by forcing a reparent event to
+    occur, even though we don't actually need to reparent the window to
+    frame it (as the frame is a native window, not an X window)
+    
+    http://sourceware.org/bugzilla/show_bug.cgi?id=9848
+    https://bugs.eclipse.org/bugs/show_bug.cgi?id=36806
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 71519a572fe15b85c0eb2b02636c9e871f2c858f
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Wed Nov 4 17:34:40 2009 +0000
+
+    Cygwin/X: Fix typo in g_fAnotherWMRunning and tidy up WM detection code
+    
+    Tidy up code for detecting another WM is already running
+    Fix typo g_fAnotherWMRunnig -> g_fAnotherWMRunning
+    Remove some unused event mask macros
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit f3fad371cce0f3836514ad5b29e59fa1ca0627a7
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Wed Nov 4 15:33:53 2009 +0000
+
+    Xming: Add FORCEEXIT option to configuration file
+    
+    Add a new option to configuration file: FORCEEXIT, like SILENTEXIT
+    but ignores the client count. Unsaved client work may be lost with
+    this option but it is useful if you want no dialogs.
+    
+    Add description of this new keyword to XWinrc man page
+    
+    Also fix grammar of the exit confirmation dialog warning to be correct
+    when there is only one(1) client connected.
+    
+    Also rearrange yacc tokens to one per line to make future merges
+    easier
+    
+    Also amend default system.XWinrc so that SILENTEXIT is on by default
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 019a601de6a8ae083852c2d384c814dcc7aeeb72
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Wed Nov 4 15:16:03 2009 +0000
+
+    Xming: Add mouse motion events with flag POINTER_SCREEN in winEnqueueMotion()
+    
+    Add mouse motion events with flag POINTER_SCREEN in winEnqueueMotion(), as
+    they are in screen coordindates and may need to be scaled to the axis range
+    appropriately
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 7af1240b57daa4ec55512276a9fda499d923eaa0
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Wed Nov 4 14:20:17 2009 +0000
+
+    Xming: Replace all the uses of deprecated functions in hw/xwin with current ones
+    
+    Replace uses of LookupIDByType() and SecurityLookupIDByType()
+    with dixLookupResourceByType()
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 2a38f7c0dbc890e6408eee143d77719f265d583d
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Fri Jun 19 21:12:55 2009 +0100
+
+    Cygwin/X: Remove a couple of extraneous '\n' in logged version info
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 56658fc06cb773ed20ef1b23a3fe918c0d3b36bb
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Oct 15 22:40:02 2009 -0500
+
+    Set default font path with fontutil 1.1 and fontpath.d
+    
+    Look for $sysconfdir/X11/fontpath.d and, if it exists, set it to the
+    default font path as a catalogue: entry. Based on app/xfs commit
+    c66a46e35ae40a23ad9acee838ab42300eddbd67.
+    
+    Otherwise, use the font-util 1.1 macros to determine the system
+    fontrootdir and standard subdirectories, or let the user configure it
+    and the subdirectories themselves.
+    
+    This adds a build-time (or at least an autoconf/autogen time) dependency
+    on font-util, and changes the --with-fontdir argument to --with-fontrootdir.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith-xsfywfwIY+M@public.gmane.org>
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit c7d1319872e0ae0b7d945e9af8c4027ee5aa2055
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Mon Nov 9 11:12:22 2009 -0500
+
+    randr: Fill in errorValue when verifying outputs/crtcs/modes
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d85ab6b6483d6ca7d9d22298d05ed1fa3076b042
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Tue Oct 13 10:15:00 2009 +1000
+
+    loader: actually stat something that has some chance of existing. (v2)
+    
+    FindModuleInSubdir seems to expect a / at the end of the subdir its
+    finding for, so we add the / early, the stat will fail if its
+    not a subdir, I'm leaving the S_ISDIR in just in case there is another
+    reason it could return 0. This does look a bit silly in strace
+    but it seems to work fine.
+    
+    I have a very intermittent issue where drivers loses its / that
+    I've been seeing on/off for a while, this may or may not fix it.
+    
+    Signed-off-by: Dave Airlie <airlied@redhat.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit a5e59230de3abafda9cd9d571cea192897155a14
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Nov 5 13:44:30 2009 -0800
+
+    randr: Turn on ModeDebug during server setup
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c61e77c77ca309f3676370992f41867807ed0c67
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Thu Nov 5 22:40:03 2009 -0800
+
+    Remove lnx_font.c and lnx.h
+    
+    I couldn't find any version of the X xserver that ever used lnx_font.c
+    so let's delete it. I tried contacting its author, Egbert, multiple
+    times on IRC and email [*] but never got any response. It also hasn't
+    been seriously touched since January 2005.
+    
+    [*] http://lists.x.org/archives/xorg-devel/2009-October/002855.html
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    Reviewed-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 15ffe9f51b122494a2b292b3ab1f199d3e81600c
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu Nov 5 18:28:28 2009 -0800
+
+    configure.ac: Notify user about which SHA1 implementation is being used
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 6b109919f6e1593b27b0760bb56a65b43fb86ea4
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Thu Nov 5 18:13:07 2009 -0800
+
+    SHA1: Add support for Common Crypto
+    
+    libSystem on darwin can handle SHA1 computation without needing to pull in
+    OpenSSL. See CC_crypto(3)
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 840a68dc5e3b4d285894f86df2a8c41fca5a4bec
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Nov 4 18:39:16 2009 -0800
+
+    XQuartz: Cleanup X11Controller.m compilation warnings.
+    
+    Declare X11Controller as implementing NSTableViewDataSource.
+    Use selectRowIndexes:byExtendingSelection instead of selectRow:byExtendingSelection
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 0e3ad44c3b05cbe7b1d8f5ce7949fec3c7ae2e7c
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Nov 4 18:15:08 2009 -0800
+
+    XQuartz: Use dixLookupResourceByType instead of LookupIDByType
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 069fc6ce0a0e7f2c418e11941568ffcc52b6b331
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Nov 4 16:18:06 2009 -0800
+
+    XQuartz: Don't weed out duplicates in generated keymap
+    
+    There seems to be an issue in the 1.5+ server where shift-space does not
+    produce a space when 'keycode 57 = space' but it does when 'keycode 57 = space
+    space'
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 6d6e8fb27f00f0c3128cef624b39a60aa754fdc8
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Nov 4 13:34:20 2009 -0800
+
+    XQuartz: Controller thread launches clients
+    
+    This avoids a memory leak due to no active auto-release pool on the server thread.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit f7b375bd141d0cf1e3add5443a5838dd8f554ef6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Nov 5 11:42:34 2009 -0800
+
+    Enable XF86PM on all Solaris platforms, not just x86/x64
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f77262513ea17401092479e17ad20fc0eb91ffb5
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Nov 5 11:42:33 2009 -0800
+
+    Use $(MAKE) instead of "make" to build Solaris inline assembly
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 964040764387d89ef64324cfbee31872ee6ce41c
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Wed Nov 4 15:35:37 2009 +0200
+
+    EXA: Preserve pPixmap->devPrivate.ptr in exaPixmapIsOffscreen_driver
+    
+    It crash the server when the drawable is 32 bit and the framebuffer is 16.
+    
+    This is pretty much a copy-past from commit 8e873185.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 7442f3355ab8f0bb2b1a270da18c65d8d315d4dd
+Merge: 0573042 7897b6c
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Nov 4 08:55:20 2009 -0800
+
+    Merge remote branch 'jeremyhu/master'
+
+commit 0573042cddb6f9942e408687a16c6842e62a8bfa
+Author: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+Date:   Wed Nov 4 15:59:30 2009 +0200
+
+    dix: Fixes a memory leak when a cursor resource is released.
+    
+    Just open and close a client that creates cursors in order to
+    reproduce. In the problem case bits->refcnt is -1 and therefore
+    bits->devPrivates is never released.
+    
+    Signed-off-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 7897b6c2d41bccb72c19418674c3526ecce29515
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Oct 27 18:00:48 2009 -0700
+
+    dix: Properly detect if the other device is frozen
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 5e79976c13c5b94b12392b493846ca26be11750b
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Nov 3 16:35:27 2009 -0800
+
+    XQuartz: Run xmodmap after programatically updating the keymap.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+    Signed-off-by: Martin Otte <otte@duke.edu>
+
+commit 412c56ef3332d09efbd861e41c3e985f44729729
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Sun Nov 1 22:08:40 2009 +0100
+
+    exa: remove some outdated comment
+    
+    - This comment is still in exa_driver.c and there it makes sense.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 48b8c076a7b7dbbddfc472e8c6e5251a0b174cbc
+Author: Matthieu Herrb <matthieu@laas.fr>
+Date:   Mon Nov 2 11:11:24 2009 +0100
+
+    add libc as a choice for SHA1 implementation
+    
+    On Sun, Nov 01, 2009 at 02:54:13PM -0800, Keith Packard wrote:
+    > Excerpts from Matthieu Herrb's message of Sun Nov 01 09:34:35 -0800 2009:
+    >
+    > > +AC_CHECK_FUNCS([SHA1Init], [HAVE_LIBC_SHA1=yes])
+    >
+    > I'd suggest AC_CHECK_FUNC instead; as far as I can tell, AC_CHECK_FUNCS
+    > will also define HAVE_SHA1INIT. Also, can you  use HAVE_LIBC_SHA1
+    > consistently rather than having two separate names (HAVE_LIBC_SHA1 and
+    > HAVE_SHA1_IN_LIBC)? Yes, I know one is a preprocessor symbol and the
+    > other is a cpp shell variable, but I think that will work anyway.
+    >
+    New version taking you comments into account.
+    
+    From: Matthieu Herrb <matthieu.herrb@laas.fr>
+    Date: Sun, 1 Nov 2009 18:19:27 +0100
+    Subject: [PATCH] Add a probe for SHA1 functions in libc in *BSD.
+    
+    The interface is the same as the one in libmd.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit da923d0bc15e99a8ed1986bd6f5df37f7af7284b
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Sun Nov 1 14:30:48 2009 -0500
+
+    Make sys.c use unaligned access functions provided in compiler.
+    
+    Favorite deleted line was definitely
+    	/* to cope with broken egcs-1.1.2 :-(((( */
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d30637339963950910e5f5fb755b8465ac7dddb4
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Thu Oct 29 11:46:22 2009 -0700
+
+    Supply all code using dl*() with DLOPEN_LIBS
+    
+    Previously DLOPEN_LIBS was managed in top-level configure.ac.
+    Instead bundle it with the code using dl*() functions to
+    avoid breakages in uncommon configurations.
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit ec98d7fc78efefcf9fc61492529157c0d289c3f2
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Mon Sep 21 10:23:16 2009 -0400
+
+    EDID: Extend the HDTV hack to handle "1368x769"
+    
+    Hate televisions so much.
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit 7c0803f555782dbf451b7c79112d7deae02e5c9f
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Wed Oct 28 15:44:37 2009 -0400
+
+    modes: Fix duplicate detection, and do it more consistently
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit ba2d39dd5428cb5922b797a1d4ea45b859412b40
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Mon Oct 26 15:10:30 2009 -0400
+
+    modes: De-duplicate a clock range check.
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit 25236d19e6ef07fcb2c71569f1b7b0c12810834a
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Mon Oct 26 14:49:57 2009 -0400
+
+    EDID: Fix interlaced detailed timings to be frame size, not field size
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit fb86433d897c116315cc7994390d11ac2f577511
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Mon Oct 26 14:04:23 2009 -0400
+
+    modes: Decorate interlaced mode names with a trailing 'i'
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit fc2ec95664d55f45f77f1ebb039a7c17a1fcdaa3
+Author: Ma Ling <ling.ma@intel.com>
+Date:   Wed Feb 18 17:41:26 2009 +0800
+
+    EDID: CEA extension support
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+
+commit fab74d1081270fb8f1d231e6e10d10aa33e164da
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 28 17:48:19 2009 -0700
+
+    Suppress certain GCC warnings in auto-generated code.
+    
+    - Don't warn for references to deprecated functions in xorg_symbols.
+    - Ignore functions generated by gl_apitemp.py that are never used.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 239435875d6a92ed31731b500a992a3af0943594
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 28 17:48:18 2009 -0700
+
+    Don't cast double to int: use default conversions or explicitly round.
+    
+    GCC warns about casting a double return value to int.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit e8c48fd8f7aab54327b0091cd17c60235ae27168
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 28 17:48:17 2009 -0700
+
+    Suppress GCC warnings like "the address of `u1' will always evaluate as `true'".
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 662594aeff9d1767316f08600949c73ac5060d18
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Thu Oct 29 00:40:48 2009 +0600
+
+    kdrive: Grab evdev mouse/keyboard devices when X server is active
+    
+    Input events are directed to both vt and input devices by default.
+    Unless input devices are grabbed, keyboard events fill it vt buffers
+    and cause spontaneous wakeups in kernel tty layer when buffers are full.
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 83d520d86c888f2c8a4abb18b7a8858d568aa18f
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 28 16:45:44 2009 -0700
+
+    Add video driver flag to indicate that console access is not needed.
+    
+    Existing video drivers will get the console enabled by default.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 25979c46b467847ccb54f5c86a1be6b9c303c99a
+Author: Jamey Sharp <jamey@minilop.net>
+Date:   Wed Oct 28 16:35:28 2009 -0700
+
+    Alloc/free drawables array for each ProcPanoramiXShmGetImage call.
+    
+    Updates my previous patch, b422b532f3dcab54c53f61a66f2ad76059d1874a.
+    keithp recommended against allocating the drawables array globally, but my
+    updated patch with that fixed isn't the patch that landed.
+    
+    Signed-off-by: Jamey Sharp <jamey@minilop.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 757c11630d5999ad13dcac79191429badc92a3a6
+Author: Tormod Volden <lists.tormod@gmail.com>
+Date:   Wed Oct 28 23:10:43 2009 +0100
+
+    xfree86: Fix description of DDC_QUIRK_DETAILED_USE_MAXIMUM_SIZE
+    
+    The message ending up in the log is misleading as to what the quirk
+    actually does: It ignores the sizes in the detailed timings and
+    replaces them with the display "Max Image Size".
+    
+    Signed-off-by: Tormod Volden <debian.tormod@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit ccf4a69db747b000aee09072aac0a2891bde139a
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Thu Oct 29 01:54:00 2009 +0600
+
+    os: Add libsha1 as a choice of SHA1 implementation
+    
+    There are small systems which don't need OpenSSL or gcrypt.
+    Add libsha1 (http://github.com/dottedmag/libsha1) as an alternative
+    small SHA1 implementation.
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 8613e4b0eb04150b1e377871f02b164be5d001e9
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Wed Oct 28 11:44:27 2009 -0700
+
+    Add missing DLOPEN_LIBS to kdrive compilation flags
+    
+    Xfbdev failed to build due to dladdr being used by xorg_backtrace.
+    Explicitly add DLOPEN_LIBS to KDRIVE_LIBS as there does not
+    seem to be a better place for it.
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit deb72fc61464250af8185dab2da8ee09f13c55d8
+Merge: 55f4c80 a60e676
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Oct 28 10:54:13 2009 -0700
+
+    Merge remote branch 'jcristau/sha1'
+
+commit 55f4c80a4c891b355a99e6a05978ca945397c5cc
+Author: Hans Nieser <hnsr@xs4all.nl>
+Date:   Wed Oct 28 06:59:40 2009 +0100
+
+    Xinput: allow non-integer values again for Constant- and AdaptiveDeceleration
+    
+    This was initially fixed by commit 3932a848572f4eaf8b7f1d91d9b74aeafab069a2
+    but then (presumably not intentionally) undone by commit
+    1d54479cb3c8b4f75b7564f8b5e1c5da940b20f4 .
+    
+    Signed-off-by: Hans Nieser <hnsr@xs4all.nl>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 50a5c32430a5267f2a05656d2417f9a8a44d8b97
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Fri Oct 23 19:32:42 2009 +0100
+
+    dmx: Correctly compute DMXGetScreenAttributes reply length
+    
+    Correctly allow for excess length of DMXGetScreenAttributes reply
+    over standard 32 byte reply in addition to the displayName string
+    when computing the length of reply
+    
+    http://bugs.freedesktop.org/show_bug.cgi?id=24685
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by:  Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 9a2f6135bfb0f12ec28f304c97917d2f7c64db05
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Oct 23 10:04:57 2009 +0900
+
+    DRI2: Report the correct extension minor version
+    
+    Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d886008c96cd16f735f54dace070cb00b23c6f44
+Author: Marcin Baczyński <marbacz@gmail.com>
+Date:   Thu Oct 22 14:43:25 2009 +0200
+
+    Kill compilation warnings.
+    
+    Signed-off-by: Marcin Baczyński <marbacz@gmail.com>
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 15b30fde179cba3877182cd51b0f870ef29ffaee
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Thu Oct 22 17:29:01 2009 -0400
+
+    dix: Fix up colormap fixup.
+    
+    FindClientResourcesByType() will walk all colormaps on all screens; we
+    only want to fix up the current screen.  Otherwise, screens > 0 will
+    have the visual pointers for their colormaps pointing off into space.
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+commit 3785475a78636eb6547ef9e46be9e009c7cf7800
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Oct 23 09:03:39 2009 +0900
+
+    Bump to 1.7.99.2 (unreleased)
+
+commit 909df9beb3ddd02632f36ae682537280a6a8e5b4
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Tue Oct 20 12:57:05 2009 +0100
+
+    Resolve an inconsistency between libX11 and Xserver over GetModifierMapping
+    
+    libX11 ModMap.c believes that GetModifierMapping can never return an error
+    
+    Xserver devices.c believes that GetModifierMapping can return an error if
+    the ModMap couldn't be generated
+    
+    According to the protocol document I have, libX11 is right, so adjust the
+    server to send back an empty modmap if one couldn't be made...
+    
+    http://bugs.freedesktop.org/show_bug.cgi?id=24621
+    
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 9c48862ac1ac119b6cfb7e376533f53af6a857f4
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Oct 22 01:12:03 2009 +0900
+
+    Bump version to 1.7.99.1
+    
+    This is a development snapshot for 1.8.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
 commit 26f4d8a2c12ff06c4beb06842cd8d9c0d9ddd4aa
 Author: Keith Packard <keithp@keithp.com>
 Date:   Thu Oct 22 01:04:42 2009 +0900
@@ -377,6 +2327,33 @@ Date:   Mon Aug 31 18:46:23 2009 -0400
     xselinuxint.h: Shared internal functions.
     
     Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+
+commit a60e676f1fd243c78859440b87652f523d3f2ec1
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Wed Oct 14 23:51:22 2009 +0200
+
+    Add libgcrypt as an option for SHA1
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Rémi Cardona <remi@gentoo.org>
+
+commit d2a6a395435919aff8943285f9cbfe6569a9728f
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Wed Oct 14 23:30:55 2009 +0200
+
+    configure: add --with-sha1={libmd,libcrypto} option
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Rémi Cardona <remi@gentoo.org>
+
+commit 55516094947dd78ad2734bb784a2fb109b64c990
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Wed Oct 14 23:20:44 2009 +0200
+
+    Move SHA1 computation from render/glyph.c to os/
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Rémi Cardona <remi@gentoo.org>
 
 commit 22b38f513c93c2f2aea5909878c3c9acae7d35c1
 Author: Jon TURNEY <jon.turney@dronecode.org.uk>

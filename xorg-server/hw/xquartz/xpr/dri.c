@@ -277,9 +277,10 @@ DRICloseScreen(ScreenPtr pScreen)
 Bool
 DRIExtensionInit(void)
 {
-    DRIDrawablePrivResType = CreateNewResourceType(DRIDrawablePrivDelete);
+    DRIDrawablePrivResType = CreateNewResourceType(DRIDrawablePrivDelete,
+						   "DRIDrawable");
 
-    return TRUE;
+    return (DRIDrawablePrivResType != 0);
 }
 
 void

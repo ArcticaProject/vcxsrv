@@ -21,7 +21,6 @@
  */
 
 #include "randrstr.h"
-#include "registry.h"
 
 RESTYPE	RRModeType;
 
@@ -266,10 +265,9 @@ RRModeInit (void)
 {
     assert (num_modes == 0);
     assert (modes == NULL);
-    RRModeType = CreateNewResourceType (RRModeDestroyResource);
+    RRModeType = CreateNewResourceType (RRModeDestroyResource, "MODE");
     if (!RRModeType)
 	return FALSE;
-    RegisterResourceName (RRModeType, "MODE");
     return TRUE;
 }
 

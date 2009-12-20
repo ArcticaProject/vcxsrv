@@ -41,7 +41,6 @@
 #include "servermd.h"
 #include "picturestr.h"
 #include "xace.h"
-#include "registry.h"
 
 static int PictureScreenPrivateKeyIndex;
 DevPrivateKey PictureScreenPrivateKey = &PictureScreenPrivateKeyIndex;
@@ -618,19 +617,16 @@ PictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
     
     if (PictureGeneration != serverGeneration)
     {
-	PictureType = CreateNewResourceType (FreePicture);
+	PictureType = CreateNewResourceType (FreePicture, "PICTURE");
 	if (!PictureType)
 	    return FALSE;
-	PictFormatType = CreateNewResourceType (FreePictFormat);
+	PictFormatType = CreateNewResourceType (FreePictFormat, "PICTFORMAT");
 	if (!PictFormatType)
 	    return FALSE;
-	GlyphSetType = CreateNewResourceType (FreeGlyphSet);
+	GlyphSetType = CreateNewResourceType (FreeGlyphSet, "GLYPHSET");
 	if (!GlyphSetType)
 	    return FALSE;
 	PictureGeneration = serverGeneration;
-	RegisterResourceName (PictureType, "PICTURE");
-	RegisterResourceName (PictFormatType, "PICTFORMAT");
-	RegisterResourceName (GlyphSetType, "GLYPHSET");
     }
     if (!formats)
     {

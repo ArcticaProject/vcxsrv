@@ -873,7 +873,7 @@ SyncCreateSystemCounter(
      */
     if (RTCounter == 0)
     {
-	RTCounter = CreateNewResourceType(FreeCounter);
+	RTCounter = CreateNewResourceType(FreeCounter, "SyncCounter");
 	if (RTCounter == 0)
 	{
 	    return NULL;
@@ -2110,11 +2110,15 @@ SyncExtensionInit(void)
 
     if (RTCounter == 0)
     {
-	RTCounter = CreateNewResourceType(FreeCounter);
+	RTCounter = CreateNewResourceType(FreeCounter, "SyncCounter");
     }
-    RTAlarm = CreateNewResourceType(FreeAlarm);
-    RTAwait = CreateNewResourceType(FreeAwait)|RC_NEVERRETAIN;
-    RTAlarmClient = CreateNewResourceType(FreeAlarmClient)|RC_NEVERRETAIN;
+    RTAlarm = CreateNewResourceType(FreeAlarm, "SyncAlarm");
+    RTAwait = CreateNewResourceType(FreeAwait, "SyncAwait");
+    if (RTAwait)
+	RTAwait |= RC_NEVERRETAIN;
+    RTAlarmClient = CreateNewResourceType(FreeAlarmClient, "SyncAlarmClient");
+    if (RTAlarmClient)
+	RTAlarmClient |= RC_NEVERRETAIN;
 
     if (RTCounter == 0 || RTAwait == 0 || RTAlarm == 0 ||
 	RTAlarmClient == 0 ||

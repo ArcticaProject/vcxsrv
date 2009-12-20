@@ -2140,7 +2140,7 @@ xf86GetAllowMouseOpenFail(void)
 Bool
 xf86IsPc98(void)
 {
-#ifdef __i386__
+#if SUPPORT_PC98
     return xf86Info.pc98;
 #else
     return FALSE;

@@ -252,9 +252,11 @@ ScreenSaverExtensionInit(INITARGS)
     int		    i;
     ScreenPtr	    pScreen;
 
-    AttrType = CreateNewResourceType(ScreenSaverFreeAttr);
-    SaverEventType = CreateNewResourceType(ScreenSaverFreeEvents);
-    SuspendType = CreateNewResourceType(ScreenSaverFreeSuspend);
+    AttrType = CreateNewResourceType(ScreenSaverFreeAttr, "SaverAttr");
+    SaverEventType = CreateNewResourceType(ScreenSaverFreeEvents,
+					   "SaverEvent");
+    SuspendType = CreateNewResourceType(ScreenSaverFreeSuspend,
+					"SaverSuspend");
 
     for (i = 0; i < screenInfo.numScreens; i++)
     {

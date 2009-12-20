@@ -1573,9 +1573,16 @@ DbeExtensionInit(void)
 
     /* Create the resource types. */
     dbeDrawableResType =
-        CreateNewResourceType(DbeDrawableDelete) | RC_DRAWABLE;
+        CreateNewResourceType(DbeDrawableDelete, "dbeDrawable");
+    if (!dbeDrawableResType)
+	return;
+    dbeDrawableResType |= RC_DRAWABLE;
+
     dbeWindowPrivResType =
-        CreateNewResourceType(DbeWindowPrivDelete);
+        CreateNewResourceType(DbeWindowPrivDelete, "dbeWindow");
+    if (!dbeWindowPrivResType)
+	return;
+
     if (!dixRegisterPrivateOffset(dbeDrawableResType,
 				  offsetof(PixmapRec, devPrivates)))
 	return;

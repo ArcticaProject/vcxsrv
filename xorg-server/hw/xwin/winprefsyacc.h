@@ -65,8 +65,9 @@
      DEBUG = 281,
      RELOAD = 282,
      TRAYICON = 283,
-     SILENTEXIT = 284,
-     STRING = 285
+     FORCEEXIT = 284,
+     SILENTEXIT = 285,
+     STRING = 286
    };
 #endif
 /* Tokens.  */
@@ -96,8 +97,9 @@
 #define DEBUG 281
 #define RELOAD 282
 #define TRAYICON 283
-#define SILENTEXIT 284
-#define STRING 285
+#define FORCEEXIT 284
+#define SILENTEXIT 285
+#define STRING 286
 
 
 
@@ -116,7 +118,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 120 "winprefsyacc.h"
+#line 122 "winprefsyacc.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

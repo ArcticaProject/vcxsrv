@@ -866,7 +866,7 @@ miComputeWideEllipse(
 	}
 	if (!cacheType)
 	{
-	    cacheType = CreateNewResourceType(miFreeArcCache);
+	    cacheType = CreateNewResourceType(miFreeArcCache, "miArcCache");
 	    (void) AddResource(FakeClientID(0), cacheType, NULL);
 	}
     } else {

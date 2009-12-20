@@ -141,10 +141,10 @@ Equipment Corporation.
 #endif
 #include "xace.h"
 #include <assert.h>
+#include "registry.h"
 
 #ifdef XSERVER_DTRACE
 #include <sys/types.h>
-#include "registry.h"
 typedef const char *string;
 #include "Xserver-dtrace.h"
 
@@ -197,7 +197,7 @@ CallResourceStateCallback(ResourceState state, ResourceRec *res)
 }
 
 RESTYPE
-CreateNewResourceType(DeleteType deleteFunc)
+CreateNewResourceType(DeleteType deleteFunc, char *name)
 {
     RESTYPE next = lastResourceType + 1;
     DeleteType *funcs;
@@ -214,6 +214,10 @@ CreateNewResourceType(DeleteType deleteFunc)
     lastResourceType = next;
     DeleteFuncs = funcs;
     DeleteFuncs[next] = deleteFunc;
+
+    /* Called even if name is NULL, to remove any previous entry */
+    RegisterResourceName(next, name);
+
     return next;
 }
 

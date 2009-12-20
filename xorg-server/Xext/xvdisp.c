@@ -1863,10 +1863,10 @@ void XineramifyXv(void)
    XvAdaptorPtr MatchingAdaptors[MAXSCREENS];
    int i, j, k, l;
 
-   XvXRTPort = CreateNewResourceType(XineramaDeleteResource);
+   XvXRTPort = CreateNewResourceType(XineramaDeleteResource, "XvXRTPort");
 
-   if(!xvsp0) return;
-   
+   if (!xvsp0 || !XvXRTPort) return;
+
    for(i = 0; i < xvsp0->nAdaptors; i++) {
       refAdapt = xvsp0->pAdaptors + i;
 

@@ -127,8 +127,8 @@ ShapeExtensionInit(void)
 {
     ExtensionEntry *extEntry;
 
-    ClientType = CreateNewResourceType(ShapeFreeClient);
-    ShapeEventType = CreateNewResourceType(ShapeFreeEvents);
+    ClientType = CreateNewResourceType(ShapeFreeClient, "ShapeClient");
+    ShapeEventType = CreateNewResourceType(ShapeFreeEvents, "ShapeEvent");
     if (ClientType && ShapeEventType &&
 	(extEntry = AddExtension(SHAPENAME, ShapeNumberEvents, 0,
 				 ProcShapeDispatch, SProcShapeDispatch,

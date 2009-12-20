@@ -111,8 +111,8 @@ AppleWMExtensionInit(
 {
     ExtensionEntry* extEntry;
 
-    ClientType = CreateNewResourceType(WMFreeClient);
-    EventType = CreateNewResourceType(WMFreeEvents);
+    ClientType = CreateNewResourceType(WMFreeClient, "WMClient");
+    EventType = CreateNewResourceType(WMFreeEvents, "WMEvent");
     eventResource = FakeClientID(0);
 
     if (ClientType && EventType &&

@@ -674,13 +674,16 @@ XvMCExtensionInit(void)
    if(XvMCScreenKey == NULL) /* nobody supports it */
 	return; 
 
-   if(!(XvMCRTContext = CreateNewResourceType(XvMCDestroyContextRes)))
+   if(!(XvMCRTContext = CreateNewResourceType(XvMCDestroyContextRes,
+					      "XvMCRTContext")))
 	return;
 
-   if(!(XvMCRTSurface = CreateNewResourceType(XvMCDestroySurfaceRes)))
+   if(!(XvMCRTSurface = CreateNewResourceType(XvMCDestroySurfaceRes,
+					      "XvMCRTSurface")))
 	return;
 
-   if(!(XvMCRTSubpicture = CreateNewResourceType(XvMCDestroySubpictureRes)))
+   if(!(XvMCRTSubpicture = CreateNewResourceType(XvMCDestroySubpictureRes,
+						 "XvMCRTSubpicture")))
 	return;
 
    extEntry = AddExtension(XvMCName, XvMCNumEvents, XvMCNumErrors, 

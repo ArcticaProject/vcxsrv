@@ -16,31 +16,25 @@
 @SET_MAKE@
 
 # Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, and/or sell copies of the Software, and to permit persons
-# to whom the Software is furnished to do so, provided that the above
-# copyright notice(s) and this permission notice appear in all copies of
-# the Software and that both the above copyright notice(s) and this
-# permission notice appear in supporting documentation.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
-# OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-# HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
-# INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
-# FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-# NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
-# WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-# 
-# Except as contained in this notice, the name of a copyright holder
-# shall not be used in advertising or otherwise to promote the sale, use
-# or other dealings in this Software without prior written authorization
-# of the copyright holder.
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice (including the next
+# paragraph) shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
 # 
 
 #							-*- Makefile -*-
@@ -195,6 +189,7 @@ DGA_LIBS = @DGA_LIBS@
 DIX_CFLAGS = @DIX_CFLAGS@
 DIX_LIB = @DIX_LIB@
 DLLTOOL = @DLLTOOL@
+DLOPEN_LIBS = @DLOPEN_LIBS@
 DMXEXAMPLES_DEP_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 DMXEXAMPLES_DEP_LIBS = @DMXEXAMPLES_DEP_LIBS@
 DMXMODULES_CFLAGS = @DMXMODULES_CFLAGS@
@@ -225,6 +220,13 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+FONT100DPIDIR = @FONT100DPIDIR@
+FONT75DPIDIR = @FONT75DPIDIR@
+FONTMISCDIR = @FONTMISCDIR@
+FONTOTFDIR = @FONTOTFDIR@
+FONTROOTDIR = @FONTROOTDIR@
+FONTTTFDIR = @FONTTTFDIR@
+FONTTYPE1DIR = @FONTTYPE1DIR@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
@@ -235,6 +237,7 @@ GREP = @GREP@
 HAL_CFLAGS = @HAL_CFLAGS@
 HAL_LIBS = @HAL_LIBS@
 INSTALL = @INSTALL@
+INSTALL_CMD = @INSTALL_CMD@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -284,6 +287,8 @@ OBJCFLAGS = @OBJCFLAGS@
 OBJCLINK = @OBJCLINK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OPENSSL_CFLAGS = @OPENSSL_CFLAGS@
+OPENSSL_LIBS = @OPENSSL_LIBS@
 OS_LIB = @OS_LIB@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
@@ -308,6 +313,8 @@ RAWCPPFLAGS = @RAWCPPFLAGS@
 SED = sed
 SERVER_MISC_CONFIG_PATH = @SERVER_MISC_CONFIG_PATH@
 SET_MAKE = @SET_MAKE@
+SHA1_CFLAGS = @SHA1_CFLAGS@
+SHA1_LIBS = @SHA1_LIBS@
 SHELL = @SHELL@
 SOLARIS_ASM_CFLAGS = @SOLARIS_ASM_CFLAGS@
 SOLARIS_INOUT_ARCH = @SOLARIS_INOUT_ARCH@
@@ -398,7 +405,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@

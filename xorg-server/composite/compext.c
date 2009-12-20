@@ -546,15 +546,18 @@ CompositeExtensionInit (void)
 	return;
 #endif
 
-    CompositeClientWindowType = CreateNewResourceType (FreeCompositeClientWindow);
+    CompositeClientWindowType = CreateNewResourceType
+	(FreeCompositeClientWindow, "CompositeClientWindow");
     if (!CompositeClientWindowType)
 	return;
 
-    CompositeClientSubwindowsType = CreateNewResourceType (FreeCompositeClientSubwindows);
+    CompositeClientSubwindowsType = CreateNewResourceType
+	(FreeCompositeClientSubwindows, "CompositeClientSubwindows");
     if (!CompositeClientSubwindowsType)
 	return;
 
-    CompositeClientOverlayType = CreateNewResourceType (FreeCompositeClientOverlay);
+    CompositeClientOverlayType = CreateNewResourceType
+	(FreeCompositeClientOverlay, "CompositeClientOverlay");
     if (!CompositeClientOverlayType)
 	return;
 

@@ -1105,17 +1105,17 @@ SecurityExtensionInit(INITARGS)
     int ret = TRUE;
 
     SecurityAuthorizationResType =
-	CreateNewResourceType(SecurityDeleteAuthorization);
+	CreateNewResourceType(SecurityDeleteAuthorization,
+			      "SecurityAuthorization");
 
-    RTEventClient = CreateNewResourceType(
-				SecurityDeleteAuthorizationEventClient);
+    RTEventClient =
+	CreateNewResourceType(SecurityDeleteAuthorizationEventClient,
+			      "SecurityEventClient");
 
     if (!SecurityAuthorizationResType || !RTEventClient)
 	return;
 
     RTEventClient |= RC_NEVERRETAIN;
-    RegisterResourceName(SecurityAuthorizationResType, "SecurityAuthorization");
-    RegisterResourceName(RTEventClient, "SecurityEventClient");
 
     /* Allocate the private storage */
     if (!dixRequestPrivate(stateKey, sizeof(SecurityStateRec)))

@@ -277,7 +277,7 @@ ShmExtensionInit(INITARGS)
 	    screenInfo.screens[i]->DestroyPixmap = ShmDestroyPixmap;
 	}
     }
-    ShmSegType = CreateNewResourceType(ShmDetachSegment);
+    ShmSegType = CreateNewResourceType(ShmDetachSegment, "ShmSeg");
     if (ShmSegType &&
 	(extEntry = AddExtension(SHMNAME, ShmNumberEvents, ShmNumberErrors,
 				 ProcShmDispatch, SProcShmDispatch,

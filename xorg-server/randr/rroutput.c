@@ -22,7 +22,6 @@
  */
 
 #include "randrstr.h"
-#include "registry.h"
 
 RESTYPE	RROutputType;
 
@@ -422,10 +421,9 @@ RROutputDestroyResource (pointer value, XID pid)
 Bool
 RROutputInit (void)
 {
-    RROutputType = CreateNewResourceType (RROutputDestroyResource);
+    RROutputType = CreateNewResourceType (RROutputDestroyResource, "OUTPUT");
     if (!RROutputType)
 	return FALSE;
-    RegisterResourceName (RROutputType, "OUTPUT");
     return TRUE;
 }
 

@@ -283,8 +283,20 @@
 /* Define to 1 if you have the <selinux/selinux.h> header file. */
 #undef HAVE_SELINUX_SELINUX_H
 
-/* Use libmd SHA1 functions instead of OpenSSL libcrypto */
+/* Use CommonCrypto SHA1 functions */
+#undef HAVE_SHA1_IN_COMMONCRYPTO
+
+/* Use libc SHA1 functions */
+#undef HAVE_SHA1_IN_LIBC
+
+/* Use libgcrypt SHA1 functions */
+#undef HAVE_SHA1_IN_LIBGCRYPT
+
+/* Use libmd SHA1 functions */
 #undef HAVE_SHA1_IN_LIBMD
+
+/* Use libsha1 for SHA1 */
+#undef HAVE_SHA1_IN_LIBSHA1
 
 /* Define to 1 if you have the `shmctl64' function. */
 #undef HAVE_SHMCTL64
@@ -383,9 +395,6 @@
 
 /* Build Kdrive X server */
 #undef KDRIVESERVER
-
-/* Build VESA-based kdrive servers */
-#undef KDRIVEVESA
 
 /* Prefix to use for launchd identifiers */
 #undef LAUNCHD_ID_PREFIX
@@ -524,6 +533,9 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
+
+/* Support PC98 */
+#undef SUPPORT_PC98
 
 /* Define to 1 on systems derived from System V Release 4 */
 #undef SVR4
