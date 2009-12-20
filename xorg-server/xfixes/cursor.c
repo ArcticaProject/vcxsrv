@@ -1086,9 +1086,12 @@ XFixesCursorInit (void)
 	cs->pCursorHideCounts = NULL;
 	SetCursorScreen (pScreen, cs);
     }
-    CursorClientType = CreateNewResourceType(CursorFreeClient);
-    CursorHideCountType = CreateNewResourceType(CursorFreeHideCount);
-    CursorWindowType = CreateNewResourceType(CursorFreeWindow);
+    CursorClientType = CreateNewResourceType(CursorFreeClient,
+					     "XFixesCursorClient");
+    CursorHideCountType = CreateNewResourceType(CursorFreeHideCount,
+						"XFixesCursorHideCount");
+    CursorWindowType = CreateNewResourceType(CursorFreeWindow,
+					     "XFixesCursorWindow");
 
     if (pInvisibleCursor == NULL) {
 	pInvisibleCursor = createInvisibleCursor();
@@ -1097,6 +1100,6 @@ XFixesCursorInit (void)
 	}
     }
 
-    return CursorClientType && CursorWindowType;
+    return CursorClientType && CursorHideCountType && CursorWindowType;
 }
 

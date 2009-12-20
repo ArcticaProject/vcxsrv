@@ -208,37 +208,41 @@ CreateResourceTypes(void)
 
   XvResourceGeneration = serverGeneration;
 
-  if (!(XvRTPort = CreateNewResourceType(XvdiDestroyPort)))
+  if (!(XvRTPort = CreateNewResourceType(XvdiDestroyPort, "XvRTPort")))
     {
       ErrorF("CreateResourceTypes: failed to allocate port resource.\n");
       return FALSE;
     }
-  
-  if (!(XvRTGrab = CreateNewResourceType(XvdiDestroyGrab)))
+
+  if (!(XvRTGrab = CreateNewResourceType(XvdiDestroyGrab, "XvRTGrab")))
     {
       ErrorF("CreateResourceTypes: failed to allocate grab resource.\n");
       return FALSE;
     }
-  
-  if (!(XvRTEncoding = CreateNewResourceType(XvdiDestroyEncoding)))
+
+  if (!(XvRTEncoding = CreateNewResourceType(XvdiDestroyEncoding,
+					     "XvRTEncoding")))
     {
       ErrorF("CreateResourceTypes: failed to allocate encoding resource.\n");
       return FALSE;
     }
-  
-  if (!(XvRTVideoNotify = CreateNewResourceType(XvdiDestroyVideoNotify)))
+
+  if (!(XvRTVideoNotify = CreateNewResourceType(XvdiDestroyVideoNotify,
+						"XvRTVideoNotify")))
     {
       ErrorF("CreateResourceTypes: failed to allocate video notify resource.\n");
       return FALSE;
     }
-  
-  if (!(XvRTVideoNotifyList = CreateNewResourceType(XvdiDestroyVideoNotifyList)))
+
+  if (!(XvRTVideoNotifyList = CreateNewResourceType(XvdiDestroyVideoNotifyList,
+						    "XvRTVideoNotifyList")))
     {
       ErrorF("CreateResourceTypes: failed to allocate video notify list resource.\n");
       return FALSE;
     }
 
-  if (!(XvRTPortNotify = CreateNewResourceType(XvdiDestroyPortNotify)))
+  if (!(XvRTPortNotify = CreateNewResourceType(XvdiDestroyPortNotify,
+					       "XvRTPortNotify")))
     {
       ErrorF("CreateResourceTypes: failed to allocate port notify resource.\n");
       return FALSE;

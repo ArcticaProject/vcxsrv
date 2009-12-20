@@ -85,8 +85,8 @@ winWindowsWMExtensionInit ()
 {
   ExtensionEntry* extEntry;
 
-  ClientType = CreateNewResourceType(WMFreeClient);
-  eventResourceType = CreateNewResourceType(WMFreeEvents);
+  ClientType = CreateNewResourceType(WMFreeClient, "WMClient");
+  eventResourceType = CreateNewResourceType(WMFreeEvents, "WMEvent");
   eventResource = FakeClientID(0);
 
   if (ClientType && eventResourceType &&

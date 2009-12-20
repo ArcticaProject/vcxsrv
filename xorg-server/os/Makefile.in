@@ -61,11 +61,12 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libos_la_LIBADD =
+am__DEPENDENCIES_1 =
+libos_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__libos_la_SOURCES_DIST = WaitFor.c access.c auth.c backtrace.c \
 	connection.c io.c mitauth.c oscolor.c osdep.h osinit.c utils.c \
-	strcasecmp.c strcasestr.c xdmauth.c xstrans.c xprintf.c log.c \
-	rpcauth.c xdmcp.c strlcat.c strlcpy.c
+	strcasecmp.c strcasestr.c xdmauth.c xsha1.c xstrans.c \
+	xprintf.c log.c rpcauth.c xdmcp.c strlcat.c strlcpy.c
 am__objects_1 = log.lo
 am__objects_2 = rpcauth.lo
 @SECURE_RPC_TRUE@am__objects_3 = $(am__objects_2)
@@ -75,8 +76,8 @@ am__objects_6 = strlcat.lo strlcpy.lo
 @NEED_STRLCAT_TRUE@am__objects_7 = $(am__objects_6)
 am_libos_la_OBJECTS = WaitFor.lo access.lo auth.lo backtrace.lo \
 	connection.lo io.lo mitauth.lo oscolor.lo osinit.lo utils.lo \
-	strcasecmp.lo strcasestr.lo xdmauth.lo xstrans.lo xprintf.lo \
-	$(am__objects_1) $(am__objects_3) $(am__objects_5) \
+	strcasecmp.lo strcasestr.lo xdmauth.lo xsha1.lo xstrans.lo \
+	xprintf.lo $(am__objects_1) $(am__objects_3) $(am__objects_5) \
 	$(am__objects_7)
 libos_la_OBJECTS = $(am_libos_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
@@ -157,6 +158,7 @@ DGA_LIBS = @DGA_LIBS@
 DIX_CFLAGS = @DIX_CFLAGS@
 DIX_LIB = @DIX_LIB@
 DLLTOOL = @DLLTOOL@
+DLOPEN_LIBS = @DLOPEN_LIBS@
 DMXEXAMPLES_DEP_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 DMXEXAMPLES_DEP_LIBS = @DMXEXAMPLES_DEP_LIBS@
 DMXMODULES_CFLAGS = @DMXMODULES_CFLAGS@
@@ -187,6 +189,13 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+FONT100DPIDIR = @FONT100DPIDIR@
+FONT75DPIDIR = @FONT75DPIDIR@
+FONTMISCDIR = @FONTMISCDIR@
+FONTOTFDIR = @FONTOTFDIR@
+FONTROOTDIR = @FONTROOTDIR@
+FONTTTFDIR = @FONTTTFDIR@
+FONTTYPE1DIR = @FONTTYPE1DIR@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
@@ -197,6 +206,7 @@ GREP = @GREP@
 HAL_CFLAGS = @HAL_CFLAGS@
 HAL_LIBS = @HAL_LIBS@
 INSTALL = @INSTALL@
+INSTALL_CMD = @INSTALL_CMD@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -246,6 +256,8 @@ OBJCFLAGS = @OBJCFLAGS@
 OBJCLINK = @OBJCLINK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OPENSSL_CFLAGS = @OPENSSL_CFLAGS@
+OPENSSL_LIBS = @OPENSSL_LIBS@
 OS_LIB = @OS_LIB@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
@@ -270,6 +282,8 @@ RAWCPPFLAGS = @RAWCPPFLAGS@
 SED = @SED@
 SERVER_MISC_CONFIG_PATH = @SERVER_MISC_CONFIG_PATH@
 SET_MAKE = @SET_MAKE@
+SHA1_CFLAGS = @SHA1_CFLAGS@
+SHA1_LIBS = @SHA1_LIBS@
 SHELL = @SHELL@
 SOLARIS_ASM_CFLAGS = @SOLARIS_ASM_CFLAGS@
 SOLARIS_INOUT_ARCH = @SOLARIS_INOUT_ARCH@
@@ -360,7 +374,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -400,15 +413,16 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LTLIBRARIES = libos.la
-AM_CFLAGS = $(DIX_CFLAGS)
+AM_CFLAGS = $(DIX_CFLAGS) $(SHA1_CFLAGS)
 SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
 STRLCAT_SRCS = strlcat.c strlcpy.c
 XORG_SRCS = log.c
 libos_la_SOURCES = WaitFor.c access.c auth.c backtrace.c connection.c \
 	io.c mitauth.c oscolor.c osdep.h osinit.c utils.c strcasecmp.c \
-	strcasestr.c xdmauth.c xstrans.c xprintf.c $(XORG_SRCS) \
-	$(am__append_1) $(am__append_2) $(am__append_3)
+	strcasestr.c xdmauth.c xsha1.c xstrans.c xprintf.c \
+	$(XORG_SRCS) $(am__append_1) $(am__append_2) $(am__append_3)
+libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS)
 EXTRA_DIST = $(SECURERPC_SRCS) $(INTERNALMALLOC_SRCS) \
      $(XDMCP_SRCS) $(STRLCAT_SRCS)
 
@@ -497,6 +511,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xdmauth.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xdmcp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xprintf.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xsha1.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrans.Plo@am__quote@
 
 .c.o:

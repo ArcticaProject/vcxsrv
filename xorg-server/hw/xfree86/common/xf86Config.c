@@ -71,13 +71,6 @@ extern DeviceAssocRec mouse_assoc;
 #include "picture.h"
 #endif
 
-#if (defined(__i386__)) && \
-    (defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
-     defined(__NetBSD__) || defined(linux) || \
-     (defined(SVR4) && !defined(sun)) || defined(__GNU__))
-#define SUPPORT_PC98
-#endif
-
 /*
  * These paths define the way the config file search is done.  The escape
  * sequences are documented in parser/scan.c.
@@ -778,11 +771,10 @@ static OptionInfoRec FlagOptions[] = {
 	{0}, FALSE },
 };
 
-#ifdef __i386__
+#ifdef SUPPORT_PC98
 static Bool
 detectPC98(void)
 {
-#ifdef SUPPORT_PC98
     unsigned char buf[2];
 
     if (xf86ReadBIOS(0xf8000, 0xe80, buf, 2) != 2)
@@ -791,11 +783,8 @@ detectPC98(void)
 	return TRUE;
     else
 	return FALSE;
-#else
-    return FALSE;
-#endif
 }
-#endif /* __i386__ */
+#endif
 
 static Bool
 configServerFlags(XF86ConfFlagsPtr flagsconf, XF86OptionPtr layoutopts)
@@ -1054,7 +1043,7 @@ configServerFlags(XF86ConfFlagsPtr flagsconf, XF86OptionPtr layoutopts)
 	xf86Info.pixmap24 = Pix24DontCare;
 	xf86Info.pix24From = X_DEFAULT;
     }
-#ifdef __i386__
+#ifdef SUPPORT_PC98
     if (xf86GetOptValBool(FlagOptions, FLAG_PC98, &value)) {
 	xf86Info.pc98 = value;
 	if (value) {

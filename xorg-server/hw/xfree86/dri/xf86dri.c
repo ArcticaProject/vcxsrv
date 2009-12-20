@@ -94,7 +94,7 @@ XFree86DRIExtensionInit(void)
     ExtensionEntry* extEntry;
 
 #ifdef XF86DRI_EVENTS
-    EventType = CreateNewResourceType(XF86DRIFreeEvents);
+    EventType = CreateNewResourceType(XF86DRIFreeEvents, "DRIEvent");
 #endif
 
     if (

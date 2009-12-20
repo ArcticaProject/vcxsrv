@@ -37,8 +37,9 @@ host_triplet = @host@
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/xorg-server.pc.in \
-	$(top_srcdir)/configure COPYING ChangeLog compile config.guess \
-	config.sub depcomp install-sh ltmain.sh missing ylwrap
+	$(top_srcdir)/configure COPYING ChangeLog INSTALL compile \
+	config.guess config.sub depcomp install-sh ltmain.sh missing \
+	ylwrap
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_define_dir.m4 \
 	$(top_srcdir)/m4/dolt.m4 $(top_srcdir)/m4/libtool.m4 \
@@ -141,6 +142,7 @@ am__relativize = \
 DIST_ARCHIVES = $(distdir).tar.gz $(distdir).tar.bz2
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
+distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 ADMIN_MAN_DIR = @ADMIN_MAN_DIR@
 ADMIN_MAN_SUFFIX = @ADMIN_MAN_SUFFIX@
@@ -185,6 +187,7 @@ DGA_LIBS = @DGA_LIBS@
 DIX_CFLAGS = @DIX_CFLAGS@
 DIX_LIB = @DIX_LIB@
 DLLTOOL = @DLLTOOL@
+DLOPEN_LIBS = @DLOPEN_LIBS@
 DMXEXAMPLES_DEP_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 DMXEXAMPLES_DEP_LIBS = @DMXEXAMPLES_DEP_LIBS@
 DMXMODULES_CFLAGS = @DMXMODULES_CFLAGS@
@@ -215,6 +218,13 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILE_MAN_DIR = @FILE_MAN_DIR@
 FILE_MAN_SUFFIX = @FILE_MAN_SUFFIX@
+FONT100DPIDIR = @FONT100DPIDIR@
+FONT75DPIDIR = @FONT75DPIDIR@
+FONTMISCDIR = @FONTMISCDIR@
+FONTOTFDIR = @FONTOTFDIR@
+FONTROOTDIR = @FONTROOTDIR@
+FONTTTFDIR = @FONTTTFDIR@
+FONTTYPE1DIR = @FONTTYPE1DIR@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLX_ARCH_DEFINES = @GLX_ARCH_DEFINES@
@@ -225,6 +235,7 @@ GREP = @GREP@
 HAL_CFLAGS = @HAL_CFLAGS@
 HAL_LIBS = @HAL_LIBS@
 INSTALL = @INSTALL@
+INSTALL_CMD = @INSTALL_CMD@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -274,6 +285,8 @@ OBJCFLAGS = @OBJCFLAGS@
 OBJCLINK = @OBJCLINK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OPENSSL_CFLAGS = @OPENSSL_CFLAGS@
+OPENSSL_LIBS = @OPENSSL_LIBS@
 OS_LIB = @OS_LIB@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
@@ -298,6 +311,8 @@ RAWCPPFLAGS = @RAWCPPFLAGS@
 SED = @SED@
 SERVER_MISC_CONFIG_PATH = @SERVER_MISC_CONFIG_PATH@
 SET_MAKE = @SET_MAKE@
+SHA1_CFLAGS = @SHA1_CFLAGS@
+SHA1_LIBS = @SHA1_LIBS@
 SHELL = @SHELL@
 SOLARIS_ASM_CFLAGS = @SOLARIS_ASM_CFLAGS@
 SOLARIS_INOUT_ARCH = @SOLARIS_INOUT_ARCH@
@@ -388,7 +403,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-distcleancheck_listfiles = @distcleancheck_listfiles@
 docdir = @docdir@
 driverdir = @driverdir@
 dvidir = @dvidir@
@@ -427,7 +441,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AUTOMAKE_OPTIONS = dist-bzip2 foreign nostdinc
+AUTOMAKE_OPTIONS = nostdinc
 ACLOCAL_AMFLAGS = -I m4
 @COMPOSITE_TRUE@COMPOSITE_DIR = composite
 @GLX_TRUE@GLX_DIR = glx
@@ -461,14 +475,13 @@ SUBDIRS = \
 @XORG_TRUE@aclocal_DATA = xorg-server.m4
 @XORG_TRUE@pkgconfigdir = $(libdir)/pkgconfig
 @XORG_TRUE@pkgconfig_DATA = xorg-server.pc
-EXTRA_DIST = xorg-server.pc.in xorg-server.m4 ChangeLog autogen.sh
+EXTRA_DIST = xorg-server.pc.in xorg-server.m4 autogen.sh
 DISTCHECK_CONFIGURE_FLAGS = \
 	--with-xkb-path=$(XKB_BASE_DIRECTORY) \
 	--with-xkb-bin-directory=$(XKB_BIN_DIRECTORY) \
 	--with-xkb-output='$${datadir}/X11/xkb/compiled'
 
 DISTCLEANFILES = doltcompile doltlibtool
-MAINTAINERCLEANFILES = ChangeLog
 DIST_SUBDIRS = \
 	doc \
 	include \
@@ -928,7 +941,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-recursive
 
 clean-am: clean-generic clean-libtool mostlyclean-am
@@ -1021,12 +1033,15 @@ uninstall-am: uninstall-aclocalDATA uninstall-pkgconfigDATA
 	uninstall-am uninstall-pkgconfigDATA
 
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL
 
 # gross hack
 relink: all

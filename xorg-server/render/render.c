@@ -3240,7 +3240,8 @@ PanoramiXRenderInit (void)
 {
     int	    i;
     
-    XRT_PICTURE = CreateNewResourceType (XineramaDeleteResource);
+    XRT_PICTURE = CreateNewResourceType (XineramaDeleteResource,
+					 "XineramaPicture");
     for (i = 0; i < RenderNumberRequests; i++)
 	PanoramiXSaveRenderVector[i] = ProcRenderVector[i];
     /*

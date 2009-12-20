@@ -22,7 +22,6 @@
  */
 
 #include "randrstr.h"
-#include "registry.h"
 
 /* From render.h */
 #ifndef SubPixelUnknown
@@ -427,10 +426,9 @@ RROutputDestroyResource (pointer value, XID pid)
 Bool
 RROutputInit (void)
 {
-    RROutputType = CreateNewResourceType (RROutputDestroyResource);
+    RROutputType = CreateNewResourceType (RROutputDestroyResource, "OUTPUT");
     if (!RROutputType)
 	return FALSE;
-    RegisterResourceName (RROutputType, "OUTPUT");
     return TRUE;
 }
 

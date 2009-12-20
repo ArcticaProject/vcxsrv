@@ -284,7 +284,9 @@ SelectionFreeWindow (pointer data, XID id)
 Bool
 XFixesSelectionInit (void)
 {
-    SelectionClientType = CreateNewResourceType(SelectionFreeClient);
-    SelectionWindowType = CreateNewResourceType(SelectionFreeWindow);
+    SelectionClientType = CreateNewResourceType(SelectionFreeClient,
+						"XFixesSelectionClient");
+    SelectionWindowType = CreateNewResourceType(SelectionFreeWindow,
+						"XFixesSelectionWindow");
     return SelectionClientType && SelectionWindowType;
 }

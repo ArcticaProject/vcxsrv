@@ -336,10 +336,10 @@ RRExtensionInit (void)
     if (!AddCallback (&ClientStateCallback, RRClientCallback, 0))
 	return;
 
-    RRClientType = CreateNewResourceType(RRFreeClient);
+    RRClientType = CreateNewResourceType(RRFreeClient, "RandRClient");
     if (!RRClientType)
 	return;
-    RREventType = CreateNewResourceType(RRFreeEvents);
+    RREventType = CreateNewResourceType(RRFreeEvents, "RandREvent");
     if (!RREventType)
 	return;
     extEntry = AddExtension (RANDR_NAME, RRNumberEvents, RRNumberErrors,

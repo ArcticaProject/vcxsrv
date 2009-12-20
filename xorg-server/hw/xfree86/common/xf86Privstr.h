@@ -91,7 +91,7 @@ typedef struct {
 						   input device events */
     Pix24Flags		pixmap24;
     MessageType		pix24From;
-#ifdef __i386__
+#ifdef SUPPORT_PC98
     Bool		pc98;
 #endif
     Bool		pmFlag;

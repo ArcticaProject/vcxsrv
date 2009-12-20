@@ -497,11 +497,11 @@ DamageExtensionInit(void)
     for (s = 0; s < screenInfo.numScreens; s++)
 	DamageSetup (screenInfo.screens[s]);
 
-    DamageExtType = CreateNewResourceType (FreeDamageExt);
+    DamageExtType = CreateNewResourceType (FreeDamageExt, "DamageExt");
     if (!DamageExtType)
 	return;
 
-    DamageExtWinType = CreateNewResourceType (FreeDamageExtWin);
+    DamageExtWinType = CreateNewResourceType (FreeDamageExtWin, "DamageExtWin");
     if (!DamageExtWinType)
 	return;
 

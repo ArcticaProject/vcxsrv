@@ -124,7 +124,7 @@ xf86InfoRec xf86Info = {
     .miscModInDevAllowNonLocal  = FALSE,
     .pixmap24                   = Pix24DontCare,
     .pix24From                  = X_DEFAULT,
-#ifdef __i386__
+#ifdef SUPPORT_PC98
     .pc98                       = FALSE,
 #endif
     .pmFlag                     = TRUE,

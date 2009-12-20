@@ -133,4 +133,7 @@
 /* Use SIGIO handlers for input device events by default */
 #undef USE_SIGIO_BY_DEFAULT
 
+/* Support PC98 */
+#undef SUPPORT_PC98
+
 #endif /* _XORG_CONFIG_H_ */

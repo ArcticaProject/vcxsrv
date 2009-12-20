@@ -87,7 +87,8 @@ ClientSleepUntil (ClientPtr client,
 
     if (SertafiedGeneration != serverGeneration)
     {
-	SertafiedResType = CreateNewResourceType (SertafiedDelete);
+	SertafiedResType = CreateNewResourceType (SertafiedDelete,
+						  "ClientSleep");
 	if (!SertafiedResType)
 	    return FALSE;
 	SertafiedGeneration = serverGeneration;

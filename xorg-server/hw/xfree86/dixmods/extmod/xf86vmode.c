@@ -170,7 +170,7 @@ XFree86VidModeExtensionInit(void)
     DEBUG_P("XFree86VidModeExtensionInit");
 
 #ifdef XF86VIDMODE_EVENTS
-    EventType = CreateNewResourceType(XF86VidModeFreeEvents);
+    EventType = CreateNewResourceType(XF86VidModeFreeEvents, "VidModeEvent");
 #endif
 
     for(i = 0; i < screenInfo.numScreens; i++) {
