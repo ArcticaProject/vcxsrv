@@ -4,7 +4,7 @@
 ## Makefile for OpenSSL
 ##
 
-VERSION=0.9.8k
+VERSION=0.9.8l
 MAJOR=0
 MINOR=9.8
 SHLIB_VERSION_NUMBER=0.9.8
@@ -69,7 +69,7 @@ ARFLAGS=
 AR=ar $(ARFLAGS) r
 ARD=ar $(ARFLAGS) d
 RANLIB= /usr/bin/ranlib
-PERL= /usr/bin/perl
+PERL= /usr/bin/perl5
 TAR= tar
 TARFLAGS= --no-recursion
 MAKEDEPPROG=makedepend
