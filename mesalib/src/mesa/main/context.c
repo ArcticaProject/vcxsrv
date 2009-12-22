@@ -898,6 +898,7 @@ _mesa_initialize_context(GLcontext *ctx,
       _mesa_free_shared_state(ctx, ctx->Shared);
       if (ctx->Exec)
          _mesa_free(ctx->Exec);
+      return GL_FALSE;
    }
 #if FEATURE_dispatch
    _mesa_init_exec_table(ctx->Exec);
@@ -1543,6 +1544,33 @@ _mesa_record_error(GLcontext *ctx, GLenum error)
 
 
 /**
+ * Flush commands and wait for completion.
+ */
+void
+_mesa_finish(GLcontext *ctx)
+{
+   FLUSH_CURRENT( ctx, 0 );
+   if (ctx->Driver.Finish) {
+      ctx->Driver.Finish(ctx);
+   }
+}
+
+
+/**
+ * Flush commands.
+ */
+void
+_mesa_flush(GLcontext *ctx)
+{
+   FLUSH_CURRENT( ctx, 0 );
+   if (ctx->Driver.Flush) {
+      ctx->Driver.Flush(ctx);
+   }
+}
+
+
+
+/**
  * Execute glFinish().
  *
  * Calls the #ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH macro and the
@@ -1553,10 +1581,7 @@ _mesa_Finish(void)
 {
    GET_CURRENT_CONTEXT(ctx);
    ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx);
-   FLUSH_CURRENT( ctx, 0 );
-   if (ctx->Driver.Finish) {
-      ctx->Driver.Finish(ctx);
-   }
+   _mesa_finish(ctx);
 }
 
 
@@ -1571,10 +1596,7 @@ _mesa_Flush(void)
 {
    GET_CURRENT_CONTEXT(ctx);
    ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx);
-   FLUSH_CURRENT( ctx, 0 );
-   if (ctx->Driver.Flush) {
-      ctx->Driver.Flush(ctx);
-   }
+   _mesa_flush(ctx);
 }
 
 
