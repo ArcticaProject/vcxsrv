@@ -125,7 +125,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
-				CompileAs="0"
+				CompileAs="1"
 				ForcedIncludeFiles="../../../../src/mesa/main/compiler.h"
 			/>
 			<Tool
@@ -483,78 +483,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\shader\grammar\grammar.c"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static CRT|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Static CRT|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\mesa\shader\grammar\grammar_crt.c"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static CRT|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Static CRT|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\mesa\shader\grammar\grammar_mesa.c"
 				>
 			</File>
@@ -580,6 +508,46 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\imports.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\lex.yy.c"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H;YY_USE_CONST;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H;YY_USE_CONST;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Static CRT|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H;YY_USE_CONST;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Static CRT|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YY_NO_UNISTD_H;YY_USE_CONST;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\hash_table.c"
 				>
 			</File>
 			<File
@@ -749,6 +717,38 @@
 			<File
 				RelativePath="..\..\..\..\src\mesa\shader\program_parse.tab.c"
 				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YYMALLOC=malloc;YYFREE=free"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YYMALLOC=malloc;YYFREE=free"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Static CRT|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YYMALLOC=malloc;YYFREE=free"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Static CRT|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="YYMALLOC=malloc;YYFREE=free"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\shader\program_parse_extra.c"
@@ -1015,6 +1015,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\shader\symbol_table.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\main\syncobj.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\tnl\t_context.c"
 				>
 			</File>
@@ -1201,42 +1209,6 @@
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\viewport.c"
 				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\mesa\main\vsnprintf.c"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Static CRT|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Static CRT|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\vtxfmt.c"
@@ -1464,6 +1436,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\shader\hash_table.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\main\hint.h"
 				>
 			</File>
@@ -1624,6 +1600,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\shader\prog_parameter_layout.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\shader\prog_print.h"
 				>
 			</File>
@@ -1637,6 +1617,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\shader\program.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\program_parse.tab.h"
 				>
 			</File>
 			<File
@@ -1909,6 +1893,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\swrast_setup\swrast_setup.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\symbol_table.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\main\syncobj.h"
 				>
 			</File>
 			<File

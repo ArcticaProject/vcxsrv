@@ -48,6 +48,13 @@
 #include "context.h"
 #include "version.h"
 
+#ifdef _GNU_SOURCE
+#include <locale.h>
+#ifdef __APPLE__
+#include <xlocale.h>
+#endif
+#endif
+
 
 #define MAXSTRING 4000  /* for vsnprintf() */
 
@@ -101,8 +108,8 @@ _mesa_align_malloc(size_t bytes, unsigned long alignment)
 {
 #if defined(HAVE_POSIX_MEMALIGN)
    void *mem;
-
-   (void) posix_memalign(& mem, alignment, bytes);
+   int err = posix_memalign(& mem, alignment, bytes);
+   (void) err;
    return mem;
 #elif defined(_WIN32) && defined(_MSC_VER)
    return _aligned_malloc(bytes, alignment);
@@ -908,7 +915,15 @@ _mesa_atoi(const char *s)
 double
 _mesa_strtod( const char *s, char **end )
 {
+#ifdef _GNU_SOURCE
+   static locale_t loc = NULL;
+   if (!loc) {
+      loc = newlocale(LC_CTYPE_MASK, "C", NULL);
+   }
+   return strtod_l(s, end, loc);
+#else
    return strtod(s, end);
+#endif
 }
 
 /** Compute simple checksum/hash for a string */
@@ -919,9 +934,9 @@ _mesa_str_checksum(const char *str)
    unsigned int sum, i;
    const char *c;
    sum = i = 1;
-   for (c = str; *c; c++)
+   for (c = str; *c; c++, i++)
       sum += *c * (i % 100);
-   return sum;
+   return sum + i;
 }
 
 

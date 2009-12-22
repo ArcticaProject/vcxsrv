@@ -230,6 +230,8 @@ else
         LIB_EXTENSION='dylib' ;;
     cygwin* )
         LIB_EXTENSION='dll' ;;
+    aix* )
+        LIB_EXTENSION='a' ;;
     * )
         LIB_EXTENSION='so' ;;
     esac
@@ -647,6 +649,13 @@ AC_ARG_WITH([dri-driverdir],
     [DRI_DRIVER_INSTALL_DIR="$withval"],
     [DRI_DRIVER_INSTALL_DIR='${libdir}/dri'])
 AC_SUBST([DRI_DRIVER_INSTALL_DIR])
+dnl Extra search path for DRI drivers
+AC_ARG_WITH([dri-searchpath],
+    [AS_HELP_STRING([--with-dri-searchpath=DIRS...],
+        [semicolon delimited DRI driver search directories @<:@${libdir}/dri@:>@])],
+    [DRI_DRIVER_SEARCH_DIR="$withval"],
+    [DRI_DRIVER_SEARCH_DIR='${DRI_DRIVER_INSTALL_DIR}'])
+AC_SUBST([DRI_DRIVER_SEARCH_DIR])
 dnl Direct rendering or just indirect rendering
 AC_ARG_ENABLE([driglx-direct],
     [AS_HELP_STRING([--disable-driglx-direct],
@@ -1148,6 +1157,11 @@ yes)
         if test "$tracker" = egl && test "x$enable_egl" != xyes; then
             AC_MSG_ERROR([cannot build egl state tracker without EGL library])
         fi
+        if test "$tracker" = xorg; then
+	    PKG_CHECK_MODULES(XEXT, [xextproto >= 7.0.99.1],
+                  HAVE_XEXTPROTO_71="yes"; DEFINES="$DEFINES -DHAVE_XEXTPROTO_71"
+                  HAVE_XEXTPROTO_71="no")
+	fi
     done
     GALLIUM_STATE_TRACKERS_DIRS="$state_trackers"
     ;;
