@@ -11,13 +11,13 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
-AC_INIT([FreeType], [2.3.9], [freetype@nongnu.org], [freetype])
+AC_INIT([FreeType], [2.3.11], [freetype@nongnu.org], [freetype])
 AC_CONFIG_SRCDIR([ftconfig.in])
 
 
 # Don't forget to update docs/VERSION.DLL!
 
-version_info='9:20:3'
+version_info='9:22:3'
 AC_SUBST([version_info])
 ft_version=`echo $version_info | tr : .`
 AC_SUBST([ft_version])
@@ -53,18 +53,15 @@ if test ${cross_compiling} = yes; then
   elif test -x a_out.exe -o -x conftest.exe; then
     EXEEXT_BUILD=".exe"
   elif test -x conftest.* ; then
-    EXEEXT_BUILD=`echo conftest.* | sed -n '1s/^.*\.//g'`
+    EXEEXT_BUILD=`echo conftest.* | sed -n '1s/^.*\././'`
   fi
+  rm -f a.* b.* a_out.exe conftest.*
   AC_MSG_RESULT($EXEEXT_BUILD)
 else
   CC_BUILD=${CC}
   EXEEXT_BUILD=${EXEEXT}
 fi
 
-
-if test ! -z ${EXEEXT_BUILD}; then
-  EXEEXT_BUILD=."${EXEEXT_BUILD}"
-fi
 AC_SUBST(CC_BUILD)
 AC_SUBST(EXEEXT_BUILD)
 
@@ -72,7 +69,7 @@ AC_SUBST(EXEEXT_BUILD)
 
 # get compiler flags right
 
-if test "x$CC" = xgcc; then
+if test "x$GCC" = xyes; then
   XX_CFLAGS="-Wall"
   XX_ANSIFLAGS="-pedantic -ansi"
 else

@@ -672,11 +672,15 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\base\ftbdf.c"
+				RelativePath="..\..\..\src\base\ftbitmap.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\base\ftbitmap.c"
+				RelativePath="..\..\..\src\base\ftfstype.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\base\ftgasp.c"
 				>
 			</File>
 			<File
@@ -818,10 +822,6 @@
 						DisableLanguageExtensions="false"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\src\base\ftgasp.c"
-				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\base\ftglyph.c"
@@ -1161,10 +1161,6 @@
 						BasicRuntimeChecks="3"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\src\base\ftxf86.c"
-				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\smooth\smooth.c"

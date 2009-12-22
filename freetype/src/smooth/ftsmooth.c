@@ -21,6 +21,7 @@
 #include FT_OUTLINE_H
 #include "ftsmooth.h"
 #include "ftgrays.h"
+#include "ftspic.h"
 
 #include "ftsmerrs.h"
 
@@ -153,7 +154,7 @@
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
-    /* allocate new one, depends on pixel format */
+    /* allocate new one */
     pitch = width;
     if ( hmul )
     {
@@ -190,6 +191,19 @@
         height  += 3 * extra;
         y_top   += extra >> 1;
       }
+    }
+
+#endif
+
+#if FT_UINT_MAX > 0xFFFFU
+
+    /* Required check is ( pitch * height < FT_ULONG_MAX ),     */
+    /* but we care realistic cases only. Always pitch <= width. */
+    if ( width > 0xFFFFU || height > 0xFFFFU )
+    {
+      FT_ERROR(( "ft_smooth_render_generic: glyph too large: %d x %d\n",
+                 width, height ));
+      return Smooth_Err_Raster_Overflow;
     }
 
 #endif
@@ -310,12 +324,19 @@
 
     FT_Outline_Translate( outline, x_shift, y_shift );
 
+    /*
+     * XXX: on 16bit system, we return an error for huge bitmap
+     * to prevent an overflow.
+     */
+    if ( x_left > FT_INT_MAX || y_top > FT_INT_MAX )
+      return Smooth_Err_Invalid_Pixel_Size;
+
     if ( error )
       goto Exit;
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = x_left;
-    slot->bitmap_top  = y_top;
+    slot->bitmap_left = (FT_Int)x_left;
+    slot->bitmap_top  = (FT_Int)y_top;
 
   Exit:
     if ( outline && origin )
@@ -376,10 +397,8 @@
   }
 
 
-  FT_CALLBACK_TABLE_DEF
-  const FT_Renderer_Class  ft_smooth_renderer_class =
-  {
-    {
+  FT_DEFINE_RENDERER(ft_smooth_renderer_class,
+
       FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
@@ -392,7 +411,7 @@
       (FT_Module_Constructor)ft_smooth_init,
       (FT_Module_Destructor) 0,
       (FT_Module_Requester)  0
-    },
+    ,
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -401,14 +420,12 @@
     (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,
 
-    (FT_Raster_Funcs*)    &ft_grays_raster
-  };
+    (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
+  )
 
 
-  FT_CALLBACK_TABLE_DEF
-  const FT_Renderer_Class  ft_smooth_lcd_renderer_class =
-  {
-    {
+  FT_DEFINE_RENDERER(ft_smooth_lcd_renderer_class,
+  
       FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
@@ -421,7 +438,7 @@
       (FT_Module_Constructor)ft_smooth_init,
       (FT_Module_Destructor) 0,
       (FT_Module_Requester)  0
-    },
+    ,
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -430,15 +447,11 @@
     (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,
 
-    (FT_Raster_Funcs*)    &ft_grays_raster
-  };
+    (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
+  )
 
+  FT_DEFINE_RENDERER(ft_smooth_lcdv_renderer_class,
 
-
-  FT_CALLBACK_TABLE_DEF
-  const FT_Renderer_Class  ft_smooth_lcdv_renderer_class =
-  {
-    {
       FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
@@ -451,7 +464,7 @@
       (FT_Module_Constructor)ft_smooth_init,
       (FT_Module_Destructor) 0,
       (FT_Module_Requester)  0
-    },
+    ,
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -460,8 +473,8 @@
     (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,
 
-    (FT_Raster_Funcs*)    &ft_grays_raster
-  };
+    (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
+  )
 
 
 /* END */
