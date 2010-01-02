@@ -1018,6 +1018,13 @@ ProcGetGeometry(ClientPtr client)
     return(client->noClientException);
 }
 
+#ifdef WIN32
+/* Do not return the clipboard window in ProcQueryTree, cause this may cause
+   the clipboard client being closed when connecting through xdmcp.
+*/
+extern int g_iClipboardWindow;
+
+#endif
 
 int
 ProcQueryTree(ClientPtr client)
@@ -1042,7 +1049,10 @@ ProcQueryTree(ClientPtr client)
         reply.parent = (Window)None;
     pHead = RealChildHead(pWin);
     for (pChild = pWin->lastChild; pChild != pHead; pChild = pChild->prevSib)
-	numChildren++;
+#ifdef WIN32
+	if (pChild->drawable.id!=g_iClipboardWindow)
+#endif
+	    numChildren++;
     if (numChildren)
     {
 	int curChild = 0;
@@ -1051,7 +1061,10 @@ ProcQueryTree(ClientPtr client)
 	if (!childIDs)
 	    return BadAlloc;
 	for (pChild = pWin->lastChild; pChild != pHead; pChild = pChild->prevSib)
-	    childIDs[curChild++] = pChild->drawable.id;
+#ifdef WIN32
+	    if (pChild->drawable.id!=g_iClipboardWindow)
+#endif
+		childIDs[curChild++] = pChild->drawable.id;
     }
     
     reply.nChildren = numChildren;
