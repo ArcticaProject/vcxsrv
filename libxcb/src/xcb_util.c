@@ -221,6 +221,23 @@ static int _xcb_open_decnet(const char *host, const char *protocol, const unsign
 }
 #endif
 
+#ifdef WIN32
+int InitWSA(void)
+{
+  static WSADATA wsadata;
+
+  if (!wsadata.wVersion)
+  {
+    ptw32_processInitialize();
+    if (WSAStartup(0x0202, &wsadata))
+      return -1;
+  }
+  return 0;
+}
+#else
+#define InitWSA()
+#endif
+
 static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
 {
     int fd = -1;
@@ -254,16 +271,8 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
 #endif
 
 #ifdef WIN32
-    {
-      static WSADATA wsadata;
-
-      if (!wsadata.wVersion)
-      {
-        if (WSAStartup(0x0202, &wsadata))
-	  return -1;
-        ptw32_processInitialize();
-      }
-    }
+    if (InitWSA()<0)
+      return -1;
 #endif
 
     snprintf(service, sizeof(service), "%hu", port);

@@ -156,6 +156,12 @@ int main(int argc, char *argv[], char *envp[])
     display = "0";
 
     #ifdef WIN32
+
+    if (InitWSA()<0)
+    {
+      printf("Error initialising WSA\n");
+      return -1;
+    }
     /* In Win32 we have different threads call Xlib functions (depending
        on the commandline options given).
        XInitThreads has to be called before
