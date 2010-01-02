@@ -240,11 +240,11 @@ unsigned int xcb_send_request(xcb_connection_t *c, int flags, struct iovec *vect
         if(prefix[2])
         {
             prefix[1] = ((uint32_t *) vector[1].iov_base)[0];
-            vector[1].iov_base = (uint32_t *) vector[1].iov_base + 1;
+            vector[1].iov_base = (caddr_t)((uint32_t *) vector[1].iov_base + 1);
             vector[1].iov_len -= sizeof(uint32_t);
         }
         vector[0].iov_len = sizeof(uint32_t) * ((prefix[0] ? 1 : 0) + (prefix[2] ? 2 : 0));
-        vector[0].iov_base = prefix + !prefix[0];
+        vector[0].iov_base = (caddr_t)(prefix + !prefix[0]);
     }
 
     if(!write_block(c, vector, veclen))
