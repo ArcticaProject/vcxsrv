@@ -783,8 +783,8 @@ LoadPreferences (void)
     }
 
   /* Setup a DISPLAY environment variable, need to allocate on heap */
-  /* because putenv doesn't copy the argument... */
-  winGetDisplayName(szDisplay, atoi(display));
+  /* because putenv doesn't copy the argument... Always use screen 0 */
+  winGetDisplayName(szDisplay, 0);
   szEnvDisplay = (char *)(malloc(strlen(szDisplay)+strlen("DISPLAY=")+1));
   if (szEnvDisplay)
     {
