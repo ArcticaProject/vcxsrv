@@ -94,8 +94,24 @@ exaCreatePixmap_mixed(ScreenPtr pScreen, int w, int h, int depth,
     if (!w || !h) {
 	exaCreateDriverPixmap_mixed(pPixmap);
 	pExaPixmap->use_gpu_copy = exaPixmapHasGpuCopy(pPixmap);
-    } else
+    } else {
 	pExaPixmap->use_gpu_copy = FALSE;
+
+	if (w == 1 && h == 1) {
+	    pExaPixmap->sys_ptr = malloc((pPixmap->drawable.bitsPerPixel + 7) / 8);
+
+	    /* Set up damage tracking */
+	    pExaPixmap->pDamage = DamageCreate(exaDamageReport_mixed, NULL,
+					       DamageReportNonEmpty, TRUE,
+					       pPixmap->drawable.pScreen,
+					       pPixmap);
+
+	    DamageRegister(&pPixmap->drawable, pExaPixmap->pDamage);
+	    /* This ensures that pending damage reflects the current operation. */
+	    /* This is used by exa to optimize migration. */
+	    DamageSetReportAfterOp(pExaPixmap->pDamage, TRUE);
+	}
+    }
 
     /* During a fallback we must prepare access. */
     if (pExaScr->fallback_counter)

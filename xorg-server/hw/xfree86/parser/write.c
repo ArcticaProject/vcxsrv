@@ -117,6 +117,8 @@ doWriteConfigFile (const char *filename, XF86ConfigPtr cptr)
 
 	xf86printInputSection (cf, cptr->conf_input_lst);
 
+	xf86printInputClassSection (cf, cptr->conf_inputclass_lst);
+
 	xf86printVideoAdaptorSection (cf, cptr->conf_videoadaptor_lst);
 
 	xf86printModesSection (cf, cptr->conf_modes_lst);

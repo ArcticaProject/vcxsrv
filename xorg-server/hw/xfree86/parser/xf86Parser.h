@@ -64,6 +64,7 @@
 #ifndef _xf86Parser_h_
 #define _xf86Parser_h_
 
+#include <X11/Xdefs.h>
 #include "xf86Optrec.h"
 
 #define HAVE_PARSER_DECLS
@@ -330,6 +331,32 @@ typedef struct
 }
 XF86ConfInputrefRec, *XF86ConfInputrefPtr;
 
+typedef struct
+{
+	Bool set;
+	Bool val;
+}
+xf86TriState;
+
+typedef struct
+{
+	GenericListRec list;
+	char *identifier;
+	char *driver;
+	char *match_product;
+	char *match_vendor;
+	char *match_device;
+	xf86TriState is_keyboard;
+	xf86TriState is_pointer;
+	xf86TriState is_joystick;
+	xf86TriState is_tablet;
+	xf86TriState is_touchpad;
+	xf86TriState is_touchscreen;
+	XF86OptionPtr option_lst;
+	char *comment;
+}
+XF86ConfInputClassRec, *XF86ConfInputClassPtr;
+
 /* Values for adj_where */
 #define CONF_ADJ_OBSOLETE	-1
 #define CONF_ADJ_ABSOLUTE	0
@@ -438,6 +465,7 @@ typedef struct
 	XF86ConfDevicePtr conf_device_lst;
 	XF86ConfScreenPtr conf_screen_lst;
 	XF86ConfInputPtr conf_input_lst;
+	XF86ConfInputClassPtr conf_inputclass_lst;
 	XF86ConfLayoutPtr conf_layout_lst;
 	XF86ConfVendorPtr conf_vendor_lst;
 	XF86ConfDRIPtr conf_dri;
@@ -456,13 +484,16 @@ xf86ConfigSymTabRec, *xf86ConfigSymTabPtr;
 /*
  * prototypes for public functions
  */
-extern _X_EXPORT const char *xf86openConfigFile (const char *, const char *,
-					const char *);
-extern _X_EXPORT void xf86setBuiltinConfig(const char *config[]);
-extern _X_EXPORT XF86ConfigPtr xf86readConfigFile (void);
-extern _X_EXPORT void xf86closeConfigFile (void);
-extern _X_EXPORT void xf86freeConfig (XF86ConfigPtr p);
-extern _X_EXPORT int xf86writeConfigFile (const char *, XF86ConfigPtr);
+extern void xf86initConfigFiles(void);
+extern const char *xf86openConfigFile(const char *path, const char *cmdline,
+				      const char *projroot);
+extern const char *xf86openConfigDirFiles(const char *path, const char *cmdline,
+					  const char *projroot);
+extern void xf86setBuiltinConfig(const char *config[]);
+extern XF86ConfigPtr xf86readConfigFile(void);
+extern void xf86closeConfigFile(void);
+extern void xf86freeConfig(XF86ConfigPtr p);
+extern int xf86writeConfigFile(const char *, XF86ConfigPtr);
 extern _X_EXPORT XF86ConfDevicePtr xf86findDevice(const char *ident, XF86ConfDevicePtr p);
 extern _X_EXPORT XF86ConfLayoutPtr xf86findLayout(const char *name, XF86ConfLayoutPtr list);
 extern _X_EXPORT XF86ConfMonitorPtr xf86findMonitor(const char *ident, XF86ConfMonitorPtr p);
@@ -473,6 +504,7 @@ extern _X_EXPORT XF86ConfInputPtr xf86findInput(const char *ident, XF86ConfInput
 extern _X_EXPORT XF86ConfInputPtr xf86findInputByDriver(const char *driver, XF86ConfInputPtr p);
 extern _X_EXPORT XF86ConfVideoAdaptorPtr xf86findVideoAdaptor(const char *ident,
 						XF86ConfVideoAdaptorPtr p);
+extern int xf86layoutAddInputDevices(XF86ConfigPtr config, XF86ConfLayoutPtr layout);
 
 extern _X_EXPORT GenericListPtr xf86addListItem(GenericListPtr head, GenericListPtr c_new);
 extern _X_EXPORT int xf86itemNotSublist(GenericListPtr list_1, GenericListPtr list_2);
@@ -480,5 +512,6 @@ extern _X_EXPORT int xf86itemNotSublist(GenericListPtr list_1, GenericListPtr li
 extern _X_EXPORT int xf86pathIsAbsolute(const char *path);
 extern _X_EXPORT int xf86pathIsSafe(const char *path);
 extern _X_EXPORT char *xf86addComment(char *cur, char *add);
+extern _X_EXPORT Bool xf86getBoolValue(Bool *val, const char *str);
 
 #endif /* _xf86Parser_h_ */

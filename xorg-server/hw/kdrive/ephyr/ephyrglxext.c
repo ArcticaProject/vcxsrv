@@ -243,10 +243,9 @@ ephyrGLXGetVisualConfigsReal (__GLXclientState *a_cl,
 
 out:
     EPHYR_LOG ("leave\n") ;
-    if (props_buf) {
-        xfree (props_buf) ;
-        props_buf = NULL ;
-    }
+    xfree (props_buf) ;
+    props_buf = NULL ;
+
     return res ;
 }
 
@@ -301,10 +300,9 @@ ephyrGLXGetFBConfigsSGIXReal (__GLXclientState *a_cl,
 
 out:
     EPHYR_LOG ("leave\n") ;
-    if (props_buf) {
-        xfree (props_buf) ;
-        props_buf = NULL ;
-    }
+    xfree (props_buf) ;
+    props_buf = NULL ;
+
     return res ;
 }
 
@@ -391,14 +389,12 @@ ephyrGLXQueryServerString(__GLXclientState *a_cl, GLbyte *a_pc)
 
 out:
     EPHYR_LOG ("leave\n") ;
-    if (server_string) {
-        xfree (server_string) ;
-        server_string = NULL;
-    }
-    if (buf) {
-        xfree (buf);
-        buf = NULL;
-    }
+    xfree (server_string) ;
+    server_string = NULL;
+
+    xfree (buf);
+    buf = NULL;
+
     return res ;
 }
 

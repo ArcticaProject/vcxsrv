@@ -42,6 +42,7 @@
 #include "xf86.h"
 #include "xf86Xinput.h"
 #include "xf86Optrec.h"
+#include "xf86Parser.h"
 
 static Bool ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 			     Bool markUsed);
@@ -456,29 +457,7 @@ xf86ShowUnusedOptions(int scrnIndex, pointer options)
 static Bool
 GetBoolValue(OptionInfoPtr p, const char *s)
 {
-    if (*s == '\0') {
-	p->value.bool = TRUE;
-    } else {
-	if (xf86NameCmp(s, "1") == 0)
-	    p->value.bool = TRUE;
-	else if (xf86NameCmp(s, "on") == 0)
-	    p->value.bool = TRUE;
-	else if (xf86NameCmp(s, "true") == 0)
-	    p->value.bool = TRUE;
-	else if (xf86NameCmp(s, "yes") == 0)
-	    p->value.bool = TRUE;
-	else if (xf86NameCmp(s, "0") == 0)
-	    p->value.bool = FALSE;
-	else if (xf86NameCmp(s, "off") == 0)
-	    p->value.bool = FALSE;
-	else if (xf86NameCmp(s, "false") == 0)
-	    p->value.bool = FALSE;
-	else if (xf86NameCmp(s, "no") == 0)
-	    p->value.bool = FALSE;
-	else
-	    return FALSE;
-    }
-    return TRUE;
+    return xf86getBoolValue(&p->value.bool, s);
 }
 
 static Bool

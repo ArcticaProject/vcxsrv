@@ -2,27 +2,35 @@
 .ds q \N'34'
 .TH __xconfigfile__ __filemansuffix__ __vendorversion__
 .SH NAME
-__xconfigfile__ \- configuration File for __xservername__ X server
+__xconfigfile__ and __xconfigdir__ \- configuration files for
+__xservername__ X server
 .SH INTRODUCTION
 .B __xservername__
 supports several mechanisms for supplying/obtaining configuration and
 run-time parameters: command line options, environment variables, the
-__xconfigfile__ configuration file, auto-detection, and fallback defaults.
-When the same information is supplied in more than one way, the highest
-precedence mechanism is used.  The list of mechanisms is ordered from
-highest precedence to lowest.  Note that not all parameters can be
-supplied via all methods.  The available command line options and
-environment variables (and some defaults) are described in the Xserver(__appmansuffix__)
-and __xservername__(__appmansuffix__) manual pages.  Most configuration file parameters, with
-their defaults, are described below.  Driver and module specific
-configuration parameters are described in the relevant driver or module
-manual page.
+__xconfigfile__ and __xconfigdir__ configuration files, auto-detection,
+and fallback defaults. When the same information is supplied in more
+than one way, the highest precedence mechanism is used. The list of
+mechanisms is ordered from highest precedence to lowest. Note that not
+all parameters can be supplied via all methods. The available command
+line options and environment variables (and some defaults) are
+described in the Xserver(__appmansuffix__) and
+__xservername__(__appmansuffix__) manual pages. Most configuration file
+parameters, with their defaults, are described below. Driver and module
+specific configuration parameters are described in the relevant driver
+or module manual page.
 .SH DESCRIPTION
 .B __xservername__
 uses a configuration file called
 .I __xconfigfile__
+and files ending in the suffix
+.I .conf
+from the directory
+.I __xconfigdir__
 for its initial setup.
-This configuration file is searched for in the following places when the
+The
+.I __xconfigfile__
+configuration file is searched for in the following places when the
 server is started as a normal user:
 .PP
 .RS 4
@@ -93,9 +101,28 @@ directory), and
 is the machine's hostname as reported by
 .BR gethostname (__libmansuffix__).
 .PP
+Additional configuration files are searched for in the following
+directories:
+.PP
+.RS 4
+.nf
+.I /etc/X11/__xconfigdir__\-4
+.I /etc/X11/__xconfigdir__
+.I /etc/__xconfigdir__
+.IR __projectroot__/etc/X11/__xconfigdir__. <hostname>
+.I __projectroot__/etc/X11/__xconfigdir__\-4
+.I __projectroot__/etc/X11/__xconfigdir__
+.IR __projectroot__/lib/X11/__xconfigdir__. <hostname>
+.I __projectroot__/lib/X11/__xconfigdir__\-4
+.I __projectroot__/lib/X11/__xconfigdir__
+.fi
+.RE
+.PP
 The
 .I __xconfigfile__
-file is composed of a number of sections which may be present in any order,
+and
+.I __xconfigdir__
+files are composed of a number of sections which may be present in any order,
 or omitted to use default configuration values.
 Each section has the form:
 .PP
@@ -117,6 +144,7 @@ The section names are:
 .BR "Module         " "Dynamic module loading"
 .BR "Extensions     " "Extension enabling"
 .BR "InputDevice    " "Input device description"
+.BR "InputClass     " "Input class description"
 .BR "Device         " "Graphics device description"
 .BR "VideoAdaptor   " "Xv video adaptor description"
 .BR "Monitor        " "Monitor description"
@@ -769,11 +797,28 @@ Example: the MIT-SHM extension can be disabled with the following entry:
 The config file may have multiple
 .B InputDevice
 sections.
-If HAL is not being used for input device configuration, there will normally
-be at least two: one for the core (primary) keyboard,
-and one of the core pointer.
+Recent X servers employ input hotplugging to add input devices, with the HAL
+backend being the default backend for X servers since 1.4. It is usually not
+necessary to provide
+.B InputDevice
+sections in the xorg.conf if hotplugging is enabled.
+.PP
+If hotplugging is disabled, there will normally
+be at least two: one for the core (primary) keyboard
+and one for the core pointer.
 If either of these two is missing, a default configuration for the missing
-ones will be used.
+ones will be used. In the absence of an explicitly specified core input
+device, the first
+.B InputDevice
+marked as
+.B CorePointer
+(or
+.BR CoreKeyboard )
+is used.
+If there is no match there, the first
+.B InputDevice
+that uses the \(lqmouse\(rq (or \(lqkbd\(rq) driver is used.
+The final fallback is to use built\-in default configurations.
 Currently the default configuration may not work as expected on all platforms.
 .PP
 .B InputDevice
@@ -828,17 +873,6 @@ and
 .BR mousedrv (__drivermansuffix__)
 on other platforms.
 .PP
-In the absence of an explicitly specified core input device, the first
-.B InputDevice
-marked as
-.B CorePointer
-(or
-.BR CoreKeyboard )
-is used.
-If there is no match there, the first
-.B InputDevice
-that uses the \(lqmouse\(rq (or \(lqkbd\(rq) driver is used.
-The final fallback is to use built\-in default configurations.
 .PP
 .B InputDevice
 sections recognise some driver\-independent
@@ -847,48 +881,135 @@ which are described here.
 See the individual input driver manual pages for a description of the
 device\-specific options.
 .TP 7
+.BI "Option \*qAutoServerLayout\*q  \*q" boolean \*q
+Always add the device to the ServerLayout section used by this instance of
+the server. This affects implied layouts as well as explicit layouts
+specified in the configuration and/or on the command line.
+.TP 7
 .BI "Option \*qCorePointer\*q"
-When this is set, the input device is installed as the core (primary)
-pointer device.
-There must be exactly one core pointer.
-If this option is not set here, or in the
-.B ServerLayout
-section, or from the
-.B \-pointer
-command line option, then the first input device that is capable of
-being used as a core pointer will be selected as the core pointer.
-This option is implicitly set when the obsolete
-.B Pointer
-section is used.
+Deprecated, use
+.B SendCoreEvents
+instead.
 .TP 7
 .BI "Option \*qCoreKeyboard\*q"
-When this is set, the input device is to be installed as the core
-(primary) keyboard device.
-There must be exactly one core keyboard.
-If this option is not set here, in the
-.B ServerLayout
-section, or from the
-.B \-keyboard
-command line option, then the first input device that is capable of
-being used as a core keyboard will be selected as the core keyboard.
-This option is implicitly set when the obsolete
-.B Keyboard
-section is used.
+Deprecated, use
+.B SendCoreEvents
+instead.
 .TP 7
 .BI "Option \*qAlwaysCore\*q  \*q" boolean \*q
+.B
+Deprecated, use
+.B SendCoreEvents
+instead.
 .TP 7
 .BI "Option \*qSendCoreEvents\*q  \*q" boolean \*q
 Both of these options are equivalent, and when enabled cause the
-input device to always report core events.
-This can be used, for example, to allow an additional pointer device to
-generate core pointer events (like moving the cursor, etc).
-.TP 4
-.BI "Option \*qHistorySize\*q  \*q" number \*q
-Sets the motion history size.
-Default: 0.
+input device to report core events through the master device. They are
+enabled by default.  Any device configured to send core events will be
+attached to the virtual core pointer or keyboard and control the cursor by
+default. Devices with
+.B SendCoreEvents
+disabled will be \*qfloating\*q and only accessible by clients employing the
+X Input extension. This option controls the startup behavior only, a device
+may be reattached or set floating at runtime.
 .TP 7
 .BI "Option \*qSendDragEvents\*q  \*q" boolean \*q
 ???
+.SH "INPUTCLASS SECTION"
+The config file may have multiple
+.B InputClass
+sections.
+These sections are optional and are used to provide configuration for a
+class of input devices as they are automatically added. An input device can
+match more than one
+.B InputClass
+section. Each class can only supplement settings from a previous class, so
+it is best to arrange the sections with the most generic matches last.
+.PP
+.B InputClass
+sections have the following format:
+.PP
+.RS 4
+.nf
+.B  "Section \*qInputClass\*q"
+.BI "    Identifier  \*q" name \*q
+.I  "    entries"
+.I  "    ..."
+.I  "    options"
+.I  "    ..."
+.B  "EndSection"
+.fi
+.RE
+.PP
+The
+.B Identifier
+entry is required in all
+.B InputClass
+sections.
+All other entries are optional.
+.PP
+The
+.B Identifier
+entry specifies the unique name for this input class.
+The
+.B Driver
+entry specifies the name of the driver to use for this input device.
+After all classes have been examined, the
+.RI \*q inputdriver \*q
+module from the final
+.B Driver
+entry will be enabled when using the loadable server.
+.PP
+When an input device is automatically added, its characteristics are
+checked against all
+.B InputClass
+sections. Each section can contain optional entries to narrow the match
+of the class. If none of the optional entries appear, the
+.B InputClass
+section is generic and will match any input device. If more than one of
+these entries appear, they all must match for the configuration to apply.
+The allowed matching entries are shown below.
+.PP
+.TP 7
+.BI "MatchProduct  \*q" matchproduct \*q
+This entry can be used to check if the substring
+.RI \*q matchproduct \*q
+occurs in the device's product name.
+.TP 7
+.BI "MatchVendor  \*q" matchvendor \*q
+This entry can be used to check if the substring
+.RI \*q matchvendor \*q
+occurs in the device's vendor name.
+.TP 7
+.BI "MatchDevicePath \*q" matchdevice \*q
+This entry can be used to check if the device file matches the
+.RI \*q matchdevice \*q
+pathname pattern.
+.TP 7
+.BI "MatchIsKeyboard     \*q" bool \*q
+.TP 7
+.BI "MatchIsPointer      \*q" bool \*q
+.TP 7
+.BI "MatchIsJoystick     \*q" bool \*q
+.TP 7
+.BI "MatchIsTablet       \*q" bool \*q
+.TP 7
+.BI "MatchIsTouchpad     \*q" bool \*q
+.TP 7
+.BI "MatchIsTouchscreen  \*q" bool \*q
+Match device types. These entries take a boolean argument similar to
+.B Option
+entries.
+.PP
+When an input device has been matched to the
+.B InputClass
+section, any
+.B Option
+entries are applied to the device. See the
+.B InputDevice
+section above for a description of the various
+.B Option
+entries.
 .SH "DEVICE SECTION"
 The config file may have multiple
 .B Device

@@ -853,6 +853,9 @@ winUseMsg (void)
   ErrorF ("-config\n"
           "\tSpecify a configuration file.\n");
 
+  ErrorF ("-configdir\n"
+          "\tSpecify a configuration directory.\n");
+
   ErrorF ("-keyboard\n"
 	  "\tSpecify a keyboard device from the configuration file.\n");
 #endif

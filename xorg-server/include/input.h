@@ -52,6 +52,7 @@ SOFTWARE.
 #include "screenint.h"
 #include <X11/Xmd.h>
 #include <X11/Xproto.h>
+#include <stdint.h>
 #include "window.h"     /* for WindowPtr */
 #include "xkbrules.h"
 #include "events.h"
@@ -209,6 +210,20 @@ typedef struct _InputOption {
     char                *value;
     struct _InputOption *next;
 } InputOption;
+
+typedef struct _InputAttributes {
+    char                *product;
+    char                *vendor;
+    char                *device;
+    uint32_t            flags;
+} InputAttributes;
+
+#define ATTR_KEYBOARD (1<<0)
+#define ATTR_POINTER (1<<1)
+#define ATTR_JOYSTICK (1<<2)
+#define ATTR_TABLET (1<<3)
+#define ATTR_TOUCHPAD (1<<4)
+#define ATTR_TOUCHSCREEN (1<<5)
 
 /* Key has been run through all input processing and events sent to clients. */
 #define KEY_PROCESSED 1
@@ -514,6 +529,7 @@ void FixUpEventFromWindow(DeviceIntPtr pDev,
 /* Implemented by the DDX. */
 extern _X_EXPORT int NewInputDeviceRequest(
     InputOption *options,
+    InputAttributes *attrs,
     DeviceIntPtr *dev);
 extern  _X_EXPORT void DeleteInputDeviceRequest(
     DeviceIntPtr dev);

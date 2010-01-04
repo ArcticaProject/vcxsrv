@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.7.99.2, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2009-12-18"
+AC_INIT([xorg-server], 1.7.99.3, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="(unreleased)"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -122,7 +122,7 @@ AM_CONDITIONAL(SPECIAL_DTRACE_OBJECTS, [test "x$SPECIAL_DTRACE_OBJECTS" = "xyes"
 
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h stdlib.h string.h unistd.h dlfcn.h stropts.h])
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h unistd.h dlfcn.h stropts.h fnmatch.h])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -618,6 +618,7 @@ AC_ARG_ENABLE(multibuffer,    AS_HELP_STRING([--enable-multibuffer], [Build Mult
 AC_ARG_ENABLE(dbe,            AS_HELP_STRING([--disable-dbe], [Build DBE extension (default: enabled)]), [DBE=$enableval], [DBE=yes])
 AC_ARG_ENABLE(xf86bigfont,    AS_HELP_STRING([--disable-xf86bigfont], [Build XF86 Big Font extension (default: disabled)]), [XF86BIGFONT=$enableval], [XF86BIGFONT=no])
 AC_ARG_ENABLE(dpms,           AS_HELP_STRING([--disable-dpms], [Build DPMS extension (default: enabled)]), [DPMSExtension=$enableval], [DPMSExtension=yes])
+AC_ARG_ENABLE(config-udev,    AS_HELP_STRING([--enable-config-udev], [Build udev support (default: no)]), [CONFIG_UDEV=$enableval], [CONFIG_UDEV=no])
 AC_ARG_ENABLE(config-dbus,    AS_HELP_STRING([--enable-config-dbus], [Build D-BUS API support (default: no)]), [CONFIG_DBUS_API=$enableval], [CONFIG_DBUS_API=no])
 AC_ARG_ENABLE(config-hal,     AS_HELP_STRING([--disable-config-hal], [Build HAL support (default: auto)]), [CONFIG_HAL=$enableval], [CONFIG_HAL=auto])
 AC_ARG_ENABLE(xfree86-utils,     AS_HELP_STRING([--enable-xfree86-utils], [Build xfree86 DDX utilities (default: enabled)]), [XF86UTILS=$enableval], [XF86UTILS=yes])
@@ -775,6 +776,26 @@ LIBXI="xi >= 1.2.99.1"
 LIBXTST="xtst >= 1.0.99.2"
 LIBPCIACCESS="pciaccess >= 0.8.0"
 LIBGLIB="glib-2.0 >= 2.16"
+LIBUDEV="libudev >= 143"
+
+if test "x$CONFIG_UDEV" = xyes &&
+ { test "x$CONFIG_DBUS_API" = xyes || test "x$CONFIG_HAL" = xyes; }; then
+	AC_MSG_ERROR([Hotplugging through both libudev and dbus/hal not allowed])
+fi
+
+PKG_CHECK_MODULES(UDEV, $LIBUDEV, [HAVE_LIBUDEV=yes], [HAVE_LIBUDEV=no])
+if test "x$CONFIG_UDEV" = xauto; then
+	CONFIG_UDEV="$HAVE_LIBUDEV"
+fi
+AM_CONDITIONAL(CONFIG_UDEV, [test "x$CONFIG_UDEV" = xyes])
+if test "x$CONFIG_UDEV" = xyes; then
+	CONFIG_DBUS_API=no
+	CONFIG_HAL=no
+	if ! test "x$HAVE_LIBUDEV" = xyes; then
+		AC_MSG_ERROR([udev configuration API requested, but libudev is not installed])
+	fi
+	AC_DEFINE(CONFIG_UDEV, 1, [Use libudev for input hotplug])
+fi
 
 dnl HAVE_DBUS is true if we actually have the D-Bus library, whereas
 dnl CONFIG_DBUS_API is true if we want to enable the D-Bus config
@@ -808,13 +829,11 @@ if test "x$CONFIG_HAL" = xyes; then
 	fi
 
 	AC_DEFINE(CONFIG_HAL, 1, [Use the HAL hotplug API])
-        REQUIRED_LIBS="$REQUIRED_LIBS hal"
 	CONFIG_NEED_DBUS="yes"
 fi
 AM_CONDITIONAL(CONFIG_HAL, [test "x$CONFIG_HAL" = xyes])
 
 if test "x$CONFIG_NEED_DBUS" = xyes; then
-	REQUIRED_LIBS="$REQUIRED_LIBS dbus-1"
         AC_DEFINE(CONFIG_NEED_DBUS, 1, [Use D-Bus for input hotplug])
 fi
 AM_CONDITIONAL(CONFIG_NEED_DBUS, [test "x$CONFIG_NEED_DBUS" = xyes])
@@ -1737,6 +1756,7 @@ if test "x$XORG" = xyes; then
 
 	dnl these only go in xorg-config.h
 	XF86CONFIGFILE="xorg.conf"
+	XF86CONFIGDIR="xorg.conf.d"
 	CONFIGFILE="$sysconfdir/$XF86CONFIGFILE"
 	LOGPREFIX="$logdir/Xorg."
 	AC_DEFINE(XORG_SERVER, 1, [Building Xorg server])
@@ -1749,6 +1769,7 @@ if test "x$XORG" = xyes; then
 	AC_DEFINE(__XSERVERNAME__, "Xorg", [Name of X server])
 	AC_DEFINE_DIR(__XCONFIGFILE__, XF86CONFIGFILE, [Name of configuration file])
 	AC_DEFINE_DIR(XF86CONFIGFILE, XF86CONFIGFILE, [Name of configuration file])
+	AC_DEFINE_DIR(__XCONFIGDIR__, XF86CONFIGDIR, [Name of configuration directory])
 	AC_DEFINE_DIR(DEFAULT_MODULE_PATH, moduledir, [Default module search path])
 	AC_DEFINE_DIR(DEFAULT_LIBRARY_PATH, libdir, [Default library install path])
 	AC_DEFINE_DIR(DEFAULT_LOGPREFIX, LOGPREFIX, [Default log location])

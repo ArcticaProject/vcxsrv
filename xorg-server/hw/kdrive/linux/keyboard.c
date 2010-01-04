@@ -231,7 +231,7 @@ readKernelMapping(KdKeyboardInfo *ki)
         return;
 
     fd = LinuxConsoleFd;
-    
+
     minKeyCode = NR_KEYS;
     maxKeyCode = 0;
     row = 0;
@@ -241,7 +241,7 @@ readKernelMapping(KdKeyboardInfo *ki)
         kbe.kb_index = LNX_KEY_INDEX(i);
 
         k = ki->keySyms.map + row * ki->keySyms.mapWidth;
-	
+
 	for (j = 0; j < ki->keySyms.mapWidth; ++j)
 	{
 	    unsigned short kval;
@@ -463,7 +463,7 @@ readKernelMapping(KdKeyboardInfo *ki)
 		k[j] = (kbe.kb_value & 0xFF) + 0x1008FF00;
 		break;
 #endif
-		
+
 	    default:
 		break;
 	    }
@@ -720,7 +720,7 @@ static void
 LinuxKeyboardDisable (KdKeyboardInfo *ki)
 {
     int fd;
-    
+
     if (!ki)
         return;
 
@@ -737,11 +737,9 @@ LinuxKeyboardInit (KdKeyboardInfo *ki)
     if (!ki)
         return !Success;
 
-    if (ki->path)
-        xfree(ki->path);
+    xfree(ki->path);
     ki->path = strdup("console");
-    if (ki->name)
-        xfree(ki->name);
+    xfree(ki->name);
     ki->name = strdup("Linux console keyboard");
 
     readKernelMapping (ki);

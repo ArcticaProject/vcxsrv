@@ -132,7 +132,7 @@ xf86InfoRec xf86Info = {
     .kbdCustomKeycodes          = FALSE,
     .disableRandR               = FALSE,
     .randRFrom                  = X_DEFAULT,
-#ifdef CONFIG_HAL
+#if defined(CONFIG_HAL) || defined(CONFIG_UDEV)
     .allowEmptyInput            = TRUE,
     .autoAddDevices             = TRUE,
     .autoEnableDevices          = TRUE
@@ -143,6 +143,7 @@ xf86InfoRec xf86Info = {
 #endif
 };
 const char *xf86ConfigFile = NULL;
+const char *xf86ConfigDir = NULL;
 const char *xf86ModulePath = DEFAULT_MODULE_PATH;
 MessageType xf86ModPathFrom = X_DEFAULT;
 const char *xf86LogFile = DEFAULT_LOGPREFIX;

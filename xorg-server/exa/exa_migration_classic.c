@@ -75,6 +75,9 @@ exaPixmapIsDirty (PixmapPtr pPix)
     if (pExaPixmap == NULL)
 	EXA_FatalErrorDebugWithRet(("EXA bug: exaPixmapIsDirty was called on a non-exa pixmap.\n"), TRUE);
 
+    if (!pExaPixmap->pDamage)
+	return FALSE;
+
     return REGION_NOTEMPTY (pScreen, DamageRegion(pExaPixmap->pDamage)) ||
 	!REGION_EQUAL(pScreen, &pExaPixmap->validSys, &pExaPixmap->validFB);
 }

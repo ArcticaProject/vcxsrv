@@ -138,40 +138,28 @@ KdFreePointer(KdPointerInfo *pi)
 {
     InputOption *option, *prev = NULL;
 
-    if (pi->name)
-        xfree(pi->name);
-    if (pi->path)
-        xfree(pi->path);
+    xfree(pi->name);
+    xfree(pi->path);
 
     for (option = pi->options; option; option = option->next) {
-        if (prev)
-            xfree(prev);
-        if (option->key)
-            xfree(option->key);
-        if (option->value)
-            xfree(option->value);
+        xfree(prev);
+        xfree(option->key);
+        xfree(option->value);
         prev = option;
     }
 
-    if (prev)
-        xfree(prev);
-    
+    xfree(prev);
     xfree(pi);
 }
- 
+
 void
 KdFreeKeyboard(KdKeyboardInfo *ki)
 {
-    if (ki->name)
-        xfree(ki->name);
-    if (ki->path)
-        xfree(ki->path);
-    if (ki->xkbRules)
-        xfree(ki->xkbRules);
-    if (ki->xkbModel)
-        xfree(ki->xkbModel);
-    if (ki->xkbLayout)
-        xfree(ki->xkbLayout);
+    xfree(ki->name);
+    xfree(ki->path);
+    xfree(ki->xkbRules);
+    xfree(ki->xkbModel);
+    xfree(ki->xkbLayout);
     ki->next = NULL;
     xfree(ki);
 }

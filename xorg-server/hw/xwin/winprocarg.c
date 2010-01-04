@@ -1341,6 +1341,24 @@ ddxProcessArgument (int argc, char *argv[], int i)
     }
 
   /*
+   * Look for the '-configdir' argument
+   */
+  if (IS_OPTION ("-configdir"))
+    {
+      CHECK_ARGS (1);
+#ifdef XWIN_XF86CONFIG
+      g_cmdline.configDir = argv[++i];
+#else
+      winMessageBoxF ("The %s option is not supported in this "
+		      "release.\n"
+		      "Ignoring this option and continuing.\n",
+		      MB_ICONINFORMATION,
+		      argv[i]);
+#endif
+      return 2;
+    }
+
+  /*
    * Look for the '-keyboard' argument
    */
   if (IS_OPTION ("-keyboard"))

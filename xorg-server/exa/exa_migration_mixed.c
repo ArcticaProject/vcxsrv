@@ -112,7 +112,8 @@ exaDoMigration_mixed(ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel)
 	    pPixmap->devKind = pExaPixmap->fb_pitch;
 	    exaCopyDirtyToFb(pixmaps + i);
 
-	    if (pExaScr->deferred_mixed_pixmap == pPixmap)
+	    if (pExaScr->deferred_mixed_pixmap == pPixmap &&
+		!pixmaps[i].as_dst && !pixmaps[i].pReg)
 		pExaScr->deferred_mixed_pixmap = NULL;
 	}
 
@@ -133,10 +134,32 @@ exaMoveInPixmap_mixed(PixmapPtr pPixmap)
     exaDoMigration(pixmaps, 1, TRUE);
 }
 
+void
+exaDamageReport_mixed(DamagePtr pDamage, RegionPtr pRegion, void *closure)
+{
+    PixmapPtr pPixmap = closure;
+    ExaPixmapPriv(pPixmap);
+
+    /* Move back results of software rendering on system memory copy of mixed driver
+     * pixmap (see exaPrepareAccessReg_mixed).
+     *
+     * Defer moving the destination back into the driver pixmap, to try and save
+     * overhead on multiple subsequent software fallbacks.
+     */
+    if (!pExaPixmap->use_gpu_copy && exaPixmapHasGpuCopy(pPixmap)) {
+	ExaScreenPriv(pPixmap->drawable.pScreen);
+
+	if (pExaScr->deferred_mixed_pixmap &&
+	    pExaScr->deferred_mixed_pixmap != pPixmap)
+	    exaMoveInPixmap_mixed(pExaScr->deferred_mixed_pixmap);
+	pExaScr->deferred_mixed_pixmap = pPixmap;
+    }
+}
+
 /* With mixed pixmaps, if we fail to get direct access to the driver pixmap, we
  * use the DownloadFromScreen hook to retrieve contents to a copy in system
  * memory, perform software rendering on that and move back the results with the
- * UploadToScreen hook (see exaFinishAccess_mixed).
+ * UploadToScreen hook (see exaDamageReport_mixed).
  */
 void
 exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg)
@@ -171,8 +194,9 @@ exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg)
 	    Bool as_dst = pixmaps[0].as_dst;
 
 	    /* Set up damage tracking */
-	    pExaPixmap->pDamage = DamageCreate(NULL, NULL, DamageReportNone,
-					       TRUE, pPixmap->drawable.pScreen,
+	    pExaPixmap->pDamage = DamageCreate(exaDamageReport_mixed, NULL,
+					       DamageReportNonEmpty, TRUE,
+					       pPixmap->drawable.pScreen,
 					       pPixmap);
 
 	    DamageRegister(&pPixmap->drawable, pExaPixmap->pDamage);
@@ -223,29 +247,3 @@ exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg)
     }
 }
 
-/* Move back results of software rendering on system memory copy of mixed driver
- * pixmap (see exaPrepareAccessReg_mixed).
- *
- * Defer moving the destination back into the driver pixmap, to try and save
- * overhead on multiple consequent software fallbacks.
- */
-void exaFinishAccess_mixed(PixmapPtr pPixmap, int index)
-{
-    ExaPixmapPriv(pPixmap);
-
-    if (pExaPixmap->pDamage && !pExaPixmap->use_gpu_copy &&
-	    exaPixmapHasGpuCopy(pPixmap)) {
-	DamageRegionProcessPending(&pPixmap->drawable);
-
-	if (index == EXA_PREPARE_DEST || index == EXA_PREPARE_AUX_DEST) {
-	    ExaScreenPriv(pPixmap->drawable.pScreen);
-
-	    if (pExaScr->deferred_mixed_pixmap &&
-		pExaScr->deferred_mixed_pixmap != pPixmap)
-		exaMoveInPixmap_mixed(pExaScr->deferred_mixed_pixmap);
-	    pExaScr->deferred_mixed_pixmap = pPixmap;
-	    pPixmap->devKind = pExaPixmap->fb_pitch;
-	} else
-	    exaMoveInPixmap_mixed(pPixmap);
-    }
-}

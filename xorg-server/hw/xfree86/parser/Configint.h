@@ -148,6 +148,8 @@ else\
 "The %s keyword requires a number to follow it."
 #define POSITIVE_INT_MSG \
 "The %s keyword requires a positive integer to follow it."
+#define BOOL_MSG \
+"The %s keyword requires a boolean to follow it."
 #define ZAXISMAPPING_MSG \
 "The ZAxisMapping keyword requires 2 positive numbers or X or Y to follow it."
 #define AUTOREPEAT_MSG \

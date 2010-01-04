@@ -38,7 +38,6 @@ typedef struct _fakePriv {
 typedef struct _fakeScrPriv {
     Rotation	randr;
     Bool	shadow;
-    PixmapPtr	pShadow;
 } FakeScrPriv;
 
 extern KdCardFuncs  fakeFuncs;

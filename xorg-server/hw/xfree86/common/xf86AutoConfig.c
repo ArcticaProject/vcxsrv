@@ -272,7 +272,8 @@ xf86AutoConfig(void)
     for (cp = builtinConfig; *cp; cp++)
 	xf86ErrorFVerb(3, "\t%s", *cp);
     xf86MsgVerb(X_DEFAULT, 3, "--- End of built-in configuration ---\n");
-    
+
+    xf86initConfigFiles();
     xf86setBuiltinConfig(builtinConfig);
     ret = xf86HandleConfigFile(TRUE);
     FreeConfig();
