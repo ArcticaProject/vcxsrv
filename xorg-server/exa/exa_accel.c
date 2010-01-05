@@ -172,6 +172,17 @@ exaDoPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth, int x, int y,
     if (pExaScr->swappedOut)
 	return FALSE;
 
+    if (pExaScr->do_migration) {
+	ExaMigrationRec pixmaps[1];
+
+	pixmaps[0].as_dst = TRUE;
+	pixmaps[0].as_src = FALSE;
+	pixmaps[0].pPix = pPix;
+	pixmaps[0].pReg = DamagePendingRegion(pExaPixmap->pDamage);
+
+	exaDoMigration (pixmaps, 1, TRUE);
+    }
+
     pPix = exaGetOffscreenPixmap (pDrawable, &xoff, &yoff);
 
     if (!pPix)
