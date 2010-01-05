@@ -408,6 +408,19 @@ winRestackWindowMultiWindow (WindowPtr pWin, WindowPtr pOldNextSib)
 }
 
 
+static void ClientResize(HWND hWnd, int nWidth, int nHeight)
+{
+  RECT rcClient, rcWindow;
+  POINT ptDiff;
+
+  GetClientRect(hWnd, &rcClient);
+  GetWindowRect(hWnd, &rcWindow);
+  ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
+  ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
+  MoveWindow(hWnd,rcWindow.left, rcWindow.top, nWidth + ptDiff.x, nHeight + ptDiff.y, TRUE);
+}
+
+
 /*
  * winCreateWindowsWindow - Create a Windows window associated with an X window
  */
@@ -495,6 +508,8 @@ winCreateWindowsWindow (WindowPtr pWin)
 		SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
   /* Make sure it gets the proper system menu for a WS_POPUP, too */
   GetSystemMenu (hWnd, TRUE);
+
+  ClientResize(hWnd,iWidth,iHeight);
 
   /* Cause any .XWinrc menus to be added in main WNDPROC */
   PostMessage (hWnd, WM_INIT_SYS_MENU, 0, 0);
