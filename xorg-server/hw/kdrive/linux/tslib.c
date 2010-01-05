@@ -9,7 +9,7 @@
  * Copyright © 2002 MontaVista Software Inc.
  * Copyright © 2005 OpenedHand Ltd.
  * Copyright © 2006 Nokia Corporation
- * 
+ *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
  * the above copyright notice appear in all copies and that both that
@@ -76,7 +76,7 @@ TsRead (int fd, void *closure)
         if (event.pressure) {
             flags = KD_BUTTON_1;
 
-            /* 
+            /*
              * Here we test for the touch screen driver actually being on the
              * touch screen, if it is we send absolute coordinates. If not,
              * then we send delta's so that we can track the entire vga screen.
@@ -127,7 +127,7 @@ TslibEnable (KdPointerInfo *pi)
     }
 
     KdRegisterFd(private->fd, TsRead, pi);
-  
+
     return Success;
 }
 
@@ -155,7 +155,7 @@ TslibInit (KdPointerInfo *pi)
 
     if (!pi || !pi->dixdev)
         return !Success;
-    
+
     pi->driverPrivate = (struct TslibPrivate *)
                         xcalloc(sizeof(struct TslibPrivate), 1);
     if (!pi->driverPrivate)
@@ -175,10 +175,8 @@ TslibInit (KdPointerInfo *pi)
 static void
 TslibFini (KdPointerInfo *pi)
 {
-    if (pi->driverPrivate) {
-        xfree(pi->driverPrivate);
-        pi->driverPrivate = NULL;
-    }
+    xfree(pi->driverPrivate);
+    pi->driverPrivate = NULL;
 }
 
 

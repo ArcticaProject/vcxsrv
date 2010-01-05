@@ -65,7 +65,6 @@ typedef struct _ephyrFakexaPriv {
 typedef struct _ephyrScrPriv {
     Rotation	randr;
     Bool	shadow;
-    PixmapPtr	pShadow;
     DamagePtr   pDamage;
     EphyrFakexaPriv *fakexa;
 } EphyrScrPriv;

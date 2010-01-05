@@ -58,25 +58,9 @@ struct xkb_options {
     char* options;
 };
 
-
-static void
-remove_device(DeviceIntPtr dev)
-{
-    /* this only gets called for devices that have already been added */
-    LogMessage(X_INFO, "config/hal: removing device %s\n", dev->name);
-
-    /* Call PIE here so we don't try to dereference a device that's
-     * already been removed. */
-    OsBlockSignals();
-    ProcessInputEvents();
-    DeleteInputDeviceRequest(dev);
-    OsReleaseSignals();
-}
-
 static void
 device_removed(LibHalContext *ctx, const char *udi)
 {
-    DeviceIntPtr dev, next;
     char *value;
 
     value = xalloc(strlen(udi) + 5); /* "hal:" + NULL */
@@ -84,34 +68,9 @@ device_removed(LibHalContext *ctx, const char *udi)
         return;
     sprintf(value, "hal:%s", udi);
 
-    for (dev = inputInfo.devices; dev; dev = next) {
-	next = dev->next;
-        if (dev->config_info && strcmp(dev->config_info, value) == 0)
-            remove_device(dev);
-    }
-    for (dev = inputInfo.off_devices; dev; dev = next) {
-	next = dev->next;
-        if (dev->config_info && strcmp(dev->config_info, value) == 0)
-            remove_device(dev);
-    }
+    remove_devices("hal", value);
 
     xfree(value);
-}
-
-static void
-add_option(InputOption **options, const char *key, const char *value)
-{
-    if (!value || *value == '\0')
-        return;
-
-    for (; *options; options = &(*options)->next)
-        ;
-    *options = xcalloc(sizeof(**options), 1);
-    if (!*options) /* Yeesh. */
-        return;
-    (*options)->key = xstrdup(key);
-    (*options)->value = xstrdup(value);
-    (*options)->next = NULL;
 }
 
 static char *
@@ -166,31 +125,12 @@ get_prop_string_array(LibHalContext *hal_ctx, const char *udi, const char *prop)
     return ret;
 }
 
-static BOOL
-device_is_duplicate(char *config_info)
-{
-    DeviceIntPtr dev;
-
-    for (dev = inputInfo.devices; dev; dev = dev->next)
-    {
-        if (dev->config_info && (strcmp(dev->config_info, config_info) == 0))
-            return TRUE;
-    }
-
-    for (dev = inputInfo.off_devices; dev; dev = dev->next)
-    {
-        if (dev->config_info && (strcmp(dev->config_info, config_info) == 0))
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
 static void
 device_added(LibHalContext *hal_ctx, const char *udi)
 {
     char *path = NULL, *driver = NULL, *name = NULL, *config_info = NULL;
     InputOption *options = NULL, *tmpo = NULL;
+    InputAttributes attrs = {0};
     DeviceIntPtr dev = NULL;
     DBusError error;
     struct xkb_options xkb_opts = {0};
@@ -215,10 +155,28 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         LogMessage(X_WARNING,"config/hal: no driver or path specified for %s\n", udi);
         goto unwind;
     }
+    attrs.device = xstrdup(path);
 
     name = get_prop_string(hal_ctx, udi, "info.product");
     if (!name)
         name = xstrdup("(unnamed)");
+    else
+        attrs.product = xstrdup(name);
+
+    attrs.vendor = get_prop_string(hal_ctx, udi, "info.vendor");
+
+    if (libhal_device_query_capability(hal_ctx, udi, "input.keys", NULL))
+        attrs.flags |= ATTR_KEYBOARD;
+    if (libhal_device_query_capability(hal_ctx, udi, "input.mouse", NULL))
+        attrs.flags |= ATTR_POINTER;
+    if (libhal_device_query_capability(hal_ctx, udi, "input.joystick", NULL))
+        attrs.flags |= ATTR_JOYSTICK;
+    if (libhal_device_query_capability(hal_ctx, udi, "input.tablet", NULL))
+        attrs.flags |= ATTR_TABLET;
+    if (libhal_device_query_capability(hal_ctx, udi, "input.touchpad", NULL))
+        attrs.flags |= ATTR_TOUCHPAD;
+    if (libhal_device_query_capability(hal_ctx, udi, "input.touchscreen", NULL))
+        attrs.flags |= ATTR_TOUCHSCREEN;
 
     options = xcalloc(sizeof(*options), 1);
     if (!options){
@@ -400,7 +358,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
 
     /* this isn't an error, but how else do you output something that the user can see? */
     LogMessage(X_INFO, "config/hal: Adding input device %s\n", name);
-    if ((rc = NewInputDeviceRequest(options, &dev)) != Success) {
+    if ((rc = NewInputDeviceRequest(options, &attrs, &dev)) != Success) {
         LogMessage(X_ERROR, "config/hal: NewInputDeviceRequest failed (%d)\n", rc);
         dev = NULL;
         goto unwind;
@@ -429,6 +387,10 @@ unwind:
         xfree(tmpo->value);
         xfree(tmpo);
     }
+
+    xfree(attrs.product);
+    xfree(attrs.vendor);
+    xfree(attrs.device);
 
     if (xkb_opts.layout)
         xfree(xkb_opts.layout);

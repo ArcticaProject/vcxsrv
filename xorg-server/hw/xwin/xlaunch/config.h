@@ -64,8 +64,13 @@ struct CConfig
     std::string font_server;
     std::string extra_params;
     std::string extra_ssh;
+#ifdef _DEBUG
+    CConfig() : window(MultiWindow), client(NoClient), clientstart(NoXClient), display("1"), 
+#else
     CConfig() : window(MultiWindow), client(NoClient), clientstart(NoXClient), display("0"), 
-                protocol_path(""), program("xeyes"), progs(PROG_NUMBER), compress(false), host(""), user(""),
+#endif
+                local(false), protocol(""),
+                protocol_path(""), program("xeyes"), progs(PROG_NUMBER), compress(false), host(""), user("ago"),
                 password(""), password_save(false), password_start(false), broadcast(false),
                 indirect(false), xdmcp_host(""), xhosts(HOST_NUMBER), clipboard(true), no_access_control(false),
                 font_server(), extra_params(), extra_ssh() {};

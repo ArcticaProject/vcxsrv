@@ -230,7 +230,8 @@ ChangeDeviceControl(ClientPtr client, DeviceIntPtr dev,
  *
  */
 int
-NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
+NewInputDeviceRequest(InputOption *options, InputAttributes *attrs,
+                      DeviceIntPtr *pdev)
 {
   DEBUG_LOG("NewInputDeviceRequest(%p, %p)\n", options, pdev);
   return BadValue;

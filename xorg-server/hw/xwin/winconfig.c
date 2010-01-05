@@ -50,6 +50,13 @@
                     "%P/lib/X11/%X.%H," "%P/lib/X11/%X-%M," \
                     "%P/lib/X11/%X"
 #endif
+#ifndef CONFIGDIRPATH
+#define CONFIGDIRPATH  "/etc/X11/%X-%M," "/etc/X11/%X," "/etc/%X," \
+                       "%P/etc/X11/%X.%H," "%P/etc/X11/%X-%M," \
+                       "%P/etc/X11/%X," \
+                       "%P/lib/X11/%X.%H," "%P/lib/X11/%X-%M," \
+                       "%P/lib/X11/%X"
+#endif
 
 XF86ConfigPtr g_xf86configptr = NULL;
 #endif
@@ -57,6 +64,7 @@ XF86ConfigPtr g_xf86configptr = NULL;
 WinCmdlineRec g_cmdline = {
 #ifdef XWIN_XF86CONFIG
   NULL,				/* configFile */
+  NULL,				/* configDir */
 #endif
   NULL,				/* fontPath */
 #ifdef XWIN_XF86CONFIG
@@ -109,20 +117,28 @@ Bool
 winReadConfigfile ()
 {
   Bool		retval = TRUE;
-  const char	*filename;
-  MessageType	from = X_DEFAULT;
+  const char	*filename, *dirname;
+  MessageType	filefrom = X_DEFAULT;
+  MessageType	dirfrom = X_DEFAULT;
   char		*xf86ConfigFile = NULL;
+  char		*xf86ConfigDir = NULL;
 
   if (g_cmdline.configFile)
     {
-      from = X_CMDLINE;
+      filefrom = X_CMDLINE;
       xf86ConfigFile = g_cmdline.configFile;
+    }
+  if (g_cmdline.configDir)
+    {
+      dirfrom = X_CMDLINE;
+      xf86ConfigDir = g_cmdline.configDir;
     }
 
   /* Parse config file into data structure */
-
+  xf86initConfigFiles();
   filename = xf86openConfigFile (CONFIGPATH, xf86ConfigFile, PROJECTROOT);
-    
+  dirname = xf86openConfigDirFiles (CONFIGDIRPATH, xf86ConfigDir, PROJECTROOT);
+
   /* Hack for backward compatibility */
   if (!filename && from == X_DEFAULT)
     filename = xf86openConfigFile (CONFIGPATH, "XF86Config", PROJECTROOT);
@@ -137,6 +153,20 @@ winReadConfigfile ()
       if (xf86ConfigFile)
 	ErrorF (": \"%s\"", xf86ConfigFile);
       ErrorF ("\n");
+    }
+  if (dirname)
+    {
+      winMsg (from, "Using config directory: \"%s\"\n", dirname);
+    }
+  else
+    {
+      winMsg (X_ERROR, "Unable to locate/open config directory");
+      if (xf86ConfigDir)
+	ErrorF (": \"%s\"", xf86ConfigDir);
+      ErrorF ("\n");
+    }
+  if (!filename && !dirname)
+    {
       return FALSE;
     }
   if ((g_xf86configptr = xf86readConfigFile ()) == NULL)

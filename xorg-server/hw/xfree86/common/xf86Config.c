@@ -95,6 +95,23 @@ extern DeviceAssocRec mouse_assoc;
 			"%P/lib/X11/%X.%H," "%P/lib/X11/%X-%M," \
 			"%P/lib/X11/%X"
 #endif
+#ifndef ROOT_CONFIGDIRPATH
+#define ROOT_CONFIGDIRPATH	"%A," "%R," \
+				"/etc/X11/%R," "%P/etc/X11/%R," \
+				"/etc/X11/%X-%M," "/etc/X11/%X," "/etc/%X," \
+				"%P/etc/X11/%X.%H," "%P/etc/X11/%X-%M," \
+				"%P/etc/X11/%X," \
+				"%P/lib/X11/%X.%H," "%P/lib/X11/%X-%M," \
+				"%P/lib/X11/%X"
+#endif
+#ifndef USER_CONFIGDIRPATH
+#define USER_CONFIGDIRPATH	"/etc/X11/%S," "%P/etc/X11/%S," \
+				"/etc/X11/%X-%M," "/etc/X11/%X," "/etc/%X," \
+				"%P/etc/X11/%X.%H," "%P/etc/X11/%X-%M," \
+				"%P/etc/X11/%X," \
+				"%P/lib/X11/%X.%H," "%P/lib/X11/%X-%M," \
+				"%P/lib/X11/%X"
+#endif
 #ifndef PROJECTROOT
 #define PROJECTROOT	"/usr/X11R6"
 #endif
@@ -1444,12 +1461,19 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
     }
 
     if (xf86Info.allowEmptyInput && !(foundPointer && foundKeyboard)) {
-#ifdef CONFIG_HAL
-	xf86Msg(X_INFO, "The server relies on HAL to provide the list of "
-	                "input devices.\n\tIf no devices become available, "
-	                "reconfigure HAL or disable AutoAddDevices.\n");
+#if defined(CONFIG_HAL) || defined(CONFIG_UDEV)
+	const char *config_backend;
+#if defined(CONFIG_HAL)
+	config_backend = "HAL";
 #else
-	xf86Msg(X_INFO, "HAL is disabled and no input devices were configured.\n"
+	config_backend = "udev";
+#endif
+	xf86Msg(X_INFO, "The server relies on %s to provide the list of "
+	                "input devices.\n\tIf no devices become available, "
+	                "reconfigure %s or disable AutoAddDevices.\n",
+			config_backend, config_backend);
+#else
+	xf86Msg(X_INFO, "Hotplugging is disabled and no input devices were configured.\n"
 			"\tTry disabling AllowEmptyInput.\n");
 #endif
     }
@@ -1471,6 +1495,45 @@ static OptionInfoRec LayoutOptions[] = {
        {0}, FALSE },
 };
 
+static Bool
+configInputDevices(XF86ConfLayoutPtr layout, serverLayoutPtr servlayoutp)
+{
+    XF86ConfInputrefPtr irp;
+    IDevPtr *indp;
+    int count = 0;
+
+    /*
+     * Count the number of input devices.
+     */
+    irp = layout->lay_input_lst;
+    while (irp) {
+	count++;
+	irp = (XF86ConfInputrefPtr)irp->list.next;
+    }
+    DebugF("Found %d input devices in the layout section %s\n",
+	    count, layout.lay_identifier);
+    indp = xnfcalloc((count + 1), sizeof(IDevPtr));
+    indp[count] = NULL;
+    irp = layout->lay_input_lst;
+    count = 0;
+    while (irp) {
+	indp[count] = xnfalloc(sizeof(IDevRec));
+	if (!configInput(indp[count], irp->iref_inputdev, X_CONFIG)) {
+	    while(count--)
+		xfree(indp[count]);
+	    xfree(indp);
+	    return FALSE;
+	}
+	indp[count]->extraOptions = irp->iref_option_lst;
+	count++;
+	irp = (XF86ConfInputrefPtr)irp->list.next;
+    }
+    servlayoutp->inputs = indp;
+
+    return TRUE;
+}
+
+
 /*
  * figure out which layout is active, which screens are used in that layout,
  * which drivers and monitors are used in these screens
@@ -1481,14 +1544,12 @@ configLayout(serverLayoutPtr servlayoutp, XF86ConfLayoutPtr conf_layout,
 {
     XF86ConfAdjacencyPtr adjp;
     XF86ConfInactivePtr idp;
-    XF86ConfInputrefPtr irp;
     int count = 0;
     int scrnum;
     XF86ConfLayoutPtr l;
     MessageType from;
     screenLayoutPtr slp;
     GDevPtr gdp;
-    IDevPtr* indp;
     int i = 0, j;
 
     if (!servlayoutp)
@@ -1639,45 +1700,6 @@ configLayout(serverLayoutPtr servlayoutp, XF86ConfLayoutPtr conf_layout,
 	}
     }
 
-#ifdef LAYOUT_DEBUG
-    ErrorF("Layout \"%s\"\n", conf_layout->lay_identifier);
-    for (i = 0; i < count; i++) {
-	ErrorF("Screen: \"%s\" (%d):\n", slp[i].screen->id,
-	       slp[i].screen->screennum);
-	switch (slp[i].where) {
-	case PosObsolete:
-	    ErrorF("\tObsolete format: \"%s\" \"%s\" \"%s\" \"%s\"\n",
-		   slp[i].top, slp[i].bottom, slp[i].left, slp[i].right);
-	    break;
-	case PosAbsolute:
-	    if (slp[i].x == -1)
-		if (slp[i].screen->screennum == 0)
-		    ErrorF("\tImplicitly left-most\n");
-		else
-		    ErrorF("\tImplicitly right of screen %d\n",
-			   slp[i].screen->screennum - 1);
-	    else
-		ErrorF("\t%d %d\n", slp[i].x, slp[i].y);
-	    break;
-	case PosRightOf:
-	    ErrorF("\tRight of \"%s\"\n", slp[i].refscreen->id);
-	    break;
-	case PosLeftOf:
-	    ErrorF("\tLeft of \"%s\"\n", slp[i].refscreen->id);
-	    break;
-	case PosAbove:
-	    ErrorF("\tAbove \"%s\"\n", slp[i].refscreen->id);
-	    break;
-	case PosBelow:
-	    ErrorF("\tBelow \"%s\"\n", slp[i].refscreen->id);
-	    break;
-	case PosRelative:
-	    ErrorF("\t%d %d relative to \"%s\"\n", slp[i].x, slp[i].y,
-		   slp[i].refscreen->id);
-	    break;
-	}
-    }
-#endif
     /*
      * Count the number of inactive devices.
      */
@@ -1701,37 +1723,13 @@ configLayout(serverLayoutPtr servlayoutp, XF86ConfLayoutPtr conf_layout,
         count++;
         idp = (XF86ConfInactivePtr)idp->list.next;
     }
-    /*
-     * Count the number of input devices.
-     */
-    count = 0;
-    irp = conf_layout->lay_input_lst;
-    while (irp) {
-        count++;
-        irp = (XF86ConfInputrefPtr)irp->list.next;
-    }
-    DebugF("Found %d input devices in the layout section %s\n",
-           count, conf_layout->lay_identifier);
-    indp = xnfcalloc((count + 1), sizeof(IDevPtr));
-    indp[count] = NULL;
-    irp = conf_layout->lay_input_lst;
-    count = 0;
-    while (irp) {
-        indp[count] = xnfalloc(sizeof(IDevRec));
-	if (!configInput(indp[count], irp->iref_inputdev, X_CONFIG)) {
-            while(count--) 
-                xfree(indp[count]);
-            xfree(indp);
-            return FALSE;
-	}
-	indp[count]->extraOptions = irp->iref_option_lst;
-        count++;
-        irp = (XF86ConfInputrefPtr)irp->list.next;
-    }
+
+    if (!configInputDevices(conf_layout, servlayoutp))
+	return FALSE;
+
     servlayoutp->id = conf_layout->lay_identifier;
     servlayoutp->screens = slp;
     servlayoutp->inactives = gdp;
-    servlayoutp->inputs = indp;
     servlayoutp->options = conf_layout->lay_option_lst;
     from = X_DEFAULT;
 
@@ -1743,12 +1741,14 @@ configLayout(serverLayoutPtr servlayoutp, XF86ConfLayoutPtr conf_layout,
  * the only active screen.
  */
 static Bool
-configImpliedLayout(serverLayoutPtr servlayoutp, XF86ConfScreenPtr conf_screen)
+configImpliedLayout(serverLayoutPtr servlayoutp, XF86ConfScreenPtr conf_screen,
+                    XF86ConfigPtr xf86configptr)
 {
     MessageType from;
     XF86ConfScreenPtr s;
     screenLayoutPtr slp;
     IDevPtr *indp;
+    XF86ConfLayoutRec layout;
 
     if (!servlayoutp)
 	return FALSE;
@@ -1784,10 +1784,19 @@ configImpliedLayout(serverLayoutPtr servlayoutp, XF86ConfScreenPtr conf_screen)
     servlayoutp->screens = slp;
     servlayoutp->inactives = xnfcalloc(1, sizeof(GDevRec));
     servlayoutp->options = NULL;
-    /* Set up an empty input device list, then look for some core devices. */
-    indp = xnfalloc(sizeof(IDevPtr));
-    *indp = NULL;
-    servlayoutp->inputs = indp;
+
+    memset(&layout, 0, sizeof(layout));
+    layout.lay_identifier = servlayoutp->id;
+    if (xf86layoutAddInputDevices(xf86configptr, &layout) > 0) {
+	if (!configInputDevices(&layout, servlayoutp))
+	    return FALSE;
+	from = X_DEFAULT;
+    } else {
+	/* Set up an empty input device list, then look for some core devices. */
+	indp = xnfalloc(sizeof(IDevPtr));
+	*indp = NULL;
+	servlayoutp->inputs = indp;
+    }
 
     return TRUE;
 }
@@ -2428,34 +2437,53 @@ checkInput(serverLayoutPtr layout, Bool implicit_layout) {
 ConfigStatus
 xf86HandleConfigFile(Bool autoconfig)
 {
-    const char *filename;
-    char *searchpath;
-    MessageType from = X_DEFAULT;
+    const char *filename, *dirname;
+    char *filesearch, *dirsearch;
+    MessageType filefrom = X_DEFAULT;
+    MessageType dirfrom = X_DEFAULT;
     char *scanptr;
     Bool singlecard = 0;
     Bool implicit_layout = FALSE;
 
     if (!autoconfig) {
-	if (getuid() == 0)
-	    searchpath = ROOT_CONFIGPATH;
-	else
-	    searchpath = USER_CONFIGPATH;
+	if (getuid() == 0) {
+	    filesearch = ROOT_CONFIGPATH;
+	    dirsearch = ROOT_CONFIGDIRPATH;
+	} else {
+	    filesearch = USER_CONFIGPATH;
+	    dirsearch = USER_CONFIGDIRPATH;
+	}
 
 	if (xf86ConfigFile)
-	    from = X_CMDLINE;
+	    filefrom = X_CMDLINE;
+	if (xf86ConfigDir)
+	    dirfrom = X_CMDLINE;
 
-	filename = xf86openConfigFile(searchpath, xf86ConfigFile, PROJECTROOT);
+	xf86initConfigFiles();
+	filename = xf86openConfigFile(filesearch, xf86ConfigFile, PROJECTROOT);
+	dirname = xf86openConfigDirFiles(dirsearch, xf86ConfigDir, PROJECTROOT);
 	if (filename) {
-	    xf86MsgVerb(from, 0, "Using config file: \"%s\"\n", filename);
+	    xf86MsgVerb(filefrom, 0, "Using config file: \"%s\"\n", filename);
 	    xf86ConfigFile = xnfstrdup(filename);
 	} else {
 	    if (xf86ConfigFile)
 		xf86Msg(X_ERROR, "Unable to locate/open config file: \"%s\"\n",
 			xf86ConfigFile);
-	    return CONFIG_NOFILE;
 	}
+	if (dirname) {
+	    xf86MsgVerb(dirfrom, 0, "Using config directory: \"%s\"\n",
+			dirname);
+	    xf86ConfigDir = xnfstrdup(dirname);
+	} else {
+	    if (xf86ConfigDir)
+		xf86Msg(X_ERROR,
+			"Unable to locate/open config directory: \"%s\"\n",
+			xf86ConfigDir);
+	}
+	if (!filename && !dirname)
+	    return CONFIG_NOFILE;
     }
-     
+
     if ((xf86configptr = xf86readConfigFile ()) == NULL) {
 	xf86Msg(X_ERROR, "Problem parsing the config file\n");
 	return CONFIG_PARSE_ERROR;
@@ -2481,7 +2509,8 @@ xf86HandleConfigFile(Bool autoconfig)
 		    "No Layout section.  Using the first Screen section.\n");
 	}
 	if (!configImpliedLayout(&xf86ConfigLayout,
-				 xf86configptr->conf_screen_lst)) {
+				 xf86configptr->conf_screen_lst,
+				 xf86configptr)) {
             xf86Msg(X_ERROR, "Unable to determine the screen layout\n");
 	    return CONFIG_PARSE_ERROR;
 	}

@@ -457,9 +457,8 @@ void
 fakeCardFini (KdCardInfo *card)
 {
     FakePriv	*priv = card->driver;
-    
-    if (priv->base)
-	free (priv->base);
+
+    free (priv->base);
     xfree (priv);
 }
 

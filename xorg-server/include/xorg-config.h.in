@@ -36,6 +36,9 @@
 /* Path to configuration file. */
 #undef __XCONFIGFILE__
 
+/* Name of configuration directory. */
+#undef __XCONFIGDIR__
+
 /* Path to loadable modules. */
 #undef DEFAULT_MODULE_PATH
 

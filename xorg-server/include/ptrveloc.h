@@ -37,7 +37,8 @@
 #define AccelProfileSimple 4
 #define AccelProfilePower 5
 #define AccelProfileLinear 6
-#define AccelProfileLAST AccelProfileLinear
+#define AccelProfileSmoothLimited 7
+#define AccelProfileLAST AccelProfileSmoothLimited
 
 /* fwd */
 struct _DeviceVelocityRec;

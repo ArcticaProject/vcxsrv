@@ -147,7 +147,7 @@ add_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
         dbus_message_iter_next(&iter);
     }
 
-    ret = NewInputDeviceRequest(options, &dev);
+    ret = NewInputDeviceRequest(options, NULL, &dev);
     if (ret != Success) {
         DebugF("[config/dbus] NewInputDeviceRequest failed\n");
         goto unwind;

@@ -842,6 +842,9 @@ CloseDevice(DeviceIntPtr dev)
     if(dev->valuator && dev->valuator->accelScheme.AccelCleanupProc)
 	dev->valuator->accelScheme.AccelCleanupProc(dev);
 
+    while (dev->xkb_interest)
+	XkbRemoveResourceClient((DevicePtr)dev,dev->xkb_interest->resource);
+
     xfree(dev->name);
 
     classes = (ClassesPtr)&dev->key;
@@ -852,9 +855,6 @@ CloseDevice(DeviceIntPtr dev)
         classes = dixLookupPrivate(&dev->devPrivates, UnusedClassesPrivateKey);
         FreeAllDeviceClasses(classes);
     }
-
-    while (dev->xkb_interest)
-	XkbRemoveResourceClient((DevicePtr)dev,dev->xkb_interest->resource);
 
     if (DevHasCursor(dev) && dev->spriteInfo->sprite) {
         xfree(dev->spriteInfo->sprite->spriteTrace);

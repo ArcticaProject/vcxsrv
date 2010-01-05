@@ -157,6 +157,10 @@ exaDoPutImage (DrawablePtr pDrawable, GCPtr pGC, int depth, int x, int y,
     if (pExaScr->fallback_counter || pExaPixmap->accel_blocked || !pExaScr->info->UploadToScreen)
 	return FALSE;
 
+    /* If there's a system copy, we want to save the result there */
+    if (pExaPixmap->pDamage)
+	return FALSE;
+
     /* Don't bother with under 8bpp, XYPixmaps. */
     if (format != ZPixmap || bpp < 8)
 	return FALSE;
@@ -1043,6 +1047,7 @@ exaFillRegionSolid (DrawablePtr	pDrawable, RegionPtr pRegion, Pixel pixel,
 	    pDrawable->width == 1 && pDrawable->height == 1 &&
 	    pDrawable->bitsPerPixel != 24) {
 	    ExaPixmapPriv(pPixmap);
+	    RegionPtr pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
 
 	    switch (pDrawable->bitsPerPixel) {
 	    case 32:
@@ -1057,6 +1062,9 @@ exaFillRegionSolid (DrawablePtr	pDrawable, RegionPtr pRegion, Pixel pixel,
 
 	    REGION_UNION(pScreen, &pExaPixmap->validSys, &pExaPixmap->validSys,
 			 pRegion);
+	    REGION_UNION(pScreen, &pExaPixmap->validFB, &pExaPixmap->validFB,
+			 pRegion);
+	    REGION_SUBTRACT(pScreen, pending_damage, pending_damage, pRegion);
 	}
 
 	ret = TRUE;
@@ -1257,35 +1265,16 @@ exaGetImage (DrawablePtr pDrawable, int x, int y, int w, int h,
 {
     ExaScreenPriv (pDrawable->pScreen);
     PixmapPtr pPix = exaGetDrawablePixmap (pDrawable);
+    ExaPixmapPriv(pPix);
     int xoff, yoff;
     Bool ok;
 
     if (pExaScr->fallback_counter || pExaScr->swappedOut)
 	goto fallback;
 
-    exaGetDrawableDeltas (pDrawable, pPix, &xoff, &yoff);
-
-    if (pExaScr->do_migration) {
-	BoxRec Box;
-	RegionRec Reg;
-	ExaMigrationRec pixmaps[1];
-
-	Box.x1 = pDrawable->y + x + xoff;
-	Box.y1 = pDrawable->y + y + yoff;
-	Box.x2 = Box.x1 + w;
-	Box.y2 = Box.y1 + h;
-
-	REGION_INIT(pScreen, &Reg, &Box, 1);
-
-	pixmaps[0].as_dst = FALSE;
-	pixmaps[0].as_src = TRUE;
-	pixmaps[0].pPix = pPix;
-	pixmaps[0].pReg = &Reg;
-
-	exaDoMigration(pixmaps, 1, FALSE);
-
-	REGION_UNINIT(pScreen, &Reg);
-    }
+    /* If there's a system copy, we want to save the result there */
+    if (pExaPixmap->pDamage)
+	goto fallback;
 
     pPix = exaGetOffscreenPixmap (pDrawable, &xoff, &yoff);
 

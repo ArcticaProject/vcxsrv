@@ -165,6 +165,7 @@ typedef struct {
     BitmapToRegionProcPtr        SavedBitmapToRegion;
     CreateScreenResourcesProcPtr SavedCreateScreenResources;
     ModifyPixmapHeaderProcPtr    SavedModifyPixmapHeader;
+    SourceValidateProcPtr        SavedSourceValidate;
 #ifdef RENDER
     CompositeProcPtr             SavedComposite;
     TrianglesProcPtr		 SavedTriangles;
@@ -177,7 +178,6 @@ typedef struct {
     void (*do_move_in_pixmap) (PixmapPtr pPixmap);
     void (*do_move_out_pixmap) (PixmapPtr pPixmap);
     void (*prepare_access_reg)(PixmapPtr pPixmap, int index, RegionPtr pReg);
-    void (*finish_access)(PixmapPtr pPixmap, int index);
 
     Bool			 swappedOut;
     enum ExaMigrationHeuristic	 migration;
@@ -202,6 +202,15 @@ typedef struct {
     unsigned int fallback_counter;
 
     ExaGlyphCacheRec             glyphCaches[EXA_NUM_GLYPH_CACHES];
+
+    /**
+     * Regions affected by fallback composite source / mask operations.
+     */
+
+    RegionRec srcReg;
+    RegionRec maskReg;
+    PixmapPtr srcPix;
+
 } ExaScreenPrivRec, *ExaScreenPrivPtr;
 
 /*
@@ -620,10 +629,10 @@ void
 exaMoveInPixmap_mixed(PixmapPtr pPixmap);
 
 void
-exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg);
+exaDamageReport_mixed(DamagePtr pDamage, RegionPtr pRegion, void *closure);
 
 void
-exaFinishAccess_mixed(PixmapPtr pPixmap, int index);
+exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg);
 
 /* exa_render.c */
 Bool

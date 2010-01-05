@@ -1387,6 +1387,19 @@ ddxProcessArgument(int argc, char **argv, int i)
     xf86ConfigFile = argv[i + 1];
     return 2;
   }
+  if (!strcmp(argv[i], "-configdir"))
+  {
+    CHECK_FOR_REQUIRED_ARGUMENT();
+    if (getuid() != 0 && !xf86PathIsSafe(argv[i + 1])) {
+      FatalError("\nInvalid argument for %s\n"
+	  "\tFor non-root users, the file specified with %s must be\n"
+	  "\ta relative path and must not contain any \"..\" elements.\n"
+	  "\tUsing default "__XCONFIGDIR__" search path.\n\n",
+	  argv[i], argv[i]);
+    }
+    xf86ConfigDir = argv[i + 1];
+    return 2;
+  }
   if (!strcmp(argv[i],"-flipPixels"))
   {
     xf86FlipPixels = TRUE;
@@ -1670,6 +1683,8 @@ ddxUseMsg(void)
   }
   ErrorF("-config file           specify a configuration file, relative to the\n");
   ErrorF("                       "__XCONFIGFILE__" search path, only root can use absolute\n");
+  ErrorF("-configdir dir         specify a configuration directory, relative to the\n");
+  ErrorF("                       "__XCONFIGDIR__" search path, only root can use absolute\n");
   ErrorF("-verbose [n]           verbose startup messages\n");
   ErrorF("-logverbose [n]        verbose log messages\n");
   ErrorF("-quiet                 minimal startup messages\n");

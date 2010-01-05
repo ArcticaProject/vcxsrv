@@ -57,9 +57,11 @@
 #include <X11/Xatom.h>
 #include "xf86.h"
 #include "xf86Priv.h"
+#include "xf86Config.h"
 #include "xf86Xinput.h"
 #include "XIstubs.h"
 #include "xf86Optrec.h"
+#include "xf86Parser.h"
 #include "mipointer.h"
 #include "xf86InPriv.h"
 #include "compiler.h"
@@ -73,6 +75,11 @@
 #include "exevents.h"	/* AddInputDevice */
 #include "exglobals.h"
 #include "eventstr.h"
+
+#include <string.h>     /* InputClassMatches */
+#ifdef HAVE_FNMATCH_H
+#include <fnmatch.h>
+#endif
 
 #include "extnsionst.h"
 
@@ -466,6 +473,85 @@ AddOtherInputDevices(void)
 {
 }
 
+/*
+ * Classes without any Match statements match all devices. Otherwise, all
+ * statements must match.
+ */
+static Bool
+InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
+{
+    if (iclass->match_product &&
+        (!attrs->product || !strstr(attrs->product, iclass->match_product)))
+        return False;
+    if (iclass->match_vendor &&
+        (!attrs->vendor || !strstr(attrs->vendor, iclass->match_vendor)))
+        return False;
+    if (iclass->match_device &&
+#ifdef HAVE_FNMATCH_H
+        (!attrs->device ||
+         fnmatch(iclass->match_device, attrs->device, 0) != 0))
+#else
+        (!attrs->device || !strstr(attrs->device, iclass->match_device)))
+#endif
+        return False;
+    if (iclass->is_keyboard.set &&
+        iclass->is_keyboard.val != !!(attrs->flags & ATTR_KEYBOARD))
+        return False;
+    if (iclass->is_pointer.set &&
+        iclass->is_pointer.val != !!(attrs->flags & ATTR_POINTER))
+        return False;
+    if (iclass->is_joystick.set &&
+        iclass->is_joystick.val != !!(attrs->flags & ATTR_JOYSTICK))
+        return False;
+    if (iclass->is_tablet.set &&
+        iclass->is_tablet.val != !!(attrs->flags & ATTR_TABLET))
+        return False;
+    if (iclass->is_touchpad.set &&
+        iclass->is_touchpad.val != !!(attrs->flags & ATTR_TOUCHPAD))
+        return False;
+    if (iclass->is_touchscreen.set &&
+        iclass->is_touchscreen.val != !!(attrs->flags & ATTR_TOUCHSCREEN))
+        return False;
+    return True;
+}
+
+/*
+ * Merge in any InputClass configurations. Each InputClass section can
+ * add to the original device configuration as well as any previous
+ * InputClass sections.
+ */
+static int
+MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
+{
+    XF86ConfInputClassPtr cl;
+    XF86OptionPtr classopts;
+
+    for (cl = xf86configptr->conf_inputclass_lst; cl; cl = cl->list.next) {
+        if (!InputClassMatches(cl, attrs))
+            continue;
+
+        xf86Msg(X_CONFIG, "%s: Applying InputClass \"%s\"\n",
+                idev->identifier, cl->identifier);
+        if (cl->driver && !idev->driver) {
+            idev->driver = xstrdup(cl->driver);
+            if (!idev->driver) {
+                xf86Msg(X_ERROR, "Could not allocate memory while merging "
+                        "InputClass configuration");
+                return BadAlloc;
+            }
+        }
+
+        classopts = xf86optionListDup(cl->option_lst);
+        if (idev->commonOptions)
+            idev->commonOptions = xf86optionListMerge(classopts,
+                                                      idev->commonOptions);
+        else
+            idev->commonOptions = classopts;
+    }
+
+    return Success;
+}
+
 /**
  * Create a new input device, activate and enable it.
  *
@@ -568,7 +654,8 @@ unwind:
 }
 
 int
-NewInputDeviceRequest (InputOption *options, DeviceIntPtr *pdev)
+NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
+                       DeviceIntPtr *pdev)
 {
     IDevRec *idev = NULL;
     InputOption *option = NULL;
@@ -605,25 +692,15 @@ NewInputDeviceRequest (InputOption *options, DeviceIntPtr *pdev)
             }
         }
 
-        /* Right now, the only automatic config we know of is HAL. */
         if (strcmp(option->key, "_source") == 0 &&
-            strcmp(option->value, "server/hal") == 0) {
+            (strcmp(option->value, "server/hal") == 0 ||
+             strcmp(option->value, "server/udev") == 0)) {
             is_auto = 1;
             if (!xf86Info.autoAddDevices) {
                 rval = BadMatch;
                 goto unwind;
             }
         }
-    }
-    if (!idev->driver || !idev->identifier) {
-        xf86Msg(X_ERROR, "No input driver/identifier specified (ignoring)\n");
-        rval = BadRequest;
-        goto unwind;
-    }
-
-    if (!idev->identifier) {
-        xf86Msg(X_ERROR, "No device identifier specified (ignoring)\n");
-        return BadMatch;
     }
 
     for (option = options; option; option = option->next) {
@@ -633,6 +710,24 @@ NewInputDeviceRequest (InputOption *options, DeviceIntPtr *pdev)
                                                option->key, option->value);
         option->key = NULL;
         option->value = NULL;
+    }
+
+    /* Apply InputClass settings */
+    if (attrs) {
+        rval = MergeInputClasses(idev, attrs);
+        if (rval != Success)
+            goto unwind;
+    }
+
+    if (!idev->driver || !idev->identifier) {
+        xf86Msg(X_ERROR, "No input driver/identifier specified (ignoring)\n");
+        rval = BadRequest;
+        goto unwind;
+    }
+
+    if (!idev->identifier) {
+        xf86Msg(X_ERROR, "No device identifier specified (ignoring)\n");
+        return BadMatch;
     }
 
     rval = xf86NewInputDevice(idev, pdev,

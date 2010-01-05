@@ -231,6 +231,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to 1 if you have the <fnmatch.h> header file. */
+#undef HAVE_FNMATCH_H
+
 /* Have /dev/urandom */
 #undef HAVE_URANDOM
 
@@ -395,6 +398,9 @@
 
 /* Support D-Bus */
 #undef HAVE_DBUS
+
+/* Use libudev for input hotplug */
+#undef CONFIG_UDEV
 
 /* Use D-Bus for input hotplug */
 #undef CONFIG_NEED_DBUS

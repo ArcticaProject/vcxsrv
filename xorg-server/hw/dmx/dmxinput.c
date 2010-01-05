@@ -103,7 +103,8 @@ void dmxUpdateWindowInfo(DMXUpdateType type, WindowPtr pWindow)
 }
 
 int
-NewInputDeviceRequest (InputOption *options, DeviceIntPtr *pdev)
+NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
+                       DeviceIntPtr *pdev)
 {
     return BadRequest;
 }

@@ -877,6 +877,31 @@ SmoothLinearProfile(
 }
 
 
+/**
+ * From 0 to threshold, the response graduates smoothly from min_accel to
+ * acceleration. Beyond threshold it is exactly the specified acceleration.
+ */
+static float
+SmoothLimitedProfile(
+    DeviceIntPtr dev,
+    DeviceVelocityPtr vel,
+    float velocity,
+    float threshold,
+    float acc)
+{
+    float res;
+
+    if(velocity >= threshold || threshold == 0.0f)
+	return acc;
+
+    velocity /= threshold; /* should be [0..1[ now */
+
+    res = CalcPenumbralGradient(velocity) * (acc - vel->min_acceleration);
+
+    return vel->min_acceleration + res;
+}
+
+
 static float
 LinearProfile(
     DeviceIntPtr dev,
@@ -887,7 +912,6 @@ LinearProfile(
 {
     return acc * velocity;
 }
-
 
 static float
 NoProfile(
@@ -920,6 +944,8 @@ GetAccelerationProfile(
             return PowerProfile;
         case AccelProfileLinear:
             return LinearProfile;
+        case AccelProfileSmoothLimited:
+            return SmoothLimitedProfile;
         case AccelProfileNone:
             return NoProfile;
         default:

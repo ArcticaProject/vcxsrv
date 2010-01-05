@@ -76,7 +76,7 @@ static KdPointerMatrix	kdPointerMatrix = {
 };
 
 void KdResetInputMachine (void);
-    
+
 #define KD_MAX_INPUT_FDS    8
 
 typedef struct _kdInputFd {
@@ -108,7 +108,7 @@ KdBlockSigio (void)
     __asm int 3;
 #else
     sigset_t	set;
-    
+
     sigemptyset (&set);
     sigaddset (&set, SIGIO);
     sigprocmask (SIG_BLOCK, &set, 0);
@@ -122,7 +122,7 @@ KdUnblockSigio (void)
     __asm int 3;
 #else
     sigset_t	set;
-    
+
     sigemptyset (&set);
     sigaddset (&set, SIGIO);
     sigprocmask (SIG_UNBLOCK, &set, 0);
@@ -190,7 +190,7 @@ KdAddFd (int fd)
 #else
     struct sigaction	act;
     sigset_t		set;
-    
+
     kdnFds++;
     fcntl (fd, F_SETOWN, getpid());
     KdNonBlockFd (fd);
@@ -215,7 +215,7 @@ KdRemoveFd (int fd)
 #else
     struct sigaction	act;
     int			flags;
-    
+
     kdnFds--;
     RemoveEnabledDevice (fd);
     flags = fcntl (fd, F_GETFL);
@@ -344,7 +344,7 @@ KdEnableInput (void)
     InternalEvent ev;
     KdKeyboardInfo *ki;
     KdPointerInfo *pi;
-    
+
     kdInputEnabled = TRUE;
 
     for (ki = kdKeyboards; ki; ki = ki->next) {
@@ -372,7 +372,7 @@ KdFindKeyboardDriver (char *name)
     /* ask a stupid question ... */
     if (!name)
         return NULL;
-    
+
     for (ret = kdKeyboardDrivers; ret; ret = ret->next) {
         if (strcmp(ret->name, name) == 0)
             return ret;
@@ -507,11 +507,11 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
                           pi->name ? pi->name : "Generic KDrive Pointer");
 
 	return Success;
-	
+
     case DEVICE_ON:
         if (pDev->on == TRUE)
             return Success;
-        
+
         if (!pi->driver->Enable) {
             ErrorF("no enable function\n");
             return BadImplementation;
@@ -558,7 +558,7 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
         (*pi->driver->Fini) (pi);
 
         KdRemovePointer(pi);
-        
+
         return Success;
     }
 
@@ -579,7 +579,7 @@ KdBell (int volume, DeviceIntPtr pDev, pointer arg, int something)
 {
     KeybdCtrl *ctrl = arg;
     KdKeyboardInfo *ki = NULL;
-    
+
     for (ki = kdKeyboards; ki; ki = ki->next) {
         if (ki->dixdev && ki->dixdev->id == pDev->id)
             break;
@@ -587,7 +587,7 @@ KdBell (int volume, DeviceIntPtr pDev, pointer arg, int something)
 
     if (!ki || !ki->dixdev || ki->dixdev->id != pDev->id || !ki->driver)
         return;
-    
+
     KdRingBell(ki, volume, ctrl->bell_pitch, ctrl->bell_duration);
 }
 
@@ -613,7 +613,7 @@ KdRingBell(KdKeyboardInfo *ki, int volume, int pitch, int duration)
 {
     if (!ki || !ki->driver || !ki->driver->Bell)
         return;
-        
+
     if (kdInputEnabled)
         (*ki->driver->Bell) (ki, volume, pitch, duration);
 }
@@ -714,7 +714,7 @@ KdKbdCtrl (DeviceIntPtr pDevice, KeybdCtrl *ctrl)
 
     KdSetLeds(ki, ctrl->leds);
     ki->bellPitch = ctrl->bell_pitch;
-    ki->bellDuration = ctrl->bell_duration; 
+    ki->bellDuration = ctrl->bell_duration;
 }
 
 extern KeybdCtrl defaultKeyboardControl;
@@ -817,7 +817,7 @@ KdKeyboardProc(DeviceIntPtr pDevice, int onoff)
         pDev->on = FALSE;
 
         return Success;
-        
+
         break;
 
     case DEVICE_CLOSE:
@@ -958,7 +958,7 @@ KdAddKeyboard (KdKeyboardInfo *ki)
 
     if (!ki)
         return !Success;
-    
+
     ki->dixdev = AddInputDevice(serverClient, KdKeyboardProc, TRUE);
     if (!ki->dixdev) {
         ErrorF("Couldn't register keyboard device %s\n",
@@ -1065,12 +1065,12 @@ KdRemovePointer (KdPointerInfo *pi)
     KdFreePointer(pi);
 }
 
-/* 
+/*
  * You can call your kdriver server with something like:
  * $ ./hw/kdrive/yourserver/X :1 -mouse evdev,,device=/dev/input/event4 -keybd
- * evdev,,device=/dev/input/event1,xkbmodel=abnt2,xkblayout=br 
+ * evdev,,device=/dev/input/event1,xkbmodel=abnt2,xkblayout=br
  */
-static Bool 
+static Bool
 KdGetOptions (InputOption **options, char *string)
 {
     InputOption     *newopt = NULL, **tmpo = NULL;
@@ -1081,7 +1081,7 @@ KdGetOptions (InputOption **options, char *string)
         return FALSE;
 
     for (tmpo = options; *tmpo; tmpo = &(*tmpo)->next)
-        ; /* Hello, I'm here */ 
+        ; /* Hello, I'm here */
     *tmpo = newopt;
 
     if (strchr(string, '='))
@@ -1122,7 +1122,7 @@ KdParseKbdOptions (KdKeyboardInfo *ki)
         else if (!strcasecmp (option->key, "device"))
             ki->path = strdup(option->value);
         else
-           ErrorF("Kbd option key (%s) of value (%s) not assigned!\n", 
+           ErrorF("Kbd option key (%s) of value (%s) not assigned!\n",
                     option->key, option->value);
     }
 }
@@ -1183,11 +1183,11 @@ KdParseKeyboard (char *arg)
     {
         arg = KdParseFindNext (arg, ",", save, &delim);
 
-	if (!KdGetOptions(&options, save)) 
+	if (!KdGetOptions(&options, save))
 	{
 	    KdFreeKeyboard(ki);
 	    return NULL;
-        }    
+        }
     }
 
     if (options)
@@ -1219,7 +1219,7 @@ KdParsePointerOptions (KdPointerInfo *pi)
         else if (!strcasecmp (option->key, "protocol"))
             pi->protocol = strdup(option->value);
         else
-            ErrorF("Pointer option key (%s) of value (%s) not assigned!\n", 
+            ErrorF("Pointer option key (%s) of value (%s) not assigned!\n",
                     option->key, option->value);
     }
 }
@@ -1471,7 +1471,7 @@ KdInitInput (void)
  *	<>  -> (deliver) synthetic_2_down_1
  *	k   -> (deliver) synthetic_2_down_1
  */
- 
+
 typedef enum _inputClass {
     down_1, up_1,
     down_2, up_2,
@@ -1651,7 +1651,7 @@ KdInsideEmulationWindow (KdPointerInfo *pi, int x, int y, int z)
     return (abs (pi->emulationDx) < EMULATION_WINDOW &&
 	    abs (pi->emulationDy) < EMULATION_WINDOW);
 }
-				     
+
 static KdInputClass
 KdClassifyInput (KdPointerInfo *pi, int type, int x, int y, int z, int b)
 {
@@ -1929,7 +1929,7 @@ KdEnqueuePointerEvent(KdPointerInfo *pi, unsigned long flags, int rx, int ry,
 
     if (!pi)
 	return;
-    
+
     ms = GetTimeInMillis();
 
     /* we don't need to transform z, so we don't. */
@@ -2024,7 +2024,7 @@ KdBlockHandler (int		screen,
 	if (pi->timeoutPending)
 	{
 	    int	ms;
-    
+
 	    ms = pi->emulationTimeout - GetTimeInMillis ();
 	    if (ms < 1)
 		ms = 1;
@@ -2043,7 +2043,7 @@ KdBlockHandler (int		screen,
 }
 
 void
-KdWakeupHandler (int		screen, 
+KdWakeupHandler (int		screen,
 		 pointer    	data,
 		 unsigned long	lresult,
 		 pointer	readmask)
@@ -2052,7 +2052,7 @@ KdWakeupHandler (int		screen,
     fd_set	*pReadmask = (fd_set *) readmask;
     int		i;
     KdPointerInfo	*pi;
-    
+
     if (kdInputEnabled && result > 0)
     {
 	for (i = 0; i < kdNumInputFds; i++)
@@ -2092,13 +2092,13 @@ KdCursorOffScreen(ScreenPtr *ppScreen, int *x, int *y)
     int		best_x, best_y;
     int		n_best_x, n_best_y;
     CARD32	ms;
-    
+
     if (kdDisableZaphod || screenInfo.numScreens <= 1)
 	return FALSE;
 
     if (0 <= *x && *x < pScreen->width && 0 <= *y && *y < pScreen->height)
 	return FALSE;
-	
+
     ms = GetTimeInMillis ();
     if (kdOffScreen && (int) (ms - kdOffScreenTime) < 1000)
 	return FALSE;
@@ -2111,7 +2111,7 @@ KdCursorOffScreen(ScreenPtr *ppScreen, int *x, int *y)
     for (n = 0; n < screenInfo.numScreens; n++)
     {
 	pNewScreen = screenInfo.screens[n];
-	if (pNewScreen == pScreen) 
+	if (pNewScreen == pScreen)
 	    continue;
 	dx = KdScreenOrigin(pNewScreen)->x - KdScreenOrigin(pScreen)->x;
 	dy = KdScreenOrigin(pNewScreen)->y - KdScreenOrigin(pScreen)->y;
@@ -2153,17 +2153,17 @@ KdCursorOffScreen(ScreenPtr *ppScreen, int *x, int *y)
     if (n_best_x == -1)
 	return FALSE;
     pNewScreen = screenInfo.screens[n_best_x];
-    
+
     if (*x < 0)
 	*x += pNewScreen->width;
     if (*y < 0)
 	*y += pNewScreen->height;
-    
+
     if (*x >= pScreen->width)
 	*x -= pScreen->width;
     if (*y >= pScreen->height)
 	*y -= pScreen->height;
-    
+
     *ppScreen = pNewScreen;
     return TRUE;
 }
@@ -2190,7 +2190,7 @@ KdWarpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
     KdUnblockSigio ();
 }
 
-miPointerScreenFuncRec kdPointerScreenFuncs = 
+miPointerScreenFuncRec kdPointerScreenFuncs =
 {
     KdCursorOffScreen,
     KdCrossScreen,
@@ -2274,7 +2274,8 @@ ChangeDeviceControl(register ClientPtr client, DeviceIntPtr pDev,
 }
 
 int
-NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
+NewInputDeviceRequest(InputOption *options, InputAttributes *attrs,
+                      DeviceIntPtr *pdev)
 {
     InputOption *option = NULL;
     KdPointerInfo *pi = NULL;
@@ -2302,6 +2303,14 @@ NewInputDeviceRequest(InputOption *options, DeviceIntPtr *pdev)
                  strcmp(option->value, "server/hal") == 0)
         {
             ErrorF("Ignoring device from HAL.\n");
+            return BadValue;
+        }
+#endif
+#ifdef CONFIG_UDEV
+        else if (strcmp(option->key, "_source") == 0 &&
+                 strcmp(option->value, "server/udev") == 0)
+        {
+            ErrorF("Ignoring device from udev.\n");
             return BadValue;
         }
 #endif

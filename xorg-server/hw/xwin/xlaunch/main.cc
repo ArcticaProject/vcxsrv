@@ -23,10 +23,6 @@
  * holders shall not be used in advertising or otherwise to promote the sale,
  * use or other dealings in this Software without prior written authorization.
  */
-
-#define printf _not_used_   /* Make sure that we do not use the standard printf definition because
-                               we are going to reimplement it in this file */
-
 #include "window/util.h"
 #include "window/wizard.h"
 #include "resources/resources.h"
@@ -41,65 +37,6 @@
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
-#include <fcntl.h>
-#include <io.h>
-#undef printf
-
-#if defined(_MSC_VER) && defined(_DLL)
-#define _CRTEXP __declspec(dllexport)
-#else
-#define _CRTEXP
-#endif
-
-_Check_return_opt_ _CRTEXP int __cdecl printf(_In_z_ _Printf_format_string_ const char * pFmt, ...)
-{
-  static int ConsoleCreated=0;
-  va_list arglist;
-  if (!ConsoleCreated)
-  {
-    int hConHandle;
-    long lStdHandle;
-    CONSOLE_SCREEN_BUFFER_INFO coninfo;
-
-    FILE *fp;
-    const unsigned int MAX_CONSOLE_LINES = 500;
-    ConsoleCreated=1;
-    if (!AttachConsole(ATTACH_PARENT_PROCESS))
-      AllocConsole();
-
-      // set the screen buffer to be big enough to let us scroll text
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE),	&coninfo);
-    coninfo.dwSize.Y = MAX_CONSOLE_LINES;
-    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE),	coninfo.dwSize);
-
-    // redirect unbuffered STDOUT to the console
-    lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
-    hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
-    fp = _fdopen( hConHandle, "w" );
-    *stdout = *fp;
-    setvbuf( stdout, NULL, _IONBF, 0 );
-
-    // redirect unbuffered STDIN to the console
-    lStdHandle = (long)GetStdHandle(STD_INPUT_HANDLE);
-    hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
-    fp = _fdopen( hConHandle, "r" );
-    *stdin = *fp;
-    setvbuf( stdin, NULL, _IONBF, 0 );
-
-    // redirect unbuffered STDERR to the console
-    lStdHandle = (long)GetStdHandle(STD_ERROR_HANDLE);
-    hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
-    fp = _fdopen( hConHandle, "w" );
-    *stderr = *fp;
-    setvbuf( stderr, NULL, _IONBF, 0 );
-
-  }
-
-  va_start(arglist, pFmt );
-  return vfprintf(stderr, pFmt, arglist);
-}
-
-
 /// @brief Send WM_ENDSESSION to all program windows.
 /// This will shutdown the started xserver
 BOOL CALLBACK KillWindowsProc(HWND hwnd, LPARAM lParam)
@@ -135,7 +72,9 @@ class CMyWizard : public CWizard
 		config.Load(filename);
 	    } catch (std::runtime_error &e)
 	    {
-		printf("Fehler: %s\n", e.what());
+		char Message[255];
+		sprintf(Message,"Failure: %s\n", e.what());
+		MessageBox(NULL,Message,"Exception",MB_OK);
 	    }
 	}
 
@@ -423,7 +362,9 @@ class CMyWizard : public CWizard
       		    config.Save(ofn.lpstrFile);
 		} catch (std::runtime_error &e)
 		{
-		    printf("Fehler: %s\n", e.what());
+		char Message[255];
+		sprintf(Message,"Failure: %s\n", e.what());
+		MessageBox(NULL,Message,"Exception",MB_OK);
 		}
 	    } 
 	}
@@ -567,11 +508,6 @@ class CMyWizard : public CWizard
             // Construct display strings
 	    std::string display_id = ":" + config.display;
 	    std::string display = "localhost" + display_id + ":0";
-
-#ifdef _DEBUG
-            // Debug only: Switch to VCXsrv installation directory
-	    SetCurrentDirectory("C:\\Programme\\vcxsrv");
-#endif	    
 
             // Build Xsrv commandline
 	    buffer = "vcxsrv " + display_id + " ";
@@ -759,7 +695,13 @@ int main(int argc, char **argv)
 	return 0;
     } catch (std::runtime_error &e)
     {
-        printf("Fehler: %s\n", e.what());
+		char Message[255];
+		sprintf(Message,"Failure: %s\n", e.what());
+		MessageBox(NULL,Message,"Exception",MB_OK);
         return -1;
     }
 }
+
+
+
+

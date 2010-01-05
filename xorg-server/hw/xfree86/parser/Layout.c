@@ -64,6 +64,10 @@
 #include "Configint.h"
 #include <string.h>
 
+
+/* Needed for auto server layout */
+extern int xf86CheckBoolOption(void* optlist, const char *name, int deflt);
+
 extern LexRec val;
 
 static xf86ConfigSymTabRec LayoutTab[] =
@@ -435,18 +439,58 @@ xf86freeLayoutList (XF86ConfLayoutPtr ptr)
 	}
 }
 
-#define CheckScreen(str, ptr)\
-if (str[0] != '\0') \
-{ \
-screen = xf86findScreen (str, p->conf_screen_lst); \
-if (!screen) \
-{ \
-	xf86validationError (UNDEFINED_SCREEN_MSG, \
-				   str, layout->lay_identifier); \
-	return (FALSE); \
-} \
-else \
-	ptr = screen; \
+int
+xf86layoutAddInputDevices(XF86ConfigPtr config, XF86ConfLayoutPtr layout)
+{
+    int count = 0;
+    XF86ConfInputPtr input = config->conf_input_lst;
+    XF86ConfInputrefPtr inptr;
+
+    /* add all AutoServerLayout devices to the server layout */
+    while (input)
+    {
+	if (xf86CheckBoolOption(input->inp_option_lst, "AutoServerLayout", FALSE))
+	{
+	    XF86ConfInputrefPtr iref = layout->lay_input_lst;
+
+	    /* avoid duplicates if referenced but lists AutoServerLayout too */
+	    while (iref)
+	    {
+		if (strcmp(iref->iref_inputdev_str, input->inp_identifier) == 0)
+		    break;
+		iref = iref->list.next;
+	    }
+
+	    if (!iref)
+	    {
+		XF86ConfInputrefPtr iptr;
+		iptr = calloc(1, sizeof(XF86ConfInputrefRec));
+		iptr->iref_inputdev_str = input->inp_identifier;
+		layout->lay_input_lst = (XF86ConfInputrefPtr)
+		    xf86addListItem((glp)layout->lay_input_lst, (glp)iptr);
+		count++;
+	    }
+	}
+	input = input->list.next;
+    }
+
+    inptr = layout->lay_input_lst;
+    while (inptr)
+    {
+	input = xf86findInput (inptr->iref_inputdev_str,
+		config->conf_input_lst);
+	if (!input)
+	{
+	    xf86validationError (UNDEFINED_INPUT_MSG,
+		    inptr->iref_inputdev_str, layout->lay_identifier);
+	    return -1;
+	}
+	else
+	    inptr->iref_inputdev = input;
+	inptr = inptr->list.next;
+    }
+
+    return count;
 }
 
 int
@@ -455,10 +499,8 @@ xf86validateLayout (XF86ConfigPtr p)
 	XF86ConfLayoutPtr layout = p->conf_layout_lst;
 	XF86ConfAdjacencyPtr adj;
 	XF86ConfInactivePtr iptr;
-	XF86ConfInputrefPtr inptr;
 	XF86ConfScreenPtr screen;
 	XF86ConfDevicePtr device;
-	XF86ConfInputPtr input;
 
 	while (layout)
 	{
@@ -475,13 +517,6 @@ xf86validateLayout (XF86ConfigPtr p)
 			}
 			else
 				adj->adj_screen = screen;
-
-#if 0
-			CheckScreen (adj->adj_top_str, adj->adj_top);
-			CheckScreen (adj->adj_bottom_str, adj->adj_bottom);
-			CheckScreen (adj->adj_left_str, adj->adj_left);
-			CheckScreen (adj->adj_right_str, adj->adj_right);
-#endif
 
 			adj = adj->list.next;
 		}
@@ -500,21 +535,10 @@ xf86validateLayout (XF86ConfigPtr p)
 				iptr->inactive_device = device;
 			iptr = iptr->list.next;
 		}
-		inptr = layout->lay_input_lst;
-		while (inptr)
-		{
-			input = xf86findInput (inptr->iref_inputdev_str,
-									p->conf_input_lst);
-			if (!input)
-			{
-				xf86validationError (UNDEFINED_INPUT_MSG,
-						inptr->iref_inputdev_str, layout->lay_identifier);
-				return (FALSE);
-			}
-			else
-				inptr->iref_inputdev = input;
-			inptr = inptr->list.next;
-		}
+
+		if (xf86layoutAddInputDevices(p, layout) == -1)
+		    return FALSE;
+
 		layout = layout->list.next;
 	}
 	return (TRUE);

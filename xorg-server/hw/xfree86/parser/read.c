@@ -177,6 +177,14 @@ xf86readConfigFile (void)
 				HANDLE_LIST (conf_input_lst, xf86parseInputSection,
 							 XF86ConfInputPtr);
 			}
+			else if (xf86nameCompare(val.str, "inputclass") == 0)
+			{
+				free(val.str);
+				val.str = NULL;
+				HANDLE_LIST (conf_inputclass_lst,
+						xf86parseInputClassSection,
+						XF86ConfInputClassPtr);
+			}
 			else if (xf86nameCompare (val.str, "module") == 0)
 			{
 				free(val.str);

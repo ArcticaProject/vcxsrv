@@ -28,13 +28,17 @@
 #endif
 
 #include "os.h"
+#include "inputstr.h"
 #include "hotplug.h"
 #include "config-backends.h"
 
 void
 config_init(void)
 {
-#if defined(CONFIG_DBUS_API) || defined(CONFIG_HAL)
+#ifdef CONFIG_UDEV
+    if (!config_udev_init())
+        ErrorF("[config] failed to initialise udev\n");
+#elif defined(CONFIG_NEED_DBUS)
     if (config_dbus_core_init()) {
 # ifdef CONFIG_DBUS_API
        if (!config_dbus_init())
@@ -54,7 +58,9 @@ config_init(void)
 void
 config_fini(void)
 {
-#if defined(CONFIG_DBUS_API) || defined(CONFIG_HAL)
+#if defined(CONFIG_UDEV)
+    config_udev_fini();
+#elif defined(CONFIG_NEED_DBUS)
 # ifdef CONFIG_HAL
     config_hal_fini();
 # endif
@@ -63,4 +69,71 @@ config_fini(void)
 # endif
     config_dbus_core_fini();
 #endif
+}
+
+static void
+remove_device(const char *backend, DeviceIntPtr dev)
+{
+    /* this only gets called for devices that have already been added */
+    LogMessage(X_INFO, "config/%s: removing device %s\n", backend, dev->name);
+
+    /* Call PIE here so we don't try to dereference a device that's
+     * already been removed. */
+    OsBlockSignals();
+    ProcessInputEvents();
+    DeleteInputDeviceRequest(dev);
+    OsReleaseSignals();
+}
+
+void
+remove_devices(const char *backend, const char *config_info)
+{
+    DeviceIntPtr dev, next;
+
+    for (dev = inputInfo.devices; dev; dev = next) {
+        next = dev->next;
+        if (dev->config_info && strcmp(dev->config_info, config_info) == 0)
+            remove_device(backend, dev);
+    }
+    for (dev = inputInfo.off_devices; dev; dev = next) {
+        next = dev->next;
+        if (dev->config_info && strcmp(dev->config_info, config_info) == 0)
+            remove_device(backend, dev);
+    }
+}
+
+BOOL
+device_is_duplicate(const char *config_info)
+{
+    DeviceIntPtr dev;
+
+    for (dev = inputInfo.devices; dev; dev = dev->next)
+    {
+        if (dev->config_info && (strcmp(dev->config_info, config_info) == 0))
+            return TRUE;
+    }
+
+    for (dev = inputInfo.off_devices; dev; dev = dev->next)
+    {
+        if (dev->config_info && (strcmp(dev->config_info, config_info) == 0))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+void
+add_option(InputOption **options, const char *key, const char *value)
+{
+    if (!value || *value == '\0')
+        return;
+
+    for (; *options; options = &(*options)->next)
+        ;
+    *options = xcalloc(sizeof(**options), 1);
+    if (!*options) /* Yeesh. */
+        return;
+    (*options)->key = xstrdup(key);
+    (*options)->value = xstrdup(value);
+    (*options)->next = NULL;
 }

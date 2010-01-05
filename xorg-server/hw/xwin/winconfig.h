@@ -188,6 +188,7 @@ typedef struct
   /* Files */
 #ifdef XWIN_XF86CONFIG
   char *configFile;
+  char *configDir;
 #endif
   char *fontPath;
   /* input devices - keyboard */

@@ -425,9 +425,6 @@ exaFinishAccess(DrawablePtr pDrawable, int index)
     /* We always hide the devPrivate.ptr. */
     pPixmap->devPrivate.ptr = NULL;
 
-    if (pExaScr->finish_access)
-	pExaScr->finish_access(pPixmap, index);
-
     if (!pExaScr->info->FinishAccess || !exaPixmapHasGpuCopy(pPixmap))
 	return;
 
@@ -981,7 +978,6 @@ exaDriverInit (ScreenPtr		pScreen,
 		pExaScr->do_move_in_pixmap = exaMoveInPixmap_mixed;
 		pExaScr->do_move_out_pixmap = NULL;
 		pExaScr->prepare_access_reg = exaPrepareAccessReg_mixed;
-		pExaScr->finish_access = exaFinishAccess_mixed;
 	    } else {
 		wrap(pExaScr, pScreen, CreatePixmap, exaCreatePixmap_driver);
 		wrap(pExaScr, pScreen, DestroyPixmap, exaDestroyPixmap_driver);
@@ -991,7 +987,6 @@ exaDriverInit (ScreenPtr		pScreen,
 		pExaScr->do_move_in_pixmap = NULL;
 		pExaScr->do_move_out_pixmap = NULL;
 		pExaScr->prepare_access_reg = NULL;
-		pExaScr->finish_access = NULL;
 	    }
 	} else {
 	    wrap(pExaScr, pScreen, CreatePixmap, exaCreatePixmap_classic);
@@ -1002,7 +997,6 @@ exaDriverInit (ScreenPtr		pScreen,
 	    pExaScr->do_move_in_pixmap = exaMoveInPixmap_classic;
 	    pExaScr->do_move_out_pixmap = exaMoveOutPixmap_classic;
 	    pExaScr->prepare_access_reg = exaPrepareAccessReg_classic;
-	    pExaScr->finish_access = NULL;
 	}
 	if (!(pExaScr->info->flags & EXA_HANDLES_PIXMAPS)) {
 	    LogMessage(X_INFO, "EXA(%d): Offscreen pixmap area of %lu bytes\n",

@@ -109,7 +109,7 @@ script.
 .B __xservername__
 supports several mechanisms for supplying/obtaining configuration and
 run-time parameters: command line options, environment variables, the
-__xconfigfile__(__filemansuffix__) configuration file, auto-detection, and
+__xconfigfile__(__filemansuffix__) configuration files, auto-detection, and
 fallback defaults.  When the same information is supplied in more than
 one way, the highest precedence mechanism is used.  The list of mechanisms
 is ordered from highest precedence to lowest.  Note that not all parameters
@@ -175,6 +175,13 @@ Read the server configuration from
 This option will work for any file when the server is run as root (i.e,
 with real-uid 0), or for files relative to a directory in the config
 search path for all other users.
+.TP 8
+.BI \-configdir " directory"
+Read the server configuration files from
+.IR directory .
+This option will work for any directory when the server is run as root
+(i.e, with real-uid 0), or for directories relative to a directory in the
+config directory search path for all other users.
 .TP 8
 .B \-configure
 When this option is specified, the
@@ -421,25 +428,18 @@ The
 .B __xservername__
 server is normally configured to recognize various special combinations
 of key presses that instruct the server to perform some action, rather
-than just sending the key press event to a client application.  The
-default XKEYBOARD keymap defines the key combinations listed below.
-The kbd (__drivermansuffix__) driver also has these key combinations
-builtin to its event handler
-for cases where the XKEYBOARD extension is not being used.  When using
-the XKEYBOARD extension, which key combinations perform which actions
-is completely configurable.
+than just sending the key press event to a client application. These actions
+depend on the XKB keymap loaded by a particular keyboard device and may or
+may not be available on a given configuration.
 .PP
-The special combinations of key presses recognized directly
-by
-.B __xservername__
-are:
+The following key combinations are commonly part of the default XKEYBOARD
+keymap.
 .TP 8
 .B Ctrl+Alt+Backspace
-Immediately kills the server -- no questions asked.  This is disabled by
-default.  It can be enabled with the -retro command line flag or by setting
-the
+Immediately kills the server -- no questions asked. It can be disabled by
+setting the
 .B DontZap
-__xconfigfile__(__filemansuffix__) file option to a FALSE value.
+__xconfigfile__(__filemansuffix__) file option to a TRUE value.
 .TP 8
 .B Ctrl+Alt+Keypad-Plus
 Change video mode to next one specified in the configuration file.
@@ -463,6 +463,10 @@ __xconfigfile__(__filemansuffix__) file option.
 .B __xservername__
 typically uses a configuration file called
 .B __xconfigfile__
+and configuration files with the suffix
+.I .conf
+in a directory called
+.B __xconfigdir__
 for its initial setup.
 Refer to the __xconfigfile__(__filemansuffix__) manual page for information
 about the format of this file.
@@ -471,7 +475,9 @@ about the format of this file.
 has a mechanism for automatically generating a built-in configuration
 at run-time when no
 .B __xconfigfile__
-file is present.  The current version of this automatic configuration
+file or
+.B __xconfigdir__
+files are present.  The current version of this automatic configuration
 mechanism works in two ways.
 .PP
 The first is via enhancements that have made many components of the
@@ -493,7 +499,7 @@ supported by __xservername__.  Enhancements are planned for future releases.
 .SH FILES
 The
 .B __xservername__
-server config file can be found in a range of locations.  These are
+server config files can be found in a range of locations.  These are
 documented fully in the __xconfigfile__(__filemansuffix__) manual page.  The
 most commonly used locations are shown here.
 .TP 30
@@ -511,6 +517,21 @@ Server configuration file.
 .TP 30
 .B __projectroot__/lib/X11/__xconfigfile__
 Server configuration file.
+.TP 30
+.B /etc/X11/__xconfigdir__
+Server configuration directory.
+.TP 30
+.B /etc/X11/__xconfigdir__-4
+Server configuration directory.
+.TP 30
+.B /etc/__xconfigdir__
+Server configuration directory.
+.TP 30
+.B __projectroot__/etc/__xconfigdir__
+Server configuration directory.
+.TP 30
+.B __projectroot__/lib/X11/__xconfigdir__
+Server configuration directory.
 .TP 30
 .BI __logdir__/__xservername__. n .log
 Server log file for display
