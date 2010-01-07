@@ -1033,16 +1033,39 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
             break;
     }
 
-#if 0
-    /* FIXME: I'm broken. Please fix me. Thanks */
     if (DeviceEventCallback) {
-	DeviceEventInfoRec eventinfo;
+        DeviceEventInfoRec eventinfo;
+        SpritePtr pSprite = device->spriteInfo->sprite;
+        xEvent *xi_events = NULL;
+        int count;
 
-	eventinfo.events = (xEventPtr) xE;
-	eventinfo.count = count;
-	CallCallbacks(&DeviceEventCallback, (pointer) & eventinfo);
+        /* see comment in EnqueueEvents regarding the next three lines */
+        if (ev->any.type == ET_Motion)
+            ev->device_event.root =
+                WindowTable[pSprite->hotPhys.pScreen->myNum]->drawable.id;
+
+        /* SDs send XI events only. MDs send both an XI event and a core
+         * event.
+         */
+        EventToXI(ev, &xi_events, &count);
+
+        eventinfo.events = (xEventPtr)xi_events;
+        eventinfo.count = count;
+        ErrorF("POE xi root is %lx\n", xi_events->u.keyButtonPointer.root);
+        CallCallbacks(&DeviceEventCallback, (pointer) & eventinfo);
+        xfree(xi_events);
+
+        if (IsMaster(device))
+        {
+            xEvent core;
+            EventToCore(ev, &core);
+            eventinfo.events = (xEventPtr)&core;
+            eventinfo.count = 1;
+            ErrorF("POE core root is %lx\n", core.u.keyButtonPointer.root);
+            CallCallbacks(&DeviceEventCallback, (pointer) & eventinfo);
+        }
+
     }
-#endif
     grab = device->deviceGrab.grab;
 
     switch(event->type)

@@ -119,6 +119,7 @@ EventToCore(InternalEvent *event, xEvent *core)
                 core->u.keyButtonPointer.rootX = e->root_x;
                 core->u.keyButtonPointer.rootY = e->root_y;
                 core->u.keyButtonPointer.state = e->corestate;
+                core->u.keyButtonPointer.root = e->root;
                 EventSetKeyRepeatFlag(core, (e->type == ET_KeyPress && e->key_repeat));
             }
             break;

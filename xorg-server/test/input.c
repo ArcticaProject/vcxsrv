@@ -153,6 +153,7 @@ static void dix_event_to_core(int type)
     int rc;
     int state;
     int detail;
+    const int ROOT_WINDOW_ID = 0x100;
 
     /* EventToCore memsets the event to 0 */
 #define test_event() \
@@ -165,7 +166,7 @@ static void dix_event_to_core(int type)
     g_assert(core.u.keyButtonPointer.state == state); \
     g_assert(core.u.keyButtonPointer.eventX == 0); \
     g_assert(core.u.keyButtonPointer.eventY == 0); \
-    g_assert(core.u.keyButtonPointer.root == 0); \
+    g_assert(core.u.keyButtonPointer.root == ROOT_WINDOW_ID); \
     g_assert(core.u.keyButtonPointer.event == 0); \
     g_assert(core.u.keyButtonPointer.child == 0); \
     g_assert(core.u.keyButtonPointer.sameScreen == FALSE);
@@ -181,6 +182,7 @@ static void dix_event_to_core(int type)
     ev.time     = time;
     ev.root_y   = x;
     ev.root_x   = y;
+    ev.root     = ROOT_WINDOW_ID;
     ev.corestate = state;
     ev.detail.key = detail;
 
