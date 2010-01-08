@@ -29,8 +29,9 @@ dnl
 # is defined, then add $1 to $REQUIRED_MODULES.
 
 AC_DEFUN([XORG_DRIVER_CHECK_EXT],[
+	AC_REQUIRE([PKG_PROG_PKG_CONFIG])
 	SAVE_CFLAGS="$CFLAGS"
-	CFLAGS="$CFLAGS -I`pkg-config --variable=sdkdir xorg-server`"
+	CFLAGS="$CFLAGS -I`$PKG_CONFIG --variable=sdkdir xorg-server`"
 	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include "xorg-server.h"
 #if !defined $1

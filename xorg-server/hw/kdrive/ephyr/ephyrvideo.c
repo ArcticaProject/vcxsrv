@@ -302,7 +302,7 @@ ephyrInitVideo (ScreenPtr pScreen)
 
     EPHYR_LOG ("enter\n") ;
 
-    if (screen->fb[0].bitsPerPixel == 8) {
+    if (screen->fb.bitsPerPixel == 8) {
         EPHYR_LOG_ERROR ("8 bits depth not supported\n") ;
         return FALSE ;
     }

@@ -99,7 +99,7 @@ Ps2Read (int ps2Port, void *closure)
 		flags |= right_button;
 	    if (b[0] & 1)
 		flags |= left_button;
-		
+
 	    dx = b[1];
 	    if (b[0] & 0x10)
 		dx -= 256;
@@ -146,7 +146,7 @@ static Status
 Ps2Enable (KdPointerInfo *pi)
 {
     int fd;
-    
+
     if (!pi)
         return BadImplementation;
 

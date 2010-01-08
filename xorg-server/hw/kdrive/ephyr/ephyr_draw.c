@@ -428,6 +428,7 @@ ephyrDrawInit(ScreenPtr pScreen)
     KdScreenPriv(pScreen);
     KdScreenInfo *screen = pScreenPriv->screen;
     EphyrScrPriv *scrpriv = screen->driver;
+    EphyrPriv *priv = screen->card->driver;
     EphyrFakexaPriv *fakexa;
     Bool success;
 
@@ -441,9 +442,9 @@ ephyrDrawInit(ScreenPtr pScreen)
 	return FALSE;
     }
 
-    fakexa->exa->memoryBase = screen->memory_base;
-    fakexa->exa->memorySize = screen->memory_size;
-    fakexa->exa->offScreenBase = screen->off_screen_base;
+    fakexa->exa->memoryBase = (CARD8 *) (priv->base);
+    fakexa->exa->memorySize = priv->bytes_per_line * ephyrBufferHeight(screen);
+    fakexa->exa->offScreenBase = priv->bytes_per_line * screen->height;
 
     /* Since we statically link against EXA, we shouldn't have to be smart about
      * versioning.

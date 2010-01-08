@@ -83,7 +83,7 @@ MsRead (int port, void *closure)
 		flags |= KD_BUTTON_1;
 	    if (b[0] & 0x10)
 		flags |= KD_BUTTON_3;
-	    
+
 	    dx = (char)(((b[0] & 0x03) << 6) | (b[1] & 0x3F));
 	    dy = (char)(((b[0] & 0x0C) << 4) | (b[2] & 0x3F));
             n -= 3;
@@ -103,8 +103,8 @@ MsInit (KdPointerInfo *pi)
         pi->path = strdup("/dev/mouse");
     if (!pi->name)
         pi->name = strdup("Microsoft protocol mouse");
-    
-    return Success; 
+
+    return Success;
 }
 
 static Status

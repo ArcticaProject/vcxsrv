@@ -52,16 +52,10 @@ extern KdCardFuncs  fbdevFuncs;
 extern char*        fbdevDevicePath;
 
 Bool
-fbdevInitialize (KdCardInfo *card, FbdevPriv *priv);
-
-Bool
 fbdevCardInit (KdCardInfo *card);
 
 Bool
 fbdevScreenInit (KdScreenInfo *screen);
-
-Bool
-fbdevScreenInitialize (KdScreenInfo *screen, FbdevScrPriv *scrpriv);
 
 Bool
 fbdevInitScreen (ScreenPtr pScreen);
@@ -94,46 +88,12 @@ void
 fbdevCardFini (KdCardInfo *card);
 
 void
-fbdevGetColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs);
+fbdevGetColors (ScreenPtr pScreen, int n, xColorItem *pdefs);
 
 void
-fbdevPutColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs);
+fbdevPutColors (ScreenPtr pScreen, int n, xColorItem *pdefs);
 
 Bool
 fbdevMapFramebuffer (KdScreenInfo *screen);
-
-void *
-fbdevWindowLinear (ScreenPtr	pScreen,
-		   CARD32	row,
-		   CARD32	offset,
-		   int		mode,
-		   CARD32	*size,
-		   void		*closure);
-
-void
-fbdevSetScreenSizes (ScreenPtr pScreen);
-
-Bool
-fbdevUnmapFramebuffer (KdScreenInfo *screen);
-
-Bool
-fbdevSetShadow (ScreenPtr pScreen);
-
-Bool
-fbdevCreateColormap (ColormapPtr pmap);
-
-#ifdef RANDR
-Bool
-fbdevRandRGetInfo (ScreenPtr pScreen, Rotation *rotations);
-
-Bool
-fbdevRandRSetConfig (ScreenPtr		pScreen,
-		     Rotation		randr,
-		     int		rate,
-		     RRScreenSizePtr	pSize);
-Bool
-fbdevRandRInit (ScreenPtr pScreen);
-
-#endif
 
 #endif /* _FBDEV_H_ */

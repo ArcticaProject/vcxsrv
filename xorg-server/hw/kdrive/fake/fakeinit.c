@@ -28,9 +28,7 @@
 void
 InitCard (char *name)
 {
-    KdCardAttr	attr;
-
-    KdCardInfoAdd (&fakeFuncs, &attr, 0);
+    KdCardInfoAdd (&fakeFuncs, 0);
 }
 
 void

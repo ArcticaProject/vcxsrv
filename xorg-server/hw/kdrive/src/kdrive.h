@@ -53,45 +53,15 @@
 #define KD_DPMS_POWERDOWN   3
 #define KD_DPMS_MAX	    KD_DPMS_POWERDOWN
 
-#ifndef KD_MAX_FB
-#define KD_MAX_FB   FB_OVERLAY_MAX
-#endif
-
-#ifndef KD_MAX_CARD_ADDRESS
-#define KD_MAX_CARD_ADDRESS 8
-#endif
-
 #define Status int
-
-/*
- * Configuration information per video card
- */
-
-typedef struct _KdCardAttr {
-    CARD32  io;
-    CARD32  address[KD_MAX_CARD_ADDRESS];
-    int	    naddr;
-
-    /* PCI bus info */
-    CARD16  vendorID;
-    CARD16  deviceID;
-    CARD8   domain;
-    CARD8   bus;
-    CARD8   slot;
-    CARD8   func;
-} KdCardAttr;
 
 typedef struct _KdCardInfo {
     struct _KdCardFuncs	    *cfuncs;
     void		    *closure;
-    KdCardAttr		    attr;
     void		    *driver;
     struct _KdScreenInfo    *screenList;
     int			    selected;
     struct _KdCardInfo	    *next;
-
-    Bool		    needSync;
-    int			    lastMarker;
 } KdCardInfo;
 
 extern KdCardInfo	*kdCardInfo;
@@ -130,10 +100,7 @@ typedef struct _KdScreenInfo {
     Bool        softCursor;
     int		mynum;
     DDXPointRec	origin;
-    KdFrameBuffer   fb[KD_MAX_FB];
-    CARD8	*memory_base;
-    unsigned long   memory_size;
-    unsigned long   off_screen_base;
+    KdFrameBuffer   fb;
 } KdScreenInfo;
 
 typedef struct _KdCardFuncs {
@@ -161,8 +128,8 @@ typedef struct _KdCardFuncs {
     void        (*disableAccel) (ScreenPtr);
     void        (*finiAccel) (ScreenPtr);
 
-    void        (*getColors) (ScreenPtr, int, int, xColorItem *);
-    void        (*putColors) (ScreenPtr, int, int, xColorItem *);
+    void        (*getColors) (ScreenPtr, int, xColorItem *);
+    void        (*putColors) (ScreenPtr, int, xColorItem *);
 
 } KdCardFuncs;
 
@@ -175,11 +142,11 @@ typedef struct {
 
     Bool	    enabled;
     Bool	    closed;
-    int		    bytesPerPixel[KD_MAX_FB];
+    int		    bytesPerPixel;
 
     int		    dpmsState;
 
-    ColormapPtr     pInstalledmap[KD_MAX_FB];         /* current colormap */
+    ColormapPtr     pInstalledmap;                    /* current colormap */
     xColorItem      systemPalette[KD_MAX_PSEUDO_SIZE];/* saved windows colors */
 
     CreateScreenResourcesProcPtr    CreateScreenResources;
@@ -242,7 +209,7 @@ struct _KdPointerInfo {
         int z;
         int flags;
         int absrel;
-    } heldEvent;         
+    } heldEvent;
     unsigned char         buttonState;
     Bool                  transformCoordinates;
     int                   pressureThreshold;
@@ -392,12 +359,9 @@ extern KdOsFuncs	*kdOsFuncs;
     dixSetPrivate(&(pScreen)->devPrivates, kdScreenPrivateKey, v)
 #define KdScreenPriv(pScreen) KdPrivScreenPtr pScreenPriv = KdGetScreenPriv(pScreen)
 
-/* knoop.c */
-extern GCOps		kdNoopOps;
-
 /* kcmap.c */
 void
-KdSetColormap (ScreenPtr pScreen, int fb);
+KdSetColormap (ScreenPtr pScreen);
 
 void
 KdEnableColormap (ScreenPtr pScreen);
@@ -416,14 +380,6 @@ KdListInstalledColormaps (ScreenPtr pScreen, Colormap *pCmaps);
 
 void
 KdStoreColors (ColormapPtr pCmap, int ndef, xColorItem *pdefs);
-
-/* kcurscol.c */
-void
-KdAllocateCursorPixels (ScreenPtr	pScreen,
-			int		fb,
-			CursorPtr	pCursor, 
-			Pixel		*source,
-			Pixel		*mask);
 
 /* kdrive.c */
 extern miPointerScreenFuncRec kdPointerScreenFuncs;
@@ -517,17 +473,16 @@ void
 KdInitOutput (ScreenInfo    *pScreenInfo,
 	      int	    argc,
 	      char	    **argv);
- 
+
 void
 KdSetSubpixelOrder (ScreenPtr pScreen, Rotation randr);
 
 void
 KdBacktrace (int signum);
-    
+
 /* kinfo.c */
 KdCardInfo *
 KdCardInfoAdd (KdCardFuncs  *funcs,
-	       KdCardAttr   *attr,
 	       void	    *closure);
 
 KdCardInfo *
@@ -584,7 +539,7 @@ _KdEnqueuePointerEvent(KdPointerInfo *pi, int type, int x, int y, int z,
 
 void
 KdReleaseAllKeys (void);
-    
+
 void
 KdSetLed (KdKeyboardInfo *ki, int led, Bool on);
 
@@ -604,7 +559,7 @@ KdBlockHandler (int		screen,
 		pointer		readmask);
 
 void
-KdWakeupHandler (int		screen, 
+KdWakeupHandler (int		screen,
 		 pointer    	data,
 		 unsigned long	result,
 		 pointer	readmask);
@@ -624,37 +579,6 @@ KdRingBell (KdKeyboardInfo      *ki,
             int                 pitch,
             int                 duration);
 
-extern KdPointerDriver	LinuxMouseDriver;
-extern KdPointerDriver	LinuxEvdevMouseDriver;
-extern KdPointerDriver	Ps2MouseDriver;
-extern KdPointerDriver	BusMouseDriver;
-extern KdPointerDriver	MsMouseDriver;
-extern KdPointerDriver	TsDriver;
-extern KdKeyboardDriver	LinuxKeyboardDriver;
-extern KdKeyboardDriver LinuxEvdevKeyboardDriver;
-extern KdOsFuncs	LinuxFuncs;
-
-extern KdPointerDriver	VxWorksMouseDriver;
-extern KdKeyboardDriver	VxWorksKeyboardDriver;
-extern KdOsFuncs	VxWorksFuncs;
-
-/* kmap.c */
-
-#define KD_MAPPED_MODE_REGISTERS    0
-#define KD_MAPPED_MODE_FRAMEBUFFER  1
-
-void *
-KdMapDevice (CARD32 addr, CARD32 size);
-
-void
-KdUnmapDevice (void *addr, CARD32 size);
-
-void
-KdSetMappedMode (CARD32 addr, CARD32 size, int mode);
-
-void
-KdResetMappedMode (CARD32 addr, CARD32 size, int mode);
-
 /* kmode.c */
 const KdMonitorTiming *
 KdFindMode (KdScreenInfo    *screen,
@@ -669,14 +593,14 @@ KdTuneMode (KdScreenInfo    *screen,
 
 #ifdef RANDR
 Bool
-KdRandRGetInfo (ScreenPtr pScreen, 
+KdRandRGetInfo (ScreenPtr pScreen,
 		int randr,
-		Bool (*supported) (ScreenPtr pScreen, 
+		Bool (*supported) (ScreenPtr pScreen,
 				   const KdMonitorTiming *));
 
 const KdMonitorTiming *
 KdRandRGetTiming (ScreenPtr	    pScreen,
-		  Bool		    (*supported) (ScreenPtr pScreen, 
+		  Bool		    (*supported) (ScreenPtr pScreen,
 						  const KdMonitorTiming *),
 		  int		    rate,
 		  RRScreenSizePtr   pSize);
@@ -684,14 +608,14 @@ KdRandRGetTiming (ScreenPtr	    pScreen,
 
 /* kshadow.c */
 Bool
-KdShadowFbAlloc (KdScreenInfo *screen, int fb, Bool rotate);
+KdShadowFbAlloc (KdScreenInfo *screen, Bool rotate);
 
 void
-KdShadowFbFree (KdScreenInfo *screen, int fb);
+KdShadowFbFree (KdScreenInfo *screen);
 
 Bool
 KdShadowSet (ScreenPtr pScreen, int randr, ShadowUpdateProc update, ShadowWindowProc window);
-    
+
 void
 KdShadowUnset (ScreenPtr pScreen);
 

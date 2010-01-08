@@ -85,10 +85,10 @@ void
 fakeCardFini (KdCardInfo *card);
 
 void
-fakeGetColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs);
+fakeGetColors (ScreenPtr pScreen, int n, xColorItem *pdefs);
 
 void
-fakePutColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs);
+fakePutColors (ScreenPtr pScreen, int n, xColorItem *pdefs);
 
 Bool
 fakeMapFramebuffer (KdScreenInfo *screen);

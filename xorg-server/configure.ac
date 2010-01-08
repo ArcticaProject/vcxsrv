@@ -640,6 +640,10 @@ AC_ARG_ENABLE(kdrive,         AS_HELP_STRING([--enable-kdrive], [Build kdrive se
 AC_ARG_ENABLE(xephyr,         AS_HELP_STRING([--enable-xephyr], [Build the kdrive Xephyr server (default: auto)]), [XEPHYR=$enableval], [XEPHYR=auto])
 AC_ARG_ENABLE(xfake,          AS_HELP_STRING([--enable-xfake], [Build the kdrive 'fake' server (default: auto)]), [XFAKE=$enableval], [XFAKE=auto])
 AC_ARG_ENABLE(xfbdev,         AS_HELP_STRING([--enable-xfbdev], [Build the kdrive framebuffer device server (default: auto)]), [XFBDEV=$enableval], [XFBDEV=auto])
+dnl kdrive options
+AC_ARG_ENABLE(kdrive-kbd,     AS_HELP_STRING([--enable-kdrive-kbd], [Build kbd driver for kdrive (default: enabled)]), [KDRIVE_KBD=$enableval], [KDRIVE_KBD=yes])
+AC_ARG_ENABLE(kdrive-mouse,   AC_HELP_STRING([--enable-kdrive-mouse], [Build mouse driver for kdrive (default: enabled)]), [KDRIVE_MOUSE=$enableval], [KDRIVE_MOUSE=yes])
+AC_ARG_ENABLE(kdrive-evdev,   AC_HELP_STRING([--enable-kdrive-evdev], [Build evdev driver for kdrive (default: enabled)]), [KDRIVE_EVDEV=$enableval], [KDRIVE_EVDEV=yes])
 
 
 dnl chown/chmod to be setuid root as part of build
@@ -1991,6 +1995,10 @@ XEPHYR_LIBS=
 XEPHYR_INCS=
 
 AM_CONDITIONAL(KDRIVE, [test x$KDRIVE = xyes])
+AM_CONDITIONAL(KDRIVE_KBD, test "x$KDRIVE_KBD" = xyes)
+AM_CONDITIONAL(KDRIVE_EVDEV, test "x$KDRIVE_EVDEV" = xyes)
+AM_CONDITIONAL(KDRIVE_MOUSE, test "x$KDRIVE_MOUSE" = xyes)
+
 if test "$KDRIVE" = yes; then
     AC_DEFINE(KDRIVESERVER,1,[Build Kdrive X server])
     AC_DEFINE(KDRIVEDDXACTIONS,,[Build kdrive ddx])
@@ -2021,6 +2029,16 @@ if test "$KDRIVE" = yes; then
         else
             AC_DEFINE(TSLIB, 1, [Have tslib support])
         fi
+    fi
+
+    if test "x$KDRIVE_KBD" = xyes; then
+       AC_DEFINE(KDRIVE_KBD, 1, [Enable KDrive kbd driver])
+    fi
+    if test "x$KDRIVE_EVDEV" = xyes; then
+       AC_DEFINE(KDRIVE_EVDEV, 1, [Enable KDrive evdev driver])
+    fi
+    if test "x$KDRIVE_MOUSE" = xyes; then
+       AC_DEFINE(KDRIVE_MOUSE, 1, [Enable KDrive mouse driver])
     fi
 
     XEPHYR_REQUIRED_LIBS="x11 $LIBXEXT xfont xau xdmcp"
