@@ -40,17 +40,18 @@ extern Bool noGlxVisualInit;
 #endif
 extern Bool   ephyrNoXV;
 
+#ifdef KDRIVE_EVDEV
+extern KdPointerDriver	LinuxEvdevMouseDriver;
+extern KdKeyboardDriver LinuxEvdevKeyboardDriver;
+#endif
+
 void processScreenArg (char *screen_size, char *parent_id) ;
 
 void
 InitCard (char *name)
 {
-    KdCardAttr	attr;
-
     EPHYR_DBG("mark");
-
-
-    KdCardInfoAdd (&ephyrFuncs, &attr, 0);
+    KdCardInfoAdd (&ephyrFuncs, 0);
 }
 
 void
@@ -66,11 +67,11 @@ InitInput (int argc, char **argv)
   KdPointerInfo *pi;
 
   KdAddKeyboardDriver(&EphyrKeyboardDriver);
-#ifdef linux
+#ifdef KDRIVE_EVDEV
   KdAddKeyboardDriver(&LinuxEvdevKeyboardDriver);
 #endif
   KdAddPointerDriver(&EphyrMouseDriver);
-#ifdef linux
+#ifdef KDRIVE_EVDEV
   KdAddPointerDriver(&LinuxEvdevMouseDriver);
 #endif
 

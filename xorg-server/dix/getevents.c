@@ -630,9 +630,12 @@ updateFromMaster(EventListPtr events, DeviceIntPtr dev, int type, int *num_event
     if (master && master->last.slave != dev)
     {
         CreateClassesChangedEvent(events, master, dev, type);
-        updateSlaveDeviceCoords(master, dev);
+        if (IsPointerDevice(master))
+        {
+            updateSlaveDeviceCoords(master, dev);
+            master->last.numValuators = dev->last.numValuators;
+        }
         master->last.slave = dev;
-        master->last.numValuators = dev->last.numValuators;
         (*num_events)++;
         events++;
     }

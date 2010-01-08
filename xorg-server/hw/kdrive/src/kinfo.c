@@ -29,7 +29,6 @@ KdCardInfo  *kdCardInfo;
 
 KdCardInfo *
 KdCardInfoAdd (KdCardFuncs  *funcs,
-	       KdCardAttr   *attr,
 	       void	    *closure)
 {
     KdCardInfo	*ci, **prev;
@@ -40,7 +39,6 @@ KdCardInfoAdd (KdCardFuncs  *funcs,
     for (prev = &kdCardInfo; *prev; prev = &(*prev)->next);
     *prev = ci;
     ci->cfuncs = funcs;
-    ci->attr = *attr;
     ci->closure = closure;
     ci->screenList = 0;
     ci->selected = 0;

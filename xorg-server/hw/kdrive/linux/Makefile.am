@@ -6,19 +6,22 @@ AM_CFLAGS = -DHAVE_DIX_CONFIG_H
 
 noinst_LTLIBRARIES = liblinux.la
 
-if TSLIB
-TSLIB_C = tslib.c
+liblinux_la_SOURCES =
+
+liblinux_la_SOURCES += linux.c klinux.h
+
+if KDRIVE_KBD
+liblinux_la_SOURCES += keyboard.c
 endif
 
-KDRIVE_HW_SOURCES =	\
-	evdev.c		\
-	keyboard.c	\
-	linux.c
+if KDRIVE_EVDEV
+liblinux_la_SOURCES += evdev.c
+endif
 
-liblinux_la_SOURCES = 	\
-	bus.c		\
-	mouse.c		\
-	ms.c		\
-	ps2.c		\
-	$(KDRIVE_HW_SOURCES) \
-	$(TSLIB_C)
+if KDRIVE_MOUSE
+liblinux_la_SOURCES += mouse.c ms.c ps2.c
+endif
+
+if TSLIB
+liblinux_la_SOURCES += tslib.c
+endif

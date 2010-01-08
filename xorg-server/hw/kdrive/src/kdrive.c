@@ -148,9 +148,9 @@ KdSetRootClip (ScreenPtr pScreen, BOOL enable)
 	REGION_EMPTY(pScreen, &pWin->borderClip);
 	REGION_BREAK (pWin->drawable.pScreen, &pWin->clipList);
     }
-    
+
     ResizeChildrenWinSize (pWin, 0, 0, 0, 0);
-    
+
     if (WasViewable)
     {
 	if (pWin->firstChild)
@@ -185,7 +185,7 @@ void
 KdDisableScreen (ScreenPtr pScreen)
 {
     KdScreenPriv(pScreen);
-    
+
     if (!pScreenPriv->enabled)
 	return;
     if (!pScreenPriv->closed)
@@ -209,7 +209,7 @@ KdDoSwitchCmd (char *reason)
     {
 	char    *command = xalloc (strlen (kdSwitchCmd) +
 				   1 +
-				   strlen (reason) + 
+				   strlen (reason) +
 				   1);
 	if (!command)
 	    return;
@@ -389,10 +389,9 @@ KdParseScreen (KdScreenInfo *screen,
 {
     char    delim;
     char    save[1024];
-    int	    fb;
     int	    i;
     int	    pixels, mm;
-    
+
     screen->dumb = kdDumbDriver;
     screen->softCursor = kdSoftCursor;
     screen->origin = kdOrigin;
@@ -403,22 +402,21 @@ KdParseScreen (KdScreenInfo *screen,
     screen->height_mm = 0;
     screen->subpixel_order = kdSubpixelOrder;
     screen->rate = 0;
-    for (fb = 0; fb < KD_MAX_FB; fb++)
-	screen->fb[fb].depth = 0;
+    screen->fb.depth = 0;
     if (!arg)
 	return;
     if (strlen (arg) >= sizeof (save))
 	return;
-    
+
     for (i = 0; i < 2; i++)
     {
 	arg = KdParseFindNext (arg, "x/@XY", save, &delim);
 	if (!save[0])
 	    return;
-	
+
 	pixels = atoi(save);
 	mm = 0;
-	
+
 	if (delim == '/')
 	{
 	    arg = KdParseFindNext (arg, "x@XY", save, &delim);
@@ -426,7 +424,7 @@ KdParseScreen (KdScreenInfo *screen,
 		return;
 	    mm = atoi(save);
 	}
-	
+
 	if (i == 0)
 	{
 	    screen->width = pixels;
@@ -476,26 +474,19 @@ KdParseScreen (KdScreenInfo *screen,
 	arg = KdParseFindNext (arg, "xY", save, &delim);
 	screen->randr |= RR_Reflect_Y;
     }
-    
-    fb = 0;
-    while (fb < KD_MAX_FB)
+
+    arg = KdParseFindNext (arg, "x/,", save, &delim);
+    if (save[0])
     {
-	arg = KdParseFindNext (arg, "x/,", save, &delim);
-	if (!save[0])
-	    break;
-	screen->fb[fb].depth = atoi(save);
+	screen->fb.depth = atoi(save);
 	if (delim == '/')
 	{
 	    arg = KdParseFindNext (arg, "x,", save, &delim);
-	    if (!save[0])
-		break;
-	    screen->fb[fb].bitsPerPixel = atoi (save);
+	    if (save[0])
+		screen->fb.bitsPerPixel = atoi (save);
 	}
 	else
-	    screen->fb[fb].bitsPerPixel = 0;
-	if (delim != ',')
-	    break;
-	fb++;
+	    screen->fb.bitsPerPixel = 0;
     }
 
     if (delim == 'x')
@@ -538,7 +529,7 @@ void
 KdUseMsg (void)
 {
     ErrorF("\nTinyX Device Dependent Usage:\n");
-    ErrorF("-screen WIDTH[/WIDTHMM]xHEIGHT[/HEIGHTMM][@ROTATION][X][Y][xDEPTH/BPP{,DEPTH/BPP}[xFREQ]]  Specify screen characteristics\n");
+    ErrorF("-screen WIDTH[/WIDTHMM]xHEIGHT[/HEIGHTMM][@ROTATION][X][Y][xDEPTH/BPP[xFREQ]]  Specify screen characteristics\n");
     ErrorF("-rgba rgb/bgr/vrgb/vbgr/none   Specify subpixel ordering for LCD panels\n");
     ErrorF("-mouse driver [,n,,options]    Specify the pointer driver and its options (n is the number of buttons)\n");
     ErrorF("-keybd driver [,,options]      Specify the keyboard driver and its options\n");
@@ -691,7 +682,7 @@ KdOsInit (KdOsFuncs *pOsFuncs)
     kdOsFuncs = pOsFuncs;
     if (pOsFuncs)
     {
-	if (serverGeneration == 1) 
+	if (serverGeneration == 1)
 	{
 	    KdDoSwitchCmd ("start");
             if (pOsFuncs->Init)
@@ -704,7 +695,7 @@ Bool
 KdAllocatePrivates (ScreenPtr pScreen)
 {
     KdPrivScreenPtr	pScreenPriv;
-    
+
     if (kdGeneration != serverGeneration)
 	kdGeneration = serverGeneration;
 
@@ -741,20 +732,20 @@ KdCloseScreen (int index, ScreenPtr pScreen)
     KdScreenInfo    *screen = pScreenPriv->screen;
     KdCardInfo	    *card = pScreenPriv->card;
     Bool	    ret;
-    
+
     pScreenPriv->closed = TRUE;
     pScreen->CloseScreen = pScreenPriv->CloseScreen;
     if(pScreen->CloseScreen)
         ret = (*pScreen->CloseScreen) (index, pScreen);
     else
 	ret = TRUE;
-    
+
     if (pScreenPriv->dpmsState != KD_DPMS_NORMAL)
 	(*card->cfuncs->dpms) (pScreen, KD_DPMS_NORMAL);
-    
+
     if (screen->mynum == card->selected)
 	KdDisableScreen (pScreen);
-    
+
     /*
      * Restore video hardware when last screen is closed
      */
@@ -763,7 +754,7 @@ KdCloseScreen (int index, ScreenPtr pScreen)
 	if (kdEnabled && card->cfuncs->restore)
 	    (*card->cfuncs->restore) (card);
     }
-	
+
     if (!pScreenPriv->screen->dumb && card->cfuncs->finiAccel)
 	(*card->cfuncs->finiAccel) (pScreen);
 
@@ -794,9 +785,9 @@ KdCloseScreen (int index, ScreenPtr pScreen)
 	    }
 	}
     }
-    
+
     pScreenPriv->screen->pScreen = 0;
-    
+
     xfree ((pointer) pScreenPriv);
     return ret;
 }
@@ -806,10 +797,10 @@ KdSaveScreen (ScreenPtr pScreen, int on)
 {
     KdScreenPriv(pScreen);
     int	    dpmsState;
-    
+
     if (!pScreenPriv->card->cfuncs->dpms)
 	return FALSE;
-    
+
     dpmsState = pScreenPriv->dpmsState;
     switch (on) {
     case SCREEN_SAVER_OFF:
@@ -861,7 +852,7 @@ KdSetSubpixelOrder (ScreenPtr pScreen, Rotation randr)
     int			subpixel_order = screen->subpixel_order;
     Rotation		subpixel_dir;
     int			i;
-    
+
     static struct {
 	int	    subpixel_order;
 	Rotation    direction;
@@ -874,7 +865,7 @@ KdSetSubpixelOrder (ScreenPtr pScreen, Rotation randr)
 
     static struct {
 	int	bit;
-	int	normal; 
+	int	normal;
 	int	reflect;
     } reflects[] = {
 	{ RR_Reflect_X, SubPixelHorizontalRGB,	SubPixelHorizontalBGR },
@@ -882,7 +873,7 @@ KdSetSubpixelOrder (ScreenPtr pScreen, Rotation randr)
 	{ RR_Reflect_Y, SubPixelVerticalRGB,	SubPixelVerticalBGR },
 	{ RR_Reflect_Y, SubPixelVerticalRGB,	SubPixelVerticalRGB },
     };
-    
+
     /* map subpixel to direction */
     for (i = 0; i < 4; i++)
 	if (orders[i].subpixel_order == subpixel_order)
@@ -890,7 +881,7 @@ KdSetSubpixelOrder (ScreenPtr pScreen, Rotation randr)
     if (i < 4)
     {
 	subpixel_dir = KdAddRotation (randr & RR_Rotate_All, orders[i].direction);
-	
+
 	/* map back to subpixel order */
 	for (i = 0; i < 4; i++)
 	    if (orders[i].direction & subpixel_dir)
@@ -919,7 +910,6 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     KdScreenInfo	*screen = kdCurrentScreen;
     KdCardInfo		*card = screen->card;
     KdPrivScreenPtr	pScreenPriv;
-    int			fb;
     /*
      * note that screen->fb is set up for the nominal orientation
      * of the screen; that means if randr is rotated, the values
@@ -931,7 +921,7 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     KdAllocatePrivates (pScreen);
 
     pScreenPriv = KdGetScreenPriv(pScreen);
-    
+
     if (!rotated)
     {
 	width = screen->width;
@@ -949,8 +939,7 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     screen->pScreen = pScreen;
     pScreenPriv->screen = screen;
     pScreenPriv->card = card;
-    for (fb = 0; fb < KD_MAX_FB && screen->fb[fb].depth; fb++)
-	pScreenPriv->bytesPerPixel[fb] = screen->fb[fb].bitsPerPixel >> 3;
+    pScreenPriv->bytesPerPixel = screen->fb.bitsPerPixel >> 3;
     pScreenPriv->dpmsState = KD_DPMS_NORMAL;
 #ifdef PANORAMIX
     dixScreenOrigins[pScreen->myNum] = screen->origin;
@@ -963,12 +952,12 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
      * our GC functions; fbFinishScreenInit initializes MI
      * backing store
      */
-    if (!fbSetupScreen (pScreen, 
-			screen->fb[0].frameBuffer, 
-			width, height, 
-			monitorResolution, monitorResolution, 
-			screen->fb[0].pixelStride,
-			screen->fb[0].bitsPerPixel))
+    if (!fbSetupScreen (pScreen,
+			screen->fb.frameBuffer,
+			width, height,
+			monitorResolution, monitorResolution,
+			screen->fb.pixelStride,
+			screen->fb.bitsPerPixel))
     {
 	return FALSE;
     }
@@ -980,42 +969,20 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     pScreen->UninstallColormap	= KdUninstallColormap;
     pScreen->ListInstalledColormaps = KdListInstalledColormaps;
     pScreen->StoreColors	= KdStoreColors;
-     
+
     pScreen->SaveScreen		= KdSaveScreen;
     pScreen->CreateWindow	= KdCreateWindow;
 
-#if KD_MAX_FB > 1
-    if (screen->fb[1].depth)
+    if (!fbFinishScreenInit (pScreen,
+			     screen->fb.frameBuffer,
+			     width, height,
+			     monitorResolution, monitorResolution,
+			     screen->fb.pixelStride,
+			     screen->fb.bitsPerPixel))
     {
-	if (!fbOverlayFinishScreenInit (pScreen, 
-					screen->fb[0].frameBuffer, 
-					screen->fb[1].frameBuffer, 
-					width, height, 
-					monitorResolution, monitorResolution,
-					screen->fb[0].pixelStride,
-					screen->fb[1].pixelStride,
-					screen->fb[0].bitsPerPixel,
-					screen->fb[1].bitsPerPixel,
-					screen->fb[0].depth,
-					screen->fb[1].depth))
-	{
-	    return FALSE;
-	}
+	return FALSE;
     }
-    else
-#endif
-    {
-	if (!fbFinishScreenInit (pScreen, 
-				 screen->fb[0].frameBuffer, 
-				 width, height,
-				 monitorResolution, monitorResolution,
-				 screen->fb[0].pixelStride,
-				 screen->fb[0].bitsPerPixel))
-	{
-	    return FALSE;
-	}
-    }
-    
+
     /*
      * Fix screen sizes; for some reason mi takes dpi instead of mm.
      * Rounding errors are annoying
@@ -1028,14 +995,14 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 	pScreen->mmHeight = *height_mmp;
     else
 	*height_mmp = pScreen->mmHeight;
-    
+
     /*
      * Plug in our own block/wakeup handlers.
      * miScreenInit installs NoopDDA in both places
      */
     pScreen->BlockHandler	= KdBlockHandler;
     pScreen->WakeupHandler	= KdWakeupHandler;
-    
+
 #ifdef RENDER
     if (!fbPictureInit (pScreen, 0, 0))
 	return FALSE;
@@ -1043,26 +1010,26 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     if (card->cfuncs->initScreen)
 	if (!(*card->cfuncs->initScreen) (pScreen))
 	    return FALSE;
-	    
+
     if (!screen->dumb && card->cfuncs->initAccel)
 	if (!(*card->cfuncs->initAccel) (pScreen))
 	    screen->dumb = TRUE;
-    
+
     if (card->cfuncs->finishInitScreen)
 	if (!(*card->cfuncs->finishInitScreen) (pScreen))
 	    return FALSE;
-	    
+
 #if 0
     fbInitValidateTree (pScreen);
 #endif
-    
+
 #if 0
     pScreen->backingStoreSupport = Always;
     miInitializeBackingStore (pScreen);
 #endif
 
 
-    /* 
+    /*
      * Wrap CloseScreen, the order now is:
      *	KdCloseScreen
      *	miBSCloseScreen
@@ -1073,9 +1040,9 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 
     pScreenPriv->CreateScreenResources = pScreen->CreateScreenResources;
     pScreen->CreateScreenResources = KdCreateScreenResources;
-    
+
     if (screen->softCursor ||
-	!card->cfuncs->initCursor || 
+	!card->cfuncs->initCursor ||
 	!(*card->cfuncs->initCursor) (pScreen))
     {
 	/* Use MI for cursor display and event queueing. */
@@ -1083,7 +1050,7 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 	miDCInitialize(pScreen, &kdPointerScreenFuncs);
     }
 
-    
+
     if (!fbCreateDefColormap (pScreen))
     {
 	return FALSE;
@@ -1100,7 +1067,7 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 	if(kdOsFuncs->Enable)
 	    (*kdOsFuncs->Enable) ();
     }
-    
+
     if (screen->mynum == card->selected)
     {
 	if(card->cfuncs->preserve)
@@ -1115,7 +1082,7 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
 	if (!screen->dumb && card->cfuncs->enableAccel)
 	    (*card->cfuncs->enableAccel) (pScreen);
     }
-    
+
     return TRUE;
 }
 
@@ -1126,9 +1093,9 @@ KdInitScreen (ScreenInfo    *pScreenInfo,
 	      char	    **argv)
 {
     KdCardInfo	*card = screen->card;
-    
+
     (*card->cfuncs->scrinit) (screen);
-    
+
     if (!card->cfuncs->initAccel)
 	screen->dumb = TRUE;
     if (!card->cfuncs->initCursor)
@@ -1143,7 +1110,6 @@ KdSetPixmapFormats (ScreenInfo	*pScreenInfo)
     KdScreenInfo    *screen;
     int		    i;
     int		    bpp;
-    int		    fb;
     PixmapFormatRec *format;
 
     for (i = 1; i <= 32; i++)
@@ -1159,33 +1125,30 @@ KdSetPixmapFormats (ScreenInfo	*pScreenInfo)
     {
 	for (screen = card->screenList; screen; screen = screen->next)
 	{
-	    for (fb = 0; fb < KD_MAX_FB && screen->fb[fb].depth; fb++)
-	    {
-		bpp = screen->fb[fb].bitsPerPixel;
-		if (bpp == 24)
-		    bpp = 32;
-		if (!depthToBpp[screen->fb[fb].depth])
-		    depthToBpp[screen->fb[fb].depth] = bpp;
-		else if (depthToBpp[screen->fb[fb].depth] != bpp) 
-		    return FALSE;
-	    }
+	    bpp = screen->fb.bitsPerPixel;
+	    if (bpp == 24)
+		bpp = 32;
+	    if (!depthToBpp[screen->fb.depth])
+		depthToBpp[screen->fb.depth] = bpp;
+	    else if (depthToBpp[screen->fb.depth] != bpp)
+		return FALSE;
 	}
     }
-    
+
     /*
      * Fill in additional formats
      */
     for (i = 0; i < NUM_KD_DEPTHS; i++)
 	if (!depthToBpp[kdDepths[i].depth])
 	    depthToBpp[kdDepths[i].depth] = kdDepths[i].bpp;
-	
+
     pScreenInfo->imageByteOrder     = IMAGE_BYTE_ORDER;
     pScreenInfo->bitmapScanlineUnit = BITMAP_SCANLINE_UNIT;
     pScreenInfo->bitmapScanlinePad  = BITMAP_SCANLINE_PAD;
     pScreenInfo->bitmapBitOrder     = BITMAP_BIT_ORDER;
-    
+
     pScreenInfo->numPixmapFormats = 0;
-    
+
     for (i = 1; i <= 32; i++)
     {
 	if (depthToBpp[i])
@@ -1196,7 +1159,7 @@ KdSetPixmapFormats (ScreenInfo	*pScreenInfo)
 	    format->scanlinePad = BITMAP_SCANLINE_PAD;
 	}
     }
-    
+
     return TRUE;
 }
 
@@ -1214,20 +1177,15 @@ KdAddScreen (ScreenInfo	    *pScreenInfo,
     {
 	unsigned long	visuals;
 	Pixel		rm, gm, bm;
-	int		fb;
-	
+
 	visuals = 0;
 	rm = gm = bm = 0;
-	for (fb = 0; fb < KD_MAX_FB && screen->fb[fb].depth; fb++)
+	if (pScreenInfo->formats[i].depth == screen->fb.depth)
 	{
-	    if (pScreenInfo->formats[i].depth == screen->fb[fb].depth)
-	    {
-		visuals = screen->fb[fb].visuals;
-		rm = screen->fb[fb].redMask;
-		gm = screen->fb[fb].greenMask;
-		bm = screen->fb[fb].blueMask;
-		break;
-	    }
+	    visuals = screen->fb.visuals;
+	    rm = screen->fb.redMask;
+	    gm = screen->fb.greenMask;
+	    bm = screen->fb.blueMask;
 	}
 	fbSetVisualTypesAndMasks (pScreenInfo->formats[i].depth,
 				  visuals,
@@ -1236,7 +1194,7 @@ KdAddScreen (ScreenInfo	    *pScreenInfo,
     }
 
     kdCurrentScreen = screen;
-    
+
     AddScreen (KdScreenInit, argc, argv);
 }
 
@@ -1246,10 +1204,9 @@ int
 KdDepthToFb (ScreenPtr	pScreen, int depth)
 {
     KdScreenPriv(pScreen);
-    int	    fb;
 
-    for (fb = 0; fb <= KD_MAX_FB && pScreenPriv->screen->fb[fb].frameBuffer; fb++)
-	if (pScreenPriv->screen->fb[fb].depth == depth)
+    for (fb = 0; fb <= KD_MAX_FB && pScreenPriv->screen->fb.frameBuffer; fb++)
+	if (pScreenPriv->screen->fb.depth == depth)
 	    return fb;
 }
 
@@ -1292,14 +1249,14 @@ KdInitOutput (ScreenInfo    *pScreenInfo,
 		KdInitScreen (pScreenInfo, screen, argc, argv);
 	}
     }
-    
+
     /*
      * Merge the various pixmap formats together, this can fail
      * when two screens share depth but not bitsPerPixel
      */
     if (!KdSetPixmapFormats (pScreenInfo))
 	return;
-    
+
     /*
      * Add all of the screens
      */

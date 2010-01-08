@@ -15,12 +15,10 @@ endif
 libkdrive_la_SOURCES =	\
 	fourcc.h	\
 	kcmap.c		\
-	kcurscol.c	\
 	kdrive.c	\
 	kdrive.h	\
 	kinfo.c		\
 	kinput.c	\
-	kmap.c		\
 	kmode.c		\
 	kshadow.c	\
 	$(KDRIVE_XV_SOURCES) \

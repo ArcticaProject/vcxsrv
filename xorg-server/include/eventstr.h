@@ -58,17 +58,13 @@ enum EventType {
     ET_ProximityOut,
     ET_DeviceChanged,
     ET_Hierarchy,
-#if XFreeXDGA
     ET_DGAEvent,
-#endif
     ET_RawKeyPress,
     ET_RawKeyRelease,
     ET_RawButtonPress,
     ET_RawButtonRelease,
     ET_RawMotion,
-#ifdef XQUARTZ
     ET_XQuartz,
-#endif
     ET_Internal = 0xFF /* First byte */
 };
 

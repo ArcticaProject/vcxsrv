@@ -1,6 +1,6 @@
-/* 
+/*
 
-   XFree86 Xv DDX written by Mark Vojkovich (markv@valinux.com) 
+   XFree86 Xv DDX written by Mark Vojkovich (markv@valinux.com)
    Adapted for KDrive by Pontus Lidman <pontus.lidman@nokia.com>
 
    Copyright (C) 2000, 2001 - Nokia Home Communications
@@ -60,21 +60,21 @@ typedef struct {
   int id;
   int type;
   int byte_order;
-  unsigned char guid[16];               
+  unsigned char guid[16];
   int bits_per_pixel;
   int format;
   int num_planes;
 
   /* for RGB formats only */
   int depth;
-  unsigned int red_mask;       
-  unsigned int green_mask;   
-  unsigned int blue_mask;   
+  unsigned int red_mask;
+  unsigned int green_mask;
+  unsigned int blue_mask;
 
   /* for YUV formats only */
   unsigned int y_sample_bits;
   unsigned int u_sample_bits;
-  unsigned int v_sample_bits;   
+  unsigned int v_sample_bits;
   unsigned int horz_y_period;
   unsigned int horz_u_period;
   unsigned int horz_v_period;
@@ -83,7 +83,7 @@ typedef struct {
   unsigned int vert_v_period;
   char component_order[32];
   int scanline_order;
-} KdImageRec, *KdImagePtr; 
+} KdImageRec, *KdImagePtr;
 
 
 typedef struct {
@@ -92,7 +92,7 @@ typedef struct {
   unsigned short width, height;
   int *pitches; /* bytes */
   int *offsets; /* in bytes from start of framebuffer */
-  DevUnion devPrivate;  
+  DevUnion devPrivate;
 } KdSurfaceRec, *KdSurfacePtr;
 
 
@@ -118,7 +118,7 @@ typedef int (* SetPortAttributeFuncPtr)(KdScreenInfo * screen, Atom attribute,
 typedef int (* GetPortAttributeFuncPtr)(KdScreenInfo * screen, Atom attribute,
 	int *value, pointer data);
 typedef void (* QueryBestSizeFuncPtr)(KdScreenInfo * screen, Bool motion,
-	short vid_w, short vid_h, short drw_w, short drw_h, 
+	short vid_w, short vid_h, short drw_w, short drw_h,
 	unsigned int *p_w, unsigned int *p_h, pointer data);
 typedef int (* PutImageFuncPtr)( KdScreenInfo * screen,  DrawablePtr pDraw,
 	short src_x, short src_y, short drw_x, short drw_y,
@@ -128,8 +128,8 @@ typedef int (* PutImageFuncPtr)( KdScreenInfo * screen,  DrawablePtr pDraw,
 typedef int (* ReputImageFuncPtr)( KdScreenInfo * screen, DrawablePtr pDraw,
 				  short drw_x, short drw_y,
 				  RegionPtr clipBoxes, pointer data );
-typedef int (*QueryImageAttributesFuncPtr)(KdScreenInfo * screen, 
-	int image, unsigned short *width, unsigned short *height, 
+typedef int (*QueryImageAttributesFuncPtr)(KdScreenInfo * screen,
+	int image, unsigned short *width, unsigned short *height,
 	int *pitches, int *offsets);
 
 typedef enum {
@@ -148,7 +148,7 @@ typedef struct {
 } KdVideoEncodingRec, *KdVideoEncodingPtr;
 
 typedef struct {
-  char 	depth;  
+  char 	depth;
   short class;
 } KdVideoFormatRec, *KdVideoFormatPtr;
 
@@ -160,13 +160,13 @@ typedef struct {
 } KdAttributeRec, *KdAttributePtr;
 
 typedef struct {
-  unsigned int type; 
+  unsigned int type;
   int flags;
   char *name;
   int nEncodings;
-  KdVideoEncodingPtr pEncodings;  
+  KdVideoEncodingPtr pEncodings;
   int nFormats;
-  KdVideoFormatPtr pFormats;  
+  KdVideoFormatPtr pFormats;
   int nPorts;
   DevUnion *pPortPrivates;
   int nAttributes;
@@ -188,7 +188,7 @@ typedef struct {
 
 Bool
 KdXVScreenInit(
-   ScreenPtr pScreen, 
+   ScreenPtr pScreen,
    KdVideoAdaptorPtr 	*Adaptors,
    int num
 );
@@ -239,7 +239,7 @@ typedef struct {
 } KdXVScreenRec, *KdXVScreenPtr;
 
 typedef struct {
-  int flags;  
+  int flags;
   PutVideoFuncPtr PutVideo;
   PutStillFuncPtr PutStill;
   GetVideoFuncPtr GetVideo;
@@ -276,4 +276,4 @@ typedef struct _KdXVWindowRec{
 } KdXVWindowRec, *KdXVWindowPtr;
 
 #endif  /* _XVDIX_H_ */
- 
+

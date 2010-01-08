@@ -48,7 +48,7 @@ typedef struct _kevdev {
     int                            abs[ABS_MAX + 1];
     int                            prevabs[ABS_MAX + 1];
     long                    key[NBITS(KEY_MAX + 1)];
-    
+
     /* supported device info */
     long                    relbits[NBITS(REL_MAX + 1)];
     long                    absbits[NBITS(ABS_MAX + 1)];
@@ -106,12 +106,12 @@ EvdevPtrMotion (KdPointerInfo    *pi, struct input_event *ev)
             int a;
             for (a = 0; a <= ke->max_rel; a++)
             {
-                if (ISBITSET (ke->relbits, a)) 
+                if (ISBITSET (ke->relbits, a))
 		{
                     if (a == 0)
                         KdEnqueuePointerEvent(pi, flags, ke->rel[a], 0, 0);
                     else if (a == 1)
-                        KdEnqueuePointerEvent(pi, flags, 0, ke->rel[a], 0); 
+                        KdEnqueuePointerEvent(pi, flags, 0, ke->rel[a], 0);
                 }
 		ke->rel[a] = 0;
             }
@@ -131,9 +131,9 @@ EvdevPtrMotion (KdPointerInfo    *pi, struct input_event *ev)
             ErrorF ("\n");
             break;
         }
-    
-    if (ev->code == REL_WHEEL) {           
-      for (i = 0; i < abs (ev->value); i++) 
+
+    if (ev->code == REL_WHEEL) {
+      for (i = 0; i < abs (ev->value); i++)
       {
         if (ev->value > 0)
           flags |= KD_BUTTON_4;
@@ -150,7 +150,7 @@ EvdevPtrMotion (KdPointerInfo    *pi, struct input_event *ev)
         KdEnqueuePointerEvent (pi, flags, 0, 0, 0);
       }
     }
-    
+
 }
 
 static void
@@ -164,7 +164,7 @@ EvdevPtrRead (int evdevPort, void *closure)
 
     n = read (evdevPort, &events, NUM_EVENTS * sizeof (struct input_event));
     if (n <= 0) {
-        if (errno == ENODEV) 
+        if (errno == ENODEV)
             DeleteInputDeviceRequest(pi->dixdev);
         return;
     }
@@ -231,7 +231,7 @@ EvdevPtrInit (KdPointerInfo *pi)
 
 static Status
 EvdevPtrEnable (KdPointerInfo *pi)
-{        
+{
     int fd;
     unsigned long   ev[NBITS(EV_MAX)];
     Kevdev            *ke;
@@ -352,7 +352,7 @@ EvdevPtrFini (KdPointerInfo *pi)
 
 
 /*
- * Evdev keyboard functions 
+ * Evdev keyboard functions
  */
 
 static void
@@ -374,7 +374,7 @@ EvdevKbdRead (int evdevPort, void *closure)
 
     n = read (evdevPort, &events, NUM_EVENTS * sizeof (struct input_event));
     if (n <= 0) {
-        if (errno == ENODEV) 
+        if (errno == ENODEV)
             DeleteInputDeviceRequest(ki->dixdev);
         return;
     }
@@ -395,7 +395,7 @@ static Status
 EvdevKbdInit (KdKeyboardInfo *ki)
 {
     int fd;
-    
+
     if (!ki->path) {
         ErrorF("Couldn't find evdev device path\n");
         return BadValue;

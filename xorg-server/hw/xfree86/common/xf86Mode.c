@@ -941,14 +941,13 @@ xf86InitialCheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode,
 ModeStatus
 xf86CheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode, int flags)
 {
-    ClockRangesPtr cp;
+    ClockRangePtr cp;
     int i, k, gap, minimumGap = CLOCK_TOLERANCE + 1;
     int extraFlags = 0;
     int clockIndex = -1;
     int MulFactor = 1;
     int DivFactor = 1;
     int ModePrivFlags = 0;
-    Bool allowDiv2;
     ModeStatus status = MODE_NOMODE;
 
     /* Some sanity checking */
@@ -1005,8 +1004,7 @@ xf86CheckModeForDriver(ScrnInfoPtr scrp, DisplayModePtr mode, int flags)
 		 * find a matching clock.
 		 */
     
-		allowDiv2 = (cp->strategy & LOOKUP_CLKDIV2) != 0;
-		i = xf86GetNearestClock(scrp, mode->Clock, allowDiv2,
+		i = xf86GetNearestClock(scrp, mode->Clock, 0,
 			   cp->ClockDivFactor, cp->ClockMulFactor, &k);
 		/*
 		 * If the clock is too far from the requested clock, this
@@ -1194,7 +1192,7 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
     int saveType;
     PixmapFormatRec *BankFormat;
     ClockRangePtr cp;
-    ClockRangesPtr storeClockRanges;
+    ClockRangePtr storeClockRanges;
     int numTimings = 0;
     range hsync[MAX_HSYNC];
     range vrefresh[MAX_VREFRESH];
@@ -1300,8 +1298,7 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
     }
 
     /*
-     * Store the clockRanges for later use by the VidMode extension. Must
-     * also store the strategy, since ClockDiv2 flag is stored there.
+     * Store the clockRanges for later use by the VidMode extension.
      */
     storeClockRanges = scrp->clockRanges;
     while (storeClockRanges != NULL) {
@@ -1309,11 +1306,10 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
     }
     for (cp = clockRanges; cp != NULL; cp = cp->next,
 	   	storeClockRanges = storeClockRanges->next) {
-	storeClockRanges = xnfalloc(sizeof(ClockRanges));
+	storeClockRanges = xnfalloc(sizeof(ClockRange));
 	if (scrp->clockRanges == NULL)
 	    scrp->clockRanges = storeClockRanges;
 	memcpy(storeClockRanges, cp, sizeof(ClockRange));
-	storeClockRanges->strategy = strategy;
     }
 
     /* Determine which pixmap format to pass to miScanLineWidth() */

@@ -101,77 +101,77 @@ ephyrScreenInitialize (KdScreenInfo *screen, EphyrScrPriv *scrpriv)
     }
 
   if (EphyrWantGrayScale)
-    screen->fb[0].depth = 8;
+    screen->fb.depth = 8;
 
-  if (screen->fb[0].depth && screen->fb[0].depth != hostx_get_depth())
+  if (screen->fb.depth && screen->fb.depth != hostx_get_depth())
     {
-      if (screen->fb[0].depth < hostx_get_depth()
-	  && (screen->fb[0].depth == 24 || screen->fb[0].depth == 16
-	      || screen->fb[0].depth == 8))
+      if (screen->fb.depth < hostx_get_depth()
+	  && (screen->fb.depth == 24 || screen->fb.depth == 16
+	      || screen->fb.depth == 8))
 	{
-	  hostx_set_server_depth(screen, screen->fb[0].depth);
+	  hostx_set_server_depth(screen, screen->fb.depth);
 	}
       else
 	ErrorF("\nXephyr: requested screen depth not supported, setting to match hosts.\n");
     }
   
-  screen->fb[0].depth = hostx_get_server_depth(screen);
+  screen->fb.depth = hostx_get_server_depth(screen);
   screen->rate = 72;
   
-  if (screen->fb[0].depth <= 8)
+  if (screen->fb.depth <= 8)
     {
       if (EphyrWantGrayScale)
-	screen->fb[0].visuals = ((1 << StaticGray) | (1 << GrayScale));
+	screen->fb.visuals = ((1 << StaticGray) | (1 << GrayScale));
       else
-	screen->fb[0].visuals = ((1 << StaticGray) |
-				 (1 << GrayScale) |
-				 (1 << StaticColor) |
-				 (1 << PseudoColor) |
-				 (1 << TrueColor) |
-				 (1 << DirectColor));
+	screen->fb.visuals = ((1 << StaticGray) |
+			      (1 << GrayScale) |
+			      (1 << StaticColor) |
+			      (1 << PseudoColor) |
+			      (1 << TrueColor) |
+			      (1 << DirectColor));
       
-      screen->fb[0].redMask   = 0x00;
-      screen->fb[0].greenMask = 0x00;
-      screen->fb[0].blueMask  = 0x00;
-      screen->fb[0].depth        = 8;
-      screen->fb[0].bitsPerPixel = 8;
+      screen->fb.redMask   = 0x00;
+      screen->fb.greenMask = 0x00;
+      screen->fb.blueMask  = 0x00;
+      screen->fb.depth        = 8;
+      screen->fb.bitsPerPixel = 8;
     }
   else 
     {
-      screen->fb[0].visuals = (1 << TrueColor);
+      screen->fb.visuals = (1 << TrueColor);
       
-      if (screen->fb[0].depth <= 15)
+      if (screen->fb.depth <= 15)
 	{
-	  screen->fb[0].depth = 15;
-	  screen->fb[0].bitsPerPixel = 16;
+	  screen->fb.depth = 15;
+	  screen->fb.bitsPerPixel = 16;
 	}
-      else if (screen->fb[0].depth <= 16)
+      else if (screen->fb.depth <= 16)
 	{
-	  screen->fb[0].depth = 16;
-	  screen->fb[0].bitsPerPixel = 16;
+	  screen->fb.depth = 16;
+	  screen->fb.bitsPerPixel = 16;
 	}
-      else if (screen->fb[0].depth <= 24)
+      else if (screen->fb.depth <= 24)
 	{
-	  screen->fb[0].depth = 24;
-	  screen->fb[0].bitsPerPixel = 32;
+	  screen->fb.depth = 24;
+	  screen->fb.bitsPerPixel = 32;
 	}
-      else if (screen->fb[0].depth <= 30)
+      else if (screen->fb.depth <= 30)
 	{
-	  screen->fb[0].depth = 30;
-	  screen->fb[0].bitsPerPixel = 32;
+	  screen->fb.depth = 30;
+	  screen->fb.bitsPerPixel = 32;
 	}
       else
 	{
 	  ErrorF("\nXephyr: Unsupported screen depth %d\n",
-	         screen->fb[0].depth);
+	         screen->fb.depth);
 	  return FALSE;
 	}
 
       hostx_get_visual_masks (screen, &redMask, &greenMask, &blueMask);
 
-      screen->fb[0].redMask = (Pixel) redMask;
-      screen->fb[0].greenMask = (Pixel) greenMask;
-      screen->fb[0].blueMask = (Pixel) blueMask;
+      screen->fb.redMask = (Pixel) redMask;
+      screen->fb.greenMask = (Pixel) greenMask;
+      screen->fb.blueMask = (Pixel) blueMask;
 
     }
   
@@ -220,6 +220,22 @@ ephyrWindowLinear (ScreenPtr	pScreen,
   return priv->base + row * priv->bytes_per_line + offset;
 }
 
+/**
+ * Figure out display buffer size. If fakexa is enabled, allocate a larger
+ * buffer so that fakexa has space to put offscreen pixmaps.
+ */
+int
+ephyrBufferHeight(KdScreenInfo *screen)
+{
+    int buffer_height;
+    if (ephyrFuncs.initAccel == NULL)
+	buffer_height = screen->height;
+    else
+	buffer_height = 3 * screen->height;
+    return buffer_height;
+}
+
+
 Bool
 ephyrMapFramebuffer (KdScreenInfo *screen)
 {
@@ -234,30 +250,19 @@ ephyrMapFramebuffer (KdScreenInfo *screen)
   KdComputePointerMatrix (&m, scrpriv->randr, screen->width, screen->height);
   KdSetPointerMatrix (&m);
   
-  priv->bytes_per_line = ((screen->width * screen->fb[0].bitsPerPixel + 31) >> 5) << 2;
-  
-  /* point the framebuffer to the data in an XImage */
-  /* If fakexa is enabled, allocate a larger buffer so that fakexa has space to
-   * put offscreen pixmaps.
-   */
-  if (ephyrFuncs.initAccel == NULL)
-    buffer_height = screen->height;
-  else
-    buffer_height = 3 * screen->height;
+  priv->bytes_per_line = ((screen->width * screen->fb.bitsPerPixel + 31) >> 5) << 2;
+
+  buffer_height = ephyrBufferHeight(screen);
 
   priv->base = hostx_screen_init (screen, screen->width, screen->height, buffer_height);
 
-  screen->memory_base  = (CARD8 *) (priv->base);
-  screen->memory_size  = priv->bytes_per_line * buffer_height;
-  screen->off_screen_base = priv->bytes_per_line * screen->height;
-  
   if ((scrpriv->randr & RR_Rotate_0) && !(scrpriv->randr & RR_Reflect_All))
     {
       scrpriv->shadow = FALSE;
       
-      screen->fb[0].byteStride = priv->bytes_per_line;
-      screen->fb[0].pixelStride = screen->width;
-      screen->fb[0].frameBuffer = (CARD8 *) (priv->base);
+      screen->fb.byteStride = priv->bytes_per_line;
+      screen->fb.pixelStride = screen->width;
+      screen->fb.frameBuffer = (CARD8 *) (priv->base);
     }
   else
     {
@@ -266,7 +271,7 @@ ephyrMapFramebuffer (KdScreenInfo *screen)
       
       EPHYR_LOG("allocing shadow");
       
-      KdShadowFbAlloc (screen, 0, 
+      KdShadowFbAlloc (screen,
 		       scrpriv->randr & (RR_Rotate_90|RR_Rotate_270));
     }
   
@@ -302,7 +307,7 @@ ephyrUnmapFramebuffer (KdScreenInfo *screen)
   EphyrScrPriv  *scrpriv = screen->driver;
   
   if (scrpriv->shadow)
-    KdShadowFbFree (screen, 0);
+    KdShadowFbFree (screen);
   
   /* Note, priv->base will get freed when XImage recreated */
   
@@ -566,10 +571,10 @@ ephyrRandRSetConfig (ScreenPtr		pScreen,
   (*pScreen->ModifyPixmapHeader) (fbGetScreenPixmap (pScreen),
 				  pScreen->width,
 				  pScreen->height,
-				  screen->fb[0].depth,
-				  screen->fb[0].bitsPerPixel,
-				  screen->fb[0].byteStride,
-				  screen->fb[0].frameBuffer);
+				  screen->fb.depth,
+				  screen->fb.bitsPerPixel,
+				  screen->fb.byteStride,
+				  screen->fb.frameBuffer);
   
   /* set the subpixel order */
   
@@ -730,7 +735,7 @@ ephyrScreenFini (KdScreenInfo *screen)
 {
     EphyrScrPriv  *scrpriv = screen->driver;
     if (scrpriv->shadow) {
-        KdShadowFbFree (screen, 0);
+        KdShadowFbFree (screen);
     }
     xfree(screen->driver);
     screen->driver = NULL;
@@ -1022,7 +1027,7 @@ ephyrCardFini (KdCardInfo *card)
 }
 
 void
-ephyrGetColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs)
+ephyrGetColors (ScreenPtr pScreen, int n, xColorItem *pdefs)
 {
   /* XXX Not sure if this is right */
   
@@ -1039,7 +1044,7 @@ ephyrGetColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs)
 }
 
 void
-ephyrPutColors (ScreenPtr pScreen, int fb, int n, xColorItem *pdefs)
+ephyrPutColors (ScreenPtr pScreen, int n, xColorItem *pdefs)
 {
   int min, max, p;
 
