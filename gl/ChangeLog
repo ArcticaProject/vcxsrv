@@ -1,3 +1,93 @@
+commit 3966379209ec48f14a1d12e48f51b687d48cc6ac
+Author: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date:   Fri Jan 8 15:11:48 2010 -0500
+
+    Bump version for release
+
+commit 6a9361aaec49495d566db1267a21a0f4ed1b9480
+Merge: c35f05d... f2b9a6a...
+Author: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date:   Fri Jan 8 11:43:07 2010 -0500
+
+    Merge branch 'master' of git://people.freedesktop.org/~jbarnes/glproto
+
+commit f2b9a6a29edf930f30eade7a0abe40a6d3c4962b
+Author: Jesse Barnes <jbarnes@jbarnes-desktop.localdomain>
+Date:   Thu Nov 12 16:53:13 2009 +0000
+
+    Add GLX swap buffers event support
+
+commit c35f05decd7c1c5e4d4c1cc955c6ba9ba370b788
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 22 19:24:48 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit 57dfc6eaf0da7ba8ef3bc1bbe105037f4b7b97f7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Nov 16 11:13:30 2009 -0500
+
+    README: file created or updated #24206
+    
+    Contains a set of URLs to freedesktop.org.
+
+commit 6f612cd9c52ad89369cb6364c11c47ad3a356b95
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 19:45:26 2009 -0500
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit 201a1ad998f1f5eefb43f6a0b6a4a59dee7662e6
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 18:31:28 2009 -0500
+
+    Makefile.am: INSTALL file is missing or incorrect #24206
+    
+    The standard GNU file on building/installing  tarball is copied
+    using the XORG_INSTALL macro contained in XORG_DEFAULT_OPTIONS
+    Add INSTALL target
+
+commit acc2c1191ea96cdecf973139fda57bd8efccb8c7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 18:11:36 2009 -0500
+
+    configure.ac: deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit 26004693388740e3c94dc194348bc56bf9a85f18
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 13:55:25 2009 -0500
+
+    configure.ac: AM_MAINTAINER_MODE missing #24238
+    
+    This turns off maintainer mode build rules in tarballs.
+    Works in conjunction with autogen.sh --enable-maintainer-mode
+
+commit abdb124781c90394eb5b0e49203b9287b7b48cbc
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Nov 14 18:26:47 2009 -0500
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit 2f13449c987e3d58555e030f887736d67e2fe62d
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue May 26 17:16:20 2009 -0400
+
+    glproto 1.4.10
+
 commit 25a12ff858d569f990e63d942677f05d301be95e
 Author: Paulo Cesar Pereira de Andrade <pcpa@mandriva.com.br>
 Date:   Tue Jan 27 20:06:28 2009 -0200
@@ -82,7 +172,7 @@ Date:   Fri Oct 12 19:03:25 2007 -0400
     Bump to 1.4.9 so we can depend on SGI pbuffer structs.
 
 commit e89ed37e56e2dec95fd43778f3a72bafca1d56e3
-Merge: 2adf876 750a853
+Merge: 2adf876... 750a853...
 Author: James Cloos <cloos@jhcloos.com>
 Date:   Mon Sep 3 06:17:08 2007 -0400
 

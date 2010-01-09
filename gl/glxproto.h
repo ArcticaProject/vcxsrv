@@ -61,6 +61,7 @@
 **  extension and the client doesn't.
 */
 #define GLX_PbufferClobber	0
+#define GLX_BufferSwapComplete	1
 
 #define __GLX_NUMBER_EVENTS 17
 
@@ -1308,6 +1309,20 @@ typedef struct {
     CARD16 count B16;
     CARD32 unused2 B32;
 } xGLXPbufferClobberEvent;
+
+typedef struct {
+    BYTE type;
+    BYTE pad;
+    CARD16 sequenceNumber B16;
+    CARD16 event_type B16;
+    CARD32 drawable;
+    CARD32 ust_hi B32;
+    CARD32 ust_lo B32;
+    CARD32 msc_hi B32;
+    CARD32 msc_lo B32;
+    CARD32 sbc_hi B32;
+    CARD32 sbc_lo B32;
+} xGLXBufferSwapComplete;
 
 /************************************************************************/
 
