@@ -583,7 +583,7 @@ export {
 }
 
  /*---------------------------------------------------------------------------*/
-([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*]|\\\ |\\#)+\\[ \t\r]*\n  {
+([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|]|\\\ |\\#)+\\[ \t\r]*\n  {
   size_t EndIndex=::strlen((const char*)yytext);
   while (strchr(" \t\r\n\\",yytext[--EndIndex]));
   yyless(EndIndex+1);
@@ -593,7 +593,7 @@ export {
   return mhmakeparser::STRING;
 }
 
-([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*]|\\\ |\\#)+\+=  {
+([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|]|\\\ |\\#)+\+=  {
   size_t Len;
   PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   Len=strlen((const char *)yytext)-2;
@@ -602,7 +602,7 @@ export {
   return mhmakeparser::STRING;
 }
 
-([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*]|\\\ |\\#)+  {
+([a-zA-Z0-9\\\._\~\-\+%\@<&;/\*\|]|\\\ |\\#)+  {
   PRINTF(("%s %d: STRING: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::STRING;
