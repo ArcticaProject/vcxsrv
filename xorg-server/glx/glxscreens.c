@@ -181,6 +181,7 @@ static char GLXServerExtensions[] =
 			"GLX_SGIX_fbconfig "
 			"GLX_SGIX_pbuffer "
 			"GLX_MESA_copy_sub_buffer "
+                        "GLX_INTEL_swap_event"
 			;
 
 /*

@@ -1481,7 +1481,7 @@ int __glXDisp_SwapBuffers(__GLXclientState *cl, GLbyte *pc)
 	return error;
 
     if (pGlxDraw->type == DRAWABLE_WINDOW &&
-	(*pGlxDraw->swapBuffers)(pGlxDraw) == GL_FALSE)
+	(*pGlxDraw->swapBuffers)(cl->client, pGlxDraw) == GL_FALSE)
 	return __glXError(GLXBadDrawable);
 
     return Success;

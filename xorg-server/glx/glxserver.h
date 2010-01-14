@@ -56,7 +56,14 @@
 #include <GL/gl.h>
 #include <GL/glxproto.h>
 
-/* For glxscreens.h */
+/*
+** GLX resources.
+*/
+typedef XID GLXContextID;
+typedef XID GLXPixmap;
+typedef XID GLXDrawable;
+
+typedef struct __GLXclientStateRec __GLXclientState;
 typedef struct __GLXdrawable __GLXdrawable;
 typedef struct __GLXcontext __GLXcontext;
 
@@ -70,15 +77,6 @@ typedef struct __GLXcontext __GLXcontext;
 #ifndef False
 #define False 0
 #endif
-
-/*
-** GLX resources.
-*/
-typedef XID GLXContextID;
-typedef XID GLXPixmap;
-typedef XID GLXDrawable;
-
-typedef struct __GLXclientStateRec __GLXclientState;
 
 extern __GLXscreen *glxGetScreen(ScreenPtr pScreen);
 extern __GLXclientState *glxGetClient(ClientPtr pClient);
@@ -250,5 +248,7 @@ extern int __glXImageSize(GLenum format, GLenum type,
 
 extern unsigned glxMajorVersion;
 extern unsigned glxMinorVersion;
+
+extern int __glXEventBase;
 
 #endif /* !__GLX_server_h__ */

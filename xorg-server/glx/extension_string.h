@@ -50,6 +50,7 @@ enum {
    SGIX_fbconfig_bit,
    SGIX_pbuffer_bit,
    SGIX_visual_select_group_bit,
+   INTEL_swap_event_bit,
    __NUM_GLX_EXTS,
 };
 

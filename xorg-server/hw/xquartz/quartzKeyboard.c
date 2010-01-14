@@ -260,6 +260,7 @@ static void DarwinBuildModifierMaps(darwinKeyboardInfo *info) {
                 break;
 
             case XK_Mode_switch:
+                ErrorF("DarwinBuildModifierMaps: XK_Mode_switch encountered, unable to determine side.\n");
                 info->modifierKeycodes[NX_MODIFIERKEY_ALTERNATE][0] = i;
 #ifdef NX_MODIFIERKEY_RALTERNATE
                 info->modifierKeycodes[NX_MODIFIERKEY_RALTERNATE][0] = i;
@@ -388,7 +389,6 @@ void DarwinKeyboardReloadHandler(void) {
     
     pthread_mutex_lock(&keyInfo_mutex); {
         /* Initialize our keySyms */
-        DarwinBuildModifierMaps(&keyInfo);
         keySyms.map = keyInfo.keyMap;
         keySyms.mapWidth   = GLYPHS_PER_KEY;
         keySyms.minKeyCode = MIN_KEYCODE;
@@ -807,6 +807,8 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
                 k[0] = k[1] = k[2] = k[3] = known_numeric_keys[i].keypad;
         }
     }
+
+    DarwinBuildModifierMaps(info);
 
     return TRUE;
 }
