@@ -248,7 +248,7 @@ __glXDRIdrawableDestroy(__GLXdrawable *drawable)
 }
 
 static GLboolean
-__glXDRIdrawableSwapBuffers(__GLXdrawable *basePrivate)
+__glXDRIdrawableSwapBuffers(ClientPtr client, __GLXdrawable *basePrivate)
 {
     __GLXDRIdrawable *private = (__GLXDRIdrawable *) basePrivate;
     __GLXDRIscreen *screen =

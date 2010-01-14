@@ -754,12 +754,12 @@ RECORDPROTO="recordproto >= 1.13.99.1"
 SCRNSAVERPROTO="scrnsaverproto >= 1.1"
 RESOURCEPROTO="resourceproto"
 DRIPROTO="xf86driproto >= 2.1.0"
-DRI2PROTO="dri2proto >= 2.1"
+DRI2PROTO="dri2proto >= 2.2"
 XINERAMAPROTO="xineramaproto"
 BIGFONTPROTO="xf86bigfontproto >= 1.2.0"
 XCALIBRATEPROTO="xcalibrateproto"
 DGAPROTO="xf86dgaproto >= 2.0.99.1"
-GLPROTO="glproto >= 1.4.9"
+GLPROTO="glproto >= 1.4.10"
 DMXPROTO="dmxproto >= 2.2.99.1"
 VIDMODEPROTO="xf86vidmodeproto >= 2.2.99.1"
 WINDOWSWMPROTO="windowswmproto"
@@ -2112,9 +2112,9 @@ AC_TRY_COMPILE([
 
 AC_DEFINE_DIR(PROJECTROOT, prefix, [Overall prefix])
 
-BUILD_DATE="$(date +'%Y%m%d')"
+BUILD_DATE="`date +'%Y%m%d'`"
 AC_SUBST([BUILD_DATE])
-BUILD_TIME="$(date +'1%H%M%S')"
+BUILD_TIME="`date +'1%H%M%S'`"
 AC_SUBST([BUILD_TIME])
 
 DIX_CFLAGS="-DHAVE_DIX_CONFIG_H $XSERVER_CFLAGS"

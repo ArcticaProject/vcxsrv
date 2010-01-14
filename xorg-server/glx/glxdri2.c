@@ -70,6 +70,7 @@ struct __GLXDRIscreen {
 
     const __DRIcoreExtension *core;
     const __DRIdri2Extension *dri2;
+    const __DRI2flushExtension *flush;
     const __DRIcopySubBufferExtension *copySubBuffer;
     const __DRIswapControlExtension *swapControl;
     const __DRItexBufferExtension *texBuffer;
@@ -132,17 +133,6 @@ __glXDRIdrawableCopySubBuffer(__GLXdrawable *drawable,
 		   DRI2BufferFrontLeft, DRI2BufferBackLeft);
 }
 
-static GLboolean
-__glXDRIdrawableSwapBuffers(__GLXdrawable *drawable)
-{
-    __GLXDRIdrawable *private = (__GLXDRIdrawable *) drawable;
-
-    __glXDRIdrawableCopySubBuffer(drawable, 0, 0,
-				  private->width, private->height);
-
-    return TRUE;
-}
-
 static void
 __glXDRIdrawableWaitX(__GLXdrawable *drawable)
 {
@@ -177,9 +167,74 @@ __glXDRIdrawableWaitGL(__GLXdrawable *drawable)
 		   DRI2BufferFrontLeft, DRI2BufferFakeFrontLeft);
 }
 
+static void
+__glXdriSwapEvent(ClientPtr client, void *data, int type, CARD64 ust,
+		  CARD64 msc, CARD64 sbc)
+{
+    __GLXdrawable *drawable = data;
+    xGLXBufferSwapComplete wire;
+
+    if (!drawable->eventMask & GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK)
+	return;
+
+    wire.type = __glXEventBase + GLX_BufferSwapComplete;
+    switch (type) {
+    case DRI2_EXCHANGE_COMPLETE:
+	wire.event_type = GLX_EXCHANGE_COMPLETE_INTEL;
+	break;
+    case DRI2_BLIT_COMPLETE:
+	wire.event_type = GLX_BLIT_COMPLETE_INTEL;
+	break;
+    case DRI2_FLIP_COMPLETE:
+	wire.event_type = GLX_FLIP_COMPLETE_INTEL;
+	break;
+    default:
+	/* unknown swap completion type */
+	break;
+    }
+    wire.sequenceNumber = client->sequence;
+    wire.drawable = drawable->drawId;
+    wire.ust_hi = ust >> 32;
+    wire.ust_lo = ust & 0xffffffff;
+    wire.msc_hi = msc >> 32;
+    wire.msc_lo = msc & 0xffffffff;
+    wire.sbc_hi = sbc >> 32;
+    wire.sbc_lo = sbc & 0xffffffff;
+
+    WriteEventsToClient(client, 1, (xEvent *) &wire);
+}
+
+/*
+ * Copy or flip back to front, honoring the swap interval if possible.
+ *
+ * If the kernel supports it, we request an event for the frame when the
+ * swap should happen, then perform the copy when we receive it.
+ */
+static GLboolean
+__glXDRIdrawableSwapBuffers(ClientPtr client, __GLXdrawable *drawable)
+{
+    __GLXDRIdrawable *priv = (__GLXDRIdrawable *) drawable;
+    __GLXDRIscreen *screen = priv->screen;
+    CARD64 unused;
+
+    if (screen->flush)
+	(*screen->flush->flushInvalidate)(priv->driDrawable);
+
+    if (DRI2SwapBuffers(client, drawable->pDraw, 0, 0, 0, &unused,
+			__glXdriSwapEvent, drawable->pDraw) != Success)
+	return FALSE;
+
+    return TRUE;
+}
+
 static int
 __glXDRIdrawableSwapInterval(__GLXdrawable *drawable, int interval)
 {
+    if (interval <= 0) /* || interval > BIGNUM? */
+	return GLX_BAD_VALUE;
+
+    DRI2SwapInterval(drawable->pDraw, interval);
+
     return 0;
 }
 
@@ -239,6 +294,18 @@ __glXDRIcontextForceCurrent(__GLXcontext *baseContext)
     return (*screen->core->bindContext)(context->driContext,
 					draw->driDrawable,
 					read->driDrawable);
+}
+
+static Bool
+__glXDRIcontextWait(__GLXcontext *baseContext,
+		    __GLXclientState *cl, int *error)
+{
+    if (DRI2WaitSwap(cl->client, baseContext->drawPriv->pDraw)) {
+	*error = cl->client->noClientException;
+	return TRUE;
+    }
+
+    return FALSE;
 }
 
 #ifdef __DRI_TEX_BUFFER
@@ -346,6 +413,7 @@ __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
     context->base.copy              = __glXDRIcontextCopy;
     context->base.forceCurrent      = __glXDRIcontextForceCurrent;
     context->base.textureFromPixmap = &__glXDRItextureFromPixmap;
+    context->base.wait              = __glXDRIcontextWait;
 
     context->driContext =
 	(*screen->dri2->createNewContext)(screen->driScreen,
@@ -550,6 +618,10 @@ initializeExtensions(__GLXDRIscreen *screen)
 			 "GLX_MESA_copy_sub_buffer");
     LogMessage(X_INFO, "AIGLX: enabled GLX_MESA_copy_sub_buffer\n");
 
+    /* FIXME: only if DDX supports it */
+    __glXEnableExtension(screen->glx_enable_bits, "GLX_INTEL_swap_event");
+    LogMessage(X_INFO, "AIGLX: enabled GLX_INTEL_swap_event\n");
+
     for (i = 0; extensions[i]; i++) {
 #ifdef __DRI_READ_DRAWABLE
 	if (strcmp(extensions[i]->name, __DRI_READ_DRAWABLE) == 0) {
@@ -581,6 +653,14 @@ initializeExtensions(__GLXDRIscreen *screen)
 	    LogMessage(X_INFO, "AIGLX: GLX_EXT_texture_from_pixmap backed by buffer objects\n");
 	}
 #endif
+
+#ifdef __DRI2_FLUSH
+	if (strcmp(extensions[i]->name, __DRI2_FLUSH) == 0 &&
+	    extensions[i]->version >= __DRI2_FLUSH_VERSION) {
+		screen->flush = (__DRI2flushExtension *) extensions[i];
+	}
+#endif
+
 	/* Ignore unknown extensions */
     }
 }

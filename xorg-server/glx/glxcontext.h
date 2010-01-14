@@ -55,6 +55,10 @@ struct __GLXcontext {
 				     unsigned long mask);
     int            (*forceCurrent)  (__GLXcontext *context);
 
+    Bool           (*wait)          (__GLXcontext *context,
+				     __GLXclientState *cl,
+				     int *error);
+
     __GLXtextureFromPixmap *textureFromPixmap;
 
     /*

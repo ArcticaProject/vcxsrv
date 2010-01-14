@@ -79,6 +79,9 @@ X_PFX (hook_run) (x_list *lst, void *arg)
     void **data;
     int length, i;
 
+    if(!lst)
+        return;
+
     length = X_PFX (list_length) (lst);
     fun = xalloc (sizeof (x_hook_function *) * length);
     data = xalloc (sizeof (void *) * length);

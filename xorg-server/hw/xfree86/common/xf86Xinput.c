@@ -121,7 +121,7 @@ ProcessVelocityConfiguration(DeviceIntPtr pDev, char* devname, pointer list,
 
     /* common settings (available via device properties) */
     tempf = xf86SetRealOption(list, "ConstantDeceleration", 1.0);
-    if(tempf > 1.0){
+    if (tempf > 1.0) {
         xf86Msg(X_CONFIG, "%s: (accel) constant deceleration by %.1f\n",
                 devname, tempf);
         prop = XIGetKnownProperty(ACCEL_PROP_CONSTANT_DECELERATION);
@@ -130,7 +130,7 @@ ProcessVelocityConfiguration(DeviceIntPtr pDev, char* devname, pointer list,
     }
 
     tempf = xf86SetRealOption(list, "AdaptiveDeceleration", 1.0);
-    if(tempf > 1.0){
+    if (tempf > 1.0) {
         xf86Msg(X_CONFIG, "%s: (accel) adaptive deceleration by %.1f\n",
                 devname, tempf);
         prop = XIGetKnownProperty(ACCEL_PROP_ADAPTIVE_DECELERATION);
@@ -144,8 +144,7 @@ ProcessVelocityConfiguration(DeviceIntPtr pDev, char* devname, pointer list,
 
     prop = XIGetKnownProperty(ACCEL_PROP_PROFILE_NUMBER);
     if (XIChangeDeviceProperty(pDev, prop, XA_INTEGER, 32,
-                               PropModeReplace, 1, &tempi, FALSE) == Success)
-    {
+                               PropModeReplace, 1, &tempi, FALSE) == Success) {
         xf86Msg(X_CONFIG, "%s: (accel) acceleration profile %i\n", devname,
                 tempi);
     } else {
@@ -156,20 +155,19 @@ ProcessVelocityConfiguration(DeviceIntPtr pDev, char* devname, pointer list,
     /* set scaling */
     tempf = xf86SetRealOption(list, "ExpectedRate", 0);
     prop = XIGetKnownProperty(ACCEL_PROP_VELOCITY_SCALING);
-    if(tempf > 0){
+    if (tempf > 0) {
         tempf = 1000.0 / tempf;
         XIChangeDeviceProperty(pDev, prop, float_prop, 32,
                                PropModeReplace, 1, &tempf, FALSE);
-    }else{
+    } else {
         tempf = xf86SetRealOption(list, "VelocityScale", s->corr_mul);
         XIChangeDeviceProperty(pDev, prop, float_prop, 32,
                                PropModeReplace, 1, &tempf, FALSE);
     }
 
     tempi = xf86SetIntOption(list, "VelocityTrackerCount", -1);
-    if(tempi > 1){
+    if (tempi > 1)
 	InitTrackers(s, tempi);
-    }
 
     s->initial_range = xf86SetIntOption(list, "VelocityInitialRange",
                                         s->initial_range);
@@ -177,7 +175,7 @@ ProcessVelocityConfiguration(DeviceIntPtr pDev, char* devname, pointer list,
     s->max_diff = xf86SetRealOption(list, "VelocityAbsDiff", s->max_diff);
 
     tempf = xf86SetRealOption(list, "VelocityRelDiff", -1);
-    if(tempf >= 0){
+    if (tempf >= 0) {
 	xf86Msg(X_CONFIG, "%s: (accel) max rel. velocity difference: %.1f%%\n",
 	        devname, tempf*100.0);
 	s->max_rel_diff = tempf;
@@ -198,40 +196,40 @@ ProcessVelocityConfiguration(DeviceIntPtr pDev, char* devname, pointer list,
 
 static void
 ApplyAccelerationSettings(DeviceIntPtr dev){
-    int scheme;
+    int scheme, i;
     DeviceVelocityPtr pVel;
     LocalDevicePtr local = (LocalDevicePtr)dev->public.devicePrivate;
     char* schemeStr;
 
-    if(dev->valuator){
+    if (dev->valuator && dev->ptrfeed) {
 	schemeStr = xf86SetStrOption(local->options, "AccelerationScheme", "");
 
 	scheme = dev->valuator->accelScheme.number;
 
-	if(!xf86NameCmp(schemeStr, "predictable"))
+	if (!xf86NameCmp(schemeStr, "predictable"))
 	    scheme = PtrAccelPredictable;
 
-	if(!xf86NameCmp(schemeStr, "lightweight"))
+	if (!xf86NameCmp(schemeStr, "lightweight"))
 	    scheme = PtrAccelLightweight;
 
-	if(!xf86NameCmp(schemeStr, "none"))
+	if (!xf86NameCmp(schemeStr, "none"))
 	    scheme = PtrAccelNoOp;
 
         /* reinit scheme if needed */
-        if(dev->valuator->accelScheme.number != scheme){
-            if(dev->valuator->accelScheme.AccelCleanupProc){
+        if (dev->valuator->accelScheme.number != scheme) {
+            if (dev->valuator->accelScheme.AccelCleanupProc) {
                 dev->valuator->accelScheme.AccelCleanupProc(dev);
             }
 
-            if(InitPointerAccelerationScheme(dev, scheme)){
+            if (InitPointerAccelerationScheme(dev, scheme)) {
 		xf86Msg(X_CONFIG, "%s: (accel) selected scheme %s/%i\n",
 		        local->name, schemeStr, scheme);
-	    }else{
+	    } else {
         	xf86Msg(X_CONFIG, "%s: (accel) could not init scheme %s\n",
         	        local->name, schemeStr);
         	scheme = dev->valuator->accelScheme.number;
             }
-        }else{
+        } else {
             xf86Msg(X_CONFIG, "%s: (accel) keeping acceleration scheme %i\n",
                     local->name, scheme);
         }
@@ -239,13 +237,37 @@ ApplyAccelerationSettings(DeviceIntPtr dev){
         xfree(schemeStr);
 
         /* process special configuration */
-        switch(scheme){
+        switch (scheme) {
             case PtrAccelPredictable:
                 pVel = GetDevicePredictableAccelData(dev);
                 ProcessVelocityConfiguration (dev, local->name, local->options,
                                               pVel);
                 break;
         }
+
+        i = xf86SetIntOption(local->options, "AccelerationNumerator",
+                             dev->ptrfeed->ctrl.num);
+        if (i >= 0)
+            dev->ptrfeed->ctrl.num = i;
+
+        i = xf86SetIntOption(local->options, "AccelerationDenominator",
+                             dev->ptrfeed->ctrl.den);
+        if (i > 0)
+            dev->ptrfeed->ctrl.den = i;
+
+        i = xf86SetIntOption(local->options, "AccelerationThreshold",
+                             dev->ptrfeed->ctrl.threshold);
+        if (i >= 0)
+            dev->ptrfeed->ctrl.threshold = i;
+
+        /* mostly a no-op anyway */
+        (*dev->ptrfeed->CtrlProc)(dev, &dev->ptrfeed->ctrl);
+
+        xf86Msg(X_CONFIG, "%s: (accel) acceleration factor: %.3f\n",
+                            local->name, ((float)dev->ptrfeed->ctrl.num)/
+                                         ((float)dev->ptrfeed->ctrl.den));
+        xf86Msg(X_CONFIG, "%s: (accel) acceleration threshold: %i\n",
+                local->name, dev->ptrfeed->ctrl.threshold);
     }
 }
 

@@ -895,7 +895,7 @@ glxWinDestroyWindow(WindowPtr pWin)
  */
 
 static GLboolean
-glxWinDrawableSwapBuffers(__GLXdrawable *base)
+glxWinDrawableSwapBuffers(ClientPtr client, __GLXdrawable *base)
 {
     BOOL ret;
     __GLXWinDrawable *draw = (__GLXWinDrawable *)base;
@@ -931,7 +931,7 @@ glxWinDrawableCopySubBuffer(__GLXdrawable *drawable,
                             int x, int y, int w, int h)
 {
   glAddSwapHintRectWINWrapperNonstatic(x, y, w, h);
-  glxWinDrawableSwapBuffers(drawable);
+  glxWinDrawableSwapBuffers(NULL,drawable);
 }
 
 static void

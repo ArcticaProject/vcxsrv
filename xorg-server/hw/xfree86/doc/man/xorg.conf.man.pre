@@ -914,7 +914,72 @@ X Input extension. This option controls the startup behavior only, a device
 may be reattached or set floating at runtime.
 .TP 7
 .BI "Option \*qSendDragEvents\*q  \*q" boolean \*q
-???
+Send core events while dragging. Enabled by default.
+.PP
+For pointing devices, the following options control how the pointer
+is accelerated or decelerated with respect to physical device motion. Most of
+these can be adjusted at runtime, see the xinput(1) man page for details. Only
+the most important acceleration options are discussed here.
+.TP 7
+.BI "Option \*qAccelerationProfile\*q  \*q" integer \*q
+Select the profile. In layman's terms, the profile constitutes the "feeling" of
+the acceleration. More formally, it defines how the transfer function (actual
+acceleration as a function of current device velocity and acceleration controls)
+is constructed. This is mainly a matter of personal preference.
+.PP
+.RS 6
+.nf
+.B  " 0      classic (mostly compatible)"
+.B  "-1      none (only constant deceleration is applied)"
+.B  " 1      device-dependent"
+.B  " 2      polynomial (polynomial function)"
+.B  " 3      smooth linear (soft knee, then linear)"
+.B  " 4      simple (normal when slow, otherwise accelerated)"
+.B  " 5      power (power function)"
+.B  " 6      linear (more speed, more acceleration)"
+.B  " 7      limited (like linear, but maxes out at threshold)"
+.fi
+.RE
+.TP 7
+.BI "Option \*qConstantDeceleration\*q  \*q" real \*q
+Makes the pointer go
+.B deceleration
+times slower than normal. Most useful for high-resolution devices.
+.TP 7
+.BI "Option \*qAdaptiveDeceleration\*q  \*q" real \*q
+Allows to actually decelerate the pointer when going slow. At most, it will be
+.B adaptive deceleration
+times slower. Enables precise pointer placement without sacrificing speed.
+.TP 7
+.BI "Option \*qAccelerationScheme\*q  \*q" string \*q
+Selects the scheme, which is the underlying algorithm.
+.PP
+.RS 7
+.nf
+.B  "predictable   default algorithm (behaving more predictable)"
+.B  "lightweight   old acceleration code (as specified in the X protocol spec)"
+.B  "none          no acceleration or deceleration"
+.fi
+.RE
+.TP 7
+.BI "Option \*qAccelerationNumerator\*q  \*q" integer \*q
+.TP 7
+.BI "Option \*qAccelerationDenominator\*q  \*q" integer \*q
+Set numerator and denominator of the acceleration factor. The acceleration
+factor is a rational which, together with threshold, can be used to tweak
+profiles to suit the users needs. The
+.B simple
+and
+.B limited
+profiles use it directly (i.e. they accelerate by the factor), for other
+profiles it should hold that a higher acceleration factor leads to a faster
+pointer. Typically, 1 is unaccelerated and values up to 5 are sensible.
+.TP 7
+.BI "Option \*qAccelerationThreshold\*q  \*q" integer \*q
+Set the threshold, which is roughly the velocity (usually device units per 10
+ms) required for acceleration to become effective. The precise effect varies
+with the profile however.
+
 .SH "INPUTCLASS SECTION"
 The config file may have multiple
 .B InputClass

@@ -1,9 +1,8 @@
 Prerequisits:
 - Microsoft Visual C++ 2008 Express Edition with SP1 (http://www.microsoft.com/express/vc/)
-- Perl (cygwin perl (http://www.cygwin.com/)  or activestate perl (http://www.activestate.com/activeperl/) )
+- Perl (cygwin perl (http://www.cygwin.com/), strawberry perl (http://strawberryperl.com)  or activestate perl (http://www.activestate.com/activeperl/) )
 - Python (2.5 used: http://www.python.org/)
 - Gnuwin32 gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/)
-- Copy gawk.exe to awk.exe
 - Make sure that the gnuwin32 binaries are in a directory path with no spaces, like 'C:\gnuwin32\bin'
 - Make sure the environment PATH includes the directory where the gnuwin32 binaries are
 - Make sure python, perl are in the environment PATH
@@ -37,7 +36,8 @@ Add an environment variable named MHMAKECONF having as value the root directory 
 e.g.: set MHMAKECONF=c:\vcxsrv\trunk
 
 Building vcxsrv:
-- run 'mhmake MAKESERVER=1' in xorg-server directory
+- run 'mhmake MAKESERVER=1' in xorg-server directory. Currently you will get an error at the end saying it cannot find vcxsrv_dbg.lib.
+  To solve this, rerun this command after executing the next command
 - run 'mhmake DEBUG=1 MAKESERVER=1' in xorg-server directory for a debugable version
 
 To build installer:

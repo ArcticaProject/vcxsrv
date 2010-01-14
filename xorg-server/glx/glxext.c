@@ -273,6 +273,7 @@ GLboolean __glXErrorOccured(void)
 }
 
 static int __glXErrorBase;
+int __glXEventBase;
 
 int __glXError(int error)
 {
@@ -409,6 +410,7 @@ void GlxExtensionInit(void)
     }
 
     __glXErrorBase = extEntry->errorBase;
+    __glXEventBase = extEntry->eventBase;
 }
 
 /************************************************************************/
@@ -452,6 +454,9 @@ __GLXcontext *__glXForceCurrent(__GLXclientState *cl, GLXContextTag tag,
     	}
     }
     
+    if (cx->wait && (*cx->wait)(cx, cl, error))
+	return NULL;
+
     if (cx == __glXLastContext) {
 	/* No need to re-bind */
 	return cx;

@@ -8,7 +8,7 @@ noinst_LTLIBRARIES = liblinux.la
 
 liblinux_la_SOURCES =
 
-liblinux_la_SOURCES += linux.c klinux.h
+liblinux_la_SOURCES += linux.c
 
 if KDRIVE_KBD
 liblinux_la_SOURCES += keyboard.c

@@ -35,9 +35,9 @@
                 <string>http://xquartz.macosforge.org/downloads/sparkle/release.xml</string>
 #endif
 	<key>NSHumanReadableCopyright</key>
-		<string>© 2003-2009 Apple Inc.
+		<string>© 2003-2010 Apple Inc.
 © 2003 XFree86 Project, Inc.
-© 2003-2009 X.org Foundation, Inc.
+© 2003-2010 X.org Foundation, Inc.
 </string>
 	<key>NSMainNibFile</key>
 		<string>main</string>
