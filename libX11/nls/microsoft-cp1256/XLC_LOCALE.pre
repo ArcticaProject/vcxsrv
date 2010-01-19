@@ -1,7 +1,5 @@
-XCOMM  $TOG: microsoft-cp1256 /main/1 1998/05/20 14:49:21 kaleb $
 XCOMM  XLocale Database Sample for microsoft-cp1256.
 XCOMM 
-XCOMM  $XFree86: xc/nls/XLC_LOCALE/microsoft-cp1256,v 1.1 2000/10/27 18:30:57 dawes Exp $
 
 XCOMM 
 XCOMM 	XLC_FONTSET category

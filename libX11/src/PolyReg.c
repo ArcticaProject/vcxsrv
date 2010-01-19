@@ -1,4 +1,3 @@
-/* $Xorg: PolyReg.c,v 1.5 2001/02/09 02:03:35 xorgcvs Exp $ */
 /************************************************************************
 
 Copyright 1987, 1998  The Open Group
@@ -45,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ************************************************************************/
-/* $XFree86: xc/lib/X11/PolyReg.c,v 1.6 2001/12/14 19:54:03 dawes Exp $ */
 
 #define LARGE_COORDINATE 1000000
 #define SMALL_COORDINATE -LARGE_COORDINATE

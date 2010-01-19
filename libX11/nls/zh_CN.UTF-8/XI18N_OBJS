@@ -2,7 +2,6 @@
 #
 #	XI18N objects table for zh_CN.UTF-8 locale
 #
-# $XFree86$
 #
 XLC	common/xlcUTF8Load	_XlcUtf8Loader	# XLC_open
 XIM	common/ximcp	_XimOpenIM _XimRegisterIMInstantiateCallback  _XimUnRegisterIMInstantiateCallback # XIM_open	XIM_register XIM_unregister

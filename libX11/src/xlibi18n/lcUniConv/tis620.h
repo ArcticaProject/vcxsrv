@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/lcUniConv/tis620.h,v 1.3 2000/11/29 17:40:35 dawes Exp $ */
 
 /*
  * TIS620-0

@@ -1,24 +1,24 @@
 /*
  * Copyright © 2009 Nokia Corporation
  *
- * Permission to use, copy, modify, distribute, and sell this software and its
- * documentation for any purpose is hereby granted without fee, provided that
- * the above copyright notice appear in all copies and that both that
- * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Nokia Corporation not be used in
- * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Nokia Corporation makes no
- * representations about the suitability of this software for any purpose.
- * It is provided "as is" without express or implied warranty.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
- * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
- * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
- * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
- * SOFTWARE.
+ * The above copyright notice and this permission notice (including the next
+ * paragraph) shall be included in all copies or substantial portions of the
+ * Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  *
  * Author:  Siarhei Siamashka (siarhei.siamashka@nokia.com)
  */
@@ -777,6 +777,125 @@ fname:
     .unreq      PF_DST
     .unreq      PF_MASK
     .unreq      DUMMY
+    .endfunc
+.endm
+
+/*
+ * A simplified variant of function generation template for a single
+ * scanline processing (for implementing pixman combine functions)
+ */
+.macro generate_composite_function_single_scanline fname, \
+                                                   src_bpp_, \
+                                                   mask_bpp_, \
+                                                   dst_w_bpp_, \
+                                                   flags, \
+                                                   pixblock_size_, \
+                                                   init, \
+                                                   cleanup, \
+                                                   process_pixblock_head, \
+                                                   process_pixblock_tail, \
+                                                   process_pixblock_tail_head, \
+                                                   dst_w_basereg_ = 28, \
+                                                   dst_r_basereg_ = 4, \
+                                                   src_basereg_   = 0, \
+                                                   mask_basereg_  = 24
+
+    .func fname
+    .global fname
+    /* For ELF format also set function visibility to hidden */
+#ifdef __ELF__
+    .hidden fname
+    .type fname, %function
+#endif
+fname:
+    .set PREFETCH_TYPE_CURRENT, PREFETCH_TYPE_NONE
+/*
+ * Make some macro arguments globally visible and accessible
+ * from other macros
+ */
+    .set src_bpp, src_bpp_
+    .set mask_bpp, mask_bpp_
+    .set dst_w_bpp, dst_w_bpp_
+    .set pixblock_size, pixblock_size_
+    .set dst_w_basereg, dst_w_basereg_
+    .set dst_r_basereg, dst_r_basereg_
+    .set src_basereg, src_basereg_
+    .set mask_basereg, mask_basereg_
+/*
+ * Assign symbolic names to registers
+ */
+    W           .req        r0      /* width (is updated during processing) */
+    DST_W       .req        r1      /* destination buffer pointer for writes */
+    SRC         .req        r2      /* source buffer pointer */
+    DST_R       .req        ip      /* destination buffer pointer for reads */
+    MASK        .req        r3      /* mask pointer */
+
+.if (((flags) & FLAG_DST_READWRITE) != 0)
+    .set dst_r_bpp, dst_w_bpp
+.else
+    .set dst_r_bpp, 0
+.endif
+.if (((flags) & FLAG_DEINTERLEAVE_32BPP) != 0)
+    .set DEINTERLEAVE_32BPP_ENABLED, 1
+.else
+    .set DEINTERLEAVE_32BPP_ENABLED, 0
+.endif
+
+    init
+    mov         DST_R, DST_W
+
+    cmp         W, #pixblock_size
+    blt         8f
+
+    ensure_destination_ptr_alignment process_pixblock_head, \
+                                     process_pixblock_tail, \
+                                     process_pixblock_tail_head
+
+    subs        W, W, #pixblock_size
+    blt         7f
+
+    /* Implement "head (tail_head) ... (tail_head) tail" loop pattern */
+    pixld_a     pixblock_size, dst_r_bpp, \
+                (dst_r_basereg - pixblock_size * dst_r_bpp / 64), DST_R
+    pixld       pixblock_size, src_bpp, \
+                (src_basereg - pixblock_size * src_bpp / 64), SRC
+    pixld       pixblock_size, mask_bpp, \
+                (mask_basereg - pixblock_size * mask_bpp / 64), MASK
+    process_pixblock_head
+    subs        W, W, #pixblock_size
+    blt         2f
+1:
+    process_pixblock_tail_head
+    subs        W, W, #pixblock_size
+    bge         1b
+2:
+    process_pixblock_tail
+    pixst_a     pixblock_size, dst_w_bpp, \
+                (dst_w_basereg - pixblock_size * dst_w_bpp / 64), DST_W
+7:
+    /* Process the remaining trailing pixels in the scanline (dst aligned) */
+    process_trailing_pixels 0, 1, \
+                            process_pixblock_head, \
+                            process_pixblock_tail, \
+                            process_pixblock_tail_head
+
+    cleanup
+    bx         lr  /* exit */
+8:
+    /* Process the remaining trailing pixels in the scanline (dst unaligned) */
+    process_trailing_pixels 0, 0, \
+                            process_pixblock_head, \
+                            process_pixblock_tail, \
+                            process_pixblock_tail_head
+
+    cleanup
+    bx          lr  /* exit */
+
+    .unreq      SRC
+    .unreq      MASK
+    .unreq      DST_R
+    .unreq      DST_W
+    .unreq      W
     .endfunc
 .endm
 

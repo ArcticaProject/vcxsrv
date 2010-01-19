@@ -11,17 +11,20 @@ if XCB
 pkgconfig_DATA += x11-xcb.pc
 endif
 
-EXTRA_DIST=x11.pc.in x11-xcb.pc.in ChangeLog
+MAINTAINERCLEANFILES = ChangeLog INSTALL
+EXTRA_DIST=x11.pc.in x11-xcb.pc.in 
 
-MAINTAINERCLEANFILES=ChangeLog
 DISTCLEANFILES = doltcompile doltlibtool
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL
 
 if LINT
 # Check source code with tools like lint & sparse

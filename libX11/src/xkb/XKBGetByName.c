@@ -1,4 +1,3 @@
-/* $Xorg: XKBGetByName.c,v 1.3 2000/08/17 19:45:02 cpqbld Exp $ */
 /************************************************************
 Copyright (c) 1993 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@ OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ********************************************************/
-/* $XFree86$ */
 
 #define NEED_REPLIES
 #define NEED_EVENTS

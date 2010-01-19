@@ -1,4 +1,3 @@
-/* $Xorg: IntAtom.c,v 1.5 2001/02/09 02:03:34 xorgcvs Exp $ */
 /*
 
 Copyright 1986, 1990, 1998  The Open Group
@@ -26,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/IntAtom.c,v 1.6 2001/12/14 19:54:02 dawes Exp $ */
 
 #define NEED_REPLIES
 #ifdef HAVE_CONFIG_H

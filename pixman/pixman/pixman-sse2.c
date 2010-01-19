@@ -3981,9 +3981,6 @@ pixman_fill_sse2 (uint32_t *bits,
 
     __m128i xmm_def;
 
-    if (bpp == 16 && (data >> 16 != (data & 0xffff)))
-	return FALSE;
-
     if (bpp != 16 && bpp != 32)
 	return FALSE;
 
@@ -3993,6 +3990,7 @@ pixman_fill_sse2 (uint32_t *bits,
 	byte_line = (uint8_t *)(((uint16_t *)bits) + stride * y + x);
 	byte_width = 2 * width;
 	stride *= 2;
+        data = (data & 0xffff) * 0x00010001;
     }
     else
     {

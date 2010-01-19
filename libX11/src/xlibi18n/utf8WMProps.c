@@ -1,4 +1,3 @@
-/* $TOG: mbWMProps.c /main/6 1998/02/06 17:44:24 kaleb $ */
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -48,7 +47,6 @@ from The Open Group.
  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
  * OR PERFORMANCE OF THIS SOFTWARE.
  */
-/* $XFree86: xc/lib/X11/utf8WMProps.c,v 1.2 2001/12/14 19:54:11 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

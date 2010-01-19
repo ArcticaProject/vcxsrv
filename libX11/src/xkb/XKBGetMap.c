@@ -1,4 +1,3 @@
-/* $Xorg: XKBGetMap.c,v 1.4 2000/08/17 19:45:02 cpqbld Exp $ */
 /************************************************************
 Copyright (c) 1993 by Silicon Graphics Computer Systems, Inc.
 
@@ -25,7 +24,6 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ********************************************************/
 
-/* $XFree86: xc/lib/X11/XKBGetMap.c,v 1.9 2003/04/17 02:06:31 dawes Exp $ */
 
 #define NEED_REPLIES
 #define NEED_EVENTS

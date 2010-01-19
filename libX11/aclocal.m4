@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.11 -*- Autoconf -*-
+# generated automatically by aclocal 1.11.1 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
 # 2005, 2006, 2007, 2008, 2009  Free Software Foundation, Inc.
@@ -13,8 +13,8 @@
 
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.63],,
-[m4_warning([this file was generated for autoconf 2.63.
+m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.65],,
+[m4_warning([this file was generated for autoconf 2.65.
 You have another version of autoconf.  It may work, but is not guaranteed to.
 If you have problems, you may need to regenerate the build system entirely.
 To do so, use the procedure documented by the package, typically `autoreconf'.])])
@@ -34,7 +34,7 @@ AC_DEFUN([AM_AUTOMAKE_VERSION],
 [am__api_version='1.11'
 dnl Some users find AM_AUTOMAKE_VERSION and mistake it for a way to
 dnl require some minimum version.  Point them to the right macro.
-m4_if([$1], [1.11], [],
+m4_if([$1], [1.11.1], [],
       [AC_FATAL([Do not call $0, use AM_INIT_AUTOMAKE([$1]).])])dnl
 ])
 
@@ -50,7 +50,7 @@ m4_define([_AM_AUTOCONF_VERSION], [])
 # Call AM_AUTOMAKE_VERSION and AM_AUTOMAKE_VERSION so they can be traced.
 # This function is AC_REQUIREd by AM_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-[AM_AUTOMAKE_VERSION([1.11])dnl
+[AM_AUTOMAKE_VERSION([1.11.1])dnl
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
 _AM_AUTOCONF_VERSION(m4_defn([AC_AUTOCONF_VERSION]))])
@@ -1033,29 +1033,23 @@ dnl
 dnl Copyright 2005-2006 Sun Microsystems, Inc.  All rights reserved.
 dnl 
 dnl Permission is hereby granted, free of charge, to any person obtaining a
-dnl copy of this software and associated documentation files (the
-dnl "Software"), to deal in the Software without restriction, including
-dnl without limitation the rights to use, copy, modify, merge, publish,
-dnl distribute, and/or sell copies of the Software, and to permit persons
-dnl to whom the Software is furnished to do so, provided that the above
-dnl copyright notice(s) and this permission notice appear in all copies of
-dnl the Software and that both the above copyright notice(s) and this
-dnl permission notice appear in supporting documentation.
+dnl copy of this software and associated documentation files (the "Software"),
+dnl to deal in the Software without restriction, including without limitation
+dnl the rights to use, copy, modify, merge, publish, distribute, sublicense,
+dnl and/or sell copies of the Software, and to permit persons to whom the
+dnl Software is furnished to do so, subject to the following conditions:
 dnl
-dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-dnl OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-dnl MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
-dnl OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-dnl HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
-dnl INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
-dnl FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-dnl NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
-dnl WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+dnl The above copyright notice and this permission notice (including the next
+dnl paragraph) shall be included in all copies or substantial portions of the
+dnl Software.
 dnl
-dnl Except as contained in this notice, the name of a copyright holder
-dnl shall not be used in advertising or otherwise to promote the sale, use
-dnl or other dealings in this Software without prior written authorization
-dnl of the copyright holder.
+dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+dnl IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+dnl FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+dnl THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+dnl LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+dnl FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+dnl DEALINGS IN THE SOFTWARE.
 
 # XORG_MACROS_VERSION(required-version)
 # -------------------------------------
@@ -1073,7 +1067,7 @@ dnl of the copyright holder.
 # See the "minimum version" comment for each macro you use to see what 
 # version you require.
 m4_defun([XORG_MACROS_VERSION],[
-m4_define([vers_have], [1.3.0])
+m4_define([vers_have], [1.4.2])
 m4_define([maj_have], m4_substr(vers_have, 0, m4_index(vers_have, [.])))
 m4_define([maj_needed], m4_substr([$1], 0, m4_index([$1], [.])))
 m4_if(m4_cmp(maj_have, maj_needed), 0,,
@@ -1369,7 +1363,8 @@ main() {
     exit(m0 == 0 || r0 == 0 || c0 == 0 ? 0 : 1);
 }],
 		[MALLOC_ZERO_RETURNS_NULL=yes],
-		[MALLOC_ZERO_RETURNS_NULL=no])
+		[MALLOC_ZERO_RETURNS_NULL=no],
+		[MALLOC_ZERO_RETURNS_NULL=yes])
 fi
 AC_MSG_RESULT([$MALLOC_ZERO_RETURNS_NULL])
 
@@ -1527,8 +1522,26 @@ XORG_CWARNFLAGS
 XORG_STRICT_OPTION
 XORG_RELEASE_VERSION
 XORG_CHANGELOG
+XORG_INSTALL
 XORG_MANPAGE_SECTIONS
 ]) # XORG_DEFAULT_OPTIONS
+
+# XORG_INSTALL()
+# ----------------
+# Minimum version: 1.4.0
+#
+# Defines the variable INSTALL_CMD as the command to copy
+# INSTALL from $prefix/share/util-macros.
+#
+AC_DEFUN([XORG_INSTALL], [
+AC_REQUIRE([PKG_PROG_PKG_CONFIG])
+macros_datadir=`$PKG_CONFIG --print-errors --variable=pkgdatadir xorg-macros`
+INSTALL_CMD="(cp -f "$macros_datadir/INSTALL" \$(top_srcdir)/.INSTALL.tmp && \
+mv \$(top_srcdir)/.INSTALL.tmp \$(top_srcdir)/INSTALL) \
+|| (rm -f \$(top_srcdir)/.INSTALL.tmp; touch \$(top_srcdir)/INSTALL; \
+echo 'util-macros \"pkgdatadir\" from xorg-macros.pc not found: installing possibly empty INSTALL.' >&2)"
+AC_SUBST([INSTALL_CMD])
+]) # XORG_INSTALL
 dnl Copyright 2005 Red Hat, Inc
 dnl
 dnl Permission to use, copy, modify, distribute, and sell this software and its
@@ -1598,41 +1611,37 @@ AC_DEFUN([XORG_RELEASE_VERSION],[
 # Defines the variable CHANGELOG_CMD as the command to generate
 # ChangeLog from git.
 #
-# Arrange that distcleancheck ignores ChangeLog left over by distclean.
 #
 AC_DEFUN([XORG_CHANGELOG], [
-CHANGELOG_CMD="(GIT_DIR=\$(top_srcdir)/.git git log > .changelog.tmp && \
-mv .changelog.tmp ChangeLog) || (rm -f .changelog.tmp; touch ChangeLog; \
+CHANGELOG_CMD="(GIT_DIR=\$(top_srcdir)/.git git log > \$(top_srcdir)/.changelog.tmp && \
+mv \$(top_srcdir)/.changelog.tmp \$(top_srcdir)/ChangeLog) \
+|| (rm -f \$(top_srcdir)/.changelog.tmp; touch \$(top_srcdir)/ChangeLog; \
 echo 'git directory not found: installing possibly empty changelog.' >&2)"
 AC_SUBST([CHANGELOG_CMD])
-AC_SUBST([distcleancheck_listfiles], ['find . -type f ! -name ChangeLog -print'])
 ]) # XORG_CHANGELOG
 
 dnl $XdotOrg: lib/xtrans/xtrans.m4,v 1.6 2005/07/26 18:59:11 alanc Exp $
 dnl
 dnl Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
-dnl 
-dnl Permission to use, copy, modify, distribute, and sell this software and its
-dnl documentation for any purpose is hereby granted without fee, provided that
-dnl the above copyright notice appear in all copies and that both that
-dnl copyright notice and this permission notice appear in supporting
-dnl documentation.
-dnl 
-dnl The above copyright notice and this permission notice shall be included
-dnl in all copies or substantial portions of the Software.
-dnl 
-dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-dnl OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-dnl MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-dnl IN NO EVENT SHALL THE OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR
-dnl OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-dnl ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-dnl OTHER DEALINGS IN THE SOFTWARE.
-dnl 
-dnl Except as contained in this notice, the name of the copyright holders shall
-dnl not be used in advertising or otherwise to promote the sale, use or
-dnl other dealings in this Software without prior written authorization
-dnl from the copyright holders.
+dnl
+dnl Permission is hereby granted, free of charge, to any person obtaining a
+dnl copy of this software and associated documentation files (the "Software"),
+dnl to deal in the Software without restriction, including without limitation
+dnl the rights to use, copy, modify, merge, publish, distribute, sublicense,
+dnl and/or sell copies of the Software, and to permit persons to whom the
+dnl Software is furnished to do so, subject to the following conditions:
+dnl
+dnl The above copyright notice and this permission notice (including the next
+dnl paragraph) shall be included in all copies or substantial portions of the
+dnl Software.
+dnl
+dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+dnl IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+dnl FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+dnl THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+dnl LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+dnl FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+dnl DEALINGS IN THE SOFTWARE.
 dnl 
 
 # XTRANS_TCP_FLAGS()

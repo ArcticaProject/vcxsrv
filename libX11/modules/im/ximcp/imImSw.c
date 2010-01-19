@@ -1,4 +1,3 @@
-/* $Xorg: imImSw.c,v 1.3 2000/08/17 19:45:12 cpqbld Exp $ */
 /******************************************************************
 
           Copyright 1992, 1993 by FUJITSU LIMITED
@@ -32,7 +31,6 @@ THIS SOFTWARE.
 	                          frankyling@hgrd01.enet.dec.com
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/imImSw.c,v 1.3 2001/01/17 19:41:51 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

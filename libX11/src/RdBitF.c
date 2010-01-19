@@ -1,4 +1,3 @@
-/* $Xorg: RdBitF.c,v 1.5 2001/02/09 02:03:35 xorgcvs Exp $ */
 /*
 
 Copyright 1987, 1998  The Open Group
@@ -26,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/RdBitF.c,v 3.6 2003/04/13 19:22:17 dawes Exp $ */
 
 /*
  *	Code to read bitmaps from disk files. Interprets

@@ -1,4 +1,3 @@
-/* $Xorg: XKB.c,v 1.3 2000/08/17 19:44:59 cpqbld Exp $ */
 /************************************************************
 Copyright (c) 1993 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@ OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ********************************************************/
-/* $XFree86: xc/lib/X11/XKB.c,v 1.9 2003/04/17 02:06:31 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

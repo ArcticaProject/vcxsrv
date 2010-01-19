@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/lcUniConv/jisx0208.h,v 1.5tsi Exp $ */
 
 /*
  * JISX0208.1990-0

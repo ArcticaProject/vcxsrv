@@ -39,3 +39,7 @@ compute_crc32 (uint32_t    in_crc32,
  */
 void
 image_endian_swap (pixman_image_t *img, int bpp);
+
+/* Generate n_bytes random bytes in malloced memory */
+uint8_t *
+make_random_bytes (int n_bytes);

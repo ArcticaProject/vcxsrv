@@ -2,7 +2,6 @@
 #
 #	XI18N objects table for zh locale
 #
-# $XFree86$
 #
 XLC	common/xlocale	_XlcEucLoader	# XLC_open
 XLC	common/xlibi18n	_XlcGenericLoader	# XLC_open

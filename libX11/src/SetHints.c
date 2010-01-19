@@ -1,4 +1,3 @@
-/* $Xorg: SetHints.c,v 1.5 2001/02/09 02:03:36 xorgcvs Exp $ */
 
 /***********************************************************
 
@@ -46,7 +45,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/SetHints.c,v 1.4 2001/12/14 19:54:06 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

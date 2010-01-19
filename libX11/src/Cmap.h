@@ -1,4 +1,3 @@
-/* $XFree86$ */
 
 #ifndef _CMAP_H_
 #define _CMAP_H_

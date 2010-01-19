@@ -1,4 +1,3 @@
-/* $TOG:  $ */
 /******************************************************************
 
               Copyright 1993 by SunSoft, Inc.
@@ -24,7 +23,6 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/lcUTF8.c,v 1.12 2001/02/09 00:02:53 dawes Exp $ */
 
 /*
  * This file contains the UTF-8 locale loader.

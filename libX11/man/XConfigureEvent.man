@@ -40,8 +40,6 @@
 .\" of this documentation for any purpose.
 .\" It is provided ``as is'' without express or implied warranty.
 .\" 
-.\" $XFree86: xc/doc/man/X11/XConEvent.man,v 1.2 2001/01/27 18:19:57 dawes Exp $
-.\" $XdotOrg: lib/X11/man/XConfigureEvent.man,v 1.2 2004-04-23 18:42:09 eich Exp $
 .\"
 .ds xT X Toolkit Intrinsics \- C Language Interface
 .ds xW Athena X Widgets \- C Language X Toolkit Interface

@@ -204,6 +204,7 @@ libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
 	      $(all_shadows:=.@LIB_MAN_SUFFIX@)
 
 fileman_DATA = $(fileman_PRE:man=@FILE_MAN_SUFFIX@)
+	       $(file_shadows:=.@FILE_MAN_SUFFIX@)
 endif
 
 EXTRA_DIST = $(libman_PRE) $(fileman_PRE)
@@ -1657,3 +1658,13 @@ $(XmbTextExtents_shadowmen):
 XmbTextPerCharExtents_shadowmen = $(XmbTextPerCharExtents_shadows:=.@LIB_MAN_SUFFIX@)
 $(XmbTextPerCharExtents_shadowmen):
 	$(AM_V_GEN)echo ".so man$(LIB_MAN_DIR_SUFFIX)/XmbTextPerCharExtents.$(LIB_MAN_SUFFIX)" > $@
+
+file_shadows =				     \
+    $(Compose_shadows)
+
+Compose_shadows =			    \
+    XCompose
+
+Compose_shadowmen = $(Compose_shadows:=.@FILE_MAN_SUFFIX@)
+$(Compose_shadowmen):
+	$(AM_V_GEN)echo ".so man$(FILE_MAN_DIR_SUFFIX)/Compose.$(FILE_MAN_SUFFIX)" > $@

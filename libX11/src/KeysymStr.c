@@ -1,4 +1,3 @@
-/* $Xorg: KeysymStr.c,v 1.5 2001/02/09 02:03:34 xorgcvs Exp $ */
 
 /*
 
@@ -25,7 +24,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/KeysymStr.c,v 3.9 2003/04/13 19:22:16 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

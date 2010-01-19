@@ -1,4 +1,3 @@
-/* $Xorg: imDefLkup.c,v 1.3 2000/08/17 19:45:12 cpqbld Exp $ */
 /******************************************************************
 
            Copyright 1992, 1993, 1994 by FUJITSU LIMITED
@@ -26,7 +25,6 @@ PERFORMANCE OF THIS SOFTWARE.
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/imDefLkup.c,v 3.11 2003/06/23 17:35:43 eich Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

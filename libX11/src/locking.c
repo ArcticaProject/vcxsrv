@@ -1,4 +1,3 @@
-/* $Xorg: locking.c,v 1.5 2001/02/09 02:03:40 xorgcvs Exp $ */
 /*
 
 Copyright 1992, 1998  The Open Group
@@ -24,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/locking.c,v 1.5 2003/04/13 19:22:22 dawes Exp $ */
 
 /*
  * Author: Stephen Gildea, MIT X Consortium

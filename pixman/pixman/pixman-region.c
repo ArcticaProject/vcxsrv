@@ -66,9 +66,44 @@
 #define GOOD_RECT(rect) ((rect)->x1 < (rect)->x2 && (rect)->y1 < (rect)->y2)
 #define BAD_RECT(rect) ((rect)->x1 > (rect)->x2 || (rect)->y1 > (rect)->y2)
 
-#define noPIXMAN_REGION_LOG_FAILURES
+/* Turn on debugging depending on what type of release this is
+ */
 
-#if defined PIXMAN_REGION_LOG_FAILURES || defined PIXMAN_REGION_DEBUG
+#if ((PIXMAN_VERSION_MICRO % 2) == 1)
+/* Random git checkout.
+ * 
+ * Those are often used for performance work, so we don't turn on the
+ * full self-checking, but we do turn on the asserts.
+ */
+#    define   FATAL_BUGS
+#    define noSELF_CHECKS
+#elif ((PIXMAN_VERSION_MINOR % 2) == 0)
+/* Stable release.
+ *
+ * We don't want assertions because the X server should stay alive
+ * if possible. We also don't want self-checks for performance-reasons.
+ */
+#    define noFATAL_BUGS
+#    define noSELF_CHECKS
+#else
+/* Development snapshot.
+ *
+ * These are the things that get shipped in development distributions
+ * such as Rawhide. We want both self-checking and fatal assertions
+ * to catch as many bugs as possible.
+ */
+#    define FATAL_BUGS
+#    define SELF_CHECKS
+#endif
+
+#ifndef FATAL_BUGS
+#    undef assert
+#    undef abort
+#    define assert(expr)
+#    define abort()
+#endif
+
+#ifdef SELF_CHECKS
 
 static void
 log_region_error (const char *function, const char *message)
@@ -83,9 +118,7 @@ log_region_error (const char *function, const char *message)
 		 "Set a breakpoint on 'log_region_error' to debug\n\n",
                  function, message);
 
-#if defined PIXMAN_REGION_DEBUG
-        abort ();
-#endif
+        abort (); /* This is #defined away unless FATAL_BUGS is defined */
 
 	n_messages++;
     }

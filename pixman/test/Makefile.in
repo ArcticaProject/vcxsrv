@@ -32,18 +32,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@HAVE_GTK_TRUE@am__append_1 = \
-@HAVE_GTK_TRUE@	clip-test		\
-@HAVE_GTK_TRUE@	clip-in			\
-@HAVE_GTK_TRUE@	composite-test		\
-@HAVE_GTK_TRUE@	gradient-test		\
-@HAVE_GTK_TRUE@	alpha-test		\
-@HAVE_GTK_TRUE@	screen-test		\
-@HAVE_GTK_TRUE@	convolution-test	\
-@HAVE_GTK_TRUE@	trap-test
-
-@HAVE_GTK_TRUE@am__append_2 = $(GTK_CFLAGS)
-noinst_PROGRAMS = $(am__EXEEXT_2)
+@HAVE_GTK_TRUE@am__append_1 = $(GTK_CFLAGS)
+noinst_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2)
+TESTS = $(am__EXEEXT_1)
 subdir = test
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -53,14 +44,15 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-@HAVE_GTK_TRUE@am__EXEEXT_1 = clip-test$(EXEEXT) clip-in$(EXEEXT) \
+am__EXEEXT_1 = region-test$(EXEEXT) fetch-test$(EXEEXT) \
+	oob-test$(EXEEXT) window-test$(EXEEXT) trap-crasher$(EXEEXT) \
+	alphamap$(EXEEXT) blitters-test$(EXEEXT) scaling-test$(EXEEXT) \
+	composite$(EXEEXT)
+@HAVE_GTK_TRUE@am__EXEEXT_2 = clip-test$(EXEEXT) clip-in$(EXEEXT) \
 @HAVE_GTK_TRUE@	composite-test$(EXEEXT) gradient-test$(EXEEXT) \
 @HAVE_GTK_TRUE@	alpha-test$(EXEEXT) screen-test$(EXEEXT) \
-@HAVE_GTK_TRUE@	convolution-test$(EXEEXT) trap-test$(EXEEXT)
-am__EXEEXT_2 = region-test$(EXEEXT) scaling-test$(EXEEXT) \
-	blitters-test$(EXEEXT) composite$(EXEEXT) fetch-test$(EXEEXT) \
-	oob-test$(EXEEXT) window-test$(EXEEXT) trap-crasher$(EXEEXT) \
-	$(am__EXEEXT_1)
+@HAVE_GTK_TRUE@	convolution-test$(EXEEXT) trap-test$(EXEEXT) \
+@HAVE_GTK_TRUE@	alphamap$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 am__alpha_test_SOURCES_DIST = alpha-test.c gtk-utils.c gtk-utils.h
 @HAVE_GTK_TRUE@am__objects_1 = gtk-utils.$(OBJEXT)
@@ -71,6 +63,9 @@ am__DEPENDENCIES_1 =
 @HAVE_GTK_TRUE@am__DEPENDENCIES_2 = $(TEST_LDADD) \
 @HAVE_GTK_TRUE@	$(am__DEPENDENCIES_1)
 @HAVE_GTK_TRUE@alpha_test_DEPENDENCIES = $(am__DEPENDENCIES_2)
+am_alphamap_OBJECTS = alphamap.$(OBJEXT) utils.$(OBJEXT)
+alphamap_OBJECTS = $(am_alphamap_OBJECTS)
+alphamap_DEPENDENCIES = $(TEST_LDADD)
 am_blitters_test_OBJECTS = blitters-test.$(OBJEXT) utils.$(OBJEXT)
 blitters_test_OBJECTS = $(am_blitters_test_OBJECTS)
 blitters_test_DEPENDENCIES = $(TEST_LDADD)
@@ -144,15 +139,17 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(alpha_test_SOURCES) $(blitters_test_SOURCES) \
-	$(clip_in_SOURCES) $(clip_test_SOURCES) composite.c \
-	$(composite_test_SOURCES) $(convolution_test_SOURCES) \
-	fetch-test.c $(gradient_test_SOURCES) oob-test.c region-test.c \
+SOURCES = $(alpha_test_SOURCES) $(alphamap_SOURCES) \
+	$(blitters_test_SOURCES) $(clip_in_SOURCES) \
+	$(clip_test_SOURCES) composite.c $(composite_test_SOURCES) \
+	$(convolution_test_SOURCES) fetch-test.c \
+	$(gradient_test_SOURCES) oob-test.c region-test.c \
 	$(scaling_test_SOURCES) $(screen_test_SOURCES) trap-crasher.c \
 	$(trap_test_SOURCES) window-test.c
-DIST_SOURCES = $(am__alpha_test_SOURCES_DIST) $(blitters_test_SOURCES) \
-	$(am__clip_in_SOURCES_DIST) $(am__clip_test_SOURCES_DIST) \
-	composite.c $(am__composite_test_SOURCES_DIST) \
+DIST_SOURCES = $(am__alpha_test_SOURCES_DIST) $(alphamap_SOURCES) \
+	$(blitters_test_SOURCES) $(am__clip_in_SOURCES_DIST) \
+	$(am__clip_test_SOURCES_DIST) composite.c \
+	$(am__composite_test_SOURCES_DIST) \
 	$(am__convolution_test_SOURCES_DIST) fetch-test.c \
 	$(am__gradient_test_SOURCES_DIST) oob-test.c region-test.c \
 	$(scaling_test_SOURCES) $(am__screen_test_SOURCES_DIST) \
@@ -291,9 +288,18 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 TEST_LDADD = $(top_builddir)/pixman/libpixman-1.la
 INCLUDES = -I$(top_srcdir)/pixman -I$(top_builddir)/pixman \
-	$(am__append_2)
-TESTPROGRAMS = region-test scaling-test blitters-test composite \
-	fetch-test oob-test window-test trap-crasher $(am__append_1)
+	$(am__append_1)
+TESTPROGRAMS = \
+	region-test		\
+	fetch-test		\
+	oob-test		\
+	window-test		\
+	trap-crasher		\
+	alphamap		\
+	blitters-test		\
+	scaling-test		\
+	composite
+
 fetch_test_LDADD = $(TEST_LDADD)
 region_test_LDADD = $(TEST_LDADD)
 composite_LDADD = $(TEST_LDADD)
@@ -304,10 +310,23 @@ blitters_test_LDADD = $(TEST_LDADD)
 blitters_test_SOURCES = blitters-test.c utils.c utils.h
 scaling_test_LDADD = $(TEST_LDADD)
 scaling_test_SOURCES = scaling-test.c utils.c utils.h
+alphamap_LDADD = $(TEST_LDADD)
+alphamap_SOURCES = alphamap.c utils.c utils.h
 
 # GTK using test programs
 @HAVE_GTK_TRUE@GTK_LDADD = $(TEST_LDADD) $(GTK_LIBS)
 @HAVE_GTK_TRUE@GTK_UTILS = gtk-utils.c gtk-utils.h
+@HAVE_GTK_TRUE@TESTPROGRAMS_GTK = \
+@HAVE_GTK_TRUE@	clip-test		\
+@HAVE_GTK_TRUE@	clip-in			\
+@HAVE_GTK_TRUE@	composite-test		\
+@HAVE_GTK_TRUE@	gradient-test		\
+@HAVE_GTK_TRUE@	alpha-test		\
+@HAVE_GTK_TRUE@	screen-test		\
+@HAVE_GTK_TRUE@	convolution-test	\
+@HAVE_GTK_TRUE@	trap-test		\
+@HAVE_GTK_TRUE@	alphamap
+
 @HAVE_GTK_TRUE@gradient_test_LDADD = $(GTK_LDADD)
 @HAVE_GTK_TRUE@gradient_test_SOURCES = gradient-test.c $(GTK_UTILS)
 @HAVE_GTK_TRUE@alpha_test_LDADD = $(GTK_LDADD)
@@ -367,6 +386,9 @@ clean-noinstPROGRAMS:
 alpha-test$(EXEEXT): $(alpha_test_OBJECTS) $(alpha_test_DEPENDENCIES) 
 	@rm -f alpha-test$(EXEEXT)
 	$(LINK) $(alpha_test_OBJECTS) $(alpha_test_LDADD) $(LIBS)
+alphamap$(EXEEXT): $(alphamap_OBJECTS) $(alphamap_DEPENDENCIES) 
+	@rm -f alphamap$(EXEEXT)
+	$(LINK) $(alphamap_OBJECTS) $(alphamap_LDADD) $(LIBS)
 blitters-test$(EXEEXT): $(blitters_test_OBJECTS) $(blitters_test_DEPENDENCIES) 
 	@rm -f blitters-test$(EXEEXT)
 	$(LINK) $(blitters_test_OBJECTS) $(blitters_test_LDADD) $(LIBS)
@@ -420,6 +442,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/alpha-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/alphamap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blitters-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clip-in.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clip-test.Po@am__quote@
@@ -512,6 +535,79 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
+check-TESTS: $(TESTS)
+	@failed=0; all=0; xfail=0; xpass=0; skip=0; ws='[	 ]'; \
+	srcdir=$(srcdir); export srcdir; \
+	list=' $(TESTS) '; \
+	if test -n "$$list"; then \
+	  for tst in $$list; do \
+	    if test -f ./$$tst; then dir=./; \
+	    elif test -f $$tst; then dir=; \
+	    else dir="$(srcdir)/"; fi; \
+	    if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
+	      all=`expr $$all + 1`; \
+	      case " $(XFAIL_TESTS) " in \
+	      *$$ws$$tst$$ws*) \
+		xpass=`expr $$xpass + 1`; \
+		failed=`expr $$failed + 1`; \
+		echo "XPASS: $$tst"; \
+	      ;; \
+	      *) \
+		echo "PASS: $$tst"; \
+	      ;; \
+	      esac; \
+	    elif test $$? -ne 77; then \
+	      all=`expr $$all + 1`; \
+	      case " $(XFAIL_TESTS) " in \
+	      *$$ws$$tst$$ws*) \
+		xfail=`expr $$xfail + 1`; \
+		echo "XFAIL: $$tst"; \
+	      ;; \
+	      *) \
+		failed=`expr $$failed + 1`; \
+		echo "FAIL: $$tst"; \
+	      ;; \
+	      esac; \
+	    else \
+	      skip=`expr $$skip + 1`; \
+	      echo "SKIP: $$tst"; \
+	    fi; \
+	  done; \
+	  if test "$$failed" -eq 0; then \
+	    if test "$$xfail" -eq 0; then \
+	      banner="All $$all tests passed"; \
+	    else \
+	      banner="All $$all tests behaved as expected ($$xfail expected failures)"; \
+	    fi; \
+	  else \
+	    if test "$$xpass" -eq 0; then \
+	      banner="$$failed of $$all tests failed"; \
+	    else \
+	      banner="$$failed of $$all tests did not behave as expected ($$xpass unexpected passes)"; \
+	    fi; \
+	  fi; \
+	  dashes="$$banner"; \
+	  skipped=""; \
+	  if test "$$skip" -ne 0; then \
+	    skipped="($$skip tests were not run)"; \
+	    test `echo "$$skipped" | wc -c` -le `echo "$$banner" | wc -c` || \
+	      dashes="$$skipped"; \
+	  fi; \
+	  report=""; \
+	  if test "$$failed" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then \
+	    report="Please report to $(PACKAGE_BUGREPORT)"; \
+	    test `echo "$$report" | wc -c` -le `echo "$$banner" | wc -c` || \
+	      dashes="$$report"; \
+	  fi; \
+	  dashes=`echo "$$dashes" | sed s/./=/g`; \
+	  echo "$$dashes"; \
+	  echo "$$banner"; \
+	  test -z "$$skipped" || echo "$$skipped"; \
+	  test -z "$$report" || echo "$$report"; \
+	  echo "$$dashes"; \
+	  test "$$failed" -eq 0; \
+	else :; fi
+
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
@@ -539,6 +635,7 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
+	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
@@ -627,18 +724,19 @@ uninstall-am:
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstPROGRAMS ctags distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags uninstall uninstall-am
+.PHONY: CTAGS GTAGS all all-am check check-TESTS check-am clean \
+	clean-generic clean-libtool clean-noinstPROGRAMS ctags \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

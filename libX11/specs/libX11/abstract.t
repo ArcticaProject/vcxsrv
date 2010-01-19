@@ -1,4 +1,3 @@
-.\" $XFree86: xc/doc/specs/X11/abstract.t,v 1.2 2003/07/09 15:27:26 tsi Exp $
 .EH ''''
 .OH ''''
 .EF ''''

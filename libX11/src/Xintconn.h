@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/Xintconn.h,v 1.1 2001/08/18 02:41:28 dawes Exp $ */
 
 #ifndef _XINTCONN_H_
 #define _XINTCONN_H_ 1

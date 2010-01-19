@@ -1,10 +1,8 @@
-XCOMM $TOG: fcd8859-15 /main/2 1998/06/17 15:53:45 kaleb $
 XCOMM
 XCOMM ISO 8859-3 (Latin3) Compose Sequence
 XCOMM
 XCOMM Sequence Definition
 XCOMM
-XCOMM $XFree86: xc/nls/Compose/iso8859-3,v 1.1 1999/06/06 14:05:57 dawes Exp $
 XCOMM
 XCOMM <Multi_key> Means <Compose>
 XCOMM Special Character

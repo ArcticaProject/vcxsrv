@@ -3,7 +3,6 @@ XCOMM zh_CN.GBK Compose Sequence
 XCOMM
 XCOMM Sequence Definition
 XCOMM
-XCOMM $XFree86: xc/nls/Compose/zh_CN.gbk,v 1.1 2001/03/06 18:03:17 dawes Exp $
 XCOMM
 XCOMM This file currently has no entries.  It appears that a compose file (even
 XCOMM just an empty one) is required for the appropriate keysyms to work for

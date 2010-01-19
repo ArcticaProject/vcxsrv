@@ -1,24 +1,24 @@
 /*
  * Copyright © 2009 Nokia Corporation
  *
- * Permission to use, copy, modify, distribute, and sell this software and its
- * documentation for any purpose is hereby granted without fee, provided that
- * the above copyright notice appear in all copies and that both that
- * copyright notice and this permission notice appear in supporting
- * documentation, and that the name of Nokia Corporation not be used in
- * advertising or publicity pertaining to distribution of the software without
- * specific, written prior permission.  Nokia Corporation makes no
- * representations about the suitability of this software for any purpose.
- * It is provided "as is" without express or implied warranty.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
- * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
- * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
- * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
- * SOFTWARE.
+ * The above copyright notice and this permission notice (including the next
+ * paragraph) shall be included in all copies or substantial portions of the
+ * Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  *
  * Author:  Siarhei Siamashka (siarhei.siamashka@nokia.com)
  */
@@ -41,6 +41,7 @@
 
     .text
     .fpu neon
+    .arch armv7a
     .altmacro
 
 #include "pixman-arm-neon-asm.h"
@@ -343,6 +344,75 @@ generate_composite_function \
 
 /******************************************************************************/
 
+.macro pixman_composite_over_n_0565_process_pixblock_head
+    /* convert 8 r5g6b5 pixel data from {d4, d5} to planar 8-bit format
+       and put data into d6 - red, d7 - green, d30 - blue */
+    vshrn.u16   d6, q2, #8
+    vshrn.u16   d7, q2, #3
+    vsli.u16    q2, q2, #5
+    vsri.u8     d6, d6, #5
+    vsri.u8     d7, d7, #6
+    vshrn.u16   d30, q2, #2
+    /* now do alpha blending, storing results in 8-bit planar format
+       into d16 - red, d19 - green, d18 - blue */
+    vmull.u8    q10, d3, d6
+    vmull.u8    q11, d3, d7
+    vmull.u8    q12, d3, d30
+    vrshr.u16   q13, q10, #8
+    vrshr.u16   q3, q11, #8
+    vrshr.u16   q15, q12, #8
+    vraddhn.u16 d20, q10, q13
+    vraddhn.u16 d23, q11, q3
+    vraddhn.u16 d22, q12, q15
+.endm
+
+.macro pixman_composite_over_n_0565_process_pixblock_tail
+    /* ... continue alpha blending */
+    vqadd.u8    d16, d2, d20
+    vqadd.u8    q9, q0, q11
+    /* convert the result to r5g6b5 and store it into {d28, d29} */
+    vshll.u8    q14, d16, #8
+    vshll.u8    q8, d19, #8
+    vshll.u8    q9, d18, #8
+    vsri.u16    q14, q8, #5
+    vsri.u16    q14, q9, #11
+.endm
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_over_n_0565_process_pixblock_tail_head
+    pixman_composite_over_n_0565_process_pixblock_tail
+    vld1.16     {d4, d5}, [DST_R, :128]!
+    vst1.16     {d28, d29}, [DST_W, :128]!
+    pixman_composite_over_n_0565_process_pixblock_head
+.endm
+
+.macro pixman_composite_over_n_0565_init
+    add         DUMMY, sp, #ARGS_STACK_OFFSET
+    vld1.32     {d3[0]}, [DUMMY]
+    vdup.8      d0, d3[0]
+    vdup.8      d1, d3[1]
+    vdup.8      d2, d3[2]
+    vdup.8      d3, d3[3]
+    vmvn.8      d3, d3      /* invert source alpha */
+.endm
+
+generate_composite_function \
+    pixman_composite_over_n_0565_asm_neon, 0, 0, 16, \
+    FLAG_DST_READWRITE, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_over_n_0565_init, \
+    default_cleanup, \
+    pixman_composite_over_n_0565_process_pixblock_head, \
+    pixman_composite_over_n_0565_process_pixblock_tail, \
+    pixman_composite_over_n_0565_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
+    4,  /* dst_r_basereg */ \
+    0,  /* src_basereg   */ \
+    24  /* mask_basereg  */
+
+/******************************************************************************/
+
 .macro pixman_composite_src_8888_0565_process_pixblock_head
     vshll.u8    q8, d1, #8
     vshll.u8    q14, d2, #8
@@ -386,6 +456,41 @@ generate_composite_function \
 
 /******************************************************************************/
 
+.macro pixman_composite_src_0565_8888_process_pixblock_head
+    vshrn.u16   d30, q0, #8
+    vshrn.u16   d29, q0, #3
+    vsli.u16    q0, q0, #5
+    vmov.u8     d31, #255
+    vsri.u8     d30, d30, #5
+    vsri.u8     d29, d29, #6
+    vshrn.u16   d28, q0, #2
+.endm
+
+.macro pixman_composite_src_0565_8888_process_pixblock_tail
+.endm
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_src_0565_8888_process_pixblock_tail_head
+    pixman_composite_src_0565_8888_process_pixblock_tail
+    vst4.8     {d28, d29, d30, d31}, [DST_W, :128]!
+    vld1.16    {d0, d1}, [SRC]!
+    pixman_composite_src_0565_8888_process_pixblock_head
+    cache_preload 8, 8
+.endm
+
+generate_composite_function \
+    pixman_composite_src_0565_8888_asm_neon, 16, 0, 32, \
+    FLAG_DST_WRITEONLY | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    10, /* prefetch distance */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_src_0565_8888_process_pixblock_head, \
+    pixman_composite_src_0565_8888_process_pixblock_tail, \
+    pixman_composite_src_0565_8888_process_pixblock_tail_head
+
+/******************************************************************************/
+
 .macro pixman_composite_add_8000_8000_process_pixblock_head
     vqadd.u8    q14, q0, q2
     vqadd.u8    q15, q1, q3
@@ -423,6 +528,48 @@ generate_composite_function \
     pixman_composite_add_8000_8000_process_pixblock_head, \
     pixman_composite_add_8000_8000_process_pixblock_tail, \
     pixman_composite_add_8000_8000_process_pixblock_tail_head
+
+/******************************************************************************/
+
+.macro pixman_composite_add_8888_8888_process_pixblock_tail_head
+    vld1.8      {d0, d1, d2, d3}, [SRC]!
+                                    PF add PF_X, PF_X, #8
+                                    PF tst PF_CTL, #0xF
+    vld1.8      {d4, d5, d6, d7}, [DST_R, :128]!
+                                    PF addne PF_X, PF_X, #8
+                                    PF subne PF_CTL, PF_CTL, #1
+        vst1.8      {d28, d29, d30, d31}, [DST_W, :128]!
+                                    PF cmp PF_X, ORIG_W
+                                    PF pld, [PF_SRC, PF_X, lsl #src_bpp_shift]
+                                    PF pld, [PF_DST, PF_X, lsl #dst_bpp_shift]
+                                    PF subge PF_X, PF_X, ORIG_W
+                                    PF subges PF_CTL, PF_CTL, #0x10
+    vqadd.u8    q14, q0, q2
+                                    PF ldrgeb DUMMY, [PF_SRC, SRC_STRIDE, lsl #src_bpp_shift]!
+                                    PF ldrgeb DUMMY, [PF_DST, DST_STRIDE, lsl #dst_bpp_shift]!
+    vqadd.u8    q15, q1, q3
+.endm
+
+generate_composite_function \
+    pixman_composite_add_8888_8888_asm_neon, 32, 0, 32, \
+    FLAG_DST_READWRITE, \
+    8, /* number of pixels, processed in a single block */ \
+    10, /* prefetch distance */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_add_8000_8000_process_pixblock_head, \
+    pixman_composite_add_8000_8000_process_pixblock_tail, \
+    pixman_composite_add_8888_8888_process_pixblock_tail_head
+
+generate_composite_function_single_scanline \
+    pixman_composite_scanline_add_asm_neon, 32, 0, 32, \
+    FLAG_DST_READWRITE, \
+    8, /* number of pixels, processed in a single block */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_add_8000_8000_process_pixblock_head, \
+    pixman_composite_add_8000_8000_process_pixblock_tail, \
+    pixman_composite_add_8888_8888_process_pixblock_tail_head
 
 /******************************************************************************/
 
@@ -490,6 +637,46 @@ generate_composite_function \
     pixman_composite_over_8888_8888_process_pixblock_head, \
     pixman_composite_over_8888_8888_process_pixblock_tail, \
     pixman_composite_over_8888_8888_process_pixblock_tail_head
+
+generate_composite_function_single_scanline \
+    pixman_composite_scanline_over_asm_neon, 32, 0, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_over_8888_8888_process_pixblock_head, \
+    pixman_composite_over_8888_8888_process_pixblock_tail, \
+    pixman_composite_over_8888_8888_process_pixblock_tail_head
+
+/******************************************************************************/
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_over_n_8888_process_pixblock_tail_head
+    pixman_composite_over_8888_8888_process_pixblock_tail
+    vld4.8      {d4, d5, d6, d7}, [DST_R, :128]!
+    vst4.8      {d28, d29, d30, d31}, [DST_W, :128]!
+    pixman_composite_over_8888_8888_process_pixblock_head
+.endm
+
+.macro pixman_composite_over_n_8888_init
+    add         DUMMY, sp, #ARGS_STACK_OFFSET
+    vld1.32     {d3[0]}, [DUMMY]
+    vdup.8      d0, d3[0]
+    vdup.8      d1, d3[1]
+    vdup.8      d2, d3[2]
+    vdup.8      d3, d3[3]
+.endm
+
+generate_composite_function \
+    pixman_composite_over_n_8888_asm_neon, 0, 0, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_over_n_8888_init, \
+    default_cleanup, \
+    pixman_composite_over_8888_8888_process_pixblock_head, \
+    pixman_composite_over_8888_8888_process_pixblock_tail, \
+    pixman_composite_over_n_8888_process_pixblock_tail_head
 
 /******************************************************************************/
 
@@ -950,6 +1137,63 @@ generate_composite_function \
 
 /******************************************************************************/
 
+.macro pixman_composite_add_8888_8888_8888_process_pixblock_head
+    /* expecting source data in {d0, d1, d2, d3} */
+    /* destination data in {d4, d5, d6, d7} */
+    /* mask in {d24, d25, d26, d27} */
+    vmull.u8    q8, d27, d0
+    vmull.u8    q9, d27, d1
+    vmull.u8    q10, d27, d2
+    vmull.u8    q11, d27, d3
+    vrshr.u16   q0, q8, #8
+    vrshr.u16   q1, q9, #8
+    vrshr.u16   q12, q10, #8
+    vrshr.u16   q13, q11, #8
+    vraddhn.u16 d0, q0, q8
+    vraddhn.u16 d1, q1, q9
+    vraddhn.u16 d2, q12, q10
+    vraddhn.u16 d3, q13, q11
+    vqadd.u8    q14, q0, q2
+    vqadd.u8    q15, q1, q3
+.endm
+
+.macro pixman_composite_add_8888_8888_8888_process_pixblock_tail
+.endm
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_add_8888_8888_8888_process_pixblock_tail_head
+    pixman_composite_add_8888_8888_8888_process_pixblock_tail
+    vst4.8      {d28, d29, d30, d31}, [DST_W, :128]!
+    vld4.8      {d4, d5, d6, d7}, [DST_R, :128]!
+    vld4.8      {d24, d25, d26, d27}, [MASK]!
+    vld4.8      {d0, d1, d2, d3}, [SRC]!
+    cache_preload 8, 8
+    pixman_composite_add_8888_8888_8888_process_pixblock_head
+.endm
+
+generate_composite_function \
+    pixman_composite_add_8888_8888_8888_asm_neon, 32, 32, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    10, /* prefetch distance */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_add_8888_8888_8888_process_pixblock_head, \
+    pixman_composite_add_8888_8888_8888_process_pixblock_tail, \
+    pixman_composite_add_8888_8888_8888_process_pixblock_tail_head
+
+generate_composite_function_single_scanline \
+    pixman_composite_scanline_add_mask_asm_neon, 32, 32, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_add_8888_8888_8888_process_pixblock_head, \
+    pixman_composite_add_8888_8888_8888_process_pixblock_tail, \
+    pixman_composite_add_8888_8888_8888_process_pixblock_tail_head
+
+/******************************************************************************/
+
 .macro pixman_composite_over_8888_n_8888_process_pixblock_head
     /* expecting source data in {d0, d1, d2, d3} */
     /* destination data in {d4, d5, d6, d7} */
@@ -1023,6 +1267,92 @@ generate_composite_function \
 
 /******************************************************************************/
 
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_over_8888_8888_8888_process_pixblock_tail_head
+    vld4.8     {d4, d5, d6, d7}, [DST_R, :128]!
+    pixman_composite_over_8888_n_8888_process_pixblock_tail
+    vld4.8     {d0, d1, d2, d3}, [SRC]!
+    cache_preload 8, 8
+    vld4.8     {d12, d13, d14, d15}, [MASK]!
+    pixman_composite_over_8888_n_8888_process_pixblock_head
+    vst4.8     {d28, d29, d30, d31}, [DST_W, :128]!
+.endm
+
+.macro pixman_composite_over_8888_8888_8888_init
+    vpush       {d8-d15}
+.endm
+
+.macro pixman_composite_over_8888_8888_8888_cleanup
+    vpop        {d8-d15}
+.endm
+
+generate_composite_function \
+    pixman_composite_over_8888_8888_8888_asm_neon, 32, 32, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_over_8888_8888_8888_init, \
+    pixman_composite_over_8888_8888_8888_cleanup, \
+    pixman_composite_over_8888_n_8888_process_pixblock_head, \
+    pixman_composite_over_8888_n_8888_process_pixblock_tail, \
+    pixman_composite_over_8888_8888_8888_process_pixblock_tail_head \
+    28, /* dst_w_basereg */ \
+    4,  /* dst_r_basereg */ \
+    0,  /* src_basereg   */ \
+    12  /* mask_basereg  */
+
+generate_composite_function_single_scanline \
+    pixman_composite_scanline_over_mask_asm_neon, 32, 32, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    pixman_composite_over_8888_8888_8888_init, \
+    pixman_composite_over_8888_8888_8888_cleanup, \
+    pixman_composite_over_8888_n_8888_process_pixblock_head, \
+    pixman_composite_over_8888_n_8888_process_pixblock_tail, \
+    pixman_composite_over_8888_8888_8888_process_pixblock_tail_head \
+    28, /* dst_w_basereg */ \
+    4,  /* dst_r_basereg */ \
+    0,  /* src_basereg   */ \
+    12  /* mask_basereg  */
+
+/******************************************************************************/
+
+/* TODO: expand macros and do better instructions scheduling */
+.macro pixman_composite_over_8888_8_8888_process_pixblock_tail_head
+    vld4.8     {d4, d5, d6, d7}, [DST_R, :128]!
+    pixman_composite_over_8888_n_8888_process_pixblock_tail
+    vld4.8     {d0, d1, d2, d3}, [SRC]!
+    cache_preload 8, 8
+    vld1.8     {d15}, [MASK]!
+    pixman_composite_over_8888_n_8888_process_pixblock_head
+    vst4.8     {d28, d29, d30, d31}, [DST_W, :128]!
+.endm
+
+.macro pixman_composite_over_8888_8_8888_init
+    vpush       {d8-d15}
+.endm
+
+.macro pixman_composite_over_8888_8_8888_cleanup
+    vpop        {d8-d15}
+.endm
+
+generate_composite_function \
+    pixman_composite_over_8888_8_8888_asm_neon, 32, 8, 32, \
+    FLAG_DST_READWRITE | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    5, /* prefetch distance */ \
+    pixman_composite_over_8888_8_8888_init, \
+    pixman_composite_over_8888_8_8888_cleanup, \
+    pixman_composite_over_8888_n_8888_process_pixblock_head, \
+    pixman_composite_over_8888_n_8888_process_pixblock_tail, \
+    pixman_composite_over_8888_8_8888_process_pixblock_tail_head \
+    28, /* dst_w_basereg */ \
+    4,  /* dst_r_basereg */ \
+    0,  /* src_basereg   */ \
+    15  /* mask_basereg  */
+
+/******************************************************************************/
+
 .macro pixman_composite_src_0888_0888_process_pixblock_head
 .endm
 
@@ -1046,6 +1376,136 @@ generate_composite_function \
     pixman_composite_src_0888_0888_process_pixblock_tail, \
     pixman_composite_src_0888_0888_process_pixblock_tail_head, \
     0, /* dst_w_basereg */ \
+    0, /* dst_r_basereg */ \
+    0, /* src_basereg   */ \
+    0  /* mask_basereg  */
+
+/******************************************************************************/
+
+.macro pixman_composite_src_0888_8888_rev_process_pixblock_head
+    vswp   d0, d2
+.endm
+
+.macro pixman_composite_src_0888_8888_rev_process_pixblock_tail
+.endm
+
+.macro pixman_composite_src_0888_8888_rev_process_pixblock_tail_head
+    vst4.8 {d0, d1, d2, d3}, [DST_W]!
+    vld3.8 {d0, d1, d2}, [SRC]!
+    vswp   d0, d2
+    cache_preload 8, 8
+.endm
+
+.macro pixman_composite_src_0888_8888_rev_init
+    veor   d3, d3, d3
+.endm
+
+generate_composite_function \
+    pixman_composite_src_0888_8888_rev_asm_neon, 24, 0, 32, \
+    FLAG_DST_WRITEONLY | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    10, /* prefetch distance */ \
+    pixman_composite_src_0888_8888_rev_init, \
+    default_cleanup, \
+    pixman_composite_src_0888_8888_rev_process_pixblock_head, \
+    pixman_composite_src_0888_8888_rev_process_pixblock_tail, \
+    pixman_composite_src_0888_8888_rev_process_pixblock_tail_head, \
+    0, /* dst_w_basereg */ \
+    0, /* dst_r_basereg */ \
+    0, /* src_basereg   */ \
+    0  /* mask_basereg  */
+
+/******************************************************************************/
+
+.macro pixman_composite_src_0888_0565_rev_process_pixblock_head
+    vshll.u8    q8, d1, #8
+    vshll.u8    q9, d2, #8
+.endm
+
+.macro pixman_composite_src_0888_0565_rev_process_pixblock_tail
+    vshll.u8    q14, d0, #8
+    vsri.u16    q14, q8, #5
+    vsri.u16    q14, q9, #11
+.endm
+
+.macro pixman_composite_src_0888_0565_rev_process_pixblock_tail_head
+        vshll.u8    q14, d0, #8
+    vld3.8 {d0, d1, d2}, [SRC]!
+        vsri.u16    q14, q8, #5
+        vsri.u16    q14, q9, #11
+    vshll.u8    q8, d1, #8
+        vst1.16 {d28, d29}, [DST_W, :128]!
+    vshll.u8    q9, d2, #8
+.endm
+
+generate_composite_function \
+    pixman_composite_src_0888_0565_rev_asm_neon, 24, 0, 16, \
+    FLAG_DST_WRITEONLY, \
+    8, /* number of pixels, processed in a single block */ \
+    10, /* prefetch distance */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_src_0888_0565_rev_process_pixblock_head, \
+    pixman_composite_src_0888_0565_rev_process_pixblock_tail, \
+    pixman_composite_src_0888_0565_rev_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
+    0, /* dst_r_basereg */ \
+    0, /* src_basereg   */ \
+    0  /* mask_basereg  */
+
+/******************************************************************************/
+
+.macro pixman_composite_src_pixbuf_8888_process_pixblock_head
+    vmull.u8    q8, d3, d0
+    vmull.u8    q9, d3, d1
+    vmull.u8    q10, d3, d2
+.endm
+
+.macro pixman_composite_src_pixbuf_8888_process_pixblock_tail
+    vrshr.u16   q11, q8, #8
+    vswp        d3, d31
+    vrshr.u16   q12, q9, #8
+    vrshr.u16   q13, q10, #8
+    vraddhn.u16 d30, q11, q8
+    vraddhn.u16 d29, q12, q9
+    vraddhn.u16 d28, q13, q10
+.endm
+
+.macro pixman_composite_src_pixbuf_8888_process_pixblock_tail_head
+        vrshr.u16   q11, q8, #8
+        vswp        d3, d31
+        vrshr.u16   q12, q9, #8
+        vrshr.u16   q13, q10, #8
+    vld4.8 {d0, d1, d2, d3}, [SRC]!
+        vraddhn.u16 d30, q11, q8
+                                    PF add PF_X, PF_X, #8
+                                    PF tst PF_CTL, #0xF
+                                    PF addne PF_X, PF_X, #8
+                                    PF subne PF_CTL, PF_CTL, #1
+        vraddhn.u16 d29, q12, q9
+        vraddhn.u16 d28, q13, q10
+    vmull.u8    q8, d3, d0
+    vmull.u8    q9, d3, d1
+    vmull.u8    q10, d3, d2
+        vst4.8 {d28, d29, d30, d31}, [DST_W, :128]!
+                                    PF cmp PF_X, ORIG_W
+                                    PF pld, [PF_SRC, PF_X, lsl #src_bpp_shift]
+                                    PF subge PF_X, PF_X, ORIG_W
+                                    PF subges PF_CTL, PF_CTL, #0x10
+                                    PF ldrgeb DUMMY, [PF_SRC, SRC_STRIDE, lsl #src_bpp_shift]!
+.endm
+
+generate_composite_function \
+    pixman_composite_src_pixbuf_8888_asm_neon, 32, 0, 32, \
+    FLAG_DST_WRITEONLY | FLAG_DEINTERLEAVE_32BPP, \
+    8, /* number of pixels, processed in a single block */ \
+    10, /* prefetch distance */ \
+    default_init, \
+    default_cleanup, \
+    pixman_composite_src_pixbuf_8888_process_pixblock_head, \
+    pixman_composite_src_pixbuf_8888_process_pixblock_tail, \
+    pixman_composite_src_pixbuf_8888_process_pixblock_tail_head, \
+    28, /* dst_w_basereg */ \
     0, /* dst_r_basereg */ \
     0, /* src_basereg   */ \
     0  /* mask_basereg  */

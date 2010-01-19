@@ -270,7 +270,7 @@ test_composite (uint32_t initcrc, int testnum, int verbose)
     int w, h;
     int op;
     pixman_format_code_t src_fmt, dst_fmt, mask_fmt;
-    uint32_t *dstbuf;
+    uint32_t *dstbuf, *srcbuf, *maskbuf;
     uint32_t crc32;
     int max_width, max_height, max_extra_stride;
 
@@ -308,12 +308,43 @@ test_composite (uint32_t initcrc, int testnum, int verbose)
     dst_img = create_random_image (img_fmt_list, max_width, max_height,
 				   max_extra_stride, &dst_fmt);
 
+    src_width = pixman_image_get_width (src_img);
+    src_height = pixman_image_get_height (src_img);
+    src_stride = pixman_image_get_stride (src_img);
+
+    dst_width = pixman_image_get_width (dst_img);
+    dst_height = pixman_image_get_height (dst_img);
+    dst_stride = pixman_image_get_stride (dst_img);
+
+    dstbuf = pixman_image_get_data (dst_img);
+    srcbuf = pixman_image_get_data (src_img);
+
+    src_x = lcg_rand_n (src_width);
+    src_y = lcg_rand_n (src_height);
+    dst_x = lcg_rand_n (dst_width);
+    dst_y = lcg_rand_n (dst_height);
+
     mask_img = NULL;
     mask_fmt = -1;
     mask_x = 0;
     mask_y = 0;
+    maskbuf = NULL;
 
-    if (lcg_rand_n (2))
+    if ((src_fmt == PIXMAN_x8r8g8b8 || src_fmt == PIXMAN_x8b8g8r8) &&
+	(lcg_rand_n (4) == 0))
+    {
+	/* PIXBUF */
+	mask_fmt = lcg_rand_n (2) ? PIXMAN_a8r8g8b8 : PIXMAN_a8b8g8r8;
+	mask_img = pixman_image_create_bits (mask_fmt,
+	                                     src_width,
+	                                     src_height,
+	                                     srcbuf,
+	                                     src_stride);
+	mask_x = src_x;
+	mask_y = src_y;
+	maskbuf = srcbuf;
+    }
+    else if (lcg_rand_n (2))
     {
 	if (lcg_rand_n (2))
 	{
@@ -335,20 +366,6 @@ test_composite (uint32_t initcrc, int testnum, int verbose)
 	mask_y = lcg_rand_n (pixman_image_get_height (mask_img));
     }
 
-    src_width = pixman_image_get_width (src_img);
-    src_height = pixman_image_get_height (src_img);
-    src_stride = pixman_image_get_stride (src_img);
-
-    dst_width = pixman_image_get_width (dst_img);
-    dst_height = pixman_image_get_height (dst_img);
-    dst_stride = pixman_image_get_stride (dst_img);
-
-    dstbuf = pixman_image_get_data (dst_img);
-
-    src_x = lcg_rand_n (src_width);
-    src_y = lcg_rand_n (src_height);
-    dst_x = lcg_rand_n (dst_width);
-    dst_y = lcg_rand_n (dst_height);
 
     w = lcg_rand_n (dst_width - dst_x + 1);
     h = lcg_rand_n (dst_height - dst_y + 1);
@@ -392,7 +409,13 @@ test_composite (uint32_t initcrc, int testnum, int verbose)
     crc32 = free_random_image (initcrc, dst_img, dst_fmt);
 
     if (mask_img)
-	free_random_image (initcrc, mask_img, -1);
+    {
+	if (srcbuf == maskbuf)
+	    pixman_image_unref(mask_img);
+	else
+	    free_random_image (initcrc, mask_img, -1);
+    }
+
 
     return crc32;
 }
@@ -440,7 +463,7 @@ main (int argc, char *argv[])
 	    /* Predefined value for running with all the fastpath functions
 	       disabled. It needs to be updated every time when changes are
 	       introduced to this program or behavior of pixman changes! */
-	    if (crc == 0x1911E2C3)
+	    if (crc == 0x20CBE02C)
 	    {
 		printf ("blitters test passed\n");
 	    }

@@ -1,4 +1,3 @@
-/* $Xorg: cmsProp.c,v 1.3 2000/08/17 19:45:10 cpqbld Exp $ */
 
 /*
  *
@@ -31,7 +30,6 @@
  *		This utility routines for manipulating properties.
  *
  */
-/* $XFree86$ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

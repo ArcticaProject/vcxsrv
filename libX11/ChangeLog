@@ -1,3 +1,259 @@
+commit 68530599e61cf9fef3fcc91650e7cef21837fce7
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jan 16 11:41:32 2010 -0800
+
+    libX11 1.3.3
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 1e5af224b9fbdb154620f898558704f2bc4bf4e9
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 14 18:33:39 2010 -0800
+
+    Update COPYING file with actual licenses from libX11 code & docs
+    
+    COPYING was previously a years out-of-date copy of the LICENSES
+    doc summarizing all licenses for all XFree86 components, many of
+    which did not apply to libX11.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit ddb1786720d6136b1b28be599c75c10ad1b76a2a
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 14 17:38:26 2010 -0800
+
+    Purge CVS/RCS id tags
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit c1db9ddcfa7091f173478dca45bf720badedfca4
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 14 15:39:14 2010 -0800
+
+    Update Sun license notices to current X.Org standard form
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 1aaa7c0358c5c035b99625f5715cb722bc2d2a2f
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 14 08:28:22 2010 -0800
+
+    Add %S substitutions to Compose man page
+    
+    Commit 9df349a7894725f9469b106af645f57f7f3f9af3 added support for %S
+    in Compose file include statements - this documents it in the Compose
+    file man page.
+    
+    Also changes the existing substitution documentation to list format
+    instead of a paragraph format to allow easier adding of %S.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 94b45db93058cffa25598fe27dd3e385ace9d305
+Author: Richard Purdie <rpurdie@linux.intel.com>
+Date:   Thu Jan 14 08:04:28 2010 -0800
+
+    Fix configure.ac PKG_ macro calls
+    
+    If the first call to PKG_CHECK_MODULES() may not be called during execution
+    which is the case here since its inside a case statement, call
+    PKG_PROG_PKG_CONFIG() to ensure things worked correctly.
+    
+    Fixes a configure failure introduced by commit
+    87529c039050ce3336ff9ce00f1b5a21d15690da when xcb is enabled.
+    
+    http://bugs.freedesktop.org/show_bug.cgi?id=26041
+    
+    Signed-off-by: Richard Purdie <rpurdie@linux.intel.com>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit df559d8bc2238a2c369152fcb06e5b5ab132a5dc
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jan 12 09:18:15 2010 -0800
+
+    Raise xorg-macros requirement to 1.4
+    
+    Needed since the changes in 464390f16d7ed4aa5bf80f89863ba92273075ec2
+    depend on the INSTALL file delivered in xorg-macros 1.4
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 9df349a7894725f9469b106af645f57f7f3f9af3
+Author: James Cloos <cloos@jhcloos.com>
+Date:   Wed Jan 13 11:04:38 2010 -0500
+
+    Allow inclusion of system level compose files.
+    
+    With the release of XFree86 4.4 an inclusion system of compose files was
+    added to Xlib to allow inclusion of the default compose file (with %L),
+    any compose files from user’s home directory (with %H), or a compose
+    file with a hard coded path¹. However, even today including system level
+    compose files is not possible in a platform independent manner although
+    the machinery for including compose files and overriding previously
+    defined compositions is already in place.
+    
+    With the ability to include system level compose files one could greatly
+    reduce the need for compose file rule duplication and the work needed to
+    propagate changes in one compose file to others. For example, currently
+    the Finnish compose file fi_FI.UTF-8 weights over 5000 lines² but it
+    is almost identical with en_US.UTF-8 except for perhaps half a dozen
+    compositions.
+    
+    This commit allows one to include system level compose files with the
+    following kind of syntax:
+    
+    include "%S/en_US.UTF-8/Compose"
+    
+    1] http://www.xfree86.org/4.4.0/RELNOTES5.html#42
+    2] http://cgit.freedesktop.org/xorg/lib/libX11/tree/nls/fi_FI.UTF-8/Compose.pre
+    
+    Signed-off-by: Marko Myllynen <myllynen@redhat.com>
+    Signed-off-by: James Cloos <cloos@jhcloos.com>
+
+commit ccf21a8877f40136e25f2f62d0668b0c76b3cfbd
+Author: Thien-Thi Nguyen <ttn@gnuvola.org>
+Date:   Tue Dec 1 10:31:47 2009 +0100
+
+    libX11: Fix comment: Invert polarity (direction) of reformat description.
+    
+    Signed-off-by: Thien-Thi Nguyen <ttn@gnuvola.org>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 4d4676c0d6324d2ff9d00d15ab485fa5d848a369
+Author: Osamu Sayama <osamu.sayama@sun.com>
+Date:   Tue Jan 5 17:26:40 2010 -0800
+
+    set_fontset_extents crash after get_rotate_fontname fix in 2bef065b70f7
+    
+    - In set_fontset_extents, check font_data is not NULL before running
+      loop that may increment it to a non-NULL invalid pointer.
+    - Make sure get_rotate_fontname counts the final field
+    
+    Fixes OpenSolaris bug 6913809: X application dumps core in ja_JP.UTF-8 locale
+    <http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6913809>
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+
+commit 87529c039050ce3336ff9ce00f1b5a21d15690da
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jan 5 18:02:37 2010 -0800
+
+    Merge X11, XKBPROTO, & XPROTO pkg-config lists
+    
+    Since the XPROTO_CFLAGS & XKBPROTO_CFLAGS are just merged into X11_CFLAGS
+    in configure.ac anyway, might as well combine the lists passed to
+    PKG_CHECK_MODULES to reduce duplication in the flags.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Rémi Cardona <remi@gentoo.org>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 2dd053667b44c55e2bf601aec7b75fc6fee1cf44
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jan 5 17:56:58 2010 -0800
+
+    Add XCompose man page shadow for Compose man page
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 02543bba816e065c02cd36e0c9e21519a9ee9c96
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jan 5 17:47:44 2010 -0800
+
+    Add $(AM_V_GEN) to silence lint rules too
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit db7c6fdeeaef9475458498e4cf09d6b1329e9aa3
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jan 5 17:42:42 2010 -0800
+
+    Remove GCC_WARNINGS now that XORG_CWARNFLAGS sets them for us
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 6b4e526e7ba105622f6b143e8e2639b44cb6cc19
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 29 10:44:24 2009 -0500
+
+    configure.ac: restore correct order for XORG_DEFAULT_OPTIONS
+    
+    It must be following AC_USE_SYSTEM_EXTENSION
+
+commit 3dbaa11d1c8705e1b309c6686f354766b651ad20
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 29 10:01:44 2009 -0500
+
+    Add .gitignore in /specs for generated files
+    
+    Being in /specs, it will apply for all 3 subdirs
+
+commit f45d39d37aab04742e44cd8c3c993aad7587e40c
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Nov 27 20:56:03 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit 464390f16d7ed4aa5bf80f89863ba92273075ec2
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:10 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+commit 6360e7f0ce6a75da2bed33ede7fea783a1fb80e1
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Oct 27 15:07:25 2009 -0400
+
+    Deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit d02f943c98fde2f14319bc57fd9ad77eb9a2a572
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Oct 26 22:08:42 2009 -0400
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit f77c89c751a6a63c8ef11ecdddca2aed11ff6e29
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Oct 22 12:34:19 2009 -0400
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit 46c7b0e9d0d85cf5ccc0d40d19821fcc3335503b
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Nov 12 23:05:40 2009 -0800
+
+    Add compose-check.pl to EXTRA_DIST
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 54c64267cc8bc98641cc39a22cb7bd71673e89e0
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Thu Oct 29 17:17:24 2009 +0100
+
+    man: fix XCopyGC argument order
+    
+    Ubuntu bug#408337
+
 commit aad10032651cdc2a53b359035954454a28d6db67
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Fri Oct 23 13:55:14 2009 -0700

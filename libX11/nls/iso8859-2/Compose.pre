@@ -1,8 +1,6 @@
-XCOMM $Xorg: iso8859-2,v 1.3 2000/08/17 19:46:59 cpqbld Exp $
 XCOMM
 XCOMM ISO 8859-2 (Latin2) Compose Sequence
 XCOMM
-XCOMM $XFree86: xc/nls/Compose/iso8859-2,v 1.6 2001/05/18 23:35:29 dawes Exp $
 XCOMM
 XCOMM Sequence Definition
 XCOMM

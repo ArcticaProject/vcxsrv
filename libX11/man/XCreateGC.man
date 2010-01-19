@@ -41,8 +41,6 @@
 .\" of this documentation for any purpose.
 .\" It is provided ``as is'' without express or implied warranty.
 .\" 
-.\" $XFree86: xc/doc/man/X11/XCreGC.man,v 1.6 2003/04/28 22:17:54 herrb Exp $
-.\" $XdotOrg: lib/X11/man/XCreateGC.man,v 1.2 2004-04-23 18:42:09 eich Exp $
 .\"
 .ds xT X Toolkit Intrinsics \- C Language Interface
 .ds xW Athena X Widgets \- C Language X Toolkit Interface
@@ -151,8 +149,8 @@ XCreateGC, XCopyGC, XChangeGC, XGetGCValues, XFreeGC, XGContextFromGC, XGCValues
 GC XCreateGC\^(\^Display *\fIdisplay\fP\^, Drawable \fId\fP\^, unsigned long
 \fIvaluemask\fP\^, XGCValues *\^\fIvalues\fP\^); 
 .HP
-int XCopyGC\^(\^Display *\fIdisplay\fP\^, GC \fIsrc\fP\^, GC \fIdest\fP\^,
-unsigned long \fIvaluemask\fP\^); 
+int XCopyGC\^(\^Display *\fIdisplay\fP\^, GC \fIsrc\fP\^,
+unsigned long \fIvaluemask\fP\^, GC \fIdest\fP\^); 
 .HP
 int XChangeGC\^(\^Display *\fIdisplay\fP\^, GC \fIgc\fP\^, unsigned long
 \fIvaluemask\fP\^, XGCValues *\^\fIvalues\fP\^); 

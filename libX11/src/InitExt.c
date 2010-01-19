@@ -1,4 +1,3 @@
-/* $Xorg: InitExt.c,v 1.4 2001/02/09 02:03:34 xorgcvs Exp $ */
 /*
 
 Copyright 1987, 1998  The Open Group
@@ -26,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/InitExt.c,v 1.7 2001/12/14 19:54:02 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

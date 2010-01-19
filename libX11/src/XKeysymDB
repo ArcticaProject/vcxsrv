@@ -1,4 +1,3 @@
-! $Xorg: XKeysymDB,v 1.3 2000/08/17 19:45:04 cpqbld Exp $
 ! Copyright 1993 Massachusetts Institute of Technology
 !
 ! Permission to use, copy, modify, distribute, and sell this software and
@@ -11,7 +10,6 @@
 ! suitability of this software for any purpose.  It is provided "as is"
 ! without express or implied warranty.
 !
-! $XFree86: xc/lib/X11/XKeysymDB,v 3.16 2003/02/11 02:51:10 dawes Exp $
 
 hpmute_acute		:100000A8
 hpmute_grave		:100000A9

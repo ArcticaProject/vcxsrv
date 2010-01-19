@@ -1,4 +1,3 @@
-/* $Xorg: GetDflt.c,v 1.6 2001/02/09 02:03:33 xorgcvs Exp $ */
 
 /***********************************************************
 
@@ -46,7 +45,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/GetDflt.c,v 3.22 2003/04/13 19:22:16 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

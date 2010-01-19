@@ -1,4 +1,3 @@
-/* $Xorg: HVCMxVC.c,v 1.3 2000/08/17 19:44:37 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -44,7 +43,6 @@
  *		querying routine.
  *
  */
-/* $XFree86$ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

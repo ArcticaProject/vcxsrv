@@ -1,4 +1,3 @@
-/* $Xorg: lcEuc.c,v 1.3 2000/08/17 19:45:17 cpqbld Exp $ */
 /******************************************************************
 
         Copyright 1992, 1993 by FUJITSU LIMITED
@@ -30,7 +29,6 @@ OF THIS SOFTWARE.
              Yoshiyuki Segawa		(segawa@ossi.com)
 
 *****************************************************************/
-/* $XFree86: xc/lib/X11/lcEuc.c,v 3.12 2003/01/20 04:05:30 dawes Exp $ */
 
 /*
  * An EUC locale.

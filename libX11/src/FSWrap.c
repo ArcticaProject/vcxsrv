@@ -1,4 +1,3 @@
-/* $Xorg: FSWrap.c,v 1.5 2001/02/09 02:03:32 xorgcvs Exp $ */
 
 /*
  * Copyright 1991 by the Open Software Foundation
@@ -56,7 +55,6 @@ from The Open Group.
 
 */
 
-/* $XFree86: xc/lib/X11/FSWrap.c,v 1.8 2003/08/22 19:27:24 eich Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

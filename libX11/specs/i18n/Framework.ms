@@ -1,7 +1,4 @@
-.\" $Xorg: Framework.ms,v 1.3 2000/08/17 19:42:49 cpqbld Exp $
-.\" $XdotOrg: xc/doc/specs/i18n/Framework.ms,v 1.2 2004/04/23 18:42:19 eich Exp $
 .\" To print this out, type tbl macros.t ThisFile | troff -ms
-.\" $XFree86: xc/doc/specs/i18n/Framework.ms,v 1.4 2001/01/17 16:57:45 dawes Exp $
 .EH ''''
 .OH ''''
 .EF ''''

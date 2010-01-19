@@ -1,4 +1,3 @@
-/* $XFree86$ */
 
 /*
  * GEORGIAN-ACADEMY

@@ -1,4 +1,3 @@
-/* $Xorg: Xaixlcint.h,v 1.3 2000/08/17 19:45:04 cpqbld Exp $ */
 /*
  *
  * Copyright IBM Corporation 1993

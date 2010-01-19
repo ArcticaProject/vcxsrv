@@ -1,4 +1,3 @@
-/* $Xorg: lcUtil.c,v 1.3 2000/08/17 19:45:20 cpqbld Exp $ */
 /*
  * Copyright 1992, 1993 by TOSHIBA Corp.
  *
@@ -24,7 +23,6 @@
  *			   	mopi@osa.ilab.toshiba.co.jp
  * Bug fixes: Bruno Haible	XFree86 Inc.
  */
-/* $XFree86: xc/lib/X11/lcUtil.c,v 1.3 2000/11/29 17:40:24 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

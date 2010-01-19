@@ -1,4 +1,3 @@
-/* $Xorg: XKBGeom.c,v 1.4 2000/08/17 19:45:01 cpqbld Exp $ */
 /************************************************************
 Copyright (c) 1993 by Silicon Graphics Computer Systems, Inc.
 
@@ -24,7 +23,6 @@ OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ********************************************************/
-/* $XFree86: xc/lib/X11/XKBGeom.c,v 1.5 2003/04/13 19:22:18 dawes Exp $ */
 
 #ifdef DEBUG
 #ifdef HAVE_CONFIG_H

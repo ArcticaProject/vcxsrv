@@ -1,4 +1,3 @@
-/* $Xorg: lcWrap.c,v 1.6 2001/02/09 02:03:39 xorgcvs Exp $ */
 /*
 
 Copyright 1991, 1998  The Open Group
@@ -53,7 +52,6 @@ from The Open Group.
  *
  *		 Katsuhisa Yano		TOSHIBA Corp.
  */
-/* $XFree86: xc/lib/X11/lcWrap.c,v 3.15 2003/04/13 19:22:22 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

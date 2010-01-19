@@ -1,852 +1,942 @@
-                                  Licenses
+The following is the 'standard copyright' agreed upon by most contributors,
+and is currently the canonical license preferred by the X.Org Foundation.
+This is a slight variant of the common MIT license form published by the
+Open Source Initiative at http://www.opensource.org/licenses/mit-license.php
 
-                             The XFree86 Project
+Copyright holders of new code should use this license statement where
+possible, and insert their name to this list.  Please sort by surname
+for people, and by the full name for other entities (e.g.  Juliusz
+Chroboczek sorts before Intel Corporation sorts before Daniel Stone).
 
-                                January 2002
+See each individual source file or directory for the license that applies
+to that file.
 
-1.  XFree86 License
+Copyright (C) 2003-2006,2008 Jamey Sharp, Josh Triplett
+Copyright © 2009 Red Hat, Inc.
+Copyright © 1990-1992,1999,2000,2004,2009 Sun Microsystems, Inc.
+All rights reserved.
 
-XFree86 code without an explicit copyright is covered by the following copy-
-right/license:
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
 
-Copyright (C) 1994-2002 The XFree86 Project, Inc.  All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is fur-
-nished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FIT-
-NESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-XFREE86 PROJECT BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CON-
-NECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Except as contained in this notice, the name of the XFree86 Project shall not
-be used in advertising or otherwise to promote the sale, use or other deal-
-ings in this Software without prior written authorization from the XFree86
-Project.
-
-2.  Other Licenses
-
-Portions of code are covered by the following licenses/copyrights.  See indi-
-vidual files for the copyright dates.
-
-2.1  X/MIT Copyrights
-
-2.1.1  X Consortium
-
-Copyright (C) <date> X Consortium
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is fur-
-nished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice (including the next
+paragraph) shall be included in all copies or substantial portions of the
+Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FIT-
-NESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE X
-CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
 
-Except as contained in this notice, the name of the X Consortium shall not be
-used in advertising or otherwise to promote the sale, use or other dealings
-in this Software without prior written authorization from the X Consortium.
+ ----------------------------------------------------------------------
 
-X Window System is a trademark of X Consortium, Inc.
+The following licenses are 'legacy' - usually MIT/X11 licenses with the name
+of the copyright holder(s) in the license statement:
 
-2.1.2  The Open Group
-
-Copyright <date>  The Open Group
+Copyright 1984-1994, 1998 The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
 documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that copyright
-notice and this permission notice appear in supporting documentation.
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation.
 
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FIT-
-NESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Except as contained in this notice, the name of The Open Group shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
-2.2  Berkeley-based copyrights:
+X Window System is a trademark of The Open Group.
 
-2.2.1  General
+		----------------------------------------
 
-Redistribution and use in source and binary forms, with or without modifica-
-tion, are permitted provided that the following conditions are met:
+Copyright 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1994, 1996 X Consortium
+Copyright 2000 The XFree86 Project, Inc.
 
-  1.  Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-  2.  Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
 
-  3.  The name of the author may not be used to endorse or promote products
-      derived from this software without specific prior written permission.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 
-THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MER-
-CHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
-EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPE-
-CIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTH-
-ERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-OF THE POSSIBILITY OF SUCH DAMAGE.
+Except as contained in this notice, the name of the X Consortium shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from the X Consortium.
 
-2.2.2  UCB/LBL
+Copyright 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+Digital Equipment Corporation
 
-Copyright (c) 1993 The Regents of the University of California.  All rights
-reserved.
+Portions Copyright 1990, 1991 by Tektronix, Inc.
 
-This software was developed by the Computer Systems Engineering group at
-Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and contributed to
-Berkeley.
+Permission to use, copy, modify and distribute this documentation for
+any purpose and without fee is hereby granted, provided that the above
+copyright notice appears in all copies and that both that copyright notice
+and this permission notice appear in all copies, and that the names of
+Digital and Tektronix not be used in in advertising or publicity pertaining
+to this documentation without specific, written prior permission.
+Digital and Tektronix makes no representations about the suitability
+of this documentation for any purpose.
+It is provided ``as is'' without express or implied warranty.
 
-All advertising materials mentioning features or use of this software must
-display the following acknowledgement: This product includes software devel-
-oped by the University of California, Lawrence Berkeley Laboratory.
+		----------------------------------------
 
-Redistribution and use in source and binary forms, with or without modifica-
-tion, are permitted provided that the following conditions are met:
+Copyright (c) 1999-2000  Free Software Foundation, Inc.
 
-  1.  Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-  2.  Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-  3.  All advertising materials mentioning features or use of this software
-      must display the following acknowledgement: This product includes soft-
-      ware developed by the University of California, Berkeley and its con-
-      tributors.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+FREE SOFTWARE FOUNDATION BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  4.  Neither the name of the University nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
+Except as contained in this notice, the name of the Free Software Foundation
+shall not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization from the
+Free Software Foundation.
 
-THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DIS-
-CLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+		----------------------------------------
+
+Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
+	All Rights Reserved
+
+This file is a component of an X Window System-specific implementation
+of Xcms based on the TekColor Color Management System.  TekColor is a
+trademark of Tektronix, Inc.  The term "TekHVC" designates a particular
+color space that is the subject of U.S. Patent No. 4,985,853 (equivalent
+foreign patents pending).  Permission is hereby granted to use, copy,
+modify, sell, and otherwise distribute this software and its
+documentation for any purpose and without fee, provided that:
+
+1. This copyright, permission, and disclaimer notice is reproduced in
+   all copies of this software and any modification thereof and in
+   supporting documentation;
+2. Any color-handling application which displays TekHVC color
+   cooordinates identifies these as TekHVC color coordinates in any
+   interface that displays these coordinates and in any associated
+   documentation;
+3. The term "TekHVC" is always used, and is only used, in association
+   with the mathematical derivations of the TekHVC Color Space,
+   including those provided in this file and any equivalent pathways and
+   mathematical derivations, regardless of digital (e.g., floating point
+   or integer) representation.
+
+Tektronix makes no representation about the suitability of this software
+for any purpose.  It is provided "as is" and with all faults.
+
+TEKTRONIX DISCLAIMS ALL WARRANTIES APPLICABLE TO THIS SOFTWARE,
+INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE.  IN NO EVENT SHALL TEKTRONIX BE LIABLE FOR ANY
+SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+RESULTING FROM LOSS OF USE, DATA, OR PROFITS, WHETHER IN AN ACTION OF
+CONTRACT, NEGLIGENCE, OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+CONNECTION WITH THE USE OR THE PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+(c) Copyright 1995 FUJITSU LIMITED
+This is source code modified by FUJITSU LIMITED under the Joint
+Development Agreement for the CDE/Motif PST.
+
+		----------------------------------------
+
+Copyright 1992 by Oki Technosystems Laboratory, Inc.
+Copyright 1992 by Fuji Xerox Co., Ltd.
+
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the name of Oki Technosystems
+Laboratory and Fuji Xerox not be used in advertising or publicity
+pertaining to distribution of the software without specific, written
+prior permission.
+Oki Technosystems Laboratory and Fuji Xerox make no representations
+about the suitability of this software for any purpose.  It is provided
+"as is" without express or implied warranty.
+
+OKI TECHNOSYSTEMS LABORATORY AND FUJI XEROX DISCLAIM ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL OKI TECHNOSYSTEMS
+LABORATORY AND FUJI XEROX BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1990, 1991, 1992, 1993, 1994 by FUJITSU LIMITED
+
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the name of FUJITSU LIMITED
+not be used in advertising or publicity pertaining to distribution
+of the software without specific, written prior permission.
+FUJITSU LIMITED makes no representations about the suitability of
+this software for any purpose.
+It is provided "as is" without express or implied warranty.
+
+FUJITSU LIMITED DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+EVENT SHALL FUJITSU LIMITED BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+
+Copyright (c) 1995 David E. Wexelblat.  All rights reserved
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL DAVID E. WEXELBLAT BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of David E. Wexelblat shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from David E. Wexelblat.
+
+		----------------------------------------
+
+Copyright 1990, 1991 by OMRON Corporation
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the name OMRON not be used in
+advertising or publicity pertaining to distribution of the software without
+specific, written prior permission.  OMRON makes no representations
+about the suitability of this software for any purpose.  It is provided
+"as is" without express or implied warranty.
+
+OMRON DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+EVENT SHALL OMRON BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTUOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1985, 1986, 1987, 1988, 1989, 1990, 1991 by
+Digital Equipment Corporation
+
+Portions Copyright 1990, 1991 by Tektronix, Inc
+
+Rewritten for X.org by Chris Lee <clee@freedesktop.org>
+
+Permission to use, copy, modify, distribute, and sell this documentation
+for any purpose and without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+Chris Lee makes no representations about the suitability for any purpose
+of the information in this document.  It is provided \`\`as-is'' without
+express or implied warranty.
+
+		----------------------------------------
+
+Copyright 1993 by Digital Equipment Corporation, Maynard, Massachusetts,
+Copyright 1994 by FUJITSU LIMITED
+Copyright 1994 by Sony Corporation
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the names of Digital, FUJITSU
+LIMITED and Sony Corporation not be used in advertising or publicity
+pertaining to distribution of the software without specific, written
+prior permission.
+
+DIGITAL, FUJITSU LIMITED AND SONY CORPORATION DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL DIGITAL, FUJITSU LIMITED
+AND SONY CORPORATION BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+
+Copyright 1991 by the Open Software Foundation
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the name of Open Software Foundation
+not be used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.  Open Software
+Foundation makes no representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
+implied warranty.
+
+OPEN SOFTWARE FOUNDATION DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS, IN NO EVENT SHALL OPEN SOFTWARE FOUNDATIONN BE
+LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1990, 1991, 1992,1993, 1994 by FUJITSU LIMITED
+Copyright 1993, 1994                  by Sony Corporation
+
+Permission to use, copy, modify, distribute, and sell this software and
+its documentation for any purpose is hereby granted without fee, provided
+that the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the name of FUJITSU LIMITED and Sony Corporation
+not be used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.  FUJITSU LIMITED and
+Sony Corporation makes no representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
+implied warranty.
+
+FUJITSU LIMITED AND SONY CORPORATION DISCLAIMS ALL WARRANTIES WITH REGARD
+TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS, IN NO EVENT SHALL FUJITSU LIMITED OR SONY CORPORATION BE LIABLE
+FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+USE OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright (c) 1993, 1995 by Silicon Graphics Computer Systems, Inc.
+
+Permission to use, copy, modify, and distribute this
+software and its documentation for any purpose and without
+fee is hereby granted, provided that the above copyright
+notice appear in all copies and that both that copyright
+notice and this permission notice appear in supporting
+documentation, and that the name of Silicon Graphics not be
+used in advertising or publicity pertaining to distribution
+of the software without specific prior written permission.
+Silicon Graphics makes no representation about the suitability
+of this software for any purpose. It is provided "as is"
+without any express or implied warranty.
+
+SILICON GRAPHICS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL SILICON
+GRAPHICS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  WITH
+THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1991, 1992, 1993, 1994 by FUJITSU LIMITED
+Copyright 1993 by Digital Equipment Corporation
+
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of FUJITSU LIMITED and
+Digital Equipment Corporation not be used in advertising or publicity
+pertaining to distribution of the software without specific, written
+prior permission.  FUJITSU LIMITED and Digital Equipment Corporation
+makes no representations about the suitability of this software for
+any purpose.  It is provided "as is" without express or implied
+warranty.
+
+FUJITSU LIMITED AND DIGITAL EQUIPMENT CORPORATION DISCLAIM ALL
+WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+FUJITSU LIMITED AND DIGITAL EQUIPMENT CORPORATION BE LIABLE FOR
+ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1992, 1993 by FUJITSU LIMITED
+Copyright 1993 by Fujitsu Open Systems Solutions, Inc.
+Copyright 1994 by Sony Corporation
+
+Permission to use, copy, modify, distribute and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the name of FUJITSU LIMITED,
+Fujitsu Open Systems Solutions, Inc. and Sony Corporation  not be
+used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.
+FUJITSU LIMITED, Fujitsu Open Systems Solutions, Inc. and
+Sony Corporation make no representations about the suitability of
+this software for any purpose.  It is provided "as is" without
+express or implied warranty.
+
+FUJITSU LIMITED, FUJITSU OPEN SYSTEMS SOLUTIONS, INC. AND SONY
+CORPORATION DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,
+IN NO EVENT SHALL FUJITSU OPEN SYSTEMS SOLUTIONS, INC., FUJITSU LIMITED
+AND SONY CORPORATION BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1987, 1988, 1990, 1993 by Digital Equipment Corporation,
+Maynard, Massachusetts,
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of Digital not be
+used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.
+
+DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+DIGITAL BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1993 by SunSoft, Inc.
+Copyright 1999-2000 by Bruno Haible
+
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the names of SunSoft, Inc. and
+Bruno Haible not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.  SunSoft, Inc. and Bruno Haible make no representations
+about the suitability of this software for any purpose.  It is
+provided "as is" without express or implied warranty.
+
+SunSoft Inc. AND Bruno Haible DISCLAIM ALL WARRANTIES WITH REGARD
+TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS, IN NO EVENT SHALL SunSoft, Inc. OR Bruno Haible BE LIABLE
+FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1991 by the Open Software Foundation
+Copyright 1993 by the TOSHIBA Corp.
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the names of Open Software Foundation and TOSHIBA
+not be used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.  Open Software
+Foundation and TOSHIBA make no representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
+implied warranty.
+
+OPEN SOFTWARE FOUNDATION AND TOSHIBA DISCLAIM ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS, IN NO EVENT SHALL OPEN SOFTWARE FOUNDATIONN OR TOSHIBA BE
+LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1988 by Wyse Technology, Inc., San Jose, Ca.,
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name Wyse not be
+used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.
+
+WYSE DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+DIGITAL BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.
+
+		----------------------------------------
+
+
+Copyright 1991 by the Open Software Foundation
+Copyright 1993, 1994 by the Sony Corporation
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the names of Open Software Foundation and
+Sony Corporation not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior permission.
+Open Software Foundation and Sony Corporation make no
+representations about the suitability of this software for any purpose.
+It is provided "as is" without express or implied warranty.
+
+OPEN SOFTWARE FOUNDATION AND SONY CORPORATION DISCLAIM ALL
+WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL OPEN
+SOFTWARE FOUNDATIONN OR SONY CORPORATION BE LIABLE FOR ANY SPECIAL,
+INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1992, 1993 by FUJITSU LIMITED
+Copyright 1993 by Fujitsu Open Systems Solutions, Inc.
+
+Permission to use, copy, modify, distribute and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the name of FUJITSU LIMITED and
+Fujitsu Open Systems Solutions, Inc. not be used in advertising or
+publicity pertaining to distribution of the software without specific,
+written prior permission.
+FUJITSU LIMITED and Fujitsu Open Systems Solutions, Inc. makes no
+representations about the suitability of this software for any purpose.
+It is provided "as is" without express or implied warranty.
+
+FUJITSU LIMITED AND FUJITSU OPEN SYSTEMS SOLUTIONS, INC. DISCLAIMS ALL
+WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL FUJITSU OPEN SYSTEMS
+SOLUTIONS, INC. AND FUJITSU LIMITED BE LIABLE FOR ANY SPECIAL, INDIRECT
+OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1993, 1994 by Sony Corporation
+
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the name of Sony Corporation
+not be used in advertising or publicity pertaining to distribution
+of the software without specific, written prior permission.
+Sony Corporation makes no representations about the suitability of
+this software for any purpose. It is provided "as is" without
+express or implied warranty.
+
+SONY CORPORATION DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+EVENT SHALL SONY CORPORATION BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1986, 1998  The Open Group
+Copyright (c) 2000  The XFree86 Project, Inc.
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation.
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+X CONSORTIUM OR THE XFREE86 PROJECT BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Except as contained in this notice, the name of the X Consortium or of the
+XFree86 Project shall not be used in advertising or otherwise to promote the
+sale, use or other dealings in this Software without prior written
+authorization from the X Consortium and the XFree86 Project.
+
+		----------------------------------------
+
+Copyright 1990, 1991 by OMRON Corporation, NTT Software Corporation,
+                     and Nippon Telegraph and Telephone Corporation
+Copyright 1991 by the Open Software Foundation
+Copyright 1993 by the FUJITSU LIMITED
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the names of OMRON, NTT Software, NTT, and
+Open Software Foundation not be used in advertising or publicity
+pertaining to distribution of the software without specific,
+written prior permission. OMRON, NTT Software, NTT, and Open Software
+Foundation make no representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
+implied warranty.
+
+OMRON, NTT SOFTWARE, NTT, AND OPEN SOFTWARE FOUNDATION
+DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL OMRON, NTT SOFTWARE, NTT, OR OPEN SOFTWARE FOUNDATION BE
+LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1988 by Wyse Technology, Inc., San Jose, Ca,
+Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts,
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name Digital not be
+used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.
+
+DIGITAL AND WYSE DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+EVENT SHALL DIGITAL OR WYSE BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+
+Copyright 1991, 1992 by Fuji Xerox Co., Ltd.
+Copyright 1992, 1993, 1994 by FUJITSU LIMITED
+
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the name of Fuji Xerox,
+FUJITSU LIMITED not be used in advertising or publicity pertaining
+to distribution of the software without specific, written prior
+permission. Fuji Xerox, FUJITSU LIMITED make no representations
+about the suitability of this software for any purpose.
+It is provided "as is" without express or implied warranty.
+
+FUJI XEROX, FUJITSU LIMITED DISCLAIM ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL FUJI XEROX,
+FUJITSU LIMITED BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA
+OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 2006 Josh Triplett
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+		----------------------------------------
+
+(c) Copyright 1996 by Sebastien Marineau and Holger Veit
+			<marineau@genie.uottawa.ca>
+                     <Holger.Veit@gmd.de>
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+HOLGER VEIT  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Except as contained in this notice, the name of Sebastien Marineau or Holger Veit
+shall not be used in advertising or otherwise to promote the sale, use or other
+dealings in this Software without prior written authorization from Holger Veit or
+Sebastien Marineau.
+
+		----------------------------------------
+
+Copyright 1990, 1991 by OMRON Corporation, NTT Software Corporation,
+                     and Nippon Telegraph and Telephone Corporation
+Copyright 1991 by the Open Software Foundation
+Copyright 1993 by the TOSHIBA Corp.
+Copyright 1993, 1994 by Sony Corporation
+Copyright 1993, 1994 by the FUJITSU LIMITED
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the names of OMRON, NTT Software, NTT, Open
+Software Foundation, and Sony Corporation not be used in advertising
+or publicity pertaining to distribution of the software without specific,
+written prior permission. OMRON, NTT Software, NTT, Open Software
+Foundation, and Sony Corporation  make no representations about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+OMRON, NTT SOFTWARE, NTT, OPEN SOFTWARE FOUNDATION, AND SONY
+CORPORATION DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT
+SHALL OMRON, NTT SOFTWARE, NTT, OPEN SOFTWARE FOUNDATION, OR SONY
+CORPORATION BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright 2000 by Bruno Haible
+
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation, and that the name of Bruno Haible not
+be used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.  Bruno Haible
+makes no representations about the suitability of this software for
+any purpose.  It is provided "as is" without express or implied
+warranty.
+
+Bruno Haible DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+NO EVENT SHALL Bruno Haible BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+OR PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright © 2003 Keith Packard
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the name of Keith Packard not be used in
+advertising or publicity pertaining to distribution of the software without
+specific, written prior permission.  Keith Packard makes no
+representations about the suitability of this software for any purpose.  It
+is provided "as is" without express or implied warranty.
+
+KEITH PACKARD DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
+EVENT SHALL KEITH PACKARD BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+		----------------------------------------
+
+Copyright (c) 2007-2009, Troy D. Hanson
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-2.3  NVIDIA Corp
+		----------------------------------------
+
+Copyright 1992, 1993 by TOSHIBA Corp.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted, provided
+that the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the name of TOSHIBA not be used in advertising
+or publicity pertaining to distribution of the software without specific,
+written prior permission. TOSHIBA make no representations about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+TOSHIBA DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+TOSHIBA BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.
+
+
+		----------------------------------------
+
+Copyright IBM Corporation 1993
+
+All Rights Reserved
+
+License to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of IBM not be
+used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission.
+
+IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS, AND
+NONINFRINGEMENT OF THIRD PARTY RIGHTS, IN NO EVENT SHALL
+IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.
+
+		----------------------------------------
+
+Copyright 1990, 1991 by OMRON Corporation, NTT Software Corporation,
+                     and Nippon Telegraph and Telephone Corporation
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the names of OMRON, NTT Software, and NTT
+not be used in advertising or publicity pertaining to distribution of the
+software without specific, written prior permission. OMRON, NTT Software,
+and NTT make no representations about the suitability of this
+software for any purpose.  It is provided "as is" without express or
+implied warranty.
+
+OMRON, NTT SOFTWARE, AND NTT, DISCLAIM ALL WARRANTIES WITH REGARD
+TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS, IN NO EVENT SHALL OMRON, NTT SOFTWARE, OR NTT, BE
+LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-Copyright (c) 1996 NVIDIA, Corp.  All rights reserved.
-
-NOTICE TO USER: The source code is copyrighted under U.S. and international
-laws.  NVIDIA, Corp. of Sunnyvale, California owns the copyright and as
-design patents pending on the design and interface of the NV chips.  Users
-and possessors of this source code are hereby granted a nonexclusive, roy-
-alty-free copyright and design patent license to use this code in individual
-and commercial software.
-
-Any use of this source code must include, in the user documentation and
-internal comments to the code, notices to the end user as follows:
-
-Copyright (c) 1996 NVIDIA, Corp.  NVIDIA design patents pending in the U.S.
-and foreign countries.
-
-NVIDIA, CORP.  MAKES NO REPRESENTATION ABOUT THE SUITABILITY OF THIS SOURCE
-CODE FOR ANY PURPOSE.  IT IS PROVIDED "AS IS" WITHOUT EXPRESS OR IMPLIED WAR-
-RANTY OF ANY KIND.  NVIDIA, CORP. DISCLAIMS ALL WARRANTIES WITH REGARD TO
-THIS SOURCE CODE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL NVIDIA, CORP.  BE LIABLE
-FOR ANY SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, OR ANY DAM-
-AGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOURCE CODE.
-
-2.4  GLX Public License
-
-GLX PUBLIC LICENSE (Version 1.0 (2/11/99)) ("License")
-
-Subject to any third party claims, Silicon Graphics, Inc. ("SGI") hereby
-grants permission to Recipient (defined below), under Recipient's copyrights
-in the Original Software (defined below), to use, copy, modify, merge, pub-
-lish, distribute, sublicense and/or sell copies of Subject Software (defined
-below), and to permit persons to whom the Subject Software is furnished in
-accordance with this License to do the same, subject to all of the following
-terms and conditions, which Recipient accepts by engaging in any such use,
-copying, modifying, merging, publishing, distributing, sublicensing or sell-
-ing:
-
-1. Definitions.
-
-     (a) "Original Software" means source code of computer software code
-     which is described in Exhibit A as Original Software.
-
-     (b) "Modifications" means any addition to or deletion from the sub-
-     stance or structure of either the Original Software or any previous
-     Modifications. When Subject Software is released as a series of
-     files, a Modification means (i) any addition to or deletion from
-     the contents of a file containing Original Software or previous
-     Modifications and (ii) any new file that contains any part of the
-     Original Code or previous Modifications.
-
-     (c) "Subject Software" means the Original Software or Modifications
-     or the combination of the Original Software and Modifications, or
-     portions of any of the foregoing.
-
-     (d) "Recipient" means an individual or a legal entity exercising
-     rights under, and complying with all of the terms of, this License.
-     For legal entities, "Recipient" includes any entity which controls,
-     is controlled by, or is under common control with Recipient. For
-     purposes of this definition, "control" of an entity means (a) the
-     power, direct or indirect, to direct or manage such entity, or (b)
-     ownership of fifty percent (50%) or more of the outstanding shares
-     or beneficial ownership of such entity.
-
-2. Redistribution of Source Code Subject to These Terms. Redistributions of
-Subject Software in source code form must retain the notice set forth in
-Exhibit A, below, in every file. A copy of this License must be included in
-any documentation for such Subject Software where the recipients' rights
-relating to Subject Software are described. Recipient may distribute the
-source code version of Subject Software under a license of Recipient's
-choice, which may contain terms different from this License, provided that
-(i) Recipient is in compliance with the terms of this License, and (ii) the
-license terms include this Section 2 and Sections 3, 4, 7, 8, 10, 12 and 13
-of this License, which terms may not be modified or superseded by any other
-terms of such license. If Recipient distributes the source code version under
-a different license Recipient must make it absolutely clear that any terms
-which differ from this License are offered by Recipient alone, not by SGI.
-Recipient hereby agrees to indemnify SGI for any liability incurred by SGI as
-a result of any such terms Recipient offers.
-
-3. Redistribution in Executable Form. The notice set forth in Exhibit A must
-be conspicuously included in any notice in an executable version of Subject
-Software, related documentation or collateral in which Recipient describes
-the user's rights relating to the Subject Software. Recipient may distribute
-the executable version of Subject Software under a license of Recipient's
-choice, which may contain terms different from this License, provided that
-(i) Recipient is in compliance with the terms of this License, and (ii) the
-license terms include this Section 3 and Sections 4, 7, 8, 10, 12 and 13 of
-this License, which terms may not be modified or superseded by any other
-terms of such license. If Recipient distributes the executable version under
-a different license Recipient must make it absolutely clear that any terms
-which differ from this License are offered by Recipient alone, not by SGI.
-Recipient hereby agrees to indemnify SGI for any liability incurred by SGI as
-a result of any such terms Recipient offers.
-
-4. Termination. This License and the rights granted hereunder will terminate
-automatically if Recipient fails to comply with terms herein and fails to
-cure such breach within 30 days of the breach. Any sublicense to the Subject
-Software which is properly granted shall survive any termination of this
-License absent termination by the terms of such sublicense. Provisions which,
-by their nature, must remain in effect beyond the termination of this License
-shall survive.
-
-5. No Trademark Rights. This License does not grant any rights to use any
-trade name, trademark or service mark whatsoever. No trade name, trademark or
-service mark of SGI may be used to endorse or promote products derived from
-the Subject Software without prior written permission of SGI.
-
-6. No Other Rights. This License does not grant any rights with respect to
-the OpenGL API or to any software or hardware implementation thereof or to
-any other software whatsoever, nor shall any other rights or licenses not
-expressly granted hereunder arise by implication, estoppel or otherwise with
-respect to the Subject Software. Title to and ownership of the Original Soft-
-ware at all times remains with SGI. All rights in the Original Software not
-expressly granted under this License are reserved.
-
-7. Compliance with Laws; Non-Infringement. Recipient shall comply with all
-applicable laws and regulations in connection with use and distribution of
-the Subject Software, including but not limited to, all export and import
-control laws and regulations of the U.S. government and other countries.
-Recipient may not distribute Subject Software that (i) in any way infringes
-(directly or contributorily) the rights (including patent, copyright, trade
-secret, trademark or other intellectual property rights of any kind) of any
-other person or entity or (ii) breaches any representation or warranty,
-express, implied or statutory, which under any applicable law it might be
-deemed to have been distributed.
-
-8. Claims of Infringement. If Recipient at any time has knowledge of any one
-or more third party claims that reproduction, modification, use, distribu-
-tion, import or sale of Subject Software (including particular functionality
-or code incorporated in Subject Software) infringes the third party's intel-
-lectual property rights, Recipient must place in a well-identified web page
-bearing the title "LEGAL" a description of each such claim and a description
-of the party making each such claim in sufficient detail that a user of the
-Subject Software will know whom to contact regarding the claim. Also, upon
-gaining such knowledge of any such claim, Recipient must conspicuously
-include the URL for such web page in the Exhibit A notice required under Sec-
-tions 2 and 3, above, and in the text of any related documentation, license
-agreement or collateral in which Recipient describes end user's rights relat-
-ing to the Subject Software. If Recipient obtains such knowledge after it
-makes Subject Software available to any other person or entity, Recipient
-shall take other steps (such as notifying appropriate mailing lists or news-
-groups) reasonably calculated to inform those who received the Subject Soft-
-ware that new knowledge has been obtained.
-
-9. DISCLAIMER OF WARRANTY. SUBJECT SOFTWARE IS PROVIDED ON AN "AS IS" BASIS,
-WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT
-LIMITATION, WARRANTIES THAT THE SUBJECT SOFTWARE IS FREE OF DEFECTS, MER-
-CHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON- INFRINGING. SGI ASSUMES NO
-RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE. SHOULD ANY SOFTWARE
-PROVE DEFECTIVE IN ANY RESPECT, SGI ASSUMES NO COST OR LIABILITY FOR ANY SER-
-VICING, REPAIR OR CORRECTION.  THIS DISCLAIMER OF WARRANTY CONSTITUTES AN
-ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY SUBJECT SOFTWARE IS AUTHORIZED
-HEREUNDER EXCEPT UNDER THIS DISCLAIMER.
-
-10. LIMITATION OF LIABILITY. UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THE-
-ORY, WHETHER TORT (INCLUDING, WITHOUT LIMITATION, NEGLIGENCE OR STRICT LIA-
-BILITY), CONTRACT, OR OTHERWISE, SHALL SGI OR ANY SGI LICENSOR BE LIABLE FOR
-ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY
-CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK
-STOPPAGE, LOSS OF DATA, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER
-COMMERCIAL DAMAGES OR LOSSES, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF
-THE POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF LIABILITY SHALL NOT APPLY
-TO LIABILITY FOR DEATH OR PERSONAL INJURY RESULTING FROM SGI's NEGLIGENCE TO
-THE EXTENT APPLICABLE LAW PROHIBITS SUCH LIMITATION. SOME JURISDICTIONS DO
-NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES,
-SO THAT EXCLUSION AND LIMITATION MAY NOT APPLY TO RECIPIENT.
-
-11. Indemnity. Recipient shall be solely responsible for damages arising,
-directly or indirectly, out of its utilization of rights under this License.
-Recipient will defend, indemnify and hold harmless Silicon Graphics, Inc.
-from and against any loss, liability, damages, costs or expenses (including
-the payment of reasonable attorneys fees) arising out of Recipient's use,
-modification, reproduction and distribution of the Subject Software or out of
-any representation or warranty made by Recipient.
-
-12. U.S. Government End Users. The Subject Software is a "commercial item"
-consisting of "commercial computer software" as such terms are defined in
-title 48 of the Code of Federal Regulations and all U.S.  Government End
-Users acquire only the rights set forth in this License and are subject to
-the terms of this License.
-
-13. Miscellaneous. This License represents the complete agreement concerning
-subject matter hereof. If any provision of this License is held to be unen-
-forceable, such provision shall be reformed so as to achieve as nearly as
-possible the same economic effect as the original provision and the remainder
-of this License will remain in effect. This License shall be governed by and
-construed in accordance with the laws of the United States and the State of
-California as applied to agreements entered into and to be performed entirely
-within California between California residents. Any litigation relating to
-this License shall be subject to the exclusive jurisdiction of the Federal
-Courts of the Northern District of California (or, absent subject matter
-jurisdiction in such courts, the courts of the State of California), with
-venue lying exclusively in Santa Clara County, California, with the losing
-party responsible for costs, including without limitation, court costs and
-reasonable attorneys fees and expenses. The application of the United Nations
-Convention on Contracts for the International Sale of Goods is expressly
-excluded. Any law or regulation which provides that the language of a con-
-tract shall be construed against the drafter shall not apply to this License.
-
-Exhibit A
-
-The contents of this file are subject to Sections 2, 3, 4, 7, 8, 10, 12 and
-13 of the GLX Public License Version 1.0 (the "License"). You may not use
-this file except in compliance with those sections of the License. You may
-obtain a copy of the License at Silicon Graphics, Inc., attn: Legal Services,
-2011 N. Shoreline Blvd., Mountain View, CA 94043 or at
-http://www.sgi.com/software/opensource/glx/license.html.
-
-Software distributed under the License is distributed on an "AS IS" basis.
-ALL WARRANTIES ARE DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED
-WARRANTIES OF MERCHANTABILITY, OF FITNESS FOR A PARTICULAR PURPOSE OR OF NON-
-INFRINGEMENT. See the License for the specific language governing rights and
-limitations under the License.
-
-The Original Software is GLX version 1.2 source code, released February,
-1999. The developer of the Original Software is Silicon Graphics, Inc.  Those
-portions of the Subject Software created by Silicon Graphics, Inc.  are Copy-
-right (c) 1991-9 Silicon Graphics, Inc. All Rights Reserved.
-
-2.5  CID Font Code Public License
-
-CID FONT CODE PUBLIC LICENSE (Version 1.0 (3/31/99))("License")
-
-Subject to any applicable third party claims, Silicon Graphics, Inc. ("SGI")
-hereby grants permission to Recipient (defined below), under SGI's copyrights
-in the Original Software (defined below), to use, copy, modify, merge, pub-
-lish, distribute, sublicense and/or sell copies of Subject Software (defined
-below) in both source code and executable form, and to permit persons to whom
-the Subject Software is furnished in accordance with this License to do the
-same, subject to all of the following terms and conditions, which Recipient
-accepts by engaging in any such use, copying, modifying, merging, publica-
-tion, distributing, sublicensing or selling:
-
-1. Definitions.
-
-     a. "Original Software" means source code of computer software code
-     that is described in Exhibit A as Original Software.
-
-     b. "Modifications" means any addition to or deletion from the sub-
-     stance or structure of either the Original Software or any previous
-     Modifications. When Subject Software is released as a series of
-     files, a Modification means (i) any addition to or deletion from
-     the contents of a file containing Original Software or previous
-     Modifications and (ii) any new file that contains any part of the
-     Original Code or previous Modifications.
-
-     c. "Subject Software" means the Original Software or Modifications
-     or the combination of the Original Software and Modifications, or
-     portions of any of the foregoing.
-
-     d. "Recipient" means an individual or a legal entity exercising
-     rights under the terms of this License. For legal entities, "Recip-
-     ient" includes any entity that controls, is controlled by, or is
-     under common control with Recipient. For purposes of this defini-
-     tion, "control" of an entity means (i) the power, direct or indi-
-     rect, to direct or manage such entity, or (ii) ownership of fifty
-     percent (50%) or more of the outstanding shares or beneficial own-
-     ership of such entity.
-
-     e. "Required Notice" means the notice set forth in Exhibit A to
-     this License.
-
-     f. "Accompanying Technology" means any software or other technology
-     that is not a Modification and that is distributed or made publicly
-     available by Recipient with the Subject Software.  Separate soft-
-     ware files that do not contain any Original Software or any previ-
-     ous Modification shall not be deemed a Modification, even if such
-     software files are aggregated as part of a product, or in any
-     medium of storage, with any file that does contain Original Soft-
-     ware or any previous Modification.
-
-2. License Terms. All distribution of the Subject Software must be made sub-
-ject to the terms of this License. A copy of this License and the Required
-Notice must be included in any documentation for Subject Software where
-Recipient's rights relating to Subject Software and/or any Accompanying Tech-
-nology are described. Distributions of Subject Software in source code form
-must also include the Required Notice in every file distributed. In addition,
-a ReadMe file entitled "Important Legal Notice" must be distributed with each
-distribution of one or more files that incorporate Subject Software. That
-file must be included with distributions made in both source code and exe-
-cutable form. A copy of the License and the Required Notice must be included
-in that file.  Recipient may distribute Accompanying Technology under a
-license of Recipient's choice, which may contain terms different from this
-License, provided that (i) Recipient is in compliance with the terms of this
-License, (ii) such other license terms do not modify or supersede the terms
-of this License as applicable to the Subject Software, (iii) Recipient hereby
-indemnifies SGI for any liability incurred by SGI as a result of the distri-
-bution of Accompanying Technology or the use of other license terms.
-
-3. Termination. This License and the rights granted hereunder will terminate
-automatically if Recipient fails to comply with terms herein and fails to
-cure such breach within 30 days of the breach. Any sublicense to the Subject
-Software that is properly granted shall survive any termination of this
-License absent termination by the terms of such sublicense. Provisions which,
-by their nature, must remain in effect beyond the termination of this License
-shall survive.
-
-4. Trademark Rights. This License does not grant any rights to use any trade
-name, trademark or service mark whatsoever. No trade name, trademark or ser-
-vice mark of SGI may be used to endorse or promote products derived from or
-incorporating any Subject Software without prior written permission of SGI.
-
-5. No Other Rights. No rights or licenses not expressly granted hereunder
-shall arise by implication, estoppel or otherwise. Title to and ownership of
-the Original Software at all times remains with SGI. All rights in the Origi-
-nal Software not expressly granted under this License are reserved.
-
-6. Compliance with Laws; Non-Infringement. Recipient shall comply with all
-applicable laws and regulations in connection with use and distribution of
-the Subject Software, including but not limited to, all export and import
-control laws and regulations of the U.S. government and other countries.
-Recipient may not distribute Subject Software that (i) in any way infringes
-(directly or contributorily) the rights (including patent, copyright, trade
-secret, trademark or other intellectual property rights of any kind) of any
-other person or entity, or (ii) breaches any representation or warranty,
-express, implied or statutory, which under any applicable law it might be
-deemed to have been distributed.
-
-7. Claims of Infringement. If Recipient at any time has knowledge of any one
-or more third party claims that reproduction, modification, use, distribu-
-tion, import or sale of Subject Software (including particular functionality
-or code incorporated in Subject Software) infringes the third party's intel-
-lectual property rights, Recipient must place in a well-identified web page
-bearing the title "LEGAL" a description of each such claim and a description
-of the party making each such claim in sufficient detail that a user of the
-Subject Software will know whom to contact regarding the claim. Also, upon
-gaining such knowledge of any such claim, Recipient must conspicuously
-include the URL for such web page in the Required Notice, and in the text of
-any related documentation, license agreement or collateral in which Recipient
-describes end user's rights relating to the Subject Software. If Recipient
-obtains such knowledge after it makes Subject Software available to any other
-person or entity, Recipient shall take other steps (such as notifying appro-
-priate mailing lists or newsgroups) reasonably calculated to provide such
-knowledge to those who received the Subject Software.
-
-8. DISCLAIMER OF WARRANTY. SUBJECT SOFTWARE IS PROVIDED ON AN "AS IS" BASIS,
-WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT
-LIMITATION, WARRANTIES THAT THE SUBJECT SOFTWARE IS FREE OF DEFECTS, MER-
-CHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. SGI ASSUMES NO
-RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE. SHOULD ANY SOFTWARE
-PROVE DEFECTIVE IN ANY RESPECT, SGI ASSUMES NO COST OR LIABILITY FOR ANY SER-
-VICING, REPAIR OR CORRECTION.  THIS DISCLAIMER OF WARRANTY CONSTITUTES AN
-ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY SUBJECT SOFTWARE IS AUTHORIZED
-HEREUNDER EXCEPT UNDER THIS DISCLAIMER.
-
-9. LIMITATION OF LIABILITY. UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY,
-WHETHER TORT (INCLUDING, WITHOUT LIMITATION, NEGLIGENCE OR STRICT LIABILITY),
-CONTRACT, OR OTHERWISE, SHALL SGI OR ANY SGI LICENSOR BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SUBJECT SOFTWARE OR
-THE USE OR OTHER DEALINGS IN THE SUBJECT SOFTWARE. SOME JURISDICTIONS DO NOT
-ALLOW THE EXCLUSION OR LIMITATION OF CERTAIN DAMAGES, SO THIS EXCLUSION AND
-LIMITATION MAY NOT APPLY TO RECIPIENT TO THE EXTENT SO DISALLOWED.
-
-10. Indemnity. Recipient shall be solely responsible for damages arising,
-directly or indirectly, out of its utilization of rights under this License.
-Recipient will defend, indemnify and hold SGI and its successors and assigns
-harmless from and against any loss, liability, damages, costs or expenses
-(including the payment of reasonable attorneys fees) arising out of (Recipi-
-ent's use, modification, reproduction and distribution of the Subject Soft-
-ware or out of any representation or warranty made by Recipient.
-
-11. U.S. Government End Users. The Subject Software is a "commercial item"
-consisting of "commercial computer software" as such terms are defined in
-title 48 of the Code of Federal Regulations and all U.S. Government End Users
-acquire only the rights set forth in this License and are subject to the
-terms of this License.
-
-12. Miscellaneous. This License represents the complete agreement concerning
-subject matter hereof. If any provision of this License is held to be unen-
-forceable by any judicial or administrative authority having proper jurisdic-
-tion with respect thereto, such provision shall be reformed so as to achieve
-as nearly as possible the same economic effect as the original provision and
-the remainder of this License will remain in effect. This License shall be
-governed by and construed in accordance with the laws of the United States
-and the State of California as applied to agreements entered into and to be
-performed entirely within California between California residents. Any liti-
-gation relating to this License shall be subject to the exclusive jurisdic-
-tion of the Federal Courts of the Northern District of California (or, absent
-subject matter jurisdiction in such courts, the courts of the State of Cali-
-fornia), with venue lying exclusively in Santa Clara County, California, with
-the losing party responsible for costs, including without limitation, court
-costs and reasonable attorneys fees and expenses. The application of the
-United Nations Convention on Contracts for the International Sale of Goods is
-expressly excluded. Any law or regulation that provides that the language of
-a contract shall be construed against the drafter shall not apply to this
-License.
-
-Exhibit A
-
-Copyright (c) 1994-1999 Silicon Graphics, Inc.
-
-The contents of this file are subject to the CID Font Code Public License
-Version 1.0 (the "License"). You may not use this file except in compliance
-with the License. You may obtain a copy of the License at Silicon Graphics,
-Inc., attn: Legal Services, 2011 N. Shoreline Blvd., Mountain View, CA 94043
-or at http://www.sgi.com/software/opensource/cid/license.html
-
-Software distributed under the License is distributed on an "AS IS" basis.
-ALL WARRANTIES ARE DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED
-WARRANTIES OF MERCHANTABILITY, OF FITNESS FOR A PARTICULAR PURPOSE OR OF NON-
-INFRINGEMENT. See the License for the specific language governing rights and
-limitations under the License.
-
-The Original Software (as defined in the License) is CID font code that was
-developed by Silicon Graphics, Inc. Those portions of the Subject Software
-(as defined in the License) that were created by Silicon Graphics, Inc. are
-Copyright (c) 1994-1999 Silicon Graphics, Inc. All Rights Reserved.
-
-[NOTE: When using this text in connection with Subject Software delivered
-solely in object code form, Recipient may replace the words "this file" with
-"this software" in both the first and second sentences.]
-
-********************************************************************************
-
-XFree86's LICENSE document does not appear to be completely
-comprehensive.
-
-Many files appear to be licensed under the "SGI FREE SOFTWARE
-LICENSE B (Version 1.1 [02/22/2000])":
-
-SGI FREE SOFTWARE LICENSE B (Version 1.1 [02/22/2000])
-
-1. Definitions.
-
-    1.1. "Additional Notice Provisions" means such additional provisions as
-    appear in the Notice in Original Code under the heading "Additional
-    Notice Provisions."
-
-    1.2. "Covered Code" means the Original Code or Modifications, or any
-    combination thereof.
-
-    1.3. "Hardware" means any physical device that accepts input, processes
-    input, stores the results of processing, and/or provides output.
-
-    1.4. "Larger Work" means a work that combines Covered Code or portions
-    thereof with code not governed by the terms of this License.
-
-    1.5. "Licensable" means having the right to grant, to the maximum
-    extent possible, whether at the time of the initial grant or
-    subsequently acquired, any and all of the rights conveyed herein.
-
-    1.6. "License" means this document.
-
-    1.7. "Licensed Patents" means patent claims Licensable by SGI that are
-    infringed by the use or sale of Original Code or any Modifications
-    provided by SGI, or any combination thereof.
-
-    1.8. "Modifications" means any addition to or deletion from the
-    substance or structure of the Original Code or any previous
-    Modifications. When Covered Code is released as a series of files, a
-    Modification is:
-
-        A. Any addition to the contents of a file containing Original Code
-        and/or addition to or deletion from the contents of a file
-        containing previous Modifications.
-
-        B. Any new file that contains any part of the Original Code or
-        previous Modifications.
-
-    1.9. "Notice" means any notice in Original Code or Covered Code, as
-    required by and in compliance with this License.
-
-    1.10. "Original Code" means source code of computer software code that
-    is described in the source code Notice required by Exhibit A as
-    Original Code, and updates and error corrections specifically thereto.
-
-    1.11. "Recipient" means an individual or a legal entity exercising
-    rights under, and complying with all of the terms of, this License or a
-    future version of this License issued under Section 8.  For legal
-    entities, "Recipient" includes any entity that controls, is controlled
-    by, or is under common control with Recipient. For purposes of this
-    definition, "control" of an entity means (a) the power, direct or
-    indirect, to direct or manage such entity, or (b) ownership of fifty
-    percent (50%) or more of the outstanding shares or beneficial ownership
-    of such entity.
-
-    1.12. "Recipient Patents" means patent claims Licensable by a Recipient
-    that are infringed by the use or sale of Original Code or any
-    Modifications provided by SGI, or any combination thereof.
-
-    1.13. "SGI" means Silicon Graphics, Inc.
-
-    1.14. "SGI Patents" means patent claims Licensable by SGI other than
-    the Licensed Patents.
-
-2. License Grant and Restrictions.
-
-    2.1. SGI License Grant. Subject to the terms of this License and any
-    third party intellectual property claims, for the duration of
-    intellectual property protections inherent in the Original Code, SGI
-    hereby grants Recipient a worldwide, royalty-free, non-exclusive
-    license, to do the following: (i) under copyrights Licensable by SGI,
-    to reproduce, distribute, create derivative works from, and, to the
-    extent applicable, display and perform the Original Code and/or any
-    Modifications provided by SGI alone and/or as part of a Larger Work;
-    and (ii) under any Licensable Patents, to make, have made, use, sell,
-    offer for sale, import and/or otherwise transfer the Original Code
-    and/or any Modifications provided by SGI. Recipient accepts the terms
-    and conditions of this License by undertaking any of the aforementioned
-    actions. The patent license shall apply to the Covered Code if, at the
-    time any related Modification is added, such addition of the
-    Modification causes such combination to be covered by the Licensed
-    Patents. The patent license in Section 2.1(ii) shall not apply to any
-    other combinations that include the Modification.  No patent license is
-    provided under SGI Patents for infringements of SGI Patents by
-    Modifications not provided by SGI or combinations of Original Code and
-    Modifications not provided by SGI.
-
-    2.2. Recipient License Grant. Subject to the terms of this License and
-    any third party intellectual property claims, Recipient hereby grants
-    SGI and any other Recipients a worldwide, royalty-free, non-exclusive
-    license, under any Recipient Patents, to make, have made, use, sell,
-    offer for sale, import and/or otherwise transfer the Original Code
-    and/or any Modifications provided by SGI.
-
-    2.3. No License For Hardware Implementations. The licenses granted in
-    Section 2.1 and 2.2 are not applicable to implementation in Hardware of
-    the algorithms embodied in the Original Code or any Modifications
-    provided by SGI .
-
-3. Redistributions.
-
-    3.1. Retention of Notice/Copy of License. The Notice set forth in
-    Exhibit A, below, must be conspicuously retained or included in any and
-    all redistributions of Covered Code. For distributions of the Covered
-    Code in source code form, the Notice must appear in every file that can
-    include a text comments field; in executable form, the Notice and a
-    copy of this License must appear in related documentation or collateral
-    where the Recipient's rights relating to Covered Code are described.
-    Any Additional Notice Provisions which actually appears in the Original
-    Code must also be retained or included in any and all redistributions
-    of Covered Code.
-
-    3.2. Alternative License. Provided that Recipient is in compliance with
-    the terms of this License, Recipient may, so long as without derogation
-    of any of SGI's rights in and to the Original Code, distribute the
-    source code and/or executable version(s) of Covered Code under (1) this
-    License; (2) a license identical to this License but for only such
-    changes as are necessary in order to clarify Recipient's role as
-    licensor of Modifications; and/or (3) a license of Recipient's
-    choosing, containing terms different from this License, provided that
-    the license terms include this Section 3 and Sections 4, 6, 7, 10, 12,
-    and 13, which terms may not be modified or superseded by any other
-    terms of such license. If Recipient elects to use any license other
-    than this License, Recipient must make it absolutely clear that any of
-    its terms which differ from this License are offered by Recipient
-    alone, and not by SGI. It is emphasized that this License is a limited
-    license, and, regardless of the license form employed by Recipient in
-    accordance with this Section 3.2, Recipient may relicense only such
-    rights, in Original Code and Modifications by SGI, as it has actually
-    been granted by SGI in this License.
-
-    3.3. Indemnity. Recipient hereby agrees to indemnify SGI for any
-    liability incurred by SGI as a result of any such alternative license
-    terms Recipient offers.
-
-4. Termination. This License and the rights granted hereunder will
-terminate automatically if Recipient breaches any term herein and fails to
-cure such breach within 30 days thereof. Any sublicense to the Covered Code
-that is properly granted shall survive any termination of this License,
-absent termination by the terms of such sublicense. Provisions that, by
-their nature, must remain in effect beyond the termination of this License,
-shall survive.
-
-5. No Trademark Or Other Rights. This License does not grant any rights to:
-(i) any software apart from the Covered Code, nor shall any other rights or
-licenses not expressly granted hereunder arise by implication, estoppel or
-otherwise with respect to the Covered Code; (ii) any trade name, trademark
-or service mark whatsoever, including without limitation any related right
-for purposes of endorsement or promotion of products derived from the
-Covered Code, without prior written permission of SGI; or (iii) any title
-to or ownership of the Original Code, which shall at all times remains with
-SGI. All rights in the Original Code not expressly granted under this
-License are reserved.
-
-6. Compliance with Laws; Non-Infringement. There are various worldwide
-laws, regulations, and executive orders applicable to dispositions of
-Covered Code, including without limitation export, re-export, and import
-control laws, regulations, and executive orders, of the U.S. government and
-other countries, and Recipient is reminded it is obliged to obey such laws,
-regulations, and executive orders. Recipient may not distribute Covered
-Code that (i) in any way infringes (directly or contributorily) any
-intellectual property rights of any kind of any other person or entity or
-(ii) breaches any representation or warranty, express, implied or
-statutory, to which, under any applicable law, it might be deemed to have
-been subject.
-
-7. Claims of Infringement. If Recipient learns of any third party claim
-that any disposition of Covered Code and/or functionality wholly or
-partially infringes the third party's intellectual property rights,
-Recipient will promptly notify SGI of such claim.
-
-8. Versions of the License. SGI may publish revised and/or new versions of
-the License from time to time, each with a distinguishing version number.
-Once Covered Code has been published under a particular version of the
-License, Recipient may, for the duration of the license, continue to use it
-under the terms of that version, or choose to use such Covered Code under
-the terms of any subsequent version published by SGI. Subject to the
-provisions of Sections 3 and 4 of this License, only SGI may modify the
-terms applicable to Covered Code created under this License.
-
-9. DISCLAIMER OF WARRANTY. COVERED CODE IS PROVIDED "AS IS." ALL EXPRESS
-AND IMPLIED WARRANTIES AND CONDITIONS ARE DISCLAIMED, INCLUDING, WITHOUT
-LIMITATION, ANY IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY,
-SATISFACTORY QUALITY, FITNESS FOR A PARTICULAR PURPOSE, AND
-NON-INFRINGEMENT. SGI ASSUMES NO RISK AS TO THE QUALITY AND PERFORMANCE OF
-THE SOFTWARE. SHOULD THE SOFTWARE PROVE DEFECTIVE IN ANY RESPECT, SGI
-ASSUMES NO COST OR LIABILITY FOR SERVICING, REPAIR OR CORRECTION. THIS
-DISCLAIMER OF WARRANTY IS AN ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY
-COVERED CODE IS AUTHORIZED HEREUNDER EXCEPT SUBJECT TO THIS DISCLAIMER.
-10. LIMITATION OF LIABILITY. UNDER NO CIRCUMSTANCES NOR LEGAL THEORY,
-WHETHER TORT (INCLUDING, WITHOUT LIMITATION, NEGLIGENCE OR STRICT
-LIABILITY), CONTRACT, OR OTHERWISE, SHALL SGI OR ANY SGI LICENSOR BE LIABLE
-FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF
-ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL,
-WORK STOPPAGE, LOSS OF DATA, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND
-ALL OTHER COMMERCIAL DAMAGES OR LOSSES, EVEN IF SUCH PARTY SHALL HAVE BEEN
-INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF LIABILITY
-SHALL NOT APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY RESULTING FROM
-SGI's NEGLIGENCE TO THE EXTENT APPLICABLE LAW PROHIBITS SUCH LIMITATION.
-SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL
-OR CONSEQUENTIAL DAMAGES, SO THAT EXCLUSION AND LIMITATION MAY NOT APPLY TO
-RECIPIENT.
-
-11. Indemnity. Recipient shall be solely responsible for damages arising,
-directly or indirectly, out of its utilization of rights under this
-License. Recipient will defend, indemnify and hold harmless Silicon
-Graphics, Inc. from and against any loss, liability, damages, costs or
-expenses (including the payment of reasonable attorneys fees) arising out
-of Recipient's use, modification, reproduction and distribution of the
-Covered Code or out of any representation or warranty made by Recipient.
-
-12. U.S. Government End Users. The Covered Code is a "commercial item"
-consisting of "commercial computer software" as such terms are defined in
-title 48 of the Code of Federal Regulations and all U.S. Government End
-Users acquire only the rights set forth in this License and are subject to
-the terms of this License.
-
-13. Miscellaneous. This License represents the complete agreement
-concerning the its subject matter. If any provision of this License is held
-to be unenforceable, such provision shall be reformed so as to achieve as
-nearly as possible the same legal and economic effect as the original
-provision and the remainder of this License will remain in effect. This
-License shall be governed by and construed in accordance with the laws of
-the United States and the State of California as applied to agreements
-entered into and to be performed entirely within California between
-California residents. Any litigation relating to this License shall be
-subject to the exclusive jurisdiction of the Federal Courts of the Northern
-District of California (or, absent subject matter jurisdiction in such
-courts, the courts of the State of California), with venue lying
-exclusively in Santa Clara County, California, with the losing party
-responsible for costs, including without limitation, court costs and
-reasonable attorneys fees and expenses. The application of the United
-Nations Convention on Contracts for the International Sale of Goods is
-expressly excluded. Any law or regulation that provides that the language
-of a contract shall be construed against the drafter shall not apply to
-this License.
-
-Exhibit A
-
-License Applicability. Except to the extent portions of this file are made
-subject to an alternative license as permitted in the SGI Free Software
-License B, Version 1.1 (the "License"), the contents of this file are
-subject only to the provisions of the License. You may not use this file
-except in compliance with the License. You may obtain a copy of the License
-at Silicon Graphics, Inc., attn: Legal Services, 1600 Amphitheatre Parkway,
-Mountain View, CA 94043-1351, or at: http://oss.sgi.com/projects/FreeB
-
-Note that, as provided in the License, the Software is distributed on an
-"AS IS" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS
-DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND
-CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
-PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-
-Original Code. The Original Code is: [name of software, version number, and
-release date], developed by Silicon Graphics, Inc. The Original Code is
-Copyright (c) [dates of first publication, as appearing in the Notice in
-the Original Code] Silicon Graphics, Inc. Copyright in any portions created
-by third parties is as indicated elsewhere herein. All Rights Reserved.
-Additional Notice Provisions: [such additional provisions, if any, as
-appear in the Notice in the Original Code under the heading "Additional
-Notice Provisions"]
-
-vim:set ai et sw=4 sts=4 tw=72:

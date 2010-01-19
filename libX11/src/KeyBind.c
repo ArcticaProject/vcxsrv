@@ -1,4 +1,3 @@
-/* $Xorg: KeyBind.c,v 1.4 2001/02/09 02:03:34 xorgcvs Exp $ */
 /*
 
 Copyright 1985, 1987, 1998  The Open Group
@@ -24,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/KeyBind.c,v 1.8 2003/05/27 22:26:25 tsi Exp $ */
 
 /* Beware, here be monsters (still under construction... - JG */
 

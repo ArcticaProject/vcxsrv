@@ -1,4 +1,3 @@
-/* $Xorg: Xcmsint.h,v 1.3 2000/08/17 19:45:05 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -29,7 +28,6 @@
  *		(i.e., for API internal use only)
  *
  */
-/* $XFree86: xc/lib/X11/Xcmsint.h,v 3.3 2001/07/25 15:04:44 dawes Exp $ */
 
 #ifndef _XCMSINT_H_
 #define _XCMSINT_H_

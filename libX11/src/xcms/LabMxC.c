@@ -1,4 +1,3 @@
-/* $Xorg: LabMxC.c,v 1.3 2000/08/17 19:44:40 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -33,7 +32,6 @@
  *		querying routine.
  *
  */
-/* $XFree86: xc/lib/X11/LabMxC.c,v 1.3 2001/01/17 19:41:39 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

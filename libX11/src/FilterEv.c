@@ -1,4 +1,3 @@
-/* $Xorg: FilterEv.c,v 1.4 2001/02/09 02:03:33 xorgcvs Exp $ */
 
  /*
   * Copyright 1990, 1991 by OMRON Corporation
@@ -53,7 +52,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/FilterEv.c,v 3.4 2001/07/29 05:01:11 tsi Exp $ */
 
 #define NEED_EVENTS
 #ifdef HAVE_CONFIG_H

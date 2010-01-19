@@ -1,4 +1,3 @@
-/* $Xorg: Font.c,v 1.4 2001/02/09 02:03:33 xorgcvs Exp $ */
 /*
 
 Copyright 1986, 1998  The Open Group
@@ -27,7 +26,6 @@ sale, use or other dealings in this Software without prior written
 authorization from the X Consortium and the XFree86 Project.
 
 */
-/* $XFree86: xc/lib/X11/Font.c,v 1.17 2003/04/13 19:22:16 dawes Exp $ */
 
 #define NEED_REPLIES
 #ifdef HAVE_CONFIG_H

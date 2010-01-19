@@ -1,4 +1,3 @@
-/* $Xorg: PutBEvent.c,v 1.4 2001/02/09 02:03:35 xorgcvs Exp $ */
 /*
 
 Copyright 1986, 1998  The Open Group
@@ -26,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/PutBEvent.c,v 1.3 2001/01/17 19:41:41 dawes Exp $ */
 
 /* XPutBackEvent puts an event back at the head of the queue. */
 #define NEED_EVENTS

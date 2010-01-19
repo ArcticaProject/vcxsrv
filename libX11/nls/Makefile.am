@@ -1,6 +1,7 @@
 x11localedir = $(X11_LOCALEDATADIR)
 
-EXTRA_DIST = locale.alias.pre compose.dir.pre locale.dir.pre
+EXTRA_DIST = locale.alias.pre compose.dir.pre locale.dir.pre \
+	compose-check.pl
 
 x11locale_DATA = locale.alias locale.dir compose.dir
 

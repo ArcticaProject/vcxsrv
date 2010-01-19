@@ -1,4 +1,3 @@
-/* $Xorg: GetHints.c,v 1.5 2001/02/09 02:03:33 xorgcvs Exp $ */
 
 /***********************************************************
 
@@ -46,7 +45,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/GetHints.c,v 1.3 2001/01/17 19:41:36 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

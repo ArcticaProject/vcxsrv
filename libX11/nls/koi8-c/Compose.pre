@@ -3,7 +3,6 @@ XCOMM koi8-c Compose Sequence
 XCOMM
 XCOMM Sequence Definition
 XCOMM
-XCOMM $XFree86: xc/nls/Compose/koi8-c,v 1.1 2000/10/27 18:30:52 dawes Exp $
 XCOMM
 
 XCOMM <Multi_key> Means <Compose>

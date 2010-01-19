@@ -1,4 +1,3 @@
-/* $Xorg: XlcPublic.h,v 1.3 2000/08/17 19:45:06 cpqbld Exp $ */
 /*
  * Copyright 1992, 1993 by TOSHIBA Corp.
  *
@@ -31,7 +30,6 @@
  * Modifier: Takanori Tateno   FUJITSU LIMITED
  *
  */
-/* $XFree86: xc/lib/X11/XlcPublic.h,v 1.11 2003/04/17 02:06:31 dawes Exp $ */
 /*
  * Most of this API is documented in i18n/Framework.PS
  */

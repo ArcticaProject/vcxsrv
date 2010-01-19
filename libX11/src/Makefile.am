@@ -417,7 +417,7 @@ lintlib_src = $(libX11_la_SOURCES) xcms/*.c xkb/*.c
 CLEANFILES += $(lintlib_DATA)
 
 $(LINTLIB): $(libX11_la_SOURCES)
-	$(LINT) -y -oX11 -x $(ALL_LINT_FLAGS) $(lintlib_src)
+	$(AM_V_GEN)$(LINT) -y -oX11 -x $(ALL_LINT_FLAGS) $(lintlib_src)
 endif MAKE_LINT_LIB
 
 #

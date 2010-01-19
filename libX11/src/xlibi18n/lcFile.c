@@ -1,4 +1,3 @@
-/* $Xorg: lcFile.c,v 1.5 2000/12/12 12:44:05 coskrey Exp $ */
 /*
  *
  * Copyright IBM Corporation 1993
@@ -23,7 +22,6 @@
  * SOFTWARE.
  *
 */
-/* $XFree86: xc/lib/X11/lcFile.c,v 3.32 2003/03/25 04:18:09 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -219,7 +217,7 @@ _XlcParsePath(
 #define XLOCALEDIR "/usr/lib/X11/locale"
 #endif
 
-static void
+void
 xlocaledir(
     char *buf,
     int buf_len)

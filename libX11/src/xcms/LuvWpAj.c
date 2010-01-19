@@ -1,4 +1,3 @@
-/* $Xorg: LuvWpAj.c,v 1.3 2000/08/17 19:44:45 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -32,7 +31,6 @@
  *		adjustment of color specifications in the CIE CIELuv.color
  *		space.
  */
-/* $XFree86$ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

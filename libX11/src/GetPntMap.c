@@ -1,4 +1,3 @@
-/* $Xorg: GetPntMap.c,v 1.4 2001/02/09 02:03:33 xorgcvs Exp $ */
 /*
 
 Copyright 1986, 1998  The Open Group
@@ -25,7 +24,6 @@ in this Software without prior written authorization from The Open Group.
 
 */
 
-/* $XFree86: xc/lib/X11/GetPntMap.c,v 1.6 2001/12/14 19:54:01 dawes Exp $ */
 
 #define NEED_REPLIES
 #ifdef HAVE_CONFIG_H

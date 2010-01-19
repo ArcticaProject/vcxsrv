@@ -1,4 +1,3 @@
-/* $Xorg: imLcIm.c,v 1.3 2000/08/17 19:45:14 cpqbld Exp $ */
 /******************************************************************
 
           Copyright 1992, 1993, 1994 by FUJITSU LIMITED
@@ -32,7 +31,6 @@ THIS SOFTWARE.
 	                          frankyling@hgrd01.enet.dec.com
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/imLcIm.c,v 1.12 2003/09/06 14:06:32 pascal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

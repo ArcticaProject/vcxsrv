@@ -1,4 +1,3 @@
-/* $Xorg: ParseGeom.c,v 1.4 2001/02/09 02:03:35 xorgcvs Exp $ */
 
 /*
 
@@ -27,7 +26,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/ParseGeom.c,v 1.3 2001/12/14 19:54:03 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
