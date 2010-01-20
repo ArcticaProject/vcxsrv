@@ -1,8 +1,4 @@
 /*
- * $Xorg: IMWrap.c,v 1.3 2000/08/17 19:44:37 cpqbld Exp $
- */
-
-/*
  * Copyright 1991 by the Open Software Foundation
  * Copyright 1993, 1994 by the Sony Corporation
  *
@@ -57,7 +53,6 @@ from The Open Group.
 
 */
 
-/* $XFree86: xc/lib/X11/IMWrap.c,v 3.8 2001/12/14 19:54:01 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

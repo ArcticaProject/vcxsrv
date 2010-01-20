@@ -1,4 +1,3 @@
-/* $Xorg: uvY.c,v 1.3 2000/08/17 19:45:23 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -35,7 +34,6 @@
  *	DOCUMENTATION
  *		"TekColor Color Management System, System Implementor's Manual"
  */
-/* $XFree86: xc/lib/X11/uvY.c,v 1.3 2001/01/17 19:41:57 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -1,4 +1,3 @@
-XCOMM  $TOG: fcd8859-15 /main/1 1998/05/20 14:49:16 kaleb $
 XCOMM  XLocale Database Sample for fcd/dis/iso 8859-15.
 XCOMM  When Final Committee Draft (FCD) 8859-15 is formalized
 XCOMM  then this file will be renamed iso8859-15.
@@ -6,7 +5,6 @@ XCOMM  This file is provided as preliminary support for the Latin-9
 XCOMM  (a.k.a. Latin-0) character set so that Europeans who want
 XCOMM  the Euro currency character can do so.
 XCOMM 
-XCOMM  $XFree86$
 XCOMM 
 
 XCOMM 

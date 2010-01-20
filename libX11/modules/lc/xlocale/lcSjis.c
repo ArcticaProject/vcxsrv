@@ -1,4 +1,3 @@
-/* $Xorg: lcSjis.c,v 1.3 2000/08/17 19:45:19 cpqbld Exp $ */
 /****************************************************************
 
         Copyright 1992, 1993 by FUJITSU LIMITED
@@ -35,7 +34,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 				makoto@sm.sony.co.jp
 
 *****************************************************************/
-/* $XFree86: xc/lib/X11/lcSjis.c,v 3.9 2002/04/10 16:20:06 tsi Exp $ */
 
 /*
  * A Japanese SJIS locale.

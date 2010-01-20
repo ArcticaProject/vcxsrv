@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/lcUniConv/iso8859_13.h,v 1.1 2000/06/23 19:50:59 dawes Exp $ */
 
 /*
  * ISO-8859-13

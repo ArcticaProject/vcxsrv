@@ -485,7 +485,7 @@ mmx_combine_over_reverse_u (pixman_implementation_t *imp,
     {
 	__m64 d, da;
 	uint32_t s = combine (src, mask);
-	
+
 	d = load8888 (*dest);
 	da = expand_alpha (d);
 	*dest = store8888 (over (d, da, load8888 (s)));
@@ -511,12 +511,12 @@ mmx_combine_in_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 x, a;
-	
+
 	x = load8888 (combine (src, mask));
 	a = load8888 (*dest);
 	a = expand_alpha (a);
 	x = pix_multiply (x, a);
-	
+
 	*dest = store8888 (x);
 
 	++dest;
@@ -540,7 +540,7 @@ mmx_combine_in_reverse_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 x, a;
-	
+
 	x = load8888 (*dest);
 	a = load8888 (combine (src, mask));
 	a = expand_alpha (a);
@@ -568,7 +568,7 @@ mmx_combine_out_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 x, a;
-	
+
 	x = load8888 (combine (src, mask));
 	a = load8888 (*dest);
 	a = expand_alpha (a);
@@ -597,7 +597,7 @@ mmx_combine_out_reverse_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 x, a;
-	
+
 	x = load8888 (*dest);
 	a = load8888 (combine (src, mask));
 	a = expand_alpha (a);
@@ -627,7 +627,7 @@ mmx_combine_atop_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 s, da, d, sia;
-	
+
 	s = load8888 (combine (src, mask));
 	d = load8888 (*dest);
 	sia = expand_alpha (s);
@@ -659,7 +659,7 @@ mmx_combine_atop_reverse_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 s, dia, d, sa;
-	
+
 	s = load8888 (combine (src, mask));
 	d = load8888 (*dest);
 	sa = expand_alpha (s);
@@ -689,7 +689,7 @@ mmx_combine_xor_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 s, dia, d, sia;
-	
+
 	s = load8888 (combine (src, mask));
 	d = load8888 (*dest);
 	sia = expand_alpha (s);
@@ -720,7 +720,7 @@ mmx_combine_add_u (pixman_implementation_t *imp,
     while (dest < end)
     {
 	__m64 s, d;
-	
+
 	s = load8888 (combine (src, mask));
 	d = load8888 (*dest);
 	s = pix_add (s, d);
@@ -785,7 +785,7 @@ mmx_combine_src_ca (pixman_implementation_t *imp,
     {
 	__m64 a = load8888 (*mask);
 	__m64 s = load8888 (*src);
-	
+
 	s = pix_multiply (s, a);
 	*dest = store8888 (s);
 
@@ -864,7 +864,7 @@ mmx_combine_in_ca (pixman_implementation_t *imp,
 	__m64 s = load8888 (*src);
 	__m64 d = load8888 (*dest);
 	__m64 da = expand_alpha (d);
-	
+
 	s = pix_multiply (s, a);
 	s = pix_multiply (s, da);
 	*dest = store8888 (s);
@@ -892,7 +892,7 @@ mmx_combine_in_reverse_ca (pixman_implementation_t *imp,
 	__m64 s = load8888 (*src);
 	__m64 d = load8888 (*dest);
 	__m64 sa = expand_alpha (s);
-	
+
 	a = pix_multiply (a, sa);
 	d = pix_multiply (d, a);
 	*dest = store8888 (d);
@@ -920,7 +920,7 @@ mmx_combine_out_ca (pixman_implementation_t *imp,
 	__m64 s = load8888 (*src);
 	__m64 d = load8888 (*dest);
 	__m64 da = expand_alpha (d);
-	
+
 	da = negate (da);
 	s = pix_multiply (s, a);
 	s = pix_multiply (s, da);
@@ -1209,7 +1209,7 @@ mmx_composite_over_n_0565 (pixman_implementation_t *imp,
 	{
 	    uint64_t d = *dst;
 	    __m64 vdest = expand565 (M64 (d), 0);
-	    
+
 	    vdest = pack_565 (over (vsrc, vsrca, vdest), vdest, 0);
 	    *dst = UINT64 (vdest);
 
@@ -1240,7 +1240,7 @@ mmx_composite_over_n_0565 (pixman_implementation_t *imp,
 	{
 	    uint64_t d = *dst;
 	    __m64 vdest = expand565 (M64 (d), 0);
-	    
+
 	    vdest = pack_565 (over (vsrc, vsrca, vdest), vdest, 0);
 	    *dst = UINT64 (vdest);
 
@@ -1615,7 +1615,7 @@ mmx_composite_over_8888_8888 (pixman_implementation_t *imp,
 	{
 	    s = *src++;
 	    a = s >> 24;
-	    
+
 	    if (a == 0xff)
 	    {
 		*dst = s;
@@ -1627,7 +1627,7 @@ mmx_composite_over_8888_8888 (pixman_implementation_t *imp,
 		sa = expand_alpha (ms);
 		*dst = store8888 (over (ms, sa, load8888 (*dst)));
 	    }
-	    
+
 	    dst++;
 	}
     }
@@ -1795,7 +1795,7 @@ mmx_composite_over_n_8_8888 (pixman_implementation_t *imp,
 		__m64 vdest = in_over (vsrc, vsrca,
 				       expand_alpha_rev (M64 (m)),
 				       load8888 (*dst));
-		
+
 		*dst = store8888 (vdest);
 	    }
 
@@ -1809,7 +1809,7 @@ mmx_composite_over_n_8_8888 (pixman_implementation_t *imp,
 	while (w >= 2)
 	{
 	    uint64_t m0, m1;
-	    
+
 	    m0 = *mask;
 	    m1 = *(mask + 1);
 
@@ -1883,22 +1883,13 @@ pixman_fill_mmx (uint32_t *bits,
     if (bpp != 16 && bpp != 32 && bpp != 8)
 	return FALSE;
 
-    if (bpp == 16 && (xor >> 16 != (xor & 0xffff)))
-	return FALSE;
-
-    if (bpp == 8 &&
-        ((xor >> 16 != (xor & 0xffff)) ||
-         (xor >> 24 != (xor & 0x00ff) >> 16)))
-    {
-	return FALSE;
-    }
-
     if (bpp == 8)
     {
 	stride = stride * (int) sizeof (uint32_t) / 1;
 	byte_line = (uint8_t *)(((uint8_t *)bits) + stride * y + x);
 	byte_width = width;
 	stride *= 1;
+        xor = (xor & 0xff) * 0x01010101;
     }
     else if (bpp == 16)
     {
@@ -1906,6 +1897,7 @@ pixman_fill_mmx (uint32_t *bits,
 	byte_line = (uint8_t *)(((uint16_t *)bits) + stride * y + x);
 	byte_width = 2 * width;
 	stride *= 2;
+        xor = (xor & 0xffff) * 0x00010001;
     }
     else
     {
@@ -1928,7 +1920,7 @@ pixman_fill_mmx (uint32_t *bits,
         "movq		%7,	%5\n"
         "movq		%7,	%6\n"
 	: "=y" (v1), "=y" (v2), "=y" (v3),
-        "=y" (v4), "=y" (v5), "=y" (v6), "=y" (v7)
+	  "=y" (v4), "=y" (v5), "=y" (v6), "=y" (v7)
 	: "y" (vfill));
 #endif
 
@@ -1936,7 +1928,7 @@ pixman_fill_mmx (uint32_t *bits,
     {
 	int w;
 	uint8_t *d = byte_line;
-	
+
 	byte_line += stride;
 	w = byte_width;
 
@@ -1976,8 +1968,8 @@ pixman_fill_mmx (uint32_t *bits,
 	        "movq	%8,	56(%0)\n"
 		:
 		: "r" (d),
-	        "y" (vfill), "y" (v1), "y" (v2), "y" (v3),
-	        "y" (v4), "y" (v5), "y" (v6), "y" (v7)
+		  "y" (vfill), "y" (v1), "y" (v2), "y" (v3),
+		  "y" (v4), "y" (v5), "y" (v6), "y" (v7)
 		: "memory");
 #else
 	    *(__m64*) (d +  0) = vfill;
@@ -2080,7 +2072,7 @@ mmx_composite_src_n_8_8888 (pixman_implementation_t *imp,
 	    if (m)
 	    {
 		__m64 vdest = in (vsrc, expand_alpha_rev (M64 (m)));
-		
+
 		*dst = store8888 (vdest);
 	    }
 	    else
@@ -2136,7 +2128,7 @@ mmx_composite_src_n_8_8888 (pixman_implementation_t *imp,
 	    if (m)
 	    {
 		__m64 vdest = load8888 (*dst);
-		
+
 		vdest = in (vsrc, expand_alpha_rev (M64 (m)));
 		*dst = store8888 (vdest);
 	    }
@@ -2218,7 +2210,7 @@ mmx_composite_over_n_8_0565 (pixman_implementation_t *imp,
 		__m64 vd = M64 (d);
 		__m64 vdest = in_over (
 		    vsrc, vsrca, expand_alpha_rev (M64 (m)), expand565 (vd, 0));
-		
+
 		vd = pack_565 (vdest, _mm_setzero_si64 (), 0);
 		*dst = UINT64 (vd);
 	    }
@@ -3082,8 +3074,8 @@ pixman_blt_mmx (uint32_t *src_bits,
 		:
 		: "r" (d), "r" (s)
 		: "memory",
-	        "%mm0", "%mm1", "%mm2", "%mm3",
-	        "%mm4", "%mm5", "%mm6", "%mm7");
+		  "%mm0", "%mm1", "%mm2", "%mm3",
+		  "%mm4", "%mm5", "%mm6", "%mm7");
 #else
 	    __m64 v0 = *(__m64 *)(s + 0);
 	    __m64 v1 = *(__m64 *)(s + 8);
@@ -3346,9 +3338,9 @@ mmx_blt (pixman_implementation_t *imp,
 
     {
 	return _pixman_implementation_blt (
-	           imp->delegate,
-	           src_bits, dst_bits, src_stride, dst_stride, src_bpp, dst_bpp,
-	           src_x, src_y, dst_x, dst_y, width, height);
+	    imp->delegate,
+	    src_bits, dst_bits, src_stride, dst_stride, src_bpp, dst_bpp,
+	    src_x, src_y, dst_x, dst_y, width, height);
     }
 
     return TRUE;
@@ -3368,7 +3360,7 @@ mmx_fill (pixman_implementation_t *imp,
     if (!pixman_fill_mmx (bits, stride, bpp, x, y, width, height, xor))
     {
 	return _pixman_implementation_fill (
-	           imp->delegate, bits, stride, bpp, x, y, width, height, xor);
+	    imp->delegate, bits, stride, bpp, x, y, width, height, xor);
     }
 
     return TRUE;

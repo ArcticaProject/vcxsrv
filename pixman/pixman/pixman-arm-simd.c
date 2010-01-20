@@ -31,18 +31,18 @@
 
 static void
 arm_composite_add_8000_8000 (pixman_implementation_t * impl,
-    pixman_op_t               op,
-    pixman_image_t *          src_image,
-    pixman_image_t *          mask_image,
-    pixman_image_t *          dst_image,
-    int32_t                   src_x,
-    int32_t                   src_y,
-    int32_t                   mask_x,
-    int32_t                   mask_y,
-    int32_t                   dest_x,
-    int32_t                   dest_y,
-    int32_t                   width,
-    int32_t                   height)
+			     pixman_op_t               op,
+			     pixman_image_t *          src_image,
+			     pixman_image_t *          mask_image,
+			     pixman_image_t *          dst_image,
+			     int32_t                   src_x,
+			     int32_t                   src_y,
+			     int32_t                   mask_x,
+			     int32_t                   mask_y,
+			     int32_t                   dest_x,
+			     int32_t                   dest_y,
+			     int32_t                   width,
+			     int32_t                   height)
 {
     uint8_t     *dst_line, *dst;
     uint8_t     *src_line, *src;
@@ -103,18 +103,18 @@ arm_composite_add_8000_8000 (pixman_implementation_t * impl,
 
 static void
 arm_composite_over_8888_8888 (pixman_implementation_t * impl,
-    pixman_op_t               op,
-    pixman_image_t *          src_image,
-    pixman_image_t *          mask_image,
-    pixman_image_t *          dst_image,
-    int32_t                   src_x,
-    int32_t                   src_y,
-    int32_t                   mask_x,
-    int32_t                   mask_y,
-    int32_t                   dest_x,
-    int32_t                   dest_y,
-    int32_t                   width,
-    int32_t                   height)
+			      pixman_op_t               op,
+			      pixman_image_t *          src_image,
+			      pixman_image_t *          mask_image,
+			      pixman_image_t *          dst_image,
+			      int32_t                   src_x,
+			      int32_t                   src_y,
+			      int32_t                   mask_x,
+			      int32_t                   mask_y,
+			      int32_t                   dest_x,
+			      int32_t                   dest_y,
+			      int32_t                   width,
+			      int32_t                   height)
 {
     uint32_t    *dst_line, *dst;
     uint32_t    *src_line, *src;
@@ -188,27 +188,26 @@ arm_composite_over_8888_8888 (pixman_implementation_t * impl,
 	    "2:\n\t"
 	    : [w] "+r" (w), [dest] "+r" (dst), [src] "+r" (src)
 	    : [component_half] "r" (component_half), [upper_component_mask] "r" (upper_component_mask),
-	    [alpha_mask] "r" (alpha_mask)
+	      [alpha_mask] "r" (alpha_mask)
 	    : "r4", "r5", "r6", "r7", "r8", "cc", "memory"
 	    );
     }
 }
 
 static void
-arm_composite_over_8888_n_8888 (
-    pixman_implementation_t * impl,
-    pixman_op_t               op,
-    pixman_image_t *          src_image,
-    pixman_image_t *          mask_image,
-    pixman_image_t *          dst_image,
-    int32_t                   src_x,
-    int32_t                   src_y,
-    int32_t                   mask_x,
-    int32_t                   mask_y,
-    int32_t                   dest_x,
-    int32_t                   dest_y,
-    int32_t                   width,
-    int32_t                   height)
+arm_composite_over_8888_n_8888 (pixman_implementation_t * impl,
+				pixman_op_t               op,
+				pixman_image_t *          src_image,
+				pixman_image_t *          mask_image,
+				pixman_image_t *          dst_image,
+				int32_t                   src_x,
+				int32_t                   src_y,
+				int32_t                   mask_x,
+				int32_t                   mask_y,
+				int32_t                   dest_x,
+				int32_t                   dest_y,
+				int32_t                   width,
+				int32_t                   height)
 {
     uint32_t *dst_line, *dst;
     uint32_t *src_line, *src;
@@ -298,7 +297,7 @@ arm_composite_over_8888_n_8888 (
 	    "2:\n\t"
 	    : [w] "+r" (w), [dest] "+r" (dst), [src] "+r" (src)
 	    : [component_half] "r" (component_half), [mask_alpha] "r" (mask),
-	    [alpha_mask] "r" (alpha_mask)
+	      [alpha_mask] "r" (alpha_mask)
 	    : "r4", "r5", "r6", "r7", "r8", "r9", "cc", "memory"
 	    );
     }
@@ -384,7 +383,8 @@ arm_composite_over_n_8_8888 (pixman_implementation_t * impl,
 	    "uxtb16 r7, r4, ror #8\n\t"
 
 	    /* we could simplify this to use 'sub' if we were
-	    * willing to give up a register for alpha_mask */
+	     * willing to give up a register for alpha_mask
+	     */
 	    "mvn r8, r5\n\t"
 	    "mov r8, r8, lsr #24\n\t"
 
@@ -483,4 +483,3 @@ _pixman_implementation_create_arm_simd (void)
 
     return imp;
 }
-

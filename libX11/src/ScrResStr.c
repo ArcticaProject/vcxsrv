@@ -1,4 +1,3 @@
-/* $Xorg: ScrResStr.c,v 1.4 2001/02/09 02:03:36 xorgcvs Exp $ */
 /*
 
 Copyright 1991, 1998  The Open Group

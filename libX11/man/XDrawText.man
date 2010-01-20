@@ -40,8 +40,6 @@
 .\" of this documentation for any purpose.
 .\" It is provided ``as is'' without express or implied warranty.
 .\" 
-.\" $XFree86: xc/doc/man/X11/XDrText.man,v 1.4 2003/04/28 22:17:54 herrb Exp $
-.\" $XdotOrg: lib/X11/man/XDrawText.man,v 1.3 2005-08-17 01:27:08 alanc Exp $
 .\"
 .ds xT X Toolkit Intrinsics \- C Language Interface
 .ds xW Athena X Widgets \- C Language X Toolkit Interface

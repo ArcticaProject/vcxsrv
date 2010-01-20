@@ -1,4 +1,3 @@
-/* $Xorg: XYZ.c,v 1.3 2000/08/17 19:45:04 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -33,7 +32,6 @@
  *
  *
  */
-/* $XFree86: xc/lib/X11/XYZ.c,v 1.3 2001/01/17 19:41:49 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

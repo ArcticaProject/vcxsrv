@@ -1,5 +1,4 @@
 /*
- * $XFree86: xc/lib/XThrStub/UIThrStubs.c,v 3.3 2001/11/18 21:13:26 herrb Exp $
  *
  * Copyright (c) 1995 David E. Wexelblat.  All rights reserved
  *

@@ -1,4 +1,3 @@
-/* $Xorg: omGeneric.c,v 1.6 2000/08/17 19:45:21 cpqbld Exp $ */
 /*  #define FONTDEBUG */
 /*
  * Copyright 1992, 1993 by TOSHIBA Corp.
@@ -32,7 +31,6 @@
  * Modifier:  Takanori Tateno   FUJITSU LIMITED
  *
  */
-/* $XFree86: xc/lib/X11/omGeneric.c,v 3.27 2003/05/27 22:26:27 tsi Exp $ */
 
 /*
  * Fixed the algorithms in parse_fontname() and parse_fontdata()
@@ -412,11 +410,10 @@ set_fontset_extents(
 		}
 	    }
 
-	    if(font_set->vrotate_num > 0) {
+	    if(font_set->vrotate_num > 0 && font_set->vrotate != NULL) {
 		font_data = (FontData) font_set->vrotate;
 		font_data_count = font_set->vrotate_num;
 		for( ; font_data_count-- ; font_data++) {
-		    if(font_data != NULL)
 		    if(font_data->font != NULL) {
 			check_fontset_extents(&overall, &logical_ascent,
 					      &logical_descent,
@@ -572,6 +569,7 @@ get_rotate_fontname(
 	if((ptr = strchr(ptr, '-'))) {
 	    *ptr = '\0';
 	} else {
+	    field_num++;	/* Count last field */
 	    break;
 	}
     }

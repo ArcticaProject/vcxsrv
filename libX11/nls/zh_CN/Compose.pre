@@ -3,7 +3,6 @@ XCOMM zh Compose Sequence
 XCOMM
 XCOMM Sequence Definition
 XCOMM
-XCOMM $XFree86: xc/nls/Compose/zh,v 1.2 2001/04/26 21:09:40 dawes Exp $
 XCOMM
 XCOMM This file currently has no entries.  It appears that a compose file (even
 XCOMM just an empty one) is required for the appropriate keysyms to work for

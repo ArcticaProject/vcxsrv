@@ -1,4 +1,3 @@
-/* $Xorg: XKBBind.c,v 1.4 2001/02/09 02:03:37 xorgcvs Exp $ */
 /*
 
 Copyright 1985, 1987, 1994, 1998  The Open Group
@@ -26,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/XKBBind.c,v 3.19 2003/05/27 22:26:25 tsi Exp $ */
 
 	/* the new monsters ate the old ones */
 

@@ -1,11 +1,8 @@
-XCOMM	$XdotOrg: lib/X11/nls/locale.dir.pre,v 1.10 2005-09-30 07:52:46 daniels Exp $
-XCOMM	$Xorg: locale.dir,v 1.3 2000/08/17 19:46:48 cpqbld Exp $
 XCOMM
 XCOMM	This file contains locale database file names
 XCOMM	The first word is the locale database file name and
 XCOMM	the second word is the full locale name.
 XCOMM
-XCOMM	$XFree86: xc/nls/locale.dir,v 1.44 2003/12/18 04:14:22 dawes Exp $
 XCOMM
 
 C/XLC_LOCALE:				C

@@ -509,7 +509,7 @@ get_fast_path (const pixman_fast_path_t *fast_paths,
 	       int			 mask_x,
 	       int			 mask_y)
 {
-    pixman_format_code_t src_format, mask_format;
+    pixman_format_code_t src_format, mask_format, dest_format;
     const pixman_fast_path_t *info;
 
     /* Check for pixbufs */
@@ -528,6 +528,7 @@ get_fast_path (const pixman_fast_path_t *fast_paths,
     }
     else
     {
+	/* Source */
 	if (_pixman_image_is_solid (src_image))
 	{
 	    src_format = PIXMAN_solid;
@@ -540,7 +541,8 @@ get_fast_path (const pixman_fast_path_t *fast_paths,
 	{
 	    return NULL;
 	}
-	
+
+	/* Mask */
 	if (!mask_image)
 	{
 	    mask_format = PIXMAN_null;
@@ -577,21 +579,18 @@ get_fast_path (const pixman_fast_path_t *fast_paths,
 	    return NULL;
 	}
     }
+
+    dest_format = dst_image->bits.format;
     
-    for (info = fast_paths; info->op != PIXMAN_OP_NONE; info++)
+    for (info = fast_paths; info->op != PIXMAN_OP_NONE; ++info)
     {
-	if (info->op != op)
-	    continue;
-
-	if (info->src_format != src_format)
-	    continue;
-	if (info->mask_format != mask_format)
-	    continue;
-
-	if (info->dest_format != dst_image->bits.format)
-	    continue;
-
-	return info;
+	if (info->op == op			&&
+	    info->src_format == src_format	&&
+	    info->mask_format == mask_format	&&
+	    info->dest_format == dest_format)
+	{
+	    return info;
+	}
     }
 
     return NULL;
@@ -708,22 +707,20 @@ _pixman_run_fast_path (const pixman_fast_path_t *paths,
 		src_repeat = FALSE;
 
 	    if (info->mask_format == PIXMAN_solid)
-	    {
 		mask_repeat = FALSE;
-	    }
 
 	    if ((src_repeat                     &&
-	         src->bits.width == 1           &&
-	         src->bits.height == 1) ||
-	        (mask_repeat                    &&
-	         mask->bits.width == 1          &&
-	         mask->bits.height == 1))
+		 src->bits.width == 1           &&
+		 src->bits.height == 1)		||
+		(mask_repeat			&&
+		 mask->bits.width == 1		&&
+		 mask->bits.height == 1))
 	    {
 		/* If src or mask are repeating 1x1 images and src_repeat or
 		 * mask_repeat are still TRUE, it means the fast path we
 		 * selected does not actually handle repeating images.
 		 *
-		 * So rather than call the "fast path" with a zillion
+		 * So rather than calling the "fast path" with a zillion
 		 * 1x1 requests, we just fall back to the general code (which
 		 * does do something sensible with 1x1 repeating images).
 		 */

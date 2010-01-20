@@ -1,4 +1,3 @@
-/* $Xorg: PixFormats.c,v 1.4 2001/02/09 02:03:35 xorgcvs Exp $ */
 /*
 
 Copyright 1989, 1998  The Open Group

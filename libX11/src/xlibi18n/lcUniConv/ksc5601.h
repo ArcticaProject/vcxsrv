@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/lcUniConv/ksc5601.h,v 1.4tsi Exp $ */
 
 /*
  * KSC5601.1987-0

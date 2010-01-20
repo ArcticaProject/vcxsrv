@@ -1,4 +1,3 @@
-/* $Xorg: XimImSw.h,v 1.3 2000/08/17 19:45:05 cpqbld Exp $ */
 /******************************************************************
 
                 Copyright 1992, 1993 by FUJITSU LIMITED
@@ -26,7 +25,6 @@ PERFORMANCE OF THIS SOFTWARE.
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
-/* $XFree86$ */
 
 #ifndef _XIMIMSW_H
 #define _XIMIMSW_H

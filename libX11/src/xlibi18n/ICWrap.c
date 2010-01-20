@@ -1,8 +1,4 @@
 /*
- * $Xorg: ICWrap.c,v 1.4 2001/02/09 02:03:33 xorgcvs Exp $
- */
-
-/*
  * Copyright 1990, 1991 by OMRON Corporation, NTT Software Corporation,
  *                      and Nippon Telegraph and Telephone Corporation
  * Copyright 1991 by the Open Software Foundation
@@ -64,7 +60,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/ICWrap.c,v 1.10 2003/04/25 14:12:38 tsi Exp $ */
 
 #define NEED_EVENTS
 #ifdef HAVE_CONFIG_H

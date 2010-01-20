@@ -5,7 +5,6 @@ XCOMM  modified for X11R6.3 by Hung-Chi Chu <hcchu@r350.ee.ntu.edu.tw> 1998/01/1
 XCOMM 
 XCOMM 	XLC_FONTSET category
 XCOMM
-XCOMM $XFree86$
 XCOMM 
 XLC_FONTSET
 XCOMM        fs0 class (7 bit ASCII)

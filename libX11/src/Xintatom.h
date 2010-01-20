@@ -1,4 +1,3 @@
-/* $XFree86$ */
 
 #ifndef _XINTATOM_H_
 #define _XINTATOM_H_ 1

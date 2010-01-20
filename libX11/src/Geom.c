@@ -1,4 +1,3 @@
-/* $Xorg: Geom.c,v 1.4 2001/02/09 02:03:33 xorgcvs Exp $ */
 
 /*
 
@@ -27,7 +26,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86$ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

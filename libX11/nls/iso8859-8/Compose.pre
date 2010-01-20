@@ -3,7 +3,6 @@ XCOMM ISO 8859-8 Compose Sequence
 XCOMM
 XCOMM Sequence Definition
 XCOMM
-XCOMM $XFree86: xc/nls/Compose/iso8859-8,v 1.1 1999/08/28 09:00:36 dawes Exp $
 XCOMM
 XCOMM This file currently has no entries.  It appears that a compose file (even
 XCOMM just an empty one) is required for the appropriate keysyms to work for

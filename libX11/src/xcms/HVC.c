@@ -1,5 +1,3 @@
-/* $XdotOrg: lib/X11/src/xcms/HVC.c,v 1.4 2005-07-03 07:00:55 daniels Exp $ */
-/* $Xorg: HVC.c,v 1.3 2000/08/17 19:44:36 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -48,7 +46,6 @@
  *	DOCUMENTATION
  *		"TekColor Color Management System, System Implementor's Manual"
  */
-/* $XFree86: xc/lib/X11/HVC.c,v 1.3 2001/01/17 19:41:37 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

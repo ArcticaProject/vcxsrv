@@ -3,7 +3,6 @@ XCOMM  X11R6 L10N for Chinese GBK Encoding.
 XCOMM     modified from xc/nls/XLC_LOCALE/zh_TW.Big5
 XCOMM     by Sean Chen <seanc@turbolinux.com>
 XCOMM 
-XCOMM $XFree86$
 
 XCOMM 
 XCOMM 	XLC_FONTSET category

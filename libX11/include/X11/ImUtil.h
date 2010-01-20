@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/ImUtil.h,v 1.2 2003/04/15 22:10:07 herrb Exp $ */
 
 #ifndef _IMUTIL_H_
 #define _IMUTIL_H_

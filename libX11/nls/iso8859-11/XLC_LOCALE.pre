@@ -1,7 +1,5 @@
 XCOMM  XLocale Database Sample for iso8859-11.
 XCOMM 
-XCOMM  Id: xf-cvs20020709-iso8859_11locale.patch,v 1.1 2002/07/09 12:24:01 thep Exp 
-XCOMM $XFree86$
 
 XCOMM 
 XCOMM 	XLC_FONTSET category

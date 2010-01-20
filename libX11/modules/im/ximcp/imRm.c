@@ -1,4 +1,3 @@
-/* $Xorg: imRm.c,v 1.4 2000/08/17 19:45:14 cpqbld Exp $ */
 /******************************************************************
 
 	  Copyright 1990, 1991, 1992,1993, 1994 by FUJITSU LIMITED
@@ -30,7 +29,6 @@ PERFORMANCE OF THIS SOFTWARE.
 			       makoto@sm.sony.co.jp
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/imRm.c,v 3.12 2003/04/13 19:22:21 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

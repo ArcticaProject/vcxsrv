@@ -1,4 +1,3 @@
-/* $XFree86$ */
 
 #ifndef _XRESINTERNAL_H_
 #define _XRESINTERNAL_H_

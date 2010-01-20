@@ -1,4 +1,3 @@
-/* $XFree86$ */
 
 /*
  * BIG5-0 and BIG5-1

@@ -1,7 +1,6 @@
 /*
  * UCS-2BE = UCS-2 big endian
  */
-/* $XFree86$ */
 
 static int
 ucs2be_mbtowc (conv_t conv, ucs4_t *pwc, const unsigned char *s, int n)

@@ -1,4 +1,3 @@
-/* $Xorg: imThaiFlt.c,v 1.5 2001/02/09 02:03:39 xorgcvs Exp $ */
 /***********************************************************
 
 Copyright 1993, 1998  The Open Group
@@ -45,7 +44,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/imThaiFlt.c,v 3.22tsi Exp $ */
 
 /*
 **++

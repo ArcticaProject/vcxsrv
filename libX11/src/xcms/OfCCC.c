@@ -1,4 +1,3 @@
-/* $Xorg: OfCCC.c,v 1.3 2000/08/17 19:44:47 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.

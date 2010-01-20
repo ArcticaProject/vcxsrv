@@ -1,4 +1,3 @@
-/* $Xorg: lcCT.c,v 1.4 2000/08/17 19:45:16 cpqbld Exp $ */
 /*
  * Copyright 1992, 1993 by TOSHIBA Corp.
  *
@@ -36,7 +35,6 @@
  *  Modifier: Ivan Pascal     The XFree86 Project
  *  Modifier: Bruno Haible    The XFree86 Project
  */
-/* $XFree86: xc/lib/X11/lcCT.c,v 3.26 2001/10/28 03:32:34 tsi Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

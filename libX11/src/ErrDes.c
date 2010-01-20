@@ -1,6 +1,4 @@
 /*
- * $Xorg: ErrDes.c,v 1.4 2001/02/09 02:03:32 xorgcvs Exp $
- * $XdotOrg: lib/X11/src/ErrDes.c,v 1.8 2005-08-26 05:16:46 daniels Exp $
  */
 
 /***********************************************************
@@ -49,7 +47,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/ErrDes.c,v 3.11 2003/08/06 14:03:59 eich Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -1,4 +1,3 @@
-/* $Xorg: imCallbk.c,v 1.4 2000/08/17 19:45:10 cpqbld Exp $ */
 /***********************************************************************
 Copyright 1993 by Digital Equipment Corporation, Maynard, Massachusetts,
 Copyright 1994 by FUJITSU LIMITED
@@ -32,7 +31,6 @@ PERFORMANCE OF THIS SOFTWARE.
 		 	     makoto@sm.sony.co.jp
 
 ***********************************************************************/
-/* $XFree86: xc/lib/X11/imCallbk.c,v 3.9 2003/08/22 13:29:16 pascal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -1,4 +1,3 @@
-XCOMM  $Xorg: zh_TW,v 1.3 2000/08/17 19:47:01 cpqbld Exp $
 XCOMM  XLocale Database Sample for zh_TW
 XCOMM 
 XCOMM Note: In lib/X11/lcCT.c, charset names for CNS11643 coded character

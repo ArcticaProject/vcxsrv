@@ -2,7 +2,6 @@
 #
 #	XI18N objects table for iso8859-11 locale
 #
-# $XFree86$
 #
 XLC	common/xlcDef	_XlcDefaultLoader	# XLC_open
 XIM	common/ximcp	_XimOpenIM _XimRegisterIMInstantiateCallback  _XimUnRegisterIMInstantiateCallback # XIM_open	XIM_register XIM_unregister

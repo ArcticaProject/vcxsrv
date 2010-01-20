@@ -1,4 +1,3 @@
-/* $Xorg: Ximint.h,v 1.3 2000/08/17 19:45:05 cpqbld Exp $ */
 /******************************************************************
 
                 Copyright 1992, 1993, 1994 by FUJITSU LIMITED
@@ -30,7 +29,6 @@ PERFORMANCE OF THIS SOFTWARE.
 			       makoto@sm.sony.co.jp
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/Ximint.h,v 3.13 2003/09/06 14:06:32 pascal Exp $ */
 
 #ifndef _XIMINT_H
 #define _XIMINT_H

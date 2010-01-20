@@ -1,4 +1,3 @@
-/* $Xorg: TextToStr.c,v 1.4 2001/02/09 02:03:37 xorgcvs Exp $ */
 /*
 
 Copyright 1989, 1998  The Open Group
@@ -25,7 +24,6 @@ in this Software without prior written authorization from The Open Group.
 
 */
 
-/* $XFree86: xc/lib/X11/TextToStr.c,v 1.4 2001/01/17 19:41:45 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

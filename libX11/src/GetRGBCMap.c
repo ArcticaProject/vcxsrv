@@ -1,4 +1,3 @@
-/* $Xorg: GetRGBCMap.c,v 1.4 2001/02/09 02:03:33 xorgcvs Exp $ */
 
 /*
 

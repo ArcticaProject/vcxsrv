@@ -1,10 +1,8 @@
-XCOMM $Xorg: compose.dir,v 1.3 2000/08/17 19:46:48 cpqbld Exp $
 XCOMM
 XCOMM	This file contains compose table file name.
 XCOMM	The first word is the compose table file name and
 XCOMM	the second word is full locale name.
 XCOMM
-XCOMM $XFree86: xc/nls/compose.dir,v 1.24 2003/08/06 14:04:00 eich Exp $
 XCOMM
 iso8859-1/Compose:		C
 iso8859-1/Compose:		af_ZA.ISO8859-1

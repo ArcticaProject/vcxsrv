@@ -1,4 +1,3 @@
-/* $XFree86$ */
 
 /*
  * Generates a CJK character set table from a .TXT table as found on

@@ -245,6 +245,9 @@ _pixman_image_validate (pixman_image_t *image)
 	image->common.property_changed (image);
 	image->common.dirty = FALSE;
     }
+
+    if (image->common.alpha_map)
+	_pixman_image_validate (image->common.alpha_map);
 }
 
 PIXMAN_EXPORT pixman_bool_t

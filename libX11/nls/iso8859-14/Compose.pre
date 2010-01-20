@@ -3,7 +3,6 @@ XCOMM
 XCOMM Original version by Alastair McKinstry, <amck@maths.tcd.ie>
 XCOMM Fixed and tidied up by Seamus O Ciardhuain <seoc@cnds.ucd.ie> (Dec 2002)
 XCOMM
-XCOMM $XFree86: xc/nls/Compose/iso8859-14,v 1.4 2001/04/26 21:09:40 dawes Exp $
 XCOMM
 XCOMM First part is taken from the Latin-1 definitions,
 XCOMM i.e. characters the same in 8859-1 and 8859-14.

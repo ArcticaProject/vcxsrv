@@ -1,7 +1,5 @@
-XCOMM  $Xorg: zh,v 1.3 2000/08/17 19:47:00 cpqbld Exp $
 XCOMM  XLocale Database Sample for zh (eucCN).
 XCOMM
-XCOMM  $XFree86: xc/nls/XLC_LOCALE/zh,v 1.2 2001/04/23 21:41:43 dawes Exp $
 
 XCOMM
 XCOMM 	XLC_FONTSET category

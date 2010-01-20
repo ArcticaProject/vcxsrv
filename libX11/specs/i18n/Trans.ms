@@ -1,5 +1,3 @@
-.\" $Xorg: Trans.ms,v 1.3 2000/08/17 19:42:49 cpqbld Exp $
-.\" $XdotOrg: xc/doc/specs/i18n/Trans.ms,v 1.2 2004/04/23 18:42:19 eich Exp $
 .\" To print this out, type tbl macros.t This File | troff -ms
 .EH ''''
 .OH ''''

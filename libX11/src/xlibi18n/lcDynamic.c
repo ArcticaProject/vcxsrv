@@ -1,4 +1,3 @@
-/* $Xorg: lcDynamic.c,v 1.4 2001/02/09 02:03:39 xorgcvs Exp $ */
 /*
 Copyright 1996, 1998  The Open Group
 
@@ -32,7 +31,6 @@ from The Open Group.
  * Modifier: Takanori Tateno   FUJITSU LIMITED
  *
  */
-/* $XFree86: xc/lib/X11/lcDynamic.c,v 1.4 2001/01/17 19:41:53 dawes Exp $ */
 
 /*
  * A dynamically loaded locale.

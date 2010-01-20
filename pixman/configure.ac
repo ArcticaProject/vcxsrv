@@ -54,7 +54,7 @@ AC_PREREQ([2.57])
 
 m4_define([pixman_major], 0)
 m4_define([pixman_minor], 17)
-m4_define([pixman_micro], 2)
+m4_define([pixman_micro], 4)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
@@ -253,7 +253,7 @@ AC_COMPILE_IFELSE([
 #include <xmmintrin.h>
 #include <emmintrin.h>
 int main () {
-    __m128i a, b, c;
+    __m128i a = _mm_set1_epi32 (0), b = _mm_set1_epi32 (0), c;
 	c = _mm_xor_si128 (a, b);
     return 0;
 }], have_sse2_intrinsics=yes)

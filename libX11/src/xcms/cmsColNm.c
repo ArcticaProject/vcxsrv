@@ -1,5 +1,3 @@
-/* $XdotOrg: lib/X11/src/xcms/cmsColNm.c,v 1.4 2005-07-03 07:00:55 daniels Exp $ */
-/* $Xorg: cmsColNm.c,v 1.3 2000/08/17 19:45:09 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -32,7 +30,6 @@
  *
  *
  */
-/* $XFree86: xc/lib/X11/cmsColNm.c,v 3.11 2003/04/13 19:22:20 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

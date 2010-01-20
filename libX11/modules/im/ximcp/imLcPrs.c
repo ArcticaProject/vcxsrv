@@ -1,4 +1,3 @@
-/* $Xorg: imLcPrs.c,v 1.3 2000/08/17 19:45:14 cpqbld Exp $ */
 /******************************************************************
 
               Copyright 1992 by Oki Technosystems Laboratory, Inc.
@@ -30,7 +29,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 ******************************************************************/
 
-/* $XFree86: xc/lib/X11/imLcPrs.c,v 1.10 2003/09/06 14:06:32 pascal Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -43,6 +41,13 @@ OR PERFORMANCE OF THIS SOFTWARE.
 #include "Ximint.h"
 #include <sys/stat.h>
 #include <stdio.h>
+
+#define XLC_BUFSIZE 256
+
+extern void xlocaledir(
+    char *buf,
+    int buf_len
+);
 
 extern int _Xmbstowcs(
     wchar_t	*wstr,
@@ -304,6 +309,7 @@ static char*
 TransFileName(Xim im, char *name)
 {
    char *home = NULL, *lcCompose = NULL;
+   char dir[XLC_BUFSIZE];
    char *i = name, *ret, *j;
    int l = 0;
 
@@ -323,6 +329,10 @@ TransFileName(Xim im, char *name)
                  lcCompose = _XlcFileName(im->core.lcd, COMPOSE_FILE);
                  if (lcCompose)
                      l += strlen(lcCompose);
+   	         break;
+   	      case 'S':
+                 xlocaledir(dir, XLC_BUFSIZE);
+                 l += strlen(dir);
    	         break;
    	  }
       } else {
@@ -354,6 +364,10 @@ TransFileName(Xim im, char *name)
                     j += strlen(lcCompose);
                     Xfree(lcCompose);
                  }
+   	         break;
+   	      case 'S':
+                 strcpy(j, dir);
+                 j += strlen(dir);
    	         break;
    	  }
           i++;

@@ -1,4 +1,3 @@
-/* $Xorg: imInt.c,v 1.8 2000/08/17 19:45:13 cpqbld Exp $ */
 /******************************************************************
 
            Copyright 1992, 1993, 1994 by FUJITSU LIMITED
@@ -26,7 +25,6 @@ PERFORMANCE OF THIS SOFTWARE.
                                fujiwara@a80.tech.yk.fujitsu.co.jp
 
 ******************************************************************/
-/* $XFree86: xc/lib/X11/imInt.c,v 3.12 2003/04/17 02:06:32 dawes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

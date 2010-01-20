@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/lcUniConv/iso8859_11.h,v 1.1tsi Exp $ */
 
 /*
  * ISO8859-11

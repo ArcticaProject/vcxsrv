@@ -192,3 +192,17 @@ image_endian_swap (pixman_image_t *img, int bpp)
     }
 }
 
+uint8_t *
+make_random_bytes (int n_bytes)
+{
+    uint8_t *bytes = malloc (n_bytes);
+    int i;
+
+    if (!bytes)
+	return NULL;
+
+    for (i = 0; i < n_bytes; ++i)
+	bytes[i] = lcg_rand () & 0xff;
+
+    return bytes;
+}

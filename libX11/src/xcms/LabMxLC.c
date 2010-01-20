@@ -1,4 +1,3 @@
-/* $Xorg: LabMxLC.c,v 1.3 2000/08/17 19:44:40 cpqbld Exp $ */
 
 /*
  * Code and supporting documentation (c) Copyright 1990 1991 Tektronix, Inc.
@@ -38,7 +37,6 @@
  *		Fred W. Billmeyer & Max Saltzman, "Principles of Color
  *		Technology", John Wily & Sons, Inc, 1981.
  */
-/* $XFree86$ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

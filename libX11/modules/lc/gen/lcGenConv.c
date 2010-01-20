@@ -1,4 +1,3 @@
-/* $Xorg: lcGenConv.c,v 1.5 2000/08/17 19:45:17 cpqbld Exp $ */
 /*
  * Copyright 1992, 1993 by TOSHIBA Corp.
  *
@@ -35,7 +34,6 @@
  *  2000
  *  Modifier: Ivan Pascal      The XFree86 Project
  */
-/* $XFree86: xc/lib/X11/lcGenConv.c,v 3.27tsi Exp $ */
 
 /*
  * A generic locale loader for all kinds of ISO-2022 based codesets.

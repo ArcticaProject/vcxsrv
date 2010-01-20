@@ -1,4 +1,3 @@
-/* $Xorg: PutImage.c,v 1.4 2001/02/09 02:03:35 xorgcvs Exp $ */
 /*
 
 Copyright 1986, 1998  The Open Group
@@ -24,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/lib/X11/PutImage.c,v 3.11 2002/12/09 04:10:56 tsi Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -4,7 +4,6 @@ XCOMM
 XCOMM modified for X11R6.3 by Hung-Chi Chu <hcchu@r350.ee.ntu.edu.tw> 1998/01/10
 XCOMM modified for Big5HKSCS by Roger So <roger.so@sw-linux.com> 
 XCOMM
-XCOMM $XFree86: xc/nls/XLC_LOCALE/zh_HK.big5hkscs,v 1.1 2001/03/06 18:54:46 dawes Exp $
 XCOMM
 XCOMM	XLC_FONTSET category
 XCOMM

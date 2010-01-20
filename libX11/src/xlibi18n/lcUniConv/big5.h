@@ -1,4 +1,3 @@
-/* $XFree86: xc/lib/X11/lcUniConv/big5.h,v 1.1tsi Exp $ */
 
 /*
  * BIG5

@@ -41,7 +41,6 @@
 .\" of this documentation for any purpose.
 .\" It is provided ``as is'' without express or implied warranty.
 .\"
-.\" $XFree86: xc/doc/man/X11/XmbTExt.man,v 1.4 2001/01/27 18:20:08 dawes Exp $
 .\" 
 .ds xT X Toolkit Intrinsics \- C Language Interface
 .ds xW Athena X Widgets \- C Language X Toolkit Interface
