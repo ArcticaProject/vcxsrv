@@ -64,6 +64,10 @@ SOFTWARE.
 #include "mifillarc.h"
 #include <X11/Xfuncproto.h>
 
+#ifdef _MSC_VER
+#define hypot _hypot
+#endif
+
 static double miDsin(double a);
 static double miDcos(double a);
 static double miDasin(double v);

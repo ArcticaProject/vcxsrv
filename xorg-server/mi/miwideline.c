@@ -45,6 +45,10 @@ from The Open Group.
 #include <math.h>
 #undef _XOPEN_SOURCE
 #endif
+#ifdef _MSC_VER
+#define hypot _hypot
+#endif
+
 #include <X11/X.h>
 #include "windowstr.h"
 #include "gcstruct.h"
