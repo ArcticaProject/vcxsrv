@@ -37,6 +37,10 @@ in this Software without prior written authorization from The Open Group.
 #include    <X11/fonts/fntfilst.h>
 #include <math.h>
 
+#ifdef _MSC_VER
+#define hypot _hypot
+#endif
+
 Bool
 FontFileAddScaledInstance (FontEntryPtr entry, FontScalablePtr vals, 
 			   FontPtr pFont, char *bitmapName)

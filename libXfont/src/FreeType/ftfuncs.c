@@ -37,6 +37,7 @@ THE SOFTWARE.
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include <unistd.h>
 
 #include <X11/fonts/fntfilst.h>
 #include <X11/fonts/fontutil.h>
@@ -133,6 +134,9 @@ sfnt_get_ushort( FT_Face     face,
 
 #define  sfnt_get_short(f,t,o)  ((FT_Short)sfnt_get_ushort((f),(t),(o)))
 
+#ifdef _MSC_VER
+#define hypot _hypot
+#endif
 
 static int ftypeInitP = 0;      /* is the engine initialised? */
 FT_Library ftypeLibrary;
