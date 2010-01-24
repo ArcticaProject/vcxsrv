@@ -277,7 +277,7 @@ XvScreenInit(ScreenPtr pScreen)
 
   /* ALLOCATE SCREEN PRIVATE RECORD */
   
-  pxvs = xalloc (sizeof (XvScreenRec));
+  pxvs = xcalloc (1,sizeof (XvScreenRec));
   if (!pxvs)
     {
       ErrorF("XvScreenInit: Unable to allocate screen private structure\n");
@@ -312,7 +312,7 @@ XvCloseScreen(
   pScreen->DestroyWindow = pxvs->DestroyWindow;
   pScreen->CloseScreen = pxvs->CloseScreen;
 
-  (* pxvs->ddCloseScreen)(ii, pScreen); 
+  if (pxvs->ddCloseScreen) (* pxvs->ddCloseScreen)(ii, pScreen); 
 
   xfree(pxvs);
 
