@@ -2777,9 +2777,8 @@ _XkbSetCompatMap(ClientPtr client, DeviceIntPtr dev,
 	XkbSymInterpretPtr	sym;
 	if ((unsigned)(req->firstSI+req->nSI)>compat->num_si) {
 	    compat->num_si= req->firstSI+req->nSI;
-	    compat->sym_interpret= _XkbTypedRealloc(compat->sym_interpret,
-						   compat->num_si,
-						   XkbSymInterpretRec);
+	    compat->sym_interpret= xrealloc(compat->sym_interpret,
+					    compat->num_si * sizeof(XkbSymInterpretRec));
 	    if (!compat->sym_interpret) {
 		compat->num_si= 0;
 		return BadAlloc;
@@ -6460,7 +6459,7 @@ _XkbSetDeviceInfoCheck(ClientPtr client, DeviceIntPtr dev,
 	nBtns= dev->button->numButtons;
 	acts= dev->button->xkb_acts;
 	if (acts==NULL) {
-	    acts= _XkbTypedCalloc(nBtns,XkbAction);
+	    acts= xcalloc(nBtns, sizeof(XkbAction));
 	    if (!acts)
 		return BadAlloc;
 	    dev->button->xkb_acts= acts;

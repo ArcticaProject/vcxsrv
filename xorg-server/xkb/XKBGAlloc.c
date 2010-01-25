@@ -615,7 +615,7 @@ XkbGeometryPtr	geom;
 Status		rtrn;
 
     if (xkb->geom==NULL) {
-	xkb->geom= _XkbTypedCalloc(1,XkbGeometryRec);
+	xkb->geom= xcalloc(1, sizeof(XkbGeometryRec));
 	if (!xkb->geom)
 	    return BadAlloc;
     }

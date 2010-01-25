@@ -504,10 +504,10 @@ InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
 {
     if (iclass->match_product &&
         (!attrs->product || !strstr(attrs->product, iclass->match_product)))
-        return False;
+        return FALSE;
     if (iclass->match_vendor &&
         (!attrs->vendor || !strstr(attrs->vendor, iclass->match_vendor)))
-        return False;
+        return FALSE;
     if (iclass->match_device &&
 #ifdef HAVE_FNMATCH_H
         (!attrs->device ||
@@ -515,26 +515,26 @@ InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
 #else
         (!attrs->device || !strstr(attrs->device, iclass->match_device)))
 #endif
-        return False;
+        return FALSE;
     if (iclass->is_keyboard.set &&
         iclass->is_keyboard.val != !!(attrs->flags & ATTR_KEYBOARD))
-        return False;
+        return FALSE;
     if (iclass->is_pointer.set &&
         iclass->is_pointer.val != !!(attrs->flags & ATTR_POINTER))
-        return False;
+        return FALSE;
     if (iclass->is_joystick.set &&
         iclass->is_joystick.val != !!(attrs->flags & ATTR_JOYSTICK))
-        return False;
+        return FALSE;
     if (iclass->is_tablet.set &&
         iclass->is_tablet.val != !!(attrs->flags & ATTR_TABLET))
-        return False;
+        return FALSE;
     if (iclass->is_touchpad.set &&
         iclass->is_touchpad.val != !!(attrs->flags & ATTR_TOUCHPAD))
-        return False;
+        return FALSE;
     if (iclass->is_touchscreen.set &&
         iclass->is_touchscreen.val != !!(attrs->flags & ATTR_TOUCHSCREEN))
-        return False;
-    return True;
+        return FALSE;
+    return TRUE;
 }
 
 /*

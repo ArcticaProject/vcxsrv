@@ -162,7 +162,7 @@ BOOL		replicated = FALSE;
 	syms= &xkb_syms_rtrn[XKB_OFFSET(i,0)];
 	if ((nSyms[i]>1)&&(syms[1]==NoSymbol)&&(syms[0]!=NoSymbol)) {
 	    KeySym upper,lower;
-	    XConvertCase(syms[0],&lower,&upper);
+	    XkbConvertCase(syms[0],&lower,&upper);
 	    if (upper!=lower) {
 		xkb_syms_rtrn[XKB_OFFSET(i,0)]= lower;
 		xkb_syms_rtrn[XKB_OFFSET(i,1)]= upper;
@@ -175,11 +175,11 @@ BOOL		replicated = FALSE;
 	    }
 	}
 	if (((protected&(1<<i))==0)&&(types_inout[i]==XkbTwoLevelIndex)) {
-	    if (IsKeypadKey(syms[0])||IsKeypadKey(syms[1]))
+	    if (XkbKSIsKeypad(syms[0])||XkbKSIsKeypad(syms[1]))
 		types_inout[i]= XkbKeypadIndex;
 	    else {
 		KeySym upper,lower;
-		XConvertCase(syms[0],&lower,&upper);
+		XkbConvertCase(syms[0],&lower,&upper);
 		if ((syms[0]==lower)&&(syms[1]==upper))
 		    types_inout[i]= XkbAlphabeticIndex;
 	    }
@@ -388,7 +388,7 @@ unsigned		changed,tmp;
     nSyms= XkbKeyNumSyms(xkb,key);
     syms= XkbKeySymsPtr(xkb,key);
     if (nSyms>IBUF_SIZE) {
-	interps= _XkbTypedCalloc(nSyms,XkbSymInterpretPtr);
+	interps= xcalloc(nSyms, sizeof(XkbSymInterpretPtr));
 	if (interps==NULL) {
 	    interps= ibuf;
 	    nSyms= IBUF_SIZE;

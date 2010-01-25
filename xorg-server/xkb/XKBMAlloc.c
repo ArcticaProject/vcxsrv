@@ -59,7 +59,7 @@ XkbClientMapPtr map;
     }
 
     if (xkb->map==NULL) {
-	map= _XkbTypedCalloc(1,XkbClientMapRec);
+	map= xcalloc(1, sizeof(XkbClientMapRec));
 	if (map==NULL)
 	    return BadAlloc;
 	xkb->map= map;
@@ -68,7 +68,7 @@ XkbClientMapPtr map;
 
     if ((which&XkbKeyTypesMask)&&(nTotalTypes>0)) {
 	if (map->types==NULL) {
-	    map->types= _XkbTypedCalloc(nTotalTypes,XkbKeyTypeRec);
+	    map->types= xcalloc(nTotalTypes, sizeof(XkbKeyTypeRec));
 	    if (map->types==NULL)
 		return BadAlloc;
 	    map->num_types= 0;
@@ -77,7 +77,7 @@ XkbClientMapPtr map;
 	else if (map->size_types<nTotalTypes) {
 	    XkbKeyTypeRec *prev_types = map->types;
 
-	    map->types= _XkbTypedRealloc(map->types,nTotalTypes,XkbKeyTypeRec);
+	    map->types= xrealloc(map->types,nTotalTypes * sizeof(XkbKeyTypeRec));
 	    if (map->types==NULL) {
 		xfree(prev_types);
 		map->num_types= map->size_types= 0;
@@ -92,7 +92,7 @@ XkbClientMapPtr map;
 	int nKeys= XkbNumKeys(xkb);
 	if (map->syms==NULL) {
 	    map->size_syms= (nKeys*15)/10;
-	    map->syms= _XkbTypedCalloc(map->size_syms,KeySym);
+	    map->syms= xcalloc(map->size_syms, sizeof(KeySym));
 	    if (!map->syms) {
 		map->size_syms= 0;
 		return BadAlloc;
@@ -102,7 +102,7 @@ XkbClientMapPtr map;
 	}
 	if (map->key_sym_map==NULL) {
 	    i= xkb->max_key_code+1;
-	    map->key_sym_map= _XkbTypedCalloc(i,XkbSymMapRec);
+	    map->key_sym_map= xcalloc(i, sizeof(XkbSymMapRec));
 	    if (map->key_sym_map==NULL)
 		return BadAlloc;
 	}
@@ -114,7 +114,7 @@ XkbClientMapPtr map;
 	    return BadMatch;
 	if (map->modmap==NULL) {
 	    i= xkb->max_key_code+1;
-	    map->modmap= _XkbTypedCalloc(i,unsigned char);
+	    map->modmap= xcalloc(i, sizeof(unsigned char));
 	    if (map->modmap==NULL)
 		return BadAlloc;
 	}
@@ -131,7 +131,7 @@ XkbServerMapPtr map;
     if (xkb==NULL)
 	return BadMatch;
     if (xkb->server==NULL) {
-	map= _XkbTypedCalloc(1,XkbServerMapRec);
+	map= xcalloc(1, sizeof(XkbServerMapRec));
 	if (map==NULL)
 	    return BadAlloc;
 	for (i=0;i<XkbNumVirtualMods;i++) {
@@ -147,7 +147,7 @@ XkbServerMapPtr map;
 	    return BadMatch;
 	if (map->explicit==NULL) {
 	    i= xkb->max_key_code+1;
-	    map->explicit= _XkbTypedCalloc(i,unsigned char);
+	    map->explicit= xcalloc(i, sizeof(unsigned char));
 	    if (map->explicit==NULL)
 		return BadAlloc;
 	}
@@ -160,7 +160,7 @@ XkbServerMapPtr map;
         if (nNewActions<1)
 	    nNewActions= 1;
 	if (map->acts==NULL) {
-	    map->acts= _XkbTypedCalloc((nNewActions+1),XkbAction);
+	    map->acts= xcalloc((nNewActions+1), sizeof(XkbAction));
 	    if (map->acts==NULL)
 		return BadAlloc;
 	    map->num_acts= 1;
@@ -170,7 +170,7 @@ XkbServerMapPtr map;
 	    unsigned need;
 	    XkbAction *prev_acts = map->acts;
 	    need= map->num_acts+nNewActions;
-	    map->acts= _XkbTypedRealloc(map->acts,need,XkbAction);
+	    map->acts= xrealloc(map->acts,need * sizeof(XkbAction));
 	    if (map->acts==NULL) {
 		xfree(prev_acts);
 	        map->num_acts= map->size_acts= 0;
@@ -182,7 +182,7 @@ XkbServerMapPtr map;
 	}
 	if (map->key_acts==NULL) {
 	    i= xkb->max_key_code+1;
-	    map->key_acts= _XkbTypedCalloc(i,unsigned short);
+	    map->key_acts= xcalloc(i, sizeof(unsigned short));
 	    if (map->key_acts==NULL)
 		return BadAlloc;
 	}
@@ -194,7 +194,7 @@ XkbServerMapPtr map;
 	    return BadMatch;
 	if (map->behaviors==NULL) {
 	    i= xkb->max_key_code+1;
-	    map->behaviors= _XkbTypedCalloc(i,XkbBehavior);
+	    map->behaviors= xcalloc(i, sizeof(XkbBehavior));
 	    if (map->behaviors==NULL)
 		return BadAlloc;
 	}
@@ -206,7 +206,7 @@ XkbServerMapPtr map;
 	    return BadMatch;
 	if (map->vmodmap==NULL) {
 	    i= xkb->max_key_code+1;
-	    map->vmodmap= _XkbTypedCalloc(i,unsigned short);
+	    map->vmodmap= xcalloc(i, sizeof(unsigned short));
 	    if (map->vmodmap==NULL)
 		return BadAlloc;
 	}
@@ -235,20 +235,20 @@ XkbCopyKeyType(XkbKeyTypePtr from,XkbKeyTypePtr into)
     }
     *into= *from;
     if ((from->map)&&(into->map_count>0)) {
-	into->map= _XkbTypedCalloc(into->map_count,XkbKTMapEntryRec);
+	into->map= xcalloc(into->map_count, sizeof(XkbKTMapEntryRec));
 	if (!into->map)
 	    return BadAlloc;
 	memcpy(into->map,from->map,into->map_count*sizeof(XkbKTMapEntryRec));
     }
     if ((from->preserve)&&(into->map_count>0)) {
-	into->preserve= _XkbTypedCalloc(into->map_count,XkbModsRec);
+	into->preserve= xcalloc(into->map_count, sizeof(XkbModsRec));
 	if (!into->preserve)
 	    return BadAlloc;
 	memcpy(into->preserve,from->preserve,
 				into->map_count*sizeof(XkbModsRec));
     }
     if ((from->level_names)&&(into->num_levels>0)) {
-	into->level_names= _XkbTypedCalloc(into->num_levels,Atom);
+	into->level_names= xcalloc(into->num_levels, sizeof(Atom));
 	if (!into->level_names)
 	    return BadAlloc;
 	memcpy(into->level_names,from->level_names,
@@ -310,7 +310,7 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
 	XkbKTMapEntryRec *prev_map = type->map;
 
 	if ((map_count>type->map_count)||(type->map==NULL))
-	    type->map=_XkbTypedRealloc(type->map,map_count,XkbKTMapEntryRec);
+	    type->map = xrealloc(type->map,map_count * sizeof(XkbKTMapEntryRec));
 	if (!type->map) {
 	    if (prev_map) 
 		xfree(prev_map);
@@ -320,8 +320,8 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
 	    XkbModsRec *prev_preserve = type->preserve;
 
 	    if ((map_count>type->map_count)||(type->preserve==NULL)) {
-		type->preserve= _XkbTypedRealloc(type->preserve,map_count,
-	     						    XkbModsRec);
+		type->preserve = xrealloc(type->preserve,
+					  map_count * sizeof(XkbModsRec));
 	    }
 	    if (!type->preserve) {
 		if (prev_preserve) 
@@ -339,7 +339,8 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
     if ((new_num_lvls>type->num_levels)||(type->level_names==NULL)) {
 	Atom * prev_level_names = type->level_names;
 
-	type->level_names=_XkbTypedRealloc(type->level_names,new_num_lvls,Atom);
+	type->level_names = xrealloc(type->level_names,
+				     new_num_lvls * sizeof(Atom));
 	if (!type->level_names) {
 	    if (prev_level_names) 
 		xfree(prev_level_names);
@@ -396,7 +397,7 @@ KeyCode		matchingKeys[XkbMaxKeyCount],nMatchingKeys;
 	if (nResize>0) {
 	    int nextMatch;
 	    xkb->map->size_syms= (nTotal*15)/10;
-	    newSyms = _XkbTypedCalloc(xkb->map->size_syms,KeySym);
+	    newSyms = xcalloc(xkb->map->size_syms, sizeof(KeySym));
 	    if (newSyms==NULL)
 		return BadAlloc;
 	    nextMatch= 0;
@@ -498,7 +499,7 @@ KeySym	*newSyms;
 	return &xkb->map->syms[xkb->map->key_sym_map[key].offset];
     }
     xkb->map->size_syms+= (needed>32?needed:32);
-    newSyms = _XkbTypedCalloc(xkb->map->size_syms,KeySym);
+    newSyms = xcalloc(xkb->map->size_syms, sizeof(KeySym));
     if (newSyms==NULL)
 	return NULL;
     newSyms[0]= NoSymbol;
@@ -637,8 +638,8 @@ int	tmp;
 	    if (xkb->map->key_sym_map) {
 		XkbSymMapRec *prev_key_sym_map = xkb->map->key_sym_map;
 
-		xkb->map->key_sym_map= _XkbTypedRealloc(xkb->map->key_sym_map,
-						(maxKC+1),XkbSymMapRec);
+		xkb->map->key_sym_map = xrealloc(xkb->map->key_sym_map,
+						(maxKC+1) * sizeof(XkbSymMapRec));
 		if (!xkb->map->key_sym_map) {
 		    xfree(prev_key_sym_map);
 		    return BadAlloc;
@@ -655,8 +656,8 @@ int	tmp;
 	    if (xkb->map->modmap) {
 		unsigned char *prev_modmap = xkb->map->modmap;
 
-		xkb->map->modmap= _XkbTypedRealloc(xkb->map->modmap,
-						(maxKC+1),unsigned char);
+		xkb->map->modmap = xrealloc(xkb->map->modmap,
+					    (maxKC+1) * sizeof(unsigned char));
 		if (!xkb->map->modmap) {
 		    xfree(prev_modmap);
 		    return BadAlloc;
@@ -674,8 +675,8 @@ int	tmp;
 	    if (xkb->server->behaviors) {
 		XkbBehavior *prev_behaviors = xkb->server->behaviors;
 
-		xkb->server->behaviors=_XkbTypedRealloc(xkb->server->behaviors,
-						(maxKC+1),XkbBehavior);
+		xkb->server->behaviors = xrealloc(xkb->server->behaviors,
+						(maxKC+1) * sizeof(XkbBehavior));
 		if (!xkb->server->behaviors) {
 		    xfree(prev_behaviors);
 		    return BadAlloc;
@@ -692,8 +693,8 @@ int	tmp;
 	    if (xkb->server->key_acts) {
 		unsigned short *prev_key_acts = xkb->server->key_acts;
 
-		xkb->server->key_acts= _XkbTypedRealloc(xkb->server->key_acts,
-						(maxKC+1),unsigned short);
+		xkb->server->key_acts= xrealloc(xkb->server->key_acts,
+						(maxKC+1) * sizeof(unsigned short));
 		if (!xkb->server->key_acts) {
 		    xfree(prev_key_acts);
 		    return BadAlloc;
@@ -710,8 +711,8 @@ int	tmp;
 	    if (xkb->server->vmodmap) {
 		unsigned short *prev_vmodmap = xkb->server->vmodmap;
 
-		xkb->server->vmodmap= _XkbTypedRealloc(xkb->server->vmodmap,
-						(maxKC+1),unsigned short);
+		xkb->server->vmodmap= xrealloc(xkb->server->vmodmap,
+						(maxKC+1) * sizeof(unsigned short));
 		if (!xkb->server->vmodmap) {
 		    xfree(prev_vmodmap);
 		    return BadAlloc;
@@ -729,8 +730,8 @@ int	tmp;
 	if ((xkb->names)&&(xkb->names->keys)) {
 	    XkbKeyNameRec *prev_keys = xkb->names->keys;
 
-	    xkb->names->keys= _XkbTypedRealloc(xkb->names->keys,
-	    					(maxKC+1),XkbKeyNameRec);
+	    xkb->names->keys = xrealloc(xkb->names->keys,
+					(maxKC+1) * sizeof(XkbKeyNameRec));
 	    if (!xkb->names->keys) {
 		xfree(prev_keys);
 		return BadAlloc;
@@ -767,7 +768,7 @@ XkbAction *newActs;
 	return &xkb->server->acts[xkb->server->key_acts[key]];
     }
     xkb->server->size_acts= xkb->server->num_acts+needed+8;
-    newActs = _XkbTypedCalloc(xkb->server->size_acts,XkbAction);
+    newActs = xcalloc(xkb->server->size_acts, sizeof(XkbAction));
     if (newActs==NULL)
 	return NULL;
     newActs[0].type = XkbSA_NoAction;

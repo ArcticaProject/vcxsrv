@@ -524,7 +524,7 @@ Bool			checkNames;
     sli= NULL;
     checkAccel= checkNames= False;
     if ((kf!=NULL)&&(kf->xkb_sli==NULL)) {
-	kf->xkb_sli= sli= _XkbTypedCalloc(1,XkbSrvLedInfoRec);
+	kf->xkb_sli= sli= xcalloc(1, sizeof(XkbSrvLedInfoRec));
 	if (sli==NULL)
 	    return NULL; /* ALLOCATION ERROR */
 	if (dev->key && dev->key->xkbInfo)
@@ -567,7 +567,7 @@ Bool			checkNames;
 	}
     }
     else if ((lf!=NULL)&&(lf->xkb_sli==NULL)) {
-	lf->xkb_sli= sli= _XkbTypedCalloc(1,XkbSrvLedInfoRec);
+	lf->xkb_sli= sli= xcalloc(1, sizeof(XkbSrvLedInfoRec));
 	if (sli==NULL)
 	    return NULL; /* ALLOCATION ERROR */
 	if (dev->key && dev->key->xkbInfo)
@@ -585,9 +585,9 @@ Bool			checkNames;
 	sli->names=		NULL;
     }
     if ((sli->names==NULL)&&(needed_parts&XkbXI_IndicatorNamesMask))
-	sli->names= _XkbTypedCalloc(XkbNumIndicators,Atom);
+	sli->names= xcalloc(XkbNumIndicators, sizeof(Atom));
     if ((sli->maps==NULL)&&(needed_parts&XkbXI_IndicatorMapsMask))
-	sli->maps= _XkbTypedCalloc(XkbNumIndicators,XkbIndicatorMapRec);
+	sli->maps= xcalloc(XkbNumIndicators, sizeof(XkbIndicatorMapRec));
     if (checkNames) {
 	register unsigned i,bit;
 	sli->namesPresent=	0;
@@ -633,7 +633,7 @@ XkbCopySrvLedInfo(	DeviceIntPtr		from,
     if (!src)
 	goto finish;
 
-    sli_new = _XkbTypedCalloc(1, XkbSrvLedInfoRec);
+    sli_new = xcalloc(1, sizeof( XkbSrvLedInfoRec));
     if (!sli_new)
 	goto finish;
 
@@ -644,8 +644,8 @@ XkbCopySrvLedInfo(	DeviceIntPtr		from,
 	sli_new->fb.lf = lf;
 
     if (!(sli_new->flags & XkbSLI_IsDefault)) {
-	sli_new->names= _XkbTypedCalloc(XkbNumIndicators,Atom);
-	sli_new->maps= _XkbTypedCalloc(XkbNumIndicators,XkbIndicatorMapRec);
+	sli_new->names= xcalloc(XkbNumIndicators, sizeof(Atom));
+	sli_new->maps= xcalloc(XkbNumIndicators, sizeof(XkbIndicatorMapRec));
     } /* else sli_new->names/maps is pointing to
 	dev->key->xkbInfo->desc->names->indicators;
 	dev->key->xkbInfo->desc->names->indicators; */
@@ -715,9 +715,9 @@ XkbSrvLedInfoPtr	sli;
 	}
     }
     if ((sli->names==NULL)&&(needed_parts&XkbXI_IndicatorNamesMask))
-	sli->names= _XkbTypedCalloc(XkbNumIndicators,Atom);
+	sli->names= xcalloc(XkbNumIndicators, sizeof(Atom));
     if ((sli->maps==NULL)&&(needed_parts&XkbXI_IndicatorMapsMask))
-	sli->maps= _XkbTypedCalloc(XkbNumIndicators,XkbIndicatorMapRec);
+	sli->maps= xcalloc(XkbNumIndicators, sizeof(XkbIndicatorMapRec));
     return sli;
 }
 

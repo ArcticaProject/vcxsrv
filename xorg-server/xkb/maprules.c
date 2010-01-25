@@ -474,7 +474,7 @@ int len;
     if ((!str1)||(!str2))
 	return str1;
     len= strlen(str1)+strlen(str2)+1;
-    str1= _XkbTypedRealloc(str1,len,char);
+    str1= xrealloc(str1,len * sizeof(char));
     if (str1)
 	strcat(str1,str2);
     return str1;
@@ -864,12 +864,12 @@ XkbRF_AddRule(XkbRF_RulesPtr	rules)
     if (rules->sz_rules<1) {
 	rules->sz_rules= 16;
 	rules->num_rules= 0;
-	rules->rules= _XkbTypedCalloc(rules->sz_rules,XkbRF_RuleRec);
+	rules->rules= xcalloc(rules->sz_rules, sizeof(XkbRF_RuleRec));
     }
     else if (rules->num_rules>=rules->sz_rules) {
 	rules->sz_rules*= 2;
-	rules->rules= _XkbTypedRealloc(rules->rules,rules->sz_rules,
-							XkbRF_RuleRec);
+	rules->rules= xrealloc(rules->rules,
+				rules->sz_rules * sizeof(XkbRF_RuleRec));
     }
     if (!rules->rules) {
 	rules->sz_rules= rules->num_rules= 0;
@@ -886,12 +886,12 @@ XkbRF_AddGroup(XkbRF_RulesPtr	rules)
     if (rules->sz_groups<1) {
 	rules->sz_groups= 16;
 	rules->num_groups= 0;
-	rules->groups= _XkbTypedCalloc(rules->sz_groups,XkbRF_GroupRec);
+	rules->groups= xcalloc(rules->sz_groups, sizeof(XkbRF_GroupRec));
     }
     else if (rules->num_groups >= rules->sz_groups) {
 	rules->sz_groups *= 2;
-	rules->groups= _XkbTypedRealloc(rules->groups,rules->sz_groups,
-							XkbRF_GroupRec);
+	rules->groups= xrealloc(rules->groups,
+				rules->sz_groups * sizeof(XkbRF_GroupRec));
     }
     if (!rules->groups) {
 	rules->sz_groups= rules->num_groups= 0;
@@ -972,7 +972,7 @@ Bool		ok;
 XkbRF_RulesPtr
 XkbRF_Create(void)
 {
-    return _XkbTypedCalloc(1, XkbRF_RulesRec);
+    return xcalloc(1, sizeof( XkbRF_RulesRec));
 }
 
 /***====================================================================***/

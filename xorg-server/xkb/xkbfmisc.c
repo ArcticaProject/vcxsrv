@@ -240,7 +240,7 @@ unsigned	wantNames,wantConfig,wantDflts;
     if ((xkb!=NULL) && (old_names!=NULL)) {
 	if (wantNames&XkmTypesMask) {
 	    if (old_names->types!=None) {
-		tmp= XkbAtomGetString(old_names->types);
+		tmp= NameForAtom(old_names->types);
 		names->types= _XkbDupString(tmp);
 	    }
 	    else {
@@ -250,7 +250,7 @@ unsigned	wantNames,wantConfig,wantDflts;
 	}
 	if (wantNames&XkmCompatMapMask) {
 	    if (old_names->compat!=None) {
-		tmp= XkbAtomGetString(old_names->compat);
+		tmp= NameForAtom(old_names->compat);
 		names->compat= _XkbDupString(tmp);
 	    }
 	    else wantDflts|= XkmCompatMapMask;
@@ -259,13 +259,13 @@ unsigned	wantNames,wantConfig,wantDflts;
 	if (wantNames&XkmSymbolsMask) {
 	    if (old_names->symbols==None)
 		return False;
-	    tmp= XkbAtomGetString(old_names->symbols);
+	    tmp= NameForAtom(old_names->symbols);
 	    names->symbols= _XkbDupString(tmp);
 	    complete|= XkmSymbolsMask; 
 	}
 	if (wantNames&XkmKeyNamesMask) {
 	   if (old_names->keycodes!=None) {
-		tmp= XkbAtomGetString(old_names->keycodes);
+		tmp= NameForAtom(old_names->keycodes);
 		names->keycodes= _XkbDupString(tmp);
 	    }
 	    else wantDflts|= XkmKeyNamesMask;
@@ -274,7 +274,7 @@ unsigned	wantNames,wantConfig,wantDflts;
 	if (wantNames&XkmGeometryMask) {
 	    if (old_names->geometry==None)
 		return False;
-	    tmp= XkbAtomGetString(old_names->geometry);
+	    tmp= NameForAtom(old_names->geometry);
 	    names->geometry= _XkbDupString(tmp);
 	    complete|= XkmGeometryMask; 
 	    wantNames&= ~XkmGeometryMask;

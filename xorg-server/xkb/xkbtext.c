@@ -74,7 +74,7 @@ XkbAtomText(Atom atm,unsigned format)
 const char	*atmstr;
 char	*rtrn,*tmp;
 
-    atmstr = XkbAtomGetString(atm);
+    atmstr = NameForAtom(atm);
     if (atmstr != NULL) {
 	int	len;
 	len= strlen(atmstr)+1;
@@ -118,7 +118,7 @@ char  numBuf[20];
     if (ndx>=XkbNumVirtualMods)
 	 tmp= "illegal";
     else if (vmodNames&&(vmodNames[ndx]!=None))
-	 tmp= XkbAtomGetString(vmodNames[ndx]);
+	 tmp= NameForAtom(vmodNames[ndx]);
     if (tmp==NULL) {
 	sprintf(numBuf,"%d",ndx);
 	tmp = numBuf;

@@ -97,7 +97,7 @@ char *		tmp;
     if ((list->szPool-list->nPool)<wlen) {
 	if (wlen>1024)	list->szPool+= XkbPaddedSize(wlen*2);
 	else		list->szPool+= 1024;
-	list->pool= _XkbTypedRealloc(list->pool,list->szPool,char);
+	list->pool= xrealloc(list->pool, list->szPool * sizeof(char));
 	if (!list->pool)
 	    return BadAlloc;
     }

@@ -472,7 +472,7 @@ AdjustWaitForDelay (pointer waitTime, unsigned long newdelay)
 void UseMsg(void)
 {
     ErrorF("use: X [:<display>] [option]\n");
-    ErrorF("-a #                   mouse acceleration (pixels)\n");
+    ErrorF("-a #                   default pointer acceleration (factor)\n");
     ErrorF("-ac                    disable access control restrictions\n");
     ErrorF("-audit int             set audit trail level\n");	
     ErrorF("-auth file             select authorization file\n");	
@@ -524,7 +524,7 @@ void UseMsg(void)
 #endif
     ErrorF("-retro                 start with classic stipple and cursor\n");
     ErrorF("-s #                   screen-saver timeout (minutes)\n");
-    ErrorF("-t #                   mouse threshold (pixels)\n");
+    ErrorF("-t #                   default pointer threshold (pixels/t)\n");
     ErrorF("-terminate             terminate at server reset\n");
     ErrorF("-to #                  connection time out\n");
     ErrorF("-tst                   disable testing extensions\n");
