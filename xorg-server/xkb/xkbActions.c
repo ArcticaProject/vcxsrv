@@ -1016,7 +1016,7 @@ register int	i;
 
     if (xkbi->szFilters==0) {
 	xkbi->szFilters = 4;
-	xkbi->filters = _XkbTypedCalloc(xkbi->szFilters,XkbFilterRec);
+	xkbi->filters = xcalloc(xkbi->szFilters, sizeof(XkbFilterRec));
 	/* 6/21/93 (ef) -- XXX! deal with allocation failure */
     }
     for (i=0;i<xkbi->szFilters;i++) {
@@ -1026,9 +1026,8 @@ register int	i;
 	}
     }
     xkbi->szFilters*=2;
-    xkbi->filters= _XkbTypedRealloc(xkbi->filters,
-                                    xkbi->szFilters,
-                                    XkbFilterRec);
+    xkbi->filters= xrealloc(xkbi->filters,
+                            xkbi->szFilters * sizeof(XkbFilterRec));
     /* 6/21/93 (ef) -- XXX! deal with allocation failure */
     bzero(&xkbi->filters[xkbi->szFilters/2],
             (xkbi->szFilters/2)*sizeof(XkbFilterRec));

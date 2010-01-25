@@ -233,7 +233,7 @@ WriteXKBIndicatorMap(	FILE *			file,
 			void *			priv)
 {
 
-    fprintf(file,"    indicator \"%s\" {\n",XkbAtomGetString(name));
+    fprintf(file,"    indicator \"%s\" {\n",NameForAtom(name));
     if (led->flags&XkbIM_NoExplicit)
 	fprintf(file,"        !allowExplicit;\n");
     if (led->flags&XkbIM_LEDDrivesKB)

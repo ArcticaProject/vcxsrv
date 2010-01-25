@@ -160,6 +160,64 @@ CheckForEmptyMask(CursorBitsPtr bits)
 }
 
 /**
+ * realize the cursor for every screen. Do not change the refcnt, this will be
+ * changed when ChangeToCursor actually changes the sprite.
+ *
+ * @return Success if all cursors realize on all screens, BadAlloc if realize
+ * failed for a device on a given screen.
+ */
+static int
+RealizeCursorAllScreens(CursorPtr pCurs)
+{
+    DeviceIntPtr pDev;
+    ScreenPtr   pscr;
+    int nscr;
+
+    for (nscr = 0; nscr < screenInfo.numScreens; nscr++)
+    {
+        pscr = screenInfo.screens[nscr];
+        for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
+        {
+            if (DevHasCursor(pDev))
+            {
+                if (!( *pscr->RealizeCursor)(pDev, pscr, pCurs))
+                {
+                    /* Realize failed for device pDev on screen pscr.
+                     * We have to assume that for all devices before, realize
+                     * worked. We need to rollback all devices so far on the
+                     * current screen and then all devices on previous
+                     * screens.
+                     */
+                    DeviceIntPtr pDevIt = inputInfo.devices; /*dev iterator*/
+                    while(pDevIt && pDevIt != pDev)
+                    {
+                        if (DevHasCursor(pDevIt))
+                            ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
+                        pDevIt = pDevIt->next;
+                    }
+                    while (--nscr >= 0)
+                    {
+                        pscr = screenInfo.screens[nscr];
+                        /* now unrealize all devices on previous screens */
+                        pDevIt = inputInfo.devices;
+                        while (pDevIt)
+                        {
+                            if (DevHasCursor(pDevIt))
+                                ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
+                            pDevIt = pDevIt->next;
+                        }
+                        ( *pscr->UnrealizeCursor)(pDev, pscr, pCurs);
+                    }
+                    return BadAlloc;
+                }
+            }
+        }
+    }
+
+    return Success;
+}
+
+/**
  * does nothing about the resource table, just creates the data structure.
  * does not copy the src and mask bits
  *
@@ -176,9 +234,7 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
 {
     CursorBitsPtr  bits;
     CursorPtr 	pCurs;
-    int		rc, nscr;
-    ScreenPtr 	pscr;
-    DeviceIntPtr pDev; 
+    int rc;
 
     *ppCurs = NULL;
     pCurs = (CursorPtr)xcalloc(sizeof(CursorRec) + sizeof(CursorBits), 1);
@@ -222,62 +278,21 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
     /* security creation/labeling check */
     rc = XaceHook(XACE_RESOURCE_ACCESS, client, cid, RT_CURSOR,
 		  pCurs, RT_NONE, NULL, DixCreateAccess);
-    if (rc != Success) {
-	dixFreePrivates(pCurs->devPrivates);
-	FreeCursorBits(bits);
-	xfree(pCurs);
-	return rc;
-    }
-	
-    /*
-     * realize the cursor for every screen
-     * Do not change the refcnt, this will be changed when ChangeToCursor
-     * actually changes the sprite.
-     */
-    for (nscr = 0; nscr < screenInfo.numScreens; nscr++)
-    {
-        pscr = screenInfo.screens[nscr];
-        for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
-        {
-            if (DevHasCursor(pDev))
-            {
-                if (!( *pscr->RealizeCursor)(pDev, pscr, pCurs))
-                {
-                    /* Realize failed for device pDev on screen pscr.
-                     * We have to assume that for all devices before, realize
-                     * worked. We need to rollback all devices so far on the
-                     * current screen and then all devices on previous
-                     * screens.
-                     */
-                    DeviceIntPtr pDevIt = inputInfo.devices; /*dev iterator*/
-                    while(pDevIt && pDevIt != pDev)
-                    {
-                        if (DevHasCursor(pDevIt))
-                            ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
-                        pDevIt = pDevIt->next;
-                    }
-                    while (--nscr >= 0)
-                    {
-                        pscr = screenInfo.screens[nscr];
-                        /* now unrealize all devices on previous screens */
-                        pDevIt = inputInfo.devices;
-                        while (pDevIt)
-                        {
-                            if (DevHasCursor(pDevIt))
-                                ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
-                            pDevIt = pDevIt->next;
-                        }
-                        ( *pscr->UnrealizeCursor)(pDev, pscr, pCurs);
-                    }
-                    dixFreePrivates(pCurs->devPrivates);
-                    FreeCursorBits(bits);
-                    xfree(pCurs);
-                    return BadAlloc;
-                }
-            }
-        }
-    }
+    if (rc != Success)
+        goto error;
+
+    rc = RealizeCursorAllScreens(pCurs);
+    if (rc != Success)
+        goto error;
+
     *ppCurs = pCurs;
+    return Success;
+
+error:
+    dixFreePrivates(pCurs->devPrivates);
+    FreeCursorBits(bits);
+    xfree(pCurs);
+
     return rc;
 }
 
@@ -294,10 +309,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
     int rc;
     CursorBitsPtr  bits;
     CursorPtr 	pCurs;
-    int		nscr;
-    ScreenPtr 	pscr;
     GlyphSharePtr pShare;
-    DeviceIntPtr pDev;
 
     rc = dixLookupResourceByType((pointer *)&sourcefont, source, RT_FONT, client,
 				 DixUseAccess);
@@ -444,67 +456,22 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
     /* security creation/labeling check */
     rc = XaceHook(XACE_RESOURCE_ACCESS, client, cid, RT_CURSOR,
 		  pCurs, RT_NONE, NULL, DixCreateAccess);
-    if (rc != Success) {
-	dixFreePrivates(pCurs->devPrivates);
-	FreeCursorBits(bits);
-	xfree(pCurs);
-	return rc;
-    }
-	
-    /*
-     * realize the cursor for every screen
-     */
-    for (nscr = 0; nscr < screenInfo.numScreens; nscr++)
-    {
-        pscr = screenInfo.screens[nscr];
+    if (rc != Success)
+        goto error;
 
-        for (pDev = inputInfo.devices; pDev; pDev = pDev->next)
-        {
-            if (DevHasCursor(pDev))
-            {
-                if (!( *pscr->RealizeCursor)(pDev, pscr, pCurs))
-                {
-                    /* Realize failed for device pDev on screen pscr.
-                     * We have to assume that for all devices before, realize
-                     * worked. We need to rollback all devices so far on the
-                     * current screen and then all devices on previous
-                     * screens.
-                     */
-                    DeviceIntPtr pDevIt = inputInfo.devices; /*dev iterator*/
-                    while(pDevIt && pDevIt != pDev)
-                    {
-                        if (DevHasCursor(pDevIt))
-                            ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
-                        pDevIt = pDevIt->next;
-                    }
+    rc = RealizeCursorAllScreens(pCurs);
+    if (rc != Success)
+        goto error;
 
-                    (*pscr->UnrealizeCursor)(inputInfo.pointer, pscr, pCurs);
-
-                    while (--nscr >= 0)
-                    {
-                        pscr = screenInfo.screens[nscr];
-                        /* now unrealize all devices on previous screens */
-                        ( *pscr->UnrealizeCursor)(inputInfo.pointer, pscr, pCurs);
-
-                        pDevIt = inputInfo.devices;
-                        while (pDevIt)
-                        {
-                            if (DevHasCursor(pDevIt))
-                                ( *pscr->UnrealizeCursor)(pDevIt, pscr, pCurs);
-                            pDevIt = pDevIt->next;
-                        }
-                        ( *pscr->UnrealizeCursor)(pDev, pscr, pCurs);
-                    }
-                    dixFreePrivates(pCurs->devPrivates);
-                    FreeCursorBits(bits);
-                    xfree(pCurs);
-                    return BadAlloc;
-                }
-            }
-        }
-    }
     *ppCurs = pCurs;
     return Success;
+
+error:
+    dixFreePrivates(pCurs->devPrivates);
+    FreeCursorBits(bits);
+    xfree(pCurs);
+
+    return rc;
 }
 
 /** CreateRootCursor
