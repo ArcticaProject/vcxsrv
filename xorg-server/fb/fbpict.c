@@ -452,6 +452,7 @@ image_from_pict (PicturePtr pict, Bool has_clip, int *xoff, int *yoff)
 	    else if (sp->type == SourcePictTypeConical)
 		image = create_conical_gradient_image (gradient);
 	}
+	*xoff = *yoff = 0;
     }
     
     if (image)

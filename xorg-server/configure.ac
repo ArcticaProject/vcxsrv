@@ -34,9 +34,10 @@ AM_MAINTAINER_MODE
 
 # Require xorg-macros: XORG_DEFAULT_OPTIONS
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.3)
+          [m4_fatal([must install xorg-macros 1.5 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.5)
 XORG_DEFAULT_OPTIONS
+XORG_WITH_DOXYGEN
 
 m4_ifndef([XORG_FONT_MACROS_VERSION], [m4_fatal([must install fontutil 1.1 or later before running autoconf/autogen])])
 XORG_FONT_MACROS_VERSION(1.1)
@@ -571,9 +572,6 @@ AC_ARG_ENABLE(install-libxf86config,
 				[Install libxf86config (default: disabled)]),
 				[INSTALL_LIBXF86CONFIG=$enableval],
 				[INSTALL_LIBXF86CONFIG=no])
-AC_ARG_ENABLE(null-root-cursor, AS_HELP_STRING([--enable-null-root-cursor], [Use an empty root cursor (default: use core cursor)]),
-                                 [NULL_ROOT_CURSOR=$enableval],
-                                 [NULL_ROOT_CURSOR=no])
 AC_ARG_ENABLE(visibility,     AC_HELP_STRING([--enable-visibility], [Enable symbol visibility (default: auto)]),
 				[SYMBOL_VISIBILITY=$enableval],
 				[SYMBOL_VISIBILITY=auto])
@@ -641,9 +639,9 @@ AC_ARG_ENABLE(xephyr,         AS_HELP_STRING([--enable-xephyr], [Build the kdriv
 AC_ARG_ENABLE(xfake,          AS_HELP_STRING([--enable-xfake], [Build the kdrive 'fake' server (default: auto)]), [XFAKE=$enableval], [XFAKE=auto])
 AC_ARG_ENABLE(xfbdev,         AS_HELP_STRING([--enable-xfbdev], [Build the kdrive framebuffer device server (default: auto)]), [XFBDEV=$enableval], [XFBDEV=auto])
 dnl kdrive options
-AC_ARG_ENABLE(kdrive-kbd,     AS_HELP_STRING([--enable-kdrive-kbd], [Build kbd driver for kdrive (default: enabled)]), [KDRIVE_KBD=$enableval], [KDRIVE_KBD=yes])
-AC_ARG_ENABLE(kdrive-mouse,   AC_HELP_STRING([--enable-kdrive-mouse], [Build mouse driver for kdrive (default: enabled)]), [KDRIVE_MOUSE=$enableval], [KDRIVE_MOUSE=yes])
-AC_ARG_ENABLE(kdrive-evdev,   AC_HELP_STRING([--enable-kdrive-evdev], [Build evdev driver for kdrive (default: enabled)]), [KDRIVE_EVDEV=$enableval], [KDRIVE_EVDEV=yes])
+AC_ARG_ENABLE(kdrive-kbd,     AS_HELP_STRING([--enable-kdrive-kbd], [Build kbd driver for kdrive (default: auto)]), [KDRIVE_KBD=$enableval], [KDRIVE_KBD=auto])
+AC_ARG_ENABLE(kdrive-mouse,   AC_HELP_STRING([--enable-kdrive-mouse], [Build mouse driver for kdrive (default: auto)]), [KDRIVE_MOUSE=$enableval], [KDRIVE_MOUSE=auto])
+AC_ARG_ENABLE(kdrive-evdev,   AC_HELP_STRING([--enable-kdrive-evdev], [Build evdev driver for kdrive (default: auto)]), [KDRIVE_EVDEV=$enableval], [KDRIVE_EVDEV=auto])
 
 
 dnl chown/chmod to be setuid root as part of build
@@ -772,7 +770,7 @@ REQUIRED_LIBS="xfont xau [pixman-1 >= 0.15.20]"
 dnl List of libraries that require a specific version
 LIBAPPLEWM="applewm >= 1.4"
 LIBDMX="dmx >= 1.0.99.1"
-LIBDRI="dri >= 7.1.0"
+LIBDRI="dri >= 7.8.0"
 LIBDRM="libdrm >= 2.3.0"
 LIBGL="gl >= 7.1.0"
 LIBXEXT="xext >= 1.0.99.4"
@@ -1185,10 +1183,6 @@ AC_CHECK_FUNC(strncasecmp, [], AC_DEFINE([NEED_STRNCASECMP], 1,
                                         [Do not have 'strncasecmp'.]))
 AC_CHECK_FUNC(strcasestr, [], AC_DEFINE([NEED_STRCASESTR], 1,
                                        [Do not have 'strcasestr'.]))
-
-if test "x$NULL_ROOT_CURSOR" = xyes; then
-        AC_DEFINE(NULL_ROOT_CURSOR, 1, [Use an empty root cursor])
-fi
 
 PKG_CHECK_MODULES([XDMCP], [xdmcp], [have_libxdmcp="yes"], [have_libxdmcp="no"])
 if test "x$have_libxdmcp" = xyes; then
@@ -1943,8 +1937,6 @@ fi
 AC_MSG_RESULT([$DMX])
 AM_CONDITIONAL(DMX, [test "x$DMX" = xyes])
 
-DOXYGEN="not_found"
-
 if test "x$DMX" = xyes; then
 	if test "x$have_dmx" = xno; then
 		AC_MSG_ERROR([Xdmx build explicitly requested, but required
@@ -1980,12 +1972,6 @@ dnl Linux sources in DMX require <linux/keyboard.h>
 	AC_SUBST(X11EXAMPLES_DEP_LIBS)
 
 fi
-AC_PATH_PROG(DOXYGEN,doxygen,[not_found])
-if test "x$DOXYGEN" = "xnot_found" ; then
-    AC_MSG_WARN([doxygen not found in $PATH. Cannot build dmx documentation])
-fi
-AC_SUBST(DOXYGEN)
-AM_CONDITIONAL([HAVE_DOXYGEN], [test "x$DOXYGEN" != "xnot_found"])
 AM_CONDITIONAL([DMX_BUILD_LNX], [test "x$DMX_BUILD_LNX" = xyes])
 AM_CONDITIONAL([DMX_BUILD_USB], [test "x$DMX_BUILD_USB" = xyes])
 
@@ -1995,9 +1981,6 @@ XEPHYR_LIBS=
 XEPHYR_INCS=
 
 AM_CONDITIONAL(KDRIVE, [test x$KDRIVE = xyes])
-AM_CONDITIONAL(KDRIVE_KBD, test "x$KDRIVE_KBD" = xyes)
-AM_CONDITIONAL(KDRIVE_EVDEV, test "x$KDRIVE_EVDEV" = xyes)
-AM_CONDITIONAL(KDRIVE_MOUSE, test "x$KDRIVE_MOUSE" = xyes)
 
 if test "$KDRIVE" = yes; then
     AC_DEFINE(KDRIVESERVER,1,[Build Kdrive X server])
@@ -2072,6 +2055,26 @@ if test "$KDRIVE" = yes; then
 	*linux*)
 	    KDRIVE_OS_LIB='$(top_builddir)/hw/kdrive/linux/liblinux.la'
             KDRIVELINUX=yes
+	    if test "x$KDRIVE_EVDEV" = xauto; then
+		KDRIVE_EVDEV=yes
+	    fi
+	    if test "x$KDRIVE_KBD" = xauto; then
+		KDRIVE_KBD=yes
+	    fi
+	    if test "x$KDRIVE_MOUSE" = xauto; then
+		KDRIVE_MOUSE=yes
+	    fi
+	    ;;
+	*)
+	    if test "x$KDRIVE_EVDEV" = xauto; then
+		KDRIVE_EVDEV=no
+	    fi
+	    if test "x$KDRIVE_KBD" = xauto; then
+		KDRIVE_KBD=no
+	    fi
+	    if test "x$KDRIVE_MOUSE" = xauto; then
+		KDRIVE_MOUSE=no
+	    fi
 	    ;;
     esac
     KDRIVE_STUB_LIB='$(top_builddir)/hw/kdrive/src/libkdrivestubs.la'
@@ -2090,6 +2093,9 @@ AC_SUBST([KDRIVE_PURE_LIBS])
 AC_SUBST([KDRIVE_LOCAL_LIBS])
 AC_SUBST([KDRIVE_LIBS])
 AM_CONDITIONAL(KDRIVELINUX, [test "x$KDRIVELINUX" = xyes])
+AM_CONDITIONAL(KDRIVE_EVDEV, [test "x$KDRIVE_EVDEV" = xyes])
+AM_CONDITIONAL(KDRIVE_KBD,   [test "x$KDRIVE_KBD" = xyes])
+AM_CONDITIONAL(KDRIVE_MOUSE, [test "x$KDRIVE_MOUSE" = xyes])
 AM_CONDITIONAL(TSLIB, [test "x$HAVE_TSLIB" = xyes])
 AM_CONDITIONAL(KDRIVEFBDEV, [test "x$XFBDEV" = xyes])
 AM_CONDITIONAL(XEPHYR, [test "x$KDRIVE" = xyes && test "x$XEPHYR" = xyes])

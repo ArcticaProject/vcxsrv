@@ -39,6 +39,8 @@ static Bool Protect0 = FALSE;
 static int VTnum = -1;
 static int xf86StartVT = -1;
 static int vtEnabled = 0;
+extern void xf86VTAcquire(int);
+extern void xf86VTRelease(int);
 #endif
 
 /* Device to open as xf86Info.consoleFd */
@@ -137,7 +139,8 @@ xf86OpenConsole(void)
 	    else
 	    {
 		if ((ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) ||
-		    (xf86Info.vtno == -1)) {
+		    (xf86Info.vtno == -1))
+		{
 		    FatalError("xf86OpenConsole: Cannot find a free VT\n");
 		}
 	    }
@@ -146,7 +149,8 @@ xf86OpenConsole(void)
 	    snprintf(consoleDev, PATH_MAX, "/dev/vt/%d", xf86Info.vtno);
 	}
 
-	if (fd != -1) {
+	if (fd != -1)
+	{
 	    close(fd);
 	}
 
@@ -178,11 +182,12 @@ xf86OpenConsole(void)
 	    if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) < 0)
 		FatalError("xf86OpenConsole: VT_GETMODE failed\n");
 
-	    OsSignal(SIGUSR1, xf86VTRequest);
+	    OsSignal(SIGUSR1, xf86VTAcquire);
+	    OsSignal(SIGUSR2, xf86VTRelease);
 
 	    VT.mode = VT_PROCESS;
-	    VT.relsig = SIGUSR1;
 	    VT.acqsig = SIGUSR1;
+	    VT.relsig = SIGUSR2;
 
 	    if (ioctl(xf86Info.consoleFd, VT_SETMODE, &VT) < 0)
 		FatalError("xf86OpenConsole: VT_SETMODE VT_PROCESS failed\n");
@@ -204,7 +209,8 @@ xf86OpenConsole(void)
     else /* serverGeneration != 1 */
     {
 #ifdef HAS_USL_VTS
-	if (vtEnabled) {
+	if (vtEnabled)
+	{
 	    /*
 	     * Now re-get the VT
 	     */
@@ -285,7 +291,8 @@ xf86CloseConsole(void)
 #endif
 
 #ifdef HAS_USL_VTS
-    if (vtEnabled == 1) {
+    if (vtEnabled)
+    {
 	if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) != -1)
 	{
 	    VT.mode = VT_AUTO;		/* Set default vt handling */

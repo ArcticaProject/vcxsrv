@@ -52,3 +52,9 @@ xf86VTSwitchTo(void)
 {
 	return(TRUE);
 }
+
+Bool
+xf86VTActivate(int vtno)
+{
+	return(TRUE);
+}

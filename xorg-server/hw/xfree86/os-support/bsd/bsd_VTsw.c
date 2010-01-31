@@ -92,3 +92,12 @@ xf86VTSwitchTo()
 #endif
 	return(TRUE);
 }
+
+Bool
+xf86VTActivate(int vtno)
+{
+	if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, vtno) < 0) {
+		return(FALSE);
+	}
+	return(TRUE);
+}

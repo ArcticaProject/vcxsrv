@@ -62,7 +62,7 @@ dist-local: html/annotated.html
 html/annotated.html: $(DOXYGEN_SRC)
 	$(DOXYGEN) $(srcdir)/doxygen.conf
 
-clean-local:
+maintainer-clean-local:
 	rm -rf html/
 endif
 

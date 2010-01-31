@@ -354,7 +354,7 @@ xf86CrtcSetModeTransform (xf86CrtcPtr crtc, DisplayModePtr mode, Rotation rotati
     }
 
     /* Only upload when needed, to avoid unneeded delays. */
-    if (!crtc->active)
+    if (!crtc->active && crtc->funcs->gamma_set)
 	crtc->funcs->gamma_set(crtc, crtc->gamma_red, crtc->gamma_green,
                                             crtc->gamma_blue, crtc->gamma_size);
 

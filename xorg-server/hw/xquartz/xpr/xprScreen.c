@@ -184,7 +184,20 @@ xprAddPseudoramiXScreens(int *x, int *y, int *width, int *height)
 
     // Find all the CoreGraphics displays
     CGGetActiveDisplayList(0, NULL, &displayCount);
+    DEBUG_LOG("displayCount: %d\n", (int)displayCount);
+
+    if(!displayCount) {
+        ErrorF("CoreGraphics has reported no connected displays.  Creating a stub 800x600 display.\n");
+        *x = *y = 0;
+        *width = 800;
+        *height = 600;
+        PseudoramiXAddScreen(*x, *y, *width, *height);
+        return;
+    }
+
     displayList = xalloc(displayCount * sizeof(CGDirectDisplayID));
+    if(!displayList)
+        FatalError("Unable to allocate memory for list of displays.\n");
     CGGetActiveDisplayList(displayCount, displayList, &displayCount);
 
     /* Get the union of all screens */

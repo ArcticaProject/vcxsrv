@@ -28,7 +28,7 @@
 #if !defined( _INDIRECT_DISPATCH_H_ )
 #  define _INDIRECT_DISPATCH_H_
 
-#  if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__)
+#  if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))) && defined(__ELF__)
 #    define HIDDEN  __attribute__((visibility("hidden")))
 #  else
 #    define HIDDEN

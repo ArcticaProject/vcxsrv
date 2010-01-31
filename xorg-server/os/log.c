@@ -187,7 +187,7 @@ LogInit(const char *fname, const char *backup)
 		sprintf(oldLog, "%s%s", logFileName, suffix);
 		free(suffix);
 		if (rename(logFileName, oldLog) == -1) {
-		    FatalError("Cannot move old log file (\"%s\" to \"%s\"\n",
+		    FatalError("Cannot move old log file \"%s\" to \"%s\"\n",
 			       logFileName, oldLog);
 		}
 		free(oldLog);
@@ -258,6 +258,14 @@ LogVWrite(int verb, const char *f, va_list args)
 {
     static char tmpBuffer[1024];
     int len = 0;
+    static Bool newline = TRUE;
+
+    if (newline) {
+	sprintf(tmpBuffer, "[%10.3f] ", GetTimeInMillis() / 1000.0);
+	len = strlen(tmpBuffer);
+	if (logFile)
+	    fwrite(tmpBuffer, len, 1, logFile);
+    }
 
     /*
      * Since a va_list can only be processed once, write the string to a
@@ -268,6 +276,7 @@ LogVWrite(int verb, const char *f, va_list args)
 	vsnprintf(tmpBuffer, sizeof(tmpBuffer), f, args);
 	len = strlen(tmpBuffer);
     }
+    newline = (tmpBuffer[len-1] == '\n');
     if ((verb < 0 || logVerbosity >= verb) && len > 0)
 	fwrite(tmpBuffer, len, 1, stderr);
     if ((verb < 0 || logFileVerbosity >= verb) && len > 0) {

@@ -70,9 +70,7 @@ extern int              darwinFakeMouse3Mask;
 extern unsigned int     darwinAppKitModMask;
 extern unsigned int     windowItemModMask;
 extern int              darwinSyncKeymap;
-extern unsigned int     darwinDesiredWidth, darwinDesiredHeight;
 extern int              darwinDesiredDepth;
-extern int              darwinDesiredRefresh;
 
 // location of X11's (0,0) point in global screen coordinates
 extern int              darwinMainScreenX;

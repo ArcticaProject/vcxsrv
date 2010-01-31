@@ -164,9 +164,18 @@ typedef struct {
     DRI2DestroyBufferProcPtr	DestroyBuffer;
     DRI2CopyRegionProcPtr	CopyRegion;
     DRI2WaitProcPtr		Wait;
+
+    /* added in version 4 */
+
     DRI2ScheduleSwapProcPtr	ScheduleSwap;
     DRI2GetMSCProcPtr		GetMSC;
     DRI2ScheduleWaitMSCProcPtr	ScheduleWaitMSC;
+
+    /* number of drivers in the driverNames array */
+    unsigned int numDrivers;
+    /* array of driver names, indexed by DRI2Driver* driver types */
+    /* a name of NULL means that driver is not supported */
+    const char * const *driverNames;
 }  DRI2InfoRec, *DRI2InfoPtr;
 
 extern _X_EXPORT int DRI2EventBase;
