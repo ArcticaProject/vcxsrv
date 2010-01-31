@@ -11,6 +11,9 @@
 // Microsoft models (using MS geometry)
 ! $msmodels = microsoft microsoft7000 microsoftpro microsoftprousb microsoftprose
 
+// Nokia devices and keyboards
+! $nokiamodels = nokiasu8w nokiarx44 nokiarx51
+
 // PC geometries - they have special geometry but symbols are mostly pc105
 ! $pcgeometries = latitude
 
@@ -24,7 +27,7 @@
 ! $maclaptop = ibook powerbook macbook78 macbook79
 ! $macs = macintosh macintosh_old ibook powerbook macbook78 macbook79
 
-! $macvendorlayouts = ch de dk es fi fr gb is it latam nl no pt se us
+! $macvendorlayouts = ch de dk fi fr gb is it latam nl no pt se us
 
 ! $azerty = be fr
 ! $qwertz = al cz de hr hu ro si sk 
@@ -66,7 +69,7 @@
               silvercrest \
               sk1300 sk2500 sk6200 sk7100 \
               sven sven303 symplon \
-              toshiba_s3000 trust trustda \
+              tm2030USB toshiba_s3000 trust trustda \
               unitekkb1925 yahoo
 
 // all layouts with 3rd and 4th groups

@@ -135,6 +135,81 @@ xkb_symbols "dvorak_altquotes" {
     key <AE01> { [	    1,	exclam, doublelowquotemark, rightdoublequotemark	]	};
 };
 
+// Polish Programmer Dvorak keymap  by Michal Nazarewicz <mina86@mina86.com>
+// based on Programmer Dvorak  by Roland Kaufmann <rlndkfmn at gmail dot com>
+//      and Polish Dvorak keymaps  by Rafal Rzepecki <divide@users.sf.net
+//      and latin(basic)
+//
+// * Numbers are in shift position (like French).
+// * Symbols have been placed in locations that give good
+//   hand-alternation and finger rolling with symbols that usually
+//   follows.
+// * Polish diacritics on AltGr+"acelnosxz" (same as in basic pl(basic)).
+// * Aditionaly, zacute on AltGr+"v" so that both zacute and zabovedot
+//   next to each other same as in pl(basic).
+// * Polish open and close quotes on AltGr+& (same location as in
+//   pl(dvp_altquotes)).
+// * English open quote on AltGr+k (same location as in latin(basic))
+// * English/Polish close quote on AltGr+b (similar location as in
+//   latin(basic) but moved right because AltGr+x is taken for zacute).
+// * Polish open and close quote on AltGr+j.
+//
+// Those rules overwrite only the following rules from us(dvp):
+// * ccedilla on AltGr+c
+// * aring on Alt+a
+// * oslash/Ooblique on Alt+o
+// * ae on Alt+e
+// * ntilde on Alt+n
+//
+partial alphanumeric_keys
+xkb_symbols "dvp" {
+    include "us(dvp)"
+
+    name[Group1] = "Poland - Programmer Dvorak";
+
+    //             Unmodified    Shift           AltGr            Shift+AltGr
+    // symbols row, left side
+    key <AE01> { [ ampersand,    percent,        doublelowquotemark, rightdoublequotemark ] };
+
+    // symbols row, right side
+
+    // upper row, left side
+
+    // // upper row, right side
+    key <AD08> { [ c,            C,              cacute,          Cacute     ] };
+    key <AD10> { [ l,            L,              lstroke,         Lstroke    ] };
+
+    // home row, left side
+    key <AC01> { [ a,            A,              aogonek,         Aogonek    ], type[Group1] = "EIGHT_LEVEL_ALPHABETIC" };
+    key <AC02> { [ o,            O,              oacute,          Oacute     ] };
+    key <AC03> { [ e,            E,              eogonek,         Eogonek    ] };
+
+    // home row, right side
+    key <AC09> { [ n,            N,              nacute,          Nacute     ] };
+    key <AC10> { [ s,            S,              sacute,          Sacute     ] };
+    key <AC11> { [ minus,        underscore,     hyphen                      ], type[Group1] = "FOUR_LEVEL_ALPHABETIC" };
+    key <BKSL> { [ backslash,    bar                                         ] };
+
+    // lower row, left side
+    key <AB03> { [ j,            J,              doublelowquotemark, rightdoublequotemark ] };
+    key <AB04> { [ k,            K,              leftdoublequotemark, leftsinglequotemark ] };
+    key <AB05> { [ x,            X,              zacute,          Zacute     ] };
+
+    // lower row, right side
+    key <AB06> { [ b,            B,              rightdoublequotemark, rightsinglequotemark ] };
+    key <AB09> { [ v,            V,              zacute,          Zacute     ] };
+    key <AB10> { [ z,            Z,              zabovedot,       Zabovedot  ] };
+
+    include "kpdl(comma)"
+
+    // this to allow writing ALL CAPS with a Shift key
+    include "level3(ralt_switch)"
+
+    // use one of compose:* options to choose Multi_key, if you will,
+    // or layout +level3(ralt_switch_multikey) to revert standard behaviour
+};
+
+
 partial alphanumeric_keys
 xkb_symbols "csb" {
 

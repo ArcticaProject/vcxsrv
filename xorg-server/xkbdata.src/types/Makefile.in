@@ -112,6 +112,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 POFILES = @POFILES@
@@ -173,7 +174,7 @@ typesdir = $(xkb_base)/types
 dist_types_DATA = \
 basic cancel caps \
 complete default extra \
-iso9995 level5 mousekeys numpad \
+iso9995 level5 mousekeys nokia numpad \
 pc README
 
 dir_data = $(dist_types_DATA)
@@ -192,9 +193,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  types/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  types/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  types/Makefile
+	  $(AUTOMAKE) --foreign  types/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \

@@ -1,2 +1,3 @@
   $macs		=	complete+numpad(mac)
+  $nokiamodels	=	complete+nokia
   *		=	complete

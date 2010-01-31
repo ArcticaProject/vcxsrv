@@ -30,8 +30,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-subdir = geometry/sgi_vndr
-DIST_COMMON = $(dist_geom_DATA) $(srcdir)/Makefile.am \
+subdir = symbols/nokia_vndr
+DIST_COMMON = $(dist_symbols_DATA) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
@@ -47,9 +47,9 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(geomdir)"
-dist_geomDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(dist_geom_DATA)
+am__installdirs = "$(DESTDIR)$(symbolsdir)"
+dist_symbolsDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(dist_symbols_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -164,9 +164,11 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 xkb_base = @xkb_base@
 xkb_rules_symlink = @xkb_rules_symlink@
-geomdir = $(xkb_base)/geometry/sgi_vndr
-dist_geom_DATA = \
-indigo  indy  O2
+symbolsdir = $(xkb_base)/symbols/nokia_vndr
+dist_symbols_DATA = \
+rx-44 \
+rx-51 \
+su-8w
 
 all: all-am
 
@@ -180,9 +182,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  geometry/sgi_vndr/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  symbols/nokia_vndr/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  geometry/sgi_vndr/Makefile
+	  $(AUTOMAKE) --foreign  symbols/nokia_vndr/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -200,22 +202,22 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-install-dist_geomDATA: $(dist_geom_DATA)
+install-dist_symbolsDATA: $(dist_symbols_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(geomdir)" || $(MKDIR_P) "$(DESTDIR)$(geomdir)"
-	@list='$(dist_geom_DATA)'; for p in $$list; do \
+	test -z "$(symbolsdir)" || $(MKDIR_P) "$(DESTDIR)$(symbolsdir)"
+	@list='$(dist_symbols_DATA)'; for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  f=$(am__strip_dir) \
-	  echo " $(dist_geomDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(geomdir)/$$f'"; \
-	  $(dist_geomDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(geomdir)/$$f"; \
+	  echo " $(dist_symbolsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(symbolsdir)/$$f'"; \
+	  $(dist_symbolsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(symbolsdir)/$$f"; \
 	done
 
-uninstall-dist_geomDATA:
+uninstall-dist_symbolsDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_geom_DATA)'; for p in $$list; do \
+	@list='$(dist_symbols_DATA)'; for p in $$list; do \
 	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(geomdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(geomdir)/$$f"; \
+	  echo " rm -f '$(DESTDIR)$(symbolsdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(symbolsdir)/$$f"; \
 	done
 tags: TAGS
 TAGS:
@@ -254,7 +256,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(geomdir)"; do \
+	for dir in "$(DESTDIR)$(symbolsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -299,7 +301,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_geomDATA
+install-data-am: install-dist_symbolsDATA
 
 install-dvi: install-dvi-am
 
@@ -333,20 +335,21 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_geomDATA
+uninstall-am: uninstall-dist_symbolsDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic distclean \
 	distclean-generic distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
-	install-dist_geomDATA install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-dist_symbolsDATA install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am uninstall uninstall-am uninstall-dist_geomDATA
+	pdf-am ps ps-am uninstall uninstall-am \
+	uninstall-dist_symbolsDATA
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

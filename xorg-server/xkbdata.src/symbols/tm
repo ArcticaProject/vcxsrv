@@ -9,7 +9,7 @@ xkb_symbols "basic" {
     name[Group1]="Turkmenistan";
     
     include "us"
-    
+	key.type[group1]="ALPHABETIC";
     key <TLDE> {	[    zcaron, 	Zcaron,		grave,	asciitilde	]	};
 
     key <AD01> {	[ adiaeresis, 	Adiaeresis,	q,	Q 	]	};

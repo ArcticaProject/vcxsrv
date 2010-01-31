@@ -124,6 +124,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 POFILES = @POFILES@
@@ -187,7 +188,7 @@ dist_geom_DATA = \
 amiga ataritt chicony \
 dell everex fujitsu \
 hhk hp keytronic kinesis \
-macintosh microsoft nec \
+macintosh microsoft nec nokia \
 northgate pc sony thinkpad \
 sun typematrix winbook README
 
@@ -207,9 +208,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  geometry/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  geometry/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  geometry/Makefile
+	  $(AUTOMAKE) --foreign  geometry/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \

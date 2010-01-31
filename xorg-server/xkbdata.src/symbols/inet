@@ -32,6 +32,7 @@ xkb_symbols "media_common" {
     key <I2E>   {       [ XF86AudioLowerVolume  ] };	
     key <I30>   {       [ XF86AudioRaiseVolume  ] };
     key <K5A>   {       [ XF86Eject             ] };
+    key <K6C>   {       [ XF86Eject             ] };
 };
 
 // popular web navigation combination
@@ -429,7 +430,6 @@ xkb_symbols "btc9019u" {
     include "inet(media_nav_acpi_common)"
     key <FK17> {	[ XF86Search		]	};
     key <I02>  {	[ XF86HomePage		]	};
-    key <K6C>  {	[ XF86Eject		]	};
 };
 
 // Cherry Blue Line
@@ -1722,7 +1722,6 @@ xkb_symbols "cymotionlinux" {
     key <I3C>	{	[	XF86Cut			]	};
     key <I78>	{	[	XF86Copy		]	};
     key <K65>	{	[	XF86Paste		]	};
-    key <K6C>	{	[	XF86Eject		]	};
     key <K75>	{	[	XF86ScrollUp		]	};
     key <XFER>	{	[	XF86AudioMedia		]	};
 };

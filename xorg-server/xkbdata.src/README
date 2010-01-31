@@ -23,3 +23,6 @@ file.
 
 For information how to replace existing XKB configuration database with 
 XKeyboardConfig see 'docs/HOWTO.transition' file.
+
+Contribution guidelines are described at
+http://www.freedesktop.org/wiki/Software/XKeyboardConfig/Rules

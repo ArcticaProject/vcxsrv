@@ -1,3 +1,65 @@
+2009-12-21 Sergey Udaltsov
+
+	* symbols/ru: Added ru(typewriter-legacy),
+	https://bugs.freedesktop.org/show_bug.cgi?id=25726
+	* rules/base.o_s.part, rules/base.xml.in, symbols/group: added
+	grp(lctrl_rctrl_switch),
+	https://bugs.freedesktop.org/show_bug.cgi?id=25727
+
+2009-11-27 Sergey Udaltsov
+
+	* symbols/se: Reintroduced the broken bar in the Swedish symbol
+	layout. http://bugs.freedesktop.org/show_bug.cgi?id=8491
+
+2009-11-25 Sergey Udaltsov
+
+	* rules/base.m_s.part, symbols/inet: a bit of optimization, K6C to map
+	to Eject, always in media section
+
+2009-11-24 Sergey Udaltsov
+
+	* rules/base.xml.in, symbols/lt: removed unneeded lt(balticplus),
+	http://bugs.freedesktop.org/show_bug.cgi?id=25263
+
+2009-11-21 Sergey Udaltsov
+
+	* ../rules/base.xml.in, ../symbols/pl: added pl(dvp),
+	http://bugs.freedesktop.org/show_bug.cgi?id=25200
+
+2009-11-18 Sergey Udaltsov
+
+	* symbols/tm: small fix for tm layout, related to Ctrl+? shortcuts
+	https://bugs.freedesktop.org/show_bug.cgi?id=25074
+
+2009-11-15 Octavio Alvarez
+
+	* rules/base.xml.in: Removed thinkpadintl from base.xml.in.
+
+2009-10-20 Sergey Udaltsov
+
+	* symbols/sun_vndr/us: added backspace mapping,
+	https://bugs.freedesktop.org/show_bug.cgi?id=24554
+
+2009-10-13 Sergey Udaltsov
+
+	* rules/base.lists.part, symbols/macintosh_vndr/Makefile.am,
+	symbols/macintosh_vndr/es: Spanish mac layout just included the
+	general one
+	* rules/base.xml.in, symbols/ch: fixed Swiss default layout, added
+	legacy variant, http://bugs.freedesktop.org/show_bug.cgi?id=24490
+
+2009-10-12 Sergey Udaltsov
+
+	* rules/base.xml.in: USA Russian Phonetic keyboard layout not found in
+	search by Languages - Russian,
+	http://bugs.freedesktop.org/show_bug.cgi?id=24485
+
+2009-09-30 Sergey Udaltsov
+
+	* rules/base.o_s.part, rules/base.xml.in, symbols/group: added
+	grp:rctrl_rshift_toggle option,
+	http://bugs.freedesktop.org/show_bug.cgi?id=24234
+
 2009-09-29 Sergey Udaltsov
 
 	* configure.in, NEWS, po/*.po: preparing 1.7

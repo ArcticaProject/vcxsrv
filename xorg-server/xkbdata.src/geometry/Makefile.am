@@ -6,7 +6,7 @@ dist_geom_DATA = \
 amiga ataritt chicony \
 dell everex fujitsu \
 hhk hp keytronic kinesis \
-macintosh microsoft nec \
+macintosh microsoft nec nokia \
 northgate pc sony thinkpad \
 sun typematrix winbook README
 

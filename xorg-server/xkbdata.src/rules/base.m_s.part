@@ -42,6 +42,8 @@
   targa_v811    =       +inet(media_nav_acpi_common)
   thinkpad      =       +inet(media_nav_common)
   thinkpadz60   =       +inet(thinkpad60)
+  tm2030USB-102 =       +inet(media_nav_acpi_common)
+  tm2030USB-106 =       +inet(media_nav_acpi_common)
   trust_slimline =      +inet(media_nav_acpi_common)
   vsonku306     =       +inet(microsoftprooem)
   $inetkbds     =       +inet(%m)

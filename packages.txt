@@ -78,7 +78,7 @@ xcmiscproto-1.2.0
 xextproto-7.1.1
 xineramaproto-1.2
 xkbcomp-1.1.1
-xkeyboard-config-1.7
+xkeyboard-config-1.8
 xorg-server-1.7.99.2
 xproto-7.0.16
 xtrans-1.2.5
