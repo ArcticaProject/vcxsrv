@@ -10,9 +10,9 @@ dist_xkbdata_geometry_DATA = \
 amiga ataritt chicony \
 dell everex fujitsu \
 hhk hp keytronic kinesis \
-macintosh microsoft nec \
+macintosh microsoft nec nokia \
 northgate pc sony thinkpad \
-sun winbook README
+sun typematrix winbook README
 
 DATA_FILES=$(dist_xkbdata_geometry_DATA:%=$(DESTDIR)\%)
 

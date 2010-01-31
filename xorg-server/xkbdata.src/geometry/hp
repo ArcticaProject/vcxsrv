@@ -454,3 +454,249 @@ xkb_geometry "omnibook_intl" {
 	};
     }; // End of "Alpha" section
 };
+
+xkb_geometry "mini110" {
+
+	description= "HP Mini 110";
+	width= 262;
+	height= 106;
+
+	shape.cornerRadius = 0;
+	shape "FN0"  { { [ 14, 10 ] } , { [ 14, 10 ] } };
+	shape "NORM" { { [ 16.7, 16 ] }   , { [ 16.7, 16 ] } };
+	shape "TLDE" { { [ 12, 16 ] } , { [ 12, 16 ] } };
+	shape "ONE"  { { [ 14, 16 ] }   , { [ 14, 16 ] } };
+	shape "BKSP" { { [ 31.3, 16 ] }   , { [ 31.3, 16 ] } };
+	shape "BKSL" { { [ 23.9, 16 ] } , { [ 23.9, 16 ] } };
+	shape "CAPS" { { [ 22, 16 ] }   , { [ 22, 16 ] } };
+	shape "RTRN" { { [ 36.3, 16 ] } , { [ 36.3, 16 ] } };
+	shape "LFSH" { { [ 31, 16 ] }   , { [ 31, 16 ] } };
+	shape "RTSH" { { [ 45, 16 ] } , { [ 45, 16 ] } };
+	shape "CTLS" { { [ 16.5, 19 ] }   , { [ 16.5, 19 ] } };
+	shape "SPCE" { { [ 78.4, 19 ] } , { [ 78.4, 19 ] } };
+	shape "ARRW" { { [ 16.7, 9 ] }  , { [ 16.7, 9 ] } };
+
+	key.gap=1;
+
+	section "Function" {
+		top=4;
+		left=3;
+		key.shape="FN0";
+		row {
+			keys {
+				<ESC>, <FK01>, <FK02>, <FK03>, <FK04>, <FK05>,
+				<FK06>, <FK07>, <FK08>, <FK09>, <FK10>, <FK11>,
+				<FK12>, <PAUS>, <SCLK>, <INS>, <DELE>
+			};
+		};
+	};
+
+	section "Alphanum" {
+		top=15;
+		left=3;
+		key.shape="NORM";
+        row {
+            top= 0;
+            keys { { <TLDE>, "TLDE" } , { <AE01>, "ONE" }, <AE02>, <AE03>, <AE04>,
+                   <AE05>, <AE06>, <AE07>, <AE08>, <AE09>,
+                   <AE10>, <AE11>, <AE12>,
+                   { <BKSP>, "BKSP" }
+            };
+        };
+        row {
+            top= 17;
+            keys { <TAB>, <AD01>, <AD02>, <AD03>, <AD04>, <AD05>,
+                   <AD06>, <AD07>, <AD08>, <AD09>, <AD10>,
+                   <AD11>, <AD12>, { <BKSL>, "BKSL" }
+            };
+        };
+        row {
+            top= 34;
+            keys { { <CAPS>, "CAPS" } ,
+                   <AC01>, <AC02>, <AC03>, <AC04>, <AC05>,
+                   <AC06>, <AC07>, <AC08>, <AC09>, <AC10>,
+                   <AC11>, { <RTRN>, "RTRN" }
+            };
+        };
+        row {
+            top= 51;
+            keys { { <LFSH>, "LFSH" },
+                    <AB01>, <AB02>, <AB03>, <AB04>, <AB05>,
+                    <AB06>, <AB07>, <AB08>, <AB09>, <AB10>,
+                    { <RTSH>, "RTSH" }
+            };
+        };
+
+	};
+
+	section "Control" {
+		top=83;
+		left=3;
+		key.shape="CTLS";
+		row {
+			keys {
+				<LCTL>, <FN>, <LWIN>, <LALT>, { <SPCE>, "SPCE" }, <RALT>, <MENU>, <RCTL>
+			};
+		};
+	};
+
+	section "Arrows" {
+		top=83;
+		left=204.9;
+		key.shape="ARRW";
+		row {
+			left= 17.7;
+			keys {
+				<UP>
+			};
+		};
+		row {
+			top = 10;
+			keys {
+				<LEFT>, <DOWN>, <RGHT>
+			};
+		};
+	};
+
+};
+
+xkb_geometry "dv5" {
+
+	height=118.4;
+	width=310.6;
+
+    description = "HP Pavilion dv5";
+
+	shape.cornerRadius = 1;
+
+	shape "ESC"  { { [20.0, 12.5] }, { [2.2, 1], [17.8, 10.5] } };
+	shape "FN0"  { { [15.9, 12.5] }, { [2.2, 1], [13.7, 10.5] } };
+	shape "DELE" { { [19.4, 12.5] }, { [2.2, 1], [17.2, 10.5] } };
+
+	shape "NORM" { { [17.9, 18.3] }, { [2.2, 1], [15.7, 16.3] } };
+
+	shape "BKSP" { { [36.1, 18.3] }, { [2.4, 1], [33.7, 16.3] } };
+
+	shape "TABK" { { [26.8, 18.3] }, { [2.4, 1], [24.4, 16.3] } };
+	shape "BKSL" { { [27.1, 18.3] }, { [2.4, 1], [24.7, 16.3] } };
+
+	shape "CAPS" { { [31.6, 18.3] }, { [2.4, 1], [29.2, 16.3] } };
+	shape "RTRN" { { [41.2, 18.3] }, { [2.4, 1], [39.3, 16.3] } };
+
+	shape "LFSH" { { [41.5, 18.3] }, { [2.4, 1], [38.8, 16.3] } };
+	shape "RTSH" { { [31.5, 18.3] }, { [2.4, 1], [29.1, 16.3] } };
+
+	shape "LCTL" { { [22.4, 18.3] }, { [2.2, 1], [20.2, 16.3] } };
+	shape "RCTL" { { [22.6, 18.3] }, { [2.2, 1], [20.4, 16.3] } };
+	shape "CTLS" { { [17.9, 18.3] }, { [2.2, 1], [15.7, 16.3] } };
+	shape "SPCE" { { [94.3, 18.3] }, { [2.5, 1], [91.8, 16.3] } };
+
+	shape "ARRW" { { [17.9, 18.3] }, { [2.2, 1], [15.7, 16.3] } };
+
+	shape "EDIT" { { [16.6, 18.3] }, { [2.2, 1], [14.4, 16.3] } };
+
+	key.gap = 1.2;
+
+	section "Function" {
+		top=4.2;
+		left=3;
+		row {
+			key.shape = "FN0";
+			keys {
+				{<ESC>, "ESC"},
+				{2.9, <FK01>}, <FK02>, <FK03>, <FK04>,
+				{2.9, <FK05>}, <FK06>, <FK07>, <FK08>,
+				{2.9, <FK09>}, <FK10>, <FK11>, <FK12>,
+				{2.9, <NMLK>}, <PAUS>, <INS>, {<DELE>, "DELE"}
+			};
+		};
+	};
+
+    section "Alpha" {
+		top = 17.9;
+		key.shape = "NORM";
+	    left = 3;
+
+		row {
+		    top = 0;
+		    keys { <TLDE>, <AE01>, <AE02>, <AE03>, <AE04>,
+			   <AE05>, <AE06>, <AE07>, <AE08>, <AE09>,
+			   <AE10>, <AE11>, <AE12>, { <BKSP>, "BKSP" }
+		    };
+		};
+		row {
+		    top = 19.5;
+		    keys { { <TAB>, "TABK" },
+			   <AD01>, <AD02>, <AD03>, <AD04>, <AD05>, 
+			   <AD06>, <AD07>, <AD08>, <AD09>, <AD10>, 
+			   <AD11>, <AD12>, { <BKSL>, "BKSL" }
+		    };
+		};
+		row {
+		    top = 39;
+		    keys { { <CAPS>, "CAPS" },
+			   <AC01>, <AC02>, <AC03>, <AC04>, <AC05>, 
+			   <AC06>, <AC07>, <AC08>, <AC09>, <AC10>, 
+			   <AC11>, { <RTRN>, "RTRN" }
+		    };
+		};
+		row {
+		    top = 58.5;
+		    keys { { <LFSH>, "LFSH" },
+			   <AB01>, <AB02>, <AB03>, <AB04>, <AB05>, 
+			   <AB06>, <AB07>, <AB08>, <AB09>, <AB10>,
+			   { <RTSH>, "RTSH" }
+		    };
+		};
+    }; // End of "Alpha" section
+
+    section "Controls" {
+		top = 95.9;
+		key.shape = "CTLS";
+	    left = 3;
+
+		row {
+		    top = 0;
+		    keys { {<LCTL>, "LCTL"}, <FN>, <LWIN>, <LALT>, {<SPCE>, "SPCE"},
+			   <RALT>, <MENU>, {<RCTL>, "RCTL"}
+		    };
+		};
+    };
+
+	section "Edition" {
+		top = 16.5;
+	    left = 289.9;
+		key.shape = "EDIT";
+		key.gap = 1.4;
+		row {
+		    top = 0;
+			vertical = true;
+		    keys {
+				<HOME>, <PGUP>, <PGDN>, <END>
+		    };
+		};
+	};
+
+	section "Arrows" {
+		top = 76.4;
+		key.shape = "ARRW";
+		left = 249.3;
+		row {
+			top = 0;
+			left = 19.1;
+			keys {
+				<UP>
+			};
+		};
+		row {
+			top = 19.5;
+			left = 0;
+			keys {
+				<LEFT>, <DOWN>, <RGHT>
+			};
+		};
+	};
+};
+
+
+

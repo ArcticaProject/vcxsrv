@@ -28,7 +28,7 @@ xkb_symbols "se" {
 
     key <SPCE>	{ [     space,      space,        space, nobreakspace ]	};
 
-    key <LSGT> { [ less,	greater,		bar,	bar ] };
+    key <LSGT>  { [      less,     greater,         bar,    brokenbar ] };
     include "kpdl(comma)"
 
     include "level3(ralt_switch)"

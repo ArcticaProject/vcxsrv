@@ -120,6 +120,19 @@ xkb_symbols "lctrl_lshift_toggle" {
     key <LCTL>	{	[	Control_L,	ISO_Next_Group ]	};
 };
 
+// using the group(rctrl_rshift_toggle) map, pressing:
+//     Control_R+Shift_R locks the next group
+// If you have two groups and group wrap is enabled, the effect is
+// indistinguishable.
+partial modifier_keys
+xkb_symbols "rctrl_rshift_toggle" {
+    key <RTSH> {
+    type[Group1]="PC_CONTROL_LEVEL2",
+    symbols[Group1]= [ Shift_R, ISO_Next_Group ]
+    };
+    key <RCTL>  {   [   Control_R,  ISO_Next_Group ]    };
+};
+
 // using the group(shift_caps_toggle) map, pressing:
 //     Shift+Caps Lock toggles group
 partial modifier_keys
@@ -150,6 +163,22 @@ xkb_symbols "win_menu_switch" {
         symbols[Group1] = [ ISO_Last_Group ]
     };
     key <RWIN> {
+        virtualMods= AltGr,
+        symbols[Group1] = [ ISO_Last_Group ]
+    };
+};
+
+// using the group(lctrl_rctrl_switch) map, pressing:
+// Left Control selects the first group
+// Right Control selects the last group
+partial modifier_keys
+xkb_symbols "lctrl_rctrl_switch" {
+    virtual_modifiers AltGr;
+    key <LCTL> {
+        virtualMods= AltGr,
+        symbols[Group1] = [ ISO_First_Group ]
+    };
+    key <RCTL> {
         virtualMods= AltGr,
         symbols[Group1] = [ ISO_Last_Group ]
     };

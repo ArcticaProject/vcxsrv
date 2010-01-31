@@ -554,6 +554,13 @@
     </model>
     <model>
       <configItem>
+        <name>hpmini110</name>
+        <_description>Hewlett-Packard Mini 110 Notebook</_description>
+        <vendor>Hewlett-Packard</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
         <name>rapidaccess</name>
         <_description>IBM Rapid Access</_description>
         <vendor>IBM</vendor>
@@ -570,13 +577,6 @@
       <configItem>
         <name>thinkpad</name>
         <_description>IBM ThinkPad 560Z/600/600E/A22E</_description>
-        <vendor>IBM</vendor>
-      </configItem>
-    </model>
-    <model>
-      <configItem>
-        <name>thinkpadintl</name>
-        <_description>IBM ThinkPad 560Z/600/600E/A22E, Intl</_description>
         <vendor>IBM</vendor>
       </configItem>
     </model>
@@ -1277,6 +1277,7 @@
           <configItem>
             <name>rus</name>
             <_description>Russian phonetic</_description>
+            <languageList><iso639Id>rus</iso639Id></languageList>
           </configItem>
         </variant>
         <variant>
@@ -3018,12 +3019,6 @@
             <_description>LEKPa</_description>
           </configItem>
         </variant>
-        <variant>
-          <configItem>
-            <name>balticplus</name>
-            <_description>Baltic+</_description>
-          </configItem>
-        </variant>
       </variantList>
     </layout>
     <layout>
@@ -3250,6 +3245,12 @@
             <languageList><iso639Id>rus</iso639Id></languageList>
           </configItem>
         </variant>
+        <variant>
+          <configItem>
+            <name>dvp</name>
+            <_description>Programmer Dvorak</_description>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>
@@ -3403,6 +3404,12 @@
           <configItem>
             <name>legacy</name>
             <_description>Legacy</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>typewriter-legacy</name>
+            <_description>Typewriter, legacy</_description>
           </configItem>
         </variant>
         <variant>
@@ -3703,6 +3710,12 @@
                       <iso639Id>gsw</iso639Id></languageList>
       </configItem>
       <variantList>
+        <variant>
+          <configItem>
+            <name>legacy</name>
+            <_description>Legacy</_description>
+          </configItem>
+        </variant>
         <variant>
           <configItem>
             <name>de_nodeadkeys</name>
@@ -4408,6 +4421,12 @@
       </option>
       <option>
         <configItem>
+          <name>grp:lctrl_rctrl_switch</name>
+          <_description>Left Ctrl (to first layout), Right Ctrl (to last layout)</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
           <name>grp:alt_caps_toggle</name>
           <_description>Alt+CapsLock</_description>
         </configItem>
@@ -4442,6 +4461,12 @@
           <_description>Left Ctrl+Left Shift</_description>
         </configItem>
       </option>
+      <option>
+        <configItem>
+          <name>grp:rctrl_rshift_toggle</name>
+          <_description>Right Ctrl+Right Shift</_description>
+        </configItem>
+      </option>      
       <option>
         <configItem>
           <name>grp:ctrl_alt_toggle</name>
@@ -4936,6 +4961,12 @@
         <configItem>
           <name>compose:menu</name>
           <_description>Menu</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>compose:lctrl</name>
+          <_description>Left Ctrl</_description>
         </configItem>
       </option>
       <option>

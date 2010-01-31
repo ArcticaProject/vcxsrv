@@ -132,6 +132,27 @@ xkb_symbols "typewriter" {
 };
 
 partial alphanumeric_keys
+xkb_symbols "typewriter-legacy" {
+    include "ru(common)"
+    name[Group1]= "Russia - Typewriter, legacy";
+    key	<TLDE> {	[      apostrophe,	  quotedbl	] 	};
+    key	<AE01> {	[	   exclam,		 1 	]	};
+    key	<AE02> {	[      numerosign,		 2	]	};
+    key	<AE03> {	[	    slash,		 3	]	};
+    key	<AE04> {	[	semicolon,		 4	]	};
+    key	<AE05> {	[	    colon,		 5	]	};
+    key	<AE06> {	[	    comma,		 6	]	};
+    key	<AE07> {	[	   period,		 7	]	};
+    key	<AE08> {	[      underscore,		 8	]	};
+    key	<AE09> {	[	 question,		 9	]	};
+    key	<AE10> {	[	  percent,		 0	]	};
+    key	<BKSL> {	[	parenleft,	parenright	]	};
+
+    key	<AD12> {	[Cyrillic_hardsign,Cyrillic_HARDSIGN	]	};
+    key	<AB10> {	[     Cyrillic_io,     Cyrillic_IO	]	};
+};
+
+partial alphanumeric_keys
 xkb_symbols "phonetic" {
 
     name[Group1]= "Russia - Phonetic";

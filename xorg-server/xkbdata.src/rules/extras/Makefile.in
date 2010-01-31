@@ -97,6 +97,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 POFILES = @POFILES@
@@ -184,9 +185,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  rules/extras/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  rules/extras/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  rules/extras/Makefile
+	  $(AUTOMAKE) --foreign  rules/extras/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \

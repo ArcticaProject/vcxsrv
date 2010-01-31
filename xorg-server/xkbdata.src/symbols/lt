@@ -160,9 +160,9 @@ xkb_symbols "ibm" {
     include "level3(ralt_switch)"
 };
 
-// LEKP, LEKPa and Baltic+ layouts 1.0 for Linux.
+// LEKP and LEKPa layouts 1.0
 // Copyright (c) 2007 Tautrimas Pajarskas
-// For more info go to http://lekp.info
+// For more info visit http://lekp.info
 //
 // LEKP and LEKPa layouts are licensed under the Creative Commons
 // Attribution-Noncommercial-Share Alike 3.0 License.
@@ -289,32 +289,6 @@ xkb_symbols "lekpa" {
     key <AB10>  { [          h,                  H ] };
 
 
-    include "level3(ralt_switch)"
-};
-
-partial alphanumeric_keys modifier_keys
-xkb_symbols "balticplus" {
-    include "latin"
-    name[Group1]="Lithuania - Baltic+";
-    key <AE01>  { [   aogonek,      Aogonek,        1,      exclam ]    };
-    key <AE02>  { [    ccaron,       Ccaron,        2,          at ]    };
-    key <AE03>  { [   eogonek,      Eogonek,        3,  numbersign ]    };
-    key <AE04>  { [ eabovedot,    Eabovedot,        4,      dollar ]    };
-    key <AE05>  { [   iogonek,      Iogonek,        5,     percent ]    };
-    key <AE06>  { [    scaron,       Scaron,        6, asciicircum ]    };
-    key <AE07>  { [   uogonek,      Uogonek,        7,   ampersand ]    };
-    key <AE08>  { [   umacron,      Umacron,        8,    asterisk ]    };
-    key <AE09>  { [ parenleft, doublelowquotemark,  9 ] };
-    key <AE10>  { [ parenright, leftdoublequotemark, 0 ] };
-    key <AE11>  { [     minus,   underscore,    minus,  section ] };
-    key <AE12>  { [    zcaron,       Zcaron,    equal,        plus ]    };
-    key <CAPS>  { [ BackSpace ] };
-    key <NFER>  { [ backslash,         bar,   endash ] };
-    key <AD03>  { [         e,            E, EuroSign ] };
-    key <AD04>  { [         r,            R, registered ] };
-    key <AD05>  { [         t,            T, trademark ] };
-    key <AB03>  { [         c,            C, copyright ] };
-    key <AB08>  { [     comma,         less,  degree ] };
     include "level3(ralt_switch)"
 };
 

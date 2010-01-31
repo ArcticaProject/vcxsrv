@@ -1,6 +1,0 @@
-
-partial default alphanumeric_keys 
-xkb_symbols "basic" {
-    include "es"
-    name[Group1]= "Spain - Mac";
-};

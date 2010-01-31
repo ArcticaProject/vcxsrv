@@ -106,6 +106,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 POFILES = @POFILES@
@@ -166,7 +167,7 @@ xkb_rules_symlink = @xkb_rules_symlink@
 symbolsdir = $(xkb_base)/symbols/macintosh_vndr
 dist_symbols_DATA = \
 apple ch de dk \
-es fi fr \
+fi fr \
 gb is it \
 latam nl no pt \
 se us
@@ -183,9 +184,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  symbols/macintosh_vndr/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  symbols/macintosh_vndr/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  symbols/macintosh_vndr/Makefile
+	  $(AUTOMAKE) --foreign  symbols/macintosh_vndr/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \

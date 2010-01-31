@@ -16,7 +16,7 @@ xkb_symbols "basic" {
     key <AE04> { [          4,   ccedilla                           ] };
     key <AE05> { [          5,    percent                           ] };
     key <AE06> { [          6,  ampersand,      notsign             ] };
-    key <AE07> { [          7,      slash,    brokenbar             ] };
+    key <AE07> { [          7,      slash,          bar             ] };
     key <AE08> { [          8,  parenleft,         cent             ] };
     key <AE09> { [          9, parenright                           ] };
     key <AE10> { [          0,      equal                           ] };
@@ -39,6 +39,14 @@ xkb_symbols "basic" {
     key <AB10> { [      minus, underscore                           ] };
 
     include "level3(ralt_switch)"
+};
+
+partial alphanumeric_keys 
+xkb_symbols "legacy" {
+    include "ch(basic)"
+
+    name[Group1]= "Switzerland - Legacy";
+    key <AE07> { [          7,      slash,    brokenbar             ] };
 };
 
 partial alphanumeric_keys 

@@ -1,6 +1,6 @@
 PURPOSE
 
-This document describes the procedure for replacing the standard XKB configuration repository shipped with an X Window System implementation. The procedure should work for XFree86 4.3 and higher and X11R7 implementation from X.Org. Any other X server supporting so called "multiple layouts" can be powered with XKeyboardConfig in a similar way (at the moment NO known commercial X Window System implementations support "multimple layouts"). X servers which do not support "multiple layouts" can be used with XKeyboardConfig as well - but users should be aware that only one group will be accessible with each possible XKB configuration.
+This document describes the procedure for replacing the standard XKB configuration repository shipped with an X Window System implementation. The procedure should work for XFree86 4.3 and higher and X11R7 implementation from X.Org. Any other X server supporting so called "multiple layouts" can be powered with XKeyboardConfig in a similar way (at the moment NO known commercial X Window System implementations support "multiple layouts"). X servers which do not support "multiple layouts" can be used with XKeyboardConfig as well - but users should be aware that only one group will be accessible with each possible XKB configuration.
 
 PROCEDURE
 

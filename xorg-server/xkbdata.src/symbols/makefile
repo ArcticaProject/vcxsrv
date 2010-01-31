@@ -6,7 +6,7 @@ THISDIR=symbols
 
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
 
-SUBDIRS = digital_vndr fujitsu_vndr hp_vndr macintosh_vndr nec_vndr sgi_vndr sony_vndr sun_vndr xfree68_vndr
+SUBDIRS = digital_vndr fujitsu_vndr hp_vndr macintosh_vndr nec_vndr nokia_vndr sgi_vndr sony_vndr sun_vndr xfree68_vndr
 
 dist_xkbdata_symbols_DATA = \
 ad af al \
