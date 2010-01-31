@@ -199,6 +199,7 @@ extern _X_EXPORT Bool xf86SIGIOSupported (void);
 typedef void (*PMClose)(void);
 extern _X_EXPORT void xf86OpenConsole(void);
 extern _X_EXPORT void xf86CloseConsole(void);
+extern _X_HIDDEN Bool xf86VTActivate(int vtno);
 extern _X_EXPORT Bool xf86VTSwitchPending(void);
 extern _X_EXPORT Bool xf86VTSwitchAway(void);
 extern _X_EXPORT Bool xf86VTSwitchTo(void);

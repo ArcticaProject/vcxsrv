@@ -96,9 +96,7 @@ int                     darwinMainScreenX = 0;
 int                     darwinMainScreenY = 0;
 
 // parameters read from the command line or user preferences
-unsigned int            darwinDesiredWidth = 0, darwinDesiredHeight = 0;
 int                     darwinDesiredDepth = -1;
-int                     darwinDesiredRefresh = -1;
 int                     darwinSyncKeymap = FALSE;
 
 // modifier masks for faking mouse buttons - ANY of these bits trigger it  (not all)
@@ -703,28 +701,10 @@ int ddxProcessArgument( int argc, char *argv[], int i )
         return 1;
     }
 
-    if ( !strcmp( argv[i], "-size" ) ) {
-        if ( i >= argc-2 ) {
-            FatalError( "-size must be followed by two numbers\n" );
-        }
-#ifdef OLD_POWERBOOK_G3
-        ErrorF( "Ignoring unsupported -size option on old PowerBook G3\n" );
-#else
-        darwinDesiredWidth = atoi( argv[i+1] );
-        darwinDesiredHeight = atoi( argv[i+2] );
-        ErrorF( "Attempting to use width x height = %i x %i\n",
-                darwinDesiredWidth, darwinDesiredHeight );
-#endif
-        return 3;
-    }
-
     if ( !strcmp( argv[i], "-depth" ) ) {
         if ( i == argc-1 ) {
             FatalError( "-depth must be followed by a number\n" );
         }
-#ifdef OLD_POWERBOOK_G3
-        ErrorF( "Ignoring unsupported -depth option on old PowerBook G3\n");
-#else
         darwinDesiredDepth = atoi( argv[i+1] );
         if(darwinDesiredDepth != -1 &&
            darwinDesiredDepth != 8 &&
@@ -734,20 +714,6 @@ int ddxProcessArgument( int argc, char *argv[], int i )
         }
 
         ErrorF( "Attempting to use pixel depth of %i\n", darwinDesiredDepth );
-#endif
-        return 2;
-    }
-
-    if ( !strcmp( argv[i], "-refresh" ) ) {
-        if ( i == argc-1 ) {
-            FatalError( "-refresh must be followed by a number\n" );
-        }
-#ifdef OLD_POWERBOOK_G3
-        ErrorF( "Ignoring unsupported -refresh option on old PowerBook G3\n");
-#else
-        darwinDesiredRefresh = atoi( argv[i+1] );
-        ErrorF( "Attempting to use refresh rate of %i\n", darwinDesiredRefresh );
-#endif
         return 2;
     }
 
@@ -771,18 +737,13 @@ void ddxUseMsg( void )
     ErrorF("\n");
     ErrorF("Device Dependent Usage:\n");
     ErrorF("\n");
+    ErrorF("-depth <8,15,24> : use this bit depth.\n");
     ErrorF("-fakebuttons : fake a three button mouse with Command and Option keys.\n");
     ErrorF("-nofakebuttons : don't fake a three button mouse.\n");
     ErrorF("-fakemouse2 <modifiers> : fake middle mouse button with modifier keys.\n");
     ErrorF("-fakemouse3 <modifiers> : fake right mouse button with modifier keys.\n");
     ErrorF("  ex: -fakemouse2 \"option,shift\" = option-shift-click is middle button.\n");
     ErrorF("-version : show the server version.\n");
-    ErrorF("\n");
-    ErrorF("\n");
-    ErrorF("Options ignored in rootless mode:\n");
-    ErrorF("-size <height> <width> : use a screen resolution of <height> x <width>.\n");
-    ErrorF("-depth <8,15,24> : use this bit depth.\n");
-    ErrorF("-refresh <rate> : use a monitor refresh rate of <rate> Hz.\n");
     ErrorF("\n");
 }
 

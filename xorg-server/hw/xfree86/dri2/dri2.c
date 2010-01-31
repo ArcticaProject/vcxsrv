@@ -70,7 +70,8 @@ typedef struct _DRI2Drawable {
 typedef struct _DRI2Screen *DRI2ScreenPtr;
 
 typedef struct _DRI2Screen {
-    const char			*driverName;
+    unsigned int		 numDrivers;
+    const char			**driverNames;
     const char			*deviceName;
     int				 fd;
     unsigned int		 lastSequence;
@@ -155,6 +156,31 @@ DRI2CreateDrawable(DrawablePtr pDraw)
     }
 
     return Success;
+}
+
+static void
+DRI2FreeDrawable(DrawablePtr pDraw)
+{
+    DRI2DrawablePtr pPriv;
+    WindowPtr  	    pWin;
+    PixmapPtr	    pPixmap;
+
+    pPriv = DRI2GetDrawable(pDraw);
+    if (pPriv == NULL)
+	return;
+
+    xfree(pPriv);
+
+    if (pDraw->type == DRAWABLE_WINDOW)
+    {
+	pWin = (WindowPtr) pDraw;
+	dixSetPrivate(&pWin->devPrivates, dri2WindowPrivateKey, NULL);
+    }
+    else
+    {
+	pPixmap = (PixmapPtr) pDraw;
+	dixSetPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey, NULL);
+    }
 }
 
 static int
@@ -507,7 +533,7 @@ DRI2SwapComplete(ClientPtr client, DrawablePtr pDraw, int frame,
     if (pPriv->refCount == 0) {
         xf86DrvMsg(pScreen->myNum, X_ERROR,
 		   "[DRI2] %s: bad drawable refcount\n", __func__);
-	xfree(pPriv);
+	DRI2FreeDrawable(pDraw);
 	return;
     }
 
@@ -728,8 +754,6 @@ DRI2DestroyDrawable(DrawablePtr pDraw)
 {
     DRI2ScreenPtr   ds = DRI2GetScreen(pDraw->pScreen);
     DRI2DrawablePtr pPriv;
-    WindowPtr  	    pWin;
-    PixmapPtr	    pPixmap;
 
     pPriv = DRI2GetDrawable(pDraw);
     if (pPriv == NULL)
@@ -752,18 +776,7 @@ DRI2DestroyDrawable(DrawablePtr pDraw)
      * actually free the priv yet.  We'll need it in the DRI2SwapComplete()
      * callback and we'll free it there once we're done. */
     if (!pPriv->swapsPending)
-	xfree(pPriv);
-
-    if (pDraw->type == DRAWABLE_WINDOW)
-    {
-	pWin = (WindowPtr) pDraw;
-	dixSetPrivate(&pWin->devPrivates, dri2WindowPrivateKey, NULL);
-    }
-    else
-    {
-	pPixmap = (PixmapPtr) pDraw;
-	dixSetPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey, NULL);
-    }
+	DRI2FreeDrawable(pDraw);
 }
 
 Bool
@@ -772,14 +785,12 @@ DRI2Connect(ScreenPtr pScreen, unsigned int driverType, int *fd,
 {
     DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
 
-    if (ds == NULL)
+    if (ds == NULL || driverType >= ds->numDrivers ||
+	    !ds->driverNames[driverType])
 	return FALSE;
 
-    if (driverType != DRI2DriverDRI)
-	return BadValue;
-
     *fd = ds->fd;
-    *driverName = ds->driverName;
+    *driverName = ds->driverNames[driverType];
     *deviceName = ds->deviceName;
 
     return TRUE;
@@ -800,6 +811,11 @@ Bool
 DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 {
     DRI2ScreenPtr ds;
+    const char* driverTypeNames[] = {
+	"DRI", /* DRI2DriverDRI */
+	"VDPAU", /* DRI2DriverVDPAU */
+    };
+    unsigned int i;
 
     if (info->version < 3)
 	return FALSE;
@@ -815,7 +831,6 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 	return FALSE;
 
     ds->fd	       = info->fd;
-    ds->driverName     = info->driverName;
     ds->deviceName     = info->deviceName;
 
     ds->CreateBuffer   = info->CreateBuffer;
@@ -828,9 +843,35 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 	ds->GetMSC = info->GetMSC;
     }
 
+    if (info->version == 3 || info->numDrivers == 0) {
+	/* Driver too old: use the old-style driverName field */
+	ds->numDrivers = 1;
+	ds->driverNames = xalloc(sizeof(*ds->driverNames));
+	if (!ds->driverNames) {
+	    xfree(ds);
+	    return FALSE;
+	}
+	ds->driverNames[0] = info->driverName;
+    } else {
+	ds->numDrivers = info->numDrivers;
+	ds->driverNames = xalloc(info->numDrivers * sizeof(*ds->driverNames));
+	if (!ds->driverNames) {
+	    xfree(ds);
+	    return FALSE;
+	}
+	memcpy(ds->driverNames, info->driverNames,
+	       info->numDrivers * sizeof(*ds->driverNames));
+    }
+
     dixSetPrivate(&pScreen->devPrivates, dri2ScreenPrivateKey, ds);
 
     xf86DrvMsg(pScreen->myNum, X_INFO, "[DRI2] Setup complete\n");
+    for (i = 0; i < sizeof(driverTypeNames) / sizeof(driverTypeNames[0]); i++) {
+	if (i < ds->numDrivers && ds->driverNames[i]) {
+	    xf86DrvMsg(pScreen->myNum, X_INFO, "[DRI2]   %s driver: %s\n",
+		       driverTypeNames[i], ds->driverNames[i]);
+	}
+    }
 
     return TRUE;
 }
@@ -840,6 +881,7 @@ DRI2CloseScreen(ScreenPtr pScreen)
 {
     DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
 
+    xfree(ds->driverNames);
     xfree(ds);
     dixSetPrivate(&pScreen->devPrivates, dri2ScreenPrivateKey, NULL);
 }
@@ -872,7 +914,7 @@ static XF86ModuleVersionInfo DRI2VersRec =
     MODINFOSTRING1,
     MODINFOSTRING2,
     XORG_VERSION_CURRENT,
-    1, 1, 0,
+    1, 2, 0,
     ABI_CLASS_EXTENSION,
     ABI_EXTENSION_VERSION,
     MOD_CLASS_NONE,

@@ -194,47 +194,40 @@ xf86ProcessActionEvent(ActionEvent action, void *arg)
 	if (!xf86Info.dontZoom)
 	    xf86ZoomViewport(xf86Info.currentScreen, -1);
 	break;
-#if defined(VT_ACTIVATE)
     case ACTION_SWITCHSCREEN:
 	if (VTSwitchEnabled && !xf86Info.dontVTSwitch && arg) {
 	    int vtno = *((int *) arg);
-#if defined(__SCO__) || defined(__UNIXWARE__)
-	    vtno--;
-#endif
-#if defined(sun)
-	    if (vtno == xf86Info.vtno)
-		break;
 
-	    xf86Info.vtRequestsPending = TRUE;
-	    xf86Info.vtPendingNum = vtno;
-#else
-	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, vtno) < 0)
-		ErrorF("Failed to switch consoles (%s)\n", strerror(errno));
-#endif
+	    if (vtno != xf86Info.vtno) {
+		if (!xf86VTActivate(vtno)) {
+		    ErrorF("Failed to switch from vt%02d to vt%02d: %s\n",
+			   xf86Info.vtno, vtno, strerror(errno));
+		}
+	    }
 	}
 	break;
     case ACTION_SWITCHSCREEN_NEXT:
 	if (VTSwitchEnabled && !xf86Info.dontVTSwitch) {
-#if defined(__SCO__) || defined(__UNIXWARE__)
-	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno) < 0)
-#else
-	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno + 1) < 0)
-#endif
-#if defined (__SCO__) || (defined(sun) && defined (__i386__) && defined (SVR4)) || defined(__UNIXWARE__)
-		if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, 0) < 0)
-#else
-		if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, 1) < 0)
-#endif
-		    ErrorF("Failed to switch consoles (%s)\n", strerror(errno));
+	    if (!xf86VTActivate(xf86Info.vtno + 1)) {
+		/* If first try failed, assume this is the last VT and
+		 * try wrapping around to the first vt.
+		 */
+		if (!xf86VTActivate(1)) {
+		    ErrorF("Failed to switch from vt%02d to next vt: %s\n",
+			   xf86Info.vtno, strerror(errno));
+		}
+	    }
 	}
 	break;
     case ACTION_SWITCHSCREEN_PREV:
 	if (VTSwitchEnabled && !xf86Info.dontVTSwitch && xf86Info.vtno > 0) {
-	    if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, xf86Info.vtno - 1) < 0)
-		ErrorF("Failed to switch consoles (%s)\n", strerror(errno));
+	    if (!xf86VTActivate(xf86Info.vtno - 1)) {
+		/* Don't know what the maximum VT is, so can't wrap around */
+		ErrorF("Failed to switch from vt%02d to previous vt: %s\n",
+		       xf86Info.vtno, strerror(errno));
+	    }
 	}
 	break;
-#endif
     default:
 	break;
     }

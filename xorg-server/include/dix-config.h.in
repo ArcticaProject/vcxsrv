@@ -414,9 +414,6 @@
 /* Use only built-in fonts */
 #undef BUILTIN_FONTS
 
-/* Use an empty root cursor */
-#undef NULL_ROOT_CURSOR
-
 /* Have a monotonic clock from clock_gettime() */
 #undef MONOTONIC_CLOCK
 

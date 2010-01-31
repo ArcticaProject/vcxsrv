@@ -1004,12 +1004,14 @@ xf86ChangeGammaRamp(
 	xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
 	RRCrtcPtr crtc = config->output[config->compat_output]->crtc->randr_crtc;
 
-	if (crtc->gammaSize != size)
-	    return BadValue;
+	if (crtc) {
+	    if (crtc->gammaSize != size)
+		return BadValue;
 
-	RRCrtcGammaSet(crtc, red, green, blue);
+	    RRCrtcGammaSet(crtc, red, green, blue);
 
-	return Success;
+	    return Success;
+	}
     }
 
     if(CMapScreenKey == NULL)
@@ -1077,7 +1079,8 @@ xf86GetGammaRampSize(ScreenPtr pScreen)
 	xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
 	RRCrtcPtr crtc = config->output[config->compat_output]->crtc->randr_crtc;
 
-	return crtc->gammaSize;
+	if (crtc)
+	    return crtc->gammaSize;
     }
 
     if(CMapScreenKey == NULL) return 0;
@@ -1106,17 +1109,19 @@ xf86GetGammaRamp(
 	xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
 	RRCrtcPtr crtc = config->output[config->compat_output]->crtc->randr_crtc;
 
-	if (crtc->gammaSize < size)
-	    return BadValue;
+	if (crtc) {
+	    if (crtc->gammaSize < size)
+		return BadValue;
 
-	if (!RRCrtcGammaGet(crtc))
-	    return BadImplementation;
+	    if (!RRCrtcGammaGet(crtc))
+		return BadImplementation;
 
-	memcpy(red, crtc->gammaRed, size * sizeof(*red));
-	memcpy(green, crtc->gammaGreen, size * sizeof(*green));
-	memcpy(blue, crtc->gammaBlue, size * sizeof(*blue));
+	    memcpy(red, crtc->gammaRed, size * sizeof(*red));
+	    memcpy(green, crtc->gammaGreen, size * sizeof(*green));
+	    memcpy(blue, crtc->gammaBlue, size * sizeof(*blue));
 
-	return Success;
+	    return Success;
+	}
     }
 
     if(CMapScreenKey == NULL) 
