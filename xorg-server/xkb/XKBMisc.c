@@ -187,7 +187,7 @@ BOOL		replicated = FALSE;
 	if (syms[0]==NoSymbol) {
 	    register int n;
 	    Bool	found;
-	    for (n=1,found=False;(!found)&&(n<nSyms[i]);n++) {
+	    for (n=1,found=FALSE;(!found)&&(n<nSyms[i]);n++) {
 		found= (syms[n]!=NoSymbol);
 	    }
 	    if (!found)
@@ -227,27 +227,27 @@ BOOL		replicated = FALSE;
      * the core replication.
      */
     if (nGroups>1) {
-	Bool sameType,allOneLevel, canonical = True;
+	Bool sameType,allOneLevel, canonical = TRUE;
 	allOneLevel= (xkb->map->types[types_inout[0]].num_levels==1);
-	for (i=1,sameType=True;(allOneLevel||sameType)&&(i<nGroups);i++) {
+	for (i=1,sameType=TRUE;(allOneLevel||sameType)&&(i<nGroups);i++) {
 	    sameType=(sameType&&(types_inout[i]==types_inout[XkbGroup1Index]));
 	    if (allOneLevel)
 		allOneLevel= (xkb->map->types[types_inout[i]].num_levels==1);
 	    if (types_inout[i] > XkbLastRequiredType)
-		canonical = False;
+		canonical = FALSE;
 	}
 	if (((sameType) || canonical)&&
 	    (!(protected&(XkbExplicitKeyTypesMask&~XkbExplicitKeyType1Mask)))){
 	    register int s;
 	    Bool	identical;
-	    for (i=1,identical=True;identical&&(i<nGroups);i++) {
+	    for (i=1,identical=TRUE;identical&&(i<nGroups);i++) {
 		KeySym *syms;
                 if (nSyms[i] != nSyms[XkbGroup1Index])
-                    identical = False;
+                    identical = FALSE;
 		syms= &xkb_syms_rtrn[XKB_OFFSET(i,0)];
 		for (s=0;identical&&(s<nSyms[i]);s++) {
 		    if (syms[s]!=xkb_syms_rtrn[s])
-			identical= False;
+			identical= FALSE;
 		}
 	    }
 	    if (identical)
@@ -374,16 +374,16 @@ unsigned		changed,tmp;
     if ((!xkb)||(!xkb->map)||(!xkb->map->key_sym_map)||
     			(!xkb->compat)||(!xkb->compat->sym_interpret)||
 			(key<xkb->min_key_code)||(key>xkb->max_key_code)) {
-	return False;
+	return FALSE;
     }
     if (((!xkb->server)||(!xkb->server->key_acts))&&
 		(XkbAllocServerMap(xkb,XkbAllServerInfoMask,0)!=Success)) {
-	return False;
+	return FALSE;
     }
     changed= 0;	/* keeps track of what has changed in _this_ call */
     explicit= xkb->server->explicit[key];
     if (explicit&XkbExplicitInterpretMask) /* nothing to do */
-	return True;
+	return TRUE;
     mods= (xkb->map->modmap?xkb->map->modmap[key]:0);
     nSyms= XkbKeyNumSyms(xkb,key);
     syms= XkbKeySymsPtr(xkb,key);
@@ -423,7 +423,7 @@ unsigned		changed,tmp;
 	if (!pActs) {
             if (nSyms > IBUF_SIZE)
                 xfree(interps);
-	    return False;
+	    return FALSE;
         }
 	new_vmodmask= 0;
 	for (n=0;n<nSyms;n++) {
@@ -508,7 +508,7 @@ unsigned		changed,tmp;
     }
     if (interps!=ibuf)
 	xfree(interps);
-    return True;
+    return TRUE;
 }
 
 Status
@@ -642,19 +642,19 @@ register int i,bit;
 register unsigned mask;
 
     if (xkb==NULL)
-	return False;
+	return FALSE;
     if (virtual_mask==0) {
 	*mask_rtrn= 0;
-	return True;
+	return TRUE;
     }
     if (xkb->server==NULL)
-	return False;
+	return FALSE;
     for (i=mask=0,bit=1;i<XkbNumVirtualMods;i++,bit<<=1) {
 	if (virtual_mask&bit)
 	    mask|= xkb->server->vmods[i];
     }
     *mask_rtrn= mask;
-    return True;
+    return TRUE;
 }
 
 /***====================================================================***/
@@ -670,7 +670,7 @@ unsigned int	tmp;
 		XkbVirtualModsToReal(xkb,tmp,&tmp);
 		act->mods.mask= act->mods.real_mods;
 		act->mods.mask|= tmp;
-		return True;
+		return TRUE;
 	    }
 	    break;
 	case XkbSA_ISOLock:
@@ -678,11 +678,11 @@ unsigned int	tmp;
 		XkbVirtualModsToReal(xkb,tmp,&tmp);
 		act->iso.mask= act->iso.real_mods;
 		act->iso.mask|= tmp;
-		return True;
+		return TRUE;
 	    }
 	    break;
     }
-    return False;
+    return FALSE;
 }
 
 static void
@@ -740,7 +740,7 @@ register int	i;
 unsigned int	checkState = 0;
 
     if ((!xkb) || (!xkb->map) || (changed==0))
-	return False;
+	return FALSE;
     for (i=0;i<xkb->map->num_types;i++) {
 	if (xkb->map->types[i].mods.vmods & changed)
 	XkbUpdateKeyTypeVirtualMods(xkb,&xkb->map->types[i],changed,changes);
@@ -753,7 +753,7 @@ unsigned int	checkState = 0;
 	    xkb->ctrls->internal.mask= newMask;
 	    if (changes) {
 		changes->ctrls.changed_ctrls|= XkbInternalModsMask;
-		checkState= True;
+		checkState= TRUE;
 	    }
 	}
     }
@@ -765,7 +765,7 @@ unsigned int	checkState = 0;
 	    xkb->ctrls->ignore_lock.mask= newMask;
 	    if (changes) {
 		changes->ctrls.changed_ctrls|= XkbIgnoreLockModsMask;
-		checkState= True;
+		checkState= TRUE;
 	    }
 	}
     }
@@ -781,7 +781,7 @@ unsigned int	checkState = 0;
 		    map->mods.mask= newMask;
 		    if (changes) {
 			changes->indicators.map_changes|= (1<<i);
-			checkState= True;
+			checkState= TRUE;
 		    }
 		}
 	    }
@@ -798,7 +798,7 @@ unsigned int	checkState = 0;
 		compat->groups[i].mask= newMask;
 		if (changes) {
 		    changes->compat.changed_groups|= (1<<i);
-		    checkState= True;
+		    checkState= TRUE;
 		}
 	    }
 	}

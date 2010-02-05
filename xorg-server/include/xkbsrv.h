@@ -309,11 +309,6 @@ extern	_X_EXPORT int	DeviceButtonPress,DeviceButtonRelease;
 
 #define	Status		int
 
-#ifndef True
-#define	True	TRUE
-#define	False	FALSE
-#endif
-
 extern _X_EXPORT void XkbUseMsg(
     void
 );

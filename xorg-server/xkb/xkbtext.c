@@ -527,9 +527,9 @@ Bool	ok;
     }
     else if (format==XkbXKMFile)
 	return str;
-    for (ok= True,len=0,in=str;*in!='\0';in++,len++) {
+    for (ok= TRUE,len=0,in=str;*in!='\0';in++,len++) {
 	if (!isprint(*in)) {
-	    ok= False;
+	    ok= FALSE;
 	    switch (*in) {
 		case '\n': case '\t': case '\v':
 		case '\b': case '\r': case '\f':
@@ -661,18 +661,18 @@ register int len;
 	if (len<((*pLeft)-3)) {
 	    strcat(to,from);
 	    *pLeft-= len;
-	    return True;
+	    return TRUE;
 	}
     }
     *pLeft= -1;
-    return False;
+    return FALSE;
 }
 
 /*ARGSUSED*/
 static Bool
 CopyNoActionArgs(XkbDescPtr xkb,XkbAction *action,char *buf,int*sz)
 {
-    return True;
+    return TRUE;
 }
 
 static Bool
@@ -694,12 +694,12 @@ unsigned	tmp;
     }
     else TryCopyStr(buf,"none",sz);
     if (act->type==XkbSA_LockMods)
-	return True;
+	return TRUE;
     if (act->flags&XkbSA_ClearLocks)
 	TryCopyStr(buf,",clearLocks",sz);
     if (act->flags&XkbSA_LatchToLock)
 	TryCopyStr(buf,",latchToLock",sz);
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -719,12 +719,12 @@ char			tbuf[32];
     else sprintf(tbuf,"+%d",XkbSAGroup(act));
     TryCopyStr(buf,tbuf,sz);
     if (act->type==XkbSA_LockGroup)
-	return True;
+	return TRUE;
     if (act->flags&XkbSA_ClearLocks)
 	TryCopyStr(buf,",clearLocks",sz);
     if (act->flags&XkbSA_LatchToLock)
 	TryCopyStr(buf,",latchToLock",sz);
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -749,7 +749,7 @@ char		tbuf[32];
     TryCopyStr(buf,tbuf,sz);
     if (act->flags&XkbSA_NoAcceleration)
 	TryCopyStr(buf,",!accel",sz);
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -783,7 +783,7 @@ char			tbuf[32];
 	}
 	TryCopyStr(buf,tbuf,sz);
     }
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -802,7 +802,7 @@ char			tbuf[32];
 	else sprintf(tbuf,"+%d",XkbSAPtrDfltValue(act));
 	TryCopyStr(buf,tbuf,sz);
     }
-    return True;
+    return TRUE;
 }
 
 static Bool
@@ -863,7 +863,7 @@ char		tbuf[64];
 	    nOut++;
 	}
     }
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -882,7 +882,7 @@ char			tbuf[32];
     if (act->flags&XkbSA_SwitchApplication)
 	 TryCopyStr(buf,",!same",sz);
     else TryCopyStr(buf,",same",sz);
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -969,7 +969,7 @@ char			tbuf[32];
 	    nOut++;
 	}
     }
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -997,7 +997,7 @@ char			tbuf[32];
     sprintf(tbuf,",data[3]=0x%02x",act->message[3]); TryCopyStr(buf,tbuf,sz);
     sprintf(tbuf,",data[4]=0x%02x",act->message[4]); TryCopyStr(buf,tbuf,sz);
     sprintf(tbuf,",data[5]=0x%02x",act->message[5]); TryCopyStr(buf,tbuf,sz);
-    return True;
+    return TRUE;
 }
 
 static Bool
@@ -1022,7 +1022,7 @@ unsigned		vmods,vmods_mask;
     else sprintf(tbuf,"key=%d",kc);
     TryCopyStr(buf,tbuf,sz);
     if ((act->mods_mask==0)&&(vmods_mask==0))
-	return True;
+	return TRUE;
     if ((act->mods_mask==XkbAllModifiersMask)&&
 	(vmods_mask==XkbAllVirtualModsMask)) {
 	tmp= XkbVModMaskText(xkb,act->mods,vmods,XkbXKBFile);
@@ -1043,7 +1043,7 @@ unsigned		vmods,vmods_mask;
 	    TryCopyStr(buf,tmp,sz);
 	}
     }
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -1076,7 +1076,7 @@ char			tbuf[32];
 	}
 	TryCopyStr(buf,tbuf,sz);
     }
-    return True;
+    return TRUE;
 }
 
 /*ARGSUSED*/
@@ -1095,7 +1095,7 @@ char		tbuf[32];
     sprintf(tbuf,",data[4]=0x%02x",act->data[4]); TryCopyStr(buf,tbuf,sz);
     sprintf(tbuf,",data[5]=0x%02x",act->data[5]); TryCopyStr(buf,tbuf,sz);
     sprintf(tbuf,",data[6]=0x%02x",act->data[6]); TryCopyStr(buf,tbuf,sz);
-    return True;
+    return TRUE;
 }
 
 typedef	Bool	(*actionCopy)(
@@ -1173,7 +1173,7 @@ char	buf[256],*tmp;
 	permanent=((behavior->type&XkbKB_Permanent)!=0);
 
 	if (type==XkbKB_Lock) {
-	    sprintf(buf,"lock= %s",(permanent?"Permanent":"True"));
+	    sprintf(buf,"lock= %s",(permanent?"Permanent":"TRUE"));
 	}
 	else if (type==XkbKB_RadioGroup) {
 	    int 	g;

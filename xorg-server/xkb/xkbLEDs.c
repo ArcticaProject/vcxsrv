@@ -103,8 +103,8 @@ Bool		ctrlChange,stateChange;
 XkbStatePtr	state;
 
     if ((map->flags&XkbIM_NoExplicit)||((map->flags&XkbIM_LEDDrivesKB)==0))
-	return False;
-    ctrlChange= stateChange= False;
+	return FALSE;
+    ctrlChange= stateChange= FALSE;
     if (map->ctrls) {
 	XkbControlsPtr	ctrls= xkbi->desc->ctrls;
 	unsigned 	old;
@@ -115,7 +115,7 @@ XkbStatePtr	state;
 	if (old!=ctrls->enabled_ctrls) {
 	    change->ctrls.changed_ctrls= XkbControlsEnabledMask;
 	    change->ctrls.enabled_ctrls_changes= old^ctrls->enabled_ctrls;
-	    ctrlChange= True;
+	    ctrlChange= TRUE;
 	}
     }
     state= &xkbi->state;
@@ -133,7 +133,7 @@ XkbStatePtr	state;
 	    if (map->which_groups&XkbIM_UseLatched)
 		XkbLatchGroup(xkbi->device,0); /* unlatch group */
 	    state->locked_group= i;
-	    stateChange= True;
+	    stateChange= TRUE;
 	}
 	else if (map->which_groups&(XkbIM_UseLatched|XkbIM_UseEffective)) {
 	    for (i=0,bit=1;i<XkbNumKbdGroups;i++,bit<<=1) {
@@ -142,7 +142,7 @@ XkbStatePtr	state;
 	    }
 	    state->locked_group= 0;
 	    XkbLatchGroup(xkbi->device,i);
-	    stateChange= True;
+	    stateChange= TRUE;
 	}
     }
     if ((map->mods.mask)&&((map->which_mods&(~XkbIM_UseBase))!=0)) {
@@ -152,7 +152,7 @@ XkbStatePtr	state;
 	    if (on)	state->locked_mods|= map->mods.mask;
 	    else	state->locked_mods&= ~map->mods.mask;
 	    if (state->locked_mods!=old)
-		stateChange= True;
+		stateChange= TRUE;
 	}
 	if (map->which_mods&(XkbIM_UseLatched|XkbIM_UseEffective)) {
 	    register unsigned long newmods;
@@ -162,7 +162,7 @@ XkbStatePtr	state;
 	    if (newmods!=state->locked_mods) {
 		newmods&= map->mods.mask;
 		XkbLatchModifiers(xkbi->device,map->mods.mask,newmods);
-		stateChange= True;
+		stateChange= TRUE;
 	    }
 	}
     }
@@ -186,7 +186,7 @@ ComputeAutoState(	XkbIndicatorMapPtr	map,
 Bool 			on;
 CARD8 			mods,group;
 
-    on= False;
+    on= FALSE;
     mods= group= 0;
     if (map->which_mods&XkbIM_UseAnyMods) {
 	if (map->which_mods&XkbIM_UseBase)
@@ -371,7 +371,7 @@ unsigned 			side_affected;
 
     side_affected= 0;
     if (changes.state_changes!=0)
-	side_affected|= XkbIndicatorsToUpdate(dev,changes.state_changes,False);
+	side_affected|= XkbIndicatorsToUpdate(dev,changes.state_changes,FALSE);
     if (changes.ctrls.enabled_ctrls_changes)
 	side_affected|= sli->usesControls;
 
@@ -402,7 +402,7 @@ unsigned 			side_affected;
 	 * required to report the necessary changes, otherwise it simply
 	 * notes the indicators with changed state.
 	 *
-	 * If 'check_edevs' is True, this function also checks the indicator
+	 * If 'check_edevs' is TRUE, this function also checks the indicator
 	 * maps for any open extension devices that have them, and updates
 	 * the state of any extension device indicators as necessary.
 	 */
@@ -522,7 +522,7 @@ Bool			checkAccel;
 Bool			checkNames;
 
     sli= NULL;
-    checkAccel= checkNames= False;
+    checkAccel= checkNames= FALSE;
     if ((kf!=NULL)&&(kf->xkb_sli==NULL)) {
 	kf->xkb_sli= sli= xcalloc(1, sizeof(XkbSrvLedInfoRec));
 	if (sli==NULL)
@@ -545,7 +545,7 @@ Bool			checkNames;
 	    sli->physIndicators=	xkb->indicators->phys_indicators;
 	    sli->names=			xkb->names->indicators;
 	    sli->maps=			xkb->indicators->maps;
-	    checkNames= checkAccel=	True;
+	    checkNames= checkAccel=	TRUE;
 	}
 	else {
 	    sli->physIndicators=	XkbAllIndicatorsMask;
@@ -558,11 +558,11 @@ Bool			checkNames;
 	xkb= dev->key->xkbInfo->desc;
 	sli->physIndicators=	xkb->indicators->phys_indicators;
 	if (xkb->names->indicators!=sli->names) {
-	    checkNames= True;
+	    checkNames= TRUE;
 	    sli->names= xkb->names->indicators;
 	}
 	if (xkb->indicators->maps!=sli->maps) {
-	    checkAccel= True;
+	    checkAccel= TRUE;
 	    sli->maps= xkb->indicators->maps;
 	}
     }
@@ -920,7 +920,7 @@ Bool				kb_changed;
 	bzero((char *)changes,sizeof(XkbChangesRec));
     }
 
-    kb_changed= False;
+    kb_changed= FALSE;
     affected= changed_leds;
     oldState= sli->effectiveState;
     for (i=0,bit=1;(i<XkbNumIndicators)&&(affected);i++,bit<<=1) {
@@ -935,7 +935,7 @@ Bool				kb_changed;
 	if (map->flags&XkbIM_LEDDrivesKB) {
 	    Bool on= ((sli->explicitState&bit)!=0);
 	    if (XkbApplyLEDChangeToKeyboard(xkbi,map,on,changes))
-		kb_changed= True;
+		kb_changed= TRUE;
 	}
     }
     sli->effectiveState= (sli->autoState|sli->explicitState);

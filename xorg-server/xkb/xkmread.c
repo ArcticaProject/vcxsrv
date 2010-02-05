@@ -195,7 +195,7 @@ int		nRead=0;
 	char name[100];
 	if (named&bit) {
 	    if (nRead+=XkmGetCountedString(file,name,100)) {
-		xkb->names->vmods[i]= XkbInternAtom(name,False);
+		xkb->names->vmods[i]= XkbInternAtom(name,FALSE);
 		if (changes)
 		    changes->names.changed_vmods|= bit;
 	    }
@@ -240,7 +240,7 @@ XkbKeyNamePtr	pN;
 	return -1;
     }
     if (name[0]!='\0') {
-	xkb->names->keycodes= XkbInternAtom(name,False);
+	xkb->names->keycodes= XkbInternAtom(name,FALSE);
     }
 
     for (pN=&xkb->names->keys[minKC],i=minKC;i<=(int)maxKC;i++,pN++) {
@@ -294,7 +294,7 @@ char 			buf[100];
 	    _XkbLibError(_XkbErrBadAlloc,"ReadXkmKeyTypes",0);
 	    return -1;
         }
-	xkb->names->types= XkbInternAtom(buf,False);
+	xkb->names->types= XkbInternAtom(buf,FALSE);
     }
     num_types= XkmGetCARD16(file,&nRead);
     nRead+= XkmSkipPadding(file,2);
@@ -349,7 +349,7 @@ char 			buf[100];
 	   return -1;
 	}
 	if (buf[0]!='\0') {
-	     type->name= XkbInternAtom(buf,False);
+	     type->name= XkbInternAtom(buf,FALSE);
 	}
 	else type->name= None;
 
@@ -430,7 +430,7 @@ XkbAction               *act;
 	    _XkbLibError(_XkbErrBadAlloc,"ReadXkmCompatMap",0);
 	    return -1;
 	}
-	xkb->names->compat= XkbInternAtom(name,False);
+	xkb->names->compat= XkbInternAtom(name,FALSE);
     }
     num_si= XkmGetCARD16(file,&nRead);
     groups= XkmGetCARD8(file,&nRead);
@@ -531,7 +531,13 @@ XkbAction               *act;
             act->devval.v2_ndx = wire.actionData[5];
             act->devval.v2_what = wire.actionData[6];
             break;
+
         case XkbSA_XFree86Private:
+            /* copy the kind of action */
+            strncpy((char*)act->any.data, (char*)wire.actionData,
+                    XkbAnyActionDataSize);
+            break ;
+
         case XkbSA_Terminate:
             /* no args, kinda (note: untrue for xfree86). */
             break;
@@ -597,7 +603,7 @@ int			nRead=0;
 	}
 	nRead+= tmp;
 	if (buf[0]!='\0')
-	     name= XkbInternAtom(buf,False);
+	     name= XkbInternAtom(buf,FALSE);
 	else name= None;
 	if ((tmp=fread(&wire,SIZEOF(xkmIndicatorMapDesc),1,file))<1) {
 	    _XkbLibError(_XkbErrBadLength,"ReadXkmIndicators",0);
@@ -816,7 +822,7 @@ int		nRead=0;
     nRead+= XkmGetCountedString(file,buf,100);
     tmp= fread(&doodadWire,SIZEOF(xkmDoodadDesc),1,file);
     nRead+= SIZEOF(xkmDoodadDesc)*tmp;
-    doodad= XkbAddGeomDoodad(geom,section,XkbInternAtom(buf,False));
+    doodad= XkbAddGeomDoodad(geom,section,XkbInternAtom(buf,FALSE));
     if (!doodad)
 	return nRead;
     doodad->any.type= doodadWire.any.type;
@@ -876,7 +882,7 @@ register int		r;
     nRead+= XkmGetCountedString(file,buf,100);
     tmp= fread(&olWire,SIZEOF(xkmOverlayDesc),1,file);
     nRead+= tmp*SIZEOF(xkmOverlayDesc);
-    ol= XkbAddGeomOverlay(section,XkbInternAtom(buf,False),
+    ol= XkbAddGeomOverlay(section,XkbInternAtom(buf,FALSE),
     							olWire.num_rows);
     if (!ol)
 	return nRead;
@@ -914,7 +920,7 @@ char		buf[100];
 Atom		nameAtom;
 
     nRead+= XkmGetCountedString(file,buf,100);
-    nameAtom= XkbInternAtom(buf,False);
+    nameAtom= XkbInternAtom(buf,FALSE);
     tmp= fread(&sectionWire,SIZEOF(xkmSectionDesc),1,file);
     nRead+= SIZEOF(xkmSectionDesc)*tmp;
     section= XkbAddGeomSection(geom,nameAtom,sectionWire.num_rows,
@@ -1008,7 +1014,7 @@ XkbGeometrySizesRec	sizes;
 	return nRead;
     }
     geom= xkb->geom;
-    geom->name= XkbInternAtom(buf,False);
+    geom->name= XkbInternAtom(buf,FALSE);
     geom->width_mm= wireGeom.width_mm;
     geom->height_mm= wireGeom.height_mm;
     nRead+= XkmGetCountedString(file,buf,100);
@@ -1044,7 +1050,7 @@ XkbGeometrySizesRec	sizes;
 	    XkbOutlinePtr	ol;
 	    xkmOutlineDesc	olWire;
 	    nRead+= XkmGetCountedString(file,buf,100);
-	    nameAtom= XkbInternAtom(buf,False);
+	    nameAtom= XkbInternAtom(buf,FALSE);
 	    tmp= fread(&shapeWire,SIZEOF(xkmShapeDesc),1,file);
 	    nRead+= tmp*SIZEOF(xkmShapeDesc);
 	    shape= XkbAddGeomShape(geom,nameAtom,shapeWire.num_outlines);

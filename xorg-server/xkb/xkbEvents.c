@@ -1073,7 +1073,7 @@ Bool		found;
 unsigned long	autoCtrls,autoValues;
 ClientPtr	client = NULL;
 
-    found= False;
+    found= FALSE;
 
     if (!dev->key || !dev->key->xkbInfo)
         return found;
@@ -1087,7 +1087,7 @@ ClientPtr	client = NULL;
 	    autoValues= interest->autoCtrlValues;
 	    client= interest->client;
 	    xfree(interest);
-	    found= True;
+	    found= TRUE;
 	}
 	while ((!found)&&(interest->next)) {
 	    if (interest->next->resource==id) {
@@ -1097,7 +1097,7 @@ ClientPtr	client = NULL;
 		autoValues= victim->autoCtrlValues;
 		client= victim->client;
 		xfree(victim);
-		found= True;
+		found= TRUE;
 	    }
 	    interest = interest->next;
 	}

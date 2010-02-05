@@ -529,7 +529,7 @@ XkbSetRepeatKeys(DeviceIntPtr pXDev,int key,int onoff)
 		pXDev->kbdfeed->ctrl.autoRepeats[key/8];
 	}
 	
-	if (XkbComputeControlsNotify(pXDev,&old,ctrls,&cn,True))
+	if (XkbComputeControlsNotify(pXDev,&old,ctrls,&cn,TRUE))
 	    XkbSendControlsNotify(pXDev,&cn);
     }
     return;
@@ -726,7 +726,7 @@ XkbCheckSecondaryEffects(	XkbSrvInfoPtr		xkbi,
 	XkbComputeDerivedState(xkbi);
     }
     if (which&XkbIndicatorStateNotifyMask)
-	XkbUpdateIndicators(xkbi->device,XkbAllIndicatorsMask,True,changes,
+	XkbUpdateIndicators(xkbi->device,XkbAllIndicatorsMask,TRUE,changes,
 									cause);
     return;
 }
@@ -749,7 +749,7 @@ XkbSrvLedInfoPtr	sli;
     ctrls->enabled_ctrls&= ~change;
     ctrls->enabled_ctrls|= (change&newValues);
     if (old==ctrls->enabled_ctrls)
-	return False;
+	return FALSE;
     if (cause!=NULL) {
 	xkbControlsNotify cn;
 	cn.numGroups= ctrls->num_groups;
@@ -774,8 +774,8 @@ XkbSrvLedInfoPtr	sli;
 	else changes->ctrls.changed_ctrls&= ~XkbControlsEnabledMask;
     }
     sli= XkbFindSrvLedInfo(xkbi->device,XkbDfltXIClass,XkbDfltXIId,0);
-    XkbUpdateIndicators(xkbi->device,sli->usesControls,True,changes,cause);
-    return True;
+    XkbUpdateIndicators(xkbi->device,sli->usesControls,TRUE,changes,cause);
+    return TRUE;
 }
 
 /***====================================================================***/
@@ -1152,7 +1152,7 @@ _XkbCopyClientMap(XkbDescPtr src, XkbDescPtr dst)
     }
     else {
         if (dst->map)
-            XkbFreeClientMap(dst, XkbAllClientInfoMask, True);
+            XkbFreeClientMap(dst, XkbAllClientInfoMask, TRUE);
     }
 
     return TRUE;
@@ -1288,7 +1288,7 @@ _XkbCopyServerMap(XkbDescPtr src, XkbDescPtr dst)
     }
     else {
         if (dst->server)
-            XkbFreeServerMap(dst, XkbAllServerInfoMask, True);
+            XkbFreeServerMap(dst, XkbAllServerInfoMask, TRUE);
     }
 
     return TRUE;
@@ -1389,7 +1389,7 @@ _XkbCopyNames(XkbDescPtr src, XkbDescPtr dst)
     }
     else {
         if (dst->names)
-            XkbFreeNames(dst, XkbAllNamesMask, True);
+            XkbFreeNames(dst, XkbAllNamesMask, TRUE);
     }
 
     return TRUE;
@@ -1441,7 +1441,7 @@ _XkbCopyCompat(XkbDescPtr src, XkbDescPtr dst)
     }
     else {
         if (dst->compat)
-            XkbFreeCompatMap(dst, XkbAllCompatMask, True);
+            XkbFreeCompatMap(dst, XkbAllCompatMask, TRUE);
     }
 
     return TRUE;
@@ -1977,7 +1977,7 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
     {
         if (dst->geom) {
             /* I LOVE THE DIFFERENT CALL SIGNATURE.  REALLY, I DO. */
-            XkbFreeGeometry(dst->geom, XkbGeomAllMask, True);
+            XkbFreeGeometry(dst->geom, XkbGeomAllMask, TRUE);
             dst->geom = NULL;
         }
     }

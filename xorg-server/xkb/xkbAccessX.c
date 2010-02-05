@@ -161,14 +161,14 @@ XkbSrvLedInfoPtr	sli;
 
     old= *ctrls;
     ctrls->enabled_ctrls |= (KRGControl&XkbAX_KRGMask);
-    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,False))
+    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,FALSE))
 	XkbSendControlsNotify(dev,pCN);
     cause.kc=		pCN->keycode;
     cause.event=	pCN->eventType;
     cause.mjr=		pCN->requestMajor;
     cause.mnr=		pCN->requestMinor;
     sli= XkbFindSrvLedInfo(dev,XkbDfltXIClass,XkbDfltXIId,0);
-    XkbUpdateIndicators(dev,sli->usesControls,True,NULL,&cause);
+    XkbUpdateIndicators(dev,sli->usesControls,TRUE,NULL,&cause);
     if (XkbAX_NeedFeedback(ctrls,XkbAX_FeatureFBMask))
 	XkbDDXAccessXBeep(dev,_BEEP_FEATURE_ON,KRGControl);
     return;
@@ -193,14 +193,14 @@ XkbSrvLedInfoPtr	sli;
 
     old = *ctrls;
     ctrls->enabled_ctrls &= ~XkbAX_KRGMask;
-    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,False))
+    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,FALSE))
 	XkbSendControlsNotify(dev,pCN);
     cause.kc=		pCN->keycode;
     cause.event=	pCN->eventType;
     cause.mjr=		pCN->requestMajor;
     cause.mnr=		pCN->requestMinor;
     sli= XkbFindSrvLedInfo(dev,XkbDfltXIClass,XkbDfltXIId,0);
-    XkbUpdateIndicators(dev,sli->usesControls,True,NULL,&cause);
+    XkbUpdateIndicators(dev,sli->usesControls,TRUE,NULL,&cause);
     if (XkbAX_NeedFeedback(ctrls,XkbAX_FeatureFBMask)) {
 	unsigned changes= old.enabled_ctrls^ctrls->enabled_ctrls;
 	XkbDDXAccessXBeep(dev,_BEEP_FEATURE_OFF,changes);
@@ -228,14 +228,14 @@ XkbSrvLedInfoPtr	sli;
     old = *ctrls;
     ctrls->enabled_ctrls |= XkbStickyKeysMask;
     xkbi->shiftKeyCount = 0;
-    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,False)) 
+    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,FALSE))
 	XkbSendControlsNotify(dev,pCN);
     cause.kc=		pCN->keycode;
     cause.event=	pCN->eventType;
     cause.mjr=		pCN->requestMajor;
     cause.mnr=		pCN->requestMinor;
     sli= XkbFindSrvLedInfo(dev,XkbDfltXIClass,XkbDfltXIId,0);
-    XkbUpdateIndicators(dev,sli->usesControls,True,NULL,&cause);
+    XkbUpdateIndicators(dev,sli->usesControls,TRUE,NULL,&cause);
     if (XkbAX_NeedFeedback(ctrls,XkbAX_FeatureFBMask)) {
 	XkbDDXAccessXBeep(dev,_BEEP_FEATURE_ON,XkbStickyKeysMask);
     }
@@ -262,7 +262,7 @@ XkbSrvLedInfoPtr	sli;
     old = *ctrls;
     ctrls->enabled_ctrls &= ~XkbStickyKeysMask;
     xkbi->shiftKeyCount = 0;
-    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,False))
+    if (XkbComputeControlsNotify(dev,&old,ctrls,pCN,FALSE))
 	XkbSendControlsNotify(dev,pCN);
 
     cause.kc=		pCN->keycode;
@@ -270,12 +270,12 @@ XkbSrvLedInfoPtr	sli;
     cause.mjr=		pCN->requestMajor;
     cause.mnr=		pCN->requestMinor;
     sli= XkbFindSrvLedInfo(dev,XkbDfltXIClass,XkbDfltXIId,0);
-    XkbUpdateIndicators(dev,sli->usesControls,True,NULL,&cause);
+    XkbUpdateIndicators(dev,sli->usesControls,TRUE,NULL,&cause);
     if (XkbAX_NeedFeedback(ctrls,XkbAX_FeatureFBMask)) {
 	XkbDDXAccessXBeep(dev,_BEEP_FEATURE_OFF,XkbStickyKeysMask);
     }
 #ifndef NO_CLEAR_LATCHES_FOR_STICKY_KEYS_OFF
-    XkbClearAllLatchesAndLocks(dev,xkbi,False,&cause);
+    XkbClearAllLatchesAndLocks(dev,xkbi,FALSE,&cause);
 #endif
     return;
 } /* AccessXStickyKeysTurnOff */
@@ -311,7 +311,7 @@ XkbSrvInfoPtr	xkbi = dev->key->xkbInfo;
     if (xkbi->repeatKey == 0)
 	return 0;
 
-    AccessXKeyboardEvent(dev, ET_KeyPress, xkbi->repeatKey, True);
+    AccessXKeyboardEvent(dev, ET_KeyPress, xkbi->repeatKey, TRUE);
 
     return xkbi->desc->ctrls->repeat_interval;
 }
@@ -346,7 +346,7 @@ XkbControlsPtr	ctrls;
 	XkbSendAccessXNotify(keybd,&ev);
 	if (XkbAX_NeedFeedback(ctrls,XkbAX_SKAcceptFBMask))
 	    XkbDDXAccessXBeep(keybd,_BEEP_SLOW_ACCEPT,XkbSlowKeysMask);
-	AccessXKeyboardEvent(keybd, ET_KeyPress,xkbi->slowKey,False);
+	AccessXKeyboardEvent(keybd, ET_KeyPress,xkbi->slowKey,FALSE);
 	/* check for magic sequences */
 	if ((ctrls->enabled_ctrls&XkbAccessXKeysMask) &&
 	    ((sym[0]==XK_Shift_R)||(sym[0]==XK_Shift_L)))
@@ -405,7 +405,7 @@ XkbSrvLedInfoPtr	sli;
 	ctrls->ax_options&= ~ctrls->axt_opts_mask;
 	ctrls->ax_options|= (ctrls->axt_opts_values&ctrls->axt_opts_mask);
     }
-    if (XkbComputeControlsNotify(dev,&old,ctrls,&cn,False)) {
+    if (XkbComputeControlsNotify(dev,&old,ctrls,&cn,FALSE)) {
 	cn.keycode = 0;
 	cn.eventType = 0;
 	cn.requestMajor = 0;
@@ -414,7 +414,7 @@ XkbSrvLedInfoPtr	sli;
     }
     XkbSetCauseUnknown(&cause);
     sli= XkbFindSrvLedInfo(dev,XkbDfltXIClass,XkbDfltXIId,0);
-    XkbUpdateIndicators(dev,sli->usesControls,True,NULL,&cause);
+    XkbUpdateIndicators(dev,sli->usesControls,TRUE,NULL,&cause);
     if (ctrls->ax_options!=old.ax_options) {
 	unsigned set,cleared,bell;
 	set= ctrls->ax_options&(~old.ax_options);
@@ -751,11 +751,11 @@ DeviceEvent     *event = &ev->device_event;
 	XkbComputeDerivedState(xkbi);
 	changed |= XkbStateChangedFlags(&oldState,&xkbi->state);
 	if (changed&sli->usedComponents) {
-	    changed_leds= XkbIndicatorsToUpdate(dev,changed,False);
+	    changed_leds= XkbIndicatorsToUpdate(dev,changed,FALSE);
 	    if (changed_leds) {
 		XkbEventCauseRec	cause;
 		XkbSetCauseKey(&cause,(event->detail.key & 0x7), event->type);
-		XkbUpdateIndicators(dev,changed_leds,True,NULL,&cause);
+		XkbUpdateIndicators(dev,changed_leds,TRUE,NULL,&cause);
 	    }
 	}
     }

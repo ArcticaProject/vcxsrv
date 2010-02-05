@@ -113,15 +113,15 @@ GetInputLine(FILE *file,InputLine *line,Bool checkbang)
 int	ch;
 Bool	endOfFile,spacePending,slashPending,inComment;
 
-     endOfFile= False;
+     endOfFile= FALSE;
      while ((!endOfFile)&&(line->num_line==0)) {
-	spacePending= slashPending= inComment= False;
+	spacePending= slashPending= inComment= FALSE;
 	while (((ch=getc(file))!='\n')&&(ch!=EOF)) {
 	    if (ch=='\\') {
 		if ((ch=getc(file))==EOF)
 		    break;
 		if (ch=='\n') {
-		    inComment= False;
+		    inComment= FALSE;
 		    ch= ' ';
 		    line->line_num++;
 		}
@@ -130,21 +130,21 @@ Bool	endOfFile,spacePending,slashPending,inComment;
 		continue;
 	    if (ch=='/') {
 		if (slashPending) {
-		    inComment= True;
-		    slashPending= False;
+		    inComment= TRUE;
+		    slashPending= FALSE;
 		}
 		else {
-		    slashPending= True;
+		    slashPending= TRUE;
 		}
 		continue;
 	    }
 	    else if (slashPending) {
 		if (spacePending) {
 		    ADD_CHAR(line,' ');
-		    spacePending= False;
+		    spacePending= FALSE;
 		}
 		ADD_CHAR(line,'/');
-		slashPending= False;
+		slashPending= FALSE;
 	    }
 	    if (isspace(ch)) {
 		while (isspace(ch)&&(ch!='\n')&&(ch!=EOF)) {
@@ -153,13 +153,13 @@ Bool	endOfFile,spacePending,slashPending,inComment;
 		if (ch==EOF)
 		    break;
 		if ((ch!='\n')&&(line->num_line>0))
-		    spacePending= True;
+		    spacePending= TRUE;
 		ungetc(ch,file);
 	    }
 	    else {
 		if (spacePending) {
 		    ADD_CHAR(line,' ');
-		    spacePending= False;
+		    spacePending= FALSE;
 		}
 		if (checkbang && ch=='!') {
 		    if (line->num_line!=0) {
@@ -175,13 +175,13 @@ Bool	endOfFile,spacePending,slashPending,inComment;
 	    }
 	}
 	if (ch==EOF)
-	     endOfFile= True;
+	     endOfFile= TRUE;
 /*	else line->num_line++;*/
      }
      if ((line->num_line==0)&&(endOfFile))
-	return False;
+	return FALSE;
       ADD_CHAR(line,'\0');
-      return True;
+      return TRUE;
 }
 
 /***====================================================================***/
@@ -273,7 +273,7 @@ Bool		found;
    bzero((char *)remap,sizeof(RemapSpec));
    remap->number = len;
    while ((tok=_XStrtok(str," ",strtok_buf))!=NULL) {
-	found= False;
+	found= FALSE;
 	str= NULL;
 	if (strcmp(tok,"=")==0)
 	    continue;
@@ -294,7 +294,7 @@ Bool		found;
                 } else {
 		    ndx = 0;
                 }
-		found= True;
+		found= TRUE;
 		if (present&(1<<i)) {
 		    if ((i == LAYOUT && l_ndx_present&(1<<ndx)) ||
 			(i == VARIANT && v_ndx_present&(1<<ndx)) ) {
@@ -358,9 +358,9 @@ int	want_len= strlen(wanted);
 	    len= strlen(str);
 	}
 	if ((len==want_len)&&(strncmp(wanted,str,len)==0))
-	    return True;
+	    return TRUE;
     }
-    return False;
+    return FALSE;
 }
 
 /***====================================================================***/
@@ -375,7 +375,7 @@ char *		str,*tok;
 register int	nread, i;
 FileSpec	tmp;
 _Xstrtokparams	strtok_buf;
-Bool 		append = False;
+Bool 		append = FALSE;
 
     if (line->line[0]=='!') {
         if (line->line[1] == '$' ||
@@ -383,14 +383,14 @@ Bool 		append = False;
             char *gname = strchr(line->line, '$');
             char *words = strchr(gname, ' ');
             if(!words)
-                return False;
+                return FALSE;
             *words++ = '\0';
             for (; *words; words++) {
                 if (*words != '=' && *words != ' ')
                     break;
             }
             if (*words == '\0')
-                return False;
+                return FALSE;
             group->name = _XkbDupString(gname);
             group->words = _XkbDupString(words);
             for (i = 1, words = group->words; *words; words++) {
@@ -400,17 +400,17 @@ Bool 		append = False;
                  }
             }
             group->number = i;
-            return True;
+            return TRUE;
         } else {
 	    SetUpRemap(line,remap);
-	    return False;
+	    return FALSE;
         }
     }
 
     if (remap->num_remap==0) {
 	DebugF("Must have a mapping before first line of data\n");
 	DebugF("Illegal line of data ignored\n");
-	return False;
+	return FALSE;
     }
     bzero((char *)&tmp,sizeof(FileSpec));
     str= line->line;
@@ -427,12 +427,12 @@ Bool 		append = False;
 	}
 	tmp.name[remap->remap[nread].word]= tok;
 	if (*tok == '+' || *tok == '|')
-	    append = True;
+	    append = TRUE;
     }
     if (nread<remap->num_remap) {
 	DebugF("Too few words on a line: %s\n", line->line);
 	DebugF("line ignored\n");
-	return False;
+	return FALSE;
     }
 
     rule->flags= 0;
@@ -463,7 +463,7 @@ Bool 		append = False;
 	        rule->variant_num = remap->remap[i].index;
         }
     }
-    return True;
+    return TRUE;
 }
 
 static char *
@@ -508,7 +508,7 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
            int i;
            mdefs->layout[1] = _XkbDupString(defs->layout);
 	   if (mdefs->layout[1] == NULL)
-	      return False;
+	      return FALSE;
            squeeze_spaces(mdefs->layout[1]);
            p = mdefs->layout[1];
            for (i = 2; i <= XkbNumKbdGroups; i++) {
@@ -532,7 +532,7 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
            int i;
            mdefs->variant[1] = _XkbDupString(defs->variant);
 	   if (mdefs->variant[1] == NULL)
-	      return False;
+	      return FALSE;
            squeeze_spaces(mdefs->variant[1]);
            p = mdefs->variant[1];
            for (i = 2; i <= XkbNumKbdGroups; i++) {
@@ -547,7 +547,7 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
               *p = '\0';
        }
    }
-   return True;
+   return TRUE;
 }
 
 static void
@@ -599,13 +599,13 @@ CheckGroup(	XkbRF_RulesPtr          rules,
        }
    }
    if (i == rules->num_groups)
-       return False;
+       return FALSE;
    for (i = 0, p = group->words; i < group->number; i++, p += strlen(p)+1) {
        if (! strcmp(p, name)) {
-           return True;
+           return TRUE;
        }
    }
-   return False;
+   return FALSE;
 }
 
 static int
@@ -614,13 +614,13 @@ XkbRF_CheckApplyRule(	XkbRF_RulePtr 		rule,
 			XkbComponentNamesPtr	names,
 			XkbRF_RulesPtr          rules)
 {
-    Bool pending = False;
+    Bool pending = FALSE;
 
     if (rule->model != NULL) {
         if(mdefs->model == NULL)
             return 0;
         if (strcmp(rule->model, "*") == 0) {
-            pending = True;
+            pending = TRUE;
         } else {
             if (rule->model[0] == '$') {
                if (!CheckGroup(rules, rule->model, mdefs->model))
@@ -643,7 +643,7 @@ XkbRF_CheckApplyRule(	XkbRF_RulePtr 		rule,
 	   *mdefs->layout[rule->layout_num] == '\0')
 	    return 0;
         if (strcmp(rule->layout, "*") == 0) {
-            pending = True;
+            pending = TRUE;
         } else {
             if (rule->layout[0] == '$') {
                if (!CheckGroup(rules, rule->layout,
@@ -660,7 +660,7 @@ XkbRF_CheckApplyRule(	XkbRF_RulePtr 		rule,
 	    *mdefs->variant[rule->variant_num] == '\0')
 	    return 0;
         if (strcmp(rule->variant, "*") == 0) {
-            pending = True;
+            pending = TRUE;
         } else {
             if (rule->variant[0] == '$') {
                if (!CheckGroup(rules, rule->variant,
@@ -911,11 +911,11 @@ XkbRF_RuleRec	trule,*rule;
 XkbRF_GroupRec  tgroup,*group;
 
     if (!(rules && file))
-	return False;
+	return FALSE;
     bzero((char *)&remap,sizeof(RemapSpec));
     bzero((char *)&tgroup,sizeof(XkbRF_GroupRec));
     InitInputLine(&line);
-    while (GetInputLine(file,&line,True)) {
+    while (GetInputLine(file,&line,TRUE)) {
 	if (CheckLine(&line,&remap,&trule,&tgroup)) {
             if (tgroup.number) {
 	        if ((group= XkbRF_AddGroup(rules))!=NULL) {
@@ -932,7 +932,7 @@ XkbRF_GroupRec  tgroup,*group;
 	line.num_line= 0;
     }
     FreeInputLine(&line);
-    return True;
+    return TRUE;
 }
 
 Bool
@@ -943,15 +943,15 @@ char		buf[PATH_MAX];
 Bool		ok;
 
     if ((!base)||(!rules))
-	return False;
+	return FALSE;
     if (locale) {
 	if (strlen(base)+strlen(locale)+2 > PATH_MAX)
-	    return False;
+	    return FALSE;
 	sprintf(buf,"%s-%s", base, locale);
     }
     else {
 	if (strlen(base)+1 > PATH_MAX)
-	    return False;
+	    return FALSE;
 	strcpy(buf,base);
     }
 
@@ -961,7 +961,7 @@ Bool		ok;
 	file= fopen(buf, "r");
     }
     if (!file)
-	return False;
+	return FALSE;
     ok= XkbRF_LoadRules(file,rules);
     fclose(file);
     return ok;

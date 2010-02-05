@@ -89,7 +89,7 @@ static  char 	doesPitch = 1;
 #define	STICKY_UNLOCK	"AX_StickyUnlock"
 #define	BOUNCE_REJECT	"AX_BounceKeyReject"
 
-#define	MAKE_ATOM(a)	MakeAtom(a,sizeof(a)-1,True)
+#define	MAKE_ATOM(a)	MakeAtom(a,sizeof(a)-1,TRUE)
 
 static void
 _XkbDDXBeepInitAtoms(void)
