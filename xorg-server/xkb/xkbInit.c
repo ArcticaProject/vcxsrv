@@ -84,7 +84,7 @@ typedef struct	_SrvXkmInfo {
 /***====================================================================***/
 
 #ifndef XKB_DFLT_RULES_PROP
-#define	XKB_DFLT_RULES_PROP	True
+#define	XKB_DFLT_RULES_PROP	TRUE
 #endif
 
 char	*		XkbBaseDirectory=	XKB_BASE_DIRECTORY;
@@ -165,20 +165,20 @@ char *			pval;
     len+= (XkbVariantUsed?strlen(XkbVariantUsed):0);
     len+= (XkbOptionsUsed?strlen(XkbOptionsUsed):0);
     if (len<1)
-	return True;
+	return TRUE;
 
     len+= 5; /* trailing NULs */
 
     name= MakeAtom(_XKB_RF_NAMES_PROP_ATOM,strlen(_XKB_RF_NAMES_PROP_ATOM),1);
     if (name==None) {
 	ErrorF("[xkb] Atom error: %s not created\n",_XKB_RF_NAMES_PROP_ATOM);
-	return True;
+	return TRUE;
     }
     pval= (char*) xalloc(len);
     if (!pval) {
 	ErrorF("[xkb] Allocation error: %s proprerty not created\n",
 						_XKB_RF_NAMES_PROP_ATOM);
-	return True;
+	return TRUE;
     }
     out= 0;
     if (XkbRulesUsed) {
@@ -211,9 +211,9 @@ char *			pval;
 								out,len);
     }
     dixChangeWindowProperty(serverClient, WindowTable[0], name, XA_STRING, 8,
-			    PropModeReplace, len, pval, True);
+			    PropModeReplace, len, pval, TRUE);
     xfree(pval);
-    return True;
+    return TRUE;
 }
 
 static void
@@ -284,7 +284,7 @@ XkbDeleteRulesDflts(void)
     xfree(XkbOptionsDflt);
     XkbOptionsDflt = NULL;
 
-    XkbFreeKeyboard(xkb_cached_map, XkbAllComponentsMask, True);
+    XkbFreeKeyboard(xkb_cached_map, XkbAllComponentsMask, TRUE);
     xkb_cached_map = NULL;
 }
 
@@ -312,17 +312,17 @@ static Bool
 XkbInitKeyTypes(XkbDescPtr xkb)
 {
     if (xkb->defined & XkmTypesMask)
-        return True;
+        return TRUE;
 
     initTypeNames(NULL);
     if (XkbAllocClientMap(xkb,XkbKeyTypesMask,num_dflt_types)!=Success)
-	return False;
+	return FALSE;
     if (XkbCopyKeyTypes(dflt_types,xkb->map->types,num_dflt_types)!=
     								 Success) {
-	return False;
+	return FALSE;
     }
     xkb->map->size_types= xkb->map->num_types= num_dflt_types;
-    return True;
+    return TRUE;
 }
 
 static void
@@ -341,7 +341,7 @@ register int 	i;
 XkbCompatMapPtr	compat;
 
     if (xkb->defined & XkmCompatMapMask)
-        return True;
+        return TRUE;
 
     if (XkbAllocCompatMap(xkb,XkbAllCompatMask,num_dfltSI)!=Success)
 	return BadAlloc;
@@ -518,7 +518,7 @@ InitKeyboardDeviceStruct(DeviceIntPtr dev, XkbRMLVOSet *rmlvo,
     dev->key = xcalloc(1, sizeof(*dev->key));
     if (!dev->key) {
         ErrorF("XKB: Failed to allocate key class\n");
-        return False;
+        return FALSE;
     }
     dev->key->sourceid = dev->id;
 
@@ -536,7 +536,7 @@ InitKeyboardDeviceStruct(DeviceIntPtr dev, XkbRMLVOSet *rmlvo,
     dev->key->xkbInfo = xkbi;
 
     if (xkb_cached_map && !XkbCompareUsedRMLVO(rmlvo)) {
-        XkbFreeKeyboard(xkb_cached_map, XkbAllComponentsMask, True);
+        XkbFreeKeyboard(xkb_cached_map, XkbAllComponentsMask, TRUE);
         xkb_cached_map = NULL;
     }
 
@@ -674,7 +674,7 @@ XkbFreeInfo(XkbSrvInfoPtr xkbi)
 	xkbi->beepTimer= NULL;
     }
     if (xkbi->desc) {
-	XkbFreeKeyboard(xkbi->desc,XkbAllComponentsMask,True);
+	XkbFreeKeyboard(xkbi->desc,XkbAllComponentsMask,TRUE);
 	xkbi->desc= NULL;
     }
     xfree(xkbi);

@@ -296,7 +296,7 @@ updateSlaveDeviceCoords(DeviceIntPtr master, DeviceIntPtr pDev)
                         &pDev->last.remainder[0], NULL, pDev->valuator->axes + 0, scr->width);
     if(pDev->valuator->numAxes > 1)
         pDev->last.valuators[1] = rescaleValuatorAxis(pDev->last.valuators[1], pDev->last.remainder[1],
-                        &pDev->last.remainder[0], NULL, pDev->valuator->axes + 1, scr->height);
+                        &pDev->last.remainder[1], NULL, pDev->valuator->axes + 1, scr->height);
 
     /* calculate the other axis as well based on info from the old
      * slave-device. If the old slave had less axes than this one,

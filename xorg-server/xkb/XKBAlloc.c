@@ -315,22 +315,22 @@ XkbFreeKeyboard(XkbDescPtr xkb,unsigned which,Bool freeAll)
     if (freeAll)
 	which= XkbAllComponentsMask;
     if (which&XkbClientMapMask)
-	XkbFreeClientMap(xkb,XkbAllClientInfoMask,True);
+	XkbFreeClientMap(xkb,XkbAllClientInfoMask,TRUE);
     if (which&XkbServerMapMask)
-	XkbFreeServerMap(xkb,XkbAllServerInfoMask,True);
+	XkbFreeServerMap(xkb,XkbAllServerInfoMask,TRUE);
     if (which&XkbCompatMapMask)
-	XkbFreeCompatMap(xkb,XkbAllCompatMask,True);
+	XkbFreeCompatMap(xkb,XkbAllCompatMask,TRUE);
     if (which&XkbIndicatorMapMask)
 	XkbFreeIndicatorMaps(xkb);
     if (which&XkbNamesMask)
-	XkbFreeNames(xkb,XkbAllNamesMask,True);
+	XkbFreeNames(xkb,XkbAllNamesMask,TRUE);
     if ((which&XkbGeometryMask) && (xkb->geom!=NULL)) {
-	XkbFreeGeometry(xkb->geom,XkbGeomAllMask,True);
+	XkbFreeGeometry(xkb->geom,XkbGeomAllMask,TRUE);
         /* PERHAPS BONGHITS etc */
         xkb->geom = NULL;
     }
     if (which&XkbControlsMask)
-	XkbFreeControls(xkb,XkbAllControlsMask,True);
+	XkbFreeControls(xkb,XkbAllControlsMask,TRUE);
     if (freeAll)
 	xfree(xkb);
     return;

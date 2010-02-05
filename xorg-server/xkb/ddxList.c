@@ -148,7 +148,7 @@ char	tmpname[PATH_MAX];
     }
 
     in= NULL;
-    haveDir= True;
+    haveDir= TRUE;
 #ifdef WIN32
     strcpy(tmpname, Win32TempDir());
     strcat(tmpname, "\\xkb_XXXXXX");
@@ -160,7 +160,7 @@ char	tmpname[PATH_MAX];
 	    in= fopen(buf,"r");
 	}
 	if (!in) {
-	    haveDir= False;
+	    haveDir= FALSE;
 	    buf = Xprintf(
 		"'%s/xkbcomp' '-R%s/%s' -w %ld -l -vlfhpR '%s'" W32_tmparg,
                 XkbBinDirectory,XkbBaseDirectory,componentDirs[what],(long)
@@ -175,7 +175,7 @@ char	tmpname[PATH_MAX];
 	    in= fopen(buf,"r");
 	}
 	if (!in) {
-	    haveDir= False;
+	    haveDir= FALSE;
 	    buf = Xprintf(
 		"xkbcomp -R%s -w %ld -l -vlfhpR '%s'" W32_tmparg,
                 componentDirs[what],(long)

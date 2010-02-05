@@ -603,7 +603,7 @@ _XkbFilterPointerBtn(	XkbSrvInfoPtr	xkbi,
 		    }
 		    if (XkbComputeControlsNotify(xkbi->device,
 						&old,xkbi->desc->ctrls,
-						&cn,False)) {
+						&cn,FALSE)) {
 			cn.keycode = keycode;
                         /* XXX: what about DeviceKeyPress? */
 			cn.eventType = KeyPress;
@@ -668,7 +668,7 @@ XkbEventCauseRec	cause;
 	    XkbSrvLedInfoPtr	sli;
 
 	    ctrls->enabled_ctrls|= change;
-	    if (XkbComputeControlsNotify(kbd,&old,ctrls,&cn,False)) {
+	    if (XkbComputeControlsNotify(kbd,&old,ctrls,&cn,FALSE)) {
 		cn.keycode = keycode;
                 /* XXX: what about DeviceKeyPress? */
 		cn.eventType = KeyPress;
@@ -682,10 +682,10 @@ XkbEventCauseRec	cause;
 	    /* If sticky keys were disabled, clear all locks and latches */
 	    if ((old.enabled_ctrls&XkbStickyKeysMask)&&
 		(!(ctrls->enabled_ctrls&XkbStickyKeysMask))) {
-		XkbClearAllLatchesAndLocks(kbd,xkbi,False,&cause);
+		XkbClearAllLatchesAndLocks(kbd,xkbi,FALSE,&cause);
     	    }
 	    sli= XkbFindSrvLedInfo(kbd,XkbDfltXIClass,XkbDfltXIId,0);
-	    XkbUpdateIndicators(kbd,sli->usesControls,True,NULL,&cause);
+	    XkbUpdateIndicators(kbd,sli->usesControls,TRUE,NULL,&cause);
 	    if (XkbAX_NeedFeedback(ctrls,XkbAX_FeatureFBMask))
 		XkbDDXAccessXBeep(kbd,_BEEP_FEATURE_ON,change);
 	}
@@ -697,7 +697,7 @@ XkbEventCauseRec	cause;
 	    XkbSrvLedInfoPtr	sli;
 
 	    ctrls->enabled_ctrls&= ~change;
-	    if (XkbComputeControlsNotify(kbd,&old,ctrls,&cn,False)) {
+	    if (XkbComputeControlsNotify(kbd,&old,ctrls,&cn,FALSE)) {
 		cn.keycode = keycode;
 		cn.eventType = KeyRelease;
 		cn.requestMajor = 0;
@@ -709,10 +709,10 @@ XkbEventCauseRec	cause;
 	    /* If sticky keys were disabled, clear all locks and latches */
 	    if ((old.enabled_ctrls&XkbStickyKeysMask)&&
 		(!(ctrls->enabled_ctrls&XkbStickyKeysMask))) {
-		XkbClearAllLatchesAndLocks(kbd,xkbi,False,&cause);
+		XkbClearAllLatchesAndLocks(kbd,xkbi,FALSE,&cause);
     	    }
 	    sli= XkbFindSrvLedInfo(kbd,XkbDfltXIClass,XkbDfltXIId,0);
-	    XkbUpdateIndicators(kbd,sli->usesControls,True,NULL,&cause);
+	    XkbUpdateIndicators(kbd,sli->usesControls,TRUE,NULL,&cause);
 	    if (XkbAX_NeedFeedback(ctrls,XkbAX_FeatureFBMask))
 		XkbDDXAccessXBeep(kbd,_BEEP_FEATURE_OFF,change);
 	}
@@ -964,7 +964,7 @@ int		button;
 		if ((pAction->devbtn.flags&XkbSA_LockNoLock)||
 		    BitIsOn(dev->button->down, button))
 		    return 0;
-		XkbDDXFakeDeviceButton(dev,True,button);
+		XkbDDXFakeDeviceButton(dev,TRUE,button);
 		filter->upAction.type= XkbSA_NoAction;
 		break;
 	    case XkbSA_DeviceBtn:
@@ -972,12 +972,12 @@ int		button;
 		    int nClicks,i;
 		    nClicks= pAction->btn.count;
 		    for (i=0;i<nClicks;i++) {
-			XkbDDXFakeDeviceButton(dev,True,button);
-			XkbDDXFakeDeviceButton(dev,False,button);
+			XkbDDXFakeDeviceButton(dev,TRUE,button);
+			XkbDDXFakeDeviceButton(dev,FALSE,button);
 		    }
 		    filter->upAction.type= XkbSA_NoAction;
 		}
-		else XkbDDXFakeDeviceButton(dev,True,button);
+		else XkbDDXFakeDeviceButton(dev,TRUE,button);
 		break;
 	}
     }
@@ -996,10 +996,10 @@ int		button;
 		if ((filter->upAction.devbtn.flags&XkbSA_LockNoUnlock)||
 		    !BitIsOn(dev->button->down, button))
 		    return 0;
-		XkbDDXFakeDeviceButton(dev,False,button);
+		XkbDDXFakeDeviceButton(dev,FALSE,button);
 		break;
 	    case XkbSA_DeviceBtn:
-		XkbDDXFakeDeviceButton(dev,False,button);
+		XkbDDXFakeDeviceButton(dev,FALSE,button);
 		break;
 	}
 	filter->active = 0;
@@ -1072,9 +1072,9 @@ xkbDeviceInfoPtr xkbPrivPtr = XKBDEVICEINFO(dev);
     if ((xkbi->flags&_XkbStateNotifyInProgress)==0) {
 	xkbi->prev_state = xkbi->state;
 	xkbi->flags|= _XkbStateNotifyInProgress;
-	genStateNotify= True;
+	genStateNotify= TRUE;
     }
-    else genStateNotify= False;
+    else genStateNotify= FALSE;
 
     xkbi->clearMods = xkbi->setMods = 0;
     xkbi->groupChange = 0;
@@ -1213,11 +1213,11 @@ xkbDeviceInfoPtr xkbPrivPtr = XKBDEVICEINFO(dev);
 	}
 	xkbi->flags&= ~_XkbStateNotifyInProgress;
     }
-    changed= XkbIndicatorsToUpdate(dev,changed,False);
+    changed= XkbIndicatorsToUpdate(dev,changed,FALSE);
     if (changed) {
 	XkbEventCauseRec	cause;
 	XkbSetCauseKey(&cause, key, event->type);
-	XkbUpdateIndicators(dev,changed,False,NULL,&cause);
+	XkbUpdateIndicators(dev,changed,FALSE,NULL,&cause);
     }
     return;
 }
@@ -1308,9 +1308,9 @@ xkbStateNotify	sn;
 	sn.requestMinor= 	cause->mnr;
 	sn.changed= XkbStateChangedFlags(&os,&xkbi->state);
 	XkbSendStateNotify(dev,&sn);
-	changed= XkbIndicatorsToUpdate(dev,sn.changed,False);
+	changed= XkbIndicatorsToUpdate(dev,sn.changed,FALSE);
 	if (changed) {
-	    XkbUpdateIndicators(dev,changed,True,NULL,cause);
+	    XkbUpdateIndicators(dev,changed,TRUE,NULL,cause);
 	}
     }
     return;

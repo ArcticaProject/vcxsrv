@@ -137,7 +137,7 @@ static Bool
 XkbWriteSectionFromName(FILE *file,char *sectionName,char *name)
 {
     fprintf(file,"    xkb_%-20s { include \"%s\" };\n",sectionName,name);
-    return True;
+    return TRUE;
 }
 
 #define	NEED_DESC(n) ((!n)||((n)[0]=='+')||((n)[0]=='|')||(strchr((n),'%')))
@@ -181,7 +181,7 @@ unsigned	wantNames,wantConfig,wantDflts;
 	want|= XkmKeyNamesMask|XkmTypesMask;
 
     if (want==0)
-	return False;
+	return FALSE;
 
     if (xkb) {
         old_names = xkb->names;
@@ -258,7 +258,7 @@ unsigned	wantNames,wantConfig,wantDflts;
 	}
 	if (wantNames&XkmSymbolsMask) {
 	    if (old_names->symbols==None)
-		return False;
+		return FALSE;
 	    tmp= NameForAtom(old_names->symbols);
 	    names->symbols= _XkbDupString(tmp);
 	    complete|= XkmSymbolsMask; 
@@ -273,7 +273,7 @@ unsigned	wantNames,wantConfig,wantDflts;
 	}
 	if (wantNames&XkmGeometryMask) {
 	    if (old_names->geometry==None)
-		return False;
+		return FALSE;
 	    tmp= NameForAtom(old_names->geometry);
 	    names->geometry= _XkbDupString(tmp);
 	    complete|= XkmGeometryMask; 
@@ -285,9 +285,9 @@ unsigned	wantNames,wantConfig,wantDflts;
     else if (complete&(XkmSymbolsMask|XkmTypesMask))
 	complete|= XkmVirtualModsMask;
     if (need & (~complete))
-	return False;
+	return FALSE;
     if ((complete&XkmSymbolsMask)&&((XkmKeyNamesMask|XkmTypesMask)&(~complete)))
-	return False;
+	return FALSE;
 
     multi_section= 1;
     if (((complete&XkmKeymapRequired)==XkmKeymapRequired)&&
@@ -306,44 +306,44 @@ unsigned	wantNames,wantConfig,wantDflts;
 	multi_section= 0;
     }
     else {
-	return False;
+	return FALSE;
     }
 
     wantNames= complete&(~(wantConfig|wantDflts));
     if (wantConfig&XkmKeyNamesMask)
-	XkbWriteXKBKeycodes(file,xkb,False,False,_AddIncl,names->keycodes);
+	XkbWriteXKBKeycodes(file,xkb,FALSE,FALSE,_AddIncl,names->keycodes);
     else if (wantDflts&XkmKeyNamesMask)
 	fprintf(stderr,"Default symbols not implemented yet!\n");
     else if (wantNames&XkmKeyNamesMask)
 	XkbWriteSectionFromName(file,"keycodes",names->keycodes);
 
     if (wantConfig&XkmTypesMask)
-	XkbWriteXKBKeyTypes(file,xkb,False,False,_AddIncl,names->types);
+	XkbWriteXKBKeyTypes(file,xkb,FALSE,FALSE,_AddIncl,names->types);
     else if (wantDflts&XkmTypesMask)
 	fprintf(stderr,"Default types not implemented yet!\n");
     else if (wantNames&XkmTypesMask)
 	XkbWriteSectionFromName(file,"types",names->types);
 
     if (wantConfig&XkmCompatMapMask)
-	XkbWriteXKBCompatMap(file,xkb,False,False,_AddIncl,names->compat);
+	XkbWriteXKBCompatMap(file,xkb,FALSE,FALSE,_AddIncl,names->compat);
     else if (wantDflts&XkmCompatMapMask)
 	fprintf(stderr,"Default interps not implemented yet!\n");
     else if (wantNames&XkmCompatMapMask)
 	XkbWriteSectionFromName(file,"compatibility",names->compat);
 
     if (wantConfig&XkmSymbolsMask)
-	XkbWriteXKBSymbols(file,xkb,False,False,_AddIncl,names->symbols);
+	XkbWriteXKBSymbols(file,xkb,FALSE,FALSE,_AddIncl,names->symbols);
     else if (wantNames&XkmSymbolsMask)
 	XkbWriteSectionFromName(file,"symbols",names->symbols);
 
     if (wantConfig&XkmGeometryMask)
-	XkbWriteXKBGeometry(file,xkb,False,False,_AddIncl,names->geometry);
+	XkbWriteXKBGeometry(file,xkb,FALSE,FALSE,_AddIncl,names->geometry);
     else if (wantNames&XkmGeometryMask)
 	XkbWriteSectionFromName(file,"geometry",names->geometry);
 
     if (multi_section)
 	fprintf(file,"};\n");
-    return True;
+    return TRUE;
 }
 
 /***====================================================================***/
@@ -366,7 +366,7 @@ register int	i;
 	a= xkb->geom->key_aliases;
 	for (i=0;i<xkb->geom->num_key_aliases;i++,a++) {
 	    if (strncmp(name,a->alias,XkbKeyNameLength)==0)
-		return XkbFindKeycodeByName(xkb,a->real,False);
+		return XkbFindKeycodeByName(xkb,a->real,FALSE);
 	}
     }
     if (xkb->names && xkb->names->key_aliases) {
@@ -374,7 +374,7 @@ register int	i;
 	a= xkb->names->key_aliases;
 	for (i=0;i<xkb->names->num_key_aliases;i++,a++) {
 	    if (strncmp(name,a->alias,XkbKeyNameLength)==0)
-		return XkbFindKeycodeByName(xkb,a->real,False);
+		return XkbFindKeycodeByName(xkb,a->real,FALSE);
 	}
     }
     return 0;
@@ -420,19 +420,19 @@ XkbNameMatchesPattern(char *name,char *ptrn)
 		ptrn++;
 		continue;
 	    }
-	    return False;
+	    return FALSE;
 	}
 	if (ptrn[0]=='?') {
 	    if (UNMATCHABLE(name[0]))
-		return False;
+		return FALSE;
 	}
 	else if (ptrn[0]=='*') {
 	    if ((!UNMATCHABLE(name[0]))&&XkbNameMatchesPattern(name+1,ptrn))
-		return True;
+		return TRUE;
 	    return XkbNameMatchesPattern(name,ptrn+1);
 	}
 	else if (ptrn[0]!=name[0])
-	    return False;
+	    return FALSE;
 	name++;
 	ptrn++;
     }

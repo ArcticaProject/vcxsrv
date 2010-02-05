@@ -637,10 +637,10 @@ ProcXkbLatchLockState(ClientPtr client)
                 sn.requestMinor = X_kbLatchLockState;
                 sn.changed = changed;
                 XkbSendStateNotify(tmpd, &sn);
-                changed = XkbIndicatorsToUpdate(tmpd, changed, False);
+                changed = XkbIndicatorsToUpdate(tmpd, changed, FALSE);
                 if (changed) {
                     XkbSetCauseXkbReq(&cause, X_kbLatchLockState, client);
-                    XkbUpdateIndicators(tmpd, changed, True, NULL, &cause);
+                    XkbUpdateIndicators(tmpd, changed, TRUE, NULL, &cause);
 	        }
             }
         }
@@ -922,7 +922,7 @@ ProcXkbSetControls(ClientPtr client)
             *ctrl= new;
             XkbDDXChangeControls(tmpd, &old, ctrl);
 
-            if (XkbComputeControlsNotify(tmpd, &old, ctrl, &cn, False)) {
+            if (XkbComputeControlsNotify(tmpd, &old, ctrl, &cn, FALSE)) {
                 cn.keycode = 0;
                 cn.eventType = 0;
                 cn.requestMajor = XkbReqCode;
@@ -932,13 +932,13 @@ ProcXkbSetControls(ClientPtr client)
 
             sli = XkbFindSrvLedInfo(tmpd, XkbDfltXIClass, XkbDfltXIId, 0);
             if (sli)
-                XkbUpdateIndicators(tmpd, sli->usesControls, True, NULL,
+                XkbUpdateIndicators(tmpd, sli->usesControls, TRUE, NULL,
                                     &cause);
 
             /* If sticky keys were disabled, clear all locks and latches */
             if ((old.enabled_ctrls & XkbStickyKeysMask) &&
                 !(ctrl->enabled_ctrls & XkbStickyKeysMask))
-                XkbClearAllLatchesAndLocks(tmpd, xkbi, True, &cause);
+                XkbClearAllLatchesAndLocks(tmpd, xkbi, TRUE, &cause);
         }
     }
 
@@ -2115,7 +2115,7 @@ unsigned		first,last;
 	cn.requestMinor= X_kbSetMap;
 	old= *xkb->ctrls;
 	xkb->ctrls->num_groups= s;
-	if (XkbComputeControlsNotify(dev,&old,xkb->ctrls,&cn,False))
+	if (XkbComputeControlsNotify(dev,&old,xkb->ctrls,&cn,FALSE))
 	    XkbSendControlsNotify(dev,&cn);
     }
     return (char *)wire;
@@ -2439,7 +2439,7 @@ _XkbSetMap(ClientPtr client, DeviceIntPtr dev, xkbSetMapReq *req, char *values)
 
     XkbSetCauseXkbReq(&cause,X_kbSetMap,client);
     bzero(&change, sizeof(change));
-    sentNKN = False;
+    sentNKN = FALSE;
     if ((xkb->min_key_code!=req->minKeyCode)||
         (xkb->max_key_code!=req->maxKeyCode)) {
 	Status			status;
@@ -2457,7 +2457,7 @@ _XkbSetMap(ClientPtr client, DeviceIntPtr dev, xkbSetMapReq *req, char *values)
 	nkn.requestMinor = X_kbSetMap;
 	nkn.changed = XkbNKN_KeycodesMask;
 	XkbSendNewKeyboardNotify(dev,&nkn);
-	sentNKN = True;
+	sentNKN = TRUE;
     }
 
     if (req->present&XkbKeyTypesMask) {
@@ -2727,7 +2727,7 @@ ProcXkbGetCompatMap(ClientPtr client)
 
 /**
  * Apply the given request on the given device.
- * If dryRun is True, then value checks are performed, but the device isn't
+ * If dryRun is TRUE, then value checks are performed, but the device isn't
  * modified.
  */
 static int
@@ -3218,7 +3218,7 @@ ProcXkbGetNamedIndicator(ClientPtr client)
     rep.deviceID = dev->id;
     rep.indicator= stuff->indicator;
     if (map!=NULL) {
-	rep.found= 		True;
+	rep.found= 		TRUE;
 	rep.on=			((sli->effectiveState&(1<<i))!=0);
 	rep.realIndicator=	((sli->physIndicators&(1<<i))!=0);
 	rep.ndx= 		i;
@@ -3230,12 +3230,12 @@ ProcXkbGetNamedIndicator(ClientPtr client)
 	rep.realMods= 		map->mods.real_mods;
 	rep.virtualMods= 	map->mods.vmods;
 	rep.ctrls= 		map->ctrls;
-	rep.supported= 		True;
+	rep.supported= 		TRUE;
     }
     else  {
-	rep.found= 		False;
-	rep.on= 		False;
-	rep.realIndicator= 	False;
+	rep.found= 		FALSE;
+	rep.on= 		FALSE;
+	rep.realIndicator= 	FALSE;
 	rep.ndx= 		XkbNoIndicator;
 	rep.flags= 		0;
 	rep.whichGroups= 	0;
@@ -3245,7 +3245,7 @@ ProcXkbGetNamedIndicator(ClientPtr client)
 	rep.realMods= 		0;
 	rep.virtualMods= 	0;
 	rep.ctrls= 		0;
-	rep.supported= 		True;
+	rep.supported= 		TRUE;
     }
     if ( client->swapped ) {
 	register int n;
@@ -3291,7 +3291,7 @@ _XkbFindNamedIndicatorMap(XkbSrvLedInfoPtr sli, Atom indicator,
 }
 
 /**
- * Creates an indicator map on the device. If dryRun is True, it only checks
+ * Creates an indicator map on the device. If dryRun is TRUE, it only checks
  * if creation is possible, but doesn't actually create it.
  */
 static int
@@ -3863,8 +3863,8 @@ const char *	str;
     str= NameForAtom(name);
     if ((strcmp(str,"ONE_LEVEL")==0)||(strcmp(str,"TWO_LEVEL")==0)||
 	(strcmp(str,"ALPHABETIC")==0)||(strcmp(str,"KEYPAD")==0))
-	return False;
-    return True;
+	return FALSE;
+    return TRUE;
 }
 
 /**
@@ -4703,7 +4703,7 @@ int	len;
 	len+= XkbSizeGeomDoodads(geom->num_doodads,geom->doodads);
 	len+= XkbSizeGeomKeyAliases(geom);
 	rep->length= len/4;
-	rep->found= True;
+	rep->found= TRUE;
 	rep->name= geom->name;
 	rep->widthMM= geom->width_mm;
 	rep->heightMM= geom->height_mm;
@@ -4718,7 +4718,7 @@ int	len;
     }
     else {
 	rep->length= 0;
-	rep->found= False;
+	rep->found= FALSE;
 	rep->name= name;
 	rep->widthMM= rep->heightMM= 0;
 	rep->nProperties= rep->nColors= rep->nShapes= 0;
@@ -4786,7 +4786,7 @@ XkbSendGeometry(	ClientPtr		client,
     if (start!=NULL)
 	xfree((char *)start);
     if (freeGeom)
-	XkbFreeGeometry(geom,XkbGeomAllMask,True);
+	XkbFreeGeometry(geom,XkbGeomAllMask,TRUE);
     return client->noClientException;
 }
 
@@ -5280,14 +5280,14 @@ _XkbSetGeometry(ClientPtr client, DeviceIntPtr dev, xkbSetGeometryReq *stuff)
     geom->width_mm= stuff->widthMM;
     geom->height_mm= stuff->heightMM;
     if ((status= _CheckSetGeom(geom,stuff,client))!=Success) {
-        XkbFreeGeometry(geom,XkbGeomAllMask,True);
+        XkbFreeGeometry(geom,XkbGeomAllMask,TRUE);
         xkb->geom= old;
         return status;
     }
     new_name= (xkb->names->geometry!=geom->name);
     xkb->names->geometry= geom->name;
     if (old)
-        XkbFreeGeometry(old,XkbGeomAllMask,True);
+        XkbFreeGeometry(old,XkbGeomAllMask,TRUE);
     if (new_name) {
         xkbNamesNotify	nn;
         bzero(&nn,sizeof(xkbNamesNotify));
@@ -5499,11 +5499,11 @@ ProcXkbListComponents(ClientPtr client)
     str= (unsigned char *)&stuff[1];
     bzero(&list,sizeof(XkbSrvListInfoRec));
     list.maxRtrn= stuff->maxNames;
-    list.pattern[_XkbListKeycodes]= GetComponentSpec(&str,False,&status);
-    list.pattern[_XkbListTypes]= GetComponentSpec(&str,False,&status);
-    list.pattern[_XkbListCompat]= GetComponentSpec(&str,False,&status);
-    list.pattern[_XkbListSymbols]= GetComponentSpec(&str,False,&status);
-    list.pattern[_XkbListGeometry]= GetComponentSpec(&str,False,&status);
+    list.pattern[_XkbListKeycodes]= GetComponentSpec(&str,FALSE,&status);
+    list.pattern[_XkbListTypes]= GetComponentSpec(&str,FALSE,&status);
+    list.pattern[_XkbListCompat]= GetComponentSpec(&str,FALSE,&status);
+    list.pattern[_XkbListSymbols]= GetComponentSpec(&str,FALSE,&status);
+    list.pattern[_XkbListGeometry]= GetComponentSpec(&str,FALSE,&status);
     if (status!=Success)
 	return status;
     len= str-((unsigned char *)stuff);
@@ -5587,13 +5587,13 @@ ProcXkbGetKbdByName(ClientPtr client)
     xkb = dev->key->xkbInfo->desc;
     status= Success;
     str= (unsigned char *)&stuff[1];
-    if (GetComponentSpec(&str,True,&status)) /* keymap, unsupported */
+    if (GetComponentSpec(&str,TRUE,&status)) /* keymap, unsupported */
         return BadMatch;
-    names.keycodes= GetComponentSpec(&str,True,&status);
-    names.types= GetComponentSpec(&str,True,&status);
-    names.compat= GetComponentSpec(&str,True,&status);
-    names.symbols= GetComponentSpec(&str,True,&status);
-    names.geometry= GetComponentSpec(&str,True,&status);
+    names.keycodes= GetComponentSpec(&str,TRUE,&status);
+    names.types= GetComponentSpec(&str,TRUE,&status);
+    names.compat= GetComponentSpec(&str,TRUE,&status);
+    names.symbols= GetComponentSpec(&str,TRUE,&status);
+    names.geometry= GetComponentSpec(&str,TRUE,&status);
     if (status!=Success)
 	return status;
     len= str-((unsigned char *)stuff);
@@ -5619,7 +5619,7 @@ ProcXkbGetKbdByName(ClientPtr client)
     geom_changed= ((names.geometry!=NULL)&&(strcmp(names.geometry,"%")!=0));
     if ((!names.geometry)&&(fwant&XkbGBN_GeometryMask)) {
         names.geometry= _XkbDupString("%");
-        geom_changed= False;
+        geom_changed= FALSE;
     }
 
     bzero(mapFile,PATH_MAX);
@@ -5629,10 +5629,10 @@ ProcXkbGetKbdByName(ClientPtr client)
     rep.length = 0;
     rep.minKeyCode = xkb->min_key_code;
     rep.maxKeyCode = xkb->max_key_code;
-    rep.loaded=	False;
-    fwant= XkbConvertGetByNameComponents(True,stuff->want)|XkmVirtualModsMask;
-    fneed= XkbConvertGetByNameComponents(True,stuff->need);
-    rep.reported= XkbConvertGetByNameComponents(False,fwant|fneed);
+    rep.loaded=	FALSE;
+    fwant= XkbConvertGetByNameComponents(TRUE,stuff->want)|XkmVirtualModsMask;
+    fneed= XkbConvertGetByNameComponents(TRUE,stuff->need);
+    rep.reported= XkbConvertGetByNameComponents(FALSE,fwant|fneed);
     if (stuff->load) {
 	fneed|= XkmKeymapRequired;
 	fwant|= XkmKeymapLegal;
@@ -5645,7 +5645,7 @@ ProcXkbGetKbdByName(ClientPtr client)
     /* We pass dev in here so we can get the old names out if needed. */
     rep.found = XkbDDXLoadKeymapByNames(dev,&names,fwant,fneed,&new,
                                         mapFile,PATH_MAX);
-    rep.newKeyboard= False;
+    rep.newKeyboard= FALSE;
     rep.pad1= rep.pad2= rep.pad3= rep.pad4= 0;
 
     stuff->want|= stuff->need;
@@ -5653,7 +5653,7 @@ ProcXkbGetKbdByName(ClientPtr client)
 	rep.reported= 0;
     else {
 	if (stuff->load)
-	    rep.loaded= True;
+	    rep.loaded= TRUE;
 	if (stuff->load || 
 		((rep.reported&XkbGBN_SymbolsMask) && (new->compat))) {
 	    XkbChangesRec changes;
@@ -5789,7 +5789,7 @@ ProcXkbGetKbdByName(ClientPtr client)
 	    grep.deviceID= dev->id;
 	    grep.sequenceNumber= client->sequence;
 	    grep.length= 0;
-	    grep.found= True;
+	    grep.found= TRUE;
 	    grep.pad= 0;
 	    grep.widthMM= grep.heightMM= 0;
 	    grep.nProperties= grep.nColors= grep.nShapes= 0;
@@ -5818,7 +5818,7 @@ ProcXkbGetKbdByName(ClientPtr client)
     if (reported&(XkbGBN_KeyNamesMask|XkbGBN_OtherNamesMask))
 	XkbSendNames(client,new,&nrep);
     if (reported&XkbGBN_GeometryMask)
-	XkbSendGeometry(client,new->geom,&grep,False);
+	XkbSendGeometry(client,new->geom,&grep,FALSE);
     if (rep.loaded) {
 	XkbDescPtr		old_xkb;
 	xkbNewKeyboardNotify 	nkn;
@@ -5883,7 +5883,7 @@ ProcXkbGetKbdByName(ClientPtr client)
 	}
     }
     if ((new!=NULL)&&(new!=xkb)) {
-	XkbFreeKeyboard(new,XkbAllComponentsMask,True);
+	XkbFreeKeyboard(new,XkbAllComponentsMask,TRUE);
 	new= NULL;
     }
     if (names.keycodes)	{ xfree(names.keycodes); names.keycodes= NULL; }
@@ -5944,10 +5944,10 @@ Bool			classOk;
 	    return XkbKeyboardErrorCode;
 	}
     }
-    classOk= False;
+    classOk= FALSE;
     if ((dev->kbdfeed)&&((class==KbdFeedbackClass)||(class==XkbAllXIClasses))) {
 	KbdFeedbackPtr kf;
-	classOk= True;
+	classOk= TRUE;
 	for (kf= dev->kbdfeed;(kf);kf=kf->next) {
 	    if ((id!=XkbAllXIIds)&&(id!=XkbDfltXIId)&&(id!=kf->ctrl.id))
 		continue;
@@ -5962,7 +5962,7 @@ Bool			classOk;
     }
     if ((dev->leds)&&((class==LedFeedbackClass)||(class==XkbAllXIClasses))) {
 	LedFeedbackPtr lf;
-	classOk= True;
+	classOk= TRUE;
 	for (lf= dev->leds;(lf);lf=lf->next) {
 	    if ((id!=XkbAllXIIds)&&(id!=XkbDfltXIId)&&(id!=lf->ctrl.id))
 		continue;

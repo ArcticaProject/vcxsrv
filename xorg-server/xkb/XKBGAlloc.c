@@ -218,7 +218,7 @@ _XkbClearOutline(char *outline_in)
 XkbOutlinePtr	outline= (XkbOutlinePtr)outline_in;
 
     if (outline->points!=NULL)
-	XkbFreeGeomPoints(outline,0,outline->num_points,True);
+	XkbFreeGeomPoints(outline,0,outline->num_points,TRUE);
     return;
 }
 
@@ -241,7 +241,7 @@ _XkbClearShape(char *shape_in)
 XkbShapePtr	shape= (XkbShapePtr)shape_in;
 
     if (shape->outlines)
-	XkbFreeGeomOutlines(shape,0,shape->num_outlines,True);
+	XkbFreeGeomOutlines(shape,0,shape->num_outlines,TRUE);
     return;
 }
 
@@ -275,7 +275,7 @@ _XkbClearOverlayRow(char *row_in)
 XkbOverlayRowPtr	row= (XkbOverlayRowPtr)row_in;
 
     if (row->keys!=NULL)
-	XkbFreeGeomOverlayKeys(row,0,row->num_keys,True);
+	XkbFreeGeomOverlayKeys(row,0,row->num_keys,TRUE);
     return;
 }
 
@@ -297,7 +297,7 @@ _XkbClearOverlay(char *overlay_in)
 XkbOverlayPtr	overlay= (XkbOverlayPtr)overlay_in;
 
     if (overlay->rows!=NULL)
-	XkbFreeGeomOverlayRows(overlay,0,overlay->num_rows,True);
+	XkbFreeGeomOverlayRows(overlay,0,overlay->num_rows,TRUE);
     return;
 }
 
@@ -331,7 +331,7 @@ _XkbClearRow(char *row_in)
 XkbRowPtr	row= (XkbRowPtr)row_in;
 
     if (row->keys!=NULL)
-	XkbFreeGeomKeys(row,0,row->num_keys,True);
+	XkbFreeGeomKeys(row,0,row->num_keys,TRUE);
     return;
 }
 
@@ -352,9 +352,9 @@ _XkbClearSection(char *section_in)
 XkbSectionPtr	section= (XkbSectionPtr)section_in;
 
     if (section->rows!=NULL)
-	XkbFreeGeomRows(section,0,section->num_rows,True);
+	XkbFreeGeomRows(section,0,section->num_rows,TRUE);
     if (section->doodads!=NULL) {
-	XkbFreeGeomDoodads(section->doodads,section->num_doodads,True);
+	XkbFreeGeomDoodads(section->doodads,section->num_doodads,TRUE);
 	section->doodads= NULL;
     }
     return;
@@ -426,20 +426,20 @@ XkbFreeGeometry(XkbGeometryPtr geom,unsigned which,Bool freeMap)
     if (freeMap)
 	which= XkbGeomAllMask;
     if ((which&XkbGeomPropertiesMask)&&(geom->properties!=NULL))
-	XkbFreeGeomProperties(geom,0,geom->num_properties,True);
+	XkbFreeGeomProperties(geom,0,geom->num_properties,TRUE);
     if ((which&XkbGeomColorsMask)&&(geom->colors!=NULL))
-	XkbFreeGeomColors(geom,0,geom->num_colors,True);
+	XkbFreeGeomColors(geom,0,geom->num_colors,TRUE);
     if ((which&XkbGeomShapesMask)&&(geom->shapes!=NULL))
-	XkbFreeGeomShapes(geom,0,geom->num_shapes,True);
+	XkbFreeGeomShapes(geom,0,geom->num_shapes,TRUE);
     if ((which&XkbGeomSectionsMask)&&(geom->sections!=NULL))
-	XkbFreeGeomSections(geom,0,geom->num_sections,True);
+	XkbFreeGeomSections(geom,0,geom->num_sections,TRUE);
     if ((which&XkbGeomDoodadsMask)&&(geom->doodads!= NULL)) {
-	XkbFreeGeomDoodads(geom->doodads,geom->num_doodads,True);
+	XkbFreeGeomDoodads(geom->doodads,geom->num_doodads,TRUE);
 	geom->doodads= NULL;
 	geom->num_doodads= geom->sz_doodads= 0;
     }
     if ((which&XkbGeomKeyAliasesMask)&&(geom->key_aliases!=NULL))
-	XkbFreeGeomKeyAliases(geom,0,geom->num_key_aliases,True);
+	XkbFreeGeomKeyAliases(geom,0,geom->num_key_aliases,TRUE);
     if (freeMap) {
 	if (geom->label_font!=NULL) {
 	    xfree(geom->label_font);
@@ -646,7 +646,7 @@ Status		rtrn;
     }
     return Success;
 BAIL:
-    XkbFreeGeometry(geom,XkbGeomAllMask,True);
+    XkbFreeGeometry(geom,XkbGeomAllMask,TRUE);
     xkb->geom= NULL;
     return rtrn;
 }
@@ -919,9 +919,9 @@ Bool		found;
     if (row->row_under>=section->num_rows)
 	return NULL;
     row_under= &section->rows[row->row_under];
-    for (i=0,found=False;i<row_under->num_keys;i++) {
+    for (i=0,found=FALSE;i<row_under->num_keys;i++) {
 	if (strncmp(under,row_under->keys[i].name.name,XkbKeyNameLength)==0) {
-	    found= True;
+	    found= TRUE;
 	    break;
 	}
     }
