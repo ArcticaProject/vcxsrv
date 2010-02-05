@@ -827,6 +827,10 @@ winClipboardFlushXEvents (HWND hwnd,
 
 	case PropertyNotify:
 	  break;
+    
+	case MappingNotify:
+    XRefreshKeyboardMapping((XMappingEvent *)&event);
+	  break;
 
 	default:
           ErrorF ("winClipboardFlushXEvents - unexpected event type %d\n", event.type);
