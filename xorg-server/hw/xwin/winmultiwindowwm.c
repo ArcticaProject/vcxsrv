@@ -66,6 +66,7 @@ typedef int pid_t;
 #include "pixmapstr.h"
 #include "winmsg.h"
 #include "windowstr.h"
+#include "winmultiwindowclass.h"
 
 #ifdef XWIN_MULTIWINDOWEXTWM
 #include <X11/extensions/windowswmstr.h>
@@ -1465,7 +1466,8 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   int			format;
   unsigned long		hint = 0, maxmin = 0, style, nitems = 0 , left = 0;
   WindowPtr		pWin = GetProp (hWnd, WIN_WINDOW_PROP);
-  MwmHints *mwm_hint = NULL;
+  MwmHints             *mwm_hint = NULL;
+  WinXSizeHints         SizeHints;
 
   if (!hWnd) return;
   if (!IsWindow (hWnd)) return;
@@ -1507,7 +1509,6 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
       else if (!(mwm_hint->decorations & MwmDecorAll))
       {
 	if (mwm_hint->decorations & MwmDecorBorder) hint |= HINT_BORDER;
-	if (mwm_hint->decorations & MwmDecorHandle) hint |= HINT_SIZEBOX;
 	if (mwm_hint->decorations & MwmDecorTitle) hint |= HINT_CAPTION;
       }
     }
@@ -1524,7 +1525,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
     {
       if (*pAtom == dockWindow)
       {
-	hint = (hint & ~HINT_NOFRAME) | HINT_SIZEBOX; /* Xming puts a sizebox on dock windows */
+	hint = (hint & ~HINT_NOFRAME); /* Xming puts a sizebox on dock windows */
 	*zstyle = HWND_TOPMOST;
       }
     }
@@ -1542,20 +1543,26 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   else if (maxmin & HINT_MIN) SendMessage(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 
   if (style & STYLE_NOTITLE)
-	hint = (hint & ~HINT_NOFRAME & ~HINT_BORDER & ~HINT_CAPTION) | HINT_SIZEBOX;
+	hint = (hint & ~HINT_NOFRAME & ~HINT_BORDER & ~HINT_CAPTION);
   else if (style & STYLE_OUTLINE)
-	hint = (hint & ~HINT_NOFRAME & ~HINT_SIZEBOX & ~HINT_CAPTION) | HINT_BORDER;
+	hint = (hint & ~HINT_NOFRAME & ~HINT_CAPTION) | HINT_BORDER;
   else if (style & STYLE_NOFRAME)
-	hint = (hint & ~HINT_BORDER & ~HINT_CAPTION & ~HINT_SIZEBOX) | HINT_NOFRAME;
+	hint = (hint & ~HINT_BORDER & ~HINT_CAPTION) | HINT_NOFRAME;
 
   style = GetWindowLongPtr(hWnd, GWL_STYLE) & ~WS_CAPTION & ~WS_SIZEBOX; /* Just in case */
-  if (!style) return;
   if (!hint) /* All on, but no resize of children is allowed */
-    style = style | WS_CAPTION | (GetParent(hWnd) ? 0 : WS_SIZEBOX);
+    style = style | WS_CAPTION;
   else if (hint & HINT_NOFRAME); /* All off, so do nothing */
   else style = style | ((hint & HINT_BORDER) ? WS_BORDER : 0) |
-		((hint & HINT_SIZEBOX) ? (GetParent(hWnd) ? 0 : WS_SIZEBOX) : 0) |
 		((hint & HINT_CAPTION) ? WS_CAPTION : 0);
+                
+  if (winMultiWindowGetWMNormalHints(pWin, &SizeHints))
+  {
+    if (!((SizeHints.min_width == SizeHints.max_width)&&(SizeHints.min_height == SizeHints.max_height) ))
+      style|=WS_SIZEBOX;
+  }
+  else              
+    style|=WS_SIZEBOX;
   SetWindowLongPtr (hWnd, GWL_STYLE, style);
 }
 
