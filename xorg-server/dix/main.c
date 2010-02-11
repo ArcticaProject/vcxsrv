@@ -299,9 +299,9 @@ int main(int argc, char *argv[], char *envp[])
 	    InitRootWindow(WindowTable[i]);
 
         InitCoreDevices();
-        config_init();
 	InitInput(argc, argv);
 	InitAndStartDevices();
+	config_init();
 
 	dixSaveScreens(serverClient, SCREEN_SAVER_FORCER, ScreenSaverReset);
 
