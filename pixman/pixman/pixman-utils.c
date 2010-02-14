@@ -498,102 +498,56 @@ _pixman_walk_composite_region (pixman_implementation_t *imp,
     }
 }
 
-static const pixman_fast_path_t *
-get_fast_path (const pixman_fast_path_t *fast_paths,
-               pixman_op_t               op,
-               pixman_image_t *          src_image,
-               pixman_image_t *          mask_image,
-               pixman_image_t *          dst_image,
-	       int			 src_x,
-	       int			 src_y,
-	       int			 mask_x,
-	       int			 mask_y)
+static void
+get_image_info (pixman_image_t       *image,
+		pixman_format_code_t *code,
+		uint32_t	     *flags)
 {
-    pixman_format_code_t src_format, mask_format, dest_format;
-    const pixman_fast_path_t *info;
-
-    /* Check for pixbufs */
-    if (mask_image && mask_image->type == BITS								&&
-	(mask_image->bits.format == PIXMAN_a8r8g8b8 || mask_image->bits.format == PIXMAN_a8b8g8r8)	&&
-	(src_image->type == BITS && src_image->bits.bits == mask_image->bits.bits)			&&
-	(src_image->common.repeat == mask_image->common.repeat)						&&
-	(src_x == mask_x && src_y == mask_y))
+    *flags = 0;
+    
+    if (!image)
     {
-	if (src_image->bits.format == PIXMAN_x8b8g8r8)
-	    src_format = mask_format = PIXMAN_pixbuf;
-	else if (src_image->bits.format == PIXMAN_x8r8g8b8)
-	    src_format = mask_format = PIXMAN_rpixbuf;
-	else
-	    return NULL;
+	*code = PIXMAN_null;
     }
     else
     {
-	/* Source */
-	if (_pixman_image_is_solid (src_image))
+	if (!image->common.transform)
+	    *flags |= FAST_PATH_ID_TRANSFORM;
+
+	if (!image->common.alpha_map)
+	    *flags |= FAST_PATH_NO_ALPHA_MAP;
+
+	if (image->common.filter != PIXMAN_FILTER_CONVOLUTION)
+	    *flags |= FAST_PATH_NO_CONVOLUTION_FILTER;
+
+	if (image->common.repeat != PIXMAN_REPEAT_PAD)
+	    *flags |= FAST_PATH_NO_PAD_REPEAT;
+
+	if (image->common.repeat != PIXMAN_REPEAT_REFLECT)
+	    *flags |= FAST_PATH_NO_REFLECT_REPEAT;
+
+	*flags |= (FAST_PATH_NO_ACCESSORS | FAST_PATH_NO_WIDE_FORMAT);
+	if (image->type == BITS)
 	{
-	    src_format = PIXMAN_solid;
+	    if (image->bits.read_func || image->bits.write_func)
+		*flags &= ~FAST_PATH_NO_ACCESSORS;
+
+	    if (PIXMAN_FORMAT_IS_WIDE (image->bits.format))
+		*flags &= ~FAST_PATH_NO_WIDE_FORMAT;
 	}
-	else if (src_image->type == BITS)
-	{
-	    src_format = src_image->bits.format;
-	}
+
+	if (image->common.component_alpha)
+	    *flags |= FAST_PATH_COMPONENT_ALPHA;
 	else
-	{
-	    return NULL;
-	}
+	    *flags |= FAST_PATH_UNIFIED_ALPHA;
 
-	/* Mask */
-	if (!mask_image)
-	{
-	    mask_format = PIXMAN_null;
-	}
-	else if (mask_image->common.component_alpha)
-	{
-	    if (mask_image->type == BITS)
-	    {
-		/* These are the *only* component_alpha formats
-		 * we support for fast paths
-		 */
-		if (mask_image->bits.format == PIXMAN_a8r8g8b8)
-		    mask_format = PIXMAN_a8r8g8b8_ca;
-		else if (mask_image->bits.format == PIXMAN_a8b8g8r8)
-		    mask_format = PIXMAN_a8b8g8r8_ca;
-		else
-		    return NULL;
-	    }
-	    else
-	    {
-		return NULL;
-	    }
-	}
-	else if (_pixman_image_is_solid (mask_image))
-	{
-	    mask_format = PIXMAN_solid;
-	}
-	else if (mask_image->common.type == BITS)
-	{
-	    mask_format = mask_image->bits.format;
-	}
+	if (_pixman_image_is_solid (image))
+	    *code = PIXMAN_solid;
+	else if (image->common.type == BITS)
+	    *code = image->bits.format;
 	else
-	{
-	    return NULL;
-	}
+	    *code = PIXMAN_unknown;
     }
-
-    dest_format = dst_image->bits.format;
-    
-    for (info = fast_paths; info->op != PIXMAN_OP_NONE; ++info)
-    {
-	if (info->op == op			&&
-	    info->src_format == src_format	&&
-	    info->mask_format == mask_format	&&
-	    info->dest_format == dest_format)
-	{
-	    return info;
-	}
-    }
-
-    return NULL;
 }
 
 static force_inline pixman_bool_t
@@ -655,82 +609,46 @@ _pixman_run_fast_path (const pixman_fast_path_t *paths,
                        int32_t                   width,
                        int32_t                   height)
 {
-    pixman_composite_func_t func = NULL;
-    pixman_bool_t src_repeat =
-	src->common.repeat == PIXMAN_REPEAT_NORMAL;
-    pixman_bool_t mask_repeat =
-	mask && mask->common.repeat == PIXMAN_REPEAT_NORMAL;
+    pixman_format_code_t src_format, mask_format, dest_format;
+    uint32_t src_flags, mask_flags, dest_flags;
+    pixman_composite_func_t func;
+    const pixman_fast_path_t *info;
     pixman_bool_t result;
-    pixman_bool_t has_fast_path;
 
-    has_fast_path = !dest->common.alpha_map &&
-		    !dest->bits.read_func &&
-		    !dest->bits.write_func;
-
-    if (has_fast_path)
+    get_image_info (src,  &src_format,  &src_flags);
+    get_image_info (mask, &mask_format, &mask_flags);
+    get_image_info (dest, &dest_format, &dest_flags);
+    
+    /* Check for pixbufs */
+    if ((mask_format == PIXMAN_a8r8g8b8 || mask_format == PIXMAN_a8b8g8r8) &&
+	(src->type == BITS && src->bits.bits == mask->bits.bits)	   &&
+	(src->common.repeat == mask->common.repeat)			   &&
+	(src_x == mask_x && src_y == mask_y))
     {
-	has_fast_path = !src->common.transform &&
-	                !src->common.alpha_map &&
-			src->common.filter != PIXMAN_FILTER_CONVOLUTION &&
-			src->common.repeat != PIXMAN_REPEAT_PAD &&
-			src->common.repeat != PIXMAN_REPEAT_REFLECT;
-	if (has_fast_path && src->type == BITS)
-	{
-	    has_fast_path = !src->bits.read_func &&
-	                    !src->bits.write_func &&
-		            !PIXMAN_FORMAT_IS_WIDE (src->bits.format);
-	}
+	if (src_format == PIXMAN_x8b8g8r8)
+	    src_format = mask_format = PIXMAN_pixbuf;
+	else if (src_format == PIXMAN_x8r8g8b8)
+	    src_format = mask_format = PIXMAN_rpixbuf;
     }
 
-    if (mask && has_fast_path)
+    func = NULL;
+    for (info = paths; info->op != PIXMAN_OP_NONE; ++info)
     {
-	has_fast_path =
-	    !mask->common.transform &&
-	    !mask->common.alpha_map &&
-	    !mask->bits.read_func &&
-	    !mask->bits.write_func &&
-	    mask->common.filter != PIXMAN_FILTER_CONVOLUTION &&
-	    mask->common.repeat != PIXMAN_REPEAT_PAD &&
-	    mask->common.repeat != PIXMAN_REPEAT_REFLECT &&
-	    !PIXMAN_FORMAT_IS_WIDE (mask->bits.format);
-    }
-
-    if (has_fast_path)
-    {
-	const pixman_fast_path_t *info;
-
-	if ((info = get_fast_path (paths, op, src, mask, dest, src_x, src_y, mask_x, mask_y)))
+	if (info->op == op					&&
+	    (info->src_format == src_format)			&&
+	    (info->src_flags & src_flags) == info->src_flags	&&
+	    (info->mask_format == mask_format)			&&
+	    (info->mask_flags & mask_flags) == info->mask_flags	&&
+	    (info->dest_format == dest_format)			&&
+	    (info->dest_flags & dest_flags) == info->dest_flags)
 	{
 	    func = info->func;
-
-	    if (info->src_format == PIXMAN_solid)
-		src_repeat = FALSE;
-
-	    if (info->mask_format == PIXMAN_solid)
-		mask_repeat = FALSE;
-
-	    if ((src_repeat                     &&
-		 src->bits.width == 1           &&
-		 src->bits.height == 1)		||
-		(mask_repeat			&&
-		 mask->bits.width == 1		&&
-		 mask->bits.height == 1))
-	    {
-		/* If src or mask are repeating 1x1 images and src_repeat or
-		 * mask_repeat are still TRUE, it means the fast path we
-		 * selected does not actually handle repeating images.
-		 *
-		 * So rather than calling the "fast path" with a zillion
-		 * 1x1 requests, we just fall back to the general code (which
-		 * does do something sensible with 1x1 repeating images).
-		 */
-		func = NULL;
-	    }
+	    break;
 	}
     }
 
     result = FALSE;
-
+    
     if (func)
     {
 	pixman_region32_t region;
@@ -746,6 +664,21 @@ _pixman_run_fast_path (const pixman_fast_path_t *paths,
 		    src, mask, extents,
 		    src_x, src_y, mask_x, mask_y, dest_x, dest_y))
 	    {
+		pixman_bool_t src_repeat, mask_repeat;
+
+		src_repeat =
+		    src->type == BITS					&&
+		    src_flags & FAST_PATH_ID_TRANSFORM			&&
+		    src->common.repeat == PIXMAN_REPEAT_NORMAL		&&
+		    src_format != PIXMAN_solid;
+		
+		mask_repeat =
+		    mask						&&
+		    mask->type == BITS					&&
+		    mask_flags & FAST_PATH_ID_TRANSFORM			&&
+		    mask->common.repeat == PIXMAN_REPEAT_NORMAL		&&
+		    mask_format != PIXMAN_solid;
+		
 		walk_region_internal (imp, op,
 		                      src, mask, dest,
 		                      src_x, src_y, mask_x, mask_y,

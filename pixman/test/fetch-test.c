@@ -6,7 +6,7 @@
 
 #define SIZE 1024
 
-static const pixman_indexed_t mono_palette =
+static pixman_indexed_t mono_palette =
 {
     .rgba = { 0x00000000, 0x00ffffff },
 };
@@ -21,7 +21,7 @@ typedef struct {
     pixman_indexed_t *indexed;
 } testcase_t;
 
-static const testcase_t testcases[] =
+static testcase_t testcases[] =
 {
     {
 	.format = PIXMAN_a8r8g8b8,
@@ -100,7 +100,7 @@ static const testcase_t testcases[] =
     },
 };
 
-const int n_test_cases = sizeof(testcases)/sizeof(testcases[0]);
+int n_test_cases = sizeof(testcases)/sizeof(testcases[0]);
 
 
 static uint32_t

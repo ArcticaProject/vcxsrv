@@ -28,6 +28,8 @@
 #endif
 #include "pixman-private.h"
 
+#include <stdlib.h>
+
 /*
  * Operator optimizations based on source or destination opacity
  */
@@ -109,8 +111,8 @@ pixman_optimize_operator (pixman_op_t     op,
 
 static void
 apply_workaround (pixman_image_t *image,
-		  int16_t *       x,
-		  int16_t *       y,
+		  int32_t *       x,
+		  int32_t *       y,
 		  uint32_t **     save_bits,
 		  int *           save_dx,
 		  int *           save_dy)
@@ -165,6 +167,24 @@ pixman_image_composite (pixman_op_t      op,
                         int16_t          dest_y,
                         uint16_t         width,
                         uint16_t         height)
+{
+    pixman_image_composite32 (op, src, mask, dest, src_x, src_y, 
+                              mask_x, mask_y, dest_x, dest_y, width, height);
+}
+
+PIXMAN_EXPORT void
+pixman_image_composite32 (pixman_op_t      op,
+                          pixman_image_t * src,
+                          pixman_image_t * mask,
+                          pixman_image_t * dest,
+                          int32_t          src_x,
+                          int32_t          src_y,
+                          int32_t          mask_x,
+                          int32_t          mask_y,
+                          int32_t          dest_x,
+                          int32_t          dest_y,
+                          int32_t          width,
+                          int32_t          height)
 {
     uint32_t *src_bits;
     int src_dx, src_dy;
@@ -323,6 +343,45 @@ pixman_image_fill_rectangles (pixman_op_t                 op,
                               int                         n_rects,
                               const pixman_rectangle16_t *rects)
 {
+    pixman_box32_t stack_boxes[6];
+    pixman_box32_t *boxes;
+    pixman_bool_t result;
+    int i;
+
+    if (n_rects > 6)
+    {
+        boxes = pixman_malloc_ab (sizeof (pixman_box32_t), n_rects);
+        if (boxes == NULL)
+            return FALSE;
+    }
+    else
+    {
+        boxes = stack_boxes;
+    }
+
+    for (i = 0; i < n_rects; ++i)
+    {
+        boxes[i].x1 = rects[i].x;
+        boxes[i].y1 = rects[i].y;
+        boxes[i].x2 = boxes[i].x1 + rects[i].width;
+        boxes[i].y2 = boxes[i].y1 + rects[i].height;
+    }
+
+    result = pixman_image_fill_boxes (op, dest, color, n_rects, boxes);
+
+    if (boxes != stack_boxes)
+        free (boxes);
+    
+    return result;
+}
+
+PIXMAN_EXPORT pixman_bool_t
+pixman_image_fill_boxes (pixman_op_t           op,
+                         pixman_image_t *      dest,
+                         pixman_color_t *      color,
+                         int                   n_boxes,
+                         const pixman_box32_t *boxes)
+{
     pixman_image_t *solid;
     pixman_color_t c;
     int i;
@@ -331,71 +390,69 @@ pixman_image_fill_rectangles (pixman_op_t                 op,
     
     if (color->alpha == 0xffff)
     {
-	if (op == PIXMAN_OP_OVER)
-	    op = PIXMAN_OP_SRC;
+        if (op == PIXMAN_OP_OVER)
+            op = PIXMAN_OP_SRC;
     }
 
     if (op == PIXMAN_OP_CLEAR)
     {
-	c.red = 0;
-	c.green = 0;
-	c.blue = 0;
-	c.alpha = 0;
+        c.red = 0;
+        c.green = 0;
+        c.blue = 0;
+        c.alpha = 0;
 
-	color = &c;
+        color = &c;
 
-	op = PIXMAN_OP_SRC;
+        op = PIXMAN_OP_SRC;
     }
 
     if (op == PIXMAN_OP_SRC)
     {
-	uint32_t pixel;
+        uint32_t pixel;
 
-	if (color_to_pixel (color, &pixel, dest->bits.format))
-	{
-	    for (i = 0; i < n_rects; ++i)
-	    {
-		pixman_region32_t fill_region;
-		int n_boxes, j;
-		pixman_box32_t *boxes;
+        if (color_to_pixel (color, &pixel, dest->bits.format))
+        {
+            pixman_region32_t fill_region;
+            int n_rects, j;
+            pixman_box32_t *rects;
 
-		pixman_region32_init_rect (&fill_region, rects[i].x, rects[i].y, rects[i].width, rects[i].height);
+            if (!pixman_region32_init_rects (&fill_region, boxes, n_boxes))
+                return FALSE;
 
-		if (dest->common.have_clip_region)
-		{
-		    if (!pixman_region32_intersect (&fill_region,
-		                                    &fill_region,
-		                                    &dest->common.clip_region))
-			return FALSE;
-		}
+            if (dest->common.have_clip_region)
+            {
+                if (!pixman_region32_intersect (&fill_region,
+                                                &fill_region,
+                                                &dest->common.clip_region))
+                    return FALSE;
+            }
 
-		boxes = pixman_region32_rectangles (&fill_region, &n_boxes);
-		for (j = 0; j < n_boxes; ++j)
-		{
-		    const pixman_box32_t *box = &(boxes[j]);
-		    pixman_fill (dest->bits.bits, dest->bits.rowstride, PIXMAN_FORMAT_BPP (dest->bits.format),
-		                 box->x1, box->y1, box->x2 - box->x1, box->y2 - box->y1,
-		                 pixel);
-		}
+            rects = pixman_region32_rectangles (&fill_region, &n_rects);
+            for (j = 0; j < n_rects; ++j)
+            {
+                const pixman_box32_t *rect = &(rects[j]);
+                pixman_fill (dest->bits.bits, dest->bits.rowstride, PIXMAN_FORMAT_BPP (dest->bits.format),
+                             rect->x1, rect->y1, rect->x2 - rect->x1, rect->y2 - rect->y1,
+                             pixel);
+            }
 
-		pixman_region32_fini (&fill_region);
-	    }
-	    return TRUE;
-	}
+            pixman_region32_fini (&fill_region);
+            return TRUE;
+        }
     }
 
     solid = pixman_image_create_solid_fill (color);
     if (!solid)
-	return FALSE;
+        return FALSE;
 
-    for (i = 0; i < n_rects; ++i)
+    for (i = 0; i < n_boxes; ++i)
     {
-	const pixman_rectangle16_t *rect = &(rects[i]);
+        const pixman_box32_t *box = &(boxes[i]);
 
-	pixman_image_composite (op, solid, NULL, dest,
-	                        0, 0, 0, 0,
-	                        rect->x, rect->y,
-	                        rect->width, rect->height);
+        pixman_image_composite32 (op, solid, NULL, dest,
+                                  0, 0, 0, 0,
+                                  box->x1, box->y1,
+                                  box->x2 - box->x1, box->y2 - box->y1);
     }
 
     pixman_image_unref (solid);
