@@ -116,8 +116,8 @@ winDrawURLWindow (LPARAM lParam)
     crText = RGB(0,0,128+64);
   SetTextColor (draw->hDC, crText);
   
-  /* Create underlined font 14 high, standard dialog font */
-  font = CreateFont (-14, 0, 0, 0, FW_NORMAL, FALSE, TRUE, FALSE,
+  /* Create font 8 high, standard dialog font */
+  font = CreateFont (-8, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
 		     0, 0, 0, 0, 0, "MS Sans Serif");
   if (!font)
     {
@@ -705,7 +705,7 @@ winAboutDlgProc (HWND hwndDialog, UINT message,
 
 	case ID_ABOUT_WEBSITE:
 	  {
-	    const char *	pszPath = "http://x.cygwin.com/";
+	    const char *	pszPath = __VENDORDWEBSUPPORT__;
 	    int			iReturn;
 	    
 	    iReturn = ShellExecute (NULL,

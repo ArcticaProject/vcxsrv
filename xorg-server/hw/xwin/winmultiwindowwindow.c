@@ -515,6 +515,13 @@ winCreateWindowsWindow (WindowPtr pWin)
   iWidth = pWin->drawable.width;
   iHeight = pWin->drawable.height;
 
+  /* ensure window actually ends up somewhere visible */
+  if (iX > GetSystemMetrics (SM_CXVIRTUALSCREEN))
+    iX = CW_USEDEFAULT;
+
+  if (iY > GetSystemMetrics (SM_CYVIRTUALSCREEN))
+    iY = CW_USEDEFAULT;
+
   if (winMultiWindowGetTransientFor (pWin, &pDaddy))
     {
       if (pDaddy)

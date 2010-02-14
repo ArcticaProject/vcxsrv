@@ -746,6 +746,29 @@ OsVendorInit (void)
 static void
 winUseMsg (void)
 {
+  ErrorF("\n");
+  ErrorF("\n");
+  ErrorF(EXECUTABLE_NAME " Device Dependent Usage:\n");
+  ErrorF("\n");
+
+#ifdef XWIN_CLIPBOARD
+  ErrorF ("-[no]clipboard\n"
+	  "\tEnable [disable] the clipboard integration. Default is enabled.\n");
+#endif
+
+  ErrorF ("-clipupdates num_boxes\n"
+	  "\tUse a clipping region to constrain shadow update blits to\n"
+	  "\tthe updated region when num_boxes, or more, are in the\n"
+	  "\tupdated region.\n");
+
+#ifdef XWIN_XF86CONFIG
+  ErrorF ("-config\n"
+          "\tSpecify a configuration file.\n");
+
+  ErrorF ("-configdir\n"
+          "\tSpecify a configuration directory.\n");
+#endif
+
   ErrorF ("-depth bits_per_pixel\n"
 	  "\tSpecify an optional bitdepth to use in fullscreen mode\n"
 	  "\twith a DirectDraw engine.\n");
@@ -753,6 +776,15 @@ winUseMsg (void)
   ErrorF ("-emulate3buttons [timeout]\n"
 	  "\tEmulate 3 button mouse with an optional timeout in\n"
 	  "\tmilliseconds.\n");
+
+#ifdef XWIN_EMULATEPSEUDO
+  ErrorF ("-emulatepseudo\n"
+	  "\tCreate a depth 8 PseudoColor visual when running in\n"
+	  "\tdepths 15, 16, 24, or 32, collectively known as TrueColor\n"
+	  "\tdepths.  The PseudoColor visual does not have correct colors,\n"
+	  "\tand it may crash, but it at least allows you to run your\n"
+	  "\tapplication in TrueColor modes.\n");
+#endif
 
   ErrorF ("-engine engine_type_id\n"
 	  "\tOverride the server's automatically selected engine type:\n"
@@ -766,10 +798,69 @@ winUseMsg (void)
 
   ErrorF ("-fullscreen\n"
 	  "\tRun the server in fullscreen mode.\n");
-  
+
+  ErrorF ("-ignoreinput\n"
+	  "\tIgnore keyboard and mouse input.\n");
+
+#ifdef XWIN_MULTIWINDOWEXTWM
+  ErrorF ("-internalwm\n"
+	  "\tRun the internal window manager.\n");
+#endif
+
+#ifdef XWIN_XF86CONFIG
+  ErrorF ("-keyboard\n"
+	  "\tSpecify a keyboard device from the configuration file.\n");
+#endif
+
+  ErrorF ("-[no]keyhook\n"
+	  "\tGrab special Windows keypresses like Alt-Tab or the Menu "
+          "key.\n");
+
+  ErrorF ("-lesspointer\n"
+	  "\tHide the windows mouse pointer when it is over any\n"
+          "\t" EXECUTABLE_NAME " window.  This prevents ghost cursors appearing when\n"
+	  "\tthe Windows cursor is drawn on top of the X cursor\n");
+
+  ErrorF ("-logfile filename\n"
+	  "\tWrite log messages to <filename>.\n");
+
+  ErrorF ("-logverbose verbosity\n"
+	  "\tSet the verbosity of log messages. [NOTE: Only a few messages\n"
+	  "\trespect the settings yet]\n"
+	  "\t\t0 - only print fatal error.\n"
+	  "\t\t1 - print additional configuration information.\n"
+	  "\t\t2 - print additional runtime information [default].\n"
+	  "\t\t3 - print debugging and tracing information.\n");
+
+  ErrorF ("-[no]multimonitors or -[no]multiplemonitors\n"
+	  "\tUse the entire virtual screen if multiple\n"
+	  "\tmonitors are present.\n");
+
+#ifdef XWIN_MULTIWINDOW
+  ErrorF ("-multiwindow\n"
+	  "\tRun the server in multi-window mode.\n");
+#endif
+
+#ifdef XWIN_MULTIWINDOWEXTWM
+  ErrorF ("-mwextwm\n"
+	  "\tRun the server in multi-window external window manager mode.\n");
+#endif
+
+  ErrorF ("-nodecoration\n"
+          "\tDo not draw a window border, title bar, etc.  Windowed\n"
+	  "\tmode only.\n");
+
+#ifdef XWIN_CLIPBOARD
+  ErrorF ("-nounicodeclipboard\n"
+	  "\tDo not use Unicode clipboard even if on a NT-based platform.\n");
+#endif
+
   ErrorF ("-refresh rate_in_Hz\n"
 	  "\tSpecify an optional refresh rate to use in fullscreen mode\n"
 	  "\twith a DirectDraw engine.\n");
+
+  ErrorF ("-rootless\n"
+	  "\tRun the server in rootless mode.\n");
 
   ErrorF ("-screen scr_num [width height [x y] | [[WxH[+X+Y]][@m]] ]\n"
 	  "\tEnable screen scr_num and optionally specify a width and\n"
@@ -781,47 +872,18 @@ winUseMsg (void)
       "\t -screen 0 1024x768@3        ; 3rd monitor size 1024x768\n"
       "\t -screen 0 @1 ; on 1st monitor using its full resolution (the default)\n");
 
-  ErrorF ("-lesspointer\n"
-	  "\tHide the windows mouse pointer when it is over an inactive\n"
-          "\t" PROJECT_NAME " window.  This prevents ghost cursors appearing where\n"
-	  "\tthe Windows cursor is drawn overtop of the X cursor\n");
-
-  ErrorF ("-nodecoration\n"
-          "\tDo not draw a window border, title bar, etc.  Windowed\n"
-	  "\tmode only.\n");
-
-#ifdef XWIN_MULTIWINDOWEXTWM
-  ErrorF ("-mwextwm\n"
-	  "\tRun the server in multi-window external window manager mode.\n");
-
-  ErrorF ("-internalwm\n"
-	  "\tRun the internal window manager.\n");
-#endif
-
-  ErrorF ("-rootless\n"
-	  "\tRun the server in rootless mode.\n");
-
-#ifdef XWIN_MULTIWINDOW
-  ErrorF ("-multiwindow\n"
-	  "\tRun the server in multi-window mode.\n");
-#endif
-
-  ErrorF ("-multiplemonitors\n"
-	  "\tEXPERIMENTAL: Use the entire virtual screen if multiple\n"
-	  "\tmonitors are present.\n");
-
-#ifdef XWIN_CLIPBOARD
-  ErrorF ("-[no]clipboard\n"
-	  "\tEnable [disable] the clipboard integration. Default is enabled.\n");
-
-  ErrorF ("-nounicodeclipboard\n"
-	  "\tDo not use Unicode clipboard even if NT-based platform.\n");
-#endif
-
   ErrorF ("-scrollbars\n"
 	  "\tIn windowed mode, allow screens bigger than the Windows desktop.\n"
 	  "\tMoreover, if the window has decorations, one can now resize\n"
 	  "\tit.\n");
+
+  ErrorF ("-silent-dup-error\n"
+	  "\tIf another instance of " EXECUTABLE_NAME " with the same display number is running\n"
+     "\texit silently and don’t display any error message.\n");
+
+  ErrorF ("-swcursor\n"
+	  "\tDisable the usage of the Windows cursor and use the X11 software\n"
+	  "\tcursor instead.\n");
 
   ErrorF ("-[no]trayicon\n"
           "\tDo not create a tray icon.  Default is to create one\n"
@@ -829,72 +891,28 @@ winUseMsg (void)
 	  "\t-notrayicon, then enable it for specific screens with\n"
 	  "\t-trayicon for those screens.\n");
 
-  ErrorF ("-clipupdates num_boxes\n"
-	  "\tUse a clipping region to constrain shadow update blits to\n"
-	  "\tthe updated region when num_boxes, or more, are in the\n"
-	  "\tupdated region.  Currently supported only by `-engine 1'.\n");
-
-#ifdef XWIN_EMULATEPSEUDO
-  ErrorF ("-emulatepseudo\n"
-	  "\tCreate a depth 8 PseudoColor visual when running in\n"
-	  "\tdepths 15, 16, 24, or 32, collectively known as TrueColor\n"
-	  "\tdepths.  The PseudoColor visual does not have correct colors,\n"
-	  "\tand it may crash, but it at least allows you to run your\n"
-	  "\tapplication in TrueColor modes.\n");
-#endif
-
   ErrorF ("-[no]unixkill\n"
           "\tCtrl+Alt+Backspace exits the X Server.\n");
 
   ErrorF ("-[no]winkill\n"
           "\tAlt+F4 exits the X Server.\n");
 
-#ifdef XWIN_XF86CONFIG
-  ErrorF ("-config\n"
-          "\tSpecify a configuration file.\n");
-
-  ErrorF ("-configdir\n"
-          "\tSpecify a configuration directory.\n");
-
-  ErrorF ("-keyboard\n"
-	  "\tSpecify a keyboard device from the configuration file.\n");
-#endif
-
-  ErrorF ("-xkbrules XKBRules\n"
-	  "\tEquivalent to XKBRules in XF86Config files.\n");
-
-  ErrorF ("-xkbmodel XKBModel\n"
-	  "\tEquivalent to XKBModel in XF86Config files.\n");
-
   ErrorF ("-xkblayout XKBLayout\n"
 	  "\tEquivalent to XKBLayout in XF86Config files.\n"
 	  "\tFor example: -xkblayout de\n");
 
-  ErrorF ("-xkbvariant XKBVariant\n"
-	  "\tEquivalent to XKBVariant in XF86Config files.\n"
-	  "\tFor example: -xkbvariant nodeadkeys\n");
+  ErrorF ("-xkbmodel XKBModel\n"
+	  "\tEquivalent to XKBModel in XF86Config files.\n");
 
   ErrorF ("-xkboptions XKBOptions\n"
 	  "\tEquivalent to XKBOptions in XF86Config files.\n");
 
-  ErrorF ("-logfile filename\n"
-	  "\tWrite logmessages to <filename> instead of /tmp/Xwin.log.\n");
+  ErrorF ("-xkbrules XKBRules\n"
+	  "\tEquivalent to XKBRules in XF86Config files.\n");
 
-  ErrorF ("-logverbose verbosity\n"
-	  "\tSet the verbosity of logmessages. [NOTE: Only a few messages\n"
-	  "\trespect the settings yet]\n"
-	  "\t\t0 - only print fatal error.\n"
-	  "\t\t1 - print additional configuration information.\n"
-	  "\t\t2 - print additional runtime information [default].\n"
-	  "\t\t3 - print debugging and tracing information.\n");
-
-  ErrorF ("-[no]keyhook\n"
-	  "\tGrab special windows key combinations like Alt-Tab or the Menu "
-          "key.\n These keys are discarded by default.\n");
-
-  ErrorF ("-swcursor\n"
-	  "\tDisable the usage of the windows cursor and use the X11 software "
-	  "cursor instead\n");
+  ErrorF ("-xkbvariant XKBVariant\n"
+	  "\tEquivalent to XKBVariant in XF86Config files.\n"
+	  "\tFor example: -xkbvariant nodeadkeys\n");
 }
 
 /* See Porting Layer Definition - p. 57 */

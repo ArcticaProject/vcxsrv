@@ -88,7 +88,7 @@ ATSTART                 { return ATSTART; }
 ATEND                   { return ATEND; }
 EXEC                    { return EXEC; }
 ALWAYSONTOP             { return ALWAYSONTOP; }
-DEBUG                   { return DEBUG; }
+DEBUG                   { return DEBUGOUTPUT; }
 RELOAD                  { return RELOAD; }
 TRAYICON                { return TRAYICON; }
 SILENTEXIT		{ return SILENTEXIT; }

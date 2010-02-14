@@ -29,6 +29,8 @@
 #include <xorg-config.h>
 #endif
 
+#include <string.h>
+#include "os.h"
 #include "xf86Parser.h"
 #include "xf86tokens.h"
 #include "Configint.h"
@@ -45,6 +47,7 @@ xf86ConfigSymTabRec InputClassTab[] =
     {MATCH_PRODUCT, "matchproduct"},
     {MATCH_VENDOR, "matchvendor"},
     {MATCH_DEVICE_PATH, "matchdevicepath"},
+    {MATCH_TAG, "matchtag"},
     {MATCH_IS_KEYBOARD, "matchiskeyboard"},
     {MATCH_IS_POINTER, "matchispointer"},
     {MATCH_IS_JOYSTICK, "matchisjoystick"},
@@ -55,6 +58,8 @@ xf86ConfigSymTabRec InputClassTab[] =
 };
 
 #define CLEANUP xf86freeInputClassList
+
+#define TOKEN_SEP "|"
 
 XF86ConfInputClassPtr
 xf86parseInputClassSection(void)
@@ -91,17 +96,22 @@ xf86parseInputClassSection(void)
         case MATCH_PRODUCT:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchProduct");
-            ptr->match_product = val.str;
+            ptr->match_product = xstrtokenize(val.str, TOKEN_SEP);
             break;
         case MATCH_VENDOR:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchVendor");
-            ptr->match_vendor = val.str;
+            ptr->match_vendor = xstrtokenize(val.str, TOKEN_SEP);
             break;
         case MATCH_DEVICE_PATH:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
                 Error(QUOTE_MSG, "MatchDevicePath");
-            ptr->match_device = val.str;
+            ptr->match_device = xstrtokenize(val.str, TOKEN_SEP);
+            break;
+        case MATCH_TAG:
+            if (xf86getSubToken(&(ptr->comment)) != STRING)
+                Error(QUOTE_MSG, "MatchTag");
+            ptr->match_tag = xstrtokenize(val.str, TOKEN_SEP);
             break;
         case MATCH_IS_KEYBOARD:
             if (xf86getSubToken(&(ptr->comment)) != STRING)
@@ -173,6 +183,8 @@ xf86parseInputClassSection(void)
 void
 xf86printInputClassSection (FILE * cf, XF86ConfInputClassPtr ptr)
 {
+    char **list;
+
     while (ptr) {
         fprintf(cf, "Section \"InputClass\"\n");
         if (ptr->comment)
@@ -181,12 +193,38 @@ xf86printInputClassSection (FILE * cf, XF86ConfInputClassPtr ptr)
             fprintf(cf, "\tIdentifier      \"%s\"\n", ptr->identifier);
         if (ptr->driver)
             fprintf(cf, "\tDriver          \"%s\"\n", ptr->driver);
-        if (ptr->match_product)
-            fprintf(cf, "\tMatchProduct    \"%s\"\n", ptr->match_product);
-        if (ptr->match_vendor)
-            fprintf(cf, "\tMatchVendor     \"%s\"\n", ptr->match_vendor);
-        if (ptr->match_device)
-            fprintf(cf, "\tMatchDevicePath \"%s\"\n", ptr->match_device);
+        if (ptr->match_product) {
+            fprintf(cf, "\tMatchProduct    \"");
+            for (list = ptr->match_product; *list; list++)
+                fprintf(cf, "%s%s",
+                        list == ptr->match_product ? "" : TOKEN_SEP,
+                        *list);
+            fprintf(cf, "\"\n");
+        }
+        if (ptr->match_vendor) {
+            fprintf(cf, "\tMatchVendor     \"");
+            for (list = ptr->match_vendor; *list; list++)
+                fprintf(cf, "%s%s",
+                        list == ptr->match_vendor ? "" : TOKEN_SEP,
+                        *list);
+            fprintf(cf, "\"\n");
+        }
+        if (ptr->match_device) {
+            fprintf(cf, "\tMatchDevicePath \"");
+            for (list = ptr->match_device; *list; list++)
+                fprintf(cf, "%s%s",
+                        list == ptr->match_device ? "" : TOKEN_SEP,
+                        *list);
+            fprintf(cf, "\"\n");
+        }
+        if (ptr->match_tag) {
+            fprintf(cf, "\tMatchTag \"");
+            for (list = ptr->match_tag; *list; list++)
+                fprintf(cf, "%s%s",
+                        list == ptr->match_tag ? "" : TOKEN_SEP,
+                        *list);
+            fprintf(cf, "\"\n");
+        }
         if (ptr->is_keyboard.set)
             fprintf(cf, "\tIsKeyboard      \"%s\"\n",
                     ptr->is_keyboard.val ? "yes" : "no");
@@ -215,13 +253,31 @@ void
 xf86freeInputClassList (XF86ConfInputClassPtr ptr)
 {
     XF86ConfInputClassPtr prev;
+    char **list;
 
     while (ptr) {
         TestFree(ptr->identifier);
         TestFree(ptr->driver);
-        TestFree(ptr->match_product);
-        TestFree(ptr->match_vendor);
-        TestFree(ptr->match_device);
+        if (ptr->match_product) {
+            for (list = ptr->match_product; *list; list++)
+                free(*list);
+            free(ptr->match_product);
+        }
+        if (ptr->match_vendor) {
+            for (list = ptr->match_vendor; *list; list++)
+                free(*list);
+            free(ptr->match_vendor);
+        }
+        if (ptr->match_device) {
+            for (list = ptr->match_device; *list; list++)
+                free(*list);
+            free(ptr->match_device);
+        }
+        if (ptr->match_tag) {
+            for (list = ptr->match_tag; *list; list++)
+                free(*list);
+            free(ptr->match_tag);
+        }
         TestFree(ptr->comment);
         xf86optionListFree(ptr->option_lst);
 

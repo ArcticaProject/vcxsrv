@@ -119,8 +119,7 @@ winClipboardProc (void *pvNotUsed)
   /* See if X supports the current locale */
   if (XSupportsLocale () == False)
     {
-      ErrorF ("winClipboardProc - Locale not supported by X.  Exiting.\n");
-      pthread_exit (NULL);
+      ErrorF ("winClipboardProc - Warning: Locale not supported by X.\n");
     }
 
   /* Set jump point for Error exits */

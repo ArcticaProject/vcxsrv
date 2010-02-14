@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.7.99.3, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="(unreleased)"
+AC_INIT([xorg-server], 1.7.99.901, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="2010-02-12"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -426,6 +426,9 @@ case $host_os in
 	;;
   darwin*)
 	AC_DEFINE(CSRG_BASED, 1, [System is BSD-like])
+	;;
+  cygwin*)
+	CFLAGS="$CFLAGS -DFD_SETSIZE=256"
 	;;
 esac
 
@@ -1829,7 +1832,9 @@ AC_MSG_RESULT([$XWIN])
 
 if test "x$XWIN" = xyes; then
 	PKG_CHECK_EXISTS($WINDOWSWMPROTO, [WINDOWSWM=yes], [WINDOWSWM=no])
+	AC_DEFINE_DIR(SYSCONFDIR, sysconfdir, [Location of system.XWinrc])
 	AC_DEFINE_UNQUOTED(XORG_VERSION_CURRENT, [$VENDOR_RELEASE], [Current Xorg version])
+	AC_DEFINE_UNQUOTED(__VENDORDWEBSUPPORT__, ["$VENDOR_WEB"], [Vendor web address for support])
 	AC_CHECK_TOOL(WINDRES, windres)
 	case $host_os in
 		cygwin*)
@@ -1842,8 +1847,6 @@ if test "x$XWIN" = xyes; then
 			       AC_DEFINE(ROOTLESS,1,[Build Rootless code])
 			       CFLAGS="$CFLAGS -DROOTLESS_WORKAROUND"
 			fi
-
-			CFLAGS="$CFLAGS -DFD_SETSIZE=256"
 			;;
 		mingw*)
 			XWIN_SERVER_NAME=Xming

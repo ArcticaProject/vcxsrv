@@ -43,6 +43,7 @@
 #ifndef PROJECT_NAME
 #  define PROJECT_NAME		"Cygwin/X"
 #endif
+#define EXECUTABLE_NAME         "XWin"
 #define WINDOW_CLASS		"cygwin/x"
 #define WINDOW_TITLE		PROJECT_NAME ":%s.%d"
 #define WINDOW_TITLE_XDMCP	"%s:%s.%d"

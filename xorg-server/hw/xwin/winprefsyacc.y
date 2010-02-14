@@ -115,7 +115,7 @@ extern int yylex(void);
 %token ATEND
 %token EXEC
 %token ALWAYSONTOP
-%token DEBUG
+%token DEBUGOUTPUT "DEBUG"
 %token RELOAD
 %token TRAYICON
 %token FORCEEXIT
@@ -243,7 +243,7 @@ forceexit:	FORCEEXIT NEWLINE { pref.fForceExit = TRUE; }
 silentexit:	SILENTEXIT NEWLINE { pref.fSilentExit = TRUE; }
 	;
 
-debug: 	DEBUG STRING NEWLINE { ErrorF("LoadPreferences: %s\n", $2); free($2); }
+debug: 	DEBUGOUTPUT STRING NEWLINE { ErrorF("LoadPreferences: %s\n", $2); free($2); }
 	;
 
 

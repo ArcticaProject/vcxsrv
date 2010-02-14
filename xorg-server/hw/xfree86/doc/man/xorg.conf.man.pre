@@ -1021,7 +1021,7 @@ The
 entry specifies the name of the driver to use for this input device.
 After all classes have been examined, the
 .RI \*q inputdriver \*q
-module from the final
+module from the first
 .B Driver
 entry will be enabled when using the loadable server.
 .PP
@@ -1039,17 +1039,29 @@ The allowed matching entries are shown below.
 .BI "MatchProduct  \*q" matchproduct \*q
 This entry can be used to check if the substring
 .RI \*q matchproduct \*q
-occurs in the device's product name.
+occurs in the device's product name. Multiple substrings can be matched by
+separating arguments with a '|' character.
 .TP 7
 .BI "MatchVendor  \*q" matchvendor \*q
 This entry can be used to check if the substring
 .RI \*q matchvendor \*q
-occurs in the device's vendor name.
+occurs in the device's vendor name. Multiple substrings can be matched by
+separating arguments with a '|' character.
 .TP 7
 .BI "MatchDevicePath \*q" matchdevice \*q
 This entry can be used to check if the device file matches the
 .RI \*q matchdevice \*q
-pathname pattern.
+pathname pattern. Multiple patterns can be matched by separating arguments
+with a '|' character.
+.TP 7
+.BI "MatchTag \*q" matchtag \*q
+This entry can be used to check if tags assigned by the config backend
+matches the
+.RI \*q matchtag \*q
+pattern.  Multiple patterns can be matched by separating arguments
+with a '|' character. A match is found if at least one of the tags given in
+.RI \*q matchtag \*q
+matches at least one of the tags assigned by the backend.
 .TP 7
 .BI "MatchIsKeyboard     \*q" bool \*q
 .TP 7
@@ -1070,11 +1082,20 @@ When an input device has been matched to the
 .B InputClass
 section, any
 .B Option
-entries are applied to the device. See the
+entries are applied to the device. One
+.B InputClass
+specific
+.B Option
+is recognized. See the
 .B InputDevice
-section above for a description of the various
+section above for a description of the remaining
 .B Option
 entries.
+.TP 7
+.BI "Option \*qIgnore\*q \*q" boolean \*q
+This optional entry specifies that the device should be ignored entirely,
+and not added to the server. This can be useful when the device is handled
+by another program and no X events should be generated.
 .SH "DEVICE SECTION"
 The config file may have multiple
 .B Device

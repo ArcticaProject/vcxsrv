@@ -502,20 +502,67 @@ AddOtherInputDevices(void)
 static Bool
 InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
 {
-    if (iclass->match_product &&
-        (!attrs->product || !strstr(attrs->product, iclass->match_product)))
-        return FALSE;
-    if (iclass->match_vendor &&
-        (!attrs->vendor || !strstr(attrs->vendor, iclass->match_vendor)))
-        return FALSE;
-    if (iclass->match_device &&
+    char **cur;
+    Bool match;
+
+    if (iclass->match_product) {
+        if (!attrs->product)
+            return FALSE;
+        /* see if any of the values match */
+        for (cur = iclass->match_product, match = FALSE; *cur; cur++)
+            if (strstr(attrs->product, *cur)) {
+                match = TRUE;
+                break;
+            }
+        if (!match)
+            return FALSE;
+    }
+    if (iclass->match_vendor) {
+        if (!attrs->vendor)
+            return FALSE;
+        /* see if any of the values match */
+        for (cur = iclass->match_vendor, match = FALSE; *cur; cur++)
+            if (strstr(attrs->vendor, *cur)) {
+                match = TRUE;
+                break;
+            }
+        if (!match)
+            return FALSE;
+    }
+    if (iclass->match_device) {
+        if (!attrs->device)
+            return FALSE;
+        /* see if any of the values match */
+        for (cur = iclass->match_device, match = FALSE; *cur; cur++)
 #ifdef HAVE_FNMATCH_H
-        (!attrs->device ||
-         fnmatch(iclass->match_device, attrs->device, 0) != 0))
+            if (fnmatch(*cur, attrs->device, FNM_PATHNAME) == 0) {
 #else
-        (!attrs->device || !strstr(attrs->device, iclass->match_device)))
+            if (strstr(attrs->device, *cur)) {
 #endif
-        return FALSE;
+                match = TRUE;
+                break;
+            }
+        if (!match)
+            return FALSE;
+    }
+    if (iclass->match_tag) {
+        if (!attrs->tags)
+            return FALSE;
+
+        for (cur = iclass->match_tag, match = FALSE; *cur && !match; cur++) {
+            const char *tag;
+            for(tag = *attrs->tags; *tag; tag++) {
+                if (!strcmp(tag, *cur)) {
+                    match = TRUE;
+                    break;
+                }
+            }
+        }
+
+        if (!match)
+            return FALSE;
+    }
+
     if (iclass->is_keyboard.set &&
         iclass->is_keyboard.val != !!(attrs->flags & ATTR_KEYBOARD))
         return FALSE;
@@ -538,9 +585,9 @@ InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
 }
 
 /*
- * Merge in any InputClass configurations. Each InputClass section can
- * add to the original device configuration as well as any previous
- * InputClass sections.
+ * Merge in any InputClass configurations. Options in each InputClass
+ * section have less priority than the original device configuration as
+ * well as any previous InputClass sections.
  */
 static int
 MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
@@ -572,6 +619,27 @@ MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
     }
 
     return Success;
+}
+
+static Bool
+IgnoreInputClass(IDevPtr idev, InputAttributes *attrs)
+{
+    XF86ConfInputClassPtr cl;
+    Bool ignore;
+
+    for (cl = xf86configptr->conf_inputclass_lst; cl; cl = cl->list.next) {
+        if (!InputClassMatches(cl, attrs))
+            continue;
+        if (xf86findOption(cl->option_lst, "Ignore")) {
+            ignore = xf86CheckBoolOption(cl->option_lst, "Ignore", FALSE);
+            if (ignore)
+                xf86Msg(X_CONFIG,
+                        "%s: Ignoring device from InputClass \"%s\"\n",
+                        idev->identifier, cl->identifier);
+            return ignore;
+        }
+    }
+    return FALSE;
 }
 
 /**
@@ -736,6 +804,11 @@ NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
 
     /* Apply InputClass settings */
     if (attrs) {
+        if (IgnoreInputClass(idev, attrs)) {
+            rval = BadIDChoice;
+            goto unwind;
+        }
+
         rval = MergeInputClasses(idev, attrs);
         if (rval != Success)
             goto unwind;

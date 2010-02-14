@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.11 -*- Autoconf -*-
+# generated automatically by aclocal 1.11.1 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
 # 2005, 2006, 2007, 2008, 2009  Free Software Foundation, Inc.
@@ -192,7 +192,7 @@ AC_DEFUN([AM_AUTOMAKE_VERSION],
 [am__api_version='1.11'
 dnl Some users find AM_AUTOMAKE_VERSION and mistake it for a way to
 dnl require some minimum version.  Point them to the right macro.
-m4_if([$1], [1.11], [],
+m4_if([$1], [1.11.1], [],
       [AC_FATAL([Do not call $0, use AM_INIT_AUTOMAKE([$1]).])])dnl
 ])
 
@@ -208,7 +208,7 @@ m4_define([_AM_AUTOCONF_VERSION], [])
 # Call AM_AUTOMAKE_VERSION and AM_AUTOMAKE_VERSION so they can be traced.
 # This function is AC_REQUIREd by AM_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-[AM_AUTOMAKE_VERSION([1.11])dnl
+[AM_AUTOMAKE_VERSION([1.11.1])dnl
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
 _AM_AUTOCONF_VERSION(m4_defn([AC_AUTOCONF_VERSION]))])
@@ -1533,29 +1533,23 @@ dnl
 dnl Copyright 2005-2006 Sun Microsystems, Inc.  All rights reserved.
 dnl 
 dnl Permission is hereby granted, free of charge, to any person obtaining a
-dnl copy of this software and associated documentation files (the
-dnl "Software"), to deal in the Software without restriction, including
-dnl without limitation the rights to use, copy, modify, merge, publish,
-dnl distribute, and/or sell copies of the Software, and to permit persons
-dnl to whom the Software is furnished to do so, provided that the above
-dnl copyright notice(s) and this permission notice appear in all copies of
-dnl the Software and that both the above copyright notice(s) and this
-dnl permission notice appear in supporting documentation.
+dnl copy of this software and associated documentation files (the "Software"),
+dnl to deal in the Software without restriction, including without limitation
+dnl the rights to use, copy, modify, merge, publish, distribute, sublicense,
+dnl and/or sell copies of the Software, and to permit persons to whom the
+dnl Software is furnished to do so, subject to the following conditions:
 dnl
-dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-dnl OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-dnl MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
-dnl OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-dnl HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
-dnl INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
-dnl FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
-dnl NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
-dnl WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+dnl The above copyright notice and this permission notice (including the next
+dnl paragraph) shall be included in all copies or substantial portions of the
+dnl Software.
 dnl
-dnl Except as contained in this notice, the name of a copyright holder
-dnl shall not be used in advertising or otherwise to promote the sale, use
-dnl or other dealings in this Software without prior written authorization
-dnl of the copyright holder.
+dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+dnl IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+dnl FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+dnl THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+dnl LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+dnl FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+dnl DEALINGS IN THE SOFTWARE.
 
 # XORG_MACROS_VERSION(required-version)
 # -------------------------------------
@@ -1573,7 +1567,7 @@ dnl of the copyright holder.
 # See the "minimum version" comment for each macro you use to see what 
 # version you require.
 m4_defun([XORG_MACROS_VERSION],[
-m4_define([vers_have], [1.4.1])
+m4_define([vers_have], [1.5.0])
 m4_define([maj_have], m4_substr(vers_have, 0, m4_index(vers_have, [.])))
 m4_define([maj_needed], m4_substr([$1], 0, m4_index([$1], [.])))
 m4_if(m4_cmp(maj_have, maj_needed), 0,,
@@ -1840,6 +1834,159 @@ AC_SUBST(MAKE_PDF)
 AC_SUBST(MAKE_HTML)
 ]) # XORG_CHECK_DOCBOOK
 
+# XORG_WITH_XMLTO
+# ----------------
+# Minimum version: 1.5.0
+#
+# Documentation tools are not always available on all platforms and sometimes
+# not at the appropriate level. This macro enables a module to test for the
+# presence of the tool and obtain it's path in separate variables. Coupled with
+# the --with-xmlto option, it allows maximum flexibilty in making decisions
+# as whether or not to use the xmlto package.
+#
+# Interface to module:
+# HAVE_XMLTO: 	used in makefiles to conditionally generate documentation
+# XMLTO:	returns the path of the xmlto program found
+#		returns the path set by the user in the environment
+# --with-xmlto:	'yes' user instructs the module to use xmlto
+#		'no' user instructs the module not to use xmlto
+#
+# If the user sets the value of XMLTO, AC_PATH_PROG skips testing the path.
+#
+AC_DEFUN([XORG_WITH_XMLTO],[
+AC_ARG_VAR([XMLTO], [Path to xmlto command])
+AC_ARG_WITH(xmlto,
+	AS_HELP_STRING([--with-xmlto],
+	   [Use xmlto to regenerate documentation (default: yes, if installed)]),
+	   [use_xmlto=$withval], [use_xmlto=auto])
+
+if test "x$use_xmlto" = x"auto"; then
+   AC_PATH_PROG([XMLTO], [xmlto])
+   if test "x$XMLTO" = "x"; then
+        AC_MSG_WARN([xmlto not found - documentation targets will be skipped])
+	have_xmlto=no
+   else
+        have_xmlto=yes
+   fi
+elif test "x$use_xmlto" = x"yes" ; then
+   AC_PATH_PROG([XMLTO], [xmlto])
+   if test "x$XMLTO" = "x"; then
+        AC_MSG_ERROR([--with-xmlto=yes specified but xmlto not found in PATH])
+   fi
+   have_xmlto=yes
+elif test "x$use_xmlto" = x"no" ; then
+   if test "x$XMLTO" != "x"; then
+      AC_MSG_WARN([ignoring XMLTO environment variable since --with-xmlto=no was specified])
+   fi
+   have_xmlto=no
+else
+   AC_MSG_ERROR([--with-xmlto expects 'yes' or 'no'])
+fi
+AM_CONDITIONAL([HAVE_XMLTO], [test "$have_xmlto" = yes])
+]) # XORG_CHECK_XMLTO
+
+# XORG_WITH_ASCIIDOC
+# ----------------
+# Minimum version: 1.5.0
+#
+# Documentation tools are not always available on all platforms and sometimes
+# not at the appropriate level. This macro enables a module to test for the
+# presence of the tool and obtain it's path in separate variables. Coupled with
+# the --with-asciidoc option, it allows maximum flexibilty in making decisions
+# as whether or not to use the asciidoc package.
+#
+# Interface to module:
+# HAVE_ASCIIDOC: used in makefiles to conditionally generate documentation
+# ASCIIDOC:	 returns the path of the asciidoc program found
+#		 returns the path set by the user in the environment
+# --with-asciidoc: 'yes' user instructs the module to use asciidoc
+#		  'no' user instructs the module not to use asciidoc
+#
+# If the user sets the value of ASCIIDOC, AC_PATH_PROG skips testing the path.
+#
+AC_DEFUN([XORG_WITH_ASCIIDOC],[
+AC_ARG_VAR([ASCIIDOC], [Path to asciidoc command])
+AC_ARG_WITH(asciidoc,
+	AS_HELP_STRING([--with-asciidoc],
+	   [Use asciidoc to regenerate documentation (default: yes, if installed)]),
+	   [use_asciidoc=$withval], [use_asciidoc=auto])
+
+if test "x$use_asciidoc" = x"auto"; then
+   AC_PATH_PROG([ASCIIDOC], [asciidoc])
+   if test "x$ASCIIDOC" = "x"; then
+        AC_MSG_WARN([asciidoc not found - documentation targets will be skipped])
+	have_asciidoc=no
+   else
+        have_asciidoc=yes
+   fi
+elif test "x$use_asciidoc" = x"yes" ; then
+   AC_PATH_PROG([ASCIIDOC], [asciidoc])
+   if test "x$ASCIIDOC" = "x"; then
+        AC_MSG_ERROR([--with-asciidoc=yes specified but asciidoc not found in PATH])
+   fi
+   have_asciidoc=yes
+elif test "x$use_asciidoc" = x"no" ; then
+   if test "x$ASCIIDOC" != "x"; then
+      AC_MSG_WARN([ignoring ASCIIDOC environment variable since --with-asciidoc=no was specified])
+   fi
+   have_asciidoc=no
+else
+   AC_MSG_ERROR([--with-asciidoc expects 'yes' or 'no'])
+fi
+AM_CONDITIONAL([HAVE_ASCIIDOC], [test "$have_asciidoc" = yes])
+]) # XORG_CHECK_ASCIIDOC
+
+# XORG_WITH_DOXYGEN
+# ----------------
+# Minimum version: 1.5.0
+#
+# Documentation tools are not always available on all platforms and sometimes
+# not at the appropriate level. This macro enables a module to test for the
+# presence of the tool and obtain it's path in separate variables. Coupled with
+# the --with-doxygen option, it allows maximum flexibilty in making decisions
+# as whether or not to use the doxygen package.
+#
+# Interface to module:
+# HAVE_DOXYGEN: used in makefiles to conditionally generate documentation
+# DOXYGEN:	 returns the path of the doxygen program found
+#		 returns the path set by the user in the environment
+# --with-doxygen: 'yes' user instructs the module to use doxygen
+#		  'no' user instructs the module not to use doxygen
+#
+# If the user sets the value of DOXYGEN, AC_PATH_PROG skips testing the path.
+#
+AC_DEFUN([XORG_WITH_DOXYGEN],[
+AC_ARG_VAR([DOXYGEN], [Path to doxygen command])
+AC_ARG_WITH(doxygen,
+	AS_HELP_STRING([--with-doxygen],
+	   [Use doxygen to regenerate documentation (default: yes, if installed)]),
+	   [use_doxygen=$withval], [use_doxygen=auto])
+
+if test "x$use_doxygen" = x"auto"; then
+   AC_PATH_PROG([DOXYGEN], [doxygen])
+   if test "x$DOXYGEN" = "x"; then
+        AC_MSG_WARN([doxygen not found - documentation targets will be skipped])
+	have_doxygen=no
+   else
+        have_doxygen=yes
+   fi
+elif test "x$use_doxygen" = x"yes" ; then
+   AC_PATH_PROG([DOXYGEN], [doxygen])
+   if test "x$DOXYGEN" = "x"; then
+        AC_MSG_ERROR([--with-doxygen=yes specified but doxygen not found in PATH])
+   fi
+   have_doxygen=yes
+elif test "x$use_doxygen" = x"no" ; then
+   if test "x$DOXYGEN" != "x"; then
+      AC_MSG_WARN([ignoring DOXYGEN environment variable since --with-doxygen=no was specified])
+   fi
+   have_doxygen=no
+else
+   AC_MSG_ERROR([--with-doxygen expects 'yes' or 'no'])
+fi
+AM_CONDITIONAL([HAVE_DOXYGEN], [test "$have_doxygen" = yes])
+]) # XORG_CHECK_DOXYGEN
+
 # XORG_CHECK_MALLOC_ZERO
 # ----------------------
 # Minimum version: 1.0.0
@@ -2037,15 +2184,15 @@ XORG_MANPAGE_SECTIONS
 # Minimum version: 1.4.0
 #
 # Defines the variable INSTALL_CMD as the command to copy
-# INSTALL from $prefix/share/doc/util-macros.
+# INSTALL from $prefix/share/util-macros.
 #
 AC_DEFUN([XORG_INSTALL], [
 AC_REQUIRE([PKG_PROG_PKG_CONFIG])
-macros_docdir=$($PKG_CONFIG --print-errors --variable=docdir xorg-macros)
-INSTALL_CMD="(cp -f "$macros_docdir/INSTALL" \$(top_srcdir)/.INSTALL.tmp && \
+macros_datadir=`$PKG_CONFIG --print-errors --variable=pkgdatadir xorg-macros`
+INSTALL_CMD="(cp -f "$macros_datadir/INSTALL" \$(top_srcdir)/.INSTALL.tmp && \
 mv \$(top_srcdir)/.INSTALL.tmp \$(top_srcdir)/INSTALL) \
 || (rm -f \$(top_srcdir)/.INSTALL.tmp; touch \$(top_srcdir)/INSTALL; \
-echo 'util-macros \"docdir\" from xorg-macros.pc not found: installing possibly empty INSTALL.' >&2)"
+echo 'util-macros \"pkgdatadir\" from xorg-macros.pc not found: installing possibly empty INSTALL.' >&2)"
 AC_SUBST([INSTALL_CMD])
 ]) # XORG_INSTALL
 dnl Copyright 2005 Red Hat, Inc

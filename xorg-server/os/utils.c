@@ -504,9 +504,7 @@ void UseMsg(void)
 #ifdef RLIMIT_STACK
     ErrorF("-ls int                limit stack space to N Kb\n");
 #endif
-#ifdef SERVER_LOCK
     ErrorF("-nolock                disable the locking mechanism\n");
-#endif
 #ifndef NOLOGOHACK
     ErrorF("-logo                  enable logo in screen saver\n");
     ErrorF("nologo                 disable logo in screen saver\n");
@@ -758,7 +756,6 @@ ProcessCommandLine(int argc, char *argv[])
 		UseMsg();
 	}
 #endif
-#ifdef SERVER_LOCK
 	else if ( strcmp ( argv[i], "-nolock") == 0)
 	{
 #if !defined(WIN32) && !defined(__CYGWIN__)
@@ -768,7 +765,6 @@ ProcessCommandLine(int argc, char *argv[])
 #endif
 	    nolock = TRUE;
 	}
-#endif
 #ifndef NOLOGOHACK
 	else if ( strcmp( argv[i], "-logo") == 0)
 	{
@@ -1868,6 +1864,46 @@ CheckUserAuthorization(void)
 	pam_end(pamh, PAM_SUCCESS);
     }
 #endif
+}
+
+/*
+ * Tokenize a string into a NULL terminated array of strings. Always returns
+ * an allocated array unless an error occurs.
+ */
+char**
+xstrtokenize(const char *str, const char *separators)
+{
+    char **list, **nlist;
+    char *tok, *tmp;
+    unsigned num = 0, n;
+
+    if (!str)
+        return NULL;
+    list = calloc(1, sizeof(*list));
+    if (!list)
+        return NULL;
+    tmp = strdup(str);
+    if (!tmp)
+        goto error;
+    for (tok = strtok(tmp, separators); tok; tok = strtok(NULL, separators)) {
+        nlist = realloc(list, (num + 2) * sizeof(*list));
+        if (!nlist)
+            goto error;
+        list = nlist;
+        list[num] = strdup(tok);
+        if (!list[num])
+            goto error;
+        list[++num] = NULL;
+    }
+    free(tmp);
+    return list;
+
+error:
+    free(tmp);
+    for (n = 0; n < num; n++)
+        free(list[n]);
+    free(list);
+    return NULL;
 }
 
 #ifdef __SCO__

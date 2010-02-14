@@ -215,6 +215,7 @@ typedef struct _InputAttributes {
     char                *product;
     char                *vendor;
     char                *device;
+    char                **tags; /* null-terminated */
     uint32_t            flags;
 } InputAttributes;
 

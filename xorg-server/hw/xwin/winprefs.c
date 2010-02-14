@@ -723,7 +723,7 @@ winIconIsOverride(unsigned hiconIn)
 
 
 /*
- * Try and open ~/.XWinrc and /usr/X11R6/lib/X11/system.XWinrc
+ * Try and open ~/.XWinrc and system.XWinrc
  * Load it into prefs structure for use by other functions
  */
 void
@@ -763,7 +763,7 @@ LoadPreferences (void)
 #ifdef RELOCATE_PROJECTROOT
       snprintf(buffer, sizeof(buffer), "%s\\system.XWinrc", winGetBaseDir());
 #else
-      strncpy(buffer, PROJECTROOT"/lib/X11/system.XWinrc", sizeof(buffer));
+      strncpy(buffer, SYSCONFDIR"/X11/system.XWinrc", sizeof(buffer));
 #endif
       buffer[sizeof(buffer)-1] = 0;
       prefFile = fopen (buffer, "r");
