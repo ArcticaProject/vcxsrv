@@ -194,6 +194,7 @@ videoPtrToDriverList(struct pci_device *dev,
 	case 0x10c8:		    driverList[0] = "neomagic"; break;
 	case 0x10de: case 0x12d2:   driverList[0] = "nv";	break;
 	case 0x1106:		    driverList[0] = "openchrome"; break;
+        case 0x1b36:		    driverList[0] = "qxl"; break;
 	case 0x1163:		    driverList[0] = "rendition"; break;
 	case 0x5333:
 	    switch (dev->device_id)

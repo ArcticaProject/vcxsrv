@@ -47,11 +47,6 @@ DeliverPropertyEvent(WindowPtr pWin, void *value)
 
 	event->sequenceNumber = client->sequence;
 	event->window = pRREvent->window->drawable.id;
-	if (client->swapped) {
-	    int n;
-	    swaps(&event->sequenceNumber, n);
-	    swapl(&event->window, n);
-	}
 	WriteEventsToClient(pRREvent->client, 1, (xEvent *)event);
     }
 
