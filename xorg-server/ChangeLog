@@ -1,3 +1,1954 @@
+commit 9c5bb550a2234e4bee2a144417d74c6bdf160e89
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Feb 12 13:46:03 2010 -0800
+
+    Bump to 1.7.99.901 -- 1.8 RC1
+
+commit 57ffeb3f2b3313dcef92a396f1f55fdbc064b2c5
+Merge: c6d9bc0 c76248f
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Feb 12 13:36:32 2010 -0800
+
+    Merge remote branch 'jturney/master'
+
+commit c6d9bc092c84ad5c68083a126aa7577baa42cef7
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Feb 10 15:36:50 2010 +1000
+
+    Add tag matching to input attributes.
+    
+    Tags may be a list of comma-separated strings that match against a MatchTag
+    InputClass section. If any of the tags specified for a device match against
+    the MatchTag of the section, this match is evaluated true and passed on to
+    the next match condition.
+    
+    Tags are specified as "input.tags" (hal) or "ID_INPUT.tags" (udev), the
+    value of the tags is case-sensitive and require an exact match (not a
+    substring match).
+    
+    i.e. "quirk" will not match "QUIRK", "need_quirk" or "quirk_needed".
+    
+    Example configuration:
+    udev:
+        ENV{ID_INPUT.tags}="foo,bar"
+    
+    hal:
+        <merge key="input.tags" type="string">foo,bar</merge>
+    
+    xorg.conf:
+        Section "InputClass"
+                Identifier "foobar quirks"
+                MatchTag "foo|foobar"
+                Option "Foobar" "on"
+        EndSection
+    
+    Where the xorg.conf section matches against any device with the tag "foo"
+    or tag "foobar" set.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 3ac43df5d4a25d6e0058b327fa05a1c1436b4794
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Feb 10 15:36:49 2010 +1000
+
+    Add xstrtokenize to the dix.
+    
+    Move tokenize out of the parser, make it a dix util function instead.
+    Splitting a string into multiple substrings is useful by other places, so
+    let's use it across the line. Future users include config/hal, config/udev
+    and of course the parser.
+    
+    Example usage:
+    char **substrings = xstrtokenize(my_string, "\n");
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 27d1b86d1b858f931b4cb1b6ddf857c76d92a6d9
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Wed Feb 10 15:36:48 2010 +1000
+
+    xfree86: Set fnmatch pathname flag for InputClass device matching
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 9b369f71273fb117c982e6ce16cd4462f206d365
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Wed Feb 10 15:36:47 2010 +1000
+
+    xfree86: Allow multiple arguments to InputClass matches
+    
+    In order to keep the number of InputClass sections manageable, allow
+    matches to contain multiple arguments. The arguments will be separated
+    by the '|' character. This allows a policy to apply to multiple types of
+    devices. For example:
+    
+        Section "InputClass"
+            Identifier "Inverted Mice"
+            MatchProduct "Crazy Mouse|Silly Mouse"
+            Option "InvertX" "yes"
+        EndSection
+    
+    This applies to the MatchProduct, MatchVendor and MatchDevicePath
+    entries. Currently there is no way to escape characters, so names or
+    patterns cannot contain '|'.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a378e361a5de89f0be8b68ebc3e854f56cefe666
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Wed Feb 10 15:36:46 2010 +1000
+
+    xfree86: Use "Ignore" option in InputClass to skip devices
+    
+    Sometimes it is desirable to skip adding specific input devices to the
+    server. The "Ignore" option is used similarly to Monitor sections so
+    that matched devices will not be added. BadIDChoice is returned to the
+    config backend so that it will clean up all resources.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8b1a685f00ae76be864cc188943a0874f48b8d64
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Wed Feb 10 15:36:45 2010 +1000
+
+    xfree86: Handle config files ending without newline
+    
+    The config parser expects to find a newline at the end of each line, so
+    files ending without one would confuse it. A newline is inserted at the
+    end of the buffer in these situations. Additionally, switching to the
+    next config file is moved to the higher level to allow parsing of the
+    last line of the previous file to complete before shifting the index and
+    resetting the line number.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Tested-by: Stephan Raue<stephan.raue@gmx.net>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 67bc278a511ca6ec42e1f8d2d5897c0109e94e2c
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Wed Feb 10 15:36:44 2010 +1000
+
+    xfree86: Make InputClass docs and comments match reality
+    
+    Drivers and options specified in InputClass sections work on a "first
+    match wins" strategy. Let's be consistent when documenting it.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a34812b09000db2ff2a1dc6182602839123edd4e
+Author: Benjamin Tissoires <tissoire@cena.fr>
+Date:   Mon Feb 8 13:50:43 2010 +0100
+
+    Add labels for multitouch valuators
+    
+    Thoses definitions have been included in the kernel but the X server is not updated accordingly.
+    Without these definitions, the multitouch axes are not correctly labelled.
+    
+    Signed-off-by: Benjamin Tissoires <tissoire@cena.fr>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit c76248fda99c38aef0ccf0ed6b58fbe95f6fe497
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Tue Feb 2 20:53:44 2010 +0000
+
+    Cygwin/X: Avoid a collision between DEBUG and a token name
+    
+    Rename a token to avoid a collision between DEBUG defined via AC_DEFINE
+    if --enable-debug is configured, and the token for the 'debug' instruction
+    in the XWin preferences file
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit b7dbbd3cd4d28cd4939706b3bf6394ba8ecafaff
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sun Nov 22 23:35:09 2009 +0000
+
+    Cygwin/X: Avoid cursor size log spam
+    
+    Fedora 12 likes to use a 39x26 animated wait cursor.  Avoid spamming
+    the log with warnings that each frame can't be completely contained
+    in the 32x32 native cursor
+    
+    Also reformat log message so it doesn't contain a '\n\t'. I mean,
+    it's not like we might want to grep the log or something...
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit c9cbbd5d1cfa58a2d9f08e25534ea8439284322d
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sat Nov 28 17:51:33 2009 +0000
+
+    Repair '-nolock'
+    
+    commit 446fe9eecddd1337f9d5164dd7c301e1ba3dfe32 removes the AC_DEFINE for
+    SERVER_LOCK and conditional compilation checking it, making it always on
+    everywhere, except in os/utils.c where code is left under SERVER_LOCK, which
+    now never gets built, making the '-nolock' option non-functional...
+    
+    This seems to have been broken since Xserver 1.7.0, but this option is
+    actually of some slight use on cygwin, as if /tmp resides on a FAT filesystem
+    (yes, I know...), hard links aren't supported.
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 7f54ccafadf99c0a1a3e788734199b306b4fa51d
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Fri Jan 16 13:12:12 2009 +0000
+
+    Cygwin/X: Make transient windows resizable again
+    
+    Reverts the change which makes parented windows non-resizeable
+    
+    Because this was trying to do something which we should be doing, as an alternative we
+    try checking WM_NORMAL_HINTS for windows which shouldn't  be resizable
+    
+    If a window has a maximum size specified, no maximize box
+    If a window has a fixed size (max size == min size, per EWMH 1.3 Implementation Notes), no resizing frame
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 654d2e372dc2978ce379ab9f02137333ec224f0c
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Tue Nov 10 13:24:40 2009 +0000
+
+    Cygwin/X: Discourage other WMs in multiwindow mode
+    
+    Tidying up of other WM detection code when ading SWT/Motif
+    fix in commit 71519a572fe15b85c0eb2b02636c9e871f2c858f
+    was rather over-agressive and now allows other WMs to think
+    they can start when the internal WM is running.
+    
+    Revert to the behaviour of selecting ButtonPressMask events
+    as well on the root window, so other WMs will be dissuaded
+    from starting
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 26857b1c2003797b02e258247f63064aa1e37c10
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sat Oct 31 17:19:17 2009 +0000
+
+    Cygwin/X: Update XWin man page
+    
+    Restructure to group similar options and offer some commentary on those groups
+    Review option descriptions, clarify and bring up-to-date
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 6f1836bfbd80e88d4c57a32757d0a5b398504c35
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Mon Nov 2 17:37:14 2009 +0000
+
+    Cygwin/X: Update DDX specific -help text
+    
+    Alphabetize options
+    Review option descriptions, clarify and bring up to date
+    Add missing option descriptions
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 22982b9e95a2339d5ba60d66263e42a0331ee41f
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Thu Oct 29 18:50:23 2009 +0000
+
+    Cygwin/X: XSupportsLocale() failure is non-critical
+    
+    Treat XSupportsLocale() returning false as non-critical to internal client
+    theads startup, and issue a warning, not an error
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit f60b7712b3451649f138b158ee282be89a66b9ef
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Mon Feb 1 17:13:00 2010 +0000
+
+    Cygwin/X: Report BUILDERSTRING with version information
+    
+    Report BUILDERSTRING with version information
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit ed2c2a68e1e6b409c198a52d99d300eb6d517e89
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Mon Feb 1 17:12:57 2010 +0000
+
+    Define FD_SETSIZE on Cygwin regardless of XWin DDX
+    
+    All DDXs segfault on Cygwin unless -DFD_SETSIZE=256 is set, so make sure
+    we do so whether or not we are building XWin.
+    
+    FD_SETSIZE must be at least XFD_SETSIZE for uses of select() to be correct.
+    The Cygwin default is only 64, so it must be increased to 256
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 2f2f3da080629d410dd99e281c382b54f0dbbf5d
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Fri Jun 19 21:14:47 2009 +0100
+
+    Cygwin/X: Copy the state of the Windows keyboard device to the Virtual Core Keyboard at startup.
+    
+    Otherwise, this happens lazily after the first keypress, which can lead
+    to applications which are started from a shell window and inspect the
+    keyboard state before a character is typed getting the wrong idea about
+    the desired keymap (e.g. xemacs shows this behaviour)
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 7a440e5b7a416e582b6c3cc4c33822854ce73aed
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Sun Oct 4 15:55:40 2009 +0100
+
+    Cygwin/X: Tidy up system.Xwinrc
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 11252ed82e1f361b99e86521ac9314f868bd1a3a
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Mon Feb 1 17:11:54 2010 +0000
+
+    Cygwin/X: Look for system.Xwinrc in SYSCONFDIR/X11
+    
+    Look for system.Xwinrc in SYSCONFDIR/X11 (usually /etc/X11)
+    Rename sample system.Xwinrc file not to have a X11R6 path in it's name
+    Add makefile install rule for system.XWinrc
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 34269a90ea2087f883f5dc8805894fc4998e4b81
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Tue Feb 2 16:21:44 2010 +0000
+
+    Cygwin/X: Update resources file and About dialog
+    
+    Use the configured vendor web address in the About dialog
+    
+    Update resources file: rework About dialog, use 'MS Shell Dlg 2'
+    logical font for all dialogs, add ellipsis to exit option in tray
+    menu as it (may) trigger another dialog.
+    
+    Get short vendor name from xwin-config.h, like other configuration
+    data presented in the About dialog box, rather than creating the
+    PROJECT_NAME define
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 881812438b430d2856d0494707e028e5f30d6e9a
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Tue Feb 2 16:22:39 2010 +0000
+
+    Xming: Use 8 point font for URL in About dialog
+    
+    Use an 8 point font for URL in About dialog, to match the rest
+    of the text in that dialog
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit c02638fd68440513b6046315547c554a910bd7e2
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Tue Feb 2 16:08:45 2010 +0000
+
+    Xming: Add a manifest file
+    
+    Use manifests to enable XP style controls
+    (only effective for XP and later and when themes are enabled).
+    The addition of manifests shouldn't cause compatibility problems with older Windows versions.
+    
+    Manifest must have execute permissions, otherwise attempts to
+    execute XWin.exe in the same directory will fail...
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit fd8a32baba77aba8d124658a19f4f6eda79e49c6
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Fri Jun 19 21:14:39 2009 +0100
+
+    Cygwin/X: Window placement refinement for multiwindow mode
+    
+    Window placement refinement for multiwindow mode, ensure a window actually
+    ends up somewhere visible if it tries to create itself offscreen (which
+    can happen for e.g. if it has a stored position from a different sized
+    display)
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 7eb840fd42bc62d88fb4fcf6600546c9ff6e56be
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Tue Feb 2 15:42:12 2010 +0000
+
+    Cygwin/X: Respect the system's ownership of the clipping region
+    
+    Respect the system's ownership of the clipping region used for shaped windows
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit bad41bdfd4a12f0c92fd221bffd9f3c5e40d0fe1
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Mon Feb 1 17:11:22 2010 +0000
+
+    Xming: Always update the Windows title Unicode (wide-character) in -multiwindow mode.
+    
+    Apply the Windows title wide-character in -multiwindow mode. Windows should now
+    display correct client X Window titles for locales with wide characters.
+    
+    Copyright (C) Colin Harrison 2005-2008
+    http://www.straightrunning.com/XmingNotes/
+    http://sourceforge.net/projects/xming/
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 901c4ebf620579c5bb951a8c003430d967ecf2ff
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Mon Jan 11 00:31:27 2010 +0000
+
+    main: move config_init() after InitInput()
+    
+    With the udev backend, config_init() calls NewInputDeviceRequest(),
+    which enables devices.  They can then start sending events, even though
+    the event queue is only initialized later in InitInput().  Oops.
+    
+    Debian bug#564256 <http://bugs.debian.org/564256>
+    
+    Reported-by: Sedat Dilek <sedat.dilek@googlemail.com>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Tested-by: Sedat Dilek <sedat.dilek@googlemail.com>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 7f648777680b9dea31c4adb657e205fc6880d98b
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Thu Jan 14 16:42:16 2010 +1000
+
+    Don't use AC_CHECK_FILE for fontpath checks when cross compiling
+    
+    AC_CHECK_FILE chokes when cross compiling, so instead we set the default
+    to the standard FONTROOTDIR directories in that case.
+    
+    Signed-off-by: Dan Nicholson<dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit db687f718f760ba254ab51994769db101dc9ca3a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 10:07:38 2010 +1000
+
+    xkb: sed True -> TRUE and False -> FALSE
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 0ea2b0bd02f8683998e8b9ebc2b96d606ce45f45
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Dec 18 20:07:30 2009 +1000
+
+    xkb: Add XKM file format description.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit 08b22c7faf97217ea4d497eec6624fc3dd916d9b
+Author: Oldřich Jedlička <oldium.pro@seznam.cz>
+Date:   Sun Jan 17 17:59:03 2010 +0100
+
+    Allow driver to call DeleteInputDeviceRequest during UnInit
+    
+    When the input driver (like xf86-input-wacom) removes it's devices
+    during a call to UnInit, the CloseDownDevices() cannot handle it. The
+    "next" variable can become a pointer to freed memory.
+    
+    The patch introduces order-independent device freeing mechanism by
+    remembering the already freed device ids. The devices can reorder any
+    time during freeing. No device will be double-freed - if the removing
+    failed for any reason; some implementations of DeleteInputDeviceRequest
+    don't free the devices already.
+    
+    Signed-off-by: Oldřich Jedlička <oldium.pro@seznam.cz>
+    Reviewed-by: Simon Thum <simon.thum@gmx.de>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit b91cec26de367f75388e620772747b08eee34294
+Author: Horst Wente <horst.wente@acm.org>
+Date:   Wed Dec 30 19:35:20 2009 +0100
+
+    xkb: make ctrl+alt+keypad + / ctrl+alt+keypad - work again (#25743)
+    
+    Video mode switching via keypad keys did not work
+    
+    Signed-off-by: Horst Wente <horst.wente@acm.org>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 993e78d6c433f65bd8a87890a6bb6da480b2cdc4
+Author: Oldřich Jedlička <oldium.pro@seznam.cz>
+Date:   Tue Jan 12 19:15:06 2010 +0100
+
+    Fix typo in updateSlaveDeviceCoords
+    
+    The index [0] for the second valuator looks bogus; fix it.
+    
+    Signed-off-by: Oldřich Jedlička <oldium.pro@seznam.cz>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 52456c602c3cdd7d5eac677889a18fad37dfb7ae
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Sat Jan 30 14:49:02 2010 -0800
+
+    XQuartz: Attatch a stub display when CoreGraphics reports no displays.
+    
+    This is half of the required changes to address the "stuck mouse pointer"
+    bug that occurs when X11 launches while the displays are asleep.  The
+    remainder of the fix is part of libXplugin which needs to be updated to
+    send XP_EVENT_DISPLAY_CHANGED when the display wakes up.  If you don't
+    have a recent enough libXplugin (expected in 2.5.0_beta2 or later), you
+    can cause this event to be sent by changing your display resolution (or
+    you could just start X11.app with your screens awake).
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 15f4bb6dc64313ff100aa5444a94c60922a498df
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Wed Jan 27 17:12:12 2010 -0800
+
+    XQuartz: Dead code removal
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 7ba5de6e9e1e8efda9f79af601fb6269bae841ce
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Jan 30 10:55:38 2010 -0800
+
+    XQuartz: Add some .gitignore magic
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 4d575b0559817258f7a0ce6c4d2d0f9e7e5bba63
+Author: Robert Morell <rmorell@nvidia.com>
+Date:   Fri Jan 29 19:07:03 2010 -0800
+
+    RENDER: Fix gradient and solid fill pictures with Xinerama, and misc cleanup
+    
+    If these aren't wrapped, then procs that are wrapped (such as
+    RenderChangePicture) will fail in Xinerama when they see the resource
+    type of a picture created through one of these interfaces is PictureType
+    and not XRT_PICTURE like those allocated via RenderCreatePicture.
+    
+    Signed-off-by: Robert Morell <rmorell@nvidia.com>
+    Reviewed-by: Aaron Plattner <aplattner@nvidia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 8d6b1838330625b758ebc55bb0df1b425c5cefaf
+Author: Robert Morell <rmorell@nvidia.com>
+Date:   Thu Jan 21 12:38:47 2010 -0800
+
+    Render: Fix request size verification
+    
+    RenderSetPictureClipRectangles and the Xinerama version of
+    RenderChangePicture were using the wrong structure types for request
+    size verification.
+    
+    Signed-off-by: Robert Morell <rmorell@nvidia.com>
+    Reviewed-by: Aaron Plattner <aplattner@nvidia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 5e81078cf56aabbf6551d96d312c7840ba9370ae
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Mon Jan 18 14:31:12 2010 +0200
+
+    xfree86: vgaarb: remove useless debug
+    
+    This is RAC's remnant. Any sane person would use a more wise method of
+    debugging instead.
+    
+    X.Org Bug 26074 <http://bugs.freedesktop.org/show_bug.cgi?id=26074>
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit e38df06772965cd5099646f1e7032b7c944d16ed
+Author: Aaron Plattner <aplattner@nvidia.com>
+Date:   Thu Jan 28 14:33:25 2010 -0800
+
+    DRI2: Bump the dri2 module version to 1.2.0 to reflect recent API changes.
+    
+    Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+    Acked-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 60b6477f6dc005a1b052be8c5e5a549550a4aa88
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Thu Jan 14 17:18:28 2010 +0200
+
+    dix/configure: remove null root cursor option
+    
+    The default behavior of the server is to start with an invisible root cursor.
+    Be such cursor invisible or inexistent (null), in the end it doesn't matter -
+    for the user. The content on screen will be the same. Besides, there's no
+    difference, in terms of performance, whether such cursor is invisible or
+    simply null. The paths that both take inside the server are roughly the same.
+    
+    Therefore create a null root cursor becomes irrelevant.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b4baab90c0d98bef98d485682d4a69a327a380d6
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 8 15:18:41 2010 +1000
+
+    dix: EventToCore needs to copy the root window too.
+    
+    This value isn't actually set for normal events but it saves us some work
+    for the record extension support.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 27fc98ecfed99fefd5c14388b4c6242f87281895
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Jan 27 14:37:32 2010 -0800
+
+    Revert "dix: EventToCore needs to copy the root window too."
+    
+    This reverts commit 0f2d297dedeff8bd227df4c498cc668b0e902344.
+    
+    Peter provided an updated patch which fixes the tests.
+
+commit 711e26466ae04ae93ff4c48d377d83d68a6320e9
+Author: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date:   Mon Jan 25 09:21:51 2010 -0800
+
+    DRI2: handle drawable destruction properly at DRI2SwapComplete time
+    
+    Simon reported an issue with kwin that turned out to be a general problem.  If
+    a drawable goes away before its swap completes, we'll try to free it up.
+    However, we free it improperly, which causes a server crash in
+    DRI2DestroyDrawable.  Fix that up by splitting the free code out and calling
+    it from DRI2SwapComplete.
+    
+    Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+    Reviewed-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b68f0204a2e4fa9d8884cbdd84b6a5df21d6b36e
+Author: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date:   Wed Jan 27 09:10:41 2010 -0800
+
+    xserver: require libdri 7.8.0 to build
+    
+    We depend on new DRI interfaces now, so require them in configure.ac.
+    
+    Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 003829072853546abd973266fe9b24d803f4f5cb
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Jan 26 22:25:04 2010 -0800
+
+    Avoid segfaults in XF86VidMode GammaRamp functions if randr_crtc is NULL
+    
+    Fixes crash when xscreensaver tries to use GammaRamp calls to fade out
+    http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6915712
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 19d03d4f49e08442f58cf02240e3e6bab04633d2
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Jan 26 20:15:49 2010 -0500
+
+    doc: finish the removal of SecurityPolicy file man pages
+    
+    The variable was unassigned  but all the code was left in.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 7962c8f78964d460c76f76dda2795b971a8c2a94
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Jan 26 20:02:13 2010 -0500
+
+    man: add missing __datadir__ for Xserver XWin man pages
+    
+    The man pages display __datadir__/fonts/X11/... because __datadir__
+    is missing in cpprules.in. Problem was introduced in commit:
+    b54bc14ce0ae38c4863794bc3096ca86cdb23908
+    when replacing __projectroot__ in the previous font path.
+    
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d2322b6309bf15a45002b42e7e6ba3d6b5bfa932
+Author: Kok, Auke <auke-jan.h.kok@intel.com>
+Date:   Wed Jan 27 11:34:45 2010 -0800
+
+    xserver: Add timestamps to logfile output.
+    
+    Add timestamps in seconds derived from clock_monotonic to the log
+    file.
+    
+    Signed-off-by: Auke Kok <auke-jan.h.kok@intel.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0b21a0416b4cb2c32da5e3fda05a0682eb97d56e
+Merge: 1e6fd65 837bd2b
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Jan 27 14:14:15 2010 -0800
+
+    Merge remote branch 'alanc/master'
+
+commit 1e6fd65d0b95260253828678131885a4ec21c594
+Author: Michael Vogt <mvo@ubuntu.com>
+Date:   Mon Jan 25 18:41:20 2010 +0100
+
+    xfree86/modes: only call gamma_set if its non NULL
+    
+    I ran accross a crash with xf86-video-nv-2.1.15 [1] and xserver
+    1.7.3.901. It looks like the problem is that gamma_set is called even
+    if that is NULL.
+    
+    [1] https://launchpad.net/bugs/494627
+    
+    Reviewed-By: Matthias Hopf <mhopf@suse.de>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0688dca044f966abc3da667f6d4e79e7cf47f996
+Author: Eric Anholt <eric@anholt.net>
+Date:   Thu Jan 21 10:31:04 2010 -0800
+
+    dri2: Fix order of operations issue in __glXdriSwapEvent test.
+    
+    Clients would have received swap events regardless of asking for it.
+    
+    Signed-off-by: Eric Anholt <eric@anholt.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit a6bd5d2e482a5aa84acb3d4932e2a166d8670ef1
+Author: Pierre-Loup A. Griffais <pgriffais@nvidia.com>
+Date:   Wed Jan 27 14:03:03 2010 -0800
+
+    Fix source pictures getting random transforms after 2d6a8f668342a5190cdf43b5.
+    
+    *xoff and *yoff were uninitialized for source-only pictures.x
+    
+    Signed-off-by: Pierre-Loup A. Griffais <pgriffais@nvidia.com>
+    Reviewed-by: Aaron Plattner <aplattner@nvidia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c3395158678aaab9dca5fc6a812cbe715ddc0e1a
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Jan 15 14:13:18 2010 -0500
+
+    packaging: provide a default README file #24206
+    
+    All modules should have a README file.
+    The bottom URL section is found in all X.Org README files.
+    
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f311f2d047120fb816897444d2101465ff5189db
+Author: Aaron Plattner <aplattner@nvidia.com>
+Date:   Wed Jan 13 11:35:52 2010 -0800
+
+    DRI2: Allow multiple driver names.
+    
+    Each driver type (e.g. DRI2DriverDRI or DRI2DriverVDPAU) can have a name in the
+    driverNames array in DRI2InfoRec.  DRI2Connect returns the name for the driver
+    specified by driverType.  Also print names of supported drivers in
+    DRI2ScreenInit.
+    
+    Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+    Reviewed-by: Kristian Høgsberg <krh@bitplanet.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f57bc0ede8e018c7e264b917927c42a018cd1d5a
+Author: Christian Zander <chzander@nvidia.com>
+Date:   Mon Jan 11 12:29:07 2010 -0800
+
+    x86emu: Respect the LEA 67h address size prefix.
+    
+    Signed-off-by: Christian Zander <chzander@nvidia.com>
+    Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+    Tested-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 837bd2bbc02b893f96861b48c1f02b7b8e7e3e48
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Oct 16 22:32:15 2009 -0700
+
+    Remove unbalanced ( from failure to move log error
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 138d4c1670ebab435bf00627c97098a3a54b81a6
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jan 16 21:03:00 2010 -0800
+
+    glx: Sun compilers now support some gcc __attribute__ values
+    
+    Sun cc 5.9 and later (__SUNPRO_C >= 0x590) support __attribute__
+    calls for aligned, always_inline, noinline, pure, const, and malloc.
+    
+    This commit consists of the related updates to files that were
+    regenerated by gl_XML.py in mesa after adding the __SUNPRO_C checks to it
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Signed-off-by: Brian Paul <brianp@vmware.com>
+
+commit 79e7b0b875634d0f9e1a95232a4e38adf617bc14
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Sat Jan 16 10:45:32 2010 -0800
+
+    Only enable kdrive input drivers on Linux by default
+    
+    Fixes build on non-Linux platforms by restoring the defaults to
+    where they were before commit 6c2b3a4247d10a50699ffa6abb643c5e959eefa8,
+    to only enable the Linux kbd, mouse & evdev drivers when building
+    on Linux platforms.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 39ab474197bdad7d8e9ef496df2d61cbea39d370
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Tue Dec 15 19:07:38 2009 -0800
+
+    Move OS-specific VT key handler code from common to os-support
+    
+    Adds new function xf86Activate to the OS-specific *VTsw*.c files
+    and calls it from xf86ProcessActionEvent
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Tested-by: Tiago Vignatti <tiago.vignatti@nokia.com> (GNU/Linux)
+
+commit 15ca3312c069526b7f2207de9dfb9b9e851caf95
+Author: Aaron Zang <Aaron.Zang@Sun.COM>
+Date:   Mon Dec 14 17:55:46 2009 -0800
+
+    Solaris: Avoid switching to inactive VT's
+    
+    Fix for OpenSolaris bug 6876992: "[vconsole] Ctrl+Alt+F12 switchs to blank
+    console screen with hotkeys property turned-off"
+    http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6876992
+    
+    Xorg needs to do sanity test for the VT it is commanded to switch to.
+    If the VT is not opened by any process, discard the switching request.
+    
+    The changes also contain the fix for some flaws discovered when
+    getting the new gdm to run.
+    
+    Signed-off-by: Aaron Zang <Aaron.Zang@Sun.COM>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 2984c18eb994696927a7f3b94d86fd47907334a0
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Jan 21 14:21:07 2010 -0500
+
+    config: replace custom code with reusable macro XORG_WITH_DOXYGEN
+    
+    XORG_WITH_DOXYGEN provides additional functions like a configure
+    option which allow platform builders to control the usage of
+    the doxygen program.
+    
+    This is a requirement from platforms that do not have such doc tool.
+    A platform with a back level doxygen may use --without-doxygen
+    to get the rest of the documentation built.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d9c20ee4191de7276a08288adffc24dff48aff8f
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Fri Jan 15 19:34:29 2010 +0200
+
+    dix: move cursor realize code to its own function
+    
+    The semantic remains, only code was moved: reuse chunk of code to realize
+    cursor on both AllocARGBCursor and AllocGlyphCursor.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f818f222362c93bcc859d997d96d8f3b447729f4
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:19 2010 +1000
+
+    xkb: unexport xkbDevicePrivateKey and xkbUnwrapProc.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 6850ea8fb95417db9ce3a70fc17f90d6fdea1389
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:16 2010 +1000
+
+    xfree86: replace True/False with TRUE/FALSE.
+    
+    xf86Xinput.c relied on xkbsrv.h's definition of True/False which seems odd
+    at first and weird on second glance.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 64b1372c15c3ede2696346e153bca9bd89016a20
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:15 2010 +1000
+
+    xkb: remove unused _XkbIsPressEvent and _XkbIsReleaseEvent defines
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c8bba14a390fe3fa16027e6b2433a314b3ea00c3
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:13 2010 +1000
+
+    xkb: remove XkbAtomGetString, replace with NameForAtom.
+    
+    XKB really XKBdoes not XKBneed its own XKBdefines for XKBeverything.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f37799c9712afb7769f369162b904d9ea2dbd608
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:12 2010 +1000
+
+    xkb: remove IsKeypadKey define, only used in two places.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit c8076f317ee5044ed3cc21b097f8b1741af8e0f1
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:11 2010 +1000
+
+    xkb: remove XConvertCase.
+    
+    Since it's typedef'd to XkbConvertCase anyway and the headers are now split
+    from the client headers, simply get rid of it altogether.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d627dd9d1ef436b01f0581e40a6736ffc6b5d2c8
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:10 2010 +1000
+
+    xkb: remove _XkbClearElems, a memset will do.
+    
+    Bonus point - it's easier to understand what's actually being done with the
+    memory.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit ea1de3fcdc40d2060bb6d13775005eadd624e767
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:32:09 2010 +1000
+
+    xkb: remove _XkbTyped*alloc
+    
+    Please no extension-specific macros for memory allocation.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0f2d297dedeff8bd227df4c498cc668b0e902344
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Jan 5 16:31:37 2010 +1000
+
+    dix: EventToCore needs to copy the root window too.
+    
+    This value isn't actually set for normal events but it saves us some work
+    for the record extension support.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 6f6a99abc12ddee82898fdabfb50c17e90e094b9
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Jan 13 14:39:54 2010 -0800
+
+    XQuartz: Don't FatalError in x_hook_run if the list is empty
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 6bde306f7f6b9bbabeaa8bb910ea549be906cd8b
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Jan 13 11:20:29 2010 -0800
+
+    XQuartz: Update copyright in bundle for 2010
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 6008cc116493cb2825ad0bda0b407b7aefabb3f4
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Mon Jan 11 18:02:55 2010 -0800
+
+    XQuartz: Setup the modifier map in the quartz thread
+    
+    This avoids possible doing it twice which could result in incorrect
+    keycodes for alt due to our loss of information about its side.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 44f9c3d16c9c9b3362306a9ba26ee52e7baafeca
+Merge: 032f978 84956ca
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Jan 13 10:19:21 2010 -0800
+
+    Merge remote branch 'jbarnes/master'
+
+commit 84956ca43b087600d9db297cffd62e960c516d9e
+Author: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date:   Mon Jan 11 14:56:24 2010 -0500
+
+    GLX/DRI2: add INTEL_swap_event support
+    
+    This allows clients to easily check for swap completion status in their
+    main loop.
+    
+    Reviewed-by: Kristian Høgsberg <krh@bitplanet.net>
+    Reviewed-by: Adam Jackson <ajax@nwnk.net>
+    Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+
+commit 04a54f69a8085ab3fe11a8713bd8b6b16ed1db27
+Author: Jesse Barnes <jbarnes@virtuousgeek.org>
+Date:   Thu Jul 16 09:01:17 2009 -0400
+
+    DRI2: add support for new DRI2 protocol requests
+    
+    Support the new DRI2 2.2 protocol requests: DRI2SwapBuffers, DRI2GetMSC,
+    DRI2WaitMSC, DRI2WaitSBC and DRI2SwapInterval.
+    
+    These requests allow the server to support the SGI_video_sync,
+    SGI_swap_interval, and OML_sync_control GLX extensions if DDX support is
+    present.  The new DDX APIs are documented in dri2.h.
+    
+    Reviewed-by: Kristian Høgsberg <krh@bitplanet.net>
+    Reviewed-by: Adam Jackson <ajax@nwnk.net>
+    Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+
+commit 032f97808c65771a07bac748212cf6457a5d1660
+Author: Simon Thum <simon.thum@gmx.de>
+Date:   Wed Jan 6 17:32:24 2010 +0100
+
+    xfree86: init pointer feedback controls from options
+    
+    With InputClass support, it makes more sense to cover all
+    aspects of acceleration in options. Previously, one could only set the
+    default on the command line.
+    
+    Signed-off-by: Simon Thum <simon.thum@gmx.de>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 0722c287a4c8a6cdedca9756192547bfcf77ade5
+Author: Simon Thum <simon.thum@gmx.de>
+Date:   Wed Jan 6 19:43:59 2010 +0100
+
+    xfree86: document pointer acceleration in xorg.conf.man
+    
+    Signed-off-by: Simon Thum <simon.thum@gmx.de>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 1aca2d757534879eb55faaee421cb972a9546712
+Author: Simon Thum <simon.thum@gmx.de>
+Date:   Wed Jan 6 19:13:36 2010 +0100
+
+    whitespace fixes
+    
+    Signed-off-by: Simon Thum <simon.thum@gmx.de>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 14039b5a7982fbf8130501bb00766176a4e9bccb
+Author: Simon Thum <simon.thum@gmx.de>
+Date:   Wed Jan 6 18:16:20 2010 +0100
+
+    doc: actually document SendDragEvents
+    
+    Signed-off-by: Simon Thum <simon.thum@gmx.de>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 14e4e4a294e648e0bdcb70c34748e1b81c5bb64f
+Author: Simon Thum <simon.thum@gmx.de>
+Date:   Wed Jan 6 18:13:27 2010 +0100
+
+    os: state effect of -a and -t options more precisely
+    
+    Signed-off-by: Simon Thum <simon.thum@gmx.de>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d727ddb91a549d23f6bf323e91db4b8916c1b7a0
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Jan 9 16:28:32 2010 -0500
+
+    kdrive: klinux.h breaks make dist
+    
+    This file is no longer part of the source code
+    and must be removed from distribution.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Reviewed-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 6313d2da6c6910827d68cf31fe00b46a34c5bfc7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Jan 8 19:04:25 2010 -0500
+
+    configure: use backticks rather than $() for commands
+    
+    This patch to xserver configure.ac is to increase code portability to
+    non POSIX system by using backticks rather than $() for command
+    substitution for BUILD_DATE and BUILD_TIME.
+    
+    Reviewed-by: Rémi Cardona <remi@gentoo.org>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 74ab27f64a747ee45810f99cdc6e29b82cf8035e
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Mon Dec 28 18:00:28 2009 +0200
+
+    Revert "Make sys.c use unaligned access functions provided in compiler."
+    
+    This reverts commit da923d0bc15e99a8ed1986bd6f5df37f7af7284b.
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 6a2a57832709798d99d19ff4c587e22f3b3c150d
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Jan 7 15:23:34 2010 -0500
+
+    macros: use PKG_CONFIG variable rather than executable name
+    
+    User can defined alternate location for pkg-config.
+    Once option in place, all instances of pkg-config must be converted.
+    
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 1b3132f5e981b3398e08263742332cc966bebc07
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Jan 7 14:12:34 2010 -0500
+
+    xwin: ignore intermediate .man file
+    
+    Only detectable on a Cygwin build
+    
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 8ab4749aaefb3727b9fc58bb37b50a2d07eb1531
+Merge: 8d53d84 9437504
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Jan 7 10:32:21 2010 -0800
+
+    Merge remote branch 'dottedmag/for-keithp'
+
+commit 8d53d84485fdce8ea9686e6f300a69f7ddebd467
+Author: Adam Tkac <atkac@redhat.com>
+Date:   Thu Jan 7 15:34:52 2010 +0100
+
+    Do not define members of include/eventstr.h:EventType enum conditionally.
+    
+    Main problem is that EventType enumeration members can be different in
+    module and in server, which obviously causes problems.
+    
+    Signed-off-by: Adam Tkac <atkac@redhat.com>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 9437504b21dfdb509ab8b3a00f64403e1e4026dd
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Mon Jan 4 05:42:02 2010 +0600
+
+    kdrive: Remove unused kdNoopOps external variable declaration
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit aa6e0936be15488455e6a4236806a58496da2979
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Mon Jan 4 05:30:22 2010 +0600
+
+    kdrive: Remove unused kmap.c
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit f78ac5c6e273f575af29746e08e7c182ff7b93b3
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Mon Jan 4 02:36:30 2010 +0600
+
+    kdrive: Make internal functions static
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 37a8ddc0dbf3fb7f059b689038979bace206dccf
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Mon Jan 4 02:28:37 2010 +0600
+
+    kdrive: Remove unused 'k' variable
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit af1f1a05e1aa9ec921f1288818a66766c301f8b0
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Mon Jan 4 01:50:04 2010 +0600
+
+    kdrive: Remove bus mouse driver
+    
+    Bus mice aren't used anymore, do not keep dead code around.
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit a3cc3af186b55ac80abd6859ffe491f4ae936596
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 23:31:28 2010 +0600
+
+    kdrive: Adjust kdrive usage message as shadow overlay support has been dropped
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit c40b9f959175057fac726fcdfff9641ae0681cf6
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Mon Jan 4 14:07:37 2010 +0600
+
+    kdrive: Remove unused VxWorks* variable declarations
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 4e0d580d5ac00d8d87c8e0080a02868c87a31caa
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 15:04:03 2010 +0600
+
+    kdrive: Remove unused KdCardInfo::lastMarker field
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit dbaab9759ba31edf63cf73eda86ba931d88e8cce
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 16:18:29 2010 +0600
+
+    kdrive: Extract common part of fbdevPutColors and fbdevEnable
+    
+    Put framebuffer colormap updating code in separate function
+    for brevity.
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 7ee14154b230b931d294288e1291c4fc617b1354
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 15:42:53 2010 +0600
+
+    kdrive: Remove unused overlay fb support
+    
+    Xfbdev, Xephyr and Xfake all use only one framebuffer, so simplify
+    implementation by removing overlay support.
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 730f7d1c4fae8ca582a4a9998a4dc4b325f98896
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 15:06:18 2010 +0600
+
+    kdrive: Remove unused KD_MAX_CARD_ADDRESS macro
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 5337ddcfd9dc2a5b823da39df7adaad6692214f0
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 14:59:07 2010 +0600
+
+    kdrive: Move Xephyr-specific fields out of KdScreenInfo
+    
+    memory_base, memory_size, off_screen_base fields in
+    KdScreenInfo are used only by fake EXA in Xephyr. Move
+    them into Xephyr, cleanup Xfake and Xfbdev.
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 62883b499b72f678ab055de4d0370227ae441370
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 13:17:21 2010 +0600
+
+    kdrive: Remove unused KdCardAttr from KdCardInfo
+    
+    Card attrs are unused in all current kdrive servers, so
+    remove it completely to avoid allocating and passing dummy
+    values to KdCardInfoAdd.
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 6c2b3a4247d10a50699ffa6abb643c5e959eefa8
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Mon Jan 4 14:07:04 2010 +0600
+
+    kdrive: Add option to compile out input drivers
+    
+    Add --without-kdrive-{kbd,mouse,evdev} configure options disabling
+    Linux keyboard driver, Linux mouse drivers (ps2, bus,ms),
+    and Linux evdev driver.
+    
+    Build all drivers by default as before.
+    
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 72ba717b1d639e94fa9ab56ca026131edc020a30
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 15:03:24 2010 +0600
+
+    kdrive: Remove unused KdCardInfo::needSync field
+    
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit d21b41cdb5e89eb428f36b19e965f0ab49e051d9
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 13:21:25 2010 +0600
+
+    kdrive: Remove .gitignore left from SDL server
+    
+    SDL server is gone, no need to keep its .gitignore anymore.
+    
+    Reviewed-by: Gaetan Nadon <memsize@videotron.ca>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+
+commit 6f265d55a61f9be323583b8acacae783be72bda9
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Jan 5 13:15:25 2010 +1000
+
+    dix: don't update the slave coordinates from the VCK.
+    
+    A keyboard event from a device with both valuators and keys will be posted
+    through the VCK. In this case, do not update the slave device coordinates
+    from the VCK - they're always 0/0. Leave them as-is, for the next pointer
+    event will continue where it left.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 326429badfc76885e4652ddc72860810c0e8d102
+Author: Adam Jackson <ajax@redhat.com>
+Date:   Tue Nov 10 14:56:36 2009 -0500
+
+    modes: Remove the ClockRanges type
+    
+    ba2d39dd5428cb5922b797a1d4ea45b859412b40 introduced warnings:
+    
+    xf86Mode.c: In function ‘xf86CheckModeForDriver’:
+    xf86Mode.c:986: warning: passing argument 1 of ‘modeInClockRange’ from incompatible pointer type
+    xf86Mode.c:253: note: expected ‘ClockRangePtr’ but argument is of type ‘ClockRangesPtr’
+    xf86Mode.c:1002: warning: passing argument 1 of ‘modeInClockRange’ from incompatible pointer type
+    xf86Mode.c:253: note: expected ‘ClockRangePtr’ but argument is of type ‘ClockRangesPtr’
+    
+    Because I foolishly didn't notice that we had types with nearly
+    identical members named ClockRange and ClockRanges.  The latter
+    contained an extra 'strategy' member at the end, which claimed to be
+    needed by the vidmode extension.  Of course, this was a lie: the only time
+    we'd use it was in mode validation, for drivers using LOOKUP_CLKDIV2 with
+    non-programmable clocks.  The only driver using LOOKUP_CLKDIV2 is
+    rendition, which has a programmable clock.  The only driver using the
+    ClockRanges type was smi, which did not use it for its 'strategy' member,
+    so has been fixed to use ClockRange instead.
+    
+    Signed-off-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 13c8bd3fde3b0831921e59f84936022a16379d63
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Jan 4 18:21:54 2010 -0800
+
+    CloseDevice: call XkbRemoveResourceClient before freeing key class struct
+    
+    XkbRemoveResourceClient() returns immediately if dev->key is NULL.
+    CloseDevice calls XkbRemoveResourceClient until it removes all resources.
+    
+    If we free dev->key and NULL it before XkbRemoveResourceClient, then
+    infinite loop ensues, and the server appears to hang on exit or crash.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit e707612e9de4e5e1d91dc1a8152810912d7e18bb
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Mon Jan 4 09:07:48 2010 +0100
+
+    EXA: Restore migration call in exaDoPutImage().
+    
+    Turns out this is still necessary if the driver PrepareAccess hook succeeds.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Tested-by: Maarten Maathuis <madman2003@gmail.com>
+    Tested-by: Andrew Chant <andrew.chant+debian@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit e10072b7c74a6f5e24f6dfa37e73688d1f3425e3
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 05:43:28 2010 +0600
+
+    Add Xephyr.man to .gitignore
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by:  Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit fb26cb793c6eba189050662c566f7ea0559bd486
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 05:43:27 2010 +0600
+
+    Remove unused pShadow field from drivers' private structures
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 2c85d72fc7bd013af327321ad5d626dc73c3caf0
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 05:43:26 2010 +0600
+
+    Do not check xfree argument for NULL
+    
+    xfree itself checks for NULL, and even this is not necessary
+    as passing NULL to free(3) is safe.
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 15bc35c6e44c65812de5c3e85ec8bbf78b032ded
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Sat Jan 2 05:43:25 2010 +0600
+
+    Remove trailing whitespace
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 1763550d0181ac1c775b9ddf490114eff2fbe67e
+Author: Simon Thum <simon.thum@gmx.de>
+Date:   Fri Jan 1 19:58:05 2010 +0100
+
+    dix: add smooth limited pointer acceleration profile
+    
+    This profile is inspired by the accel code removed from the wacom driver.
+    It ascends from zero to acceleration, maxing out at threshold. This means you
+    can control the slope using threshold, which wasn't possible in wacom.
+    For sanity's sake, threshold should grow with acceleration.
+    
+    Works best with adaptive deceleration, since otherwise it only generates
+    acceleration above 1, causing seldom pixel skips.
+    
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 435f27667f84269768efecde34de4af2b2d43376
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sun Sep 27 14:45:47 2009 +0200
+
+    config: add libudev input-hotplug backend
+    
+    Add a backend using libudev for input hotplug, and disable the hal and
+    dbus backends if this one is enabled.
+    
+    XKB configuration happens using xkb{rules,model,layout,variant,options}
+    properties (case-insensitive) on the device.  We fill in InputAttributes
+    to allow configuration through InputClass in Xorg.
+    
+    Requires udev 148 for the input_id helper and ID_INPUT* properties.
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit b8b12e41c453c3bf94b11e7a18934d3b6e1869bf
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Dec 23 16:05:16 2009 +1000
+
+    xfree86: move sanity checks below option and input classes merges.
+    
+    While the identifier is likely set before the input classes are merged, the
+    driver may not be. Hence don't check for a driver before we've completed
+    configuration for this device.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit 9fad8f06fb89ac2ae05bea0fa24cab3df7677297
+Merge: 871bbe1 42e8c92
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Dec 30 09:28:19 2009 -0800
+
+    Merge remote branch 'dbn/inputclass'
+
+commit 871bbe1d87fa3c7ebd075e1d1eec33e45b08493d
+Merge: db2c6f7 e116563
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Dec 30 09:16:45 2009 -0800
+
+    Merge remote branch 'dbn/xorg.conf.d'
+
+commit db2c6f7c91289b5d49978974093a1002b3b53a56
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Dec 29 15:48:44 2009 +0100
+
+    EXA: Don't use UTS/DFS directly for Put/GetImage when there's a system copy.
+    
+    We want to save the result in the system memory copy, in case we'll need it
+    again for subsequent software fallbacks.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-By: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit f28ca728e90ccbb901e8e7215a842525d8e786d3
+Author: Thomas Hellstrom <thellstrom@vmware.com>
+Date:   Tue Dec 29 12:51:30 2009 +0100
+
+    EXA: Restrict the regions that need to be migrated for composite fallback for src / mask pictures.
+    
+    [ Michel: Minor fixups to address compiler warnings ]
+    
+    Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0c1f43c0f3e888172f11f62a2f208af70e0183cc
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Dec 29 12:51:29 2009 +0100
+
+    EXA/mixed: Handle results of software fallbacks in DamageReport hook.
+    
+    This is more elegant and probably also slightly more correct than doing it
+    at FinishAccess time.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 08bf26c28fc8147b64f2fe8345b9581e0101571c
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Dec 29 12:51:28 2009 +0100
+
+    EXA: Fix migration avoidance for 1x1 pixmaps.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0bd8f0cd7f3823ee17ae8c88fd3e004bfff9982d
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Dec 29 12:51:27 2009 +0100
+
+    EXA/classic: Fix crash with migration heuristic "smart".
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 40453bf7718f1c3d672b87e9d84991032cbef859
+Author: Thomas Hellstrom <thellstrom@vmware.com>
+Date:   Tue Dec 29 09:34:44 2009 +0100
+
+    EXA: Limit src prepareAccess regions for a number of unaccelerated operations.
+    
+    When we can trivially calculate the affected source regions,
+    do that before calling region bounded prepareAccess.
+    
+    [ Michel: Minor fixups to address compiler warnings ]
+    
+    Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit aa9ce8ab343d51a67924757c5a43c9572248bb24
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Tue Dec 29 09:34:43 2009 +0100
+
+    EXA: Use relevant source region to minimize migration on CopyWindow fallbacks.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 39cc110caa1f6481a7213ae39f82669333ec1645
+Author: Thomas Hellstrom <thellstrom@vmware.com>
+Date:   Tue Dec 29 09:34:42 2009 +0100
+
+    EXA: Fix bugs in exaGetImage / ExaCheckGetImage migration.
+    
+    Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d42f3960514f1c410863ac6c09c5638b5ddeae20
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Mon Dec 28 16:48:18 2009 +0100
+
+    EXA: Allow optimized migration to be enabled with mixed pixmaps.
+    
+    This was always the intention, I only recently realized it wasn't the case
+    yet...
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 661630f9099f254e54c8da513aaed12f6532cc35
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Mon Dec 28 16:48:17 2009 +0100
+
+    EXA/mixed: Don't clear deferred status of pixmaps if migration is limited.
+    
+    * With optimized migration, only the pending damage region is synchronized for
+      destination pixmaps.
+    * Migration of source pixmaps can be limited to a bounding region.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 42e8c9224e6c54655c45f87999d37d0d67b3f7f5
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Fri Oct 2 06:29:28 2009 -0700
+
+    xfree86: Introduce InputClass configuration
+    
+    Currently Xorg uses hal's fdi files to decide what configuration options
+    are applied to automatically added input devices. This is sub-optimal
+    since it requires users to use a new and different configuration store
+    than xorg.conf.
+    
+    The InputClass section attempts to provide a system similar to hal where
+    configuration can be applied to all devices with certain attributes. For
+    now, devices can be matched to:
+    
+    * A substring of the product name via a MatchProduct entry
+    * A substring of the vendir name via a MatchVendor entry
+    * A pathname pattern of the device file via a MatchDevicePath entry
+    * A device type via boolean entries for MatchIsKeyboard, MatchIsPointer,
+      MatchIsJoystick, MatchIsTablet, MatchIsTouchpad and MatchIsTouchscreen
+    
+    See the INPUTCLASS section in xorg.conf(5) for more details.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 0711598dd3e8366217676f462f1af7d0899656d9
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Wed Sep 2 06:47:13 2009 -0700
+
+    config: Introduce InputAttributes in NewInputDeviceRequest
+    
+    In order to give NewInputDeviceRequest more information, a new
+    InputAttributes type is introduced. Currently, this collects the product
+    and vendor name, device path, and sets booleans for attributes such as
+    having keys and/or a pointer. Only the HAL backend fills in the
+    attributes, though.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer at who-t.net>
+
+commit c6e8637e29e0ca11dfb35c02da7ca6002ac8c597
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Fri Oct 2 06:28:03 2009 -0700
+
+    xfree86: Support non-Option boolean entries in configuration
+    
+    Refactored code into the parser to allow the freeform boolean types used
+    in Option entries to be used in other configuration entries. This isn't
+    as powerful as allowing "No" to precede the option names, but it atleast
+    gives a common handling of "yes", "no", etc.
+    
+    A type xf86TriState has been added to support an optional boolean. This
+    allows the boolean sense of the value to be kept while providing a means
+    to signal that it is unset.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer at who-t.net>
+
+commit e1165632bdfbd720889ed1adf5f7ab338032c0ee
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Dec 21 15:56:35 2009 +1000
+
+    xfree86: Add Option AutoServerLayout for input devices.
+    
+    Any input device with this option will be automatically added to whichever
+    server layout is selected at startup. This removes the need to reference a
+    device from the ServerLayout section. The two following configuration are
+    identical:
+    
+    CONFIG 1:
+        Section "ServerLayout"
+                InputDevice "foo"
+        EndSection
+    
+        Section "InputDevice"
+                Identifier "foo"
+                ...
+        EndSection
+    
+    CONFIG 2:
+        Section "InputDevice"
+                Identifier "foo"
+                Option "AutoServerLayout" "on"
+                ...
+        EndSection
+    
+    The selection of the server layout affects both explicitly specified
+    layouts and the implicit layout.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp at keithp.com>
+
+commit 592b20c517461d32daf44a940386ffcc11c434f8
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Mon Dec 21 01:13:44 2009 -0800
+
+    xfree86: Allow config directory to be specified on command line
+    
+    Add a new command line parameter, -configdir, to specify the config
+    directory to be used. Rules are the same as -config for root vs. user
+    privileges.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer at who-t.net>
+
+commit efa5269f23c2237eb5368bf5245ffbbf35714153
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Mon Dec 21 00:04:16 2009 -0800
+
+    xfree86: Use xorg.conf.d directory for multiple config files
+    
+    Currently there is a single file, xorg.conf, for configuring the server.
+    This works fine most of the time, but it becomes a problem when packages
+    or system services need to adjust the configuration. Instead, allow
+    multiple configuration files to live in a directory. Typically this will
+    be /etc/X11/xorg.conf.d.
+    
+    Files with a suffix of .conf will be read and added to the server
+    configuration after xorg.conf. The server won't fall back to using the
+    auto configuration unless there is no config file and there are no files
+    in the config directory.
+    
+    Right now this uses a simpler search template than the config file
+    search path by not using the command line or environment variable
+    parameters. The matching code was refactored a bit to make this more
+    coherent. Any DDX wanting to read the config files will need to call
+    xf86initConfigFiles before opening/reading them. This is to allow
+    xf86openConfigFile without xf86openConfigDirFiles and vice-versa.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer at who-t.net>
+
+commit f1e869aca176e9113f9d234b0ea59b4cac295cc4
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Mon Dec 21 00:03:11 2009 -0800
+
+    xfree86: Unexport configuration file symbols
+    
+    These functions should not be used outside of DDXs, so no need to put
+    them in the ABI.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer at who-t.net>
+
+commit 90e6d93cf9bfafd63d7849dc16ce194d6f9c9d5f
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Dec 23 12:54:14 2009 +1000
+
+    test/xi2: fail if xi2 class type is garbage. (#25492)
+    
+    If the keycode range exceeds the allowable length, memory gets overwritten.
+    Catch this case by making sure that only allowed class types are
+    present.
+    
+    X.Org Bug 25492 <http://bugs.freedesktop.org/show_bug.cgi?id=25492>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dave Airlie <airlied@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 72286eae9f4a2f2ca6c46919ff8aa1011429e03a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Dec 22 15:42:59 2009 +1000
+
+    xfree86: remove LAYOUT_DEBUG section.
+    
+    I don't think this one has been in use since 2003.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dave Airlie <airlied@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 38b5afb0b5b46b61effa6f0e5a377b343e357e7e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Dec 22 15:40:40 2009 +1000
+
+    xfree86: remove some 'enable this later' and if 0 ifdefs
+    
+    2003 called, they want their ifdefs back.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dave Airlie <airlied@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 7dc78db79edd15b971110acaf16bbe7f69e40bdb
+Merge: 81a623f b44c9be
+Author: Keith Packard <keithp@keithp.com>
+Date:   Tue Dec 22 21:25:18 2009 -0800
+
+    Merge remote branch 'whot/master'
+
+commit b44c9be244cee286835855483a69c69e80b095c0
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Tue Dec 22 17:14:09 2009 +0100
+
+    test/xi2: fix maximum max_keycode (bug#25492)
+    
+    The number of keycodes needs to be lower than 0xFFFD so that the length
+    field of xXIKeyInfo doesn't overflow.
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 190610e0c62170a27ab3e40c6c6210a583ae1ad4
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Dec 21 11:08:26 2009 +1000
+
+    xfree86: remove HistorySize from the xorg.conf man page.
+    
+    This option isn't parsed by anything anymore.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 094c6b9f97a9f92e5a0ef3cf5be24c09ed4d6063
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Dec 21 10:42:32 2009 +1000
+
+    xfree86: reword InputDevice man sections, deprecate CorePointer/CoreKeyboard
+    
+    Reshuffle and reword - InputDevice sections are only necessary if
+    hotplugging is disabled. Put more emphasis on hotplugging and less on HAL
+    since we'll switch backends eventually.
+    
+    CorePointer, CoreKeyboard, and AlwaysCore should be listed as deprecated
+    since they don't do what they used to since 1.4. These days, only
+    SendCoreEvents matters and it's enabled for any driver calling
+    xf86ProcessCommonOptions (== every driver).
+    It only controls the startup behavior too, so document this.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Keith Packard <keithp@keithp.com>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 81a623f036fe56d53c4e3bdafb3eaf945502525f
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sat Dec 19 20:11:41 2009 -0800
+
+    Bump to 1.7.99.3 (unreleased)
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
 commit 3c30c5b6d321f34736c442c9cd982308d9b8b93a
 Author: Keith Packard <keithp@keithp.com>
 Date:   Fri Dec 18 22:58:59 2009 -0800
@@ -92,6 +2043,34 @@ Date:   Thu Dec 17 18:24:37 2009 -0800
     
     Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
     Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 801bc8075aee664bd4c6b6ff842ab737c143a1de
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Dec 14 08:43:19 2009 +1000
+
+    xfree86: update man page for special keys handling.
+    
+    SpecialKeyHandling was removed from the kbd driver with version 1.4.0. Since
+    this is the only version that will build against server 1.7+ it's not
+    reasonable to mention it in the man page. Reword, point to XKB instead and
+    make clear that some key combinations _may_ not be available in any given
+    config.
+    
+    Reported-by: Derek Fawcus
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 753310837cd3812882d8de67f063bb61813db675
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Dec 14 08:41:18 2009 +1000
+
+    xfree86: DontZap has been disabled for a while now, say so in the man page.
+    
+    1.7 always shipped with DontZap disabled, it's just the default keymaps that
+    may not include the symbol to trigger it.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
 
 commit 0cb638dc6822e54567a1731ea1cf588475a226e9
 Merge: 6a6a041 fbdf493

@@ -343,9 +343,10 @@ typedef struct
 	GenericListRec list;
 	char *identifier;
 	char *driver;
-	char *match_product;
-	char *match_vendor;
-	char *match_device;
+	char **match_product;
+	char **match_vendor;
+	char **match_device;
+	char **match_tag;
 	xf86TriState is_keyboard;
 	xf86TriState is_pointer;
 	xf86TriState is_joystick;

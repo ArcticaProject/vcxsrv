@@ -43,6 +43,7 @@
 #ifndef PROJECT_NAME
 #  define PROJECT_NAME		"VcXsrv"
 #endif
+#define EXECUTABLE_NAME         "VcXsrv"
 #define WINDOW_CLASS		"VcXsrv/x"
 #define WINDOW_TITLE		PROJECT_NAME " Server - %s:%s.%d"
 #define WINDOW_TITLE_XDMCP	PROJECT_NAME " Server - %s:%s.%d"

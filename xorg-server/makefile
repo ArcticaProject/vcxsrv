@@ -74,7 +74,7 @@ LINKLIBS += $(MHMAKECONF)\openssl\out32\libeay32.lib \
 
 endif
 
-RCINCLUDES += hw\xwin $(MHMAKECONF)\include $(MHMAKECONF)
+RCINCLUDES += include hw\xwin $(MHMAKECONF)\include $(MHMAKECONF)
 
 XWin.rc: hw\xwin\XWin.rc
 	copy $< $@

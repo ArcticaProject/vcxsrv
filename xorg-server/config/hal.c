@@ -164,6 +164,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         attrs.product = xstrdup(name);
 
     attrs.vendor = get_prop_string(hal_ctx, udi, "info.vendor");
+    attrs.tags = xstrtokenize(get_prop_string(hal_ctx, udi, "input.tags"), ",");
 
     if (libhal_device_query_capability(hal_ctx, udi, "input.keys", NULL))
         attrs.flags |= ATTR_KEYBOARD;
@@ -391,6 +392,14 @@ unwind:
     xfree(attrs.product);
     xfree(attrs.vendor);
     xfree(attrs.device);
+    if (attrs.tags) {
+        char **tag = attrs.tags;
+        while (*tag) {
+            xfree(*tag);
+            tag++;
+        }
+        xfree(attrs.tags);
+    }
 
     if (xkb_opts.layout)
         xfree(xkb_opts.layout);

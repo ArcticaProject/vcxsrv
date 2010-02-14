@@ -153,7 +153,7 @@ XWin_LDADD = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_GLX_LIBS) $(XWIN_GLX_LINK_FLAGS) $(
 XWin_LDFLAGS = -mwindows
 
 .rc.o:
-	$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include -DPROJECT_NAME=\"$(VENDOR_NAME_SHORT)\"
+	$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include
 
 winprefsyacc.h: winprefsyacc.c
 winprefslex.c: winprefslex.l winprefsyacc.c winprefsyacc.h
@@ -186,11 +186,13 @@ XWinrc.$(FILE_MAN_SUFFIX): XWinrc.man
 
 EXTRAMANDEFS = -D__logdir__=$(logdir) -D__sysconfdir__=$(sysconfdir) -D__datadir__=$(datadir)
 
+xwinconfigdir = $(sysconfdir)/X11
+xwinconfig_DATA = system.XWinrc
+
 include $(top_srcdir)/cpprules.in
 
 EXTRA_DIST = \
 	$(MAN_SRCS) \
-	_usr_X11R6_lib_X11_system.XWinrc \
 	X.ico \
 	XWin.rc \
 	xlaunch/config.cc \

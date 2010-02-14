@@ -1546,6 +1546,7 @@ winLogVersionInfo (void)
   winDebug ("Welcome to the VcXsrv X Server\n");
   winDebug ("Vendor: %s\n", VENDOR_STRING);
   winDebug ("Release: %d.%d.%d.%d (%d)\n\n", XORG_VERSION_MAJOR, XORG_VERSION_MINOR, XORG_VERSION_PATCH, XORG_VERSION_SNAP, XORG_VERSION_CURRENT);
+  winDebug ("%s\n\n", BUILDERSTRING);
   winDebug ("Contact: %s\n\n", VENDOR_CONTACT);
 #endif
 }

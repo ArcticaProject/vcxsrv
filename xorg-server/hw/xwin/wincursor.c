@@ -187,8 +187,7 @@ winLoadCursor (ScreenPtr pScreen, CursorPtr pCursor, int screen)
   if (pScreenPriv->cursor.sm_cx < pCursor->bits->width || 
       pScreenPriv->cursor.sm_cy < pCursor->bits->height)
     {
-      ErrorF ("winLoadCursor - Windows requires %dx%d cursor\n"
-	      "\tbut X requires %dx%d\n",
+      ErrorF ("winLoadCursor - Windows requires %dx%d cursor but X requires %dx%d\n",
 	      pScreenPriv->cursor.sm_cx, pScreenPriv->cursor.sm_cy,
 	      pCursor->bits->width, pCursor->bits->height);
     }

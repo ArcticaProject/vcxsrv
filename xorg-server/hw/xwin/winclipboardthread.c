@@ -117,8 +117,7 @@ winClipboardProc (void *pvNotUsed)
   /* See if X supports the current locale */
   if (XSupportsLocale () == False)
     {
-      ErrorF ("winClipboardProc - Locale not supported by X.  Exiting.\n");
-      goto thread_errorexit;
+      ErrorF ("winClipboardProc - Warning: Locale not supported by X.\n");
     }
 
   /* Create Windows messaging window */

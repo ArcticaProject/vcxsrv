@@ -12,7 +12,7 @@
 /* Cygwin has /dev/windows for signaling new win32 messages */
 #undef HAS_DEVWINDOWS
 
-/* Switch on debug messages */ 
+/* Switch on debug messages */
 #undef CYGDEBUG
 #undef CYGWINDOWING_DEBUG
 #undef CYGMULTIWINDOW_DEBUG
@@ -22,3 +22,13 @@
 
 /* Do we require our own snprintf? */
 #undef NEED_SNPRINTF
+
+/* Short vendor name */
+#undef XVENDORNAMESHORT
+
+/* Vendor web address for support */
+#undef __VENDORDWEBSUPPORT__
+
+/* Location of system.XWinrc */
+#undef SYSCONFDIR
+

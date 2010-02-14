@@ -1,4 +1,3 @@
-/* include/xwin-config.h.  Generated from xwin-config.h.in by configure.  */
 /*
  * xwin-config.h.in
  *
@@ -23,6 +22,9 @@
 
 /* Do we require our own snprintf? */
 /* #undef NEED_SNPRINTF */
+
+/* Short vendor name */
+#define XVENDORNAMESHORT "VcXsrv"
 
 /* Vendor web address for support */
 #define __VENDORDWEBSUPPORT__ "http://www.hc-consult.be/"

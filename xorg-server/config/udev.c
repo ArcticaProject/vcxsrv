@@ -84,6 +84,7 @@ device_added(struct udev_device *udev_device)
     add_option(&options, "path", path);
     add_option(&options, "device", path);
     attrs.device = path;
+    attrs.tags = xstrtokenize(udev_device_get_property_value(udev_device, "ID_INPUT.tags"), ",");
 
     config_info = Xprintf("udev:%s", syspath);
     if (!config_info)
@@ -148,6 +149,15 @@ device_added(struct udev_device *udev_device)
         xfree(tmpo->key);
         xfree(tmpo->value);
         xfree(tmpo);
+    }
+
+    if (attrs.tags) {
+        char **tag = attrs.tags;
+        while (*tag) {
+            xfree(*tag);
+            tag++;
+        }
+        xfree(attrs.tags);
     }
 
     return;

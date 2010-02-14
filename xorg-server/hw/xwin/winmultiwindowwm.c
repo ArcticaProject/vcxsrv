@@ -187,7 +187,7 @@ static void
 winInitMultiWindowWM (WMInfoPtr pWMInfo, WMProcArgPtr pProcArg);
 
 static Bool
-CheckAnotherWindowManager (Display *pDisplay, DWORD dwScreen);
+CheckAnotherWindowManager (Display *pDisplay, DWORD dwScreen, Bool fAllowOtherWM);
 
 static void
 winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle);
@@ -396,6 +396,7 @@ GetWindowName (Display *pDisplay, Window iWin, wchar_t **ppName)
  	pszReturnData = (char *) malloc (iLen + 1);
  	pszReturnData[0] = '\0';
  	for (i = 0; i < nNum; i++) strcat (pszReturnData, ppList[i]);
+ 	if (ppList) XFreeStringList (ppList);
    }
    else
    {
@@ -406,9 +407,7 @@ GetWindowName (Display *pDisplay, Window iWin, wchar_t **ppName)
    *ppName = (wchar_t*)malloc(sizeof(wchar_t)*(iLen + 1));
    MultiByteToWideChar (CP_UTF8, 0, pszReturnData, -1, *ppName, iLen);
    XFree (xtpName.value);
-   if (ppList) XFreeStringList (ppList);
    free (pszReturnData);
-
   winDebug ("GetWindowName - Returning\n");
 }
 
@@ -804,9 +803,7 @@ winMultiWindowXMsgProc (void *pArg)
   /* See if X supports the current locale */
   if (XSupportsLocale () == False)
     {
-      ErrorF ("winMultiWindowXMsgProc - Locale not supported by X.  "
-	      "Exiting.\n");
-      pthread_exit (NULL);
+      ErrorF ("winMultiWindowXMsgProc - Warning: locale not supported by X\n");
     }
 
   /* Release the server started mutex */
@@ -879,7 +876,7 @@ winMultiWindowXMsgProc (void *pArg)
 	  "successfully opened the display.\n");
 
   /* Check if another window manager is already running */
-  g_fAnotherWMRunning = CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen);
+  g_fAnotherWMRunning = CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen, pProcArg->pWMInfo->fAllowOtherWM);
 
   if (g_fAnotherWMRunning && !pProcArg->pWMInfo->fAllowOtherWM)
     {
@@ -930,7 +927,7 @@ winMultiWindowXMsgProc (void *pArg)
 
       if (pProcArg->pWMInfo->fAllowOtherWM && !XPending (pProcArg->pDisplay))
 	{
-	  if (CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen))
+	  if (CheckAnotherWindowManager (pProcArg->pDisplay, pProcArg->dwScreen, TRUE))
 	    {
 	      if (!g_fAnotherWMRunning)
 		{
@@ -1179,8 +1176,7 @@ winInitMultiWindowWM (WMInfoPtr pWMInfo, WMProcArgPtr pProcArg)
   /* See if X supports the current locale */
   if (XSupportsLocale () == False)
     {
-      ErrorF ("winInitMultiWindowWM - Locale not supported by X.  Exiting.\n");
-      pthread_exit (NULL);
+      ErrorF ("winInitMultiWindowWM - Warning: Locale not supported by X.\n");
     }
 
   /* Release the server started mutex */
@@ -1414,7 +1410,7 @@ winRedirectErrorHandler (Display *pDisplay, XErrorEvent *pErr)
  */
 
 static Bool
-CheckAnotherWindowManager (Display *pDisplay, DWORD dwScreen)
+CheckAnotherWindowManager (Display *pDisplay, DWORD dwScreen, Bool fAllowOtherWM)
 {
   /*
     Try to select the events which only one client at a time is allowed to select.
@@ -1429,8 +1425,12 @@ CheckAnotherWindowManager (Display *pDisplay, DWORD dwScreen)
 
   /*
     Side effect: select the events we are actually interested in...
+
+    If other WMs are not allowed, also select one of the events which only one client
+    at a time is allowed to select, so other window managers won't start...
   */
-  XSelectInput(pDisplay, RootWindow (pDisplay, dwScreen), SubstructureNotifyMask);
+  XSelectInput(pDisplay, RootWindow (pDisplay, dwScreen),
+               SubstructureNotifyMask | ( !fAllowOtherWM ? ButtonPressMask : 0));
   XSync (pDisplay, 0);
   return redirectError;
 }
@@ -1451,6 +1451,7 @@ winDeinitMultiWindowWM (void)
 #define HINT_BORDER	(1L<<1)
 #define HINT_SIZEBOX	(1l<<2)
 #define HINT_CAPTION	(1l<<3)
+#define HINT_NOMAXIMIZE (1L<<4)
 /* These two are used on their own */
 #define HINT_MAX	(1L<<0)
 #define HINT_MIN	(1L<<1)
@@ -1532,7 +1533,32 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
     if (pAtom) XFree(pAtom);
   }
 
-  /* Apply Styles, overriding hint settings from above */
+  {
+    XSizeHints *normal_hint = XAllocSizeHints();
+    long supplied;
+    if (normal_hint && (XGetWMNormalHints(pDisplay, iWindow, normal_hint, &supplied) == Success))
+      {
+        if (normal_hint->flags & PMaxSize)
+          {
+            /* Not maximizable if a maximum size is specified */
+            hint |= HINT_NOMAXIMIZE;
+
+            if (normal_hint->flags & PMinSize)
+              {
+                /*
+                  If both minimum size and maximum size are specified and are the same,
+                  don't bother with a resizing frame
+                */
+                if ((normal_hint->min_width == normal_hint->max_width)
+                    && (normal_hint->min_height == normal_hint->max_height))
+                  hint = (hint & ~HINT_SIZEBOX);
+              }
+          }
+      }
+    XFree(normal_hint);
+  }
+
+  /* Override hint settings from above with settings from config file */
   style = winOverrideStyle((unsigned long)pWin);
   if (style & STYLE_TOPMOST) *zstyle = HWND_TOPMOST;
   else if (style & STYLE_MAXIMIZE) maxmin = (hint & ~HINT_MIN) | HINT_MAX;
@@ -1549,12 +1575,19 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   else if (style & STYLE_NOFRAME)
 	hint = (hint & ~HINT_BORDER & ~HINT_CAPTION) | HINT_NOFRAME;
 
+  /* Now apply styles to window */
   style = GetWindowLongPtr(hWnd, GWL_STYLE) & ~WS_CAPTION & ~WS_SIZEBOX; /* Just in case */
   if (!hint) /* All on, but no resize of children is allowed */
     style = style | WS_CAPTION;
-  else if (hint & HINT_NOFRAME); /* All off, so do nothing */
+  else if (hint & HINT_NOFRAME) /* All off */
+    style = style & ~WS_CAPTION & ~WS_SIZEBOX;
   else style = style | ((hint & HINT_BORDER) ? WS_BORDER : 0) |
+		((hint & HINT_SIZEBOX) ? WS_SIZEBOX : 0) |
 		((hint & HINT_CAPTION) ? WS_CAPTION : 0);
+
+  if (hint & HINT_NOMAXIMIZE)
+    style = style & ~WS_MAXIMIZEBOX;
+
                 
   if (winMultiWindowGetWMNormalHints(pWin, &SizeHints))
   {
