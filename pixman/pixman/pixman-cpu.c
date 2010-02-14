@@ -253,8 +253,6 @@ pixman_arm_read_auxv ()
 	    if (aux.a_type == AT_HWCAP)
 	    {
 		uint32_t hwcap = aux.a_un.a_val;
-		if (getenv ("ARM_FORCE_HWCAP"))
-		    hwcap = strtoul (getenv ("ARM_FORCE_HWCAP"), NULL, 0);
 		/* hardcode these values to avoid depending on specific
 		 * versions of the hwcap header, e.g. HWCAP_NEON
 		 */
@@ -266,8 +264,6 @@ pixman_arm_read_auxv ()
 	    else if (aux.a_type == AT_PLATFORM)
 	    {
 		const char *plat = (const char*) aux.a_un.a_val;
-		if (getenv ("ARM_FORCE_PLATFORM"))
-		    plat = getenv ("ARM_FORCE_PLATFORM");
 		if (strncmp (plat, "v7l", 3) == 0)
 		{
 		    arm_has_v7 = TRUE;
@@ -280,12 +276,6 @@ pixman_arm_read_auxv ()
 	    }
 	}
 	close (fd);
-
-	/* if we don't have 2.6.29, we have to do this hack; set
-	 * the env var to trust HWCAP.
-	 */
-	if (!getenv ("ARM_TRUST_HWCAP") && arm_has_v7)
-	    arm_has_neon = TRUE;
     }
 
     arm_tests_initialized = TRUE;

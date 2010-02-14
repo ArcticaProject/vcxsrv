@@ -77,7 +77,7 @@ ensure-prev:
 		false;									\
 	fi
 
-release-check: ensure-prev release-verify-newer release-remove-old check distcheck
+release-check: ensure-prev release-verify-newer release-remove-old distcheck
 
 release-tag:
 	git tag -u $(GPGKEY) -m "$(PACKAGE) $(VERSION) release" $(PACKAGE)-$(VERSION)

@@ -1102,7 +1102,7 @@ mmx_composite_over_n_8888 (pixman_implementation_t *imp,
 {
     uint32_t src;
     uint32_t    *dst_line, *dst;
-    uint16_t w;
+    int32_t w;
     int dst_stride;
     __m64 vsrc, vsrca;
 
@@ -1181,7 +1181,7 @@ mmx_composite_over_n_0565 (pixman_implementation_t *imp,
 {
     uint32_t src;
     uint16_t    *dst_line, *dst;
-    uint16_t w;
+    int32_t w;
     int dst_stride;
     __m64 vsrc, vsrca;
 
@@ -1376,7 +1376,7 @@ mmx_composite_over_8888_n_8888 (pixman_implementation_t *imp,
     uint32_t mask;
     __m64 vmask;
     int dst_stride, src_stride;
-    uint16_t w;
+    int32_t w;
     __m64 srca;
 
     CHECKPOINT ();
@@ -1461,7 +1461,7 @@ mmx_composite_over_x888_n_8888 (pixman_implementation_t *imp,
     uint32_t mask;
     __m64 vmask;
     int dst_stride, src_stride;
-    uint16_t w;
+    int32_t w;
     __m64 srca;
 
     CHECKPOINT ();
@@ -1596,7 +1596,7 @@ mmx_composite_over_8888_8888 (pixman_implementation_t *imp,
     uint32_t s;
     int dst_stride, src_stride;
     uint8_t a;
-    uint16_t w;
+    int32_t w;
 
     CHECKPOINT ();
 
@@ -1652,7 +1652,7 @@ mmx_composite_over_8888_0565 (pixman_implementation_t *imp,
     uint16_t    *dst_line, *dst;
     uint32_t    *src_line, *src;
     int dst_stride, src_stride;
-    uint16_t w;
+    int32_t w;
 
     CHECKPOINT ();
 
@@ -1756,7 +1756,7 @@ mmx_composite_over_n_8_8888 (pixman_implementation_t *imp,
     uint32_t *dst_line, *dst;
     uint8_t *mask_line, *mask;
     int dst_stride, mask_stride;
-    uint16_t w;
+    int32_t w;
     __m64 vsrc, vsrca;
     uint64_t srcsrc;
 
@@ -2030,7 +2030,7 @@ mmx_composite_src_n_8_8888 (pixman_implementation_t *imp,
     uint32_t    *dst_line, *dst;
     uint8_t     *mask_line, *mask;
     int dst_stride, mask_stride;
-    uint16_t w;
+    int32_t w;
     __m64 vsrc, vsrca;
     uint64_t srcsrc;
 
@@ -2165,7 +2165,7 @@ mmx_composite_over_n_8_0565 (pixman_implementation_t *imp,
     uint16_t *dst_line, *dst;
     uint8_t *mask_line, *mask;
     int dst_stride, mask_stride;
-    uint16_t w;
+    int32_t w;
     __m64 vsrc, vsrca, tmp;
     uint64_t srcsrcsrcsrc, src16;
 
@@ -2305,7 +2305,7 @@ mmx_composite_over_pixbuf_0565 (pixman_implementation_t *imp,
     uint16_t    *dst_line, *dst;
     uint32_t    *src_line, *src;
     int dst_stride, src_stride;
-    uint16_t w;
+    int32_t w;
 
     CHECKPOINT ();
 
@@ -2425,7 +2425,7 @@ mmx_composite_over_pixbuf_8888 (pixman_implementation_t *imp,
     uint32_t    *dst_line, *dst;
     uint32_t    *src_line, *src;
     int dst_stride, src_stride;
-    uint16_t w;
+    int32_t w;
 
     CHECKPOINT ();
 
@@ -2633,7 +2633,7 @@ mmx_composite_in_n_8_8 (pixman_implementation_t *imp,
     uint8_t *dst_line, *dst;
     uint8_t *mask_line, *mask;
     int dst_stride, mask_stride;
-    uint16_t w;
+    int32_t w;
     uint32_t src;
     uint8_t sa;
     __m64 vsrc, vsrca;
@@ -2715,7 +2715,7 @@ mmx_composite_in_8_8 (pixman_implementation_t *imp,
     uint8_t     *dst_line, *dst;
     uint8_t     *src_line, *src;
     int src_stride, dst_stride;
-    uint16_t w;
+    int32_t w;
 
     PIXMAN_IMAGE_GET_LINE (dst_image, dest_x, dest_y, uint8_t, dst_stride, dst_line, 1);
     PIXMAN_IMAGE_GET_LINE (src_image, src_x, src_y, uint8_t, src_stride, src_line, 1);
@@ -2780,7 +2780,7 @@ mmx_composite_add_n_8_8 (pixman_implementation_t *imp,
     uint8_t     *dst_line, *dst;
     uint8_t     *mask_line, *mask;
     int dst_stride, mask_stride;
-    uint16_t w;
+    int32_t w;
     uint32_t src;
     uint8_t sa;
     __m64 vsrc, vsrca;
@@ -2860,7 +2860,7 @@ mmx_composite_add_8000_8000 (pixman_implementation_t *imp,
     uint8_t *dst_line, *dst;
     uint8_t *src_line, *src;
     int dst_stride, src_stride;
-    uint16_t w;
+    int32_t w;
     uint8_t s, d;
     uint16_t t;
 
@@ -2934,7 +2934,7 @@ mmx_composite_add_8888_8888 (pixman_implementation_t *imp,
     uint32_t    *dst_line, *dst;
     uint32_t    *src_line, *src;
     int dst_stride, src_stride;
-    uint16_t w;
+    int32_t w;
 
     CHECKPOINT ();
 
@@ -3165,7 +3165,7 @@ mmx_composite_over_x888_8_8888 (pixman_implementation_t *imp,
     uint32_t  *dst, *dst_line;
     uint8_t  *mask, *mask_line;
     int src_stride, mask_stride, dst_stride;
-    uint16_t w;
+    int32_t w;
 
     PIXMAN_IMAGE_GET_LINE (dst_image, dest_x, dest_y, uint32_t, dst_stride, dst_line, 1);
     PIXMAN_IMAGE_GET_LINE (mask_image, mask_x, mask_y, uint8_t, mask_stride, mask_line, 1);
@@ -3216,72 +3216,74 @@ mmx_composite_over_x888_8_8888 (pixman_implementation_t *imp,
 
 static const pixman_fast_path_t mmx_fast_paths[] =
 {
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_r5g6b5,   mmx_composite_over_n_8_0565       },
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_b5g6r5,   mmx_composite_over_n_8_0565       },
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8r8g8b8, mmx_composite_over_n_8_8888       },
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8r8g8b8, mmx_composite_over_n_8_8888       },
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8b8g8r8, mmx_composite_over_n_8_8888       },
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8b8g8r8, mmx_composite_over_n_8_8888       },
-    { PIXMAN_OP_OVER, PIXMAN_solid, PIXMAN_a8r8g8b8_ca, PIXMAN_a8r8g8b8, mmx_composite_over_n_8888_8888_ca },
-    { PIXMAN_OP_OVER, PIXMAN_solid, PIXMAN_a8r8g8b8_ca, PIXMAN_x8r8g8b8, mmx_composite_over_n_8888_8888_ca },
-    { PIXMAN_OP_OVER, PIXMAN_solid, PIXMAN_a8r8g8b8_ca, PIXMAN_r5g6b5,   mmx_composite_over_n_8888_0565_ca },
-    { PIXMAN_OP_OVER, PIXMAN_solid, PIXMAN_a8b8g8r8_ca, PIXMAN_a8b8g8r8, mmx_composite_over_n_8888_8888_ca },
-    { PIXMAN_OP_OVER, PIXMAN_solid, PIXMAN_a8b8g8r8_ca, PIXMAN_x8b8g8r8, mmx_composite_over_n_8888_8888_ca },
-    { PIXMAN_OP_OVER, PIXMAN_solid, PIXMAN_a8b8g8r8_ca, PIXMAN_b5g6r5,   mmx_composite_over_n_8888_0565_ca },
-    { PIXMAN_OP_OVER, PIXMAN_pixbuf,   PIXMAN_pixbuf,   PIXMAN_a8r8g8b8, mmx_composite_over_pixbuf_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_pixbuf,   PIXMAN_pixbuf,   PIXMAN_x8r8g8b8, mmx_composite_over_pixbuf_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_pixbuf,   PIXMAN_pixbuf,   PIXMAN_r5g6b5,   mmx_composite_over_pixbuf_0565    },
-    { PIXMAN_OP_OVER, PIXMAN_rpixbuf,  PIXMAN_rpixbuf,  PIXMAN_a8b8g8r8, mmx_composite_over_pixbuf_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_rpixbuf,  PIXMAN_rpixbuf,  PIXMAN_x8b8g8r8, mmx_composite_over_pixbuf_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_rpixbuf,  PIXMAN_rpixbuf,  PIXMAN_b5g6r5,   mmx_composite_over_pixbuf_0565    },
-    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_solid,    PIXMAN_a8r8g8b8, mmx_composite_over_x888_n_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_solid,    PIXMAN_x8r8g8b8, mmx_composite_over_x888_n_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_solid,    PIXMAN_a8b8g8r8, mmx_composite_over_x888_n_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_solid,    PIXMAN_x8b8g8r8, mmx_composite_over_x888_n_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_solid,    PIXMAN_a8r8g8b8, mmx_composite_over_8888_n_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_solid,    PIXMAN_x8r8g8b8, mmx_composite_over_8888_n_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_solid,    PIXMAN_a8b8g8r8, mmx_composite_over_8888_n_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_solid,    PIXMAN_x8b8g8r8, mmx_composite_over_8888_n_8888    },
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    a8,       r5g6b5,   mmx_composite_over_n_8_0565       ),
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    a8,       b5g6r5,   mmx_composite_over_n_8_0565       ),
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    a8,       a8r8g8b8, mmx_composite_over_n_8_8888       ),
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    a8,       x8r8g8b8, mmx_composite_over_n_8_8888       ),
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    a8,       a8b8g8r8, mmx_composite_over_n_8_8888       ),
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    a8,       x8b8g8r8, mmx_composite_over_n_8_8888       ),
+    PIXMAN_STD_FAST_PATH_CA (OVER, solid,    a8r8g8b8, a8r8g8b8, mmx_composite_over_n_8888_8888_ca ),
+    PIXMAN_STD_FAST_PATH_CA (OVER, solid,    a8r8g8b8, x8r8g8b8, mmx_composite_over_n_8888_8888_ca ),
+    PIXMAN_STD_FAST_PATH_CA (OVER, solid,    a8r8g8b8, r5g6b5,   mmx_composite_over_n_8888_0565_ca ),
+    PIXMAN_STD_FAST_PATH_CA (OVER, solid,    a8b8g8r8, a8b8g8r8, mmx_composite_over_n_8888_8888_ca ),
+    PIXMAN_STD_FAST_PATH_CA (OVER, solid,    a8b8g8r8, x8b8g8r8, mmx_composite_over_n_8888_8888_ca ),
+    PIXMAN_STD_FAST_PATH_CA (OVER, solid,    a8b8g8r8, b5g6r5,   mmx_composite_over_n_8888_0565_ca ),
+    PIXMAN_STD_FAST_PATH    (OVER, pixbuf,   pixbuf,   a8r8g8b8, mmx_composite_over_pixbuf_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, pixbuf,   pixbuf,   x8r8g8b8, mmx_composite_over_pixbuf_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, pixbuf,   pixbuf,   r5g6b5,   mmx_composite_over_pixbuf_0565    ),
+    PIXMAN_STD_FAST_PATH    (OVER, rpixbuf,  rpixbuf,  a8b8g8r8, mmx_composite_over_pixbuf_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, rpixbuf,  rpixbuf,  x8b8g8r8, mmx_composite_over_pixbuf_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, rpixbuf,  rpixbuf,  b5g6r5,   mmx_composite_over_pixbuf_0565    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8r8g8b8, solid,    a8r8g8b8, mmx_composite_over_x888_n_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8r8g8b8, solid,    x8r8g8b8, mmx_composite_over_x888_n_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8b8g8r8, solid,    a8b8g8r8, mmx_composite_over_x888_n_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8b8g8r8, solid,    x8b8g8r8, mmx_composite_over_x888_n_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8r8g8b8, solid,    a8r8g8b8, mmx_composite_over_8888_n_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8r8g8b8, solid,    x8r8g8b8, mmx_composite_over_8888_n_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8b8g8r8, solid,    a8b8g8r8, mmx_composite_over_8888_n_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8b8g8r8, solid,    x8b8g8r8, mmx_composite_over_8888_n_8888    ),
 #if 0
-    /* FIXME: This code is commented out since it's apparently not actually faster than the generic code. */
-    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, mmx_composite_over_x888_8_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, mmx_composite_over_x888_8_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_x8b8r8g8, PIXMAN_a8,       PIXMAN_x8b8g8r8, mmx_composite_over_x888_8_8888    },
-    { PIXMAN_OP_OVER, PIXMAN_x8b8r8g8, PIXMAN_a8,       PIXMAN_a8r8g8b8, mmx_composite_over_x888_8_8888    },
+    /* FIXME: This code is commented out since it's apparently
+     * not actually faster than the generic code.
+     */
+    PIXMAN_STD_FAST_PATH    (OVER, x8r8g8b8, a8,       x8r8g8b8, mmx_composite_over_x888_8_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8r8g8b8, a8,       a8r8g8b8, mmx_composite_over_x888_8_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8b8r8g8, a8,       x8b8g8r8, mmx_composite_over_x888_8_8888    ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8b8r8g8, a8,       a8r8g8b8, mmx_composite_over_x888_8_8888    ),
 #endif
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_null,     PIXMAN_a8r8g8b8, mmx_composite_over_n_8888        },
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_null,     PIXMAN_x8r8g8b8, mmx_composite_over_n_8888        },
-    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_null,     PIXMAN_r5g6b5,   mmx_composite_over_n_0565        },
-    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_null,     PIXMAN_x8r8g8b8, mmx_composite_copy_area          },
-    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_null,     PIXMAN_x8b8g8r8, mmx_composite_copy_area          },
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    null,     a8r8g8b8, mmx_composite_over_n_8888         ),
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    null,     x8r8g8b8, mmx_composite_over_n_8888         ),
+    PIXMAN_STD_FAST_PATH    (OVER, solid,    null,     r5g6b5,   mmx_composite_over_n_0565         ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8r8g8b8, null,     x8r8g8b8, mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (OVER, x8b8g8r8, null,     x8b8g8r8, mmx_composite_copy_area           ),
 
-    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_a8r8g8b8, mmx_composite_over_8888_8888     },
-    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_x8r8g8b8, mmx_composite_over_8888_8888     },
-    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_r5g6b5,   mmx_composite_over_8888_0565     },
-    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_a8b8g8r8, mmx_composite_over_8888_8888     },
-    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_x8b8g8r8, mmx_composite_over_8888_8888     },
-    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_b5g6r5,   mmx_composite_over_8888_0565     },
+    PIXMAN_STD_FAST_PATH    (OVER, a8r8g8b8, null,     a8r8g8b8, mmx_composite_over_8888_8888      ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8r8g8b8, null,     x8r8g8b8, mmx_composite_over_8888_8888      ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8r8g8b8, null,     r5g6b5,   mmx_composite_over_8888_0565      ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8b8g8r8, null,     a8b8g8r8, mmx_composite_over_8888_8888      ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8b8g8r8, null,     x8b8g8r8, mmx_composite_over_8888_8888      ),
+    PIXMAN_STD_FAST_PATH    (OVER, a8b8g8r8, null,     b5g6r5,   mmx_composite_over_8888_0565      ),
 
-    { PIXMAN_OP_ADD, PIXMAN_a8r8g8b8,  PIXMAN_null,     PIXMAN_a8r8g8b8, mmx_composite_add_8888_8888   },
-    { PIXMAN_OP_ADD, PIXMAN_a8b8g8r8,  PIXMAN_null,     PIXMAN_a8b8g8r8, mmx_composite_add_8888_8888   },
-    { PIXMAN_OP_ADD, PIXMAN_a8,        PIXMAN_null,     PIXMAN_a8,       mmx_composite_add_8000_8000   },
-    { PIXMAN_OP_ADD, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_a8,       mmx_composite_add_n_8_8    },
+    PIXMAN_STD_FAST_PATH    (ADD,  a8r8g8b8, null,     a8r8g8b8, mmx_composite_add_8888_8888       ),
+    PIXMAN_STD_FAST_PATH    (ADD,  a8b8g8r8, null,     a8b8g8r8, mmx_composite_add_8888_8888       ),
+    PIXMAN_STD_FAST_PATH    (ADD,  a8,       null,     a8,       mmx_composite_add_8000_8000       ),
+    PIXMAN_STD_FAST_PATH    (ADD,  solid,    a8,       a8,       mmx_composite_add_n_8_8           ),
 
-    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_a8r8g8b8, mmx_composite_src_n_8_8888 },
-    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_x8r8g8b8, mmx_composite_src_n_8_8888 },
-    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_a8b8g8r8, mmx_composite_src_n_8_8888 },
-    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_x8b8g8r8, mmx_composite_src_n_8_8888 },
-    { PIXMAN_OP_SRC, PIXMAN_a8r8g8b8,  PIXMAN_null,     PIXMAN_a8r8g8b8, mmx_composite_copy_area },
-    { PIXMAN_OP_SRC, PIXMAN_a8b8g8r8,  PIXMAN_null,     PIXMAN_a8b8g8r8, mmx_composite_copy_area },
-    { PIXMAN_OP_SRC, PIXMAN_a8r8g8b8,  PIXMAN_null,     PIXMAN_x8r8g8b8, mmx_composite_copy_area },
-    { PIXMAN_OP_SRC, PIXMAN_a8b8g8r8,  PIXMAN_null,     PIXMAN_x8b8g8r8, mmx_composite_copy_area },
-    { PIXMAN_OP_SRC, PIXMAN_x8r8g8b8,  PIXMAN_null,     PIXMAN_x8r8g8b8, mmx_composite_copy_area },
-    { PIXMAN_OP_SRC, PIXMAN_x8b8g8r8,  PIXMAN_null,     PIXMAN_x8b8g8r8, mmx_composite_copy_area },
-    { PIXMAN_OP_SRC, PIXMAN_r5g6b5,    PIXMAN_null,     PIXMAN_r5g6b5,   mmx_composite_copy_area },
-    { PIXMAN_OP_SRC, PIXMAN_b5g6r5,    PIXMAN_null,     PIXMAN_b5g6r5,   mmx_composite_copy_area },
+    PIXMAN_STD_FAST_PATH    (SRC,  solid,    a8,       a8r8g8b8, mmx_composite_src_n_8_8888        ),
+    PIXMAN_STD_FAST_PATH    (SRC,  solid,    a8,       x8r8g8b8, mmx_composite_src_n_8_8888        ),
+    PIXMAN_STD_FAST_PATH    (SRC,  solid,    a8,       a8b8g8r8, mmx_composite_src_n_8_8888        ),
+    PIXMAN_STD_FAST_PATH    (SRC,  solid,    a8,       x8b8g8r8, mmx_composite_src_n_8_8888        ),
+    PIXMAN_STD_FAST_PATH    (SRC,  a8r8g8b8, null,     a8r8g8b8, mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (SRC,  a8b8g8r8, null,     a8b8g8r8, mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (SRC,  a8r8g8b8, null,     x8r8g8b8, mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (SRC,  a8b8g8r8, null,     x8b8g8r8, mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (SRC,  x8r8g8b8, null,     x8r8g8b8, mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (SRC,  x8b8g8r8, null,     x8b8g8r8, mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (SRC,  r5g6b5,   null,     r5g6b5,   mmx_composite_copy_area           ),
+    PIXMAN_STD_FAST_PATH    (SRC,  b5g6r5,   null,     b5g6r5,   mmx_composite_copy_area           ),
 
-    { PIXMAN_OP_IN,  PIXMAN_a8,        PIXMAN_null,     PIXMAN_a8,       mmx_composite_in_8_8    },
-    { PIXMAN_OP_IN,  PIXMAN_solid,     PIXMAN_a8,       PIXMAN_a8,       mmx_composite_in_n_8_8  },
+    PIXMAN_STD_FAST_PATH    (IN,   a8,       null,     a8,       mmx_composite_in_8_8              ),
+    PIXMAN_STD_FAST_PATH    (IN,   solid,    a8,       a8,       mmx_composite_in_n_8_8            ),
 
     { PIXMAN_OP_NONE },
 };

@@ -231,6 +231,12 @@ pixman_image_set_destroy_function (pixman_image_t *            image,
     image->common.destroy_data = data;
 }
 
+PIXMAN_EXPORT void *
+pixman_image_get_destroy_data (pixman_image_t *image)
+{
+  return image->common.destroy_data;
+}
+
 void
 _pixman_image_reset_clip_region (pixman_image_t *image)
 {
@@ -247,7 +253,7 @@ _pixman_image_validate (pixman_image_t *image)
     }
 
     if (image->common.alpha_map)
-	_pixman_image_validate (image->common.alpha_map);
+	_pixman_image_validate ((pixman_image_t *)image->common.alpha_map);
 }
 
 PIXMAN_EXPORT pixman_bool_t
@@ -591,7 +597,7 @@ _pixman_image_is_opaque (pixman_image_t *image)
 	break;
 
     case SOLID:
-	if (ALPHA_8 (image->solid.color) != 0xff)
+	if (image->solid.color.alpha != 0xffff)
 	    return FALSE;
 	break;
 

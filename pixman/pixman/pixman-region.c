@@ -68,32 +68,21 @@
 
 /* Turn on debugging depending on what type of release this is
  */
-
-#if ((PIXMAN_VERSION_MICRO % 2) == 1)
-/* Random git checkout.
- * 
- * Those are often used for performance work, so we don't turn on the
- * full self-checking, but we do turn on the asserts.
+#if (((PIXMAN_VERSION_MICRO % 2) == 0) && ((PIXMAN_VERSION_MINOR % 2) == 1))
+/* This is a development snapshot, so we want self-checking in order to
+ * catch as many bugs as possible. However, we don't turn on the asserts
+ * because that just leads to the X server crashing which leads to
+ * people not running the snapshots.
  */
-#    define   FATAL_BUGS
-#    define noSELF_CHECKS
-#elif ((PIXMAN_VERSION_MINOR % 2) == 0)
-/* Stable release.
- *
- * We don't want assertions because the X server should stay alive
- * if possible. We also don't want self-checks for performance-reasons.
+#    define noFATAL_BUGS
+#    define SELF_CHECKS
+#else
+/* This is either a stable release or a random git checkout. We don't
+ * want self checks in either case for performance reasons. (Random
+ * git checkouts are often used for performance work
  */
 #    define noFATAL_BUGS
 #    define noSELF_CHECKS
-#else
-/* Development snapshot.
- *
- * These are the things that get shipped in development distributions
- * such as Rawhide. We want both self-checking and fatal assertions
- * to catch as many bugs as possible.
- */
-#    define FATAL_BUGS
-#    define SELF_CHECKS
 #endif
 
 #ifndef FATAL_BUGS
@@ -110,7 +99,7 @@ log_region_error (const char *function, const char *message)
 {
     static int n_messages = 0;
 
-    if (n_messages < 50)
+    if (n_messages < 5)
     {
 	fprintf (stderr,
 		 "*** BUG ***\n"
@@ -2470,7 +2459,7 @@ PREFIX (_selfcheck) (region_type_t *reg)
 
 PIXMAN_EXPORT pixman_bool_t
 PREFIX (_init_rects) (region_type_t *region,
-                      box_type_t *boxes, int count)
+                      const box_type_t *boxes, int count)
 {
     box_type_t *rects;
     int displacement;

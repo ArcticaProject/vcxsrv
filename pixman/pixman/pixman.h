@@ -71,6 +71,10 @@ SOFTWARE.
 
 #include <pixman-version.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 /*
  * Standard integers
  */
@@ -393,7 +397,7 @@ void                    pixman_region_init_rect          (pixman_region16_t *reg
 							  unsigned int       width,
 							  unsigned int       height);
 pixman_bool_t           pixman_region_init_rects         (pixman_region16_t *region,
-							  pixman_box16_t    *boxes,
+							  const pixman_box16_t *boxes,
 							  int                count);
 void                    pixman_region_init_with_extents  (pixman_region16_t *region,
 							  pixman_box16_t    *extents);
@@ -429,7 +433,7 @@ pixman_bool_t           pixman_region_contains_point     (pixman_region16_t *reg
 							  int                x,
 							  int                y,
 							  pixman_box16_t    *box);
-pixman_region_overlap_t pixman_region_contains_rectangle (pixman_region16_t *pixman_region16_t,
+pixman_region_overlap_t pixman_region_contains_rectangle (pixman_region16_t *region,
 							  pixman_box16_t    *prect);
 pixman_bool_t           pixman_region_not_empty          (pixman_region16_t *region);
 pixman_box16_t *        pixman_region_extents            (pixman_region16_t *region);
@@ -480,7 +484,7 @@ void                    pixman_region32_init_rect          (pixman_region32_t *r
 							    unsigned int       width,
 							    unsigned int       height);
 pixman_bool_t           pixman_region32_init_rects         (pixman_region32_t *region,
-							    pixman_box32_t    *boxes,
+							    const pixman_box32_t *boxes,
 							    int                count);
 void                    pixman_region32_init_with_extents  (pixman_region32_t *region,
 							    pixman_box32_t    *extents);
@@ -722,6 +726,7 @@ pixman_bool_t   pixman_image_unref                   (pixman_image_t            
 void		pixman_image_set_destroy_function    (pixman_image_t		   *image,
 						      pixman_image_destroy_func_t   function,
 						      void			   *data);
+void *		pixman_image_get_destroy_data        (pixman_image_t		   *image);
 
 /* Set properties */
 pixman_bool_t   pixman_image_set_clip_region         (pixman_image_t               *image,
@@ -761,6 +766,11 @@ pixman_bool_t	pixman_image_fill_rectangles	     (pixman_op_t		    op,
 						      pixman_color_t		   *color,
 						      int			    n_rects,
 						      const pixman_rectangle16_t   *rects);
+pixman_bool_t   pixman_image_fill_boxes              (pixman_op_t                   op,
+                                                      pixman_image_t               *dest,
+                                                      pixman_color_t               *color,
+                                                      int                           n_boxes,
+                                                      const pixman_box32_t         *boxes);
 
 /* Composite */
 pixman_bool_t pixman_compute_composite_region (pixman_region16_t *region,
@@ -787,6 +797,18 @@ void          pixman_image_composite          (pixman_op_t        op,
 					       int16_t            dest_y,
 					       uint16_t           width,
 					       uint16_t           height);
+void          pixman_image_composite32        (pixman_op_t        op,
+					       pixman_image_t    *src,
+					       pixman_image_t    *mask,
+					       pixman_image_t    *dest,
+					       int32_t            src_x,
+					       int32_t            src_y,
+					       int32_t            mask_x,
+					       int32_t            mask_y,
+					       int32_t            dest_x,
+					       int32_t            dest_y,
+					       int32_t            width,
+					       int32_t            height);
 
 /* Old X servers rely on out-of-bounds accesses when they are asked
  * to composite with a window as the source. They create a pixman image
@@ -891,5 +913,9 @@ void           pixman_rasterize_trapezoid  (pixman_image_t            *image,
 					    const pixman_trapezoid_t  *trap,
 					    int                        x_off,
 					    int                        y_off);
+
+#ifdef  __cplusplus
+}
+#endif
 
 #endif /* PIXMAN_H__ */
