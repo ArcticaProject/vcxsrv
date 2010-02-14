@@ -3233,8 +3233,13 @@ dixSaveScreens(ClientPtr client, int on, int mode)
 	}
     }
     screenIsSaved = what;
-    if (mode == ScreenSaverReset)
-       SetScreenSaverTimer();
+    if (mode == ScreenSaverReset) {
+	if (on == SCREEN_SAVER_FORCER) {
+	    UpdateCurrentTimeIf();
+	    lastDeviceEventTime = currentTime;
+	}
+	SetScreenSaverTimer();
+    }
     return Success;
 }
 
