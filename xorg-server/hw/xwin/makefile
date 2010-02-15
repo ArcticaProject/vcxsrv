@@ -26,25 +26,28 @@ DEFINES += XWIN_MULTIWINDOW
 #	winwindowswm.c
 #DEFINES += XWIN_MULTIWINDOWEXTWM
 
-SRCS_NATIVEGDI = \
-	winclip.c \
-	winfillsp.c \
-	winfont.c \
-	wingc.c \
-	wingetsp.c \
-	winnativegdi.c \
-	winpixmap.c \
-	winpolyline.c \
-	winrop.c \
-	winsetsp.c
-DEFINES +=  XWIN_NATIVEGDI
+#SRCS_NATIVEGDI = \
+#	winclip.c \
+#	winfillsp.c \
+#	winfont.c \
+#	wingc.c \
+#	wingetsp.c \
+#	winnativegdi.c \
+#	winpixmap.c \
+#	winpolyline.c \
+#	winrop.c \
+#	winsetsp.c
+#DEFINES +=  XWIN_NATIVEGDI
 
+#SRCS_PRIMARYFB = \
+#	winpfbdd.c
+#DEFINES += XWIN_PRIMARYFB
 
 SRCS_RANDR = \
 	winrandr.c
 DEFINES += XWIN_RANDR RELOCATE_PROJECTROOT
 
-CSRCS = InitInput.c \
+CSRCS =	InitInput.c \
 	InitOutput.c \
 	winallpriv.c \
 	winauth.c \
@@ -83,7 +86,8 @@ CSRCS = InitInput.c \
 	$(SRCS_CLIPBOARD) \
 	$(SRCS_MULTIWINDOW) \
 	$(SRCS_MULTIWINDOWEXTWM) \
-	$(SRCS_NATIVEGDI)
+	$(SRCS_NATIVEGDI) \
+	$(SRCS_PRIMARYFB)
 
 
 DEFINES += YY_NO_UNISTD_H

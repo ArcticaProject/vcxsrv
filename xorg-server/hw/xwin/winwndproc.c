@@ -641,7 +641,6 @@ winWindowProc (HWND hwnd, UINT message,
       return TRUE;
 
     case WM_PAINT:
-      winDebug ("winWindowProc - WM_PAINT\n");
       /* Only paint if we have privates and the server is enabled */
       if (s_pScreenPriv == NULL
 	  || !s_pScreenPriv->fEnabled

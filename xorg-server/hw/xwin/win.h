@@ -461,17 +461,19 @@ typedef struct _winPrivScreenRec
   
   /* Privates used by shadow fb and primary fb DirectDraw servers */
   LPDIRECTDRAW		pdd;
-  LPDIRECTDRAWSURFACE2	pddsPrimary;
+  LPDIRECTDRAWSURFACE	pddsPrimary;
   LPDIRECTDRAW2		pdd2;
 
   /* Privates used by shadow fb DirectDraw server */
-  LPDIRECTDRAWSURFACE2	pddsShadow;
+  LPDIRECTDRAWSURFACE	pddsShadow;
   LPDDSURFACEDESC	pddsdShadow;
 
+#ifdef XWIN_PRIMARYFB
   /* Privates used by primary fb DirectDraw server */
-  LPDIRECTDRAWSURFACE2	pddsOffscreen;
+  LPDIRECTDRAWSURFACE	pddsOffscreen;
   LPDDSURFACEDESC	pddsdOffscreen;
   LPDDSURFACEDESC	pddsdPrimary;
+#endif
 
   /* Privates used by shadow fb DirectDraw Nonlocking server */
   LPDIRECTDRAW4		pdd4;

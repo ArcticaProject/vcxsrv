@@ -34,6 +34,11 @@
 #endif
 #include "win.h"
 
+typedef struct mybitmap
+{
+  BITMAPINFOHEADER bmiHeader;
+  RGBQUAD          bmiColors[256];  /* Maximum palette used in case of 8-bit per pixel */
+} mybitmap_t;
 
 /* See Porting Layer Definition - p. 55 */
 void
@@ -49,7 +54,7 @@ winSetSpansNativeGDI (DrawablePtr	pDrawable,
   PixmapPtr		pPixmap = NULL;
   winPrivPixmapPtr	pPixmapPriv = NULL;
   HBITMAP		hbmpOrig = NULL;
-  BITMAPINFO		bmi;
+  mybitmap_t		bmi;
   HRGN			hrgn = NULL, combined = NULL;
   int			nbox;
   BoxPtr	 	pbox;
@@ -90,7 +95,7 @@ winSetSpansNativeGDI (DrawablePtr	pDrawable,
 
       while (iSpans--)
         {
-	  ZeroMemory (&bmi, sizeof (BITMAPINFO));
+	  ZeroMemory (&bmi, sizeof (mybitmap_t));
 	  bmi.bmiHeader.biSize = sizeof (BITMAPINFOHEADER);
 	  bmi.bmiHeader.biWidth = *piWidths;
 	  bmi.bmiHeader.biHeight = 1;
@@ -112,7 +117,7 @@ winSetSpansNativeGDI (DrawablePtr	pDrawable,
 			 0, 0,
 			 *piWidths, 1,
 			 pSrcs,
-			 (BITMAPINFO *) &bmi,
+			 (BITMAPINFO*)&bmi,
 			 DIB_RGB_COLORS,
 			 g_copyROP[pGC->alu]);
 
@@ -136,7 +141,7 @@ winSetSpansNativeGDI (DrawablePtr	pDrawable,
 
       while (iSpans--)
         {
-	  ZeroMemory (&bmi, sizeof (BITMAPINFO));
+	  ZeroMemory (&bmi, sizeof (mybitmap_t));
 	  bmi.bmiHeader.biSize = sizeof (BITMAPINFOHEADER);
 	  bmi.bmiHeader.biWidth = *piWidths;
 	  bmi.bmiHeader.biHeight = 1;

@@ -41,7 +41,6 @@
  * External symbols
  */
 
-extern const GUID		_IID_IDirectDraw2;
 extern HWND			g_hDlgExit;
 
 
