@@ -43,21 +43,21 @@ extern "C" {
 #endif
 
 #define	XSERVER_CLIENT_AUTH(arg0, arg1, arg2, arg3) \
-	winDebug("XSERVER_CLIENT_AUTH: %d %s %d %d\n",arg0, arg1, arg2, arg3)
+	winDebug4("XSERVER_CLIENT_AUTH: %d %s %d %d\n",arg0, arg1, arg2, arg3)
 #define	XSERVER_CLIENT_CONNECT(arg0, arg1) \
-	winDebug("XSERVER_CLIENT_CONNECT: %d %d\n",arg0, arg1)
+	winDebug4("XSERVER_CLIENT_CONNECT: %d %d\n",arg0, arg1)
 #define	XSERVER_CLIENT_DISCONNECT(arg0) \
-	winDebug("XSERVER_CLIENT_DISCONNECT: %d %d\n",arg0)
+	winDebug4("XSERVER_CLIENT_DISCONNECT: %d %d\n",arg0)
 #define	XSERVER_REQUEST_DONE(arg0, arg1, arg2, arg3, arg4) \
-	winDebug("XSERVER_REQUEST_DONE: %s %d %d %d %d\n",arg0, arg1, arg2, arg3, arg4)
+	winDebug4("XSERVER_REQUEST_DONE: %s %d %d %d %d\n",arg0, arg1, arg2, arg3, arg4)
 #define	XSERVER_REQUEST_START(arg0, arg1, arg2, arg3, arg4) \
-	winDebug("XSERVER_REQUEST_START: %s %d %d %d ->%p\n",arg0, arg1, arg2, arg3, arg4)
+	winDebug4("XSERVER_REQUEST_START: %s %d %d %d ->%p\n",arg0, arg1, arg2, arg3, arg4)
 #define	XSERVER_RESOURCE_ALLOC(arg0, arg1, arg2, arg3) \
-	winDebug("XSERVER_RESOURCE_ALLOC: 0x%x 0x%x ->%p %s\n",arg0, arg1, arg2, arg3)
+	winDebug4("XSERVER_RESOURCE_ALLOC: 0x%x 0x%x ->%p %s\n",arg0, arg1, arg2, arg3)
 #define	XSERVER_RESOURCE_FREE(arg0, arg1, arg2, arg3) \
-	winDebug("XSERVER_RESOURCE_FREE: 0x%x 0x%x ->%p %s\n",arg0, arg1, arg2, arg3)
+	winDebug4("XSERVER_RESOURCE_FREE: 0x%x 0x%x ->%p %s\n",arg0, arg1, arg2, arg3)
 #define	XSERVER_SEND_EVENT(arg0, arg1, arg2) \
-	winDebug("XSERVER_SEND_EVENT: 0x%x 0x%x ->%p\n",arg0, arg1, arg2)
+	winDebug4("XSERVER_SEND_EVENT: 0x%x 0x%x ->%p\n",arg0, arg1, arg2)
 
 #define	XSERVER_CLIENT_AUTH_ENABLED() (1)
 #define	XSERVER_CLIENT_CONNECT_ENABLED() (1)

@@ -39,9 +39,11 @@
 #if !defined(_MSC_VER) || defined(_DEBUG)
 #define WINDBG
 void winDebug (const char *format, ...);
+void winDebug4 (const char *format, ...);
 void winDebugWin32Message(const char* function, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 #else
 #define winDebug(...)
+#define winDebug4(...)
 #define winDebugWin32Message(...)
 #endif
 
