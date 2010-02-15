@@ -276,7 +276,21 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
     try
     {
       string SvnCommand=SearchCommand("svn",EXEEXT);
+      #ifdef WIN32
       Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetQuotedFullFileName(),false,&Output);
+      #else
+      struct stat Stat;
+      lstat(m_MhMakeConf->GetFullFileName().c_str(),&Stat);
+      if (S_ISLNK(Stat.st_mode))
+      {
+        char FileName[1024];
+        int len=readlink(m_MhMakeConf->GetFullFileName().c_str(),FileName,sizeof(FileName));
+        FileName[len]=0;
+        Ret=OsExeCommand(SvnCommand,string(" info ")+GetFileInfo(FileName,m_MhMakeConf->GetDir())->GetQuotedFullFileName(),false,&Output);
+      }
+      else
+        Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetQuotedFullFileName(),false,&Output);
+      #endif
     }
     catch (string Message)
     {

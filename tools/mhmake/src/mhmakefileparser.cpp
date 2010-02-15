@@ -520,7 +520,10 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
       else if (Ret=='#' || Ret=='.')
       {
         if (Ret=='#')
+        {
+          fscanf(pIn,"%*[ \t]");
           Ret=fscanf(pIn,"include %1[\"<]%254[^>\"]%*[\">]",&Type,IncludeList);
+        }
         else
           Ret=fscanf(pIn,"import %1[\"<]%254[^>\"]%*[\">]",&Type,IncludeList);
         if (Ret==2)

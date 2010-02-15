@@ -50,7 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "1.4.11"
+#define MHMAKEVER    "1.4.13"
 
 string SearchCommand(const string &Command, const string &Extension="");
 
