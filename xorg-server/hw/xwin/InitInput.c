@@ -171,3 +171,8 @@ InitInput (int argc, char *argv[])
   winDebug ("InitInput - returning\n");
 #endif
 }
+
+void
+CloseInput (void)
+{
+}

@@ -444,6 +444,26 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
         to->key      = NULL;
     }
 
+    /* If a SrvLedInfoPtr's flags are XkbSLI_IsDefault, the names and maps
+     * pointer point into the xkbInfo->desc struct.  XkbCopySrvLedInfo
+     * didn't update the pointers so we need to do it manually here.
+     */
+    if (to->kbdfeed)
+    {
+        KbdFeedbackPtr k;
+
+        for (k = to->kbdfeed; k; k = k->next)
+        {
+            if (!k->xkb_sli)
+                continue;
+            if (k->xkb_sli->flags & XkbSLI_IsDefault)
+            {
+                k->xkb_sli->names = to->key->xkbInfo->desc->names->indicators;
+                k->xkb_sli->maps = to->key->xkbInfo->desc->indicators->maps;
+            }
+        }
+    }
+
     /* We can't just copy over the focus class. When an app sets the focus,
      * it'll do so on the master device. Copying the SDs focus means losing
      * the focus.

@@ -136,8 +136,8 @@ winReadConfigfile ()
 
   /* Parse config file into data structure */
   xf86initConfigFiles();
-  filename = xf86openConfigFile (CONFIGPATH, xf86ConfigFile, PROJECTROOT);
   dirname = xf86openConfigDirFiles (CONFIGDIRPATH, xf86ConfigDir, PROJECTROOT);
+  filename = xf86openConfigFile (CONFIGPATH, xf86ConfigFile, PROJECTROOT);
 
   /* Hack for backward compatibility */
   if (!filename && from == X_DEFAULT)

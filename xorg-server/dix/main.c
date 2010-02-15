@@ -257,7 +257,6 @@ int main(int argc, char *argv[], char *envp[])
         InitCoreDevices();
 	InitInput(argc, argv);
 	InitAndStartDevices();
-	config_init();
 
 	dixSaveScreens(serverClient, SCREEN_SAVER_FORCER, ScreenSaverReset);
 
@@ -305,7 +304,7 @@ int main(int argc, char *argv[], char *envp[])
 	FreeAllResources();
 #endif
 
-        config_fini();
+        CloseInput();
 
         memset(WindowTable, 0, sizeof(WindowTable));
 	CloseDownDevices();

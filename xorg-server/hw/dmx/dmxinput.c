@@ -75,6 +75,10 @@ void InitInput(int argc, char **argv)
     mieqInit();
 }
 
+void CloseInput(void)
+{
+}
+
 /** Called from dix/dispatch.c in Dispatch() whenever input events
  * require processing.  All the work is done in the lower level
  * routines. */

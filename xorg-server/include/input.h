@@ -420,6 +420,7 @@ extern _X_EXPORT void ProcessInputEvents(void);
 extern _X_EXPORT void InitInput(
     int  /*argc*/,
     char ** /*argv*/);
+extern _X_EXPORT void CloseInput(void);
 
 extern _X_EXPORT int GetMaximumEventsNum(void);
 

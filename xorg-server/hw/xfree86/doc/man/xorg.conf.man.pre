@@ -988,8 +988,8 @@ These sections are optional and are used to provide configuration for a
 class of input devices as they are automatically added. An input device can
 match more than one
 .B InputClass
-section. Each class can only supplement settings from a previous class, so
-it is best to arrange the sections with the most generic matches last.
+section. Each class can override settings from a previous class, so it is
+best to arrange the sections with the most generic matches first.
 .PP
 .B InputClass
 sections have the following format:

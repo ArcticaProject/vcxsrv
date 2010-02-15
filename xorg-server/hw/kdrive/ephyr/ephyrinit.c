@@ -94,6 +94,11 @@ InitInput (int argc, char **argv)
   KdInitInput();
 }
 
+void
+CloseInput (void)
+{
+}
+
 #ifdef DDXBEFORERESET
 void
 ddxBeforeReset (void)

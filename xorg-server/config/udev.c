@@ -214,17 +214,12 @@ config_udev_init(void)
     struct udev *udev;
     struct udev_enumerate *enumerate;
     struct udev_list_entry *devices, *device;
-    int rc;
 
     udev = udev_new();
     if (!udev)
         return 0;
     udev_monitor = udev_monitor_new_from_netlink(udev, "udev");
     if (!udev_monitor)
-        return 0;
-    rc = udev_monitor_filter_add_match_subsystem_devtype(udev_monitor,
-                                                         "input", NULL);
-    if (rc < 0)
         return 0;
 
     if (udev_monitor_enable_receiving(udev_monitor)) {
@@ -235,7 +230,6 @@ config_udev_init(void)
     enumerate = udev_enumerate_new(udev);
     if (!enumerate)
         return 0;
-    udev_enumerate_add_match_subsystem(enumerate, "input");
     udev_enumerate_scan_devices(enumerate);
     devices = udev_enumerate_get_list_entry(enumerate);
     udev_list_entry_foreach(device, devices) {
