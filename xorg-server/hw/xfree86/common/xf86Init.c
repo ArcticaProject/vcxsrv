@@ -90,6 +90,8 @@
 #include "Pci.h"
 #include "xf86Bus.h"
 
+#include <hotplug.h>
+
 /* forward declarations */
 static Bool probe_devices_from_device_sections(DriverPtr drvp);
 static Bool add_matching_devices_to_configure_list(DriverPtr drvp);
@@ -1138,6 +1140,14 @@ InitInput(int argc, char **argv)
         if (xf86NewInputDevice(*pDev, &dev, TRUE) == BadAlloc)
             break;
     }
+
+    config_init();
+}
+
+void
+CloseInput (void)
+{
+    config_fini();
 }
 
 /*

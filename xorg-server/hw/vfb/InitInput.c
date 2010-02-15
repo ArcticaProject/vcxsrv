@@ -142,3 +142,8 @@ InitInput(int argc, char *argv[])
     RegisterKeyboardDevice(k);
     (void)mieqInit();
 }
+
+void
+CloseInput (void)
+{
+}

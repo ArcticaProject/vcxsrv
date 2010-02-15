@@ -67,13 +67,6 @@ extern winDispatchProcPtr	winProcQueryTreeOrig;
 #endif
 
 
-void InputDevicesClosed(void)
-{
-  g_pwinPointer=NULL;
-  g_pwinKeyboard=NULL;
-}
-
-
 /* Called from dix/devices.c */
 /*
  * All of our keys generate up and down transition notifications,
@@ -165,4 +158,11 @@ InitInput (int argc, char *argv[])
 #endif
 
   winDebug ("InitInput - returning\n");
+}
+
+void
+CloseInput (void)
+{
+  g_pwinPointer=NULL;
+  g_pwinKeyboard=NULL;
 }

@@ -586,37 +586,40 @@ InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
 
 /*
  * Merge in any InputClass configurations. Options in each InputClass
- * section have less priority than the original device configuration as
+ * section have more priority than the original device configuration as
  * well as any previous InputClass sections.
  */
 static int
 MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
 {
     XF86ConfInputClassPtr cl;
-    XF86OptionPtr classopts;
+    XF86OptionPtr classopts, mergedopts = NULL;
+    char *classdriver = NULL;
 
     for (cl = xf86configptr->conf_inputclass_lst; cl; cl = cl->list.next) {
         if (!InputClassMatches(cl, attrs))
             continue;
 
+        /* Collect class options and merge over previous classes */
         xf86Msg(X_CONFIG, "%s: Applying InputClass \"%s\"\n",
                 idev->identifier, cl->identifier);
-        if (cl->driver && !idev->driver) {
-            idev->driver = xstrdup(cl->driver);
-            if (!idev->driver) {
-                xf86Msg(X_ERROR, "Could not allocate memory while merging "
-                        "InputClass configuration");
-                return BadAlloc;
-            }
-        }
-
+        if (cl->driver)
+            classdriver = cl->driver;
         classopts = xf86optionListDup(cl->option_lst);
-        if (idev->commonOptions)
-            idev->commonOptions = xf86optionListMerge(classopts,
-                                                      idev->commonOptions);
-        else
-            idev->commonOptions = classopts;
+        mergedopts = xf86optionListMerge(mergedopts, classopts);
     }
+
+    /* Apply options to device with InputClass settings preferred. */
+    if (classdriver) {
+        xfree(idev->driver);
+        idev->driver = xstrdup(classdriver);
+        if (!idev->driver) {
+            xf86Msg(X_ERROR, "Failed to allocate memory while merging "
+                    "InputClass configuration");
+            return BadAlloc;
+        }
+    }
+    idev->commonOptions = xf86optionListMerge(idev->commonOptions, mergedopts);
 
     return Success;
 }

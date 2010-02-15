@@ -109,6 +109,11 @@ InitInput(int argc, char *argv[])
   RegisterBlockAndWakeupHandlers(xnestBlockHandler, xnestWakeupHandler, NULL);
 }
 
+void
+CloseInput(void)
+{
+}
+
 /*
  * DDX - specific abort routine.  Called by AbortServer().
  */
