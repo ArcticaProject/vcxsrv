@@ -1,5 +1,9 @@
 DIRFILE=$(THISDIR:%=$(DESTDIR)\..\%.dir)
-all: $(DESTDIR) $(DATA_FILES) $(DIRFILE)
+
+.PHONY: destdir
+destdir: $(DESTDIR)
+
+all: destdir $(DATA_FILES) $(DIRFILE)
 
 $(DESTDIR)\default: default.in
 	copy $< $@
