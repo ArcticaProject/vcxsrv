@@ -42,7 +42,6 @@ public:
   {
     return m_pCurrentDir;
   }
-  static void ChangeCurDir(const refptr<fileinfo>&NewDir);
 };
 
 #endif

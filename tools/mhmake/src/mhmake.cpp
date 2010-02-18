@@ -84,7 +84,7 @@ int __CDECL main(int argc, char* argv[])
       CmdLineArgs.push_back(argv[i]);
     }
 
-    refptr<loadedmakefile> pFirstMakefile(new loadedmakefile(CmdLineArgs,"makefile"));
+    refptr<loadedmakefile> pFirstMakefile(new loadedmakefile(curdir::GetCurDir(),CmdLineArgs,"makefile"));
     // For the first makefile we add the defines passed on the command line to the
     // environment so that the other load_makefile see the same variables
     pFirstMakefile->AddCommandLineVarsToEnvironment();
@@ -120,7 +120,8 @@ int __CDECL main(int argc, char* argv[])
         {
           g_Clean=true;
         }
-        pFirstMakefile->m_pParser->BuildTarget(GetFileInfo(*It,pFirstMakefile->m_MakeDir));
+        refptr<fileinfo> pTarget=GetFileInfo(*It,pFirstMakefile->m_MakeDir);
+        pFirstMakefile->m_pParser->BuildTarget(pTarget);
         It++;
       }
     }
@@ -128,7 +129,9 @@ int __CDECL main(int argc, char* argv[])
     {
       refptr<fileinfo> FirstTarget=pFirstMakefile->m_pParser->GetFirstTarget();
       if (FirstTarget)
+      {
         pFirstMakefile->m_pParser->BuildTarget(FirstTarget);
+      }
       else
         cout << "Warning: no targets in makefile. Nothing to be build.\nMHMAKECONF defined?\n";
     }

@@ -38,23 +38,6 @@ curdir::initcurdir::initcurdir()
 {
   char CurDir[MAX_PATH];
   getcwd(CurDir,MAX_PATH);
-  *this=GetFileInfo(CurDir,refptr<fileinfo>());
+  string strCurDir=CurDir;
+  *this=GetAbsFileInfo(NormalizePathName(strCurDir));
 }
-
-///////////////////////////////////////////////////////////////////////////////
-void curdir::ChangeCurDir(const refptr<fileinfo>&NewDir)
-{
-  if (NewDir!=m_pCurrentDir)
-  {
-    #ifdef _DEBUG
-    if (g_PrintAdditionalInfo)
-      cout << "Changing to dir "<<NewDir->GetFullFileName()<<endl;
-    #endif
-    if (-1==chdir(NewDir->GetFullFileName().c_str()))
-    {
-      throw string("Error changing to directory ") + NewDir->GetQuotedFullFileName();
-    }
-    m_pCurrentDir=NewDir;
-  }
-}
-

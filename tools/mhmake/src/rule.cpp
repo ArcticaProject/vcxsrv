@@ -151,7 +151,7 @@ void IMPLICITRULE::SearchImplicitRule(const refptr<fileinfo> &Target,vector< pai
         if (!ResIt->first.empty())
         {
           string Dependent=ReplaceWithStem(ResIt->first,Res.m_Stem);
-          Result.push_back(pair<refptr<fileinfo>,refptr<rule> >(GetFileInfo(Dependent),ResIt->second));
+          Result.push_back(pair<refptr<fileinfo>,refptr<rule> >(GetFileInfo(Dependent,ResIt->second->GetMakefile()->GetMakeDir()),ResIt->second));
         }
         else
           Result.push_back(pair<refptr<fileinfo>,refptr<rule> >(NullFileInfo,ResIt->second));

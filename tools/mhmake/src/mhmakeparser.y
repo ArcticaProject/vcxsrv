@@ -114,8 +114,8 @@ ruledef: expression_nocolorequal rulecolon maybeemptyexpression
              throw string("Empty left hand side in rule: ") + $1 + " : " + $3;
            }
            #endif
-           SplitToItems(ExpandExpression($1),*m_pCurrentItems,m_MakeDir);
-           SplitToItems(ExpandExpression($3),*m_pCurrentDeps,m_MakeDir);
+           SplitToItems(ExpandExpression($1),*m_pCurrentItems);
+           SplitToItems(ExpandExpression($3),*m_pCurrentDeps);
            m_DoubleColonRule= ($2==1) ;
            PRINTF(("Defining rule %s : %s\n",$1.c_str(),$3.c_str()));
            PRINTF(("  Expanded to %s : %s\n",ExpandExpression($1).c_str(),ExpandExpression($3).c_str()));
@@ -129,7 +129,7 @@ rulecolon: COLON {$$=0;} |
 phonyrule: PHONY COLON expression
            {
              vector< refptr<fileinfo> > Items;
-             SplitToItems(ExpandExpression($3),Items,m_MakeDir);
+             SplitToItems(ExpandExpression($3),Items);
              vector< refptr<fileinfo> >::iterator pIt=Items.begin();
              while (pIt!=Items.end())
              {
@@ -151,7 +151,7 @@ exportstrings : exportstring |
 
 exportstring : STRING
                {
-                 m_Exports.push_back($1+"="+ExpandExpression(ExpandVar($1)));
+                 SetExport($1,ExpandExpression(ExpandVar($1)));
                  PRINTF(("Exporting %s : %s\n",$1.c_str(),ExpandExpression(ExpandVar($1)).c_str()));
                }
 ;

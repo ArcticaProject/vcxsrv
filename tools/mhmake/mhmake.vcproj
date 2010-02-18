@@ -20,8 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -53,7 +53,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".,src,src\parser"
+				AdditionalIncludeDirectories=".,src,$(OutDir)"
 				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE"
 				StringPooling="true"
 				ExceptionHandling="2"
@@ -150,7 +150,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".,src,src\parser"
+				AdditionalIncludeDirectories=".,src,$(OutDir)"
 				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE"
 				StringPooling="true"
 				ExceptionHandling="2"
@@ -212,8 +212,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -240,7 +240,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".,src,src\parser"
+				AdditionalIncludeDirectories=".,src,$(OutDir)"
 				PreprocessorDefinitions="_DEBUG;_CRTDBG_MAP_ALLOC;WIN32;_CONSOLE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -330,7 +330,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".,src,src\parser"
+				AdditionalIncludeDirectories=".,src,$(OutDir)"
 				PreprocessorDefinitions="_DEBUG;_CRTDBG_MAP_ALLOC;WIN32;_CONSOLE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -425,7 +425,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".,src,src\parser"
+				AdditionalIncludeDirectories=".,src,$(OutDir)"
 				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -527,7 +527,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".,src,src\parser"
+				AdditionalIncludeDirectories=".,src,$(OutDir)"
 				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -603,6 +603,10 @@
 			>
 			<File
 				RelativePath=".\src\build.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\commandqueue.cpp"
 				>
 			</File>
 			<File
@@ -727,6 +731,10 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\src\commandqueue.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\curdir.h"
 				>
 			</File>
@@ -771,9 +779,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -781,9 +789,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -791,9 +799,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -801,9 +809,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -811,9 +819,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -821,9 +829,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -831,9 +839,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -841,9 +849,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -851,9 +859,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -861,9 +869,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makelex.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makelex.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\flexskel.cc ..\src\flexskel.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\flexskel.cc;.\src\flexskel.h;"
-						Outputs="src\parser\mhmakeLexer.cpp;src\parser\mhmakeLexer.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 			</File>
@@ -875,9 +883,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -885,9 +893,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -895,9 +903,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -905,9 +913,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -915,9 +923,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -925,9 +933,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -935,9 +943,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -945,9 +953,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -955,9 +963,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -965,9 +973,9 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="cmd.exe /c makebison.bat&#x0D;&#x0A;"
+						CommandLine="cmd.exe /c makebison.bat $(OutDir) &quot;$(InputPath)&quot; ..\src\bison.cc ..\src\bison.h $(InputName).h $(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies=".\src\bison.cc;.\src\bison.h;"
-						Outputs="src\parser\mhmakeparser.cpp;src\parser\mhmakeparser.h"
+						Outputs="$(OutDir)\$(InputName).cpp;$(OutDir)\$(InputName).h"
 					/>
 				</FileConfiguration>
 			</File>
@@ -976,19 +984,11 @@
 				Filter="cpp;h"
 				>
 				<File
-					RelativePath=".\src\parser\mhmakelexer.cpp"
+					RelativePath="$(OutDir)\mhmakeLexer.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\src\parser\mhmakelexer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\parser\mhmakeparser.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\parser\mhmakeparser.h"
+					RelativePath="$(OutDir)\mhmakeParser.cpp"
 					>
 				</File>
 			</Filter>

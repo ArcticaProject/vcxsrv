@@ -137,7 +137,7 @@ class fileinfo : public refbase
 {
   string m_AbsFileName;
   bool m_IsPhony;
-  bool m_IsBuild;
+  int m_BuildStatus;  /* Bit 0 means the target built is started, Bit 1 means the target is still building */
   refptr<rule> m_pRule;
   vector< refptr<fileinfo> > m_Deps;
   mh_time_t m_Date;
@@ -150,7 +150,7 @@ public:
   fileinfo(const string &AbsFileName,uint32 Md5_32)
   {
     m_IsPhony=false;
-    m_IsBuild=false;
+    m_BuildStatus=0;
     m_AbsFileName=UnquoteFileName(AbsFileName);
     InvalidateDate();
     m_CommandsMd5_32=Md5_32;
@@ -210,7 +210,7 @@ public:
   void SetRule(refptr<rule> &pRule)
   {
     #if defined(_DEBUG) && defined(_MSC_VER)
-    if (m_pRule && m_pRule->GetCommands().size()) {
+    if (m_pRule && m_pRule->GetCommands().size() && !IsBuilding()) {
       DebugBreak();
     }
     #endif
@@ -305,7 +305,9 @@ public:
     return m_IsPhony;
   }
   mh_time_t realGetDate(void);
+#ifdef _DEBUG
   void SetDateToNow(void);
+#endif
 
   void SetDate(mh_time_t Date)
   {
@@ -336,17 +338,29 @@ public:
   {
     return GetDate().DoesExist();
   }
+  bool IsBuildStarted(void) const
+  {
+    return (m_BuildStatus&1)==1;
+  }
   bool IsBuild(void) const
   {
-    return m_IsBuild;
+    return m_BuildStatus==1;
   }
   void SetBuild(void)
   {
-    m_IsBuild=true;
+    m_BuildStatus=1;
   }
-  void ClearBuild(void)
+  bool IsBuilding(void) const
   {
-    m_IsBuild=false;
+    return (m_BuildStatus&2)==2;
+  }
+  void SetBuilding(void)
+  {
+    m_BuildStatus|=2;
+  }
+  void ClearBuilding(void)
+  {
+    m_BuildStatus&=~2;
   }
   bool IsAutoDepExtention(void) const;
 
@@ -393,7 +407,7 @@ struct less_fileinfo : public binary_function <const fileinfo*, const fileinfo*,
 extern const string NullString;
 extern refptr<fileinfo> NullFileInfo;
 
-const refptr<fileinfo> &GetFileInfo(const string &szName,const refptr<fileinfo> &pRelDir=curdir::GetCurDir());
+const refptr<fileinfo> &GetFileInfo(const string &szName,const refptr<fileinfo> &pRelDir);
 
 extern set<refptr<fileinfo>,less_refptrfileinfo > g_FileInfos;
 
@@ -412,55 +426,13 @@ inline const refptr<fileinfo> &GetAbsFileInfo(const string &strAbsName)
     return *pFind;
 }
 
-
-inline const refptr<fileinfo> &GetFileInfo(const string &szName,const string &RelDir)
-{
-  return GetFileInfo(szName,GetFileInfo(RelDir));
-}
-
-inline const refptr<fileinfo> &GetFileInfo(const char *szName,const char *RelDir)
-{
-  return GetFileInfo(string(szName),string(RelDir));
-}
-
-inline const refptr<fileinfo> &GetFileInfo(const char *szName,const refptr<fileinfo> &RelDir=curdir::GetCurDir())
+inline const refptr<fileinfo> &GetFileInfo(const char *szName,const refptr<fileinfo> &RelDir)
 {
   return GetFileInfo(string(szName),RelDir);
 }
 
+string &NormalizePathName(string &Name);
 void PrintFileInfos();
-
-#ifdef WIN32
-class ZEROTIME
-{
-  __int64 m_ZeroTime;
-public:
-  ZEROTIME()
-  {
-    SYSTEMTIME SystemTime;
-
-    memset(&SystemTime,0,sizeof(SystemTime));
-    SystemTime.wYear=1970;
-    SystemTime.wMonth=1;
-    SystemTime.wDay=1;
-    SystemTime.wDayOfWeek=4;
-
-    SystemTimeToFileTime(&SystemTime,(FILETIME*)&m_ZeroTime);
-  }
-
-  __int64 GetZeroTime()
-  {
-    return m_ZeroTime;
-  }
-
-  mh_time_t ConvertTime(FILETIME *pFileTime)
-  {
-    return (mh_time_t)((*(__int64*)pFileTime-m_ZeroTime)/10000000);  /* filetime is in nano seconds*/
-  }
-};
-
-extern ZEROTIME g_ZeroTime;
-#endif
 
 #endif
 

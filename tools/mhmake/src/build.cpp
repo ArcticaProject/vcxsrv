@@ -27,7 +27,6 @@
 
 /* Calling py2exe is only implemented on windows for now. */
 #ifdef WIN32
-static const string &GetPythonExe();
 
 /* Python exe create script in parts:
 import zipfile,tempfile,shutil,os
@@ -214,12 +213,12 @@ void mhmakefileparser::CreatePythonExe(const string &FullCommand)
   PythonScript+=GetPythonExe();
   PythonScript+=PythonScriptPart3;
 
-  char Filename[10];
+  char Filename[MAX_PATH];
   int Nr=0;
   FILE *pFile=(FILE*)1;
   while (1)
   {
-    sprintf(Filename,"tmp%d.py",Nr);
+    sprintf(Filename,"%s\\tmp%d.py",m_MakeDir->GetFullFileName().c_str(),Nr);
     pFile=fopen(Filename,"r");
     if (!pFile)
       break;
@@ -231,7 +230,7 @@ void mhmakefileparser::CreatePythonExe(const string &FullCommand)
   fclose(pFile);
 
   string GenExeCommand=GetPythonExe();
-  GenExeCommand+=Filename;
+  GenExeCommand+=QuoteFileName(Filename);
 
   string Output;
   ExecuteCommand(GenExeCommand,&Output);
@@ -241,21 +240,22 @@ void mhmakefileparser::CreatePythonExe(const string &FullCommand)
 #endif
 
 /*****************************************************************************/
-#ifndef WIN32
-static int SearchPath(void *NotUsed, const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart)
+int mhmakefileparser::SearchPath(void *NotUsed, const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const
 {
+  static vector< refptr<fileinfo> > vSearchPath;
+
   string Command(szCommand);
   if (pExt)
     Command+=pExt;
   vector< refptr<fileinfo> >::iterator It;
   vector< refptr<fileinfo> >::iterator ItEnd;
 
-  refptr<fileinfo> CommandFile=GetFileInfo(Command);
+  refptr<fileinfo> CommandFile=GetFileInfo(Command,m_MakeDir);
   if (CommandFile->Exists())
   {
     goto found;
   }
-  static vector< refptr<fileinfo> > vSearchPath;
+  CommandFile->InvalidateDate(); // It could be created in the makefile later
   if (!vSearchPath.size())
   {
      char Path[1024];
@@ -266,7 +266,7 @@ static int SearchPath(void *NotUsed, const char *szCommand, const char *pExt, in
      char *pTok=strtok(Path,OSPATHENVSEPSTR);
      while (pTok)
      {
-       vSearchPath.push_back(GetFileInfo(pTok));
+       vSearchPath.push_back(GetFileInfo(pTok,m_MakeDir));
        pTok=strtok(NULL,OSPATHENVSEPSTR);
      }
   }
@@ -292,10 +292,9 @@ found:
   strcpy(szFullCommand,FullCommand.c_str());
   return 1;
 }
-#endif
 
 /*****************************************************************************/
-string SearchCommand(const string &Command, const string &Extension)
+string mhmakefileparser::SearchCommand(const string &Command, const string &Extension) const
 {
   char FullCommand[MAX_PATH]="";
   unsigned long Size=sizeof(FullCommand);
@@ -390,7 +389,7 @@ static bool DeleteDir(const string &Dir,const string WildSearch="*",bool bRemove
 }
 
 /*****************************************************************************/
-static bool DeleteFiles(const string &Params)
+HANDLE mhmakefileparser::DeleteFiles(const string &Params) const
 {
   bool IgnoreError=false;
   vector< refptr<fileinfo> > Files;
@@ -406,7 +405,7 @@ static bool DeleteFiles(const string &Params)
     else
     {
       cerr << "Invalid option "<<Params[1]<<" in del statement\n";
-      return false;
+      return (HANDLE)-1;
     }
   }
   else
@@ -449,11 +448,11 @@ static bool DeleteFiles(const string &Params)
       if (-1==remove(FileName.c_str()) && !IgnoreError)
       {
         cerr << "Error deleting "<<FileName<<endl;
-        return false;
+        return (HANDLE)-1;
       }
     }
   }
-  return true;
+  return (HANDLE)0;
 }
 
 /*****************************************************************************/
@@ -599,7 +598,7 @@ exit:
 }
 
 /*****************************************************************************/
-static bool EchoCommand(const string &Params)
+HANDLE mhmakefileparser::EchoCommand(const string &Params) const
 {
     // Find the first > character
   size_t Pos=Params.find_first_of('>');
@@ -616,20 +615,20 @@ static bool EchoCommand(const string &Params)
     if (Params[Pos+1]=='>')
     {
       NextItem(Params.substr(Pos+2).c_str(),Filename);
-      refptr<fileinfo> pFile=GetFileInfo(Filename);
+      refptr<fileinfo> pFile=GetFileInfo(Filename,m_MakeDir);
         // Open file in append
       pfFile=fopen(pFile->GetFullFileName().c_str(),"a");
     }
     else
     {
       NextItem(Params.substr(Pos+1).c_str(),Filename);
-      refptr<fileinfo> pFile=GetFileInfo(Filename);
+      refptr<fileinfo> pFile=GetFileInfo(Filename,m_MakeDir);
       pfFile=fopen(pFile->GetFullFileName().c_str(),"w");
     }
     if (!pfFile)
     {
       cerr << "Error opening file "<<Filename<<endl;
-      return false;
+      return (HANDLE)-1;
     }
     int Begin=0;
     while (Params[Begin]==' ' || Params[Begin] == '\t') Begin++;  // Strip leading white space
@@ -637,15 +636,15 @@ static bool EchoCommand(const string &Params)
     if (EchoStr.length()!=fwrite(EchoStr.c_str(),1,EchoStr.length(),pfFile))
     {
       cerr << "Error writing file "<<Filename<<endl;
-      return false;
+      return (HANDLE)-1;
     }
     fclose(pfFile);
   }
-  return true;
+  return (HANDLE)0;
 }
 
 /*****************************************************************************/
-static bool CopyFiles(const string &Params)
+HANDLE mhmakefileparser::CopyFiles(const string &Params) const
 {
   vector< refptr<fileinfo> > Files;
 
@@ -663,7 +662,7 @@ static bool CopyFiles(const string &Params)
   if (NrSrcs>1 && !pDest->IsDir())
   {
     cerr << "copy: Destination must be a directory when more then one source : "<<Params<<endl;
-    return false;
+    return (HANDLE)-1;
   }
 
   for (size_t i=0; i<NrSrcs; i++)
@@ -675,7 +674,7 @@ static bool CopyFiles(const string &Params)
     if (pSrc->IsDir())
     {
       SrcFileName+=OSPATHSEPSTR"*";
-      pSrc=GetFileInfo(SrcFileName);
+      pSrc=GetFileInfo(SrcFileName,m_MakeDir);
     }
 
     //cerr << "copy "<<pSrc->GetFullFileName()<<" "<<pDest->GetFullFileName()<<endl;
@@ -685,7 +684,7 @@ static bool CopyFiles(const string &Params)
       if (!CopyDir(pSrc->GetDir(), pDest, pSrc->GetName()))
       {
         cerr << "copy: Error copying directory: " << Params << endl;
-        return false;
+        return (HANDLE)-1;
       }
     }
     else
@@ -693,17 +692,17 @@ static bool CopyFiles(const string &Params)
       if (!CopyFile(pSrc,pDest))
       {
         cerr << "copy: Error copying file: " << Params << endl;
-        return false;
+        return (HANDLE)-1;
       }
     }
   }
 
-  return true;
+  return (HANDLE)0;
 
 }
 
 /*****************************************************************************/
-static bool TouchFiles(const string &Params)
+HANDLE mhmakefileparser::TouchFiles(const string &Params) const
 {
   vector< refptr<fileinfo> > Files;
 
@@ -723,7 +722,7 @@ static bool TouchFiles(const string &Params)
     if (pFile->IsDir())
     {
       cerr << "touch: Cannot touch a directory: " << FileName << endl;
-      return false;
+      return (HANDLE)-1;
     }
     if (pFile->Exists())
     {
@@ -744,7 +743,7 @@ static bool TouchFiles(const string &Params)
         if (fstat (fd, &st) < 0)
         {
           cerr << "touch: Cannot stat file " << FileName << endl;
-          return false;
+          return (HANDLE)-1;
         }
       }
 
@@ -754,14 +753,14 @@ static bool TouchFiles(const string &Params)
         if (fd>=0 && close(fd) < 0)
         {
           cerr << "touch: Error closing file " << FileName << endl;
-          return false;
+          return (HANDLE)-1;
         }
         /*Re-Create an empty file */
         pFile=fopen(FileName.c_str(),"wb");
         if (!pFile)
         {
           cerr << "touch: Cannot create file: " << FileName << endl;
-          return false;
+          return (HANDLE)-1;
         }
         fclose(pFile);
       }
@@ -771,22 +770,22 @@ static bool TouchFiles(const string &Params)
         if (Ret!=sizeof(c) && Ret!=EOF)
         {
           cerr << "touch: Cannot read file " << FileName << ": "<<Ret<<endl;
-          return false;
+          return (HANDLE)-1;
         }
         if (lseek (fd, (off_t) 0, SEEK_SET) < 0)
         {
           cerr << "touch: Error changing file pointer " << FileName << endl;
-          return false;
+          return (HANDLE)-1;
         }
         if (write (fd, &c, sizeof c) != sizeof(c))
         {
           cerr << "touch: Error writing file " << FileName << endl;
-          return false;
+          return (HANDLE)-1;
         }
         if (close (fd) < 0)
         {
           cerr << "touch: Error closing file " << FileName << endl;
-          return false;
+          return (HANDLE)-1;
         }
       }
     }
@@ -797,17 +796,17 @@ static bool TouchFiles(const string &Params)
       if (!pFile)
       {
         cerr << "touch: Cannot create file: " << FileName << endl;
-        return false;
+        return (HANDLE)-1;
       }
       fclose(pFile);
     }
     pFile->InvalidateDate();
   }
-  return true;
+  return (HANDLE)0;
 }
 
 /*****************************************************************************/
-static const string &GetPythonExe()
+const string &mhmakefileparser::GetPythonExe() const
 {
   static string PythonExe;
   if (PythonExe.empty())
@@ -905,8 +904,8 @@ string mhmakefileparser::GetFullCommand(string Command)
         Command=FullCommand;
         if (!PythonFullCommand.empty()&&s_Py2ExeInstalled)
         {
-          refptr<fileinfo> pExeFile=GetFileInfo(FullCommand);
-          refptr<fileinfo> pPyFile=GetFileInfo(PythonFullCommand);
+          refptr<fileinfo> pExeFile=GetFileInfo(FullCommand,m_MakeDir);
+          refptr<fileinfo> pPyFile=GetFileInfo(PythonFullCommand,m_MakeDir);
           bool bBuild=false;
           if (pExeFile->GetDate().IsOlder(pPyFile->GetDate()))
           {
@@ -956,7 +955,7 @@ string mhmakefileparser::GetFullCommand(string Command)
             string ExeFullCommand=SearchCommand(Command,EXEEXT);
             if (!ExeFullCommand.empty())
             {
-              pExeFile=GetFileInfo(ExeFullCommand);
+              pExeFile=GetFileInfo(ExeFullCommand,m_MakeDir);
               pExeFile->InvalidateDate(); // The file was just generated, make sure the correct date is taken.
             }
             if (ExeFullCommand.empty() || !pExeFile->Exists())
@@ -984,7 +983,7 @@ string mhmakefileparser::GetFullCommand(string Command)
   return pFound->second;
 }
 
-bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,string *pOutput)
+HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const
 {
   string FullCommandLine;
   string ComSpec=GetComspec();
@@ -1059,7 +1058,7 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
     StartupInfo.hStdOutput = hChildStdoutWr;
     StartupInfo.hStdError = hChildStdoutWr;
 
-    if (!CreateProcess(NULL,pFullCommand,NULL,NULL,TRUE,CREATE_NO_WINDOW,NULL,curdir::GetCurDir()->GetFullFileName().c_str(),&StartupInfo,&ProcessInfo))
+    if (!CreateProcess(NULL,pFullCommand,NULL,NULL,TRUE,CREATE_NO_WINDOW,m_pEnv,m_MakeDir->GetFullFileName().c_str(),&StartupInfo,&ProcessInfo))
     {
       delete[] pFullCommand;
       string ErrorMessage=string("Error starting command: ") + FullCommandLine + " : " + stringify(GetLastError());
@@ -1086,10 +1085,24 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
     WaitForSingleObject(ProcessInfo.hProcess,INFINITE);
     fclose(pStdIn);
     fclose(pStdOut);
+
+    DWORD ExitCode=0;
+    if (!GetExitCodeProcess(ProcessInfo.hProcess,&ExitCode) || ExitCode)
+    {
+      if (IgnoreError)
+      {
+        cerr << "Error running command: "<<Command<<", but ignoring error\n";
+        return (HANDLE)0; // Ignore error
+      }
+      else
+        return (HANDLE)-1;
+    }
+    CloseHandle(ProcessInfo.hProcess);
+    return (HANDLE)0;
   }
   else
   {
-    if (!CreateProcess(NULL,pFullCommand,NULL,NULL,TRUE,0,NULL,curdir::GetCurDir()->GetFullFileName().c_str(),&StartupInfo,&ProcessInfo))
+    if (!CreateProcess(NULL,pFullCommand,NULL,NULL,TRUE,0,m_pEnv,m_MakeDir->GetFullFileName().c_str(),&StartupInfo,&ProcessInfo))
     {
       delete[] pFullCommand;
       string ErrorMessage=string("Error starting command: ") + Command + " : " + stringify(GetLastError());
@@ -1100,21 +1113,8 @@ bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,st
     }
     delete[] pFullCommand;
     CloseHandle(ProcessInfo.hThread);
-    WaitForSingleObject(ProcessInfo.hProcess,INFINITE);
+    return ProcessInfo.hProcess;
   }
-  DWORD ExitCode=0;
-  if (!GetExitCodeProcess(ProcessInfo.hProcess,&ExitCode) || ExitCode)
-  {
-    if (IgnoreError)
-    {
-      cerr << "Error running command: "<<Command<<", but ignoring error\n";
-      return true; // Ignore error
-    }
-    else
-      return false;
-  }
-  CloseHandle(ProcessInfo.hProcess);
-  return true;
 #else
   int pipeto[2];      /* pipe to feed the exec'ed program input */
   int pipefrom[2];    /* pipe to get the exec'ed program output */
@@ -1278,10 +1278,10 @@ string EscapeQuotes(const string &Params)
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-bool mhmakefileparser::ExecuteCommand(string Command,string *pOutput)
+HANDLE mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, string *pOutput)
 {
   bool Echo=true;
-  bool IgnoreError=false;
+  IgnoreError=false;
   while (1)
   {
     if (Command[0]=='@')
@@ -1398,7 +1398,7 @@ bool mhmakefileparser::ExecuteCommand(string Command,string *pOutput)
   #ifdef _DEBUG
   }
   #endif
-  return true; /* No Error */
+  return (HANDLE)0; /* No Error */
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1409,7 +1409,13 @@ void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, const refptr
   vector< refptr<fileinfo> >::iterator pDepIt=Deps.begin();
   while (pDepIt!=Deps.end())
   {
-    mh_time_t DepDate=BuildTarget(*pDepIt);
+    StartBuildTarget(*pDepIt);
+    pDepIt++;
+  }
+  pDepIt=Deps.begin();
+  while (pDepIt!=Deps.end())
+  {
+    mh_time_t DepDate=WaitBuildTarget(*pDepIt);
     if (DepDate.IsNewer(YoungestDate))
       YoungestDate=DepDate;
     if (DepDate.IsNewer(TargetDate))
@@ -1425,7 +1431,7 @@ void mhmakefileparser::BuildDependencies(const refptr<rule> &pRule, const refptr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bCheckTargetDir)
+mh_time_t mhmakefileparser::StartBuildTarget(const refptr<fileinfo> &Target,bool bCheckTargetDir)
 {
   #ifdef _DEBUG
   if (g_CheckCircularDeps)
@@ -1442,7 +1448,7 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
         pIt++;
       }
     }
-    if (!Target->IsBuild()) m_TargetStack.push_back(Target);
+    if (!Target->IsBuildStarted()) m_TargetStack.push_back(Target);
   }
   #endif
 
@@ -1467,6 +1473,8 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
     #endif
     return Target->GetDate();
   }
+  if (Target->IsBuilding())
+    return mh_time_t();  // Target is still building, so we have to wait
 
   #ifdef _DEBUG
   if (g_GenProjectTree)
@@ -1567,6 +1575,16 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
       }
       ResultIt++;
     }
+    if (pRule)
+    {
+      #ifdef _DEBUG
+      Target->SetBuilding();
+      Target->SetRule(pRule);
+      Target->ClearBuilding();
+      #else
+      Target->SetRule(pRule);
+      #endif
+    }
   }
 
   mhmakeparser *pMakefile=NULL;
@@ -1614,24 +1632,9 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
     // Now execute the commands
     vector<string> &Commands=pRule->GetCommands();
 
-    while (1)
+    if (!MakeTarget)
     {
       vector<string>::iterator CommandIt=Commands.begin();
-      if (MakeTarget)
-      {
-        pMakefile->UpdateAutomaticDependencies(Target);
-        BuildDependencies(pRule,Target,TargetDate,YoungestDate,MakeTarget); /* Since it could be that there are dependencies added, make sure that they are all build before building this target */
-
-        pMakefile->InitEnv();  // Make sure that the exports are set in the evironment
-#ifdef _DEBUG
-       if (!g_GenProjectTree && !g_Quiet)
-#else
-       if (!g_Quiet)
-#endif
-        cout << "Building " << Target->GetQuotedFullFileName()<<endl;
-      }
-
-      curdir::ChangeCurDir(pMakefile->GetMakeDir());
 
       md5_context ctx;
       md5_starts( &ctx );
@@ -1641,57 +1644,18 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
         string Command=pMakefile->ExpandExpression(*CommandIt);
         pMakefile->ClearRuleThatIsBuild();  /* Make sure that further expansion is not taking this rule into account.*/
         md5_update( &ctx, (uint8 *)Command.c_str(), (unsigned long)Command.size());
-        if (MakeTarget)
-        {
-          #ifdef _DEBUG
-          if (g_pPrintDependencyCheck)
-          {
-            for (int i=0; i<Indent; i++)
-              cout<<"  ";
-            cout<<"-> "<<Command<<endl;
-          }
-          if (!g_GenProjectTree)
-          #endif
-          if (!pMakefile->ExecuteCommand(Command))
-          {
-            string ErrorMessage = string("Error running command: ")+ Command +"\n";
-            ErrorMessage += "Command defined in makefile: " + pMakefile->GetMakeDir()->GetQuotedFullFileName();
-            Target->SetCommandsMd5_32(0);  /* Clear the md5 to make sure that the target is rebuild the next time mhmake is ran */
-            m_AutoDepsDirty=true;  /* We need to update the autodeps file if the md5 has been changed */
-            throw ErrorMessage;
-          }
-        }
         CommandIt++;
       }
 
       uint32 Md5_32=md5_finish32( &ctx);
-      if (MakeTarget)
-      {
-        #ifdef _DEBUG
-        if (g_DoNotExecute||g_GenProjectTree)
-          Target->SetDateToNow();
-        else
-        #endif
-          Target->InvalidateDate();
-        mh_time_t NewDate=Target->GetDate();
-        if (NewDate.IsNewer(YoungestDate))
-          YoungestDate=NewDate;
-
-        Target->SetCommandsMd5_32(Md5_32);  /* If the rule of the target was added with an implicit rule the targets in the rule is empty */
-        pMakefile->AddTarget(Target);
-        pMakefile->m_AutoDepsDirty=true;
-        pRule->SetTargetsIsBuild(Md5_32);
-        break;
-      }
-      else if (!Target->CompareMd5_32(Md5_32))
+      if (!Target->CompareMd5_32(Md5_32))
       {
         if (TargetDate.IsNewerOrSame(m_sBuildTime) || TargetDate.IsDir())
         {
           // Only rebuild if it is not yet rebuild in this current run. This may happen for implicit rules that have multiple targets (implicit rules that build more then one target at the same time
           Target->SetCommandsMd5_32(Md5_32);
           pMakefile->AddTarget(Target);
-          pMakefile->m_AutoDepsDirty=true;  /* We need to update the autodeps file if the md5 has been changed */
-          break;
+          pMakefile->SetAutoDepsDirty();  /* We need to update the autodeps file if the md5 has been changed */
         }
         else
         {
@@ -1699,11 +1663,28 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
           if (!g_GenProjectTree)
             cout << "Md5 is different for " << Target->GetQuotedFullFileName() << " Old:"<<hex<<Target->GetCommandsMd5_32()<<", New: "<<Md5_32<<". Commandline must have been changed so recompiling\n";
           #endif
+
+          #ifdef _DEBUG
+          Indent--;
+          if (g_CheckCircularDeps)
+          {
+            m_TargetStack.pop_back();
+          }
+          #endif
+
           MakeTarget=true;
         }
       }
-      else
-        break;
+    }
+    if (MakeTarget)
+    {
+      // Queue for execution
+//      Target->SetDate(YoungestDate);
+      if (sm_CommandQueue.QueueTarget(Target))
+        return mh_time_t();
+      mh_time_t NewDate=Target->GetDate();
+      if (NewDate.IsNewer(YoungestDate))
+        YoungestDate=NewDate;
     }
   }
 
@@ -1728,6 +1709,12 @@ mh_time_t mhmakefileparser::BuildTarget(const refptr<fileinfo> &Target,bool bChe
   #endif
   Target->SetDate(YoungestDate); /* This is especially needed for phony targets in between real targets */
   return YoungestDate;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+mh_time_t mhmakefileparser::WaitBuildTarget(const refptr<fileinfo> &Target)
+{
+  return sm_CommandQueue.WaitForTarget(Target);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -26,6 +26,8 @@
 #include "rule.h"
 #include "mhmakelexer.h"
 
+commandqueue mhmakefileparser::sm_CommandQueue;
+
 ///////////////////////////////////////////////////////////////////////////////
 int mhmakefileparser::yylex(void)
 {
@@ -40,13 +42,13 @@ void mhmakefileparser::yyerror(const char *m)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int mhmakefileparser::ParseFile(const refptr<fileinfo> &FileInfo,bool SetMakeDir)
+int mhmakefileparser::ParseFile(const refptr<fileinfo> &FileInfo, refptr<fileinfo> &pMakeDir)
 {
   mhmakelexer theLexer;
   m_ptheLexer=&theLexer;
-  if (SetMakeDir)
+  if (pMakeDir)
   {
-    m_MakeDir=curdir::GetCurDir();
+    m_MakeDir=pMakeDir;
     m_Variables[CURDIR]=m_MakeDir->GetQuotedFullFileName();
   }
   theLexer.m_InputFileName=FileInfo->GetFullFileName();
@@ -357,7 +359,7 @@ string mhmakefileparser::ExpandVar(const string &Var) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SplitToItems(const string &String,vector< refptr<fileinfo> > &Items,refptr<fileinfo> Dir)
+void mhmakefileparser::SplitToItems(const string &String,vector< refptr<fileinfo> > &Items) const
 {
   const char *pTmp=String.c_str();
   while (*pTmp)
@@ -366,7 +368,7 @@ void SplitToItems(const string &String,vector< refptr<fileinfo> > &Items,refptr<
     pTmp=NextItem(pTmp,Item);
     if (!Item.empty())
     {
-      Items.push_back(GetFileInfo(Item,Dir));
+      Items.push_back(GetFileInfo(Item,m_MakeDir));
     }
   }
 }
@@ -377,7 +379,7 @@ void mhmakefileparser::ParseBuildedIncludeFiles()
   vector<string>::iterator It=m_ToBeIncludeAfterBuild.begin();
   while (It!=m_ToBeIncludeAfterBuild.end())
   {
-    int result=ParseFile(GetFileInfo(*It));
+    int result=ParseFile(GetFileInfo(*It,m_MakeDir));
     if (result)
     {
       throw string("Error parsing ")+*It;
@@ -410,12 +412,15 @@ void mhmakefileparser::PrintVariables(bool Expand) const
     }
     It++;
   }
-  cout << "Exported Variables:\n";
-  vector<string>::const_iterator It2=m_Exports.begin();
-  while (It2!=m_Exports.end())
+  if (m_pEnv)
   {
-    cout<<*It2<<endl;
-    It2++;
+    cout << "Environment overruled:\n";
+    char *pEnv=m_pEnv;
+    while (*pEnv)
+    {
+      cout<<pEnv<<endl;
+      pEnv+=strlen(pEnv)+1;
+    }
   }
 }
 #endif
@@ -474,7 +479,6 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
   if (!pIn)
     return;
 
-  refptr<fileinfo> CurDir=curdir::GetCurDir();  /* Since we are calling BuildTarget, the current directory might change, which is not what we should expecting */
   char IncludeList[255];
   int PrevRet=0;
   int Ret=fgetc(pIn);
@@ -551,7 +555,8 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
         {
           refptr<fileinfo> pInclude=GetFileInfo(IncludeFile,FirstDep->GetDir());
           /* Add the dependency when the file alrady exist or there is a rule available to be build */
-          if (BuildTarget(pInclude).DoesExist())  // Try to build the target, and add it if it exists after building
+          mh_time_t Date=BuildTarget(pInclude);
+          if (Date.DoesExist())  // Try to build the target, and add it if it exists after building
           {
             set< refptr<fileinfo> >::iterator pFind=Autodeps.find(pInclude);
             if (pFind==Autodeps.end())
@@ -566,7 +571,8 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
         while (It<IncludeDirs->end())
         {
           refptr<fileinfo> pInclude=GetFileInfo(IncludeFile,*It);
-          if (BuildTarget(pInclude).DoesExist()) // Try to build the target, and add it if it exists after building
+          mh_time_t Date=BuildTarget(pInclude);
+          if (Date.DoesExist()) // Try to build the target, and add it if it exists after building
           {
             set< refptr<fileinfo> >::iterator pFind=Autodeps.find(pInclude);
             if (pFind==Autodeps.end())
@@ -587,7 +593,6 @@ void mhmakefileparser::GetAutoDeps(const refptr<fileinfo> &FirstDep,set< refptr<
     Ret=fgetc(pIn);
   }
   fclose(pIn);
-  curdir::ChangeCurDir(CurDir);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -615,7 +620,7 @@ void mhmakefileparser::UpdateAutomaticDependencies(const refptr<fileinfo> &Targe
       Target->AddDep(*It);
       It++;
     }
-    m_AutoDepsDirty=true;
+    SetAutoDepsDirty();
   }
 }
 
@@ -691,14 +696,14 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
   ReadStr(pIn,FileName);
   while (FileName[0])
   {
-    refptr<fileinfo> Target=GetFileInfo(FileName);
+    refptr<fileinfo> Target=GetFileInfo(FileName,m_MakeDir);
     set< refptr<fileinfo> > &Autodeps=m_AutoDeps[Target];
     ReadStr(pIn,FileName);
     while (FileName[0])
     {
       if (!g_ForceAutoDepRescan)  /* If we are forcing the autodepscan we do not have to load the dependencies. */
       {
-        refptr<fileinfo> Dep=GetFileInfo(FileName);
+        refptr<fileinfo> Dep=GetFileInfo(FileName,m_MakeDir);
         Autodeps.insert(Dep);
         Target->AddDep(Dep);
       }
@@ -728,7 +733,7 @@ void mhmakefileparser::LoadAutoDepsFile(refptr<fileinfo> &DepFile)
     AddTarget(*pPair.first);
   }
   if (MakeNotDirty)
-    m_AutoDepsDirty=false;
+    ClearAutoDepsDirty();
 
   fclose(pIn);
 }
@@ -748,7 +753,7 @@ static void MakeDirs(const refptr<fileinfo> & Dir)
 
 void mhmakefileparser::SaveAutoDepsFile()
 {
-  if (!m_AutoDepsDirty)
+  if (!IsAutoDepsDirty())
     return;
 
   if (g_Clean
@@ -763,7 +768,7 @@ void mhmakefileparser::SaveAutoDepsFile()
   {
     return;
   }
-  refptr<fileinfo> pDepFile=GetFileInfo(DepFile);
+  refptr<fileinfo> pDepFile=GetFileInfo(DepFile,m_MakeDir);
 
 #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
@@ -864,75 +869,68 @@ bool mhmakefileparser::SkipHeaderFile(const string &FileName)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Makes sure that the makefile exports are set in the environment
-
-const mhmakefileparser *mhmakefileparser::m_spCurEnv; // Identifies which makefiles exports are currently set
-
-void mhmakefileparser::InitEnv() const
+void mhmakefileparser::SetExport(const string &Var, const string &Val)
 {
-  if (this!=m_spCurEnv)
+  if (!m_pEnv)
   {
-    /* First restore the previous set environment variables */
-    if (m_spCurEnv)
-      m_spCurEnv->RestoreEnv();
-
-    ((mhmakefileparser*)this)->SaveEnv();
-    vector<string>::const_iterator It=m_Exports.begin();
-    vector<string>::const_iterator ItEnd=m_Exports.end();
-    while (It!=ItEnd)
+    /* Environment not created yet, so create one */
+    char *pEnv=GetEnvironmentStrings();
+    char *pEnd=pEnv;
+    while (*pEnd)
     {
-      putenv((char *)It->c_str());
-      It++;
+      while (*pEnd++);
     }
-    m_spCurEnv=this;
+    int Len=pEnd-pEnv+1;
+    m_pEnv=(char*)malloc(Len);
+    memcpy(m_pEnv,pEnv,Len);
+    m_EnvLen=Len;
+    FreeEnvironmentStrings(pEnv);
   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::SaveEnv()
-{
-  vector<string>::const_iterator It=m_Exports.begin();
-  vector<string>::const_iterator ItEnd=m_Exports.end();
-  while (It!=ItEnd)
+  /* First check if the variable is in the environment, if so remove it first */
+  char *pEnv=m_pEnv;
+  while (*pEnv)
   {
-    string Export=*It++;
-    const char *pTmp=Export.c_str();
-    string Var;
-    NextItem(pTmp,Var,"=");
-    const char *pEnv=getenv(Var.c_str());
-    string Env;
-    if (pEnv)
-      Env=pEnv;
-    m_SavedExports[Var]=Env;
+    const char *pVar=Var.c_str();
+    char *pStart=pEnv;
+    while (*pEnv!='=' && *pEnv==*pVar)
+    {
+      pEnv++; pVar++;
+    }
+    if (*pEnv=='=' && !*pVar)
+    {
+      /* Variable found, remove it */
+      while (*pEnv++);
+      m_EnvLen-=pEnv-pStart;
+      while (*pEnv)
+      {
+        while (*pEnv)
+        {
+          *pStart=*pEnv++;
+          pStart++;
+        }
+        *pStart=*pEnv++;
+        pStart++;
+      }
+      *pStart=*pEnv;
+      break;
+    }
+    while (*pEnv++);
   }
+  int VarLen=Var.length();
+  int ValLen=Val.length();
+  int Extra=VarLen+ValLen+2;
+  /* Add the variable at the end */
+  m_pEnv=(char*)realloc(m_pEnv,m_EnvLen+Extra);
+  pEnv=m_pEnv+m_EnvLen-1;
+  memcpy(pEnv,Var.c_str(),VarLen);
+  pEnv+=VarLen;
+  *pEnv++='=';
+  memcpy(pEnv,Val.c_str(),ValLen);
+  pEnv+=ValLen;
+  *pEnv++='\0';
+  *pEnv++='\0';
+  m_EnvLen+=Extra;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-void mhmakefileparser::RestoreEnv() const
-{
-  if (m_spCurEnv && this!=m_spCurEnv)
-  {
-    m_spCurEnv->RestoreEnv();  // Make sure that environment variable that were set in the other makefile (m_spCurEnv) are cleared, otherwise the environment is not completely restored.
-  }
-
-  map<string,string>::const_iterator It=m_SavedExports.begin();
-  map<string,string>::const_iterator ItEnd=m_SavedExports.end();
-  while (It!=ItEnd)
-  {
-#ifdef WIN32
-    char Env[1024];
-    sprintf(Env,"%s=%s",It->first.c_str(),It->second.c_str());
-    putenv(Env);
-#else
-    /* on linux, only use putenv if you know the supplied string will stay in memory */
-    setenv(It->first.c_str(),It->second.c_str(),1);
-#endif
-    It++;
-  }
-  ((mhmakefileparser*)this)->m_SavedExports.clear();
-  m_spCurEnv=NULL;
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -979,8 +977,6 @@ uint32 mhmakefileparser::CreateEnvMd5_32() const
   string EnvVars=ExpandVar(USED_ENVVARS);
   const char *pTmp=EnvVars.c_str();
 
-  RestoreEnv();  // Restore the environment before creating the md5, so that we have the original environment when the makefile was parsed.
-
   // Now create the md5 string
   md5_starts( &ctx );
 
@@ -1023,13 +1019,7 @@ mh_time_t mhmakefileparser::m_sBuildTime;
 
 void mhmakefileparser::InitBuildTime()
 {
-#ifdef WIN32
-  FILETIME FileTime;
-  GetSystemTimeAsFileTime(&FileTime);
-  m_sBuildTime=g_ZeroTime.ConvertTime(&FileTime);
-#else
   m_sBuildTime=time(NULL);
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

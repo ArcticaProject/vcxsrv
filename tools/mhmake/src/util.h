@@ -50,9 +50,7 @@
 #define PLATFORM     "linux"
 #endif
 
-#define MHMAKEVER    "1.4.13"
-
-string SearchCommand(const string &Command, const string &Extension="");
+#define MHMAKEVER    "2.0.0_rc"
 
 class makecommand
 {
@@ -173,7 +171,7 @@ struct loadedmakefile : public refbase
   vector<string>       m_CommandLineTargets;
   refptr<mhmakeparser> m_pParser;
 
-  loadedmakefile(vector<string> &Args,const string &Makefile=g_EmptyString);
+  loadedmakefile(const refptr<fileinfo> &pDir, vector<string> &Args,const string &Makefile=g_EmptyString);
 
   void LoadMakefile();
   void AddCommandLineVarsToEnvironment()

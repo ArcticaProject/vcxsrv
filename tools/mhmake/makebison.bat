@@ -1,11 +1,11 @@
 @echo off
 setlocal
-if not exist src\parser mkdir src\parser
 
-"bison++" -d -Ssrc\bison.cc -Hsrc\bison.h -hsrc\parser\mhmakeparser.h -osrc\parser\mhmakeparser.cpp src\mhmakeparser.y
+cd %1
+"..\bison++" -d -S%3 -H%4 -h%5 -o%6 %2
 
-set file=src\parser\mhmakeparser.cpp
-set tempfile=src\parser\temp12345.5678
+set file=%6
+set tempfile=%RANDOM%bison.tmp
 
 move %file% %tempfile%
 echo #include "stdafx.h" > %file%

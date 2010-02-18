@@ -19,15 +19,30 @@
 /* $Rev$ */
 
 #include "stdafx.h"
+#include <WinIoCtl.h>
 
 #include "rule.h"
 #include "util.h"
 #include "mhmakeparser.h"
 
+#ifdef WIN32
+#define REPARSE_MOUNTPOINT_HEADER_SIZE   8
+
+typedef struct {
+  DWORD ReparseTag;
+  DWORD ReparseDataLength;
+  WORD Reserved;
+  WORD ReparseTargetLength;
+  WORD ReparseTargetMaximumLength;
+  WORD Reserved1;
+  WCHAR ReparseTarget[1];
+} REPARSE_MOUNTPOINT_DATA_BUFFER, *PREPARSE_MOUNTPOINT_DATA_BUFFER;
+#endif
+
 static char s_UsageString[]=
 "\
 Usage: mhmake [-f <Makefile>] [-[c|C] <RunDir>] [<Var>=<Value>]\n\
-              [-a] [-q] [-s] [-v] [targets]+\n"
+              [-a] [-q] [-s] [-v] [-P <Nr Parallel Builds>] [targets]+\n"
 #ifdef _DEBUG
 "\
               [-p] [-n] [-e] [-l] [-w] [-d] [-CD] [-m] [-b]\n"
@@ -41,7 +56,11 @@ Usage: mhmake [-f <Makefile>] [-[c|C] <RunDir>] [<Var>=<Value>]\n\
   -a          : Rebuild all targets\n\
   -s          : Rescan automatic dependencies\n\
   -v          : Print version information\n\
-  -q          : Quiet. Disable all output \n"
+  -q          : Quiet. Disable all output \n\
+  -P <Nr Parallel Builds> :\n\
+                Number of parallel build commands executed at the \n\
+                same time. Default is this the number of processor \n\
+                cores. 1 disables parallel builds.\n"
 #ifdef _DEBUG
 "\n\
   The following options are additional options in mhmake_dbg which are not\n\
@@ -255,8 +274,6 @@ refptr<loadedmakefile> LOADEDMAKEFILES::find(const loadedmakefile &ToSearch)
 
 LOADEDMAKEFILES g_LoadedMakefiles;
 
-bool OsExeCommand(const string &Command,const string &Params,bool IgnoreError,string *pOutput);
-
 ///////////////////////////////////////////////////////////////////////////////
 loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
 {
@@ -266,18 +283,50 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
   {
     string Env(QuoteFileName(pEnv));
     m_GlobalCommandLineVars[MHMAKECONF]=Env;
-    m_MhMakeConf=GetFileInfo(Env);
+    m_MhMakeConf=GetAbsFileInfo(Env);
 
     // Get the revision of the working copy
     // We do it with the svn info command
 
     string Output;
-    bool Ret;
     try
     {
-      string SvnCommand=SearchCommand("svn",EXEEXT);
+      mhmakefileparser Dummy(curdir::GetCurDir());
+      string SvnCommand=Dummy.SearchCommand("svn",EXEEXT);
       #ifdef WIN32
-      Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetQuotedFullFileName(),false,&Output);
+      if (GetFileAttributes(m_MhMakeConf->GetFullFileName().c_str())&FILE_ATTRIBUTE_REPARSE_POINT)
+      {
+        WIN32_FIND_DATA FindData;
+        HANDLE hFind=FindFirstFile(m_MhMakeConf->GetFullFileName().c_str(),&FindData);
+        if (hFind!=INVALID_HANDLE_VALUE)
+        {
+          if (FindData.dwReserved0==IO_REPARSE_TAG_MOUNT_POINT)
+          {
+            HANDLE hDir = ::CreateFile(m_MhMakeConf->GetFullFileName().c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS, NULL);
+            
+            BYTE buf[MAXIMUM_REPARSE_DATA_BUFFER_SIZE];  // We need a large buffer
+            REPARSE_MOUNTPOINT_DATA_BUFFER& ReparseBuffer = (REPARSE_MOUNTPOINT_DATA_BUFFER&)buf;
+            DWORD dwRet;
+
+            if (::DeviceIoControl(hDir, FSCTL_GET_REPARSE_POINT, NULL, 0, &ReparseBuffer, MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &dwRet, NULL))
+            {
+              // Success
+              ::CloseHandle(hDir);
+
+              LPCWSTR pPath = ReparseBuffer.ReparseTarget;
+              if (wcsncmp(pPath, L"\\??\\", 4) == 0) pPath += 4;  // Skip 'non-parsed' prefix
+              char szPath[MAX_PATH];
+              ::WideCharToMultiByte(CP_ACP, 0, pPath, -1, szPath, MAX_PATH, NULL, NULL);
+              Dummy.OsExeCommand(SvnCommand,string(" info ")+GetFileInfo(szPath,m_MhMakeConf->GetDir())->GetQuotedFullFileName(),false,&Output);
+            }
+            else
+            {  // Error
+              ::CloseHandle(hDir);
+            }
+          }
+          FindClose(hFind);
+        }
+      }
       #else
       struct stat Stat;
       lstat(m_MhMakeConf->GetFullFileName().c_str(),&Stat);
@@ -286,15 +335,14 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
         char FileName[1024];
         int len=readlink(m_MhMakeConf->GetFullFileName().c_str(),FileName,sizeof(FileName));
         FileName[len]=0;
-        Ret=OsExeCommand(SvnCommand,string(" info ")+GetFileInfo(FileName,m_MhMakeConf->GetDir())->GetQuotedFullFileName(),false,&Output);
+        Dummy.OsExeCommand(SvnCommand,string(" info ")+GetFileInfo(FileName,m_MhMakeConf->GetDir())->GetQuotedFullFileName(),false,&Output);
       }
-      else
-        Ret=OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetQuotedFullFileName(),false,&Output);
       #endif
+      else
+        Dummy.OsExeCommand(SvnCommand,string(" info ")+m_MhMakeConf->GetQuotedFullFileName(),false,&Output);
     }
     catch (string Message)
     {
-      Ret=false;
     }
 
     char *pTok=strtok((char*)Output.c_str(),"\n");   // doing this is changing string, so this is very dangerous !!!
@@ -315,7 +363,7 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
+loadedmakefile::loadedmakefile(const refptr<fileinfo> &pDir, vector<string> &Args,const string&Makefile)
 {
   m_CommandLineVars=sm_Statics.m_GlobalCommandLineVars;
 
@@ -339,7 +387,7 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
           {
             if (!m_MakeDir)
             {
-              m_Makefile=GetFileInfo(ArgIt->substr(2));
+              m_Makefile=GetFileInfo(ArgIt->substr(2),pDir);
             }
             else
             {
@@ -351,7 +399,7 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
             ArgIt++;
             if (!m_MakeDir)
             {
-              m_Makefile=GetFileInfo(*ArgIt);
+              m_Makefile=GetFileInfo(*ArgIt,pDir);
             }
             else
             {
@@ -370,11 +418,11 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
           /* Fall through */
         case 'c':
           if (ArgIt->size()>2)
-            m_MakeDir=GetFileInfo(ArgIt->substr(2));
+            m_MakeDir=GetFileInfo(ArgIt->substr(2),pDir);
           else
           {
             ArgIt++;
-            m_MakeDir=GetFileInfo(*ArgIt);
+            m_MakeDir=GetFileInfo(*ArgIt,pDir);
           }
           break;
         case 'a':
@@ -388,6 +436,15 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
           break;
         case 'v':
           PrintVersionInfo();
+          break;
+        case 'P':
+          if (ArgIt->size()>2)
+            mhmakefileparser::SetNrParallelBuilds(atoi(ArgIt->substr(2).c_str()));
+          else
+          {
+            ArgIt++;
+            mhmakefileparser::SetNrParallelBuilds(atoi((*ArgIt).c_str()));
+          }
           break;
 #ifdef _DEBUG
         case 'p':
@@ -433,7 +490,7 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
     if (!Makefile.empty())
     {
       if (!m_MakeDir)
-        m_Makefile=GetFileInfo(Makefile);
+        m_Makefile=GetFileInfo(Makefile,pDir);
       else
         m_Makefile=GetFileInfo(Makefile,m_MakeDir);
     }
@@ -441,7 +498,7 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
   if (!m_Makefile)
   {
     if (!m_MakeDir)
-      m_Makefile=GetFileInfo(m_CommandLineTargets[0]);
+      m_Makefile=GetFileInfo(m_CommandLineTargets[0],pDir);
     else
       m_Makefile=GetFileInfo(m_CommandLineTargets[0],m_MakeDir);
 
@@ -470,10 +527,6 @@ loadedmakefile::loadedmakefile(vector<string> &Args,const string&Makefile)
 ///////////////////////////////////////////////////////////////////////////////
 void loadedmakefile::LoadMakefile()
 {
-  refptr<fileinfo> CurDir=curdir::GetCurDir();
-
-  curdir::ChangeCurDir(m_MakeDir);
-
   #ifdef _DEBUG
   if (g_PrintAdditionalInfo)
     cout << "Loading makefile "<<m_Makefile->GetQuotedFullFileName()<<endl;
@@ -510,7 +563,7 @@ void loadedmakefile::LoadMakefile()
     }
     refptr<fileinfo> BeforeMakefile=GetFileInfo(BaseAutoMak+".before",sm_Statics.m_MhMakeConf);
 
-    int result=m_pParser->ParseFile(BeforeMakefile,true);
+    int result=m_pParser->ParseFile(BeforeMakefile,m_MakeDir);
     if (result)
     {
       throw string("Error parsing ")+BeforeMakefile->GetQuotedFullFileName();
@@ -523,7 +576,7 @@ void loadedmakefile::LoadMakefile()
     {
       throw string("When making use of MHMAKECONF, you have to define OBJDIR in makefile.before");
     }
-    DepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR "." + m_Makefile->GetName()+ ".dep");
+    DepFile=GetFileInfo(ObjDirName+OSPATHSEPSTR "." + m_Makefile->GetName()+ ".dep",m_MakeDir);
     m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
   }
   else
@@ -545,7 +598,7 @@ void loadedmakefile::LoadMakefile()
     char ID[10];
     sprintf(ID,"_%x",md5_finish32( &ctx));
 
-    DepFile=GetFileInfo(string(".") + m_Makefile->GetName()+ ".dep"+ID);
+    DepFile=GetFileInfo(string(".") + m_Makefile->GetName()+ ".dep"+ID,m_MakeDir);
     m_pParser->SetVariable(AUTODEPFILE,DepFile->GetQuotedFullFileName());
   }
 
@@ -553,7 +606,7 @@ void loadedmakefile::LoadMakefile()
     m_pParser->LoadAutoDepsFile(DepFile); /* Already load this autodep file before parsing of the makefile to avoid needless rebuilds. */
 
   //m_pParser->yydebug=1;
-  int result=m_pParser->ParseFile(m_Makefile,true);
+  int result=m_pParser->ParseFile(m_Makefile,m_MakeDir);
   if (result)
   {
     throw string("Error parsing ")+m_Makefile->GetQuotedFullFileName();
@@ -608,7 +661,7 @@ void loadedmakefile::LoadMakefile()
       Args.push_back(Item);
     }
 
-    refptr<loadedmakefile> pLoadedMakefile(new loadedmakefile(Args));
+    refptr<loadedmakefile> pLoadedMakefile(new loadedmakefile(m_MakeDir,Args));
     refptr<loadedmakefile> Found=g_LoadedMakefiles.find(*pLoadedMakefile);
     if (Found)
     {
@@ -627,8 +680,6 @@ void loadedmakefile::LoadMakefile()
     }
     It++;
   }
-  curdir::ChangeCurDir(CurDir);
-
 }
 
 #ifdef _DEBUG

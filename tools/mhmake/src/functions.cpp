@@ -60,6 +60,35 @@ map<string,function_f> mhmakefileparser::m_Functions;
 bool mhmakefileparser::m_FunctionsInitialised;
 
 ///////////////////////////////////////////////////////////////////////////////
+// Loop over a list of filenames
+static string IterList(const string &List,string (*iterFunc)(const string &FileName,void *pArg), void *pArg=NULL)
+{
+  const char *pTmp=List.c_str();
+  string Ret=g_EmptyString;
+  bool first=true;
+  while (*pTmp)
+  {
+    if (!first)
+    {
+      Ret+=g_SpaceString;
+    }
+    else
+    {
+      first=false;
+    }
+    string Item;
+    pTmp=NextItem(pTmp,Item);
+    Item=iterFunc(Item,pArg);
+    if (Item.empty())
+      first=true;  // Do not add space the next iteration
+    else
+      Ret+=Item;
+  }
+
+  return Ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void mhmakefileparser::InitFuncs(void)
 {
   for (int i=0; i<sizeof(m_FunctionsDef)/sizeof(funcdef); i++)
@@ -79,6 +108,16 @@ static string TrimString(const string &Input)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+static string filter(const string &FileName, void *pvFilter)
+{
+  string *pFilter=(string*)pvFilter;
+  if (PercentMatchList(UnquoteFileName(FileName),*pFilter))
+    return FileName;
+  else
+    return g_EmptyString;
+}
+///////////////////////////////////////////////////////////////////////////////
 string mhmakefileparser::f_filter(const string & Arg) const
 {
   size_t ipos=Arg.find(',');
@@ -93,28 +132,7 @@ string mhmakefileparser::f_filter(const string & Arg) const
   if (Str.empty())
     return Str;
 
-  bool First=true;
-  string Ret;
-  char *pTok=strtok((char*)List.c_str()," \t");   // doing this is changing string, so this is very dangerous
-  while (pTok)
-  {
-    string Item(pTok);
-    if (PercentMatchList(Item,Str))
-    {
-      if (First)
-      {
-        Ret=Item;
-        First=false;
-      }
-      else
-      {
-        Ret+=g_SpaceString;
-        Ret+=Item;
-      }
-    }
-    pTok=strtok(NULL," \t");
-  }
-  return Ret;
+  return IterList(List,filter,(void*)&Str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -333,30 +351,28 @@ string mhmakefileparser::f_firstword(const string & Arg) const
 ///////////////////////////////////////////////////////////////////////////////
 string mhmakefileparser::f_wildcard(const string & Arg) const
 {
-  string FileSpec=TrimString(Arg);
-  size_t LastSep=FileSpec.find_last_of(OSPATHSEP)+1;
-  string Dir=FileSpec.substr(0,LastSep);
+  refptr<fileinfo> FileSpec=GetFileInfo(TrimString(Arg),m_MakeDir); /* Use GetFileInfo to make the relative path absolute */
+  refptr<fileinfo> Dir=FileSpec->GetDir();
 #ifdef WIN32
   struct _finddata_t FileInfo;
-  intptr_t hFile=_findfirst(FileSpec.c_str(),&FileInfo);
+  intptr_t hFile=_findfirst(FileSpec->GetFullFileName().c_str(),&FileInfo);
   if (hFile==-1)
     return g_EmptyString;
 
   string Ret=g_EmptyString;
 
-  /* We have to verify with percentmatch since the find functions *.ext also matches the functions *.xmlbrol */
-  string CheckSpec=FileSpec.substr(LastSep);
+  /* We have to verify with percentmatch since the find functions *.ext also matches the functions *.extbrol */
+  string CheckSpec=FileSpec->GetName();
   if (PercentMatch(FileInfo.name,CheckSpec,NULL,'*'))
   {
-    Ret=Dir+FileInfo.name;
+    Ret=GetFileInfo(FileInfo.name,Dir)->GetQuotedFullFileName();
   }
   while (-1!=_findnext(hFile,&FileInfo))
   {
     if (PercentMatch(FileInfo.name,CheckSpec,NULL,'*'))
     {
       Ret+=g_SpaceString;
-      Ret+=Dir;
-      Ret+=FileInfo.name;
+      Ret+=GetFileInfo(FileInfo.name,Dir)->GetQuotedFullFileName();
     }
   }
   _findclose(hFile);
@@ -386,7 +402,7 @@ string mhmakefileparser::f_wildcard(const string & Arg) const
 string mhmakefileparser::f_exist(const string & Arg) const
 {
   string File=TrimString(Arg);
-  refptr<fileinfo> pFile=GetFileInfo(File);
+  refptr<fileinfo> pFile=GetFileInfo(File,m_MakeDir);
   if (pFile->Exists())
   {
     return string("1");
@@ -454,41 +470,16 @@ string mhmakefileparser::f_filesindirs(const string & Arg) const
 string mhmakefileparser::f_fullname(const string & Arg) const
 {
   string File=TrimString(Arg);
-  refptr<fileinfo> pFile=GetFileInfo(File);
+  refptr<fileinfo> pFile=GetFileInfo(File,m_MakeDir);
   return pFile->GetQuotedFullFileName();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string IterList(const string &List,string (*iterFunc)(const string &FileName,const string &Arg),const string &Arg=NullString)
+static string basename(const string &FileName,void*)
 {
-  const char *pTmp=List.c_str();
-  string Ret=g_EmptyString;
-  bool first=true;
-  while (*pTmp)
-  {
-    if (!first)
-    {
-      Ret+=g_SpaceString;
-    }
-    else
-    {
-      first=false;
-    }
-    string Item;
-    pTmp=NextItem(pTmp,Item);
-    Ret+=iterFunc(Item,Arg);
-  }
-
-  return Ret;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-static string basename(const string &FileName,const string &)
-{
-  string Ret=FileName.substr(0,FileName.find_last_of('.'));
-  if (FileName[0]=='"' && FileName.end()[-1]=='"')
-    Ret+=s_QuoteString;
-  return Ret;
+  string Ret=UnquoteFileName(FileName);
+  Ret=Ret.substr(0,Ret.find_last_of('.'));
+  return QuoteFileName(Ret);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -498,20 +489,18 @@ string mhmakefileparser::f_basename(const string & FileNames) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string notdir(const string &FileName,const string &)
+static string notdir(const string &FileName,void*)
 {
-  size_t Pos=FileName.find_last_of(OSPATHSEP);
+  string Ret=UnquoteFileName(FileName);
+  size_t Pos=Ret.find_last_of(OSPATHSEP);
   if (Pos==string::npos)
   {
     return FileName;
   }
   else
   {
-    string Ret=g_EmptyString;
-    if (FileName[0]=='"' && FileName.end()[-1]=='"')
-      Ret+=s_QuoteString;
-    Ret+=FileName.substr(Pos+1);
-    return Ret;
+    Ret=Ret.substr(Pos+1);
+    return QuoteFileName(Ret);
   }
 
 }
@@ -523,9 +512,9 @@ string mhmakefileparser::f_notdir(const string & FileNames) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string addprefix(const string &FileName,const string &Prefix)
+static string addprefix(const string &FileName,void *pPrefix)
 {
-  return Prefix+FileName;
+  return *(const string *)pPrefix+FileName;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -541,13 +530,13 @@ string mhmakefileparser::f_addprefix(const string & Arg) const
   #endif
   string FileNames;
   pTmp=NextCharItem(pTmp,FileNames,',');
-  return IterList(FileNames,addprefix,PreFix);
+  return IterList(FileNames,addprefix,&PreFix);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string addsuffix(const string &FileName,const string &Suffix)
+static string addsuffix(const string &FileName,void *pSuffix)
 {
-  return FileName+Suffix;
+  return FileName+*(const string *)pSuffix;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -563,7 +552,7 @@ string mhmakefileparser::f_addsuffix(const string & Arg) const
   #endif
   string FileNames;
   pTmp=NextCharItem(pTmp,FileNames,',');
-  return IterList(FileNames,addsuffix,SufFix);
+  return IterList(FileNames,addsuffix,&SufFix);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -639,7 +628,7 @@ string mhmakefileparser::f_strip(const string & Arg) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string dir(const string &FileName,const string &)
+static string dir(const string &FileName, void *)
 {
   size_t Pos=FileName.find_last_of(OSPATHSEP);
   if (Pos==string::npos)
@@ -682,10 +671,11 @@ string mhmakefileparser::f_shell(const string & Command) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string relpath(const string &FileName,const string &)
+static string relpath(const string &FileName,void *pvDir)
 {
-  refptr<fileinfo> Path=GetFileInfo(FileName);
-  const char *pCur=curdir::GetCurDir()->GetFullFileName().c_str();
+  const refptr<fileinfo> pDir=*(const refptr<fileinfo> *)pvDir;
+  refptr<fileinfo> Path=GetFileInfo(FileName,pDir);
+  const char *pCur=pDir->GetFullFileName().c_str();
   const char *pPath=Path->GetFullFileName().c_str();
 
   const char *pLast=pPath;
@@ -736,11 +726,11 @@ static string relpath(const string &FileName,const string &)
 // Make a path name relative to the current directory
 string mhmakefileparser::f_relpath(const string & FileNames) const
 {
-  return IterList(FileNames,relpath);
+  return IterList(FileNames,relpath,(void*)&m_MakeDir);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string makeupper(const string &FileName,const string &)
+static string makeupper(const string &FileName,void *)
 {
   string Ret=FileName;
   string::const_iterator pSrc=FileName.begin();
@@ -759,7 +749,7 @@ string mhmakefileparser::f_toupper(const string & FileNames) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static string makelower(const string &FileName,const string &)
+static string makelower(const string &FileName, void *)
 {
   string Ret=FileName;
   string::const_iterator pSrc=FileName.begin();

@@ -25,12 +25,12 @@
 #include "util.h"
 #include "mhmakeparser.h"
 
+#ifndef S_ISDIR
+#define S_ISDIR(val) ((val)&_S_IFDIR)
+#endif
+
 const string NullString;
 refptr<fileinfo> NullFileInfo;
-
-#ifdef WIN32
-ZEROTIME g_ZeroTime;
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 string QuoteFileName(const string &Filename)
@@ -92,27 +92,6 @@ string fileinfo::GetName() const
 ///////////////////////////////////////////////////////////////////////////////
 mh_time_t fileinfo::realGetDate()
 {
-#ifdef WIN32
-  WIN32_FIND_DATA FindData;
-  HANDLE hFind=FindFirstFile(m_AbsFileName.c_str(),&FindData);
-  if (hFind==INVALID_HANDLE_VALUE)
-  {
-    m_Date.SetNotExist();
-  }
-  else
-  {
-    FindClose(hFind);
-    if (FindData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)
-    { // For directories we just take an old time since the lastwritetime is changed each time something
-      // is added to the directory
-      m_Date.SetDir();
-    }
-    else
-    {
-      m_Date=g_ZeroTime.ConvertTime(&FindData.ftLastWriteTime);
-    }
-  }
-#else
   struct stat Buf;
   if (-1==stat(m_AbsFileName.c_str(),&Buf))
     m_Date.SetNotExist();
@@ -120,7 +99,6 @@ mh_time_t fileinfo::realGetDate()
     m_Date.SetDir();
   else
     m_Date=Buf.st_mtime;
-#endif
   return m_Date;
 }
 
@@ -157,16 +135,12 @@ bool fileinfo::IsDir() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+#ifdef _DEBUG
 void fileinfo::SetDateToNow()
 {
-#ifdef WIN32
-  FILETIME FileTime;
-  GetSystemTimeAsFileTime(&FileTime);
-  m_Date=g_ZeroTime.ConvertTime(&FileTime);
-#else
   m_Date=time(NULL);
-#endif
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 string fileinfo::GetPrerequisits() const
@@ -252,7 +226,7 @@ string fileinfo::GetErrorMessageDuplicateRule(const refptr<rule>&pRule)
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-static inline string &NormalizePathName(string &Name)
+string &NormalizePathName(string &Name)
 {
   const char *pPtr=Name.c_str();
   const char *pBeg=pPtr;

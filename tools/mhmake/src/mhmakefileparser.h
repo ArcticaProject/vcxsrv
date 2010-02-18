@@ -23,6 +23,7 @@
 
 #include "fileinfo.h"
 #include "util.h"
+#include "commandqueue.h"
 
 class rule;
 
@@ -52,47 +53,50 @@ class mhmakefileparser : public refbase
 {
 
 private:
-  mhmakelexer *m_ptheLexer;
-  int          m_yyloc;
-  refptr<fileinfo> m_RuleThatIsBuild;
-  vector<string> m_ToBeIncludeAfterBuild;
-  vector<string> m_MakefilesToLoad;
-  refptr<fileinfo> m_AutoDepFileLoaded;
-  int m_InExpandExpression;
-  mh_time_t m_Date;
-  uint32 m_EnvMd5_32;   /* Cached Md5_32 value of the userd environment variables */
+  static commandqueue   sm_CommandQueue;
+
+  mhmakelexer          *m_ptheLexer;
+  int                   m_yyloc;
+  refptr<fileinfo>      m_RuleThatIsBuild;
+  vector<string>        m_ToBeIncludeAfterBuild;
+  vector<string>        m_MakefilesToLoad;
+  refptr<fileinfo>      m_AutoDepFileLoaded;
+  int                   m_InExpandExpression;
+  mh_time_t             m_Date;
+  uint32                m_EnvMd5_32;   /* Cached Md5_32 value of the userd environment variables */
 #ifdef _DEBUG
-  int m_ImplicitSearch;
+  int                   m_ImplicitSearch;
 #endif
-  map<string,string> m_CommandCache;
+  map<string,string>    m_CommandCache;
 
 protected:
-  map<string,string> m_Variables;
-  map<string,string> m_CommandLineVars;
-  TOKENVALUE       m_theTokenValue;
-  refptr<fileinfo> m_MakeDir;
-  refptr<rule>     m_pCurrentRule;
+  map<string,string>    m_Variables;
+  map<string,string>    m_CommandLineVars;
+  TOKENVALUE            m_theTokenValue;
+  refptr<fileinfo>      m_MakeDir;
+  refptr<rule>          m_pCurrentRule;
   refptr<fileinfoarray> m_pCurrentItems;
   refptr<fileinfoarray> m_pCurrentDeps;
-  refptr<fileinfo> m_FirstTarget;
-  fileinfoarray m_IncludedMakefiles;
-  refptr< fileinfoarray > m_pIncludeDirs;
-  string m_IncludeDirs;
+  refptr<fileinfo>      m_FirstTarget;
+  fileinfoarray         m_IncludedMakefiles;
+  refptr<fileinfoarray> m_pIncludeDirs;
+  string                m_IncludeDirs;
+  
+  bool                  m_DoubleColonRule;
+  bool                  m_AutoDepsDirty;
+  bool                  m_ForceAutoDepRescan;
+  set<string>           m_SkipHeaders;        // Headers to skip
+  vector<string>        m_PercentHeaders;  // Percent specification of headers to skip
+  bool                  m_SkipHeadersInitialized;    // true when previous 2 variables are initialized
+
+  bool                  m_RebuildAll; /* true when to rebuild all targets of this makefile */
+
+  set<string>           m_UsedEnvVars;     // Array containing a list of variables that are taken from the environment (This is used for rebuild checking)
+  char                 *m_pEnv;            // New environment in case the makefile exports variables
+  int                   m_EnvLen;          // Current length of m_pEnv
+
   map< refptr<fileinfo>, set< refptr<fileinfo> > > m_AutoDeps;
   set< const fileinfo* , less_fileinfo > m_Targets; // List of targets that are build by this makefile
-  bool m_DoubleColonRule;
-  bool m_AutoDepsDirty;
-  bool m_ForceAutoDepRescan;
-  set<string> m_SkipHeaders;        // Headers to skip
-  vector<string> m_PercentHeaders;  // Percent specification of headers to skip
-  bool m_SkipHeadersInitialized;    // true when previous 2 variables are initialized
-
-  bool m_RebuildAll; /* true when to rebuild all targets of this makefile */
-
-  vector<string>     m_Exports;         // Array of variables to export.
-  map<string,string> m_SavedExports;    // Original values of the environment are saved here.
-  set<string>        m_UsedEnvVars;     // Array containing a list of variables that are taken from the environment (This is used for rebuild checking)
-  static const mhmakefileparser *m_spCurEnv; // Identifies which makefiles exports are currently set
 
   static mh_time_t m_sBuildTime;
 
@@ -109,8 +113,9 @@ public:
       ,m_SkipHeadersInitialized(false)
       ,m_RebuildAll(false)
       ,m_EnvMd5_32(0)
+      ,m_pEnv(NULL)
       #ifdef _DEBUG
-      ,m_ImplicitSearch(false)
+      ,m_ImplicitSearch(0)
       #endif
   {
     if (!m_FunctionsInitialised) InitFuncs();
@@ -119,19 +124,49 @@ public:
     SetVariable(EXEEXTVAR,EXEEXT);
   }
 
+  /* Needed if you only want to use the searchcommand and execommand functions */
+  mhmakefileparser(const refptr<fileinfo> &pMakeDir) : m_MakeDir(pMakeDir), m_pEnv(NULL)
+  {}
+
+  static void SetNrParallelBuilds(int NrParallelBuilds)
+  {
+    sm_CommandQueue.SetNrParallelBuilds(NrParallelBuilds);
+  }
+
   bool CompareEnv() const;
   uint32 CreateEnvMd5_32() const;
   string GetFromEnv(const string &Var,bool Cache=true) const;
   void CreateUSED_ENVVARS();
 
-  void SaveEnv();
-  void RestoreEnv() const;
+  void SetExport(const string & Var, const string & Val);
+
   void CheckEnv(void);
+
+  #ifdef _DEBUG
+  int ImplicitSearch() const
+  {
+    return m_ImplicitSearch;
+  }
+  #endif
+
+  void SetAutoDepsDirty()
+  {
+    m_AutoDepsDirty=true;
+  }
+
+  void ClearAutoDepsDirty()
+  {
+    m_AutoDepsDirty=false;
+  }
+  bool IsAutoDepsDirty() const
+  {
+    return m_AutoDepsDirty;
+  }
 
   void SetRebuildAll()
   {
     m_RebuildAll=true;
-    m_AutoDepsDirty=true;  /* This is to be sure that all new calculated md5 strings are saved. */
+    SetAutoDepsDirty();  /* This is to be sure that all new calculated md5 strings are saved. */
   }
 
   void SetVariable(string Var,string Val)
@@ -141,7 +176,7 @@ public:
   void EnableAutoDepRescan(void)
   {
     m_ForceAutoDepRescan=true;
-    m_AutoDepsDirty=true;
+    SetAutoDepsDirty();
   }
   bool ForceAutoDepRescan(void)
   {
@@ -166,12 +201,16 @@ public:
   virtual ~mhmakefileparser()
   {
     SaveAutoDepsFile();
+    free(m_pEnv);
   }
   virtual int yylex(void);
   virtual void yyerror(const char *m);
-  virtual int yyparse()=0;
+  virtual int yyparse()
+  {
+    throw("Please derive if you want to execute yyparse.");
+  }
 
-  int ParseFile(const refptr<fileinfo> &FileInfo,bool SetMakeDir=false);
+  int ParseFile(const refptr<fileinfo> &FileInfo,refptr<fileinfo> &pMakeDir=NullFileInfo);
 
   /* Functions to handle variables */
   bool IsDefined(const string &Var) const;
@@ -239,7 +278,23 @@ public:
   {
     m_Targets.insert(pTarget);
   }
-  mh_time_t BuildTarget(const refptr<fileinfo> &Target, bool bCheckTargetDir=true);  /* returns the date of the target after build, especially important for phony rules, since this will be the youngest date of all dependencies */
+  /* Starts building the target,
+    returns 0 when target build is not finished,
+    returns the date of the target when target is build, especially important for phony rules, since this will be the youngest date of all dependencies */
+  mh_time_t StartBuildTarget(const refptr<fileinfo> &Target, bool bCheckTargetDir=true);
+  /* Waits for the target being build, returns the date of the target. Not needed to be cald when StartBuildTarget returned a value different from zero */
+  mh_time_t WaitBuildTarget(const refptr<fileinfo> &Target);
+
+  /* Use the following command when you want to wait for the target is built */
+  mh_time_t BuildTarget(const refptr<fileinfo> &Target, bool bCheckTargetDir=true)
+  {
+    mh_time_t TargetDate=StartBuildTarget(Target,bCheckTargetDir);
+    if (!TargetDate.IsDateValid())
+      return WaitBuildTarget(Target);
+    else
+      return TargetDate;
+  }
+
   void BuildDependencies(const refptr<rule> &pRule, const refptr<fileinfo> &Target, mh_time_t TargetDate, mh_time_t &YoungestDate, bool &MakeTarget);
 
   void BuildIncludedMakefiles();
@@ -270,14 +325,28 @@ public:
   }
   void AddRule();
 
-  bool ExecuteCommand(string Command,string *pOutput=NULL);
+  HANDLE ExecuteCommand(string Command, bool &IgnoreError, string *pOutput=NULL);
+  HANDLE ExecuteCommand(string Command, string *pOutput=NULL)
+  {
+    bool IgnoreError;
+    return ExecuteCommand(Command, IgnoreError, pOutput);
+  }
   string GetFullCommand(string Command);
   void CreatePythonExe(const string &FullCommand);
 
   static void InitBuildTime();
+
+  void SplitToItems(const string &String, vector< refptr<fileinfo> > &Items) const;
+  HANDLE DeleteFiles(const string &Params) const;
+  HANDLE CopyFiles(const string &Params) const;
+  HANDLE TouchFiles(const string &Params) const;
+  HANDLE EchoCommand(const string &Params) const;
+  string SearchCommand(const string &Command, const string &Extension="") const;
+  const string &GetPythonExe() const;
+  int SearchPath(void *NotUsed, const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const;
+  HANDLE OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const;
 };
 
-void SplitToItems(const string &String,vector< refptr<fileinfo> > &Items,refptr<fileinfo> Dir=curdir::GetCurDir());
 
 #endif
 
