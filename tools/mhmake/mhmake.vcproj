@@ -984,11 +984,19 @@
 				Filter="cpp;h"
 				>
 				<File
-					RelativePath="$(OutDir)\mhmakeLexer.cpp"
+					RelativePath="$(OutDir)\mhmakelexer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="$(OutDir)\mhmakeParser.cpp"
+					RelativePath="$(OutDir)\mhmakelexer.h"
+					>
+				</File>
+				<File
+					RelativePath="$(OutDir)\mhmakeparser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="$(OutDir)\mhmakeparser.h"
 					>
 				</File>
 			</Filter>

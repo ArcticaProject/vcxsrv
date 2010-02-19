@@ -333,7 +333,7 @@ static bool DeleteDir(const string &Dir,const string WildSearch="*",bool bRemove
   string Pattern=Dir+OSPATHSEP+WildSearch;
 #ifdef WIN32
   WIN32_FIND_DATA FindData;
-  HANDLE hFind=FindFirstFile(Pattern.c_str(),&FindData);
+  mh_pid_t hFind=FindFirstFile(Pattern.c_str(),&FindData);
   if (hFind==INVALID_HANDLE_VALUE)
   {
     return Error;
@@ -389,7 +389,7 @@ static bool DeleteDir(const string &Dir,const string WildSearch="*",bool bRemove
 }
 
 /*****************************************************************************/
-HANDLE mhmakefileparser::DeleteFiles(const string &Params) const
+mh_pid_t mhmakefileparser::DeleteFiles(const string &Params) const
 {
   bool IgnoreError=false;
   vector< refptr<fileinfo> > Files;
@@ -405,7 +405,7 @@ HANDLE mhmakefileparser::DeleteFiles(const string &Params) const
     else
     {
       cerr << "Invalid option "<<Params[1]<<" in del statement\n";
-      return (HANDLE)-1;
+      return (mh_pid_t)-1;
     }
   }
   else
@@ -448,11 +448,11 @@ HANDLE mhmakefileparser::DeleteFiles(const string &Params) const
       if (-1==remove(FileName.c_str()) && !IgnoreError)
       {
         cerr << "Error deleting "<<FileName<<endl;
-        return (HANDLE)-1;
+        return (mh_pid_t)-1;
       }
     }
   }
-  return (HANDLE)0;
+  return (mh_pid_t)0;
 }
 
 /*****************************************************************************/
@@ -500,7 +500,7 @@ static bool CopyDir(refptr<fileinfo> pDir,refptr<fileinfo> pDest,const string Wi
   string Pattern=pDir->GetFullFileName()+OSPATHSEP+WildSearch;
 #ifdef WIN32
   WIN32_FIND_DATA FindData;
-  HANDLE hFind=FindFirstFile(Pattern.c_str(),&FindData);
+  mh_pid_t hFind=FindFirstFile(Pattern.c_str(),&FindData);
   if (hFind==INVALID_HANDLE_VALUE)
   {
     return false;
@@ -554,7 +554,7 @@ exit:
 
   for (int i=0; i<Res.gl_pathc; i++)
   {
-    refptr<fileinfo> pSrc=GetFileInfo(Res.gl_pathv[i]);
+    refptr<fileinfo> pSrc=GetFileInfo(Res.gl_pathv[i],pDir);
     if (pSrc->IsDir())
     {
       *(strrchr(Res.gl_pathv[i],'/'))='\0';
@@ -585,7 +585,7 @@ exit:
     }
     else
     {
-      Error = CopyFile(GetFileInfo(Res.gl_pathv[i]),pDest);
+      Error = CopyFile(GetFileInfo(Res.gl_pathv[i],pDir),pDest);
       if (!Error) goto exit;
     }
   }
@@ -598,7 +598,7 @@ exit:
 }
 
 /*****************************************************************************/
-HANDLE mhmakefileparser::EchoCommand(const string &Params) const
+mh_pid_t mhmakefileparser::EchoCommand(const string &Params) const
 {
     // Find the first > character
   size_t Pos=Params.find_first_of('>');
@@ -628,7 +628,7 @@ HANDLE mhmakefileparser::EchoCommand(const string &Params) const
     if (!pfFile)
     {
       cerr << "Error opening file "<<Filename<<endl;
-      return (HANDLE)-1;
+      return (mh_pid_t)-1;
     }
     int Begin=0;
     while (Params[Begin]==' ' || Params[Begin] == '\t') Begin++;  // Strip leading white space
@@ -636,15 +636,15 @@ HANDLE mhmakefileparser::EchoCommand(const string &Params) const
     if (EchoStr.length()!=fwrite(EchoStr.c_str(),1,EchoStr.length(),pfFile))
     {
       cerr << "Error writing file "<<Filename<<endl;
-      return (HANDLE)-1;
+      return (mh_pid_t)-1;
     }
     fclose(pfFile);
   }
-  return (HANDLE)0;
+  return (mh_pid_t)0;
 }
 
 /*****************************************************************************/
-HANDLE mhmakefileparser::CopyFiles(const string &Params) const
+mh_pid_t mhmakefileparser::CopyFiles(const string &Params) const
 {
   vector< refptr<fileinfo> > Files;
 
@@ -662,7 +662,7 @@ HANDLE mhmakefileparser::CopyFiles(const string &Params) const
   if (NrSrcs>1 && !pDest->IsDir())
   {
     cerr << "copy: Destination must be a directory when more then one source : "<<Params<<endl;
-    return (HANDLE)-1;
+    return (mh_pid_t)-1;
   }
 
   for (size_t i=0; i<NrSrcs; i++)
@@ -684,7 +684,7 @@ HANDLE mhmakefileparser::CopyFiles(const string &Params) const
       if (!CopyDir(pSrc->GetDir(), pDest, pSrc->GetName()))
       {
         cerr << "copy: Error copying directory: " << Params << endl;
-        return (HANDLE)-1;
+        return (mh_pid_t)-1;
       }
     }
     else
@@ -692,17 +692,17 @@ HANDLE mhmakefileparser::CopyFiles(const string &Params) const
       if (!CopyFile(pSrc,pDest))
       {
         cerr << "copy: Error copying file: " << Params << endl;
-        return (HANDLE)-1;
+        return (mh_pid_t)-1;
       }
     }
   }
 
-  return (HANDLE)0;
+  return (mh_pid_t)0;
 
 }
 
 /*****************************************************************************/
-HANDLE mhmakefileparser::TouchFiles(const string &Params) const
+mh_pid_t mhmakefileparser::TouchFiles(const string &Params) const
 {
   vector< refptr<fileinfo> > Files;
 
@@ -722,7 +722,7 @@ HANDLE mhmakefileparser::TouchFiles(const string &Params) const
     if (pFile->IsDir())
     {
       cerr << "touch: Cannot touch a directory: " << FileName << endl;
-      return (HANDLE)-1;
+      return (mh_pid_t)-1;
     }
     if (pFile->Exists())
     {
@@ -743,7 +743,7 @@ HANDLE mhmakefileparser::TouchFiles(const string &Params) const
         if (fstat (fd, &st) < 0)
         {
           cerr << "touch: Cannot stat file " << FileName << endl;
-          return (HANDLE)-1;
+          return (mh_pid_t)-1;
         }
       }
 
@@ -753,14 +753,14 @@ HANDLE mhmakefileparser::TouchFiles(const string &Params) const
         if (fd>=0 && close(fd) < 0)
         {
           cerr << "touch: Error closing file " << FileName << endl;
-          return (HANDLE)-1;
+          return (mh_pid_t)-1;
         }
         /*Re-Create an empty file */
         pFile=fopen(FileName.c_str(),"wb");
         if (!pFile)
         {
           cerr << "touch: Cannot create file: " << FileName << endl;
-          return (HANDLE)-1;
+          return (mh_pid_t)-1;
         }
         fclose(pFile);
       }
@@ -770,22 +770,22 @@ HANDLE mhmakefileparser::TouchFiles(const string &Params) const
         if (Ret!=sizeof(c) && Ret!=EOF)
         {
           cerr << "touch: Cannot read file " << FileName << ": "<<Ret<<endl;
-          return (HANDLE)-1;
+          return (mh_pid_t)-1;
         }
         if (lseek (fd, (off_t) 0, SEEK_SET) < 0)
         {
           cerr << "touch: Error changing file pointer " << FileName << endl;
-          return (HANDLE)-1;
+          return (mh_pid_t)-1;
         }
         if (write (fd, &c, sizeof c) != sizeof(c))
         {
           cerr << "touch: Error writing file " << FileName << endl;
-          return (HANDLE)-1;
+          return (mh_pid_t)-1;
         }
         if (close (fd) < 0)
         {
           cerr << "touch: Error closing file " << FileName << endl;
-          return (HANDLE)-1;
+          return (mh_pid_t)-1;
         }
       }
     }
@@ -796,13 +796,13 @@ HANDLE mhmakefileparser::TouchFiles(const string &Params) const
       if (!pFile)
       {
         cerr << "touch: Cannot create file: " << FileName << endl;
-        return (HANDLE)-1;
+        return (mh_pid_t)-1;
       }
       fclose(pFile);
     }
     pFile->InvalidateDate();
   }
-  return (HANDLE)0;
+  return (mh_pid_t)0;
 }
 
 /*****************************************************************************/
@@ -983,7 +983,7 @@ string mhmakefileparser::GetFullCommand(string Command)
   return pFound->second;
 }
 
-HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const
+mh_pid_t mhmakefileparser::OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const
 {
   string FullCommandLine;
   string ComSpec=GetComspec();
@@ -1012,12 +1012,12 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
 
   if (pOutput || g_Quiet)
   {
-    HANDLE hChildStdinRd;
-    HANDLE hChildStdinWr;
-    HANDLE hChildStdoutRd;
-    HANDLE hChildStdoutWr;
-    HANDLE hChildStdinWrDup;
-    HANDLE hChildStdoutRdDup;
+    mh_pid_t hChildStdinRd;
+    mh_pid_t hChildStdinWr;
+    mh_pid_t hChildStdoutRd;
+    mh_pid_t hChildStdoutWr;
+    mh_pid_t hChildStdinWrDup;
+    mh_pid_t hChildStdoutRdDup;
     SECURITY_ATTRIBUTES saAttr;
     BOOL fSuccess;
 
@@ -1026,7 +1026,7 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
     saAttr.lpSecurityDescriptor = NULL;
 
     if (!CreatePipe(&hChildStdinRd, &hChildStdinWr, &saAttr, 0))
-      return false;
+      return (mh_pid_t)-1;
 
         /* Create new output read handle and the input write handle. Set
     * the inheritance properties to FALSE. Otherwise, the child inherits
@@ -1035,17 +1035,17 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
     fSuccess = DuplicateHandle(GetCurrentProcess(), hChildStdinWr,
                                GetCurrentProcess(), &hChildStdinWrDup, 0,
                                FALSE, DUPLICATE_SAME_ACCESS);
-    if (!fSuccess) return false;
+    if (!fSuccess) return (mh_pid_t)-1;
     /* Close the inheritable version of ChildStdin that we're using. */
     CloseHandle(hChildStdinWr);
 
     if (!CreatePipe(&hChildStdoutRd, &hChildStdoutWr, &saAttr, 0))
-      return false;
+      return (mh_pid_t)-1;
 
     fSuccess = DuplicateHandle(GetCurrentProcess(), hChildStdoutRd,
                                GetCurrentProcess(), &hChildStdoutRdDup, 0,
                                FALSE, DUPLICATE_SAME_ACCESS);
-    if (!fSuccess) return false;
+    if (!fSuccess) return (mh_pid_t)-1;
     CloseHandle(hChildStdoutRd);
 
     int hStdIn = _open_osfhandle((long)hChildStdinWrDup, _O_WRONLY|_O_TEXT);
@@ -1068,8 +1068,8 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
         throw ErrorMessage;
     }
     delete[] pFullCommand;
-    if (!CloseHandle(hChildStdinRd)) return false;
-    if (!CloseHandle(hChildStdoutWr)) return false;
+    if (!CloseHandle(hChildStdinRd)) return (mh_pid_t)-1;
+    if (!CloseHandle(hChildStdoutWr)) return (mh_pid_t)-1;
 
     CloseHandle(ProcessInfo.hThread);
     char Buf[256];
@@ -1092,13 +1092,13 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
       if (IgnoreError)
       {
         cerr << "Error running command: "<<Command<<", but ignoring error\n";
-        return (HANDLE)0; // Ignore error
+        return (mh_pid_t)0; // Ignore error
       }
       else
-        return (HANDLE)-1;
+        return (mh_pid_t)-1;
     }
     CloseHandle(ProcessInfo.hProcess);
-    return (HANDLE)0;
+    return (mh_pid_t)0;
   }
   else
   {
@@ -1116,9 +1116,6 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
     return ProcessInfo.hProcess;
   }
 #else
-  int pipeto[2];      /* pipe to feed the exec'ed program input */
-  int pipefrom[2];    /* pipe to get the exec'ed program output */
-
   if (Command.substr(0,ComSpec.size())==ComSpec)
   {
     string tmpCommand=Command.substr(ComSpec.size(),Command.size());
@@ -1132,28 +1129,28 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
 
   if (pOutput || g_Quiet)
   {
+    int pipeto[2];      /* pipe to feed the exec'ed program input */
+    int pipefrom[2];    /* pipe to get the exec'ed program output */
+
     pipe( pipeto );
     pipe( pipefrom );
-  }
 
-  pid_t ID=vfork();
-  if (ID==-1)
-  {
-    if (IgnoreError)
+    pid_t ID=vfork();
+    if (ID==-1)
     {
-      cerr << "Error forking when try to run command: "<<Command<<", but ignoring error\n";
-      return true; // Ignore error
+      if (IgnoreError)
+      {
+        cerr << "Error forking when try to run command: "<<Command<<", but ignoring error\n";
+        return (mh_pid_t)0; // Ignore error
+      }
+      else
+        return (mh_pid_t)-1;
     }
-    else
-      return false;
-  }
-  else if (ID==0)
-  {
-    int argc;
-    const char **pargv;
-
-    if (pOutput || g_Quiet)
+    else if (ID==0)
     {
+      int argc;
+      const char **pargv;
+
       dup2( pipeto[0], STDIN_FILENO );
       dup2( pipefrom[1], STDOUT_FILENO  );
       /* close unnecessary pipe descriptors for a clean environment */
@@ -1161,15 +1158,17 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
       close( pipeto[1] );
       close( pipefrom[0] );
       close( pipefrom[1] );
-    }
 
-    poptParseArgvString(FullCommandLine.c_str(), &argc, &pargv);
-    execv(pargv[0],(char *const*)pargv);
-    _exit (EXIT_FAILURE);
-  }
-  else
-  {
-    if (pOutput || g_Quiet)
+      poptParseArgvString(FullCommandLine.c_str(), &argc, &pargv);
+      chdir(m_MakeDir->GetFullFileName().c_str());
+      if (m_pEnv)
+        execve(pargv[0],(char *const*)pargv,m_pEnv);
+      else
+        execv(pargv[0],(char *const*)pargv);
+      free(pargv);
+      _exit (EXIT_FAILURE);
+    }
+    else
     {
         /* Close unused pipe ends. This is especially important for the
       * pipefrom[1] write descriptor, otherwise readFromPipe will never
@@ -1183,16 +1182,16 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
         if (IgnoreError)
         {
           cerr << "Error forking when try to run command: "<<Command<<", but ignoring error\n";
-          return true; // Ignore error
+          return (mh_pid_t)0; // Ignore error
         }
         else
-          return false;
+          return (mh_pid_t)-1;
       }
       else if (ID2==0)
       {
         /* Close pipe write descriptor, or we will never know when the
-         * writer process closes its end of the pipe and stops feeding the
-         * exec'ed program. */
+        * writer process closes its end of the pipe and stops feeding the
+        * exec'ed program. */
         close( pipeto[1] );
         char Buf[256];
         int Nbr;
@@ -1216,21 +1215,55 @@ HANDLE mhmakefileparser::OsExeCommand(const string &Command, const string &Param
         int Status;
         waitpid(ID2,&Status,0); // Wait until the reading of the output is finished
       }
+
+      int Status;
+      int Ret=waitpid(ID,&Status,0);
+      if (Ret!=ID || Status)
+      {
+        if (IgnoreError)
+        {
+          cerr << "Error running command: "<<Command<<", but ignoring error\n";
+          return (mh_pid_t)0; // Ignore error
+        }
+        else
+          return (mh_pid_t)-1;
+      }
     }
-    int Status;
-    int Ret=waitpid(ID,&Status,0);
-    if (Ret!=ID || Status)
+  }
+  else
+  {   // No pOutput
+    pid_t ID=fork();
+    if (ID==-1)
     {
       if (IgnoreError)
       {
-        cerr << "Error running command: "<<Command<<", but ignoring error\n";
-        return true; // Ignore error
+        cerr << "Error forking when try to run command: "<<Command<<", but ignoring error\n";
+        return (mh_pid_t)0; // Ignore error
       }
       else
-        return false;
+        return (mh_pid_t)-1;
+    }
+    else if (ID==0)
+    {
+      int argc;
+      const char **pargv;
+
+      poptParseArgvString(FullCommandLine.c_str(), &argc, &pargv);
+      chdir(m_MakeDir->GetFullFileName().c_str());
+      if (m_pEnv)
+        execve(pargv[0],(char *const*)pargv,m_pEnv);
+      else
+        execv(pargv[0],(char *const*)pargv);
+      free(pargv);
+      _exit (EXIT_FAILURE);
+    }
+    else
+    {
+      return (mh_pid_t)ID;
     }
   }
-  return true;
+
+  return (mh_pid_t)0;
 #endif
 }
 
@@ -1278,7 +1311,7 @@ string EscapeQuotes(const string &Params)
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-HANDLE mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, string *pOutput)
+mh_pid_t mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, string *pOutput)
 {
   bool Echo=true;
   IgnoreError=false;
@@ -1398,7 +1431,7 @@ HANDLE mhmakefileparser::ExecuteCommand(string Command, bool &IgnoreError, strin
   #ifdef _DEBUG
   }
   #endif
-  return (HANDLE)0; /* No Error */
+  return (mh_pid_t)0; /* No Error */
 }
 
 ///////////////////////////////////////////////////////////////////////////////

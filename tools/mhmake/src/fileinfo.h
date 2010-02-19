@@ -81,10 +81,7 @@ class mh_time
   bool operator < (const mh_time &Src);
 public:
   mh_time(){m_Time=DATENOTVALID;}
-#ifdef WIN32
-  mh_time(unsigned __int64 Time) : m_Time((unsigned long)(Time&0xffffffff)) {}
-  mh_time(__int64 Time) : m_Time((unsigned long)(Time&0xffffffff)) {}
-#endif
+  mh_time(time_t Time) : m_Time((unsigned long)Time) {}
   mh_time(unsigned long Time) : m_Time(Time) {}
   mh_time(const mh_time &Time) : m_Time(Time.m_Time) {}
 

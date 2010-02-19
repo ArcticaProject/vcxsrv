@@ -378,17 +378,18 @@ string mhmakefileparser::f_wildcard(const string & Arg) const
   _findclose(hFile);
 #else
   glob_t Res;
-  if (glob (FileSpec.c_str(), GLOB_ERR|GLOB_NOSORT|GLOB_MARK, NULL, &Res))
+  if (glob (FileSpec->GetFullFileName().c_str(), GLOB_ERR|GLOB_NOSORT|GLOB_MARK, NULL, &Res))
     return g_EmptyString;
 
   string Ret=g_EmptyString;
   string SepStr=g_EmptyString;
+  string CheckSpec=FileSpec->GetName();
   for (int i=0; i<Res.gl_pathc; i++)
   {
-    if (PercentMatch(Res.gl_pathv[i],FileSpec,NULL,'*'))
+    if (PercentMatch(Res.gl_pathv[i],CheckSpec,NULL,'*'))
     {
       Ret+=SepStr;
-      Ret+=Res.gl_pathv[i];
+      Ret+=GetFileInfo(Res.gl_pathv[i],Dir)->GetQuotedFullFileName();
       SepStr=g_SpaceString;
     }
   }

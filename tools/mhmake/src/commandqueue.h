@@ -23,6 +23,12 @@
 
 #include "fileinfo.h"
 
+#ifdef WIN32
+typedef HANDLE mh_pid_t;
+#else
+typedef pid_t mh_pid_t;
+#endif
+
 class commandqueue
 {
   struct activeentry
@@ -36,7 +42,7 @@ class commandqueue
 private:
   queue< refptr<fileinfo> >  m_Queue;
   unsigned                   m_MaxNrCommandsInParallel;
-  HANDLE                    *m_pActiveProcesses;
+  mh_pid_t                  *m_pActiveProcesses;
   activeentry               *m_pActiveEntries;
   unsigned                   m_NrActiveEntries;
 
@@ -44,7 +50,7 @@ private:
   void ThrowCommandExecutionError(activeentry *pActiveEntry);
   void RemoveActiveEntry(unsigned Entry);
   bool StartExecuteCommands(const refptr<fileinfo> &pTarget);
-  bool StartExecuteNextCommand(activeentry *pActiveEntry, HANDLE *pActiveProcess);
+  bool StartExecuteNextCommand(activeentry *pActiveEntry, mh_pid_t *pActiveProcess);
   void TargetBuildFinished(activeentry *pActiveEntry);
 
 public:

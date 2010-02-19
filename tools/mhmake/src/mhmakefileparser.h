@@ -81,7 +81,7 @@ protected:
   fileinfoarray         m_IncludedMakefiles;
   refptr<fileinfoarray> m_pIncludeDirs;
   string                m_IncludeDirs;
-  
+
   bool                  m_DoubleColonRule;
   bool                  m_AutoDepsDirty;
   bool                  m_ForceAutoDepRescan;
@@ -92,7 +92,11 @@ protected:
   bool                  m_RebuildAll; /* true when to rebuild all targets of this makefile */
 
   set<string>           m_UsedEnvVars;     // Array containing a list of variables that are taken from the environment (This is used for rebuild checking)
+#ifdef WIN32
   char                 *m_pEnv;            // New environment in case the makefile exports variables
+#else
+  char                **m_pEnv;            // New environment in case the makefile exports variables
+#endif
   int                   m_EnvLen;          // Current length of m_pEnv
 
   map< refptr<fileinfo>, set< refptr<fileinfo> > > m_AutoDeps;
@@ -125,7 +129,10 @@ public:
   }
 
   /* Needed if you only want to use the searchcommand and execommand functions */
-  mhmakefileparser(const refptr<fileinfo> &pMakeDir) : m_MakeDir(pMakeDir), m_pEnv(NULL)
+  mhmakefileparser(const refptr<fileinfo> &pMakeDir) :
+    m_MakeDir(pMakeDir)
+  , m_AutoDepsDirty(false)
+  , m_pEnv(NULL)
   {}
 
   static void SetNrParallelBuilds(int NrParallelBuilds)
@@ -201,6 +208,11 @@ public:
   virtual ~mhmakefileparser()
   {
     SaveAutoDepsFile();
+#ifndef WIN32
+    char **pEnv=m_pEnv;
+    if (pEnv)
+      while (*pEnv) free(*pEnv++);
+#endif
     free(m_pEnv);
   }
   virtual int yylex(void);
@@ -325,8 +337,8 @@ public:
   }
   void AddRule();
 
-  HANDLE ExecuteCommand(string Command, bool &IgnoreError, string *pOutput=NULL);
-  HANDLE ExecuteCommand(string Command, string *pOutput=NULL)
+  mh_pid_t ExecuteCommand(string Command, bool &IgnoreError, string *pOutput=NULL);
+  mh_pid_t ExecuteCommand(string Command, string *pOutput=NULL)
   {
     bool IgnoreError;
     return ExecuteCommand(Command, IgnoreError, pOutput);
@@ -337,14 +349,14 @@ public:
   static void InitBuildTime();
 
   void SplitToItems(const string &String, vector< refptr<fileinfo> > &Items) const;
-  HANDLE DeleteFiles(const string &Params) const;
-  HANDLE CopyFiles(const string &Params) const;
-  HANDLE TouchFiles(const string &Params) const;
-  HANDLE EchoCommand(const string &Params) const;
+  mh_pid_t DeleteFiles(const string &Params) const;
+  mh_pid_t CopyFiles(const string &Params) const;
+  mh_pid_t TouchFiles(const string &Params) const;
+  mh_pid_t EchoCommand(const string &Params) const;
   string SearchCommand(const string &Command, const string &Extension="") const;
   const string &GetPythonExe() const;
   int SearchPath(void *NotUsed, const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const;
-  HANDLE OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const;
+  mh_pid_t OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const;
 };
 
 

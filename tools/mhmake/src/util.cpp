@@ -19,13 +19,15 @@
 /* $Rev$ */
 
 #include "stdafx.h"
-#include <WinIoCtl.h>
 
 #include "rule.h"
 #include "util.h"
 #include "mhmakeparser.h"
 
 #ifdef WIN32
+
+#include <WinIoCtl.h>
+
 #define REPARSE_MOUNTPOINT_HEADER_SIZE   8
 
 typedef struct {
@@ -112,7 +114,7 @@ void PrintVersionInfo(void)
   static const char VersionStr[]="\
 mhmake : GNU compatible make tool with extensions\n\
 version: "MHMAKEVER"\n\
-Remarks and bug reports -> Marc Haesen\n\
+Remarks and bug reports -> marha@sourceforge.net\n\
 ";
   cerr << VersionStr;
   exit(1);
@@ -303,7 +305,7 @@ loadedmakefile::loadedmakefile_statics::loadedmakefile_statics()
           if (FindData.dwReserved0==IO_REPARSE_TAG_MOUNT_POINT)
           {
             HANDLE hDir = ::CreateFile(m_MhMakeConf->GetFullFileName().c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS, NULL);
-            
+
             BYTE buf[MAXIMUM_REPARSE_DATA_BUFFER_SIZE];  // We need a large buffer
             REPARSE_MOUNTPOINT_DATA_BUFFER& ReparseBuffer = (REPARSE_MOUNTPOINT_DATA_BUFFER&)buf;
             DWORD dwRet;

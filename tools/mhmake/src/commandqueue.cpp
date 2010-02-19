@@ -23,14 +23,67 @@
 #include "commandqueue.h"
 #include "mhmakeparser.h"
 
+#ifndef WIN32
+
+#define INFINITE 0
+#define FALSE 0
+
+static int Status;
+unsigned WaitForMultipleObjects(int Nbr, mh_pid_t *phProcesses, int, int)
+{
+  mh_pid_t ID=waitpid(0,&Status,0);
+  for (int i=0; i<Nbr; i++)
+  {
+    if (ID==phProcesses[i])
+      return i;
+  }
+  return -1;
+}
+
+typedef unsigned DWORD;
+
+int GetExitCodeProcess(mh_pid_t hProcess, DWORD *pExitCode)
+{
+  *pExitCode=Status;
+  return true;
+}
+
+#define CloseHandle(Handle)
+
+#endif
+
+
 commandqueue::commandqueue() :
     m_NrActiveEntries(0)
 {
+#ifdef WIN32
   SYSTEM_INFO SysInfo;
   GetSystemInfo(&SysInfo);
   m_MaxNrCommandsInParallel=SysInfo.dwNumberOfProcessors;
+#else
+  FILE *pFile=fopen("/proc/cpuinfo","r");
+  const char *pProc="\nprocessor";
+  int cur=1;
+  int NrProcs=0;
+  while (!feof(pFile))
+  {
+    char In=fgetc(pFile);
+    if (In==pProc[cur])
+    {
+      cur++;
+      if (!pProc[cur])
+      {
+        NrProcs++;
+        cur=0;
+      }
+    }
+    else
+      cur=0;
+  }
+  m_MaxNrCommandsInParallel=NrProcs;
+#endif
 
-  m_pActiveProcesses=new HANDLE[m_MaxNrCommandsInParallel];
+  m_pActiveProcesses=new mh_pid_t[m_MaxNrCommandsInParallel];
   m_pActiveEntries= new activeentry[m_MaxNrCommandsInParallel];
 }
 
@@ -44,11 +97,11 @@ void commandqueue::SetNrParallelBuilds(unsigned NrParallelBuilds)
 {
   if (m_NrActiveEntries)
     throw("Changing of number of parallel builds is only allowed when no commands are executing");
-  NrParallelBuilds=max(1,NrParallelBuilds);
+  NrParallelBuilds=max(1u,NrParallelBuilds);
   m_MaxNrCommandsInParallel=NrParallelBuilds;
   delete [] m_pActiveProcesses;
   delete [] m_pActiveEntries;
-  m_pActiveProcesses=new HANDLE[NrParallelBuilds];
+  m_pActiveProcesses=new mh_pid_t[NrParallelBuilds];
   m_pActiveEntries= new activeentry[NrParallelBuilds];
 }
 
@@ -86,7 +139,7 @@ void commandqueue::RemoveActiveEntry(unsigned Entry)
 
 /* Start to execute next command, return true when command is completely executed
    upon return */
-bool commandqueue::StartExecuteNextCommand(activeentry *pActiveEntry, HANDLE *pActiveProcess)
+bool commandqueue::StartExecuteNextCommand(activeentry *pActiveEntry, mh_pid_t *pActiveProcess)
 {
   refptr<fileinfo> pTarget=pActiveEntry->pTarget;
   mhmakeparser *pMakefile=pTarget->GetRule()->GetMakefile();
@@ -106,8 +159,8 @@ bool commandqueue::StartExecuteNextCommand(activeentry *pActiveEntry, HANDLE *pA
   if (!g_GenProjectTree)
   {
   #endif
-    HANDLE hProcess=pMakefile->ExecuteCommand(Command,pActiveEntry->IgnoreError);
-    if (hProcess==(HANDLE)-1)
+    mh_pid_t hProcess=pMakefile->ExecuteCommand(Command,pActiveEntry->IgnoreError);
+    if (hProcess==(mh_pid_t)-1)
     {
       ThrowCommandExecutionError(pActiveEntry);
     }
@@ -235,7 +288,7 @@ mh_time_t commandqueue::WaitForTarget(const refptr<fileinfo> &pTarget)
   while (1)
   {
     // First wait until one of the processes that are running is finished
-    DWORD Ret=WaitForMultipleObjects(m_NrActiveEntries,m_pActiveProcesses,FALSE,INFINITE);
+    unsigned Ret=WaitForMultipleObjects(m_NrActiveEntries,m_pActiveProcesses,FALSE,INFINITE);
     if (Ret>=m_NrActiveEntries)
       throw("fatal error: unexpected return value of WaitForMultipleObjects " + stringify(Ret));
     activeentry *pActiveEntry=&m_pActiveEntries[Ret];
@@ -244,7 +297,7 @@ mh_time_t commandqueue::WaitForTarget(const refptr<fileinfo> &pTarget)
 
       // First check the error code of the command
     DWORD ExitCode=0;
-    HANDLE hProcess=m_pActiveProcesses[Ret];
+    mh_pid_t hProcess=m_pActiveProcesses[Ret];
     if (!GetExitCodeProcess(hProcess,&ExitCode) || ExitCode)
     {
       if (pActiveEntry->IgnoreError)

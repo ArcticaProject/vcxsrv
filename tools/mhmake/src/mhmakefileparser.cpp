@@ -415,12 +415,21 @@ void mhmakefileparser::PrintVariables(bool Expand) const
   if (m_pEnv)
   {
     cout << "Environment overruled:\n";
+#ifdef WIN32
     char *pEnv=m_pEnv;
     while (*pEnv)
     {
       cout<<pEnv<<endl;
       pEnv+=strlen(pEnv)+1;
     }
+#else
+    char **pEnv=m_pEnv;
+    while (*pEnv)
+    {
+      cout<<*pEnv<<endl;
+      pEnv++;
+    }
+#endif
   }
 }
 #endif
@@ -871,6 +880,7 @@ bool mhmakefileparser::SkipHeaderFile(const string &FileName)
 ///////////////////////////////////////////////////////////////////////////////
 void mhmakefileparser::SetExport(const string &Var, const string &Val)
 {
+#ifdef WIN32
   if (!m_pEnv)
   {
     /* Environment not created yet, so create one */
@@ -930,6 +940,57 @@ void mhmakefileparser::SetExport(const string &Var, const string &Val)
   *pEnv++='\0';
   *pEnv++='\0';
   m_EnvLen+=Extra;
+#else
+  if (!m_pEnv)
+  {
+    /* Environment not created yet, so create one */
+    char **pEnv=environ;
+    char **pEnd=pEnv;
+    int Len=1;
+    while (*pEnd)
+    {
+      Len++;
+      pEnd++;
+    }
+    m_EnvLen=Len;
+    m_pEnv=(char**)malloc(Len*sizeof(pEnv));
+    int i=0;
+    while (*pEnv)
+    {
+      m_pEnv[i]=strdup(*pEnv);
+      i++;
+      pEnv++;
+    }
+    m_pEnv[i]=NULL;
+  }
+  /* First check if the variable is in the environment, if so replace it */
+  char **pEnv=m_pEnv;
+  while (*pEnv)
+  {
+    const char *pVar=Var.c_str();
+    char *pStart=*pEnv;
+    char *pTmp=pStart;
+    while (*pTmp!='=' && *pTmp==*pVar)
+    {
+      pTmp++; pVar++;
+    }
+    if (*pTmp=='=' && !*pVar)
+    {
+      free(*pEnv);
+      *pEnv=strdup((Var+"="+Val).c_str());
+      break;
+    }
+    pEnv++;
+  }
+  if (!*pEnv)
+  {
+    // Add it at the end of the list
+    m_pEnv=(char**)realloc(m_pEnv,(m_EnvLen+1)*sizeof(*pEnv));
+    m_pEnv[m_EnvLen-1]=strdup((Var+"="+Val).c_str());
+    m_pEnv[m_EnvLen++]=NULL;
+  }
+
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

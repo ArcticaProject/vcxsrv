@@ -1,5 +1,6 @@
 SRCS = mhmakeparser.y mhmakelexer.l mhmake.cpp mhmakefileparser.cpp util.cpp \
-       functions.cpp fileinfo.cpp rule.cpp md5.c build.cpp curdir.cpp
+       functions.cpp fileinfo.cpp rule.cpp md5.c build.cpp curdir.cpp \
+       commandqueue.cpp
 
 if DEBUG
 bin_PROGRAMS=mhmake_dbg
