@@ -33,7 +33,7 @@
 #define IDD_PROGRAM             104
 #define IDD_XDMCP               105
 #define IDD_FONTPATH            106
-#define IDD_CLIPBOARD           107
+#define IDD_EXTRA               107
 
 #define IDI_XLAUNCH             108
 
@@ -49,8 +49,8 @@
 #define IDS_FONTPATH_SUBTITLE   309
 #define IDS_FINISH_TITLE        310
 #define IDS_FINISH_SUBTITLE     311
-#define IDS_CLIPBOARD_TITLE     312
-#define IDS_CLIPBOARD_SUBTITLE  313
+#define IDS_EXTRA_TITLE         312
+#define IDS_EXTRA_SUBTITLE      313
 #define IDS_SAVE_TITLE          320
 #define IDS_SAVE_FILETITLE      321
 #define IDS_SAVE_FILTER         322
@@ -99,3 +99,5 @@
 #define IDC_CLIPBOARD_DESC       261
 #define IDC_EXTRA_PARAMS         262
 #define IDC_EXTRA_PARAMS_DESC    263
+#define IDC_WGL                  264
+#define IDC_WGL_DESC             265

@@ -57,9 +57,11 @@
 
 #define STR_CAPTION_FONTPATH        "Fontpath settings"
 
-#define STR_CAPTION_CLIPBOARD       "Clipboard settings"
+#define STR_CAPTION_EXTRA          "Extra settings"
 #define STR_CLIPBOARD               "Clipboard"
 #define STR_CLIPBOARD_DESC          "Start the integrated clipboard manager"
+#define STR_WGL                     "Native opengl"
+#define STR_WGL_DESC                "Use the native windows opengl library (wgl). Make sure to export the LIBGL_ALWAYS_INDIRECT environment variable."
 #define STR_EXTRA_PARAMS_DESC       "Additional parameters for VcXsrv"
 
 #define STR_CAPTION_FINISH          "Finish configuration"
@@ -79,8 +81,8 @@
 #define STR_FONTPATH_SUBTITLE       ""
 #define STR_FINISH_TITLE            "Configuration complete"
 #define STR_FINISH_SUBTITLE         ""
-#define STR_CLIPBOARD_TITLE         "Clipboard settings"
-#define STR_CLIPBOARD_SUBTITLE      ""
+#define STR_EXTRA_TITLE             "Extra settings"
+#define STR_EXTRA_SUBTITLE          ""
 
 #define STR_SAVE_TITLE              "Save configuration"
 #define STR_SAVE_FILETITLE          "Filename"
@@ -100,9 +102,9 @@ BEGIN
     IDS_FONTPATH_SUBTITLE   STR_FONTPATH_SUBTITLE   
     IDS_FINISH_TITLE        STR_FINISH_TITLE      
     IDS_FINISH_SUBTITLE     STR_FINISH_SUBTITLE   
-    IDS_CLIPBOARD_TITLE     STR_CLIPBOARD_TITLE      
-    IDS_CLIPBOARD_SUBTITLE  STR_CLIPBOARD_SUBTITLE   
-    IDS_SAVE_TITLE	    STR_SAVE_TITLE
+    IDS_EXTRA_TITLE         STR_EXTRA_TITLE      
+    IDS_EXTRA_SUBTITLE      STR_EXTRA_SUBTITLE   
+    IDS_SAVE_TITLE          STR_SAVE_TITLE
     IDS_SAVE_FILETITLE      STR_SAVE_FILETITLE
     IDS_SAVE_FILTER         STR_SAVE_FILTER
 END

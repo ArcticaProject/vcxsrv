@@ -60,6 +60,7 @@ struct CConfig
     std::string xdmcp_host;
     std::vector<std::string> xhosts;
     bool clipboard;
+    bool wgl;
     bool no_access_control;
     std::string font_server;
     std::string extra_params;
@@ -73,7 +74,7 @@ struct CConfig
                 protocol_path(""), program("xeyes"), progs(PROG_NUMBER), compress(false), host(""), user("ago"),
                 password(""), password_save(false), password_start(false), broadcast(false),
                 indirect(false), xdmcp_host(""), xhosts(HOST_NUMBER), clipboard(true), no_access_control(false),
-                font_server(), extra_params(), extra_ssh() {};
+                font_server(), extra_params(), extra_ssh(), wgl(true) {};
     void Load(const char * filename);
     void Save(const char * filename);
 };

@@ -62,7 +62,7 @@ class CMyWizard : public CWizard
             AddPage(IDD_PROGRAM, IDS_PROGRAM_TITLE, IDS_PROGRAM_SUBTITLE);
             AddPage(IDD_XDMCP, IDS_XDMCP_TITLE, IDS_XDMCP_SUBTITLE);
             //AddPage(IDD_FONTPATH, IDS_FONTPATH_TITLE, IDS_FONTPATH_SUBTITLE);
-            AddPage(IDD_CLIPBOARD, IDS_CLIPBOARD_TITLE, IDS_CLIPBOARD_SUBTITLE);
+            AddPage(IDD_EXTRA, IDS_EXTRA_TITLE, IDS_EXTRA_SUBTITLE);
             AddPage(IDD_FINISH, IDS_FINISH_TITLE, IDS_FINISH_SUBTITLE);
         }
 
@@ -133,7 +133,7 @@ class CMyWizard : public CWizard
 		    } else if (IsDlgButtonChecked(hwndDlg, IDC_CLIENT_NONE))
 		    {
 			config.client = CConfig::NoClient;
-			SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_CLIPBOARD);
+			SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_EXTRA);
 		    } else
 			SetWindowLong(hwndDlg, DWL_MSGRESULT, -1);
 		    return TRUE;
@@ -165,7 +165,7 @@ class CMyWizard : public CWizard
 		    if (!config.local && (config.host.empty() || config.program.empty()))
 			SetWindowLong(hwndDlg, DWL_MSGRESULT, -1);
 		    else
-			SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_CLIPBOARD);
+			SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_EXTRA);
 		    return TRUE;
 		case IDD_XDMCP:
                     // Check for broadcast
@@ -194,14 +194,19 @@ class CMyWizard : public CWizard
 		    if (!config.broadcast && config.xdmcp_host.empty())
 			SetWindowLong(hwndDlg, DWL_MSGRESULT, -1);
 		    else	
-			SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_CLIPBOARD);
+			SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_EXTRA);
 		    return TRUE;
-                case IDD_CLIPBOARD:
+                case IDD_EXTRA:
                     // check for clipboard
                     if (IsDlgButtonChecked(hwndDlg, IDC_CLIPBOARD))
                         config.clipboard = true;
                     else
                         config.clipboard = false;
+                    // check for wgl
+                    if (IsDlgButtonChecked(hwndDlg, IDC_WGL))
+                        config.wgl = true;
+                    else
+                        config.wgl = false;
                     // read parameters
 		    {
 			char buffer[512];
@@ -242,7 +247,7 @@ class CMyWizard : public CWizard
 		    SetWindowLong(hwndDlg, DWL_MSGRESULT, IDD_CLIENTS);
 		    return TRUE;
 		case IDD_FONTPATH:
-                case IDD_CLIPBOARD: // temporary. fontpath is disabled
+                case IDD_EXTRA: // temporary. fontpath is disabled
 		    switch (config.client)
 		    {
 			case CConfig::NoClient:	
@@ -442,8 +447,9 @@ class CMyWizard : public CWizard
                             // Set hostname
 			    SetDlgItemText(hwndDlg, IDC_XDMCP_HOST, config.xdmcp_host.c_str());
 			    break;
-                        case IDD_CLIPBOARD:
+                        case IDD_EXTRA:
                             CheckDlgButton(hwndDlg, IDC_CLIPBOARD, config.clipboard?BST_CHECKED:BST_UNCHECKED);
+                            CheckDlgButton(hwndDlg, IDC_WGL, config.wgl?BST_CHECKED:BST_UNCHECKED);
                             SetDlgItemText(hwndDlg, IDC_EXTRA_PARAMS, config.extra_params.c_str());
                             break;
 
@@ -542,6 +548,8 @@ class CMyWizard : public CWizard
 	    }
             if (config.clipboard)
                 buffer += "-clipboard ";
+            if (config.wgl)
+                buffer += "-wgl ";
             if (!config.extra_params.empty())
             {
                 buffer += config.extra_params;
