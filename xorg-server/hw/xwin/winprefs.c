@@ -56,6 +56,8 @@ extern DWORD g_dwCurrentThreadID;
 
 extern const char *winGetBaseDir(void);
 
+extern const char *g_pszLogFile;
+
 /* From winmultiwindowflex.l, the real parser */
 extern void parse_file (FILE *fp);
 
@@ -785,12 +787,9 @@ LoadPreferences (void)
   /* Setup a DISPLAY environment variable, need to allocate on heap */
   /* because putenv doesn't copy the argument... Always use screen 0 */
   winGetDisplayName(szDisplay, 0);
-  szEnvDisplay = (char *)(malloc(strlen(szDisplay)+strlen("DISPLAY=")+1));
-  if (szEnvDisplay)
-    {
-      snprintf(szEnvDisplay, 512, "DISPLAY=%s", szDisplay);
-      putenv (szEnvDisplay);
-    }
+  szEnvDisplay = (char *)(malloc(strlen(szDisplay)+9/*strlen("DISPLAY=")+1*/));
+  snprintf(szEnvDisplay, 512, "DISPLAY=%s", szDisplay);
+  putenv (szEnvDisplay);
 
   /* Replace any "%display%" in menu commands with display string */
   for (i=0; i<pref.menuItems; i++)
@@ -806,6 +805,12 @@ LoadPreferences (void)
 		  {
 		    memcpy (dstParam, szDisplay, strlen(szDisplay));
 		    dstParam += strlen(szDisplay);
+		    srcParam += 9;
+		  }
+		else if (!strncmp(srcParam, "%logfile%", 9))
+		  {
+		    memcpy (dstParam, g_pszLogFile, strlen(g_pszLogFile));
+		    dstParam += strlen(g_pszLogFile);
 		    srcParam += 9;
 		  }
 		else

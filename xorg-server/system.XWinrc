@@ -8,8 +8,6 @@
 
 # Comments begin with "#" or "//" and go to the end-of-line
 
-# Paths to commands are **cygwin** based (i.e. /usr/local/bin/xcalc)
-
 # Paths to icons are **WINDOWS** based (i.e. c:\windows\icons)
 
 # Menus are defined as...
@@ -18,6 +16,9 @@
 #                               ^^ This command will have any "%display%"
 #                                  string replaced with the proper display
 #                                  variable (i.e. 127.0.0.1:<display>.0)
+#                                  (This should only rarely be needed as
+#                                  the DISPLAY environment variable is also
+#                                  set correctly)
 #  or	<Menu Text>	MENU	<name-of-some-prior-defined-menu>
 #  or	<Menu Text>	ALWAYSONTOP
 #                         ^^ Sets the window to display above all others
@@ -79,15 +80,17 @@
 
 // Make some menus...
 menu apps {
-	xcalc	exec	"xcalc"
-	xclock	exec	"xclock"
-  xwininfo exec "xwininfo -pause"
+	xcalc   	exec	"xcalc"
+	xclock  	exec	"xclock"
+	xwininfo	exec	"xwininfo -pause"
 }
 
 menu root {
 // Comments fit here, too...
 	"Reload system.XWinrc"	RELOAD
-	"Applications"	menu	apps
+	"Applications"        	menu	apps
+	Separator
+	"Show log"	exec	"notepad %logfile%"
 	Separator
 }
 
