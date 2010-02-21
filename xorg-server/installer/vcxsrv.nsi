@@ -108,6 +108,7 @@ Section "VcXsrv (required)"
   WriteRegStr HKCR ".xlaunch" "" "XLaunchFile"
   WriteRegStr HKCR "XLaunchFile" "" "XLaunch Configuration"
   WriteRegStr HKCR "XLaunchFile\DefaultIcon" "" "$INSTDIR\xlaunch.exe,0"
+  WriteRegStr HKCR "XLaunchFile\shell" "" 'open'
   WriteRegStr HKCR "XLaunchFile\shell\open\command" "" '"$INSTDIR\XLaunch.exe" -run "%1"'
   WriteRegStr HKCR "XLaunchFile\shell\open\ddeexec\Application" "" "XLaunch"
   WriteRegStr HKCR "XLaunchFile\shell\open\ddeexec\Topic" "" "System"
@@ -117,6 +118,17 @@ Section "VcXsrv (required)"
   WriteRegStr HKCR "XLaunchFile\shell\Validate\command" "" '"$INSTDIR\XLaunch.exe" -validate "%1"'
   WriteRegStr HKCR "XLaunchFile\shell\Validate\ddeexec\Application" "" "XLaunch"
   WriteRegStr HKCR "XLaunchFile\shell\Validate\ddeexec\Topic" "" "System"
+
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell" "" 'open'
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\open\command" "" '"$INSTDIR\XLaunch.exe" -run "%1"'
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\open\ddeexec\Application" "" "XLaunch"
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\open\ddeexec\Topic" "" "System"
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\edit\command" "" '"$INSTDIR\XLaunch.exe" -load "%1"'
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\edit\ddeexec\Application" "" "XLaunch"
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\edit\ddeexec\Topic" "" "System"
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\Validate\command" "" '"$INSTDIR\XLaunch.exe" -validate "%1"'
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\Validate\ddeexec\Application" "" "XLaunch"
+  WriteRegStr HKCR "Applications\xlaunch.exe\shell\Validate\ddeexec\Topic" "" "System"
 
   InitPluginsDir
   SetOutPath $PLUGINSDIR
@@ -201,16 +213,27 @@ Section "Uninstall"
   ; Register the xlaunch file extension
   DeleteRegKey HKCR ".xlaunch"
   DeleteRegKey HKCR "XLaunchFile"
+  DeleteRegKey HKCR "Applications\xlaunch.exe"
 
   ; Remove files and uninstaller
   Delete "$INSTDIR\vcxsrv.exe"
+  Delete "$INSTDIR\vcxsrv_dbg.exe"
+  Delete "$INSTDIR\vcxsrv_dbg.pdb"
   Delete "$INSTDIR\uninstall.exe"
   Delete "$INSTDIR\protocol.txt"
   Delete "$INSTDIR\system.XWinrc"
   Delete "$INSTDIR\xkbcomp.exe"
+  Delete "$INSTDIR\xcalc.exe"
+  Delete "$INSTDIR\xcalc"
+  Delete "$INSTDIR\xcalc-color"
+  Delete "$INSTDIR\xclock.exe"
+  Delete "$INSTDIR\xwininfo.exe"
   Delete "$INSTDIR\XKeysymDB"
   Delete "$INSTDIR\XErrorDB"
   Delete "$INSTDIR\xlaunch.exe"
+  Delete "$INSTDIR\plink.exe"
+  Delete "$INSTDIR\swrast_dri.dll"
+  Delete "$INSTDIR\swrast_dri_dbg.dll"
 
   RMDir /r "$INSTDIR\fonts"
   RMDir /r "$INSTDIR\xkbdata"
