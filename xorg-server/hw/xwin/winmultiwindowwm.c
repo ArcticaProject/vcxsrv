@@ -1592,7 +1592,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
                 
   if (winMultiWindowGetWMNormalHints(pWin, &SizeHints))
   {
-    if (!((SizeHints.min_width == SizeHints.max_width)&&(SizeHints.min_height == SizeHints.max_height) ))
+    if (!(SizeHints.max_width&&SizeHints.max_height&&(SizeHints.min_width == SizeHints.max_width)&&(SizeHints.min_height == SizeHints.max_height) ))
       style|=WS_SIZEBOX;
   }
   else              
