@@ -118,9 +118,17 @@ void commandqueue::ThrowCommandExecutionError(activeentry *pActiveEntry)
   throw ErrorMessage;
 }
 
+void commandqueue::AddActiveEntry(activeentry &ActiveEntry, mh_pid_t ActiveProcess)
+{
+//cout << "Adding entry "<<m_NrActiveEntries<<" to queue:"<<ActiveEntry.pTarget->GetQuotedFullFileName()<<" ("<<ActiveProcess<<")\n";
+  m_pActiveEntries[m_NrActiveEntries]=ActiveEntry;
+  m_pActiveProcesses[m_NrActiveEntries]=ActiveProcess;
+  m_NrActiveEntries++;
+}
+
 void commandqueue::RemoveActiveEntry(unsigned Entry)
 {
-//cout << "Remove entry "<<Entry<<" of "<<m_NrActiveEntries<<" from queue:"<<m_pActiveEntries[Entry].pTarget->GetQuotedFullFileName()<<endl;
+//cout << "Remove entry "<<Entry<<" of "<<m_NrActiveEntries<<" from queue:"<<m_pActiveEntries[Entry].pTarget->GetQuotedFullFileName()<<<<" ("<<m_pActiveEntries[Entry]<<")\n";
   unsigned NrToMove=m_NrActiveEntries-Entry-1;
   if (NrToMove)
   {
@@ -228,19 +236,21 @@ bool commandqueue::StartExecuteCommands(const refptr<fileinfo> &pTarget)
   refptr<rule> pRule=pTarget->GetRule();
   mhmakeparser *pMakefile=pRule->GetMakefile();
   vector<string>::iterator CommandIt=pRule->GetCommands().begin();
-  activeentry *pActiveEntry=&m_pActiveEntries[m_NrActiveEntries];
-  md5_starts( &pActiveEntry->md5ctx );
 
-  pActiveEntry->pTarget=pTarget;
-  pActiveEntry->CurrentCommandIt=CommandIt;
-  pActiveEntry->pTarget=pTarget;
+  activeentry ActiveEntry;
+  mh_pid_t ActiveProcess;
+
+  md5_starts( &ActiveEntry.md5ctx );
+
+  ActiveEntry.pTarget=pTarget;
+  ActiveEntry.CurrentCommandIt=CommandIt;
 
   while (1)
   {
-    if (StartExecuteNextCommand(pActiveEntry, &m_pActiveProcesses[m_NrActiveEntries]))
+    if (StartExecuteNextCommand(&ActiveEntry, &ActiveProcess))
     {
-      pActiveEntry->CurrentCommandIt++;
-      if (pActiveEntry->CurrentCommandIt==pRule->GetCommands().end())
+      ActiveEntry.CurrentCommandIt++;
+      if (ActiveEntry.CurrentCommandIt==pRule->GetCommands().end())
       {
          // All commands executed
          break;
@@ -248,13 +258,11 @@ bool commandqueue::StartExecuteCommands(const refptr<fileinfo> &pTarget)
     }
     else
     {
-//cout << "Adding entry "<<m_NrActiveEntries<<" to queue:"<<pActiveEntry->pTarget->GetQuotedFullFileName()<<endl;
-      m_NrActiveEntries++;
+      AddActiveEntry(ActiveEntry,ActiveProcess);
       return false;
     }
   }
-  TargetBuildFinished(pActiveEntry);
-  *pActiveEntry=activeentry();
+  TargetBuildFinished(&ActiveEntry);
   return true;
 }
 

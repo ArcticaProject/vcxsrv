@@ -48,6 +48,7 @@ private:
 
 private:
   void ThrowCommandExecutionError(activeentry *pActiveEntry);
+  void AddActiveEntry(activeentry &ActiveEntry, mh_pid_t ActiveProcess);
   void RemoveActiveEntry(unsigned Entry);
   bool StartExecuteCommands(const refptr<fileinfo> &pTarget);
   bool StartExecuteNextCommand(activeentry *pActiveEntry, mh_pid_t *pActiveProcess);
