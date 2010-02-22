@@ -1510,6 +1510,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
       else if (!(mwm_hint->decorations & MwmDecorAll))
       {
 	if (mwm_hint->decorations & MwmDecorBorder) hint |= HINT_BORDER;
+	if (mwm_hint->decorations & MwmDecorHandle) hint |= HINT_SIZEBOX;
 	if (mwm_hint->decorations & MwmDecorTitle) hint |= HINT_CAPTION;
       }
     }
@@ -1526,7 +1527,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
     {
       if (*pAtom == dockWindow)
       {
-	hint = (hint & ~HINT_NOFRAME); /* Xming puts a sizebox on dock windows */
+	hint = (hint & ~HINT_NOFRAME) | HINT_SIZEBOX; /* Xming puts a sizebox on dock windows */
 	*zstyle = HWND_TOPMOST;
       }
     }
@@ -1569,7 +1570,7 @@ winApplyHints (Display *pDisplay, Window iWindow, HWND hWnd, HWND *zstyle)
   else if (maxmin & HINT_MIN) SendMessage(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 
   if (style & STYLE_NOTITLE)
-	hint = (hint & ~HINT_NOFRAME & ~HINT_BORDER & ~HINT_CAPTION);
+	hint = (hint & ~HINT_NOFRAME & ~HINT_BORDER & ~HINT_CAPTION) | HINT_SIZEBOX;
   else if (style & STYLE_OUTLINE)
 	hint = (hint & ~HINT_NOFRAME & ~HINT_CAPTION) | HINT_BORDER;
   else if (style & STYLE_NOFRAME)
