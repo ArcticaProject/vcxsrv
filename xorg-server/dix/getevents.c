@@ -63,6 +63,8 @@
 #include "listdev.h" /* for sizing up DeviceClassesChangedEvent */
 
 #ifdef _MSC_VER
+#include <math.h>
+
 float roundf(float f)
 {
   return ((f<0.0f) ? ceil(f-.5)  : floor (f+.5));
