@@ -503,7 +503,7 @@ __glXGetDrawable(__GLXcontext *glxc, GLXDrawable drawId, ClientPtr client,
 	return NULL;
     }
 
-    if (pDraw->pScreen != glxc->pGlxScreen->pScreen) {
+    if (!glxc || pDraw->pScreen != glxc->pGlxScreen->pScreen) {
 	client->errorValue = pDraw->pScreen->myNum;
 	*error = BadMatch;
 	return NULL;
