@@ -357,7 +357,7 @@
 #define XCMISC 1
 
 /* Build Security extension */
-#undef XCSECURITY
+#define XCSECURITY 1
 
 /* Support Xdmcp */
 #define XDMCP 1

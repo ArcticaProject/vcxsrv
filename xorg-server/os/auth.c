@@ -317,11 +317,23 @@ GenerateAuthorization(
 void
 GenerateRandomData (int len, char *buf)
 {
+#ifdef _MSC_VER
+    static HANDLE hAdvApi32;
+    static BOOLEAN (_stdcall * RtlGenRandom)(void *,unsigned long);
+
+    if (!hAdvApi32)
+    {
+      hAdvApi32=LoadLibrary("advapi32.dll");
+      RtlGenRandom=(BOOLEAN (_stdcall *)(void*,unsigned long))GetProcAddress(hAdvApi32,"SystemFunction036");
+    }
+    RtlGenRandom(buf, len);
+#else
     int fd;
 
     fd = open("/dev/urandom", O_RDONLY);
     read(fd, buf, len);
     close(fd);
+#endif
 }
 
 #endif /* XCSECURITY */
