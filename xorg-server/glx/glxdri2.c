@@ -217,8 +217,15 @@ __glXDRIdrawableSwapBuffers(ClientPtr client, __GLXdrawable *drawable)
     __GLXDRIscreen *screen = priv->screen;
     CARD64 unused;
 
+#if __DRI2_FLUSH_VERSION >= 3
+    if (screen->flush) {
+	(*screen->flush->flush)(priv->driDrawable);
+	(*screen->flush->invalidate)(priv->driDrawable);
+    }
+#else
     if (screen->flush)
 	(*screen->flush->flushInvalidate)(priv->driDrawable);
+#endif
 
     if (DRI2SwapBuffers(client, drawable->pDraw, 0, 0, 0, &unused,
 			__glXdriSwapEvent, drawable->pDraw) != Success)

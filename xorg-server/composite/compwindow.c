@@ -205,7 +205,7 @@ compPositionWindow (WindowPtr pWin, int x, int y)
 #ifdef COMPOSITE_DEBUG
     if ((pWin->redirectDraw != RedirectDrawNone) !=
 	(pWin->viewable && (GetCompWindow(pWin) != NULL)))
-	abort ();
+	OsAbort ();
 #endif
     if (pWin->redirectDraw != RedirectDrawNone)
     {

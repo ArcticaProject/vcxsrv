@@ -69,9 +69,6 @@ DevPrivateKey dataKey = &dataKeyIndex;
 /* audit file descriptor */
 static int audit_fd;
 
-/* whether AVC is active */
-static int avc_active;
-
 /* atoms for window label properties */
 static Atom atom_ctx;
 static Atom atom_client_ctx;
@@ -125,9 +122,7 @@ SELinuxLabelClient(ClientPtr client)
     security_context_t ctx;
 
     subj = dixLookupPrivate(&client->devPrivates, subjectKey);
-    sidput(subj->sid);
     obj = dixLookupPrivate(&client->devPrivates, objectKey);
-    sidput(obj->sid);
 
     /* Try to get a context from the socket */
     if (fd < 0 || getpeercon_raw(fd, &ctx) < 0) {
@@ -170,7 +165,7 @@ finish:
 	FatalError("SELinux: client %d: context_to_sid_raw(%s) failed\n",
 		   client->index, ctx);
 
-    sidget(obj->sid = subj->sid);
+    obj->sid = subj->sid;
     freecon(ctx);
 }
 
@@ -191,7 +186,6 @@ SELinuxLabelInitial(void)
     subj = dixLookupPrivate(&serverClient->devPrivates, subjectKey);
     obj = dixLookupPrivate(&serverClient->devPrivates, objectKey);
     subj->privileged = 1;
-    sidput(subj->sid);
 
     /* Use the context of the X server process for the serverClient */
     if (getcon_raw(&ctx) < 0)
@@ -201,7 +195,7 @@ SELinuxLabelInitial(void)
     if (avc_context_to_sid_raw(ctx, &subj->sid) < 0)
 	FatalError("SELinux: serverClient: context_to_sid(%s) failed\n", ctx);
 
-    sidget(obj->sid = subj->sid);
+    obj->sid = subj->sid;
     freecon(ctx);
 
     srec.client = serverClient;
@@ -230,8 +224,8 @@ SELinuxLabelResource(XaceResourceAccessRec *rec, SELinuxSubjectRec *subj,
     security_id_t tsid;
 
     /* Check for a create context */
-    if (rec->rtype == RT_WINDOW && subj->win_create_sid) {
-	sidget(obj->sid = subj->win_create_sid);
+    if (rec->rtype & RC_DRAWABLE && subj->win_create_sid) {
+	obj->sid = subj->win_create_sid;
 	return Success;
     }
 
@@ -359,17 +353,14 @@ SELinuxDevice(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 	SELinuxSubjectRec *dsubj;
 	dsubj = dixLookupPrivate(&rec->dev->devPrivates, subjectKey);
 
-	sidput(dsubj->sid);
-	sidput(obj->sid);
-
 	if (subj->dev_create_sid) {
 	    /* Label the device with the create context */
-	    sidget(obj->sid = subj->dev_create_sid);
-	    sidget(dsubj->sid = subj->dev_create_sid);
+	    obj->sid = subj->dev_create_sid;
+	    dsubj->sid = subj->dev_create_sid;
 	} else {
 	    /* Label the device directly with the process SID */
-	    sidget(obj->sid = subj->sid);
-	    sidget(dsubj->sid = subj->sid);
+	    obj->sid = subj->sid;
+	    dsubj->sid = subj->sid;
 	}
     }
 
@@ -483,8 +474,6 @@ SELinuxExtension(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 	    return;
 	}
 
-	sidput(obj->sid);
-
 	/* Perform a transition to obtain the final SID */
 	if (avc_compute_create(serv->sid, sid, SECCLASS_X_EXTENSION,
 			       &obj->sid) < 0) {
@@ -520,7 +509,6 @@ SELinuxSelection(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 
     /* If this is a new object that needs labeling, do it now */
     if (access_mode & DixCreateAccess) {
-	sidput(obj->sid);
 	rc = SELinuxSelectionToSID(name, subj, &obj->sid, &obj->poly);
 	if (rc != Success)
 	    obj->sid = unlabeled_sid;
@@ -538,7 +526,6 @@ SELinuxSelection(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 		break;
 	    obj = dixLookupPrivate(&pSel->devPrivates, objectKey);
 	}
-	sidput(tsid);
 
 	if (pSel)
 	    *rec->ppSel = pSel;
@@ -557,11 +544,10 @@ SELinuxSelection(CallbackListPtr *pcbl, pointer unused, pointer calldata)
     /* Label the content (advisory only) */
     if (access_mode & DixSetAttrAccess) {
 	data = dixLookupPrivate(&pSel->devPrivates, dataKey);
-	sidput(data->sid);
 	if (subj->sel_create_sid)
-	    sidget(data->sid = subj->sel_create_sid);
+	    data->sid = subj->sel_create_sid;
 	else
-	    sidget(data->sid = obj->sid);
+	    data->sid = obj->sid;
     }
 }
 
@@ -586,7 +572,6 @@ SELinuxProperty(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 
     /* If this is a new object that needs labeling, do it now */
     if (rec->access_mode & DixCreateAccess) {
-	sidput(obj->sid);
 	rc = SELinuxPropertyToSID(name, subj, &obj->sid, &obj->poly);
 	if (rc != Success) {
 	    rec->status = rc;
@@ -605,7 +590,6 @@ SELinuxProperty(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 		break;
 	    obj = dixLookupPrivate(&pProp->devPrivates, objectKey);
 	}
-	sidput(tsid);
 
 	if (pProp)
 	    *rec->ppProp = pProp;
@@ -624,11 +608,10 @@ SELinuxProperty(CallbackListPtr *pcbl, pointer unused, pointer calldata)
     /* Label the content (advisory only) */
     if (rec->access_mode & DixWriteAccess) {
 	data = dixLookupPrivate(&pProp->devPrivates, dataKey);
-	sidput(data->sid);
 	if (subj->prp_create_sid)
-	    sidget(data->sid = subj->prp_create_sid);
+	    data->sid = subj->prp_create_sid;
 	else
-	    sidget(data->sid = obj->sid);
+	    data->sid = obj->sid;
     }
 }
 
@@ -705,8 +688,6 @@ SELinuxScreen(CallbackListPtr *pcbl, pointer is_saver, pointer calldata)
 
     /* If this is a new object that needs labeling, do it now */
     if (access_mode & DixCreateAccess) {
-	sidput(obj->sid);
-
 	/* Perform a transition to obtain the final SID */
 	if (avc_compute_create(subj->sid, subj->sid, SECCLASS_X_SCREEN,
 			       &obj->sid) < 0) {
@@ -838,7 +819,6 @@ SELinuxSubjectInit(CallbackListPtr *pcbl, pointer unused, pointer calldata)
     PrivateCallbackRec *rec = calldata;
     SELinuxSubjectRec *subj = *rec->value;
 
-    sidget(unlabeled_sid);
     subj->sid = unlabeled_sid;
 
     avc_entry_ref_init(&subj->aeref);
@@ -851,14 +831,6 @@ SELinuxSubjectFree(CallbackListPtr *pcbl, pointer unused, pointer calldata)
     SELinuxSubjectRec *subj = *rec->value;
 
     xfree(subj->command);
-
-    if (avc_active) {
-	sidput(subj->sid);
-	sidput(subj->dev_create_sid);
-	sidput(subj->win_create_sid);
-	sidput(subj->sel_create_sid);
-	sidput(subj->prp_create_sid);
-    }
 }
 
 static void
@@ -867,21 +839,9 @@ SELinuxObjectInit(CallbackListPtr *pcbl, pointer unused, pointer calldata)
     PrivateCallbackRec *rec = calldata;
     SELinuxObjectRec *obj = *rec->value;
 
-    sidget(unlabeled_sid);
     obj->sid = unlabeled_sid;
 }
 
-static void
-SELinuxObjectFree(CallbackListPtr *pcbl, pointer unused, pointer calldata)
-{
-    PrivateCallbackRec *rec = calldata;
-    SELinuxObjectRec *obj = *rec->value;
-
-    if (avc_active)
-	sidput(obj->sid);
-}
-
-#ifdef HAVE_AVC_NETLINK_ACQUIRE_FD
 static int netlink_fd;
 
 static void
@@ -895,7 +855,6 @@ SELinuxWakeupHandler(void *data, int err, void *read_mask)
     if (FD_ISSET(netlink_fd, (fd_set *)read_mask))
         avc_netlink_check_nb();
 }
-#endif
 
 void
 SELinuxFlaskReset(void)
@@ -919,15 +878,12 @@ SELinuxFlaskReset(void)
 
     /* Tear down SELinux stuff */
     audit_close(audit_fd);
-#ifdef HAVE_AVC_NETLINK_ACQUIRE_FD
     avc_netlink_release_fd();
     RemoveBlockAndWakeupHandlers(SELinuxBlockHandler, SELinuxWakeupHandler,
                                  NULL);
     RemoveGeneralSocket(netlink_fd);
-#endif
 
     avc_destroy();
-    avc_active = 0;
 }
 
 void
@@ -965,7 +921,6 @@ SELinuxFlaskInit(void)
 
     if (avc_open(&avc_option, 1) < 0)
 	FatalError("SELinux: Couldn't initialize SELinux userspace AVC\n");
-    avc_active = 1;
 
     if (security_get_initial_context_raw("unlabeled", &ctx) < 0)
 	FatalError("SELinux: Failed to look up unlabeled context\n");
@@ -992,20 +947,16 @@ SELinuxFlaskInit(void)
     if (atom_client_ctx == BAD_RESOURCE)
 	FatalError("SELinux: Failed to create atom\n");
 
-#ifdef HAVE_AVC_NETLINK_ACQUIRE_FD
     netlink_fd = avc_netlink_acquire_fd();
     AddGeneralSocket(netlink_fd);
     RegisterBlockAndWakeupHandlers(SELinuxBlockHandler, SELinuxWakeupHandler,
                                    NULL);
-#endif
 
     /* Register callbacks */
     ret &= dixRegisterPrivateInitFunc(subjectKey, SELinuxSubjectInit, NULL);
     ret &= dixRegisterPrivateDeleteFunc(subjectKey, SELinuxSubjectFree, NULL);
     ret &= dixRegisterPrivateInitFunc(objectKey, SELinuxObjectInit, NULL);
-    ret &= dixRegisterPrivateDeleteFunc(objectKey, SELinuxObjectFree, NULL);
     ret &= dixRegisterPrivateInitFunc(dataKey, SELinuxObjectInit, NULL);
-    ret &= dixRegisterPrivateDeleteFunc(dataKey, SELinuxObjectFree, NULL);
 
     ret &= AddCallback(&ClientStateCallback, SELinuxClientState, NULL);
     ret &= AddCallback(&ResourceStateCallback, SELinuxResourceState, NULL);

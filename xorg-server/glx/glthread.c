@@ -129,7 +129,7 @@ _glthread_SetTSD(_glthread_TSD *tsd, void *ptr)
 _X_EXPORT unsigned long
 _glthread_GetID(void)
 {
-   abort();   /* XXX not implemented yet */
+   OsAbort();   /* XXX not implemented yet */
    return (unsigned long) 0;
 }
 

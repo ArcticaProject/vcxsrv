@@ -73,7 +73,6 @@ static void set_x11_path(void) {
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1050
 
     CFURLRef appURL = NULL;
-    CFBundleRef bundle = NULL;
     OSStatus osstatus = LSFindApplicationForInfo(kLSUnknownCreator, CFSTR(kX11AppBundleId), nil, nil, &appURL);
 
     switch (osstatus) {
@@ -82,12 +81,6 @@ static void set_x11_path(void) {
                 fprintf(stderr, "Xquartz: Invalid response from LSFindApplicationForInfo(%s)\n", 
                         kX11AppBundleId);
                 exit(1);
-            }
-
-            bundle = CFBundleCreate(NULL, appURL);
-            if(!bundle) {
-                fprintf(stderr, "Xquartz: Null value returned from CFBundleCreate().\n");
-                exit(2);                
             }
 
             if (!CFURLGetFileSystemRepresentation(appURL, true, (unsigned char *)x11_path, sizeof(x11_path))) {

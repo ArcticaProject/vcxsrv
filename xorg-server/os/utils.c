@@ -1310,6 +1310,18 @@ OsReleaseSignals (void)
 #endif
 }
 
+/*
+ * Pending signals may interfere with core dumping. Provide a
+ * mechanism to block signals when aborting.
+ */
+
+void
+OsAbort (void)
+{
+    OsBlockSignals();
+    abort();
+}
+
 #if !defined(WIN32)
 /*
  * "safer" versions of system(3), popen(3) and pclose(3) which give up

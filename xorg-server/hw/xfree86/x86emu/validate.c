@@ -673,7 +673,7 @@ int main(int argc)
     VAL_LONG_LONG_BINARY(cmp_long);
 
     VAL_BYTE_UNARY(daa_byte);
-    VAL_BYTE_UNARY(das_byte);   // Fails for 0x9A (out of range anyway)
+    VAL_BYTE_UNARY(das_byte);   /* Fails for 0x9A (out of range anyway) */
 
     VAL_BYTE_UNARY(dec_byte);
     VAL_WORD_UNARY(dec_word);

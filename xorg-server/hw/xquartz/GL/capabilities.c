@@ -522,7 +522,7 @@ bool getGlCapabilities(struct glCapabilities *cap) {
 	    conf = malloc(sizeof(*conf));
 	    if(NULL == conf) {
             perror("malloc");
-            abort();
+            OsAbort();
 	    }
 
 	    /* Copy the struct. */

@@ -1573,7 +1573,8 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	 */
 	output->status = (*output->funcs->detect)(output);
 
-	if (output->status == XF86OutputStatusDisconnected)
+	if (output->status == XF86OutputStatusDisconnected &&
+		!xf86ReturnOptValBool(output->options, OPTION_ENABLE, FALSE))
 	{
 	    xf86OutputSetEDID (output, NULL);
 	    continue;

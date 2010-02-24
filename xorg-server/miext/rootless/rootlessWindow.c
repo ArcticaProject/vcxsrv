@@ -978,7 +978,7 @@ StartFrameResize(WindowPtr pWin, Bool gravity,
                 copy_rect.y2 = oldY2;
             }
             else
-                abort();
+                OsAbort();
 
             Bpp = winRec->win->drawable.bitsPerPixel / 8;
             copy_rect_width = copy_rect.x2 - copy_rect.x1;

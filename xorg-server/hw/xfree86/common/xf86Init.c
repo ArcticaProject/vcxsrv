@@ -1235,7 +1235,7 @@ ddxGiveUp(void)
 
     /* If an unexpected signal was caught, dump a core for debugging */
     if (xf86Info.caughtSignal)
-	abort();
+	OsAbort();
 }
 
 

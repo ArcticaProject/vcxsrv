@@ -368,7 +368,7 @@ void DarwinKeyboardReloadHandler(void) {
     KeySymsRec keySyms;
     CFIndex initialKeyRepeatValue, keyRepeatValue;
     BOOL ok;
-    DeviceIntPtr pDev = darwinKeyboard;
+    DeviceIntPtr pDev;
     const char *xmodmap = PROJECTROOT "/bin/xmodmap";
     const char *sysmodmap = PROJECTROOT "/lib/X11/xinit/.Xmodmap";
     const char *homedir = getenv("HOME");

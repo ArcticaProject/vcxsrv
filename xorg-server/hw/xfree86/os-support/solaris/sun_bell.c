@@ -126,14 +126,15 @@ xf86OSRingBell(int loudness, int pitch, int duration)
     iovcnt = 0;
 
     for (cnt = 0; cnt <= repeats; cnt++) {
-        iov[iovcnt].iov_base = (char *) samples;
-        iov[iovcnt++].iov_len = sizeof(samples);
         if (cnt == repeats) {
             /* Insert a bit of silence so that multiple beeps are distinct and
              * not compressed into a single tone.
              */
             iov[iovcnt].iov_base = (char *) silence;
             iov[iovcnt++].iov_len = sizeof(silence);
+        } else {
+            iov[iovcnt].iov_base = (char *) samples;
+            iov[iovcnt++].iov_len = sizeof(samples);
         }
         if ((iovcnt >= IOV_MAX) || (cnt == repeats)) {
             written = writev(audioFD, iov, iovcnt);

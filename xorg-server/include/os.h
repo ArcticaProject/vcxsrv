@@ -262,6 +262,8 @@ extern _X_EXPORT void OsBlockSignals (void);
 
 extern _X_EXPORT void OsReleaseSignals (void);
 
+extern _X_EXPORT void OsAbort (void);
+
 #if !defined(WIN32)
 extern _X_EXPORT int System(char *);
 extern _X_EXPORT pointer Popen(char *, char *);

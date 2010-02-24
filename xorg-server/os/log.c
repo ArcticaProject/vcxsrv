@@ -413,7 +413,7 @@ AbortServer(void)
     AbortDDX();
     fflush(stderr);
     if (CoreDump)
-	abort();
+	OsAbort();
     exit (1);
 }
 
@@ -537,7 +537,7 @@ FatalError(const char *f, ...)
 	beenhere = TRUE;
 	AbortServer();
     } else
-	abort();
+	OsAbort();
     /*NOTREACHED*/
 }
 

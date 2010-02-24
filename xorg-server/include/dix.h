@@ -576,8 +576,8 @@ typedef struct {
 extern _X_EXPORT CallbackListPtr DeviceEventCallback;
 
 typedef struct {
-    xEventPtr events;
-    int count;
+    InternalEvent *event;
+    DeviceIntPtr device;
 } DeviceEventInfoRec;
 
 extern int XItoCoreType(int xi_type);
@@ -585,7 +585,7 @@ extern Bool DevHasCursor(DeviceIntPtr pDev);
 extern Bool _X_EXPORT IsPointerDevice( DeviceIntPtr dev);
 extern Bool _X_EXPORT IsKeyboardDevice(DeviceIntPtr dev);
 extern Bool IsPointerEvent(InternalEvent *event);
-extern Bool IsMaster(DeviceIntPtr dev);
+extern _X_EXPORT Bool IsMaster(DeviceIntPtr dev);
 
 extern _X_HIDDEN void CopyKeyClass(DeviceIntPtr device, DeviceIntPtr master);
 extern _X_HIDDEN int CorePointerProc(DeviceIntPtr dev, int what);
