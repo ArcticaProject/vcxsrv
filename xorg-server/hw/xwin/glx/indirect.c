@@ -51,6 +51,7 @@
     before using it?
   - are the __GLXConfig * we get handed back ones we are made (so we can extend the structure
     with privates?) Or are they created inside the GLX core as well?
+  - snap winWindowInfoRec, it's just the same as a HWND now...
 */
 
 /*
@@ -435,6 +436,34 @@ glxWinScreenSwapInterval(__GLXdrawable *drawable, int interval)
   return ret;
 }
 
+static void
+glxLogExtensions (char *extensions)
+{
+    int i = 0;
+    char *strl;
+    char *str = xalloc(strlen(extensions) + 1);
+
+    if (str == NULL)
+    {
+	ErrorF("\nglxLogExtensions: xalloc error\n");
+	return;
+    }
+
+    str[strlen(extensions)] = '\0';
+    strncpy (str, extensions, strlen(extensions));
+    strl = strtok(str, " ");
+    ErrorF("%s", strl);
+    while (1)
+    {
+	strl = strtok(NULL, " ");
+	if (strl == NULL) break;
+	if (++i%5 == 0) ErrorF("\n\t\t");
+	ErrorF(" %s", strl);
+    }
+    ErrorF("\n");
+    xfree(str);
+}
+
 /* This is called by GlxExtensionInit() asking the GLX provider if it can handle the screen... */
 static __GLXscreen *
 glxWinScreenProbe(ScreenPtr pScreen)
@@ -520,9 +549,12 @@ glxWinScreenProbe(ScreenPtr pScreen)
     ErrorF("GL_VENDOR:     %s\n", glGetStringWrapperNonstatic(GL_VENDOR));
     ErrorF("GL_RENDERER:   %s\n", glGetStringWrapperNonstatic(GL_RENDERER));
     gl_extensions = (const char *)glGetStringWrapperNonstatic(GL_EXTENSIONS);
-    ErrorF("GL_EXTENSIONS: %s\n", gl_extensions);
+    ErrorF("GL_EXTENSIONS: ");
+    glxLogExtensions(gl_extensions);
     wgl_extensions = wglGetExtensionsStringARBWrapper(hdc);
-    ErrorF("WGL_EXTENSIONS:%s\n", wgl_extensions);
+    if (!wgl_extensions) wgl_extensions = "";
+    ErrorF("WGL_EXTENSIONS:");
+    glxLogExtensions(wgl_extensions);
 
     // Can you see the problem here?  The extensions string is DC specific
     // Different DCs for windows on a multimonitor system driven by multiple cards
@@ -658,15 +690,12 @@ glxWinScreenProbe(ScreenPtr pScreen)
           if (screen->has_WGL_ARB_multisample)
             {
               screen->base.GLXversion = xstrdup("1.4");
-              /*
-                XXX: this just controls the version string returned to glXQueryServerString()
-                there is currently no way to control the version number the server returns to
-                glXQueryVersion()...
-              */
+              screen->base.GLXminor = 4;
             }
           else
             {
               screen->base.GLXversion = xstrdup("1.3");
+              screen->base.GLXminor = 3;
             }
           LogMessage(X_INFO, "AIGLX: Set GLX version to %s\n", screen->base.GLXversion);
         }
@@ -1190,6 +1219,9 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
     {
       if (draw->hPbuffer == NULL)
         {
+          __GLXscreen *screen;
+          glxWinScreen *winScreen;
+          int pixelFormat;
           // XXX: which DC are supposed to use???
           HDC screenDC = GetDC(NULL);
 
@@ -1198,10 +1230,10 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
               ErrorF("glxWinDeferredCreateContext: tried to attach a context whose fbConfig doesn't have drawableType GLX_PBUFFER_BIT to a GLX_DRAWABLE_PBUFFER drawable\n");
             }
 
-          __GLXscreen *screen = gc->base.pGlxScreen;
-          glxWinScreen *winScreen = (glxWinScreen *)screen;
+          screen = gc->base.pGlxScreen;
+          winScreen = (glxWinScreen *)screen;
 
-          int pixelFormat = fbConfigToPixelFormatIndex(screenDC, gc->base.config, GLX_DRAWABLE_PBUFFER, winScreen);
+          pixelFormat = fbConfigToPixelFormatIndex(screenDC, gc->base.config, GLX_DRAWABLE_PBUFFER, winScreen);
           if (pixelFormat == 0)
             {
               ErrorF("wglChoosePixelFormat error: %s\n", glxWinErrorMessage());
@@ -1226,11 +1258,16 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
     {
       if (draw->dibDC == NULL)
         {
-          BITMAPINFOHEADER bmpHeader = { sizeof(bmpHeader),
-                                         draw->base.pDraw->width, draw->base.pDraw->height,
-                                         1, draw->base.pDraw->bitsPerPixel,
-                                         BI_RGB};
+          BITMAPINFOHEADER bmpHeader;
           void *pBits;
+
+          memset (&bmpHeader, 0, sizeof(BITMAPINFOHEADER));
+          bmpHeader.biSize = sizeof(BITMAPINFOHEADER);
+          bmpHeader.biWidth = draw->base.pDraw->width;
+          bmpHeader.biHeight = draw->base.pDraw->height;
+          bmpHeader.biPlanes = 1;
+          bmpHeader.biBitCount = draw->base.pDraw->bitsPerPixel;
+          bmpHeader.biCompression = BI_RGB;
 
           if (!(gc->base.config->drawableType & GLX_PIXMAP_BIT))
             {
@@ -1319,8 +1356,9 @@ glxWinContextMakeCurrent(__GLXcontext *base)
   HDC drawDC;
   HDC readDC = NULL;
   __GLXdrawable *drawPriv;
-  __GLXdrawable *readPriv;
-  HWND hwnd;
+  __GLXdrawable *readPriv = NULL;
+  HWND hDrawWnd;
+  HWND hReadWnd;
 
   GLWIN_TRACE_MSG("glxWinContextMakeCurrent context %p (native ctx %p)", gc, gc->ctx);
   glWinCallDelta();
@@ -1340,7 +1378,7 @@ glxWinContextMakeCurrent(__GLXcontext *base)
       return FALSE;
     }
 
-  drawDC = glxWinMakeDC(gc, (__GLXWinDrawable *)drawPriv, &drawDC, &hwnd);
+  drawDC = glxWinMakeDC(gc, (__GLXWinDrawable *)drawPriv, &drawDC, &hDrawWnd);
   if (drawDC == NULL)
     {
       ErrorF("glxWinMakeDC failed for drawDC\n");
@@ -1356,18 +1394,18 @@ glxWinContextMakeCurrent(__GLXcontext *base)
         to one DC and reading from the other
       */
       readPriv = gc->base.readPriv;
-      readDC = glxWinMakeDC(gc, (__GLXWinDrawable *)readPriv, &readDC, &hwnd);
+      readDC = glxWinMakeDC(gc, (__GLXWinDrawable *)readPriv, &readDC, &hReadWnd);
       if (readDC == NULL)
         {
           ErrorF("glxWinMakeDC failed for readDC\n");
-          glxWinReleaseDC(hwnd, drawDC, (__GLXWinDrawable *)readPriv);
+          glxWinReleaseDC(hDrawWnd, drawDC, (__GLXWinDrawable *)drawPriv);
           return FALSE;
         }
 
       ret = wglMakeContextCurrentARBWrapper(drawDC, readDC, gc->ctx);
       if (!ret)
         {
-          ErrorF("wglMakeContextCurrent error: %s\n", glxWinErrorMessage());
+          ErrorF("wglMakeContextCurrentARBWrapper error: %s\n", glxWinErrorMessage());
         }
     }
   else
@@ -1383,9 +1421,9 @@ glxWinContextMakeCurrent(__GLXcontext *base)
   // apparently make current could fail if the context is current in a different thread,
   // but that shouldn't be able to happen in the current server...
 
-  glxWinReleaseDC(hwnd, drawDC, (__GLXWinDrawable *)drawPriv);
+  glxWinReleaseDC(hDrawWnd, drawDC, (__GLXWinDrawable *)drawPriv);
   if (readDC)
-    glxWinReleaseDC(hwnd, drawDC, (__GLXWinDrawable *)readPriv);
+    glxWinReleaseDC(hReadWnd, readDC, (__GLXWinDrawable *)readPriv);
 
   return ret;
 }
@@ -1988,11 +2026,11 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen *screen)
   /* fill in configs */
   for (i = 0;  i < numConfigs; i++)
     {
+      int values[num_attrs];
+
       c = &(result[i]);
       c->base.next = NULL;
       c->pixelFormatIndex = i+1;
-
-      int values[num_attrs];
 
       if (!wglGetPixelFormatAttribivARBWrapper(hdc, i+1, 0, num_attrs, attrs, values))
         {
@@ -2031,6 +2069,10 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen *screen)
 
         case WGL_TYPE_RGBA_FLOAT_ARB:
           GLWIN_DEBUG_MSG("pixelFormat %d is WGL_TYPE_RGBA_FLOAT_ARB, skipping", i+1);
+          continue;
+
+        case WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT:
+          GLWIN_DEBUG_MSG("pixelFormat %d is WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT, skipping", i+1);
           continue;
 
         case WGL_TYPE_RGBA_ARB:
