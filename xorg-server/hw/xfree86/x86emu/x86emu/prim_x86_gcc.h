@@ -61,7 +61,7 @@ static inline void hw_cpuid (u32 *a, u32 *b, u32 *c, u32 *d)
                           : "cc");
 }
 
-#else // ! (__PIC__ && __i386__)
+#else /* ! (__PIC__ && __i386__) */
 
 #define x86EMU_HAS_HW_CPUID 1
 static inline void hw_cpuid (u32 *a, u32 *b, u32 *c, u32 *d)
@@ -73,7 +73,7 @@ static inline void hw_cpuid (u32 *a, u32 *b, u32 *c, u32 *d)
                           : "cc");
 }
 
-#endif // __PIC__ && __i386__
+#endif /* __PIC__ && __i386__ */
 
 
-#endif // __X86EMU_PRIM_X86_GCC_H
+#endif /* __X86EMU_PRIM_X86_GCC_H */

@@ -58,15 +58,6 @@ struct atom_list {
     /* The unmapped window we use for fetching selections. */
     Window _selection_window;
 
-    /* Last time we declared anything on the pasteboard. */
-    int _my_last_change;
-
-    /* Name of the selection we're proxying onto the pasteboard. */
-    Atom _proxied_selection;
-
-    /* When true, we're expecting a SelectionNotify event. */
-    unsigned int _pending_notify :1;
- 
     Atom request_atom;
     
     struct {

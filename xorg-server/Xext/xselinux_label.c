@@ -177,20 +177,17 @@ SELinuxSelectionToSID(Atom selection, SELinuxSubjectRec *subj,
 
     /* Check for an override context next */
     if (subj->sel_use_sid) {
-	sidget(tsid = subj->sel_use_sid);
+	tsid = subj->sel_use_sid;
 	goto out;
     }
 
-    sidget(tsid = obj->sid);
+    tsid = obj->sid;
 
     /* Polyinstantiate if necessary to obtain the final SID */
-    if (obj->poly) {
-	sidput(tsid);
-	if (avc_compute_member(subj->sid, obj->sid,
-			       SECCLASS_X_SELECTION, &tsid) < 0) {
-	    ErrorF("SELinux: a compute_member call failed!\n");
-	    return BadValue;
-	}
+    if (obj->poly && avc_compute_member(subj->sid, obj->sid,
+					SECCLASS_X_SELECTION, &tsid) < 0) {
+	ErrorF("SELinux: a compute_member call failed!\n");
+	return BadValue;
     }
 out:
     *sid_rtn = tsid;
@@ -217,7 +214,7 @@ SELinuxPropertyToSID(Atom property, SELinuxSubjectRec *subj,
 
     /* Check for an override context next */
     if (subj->prp_use_sid) {
-	sidget(tsid = subj->prp_use_sid);
+	tsid = subj->prp_use_sid;
 	goto out;
     }
 
@@ -234,10 +231,8 @@ SELinuxPropertyToSID(Atom property, SELinuxSubjectRec *subj,
 	if (avc_compute_member(subj->sid, tsid2,
 			       SECCLASS_X_PROPERTY, &tsid) < 0) {
 	    ErrorF("SELinux: a compute_member call failed!\n");
-	    sidput(tsid2);
 	    return BadValue;
 	}
-	sidput(tsid2);
     }
 out:
     *sid_rtn = tsid;
@@ -273,10 +268,8 @@ SELinuxEventToSID(unsigned type, security_id_t sid_of_window,
 	}
 	freecon(ctx);
 	/* Cache the SID value */
-	if (!SELinuxArraySet(&arr_events, type, sid)) {
-	    sidput(sid);
+	if (!SELinuxArraySet(&arr_events, type, sid))
 	    return BadAlloc;
-	}
     }
 
     /* Perform a transition to obtain the final SID */

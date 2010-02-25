@@ -165,9 +165,37 @@ void
 exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg)
 {
     ExaPixmapPriv(pPixmap);
+    Bool has_gpu_copy = exaPixmapHasGpuCopy(pPixmap);
+    Bool success;
 
-    if (!ExaDoPrepareAccess(pPixmap, index)) {
-	Bool has_gpu_copy = exaPixmapHasGpuCopy(pPixmap);
+    success = ExaDoPrepareAccess(pPixmap, index);
+
+    if (success && has_gpu_copy && pExaPixmap->pDamage) {
+	/* You cannot do accelerated operations while a buffer is mapped. */
+	exaFinishAccess(&pPixmap->drawable, index);
+	/* Update the gpu view of both deferred destination pixmaps and of
+	 * source pixmaps that were migrated with a bounding region.
+	 */
+	exaMoveInPixmap_mixed(pPixmap);
+	success = ExaDoPrepareAccess(pPixmap, index);
+
+	if (success) {
+	    /* We have a gpu pixmap that can be accessed, we don't need the cpu
+	     * copy anymore. Drivers that prefer DFS, should fail prepare
+	     * access.
+	     */
+	    DamageUnregister(&pPixmap->drawable, pExaPixmap->pDamage);
+	    DamageDestroy(pExaPixmap->pDamage);
+	    pExaPixmap->pDamage = NULL;
+
+	    free(pExaPixmap->sys_ptr);
+	    pExaPixmap->sys_ptr = NULL;
+
+	    return;
+	}
+    }
+
+    if (!success) {
 	ExaMigrationRec pixmaps[1];
 
 	/* Do we need to allocate our system buffer? */
@@ -228,22 +256,6 @@ exaPrepareAccessReg_mixed(PixmapPtr pPixmap, int index, RegionPtr pReg)
 	pPixmap->devPrivate.ptr = pExaPixmap->sys_ptr;
 	pPixmap->devKind = pExaPixmap->sys_pitch;
 	pExaPixmap->use_gpu_copy = FALSE;
-    /* We have a gpu pixmap that can be accessed, we don't need the cpu copy
-     * anymore. Drivers that prefer DFS, should fail prepare access. */
-    } else if (pExaPixmap->pDamage && exaPixmapHasGpuCopy(pPixmap)) {
-	ExaScreenPriv(pPixmap->drawable.pScreen);
-
-	/* Copy back any deferred content if needed. */
-	if (pExaScr->deferred_mixed_pixmap &&
-	    pExaScr->deferred_mixed_pixmap == pPixmap)
-	    exaMoveInPixmap_mixed(pPixmap);
-
-	DamageUnregister(&pPixmap->drawable, pExaPixmap->pDamage);
-	DamageDestroy(pExaPixmap->pDamage);
-	pExaPixmap->pDamage = NULL;
-
-	free(pExaPixmap->sys_ptr);
-	pExaPixmap->sys_ptr = NULL;
     }
 }
 

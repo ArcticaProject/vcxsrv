@@ -1137,8 +1137,6 @@ EnqueueEvent(InternalEvent *ev, DeviceIntPtr device)
     if (DeviceEventCallback)
     {
 	DeviceEventInfoRec eventinfo;
-	xEvent *xi_events = NULL;
-	int count;
 
 	/*  The RECORD spec says that the root window field of motion events
 	 *  must be valid.  At this point, it hasn't been filled in yet, so
@@ -1149,27 +1147,12 @@ EnqueueEvent(InternalEvent *ev, DeviceIntPtr device)
 	 *  the data that GetCurrentRootWindow relies on hasn't been
 	 *  updated yet.
 	 */
-
 	if (ev->any.type == ET_Motion)
-	    ev->device_event.root =
-		WindowTable[pSprite->hotPhys.pScreen->myNum]->drawable.id;
+	    ev->device_event.root = WindowTable[pSprite->hotPhys.pScreen->myNum]->drawable.id;
 
-	EventToXI(ev, &xi_events, &count);
-
-	eventinfo.events = (xEventPtr)xi_events;
-	eventinfo.count = count;
-	CallCallbacks(&DeviceEventCallback, (pointer) & eventinfo);
-	xfree(xi_events);
-
-	if (IsMaster(device))
-	{
-	    xEvent core;
-	    EventToCore(ev, &core);
-	    eventinfo.events = (xEventPtr)&core;
-	    eventinfo.count = 1;
-	    CallCallbacks(&DeviceEventCallback, (pointer) & eventinfo);
-	}
-
+	eventinfo.event = ev;
+	eventinfo.device = device;
+	CallCallbacks(&DeviceEventCallback, (pointer)&eventinfo);
     }
 
     if (event->type == ET_Motion)
@@ -1434,11 +1417,6 @@ CheckGrabForSyncs(DeviceIntPtr thisDev, Bool thisMode, Bool otherMode)
 	    thisDev->deviceGrab.sync.other = NullGrab;
     }
 
-    /*
-        XXX: Direct slave grab won't freeze the paired master device.
-        The correct thing to do would be to freeze all SDs attached to the
-        paired master device.
-     */
     if (IsMaster(thisDev))
     {
         dev = GetPairedDevice(thisDev);
@@ -2505,32 +2483,36 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
             if (mask & XI_MASK)
             {
                 rc = EventToXI(event, &xE, &count);
-                if (rc == Success &&
-                    XaceHook(XACE_SEND_ACCESS, NULL, dev, pWin, xE, count) == Success)
-                {
-                    filter = GetEventFilter(dev, xE);
-                    FixUpEventFromWindow(dev, xE, pWin, child, FALSE);
-                    deliveries = DeliverEventsToWindow(dev, pWin, xE, count,
-                                                       filter, grab);
-                    if (deliveries > 0)
-                        goto unwind;
-                }
+                if (rc == Success) {
+                    if (XaceHook(XACE_SEND_ACCESS, NULL, dev, pWin, xE, count) == Success) {
+                        filter = GetEventFilter(dev, xE);
+                        FixUpEventFromWindow(dev, xE, pWin, child, FALSE);
+                        deliveries = DeliverEventsToWindow(dev, pWin, xE, count,
+                                                           filter, grab);
+                        if (deliveries > 0)
+                            goto unwind;
+                    }
+                } else if (rc != BadMatch)
+                    ErrorF("[dix] %s: XI conversion failed in DDE (%d, %d). Skipping delivery.\n",
+                            dev->name, event->any.type, rc);
             }
 
             /* Core event */
             if ((mask & CORE_MASK) && IsMaster(dev) && dev->coreEvents)
             {
                 rc = EventToCore(event, &core);
-                if (rc == Success &&
-                    XaceHook(XACE_SEND_ACCESS, NULL, dev, pWin, &core, 1) == Success)
-                {
-                    filter = GetEventFilter(dev, &core);
-                    FixUpEventFromWindow(dev, &core, pWin, child, FALSE);
-                    deliveries = DeliverEventsToWindow(dev, pWin, &core, 1,
-                            filter, grab);
-                    if (deliveries > 0)
-                        goto unwind;
-                }
+                if (rc == Success) {
+                    if (XaceHook(XACE_SEND_ACCESS, NULL, dev, pWin, &core, 1) == Success) {
+                        filter = GetEventFilter(dev, &core);
+                        FixUpEventFromWindow(dev, &core, pWin, child, FALSE);
+                        deliveries = DeliverEventsToWindow(dev, pWin, &core, 1,
+                                                           filter, grab);
+                        if (deliveries > 0)
+                            goto unwind;
+                    }
+                } else if (rc != BadMatch)
+                        ErrorF("[dix] %s: Core conversion failed in DDE (%d, %d).\n",
+                                dev->name, event->any.type, rc);
             }
 
             if ((deliveries < 0) || (pWin == stopAt) ||
@@ -3807,14 +3789,16 @@ DeliverFocusedEvent(DeviceIntPtr keybd, InternalEvent *event, WindowPtr window)
     if (sendCore)
     {
         rc = EventToCore(event, &core);
-        if (rc == Success &&
-            XaceHook(XACE_SEND_ACCESS, NULL, keybd, focus, &core, 1) == Success)
-        {
-            FixUpEventFromWindow(keybd, &core, focus, None, FALSE);
-            deliveries = DeliverEventsToWindow(keybd, focus, &core, 1,
-                                               GetEventFilter(keybd, &core),
-                                               NullGrab);
-        }
+        if (rc == Success) {
+            if (XaceHook(XACE_SEND_ACCESS, NULL, keybd, focus, &core, 1) == Success) {
+                FixUpEventFromWindow(keybd, &core, focus, None, FALSE);
+                deliveries = DeliverEventsToWindow(keybd, focus, &core, 1,
+                                                   GetEventFilter(keybd, &core),
+                                                   NullGrab);
+            }
+        } else if (rc != BadMatch)
+            ErrorF("[dix] %s: core conversion failed DFE (%d, %d). Skipping delivery.\n",
+                    keybd->name, event->any.type, rc);
     }
 
 unwind:

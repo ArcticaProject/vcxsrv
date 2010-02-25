@@ -641,30 +641,46 @@ static int execute(const char *command) {
 static char *command_from_prefs(const char *key, const char *default_value) {
     char *command = NULL;
     
-    CFStringRef cfKey = CFStringCreateWithCString(NULL, key, kCFStringEncodingASCII);
-    CFPropertyListRef PlistRef = CFPreferencesCopyAppValue(cfKey, kCFPreferencesCurrentApplication);
+    CFStringRef cfKey;
+    CFPropertyListRef PlistRef;
+
+    if(!key)
+        return NULL;
+
+    cfKey = CFStringCreateWithCString(NULL, key, kCFStringEncodingASCII);
+
+    if(!cfKey)
+        return NULL;
+
+    PlistRef = CFPreferencesCopyAppValue(cfKey, kCFPreferencesCurrentApplication);
     
     if ((PlistRef == NULL) || (CFGetTypeID(PlistRef) != CFStringGetTypeID())) {
         CFStringRef cfDefaultValue = CFStringCreateWithCString(NULL, default_value, kCFStringEncodingASCII);
         int len = strlen(default_value) + 1;
 
+        if(!cfDefaultValue)
+            goto command_from_prefs_out;
+
         CFPreferencesSetAppValue(cfKey, cfDefaultValue, kCFPreferencesCurrentApplication);
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
+        CFRelease(cfDefaultValue);
         
         command = (char *)malloc(len * sizeof(char));
         if(!command)
-            return NULL;
+            goto command_from_prefs_out;
         strcpy(command, default_value);
     } else {
         int len = CFStringGetLength((CFStringRef)PlistRef) + 1;
         command = (char *)malloc(len * sizeof(char));
         if(!command)
-            return NULL;
+            goto command_from_prefs_out;
         CFStringGetCString((CFStringRef)PlistRef, command, len,  kCFStringEncodingASCII);
-	}
-    
+    }
+
+command_from_prefs_out:
     if (PlistRef)
         CFRelease(PlistRef);
-    
+    if(cfKey)
+        CFRelease(cfKey);
     return command;
 }

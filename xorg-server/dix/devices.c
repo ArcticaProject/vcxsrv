@@ -2020,14 +2020,6 @@ ProcBell(ClientPtr client)
 	return BadValue;
     }
 
-    /* Seems like no keyboard actually has the BellProc set. Returning
-     * BadDevice (previous code) will make apps crash badly. The man pages
-     * doesn't say anything about a BadDevice being returned either.
-     * So just quietly do nothing and pretend everything has worked.
-     */
-    if (!keybd->kbdfeed->BellProc)
-        return Success;
-
     newpercent = (base * stuff->percent) / 100;
     if (stuff->percent < 0)
         newpercent = base + newpercent;

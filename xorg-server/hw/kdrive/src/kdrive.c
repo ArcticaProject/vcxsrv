@@ -336,7 +336,7 @@ AbortDDX(void)
     }
 
     if (kdCaughtSignal)
-        abort();
+        OsAbort();
 }
 
 void

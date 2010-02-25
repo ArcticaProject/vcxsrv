@@ -132,7 +132,6 @@ ProcSELinuxSetCreateContext(ClientPtr client, unsigned offset)
 
     ptr = dixLookupPrivate(privPtr, subjectKey);
     pSid = (security_id_t *)(ptr + offset);
-    sidput(*pSid);
     *pSid = NULL;
 
     rc = Success;
@@ -193,11 +192,9 @@ ProcSELinuxSetDeviceContext(ClientPtr client)
     }
 
     subj = dixLookupPrivate(&dev->devPrivates, subjectKey);
-    sidput(subj->sid);
     subj->sid = sid;
     obj = dixLookupPrivate(&dev->devPrivates, objectKey);
-    sidput(obj->sid);
-    sidget(obj->sid = sid);
+    obj->sid = sid;
 
     rc = Success;
 out:
@@ -224,20 +221,28 @@ ProcSELinuxGetDeviceContext(ClientPtr client)
 }
 
 static int
-ProcSELinuxGetWindowContext(ClientPtr client)
+ProcSELinuxGetDrawableContext(ClientPtr client)
 {
-    WindowPtr pWin;
+    DrawablePtr pDraw;
+    PrivateRec **privatePtr;
     SELinuxObjectRec *obj;
     int rc;
 
     REQUEST(SELinuxGetContextReq);
     REQUEST_SIZE_MATCH(SELinuxGetContextReq);
 
-    rc = dixLookupWindow(&pWin, stuff->id, client, DixGetAttrAccess);
+    rc = dixLookupDrawable(&pDraw, stuff->id, client,
+			   M_WINDOW | M_DRAWABLE_PIXMAP,
+			   DixGetAttrAccess);
     if (rc != Success)
 	return rc;
 
-    obj = dixLookupPrivate(&pWin->devPrivates, objectKey);
+    if (pDraw->type == M_DRAWABLE_PIXMAP)
+	privatePtr = &((PixmapPtr)pDraw)->devPrivates;
+    else
+	privatePtr = &((WindowPtr)pDraw)->devPrivates;
+
+    obj = dixLookupPrivate(privatePtr, objectKey);
     return SELinuxSendContextReply(client, obj->sid);
 }
 
@@ -481,12 +486,12 @@ ProcSELinuxDispatch(ClientPtr client)
 	return ProcSELinuxSetDeviceContext(client);
     case X_SELinuxGetDeviceContext:
 	return ProcSELinuxGetDeviceContext(client);
-    case X_SELinuxSetWindowCreateContext:
+    case X_SELinuxSetDrawableCreateContext:
 	return ProcSELinuxSetCreateContext(client, CTX_WIN);
-    case X_SELinuxGetWindowCreateContext:
+    case X_SELinuxGetDrawableCreateContext:
 	return ProcSELinuxGetCreateContext(client, CTX_WIN);
-    case X_SELinuxGetWindowContext:
-	return ProcSELinuxGetWindowContext(client);
+    case X_SELinuxGetDrawableContext:
+	return ProcSELinuxGetDrawableContext(client);
     case X_SELinuxSetPropertyCreateContext:
 	return ProcSELinuxSetCreateContext(client, CTX_PRP);
     case X_SELinuxGetPropertyCreateContext:
@@ -569,14 +574,14 @@ SProcSELinuxGetDeviceContext(ClientPtr client)
 }
 
 static int
-SProcSELinuxGetWindowContext(ClientPtr client)
+SProcSELinuxGetDrawableContext(ClientPtr client)
 {
     REQUEST(SELinuxGetContextReq);
     int n;
 
     REQUEST_SIZE_MATCH(SELinuxGetContextReq);
     swapl(&stuff->id, n);
-    return ProcSELinuxGetWindowContext(client);
+    return ProcSELinuxGetDrawableContext(client);
 }
 
 static int
@@ -643,12 +648,12 @@ SProcSELinuxDispatch(ClientPtr client)
 	return SProcSELinuxSetDeviceContext(client);
     case X_SELinuxGetDeviceContext:
 	return SProcSELinuxGetDeviceContext(client);
-    case X_SELinuxSetWindowCreateContext:
+    case X_SELinuxSetDrawableCreateContext:
 	return SProcSELinuxSetCreateContext(client, CTX_WIN);
-    case X_SELinuxGetWindowCreateContext:
+    case X_SELinuxGetDrawableCreateContext:
 	return ProcSELinuxGetCreateContext(client, CTX_WIN);
-    case X_SELinuxGetWindowContext:
-	return SProcSELinuxGetWindowContext(client);
+    case X_SELinuxGetDrawableContext:
+	return SProcSELinuxGetDrawableContext(client);
     case X_SELinuxSetPropertyCreateContext:
 	return SProcSELinuxSetCreateContext(client, CTX_PRP);
     case X_SELinuxGetPropertyCreateContext:

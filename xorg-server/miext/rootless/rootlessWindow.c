@@ -78,7 +78,6 @@ extern int darwinMainScreenX, darwinMainScreenY;
     return atom;                                                \
   }
 
-
 DEFINE_ATOM_HELPER (xa_native_window_id, "_NATIVE_WINDOW_ID")
 
 static Bool windows_hidden;
@@ -985,7 +984,7 @@ StartFrameResize(WindowPtr pWin, Bool gravity,
                 copy_rect.y2 = oldY2;
             }
             else
-                abort();
+                OsAbort();
 
             Bpp = winRec->win->drawable.bitsPerPixel / 8;
             copy_rect_width = copy_rect.x2 - copy_rect.x1;

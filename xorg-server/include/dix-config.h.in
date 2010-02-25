@@ -446,6 +446,4 @@
 #include "dix-config-apple-verbatim.h"
 #endif
 
-#undef HAVE_AVC_NETLINK_ACQUIRE_FD
-
 #endif /* _DIX_CONFIG_H_ */

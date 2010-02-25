@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Extension info */
 #define SELINUX_EXTENSION_NAME		"SELinux"
 #define SELINUX_MAJOR_VERSION		1
-#define SELINUX_MINOR_VERSION		0
+#define SELINUX_MINOR_VERSION		1
 #define SELinuxNumberEvents		0
 #define SELinuxNumberErrors		0
 
@@ -33,9 +33,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define X_SELinuxGetDeviceCreateContext		2
 #define X_SELinuxSetDeviceContext		3
 #define X_SELinuxGetDeviceContext		4
-#define X_SELinuxSetWindowCreateContext		5
-#define X_SELinuxGetWindowCreateContext		6
-#define X_SELinuxGetWindowContext		7
+#define X_SELinuxSetDrawableCreateContext	5
+#define X_SELinuxGetDrawableCreateContext	6
+#define X_SELinuxGetDrawableContext		7
 #define X_SELinuxSetPropertyCreateContext	8
 #define X_SELinuxGetPropertyCreateContext	9
 #define X_SELinuxSetPropertyUseContext		10

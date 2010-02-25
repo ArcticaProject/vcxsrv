@@ -112,7 +112,17 @@ ProcXSetDeviceMode(ClientPtr client)
     if (rep.status == Success)
 	dev->valuator->mode = stuff->mode;
     else if (rep.status != AlreadyGrabbed)
+    {
+	switch(rep.status) {
+	    case BadMatch:
+	    case BadImplementation:
+	    case BadAlloc:
+		break;
+	    default:
+		rep.status = BadMode;
+	}
 	return rep.status;
+    }
 
     WriteReplyToClient(client, sizeof(xSetDeviceModeReply), &rep);
     return Success;
