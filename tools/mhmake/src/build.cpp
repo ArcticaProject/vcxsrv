@@ -240,7 +240,7 @@ void mhmakefileparser::CreatePythonExe(const string &FullCommand)
 #endif
 
 /*****************************************************************************/
-int mhmakefileparser::SearchPath(void *NotUsed, const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const
+int mhmakefileparser::SearchPath(const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const
 {
   static vector< refptr<fileinfo> > vSearchPath;
 
@@ -258,17 +258,17 @@ int mhmakefileparser::SearchPath(void *NotUsed, const char *szCommand, const cha
   CommandFile->InvalidateDate(); // It could be created in the makefile later
   if (!vSearchPath.size())
   {
-     char Path[1024];
      char *pPath=getenv(PATH);
      if (!pPath)
        return 0;
-     strcpy(Path,pPath); // To be able to use strtok
+     char *Path=strdup(pPath); // To be able to use strtok
      char *pTok=strtok(Path,OSPATHENVSEPSTR);
      while (pTok)
      {
        vSearchPath.push_back(GetFileInfo(pTok,m_MakeDir));
        pTok=strtok(NULL,OSPATHENVSEPSTR);
      }
+     free(Path);
   }
   It=vSearchPath.begin();
   ItEnd=vSearchPath.end();
@@ -303,7 +303,7 @@ string mhmakefileparser::SearchCommand(const string &Command, const string &Exte
     pExt=NULL;
   else
     pExt=Extension.c_str();
-  if (SearchPath(NULL,UnquoteFileName(Command).c_str(),pExt,MAX_PATH,FullCommand,NULL))
+  if (SearchPath(UnquoteFileName(Command).c_str(),pExt,MAX_PATH,FullCommand,NULL))
     return FullCommand;
 #ifdef WIN32
   /* See if we have a path for python.exe in the registry */

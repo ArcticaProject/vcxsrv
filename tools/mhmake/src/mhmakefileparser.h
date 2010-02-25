@@ -355,7 +355,7 @@ public:
   mh_pid_t EchoCommand(const string &Params) const;
   string SearchCommand(const string &Command, const string &Extension="") const;
   const string &GetPythonExe() const;
-  int SearchPath(void *NotUsed, const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const;
+  int SearchPath(const char *szCommand, const char *pExt, int Len, char *szFullCommand,char **pFilePart) const;
   mh_pid_t OsExeCommand(const string &Command, const string &Params, bool IgnoreError, string *pOutput) const;
 };
 
