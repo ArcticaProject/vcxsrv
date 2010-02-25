@@ -51,6 +51,7 @@
     before using it?
   - are the __GLXConfig * we get handed back ones we are made (so we can extend the structure
     with privates?) Or are they created inside the GLX core as well?
+  - snap winWindowInfoRec, it's just the same as a HWND now...
 */
 
 /*
@@ -488,6 +489,34 @@ static LRESULT CALLBACK GlxWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+static void
+glxLogExtensions (char *extensions)
+{
+    int i = 0;
+    char *strl;
+    char *str = xalloc(strlen(extensions) + 1);
+
+    if (str == NULL)
+    {
+	winDebug("\nglxLogExtensions: xalloc error\n");
+	return;
+    }
+
+    str[strlen(extensions)] = '\0';
+    strncpy (str, extensions, strlen(extensions));
+    strl = strtok(str, " ");
+    winDebug("%s", strl);
+    while (1)
+    {
+	strl = strtok(NULL, " ");
+	if (strl == NULL) break;
+	if (++i%5 == 0) ErrorF("\n\t\t");
+	winDebug(" %s", strl);
+    }
+    winDebug("\n");
+    xfree(str);
+}
+
 /* This is called by GlxExtensionInit() asking the GLX provider if it can handle the screen... */
 static __GLXscreen *
 glxWinScreenProbe(ScreenPtr pScreen)
@@ -579,11 +608,12 @@ glxWinScreenProbe(ScreenPtr pScreen)
     winDebug("GL_VENDOR:     %s\n", glGetStringWrapperNonstatic(GL_VENDOR));
     winDebug("GL_RENDERER:   %s\n", glGetStringWrapperNonstatic(GL_RENDERER));
     gl_extensions = (const char *)glGetStringWrapperNonstatic(GL_EXTENSIONS);
-    winDebug("GL_EXTENSIONS: %s\n", gl_extensions);
+    winDebug("GL_EXTENSIONS: ");
+    glxLogExtensions(gl_extensions);
     wgl_extensions = wglGetExtensionsStringARBWrapper(hdc);
-    if (!wgl_extensions)
-      wgl_extensions="";
-    winDebug("WGL_EXTENSIONS:%s\n", wgl_extensions);
+    if (!wgl_extensions) wgl_extensions = "";
+    winDebug("WGL_EXTENSIONS:");
+    glxLogExtensions(wgl_extensions);
 
     // Can you see the problem here?  The extensions string is DC specific
     // Different DCs for windows on a multimonitor system driven by multiple cards
@@ -721,17 +751,12 @@ glxWinScreenProbe(ScreenPtr pScreen)
           if (screen->has_WGL_ARB_multisample)
             {
               screen->base.GLXversion = xstrdup("1.4");
-              screen->base.GLXminor=4;
-              /*
-                XXX: this just controls the version string returned to glXQueryServerString()
-                there is currently no way to control the version number the server returns to
-                glXQueryVersion()...
-              */
+              screen->base.GLXminor = 4;
             }
           else
             {
               screen->base.GLXversion = xstrdup("1.3");
-              screen->base.GLXminor=3;
+              screen->base.GLXminor = 3;
             }
           LogMessage(X_INFO, "AIGLX: Set GLX version to %s\n", screen->base.GLXversion);
         }
@@ -1376,14 +1401,14 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
         {
           BITMAPINFOHEADER bmpHeader;
           void *pBits;
-          
-          ZeroMemory(&bmpHeader,sizeof(bmpHeader));
-          bmpHeader.biSize=sizeof(bmpHeader);
-          bmpHeader.biWidth=draw->base.pDraw->width;
-          bmpHeader.biHeight=draw->base.pDraw->height;
-          bmpHeader.biPlanes=1;
-          bmpHeader.biBitCount=draw->base.pDraw->bitsPerPixel;
-          bmpHeader.biCompression=BI_RGB;
+
+          memset (&bmpHeader, 0, sizeof(BITMAPINFOHEADER));
+          bmpHeader.biSize = sizeof(BITMAPINFOHEADER);
+          bmpHeader.biWidth = draw->base.pDraw->width;
+          bmpHeader.biHeight = draw->base.pDraw->height;
+          bmpHeader.biPlanes = 1;
+          bmpHeader.biBitCount = draw->base.pDraw->bitsPerPixel;
+          bmpHeader.biCompression = BI_RGB;
 
           if (!(gc->base.config->drawableType & GLX_PIXMAP_BIT))
             {
@@ -2209,7 +2234,7 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen *screen)
         case WGL_TYPE_RGBA_FLOAT_ARB:
           GLWIN_DEBUG_MSG("pixelFormat %d is WGL_TYPE_RGBA_FLOAT_ARB, skipping", i+1);
           continue;
-          
+
         case WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT:
           GLWIN_DEBUG_MSG("pixelFormat %d is WGL_TYPE_RGBA_UNSIGNED_FLOAT_EXT, skipping", i+1);
           continue;
