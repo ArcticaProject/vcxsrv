@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "pixman.h"
+#include "utils.h"
 
 int
 main ()
@@ -22,8 +22,15 @@ main ()
 	{ 2, 6, 7, 6 },
 	{ 4, 1, 6, 1 },
     };
-    int i;
+    int i, j;
     pixman_box32_t *b;
+    pixman_image_t *image, *fill;
+    pixman_color_t white = {
+	0xffff,
+	0xffff,
+	0xffff,
+	0xffff
+    };
 
     /* This used to go into an infinite loop before pixman-region.c
      * was fixed to not use explict "short" variables
@@ -73,6 +80,44 @@ main ()
     b = pixman_region32_rectangles (&r1, &i);
 
     assert (i == 0);
+
+    fill = pixman_image_create_solid_fill (&white);
+    for (i = 0; i < 100; i++)
+    {
+	int image_size = 128;
+
+	pixman_region32_init (&r1);
+
+	/* Add some random rectangles */
+	for (j = 0; j < 64; j++)
+	    pixman_region32_union_rect (&r1, &r1,
+					lcg_rand_n (image_size),
+					lcg_rand_n (image_size),
+					lcg_rand_n (25),
+					lcg_rand_n (25));
+
+	/* Clip to image size */
+	pixman_region32_init_rect (&r2, 0, 0, image_size, image_size);
+	pixman_region32_intersect (&r1, &r1, &r2);
+	pixman_region32_fini (&r2);
+
+	/* render region to a1 mask */
+	image = pixman_image_create_bits (PIXMAN_a1, image_size, image_size, NULL, 0);
+	pixman_image_set_clip_region32 (image, &r1);
+	pixman_image_composite32 (PIXMAN_OP_SRC,
+				  fill, NULL, image,
+				  0, 0, 0, 0, 0, 0,
+				  image_size, image_size);
+	pixman_region32_init_from_image (&r2, image);
+
+	pixman_image_unref (image);
+
+	assert (pixman_region32_equal (&r1, &r2));
+	pixman_region32_fini (&r1);
+	pixman_region32_fini (&r2);
+
+    }
+    pixman_image_unref (fill);
 
     return 0;
 }

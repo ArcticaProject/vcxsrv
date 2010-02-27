@@ -5842,61 +5842,6 @@ static const pixman_fast_path_t sse2_fast_paths[] =
     { PIXMAN_OP_NONE },
 };
 
-/*
- * Work around GCC bug causing crashes in Mozilla with SSE2
- *
- * When using -msse, gcc generates movdqa instructions assuming that
- * the stack is 16 byte aligned. Unfortunately some applications, such
- * as Mozilla and Mono, end up aligning the stack to 4 bytes, which
- * causes the movdqa instructions to fail.
- *
- * The __force_align_arg_pointer__ makes gcc generate a prologue that
- * realigns the stack pointer to 16 bytes.
- *
- * On x86-64 this is not necessary because the standard ABI already
- * calls for a 16 byte aligned stack.
- *
- * See https://bugs.freedesktop.org/show_bug.cgi?id=15693
- */
-#if defined(__GNUC__) && !defined(__x86_64__) && !defined(__amd64__)
-__attribute__((__force_align_arg_pointer__))
-#endif
-static void
-sse2_composite (pixman_implementation_t *imp,
-                pixman_op_t              op,
-                pixman_image_t *         src,
-                pixman_image_t *         mask,
-                pixman_image_t *         dest,
-                int32_t                  src_x,
-                int32_t                  src_y,
-                int32_t                  mask_x,
-                int32_t                  mask_y,
-                int32_t                  dest_x,
-                int32_t                  dest_y,
-                int32_t                  width,
-                int32_t                  height)
-{
-    if (_pixman_run_fast_path (sse2_fast_paths, imp,
-                               op, src, mask, dest,
-                               src_x, src_y,
-                               mask_x, mask_y,
-                               dest_x, dest_y,
-                               width, height))
-    {
-	return;
-    }
-
-    _pixman_implementation_composite (imp->delegate, op,
-                                      src, mask, dest,
-                                      src_x, src_y,
-                                      mask_x, mask_y,
-                                      dest_x, dest_y,
-                                      width, height);
-}
-
-#if defined(__GNUC__) && !defined(__x86_64__) && !defined(__amd64__)
-__attribute__((__force_align_arg_pointer__))
-#endif
 static pixman_bool_t
 sse2_blt (pixman_implementation_t *imp,
           uint32_t *               src_bits,
@@ -5955,8 +5900,12 @@ __attribute__((__force_align_arg_pointer__))
 pixman_implementation_t *
 _pixman_implementation_create_sse2 (void)
 {
-    pixman_implementation_t *mmx = _pixman_implementation_create_mmx ();
-    pixman_implementation_t *imp = _pixman_implementation_create (mmx);
+#ifdef USE_MMX
+    pixman_implementation_t *fallback = _pixman_implementation_create_mmx ();
+#else
+    pixman_implementation_t *fallback = _pixman_implementation_create_fast_path ();
+#endif
+    pixman_implementation_t *imp = _pixman_implementation_create (fallback, sse2_fast_paths);
 
     /* SSE2 constants */
     mask_565_r  = create_mask_2x32_128 (0x00f80000, 0x00f80000);
@@ -6014,7 +5963,6 @@ _pixman_implementation_create_sse2 (void)
     imp->combine_32_ca[PIXMAN_OP_XOR] = sse2_combine_xor_ca;
     imp->combine_32_ca[PIXMAN_OP_ADD] = sse2_combine_add_ca;
 
-    imp->composite = sse2_composite;
     imp->blt = sse2_blt;
     imp->fill = sse2_fill;
 

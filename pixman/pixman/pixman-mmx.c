@@ -3288,37 +3288,6 @@ static const pixman_fast_path_t mmx_fast_paths[] =
     { PIXMAN_OP_NONE },
 };
 
-static void
-mmx_composite (pixman_implementation_t *imp,
-               pixman_op_t              op,
-               pixman_image_t *         src,
-               pixman_image_t *         mask,
-               pixman_image_t *         dest,
-               int32_t                  src_x,
-               int32_t                  src_y,
-               int32_t                  mask_x,
-               int32_t                  mask_y,
-               int32_t                  dest_x,
-               int32_t                  dest_y,
-               int32_t                  width,
-               int32_t                  height)
-{
-    if (_pixman_run_fast_path (mmx_fast_paths, imp,
-                               op, src, mask, dest,
-                               src_x, src_y,
-                               mask_x, mask_y,
-                               dest_x, dest_y,
-                               width, height))
-    {
-	return;
-    }
-
-    _pixman_implementation_composite (imp->delegate,
-                                      op, src, mask, dest, src_x, src_y,
-                                      mask_x, mask_y, dest_x, dest_y,
-                                      width, height);
-}
-
 static pixman_bool_t
 mmx_blt (pixman_implementation_t *imp,
          uint32_t *               src_bits,
@@ -3372,7 +3341,7 @@ pixman_implementation_t *
 _pixman_implementation_create_mmx (void)
 {
     pixman_implementation_t *general = _pixman_implementation_create_fast_path ();
-    pixman_implementation_t *imp = _pixman_implementation_create (general);
+    pixman_implementation_t *imp = _pixman_implementation_create (general, mmx_fast_paths);
 
     imp->combine_32[PIXMAN_OP_OVER] = mmx_combine_over_u;
     imp->combine_32[PIXMAN_OP_OVER_REVERSE] = mmx_combine_over_reverse_u;
@@ -3398,7 +3367,6 @@ _pixman_implementation_create_mmx (void)
     imp->combine_32_ca[PIXMAN_OP_XOR] = mmx_combine_xor_ca;
     imp->combine_32_ca[PIXMAN_OP_ADD] = mmx_combine_add_ca;
 
-    imp->composite = mmx_composite;
     imp->blt = mmx_blt;
     imp->fill = mmx_fill;
 

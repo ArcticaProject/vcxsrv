@@ -309,7 +309,7 @@ pixman_have_arm_neon (void)
 
 #endif /* USE_ARM_SIMD || USE_ARM_NEON */
 
-#ifdef USE_MMX
+#if defined(USE_MMX) || defined(USE_SSE2)
 /* The CPU detection code needs to be in a file not compiled with
  * "-mmmx -msse", as gcc would generate CMOV instructions otherwise
  * that would lead to SIGILL instructions on old CPUs that don't have
