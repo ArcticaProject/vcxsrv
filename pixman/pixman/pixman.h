@@ -72,8 +72,14 @@ SOFTWARE.
 #include <pixman-version.h>
 
 #ifdef  __cplusplus
-extern "C" {
+#define PIXMAN_BEGIN_DECLS extern "C" {
+#define PIXMAN_END_DECLS }
+#else
+#define PIXMAN_BEGIN_DECLS
+#define PIXMAN_END_DECLS
 #endif
+
+PIXMAN_BEGIN_DECLS
 
 /*
  * Standard integers
@@ -170,6 +176,7 @@ struct pixman_transform
 
 /* forward declaration (sorry) */
 struct pixman_box16;
+typedef  union pixman_image		pixman_image_t;
 
 void          pixman_transform_init_identity    (struct pixman_transform       *matrix);
 pixman_bool_t pixman_transform_point_3d         (const struct pixman_transform *transform,
@@ -401,6 +408,8 @@ pixman_bool_t           pixman_region_init_rects         (pixman_region16_t *reg
 							  int                count);
 void                    pixman_region_init_with_extents  (pixman_region16_t *region,
 							  pixman_box16_t    *extents);
+void                    pixman_region_init_from_image    (pixman_region16_t *region,
+							  pixman_image_t    *image);
 void                    pixman_region_fini               (pixman_region16_t *region);
 
 
@@ -488,6 +497,8 @@ pixman_bool_t           pixman_region32_init_rects         (pixman_region32_t *r
 							    int                count);
 void                    pixman_region32_init_with_extents  (pixman_region32_t *region,
 							    pixman_box32_t    *extents);
+void                    pixman_region32_init_from_image    (pixman_region32_t *region,
+							    pixman_image_t    *image);
 void                    pixman_region32_fini               (pixman_region32_t *region);
 
 
@@ -561,7 +572,6 @@ const char*   pixman_version_string     (void);
 /*
  * Images
  */
-typedef  union pixman_image		pixman_image_t;
 typedef struct pixman_indexed		pixman_indexed_t;
 typedef struct pixman_gradient_stop	pixman_gradient_stop_t;
 
@@ -914,8 +924,6 @@ void           pixman_rasterize_trapezoid  (pixman_image_t            *image,
 					    int                        x_off,
 					    int                        y_off);
 
-#ifdef  __cplusplus
-}
-#endif
+PIXMAN_END_DECLS
 
 #endif /* PIXMAN_H__ */

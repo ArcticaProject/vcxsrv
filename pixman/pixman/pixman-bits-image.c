@@ -1041,14 +1041,10 @@ pixman_image_create_bits (pixman_format_code_t format,
 
     /* must be a whole number of uint32_t's
      */
-    return_val_if_fail (bits == NULL ||
-                        (rowstride_bytes % sizeof (uint32_t)) == 0, NULL);
+    return_val_if_fail (
+	bits == NULL || (rowstride_bytes % sizeof (uint32_t)) == 0, NULL);
 
-    if (PIXMAN_FORMAT_BPP (format) < PIXMAN_FORMAT_DEPTH (format))
-    {
-	fprintf (stderr, "Bad format passed to pixman_image_create_bits();\n");
-	return NULL;
-    }
+    return_val_if_fail (PIXMAN_FORMAT_BPP (format) >= PIXMAN_FORMAT_DEPTH (format), NULL);
 
     if (!bits && width && height)
     {

@@ -349,13 +349,13 @@ _pixman_gradient_walker_pixel (pixman_gradient_walker_t *walker,
 #define STEP_Y_SMALL(n) (pixman_fixed_1 / N_Y_FRAC (n))
 #define STEP_Y_BIG(n)   (pixman_fixed_1 - (N_Y_FRAC (n) - 1) * STEP_Y_SMALL (n))
 
-#define Y_FRAC_FIRST(n) (STEP_Y_SMALL (n) / 2)
+#define Y_FRAC_FIRST(n) (STEP_Y_BIG (n) / 2)
 #define Y_FRAC_LAST(n)  (Y_FRAC_FIRST (n) + (N_Y_FRAC (n) - 1) * STEP_Y_SMALL (n))
 
 #define STEP_X_SMALL(n) (pixman_fixed_1 / N_X_FRAC (n))
 #define STEP_X_BIG(n)   (pixman_fixed_1 - (N_X_FRAC (n) - 1) * STEP_X_SMALL (n))
 
-#define X_FRAC_FIRST(n) (STEP_X_SMALL (n) / 2)
+#define X_FRAC_FIRST(n) (STEP_X_BIG (n) / 2)
 #define X_FRAC_LAST(n)  (X_FRAC_FIRST (n) + (N_X_FRAC (n) - 1) * STEP_X_SMALL (n))
 
 #define RENDER_SAMPLES_X(x, n)						\
@@ -372,7 +372,6 @@ pixman_rasterize_edges_accessors (pixman_image_t *image,
 /*
  * Implementations
  */
-
 typedef struct pixman_implementation_t pixman_implementation_t;
 
 typedef void (*pixman_combine_32_func_t) (pixman_implementation_t *imp,
@@ -428,23 +427,36 @@ typedef pixman_bool_t (*pixman_fill_func_t) (pixman_implementation_t *imp,
 void _pixman_setup_combiner_functions_32 (pixman_implementation_t *imp);
 void _pixman_setup_combiner_functions_64 (pixman_implementation_t *imp);
 
+typedef struct
+{
+    pixman_op_t             op;
+    pixman_format_code_t    src_format;
+    uint32_t		    src_flags;
+    pixman_format_code_t    mask_format;
+    uint32_t		    mask_flags;
+    pixman_format_code_t    dest_format;
+    uint32_t		    dest_flags;
+    pixman_composite_func_t func;
+} pixman_fast_path_t;
+
 struct pixman_implementation_t
 {
-    pixman_implementation_t *toplevel;
-    pixman_implementation_t *delegate;
+    pixman_implementation_t *	toplevel;
+    pixman_implementation_t *	delegate;
+    const pixman_fast_path_t *	fast_paths;
+    
+    pixman_blt_func_t		blt;
+    pixman_fill_func_t		fill;
 
-    pixman_composite_func_t  composite;
-    pixman_blt_func_t        blt;
-    pixman_fill_func_t       fill;
-
-    pixman_combine_32_func_t combine_32[PIXMAN_N_OPERATORS];
-    pixman_combine_32_func_t combine_32_ca[PIXMAN_N_OPERATORS];
-    pixman_combine_64_func_t combine_64[PIXMAN_N_OPERATORS];
-    pixman_combine_64_func_t combine_64_ca[PIXMAN_N_OPERATORS];
+    pixman_combine_32_func_t	combine_32[PIXMAN_N_OPERATORS];
+    pixman_combine_32_func_t	combine_32_ca[PIXMAN_N_OPERATORS];
+    pixman_combine_64_func_t	combine_64[PIXMAN_N_OPERATORS];
+    pixman_combine_64_func_t	combine_64_ca[PIXMAN_N_OPERATORS];
 };
 
 pixman_implementation_t *
-_pixman_implementation_create (pixman_implementation_t *delegate);
+_pixman_implementation_create (pixman_implementation_t *delegate,
+			       const pixman_fast_path_t *fast_paths);
 
 void
 _pixman_implementation_combine_32 (pixman_implementation_t *imp,
@@ -474,20 +486,6 @@ _pixman_implementation_combine_64_ca (pixman_implementation_t *imp,
                                       const uint64_t *         src,
                                       const uint64_t *         mask,
                                       int                      width);
-void
-_pixman_implementation_composite (pixman_implementation_t *imp,
-                                  pixman_op_t              op,
-                                  pixman_image_t *         src,
-                                  pixman_image_t *         mask,
-                                  pixman_image_t *         dest,
-                                  int32_t                  src_x,
-                                  int32_t                  src_y,
-                                  int32_t                  mask_x,
-                                  int32_t                  mask_y,
-                                  int32_t                  dest_x,
-                                  int32_t                  dest_y,
-                                  int32_t                  width,
-                                  int32_t                  height);
 
 pixman_bool_t
 _pixman_implementation_blt (pixman_implementation_t *imp,
@@ -564,17 +562,22 @@ _pixman_choose_implementation (void);
 #define PIXMAN_pixbuf		PIXMAN_FORMAT (0, 2, 0, 0, 0, 0)
 #define PIXMAN_rpixbuf		PIXMAN_FORMAT (0, 3, 0, 0, 0, 0)
 #define PIXMAN_unknown		PIXMAN_FORMAT (0, 4, 0, 0, 0, 0)
+#define PIXMAN_any		PIXMAN_FORMAT (0, 5, 0, 0, 0, 0)	
 
-#define FAST_PATH_ID_TRANSFORM			(1 << 0)
-#define FAST_PATH_NO_ALPHA_MAP			(1 << 1)
-#define FAST_PATH_NO_CONVOLUTION_FILTER		(1 << 2)
-#define FAST_PATH_NO_PAD_REPEAT			(1 << 3)
-#define FAST_PATH_NO_REFLECT_REPEAT		(1 << 4)
-#define FAST_PATH_NO_ACCESSORS			(1 << 5)
-#define FAST_PATH_NO_WIDE_FORMAT		(1 << 6)
-#define FAST_PATH_reserved			(1 << 7)
-#define FAST_PATH_COMPONENT_ALPHA		(1 << 8)
-#define FAST_PATH_UNIFIED_ALPHA			(1 << 9)
+#define PIXMAN_OP_any		(PIXMAN_N_OPERATORS + 1)
+
+#define FAST_PATH_ID_TRANSFORM			(1 <<  0)
+#define FAST_PATH_NO_ALPHA_MAP			(1 <<  1)
+#define FAST_PATH_NO_CONVOLUTION_FILTER		(1 <<  2)
+#define FAST_PATH_NO_PAD_REPEAT			(1 <<  3)
+#define FAST_PATH_NO_REFLECT_REPEAT		(1 <<  4)
+#define FAST_PATH_NO_ACCESSORS			(1 <<  5)
+#define FAST_PATH_NO_WIDE_FORMAT		(1 <<  6)
+#define FAST_PATH_COVERS_CLIP			(1 <<  7)
+#define FAST_PATH_COMPONENT_ALPHA		(1 <<  8)
+#define FAST_PATH_UNIFIED_ALPHA			(1 <<  9)
+#define FAST_PATH_SCALE_TRANSFORM		(1 << 10)
+#define FAST_PATH_NEAREST_FILTER		(1 << 11)
 
 #define _FAST_PATH_STANDARD_FLAGS					\
     (FAST_PATH_ID_TRANSFORM		|				\
@@ -583,7 +586,8 @@ _pixman_choose_implementation (void);
      FAST_PATH_NO_PAD_REPEAT		|				\
      FAST_PATH_NO_REFLECT_REPEAT	|				\
      FAST_PATH_NO_ACCESSORS		|				\
-     FAST_PATH_NO_WIDE_FORMAT)
+     FAST_PATH_NO_WIDE_FORMAT		|				\
+     FAST_PATH_COVERS_CLIP)
 
 #define FAST_PATH_STD_SRC_FLAGS						\
     _FAST_PATH_STANDARD_FLAGS
@@ -596,18 +600,6 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_STD_DEST_FLAGS					\
     (FAST_PATH_NO_ACCESSORS		|				\
      FAST_PATH_NO_WIDE_FORMAT)
-
-typedef struct
-{
-    pixman_op_t             op;
-    pixman_format_code_t    src_format;
-    uint32_t		    src_flags;
-    pixman_format_code_t    mask_format;
-    uint32_t		    mask_flags;
-    pixman_format_code_t    dest_format;
-    uint32_t		    dest_flags;
-    pixman_composite_func_t func;
-} pixman_fast_path_t;
 
 #define FAST_PATH(op, src, src_flags, mask, mask_flags, dest, dest_flags, func) \
     PIXMAN_OP_ ## op,							\
@@ -649,38 +641,6 @@ pixman_bool_t
 pixman_addition_overflows_int (unsigned int a, unsigned int b);
 
 /* Compositing utilities */
-pixman_bool_t
-_pixman_run_fast_path (const pixman_fast_path_t *paths,
-                       pixman_implementation_t * imp,
-                       pixman_op_t               op,
-                       pixman_image_t *          src,
-                       pixman_image_t *          mask,
-                       pixman_image_t *          dest,
-                       int32_t                   src_x,
-                       int32_t                   src_y,
-                       int32_t                   mask_x,
-                       int32_t                   mask_y,
-                       int32_t                   dest_x,
-                       int32_t                   dest_y,
-                       int32_t                   width,
-                       int32_t                   height);
-
-void
-_pixman_walk_composite_region (pixman_implementation_t *imp,
-                               pixman_op_t              op,
-                               pixman_image_t *         src_image,
-                               pixman_image_t *         mask_image,
-                               pixman_image_t *         dst_image,
-                               int32_t                  src_x,
-                               int32_t                  src_y,
-                               int32_t                  mask_x,
-                               int32_t                  mask_y,
-                               int32_t                  dest_x,
-                               int32_t                  dest_y,
-                               int32_t                  width,
-                               int32_t                  height,
-                               pixman_composite_func_t  composite_rect);
-
 void
 pixman_expand (uint64_t *           dst,
                const uint32_t *     src,
@@ -749,23 +709,50 @@ pixman_region16_copy_from_region32 (pixman_region16_t *dst,
      PIXMAN_FORMAT_G (f) > 8 ||						\
      PIXMAN_FORMAT_B (f) > 8)
 
+#ifdef WORDS_BIGENDIAN
+#   define SCREEN_SHIFT_LEFT(x,n)	((x) << (n))
+#   define SCREEN_SHIFT_RIGHT(x,n)	((x) >> (n))
+#else
+#   define SCREEN_SHIFT_LEFT(x,n)	((x) >> (n))
+#   define SCREEN_SHIFT_RIGHT(x,n)	((x) << (n))
+#endif
+
 /*
  * Various debugging code
  */
 
 #undef DEBUG
-#define DEBUG 0
 
-#if DEBUG
+/* Turn on debugging depending on what type of release this is
+ */
+#if (((PIXMAN_VERSION_MICRO % 2) == 0) && ((PIXMAN_VERSION_MINOR % 2) == 1))
+
+/* Debugging gets turned on for development releases because these
+ * are the things that end up in bleeding edge distributions such
+ * as Rawhide etc.
+ *
+ * For performance reasons we don't turn it on for stable releases or
+ * random git checkouts. (Random git checkouts are often used for
+ * performance work).
+ */
+
+#    define DEBUG
+
+#endif
+
+#ifdef DEBUG
+
+void
+_pixman_log_error (const char *function, const char *message);
 
 #define return_if_fail(expr)                                            \
     do                                                                  \
     {                                                                   \
-	if (!(expr))                                                    \
-	{                                                               \
-	    fprintf (stderr, "In %s: %s failed\n", FUNC, # expr);	\
-	    return;                                                     \
-	}                                                               \
+	if (!(expr))							\
+	{								\
+	    _pixman_log_error (FUNC, "The expression " # expr " was false"); \
+	    return;							\
+	}								\
     }                                                                   \
     while (0)
 
@@ -773,16 +760,27 @@ pixman_region16_copy_from_region32 (pixman_region16_t *dst,
     do                                                                  \
     {                                                                   \
 	if (!(expr))                                                    \
-	{                                                               \
-	    fprintf (stderr, "In %s: %s failed\n", FUNC, # expr);	\
-	    return (retval);                                            \
-	}                                                               \
+	{								\
+	    _pixman_log_error (FUNC, "The expression " # expr " was false"); \
+	    return (retval);						\
+	}								\
     }                                                                   \
     while (0)
 
+#define critical_if_fail(expr)						\
+    do									\
+    {									\
+	if (!(expr))							\
+	    _pixman_log_error (FUNC, "The expression " # expr " was false"); \
+    }									\
+    while (0)
+
+
 #else
 
-#define return_if_fail(expr)                                            \
+#define _pixman_log_error(f,m) do { } while (0)				\
+
+#define return_if_fail(expr)						\
     do                                                                  \
     {                                                                   \
 	if (!(expr))							\
@@ -798,6 +796,11 @@ pixman_region16_copy_from_region32 (pixman_region16_t *dst,
     }                                                                   \
     while (0)
 
+#define critical_if_fail(expr)						\
+    do									\
+    {									\
+    }									\
+    while (0)
 #endif
 
 /*
