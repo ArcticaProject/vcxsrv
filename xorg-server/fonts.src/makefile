@@ -1,1 +1,1 @@
-SUBDIRS=font-util 75dpi 100dpi cyrillic encodings misc OTF Speedo TTF Type1
+SUBDIRS=font-util 75dpi 100dpi cyrillic encodings misc OTF Speedo TTF Type1 terminus-font

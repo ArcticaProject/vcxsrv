@@ -68,7 +68,7 @@ FONT_FILES = \
 fontdir = .
 font_DATA = $(FONT_FILES:%=$(DESTDIR)\%)
 
-all: $(DESTDIR) $(DESTDIR)\fonts.scale $(DESTDIR)\fonts.dir
+all: $(DESTDIR) $(DESTDIR)\fonts.dir
 
 MKFONTSCALE=$(MHMAKECONF)\mkfontscale\$(OBJDIR)\mkfontscale.exe
 
@@ -78,7 +78,7 @@ $(DESTDIR)\fonts.scale: $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) .
 
-$(DESTDIR)\fonts.dir: $(font_DATA) $(MKFONTSCALE)
+$(DESTDIR)\fonts.dir: $(DESTDIR)\fonts.scale $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) -b -s -l .
 #	$(FCCACHE) $(DESTDIR)

@@ -321,7 +321,7 @@ font_DATA = \
 	$(KOI8_R_PCF_FILES) \
 	$(JISX0201_PCF_FILES)
 
-all: $(DESTDIR) $(UCS2ANY) $(DESTDIR)\fonts.scale $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
+all: $(DESTDIR) $(UCS2ANY) $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
 
 MKFONTSCALE=$(MHMAKECONF)\mkfontscale\$(OBJDIR)\mkfontscale.exe
 
@@ -331,7 +331,7 @@ $(DESTDIR)\fonts.scale: $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) .
 
-$(DESTDIR)\fonts.dir: $(font_DATA) $(MKFONTSCALE)
+$(DESTDIR)\fonts.dir: $(DESTDIR)\fonts.scale $(font_DATA) $(MKFONTSCALE)
 	del -e $@
 	cd $(DESTDIR) & $(MKFONTSCALE) -b -s -l .
 

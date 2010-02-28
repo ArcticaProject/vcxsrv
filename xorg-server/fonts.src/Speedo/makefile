@@ -20,7 +20,9 @@ FONT_FILES = \
 fontdir = .
 font_DATA = $(FONT_FILES:%=$(DESTDIR)\%)
 
-all: $(DESTDIR) $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.scale
+$(DESTDIR)\fonts.dir: $(DESTDIR)\fonts.scale
+
+all: $(DESTDIR) $(DESTDIR)\fonts.dir
 
 MKFONTSCALE=$(MHMAKECONF)\mkfontscale\$(OBJDIR)\mkfontscale.exe
 
