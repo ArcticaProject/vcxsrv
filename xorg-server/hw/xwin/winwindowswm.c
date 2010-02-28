@@ -81,7 +81,7 @@ make_box (int x, int y, int w, int h)
 }
 
 void
-winWindowsWMExtensionInit ()
+winWindowsWMExtensionInit (void)
 {
   ExtensionEntry* extEntry;
 

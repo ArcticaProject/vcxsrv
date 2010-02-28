@@ -489,32 +489,52 @@ static LRESULT CALLBACK GlxWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+/*
+  Report the extensions split and formatted to avoid overflowing a line
+ */
 static void
-glxLogExtensions (char *extensions)
+glxLogExtensions(const char *prefix, const char *extensions)
 {
-    int i = 0;
-    char *strl;
-    char *str = xalloc(strlen(extensions) + 1);
+  int length = 0;
+  char *strl;
+  char *str = xalloc(strlen(extensions) + 1);
 
-    if (str == NULL)
+  if (str == NULL)
     {
-	winDebug("\nglxLogExtensions: xalloc error\n");
-	return;
+      ErrorF("glxLogExtensions: xalloc error\n");
+      return;
     }
 
-    str[strlen(extensions)] = '\0';
-    strncpy (str, extensions, strlen(extensions));
-    strl = strtok(str, " ");
-    winDebug("%s", strl);
-    while (1)
+  str[strlen(extensions)] = '\0';
+  strncpy (str, extensions, strlen(extensions));
+
+  strl = strtok(str, " ");
+  winDebug("%s%s", prefix, strl);
+  length = strlen(prefix) + strlen(strl);
+
+  while (1)
     {
-	strl = strtok(NULL, " ");
-	if (strl == NULL) break;
-	if (++i%5 == 0) ErrorF("\n\t\t");
-	winDebug(" %s", strl);
+      strl = strtok(NULL, " ");
+      if (strl == NULL) break;
+
+      if (length + strlen(strl) + 1 > 120)
+        {
+          winDebug("\n%s",prefix);
+          length = strlen(prefix);
+        }
+      else
+        {
+          winDebug(" ");
+          length++;
+        }
+
+      winDebug("%s", strl);
+      length = length + strlen(strl);
     }
-    winDebug("\n");
-    xfree(str);
+
+  winDebug("\n");
+
+  xfree(str);
 }
 
 /* This is called by GlxExtensionInit() asking the GLX provider if it can handle the screen... */
@@ -604,16 +624,14 @@ glxWinScreenProbe(ScreenPtr pScreen)
     // (but we need to have a current context for them to be resolvable)
     wglResolveExtensionProcs();
 
-    winDebug("GL_VERSION:    %s\n", glGetStringWrapperNonstatic(GL_VERSION));
-    winDebug("GL_VENDOR:     %s\n", glGetStringWrapperNonstatic(GL_VENDOR));
-    winDebug("GL_RENDERER:   %s\n", glGetStringWrapperNonstatic(GL_RENDERER));
+    winDebug("GL_VERSION:     %s\n", glGetStringWrapperNonstatic(GL_VERSION));
+    winDebug("GL_VENDOR:      %s\n", glGetStringWrapperNonstatic(GL_VENDOR));
+    winDebug("GL_RENDERER:    %s\n", glGetStringWrapperNonstatic(GL_RENDERER));
     gl_extensions = (const char *)glGetStringWrapperNonstatic(GL_EXTENSIONS);
-    winDebug("GL_EXTENSIONS: ");
-    glxLogExtensions(gl_extensions);
+    glxLogExtensions("GL_EXTENSIONS:  ", gl_extensions);
     wgl_extensions = wglGetExtensionsStringARBWrapper(hdc);
     if (!wgl_extensions) wgl_extensions = "";
-    winDebug("WGL_EXTENSIONS:");
-    glxLogExtensions(wgl_extensions);
+    glxLogExtensions("WGL_EXTENSIONS: ", wgl_extensions);
 
     // Can you see the problem here?  The extensions string is DC specific
     // Different DCs for windows on a multimonitor system driven by multiple cards
@@ -751,11 +769,13 @@ glxWinScreenProbe(ScreenPtr pScreen)
           if (screen->has_WGL_ARB_multisample)
             {
               screen->base.GLXversion = xstrdup("1.4");
+              screen->base.GLXmajor = 1;
               screen->base.GLXminor = 4;
             }
           else
             {
               screen->base.GLXversion = xstrdup("1.3");
+              screen->base.GLXmajor = 1;
               screen->base.GLXminor = 3;
             }
           LogMessage(X_INFO, "AIGLX: Set GLX version to %s\n", screen->base.GLXversion);
@@ -956,7 +976,7 @@ glxWinDrawableCopySubBuffer(__GLXdrawable *drawable,
                             int x, int y, int w, int h)
 {
   glAddSwapHintRectWINWrapperNonstatic(x, y, w, h);
-  glxWinDrawableSwapBuffers(NULL,drawable);
+  glxWinDrawableSwapBuffers(NULL, drawable);
 }
 
 static void

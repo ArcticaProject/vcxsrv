@@ -440,8 +440,9 @@ mieqProcessInputEvents(void)
         evlen   = e->events->evlen;
         if(evlen > event_size)
         {
-            event_size=evlen;
             event = xrealloc(event, evlen);
+            event_size=evlen;
+
             if (!event)
                 FatalError("[mi] No memory left for event processing.\n");
         }

@@ -194,7 +194,7 @@ typedef int pid_t;
  * Windows headers
  */
 #include "winms.h"
-#include "./winresource.h"
+#include "winresource.h"
 
 
 /*

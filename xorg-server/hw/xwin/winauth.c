@@ -134,7 +134,7 @@ GenerateAuthorization(
  */
 
 Bool
-winGenerateAuthorization ()
+winGenerateAuthorization (void)
 {
   Bool				fFreeAuth = FALSE;
   SecurityAuthorizationPtr	pAuth = NULL;

@@ -250,7 +250,7 @@ winMouseButtonsSendEvent (int iEventType, int iButton)
 			     POINTER_RELATIVE, 0, 0, NULL);
 
   for (i = 0; i < nevents; i++)
-    mieqEnqueue(g_pwinPointer, (InternalEvent*)(events + i)->event);
+    mieqEnqueue(g_pwinPointer, (InternalEvent*)events[i].event);
 
   winDebug("winMouseButtonsSendEvent: iEventType: %d, iButton: %d, nEvents %d\n",
           iEventType, iButton, nevents);
@@ -381,5 +381,5 @@ void winEnqueueMotion(int x, int y)
 			     POINTER_ABSOLUTE | POINTER_SCREEN, 0, 2, valuators);
 
   for (i = 0; i < nevents; i++)
-    mieqEnqueue(g_pwinPointer, (InternalEvent*)(events + i)->event);
+    mieqEnqueue(g_pwinPointer, (InternalEvent*)events[i].event);
 }
