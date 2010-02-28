@@ -35,14 +35,6 @@
  */
 #include "winkeynames.h"
 
-
-/*
- * Include the standard ASCII keymap.
- *
- * This header declares a static KeySym array called 'map'.
- */
-#include "winkeymap.h"
-
 #define		WIN_KEYMAP_COLS		3
 
 /* ASCII column, rows 33 through 40 are for Speech Recognition with

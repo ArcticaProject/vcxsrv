@@ -321,14 +321,6 @@ winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
     }
 }
 
-/* Safe to call from any thread. */
-unsigned int
-WindowsWMSelectedEvents (void)
-{
-  return eventMask;
-}
-
-
 /* general utility functions */
 
 static int
