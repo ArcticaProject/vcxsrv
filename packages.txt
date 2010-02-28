@@ -70,6 +70,7 @@ recordproto-1.14
 renderproto-0.11
 resourceproto-1.1.0
 scrnsaverproto-1.2.0
+terminus-font-4.30
 ttf-bitstream-vera-1.10
 xcalc-1.0.2
 xclock-1.0.4
