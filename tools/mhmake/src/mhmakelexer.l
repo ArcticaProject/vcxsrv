@@ -202,27 +202,27 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-[\ \t]+ {
+[ \t]+ {
   PRINTF(("%s %d: SPACE:\n",m_InputFileName.c_str(),m_Line));
   return mhmakeparser::SPACE;
 }
 
  /*---------------------------------------------------------------------------*/
-[\ t]*=[ \t]*\\[ \t\r]*\n[ \t]* {
+[ \t]*=[ \t]*\\[ \t\r]*\n[ \t]* {
   PRINTF(("%s %d: EQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   m_Line++;
   theValue.theString=(const char *)yytext;
   return mhmakeparser::EQUAL;
 }
 
-[\ t]*=[ \t]* {
+[ \t]*=[ \t]* {
   PRINTF(("%s %d: EQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   theValue.theString=(const char *)yytext;
   return mhmakeparser::EQUAL;
 }
 
  /*---------------------------------------------------------------------------*/
-[\ t]*:=[ \t]*\\[ \t\r]*\n[ \t]* {
+[ \t]*:=[ \t]*\\[ \t\r]*\n[ \t]* {
   m_Line++;
   PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   return mhmakeparser::IMEQUAL;
@@ -234,7 +234,7 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-[\ t]*\?=[ \t]*\\[ \t\r]*\n[ \t]* {
+[ \t]*\?=[ \t]*\\[ \t\r]*\n[ \t]* {
   m_Line++;
   PRINTF(("%s %d: IMEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   return mhmakeparser::OPTEQUAL;
@@ -246,7 +246,7 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-[\ t]*\+=[ \t]*\\[ \t\r]*\n[ \t]* {
+[ \t]*\+=[ \t]*\\[ \t\r]*\n[ \t]* {
   PRINTF(("%s %d: PEQUAL: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   m_Line++;
   return mhmakeparser::PEQUAL;
@@ -258,7 +258,7 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-[\ t]*;[ \t]*\\[ \t\r]*\n[ \t]* {
+[ \t]*;[ \t]*\\[ \t\r]*\n[ \t]* {
   PRINTF(("%s %d: -SEMICOLON (NEWLINE): %s\n",m_InputFileName.c_str(),m_Line,yytext));
   m_curtoken=g_EmptyString;
   m_Line++;
@@ -274,7 +274,7 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-[\ t]*::[ \t]*\\[ \t\r]*\n[ \t]* {
+[ \t]*::[ \t]*\\[ \t\r]*\n[ \t]* {
   PRINTF(("%s %d: DOUBLECOLON: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   m_Line++;
   theValue.theString=(const char *)yytext;
@@ -288,7 +288,7 @@ load_makefile {
 }
 
  /*---------------------------------------------------------------------------*/
-[\ t]*:[ \t]*\\[ \t\r]*\n[ \t]* {
+[ \t]*:[ \t]*\\[ \t\r]*\n[ \t]* {
   PRINTF(("%s %d: COLON: %s\n",m_InputFileName.c_str(),m_Line,yytext));
   m_Line++;
   theValue.theString=(const char *)yytext;
