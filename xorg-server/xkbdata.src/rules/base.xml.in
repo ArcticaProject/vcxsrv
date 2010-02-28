@@ -2059,6 +2059,12 @@
 	    <_description>UCW layout (accented letters only)</_description>
 	 </configItem>
 	</variant>
+	<variant>
+	  <configItem>
+	    <name>dvorak-ucw</name>
+	    <_description>US Dvorak with CZ UCW support</_description>
+	 </configItem>
+	</variant>
       </variantList>
     </layout>
     <layout>
@@ -4333,6 +4339,34 @@
         </variant>
       </variantList>
     </layout>
+    <layout>
+      <configItem>
+        <name>ml</name>
+        <shortDescription>Mli</shortDescription>
+        <description>Mali</description>
+        <languageList><iso639Id>bam</iso639Id></languageList>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>fr-oss</name>
+            <description>Français (France Alternative)</description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>us-mac</name>
+            <description>English (USA Macintosh)</description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>us-intl</name>
+            <description>English (USA International)</description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
   </layoutList>
   <optionList>
     <group allowMultipleSelection="true">
@@ -5014,7 +5048,7 @@
       <option>
         <configItem>
           <name>numpad:shift3</name>
-          <_description>Shift does not cancel NumLock, chooses 3d level instead</_description>
+          <_description>Shift does not cancel NumLock, chooses 3rd level instead</_description>
         </configItem>
       </option>
       <option>
@@ -5068,7 +5102,7 @@
       </option>
     </group>
     <group allowMultipleSelection="false">
-      <!-- Let space output nobreakspace for the desired level -->
+      <!-- Let space output NBSP, NNBSP, ZWNJ, and ZWJ for the desired level -->
       <configItem>
         <name>nbsp</name>
         <_description>Using space key to input non-breakable space character</_description>
@@ -5119,6 +5153,54 @@
         <configItem>
           <name>nbsp:level4nl</name>
           <_description>Non-breakable space character at fourth level, thin non-breakable space character at sixth level (via Ctrl+Shift)</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj2</name>
+          <_description>Zero-width non-joiner character at second level</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj2zwj3</name>
+          <_description>Zero-width non-joiner character at second level, zero-width joiner character at third level</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj2zwj3nb4</name>
+          <_description>Zero-width non-joiner character at second level, zero-width joiner character at third level, non-breakable space character at fourth level</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj2nb3</name>
+          <_description>Zero-width non-joiner character at second level, non-breakable space character at third level</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj2nb3s</name>
+          <_description>Zero-width non-joiner character at second level, non-breakable space character at third level, nothing at fourth level</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj2nb3zwj4</name>
+          <_description>Zero-width non-joiner character at second level, non-breakable space character at third level, zero-width joiner at fourth level</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj2nb3nnb4</name>
+          <_description>Zero-width non-joiner character at second level, non-breakable space character at third level, thin non-breakable space at fourth level</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>nbsp:zwnj3zwj4</name>
+          <_description>Zero-width non-joiner character at third level, zero-width joiner at fourth level</_description>
         </configItem>
       </option>
     </group>

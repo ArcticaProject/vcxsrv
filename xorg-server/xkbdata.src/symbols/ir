@@ -16,19 +16,25 @@
 
 partial default alphanumeric_keys
 xkb_symbols "pes" {
-    include "ir(pes_part_basic)"
-    include "ir(pes_part_ext)"
-
     name[Group1]= "Iran";
+
+    include "ir(pes_part_basic)";
+    include "ir(pes_part_ext)";
+
+    include "nbsp(zwnj2nb3nnb4)";
+    include "level3(ralt_switch)";
 };
 
 
 partial alphanumeric_keys
 xkb_symbols "pes_keypad" {
-    include "ir(pes_part_basic)"
-    include "ir(pes_part_keypad)"
-
     name[Group1]= "Iran - Persian, with Persian Keypad";
+
+    include "ir(pes_part_basic)";
+    include "ir(pes_part_keypad)";
+
+    include "nbsp(zwnj2nb3nnb4)";
+    include "level3(ralt_switch)";
 };
 
 partial hidden alphanumeric_keys
@@ -87,10 +93,6 @@ xkb_symbols "pes_part_basic" {
     key <AE11> { [ minus,		Arabic_tatweel,		underscore	] };
     key <AE12> { [ equal,		plus,			0x1002212	] };
     key <BKSL> { [ backslash,		bar,			0x1002010	] };
-
-    key <SPCE> { [ space,		0x100200c,		nobreakspace	] };
-
-    include "level3(ralt_switch)"
 };
 
 partial hidden alphanumeric_keys
@@ -107,8 +109,6 @@ xkb_symbols "pes_part_ext" {
     key <AE08> { [ 0x10006f8,	asterisk,	enfilledcircbullet,	8	] };
     key <AE09> { [ 0x10006f9,	parenright,	0x100200e,		9	] };
     key <AE10> { [ 0x10006f0,	parenleft,	0x100200f,		0	] };
-
-    key <SPCE> { [ space,	0x100200c,	nobreakspace,	0x100202F	] };
 };
 
 partial hidden alphanumeric_keys
@@ -184,7 +184,6 @@ xkb_symbols "ku_ara" {
     // Other 3-Level symbols
     key <TLDE> { [ 0x100200d,		division,		asciitilde	] };
     key <BKSL> { [ backslash,		bar,			ccedilla, Ccedilla	] };
-    key <SPCE> { [ space,		0x100200c,		nobreakspace	] };
 
     // Digits
     key <AE01> { [ 1,	exclam,		0x10006f1,	quoteleft	] };
@@ -236,6 +235,7 @@ xkb_symbols "ku_ara" {
     key <AB09> { [ period,		less,		apostrophe	] };
     key <AB10> { [ slash,		Arabic_question_mark, 	question	] };
 
+    include "nbsp(zwnj2nb3)"
     include "level3(ralt_switch)"
 };
 

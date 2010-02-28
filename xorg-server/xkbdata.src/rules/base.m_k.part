@@ -1,5 +1,6 @@
   amiga		=	amiga(de)
   ataritt	=	ataritt(de)
+  empty         =       empty
   sun4		=	sun(type4_euro)
   sun5		=	sun(type5_euro)
   sun6		=	sun(type6_usb)

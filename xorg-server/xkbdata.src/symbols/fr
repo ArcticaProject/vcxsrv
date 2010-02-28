@@ -46,14 +46,30 @@ xkb_symbols "basic" {
 };
 
 partial alphanumeric_keys
+xkb_symbols "olpc" {
+    // Contact: Sayamindu Dasgupta <sayamindu@laptop.org>
+    include "fr(basic)"
+
+    name[Group1]="France - OLPC";
+
+    key <AD02>	{ [ z,  Z,  VoidSymbol, guillemotleft ]	};
+
+    key <AC02>	{ [ s,  S,  VoidSymbol, ssharp ] };
+
+    key <AB02>	{ [  x,  X,  VoidSymbol,     guillemotright ] };
+
+    key <I219>  { [ less, greater ] };
+};
+
+partial alphanumeric_keys
 xkb_symbols "Sundeadkeys" {
 
     // Modifies the basic French layout to use the Sun dead keys
 
     include "fr(basic)"
 
-    key <AD11>	{ [SunFA_Circum, SunFA_Diaeresis ]	};
-    key <AB07>	{ [comma,   question,  SunFA_Acute, dead_doubleacute ]	};
+    key <AD11>	{ [dead_circumflex, dead_diaeresis ]	};
+    key <AB07>	{ [comma,   question,  dead_acute, dead_doubleacute ]	};
 };
 
 partial alphanumeric_keys
@@ -222,14 +238,14 @@ xkb_symbols "oss_Sundeadkeys" {
     include "fr(oss)"
 
     // First row
-    key <TLDE>	{ [      twosuperior,    threesuperior,          onesuperior,         SunFA_Cedilla ] }; // ¹ ² ³ ¸ 
+    key <TLDE>	{ [      twosuperior,    threesuperior,          onesuperior,         dead_cedilla ] }; // ¹ ² ³ ¸ 
 
     // Second row
-    key <AD11>	{ [     SunFA_Circum,  SunFA_Diaeresis,          SunFA_Tilde,        dead_abovering ] }; // ^ ̈ ̃ ˚
+    key <AD11>	{ [     dead_circumflex,  dead_diaeresis,          dead_tilde,        dead_abovering ] }; // ^ ̈ ̃ ˚
 
     //Third row
-    key <AC11>	{ [           ugrave,          percent,          SunFA_Acute,                Ugrave ] }; // ù % ' Ù
-    key <BKSL>	{ [         asterisk,               mu,          SunFA_Grave,           dead_macron ] }; // * µ ` ̄
+    key <AC11>	{ [           ugrave,          percent,          dead_acute,                Ugrave ] }; // ù % ' Ù
+    key <BKSL>	{ [         asterisk,               mu,          dead_grave,           dead_macron ] }; // * µ ` ̄
 };
 
 partial alphanumeric_keys
@@ -400,9 +416,9 @@ xkb_symbols "latin9_Sundeadkeys" {
 
     include "fr(latin9)"
 
-    key <AE01>	{ [       ampersand,               1,         SunFA_Acute,       periodcentered ] };
-    key <AE07>	{ [          egrave,               7,         SunFA_Grave,               Egrave ] };
-    key <AD11>	{ [    SunFA_Circum, SunFA_Diaeresis,         SunFA_Tilde,           quoteright ] };
+    key <AE01>	{ [       ampersand,               1,         dead_acute,       periodcentered ] };
+    key <AE07>	{ [          egrave,               7,         dead_grave,               Egrave ] };
+    key <AD11>	{ [    dead_circumflex, dead_diaeresis,         dead_tilde,           quoteright ] };
 
 };
 

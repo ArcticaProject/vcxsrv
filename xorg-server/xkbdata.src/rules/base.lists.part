@@ -21,7 +21,7 @@
 ! $tmgeometries = tm2020 tm2030PS2 tm2030USB tm2030USB-102 tm2030USB-106
 
 // Layouts that provide further specializations for the OLPC
-! $olpclayouts = af am ara br ca es et it kh kz in mn np ru th tr us 
+! $olpclayouts = af am ara br ca es et fr it kh kz in mn np ru th tr us 
 
 ! $macbooks = macbook78 macbook79
 ! $maclaptop = ibook powerbook macbook78 macbook79
@@ -97,3 +97,9 @@
 ! $evdevkbds = ibm_spacesaver
 
 ! $thinkpads = thinkpad thinkpad60 thinkpadz60
+
+! $sun_t6_custom = ara be br ca ch cz de dk \
+                   ee es fi fr gb gr it kr \
+                   lt lv nl no pl pt ro ru \
+                   se sk tr tw ua
+
