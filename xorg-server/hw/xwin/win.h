@@ -196,7 +196,7 @@
  * Windows headers
  */
 #include "winms.h"
-#include "./winresource.h"
+#include "winresource.h"
 
 
 /*

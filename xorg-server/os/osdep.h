@@ -200,7 +200,7 @@ extern int *ConnectionTranslation;
 #else
 extern int GetConnectionTranslation(int conn);
 extern void SetConnectionTranslation(int conn, int client);
-extern void ClearConnectionTranslation();
+extern void ClearConnectionTranslation(void);
 #endif
  
 extern Bool NewOutputPending;

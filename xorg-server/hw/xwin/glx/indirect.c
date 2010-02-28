@@ -436,32 +436,52 @@ glxWinScreenSwapInterval(__GLXdrawable *drawable, int interval)
   return ret;
 }
 
+/*
+  Report the extensions split and formatted to avoid overflowing a line
+ */
 static void
-glxLogExtensions (char *extensions)
+glxLogExtensions(const char *prefix, const char *extensions)
 {
-    int i = 0;
-    char *strl;
-    char *str = xalloc(strlen(extensions) + 1);
+  int length = 0;
+  char *strl;
+  char *str = xalloc(strlen(extensions) + 1);
 
-    if (str == NULL)
+  if (str == NULL)
     {
-	ErrorF("\nglxLogExtensions: xalloc error\n");
-	return;
+      ErrorF("glxLogExtensions: xalloc error\n");
+      return;
     }
 
-    str[strlen(extensions)] = '\0';
-    strncpy (str, extensions, strlen(extensions));
-    strl = strtok(str, " ");
-    ErrorF("%s", strl);
-    while (1)
+  str[strlen(extensions)] = '\0';
+  strncpy (str, extensions, strlen(extensions));
+
+  strl = strtok(str, " ");
+  ErrorF("%s%s", prefix, strl);
+  length = strlen(prefix) + strlen(strl);
+
+  while (1)
     {
-	strl = strtok(NULL, " ");
-	if (strl == NULL) break;
-	if (++i%5 == 0) ErrorF("\n\t\t");
-	ErrorF(" %s", strl);
+      strl = strtok(NULL, " ");
+      if (strl == NULL) break;
+
+      if (length + strlen(strl) + 1 > 120)
+        {
+          ErrorF("\n%s",prefix);
+          length = strlen(prefix);
+        }
+      else
+        {
+          ErrorF(" ");
+          length++;
+        }
+
+      ErrorF("%s", strl);
+      length = length + strlen(strl);
     }
-    ErrorF("\n");
-    xfree(str);
+
+  ErrorF("\n");
+
+  xfree(str);
 }
 
 /* This is called by GlxExtensionInit() asking the GLX provider if it can handle the screen... */
@@ -545,16 +565,14 @@ glxWinScreenProbe(ScreenPtr pScreen)
     // (but we need to have a current context for them to be resolvable)
     wglResolveExtensionProcs();
 
-    ErrorF("GL_VERSION:    %s\n", glGetStringWrapperNonstatic(GL_VERSION));
-    ErrorF("GL_VENDOR:     %s\n", glGetStringWrapperNonstatic(GL_VENDOR));
-    ErrorF("GL_RENDERER:   %s\n", glGetStringWrapperNonstatic(GL_RENDERER));
+    ErrorF("GL_VERSION:     %s\n", glGetStringWrapperNonstatic(GL_VERSION));
+    ErrorF("GL_VENDOR:      %s\n", glGetStringWrapperNonstatic(GL_VENDOR));
+    ErrorF("GL_RENDERER:    %s\n", glGetStringWrapperNonstatic(GL_RENDERER));
     gl_extensions = (const char *)glGetStringWrapperNonstatic(GL_EXTENSIONS);
-    ErrorF("GL_EXTENSIONS: ");
-    glxLogExtensions(gl_extensions);
+    glxLogExtensions("GL_EXTENSIONS:  ", gl_extensions);
     wgl_extensions = wglGetExtensionsStringARBWrapper(hdc);
     if (!wgl_extensions) wgl_extensions = "";
-    ErrorF("WGL_EXTENSIONS:");
-    glxLogExtensions(wgl_extensions);
+    glxLogExtensions("WGL_EXTENSIONS: ", wgl_extensions);
 
     // Can you see the problem here?  The extensions string is DC specific
     // Different DCs for windows on a multimonitor system driven by multiple cards
@@ -690,11 +708,13 @@ glxWinScreenProbe(ScreenPtr pScreen)
           if (screen->has_WGL_ARB_multisample)
             {
               screen->base.GLXversion = xstrdup("1.4");
+              screen->base.GLXmajor = 1;
               screen->base.GLXminor = 4;
             }
           else
             {
               screen->base.GLXversion = xstrdup("1.3");
+              screen->base.GLXmajor = 1;
               screen->base.GLXminor = 3;
             }
           LogMessage(X_INFO, "AIGLX: Set GLX version to %s\n", screen->base.GLXversion);
@@ -787,7 +807,7 @@ glxWinUnrealizeWindow(WindowPtr pWin)
  */
 
 static GLboolean
-glxWinDrawableSwapBuffers(__GLXdrawable *base)
+glxWinDrawableSwapBuffers(ClientPtr client, __GLXdrawable *base)
 {
     HDC dc;
     HWND hwnd;
@@ -831,7 +851,7 @@ glxWinDrawableCopySubBuffer(__GLXdrawable *drawable,
                             int x, int y, int w, int h)
 {
   glAddSwapHintRectWINWrapperNonstatic(x, y, w, h);
-  glxWinDrawableSwapBuffers(drawable);
+  glxWinDrawableSwapBuffers(NULL, drawable);
 }
 
 static void
@@ -1489,9 +1509,12 @@ glxWinContextDestroy(__GLXcontext *base)
               wglMakeCurrent(NULL, NULL);
             }
 
-          BOOL ret = wglDeleteContext(gc->ctx);
-          if (!ret)
-            ErrorF("wglDeleteContext error: %s\n", glxWinErrorMessage());
+          {
+            BOOL ret = wglDeleteContext(gc->ctx);
+            if (!ret)
+              ErrorF("wglDeleteContext error: %s\n", glxWinErrorMessage());
+          }
+
           gc->ctx = NULL;
         }
 

@@ -81,7 +81,7 @@ make_box (int x, int y, int w, int h)
 }
 
 void
-winWindowsWMExtensionInit ()
+winWindowsWMExtensionInit (void)
 {
   ExtensionEntry* extEntry;
 
@@ -325,14 +325,6 @@ winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
       WriteEventsToClient (client, 1, (xEvent *) &se);
     }
 }
-
-/* Safe to call from any thread. */
-unsigned int
-WindowsWMSelectedEvents (void)
-{
-  return eventMask;
-}
-
 
 /* general utility functions */
 

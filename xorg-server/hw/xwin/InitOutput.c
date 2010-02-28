@@ -1,3 +1,4 @@
+
 /*
 
 Copyright 1993, 1998  The Open Group
@@ -361,11 +362,11 @@ winCheckMount(void)
       continue;
     level = curlevel;
 
-    if ((winCheckMntOpt(ent, "binary") == NULL) ||
+    if ((winCheckMntOpt(ent, "binary") == NULL) &&
         (winCheckMntOpt(ent, "binmode") == NULL))
-      binary = 0;
+      binary = FALSE;
     else
-      binary = 1;
+      binary = TRUE;
   }
     
   if (endmntent(mnt) != 1)

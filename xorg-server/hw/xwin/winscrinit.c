@@ -246,7 +246,7 @@ winScreenInit (int index,
   dixScreenOrigins[index].x = pScreenInfo->dwInitialX - GetSystemMetrics(SM_XVIRTUALSCREEN);
   dixScreenOrigins[index].y = pScreenInfo->dwInitialY - GetSystemMetrics(SM_YVIRTUALSCREEN);
 
-  ErrorF("Screen %d added at XINERAMA coordinate (%d,%d).\n",
+  ErrorF("Screen %d added at virtual desktop coordinate (%d,%d).\n",
          index, dixScreenOrigins[index].x, dixScreenOrigins[index].y);
 
 #if CYGDEBUG || YES

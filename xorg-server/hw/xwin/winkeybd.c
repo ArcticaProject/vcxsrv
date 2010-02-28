@@ -49,9 +49,6 @@ static Bool g_winKeyState[NUM_KEYCODES];
  */
 
 static void
-winGetKeyMappings (KeySymsPtr pKeySyms, CARD8 *pModMap);
-
-static void
 winKeybdBell (int iPercent, DeviceIntPtr pDeviceInt,
 	      pointer pCtrl, int iClass);
 
@@ -116,89 +113,6 @@ winTranslateKey (WPARAM wParam, LPARAM lParam, int *piScanCode)
         *piScanCode = iParamScanCode;
         break;
     }
-}
-
-
-/*
- * We call this function from winKeybdProc when we are
- * initializing the keyboard.
- */
-
-static void
-winGetKeyMappings (KeySymsPtr pKeySyms, CARD8 *pModMap)
-{
-  int			i;
-  KeySym		*pMap = map;
-  KeySym		*pKeySym;
-
-  /*
-   * Initialize all key states to up... which may not be true
-   * but it is close enough.
-   */
-  ZeroMemory (g_winKeyState, sizeof (g_winKeyState[0]) * NUM_KEYCODES);
-
-  /* MAP_LENGTH is defined in Xserver/include/input.h to be 256 */
-  for (i = 0; i < MAP_LENGTH; i++)
-    pModMap[i] = NoSymbol;  /* make sure it is restored */
-
-  /* Loop through all valid entries in the key symbol table */
-  for (pKeySym = pMap, i = MIN_KEYCODE;
-       i < (MIN_KEYCODE + NUM_KEYCODES);
-       i++, pKeySym += GLYPHS_PER_KEY)
-    {
-      switch (*pKeySym)
-	{
-	case XK_Shift_L:
-	case XK_Shift_R:
-	  pModMap[i] = ShiftMask;
-	  break;
-
-	case XK_Control_L:
-	case XK_Control_R:
-	  pModMap[i] = ControlMask;
-	  break;
-
-	case XK_Caps_Lock:
-	  pModMap[i] = LockMask;
-	  break;
-
-	case XK_Alt_L:
-	case XK_Alt_R:
-	  pModMap[i] = AltMask;
-	  break;
-
-	case XK_Num_Lock:
-	  pModMap[i] = NumLockMask;
-	  break;
-
-	case XK_Scroll_Lock:
-	  pModMap[i] = ScrollLockMask;
-	  break;
-
-#if 0
-	case XK_Super_L:
-	case XK_Super_R:
-	  pModMap[i] = Mod4Mask;
-	  break;
-#else
-	/* Hirigana/Katakana toggle */
-	case XK_Kana_Lock:
-	case XK_Kana_Shift:
-	  pModMap[i] = KanaMask;
-	  break;
-#endif
-
-	/* alternate toggle for multinational support */
-	case XK_Mode_switch:
-	  pModMap[i] = AltLangMask;
-	  break;
-	}
-    }
-
-  pKeySyms->map        = (KeySym *) pMap;
-  pKeySyms->mapWidth   = GLYPHS_PER_KEY;
-  pKeySyms->minKeyCode = MIN_KEYCODE;
-  pKeySyms->maxKeyCode = MAX_KEYCODE;
 }
 
 
@@ -572,7 +486,7 @@ winSendKeyEvent (DWORD dwKey, Bool fDown)
   nevents = GetKeyboardEvents(events, g_pwinKeyboard, fDown ? KeyPress : KeyRelease, dwKey + MIN_KEYCODE);
 
   for (i = 0; i < nevents; i++)
-    mieqEnqueue(g_pwinKeyboard, events[i].event);
+    mieqEnqueue(g_pwinKeyboard, (InternalEvent*)events[i].event);
 
 #if CYGDEBUG
   ErrorF("winSendKeyEvent: dwKey: %d, fDown: %d, nEvents %d\n",

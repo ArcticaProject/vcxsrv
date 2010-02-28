@@ -330,7 +330,7 @@ winConfigKeyboard (DeviceIntPtr pDevice)
         const char          regtempl[] = 
           "SYSTEM\\CurrentControlSet\\Control\\Keyboard Layouts\\";
         char                *regpath;
-        char                lname[256];
+        unsigned char       lname[256];
         DWORD               namesize = sizeof(lname);
 
         regpath = malloc(sizeof(regtempl) + KL_NAMELENGTH + 1);

@@ -554,7 +554,7 @@ winFinishCreateWindowsWindowDDNL (WindowPtr pWin)
   int			iWidth, iHeight;
   int			iX, iY;
 
-  winDebug ("\nwinFinishCreateWindowsWindowDDNL!\n\n");
+  winDebug ("winFinishCreateWindowsWindowDDNL!\n\n");
 
   iX = pWin->drawable.x + GetSystemMetrics (SM_XVIRTUALSCREEN);
   iY = pWin->drawable.y + GetSystemMetrics (SM_YVIRTUALSCREEN);

@@ -453,7 +453,7 @@ winClipboardErrorHandler (Display *pDisplay, XErrorEvent *pErr)
 static int
 winClipboardIOErrorHandler (Display *pDisplay)
 {
-  ErrorF ("\nwinClipboardIOErrorHandler!\n\n");
+  ErrorF ("winClipboardIOErrorHandler!\n\n");
 
   /* Restart at the main entry point */
   longjmp (g_jmpEntry, WIN_JMP_ERROR_IO);

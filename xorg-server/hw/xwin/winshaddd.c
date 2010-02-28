@@ -651,7 +651,7 @@ winShadowUpdateDD (ScreenPtr pScreen,
 	      "pixmap header to point to the new address.  If you get "
 	      "this message and "PROJECT_NAME" freezes or crashes "
 	      "after this message then send a problem report and your "
-	      "%s file to " BUILDERADDR, g_pszLogFile);
+	      "%s file to " BUILDERADDR "\n", g_pszLogFile);
 
       /* Location of shadow framebuffer has changed */
       pScreenInfo->pfb = pScreenPriv->pddsdShadow->lpSurface;
