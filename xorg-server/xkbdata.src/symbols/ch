@@ -58,9 +58,9 @@ partial alphanumeric_keys
 xkb_symbols "de_Sundeadkeys" {
     // modify the basic Swiss German layout to use Sun dead keys
     include "ch(basic)"
-    key <AE11> { [      apostrophe,    question,  SunFA_Acute   ] };
-    key <AE12> { [    SunFA_Circum, SunFA_Grave,  SunFA_Tilde   ] };
-    key <AD12> { [ SunFA_Diaeresis,      exclam, bracketright   ] };
+    key <AE11> { [      apostrophe,    question,  dead_acute   ] };
+    key <AE12> { [    dead_circumflex, dead_grave,  dead_tilde   ] };
+    key <AD12> { [ dead_diaeresis,      exclam, bracketright   ] };
 };
 
 partial alphanumeric_keys 
@@ -103,9 +103,9 @@ partial alphanumeric_keys
 xkb_symbols "fr_Sundeadkeys" {
     // modify the basic Swiss French layout to use Sun dead keys
     include "ch(fr)"
-    key <AE11> { [      apostrophe,    question,  SunFA_Acute   ] };
-    key <AE12> { [    SunFA_Circum, SunFA_Grave,  SunFA_Tilde   ] };
-    key <AD12> { [ SunFA_Diaeresis,      exclam, bracketright   ] };
+    key <AE11> { [      apostrophe,    question,  dead_acute   ] };
+    key <AE12> { [    dead_circumflex, dead_grave,  dead_tilde   ] };
+    key <AD12> { [ dead_diaeresis,      exclam, bracketright   ] };
 };
 
 partial alphanumeric_keys

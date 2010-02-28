@@ -1,36 +1,61 @@
 //-------------------------------------------------------------------------
 //
-// Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+// Copyright 2010 Sun Microsystems, Inc.  All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the "Software"),
-// to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following conditions:
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, provided that the above
+// copyright notice(s) and this permission notice appear in all copies of
+// the Software and that both the above copyright notice(s) and this
+// permission notice appear in supporting documentation.
 //
-// The above copyright notice and this permission notice (including the next
-// paragraph) shall be included in all copies or substantial portions of the
-// Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-// DEALINGS IN THE SOFTWARE.
+// Except as contained in this notice, the name of a copyright holder
+// shall not be used in advertising or otherwise to promote the sale, use
+// or other dealings in this Software without prior written authorization
+// of the copyright holder.
 //
 //-------------------------------------------------------------------------
 //
-// ident "@(#)solaris 1.7     05/11/08 SMI"
+
+//
+// CDDL HEADER START
+//
+// The contents of this file are subject to the terms of the
+// Common Development and Distribution License (the "License").
+// You may not use this file except in compliance with the License.
+//
+// You can obtain a copy of the license at src/OPENSOLARIS.LICENSE
+// or http://www.opensolaris.org/os/licensing.
+// See the License for the specific language governing permissions
+// and limitations under the License.
+//
+// When distributing Covered Code, include this CDDL HEADER in each
+// file and include the License file at src/OPENSOLARIS.LICENSE.
+// If applicable, add the following below this CDDL HEADER, with the
+// fields enclosed by brackets "[]" replaced with your own identifying
+// information: Portions Copyright [yyyy] [name of copyright owner]
+//
+// CDDL HEADER END
 //
 
 // Default map provides backwards compatibility with Sun keyboards from
 // long ago and the key mappings still used in Solaris Xsun today
 
 partial default
-xkb_symbols "defaults" {
+xkb_symbols "defaults_common" {
 
     // Left side keys were labeled L1-L10 on Sun Type 2 & Type 3 keyboards
     // and the names have stuck (you can spot a longtime Sun admin when you
@@ -81,22 +106,37 @@ xkb_symbols "defaults" {
     key <MUTE> { [  SunAudioMute,	SunVideoDegauss		]	};
     key <VOL-> { [  SunAudioLowerVolume,SunVideoLowerBrightness ]	};
     key <VOL+> { [  SunAudioRaiseVolume,SunVideoRaiseBrightness	]	};
-    key <POWR> { [  SunPowerSwitch,	SunPowerSwitchShift	]	};
+    key <POWR> { [  XF86Sleep,		XF86Hibernate		]	};
 
-    key <LALT> { [ Alt_L                ]                       };
-    // key <RALT> { [ Mode_switch          ]                       };
-    // key <ALGR> { [ Mode_switch          ]                       };
-    key <LMTA> { [ Meta_L               ]                       };
-    key <RMTA> { [ Meta_R               ]                       };
-    key <COMP> { [ Multi_key            ]                       };
+//    key <LALT> { [ Alt_L                ]                       };
+//    key <LMTA> { [ Meta_L               ]                       };
+//    key <RMTA> { [ Meta_R               ]                       };
+//    key <COMP> { [ Multi_key            ]                       };
+};
+
+partial default
+xkb_symbols "defaults" {
+    include "sun_vndr/solaris(defaults_common)"
+//    key <RALT> { [ Mode_switch          ]                       };
+//    key <ALGR> { [ Mode_switch          ]                       };
 
     // begin modifier mappings
-    modifier_map Shift          { Shift_R, Shift_L };
-    modifier_map Mod1           { Alt_L };
-    modifier_map Mod2           { Alt_R, Mode_switch };
-    modifier_map Mod3           { Num_Lock };
-    modifier_map Mod4           { Meta_L, Meta_R };
+//    modifier_map Shift          { Shift_R, Shift_L };
+//    modifier_map Mod1           { Alt_L };
+//    modifier_map Mod2           { Num_Lock };
+//    modifier_map Mod3           { Alt_R, Mode_switch };
+//    modifier_map Mod4           { Meta_L, Meta_R };
+};
 
+partial default
+xkb_symbols "defaults_type7jp" {
+    include "sun_vndr/solaris(defaults_common)"
+    // begin modifier mappings
+    modifier_map Shift          { Shift_R, Shift_L };
+    modifier_map Mod1           { Alt_L , Alt_R};
+    modifier_map Mod2           { Num_Lock };
+    modifier_map Mod3           { Mode_switch };
+    modifier_map Mod4           { Meta_L, Meta_R };
 };
 
 // Map the keys to the actual key names instead of the ancient Sun function

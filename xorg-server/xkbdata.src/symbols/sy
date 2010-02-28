@@ -54,7 +54,6 @@ xkb_symbols "syc" {
     key <AC10> {  [  	0x100071F,      0x1000323				]     };
     key <AC11> {  [  	0x100071B,	0x1000330				]     };
 
-    key <SPCE> {  [  	space,		0x100200c				]     };
     key <AB01> {  [  	bracketright,	0x1000732,	Arabic_sukun		]     };
     key <AB02> {  [  	bracketleft,	0x1000735				]     };
     key <AB03> {  [  	0x1000724,      0x1000738,	0x100200D		]     };
@@ -68,6 +67,8 @@ xkb_symbols "syc" {
 
     // End Alphanumeric Section
 
+    // Space
+    include "nbsp(zwnj2)";
     
     // Begin Modifier Mappings
     

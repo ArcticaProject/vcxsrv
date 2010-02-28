@@ -1,6 +1,6 @@
 transform_scripts= \
-ln_s.sh \
-lnv_s.sh \
+mln_s.sh \
+mlnvn_s.sh \
 ml_s.sh \
 mlv_s.sh \
 ml1_s.sh \

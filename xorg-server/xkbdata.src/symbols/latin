@@ -22,7 +22,7 @@ xkb_symbols "basic" {
 
     key <AD01>	{ [         q,          Q,           at,  Greek_OMEGA ]	};
     key <AD02>	{ [         w,          W,      lstroke,      Lstroke ]	};
-    key <AD03>	{ [         e,          E ]	};
+    key <AD03>	{ [         e,          E,            e,            E ]	};
     key <AD04>	{ [         r,          R,    paragraph,   registered ]	};
     key <AD05>	{ [         t,          T,       tslash,       Tslash ]	};
     key <AD06>	{ [         y,          Y,    leftarrow,          yen ]	};
@@ -39,7 +39,7 @@ xkb_symbols "basic" {
     key <AC04>	{ [         f,          F,      dstroke,  ordfeminine ]	};
     key <AC05>	{ [         g,          G,          eng,          ENG ]	};
     key <AC06>	{ [         h,          H,      hstroke,      Hstroke ]	};
-    key <AC07>	{ [         j,          J ]	};
+    key <AC07>	{ [         j,          J,            j,            J ]	};
     key <AC08>	{ [         k,          K,          kra,    ampersand ]	};
     key <AC09>	{ [         l,          L,      lstroke,      Lstroke ]	};
     key <AC10>	{ [ semicolon,    colon, dead_acute, dead_doubleacute ]	};
@@ -52,7 +52,7 @@ xkb_symbols "basic" {
     key <AB03>	{ [         c,          C,         cent,    copyright ]	};
     key <AB04>	{ [         v,          V, leftdoublequotemark, leftsinglequotemark ]	};
     key <AB05>	{ [         b,          B, rightdoublequotemark, rightsinglequotemark ] };
-    key <AB06>	{ [         n,          N ]	};
+    key <AB06>	{ [         n,          N,            n,            N ]	};
     key <AB07>	{ [         m,          M,           mu,    masculine ]	};
     key <AB08>	{ [     comma,       less, horizconnector,   multiply ]	};
     key <AB09>	{ [    period,    greater, periodcentered,   division ]	};

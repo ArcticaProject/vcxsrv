@@ -142,3 +142,33 @@ xkb_symbols "ucw" {
     key <AD09> { [oacute,      Oacute      ] };
     key <AD10> { [odiaeresis,  Odiaeresis  ] };
 };
+
+partial alphanumeric_keys
+xkb_symbols "dvorak-ucw" {
+
+    // US Dvorak layout extend with UCW - AltGr produces accented characters
+
+    include "us(dvorak)"
+
+    name[Group1]= "Czechia - US Dvorak with CZ UCW support";
+
+    key <AB03> { [ j, J, eacute, Eacute ] };
+    key <AB04> { [ k, K, uacute, Uacute ] };
+    key <AB10> { [ z, Z, zcaron, Zcaron ] };
+
+    key <AC01> { [ a, A, aacute, Aacute ] };
+    key <AC02> { [ o, O, oacute, Oacute ] };
+    key <AC03> { [ e, E, ecaron, Ecaron ] };
+    key <AC04> { [ u, U, uring,  Uring  ] };
+    key <AC05> { [ i, I, iacute, Iacute ] };
+    key <AC06> { [ d, D, dcaron, Dcaron ] };
+    key <AC08> { [ t, T, tcaron, Tcaron ] };
+    key <AC09> { [ n, N, ncaron, Ncaron ] };
+    key <AC10> { [ s, S, scaron, Scaron ] };
+
+    key <AD05> { [ y, Y, yacute, Yacute ] };
+    key <AD08> { [ c, C, ccaron, Ccaron ] };
+    key <AD09> { [ r, R, rcaron, Rcaron ] };
+
+    include "level3(ralt_switch)"
+};

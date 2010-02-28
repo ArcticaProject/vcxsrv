@@ -74,7 +74,7 @@ xkb_symbols "sin_phonetic" {
   key <AB10> { [ any, any, 0x0100200d, NoSymbol ] };
 
   // Space
-  key <SPCE> { [ space, nobreakspace, 0x0100200c, NoSymbol ] };
+  include "nbsp(zwnj2nb3s)";
 
   include "level3(ralt_switch)"
 };

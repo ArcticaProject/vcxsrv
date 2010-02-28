@@ -1,69 +1,118 @@
-// $XdotOrg: $
 //
-// Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
+// Copyright 2010 Sun Microsystems, Inc.  All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the "Software"),
-// to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following conditions:
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, provided that the above
+// copyright notice(s) and this permission notice appear in all copies of
+// the Software and that both the above copyright notice(s) and this
+// permission notice appear in supporting documentation.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+// 
+// Except as contained in this notice, the name of a copyright holder
+// shall not be used in advertising or otherwise to promote the sale, use
+// or other dealings in this Software without prior written authorization
+// of the copyright holder.
 //
-// The above copyright notice and this permission notice (including the next
-// paragraph) shall be included in all copies or substantial portions of the
-// Software.
+
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-// DEALINGS IN THE SOFTWARE.
+// CDDL HEADER START
+//
+// The contents of this file are subject to the terms of the
+// Common Development and Distribution License (the "License").
+// You may not use this file except in compliance with the License.
+//
+// You can obtain a copy of the license at src/OPENSOLARIS.LICENSE
+// or http://www.opensolaris.org/os/licensing.
+// See the License for the specific language governing permissions
+// and limitations under the License.
+//
+// When distributing Covered Code, include this CDDL HEADER in each
+// file and include the License file at src/OPENSOLARIS.LICENSE.
+// If applicable, add the following below this CDDL HEADER, with the
+// fields enclosed by brackets "[]" replaced with your own identifying
+// information: Portions Copyright [yyyy] [name of copyright owner]
+//
+// CDDL HEADER END
 //
 
-default partial alphanumeric_keys 
-xkb_symbols "type5" {
 
-    // Describes the differences between a very simple US/ASCII
-    // keyboard and a very simple Latvian keyboard.
+partial default alphanumeric_keys
+xkb_symbols "type6" {
 
-    // Alphanumeric section
+    name[Group1]="Latvia";
 
-    name[group1]="Latvian";
 
-    key <AE04> {	[	4,		dollar		],
-			[	section				]	};
-    key <AE08> {	[	8,		asterisk	],
-			[	multiply			]	};
-    key <AD03> {        [       e,              E               ],
-			[	emacron,	Emacron		]	};
-    key <AD04> {        [       r,              R               ],
-			[	rcedilla,	Rcedilla	]	};
-    key <AD07> {        [       u,              U               ],
-			[	umacron,	Umacron		]	};
-    key <AD08> {        [       i,              I               ],
-			[	imacron,	Imacron		]	};
-    key <AD09> {        [       o,              O               ],
-			[	omacron,	Omacron		]	};
-    key <AC01> {	[	a,		A		],
-			[	amacron,	Amacron		]	};
-    key <AC02> {	[	s,		S		],
-			[	scaron,		Scaron		]	};
-    key <AC05> {	[	g,		G		],
-			[	gcedilla,	Gcedilla	]	};
-    key <AC08> {	[	k,		K		],
-			[	kcedilla,	Kcedilla	]	};
-    key <AC09> {	[	l,		L		],
-			[	lcedilla,	Lcedilla	]	};
-    key <BKSL> {	[	degree,		bar		]	};
-    key <LSGT> {	[	backslash,	bar		]	};
-    key <AB01> {	[	z,		Z		],
-			[	zcaron,		Zcaron		]	};
-    key <AB03> {	[	c,		C		],
-			[	ccaron,		ccaron		]	};
-    key <AB06> {	[	n,		N		],
-			[	ncedilla,	Ncedilla	]	};
-    // End alphanumeric section
+   key <TLDE> { [          grave,    asciitilde,	acute,    asciitilde ] };
+   key <AE01> { [              1,        exclam,	onesuperior,    exclamdown ] };
+   key <AE02> { [              2,            at,	twosuperior,     oneeighth ] };
+   key <AE03> { [              3,    numbersign,	threesuperior,      sterling ] };
+   key <AE04> { [              4,        dollar,	EuroSign,          cent ] };
+   key <AE05> { [              5,       percent,	onehalf,  threeeighths ] };
+   key <AE06> { [              6,   asciicircum,	threequarters,   fiveeighths ] };
+   key <AE07> { [              7,     ampersand,	braceleft,  seveneighths ] };
+   key <AE08> { [              8,      asterisk,	bracketleft,     trademark ] };
+   key <AE09> { [              9,     parenleft,	bracketright,     plusminus ] };
+   key <AE10> { [              0,    parenright,	braceright,        degree ] };
+   key <AE11> { [          minus,    underscore,	backslash,  questiondown ] };
+   key <AE12> { [          equal,          plus,	endash,        emdash ] };
+
+   key <AD01> { [              q,             Q,	q,             Q ] };
+   key <AD02> { [              w,             W,	w,             W ] };
+   key <AD03> { [              e,             E,	emacron,       Emacron ] };
+   key <AD04> { [              r,             R,	rcedilla,      Rcedilla ] };
+   key <AD05> { [              t,             T,	t,             T ] };
+   key <AD06> { [              y,             Y,	y,             Y ] };
+   key <AD07> { [              u,             U,	umacron,       Umacron ] };
+   key <AD08> { [              i,             I,	imacron,       Imacron ] };
+   key <AD09> { [              o,             O,	omacron,       Omacron ] };
+   key <AD10> { [              p,             P,	p,             P ] };
+   key <AD11> { [    bracketleft,     braceleft,	guillemotleft, leftdoublequotemark ] };
+   key <AD12> { [   bracketright,    braceright,	guillemotright, rightdoublequotemark ] };
+
+   key <AC01> { [              a,             A,	amacron,       Amacron ] };
+   key <AC02> { [              s,             S,	scaron,        Scaron ] };
+   key <AC03> { [              d,             D,	d,             D ] };
+   key <AC04> { [              f,             F,	f,             F ] };
+   key <AC05> { [              g,             G,	gcedilla,      Gcedilla ] };
+   key <AC06> { [              h,             H,	h,             H ] };
+   key <AC07> { [              j,             J,	j,             J ] };
+   key <AC08> { [              k,             K,	kcedilla,      Kcedilla ] };
+   key <AC09> { [              l,             L,	lcedilla,      Lcedilla ] };
+   key <AC10> { [      semicolon,         colon,	semicolon,         colon ] };
+   key <AC11> { [     apostrophe,      quotedbl,	leftdoublequotemark, doublelowquotemark ] };
+   key <LSGT> { [      backslash,           bar,	degree,     brokenbar ] };
+
+   key <BKSL> { [      backslash,           bar,	grave,         breve ] };
+   key <AB01> { [              z,             Z,	zcaron,        Zcaron ] };
+   key <AB02> { [              x,             X,	x,             X ] };
+   key <AB03> { [              c,             C,	ccaron,        Ccaron ] };
+   key <AB04> { [              v,             V,	v,             V ] };
+   key <AB05> { [              b,             B,	b,             B ] };
+   key <AB06> { [              n,             N,	ncedilla,      Ncedilla ] };
+   key <AB07> { [              m,             M,	m,             M ] };
+   key <AB08> { [          comma,          less,	horizconnector,      multiply ] };
+   key <AB09> { [         period,       greater,	periodcentered,      division ] };
+   key <AB10> { [          slash,      question,	slash,      abovedot ] };
+
+	include "level3(ralt_switch)"
+
+};
+
+partial alphanumeric_keys
+	xkb_symbols "basic" {
+	include "sun_vndr/lv(type6)"
 };
 

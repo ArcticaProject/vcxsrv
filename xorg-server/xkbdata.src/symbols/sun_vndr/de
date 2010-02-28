@@ -1,65 +1,141 @@
-// $XdotOrg: $
 //
-// Copyright 2004 Sun Microsystems, Inc.  All rights reserved.
+//
+// Copyright 2010 Sun Microsystems, Inc.  All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the "Software"),
-// to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following conditions:
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, provided that the above
+// copyright notice(s) and this permission notice appear in all copies of
+// the Software and that both the above copyright notice(s) and this
+// permission notice appear in supporting documentation.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+// OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+// INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+// FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+// NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+// WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+// 
+// Except as contained in this notice, the name of a copyright holder
+// shall not be used in advertising or otherwise to promote the sale, use
+// or other dealings in this Software without prior written authorization
+// of the copyright holder.
 //
-// The above copyright notice and this permission notice (including the next
-// paragraph) shall be included in all copies or substantial portions of the
-// Software.
+
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-// DEALINGS IN THE SOFTWARE.
+// CDDL HEADER START
+//
+// The contents of this file are subject to the terms of the
+// Common Development and Distribution License (the "License").
+// You may not use this file except in compliance with the License.
+//
+// You can obtain a copy of the license at src/OPENSOLARIS.LICENSE
+// or http://www.opensolaris.org/os/licensing.
+// See the License for the specific language governing permissions
+// and limitations under the License.
+//
+// When distributing Covered Code, include this CDDL HEADER in each
+// file and include the License file at src/OPENSOLARIS.LICENSE.
+// If applicable, add the following below this CDDL HEADER, with the
+// fields enclosed by brackets "[]" replaced with your own identifying
+// information: Portions Copyright [yyyy] [name of copyright owner]
+//
+// CDDL HEADER END
 //
 
+partial default alphanumeric_keys
+xkb_symbols "type6" {
 
+    name[Group1]="Germany";
 
-xkb_symbols "type4" {
-    include "sun_vndr/us(type4basic)"
-    // A few keys are different
-    key <BKSL> { [ less, braceleft      ]                       };
+    key <TLDE> { [     asciicircum,           degree                   ] };
+    key <AE02> { [               2,         quotedbl,     twosuperior  ] }; 
+    key <AE03> { [               3,          section,   threesuperior  ] };
+    key <AE04> { [               4,           dollar                   ] };
+    key <AE06> { [               6,        ampersand,         section  ] };
+    key <AE07> { [               7,            slash,       braceleft  ] };
+    key <AE08> { [               8,        parenleft,     bracketleft  ] };
+    key <AE09> { [               9,       parenright,    bracketright  ] };
+    key <AE10> { [               0,            equal,      braceright  ] };
+    key <AE11> { [          ssharp,         question,       backslash  ] };
+    key <AE12> { [      dead_acute,       dead_grave                   ] };
+    key <AD01> { [               q,                Q,              at  ] };
+    key <AD03> { [               e,                E,        EuroSign  ] };
+    key <AD06> { [               z,                Z                   ] };
+    key <AD11> { [      udiaeresis,       Udiaeresis                   ] };
+    key <AD12> { [            plus,         asterisk,      asciitilde  ] };
+    key <AC10> { [      odiaeresis,       Odiaeresis                   ] };
+    key <AC11> { [      adiaeresis,       Adiaeresis                   ] };
+    key <AB01> { [               y,                Y                   ] };
+    key <AB07> { [               m,                M,              mu  ] };
+    key <AB08> { [           comma,        semicolon                   ] };
+    key <AB09> { [          period,            colon                   ] };
+    key <AB10> { [           minus,       underscore                   ] };
+    key <BKSL> { [      numbersign,       apostrophe,           grave  ] };
+    key <LSGT> { [            less,          greater,             bar  ] };
 
-    key <BRCR> { [ greater, braceright  ]                       };
-    key <DELE> { [ Delete               ]                       };
-
-    key <AE01> { [ 1, plus              ], [exclam      ]       };
-    key <AE02> { [ 2, quotedbl          ], [at          ]       };
-    key <AE03> { [ 3, asterisk          ], [numbersign  ]       };
-    key <AE04> { [ 4, ccedilla          ], [cent        ]       };
-    key <AE05> { [ 5, percent           ], [asciitilde  ]       };
-    key <AE06> { [ 6, ampersand         ], [section     ]       };
-    key <AE07> { [ 7, slash             ], [bar         ]       };
-    key <AE08> { [ 8, parenleft         ], [degree      ]       };
-    key <AE09> { [ 9, parenright        ], [backslash   ]       };
-    key <AE10> { [ 0, equal             ], [asciicircum ]       };
-    Key <AE11> { [ quoteright, question ], [quoteleft   ]       };
-    key <AE12> { [ SunFA_Circum, SunFA_Grave    ]               };
-    key <AD03> { [ e, E                 ], [EuroSign    ]       };
-    key <AD06> { [ Z                    ]                       };
-    key <AD11> { [ udiaeresis, egrave   ]                       };
-    key <AD12> { [ SunFA_Diaeresis, SunFA_Acute ]               };
-    key <AC10> { [ odiaeresis, eacute   ]                       };
-    key <AC11> { [ adiaeresis, agrave   ]                       };
-    key <TLDE> { [ dollar, SunFA_Tilde  ], [sterling    ]       };
-    key <LSGT> { [ bracketright, bracketleft   ], [ backslash ] };
-    key <AB01> { [ Y                    ]                       };
-    key <AB07> { [ M, NoSymbol          ], [mu  ]               };
-    key <AB08> { [ comma, semicolon     ]                       };
-    key <AB09> { [ period, colon        ]                       };
-    key <AB10> { [ minus, underscore    ]                       };
-    key <COMP> { [ SunAltGraph          ]                       };
-    key <ALGR> { [ SunCompose           ]                       };
-
-
+        include "level3(ralt_switch)"
+        include "kpdl(comma)"
 
 };
+
+partial alphanumeric_keys
+xkb_symbols "type4" {
+
+    name[Group1]="Germany - Sun type 4";
+
+    key <BKSL>  { [           less,     braceleft     					      ] };
+    key <BRCR>  { [        greater,    braceright     					      ] };
+    key <DELE>  { [         Delete                                                            ] };
+
+    key <AE01> { [               1,          plus,               exclam                       ] };
+    key <AE02> { [               2,      quotedbl,                   at,            oneeighth ]	};
+    key <AE03> { [               3,      asterisk,           numbersign,             sterling ]	};
+    key <AE04> { [               4,      ccedilla,                 cent                       ]	};
+    key <AE05> { [               5,       percent,           asciitilde                       ] };
+    key <AE06> { [               6,     ampersand,              section                       ] };
+    key <AE07> { [               7,         slash,                  bar                       ] };
+    key <AE08> { [               8,     parenleft,               degree                       ] };
+    key <AE09> { [               9,    parenright,            backslash                       ] };
+    key <AE10> { [               0,         equal,          asciicircum                       ] };
+    Key <AE11> { [      quoteright,      question,            quoteleft                       ] };
+    key <AE12> { [ dead_circumflex,    dead_grave                                             ] };
+
+    key <AD03>	{ [              e,             E,             EuroSign,             EuroSign ]	};
+    key <AD06>	{ [              z,             Z,            leftarrow,                  yen ]	};
+    key <AD11>	{ [     udiaeresis,        egrave,       dead_diaeresis,       dead_abovering ] };
+    key <AD12>	{ [ dead_diaeresis,    dead_acute                                             ] };
+
+    key <AC02>  { [              s,             S                                             ] };
+    key <AC07>  { [              j,             J,        dead_belowdot,        dead_abovedot ] };
+    key <AC10>	{ [     odiaeresis,        eacute,     dead_doubleacute,        dead_belowdot ] };
+    key <AC11>	{ [     adiaeresis,        agrave,      dead_circumflex,           dead_caron ] };
+    key <TLDE>	{ [         dollar,    dead_tilde,             sterling                       ] };
+
+    key <AB01>	{ [              y,             Y,       guillemotright                       ] };
+    key <AB02>	{ [              x,             X,        guillemotleft 	              ] };
+    key <AB04>	{ [              v,             V,   doublelowquotemark,   singlelowquotemark ]	};
+    key <AB05>	{ [              b,             B,  leftdoublequotemark,  leftsinglequotemark ] };
+    key <AB06>	{ [              n,             N, rightdoublequotemark, rightsinglequotemark ]	};    
+    key <AB07>  { [              m,             M,                   mu                       ] };
+    key <AB08>  { [          comma,     semicolon,       periodcentered,             multiply ] };
+    key <AB09>	{ [         period,         colon                                             ] };
+    key <AB10>	{ [          minus,    underscore                                             ] };
+
+	include "level3(ralt_switch)"
+	include "kpdl(comma)"
+
+};
+
+
+partial alphanumeric_keys
+	xkb_symbols "basic" {
+	include "sun_vndr/de(type6)"
+};
+

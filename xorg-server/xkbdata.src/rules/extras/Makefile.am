@@ -3,12 +3,12 @@ transform_files=layoutsMapping.lst variantsMapping.lst
 scripts_dir=$(srcdir)/../bin
 
 scripts= \
-base.l2_s.part \
-base.l3_s.part \
-base.l4_s.part \
-base.l2v2_s.part \
-base.l3v3_s.part \
-base.l4v4_s.part \
+base.ml2_s.part \
+base.ml3_s.part \
+base.ml4_s.part \
+base.ml2v2_s.part \
+base.ml3v3_s.part \
+base.ml4v4_s.part \
 base.ml_s.part \
 base.ml1_s.part \
 base.mlv_s.part \
@@ -17,22 +17,22 @@ base.ml_s.part
 
 noinst_SCRIPTS=$(scripts)
 
-base.l2_s.part: $(scripts_dir)/ln_s.sh $(transform_files)
+base.ml2_s.part: $(scripts_dir)/mln_s.sh $(transform_files)
 	sh $< 2 $(srcdir)
 
-base.l3_s.part: $(scripts_dir)/ln_s.sh $(transform_files)
+base.ml3_s.part: $(scripts_dir)/mln_s.sh $(transform_files)
 	sh $< 3 $(srcdir)
 
-base.l4_s.part: $(scripts_dir)/ln_s.sh $(transform_files)
+base.ml4_s.part: $(scripts_dir)/mln_s.sh $(transform_files)
 	sh $< 4 $(srcdir)
 
-base.l2v2_s.part: $(scripts_dir)/lnv_s.sh $(transform_files)
+base.ml2v2_s.part: $(scripts_dir)/mlnvn_s.sh $(transform_files)
 	sh $< 2 $(srcdir)
 
-base.l3v3_s.part: $(scripts_dir)/lnv_s.sh $(transform_files)
+base.ml3v3_s.part: $(scripts_dir)/mlnvn_s.sh $(transform_files)
 	sh $< 3 $(srcdir)
 
-base.l4v4_s.part: $(scripts_dir)/lnv_s.sh $(transform_files)
+base.ml4v4_s.part: $(scripts_dir)/mlnvn_s.sh $(transform_files)
 	sh $< 4 $(srcdir)
 
 base.ml_s.part: $(scripts_dir)/ml_s.sh $(transform_files)

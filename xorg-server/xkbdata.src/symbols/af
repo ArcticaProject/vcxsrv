@@ -56,7 +56,6 @@ xkb_symbols "basic" {
    key <AC11> { [ 0x10006af, Arabic_semicolon, 0x10006ab ] };
 
    key <BKSL> { [ backslash, bar, 0x100003f ] };
-   key <SPCE> { [ space, 0x100200c, 0x10000a0 ] };
 
    key <AB01> { [ Arabic_zah, Arabic_kaf, 0x10006d2] };
    key <AB02> { [ Arabic_tah, 0x1000653 , 0x1000691 ] };
@@ -68,6 +67,8 @@ xkb_symbols "basic" {
    key <AB08> { [ Arabic_waw, greater, 0x100002c ] };
    key <AB09> { [ period, less, 0x10006c7 ] };
    key <AB10> { [ slash, Arabic_question_mark, 0x10006c9 ] };
+
+   include "nbsp(zwnj2nb3)"
    include "level3(ralt_switch)"
 };
 
@@ -126,7 +127,6 @@ xkb_symbols "ps" {
    key <AC11> { [ 0x10006ab, Arabic_semicolon, 0x10006af ] };
 
    key <BKSL> { [ backslash, 0x100002a, 0x100007c ] };
-   key <SPCE> { [ space, 0x100200c, 0x10000a0 ] };
 
    key <AB01> { [ 0x10006cd, 0x1000638, 0x100003f] };
    key <AB02> { [ 0x10006d0, 0x1000637, 0x100003b ] };
@@ -138,6 +138,8 @@ xkb_symbols "ps" {
    key <AB08> { [ Arabic_waw, 0x100060c, 0x100002c ] };
    key <AB09> { [ 0x1000696, 0x100002e, 0x10006c7 ] };
    key <AB10> { [ slash, Arabic_question_mark, 0x10006c9 ] };
+
+   include "nbsp(zwnj2nb3)"
    include "level3(ralt_switch)"
 };
 
@@ -196,7 +198,6 @@ xkb_symbols "uz" {
    key <AC11> { [ 0x10006af, Arabic_semicolon, 0x10006ab ] };
 
    key <BKSL> { [ backslash, bar, 0x100003f ] };
-   key <SPCE> { [ space, 0x100200c, 0x10000a0 ] };
 
    key <AB01> { [ Arabic_zah, 0x10006c9, 0x10006d2] };
    key <AB02> { [ Arabic_tah, 0x10006c7, 0x1000691 ] };
@@ -208,6 +209,8 @@ xkb_symbols "uz" {
    key <AB08> { [ Arabic_waw, greater, 0x100002c ] };
    key <AB09> { [ period, less ] };
    key <AB10> { [ slash, Arabic_question_mark, 0x1000655 ] };
+
+   include "nbsp(zwnj2nb3)"
    include "level3(ralt_switch)"
 };
 
@@ -256,7 +259,6 @@ xkb_symbols "olpc-ps" {
    key <AC11> { [ 0x10006AB, 0x100061B, 0x10006AF ] }; // Arabic kaf with ring, Arabic semicolon, Arabic gaf
 
    key <BKSL> { [ backslash, asterisk, bar ] };
-   key <SPCE> { [ space, 0x100200C, 0x10000A0 ] }; // zero width non-joiner, no break space
 
    key <AB01> { [ 0x1000638, 0x1000626, question] }; // Arabic zah, Arabic yeh with hamza above
    key <AB02> { [ 0x10006D0, 0x1000637, semicolon ] }; // Arabic tah, Arabic E
@@ -269,6 +271,7 @@ xkb_symbols "olpc-ps" {
    key <AB09> { [ 0x1000696, 0x100002E, 0x10006C7 ] }; // Arabic reh with dot below and dot above, full stop, Arabic letter U
    key <AB10> { [ slash, 0x100061F, 0x10006C9 ] }; // Arabic question mark, Arabic kirghiz yu
 
+   include "nbsp(zwnj2nb3)"
    include "group(olpc)"
 };
 
@@ -317,7 +320,6 @@ xkb_symbols "olpc-fa" {
    key <AC11> { [ 0x10006AF, 0x100061B, 0x10006AB ] }; // Arabic gaf, Arabic semicolon, Arabic kaf with ring
 
    key <BKSL> { [ backslash, bar, question ] };
-   key <SPCE> { [ space, 0x100200C, 0x10000A0 ] }; // zero width non-joiner, no break space
 
    key <AB01> { [ 0x1000638, 0x1000643, 0x10006D2 ] }; // Arabic zah, Arabic kaf, Arabic yeh barree
    key <AB02> { [ 0x1000637, 0x1000653, 0x1000691 ] }; // Arabic tah, Arabic maddah above, Arabic rreh
@@ -330,6 +332,7 @@ xkb_symbols "olpc-fa" {
    key <AB09> { [ period, less, 0x10006C7 ] }; // Arabic u
    key <AB10> { [ slash, 0x100061F, 0x10006C9 ] }; // Arabic question mark, Arabic kirghiz yu
 
+   include "nbsp(zwnj2nb3)"
    include "group(olpc)"
 };
 
@@ -378,7 +381,6 @@ xkb_symbols "olpc-uz" {
    key <AC11> { [ 0x10006AF, 0x100061B, 0x10006AB ] }; // Arabic gaf, Arabic semicolon, Arabic kaf with ring
 
    key <BKSL> { [ backslash, bar, question ] };
-   key <SPCE> { [ space, 0x100200C, 0x10000A0 ] }; // zero width non-joiner, no break space
 
    key <AB01> { [ 0x1000638, 0x10006C9, 0x10006D2 ] }; // Arabic zah, Arabic kirghiz yu, Arabic yeh barree
    key <AB02> { [ 0x1000637, 0x10006C7, 0x1000691 ] }; // Arabic tah, Arabic u, Arabic rreh
@@ -391,5 +393,6 @@ xkb_symbols "olpc-uz" {
    key <AB09> { [ period, less ] };
    key <AB10> { [ slash, 0x100061F, 0x1000655 ] }; // Arabic question mark, Arabic hamza below
 
+   include "nbsp(zwnj2nb3)"
    include "group(olpc)"
 };

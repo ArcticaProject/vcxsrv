@@ -145,17 +145,17 @@ xkb_symbols "oss_Sundeadkeys" {
     include "be(oss)"
 
     // First row
-    key <AE04>	{ [       apostrophe,                4,        SunFA_Cedilla,             0x1002014 ] }; // ' 4 ¸ — (tiret cadratin)
+    key <AE04>	{ [       apostrophe,                4,        dead_cedilla,             0x1002014 ] }; // ' 4 ¸ — (tiret cadratin)
 
     // Second row
-    key <AD11>	{ [     SunFA_Circum,  SunFA_Diaeresis,          bracketleft,        dead_abovering ] }; // ^ ̈ [ ˚
+    key <AD11>	{ [     dead_circumflex,  dead_diaeresis,          bracketleft,        dead_abovering ] }; // ^ ̈ [ ˚
 
     //Third row
-    key <AC11>	{ [           ugrave,          percent,          SunFA_Acute,                Ugrave ] }; // ù % ' Ù
-    key <BKSL>	{ [              mu,          sterling,          SunFA_Grave,           dead_macron ] }; // µ £ ` ̄
+    key <AC11>	{ [           ugrave,          percent,          dead_acute,                Ugrave ] }; // ù % ' Ù
+    key <BKSL>	{ [              mu,          sterling,          dead_grave,           dead_macron ] }; // µ £ ` ̄
 
     // Fourth row
-    key <AB10>  { [            equal,             plus,          SunFA_Tilde,             0x1002212 ] }; // = + ~ −
+    key <AB10>  { [            equal,             plus,          dead_tilde,             0x1002212 ] }; // = + ~ −
 };
 
 partial alphanumeric_keys
@@ -188,11 +188,11 @@ xkb_symbols "sundeadkeys" {
     include "be(basic)"
     name[Group1]="Belgium - Sun dead keys";
 
-    key <AD11>	{ [SunFA_Circum, SunFA_Diaeresis, bracketleft, bracketleft] };
-    key <AC11>	{ [    ugrave,    percent,  SunFA_Acute,  SunFA_Acute ]	};
-    key <BKSL>	{ [        mu,   sterling,  SunFA_Grave,  SunFA_Grave ]	};
-    key <AB07>	{ [     comma,  question, SunFA_Cedilla, SunFA_Cedilla]	};
-    key <AB10>	{ [     equal,       plus,  SunFA_Tilde,  SunFA_Tilde ]	};
+    key <AD11>	{ [dead_circumflex, dead_diaeresis, bracketleft, bracketleft] };
+    key <AC11>	{ [    ugrave,    percent,  dead_acute,  dead_acute ]	};
+    key <BKSL>	{ [        mu,   sterling,  dead_grave,  dead_grave ]	};
+    key <AB07>	{ [     comma,  question, dead_cedilla, dead_cedilla]	};
+    key <AB10>	{ [     equal,       plus,  dead_tilde,  dead_tilde ]	};
 };
 
 partial alphanumeric_keys

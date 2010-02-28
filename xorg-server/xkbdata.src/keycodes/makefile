@@ -9,19 +9,20 @@ DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
 SUBDIRS = digital_vndr sgi_vndr
 
 dist_xkbdata_keycodes_DATA = \
-	aliases \
-	amiga \
-	ataritt \
-	evdev \
-	fujitsu \
-	hp \
-	ibm \
-	macintosh \
-	sony \
-	sun \
-	xfree86 \
-	xfree98 \
-	README
+aliases \
+amiga \
+ataritt \
+empty \
+evdev \
+fujitsu \
+hp \
+ibm \
+macintosh \
+sony \
+sun \
+xfree86 \
+xfree98 \
+README
 
 DATA_FILES=$(dist_xkbdata_keycodes_DATA:%=$(DESTDIR)\%)
 

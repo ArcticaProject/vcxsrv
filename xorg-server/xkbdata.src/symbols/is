@@ -40,13 +40,13 @@ xkb_symbols "Sundeadkeys" {
 
     name[Group1]="Iceland - Sun dead keys";
 
-    key <TLDE>	{ [SunFA_Circum,     degree,      notsign,    notsign ]	};
-    key <AE12>	{ [SunFA_Acute, SunFA_Grave, SunFA_Cedilla, SunFA_Cedilla ] };
-    key <AD11>	{ [udiaeresis, Udiaeresis, SunFA_Diaeresis, SunFA_Diaeresis ] };
-    key <AD12>	{ [      plus,   asterisk,  SunFA_Tilde,  dead_macron ]	};
-    key <AC10>	{ [odiaeresis, Odiaeresis,  SunFA_Acute,  SunFA_Acute ]	};
-    key <AC11>	{ [adiaeresis, Adiaeresis, SunFA_Circum, SunFA_Circum ]	};
-    key <BKSL>	{ [numbersign,      acute,  SunFA_Grave,  SunFA_Grave ]	};
+    key <TLDE>	{ [dead_circumflex,     degree,      notsign,    notsign ]	};
+    key <AE12>	{ [dead_acute, dead_grave, dead_cedilla, dead_cedilla ] };
+    key <AD11>	{ [udiaeresis, Udiaeresis, dead_diaeresis, dead_diaeresis ] };
+    key <AD12>	{ [      plus,   asterisk,  dead_tilde,  dead_macron ]	};
+    key <AC10>	{ [odiaeresis, Odiaeresis,  dead_acute,  dead_acute ]	};
+    key <AC11>	{ [adiaeresis, Adiaeresis, dead_circumflex, dead_circumflex ]	};
+    key <BKSL>	{ [numbersign,      acute,  dead_grave,  dead_grave ]	};
 };
 
 partial alphanumeric_keys

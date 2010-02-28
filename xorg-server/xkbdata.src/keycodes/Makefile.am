@@ -6,6 +6,7 @@ dist_keycodes_DATA = \
 aliases \
 amiga \
 ataritt \
+empty \
 evdev \
 fujitsu \
 hp \

@@ -131,7 +131,8 @@ xkb_symbols "lyx" {
     key <AE09> { [ 9         ,	parenright	]       };
     key <AE10> { [ 0         ,	parenleft	]       };
     
-    key <AE11> { [     minus,	0x10005be	]	}; // H. Hiphen
+    key <AE11> { [ minus     ,	0x10005be	]	}; // H. Hiphen
+    key <AE12> { [ equal     ,	plus		]	};
 };
 
 
