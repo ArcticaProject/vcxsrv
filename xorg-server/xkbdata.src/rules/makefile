@@ -153,13 +153,16 @@ $(DESTDIR)\xorg%: $(DESTDIR)\base%
 
 rules_DATA = $(ALL_RULES_FILES) $(COMPATFILES)
 
-XML_IN_FILES = base.xml.in evdev.xml.in base.extras.xml.in evdev.extras.xml.in
-xml_DATA = $(XML_IN_FILES:%.xml.in=%.xml) 
+xml_DATA = base.xml evdev.xml base.extras.xml evdev.extras.xml 
 
 $(DESTDIR)\%.xml: %.xml.in
 	copy $< $@
 
+$(DESTDIR)\evdev.xml: base.xml.in
+	cp $< $@
 
+$(DESTDIR)\evdev.extras.xml: base.extras.xml.in
+	cp $< $@
 
 DATA_FILES=$(rules_DATA:%=$(DESTDIR)\%) $(xml_DATA:%=$(DESTDIR)\%)
 
