@@ -4,10 +4,21 @@
 #include <fcntl.h>
 #include <io.h>
 
-static void CreateConsole()
+#define MAX_CONSOLE_LINES 500
+
+int main(int argc, char *argv[]);
+
+/* Ignore control c and control break signals */
+static BOOL WINAPI IgnoreControlC(DWORD dwCtrlType)
+{
+  if (dwCtrlType==CTRL_C_EVENT || dwCtrlType==CTRL_BREAK_EVENT)
+    return TRUE;
+  return FALSE;
+}
+
+static void CreateConsole(void)
 {
   static int ConsoleCreated=0;
-  va_list arglist;
   if (!ConsoleCreated)
   {
     int hConHandle;
@@ -15,15 +26,20 @@ static void CreateConsole()
     CONSOLE_SCREEN_BUFFER_INFO coninfo;
 
     FILE *fp;
-    const unsigned int MAX_CONSOLE_LINES = 500;
     ConsoleCreated=1;
     if (!AttachConsole(ATTACH_PARENT_PROCESS))
       AllocConsole();
+    else
+      SetConsoleCtrlHandler(IgnoreControlC,TRUE);     // Only allow control C interrupt the program when a console was created
+
 
       // set the screen buffer to be big enough to let us scroll text
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE),	&coninfo);
-    coninfo.dwSize.Y = MAX_CONSOLE_LINES;
-    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE),	coninfo.dwSize);
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
+    if (coninfo.dwSize.Y < MAX_CONSOLE_LINES)
+    {
+      coninfo.dwSize.Y = MAX_CONSOLE_LINES;
+      SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
+    }
 
     // redirect unbuffered STDOUT to the console
     lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
@@ -45,7 +61,6 @@ static void CreateConsole()
     fp = _fdopen( hConHandle, "w" );
     *stderr = *fp;
     setvbuf( stderr, NULL, _IONBF, 0 );
-
   }
 }
 
@@ -58,12 +73,20 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
   char *pTmp;
   char *pProgramName;
 
+  hInstance=hInstance;
+  nCmdShow=nCmdShow;
+  hPrevInstance=hPrevInstance;
+
   if (!strncmp(lpCmdLine,"-console",8))
   {
     CreateConsole();
     lpCmdLine+=9;
   }
-  
+  else
+  {
+    SetConsoleCtrlHandler(IgnoreControlC,TRUE);
+  }
+
   GetModuleFileName(NULL,ProgramName,255);
   pTmp=strrchr(ProgramName,'\\');
   if (pTmp)
@@ -105,6 +128,6 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
       break;
     }
   }
-  
+
   return main(argc,argv);
 }
