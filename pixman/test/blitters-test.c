@@ -27,8 +27,6 @@
 #include <config.h>
 #include "utils.h"
 
-/* A primitive pseudorandom number generator, taken from POSIX.1-2001 example */
-
 static void *
 aligned_malloc (size_t align, size_t size)
 {

@@ -88,14 +88,13 @@ pixman_optimize_operator (pixman_op_t     op,
     pixman_bool_t is_source_opaque;
     pixman_bool_t is_dest_opaque;
     const optimized_operator_info_t *info = pixman_operator_can_be_optimized (op);
-
     if (!info || mask_image)
 	return op;
 
-    is_source_opaque = _pixman_image_is_opaque (src_image);
-    is_dest_opaque = _pixman_image_is_opaque (dst_image);
+    is_source_opaque = src_image->common.flags & FAST_PATH_IS_OPAQUE;
+    is_dest_opaque = dst_image->common.flags & FAST_PATH_IS_OPAQUE;
 
-    if (is_source_opaque == FALSE && is_dest_opaque == FALSE)
+    if (!is_source_opaque && !is_dest_opaque)
 	return op;
 
     if (is_source_opaque && is_dest_opaque)
@@ -117,7 +116,7 @@ apply_workaround (pixman_image_t *image,
 		  int *           save_dx,
 		  int *           save_dy)
 {
-    if (image && image->common.need_workaround)
+    if (image && (image->common.flags & FAST_PATH_NEEDS_WORKAROUND))
     {
 	/* Some X servers generate images that point to the
 	 * wrong place in memory, but then set the clip region
@@ -153,7 +152,7 @@ apply_workaround (pixman_image_t *image,
 static void
 unapply_workaround (pixman_image_t *image, uint32_t *bits, int dx, int dy)
 {
-    if (image && image->common.need_workaround)
+    if (image && (image->common.flags & FAST_PATH_NEEDS_WORKAROUND))
     {
 	image->bits.bits = bits;
 	pixman_region32_translate (&image->common.clip_region, dx, dy);
@@ -448,69 +447,6 @@ walk_region_internal (pixman_implementation_t *imp,
     }
 }
 
-static void
-get_image_info (pixman_image_t       *image,
-		pixman_format_code_t *code,
-		uint32_t	     *flags)
-{
-    *flags = 0;
-    
-    if (!image->common.transform)
-    {
-	*flags |= FAST_PATH_ID_TRANSFORM;
-    }
-    else
-    {
-	if (image->common.transform->matrix[0][1] == 0 &&
-	    image->common.transform->matrix[1][0] == 0 &&
-	    image->common.transform->matrix[2][0] == 0 &&
-	    image->common.transform->matrix[2][1] == 0 &&
-	    image->common.transform->matrix[2][2] == pixman_fixed_1)
-	{
-	    *flags |= FAST_PATH_SCALE_TRANSFORM;
-	}
-    }
-    
-    if (!image->common.alpha_map)
-	*flags |= FAST_PATH_NO_ALPHA_MAP;
-    
-    if (image->common.filter != PIXMAN_FILTER_CONVOLUTION)
-    {
-	*flags |= FAST_PATH_NO_CONVOLUTION_FILTER;
-	
-	if (image->common.filter == PIXMAN_FILTER_NEAREST)
-	    *flags |= FAST_PATH_NEAREST_FILTER;
-    }
-    
-    if (image->common.repeat != PIXMAN_REPEAT_PAD)
-	*flags |= FAST_PATH_NO_PAD_REPEAT;
-    
-    if (image->common.repeat != PIXMAN_REPEAT_REFLECT)
-	*flags |= FAST_PATH_NO_REFLECT_REPEAT;
-    
-    *flags |= (FAST_PATH_NO_ACCESSORS | FAST_PATH_NO_WIDE_FORMAT);
-    if (image->type == BITS)
-    {
-	if (image->bits.read_func || image->bits.write_func)
-	    *flags &= ~FAST_PATH_NO_ACCESSORS;
-	
-	if (PIXMAN_FORMAT_IS_WIDE (image->bits.format))
-	    *flags &= ~FAST_PATH_NO_WIDE_FORMAT;
-    }
-    
-    if (image->common.component_alpha)
-	*flags |= FAST_PATH_COMPONENT_ALPHA;
-    else
-	*flags |= FAST_PATH_UNIFIED_ALPHA;
-    
-    if (_pixman_image_is_solid (image))
-	*code = PIXMAN_solid;
-    else if (image->common.type == BITS)
-	*code = image->bits.format;
-    else
-	*code = PIXMAN_unknown;
-}
-
 static force_inline pixman_bool_t
 image_covers (pixman_image_t *image,
               pixman_box32_t *extents,
@@ -548,22 +484,33 @@ do_composite (pixman_implementation_t *imp,
 {
     pixman_format_code_t src_format, mask_format, dest_format;
     uint32_t src_flags, mask_flags, dest_flags;
-    pixman_bool_t src_repeat, mask_repeat;
     pixman_region32_t region;
     pixman_box32_t *extents;
+    uint32_t *src_bits;
+    int src_dx, src_dy;
+    uint32_t *mask_bits;
+    int mask_dx, mask_dy;
+    uint32_t *dest_bits;
+    int dest_dx, dest_dy;
+    pixman_bool_t need_workaround;
 
-    get_image_info (src,  &src_format,  &src_flags);
+    src_format = src->common.extended_format_code;
+    src_flags = src->common.flags;
+
     if (mask)
     {
-	get_image_info (mask, &mask_format, &mask_flags);
+	mask_format = mask->common.extended_format_code;
+	mask_flags = mask->common.flags;
     }
     else
     {
 	mask_format = PIXMAN_null;
 	mask_flags = 0;
     }
-    get_image_info (dest, &dest_format, &dest_flags);
-    
+
+    dest_format = dest->common.extended_format_code;
+    dest_flags = dest->common.flags;
+
     /* Check for pixbufs */
     if ((mask_format == PIXMAN_a8r8g8b8 || mask_format == PIXMAN_a8b8g8r8) &&
 	(src->type == BITS && src->bits.bits == mask->bits.bits)	   &&
@@ -575,20 +522,17 @@ do_composite (pixman_implementation_t *imp,
 	else if (src_format == PIXMAN_x8r8g8b8)
 	    src_format = mask_format = PIXMAN_rpixbuf;
     }
-	    
-    src_repeat =
-	src->type == BITS					&&
-	src_flags & FAST_PATH_ID_TRANSFORM			&&
-	src->common.repeat == PIXMAN_REPEAT_NORMAL		&&
-	src_format != PIXMAN_solid;
-    
-    mask_repeat =
-	mask							&&
-	mask->type == BITS					&&
-	mask_flags & FAST_PATH_ID_TRANSFORM			&&
-	mask->common.repeat == PIXMAN_REPEAT_NORMAL		&&
-	mask_format != PIXMAN_solid;
-    
+
+    /* Check for workaround */
+    need_workaround = (src_flags | mask_flags | dest_flags) & FAST_PATH_NEEDS_WORKAROUND;
+
+    if (need_workaround)
+    {
+	apply_workaround (src, &src_x, &src_y, &src_bits, &src_dx, &src_dy);
+	apply_workaround (mask, &mask_x, &mask_y, &mask_bits, &mask_dx, &mask_dy);
+	apply_workaround (dest, &dest_x, &dest_y, &dest_bits, &dest_dx, &dest_dy);
+    }
+
     pixman_region32_init (&region);
     
     if (!pixman_compute_composite_region32 (
@@ -631,7 +575,8 @@ do_composite (pixman_implementation_t *imp,
 				      src_x, src_y, mask_x, mask_y,
 				      dest_x, dest_y,
 				      width, height,
-				      src_repeat, mask_repeat,
+				      (src_flags & FAST_PATH_SIMPLE_REPEAT),
+				      (mask_flags & FAST_PATH_SIMPLE_REPEAT),
 				      &region,
 				      info->func);
 		
@@ -643,7 +588,32 @@ do_composite (pixman_implementation_t *imp,
     }
 
 done:
+    if (need_workaround)
+    {
+	unapply_workaround (src, src_bits, src_dx, src_dy);
+	unapply_workaround (mask, mask_bits, mask_dx, mask_dy);
+	unapply_workaround (dest, dest_bits, dest_dx, dest_dy);
+    }
+
     pixman_region32_fini (&region);
+}
+
+PIXMAN_EXPORT void
+pixman_image_composite (pixman_op_t      op,
+                        pixman_image_t * src,
+                        pixman_image_t * mask,
+                        pixman_image_t * dest,
+                        int16_t          src_x,
+                        int16_t          src_y,
+                        int16_t          mask_x,
+                        int16_t          mask_y,
+                        int16_t          dest_x,
+                        int16_t          dest_y,
+                        uint16_t         width,
+                        uint16_t         height)
+{
+    pixman_image_composite32 (op, src, mask, dest, src_x, src_y, 
+                              mask_x, mask_y, dest_x, dest_y, width, height);
 }
 
 /*
@@ -666,24 +636,6 @@ done:
 __attribute__((__force_align_arg_pointer__))
 #endif
 PIXMAN_EXPORT void
-pixman_image_composite (pixman_op_t      op,
-                        pixman_image_t * src,
-                        pixman_image_t * mask,
-                        pixman_image_t * dest,
-                        int16_t          src_x,
-                        int16_t          src_y,
-                        int16_t          mask_x,
-                        int16_t          mask_y,
-                        int16_t          dest_x,
-                        int16_t          dest_y,
-                        uint16_t         width,
-                        uint16_t         height)
-{
-    pixman_image_composite32 (op, src, mask, dest, src_x, src_y, 
-                              mask_x, mask_y, dest_x, dest_y, width, height);
-}
-
-PIXMAN_EXPORT void
 pixman_image_composite32 (pixman_op_t      op,
                           pixman_image_t * src,
                           pixman_image_t * mask,
@@ -697,14 +649,6 @@ pixman_image_composite32 (pixman_op_t      op,
                           int32_t          width,
                           int32_t          height)
 {
-    uint32_t *src_bits;
-    int src_dx, src_dy;
-    uint32_t *mask_bits;
-    int mask_dx, mask_dy;
-    uint32_t *dest_bits;
-    int dest_dx, dest_dy;
-    pixman_bool_t need_workaround;
-
     _pixman_image_validate (src);
     if (mask)
 	_pixman_image_validate (mask);
@@ -726,34 +670,12 @@ pixman_image_composite32 (pixman_op_t      op,
     if (!imp)
 	imp = _pixman_choose_implementation ();
 
-    need_workaround =
-	(src->common.need_workaround)			||
-	(mask && mask->common.need_workaround)		||
-	(dest->common.need_workaround);
-   
-    if (need_workaround)
-    {
-	apply_workaround (src, &src_x, &src_y, &src_bits, &src_dx, &src_dy);
-	apply_workaround (mask, &mask_x, &mask_y, &mask_bits, &mask_dx, &mask_dy);
-	apply_workaround (dest, &dest_x, &dest_y, &dest_bits, &dest_dx, &dest_dy);
-    }
-
     do_composite (imp, op,
 		  src, mask, dest,
 		  src_x, src_y,
 		  mask_x, mask_y,
 		  dest_x, dest_y,
 		  width, height);
-    
-    if (need_workaround)
-    {
-	if (src->common.need_workaround)
-	    unapply_workaround (src, src_bits, src_dx, src_dy);
-	if (mask && mask->common.need_workaround)
-	    unapply_workaround (mask, mask_bits, mask_dx, mask_dy);
-	if (dest->common.need_workaround)
-	    unapply_workaround (dest, dest_bits, dest_dx, dest_dy);
-    }
 }
 
 PIXMAN_EXPORT pixman_bool_t
