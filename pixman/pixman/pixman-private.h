@@ -86,7 +86,6 @@ struct image_common
 						     * the image is used as a source
 						     */
     pixman_bool_t		dirty;
-    pixman_bool_t               need_workaround;
     pixman_transform_t *        transform;
     pixman_repeat_t             repeat;
     pixman_filter_t             filter;
@@ -103,6 +102,9 @@ struct image_common
 
     pixman_image_destroy_func_t destroy_func;
     void *                      destroy_data;
+
+    uint32_t			flags;
+    pixman_format_code_t	extended_format_code;
 };
 
 struct source_image
@@ -280,12 +282,6 @@ _pixman_image_reset_clip_region (pixman_image_t *image);
 
 void
 _pixman_image_validate (pixman_image_t *image);
-
-pixman_bool_t
-_pixman_image_is_opaque (pixman_image_t *image);
-
-pixman_bool_t
-_pixman_image_is_solid (pixman_image_t *image);
 
 uint32_t
 _pixman_image_get_solid (pixman_image_t *     image,
@@ -562,7 +558,7 @@ _pixman_choose_implementation (void);
 #define PIXMAN_pixbuf		PIXMAN_FORMAT (0, 2, 0, 0, 0, 0)
 #define PIXMAN_rpixbuf		PIXMAN_FORMAT (0, 3, 0, 0, 0, 0)
 #define PIXMAN_unknown		PIXMAN_FORMAT (0, 4, 0, 0, 0, 0)
-#define PIXMAN_any		PIXMAN_FORMAT (0, 5, 0, 0, 0, 0)	
+#define PIXMAN_any		PIXMAN_FORMAT (0, 5, 0, 0, 0, 0)
 
 #define PIXMAN_OP_any		(PIXMAN_N_OPERATORS + 1)
 
@@ -578,6 +574,9 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_UNIFIED_ALPHA			(1 <<  9)
 #define FAST_PATH_SCALE_TRANSFORM		(1 << 10)
 #define FAST_PATH_NEAREST_FILTER		(1 << 11)
+#define FAST_PATH_SIMPLE_REPEAT			(1 << 12)
+#define FAST_PATH_IS_OPAQUE			(1 << 13)
+#define FAST_PATH_NEEDS_WORKAROUND		(1 << 14)
 
 #define _FAST_PATH_STANDARD_FLAGS					\
     (FAST_PATH_ID_TRANSFORM		|				\
