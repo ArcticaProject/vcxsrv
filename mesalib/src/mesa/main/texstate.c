@@ -31,9 +31,7 @@
 #include "glheader.h"
 #include "mfeatures.h"
 #include "colormac.h"
-#if FEATURE_colortable
 #include "colortab.h"
-#endif
 #include "context.h"
 #include "enums.h"
 #include "macros.h"
@@ -309,10 +307,6 @@ _mesa_ActiveTextureARB(GLenum texture)
       /* update current stack pointer */
       ctx->CurrentStack = &ctx->TextureMatrixStack[texUnit];
    }
-
-   if (ctx->Driver.ActiveTexture) {
-      (*ctx->Driver.ActiveTexture)( ctx, (GLuint) texUnit );
-   }
 }
 
 
@@ -324,10 +318,17 @@ _mesa_ClientActiveTextureARB(GLenum texture)
    GLuint texUnit = texture - GL_TEXTURE0;
    ASSERT_OUTSIDE_BEGIN_END(ctx);
 
+   if (MESA_VERBOSE & (VERBOSE_API | VERBOSE_TEXTURE))
+      _mesa_debug(ctx, "glClientActiveTexture %s\n",
+                  _mesa_lookup_enum_by_nr(texture));
+
    if (texUnit >= ctx->Const.MaxTextureCoordUnits) {
       _mesa_error(ctx, GL_INVALID_ENUM, "glClientActiveTexture(texture)");
       return;
    }
+
+   if (ctx->Array.ActiveTexture == texUnit)
+      return;
 
    FLUSH_VERTICES(ctx, _NEW_ARRAY);
    ctx->Array.ActiveTexture = texUnit;
@@ -362,9 +363,6 @@ update_texture_matrices( GLcontext *ctx )
 	 if (ctx->Texture.Unit[u]._ReallyEnabled &&
 	     ctx->TextureMatrixStack[u].Top->type != MATRIX_IDENTITY)
 	    ctx->Texture._TexMatEnabled |= ENABLE_TEXMAT(u);
-
-	 if (ctx->Driver.TextureMatrix)
-	    ctx->Driver.TextureMatrix( ctx, u, ctx->TextureMatrixStack[u].Top);
       }
    }
 }
@@ -759,9 +757,7 @@ _mesa_init_texture(GLcontext *ctx)
    ctx->Texture.CurrentUnit = 0;      /* multitexture */
    ctx->Texture._EnabledUnits = 0x0;
    ctx->Texture.SharedPalette = GL_FALSE;
-#if FEATURE_colortable
    _mesa_init_colortable(&ctx->Texture.Palette);
-#endif
 
    for (u = 0; u < MAX_TEXTURE_UNITS; u++)
       init_texture_unit(ctx, u);
@@ -802,10 +798,8 @@ _mesa_free_texture_data(GLcontext *ctx)
    for (tgt = 0; tgt < NUM_TEXTURE_TARGETS; tgt++)
       ctx->Driver.DeleteTexture(ctx, ctx->Texture.ProxyTex[tgt]);
 
-#if FEATURE_colortable
    for (u = 0; u < MAX_TEXTURE_IMAGE_UNITS; u++)
       _mesa_free_colortable_data(&ctx->Texture.Unit[u].ColorTable);
-#endif
 }
 
 

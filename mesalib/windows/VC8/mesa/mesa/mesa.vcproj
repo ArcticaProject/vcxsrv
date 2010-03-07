@@ -727,6 +727,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\main\remap.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\main\renderbuffer.c"
 				>
 			</File>
@@ -795,10 +799,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\swrast\s_imaging.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\mesa\swrast\s_lines.c"
 				>
 			</File>
@@ -832,10 +832,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\swrast\s_texfilter.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\mesa\swrast\s_texstore.c"
 				>
 			</File>
 			<File
@@ -1052,6 +1048,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\texenvprogram.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\main\texfetch.c"
 				>
 			</File>
 			<File
@@ -1588,6 +1588,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\main\remap.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\main\renderbuffer.h"
 				>
 			</File>
@@ -1888,11 +1892,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\main\texfetch.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\main\texformat.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\main\texformat_tmp.h"
+				RelativePath="..\..\..\..\src\mesa\main\texfetch_tmp.h"
 				>
 			</File>
 			<File

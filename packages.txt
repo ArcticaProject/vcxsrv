@@ -60,7 +60,7 @@ libxkbfile-1.0.6
 libXmu-1.0.5
 libXpm-3.5.8
 libXt-1.0.7
-mesa_7_6_1_rc1
+mesa-7.7
 mkfontscale-1.0.7
 openssl-0.9.8l
 pixman-0.17.10

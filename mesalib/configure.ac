@@ -18,7 +18,8 @@ AC_CONFIG_AUX_DIR([bin])
 AC_CANONICAL_HOST
 
 dnl Versions for external dependencies
-LIBDRM_REQUIRED=2.4.3
+LIBDRM_REQUIRED=2.4.15
+LIBDRM_RADEON_REQUIRED=2.4.17
 DRI2PROTO_REQUIRED=1.99.3
 
 dnl Check for progs
@@ -419,7 +420,7 @@ WINDOW_SYSTEM=""
 GALLIUM_DIRS="auxiliary drivers state_trackers"
 GALLIUM_WINSYS_DIRS=""
 GALLIUM_WINSYS_DRM_DIRS=""
-GALLIUM_AUXILIARY_DIRS="rbug draw translate cso_cache pipebuffer tgsi sct rtasm util indices"
+GALLIUM_AUXILIARY_DIRS="rbug draw translate cso_cache pipebuffer tgsi sct rtasm util indices vl"
 GALLIUM_DRIVERS_DIRS="softpipe failover trace identity"
 GALLIUM_STATE_TRACKERS_DIRS=""
 
@@ -577,7 +578,7 @@ dri)
     GL_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED dri2proto >= $DRI2PROTO_REQUIRED"
     DRI_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED"
 
-    PKG_CHECK_MODULES([LIBDRM_RADEON], [libdrm_radeon], HAVE_LIBDRM_RADEON=yes, HAVE_LIBDRM_RADEON=no)
+    PKG_CHECK_MODULES([LIBDRM_RADEON], [libdrm_radeon libdrm >= $LIBDRM_RADEON_REQUIRED], HAVE_LIBDRM_RADEON=yes, HAVE_LIBDRM_RADEON=no)
 
     if test "$HAVE_LIBDRM_RADEON" = yes; then
 	RADEON_CFLAGS="-DHAVE_LIBDRM_RADEON=1 $LIBDRM_RADEON_CFLAGS"
@@ -775,8 +776,8 @@ if test "$mesa_driver" = dri; then
 
     # default drivers
     if test "x$DRI_DIRS" = "xyes"; then
-        DRI_DIRS="i810 i915 i965 mach64 mga r128 r200 r300 r600 radeon s3v \
-            savage sis tdfx trident unichrome ffb swrast"
+        DRI_DIRS="i810 i915 i965 mach64 mga r128 r200 r300 r600 radeon \
+            savage sis tdfx unichrome ffb swrast"
     fi
 
     DRI_DIRS=`echo "$DRI_DIRS" | $SED 's/  */ /g'`
@@ -1143,7 +1144,14 @@ yes)
         GALLIUM_STATE_TRACKERS_DIRS=glx
         ;;
     dri)
-        test "x$enable_egl" = xyes && GALLIUM_STATE_TRACKERS_DIRS=egl
+        GALLIUM_STATE_TRACKERS_DIRS="dri"
+        if test "x$enable_egl" = xyes; then
+            GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS egl"
+        fi
+        # Have only tested st/xorg on 1.6.0 servers
+        PKG_CHECK_MODULES(XORG, [xorg-server >= 1.6.0],
+            HAVE_XORG="yes"; GALLIUM_STATE_TRACKERS_DIRS="$GALLIUM_STATE_TRACKERS_DIRS xorg",
+            HAVE_XORG="no")
         ;;
     esac
     ;;
@@ -1159,9 +1167,9 @@ yes)
         fi
         if test "$tracker" = xorg; then
 	    PKG_CHECK_MODULES(XEXT, [xextproto >= 7.0.99.1],
-                  HAVE_XEXTPROTO_71="yes"; DEFINES="$DEFINES -DHAVE_XEXTPROTO_71"
+                  HAVE_XEXTPROTO_71="yes"; DEFINES="$DEFINES -DHAVE_XEXTPROTO_71",
                   HAVE_XEXTPROTO_71="no")
-	fi
+        fi
     done
     GALLIUM_STATE_TRACKERS_DIRS="$state_trackers"
     ;;
@@ -1190,16 +1198,33 @@ AC_ARG_WITH([max-height],
 )
 
 dnl
+dnl Gallium SVGA configuration
+dnl
+AC_ARG_ENABLE([gallium-svga],
+    [AS_HELP_STRING([--enable-gallium-svga],
+        [build gallium SVGA @<:@default=disabled@:>@])],
+    [enable_gallium_svga="$enableval"],
+    [enable_gallium_svga=auto])
+if test "x$enable_gallium_svga" = xyes; then
+    GALLIUM_WINSYS_DRM_DIRS="$GALLIUM_WINSYS_DRM_DIRS vmware"
+    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS svga"
+elif test "x$enable_gallium_svga" = xauto; then
+    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS svga"
+fi
+
+dnl
 dnl Gallium Intel configuration
 dnl
 AC_ARG_ENABLE([gallium-intel],
-    [AS_HELP_STRING([--disable-gallium-intel],
-        [build gallium intel @<:@default=enabled@:>@])],
+    [AS_HELP_STRING([--enable-gallium-intel],
+        [build gallium intel @<:@default=disabled@:>@])],
     [enable_gallium_intel="$enableval"],
-    [enable_gallium_intel=yes])
+    [enable_gallium_intel=auto])
 if test "x$enable_gallium_intel" = xyes; then
     GALLIUM_WINSYS_DRM_DIRS="$GALLIUM_WINSYS_DRM_DIRS intel"
-    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS i915simple"
+    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS i915"
+elif test "x$enable_gallium_intel" = xauto; then
+    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS i915"
 fi
 
 dnl

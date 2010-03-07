@@ -29,7 +29,7 @@
 #include "imports.h"
 #include "mtypes.h"
 #include "state.h"
-
+#include "vbo/vbo.h"
 
 
 /**
@@ -124,6 +124,40 @@ check_valid_to_render(GLcontext *ctx, const char *function)
    return GL_TRUE;
 }
 
+static GLboolean
+check_index_bounds(GLcontext *ctx, GLsizei count, GLenum type,
+		   const GLvoid *indices, GLint basevertex)
+{
+   struct _mesa_prim prim;
+   struct _mesa_index_buffer ib;
+   GLuint min, max;
+
+   /* Only the X Server needs to do this -- otherwise, accessing outside
+    * array/BO bounds allows application termination.
+    */
+   if (!ctx->Const.CheckArrayBounds)
+      return GL_TRUE;
+
+   memset(&prim, 0, sizeof(prim));
+   prim.count = count;
+
+   memset(&ib, 0, sizeof(ib));
+   ib.type = type;
+   ib.ptr = indices;
+   ib.obj = ctx->Array.ElementArrayBufferObj;
+
+   vbo_get_minmax_index(ctx, &prim, &ib, &min, &max);
+
+   if (min + basevertex < 0 ||
+       max + basevertex > ctx->Array.ArrayObj->_MaxElement) {
+      /* the max element is out of bounds of one or more enabled arrays */
+      _mesa_warning(ctx, "glDrawElements() index=%u is "
+		    "out of bounds (max=%u)", max, ctx->Array.ArrayObj->_MaxElement);
+      return GL_FALSE;
+   }
+
+   return GL_TRUE;
+}
 
 /**
  * Error checking for glDrawElements().  Includes parameter checking
@@ -133,7 +167,7 @@ check_valid_to_render(GLcontext *ctx, const char *function)
 GLboolean
 _mesa_validate_DrawElements(GLcontext *ctx,
 			    GLenum mode, GLsizei count, GLenum type,
-			    const GLvoid *indices)
+			    const GLvoid *indices, GLint basevertex)
 {
    ASSERT_OUTSIDE_BEGIN_END_WITH_RETVAL(ctx,  GL_FALSE);
 
@@ -177,17 +211,8 @@ _mesa_validate_DrawElements(GLcontext *ctx,
          return GL_FALSE;
    }
 
-   if (ctx->Const.CheckArrayBounds) {
-      /* find max array index */
-      GLuint max = _mesa_max_buffer_index(ctx, count, type, indices,
-                                          ctx->Array.ElementArrayBufferObj);
-      if (max >= ctx->Array.ArrayObj->_MaxElement) {
-         /* the max element is out of bounds of one or more enabled arrays */
-         _mesa_warning(ctx, "glDrawElements() index=%u is "
-                       "out of bounds (max=%u)", max, ctx->Array.ArrayObj->_MaxElement);
-         return GL_FALSE;
-      }
-   }
+   if (!check_index_bounds(ctx, count, type, indices, basevertex))
+      return GL_FALSE;
 
    return GL_TRUE;
 }
@@ -202,7 +227,7 @@ GLboolean
 _mesa_validate_DrawRangeElements(GLcontext *ctx, GLenum mode,
 				 GLuint start, GLuint end,
 				 GLsizei count, GLenum type,
-				 const GLvoid *indices)
+				 const GLvoid *indices, GLint basevertex)
 {
    ASSERT_OUTSIDE_BEGIN_END_WITH_RETVAL(ctx, GL_FALSE);
 
@@ -250,14 +275,8 @@ _mesa_validate_DrawRangeElements(GLcontext *ctx, GLenum mode,
          return GL_FALSE;
    }
 
-   if (ctx->Const.CheckArrayBounds) {
-      GLuint max = _mesa_max_buffer_index(ctx, count, type, indices,
-                                          ctx->Array.ElementArrayBufferObj);
-      if (max >= ctx->Array.ArrayObj->_MaxElement) {
-         /* the max element is out of bounds of one or more enabled arrays */
-         return GL_FALSE;
-      }
-   }
+   if (!check_index_bounds(ctx, count, type, indices, basevertex))
+      return GL_FALSE;
 
    return GL_TRUE;
 }
