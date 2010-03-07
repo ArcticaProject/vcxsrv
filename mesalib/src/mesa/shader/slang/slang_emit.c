@@ -195,6 +195,9 @@ alloc_node_storage(slang_emit_info *emitInfo, slang_ir_node *n,
    if (!n->Store) {
       assert(defaultSize > 0);
       n->Store = _slang_new_ir_storage(PROGRAM_TEMPORARY, -1, defaultSize);
+      if (!n->Store) {
+         return GL_FALSE;
+      }
    }
 
    /* now allocate actual register(s).  I.e. set n->Store->Index >= 0 */
@@ -431,6 +434,9 @@ new_instruction(slang_emit_info *emitInfo, gl_inst_opcode opcode)
          _mesa_realloc_instructions(prog->Instructions,
                                     prog->NumInstructions,
                                     emitInfo->MaxInstructions);
+      if (!prog->Instructions) {
+         return NULL;
+      }
    }
 
    inst = prog->Instructions + prog->NumInstructions;
@@ -451,12 +457,14 @@ emit_arl_load(slang_emit_info *emitInfo,
               gl_register_file file, GLint index, GLuint swizzle)
 {
    struct prog_instruction *inst = new_instruction(emitInfo, OPCODE_ARL);
-   inst->SrcReg[0].File = file;
-   inst->SrcReg[0].Index = index;
-   inst->SrcReg[0].Swizzle = fix_swizzle(swizzle);
-   inst->DstReg.File = PROGRAM_ADDRESS;
-   inst->DstReg.Index = 0;
-   inst->DstReg.WriteMask = WRITEMASK_X;
+   if (inst) {
+      inst->SrcReg[0].File = file;
+      inst->SrcReg[0].Index = index;
+      inst->SrcReg[0].Swizzle = fix_swizzle(swizzle);
+      inst->DstReg.File = PROGRAM_ADDRESS;
+      inst->DstReg.Index = 0;
+      inst->DstReg.WriteMask = WRITEMASK_X;
+   }
    return inst;
 }
 
@@ -765,7 +773,9 @@ static struct prog_instruction *
 emit_comment(slang_emit_info *emitInfo, const char *comment)
 {
    struct prog_instruction *inst = new_instruction(emitInfo, OPCODE_NOP);
-   inst_comment(inst, comment);
+   if (inst) {
+      inst_comment(inst, comment);
+   }
    return inst;
 }
 
@@ -792,7 +802,9 @@ emit_arith(slang_emit_info *emitInfo, slang_ir_node *n)
       emit(emitInfo, n->Children[0]->Children[0]);  /* A */
       emit(emitInfo, n->Children[0]->Children[1]);  /* B */
       emit(emitInfo, n->Children[1]);  /* C */
-      alloc_node_storage(emitInfo, n, -1);  /* dest */
+      if (!alloc_node_storage(emitInfo, n, -1)) {  /* dest */
+         return NULL;
+      }
 
       inst = emit_instruction(emitInfo,
                               OPCODE_MAD,
@@ -813,7 +825,9 @@ emit_arith(slang_emit_info *emitInfo, slang_ir_node *n)
       emit(emitInfo, n->Children[0]);  /* A */
       emit(emitInfo, n->Children[1]->Children[0]);  /* B */
       emit(emitInfo, n->Children[1]->Children[1]);  /* C */
-      alloc_node_storage(emitInfo, n, -1);  /* dest */
+      if (!alloc_node_storage(emitInfo, n, -1)) {  /* dest */
+         return NULL;
+      }
 
       inst = emit_instruction(emitInfo,
                               OPCODE_MAD,
@@ -839,7 +853,9 @@ emit_arith(slang_emit_info *emitInfo, slang_ir_node *n)
    }
 
    /* result storage */
-   alloc_node_storage(emitInfo, n, -1);
+   if (!alloc_node_storage(emitInfo, n, -1)) {
+      return NULL;
+   }
 
    inst = emit_instruction(emitInfo,
                            info->InstOpcode,
@@ -1093,7 +1109,9 @@ emit_clamp(slang_emit_info *emitInfo, slang_ir_node *n)
     * the intermediate result.  Use a temp register instead.
     */
    _mesa_bzero(&tmpNode, sizeof(tmpNode));
-   alloc_node_storage(emitInfo, &tmpNode, n->Store->Size);
+   if (!alloc_node_storage(emitInfo, &tmpNode, n->Store->Size)) {
+      return NULL;
+   }
 
    /* tmp = max(ch[0], ch[1]) */
    inst = emit_instruction(emitInfo, OPCODE_MAX,
@@ -1191,6 +1209,9 @@ emit_fcall(slang_emit_info *emitInfo, slang_ir_node *n)
        * really just a NOP to attach the label to.
        */
       inst = new_instruction(emitInfo, OPCODE_BGNSUB);
+      if (!inst) {
+         return NULL;
+      }
       inst_comment(inst, n->Label->Name);
    }
 
@@ -1202,10 +1223,16 @@ emit_fcall(slang_emit_info *emitInfo, slang_ir_node *n)
    inst = prev_instruction(emitInfo);
    if (inst && inst->Opcode != OPCODE_RET) {
       inst = new_instruction(emitInfo, OPCODE_RET);
+      if (!inst) {
+         return NULL;
+      }
    }
 
    if (emitInfo->EmitBeginEndSub) {
       inst = new_instruction(emitInfo, OPCODE_ENDSUB);
+      if (!inst) {
+         return NULL;
+      }
       inst_comment(inst, n->Label->Name);
    }
 
@@ -1215,6 +1242,9 @@ emit_fcall(slang_emit_info *emitInfo, slang_ir_node *n)
 
    /* emit the function call */
    inst = new_instruction(emitInfo, OPCODE_CAL);
+   if (!inst) {
+      return NULL;
+   }
    /* The branch target is just the subroutine number (changed later) */
    inst->BranchTarget = subroutineId;
    inst_comment(inst, n->Label->Name);
@@ -1235,7 +1265,9 @@ emit_return(slang_emit_info *emitInfo, slang_ir_node *n)
    assert(n->Opcode == IR_RETURN);
    assert(n->Label);
    inst = new_instruction(emitInfo, OPCODE_RET);
-   inst->DstReg.CondMask = COND_TR;  /* always return */
+   if (inst) {
+      inst->DstReg.CondMask = COND_TR;  /* always return */
+   }
    return inst;
 }
 
@@ -1249,6 +1281,9 @@ emit_kill(slang_emit_info *emitInfo)
     * Note that ARB-KILL depends on sign of vector operand.
     */
    inst = new_instruction(emitInfo, OPCODE_KIL_NV);
+   if (!inst) {
+      return NULL;
+   }
    inst->DstReg.CondMask = COND_TR;  /* always kill */
 
    assert(emitInfo->prog->Target == GL_FRAGMENT_PROGRAM_ARB);
@@ -1600,8 +1635,10 @@ emit_if(slang_emit_info *emitInfo, slang_ir_node *n)
    if (emitInfo->EmitHighLevelInstructions) {
       if (emitInfo->EmitCondCodes) {
          /* IF condcode THEN ... */
-         struct prog_instruction *ifInst;
-         ifInst = new_instruction(emitInfo, OPCODE_IF);
+         struct prog_instruction *ifInst = new_instruction(emitInfo, OPCODE_IF);
+         if (!ifInst) {
+            return NULL;
+         }
          ifInst->DstReg.CondMask = COND_NE;  /* if cond is non-zero */
          /* only test the cond code (1 of 4) that was updated by the
           * previous instruction.
@@ -1620,6 +1657,9 @@ emit_if(slang_emit_info *emitInfo, slang_ir_node *n)
    else {
       /* conditional jump to else, or endif */
       struct prog_instruction *ifInst = new_instruction(emitInfo, OPCODE_BRA);
+      if (!ifInst) {
+         return NULL;
+      }
       ifInst->DstReg.CondMask = COND_EQ;  /* BRA if cond is zero */
       inst_comment(ifInst, "if zero");
       ifInst->DstReg.CondSwizzle = writemask_to_swizzle(condWritemask);
@@ -1632,12 +1672,17 @@ emit_if(slang_emit_info *emitInfo, slang_ir_node *n)
       /* have else body */
       elseInstLoc = prog->NumInstructions;
       if (emitInfo->EmitHighLevelInstructions) {
-         (void) new_instruction(emitInfo, OPCODE_ELSE);
+         struct prog_instruction *inst = new_instruction(emitInfo, OPCODE_ELSE);
+         if (!inst) {
+            return NULL;
+         }
       }
       else {
          /* jump to endif instruction */
-         struct prog_instruction *inst;
-         inst = new_instruction(emitInfo, OPCODE_BRA);
+         struct prog_instruction *inst = new_instruction(emitInfo, OPCODE_BRA);
+         if (!inst) {
+            return NULL;
+         }
          inst_comment(inst, "else");
          inst->DstReg.CondMask = COND_TR;  /* always branch */
       }
@@ -1650,7 +1695,10 @@ emit_if(slang_emit_info *emitInfo, slang_ir_node *n)
    }
 
    if (emitInfo->EmitHighLevelInstructions) {
-      (void) new_instruction(emitInfo, OPCODE_ENDIF);
+      struct prog_instruction *inst = new_instruction(emitInfo, OPCODE_ENDIF);
+      if (!inst) {
+         return NULL;
+      }
    }
 
    if (n->Children[2]) {
@@ -1671,7 +1719,10 @@ emit_loop(slang_emit_info *emitInfo, slang_ir_node *n)
    /* emit OPCODE_BGNLOOP */
    beginInstLoc = prog->NumInstructions;
    if (emitInfo->EmitHighLevelInstructions) {
-      (void) new_instruction(emitInfo, OPCODE_BGNLOOP);
+      struct prog_instruction *inst = new_instruction(emitInfo, OPCODE_BGNLOOP);
+      if (!inst) {
+         return NULL;
+      }
    }
 
    /* body */
@@ -1689,10 +1740,16 @@ emit_loop(slang_emit_info *emitInfo, slang_ir_node *n)
    if (emitInfo->EmitHighLevelInstructions) {
       /* emit OPCODE_ENDLOOP */
       endInst = new_instruction(emitInfo, OPCODE_ENDLOOP);
+      if (!endInst) {
+         return NULL;
+      }
    }
    else {
       /* emit unconditional BRA-nch */
       endInst = new_instruction(emitInfo, OPCODE_BRA);
+      if (!endInst) {
+         return NULL;
+      }
       endInst->DstReg.CondMask = COND_TR;  /* always true */
    }
    /* ENDLOOP's BranchTarget points to the BGNLOOP inst */
@@ -1762,7 +1819,9 @@ emit_cont_break(slang_emit_info *emitInfo, slang_ir_node *n)
    }
    n->InstLocation = emitInfo->prog->NumInstructions;
    inst = new_instruction(emitInfo, opcode);
-   inst->DstReg.CondMask = COND_TR;  /* always true */
+   if (inst) {
+      inst->DstReg.CondMask = COND_TR;  /* always true */
+   }
    return inst;
 }
 
@@ -1798,8 +1857,10 @@ emit_cont_break_if_true(slang_emit_info *emitInfo, slang_ir_node *n)
           */
          const GLuint condWritemask = inst->DstReg.WriteMask;
          inst = new_instruction(emitInfo, opcode);
-         inst->DstReg.CondMask = COND_NE;
-         inst->DstReg.CondSwizzle = writemask_to_swizzle(condWritemask);
+         if (inst) {
+            inst->DstReg.CondMask = COND_NE;
+            inst->DstReg.CondSwizzle = writemask_to_swizzle(condWritemask);
+         }
          return inst;
       }
       else {
@@ -1817,7 +1878,13 @@ emit_cont_break_if_true(slang_emit_info *emitInfo, slang_ir_node *n)
          n->InstLocation = emitInfo->prog->NumInstructions;
 
          inst = new_instruction(emitInfo, opcode);
+         if (!inst) {
+            return NULL;
+         }
          inst = new_instruction(emitInfo, OPCODE_ENDIF);
+         if (!inst) {
+            return NULL;
+         }
 
          emitInfo->prog->Instructions[ifInstLoc].BranchTarget
             = emitInfo->prog->NumInstructions;
@@ -1828,8 +1895,10 @@ emit_cont_break_if_true(slang_emit_info *emitInfo, slang_ir_node *n)
       const GLuint condWritemask = inst->DstReg.WriteMask;
       assert(emitInfo->EmitCondCodes);
       inst = new_instruction(emitInfo, OPCODE_BRA);
-      inst->DstReg.CondMask = COND_NE;
-      inst->DstReg.CondSwizzle = writemask_to_swizzle(condWritemask);
+      if (inst) {
+         inst->DstReg.CondMask = COND_NE;
+         inst->DstReg.CondSwizzle = writemask_to_swizzle(condWritemask);
+      }
       return inst;
    }
 }
@@ -2201,7 +2270,9 @@ emit(slang_emit_info *emitInfo, slang_ir_node *n)
 
    if (n->Comment) {
       inst = new_instruction(emitInfo, OPCODE_NOP);
-      inst->Comment = _mesa_strdup(n->Comment);
+      if (inst) {
+         inst->Comment = _mesa_strdup(n->Comment);
+      }
       inst = NULL;
    }
 
@@ -2503,6 +2574,9 @@ _slang_emit_code(slang_ir_node *n, slang_var_table *vt,
    if (withEnd) {
       struct prog_instruction *inst;
       inst = new_instruction(&emitInfo, OPCODE_END);
+      if (!inst) {
+         return GL_FALSE;
+      }
    }
 
    _slang_resolve_subroutines(&emitInfo);

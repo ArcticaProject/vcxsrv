@@ -72,6 +72,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "main/context.h"
 #include "main/dlist.h"
 #include "main/enums.h"
+#include "main/eval.h"
 #include "main/macros.h"
 #include "main/api_noop.h"
 #include "main/api_validate.h"
@@ -269,7 +270,7 @@ static void _save_compile_vertex_list( GLcontext *ctx )
     * being compiled.
     */
    node = (struct vbo_save_vertex_list *)
-      _mesa_alloc_instruction(ctx, save->opcode_vertex_list, sizeof(*node));
+      _mesa_dlist_alloc(ctx, save->opcode_vertex_list, sizeof(*node));
 
    if (!node)
       return;
@@ -826,6 +827,33 @@ static void GLAPIENTRY _save_DrawRangeElements(GLenum mode,
    _mesa_compile_error( ctx, GL_INVALID_OPERATION, "glDrawRangeElements" );
 }
 
+static void GLAPIENTRY _save_DrawElementsBaseVertex(GLenum mode,
+						    GLsizei count,
+						    GLenum type,
+						    const GLvoid *indices,
+						    GLint basevertex)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   (void) mode; (void) count; (void) type; (void) indices; (void)basevertex;
+
+   _mesa_compile_error( ctx, GL_INVALID_OPERATION, "glDrawElements" );
+}
+
+static void GLAPIENTRY _save_DrawRangeElementsBaseVertex(GLenum mode,
+							 GLuint start,
+							 GLuint end,
+							 GLsizei count,
+							 GLenum type,
+							 const GLvoid *indices,
+							 GLint basevertex)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   (void) mode; (void) start; (void) end; (void) count; (void) type;
+   (void) indices; (void)basevertex;
+
+   _mesa_compile_error( ctx, GL_INVALID_OPERATION, "glDrawRangeElements" );
+}
+
 static void GLAPIENTRY _save_DrawArrays(GLenum mode, GLint start, GLsizei count)
 {
    GET_CURRENT_CONTEXT(ctx);
@@ -907,7 +935,7 @@ static void GLAPIENTRY _save_OBE_DrawElements(GLenum mode, GLsizei count, GLenum
    GET_CURRENT_CONTEXT(ctx);
    GLint i;
 
-   if (!_mesa_validate_DrawElements( ctx, mode, count, type, indices ))
+   if (!_mesa_validate_DrawElements( ctx, mode, count, type, indices, 0 ))
       return;
 
    _ae_map_vbos( ctx );
@@ -948,7 +976,7 @@ static void GLAPIENTRY _save_OBE_DrawRangeElements(GLenum mode,
    GET_CURRENT_CONTEXT(ctx);
    if (_mesa_validate_DrawRangeElements( ctx, mode,
 					 start, end,
-					 count, type, indices ))
+					 count, type, indices, 0 ))
       _save_OBE_DrawElements( mode, count, type, indices );
 }
 
@@ -961,7 +989,8 @@ static void _save_vtxfmt_init( GLcontext *ctx )
    struct vbo_save_context *save = &vbo_context(ctx)->save;
    GLvertexformat *vfmt = &save->vtxfmt;
 
-   vfmt->ArrayElement = _ae_loopback_array_elt;	        /* generic helper */
+   _MESA_INIT_ARRAYELT_VTXFMT(vfmt, _ae_);
+
    vfmt->Begin = _save_Begin;
    vfmt->Color3f = _save_Color3f;
    vfmt->Color3fv = _save_Color3fv;
@@ -1020,28 +1049,23 @@ static void _save_vtxfmt_init( GLcontext *ctx )
    
    /* This will all require us to fallback to saving the list as opcodes:
     */ 
-   vfmt->CallList = _save_CallList; /* inside begin/end */
-   vfmt->CallLists = _save_CallLists; /* inside begin/end */
-   vfmt->EvalCoord1f = _save_EvalCoord1f;
-   vfmt->EvalCoord1fv = _save_EvalCoord1fv;
-   vfmt->EvalCoord2f = _save_EvalCoord2f;
-   vfmt->EvalCoord2fv = _save_EvalCoord2fv;
-   vfmt->EvalPoint1 = _save_EvalPoint1;
-   vfmt->EvalPoint2 = _save_EvalPoint2;
+   _MESA_INIT_DLIST_VTXFMT(vfmt, _save_); /* inside begin/end */
+
+   _MESA_INIT_EVAL_VTXFMT(vfmt, _save_);
 
    /* These are all errors as we at least know we are in some sort of
     * begin/end pair:
     */
-   vfmt->EvalMesh1 = _save_EvalMesh1;	
-   vfmt->EvalMesh2 = _save_EvalMesh2;
    vfmt->Begin = _save_Begin;
    vfmt->Rectf = _save_Rectf;
    vfmt->DrawArrays = _save_DrawArrays;
    vfmt->DrawElements = _save_DrawElements;
    vfmt->DrawRangeElements = _save_DrawRangeElements;
+   vfmt->DrawElementsBaseVertex = _save_DrawElementsBaseVertex;
+   vfmt->DrawRangeElementsBaseVertex = _save_DrawRangeElementsBaseVertex;
    /* Loops back into vfmt->DrawElements */
    vfmt->MultiDrawElementsEXT = _mesa_noop_MultiDrawElements;
-
+   vfmt->MultiDrawElementsBaseVertex = _mesa_noop_MultiDrawElementsBaseVertex;
 }
 
 
@@ -1209,11 +1233,11 @@ void vbo_save_api_init( struct vbo_save_context *save )
    GLuint i;
 
    save->opcode_vertex_list =
-      _mesa_alloc_opcode( ctx,
-			  sizeof(struct vbo_save_vertex_list),
-			  vbo_save_playback_vertex_list,
-			  vbo_destroy_vertex_list,
-			  vbo_print_vertex_list );
+      _mesa_dlist_alloc_opcode( ctx,
+                                sizeof(struct vbo_save_vertex_list),
+                                vbo_save_playback_vertex_list,
+                                vbo_destroy_vertex_list,
+                                vbo_print_vertex_list );
 
    ctx->Driver.NotifySaveBegin = vbo_save_NotifyBegin;
 
@@ -1233,6 +1257,7 @@ void vbo_save_api_init( struct vbo_save_context *save )
    ctx->ListState.ListVtxfmt.DrawRangeElements = _save_OBE_DrawRangeElements;
    /* loops back into _save_OBE_DrawElements */
    ctx->ListState.ListVtxfmt.MultiDrawElementsEXT = _mesa_noop_MultiDrawElements;
+   ctx->ListState.ListVtxfmt.MultiDrawElementsBaseVertex = _mesa_noop_MultiDrawElementsBaseVertex;
    _mesa_install_save_vtxfmt( ctx, &ctx->ListState.ListVtxfmt );
 }
 

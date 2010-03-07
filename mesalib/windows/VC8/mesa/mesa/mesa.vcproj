@@ -459,6 +459,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\main\formats.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\main\framebuffer.c"
 				>
 			</File>
@@ -488,6 +492,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\hash.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\shader\hash_table.c"
 				>
 			</File>
 			<File
@@ -545,10 +553,6 @@
 						PreprocessorDefinitions="YY_NO_UNISTD_H;YY_USE_CONST;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\mesa\shader\hash_table.c"
-				>
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\shader\lex.yy.c"
@@ -843,10 +847,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\swrast\s_imaging.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\mesa\swrast\s_lines.c"
 				>
 			</File>
@@ -880,10 +880,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\swrast\s_texfilter.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\mesa\swrast\s_texstore.c"
 				>
 			</File>
 			<File
@@ -1011,11 +1007,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\main\syncobj.c"
+				RelativePath="..\..\..\..\src\mesa\shader\symbol_table.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\shader\symbol_table.c"
+				RelativePath="..\..\..\..\src\mesa\main\syncobj.c"
 				>
 			</File>
 			<File
@@ -1108,6 +1104,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\main\texenvprogram.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\main\texfetch.c"
 				>
 			</File>
 			<File
@@ -1644,6 +1644,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\main\remap.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\main\renderbuffer.h"
 				>
 			</File>
@@ -1944,11 +1948,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\main\texformat.h"
+				RelativePath="..\..\..\..\src\mesa\main\texfetch.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\mesa\main\texformat_tmp.h"
+				RelativePath="..\..\..\..\src\mesa\main\texfetch_tmp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\main\texformat.h"
 				>
 			</File>
 			<File

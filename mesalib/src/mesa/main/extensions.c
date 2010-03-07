@@ -47,7 +47,9 @@ static const struct {
 } default_extensions[] = {
    { OFF, "GL_ARB_copy_buffer",                F(ARB_copy_buffer) },
    { OFF, "GL_ARB_depth_texture",              F(ARB_depth_texture) },
+   { OFF, "GL_ARB_depth_clamp",                F(ARB_depth_clamp) },
    { ON,  "GL_ARB_draw_buffers",               F(ARB_draw_buffers) },
+   { OFF, "GL_ARB_draw_elements_base_vertex",  F(ARB_draw_elements_base_vertex) },
    { OFF, "GL_ARB_fragment_program",           F(ARB_fragment_program) },
    { OFF, "GL_ARB_fragment_program_shadow",    F(ARB_fragment_program_shadow) },
    { OFF, "GL_ARB_fragment_shader",            F(ARB_fragment_shader) },
@@ -61,6 +63,7 @@ static const struct {
    { OFF, "GL_ARB_pixel_buffer_object",        F(EXT_pixel_buffer_object) },
    { OFF, "GL_ARB_point_parameters",           F(EXT_point_parameters) },
    { OFF, "GL_ARB_point_sprite",               F(ARB_point_sprite) },
+   { OFF, "GL_ARB_provoking_vertex",           F(EXT_provoking_vertex) },
    { OFF, "GL_ARB_seamless_cube_map",          F(ARB_seamless_cube_map) },
    { OFF, "GL_ARB_shader_objects",             F(ARB_shader_objects) },
    { OFF, "GL_ARB_shading_language_100",       F(ARB_shading_language_100) },
@@ -101,8 +104,9 @@ static const struct {
    { ON,  "GL_EXT_copy_texture",               F(EXT_copy_texture) },
    { OFF, "GL_EXT_depth_bounds_test",          F(EXT_depth_bounds_test) },
    { ON,  "GL_EXT_draw_range_elements",        F(EXT_draw_range_elements) },
-   { OFF, "GL_EXT_framebuffer_object",         F(EXT_framebuffer_object) },
    { OFF, "GL_EXT_framebuffer_blit",           F(EXT_framebuffer_blit) },
+   { OFF, "GL_EXT_framebuffer_multisample",    F(EXT_framebuffer_multisample) },
+   { OFF, "GL_EXT_framebuffer_object",         F(EXT_framebuffer_object) },
    { OFF, "GL_EXT_fog_coord",                  F(EXT_fog_coord) },
    { OFF, "GL_EXT_gpu_program_parameters",     F(EXT_gpu_program_parameters) },
    { OFF, "GL_EXT_histogram",                  F(EXT_histogram) },
@@ -162,8 +166,11 @@ static const struct {
    { OFF, "GL_MESA_ycbcr_texture",             F(MESA_ycbcr_texture) },
    { ON,  "GL_MESA_window_pos",                F(ARB_window_pos) },
    { OFF, "GL_NV_blend_square",                F(NV_blend_square) },
+   { OFF, "GL_NV_depth_clamp",                 F(ARB_depth_clamp) },
    { OFF, "GL_NV_fragment_program",            F(NV_fragment_program) },
+   { OFF, "GL_NV_fragment_program_option",     F(NV_fragment_program_option) },
    { ON,  "GL_NV_light_max_exponent",          F(NV_light_max_exponent) },
+   { OFF, "GL_NV_packed_depth_stencil",        F(EXT_packed_depth_stencil) },
    { OFF, "GL_NV_point_sprite",                F(NV_point_sprite) },
    { OFF, "GL_NV_texture_env_combine4",        F(NV_texture_env_combine4) },
    { OFF, "GL_NV_texture_rectangle",           F(NV_texture_rectangle) },
@@ -192,8 +199,10 @@ void
 _mesa_enable_sw_extensions(GLcontext *ctx)
 {
    ctx->Extensions.ARB_copy_buffer = GL_TRUE;
+   ctx->Extensions.ARB_depth_clamp = GL_TRUE;
    ctx->Extensions.ARB_depth_texture = GL_TRUE;
    /*ctx->Extensions.ARB_draw_buffers = GL_TRUE;*/
+   ctx->Extensions.ARB_draw_elements_base_vertex = GL_TRUE;
 #if FEATURE_ARB_fragment_program
    ctx->Extensions.ARB_fragment_program = GL_TRUE;
    ctx->Extensions.ARB_fragment_program_shadow = GL_TRUE;
@@ -208,7 +217,7 @@ _mesa_enable_sw_extensions(GLcontext *ctx)
    ctx->Extensions.ARB_imaging = GL_TRUE;
    ctx->Extensions.ARB_map_buffer_range = GL_TRUE;
    ctx->Extensions.ARB_multitexture = GL_TRUE;
-#if FEATURE_ARB_occlusion_query
+#if FEATURE_queryobj
    ctx->Extensions.ARB_occlusion_query = GL_TRUE;
 #endif
    ctx->Extensions.ARB_point_sprite = GL_TRUE;
@@ -267,6 +276,9 @@ _mesa_enable_sw_extensions(GLcontext *ctx)
 #if FEATURE_EXT_framebuffer_blit
    ctx->Extensions.EXT_framebuffer_blit = GL_TRUE;
 #endif
+#if FEATURE_ARB_framebuffer_object
+   ctx->Extensions.EXT_framebuffer_multisample = GL_TRUE;
+#endif
    ctx->Extensions.EXT_histogram = GL_TRUE;
    /*ctx->Extensions.EXT_multi_draw_arrays = GL_TRUE;*/
    ctx->Extensions.EXT_packed_depth_stencil = GL_TRUE;
@@ -308,6 +320,9 @@ _mesa_enable_sw_extensions(GLcontext *ctx)
 #endif
 #if FEATURE_NV_fragment_program
    ctx->Extensions.NV_fragment_program = GL_TRUE;
+#endif
+#if FEATURE_NV_fragment_program && FEATURE_ARB_fragment_program
+   ctx->Extensions.NV_fragment_program_option = GL_TRUE;
 #endif
    ctx->Extensions.SGI_color_matrix = GL_TRUE;
    ctx->Extensions.SGI_color_table = GL_TRUE;
