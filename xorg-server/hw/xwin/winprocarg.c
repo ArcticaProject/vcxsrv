@@ -53,7 +53,7 @@ extern Bool			g_fUnicodeClipboard;
 extern Bool			g_fClipboard;
 #endif
 extern int			g_iLogVerbose;
-extern char *			g_pszLogFile;
+extern const char *		g_pszLogFile;
 #ifdef RELOCATE_PROJECTROOT
 extern Bool			g_fLogFileChanged;
 #endif

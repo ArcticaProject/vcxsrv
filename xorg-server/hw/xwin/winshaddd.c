@@ -42,7 +42,7 @@
  */
 
 extern HWND			g_hDlgExit;
-extern char *g_pszLogFile;
+extern const char *g_pszLogFile;
 
 /*
  * FIXME: Headers are broken, DEFINE_GUID doesn't work correctly,

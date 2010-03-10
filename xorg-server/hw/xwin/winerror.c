@@ -41,8 +41,9 @@
 
 /* References to external symbols */
 extern char *		g_pszCommandLine;
-extern char *		g_pszLogFile;
+extern const char *	g_pszLogFile;
 extern Bool		g_fSilentFatalError;
+extern Bool		g_fLogInited;
 
 
 #ifdef DDXOSVERRORF
@@ -86,6 +87,12 @@ OsVendorFatalError (void)
   /* Don't give duplicate warning if UseMsg was called */
   if (g_fSilentFatalError)
     return;
+
+  if (!g_fLogInited) {
+    g_fLogInited = TRUE;
+    g_pszLogFile = LogInit (g_pszLogFile, NULL);
+  }
+  LogClose ();
 
   winMessageBoxF (
           "A fatal error has occurred and " PROJECT_NAME " will now exit.\n" \

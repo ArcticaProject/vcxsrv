@@ -69,9 +69,9 @@ Bool           g_fAuthEnabled = FALSE;
 HICON		g_hIconX = NULL;
 HICON		g_hSmallIconX = NULL;
 #ifndef RELOCATE_PROJECTROOT
-char *		g_pszLogFile = "/tmp/XWin.log";
+const char *	g_pszLogFile = DEFAULT_LOGDIR "/XWin.%s.log";
 #else
-char *		g_pszLogFile = "XWin.log";
+const char *	g_pszLogFile = "XWin.log";
 Bool		g_fLogFileChanged = FALSE;
 #endif
 int		g_iLogVerbose = 2;

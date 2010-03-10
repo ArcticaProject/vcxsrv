@@ -187,7 +187,7 @@ XWinrc.$(FILE_MAN_SUFFIX): XWinrc.man
 	-rm -f XWinrc.$(FILE_MAN_SUFFIX)
 	$(LN_S) XWinrc.man XWinrc.$(FILE_MAN_SUFFIX)
 
-EXTRAMANDEFS = -D__logdir__=$(logdir) -D__sysconfdir__=$(sysconfdir)
+EXTRAMANDEFS = -D__logdir__=$(logdir) -D__sysconfdir__=$(sysconfdir) -D__datadir__=$(datadir)
 
 xwinconfigdir = $(sysconfdir)/X11
 xwinconfig_DATA = system.XWinrc
