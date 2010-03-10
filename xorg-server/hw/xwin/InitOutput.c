@@ -71,7 +71,7 @@ extern int			g_iLastScreen;
 extern char *			g_pszCommandLine;
 extern Bool			g_fSilentFatalError;
 
-extern const char *			g_pszLogFile;
+extern const char *		g_pszLogFile;
 extern Bool			g_fLogFileChanged;
 extern int			g_iLogVerbose;
 Bool				g_fLogInited;
