@@ -1032,8 +1032,6 @@ set_font_authorizations(char **authorizations, int *authlen, pointer client)
 #endif /* TCPCONN */
 }
 
-#ifndef INTERNAL_MALLOC
-
 void *
 Xalloc(unsigned long amount)
 {
@@ -1149,7 +1147,6 @@ Xfree(pointer ptr)
     if (ptr)
 	free(ptr); 
 }
-#endif /* !INTERNAL_MALLOC */
 
 
 char *

@@ -3462,6 +3462,7 @@ CheckPassiveGrabsOnWindow(
     {
 	DeviceIntPtr	gdev;
 	XkbSrvInfoPtr	xkbi = NULL;
+	Mask		mask = 0;
 
 	gdev= grab->modifierDevice;
         if (grab->grabtype == GRABTYPE_CORE)
@@ -3514,6 +3515,10 @@ CheckPassiveGrabsOnWindow(
 	     (grab->confineTo->realized &&
 				BorderSizeNotEmpty(device, grab->confineTo))))
 	{
+            int rc, count = 0;
+            xEvent *xE = NULL;
+            xEvent core;
+
             event->corestate &= 0x1f00;
             event->corestate |= tempGrab.modifiersDetail.exact & (~0x1f00);
             grabinfo = &device->deviceGrab;
@@ -3560,8 +3565,62 @@ CheckPassiveGrabsOnWindow(
             }
 
 
+            if (match & CORE_MATCH)
+            {
+                rc = EventToCore((InternalEvent*)event, &core);
+                if (rc != Success)
+                {
+                    if (rc != BadMatch)
+                        ErrorF("[dix] %s: core conversion failed in CPGFW "
+                                "(%d, %d).\n", device->name, event->type, rc);
+                    continue;
+                }
+                xE = &core;
+                count = 1;
+                mask = grab->eventMask;
+            } else if (match & XI2_MATCH)
+            {
+                rc = EventToXI2((InternalEvent*)event, &xE);
+                if (rc != Success)
+                {
+                    if (rc != BadMatch)
+                        ErrorF("[dix] %s: XI2 conversion failed in CPGFW "
+                                "(%d, %d).\n", device->name, event->type, rc);
+                    continue;
+                }
+                count = 1;
+
+                /* FIXME: EventToXI2 returns NULL for enter events, so
+                 * dereferencing the event is bad. Internal event types are
+                 * aligned with core events, so the else clause is valid.
+                 * long-term we should use internal events for enter/focus
+                 * as well */
+                if (xE)
+                    mask = grab->xi2mask[device->id][((xGenericEvent*)xE)->evtype/8];
+                else if (event->type == XI_Enter || event->type == XI_FocusIn)
+                    mask = grab->xi2mask[device->id][event->type/8];
+            } else
+            {
+                rc = EventToXI((InternalEvent*)event, &xE, &count);
+                if (rc != Success)
+                {
+                    if (rc != BadMatch)
+                        ErrorF("[dix] %s: XI conversion failed in CPGFW "
+                                "(%d, %d).\n", device->name, event->type, rc);
+                    continue;
+                }
+                mask = grab->eventMask;
+            }
+
 	    (*grabinfo->ActivateGrab)(device, grab, currentTime, TRUE);
-            DeliverGrabbedEvent((InternalEvent*)event, device, FALSE);
+
+            if (xE)
+            {
+                FixUpEventFromWindow(device, xE, grab->window, None, TRUE);
+
+                TryClientEvents(rClient(grab), device, xE, count, mask,
+                                       GetEventFilter(device, xE), grab);
+            }
 
 	    if (grabinfo->sync.state == FROZEN_NO_EVENT)
 	    {
@@ -3571,6 +3630,8 @@ CheckPassiveGrabsOnWindow(
 		grabinfo->sync.state = FROZEN_WITH_EVENT;
             }
 
+            if (match & (XI_MATCH | XI2_MATCH))
+                xfree(xE); /* on core match xE == &core */
 	    return TRUE;
 	}
     }
