@@ -25,20 +25,21 @@ AC_PREREQ([2.57])
 
 dnl
 dnl
-AC_INIT(libXt, 1.0.7, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libXt)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AC_INIT(libXt, 1.0.8, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libXt)
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
 # Require xorg-macros: XORG_DEFAULT_OPTIONS
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
 XORG_MACROS_VERSION(1.3)
+XORG_DEFAULT_OPTIONS
 AM_CONFIG_HEADER(config.h)
 
 # Check for progs
 AC_PROG_CC
 AC_PROG_LIBTOOL
 AM_PROG_CC_C_O
-XORG_DEFAULT_OPTIONS
 
 if test x"$CC_FOR_BUILD" = x; then
 	if test x"$cross_compiling" = xyes; then
@@ -60,9 +61,8 @@ AC_CHECK_HEADER([alloca.h], AC_DEFINE(INCLUDE_ALLOCA_H, 1, [Define to 1 if Xallo
 
 # Map function checks to old Imake #defines
 case $host_os in
-	# darwin has poll() but can't be used to poll character devices
-	# darwin10 (SnowLeopard) should be tested as well once released
-	darwin7*) ;; darwin8*) ;; darwin9*) ;;
+	# darwin has poll() but can't be used to poll character devices (atleast through SnowLeopard)
+	darwin*) ;;
 	*)
 		AC_CHECK_FUNC(poll, AC_DEFINE(USE_POLL,1,
 	        	[Define to 1 if you have the "poll" function.]))
@@ -79,12 +79,6 @@ AC_ARG_ENABLE(xkb, AC_HELP_STRING([--disable-xkb], [Disable XKB support]),
 if test "x$XKB" = "xyes" ; then
 	AC_DEFINE(XKB, 1, [Define to 1 to use XKB for keysym resolution.])
 fi
-
-AC_ARG_ENABLE(install-makestrs,
-	AC_HELP_STRING([--disable-install-makestrs], [Disable installing makestrs]),
-	INSTALL_MAKESTRS="$enableval",
-	INSTALL_MAKESTRS="yes")
-AM_CONDITIONAL([INSTALL_MAKESTRS], [test "x$INSTALL_MAKESTRS" = xyes])
 
 # Replaces XFileSearchPathDefault from Imake configs
 XFILESEARCHPATHDEFAULT='$(sysconfdir)/X11/%L/%T/%N%C%S:$(sysconfdir)/X11/%l/%T/%N%C%S:$(sysconfdir)/X11/%T/%N%C%S:$(sysconfdir)/X11/%L/%T/%N%S:$(sysconfdir)/X11/%l/%T/%N%S:$(sysconfdir)/X11/%T/%N%S:$(datadir)/X11/%L/%T/%N%C%S:$(datadir)/X11/%l/%T/%N%C%S:$(datadir)/X11/%T/%N%C%S:$(datadir)/X11/%L/%T/%N%S:$(datadir)/X11/%l/%T/%N%S:$(datadir)/X11/%T/%N%S:$(libdir)/X11/%L/%T/%N%C%S:$(libdir)/X11/%l/%T/%N%C%S:$(libdir)/X11/%T/%N%C%S:$(libdir)/X11/%L/%T/%N%S:$(libdir)/X11/%l/%T/%N%S:$(libdir)/X11/%T/%N%S'
