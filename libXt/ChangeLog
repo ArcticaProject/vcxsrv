@@ -1,3 +1,134 @@
+commit e3bce11a8ea7e0175a6f08367bace9b0eb2b898a
+Author: Rémi Cardona <remi@gentoo.org>
+Date:   Mon Mar 15 22:59:04 2010 +0100
+
+    libXt 1.0.8
+    
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+
+commit a1a8df535fa5ab3748404bdeb07e61beb604b14e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Thu Jan 14 20:07:46 2010 -0800
+
+    Update Sun license notices to current X.Org standard form
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 6393306d1a2eb8239f108a773f342495e1cfd85c
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Jan 14 15:57:31 2010 -0500
+
+    COPYING: add missing copyright notices
+    
+    Refer to: ActionHook.c
+    Copyright 1987, 1988 by Digital Equipment Corporation
+    Copyright 1993 by Sun Microsystems, Inc. Mountain View, CA.
+    Copyright 1987, 1988, 1998  The Open Group
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit b798093fc6cbcf35c095f3401586d2741adcd2cd
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Dec 11 17:04:23 2009 -0800
+
+    darwin: xnu doesn't support poll on ttys on the master side.
+    
+    <rdar://problem/7360546>
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit e0ac2ea8b211bdca848679ee59362384f0f97e36
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Dec 7 22:28:53 2009 -0800
+
+    Fix make distcheck (./util/makestrs.1 left after distclean)
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit 345633dc9c79b32a1b391dfb4dfedf87ae9e291b
+Author: Rémi Cardona <remi@gentoo.org>
+Date:   Mon Nov 9 12:26:17 2009 +0100
+
+    Don't install makestrs on the system
+    
+    It has no known outside-libXt users. Let's not install it and its man page.
+    
+    Signed-off-by: Rémi Cardona <remi@gentoo.org>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit ed31677bb9b1dd9498715a922763968917b87e49
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Nov 27 20:56:04 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit 2d95ad4beed294a0a30fdb1d8e7798fa62455a41
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:10 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+commit 7cc872e9934f62bf56976d5592ce621e30b1f95a
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Oct 27 15:07:26 2009 -0400
+
+    Deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit 7ba57d7789362c2c2e646cc3b896802e6cbcb039
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Oct 26 22:08:43 2009 -0400
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit b4309cadb1de581d191fce924dac8fc7e55e5fb8
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Oct 22 12:34:19 2009 -0400
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit 80ff1f362eefabe4be62784b001500b49943f1a5
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Wed Oct 21 12:47:26 2009 -0700
+
+    This is not a GNU project, so declare it foreign.
+    
+    On Wed, 2009-10-21 at 13:36 +1000, Peter Hutterer wrote:
+    > On Tue, Oct 20, 2009 at 08:23:55PM -0700, Jeremy Huddleston wrote:
+    > > I noticed an INSTALL file in xlsclients and libXvMC today, and it
+    > > was quite annoying to work around since 'autoreconf -fvi' replaces
+    > > it and git wants to commit it.  Should these files even be in git?
+    > > Can I nuke them for the betterment of humanity and since they get
+    > > created by autoreconf anyways?
+    >
+    > See https://bugs.freedesktop.org/show_bug.cgi?id=24206
+    
+    As an interim measure, replace AM_INIT_AUTOMAKE([dist-bzip2]) with
+    AM_INIT_AUTOMAKE([foreign dist-bzip2]). This will prevent the generation
+    of the INSTALL file. It is also part of the 24206 solution.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
 commit 5d63df924d7f66d2207c8db67e5d6cce8c7b245b
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Thu Oct 8 21:50:35 2009 -0700
@@ -288,7 +419,7 @@ Date:   Tue Jan 2 17:49:17 2007 -0800
     <https://bugs.freedesktop.org/show_bug.cgi?id=9514>
 
 commit 75f83503ba1db628137ffc9d1d9e4f2a7a2fd97a
-Merge: 2f201b1... 153264a...
+Merge: 2f201b1 153264a
 Author: Jeremy C. Reed <reed@glacier.reedmedia.net>
 Date:   Sat Dec 9 09:31:02 2006 -0600
 

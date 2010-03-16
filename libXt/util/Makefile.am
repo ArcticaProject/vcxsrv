@@ -1,8 +1,4 @@
-if INSTALL_MAKESTRS
-bin_PROGRAMS = makestrs
-else
 noinst_PROGRAMS = makestrs
-endif
 
 CC = @CC_FOR_BUILD@
 CFLAGS = @CFLAGS_FOR_BUILD@
@@ -23,14 +19,10 @@ appmandir = $(APP_MAN_DIR)
 
 appman_PRE = makestrs.man
 
-if INSTALL_MAKESTRS
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-else
 noinst_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-endif
 
 EXTRA_DIST += $(appman_PRE)
-CLEANFILES = $(appman_DATA)
+CLEANFILES = $(appman_DATA) $(noinst_DATA)
 
 SED = sed
 
