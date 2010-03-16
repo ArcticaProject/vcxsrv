@@ -252,7 +252,15 @@ string mhmakefileparser::ExpandMacro(const string &Expr) const
       string ToStr(pTo);
       #ifdef WIN32
       if (IsFileName)
-        return QuoteFileName(Substitute(UnquoteFileName(ToSubst),SrcStr,ToStr));
+      {
+        matchres Res;
+        string FileName(UnquoteFileName(ToSubst));
+        if (PercentMatch(FileName,UnquoteFileName(SrcStr),&Res))
+        {
+          FileName=ReplaceWithStem(UnquoteFileName(ToStr),Res.m_Stem);
+        }
+        return QuoteFileName(FileName);
+      }
       #endif
       return Substitute(ToSubst,SrcStr,ToStr);
     }
