@@ -557,4 +557,34 @@ typedef struct _QdEvent {
     InternalEvent	*event;
 } QdEventRec;
 
+/**
+ * syncEvents is the global structure for queued events.
+ *
+ * Devices can be frozen through GrabModeSync pointer grabs. If this is the
+ * case, events from these devices are added to "pending" instead of being
+ * processed normally. When the device is unfrozen, events in "pending" are
+ * replayed and processed as if they would come from the device directly.
+ */
+typedef struct _EventSyncInfo {
+    QdEventPtr          pending, /**<  list of queued events */
+                        *pendtail; /**< last event in list */
+    /** The device to replay events for. Only set in AllowEvents(), in which
+     * case it is set to the device specified in the request. */
+    DeviceIntPtr        replayDev;      /* kludgy rock to put flag for */
+
+    /**
+     * The window the events are supposed to be replayed on.
+     * This window may be set to the grab's window (but only when
+     * Replay{Pointer|Keyboard} is given in the XAllowEvents()
+     * request. */
+    WindowPtr           replayWin;      /*   ComputeFreezes            */
+    /**
+     * Flag to indicate whether we're in the process of
+     * replaying events. Only set in ComputeFreezes(). */
+    Bool                playingEvents;
+    TimeStamp           time;
+} EventSyncInfoRec, *EventSyncInfoPtr;
+
+extern EventSyncInfoRec syncEvents;
+
 #endif /* INPUTSTRUCT_H */
