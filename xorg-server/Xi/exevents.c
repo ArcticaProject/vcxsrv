@@ -1053,7 +1053,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
             break;
     }
 
-    if (DeviceEventCallback) {
+    if (DeviceEventCallback && !syncEvents.playingEvents) {
 	DeviceEventInfoRec eventinfo;
 	SpritePtr pSprite = device->spriteInfo->sprite;
 

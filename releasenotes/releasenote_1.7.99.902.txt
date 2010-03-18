@@ -1,0 +1,253 @@
+Changes in 1.7.99.902
+---------------------
+- Update the following packages:
+         pixman-0.17.10
+         xserver git update till 16/3/2010
+         xkeyboard-config git update till 16/3/2010
+         mesa 7.7
+         libXt-1.0.8
+- Added terminus-font-4.30
+- libwinmain: Make sure that control C only kills the process when a new console is created.
+- Solved problem when path environment variable was larger then 1024 bytes
+- Solved possible crash of accessing a null pointer
+- Enabled XCSECURITY
+- Solved 'ceil' undefined warning
+- Solved '_XSERVTransWSAStartup' undefined warning
+- Solved problem of some windows not being sizeable in multiwindow mode
+
+Changes in 1.7.99.901
+---------------------
+- Update the following packages:
+         pixman-0.17.6
+         xorg-server-1.7.99.901
+         xserver git update till 15/2/2010
+- Solved .xlaunch file extension registry problem in vista
+- Added opengl option in xlaunch
+- Added showin of log file in menu
+- Removed NATIVEGDI compilation (is currently not working)
+- Solved problem of certain windows not being sizeable in multiwindow mode
+- Also handle MappingNotify event in clipboard thread
+
+
+Changes in 1.7.99.6
+-------------------
+- Update the following packages:
+         libX11-1.3.3
+         pixman-0.17.4
+         glproto-1.4.11
+         xserver git update till 25/1/2010
+- Added patches for bug http://bugs.freedesktop.org/show_bug.cgi?id=20500
+  0001-dix-EventToCore-needs-to-copy-the-root-window-too.patch
+  0001-Re-enable-the-RECORD-extension.patch
+- Solved a possible crash in closing down the screen due to use on an uninitialised pointer.
+- Solved problem in drawing of wide lines. Occured when plotting in octave.
+
+
+Changes in 1.7.99.5
+-------------------
+- Update the following packages:
+         freetype-2.3.11
+         mesa_7_6_1_rc1
+         xserver git update till 5/1/2010
+- Fixed problem of clipboard client being shutdown when connecting through xdmcp.
+- Always use screen 0 to start windows clients.
+- Multiwindow: solved problem of window not having the correct size.
+
+
+Changes in 1.7.99.4
+-------------------
+- Update the following packages:
+         libxcb-1.5
+         xcb-proto-1.6
+         xserver git update till 17/12/2009
+- Use swrast_dri_dbg.dll when running vcxsrv_dbg.exe
+- Added native opengl with the -wgl option
+
+  
+Changes in 1.7.99.3
+-------------------
+- Update the following packages:
+         pixman-0.17.2
+  
+- Switch to the git master branch for xserver
+- Added cygwin-aiglx branch of git://anongit.freedesktop.org/~jturney/xserver
+  to have native opengl rendering. Only working with -multiwindow and
+  when export LIBGL_ALWAYS_INDIRECT
+- vcxsrv.exe: When the first parameter is -console, the output is also written
+  to the console.
+- xinerama: solved endless loop problem when moving the cursor from one screen to there
+  other.
+- vcxsrv.exe: Set the current directory always to the directory where vcxsrv.exe is
+  installed, so the fonts are always found.
+  
+Changes in 1.7.99.2
+-------------------
+- Added the following packages:
+        xwininfo-1.0.5
+        xcalc-1.0.2
+        xclock-1.0.4
+        libXmu-1.0.5
+        libXaw-1.0.7
+        libXpm-3.5.8
+        libXext-1.1.1
+        libXt-1.0.7
+- Solved some building problems in the makefiles when building from cmd.exe
+- Do not open command window when running release build
+- Solved incorrect behaviour of writev in case the first send succeeded and the second returned with an error.
+- Solved crash in dix\colormap.c because wrong map was adjusted when the number of visuals was reallocated.
+
+Changes in 1.7.99.1
+-------------------
+- Updated to the following packages
+        libX11-1.3.2
+        xorg-server-1.7.99.1
+        xtrans-1.2.5
+        font-util-1.1.1
+- Now complete locale directory is build and packaged.
+- solved possible problem in xcb: Make sure the winsock library
+  and pthread library are initialised.
+- Solved problem of local fonts not being registered. This caused certain
+  application not to start (like xcalc)
+
+Changes in 1.7.0.1
+------------------
+- Updated to the following packages
+        encodings-1.0.3
+        font-adobe-75dpi-1.0.1
+        font-adobe-100dpi-1.0.1
+        font-adobe-utopia-75dpi-1.0.2
+        font-adobe-utopia-100dpi-1.0.2
+        font-adobe-utopia-type1-1.0.2
+        font-alias-1.0.2
+        font-arabic-misc-1.0.1
+        font-bh-75dpi-1.0.1
+        font-bh-100dpi-1.0.1
+        font-bh-lucidatypewriter-75dpi-1.0.1
+        font-bh-lucidatypewriter-100dpi-1.0.1
+        font-bh-ttf-1.0.1
+        font-bh-type1-1.0.1
+        font-bitstream-75dpi-1.0.1
+        font-bitstream-100dpi-1.0.1
+        font-bitstream-speedo-1.0.1
+        font-bitstream-type1-1.0.1
+        font-cronyx-cyrillic-1.0.1
+        font-cursor-misc-1.0.1
+        font-daewoo-misc-1.0.1
+        font-dec-misc-1.0.1
+        font-ibm-type1-1.0.1
+        font-isas-misc-1.0.1
+        font-jis-misc-1.0.1
+        font-micro-misc-1.0.1
+        font-misc-cyrillic-1.0.1
+        font-misc-ethiopic-1.0.1
+        font-misc-meltho-1.0.1
+        font-misc-misc-1.1.0
+        font-mutt-misc-1.0.1
+        font-schumacher-misc-1.1.0
+        font-screen-cyrillic-1.0.2
+        font-sony-misc-1.0.1
+        font-sun-misc-1.0.1
+        font-util-1.1.0
+        font-winitzki-cyrillic-1.0.1
+        font-xfree86-type1-1.0.2
+        libXfont-1.4.1
+        mkfontscale-1.0.7
+- Added mesa 7.6. Opengl is working now.
+- Bug fix in miClipPictureSrc function.
+
+Changes in 1.7.0
+----------------
+- Updated to the following packages:
+        fixesproto-4.1.1
+        randrproto-1.3.1
+        libxkbfile-1.0.6
+        xkeyboard-config-1.7
+        pixman-0.16.2
+        libX11-1.3
+        libXinerama-1.1
+        xkbcomp-1.1.1
+        recordproto-1.14
+        xineramaproto-1.2
+        inputproto-2.0
+        compositeproto-0.4.1
+        xorg-server-1.7.0
+- Removed most tracing in release version. Use vcxsrv_dbg when you want a log of tracing.
+- Also install xerrordb file.
+- Make sure the temporary file gets deleted after keyboard compilation.
+- Take for the log file the same verbosity as for the screen.
+- Change trace buffer from static to local to avoid problems in multithreaded tracing.
+- Print some more information in X error handler.
+- Solved run-time downcast errors in debug version.
+- Solved error: XSetWindowBorderWidth can only be called if the window class is different from InputOnly
+- Make it possible to overrule XSERVER_DTRACE in the makefiles
+- Call XSelectInput when a window is mapped and not when it is created.
+  (There seems to be windows which created and destroyed soon without being
+   mapped to real windows. This was causing some errors.)
+
+
+Changes in 1.1.2
+----------------
+- Updated to the following packages:
+        xorg-server-1.6.99.902
+        xproto-7.0.16
+        libXdmcp-1.0.3
+        bdftopcf-1.0.2
+- Solved endless looping when clipboardthread is restarted due to winioerrhandler.
+  Caused an unexpected exit of the server when the -clipboard option was specified.
+- Solved possible crash upon server restart because some global pointers
+  were not initialised back to 0
+
+Changes in 1.1.1
+----------------
+- Updated to the following packages:
+        xorg-server-1.6.99.901
+        xkeyboard-config-1.6.99
+- Enabled support for xinerama
+- Rewritten part of the clipboard code (sometimes clipboard was
+  not working as expected)
+  One problem remains (clipboard thread exiting at startup.). This
+  one is hard to solve since no known recipy to reproduce.
+- Now also install the debug version of the executable (vcxsrv_dbg).
+  This version has some more logging and error checking.
+- Solved stack corruption in QueryMonitor. Now use multimon.h
+- Bug solved in xcb_conn.c: use closesocket instead of close.
+- Also display the number of active clients in the tray icon tooltip text.
+
+Changes in 1.1.0
+----------------
+- Updated to the following packages:
+        libX11-1.2.99.901.tar.gz
+        xtrans-1.2.4.tar.gz
+        fontsproto-2.1.0.tar.gz
+        damageproto-1.2.0.tar.gz
+        xcmiscproto-1.2.0.tar.gz
+        bigreqsproto-1.1.0.tar.gz
+        scrnsaverproto-1.2.0.tar.gz
+        resourceproto-1.1.0.tar.gz
+        xextproto-7.1.1.tar.gz
+        recordproto-1.13.99.1.tar.gz
+        inputproto-1.9.99.902.tar.gz
+        font-util-1.0.2.tar.gz
+        xorg-server-1.6.99.900.tar.gz
+- Make sure clipboard thread is cleaned up correctly on error.
+  Solved clipboard thread exits causing the clipboard not to be working.
+- Solved some errors in the fonts directory due to makefile problems
+
+Changes in 1.0.2
+----------------
+
+- installer: Do not show details by default
+- xlaunch: show message box when display number is nto filled in.
+- BUG: Solved right mouse button not working in multi window mode.
+- Added plink tool in installation.
+- Xlaunch is now a windows application in stead of a console application
+
+Changes in 1.0.1
+----------------
+
+- installer: make sure the latest version of the installed MSVC run-time is used.
+- BUG: Solved mouse wheel not behaving correctly (especially when there are multiple monitors)
+- locale: swith to the version of libX11/nls/C/makefile
+- clipboard: solved paste problem from X to windows (in Vista)
+- xkbcomp/listing.c: Solved uninitialised variable error in WIN32
+- xkbdata.src/symbols/level3: Removed warning when compiling for be keyboard.

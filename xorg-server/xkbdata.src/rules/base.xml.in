@@ -4564,7 +4564,7 @@
       <option>
         <configItem>
           <name>grp:sclk_toggle</name>
-          <_description>Scroll Lock</_description>
+          <_description>ScrollLock</_description>
         </configItem>
       </option>
     </group>
@@ -5012,13 +5012,31 @@
       <option>
         <configItem>
           <name>compose:caps</name>
-          <_description>Caps Lock</_description>
+          <_description>CapsLock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>compose:102</name>
           <_description>Less-than/Greater-than</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>compose:paus</name>
+          <_description>Pause</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>compose:prsc</name>
+          <_description>PrtSc</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>compose:sclk</name>
+          <_description>ScrollLock</_description>
         </configItem>
       </option>
     </group>

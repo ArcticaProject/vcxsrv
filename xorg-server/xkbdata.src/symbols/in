@@ -1318,7 +1318,6 @@ xkb_symbols "hin-wx" {
       key <AC09> {	 [      0x1000932,  0x1000962, 0x1000933, 0x100090C]	};
       key <AC10> {	 [      semicolon, colon  		]	};
       key <AC11> {	 [      quoteright, quotedbl 		]	};
-      key <BKSL> {	 [      backslash,         bar  		]	};
 
       key <AB01> {	 [      0x1000901,   0x100093C, 0x100093D, 0x1000950]   };
       key <AB02> {       [      0x1000926,   0x1000927      ]       };
