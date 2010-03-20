@@ -285,6 +285,22 @@ xcb_generic_event_t *xcb_poll_for_event(xcb_connection_t *c);
  */
 xcb_generic_error_t *xcb_request_check(xcb_connection_t *c, xcb_void_cookie_t cookie);
 
+/**
+ * @brief Discards the reply for a request.
+ * @param c: The connection to the X server.
+ * @param sequence: The request sequence number from a cookie.
+ *
+ * Discards the reply for a request. Additionally, any error generated
+ * by the request is also discarded (unless it was an _unchecked request
+ * and the error has already arrived).
+ *
+ * This function will not block even if the reply is not yet available.
+ *
+ * Note that the sequence really does have to come from an xcb cookie;
+ * this function is not designed to operate on socket-handoff replies.
+ */
+void xcb_discard_reply(xcb_connection_t *c, unsigned int sequence);
+
 
 /* xcb_ext.c */
 

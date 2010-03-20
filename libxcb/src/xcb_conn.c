@@ -211,8 +211,10 @@ xcb_connection_t *xcb_connect_to_fd(int fd, xcb_auth_info_t *auth_info)
     xcb_connection_t* c;
 
     c = calloc(1, sizeof(xcb_connection_t));
-    if(!c)
+    if(!c) {
+        close(fd);
         return (xcb_connection_t *) &error_connection;
+    }
 
     c->fd = fd;
 

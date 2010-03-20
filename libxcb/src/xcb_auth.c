@@ -260,10 +260,10 @@ int _xcb_get_auth_info(int fd, xcb_auth_info_t *info, int display)
      * case anyway.*/
     if (getpeername(fd, sockname, &socknamelen) == -1)
     {
-        if (sockname->sa_family != AF_UNIX)
-            return 0;   /* except for AF_UNIX, sockets should have peernames */
         if (getsockname(fd, sockname, &socknamelen) == -1)
             return 0;   /* can only authenticate sockets */
+        if (sockname->sa_family != AF_UNIX)
+            return 0;   /* except for AF_UNIX, sockets should have peernames */
         gotsockname = 1;
     }
 

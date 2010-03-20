@@ -409,6 +409,116 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
     return ret;
 }
 
+static void insert_pending_discard(xcb_connection_t *c, pending_reply **prev_next, uint64_t seq)
+{
+    pending_reply *pend;
+    pend = malloc(sizeof(*pend));
+    if(!pend)
+    {
+        _xcb_conn_shutdown(c);
+        return;
+    }
+
+    pend->first_request = seq;
+    pend->last_request = seq;
+    pend->workaround = 0;
+    pend->flags = XCB_REQUEST_DISCARD_REPLY;
+    pend->next = *prev_next;
+    *prev_next = pend;
+
+    if(!pend->next)
+        c->in.pending_replies_tail = &pend->next;
+}
+
+static void discard_reply(xcb_connection_t *c, unsigned int request)
+{
+    pending_reply *pend = 0;
+    pending_reply **prev_pend;
+    uint64_t widened_request;
+
+    /* We've read requests past the one we want, so if it has replies we have
+     * them all and they're in the replies map. */
+    if(XCB_SEQUENCE_COMPARE_32(request, <, c->in.request_read))
+    {
+        struct reply_list *head;
+        head = _xcb_map_remove(c->in.replies, request);
+        while (head)
+        {
+            struct reply_list *next = head->next;
+            free(head->reply);
+            free(head);
+            head = next;
+        }
+        return;
+    }
+
+    /* We're currently processing the responses to the request we want, and we
+     * have a reply ready to return. Free it, and mark the pend to free any further
+     * replies. */
+    if(XCB_SEQUENCE_COMPARE_32(request, ==, c->in.request_read) && c->in.current_reply)
+    {
+        struct reply_list *head;
+        head = c->in.current_reply;
+        c->in.current_reply = NULL;
+        c->in.current_reply_tail = &c->in.current_reply;
+        while (head)
+        {
+            struct reply_list *next = head->next;
+            free(head->reply);
+            free(head);
+            head = next;
+        }
+
+        pend = c->in.pending_replies;
+        if(pend &&
+            !(XCB_SEQUENCE_COMPARE(pend->first_request, <=, c->in.request_read) &&
+             (pend->workaround == WORKAROUND_EXTERNAL_SOCKET_OWNER ||
+              XCB_SEQUENCE_COMPARE(c->in.request_read, <=, pend->last_request))))
+            pend = 0;
+        if(pend)
+            pend->flags |= XCB_REQUEST_DISCARD_REPLY;
+        else
+            insert_pending_discard(c, &c->in.pending_replies, c->in.request_read);
+
+        return;
+    }
+
+    /* Walk the list of pending requests. Mark the first match for deletion. */
+    for(prev_pend = &c->in.pending_replies; *prev_pend; prev_pend = &(*prev_pend)->next)
+    {
+        if(XCB_SEQUENCE_COMPARE_32((*prev_pend)->first_request, >, request))
+            break;
+
+        if(XCB_SEQUENCE_COMPARE_32((*prev_pend)->first_request, ==, request))
+        {
+            /* Pending reply found. Mark for discard: */
+            (*prev_pend)->flags |= XCB_REQUEST_DISCARD_REPLY;
+            return;
+        }
+    }
+
+    /* Pending reply not found (likely due to _unchecked request). Create one: */
+    widened_request = (c->out.request & UINT64_C(0xffffffff00000000)) | request;
+    if(widened_request > c->out.request)
+        widened_request -= UINT64_C(1) << 32;
+
+    insert_pending_discard(c, prev_pend, widened_request);
+}
+
+void xcb_discard_reply(xcb_connection_t *c, unsigned int sequence)
+{
+    if(c->has_error)
+        return;
+
+    /* If an error occurred when issuing the request, fail immediately. */
+    if(!sequence)
+        return;
+
+    pthread_mutex_lock(&c->iolock);
+    discard_reply(c, sequence);
+    pthread_mutex_unlock(&c->iolock);
+}
+
 int xcb_poll_for_reply(xcb_connection_t *c, unsigned int request, void **reply, xcb_generic_error_t **error)
 {
     int ret;

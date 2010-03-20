@@ -471,8 +471,6 @@ main ()
   diff = end - start;
 
   /* free var */
-  for (i = 0; i &lt; count; ++i)
-    free (names[i]);
   free (atoms);
   free (cs);
 
@@ -494,6 +492,8 @@ main ()
   printf ("ratio         : %f\n", diff_x / diff);
 
   free (atoms_x);
+  for (i = 0; i &lt; count; ++i)
+    free (names[i]);
   free (names);
 
   XCloseDisplay (disp);
