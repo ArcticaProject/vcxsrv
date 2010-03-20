@@ -18,6 +18,9 @@
 /* Whether we have posix_memalign() */
 #undef HAVE_POSIX_MEMALIGN
 
+/* Whether pthread_setspecific() is supported */
+#undef HAVE_PTHREAD_SETSPECIFIC
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
@@ -58,6 +61,9 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
@@ -69,6 +75,9 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
+
+/* Whether the tool chain supports __thread */
+#undef TOOLCHAIN_SUPPORTS__THREAD
 
 /* use ARM NEON assembly optimizations */
 #undef USE_ARM_NEON

@@ -54,11 +54,11 @@ AC_PREREQ([2.57])
 
 m4_define([pixman_major], 0)
 m4_define([pixman_minor], 17)
-m4_define([pixman_micro], 10)
+m4_define([pixman_micro], 12)
 
 m4_define([pixman_version],[pixman_major.pixman_minor.pixman_micro])
 
-AC_INIT(pixman, pixman_version, "sandmann@daimi.au.dk", pixman)
+AC_INIT(pixman, pixman_version, "pixman@lists.freedesktop.org", pixman)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
 # Suppress verbose compile lines
@@ -363,18 +363,28 @@ AM_CONDITIONAL(USE_VMX, test $have_vmx_intrinsics = yes)
 
 dnl ===========================================================================
 dnl Check for ARM SIMD instructions
-ARM_SIMD_CFLAGS="-mcpu=arm1136j-s"
+ARM_SIMD_CFLAGS=""
 
 have_arm_simd=no
 AC_MSG_CHECKING(whether to use ARM SIMD assembler)
-xserver_save_CFLAGS=$CFLAGS
-CFLAGS="$ARM_SIMD_CFLAGS $CFLAGS"
+# check with default CFLAGS in case the toolchain turns on a sufficiently recent -mcpu=
 AC_COMPILE_IFELSE([
 int main () {
     asm("uqadd8 r1, r1, r2");
     return 0;
-}], have_arm_simd=yes)
-CFLAGS=$xserver_save_CFLAGS
+}], have_arm_simd=yes,
+    # check again with an explicit -mcpu= in case the toolchain defaults to an
+    # older one; note that uqadd8 isn't available in Thumb mode on arm1136j-s
+    # so we force ARM mode
+    ARM_SIMD_CFLAGS="-mcpu=arm1136j-s -marm"
+    xserver_save_CFLAGS=$CFLAGS
+    CFLAGS="$ARM_SIMD_CFLAGS $CFLAGS"
+    AC_COMPILE_IFELSE([
+    int main () {
+        asm("uqadd8 r1, r1, r2");
+        return 0;
+    }], have_arm_simd=yes)
+    CFLAGS=$xserver_save_CFLAGS)
 
 AC_ARG_ENABLE(arm-simd,
    [AC_HELP_STRING([--disable-arm-simd],
@@ -512,6 +522,86 @@ AC_CHECK_FUNC(posix_memalign, have_posix_memalign=yes, have_posix_memalign=no)
 if test x$have_posix_memalign = xyes; then
    AC_DEFINE(HAVE_POSIX_MEMALIGN, 1, [Whether we have posix_memalign()])
 fi
+
+dnl =====================================
+dnl Thread local storage
+
+support_for__thread=no
+
+AC_MSG_CHECKING(for __thread)
+AC_COMPILE_IFELSE([
+__thread int x ;
+int main () { return 0; }
+], support_for__thread=yes)
+
+if test $support_for__thread = yes; then 
+   AC_DEFINE([TOOLCHAIN_SUPPORTS__THREAD],[],[Whether the tool chain supports __thread])
+fi
+
+AC_MSG_RESULT($support_for__thread)
+
+dnl posix tls
+
+if test $support_for__thread = no; then
+
+support_for_pthread_setspecific=no
+   
+AC_MSG_CHECKING(for pthread_setspecific)
+
+save_LDFLAGS=$LDFLAGS
+
+LDFLAGS="-pthread"
+
+AC_LINK_IFELSE([
+#include <pthread.h>
+
+#include <stdlib.h>
+#include <pthread.h>
+
+static pthread_once_t once_control = PTHREAD_ONCE_INIT;
+static pthread_key_t key;
+
+static void
+make_key (void)
+{
+    pthread_key_create (&key, NULL);
+}
+
+int
+main ()
+{
+    void *value = NULL;
+    
+    if (pthread_once (&once_control, make_key) != 0)
+    {
+	value = NULL;
+    }
+    else
+    {
+	value = pthread_getspecific (key);
+	if (!value)
+	{
+	    value = malloc (100);
+	    pthread_setspecific (key, value);
+	}
+    }
+}
+], support_for_pthread_setspecific=yes);
+
+LDFLAGS=$save_LDFLAGS
+
+if test $support_for_pthread_setspecific = yes; then
+   PTHREAD_LDFLAGS="-pthread"
+   AC_DEFINE([HAVE_PTHREAD_SETSPECIFIC], [], [Whether pthread_setspecific() is supported])
+fi
+
+AC_MSG_RESULT($support_for_pthread_setspecific);
+
+fi
+
+AC_SUBST(TOOLCHAIN_SUPPORTS__THREAD)
+AC_SUBST(HAVE_PTHREAD_SETSPECIFIC)
+AC_SUBST(PTHREAD_LDFLAGS)
 
 AC_OUTPUT([pixman-1.pc
            pixman-1-uninstalled.pc

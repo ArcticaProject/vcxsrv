@@ -11,6 +11,8 @@
 #include "pixman.h"
 #include <time.h>
 #include <assert.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "pixman-compiler.h"
 
@@ -577,6 +579,10 @@ _pixman_choose_implementation (void);
 #define FAST_PATH_SIMPLE_REPEAT			(1 << 12)
 #define FAST_PATH_IS_OPAQUE			(1 << 13)
 #define FAST_PATH_NEEDS_WORKAROUND		(1 << 14)
+#define FAST_PATH_NO_NONE_REPEAT		(1 << 15)
+#define FAST_PATH_SAMPLES_COVER_CLIP		(1 << 16)
+#define FAST_PATH_16BIT_SAFE			(1 << 17)
+#define FAST_PATH_X_UNIT_POSITIVE		(1 << 18)
 
 #define _FAST_PATH_STANDARD_FLAGS					\
     (FAST_PATH_ID_TRANSFORM		|				\
@@ -701,6 +707,12 @@ pixman_region16_copy_from_region32 (pixman_region16_t *dst,
     (((((s) << 3) & 0xf8) | (((s) >> 2) & 0x7)) |			\
      ((((s) << 5) & 0xfc00) | (((s) >> 1) & 0x300)) |			\
      ((((s) << 8) & 0xf80000) | (((s) << 3) & 0x70000)))
+
+#define CONVERT_0565_TO_8888(s) (CONVERT_0565_TO_0888(s) | 0xff000000)
+
+/* Trivial versions that are useful in macros */
+#define CONVERT_8888_TO_8888(s) (s)
+#define CONVERT_0565_TO_0565(s) (s)
 
 #define PIXMAN_FORMAT_IS_WIDE(f)					\
     (PIXMAN_FORMAT_A (f) > 8 ||						\

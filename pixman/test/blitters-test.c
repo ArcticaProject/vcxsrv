@@ -27,6 +27,8 @@
 #include <config.h>
 #include "utils.h"
 
+static pixman_indexed_t palette;
+
 static void *
 aligned_malloc (size_t align, size_t size)
 {
@@ -58,6 +60,7 @@ create_random_image (pixman_format_code_t *allowed_formats,
     while (allowed_formats[n] != -1)
 	n++;
     fmt = allowed_formats[lcg_rand_n (n)];
+
     width = lcg_rand_n (max_width) + 1;
     height = lcg_rand_n (max_height) + 1;
     stride = (width * PIXMAN_FORMAT_BPP (fmt) + 7) / 8 +
@@ -78,6 +81,12 @@ create_random_image (pixman_format_code_t *allowed_formats,
     }
 
     img = pixman_image_create_bits (fmt, width, height, buf, stride);
+
+    if (PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_COLOR	||
+	PIXMAN_FORMAT_TYPE (fmt) == PIXMAN_TYPE_GRAY)
+    {
+	pixman_image_set_indexed (img, &palette);
+    }
 
     image_endian_swap (img, PIXMAN_FORMAT_BPP (fmt));
 
@@ -221,7 +230,6 @@ static pixman_format_code_t img_fmt_list[] = {
     PIXMAN_b2g3r3,
     PIXMAN_a2r2g2b2,
     PIXMAN_a2b2g2r2,
-#if 0 /* using these crashes the test */
     PIXMAN_c8,
     PIXMAN_g8,
     PIXMAN_x4c4,
@@ -229,7 +237,6 @@ static pixman_format_code_t img_fmt_list[] = {
     PIXMAN_c4,
     PIXMAN_g4,
     PIXMAN_g1,
-#endif
     PIXMAN_x4a4,
     PIXMAN_a4,
     PIXMAN_r1g2b1,
@@ -418,12 +425,26 @@ test_composite (uint32_t initcrc, int testnum, int verbose)
     return crc32;
 }
 
+static void
+initialize_palette (void)
+{
+    int i;
+
+    for (i = 0; i < PIXMAN_MAX_INDEXED; ++i)
+	palette.rgba[i] = lcg_rand ();
+
+    for (i = 0; i < 32768; ++i)
+	palette.ent[i] = lcg_rand() & 0xff;
+}
+
 int
 main (int argc, char *argv[])
 {
     int i, n1 = 1, n2 = 0;
     uint32_t crc = 0;
     int verbose = getenv ("VERBOSE") != NULL;
+
+    initialize_palette();
 
     if (argc >= 3)
     {
@@ -461,7 +482,7 @@ main (int argc, char *argv[])
 	    /* Predefined value for running with all the fastpath functions
 	       disabled. It needs to be updated every time when changes are
 	       introduced to this program or behavior of pixman changes! */
-	    if (crc == 0x20CBE02C)
+	    if (crc == 0xA058F792)
 	    {
 		printf ("blitters test passed\n");
 	    }
