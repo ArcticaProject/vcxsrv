@@ -30,82 +30,114 @@
 
 #include <stdlib.h>
 
-/*
- * Operator optimizations based on source or destination opacity
- */
-typedef struct
-{
-    pixman_op_t op;
-    pixman_op_t op_src_dst_opaque;
-    pixman_op_t op_src_opaque;
-    pixman_op_t op_dst_opaque;
-} optimized_operator_info_t;
-
-static const optimized_operator_info_t optimized_operators[] =
-{
-    /* Input Operator           SRC&DST Opaque          SRC Opaque              DST Opaque      */
-    { PIXMAN_OP_OVER,           PIXMAN_OP_SRC,          PIXMAN_OP_SRC,          PIXMAN_OP_OVER },
-    { PIXMAN_OP_OVER_REVERSE,   PIXMAN_OP_DST,          PIXMAN_OP_OVER_REVERSE, PIXMAN_OP_DST },
-    { PIXMAN_OP_IN,             PIXMAN_OP_SRC,          PIXMAN_OP_IN,           PIXMAN_OP_SRC },
-    { PIXMAN_OP_IN_REVERSE,     PIXMAN_OP_DST,          PIXMAN_OP_DST,          PIXMAN_OP_IN_REVERSE },
-    { PIXMAN_OP_OUT,            PIXMAN_OP_CLEAR,        PIXMAN_OP_OUT,          PIXMAN_OP_CLEAR },
-    { PIXMAN_OP_OUT_REVERSE,    PIXMAN_OP_CLEAR,        PIXMAN_OP_CLEAR,        PIXMAN_OP_OUT_REVERSE },
-    { PIXMAN_OP_ATOP,           PIXMAN_OP_SRC,          PIXMAN_OP_IN,           PIXMAN_OP_OVER },
-    { PIXMAN_OP_ATOP_REVERSE,   PIXMAN_OP_DST,          PIXMAN_OP_OVER_REVERSE, PIXMAN_OP_IN_REVERSE },
-    { PIXMAN_OP_XOR,            PIXMAN_OP_CLEAR,        PIXMAN_OP_OUT,          PIXMAN_OP_OUT_REVERSE },
-    { PIXMAN_OP_SATURATE,       PIXMAN_OP_DST,          PIXMAN_OP_OVER_REVERSE, PIXMAN_OP_DST },
-    { PIXMAN_OP_NONE }
-};
-
 static pixman_implementation_t *imp;
 
-/*
- * Check if the current operator could be optimized
- */
-static const optimized_operator_info_t*
-pixman_operator_can_be_optimized (pixman_op_t op)
-{
-    const optimized_operator_info_t *info;
+typedef struct operator_info_t operator_info_t;
 
-    for (info = optimized_operators; info->op != PIXMAN_OP_NONE; info++)
-    {
-	if (info->op == op)
-	    return info;
-    }
-    return NULL;
-}
+struct operator_info_t
+{
+    uint8_t	opaque_info[4];
+};
+
+#define PACK(neither, src, dest, both)			\
+    {{	    (uint8_t)PIXMAN_OP_ ## neither,		\
+	    (uint8_t)PIXMAN_OP_ ## src,			\
+	    (uint8_t)PIXMAN_OP_ ## dest,		\
+	    (uint8_t)PIXMAN_OP_ ## both		}}
+
+static const operator_info_t operator_table[] =
+{
+    /*    Neither Opaque         Src Opaque             Dst Opaque             Both Opaque */
+    PACK (CLEAR,                 CLEAR,                 CLEAR,                 CLEAR),
+    PACK (SRC,                   SRC,                   SRC,                   SRC),
+    PACK (DST,                   DST,                   DST,                   DST),
+    PACK (OVER,                  SRC,                   OVER,                  SRC),
+    PACK (OVER_REVERSE,          OVER_REVERSE,          DST,                   DST),
+    PACK (IN,                    IN,                    SRC,                   SRC),
+    PACK (IN_REVERSE,            DST,                   IN_REVERSE,            DST),
+    PACK (OUT,                   OUT,                   CLEAR,                 CLEAR),
+    PACK (OUT_REVERSE,           CLEAR,                 OUT_REVERSE,           CLEAR),
+    PACK (ATOP,                  IN,                    OVER,                  SRC),
+    PACK (ATOP_REVERSE,          OVER_REVERSE,          IN_REVERSE,            DST),
+    PACK (XOR,                   OUT,                   OUT_REVERSE,           CLEAR),
+    PACK (ADD,                   ADD,                   ADD,                   ADD),
+    PACK (SATURATE,              OVER_REVERSE,          DST,                   DST),
+
+    {{ 0 /* 0x0e */ }},
+    {{ 0 /* 0x0f */ }},
+
+    PACK (CLEAR,                 CLEAR,                 CLEAR,                 CLEAR),
+    PACK (SRC,                   SRC,                   SRC,                   SRC),
+    PACK (DST,                   DST,                   DST,                   DST),
+    PACK (DISJOINT_OVER,         DISJOINT_OVER,         DISJOINT_OVER,         DISJOINT_OVER),
+    PACK (DISJOINT_OVER_REVERSE, DISJOINT_OVER_REVERSE, DISJOINT_OVER_REVERSE, DISJOINT_OVER_REVERSE),
+    PACK (DISJOINT_IN,           DISJOINT_IN,           DISJOINT_IN,           DISJOINT_IN),
+    PACK (DISJOINT_IN_REVERSE,   DISJOINT_IN_REVERSE,   DISJOINT_IN_REVERSE,   DISJOINT_IN_REVERSE),
+    PACK (DISJOINT_OUT,          DISJOINT_OUT,          DISJOINT_OUT,          DISJOINT_OUT),
+    PACK (DISJOINT_OUT_REVERSE,  DISJOINT_OUT_REVERSE,  DISJOINT_OUT_REVERSE,  DISJOINT_OUT_REVERSE),
+    PACK (DISJOINT_ATOP,         DISJOINT_ATOP,         DISJOINT_ATOP,         DISJOINT_ATOP),
+    PACK (DISJOINT_ATOP_REVERSE, DISJOINT_ATOP_REVERSE, DISJOINT_ATOP_REVERSE, DISJOINT_ATOP_REVERSE),
+    PACK (DISJOINT_XOR,          DISJOINT_XOR,          DISJOINT_XOR,          DISJOINT_XOR),
+
+    {{ 0 /* 0x1c */ }},
+    {{ 0 /* 0x1d */ }},
+    {{ 0 /* 0x1e */ }},
+    {{ 0 /* 0x1f */ }},
+
+    PACK (CLEAR,                 CLEAR,                 CLEAR,                 CLEAR),
+    PACK (SRC,                   SRC,                   SRC,                   SRC),
+    PACK (DST,                   DST,                   DST,                   DST),
+    PACK (CONJOINT_OVER,         CONJOINT_OVER,         CONJOINT_OVER,         CONJOINT_OVER),
+    PACK (CONJOINT_OVER_REVERSE, CONJOINT_OVER_REVERSE, CONJOINT_OVER_REVERSE, CONJOINT_OVER_REVERSE),
+    PACK (CONJOINT_IN,           CONJOINT_IN,           CONJOINT_IN,           CONJOINT_IN),
+    PACK (CONJOINT_IN_REVERSE,   CONJOINT_IN_REVERSE,   CONJOINT_IN_REVERSE,   CONJOINT_IN_REVERSE),
+    PACK (CONJOINT_OUT,          CONJOINT_OUT,          CONJOINT_OUT,          CONJOINT_OUT),
+    PACK (CONJOINT_OUT_REVERSE,  CONJOINT_OUT_REVERSE,  CONJOINT_OUT_REVERSE,  CONJOINT_OUT_REVERSE),
+    PACK (CONJOINT_ATOP,         CONJOINT_ATOP,         CONJOINT_ATOP,         CONJOINT_ATOP),
+    PACK (CONJOINT_ATOP_REVERSE, CONJOINT_ATOP_REVERSE, CONJOINT_ATOP_REVERSE, CONJOINT_ATOP_REVERSE),
+    PACK (CONJOINT_XOR,          CONJOINT_XOR,          CONJOINT_XOR,          CONJOINT_XOR),
+
+    {{ 0 /* 0x2c */ }},
+    {{ 0 /* 0x2d */ }},
+    {{ 0 /* 0x2e */ }},
+    {{ 0 /* 0x2f */ }},
+
+    PACK (MULTIPLY,              MULTIPLY,              MULTIPLY,              MULTIPLY),
+    PACK (SCREEN,                SCREEN,                SCREEN,                SCREEN),
+    PACK (OVERLAY,               OVERLAY,               OVERLAY,               OVERLAY),
+    PACK (DARKEN,                DARKEN,                DARKEN,                DARKEN),
+    PACK (LIGHTEN,               LIGHTEN,               LIGHTEN,               LIGHTEN),
+    PACK (COLOR_DODGE,           COLOR_DODGE,           COLOR_DODGE,           COLOR_DODGE),
+    PACK (COLOR_BURN,            COLOR_BURN,            COLOR_BURN,            COLOR_BURN),
+    PACK (HARD_LIGHT,            HARD_LIGHT,            HARD_LIGHT,            HARD_LIGHT),
+    PACK (SOFT_LIGHT,            SOFT_LIGHT,            SOFT_LIGHT,            SOFT_LIGHT),
+    PACK (DIFFERENCE,            DIFFERENCE,            DIFFERENCE,            DIFFERENCE),
+    PACK (EXCLUSION,             EXCLUSION,             EXCLUSION,             EXCLUSION),
+    PACK (HSL_HUE,               HSL_HUE,               HSL_HUE,               HSL_HUE),
+    PACK (HSL_SATURATION,        HSL_SATURATION,        HSL_SATURATION,        HSL_SATURATION),
+    PACK (HSL_COLOR,             HSL_COLOR,             HSL_COLOR,             HSL_COLOR),
+    PACK (HSL_LUMINOSITY,        HSL_LUMINOSITY,        HSL_LUMINOSITY,        HSL_LUMINOSITY),
+};
 
 /*
  * Optimize the current operator based on opacity of source or destination
  * The output operator should be mathematically equivalent to the source.
  */
 static pixman_op_t
-pixman_optimize_operator (pixman_op_t     op,
-                          pixman_image_t *src_image,
-                          pixman_image_t *mask_image,
-                          pixman_image_t *dst_image)
+optimize_operator (pixman_op_t     op,
+		   uint32_t        src_flags,
+		   uint32_t        mask_flags,
+		   uint32_t        dst_flags)
 {
-    pixman_bool_t is_source_opaque;
-    pixman_bool_t is_dest_opaque;
-    const optimized_operator_info_t *info = pixman_operator_can_be_optimized (op);
-    if (!info || mask_image)
-	return op;
+    pixman_bool_t is_source_opaque, is_dest_opaque;
+    int opaqueness;
 
-    is_source_opaque = src_image->common.flags & FAST_PATH_IS_OPAQUE;
-    is_dest_opaque = dst_image->common.flags & FAST_PATH_IS_OPAQUE;
+    is_source_opaque = ((src_flags & mask_flags) & FAST_PATH_IS_OPAQUE) != 0;
+    is_dest_opaque = (dst_flags & FAST_PATH_IS_OPAQUE) != 0;
 
-    if (!is_source_opaque && !is_dest_opaque)
-	return op;
+    opaqueness = ((is_dest_opaque << 1) | is_source_opaque);
 
-    if (is_source_opaque && is_dest_opaque)
-	return info->op_src_dst_opaque;
-    else if (is_source_opaque)
-	return info->op_src_opaque;
-    else if (is_dest_opaque)
-	return info->op_dst_opaque;
-
-    return op;
-
+    return operator_table[op].opaque_info[opaqueness];
 }
 
 static void
@@ -447,25 +479,85 @@ walk_region_internal (pixman_implementation_t *imp,
     }
 }
 
-static force_inline pixman_bool_t
-image_covers (pixman_image_t *image,
-              pixman_box32_t *extents,
-              int             x,
-              int             y)
+#define IS_16BIT(x) (((x) >= INT16_MIN) && ((x) <= INT16_MAX))
+
+static force_inline uint32_t
+compute_src_extents_flags (pixman_image_t *image,
+			   pixman_box32_t *extents,
+			   int             x,
+			   int             y)
 {
-    if (image->common.type == BITS &&
-	image->common.repeat == PIXMAN_REPEAT_NONE)
+    pixman_box16_t extents16;
+    uint32_t flags;
+
+    flags = FAST_PATH_COVERS_CLIP;
+
+    if (image->common.type != BITS)
+	return flags;
+
+    if (image->common.repeat == PIXMAN_REPEAT_NONE &&
+	(x > extents->x1 || y > extents->y1 ||
+	 x + image->bits.width < extents->x2 ||
+	 y + image->bits.height < extents->y2))
     {
-	if (x > extents->x1 || y > extents->y1 ||
-	    x + image->bits.width < extents->x2 ||
-	    y + image->bits.height < extents->y2)
+	flags &= ~FAST_PATH_COVERS_CLIP;
+    }
+
+    if (IS_16BIT (extents->x1 - x) &&
+	IS_16BIT (extents->y1 - y) &&
+	IS_16BIT (extents->x2 - x) &&
+	IS_16BIT (extents->y2 - y))
+    {
+	extents16.x1 = extents->x1 - x;
+	extents16.y1 = extents->y1 - y;
+	extents16.x2 = extents->x2 - x;
+	extents16.y2 = extents->y2 - y;
+
+	if (!image->common.transform ||
+	    pixman_transform_bounds (image->common.transform, &extents16))
 	{
-	    return FALSE;
+	    if (extents16.x1 >= 0  && extents16.y1 >= 0 &&
+		extents16.x2 <= image->bits.width &&
+		extents16.y2 <= image->bits.height)
+	    {
+		flags |= FAST_PATH_SAMPLES_COVER_CLIP;
+	    }
 	}
     }
 
-    return TRUE;
+    if (IS_16BIT (extents->x1 - x - 1) &&
+	IS_16BIT (extents->y1 - y - 1) &&
+	IS_16BIT (extents->x2 - x + 1) &&
+	IS_16BIT (extents->y2 - y + 1))
+    {
+	extents16.x1 = extents->x1 - x - 1;
+	extents16.y1 = extents->y1 - y - 1;
+	extents16.x2 = extents->x2 - x + 1;
+	extents16.y2 = extents->y2 - y + 1;
+
+	if (/* src space expanded by one in dest space fits in 16 bit */
+	    (!image->common.transform ||
+	     pixman_transform_bounds (image->common.transform, &extents16)) &&
+	    /* And src image size can be used as 16.16 fixed point */
+	    image->bits.width < 0x7fff &&
+	    image->bits.height < 0x7fff)
+	{
+	    /* Then we're "16bit safe" */
+	    flags |= FAST_PATH_16BIT_SAFE;
+	}
+    }
+
+    return flags;
 }
+
+#define N_CACHED_FAST_PATHS 8
+
+typedef struct
+{
+    pixman_fast_path_t cache [N_CACHED_FAST_PATHS];
+} cache_t;
+
+PIXMAN_DEFINE_THREAD_LOCAL (cache_t, fast_path_cache);
 
 static void
 do_composite (pixman_implementation_t *imp,
@@ -493,6 +585,9 @@ do_composite (pixman_implementation_t *imp,
     uint32_t *dest_bits;
     int dest_dx, dest_dy;
     pixman_bool_t need_workaround;
+    const pixman_fast_path_t *info;
+    cache_t *cache;
+    int i;
 
     src_format = src->common.extended_format_code;
     src_flags = src->common.flags;
@@ -505,7 +600,7 @@ do_composite (pixman_implementation_t *imp,
     else
     {
 	mask_format = PIXMAN_null;
-	mask_flags = 0;
+	mask_flags = FAST_PATH_IS_OPAQUE;
     }
 
     dest_format = dest->common.extended_format_code;
@@ -544,50 +639,114 @@ do_composite (pixman_implementation_t *imp,
     
     extents = pixman_region32_extents (&region);
     
-    if (image_covers (src, extents, dest_x - src_x, dest_y - src_y))
-	src_flags |= FAST_PATH_COVERS_CLIP;
-    
-    if (mask && image_covers (mask, extents, dest_x - mask_x, dest_y - mask_y))
-	mask_flags |= FAST_PATH_COVERS_CLIP;
-	    
+    src_flags |= compute_src_extents_flags (src, extents, dest_x - src_x, dest_y - src_y);
+
+    if (mask)
+	mask_flags |= compute_src_extents_flags (mask, extents, dest_x - mask_x, dest_y - mask_y);
+
+    /*
+     * Check if we can replace our operator by a simpler one
+     * if the src or dest are opaque. The output operator should be
+     * mathematically equivalent to the source.
+     */
+    op = optimize_operator (op, src_flags, mask_flags, dest_flags);
+    if (op == PIXMAN_OP_DST)
+	return;
+
+    /* Check cache for fast paths */
+    cache = PIXMAN_GET_THREAD_LOCAL (fast_path_cache);
+
+    for (i = 0; i < N_CACHED_FAST_PATHS; ++i)
+    {
+	info = &(cache->cache[i]);
+
+	/* Note that we check for equality here, not whether
+	 * the cached fast path matches. This is to prevent
+	 * us from selecting an overly general fast path
+	 * when a more specific one would work.
+	 */
+	if (info->op == op			&&
+	    info->src_format == src_format	&&
+	    info->mask_format == mask_format	&&
+	    info->dest_format == dest_format	&&
+	    info->src_flags == src_flags	&&
+	    info->mask_flags == mask_flags	&&
+	    info->dest_flags == dest_flags	&&
+	    info->func)
+	{
+	    goto found;
+	}
+    }
+
     while (imp)
     {
-	const pixman_fast_path_t *info;
-	    
-	for (info = imp->fast_paths; info->op != PIXMAN_OP_NONE; ++info)
+	info = imp->fast_paths;
+
+	while (info->op != PIXMAN_OP_NONE)
 	{
 	    if ((info->op == op || info->op == PIXMAN_OP_any)		&&
-		/* src */
+		/* Formats */
 		((info->src_format == src_format) ||
 		 (info->src_format == PIXMAN_any))			&&
-		(info->src_flags & src_flags) == info->src_flags	&&
-		/* mask */
 		((info->mask_format == mask_format) ||
 		 (info->mask_format == PIXMAN_any))			&&
-		(info->mask_flags & mask_flags) == info->mask_flags	&&
-		/* dest */
 		((info->dest_format == dest_format) ||
 		 (info->dest_format == PIXMAN_any))			&&
+		/* Flags */
+		(info->src_flags & src_flags) == info->src_flags	&&
+		(info->mask_flags & mask_flags) == info->mask_flags	&&
 		(info->dest_flags & dest_flags) == info->dest_flags)
 	    {
-		walk_region_internal (imp, op,
-				      src, mask, dest,
-				      src_x, src_y, mask_x, mask_y,
-				      dest_x, dest_y,
-				      width, height,
-				      (src_flags & FAST_PATH_SIMPLE_REPEAT),
-				      (mask_flags & FAST_PATH_SIMPLE_REPEAT),
-				      &region,
-				      info->func);
-		
-		goto done;
+		/* Set i to the last spot in the cache so that the
+		 * move-to-front code below will work
+		 */
+		i = N_CACHED_FAST_PATHS - 1;
+
+		goto found;
 	    }
+
+	    ++info;
 	}
-	
+
 	imp = imp->delegate;
     }
 
-done:
+    /* We didn't find a compositing routine. This should not happen, but if
+     * it somehow does, just exit rather than crash.
+     */
+    goto out;
+
+found:
+    walk_region_internal (imp, op,
+			  src, mask, dest,
+			  src_x, src_y, mask_x, mask_y,
+			  dest_x, dest_y,
+			  width, height,
+			  (src_flags & FAST_PATH_SIMPLE_REPEAT),
+			  (mask_flags & FAST_PATH_SIMPLE_REPEAT),
+			  &region, info->func);
+
+    if (i)
+    {
+	/* Make a copy of info->func, because info->func may change when
+	 * we update the cache.
+	 */
+	pixman_composite_func_t func = info->func;
+	
+	while (i--)
+	    cache->cache[i + 1] = cache->cache[i];
+
+	cache->cache[0].op = op;
+	cache->cache[0].src_format = src_format;
+	cache->cache[0].src_flags = src_flags;
+	cache->cache[0].mask_format = mask_format;
+	cache->cache[0].mask_flags = mask_flags;
+	cache->cache[0].dest_format = dest_format;
+	cache->cache[0].dest_flags = dest_flags;
+	cache->cache[0].func = func;
+    }
+
+out:
     if (need_workaround)
     {
 	unapply_workaround (src, src_bits, src_dx, src_dy);
@@ -653,19 +812,6 @@ pixman_image_composite32 (pixman_op_t      op,
     if (mask)
 	_pixman_image_validate (mask);
     _pixman_image_validate (dest);
-    
-    /*
-     * Check if we can replace our operator by a simpler one
-     * if the src or dest are opaque. The output operator should be
-     * mathematically equivalent to the source.
-     */
-    op = pixman_optimize_operator(op, src, mask, dest);
-    if (op == PIXMAN_OP_DST		||
-	op == PIXMAN_OP_CONJOINT_DST	||
-	op == PIXMAN_OP_DISJOINT_DST)
-    {
-        return;
-    }
 
     if (!imp)
 	imp = _pixman_choose_implementation ();

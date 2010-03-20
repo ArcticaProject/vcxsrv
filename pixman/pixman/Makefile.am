@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = libpixman-1.la
-libpixman_1_la_LDFLAGS = -version-info $(LT_VERSION_INFO) -no-undefined
+libpixman_1_la_LDFLAGS = -version-info $(LT_VERSION_INFO) -no-undefined @PTHREAD_LDFLAGS@ 
 libpixman_1_la_LIBADD = @DEP_LIBS@ -lm
 libpixman_1_la_SOURCES =			\
 	pixman.h				\
@@ -64,7 +64,7 @@ libpixman_mmx_la_LIBADD = $(DEP_LIBS)
 libpixman_1_la_LDFLAGS += $(MMX_LDFLAGS)
 libpixman_1_la_LIBADD += libpixman-mmx.la
 
-$(libpixman_mmx_la_SOURCES:.c=.s) : ASM_CFLAGS=$(MMX_CFLAGS)
+ASM_CFLAGS_mmx=$(MMX_CFLAGS)
 endif
 
 # vmx code
@@ -77,7 +77,7 @@ libpixman_vmx_la_CFLAGS = $(DEP_CFLAGS) $(VMX_CFLAGS)
 libpixman_vmx_la_LIBADD = $(DEP_LIBS)
 libpixman_1_la_LIBADD += libpixman-vmx.la
 
-$(libpixman_vmx_la_SOURCES:.c=.s) : ASM_CFLAGS=$(VMX_CFLAGS)
+ASM_CFLAGS_vmx=$(VMX_CFLAGS)
 endif
 
 # sse2 code
@@ -90,7 +90,7 @@ libpixman_sse2_la_LIBADD = $(DEP_LIBS)
 libpixman_1_la_LDFLAGS += $(SSE2_LDFLAGS)
 libpixman_1_la_LIBADD += libpixman-sse2.la
 
-$(libpixman_sse2_la_SOURCES:.c=.s) : ASM_CFLAGS=$(SSE2_CFLAGS)
+ASM_CFLAGS_sse2=$(SSE2_CFLAGS)
 endif
 
 # arm simd code
@@ -102,7 +102,7 @@ libpixman_arm_simd_la_CFLAGS = $(DEP_CFLAGS) $(ARM_SIMD_CFLAGS)
 libpixman_arm_simd_la_LIBADD = $(DEP_LIBS)
 libpixman_1_la_LIBADD += libpixman-arm-simd.la
 
-$(libpixman_arm_simd_la_SOURCES:.c=.s) : ASM_CFLAGS=$(ARM_SIMD_CFLAGS)
+ASM_CFLAGS_arm_simd=$(ARM_SIMD_CFLAGS)
 endif
 
 # arm neon code
@@ -116,8 +116,8 @@ libpixman_arm_neon_la_CFLAGS = $(DEP_CFLAGS)
 libpixman_arm_neon_la_LIBADD = $(DEP_LIBS)
 libpixman_1_la_LIBADD += libpixman-arm-neon.la
 
-$(libpixman_arm_neon_la_SOURCES:.c=.s) : ASM_CFLAGS=
+ASM_CFLAGS_arm_neon=
 endif
 
 .c.s : $(libpixmaninclude_HEADERS) $(BUILT_SOURCES)
-	$(CC) $(CFLAGS) $(ASM_CFLAGS) -DHAVE_CONFIG_H -I$(srcdir) -I$(builddir) -I$(top_builddir) -S -o $@ $<
+	$(CC) $(CFLAGS) $(ASM_CFLAGS_$(@:pixman-%.s=%)) $(ASM_CFLAGS_$(@:pixman-arm-%.s=arm_%)) -DHAVE_CONFIG_H -I$(srcdir) -I$(builddir) -I$(top_builddir) -S -o $@ $<

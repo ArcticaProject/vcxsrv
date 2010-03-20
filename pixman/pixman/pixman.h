@@ -84,6 +84,9 @@ PIXMAN_BEGIN_DECLS
 /*
  * Standard integers
  */
+
+#if !defined (PIXMAN_DONT_DEFINE_STDINT)
+
 #if defined (_SVR4) || defined (SVR4) || defined (__OpenBSD__) || defined (_sgi) || defined (__sun) || defined (sun) || defined (__digital__) || defined (__HP_cc)
 #  include <inttypes.h>
 #elif defined (_MSC_VER)
@@ -99,6 +102,8 @@ typedef unsigned __int64 uint64_t;
 #  include <sys/inttypes.h>
 #else
 #  include <stdint.h>
+#endif
+
 #endif
 
 /*
@@ -343,9 +348,10 @@ typedef enum
     PIXMAN_OP_HSL_HUE			= 0x3b,
     PIXMAN_OP_HSL_SATURATION		= 0x3c,
     PIXMAN_OP_HSL_COLOR			= 0x3d,
-    PIXMAN_OP_HSL_LUMINOSITY		= 0x3e,
+    PIXMAN_OP_HSL_LUMINOSITY		= 0x3e
 
 #ifdef PIXMAN_USE_INTERNAL_API
+    ,
     PIXMAN_N_OPERATORS,
     PIXMAN_OP_NONE = PIXMAN_N_OPERATORS
 #endif
