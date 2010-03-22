@@ -27,6 +27,7 @@ sdk_HEADERS =		\
 	globals.h	\
 	input.h		\
 	inputstr.h	\
+	list.h		\
 	misc.h		\
 	miscstruct.h	\
 	opaque.h	\

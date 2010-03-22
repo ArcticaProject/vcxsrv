@@ -75,9 +75,9 @@ am__XWin_SOURCES_DIST = InitInput.c InitOutput.c winallpriv.c \
 	winscrinit.c winshaddd.c winshadddnl.c winshadgdi.c \
 	wintrayicon.c winvalargs.c winwakeup.c winwindow.c \
 	winwndproc.c ddraw.h winclipboard.h winconfig.h win.h \
-	winkeybd.h winkeymap.h winkeynames.h winlayouts.h \
-	winmessages.h winmsg.h winms.h winmultiwindowclass.h \
-	winprefs.h winpriv.h winresource.h winwindow.h XWin.rc \
+	winkeybd.h winkeynames.h winlayouts.h winmessages.h winmsg.h \
+	winms.h winmultiwindowclass.h winprefs.h winpriv.h \
+	winresource.h winwindow.h XWin.rc \
 	$(top_srcdir)/Xext/dpmsstubs.c $(top_srcdir)/Xi/stubs.c \
 	$(top_srcdir)/mi/miinitext.c $(top_srcdir)/fb/fbcmap_mi.c \
 	winclipboardinit.c winclipboardtextconv.c winclipboardthread.c \
@@ -241,6 +241,7 @@ DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
 DBUS_LIBS = @DBUS_LIBS@
 DEFAULT_LIBRARY_PATH = @DEFAULT_LIBRARY_PATH@
+DEFAULT_LOGDIR = @DEFAULT_LOGDIR@
 DEFAULT_LOGPREFIX = @DEFAULT_LOGPREFIX@
 DEFAULT_MODULE_PATH = @DEFAULT_MODULE_PATH@
 DEFS = $(DEFS_CLIPBOARD) \
@@ -380,6 +381,8 @@ RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
 SED = sed
+SELINUX_CFLAGS = @SELINUX_CFLAGS@
+SELINUX_LIBS = @SELINUX_LIBS@
 SERVER_MISC_CONFIG_PATH = @SERVER_MISC_CONFIG_PATH@
 SET_MAKE = @SET_MAKE@
 SHA1_CFLAGS = @SHA1_CFLAGS@
@@ -609,7 +612,6 @@ SRCS = InitInput.c \
 	winconfig.h \
 	win.h \
 	winkeybd.h \
-	winkeymap.h \
 	winkeynames.h \
 	winlayouts.h \
 	winmessages.h \

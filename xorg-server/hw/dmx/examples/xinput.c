@@ -233,7 +233,7 @@ int main(int argc, char **argv)
         int         total = 0;
 
 #define ADD(type)                                     \
-        if (cnt >= MAX_EVENTS) OsAbort();             \
+        if (cnt >= MAX_EVENTS) abort();             \
         names[cnt] = #type;                           \
         type(dev, event_type[cnt], event_list[cnt]);  \
         if (event_type[cnt]) ++cnt

@@ -193,6 +193,17 @@ void rule::SetTargetsIsBuild(uint32 Md5_32)
     It++;
   }
 }
+///////////////////////////////////////////////////////////////////////////////
+void rule::SetTargetsIsBuilding(const fileinfo *pSrc)
+{
+  vector< fileinfo* >::iterator It=m_Targets.begin();
+  while (It!=m_Targets.end())
+  {
+    if ((*It)!=pSrc)
+      (*It)->SetBuilding(false);
+    It++;
+  }
+}
 
 
 #ifdef _DEBUG

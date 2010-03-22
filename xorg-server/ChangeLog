@@ -1,3 +1,1035 @@
+commit 13c007f9224ad871193e40466e64df1477ed26b0
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sun Mar 21 17:23:46 2010 -0700
+
+    Bump to 1.7.99.902 -- 1.8 RC2
+
+commit 235fa5030428084368e5be57fca695647b7b79c4
+Merge: 1c612ac fa5103a
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sun Mar 21 15:38:40 2010 -0700
+
+    Merge commit 'fa5103a02bd509e4a102afdad2ab26cb22210367'
+
+commit 1c612acca8568fcdf9761d23f112adaf4d496f1b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Mar 17 14:32:38 2010 +1000
+
+    dix: if owner-events is true for passive grabs, add the window mask (#25400)
+    
+    A client requesting a GrabModeSync button grab, owner-events true, with only
+    the ButtonRelease mask set would never receive the press event even if the
+    grab window had the ButtonPress mask set.
+    
+    The protocol requires that if owner-events is true, then the delivery mask
+    is the combination of the grab mask + the window event mask.
+    
+    X.Org Bug 25400 <http://bugs.freedesktop.org/show_bug.cgi?id=25400>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Jim Ramsay <i.am@jimramsay.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 95ca39b981624df5338a16b506289014c431ae82
+Merge: e7ff956 bf18191
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sun Mar 21 15:24:06 2010 -0700
+
+    Merge remote branch 'jturney/master'
+
+commit e7ff956638780dc1c6f160a1fd041b92cebff9ac
+Author: Oliver McFadden <oliver.mcfadden@nokia.com>
+Date:   Mon Mar 15 23:46:36 2010 +0200
+
+    common: xf86Configure: alloc_strlen: Allocated memory does not have space for the terminating NUL of the string
+    
+    buffer_alloc: Called allocating function "realloc" which allocated memory dictated by parameter "len + strlen(displaySize_string)"
+    alloc_strlen: Allocated memory does not have space for the terminating NUL of the string
+    var_assign: Assigned "ptr->mon_comment" to storage allocated by "realloc(ptr->mon_comment, len + strlen(displaySize_string))"
+    
+    Signed-off-by: Oliver McFadden <oliver.mcfadden@nokia.com>
+    Reviewed-by: Matt Turner <mattst88@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit aeae6637b52b042cf8b07c6943abcd5d31968d49
+Author: Oliver McFadden <oliver.mcfadden@nokia.com>
+Date:   Mon Mar 15 23:46:34 2010 +0200
+
+    fb: fbFinishScreenInit: leaked_storage: Variable "(visuals|depths)" goes out of scope
+    
+    Signed-off-by: Oliver McFadden <oliver.mcfadden@nokia.com>
+    Reviewed-by: Matt Turner <mattst88@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit d9ee31ab05efbd2d598cc93a41a8834f84d30803
+Author: Oliver McFadden <oliver.mcfadden@nokia.com>
+Date:   Mon Mar 15 23:46:33 2010 +0200
+
+    exa: exaFinishAccess: Overrun of static array "pExaScr->access" of size 6 at position 6 with index variable "i"
+    
+    Signed-off-by: Oliver McFadden <oliver.mcfadden@nokia.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit bf181915e103b0659c5a0bc3b2f6bccb18c9ec36
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Mon Feb 1 17:11:51 2010 +0000
+
+    Cygwin/X: Allow the default log location to be configurable
+    
+    Allow the default log location to be configurable (e.g. /var/log),
+    and use separate logs for each display instance (e.g. XWin.0.log).
+    
+    Make the type of g_pszLogFile const char*, per os/log.c:LogInit().
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit cca4952d750779a4c58a11fe08a53336042930bb
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Fri Feb 26 14:40:30 2010 +0000
+
+    Xming: Warning fixes
+    
+    Fix warnings due to prototypes not specifying function arguments
+    Fix warning with RegQueryValueEx()
+    Tidy up an include
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit b8cf4153f84404b2a1b62a247d5d36d24bf481da
+Author: Colin Harrison <colin.harrison@virgin.net>
+Date:   Fri Feb 26 14:41:00 2010 +0000
+
+    Xming: Dead code removal
+    
+    Remove some dead code, mostly code made obsolete by mandatory XKB
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+
+commit 9b18f7ac0ba9aadb8c86bc2717cbdff75e951b69
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Fri Feb 26 14:22:57 2010 +0000
+
+    Cygwin/X: Tidy up some cosmetic issues in log strings
+    
+    Tidy up some cosmetic issues in log strings:
+    - Add missing '\n'
+    - Fix some strings starting with '\n'
+    - Remove '\f' from some log strings
+    
+    These all just look daft in a log with timestamps.
+    
+    Also clarify log message about screen origin coordinates
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit 178e830378c3514b9c53a5b1c6d2d5f930c3779b
+Author: Jon TURNEY <jon.turney@dronecode.org.uk>
+Date:   Mon Feb 22 19:13:30 2010 +0000
+
+    Cygwin/X: Fix thinko in mount option checking
+    
+    Fix a thinko in mount option checking.
+    Use symbolic names for values assigned to binary flag for clarity.
+    
+    Signed-off-by: Jon TURNEY <jon.turney@dronecode.org.uk>
+    Reviewed-by: Colin Harrison <colin.harrison@virgin.net>
+
+commit fa5103a02bd509e4a102afdad2ab26cb22210367
+Author: Francisco Jerez <currojerez@riseup.net>
+Date:   Wed Feb 24 23:18:01 2010 +0100
+
+    dri2: No need to blit from front on DRI2GetBuffers if they're just being reused.
+    
+    It can be quite an expensive operation, so we're better off not doing
+    it unless it's totally required.
+    
+    Signed-off-by: Francisco Jerez <currojerez@riseup.net>
+    Signed-off-by: Kristian Høgsberg <krh@bitplanet.net>
+    Reviewed-by: Kristian Høgsberg <krh@bitplanet.net>
+
+commit e38e01081af42825bb7b44d18aa35845318f8556
+Author: Francisco Jerez <currojerez@riseup.net>
+Date:   Wed Feb 24 23:18:00 2010 +0100
+
+    Import linked list helpers from the intel DDX.
+    
+    Borrowed from i830.h, except for list_for_each_entry().
+    
+    Signed-off-by: Francisco Jerez <currojerez@riseup.net>
+    Signed-off-by: Kristian Høgsberg <krh@bitplanet.net>
+    Reviewed-by: Kristian Høgsberg <krh@bitplanet.net>
+
+commit b8a3be5f34016b745e38cd53825a4e398c6127bc
+Author: Francisco Jerez <currojerez@riseup.net>
+Date:   Wed Feb 24 23:17:59 2010 +0100
+
+    Add a ConfigNotify hook.
+    
+    Executed from the ConfigureWindow request, right before sending
+    ConfigureNotify to the clients.
+    
+    This commit breaks the ScreenRec ABI.
+    
+    Signed-off-by: Francisco Jerez <currojerez@riseup.net>
+    Signed-off-by: Kristian Høgsberg <krh@bitplanet.net>
+    Reviewed-by: Kristian Høgsberg <krh@bitplanet.net>
+
+commit 67a8c659f25218904bae64aac6e98e326c90330b
+Author: Roland Scheidegger <sroland@vmware.com>
+Date:   Fri Mar 12 16:53:30 2010 +0100
+
+    hw/xfree86: move reference counting out of the UseHWCursor[ARGB] functions
+    
+    The problem is that the xf86_use_hw_cursor(_argb) functions may get this
+    correctly now, some drivers will replace these generic versions with their
+    own functions. It is pretty insane to expect them to do reference counting
+    of the cursor (as an example, look at driver/xf86-video-vmware to see how
+    that looks like as a workaround). There are even places in xserver itself
+    which replace these two functions.
+    The segfaults if no reference counting is done are caused because the
+    reference count of the cursor reached zero, hence the cursor was freed,
+    however xf86CursorEnableDisableFBAccess() brought it back to life from
+    the dead (from the SavedCursor).
+    This patch hence adds reference counting in xf86CursorSetCursor. As per Michel
+    Daenzer's suggestion, also free the cursor upon xf86CursorCloseScreen.
+    In theory with this it should be possible to remove the reference
+    counting in the UseHwCursor functions I think, though it should also be
+    safe to keep them.
+    
+    Signed-off-by: Roland Scheidegger <sroland@vmware.com>
+    Reviewed-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 75efb46a14fe45ffe73faff637b1fa6d017e1e52
+Author: Roland Scheidegger <sroland@vmware.com>
+Date:   Fri Mar 12 16:52:56 2010 +0100
+
+    hw/xfree86: fix refcounting in xf86_use_hw_cursor
+    
+    This is the same fix as was done in
+    fcdc1d78cca3b8bb6b77d53eda7e21d649df6943 for xf86_use_hw_cursor_argb.
+    
+    Signed-off-by: Roland Scheidegger <sroland@vmware.com>
+    Reviewed-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit df9b6f16b27398545cd4cff8a56dd59a3813351d
+Merge: 5f169f5 5172253
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Mar 15 08:26:58 2010 -0700
+
+    Merge remote branch 'jeremyhu/master'
+
+commit 5f169f54936c9868ad0f3778cb95c1f35eef41ea
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Fri Mar 5 10:35:54 2010 -0500
+
+    XQuartz: remove undefined XSERVER_CFLAGS variable
+    
+    This is a variable local to configure.ac which is not AC_SUBST()
+    It is undefined in any generated Makefile.
+    
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 5172253bae3b9867118c6717434e73c173acd5e9
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Wed Feb 10 15:52:14 2010 -0800
+
+    XQuartz: Use an empty xkb keymap by default
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit b117bc7a441bec8f61610fb384d747112f73d236
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Thu Mar 11 00:06:01 2010 -0800
+
+    XQuartz: Include os.h for OsAbort()
+    
+    Fixes regression from 5b9a52be7e975e59e0bbc6b43539ecaff96b2ecd
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit b7a16117c6d87a9d33a5f682b592b4507f2c065e
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Thu Mar 11 00:03:08 2010 -0800
+
+    XQuartz: GLX: Fix prototype for swapBuffers
+    
+    This was a regression introduced by 04a54f69a8085ab3fe11a8713bd8b6b16ed1db27
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 178da6534fe7ab4b99fb87925c04e6f963c88583
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Mon Mar 8 16:33:37 2010 -0500
+
+    Xext: Link to external libraries when necessary.
+    
+    Although the DDX should be linked to the necessary libraries, we may
+    also need to pull them in directly to the module to ensure the symbols
+    are resolved at runtime. Should fix this bug with XSELINUX:
+    
+    /usr/bin/X: symbol lookup error:
+    /usr/lib64/xorg/modules/extensions/libextmod.so: undefined symbol:
+    is_selinux_enabled
+    
+    -v2: use _LIBADD instead of _LIBS; remove SELINUX_LIBS from
+         XSERVER_SYS_LIBS as it should only be needed in extmod.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit a2ea8c2f2cc53607d57d60f41c879380ea70cd02
+Author: Daniel Stone <daniel@fooishbar.org>
+Date:   Thu Mar 11 14:19:04 2010 +0200
+
+    Record: Avoid duplicates from replaying frozen events
+    
+    Reintroduce a check which used to be there in the old
+    ProcessKeyboardEvent/ProcessPointerEvent codepath, which avoids us
+    recording events subject to a grab twice: once when it's first processed
+    in EnqueueEvent, and then again when it's thawed and being replayed.
+    
+    This required a tiny amount of code motion to expose syncEvents.
+    
+    Signed-off-by: Daniel Stone <daniel@fooishbar.org>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit f2eacb4646beb25d055de22868f93e6b24f229b6
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Mar 10 09:39:05 2010 +1000
+
+    Revert "dix: Use DeliverGrabbedEvent for implicit passive grabs (#25400)"
+    
+    Several users have pointed out that this commit introduces regressions, most
+    notably perhaps fluxbox which essentially stops working after a few clicks.
+    
+    This reverts commit cf72b5437d2d620521279077a29c5df6d0fbb576.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit df9f3273041c6c3e0da2d2254e8c156cd582e296
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Mar 10 09:24:32 2010 +1000
+
+    xfree86: fix xf86Config.c build error in --enable-debug mode. (#26971)
+    
+    xf86Config.c: In function 'configInputDevices':
+    xf86Config.c:1514: error: request for member 'lay_identifier' in something
+    not a structure or union
+    make[5]: *** [xf86Config.lo] Error 1
+    
+    Introduced with e1165632bdfbd720889ed1adf5f7ab338032c0ee.
+    
+    X.Org Bug 26971 <http://bugs.freedesktop.org/show_bug.cgi?id=26971>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 116068103282924ef1476231d13d54719a797252
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Mar 9 09:35:23 2010 +1000
+
+    xfree86: don't warn about nonexisting core pointer/keyboard in config.
+    
+    In the vast majority of cases there is no xorg.conf that specifies a core
+    pointer/keyboard. Skip this warning, since we'll get another notification
+    about how the server relies on the config backend for input devices anyway.
+    
+    Leave the warning in for the error case (AEI off).
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit c39c8ece9bd3ce025549f4bac7794f5a62266f4a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Feb 10 15:06:52 2010 +1000
+
+    os: remove INTERNAL_MALLOC define.
+    
+    There doesn't seem to be anything that defines it and given that the
+    counterpart (the X internal malloc) was removed in
+    01cfba75229f4b9bf1e4fe80814931acdacde14c it's unlikely to work anyway.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 9f462ff9082634719e64d2d8d4dbd09ec7deaf2e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Feb 26 14:02:09 2010 +1000
+
+    dix: Clip only into axis ranges if we're in absolute mode. (#26543)
+    
+    An absolute device in relative mode may provide valuators outside of the
+    axis range. Clipping back into the range prevents screen crossings in a
+    multi-screen (Xinerama) setup as the required screen edge for crossing is
+    never met: miPointerSetPosition crosses the screen conditional to the X
+    coordinate being equal to the screen width or _less than_ 0. While the
+    former can be met when clipping into the coordinate range and scaling, the
+    latter cannot, resulting in a mouse pointer that gets stuck on the rightmost
+    screen.
+    
+    This patch only applies axis clipping for valuators in mode Absolute. If
+    relative, we allow the values to get above/below the axis ranges. Doesn't
+    matter, miPointerSetPosition will reset the values to the allowed range even
+    if no screen was crossed.
+    This leads to interesting values provided to clients, the valuator range of
+    the device resets once a screen is crossed and essentially reflects
+    the position of the cursor on the screen - scaled into the valuator range.
+    The values themselves are valid given the range though.
+    
+    In theory, the XI1 specs require that a relative device has a min/max range
+    of 0/0. This doesn't really go well with devices that actually can switch
+    mode between relative and absolute since they would have to reset their axis
+    range when switching. If multiple XI clients are in use, we have no method
+    of notifying them about the changes, so other clients may continue to use
+    the wrong axis ranges (note: XI1 wasn't really designed to have multiple
+    clients use a device). Expecting all relative devices to have this min/max
+    of 0 is unrealistic at this point.
+    
+    So pick what is possibly the lesser of all evils, pass the beer and despair.
+    
+    X.Org Bug 26543 <http://bugs.freedesktop.org/show_bug.cgi?id=26543>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+
+commit bbae92795c7eab062e6722c42fa7915e0cee5d69
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Mon Feb 15 20:08:09 2010 -0500
+
+    Replace assembly with generic unaligned access code
+    
+    Removes Alpha assembly, and probably works around unaligned accesses on
+    other sensitive platforms.
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+    Compiled-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 1c2abec479cfbac9aeadc121af0825d368317658
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Feb 26 11:44:17 2010 +1000
+
+    configure: move SELINUX_LIBS to XSERVER_SYS_LIBS
+    
+    All ddxs require linking against selinux if enabled.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit cab99b947c66a42dbf8a906bdb02e23aa7cab519
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Feb 26 11:41:38 2010 +1000
+
+    configure: move libselinux requirement up to the common section.
+    
+    Let's have all version-specific requirements in one block.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 9e7b6e565f6e69f20002bf03ed05fe8b63f86924
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Feb 26 10:14:00 2010 +1000
+
+    dmx: fix OsAbort()-related build error in examples/xinput.c
+    
+    5b9a52be7e975e59e0bbc6b43539ecaff96b2ecd changed the server to use OsAbort()
+    instead of abort(). xinput in dmx is a client program though and fails to
+    link if it tries to use OsAbort(). Switch it back to using abort().
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit cf72b5437d2d620521279077a29c5df6d0fbb576
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Feb 25 12:49:21 2010 +1000
+
+    dix: Use DeliverGrabbedEvent for implicit passive grabs (#25400)
+    
+    A client requesting a GrabModeSync button grab, owner-events true, with only
+    the ButtonRelease mask set would never receive the press event even if the
+    grab window had the ButtonPress mask set.
+    
+    The protocol requires that if owner-events is true, then the delivery mask
+    is the combination of the grab mask + the window event mask.
+    
+    DeliverGrabbedEvents does this already for us, checking first the delivery
+    based on owner_events and then based on the grab mask. AFAICT, the device
+    cannot enter the states FREEZE_BOTH_NEXT_EVENT or FREEZE_NEXT_EVENT that
+    would be handled by DGE in any possible path here.
+    
+    Bonus point - CheckPassiveGrabsOnWindows suddenly becomes a lot lesss
+    complicated.
+    
+    X.Org Bug 25400 <http://bugs.freedesktop.org/show_bug.cgi?id=25400>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit de86a3a3448f0a55c1cd99aee9ea80070a589877
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Feb 25 11:37:05 2010 -0800
+
+    Allow for missing or disabled compat_output
+    
+    When the compat output is missing (I don't think this is actually
+    possible), or is disabled (and hence has no crtc), we would like to
+    avoid dereferencing NULL pointers. This patch creates inline functions
+    to extract the current compat output, crtc or associated RandR crtc
+    structure, carefully checking for NULL pointers everywhere.
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit fbbadca7e88391e81ab0f470290f5eec36aa9ce7
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Feb 25 11:35:03 2010 -0800
+
+    Share enum definition for det_monrec_parameter sync_source
+    
+    There were two separate enum definitions, one inside
+    det_monrec_parameter struct and one for a local variable (which was then
+    stored inside the struct). Sharing a single definition makes the
+    code more obviously correct while making the compiler happier.
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 4b55b2cf8a52c39b53bae11cd1bc7314481d4c86
+Author: Robert Bragg <bob@o-hand.com>
+Date:   Wed Jan 27 20:38:38 2010 +0000
+
+    DRI2: initialize event->drawable in DRI2SwapEvent
+    
+    We weren't initialising the drawable in the event structure so the
+    client side DRI2WireToEvent used for translating the event into a GLX
+    event wouldn't be able to lookup up the corresponding GLXDrawable before
+    passing the event on.
+    
+    Signed-off-by: Robert Bragg <robert@linux.intel.com>
+    Reviewed-by: Eric Anholt <eric@anholt.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 780c95caf9888fa4548dfe4c1c78a7e7ce99a9ed
+Merge: 018b177 758f697
+Author: Keith Packard <keithp@keithp.com>
+Date:   Wed Feb 24 09:59:19 2010 -0800
+
+    Merge remote branch 'whot/for-keith'
+
+commit 018b177591c9fade6d065e31858cc6e054d33eff
+Author: Kristian Høgsberg <krh@bitplanet.net>
+Date:   Wed Feb 24 10:37:26 2010 -0500
+
+    glx: Compile fix to let server compile with new and old mesa
+    
+    We broke the __DRI2_FLUSH API since it was never released, but since it's
+    taking a little longer than expected to get the X server side of the changes
+    ready, fix things up so it compiles.
+    
+    Signed-off-by: Kristian Høgsberg <krh@bitplanet.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 758f6971750ed507e64eee817d720a77181439f2
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Feb 15 16:32:16 2010 +1000
+
+    dix: try to ring the bell even if the current device doesn't have one. (#24503)
+    
+    Evdev devices do not have the bell proc set, but XTEST devices do. By
+    exiting early, the bell only rings if the last keyboard used was the XTEST
+    keyboard and hence the bell proc is still set on the master but not if an
+    evdev keyboard was used last.
+    
+    The better approach here is to try to ring the bell on all devices attached
+    to this master device in case one or more actually do produce an audible
+    sound. That's also XKB's behaviour if XkbUseCoreKbd is specified as device
+    identifier.
+    
+    X.Org Bug 24503 <http://bugs.freedesktop.org/show_bug.cgi?id=24503>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+
+commit c0d941913199ed251fceab62fcf65437f6f9bd31
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Feb 18 16:00:15 2010 +1000
+
+    dix: remove now-erroneous comment about frozen slave devices.
+    
+    A direct grab on a slave device through XI2 detaches it, regardless of
+    whether the grab is sync or async. So this comment doesn't apply to XI2
+    anyway.
+    
+    For XI1, aside from your life being miserable already, it doesn't matter as
+    XI1 does not have a concept of attachment. You can freeze a device and if
+    you don't freeze _all_ other devices at the same time, the master device can
+    still happily send events to the client.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit db4f676f25c6d8e58263d5151942be730592d444
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Feb 3 15:40:47 2010 -0500
+
+    xselinux: Bump extension minor version.
+    
+    Changes introduced in this version:
+    	- 3 window-related requests now handle pixmaps also.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit a6cbcf6e782e65f3d4d14202ed0b7a8f65b33c9d
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Feb 3 15:38:57 2010 -0500
+
+    xselinux: Rename window-related requests that now support pixmaps.
+    
+    Renamed requests:
+    	SetWindowCreateContext -> SetDrawableCreateContext
+    	GetWindowCreateContext -> GetDrawableCreateContext
+    	GetWindowContext -> GetDrawableContext
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit ab68c707fd02613d9359120ba6402639dd8bd89e
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Feb 3 15:08:40 2010 -0500
+
+    xselinux: Allow GetWindowContext to be used for pixmaps as well.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit eb9210097efea81065c301e5b6b4da7a566deb4a
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Jan 6 12:52:51 2010 -0500
+
+    xselinux: Remove reference counting calls for SID objects.
+    
+    Starting with libselinux 2.0.86, SID objects are no longer
+    reference counted and the sidput() and sidget() calls are no-ops.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 0c4b75a08922416050bb73d2e279ce938d3823e7
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Oct 21 21:59:01 2009 -0400
+
+    Don't print a failure message when XACE denies an input event delivery.
+    
+    A denial is normal and the behavior should be to drop the event.
+    Having the log message creates excessive log spam.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit e687e11b1248494a45b9a4e4c321675526808703
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Oct 21 21:46:50 2009 -0400
+
+    Revert "Remove some debug messages that trigger on XACE event delivery failure."
+    
+    The log messages still need to be there for non-XACE failures.
+    
+    This reverts commit 4be354c4c2da5168b302601b91bd80cfaca7e193.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 2ecb9f7d86117f212d7845741a3e155553954a85
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Wed Oct 21 19:28:26 2009 -0400
+
+    libselinux now has a pkgconfig file.  Use it.
+    
+    Also remove HAVE_NETLINK_AVC_ACQUIRE_FD tests, because we now
+    require a version of libselinux that has it.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 9fc6b59d46382e949526dc10c3f5bfddbe2acb92
+Author: Eamon Walsh <ewalsh@tycho.nsa.gov>
+Date:   Thu Oct 15 17:32:21 2009 -0400
+
+    xselinux: Allow SetWindowCreateContext to be used for pixmaps as well.
+    
+    Signed-off-by: Eamon Walsh <ewalsh@tycho.nsa.gov>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 93ff1bc5884cdfca1132af7fbc06c48e06f218c8
+Author: Simon Farnsworth <simon.farnsworth@onelan.co.uk>
+Date:   Mon Feb 15 14:18:00 2010 +0200
+
+    Always enable outputs that have been forced on in the configuration file
+    
+    If the user has gone to the effort of manually enabling an output in
+    the configuration file assume that they know what they're doing.
+    
+    X.org Bug 14611 <http://bugs.freedesktop.org/show_bug.cgi?id=14611>
+    
+    Signed-off-by: Simon Farnsworth <simon.farnsworth@onelan.co.uk>
+    Reviewed-by: Alex Deucher <alexdeucher@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit ca9c2472d74c7107ccc117e2c9c723c168d2eccf
+Merge: e40ba57 02d1116
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Feb 22 13:26:06 2010 -0800
+
+    Merge remote branch 'whot/for-keith'
+
+commit e40ba5798c367bec584f6437b23d2c5f801fd013
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Feb 18 15:49:09 2010 +1000
+
+    Xi: assume BadMode for non-BadMatch errors returned from SetDeviceMode.
+    
+    The XI protocol spec only allows for two errors on the SetDeviceMode
+    requests: BadMatch or BadMode. BadMode however is a dynamically assigned
+    extension error and the driver doesn't have access to the actual error
+    number. Hence, if a SetDeviceMode driver returns an error other than
+    BadMatch, assume BadMode.
+    
+    The two exceptions are BadAlloc and BadImplementations, pass these on to the
+    client (any request is allowed to return either of those).
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 02d1116e7eb84068fa32477f1640d29b0a81b638
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Jan 11 16:35:36 2010 +1000
+
+    Xi: assume BadMode for non-BadMatch errors returned from SetDeviceMode.
+    
+    The XI protocol spec only allows for two errors on the SetDeviceMode
+    requests: BadMatch or BadMode. BadMode however is a dynamically assigned
+    extension error and the driver doesn't have access to the actual error
+    number. Hence, if a SetDeviceMode driver returns an error other than
+    BadMatch, assume BadMode.
+    
+    The two exceptions are BadAlloc and BadImplementations, pass these on to the
+    client (any request is allowed to return either of those).
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 122fc0e7a0712df4ec2bd9ca6773f90bcd2095cf
+Author: Chris Dekter <cdekter@gmail.com>
+Date:   Thu Feb 11 16:34:09 2010 +1000
+
+    Re-enable RECORD extension.
+    
+    RECORD was disabled during the switch to internal events. This patch
+    modifies the record callback to work with internal events instead of
+    xEvents. The InternalEvents are converted to core/Xi events as needed.
+    
+    Since record is a loadable extension, the EventTo* calls must be externed.
+    
+    Signed-off-by: Chris Dekter <cdekter@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 03ef00ae79687046dc9f9987857062a16ff2c2e0
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Wed Feb 17 11:40:44 2010 +0100
+
+    EXA/mixed: Clean up exaPrepareAccessReg_mixed() a little.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Acked-by: Maarten Maathuis <madman2003@gmail.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 9623daad7c864d46b0dfcbb6e689820b96cc8115
+Author: Maarten Maathuis <madman2003@gmail.com>
+Date:   Wed Feb 17 11:40:43 2010 +0100
+
+    exa/mixed: fix gnome-panel corruption
+    
+    - A mapped pixmap can't be used for acceleration, any decent memory manager
+    will refuse this.
+    - Source pixmaps migrated with a bounding region are incomplete (from the
+    gpu point of view), so do the upload unconditionally, instead of just for
+    deferred destination pixmaps.
+    - Fixes fd.o bug #26076.
+    
+    Signed-off-by: Maarten Maathuis <madman2003@gmail.com>
+    Acked-by: Michel Dänzer <michel@daenzer.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 5b9a52be7e975e59e0bbc6b43539ecaff96b2ecd
+Author: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+Date:   Thu Jan 28 11:08:34 2010 +0200
+
+    os: Prevent core dump from being truncated.
+    
+    The problem fixed by this patch can be reproduced on Linux with the
+    following steps.
+    - Access NULL pointer intentionally in ProcessOtherEvent on key press.
+    - Instead of saving core dump to a file, write it into a pipe.
+      echo "|/usr/sbin/my-core-dumper" > /proc/sys/kernel/core_pattern
+    - Dump the core by pressing a key.
+    
+    While the core is being dumped into the pipe, the smart schedule timer
+    will cause a pending SIGALRM. Linux kernel stops writing data to the
+    pipe when there are pending signals. This causes the core dump to be
+    truncated. On my system I'm expecting a 6 MB dump but the size will be
+    60 kB instead. The problem is solved if we block the SIGALRM caused by
+    expired smart schedule timer.
+    
+    I haven't been able to reproduce this problem in the following cases.
+    - Save core dump to a file instead of a pipe.
+    - kill -SEGV `pidof Xorg`
+    - Press a key to dump core while gdb is attached to Xorg.
+    - Give option -dumbSched to Xorg.
+    
+    Also note that the fix works only when NoTrapSignals has the default
+    value FALSE. The problem can still be reproduced if error signals
+    aren't trapped. In addition to pending SIGALRM, there is a similar
+    problem with pending SIGIO from the keyboard driver during core dump.
+    
+    Signed-off-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit ca364ca82a760d8e5347a6f9f79636c9a5e4e03f
+Author: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+Date:   Thu Jan 28 11:08:33 2010 +0200
+
+    os: Introduce OsAbort for proper core dumps.
+    
+    Signed-off-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 031f92bf9ab15226df410012a0d1c9c390efc36d
+Author: Oliver McFadden <oliver.mcfadden@nokia.com>
+Date:   Wed Feb 3 10:05:20 2010 +0200
+
+    parser: corrected xf86getBoolValue to use case insensitive compare
+    
+    commit c6e8637e29e0ca11dfb35c02da7ca6002ac8c597 introduced this
+    regression; it can cause existing config files to be parsed incorrectly.
+    
+    Acked-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Oliver McFadden <oliver.mcfadden@nokia.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit be96fb2f02c13a6ee8aba40f7d4c3f9141f06cea
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Mon Feb 15 17:42:11 2010 -0800
+
+    Solaris xf86OSRingBell() off-by-one error in filling iov[] array
+    
+    When generating sound buffers for /dev/audio bells, insert waveform
+    for beep *or* silence, but not both, so we don't write one entry past
+    the end of the iov buffer when the final bit of soundwave ends up in
+    the final entry allocated in the iov array.
+    
+    Fixes OpenSolaris bug 6894890:
+     http://bugs.opensolaris.org/bugdatabase/view_bug.do?bug_id=6894890
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 2d40f22d1ec970a84b23aa42b1feca4feedeb4bb
+Author: Matt Turner <mattst88@gmail.com>
+Date:   Mon Feb 15 20:05:24 2010 -0500
+
+    Use C-style comments in x86emu
+    
+    Signed-off-by: Matt Turner <mattst88@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 4e8bf12b13690afa6d9fee0e339d3819ef16fb3f
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Mon Feb 15 16:46:21 2010 -0800
+
+    XQuartz: Fix a possible buffer overrun in quartzAudio
+    
+    Also dropped deprecated API while there
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 4127e8e5be5c366eb752bbb8d7f0ff5b519e641b
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Wed Feb 10 17:56:30 2010 -0800
+
+    XQuartz: clang static analysis fixes
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit c686c5cbdc5f35744407af5f9aabbd18cc17714b
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Mon Feb 15 15:03:01 2010 -0800
+
+    XQuartz: Fix linking (CloseInput())
+    
+    Fixes regresison from d33adcdf03c69407d151e732fa0cf9947151eb19
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 84905007702da2c05a4f7446b3fc5ff52be49655
+Author: Thomas Jaeger <ThJaeger@gmail.com>
+Date:   Mon Jan 4 15:00:49 2010 -0500
+
+    udev: Don't filter subsystem "input"
+    
+    This allows serial wacom devices to work, whose subsystem is "tty".
+    
+    Signed-off-by: Thomas Jaeger <ThJaeger@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 8736d112afb0dd61dfdaadd6378eafd200b2ef5f
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Sat Feb 13 10:40:40 2010 -0800
+
+    xfree86: Reorder InputClass option priorities
+    
+    Currently the config and InputClasses are merged together so that the
+    options from the config backend have the highest priority. This is bad
+    since it means options such as a default XKB layout set by the backend
+    cannot be changed by the user.
+    
+    This patch changes order of precedence to be:
+    
+    1. xorg.conf
+    2. xorg.conf.d (later files have higher priority)
+    3. config backend
+    
+    In order to allow this ordering, the config parsing has been changed to
+    read the xorg.conf.d files before xorg.conf. This has the consequence
+    that the core device picking which looks for the first InputDevice may
+    not find it in xorg.conf.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 48f7298657f91843db36566b8d66d6c4c18dbd4c
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Jan 13 15:03:45 2010 +1000
+
+    Xi: reset the sli pointers after copying device classes. (#25640)
+    
+    If the indicator flags have the XkbSLI_IsDefault bit set, the indicator map
+    and names aren't their own bit of memory but rather point into the
+    device->key->xkbInfo->desc structure. XkbCopySrvLedInfo knows about this and
+    leaves the pointers alone.
+    
+    When copying the classes from the slave to the master, these pointers are
+    copied and still point to the dev->key class of the slave device. If the
+    slave device is removed, the memory becomes invalid and a call to modify
+    this data (e.g. XkbSetIndicators) may cause a deadlock.
+    
+    The copying of dev->key relies on dev->kbdfeed to be already set up. Hence
+    the pointers need to be reset once _both_ kbdfeed and key have been copied
+    into the master device.
+    
+    X.Org Bug 25640 <http://bugs.freedesktop.org/show_bug.cgi?id=25640>
+    Fedora Bug 540584 <https://bugzilla.redhat.com/show_bug.cgi?id=540584>
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit d33adcdf03c69407d151e732fa0cf9947151eb19
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Jan 15 15:22:02 2010 +1000
+
+    dix: move config_init into the DDX.
+    
+    The only DDX currently using hotplugging is the xfree86 one and it looks
+    like it'll stay that way for a bit. Move the initialization to the DDX,
+    since Xephyr, Xnest, and friends don't need HAL or udev notifications.
+    
+    Add CloseInput (counterpart to InitInput) to be able to clean up the config
+    initialization from the DDX as well.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 001ce71dc11287dc94cc2fbc5d35677c046e6c04
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Fri Feb 12 23:34:57 2010 +0100
+
+    dix: restore lastDeviceEventTime update in dixSaveScreens
+    
+    This was removed in 6b5978dcf1f7ac3ecc2f22df06f7000f360e2066 (Do not
+    reset lastDeviceEventTime when we do dixSaveScreens), but caused a
+    regression for XResetScreenSaver.  Add the lastDeviceEventTime update
+    back, but restrict it to that case.
+    
+    X.Org bug#25855 <http://bugs.freedesktop.org/25855>
+    
+    Reported-by: Lubos Lunak <l.lunak@suse.cz>
+    Tested-by: Lubos Lunak <l.lunak@suse.cz>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 97b03037f4d99fcebc7603011f41c3aff9871ce2
+Author: Peter Harris <pharris@opentext.com>
+Date:   Fri Feb 12 15:36:30 2010 -0500
+
+    Don't double-swap the RandR PropertyNotify event
+    
+    The event is already swapped in randr.c/SRROutputPropertyNotifyEvent, so
+    it should not be swapped here.
+    
+    X.Org Bugzilla #26511: http://bugs.freedesktop.org/show_bug.cgi?id=26511
+    
+    Tested-by: Leonardo Chiquitto <leonardo@ngdn.org>
+    Acked-by: Adam Jackson <ajax at redhat.com>
+    Reviewed-by: Julien Cristau <jcristau at debian.org>
+    Signed-off-by: Peter Harris <pharris@opentext.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 0b73f98cbd1803b82c2faf1a40f1a0037673d712
+Author: Soeren Sandmann <sandmann@daimi.au.dk>
+Date:   Fri Feb 12 20:04:53 2010 +0100
+
+    xfree86: Add qxl driver to the autoconfig logic
+    
+    The qxl driver is for the QXL virtualized graphics device.
+    
+    Signed-off-by: Søren Sandmann Pedersen <ssp@redhat.com>
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
 commit 9c5bb550a2234e4bee2a144417d74c6bdf160e89
 Author: Keith Packard <keithp@keithp.com>
 Date:   Fri Feb 12 13:46:03 2010 -0800

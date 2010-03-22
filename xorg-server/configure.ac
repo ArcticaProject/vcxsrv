@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.7.99.901, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2010-02-12"
+AC_INIT([xorg-server], 1.7.99.902, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="2010-03-21"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -786,6 +786,7 @@ LIBXTST="xtst >= 1.0.99.2"
 LIBPCIACCESS="pciaccess >= 0.8.0"
 LIBGLIB="glib-2.0 >= 2.16"
 LIBUDEV="libudev >= 143"
+LIBSELINUX="libselinux >= 2.0.86"
 
 if test "x$CONFIG_UDEV" = xyes &&
  { test "x$CONFIG_DBUS_API" = xyes || test "x$CONFIG_HAL" = xyes; }; then
@@ -1058,7 +1059,7 @@ if test "x$XSELINUX" = xyes; then
 	fi
 	AC_CHECK_HEADERS([libaudit.h], [], AC_MSG_ERROR([SELinux extension requires audit system headers]))
 	AC_CHECK_LIB(audit, audit_open, [], AC_MSG_ERROR([SELinux extension requires audit system library]))
-	PKG_CHECK_MODULES([SELINUX], [libselinux >= 2.0.86])
+	PKG_CHECK_MODULES([SELINUX], $LIBSELINUX)
 	SELINUX_LIBS="$SELINUX_LIBS -laudit"
 	AC_DEFINE(XSELINUX, 1, [Build SELinux extension])
 fi
@@ -1579,7 +1580,7 @@ if test "x$XORG" = xyes; then
 	AC_CHECK_FUNCS([pci_device_vgaarb_init])
 	LIBS=$SAVE_LIBS
 	CFLAGS=$SAVE_CFLAGS
-	XORG_SYS_LIBS="$XORG_SYS_LIBS $PCIACCESS_LIBS $GLX_SYS_LIBS $SELINUX_LIBS"
+	XORG_SYS_LIBS="$XORG_SYS_LIBS $PCIACCESS_LIBS $GLX_SYS_LIBS"
 	XORG_CFLAGS="$XORG_CFLAGS $PCIACCESS_CFLAGS"
 
 	case $host_os in
@@ -1828,6 +1829,7 @@ AC_MSG_RESULT([$XWIN])
 if test "x$XWIN" = xyes; then
 	PKG_CHECK_EXISTS($WINDOWSWMPROTO, [WINDOWSWM=yes], [WINDOWSWM=no])
 	AC_DEFINE_DIR(SYSCONFDIR, sysconfdir, [Location of system.XWinrc])
+	AC_DEFINE_DIR(DEFAULT_LOGDIR, logdir, [Default log location])
 	AC_DEFINE_UNQUOTED(XORG_VERSION_CURRENT, [$VENDOR_RELEASE], [Current Xorg version])
 	AC_DEFINE_UNQUOTED(__VENDORDWEBSUPPORT__, ["$VENDOR_WEB"], [Vendor web address for support])
 	AC_CHECK_TOOL(WINDRES, windres)

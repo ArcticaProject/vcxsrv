@@ -72,6 +72,7 @@ public:
     m_Targets.push_back(pTarget);
   }
   void SetTargetsIsBuild(uint32 Md5_32);
+  void SetTargetsIsBuilding(const fileinfo *pSrc);
 };
 
 class IMPLICITRULE

@@ -44,11 +44,12 @@ host_triplet = @host@
 @XACE_TRUE@am__append_7 = $(XACE_SRCS)
 @XACE_TRUE@@XORG_TRUE@am__append_8 = xace.h xacestr.h
 @XSELINUX_TRUE@am__append_9 = $(XSELINUX_SRCS)
-@XCSECURITY_TRUE@am__append_10 = $(XCSECURITY_SRCS)
-@XCALIBRATE_TRUE@am__append_11 = $(XCALIBRATE_SRCS)
-@MULTIBUFFER_TRUE@am__append_12 = $(MULTIBUFFER_SRCS)
-@XF86BIGFONT_TRUE@am__append_13 = $(BIGFONT_SRCS)
-@DPMSExtension_TRUE@am__append_14 = $(DPMS_SRCS)
+@XSELINUX_TRUE@am__append_10 = $(SELINUX_LIBS)
+@XCSECURITY_TRUE@am__append_11 = $(XCSECURITY_SRCS)
+@XCALIBRATE_TRUE@am__append_12 = $(XCALIBRATE_SRCS)
+@MULTIBUFFER_TRUE@am__append_13 = $(MULTIBUFFER_SRCS)
+@XF86BIGFONT_TRUE@am__append_14 = $(BIGFONT_SRCS)
+@DPMSExtension_TRUE@am__append_15 = $(DPMS_SRCS)
 subdir = Xext
 DIST_COMMON = $(am__sdk_HEADERS_DIST) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -72,7 +73,10 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libXext_la_LIBADD =
+am__DEPENDENCIES_1 =
+@XSELINUX_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2)
+libXext_la_DEPENDENCIES = $(am__DEPENDENCIES_3)
 am__libXext_la_SOURCES_DIST = bigreq.c geext.c shape.c sleepuntil.c \
 	sleepuntil.h sync.c syncsrv.h xcmisc.c xtest.c shm.c shmint.h \
 	panoramiX.c panoramiX.h panoramiXh.h panoramiXsrv.h \
@@ -127,7 +131,7 @@ am__libXextbuiltin_la_SOURCES_DIST = bigreq.c geext.c shape.c \
 @XORG_TRUE@am_libXextbuiltin_la_OBJECTS = $(am__objects_13)
 libXextbuiltin_la_OBJECTS = $(am_libXextbuiltin_la_OBJECTS)
 @XORG_TRUE@am_libXextbuiltin_la_rpath =
-libXextmodule_la_LIBADD =
+@XORG_TRUE@libXextmodule_la_DEPENDENCIES = $(am__DEPENDENCIES_3)
 am__libXextmodule_la_SOURCES_DIST = xvmain.c xvdisp.c xvmc.c xvdix.h \
 	xvmcext.h xvdisp.h xres.c saver.c xselinux_ext.c \
 	xselinux_hooks.c xselinux_label.c xselinux.h xselinuxint.h \
@@ -225,6 +229,7 @@ DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
 DBUS_LIBS = @DBUS_LIBS@
 DEFAULT_LIBRARY_PATH = @DEFAULT_LIBRARY_PATH@
+DEFAULT_LOGDIR = @DEFAULT_LOGDIR@
 DEFAULT_LOGPREFIX = @DEFAULT_LOGPREFIX@
 DEFAULT_MODULE_PATH = @DEFAULT_MODULE_PATH@
 DEFS = @DEFS@
@@ -356,6 +361,8 @@ RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
 SED = @SED@
+SELINUX_CFLAGS = @SELINUX_CFLAGS@
+SELINUX_LIBS = @SELINUX_LIBS@
 SERVER_MISC_CONFIG_PATH = @SERVER_MISC_CONFIG_PATH@
 SET_MAKE = @SET_MAKE@
 SHA1_CFLAGS = @SHA1_CFLAGS@
@@ -509,12 +516,13 @@ AM_CFLAGS = $(DIX_CFLAGS)
 # Sources always included in libXextbuiltin.la & libXext.la
 BUILTIN_SRCS = bigreq.c geext.c shape.c sleepuntil.c sleepuntil.h \
 	sync.c syncsrv.h xcmisc.c xtest.c $(am__append_1) \
-	$(am__append_5) $(am__append_7) $(am__append_10) \
-	$(am__append_11) $(am__append_13)
+	$(am__append_5) $(am__append_7) $(am__append_11) \
+	$(am__append_12) $(am__append_14)
 
 # Sources always included in libXextmodule.la & libXext.la. That's right, zero.
 MODULE_SRCS = $(am__append_2) $(am__append_3) $(am__append_4) \
-	$(am__append_9) $(am__append_12) $(am__append_14)
+	$(am__append_9) $(am__append_13) $(am__append_15)
+MODULE_LIBS = $(am__append_10)
 
 # Optional sources included if extension enabled by configure.ac rules
 
@@ -558,8 +566,10 @@ DPMS_SRCS = dpms.c dpmsproc.h
 
 # Now take all of the above, mix well, bake for 10 minutes and get libXext*.la
 libXext_la_SOURCES = $(BUILTIN_SRCS) $(MODULE_SRCS)
+libXext_la_LIBADD = $(MODULE_LIBS)
 @XORG_TRUE@libXextbuiltin_la_SOURCES = $(BUILTIN_SRCS)
 @XORG_TRUE@libXextmodule_la_SOURCES = $(MODULE_SRCS)
+@XORG_TRUE@libXextmodule_la_LIBADD = $(MODULE_LIBS)
 EXTRA_DIST = \
 	$(MITSHM_SRCS) \
 	$(XV_SRCS) \

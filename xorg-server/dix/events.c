@@ -3555,6 +3555,8 @@ CheckPassiveGrabsOnWindow(
                 xE = &core;
                 count = 1;
                 mask = grab->eventMask;
+                if (grab->ownerEvents)
+                    mask |= pWin->eventMask;
             } else if (match & XI2_MATCH)
             {
                 rc = EventToXI2((InternalEvent*)event, &xE);
@@ -3576,6 +3578,24 @@ CheckPassiveGrabsOnWindow(
                     mask = grab->xi2mask[device->id][((xGenericEvent*)xE)->evtype/8];
                 else if (event->type == XI_Enter || event->type == XI_FocusIn)
                     mask = grab->xi2mask[device->id][event->type/8];
+
+                if (grab->ownerEvents && wOtherInputMasks(grab->window))
+                {
+                    InputClientsPtr icp =
+                        wOtherInputMasks(grab->window)->inputClients;
+
+                    while(icp)
+                    {
+                        if (rClient(icp) == rClient(grab))
+                        {
+                            int evtype = (xE) ? ((xGenericEvent*)xE)->evtype : event->type;
+                            mask |= icp->xi2mask[device->id][evtype/8];
+                            break;
+                        }
+
+                        icp = icp->next;
+                    }
+                }
             } else
             {
                 rc = EventToXI((InternalEvent*)event, &xE, &count);
@@ -3587,6 +3607,22 @@ CheckPassiveGrabsOnWindow(
                     continue;
                 }
                 mask = grab->eventMask;
+                if (grab->ownerEvents && wOtherInputMasks(grab->window))
+                {
+                    InputClientsPtr icp =
+                        wOtherInputMasks(grab->window)->inputClients;
+
+                    while(icp)
+                    {
+                        if (rClient(icp) == rClient(grab))
+                        {
+                            mask |= icp->mask[device->id];
+                            break;
+                        }
+
+                        icp = icp->next;
+                    }
+                }
             }
 
 	    (*grabinfo->ActivateGrab)(device, grab, currentTime, TRUE);

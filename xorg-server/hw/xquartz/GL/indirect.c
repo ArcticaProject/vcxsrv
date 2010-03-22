@@ -471,7 +471,7 @@ static int __glXAquaContextForceCurrent(__GLXcontext *baseContext)
 }
 
 /* Drawing surface notification callbacks */
-static GLboolean __glXAquaDrawableSwapBuffers(__GLXdrawable *base) {
+static GLboolean __glXAquaDrawableSwapBuffers(ClientPtr client, __GLXdrawable *base) {
     CGLError err;
     __GLXAquaDrawable *drawable;
  

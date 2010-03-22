@@ -2303,6 +2303,9 @@ ConfigureWindow(WindowPtr pWin, Mask mask, XID *vlist, ClientPtr client)
     return(Success);
 
 ActuallyDoSomething:
+    if (pWin->drawable.pScreen->ConfigNotify)
+	(*pWin->drawable.pScreen->ConfigNotify)(pWin, x, y, w, h, bw, pSib);
+
     if (SubStrSend(pWin, pParent))
     {
 	memset(&event, 0, sizeof(xEvent));

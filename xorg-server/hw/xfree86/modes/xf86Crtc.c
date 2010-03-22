@@ -1495,12 +1495,16 @@ GuessRangeFromModes(MonPtr mon, DisplayModePtr mode)
        mon->vrefresh[0].lo = 58.0;
 }
 
+enum det_monrec_source {
+    sync_config, sync_edid, sync_default
+};
+
 struct det_monrec_parameter {
     MonRec *mon_rec;
     int *max_clock;
     Bool set_hsync;
     Bool set_vrefresh;
-    enum { sync_config, sync_edid, sync_default } *sync_source;
+    enum det_monrec_source *sync_source;
 };
 
 static void handle_detailed_monrec(struct detailed_monitor_section *det_mon,
@@ -1563,7 +1567,7 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	Bool                add_default_modes = TRUE;
 	Bool		    debug_modes = config->debug_modes ||
 					  xf86Initialising;
-	enum { sync_config, sync_edid, sync_default } sync_source = sync_default;
+	enum det_monrec_source sync_source = sync_default;
 	
 	while (output->probed_modes != NULL)
 	    xf86DeleteMode(&output->probed_modes, output->probed_modes);
@@ -2591,8 +2595,8 @@ xf86SetDesiredModes (ScrnInfoPtr scrn)
 	if (!crtc->enabled)
 	    continue;
 
-	if (config->output[config->compat_output]->crtc == crtc)
-	    output = config->output[config->compat_output];
+	if (xf86CompatOutput(scrn) && xf86CompatCrtc(scrn) == crtc)
+	    output = xf86CompatOutput(scrn);
 	else
 	{
 	    for (o = 0; o < config->num_output; o++)
@@ -2712,14 +2716,16 @@ xf86SetSingleMode (ScrnInfoPtr pScrn, DisplayModePtr desired, Rotation rotation)
 {
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(pScrn);
     Bool		ok = TRUE;
-    xf86OutputPtr	compat_output = config->output[config->compat_output];
-    DisplayModePtr	compat_mode;
+    xf86OutputPtr	compat_output;
+    DisplayModePtr	compat_mode = NULL;
     int			c;
 
     /*
      * Let the compat output drive the final mode selection
      */
-    compat_mode = xf86OutputFindClosestMode (compat_output, desired);
+    compat_output = xf86CompatOutput(pScrn);
+    if (compat_output)
+	compat_mode = xf86OutputFindClosestMode (compat_output, desired);
     if (compat_mode)
 	desired = compat_mode;
     
@@ -2943,7 +2949,7 @@ xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
     }
 
     /* Set the DDC properties for the 'compat' output */
-    if (output == config->output[config->compat_output])
+    if (output == xf86CompatOutput(scrn))
         xf86SetDDCproperties(scrn, edid_mon);
 
 #ifdef RANDR_12_INTERFACE

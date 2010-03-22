@@ -1001,8 +1001,7 @@ xf86ChangeGammaRamp(
     CMapLinkPtr pLink;
 
     if (xf86_crtc_supports_gamma(pScrn)) {
-	xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
-	RRCrtcPtr crtc = config->output[config->compat_output]->crtc->randr_crtc;
+	RRCrtcPtr crtc = xf86CompatRRCrtc(pScrn);
 
 	if (crtc) {
 	    if (crtc->gammaSize != size)
@@ -1076,8 +1075,7 @@ xf86GetGammaRampSize(ScreenPtr pScreen)
     CMapScreenPtr pScreenPriv;
 
     if (xf86_crtc_supports_gamma(pScrn)) {
-	xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
-	RRCrtcPtr crtc = config->output[config->compat_output]->crtc->randr_crtc;
+	RRCrtcPtr crtc = xf86CompatRRCrtc(pScrn);
 
 	if (crtc)
 	    return crtc->gammaSize;
@@ -1106,8 +1104,7 @@ xf86GetGammaRamp(
     int shift, sigbits;
 
     if (xf86_crtc_supports_gamma(pScrn)) {
-	xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
-	RRCrtcPtr crtc = config->output[config->compat_output]->crtc->randr_crtc;
+	RRCrtcPtr crtc = xf86CompatRRCrtc(pScrn);
 
 	if (crtc) {
 	    if (crtc->gammaSize < size)

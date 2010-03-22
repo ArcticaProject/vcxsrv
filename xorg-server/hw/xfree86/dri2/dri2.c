@@ -202,27 +202,25 @@ find_attachment(DRI2DrawablePtr pPriv, unsigned attachment)
     return -1;
 }
 
-static DRI2BufferPtr
+static Bool
 allocate_or_reuse_buffer(DrawablePtr pDraw, DRI2ScreenPtr ds,
 			 DRI2DrawablePtr pPriv,
 			 unsigned int attachment, unsigned int format,
-			 int dimensions_match)
+			 int dimensions_match, DRI2BufferPtr *buffer)
 {
-    DRI2BufferPtr buffer;
-    int old_buf;
-
-    old_buf = find_attachment(pPriv, attachment);
+    int old_buf = find_attachment(pPriv, attachment);
 
     if ((old_buf < 0)
 	|| !dimensions_match
 	|| (pPriv->buffers[old_buf]->format != format)) {
-	buffer = (*ds->CreateBuffer)(pDraw, attachment, format);
-    } else {
-	buffer = pPriv->buffers[old_buf];
-	pPriv->buffers[old_buf] = NULL;
-    }
+	*buffer = (*ds->CreateBuffer)(pDraw, attachment, format);
+	return TRUE;
 
-    return buffer;
+    } else {
+	*buffer = pPriv->buffers[old_buf];
+	pPriv->buffers[old_buf] = NULL;
+	return FALSE;
+    }
 }
 
 static DRI2BufferPtr *
@@ -238,6 +236,7 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
     int have_fake_front = 0;
     int front_format = 0;
     int dimensions_match;
+    int buffers_changed = 0;
     int i;
 
     if (!pPriv) {
@@ -256,8 +255,10 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
 	const unsigned attachment = *(attachments++);
 	const unsigned format = (has_format) ? *(attachments++) : 0;
 
-	buffers[i] = allocate_or_reuse_buffer(pDraw, ds, pPriv, attachment,
-					      format, dimensions_match);
+	if (allocate_or_reuse_buffer(pDraw, ds, pPriv, attachment,
+				     format, dimensions_match,
+				     &buffers[i]))
+		buffers_changed = 1;
 
 	/* If the drawable is a window and the front-buffer is requested,
 	 * silently add the fake front-buffer to the list of requested
@@ -287,15 +288,18 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
     }
 
     if (need_real_front > 0) {
-	buffers[i++] = allocate_or_reuse_buffer(pDraw, ds, pPriv,
-						DRI2BufferFrontLeft,
-						front_format, dimensions_match);
+	if (allocate_or_reuse_buffer(pDraw, ds, pPriv, DRI2BufferFrontLeft,
+				     front_format, dimensions_match,
+				     &buffers[i++]))
+	    buffers_changed = 1;
     }
 
     if (need_fake_front > 0) {
-	buffers[i++] = allocate_or_reuse_buffer(pDraw, ds, pPriv,
-						DRI2BufferFakeFrontLeft,
-						front_format, dimensions_match);
+	if (allocate_or_reuse_buffer(pDraw, ds, pPriv, DRI2BufferFakeFrontLeft,
+				     front_format, dimensions_match,
+				     &buffers[i++]))
+	    buffers_changed = 1;
+
 	have_fake_front = 1;
     }
 
@@ -324,7 +328,7 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
      * contents of the real front-buffer.  This ensures correct operation of
      * applications that call glXWaitX before calling glDrawBuffer.
      */
-    if (have_fake_front) {
+    if (have_fake_front && buffers_changed) {
 	BoxRec box;
 	RegionRec region;
 

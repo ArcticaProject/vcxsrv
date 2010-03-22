@@ -351,9 +351,14 @@ public:
   {
     return (m_BuildStatus&2)==2;
   }
-  void SetBuilding(void)
+  void SetBuilding(bool Others=true)
   {
     m_BuildStatus|=2;
+    /* Check if there are targets build by the rule attached to this target, if so set them also to building */
+    if (Others && m_pRule)
+    {
+      m_pRule->SetTargetsIsBuilding(this);
+    }
   }
   void ClearBuilding(void)
   {
