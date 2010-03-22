@@ -805,9 +805,10 @@ xf86RandR12CreateScreenResources (ScreenPtr pScreen)
 	}
 	else
 	{
-	    xf86OutputPtr   output = config->output[config->compat_output];
+	    xf86OutputPtr   output = xf86CompatOutput(pScrn);
 
-	    if (output->conf_monitor &&
+	    if (output &&
+		output->conf_monitor &&
 		(output->conf_monitor->mon_width  > 0 &&
 		 output->conf_monitor->mon_height > 0))
 	    {
@@ -1719,10 +1720,13 @@ xf86RandR12ChangeGamma(int scrnIndex, Gamma gamma)
 {
     CARD16 *points, *red, *green, *blue;
     ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
-    xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
-    RRCrtcPtr crtc = config->output[config->compat_output]->crtc->randr_crtc;
-    int size = max(0, crtc->gammaSize);
+    RRCrtcPtr crtc = xf86CompatRRCrtc(pScrn);
+    int size;
 
+    if (!crtc)
+	return Success;
+
+    size = max(0, crtc->gammaSize);
     if (!size)
 	return Success;
 

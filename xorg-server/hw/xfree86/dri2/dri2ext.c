@@ -353,10 +353,12 @@ DRI2SwapEvent(ClientPtr client, void *data, int type, CARD64 ust, CARD64 msc,
 	      CARD64 sbc)
 {
     xDRI2BufferSwapComplete event;
+    DrawablePtr pDrawable = data;
 
     event.type = DRI2EventBase + DRI2_BufferSwapComplete;
     event.sequenceNumber = client->sequence;
     event.event_type = type;
+    event.drawable = pDrawable->id;
     event.ust_hi = (CARD64)ust >> 32;
     event.ust_lo = ust & 0xffffffff;
     event.msc_hi = (CARD64)msc >> 32;

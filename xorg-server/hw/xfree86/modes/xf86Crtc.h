@@ -689,6 +689,32 @@ extern _X_EXPORT int xf86CrtcConfigPrivateIndex;
 
 #define XF86_CRTC_CONFIG_PTR(p)	((xf86CrtcConfigPtr) ((p)->privates[xf86CrtcConfigPrivateIndex].ptr))
 
+static _X_INLINE xf86OutputPtr
+xf86CompatOutput(ScrnInfoPtr pScrn)
+{
+    xf86CrtcConfigPtr config = XF86_CRTC_CONFIG_PTR(pScrn);
+    return config->output[config->compat_output];
+}
+
+static _X_INLINE xf86CrtcPtr
+xf86CompatCrtc(ScrnInfoPtr pScrn)
+{
+    xf86OutputPtr compat_output = xf86CompatOutput(pScrn);
+    if (!compat_output)
+	return NULL;
+    return compat_output->crtc;
+}
+
+static _X_INLINE RRCrtcPtr
+xf86CompatRRCrtc(ScrnInfoPtr pScrn)
+{
+    xf86CrtcPtr	compat_crtc = xf86CompatCrtc(pScrn);
+    if (!compat_crtc)
+	return NULL;
+    return compat_crtc->randr_crtc;
+}
+
+
 /*
  * Initialize xf86CrtcConfig structure
  */

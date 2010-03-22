@@ -1567,7 +1567,7 @@ dnl DEALINGS IN THE SOFTWARE.
 # See the "minimum version" comment for each macro you use to see what 
 # version you require.
 m4_defun([XORG_MACROS_VERSION],[
-m4_define([vers_have], [1.5.0])
+m4_define([vers_have], [1.6.1])
 m4_define([maj_have], m4_substr(vers_have, 0, m4_index(vers_have, [.])))
 m4_define([maj_needed], m4_substr([$1], 0, m4_index([$1], [.])))
 m4_if(m4_cmp(maj_have, maj_needed), 0,,
@@ -1731,7 +1731,7 @@ fi
 AC_PATH_PROG(LINUXDOC, linuxdoc)
 AC_PATH_PROG(PS2PDF, ps2pdf)
 
-AC_MSG_CHECKING([Whether to build documentation])
+AC_MSG_CHECKING([whether to build documentation])
 
 if test x$HAVE_DEFS_ENT != x && test x$LINUXDOC != x ; then
    BUILDDOC=yes
@@ -1743,7 +1743,7 @@ AM_CONDITIONAL(BUILD_LINUXDOC, [test x$BUILDDOC = xyes])
 
 AC_MSG_RESULT([$BUILDDOC])
 
-AC_MSG_CHECKING([Whether to build pdf documentation])
+AC_MSG_CHECKING([whether to build pdf documentation])
 
 if test x$PS2PDF != x && test x$BUILD_PDFDOC != xno; then
    BUILDPDFDOC=yes
@@ -1791,7 +1791,7 @@ AC_PATH_PROG(DOCBOOKPDF, docbook2pdf)
 AC_PATH_PROG(DOCBOOKHTML, docbook2html)
 AC_PATH_PROG(DOCBOOKTXT, docbook2txt)
 
-AC_MSG_CHECKING([Whether to build text documentation])
+AC_MSG_CHECKING([whether to build text documentation])
 if test x$HAVE_DEFS_ENT != x && test x$DOCBOOKTXT != x &&
    test x$BUILD_TXTDOC != xno; then
 	BUILDTXTDOC=yes
@@ -1799,7 +1799,7 @@ fi
 AM_CONDITIONAL(BUILD_TXTDOC, [test x$BUILDTXTDOC = xyes])
 AC_MSG_RESULT([$BUILDTXTDOC])
 
-AC_MSG_CHECKING([Whether to build PDF documentation])
+AC_MSG_CHECKING([whether to build PDF documentation])
 if test x$HAVE_DEFS_ENT != x && test x$DOCBOOKPDF != x &&
    test x$BUILD_PDFDOC != xno; then
 	BUILDPDFDOC=yes
@@ -1807,7 +1807,7 @@ fi
 AM_CONDITIONAL(BUILD_PDFDOC, [test x$BUILDPDFDOC = xyes])
 AC_MSG_RESULT([$BUILDPDFDOC])
 
-AC_MSG_CHECKING([Whether to build PostScript documentation])
+AC_MSG_CHECKING([whether to build PostScript documentation])
 if test x$HAVE_DEFS_ENT != x && test x$DOCBOOKPS != x &&
    test x$BUILD_PSDOC != xno; then
 	BUILDPSDOC=yes
@@ -1815,7 +1815,7 @@ fi
 AM_CONDITIONAL(BUILD_PSDOC, [test x$BUILDPSDOC = xyes])
 AC_MSG_RESULT([$BUILDPSDOC])
 
-AC_MSG_CHECKING([Whether to build HTML documentation])
+AC_MSG_CHECKING([whether to build HTML documentation])
 if test x$HAVE_DEFS_ENT != x && test x$DOCBOOKHTML != x &&
    test x$BUILD_HTMLDOC != xno; then
 	BUILDHTMLDOC=yes
@@ -1834,7 +1834,7 @@ AC_SUBST(MAKE_PDF)
 AC_SUBST(MAKE_HTML)
 ]) # XORG_CHECK_DOCBOOK
 
-# XORG_WITH_XMLTO
+# XORG_WITH_XMLTO([MIN-VERSION])
 # ----------------
 # Minimum version: 1.5.0
 #
@@ -1882,10 +1882,24 @@ elif test "x$use_xmlto" = x"no" ; then
 else
    AC_MSG_ERROR([--with-xmlto expects 'yes' or 'no'])
 fi
+m4_ifval([$1],
+[if test "$have_xmlto" = yes; then
+    # scrape the xmlto version
+    AC_MSG_CHECKING([the xmlto version])
+    xmlto_version=`$XMLTO --version 2>/dev/null | cut -d' ' -f3`
+    AC_MSG_RESULT([$xmlto_version])
+    AS_VERSION_COMPARE([$xmlto_version], [$1],
+        [if test "x$use_xmlto" = xauto; then
+            AC_MSG_WARN([xmlto version $xmlto_version found, but $1 needed])
+            have_xmlto=no
+        else
+            AC_MSG_ERROR([xmlto version $xmlto_version found, but $1 needed])
+        fi])
+fi])
 AM_CONDITIONAL([HAVE_XMLTO], [test "$have_xmlto" = yes])
-]) # XORG_CHECK_XMLTO
+]) # XORG_WITH_XMLTO
 
-# XORG_WITH_ASCIIDOC
+# XORG_WITH_ASCIIDOC([MIN-VERSION])
 # ----------------
 # Minimum version: 1.5.0
 #
@@ -1933,11 +1947,25 @@ elif test "x$use_asciidoc" = x"no" ; then
 else
    AC_MSG_ERROR([--with-asciidoc expects 'yes' or 'no'])
 fi
+m4_ifval([$1],
+[if test "$have_asciidoc" = yes; then
+    # scrape the asciidoc version
+    AC_MSG_CHECKING([the asciidoc version])
+    asciidoc_version=`$ASCIIDOC --version 2>/dev/null | cut -d' ' -f2`
+    AC_MSG_RESULT([$asciidoc_version])
+    AS_VERSION_COMPARE([$asciidoc_version], [$1],
+        [if test "x$use_asciidoc" = xauto; then
+            AC_MSG_WARN([asciidoc version $asciidoc_version found, but $1 needed])
+            have_asciidoc=no
+        else
+            AC_MSG_ERROR([asciidoc version $asciidoc_version found, but $1 needed])
+        fi])
+fi])
 AM_CONDITIONAL([HAVE_ASCIIDOC], [test "$have_asciidoc" = yes])
-]) # XORG_CHECK_ASCIIDOC
+]) # XORG_WITH_ASCIIDOC
 
-# XORG_WITH_DOXYGEN
-# ----------------
+# XORG_WITH_DOXYGEN([MIN-VERSION])
+# --------------------------------
 # Minimum version: 1.5.0
 #
 # Documentation tools are not always available on all platforms and sometimes
@@ -1984,8 +2012,311 @@ elif test "x$use_doxygen" = x"no" ; then
 else
    AC_MSG_ERROR([--with-doxygen expects 'yes' or 'no'])
 fi
+m4_ifval([$1],
+[if test "$have_doxygen" = yes; then
+    # scrape the doxygen version
+    AC_MSG_CHECKING([the doxygen version])
+    doxygen_version=`$DOXYGEN --version 2>/dev/null`
+    AC_MSG_RESULT([$doxygen_version])
+    AS_VERSION_COMPARE([$doxygen_version], [$1],
+        [if test "x$use_doxygen" = xauto; then
+            AC_MSG_WARN([doxygen version $doxygen_version found, but $1 needed])
+            have_doxygen=no
+        else
+            AC_MSG_ERROR([doxygen version $doxygen_version found, but $1 needed])
+        fi])
+fi])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test "$have_doxygen" = yes])
-]) # XORG_CHECK_DOXYGEN
+]) # XORG_WITH_DOXYGEN
+
+# XORG_WITH_GROFF
+# ----------------
+# Minimum version: 1.6.0
+#
+# Documentation tools are not always available on all platforms and sometimes
+# not at the appropriate level. This macro enables a module to test for the
+# presence of the tool and obtain it's path in separate variables. Coupled with
+# the --with-groff option, it allows maximum flexibilty in making decisions
+# as whether or not to use the groff package.
+#
+# Interface to module:
+# HAVE_GROFF:	 used in makefiles to conditionally generate documentation
+# HAVE_GROFF_MM: the memorandum macros (-mm) package
+# HAVE_GROFF_MS: the -ms macros package
+# GROFF:	 returns the path of the groff program found
+#		 returns the path set by the user in the environment
+# --with-groff:	 'yes' user instructs the module to use groff
+#		 'no' user instructs the module not to use groff
+#
+# If the user sets the value of GROFF, AC_PATH_PROG skips testing the path.
+#
+# OS and distros often splits groff in a basic and full package, the former
+# having the groff program and the later having devices, fonts and macros
+# Checking for the groff executable is not enough.
+#
+# If macros are missing, we cannot assume that groff is useless, so we don't
+# unset HAVE_GROFF or GROFF env variables.
+# HAVE_GROFF_?? can never be true while HAVE_GROFF is false.
+#
+AC_DEFUN([XORG_WITH_GROFF],[
+AC_ARG_VAR([GROFF], [Path to groff command])
+AC_ARG_WITH(groff,
+	AS_HELP_STRING([--with-groff],
+	   [Use groff to regenerate documentation (default: yes, if installed)]),
+	   [use_groff=$withval], [use_groff=auto])
+
+if test "x$use_groff" = x"auto"; then
+   AC_PATH_PROG([GROFF], [groff])
+   if test "x$GROFF" = "x"; then
+        AC_MSG_WARN([groff not found - documentation targets will be skipped])
+	have_groff=no
+   else
+        have_groff=yes
+   fi
+elif test "x$use_groff" = x"yes" ; then
+   AC_PATH_PROG([GROFF], [groff])
+   if test "x$GROFF" = "x"; then
+        AC_MSG_ERROR([--with-groff=yes specified but groff not found in PATH])
+   fi
+   have_groff=yes
+elif test "x$use_groff" = x"no" ; then
+   if test "x$GROFF" != "x"; then
+      AC_MSG_WARN([ignoring GROFF environment variable since --with-groff=no was specified])
+   fi
+   have_groff=no
+else
+   AC_MSG_ERROR([--with-groff expects 'yes' or 'no'])
+fi
+# We have groff, test for the presence of the macro packages
+if test "x$have_groff" = x"yes"; then
+    AC_MSG_CHECKING([for ${GROFF} -ms macros])
+    if ${GROFF} -ms -I. /dev/null >/dev/null 2>&1 ; then
+        groff_ms_works=yes
+    else
+        groff_ms_works=no
+    fi
+    AC_MSG_RESULT([$groff_ms_works])
+    AC_MSG_CHECKING([for ${GROFF} -mm macros])
+    if ${GROFF} -mm -I. /dev/null >/dev/null 2>&1 ; then
+        groff_mm_works=yes
+    else
+        groff_mm_works=no
+    fi
+    AC_MSG_RESULT([$groff_mm_works])
+fi
+AM_CONDITIONAL([HAVE_GROFF], [test "$have_groff" = yes])
+AM_CONDITIONAL([HAVE_GROFF_MS], [test "$groff_ms_works" = yes])
+AM_CONDITIONAL([HAVE_GROFF_MM], [test "$groff_mm_works" = yes])
+]) # XORG_WITH_GROFF
+
+# XORG_WITH_FOP
+# ----------------
+# Minimum version: 1.6.0
+#
+# Documentation tools are not always available on all platforms and sometimes
+# not at the appropriate level. This macro enables a module to test for the
+# presence of the tool and obtain it's path in separate variables. Coupled with
+# the --with-fop option, it allows maximum flexibilty in making decisions
+# as whether or not to use the fop package.
+#
+# Interface to module:
+# HAVE_FOP: 	used in makefiles to conditionally generate documentation
+# FOP:	 	returns the path of the fop program found
+#		returns the path set by the user in the environment
+# --with-fop: 	'yes' user instructs the module to use fop
+#		'no' user instructs the module not to use fop
+#
+# If the user sets the value of FOP, AC_PATH_PROG skips testing the path.
+#
+AC_DEFUN([XORG_WITH_FOP],[
+AC_ARG_VAR([FOP], [Path to fop command])
+AC_ARG_WITH(fop,
+	AS_HELP_STRING([--with-fop],
+	   [Use fop to regenerate documentation (default: yes, if installed)]),
+	   [use_fop=$withval], [use_fop=auto])
+
+if test "x$use_fop" = x"auto"; then
+   AC_PATH_PROG([FOP], [fop])
+   if test "x$FOP" = "x"; then
+        AC_MSG_WARN([fop not found - documentation targets will be skipped])
+	have_fop=no
+   else
+        have_fop=yes
+   fi
+elif test "x$use_fop" = x"yes" ; then
+   AC_PATH_PROG([FOP], [fop])
+   if test "x$FOP" = "x"; then
+        AC_MSG_ERROR([--with-fop=yes specified but fop not found in PATH])
+   fi
+   have_fop=yes
+elif test "x$use_fop" = x"no" ; then
+   if test "x$FOP" != "x"; then
+      AC_MSG_WARN([ignoring FOP environment variable since --with-fop=no was specified])
+   fi
+   have_fop=no
+else
+   AC_MSG_ERROR([--with-fop expects 'yes' or 'no'])
+fi
+AM_CONDITIONAL([HAVE_FOP], [test "$have_fop" = yes])
+]) # XORG_WITH_FOP
+
+# XORG_WITH_PS2PDF
+# ----------------
+# Minimum version: 1.6.0
+#
+# Documentation tools are not always available on all platforms and sometimes
+# not at the appropriate level. This macro enables a module to test for the
+# presence of the tool and obtain it's path in separate variables. Coupled with
+# the --with-ps2pdf option, it allows maximum flexibilty in making decisions
+# as whether or not to use the ps2pdf package.
+#
+# Interface to module:
+# HAVE_PS2PDF: 	used in makefiles to conditionally generate documentation
+# PS2PDF:	returns the path of the ps2pdf program found
+#		returns the path set by the user in the environment
+# --with-ps2pdf: 'yes' user instructs the module to use ps2pdf
+#		 'no' user instructs the module not to use ps2pdf
+#
+# If the user sets the value of PS2PDF, AC_PATH_PROG skips testing the path.
+#
+AC_DEFUN([XORG_WITH_PS2PDF],[
+AC_ARG_VAR([PS2PDF], [Path to ps2pdf command])
+AC_ARG_WITH(ps2pdf,
+	AS_HELP_STRING([--with-ps2pdf],
+	   [Use ps2pdf to regenerate documentation (default: yes, if installed)]),
+	   [use_ps2pdf=$withval], [use_ps2pdf=auto])
+
+if test "x$use_ps2pdf" = x"auto"; then
+   AC_PATH_PROG([PS2PDF], [ps2pdf])
+   if test "x$PS2PDF" = "x"; then
+        AC_MSG_WARN([ps2pdf not found - documentation targets will be skipped])
+	have_ps2pdf=no
+   else
+        have_ps2pdf=yes
+   fi
+elif test "x$use_ps2pdf" = x"yes" ; then
+   AC_PATH_PROG([PS2PDF], [ps2pdf])
+   if test "x$PS2PDF" = "x"; then
+        AC_MSG_ERROR([--with-ps2pdf=yes specified but ps2pdf not found in PATH])
+   fi
+   have_ps2pdf=yes
+elif test "x$use_ps2pdf" = x"no" ; then
+   if test "x$PS2PDF" != "x"; then
+      AC_MSG_WARN([ignoring PS2PDF environment variable since --with-ps2pdf=no was specified])
+   fi
+   have_ps2pdf=no
+else
+   AC_MSG_ERROR([--with-ps2pdf expects 'yes' or 'no'])
+fi
+AM_CONDITIONAL([HAVE_PS2PDF], [test "$have_ps2pdf" = yes])
+]) # XORG_WITH_PS2PDF
+
+# XORG_ENABLE_DOCS (enable_docs=yes)
+# ----------------
+# Minimum version: 1.6.0
+#
+# Documentation tools are not always available on all platforms and sometimes
+# not at the appropriate level. This macro enables a builder to skip all
+# documentation targets except traditional man pages.
+# Combined with the specific tool checking macros XORG_WITH_*, it provides
+# maximum flexibilty in controlling documentation building.
+# Refer to:
+# XORG_WITH_XMLTO         --with-xmlto
+# XORG_WITH_ASCIIDOC      --with-asciidoc
+# XORG_WITH_DOXYGEN       --with-doxygen
+# XORG_WITH_FOP           --with-fop
+# XORG_WITH_GROFF         --with-groff
+# XORG_WITH_PS2PDF        --with-ps2pdf
+#
+# Interface to module:
+# ENABLE_DOCS: 	  used in makefiles to conditionally generate documentation
+# --enable-docs: 'yes' user instructs the module to generate docs
+#		 'no' user instructs the module not to generate docs
+# parm1:	specify the default value, yes or no.
+#
+AC_DEFUN([XORG_ENABLE_DOCS],[
+default=$1
+if test "x$default" = x ; then
+  default="yes"
+fi
+AC_ARG_ENABLE(docs,
+	AS_HELP_STRING([--enable-docs],
+	   [Enable building the documentation (default: yes)]),
+	   [build_docs=$enableval], [build_docs=$default])
+AM_CONDITIONAL(ENABLE_DOCS, [test x$build_docs = xyes])
+AC_MSG_CHECKING([whether to build documentation])
+AC_MSG_RESULT([$build_docs])
+]) # XORG_ENABLE_DOCS
+
+# XORG_ENABLE_DEVEL_DOCS (enable_devel_docs=yes)
+# ----------------
+# Minimum version: 1.6.0
+#
+# This macro enables a builder to skip all developer documentation.
+# Combined with the specific tool checking macros XORG_WITH_*, it provides
+# maximum flexibilty in controlling documentation building.
+# Refer to:
+# XORG_WITH_XMLTO         --with-xmlto
+# XORG_WITH_ASCIIDOC      --with-asciidoc
+# XORG_WITH_DOXYGEN       --with-doxygen
+# XORG_WITH_FOP           --with-fop
+# XORG_WITH_GROFF         --with-groff
+# XORG_WITH_PS2PDF        --with-ps2pdf
+#
+# Interface to module:
+# ENABLE_DEVEL_DOCS:	used in makefiles to conditionally generate developer docs
+# --enable-devel-docs:	'yes' user instructs the module to generate developer docs
+#			'no' user instructs the module not to generate developer docs
+# parm1:		specify the default value, yes or no.
+#
+AC_DEFUN([XORG_ENABLE_DEVEL_DOCS],[
+devel_default=$1
+if test "x$devel_default" = x ; then
+  devel_default="yes"
+fi
+AC_ARG_ENABLE(devel-docs,
+	AS_HELP_STRING([--enable-devel-docs],
+	   [Enable building the developer documentation (default: yes)]),
+	   [build_devel_docs=$enableval], [build_devel_docs=$devel_default])
+AM_CONDITIONAL(ENABLE_DEVEL_DOCS, [test x$build_devel_docs = xyes])
+AC_MSG_CHECKING([whether to build developer documentation])
+AC_MSG_RESULT([$build_devel_docs])
+]) # XORG_ENABLE_DEVEL_DOCS
+
+# XORG_ENABLE_SPECS (enable_specs=yes)
+# ----------------
+# Minimum version: 1.6.0
+#
+# This macro enables a builder to skip all functional specification targets.
+# Combined with the specific tool checking macros XORG_WITH_*, it provides
+# maximum flexibilty in controlling documentation building.
+# Refer to:
+# XORG_WITH_XMLTO         --with-xmlto
+# XORG_WITH_ASCIIDOC      --with-asciidoc
+# XORG_WITH_DOXYGEN       --with-doxygen
+# XORG_WITH_FOP           --with-fop
+# XORG_WITH_GROFF         --with-groff
+# XORG_WITH_PS2PDF        --with-ps2pdf
+#
+# Interface to module:
+# ENABLE_SPECS:		used in makefiles to conditionally generate specs
+# --enable-specs:	'yes' user instructs the module to generate specs
+#			'no' user instructs the module not to generate specs
+# parm1:		specify the default value, yes or no.
+#
+AC_DEFUN([XORG_ENABLE_SPECS],[
+spec_default=$1
+if test "x$spec_default" = x ; then
+  spec_default="yes"
+fi
+AC_ARG_ENABLE(specs,
+	AS_HELP_STRING([--enable-specs],
+	   [Enable building the specs (default: yes)]),
+	   [build_specs=$enableval], [build_specs=$spec_default])
+AM_CONDITIONAL(ENABLE_SPECS, [test x$build_specs = xyes])
+AC_MSG_CHECKING([whether to build functional specifications])
+AC_MSG_RESULT([$build_specs])
+]) # XORG_ENABLE_SPECS
 
 # XORG_CHECK_MALLOC_ZERO
 # ----------------------
@@ -2119,7 +2450,7 @@ AC_REQUIRE([AC_PROG_CC])
 if  test "x$GCC" = xyes ; then
     CWARNFLAGS="-Wall -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes \
 -Wmissing-declarations -Wnested-externs -fno-strict-aliasing \
--Wbad-function-cast"
+-Wbad-function-cast -Wformat=2"
     case `$CC -dumpversion` in
     3.4.* | 4.*)
 	CWARNFLAGS="$CWARNFLAGS -Wold-style-definition -Wdeclaration-after-statement"
@@ -2132,7 +2463,6 @@ else
     fi
 fi
 AC_SUBST(CWARNFLAGS)
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 ]) # XORG_CWARNFLAGS
 
 # XORG_STRICT_OPTION
@@ -2177,6 +2507,8 @@ XORG_RELEASE_VERSION
 XORG_CHANGELOG
 XORG_INSTALL
 XORG_MANPAGE_SECTIONS
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])],
+    [AC_SUBST([AM_DEFAULT_VERBOSITY], [1])])
 ]) # XORG_DEFAULT_OPTIONS
 
 # XORG_INSTALL()
@@ -2276,28 +2608,25 @@ AC_SUBST([CHANGELOG_CMD])
 dnl $XdotOrg: lib/xtrans/xtrans.m4,v 1.6 2005/07/26 18:59:11 alanc Exp $
 dnl
 dnl Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
-dnl 
-dnl Permission to use, copy, modify, distribute, and sell this software and its
-dnl documentation for any purpose is hereby granted without fee, provided that
-dnl the above copyright notice appear in all copies and that both that
-dnl copyright notice and this permission notice appear in supporting
-dnl documentation.
-dnl 
-dnl The above copyright notice and this permission notice shall be included
-dnl in all copies or substantial portions of the Software.
-dnl 
-dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-dnl OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-dnl MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-dnl IN NO EVENT SHALL THE OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR
-dnl OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-dnl ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-dnl OTHER DEALINGS IN THE SOFTWARE.
-dnl 
-dnl Except as contained in this notice, the name of the copyright holders shall
-dnl not be used in advertising or otherwise to promote the sale, use or
-dnl other dealings in this Software without prior written authorization
-dnl from the copyright holders.
+dnl
+dnl Permission is hereby granted, free of charge, to any person obtaining a
+dnl copy of this software and associated documentation files (the "Software"),
+dnl to deal in the Software without restriction, including without limitation
+dnl the rights to use, copy, modify, merge, publish, distribute, sublicense,
+dnl and/or sell copies of the Software, and to permit persons to whom the
+dnl Software is furnished to do so, subject to the following conditions:
+dnl
+dnl The above copyright notice and this permission notice (including the next
+dnl paragraph) shall be included in all copies or substantial portions of the
+dnl Software.
+dnl
+dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+dnl IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+dnl FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+dnl THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+dnl LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+dnl FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+dnl DEALINGS IN THE SOFTWARE.
 dnl 
 
 # XTRANS_TCP_FLAGS()
@@ -2307,7 +2636,9 @@ AC_DEFUN([XTRANS_TCP_FLAGS],[
  # SVR4 hides these in libraries other than libc
  AC_SEARCH_LIBS(socket, [socket])
  AC_SEARCH_LIBS(gethostbyname, [nsl])
- AC_HAVE_LIBRARY([ws2_32])
+ if test "$ac_cv_search_socket$ac_cv_search_gethostbyname" = "nono"; then
+   AC_HAVE_LIBRARY([ws2_32])
+ fi
 
  # Needs to come after above checks for libsocket & libnsl for SVR4 systems
  AC_ARG_ENABLE(ipv6, 

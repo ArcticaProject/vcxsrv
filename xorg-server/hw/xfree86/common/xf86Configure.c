@@ -612,7 +612,7 @@ configureDDCMonitorSection (int screennum)
 	  len = 0;
 	}
 	if ((ptr->mon_comment =
-	     realloc(ptr->mon_comment, len+strlen(displaySize_string)))) {
+	     realloc(ptr->mon_comment, len + strlen(displaySize_string) + 1))) {
 	  strcpy(ptr->mon_comment + len, displaySize_string);
 	}
       }

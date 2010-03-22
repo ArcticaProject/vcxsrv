@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libXquartzXpr.la
 
-AM_CFLAGS =  $(XSERVER_CFLAGS) $(DIX_CFLAGS)
+AM_CFLAGS =  $(DIX_CFLAGS)
 AM_CPPFLAGS = \
 	-I$(srcdir) -I$(srcdir)/.. \
 	-I$(top_srcdir)/miext \

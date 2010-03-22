@@ -487,26 +487,10 @@ CursorPtr
 CreateRootCursor(char *unused1, unsigned int unused2)
 {
     CursorPtr 	curs;
-#ifdef NULL_ROOT_CURSOR
-    CursorMetricRec cm;
-#else
     FontPtr 	cursorfont;
     int	err;
     XID		fontID;
-#endif
 
-#ifdef NULL_ROOT_CURSOR
-    cm.width = 0;
-    cm.height = 0;
-    cm.xhot = 0;
-    cm.yhot = 0;
-
-    AllocARGBCursor(NULL, NULL, NULL, &cm, 0, 0, 0, 0, 0, 0,
-		    &curs, serverClient, (XID)0);
-
-    if (curs == NullCursor)
-        return NullCursor;
-#else
     fontID = FakeClientID(0);
     err = OpenFont(serverClient, fontID, FontLoadAll | FontOpenSync,
 	(unsigned)strlen(defaultCursorFont), defaultCursorFont);
@@ -520,7 +504,6 @@ CreateRootCursor(char *unused1, unsigned int unused2)
     if (AllocGlyphCursor(fontID, 0, fontID, 1, 0, 0, 0, ~0, ~0, ~0,
 			 &curs, serverClient, (XID)0) != Success)
 	return NullCursor;
-#endif
 
     if (!AddResource(FakeClientID(0), RT_CURSOR, (pointer)curs))
 	return NullCursor;

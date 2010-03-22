@@ -31,6 +31,10 @@
 
 #include "capabilities.h"
 
+#define Cursor X_Cursor
+#include "os.h"
+#undef Cursor
+
 static void handleBufferModes(struct glCapabilitiesConfig *c, GLint bufferModes) {
     if(bufferModes & kCGLStereoscopicBit) {
 	c->stereo = true;

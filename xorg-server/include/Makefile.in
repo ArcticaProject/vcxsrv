@@ -90,12 +90,12 @@ am__sdk_HEADERS_DIST = XIstubs.h bstore.h bstorestr.h closestr.h \
 	cursorstr.h dix.h dixaccess.h dixevents.h dixfont.h \
 	dixfontstr.h dixgrabs.h dixstruct.h events.h exevents.h \
 	extension.h extinit.h extnsionst.h gc.h gcstruct.h globals.h \
-	input.h inputstr.h misc.h miscstruct.h opaque.h os.h pixmap.h \
-	pixmapstr.h privates.h property.h propertyst.h ptrveloc.h \
-	region.h regionstr.h registry.h resource.h rgb.h screenint.h \
-	scrnintstr.h selection.h servermd.h site.h swaprep.h swapreq.h \
-	validate.h window.h windowstr.h xkbfile.h xkbsrv.h xkbstr.h \
-	xkbrules.h xserver-properties.h
+	input.h inputstr.h list.h misc.h miscstruct.h opaque.h os.h \
+	pixmap.h pixmapstr.h privates.h property.h propertyst.h \
+	ptrveloc.h region.h regionstr.h registry.h resource.h rgb.h \
+	screenint.h scrnintstr.h selection.h servermd.h site.h \
+	swaprep.h swapreq.h validate.h window.h windowstr.h xkbfile.h \
+	xkbsrv.h xkbstr.h xkbrules.h xserver-properties.h
 HEADERS = $(nodist_sdk_HEADERS) $(sdk_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -135,6 +135,7 @@ DARWIN_LIBS = @DARWIN_LIBS@
 DBUS_CFLAGS = @DBUS_CFLAGS@
 DBUS_LIBS = @DBUS_LIBS@
 DEFAULT_LIBRARY_PATH = @DEFAULT_LIBRARY_PATH@
+DEFAULT_LOGDIR = @DEFAULT_LOGDIR@
 DEFAULT_LOGPREFIX = @DEFAULT_LOGPREFIX@
 DEFAULT_MODULE_PATH = @DEFAULT_MODULE_PATH@
 DEFS = @DEFS@
@@ -266,6 +267,8 @@ RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
 SED = @SED@
+SELINUX_CFLAGS = @SELINUX_CFLAGS@
+SELINUX_LIBS = @SELINUX_LIBS@
 SERVER_MISC_CONFIG_PATH = @SERVER_MISC_CONFIG_PATH@
 SET_MAKE = @SET_MAKE@
 SHA1_CFLAGS = @SHA1_CFLAGS@
@@ -430,6 +433,7 @@ top_srcdir = @top_srcdir@
 @XORG_TRUE@	globals.h	\
 @XORG_TRUE@	input.h		\
 @XORG_TRUE@	inputstr.h	\
+@XORG_TRUE@	list.h		\
 @XORG_TRUE@	misc.h		\
 @XORG_TRUE@	miscstruct.h	\
 @XORG_TRUE@	opaque.h	\

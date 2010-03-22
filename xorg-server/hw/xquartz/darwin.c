@@ -45,6 +45,7 @@
 #include "site.h"
 #include "globals.h"
 #include "dix.h"
+#include "xkbsrv.h"
 
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XIproto.h>
@@ -461,6 +462,11 @@ int DarwinParseModifierList(const char *constmodifiers, int separatelr)
  */
 void InitInput( int argc, char **argv )
 {
+    XkbRMLVOSet rmlvo = { .rules = "base", .model = "empty", .layout = "empty",
+                          .variant = NULL, .options = NULL };
+    /* We need to really have rules... or something... */
+    XkbSetRulesDflts(&rmlvo);
+
     darwinKeyboard = AddInputDevice(serverClient, DarwinKeybdProc, TRUE);
     RegisterKeyboardDevice( darwinKeyboard );
     darwinKeyboard->name = strdup("keyboard");
