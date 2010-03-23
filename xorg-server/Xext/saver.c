@@ -620,10 +620,10 @@ CreateSaverWindow (ScreenPtr pScreen)
     	    	FreeResource (pWin->drawable.id, RT_NONE);
     	    	return FALSE;
 	    }
+	pAttr->pCursor->refcnt++;
 	if (pWin->optional->cursor)
 	    FreeCursor (pWin->optional->cursor, (Cursor)0);
 	pWin->optional->cursor = pAttr->pCursor;
-	pAttr->pCursor->refcnt++;
 	pWin->cursorIsNone = FALSE;
 	CheckWindowOptionalNeed (pWin);
 	mask |= CWCursor;
