@@ -484,3 +484,27 @@ xkb_symbols "bak" {
     include "level3(ralt_switch)"
 };
 
+// Serbian charecters added as third level symbols to Russian keyboard layout.
+
+partial default alphanumeric_keys
+xkb_symbols "srp" {
+    include "ru(common)"
+    include "level3(ralt_switch)"
+
+    name[Group1]= "Russia - Serbian";
+
+    key <AE03> { [ 3, numerosign ] };
+    key <AE04> { [ 4, semicolon ] };
+    key <AE05> { [ 5, percent ] };
+    key <AE06> { [ 6, colon ] };
+    key <AE07> { [ 7, question ] };
+    key <AE08> { [ 8, asterisk ] };
+    key <AB10> { [ period, comma ] };
+    key <BKSL> { [ backslash, slash ] };
+    key	<AD01> { [ Cyrillic_shorti, Cyrillic_SHORTI, U458, U408 ] };
+    key	<AD06> { [ Cyrillic_en, Cyrillic_EN, U45A, U40A ] };
+    key	<AC08> { [ Cyrillic_el, Cyrillic_EL, U459, U409 ] };
+    key	<AC09> { [ Cyrillic_de, Cyrillic_DE, U45F, U40F ] };
+    key	<AC10> { [ Cyrillic_zhe, Cyrillic_ZHE, U452, U402 ] };
+    key	<AB02> { [ Cyrillic_che, Cyrillic_CHE, U45B, U40B ] };
+};

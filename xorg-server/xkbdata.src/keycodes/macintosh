@@ -185,3 +185,27 @@ xkb_keycodes "hhk" {
     <FK15> = 110;
 };
 
+// Aluminium Keyboards
+xkb_keycodes "alukbd" {
+    include "xfree86"
+
+    // Fkeys missing in xfree86 keycodes
+    <FK18> = 129;
+    <FK19> = 130;
+
+    // Eject key that matches the geometry definition
+    alias <I169> = <K6C>;
+
+    // Japanese keypad separator (KPSP in base, JPCM in evdev)
+    alias <JPCM> = <KPDC>;
+};
+
+// Aluminium Keyboards JIS
+// As of HID Usage Table v1.11, it seems there are no usages
+// for keys EISU or KANA. JIS Aluminium Keyboards overcome
+// this by outputting usages of keys Hanja and Hangul
+xkb_keycodes "jisevdev" {
+    alias <KANA> = <HJCV>;   // Switch to kana mode
+    alias <EISU> = <HNGL>;   // Switch to alphanumeric mode
+};
+

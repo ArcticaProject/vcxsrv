@@ -982,35 +982,35 @@
     <model>
       <configItem>
         <name>tm2020</name>
-        <description>TypeMatrix EZ-Reach 2020</description>
+        <_description>TypeMatrix EZ-Reach 2020</_description>
         <vendor>TypeMatrix</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>tm2030PS2</name>
-        <description>TypeMatrix EZ-Reach 2030 PS2</description>
+        <_description>TypeMatrix EZ-Reach 2030 PS2</_description>
         <vendor>TypeMatrix</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>tm2030USB</name>
-        <description>TypeMatrix EZ-Reach 2030 USB</description>
+        <_description>TypeMatrix EZ-Reach 2030 USB</_description>
         <vendor>TypeMatrix</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>tm2030USB-102</name>
-        <description>TypeMatrix EZ-Reach 2030 USB (102/105:EU mode)</description>
+        <_description>TypeMatrix EZ-Reach 2030 USB (102/105:EU mode)</_description>
         <vendor>TypeMatrix</vendor>
       </configItem>
     </model>
     <model>
       <configItem>
         <name>tm2030USB-106</name>
-        <description>TypeMatrix EZ-Reach 2030 USB (106:JP mode)</description>
+        <_description>TypeMatrix EZ-Reach 2030 USB (106:JP mode)</_description>
         <vendor>TypeMatrix</vendor>
       </configItem>
     </model>
@@ -1095,6 +1095,27 @@
       <configItem>
         <name>apple_laptop</name>
         <_description>Apple Laptop</_description>
+	<vendor>Apple</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>applealu_ansi</name>
+        <_description>Apple Aluminium Keyboard (ANSI)</_description>
+	<vendor>Apple</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>applealu_iso</name>
+        <_description>Apple Aluminium Keyboard (ISO)</_description>
+	<vendor>Apple</vendor>
+      </configItem>
+    </model>
+    <model>
+      <configItem>
+        <name>applealu_jis</name>
+        <_description>Apple Aluminium Keyboard (JIS)</_description>
 	<vendor>Apple</vendor>
       </configItem>
     </model>
@@ -1228,7 +1249,7 @@
         <variant>
           <configItem>
             <name>alt-intl</name>
-            <_description>Alternative international (former us_intl)</_description>
+            <_description>Alternative international</_description>
           </configItem>
         </variant>
 	<variant>
@@ -1246,7 +1267,13 @@
         <variant>
           <configItem>
             <name>dvorak-intl</name>
-            <_description>Dvorak international</_description>
+            <_description>Dvorak international (with dead keys)</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>dvorak-alt-intl</name>
+            <_description>Dvorak alternative international (no dead keys)</_description>
           </configItem>
         </variant>
         <variant>
@@ -1299,6 +1326,14 @@
           <configItem>
             <name>olpc2</name>
             <_description>Group toggle on multiply/divide key</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>srp</name>
+            <_description>Serbian</_description>
+            <languageList><iso639Id>eng</iso639Id>
+                          <iso639Id>srp</iso639Id> </languageList>
           </configItem>
         </variant>
       </variantList>
@@ -1566,7 +1601,7 @@
     <layout>
       <configItem>
         <name>bd</name>
-        <_shortDescription>Ban</_shortDescription>
+        <_shortDescription>Bgd</_shortDescription>
         <_description>Bangladesh</_description>
         <languageList><iso639Id>ben</iso639Id></languageList>
       </configItem>
@@ -1659,7 +1694,7 @@
         <variant>
           <configItem>
             <name>tam_keyboard_with_numerals</name>
-            <description>Tamil Keyboard with Numerals</description>
+            <_description>Tamil Keyboard with Numerals</_description>
             <languageList><iso639Id>tam</iso639Id></languageList>
           </configItem>
         </variant>
@@ -1963,7 +1998,7 @@
     <layout>
       <configItem>
         <name>cd</name>
-        <_shortDescription>DRC</_shortDescription>
+        <_shortDescription>COD</_shortDescription>
         <_description>Congo, Democratic Republic of the</_description>
         <languageList><iso639Id>fra</iso639Id></languageList>
       </configItem>
@@ -1972,7 +2007,7 @@
     <layout>
       <configItem>
         <name>cn</name>
-        <_shortDescription>China</_shortDescription>
+        <_shortDescription>Chn</_shortDescription>
         <_description>China</_description>
         <languageList><iso639Id>chi</iso639Id></languageList>
       </configItem>
@@ -2070,7 +2105,7 @@
     <layout>
       <configItem>
         <name>dk</name>
-        <_shortDescription>Dan</_shortDescription>
+        <_shortDescription>Dnk</_shortDescription>
         <_description>Denmark</_description>
         <languageList><iso639Id>dan</iso639Id></languageList>
       </configItem>
@@ -2132,7 +2167,7 @@
     <layout>
       <configItem>
         <name>bt</name>
-        <_shortDescription>Bhu</_shortDescription>
+        <_shortDescription>Btn</_shortDescription>
         <_description>Bhutan</_description>
         <languageList><iso639Id>dzo</iso639Id></languageList>
       </configItem>
@@ -2251,7 +2286,7 @@
     <layout>
       <configItem>
         <name>fo</name>
-        <_shortDescription>Fao</_shortDescription>
+        <_shortDescription>Fro</_shortDescription>
         <_description>Faroe Islands</_description>
         <languageList><iso639Id>fao</iso639Id></languageList>
       </configItem>
@@ -2462,7 +2497,7 @@
     <layout>
       <configItem>
         <name>gn</name>
-        <_shortDescription>Gui</_shortDescription>
+        <_shortDescription>Gin</_shortDescription>
         <_description>Guinea</_description>
         <languageList><iso639Id>fra</iso639Id></languageList>
       </configItem>
@@ -2597,7 +2632,7 @@
     <layout>
       <configItem>
         <name>gr</name>
-        <_shortDescription>Gre</_shortDescription>
+        <_shortDescription>Grc</_shortDescription>
         <_description>Greece</_description>
         <languageList><iso639Id>gre</iso639Id></languageList>
       </configItem>
@@ -2874,6 +2909,12 @@
             <_description>OADG 109A</_description>
           </configItem>
 	</variant>
+        <variant>
+          <configItem>
+            <name>mac</name>
+            <description>Macintosh</description>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>
@@ -2903,9 +2944,9 @@
     </layout>
     <layout>
       <configItem>
-	<name>kz</name>
-	<_shortDescription>Kaz</_shortDescription>
-	<_description>Kazakhstan</_description>
+        <name>kz</name>
+        <_shortDescription>Kaz</_shortDescription>
+        <_description>Kazakhstan</_description>
         <languageList><iso639Id>kaz</iso639Id></languageList>
       </configItem>
       <variantList>
@@ -3030,7 +3071,7 @@
     <layout>
       <configItem>
         <name>lv</name>
-        <_shortDescription>Lav</_shortDescription>
+        <_shortDescription>Lva</_shortDescription>
         <_description>Latvia</_description>
         <languageList><iso639Id>lav</iso639Id></languageList>
       </configItem>
@@ -3489,6 +3530,14 @@
         </variant>
         <variant>
           <configItem>
+            <name>srp</name>
+            <_description>Serbian</_description>
+            <languageList><iso639Id>rus</iso639Id>
+                          <iso639Id>srp</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
             <name>bak</name>
             <_description>Bashkirian</_description>
             <languageList><iso639Id>bak</iso639Id></languageList>
@@ -3832,7 +3881,7 @@
     <layout>
       <configItem>
         <name>lk</name>
-        <_shortDescription>SrL</_shortDescription>
+        <_shortDescription>Lka</_shortDescription>
         <_description>Sri Lanka</_description>
         <languageList><iso639Id>sin</iso639Id></languageList>
       </configItem>
@@ -4215,7 +4264,7 @@
     <layout>
       <configItem>
         <name>mv</name>
-        <_shortDescription>Mal</_shortDescription>
+        <_shortDescription>Mdv</_shortDescription>
         <_description>Maldives</_description>
         <languageList><iso639Id>div</iso639Id></languageList>
       </configItem>
@@ -4224,7 +4273,7 @@
     <layout>
        <configItem>
         <name>za</name>
-        <_shortDescription>Zar</_shortDescription>
+        <_shortDescription>Zaf</_shortDescription>
         <_description>South Africa</_description>
         <languageList><iso639Id>eng</iso639Id></languageList>
       </configItem>
@@ -4248,7 +4297,7 @@
     <layout>
       <configItem>
         <name>np</name>
-        <_shortDescription>Nep</_shortDescription>
+        <_shortDescription>Npl</_shortDescription>
 	<_description>Nepal</_description>
         <languageList><iso639Id>nep</iso639Id></languageList>
       </configItem>
@@ -4256,7 +4305,7 @@
     <layout>
       <configItem>
         <name>ng</name>
-        <_shortDescription>Nig</_shortDescription>
+        <_shortDescription>Nga</_shortDescription>
 	<_description>Nigeria</_description>
         <languageList><iso639Id>eng</iso639Id></languageList>
       </configItem>
@@ -4296,8 +4345,8 @@
     <layout>
       <configItem>
         <name>sn</name>
-        <shortDescription>Sen</shortDescription>
-        <description>Senegal</description>
+        <_shortDescription>Sen</_shortDescription>
+        <_description>Senegal</_description>
         <languageList><iso639Id>wol</iso639Id></languageList>
       </configItem>
       <variantList/>
@@ -4326,7 +4375,7 @@
     <layout>
       <configItem>
         <name>tm</name>
-        <shortDescription>Tkm</shortDescription>
+        <_shortDescription>Tkm</_shortDescription>
         <_description>Turkmenistan</_description>
         <languageList><iso639Id>tuk</iso639Id></languageList>
       </configItem>
@@ -4342,27 +4391,27 @@
     <layout>
       <configItem>
         <name>ml</name>
-        <shortDescription>Mli</shortDescription>
-        <description>Mali</description>
+        <_shortDescription>Mli</_shortDescription>
+        <_description>Mali</_description>
         <languageList><iso639Id>bam</iso639Id></languageList>
       </configItem>
       <variantList>
         <variant>
           <configItem>
             <name>fr-oss</name>
-            <description>Français (France Alternative)</description>
+            <_description>Français (France Alternative)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>us-mac</name>
-            <description>English (USA Macintosh)</description>
+            <_description>English (USA Macintosh)</_description>
           </configItem>
         </variant>
         <variant>
           <configItem>
             <name>us-intl</name>
-            <description>English (USA International)</description>
+            <_description>English (USA International)</_description>
           </configItem>
         </variant>
       </variantList>
@@ -5073,6 +5122,12 @@
         <configItem>
           <name>srvrkeys:none</name>
           <_description>Special keys (Ctrl+Alt+&lt;key&gt;) handled in a server</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>apple:alupckeys</name>
+          <description>Apple Aluminium Keyboard: emulate PC keys (Print, Scroll_Lock, Pause, NumLock)</description>
         </configItem>
       </option>
       <option>

@@ -164,7 +164,7 @@ xkb_symbols "intl" {
 partial alphanumeric_keys
 xkb_symbols "alt-intl" {
 
-  name[Group1]= "USA - Alternative international (former us_intl)";
+  name[Group1]= "USA - Alternative international";
 
   include "us"
 
@@ -253,7 +253,74 @@ xkb_symbols "dvorak" {
     key <BKSL> { [  backslash,  bar             ]       };
 };
 
-// Dvorak international
+// Dvorak international with dead keys
+// Olivier Mehani (shtrom-xorg@ssji.net)
+// Reproduce the per-key mapping of us(intl) for the dvorak layout
+// aka "I just swapped my keys over"
+partial alphanumeric_keys
+xkb_symbols "dvorak-intl" {
+
+    name[Group1]= "USA - Dvorak international (with dead keys)";
+
+    include "us(dvorak)"
+
+    key <TLDE> { [dead_grave, dead_tilde,         grave,       asciitilde ] };
+
+    key <AE01> { [	   1,     exclam,    exclamdown,      onesuperior ] };
+    key <AE02> { [	   2,         at,   twosuperior, dead_doubleacute ] };
+    key <AE03> { [	   3, numbersign, threesuperior,      dead_macron ] };
+    key <AE04> { [	   4,     dollar,      currency,         sterling ] };
+    key <AE05> { [	   5,    percent,      EuroSign,     dead_cedilla ] };
+    key <AE06> { [    6, dead_circumflex,    onequarter,      asciicircum ] };
+    key <AE07> { [	   7,  ampersand,       onehalf,	dead_horn ] };
+    key <AE08> { [	   8,   asterisk, threequarters,      dead_ogonek ] };
+    key <AE09> { [	   9,  parenleft, leftsinglequotemark, dead_breve ] };
+    key <AE10> { [	   0, parenright, rightsinglequotemark, dead_abovering ] };
+    key <AE11> { [ bracketleft,  braceleft,  guillemotleft, leftdoublequotemark ] };
+    key <AE12> { [bracketright, braceright, guillemotright, rightdoublequotemark ] };
+
+    key <AD01> { [dead_acute, dead_diaeresis, apostrophe,        quotedbl ] };
+    key <AD02> { [     comma,       less,      ccedilla,         Ccedilla ] };
+    key <AD03> { [    period,    greater, dead_abovedot,       dead_caron ] };
+    key <AD04> { [	   p,          P,    odiaeresis,       Odiaeresis ] };
+    key <AD05> { [	   y,          Y,    udiaeresis,       Udiaeresis ] };
+    // key <AD06> { [	   f,	F		]	};
+    // key <AD07> { [	   g,	G		]	};
+    key <AD08> { [	   c,          C,     copyright,             cent ] };
+    key <AD09> { [	   r,          R,    registered,       registered ] };
+    key <AD10> { [	   l,          L,        oslash,         Ooblique ] };
+    key <AD11> { [     slash,   question,  questiondown,        dead_hook ] };
+    // key <AD12> { [     equal,       plus,      multiply,         division ] };
+
+    key <AC01> { [	   a,          A,        aacute,           Aacute ] };
+    key <AC02> { [	   o,          O,        oacute,           Oacute ] };
+    key <AC03> { [	   e,          E,        eacute,           Eacute ] };
+    key <AC04> { [	   u,          U,        uacute,           Uacute ] };
+    key <AC05> { [	   i,          I,        iacute,           Iacute ] };
+    key <AC06> { [	   d,          D,           eth,              ETH ] };
+    // key <AC07> { [	   h,	H		]	};
+    key <AC08> { [	   t,          T,         thorn,            THORN ] };
+    key <AC09> { [	   n,          N,        ntilde,           Ntilde ] };
+    key <AC10> { [	   s,          S,        ssharp,          section ] };
+    // key <AC11> { [     minus, underscore,           yen,    dead_belowdot ] };
+
+    key <AB01> { [ semicolon,      colon,     paragraph,           degree ] };
+    key <AB02> { [	   q,          Q,    adiaeresis,       Adiaeresis ] };
+    // key <AB03> { [	   j,	J		]	};
+    key <AB04> { [	   k,          K,            oe,               OE ] };
+    // key <AB05> { [	   x,	X		]	};
+    // key <AB06> { [	   b,	B		]	};
+    key <AB07> { [	   m,          M,            mu,               mu ] };
+    key <AB08> { [	   w,          W,         aring,            Aring ] };
+    // key <AB09> { [	   v,	V		]	};
+    key <AB10> { [	   z,          Z,            ae,               AE ] };
+
+    key <BKSL> { [ backslash,        bar,       notsign,        brokenbar ] };
+
+    include "level3(ralt_switch)"
+};
+
+// Dvorak international without dead keys
 // Stephane Magnenat (stephane at magnenat dot net, http://stephane.magnenat.net)
 // Based on information from http://www.poupinou.org/dvorak/index.html
 //
@@ -270,9 +337,9 @@ xkb_symbols "dvorak" {
 //      â   ö   è   ù   ï
 
 partial alphanumeric_keys
-xkb_symbols "dvorak-intl" {
+xkb_symbols "dvorak-alt-intl" {
 
-    name[Group1]= "USA - Dvorak international";
+    name[Group1]= "USA - Dvorak alternative international (no dead keys)";
 
     include "us(dvorak)"
 
@@ -1050,4 +1117,26 @@ xkb_symbols "chr" {
     key <AB10> { [      U13C2,      U13C9 ] };
 
     // End alphanumeric section
+};
+
+// Serbian charecters added as third level symbols to US keyboard layout.
+
+partial alphanumeric_keys
+xkb_symbols "srp" {
+
+  name[Group1]= "USA - Serbian";
+
+  include "us"
+
+  key <TLDE> { [ grave, asciitilde ] };
+  key <AE06> { [ 6, dead_caron, asciicircum, asciicircum ] };
+  key <AC09> { [ l, L, U1C9, U1C8 ] };
+  key <AB06> { [ n, N, U1CC, U1CB ] };
+  key <AB01> { [ z, Z, U1C6, U1C5 ] };
+  key <AD03> { [ e, E, EuroSign, cent ] };
+  key <AC03> { [ d, D, dstroke, Dstroke ] };
+  key <AC11> { [ dead_acute, quotedbl, apostrophe, U315 ] };
+  key <SPCE> { [ space, space, nobreakspace, nobreakspace ] };
+
+  include "level3(ralt_switch)"
 };

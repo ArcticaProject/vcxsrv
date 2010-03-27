@@ -48,4 +48,5 @@
   vsonku306     =       +inet(microsoftprooem)
   $inetkbds     =       +inet(%m)
   $maclaptop    =       +inet(apple)+level3(enter_switch)
+  $applealu     =       +inet(apple)
   $macs	        =       +inet(apple)

@@ -211,3 +211,12 @@ xkb_symbols "nicola_f_bs" {
     key <AC12> { [ Escape               ] };
     key <AB11> { [ at, grave            ] };
 };
+
+// Copied from macintosh_vndr/jp
+partial alphanumeric_keys
+xkb_symbols "mac" {
+    name[Group1]	= "Japan - Macintosh";
+    include "jp(kana)"
+
+    replace key <CAPS> { [ Caps_Lock ] };
+};

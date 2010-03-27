@@ -25,6 +25,7 @@
 
 ! $macbooks = macbook78 macbook79
 ! $maclaptop = ibook powerbook macbook78 macbook79
+! $applealu = applealu_ansi applealu_iso applealu_jis
 ! $macs = macintosh macintosh_old ibook powerbook macbook78 macbook79
 
 ! $macvendorlayouts = ch de dk fi fr gb is it latam nl no pt se us

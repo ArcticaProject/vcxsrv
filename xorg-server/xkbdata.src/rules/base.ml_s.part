@@ -23,6 +23,10 @@
   macintosh_old	$macvendorlayouts	=	macintosh_vndr/us(oldmac)+macintosh_vndr/%l%(v)
   macintosh_old	$nonlatin		=	macintosh_vndr/us(oldmac)+%l%(v):2
   macintosh_old	*			=	macintosh_vndr/us(oldmac)+%l%(v)
+  applealu_jis	jp			=	macintosh_vndr/apple(alukbd)+macintosh_vndr/jp(usmac)+macintosh_vndr/jp(mac):2
+  applealu_jis	*			=	macintosh_vndr/apple(alukbd)+%l%(v)+macintosh_vndr/jp(mac):2
+ $applealu	$macvendorlayouts	=	macintosh_vndr/apple(alukbd)+macintosh_vndr/%l%(v)
+ $applealu	*			=	macintosh_vndr/apple(alukbd)+%l%(v)
  $macs		en_US			=	pc+macintosh_vndr/us(extended)
  $macs		$macvendorlayouts	=	pc+macintosh_vndr/%l%(v)
   nokiarx44	*			=	nokia_vndr/rx-44(%l)
