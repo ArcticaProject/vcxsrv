@@ -185,7 +185,7 @@ typedef void (*InitExtension)(INITARGS);
 #include <X11/extensions/panoramiXproto.h>
 #endif
 #ifdef XF86BIGFONT
-#include <X11/extensions/xf86bigfstr.h>
+#include <X11/extensions/xf86bigfproto.h>
 #endif
 #ifdef RES
 #include <X11/extensions/XResproto.h>

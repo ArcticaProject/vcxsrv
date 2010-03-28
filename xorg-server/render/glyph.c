@@ -217,6 +217,9 @@ FindGlyphByHash (unsigned char sha1[20], int format)
     GlyphRefPtr gr;
     CARD32 signature = *(CARD32 *) sha1;
 
+    if (!globalGlyphs[format].hashSet)
+	return NULL;
+
     gr = FindGlyphRef (&globalGlyphs[format],
 		       signature, TRUE, sha1);
 
