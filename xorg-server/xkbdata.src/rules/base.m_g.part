@@ -17,6 +17,7 @@
  $tmgeometries	=	typematrix(%m)
   winbook	=	winbook(XP5)
   pc98		=	nec(pc98)
+ $applealu	=	macintosh(%m)
  $macbooks      =       macintosh(%m)
  $macs		=	macintosh(macintosh)
   hhk		=	hhk(basic)
