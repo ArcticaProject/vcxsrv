@@ -232,7 +232,6 @@ static RAND_METHOD hwcrhk_rand =
 /* Constants used when creating the ENGINE */
 static const char *engine_hwcrhk_id = "chil";
 static const char *engine_hwcrhk_name = "CHIL hardware engine support";
-
 #ifndef OPENSSL_NO_DYNAMIC_ENGINE 
 /* Compatibility hack, the dynamic library uses this form in the path */
 static const char *engine_hwcrhk_id_alt = "ncipher";
@@ -847,8 +846,6 @@ static EVP_PKEY *hwcrhk_load_privkey(ENGINE *eng, const char *key_id,
 
 	return res;
  err:
-	if (res)
-		EVP_PKEY_free(res);
 #ifndef OPENSSL_NO_RSA
 	if (rtmp)
 		RSA_free(rtmp);
@@ -1204,6 +1201,11 @@ static int hwcrhk_get_pass(const char *prompt_info,
 	pem_password_cb *callback = NULL;
 	void *callback_data = NULL;
         UI_METHOD *ui_method = NULL;
+	/* Despite what the documentation says prompt_info can be
+	 * an empty string.
+	 */
+	if (prompt_info && !*prompt_info)
+		prompt_info = NULL;
 
         if (cactx)
                 {
@@ -1305,10 +1307,14 @@ static int hwcrhk_insert_card(const char *prompt_info,
 		{
 		char answer;
 		char buf[BUFSIZ];
-
-		if (wrong_info)
+		/* Despite what the documentation says wrong_info can be
+	 	 * an empty string.
+		 */
+		if (wrong_info && *wrong_info)
 			BIO_snprintf(buf, sizeof(buf)-1,
 				"Current card: \"%s\"\n", wrong_info);
+		else
+			buf[0] = 0;
 		ok = UI_dup_info_string(ui, buf);
 		if (ok >= 0 && prompt_info)
 			{

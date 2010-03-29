@@ -131,7 +131,7 @@ BIO *BIO_new_file(const char *filename, const char *mode)
 			BIOerr(BIO_F_BIO_NEW_FILE,ERR_R_SYS_LIB);
 		return(NULL);
 		}
-	if ((ret=BIO_new(BIO_s_file_internal())) == NULL)
+	if ((ret=BIO_new(BIO_s_file())) == NULL)
 		{
 		fclose(file);
 		return(NULL);
@@ -272,9 +272,9 @@ static long MS_CALLBACK file_ctrl(BIO *b, int cmd, long num, void *ptr)
 			BIO_clear_flags(b,BIO_FLAGS_UPLINK);
 #endif
 #endif
-#ifdef UP_fsetmode
+#ifdef UP_fsetmod
 		if (b->flags&BIO_FLAGS_UPLINK)
-			UP_fsetmode(b->ptr,num&BIO_FP_TEXT?'t':'b');
+			UP_fsetmod(b->ptr,(char)((num&BIO_FP_TEXT)?'t':'b'));
 		else
 #endif
 		{
@@ -286,8 +286,7 @@ static long MS_CALLBACK file_ctrl(BIO *b, int cmd, long num, void *ptr)
 			_setmode(fd,_O_BINARY);
 #elif defined(OPENSSL_SYS_NETWARE) && defined(NETWARE_CLIB)
 		int fd = fileno((FILE*)ptr);
-         /* Under CLib there are differences in file modes
-         */
+		/* Under CLib there are differences in file modes */
 		if (num & BIO_FP_TEXT)
 			setmode(fd,O_TEXT);
 		else
@@ -308,7 +307,7 @@ static long MS_CALLBACK file_ctrl(BIO *b, int cmd, long num, void *ptr)
 			else
 				_setmode(fd,_O_BINARY);
 			}
-#elif defined(OPENSSL_SYS_OS2)
+#elif defined(OPENSSL_SYS_OS2) || defined(OPENSSL_SYS_WIN32_CYGWIN)
 		int fd = fileno((FILE*)ptr);
 		if (num & BIO_FP_TEXT)
 			setmode(fd, O_TEXT);
@@ -404,11 +403,18 @@ static int MS_CALLBACK file_gets(BIO *bp, char *buf, int size)
 
 	buf[0]='\0';
 	if (bp->flags&BIO_FLAGS_UPLINK)
-		UP_fgets(buf,size,bp->ptr);
+		{
+		if (!UP_fgets(buf,size,bp->ptr))
+			goto err;
+		}
 	else
-		fgets(buf,size,(FILE *)bp->ptr);
+		{
+		if (!fgets(buf,size,(FILE *)bp->ptr))
+			goto err;
+		}
 	if (buf[0] != '\0')
 		ret=strlen(buf);
+	err:
 	return(ret);
 	}
 
