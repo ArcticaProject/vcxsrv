@@ -1315,7 +1315,9 @@ OsReleaseSignals (void)
 void
 OsAbort (void)
 {
+#ifndef __APPLE__
     OsBlockSignals();
+#endif
     abort();
 }
 

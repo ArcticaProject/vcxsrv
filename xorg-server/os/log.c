@@ -117,6 +117,12 @@ static char *saveBuffer = NULL;
 static int bufferSize = 0, bufferUnused = 0, bufferPos = 0;
 static Bool needBuffer = TRUE;
 
+#ifdef __APPLE__
+static char __crashreporter_info_buff__[4096] = {0};
+static const char *__crashreporter_info__ = &__crashreporter_info_buff__[0];
+asm (".desc __crashreporter_info__, 0x10");
+#endif
+
 /* Prefix strings for log messages. */
 #ifndef X_UNKNOWN_STRING
 #define X_UNKNOWN_STRING		"(\?\?)"
@@ -527,6 +533,9 @@ FatalError(const char *f, ...)
 	ErrorF("\nFatal server error:\n");
 
     va_start(args, f);
+#ifdef __APPLE__
+    (void)vsnprintf(__crashreporter_info_buff__, sizeof(__crashreporter_info_buff__), f, args);
+#endif
     VErrorF(f, args);
     va_end(args);
     ErrorF("\n");

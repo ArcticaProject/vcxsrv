@@ -4416,6 +4416,14 @@
         </variant>
       </variantList>
     </layout>
+    <layout>
+      <configItem>
+        <name>tz</name>
+        <_shortDescription>Tza</_shortDescription>
+	<_description>Tanzania</_description>
+        <languageList><iso639Id>swa</iso639Id></languageList>
+      </configItem>
+    </layout>
   </layoutList>
   <optionList>
     <group allowMultipleSelection="true">

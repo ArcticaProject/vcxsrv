@@ -73,8 +73,11 @@ device_added(struct udev_device *udev_device)
         goto unwind;
 
     parent = udev_device_get_parent(udev_device);
-    if (parent)
-        name = udev_device_get_property_value(parent, "NAME");
+    if (parent) {
+        name = udev_device_get_sysattr_value(parent, "name");
+        if (!name)
+            name = udev_device_get_property_value(parent, "NAME");
+    }
     if (!name)
         name = "(unnamed)";
     else

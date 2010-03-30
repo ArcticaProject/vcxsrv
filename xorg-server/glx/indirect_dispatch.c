@@ -98,8 +98,6 @@ void __glXDisp_CallLists(GLbyte * pc)
     const GLenum type = *(GLenum   *)(pc +  4);
     const GLvoid * lists =  (const GLvoid *)(pc +  8);
 
-    lists = (const GLvoid *) (pc + 8);
-
     CALL_CallLists( GET_DISPATCH(), (
         n,
         type,

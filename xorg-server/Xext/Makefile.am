@@ -107,7 +107,7 @@ MODULE_SRCS  += $(MULTIBUFFER_SRCS)
 endif
 
 # XF86 Big Font extension
-BIGFONT_SRCS = xf86bigfont.c
+BIGFONT_SRCS = xf86bigfont.c xf86bigfontsrv.h
 if XF86BIGFONT
 BUILTIN_SRCS += $(BIGFONT_SRCS)
 endif
