@@ -35,7 +35,7 @@ ro rs ru \
 se si sk sn \
 sy th \
 terminate \
-tj tm tr \
+tj tm tr tz \
 ua us uz vn \
 za \
 altwin capslock compose ctrl empty eurosign group inet \

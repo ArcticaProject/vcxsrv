@@ -753,7 +753,7 @@ XkbSrvLedInfoPtr	sli;
     if (cause!=NULL) {
 	xkbControlsNotify cn;
 	cn.numGroups= ctrls->num_groups;
-	cn.changedControls|= XkbControlsEnabledMask;
+	cn.changedControls= XkbControlsEnabledMask;
 	cn.enabledControls= ctrls->enabled_ctrls;
 	cn.enabledControlChanges= (ctrls->enabled_ctrls^old);
 	cn.keycode= cause->kc;

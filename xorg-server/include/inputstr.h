@@ -386,8 +386,16 @@ typedef struct {
     int spriteTraceSize;
     int spriteTraceGood;
 
-    ScreenPtr pEnqueueScreen; /* screen events are being delivered to */
-    ScreenPtr pDequeueScreen; /* screen events are being dispatched to */
+    /* Due to delays between event generation and event processing, it is
+     * possible that the pointer has crossed screen boundaries between the
+     * time in which it begins generating events and the time when
+     * those events are processed.
+     *
+     * pEnqueueScreen: screen the pointer was on when the event was generated
+     * pDequeueScreen: screen the pointer was on when the event is processed
+     */
+    ScreenPtr pEnqueueScreen;
+    ScreenPtr pDequeueScreen;
 
 } SpriteRec, *SpritePtr;
 
