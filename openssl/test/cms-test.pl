@@ -55,7 +55,7 @@
 
 my $ossl_path;
 
-if ( -f "../apps/openssl" ) {
+if ( -f "../apps/openssl$ENV{EXE_EXT}" ) {
     $ossl_path = "../util/shlib_wrap.sh ../apps/openssl";
 }
 elsif ( -f "..\\out32dll\\openssl.exe" ) {
@@ -232,7 +232,7 @@ my @smime_cms_tests = (
     [
         "signed content MIME format, RSA key, signed receipt request",
         "-sign -in smcont.txt -signer $smdir/smrsa1.pem -nodetach"
-          . " -receipt_request_to test@openssl.org -receipt_request_all"
+          . " -receipt_request_to test\@openssl.org -receipt_request_all"
           . " -out test.cms",
         "-verify -in test.cms "
           . " -CAfile $smdir/smroot.pem -out smtst.txt"
@@ -332,10 +332,6 @@ my @smime_cms_comp_tests = (
     ]
 
 );
-
-print "PKCS#7 <=> PKCS#7 consistency tests\n";
-
-run_smime_tests( \$badcmd, \@smime_pkcs7_tests, $pk7cmd, $pk7cmd );
 
 print "CMS => PKCS#7 compatibility tests\n";
 

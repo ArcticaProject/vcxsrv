@@ -3,6 +3,7 @@ Prerequisits:
 - Perl (cygwin perl (http://www.cygwin.com/), strawberry perl (http://strawberryperl.com)  or activestate perl (http://www.activestate.com/activeperl/) )
 - Python (2.5 used: http://www.python.org/)
 - Gnuwin32 gawk, gzip, flex, bison (and it's dependancies), sed (and it's dependancies (http://gnuwin32.sourceforge.net/)
+- nasm (http://nasm.sourceforge.net). Make sure the nasm directory is in your path
 - Make sure that the gnuwin32 binaries are in a directory path with no spaces, like 'C:\gnuwin32\bin'
 - Make sure the environment PATH includes the directory where the gnuwin32 binaries are
 - Make sure python, perl are in the environment PATH
@@ -18,7 +19,7 @@ Building freetype:
 
 Building openssl:
 - run 'perl Configure VC-WIN32' in the openssl directory
-- run 'ms\do_masm.bat' in the openssl' directory
+- run 'ms\do_nasm.bat' in the openssl' directory
 - run 'nmake -f ms\nt.mak' in the openssl directory
 - run 'nmake DEBUG=1 -f ms\nt.mak' in the openssl directory (if you want to build the DEBUG version of vcxsrv)
 

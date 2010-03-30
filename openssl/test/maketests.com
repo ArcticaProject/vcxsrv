@@ -12,9 +12,9 @@ $!  "test" programs for the different types of encryption for OpenSSL.
 $!  It was written so it would try to determine what "C" compiler to
 $!  use or you can specify which "C" compiler to use.
 $!
-$!  The test "executeables" will be placed in a directory called
-$!  [.xxx.EXE.TEST] where "xxx" denotes AXP or VAX depending on your machines
-$!  architecture.
+$!  The test "executables" will be placed in a directory called
+$!  [.xxx.EXE.TEST] where "xxx" denotes ALPHA, IA64, or VAX, depending
+$!  on your machine architecture.
 $!
 $!  Specify DEBUG or NODEBUG P1 to compile with or without debugger
 $!  information.
@@ -42,26 +42,35 @@ $! (That is, If Wee Need To Link To One.)
 $!
 $ TCPIP_LIB = ""
 $!
-$! Check Which Architecture We Are Using.
+$! Check What Architecture We Are Using.
 $!
-$ IF (F$GETSYI("CPU").GE.128) 
+$ IF (F$GETSYI("CPU").LT.128)
 $ THEN
-$!
-$!  The Architecture Is AXP.
-$!
-$   ARCH := AXP
-$!
-$! Else...
-$!
-$ ELSE
 $!
 $!  The Architecture Is VAX.
 $!
 $   ARCH := VAX
 $!
+$! Else...
+$!
+$ ELSE
+$!
+$!  The Architecture Is Alpha, IA64 or whatever comes in the future.
+$!
+$   ARCH = F$EDIT( F$GETSYI( "ARCH_NAME"), "UPCASE")
+$   IF (ARCH .EQS. "") THEN ARCH = "UNK"
+$!
 $! End The Architecture Check.
 $!
 $ ENDIF
+$!
+$! Define The OBJ Directory.
+$!
+$ OBJ_DIR := SYS$DISK:[-.'ARCH'.OBJ.TEST]
+$!
+$! Define The EXE Directory.
+$!
+$ EXE_DIR := SYS$DISK:[-.'ARCH'.EXE.TEST]
 $!
 $! Check To Make Sure We Have Valid Command Line Parameters.
 $!
@@ -83,10 +92,6 @@ $! Define The SSL We Are To Use.
 $!
 $ SSL_LIB := SYS$DISK:[-.'ARCH'.EXE.SSL]LIBSSL.OLB
 $!
-$! Define The OBJ Directory.
-$!
-$ OBJ_DIR := SYS$DISK:[-.'ARCH'.OBJ.TEST]
-$!
 $! Check To See If The Architecture Specific OBJ Directory Exists.
 $!
 $ IF (F$PARSE(OBJ_DIR).EQS."")
@@ -99,10 +104,6 @@ $!
 $! End The Architecture Specific OBJ Directory Check.
 $!
 $ ENDIF
-$!
-$! Define The EXE Directory.
-$!
-$ EXE_DIR := SYS$DISK:[-.'ARCH'.EXE.TEST]
 $!
 $! Check To See If The Architecture Specific EXE Directory Exists.
 $!
@@ -126,15 +127,20 @@ $!
 $ GOSUB CHECK_OPT_FILE
 $!
 $! Define The TEST Files.
+$! NOTE: Some might think this list ugly.  However, it's made this way to
+$! reflect the EXE variable in Makefile as closely as possible,
+$! thereby making it fairly easy to verify that the lists are the same.
 $!
 $ TEST_FILES = "BNTEST,ECTEST,ECDSATEST,ECDHTEST,IDEATEST,"+ -
-	       "MD2TEST,MD4TEST,MD5TEST,HMACTEST,"+ -
+	       "MD2TEST,MD4TEST,MD5TEST,HMACTEST,WP_TEST,"+ -
 	       "RC2TEST,RC4TEST,RC5TEST,"+ -
 	       "DESTEST,SHATEST,SHA1TEST,SHA256T,SHA512T,"+ -
 	       "MDC2TEST,RMDTEST,"+ -
 	       "RANDTEST,DHTEST,ENGINETEST,"+ -
 	       "BFTEST,CASTTEST,SSLTEST,EXPTEST,DSATEST,RSA_TEST,"+ -
-	       "EVP_TEST"
+	       "EVP_TEST,JPAKETEST"
+$! Should we add MTTEST,PQ_TEST,LH_TEST,DIVTEST,TABTEST as well?
+$
 $ TCPIP_PROGRAMS = ",,"
 $ IF COMPILER .EQS. "VAXC" THEN -
      TCPIP_PROGRAMS = ",SSLTEST,"
@@ -195,7 +201,9 @@ $!
 $! Compile The File.
 $!
 $ ON ERROR THEN GOTO NEXT_FILE
-$ CC/OBJECT='OBJECT_FILE' 'SOURCE_FILE'
+$ CC/OBJECT='OBJECT_FILE' /PREFIX=ALL -
+    /INCLUDE=(SYS$DISK:[-],SYS$DISK:[-.CRYPTO],SYS$DISK:[-.CRYPTO.X509V3],SYS$DISK:[-.INCLUDE.OPENSSL]) - 
+    'SOURCE_FILE'
 $ ON WARNING THEN GOTO NEXT_FILE
 $!
 $! Check If What We Are About To Compile Works Without A TCP/IP Library.
@@ -327,7 +335,7 @@ $!
 $   IF (F$SEARCH(OPT_FILE).EQS."")
 $   THEN
 $!
-$!    Figure Out If We Need An AXP Or A VAX Linker Option File.
+$!    Figure Out If We Need A non-VAX Or A VAX Linker Option File.
 $!
 $     IF (ARCH.EQS."VAX")
 $     THEN
@@ -347,19 +355,19 @@ $!    Else...
 $!
 $     ELSE
 $!
-$!      Create The AXP Linker Option File.
+$!      Create The non-VAX Linker Option File.
 $!
 $       CREATE 'OPT_FILE'
 $DECK
 !
-! Default System Options File For AXP To Link Agianst 
+! Default System Options File For non-VAX To Link Agianst 
 ! The Sharable C Runtime Library.
 !
 SYS$SHARE:CMA$OPEN_LIB_SHR/SHARE
 SYS$SHARE:CMA$OPEN_RTL/SHARE
 $EOD
 $!
-$!    End The VAX/AXP DEC C Option File Check.
+$!    End The DEC C Option File Check.
 $!
 $     ENDIF
 $!
@@ -511,7 +519,7 @@ $   ELSE
 $!
 $!  Check To See If We Have VAXC Or DECC.
 $!
-$     IF (ARCH.EQS."AXP").OR.(F$TRNLNM("DECC$CC_DEFAULT").NES."")
+$     IF (ARCH.NES."VAX").OR.(F$TRNLNM("DECC$CC_DEFAULT").NES."")
 $     THEN 
 $!
 $!      Looks Like DECC, Set To Use DECC.
@@ -621,7 +629,7 @@ $     CC = CC + "/''CC_OPTIMIZE'/''DEBUGGER'/STANDARD=ANSI89" + -
 $!
 $!    Define The Linker Options File Name.
 $!
-$     OPT_FILE = "SYS$DISK:[]VAX_DECC_OPTIONS.OPT"
+$     OPT_FILE = "''EXE_DIR'VAX_DECC_OPTIONS.OPT"
 $!
 $!  End DECC Check.
 $!
@@ -643,9 +651,9 @@ $!
 $!    Compile Using VAXC.
 $!
 $     CC = "CC"
-$     IF ARCH.EQS."AXP"
+$     IF ARCH.NES."VAX"
 $     THEN
-$	WRITE SYS$OUTPUT "There is no VAX C on Alpha!"
+$	WRITE SYS$OUTPUT "There is no VAX C on ''ARCH'!"
 $	EXIT
 $     ENDIF
 $     IF F$TRNLNM("DECC$CC_DEFAULT").EQS."/DECC" THEN CC = "CC/VAXC"
@@ -659,7 +667,7 @@ $     DEFINE/NOLOG SYS SYS$COMMON:[SYSLIB]
 $!
 $!    Define The Linker Options File Name.
 $!
-$     OPT_FILE = "SYS$DISK:[]VAX_VAXC_OPTIONS.OPT"
+$     OPT_FILE = "''EXE_DIR'VAX_VAXC_OPTIONS.OPT"
 $!
 $!  End VAXC Check
 $!
@@ -685,7 +693,7 @@ $     CC = "GCC/NOCASE_HACK/''GCC_OPTIMIZE'/''DEBUGGER'/NOLIST" + -
 $!
 $!    Define The Linker Options File Name.
 $!
-$     OPT_FILE = "SYS$DISK:[]VAX_GNUC_OPTIONS.OPT"
+$     OPT_FILE = "''EXE_DIR'VAX_GNUC_OPTIONS.OPT"
 $!
 $!  End The GNU C Check.
 $!
