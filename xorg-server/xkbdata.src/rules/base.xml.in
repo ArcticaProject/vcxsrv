@@ -4424,6 +4424,14 @@
         <languageList><iso639Id>swa</iso639Id></languageList>
       </configItem>
     </layout>
+    <layout>
+      <configItem>
+        <name>ke</name>
+        <_shortDescription>Ken</_shortDescription>
+	<_description>Kenya</_description>
+        <languageList><iso639Id>swa</iso639Id></languageList>
+      </configItem>
+    </layout>
   </layoutList>
   <optionList>
     <group allowMultipleSelection="true">

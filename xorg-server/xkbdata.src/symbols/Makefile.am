@@ -16,7 +16,8 @@ gb ge gh gn \
 gr hr hu \
 ie il in iq \
 ir is it jp \
-kg kh kr kz \
+ke kg kh \
+kr kz \
 la latam latin \
 lk lt lv \
 ma mao me \
