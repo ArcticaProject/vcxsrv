@@ -1,0 +1,13 @@
+// $XKeyboardConfig$
+
+// Keyboard layout for Swahili in Arabic script.
+// Based on Martin Vidner's Buckwalter transliteration variant of the Arabic keyboard
+// Please notify any corrections or omissions to
+// Kevin Donnelly (kevin@dotmon.com)
+
+partial default alphanumeric_keys
+xkb_symbols "swa" {
+  include "tz(swa)"
+
+  name[Group1]= "Kenya";
+};

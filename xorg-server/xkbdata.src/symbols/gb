@@ -122,17 +122,8 @@ xkb_symbols "colemak" {
     key <TLDE>	{ [     grave,    notsign,          bar,          bar ]	};
 
     key <BKSL>	{ [numbersign, asciitilde,   dead_grave,   dead_breve ]	};
-    key <LSGT> { [            z,            Z,              ae,               AE ] };
-    key <AB01> { [            x,            X, dead_circumflex,       asciitilde ] };
-    key <AB02> { [            c,            C,        ccedilla,         Ccedilla ] };
-    key <AB03> { [            v,            V,              oe,               OE ] };
-    key <AB04> { [            b,            B,      dead_breve,       asciitilde ] };
-    key <AB05> { [            k,            K,  dead_abovering,       asciitilde ] };
-    key <AB06> { [            m,            M,     dead_macron,       asciitilde ] };
-    key <AB07> { [        comma,         less,    dead_cedilla,       asciitilde ] };
-    key <AB08> { [       period,      greater,   dead_abovedot,       asciitilde ] };
-    key <AB09> { [    backslash,          bar,      asciitilde,       asciitilde ] };
-    key <AB10> { [        slash,     question,    questiondown,       asciitilde ] };
+    key <LSGT>	{ [ backslash,        bar,          bar,    brokenbar ]	};
+
     include "level3(ralt_switch_multikey)"
 };
 
