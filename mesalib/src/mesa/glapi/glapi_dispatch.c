@@ -24,7 +24,7 @@
 
 
 /**
- * \file dispatch.c
+ * \file glapi_dispatch.c
  *
  * This file generates all the gl* function entrypoints.  This code is not
  * used if optimized assembly stubs are available (e.g., using x86/glapi_x86.S
@@ -32,15 +32,19 @@
  *
  * \note
  * This file is also used to build the client-side libGL that loads DRI-based
- * device drivers.  At build-time it is symlinked to src/glx/x11.
+ * device drivers.  At build-time it is symlinked to src/glx.
  *
  * \author Brian Paul <brian@precisioninsight.com>
  */
 
-#ifndef GLX_USE_APPLEGL
-
+#ifdef HAVE_DIX_CONFIG_H
+#include <dix-config.h>
+#include "glapi/mesa.h"
+#else
 #include "main/glheader.h"
 #include "main/compiler.h"
+#endif
+
 #include "glapi/glapi.h"
 #include "glapi/glapitable.h"
 #include "glapi/glapidispatch.h"
@@ -89,8 +93,10 @@
 #define GLAPIENTRY
 #endif
 
+#ifdef GLX_INDIRECT_RENDERING
+/* those link to libglapi.a should provide the entry points */
+#define _GLAPI_SKIP_PROTO_ENTRY_POINTS
+#endif
 #include "glapi/glapitemp.h"
 
 #endif /* USE_X86_ASM */
-
-#endif /* !GLX_USE_APPLEGL */

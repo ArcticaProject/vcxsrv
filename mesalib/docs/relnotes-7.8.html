@@ -1,0 +1,62 @@
+<HTML>
+
+<TITLE>Mesa Release Notes</TITLE>
+
+<head><link rel="stylesheet" type="text/css" href="mesa.css"></head>
+
+<BODY>
+
+<body bgcolor="#eeeeee">
+
+<H1>Mesa 7.8 Release Notes / March 28, 2010</H1>
+
+<p>
+Mesa 7.8 is a new development release.
+People who are concerned with stability and reliability should stick
+with a previous release or wait for Mesa 7.8.1.
+</p>
+<p>
+Mesa 7.8 implements the OpenGL 2.1 API, but the version reported by
+glGetString(GL_VERSION) depends on the particular driver being used.
+Some drivers don't support all the features required in OpenGL 2.1.
+</p>
+<p>
+See the <a href="install.html">Compiling/Installing page</a> for prerequisites
+for DRI hardware acceleration.
+</p>
+
+
+<h2>MD5 checksums</h2>
+<pre>
+tbd
+</pre>
+
+
+<h2>New features</h2>
+<ul>
+<li>GL_NV_conditional_render extension (swrast driver only)
+<li>GL_EXT_draw_buffers2 extension (swrast and i965 driver only)
+<li>GL_ARB_fragment_coord_conventions extension (for swrast, i965, and Gallium drivers)
+<li>GL_EXT_texture_array extension (swrast driver only)
+<li>GL_APPLE_object_purgeable extension (swrast and i945/i965 DRI drivers)
+<li>Much improved support for <a href="egl.html">EGL in Mesa</a>
+<li>New state trackers for <a href="opengles.html">OpenGL ES 1.1 and 2.0</a>
+<li>Dedicated documentation for Gallium
+</ul>
+
+
+<h2>Bug fixes</h2>
+<ul>
+<li>Massive improvements to the Gallium driver for R300-R500 Radeons; this
+    driver is now moderately stable but not terribly performant.
+</ul>
+
+
+<h2>Changes</h2>
+<ul>
+<li>Removed support for color-index rendering</li>
+<li>Removed support for GCC versions earlier than 3.3.0.</li>
+</ul>
+
+</body>
+</html>

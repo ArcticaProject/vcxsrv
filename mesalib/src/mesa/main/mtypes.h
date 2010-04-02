@@ -564,7 +564,7 @@ struct gl_colorbuffer_attrib
    GLclampf ClearColor[4];		/**< Color to use for glClear */
 
    GLuint IndexMask;			/**< Color index write mask */
-   GLubyte ColorMask[4];		/**< Each flag is 0xff or 0x0 */
+   GLubyte ColorMask[MAX_DRAW_BUFFERS][4];/**< Each flag is 0xff or 0x0 */
 
    GLenum DrawBuffer[MAX_DRAW_BUFFERS];	/**< Which buffer to draw into */
 
@@ -581,7 +581,7 @@ struct gl_colorbuffer_attrib
     * \name Blending
     */
    /*@{*/
-   GLboolean BlendEnabled;		/**< Blending enabled flag */
+   GLbitfield BlendEnabled;		/**< Per-buffer blend enable flags */
    GLenum BlendSrcRGB;			/**< Blending source operator */
    GLenum BlendDstRGB;			/**< Blending destination operator */
    GLenum BlendSrcA;			/**< GL_INGR_blend_func_separate */
@@ -630,8 +630,7 @@ struct gl_current_attrib
    GLfloat RasterDistance;
    GLfloat RasterColor[4];
    GLfloat RasterSecondaryColor[4];
-   GLfloat RasterIndex;
-   GLfloat RasterTexCoords[MAX_TEXTURE_UNITS][4];
+   GLfloat RasterTexCoords[MAX_TEXTURE_COORD_UNITS][4];
    GLboolean RasterPosValid;
    /*@}*/
 };
@@ -963,7 +962,7 @@ struct gl_point_attrib
    GLfloat Threshold;		/**< GL_EXT_point_parameters */
    GLboolean _Attenuated;	/**< True if Params != [1, 0, 0] */
    GLboolean PointSprite;	/**< GL_NV/ARB_point_sprite */
-   GLboolean CoordReplace[MAX_TEXTURE_UNITS]; /**< GL_ARB_point_sprite */
+   GLboolean CoordReplace[MAX_TEXTURE_COORD_UNITS]; /**< GL_ARB_point_sprite*/
    GLenum SpriteRMode;		/**< GL_NV_point_sprite (only!) */
    GLenum SpriteOrigin;		/**< GL_ARB_point_sprite */
 };
@@ -1217,7 +1216,11 @@ struct gl_texture_object
    GLuint Name;			/**< the user-visible texture object ID */
    GLenum Target;               /**< GL_TEXTURE_1D, GL_TEXTURE_2D, etc. */
    GLfloat Priority;		/**< in [0,1] */
-   GLfloat BorderColor[4];	/**< unclamped */
+   union {
+      GLfloat f[4];
+      GLuint ui[4];
+      GLint i[4];
+   } BorderColor;               /**< Interpreted according to texture format */
    GLenum WrapS;		/**< S-axis texture image wrap mode */
    GLenum WrapT;		/**< T-axis texture image wrap mode */
    GLenum WrapR;		/**< R-axis texture image wrap mode */
@@ -1241,6 +1244,7 @@ struct gl_texture_object
    GLboolean GenerateMipmap;    /**< GL_SGIS_generate_mipmap */
    GLboolean _Complete;		/**< Is texture object complete? */
    GLboolean _RenderToTexture;  /**< Any rendering to this texture? */
+   GLboolean Purgeable;         /**< Is the buffer purgeable under memory pressure? */
 
    /** Actual texture images, indexed by [cube face] and [mipmap level] */
    struct gl_texture_image *Image[MAX_FACES][MAX_TEXTURE_LEVELS];
@@ -1357,7 +1361,7 @@ struct gl_texture_unit
 struct gl_texture_attrib
 {
    GLuint CurrentUnit;   /**< GL_ACTIVE_TEXTURE */
-   struct gl_texture_unit Unit[MAX_TEXTURE_UNITS];
+   struct gl_texture_unit Unit[MAX_COMBINED_TEXTURE_IMAGE_UNITS];
 
    struct gl_texture_object *ProxyTex[NUM_TEXTURE_TARGETS];
 
@@ -1422,6 +1426,7 @@ struct gl_viewport_attrib
  */
 struct gl_buffer_object
 {
+   _glthread_Mutex Mutex;
    GLint RefCount;
    GLuint Name;
    GLenum Usage;        /**< GL_STREAM_DRAW_ARB, GL_STREAM_READ_ARB, etc. */
@@ -1435,6 +1440,7 @@ struct gl_buffer_object
    GLsizeiptr Length;   /**< Mapped length */
    /*@}*/
    GLboolean Written;   /**< Ever written to? (for debugging) */
+   GLboolean Purgeable; /**< Is the buffer purgeable under memory pressure? */
 };
 
 
@@ -1758,6 +1764,8 @@ struct gl_fragment_program
    struct gl_program Base;   /**< base class */
    GLenum FogOption;
    GLboolean UsesKill;          /**< shader uses KIL instruction */
+   GLboolean OriginUpperLeft;
+   GLboolean PixelCenterInteger;
 };
 
 
@@ -1899,6 +1907,10 @@ struct gl_query_state
    struct _mesa_HashTable *QueryObjects;
    struct gl_query_object *CurrentOcclusionObject; /* GL_ARB_occlusion_query */
    struct gl_query_object *CurrentTimerObject;     /* GL_EXT_timer_query */
+
+   /** GL_NV_conditional_render */
+   struct gl_query_object *CondRenderQuery;
+   GLenum CondRenderMode;
 };
 
 
@@ -2094,6 +2106,7 @@ struct gl_renderbuffer
    GLuint Name;
    GLint RefCount;
    GLuint Width, Height;
+   GLboolean Purgeable;   /**< Is the buffer purgeable under memory pressure? */
 
    GLenum InternalFormat; /**< The user-specified format */
    GLenum _BaseFormat;    /**< Either GL_RGB, GL_RGBA, GL_DEPTH_COMPONENT or
@@ -2319,6 +2332,7 @@ struct gl_constants
    GLuint MaxTextureCoordUnits;
    GLuint MaxTextureImageUnits;
    GLuint MaxVertexTextureImageUnits;
+   GLuint MaxCombinedTextureImageUnits;
    GLuint MaxTextureUnits;           /**< = MIN(CoordUnits, ImageUnits) */
    GLfloat MaxTextureMaxAnisotropy;  /**< GL_EXT_texture_filter_anisotropic */
    GLfloat MaxTextureLodBias;        /**< GL_EXT_texture_lod_bias */
@@ -2386,11 +2400,13 @@ struct gl_extensions
    GLboolean ARB_depth_clamp;
    GLboolean ARB_draw_buffers;
    GLboolean ARB_draw_elements_base_vertex;
+   GLboolean ARB_fragment_coord_conventions;
    GLboolean ARB_fragment_program;
    GLboolean ARB_fragment_program_shadow;
    GLboolean ARB_fragment_shader;
    GLboolean ARB_framebuffer_object;
    GLboolean ARB_half_float_pixel;
+   GLboolean ARB_half_float_vertex;
    GLboolean ARB_imaging;
    GLboolean ARB_map_buffer_range;
    GLboolean ARB_multisample;
@@ -2433,6 +2449,7 @@ struct gl_extensions
    GLboolean EXT_compiled_vertex_array;
    GLboolean EXT_copy_texture;
    GLboolean EXT_depth_bounds_test;
+   GLboolean EXT_draw_buffers2;
    GLboolean EXT_draw_range_elements;
    GLboolean EXT_fog_coord;
    GLboolean EXT_framebuffer_blit;
@@ -2459,6 +2476,7 @@ struct gl_extensions
    GLboolean EXT_texture;
    GLboolean EXT_texture_object;
    GLboolean EXT_texture3D;
+   GLboolean EXT_texture_array;
    GLboolean EXT_texture_compression_s3tc;
    GLboolean EXT_texture_env_add;
    GLboolean EXT_texture_env_combine;
@@ -2476,6 +2494,7 @@ struct gl_extensions
    GLboolean APPLE_client_storage;
    GLboolean APPLE_packed_pixels;
    GLboolean APPLE_vertex_array_object;
+   GLboolean APPLE_object_purgeable;
    GLboolean ATI_envmap_bumpmap;
    GLboolean ATI_texture_mirror_once;
    GLboolean ATI_texture_env_combine3;
@@ -2490,6 +2509,7 @@ struct gl_extensions
    GLboolean MESA_texture_array;
    GLboolean MESA_texture_signed_rgba;
    GLboolean NV_blend_square;
+   GLboolean NV_conditional_render;
    GLboolean NV_fragment_program;
    GLboolean NV_fragment_program_option;
    GLboolean NV_light_max_exponent;
@@ -2508,8 +2528,13 @@ struct gl_extensions
    GLboolean SGIS_texture_lod;
    GLboolean TDFX_texture_compression_FXT1;
    GLboolean S3_s3tc;
+#if FEATURE_OES_draw_texture
+   GLboolean OES_draw_texture;
+#endif /* FEATURE_OES_draw_texture */
    /** The extension string */
    const GLubyte *String;
+   /** Number of supported extensions */
+   GLuint Count;
 };
 
 
@@ -2850,6 +2875,10 @@ struct __GLcontextRec
 
    /** Extension information */
    struct gl_extensions Extensions;
+
+   /** Version info */
+   GLuint VersionMajor, VersionMinor;
+   char *VersionString;
 
    /** \name State attribute stack (for glPush/PopAttrib) */
    /*@{*/

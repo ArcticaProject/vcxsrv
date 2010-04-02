@@ -38,7 +38,6 @@
 #include "imports.h"
 #include "macros.h"
 #include "teximage.h"
-#include "texstate.h"
 #include "texobj.h"
 #include "mtypes.h"
 #include "shader/prog_instruction.h"
@@ -107,7 +106,7 @@ _mesa_initialize_texture_object( struct gl_texture_object *obj,
           target == GL_TEXTURE_1D_ARRAY_EXT ||
           target == GL_TEXTURE_2D_ARRAY_EXT);
 
-   _mesa_bzero(obj, sizeof(*obj));
+   memset(obj, 0, sizeof(*obj));
    /* init the non-zero fields */
    _glthread_INIT_MUTEX(obj->Mutex);
    obj->RefCount = 1;
@@ -208,7 +207,7 @@ _mesa_delete_texture_object( GLcontext *ctx, struct gl_texture_object *texObj )
    _glthread_DESTROY_MUTEX(texObj->Mutex);
 
    /* free this object */
-   _mesa_free(texObj);
+   free(texObj);
 }
 
 
@@ -228,10 +227,10 @@ _mesa_copy_texture_object( struct gl_texture_object *dest,
    dest->Target = src->Target;
    dest->Name = src->Name;
    dest->Priority = src->Priority;
-   dest->BorderColor[0] = src->BorderColor[0];
-   dest->BorderColor[1] = src->BorderColor[1];
-   dest->BorderColor[2] = src->BorderColor[2];
-   dest->BorderColor[3] = src->BorderColor[3];
+   dest->BorderColor.f[0] = src->BorderColor.f[0];
+   dest->BorderColor.f[1] = src->BorderColor.f[1];
+   dest->BorderColor.f[2] = src->BorderColor.f[2];
+   dest->BorderColor.f[3] = src->BorderColor.f[3];
    dest->WrapS = src->WrapS;
    dest->WrapT = src->WrapT;
    dest->WrapR = src->WrapR;
@@ -384,7 +383,7 @@ _mesa_reference_texobj(struct gl_texture_object **ptr,
 static void
 incomplete(const struct gl_texture_object *t, const char *why)
 {
-   _mesa_printf("Texture Obj %d incomplete because: %s\n", t->Name, why);
+   printf("Texture Obj %d incomplete because: %s\n", t->Name, why);
 }
 #else
 #define incomplete(t, why)
@@ -417,7 +416,7 @@ _mesa_test_texobj_completeness( const GLcontext *ctx,
     */
    if ((baseLevel < 0) || (baseLevel >= MAX_TEXTURE_LEVELS)) {
       char s[100];
-      _mesa_sprintf(s, "base level = %d is invalid", baseLevel);
+      sprintf(s, "base level = %d is invalid", baseLevel);
       incomplete(t, s);
       t->_Complete = GL_FALSE;
       return;
@@ -426,7 +425,7 @@ _mesa_test_texobj_completeness( const GLcontext *ctx,
    /* Always need the base level image */
    if (!t->Image[0][baseLevel]) {
       char s[100];
-      _mesa_sprintf(s, "Image[baseLevel=%d] == NULL", baseLevel);
+      sprintf(s, "Image[baseLevel=%d] == NULL", baseLevel);
       incomplete(t, s);
       t->_Complete = GL_FALSE;
       return;
@@ -940,7 +939,8 @@ _mesa_DeleteTextures( GLsizei n, const GLuint *textures)
 /**
  * Convert a GL texture target enum such as GL_TEXTURE_2D or GL_TEXTURE_3D
  * into the corresponding Mesa texture target index.
- * Return -1 if target is invalid.
+ * Note that proxy targets are not valid here.
+ * \return TEXTURE_x_INDEX or -1 if target is invalid
  */
 static GLint
 target_enum_to_index(GLenum target)
