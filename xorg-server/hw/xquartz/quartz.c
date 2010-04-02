@@ -166,6 +166,11 @@ void QuartzInitOutput(
         FatalError("Could not register block and wakeup handlers.");
     }
 
+#if defined(RANDR) && !defined(FAKE_RANDR)
+    if(!QuartzRandRInit(pScreen))
+        FatalError("Failed to init RandR extension.\n");
+#endif
+
     // Do display mode specific initialization
     quartzProcs->DisplayInit();
 }
@@ -236,6 +241,7 @@ void QuartzUpdateScreens(void) {
     WindowPtr pRoot;
     int x, y, width, height, sx, sy;
     xEvent e;
+    BoxRec bounds;
     
     if (noPseudoramiXExtension || screenInfo.numScreens != 1)
     {
@@ -259,14 +265,12 @@ void QuartzUpdateScreens(void) {
     pScreen->width = width;
     pScreen->height = height;
     
-#ifndef FAKE_RANDR
-    if(!QuartzRandRInit(pScreen))
-        FatalError("Failed to init RandR extension.\n");
-#endif
-    
     DarwinAdjustScreenOrigins(&screenInfo);
     quartzProcs->UpdateScreen(pScreen);
     
+    /* DarwinAdjustScreenOrigins or UpdateScreen may change dixScreenOrigins,
+     * so use it rather than x/y
+     */
     sx = dixScreenOrigins[pScreen->myNum].x + darwinMainScreenX;
     sy = dixScreenOrigins[pScreen->myNum].y + darwinMainScreenY;
     
@@ -277,8 +281,16 @@ void QuartzUpdateScreens(void) {
     //pScreen->PaintWindowBackground (pRoot, &pRoot->borderClip,  PW_BACKGROUND);
     miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);
 
-//  TODO: This is a noop in 1.6 and nuked in master... we may need to do something else now to handle it
-//    DefineInitialRootWindow(pRoot);
+    /* <rdar://problem/7770779> pointer events are clipped to old display region after display reconfiguration
+     * http://xquartz.macosforge.org/trac/ticket/346
+     */
+    bounds.x1 = 0;
+    bounds.x2 = width;
+    bounds.y1 = 0;
+    bounds.y2 = height;
+    pScreen->ConstrainCursor(inputInfo.pointer, pScreen, &bounds);
+    inputInfo.pointer->spriteInfo->sprite->physLimits = bounds;
+    inputInfo.pointer->spriteInfo->sprite->hotLimits = bounds;
 
     DEBUG_LOG("Root Window: %dx%d @ (%d, %d) darwinMainScreen (%d, %d) xy (%d, %d) dixScreenOrigins (%d, %d)\n", width, height, x - sx, y - sy, darwinMainScreenX, darwinMainScreenY, x, y, dixScreenOrigins[pScreen->myNum].x, dixScreenOrigins[pScreen->myNum].y);
 

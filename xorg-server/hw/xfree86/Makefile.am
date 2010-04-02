@@ -114,7 +114,7 @@ CPP_FILES_FLAGS = \
 	-DMODULEPATH=\"$(DEFAULT_MODULE_PATH)\"
 
 relink:
-	rm -f Xorg && $(MAKE) Xorg
+	$(AM_V_at)rm -f Xorg && $(MAKE) Xorg
 
 xorg.conf.example.pre: xorgconf.cpp
 	cp $(srcdir)/xorgconf.cpp $@

@@ -73,10 +73,11 @@ extern int noPanoramiXExtension;
 #define XSERVER_VERSION "?"
 #endif
 
-const int __crashreporter_info__len = 4096;
-const char *__crashreporter_info__base = "X.Org X Server " XSERVER_VERSION " Build Date: " BUILD_DATE;
-char __crashreporter_info__buf[4096];
-char *__crashreporter_info__ = __crashreporter_info__buf;
+static char __crashreporter_info_buff__[4096] = {0};
+static const char *__crashreporter_info__ = &__crashreporter_info_buff__[0];
+asm (".desc ___crashreporter_info__, 0x10");
+
+static const char *__crashreporter_info__base = "X.Org X Server " XSERVER_VERSION " Build Date: " BUILD_DATE;
 
 static char *launchd_id_prefix = NULL;
 static char *server_bootstrap_name = NULL;
@@ -548,7 +549,7 @@ int main(int argc, char **argv, char **envp) {
     noPanoramiXExtension = TRUE;
 
     /* Setup the initial crasherporter info */
-    strlcpy(__crashreporter_info__, __crashreporter_info__base, __crashreporter_info__len);
+    strlcpy(__crashreporter_info_buff__, __crashreporter_info__base, sizeof(__crashreporter_info_buff__));
     
     fprintf(stderr, "X11.app: main(): argc=%d\n", argc);
     for(i=0; i < argc; i++) {

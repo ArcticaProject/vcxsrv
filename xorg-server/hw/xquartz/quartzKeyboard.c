@@ -184,12 +184,6 @@ static void DarwinChangeKeyboardControl(DeviceIntPtr device, KeybdCtrl *ctrl) {
     // keyclick, bell volume / pitch, autorepead, LED's
 }
 
-static void DarwinKeyboardBell(int volume, DeviceIntPtr pDev, pointer arg, int something) {
-    KeybdCtrl *ctrl = arg;
-
-    DDXRingBell(volume, ctrl->bell_pitch, ctrl->bell_duration);
-}
-
 //-----------------------------------------------------------------------------
 // Utility functions to help parse Darwin keymap
 //-----------------------------------------------------------------------------
@@ -301,7 +295,7 @@ void DarwinKeyboardInit(DeviceIntPtr pDev) {
     // for a kIOHIDParamConnectType connection.
     assert(darwinParamConnect = NXOpenEventStatus());
 
-    InitKeyboardDeviceStruct(pDev, NULL, DarwinKeyboardBell, DarwinChangeKeyboardControl);
+    InitKeyboardDeviceStruct(pDev, NULL, NULL, DarwinChangeKeyboardControl);
 
     DarwinKeyboardReloadHandler();
 
@@ -741,7 +735,10 @@ Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info) {
                     if (err != noErr) continue;
                 }
 
-                if (len > 0 && s[0] != 0x0010) {
+                /* Not sure why 0x0010 is there.
+                 * 0x0000 - <rdar://problem/7793566> 'Unicode Hex Input' ...
+                 */
+                if (len > 0 && s[0] != 0x0010 && s[0] != 0x0000) {
                     k[j] = ucs2keysym (s[0]);
                     if (dead_key_state != 0) k[j] = make_dead_key (k[j]);
                 }

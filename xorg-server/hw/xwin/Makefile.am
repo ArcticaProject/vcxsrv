@@ -152,7 +152,7 @@ XWin_LDADD = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_GLX_LIBS) $(XWIN_GLX_LINK_FLAGS) $(
 XWin_LDFLAGS = -mwindows
 
 .rc.o:
-	$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include
+	$(AM_V_GEN)$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include
 
 winprefsyacc.h: winprefsyacc.c
 winprefslex.c: winprefslex.l winprefsyacc.c winprefsyacc.h
@@ -176,12 +176,12 @@ filemandir = $(FILE_MAN_DIR)
 fileman_DATA = XWinrc.$(FILE_MAN_SUFFIX)
 
 XWin.$(APP_MAN_SUFFIX): XWin.man
-	-rm -f XWin.$(APP_MAN_SUFFIX)
-	$(LN_S) XWin.man XWin.$(APP_MAN_SUFFIX)
+	-$(AM_V_at)rm -f XWin.$(APP_MAN_SUFFIX)
+	$(AM_V_at)$(LN_S) XWin.man XWin.$(APP_MAN_SUFFIX)
 
 XWinrc.$(FILE_MAN_SUFFIX): XWinrc.man
-	-rm -f XWinrc.$(FILE_MAN_SUFFIX)
-	$(LN_S) XWinrc.man XWinrc.$(FILE_MAN_SUFFIX)
+	-$(AM_V_at)rm -f XWinrc.$(FILE_MAN_SUFFIX)
+	$(AM_V_at)$(LN_S) XWinrc.man XWinrc.$(FILE_MAN_SUFFIX)
 
 EXTRAMANDEFS = -D__logdir__=$(logdir) -D__sysconfdir__=$(sysconfdir) -D__datadir__=$(datadir)
 
@@ -190,8 +190,12 @@ xwinconfig_DATA = system.XWinrc
 
 include $(top_srcdir)/cpprules.in
 
+install-exec-hook:
+	(cd $(DESTDIR)$(bindir) && rm -f X && $(LN_S) XWin$(EXEEXT) X)
+
 EXTRA_DIST = \
 	$(MAN_SRCS) \
+	$(xwinconfig_DATA) \
 	X.ico \
 	XWin.rc \
 	xlaunch/config.cc \
@@ -216,7 +220,7 @@ EXTRA_DIST = \
 	xlaunch/window/wizard.h
 
 relink:
-	rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)
+	$(AM_V_at)rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)
 
 SUBDIRS = $(GLX_DIR) .
 DIST_SUBDIRS = glx .

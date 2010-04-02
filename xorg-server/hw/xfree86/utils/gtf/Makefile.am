@@ -40,5 +40,5 @@ CLEANFILES = $(appman_PRE) $(appman_DATA)
 SUFFIXES += .$(APP_MAN_SUFFIX) .man
 
 .man.$(APP_MAN_SUFFIX):
-	-rm -f $@
-	$(LN_S) $< $@
+	-$(AM_V_at)rm -f $@
+	$(AM_V_at)$(LN_S) $< $@

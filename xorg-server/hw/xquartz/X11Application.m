@@ -52,7 +52,7 @@
 #include <Xplugin.h>
 
 // pbproxy/pbproxy.h
-extern BOOL xpbproxy_init (void);
+extern int xpbproxy_run (void);
 
 #define DEFAULTS_FILE X11LIBDIR"/X11/xserver/Xquartz.plist"
 
@@ -908,6 +908,26 @@ environment the next time you start X11?", @"Startup xinitrc dialog");
     [X11App prefs_synchronize];
 }
 
+static inline pthread_t create_thread(void *func, void *arg) {
+    pthread_attr_t attr;
+    pthread_t tid;
+    
+    pthread_attr_init(&attr);
+    pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    pthread_create(&tid, &attr, func, arg);
+    pthread_attr_destroy(&attr);
+    
+    return tid;
+}
+
+static void *xpbproxy_x_thread(void *args) {
+    xpbproxy_run();
+
+    fprintf(stderr, "xpbproxy thread is terminating unexpectedly.\n");
+    return NULL;
+}
+
 void X11ApplicationMain (int argc, char **argv, char **envp) {
     NSAutoreleasePool *pool;
 
@@ -962,8 +982,7 @@ void X11ApplicationMain (int argc, char **argv, char **envp) {
      */
     check_xinitrc();
     
-    if(!xpbproxy_init())
-        fprintf(stderr, "Error initializing xpbproxy\n");
+    create_thread(xpbproxy_x_thread, NULL);
 
 #if XQUARTZ_SPARKLE
     [[X11App controller] setup_sparkle];

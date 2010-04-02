@@ -67,7 +67,7 @@ extern void xpbproxy_set_is_active (BOOL state);
 extern BOOL xpbproxy_get_is_active (void);
 extern id xpbproxy_selection_object (void);
 extern Time xpbproxy_current_timestamp (void);
-extern BOOL xpbproxy_init (void);
+extern int xpbproxy_run (void);
 
 extern Display *xpbproxy_dpy;
 extern int xpbproxy_apple_wm_event_base, xpbproxy_apple_wm_error_base;
@@ -76,7 +76,6 @@ extern BOOL xpbproxy_have_xfixes;
 
 /* from x-input.m */
 extern BOOL xpbproxy_input_register (void);
-extern void xpbproxy_input_loop();
 
 #ifdef DEBUG
 /* BEWARE: this can cause a string memory leak, according to the leaks program. */

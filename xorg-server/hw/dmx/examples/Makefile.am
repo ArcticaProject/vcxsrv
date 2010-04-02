@@ -4,14 +4,14 @@ EV_PROG = ev
 endif
 
 bin_PROGRAMS = \
-	xdmx dmxwininfo dmxreconfig dmxresize \
+	dmxinfo dmxwininfo dmxreconfig dmxresize \
 	dmxaddscreen dmxrmscreen \
 	dmxaddinput dmxrminput
 noinst_PROGRAMS = xinput xtest evi res xled xbell $(EV_PROG)
 
-xdmx_SOURCES = xdmx.c
-xdmx_LDADD = @DMXEXAMPLES_DEP_LIBS@
-xdmx_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
+dmxinfo_SOURCES = dmxinfo.c
+dmxinfo_LDADD = @DMXEXAMPLES_DEP_LIBS@
+dmxinfo_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 
 dmxwininfo_SOURCES = dmxwininfo.c
 dmxwininfo_LDADD = @DMXXMUEXAMPLES_DEP_LIBS@

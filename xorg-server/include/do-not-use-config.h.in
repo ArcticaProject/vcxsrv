@@ -654,6 +654,9 @@
 /* Support Xinerama extension */
 #undef XINERAMA
 
+/* Support X Input extension */
+#undef XINPUT
+
 /* Path to XKB data */
 #undef XKB_BASE_DIRECTORY
 

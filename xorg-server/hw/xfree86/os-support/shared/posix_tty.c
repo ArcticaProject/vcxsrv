@@ -137,19 +137,9 @@ xf86OpenSerial (pointer options)
 
 	if (!isatty (fd))
 	{
-#if 1
 		/* Allow non-tty devices to be opened. */
 		xfree(dev);
 		return (fd);
-#else
-		xf86Msg (X_WARNING,
-			 "xf86OpenSerial: Specified device %s is not a tty\n",
-			 dev);
-		SYSCALL (close (fd));
-		errno = EINVAL;
-		xfree(dev);
-		return (-1);
-#endif
 	}
 
 	/* set up default port parameters */

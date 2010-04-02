@@ -129,8 +129,9 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(dbusconfigdir)"
-DATA = $(dbusconfig_DATA)
+am__installdirs = "$(DESTDIR)$(dbusconfigdir)" \
+	"$(DESTDIR)$(xorgconfddir)"
+DATA = $(dbusconfig_DATA) $(xorgconfd_DATA)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -145,6 +146,7 @@ APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
 AR = @AR@
+ARM_BACKTRACE_CFLAGS = @ARM_BACKTRACE_CFLAGS@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -332,6 +334,7 @@ XDMX_SYS_LIBS = @XDMX_SYS_LIBS@
 XEPHYR_CFLAGS = @XEPHYR_CFLAGS@
 XEPHYR_INCS = @XEPHYR_INCS@
 XEPHYR_LIBS = @XEPHYR_LIBS@
+XF86CONFIGDIR = @XF86CONFIGDIR@
 XF86CONFIGFILE = @XF86CONFIGFILE@
 XF86VIDMODE_CFLAGS = @XF86VIDMODE_CFLAGS@
 XF86VIDMODE_LIBS = @XF86VIDMODE_LIBS@
@@ -448,9 +451,11 @@ libconfig_la_SOURCES = config.c config-backends.h $(am__append_2) \
 @CONFIG_NEED_DBUS_TRUE@@CONFIG_UDEV_FALSE@	$(DBUS_LIBS) \
 @CONFIG_NEED_DBUS_TRUE@@CONFIG_UDEV_FALSE@	$(am__append_8)
 @CONFIG_UDEV_TRUE@libconfig_la_LIBADD = $(UDEV_LIBS) $(am__append_8)
+@CONFIG_UDEV_TRUE@xorgconfddir = $(prefix)/etc/X11/$(XF86CONFIGDIR)
+@CONFIG_UDEV_TRUE@xorgconfd_DATA = 10-evdev.conf
 @CONFIG_DBUS_API_TRUE@@CONFIG_NEED_DBUS_TRUE@@CONFIG_UDEV_FALSE@dbusconfigdir = $(sysconfdir)/dbus-1/system.d
 @CONFIG_DBUS_API_TRUE@@CONFIG_NEED_DBUS_TRUE@@CONFIG_UDEV_FALSE@dbusconfig_DATA = xorg-server.conf
-EXTRA_DIST = xorg-server.conf x11-input.fdi
+EXTRA_DIST = xorg-server.conf x11-input.fdi 10-evdev.conf
 all: all-am
 
 .SUFFIXES:
@@ -558,6 +563,26 @@ uninstall-dbusconfigDATA:
 	test -n "$$files" || exit 0; \
 	echo " ( cd '$(DESTDIR)$(dbusconfigdir)' && rm -f" $$files ")"; \
 	cd "$(DESTDIR)$(dbusconfigdir)" && rm -f $$files
+install-xorgconfdDATA: $(xorgconfd_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(xorgconfddir)" || $(MKDIR_P) "$(DESTDIR)$(xorgconfddir)"
+	@list='$(xorgconfd_DATA)'; test -n "$(xorgconfddir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(xorgconfddir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(xorgconfddir)" || exit $$?; \
+	done
+
+uninstall-xorgconfdDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(xorgconfd_DATA)'; test -n "$(xorgconfddir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(xorgconfddir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(xorgconfddir)" && rm -f $$files
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -645,7 +670,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(dbusconfigdir)"; do \
+	for dir in "$(DESTDIR)$(dbusconfigdir)" "$(DESTDIR)$(xorgconfddir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -696,7 +721,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dbusconfigDATA
+install-data-am: install-dbusconfigDATA install-xorgconfdDATA
 
 install-dvi: install-dvi-am
 
@@ -742,7 +767,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dbusconfigDATA
+uninstall-am: uninstall-dbusconfigDATA uninstall-xorgconfdDATA
 
 .MAKE: install-am install-strip
 
@@ -754,11 +779,12 @@ uninstall-am: uninstall-dbusconfigDATA
 	install-dbusconfigDATA install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-ps install-ps-am install-strip install-xorgconfdDATA \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-dbusconfigDATA
+	tags uninstall uninstall-am uninstall-dbusconfigDATA \
+	uninstall-xorgconfdDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

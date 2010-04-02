@@ -120,7 +120,7 @@
 /* Tiger PPC doesn't have the associated symbols, but glext.h says it does.  Liars!
  * http://trac.macports.org/ticket/20638
  */
-#if defined(__ppc__) && MAC_OS_X_VERSION_MIN_REQUIRED == 1040
+#if defined(__ppc__) && MAC_OS_X_VERSION_MIN_REQUIRED < 1050
 #undef GL_EXT_gpu_program_parameters
 #define GL_EXT_gpu_program_parameters 0
 #endif

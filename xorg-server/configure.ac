@@ -26,8 +26,8 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.7.99.902, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2010-03-21"
+AC_INIT([xorg-server], 1.8.0, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="2010-04-02"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
@@ -314,6 +314,19 @@ AC_CHECK_HEADER([execinfo.h],[
         AC_DEFINE(HAVE_EXECINFO_H, 1, [Have execinfo.h])
     ])]
 )
+
+dnl ARM needs additional compiler flags for proper backtraces if GCC is
+dnl used. Compile a dummy program with the -mapcs-frame option. If it
+dnl succeeds, we know that we are building for ARM with GCC.
+old_CFLAGS="$CFLAGS"
+CFLAGS="-mapcs-frame"
+AC_COMPILE_IFELSE(
+        AC_LANG_PROGRAM([[ ]]),
+        ARM_BACKTRACE_CFLAGS="$CFLAGS",
+        ARM_BACKTRACE_CFLAGS=""
+)
+CFLAGS="$old_CFLAGS"
+AC_SUBST(ARM_BACKTRACE_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Bus options and CPU capabilities.  Replaces logic in
@@ -623,7 +636,7 @@ AC_ARG_ENABLE(multibuffer,    AS_HELP_STRING([--enable-multibuffer], [Build Mult
 AC_ARG_ENABLE(dbe,            AS_HELP_STRING([--disable-dbe], [Build DBE extension (default: enabled)]), [DBE=$enableval], [DBE=yes])
 AC_ARG_ENABLE(xf86bigfont,    AS_HELP_STRING([--disable-xf86bigfont], [Build XF86 Big Font extension (default: disabled)]), [XF86BIGFONT=$enableval], [XF86BIGFONT=no])
 AC_ARG_ENABLE(dpms,           AS_HELP_STRING([--disable-dpms], [Build DPMS extension (default: enabled)]), [DPMSExtension=$enableval], [DPMSExtension=yes])
-AC_ARG_ENABLE(config-udev,    AS_HELP_STRING([--enable-config-udev], [Build udev support (default: no)]), [CONFIG_UDEV=$enableval], [CONFIG_UDEV=no])
+AC_ARG_ENABLE(config-udev,    AS_HELP_STRING([--enable-config-udev], [Build udev support (default: auto)]), [CONFIG_UDEV=$enableval], [CONFIG_UDEV=auto])
 AC_ARG_ENABLE(config-dbus,    AS_HELP_STRING([--enable-config-dbus], [Build D-BUS API support (default: no)]), [CONFIG_DBUS_API=$enableval], [CONFIG_DBUS_API=no])
 AC_ARG_ENABLE(config-hal,     AS_HELP_STRING([--disable-config-hal], [Build HAL support (default: auto)]), [CONFIG_HAL=$enableval], [CONFIG_HAL=auto])
 AC_ARG_ENABLE(xfree86-utils,     AS_HELP_STRING([--enable-xfree86-utils], [Build xfree86 DDX utilities (default: enabled)]), [XF86UTILS=$enableval], [XF86UTILS=yes])
@@ -1122,6 +1135,7 @@ MIEXT_DAMAGE_LIB='$(top_builddir)/miext/damage/libdamage.la'
 MIEXT_DAMAGE_INC='-I$(top_srcdir)/miext/damage'
 
 # XINPUT extension is integral part of the server
+AC_DEFINE(XINPUT, 1, [Support X Input extension])
 XI_LIB='$(top_builddir)/Xi/libXi.la'
 XI_INC='-I$(top_srcdir)/Xi'
 
@@ -1440,17 +1454,9 @@ UTILS_SYS_LIBS="${SYS_LIBS}"
 AC_SUBST([UTILS_SYS_LIBS])
 
 # The Xorg binary needs to export symbols so that they can be used from modules
-# Some platforms require extra flags to do this.   gcc should set these flags
-# when -rdynamic is passed to it, other compilers/linkers may need to be added
-# here.
-if test "x$GCC" = "xyes"; then
-       LD_EXPORT_SYMBOLS_FLAG="-rdynamic"
-fi
-case $host_os in
-       openbsd*)
-       LD_EXPORT_SYMBOLS_FLAG="-Wl,--export-dynamic"
-       ;;
-esac
+# Some platforms require extra flags to do this.   libtool should set the
+# necessary flags for each platform when -export-dynamic is passed to it.
+LD_EXPORT_SYMBOLS_FLAG="-export-dynamic"
 AC_SUBST([LD_EXPORT_SYMBOLS_FLAG])
 
 dnl Imake defines SVR4 on SVR4 systems, and many files check for it, so
@@ -1758,6 +1764,7 @@ if test "x$XORG" = xyes; then
 	dnl these only go in xorg-config.h
 	XF86CONFIGFILE="xorg.conf"
 	XF86CONFIGDIR="xorg.conf.d"
+	AC_SUBST(XF86CONFIGDIR)
 	CONFIGFILE="$sysconfdir/$XF86CONFIGFILE"
 	LOGPREFIX="$logdir/Xorg."
 	AC_DEFINE(XORG_SERVER, 1, [Building Xorg server])
