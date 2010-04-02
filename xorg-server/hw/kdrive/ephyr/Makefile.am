@@ -81,7 +81,7 @@ Xephyr_DEPENDENCIES =	\
 Xephyr_LDFLAGS = $(LD_EXPORT_SYMBOLS_FLAG)
 
 relink:
-	rm -f $(bin_PROGRAMS) && make $(bin_PROGRAMS)
+	$(AM_V_at)rm -f $(bin_PROGRAMS) && $(MAKE) $(bin_PROGRAMS)
 
 MAN_SRCS = Xephyr.man.pre
 
@@ -89,8 +89,8 @@ appmandir = $(APP_MAN_DIR)
 appman_DATA = Xephyr.$(APP_MAN_SUFFIX)
 
 Xephyr.$(APP_MAN_SUFFIX): Xephyr.man
-	-rm -f Xephyr.$(APP_MAN_SUFFIX)
-	$(LN_S) Xephyr.man Xephyr.$(APP_MAN_SUFFIX)
+	-$(AM_V_at)rm -f Xephyr.$(APP_MAN_SUFFIX)
+	$(AM_V_at)$(LN_S) Xephyr.man Xephyr.$(APP_MAN_SUFFIX)
 
 include $(top_srcdir)/cpprules.in
 

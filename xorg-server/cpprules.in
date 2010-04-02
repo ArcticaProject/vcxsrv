@@ -2,8 +2,6 @@
 # Rules for generating files using the C pre-processor
 # (Replaces CppFileTarget from Imake)
 
-SED = sed
-
 SUFFIXES = .pre .man .man.pre
 
 # Translate XCOMM into pound sign with sed, rather than passing -DXCOMM=XCOMM

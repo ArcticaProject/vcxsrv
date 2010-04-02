@@ -9,6 +9,9 @@ AM_CFLAGS += $(UDEV_CFLAGS)
 libconfig_la_SOURCES += udev.c
 libconfig_la_LIBADD = $(UDEV_LIBS)
 
+xorgconfddir = $(prefix)/etc/X11/$(XF86CONFIGDIR)
+xorgconfd_DATA = 10-evdev.conf
+
 else
 
 if CONFIG_NEED_DBUS
@@ -33,4 +36,4 @@ endif # CONFIG_NEED_DBUS
 
 endif # !CONFIG_UDEV
 
-EXTRA_DIST = xorg-server.conf x11-input.fdi
+EXTRA_DIST = xorg-server.conf x11-input.fdi 10-evdev.conf

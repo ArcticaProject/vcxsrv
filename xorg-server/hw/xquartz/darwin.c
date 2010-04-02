@@ -602,7 +602,7 @@ void InitOutput( ScreenInfo *pScreenInfo, int argc, char **argv )
 
 
 /*
- * OsVendorFataError
+ * OsVendorFatalError
  */
 void OsVendorFatalError( void )
 {
@@ -760,7 +760,7 @@ void ddxUseMsg( void )
  */
 void ddxGiveUp( void )
 {
-    ErrorF( "Quitting Xquartz...\n" );
+    ErrorF( "Quitting Xquartz\n" );
 }
 
 
@@ -773,11 +773,7 @@ void ddxGiveUp( void )
 void AbortDDX( void )
 {
     ErrorF( "   AbortDDX\n" );
-    /*
-     * This is needed for a abnormal server exit, since the normal exit stuff
-     * MUST also be performed (i.e. the vt must be left in a defined state)
-     */
-    ddxGiveUp();
+    OsAbort();
 }
 
 #include "mivalidate.h" // for union _Validate used by windowstr.h

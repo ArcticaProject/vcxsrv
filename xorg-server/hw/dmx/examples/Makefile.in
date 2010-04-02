@@ -34,9 +34,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = xdmx$(EXEEXT) dmxwininfo$(EXEEXT) dmxreconfig$(EXEEXT) \
-	dmxresize$(EXEEXT) dmxaddscreen$(EXEEXT) dmxrmscreen$(EXEEXT) \
-	dmxaddinput$(EXEEXT) dmxrminput$(EXEEXT)
+bin_PROGRAMS = dmxinfo$(EXEEXT) dmxwininfo$(EXEEXT) \
+	dmxreconfig$(EXEEXT) dmxresize$(EXEEXT) dmxaddscreen$(EXEEXT) \
+	dmxrmscreen$(EXEEXT) dmxaddinput$(EXEEXT) dmxrminput$(EXEEXT)
 noinst_PROGRAMS = xinput$(EXEEXT) xtest$(EXEEXT) evi$(EXEEXT) \
 	res$(EXEEXT) xled$(EXEEXT) xbell$(EXEEXT) $(am__EXEEXT_1)
 subdir = hw/dmx/examples
@@ -77,6 +77,12 @@ dmxaddscreen_OBJECTS = $(am_dmxaddscreen_OBJECTS)
 dmxaddscreen_DEPENDENCIES =
 dmxaddscreen_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(dmxaddscreen_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_dmxinfo_OBJECTS = dmxinfo-dmxinfo.$(OBJEXT)
+dmxinfo_OBJECTS = $(am_dmxinfo_OBJECTS)
+dmxinfo_DEPENDENCIES =
+dmxinfo_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(dmxinfo_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_dmxreconfig_OBJECTS = dmxreconfig-dmxreconfig.$(OBJEXT)
 dmxreconfig_OBJECTS = $(am_dmxreconfig_OBJECTS)
@@ -132,12 +138,6 @@ xbell_DEPENDENCIES =
 xbell_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(xbell_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_xdmx_OBJECTS = xdmx-xdmx.$(OBJEXT)
-xdmx_OBJECTS = $(am_xdmx_OBJECTS)
-xdmx_DEPENDENCIES =
-xdmx_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(xdmx_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_xinput_OBJECTS = xinput-xinput.$(OBJEXT)
 xinput_OBJECTS = $(am_xinput_OBJECTS)
 xinput_DEPENDENCIES =
@@ -179,17 +179,17 @@ AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(dmxaddinput_SOURCES) $(dmxaddscreen_SOURCES) \
-	$(dmxreconfig_SOURCES) $(dmxresize_SOURCES) \
+	$(dmxinfo_SOURCES) $(dmxreconfig_SOURCES) $(dmxresize_SOURCES) \
 	$(dmxrminput_SOURCES) $(dmxrmscreen_SOURCES) \
 	$(dmxwininfo_SOURCES) $(ev_SOURCES) $(evi_SOURCES) \
-	$(res_SOURCES) $(xbell_SOURCES) $(xdmx_SOURCES) \
-	$(xinput_SOURCES) $(xled_SOURCES) $(xtest_SOURCES)
+	$(res_SOURCES) $(xbell_SOURCES) $(xinput_SOURCES) \
+	$(xled_SOURCES) $(xtest_SOURCES)
 DIST_SOURCES = $(dmxaddinput_SOURCES) $(dmxaddscreen_SOURCES) \
-	$(dmxreconfig_SOURCES) $(dmxresize_SOURCES) \
+	$(dmxinfo_SOURCES) $(dmxreconfig_SOURCES) $(dmxresize_SOURCES) \
 	$(dmxrminput_SOURCES) $(dmxrmscreen_SOURCES) \
 	$(dmxwininfo_SOURCES) $(ev_SOURCES) $(evi_SOURCES) \
-	$(res_SOURCES) $(xbell_SOURCES) $(xdmx_SOURCES) \
-	$(xinput_SOURCES) $(xled_SOURCES) $(xtest_SOURCES)
+	$(res_SOURCES) $(xbell_SOURCES) $(xinput_SOURCES) \
+	$(xled_SOURCES) $(xtest_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -204,6 +204,7 @@ APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
 AR = @AR@
+ARM_BACKTRACE_CFLAGS = @ARM_BACKTRACE_CFLAGS@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -391,6 +392,7 @@ XDMX_SYS_LIBS = @XDMX_SYS_LIBS@
 XEPHYR_CFLAGS = @XEPHYR_CFLAGS@
 XEPHYR_INCS = @XEPHYR_INCS@
 XEPHYR_LIBS = @XEPHYR_LIBS@
+XF86CONFIGDIR = @XF86CONFIGDIR@
 XF86CONFIGFILE = @XF86CONFIGFILE@
 XF86VIDMODE_CFLAGS = @XF86VIDMODE_CFLAGS@
 XF86VIDMODE_LIBS = @XF86VIDMODE_LIBS@
@@ -500,9 +502,9 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 # Requires <linux/input.h>
 @DMX_BUILD_USB_TRUE@EV_PROG = ev
-xdmx_SOURCES = xdmx.c
-xdmx_LDADD = @DMXEXAMPLES_DEP_LIBS@
-xdmx_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
+dmxinfo_SOURCES = dmxinfo.c
+dmxinfo_LDADD = @DMXEXAMPLES_DEP_LIBS@
+dmxinfo_CFLAGS = @DMXEXAMPLES_DEP_CFLAGS@
 dmxwininfo_SOURCES = dmxwininfo.c
 dmxwininfo_LDADD = @DMXXMUEXAMPLES_DEP_LIBS@
 dmxwininfo_CFLAGS = @DMXXMUEXAMPLES_DEP_CFLAGS@
@@ -637,6 +639,9 @@ dmxaddinput$(EXEEXT): $(dmxaddinput_OBJECTS) $(dmxaddinput_DEPENDENCIES)
 dmxaddscreen$(EXEEXT): $(dmxaddscreen_OBJECTS) $(dmxaddscreen_DEPENDENCIES) 
 	@rm -f dmxaddscreen$(EXEEXT)
 	$(AM_V_CCLD)$(dmxaddscreen_LINK) $(dmxaddscreen_OBJECTS) $(dmxaddscreen_LDADD) $(LIBS)
+dmxinfo$(EXEEXT): $(dmxinfo_OBJECTS) $(dmxinfo_DEPENDENCIES) 
+	@rm -f dmxinfo$(EXEEXT)
+	$(AM_V_CCLD)$(dmxinfo_LINK) $(dmxinfo_OBJECTS) $(dmxinfo_LDADD) $(LIBS)
 dmxreconfig$(EXEEXT): $(dmxreconfig_OBJECTS) $(dmxreconfig_DEPENDENCIES) 
 	@rm -f dmxreconfig$(EXEEXT)
 	$(AM_V_CCLD)$(dmxreconfig_LINK) $(dmxreconfig_OBJECTS) $(dmxreconfig_LDADD) $(LIBS)
@@ -664,9 +669,6 @@ res$(EXEEXT): $(res_OBJECTS) $(res_DEPENDENCIES)
 xbell$(EXEEXT): $(xbell_OBJECTS) $(xbell_DEPENDENCIES) 
 	@rm -f xbell$(EXEEXT)
 	$(AM_V_CCLD)$(xbell_LINK) $(xbell_OBJECTS) $(xbell_LDADD) $(LIBS)
-xdmx$(EXEEXT): $(xdmx_OBJECTS) $(xdmx_DEPENDENCIES) 
-	@rm -f xdmx$(EXEEXT)
-	$(AM_V_CCLD)$(xdmx_LINK) $(xdmx_OBJECTS) $(xdmx_LDADD) $(LIBS)
 xinput$(EXEEXT): $(xinput_OBJECTS) $(xinput_DEPENDENCIES) 
 	@rm -f xinput$(EXEEXT)
 	$(AM_V_CCLD)$(xinput_LINK) $(xinput_OBJECTS) $(xinput_LDADD) $(LIBS)
@@ -685,6 +687,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dmxaddinput-dmxaddinput.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dmxaddscreen-dmxaddscreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dmxinfo-dmxinfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dmxreconfig-dmxreconfig.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dmxresize-dmxresize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dmxrminput-dmxrminput.Po@am__quote@
@@ -694,7 +697,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/evi-evi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/res-res.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xbell-xbell.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xdmx-xdmx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xinput-xinput.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xled-xled.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xtest-xtest.Po@am__quote@
@@ -754,6 +756,22 @@ dmxaddscreen-dmxaddscreen.obj: dmxaddscreen.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='dmxaddscreen.c' object='dmxaddscreen-dmxaddscreen.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dmxaddscreen_CFLAGS) $(CFLAGS) -c -o dmxaddscreen-dmxaddscreen.obj `if test -f 'dmxaddscreen.c'; then $(CYGPATH_W) 'dmxaddscreen.c'; else $(CYGPATH_W) '$(srcdir)/dmxaddscreen.c'; fi`
+
+dmxinfo-dmxinfo.o: dmxinfo.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dmxinfo_CFLAGS) $(CFLAGS) -MT dmxinfo-dmxinfo.o -MD -MP -MF $(DEPDIR)/dmxinfo-dmxinfo.Tpo -c -o dmxinfo-dmxinfo.o `test -f 'dmxinfo.c' || echo '$(srcdir)/'`dmxinfo.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dmxinfo-dmxinfo.Tpo $(DEPDIR)/dmxinfo-dmxinfo.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='dmxinfo.c' object='dmxinfo-dmxinfo.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dmxinfo_CFLAGS) $(CFLAGS) -c -o dmxinfo-dmxinfo.o `test -f 'dmxinfo.c' || echo '$(srcdir)/'`dmxinfo.c
+
+dmxinfo-dmxinfo.obj: dmxinfo.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dmxinfo_CFLAGS) $(CFLAGS) -MT dmxinfo-dmxinfo.obj -MD -MP -MF $(DEPDIR)/dmxinfo-dmxinfo.Tpo -c -o dmxinfo-dmxinfo.obj `if test -f 'dmxinfo.c'; then $(CYGPATH_W) 'dmxinfo.c'; else $(CYGPATH_W) '$(srcdir)/dmxinfo.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/dmxinfo-dmxinfo.Tpo $(DEPDIR)/dmxinfo-dmxinfo.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='dmxinfo.c' object='dmxinfo-dmxinfo.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dmxinfo_CFLAGS) $(CFLAGS) -c -o dmxinfo-dmxinfo.obj `if test -f 'dmxinfo.c'; then $(CYGPATH_W) 'dmxinfo.c'; else $(CYGPATH_W) '$(srcdir)/dmxinfo.c'; fi`
 
 dmxreconfig-dmxreconfig.o: dmxreconfig.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dmxreconfig_CFLAGS) $(CFLAGS) -MT dmxreconfig-dmxreconfig.o -MD -MP -MF $(DEPDIR)/dmxreconfig-dmxreconfig.Tpo -c -o dmxreconfig-dmxreconfig.o `test -f 'dmxreconfig.c' || echo '$(srcdir)/'`dmxreconfig.c
@@ -898,22 +916,6 @@ xbell-xbell.obj: xbell.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xbell.c' object='xbell-xbell.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xbell_CFLAGS) $(CFLAGS) -c -o xbell-xbell.obj `if test -f 'xbell.c'; then $(CYGPATH_W) 'xbell.c'; else $(CYGPATH_W) '$(srcdir)/xbell.c'; fi`
-
-xdmx-xdmx.o: xdmx.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmx_CFLAGS) $(CFLAGS) -MT xdmx-xdmx.o -MD -MP -MF $(DEPDIR)/xdmx-xdmx.Tpo -c -o xdmx-xdmx.o `test -f 'xdmx.c' || echo '$(srcdir)/'`xdmx.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmx-xdmx.Tpo $(DEPDIR)/xdmx-xdmx.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xdmx.c' object='xdmx-xdmx.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmx_CFLAGS) $(CFLAGS) -c -o xdmx-xdmx.o `test -f 'xdmx.c' || echo '$(srcdir)/'`xdmx.c
-
-xdmx-xdmx.obj: xdmx.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmx_CFLAGS) $(CFLAGS) -MT xdmx-xdmx.obj -MD -MP -MF $(DEPDIR)/xdmx-xdmx.Tpo -c -o xdmx-xdmx.obj `if test -f 'xdmx.c'; then $(CYGPATH_W) 'xdmx.c'; else $(CYGPATH_W) '$(srcdir)/xdmx.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xdmx-xdmx.Tpo $(DEPDIR)/xdmx-xdmx.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xdmx.c' object='xdmx-xdmx.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xdmx_CFLAGS) $(CFLAGS) -c -o xdmx-xdmx.obj `if test -f 'xdmx.c'; then $(CYGPATH_W) 'xdmx.c'; else $(CYGPATH_W) '$(srcdir)/xdmx.c'; fi`
 
 xinput-xinput.o: xinput.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xinput_CFLAGS) $(CFLAGS) -MT xinput-xinput.o -MD -MP -MF $(DEPDIR)/xinput-xinput.Tpo -c -o xinput-xinput.o `test -f 'xinput.c' || echo '$(srcdir)/'`xinput.c

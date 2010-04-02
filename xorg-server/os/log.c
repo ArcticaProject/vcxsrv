@@ -120,7 +120,7 @@ static Bool needBuffer = TRUE;
 #ifdef __APPLE__
 static char __crashreporter_info_buff__[4096] = {0};
 static const char *__crashreporter_info__ = &__crashreporter_info_buff__[0];
-asm (".desc __crashreporter_info__, 0x10");
+asm (".desc ___crashreporter_info__, 0x10");
 #endif
 
 /* Prefix strings for log messages. */

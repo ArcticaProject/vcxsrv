@@ -618,6 +618,7 @@ MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
                     "InputClass configuration");
             return BadAlloc;
         }
+        mergedopts = xf86ReplaceStrOption(mergedopts, "driver", idev->driver);
     }
     idev->commonOptions = xf86optionListMerge(idev->commonOptions, mergedopts);
 

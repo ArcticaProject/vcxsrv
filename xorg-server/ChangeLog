@@ -1,3 +1,562 @@
+commit 495cec794dad95ed0c79048f3c410ad23e7d5ea4
+Author: Keith Packard <keithp@keithp.com>
+Date:   Fri Apr 2 00:14:23 2010 -0700
+
+    xserver 1.8.0
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b9ad452ec92a7dcbed680acb3f3b8ec29fa660df
+Author: Tiago Vignatti <tiago.vignatti@nokia.com>
+Date:   Thu Apr 1 18:57:50 2010 +0300
+
+    xfree86: die gracefully in the vga arbiter if AddScreen fails
+    
+    vga arbiter will be locked in one device while AbortDDX will call LeaveVT
+    routines from the other device. Fail!
+    
+    Signed-off-by: Tiago Vignatti <tiago.vignatti@nokia.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit e75f202e7768b7cc0eb2ad0e0f3f51ea81cd7275
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Mar 24 11:08:55 2010 +1000
+
+    configure: enable udev backend as "auto"
+    
+    Due to the checks in configure, this means it gets priority over HAL if
+    libudev is found.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 24952b786625fef808cb26d539dd5109d623c053
+Author: Keith Packard <keithp@keithp.com>
+Date:   Thu Apr 1 23:44:24 2010 -0700
+
+    Install 10-evdev.conf in $(prefix)/etc/X11/xorg.conf.d under udev
+    
+    udev needs some xorg.conf file to tell it to load a suitable input
+    driver, 10-evdev.conf is as simple as they come, mapping all evdev
+    devices to the evdev driver.
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 02328f190f893cb4ad0f3af7a2ecd39ed77ae5ad
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Thu Apr 1 18:21:51 2010 -0700
+
+    Bump bundle version to 2.5.1
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 0e342add7768df55a1917e27f9b85feddd444e82
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Thu Apr 1 15:30:46 2010 -0700
+
+    darwin: Correct inline assembly for  ___crashreporter_info__
+    
+    It was missing an underscore.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 67b814d9b2baea6beccfb1625a1e3f0b2ba7218b
+Author: Ruediger Oertel <ro@suse.de>
+Date:   Mon Mar 29 00:23:40 2010 +0200
+
+    Remove now obsolete function chooseVideoDriver
+    
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 1dd5fbc5a4d860af1c102b33e04dedd8c72617a1
+Author: Ruediger Oertel <ro@suse.de>
+Date:   Fri Mar 26 09:33:20 2010 -0700
+
+    xfree86: Handle driver autoconfiguration when .conf files exist
+    
+    When doing driver autoconfiguration with some parts of the config file
+    present but no driver set (e.g. only input configuration) fix the case
+    that we may have multiple drivers to try.
+    
+    Create a screen section for each driver and let them be tried in a row.
+    
+    Signed-off-by: Ruediger Oertel <ro@suse.de>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Tested-by: Timo Aaltonen <timo.aaltonen@aalto.fi>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 57cb1a854a1b6d91d214b3fa250a7df2ed20d433
+Merge: 4b3d67a 28a5f14
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Mar 29 11:46:00 2010 -0700
+
+    Merge remote branch 'jeremyhu/master'
+
+commit 4b3d67a7647f696957727948f9757a261e15d14e
+Merge: 579715f aa91508
+Author: Keith Packard <keithp@keithp.com>
+Date:   Mon Mar 29 11:44:07 2010 -0700
+
+    Merge remote branch 'whot/for-keith'
+
+commit 28a5f14b4089dccb8045cc4fdc923542a73dd22d
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Sun Mar 28 13:46:23 2010 -0700
+
+    XQuartz: Re-query dixScreenOrigins as the value could've changed.
+    
+    Fix a regression in 9c9c3a85b094a3c7b2763a572715d710325091aa
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit 436d0bb9cca122bfdde32902b683d2499f61e6fc
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Sat Mar 27 17:35:10 2010 -0700
+
+    darwin: Generate crash reports on FatalError()
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit 73b3b67aac9f3938a96cb8822b9c270bd82ded5c
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Mon Mar 22 09:30:51 2010 -0700
+
+    GLX: Remove a redundant initialization
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit 339207be6f184cc783076fc7e2cc12f92f57f2ba
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Thu Mar 25 22:15:58 2010 -0700
+
+    XQuartz: Workaround weird key data reported on some layouts
+    
+    This should make 'Unicode Hex Input' work as an input layout.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+
+commit aa91508356f243edc3b11795b1481edcfe0d39c2
+Author: Dan Nicholson <dbn.lists@gmail.com>
+Date:   Wed Mar 24 23:18:35 2010 -0700
+
+    config/udev: Prefer product name from attribute rather than uevent
+    
+    The input device product name for evdev devices in the kernel uevent has
+    embedded quotes that aren't expected here. Use the sysfs name attribute
+    instead, which does not suffer this problem. The uevent name will be
+    used as a fallback if no name attribute is found.
+    
+    Signed-off-by: Dan Nicholson <dbn.lists@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d00c3298a698ddddc8967215cef7dd941fa15804
+Author: Fernando Carrijo <fcarrijo@yahoo.com.br>
+Date:   Wed Mar 24 20:11:34 2010 -0300
+
+    Cleanup some comments in SpriteRec
+    
+    Signed-off-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 70bd02f2ea3a91c0340df97ca3b8a4f9400f6f46
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Mar 23 12:13:56 2010 +1000
+
+    xfree86: merge driver from the input class into the options.
+    
+    A driver that is assigned by an input class is only present as idev->driver.
+    The driver itself has no access to this information once PreInit is called.
+    For devices that rely on chain-hotplugging (wacom), this means that for the
+    second device the driver information is lost and the second device cannot be
+    initialized through NewInputDeviceRequest. Although this could be worked
+    around by hardcoding the driver name in the wacom driver, having the
+    assigned driver in the options seems like the better solution.
+    
+    This issue only manifests itself with the udev backend. With HAL, the driver
+    is assigned by HAL and the option is duplicated in config/hal.c.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 579715f830fbbca9e1ecb17dc18176132f5969e7
+Author: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+Date:   Wed Mar 17 12:16:57 2010 +0200
+
+    os: Prevent backtrace from being stopped in noreturn functions.
+    
+    There are two noreturn functions in the X server: FatalError and
+    AbortServer. Having any of those two functions in the middle of a call
+    stack will prevent unwinding the program properly and stops the
+    backtrace at those functions in gdb.
+    
+    The file containing FatalError and AbortServer, os/log.c, has to be
+    compiled with the -mapcs-frame option on ARM to get proper
+    backtraces. Automake imposes its own restrictions on compiling
+    individual source files with different options. The recommended way to
+    do this is to put os/log.c into a convenience library and add this
+    library inside os/libos.la. See the documentation of GNU Automake
+    manual, version 1.11.1, section 27.8 Per-Object Flags Emulation, for
+    details.
+    
+    Signed-off-by: Rami Ylimaki <ext-rami.ylimaki@nokia.com>
+    Reviewed-by: Daniel Stone <daniel@fooishbar.org>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit e086b99c1f5ce351b578de7cd9f616bc79d6cf64
+Author: Mikhail Gusarov <dottedmag@dottedmag.net>
+Date:   Tue Mar 23 01:03:53 2010 +0600
+
+    kdrive: Bump evdev maxKeycode
+    
+    There are keycodes > 193 in evdev, e.g. KEY_WIMAX which is 246 .
+    
+    Signed-off-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Adam Jackson <ajax@nwnk.net>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 185185eeb44a277c324be0f58a4b4a469b56b69b
+Author: Peter Harris <pharris@opentext.com>
+Date:   Tue Mar 23 12:08:19 2010 -0400
+
+    Fix crash when all glyphs of a given depth are freed, but not all glyphsets
+    
+    This is how the crash can be triggered with only two clients on the system:
+    Client A: (already running)
+    Client B: Connect
+    Client B: CreateGlyphSet(depthN)
+    Client A: Disconnect
+    Server: free globalGlyphs(depthN)
+    Client B: AddGlyphs(depthN)
+    Server: SEGV
+    
+    This crash was introduced with the FindGlyphsByHash function
+    in 516b96387b0e57b524a37a96da22dbeeeb041712. Before that revision,
+    ResizeGlyphSet was always called before FindGlyphRef, which would
+    re-create globalGlyphs(depthN) if necessary.
+    
+    X.Org Bug 20718 <http://bugs.freedesktop.org/show_bug.cgi?id=20718>
+    
+    Reviewed-by: Adam Jackson <ajax@redhat.com>
+    Signed-off-by: Peter Harris <pharris@opentext.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 8311cd5f89ca6781842bb24671b8122cdf8be148
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Tue Mar 23 10:37:36 2010 -0700
+
+    XKB: Fix garbage initialization
+    
+    XkbEnableDisableControls set extra garbage bits on the xkbControlsNotify
+    changedControls mask because it was uninitialized on the stack.
+    
+    Found by clang
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 0ecfab89d1754b0b7e32b3964b40663d1810cd62
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Mar 22 14:04:09 2010 +1000
+
+    xfree86: remove if 1 from the dawn of time.
+    
+    7+ years for an if 1 should be enough to just admit that there's no other
+    option.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+    Reviewed-by: Corbin Simpson <MostAwesomeDude@gmail.com>
+
+commit 6389405b56d2221d8a7b80c4bb3bd3b4e1a29bab
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Mar 22 09:20:49 2010 +1000
+
+    configure: Always define XINPUT.
+    
+    This define was removed in e251c9e75afdc "Remove all traces of #ifdef XINPUT
+    and the matching bits from the configure.ac". Drivers that support multiple
+    server versions and still check for ifdef XINPUT now always build without
+    XINPUT support if they're calling XORG_DRIVER_CHECK_EXT(XINPUT, inputproto).
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 0c2fde5c8ad6e94b4ed1588aa93256a2b64f74d9
+Author: Tomas Carnecky <tom@dbservice.com>
+Date:   Mon Mar 22 11:20:15 2010 -0700
+
+    Fix typos in the swap functions
+    
+    This should fix bug #3539.
+    
+    Signed-off-by: Tomas Carnecky <tom@dbservice.com>
+    Signed-off-by: Ian Romanick <ian.d.romanick@intel.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 3083c5d0c4386cdd7083b7a83ac72fdad2f1e61e
+Author: Michel Dänzer <daenzer@vmware.com>
+Date:   Mon Mar 22 18:01:17 2010 +0100
+
+    Xext: Fix cursor reference counting hazard.
+    
+    Make sure the reference count of the new cursor is increased before the old
+    one is decreased, otherwise bad things will happen if they're one and the
+    same and the reference count is 1 initially. Not sure this can actually happen
+    here, but better safe than sorry.
+    
+    Signed-off-by: Michel Dänzer <daenzer@vmware.com>
+    Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit b29220dc765cb6f878c5466e00e4bd21f3bd803d
+Merge: c3da766 ed31d50
+Author: Keith Packard <keithp@keithp.com>
+Date:   Sun Mar 21 23:01:58 2010 -0700
+
+    Merge remote branch 'jeremyhu/master'
+
+commit c3da76643aeebdd24047e3e14a860507eac37ec3
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Mar 18 23:19:20 2010 -0500
+
+    Cygwin/X: Make X -> XWin symlink during install
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit abf4e0b7e349b0238b2b97a16b8a308b5026af31
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Mon Mar 22 00:44:28 2010 -0500
+
+    New header for XF86Bigfont server functions
+    
+    Xext/xf86bigfont.c contains three non-static functions which are called
+    elsewhere in the server.  This creates a new header containing these
+    declarations in order to fix several warnings:
+    
+    xf86bigfont.c:285: warning: no previous prototype for `XF86BigfontFreeFontShm'
+    dixfonts.c:502: warning: implicit declaration of function `XF86BigfontFreeFontS$
+    dixfonts.c:502: warning: nested extern declaration of `XF86BigfontFreeFontShm'
+    log.c:436: warning: implicit declaration of function `XF86BigfontCleanup'
+    log.c:436: warning: nested extern declaration of `XF86BigfontCleanup'
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 57a049ea89b008c0b60316c3b6e6ff5c8fbd4cad
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Thu Mar 18 04:46:20 2010 -0500
+
+    Xext: fix old-style function definitions in xf86bigfont.c
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 822b9f9a3e822df8848995eda246f83864d1366f
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Sun Feb 21 01:24:44 2010 -0600
+
+    mi: remove deprecated #include <X11/extensions/xf86bigfstr.h> in miinitext.c
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 946b49ebcbf47e030a6e00ce1a699f3b055f638a
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Mar 17 17:37:05 2010 -0500
+
+    Catch errors in recursive relink targets
+    
+    If make relink fails in a subdirectory, we need to catch the error
+    otherwise make will continue iterating the 'for' loop.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+
+commit 0820a6e2fb005b5f856dda25e1644f34fc994129
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Mar 17 13:40:41 2010 -0500
+
+    Fix .man.N targets for AM_SILENT_RULES
+    
+    Add $(AM_V_GEN) for sed-based rules so they appear as expected with
+    automake silent rules, and $(AM_V_at) to completely hide cp/ln/rm
+    commands which are not prone to fail.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 9be4157391edf0c5fc4ee36adfb1eb1c3bdb8e3b
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Mar 17 13:33:39 2010 -0500
+
+    Respect value of SED from configure
+    
+    We now use libtool, which calls AC_PROG_SED and sets SED as the path to
+    a fully-functional 'sed' (which may also be called 'gsed' if GNU sed is
+    installed alongside a proprietary version).  Therefore we should respect
+    the value of SED so we are sure to use the correct one.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 5e00f464c546debf9164f24c6d648623f7ee5946
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Mar 17 14:56:24 2010 -0500
+
+    Fix relink targets for silent rules
+    
+    Add $(AM_V_at) to all relink make targets to silence them when automake
+    silent rules are in use.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit fa7e062962d17862032bc600bfcffd486addb063
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Mar 17 13:52:38 2010 -0500
+
+    Use EXEEXT in relink rules for portable DDXs
+    
+    On Cygwin and MinGW, executables use the .exe suffix.  Autoconf and
+    automake set EXEEXT on these platforms, and leave it empty on others
+    where no suffix is used.  $(EXEEXT) must be appended to executable names
+    in custom rules for portability:
+    
+    http://www.gnu.org/software/automake/manual/html_node/EXEEXT.html
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 037869d7b876f43158df88d63788b93a5d6187c1
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Mar 17 13:48:49 2010 -0500
+
+    kdrive: Use $(MAKE) in relink rules
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Mikhail Gusarov <dottedmag@dottedmag.net>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+
+commit 8e5de45513577c63a33833931f2afd0cc59d42a7
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Wed Feb 24 02:56:59 2010 -0600
+
+    Use libtool -export-dynamic flag for portability
+    
+    The linker flag required for exporting symbols in executables varies
+    by platform.  libtool handles this with a single -export-dynamic
+    flag (not to be confused with the similarly-named ELF linker flag)
+    which tells it to use the correct platform-specific flag at link time.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Dan Nicholson <dbn.lists@gmail.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 2a11ffa977d2267d8b2f27b76490a98e9c73b8c7
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Fri Feb 19 14:31:28 2010 -0600
+
+    Rename xdmx client to dmxinfo
+    
+    The DMX Xdmx server and xdmx client cannot both be installed on
+    case-insensitive file systems.  The client is undocumented and
+    so renaming it is the best option.
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit fbb4903eaa23174d21ab8c640d9de1fe3eb17539
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Sun Feb 21 02:08:08 2010 -0600
+
+    Cygwin/X: Fix windres rule for automake silent rules
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Reviewed-by: Rémi Cardona <rem@gentoo.org>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit 8db894690988f2bac9c0acb96fd39811d2b42f47
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Fri Feb 19 00:05:28 2010 -0600
+
+    Cygwin/X: Fix make dist after 11252ed82e1f361b99e86521ac9314f868bd1a3a
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Acked-by: Adam Jackson <ajax@redhat.com>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+
+commit ed31d50b5f7f25e4db986711699704e615b8afcb
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Fri Mar 19 17:24:27 2010 -0700
+
+    XQuartz: Constrain the pointer to the updated display bounds on display reconfigure.
+    
+    http://xquartz.macosforge.org/trac/ticket/346
+
+commit 927480be12ff61deb4e8120d2f90ddef3a1a6beb
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Mar 20 11:03:28 2010 -0700
+
+    XQuartz: pbproxy: Make standalone xpbproxy respect the launchd prefix
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit d16bc8a3cdbe0e8b9cba836c7aa2ff7c0458049e
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Sat Mar 20 03:28:57 2010 -0700
+
+    XQuartz: xpbproxy: Cleanup xpbproxy threading
+    
+    Confine xpbproxy to a single thread
+    Runs inside its own CFRunLoop
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit 9c9c3a85b094a3c7b2763a572715d710325091aa
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Fri Mar 19 17:23:12 2010 -0700
+
+    XQuartz: Minor cleanup
+    
+    Move RandRInit to where it will need to be (not yet implemented)
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit bb75d0df8b5238bfe8b011bb5737fae2a3584290
+Author: Jeremy Huddleston <jeremyhu@freedesktop.org>
+Date:   Fri Mar 19 15:26:50 2010 -0700
+
+    XQuartz: GLX: Fix Availability for Tiger ppc workaround
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@freedesktop.org>
+
+commit eac7cdabecafb7c505795207182ab2578d672c06
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Tue Mar 16 11:29:08 2010 -0700
+
+    Revert "XQuartz: Explicitly pass a bellProc to make XBell() work again."
+    
+    I'm not quite sure why this was necessary, but DDXRingBell is being called
+    from CoreKeyboardBell, so we don't need a separate bellProc which would
+    result in multiple rings.
+    
+    This reverts commit 9071b0d69748cfa7ecca17b4cb0e431bbb0ef2a4.
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+
 commit 13c007f9224ad871193e40466e64df1477ed26b0
 Author: Keith Packard <keithp@keithp.com>
 Date:   Sun Mar 21 17:23:46 2010 -0700

@@ -61,28 +61,32 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-am__DEPENDENCIES_1 =
-libos_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am__libos_la_SOURCES_DIST = WaitFor.c access.c auth.c backtrace.c \
-	connection.c io.c mitauth.c oscolor.c osdep.h osinit.c utils.c \
-	strcasecmp.c strcasestr.c xdmauth.c xsha1.c xstrans.c \
-	xprintf.c log.c rpcauth.c xdmcp.c strlcat.c strlcpy.c
-am__objects_1 = log.lo
-am__objects_2 = rpcauth.lo
-@SECURE_RPC_TRUE@am__objects_3 = $(am__objects_2)
-am__objects_4 = xdmcp.lo
-@XDMCP_TRUE@am__objects_5 = $(am__objects_4)
-am__objects_6 = strlcat.lo strlcpy.lo
-@NEED_STRLCAT_TRUE@am__objects_7 = $(am__objects_6)
-am_libos_la_OBJECTS = WaitFor.lo access.lo auth.lo backtrace.lo \
-	connection.lo io.lo mitauth.lo oscolor.lo osinit.lo utils.lo \
-	strcasecmp.lo strcasestr.lo xdmauth.lo xsha1.lo xstrans.lo \
-	xprintf.lo $(am__objects_1) $(am__objects_3) $(am__objects_5) \
-	$(am__objects_7)
-libos_la_OBJECTS = $(am_libos_la_OBJECTS)
+liblog_la_LIBADD =
+am_liblog_la_OBJECTS = liblog_la-log.lo
+liblog_la_OBJECTS = $(am_liblog_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
+liblog_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(liblog_la_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__DEPENDENCIES_1 =
+libos_la_DEPENDENCIES = $(am__DEPENDENCIES_1) liblog.la
+am__libos_la_SOURCES_DIST = WaitFor.c access.c auth.c backtrace.c \
+	connection.c io.c mitauth.c oscolor.c osdep.h osinit.c utils.c \
+	strcasecmp.c strcasestr.c xdmauth.c xsha1.c xstrans.c \
+	xprintf.c rpcauth.c xdmcp.c strlcat.c strlcpy.c
+am__objects_1 = rpcauth.lo
+@SECURE_RPC_TRUE@am__objects_2 = $(am__objects_1)
+am__objects_3 = xdmcp.lo
+@XDMCP_TRUE@am__objects_4 = $(am__objects_3)
+am__objects_5 = strlcat.lo strlcpy.lo
+@NEED_STRLCAT_TRUE@am__objects_6 = $(am__objects_5)
+am_libos_la_OBJECTS = WaitFor.lo access.lo auth.lo backtrace.lo \
+	connection.lo io.lo mitauth.lo oscolor.lo osinit.lo utils.lo \
+	strcasecmp.lo strcasestr.lo xdmauth.lo xsha1.lo xstrans.lo \
+	xprintf.lo $(am__objects_2) $(am__objects_4) $(am__objects_6)
+libos_la_OBJECTS = $(am_libos_la_OBJECTS)
 PROGRAMS = $(noinst_PROGRAMS)
 os_O_SOURCES = os.c
 os_O_OBJECTS = os.$(OBJEXT)
@@ -109,8 +113,8 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(libos_la_SOURCES) os.c
-DIST_SOURCES = $(am__libos_la_SOURCES_DIST) os.c
+SOURCES = $(liblog_la_SOURCES) $(libos_la_SOURCES) os.c
+DIST_SOURCES = $(liblog_la_SOURCES) $(am__libos_la_SOURCES_DIST) os.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -125,6 +129,7 @@ APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
 AR = @AR@
+ARM_BACKTRACE_CFLAGS = @ARM_BACKTRACE_CFLAGS@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -312,6 +317,7 @@ XDMX_SYS_LIBS = @XDMX_SYS_LIBS@
 XEPHYR_CFLAGS = @XEPHYR_CFLAGS@
 XEPHYR_INCS = @XEPHYR_INCS@
 XEPHYR_LIBS = @XEPHYR_LIBS@
+XF86CONFIGDIR = @XF86CONFIGDIR@
 XF86CONFIGFILE = @XF86CONFIGFILE@
 XF86VIDMODE_CFLAGS = @XF86VIDMODE_CFLAGS@
 XF86VIDMODE_LIBS = @XF86VIDMODE_LIBS@
@@ -419,17 +425,25 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LTLIBRARIES = libos.la
+noinst_LTLIBRARIES = libos.la liblog.la
 AM_CFLAGS = $(DIX_CFLAGS) $(SHA1_CFLAGS)
 SECURERPC_SRCS = rpcauth.c
 XDMCP_SRCS = xdmcp.c
 STRLCAT_SRCS = strlcat.c strlcpy.c
-XORG_SRCS = log.c
+
+# Build a convenience library liblog.la that will be added into
+# libos.la. The split is done so that log.c can be built with
+# different compiler options.
+liblog_la_SOURCES = log.c
+# Add flags needed for proper backtraces of functions marked with GCC
+# __attribute__((noreturn)). Currently those flags are needed for
+# FatalError and AbortServer in log.c.
+liblog_la_CFLAGS = $(AM_CFLAGS) $(ARM_BACKTRACE_CFLAGS)
 libos_la_SOURCES = WaitFor.c access.c auth.c backtrace.c connection.c \
 	io.c mitauth.c oscolor.c osdep.h osinit.c utils.c strcasecmp.c \
 	strcasestr.c xdmauth.c xsha1.c xstrans.c xprintf.c \
-	$(XORG_SRCS) $(am__append_1) $(am__append_2) $(am__append_3)
-libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS)
+	$(am__append_1) $(am__append_2) $(am__append_3)
+libos_la_LIBADD = @SHA1_LIBS@ $(DLOPEN_LIBS) liblog.la
 EXTRA_DIST = $(SECURERPC_SRCS) $(INTERNALMALLOC_SRCS) \
      $(XDMCP_SRCS) $(STRLCAT_SRCS)
 
@@ -477,6 +491,8 @@ clean-noinstLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+liblog.la: $(liblog_la_OBJECTS) $(liblog_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(liblog_la_LINK)  $(liblog_la_OBJECTS) $(liblog_la_LIBADD) $(LIBS)
 libos.la: $(libos_la_OBJECTS) $(libos_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK)  $(libos_la_OBJECTS) $(libos_la_LIBADD) $(LIBS)
 
@@ -504,7 +520,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/backtrace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/connection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/liblog_la-log.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mitauth.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/os.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oscolor.Plo@am__quote@
@@ -544,6 +560,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+liblog_la-log.lo: log.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(liblog_la_CFLAGS) $(CFLAGS) -MT liblog_la-log.lo -MD -MP -MF $(DEPDIR)/liblog_la-log.Tpo -c -o liblog_la-log.lo `test -f 'log.c' || echo '$(srcdir)/'`log.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/liblog_la-log.Tpo $(DEPDIR)/liblog_la-log.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='log.c' object='liblog_la-log.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(liblog_la_CFLAGS) $(CFLAGS) -c -o liblog_la-log.lo `test -f 'log.c' || echo '$(srcdir)/'`log.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

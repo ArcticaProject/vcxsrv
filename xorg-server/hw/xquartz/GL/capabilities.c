@@ -525,8 +525,7 @@ bool getGlCapabilities(struct glCapabilities *cap) {
 
 	    conf = malloc(sizeof(*conf));
 	    if(NULL == conf) {
-            perror("malloc");
-            OsAbort();
+                FatalError("Unable to allocate memory for OpenGL capabilities\n");
 	    }
 
 	    /* Copy the struct. */

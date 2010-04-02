@@ -8,7 +8,7 @@ CLEANFILES = $(appman_PROCESSED) $(appman_DATA)
 include $(top_srcdir)/cpprules.in
 
 .man.$(APP_MAN_SUFFIX):
-	cp $< $@
+	$(AM_V_at)cp $< $@
 
 EXTRA_DIST = \
 	Xquartz.man.pre

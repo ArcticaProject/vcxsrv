@@ -522,34 +522,40 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
     }
 }
 
-static char*
-chooseVideoDriver(void)
+/* copy a screen section and enter the desired driver
+ * and insert it at i in the list of screens */
+static Bool
+copyScreen(confScreenPtr oscreen, GDevPtr odev, int i, char *driver)
 {
-    char *chosen_driver = NULL;
-    int i;
-    char *matches[20]; /* If we have more than 20 drivers we're in trouble */
+    GDevPtr cptr = NULL;
 
-    listPossibleVideoDrivers(matches, 20);
+    xf86ConfigLayout.screens[i].screen = xnfcalloc(1, sizeof(confScreenRec));
+    if(!xf86ConfigLayout.screens[i].screen)
+        return FALSE;
+    memcpy(xf86ConfigLayout.screens[i].screen, oscreen, sizeof(confScreenRec));
 
-    /* TODO Handle multiple drivers claiming to support the same PCI ID */
-    chosen_driver = matches[0];
+    cptr = xcalloc(1, sizeof(GDevRec));
+    if (!cptr)
+        return FALSE;
+    memcpy(cptr, odev, sizeof(GDevRec));
 
-    xf86Msg(X_DEFAULT, "Matched %s for the autoconfigured driver\n",
-	    chosen_driver);
+    cptr->identifier = Xprintf("Autoconfigured Video Device %s", driver);
+    cptr->driver = driver;
 
-    for (i = 0; matches[i] ; i++) {
-        if (matches[i] != chosen_driver) {
-            xfree(matches[i]);
-        }
-    }
+    /* now associate the new driver entry with the new screen entry */
+    xf86ConfigLayout.screens[i].screen->device = cptr;
+    cptr->myScreenSection = xf86ConfigLayout.screens[i].screen;
 
-    return chosen_driver;
+    return TRUE;
 }
 
 GDevPtr
 autoConfigDevice(GDevPtr preconf_device)
 {
     GDevPtr ptr = NULL;
+    char *matches[20]; /* If we have more than 20 drivers we're in trouble */
+    int num_matches = 0, num_screens = 0, i;
+    screenLayoutPtr slp;
 
     if (!xf86configptr) {
         return NULL;
@@ -573,14 +579,59 @@ autoConfigDevice(GDevPtr preconf_device)
         ptr->driver = NULL;
     }
     if (!ptr->driver) {
-        ptr->driver = chooseVideoDriver();
+        /* get all possible video drivers and count them */
+        listPossibleVideoDrivers(matches, 20);
+        for (; matches[num_matches]; num_matches++) {
+            xf86Msg(X_DEFAULT, "Matched %s as autoconfigured driver %d\n",
+                    matches[num_matches], num_matches);
+        }
+
+        slp = xf86ConfigLayout.screens;
+        if (slp) {
+            /* count the number of screens and make space for
+             * a new screen for each additional possible driver
+             * minus one for the already existing first one
+             * plus one for the terminating NULL */
+            for (; slp[num_screens].screen; num_screens++);
+            xf86ConfigLayout.screens = xnfcalloc(num_screens + num_matches,
+                                                sizeof(screenLayoutRec));
+            xf86ConfigLayout.screens[0] = slp[0];
+
+            /* do the first match and set that for the original first screen */
+            ptr->driver = matches[0];
+            if (!xf86ConfigLayout.screens[0].screen->device) {
+                xf86ConfigLayout.screens[0].screen->device = ptr;
+                ptr->myScreenSection = xf86ConfigLayout.screens[0].screen;
+            }
+
+            /* for each other driver found, copy the first screen, insert it
+             * into the list of screens and set the driver */
+            i = 0;
+            while (i++ < num_matches) {
+                if (!copyScreen(slp[0].screen, ptr, i, matches[i]))
+                    return NULL;
+            }
+
+            /* shift the rest of the original screen list
+             * to the end of the current screen list
+             *
+             * TODO Handle rest of multiple screen sections */
+            for (i = 1; i < num_screens; i++) {
+                xf86ConfigLayout.screens[i+num_matches] = slp[i];
+            }
+            xf86ConfigLayout.screens[num_screens+num_matches-1].screen = NULL;
+            xfree(slp);
+        } else {
+            /* layout does not have any screens, not much to do */
+            ptr->driver = matches[0];
+            for (i = 1; matches[i] ; i++) {
+                if (matches[i] != matches[0]) {
+                    xfree(matches[i]);
+                }
+            }
+        }
     }
 
-    /* TODO Handle multiple screen sections */
-    if (xf86ConfigLayout.screens && !xf86ConfigLayout.screens->screen->device) {
-        xf86ConfigLayout.screens->screen->device = ptr;
-        ptr->myScreenSection = xf86ConfigLayout.screens->screen;
-    }
     xf86Msg(X_DEFAULT, "Assigned the driver to the xf86ConfigLayout\n");
 
     return ptr;

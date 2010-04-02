@@ -217,6 +217,7 @@ APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
 AR = @AR@
+ARM_BACKTRACE_CFLAGS = @ARM_BACKTRACE_CFLAGS@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -380,7 +381,7 @@ PS2PDF = @PS2PDF@
 RANLIB = @RANLIB@
 RAWCPP = @RAWCPP@
 RAWCPPFLAGS = @RAWCPPFLAGS@
-SED = sed
+SED = @SED@
 SELINUX_CFLAGS = @SELINUX_CFLAGS@
 SELINUX_LIBS = @SELINUX_LIBS@
 SERVER_MISC_CONFIG_PATH = @SERVER_MISC_CONFIG_PATH@
@@ -412,6 +413,7 @@ XDMX_SYS_LIBS = @XDMX_SYS_LIBS@
 XEPHYR_CFLAGS = @XEPHYR_CFLAGS@
 XEPHYR_INCS = @XEPHYR_INCS@
 XEPHYR_LIBS = @XEPHYR_LIBS@
+XF86CONFIGDIR = @XF86CONFIGDIR@
 XF86CONFIGFILE = @XF86CONFIGFILE@
 XF86VIDMODE_CFLAGS = @XF86VIDMODE_CFLAGS@
 XF86VIDMODE_LIBS = @XF86VIDMODE_LIBS@
@@ -703,6 +705,7 @@ MANDEFS = \
 EXTRA_DIST = \
 	$(GLX_EXTRAS) \
 	$(MAN_SRCS) \
+	$(xwinconfig_DATA) \
 	X.ico \
 	XWin.rc \
 	xlaunch/config.cc \
@@ -1193,7 +1196,8 @@ install-dvi: install-dvi-am
 install-dvi-am:
 
 install-exec-am: install-binPROGRAMS
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
 install-html: install-html-am
 
 install-html-am:
@@ -1235,7 +1239,7 @@ ps-am:
 uninstall-am: uninstall-appmanDATA uninstall-binPROGRAMS \
 	uninstall-filemanDATA uninstall-xwinconfigDATA
 
-.MAKE: all check install install-am install-strip
+.MAKE: all check install install-am install-exec-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
 	clean-generic clean-libtool ctags distclean distclean-compile \
@@ -1243,11 +1247,11 @@ uninstall-am: uninstall-appmanDATA uninstall-binPROGRAMS \
 	dvi-am html html-am info info-am install install-am \
 	install-appmanDATA install-binPROGRAMS install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-filemanDATA install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip install-xwinconfigDATA installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-exec-am install-exec-hook install-filemanDATA \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip install-xwinconfigDATA \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-appmanDATA \
@@ -1256,18 +1260,18 @@ uninstall-am: uninstall-appmanDATA uninstall-binPROGRAMS \
 
 
 .rc.o:
-	$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include
+	$(AM_V_GEN)$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include
 
 winprefsyacc.h: winprefsyacc.c
 winprefslex.c: winprefslex.l winprefsyacc.c winprefsyacc.h
 
 XWin.$(APP_MAN_SUFFIX): XWin.man
-	-rm -f XWin.$(APP_MAN_SUFFIX)
-	$(LN_S) XWin.man XWin.$(APP_MAN_SUFFIX)
+	-$(AM_V_at)rm -f XWin.$(APP_MAN_SUFFIX)
+	$(AM_V_at)$(LN_S) XWin.man XWin.$(APP_MAN_SUFFIX)
 
 XWinrc.$(FILE_MAN_SUFFIX): XWinrc.man
-	-rm -f XWinrc.$(FILE_MAN_SUFFIX)
-	$(LN_S) XWinrc.man XWinrc.$(FILE_MAN_SUFFIX)
+	-$(AM_V_at)rm -f XWinrc.$(FILE_MAN_SUFFIX)
+	$(AM_V_at)$(LN_S) XWinrc.man XWinrc.$(FILE_MAN_SUFFIX)
 
 .pre:
 	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(CPP_FILES_FLAGS) < $< | $(CPP_SED_MAGIC) > $@
@@ -1275,8 +1279,11 @@ XWinrc.$(FILE_MAN_SUFFIX): XWinrc.man
 .man.pre.man:
 	$(AM_V_GEN)$(RAWCPP) $(RAWCPPFLAGS) $(MANDEFS) $(EXTRAMANDEFS) < $< | $(CPP_SED_MAGIC) > $@
 
+install-exec-hook:
+	(cd $(DESTDIR)$(bindir) && rm -f X && $(LN_S) XWin$(EXEEXT) X)
+
 relink:
-	rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)
+	$(AM_V_at)rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

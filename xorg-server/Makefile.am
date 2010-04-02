@@ -94,4 +94,4 @@ DIST_SUBDIRS = \
 
 # gross hack
 relink: all
-	$(MAKE) -C hw relink
+	$(AM_V_at)$(MAKE) -C hw relink

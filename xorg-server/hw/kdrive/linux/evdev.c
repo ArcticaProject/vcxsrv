@@ -362,7 +362,7 @@ readMapping (KdKeyboardInfo *ki)
         return;
 
     ki->minScanCode = 0;
-    ki->maxScanCode = 193;
+    ki->maxScanCode = 247;
 }
 
 static void

@@ -82,7 +82,7 @@
 /* use ARM NEON assembly optimizations */
 #undef USE_ARM_NEON
 
-/* use ARM SIMD compiler intrinsics */
+/* use ARM SIMD assembly optimizations */
 #undef USE_ARM_SIMD
 
 /* use GNU-style inline assembler */

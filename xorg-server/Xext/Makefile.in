@@ -81,10 +81,11 @@ am__libXext_la_SOURCES_DIST = bigreq.c geext.c shape.c sleepuntil.c \
 	sleepuntil.h sync.c syncsrv.h xcmisc.c xtest.c shm.c shmint.h \
 	panoramiX.c panoramiX.h panoramiXh.h panoramiXsrv.h \
 	panoramiXprocs.c panoramiXSwap.c xace.c xace.h xacestr.h \
-	security.c securitysrv.h xcalibrate.c xf86bigfont.c xvmain.c \
-	xvdisp.c xvmc.c xvdix.h xvmcext.h xvdisp.h xres.c saver.c \
-	xselinux_ext.c xselinux_hooks.c xselinux_label.c xselinux.h \
-	xselinuxint.h mbuf.c dpms.c dpmsproc.h
+	security.c securitysrv.h xcalibrate.c xf86bigfont.c \
+	xf86bigfontsrv.h xvmain.c xvdisp.c xvmc.c xvdix.h xvmcext.h \
+	xvdisp.h xres.c saver.c xselinux_ext.c xselinux_hooks.c \
+	xselinux_label.c xselinux.h xselinuxint.h mbuf.c dpms.c \
+	dpmsproc.h
 am__objects_1 = shm.lo
 @MITSHM_TRUE@am__objects_2 = $(am__objects_1)
 am__objects_3 = panoramiX.lo panoramiXprocs.lo panoramiXSwap.lo
@@ -127,7 +128,8 @@ am__libXextbuiltin_la_SOURCES_DIST = bigreq.c geext.c shape.c \
 	sleepuntil.c sleepuntil.h sync.c syncsrv.h xcmisc.c xtest.c \
 	shm.c shmint.h panoramiX.c panoramiX.h panoramiXh.h \
 	panoramiXsrv.h panoramiXprocs.c panoramiXSwap.c xace.c xace.h \
-	xacestr.h security.c securitysrv.h xcalibrate.c xf86bigfont.c
+	xacestr.h security.c securitysrv.h xcalibrate.c xf86bigfont.c \
+	xf86bigfontsrv.h
 @XORG_TRUE@am_libXextbuiltin_la_OBJECTS = $(am__objects_13)
 libXextbuiltin_la_OBJECTS = $(am_libXextbuiltin_la_OBJECTS)
 @XORG_TRUE@am_libXextbuiltin_la_rpath =
@@ -205,6 +207,7 @@ APPLE_APPLICATION_NAME = @APPLE_APPLICATION_NAME@
 APP_MAN_DIR = @APP_MAN_DIR@
 APP_MAN_SUFFIX = @APP_MAN_SUFFIX@
 AR = @AR@
+ARM_BACKTRACE_CFLAGS = @ARM_BACKTRACE_CFLAGS@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -392,6 +395,7 @@ XDMX_SYS_LIBS = @XDMX_SYS_LIBS@
 XEPHYR_CFLAGS = @XEPHYR_CFLAGS@
 XEPHYR_INCS = @XEPHYR_INCS@
 XEPHYR_LIBS = @XEPHYR_LIBS@
+XF86CONFIGDIR = @XF86CONFIGDIR@
 XF86CONFIGFILE = @XF86CONFIGFILE@
 XF86VIDMODE_CFLAGS = @XF86VIDMODE_CFLAGS@
 XF86VIDMODE_LIBS = @XF86VIDMODE_LIBS@
@@ -559,7 +563,7 @@ MULTIBUFFER_SRCS = mbuf.c
 EXTRA_MULTIBUFFER_SRCS = mbufbf.c mbufpx.c
 
 # XF86 Big Font extension
-BIGFONT_SRCS = xf86bigfont.c
+BIGFONT_SRCS = xf86bigfont.c xf86bigfontsrv.h
 
 # DPMS extension
 DPMS_SRCS = dpms.c dpmsproc.h

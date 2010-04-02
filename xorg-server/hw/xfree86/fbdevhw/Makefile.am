@@ -22,7 +22,7 @@ driverman_DATA = fbdevhw.$(DRIVER_MAN_SUFFIX)
 CLEANFILES = $(driverman_DATA) fbdevhw.man
 
 fbdevhw.$(DRIVER_MAN_SUFFIX): fbdevhw.man
-	-rm -f fbdevhw.$(DRIVER_MAN_SUFFIX)
-	$(LN_S) fbdevhw.man fbdevhw.$(DRIVER_MAN_SUFFIX)
+	-$(AM_V_at)rm -f fbdevhw.$(DRIVER_MAN_SUFFIX)
+	$(AM_V_at)$(LN_S) fbdevhw.man fbdevhw.$(DRIVER_MAN_SUFFIX)
 
 EXTRA_DIST = fbpriv.h fbdevhw.man.pre README

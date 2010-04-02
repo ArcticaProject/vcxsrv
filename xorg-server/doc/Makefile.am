@@ -14,9 +14,9 @@ CLEANFILES = $(appman_PROCESSED) $(appman_DATA)
 include $(top_srcdir)/cpprules.in
 
 .man.$(APP_MAN_SUFFIX):
-	cp $< $@
+	$(AM_V_at)cp $< $@
 
-EXTRAMANDEFS = -D__default_font_path__="`echo $(COMPILEDDEFAULTFONTPATH) | sed -e 's/,/, /g'`"
+EXTRAMANDEFS = -D__default_font_path__="`echo $(COMPILEDDEFAULTFONTPATH) | $(SED) -e 's/,/, /g'`"
 
 # Docs about X server internals that we ship with source but don't install
 DEVEL_DOCS = smartsched

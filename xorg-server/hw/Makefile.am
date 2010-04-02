@@ -38,4 +38,4 @@ SUBDIRS =			\
 DIST_SUBDIRS = dmx xfree86 vfb xnest xwin xquartz kdrive
 
 relink:
-	for i in $(SUBDIRS) ; do $(MAKE) -C $$i relink ; done
+	$(AM_V_at)for i in $(SUBDIRS) ; do $(MAKE) -C $$i relink || exit 1 ; done
