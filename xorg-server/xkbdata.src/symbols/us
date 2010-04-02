@@ -116,6 +116,10 @@ xkb_symbols "intl" {
     key <AC01> { [	   a,          A,        aacute,           Aacute ] };
     key <AC02> { [	   s,          S,        ssharp,          section ] };
     key <AC03> { [	   d,          D,           eth,              ETH ] };
+    key <AC04> { [	   f,          F,             f,                F ] };
+    key <AC05> { [	   g,          G,             g,                G ] };
+    key <AC06> { [	   h,          H,             h,                H ] };
+    key <AC07> { [	   j,          J,             j,                J ] };
     key <AC08> { [	   k,          K,            oe,               OE ] };
 
     key <AC09> { [	   l,          L,        oslash,         Ooblique ] };
@@ -123,7 +127,10 @@ xkb_symbols "intl" {
     key <AC11> { [dead_acute, dead_diaeresis, apostrophe,        quotedbl ] };
 
     key <AB01> { [	   z,          Z,            ae,               AE ] };
+    key <AB02> { [	   x,          X,             x,                X ] };
     key <AB03> { [	   c,          C,     copyright,             cent ] };
+    key <AB04> { [	   v,          V,             v,                V ] };
+    key <AB05> { [	   b,          B,             b,                B ] };
     key <AB06> { [	   n,          N,        ntilde,           Ntilde ] };
     key <AB07> { [	   m,          M,            mu,               mu ] };
     key <AB08> { [     comma,       less,      ccedilla,         Ccedilla ] };
