@@ -403,6 +403,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\mesa\drivers\common\meta.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\mesa\drivers\windows\gdi\wgl.c"
 				>
 			</File>
@@ -421,6 +425,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\mesa\drivers\common\driverfuncs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\mesa\drivers\common\meta.h"
 				>
 			</File>
 			<File

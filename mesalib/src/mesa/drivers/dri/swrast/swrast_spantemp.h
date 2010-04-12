@@ -37,7 +37,7 @@
 #define _SWRAST_SPANTEMP_ONCE
 
 static INLINE void
-PUT_PIXEL( GLcontext *glCtx, GLint x, GLint y, GLubyte *p )
+PUT_PIXEL( GLcontext *glCtx, GLint x, GLint y, GLvoid *p )
 {
     __DRIcontext *ctx = swrast_context(glCtx);
     __DRIdrawable *draw = swrast_drawable(glCtx->DrawBuffer);
@@ -98,7 +98,6 @@ GET_ROW( GLcontext *glCtx, GLint x, GLint y, GLuint n, char *row )
  * Define the following macros before including this file:
  *   NAME(BASE)  to generate the function name (i.e. add prefix or suffix)
  *   RB_TYPE  the renderbuffer DataType
- *   CI_MODE  if set, color index mode, else RGBA
  *   SPAN_VARS  to declare any local variables
  *   INIT_PIXEL_PTR(P, X, Y)  to initialize a pointer to a pixel
  *   INC_PIXEL_PTR(P)  to increment a pixel pointer by one pixel
@@ -113,9 +112,7 @@ GET_ROW( GLcontext *glCtx, GLint x, GLint y, GLuint n, char *row )
 #include "main/macros.h"
 
 
-#ifdef CI_MODE
-#define RB_COMPONENTS 1
-#elif !defined(RB_COMPONENTS)
+#if !defined(RB_COMPONENTS)
 #define RB_COMPONENTS 4
 #endif
 
@@ -127,11 +124,7 @@ NAME(get_row)( GLcontext *ctx, struct gl_renderbuffer *rb,
 #ifdef SPAN_VARS
    SPAN_VARS
 #endif
-#ifdef CI_MODE
-   RB_TYPE *dest = (RB_TYPE *) values;
-#else
    RB_TYPE (*dest)[RB_COMPONENTS] = (RB_TYPE (*)[RB_COMPONENTS]) values;
-#endif
    GLuint i;
    char *row = swrast_drawable(ctx->ReadBuffer)->row;
    INIT_PIXEL_PTR(pixel, x, y);
@@ -151,11 +144,7 @@ NAME(get_values)( GLcontext *ctx, struct gl_renderbuffer *rb,
 #ifdef SPAN_VARS
    SPAN_VARS
 #endif
-#ifdef CI_MODE
-   RB_TYPE *dest = (RB_TYPE *) values;
-#else
    RB_TYPE (*dest)[RB_COMPONENTS] = (RB_TYPE (*)[RB_COMPONENTS]) values;
-#endif
    GLuint i;
    for (i = 0; i < count; i++) {
       RB_TYPE pixel[4];
@@ -179,7 +168,8 @@ NAME(put_row)( GLcontext *ctx, struct gl_renderbuffer *rb,
    if (mask) {
       for (i = 0; i < count; i++) {
          if (mask[i]) {
-            RB_TYPE pixel[4];
+            RB_TYPE row[4];
+            INIT_PIXEL_PTR(pixel, x, y);
             STORE_PIXEL(pixel, x + i, y, src[i]);
             PUT_PIXEL(ctx, x + i, YFLIP(xrb, y), pixel);
          }
@@ -198,7 +188,6 @@ NAME(put_row)( GLcontext *ctx, struct gl_renderbuffer *rb,
 }
 
 
-#if !defined(CI_MODE)
 static void
 NAME(put_row_rgb)( GLcontext *ctx, struct gl_renderbuffer *rb,
                    GLuint count, GLint x, GLint y,
@@ -212,7 +201,8 @@ NAME(put_row_rgb)( GLcontext *ctx, struct gl_renderbuffer *rb,
    if (mask) {
       for (i = 0; i < count; i++) {
          if (mask[i]) {
-            RB_TYPE pixel[4];
+            RB_TYPE row[4];
+            INIT_PIXEL_PTR(pixel, x, y);
 #ifdef STORE_PIXEL_RGB
             STORE_PIXEL_RGB(pixel, x + i, y, src[i]);
 #else
@@ -237,7 +227,6 @@ NAME(put_row_rgb)( GLcontext *ctx, struct gl_renderbuffer *rb,
    }
    (void) rb;
 }
-#endif
 
 
 static void
@@ -253,7 +242,8 @@ NAME(put_mono_row)( GLcontext *ctx, struct gl_renderbuffer *rb,
    if (mask) {
       for (i = 0; i < count; i++) {
          if (mask[i]) {
-            RB_TYPE pixel[4];
+            RB_TYPE row[4];
+            INIT_PIXEL_PTR(pixel, x, y);
             STORE_PIXEL(pixel, x + i, y, src);
             PUT_PIXEL(ctx, x + i, YFLIP(xrb, y), pixel);
          }
@@ -285,7 +275,8 @@ NAME(put_values)( GLcontext *ctx, struct gl_renderbuffer *rb,
    ASSERT(mask);
    for (i = 0; i < count; i++) {
       if (mask[i]) {
-         RB_TYPE pixel[4];
+         RB_TYPE row[4];
+         INIT_PIXEL_PTR(pixel, x, y);
          STORE_PIXEL(pixel, x[i], y[i], src[i]);
          PUT_PIXEL(ctx, x[i], YFLIP(xrb, y[i]), pixel);
       }
@@ -307,7 +298,8 @@ NAME(put_mono_values)( GLcontext *ctx, struct gl_renderbuffer *rb,
    ASSERT(mask);
    for (i = 0; i < count; i++) {
       if (mask[i]) {
-         RB_TYPE pixel[4];
+         RB_TYPE row[4];
+         INIT_PIXEL_PTR(pixel, x, y);
          STORE_PIXEL(pixel, x[i], y[i], src);
          PUT_PIXEL(ctx, x[i], YFLIP(xrb, y[i]), pixel);
       }
@@ -319,7 +311,6 @@ NAME(put_mono_values)( GLcontext *ctx, struct gl_renderbuffer *rb,
 #undef NAME
 #undef RB_TYPE
 #undef RB_COMPONENTS
-#undef CI_MODE
 #undef SPAN_VARS
 #undef INIT_PIXEL_PTR
 #undef INC_PIXEL_PTR

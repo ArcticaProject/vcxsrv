@@ -29,9 +29,8 @@
 #include "main/glheader.h"
 #include "main/enums.h"
 #include "main/imports.h"
-#include "main/macros.h"
 #include "main/mtypes.h"
-#include "glapi/dispatch.h"
+#include "main/dispatch.h"
 #include "glapi/glapi.h"
 
 #include "vbo_context.h"
@@ -79,7 +78,7 @@ struct loopback_attr {
 };
 
 /* Don't emit ends and begins on wrapped primitives.  Don't replay
- * wrapped vertices.  If we get here, it's probably because the the
+ * wrapped vertices.  If we get here, it's probably because the
  * precalculated wrapping is wrong.
  */
 static void loopback_prim( GLcontext *ctx,
@@ -96,12 +95,12 @@ static void loopback_prim( GLcontext *ctx,
    GLuint k;
 
    if (0)
-      _mesa_printf("loopback prim %s(%s,%s) verts %d..%d\n",
-		   _mesa_lookup_prim_by_nr(prim->mode),
-		   prim->begin ? "begin" : "..",
-		   prim->end ? "end" : "..",
-		   start, 
-		   end);
+      printf("loopback prim %s(%s,%s) verts %d..%d\n",
+	     _mesa_lookup_prim_by_nr(prim->mode),
+	     prim->begin ? "begin" : "..",
+	     prim->end ? "end" : "..",
+	     start, 
+	     end);
 
    if (prim->begin) {
       CALL_Begin(GET_DISPATCH(), ( prim->mode ));

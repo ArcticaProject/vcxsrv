@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>FreeType-2.3.11 API Reference</title>
+<title>FreeType-2.3.12 API Reference</title>
 <style type="text/css">
   body { font-family: Verdana, Geneva, Arial, Helvetica, serif;
          color: #000000;
@@ -35,7 +35,7 @@
 <table align=center><tr><td><font size=-1>[<a href="ft2-index.html">Index</a>]</font></td>
 <td width="100%"></td>
 <td><font size=-1>[<a href="ft2-toc.html">TOC</a>]</font></td></tr></table>
-<center><h1>FreeType-2.3.11 API Reference</h1></center>
+<center><h1>FreeType-2.3.12 API Reference</h1></center>
 
 <center><h1>
 Outline Processing
@@ -719,7 +719,7 @@ Defined in FT_IMAGE_H (freetype/ftimage.h).
 
 </pre></table><br>
 <table align=center width="87%"><tr><td>
-<p>A function pointer type use to describe the signature of a &lsquo;conic to&rsquo; function during outline walking/decomposition.</p>
+<p>A function pointer type used to describe the signature of a &lsquo;conic to&rsquo; function during outline walking or decomposition.</p>
 <p>A &lsquo;conic to&rsquo; is emitted to indicate a second-order Bézier arc in the outline.</p>
 </td></tr></table><br>
 <table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>input</b></em></td></tr><tr><td>
@@ -762,7 +762,7 @@ Defined in FT_IMAGE_H (freetype/ftimage.h).
 
 </pre></table><br>
 <table align=center width="87%"><tr><td>
-<p>A function pointer type used to describe the signature of a &lsquo;cubic to&rsquo; function during outline walking/decomposition.</p>
+<p>A function pointer type used to describe the signature of a &lsquo;cubic to&rsquo; function during outline walking or decomposition.</p>
 <p>A &lsquo;cubic to&rsquo; is emitted to indicate a third-order Bézier arc.</p>
 </td></tr></table><br>
 <table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>input</b></em></td></tr><tr><td>
@@ -812,7 +812,7 @@ Defined in FT_IMAGE_H (freetype/ftimage.h).
 
 </pre></table><br>
 <table align=center width="87%"><tr><td>
-<p>A structure to hold various function pointers used during outline decomposition in order to emit segments, conic, and cubic Béziers, as well as &lsquo;move to&rsquo; and &lsquo;close to&rsquo; operations.</p>
+<p>A structure to hold various function pointers used during outline decomposition in order to emit segments, conic, and cubic Béziers.</p>
 </td></tr></table><br>
 <table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>fields</b></em></td></tr><tr><td>
 <p></p>
@@ -843,7 +843,7 @@ Defined in FT_IMAGE_H (freetype/ftimage.h).
   x' = (x &lt;&lt; shift) - delta                                        
   y' = (x &lt;&lt; shift) - delta                                        
 </pre>
-<p>Set the value of &lsquo;shift&rsquo; and &lsquo;delta&rsquo; to&nbsp;0 to get the original point coordinates.</p>
+<p>Set the values of &lsquo;shift&rsquo; and &lsquo;delta&rsquo; to&nbsp;0 to get the original point coordinates.</p>
 </td></tr></table>
 </td></tr></table>
 <hr width="75%">
@@ -865,7 +865,7 @@ Defined in FT_OUTLINE_H (freetype/ftoutln.h).
 
 </pre></table><br>
 <table align=center width="87%"><tr><td>
-<p>Walk over an outline's structure to decompose it into individual segments and Bézier arcs. This function is also able to emit &lsquo;move to&rsquo; and &lsquo;close to&rsquo; operations to indicate the start and end of new contours in the outline.</p>
+<p>Walk over an outline's structure to decompose it into individual segments and Bézier arcs. This function also emits &lsquo;move to&rsquo; operations to indicate the start of new contours in the outline.</p>
 </td></tr></table><br>
 <table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>input</b></em></td></tr><tr><td>
 <p></p>

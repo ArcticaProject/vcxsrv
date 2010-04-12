@@ -43,7 +43,7 @@ font-util-1.1.1
 font-winitzki-cyrillic-1.0.1
 font-xfree86-type1-1.0.2
 fontsproto-2.1.0
-freetype-2.3.11
+freetype-2.3.12
 glproto-1.4.11
 inputproto-2.0
 kbproto-1.0.3
@@ -60,7 +60,7 @@ libxkbfile-1.0.6
 libXmu-1.0.5
 libXpm-3.5.8
 libXt-1.0.8
-mesa-7.7
+mesa-7.8
 mkfontscale-1.0.7
 openssl-1.0.0
 pixman-0.18.0

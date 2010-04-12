@@ -60,6 +60,9 @@ extern void
 _mesa_init_buffer_objects( GLcontext *ctx );
 
 extern void
+_mesa_free_buffer_objects( GLcontext *ctx );
+
+extern void
 _mesa_update_default_objects_buffer_objects(GLcontext *ctx);
 
 
@@ -155,6 +158,9 @@ extern void GLAPIENTRY
 _mesa_GetBufferParameterivARB(GLenum target, GLenum pname, GLint *params);
 
 extern void GLAPIENTRY
+_mesa_GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params);
+
+extern void GLAPIENTRY
 _mesa_GetBufferPointervARB(GLenum target, GLenum pname, GLvoid **params);
 
 extern void GLAPIENTRY
@@ -168,5 +174,16 @@ _mesa_MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length,
 
 extern void GLAPIENTRY
 _mesa_FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length);
+
+#if FEATURE_APPLE_object_purgeable
+extern GLenum GLAPIENTRY
+_mesa_ObjectPurgeableAPPLE(GLenum objectType, GLuint name, GLenum option);
+
+extern GLenum GLAPIENTRY
+_mesa_ObjectUnpurgeableAPPLE(GLenum objectType, GLuint name, GLenum option);
+
+extern void GLAPIENTRY
+_mesa_GetObjectParameterivAPPLE(GLenum objectType, GLuint name, GLenum pname, GLint* params);
+#endif
 
 #endif

@@ -40,7 +40,6 @@
 #include "shader/prog_statevars.h"
 #include "shader/prog_execute.h"
 #include "swrast/s_context.h"
-#include "swrast/s_texfilter.h"
 
 #include "tnl/tnl.h"
 #include "tnl/t_context.h"
@@ -204,13 +203,14 @@ vp_fetch_texel(GLcontext *ctx, const GLfloat texcoord[4], GLfloat lambda,
  * Called via ctx->Driver.ProgramStringNotify() after a new vertex program
  * string has been parsed.
  */
-void
+GLboolean
 _tnl_program_string(GLcontext *ctx, GLenum target, struct gl_program *program)
 {
    /* No-op.
     * If we had derived anything from the program that was private to this
     * stage we'd recompute/validate it here.
     */
+   return GL_TRUE;
 }
 
 
@@ -221,7 +221,7 @@ static void
 init_machine(GLcontext *ctx, struct gl_program_machine *machine)
 {
    /* Input registers get initialized from the current vertex attribs */
-   MEMCPY(machine->VertAttribs, ctx->Current.Attrib,
+   memcpy(machine->VertAttribs, ctx->Current.Attrib,
           MAX_VERTEX_GENERIC_ATTRIBS * 4 * sizeof(GLfloat));
 
    if (ctx->VertexProgram._Current->IsNVProgram) {
@@ -390,6 +390,13 @@ run_vp( GLcontext *ctx, struct tnl_pipeline_stage *stage )
 #endif
          COPY_4V(store->results[attr].data[i], machine.Outputs[attr]);
       }
+
+      /* FOGC is a special case.  Fragment shader expects (f,0,0,1) */
+      if (program->Base.OutputsWritten & BITFIELD64_BIT(VERT_RESULT_FOGC)) {
+         store->results[VERT_RESULT_FOGC].data[i][1] = 0.0;
+         store->results[VERT_RESULT_FOGC].data[i][2] = 0.0;
+         store->results[VERT_RESULT_FOGC].data[i][3] = 1.0;
+      }
 #ifdef NAN_CHECK
       ASSERT(machine.Outputs[0][3] != 0.0F);
 #endif
@@ -454,19 +461,14 @@ run_vp( GLcontext *ctx, struct tnl_pipeline_stage *stage )
       VB->ClipPtr->count = VB->Count;
    }
 
-   VB->ColorPtr[0] = &store->results[VERT_RESULT_COL0];
-   VB->ColorPtr[1] = &store->results[VERT_RESULT_BFC0];
-   VB->SecondaryColorPtr[0] = &store->results[VERT_RESULT_COL1];
-   VB->SecondaryColorPtr[1] = &store->results[VERT_RESULT_BFC1];
-   VB->FogCoordPtr = &store->results[VERT_RESULT_FOGC];
-
    VB->AttribPtr[VERT_ATTRIB_COLOR0] = &store->results[VERT_RESULT_COL0];
    VB->AttribPtr[VERT_ATTRIB_COLOR1] = &store->results[VERT_RESULT_COL1];
    VB->AttribPtr[VERT_ATTRIB_FOG] = &store->results[VERT_RESULT_FOGC];
    VB->AttribPtr[_TNL_ATTRIB_POINTSIZE] = &store->results[VERT_RESULT_PSIZ];
+   VB->BackfaceColorPtr = &store->results[VERT_RESULT_BFC0];
+   VB->BackfaceSecondaryColorPtr = &store->results[VERT_RESULT_BFC1];
 
    for (i = 0; i < ctx->Const.MaxTextureCoordUnits; i++) {
-      VB->TexCoordPtr[i] = 
       VB->AttribPtr[_TNL_ATTRIB_TEX0 + i]
          = &store->results[VERT_RESULT_TEX0 + i];
    }
@@ -512,7 +514,7 @@ init_vp(GLcontext *ctx, struct tnl_pipeline_stage *stage)
 
    /* a few other misc allocations */
    _mesa_vector4f_alloc( &store->ndcCoords, 0, size, 32 );
-   store->clipmask = (GLubyte *) ALIGN_MALLOC(sizeof(GLubyte)*size, 32 );
+   store->clipmask = (GLubyte *) _mesa_align_malloc(sizeof(GLubyte)*size, 32 );
 
    return GL_TRUE;
 }
@@ -535,7 +537,7 @@ dtr(struct tnl_pipeline_stage *stage)
 
       /* free misc arrays */
       _mesa_vector4f_free( &store->ndcCoords );
-      ALIGN_FREE( store->clipmask );
+      _mesa_align_free( store->clipmask );
 
       FREE( store );
       stage->privatePtr = NULL;

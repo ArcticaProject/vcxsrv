@@ -400,7 +400,7 @@
 #  define READ_RGBA( rgba, _x, _y )				        \
      do {								\
         GLuint p = GET_VALUE(_x, _y);					\
-        *((uint32_t *) rgba) = (t << 8) | 0xff;				\
+        *((uint32_t *) rgba) = (p << 8) | 0xff;				\
      } while (0)
 # else
 #  define READ_RGBA( rgba, _x, _y )				        \
@@ -805,7 +805,6 @@ static void TAG(ReadRGBAPixels)( GLcontext *ctx,
    HW_READ_LOCK()
       {
          GLubyte (*rgba)[4] = (GLubyte (*)[4]) values;
-         GLubyte *mask = NULL; /* remove someday */
 	 GLint i;
 	 LOCAL_VARS;
 
@@ -813,23 +812,11 @@ static void TAG(ReadRGBAPixels)( GLcontext *ctx,
 
 	 HW_READ_CLIPLOOP()
 	    {
-	       if (mask)
-	       {
-		  for (i=0;i<n;i++)
-		     if (mask[i]) {
-			int fy = Y_FLIP( y[i] );
-			if (CLIPPIXEL( x[i], fy ))
-			   READ_RGBA( rgba[i], x[i], fy );
-		     }
-	       }
-	       else
-	       {
-		  for (i=0;i<n;i++) {
-		     int fy = Y_FLIP( y[i] );
-		     if (CLIPPIXEL( x[i], fy ))
-			READ_RGBA( rgba[i], x[i], fy );
-		  }
-	       }
+               for (i=0;i<n;i++) {
+                  int fy = Y_FLIP( y[i] );
+                     if (CLIPPIXEL( x[i], fy ))
+                        READ_RGBA( rgba[i], x[i], fy );
+               }
 	    }
 	 HW_ENDCLIPLOOP();
       }

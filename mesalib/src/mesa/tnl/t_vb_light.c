@@ -64,7 +64,6 @@ struct light_stage_data {
    GLvector4f Input;
    GLvector4f LitColor[2];
    GLvector4f LitSecondary[2];
-   GLvector4f LitIndex[2];
    light_func *light_func_tab;
 
    struct material_cursor mat[MAT_ATTRIB_MAX];
@@ -127,7 +126,7 @@ prepare_materials(GLcontext *ctx,
       const GLuint bitmask = ctx->Light.ColorMaterialBitmask;
       for (i = 0 ; i < MAT_ATTRIB_MAX ; i++)
 	 if (bitmask & (1<<i))
-	    VB->AttribPtr[_TNL_ATTRIB_MAT_FRONT_AMBIENT + i] = VB->ColorPtr[0];
+	    VB->AttribPtr[_TNL_ATTRIB_MAT_FRONT_AMBIENT + i] = VB->AttribPtr[_TNL_ATTRIB_COLOR0];
    }
 
    /* Now, for each material attribute that's tracking vertex color, save
@@ -161,7 +160,6 @@ static light_func _tnl_light_tab[MAX_LIGHT_FUNC];
 static light_func _tnl_light_fast_tab[MAX_LIGHT_FUNC];
 static light_func _tnl_light_fast_single_tab[MAX_LIGHT_FUNC];
 static light_func _tnl_light_spec_tab[MAX_LIGHT_FUNC];
-static light_func _tnl_light_ci_tab[MAX_LIGHT_FUNC];
 
 #define TAG(x)           x
 #define IDX              (0)
@@ -200,7 +198,7 @@ static GLboolean run_lighting( GLcontext *ctx,
    struct light_stage_data *store = LIGHT_STAGE_DATA(stage);
    TNLcontext *tnl = TNL_CONTEXT(ctx);
    struct vertex_buffer *VB = &tnl->vb;
-   GLvector4f *input = ctx->_NeedEyeCoords ? VB->EyePtr : VB->ObjPtr;
+   GLvector4f *input = ctx->_NeedEyeCoords ? VB->EyePtr : VB->AttribPtr[_TNL_ATTRIB_POS];
    GLuint idx;
 
    if (!ctx->Light.Enabled || ctx->VertexProgram._Current)
@@ -208,13 +206,13 @@ static GLboolean run_lighting( GLcontext *ctx,
 
    /* Make sure we can talk about position x,y and z:
     */
-   if (input->size <= 2 && input == VB->ObjPtr) {
+   if (input->size <= 2 && input == VB->AttribPtr[_TNL_ATTRIB_POS]) {
 
       _math_trans_4f( store->Input.data,
-		      VB->ObjPtr->data,
-		      VB->ObjPtr->stride,
+		      VB->AttribPtr[_TNL_ATTRIB_POS]->data,
+		      VB->AttribPtr[_TNL_ATTRIB_POS]->stride,
 		      GL_FLOAT,
-		      VB->ObjPtr->size,
+		      VB->AttribPtr[_TNL_ATTRIB_POS]->size,
 		      0,
 		      VB->Count );
 
@@ -246,10 +244,6 @@ static GLboolean run_lighting( GLcontext *ctx,
     */
    store->light_func_tab[idx]( ctx, VB, stage, input );
 
-   VB->AttribPtr[_TNL_ATTRIB_COLOR0] = VB->ColorPtr[0];
-   VB->AttribPtr[_TNL_ATTRIB_COLOR1] = VB->SecondaryColorPtr[0];
-   VB->AttribPtr[_TNL_ATTRIB_COLOR_INDEX] = VB->IndexPtr[0];
-
    return GL_TRUE;
 }
 
@@ -264,22 +258,18 @@ static void validate_lighting( GLcontext *ctx,
    if (!ctx->Light.Enabled || ctx->VertexProgram._Current)
       return;
 
-   if (ctx->Visual.rgbMode) {
-      if (ctx->Light._NeedVertices) {
-	 if (ctx->Light.Model.ColorControl == GL_SEPARATE_SPECULAR_COLOR)
-	    tab = _tnl_light_spec_tab;
-	 else
-	    tab = _tnl_light_tab;
-      }
-      else {
-	 if (ctx->Light.EnabledList.next == ctx->Light.EnabledList.prev)
-	    tab = _tnl_light_fast_single_tab;
-	 else
-	    tab = _tnl_light_fast_tab;
-      }
+   if (ctx->Light._NeedVertices) {
+      if (ctx->Light.Model.ColorControl == GL_SEPARATE_SPECULAR_COLOR)
+	 tab = _tnl_light_spec_tab;
+      else
+	 tab = _tnl_light_tab;
    }
-   else
-      tab = _tnl_light_ci_tab;
+   else {
+      if (ctx->Light.EnabledList.next == ctx->Light.EnabledList.prev)
+	 tab = _tnl_light_fast_single_tab;
+      else
+	 tab = _tnl_light_fast_tab;
+   }
 
 
    LIGHT_STAGE_DATA(stage)->light_func_tab = tab;
@@ -315,18 +305,11 @@ static GLboolean init_lighting( GLcontext *ctx,
    _mesa_vector4f_alloc( &store->LitColor[1], 0, size, 32 );
    _mesa_vector4f_alloc( &store->LitSecondary[0], 0, size, 32 );
    _mesa_vector4f_alloc( &store->LitSecondary[1], 0, size, 32 );
-   _mesa_vector4f_alloc( &store->LitIndex[0], 0, size, 32 );
-   _mesa_vector4f_alloc( &store->LitIndex[1], 0, size, 32 );
 
    store->LitColor[0].size = 4;
    store->LitColor[1].size = 4;
    store->LitSecondary[0].size = 3;
    store->LitSecondary[1].size = 3;
-
-   store->LitIndex[0].size = 1;
-   store->LitIndex[0].stride = sizeof(GLfloat);
-   store->LitIndex[1].size = 1;
-   store->LitIndex[1].stride = sizeof(GLfloat);
 
    return GL_TRUE;
 }
@@ -344,8 +327,6 @@ static void dtr( struct tnl_pipeline_stage *stage )
       _mesa_vector4f_free( &store->LitColor[1] );
       _mesa_vector4f_free( &store->LitSecondary[0] );
       _mesa_vector4f_free( &store->LitSecondary[1] );
-      _mesa_vector4f_free( &store->LitIndex[0] );
-      _mesa_vector4f_free( &store->LitIndex[1] );
       FREE( store );
       stage->privatePtr = NULL;
    }
