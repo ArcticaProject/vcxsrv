@@ -51,10 +51,6 @@
 #define SERVER_DMX_MINOR_VERSION		2
 #define SERVER_DMX_PATCH_VERSION		20040604
 
-/* DRI2 */
-#define SERVER_DRI2_MAJOR_VERSION		1
-#define SERVER_DRI2_MINOR_VERSION		2
-
 /* Generic event extension */
 #define SERVER_GE_MAJOR_VERSION                 1
 #define SERVER_GE_MINOR_VERSION                 0

@@ -83,8 +83,11 @@ AddExtension(char *name, int NumEvents, int NumErrors,
     if (!MainProc || !SwappedMainProc || !MinorOpcodeProc)
         return((ExtensionEntry *) NULL);
     if ((lastEvent + NumEvents > LAST_EVENT) || 
-	        (unsigned)(lastError + NumErrors > LAST_ERROR))
+	        (unsigned)(lastError + NumErrors > LAST_ERROR)) {
+        LogMessage(X_ERROR, "Not enabling extension %s: maximum number of "
+                   "events or errors exceeded.\n", name);
         return((ExtensionEntry *) NULL);
+    }
 
     ext = xalloc(sizeof(ExtensionEntry));
     if (!ext)
