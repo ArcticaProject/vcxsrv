@@ -1,3 +1,11 @@
+Release 1.6 (2010-04-09)
+========================
+- darwin: xnu doesn't support poll on ttys on the master side
+- Fix descriptor leak on memory error path
+- Support xcb_discard_reply
+- Open the X11 socket with close-on-exec flag
+- Fix authentication on hpux and Hurd
+
 Release 1.5 (2009-12-03)
 ========================
 - setsockopt(SO_KEEPALIVE) on TCP display connections

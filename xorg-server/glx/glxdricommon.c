@@ -121,7 +121,7 @@ setScalar(__GLXconfig *config, unsigned int attrib, unsigned int value)
 static __GLXconfig *
 createModeFromConfig(const __DRIcoreExtension *core,
 		     const __DRIconfig *driConfig,
-		     unsigned int visualType)
+		     unsigned int visualType, unsigned int drawableType)
 {
     __GLXDRIconfig *config;
     unsigned int attrib, value;
@@ -167,13 +167,14 @@ createModeFromConfig(const __DRIcoreExtension *core,
     config->config.next = NULL;
     config->config.xRenderable = GL_TRUE;
     config->config.visualType = visualType;
-    config->config.drawableType = GLX_WINDOW_BIT | GLX_PIXMAP_BIT;
+    config->config.drawableType = drawableType;
 
     return &config->config;
 }
 
 __GLXconfig *
-glxConvertConfigs(const __DRIcoreExtension *core, const __DRIconfig **configs)
+glxConvertConfigs(const __DRIcoreExtension *core,
+		  const __DRIconfig **configs, unsigned int drawableType)
 {
     __GLXconfig head, *tail;
     int i;
@@ -183,7 +184,8 @@ glxConvertConfigs(const __DRIcoreExtension *core, const __DRIconfig **configs)
 
     for (i = 0; configs[i]; i++) {
 	tail->next = createModeFromConfig(core,
-					  configs[i], GLX_TRUE_COLOR);
+					  configs[i], GLX_TRUE_COLOR,
+					  drawableType);
 	if (tail->next == NULL)
 	    break;
 
@@ -192,7 +194,8 @@ glxConvertConfigs(const __DRIcoreExtension *core, const __DRIconfig **configs)
 
     for (i = 0; configs[i]; i++) {
 	tail->next = createModeFromConfig(core,
-					  configs[i], GLX_DIRECT_COLOR);
+					  configs[i], GLX_DIRECT_COLOR,
+					  drawableType);
 	if (tail->next == NULL)
 	    break;
 

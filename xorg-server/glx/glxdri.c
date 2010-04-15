@@ -35,6 +35,7 @@
 #include <drm.h>
 #include <GL/gl.h>
 #include <GL/internal/dri_interface.h>
+#include <GL/glxtokens.h>
 
 #include <windowstr.h>
 #include <os.h>
@@ -939,9 +940,6 @@ initializeExtensions(__GLXDRIscreen *screen)
     }
 }
     
-extern __GLXconfig *
-glxConvertConfigs(const __DRIcoreExtension *core, const __DRIconfig **configs);
-
 static __GLXscreen *
 __glXDRIscreenProbe(ScreenPtr pScreen)
 {
@@ -1131,7 +1129,8 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 	goto handle_error;
     }
 
-    screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs);
+    screen->base.fbconfigs = glxConvertConfigs(screen->core,
+					       driConfigs, GLX_WINDOW_BIT);
 
     initializeExtensions(screen);
 

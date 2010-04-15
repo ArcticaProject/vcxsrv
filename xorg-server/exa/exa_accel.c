@@ -512,7 +512,7 @@ exaHWCopyNtoN (DrawablePtr    pSrcDrawable,
 	 *
 	 * Only taking this path for directly accessible pixmaps.
 	 */
-	} else if (!pDstExaPixmap->pDamage) {
+	} else if (!pDstExaPixmap->pDamage && pSrcExaPixmap->sys_ptr) {
 	    int bpp = pSrcDrawable->bitsPerPixel;
 	    int src_stride = exaGetPixmapPitch(pSrcPixmap);
 	    CARD8 *src = NULL;

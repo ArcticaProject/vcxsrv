@@ -1127,7 +1127,7 @@ authorization from the authors.
 		</switch>
 	</request>
 
-	<request name="Bell" opcode="2">
+	<request name="Bell" opcode="3">
 		<field name="deviceSpec" type="DeviceSpec" />
 		<field name="bellClass" type="BellClassSpec" />
 		<field name="bellID" type="IDSpec" />
@@ -1142,7 +1142,7 @@ authorization from the authors.
 		<field name="window" type="WINDOW" />
 	</request>
 
-	<request name="GetState" opcode="3">
+	<request name="GetState" opcode="4">
 		<field name="deviceSpec" type="DeviceSpec" />
 		<pad bytes="2" />
 		<reply>

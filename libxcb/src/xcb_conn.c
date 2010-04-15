@@ -210,6 +210,14 @@ xcb_connection_t *xcb_connect_to_fd(int fd, xcb_auth_info_t *auth_info)
 {
     xcb_connection_t* c;
 
+#ifndef USE_POLL
+    if(fd >= FD_SETSIZE) /* would overflow in FD_SET */
+    {
+        close(fd);
+        return (xcb_connection_t *) &error_connection;
+    }
+#endif
+
     c = calloc(1, sizeof(xcb_connection_t));
     if(!c) {
         close(fd);

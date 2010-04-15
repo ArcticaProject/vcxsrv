@@ -506,7 +506,10 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
     initializeExtensions(screen);
 
-    screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs);
+    screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs,
+					       GLX_WINDOW_BIT |
+					       GLX_PIXMAP_BIT |
+					       GLX_PBUFFER_BIT);
 
     __glXScreenInit(&screen->base, pScreen);
 

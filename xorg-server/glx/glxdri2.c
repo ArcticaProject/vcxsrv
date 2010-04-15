@@ -616,6 +616,7 @@ glxDRILeaveVT (int index, int flags)
 static void
 initializeExtensions(__GLXDRIscreen *screen)
 {
+    ScreenPtr pScreen = screen->base.pScreen;
     const __DRIextension **extensions;
     int i;
 
@@ -625,9 +626,16 @@ initializeExtensions(__GLXDRIscreen *screen)
 			 "GLX_MESA_copy_sub_buffer");
     LogMessage(X_INFO, "AIGLX: enabled GLX_MESA_copy_sub_buffer\n");
 
-    /* FIXME: only if DDX supports it */
     __glXEnableExtension(screen->glx_enable_bits, "GLX_INTEL_swap_event");
     LogMessage(X_INFO, "AIGLX: enabled GLX_INTEL_swap_event\n");
+
+    if (DRI2HasSwapControl(pScreen)) {
+	__glXEnableExtension(screen->glx_enable_bits,
+			     "GLX_SGI_swap_control");
+	__glXEnableExtension(screen->glx_enable_bits,
+			     "GLX_MESA_swap_control");
+	LogMessage(X_INFO, "AIGLX: enabled GLX_SGI_swap_control and GLX_MESA_swap_control\n");
+    }
 
     for (i = 0; extensions[i]; i++) {
 #ifdef __DRI_READ_DRAWABLE
@@ -636,19 +644,6 @@ initializeExtensions(__GLXDRIscreen *screen)
 				 "GLX_SGI_make_current_read");
 
 	    LogMessage(X_INFO, "AIGLX: enabled GLX_SGI_make_current_read\n");
-	}
-#endif
-
-#ifdef __DRI_SWAP_CONTROL
-	if (strcmp(extensions[i]->name, __DRI_SWAP_CONTROL) == 0) {
-	    screen->swapControl =
-		(const __DRIswapControlExtension *) extensions[i];
-	    __glXEnableExtension(screen->glx_enable_bits,
-				 "GLX_SGI_swap_control");
-	    __glXEnableExtension(screen->glx_enable_bits,
-				 "GLX_MESA_swap_control");
-	    
-	    LogMessage(X_INFO, "AIGLX: enabled GLX_SGI_swap_control and GLX_MESA_swap_control\n");
 	}
 #endif
 
@@ -753,7 +748,10 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
 
     initializeExtensions(screen);
 
-    screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs);
+    screen->base.fbconfigs = glxConvertConfigs(screen->core, driConfigs,
+					       GLX_WINDOW_BIT |
+					       GLX_PIXMAP_BIT |
+					       GLX_PBUFFER_BIT);
 
     __glXScreenInit(&screen->base, pScreen);
 
