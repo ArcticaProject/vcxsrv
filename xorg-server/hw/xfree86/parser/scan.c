@@ -599,6 +599,8 @@ xf86pathIsSafe(const char *path)
  *    %F    config file environment ($XORGCONFIG) as a relative path
  *    %G    config file environment ($XORGCONFIG) as a safe path
  *    %P    projroot
+ *    %C    sysconfdir
+ *    %D    datadir
  *    %M    major version number
  *    %%    %
  */
@@ -614,6 +616,12 @@ xf86pathIsSafe(const char *path)
 #endif
 #ifndef PROJECTROOT
 #define PROJECTROOT	"/usr/X11R6"
+#endif
+#ifndef SYSCONFDIR
+#define SYSCONFDIR	PROJECTROOT "/etc"
+#endif
+#ifndef DATADIR
+#define DATADIR		PROJECTROOT "/share"
 #endif
 #ifndef XCONFENV
 #define XCONFENV	"XORGCONFIG"
@@ -754,6 +762,12 @@ DoSubstitution(const char *template, const char *cmdline, const char *projroot,
 					APPEND_STR(projroot);
 				else
 					BAIL_OUT;
+				break;
+			case 'C':
+				APPEND_STR(SYSCONFDIR);
+				break;
+			case 'D':
+				APPEND_STR(DATADIR);
 				break;
 			case 'M':
 				if (!majorvers[0]) {

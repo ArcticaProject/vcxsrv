@@ -312,6 +312,7 @@ xf86CursorSetCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCurs,
             xf86SetCursor(pScreen, NullCursor, x, y);
             ScreenPriv->isUp = FALSE;
         }
+        ScreenPriv->CurrentCursor = NullCursor;
         return;
     }
 

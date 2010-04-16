@@ -712,10 +712,13 @@ static NSMutableArray * cfarray_to_nsarray (CFArrayRef in) {
                                            default:quartzEnableRootless];
     quartzFullscreenMenu = [self prefs_get_boolean:@PREFS_FULLSCREEN_MENU
                                            default:quartzFullscreenMenu];
-    quartzFullscreenDisableHotkeys = ![self prefs_get_boolean:
-                            @PREFS_FULLSCREEN_HOTKEYS default:!quartzFullscreenDisableHotkeys];
+    quartzFullscreenDisableHotkeys = ![self prefs_get_boolean:@PREFS_FULLSCREEN_HOTKEYS
+                                                      default:!quartzFullscreenDisableHotkeys];
     darwinFakeButtons = [self prefs_get_boolean:@PREFS_FAKEBUTTONS
                                         default:darwinFakeButtons];
+    quartzOptionSendsAlt = [self prefs_get_boolean:@PREFS_OPTION_SENDS_ALT
+                                           default:quartzOptionSendsAlt];
+
     if (darwinFakeButtons) {
         const char *fake2, *fake3;
 
@@ -969,8 +972,7 @@ void X11ApplicationMain (int argc, char **argv, char **envp) {
         fprintf(stderr, "X11ApplicationMain: Unable to determine KLGetCurrentKeyboardLayout() at startup.\n");
 #endif
 
-    memset(keyInfo.keyMap, 0, sizeof(keyInfo.keyMap));
-    if (!QuartzReadSystemKeymap(&keyInfo)) {
+    if (!QuartsResyncKeymap(FALSE)) {
         fprintf(stderr, "X11ApplicationMain: Could not build a valid keymap.\n");
     }
 
@@ -1229,17 +1231,10 @@ static inline int ensure_flag(int flags, int device_independent, int device_depe
                 if(key_layout != last_key_layout) {
                     last_key_layout = key_layout;
 #endif
-
                     /* Update keyInfo */
-                    pthread_mutex_lock(&keyInfo_mutex);
-                    memset(keyInfo.keyMap, 0, sizeof(keyInfo.keyMap));
-                    if (!QuartzReadSystemKeymap(&keyInfo)) {
+                    if (!QuartsResyncKeymap(TRUE)) {
                         fprintf(stderr, "sendX11NSEvent: Could not build a valid keymap.\n");
                     }
-                    pthread_mutex_unlock(&keyInfo_mutex);
-                    
-                    /* Tell server thread to deal with new keyInfo */
-                    DarwinSendDDXEvent(kXquartzReloadKeymap, 0);
                 }
             }
 

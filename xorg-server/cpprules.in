@@ -34,6 +34,7 @@ MANDEFS = \
 	-D__adminmansuffix__=$(ADMIN_MAN_SUFFIX) \
 	-D__mandir__=$(mandir) \
 	-D__projectroot__=$(prefix) \
+	-D__sysconfdir__=$(sysconfdir) \
 	-D__datadir__=$(datadir) \
 	-D__xconfigfile__=$(__XCONFIGFILE__) \
 	-D__xconfigdir__=$(__XCONFIGDIR__) \

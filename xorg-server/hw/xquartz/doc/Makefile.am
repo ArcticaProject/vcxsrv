@@ -7,6 +7,8 @@ CLEANFILES = $(appman_PROCESSED) $(appman_DATA)
 
 include $(top_srcdir)/cpprules.in
 
+MANDEFS += -D__laucnd_id_prefix__=$(LAUNCHD_ID_PREFIX)
+
 .man.$(APP_MAN_SUFFIX):
 	$(AM_V_at)cp $< $@
 

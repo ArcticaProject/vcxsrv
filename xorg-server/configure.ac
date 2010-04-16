@@ -26,18 +26,18 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ(2.57)
-AC_INIT([xorg-server], 1.8.0, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
-RELEASE_DATE="2010-04-02"
+AC_INIT([xorg-server], 1.8.99.0, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xorg-server)
+RELEASE_DATE="unreleased"
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
 # Require xorg-macros: XORG_DEFAULT_OPTIONS
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.5 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.5)
+          [m4_fatal([must install xorg-macros 1.6 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.6)
 XORG_DEFAULT_OPTIONS
-XORG_WITH_DOXYGEN
+XORG_WITH_DOXYGEN(1.6.1)
 
 m4_ifndef([XORG_FONT_MACROS_VERSION], [m4_fatal([must install fontutil 1.1 or later before running autoconf/autogen])])
 XORG_FONT_MACROS_VERSION(1.1)
@@ -644,6 +644,7 @@ AC_ARG_ENABLE(xaa,               AS_HELP_STRING([--enable-xaa], [Build XAA (defa
 AC_ARG_ENABLE(vgahw,          AS_HELP_STRING([--enable-vgahw], [Build Xorg with vga access (default: enabled)]), [VGAHW=$enableval], [VGAHW=yes])
 AC_ARG_ENABLE(vbe,            AS_HELP_STRING([--enable-vbe], [Build Xorg with VBE module (default: enabled)]), [VBE=$enableval], [VBE=yes])
 AC_ARG_ENABLE(int10-module,     AS_HELP_STRING([--enable-int10-module], [Build Xorg with int10 module (default: enabled)]), [INT10MODULE=$enableval], [INT10MODULE=yes])
+AC_ARG_ENABLE(windowswm,      AS_HELP_STRING([--enable-windowswm], [Build XWin with WindowsWM extension (default: no)]), [WINDOWSWM=$enableval], [WINDOWSWM=no])
 
 dnl DDXes.
 AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
@@ -673,6 +674,7 @@ AC_ARG_ENABLE(install-setuid,
 AC_MSG_CHECKING([to see if we can install the Xorg server as root])
 if test "x$SETUID" = "xauto" ; then
 	case $host_os in
+	    cygwin*)		SETUID="no"  ;;
 	    darwin*)		SETUID="no"  ;;
 	    *)
 	   	case $host_cpu in
@@ -723,8 +725,16 @@ XORG_CHECK_LINUXDOC
 dnl Handle installing libxf86config
 AM_CONDITIONAL(INSTALL_LIBXF86CONFIG, [test "x$INSTALL_LIBXF86CONFIG" = xyes])
 
-dnl XQuartz DDX Detection... Yes, it's ugly to have it here... but we need to handle this early on
+dnl DDX Detection... Yes, it's ugly to have it here... but we need to
+dnl handle this early on so that we don't require unsupported extensions
 case $host_os in
+	cygwin*)
+		DGA=no
+		DRI2=no
+		XF86VIDMODE=no
+		XSELINUX=no
+		XV=no
+		;;
 	darwin*)
 		DRI2=no
 
@@ -1792,8 +1802,10 @@ if test "x$XORG" = xyes; then
 	AC_SUBST([driverdir])
 	sdkdir="$includedir/xorg"
 	extdir="$includedir/X11/extensions"
+	sysconfigdir="$datadir/X11/$XF86CONFIGDIR"
 	AC_SUBST([sdkdir])
 	AC_SUBST([extdir])
+	AC_SUBST([sysconfigdir])
 	AC_SUBST([logdir])
 
 	# stuff the ABI versions into the pc file too
@@ -1834,27 +1846,30 @@ fi
 AC_MSG_RESULT([$XWIN])
 
 if test "x$XWIN" = xyes; then
-	PKG_CHECK_EXISTS($WINDOWSWMPROTO, [WINDOWSWM=yes], [WINDOWSWM=no])
 	AC_DEFINE_DIR(SYSCONFDIR, sysconfdir, [Location of system.XWinrc])
 	AC_DEFINE_DIR(DEFAULT_LOGDIR, logdir, [Default log location])
 	AC_DEFINE_UNQUOTED(XORG_VERSION_CURRENT, [$VENDOR_RELEASE], [Current Xorg version])
 	AC_DEFINE_UNQUOTED(__VENDORDWEBSUPPORT__, ["$VENDOR_WEB"], [Vendor web address for support])
 	AC_CHECK_TOOL(WINDRES, windres)
+
+	PKG_CHECK_MODULES([XWINMODULES],[x11 xdmcp xau xfont])
+
+	if test "x$WINDOWSWM" = xauto; then
+		PKG_CHECK_EXISTS($WINDOWSWMPROTO, [WINDOWSWM=yes], [WINDOWSWM=no])
+	fi
+	if test "x$WINDOWSWM" = xyes ; then
+		PKG_CHECK_MODULES(WINDOWSWM, $WINDOWSWMPROTO)
+		XWINMODULES_CFLAGS="$XWINMODULES_CFLAGS $WINDOWSWM_CFLAGS"
+		AC_DEFINE(ROOTLESS,1,[Build Rootless code])
+	fi
+
 	case $host_os in
 		cygwin*)
 			XWIN_SERVER_NAME=XWin
-			PKG_CHECK_MODULES([XWINMODULES],[x11 xdmcp xau xfont])
 			AC_DEFINE(HAS_DEVWINDOWS,1,[Cygwin has /dev/windows for signaling new win32 messages])
-
-			dnl if we have windowswmproto, build rootless extension for multwindowextwm mode
-			if test "x$WINDOWSWM" = xyes ; then
-			       AC_DEFINE(ROOTLESS,1,[Build Rootless code])
-			       CFLAGS="$CFLAGS -DROOTLESS_WORKAROUND"
-			fi
 			;;
 		mingw*)
 			XWIN_SERVER_NAME=Xming
-			PKG_CHECK_MODULES([XWINMODULES],[x11 xdmcp xau xfont])
 			AC_DEFINE(RELOCATE_PROJECTROOT,1,[Make PROJECT_ROOT relative to the xserver location])
 			AC_DEFINE(HAS_WINSOCK,1,[Use Windows sockets])
 			XWIN_SYS_LIBS=-lwinsock2
@@ -1874,10 +1889,6 @@ if test "x$XWIN" = xyes; then
 
 	AC_DEFINE(DDXOSVERRORF, 1, [Use OsVendorVErrorF])
 	AC_DEFINE(DDXBEFORERESET, 1, [Use ddxBeforeReset ])
-	if test "x$XF86VIDMODE" = xyes; then
-		AC_MSG_NOTICE([Disabling XF86VidMode extension])
-		XF86VIDMODE=no
-	fi
 fi
 AM_CONDITIONAL(XWIN, [test "x$XWIN" = xyes])
 AM_CONDITIONAL(XWIN_MULTIWINDOW, [test "x$XWIN" = xyes])

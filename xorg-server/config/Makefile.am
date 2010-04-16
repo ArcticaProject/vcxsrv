@@ -9,7 +9,7 @@ AM_CFLAGS += $(UDEV_CFLAGS)
 libconfig_la_SOURCES += udev.c
 libconfig_la_LIBADD = $(UDEV_LIBS)
 
-xorgconfddir = $(prefix)/etc/X11/$(XF86CONFIGDIR)
+xorgconfddir = $(datadir)/X11/$(XF86CONFIGDIR)
 xorgconfd_DATA = 10-evdev.conf
 
 else
