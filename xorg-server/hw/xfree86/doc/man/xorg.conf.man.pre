@@ -102,19 +102,51 @@ is the machine's hostname as reported by
 .BR gethostname (__libmansuffix__).
 .PP
 Additional configuration files are searched for in the following
-directories:
+directories when the server is started as a normal user:
 .PP
 .RS 4
 .nf
-.I /etc/X11/__xconfigdir__\-4
+.IR /etc/X11/ <cmdline>
+.IR __sysconfdir__/X11/ <cmdline>
 .I /etc/X11/__xconfigdir__
-.I /etc/__xconfigdir__
-.IR __projectroot__/etc/X11/__xconfigdir__. <hostname>
-.I __projectroot__/etc/X11/__xconfigdir__\-4
-.I __projectroot__/etc/X11/__xconfigdir__
-.IR __projectroot__/lib/X11/__xconfigdir__. <hostname>
-.I __projectroot__/lib/X11/__xconfigdir__\-4
-.I __projectroot__/lib/X11/__xconfigdir__
+.I __sysconfdir__/X11/__xconfigdir__
+.fi
+.RE
+.PP
+where
+.I <cmdline>
+is a relative path (with no \(lq..\(rq components) specified with the
+.B \-configdir
+command line option.
+.PP
+When the __xservername__ server is started by the \(lqroot\(rq user, the
+config directory search locations are as follows:
+.PP
+.RS 4
+.nf
+<cmdline>
+.IR /etc/X11/ <cmdline>
+.IR __sysconfdir__/X11/ <cmdline>
+.I /etc/X11/__xconfigdir__
+.I __sysconfdir__/X11/__xconfigdir__
+.fi
+.RE
+.PP
+where
+.I <cmdline>
+is the path specified with the
+.B \-configdir
+command line option (which may be absolute or relative).
+.PP
+Finally, configuration files will also be searched for in directories
+reserved for system use. These are to separate configuration files from
+the vendor or 3rd party packages from those of local administration.
+These files are found in the following directories:
+.PP
+.RS 4
+.nf
+.I /usr/share/X11/__xconfigdir__
+.I __datadir__/X11/__xconfigdir__
 .fi
 .RE
 .PP
@@ -2373,25 +2405,16 @@ Display drivers:
 .PP
 Input drivers:
 .BR acecad (__drivermansuffix__),
-.BR calcomp (__drivermansuffix__),
 .BR citron (__drivermansuffix__),
-.BR dmc (__drivermansuffix__),
-.BR dynapro (__drivermansuffix__),
 .BR elographics (__drivermansuffix__),
 .BR evdev (__drivermansuffix__),
 .BR fpit (__drivermansuffix__),
-.BR js_x (__drivermansuffix__),
 .BR joystick (__drivermansuffix__),
 .BR kbd (__drivermansuffix__),
-.BR magictouch (__drivermansuffix__),
-.BR microtouch (__drivermansuffix__),
 .BR mousedrv (__drivermansuffix__),
 .BR mutouch (__drivermansuffix__),
-.BR palmax (__drivermansuffix__),
 .BR penmount (__drivermansuffix__),
 .BR synaptics (__drivermansuffix__),
-.BR tek4957 (__drivermansuffix__),
-.BR ur98 (__drivermansuffix__),
 .BR vmmouse (__drivermansuffix__),
 .BR void (__drivermansuffix__),
 .BR wacom (__drivermansuffix__).

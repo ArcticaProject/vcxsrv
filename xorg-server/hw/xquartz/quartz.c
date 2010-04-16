@@ -79,6 +79,7 @@ int                     aquaMenuBarHeight = 0;
 QuartzModeProcsPtr      quartzProcs = NULL;
 const char             *quartzOpenGLBundle = NULL;
 int                     quartzFullscreenDisableHotkeys = TRUE;
+int                     quartzOptionSendsAlt = FALSE;
 
 #if defined(RANDR) && !defined(FAKE_RANDR)
 Bool QuartzRandRGetInfo (ScreenPtr pScreen, Rotation *rotations) {

@@ -548,7 +548,7 @@ static CGLPixelFormatObj makeFormat(__GLXconfig *conf) {
        attr[i++] = conf->samples;
     }
      
-    attr[i + 1] = 0;
+    attr[i] = 0;
 
     error = CGLChoosePixelFormat(attr, &fobj, &formats);
     if(error) {

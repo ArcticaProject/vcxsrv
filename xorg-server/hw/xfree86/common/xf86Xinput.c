@@ -625,25 +625,30 @@ MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
     return Success;
 }
 
+/*
+ * Iterate the list of classes and look for Option "Ignore". Return the
+ * value of the last matching class and holler when returning TRUE.
+ */
 static Bool
 IgnoreInputClass(IDevPtr idev, InputAttributes *attrs)
 {
     XF86ConfInputClassPtr cl;
-    Bool ignore;
+    Bool ignore = FALSE;
+    const char *ignore_class;
 
     for (cl = xf86configptr->conf_inputclass_lst; cl; cl = cl->list.next) {
         if (!InputClassMatches(cl, attrs))
             continue;
         if (xf86findOption(cl->option_lst, "Ignore")) {
             ignore = xf86CheckBoolOption(cl->option_lst, "Ignore", FALSE);
-            if (ignore)
-                xf86Msg(X_CONFIG,
-                        "%s: Ignoring device from InputClass \"%s\"\n",
-                        idev->identifier, cl->identifier);
-            return ignore;
+            ignore_class = cl->identifier;
         }
     }
-    return FALSE;
+
+    if (ignore)
+        xf86Msg(X_CONFIG, "%s: Ignoring device from InputClass \"%s\"\n",
+                idev->identifier, ignore_class);
+    return ignore;
 }
 
 /**

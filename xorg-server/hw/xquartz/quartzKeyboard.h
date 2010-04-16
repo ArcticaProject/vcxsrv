@@ -41,18 +41,10 @@
 #define MIN_KEYCODE     XkbMinLegalKeyCode     // unfortunately, this isn't 0...
 #define MAX_KEYCODE     NUM_KEYCODES + MIN_KEYCODE - 1
 
-typedef struct darwinKeyboardInfo_struct {
-    CARD8 modMap[MAP_LENGTH];
-    KeySym keyMap[MAP_LENGTH * GLYPHS_PER_KEY];
-    unsigned char modifierKeycodes[32][2];
-} darwinKeyboardInfo;
-
 /* These functions need to be implemented by Xquartz, XDarwin, etc. */
-Bool QuartzReadSystemKeymap(darwinKeyboardInfo *info);
+Bool QuartsResyncKeymap(Bool sendDDXEvent);
 
 /* Provided for darwinEvents.c */
-extern darwinKeyboardInfo keyInfo;
-extern pthread_mutex_t keyInfo_mutex;
 void DarwinKeyboardReloadHandler(void);
 int DarwinModifierNXKeycodeToNXKey(unsigned char keycode, int *outSide);
 int DarwinModifierNXKeyToNXKeycode(int key, int side);

@@ -80,8 +80,8 @@ ProcDRI2QueryVersion(ClientPtr client)
     rep.type = X_Reply;
     rep.length = 0;
     rep.sequenceNumber = client->sequence;
-    rep.majorVersion = SERVER_DRI2_MAJOR_VERSION;
-    rep.minorVersion = SERVER_DRI2_MINOR_VERSION;
+    rep.majorVersion = dri2_major;
+    rep.minorVersion = dri2_minor;
 
     if (client->swapped) {
     	swaps(&rep.sequenceNumber, n);
@@ -383,6 +383,13 @@ ProcDRI2SwapBuffers(ClientPtr client)
     if (!validDrawable(client, stuff->drawable,
 		       DixReadAccess | DixWriteAccess, &pDrawable, &status))
 	return status;
+
+    /*
+     * Ensures an out of control client can't exhaust our swap queue, and
+     * also orders swaps.
+     */
+    if (DRI2ThrottleClient(client, pDrawable))
+	return client->noClientException;
 
     target_msc = vals_to_card64(stuff->target_msc_lo, stuff->target_msc_hi);
     divisor = vals_to_card64(stuff->divisor_lo, stuff->divisor_hi);

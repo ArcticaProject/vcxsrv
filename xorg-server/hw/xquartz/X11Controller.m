@@ -43,6 +43,7 @@
 #include "darwin.h"
 #include "darwinEvents.h"
 #include "quartz.h"
+#include "quartzKeyboard.h"
 #include <X11/extensions/applewmconst.h>
 #include "applewmExt.h"
 
@@ -630,49 +631,69 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 
 - (IBAction)prefs_changed:sender
 {
-    BOOL pbproxy_active;
+    if(!sender)
+        return;
+    
+    if(sender == fake_buttons) {
+        darwinFakeButtons = [fake_buttons intValue];
+        [NSApp prefs_set_boolean:@PREFS_FAKEBUTTONS value:darwinFakeButtons];
+    } else if(sender == use_sysbeep) {
+        quartzUseSysBeep = [use_sysbeep intValue];
+        [NSApp prefs_set_boolean:@PREFS_SYSBEEP value:quartzUseSysBeep];
+    } else if(sender == enable_keyequivs) {
+        X11EnableKeyEquivalents =  [enable_keyequivs intValue];
+        [NSApp prefs_set_boolean:@PREFS_KEYEQUIVS value:X11EnableKeyEquivalents];
+    } else if(sender == sync_keymap) {
+        darwinSyncKeymap = [sync_keymap intValue];
+        [NSApp prefs_set_boolean:@PREFS_SYNC_KEYMAP value:darwinSyncKeymap];
+    } else if(sender == enable_fullscreen_menu) {
+        quartzFullscreenMenu = [enable_fullscreen_menu intValue];
+        [NSApp prefs_set_boolean:@PREFS_FULLSCREEN_MENU value:quartzFullscreenMenu];
+    } else if(sender == option_sends_alt) {
+        BOOL prev_opt_sends_alt = quartzOptionSendsAlt;
+        
+        quartzOptionSendsAlt = [option_sends_alt intValue];
+        [NSApp prefs_set_boolean:@PREFS_OPTION_SENDS_ALT value:quartzOptionSendsAlt];
 
-    darwinFakeButtons = [fake_buttons intValue];
-    quartzUseSysBeep = [use_sysbeep intValue];
-    X11EnableKeyEquivalents = [enable_keyequivs intValue];
-    darwinSyncKeymap = [sync_keymap intValue];
-    quartzFullscreenMenu = [enable_fullscreen_menu intValue];
+        if(prev_opt_sends_alt != quartzOptionSendsAlt)
+            QuartsResyncKeymap(TRUE);
+    } else if(sender == click_through) {
+        [NSApp prefs_set_boolean:@PREFS_CLICK_THROUGH value:[click_through intValue]];
+    } else if(sender == focus_follows_mouse) {
+        [NSApp prefs_set_boolean:@PREFS_FFM value:[focus_follows_mouse intValue]];
+    } else if(sender == focus_on_new_window) {
+        [NSApp prefs_set_boolean:@PREFS_FOCUS_ON_NEW_WINDOW value:[focus_on_new_window intValue]];
+    } else if(sender == enable_auth) {
+        [NSApp prefs_set_boolean:@PREFS_NO_AUTH value:![enable_auth intValue]];
+    } else if(sender == enable_tcp) {
+        [NSApp prefs_set_boolean:@PREFS_NO_TCP value:![enable_tcp intValue]];
+    } else if(sender == depth) {
+        [NSApp prefs_set_integer:@PREFS_DEPTH value:[depth selectedTag]];
+    } else if(sender == sync_pasteboard) {
+        BOOL pbproxy_active = [sync_pasteboard intValue];
+        [NSApp prefs_set_boolean:@PREFS_SYNC_PB value:pbproxy_active];
 
-    /* after adding prefs here, also add to [X11Application read_defaults]
-     and prefs_show */
+        [sync_pasteboard_to_clipboard setEnabled:pbproxy_active];
+        [sync_pasteboard_to_primary setEnabled:pbproxy_active];
+        [sync_clipboard_to_pasteboard setEnabled:pbproxy_active];
+        [sync_primary_immediately setEnabled:pbproxy_active];
 
-    [NSApp prefs_set_boolean:@PREFS_FAKEBUTTONS value:darwinFakeButtons];
-    [NSApp prefs_set_boolean:@PREFS_SYSBEEP value:quartzUseSysBeep];
-    [NSApp prefs_set_boolean:@PREFS_KEYEQUIVS value:X11EnableKeyEquivalents];
-    [NSApp prefs_set_boolean:@PREFS_SYNC_KEYMAP value:darwinSyncKeymap];
-    [NSApp prefs_set_boolean:@PREFS_FULLSCREEN_MENU value:quartzFullscreenMenu];
-    [NSApp prefs_set_boolean:@PREFS_CLICK_THROUGH value:[click_through intValue]];
-    [NSApp prefs_set_boolean:@PREFS_FFM value:[focus_follows_mouse intValue]];
-    [NSApp prefs_set_boolean:@PREFS_FOCUS_ON_NEW_WINDOW value:[focus_on_new_window intValue]];
-    [NSApp prefs_set_boolean:@PREFS_NO_AUTH value:![enable_auth intValue]];
-    [NSApp prefs_set_boolean:@PREFS_NO_TCP value:![enable_tcp intValue]];
-    [NSApp prefs_set_integer:@PREFS_DEPTH value:[depth selectedTag]];
-
-    pbproxy_active = [sync_pasteboard intValue];
-
-    [NSApp prefs_set_boolean:@PREFS_SYNC_PB value:pbproxy_active];
-    [NSApp prefs_set_boolean:@PREFS_SYNC_PB_TO_CLIPBOARD value:[sync_pasteboard_to_clipboard intValue]];
-    [NSApp prefs_set_boolean:@PREFS_SYNC_PB_TO_PRIMARY value:[sync_pasteboard_to_primary intValue]];
-    [NSApp prefs_set_boolean:@PREFS_SYNC_CLIPBOARD_TO_PB value:[sync_clipboard_to_pasteboard intValue]];
-    [NSApp prefs_set_boolean:@PREFS_SYNC_PRIMARY_ON_SELECT value:[sync_primary_immediately intValue]];
+        // setEnabled doesn't do this...
+        [sync_text1 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
+        [sync_text2 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
+    } else if(sender == sync_pasteboard_to_clipboard) {
+        [NSApp prefs_set_boolean:@PREFS_SYNC_PB_TO_CLIPBOARD value:[sync_pasteboard_to_clipboard intValue]];
+    } else if(sender == sync_pasteboard_to_primary) {
+        [NSApp prefs_set_boolean:@PREFS_SYNC_PB_TO_PRIMARY value:[sync_pasteboard_to_primary intValue]];
+    } else if(sender == sync_clipboard_to_pasteboard) {
+        [NSApp prefs_set_boolean:@PREFS_SYNC_CLIPBOARD_TO_PB value:[sync_clipboard_to_pasteboard intValue]];
+    } else if(sender == sync_primary_immediately) {
+        [NSApp prefs_set_boolean:@PREFS_SYNC_PRIMARY_ON_SELECT value:[sync_primary_immediately intValue]];
+    }
 
     [NSApp prefs_synchronize];
-
-    [sync_pasteboard_to_clipboard setEnabled:pbproxy_active];
-    [sync_pasteboard_to_primary setEnabled:pbproxy_active];
-    [sync_clipboard_to_pasteboard setEnabled:pbproxy_active];
-    [sync_primary_immediately setEnabled:pbproxy_active];
     
-    // setEnabled doesn't do this...
-    [sync_text1 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
-    [sync_text2 setTextColor:pbproxy_active ? [NSColor controlTextColor] : [NSColor disabledControlTextColor]];
-    
-	DarwinSendDDXEvent(kXquartzReloadPreferences, 0);
+    DarwinSendDDXEvent(kXquartzReloadPreferences, 0);
 }
 
 - (IBAction) prefs_show:sender
@@ -683,6 +704,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
     [use_sysbeep setIntValue:quartzUseSysBeep];
     [enable_keyequivs setIntValue:X11EnableKeyEquivalents];
     [sync_keymap setIntValue:darwinSyncKeymap];
+    [option_sends_alt setIntValue:quartzOptionSendsAlt];
     [click_through setIntValue:[NSApp prefs_get_boolean:@PREFS_CLICK_THROUGH default:NO]];
     [focus_follows_mouse setIntValue:[NSApp prefs_get_boolean:@PREFS_FFM default:NO]];
     [focus_on_new_window setIntValue:[NSApp prefs_get_boolean:@PREFS_FOCUS_ON_NEW_WINDOW default:YES]];

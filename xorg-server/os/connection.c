@@ -1253,10 +1253,11 @@ MakeClientGrabPervious(ClientPtr client)
 void ListenOnOpenFD(int fd, int noxauth) {
     char port[256];
     XtransConnInfo ciptr;
+    const char *display_env = getenv("DISPLAY");
 
-    if(!strncmp(getenv("DISPLAY"), "/tmp/launch", 11)) {
+    if(display_env && (strncmp(display_env, "/tmp/launch", 11) == 0)) {
         /* Make the path the launchd socket if our DISPLAY is set right */
-        strcpy(port, getenv("DISPLAY"));
+        strcpy(port, display_env);
     } else {
         /* Just some default so things don't break and die. */
         sprintf(port, ":%d", atoi(display));

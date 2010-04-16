@@ -45,6 +45,9 @@
 
 #include "xf86.h"
 
+CARD8 dri2_major; /* version of DRI2 supported by DDX */
+CARD8 dri2_minor;
+
 static int dri2ScreenPrivateKeyIndex;
 static DevPrivateKey dri2ScreenPrivateKey = &dri2ScreenPrivateKeyIndex;
 static int dri2WindowPrivateKeyIndex;
@@ -60,10 +63,13 @@ typedef struct _DRI2Drawable {
     int			 bufferCount;
     unsigned int	 swapsPending;
     ClientPtr		 blockedClient;
+    Bool		 blockedOnMsc;
     int			 swap_interval;
     CARD64		 swap_count;
-    CARD64		 target_sbc; /* -1 means no SBC wait outstanding */
+    int64_t		 target_sbc; /* -1 means no SBC wait outstanding */
     CARD64		 last_swap_target; /* most recently queued swap target */
+    CARD64		 last_swap_msc; /* msc at completion of most recent swap */
+    CARD64		 last_swap_ust; /* ust at completion of most recent swap */
     int			 swap_limit; /* for N-buffering */
 } DRI2DrawableRec, *DRI2DrawablePtr;
 
@@ -116,9 +122,11 @@ DRI2GetDrawable(DrawablePtr pDraw)
 int
 DRI2CreateDrawable(DrawablePtr pDraw)
 {
+    DRI2ScreenPtr   ds = DRI2GetScreen(pDraw->pScreen);
     WindowPtr	    pWin;
     PixmapPtr	    pPixmap;
     DRI2DrawablePtr pPriv;
+    CARD64          ust;
 
     pPriv = DRI2GetDrawable(pDraw);
     if (pPriv != NULL)
@@ -138,11 +146,17 @@ DRI2CreateDrawable(DrawablePtr pDraw)
     pPriv->bufferCount = 0;
     pPriv->swapsPending = 0;
     pPriv->blockedClient = NULL;
+    pPriv->blockedOnMsc = FALSE;
     pPriv->swap_count = 0;
     pPriv->target_sbc = -1;
     pPriv->swap_interval = 1;
-    pPriv->last_swap_target = -1;
+    /* Initialize last swap target from DDX if possible */
+    if (!ds->GetMSC || !(*ds->GetMSC)(pDraw, &ust, &pPriv->last_swap_target))
+	pPriv->last_swap_target = 0;
+
     pPriv->swap_limit = 1; /* default to double buffering */
+    pPriv->last_swap_msc = 0;
+    pPriv->last_swap_ust = 0;
 
     if (pDraw->type == DRAWABLE_WINDOW)
     {
@@ -390,6 +404,15 @@ DRI2ThrottleClient(ClientPtr client, DrawablePtr pDraw)
     return FALSE;
 }
 
+static void
+__DRI2BlockClient(ClientPtr client, DRI2DrawablePtr pPriv)
+{
+    if (pPriv->blockedClient == NULL) {
+	IgnoreClient(client);
+	pPriv->blockedClient = client;
+    }
+}
+
 void
 DRI2BlockClient(ClientPtr client, DrawablePtr pDraw)
 {
@@ -399,10 +422,8 @@ DRI2BlockClient(ClientPtr client, DrawablePtr pDraw)
     if (pPriv == NULL)
 	return;
 
-    if (pPriv->blockedClient == NULL) {
-	IgnoreClient(client);
-	pPriv->blockedClient = client;
-    }
+    __DRI2BlockClient(client, pPriv);
+    pPriv->blockedOnMsc = TRUE;
 }
 
 int
@@ -483,6 +504,11 @@ DRI2WaitMSCComplete(ClientPtr client, DrawablePtr pDraw, int frame,
 	AttendClient(pPriv->blockedClient);
 
     pPriv->blockedClient = NULL;
+    pPriv->blockedOnMsc = FALSE;
+
+    /* If there's still a swap pending, let DRI2SwapComplete free it */
+    if (pPriv->refCount == 0 && pPriv->swapsPending == 0)
+	DRI2FreeDrawable(pDraw);
 }
 
 static void
@@ -500,21 +526,26 @@ DRI2WakeClient(ClientPtr client, DrawablePtr pDraw, int frame,
     }
 
     /*
-     * Swap completed.  Either wake up an SBC waiter or a client that was
-     * blocked due to GLX activity during a swap.
+     * Swap completed.
+     * Wake the client iff:
+     *   - it was waiting on SBC
+     *   - was blocked due to GLX make current
+     *   - was blocked due to swap throttling
+     *   - is not blocked due to an MSC wait
      */
     if (pPriv->target_sbc != -1 &&
-	pPriv->target_sbc >= pPriv->swap_count) {
+	pPriv->target_sbc <= pPriv->swap_count) {
 	ProcDRI2WaitMSCReply(client, ((CARD64)tv_sec * 1000000) + tv_usec,
 			     frame, pPriv->swap_count);
 	pPriv->target_sbc = -1;
 
 	AttendClient(pPriv->blockedClient);
 	pPriv->blockedClient = NULL;
-    } else if (pPriv->target_sbc == -1) {
-	if (pPriv->blockedClient)
+    } else if (pPriv->target_sbc == -1 && !pPriv->blockedOnMsc) {
+	if (pPriv->blockedClient) {
 	    AttendClient(pPriv->blockedClient);
-	pPriv->blockedClient = NULL;
+	    pPriv->blockedClient = NULL;
+	}
     }
 }
 
@@ -534,21 +565,24 @@ DRI2SwapComplete(ClientPtr client, DrawablePtr pDraw, int frame,
 	return;
     }
 
-    if (pPriv->refCount == 0) {
-        xf86DrvMsg(pScreen->myNum, X_ERROR,
-		   "[DRI2] %s: bad drawable refcount\n", __func__);
-	DRI2FreeDrawable(pDraw);
-	return;
-    }
+    pPriv->swapsPending--;
+    pPriv->swap_count++;
 
     ust = ((CARD64)tv_sec * 1000000) + tv_usec;
     if (swap_complete)
 	swap_complete(client, swap_data, type, ust, frame, pPriv->swap_count);
 
-    pPriv->swapsPending--;
-    pPriv->swap_count++;
+    pPriv->last_swap_msc = frame;
+    pPriv->last_swap_ust = ust;
 
     DRI2WakeClient(client, pDraw, frame, tv_sec, tv_usec);
+
+    /*
+     * It's normal for the app to have exited with a swap outstanding, but
+     * don't free the drawable until they're all complete.
+     */
+    if (pPriv->swapsPending == 0 && pPriv->refCount == 0)
+	DRI2FreeDrawable(pDraw);
 }
 
 Bool
@@ -563,7 +597,7 @@ DRI2WaitSwap(ClientPtr client, DrawablePtr pDrawable)
 	pPriv->blockedClient == NULL) {
 	ResetCurrentRequest(client);
 	client->sequence--;
-	DRI2BlockClient(client, pDrawable);
+	__DRI2BlockClient(client, pPriv);
 	return TRUE;
     }
 
@@ -579,7 +613,6 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
     DRI2ScreenPtr   ds = DRI2GetScreen(pDraw->pScreen);
     DRI2DrawablePtr pPriv;
     DRI2BufferPtr   pDestBuffer = NULL, pSrcBuffer = NULL;
-    CARD64          ust;
     int             ret, i;
 
     pPriv = DRI2GetDrawable(pDraw);
@@ -601,8 +634,8 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
 	return BadDrawable;
     }
 
-    /* Old DDX, just blit */
-    if (!ds->ScheduleSwap) {
+    /* Old DDX or no swap interval, just blit */
+    if (!ds->ScheduleSwap || !pPriv->swap_interval) {
 	BoxRec box;
 	RegionRec region;
 
@@ -623,41 +656,35 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
     /*
      * In the simple glXSwapBuffers case, all params will be 0, and we just
      * need to schedule a swap for the last swap target + the swap interval.
-     * If the last swap target hasn't been set yet, call into the driver
-     * to get the current count.
      */
-    if (target_msc == 0 && divisor == 0 && remainder == 0 &&
-	pPriv->last_swap_target < 0) {
-	ret = (*ds->GetMSC)(pDraw, &ust, &target_msc);
-	if (!ret) {
-	    xf86DrvMsg(pScreen->myNum, X_ERROR,
-		       "[DRI2] %s: driver failed to return current MSC\n",
-		       __func__);
-	    return BadDrawable;
-	}
+    if (target_msc == 0 && divisor == 0 && remainder == 0) {
+	/*
+	 * Swap target for this swap is last swap target + swap interval since
+	 * we have to account for the current swap count, interval, and the
+	 * number of pending swaps.
+	 */
+	*swap_target = pPriv->last_swap_target + pPriv->swap_interval;
+    } else {
+	/* glXSwapBuffersMscOML could have a 0 target_msc, honor it */
+	*swap_target = target_msc;
     }
 
-    /* First swap needs to initialize last_swap_target */
-    if (pPriv->last_swap_target < 0)
-	pPriv->last_swap_target = target_msc;
-
-    /*
-     * Swap target for this swap is last swap target + swap interval since
-     * we have to account for the current swap count, interval, and the
-     * number of pending swaps.
-     */
-    *swap_target = pPriv->last_swap_target + pPriv->swap_interval;
-
+    pPriv->swapsPending++;
     ret = (*ds->ScheduleSwap)(client, pDraw, pDestBuffer, pSrcBuffer,
 			      swap_target, divisor, remainder, func, data);
     if (!ret) {
+	pPriv->swapsPending--; /* didn't schedule */
         xf86DrvMsg(pScreen->myNum, X_ERROR,
 		   "[DRI2] %s: driver failed to schedule swap\n", __func__);
 	return BadDrawable;
     }
 
-    pPriv->swapsPending++;
     pPriv->last_swap_target = *swap_target;
+
+    /* According to spec, return expected swapbuffers count SBC after this swap
+     * will complete.
+     */
+    *swap_target = pPriv->swap_count + pPriv->swapsPending;
 
     return Success;
 }
@@ -665,10 +692,16 @@ DRI2SwapBuffers(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
 void
 DRI2SwapInterval(DrawablePtr pDrawable, int interval)
 {
+    ScreenPtr       pScreen = pDrawable->pScreen;
     DRI2DrawablePtr pPriv = DRI2GetDrawable(pDrawable);
 
-    /* fixme: check against arbitrary max? */
+    if (pPriv == NULL) {
+        xf86DrvMsg(pScreen->myNum, X_ERROR,
+		   "[DRI2] %s: bad drawable\n", __func__);
+	return;
+    }
 
+    /* fixme: check against arbitrary max? */
     pPriv->swap_interval = interval;
 }
 
@@ -717,7 +750,7 @@ DRI2WaitMSC(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
     Bool ret;
 
     pPriv = DRI2GetDrawable(pDraw);
-    if (pPriv == NULL)
+    if (pPriv == NULL || pPriv->refCount == 0)
 	return BadDrawable;
 
     /* Old DDX just completes immediately */
@@ -741,14 +774,28 @@ DRI2WaitSBC(ClientPtr client, DrawablePtr pDraw, CARD64 target_sbc,
     DRI2DrawablePtr pPriv;
 
     pPriv = DRI2GetDrawable(pDraw);
-    if (pPriv == NULL)
+    if (pPriv == NULL || pPriv->refCount == 0)
 	return BadDrawable;
 
-    if (pPriv->swap_count >= target_sbc)
-	return Success;
+    /* target_sbc == 0 means to block until all pending swaps are
+     * finished. Recalculate target_sbc to get that behaviour.
+     */
+    if (target_sbc == 0)
+        target_sbc = pPriv->swap_count + pPriv->swapsPending;
+
+    /* If current swap count already >= target_sbc,
+     * return immediately with (ust, msc, sbc) triplet of
+     * most recent completed swap.
+     */
+    if (pPriv->swap_count >= target_sbc) {
+        *sbc = pPriv->swap_count;
+        *msc = pPriv->last_swap_msc;
+        *ust = pPriv->last_swap_ust;
+        return Success;
+    }
 
     pPriv->target_sbc = target_sbc;
-    DRI2BlockClient(client, pDraw);
+    __DRI2BlockClient(client, pPriv);
 
     return Success;
 }
@@ -776,11 +823,19 @@ DRI2DestroyDrawable(DrawablePtr pDraw)
 	xfree(pPriv->buffers);
     }
 
-    /* If the window is destroyed while we have a swap pending, don't
+    /* If the window is destroyed while we have a swap or wait pending, don't
      * actually free the priv yet.  We'll need it in the DRI2SwapComplete()
      * callback and we'll free it there once we're done. */
-    if (!pPriv->swapsPending)
+    if (!pPriv->swapsPending && !pPriv->blockedClient)
 	DRI2FreeDrawable(pDraw);
+}
+
+Bool
+DRI2HasSwapControl(ScreenPtr pScreen)
+{
+    DRI2ScreenPtr ds = DRI2GetScreen(pScreen);
+
+    return (ds->ScheduleSwap && ds->GetMSC);
 }
 
 Bool
@@ -820,6 +875,7 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 	"VDPAU", /* DRI2DriverVDPAU */
     };
     unsigned int i;
+    CARD8 cur_minor;
 
     if (info->version < 3)
 	return FALSE;
@@ -836,6 +892,7 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 
     ds->fd	       = info->fd;
     ds->deviceName     = info->deviceName;
+    dri2_major         = 1;
 
     ds->CreateBuffer   = info->CreateBuffer;
     ds->DestroyBuffer  = info->DestroyBuffer;
@@ -845,7 +902,14 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
 	ds->ScheduleSwap = info->ScheduleSwap;
 	ds->ScheduleWaitMSC = info->ScheduleWaitMSC;
 	ds->GetMSC = info->GetMSC;
+	cur_minor = 2;
+    } else {
+	cur_minor = 1;
     }
+
+    /* Initialize minor if needed and set to minimum provied by DDX */
+    if (!dri2_minor || dri2_minor > cur_minor)
+	dri2_minor = cur_minor;
 
     if (info->version == 3 || info->numDrivers == 0) {
 	/* Driver too old: use the old-style driverName field */

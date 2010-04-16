@@ -34,7 +34,9 @@ libxf86config_a_SOURCES = \
 	$(INTERNAL_SOURCES)
 libxf86config_a_CFLAGS = $(AM_CFLAGS)
 
-AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS)
+AM_CFLAGS = $(DIX_CFLAGS) $(XORG_CFLAGS) \
+	-DSYSCONFDIR=\"$(sysconfdir)\" \
+	-DDATADIR=\"$(datadir)\"
 
 EXTRA_DIST = \
 	Configint.h \

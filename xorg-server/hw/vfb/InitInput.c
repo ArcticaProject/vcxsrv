@@ -43,6 +43,7 @@ from The Open Group.
 #include <X11/keysym.h>
 #include "xserver-properties.h"
 #include "exevents.h"
+#include "extinit.h"
 
 Bool
 LegalModifier(unsigned int key, DeviceIntPtr pDev)
@@ -136,10 +137,15 @@ void
 InitInput(int argc, char *argv[])
 {
     DeviceIntPtr p, k;
+    Atom xiclass;
     p = AddInputDevice(serverClient, vfbMouseProc, TRUE);
     k = AddInputDevice(serverClient, vfbKeybdProc, TRUE);
     RegisterPointerDevice(p);
+    xiclass = MakeAtom(XI_MOUSE, sizeof(XI_MOUSE) - 1, TRUE);
+    AssignTypeAndName(p, xiclass, "Xvfb mouse");
     RegisterKeyboardDevice(k);
+    xiclass = MakeAtom(XI_KEYBOARD, sizeof(XI_KEYBOARD) - 1, TRUE);
+    AssignTypeAndName(k, xiclass, "Xvfb keyboard");
     (void)mieqInit();
 }
 
