@@ -768,18 +768,6 @@ extern _X_EXPORT void XkbDDXUpdateDeviceIndicators(
 	CARD32			/* newState */
 );
 
-extern _X_EXPORT void XkbDDXFakePointerMotion(
- 	unsigned int	/* flags */,
-	int		/* x */,
-	int		/* y */
-);
-
-extern _X_EXPORT void XkbDDXFakeDeviceButton(
-	DeviceIntPtr	/* dev */,
-	Bool		/* press */,
-	int		/* button */
-);
-
 extern _X_EXPORT int XkbDDXTerminateServer(
 	DeviceIntPtr	/* dev */,
 	KeyCode		/* key */,

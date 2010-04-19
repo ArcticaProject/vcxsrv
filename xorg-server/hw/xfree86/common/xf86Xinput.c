@@ -86,6 +86,7 @@
 #include "windowstr.h"	/* screenIsSaved */
 
 #include <stdarg.h>
+#include <stdint.h>          /* for int64_t */
 
 #include <X11/Xpoll.h>
 
@@ -1177,12 +1178,11 @@ xf86ScaleAxis(int	Cx,
               int	Rxlow )
 {
     int X;
-    int dSx = Sxhigh - Sxlow;
-    int dRx = Rxhigh - Rxlow;
+    int64_t dSx = Sxhigh - Sxlow;
+    int64_t dRx = Rxhigh - Rxlow;
 
-    dSx = Sxhigh - Sxlow;
     if (dRx) {
-	X = ((dSx * (Cx - Rxlow)) / dRx) + Sxlow;
+	X = (int)(((dSx * (Cx - Rxlow)) / dRx) + Sxlow);
     }
     else {
 	X = 0;

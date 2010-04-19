@@ -131,8 +131,19 @@ static Bool DrawableGone(__GLXdrawable *glxPriv, XID xid)
     __GLXcontext *c;
     __GLXcontext *cnext;
 
+    /* If this drawable was created using glx 1.3 drawable
+     * constructors, we added it as a glx drawable resource under both
+     * its glx drawable ID and it X drawable ID.  Remove the other
+     * resource now so we don't a callback for freed memory. */
+    if (glxPriv->drawId != glxPriv->pDraw->id) {
+	if (xid == glxPriv->drawId)
+	    FreeResourceByType(glxPriv->pDraw->id, __glXDrawableRes, TRUE);
+	else
+	    FreeResourceByType(glxPriv->drawId, __glXDrawableRes, TRUE);
+    }
+
     for (c = glxAllContexts; c; c = cnext) {
-	cnext=c->next; /* Safe because c is going to be freed */
+	cnext=c->next; /* Save because c is going to be freed */
 	if (c->isCurrent && (c->drawPriv == glxPriv || c->readPriv == glxPriv)) {
 	    int i;
 

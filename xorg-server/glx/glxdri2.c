@@ -105,11 +105,6 @@ __glXDRIdrawableDestroy(__GLXdrawable *drawable)
     
     (*core->destroyDrawable)(private->driDrawable);
 
-    /* If the X window was destroyed, the dri DestroyWindow hook will
-     * aready have taken care of this, so only call if pDraw isn't NULL. */
-    if (drawable->pDraw != NULL)
-	DRI2DestroyDrawable(drawable->pDraw);
-
     __glXDrawableRelease(drawable);
 
     xfree(private);
