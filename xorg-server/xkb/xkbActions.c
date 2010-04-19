@@ -40,10 +40,14 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <xkbsrv.h>
 #include "xkb.h"
 #include <ctype.h>
+#include "mi.h"
 #define EXTENSION_EVENT_BASE 64
 
 static int xkbDevicePrivateKeyIndex;
 DevPrivateKey xkbDevicePrivateKey = &xkbDevicePrivateKeyIndex;
+
+static void XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button);
+static void XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y);
 
 void
 xkbUnwrapProc(DeviceIntPtr device, DeviceHandleProc proc,
@@ -479,7 +483,7 @@ int		dx,dy;
 	dx= xkbi->mouseKeysDX;
 	dy= xkbi->mouseKeysDY;
     }
-    XkbDDXFakePointerMotion(xkbi->mouseKeysFlags,dx,dy);
+    XkbFakePointerMotion(xkbi->device, xkbi->mouseKeysFlags,dx,dy);
     return xkbi->desc->ctrls->mk_interval;
 }
 
@@ -507,7 +511,7 @@ Bool	accel;
 	accel= ((pAction->ptr.flags&XkbSA_NoAcceleration)==0);
 	x= XkbPtrActionX(&pAction->ptr);
 	y= XkbPtrActionY(&pAction->ptr);
-	XkbDDXFakePointerMotion(pAction->ptr.flags,x,y);
+	XkbFakePointerMotion(xkbi->device, pAction->ptr.flags,x,y);
 	AccessXCancelRepeatKey(xkbi,keycode);
 	xkbi->mouseKeysAccel= accel&&
 		(xkbi->desc->ctrls->enabled_ctrls&XkbMouseKeysAccelMask);
@@ -554,7 +558,7 @@ _XkbFilterPointerBtn(	XkbSrvInfoPtr	xkbi,
 			((pAction->btn.flags&XkbSA_LockNoLock)==0)) {
 		    xkbi->lockedPtrButtons|= (1<<button);
 		    AccessXCancelRepeatKey(xkbi,keycode);
-		    XkbDDXFakeDeviceButton(xkbi->device, 1, button);
+		    XkbFakeDeviceButton(xkbi->device, 1, button);
 		    filter->upAction.type= XkbSA_NoAction;
 		}
 		break;
@@ -565,12 +569,12 @@ _XkbFilterPointerBtn(	XkbSrvInfoPtr	xkbi,
 		    if (pAction->btn.count>0) {
 			nClicks= pAction->btn.count;
 			for (i=0;i<nClicks;i++) {
-			    XkbDDXFakeDeviceButton(xkbi->device, 1, button);
-			    XkbDDXFakeDeviceButton(xkbi->device, 0, button);
+			    XkbFakeDeviceButton(xkbi->device, 1, button);
+			    XkbFakeDeviceButton(xkbi->device, 0, button);
 			}
 			filter->upAction.type= XkbSA_NoAction;
 		    }
-		    else XkbDDXFakeDeviceButton(xkbi->device, 1, button);
+		    else XkbFakeDeviceButton(xkbi->device, 1, button);
 		}
 		break;
 	    case XkbSA_SetPtrDflt:
@@ -626,7 +630,7 @@ _XkbFilterPointerBtn(	XkbSrvInfoPtr	xkbi,
 		}
 		xkbi->lockedPtrButtons&= ~(1<<button);
 	    case XkbSA_PtrBtn:
-		XkbDDXFakeDeviceButton(xkbi->device, 0, button);
+		XkbFakeDeviceButton(xkbi->device, 0, button);
 		break;
 	}
 	filter->active = 0;
@@ -964,7 +968,7 @@ int		button;
 		if ((pAction->devbtn.flags&XkbSA_LockNoLock)||
 		    BitIsOn(dev->button->down, button))
 		    return 0;
-		XkbDDXFakeDeviceButton(dev,TRUE,button);
+		XkbFakeDeviceButton(dev,TRUE,button);
 		filter->upAction.type= XkbSA_NoAction;
 		break;
 	    case XkbSA_DeviceBtn:
@@ -972,12 +976,12 @@ int		button;
 		    int nClicks,i;
 		    nClicks= pAction->btn.count;
 		    for (i=0;i<nClicks;i++) {
-			XkbDDXFakeDeviceButton(dev,TRUE,button);
-			XkbDDXFakeDeviceButton(dev,FALSE,button);
+			XkbFakeDeviceButton(dev,TRUE,button);
+			XkbFakeDeviceButton(dev,FALSE,button);
 		    }
 		    filter->upAction.type= XkbSA_NoAction;
 		}
-		else XkbDDXFakeDeviceButton(dev,TRUE,button);
+		else XkbFakeDeviceButton(dev,TRUE,button);
 		break;
 	}
     }
@@ -996,10 +1000,10 @@ int		button;
 		if ((filter->upAction.devbtn.flags&XkbSA_LockNoUnlock)||
 		    !BitIsOn(dev->button->down, button))
 		    return 0;
-		XkbDDXFakeDeviceButton(dev,FALSE,button);
+		XkbFakeDeviceButton(dev,FALSE,button);
 		break;
 	    case XkbSA_DeviceBtn:
-		XkbDDXFakeDeviceButton(dev,FALSE,button);
+		XkbFakeDeviceButton(dev,FALSE,button);
 		break;
 	}
 	filter->active = 0;
@@ -1316,3 +1320,70 @@ xkbStateNotify	sn;
     return;
 }
 
+static void
+XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y)
+{
+    EventListPtr        events;
+    int                 nevents, i;
+    DeviceIntPtr        ptr;
+    int                 gpe_flags = 0;
+
+    if (!dev->u.master)
+        ptr = dev;
+    else
+        ptr = GetXTestDevice(GetMaster(dev, MASTER_POINTER));
+
+    if (flags & XkbSA_MoveAbsoluteX || flags & XkbSA_MoveAbsoluteY)
+        gpe_flags = POINTER_ABSOLUTE;
+    else
+        gpe_flags = POINTER_RELATIVE;
+
+    events = InitEventList(GetMaximumEventsNum());
+    OsBlockSignals();
+    nevents = GetPointerEvents(events, ptr,
+                               MotionNotify, 0,
+                               gpe_flags, 0, 2, (int[]){x, y});
+    OsReleaseSignals();
+
+    for (i = 0; i < nevents; i++)
+        mieqProcessDeviceEvent(ptr, (InternalEvent*)events[i].event, NULL);
+
+    FreeEventList(events, GetMaximumEventsNum());
+}
+
+static void
+XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button)
+{
+    EventListPtr        events;
+    int                 nevents, i;
+    DeviceIntPtr        ptr;
+
+    /* If dev is a slave device, and the SD is attached, do nothing. If we'd
+     * post through the attached master pointer we'd get duplicate events.
+     *
+     * if dev is a master keyboard, post through the XTEST device
+     *
+     * if dev is a floating slave, post through the device itself.
+     */
+
+    if (IsMaster(dev))
+        ptr = GetXTestDevice(GetMaster(dev, MASTER_POINTER));
+    else if (!dev->u.master)
+        ptr = dev;
+    else
+        return;
+
+    events = InitEventList(GetMaximumEventsNum());
+    OsBlockSignals();
+    nevents = GetPointerEvents(events, ptr,
+                               press ? ButtonPress : ButtonRelease, button,
+                               0 /* flags */, 0 /* first */,
+                               0 /* num_val */, NULL);
+    OsReleaseSignals();
+
+
+    for (i = 0; i < nevents; i++)
+        mieqProcessDeviceEvent(ptr, (InternalEvent*)events[i].event, NULL);
+
+    FreeEventList(events, GetMaximumEventsNum());
+}

@@ -173,7 +173,6 @@ struct __GLXscreen {
     /*@}*/
 
     Bool (*CloseScreen)(int index, ScreenPtr pScreen);
-    Bool (*DestroyWindow)(WindowPtr pWindow);
 };
 
 

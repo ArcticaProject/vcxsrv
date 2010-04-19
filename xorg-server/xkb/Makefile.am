@@ -5,11 +5,9 @@ AM_CFLAGS = $(DIX_CFLAGS)
 DDX_SRCS = \
         ddxBeep.c \
         ddxCtrls.c \
-        ddxFakeMtn.c \
         ddxLEDs.c \
         ddxLoad.c \
-        ddxList.c \
-        ddxDevBtn.c
+        ddxList.c
 
 DIX_SRCS = \
         xkb.c \

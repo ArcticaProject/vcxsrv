@@ -215,7 +215,6 @@ glxCloseScreen (int index, ScreenPtr pScreen)
     __GLXscreen *pGlxScreen = glxGetScreen(pScreen);
 
     pScreen->CloseScreen = pGlxScreen->CloseScreen;
-    pScreen->DestroyWindow = pGlxScreen->DestroyWindow;
 
     pGlxScreen->destroy(pGlxScreen);
 
@@ -347,31 +346,6 @@ pickFBConfig(__GLXscreen *pGlxScreen, VisualPtr visual)
     return best;
 }
 
-static Bool
-glxDestroyWindow(WindowPtr pWin)
-{
-    ScreenPtr pScreen = pWin->drawable.pScreen;
-    __GLXscreen *pGlxScreen = glxGetScreen(pScreen);
-    Bool retval = TRUE;
-
-    FreeResource(pWin->drawable.id, FALSE);
-
-    /* call lower wrapped functions */
-    if (pGlxScreen->DestroyWindow) {
-	/* unwrap */
-	pScreen->DestroyWindow = pGlxScreen->DestroyWindow;
-
-	/* call lower layers */
-	retval = (*pScreen->DestroyWindow)(pWin);
-
-	/* rewrap */
-	pGlxScreen->DestroyWindow = pScreen->DestroyWindow;
-	pScreen->DestroyWindow = glxDestroyWindow;
-    }
-
-    return retval;
-}
-
 void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 {
     __GLXconfig *m;
@@ -394,8 +368,6 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 
     pGlxScreen->CloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = glxCloseScreen;
-    pGlxScreen->DestroyWindow = pScreen->DestroyWindow;
-    pScreen->DestroyWindow = glxDestroyWindow;
 
     i = 0;
     for (m = pGlxScreen->fbconfigs; m != NULL; m = m->next) {

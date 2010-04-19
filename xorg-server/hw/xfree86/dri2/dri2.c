@@ -48,15 +48,14 @@
 CARD8 dri2_major; /* version of DRI2 supported by DDX */
 CARD8 dri2_minor;
 
-static int dri2ScreenPrivateKeyIndex;
+static int           dri2ScreenPrivateKeyIndex;
 static DevPrivateKey dri2ScreenPrivateKey = &dri2ScreenPrivateKeyIndex;
-static int dri2WindowPrivateKeyIndex;
-static DevPrivateKey dri2WindowPrivateKey = &dri2WindowPrivateKeyIndex;
-static int dri2PixmapPrivateKeyIndex;
-static DevPrivateKey dri2PixmapPrivateKey = &dri2PixmapPrivateKeyIndex;
+static RESTYPE       dri2DrawableRes;
+
+typedef struct _DRI2Screen *DRI2ScreenPtr;
 
 typedef struct _DRI2Drawable {
-    unsigned int	 refCount;
+    DRI2ScreenPtr        dri2_screen;
     int			 width;
     int			 height;
     DRI2BufferPtr	*buffers;
@@ -73,9 +72,8 @@ typedef struct _DRI2Drawable {
     int			 swap_limit; /* for N-buffering */
 } DRI2DrawableRec, *DRI2DrawablePtr;
 
-typedef struct _DRI2Screen *DRI2ScreenPtr;
-
 typedef struct _DRI2Screen {
+    ScreenPtr			 screen;
     unsigned int		 numDrivers;
     const char			**driverNames;
     const char			*deviceName;
@@ -101,45 +99,35 @@ DRI2GetScreen(ScreenPtr pScreen)
 static DRI2DrawablePtr
 DRI2GetDrawable(DrawablePtr pDraw)
 {
-    WindowPtr		  pWin;
-    PixmapPtr		  pPixmap;
+    DRI2DrawablePtr pPriv;
+    int rc;
 
-    if (!pDraw)
+    rc = dixLookupResourceByType((pointer *) &pPriv, pDraw->id,
+				 dri2DrawableRes, NULL, DixReadAccess);
+    if (rc != Success)
 	return NULL;
 
-    if (pDraw->type == DRAWABLE_WINDOW)
-    {
-	pWin = (WindowPtr) pDraw;
-	return dixLookupPrivate(&pWin->devPrivates, dri2WindowPrivateKey);
-    }
-    else
-    {
-	pPixmap = (PixmapPtr) pDraw;
-	return dixLookupPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey);
-    }
+    return pPriv;
 }
 
 int
 DRI2CreateDrawable(DrawablePtr pDraw)
 {
     DRI2ScreenPtr   ds = DRI2GetScreen(pDraw->pScreen);
-    WindowPtr	    pWin;
-    PixmapPtr	    pPixmap;
     DRI2DrawablePtr pPriv;
     CARD64          ust;
+    int		    rc;
 
-    pPriv = DRI2GetDrawable(pDraw);
-    if (pPriv != NULL)
-    {
-	pPriv->refCount++;
-	return Success;
-    }
+    rc = dixLookupResourceByType((pointer *) &pPriv, pDraw->id,
+				 dri2DrawableRes, NULL, DixReadAccess);
+    if (rc == Success || rc != BadValue)
+	return rc;
 
     pPriv = xalloc(sizeof *pPriv);
     if (pPriv == NULL)
 	return BadAlloc;
 
-    pPriv->refCount = 1;
+    pPriv->dri2_screen = ds;
     pPriv->width = pDraw->width;
     pPriv->height = pDraw->height;
     pPriv->buffers = NULL;
@@ -158,43 +146,30 @@ DRI2CreateDrawable(DrawablePtr pDraw)
     pPriv->last_swap_msc = 0;
     pPriv->last_swap_ust = 0;
 
-    if (pDraw->type == DRAWABLE_WINDOW)
-    {
-	pWin = (WindowPtr) pDraw;
-	dixSetPrivate(&pWin->devPrivates, dri2WindowPrivateKey, pPriv);
-    }
-    else
-    {
-	pPixmap = (PixmapPtr) pDraw;
-	dixSetPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey, pPriv);
-    }
+    if (!AddResource(pDraw->id, dri2DrawableRes, pPriv))
+	return BadAlloc;
 
     return Success;
 }
 
-static void
-DRI2FreeDrawable(DrawablePtr pDraw)
+static int DRI2DrawableGone(pointer p, XID id)
 {
-    DRI2DrawablePtr pPriv;
-    WindowPtr  	    pWin;
-    PixmapPtr	    pPixmap;
+    DRI2DrawablePtr pPriv = p;
+    DRI2ScreenPtr   ds = pPriv->dri2_screen;
+    DrawablePtr     root;
+    int i;
 
-    pPriv = DRI2GetDrawable(pDraw);
-    if (pPriv == NULL)
-	return;
+    root = &WindowTable[ds->screen->myNum]->drawable;
+    if (pPriv->buffers != NULL) {
+	for (i = 0; i < pPriv->bufferCount; i++)
+	    (*ds->DestroyBuffer)(root, pPriv->buffers[i]);
+
+	xfree(pPriv->buffers);
+    }
 
     xfree(pPriv);
 
-    if (pDraw->type == DRAWABLE_WINDOW)
-    {
-	pWin = (WindowPtr) pDraw;
-	dixSetPrivate(&pWin->devPrivates, dri2WindowPrivateKey, NULL);
-    }
-    else
-    {
-	pPixmap = (PixmapPtr) pDraw;
-	dixSetPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey, NULL);
-    }
+    return Success;
 }
 
 static int
@@ -505,10 +480,6 @@ DRI2WaitMSCComplete(ClientPtr client, DrawablePtr pDraw, int frame,
 
     pPriv->blockedClient = NULL;
     pPriv->blockedOnMsc = FALSE;
-
-    /* If there's still a swap pending, let DRI2SwapComplete free it */
-    if (pPriv->refCount == 0 && pPriv->swapsPending == 0)
-	DRI2FreeDrawable(pDraw);
 }
 
 static void
@@ -576,13 +547,6 @@ DRI2SwapComplete(ClientPtr client, DrawablePtr pDraw, int frame,
     pPriv->last_swap_ust = ust;
 
     DRI2WakeClient(client, pDraw, frame, tv_sec, tv_usec);
-
-    /*
-     * It's normal for the app to have exited with a swap outstanding, but
-     * don't free the drawable until they're all complete.
-     */
-    if (pPriv->swapsPending == 0 && pPriv->refCount == 0)
-	DRI2FreeDrawable(pDraw);
 }
 
 Bool
@@ -750,7 +714,7 @@ DRI2WaitMSC(ClientPtr client, DrawablePtr pDraw, CARD64 target_msc,
     Bool ret;
 
     pPriv = DRI2GetDrawable(pDraw);
-    if (pPriv == NULL || pPriv->refCount == 0)
+    if (pPriv == NULL)
 	return BadDrawable;
 
     /* Old DDX just completes immediately */
@@ -774,7 +738,7 @@ DRI2WaitSBC(ClientPtr client, DrawablePtr pDraw, CARD64 target_sbc,
     DRI2DrawablePtr pPriv;
 
     pPriv = DRI2GetDrawable(pDraw);
-    if (pPriv == NULL || pPriv->refCount == 0)
+    if (pPriv == NULL)
 	return BadDrawable;
 
     /* target_sbc == 0 means to block until all pending swaps are
@@ -798,36 +762,6 @@ DRI2WaitSBC(ClientPtr client, DrawablePtr pDraw, CARD64 target_sbc,
     __DRI2BlockClient(client, pPriv);
 
     return Success;
-}
-
-void
-DRI2DestroyDrawable(DrawablePtr pDraw)
-{
-    DRI2ScreenPtr   ds = DRI2GetScreen(pDraw->pScreen);
-    DRI2DrawablePtr pPriv;
-
-    pPriv = DRI2GetDrawable(pDraw);
-    if (pPriv == NULL)
-	return;
-
-    pPriv->refCount--;
-    if (pPriv->refCount > 0)
-	return;
-
-    if (pPriv->buffers != NULL) {
-	int i;
-
-	for (i = 0; i < pPriv->bufferCount; i++)
-	    (*ds->DestroyBuffer)(pDraw, pPriv->buffers[i]);
-
-	xfree(pPriv->buffers);
-    }
-
-    /* If the window is destroyed while we have a swap or wait pending, don't
-     * actually free the priv yet.  We'll need it in the DRI2SwapComplete()
-     * callback and we'll free it there once we're done. */
-    if (!pPriv->swapsPending && !pPriv->blockedClient)
-	DRI2FreeDrawable(pDraw);
 }
 
 Bool
@@ -890,6 +824,7 @@ DRI2ScreenInit(ScreenPtr pScreen, DRI2InfoPtr info)
     if (!ds)
 	return FALSE;
 
+    ds->screen         = pScreen;
     ds->fd	       = info->fd;
     ds->deviceName     = info->deviceName;
     dri2_major         = 1;
@@ -960,6 +895,8 @@ static pointer
 DRI2Setup(pointer module, pointer opts, int *errmaj, int *errmin)
 {
     static Bool setupDone = FALSE;
+
+    dri2DrawableRes = CreateNewResourceType(DRI2DrawableGone, "DRI2Drawable");
 
     if (!setupDone)
     {
