@@ -69,16 +69,6 @@ typedef struct reader_list {
     struct reader_list *next;
 } reader_list;
 
-static void wake_up_next_reader(xcb_connection_t *c)
-{
-    int pthreadret;
-    if(c->in.readers)
-        pthreadret = pthread_cond_signal(c->in.readers->data);
-    else
-        pthreadret = pthread_cond_signal(&c->in.event_cond);
-    assert(pthreadret == 0);
-}
-
 static int read_packet(xcb_connection_t *c)
 {
     xcb_generic_reply_t genrep;
@@ -154,9 +144,7 @@ static int read_packet(xcb_connection_t *c)
 
     /* XGE events may have sizes > 32 */
     if (genrep.response_type == XCB_XGE_EVENT)
-    {
-        eventlength = ((xcb_ge_event_t*)&genrep)->length * 4;
-    }
+        eventlength = genrep.length * 4;
 
     buf = malloc(length + eventlength +
             (genrep.response_type == XCB_REPLY ? 0 : sizeof(uint32_t)));
@@ -404,7 +392,7 @@ void *xcb_wait_for_reply(xcb_connection_t *c, unsigned int request, xcb_generic_
         pthread_cond_destroy(&cond);
     }
 
-    wake_up_next_reader(c);
+    _xcb_in_wake_up_next_reader(c);
     pthread_mutex_unlock(&c->iolock);
     return ret;
 }
@@ -547,7 +535,7 @@ xcb_generic_event_t *xcb_wait_for_event(xcb_connection_t *c)
         if(!_xcb_conn_wait(c, &c->in.event_cond, 0, 0))
             break;
 
-    wake_up_next_reader(c);
+    _xcb_in_wake_up_next_reader(c);
     pthread_mutex_unlock(&c->iolock);
     return ret;
 }
@@ -629,6 +617,16 @@ void _xcb_in_destroy(_xcb_in *in)
         in->pending_replies = pend->next;
         free(pend);
     }
+}
+
+void _xcb_in_wake_up_next_reader(xcb_connection_t *c)
+{
+    int pthreadret;
+    if(c->in.readers)
+        pthreadret = pthread_cond_signal(c->in.readers->data);
+    else
+        pthreadret = pthread_cond_signal(&c->in.event_cond);
+    assert(pthreadret == 0);
 }
 
 int _xcb_in_expect_reply(xcb_connection_t *c, uint64_t request, enum workarounds workaround, int flags)

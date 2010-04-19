@@ -52,7 +52,7 @@ static int write_block(xcb_connection_t *c, struct iovec *vector, int count)
     vector[0].iov_base = c->out.queue;
     vector[0].iov_len = c->out.queue_len;
     c->out.queue_len = 0;
-    return _xcb_out_send(c, &vector, &count);
+    return _xcb_out_send(c, vector, count);
 }
 
 static void get_socket_back(xcb_connection_t *c)
@@ -283,7 +283,7 @@ int xcb_writev(xcb_connection_t *c, struct iovec *vector, int count, uint64_t re
         return 0;
     pthread_mutex_lock(&c->iolock);
     c->out.request += requests;
-    ret = _xcb_out_send(c, &vector, &count);
+    ret = _xcb_out_send(c, vector, count);
     pthread_mutex_unlock(&c->iolock);
     return ret;
 }
@@ -331,13 +331,14 @@ void _xcb_out_destroy(_xcb_out *out)
     pthread_mutex_destroy(&out->reqlenlock);
 }
 
-int _xcb_out_send(xcb_connection_t *c, struct iovec **vector, int *count)
+int _xcb_out_send(xcb_connection_t *c, struct iovec *vector, int count)
 {
     int ret = 1;
-    while(ret && *count)
-        ret = _xcb_conn_wait(c, &c->out.cond, vector, count);
+    while(ret && count)
+        ret = _xcb_conn_wait(c, &c->out.cond, &vector, &count);
     c->out.request_written = c->out.request;
     pthread_cond_broadcast(&c->out.cond);
+    _xcb_in_wake_up_next_reader(c);
     return ret;
 }
 
@@ -348,12 +349,11 @@ int _xcb_out_flush_to(xcb_connection_t *c, uint64_t request)
         return 1;
     if(c->out.queue_len)
     {
-        struct iovec vec, *vec_ptr = &vec;
-        int count = 1;
+        struct iovec vec;
         vec.iov_base = c->out.queue;
         vec.iov_len = c->out.queue_len;
         c->out.queue_len = 0;
-        return _xcb_out_send(c, &vec_ptr, &count);
+        return _xcb_out_send(c, &vec, 1);
     }
     while(c->out.writing)
         pthread_cond_wait(&c->out.cond, &c->iolock);

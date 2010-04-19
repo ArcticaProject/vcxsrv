@@ -102,10 +102,7 @@ static int write_setup(xcb_connection_t *c, xcb_auth_info_t *auth_info)
     assert(count <= (int) (sizeof(parts) / sizeof(*parts)));
 
     pthread_mutex_lock(&c->iolock);
-    {
-        struct iovec *parts_ptr = parts;
-        ret = _xcb_out_send(c, &parts_ptr, &count);
-    }
+    ret = _xcb_out_send(c, parts, count);
     pthread_mutex_unlock(&c->iolock);
     return ret;
 }
