@@ -134,7 +134,7 @@ static int write_setup(xcb_connection_t *c, xcb_auth_info_t *auth_info)
     out.authorization_protocol_name_len = 0;
     out.authorization_protocol_data_len = 0;
     parts[count].iov_len = sizeof(xcb_setup_request_t);
-    parts[count++].iov_base = &out;
+    parts[count++].iov_base = (caddr_t) &out;
     parts[count].iov_len = XCB_PAD(sizeof(xcb_setup_request_t));
     parts[count++].iov_base = (char *) pad;
 
@@ -152,10 +152,7 @@ static int write_setup(xcb_connection_t *c, xcb_auth_info_t *auth_info)
     assert(count <= (int) (sizeof(parts) / sizeof(*parts)));
 
     pthread_mutex_lock(&c->iolock);
-    {
-        struct iovec *parts_ptr = parts;
-        ret = _xcb_out_send(c, &parts_ptr, &count);
-    }
+    ret = _xcb_out_send(c, parts, count);
     pthread_mutex_unlock(&c->iolock);
     return ret;
 }
