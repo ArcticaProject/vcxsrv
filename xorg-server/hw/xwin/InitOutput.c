@@ -47,7 +47,6 @@ from The Open Group.
 #if defined(WIN32)
 #include "xkbsrv.h"
 #endif
-
 #ifdef RELOCATE_PROJECTROOT
 #undef Status
 #include <shlobj.h>
@@ -160,9 +159,7 @@ static PixmapFormatRec g_PixmapFormats[] = {
   { 15,   16,     BITMAP_SCANLINE_PAD },
   { 16,   16,     BITMAP_SCANLINE_PAD },
   { 24,   32,     BITMAP_SCANLINE_PAD },
-#ifdef RENDER
   { 32,   32,     BITMAP_SCANLINE_PAD }
-#endif
 };
 
 const int NUMFORMATS = sizeof (g_PixmapFormats) / sizeof (g_PixmapFormats[0]);

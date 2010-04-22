@@ -50,10 +50,8 @@
 #include "dix.h"
 #include "fb.h"
 #include "fboverlay.h"
-#ifdef RENDER
 #include "fbpict.h"
 #include "glyphstr.h"
-#endif
 #include "damage.h"
 
 #define DEBUG_TRACE_FALL	0
@@ -166,13 +164,11 @@ typedef struct {
     CreateScreenResourcesProcPtr SavedCreateScreenResources;
     ModifyPixmapHeaderProcPtr    SavedModifyPixmapHeader;
     SourceValidateProcPtr        SavedSourceValidate;
-#ifdef RENDER
     CompositeProcPtr             SavedComposite;
     TrianglesProcPtr		 SavedTriangles;
     GlyphsProcPtr                SavedGlyphs;
     TrapezoidsProcPtr            SavedTrapezoids;
     AddTrapsProcPtr		 SavedAddTraps;
-#endif
     void (*do_migration) (ExaMigrationPtr pixmaps, int npixmaps, Bool can_accel);
     Bool (*pixmap_has_gpu_copy) (PixmapPtr pPixmap);
     void (*do_move_in_pixmap) (PixmapPtr pPixmap);
@@ -499,7 +495,6 @@ exaCopyNtoN (DrawablePtr    pSrcDrawable,
 
 extern const GCOps exaOps;
 
-#ifdef RENDER
 void
 ExaCheckComposite (CARD8      op,
 		  PicturePtr pSrc,
@@ -513,7 +508,6 @@ ExaCheckComposite (CARD8      op,
 		  INT16      yDst,
 		  CARD16     width,
 		  CARD16     height);
-#endif
 
 /* exa_offscreen.c */
 void

@@ -26,8 +26,6 @@
 
 #include "fb.h"
 
-#ifdef RENDER
-
 #include "picturestr.h"
 #include "mipict.h"
 #include "renderedge.h"
@@ -160,4 +158,3 @@ fbAddTriangles (PicturePtr  pPicture,
     }
 }
 
-#endif /* RENDER */

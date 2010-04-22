@@ -46,9 +46,7 @@
 #include "dmxvisual.h"
 #include "dmxinput.h"
 #include "dmxextension.h"
-#ifdef RENDER
 #include "dmxpict.h"
-#endif
 
 #include "windowstr.h"
 
@@ -288,9 +286,7 @@ void dmxCreateAndRealizeWindow(WindowPtr pWindow, Bool doSync)
     pWinPriv->window = dmxCreateNonRootWindow(pWindow);
     if (pWinPriv->restacked) dmxDoRestackWindow(pWindow);
     if (pWinPriv->isShaped) dmxDoSetShape(pWindow);
-#ifdef RENDER
     if (pWinPriv->hasPict) dmxCreatePictureList(pWindow);
-#endif
     if (pWinPriv->mapped) XMapWindow(dmxScreen->beDisplay,
 				      pWinPriv->window);
     if (doSync) dmxSync(dmxScreen, False);
@@ -320,9 +316,7 @@ Bool dmxCreateWindow(WindowPtr pWindow)
     pWinPriv->restacked  = FALSE;
     pWinPriv->attribMask = 0;
     pWinPriv->isShaped   = FALSE;
-#ifdef RENDER
     pWinPriv->hasPict    = FALSE;
-#endif
 #ifdef GLXEXT
     pWinPriv->swapGroup  = NULL;
     pWinPriv->barrier    = 0;
@@ -405,10 +399,8 @@ Bool dmxDestroyWindow(WindowPtr pWindow)
 
     DMX_UNWRAP(DestroyWindow, dmxScreen, pScreen);
 
-#ifdef RENDER
     /* Destroy any picture list associated with this window */
     needSync |= dmxDestroyPictureList(pWindow);
-#endif
 
     /* Destroy window on back-end server */
     needSync |= dmxBEDestroyWindow(pWindow);

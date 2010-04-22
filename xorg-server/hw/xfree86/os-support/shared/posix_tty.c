@@ -340,14 +340,9 @@ xf86SetSerial (int fd, pointer options)
 
 	if ((xf86SetBoolOption (options, "ClearRTS", FALSE)))
 	{
-#ifdef CLEARRTS_SUPPORT
-		val = TIOCM_RTS;
-		SYSCALL (ioctl(fd, TIOCMBIC, &val));
-#else
 		xf86Msg (X_WARNING,
 			 "Option ClearRTS not supported on this OS\n");
 			return (-1);
-#endif
 		xf86MarkOptionUsedByName (options, "ClearRTS");
 	}
 

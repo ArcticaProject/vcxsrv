@@ -62,10 +62,8 @@ typedef struct {
     UninstallColormapProcPtr	UninstallColormap;
     ListInstalledColormapsProcPtr ListInstalledColormaps;
     StoreColorsProcPtr		StoreColors;
-#ifdef RENDER
     CompositeProcPtr		Composite;
     GlyphsProcPtr		Glyphs;
-#endif    
 
     CloseScreenProcPtr		wrapCloseScreen;
     CreateScreenResourcesProcPtr wrapCreateScreenResources;
@@ -79,10 +77,8 @@ typedef struct {
     UninstallColormapProcPtr	wrapUninstallColormap;
     ListInstalledColormapsProcPtr wrapListInstalledColormaps;
     StoreColorsProcPtr		wrapStoreColors;
-#ifdef RENDER
     CompositeProcPtr		wrapComposite;
     GlyphsProcPtr		wrapGlyphs;
-#endif    
     int depth;
 } xaaWrapperScrPrivRec, *xaaWrapperScrPrivPtr;
 
@@ -270,9 +266,7 @@ xaaSetupWrapper(ScreenPtr pScreen, XAAInfoRecPtr infoPtr, int depth, SyncFunc *f
 {
     Bool ret;
     xaaWrapperScrPrivPtr pScrPriv;
-#ifdef RENDER
     PictureScreenPtr	ps = GetPictureScreenIfSet(pScreen);
-#endif
 
     if (!dixRequestPrivate(xaaWrapperGCPrivateKey, sizeof(xaaWrapperGCPrivRec)))
 	return FALSE;
@@ -293,12 +287,10 @@ xaaSetupWrapper(ScreenPtr pScreen, XAAInfoRecPtr infoPtr, int depth, SyncFunc *f
     get (pScrPriv, pScreen, UninstallColormap, wrapUninstallColormap);
     get (pScrPriv, pScreen, ListInstalledColormaps, wrapListInstalledColormaps);
     get (pScrPriv, pScreen, StoreColors, wrapStoreColors);
-#ifdef RENDER
     if (ps) {
 	get (pScrPriv, ps, Glyphs, wrapGlyphs);
 	get (pScrPriv, ps, Composite, wrapComposite);
     }
-#endif
     if (!(ret = XAAInit(pScreen,infoPtr)))
 	return FALSE;
     
@@ -317,12 +309,10 @@ xaaSetupWrapper(ScreenPtr pScreen, XAAInfoRecPtr infoPtr, int depth, SyncFunc *f
 	  xaaWrapperListInstalledColormaps);
     wrap (pScrPriv, pScreen, StoreColors, xaaWrapperStoreColors);
 
-#ifdef RENDER
     if (ps) {
 	wrap (pScrPriv, ps, Glyphs, xaaWrapperGlyphs);
 	wrap (pScrPriv, ps, Composite, xaaWrapperComposite);
     }
-#endif
     pScrPriv->depth = depth;
     dixSetPrivate(&pScreen->devPrivates, xaaWrapperScrPrivateKey, pScrPriv);
 
@@ -438,7 +428,6 @@ xaaWrapperDestroyClip(GCPtr pGC)
     XAAWRAPPER_GC_FUNC_EPILOGUE (pGC);
 }
 
-#ifdef RENDER
 static void
 xaaWrapperComposite (CARD8 op, PicturePtr pSrc, PicturePtr pMask, PicturePtr pDst,
 	     INT16 xSrc, INT16 ySrc, INT16 xMask, INT16 yMask,
@@ -470,7 +459,6 @@ xaaWrapperGlyphs (CARD8 op, PicturePtr pSrc, PicturePtr pDst,
     wrap (pScrPriv, ps, Glyphs, xaaWrapperGlyphs);
 
 }
-#endif
 
 void
 XAASync(ScreenPtr pScreen)

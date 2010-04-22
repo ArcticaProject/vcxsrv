@@ -62,9 +62,7 @@
 #include "globals.h"
 #include "scrnintstr.h"
 
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 
 #ifdef GLXEXT
 #include <GL/glx.h>
@@ -233,7 +231,6 @@ typedef struct _DMXScreenInfo {
 
     SetShapeProcPtr                SetShape;
 
-#ifdef RENDER
     CreatePictureProcPtr           CreatePicture;
     DestroyPictureProcPtr          DestroyPicture;
     ChangePictureClipProcPtr       ChangePictureClip;
@@ -254,7 +251,6 @@ typedef struct _DMXScreenInfo {
     TrianglesProcPtr               Triangles;
     TriStripProcPtr                TriStrip;
     TriFanProcPtr                  TriFan;
-#endif
 } DMXScreenInfo;
 
 /* Global variables available to all Xserver/hw/dmx routines. */

@@ -36,16 +36,7 @@
 #define DAMAGE 1
 
 /* Build for darwin with Quartz support */
-/* #undef DARWIN_WITH_QUARTZ */
-
-/* Use OsVendorInit */
-#define DDXOSINIT 1
-
-/* Use GetTimeInMillis */
-#define DDXTIME 1
-
-/* Use OsVendorFatalError */
-#define DDXOSFATALERROR 1
+#undef DARWIN_WITH_QUARTZ
 
 /* Use OsVendorVErrorF */
 #define DDXOSVERRORF 1
@@ -85,9 +76,6 @@
 
 /* Support SHM */
 #undef HAS_SHM
-
-/* Define to 1 if you have `alloca', as a function or macro. */
-#define HAVE_ALLOCA 1
 
 /* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
    */
@@ -175,15 +163,6 @@
 /* Define to 1 if you have the <linux/fb.h> header file. */
 #undef HAVE_LINUX_FB_H
 
-/* Define to 1 if you have the `memmove' function. */
-#define HAVE_MEMMOVE 1
-
-/* Define to 1 if you have the <memory.h> header file. */
-#define HAVE_MEMORY_H 1
-
-/* Define to 1 if you have the `memset' function. */
-#define HAVE_MEMSET 1
-
 /* Define to 1 if you have the `mkstemp' function. */
 #define HAVE_MKSTEMP 1
 
@@ -196,8 +175,20 @@
 /* Define to 1 if you have the <rpcsvc/dbm.h> header file. */
 #undef HAVE_RPCSVC_DBM_H
 
-/* Define to use libmd SHA1 functions instead of OpenSSL libcrypto */
+/* Define to use libc SHA1 functions */
+#undef HAVE_SHA1_IN_LIBC
+
+/* Define to use CommonCrypto SHA1 functions */
+#undef HAVE_SHA1_IN_COMMONCRYPTO
+
+/* Define to use libmd SHA1 functions */
 #undef HAVE_SHA1_IN_LIBMD
+
+/* Define to use libgcrypt SHA1 functions */
+#undef HAVE_SHA1_IN_LIBGCRYPT
+
+/* Define to use libsha1 for SHA1 */
+#undef HAVE_SHA1_IN_LIBSHA1
 
 /* Define to 1 if you have the `shmctl64' function. */
 #undef HAVE_SHMCTL64
@@ -255,6 +246,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to 1 if you have the <fnmatch.h> header file. */
+#undef HAVE_FNMATCH_H
+
 /* Have /dev/urandom */
 #undef HAVE_URANDOM
 
@@ -266,9 +260,6 @@
 
 /* Support os-specific local connections */
 #undef LOCALCONN
-
-/* Support MIT Misc extension */
-#define MITMISC 1
 
 /* Support MIT-SHM Extension */
 #undef MITSHM
@@ -309,20 +300,6 @@
 /* Support SHAPE extension */
 #define SHAPE 1
 
-/* Include time-based scheduler */
-#define SMART_SCHEDULE 1
-
-/* If using the C implementation of alloca, define if you know the
-   direction of stack growth for your system; otherwise it will be
-   automatically deduced at run-time.
-	STACK_DIRECTION > 0 => grows toward higher addresses
-	STACK_DIRECTION < 0 => grows toward lower addresses
-	STACK_DIRECTION = 0 => direction of growth unknown */
-/* #undef STACK_DIRECTION */
-
-/* Define to 1 if you have the ANSI C header files. */
-#define STDC_HEADERS 1
-
 /* Define to 1 on systems derived from System V Release 4 */
 #undef SVR4
 
@@ -362,9 +339,6 @@
 /* Support Xdmcp */
 #define XDMCP 1
 
-/* Build XEvIE extension */
-#define XEVIE 1
-
 /* Build XFree86 BigFont extension */
 #undef XF86BIGFONT
 
@@ -386,12 +360,6 @@
 /* Build XKB */
 #define XKB 1
 
-/* Enable XKB per default */
-#define XKB_DFLT_DISABLED 0
-
-/* Build XKB server */
-/*#define XKB_IN_SERVER 1*/
-
 /* Vendor release */
 #undef XORG_RELEASE
 
@@ -407,9 +375,6 @@
 /* Build XvMC Extension */
 #undef XvMCExtension
 
-/* Build XRes extension */
-#define XResExtension 1
-
 /* Support XSync extension */
 #define XSYNC 1
 
@@ -418,18 +383,6 @@
 
 /* Support Xv extension */
 #undef XV
-
-/* Build APPGROUP extension */
-/* #undef XAPPGROUP */
-
-/* Build TOG-CUP extension */
-#define TOGCUP 1
-
-/* Build Extended-Visual-Information extension */
-#define EVI 1
-
-/* Build Multibuffer extension */
-#undef MULTIBUFFER
 
 /* Support DRI extension */
 #undef XF86DRI
@@ -480,11 +433,11 @@
 /* Define to 1 if `struct sockaddr_in' has a `sin_len' member */
 #undef BSD44SOCKETS
 
-/* Define to 1 if modules should avoid the libcwrapper */
-#define NO_LIBCWRAPPER 1
-
 /* Support D-Bus */
 #undef HAVE_DBUS
+
+/* Use libudev for input hotplug */
+#undef CONFIG_UDEV
 
 /* Use D-Bus for input hotplug */
 #undef CONFIG_NEED_DBUS
@@ -494,12 +447,6 @@
 
 /* Support HAL for hotplug */
 #undef CONFIG_HAL
-
-/* Use only built-in fonts */
-#undef BUILTIN_FONTS
-
-/* Use an empty root cursor */
-#undef NULL_ROOT_CURSOR
 
 /* Have a monotonic clock from clock_gettime() */
 #undef MONOTONIC_CLOCK

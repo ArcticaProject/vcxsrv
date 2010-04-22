@@ -181,10 +181,8 @@ typedef int pid_t;
 #include "fb.h"
 #include "rootless.h"
 
-#ifdef RENDER
 #include "mipict.h"
 #include "picturestr.h"
-#endif
 
 #ifdef RANDR
 #include "randrstr.h"

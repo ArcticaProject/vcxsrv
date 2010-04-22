@@ -42,9 +42,7 @@
 
 #include "scrnintstr.h"
 
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 
 
 // Debug output, or not.
@@ -100,10 +98,8 @@ typedef struct _RootlessScreenRec {
 
     SetShapeProcPtr SetShape;
 
-#ifdef RENDER
     CompositeProcPtr Composite;
     GlyphsProcPtr Glyphs;
-#endif
 
     InstallColormapProcPtr InstallColormap;
     UninstallColormapProcPtr UninstallColormap;

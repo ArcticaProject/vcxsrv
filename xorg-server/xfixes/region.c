@@ -26,10 +26,8 @@
 
 #include "xfixesint.h"
 #include "scrnintstr.h"
-#ifdef RENDER
 #include <picturestr.h>
 extern int RenderErrBase;
-#endif
 #include <regionstr.h>
 #include <gcstruct.h>
 #include <window.h>
@@ -265,7 +263,6 @@ SProcXFixesCreateRegionFromGC (ClientPtr client)
 int
 ProcXFixesCreateRegionFromPicture (ClientPtr client)
 {
-#ifdef RENDER
     RegionPtr	pRegion;
     PicturePtr	pPicture;
     REQUEST (xXFixesCreateRegionFromPictureReq);
@@ -296,9 +293,6 @@ ProcXFixesCreateRegionFromPicture (ClientPtr client)
 	return BadAlloc;
     
     return(client->noClientException);
-#else
-    return BadRequest;
-#endif
 }
 
 int
@@ -769,7 +763,6 @@ SProcXFixesSetWindowShapeRegion (ClientPtr client)
 int
 ProcXFixesSetPictureClipRegion (ClientPtr client)
 {
-#ifdef RENDER
     PicturePtr		pPicture;
     RegionPtr		pRegion;
     ScreenPtr		pScreen;
@@ -785,9 +778,6 @@ ProcXFixesSetPictureClipRegion (ClientPtr client)
     
     return SetPictureClipRegion (pPicture, stuff->xOrigin, stuff->yOrigin,
 				 pRegion);
-#else
-    return BadRequest;
-#endif
 }
 
 int

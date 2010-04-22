@@ -398,10 +398,6 @@ int TUNER_get_afc_hint(FI1236Ptr f)
 {
 if(f->afc_timer_installed)return TUNER_STILL_TUNING;
 return f->last_afc_hint;
-if(f->type==TUNER_TYPE_MT2032)
-	return MT2032_get_afc_hint(f);
-	else
-	return FI1236_get_afc_hint(f);
 }
 
 static void MT2032_dump_status(FI1236Ptr f)

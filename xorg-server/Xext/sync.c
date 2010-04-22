@@ -2178,7 +2178,7 @@ static XSyncValue *pnext_time;
 
 /*
 *** Server Block Handler
-*** code inspired by multibuffer extension
+*** code inspired by multibuffer extension (now deprecated)
  */
 /*ARGSUSED*/
 static void

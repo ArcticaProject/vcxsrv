@@ -30,9 +30,7 @@
 #include "damage.h"
 #include "gcstruct.h"
 #include "privates.h"
-#ifdef RENDER
 # include "picturestr.h"
-#endif
 
 typedef struct _damage {
     DamagePtr		pNext;
@@ -72,11 +70,9 @@ typedef struct _damageScrPriv {
     DestroyPixmapProcPtr	DestroyPixmap;
     SetWindowPixmapProcPtr	SetWindowPixmap;
     DestroyWindowProcPtr	DestroyWindow;
-#ifdef RENDER
     CompositeProcPtr		Composite;
     GlyphsProcPtr		Glyphs;
     AddTrapsProcPtr		AddTraps;
-#endif
 
     /* Table of wrappable function pointers */
     DamageScreenFuncsRec	funcs;

@@ -53,9 +53,7 @@
 #include "dmxcb.h"
 #include "dmxprop.h"
 #include "dmxstat.h"
-#ifdef RENDER
 #include "dmxpict.h"
-#endif
 
 #include <X11/Xos.h>                /* For gettimeofday */
 #include "dixstruct.h"
@@ -795,11 +793,9 @@ void InitOutput(ScreenInfo *pScreenInfo, int argc, char *argv[])
      */
     dmxInitFonts();
 
-#ifdef RENDER
     /* Initialize the render extension */
     if (!noRenderExtension)
 	dmxInitRender();
-#endif
 
     /* Initialized things that need timer hooks */
     dmxStatInit();

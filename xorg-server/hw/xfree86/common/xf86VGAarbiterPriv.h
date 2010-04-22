@@ -43,9 +43,7 @@
 #include "xf86str.h"
 #include "mipointer.h"
 #include "mipointrst.h"
-#ifdef RENDER
 # include "picturestr.h"
-#endif
 
 
 #define WRAP_SCREEN(x,y) {pScreenPriv->x = pScreen->x; pScreen->x = y;}
@@ -139,11 +137,9 @@ typedef struct _VGAarbiterScreen {
     void                        (*LeaveVT)(int, int);
     void                        (*FreeScreen)(int, int);
     miPointerSpriteFuncPtr      miSprite;
-#ifdef RENDER
     CompositeProcPtr            Composite;
     GlyphsProcPtr               Glyphs;
     CompositeRectsProcPtr       CompositeRects;
-#endif
 } VGAarbiterScreenRec, *VGAarbiterScreenPtr;
 
 typedef struct _VGAarbiterGC {
@@ -254,7 +250,6 @@ static Bool VGAarbiterDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScree
 static void VGAarbiterDeviceCursorCleanup(DeviceIntPtr pDev, ScreenPtr pScreen);
 
 
-#ifdef RENDER
 static void VGAarbiterComposite(CARD8 op, PicturePtr pSrc, PicturePtr pMask,
     PicturePtr pDst, INT16 xSrc, INT16 ySrc, INT16 xMask, INT16 yMask,
     INT16 xDst, INT16 yDst, CARD16 width, CARD16 height);
@@ -263,4 +258,3 @@ static void VGAarbiterGlyphs(CARD8 op, PicturePtr pSrc, PicturePtr pDst,
     list, GlyphPtr *glyphs);
 static void VGAarbiterCompositeRects(CARD8 op, PicturePtr pDst, xRenderColor
     *color, int nRect, xRectangle *rects);
-#endif

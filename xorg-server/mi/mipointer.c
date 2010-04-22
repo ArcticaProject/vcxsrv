@@ -497,13 +497,13 @@ miPointerSetPosition(DeviceIntPtr pDev, int *x, int *y)
 
     miPointerPtr        pPointer; 
 
+    if (!pDev || !pDev->coreEvents)
+        return;
+
     pPointer = MIPOINTER(pDev);
     pScreen = pPointer->pScreen;
     if (!pScreen)
 	return;	    /* called before ready */
-
-    if (!pDev || !pDev->coreEvents)
-        return;
 
     if (*x < 0 || *x >= pScreen->width || *y < 0 || *y >= pScreen->height)
     {

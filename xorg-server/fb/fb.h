@@ -41,11 +41,7 @@
 #include "mi.h"
 #include "migc.h"
 #include "mibstore.h"
-#ifdef RENDER
 #include "picturestr.h"
-#else
-#include "picture.h"
-#endif
 
 #ifdef FB_ACCESS_WRAPPER
 

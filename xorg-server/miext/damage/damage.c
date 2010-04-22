@@ -596,8 +596,6 @@ damageDestroyClip(GCPtr pGC)
 				  REGION_NOTEMPTY(d->pScreen, \
 						  g->pCompositeClip)))
 
-#ifdef RENDER
-
 #define TRIM_PICTURE_BOX(box, pDst) { \
     BoxPtr extents = &pDst->pCompositeClip->extents;\
     if(box.x1 < extents->x1) box.x1 = extents->x1; \
@@ -774,7 +772,6 @@ damageAddTraps (PicturePtr  pPicture,
     damageRegionProcessPending (pPicture->pDrawable);
     wrap (pScrPriv, ps, AddTraps, damageAddTraps);
 }
-#endif
 
 /**********************************************************/
 
@@ -1882,9 +1879,7 @@ Bool
 DamageSetup (ScreenPtr pScreen)
 {
     DamageScrPrivPtr	pScrPriv;
-#ifdef RENDER
     PictureScreenPtr	ps = GetPictureScreenIfSet(pScreen);
-#endif
     const DamageScreenFuncsRec miFuncs = {
 	miDamageCreate, miDamageRegister, miDamageUnregister, miDamageDestroy
     };
@@ -1908,13 +1903,11 @@ DamageSetup (ScreenPtr pScreen)
     wrap (pScrPriv, pScreen, SetWindowPixmap, damageSetWindowPixmap);
     wrap (pScrPriv, pScreen, CopyWindow, damageCopyWindow);
     wrap (pScrPriv, pScreen, CloseScreen, damageCloseScreen);
-#ifdef RENDER
     if (ps) {
 	wrap (pScrPriv, ps, Glyphs, damageGlyphs);
 	wrap (pScrPriv, ps, Composite, damageComposite);
 	wrap (pScrPriv, ps, AddTraps, damageAddTraps);
     }
-#endif
 
     pScrPriv->funcs = miFuncs;
 

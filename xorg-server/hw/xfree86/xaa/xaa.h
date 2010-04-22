@@ -108,9 +108,7 @@
 #include "regionstr.h"
 #include "xf86fbman.h"
 
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 
 /* Flags */
 #define PIXMAP_CACHE			0x00000001
@@ -1251,7 +1249,6 @@ typedef struct _XAAInfoRec {
 
    CARD32 FullPlanemasks[32];
 
-#ifdef RENDER
    Bool (*Composite) (
    	CARD8      op,
         PicturePtr pSrc,
@@ -1336,13 +1333,10 @@ typedef struct _XAAInfoRec {
    CARD32 * CPUToScreenTextureFormats;
 
 
-#endif
-
    /* these were added for 4.3.0 */
    BoxRec SolidLineLimits;
    BoxRec DashedLineLimits;
 
-#ifdef RENDER
    /* These were added for X.Org 6.8.0 */
    Bool (*SetupForCPUToScreenAlphaTexture2) (
 	ScrnInfoPtr	pScrn,
@@ -1373,7 +1367,6 @@ typedef struct _XAAInfoRec {
 	int		flags
    );
    CARD32 *CPUToScreenTextureDstFormats;
-#endif /* RENDER */
 } XAAInfoRec, *XAAInfoRecPtr;
 
 #define SET_SYNC_FLAG(infoRec)	(infoRec)->NeedToSync = TRUE

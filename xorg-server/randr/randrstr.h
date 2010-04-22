@@ -47,10 +47,8 @@
 #include "rrtransform.h"
 #include <X11/extensions/randr.h>
 #include <X11/extensions/randrproto.h>
-#ifdef RENDER
 #include <X11/extensions/render.h> 	/* we share subpixel order information */
 #include "picturestr.h"
-#endif
 #include <X11/Xfuncproto.h>
 
 /* required for ABI compatibility for now */

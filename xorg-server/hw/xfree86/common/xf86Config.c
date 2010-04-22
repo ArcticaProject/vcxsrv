@@ -67,9 +67,7 @@ extern DeviceAssocRec mouse_assoc;
 
 #include "xkbsrv.h"
 
-#ifdef RENDER
 #include "picture.h"
-#endif
 
 /*
  * These paths define the way the config file search is done.  The escape
@@ -925,7 +923,6 @@ configServerFlags(XF86ConfFlagsPtr flagsconf, XF86OptionPtr layoutopts)
         }
     }
     
-#ifdef RENDER
     {
 	if ((s = xf86GetOptValString(FlagOptions, FLAG_RENDER_COLORMAP_MODE))){
 	    int policy = PictureParseCmapPolicy (s);
@@ -938,7 +935,6 @@ configServerFlags(XF86ConfFlagsPtr flagsconf, XF86OptionPtr layoutopts)
 	    }
 	}
     }
-#endif
 
 #ifdef RANDR
     xf86Info.disableRandR = FALSE;

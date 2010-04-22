@@ -247,6 +247,9 @@ ListButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info, Bool reportState)
     int mask_len;
     int i;
 
+    if (!dev || !dev->button)
+	return 0;
+
     mask_len = bytes_to_int32(bits_to_bytes(dev->button->numButtons));
 
     info->type = ButtonClass;
@@ -259,7 +262,7 @@ ListButtonInfo(DeviceIntPtr dev, xXIButtonInfo* info, Bool reportState)
     memset(bits, 0, mask_len * 4);
 
     if (reportState)
-	for (i = 0; dev && dev->button && i < dev->button->numButtons; i++)
+	for (i = 0; i < dev->button->numButtons; i++)
 	    if (BitIsOn(dev->button->down, i))
 		SetBit(bits, i);
 

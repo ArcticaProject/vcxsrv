@@ -1251,7 +1251,6 @@ XAAInitAccel(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
 	   infoRec->ComputeDash = XAAComputeDash;
     }
 
-#ifdef RENDER
     {
 	Bool haveTexture = infoRec->CPUToScreenTextureFormats &&
 			   infoRec->CPUToScreenTextureDstFormats &&
@@ -1271,7 +1270,6 @@ XAAInitAccel(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
             infoRec->Glyphs = XAADoGlyphs;
         }	
     }
-#endif
 
     /************  Validation Functions **************/
 

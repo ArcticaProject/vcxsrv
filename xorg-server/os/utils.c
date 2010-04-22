@@ -120,9 +120,7 @@ __stdcall unsigned long GetTickCount(void);
 
 #include "xkbsrv.h"
 
-#ifdef RENDER
 #include "picture.h"
-#endif
 
 Bool noTestExtensions;
 #ifdef COMPOSITE
@@ -148,15 +146,10 @@ Bool noScreenSaverExtension = FALSE;
 #ifdef MITSHM
 Bool noMITShmExtension = FALSE;
 #endif
-#ifdef MULTIBUFFER
-Bool noMultibufferExtension = FALSE;
-#endif
 #ifdef RANDR
 Bool noRRExtension = FALSE;
 #endif
-#ifdef RENDER
 Bool noRenderExtension = FALSE;
-#endif
 #ifdef XCSECURITY
 Bool noSecurityExtension = FALSE;
 #endif
@@ -530,9 +523,7 @@ void UseMsg(void)
     ErrorF("-nopn                  reject failure to listen on all ports\n");
     ErrorF("-r                     turns off auto-repeat\n");
     ErrorF("r                      turns on auto-repeat \n");
-#ifdef RENDER
     ErrorF("-render [default|mono|gray|color] set render color alloc policy\n");
-#endif
     ErrorF("-retro                 start with classic stipple and cursor\n");
     ErrorF("-s #                   screen-saver timeout (minutes)\n");
     ErrorF("-t #                   default pointer threshold (pixels/t)\n");
@@ -933,7 +924,6 @@ ProcessCommandLine(int argc, char *argv[])
 	    else
 		UseMsg();
 	}
-#ifdef RENDER
 	else if ( strcmp( argv[i], "-render" ) == 0)
 	{
 	    if (++i < argc)
@@ -948,7 +938,6 @@ ProcessCommandLine(int argc, char *argv[])
 	    else
 		UseMsg ();
 	}
-#endif
 	else if ( strcmp( argv[i], "+extension") == 0)
 	{
 	    if (++i < argc)

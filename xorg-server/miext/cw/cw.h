@@ -90,7 +90,6 @@ typedef struct {
     GetWindowPixmapProcPtr	GetWindowPixmap;
     SetWindowPixmapProcPtr	SetWindowPixmap;
     
-#ifdef RENDER
     DestroyPictureProcPtr	DestroyPicture;
     ChangePictureClipProcPtr	ChangePictureClip;
     DestroyPictureClipProcPtr	DestroyPictureClip;
@@ -107,7 +106,6 @@ typedef struct {
     TriFanProcPtr		TriFan;
 
     RasterizeTrapezoidProcPtr	RasterizeTrapezoid;
-#endif
 } cwScreenRec, *cwScreenPtr;
 
 extern _X_EXPORT DevPrivateKey cwScreenKey;

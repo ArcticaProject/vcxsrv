@@ -260,7 +260,6 @@ typedef struct _XAAStateWrapRec {
    GetImageProcPtr GetImage;
    GetSpansProcPtr GetSpans;
    CopyWindowProcPtr CopyWindow;
-#ifdef RENDER
    Bool (*SetupForCPUToScreenAlphaTexture2)(ScrnInfoPtr pScrn, int op,
                                            CARD16 red, CARD16 green,
                                            CARD16 blue, CARD16 alpha,
@@ -271,7 +270,6 @@ typedef struct _XAAStateWrapRec {
                                       CARD32 srcFormat, CARD32 dstFormat,
                                       CARD8 *texPtr, int texPitch,
                                       int width, int height, int flags);
-#endif
 } XAAStateWrapRec, *XAAStateWrapPtr;
 
 static int XAAStateKeyIndex;
@@ -1457,7 +1455,6 @@ static void XAAStateWrapCopyWindow(WindowPtr pWindow, DDXPointRec ptOldOrg,
 			     prgnSrc);
 }
 
-#ifdef RENDER
 static Bool XAAStateWrapSetupForCPUToScreenAlphaTexture2(ScrnInfoPtr pScrn,
                                                          int op, CARD16 red,
                                                          CARD16 green,
@@ -1494,7 +1491,6 @@ static Bool XAAStateWrapSetupForCPUToScreenTexture2(ScrnInfoPtr pScrn, int op,
                                                     dstFormat, texPtr, texPitch,
 						    width, height, flags);
 }
-#endif
 
 /* Setup Function */
 Bool
@@ -1624,9 +1620,7 @@ XAAInitStateWrap(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
    XAA_STATE_WRAP(GetImage);
    XAA_STATE_WRAP(GetSpans);
    XAA_STATE_WRAP(CopyWindow);
-#ifdef RENDER
    XAA_STATE_WRAP(SetupForCPUToScreenAlphaTexture2);
    XAA_STATE_WRAP(SetupForCPUToScreenTexture2);
-#endif
    return TRUE;
 }

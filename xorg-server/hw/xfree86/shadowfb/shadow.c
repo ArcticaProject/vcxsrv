@@ -27,9 +27,7 @@
 #include "xf86str.h"
 #include "shadowfb.h"
 
-#ifdef RENDER
 # include "picturestr.h"
-#endif
 
 static Bool ShadowCloseScreen (int i, ScreenPtr pScreen);
 static void ShadowCopyWindow(
@@ -51,7 +49,6 @@ static Bool ShadowModifyPixmapHeader(
 static Bool ShadowEnterVT(int index, int flags);
 static void ShadowLeaveVT(int index, int flags);
 
-#ifdef RENDER
 static void ShadowComposite(
     CARD8 op,
     PicturePtr pSrc,
@@ -66,7 +63,6 @@ static void ShadowComposite(
     CARD16 width,
     CARD16 height
 );
-#endif /* RENDER */
 
 
 typedef struct {
@@ -77,9 +73,7 @@ typedef struct {
   CopyWindowProcPtr			CopyWindow;
   CreateGCProcPtr			CreateGC;
   ModifyPixmapHeaderProcPtr		ModifyPixmapHeader;
-#ifdef RENDER
   CompositeProcPtr Composite;
-#endif /* RENDER */
   Bool				(*EnterVT)(int, int);
   void				(*LeaveVT)(int, int);
   Bool				vtSema;
@@ -164,9 +158,7 @@ ShadowFBInit2 (
 ){
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     ShadowScreenPtr pPriv;
-#ifdef RENDER
     PictureScreenPtr ps = GetPictureScreenIfSet(pScreen);
-#endif /* RENDER */
 
     if(!preRefreshArea && !postRefreshArea) return FALSE;
     
@@ -199,12 +191,10 @@ ShadowFBInit2 (
     pScrn->EnterVT = ShadowEnterVT;
     pScrn->LeaveVT = ShadowLeaveVT;
 
-#ifdef RENDER
     if(ps) {
       pPriv->Composite = ps->Composite;
       ps->Composite = ShadowComposite;
     }
-#endif /* RENDER */
 
     return TRUE;
 }
@@ -251,9 +241,7 @@ ShadowCloseScreen (int i, ScreenPtr pScreen)
 {
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     ShadowScreenPtr pPriv = GET_SCREEN_PRIVATE(pScreen);
-#ifdef RENDER
     PictureScreenPtr ps = GetPictureScreenIfSet(pScreen);
-#endif /* RENDER */
 
     pScreen->CloseScreen = pPriv->CloseScreen;
     pScreen->CopyWindow = pPriv->CopyWindow;
@@ -263,11 +251,9 @@ ShadowCloseScreen (int i, ScreenPtr pScreen)
     pScrn->EnterVT = pPriv->EnterVT;
     pScrn->LeaveVT = pPriv->LeaveVT;
 
-#ifdef RENDER
     if(ps) {
         ps->Composite = pPriv->Composite;
     }
-#endif /* RENDER */
 
     xfree((pointer)pPriv);
 
@@ -355,7 +341,6 @@ ShadowModifyPixmapHeader(
     return retval;
 }
 
-#ifdef RENDER
 static void
 ShadowComposite(
     CARD8 op,
@@ -408,7 +393,6 @@ ShadowComposite(
         (*pPriv->postRefresh)(pPriv->pScrn, 1, &box);
     }
 }
-#endif /* RENDER */
 
 /**********************************************************/
 

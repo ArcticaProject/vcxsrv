@@ -100,9 +100,7 @@ XAAInit(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     XAAScreenPtr pScreenPriv;
     int i;
-#ifdef RENDER
     PictureScreenPtr    ps = GetPictureScreenIfSet(pScreen);
-#endif
 
     /* Return successfully if no acceleration wanted */
     if (!infoRec)
@@ -173,7 +171,6 @@ XAAInit(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
     pScrn->EnableDisableFBAccess = XAAEnableDisableFBAccess;
 
     pScreenPriv->WindowExposures = pScreen->WindowExposures;
-#ifdef RENDER
     if (ps)
     {
 	pScreenPriv->Composite = ps->Composite;
@@ -181,7 +178,6 @@ XAAInit(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
 	pScreenPriv->Glyphs = ps->Glyphs;
 	ps->Glyphs = XAAGlyphs;
     }
-#endif    
     if(pScrn->overlayFlags & OVERLAY_8_32_PLANAR)
         XAASetupOverlay8_32Planar(pScreen);
 

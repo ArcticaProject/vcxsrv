@@ -52,9 +52,7 @@ Equipment Corporation.
 #include "globals.h"
 #include "servermd.h"
 #include "resource.h"
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 #include "modinit.h"
 #include "protocol-versions.h"
 
@@ -589,9 +587,7 @@ void PanoramiXExtensionInit(int argc, char *argv[])
     ProcVector[X_StoreColors] = PanoramiXStoreColors;
     ProcVector[X_StoreNamedColor] = PanoramiXStoreNamedColor;
 
-#ifdef RENDER
     PanoramiXRenderInit ();
-#endif
 }
 
 extern Bool CreateConnectionBlock(void);
@@ -891,9 +887,7 @@ static void PanoramiXResetProc(ExtensionEntry* extEntry)
 {
     int		i;
 
-#ifdef RENDER
     PanoramiXRenderReset ();
-#endif
     screenInfo.numScreens = PanoramiXNumScreens;
     for (i = 256; i--; )
 	ProcVector[i] = SavedProcVector[i];

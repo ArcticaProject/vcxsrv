@@ -74,9 +74,7 @@
 #include "xf86DDC.h"
 #include "xf86Xinput.h"
 #include "xf86InPriv.h"
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 
 #include "xf86VGAarbiter.h"
 #include "globals.h"
@@ -110,15 +108,9 @@ static PixmapFormatRec formats[MAXFORMATS] = {
 	{ 15,	16,	BITMAP_SCANLINE_PAD },
 	{ 16,	16,	BITMAP_SCANLINE_PAD },
 	{ 24,	32,	BITMAP_SCANLINE_PAD },
-#ifdef RENDER
 	{ 32,	32,	BITMAP_SCANLINE_PAD },
-#endif
 };
-#ifdef RENDER
 static int numFormats = 7;
-#else
-static int numFormats = 6;
-#endif
 static Bool formatsDone = FALSE;
 
 #ifndef OSNAME
@@ -1082,7 +1074,6 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 		    xf86Screens[i]->pScreen->CreateWindow);
       xf86Screens[i]->pScreen->CreateWindow = xf86CreateRootWindow;
 
-#ifdef RENDER
     if (PictureGetSubpixelOrder (xf86Screens[i]->pScreen) == SubPixelUnknown)
     {
 	xf86MonPtr DDC = (xf86MonPtr)(xf86Screens[i]->monitor->DDC);
@@ -1092,7 +1083,6 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
 				  SubPixelHorizontalRGB : SubPixelNone) :
 				 SubPixelUnknown);
     }
-#endif
 #ifdef RANDR
     if (!xf86Info.disableRandR)
 	xf86RandRInit (screenInfo.screens[scr_index]);

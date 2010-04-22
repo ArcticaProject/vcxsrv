@@ -49,10 +49,8 @@ static int cwScreenKeyIndex;
 DevPrivateKey cwScreenKey = &cwScreenKeyIndex;
 static int cwWindowKeyIndex;
 DevPrivateKey cwWindowKey = &cwWindowKeyIndex;
-#ifdef RENDER
 static int cwPictureKeyIndex;
 DevPrivateKey cwPictureKey = &cwPictureKeyIndex;
-#endif
 extern GCOps cwGCOps;
 
 static Bool
@@ -477,9 +475,7 @@ void
 miInitializeCompositeWrapper(ScreenPtr pScreen)
 {
     cwScreenPtr pScreenPriv;
-#ifdef RENDER
     Bool has_render = GetPictureScreenIfSet(pScreen) != NULL;
-#endif
 
     if (!dixRequestPrivate(cwGCKey, sizeof(cwGCRec)))
 	return;
@@ -499,19 +495,15 @@ miInitializeCompositeWrapper(ScreenPtr pScreen)
     SCREEN_EPILOGUE(pScreen, SetWindowPixmap, cwSetWindowPixmap);
     SCREEN_EPILOGUE(pScreen, GetWindowPixmap, cwGetWindowPixmap);
 
-#ifdef RENDER
     if (has_render)
 	cwInitializeRender(pScreen);
-#endif
 }
 
 static Bool
 cwCloseScreen (int i, ScreenPtr pScreen)
 {
     cwScreenPtr   pScreenPriv;
-#ifdef RENDER
     PictureScreenPtr ps = GetPictureScreenIfSet(pScreen);
-#endif
 
     pScreenPriv = (cwScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						cwScreenKey);
@@ -521,10 +513,8 @@ cwCloseScreen (int i, ScreenPtr pScreen)
     pScreen->CreateGC = pScreenPriv->CreateGC;
     pScreen->CopyWindow = pScreenPriv->CopyWindow;
 
-#ifdef RENDER
     if (ps)
 	cwFiniRender(pScreen);
-#endif
 
     xfree((pointer)pScreenPriv);
 

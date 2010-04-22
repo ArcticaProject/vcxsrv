@@ -53,9 +53,7 @@
 #include "dmxprop.h"
 #include "dmxdpms.h"
 
-#ifdef RENDER
 #include "dmxpict.h"
-#endif
 
 #include "fb.h"
 #include "mipointer.h"
@@ -78,12 +76,10 @@ static int dmxScreenPrivateKeyIndex;
 DevPrivateKey dmxScreenPrivateKey = &dmxScreenPrivateKeyIndex; /**< Private index for Screens   */
 static int dmxColormapPrivateKeyIndex;
 DevPrivateKey dmxColormapPrivateKey = &dmxColormapPrivateKeyIndex; /**< Private index for Colormaps */
-#ifdef RENDER
 static int dmxPictPrivateKeyIndex;
 DevPrivateKey dmxPictPrivateKey = &dmxPictPrivateKeyIndex; /**< Private index for Picts     */
 static int dmxGlyphSetPrivateKeyIndex;
 DevPrivateKey dmxGlyphSetPrivateKey = &dmxGlyphSetPrivateKeyIndex; /**< Private index for GlyphSets */
-#endif
 
 /** Initialize the parts of screen \a idx that require access to the
  *  back-end server. */
@@ -278,9 +274,7 @@ Bool dmxScreenInit(int idx, ScreenPtr pScreen, int argc, char *argv[])
 		 dmxScreen->beXDPI,
 		 dmxScreen->scrnWidth,
 		 dmxScreen->beBPP);
-#ifdef RENDER
     (void)dmxPictureInit(pScreen, 0, 0);
-#endif
 
     /* Not yet... */
     pScreen->GetWindowPixmap = NULL;
@@ -435,9 +429,7 @@ Bool dmxCloseScreen(int idx, ScreenPtr pScreen)
 
     /* Reset the proc vectors */
     if (idx == 0) {
-#ifdef RENDER
 	dmxResetRender();
-#endif
 	dmxResetFonts();
     }
 

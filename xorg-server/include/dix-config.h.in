@@ -360,9 +360,6 @@
 /* Support Xv extension */
 #undef XV
 
-/* Build Multibuffer extension */
-#undef MULTIBUFFER
-
 /* Support DRI extension */
 #undef XF86DRI
 
@@ -410,9 +407,6 @@
 
 /* Support HAL for hotplug */
 #undef CONFIG_HAL
-
-/* Use only built-in fonts */
-#undef BUILTIN_FONTS
 
 /* Have a monotonic clock from clock_gettime() */
 #undef MONOTONIC_CLOCK

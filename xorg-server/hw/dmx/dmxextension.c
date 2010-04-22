@@ -53,9 +53,7 @@
 #include "dmxgc.h"
 #include "dmxfont.h"
 #include "dmxcmap.h"
-#ifdef RENDER
 #include "dmxpict.h"
-#endif
 #include "dmxinput.h"
 #include "dmxsync.h"
 #include "dmxscrinit.h"
@@ -896,13 +894,11 @@ static void dmxBECreateResources(pointer value, XID id, RESTYPE type,
 	if (pCmap->pScreen->myNum == scrnNum)
 	    (void)dmxBECreateColormap((ColormapPtr)value);
 #if 0
-#ifdef RENDER
     /* TODO: Recreate Picture and GlyphSet resources */
     } else if ((type & TypeMask) == (PictureType & TypeMask)) {
 	/* Picture resources are created when windows are created */
     } else if ((type & TypeMask) == (GlyphSetType & TypeMask)) {
 	dmxBEFreeGlyphSet(pScreen, (GlyphSetPtr)value);
-#endif
 #endif
     } else {
 	/* Other resource types??? */
@@ -1057,7 +1053,6 @@ static Bool dmxCompareScreens(DMXScreenInfo *new, DMXScreenInfo *old)
     return TRUE;
 }
 
-#ifdef RENDER
 /** Restore Render's picture */
 static void dmxBERestoreRenderPict(pointer value, XID id, pointer n)
 {
@@ -1164,7 +1159,6 @@ static void dmxBERestoreRenderGlyph(pointer value, XID id, pointer n)
     free(gids);
     free(glyphs);    
 }
-#endif
 
 /** Reattach previously detached back-end screen. */
 int dmxAttachScreen(int idx, DMXScreenAttributesPtr attr)
@@ -1284,7 +1278,6 @@ int dmxAttachScreen(int idx, DMXScreenAttributesPtr attr)
     /* Create window hierarchy (top down) */
     dmxBECreateWindowTree(idx);
 
-#ifdef RENDER
     /* Restore the picture state for RENDER */
     for (i = currentMaxClients; --i >= 0; )
 	if (clients[i])
@@ -1296,7 +1289,6 @@ int dmxAttachScreen(int idx, DMXScreenAttributesPtr attr)
 	if (clients[i])
 	    FindClientResourcesByType(clients[i],GlyphSetType, 
 				      dmxBERestoreRenderGlyph,(pointer)idx);
-#endif
 
     /* Refresh screen by generating exposure events for all windows */
     dmxForceExposures(idx);
@@ -1482,7 +1474,6 @@ static void dmxBEDestroyResources(pointer value, XID id, RESTYPE type,
 	ColormapPtr  pCmap = value;
 	if (pCmap->pScreen->myNum == scrnNum)
 	    dmxBEFreeColormap((ColormapPtr)value);
-#ifdef RENDER
     } else if ((type & TypeMask) == (PictureType & TypeMask)) {
 	PicturePtr  pPict = value;
 	if (pPict->pDrawable->pScreen->myNum == scrnNum) {
@@ -1496,7 +1487,6 @@ static void dmxBEDestroyResources(pointer value, XID id, RESTYPE type,
 	}
     } else if ((type & TypeMask) == (GlyphSetType & TypeMask)) {
 	dmxBEFreeGlyphSet(pScreen, (GlyphSetPtr)value);
-#endif
     } else {
 	/* Other resource types??? */
     }

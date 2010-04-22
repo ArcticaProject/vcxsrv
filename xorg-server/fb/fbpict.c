@@ -32,9 +32,6 @@
 #include "fb.h"
 
 #include "picturestr.h"
-
-#ifdef RENDER
-
 #include "mipict.h"
 #include "fbpict.h"
 
@@ -203,8 +200,6 @@ fbCompositeGeneral (CARD8	op,
 			xSrc, ySrc, xMask, yMask, xDst, yDst,
 			width, height);
 }
-
-#endif /* RENDER */
 
 static pixman_image_t *
 create_solid_fill_image (PicturePtr pict)
@@ -473,8 +468,6 @@ Bool
 fbPictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
 {
 
-#ifdef RENDER
-
     PictureScreenPtr    ps;
 
     if (!miPictureInit (pScreen, formats, nformats))
@@ -486,8 +479,6 @@ fbPictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
     ps->RasterizeTrapezoid = fbRasterizeTrapezoid;
     ps->AddTraps = fbAddTraps;
     ps->AddTriangles = fbAddTriangles;
-
-#endif /* RENDER */
 
     return TRUE;
 }

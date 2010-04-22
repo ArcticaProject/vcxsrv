@@ -49,9 +49,7 @@ typedef struct _dmxWinPriv {
     Colormap       cmap;
     Visual        *visual;
     Bool           isShaped;
-#ifdef RENDER
     Bool           hasPict;
-#endif
 #ifdef GLXEXT
     void          *swapGroup;
     int            barrier;
