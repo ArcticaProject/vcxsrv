@@ -353,9 +353,13 @@ XkbClientMapPtr		map;
 XkbServerMapPtr		srv;
 Bool			showActions;
 
+    if (!xkb) {
+	_XkbLibError(_XkbErrMissingSymbols,"XkbWriteXKBSymbols",0);
+	return FALSE;
+    }
+
     map= xkb->map;
-    srv= xkb->server;
-    if ((!xkb)||(!map)||(!map->syms)||(!map->key_sym_map)) {
+    if ((!map)||(!map->syms)||(!map->key_sym_map)) {
 	_XkbLibError(_XkbErrMissingSymbols,"XkbWriteXKBSymbols",0);
 	return FALSE;
     }
@@ -376,6 +380,7 @@ Bool			showActions;
     }
     if (tmp>0)
 	fprintf(file,"\n");
+    srv= xkb->server;
     for (i=xkb->min_key_code;i<=xkb->max_key_code;i++) {
 	Bool	simple;
 	if ((int)XkbKeyNumSyms(xkb,i)<1)

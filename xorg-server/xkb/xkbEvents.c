@@ -1041,8 +1041,7 @@ XkbInterestPtr	interest;
 	    return ((interest->resource==id)?interest:NULL);
 	interest = interest->next;
     }
-    interest = xalloc(sizeof(XkbInterestRec));
-    bzero(interest,sizeof(XkbInterestRec));
+    interest = xcalloc(1, sizeof(XkbInterestRec));
     if (interest) {
 	interest->dev = dev;
 	interest->client = client;

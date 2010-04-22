@@ -155,9 +155,7 @@ static PixmapFormatRec g_PixmapFormats[] = {
   { 15,   16,     BITMAP_SCANLINE_PAD },
   { 16,   16,     BITMAP_SCANLINE_PAD },
   { 24,   32,     BITMAP_SCANLINE_PAD },
-#ifdef RENDER
   { 32,   32,     BITMAP_SCANLINE_PAD }
-#endif
 };
 
 const int NUMFORMATS = sizeof (g_PixmapFormats) / sizeof (g_PixmapFormats[0]);

@@ -23,9 +23,7 @@
 
 #include "exa_priv.h"
 
-#ifdef RENDER
 #include "mipict.h"
-#endif
 
 /*
  * These functions wrap the low-level fb rendering functions and
@@ -617,9 +615,7 @@ ExaCheckComposite (CARD8      op,
                    CARD16     height)
 {
     ScreenPtr pScreen = pDst->pDrawable->pScreen;
-#ifdef RENDER
     PictureScreenPtr	ps = GetPictureScreen(pScreen);
-#endif /* RENDER */
     EXA_PRE_FALLBACK(pScreen);
 
     if (pExaScr->prepare_access_reg) {
@@ -652,7 +648,6 @@ ExaCheckComposite (CARD8      op,
 	    exaPrepareAccess (pMask->pDrawable, EXA_PREPARE_MASK);
     }
 
-#ifdef RENDER
     swap(pExaScr, ps, Composite);
     ps->Composite (op,
                  pSrc,
@@ -667,7 +662,6 @@ ExaCheckComposite (CARD8      op,
                  width,
                  height);
     swap(pExaScr, ps, Composite);
-#endif /* RENDER */
     if (pMask && pMask->pDrawable != NULL)
 	exaFinishAccess (pMask->pDrawable, EXA_PREPARE_MASK);
     if (pSrc->pDrawable != NULL)
@@ -692,19 +686,15 @@ ExaCheckAddTraps (PicturePtr	pPicture,
 		  xTrap		*traps)
 {
     ScreenPtr pScreen = pPicture->pDrawable->pScreen;
-#ifdef RENDER
     PictureScreenPtr	ps = GetPictureScreen(pScreen);
-#endif /* RENDER */
     EXA_PRE_FALLBACK(pScreen);
 
     EXA_FALLBACK(("to pict %p (%c)\n",
 		  exaDrawableLocation(pPicture->pDrawable)));
     exaPrepareAccess(pPicture->pDrawable, EXA_PREPARE_DEST);
-#ifdef RENDER
     swap(pExaScr, ps, AddTraps);
     ps->AddTraps (pPicture, x_off, y_off, ntrap, traps);
     swap(pExaScr, ps, AddTraps);
-#endif /* RENDER */
     exaFinishAccess(pPicture->pDrawable, EXA_PREPARE_DEST);
     EXA_POST_FALLBACK(pScreen);
 }

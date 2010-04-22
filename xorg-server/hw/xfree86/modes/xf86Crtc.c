@@ -42,9 +42,7 @@
 #include "X11/extensions/render.h"
 #include "X11/extensions/dpmsconst.h"
 #include "X11/Xatom.h"
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 
 #include "xf86xv.h"
 
@@ -184,7 +182,6 @@ xf86CrtcInUse (xf86CrtcPtr crtc)
 void
 xf86CrtcSetScreenSubpixelOrder (ScreenPtr pScreen)
 {
-#ifdef RENDER
     int			subpixel_order = SubPixelUnknown;
     Bool		has_none = FALSE;
     ScrnInfoPtr		scrn = xf86Screens[pScreen->myNum];
@@ -243,7 +240,6 @@ xf86CrtcSetScreenSubpixelOrder (ScreenPtr pScreen)
     if (subpixel_order == SubPixelUnknown && has_none)
 	subpixel_order = SubPixelNone;
     PictureSetSubpixelOrder (pScreen, subpixel_order);
-#endif
 }
 
 /**

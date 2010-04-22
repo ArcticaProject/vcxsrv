@@ -138,9 +138,10 @@ ProcXSendExtensionEvent(ClientPtr client)
 
     first = ((xEvent *) & stuff[1]);
     if (!((EXTENSION_EVENT_BASE <= first->u.u.type) &&
-	  (first->u.u.type < lastEvent)))
+	  (first->u.u.type < lastEvent))) {
 	client->errorValue = first->u.u.type;
 	return BadValue;
+    }
 
     list = (XEventClass *) (first + stuff->num_events);
     if ((ret = CreateMaskFromList(client, list, stuff->count, tmp, dev,

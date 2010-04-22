@@ -55,7 +55,6 @@ SOFTWARE.
 
 #ifdef HAVE_DMX_CONFIG_H
 #include <dmx-config.h>
-#undef MULTIBUFFER
 #undef XV
 #undef DBE
 #undef XF86VIDMODE
@@ -116,15 +115,10 @@ extern Bool noScreenSaverExtension;
 #ifdef MITSHM
 extern Bool noMITShmExtension;
 #endif
-#ifdef MULTIBUFFER
-extern Bool noMultibufferExtension;
-#endif
 #ifdef RANDR
 extern Bool noRRExtension;
 #endif
-#ifdef RENDER
 extern Bool noRenderExtension;
-#endif
 #ifdef XCSECURITY
 extern Bool noSecurityExtension;
 #endif
@@ -195,9 +189,6 @@ typedef void (*InitExtension)(INITARGS);
 #ifdef MITSHM
 extern void ShmExtensionInit(INITARGS);
 #endif
-#ifdef MULTIBUFFER
-extern void MultibufferExtensionInit(INITARGS);
-#endif
 #ifdef PANORAMIX
 extern void PanoramiXExtensionInit(INITARGS);
 #endif
@@ -252,9 +243,7 @@ extern void XFree86DRIExtensionInit(INITARGS);
 #ifdef DPMSExtension
 extern void DPMSExtensionInit(INITARGS);
 #endif
-#ifdef RENDER
 extern void RenderExtensionInit(INITARGS);
-#endif
 #ifdef RANDR
 extern void RRExtensionInit(INITARGS);
 #endif
@@ -308,15 +297,10 @@ static ExtensionToggle ExtensionToggleList[] =
 #ifdef MITSHM
     { SHMNAME, &noMITShmExtension },
 #endif
-#ifdef MULTIBUFFER
-    { "Multi-Buffering", &noMultibufferExtension },
-#endif
 #ifdef RANDR
     { "RANDR", &noRRExtension },
 #endif
-#ifdef RENDER
     { "RENDER", &noRenderExtension },
-#endif
 #ifdef XCSECURITY
     { "SECURITY", &noSecurityExtension },
 #endif
@@ -416,9 +400,6 @@ InitExtensions(int argc, char *argv[])
 #ifdef MITSHM
     if (!noMITShmExtension) ShmExtensionInit();
 #endif
-#ifdef MULTIBUFFER
-    if (!noMultibufferExtension) MultibufferExtensionInit();
-#endif
     XInputExtensionInit();
 #ifdef XTEST
     if (!noTestExtensions) XTestExtensionInit();
@@ -469,9 +450,7 @@ InitExtensions(int argc, char *argv[])
     /* must be before Render to layer DisplayCursor correctly */
     if (!noXFixesExtension) XFixesExtensionInit();
 #endif
-#ifdef RENDER
     if (!noRenderExtension) RenderExtensionInit();
-#endif
 #ifdef RANDR
     if (!noRRExtension) RRExtensionInit();
 #endif
@@ -524,9 +503,7 @@ static ExtensionModule staticExtensions[] = {
 #ifdef XF86BIGFONT
     { XFree86BigfontExtensionInit, XF86BIGFONTNAME, &noXFree86BigfontExtension, NULL, NULL },
 #endif
-#ifdef RENDER
     { RenderExtensionInit, "RENDER", &noRenderExtension, NULL, NULL },
-#endif
 #ifdef RANDR
     { RRExtensionInit, "RANDR", &noRRExtension, NULL, NULL },
 #endif

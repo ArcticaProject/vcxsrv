@@ -1003,10 +1003,8 @@ KdScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
     pScreen->BlockHandler	= KdBlockHandler;
     pScreen->WakeupHandler	= KdWakeupHandler;
 
-#ifdef RENDER
     if (!fbPictureInit (pScreen, 0, 0))
 	return FALSE;
-#endif
     if (card->cfuncs->initScreen)
 	if (!(*card->cfuncs->initScreen) (pScreen))
 	    return FALSE;

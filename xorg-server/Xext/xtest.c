@@ -357,7 +357,8 @@ ProcXTestFakeInput(ClientPtr client)
         activateTime.milliseconds = ms;
         ev->u.keyButtonPointer.time = 0;
 
-        /* see mbuf.c:QueueDisplayRequest for code similar to this */
+        /* see mbuf.c:QueueDisplayRequest (from the deprecated Multibuffer
+         * extension) for code similar to this */
 
         if (!ClientSleepUntil(client, &activateTime, NULL, NULL))
         {

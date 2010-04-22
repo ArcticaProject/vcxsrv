@@ -10,9 +10,7 @@
 #include "xf86fbman.h"
 #include "xaa.h"
 #include "mi.h"
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 
 #define GCWhenForced		(GCArcMode << 1)
 
@@ -55,10 +53,8 @@ typedef struct _XAAScreen {
    void                		(*LeaveVT)(int, int);
    int				(*SetDGAMode)(int, int, DGADevicePtr);
    void				(*EnableDisableFBAccess)(int, Bool);
-#ifdef RENDER
     CompositeProcPtr            Composite;
     GlyphsProcPtr               Glyphs;
-#endif
 } XAAScreenRec, *XAAScreenPtr;
 
 #define	OPS_ARE_PIXMAP		0x00000001
@@ -1539,7 +1535,6 @@ extern _X_EXPORT void XAARemoveAreaCallback(FBAreaPtr area);
 extern _X_EXPORT void XAAMoveOutOffscreenPixmap(PixmapPtr pPix);
 extern _X_EXPORT Bool XAAInitStateWrap(ScreenPtr pScreen, XAAInfoRecPtr infoRec);
 
-#ifdef RENDER
 extern _X_EXPORT void
 XAAComposite (CARD8      op,
 	      PicturePtr pSrc,
@@ -1626,8 +1621,6 @@ XAAGetPixelFromRGBA (
     CARD16 alpha,
     CARD32 format
 );
-
-#endif
 
 /* XXX should be static */
 extern _X_EXPORT GCOps XAAFallbackOps;

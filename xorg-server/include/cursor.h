@@ -55,9 +55,7 @@ SOFTWARE.
 #define NullCursor ((CursorPtr)NULL)
 
 /* Provide support for alpha composited cursors */
-#ifdef RENDER
 #define ARGB_CURSOR
-#endif
 
 struct _DeviceIntRec;
 

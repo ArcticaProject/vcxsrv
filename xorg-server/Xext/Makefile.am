@@ -99,13 +99,6 @@ BUILTIN_SRCS += $(XCALIBRATE_SRCS)
 # XCalibrate needs tslib
 endif
 
-# Multi-buffering extension
-MULTIBUFFER_SRCS = mbuf.c
-EXTRA_MULTIBUFFER_SRCS = mbufbf.c mbufpx.c
-if MULTIBUFFER
-MODULE_SRCS  += $(MULTIBUFFER_SRCS)
-endif
-
 # XF86 Big Font extension
 BIGFONT_SRCS = xf86bigfont.c xf86bigfontsrv.h
 if XF86BIGFONT
@@ -140,8 +133,6 @@ EXTRA_DIST = \
 	$(XSELINUX_SRCS) \
 	$(XCALIBRATE_SRCS) \
 	$(XINERAMA_SRCS) \
-	$(MULTIBUFFER_SRCS) \
-	$(EXTRA_MULTIBUFFER_SRCS) \
 	$(FONTCACHE_SRCS) \
 	$(BIGFONT_SRCS) \
 	$(DPMS_SRCS) \

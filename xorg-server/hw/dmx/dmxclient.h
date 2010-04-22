@@ -86,10 +86,8 @@ typedef XID           KeySym64;
 
 #include <X11/extensions/shape.h>
 
-#ifdef RENDER
 #include <X11/extensions/Xrender.h>
 #undef PictFormatType
-#endif
 
 #include <X11/extensions/XKB.h>
 #include "xkbstr.h"

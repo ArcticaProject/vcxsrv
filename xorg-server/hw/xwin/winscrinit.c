@@ -390,14 +390,12 @@ winFinishScreenInitFB (int index,
   pScreen->blockData = pScreen;
   pScreen->wakeupData = pScreen;
 
-#ifdef RENDER
   /* Render extension initialization, calls miPictureInit */
   if (!fbPictureInit (pScreen, NULL, 0))
     {
       ErrorF ("winFinishScreenInitFB - fbPictureInit () failed\n");
       return FALSE;
     }
-#endif
 
 #ifdef RANDR
   /* Initialize resize and rotate support */

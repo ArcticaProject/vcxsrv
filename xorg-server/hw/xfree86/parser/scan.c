@@ -845,10 +845,13 @@ static int
 ConfigFilter(const struct dirent *de)
 {
 	const char *name = de->d_name;
-	size_t len = strlen(name);
+	size_t len;
 	size_t suflen = strlen(XCONFIGSUFFIX);
 
-	if (!name || name[0] == '.' || len <= suflen)
+	if (!name || name[0] == '.')
+		return 0;
+	len = strlen(name);
+	if(len <= suflen)
 		return 0;
 	if (strcmp(&name[len-suflen], XCONFIGSUFFIX) != 0)
 		return 0;

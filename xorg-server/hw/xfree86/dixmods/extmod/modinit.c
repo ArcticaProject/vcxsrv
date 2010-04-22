@@ -47,15 +47,6 @@ static ExtensionModule extensionModules[] = {
 	NULL
     },
 #endif
-#ifdef MULTIBUFFER
-    {
-	MultibufferExtensionInit,
-	MULTIBUFFER_PROTOCOL_NAME,
-	&noMultibufferExtension,
-	NULL,
-	NULL
-    },
-#endif
 #ifdef SCREENSAVER
     {
 	ScreenSaverExtensionInit,

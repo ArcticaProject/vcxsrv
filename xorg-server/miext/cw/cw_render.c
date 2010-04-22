@@ -30,8 +30,6 @@
 #include "windowstr.h"
 #include "cw.h"
 
-#ifdef RENDER
-
 #define cwPsDecl(pScreen)	\
     PictureScreenPtr	ps = GetPictureScreen (pScreen);	\
     cwScreenPtr		pCwScreen = getCwScreen (pScreen)
@@ -469,4 +467,3 @@ cwFiniRender (ScreenPtr pScreen)
     cwPsUnwrap(TriFan);
 }
 
-#endif /* RENDER */

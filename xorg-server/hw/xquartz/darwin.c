@@ -240,11 +240,9 @@ static Bool DarwinScreenInit(int index, ScreenPtr pScreen, int argc, char **argv
         return FALSE;
     }
 
-#ifdef RENDER
     if (! fbPictureInit(pScreen, 0, 0)) {
         return FALSE;
     }
-#endif
 
 #ifdef MITSHM
     ShmRegisterFbFuncs(pScreen);

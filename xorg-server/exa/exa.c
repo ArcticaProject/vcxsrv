@@ -753,9 +753,7 @@ static Bool
 exaCloseScreen(int i, ScreenPtr pScreen)
 {
     ExaScreenPriv(pScreen);
-#ifdef RENDER
     PictureScreenPtr	ps = GetPictureScreenIfSet(pScreen);
-#endif
 
     if (ps->Glyphs == exaGlyphs)
 	exaGlyphsFini(pScreen);
@@ -778,16 +776,12 @@ exaCloseScreen(int i, ScreenPtr pScreen)
     unwrap(pExaScr, pScreen, ChangeWindowAttributes);
     unwrap(pExaScr, pScreen, BitmapToRegion);
     unwrap(pExaScr, pScreen, CreateScreenResources);
-#ifdef RENDER
-    if (ps) {
-	unwrap(pExaScr, ps, Composite);
-	if (pExaScr->SavedGlyphs)
-	    unwrap(pExaScr, ps, Glyphs);
-	unwrap(pExaScr, ps, Trapezoids);
-	unwrap(pExaScr, ps, Triangles);
-	unwrap(pExaScr, ps, AddTraps);
-    }
-#endif
+    unwrap(pExaScr, ps, Composite);
+    if (pExaScr->SavedGlyphs)
+	unwrap(pExaScr, ps, Glyphs);
+    unwrap(pExaScr, ps, Trapezoids);
+    unwrap(pExaScr, ps, Triangles);
+    unwrap(pExaScr, ps, AddTraps);
 
     xfree (pExaScr);
 
@@ -825,9 +819,7 @@ exaDriverInit (ScreenPtr		pScreen,
                ExaDriverPtr	pScreenInfo)
 {
     ExaScreenPrivPtr pExaScr;
-#ifdef RENDER
     PictureScreenPtr ps;
-#endif
 
     if (!pScreenInfo)
 	return FALSE;
@@ -895,9 +887,7 @@ exaDriverInit (ScreenPtr		pScreen,
         pScreenInfo->maxPitchPixels = pScreenInfo->maxX;
     }
 
-#ifdef RENDER
     ps = GetPictureScreenIfSet(pScreen);
-#endif
 
     pExaScr = xcalloc (sizeof (ExaScreenPrivRec), 1);
     if (!pExaScr) {
@@ -940,7 +930,6 @@ exaDriverInit (ScreenPtr		pScreen,
     wrap(pExaScr, pScreen, BitmapToRegion, exaBitmapToRegion);
     wrap(pExaScr, pScreen, CreateScreenResources, exaCreateScreenResources);
 
-#ifdef RENDER
     if (ps) {
 	wrap(pExaScr, ps, Composite, exaComposite);
 	if (pScreenInfo->PrepareComposite)
@@ -949,7 +938,6 @@ exaDriverInit (ScreenPtr		pScreen,
 	wrap(pExaScr, ps, Triangles, exaTriangles);
 	wrap(pExaScr, ps, AddTraps, ExaCheckAddTraps);
     }
-#endif
 
 #ifdef MITSHM
     /*

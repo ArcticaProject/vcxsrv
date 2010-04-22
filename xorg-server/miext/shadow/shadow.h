@@ -26,9 +26,7 @@
 
 #include "scrnintstr.h"
 
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 
 #include "damage.h"
 #include "damagestr.h"

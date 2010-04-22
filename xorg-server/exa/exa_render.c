@@ -30,7 +30,6 @@
 
 #include "exa_priv.h"
 
-#ifdef RENDER
 #include "mipict.h"
 
 #if DEBUG_TRACE_FALL
@@ -1072,7 +1071,6 @@ done:
     if (pMask)
 	pMask->repeat = saveMaskRepeat;
 }
-#endif
 
 /**
  * Same as miCreateAlphaPicture, except it uses ExaCheckPolyFillRect instead

@@ -61,14 +61,12 @@
 #include <xorg-config.h>
 #endif
 
-#ifdef RENDER
 #define XAA_RENDER_PROLOGUE(pScreen,field)\
     (GetPictureScreen(pScreen)->field = \
      ((XAAScreenPtr)dixLookupPrivate(&(pScreen)->devPrivates, XAAGetScreenKey()))->field)
 
 #define XAA_RENDER_EPILOGUE(pScreen, field, wrapper)\
     (GetPictureScreen(pScreen)->field = wrapper)
-#endif
 
 /* This also works fine for drawables */
 

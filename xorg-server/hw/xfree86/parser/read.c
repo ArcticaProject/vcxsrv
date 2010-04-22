@@ -219,15 +219,15 @@ xf86readConfigFile (void)
 			}
 			else
 			{
-				Error (INVALID_SECTION_MSG, xf86tokenString ());
 				free(val.str);
 				val.str = NULL;
+				Error (INVALID_SECTION_MSG, xf86tokenString ());
 			}
 			break;
 		default:
-			Error (INVALID_KEYWORD_MSG, xf86tokenString ());
 			free(val.str);
 			val.str = NULL;
+			Error (INVALID_KEYWORD_MSG, xf86tokenString ());
 		}
 	}
 

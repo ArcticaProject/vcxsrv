@@ -106,11 +106,7 @@ RRDeliverScreenEvent (ClientPtr client, WindowPtr pWin, ScreenPtr pScreen)
     se.configTimestamp = pScrPriv->lastConfigTime.milliseconds;
     se.root =  pRoot->drawable.id;
     se.window = pWin->drawable.id;
-#ifdef RENDER
     se.subpixelOrder = PictureGetSubpixelOrder (pScreen);
-#else
-    se.subpixelOrder = SubPixelUnknown;
-#endif
 
     se.sequenceNumber = client->sequence;
     se.sizeID = RR10CurrentSizeID (pScreen);

@@ -9,11 +9,6 @@
 
 #include <X11/extensions/shapeproto.h>
 
-#ifdef MULTIBUFFER
-extern void MultibufferExtensionInit(INITARGS);
-#include <X11/extensions/multibufproto.h>
-#endif
-
 #ifdef XTEST
 extern void XTestExtensionInit(INITARGS);
 #include <X11/extensions/xtestproto.h>

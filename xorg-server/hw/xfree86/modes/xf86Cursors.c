@@ -41,9 +41,7 @@
 #include "X11/extensions/render.h"
 #include "X11/extensions/dpmsconst.h"
 #include "X11/Xatom.h"
-#ifdef RENDER
 #include "picturestr.h"
-#endif
 #include "cursorstr.h"
 #include "inputstr.h"
 
