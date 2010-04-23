@@ -123,13 +123,6 @@
     </model>
     <model>
       <configItem>
-        <name>acpi</name>
-        <_description>ACPI Standard</_description>
-        <vendor>Generic</vendor>
-      </configItem>
-    </model>
-    <model>
-      <configItem>
         <name>azonaRF2300</name>
         <_description>Azona RF2300 wireless Internet Keyboard</_description>
         <vendor>Azona</vendor>
@@ -1131,13 +1124,6 @@
         <name>emachines</name>
         <_description>Laptop/notebook eMachines m68xx</_description>
 	<vendor>eMachines</vendor>
-      </configItem>
-    </model>
-    <model>
-      <configItem>
-	<name>evdev</name>
-	<_description>Evdev-managed keyboard</_description>
-	<vendor>Generic</vendor>
       </configItem>
     </model>
     <model>
