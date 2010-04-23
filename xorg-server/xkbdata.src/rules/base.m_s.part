@@ -3,7 +3,6 @@
   a4_rfkb23     =       +inet(media_nav_acpi_common)
   asus_laptop   =       +inet(media_common)
   acer_tm_800   =       +inet(acer_laptop)
-  acpi          =       +inet(acpi_common)
   benqx730      =       +inet(benqx)
   benqx800      =       +inet(benqx)
   btc5126t      =       +inet(nav_acpi_common)

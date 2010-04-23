@@ -6,9 +6,6 @@
   sun6		=	sun(type6_usb)
   sun6euro	=	sun(type6tuv_usb)
   pc98		=	xfree98(pc98)
-  evdev		=	evdev
- $nokiamodels	=	evdev
-  olpc		=	evdev
  $applealu	=	macintosh(alukbd)
   macintosh_hhk	=	macintosh(hhk)
   macintosh_old	=	macintosh(old)
