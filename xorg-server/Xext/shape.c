@@ -365,7 +365,7 @@ ProcPanoramiXShapeRectangles(
     FOR_NSCREENS(j) {
 	stuff->dest = win->info[j].id;
 	result = ProcShapeRectangles (client);
-	BREAK_IF(result != Success);
+	if (result != Success) break;
     }
     return (result);
 }
@@ -474,7 +474,7 @@ ProcPanoramiXShapeMask(
 	if(pmap)
 	    stuff->src  = pmap->info[j].id;
 	result = ProcShapeMask (client);
-	BREAK_IF(result != Success);
+	if (result != Success) break;
     }
     return (result);
 }
@@ -600,7 +600,7 @@ ProcPanoramiXShapeCombine(
 	stuff->dest = win->info[j].id;
 	stuff->src =  win2->info[j].id;
 	result = ProcShapeCombine (client);
-	BREAK_IF(result != Success);
+	if (result != Success) break;
     }
     return (result);
 }

@@ -537,8 +537,7 @@ InitExtensions(int argc, char *argv[])
     for (i = 0; ExtensionModuleList[i].name != NULL; i++) {
 	ext = &ExtensionModuleList[i];
 	if (ext->initFunc != NULL && 
-	    (ext->disablePtr == NULL || 
-	     (ext->disablePtr != NULL && !*ext->disablePtr))) {
+	    (ext->disablePtr == NULL || !*ext->disablePtr)) {
 	    (ext->initFunc)();
 	}
     }

@@ -163,7 +163,7 @@ xf86RandRSetMode (ScreenPtr	    pScreen,
     WindowPtr		pRoot = WindowTable[pScreen->myNum];
     Bool		ret = TRUE;
 
-    if (pRoot)
+    if (pRoot && scrp->vtSema)
 	(*scrp->EnableDisableFBAccess) (pScreen->myNum, FALSE);
     if (useVirtual)
     {
@@ -229,7 +229,7 @@ xf86RandRSetMode (ScreenPtr	    pScreen,
      */
     xf86SetViewport (pScreen, pScreen->width, pScreen->height);
     xf86SetViewport (pScreen, 0, 0);
-    if (pRoot)
+    if (pRoot && scrp->vtSema)
 	(*scrp->EnableDisableFBAccess) (pScreen->myNum, TRUE);
     return ret;
 }
