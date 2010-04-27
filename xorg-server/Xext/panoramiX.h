@@ -80,19 +80,6 @@ typedef struct {
 #define FOR_NSCREENS_BACKWARD(j) for(j = PanoramiXNumScreens - 1; j >= 0; j--)
 #define FOR_NSCREENS(j) FOR_NSCREENS_FORWARD(j)
 
-#define BREAK_IF(a) if ((a)) break
-#define IF_RETURN(a,b) if ((a)) return (b)
-
-#define FORCE_ROOT(a) { \
-    int _j; \
-    for (_j = PanoramiXNumScreens - 1; _j; _j--) \
-        if ((a).root == WindowTable[_j]->drawable.id)   \
-            break;                                      \
-    (a).rootX += panoramiXdataPtr[_j].x;             \
-    (a).rootY += panoramiXdataPtr[_j].y;             \
-    (a).root = WindowTable[0]->drawable.id;          \
-}
-
 #define IS_SHARED_PIXMAP(r) (((r)->type == XRT_PIXMAP) && (r)->u.pix.shared)
 
 #endif /* _PANORAMIX_H_ */

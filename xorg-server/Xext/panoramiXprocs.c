@@ -1728,7 +1728,7 @@ int PanoramiXPolyFillArc(ClientPtr client)
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
     narcs = (client->req_len << 2) - sizeof(xPolyFillArcReq);
-    IF_RETURN((narcs % sizeof(xArc)), BadLength);
+    if (narcs % sizeof(xArc)) return BadLength;
     narcs /= sizeof(xArc);
     if (narcs > 0) {
 	origArcs = xalloc(narcs * sizeof(xArc));

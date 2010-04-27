@@ -5358,7 +5358,6 @@ ProcGrabButton(ClientPtr client)
 	rc = dixLookupResourceByType((pointer *)&cursor, stuff->cursor, RT_CURSOR,
 			       client, DixUseAccess);
 	if (rc != Success)
-	if (!cursor)
 	{
 	    client->errorValue = stuff->cursor;
 	    return (rc == BadValue) ? BadCursor : rc;

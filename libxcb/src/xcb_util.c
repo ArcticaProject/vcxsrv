@@ -28,6 +28,7 @@
 #include <assert.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <limits.h>
 #include <sys/un.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -70,7 +71,14 @@ static int _xcb_parse_display(const char *name, char **host, char **protocol,
         name = getenv("DISPLAY");
     if(!name)
         return 0;
+
+#ifdef HAVE_LAUNCHD
+    if(strncmp(name, "/tmp/launch", 11) == 0)
+        slash = NULL;
+    else
+#endif
     slash = strrchr(name, '/');
+
     if (slash) {
         len = slash - name;
         if (protocol) {
@@ -138,12 +146,19 @@ static int _xcb_open(char *host, char *protocol, const int display)
 #ifdef HAVE_ABSTRACT_SOCKETS
     int fd;
 #endif
-    static const char base[] = "/tmp/.X11-unix/X";
-    char file[sizeof(base) + 20];
+    static const char unix_base[] = "/tmp/.X11-unix/X";
+    const char *base = unix_base;
+    char file[PATH_MAX + 1];
     int filelen;
 
     if(*host)
     {
+#ifdef HAVE_LAUNCHD
+        if(strncmp(host, "/tmp/launch", 11) == 0) {
+	    base = host;
+        } else {
+#endif
+
 #ifdef DNETCONN
         /* DECnet displays have two colons, so _xcb_parse_display will have
            left one at the end.  However, an IPv6 address can end with *two*
@@ -164,10 +179,18 @@ static int _xcb_open(char *host, char *protocol, const int display)
                 unsigned short port = X_TCP_PORT + display;
                 return _xcb_open_tcp(host, protocol, port);
             }
+#ifdef HAVE_LAUNCHD
+        }
+#endif
     }
 
     /* display specifies Unix socket */
-    filelen = snprintf(file, sizeof(file), "%s%d", base, display);
+#ifdef HAVE_LAUNCHD
+    if(base == host)
+        filelen = snprintf(file, sizeof(file), "%s:%d", base, display);
+    else
+#endif
+        filelen = snprintf(file, sizeof(file), "%s%d", base, display);
     if(filelen < 0)
         return -1;
     /* snprintf may truncate the file */
@@ -363,13 +386,6 @@ xcb_connection_t *xcb_connect_to_display_with_auth_info(const char *displayname,
 
     int parsed = _xcb_parse_display(displayname, &host, &protocol, &display, screenp);
     
-#ifdef HAVE_LAUNCHD
-    if(!displayname)
-        displayname = getenv("DISPLAY");
-    if(displayname && strlen(displayname)>11 && !strncmp(displayname, "/tmp/launch", 11))
-        fd = _xcb_open_unix(NULL, displayname);
-    else
-#endif
     if(!parsed)
         return (xcb_connection_t *) &error_connection;
     else

@@ -476,7 +476,8 @@ void PanoramiXExtensionInit(int argc, char *argv[])
 	panoramiXdataPtr = (PanoramiXData *) 
 		xcalloc(PanoramiXNumScreens, sizeof(PanoramiXData));
 
-        BREAK_IF(!panoramiXdataPtr);
+	if (!panoramiXdataPtr)
+	    break;
 
 	if (!dixRequestPrivate(PanoramiXGCKey, sizeof(PanoramiXGCRec))) {
 		noPanoramiXExtension = TRUE;
