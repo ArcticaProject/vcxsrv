@@ -115,27 +115,6 @@ glWinResolveHelper(PROC *cache, char *symbol)
 #define RESOLVED_PROC(proctype) proc
 
 /*
- *  GL dispatch table debugging
- */
-
-static void
-warn_func(void * ctx, const char *format, ...)
-{
-    va_list v;
-    va_start(v, format);
-    VErrorF(format, v);
-    va_end(v);
-    ErrorF("\n");
-}
-
-static void
-gl_dispatch_debugging(void)
-{
-  _glapi_set_warning_func(warn_func);
-  _glapi_noop_enable_warnings(TRUE);
-}
-
-/*
   Include generated cdecl wrappers for stdcall gl*() functions in opengl32.dll
 
   OpenGL 1.2 and upward is treated as extensions, function address must

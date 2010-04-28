@@ -309,7 +309,6 @@ if dispatchheader :
         print 'void glWinSetupDispatchTable(void)'
         print '{'
         print '  struct _glapi_table *disp = _glapi_get_dispatch();'
-        print '  gl_dispatch_debugging();\n'
 
         for d in sorted(dispatch.keys()) :
                 if wrappers.has_key(d) :

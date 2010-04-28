@@ -27,7 +27,6 @@
 
 #include <X11/X.h>
 #include "os.h"
-#include "mibank.h"
 #include "globals.h"
 #include "xf86.h"
 #include "xf86str.h"

@@ -7,10 +7,5 @@
 #include <X11/Xwindows.h>
 #include <windowstr.h>
 
-typedef struct
-{
-    HWND    hwnd;
-} winWindowInfoRec, *winWindowInfoPtr;
-
-void winGetWindowInfo(WindowPtr pWin, winWindowInfoPtr pWinInfo);
+HWND winGetWindowInfo(WindowPtr pWin);
 Bool winCheckScreenAiglxIsSupported(ScreenPtr pScreen);

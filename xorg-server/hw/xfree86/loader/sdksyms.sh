@@ -217,7 +217,6 @@ cat > sdksyms.c << EOF
 
 
 /* mi/Makefile.am */
-#include "mibank.h"
 #include "micmap.h"
 #include "miline.h"
 #include "mipointer.h"

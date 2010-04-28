@@ -26,6 +26,52 @@
  */
 
 /*
+ * LCM() and scanLineWidth() are:
+ *
+ * Copyright 1997 through 2004 by Marc Aurele La France (TSI @ UQV), tsi@xfree86.org
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and its
+ * documentation for any purpose is hereby granted without fee, provided that
+ * the above copyright notice appear in all copies and that both that copyright
+ * notice and this permission notice appear in supporting documentation, and
+ * that the name of Marc Aurele La France not be used in advertising or
+ * publicity pertaining to distribution of the software without specific,
+ * written prior permission.  Marc Aurele La France makes no representations
+ * about the suitability of this software for any purpose.  It is provided
+ * "as-is" without express or implied warranty.
+ *
+ * MARC AURELE LA FRANCE DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO
+ * EVENT SHALL MARC AURELE LA FRANCE BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+ * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+ * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ *
+ * Copyright 1990,91,92,93 by Thomas Roell, Germany.
+ * Copyright 1991,92,93    by SGCS (Snitily Graphics Consulting Services), USA.
+ *
+ * Permission to use, copy, modify, distribute, and sell this software
+ * and its documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this  permission notice appear
+ * in supporting documentation, and that the name of Thomas Roell nor
+ * SGCS be used in advertising or publicity pertaining to distribution
+ * of the software without specific, written prior permission.
+ * Thomas Roell nor SGCS makes no representations about the suitability
+ * of this software for any purpose. It is provided "as is" without
+ * express or implied warranty.
+ *
+ * THOMAS ROELL AND SGCS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS, IN NO EVENT SHALL THOMAS ROELL OR SGCS BE LIABLE FOR ANY
+ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+ * CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+ * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/*
  * Authors: Dirk Hohndel <hohndel@XFree86.Org>
  *          David Dawes <dawes@XFree86.Org>
  *          Marc La France <tsi@XFree86.Org>
@@ -42,7 +88,6 @@
 #include "xf86Modes.h"
 #include "os.h"
 #include "servermd.h"
-#include "mibank.h"
 #include "globals.h"
 #include "xf86.h"
 #include "xf86Priv.h"
@@ -1126,6 +1171,131 @@ found:
     return 1;
 }
 
+/* Least common multiple */
+static unsigned int
+LCM(unsigned int x, unsigned int y)
+{
+    unsigned int m = x, n = y, o;
+
+    while ((o = m % n))
+    {
+        m = n;
+        n = o;
+    }
+
+    return (x / n) * y;
+}
+
+/*
+ * Given various screen attributes, determine the minimum scanline width such
+ * that each scanline is server and DDX padded and any pixels with imbedded
+ * bank boundaries are off-screen.  This function returns -1 if such a width
+ * cannot exist.
+ */
+static int
+scanLineWidth(
+    unsigned int     xsize,         /* pixels */
+    unsigned int     ysize,         /* pixels */
+    unsigned int     width,         /* pixels */
+    unsigned long    BankSize,      /* char's */
+    PixmapFormatRec *pBankFormat,
+    unsigned int     nWidthUnit     /* bits */
+)
+{
+    unsigned long nBitsPerBank, nBitsPerScanline, nBitsPerScanlinePadUnit;
+    unsigned long minBitsPerScanline, maxBitsPerScanline;
+
+    /* Sanity checks */
+
+    if (!nWidthUnit || !pBankFormat)
+        return -1;
+
+    nBitsPerBank = BankSize * 8;
+    if (nBitsPerBank % pBankFormat->scanlinePad)
+        return -1;
+
+    if (xsize > width)
+        width = xsize;
+    nBitsPerScanlinePadUnit = LCM(pBankFormat->scanlinePad, nWidthUnit);
+    nBitsPerScanline =
+        (((width * pBankFormat->bitsPerPixel) + nBitsPerScanlinePadUnit - 1) /
+         nBitsPerScanlinePadUnit) * nBitsPerScanlinePadUnit;
+    width = nBitsPerScanline / pBankFormat->bitsPerPixel;
+
+    if (!xsize || !(nBitsPerBank % pBankFormat->bitsPerPixel))
+        return (int)width;
+
+    /*
+     * Scanlines will be server-pad aligned at this point.  They will also be
+     * a multiple of nWidthUnit bits long.  Ensure that pixels with imbedded
+     * bank boundaries are off-screen.
+     *
+     * It seems reasonable to limit total frame buffer size to 1/16 of the
+     * theoretical maximum address space size.  On a machine with 32-bit
+     * addresses (to 8-bit quantities) this turns out to be 256MB.  Not only
+     * does this provide a simple limiting condition for the loops below, but
+     * it also prevents unsigned long wraparounds.
+     */
+    if (!ysize)
+        return -1;
+
+    minBitsPerScanline = xsize * pBankFormat->bitsPerPixel;
+    if (minBitsPerScanline > nBitsPerBank)
+        return -1;
+
+    if (ysize == 1)
+        return (int)width;
+
+    maxBitsPerScanline =
+        (((unsigned long)(-1) >> 1) - minBitsPerScanline) / (ysize - 1);
+    while (nBitsPerScanline <= maxBitsPerScanline)
+    {
+        unsigned long BankBase, BankUnit;
+
+        BankUnit = ((nBitsPerBank + nBitsPerScanline - 1) / nBitsPerBank) *
+            nBitsPerBank;
+        if (!(BankUnit % nBitsPerScanline))
+            return (int)width;
+
+        for (BankBase = BankUnit;  ;  BankBase += nBitsPerBank)
+        {
+            unsigned long x, y;
+
+            y = BankBase / nBitsPerScanline;
+            if (y >= ysize)
+                return (int)width;
+
+            x = BankBase % nBitsPerScanline;
+            if (!(x % pBankFormat->bitsPerPixel))
+                continue;
+
+            if (x < minBitsPerScanline)
+            {
+                /*
+                 * Skip ahead certain widths by dividing the excess scanline
+                 * amongst the y's.
+                 */
+                y *= nBitsPerScanlinePadUnit;
+                nBitsPerScanline +=
+                    ((x + y - 1) / y) * nBitsPerScanlinePadUnit;
+                width = nBitsPerScanline / pBankFormat->bitsPerPixel;
+                break;
+            }
+
+            if (BankBase != BankUnit)
+                continue;
+
+            if (!(nBitsPerScanline % x))
+                return (int)width;
+
+            BankBase = ((nBitsPerScanline - minBitsPerScanline) /
+                (nBitsPerScanline - x)) * BankUnit;
+        }
+    }
+
+    return -1;
+}
+
 /*
  * xf86ValidateModes
  *
@@ -1312,7 +1482,7 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	memcpy(storeClockRanges, cp, sizeof(ClockRange));
     }
 
-    /* Determine which pixmap format to pass to miScanLineWidth() */
+    /* Determine which pixmap format to pass to scanLineWidth() */
     if (scrp->depth > 4)
 	BankFormat = &scrp->fbFormat;
     else
@@ -1363,15 +1533,15 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	    for (i = 0; linePitches[i] != 0; i++) {
 		if ((linePitches[i] >= virtualX) &&
 		    (linePitches[i] ==
-		     miScanLineWidth(virtualX, virtualY, linePitches[i],
-				     apertureSize, BankFormat, pitchInc))) {
+		     scanLineWidth(virtualX, virtualY, linePitches[i],
+				   apertureSize, BankFormat, pitchInc))) {
 		    linePitch = linePitches[i];
 		    break;
 		}
 	    }
 	} else {
-	    linePitch = miScanLineWidth(virtualX, virtualY, minPitch,
-					apertureSize, BankFormat, pitchInc);
+	    linePitch = scanLineWidth(virtualX, virtualY, minPitch,
+				      apertureSize, BankFormat, pitchInc);
 	}
 
 	if ((linePitch < minPitch) || (linePitch > maxPitch)) {
@@ -1396,8 +1566,8 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	/* XXX this doesn't take m{in,ax}Pitch into account; oh well */
 	inferred_virtual = inferVirtualSize(scrp, availModes, &virtX, &virtY);
 	if (inferred_virtual)
-	    linePitch = miScanLineWidth(virtX, virtY, minPitch, apertureSize,
-					BankFormat, pitchInc);
+	    linePitch = scanLineWidth(virtX, virtY, minPitch, apertureSize,
+				      BankFormat, pitchInc);
     }
 
     /* Print clock ranges and scaled clocks */
@@ -1609,8 +1779,8 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 		    if ((linePitches[i] >= newVirtX) &&
 			(linePitches[i] >= linePitch) &&
 			(linePitches[i] ==
-			 miScanLineWidth(newVirtX, newVirtY, linePitches[i],
-					 apertureSize, BankFormat, pitchInc))) {
+			 scanLineWidth(newVirtX, newVirtY, linePitches[i],
+				       apertureSize, BankFormat, pitchInc))) {
 			newLinePitch = linePitches[i];
 			break;
 		    }
@@ -1618,9 +1788,9 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 	    } else {
 		if (linePitch < minPitch)
 		    linePitch = minPitch;
-		newLinePitch = miScanLineWidth(newVirtX, newVirtY, linePitch,
-					       apertureSize, BankFormat,
-					       pitchInc);
+		newLinePitch = scanLineWidth(newVirtX, newVirtY, linePitch,
+					     apertureSize, BankFormat,
+					     pitchInc);
 	    }
 	    if ((newLinePitch < minPitch) || (newLinePitch > maxPitch)) {
 		p->status = MODE_BAD_WIDTH;
@@ -1682,8 +1852,8 @@ xf86ValidateModes(ScrnInfoPtr scrp, DisplayModePtr availModes,
 		       virtX, virtY, vx, vy);
 	    virtX = vx;
 	    virtY = vy;
-	    linePitch = miScanLineWidth(vx, vy, minPitch, apertureSize,
-					BankFormat, pitchInc);
+	    linePitch = scanLineWidth(vx, vy, minPitch, apertureSize,
+				      BankFormat, pitchInc);
 	}
     }
 
