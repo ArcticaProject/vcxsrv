@@ -13,9 +13,10 @@ DEFS_CLIPBOARD = -DXWIN_CLIPBOARD
 endif
 
 if XWIN_GLX_WINDOWS
-SRCS_GLX_WINDOWS = \
-	winpriv.c
+GLX_DIR = glx
 DEFS_GLX_WINDOWS = -DXWIN_GLX_WINDOWS
+XWIN_GLX_LIBS = $(top_builddir)/hw/xwin/glx/libXwinGLX.la
+XWIN_GLX_LINK_FLAGS = -lopengl32
 endif
 
 if XWIN_MULTIWINDOW
@@ -125,7 +126,6 @@ SRCS =	InitInput.c \
 	$(top_srcdir)/mi/miinitext.c \
 	$(top_srcdir)/fb/fbcmap_mi.c \
 	$(SRCS_CLIPBOARD) \
-	$(SRCS_GLX_WINDOWS) \
 	$(SRCS_MULTIWINDOW) \
 	$(SRCS_MULTIWINDOWEXTWM) \
 	$(SRCS_NATIVEGDI) \
@@ -146,13 +146,12 @@ XWin_SOURCES = $(SRCS)
 
 INCLUDES = -I$(top_srcdir)/miext/rootless
 
-XWin_DEPENDENCIES = $(XWIN_LIBS)
-XWin_LDADD = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_LIBS) $(MAIN_LIB) $(XSERVER_LIBS) $(XSERVER_SYS_LIBS) $(XWIN_SYS_LIBS)
+XWin_DEPENDENCIES = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_GLX_LIBS) $(XWIN_LIBS) $(MAIN_LIB) $(XSERVER_LIBS)
+XWin_LDADD = $(MULTIWINDOWEXTWM_LIBS) $(XWIN_GLX_LIBS) $(XWIN_GLX_LINK_FLAGS) $(XWIN_LIBS) $(MAIN_LIB) $(XSERVER_LIBS) $(XSERVER_SYS_LIBS) $(XWIN_SYS_LIBS)
+XWin_LDFLAGS = -mwindows -static
 
 .rc.o:
 	$(AM_V_GEN)$(WINDRES) --use-temp-file -i $< --input-format=rc -o $@ -O coff -I $(top_builddir)/include
-
-XWin_LDFLAGS = -mwindows -static
 
 winprefsyacc.h: winprefsyacc.c
 winprefslex.c: winprefslex.l winprefsyacc.c winprefsyacc.h
@@ -164,12 +163,8 @@ AM_YFLAGS = -d
 AM_LFLAGS = -i
 AM_CFLAGS = -DHAVE_XWIN_CONFIG_H $(DIX_CFLAGS) \
             $(XWINMODULES_CFLAGS) \
-            -DXFree86Server
-
-GLX_EXTRAS = \
-	glx/glwindows.h \
-	glx/glwrap.c \
-	glx/indirect.c
+            -DXFree86Server \
+            -I$(top_srcdir)
 
 MAN_SRCS = XWin.man.pre XWinrc.man.pre
 
@@ -198,7 +193,6 @@ install-exec-hook:
 	(cd $(DESTDIR)$(bindir) && rm -f X && $(LN_S) XWin$(EXEEXT) X)
 
 EXTRA_DIST = \
-	$(GLX_EXTRAS) \
 	$(MAN_SRCS) \
 	$(xwinconfig_DATA) \
 	X.ico \
@@ -226,3 +220,6 @@ EXTRA_DIST = \
 
 relink:
 	$(AM_V_at)rm -f XWin$(EXEEXT) && $(MAKE) XWin$(EXEEXT)
+
+SUBDIRS = $(GLX_DIR) .
+DIST_SUBDIRS = glx .

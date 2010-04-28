@@ -2220,6 +2220,7 @@ hw/dmx/Makefile
 hw/vfb/Makefile
 hw/xnest/Makefile
 hw/xwin/Makefile
+hw/xwin/glx/Makefile
 hw/xquartz/Makefile
 hw/xquartz/GL/Makefile
 hw/xquartz/bundle/Makefile

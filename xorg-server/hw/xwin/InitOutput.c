@@ -99,8 +99,8 @@ extern HMODULE			g_hmodCommonControls;
 extern FARPROC			g_fpTrackMouseEvent;
 extern Bool			g_fNoHelpMessageBox;                     
 extern Bool			g_fSilentDupError;                     
-  
-  
+extern Bool                     g_fNativeGl;
+
 /*
  * Function prototypes
  */
@@ -187,6 +187,17 @@ winClipboardShutdown (void)
 }
 #endif
 
+void
+ddxPushProviders(void)
+{
+#ifdef XWIN_GLX_WINDOWS
+  if (g_fNativeGl)
+    {
+      /* install the native GL provider */
+      glxWinPushNativeProvider();
+    }
+#endif
+}
 
 #if defined(DDXBEFORERESET)
 /*
@@ -889,6 +900,11 @@ winUseMsg (void)
 
   ErrorF ("-[no]unixkill\n"
           "\tCtrl+Alt+Backspace exits the X Server.\n");
+
+#ifdef XWIN_GLX_WINDOWS
+  ErrorF ("-[no]wgl\n"
+	  "\tEnable the GLX extension to use the native Windows WGL interface for accelerated OpenGL\n");
+#endif
 
   ErrorF ("-[no]winkill\n"
           "\tAlt+F4 exits the X Server.\n");

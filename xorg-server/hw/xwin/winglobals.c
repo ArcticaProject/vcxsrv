@@ -85,7 +85,7 @@ HWND		g_hwndKeyboardFocus = NULL;
 Bool		g_fNoHelpMessageBox = FALSE;
 Bool		g_fSoftwareCursor = FALSE;
 Bool		g_fSilentDupError = FALSE;
-
+Bool            g_fNativeGl = FALSE;
 
 /*
  * Global variables for dynamically loaded libraries and

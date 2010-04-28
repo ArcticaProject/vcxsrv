@@ -47,6 +47,7 @@
 extern HICON		g_hIconX;
 extern HICON		g_hSmallIconX;
 extern HWND		g_hDlgDepthChange;
+extern Bool             g_fNativeGl;
 
 /*
  * Prototypes for local functions
@@ -74,7 +75,7 @@ void winInitMultiWindowClass(void)
   {
     /* Setup our window class */
     wcx.cbSize=sizeof(WNDCLASSEX);
-    wcx.style = CS_HREDRAW | CS_VREDRAW;
+    wcx.style = CS_HREDRAW | CS_VREDRAW | (g_fNativeGl ? CS_OWNDC : 0);
     wcx.lpfnWndProc = winTopLevelWindowProc;
     wcx.cbClsExtra = 0;
     wcx.cbWndExtra = 0;

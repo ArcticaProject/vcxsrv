@@ -64,6 +64,7 @@ extern Bool			g_fKeyboardHookLL;
 extern Bool			g_fNoHelpMessageBox;                     
 extern Bool			g_fSoftwareCursor;
 extern Bool			g_fSilentDupError;
+extern Bool                     g_fNativeGl;
 
 /* globals required by callback function for monitor information */
 struct GetMonitorInfoData {
@@ -1464,6 +1465,19 @@ ddxProcessArgument (int argc, char *argv[], int i)
       g_fSilentDupError = TRUE;
       return 1;
     }
+
+  if (IS_OPTION("-wgl"))
+    {
+      g_fNativeGl = TRUE;
+      return 1;
+    }
+
+  if (IS_OPTION("-nowgl"))
+    {
+      g_fNativeGl = FALSE;
+      return 1;
+    }
+
   return 0;
 }
 
