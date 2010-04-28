@@ -73,7 +73,7 @@ extern Bool			g_fSilentFatalError;
 extern const char *		g_pszLogFile;
 extern Bool			g_fLogFileChanged;
 extern int			g_iLogVerbose;
-Bool				g_fLogInited;
+extern Bool				g_fLogInited;
 
 extern Bool			g_fXdmcpEnabled;
 extern Bool			g_fAuthEnabled;
