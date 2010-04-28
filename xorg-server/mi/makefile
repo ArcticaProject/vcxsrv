@@ -1,5 +1,4 @@
 CSRCS=miarc.c		\
-	mibank.c	\
 	mibitblt.c	\
 	mibstore.c	\
 	micmap.c	\
@@ -34,8 +33,8 @@ CSRCS=miarc.c		\
 	miwindow.c	\
 	mizerarc.c	\
 	mizerclip.c	\
-	mizerline.c     \
-        miinitext.c
+	mizerline.c	\
+	miinitext.c
   
 LIBRARY=libmi
 

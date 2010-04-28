@@ -9,12 +9,5 @@
 
 #define WIN_GL_WINDOW_CLASS "XWinGLTest"
 
-typedef struct
-{
-    HWND    hwnd;
-    HRGN    hrgn;
-    RECT    rect;
-} winWindowInfoRec, *winWindowInfoPtr;
-
-void winGetWindowInfo(WindowPtr pWin, winWindowInfoPtr pWinInfo);
+HWND winGetWindowInfo(WindowPtr pWin);
 Bool winCheckScreenAiglxIsSupported(ScreenPtr pScreen);

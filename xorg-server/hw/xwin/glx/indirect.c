@@ -51,7 +51,6 @@
     before using it?
   - are the __GLXConfig * we get handed back ones we are made (so we can extend the structure
     with privates?) Or are they created inside the GLX core as well?
-  - snap winWindowInfoRec, it's just the same as a HWND now...
 */
 
 /*
@@ -74,7 +73,6 @@
 #include <glx/glxserver.h>
 #include <glx/glxutil.h>
 #include <glx/extension_string.h>
-#include <GL/internal/glcore.h>
 #include <GL/glxtokens.h>
 
 #include <winpriv.h>
@@ -519,7 +517,8 @@ glxLogExtensions(const char *prefix, const char *extensions)
 
       if (length + strlen(strl) + 1 > 120)
         {
-          winDebug("\n%s",prefix);
+          winDebug("\n");
+          winDebug("%s",prefix);
           length = strlen(prefix);
         }
       else
@@ -1221,7 +1220,6 @@ glxWinMakeDC(__GLXWinContext *gc, __GLXWinDrawable *draw, HWND *hwnd)
   {
     case GLX_DRAWABLE_WINDOW:
     {
-      winWindowInfoRec winInfo;
       WindowPtr pWin;
 
       pWin = (WindowPtr) draw->base.pDraw;
@@ -1231,19 +1229,18 @@ glxWinMakeDC(__GLXWinContext *gc, __GLXWinDrawable *draw, HWND *hwnd)
           return NULL;
         }
 
-      winGetWindowInfo(pWin, &winInfo);
-      *hwnd = winInfo.hwnd;
+      *hwnd = winGetWindowInfo(pWin);
 
-      if (winInfo.hwnd == NULL)
+      if (*hwnd == NULL)
         {
           ErrorF("No HWND error: %s\n", glxWinErrorMessage());
           return NULL;
         }
 
-      hdc = GetDC(winInfo.hwnd);
+      hdc = GetDC(*hwnd);
 
       if (hdc == NULL)
-        ErrorF("GetDC error: %s: hwnd %x, gc %p, gc->ctx %p ,gc->hwnd %p\n", glxWinErrorMessage(), winInfo.hwnd, gc, gc->ctx, gc->hwnd);
+        ErrorF("GetDC error: %s: hwnd %x, gc %p, gc->ctx %p ,gc->hwnd %p\n", glxWinErrorMessage(), *hwnd, gc, gc->ctx, gc->hwnd);
 
       if (gc->hDC)
       {
@@ -1252,11 +1249,11 @@ glxWinMakeDC(__GLXWinContext *gc, __GLXWinDrawable *draw, HWND *hwnd)
       }
 #ifdef _DEBUG
       if (glxWinDebugSettings.enableTrace)
-        GLWIN_DEBUG_HWND(winInfo.hwnd);
+            GLWIN_DEBUG_HWND(*hwnd);
 
-      GLWIN_TRACE_MSG("for context %p (native ctx %p), hWnd changed from %p to %p", gc, gc->ctx, gc->hwnd, winInfo.hwnd);
+          GLWIN_TRACE_MSG("for context %p (native ctx %p), hWnd changed from %p to %p", gc, gc->ctx, gc->hwnd, *hwnd);
 #endif
-      gc->hwnd = winInfo.hwnd;
+      gc->hwnd = *hwnd;
       
       /* Check if we need to set the pixelformat */
       {
@@ -1351,7 +1348,6 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
   {
     case GLX_DRAWABLE_WINDOW:
     {
-      winWindowInfoRec winInfo;
       WindowPtr pWin = (WindowPtr) draw->base.pDraw;
 
       if (!(gc->base.config->drawableType & GLX_WINDOW_BIT))
@@ -1367,8 +1363,7 @@ glxWinDeferredCreateContext(__GLXWinContext *gc, __GLXWinDrawable *draw)
 
       GLWIN_DEBUG_MSG("glxWinDeferredCreateContext: pWin %p", pWin);
 
-      winGetWindowInfo(pWin, &winInfo);
-      if (winInfo.hwnd == NULL)
+      if (winGetWindowInfo(pWin) == NULL)
         {
           GLWIN_DEBUG_MSG("Deferring until native window is created");
           return;
@@ -2022,7 +2017,16 @@ glxWinCreateConfigs(HDC hdc, glxWinScreen *screen)
       /* SGIX_fbconfig / GLX 1.3 */
       c->base.drawableType = (((pfd.dwFlags & PFD_DRAW_TO_WINDOW) ? GLX_WINDOW_BIT : 0)
                          | ((pfd.dwFlags & PFD_DRAW_TO_BITMAP) ? GLX_PIXMAP_BIT : 0));
-      c->base.renderType = GLX_RGBA_BIT;
+
+      if (pfd.iPixelType == PFD_TYPE_COLORINDEX)
+        {
+          c->base.renderType = GLX_RGBA_BIT | GLX_COLOR_INDEX_BIT;
+        }
+      else
+        {
+          c->base.renderType = GLX_RGBA_BIT;
+        }
+
       c->base.xRenderable = GL_TRUE;
       c->base.fbconfigID = -1; // will be set by __glXScreenInit()
 
@@ -2346,7 +2350,24 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen *screen)
       c->base.drawableType = ((ATTR_VALUE(WGL_DRAW_TO_WINDOW_ARB, 0) ? GLX_WINDOW_BIT : 0)
                          | (ATTR_VALUE(WGL_DRAW_TO_BITMAP_ARB, 0) ? GLX_PIXMAP_BIT : 0)
                          | (ATTR_VALUE(WGL_DRAW_TO_PBUFFER_ARB, 0) ? GLX_PBUFFER_BIT : 0));
-      c->base.renderType = GLX_RGBA_BIT | GLX_COLOR_INDEX_BIT; // Hmmm ???
+
+      /*
+        Assume OpenGL RGBA rendering is available on all visuals
+        (it is specified to render to red component in single-channel visuals,
+        if supported, but there doesn't seem to be any mechanism to check if it
+        is supported)
+
+        Color index rendering is only supported on single-channel visuals
+      */
+      if (c->base.visualType == GLX_STATIC_COLOR)
+        {
+          c->base.renderType = GLX_RGBA_BIT | GLX_COLOR_INDEX_BIT;
+        }
+      else
+        {
+          c->base.renderType = GLX_RGBA_BIT;
+        }
+
       c->base.xRenderable = GL_TRUE;
       c->base.fbconfigID = -1; // will be set by __glXScreenInit()
 

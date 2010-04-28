@@ -30,7 +30,6 @@
 
 #include "xf86.h"
 #include "os.h"
-#include "mibank.h"
 #include "globals.h"
 #include "xf86.h"
 #include "xf86Priv.h"
