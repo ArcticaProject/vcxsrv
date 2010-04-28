@@ -73,7 +73,7 @@ extern Bool			g_fSilentFatalError;
 extern const char *		g_pszLogFile;
 extern Bool			g_fLogFileChanged;
 extern int			g_iLogVerbose;
-extern Bool				g_fLogInited;
+Bool				g_fLogInited;
 
 extern Bool			g_fXdmcpEnabled;
 extern Bool			g_fAuthEnabled;
@@ -911,6 +911,11 @@ winUseMsg (void)
   ErrorF ("-[no]unixkill\n"
           "\tCtrl+Alt+Backspace exits the X Server.\n");
 
+#ifdef XWIN_GLX_WINDOWS
+  ErrorF ("-[no]wgl\n"
+	  "\tEnable the GLX extension to use the native Windows WGL interface for accelerated OpenGL\n");
+#endif
+
   ErrorF ("-[no]winkill\n"
           "\tAlt+F4 exits the X Server.\n");
 
@@ -930,11 +935,6 @@ winUseMsg (void)
   ErrorF ("-xkbvariant XKBVariant\n"
 	  "\tEquivalent to XKBVariant in XF86Config files.\n"
 	  "\tFor example: -xkbvariant nodeadkeys\n");
-
-#ifdef XWIN_GLX_WINDOWS
-  ErrorF ("-[no]wgl\n"
-	  "\tEnable the GLX extension to use the native Windows WGL interface for accelerated OpenGL\n");
-#endif
 }
 
 /* See Porting Layer Definition - p. 57 */
