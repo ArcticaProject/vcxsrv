@@ -3,7 +3,7 @@ MHMAKESLNFILE=mhmakevc10.sln
 BUILDCMD=devenv.com $(MHMAKESLNFILE) /build
 else
 MHMAKESLNFILE=mhmake.sln
-BUILDCMD=devenv.com vcbuild $(MHMAKESLNFILE)
+BUILDCMD=vcbuild $(MHMAKESLNFILE)
 endif
 
 .PHONY: all mhmake_dbg mhmake cleanthis
