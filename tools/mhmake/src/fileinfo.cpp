@@ -302,7 +302,7 @@ const refptr<fileinfo> &GetFileInfo(const string &NameIn,const refptr<fileinfo> 
 
   //Only concatenate if szName is not already a full name
 #ifdef WIN32
-  if (!Name.empty() && Name[1]!=':')
+  if (Name.length()>1 && Name[1]!=':')
 #endif
   {
     if (Name[0]!=OSPATHSEP)
