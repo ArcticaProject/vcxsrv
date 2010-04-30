@@ -2,7 +2,6 @@ CSRCS=\
 bigreq.c \
 dpms.c \
 dpmsstubs.c \
-mbuf.c \
 saver.c \
 security.c \
 shape.c \
