@@ -89,8 +89,7 @@ static int authname_match(enum auth_protos kind, char *name, size_t namelen)
 
 #define SIN6_ADDR(s) (&((struct sockaddr_in6 *)s)->sin6_addr)
 
-static Xauth *get_authptr(struct sockaddr *sockname, unsigned int socknamelen,
-                          int display)
+static Xauth *get_authptr(struct sockaddr *sockname, int display)
 {
     char *addr = 0;
     int addrlen = 0;
@@ -243,13 +242,55 @@ static int compute_auth(xcb_auth_info_t *info, Xauth *authptr, struct sockaddr *
     return 0;   /* Unknown authorization type */
 }
 
+/* `sockaddr_un.sun_path' typical size usually ranges between 92 and 108 */
+#define INITIAL_SOCKNAME_SLACK 108
+
+/* Return a dynamically allocated socket address structure according
+   to the value returned by either getpeername() or getsockname()
+   (according to POSIX, applications should not assume a particular
+   length for `sockaddr_un.sun_path') */
+static struct sockaddr *get_peer_sock_name(int (*socket_func)(int,
+							      struct sockaddr *,
+							      socklen_t *),
+					   int fd)
+{
+    socklen_t socknamelen = sizeof(struct sockaddr) + INITIAL_SOCKNAME_SLACK;
+    socklen_t actual_socknamelen = socknamelen;
+    struct sockaddr *sockname = malloc(socknamelen), *new_sockname = NULL;
+
+    if (sockname == NULL)
+        return NULL;
+
+    /* Both getpeername() and getsockname() truncates sockname if
+       there is not enough space and set the required length in
+       actual_socknamelen */
+    if (socket_func(fd, sockname, &actual_socknamelen) == -1)
+        goto sock_or_realloc_error;
+
+    if (actual_socknamelen > socknamelen)
+    {
+        socknamelen = actual_socknamelen;
+
+        if ((new_sockname = realloc(sockname, actual_socknamelen)) == NULL ||
+            socket_func(fd, new_sockname, &actual_socknamelen) == -1 ||
+            actual_socknamelen > socknamelen) 
+            goto sock_or_realloc_error;
+
+        sockname = new_sockname;
+    }
+
+    return sockname;
+
+ sock_or_realloc_error:
+    free(sockname);
+    return NULL;
+}
+
 int _xcb_get_auth_info(int fd, xcb_auth_info_t *info, int display)
 {
     /* code adapted from Xlib/ConnDis.c, xtrans/Xtranssocket.c,
        xtrans/Xtransutils.c */
-    char sockbuf[sizeof(struct sockaddr) + MAXPATHLEN];
-    unsigned int socknamelen = sizeof(sockbuf);   /* need extra space */
-    struct sockaddr *sockname = (struct sockaddr *) &sockbuf;
+    struct sockaddr *sockname = NULL;
     int gotsockname = 0;
     Xauth *authptr = 0;
     int ret = 1;
@@ -258,24 +299,30 @@ int _xcb_get_auth_info(int fd, xcb_auth_info_t *info, int display)
      * for UNIX Domain Sockets, but this is irrelevant,
      * since compute_auth() ignores the peer name in this
      * case anyway.*/
-    if (getpeername(fd, sockname, &socknamelen) == -1)
+    if ((sockname = get_peer_sock_name(getpeername, fd)) == NULL)
     {
-        if (getsockname(fd, sockname, &socknamelen) == -1)
+        if ((sockname = get_peer_sock_name(getsockname, fd)) == NULL)
             return 0;   /* can only authenticate sockets */
         if (sockname->sa_family != AF_UNIX)
+        {
+            free(sockname);
             return 0;   /* except for AF_UNIX, sockets should have peernames */
+        }
         gotsockname = 1;
     }
 
-    authptr = get_authptr(sockname, socknamelen, display);
+    authptr = get_authptr(sockname, display);
     if (authptr == 0)
+    {
+        free(sockname);
         return 0;   /* cannot find good auth data */
+    }
 
     info->namelen = memdup(&info->name, authptr->name, authptr->name_length);
     if (!info->namelen)
         goto no_auth;   /* out of memory */
 
-    if (!gotsockname && getsockname(fd, sockname, &socknamelen) == -1)
+    if (!gotsockname && (sockname = get_peer_sock_name(getsockname, fd)) == NULL)
     {
         free(info->name);
         goto no_auth;   /* can only authenticate sockets */
@@ -288,10 +335,15 @@ int _xcb_get_auth_info(int fd, xcb_auth_info_t *info, int display)
         goto no_auth;   /* cannot build auth record */
     }
 
+    free(sockname);
+    sockname = NULL;
+
     XauDisposeAuth(authptr);
     return ret;
 
  no_auth:
+    free(sockname);
+
     info->name = 0;
     info->namelen = 0;
     XauDisposeAuth(authptr);
