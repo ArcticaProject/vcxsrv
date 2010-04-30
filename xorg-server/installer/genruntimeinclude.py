@@ -9,7 +9,7 @@ Template=r"""!define MSVC_PUBLICTOKEN   "<PUBLICTOKEN>"
 !define MSVC_MANIFEST_PART "x86_Microsoft.VC90.CRT_${MSVC_PUBLICTOKEN}_9.0.${MSVC_VERSION}_<SUFFIX>.manifest"
 !define MSVC_MANIFEST      "<WINSXSDIR>\manifests\${MSVC_MANIFEST_PART}"
 
-!define MSVC_VERSION_D       "<VERSION>"
+!define MSVC_VERSION_D       "<DVERSION>"
 !define MSVCR90_DLL_D        "<WINSXSDIR>\x86_Microsoft.VC90.DebugCRT_${MSVC_PUBLICTOKEN}_9.0.${MSVC_VERSION_D}_<DSUFFIX>\msvcr90d.dll"
 !define MSVCM90_DLL_D        "<WINSXSDIR>\x86_Microsoft.VC90.DebugCRT_${MSVC_PUBLICTOKEN}_9.0.${MSVC_VERSION_D}_<DSUFFIX>\msvcm90d.dll"
 !define MSVCP90_DLL_D        "<WINSXSDIR>\x86_Microsoft.VC90.DebugCRT_${MSVC_PUBLICTOKEN}_9.0.${MSVC_VERSION_D}_<DSUFFIX>\msvcp90d.dll"
