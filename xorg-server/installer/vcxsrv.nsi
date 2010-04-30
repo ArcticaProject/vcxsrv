@@ -52,10 +52,11 @@ XPStyle on
 
 !define FUSION_REFCOUNT_UNINSTALL_SUBKEY_GUID {8cedc215-ac4b-488b-93c0-a50a49cb2fb8}
 
+!ifdef VS2008
 !include runtime
+!endif
 
 ;--------------------------------
-
 ; The stuff to install
 Section "VcXsrv (required)"
 
@@ -87,6 +88,10 @@ Section "VcXsrv (required)"
   File "..\..\tools\plink\obj\release\plink.exe"
   File "..\swrast_dri.dll"
   File "..\swrast_dri_dbg.dll"
+!ifndef VS2008
+  File "msvcr100.dll"
+  File "msvcr100d.dll"
+!endif
   SetOutPath $INSTDIR\fonts
   File /r "..\fonts\*.*"
   SetOutPath $INSTDIR\xkbdata
@@ -130,6 +135,7 @@ Section "VcXsrv (required)"
   WriteRegStr HKCR "Applications\xlaunch.exe\shell\Validate\ddeexec\Application" "" "XLaunch"
   WriteRegStr HKCR "Applications\xlaunch.exe\shell\Validate\ddeexec\Topic" "" "System"
 
+!ifdef VS2008
   InitPluginsDir
   SetOutPath $PLUGINSDIR
   File "${MSVCR90_DLL}"
@@ -176,6 +182,7 @@ faildebugcrt:
   DetailPrint $1
   Goto end
 end:
+!endif
 SectionEnd
 
 ; Optional section (can be disabled by the user)
@@ -234,6 +241,10 @@ Section "Uninstall"
   Delete "$INSTDIR\plink.exe"
   Delete "$INSTDIR\swrast_dri.dll"
   Delete "$INSTDIR\swrast_dri_dbg.dll"
+!ifndef VS2008
+  Delete "$INSTDIR\msvcr100.dll"
+  Delete "$INSTDIR\msvcr100d.dll"
+!endif
 
   RMDir /r "$INSTDIR\fonts"
   RMDir /r "$INSTDIR\xkbdata"
