@@ -1,0 +1,470 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Static CRT|Win32">
+      <Configuration>Debug Static CRT</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Static CRT|Win32">
+      <Configuration>Release Static CRT</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2E50FDAF-430B-475B-AE6B-60B68F2875BA}</ProjectGuid>
+    <RootNamespace>glu</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/glu.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../../../../include;../../../../src/glu/sgi/include;../../../../src/glu/sgi/libnurbs/interface;../../../../src/glu/sgi/libnurbs/internals;../../../../src/glu/sgi/libnurbs/nurbtess;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GLU_EXPORTS;BUILD_GLU32;LIBRARYBUILD;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)GLU32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glu\sgi\glu.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(TargetDir)GLU32.pdb</ProgramDatabaseFile>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLU32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLU32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLU32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/glu.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../../../include;../../../../src/glu/sgi/include;../../../../src/glu/sgi/libnurbs/interface;../../../../src/glu/sgi/libnurbs/internals;../../../../src/glu/sgi/libnurbs/nurbtess;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GLU_EXPORTS;BUILD_GLU32;LIBRARYBUILD;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)GLU32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glu\sgi\glu.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(TargetDir)GLU32.pdb</ProgramDatabaseFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLU32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLU32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLU32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/glu.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../../../include;../../../../src/glu/sgi/include;../../../../src/glu/sgi/libnurbs/interface;../../../../src/glu/sgi/libnurbs/internals;../../../../src/glu/sgi/libnurbs/nurbtess;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GLU_EXPORTS;BUILD_GLU32;LIBRARYBUILD;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)GLU32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glu\sgi\glu.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(TargetDir)GLU32.pdb</ProgramDatabaseFile>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLU32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLU32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLU32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/glu.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../../../../include;../../../../src/glu/sgi/include;../../../../src/glu/sgi/libnurbs/interface;../../../../src/glu/sgi/libnurbs/internals;../../../../src/glu/sgi/libnurbs/nurbtess;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GLU_EXPORTS;BUILD_GLU32;LIBRARYBUILD;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)GLU32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glu\sgi\glu.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>$(TargetDir)GLU32.pdb</ProgramDatabaseFile>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLU32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLU32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLU32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\dict.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libutil\error.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\geom.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libutil\glue.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\memalloc.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\mesh.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libutil\mipmap.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\normal.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\priorityq-heap.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\priorityq.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libutil\project.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libutil\quad.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libutil\registry.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\render.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\sweep.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\tess.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libtess\tessmono.c" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\arc.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\arcsorter.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\arctess.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\backend.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\basiccrveval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\basicsurfeval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\bezierEval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\bezierPatch.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\bezierPatchMesh.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\bin.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\bufpool.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\cachingeval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\ccw.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\coveandtiler.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\curve.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\curvelist.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\curvesub.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\dataTransform.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\directedLine.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\displaylist.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\flist.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\flistsorter.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glcurveval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glinterface.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glrenderer.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glsurfeval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\gridWrap.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\hull.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\incurveeval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\interface\insurfeval.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\intersect.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\knotvector.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mapdesc.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mapdescv.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\maplist.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mesher.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\monoChain.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\monoPolyPart.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\monotonizer.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\monoTriangulation.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\monoTriangulationBackend.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mycode.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\nurbsinterfac.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\nurbstess.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\partitionX.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\partitionY.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\patch.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\patchlist.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\polyDBG.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\polyUtil.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\primitiveStream.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\quicksort.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\quilt.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\reader.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\rectBlock.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\renderhints.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleComp.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleCompBot.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleCompRight.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleCompTop.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampledLine.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleMonoPoly.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\searchTree.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\slicer.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\sorter.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\splitarcs.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\subdivider.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\tobezier.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\trimline.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\trimregion.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\trimvertpool.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\uarray.cc" />
+    <ClCompile Include="..\..\..\..\src\glu\sgi\libnurbs\internals\varray.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\src\glu\sgi\glu.def" />
+    <None Include="..\..\..\..\src\glu\sgi\libtess\README" />
+    <None Include="..\..\..\..\src\glu\sgi\libtess\alg-outline" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\arc.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\arcsorter.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\arctess.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\backend.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\basiccrveval.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\basicsurfeval.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\bezierarc.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\bezierEval.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\bezierPatch.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\bezierPatchMesh.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\bin.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\bufpool.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\cachingeval.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\coveandtiler.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\curve.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\curvelist.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\dataTransform.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\defines.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\definitions.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\dict-list.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\dict.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\directedLine.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\displaylist.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\displaymode.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\flist.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\flistsorter.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\geom.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glcurveval.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glimports.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\glimports.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glrenderer.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\glsurfeval.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libutil\gluint.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\include\gluos.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\gridline.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\gridtrimvertex.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\gridvertex.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\gridWrap.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\hull.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\jarcloc.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\knotvector.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mapdesc.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\maplist.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\memalloc.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\mesh.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mesher.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\monoChain.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\monoPolyPart.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\monotonizer.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\monoTriangulation.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\myassert.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mymath.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mysetjmp.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\mystdio.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\mystdio.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\interface\mystdlib.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\mystdlib.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\mystring.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\normal.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\nurbsconsts.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\nurbstess.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\partitionX.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\partitionY.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\patch.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\patchlist.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\polyDBG.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\polyUtil.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\primitiveStream.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\priorityq-heap.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\priorityq-sort.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\priorityq.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\pwlarc.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\quicksort.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\quilt.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\reader.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\rectBlock.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\render.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\renderhints.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleComp.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleCompBot.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleCompRight.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleCompTop.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampledLine.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\sampleMonoPoly.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\searchTree.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\simplemath.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\slicer.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\sorter.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\subdivider.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\sweep.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\tess.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libtess\tessmono.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\trimline.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\trimregion.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\trimvertex.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\trimvertpool.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\types.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\uarray.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\internals\varray.h" />
+    <ClInclude Include="..\..\..\..\src\glu\sgi\libnurbs\nurbtess\zlassert.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\gdi\gdi.vcxproj">
+      <Project>{a1b24907-e196-4826-b6af-26723629b633}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
