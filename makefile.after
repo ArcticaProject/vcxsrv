@@ -38,16 +38,24 @@ endif
 
 PDB := $(EXE:%.exe=%.pdb)
 
-MANIFESTFILE:=$(OBJDIR)\runtime.manifest
+ifdef VS2008
 
-all: $(EXE)
+MANIFESTFILE:=$(OBJDIR)\runtime.manifest
 
 $(MANIFESTFILE):
 	$(MHMAKECONF)/tools/genruntimemanifest $@ $(DEBUG)
 
+endif
+
+all: $(EXE)
+
 $(EXE) :  $(OBJS) $(INCLUDELIBFILES) $(RESOBJS) $(MANIFESTFILE) $(EXTRALIB)
+ifndef VS2008
+	$(LINK) $(LINKFLAGS) /OUT:$(relpath $@) $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(EXTRALIB) $(OBJS) $(RESOBJS)
+else
 	$(LINK) $(LINKFLAGS) /MANIFEST:NO /OUT:$(relpath $@) $(INCLUDELIBFILES) $(SYSTEMLIBS) $(LINKLIBS) $(EXTRALIB) $(OBJS) $(RESOBJS)
 	mt -nologo -manifest $(MANIFESTFILE) -outputresource:$(relpath $@);\#1
+endif
 
 endif  # End WINAPP or TTYAPP stuff
 
