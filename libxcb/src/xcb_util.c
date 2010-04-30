@@ -143,13 +143,12 @@ static int _xcb_open_abstract(char *protocol, const char *file, size_t filelen);
 
 static int _xcb_open(char *host, char *protocol, const int display)
 {
-#ifdef HAVE_ABSTRACT_SOCKETS
     int fd;
-#endif
     static const char unix_base[] = "/tmp/.X11-unix/X";
     const char *base = unix_base;
-    char file[PATH_MAX + 1];
-    int filelen;
+    size_t filelen;
+    char *file = NULL;
+    int actual_filelen;
 
     if(*host)
     {
@@ -184,24 +183,38 @@ static int _xcb_open(char *host, char *protocol, const int display)
 #endif
     }
 
+    filelen = strlen(base) + 1 + sizeof(display) * 3 + 1;
+    file = malloc(filelen);
+    if(file == NULL)
+        return -1;
+
     /* display specifies Unix socket */
 #ifdef HAVE_LAUNCHD
     if(base == host)
-        filelen = snprintf(file, sizeof(file), "%s:%d", base, display);
+        actual_filelen = snprintf(file, filelen, "%s:%d", base, display);
     else
 #endif
-        filelen = snprintf(file, sizeof(file), "%s%d", base, display);
-    if(filelen < 0)
+        actual_filelen = snprintf(file, filelen, "%s%d", base, display);
+    if(actual_filelen < 0)
+    {
+        free(file);
         return -1;
+    }
     /* snprintf may truncate the file */
-    filelen = MIN(filelen, sizeof(file) - 1);
+    filelen = MIN(actual_filelen, filelen - 1);
 #ifdef HAVE_ABSTRACT_SOCKETS
     fd = _xcb_open_abstract(protocol, file, filelen);
     if (fd >= 0 || (errno != ENOENT && errno != ECONNREFUSED))
+    {
+        free(file);
         return fd;
+    }
 
 #endif
-    return  _xcb_open_unix(protocol, file);
+    fd = _xcb_open_unix(protocol, file);
+    free(file);
+
+    return fd;
 }
 
 #ifdef DNETCONN
