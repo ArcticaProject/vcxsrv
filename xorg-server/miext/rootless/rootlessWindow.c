@@ -1553,10 +1553,6 @@ RootlessDisableRoot (ScreenPtr pScreen)
 	return;
            
     RootlessDestroyFrame (pRoot, winRec);
-    /* 
-     * gstaplin: I fixed the usage of this DeleteProperty so that it would compile.
-     * QUESTION: Where is this xa_native_window_id set?
-     */
     DeleteProperty (serverClient, pRoot, xa_native_window_id ());
 }
 

@@ -113,15 +113,6 @@ GlyphUninit (ScreenPtr pScreen)
 	    }
 	}
     }
-
-    for (fdepth = 0; fdepth < GlyphFormatNum; fdepth++)
-    {
-	if (!globalGlyphs[fdepth].hashSet)
-	    continue;
-	
-	for (i = 0; i < globalGlyphs[fdepth].hashSet->size; i++)
-	    glyph = globalGlyphs[fdepth].table[i].glyph;    
-    }
 }
 
 GlyphHashSetPtr

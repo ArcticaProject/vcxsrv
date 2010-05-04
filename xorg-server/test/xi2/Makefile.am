@@ -31,14 +31,14 @@ protocol_xiquerypointer_LDADD=$(TEST_LDADD)
 protocol_xiwarppointer_LDADD=$(TEST_LDADD)
 protocol_eventconvert_LDADD=$(TEST_LDADD)
 
-protocol_xiqueryversion_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,WriteToClient
-protocol_xiquerydevice_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,WriteToClient
-protocol_xiselectevents_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,dixLookupWindow -Wl,-wrap,XISetEventMask
-protocol_xigetselectedevents_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupWindow -Wl,-wrap,AddResource
-protocol_xisetclientpointer_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,dixLookupClient
-protocol_xigetclientpointer_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupClient
-protocol_xiquerypointer_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupWindow
-protocol_xiwarppointer_CFLAGS=$(AM_CFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupWindow
+protocol_xiqueryversion_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,WriteToClient
+protocol_xiquerydevice_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,WriteToClient
+protocol_xiselectevents_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,dixLookupWindow -Wl,-wrap,XISetEventMask
+protocol_xigetselectedevents_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupWindow -Wl,-wrap,AddResource
+protocol_xisetclientpointer_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,dixLookupClient
+protocol_xigetclientpointer_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupClient
+protocol_xiquerypointer_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupWindow
+protocol_xiwarppointer_LDFLAGS=$(AM_LDFLAGS) -Wl,-wrap,WriteToClient -Wl,-wrap,dixLookupWindow
 
 protocol_xiqueryversion_SOURCES=$(COMMON_SOURCES) protocol-xiqueryversion.c
 protocol_xiquerydevice_SOURCES=$(COMMON_SOURCES) protocol-xiquerydevice.c

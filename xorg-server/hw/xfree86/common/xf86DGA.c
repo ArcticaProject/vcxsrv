@@ -731,7 +731,7 @@ DGAInstallCmap(ColormapPtr cmap)
     /* We rely on the extension to check that DGA is active */ 
 
     if(!pScreenPriv->dgaColormap) 
-	pScreenPriv->savedColormap = miInstalledMaps[pScreen->myNum];
+	pScreenPriv->savedColormap = GetInstalledmiColormap(pScreen);
 
     pScreenPriv->dgaColormap = cmap;    
 

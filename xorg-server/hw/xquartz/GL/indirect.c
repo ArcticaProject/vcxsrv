@@ -42,6 +42,8 @@
 #define GL_GLEXT_WUNDEF_SUPPORT
 
 #include <OpenGL/OpenGL.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 #include <OpenGL/CGLContext.h>
 
 /* These next few GL_EXT pre-processing blocks are to explicitly define 

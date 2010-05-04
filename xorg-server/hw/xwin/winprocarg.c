@@ -45,9 +45,7 @@ from The Open Group.
  */
 
 extern int			g_iNumScreens;
-extern winScreenInfo		g_ScreenInfo[];
-extern int			g_iLastScreen;
-extern Bool			g_fInitializedDefaultScreens;
+extern winScreenInfo *		g_ScreenInfo;
 #ifdef XWIN_CLIPBOARD
 extern Bool			g_fUnicodeClipboard;
 extern Bool			g_fClipboard;
@@ -130,25 +128,25 @@ winLogVersionInfo (void);
 void OsVendorVErrorF (const char *pszFormat, va_list va_args);
 #endif
 
-void
-winInitializeDefaultScreens (void);
-
 /*
  * Process arguments on the command line
  */
 
-void
-winInitializeDefaultScreens (void)
-{
-  int                   i;
-  DWORD			dwWidth, dwHeight;
+static int iLastScreen = -1;
+static winScreenInfo defaultScreenInfo;
 
-  /* Bail out early if default screens have already been initialized */
-  if (g_fInitializedDefaultScreens)
+static void
+winInitializeScreenDefaults(void)
+{
+  DWORD dwWidth, dwHeight;
+  static Bool fInitializedScreenDefaults = FALSE;
+
+  /* Bail out early if default screen has already been initialized */
+  if (fInitializedScreenDefaults)
     return;
 
   /* Zero the memory used for storing the screen info */
-  ZeroMemory (g_ScreenInfo, MAXSCREENS * sizeof (winScreenInfo));
+  memset(&defaultScreenInfo, 0, sizeof(winScreenInfo));
 
   /* Get default width and height */
   /*
@@ -158,62 +156,88 @@ winInitializeDefaultScreens (void)
   dwWidth = GetSystemMetrics (SM_CXSCREEN);
   dwHeight = GetSystemMetrics (SM_CYSCREEN);
 
-  winErrorFVerb (2, "winInitializeDefaultScreens - w %d h %d\n",
+  winErrorFVerb (2, "winInitializeScreenDefaults - w %d h %d\n",
 	  (int) dwWidth, (int) dwHeight);
 
   /* Set a default DPI, if no parameter was passed */
   if (monitorResolution == 0)
     monitorResolution = WIN_DEFAULT_DPI;
 
-  for (i = 0; i < MAXSCREENS; ++i)
-    {
-      g_ScreenInfo[i].dwScreen = i;
-      g_ScreenInfo[i].dwWidth  = dwWidth;
-      g_ScreenInfo[i].dwHeight = dwHeight;
-      g_ScreenInfo[i].dwUserWidth  = dwWidth;
-      g_ScreenInfo[i].dwUserHeight = dwHeight;
-      g_ScreenInfo[i].fUserGaveHeightAndWidth
-	=  WIN_DEFAULT_USER_GAVE_HEIGHT_AND_WIDTH;
-      g_ScreenInfo[i].fUserGavePosition = FALSE;
-      g_ScreenInfo[i].dwBPP = WIN_DEFAULT_BPP;
-      g_ScreenInfo[i].dwClipUpdatesNBoxes = WIN_DEFAULT_CLIP_UPDATES_NBOXES;
+  defaultScreenInfo.dwWidth  = dwWidth;
+  defaultScreenInfo.dwHeight = dwHeight;
+  defaultScreenInfo.dwUserWidth  = dwWidth;
+  defaultScreenInfo.dwUserHeight = dwHeight;
+  defaultScreenInfo.fUserGaveHeightAndWidth = WIN_DEFAULT_USER_GAVE_HEIGHT_AND_WIDTH;
+  defaultScreenInfo.fUserGavePosition = FALSE;
+  defaultScreenInfo.dwBPP = WIN_DEFAULT_BPP;
+  defaultScreenInfo.dwClipUpdatesNBoxes = WIN_DEFAULT_CLIP_UPDATES_NBOXES;
 #ifdef XWIN_EMULATEPSEUDO
-      g_ScreenInfo[i].fEmulatePseudo = WIN_DEFAULT_EMULATE_PSEUDO;
+  defaultScreenInfo.fEmulatePseudo = WIN_DEFAULT_EMULATE_PSEUDO;
 #endif
-      g_ScreenInfo[i].dwRefreshRate = WIN_DEFAULT_REFRESH;
-      g_ScreenInfo[i].pfb = NULL;
-      g_ScreenInfo[i].fFullScreen = FALSE;
-      g_ScreenInfo[i].fDecoration = TRUE;
+  defaultScreenInfo.dwRefreshRate = WIN_DEFAULT_REFRESH;
+  defaultScreenInfo.pfb = NULL;
+  defaultScreenInfo.fFullScreen = FALSE;
+  defaultScreenInfo.fDecoration = TRUE;
 #ifdef XWIN_MULTIWINDOWEXTWM
-      g_ScreenInfo[i].fMWExtWM = FALSE;
-      g_ScreenInfo[i].fInternalWM = FALSE;
+  defaultScreenInfo.fMWExtWM = FALSE;
+  defaultScreenInfo.fInternalWM = FALSE;
 #endif
-      g_ScreenInfo[i].fRootless = FALSE;
+  defaultScreenInfo.fRootless = FALSE;
 #ifdef XWIN_MULTIWINDOW
-      g_ScreenInfo[i].fMultiWindow = FALSE;
+  defaultScreenInfo.fMultiWindow = FALSE;
 #endif
 #if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-      g_ScreenInfo[i].fMultiMonitorOverride = FALSE;
+  defaultScreenInfo.fMultiMonitorOverride = FALSE;
 #endif
-      g_ScreenInfo[i].fMultipleMonitors = FALSE;
-      g_ScreenInfo[i].fLessPointer = FALSE;
-      g_ScreenInfo[i].fScrollbars = FALSE;
-      g_ScreenInfo[i].fNoTrayIcon = FALSE;
-      g_ScreenInfo[i].iE3BTimeout = WIN_E3B_OFF;
-      g_ScreenInfo[i].dwWidth_mm = (dwWidth / WIN_DEFAULT_DPI)
-	* 25.4;
-      g_ScreenInfo[i].dwHeight_mm = (dwHeight / WIN_DEFAULT_DPI)
-	* 25.4;
-      g_ScreenInfo[i].fUseWinKillKey = WIN_DEFAULT_WIN_KILL;
-      g_ScreenInfo[i].fUseUnixKillKey = WIN_DEFAULT_UNIX_KILL;
-      g_ScreenInfo[i].fIgnoreInput = FALSE;
-      g_ScreenInfo[i].fExplicitScreen = FALSE;
+  defaultScreenInfo.fMultipleMonitors = FALSE;
+  defaultScreenInfo.fLessPointer = FALSE;
+  defaultScreenInfo.fScrollbars = FALSE;
+  defaultScreenInfo.fNoTrayIcon = FALSE;
+  defaultScreenInfo.iE3BTimeout = WIN_E3B_OFF;
+  defaultScreenInfo.dwWidth_mm = (dwWidth / WIN_DEFAULT_DPI) * 25.4;
+  defaultScreenInfo.dwHeight_mm = (dwHeight / WIN_DEFAULT_DPI) * 25.4;
+  defaultScreenInfo.fUseWinKillKey = WIN_DEFAULT_WIN_KILL;
+  defaultScreenInfo.fUseUnixKillKey = WIN_DEFAULT_UNIX_KILL;
+  defaultScreenInfo.fIgnoreInput = FALSE;
+  defaultScreenInfo.fExplicitScreen = FALSE;
+
+  /* Note that the default screen has been initialized */
+  fInitializedScreenDefaults = TRUE;
+}
+
+static void
+winInitializeScreen(int i)
+{
+  winErrorFVerb (2, "winInitializeScreen - %d\n",i);
+
+  /* Initialize default screen values, if needed */
+  winInitializeScreenDefaults();
+
+  /* Copy the default screen info */
+  g_ScreenInfo[i] = defaultScreenInfo;
+
+  /* Set the screen number */
+  g_ScreenInfo[i].dwScreen = i;
+}
+
+void
+winInitializeScreens(int maxscreens)
+{
+  int i;
+  winErrorFVerb (2, "winInitializeScreens - %i\n", maxscreens);
+
+  if (maxscreens > g_iNumScreens)
+    {
+      /* Reallocate the memory for DDX-specific screen info */
+      g_ScreenInfo = realloc(g_ScreenInfo, maxscreens * sizeof (winScreenInfo));
+
+      /* Set default values for any new screens */
+      for (i = g_iNumScreens; i < maxscreens ; i++)
+        winInitializeScreen(i);
+
+      /* Keep a count of the number of screens */
+      g_iNumScreens = maxscreens;
     }
-
-  /* Signal that the default screens have been initialized */
-  g_fInitializedDefaultScreens = TRUE;
-
-  winErrorFVerb (2, "winInitializeDefaultScreens - Returning\n");
 }
 
 /* See Porting Layer Definition - p. 57 */
@@ -245,6 +269,7 @@ int
 ddxProcessArgument (int argc, char *argv[], int i)
 {
   static Bool		s_fBeenHere = FALSE;
+  winScreenInfo	*screenInfoPtr = NULL;
 
   /* Initialize once */
   if (!s_fBeenHere)
@@ -277,7 +302,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 	   */
 	  winErrorFVerb (2, "ddxProcessArgument - Initializing default "
 			 "screens\n");
-	  winInitializeDefaultScreens ();
+	  winInitializeScreenDefaults();
 	}
     }
 
@@ -332,13 +357,21 @@ ddxProcessArgument (int argc, char *argv[], int i)
       nScreenNum = atoi (argv[i + 1]);
 
       /* Validate the specified screen number */
-      if (nScreenNum < 0 || nScreenNum >= MAXSCREENS)
+      if (nScreenNum < 0)
         {
           ErrorF ("ddxProcessArgument - screen - Invalid screen number %d\n",
 		  nScreenNum);
           UseMsg ();
 	  return 0;
         }
+
+      /*
+        Initialize default values for any new screens
+
+        Note that default values can't change after a -screen option is
+        seen, so it's safe to do this for each screen as it is introduced
+      */
+      winInitializeScreens(nScreenNum+1);
 
 	  /* look for @m where m is monitor number */
 	  if (i + 2 < argc
@@ -506,12 +539,31 @@ ddxProcessArgument (int argc, char *argv[], int i)
        * before a screen number apply to all screens, whereas parameters
        * seen after a screen number apply to that screen number only.
        */
-      g_iLastScreen = nScreenNum;
-
-      /* Keep a count of the number of screens */
-      ++g_iNumScreens;
+      iLastScreen = nScreenNum;
 
       return iArgsProcessed;
+    }
+
+
+  /*
+   * Is this parameter attached to a screen or global?
+   *
+   * If the parameter is for all screens (appears before
+   * any -screen option), store it in the default screen
+   * info
+   *
+   * If the parameter is for a single screen (appears
+   * after a -screen option), store it in the screen info
+   * for that screen
+   *
+   */
+  if (iLastScreen == -1)
+    {
+      screenInfoPtr = &defaultScreenInfo;
+    }
+  else
+    {
+      screenInfoPtr = &(g_ScreenInfo[iLastScreen]);
     }
 
   /*
@@ -542,22 +594,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 	  return 0;
 	}
 
-      /* Is this parameter attached to a screen or global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int		j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].dwEnginePreferred = dwEngine;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].dwEnginePreferred = dwEngine;
-	}
+      screenInfoPtr->dwEnginePreferred = dwEngine;
       
       /* Indicate that we have processed the argument */
       return 2;
@@ -568,30 +605,11 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-fullscreen"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
 #if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-              if (!g_ScreenInfo[j].fMultiMonitorOverride)
-                g_ScreenInfo[j].fMultipleMonitors = FALSE;
+          if (!screenInfoPtr->fMultiMonitorOverride)
+            screenInfoPtr->fMultipleMonitors = FALSE;
 #endif
-	      g_ScreenInfo[j].fFullScreen = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-          if (!g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride)
-            g_ScreenInfo[g_iLastScreen].fMultipleMonitors = FALSE;
-#endif
-	  g_ScreenInfo[g_iLastScreen].fFullScreen = TRUE;
-	}
+	  screenInfoPtr->fFullScreen = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -602,22 +620,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-lesspointer"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fLessPointer = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-          g_ScreenInfo[g_iLastScreen].fLessPointer = TRUE;
-	}
+      screenInfoPtr->fLessPointer = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -628,30 +631,11 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-nodecoration"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
 #if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-              if (!g_ScreenInfo[j].fMultiMonitorOverride)
-                g_ScreenInfo[j].fMultipleMonitors = FALSE;
+      if (!screenInfoPtr->fMultiMonitorOverride)
+        screenInfoPtr->fMultipleMonitors = FALSE;
 #endif
-	      g_ScreenInfo[j].fDecoration = FALSE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-          if (!g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride)
-            g_ScreenInfo[g_iLastScreen].fMultipleMonitors = FALSE;
-#endif
-	  g_ScreenInfo[g_iLastScreen].fDecoration = FALSE;
-	}
+      screenInfoPtr->fDecoration = FALSE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -663,26 +647,9 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-mwextwm"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-              if (!g_ScreenInfo[j].fMultiMonitorOverride)
-                g_ScreenInfo[j].fMultipleMonitors = TRUE;
-	      g_ScreenInfo[j].fMWExtWM = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-          if (!g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride)
-            g_ScreenInfo[g_iLastScreen].fMultipleMonitors = TRUE;
-	  g_ScreenInfo[g_iLastScreen].fMWExtWM = TRUE;
-	}
+      if (!screenInfoPtr->fMultiMonitorOverride)
+        screenInfoPtr->fMultipleMonitors = TRUE;
+      screenInfoPtr->fMWExtWM = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -692,28 +659,10 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-internalwm"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      if (!g_ScreenInfo[j].fMultiMonitorOverride)
-	        g_ScreenInfo[j].fMultipleMonitors = TRUE;
-	      g_ScreenInfo[j].fMWExtWM = TRUE;
-	      g_ScreenInfo[j].fInternalWM = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  if (!g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride)
-	    g_ScreenInfo[g_iLastScreen].fMultipleMonitors = TRUE;
-	  g_ScreenInfo[g_iLastScreen].fMWExtWM = TRUE;
-	  g_ScreenInfo[g_iLastScreen].fInternalWM = TRUE;
-	}
+      if (!screenInfoPtr->fMultiMonitorOverride)
+        screenInfoPtr->fMultipleMonitors = TRUE;
+      screenInfoPtr->fMWExtWM = TRUE;
+      screenInfoPtr->fInternalWM = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -725,30 +674,11 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-rootless"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
 #if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-              if (!g_ScreenInfo[j].fMultiMonitorOverride)
-                g_ScreenInfo[j].fMultipleMonitors = FALSE;
+      if (!screenInfoPtr->fMultiMonitorOverride)
+        screenInfoPtr->fMultipleMonitors = FALSE;
 #endif
-	      g_ScreenInfo[j].fRootless = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-          if (!g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride)
-            g_ScreenInfo[g_iLastScreen].fMultipleMonitors = FALSE;
-#endif
-	  g_ScreenInfo[g_iLastScreen].fRootless = TRUE;
-	}
+      screenInfoPtr->fRootless = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -760,30 +690,11 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-multiwindow"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
 #if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-              if (!g_ScreenInfo[j].fMultiMonitorOverride)
-                g_ScreenInfo[j].fMultipleMonitors = TRUE;
+      if (!screenInfoPtr->fMultiMonitorOverride)
+        screenInfoPtr->fMultipleMonitors = TRUE;
 #endif
-	      g_ScreenInfo[j].fMultiWindow = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-          if (!g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride)
-            g_ScreenInfo[g_iLastScreen].fMultipleMonitors = TRUE;
-#endif
-	  g_ScreenInfo[g_iLastScreen].fMultiWindow = TRUE;
-	}
+      screenInfoPtr->fMultiWindow = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -796,28 +707,10 @@ ddxProcessArgument (int argc, char *argv[], int i)
   if (IS_OPTION ("-multiplemonitors")
       || IS_OPTION ("-multimonitors"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
 #if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-              g_ScreenInfo[j].fMultiMonitorOverride = TRUE;
+      screenInfoPtr->fMultiMonitorOverride = TRUE;
 #endif
-	      g_ScreenInfo[j].fMultipleMonitors = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-          g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride = TRUE;
-#endif
-	  g_ScreenInfo[g_iLastScreen].fMultipleMonitors = TRUE;
-	}
+      screenInfoPtr->fMultipleMonitors = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -829,28 +722,10 @@ ddxProcessArgument (int argc, char *argv[], int i)
   if (IS_OPTION ("-nomultiplemonitors")
       || IS_OPTION ("-nomultimonitors"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
 #if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-              g_ScreenInfo[j].fMultiMonitorOverride = TRUE;
+      screenInfoPtr->fMultiMonitorOverride = TRUE;
 #endif
-	      g_ScreenInfo[j].fMultipleMonitors = FALSE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-#if defined(XWIN_MULTIWINDOW) || defined(XWIN_MULTIWINDOWEXTWM)
-          g_ScreenInfo[g_iLastScreen].fMultiMonitorOverride = TRUE;
-#endif
-	  g_ScreenInfo[g_iLastScreen].fMultipleMonitors = FALSE;
-	}
+      screenInfoPtr->fMultipleMonitors = FALSE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -862,22 +737,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-scrollbars"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fScrollbars = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fScrollbars = TRUE;
-	}
+      screenInfoPtr->fScrollbars = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -915,22 +775,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-ignoreinput"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fIgnoreInput = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fIgnoreInput = TRUE;
-	}
+      screenInfoPtr->fIgnoreInput = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -963,22 +808,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
 	  iE3BTimeout = WIN_DEFAULT_E3B_TIME;
 	}
 
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].iE3BTimeout = iE3BTimeout;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].iE3BTimeout = iE3BTimeout;
-	}
+      screenInfoPtr->iE3BTimeout = iE3BTimeout;
 
       /* Indicate that we have processed this argument */
       return iArgsProcessed;
@@ -1001,23 +831,8 @@ ddxProcessArgument (int argc, char *argv[], int i)
       /* Grab the argument */
       dwBPP = atoi (argv[i]);
 
-      /* Is this parameter attached to a screen or global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int		j;
+      screenInfoPtr->dwBPP = dwBPP;
 
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].dwBPP = dwBPP;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].dwBPP = dwBPP;
-	}
-      
       /* Indicate that we have processed the argument */
       return 2;
     }
@@ -1039,23 +854,8 @@ ddxProcessArgument (int argc, char *argv[], int i)
       /* Grab the argument */
       dwRefreshRate = atoi (argv[i]);
 
-      /* Is this parameter attached to a screen or global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int		j;
+      screenInfoPtr->dwRefreshRate = dwRefreshRate;
 
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].dwRefreshRate = dwRefreshRate;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].dwRefreshRate = dwRefreshRate;
-	}
-      
       /* Indicate that we have processed the argument */
       return 2;
     }
@@ -1077,23 +877,8 @@ ddxProcessArgument (int argc, char *argv[], int i)
       /* Grab the argument */
       dwNumBoxes = atoi (argv[i]);
 
-      /* Is this parameter attached to a screen or global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int		j;
+      screenInfoPtr->dwClipUpdatesNBoxes = dwNumBoxes;
 
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].dwClipUpdatesNBoxes = dwNumBoxes;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].dwClipUpdatesNBoxes = dwNumBoxes;
-	}
-      
       /* Indicate that we have processed the argument */
       return 2;
     }
@@ -1104,22 +889,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-emulatepseudo"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fEmulatePseudo = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-          g_ScreenInfo[g_iLastScreen].fEmulatePseudo = TRUE;
-	}
+      screenInfoPtr->fEmulatePseudo = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -1131,22 +901,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-nowinkill"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fUseWinKillKey = FALSE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fUseWinKillKey = FALSE;
-	}
+      screenInfoPtr->fUseWinKillKey = FALSE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -1157,22 +912,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-winkill"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fUseWinKillKey = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fUseWinKillKey = TRUE;
-	}
+      screenInfoPtr->fUseWinKillKey = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -1183,22 +923,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-nounixkill"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fUseUnixKillKey = FALSE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fUseUnixKillKey = FALSE;
-	}
+      screenInfoPtr->fUseUnixKillKey = FALSE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -1209,22 +934,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-unixkill"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fUseUnixKillKey = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fUseUnixKillKey = TRUE;
-	}
+      screenInfoPtr->fUseUnixKillKey = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -1235,22 +945,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-notrayicon"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fNoTrayIcon = TRUE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fNoTrayIcon = TRUE;
-	}
+      screenInfoPtr->fNoTrayIcon = TRUE;
 
       /* Indicate that we have processed this argument */
       return 1;
@@ -1261,22 +956,7 @@ ddxProcessArgument (int argc, char *argv[], int i)
    */
   if (IS_OPTION ("-trayicon"))
     {
-      /* Is this parameter attached to a screen or is it global? */
-      if (-1 == g_iLastScreen)
-	{
-	  int			j;
-
-	  /* Parameter is for all screens */
-	  for (j = 0; j < MAXSCREENS; j++)
-	    {
-	      g_ScreenInfo[j].fNoTrayIcon = FALSE;
-	    }
-	}
-      else
-	{
-	  /* Parameter is for a single screen */
-	  g_ScreenInfo[g_iLastScreen].fNoTrayIcon = FALSE;
-	}
+      screenInfoPtr->fNoTrayIcon = FALSE;
 
       /* Indicate that we have processed this argument */
       return 1;

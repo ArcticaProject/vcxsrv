@@ -63,10 +63,10 @@
 #define SCREEN_EPILOGUE(pScreen, field, wrapper)\
     ((pScreen)->field = wrapper)
 
-#define LOAD_PALETTE(pmap, index) \
-    ((pmap == miInstalledMaps[index]) && \
+#define LOAD_PALETTE(pmap) \
+    ((pmap == GetInstalledmiColormap(pmap->pScreen)) && \
      ((pScreenPriv->flags & CMAP_LOAD_EVEN_IF_OFFSCREEN) || \
-      xf86Screens[index]->vtSema || pScreenPriv->isDGAmode))
+      xf86Screens[pmap->pScreen->myNum]->vtSema || pScreenPriv->isDGAmode))
 
 
 typedef struct _CMapLink {
@@ -221,7 +221,7 @@ Bool xf86HandleColormaps(
     }
 
     /* Force the initial map to be loaded */
-    miInstalledMaps[pScreen->myNum] = NULL;
+    SetInstalledmiColormap(pScreen, NULL);
     CMapInstallColormap(pDefMap);
     return TRUE;
 }
@@ -425,11 +425,10 @@ static void
 CMapInstallColormap(ColormapPtr pmap)
 {
     ScreenPtr 	  pScreen = pmap->pScreen;
-    int		  index = pScreen->myNum;
     CMapScreenPtr pScreenPriv = (CMapScreenPtr)dixLookupPrivate(
 	&pScreen->devPrivates, CMapScreenKey);
 
-    if (pmap == miInstalledMaps[index])
+    if (pmap == GetInstalledmiColormap(pmap->pScreen))
 	return;
 
     pScreen->InstallColormap = pScreenPriv->InstallColormap;
@@ -438,15 +437,15 @@ CMapInstallColormap(ColormapPtr pmap)
 
     /* Important. We let the lower layers, namely DGA, 
        overwrite the choice of Colormap to install */
-    if (miInstalledMaps[index])
-	pmap = miInstalledMaps[index];
+    if (GetInstalledmiColormap(pmap->pScreen))
+	pmap = GetInstalledmiColormap(pmap->pScreen);
 
     if (!(pScreenPriv->flags & CMAP_PALETTED_TRUECOLOR) &&
 	 (pmap->pVisual->class == TrueColor) &&
 	 CMapColormapUseMax(pmap->pVisual, pScreenPriv))
 	return;
 
-    if(LOAD_PALETTE(pmap, index))
+    if(LOAD_PALETTE(pmap))
 	CMapReinstallMap(pmap);
 }
 
@@ -461,8 +460,8 @@ CMapEnterVT(int index, int flags)
 	&pScreen->devPrivates, CMapScreenKey);
 
     if((*pScreenPriv->EnterVT)(index, flags)) {
-	if(miInstalledMaps[index])
-	    CMapReinstallMap(miInstalledMaps[index]);
+	if(GetInstalledmiColormap(pScreen))
+	    CMapReinstallMap(GetInstalledmiColormap(pScreen));
 	return TRUE;
     }
     return FALSE;
@@ -477,8 +476,8 @@ CMapSwitchMode(int index, DisplayModePtr mode, int flags)
 	&pScreen->devPrivates, CMapScreenKey);
 
     if((*pScreenPriv->SwitchMode)(index, mode, flags)) {
-	if(miInstalledMaps[index])
-	    CMapReinstallMap(miInstalledMaps[index]);
+	if(GetInstalledmiColormap(pScreen))
+	    CMapReinstallMap(GetInstalledmiColormap(pScreen));
 	return TRUE;
     }
     return FALSE;
@@ -497,9 +496,9 @@ CMapSetDGAMode(int index, int num, DGADevicePtr dev)
 
     pScreenPriv->isDGAmode = DGAActive(index);
 
-    if(!pScreenPriv->isDGAmode && miInstalledMaps[index] 
+    if(!pScreenPriv->isDGAmode && GetInstalledmiColormap(pScreen)
          && xf86Screens[pScreen->myNum]->vtSema)
-	CMapReinstallMap(miInstalledMaps[index]);
+	CMapReinstallMap(GetInstalledmiColormap(pScreen));
 
     return ret;
 }
@@ -649,7 +648,7 @@ CMapRefreshColors(ColormapPtr pmap, int defs, int* indices)
     }
 
 
-    if(LOAD_PALETTE(pmap, pmap->pScreen->myNum))
+    if(LOAD_PALETTE(pmap))
 	(*pScrn->LoadPalette)(pScreenPriv->pScrn, defs, indices,
  					colors, pmap->pVisual);
 
@@ -802,7 +801,7 @@ CMapSetOverscan(ColormapPtr pmap, int defs, int *indices)
     }
     if (newOverscan) {
 	pColPriv->overscan = overscan;
-	if (LOAD_PALETTE(pmap, pmap->pScreen->myNum)) {
+	if (LOAD_PALETTE(pmap)) {
 #ifdef DEBUGOVERSCAN
 	    ErrorF("SetOverscan() called from CmapSetOverscan\n");
 #endif
@@ -929,10 +928,10 @@ CMapChangeGamma(
 	pLink = pLink->next;
     }
 
-    if(miInstalledMaps[pScreen->myNum] && 
+    if(GetInstalledmiColormap(pScreen) &&
        ((pScreenPriv->flags & CMAP_LOAD_EVEN_IF_OFFSCREEN) ||
 	pScrn->vtSema || pScreenPriv->isDGAmode)) {
-	ColormapPtr pMap = miInstalledMaps[pScreen->myNum];
+	ColormapPtr pMap = GetInstalledmiColormap(pScreen);
 
 	if (!(pScreenPriv->flags & CMAP_PALETTED_TRUECOLOR) &&
 	    (pMap->pVisual->class == TrueColor) &&
@@ -951,9 +950,9 @@ CMapChangeGamma(
 	    if(pLink) {
 		/* need to trick CMapRefreshColors() into thinking 
 		   this is the currently installed map */
-		miInstalledMaps[pScreen->myNum] = pLink->cmap;
+		SetInstalledmiColormap(pScreen, pLink->cmap);
 		CMapReinstallMap(pLink->cmap);
-		miInstalledMaps[pScreen->myNum] = pMap;
+		SetInstalledmiColormap(pScreen, pMap);
 	    }
 	} else
 	    CMapReinstallMap(pMap);
@@ -1035,10 +1034,10 @@ xf86ChangeGammaRamp(
         pLink = pLink->next;
     }
 
-    if(miInstalledMaps[pScreen->myNum] &&
+    if(GetInstalledmiColormap(pScreen) &&
        ((pScreenPriv->flags & CMAP_LOAD_EVEN_IF_OFFSCREEN) ||
         pScrn->vtSema || pScreenPriv->isDGAmode)) {
-        ColormapPtr pMap = miInstalledMaps[pScreen->myNum];
+        ColormapPtr pMap = GetInstalledmiColormap(pScreen);
 
         if (!(pScreenPriv->flags & CMAP_PALETTED_TRUECOLOR) &&
             (pMap->pVisual->class == TrueColor) &&
@@ -1057,9 +1056,9 @@ xf86ChangeGammaRamp(
             if(pLink) {
                 /* need to trick CMapRefreshColors() into thinking
                    this is the currently installed map */
-                miInstalledMaps[pScreen->myNum] = pLink->cmap;
+                SetInstalledmiColormap(pScreen, pLink->cmap);
                 CMapReinstallMap(pLink->cmap);
-                miInstalledMaps[pScreen->myNum] = pMap;
+                SetInstalledmiColormap(pScreen, pMap);
             }
         } else
             CMapReinstallMap(pMap);

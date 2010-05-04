@@ -514,8 +514,9 @@ typedef struct _DeviceIntRec {
     LedFeedbackPtr	leds;
     struct _XkbInterest *xkb_interest;
     char                *config_info; /* used by the hotplug layer */
+    ClassesPtr		unused_classes; /* for master devices */
+    int			saved_master_id;	/* for slaves while grabbed */
     PrivateRec		*devPrivates;
-    int			nPrivates;
     DeviceUnwrapProc    unwrapProc;
     SpriteInfoPtr       spriteInfo;
     union {

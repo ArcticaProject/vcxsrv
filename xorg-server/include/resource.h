@@ -251,12 +251,6 @@ extern _X_EXPORT RESTYPE TypeMask;
  * Please use the noted replacements instead.
  */
 
-#ifdef __GNUC__
-#define X_DEPRECATED __attribute__((deprecated))
-#else
-#define X_DEPRECATED
-#endif
-
 /* replaced by dixLookupResourceByType */
 extern _X_EXPORT pointer SecurityLookupIDByType(
     ClientPtr client,

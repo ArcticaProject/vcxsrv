@@ -83,8 +83,6 @@ GetAccelerationProfile(DeviceVelocityPtr vel, int profile_num);
 /* some int which is not a profile number */
 #define PROFILE_UNINITIALIZE (-100)
 
-/* number of properties for predictable acceleration */
-#define NPROPS_PREDICTABLE_ACCEL 4
 
 /**
  * Init struct so it should match the average case
@@ -323,26 +321,18 @@ AccelInitScaleProperty(DeviceIntPtr dev, DeviceVelocityPtr vel)
     return XIRegisterPropertyHandler(dev, AccelSetScaleProperty, NULL, NULL);
 }
 
-static int AccelPropHandlerPrivateKeyIndex;
-DevPrivateKey AccelPropHandlerPrivateKey = &AccelPropHandlerPrivateKeyIndex;
-
 BOOL
 InitializePredictableAccelerationProperties(DeviceIntPtr dev)
 {
     DeviceVelocityPtr  vel = GetDevicePredictableAccelData(dev);
-    long *prop_handlers;
 
     if(!vel)
 	return FALSE;
-    prop_handlers = xalloc(NPROPS_PREDICTABLE_ACCEL * sizeof(long));
 
-    prop_handlers[0] = AccelInitProfileProperty(dev, vel);
-    prop_handlers[1] = AccelInitDecelProperty(dev, vel);
-    prop_handlers[2] = AccelInitAdaptDecelProperty(dev, vel);
-    prop_handlers[3] = AccelInitScaleProperty(dev, vel);
-
-    dixSetPrivate(&dev->devPrivates, AccelPropHandlerPrivateKey,
-                  prop_handlers);
+    vel->prop_handlers[0] = AccelInitProfileProperty(dev, vel);
+    vel->prop_handlers[1] = AccelInitDecelProperty(dev, vel);
+    vel->prop_handlers[2] = AccelInitAdaptDecelProperty(dev, vel);
+    vel->prop_handlers[3] = AccelInitScaleProperty(dev, vel);
 
     return TRUE;
 }
@@ -350,8 +340,8 @@ InitializePredictableAccelerationProperties(DeviceIntPtr dev)
 BOOL
 DeletePredictableAccelerationProperties(DeviceIntPtr dev)
 {
+    DeviceVelocityPtr  vel;
     Atom prop;
-    long *prop_handlers;
     int i;
 
     prop = XIGetKnownProperty(ACCEL_PROP_VELOCITY_SCALING);
@@ -363,13 +353,10 @@ DeletePredictableAccelerationProperties(DeviceIntPtr dev)
     prop = XIGetKnownProperty(ACCEL_PROP_PROFILE_NUMBER);
     XIDeleteDeviceProperty(dev, prop, FALSE);
 
-    prop_handlers = dixLookupPrivate(&dev->devPrivates,
-                                     AccelPropHandlerPrivateKey);
-    dixSetPrivate(&dev->devPrivates, AccelPropHandlerPrivateKey, NULL);
-
-    for (i = 0; prop_handlers && i < NPROPS_PREDICTABLE_ACCEL; i++)
-        XIUnregisterPropertyHandler(dev, prop_handlers[i]);
-    xfree(prop_handlers);
+    vel = GetDevicePredictableAccelData(dev);
+    for (i = 0; vel && i < NPROPS_PREDICTABLE_ACCEL; i++)
+	if (vel->prop_handlers[i])
+	    XIUnregisterPropertyHandler(dev, vel->prop_handlers[i]);
 
     return TRUE;
 }

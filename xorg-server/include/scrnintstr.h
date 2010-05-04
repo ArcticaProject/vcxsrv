@@ -615,10 +615,8 @@ typedef struct _ScreenInfo {
     int		numPixmapFormats;
     PixmapFormatRec
 		formats[MAXFORMATS];
-    int		arraySize;
     int		numScreens;
     ScreenPtr	screens[MAXSCREENS];
-    int		unused;
 } ScreenInfo;
 
 extern _X_EXPORT ScreenInfo screenInfo;

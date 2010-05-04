@@ -50,7 +50,7 @@ vgaListInstalledColormaps(pScreen, pmaps)
   /* By the time we are processing requests, we can guarantee that there
    * is always a colormap installed */
   
-  *pmaps = miInstalledMaps[pScreen->myNum]->mid;
+  *pmaps = GetInstalledmiColormap(pScreen)->mid;
   return(1);
 }
 
@@ -62,13 +62,13 @@ vgaGetInstalledColormaps(pScreen, pmaps)
   /* By the time we are processing requests, we can guarantee that there
    * is always a colormap installed */
   
-  *pmaps = miInstalledMaps[pScreen->myNum];
+  *pmaps = GetInstalledmiColormap(pScreen);
   return(1);
 }
 
 int vgaCheckColorMap(ColormapPtr pmap)
 {
-  return (pmap != miInstalledMaps[pmap->pScreen->myNum]);
+  return (pmap != GetInstalledmiColormap(pmap->pScreen));
 }
 
 
@@ -217,7 +217,7 @@ void
 vgaInstallColormap(pmap)
      ColormapPtr	pmap;
 {
-  ColormapPtr oldmap = miInstalledMaps[pmap->pScreen->myNum];
+  ColormapPtr oldmap = GetInstalledmiColormap(pmap->pScreen);
   int         entries;
   Pixel *     ppix;
   xrgb *      prgb;
@@ -242,7 +242,7 @@ vgaInstallColormap(pmap)
   if ( oldmap != NOMAPYET)
     WalkTree( pmap->pScreen, TellLostMap, &oldmap->mid);
 
-  miInstalledMaps[pmap->pScreen->myNum] = pmap;
+  SetInstalledmiColormap(pmap->pScreen, pmap);
 
   for ( i=0; i<entries; i++) ppix[i] = i;
 
@@ -273,13 +273,13 @@ vgaUninstallColormap(pmap)
 
   ColormapPtr defColormap;
   
-  if ( pmap != miInstalledMaps[pmap->pScreen->myNum] )
+  if ( pmap != GetInstalledmiColormap(pmap->pScreen))
     return;
 
   dixLookupResourceByType((pointer *)&defColormap, pmap->pScreen->defColormap,
 			  RT_COLORMAP, serverClient, DixInstallAccess);
 
-  if (defColormap == miInstalledMaps[pmap->pScreen->myNum])
+  if (defColormap == GetInstalledmiColormap(pmap->pScreen))
     return;
 
   (*pmap->pScreen->InstallColormap) (defColormap);

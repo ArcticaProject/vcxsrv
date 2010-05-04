@@ -825,7 +825,7 @@ NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
     }
 
     if (!idev->driver || !idev->identifier) {
-        xf86Msg(X_ERROR, "No input driver/identifier specified (ignoring)\n");
+        xf86Msg(X_INFO, "No input driver/identifier specified (ignoring)\n");
         rval = BadRequest;
         goto unwind;
     }

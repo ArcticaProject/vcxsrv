@@ -196,7 +196,7 @@ winScreenInit (int index,
 
       /* 
        * In this case, some of the defaults set in
-       * winInitializeDefaultScreens () are not correct ...
+       * winInitializeScreenDefaults() are not correct ...
        */
       if (!pScreenInfo->fUserGaveHeightAndWidth)
 	{

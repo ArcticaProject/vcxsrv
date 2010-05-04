@@ -40,17 +40,24 @@
  */
 
 extern int			g_iNumScreens;
-extern winScreenInfo		g_ScreenInfo[];
+extern winScreenInfo *		g_ScreenInfo;
 extern Bool			g_fXdmcpEnabled;
 
 
 /*
- * Prototypes
+ * Verify all screens have been explicitly specified
  */
+static BOOL
+isEveryScreenExplicit(void)
+{
+  int i;
 
-Bool
-winValidateArgs (void);
+  for (i = 0; i < g_iNumScreens; i++)
+    if (!g_ScreenInfo[i].fExplicitScreen)
+      return FALSE;
 
+  return TRUE;
+}
 
 /*
  * winValidateArgs - Look for invalid argument combinations
@@ -62,6 +69,7 @@ winValidateArgs (void)
   int		i;
   int		iMaxConsecutiveScreen = 0;
   BOOL		fHasNormalScreen0 = FALSE;
+  BOOL		fImplicitScreenFound = FALSE;
 
   /*
    * Check for a malformed set of -screen parameters.
@@ -70,23 +78,14 @@ winValidateArgs (void)
    *	XWin -screen 0 -screen 2
    *	XWin -screen 1 -screen 2
    */
-  for (i = 0; i < MAXSCREENS; i++)
-    {
-      if (g_ScreenInfo[i].fExplicitScreen)
-	iMaxConsecutiveScreen = i + 1;
-    }
-  winErrorFVerb (2, "winValidateArgs - g_iNumScreens: %d "
-		 "iMaxConsecutiveScreen: %d\n",
-		 g_iNumScreens, iMaxConsecutiveScreen);
-  if (g_iNumScreens < iMaxConsecutiveScreen)
+  if (!isEveryScreenExplicit())
     {
       ErrorF ("winValidateArgs - Malformed set of screen parameter(s).  "
 	      "Screens must be specified consecutively starting with "
 	      "screen 0.  That is, you cannot have only a screen 1, nor "
 	      "could you have screen 0 and screen 2.  You instead must "
-	      "have screen 0, or screen 0 and screen 1, respectively.  Of "
-	      "you can specify as many screens as you want from 0 up to "
-	      "%d.\n", MAXSCREENS - 1);
+	      "have screen 0, or screen 0 and screen 1, respectively.  "
+	      "You can specify as many screens as you want.\n");
       return FALSE;
     }
 

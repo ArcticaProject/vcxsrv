@@ -64,8 +64,7 @@ typedef HRESULT (*SHGETFOLDERPATHPROC)(
  */
 
 extern int			g_iNumScreens;
-extern winScreenInfo		g_ScreenInfo[];
-extern int			g_iLastScreen;
+extern winScreenInfo *		g_ScreenInfo;
 extern char *			g_pszCommandLine;
 extern Bool			g_fSilentFatalError;
 
@@ -114,9 +113,6 @@ winClipboardShutdown (void);
 void
 OsVendorVErrorF (const char *pszFormat, va_list va_args);
 #endif
-
-void
-winInitializeDefaultScreens (void);
 
 static Bool
 winCheckDisplayNumber (void);
@@ -727,22 +723,16 @@ OsVendorInit (void)
   /* Add a default screen if no screens were specified */
   if (g_iNumScreens == 0)
     {
-      winDebug ("OsVendorInit - Creating bogus screen 0\n");
-
-      /* 
-       * We need to initialize default screens if no arguments
-       * were processed.  Otherwise, the default screens would
-       * already have been initialized by ddxProcessArgument ().
-       */
-      winInitializeDefaultScreens ();
+      winDebug ("OsVendorInit - Creating default screen 0\n");
 
       /*
-       * Add a screen 0 using the defaults set by 
-       * winInitializeDefaultScreens () and any additional parameters
-       * processed by ddxProcessArgument ().
+       * We need to initialize the default screen 0 if no -screen
+       * arguments were processed.
+       *
+       * Add a screen 0 using the defaults set by winInitializeDefaultScreens()
+       * and any additional default screen parameters given
        */
-      g_iNumScreens = 1;
-      g_iLastScreen = 0;
+      winInitializeScreens(1);
 
       /* We have to flag this as an explicit screen, even though it isn't */
       g_ScreenInfo[0].fExplicitScreen = TRUE;

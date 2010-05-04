@@ -184,6 +184,7 @@ ProcXTestFakeInput(ClientPtr client)
     int i;
     int base = 0;
     int flags = 0;
+    int need_ptr_update = 1;
 
     nev = (stuff->length << 2) - sizeof(xReq);
     if ((nev % sizeof(xEvent)) || !nev)
@@ -388,6 +389,8 @@ ProcXTestFakeInput(ClientPtr client)
                 client->errorValue = ev->u.u.detail;
                 return BadValue;
             }
+
+            need_ptr_update = 0;
             break;
         case MotionNotify:
             if (!dev->valuator)
@@ -452,7 +455,8 @@ ProcXTestFakeInput(ClientPtr client)
     for (i = 0; i < nevents; i++)
         mieqProcessDeviceEvent(dev, (InternalEvent*)(xtest_evlist+i)->event, NULL);
 
-    miPointerUpdateSprite(dev);
+    if (need_ptr_update)
+        miPointerUpdateSprite(dev);
     return client->noClientException;
 }
 

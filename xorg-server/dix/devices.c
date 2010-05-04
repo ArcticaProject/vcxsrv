@@ -89,13 +89,6 @@ SOFTWARE.
  * This file handles input device-related stuff.
  */
 
-static int CoreDevicePrivateKeyIndex;
-DevPrivateKey CoreDevicePrivateKey = &CoreDevicePrivateKeyIndex;
-/* Used to store classes currently not in use by an MD */
-static int UnusedClassesPrivateKeyIndex;
-DevPrivateKey UnusedClassesPrivateKey = &UnusedClassesPrivateKeyIndex;
-
-
 static void RecalculateMasterButtons(DeviceIntPtr slave);
 
 /**
@@ -852,11 +845,14 @@ CloseDevice(DeviceIntPtr dev)
 
     if (IsMaster(dev))
     {
-        classes = dixLookupPrivate(&dev->devPrivates, UnusedClassesPrivateKey);
+        classes = dev->unused_classes;
         FreeAllDeviceClasses(classes);
+	xfree(classes);
     }
 
     if (DevHasCursor(dev) && dev->spriteInfo->sprite) {
+	if (dev->spriteInfo->sprite->current)
+	    FreeCursor(dev->spriteInfo->sprite->current, None);
         xfree(dev->spriteInfo->sprite->spriteTrace);
         xfree(dev->spriteInfo->sprite);
     }
@@ -2465,7 +2461,6 @@ AllocDevicePair (ClientPtr client, char* name,
 {
     DeviceIntPtr pointer;
     DeviceIntPtr keyboard;
-    ClassesPtr classes;
     *ptr = *keybd = NULL;
 
     pointer = AddInputDevice(client, ptr_proc, TRUE);
@@ -2511,12 +2506,9 @@ AllocDevicePair (ClientPtr client, char* name,
     keyboard->last.slave = NULL;
     keyboard->type = (master) ? MASTER_KEYBOARD : SLAVE;
 
-
     /* The ClassesRec stores the device classes currently not used. */
-    classes = xcalloc(1, sizeof(ClassesRec));
-    dixSetPrivate(&pointer->devPrivates, UnusedClassesPrivateKey, classes);
-    classes = xcalloc(1, sizeof(ClassesRec));
-    dixSetPrivate(&keyboard->devPrivates, UnusedClassesPrivateKey, classes);
+    pointer->unused_classes = xcalloc(1, sizeof(ClassesRec));
+    keyboard->unused_classes = xcalloc(1, sizeof(ClassesRec));
 
     *ptr = pointer;
     *keybd = keyboard;

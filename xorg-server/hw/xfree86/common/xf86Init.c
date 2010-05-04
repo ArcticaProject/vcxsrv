@@ -552,9 +552,6 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
   xf86Initialising = TRUE;
 
   if (serverGeneration == 1) {
-
-    pScreenInfo->numScreens = 0;
-
     if ((xf86ServerName = strrchr(argv[0], '/')) != 0)
       xf86ServerName++;
     else

@@ -1054,11 +1054,15 @@ createInvisibleCursor (void)
     cm.xhot = 0;
     cm.yhot = 0;
 
-    AllocARGBCursor(psrcbits, pmaskbits,
-		NULL, &cm,
-		0, 0, 0,
-		0, 0, 0,
-		&pCursor, serverClient, (XID)0);
+    if (AllocARGBCursor(psrcbits, pmaskbits,
+			NULL, &cm,
+			0, 0, 0,
+			0, 0, 0,
+			&pCursor, serverClient, (XID)0) != Success)
+	return NullCursor;
+
+    if (!AddResource(FakeClientID(0), RT_CURSOR, (pointer) pCursor))
+	return NullCursor;
 
     return pCursor;
 }
@@ -1091,12 +1095,9 @@ XFixesCursorInit (void)
     CursorWindowType = CreateNewResourceType(CursorFreeWindow,
 					     "XFixesCursorWindow");
 
-    if (pInvisibleCursor == NULL) {
-	pInvisibleCursor = createInvisibleCursor();
-	if (pInvisibleCursor == NULL) {
-	    return BadAlloc;
-	}
-    }
+    pInvisibleCursor = createInvisibleCursor();
+    if (pInvisibleCursor == NULL)
+	return BadAlloc;
 
     return CursorClientType && CursorHideCountType && CursorWindowType;
 }

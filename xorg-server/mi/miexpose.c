@@ -552,6 +552,9 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
     DrawablePtr	drawable = &pWin->drawable;
 
 #ifdef ROOTLESS
+    if(!drawable || drawable->type == UNDRAWABLE_WINDOW)
+	return;
+
     if(IsFramedWindow(pWin)) {
         RootlessStartDrawing(pWin);
         RootlessDamageRegion(pWin, prgn);

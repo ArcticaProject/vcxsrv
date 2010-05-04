@@ -48,6 +48,7 @@ SOFTWARE.
 #ifndef DIX_H
 #define DIX_H
 
+#include "callback.h"
 #include "gc.h"
 #include "window.h"
 #include "input.h"
@@ -512,36 +513,6 @@ ScreenRestructured (ScreenPtr pScreen);
 
 extern _X_EXPORT int ffs(int i);
 
-/*
- *  callback manager stuff
- */
-
-#ifndef _XTYPEDEF_CALLBACKLISTPTR
-typedef struct _CallbackList *CallbackListPtr; /* also in misc.h */
-#define _XTYPEDEF_CALLBACKLISTPTR
-#endif
-
-typedef void (*CallbackProcPtr) (
-    CallbackListPtr *, pointer, pointer);
-
-extern _X_EXPORT Bool AddCallback(
-    CallbackListPtr * /*pcbl*/,
-    CallbackProcPtr /*callback*/,
-    pointer /*data*/);
-
-extern _X_EXPORT Bool DeleteCallback(
-    CallbackListPtr * /*pcbl*/,
-    CallbackProcPtr /*callback*/,
-    pointer /*data*/);
-
-extern _X_EXPORT void CallCallbacks(
-    CallbackListPtr * /*pcbl*/,
-    pointer /*call_data*/);
-
-extern _X_EXPORT void DeleteCallbackList(
-    CallbackListPtr * /*pcbl*/);
-
-extern _X_EXPORT void InitCallbackManager(void);
 
 /*
  *  ServerGrabCallback stuff
