@@ -144,3 +144,21 @@ xkb_symbols "enter_switch" {
     };
   modifier_map Mod5   { ISO_Level3_Shift };
 };
+
+partial modifier_keys
+xkb_symbols "caps_switch" {
+  key <CAPS> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+  };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+partial modifier_keys
+xkb_symbols "bksl_switch" {
+  key <BKSL> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+  };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};

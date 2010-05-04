@@ -486,7 +486,7 @@ xkb_symbols "bak" {
 
 // Serbian charecters added as third level symbols to Russian keyboard layout.
 
-partial default alphanumeric_keys
+partial alphanumeric_keys
 xkb_symbols "srp" {
     include "ru(common)"
     include "level3(ralt_switch)"

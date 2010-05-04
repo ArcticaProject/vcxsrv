@@ -16,3 +16,51 @@ xkb_symbols "rctrl_switch" {
     };
   modifier_map Mod3   { ISO_Level5_Shift };
 };
+
+// The following modifier keys are used to switch to the third shift and to set a
+// corresponding lock, implemented as NumLock.
+
+partial modifier_keys
+xkb_symbols "lock" {
+  // This adds the definitions needed to create a level5-lock behaviour, using
+  // the real modifier NumLock as a lock indicator.
+  // See also: types/level5 : EIGHT_LEVEL_LEVEL_FIVE_LOCK
+  // See also: compat/level5(level5_lock)
+  key.type[Group1] = "ONE_LEVEL";
+
+  replace key <MDSW> {
+    vmods = LevelFive,
+    symbols[Group1] = [ ISO_Level5_Shift ],
+    actions[Group1] = [ SetMods(modifiers=LevelFive) ]
+  };
+  modifier_map Mod3 { <MDSW> };
+
+  replace key <HYPR> {
+    vmods = NumLock,
+    symbols[Group1] = [ NoSymbol ],
+    actions[Group1] = [ SetMods(modifiers=NumLock) ]
+  };
+  modifier_map Mod2 { <HYPR> };
+};
+
+partial modifier_keys
+xkb_symbols "lsgt_switch_lock" {
+
+  include "level5(lock)"
+
+  key <LSGT> {
+    type[Group1] = "EIGHT_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};
+
+partial modifier_keys
+xkb_symbols "ralt_switch_lock" {
+
+  include "level5(lock)"
+
+  key <RALT> {
+    type[Group1] = "EIGHT_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};

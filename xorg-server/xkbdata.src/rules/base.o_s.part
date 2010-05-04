@@ -110,5 +110,12 @@
   esperanto:dvorak      =	+epo(dvorak)
   terminate:ctrl_alt_bksp =	+terminate(ctrl_alt_bksp)
   apple:alupckeys	=	+macintosh_vndr/apple(alupckeys)
+  shift:both_capslock                =       +shift(both_capslock)
+  shift:lshift_both_capslock         =       +shift(lshift_both_capslock)
+  shift:rshift_both_capslock         =       +shift(rshift_both_capslock)
+  lv3:caps_switch                    =       +level3(caps_switch)
+  lv3:bksl_switch                    =       +level3(bksl_switch)
+  lv5:lsgt_switch_lock            =       +level5(lsgt_switch_lock)
+  lv5:ralt_switch_lock            =       +level5(ralt_switch_lock)
 
 

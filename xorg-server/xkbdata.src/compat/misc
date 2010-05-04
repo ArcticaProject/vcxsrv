@@ -115,3 +115,13 @@ default partial xkb_compatibility "misc"  {
 
     include "ledscroll"
 };
+
+partial xkb_compatibility "assign_shift_left_action"  {
+    // Because of the irrevertable modifier mapping in symbols/pc <LFSH> is 
+    // getting bound to the Lock modifier when using 
+    // symbols/shift(both_capslock), creating unwanted behaviour. 
+    // This is a quirk, to circumvent the problem.
+    interpret Shift_L {
+        action = SetMods(modifiers = Shift);
+    };
+};
