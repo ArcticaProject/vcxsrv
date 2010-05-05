@@ -2777,7 +2777,6 @@ UnrealizeTree(
     WindowPtr pChild;
     UnrealizeWindowProcPtr Unrealize;
     MarkUnrealizedWindowProcPtr MarkUnrealizedWindow;
-    int rc;
 
     Unrealize = pWin->drawable.pScreen->UnrealizeWindow;
     MarkUnrealizedWindow = pWin->drawable.pScreen->MarkUnrealizedWindow;
@@ -2791,7 +2790,7 @@ UnrealizeTree(
 #ifdef PANORAMIX
 	    if(!noPanoramiXExtension && !pChild->drawable.pScreen->myNum) {
 		PanoramiXRes *win;
-		rc = dixLookupResourceByType((pointer *)&win,
+		int rc = dixLookupResourceByType((pointer *)&win,
 					     pChild->drawable.id, XRT_WINDOW,
 					     serverClient, DixWriteAccess);
 		if (rc == Success)

@@ -232,7 +232,6 @@ int main(int argc, char *argv[], char *envp[])
 	    FatalError("couldn't init server resources");
 
 	SetInputCheck(&alwaysCheckForInput[0], &alwaysCheckForInput[1]);
-	screenInfo.arraySize = MAXSCREENS;
 	screenInfo.numScreens = 0;
 
 	InitAtoms();

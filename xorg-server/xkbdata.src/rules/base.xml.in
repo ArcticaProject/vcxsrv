@@ -2478,6 +2478,19 @@
             <languageList><iso639Id>hau</iso639Id></languageList>
           </configItem>
         </variant>
+        <variant>
+          <configItem>
+            <name>avn</name>
+            <_description>Avatime</_description>
+            <languageList><iso639Id>avn</iso639Id></languageList>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
+            <name>gillbt</name>
+            <_description>GILLBT</_description>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>
@@ -2898,7 +2911,7 @@
         <variant>
           <configItem>
             <name>mac</name>
-            <description>Macintosh</description>
+            <_description>Macintosh</_description>
           </configItem>
         </variant>
       </variantList>
@@ -4692,6 +4705,18 @@
           <_description>Enter on keypad</_description>
         </configItem>
       </option>
+      <option>
+        <configItem>
+          <name>lv3:caps_switch</name>
+          <_description>CapsLock</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv3:bksl_switch</name>
+          <_description>Backslash</_description>
+        </configItem>
+      </option>
     </group>
     <group allowMultipleSelection="false">
       <!-- Tweaking the position of the "Ctrl" key -->
@@ -5129,7 +5154,7 @@
       <option>
         <configItem>
           <name>apple:alupckeys</name>
-          <description>Apple Aluminium Keyboard: emulate PC keys (Print, Scroll_Lock, Pause, NumLock)</description>
+          <_description>Apple Aluminium Keyboard: emulate PC keys (Print, Scroll_Lock, Pause, NumLock)</_description>
         </configItem>
       </option>
       <option>
@@ -5142,6 +5167,12 @@
         <configItem>
           <name>misc:typo</name>
           <_description>Enable extra typographic characters</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>shift:both_capslock</name>
+          <_description>Both Shift-Keys together toggle CapsLock</_description>
         </configItem>
       </option>
     </group>
@@ -5173,6 +5204,60 @@
         <configItem>
           <name>eurosign:5</name>
           <_description>5</_description>
+        </configItem>
+      </option>
+    </group>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>lv5</name>
+        <_description>Key to choose 5th level</_description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>lv5:lsgt_switch_lock</name>
+	  <_description>&lt;Less/Greater&gt; chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:ralt_switch_lock</name>
+          <_description>Right Alt chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:lwin_switch_lock</name>
+          <_description>Left Win chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:rwin_switch_lock</name>
+          <_description>Right Win chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:lsgt_switch_lock_cancel</name>
+	  <_description>&lt;Less/Greater&gt; chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:ralt_switch_lock_cancel</name>
+          <_description>Right Alt chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:lwin_switch_lock_cancel</name>
+          <_description>Left Win chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:rwin_switch_lock_cancel</name>
+          <_description>Right Win chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
         </configItem>
       </option>
     </group>

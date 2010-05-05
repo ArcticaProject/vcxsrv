@@ -41,8 +41,7 @@
  */
 
 int		g_iNumScreens = 0;
-winScreenInfo	g_ScreenInfo[MAXSCREENS];
-int		g_iLastScreen = -1;
+winScreenInfo * g_ScreenInfo = 0;
 #ifdef HAS_DEVWINDOWS
 int		g_fdMessageQueue = WIN_FD_INVALID;
 #endif
@@ -57,7 +56,6 @@ DevPrivateKey	g_iPixmapPrivateKey = &g_iPixmapPrivateKeyIndex;
 static int	g_iWindowPrivateKeyIndex;
 DevPrivateKey	g_iWindowPrivateKey = &g_iWindowPrivateKeyIndex;
 unsigned long	g_ulServerGeneration = 0;
-Bool		g_fInitializedDefaultScreens = FALSE;
 DWORD		g_dwEnginesSupported = 0;
 HINSTANCE	g_hInstance = 0;
 HWND		g_hDlgDepthChange = NULL;

@@ -1411,12 +1411,8 @@ CheckGrabForSyncs(DeviceIntPtr thisDev, Bool thisMode, Bool otherMode)
     ComputeFreezes();
 }
 
-/* Only ever used if a grab is called on an attached slave device. */
-static int GrabPrivateKeyIndex;
-static DevPrivateKey GrabPrivateKey = &GrabPrivateKeyIndex;
-
 /**
- * Save the device's master device in the devPrivates. This needs to be done
+ * Save the device's master device id. This needs to be done
  * if a client directly grabs a slave device that is attached to a master. For
  * the duration of the grab, the device is detached, ungrabbing re-attaches it
  * though.
@@ -1427,35 +1423,28 @@ static DevPrivateKey GrabPrivateKey = &GrabPrivateKeyIndex;
 static void
 DetachFromMaster(DeviceIntPtr dev)
 {
-    intptr_t id;
     if (!dev->u.master)
         return;
 
-    id = dev->u.master->id;
+    dev->saved_master_id = dev->u.master->id;
 
-    dixSetPrivate(&dev->devPrivates, GrabPrivateKey, (void *)id);
     AttachDevice(NULL, dev, NULL);
 }
 
 static void
 ReattachToOldMaster(DeviceIntPtr dev)
 {
-    int id;
-    void *p;
     DeviceIntPtr master = NULL;
 
     if (IsMaster(dev))
         return;
 
-
-    p = dixLookupPrivate(&dev->devPrivates, GrabPrivateKey);
-    id = (intptr_t) p; /* silence gcc warnings */
-    dixLookupDevice(&master, id, serverClient, DixUseAccess);
+    dixLookupDevice(&master, dev->saved_master_id, serverClient, DixUseAccess);
 
     if (master)
     {
         AttachDevice(serverClient, dev, master);
-        dixSetPrivate(&dev->devPrivates, GrabPrivateKey, NULL);
+	dev->saved_master_id = 0;
     }
 }
 
@@ -2572,7 +2561,6 @@ static Bool
 PointInBorderSize(WindowPtr pWin, int x, int y)
 {
     BoxRec box;
-    SpritePtr pSprite = inputInfo.pointer->spriteInfo->sprite;
 
     if(POINT_IN_REGION(pWin->drawable.pScreen, &pWin->borderSize, x, y, &box))
 	return TRUE;
@@ -2580,6 +2568,7 @@ PointInBorderSize(WindowPtr pWin, int x, int y)
 #ifdef PANORAMIX
     if(!noPanoramiXExtension &&
             XineramaSetWindowPntrs(inputInfo.pointer, pWin)) {
+	SpritePtr pSprite = inputInfo.pointer->spriteInfo->sprite;
 	int i;
 
 	for(i = 1; i < PanoramiXNumScreens; i++) {
@@ -2946,6 +2935,7 @@ InitializeSprite(DeviceIntPtr pDev, WindowPtr pWin)
 {
     SpritePtr pSprite;
     ScreenPtr pScreen;
+    CursorPtr pCursor;
 
     if (!pDev->spriteInfo->sprite)
     {
@@ -2989,8 +2979,7 @@ InitializeSprite(DeviceIntPtr pDev, WindowPtr pWin)
 
     if (pWin)
     {
-        pSprite->current = wCursor(pWin);
-        pSprite->current->refcnt++;
+	pCursor = wCursor(pWin);
 	pSprite->spriteTrace = (WindowPtr *)xcalloc(1, 32*sizeof(WindowPtr));
 	if (!pSprite->spriteTrace)
 	    FatalError("Failed to allocate spriteTrace");
@@ -3003,13 +2992,18 @@ InitializeSprite(DeviceIntPtr pDev, WindowPtr pWin)
 	pSprite->pDequeueScreen = pSprite->pEnqueueScreen;
 
     } else {
-        pSprite->current = NullCursor;
+        pCursor = NullCursor;
 	pSprite->spriteTrace = NULL;
 	pSprite->spriteTraceSize = 0;
 	pSprite->spriteTraceGood = 0;
 	pSprite->pEnqueueScreen = screenInfo.screens[0];
 	pSprite->pDequeueScreen = pSprite->pEnqueueScreen;
     }
+    if (pCursor)
+	pCursor->refcnt++;
+    if (pSprite->current)
+	FreeCursor(pSprite->current, None);
+    pSprite->current = pCursor;
 
     if (pScreen)
     {
@@ -3062,6 +3056,7 @@ UpdateSpriteForScreen(DeviceIntPtr pDev, ScreenPtr pScreen)
 {
     SpritePtr pSprite = NULL;
     WindowPtr win = NULL;
+    CursorPtr pCursor;
     if (!pScreen)
         return ;
 
@@ -3077,8 +3072,12 @@ UpdateSpriteForScreen(DeviceIntPtr pDev, ScreenPtr pScreen)
     pSprite->hotLimits.x2 = pScreen->width;
     pSprite->hotLimits.y2 = pScreen->height;
     pSprite->win = win;
-    pSprite->current = wCursor (win);
-    pSprite->current->refcnt++;
+    pCursor = wCursor(win);
+    if (pCursor)
+	pCursor->refcnt++;
+    if (pSprite->current)
+	FreeCursor(pSprite->current, 0);
+    pSprite->current = pCursor;
     pSprite->spriteTraceGood = 1;
     pSprite->spriteTrace[0] = win;
     (*pScreen->CursorLimits) (pDev,

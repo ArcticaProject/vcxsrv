@@ -36,16 +36,18 @@
 #error "You should be compiling fbcmap_mi.c instead of fbcmap.c!"
 #endif
 
+static int cmapScrPrivateKeyIndex;
+static DevPrivateKey cmapScrPrivateKey = &cmapScrPrivateKeyIndex;
 
-
-ColormapPtr FbInstalledMaps[MAXSCREENS];
+#define GetInstalledColormap(s) ((ColormapPtr) dixLookupPrivate(&(s)->devPrivates, cmapScrPrivateKey))
+#define SetInstalledColormap(s,c) (dixSetPrivate(&(s)->devPrivates, cmapScrPrivateKey, c))
 
 int
 fbListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
 {
     /* By the time we are processing requests, we can guarantee that there
      * is always a colormap installed */
-    *pmaps = FbInstalledMaps[pScreen->myNum]->mid;
+    *pmaps = GetInstalledColormap(pScreen)->mid;
     return (1);
 }
 
@@ -53,8 +55,7 @@ fbListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
 void
 fbInstallColormap(ColormapPtr pmap)
 {
-    int index = pmap->pScreen->myNum;
-    ColormapPtr oldpmap = FbInstalledMaps[index];
+    ColormapPtr oldpmap = GetInstalledColormap(pmap->pScreen);
 
     if(pmap != oldpmap)
     {
@@ -63,7 +64,7 @@ fbInstallColormap(ColormapPtr pmap)
 	if(oldpmap != (ColormapPtr)None)
 	    WalkTree(pmap->pScreen, TellLostMap, (char *)&oldpmap->mid);
 	/* Install pmap */
-	FbInstalledMaps[index] = pmap;
+	SetInstalledColormap(pmap->pScreen, pmap);
 	WalkTree(pmap->pScreen, TellGainedMap, (char *)&pmap->mid);
     }
 }
@@ -71,8 +72,7 @@ fbInstallColormap(ColormapPtr pmap)
 void
 fbUninstallColormap(ColormapPtr pmap)
 {
-    int index = pmap->pScreen->myNum;
-    ColormapPtr curpmap = FbInstalledMaps[index];
+    ColormapPtr curpmap = GetInstalledColormap(pmap->pScreen);
 
     if(pmap == curpmap)
     {

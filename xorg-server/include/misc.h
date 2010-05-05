@@ -100,6 +100,12 @@ typedef unsigned long ATOM;
 #define FALSE 0
 #endif
 
+#ifdef __GNUC__
+#define X_DEPRECATED __attribute__((deprecated))
+#else
+#define X_DEPRECATED
+#endif
+
 #ifndef _XTYPEDEF_CALLBACKLISTPTR
 typedef struct _CallbackList *CallbackListPtr; /* also in dix.h */
 #define _XTYPEDEF_CALLBACKLISTPTR

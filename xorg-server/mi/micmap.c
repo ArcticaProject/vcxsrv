@@ -40,13 +40,14 @@
 #include "globals.h"
 #include "micmap.h"
 
-ColormapPtr miInstalledMaps[MAXSCREENS];
+static int micmapScrPrivateKeyIndex;
+DevPrivateKey micmapScrPrivateKey = &micmapScrPrivateKeyIndex;
 
 int
 miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
 {
-    if (miInstalledMaps[pScreen->myNum]) {
-	*pmaps = miInstalledMaps[pScreen->myNum]->mid;
+    if (GetInstalledmiColormap(pScreen)) {
+	*pmaps = GetInstalledmiColormap(pScreen)->mid;
 	return (1);
     }
     return 0;
@@ -55,8 +56,7 @@ miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
 void
 miInstallColormap(ColormapPtr pmap)
 {
-    int index = pmap->pScreen->myNum;
-    ColormapPtr oldpmap = miInstalledMaps[index];
+    ColormapPtr oldpmap = GetInstalledmiColormap(pmap->pScreen);
 
     if(pmap != oldpmap)
     {
@@ -65,7 +65,7 @@ miInstallColormap(ColormapPtr pmap)
 	if(oldpmap != (ColormapPtr)None)
 	    WalkTree(pmap->pScreen, TellLostMap, (char *)&oldpmap->mid);
 	/* Install pmap */
-	miInstalledMaps[index] = pmap;
+	SetInstalledmiColormap(pmap->pScreen, pmap);
 	WalkTree(pmap->pScreen, TellGainedMap, (char *)&pmap->mid);
 
     }
@@ -74,8 +74,7 @@ miInstallColormap(ColormapPtr pmap)
 void
 miUninstallColormap(ColormapPtr pmap)
 {
-    int index = pmap->pScreen->myNum;
-    ColormapPtr curpmap = miInstalledMaps[index];
+    ColormapPtr curpmap = GetInstalledmiColormap(pmap->pScreen);
 
     if(pmap == curpmap)
     {

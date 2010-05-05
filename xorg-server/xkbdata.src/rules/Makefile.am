@@ -41,6 +41,11 @@ HDR compat/base.ml2v2_s.part  extras/base.ml2v2_s.part \
 HDR compat/base.ml3v3_s.part  extras/base.ml3v3_s.part \
 HDR compat/base.ml4v4_s.part  extras/base.ml4v4_s.part \
 HDR base.m_s.part \
+HDR compat/base.lv_c.part   \
+HDR compat/base.l1v1_c.part \
+HDR compat/base.l2v2_c.part \
+HDR compat/base.l3v3_c.part \
+HDR compat/base.l4v4_c.part \
 HDR base.ml_c.part \
 HDR base.ml1_c.part \
 HDR base.m_t.part \
@@ -72,6 +77,11 @@ HDR compat/base.ml2v2_s.part  extras/base.ml2v2_s.part \
 HDR compat/base.ml3v3_s.part  extras/base.ml3v3_s.part \
 HDR compat/base.ml4v4_s.part  extras/base.ml4v4_s.part \
 HDR evdev.m_s.part \
+HDR compat/base.lv_c.part   \
+HDR compat/base.l1v1_c.part \
+HDR compat/base.l2v2_c.part \
+HDR compat/base.l3v3_c.part \
+HDR compat/base.l4v4_c.part \
 HDR base.ml_c.part \
 HDR base.ml1_c.part \
 HDR base.m_t.part \
@@ -104,6 +114,11 @@ HDR extras/base.ml2v2_s.part \
 HDR extras/base.ml3v3_s.part \
 HDR extras/base.ml4v4_s.part \
 HDR base.m_s.part \
+HDR \
+HDR \
+HDR \
+HDR \
+HDR \
 HDR base.ml_c.part \
 HDR base.ml1_c.part \
 HDR base.m_t.part \
@@ -134,6 +149,11 @@ HDR extras/base.ml2v2_s.part \
 HDR extras/base.ml3v3_s.part \
 HDR extras/base.ml4v4_s.part \
 HDR evdev.m_s.part \
+HDR \
+HDR \
+HDR \
+HDR \
+HDR \
 HDR base.ml_c.part \
 HDR base.ml1_c.part \
 HDR base.m_t.part \

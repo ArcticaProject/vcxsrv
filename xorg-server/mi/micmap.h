@@ -4,7 +4,13 @@
 #ifndef _MICMAP_H_
 #define _MICMAP_H_
 
-extern _X_EXPORT ColormapPtr miInstalledMaps[MAXSCREENS];
+#define GetInstalledmiColormap(s) \
+    ((ColormapPtr) dixLookupPrivate(&(s)->devPrivates, micmapScrPrivateKey))
+#define SetInstalledmiColormap(s,c) \
+    (dixSetPrivate(&(s)->devPrivates, micmapScrPrivateKey, c))
+
+extern _X_EXPORT DevPrivateKey micmapScrPrivateKey;
+
 
 typedef Bool (* miInitVisualsProcPtr)(VisualPtr *, DepthPtr *, int *, int *,
 					int *, VisualID *, unsigned long, int,

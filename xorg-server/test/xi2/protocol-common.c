@@ -141,7 +141,6 @@ static Bool device_cursor_init(DeviceIntPtr dev, ScreenPtr screen) { return TRUE
 static Bool set_cursor_pos(DeviceIntPtr dev, ScreenPtr screen, int x, int y, Bool event) { return TRUE; }
 void init_simple(void)
 {
-    screenInfo.arraySize = MAXSCREENS;
     screenInfo.numScreens = 1;
     screenInfo.screens[0] = &screen;
 

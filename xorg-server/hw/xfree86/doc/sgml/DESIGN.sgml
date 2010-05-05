@@ -1,5 +1,5 @@
 <!DOCTYPE linuxdoc PUBLIC "-//Xorg//DTD linuxdoc//EN" [
- <!ENTITY % defs SYSTEM "defs.ent"> %defs;
+ <!ENTITY % defs SYSTEM "X11/defs.ent"> %defs;
  <!-- config file keyword markup -->
  <!ENTITY s.key STARTTAG "bf">
  <!ENTITY e.key ENDTAG "bf">

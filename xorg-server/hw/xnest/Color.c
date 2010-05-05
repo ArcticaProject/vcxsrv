@@ -34,7 +34,11 @@ is" without express or implied warranty.
 #include "XNWindow.h"
 #include "Args.h"
 
-static ColormapPtr InstalledMaps[MAXSCREENS];
+static int cmapScrPrivateKeyIndex;
+static DevPrivateKey cmapScrPrivateKey = &cmapScrPrivateKeyIndex;
+
+#define GetInstalledColormap(s) ((ColormapPtr) dixLookupPrivate(&(s)->devPrivates, cmapScrPrivateKey))
+#define SetInstalledColormap(s,c) (dixSetPrivate(&(s)->devPrivates, cmapScrPrivateKey, c))
 
 Bool
 xnestCreateColormap(ColormapPtr pCmap)
@@ -332,11 +336,7 @@ xnestDirectUninstallColormaps(ScreenPtr pScreen)
 void
 xnestInstallColormap(ColormapPtr pCmap)
 {
-  int index;
-  ColormapPtr pOldCmap;
-  
-  index = pCmap->pScreen->myNum;
-  pOldCmap = InstalledMaps[index];
+  ColormapPtr pOldCmap = GetInstalledColormap(pCmap->pScreen);
   
   if(pCmap != pOldCmap)
     {
@@ -346,7 +346,7 @@ xnestInstallColormap(ColormapPtr pCmap)
       if(pOldCmap != (ColormapPtr)None)
 	WalkTree(pCmap->pScreen, TellLostMap, (pointer)&pOldCmap->mid);
       
-      InstalledMaps[index] = pCmap;
+      SetInstalledColormap(pCmap->pScreen, pCmap);
       WalkTree(pCmap->pScreen, TellGainedMap, (pointer)&pCmap->mid);
       
       xnestSetInstalledColormapWindows(pCmap->pScreen);
@@ -357,11 +357,7 @@ xnestInstallColormap(ColormapPtr pCmap)
 void
 xnestUninstallColormap(ColormapPtr pCmap)
 {
-  int index;
-  ColormapPtr pCurCmap;
-  
-  index = pCmap->pScreen->myNum;
-  pCurCmap = InstalledMaps[index];
+  ColormapPtr pCurCmap = GetInstalledColormap(pCmap->pScreen);
   
   if(pCmap == pCurCmap)
     {
@@ -382,7 +378,7 @@ int
 xnestListInstalledColormaps(ScreenPtr pScreen, Colormap *pCmapIDs)
 {
   if (xnestInstalledDefaultColormap) {
-    *pCmapIDs = InstalledMaps[pScreen->myNum]->mid;
+    *pCmapIDs = GetInstalledColormap(pScreen)->mid;
     return 1;
   }
   else

@@ -94,3 +94,60 @@ xkb_symbols "generic" {
     include "level3(ralt_switch)"
 
 };
+
+partial alphanumeric_keys
+xkb_symbols "avn" {
+    include "gh(basic)"
+
+    name[Group1]= "Ghana - Avatime";
+
+    key <TLDE> { [      grave,     asciitilde,   0x01000300,  0x01000303 ] }; // combining grave; combining tilde
+    key <AE04> { [          4,         dollar,         cent,  0x010020B5 ] }; // ¢, ₵
+    key <AE11> { [      minus,     underscore,   0x01000304,  0x01000304 ] }; // combining macron
+    key <AD01> { [ 0x0100028B,      0x010001B2                           ] }; // ʋ, Ʋ
+    key <AD07> { [          u,              U,   0x0100028A,  0x010001B1 ] }; // ʊ, Ʊ
+    key <AD08> { [          i,              I,   0x01000269,  0x01000196 ] }; // ɩ, Ɩ
+    key <AD11> { [ 0x0100025B,      0x01000190, bracketleft,  braceleft  ] }; // ɛ, Ɛ
+    key <AC03> { [          d,              D,   0x01000256,  0x01000189 ] }; // ɖ, Ɖ
+    key <AC04> { [          f,              F,   0x01000192,  0x01000191 ] }; // ƒ, Ƒ
+    key <AC07> { [ 0x0100014B,      0x0100014A                           ] }; // ŋ, Ŋ
+    key <AC11> { [ apostrophe,       quotedbl,   0x01000301,  0x01000301 ] }; // combining acute
+    key <AB03> { [ 0x01000254,      0x01000186                           ] }; // ɔ, Ɔ
+
+    include "level3(ralt_switch)"
+ 
+};
+
+// This keyboard layout fully imitates the 'Ghana Unicode' layout which is used in GILLBT on Windows with Keyman.
+// However, in this layout a 3rd level key (R ALT) is used rather than dead keys.
+// Also it has three additional features:
+// 1) combining macron above: <R ALT> + <SHIFT> + <->
+// 2) cent: <R ALT> + <4> or <R ALT> + <SHIFT> + <4>
+// 3) ʊ/Ʊ: <R ALT> + <u>/<U>
+
+partial alphanumeric_keys
+xkb_symbols "gillbt" {
+    include "gh(basic)"
+
+    name[Group1]= "Ghana - GILLBT";
+
+    key <TLDE> { [ grave,      asciitilde,  0x01000300,   0x01000303  ] }; // combining grave; combining tilde
+    key <AE04> { [ 4,          dollar,      cent,         0x010020B5  ] }; // ¢, ₵
+    key <AE06> { [ 6,          asciicircum, 0x01000302,   0x01000302  ] }; // combining circumflex accent
+    key <AE11> { [ minus,      underscore,  0x01000331,   0x01000304  ] }; // combining macron below; combining macron above
+    key <AE12> { [ 0x0100014B, 0x0100014A,  equal,        plus        ] }; // ŋ, Ŋ
+    key <AD01> { [ 0x0100028B, 0x010001B2,  q,            Q           ] }; // ʋ, Ʋ
+    key <AD03> { [ e,          E,           0x010001DD,   0x0100018E  ] }; // ǝ, Ǝ
+    key <AD07> { [ u,          U,           0x0100028A,   0x010001B1  ] }; // ʊ, Ʊ
+    key <AD11> { [ 0x0100025B, 0x01000190,  bracketleft,  braceleft   ] }; // ɛ, Ɛ
+    key <AD12> { [ 0x01000254, 0x01000186,  bracketright, braceright  ] }; // ɔ, Ɔ
+    key <AC03> { [ d,          D,           0x01000256,   0x01000189  ] }; // ɖ, Ɖ
+    key <AC04> { [ f,          F,           0x01000192,   0x01000191  ] }; // ƒ, Ƒ
+    key <AC05> { [ g,          G,           0x01000263,   0x01000194  ] }; // ɣ, Ɣ
+    key <AC11> { [ apostrophe, quotedbl,    0x01000301,   0x01000301  ] }; // combining acute
+    key <AB01> { [ z,          Z,           0x01000292,   0x010001B7  ] }; // ʒ, Ʒ
+    key <AB02> { [ 0x01000269, 0x01000196,  x,            X           ] }; // ɩ, Ɩ
+    key <AB03> { [ c,          C,           0x010000E7,   0x010000C7  ] }; // ç, Ç
+    
+    include "level3(ralt_switch)"
+};

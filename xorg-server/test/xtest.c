@@ -49,7 +49,6 @@ static void xtest_init_devices(void)
 
     /* random stuff that needs initialization */
     memset(&screen, 0, sizeof(screen));
-    screenInfo.arraySize = MAXSCREENS;
     screenInfo.numScreens = 1;
     screenInfo.screens[0] = &screen;
     screen.myNum = 0;

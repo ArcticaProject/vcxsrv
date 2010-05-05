@@ -1,7 +1,12 @@
 
 transform_files=layoutsMapping.lst variantsMapping.lst
 
-dist_parts=base.o_s.part
+dist_parts=base.o_s.part \
+base.lv_c.part \
+base.l1v1_c.part \
+base.l2v2_c.part \
+base.l3v3_c.part \
+base.l4v4_c.part
 
 scripts_dir=$(srcdir)/../bin
 

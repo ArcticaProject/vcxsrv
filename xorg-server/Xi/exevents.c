@@ -96,9 +96,6 @@ Bool ShouldFreeInputMasks(WindowPtr /* pWin */ ,
 static Bool MakeInputMasks(WindowPtr	/* pWin */
     );
 
-/* Used to sture classes currently not in use by an MD */
-extern DevPrivateKey UnusedClassesPrivateKey;
-
 /*
  * Only let the given client know of core events which will affect its
  * interpretation of input events, if the client's ClientPointer (or the
@@ -230,8 +227,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
 
         if (!to->intfeed)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->intfeed = classes->intfeed;
         }
 
@@ -255,7 +251,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->intfeed && !from->intfeed)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->intfeed = to->intfeed;
         to->intfeed      = NULL;
     }
@@ -266,8 +262,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
 
         if (!to->stringfeed)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->stringfeed = classes->stringfeed;
         }
 
@@ -291,7 +286,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->stringfeed && !from->stringfeed)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->stringfeed = to->stringfeed;
         to->stringfeed      = NULL;
     }
@@ -302,8 +297,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
 
         if (!to->bell)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->bell = classes->bell;
         }
 
@@ -328,7 +322,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->bell && !from->bell)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->bell = to->bell;
         to->bell      = NULL;
     }
@@ -339,8 +333,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
 
         if (!to->leds)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->leds = classes->leds;
         }
 
@@ -367,7 +360,7 @@ DeepCopyFeedbackClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->leds && !from->leds)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->leds = to->leds;
         to->leds      = NULL;
     }
@@ -387,8 +380,7 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
 
         if (!to->kbdfeed)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
 
             to->kbdfeed = classes->kbdfeed;
             if (!to->kbdfeed)
@@ -419,7 +411,7 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->kbdfeed && !from->kbdfeed)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->kbdfeed = to->kbdfeed;
         to->kbdfeed      = NULL;
     }
@@ -428,8 +420,7 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
     {
         if (!to->key)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                    UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->key = classes->key;
             if (!to->key)
                 InitKeyboardDeviceStruct(to, NULL, NULL, NULL);
@@ -441,7 +432,7 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->key && !from->key)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->key = to->key;
         to->key      = NULL;
     }
@@ -478,8 +469,7 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
         {
             WindowPtr *oldTrace;
 
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->focus = classes->focus;
             if (!to->focus)
             {
@@ -502,7 +492,7 @@ DeepCopyKeyboardClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->focus)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->focus = to->focus;
         to->focus      = NULL;
     }
@@ -520,8 +510,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
         PtrFeedbackPtr *p, it;
         if (!to->ptrfeed)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->ptrfeed = classes->ptrfeed;
         }
 
@@ -545,7 +534,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->ptrfeed && !from->ptrfeed)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->ptrfeed = to->ptrfeed;
         to->ptrfeed      = NULL;
     }
@@ -555,8 +544,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
         ValuatorClassPtr v;
         if (!to->valuator)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->valuator = classes->valuator;
             if (to->valuator)
                 classes->valuator = NULL;
@@ -579,7 +567,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->valuator && !from->valuator)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->valuator = to->valuator;
         to->valuator      = NULL;
     }
@@ -588,8 +576,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     {
         if (!to->button)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->button = classes->button;
             if (!to->button)
             {
@@ -619,7 +606,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->button && !from->button)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->button = to->button;
         to->button      = NULL;
     }
@@ -628,8 +615,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     {
         if (!to->proximity)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->proximity = classes->proximity;
             if (!to->proximity)
             {
@@ -644,7 +630,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->proximity)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->proximity = to->proximity;
         to->proximity      = NULL;
     }
@@ -653,8 +639,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     {
         if (!to->absolute)
         {
-            classes = dixLookupPrivate(&to->devPrivates,
-                                       UnusedClassesPrivateKey);
+            classes = to->unused_classes;
             to->absolute = classes->absolute;
             if (!to->absolute)
             {
@@ -669,7 +654,7 @@ DeepCopyPointerClasses(DeviceIntPtr from, DeviceIntPtr to)
     } else if (to->absolute)
     {
         ClassesPtr classes;
-        classes = dixLookupPrivate(&to->devPrivates, UnusedClassesPrivateKey);
+        classes = to->unused_classes;
         classes->absolute = to->absolute;
         to->absolute      = NULL;
     }

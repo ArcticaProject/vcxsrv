@@ -1601,6 +1601,7 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                 else {
                     dcolor->spec = xstrdup(scolor->spec);
                 }
+                dcolor->pixel = scolor->pixel;
             }
 
             dst->geom->num_colors = dst->geom->sz_colors;
@@ -1672,6 +1673,8 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
 
                             memcpy(doutline->points, soutline->points,
                                    soutline->num_points * sizeof(XkbPointRec));
+
+                            doutline->corner_radius = soutline->corner_radius;
                         }
 
                         doutline->num_points = soutline->num_points;
@@ -1681,6 +1684,36 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
 
                 dshape->num_outlines = sshape->num_outlines;
                 dshape->sz_outlines = sshape->num_outlines;
+                dshape->name = sshape->name;
+                dshape->bounds = sshape->bounds;
+
+                dshape->approx = NULL;
+                if (sshape->approx && sshape->num_outlines > 0) {
+
+                    const ptrdiff_t approx_idx =
+                            sshape->approx - sshape->outlines;
+
+                    if (approx_idx < dshape->num_outlines) {
+                            dshape->approx = dshape->outlines + approx_idx;
+                    } else {
+                            LogMessage(X_WARNING, "XKB: approx outline "
+                                            "index is out of range\n");
+                    }
+                }
+
+                dshape->primary = NULL;
+                if (sshape->primary && sshape->num_outlines > 0) {
+
+                    const ptrdiff_t primary_idx =
+                            sshape->primary - sshape->outlines;
+
+                    if (primary_idx < dshape->num_outlines) {
+                            dshape->primary = dshape->outlines + primary_idx;
+                    } else {
+                            LogMessage(X_WARNING, "XKB: primary outline "
+                                            "index is out of range\n");
+                    }
+                }
             }
 
             dst->geom->num_shapes = src->geom->num_shapes;
@@ -1784,6 +1817,10 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                     }
                     drow->num_keys = srow->num_keys;
                     drow->sz_keys = srow->num_keys;
+                    drow->top = srow->top;
+                    drow->left = srow->left;
+                    drow->vertical = srow->vertical;
+                    drow->bounds = srow->bounds;
                 }
 
                 if (ssection->num_doodads) {
@@ -1802,6 +1839,7 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                       ddoodad = dsection->doodads;
                      k < ssection->num_doodads;
                      k++, sdoodad++, ddoodad++) {
+                    memcpy(ddoodad , sdoodad, sizeof(XkbDoodadRec));
                     if (sdoodad->any.type == XkbTextDoodad) {
                         if (sdoodad->text.text)
                             ddoodad->text.text =
@@ -1815,7 +1853,6 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                             ddoodad->logo.logo_name =
                              xstrdup(sdoodad->logo.logo_name);
                     }
-                    ddoodad->any.type = sdoodad->any.type;
                 }
                 dsection->overlays = NULL;
                 dsection->sz_overlays = 0;
@@ -1880,7 +1917,7 @@ _XkbCopyGeom(XkbDescPtr src, XkbDescPtr dst)
                   ddoodad = dst->geom->doodads;
                  i < src->geom->num_doodads;
                  i++, sdoodad++, ddoodad++) {
-                ddoodad->any.type = sdoodad->any.type;
+                memcpy(ddoodad , sdoodad, sizeof(XkbDoodadRec));
                 if (sdoodad->any.type == XkbTextDoodad) {
                     if (sdoodad->text.text)
                         ddoodad->text.text = xstrdup(sdoodad->text.text);

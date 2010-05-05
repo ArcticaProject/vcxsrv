@@ -186,7 +186,9 @@ typedef struct {
    int num;
 } OffscreenImageRec;
 
-static OffscreenImageRec OffscreenImages[MAXSCREENS];
+static int OffscreenPrivateKeyIndex;
+static DevPrivateKey OffscreenPrivateKey = &OffscreenPrivateKeyIndex;
+#define GetOffscreenImage(pScreen) ((OffscreenImageRec *) dixLookupPrivate(&(pScreen)->devPrivates, OffscreenPrivateKey))
 
 Bool
 xf86XVRegisterOffscreenImages(
@@ -194,9 +196,18 @@ xf86XVRegisterOffscreenImages(
     XF86OffscreenImagePtr images,
     int num
 ){
-    OffscreenImages[pScreen->myNum].num = num;
-    OffscreenImages[pScreen->myNum].images = images;
+    OffscreenImageRec *OffscreenImage;
+    /* This function may be called before xf86XVScreenInit, so there's
+     * no better place than this to call dixRequestPrivate to ensure we
+     * have space reserved. After the first call it is a no-op. */
+    if(!dixRequestPrivate(OffscreenPrivateKey, sizeof(OffscreenImageRec)) ||
+       !(OffscreenImage = GetOffscreenImage(pScreen)))
+        /* Every X.org driver assumes this function always succeeds, so
+         * just die on allocation failure. */
+        FatalError("Could not allocate private storage for XV offscreen images.\n");
 
+    OffscreenImage->num = num;
+    OffscreenImage->images = images;
     return TRUE;
 }
 
@@ -205,8 +216,9 @@ xf86XVQueryOffscreenImages(
    ScreenPtr pScreen,
    int *num
 ){
-   *num = OffscreenImages[pScreen->myNum].num;
-   return OffscreenImages[pScreen->myNum].images;
+    OffscreenImageRec *OffscreenImage = GetOffscreenImage(pScreen);
+    *num = OffscreenImage->num;
+    return OffscreenImage->images;
 }
 
 
@@ -1176,9 +1188,6 @@ xf86XVCloseScreen(int i, ScreenPtr pScreen)
   XF86XVScreenPtr ScreenPriv = GET_XF86XV_SCREEN(pScreen);
   XvAdaptorPtr pa;
   int c;
-
-  /* Clear offscreen images */
-  memset(&OffscreenImages[pScreen->myNum], 0, sizeof(OffscreenImages[0]));
 
   if(!ScreenPriv) return TRUE;
 

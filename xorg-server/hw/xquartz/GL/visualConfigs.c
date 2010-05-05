@@ -35,9 +35,10 @@
 #include "dri.h"
 
 #include <OpenGL/OpenGL.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 #include <OpenGL/CGLContext.h>
 
-#include <GL/gl.h>
 #include <GL/glxproto.h>
 #include <windowstr.h>
 #include <resource.h>
