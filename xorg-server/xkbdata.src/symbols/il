@@ -16,7 +16,6 @@ xkb_symbols "basic" {
 
     key <AD01> { [ slash,	Q		]	};
     key <AD02> { [ apostrophe,	W		]	};
-    key <AD03> { [ hebrew_qoph,	E		]       };
     key <AD04> { [ hebrew_resh,	R		]	};
     key <AD05> { [ hebrew_aleph,T		]       };
     key <AD06> { [ hebrew_tet,	Y		]       };
@@ -25,7 +24,6 @@ xkb_symbols "basic" {
     key <AD09> { [ hebrew_finalmem,	O	]       };
     key <AD10> { [ hebrew_pe,	P		]	};
 
-    key <AC01> { [ hebrew_shin,	A		]	};
     key <AC02> { [ hebrew_dalet,S		]       };
     key <AC03> { [ hebrew_gimel,D		]       };
     key <AC04> { [ hebrew_kaph,	F		]	};
@@ -52,6 +50,8 @@ xkb_symbols "basic" {
     
     key <TLDE> { [ semicolon,	asciitilde,0x10005b0	]}; // Sheva
     key <AB10> { [ period,	question,  0x10005c3	]}; // Sof Pasuq
+    key <AD03> { [ hebrew_qoph,	E,	EuroSign	]};
+    key <AC01> { [ hebrew_shin,	A,	0x10020AA	]};
   
     // The following may get overriden by the iso9995-3(basic101) symbols.
     // therefore they are included here. 
@@ -77,6 +77,8 @@ xkb_symbols "basic" {
     key <AD12> { [ bracketleft,  braceleft,  0x10005bd	]}; // Meteg
                                       
     key <BKSL> { [ backslash,    bar,  0x10005bb	]}; // Qubuts    
+
+    include "level3(ralt_switch)"
 };
 
 

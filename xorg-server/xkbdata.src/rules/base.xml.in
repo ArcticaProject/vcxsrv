@@ -1311,7 +1311,7 @@
         <variant>
           <configItem>
             <name>olpc2</name>
-            <_description>Group toggle on multiply/divide key</_description>
+            <_description>Layout toggle on multiply/divide key</_description>
           </configItem>
         </variant>
         <variant>
@@ -2295,8 +2295,14 @@
       <variantList>
         <variant>
           <configItem>
+            <name>classic</name>
+            <_description>Classic</_description>
+          </configItem>
+        </variant>
+        <variant>
+          <configItem>
             <name>nodeadkeys</name>
-            <_description>Eliminate dead keys</_description>
+            <_description>Classic, eliminate dead keys</_description>
           </configItem>
         </variant>
         <variant>
@@ -2305,12 +2311,6 @@
             <_description>Northern Saami</_description>
             <languageList><iso639Id>smi</iso639Id>
                           <iso639Id>sme</iso639Id></languageList>
-          </configItem>
-        </variant>
-        <variant>
-          <configItem>
-            <name>classic</name>
-            <_description>Classic</_description>
           </configItem>
         </variant>
         <variant>
@@ -3594,6 +3594,13 @@
             <_description>Latin with guillemets</_description>
           </configItem>
         </variant>
+        <variant>
+          <configItem>
+            <name>rue</name>
+            <_description>Pannonian Rusyn Homophonic</_description>
+            <languageList><iso639Id>rue</iso639Id></languageList>
+          </configItem>
+        </variant>
       </variantList>
     </layout>
     <layout>
@@ -4717,6 +4724,30 @@
           <_description>Backslash</_description>
         </configItem>
       </option>
+      <option>
+        <configItem>
+          <name>lv3:lsgt_switch</name>
+	  <description>&lt;Less/Greater&gt;</description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv3:caps_switch_latch</name>
+          <description>CapsLock (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv3:bksl_switch_latch</name>
+          <description>Backslash chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv3:lsgt_switch_latch</name>
+	  <description>&lt;Less/Greater&gt; (chooses 3rd level, latches when pressed together with another 3rd-level-chooser)</description>
+        </configItem>
+      </option>
     </group>
     <group allowMultipleSelection="false">
       <!-- Tweaking the position of the "Ctrl" key -->
@@ -5094,7 +5125,7 @@
       <option>
         <configItem>
           <name>compose:102</name>
-          <_description>Less-than/Greater-than</_description>
+          <_description>&lt;Less/Greater&gt;</_description>
         </configItem>
       </option>
       <option>
@@ -5175,6 +5206,18 @@
           <_description>Both Shift-Keys together toggle CapsLock</_description>
         </configItem>
       </option>
+      <option>
+        <configItem>
+          <name>shift:both_capslock_cancel</name>
+          <description>Both Shift-Keys together activate CapsLock, one Shift-Key deactivates</description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>shift:both_shiftlock</name>
+          <description>Both Shift-Keys together toggle ShiftLock</description>
+        </configItem>
+      </option>
     </group>
     <group allowMultipleSelection="true">
       <!-- Special shortcuts for the Euro character -->
@@ -5215,49 +5258,61 @@
       <option>
         <configItem>
           <name>lv5:lsgt_switch_lock</name>
-	  <_description>&lt;Less/Greater&gt; chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+	  <_description>&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:ralt_switch_lock</name>
-          <_description>Right Alt chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+          <_description>Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:lwin_switch_lock</name>
-          <_description>Left Win chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+          <_description>Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:rwin_switch_lock</name>
-          <_description>Right Win chooses 5th level and locks it when pressed together with another 5th-level-chooser</_description>
+          <_description>Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:lsgt_switch_lock_cancel</name>
-	  <_description>&lt;Less/Greater&gt; chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+	  <_description>&lt;Less/Greater&gt; chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:ralt_switch_lock_cancel</name>
-          <_description>Right Alt chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>Right Alt chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:lwin_switch_lock_cancel</name>
-          <_description>Left Win chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>Left Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
         </configItem>
       </option>
       <option>
         <configItem>
           <name>lv5:rwin_switch_lock_cancel</name>
-          <_description>Right Win chooses 5th level and locks it when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+          <_description>Right Win chooses 5th level, locks when pressed together with another 5th-level-chooser, one press releases the lock</_description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:lsgt_switch_lock_cancel</name>
+	  <description>&lt;Less/Greater&gt; chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</description>
+        </configItem>
+      </option>
+      <option>
+        <configItem>
+          <name>lv5:ralt_switch_lock_cancel</name>
+          <description>Right Alt chooses 5th level and activates level5-Lock when pressed together with another 5th-level-chooser, one press releases the lock</description>
         </configItem>
       </option>
     </group>

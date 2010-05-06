@@ -162,3 +162,39 @@ xkb_symbols "bksl_switch" {
   };
   modifier_map Mod5   { ISO_Level3_Shift };
 };
+
+partial modifier_keys
+xkb_symbols "lsgt_switch" {
+  key <LSGT> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift ]
+  };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+partial modifier_keys
+xkb_symbols "caps_switch_latch" {
+  key <CAPS> {
+    type[Group1]="THREE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift, ISO_Level3_Shift, ISO_Level3_Latch ]
+  };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+partial modifier_keys
+xkb_symbols "bksl_switch_latch" {
+  key <BKSL> {
+    type[Group1]="THREE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift, ISO_Level3_Shift, ISO_Level3_Latch ]
+  };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};
+
+partial modifier_keys
+xkb_symbols "lsgt_switch_latch" {
+  key <LSGT> {
+    type[Group1]="THREE_LEVEL",
+    symbols[Group1] = [ ISO_Level3_Shift, ISO_Level3_Shift, ISO_Level3_Latch ]
+  };
+  modifier_map Mod5   { ISO_Level3_Shift };
+};

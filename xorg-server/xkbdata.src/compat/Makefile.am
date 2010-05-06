@@ -1,7 +1,7 @@
 compatdir = $(xkb_base)/compat
 
 dist_compat_DATA = \
-accessx basic complete \
+accessx basic caps complete \
 default iso9995 \
 japan keypad ledcaps \
 lednum ledscroll level5 \

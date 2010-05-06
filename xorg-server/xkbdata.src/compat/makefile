@@ -7,7 +7,7 @@ THISDIR=compat
 DESTDIR=$(MHMAKECONF)\xorg-server\xkbdata\$(THISDIR)
 
 dist_xkbdata_compat_DATA = \
-accessx basic complete \
+accessx basic caps complete \
 default iso9995 \
 japan keypad ledcaps \
 lednum ledscroll level5 \

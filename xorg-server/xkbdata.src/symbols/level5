@@ -55,12 +55,78 @@ xkb_symbols "lsgt_switch_lock" {
 };
 
 partial modifier_keys
+xkb_symbols "lwin_switch_lock" {
+
+  include "level5(lock)"
+
+  key <LWIN> {
+    type[Group1] = "EIGHT_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};
+
+partial modifier_keys
 xkb_symbols "ralt_switch_lock" {
 
   include "level5(lock)"
 
   key <RALT> {
     type[Group1] = "EIGHT_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};
+
+partial modifier_keys
+xkb_symbols "rwin_switch_lock" {
+
+  include "level5(lock)"
+
+  key <RWIN> {
+    type[Group1] = "EIGHT_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};
+
+partial modifier_keys
+xkb_symbols "lsgt_switch_lock_cancel" {
+
+  include "level5(lock)"
+
+  key <LSGT> {
+    type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};
+
+partial modifier_keys
+xkb_symbols "lwin_switch_lock_cancel" {
+
+  include "level5(lock)"
+
+  key <LWIN> {
+    type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};
+
+partial modifier_keys
+xkb_symbols "ralt_switch_lock_cancel" {
+
+  include "level5(lock)"
+
+  key <RALT> {
+    type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK",
+    symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
+  };
+};
+
+partial modifier_keys
+xkb_symbols "rwin_switch_lock_cancel" {
+
+  include "level5(lock)"
+
+  key <RWIN> {
+    type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK",
     symbols[Group1] = [ ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Shift, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock, ISO_Level5_Lock ]
   };
 };
