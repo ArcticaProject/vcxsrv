@@ -42,7 +42,7 @@ xkb_symbols "ewe" {
     key <AB03> { [ 0x0100014B, 0x0100014A,          c,          C ] }; 
     key <AD11> { [ 0x01000254, 0x01000186,  braceleft,  braceleft ] }; 
     key <AD12> { [ 0x0100028B, 0x010001B2, braceright, braceright ] }; 
-    key <AD13> { [ 0x01000256, 0x01000189,  backslash,  backslash ] };
+    key <BKSL> { [ 0x01000256, 0x01000189,  backslash,  backslash ] };
     key <AC07> { [ 0x01000192, 0x01000191,          j,          J ] };
     key <AC05> { [          g,          G, 0x01000263, 0x01000194 ] };
  

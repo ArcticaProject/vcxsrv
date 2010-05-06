@@ -329,7 +329,7 @@ xkb_symbols "def_101" {
 // The standard Hungaryan qwertz layout
 hidden partial alphanumeric_keys
 xkb_symbols "def_qwertz" {
-    key <AD06>  { [            z,            Z                                     ] };
+    key <AD06>  { [            z,            Z,           endash                   ] };
     key <AB01>  { [            y,            Y,           greater                  ] };
 };
 
@@ -338,7 +338,7 @@ xkb_symbols "def_qwertz" {
 // The qwerty layout for people who familiar with the standard US layout
 hidden partial alphanumeric_keys
 xkb_symbols "def_qwerty" {
-    key <AD06>  { [            y,            Y                                     ] };
+    key <AD06>  { [            y,            Y,           endash                   ] };
     key <AB01>  { [            z,            Z,           greater                  ] };
 };
 
@@ -396,6 +396,8 @@ xkb_symbols "def_common" {
     key <AD02>  { [            w,            W,               bar                  ] };
     key <AD07>  { [            u,            U,          EuroSign                  ] };
     key <AD08>  { [            i,            I,            Iacute,          iacute ] };
+    key <AD09>	{ [            o,            O,        doublelowquotemark          ] };
+    key <AD10>	{ [            p,            P,        rightdoublequotemark        ] };
     key <AD11>  { [ odoubleacute, Odoubleacute,          division                  ] };
     key <AD12>  { [       uacute,       Uacute,          multiply                  ] };
 
