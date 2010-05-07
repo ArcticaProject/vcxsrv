@@ -31,30 +31,30 @@ xkb_symbols "basic" {
     key <AD02> {  [      Arabic_sad,     Arabic_fathatan  ]     };
     key <AD03> {  [     Arabic_theh,     Arabic_damma     ]     };
     key <AD04> {  [      Arabic_qaf,     Arabic_dammatan  ]     };
-    key <AD05> {  [      Arabic_feh,     0x100fef9        ]     };
+    key <AD05> {  [   Arabic_feh,  0x100fef9, 0x10006a4   ]     };
     key <AD06> {  [   Arabic_ghain, Arabic_hamzaunderalef ]     };
     key <AD07> {  [      Arabic_ain,         grave        ]     };
     key <AD08> {  [       Arabic_ha,        division      ]     };
     key <AD09> {  [     Arabic_khah,       multiply       ]     };
     key <AD10> {  [      Arabic_hah,    Arabic_semicolon  ]     };
-    key <AD11> {  [     Arabic_jeem,        less          ]     };
+    key <AD11> {  [     Arabic_jeem,   less, 0x1000686    ]     };
     key <AD12> {  [      Arabic_dal,        greater       ]     };
 
     key <AC01> {  [    Arabic_sheen,   Arabic_kasra       ]     };
     key <AC02> {  [     Arabic_seen,   Arabic_kasratan    ]     };
     key <AC03> {  [      Arabic_yeh,       bracketright   ]     };
-    key <AC04> {  [      Arabic_beh,       bracketleft    ]     };
+    key <AC04> {  [   Arabic_beh, bracketleft, 0x100067e  ]     };
     key <AC05> {  [      Arabic_lam,       0x100fef7      ]     };
     key <AC06> {  [     Arabic_alef,   Arabic_hamzaonalef ]     };
     key <AC07> {  [      Arabic_teh,      Arabic_tatweel  ]     };
     key <AC08> {  [     Arabic_noon,      Arabic_comma    ]     };
     key <AC09> {  [     Arabic_meem,         slash        ]     };
-    key <AC10> {  [      Arabic_kaf,           colon      ]     };
+    key <AC10> {  [      Arabic_kaf,   colon, 0x10006af   ]     };
     key <AC11> {  [      Arabic_tah,        quotedbl      ]     };
 
     key <LSGT> {  [             bar,      brokenbar	  ]     };
-    key <AB01> {  [Arabic_hamzaonyeh,    asciitilde       ]     };
-    key <AB02> {  [    Arabic_hamza,      Arabic_sukun    ]     };
+    key <AB01> {  [Arabic_hamzaonyeh, asciitilde, guillemotright  ]     };
+    key <AB02> {  [    Arabic_hamza,  Arabic_sukun, guillemotleft ]     };
     key <AB03> {  [Arabic_hamzaonwaw,      braceright     ]     };
     key <AB04> {  [       Arabic_ra,       braceleft      ]     };
     key <AB05> {  [       0x100fefb,       0x100fef5      ]     };
@@ -63,6 +63,8 @@ xkb_symbols "basic" {
     key <AB08> {  [      Arabic_waw,         comma        ]     };
     key <AB09> {  [     Arabic_zain,         period       ]     };
     key <AB10> {  [      Arabic_zah, Arabic_question_mark ]     };
+
+    include "level3(ralt_switch)"
 
     // End alphanumeric section
 };

@@ -4,9 +4,9 @@ symbolsdir = $(xkb_base)/symbols
 dist_symbols_DATA = \
 ad af al \
 am ara az \
-be bd \
-bg br ba \
-bt by brai \
+ba bd be \
+bg br brai \
+bt bw by \
 ca cd \
 ch cn cz \
 de dk \

@@ -4437,6 +4437,23 @@
 	<_description>Kenya</_description>
         <languageList><iso639Id>swa</iso639Id></languageList>
       </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>kik</name>
+            <_description>Kikuyu</_description>
+            <languageList><iso639Id>kik</iso639Id></languageList>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+    <layout>
+      <configItem>
+        <name>bw</name>
+        <_shortDescription>Bwa</_shortDescription>
+	<_description>Botswana</_description>
+        <languageList><iso639Id>tsn</iso639Id></languageList>
+      </configItem>
     </layout>
   </layoutList>
   <optionList>
