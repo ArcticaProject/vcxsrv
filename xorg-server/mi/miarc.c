@@ -385,46 +385,9 @@ typedef struct {
     char top, bot, hole;
 } miArcSpanData;
 
-typedef struct {
-    unsigned long lrustamp;
-    unsigned short lw;
-    unsigned short width, height;
-    miArcSpanData *spdata;
-} arcCacheRec;
-
-#define CACHESIZE 25
-
 static void drawQuadrant(struct arc_def *def, struct accelerators *acc,
 			 int a0, int a1, int mask, miArcFacePtr right,
 			 miArcFacePtr left, miArcSpanData *spdata);
-
-static arcCacheRec arcCache[CACHESIZE];
-static unsigned long lrustamp;
-static arcCacheRec *lastCacheHit = &arcCache[0];
-static RESTYPE cacheType;
-
-static int
-miFreeArcCache (pointer data, XID id)
-{
-    int k;
-    arcCacheRec *cent;
-
-    if (id)
-	cacheType = 0;
-
-    for (k = CACHESIZE, cent = &arcCache[0]; --k >= 0; cent++)
-    {
-	if (cent->spdata)
-	{
-	    cent->lrustamp = 0;
-	    cent->lw = 0;
-	    xfree(cent->spdata);
-	    cent->spdata = NULL;
-	}
-    }
-    lrustamp = 0;
-    return Success;
-}
 
 static void
 miComputeCircleSpans(
@@ -829,76 +792,21 @@ tailX(
 }
 
 static miArcSpanData *
-miComputeWideEllipse(
-    int  lw,
-    xArc *parc,
-    Bool *mustFree)
+miComputeWideEllipse(int lw, xArc *parc)
 {
-    miArcSpanData *spdata;
-    arcCacheRec *cent, *lruent;
+    miArcSpanData *spdata = NULL;
     int k;
-    arcCacheRec fakeent;
 
     if (!lw)
 	lw = 1;
-    if (parc->height <= 1500)
-    {
-	*mustFree = FALSE;
-	cent = lastCacheHit;
-	if (cent->lw == lw &&
-	    cent->width == parc->width && cent->height == parc->height)
-	{
-	    cent->lrustamp = ++lrustamp;
-	    return cent->spdata;
-	}
-	lruent = &arcCache[0];
-	for (k = CACHESIZE, cent = lruent; --k >= 0; cent++)
-	{
-	    if (cent->lw == lw &&
-		cent->width == parc->width && cent->height == parc->height)
-	    {
-		cent->lrustamp = ++lrustamp;
-		lastCacheHit = cent;
-		return cent->spdata;
-	    }
-	    if (cent->lrustamp < lruent->lrustamp)
-		lruent = cent;
-	}
-	if (!cacheType)
-	{
-	    cacheType = CreateNewResourceType(miFreeArcCache, "miArcCache");
-	    (void) AddResource(FakeClientID(0), cacheType, NULL);
-	}
-    } else {
-	lruent = &fakeent;
-	lruent->spdata = NULL;
-	*mustFree = TRUE;
-    }
     k = (parc->height >> 1) + ((lw - 1) >> 1);
-    spdata = lruent->spdata;
-    if (!spdata || spdata->k != k)
-    {
-	if (spdata)
-	    xfree(spdata);
-	spdata = xalloc(sizeof(miArcSpanData) + sizeof(miArcSpan) * (k + 2));
-	lruent->spdata = spdata;
-	if (!spdata)
-	{
-	    lruent->lrustamp = 0;
-	    lruent->lw = 0;
-	    return spdata;
-	}
-	spdata->spans = (miArcSpan *)(spdata + 1);
-	spdata->k = k;
-    }
+    spdata = xalloc(sizeof(miArcSpanData) + sizeof(miArcSpan) * (k + 2));
+    if (!spdata)
+	return NULL;
+    spdata->spans = (miArcSpan *)(spdata + 1);
+    spdata->k = k;
     spdata->top = !(lw & 1) && !(parc->width & 1);
     spdata->bot = !(parc->height & 1);
-    lruent->lrustamp = ++lrustamp;
-    lruent->lw = lw;
-    lruent->width = parc->width;
-    lruent->height = parc->height;
-    if (lruent != &fakeent)
-	lastCacheHit = lruent;
     if (parc->width == parc->height)
 	miComputeCircleSpans(lw, parc, spdata);
     else
@@ -917,7 +825,6 @@ miFillWideEllipse(
     int *widths;
     int *wids;
     miArcSpanData *spdata;
-    Bool mustFree;
     miArcSpan *span;
     int xorg, yorgu, yorgl;
     int n;
@@ -928,7 +835,7 @@ miFillWideEllipse(
     if (!widths)
 	return;
     points = (DDXPointPtr)((char *)widths + n);
-    spdata = miComputeWideEllipse((int)pGC->lineWidth, parc, &mustFree);
+    spdata = miComputeWideEllipse((int)pGC->lineWidth, parc);
     if (!spdata)
     {
 	xfree(widths);
@@ -1020,8 +927,7 @@ miFillWideEllipse(
 	    wids += 2;
 	}
     }
-    if (mustFree)
-	xfree(spdata);
+    xfree(spdata);
     (*pGC->ops->FillSpans)(pDraw, pGC, pts - points, points, widths, FALSE);
 
     xfree(widths);
@@ -1524,7 +1430,7 @@ miRoundCap(
 
 # define Dsin(d)	((d) == 0.0 ? 0.0 : ((d) == 90.0 ? 1.0 : sin(d*M_PI/180.0)))
 # define Dcos(d)	((d) == 0.0 ? 1.0 : ((d) == 90.0 ? 0.0 : cos(d*M_PI/180.0)))
-# define mod(a,b)	((a) >= 0 ? (a) % (b) : (b) - (-a) % (b))
+# define mod(a,b)	((a) >= 0 ? (a) % (b) : (b) - (-(a)) % (b))
 
 static double
 miDcos (double a)
@@ -3358,9 +3264,8 @@ drawArc (
 	int			flipRight = 0, flipLeft = 0;			
 	int			copyEnd = 0;
 	miArcSpanData		*spdata;
-	Bool			mustFree;
 
-	spdata = miComputeWideEllipse(l, tarc, &mustFree);
+	spdata = miComputeWideEllipse(l, tarc);
 	if (!spdata)
 	    return;
 
@@ -3572,8 +3477,7 @@ drawArc (
 			left->counterClock = temp;
 		}
 	}
-	if (mustFree)
-	    xfree(spdata);
+	xfree(spdata);
 }
 
 static void

@@ -408,18 +408,18 @@ extern _X_EXPORT RESTYPE	GlyphSetType;
 #define GetPictureWindow(w) ((PicturePtr)dixLookupPrivate(&(w)->devPrivates, PictureWindowPrivateKey))
 #define SetPictureWindow(w,p) dixSetPrivate(&(w)->devPrivates, PictureWindowPrivateKey, p)
 
-#define VERIFY_PICTURE(pPicture, pid, client, mode, err) {\
+#define VERIFY_PICTURE(pPicture, pid, client, mode) {\
     int rc = dixLookupResourceByType((pointer)&(pPicture), pid,\
 	                             PictureType, client, mode);\
     if (rc != Success)\
-	return (rc == BadValue) ? err : rc;\
+	return (rc == BadValue) ? RenderErrBase + BadPicture : rc;\
 }
 
-#define VERIFY_ALPHA(pPicture, pid, client, mode, err) {\
+#define VERIFY_ALPHA(pPicture, pid, client, mode) {\
     if (pid == None) \
 	pPicture = 0; \
     else { \
-	VERIFY_PICTURE(pPicture, pid, client, mode, err); \
+	VERIFY_PICTURE(pPicture, pid, client, mode); \
     } \
 } \
 

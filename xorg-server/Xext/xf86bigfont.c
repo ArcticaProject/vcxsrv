@@ -427,18 +427,8 @@ ProcXF86BigfontQueryFont(
 	    return BadLength;
     }
 #endif
-    client->errorValue = stuff->id;		/* EITHER font or gc */
-    dixLookupResourceByType((pointer *)&pFont, stuff->id, RT_FONT,
-			    client, DixGetAttrAccess);
-    if (!pFont) {
-	GC *pGC;
-	dixLookupResourceByType((pointer *)&pGC, stuff->id, RT_GC,
-				client, DixGetAttrAccess);
-        if (!pGC)
-            return BadFont;    /* procotol spec says only error is BadFont */
-
-	pFont = pGC->font;
-    }
+    if (dixLookupFontable(&pFont, stuff->id, client, DixGetAttrAccess) != Success)
+	return BadFont;    /* procotol spec says only error is BadFont */
 
     pmax = FONTINKMAX(pFont);
     pmin = FONTINKMIN(pFont);

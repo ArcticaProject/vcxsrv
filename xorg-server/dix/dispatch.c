@@ -1283,22 +1283,13 @@ ProcQueryFont(ClientPtr client)
 {
     xQueryFontReply	*reply;
     FontPtr pFont;
-    GC *pGC;
     int rc;
     REQUEST(xResourceReq);
     REQUEST_SIZE_MATCH(xResourceReq);
 
-    client->errorValue = stuff->id;		/* EITHER font or gc */
-    rc = dixLookupResourceByType((pointer *)&pFont, stuff->id, RT_FONT, client,
-				 DixGetAttrAccess);
-    if (rc == BadValue) {
-	rc = dixLookupResourceByType((pointer *)&pGC, stuff->id, RT_GC, client,
-				     DixGetAttrAccess);
-	if (rc == Success)
-	    pFont = pGC->font;
-    }
+    rc = dixLookupFontable(&pFont, stuff->id, client, DixGetAttrAccess);
     if (rc != Success)
-	return (rc == BadValue) ? BadFont: rc;
+	return rc;
 
     {
 	xCharInfo	*pmax = FONTINKMAX(pFont);
@@ -1339,24 +1330,15 @@ ProcQueryTextExtents(ClientPtr client)
 {
     xQueryTextExtentsReply reply;
     FontPtr pFont;
-    GC *pGC;
     ExtentInfoRec info;
     unsigned long length;
     int rc;
     REQUEST(xQueryTextExtentsReq);
     REQUEST_AT_LEAST_SIZE(xQueryTextExtentsReq);
         
-    client->errorValue = stuff->fid;		/* EITHER font or gc */
-    rc = dixLookupResourceByType((pointer *)&pFont, stuff->fid, RT_FONT, client,
-				 DixGetAttrAccess);
-    if (rc == BadValue) {
-	rc = dixLookupResourceByType((pointer *)&pGC, stuff->fid, RT_GC, client,
-			       DixGetAttrAccess);
-	if (rc == Success)
-	    pFont = pGC->font;
-    }
+    rc = dixLookupFontable(&pFont, stuff->fid, client, DixGetAttrAccess);
     if (rc != Success)
-	return (rc == BadValue) ? BadFont: rc;
+	return rc;
 
     length = client->req_len - bytes_to_int32(sizeof(xQueryTextExtentsReq));
     length = length << 1;

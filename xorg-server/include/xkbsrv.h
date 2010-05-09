@@ -906,7 +906,7 @@ extern Bool XkbCopyKeymap(
         XkbDescPtr              /* dst */,
         XkbDescPtr              /* src */);
 
-extern Bool XkbCopyDeviceKeymap(
+extern _X_EXPORT Bool XkbCopyDeviceKeymap(
         DeviceIntPtr            /* dst */,
         DeviceIntPtr            /* src */);
 

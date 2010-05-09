@@ -132,14 +132,14 @@ static struct multicastinfo {
 #endif
 
 static void XdmcpAddHost(
-    struct sockaddr    *from,
+    const struct sockaddr    *from,
     int			fromlen,
     ARRAY8Ptr		AuthenticationName,
     ARRAY8Ptr		hostname,
     ARRAY8Ptr		status);
 
 static void XdmcpSelectHost(
-    struct sockaddr	*host_sockaddr,
+    const struct sockaddr *host_sockaddr,
     int			host_len,
     ARRAY8Ptr		AuthenticationName);
 
@@ -169,10 +169,10 @@ static void send_keepalive_msg(void);
 static void recv_alive_msg(unsigned /*length*/);
 
 static void XdmcpFatal(
-    char * /*type*/,
+    const char * /*type*/,
     ARRAY8Ptr /*status*/);
  
-static void XdmcpWarning(char * /*str*/);
+static void XdmcpWarning(const char * /*str*/);
 
 static void get_manager_by_name(
     int /*argc*/,
@@ -210,7 +210,7 @@ static void XdmcpWakeupHandler(
 static ARRAY8 ManufacturerDisplayID;
 
 static void
-XdmcpRegisterManufacturerDisplayID (char *name, int length)
+XdmcpRegisterManufacturerDisplayID (const char *name, int length)
 {
     int	    i;
 
@@ -332,7 +332,7 @@ static struct sockaddr_in   BroadcastAddresses[MAX_BROADCAST];
 static int		    NumBroadcastAddresses;
 
 void
-XdmcpRegisterBroadcastAddress (struct sockaddr_in *addr)
+XdmcpRegisterBroadcastAddress (const struct sockaddr_in *addr)
 {
     struct sockaddr_in	*bcast;
     if (NumBroadcastAddresses >= MAX_BROADCAST)
@@ -364,9 +364,9 @@ static AuthenticationFuncsPtr	AuthenticationFuncsList;
 
 void
 XdmcpRegisterAuthentication (
-    char    *name,
+    const char    *name,
     int	    namelen,
-    char    *data,
+    const char    *data,
     int	    datalen,
     ValidatorFunc Validator,
     GeneratorFunc Generator,
@@ -420,7 +420,7 @@ static ARRAY8Ptr	AuthenticationData = &noAuthenticationData;
 static AuthenticationFuncsPtr	AuthenticationFuncs;
 
 static void
-XdmcpSetAuthentication (ARRAY8Ptr name)
+XdmcpSetAuthentication (const ARRAY8Ptr name)
 {
     int	i;
 
@@ -445,7 +445,7 @@ static long		xdmcpGeneration;
 void
 XdmcpRegisterConnection (
     int	    type,
-    char    *address,
+    const char    *address,
     int	    addrlen)
 {
     int	    i;
@@ -528,7 +528,7 @@ XdmcpRegisterAuthorizations (void)
 }
 
 void
-XdmcpRegisterAuthorization (char *name, int namelen)
+XdmcpRegisterAuthorization (const char *name, int namelen)
 {
     ARRAY8  authName;
     int	    i;
@@ -554,7 +554,7 @@ XdmcpRegisterAuthorization (char *name, int namelen)
 static ARRAY8	DisplayClass;
 
 static void
-XdmcpRegisterDisplayClass (char *name, int length)
+XdmcpRegisterDisplayClass (const char *name, int length)
 {
     int	    i;
 
@@ -728,7 +728,7 @@ XdmcpWakeupHandler(
 
 static void
 XdmcpSelectHost(
-    struct sockaddr	*host_sockaddr,
+    const struct sockaddr	*host_sockaddr,
     int			host_len,
     ARRAY8Ptr		AuthenticationName)
 {
@@ -748,7 +748,7 @@ XdmcpSelectHost(
 /*ARGSUSED*/
 static void
 XdmcpAddHost(
-    struct sockaddr    *from,
+    const struct sockaddr    *from,
     int			fromlen,
     ARRAY8Ptr		AuthenticationName,
     ARRAY8Ptr		hostname,
@@ -854,7 +854,7 @@ send_packet(void)
  */
 
 static void
-XdmcpDeadSession (char *reason)
+XdmcpDeadSession (const char *reason)
 {
     ErrorF ("XDM: %s, declaring session dead\n", reason);
     state = XDM_INIT_STATE;
@@ -1448,7 +1448,7 @@ recv_alive_msg (unsigned length)
 
 static  void
 XdmcpFatal (
-    char	*type,
+    const char	*type,
     ARRAY8Ptr	status)
 {
     FatalError ("XDMCP fatal error: %s %*.*s\n", type,
@@ -1456,15 +1456,15 @@ XdmcpFatal (
 }
 
 static  void
-XdmcpWarning(char *str)
+XdmcpWarning(const char *str)
 {
     ErrorF("XDMCP warning: %s\n", str);
 }
 
 static void
 get_addr_by_name(
-    char *	argtype,
-    char *	namestr,
+    const char *argtype,
+    const char *namestr,
     int		port,
     int		socktype,
     SOCKADDR_TYPE *addr,

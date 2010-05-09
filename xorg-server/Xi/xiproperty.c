@@ -403,6 +403,15 @@ XIGetKnownProperty(char *name)
     return 0;
 }
 
+void
+XIResetProperties(void)
+{
+    int i;
+
+    for (i = 0; i < (sizeof(dev_properties)/sizeof(struct dev_properties)); i++)
+        dev_properties[i].type = None;
+}
+
 /**
  * Convert the given property's value(s) into @nelem_return integer values and
  * store them in @buf_return. If @nelem_return is larger than the number of

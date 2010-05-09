@@ -270,8 +270,7 @@ ProcXFixesCreateRegionFromPicture (ClientPtr client)
     REQUEST_SIZE_MATCH (xXFixesCreateRegionFromPictureReq);
     LEGAL_NEW_RESOURCE (stuff->region, client);
 
-    VERIFY_PICTURE(pPicture, stuff->picture, client, DixGetAttrAccess,
-		   RenderErrBase + BadPicture);
+    VERIFY_PICTURE(pPicture, stuff->picture, client, DixGetAttrAccess);
     
     switch (pPicture->clientClipType) {
     case CT_PIXMAP:
@@ -770,8 +769,7 @@ ProcXFixesSetPictureClipRegion (ClientPtr client)
     REQUEST(xXFixesSetPictureClipRegionReq);
     
     REQUEST_SIZE_MATCH (xXFixesSetPictureClipRegionReq);
-    VERIFY_PICTURE(pPicture, stuff->picture, client, DixSetAttrAccess,
-		   RenderErrBase + BadPicture);
+    VERIFY_PICTURE(pPicture, stuff->picture, client, DixSetAttrAccess);
     pScreen = pPicture->pDrawable->pScreen;
     ps = GetPictureScreen (pScreen);
     VERIFY_REGION_OR_NONE(pRegion, stuff->region, client, DixReadAccess);
