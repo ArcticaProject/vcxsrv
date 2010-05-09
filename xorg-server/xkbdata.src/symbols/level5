@@ -17,6 +17,25 @@ xkb_symbols "rctrl_switch" {
   modifier_map Mod3   { ISO_Level5_Shift };
 };
 
+partial modifier_keys
+xkb_symbols "lsgt_switch" {
+  key <LSGT> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift ]
+    };
+  modifier_map Mod3   { ISO_Level5_Shift };
+};
+
+partial modifier_keys
+xkb_symbols "ralt_switch" {
+  key <RALT> {
+    type[Group1]="ONE_LEVEL",
+    symbols[Group1] = [ ISO_Level5_Shift ]
+    };
+  modifier_map Mod3   { ISO_Level5_Shift };
+};
+
+
 // The following modifier keys are used to switch to the third shift and to set a
 // corresponding lock, implemented as NumLock.
 

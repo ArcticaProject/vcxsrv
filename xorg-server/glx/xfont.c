@@ -159,7 +159,6 @@ int __glXDisp_UseXFont(__GLXclientState *cl, GLbyte *pc)
     ClientPtr client = cl->client;
     xGLXUseXFontReq *req;
     FontPtr pFont;
-    GC *pGC;
     GLuint currentListIndex;
     __GLXcontext *cx;
     int error;
@@ -185,19 +184,9 @@ int __glXDisp_UseXFont(__GLXclientState *cl, GLbyte *pc)
     ** containing a font.
     */
 
-    error = dixLookupResourceByType((pointer *)&pFont,
-				    req->font, RT_FONT,
-				    client, DixReadAccess);
-    if (error != Success) {
-	error = dixLookupResourceByType((pointer *)&pGC,
-					req->font, RT_GC,
-					client, DixReadAccess);
-        if (error != Success) {
-	    client->errorValue = req->font;
-            return error == BadGC ? BadFont : error;
-	}
-	pFont = pGC->font;
-    }
+    error = dixLookupFontable(&pFont, req->font, client, DixReadAccess);
+    if (error != Success)
+	return error;
 
     return MakeBitmapsFromFont(pFont, req->first, req->count,
 				    req->listBase);

@@ -92,6 +92,7 @@ Author:  Adobe Systems Incorporated
 #include "windowstr.h"
 #include "dixstruct.h"
 #include "pixmapstr.h"
+#include "gcstruct.h"
 #include "scrnintstr.h"
 #define  XK_LATIN1
 #include <X11/keysymdef.h>
@@ -233,6 +234,23 @@ dixLookupGC(GCPtr *pGC, XID id, ClientPtr client, Mask access)
     int rc;
     rc = dixLookupResourceByType((pointer *)pGC, id, RT_GC, client, access);
     return (rc == BadValue) ? BadGC : rc;
+}
+
+int
+dixLookupFontable(FontPtr *pFont, XID id, ClientPtr client, Mask access)
+{
+    int rc;
+    GC *pGC;
+    client->errorValue = id;		/* EITHER font or gc */
+    rc = dixLookupResourceByType((pointer *) pFont, id, RT_FONT, client, access);
+    if (rc != BadValue)
+	return rc;
+    rc = dixLookupResourceByType((pointer *) &pGC, id, RT_GC, client, access);
+    if (rc == BadValue)
+	return BadFont;
+    if (rc == Success)
+	*pFont = pGC->font;
+    return rc;
 }
 
 int

@@ -287,7 +287,7 @@ extern _X_EXPORT int AddHost(
     ClientPtr	/*client*/,
     int         /*family*/,
     unsigned    /*length*/,
-    pointer     /*pAddr*/);
+    const void * /*pAddr*/);
 
 extern _X_EXPORT Bool ForEachHostInFamily (
     int	    /*family*/,
@@ -371,9 +371,9 @@ extern _X_EXPORT int AuthorizationFromID (
 
 extern _X_EXPORT XID CheckAuthorization(
     unsigned int /*namelength*/,
-    char * /*name*/,
+    const char * /*name*/,
     unsigned int /*datalength*/,
-    char * /*data*/,
+    const char * /*data*/,
     ClientPtr /*client*/,
     char ** /*reason*/
 );
@@ -382,22 +382,22 @@ extern _X_EXPORT void ResetAuthorization(void);
 
 extern _X_EXPORT int RemoveAuthorization (
     unsigned short	name_length,
-    char		*name,
+    const char		*name,
     unsigned short	data_length,
-    char		*data);
+    const char		*data);
 
 extern _X_EXPORT int AddAuthorization(
     unsigned int	/*name_length*/,
-    char *		/*name*/,
+    const char *	/*name*/,
     unsigned int	/*data_length*/,
     char *		/*data*/);
 
 #ifdef XCSECURITY
 extern _X_EXPORT XID GenerateAuthorization(
     unsigned int   /* name_length */,
-    char	*  /* name */,
+    const char	*  /* name */,
     unsigned int   /* data_length */,
-    char	*  /* data */,
+    const char	*  /* data */,
     unsigned int * /* data_length_return */,
     char	** /* data_return */);
 #endif

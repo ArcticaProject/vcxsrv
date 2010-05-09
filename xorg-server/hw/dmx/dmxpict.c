@@ -622,8 +622,7 @@ static int dmxProcRenderSetPictureTransform(ClientPtr client)
     REQUEST(xRenderSetPictureTransformReq);
 
     REQUEST_SIZE_MATCH(xRenderSetPictureTransformReq);
-    VERIFY_PICTURE(pPicture, stuff->picture, client, DixWriteAccess,
-		   RenderErrBase + BadPicture);
+    VERIFY_PICTURE(pPicture, stuff->picture, client, DixWriteAccess);
 
     /* For the following to work with PanoramiX, it assumes that Render
      * wraps the ProcRenderVector after dmxRenderInit has been called.
@@ -663,8 +662,7 @@ static int dmxProcRenderSetPictureFilter(ClientPtr client)
     REQUEST(xRenderSetPictureFilterReq);
 
     REQUEST_AT_LEAST_SIZE(xRenderSetPictureFilterReq);
-    VERIFY_PICTURE(pPicture, stuff->picture, client, DixWriteAccess,
-		   RenderErrBase + BadPicture);
+    VERIFY_PICTURE(pPicture, stuff->picture, client, DixWriteAccess);
 
     /* For the following to work with PanoramiX, it assumes that Render
      * wraps the ProcRenderVector after dmxRenderInit has been called.

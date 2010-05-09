@@ -159,9 +159,9 @@ RegisterAuthorizations (void)
 XID
 CheckAuthorization (
     unsigned int name_length,
-    char	*name,
+    const char	*name,
     unsigned int data_length,
-    char	*data,
+    const char	*data,
     ClientPtr client,
     char	**reason)	/* failure message.  NULL for default msg */
 {
@@ -256,9 +256,9 @@ AuthorizationFromID (
 int
 RemoveAuthorization (
 	unsigned short	name_length,
-	char		*name,
+	const char	*name,
 	unsigned short	data_length,
-	char		*data)
+	const char	*data)
 {
     int	i;
 
@@ -274,7 +274,8 @@ RemoveAuthorization (
 }
 
 int
-AddAuthorization (unsigned name_length, char *name, unsigned data_length, char *data)
+AddAuthorization (unsigned name_length, const char *name,
+		  unsigned data_length, char *data)
 {
     int	i;
 
@@ -294,9 +295,9 @@ AddAuthorization (unsigned name_length, char *name, unsigned data_length, char *
 XID
 GenerateAuthorization(
 	unsigned name_length,
-	char	*name,
+	const char	*name,
 	unsigned data_length,
-	char	*data,
+	const char	*data,
 	unsigned *data_length_return,
 	char	**data_return)
 {

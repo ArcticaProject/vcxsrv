@@ -13,7 +13,7 @@ fi
 AC_ARG_WITH( xkb_base,
              [AS_HELP_STRING([--with-xkb-base=DIR],[XKB base path @<:@DATADIR/X11/xkb@:>@])],
              xkb_base="$withval", 
-             xkb_base="\$(datadir)/X11/xkb" )
+             xkb_base="${datadir}/X11/xkb" )
 
 AC_ARG_WITH( xkb_rules_symlink,
              [  --with-xkb-rules-symlink=NAME1(,NAME2)*        create symlink(s) to "old style" rules files (xfree86 and/or xorg)],
@@ -75,6 +75,7 @@ symbols/sun_vndr/Makefile
 symbols/xfree68_vndr/Makefile
 symbols/extras/Makefile
 types/Makefile
+xkeyboard-config.pc
 xkeyboard-config.spec
 docs/Makefile
 ])

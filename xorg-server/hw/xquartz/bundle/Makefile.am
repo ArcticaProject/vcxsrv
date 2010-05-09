@@ -28,6 +28,10 @@ EXTRA_DIST = \
 	Info.plist.cpp \
 	PkgInfo \
 	$(resource_DATA) \
+	Resources/ar.lproj/InfoPlist.strings \
+	Resources/ar.lproj/Localizable.strings \
+	Resources/ar.lproj/main.nib/designable.nib \
+	Resources/ar.lproj/main.nib/keyedobjects.nib \
 	Resources/da.lproj/InfoPlist.strings \
 	Resources/da.lproj/Localizable.strings \
 	Resources/da.lproj/main.nib/keyedobjects.nib \

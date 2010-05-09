@@ -257,7 +257,7 @@ xkb_symbols "neo_base" {
 
     // Alphanumeric-keys
     // ===============
-    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
+    key.type[Group1] = "EIGHT_LEVEL";
 
     // Tab as Multi_key (Compose)
     // --------------------------------------------------------------
@@ -285,7 +285,7 @@ xkb_symbols "neo_base" {
 
     // Top row
     // --------------------------------------------------------------
-    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
+    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC";
     key <AD01> { [ x,                       X,                       ellipsis,                Greek_xi,                Prior,                   Prior,                   Greek_XI,                NoSymbol                 ] };
     key <AD02> { [ v,                       V,                       underscore,              NoSymbol,                BackSpace,               BackSpace,               radical,                 NoSymbol                 ] };
     key <AD03> { [ l,                       L,                       bracketleft,             Greek_lambda,            Up,                      Up,                      Greek_LAMBDA,            NoSymbol                 ] };
@@ -300,12 +300,12 @@ xkb_symbols "neo_base" {
 
     key <AD11> { [ ssharp,                  U1E9E,                   U017F,                   Greek_finalsmallsigma,   U2212,                   NoSymbol,                jot,                     NoSymbol                 ] };
 
-    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
+    key.type[Group1] = "EIGHT_LEVEL";
     key <AD12> { [ dead_acute,              dead_tilde,              dead_stroke,             dead_psili,              dead_doubleacute,        NoSymbol,                dead_breve,              NoSymbol                 ] };
 
     // Middle row
     // --------------------------------------------------------------
-    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
+    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC";
     key <AC01> { [ u,                       U,                       backslash,               NoSymbol,                Home,                    Home,                    includedin,              NoSymbol                 ] };
     key <AC02> { [ i,                       I,                       slash,                   Greek_iota,              Left,                    Left,                    integral,                NoSymbol                 ] };
     key <AC03> { [ a,                       A,                       braceleft,               Greek_alpha,             Down,                    Down,                    U2200,                   NoSymbol                 ] };
@@ -330,12 +330,12 @@ xkb_symbols "neo_base" {
 
     key <AB06> { [ b,                       B,                       plus,                    Greek_beta,              colon,                   NoSymbol,                U21D0,                   NoSymbol                 ] };
     key <AB07> { [ m,                       M,                       percent,                 Greek_mu,                KP_1,                    KP_1,                    ifonlyif,                NoSymbol                 ] };
-    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
+    key.type[Group1] = "EIGHT_LEVEL";
     key <AB08> { [ comma,                   endash,                  quotedbl,                U03F1,                   KP_2,                    KP_2,                    U21D2,                   NoSymbol                 ] };
     key <AB09> { [ period,                  enfilledcircbullet,      apostrophe,              U03D1,                   KP_3,                    KP_3,                    U21A6,                   NoSymbol                 ] };
-    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC_LEVEL_FIVE_LOCK";
+    key.type[Group1] = "EIGHT_LEVEL_ALPHABETIC";
     key <AB10> { [ j,                       J,                       semicolon,               Greek_theta,             semicolon,               NoSymbol,                Greek_THETA,             NoSymbol                 ] };
-    key.type[Group1] = "EIGHT_LEVEL_LEVEL_FIVE_LOCK";
+    key.type[Group1] = "EIGHT_LEVEL";
 
     // Space key
     // --------------------------------------------------------------
@@ -389,8 +389,8 @@ xkb_symbols "neo" {
     include "shift(both_capslock)"
     include "level3(caps_switch)"
     include "level3(bksl_switch)"
-    include "level5(lsgt_switch_lock)"
-    include "level5(ralt_switch_lock)"
+    include "level5(lsgt_switch)"
+    include "level5(ralt_switch)"
 };
 
 // Copied from macintosh_vndr/de

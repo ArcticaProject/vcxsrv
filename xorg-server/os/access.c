@@ -215,11 +215,11 @@ static int ConvertAddr(struct sockaddr * /*saddr*/,
 		       pointer * /*addr*/);
 
 static int CheckAddr(int /*family*/,
-		     pointer /*pAddr*/,
+		     const void * /*pAddr*/,
 		     unsigned /*length*/);
 
 static Bool NewHost(int /*family*/,
-		    pointer /*addr*/,
+		    const void  * /*addr*/,
 		    int /*len*/,
 		    int /* addingLocalHosts */);
 
@@ -1316,7 +1316,7 @@ int
 AddHost (ClientPtr	client,
 	 int            family,
 	 unsigned       length,        /* of bytes in pAddr */
-	 pointer        pAddr)
+	 const void *   pAddr)
 {
     int rc, len;
 
@@ -1377,7 +1377,7 @@ ForEachHostInFamily (int	    family,
  * called when starting or resetting the server */
 static Bool
 NewHost (int		family,
-	 pointer	addr,
+	 const void *	addr,
 	 int		len,
 	 int		addingLocalHosts)
 {
@@ -1512,7 +1512,7 @@ GetHosts (
 static int
 CheckAddr (
     int			family,
-    pointer		pAddr,
+    const void *	pAddr,
     unsigned		length)
 {
     int	len;

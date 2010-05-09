@@ -96,7 +96,7 @@ XdmAuthenticationGenerator (ARRAY8Ptr privateData, ARRAY8Ptr outgoingData,
 }
 
 static Bool
-XdmAuthenticationAddAuth (int name_len, char *name, 
+XdmAuthenticationAddAuth (int name_len, const char *name,
     int data_len, char *data)
 {
     Bool    ret;
@@ -114,7 +114,7 @@ XdmAuthenticationAddAuth (int name_len, char *name,
 		 'A' <= c && c <= 'F' ? c - 'A' + 10 : -1)
 
 static int
-HexToBinary (char *in, char *out, int len)
+HexToBinary (const char *in, char *out, int len)
 {
     int	    top, bottom;
 
@@ -137,7 +137,7 @@ HexToBinary (char *in, char *out, int len)
 }
 
 void
-XdmAuthenticationInit (char *cookie, int cookie_len)
+XdmAuthenticationInit (const char *cookie, int cookie_len)
 {
     bzero (privateKey.data, 8);
     if (!strncmp (cookie, "0x", 2) || !strncmp (cookie, "0X", 2))
@@ -188,7 +188,7 @@ static Bool	    gotClock;
 #define TwentyFiveMinutes (25 * 60)
 
 static Bool
-XdmClientAuthCompare (XdmClientAuthPtr a, XdmClientAuthPtr b)
+XdmClientAuthCompare (const XdmClientAuthPtr a, const XdmClientAuthPtr b)
 {
     int	i;
 
@@ -201,7 +201,7 @@ XdmClientAuthCompare (XdmClientAuthPtr a, XdmClientAuthPtr b)
 }
 
 static void
-XdmClientAuthDecode (unsigned char *plain, XdmClientAuthPtr auth)
+XdmClientAuthDecode (const unsigned char *plain, XdmClientAuthPtr auth)
 {
     int	    i, j;
 
@@ -327,7 +327,7 @@ XdmAuthorizationValidate (unsigned char *plain, int length,
 }
 
 int
-XdmAddCookie (unsigned short data_length, char *data, XID id)
+XdmAddCookie (unsigned short data_length, const char *data, XID id)
 {
     XdmAuthorizationPtr	new;
     unsigned char	*rho_bits, *key_bits;
@@ -375,7 +375,7 @@ XdmAddCookie (unsigned short data_length, char *data, XID id)
 }
 
 XID
-XdmCheckCookie (unsigned short cookie_length, char *cookie, 
+XdmCheckCookie (unsigned short cookie_length, const char *cookie,
     ClientPtr xclient, char **reason)
 {
     XdmAuthorizationPtr	auth;
@@ -464,7 +464,7 @@ XdmFromID (XID id, unsigned short *data_lenp, char **datap)
 }
 
 int
-XdmRemoveCookie (unsigned short data_length, char *data)
+XdmRemoveCookie (unsigned short data_length, const char *data)
 {
     XdmAuthorizationPtr	auth;
     XdmAuthKeyPtr	key_bits, rho_bits;

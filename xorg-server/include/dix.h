@@ -199,6 +199,12 @@ extern _X_EXPORT int dixLookupGC(
     ClientPtr client,
     Mask access_mode);
 
+extern _X_EXPORT int dixLookupFontable(
+    FontPtr *result,
+    XID id,
+    ClientPtr client,
+    Mask access_mode);
+
 extern _X_EXPORT int dixLookupClient(
     ClientPtr *result,
     XID id,

@@ -62,4 +62,7 @@ void SRepXIListProperties(ClientPtr client, int size,
                           xXIListPropertiesReply *rep);
 void SRepXIGetProperty(ClientPtr client, int size,
                        xXIGetPropertyReply *rep);
+
+void XIResetProperties(void);
+
 #endif /* XIPROPERTY_H */
