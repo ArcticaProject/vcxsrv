@@ -11,9 +11,9 @@ SUBDIRS = digital_vndr fujitsu_vndr hp_vndr macintosh_vndr nec_vndr nokia_vndr s
 dist_xkbdata_symbols_DATA = \
 ad af al \
 am ara az \
-be bd \
-bg br ba \
-bt by brai \
+ba bd be \
+bg br brai \
+bt bw by \
 ca cd \
 ch cn cz \
 de dk \
@@ -23,7 +23,8 @@ gb ge gh gn \
 gr hr hu \
 ie il in iq \
 ir is it jp \
-kg kh kr kz \
+ke kg kh \
+kr kz \
 la latam latin \
 lk lt lv \
 ma mao me \
