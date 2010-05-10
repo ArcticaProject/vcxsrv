@@ -6,7 +6,7 @@ UCS2ANY = perl ucstoany.pl
 
 INC_BDF_RULES=1
 
-all: $(BDFTOPCF) -t
+all: $(BDFTOPCF)
 
 DESTDIR=$(MHMAKECONF)\xorg-server\fonts\terminus-font
 
@@ -1106,7 +1106,7 @@ font_DATA = $(PCF:%=$(DESTDIR)\%.gz) $(PCF_N12:%=$(DESTDIR)\%.gz)
 
 destdir: $(DESTDIR)
 
-all: destdir $(UCS2ANY) $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
+all: $(DESTDIR) $(DESTDIR)\fonts.dir $(DESTDIR)\fonts.alias
 
 MKFONTSCALE=$(MHMAKECONF)\mkfontscale\$(OBJDIR)\mkfontscale.exe
 
