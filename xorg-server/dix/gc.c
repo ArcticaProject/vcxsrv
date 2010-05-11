@@ -263,78 +263,68 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 		break;
 	    }
 	    case GCTile:
-	    {
-		XID newpix = 0;
 		if (pUnion)
 		{
 		    NEXT_PTR(PixmapPtr, pPixmap);
-		    rc = Success;
 		}
 		else
 		{
+		    XID newpix;
 		    NEXTVAL(XID, newpix);
 		    rc = dixLookupResourceByType((pointer *)&pPixmap, newpix,
 					   RT_PIXMAP, client, DixReadAccess);
+		    if (rc != Success)
+		    {
+			clientErrorValue = newpix;
+			error = (rc == BadValue) ? BadPixmap : rc;
+			break;
+		    }
 		}
-		if (rc == Success)
+		if ((pPixmap->drawable.depth != pGC->depth) ||
+		    (pPixmap->drawable.pScreen != pGC->pScreen))
 		{
-		    if ((pPixmap->drawable.depth != pGC->depth) ||
-			(pPixmap->drawable.pScreen != pGC->pScreen))
-		    {
-			error = BadMatch;
-		    }
-		    else
-		    {
-			pPixmap->refcnt++;
-			if (!pGC->tileIsPixel)
-			    (* pGC->pScreen->DestroyPixmap)(pGC->tile.pixmap);
-			pGC->tileIsPixel = FALSE;
-			pGC->tile.pixmap = pPixmap;
-		    }
+		    error = BadMatch;
 		}
 		else
 		{
-		    clientErrorValue = newpix;
-		    error = (rc == BadValue) ? BadPixmap : rc;
+		    pPixmap->refcnt++;
+		    if (!pGC->tileIsPixel)
+			(* pGC->pScreen->DestroyPixmap)(pGC->tile.pixmap);
+		    pGC->tileIsPixel = FALSE;
+		    pGC->tile.pixmap = pPixmap;
 		}
 		break;
-	    }
 	    case GCStipple:
-	    {
-		XID newstipple = 0;
 		if (pUnion)
 		{
 		    NEXT_PTR(PixmapPtr, pPixmap);
-		    rc = Success;
 		}
 		else
 		{
+		    XID newstipple;
 		    NEXTVAL(XID, newstipple)
 		    rc = dixLookupResourceByType((pointer *)&pPixmap, newstipple,
 					   RT_PIXMAP, client, DixReadAccess);
+		    if (rc != Success)
+		    {
+			clientErrorValue = newstipple;
+			error = (rc == BadValue) ? BadPixmap : rc;
+			break;
+		    }
 		}
-		if (rc == Success)
+		if ((pPixmap->drawable.depth != 1) ||
+		    (pPixmap->drawable.pScreen != pGC->pScreen))
 		{
-		    if ((pPixmap->drawable.depth != 1) ||
-			(pPixmap->drawable.pScreen != pGC->pScreen))
-		    {
-			error = BadMatch;
-		    }
-		    else
-		    {
-			pPixmap->refcnt++;
-			if (pGC->stipple)
-			    (* pGC->pScreen->DestroyPixmap)(pGC->stipple);
-			pGC->stipple = pPixmap;
-		    }
+		    error = BadMatch;
 		}
 		else
 		{
-		    clientErrorValue = newstipple;
-		    error = (rc == BadValue) ? BadPixmap : rc;
+		    pPixmap->refcnt++;
+		    if (pGC->stipple)
+			(* pGC->pScreen->DestroyPixmap)(pGC->stipple);
+		    pGC->stipple = pPixmap;
 		}
 		break;
-	    }
 	    case GCTileStipXOrigin:
 		NEXTVAL(INT16, pGC->patOrg.x);
 		break;
@@ -344,30 +334,27 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 	    case GCFont:
     	    {
 		FontPtr	pFont;
-		XID newfont = 0;
 		if (pUnion)
 		{
 		    NEXT_PTR(FontPtr, pFont);
-		    rc = Success;
 		}
 		else
 		{
+		    XID newfont;
 		    NEXTVAL(XID, newfont)
 		    rc = dixLookupResourceByType((pointer *)&pFont, newfont,
 					   RT_FONT, client, DixUseAccess);
+		    if (rc != Success)
+		    {
+			clientErrorValue = newfont;
+			error = (rc == BadValue) ? BadFont : rc;
+			break;
+		    }
 		}
-		if (rc == Success)
-		{
-		    pFont->refcnt++;
-		    if (pGC->font)
-    		        CloseFont(pGC->font, (Font)0);
-		    pGC->font = pFont;
-		 }
-		else
-		{
-		    clientErrorValue = newfont;
-		    error = (rc == BadValue) ? BadFont : rc;
-		}
+		pFont->refcnt++;
+		if (pGC->font)
+		    CloseFont(pGC->font, (Font)0);
+		pGC->font = pFont;
 		break;
 	    }
 	    case GCSubwindowMode:
@@ -403,22 +390,16 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 		NEXTVAL(INT16, pGC->clipOrg.y);
 		break;
 	    case GCClipMask:
-	    {
-		Pixmap pid = 0;
-		int    clipType = 0;
-
 		if (pUnion)
 		{
 		    NEXT_PTR(PixmapPtr, pPixmap);
 		}
 		else
 		{
+		    Pixmap pid;
 		    NEXTVAL(Pixmap, pid)
 		    if (pid == None)
-		    {
-			clipType = CT_NONE;
 			pPixmap = NullPixmap;
-		    }
 		    else {
 			rc = dixLookupResourceByType((pointer *)&pPixmap, pid,
 					       RT_PIXMAP, client,
@@ -426,6 +407,7 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 			if (rc != Success) {
 			    clientErrorValue = pid;
 			    error = (rc == BadValue) ? BadPixmap : rc;
+			    break;
 			}
 		    }
 		}
@@ -436,20 +418,13 @@ dixChangeGC(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32, ChangeGCValPtr
 			(pPixmap->drawable.pScreen != pGC->pScreen))
 		    {
 			error = BadMatch;
+			break;
 		    }
-		    else
-		    {
-			clipType = CT_PIXMAP;
-			pPixmap->refcnt++;
-		    }
+		    pPixmap->refcnt++;
 		}
-		if(error == Success)
-		{
-		    (*pGC->funcs->ChangeClip)(pGC, clipType,
-					      (pointer)pPixmap, 0);
-		}
+		(*pGC->funcs->ChangeClip)(pGC, pPixmap ? CT_PIXMAP : CT_NONE,
+					  (pointer)pPixmap, 0);
 		break;
-	    }
 	    case GCDashOffset:
 		NEXTVAL(INT16, pGC->dashOffset);
 		break;

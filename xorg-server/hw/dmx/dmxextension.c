@@ -1155,7 +1155,7 @@ static void dmxBERestoreRenderGlyph(pointer value, XID id, pointer n)
 		     len_images);
 
     /* Clean up */
-    free(len_images);
+    free(images);
     free(gids);
     free(glyphs);    
 }

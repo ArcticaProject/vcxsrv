@@ -94,7 +94,7 @@ static SyncCounter **SysCounterList = NULL;
 #define XSyncCAAllTrigger \
     (XSyncCACounter | XSyncCAValueType | XSyncCAValue | XSyncCATestType)
 
-static void SyncComputeBracketValues(SyncCounter *, Bool);
+static void SyncComputeBracketValues(SyncCounter *);
 
 static void SyncInitServerTime(void);
 
@@ -167,7 +167,7 @@ SyncDeleteTriggerFromCounter(SyncTrigger *pTrigger)
     }
 
     if (IsSystemCounter(pTrigger->pCounter))
-	SyncComputeBracketValues(pTrigger->pCounter, /*startOver*/ TRUE);
+	SyncComputeBracketValues(pTrigger->pCounter);
 }
 
 
@@ -194,7 +194,7 @@ SyncAddTriggerToCounter(SyncTrigger *pTrigger)
     pTrigger->pCounter->pTriglist = pCur;
 
     if (IsSystemCounter(pTrigger->pCounter))
-	SyncComputeBracketValues(pTrigger->pCounter, /*startOver*/ TRUE);
+	SyncComputeBracketValues(pTrigger->pCounter);
 
     return Success;
 }
@@ -351,7 +351,7 @@ SyncInitTrigger(ClientPtr client, SyncTrigger *pTrigger, XSyncCounter counter,
     }
     else if (IsSystemCounter(pCounter))
     {
-	SyncComputeBracketValues(pCounter, /*startOver*/ TRUE);
+	SyncComputeBracketValues(pCounter);
     }
 
     return Success;
@@ -646,7 +646,7 @@ SyncChangeCounter(SyncCounter *pCounter, CARD64 newval)
 
     if (IsSystemCounter(pCounter))
     {
-	SyncComputeBracketValues(pCounter, /* startOver */ FALSE);
+	SyncComputeBracketValues(pCounter);
     }
 }
 
@@ -913,7 +913,7 @@ SyncDestroySystemCounter(pointer pSysCounter)
 }
 
 static void
-SyncComputeBracketValues(SyncCounter *pCounter, Bool startOver)
+SyncComputeBracketValues(SyncCounter *pCounter)
 {
     SyncTriggerList *pCur;
     SyncTrigger *pTrigger;
@@ -930,11 +930,8 @@ SyncComputeBracketValues(SyncCounter *pCounter, Bool startOver)
     if (ct == XSyncCounterNeverChanges)
 	return;
 
-    if (startOver)
-    {
-	XSyncMaxValue(&psci->bracket_greater);
-	XSyncMinValue(&psci->bracket_less);
-    }
+    XSyncMaxValue(&psci->bracket_greater);
+    XSyncMinValue(&psci->bracket_less);
 
     for (pCur = pCounter->pTriglist; pCur; pCur = pCur->next)
     {
