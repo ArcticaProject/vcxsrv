@@ -1088,13 +1088,15 @@ DGAProcessPointerEvent (ScreenPtr pScreen, DGAEvent *event, DeviceIntPtr mouse)
     ButtonClassPtr  butc = mouse->button;
     DGAScreenPtr    pScreenPriv = DGA_GET_SCREEN_PRIV(pScreen);
     DeviceEvent     ev;
+    DeviceIntPtr    master = GetMaster(mouse, MASTER_KEYBOARD);
 
     memset(&ev, 0, sizeof(ev));
     ev.header = ET_Internal;
     ev.length = sizeof(ev);
     ev.type = event->subtype;
     ev.corestate  = butc->state;
-    ev.corestate |= XkbStateFieldFromRec(&GetPairedDevice(mouse)->key->xkbInfo->state);
+    if (master && master->key)
+        ev.corestate |= XkbStateFieldFromRec(&master->key->xkbInfo->state);
 
     UpdateDeviceState(mouse, &ev);
 
