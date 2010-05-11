@@ -589,6 +589,7 @@ FreeResourceByType(XID id, RESTYPE type, Bool skipFree)
 			      res->value, TypeNameString(res->type));
 #endif		    		    
 		*prev = res->next;
+		clientTable[cid].elements--;
 
 		CallResourceStateCallback(ResourceStateFreeing, res);
 
@@ -734,12 +735,14 @@ FreeClientNeverRetainResources(ClientPtr client)
     ResourcePtr *resources;
     ResourcePtr this;
     ResourcePtr *prev;
-    int j;
+    int j, elements;
+    int *eltptr;
 
     if (!client)
 	return;
 
     resources = clientTable[client->index].resources;
+    eltptr = &clientTable[client->index].elements;
     for (j=0; j < clientTable[client->index].buckets; j++) 
     {
 	prev = &resources[j];
@@ -753,11 +756,15 @@ FreeClientNeverRetainResources(ClientPtr client)
 			      this->value, TypeNameString(this->type));
 #endif		    
 		*prev = this->next;
+		clientTable[client->index].elements--;
 
 		CallResourceStateCallback(ResourceStateFreeing, this);
 
+		elements = *eltptr;
 		(*DeleteFuncs[rtype & TypeMask])(this->value, this->id);
 		xfree(this);
+		if (*eltptr != elements)
+		    prev = &resources[j]; /* prev may no longer be valid */
 	    }
 	    else
 		prev = &this->next;
@@ -804,6 +811,7 @@ FreeClientResources(ClientPtr client)
 			  this->value, TypeNameString(this->type));
 #endif		    
 	    *head = this->next;
+	    clientTable[client->index].elements--;
 
 	    CallResourceStateCallback(ResourceStateFreeing, this);
 

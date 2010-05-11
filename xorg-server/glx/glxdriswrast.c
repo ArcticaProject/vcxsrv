@@ -301,10 +301,12 @@ glxChangeGC(GCPtr gc, BITS32 mask, CARD32 val)
 }
 
 static __GLXdrawable *
-__glXDRIscreenCreateDrawable(__GLXscreen *screen,
+__glXDRIscreenCreateDrawable(ClientPtr client,
+			     __GLXscreen *screen,
 			     DrawablePtr pDraw,
-			     int type,
 			     XID drawId,
+			     int type,
+			     XID glxDrawId,
 			     __GLXconfig *glxConfig)
 {
     __GLXDRIscreen *driScreen = (__GLXDRIscreen *) screen;
@@ -319,7 +321,7 @@ __glXDRIscreenCreateDrawable(__GLXscreen *screen,
 
     private->screen = driScreen;
     if (!__glXDrawableInit(&private->base, screen,
-			   pDraw, type, drawId, glxConfig)) {
+			   pDraw, type, glxDrawId, glxConfig)) {
         xfree(private);
 	return NULL;
     }

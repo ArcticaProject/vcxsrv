@@ -512,8 +512,9 @@ __glXGetDrawable(__GLXcontext *glxc, GLXDrawable drawId, ClientPtr client,
     if (!validGlxFBConfigForWindow(client, glxc->config, pDraw, error))
 	return NULL;
 
-    pGlxDraw = glxc->pGlxScreen->createDrawable(glxc->pGlxScreen,
-						pDraw, GLX_DRAWABLE_WINDOW,
+    pGlxDraw = glxc->pGlxScreen->createDrawable(client, glxc->pGlxScreen,
+						pDraw, drawId,
+						GLX_DRAWABLE_WINDOW,
 						drawId, glxc->config);
 
     /* since we are creating the drawablePrivate, drawId should be new */
@@ -1104,15 +1105,17 @@ __glXDrawableRelease(__GLXdrawable *drawable)
 }
 
 static int 
-DoCreateGLXDrawable(ClientPtr client, __GLXscreen *pGlxScreen, __GLXconfig *config,
-		    DrawablePtr pDraw, XID glxDrawableId, int type)
+DoCreateGLXDrawable(ClientPtr client, __GLXscreen *pGlxScreen,
+		    __GLXconfig *config, DrawablePtr pDraw, XID drawableId,
+		    XID glxDrawableId, int type)
 {
     __GLXdrawable *pGlxDraw;
 
     if (pGlxScreen->pScreen != pDraw->pScreen)
 	return BadMatch;
 
-    pGlxDraw = pGlxScreen->createDrawable(pGlxScreen, pDraw, type,
+    pGlxDraw = pGlxScreen->createDrawable(client, pGlxScreen, pDraw,
+					  drawableId, type,
 					  glxDrawableId, config);
     if (pGlxDraw == NULL)
 	return BadAlloc;
@@ -1125,7 +1128,7 @@ DoCreateGLXDrawable(ClientPtr client, __GLXscreen *pGlxScreen, __GLXconfig *conf
     /* Add the glx drawable under the XID of the underlying X drawable
      * too.  That way we'll get a callback in DrawableGone and can
      * clean up properly when the drawable is destroyed. */
-    if (pDraw->id != glxDrawableId &&
+    if (drawableId != glxDrawableId &&
 	!AddResource(pDraw->id, __glXDrawableRes, pGlxDraw)) {
 	pGlxDraw->destroy (pGlxDraw);
 	return BadAlloc;
@@ -1153,7 +1156,7 @@ DoCreateGLXPixmap(ClientPtr client, __GLXscreen *pGlxScreen, __GLXconfig *config
 	return BadPixmap;
     }
 
-    err = DoCreateGLXDrawable(client, pGlxScreen, config, pDraw,
+    err = DoCreateGLXDrawable(client, pGlxScreen, config, pDraw, drawableId,
 			      glxDrawableId, GLX_DRAWABLE_PIXMAP);
 
     return err;
@@ -1316,7 +1319,8 @@ DoCreatePbuffer(ClientPtr client, int screenNum, XID fbconfigId,
 	return BadAlloc;
 
     return DoCreateGLXDrawable(client, pGlxScreen, config, &pPixmap->drawable,
-			       glxDrawableId, GLX_DRAWABLE_PBUFFER);
+			       glxDrawableId, glxDrawableId,
+			       GLX_DRAWABLE_PBUFFER);
 }
 
 int __glXDisp_CreatePbuffer(__GLXclientState *cl, GLbyte *pc)
@@ -1439,7 +1443,8 @@ int __glXDisp_CreateWindow(__GLXclientState *cl, GLbyte *pc)
 	return err;
 
     return DoCreateGLXDrawable(client, pGlxScreen, config,
-			       pDraw, req->glxwindow, GLX_DRAWABLE_WINDOW);
+			       pDraw, req->window,
+			       req->glxwindow, GLX_DRAWABLE_WINDOW);
 }
 
 int __glXDisp_DestroyWindow(__GLXclientState *cl, GLbyte *pc)

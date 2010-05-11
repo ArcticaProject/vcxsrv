@@ -51,7 +51,7 @@ DamageExtNotify (DamageExtPtr pDamageExt, BoxPtr pBoxes, int nBoxes)
     ev.type = DamageEventBase + XDamageNotify;
     ev.level = pDamageExt->level;
     ev.sequenceNumber = pClient->sequence;
-    ev.drawable = pDrawable->id;
+    ev.drawable = pDamageExt->drawable;
     ev.damage = pDamageExt->id;
     ev.timestamp = currentTime.milliseconds;
     ev.geometry.x = pDrawable->x;
@@ -205,6 +205,7 @@ ProcDamageCreate (ClientPtr client)
     if (!pDamageExt)
 	return BadAlloc;
     pDamageExt->id = stuff->damage;
+    pDamageExt->drawable = stuff->drawable;
     pDamageExt->pDrawable = pDrawable;
     pDamageExt->level = level;
     pDamageExt->pClient = client;
