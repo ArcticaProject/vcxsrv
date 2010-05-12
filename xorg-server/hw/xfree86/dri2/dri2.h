@@ -198,7 +198,8 @@ extern _X_EXPORT Bool DRI2Connect(ScreenPtr pScreen,
 
 extern _X_EXPORT Bool DRI2Authenticate(ScreenPtr pScreen, drm_magic_t magic);
 
-extern _X_EXPORT int DRI2CreateDrawable(DrawablePtr pDraw);
+extern _X_EXPORT int DRI2CreateDrawable(ClientPtr client,
+					DrawablePtr pDraw, XID id);
 
 extern _X_EXPORT void DRI2DestroyDrawable(DrawablePtr pDraw);
 

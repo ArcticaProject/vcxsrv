@@ -169,7 +169,7 @@ void warn_func(void * p1, char *format, ...);
 
 // some prototypes
 static __GLXscreen * __glXAquaScreenProbe(ScreenPtr pScreen);
-static __GLXdrawable * __glXAquaScreenCreateDrawable(__GLXscreen *screen, DrawablePtr pDraw, int type, XID drawId, __GLXconfig *conf);
+static __GLXdrawable * __glXAquaScreenCreateDrawable(ClientPtr client, __GLXscreen *screen, DrawablePtr pDraw, XID drawId, int type, XID glxDrawId, __GLXconfig *conf);
 
 static void __glXAquaContextDestroy(__GLXcontext *baseContext);
 static int __glXAquaContextMakeCurrent(__GLXcontext *baseContext);
@@ -639,10 +639,12 @@ static void __glXAquaDrawableDestroy(__GLXdrawable *base) {
 }
 
 static __GLXdrawable *
-__glXAquaScreenCreateDrawable(__GLXscreen *screen,
+__glXAquaScreenCreateDrawable(ClientPtr client,
+                              __GLXscreen *screen,
 			      DrawablePtr pDraw,
-			      int type,
 			      XID drawId,
+			      int type,
+			      XID glxDrawId,
 			      __GLXconfig *conf) {
   __GLXAquaDrawable *glxPriv;
 
@@ -653,7 +655,7 @@ __glXAquaScreenCreateDrawable(__GLXscreen *screen,
 
   memset(glxPriv, 0, sizeof *glxPriv);
 
-  if(!__glXDrawableInit(&glxPriv->base, screen, pDraw, type, drawId, conf)) {
+  if(!__glXDrawableInit(&glxPriv->base, screen, pDraw, type, glxDrawId, conf)) {
     xfree(glxPriv);
     return NULL;
   }

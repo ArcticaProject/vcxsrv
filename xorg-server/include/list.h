@@ -94,4 +94,10 @@ list_is_empty(struct list *head)
 	 &pos->member != (head);					\
 	 pos = __container_of(pos->member.next, pos, member))
 
+#define list_for_each_entry_safe(pos, next, head, member)		\
+    for (pos = __container_of((head)->next, pos, member),		\
+	 next = __container_of(pos->member.next, pos, member);		\
+	 &pos->member != (head);					\
+	 pos = next, next = __container_of(next->member.next, next, member))
+
 #endif

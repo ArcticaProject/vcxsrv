@@ -430,10 +430,12 @@ __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
 }
 
 static __GLXdrawable *
-__glXDRIscreenCreateDrawable(__GLXscreen *screen,
+__glXDRIscreenCreateDrawable(ClientPtr client,
+			     __GLXscreen *screen,
 			     DrawablePtr pDraw,
-			     int type,
 			     XID drawId,
+			     int type,
+			     XID glxDrawId,
 			     __GLXconfig *glxConfig)
 {
     __GLXDRIscreen *driScreen = (__GLXDRIscreen *) screen;
@@ -446,7 +448,7 @@ __glXDRIscreenCreateDrawable(__GLXscreen *screen,
 
     private->screen = driScreen;
     if (!__glXDrawableInit(&private->base, screen,
-			   pDraw, type, drawId, glxConfig)) {
+			   pDraw, type, glxDrawId, glxConfig)) {
         xfree(private);
 	return NULL;
     }
@@ -457,7 +459,7 @@ __glXDRIscreenCreateDrawable(__GLXscreen *screen,
     private->base.waitGL	= __glXDRIdrawableWaitGL;
     private->base.waitX		= __glXDRIdrawableWaitX;
 
-    if (DRI2CreateDrawable(pDraw)) {
+    if (DRI2CreateDrawable(client, pDraw, drawId)) {
 	    xfree(private);
 	    return NULL;
     }
@@ -653,7 +655,7 @@ initializeExtensions(__GLXDRIscreen *screen)
 
 #ifdef __DRI2_FLUSH
 	if (strcmp(extensions[i]->name, __DRI2_FLUSH) == 0 &&
-	    extensions[i]->version >= __DRI2_FLUSH_VERSION) {
+	    extensions[i]->version >= 3) {
 		screen->flush = (__DRI2flushExtension *) extensions[i];
 	}
 #endif
@@ -713,11 +715,11 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     
     for (i = 0; extensions[i]; i++) {
         if (strcmp(extensions[i]->name, __DRI_CORE) == 0 &&
-	    extensions[i]->version >= __DRI_CORE_VERSION) {
+	    extensions[i]->version >= 1) {
 		screen->core = (const __DRIcoreExtension *) extensions[i];
 	}
         if (strcmp(extensions[i]->name, __DRI_DRI2) == 0 &&
-	    extensions[i]->version >= __DRI_DRI2_VERSION) {
+	    extensions[i]->version >= 1) {
 		screen->dri2 = (const __DRIdri2Extension *) extensions[i];
 	}
     }

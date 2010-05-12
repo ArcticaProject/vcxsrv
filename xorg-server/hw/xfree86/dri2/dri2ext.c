@@ -167,7 +167,7 @@ ProcDRI2CreateDrawable(ClientPtr client)
 		       &pDrawable, &status))
 	return status;
 
-    status = DRI2CreateDrawable(pDrawable);
+    status = DRI2CreateDrawable(client, pDrawable, stuff->drawable);
     if (status != Success)
 	return status;
 

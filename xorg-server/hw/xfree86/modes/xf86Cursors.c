@@ -609,7 +609,7 @@ xf86_reload_cursors (ScreenPtr screen)
     cursor_screen_priv = dixLookupPrivate(&screen->devPrivates,
 					  xf86CursorScreenKey);
     /* return if HW cursor is inactive, to avoid displaying two cursors */
-    if (!cursor_screen_priv->isUp)
+    if (!cursor_screen_priv || !cursor_screen_priv->isUp)
 	return;
 
     scrn = xf86Screens[screen->myNum];

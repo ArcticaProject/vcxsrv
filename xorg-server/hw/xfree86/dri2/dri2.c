@@ -37,6 +37,7 @@
 #include <errno.h>
 #include <xf86drm.h>
 #include "xf86Module.h"
+#include "list.h"
 #include "scrnintstr.h"
 #include "windowstr.h"
 #include "dixstruct.h"
@@ -50,12 +51,18 @@ CARD8 dri2_minor;
 
 static int           dri2ScreenPrivateKeyIndex;
 static DevPrivateKey dri2ScreenPrivateKey = &dri2ScreenPrivateKeyIndex;
+static int dri2WindowPrivateKeyIndex;
+static DevPrivateKey dri2WindowPrivateKey = &dri2WindowPrivateKeyIndex;
+static int dri2PixmapPrivateKeyIndex;
+static DevPrivateKey dri2PixmapPrivateKey = &dri2PixmapPrivateKeyIndex;
 static RESTYPE       dri2DrawableRes;
 
 typedef struct _DRI2Screen *DRI2ScreenPtr;
 
 typedef struct _DRI2Drawable {
     DRI2ScreenPtr        dri2_screen;
+    DrawablePtr		 drawable;
+    struct list		 reference_list;
     int			 width;
     int			 height;
     DRI2BufferPtr	*buffers;
@@ -74,6 +81,7 @@ typedef struct _DRI2Drawable {
 
 typedef struct _DRI2Screen {
     ScreenPtr			 screen;
+    int				 refcnt;
     unsigned int		 numDrivers;
     const char			**driverNames;
     const char			*deviceName;
@@ -99,35 +107,33 @@ DRI2GetScreen(ScreenPtr pScreen)
 static DRI2DrawablePtr
 DRI2GetDrawable(DrawablePtr pDraw)
 {
-    DRI2DrawablePtr pPriv;
-    int rc;
+    WindowPtr pWin;
+    PixmapPtr pPixmap;
 
-    rc = dixLookupResourceByType((pointer *) &pPriv, pDraw->id,
-				 dri2DrawableRes, NULL, DixReadAccess);
-    if (rc != Success)
-	return NULL;
-
-    return pPriv;
+    if (pDraw->type == DRAWABLE_WINDOW) {
+	pWin = (WindowPtr) pDraw;
+	return dixLookupPrivate(&pWin->devPrivates, dri2WindowPrivateKey);
+    } else {
+	pPixmap = (PixmapPtr) pDraw;
+	return dixLookupPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey);
+    }
 }
 
-int
-DRI2CreateDrawable(DrawablePtr pDraw)
+static DRI2DrawablePtr
+DRI2AllocateDrawable(DrawablePtr pDraw)
 {
     DRI2ScreenPtr   ds = DRI2GetScreen(pDraw->pScreen);
     DRI2DrawablePtr pPriv;
     CARD64          ust;
-    int		    rc;
-
-    rc = dixLookupResourceByType((pointer *) &pPriv, pDraw->id,
-				 dri2DrawableRes, NULL, DixReadAccess);
-    if (rc == Success || rc != BadValue)
-	return rc;
+    WindowPtr pWin;
+    PixmapPtr pPixmap;
 
     pPriv = xalloc(sizeof *pPriv);
     if (pPriv == NULL)
-	return BadAlloc;
+	return NULL;
 
     pPriv->dri2_screen = ds;
+    pPriv->drawable = pDraw;
     pPriv->width = pDraw->width;
     pPriv->height = pDraw->height;
     pPriv->buffers = NULL;
@@ -145,9 +151,77 @@ DRI2CreateDrawable(DrawablePtr pDraw)
     pPriv->swap_limit = 1; /* default to double buffering */
     pPriv->last_swap_msc = 0;
     pPriv->last_swap_ust = 0;
+    list_init(&pPriv->reference_list);
 
-    if (!AddResource(pDraw->id, dri2DrawableRes, pPriv))
+    if (pDraw->type == DRAWABLE_WINDOW) {
+	pWin = (WindowPtr) pDraw;
+	dixSetPrivate(&pWin->devPrivates, dri2WindowPrivateKey, pPriv);
+    } else {
+	pPixmap = (PixmapPtr) pDraw;
+	dixSetPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey, pPriv);
+    }
+
+    return pPriv;
+}
+
+typedef struct DRI2DrawableRefRec {
+    XID id;
+    XID dri2_id;
+    struct list link;
+} DRI2DrawableRefRec, *DRI2DrawableRefPtr;
+
+static DRI2DrawableRefPtr
+DRI2LookupDrawableRef(DRI2DrawablePtr pPriv, XID id)
+{
+    DRI2DrawableRefPtr ref;
+
+    list_for_each_entry(ref, &pPriv->reference_list, link) {
+	if (ref->id == id)
+	    return ref;
+    }
+    
+    return NULL;
+}
+
+static int
+DRI2AddDrawableRef(DRI2DrawablePtr pPriv, XID id, XID dri2_id)
+{
+    DRI2DrawableRefPtr ref;
+
+    ref = malloc(sizeof *ref);
+    if (ref == NULL)
 	return BadAlloc;
+	
+    if (!AddResource(dri2_id, dri2DrawableRes, pPriv))
+	return BadAlloc;
+    if (!DRI2LookupDrawableRef(pPriv, id))
+	if (!AddResource(id, dri2DrawableRes, pPriv))
+	    return BadAlloc;
+
+    ref->id = id;
+    ref->dri2_id = dri2_id; 
+    list_add(&ref->link, &pPriv->reference_list);
+
+    return Success;
+}
+
+int
+DRI2CreateDrawable(ClientPtr client, DrawablePtr pDraw, XID id)
+{
+    DRI2DrawablePtr pPriv;
+    XID dri2_id;
+    int rc;
+
+    pPriv = DRI2GetDrawable(pDraw);
+    if (pPriv == NULL)
+	pPriv = DRI2AllocateDrawable(pDraw);
+    if (pPriv == NULL)
+	return BadAlloc;
+    
+    dri2_id = FakeClientID(client->index);
+    rc = DRI2AddDrawableRef(pPriv, id, dri2_id);
+    if (rc != Success)
+	return rc;
 
     return Success;
 }
@@ -156,13 +230,45 @@ static int DRI2DrawableGone(pointer p, XID id)
 {
     DRI2DrawablePtr pPriv = p;
     DRI2ScreenPtr   ds = pPriv->dri2_screen;
-    DrawablePtr     root;
+    DRI2DrawableRefPtr ref, next;
+    WindowPtr pWin;
+    PixmapPtr pPixmap;
+    DrawablePtr pDraw;
     int i;
 
-    root = &WindowTable[ds->screen->myNum]->drawable;
+    list_for_each_entry_safe(ref, next, &pPriv->reference_list, link) {
+	if (ref->dri2_id == id) {
+	    list_del(&ref->link);
+	    /* If this was the last ref under this X drawable XID,
+	     * unregister the X drawable resource. */
+	    if (!DRI2LookupDrawableRef(pPriv, ref->id))
+		FreeResourceByType(ref->id, dri2DrawableRes, TRUE);
+	    free(ref);
+	    break;
+	}
+
+	if (ref->id == id) {
+	    list_del(&ref->link);
+	    FreeResourceByType(ref->dri2_id, dri2DrawableRes, TRUE);
+	    free(ref);
+	}
+    }
+
+    if (!list_is_empty(&pPriv->reference_list))
+	return Success;
+
+    pDraw = pPriv->drawable;
+    if (pDraw->type == DRAWABLE_WINDOW) {
+	pWin = (WindowPtr) pDraw;
+	dixSetPrivate(&pWin->devPrivates, dri2WindowPrivateKey, NULL);
+    } else {
+	pPixmap = (PixmapPtr) pDraw;
+	dixSetPrivate(&pPixmap->devPrivates, dri2PixmapPrivateKey, NULL);
+    }
+
     if (pPriv->buffers != NULL) {
 	for (i = 0; i < pPriv->bufferCount; i++)
-	    (*ds->DestroyBuffer)(root, pPriv->buffers[i]);
+	    (*ds->DestroyBuffer)(pDraw, pPriv->buffers[i]);
 
 	xfree(pPriv->buffers);
     }

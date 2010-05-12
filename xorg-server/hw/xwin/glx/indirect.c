@@ -415,10 +415,12 @@ static __GLXscreen *glxWinScreenProbe(ScreenPtr pScreen);
 static __GLXcontext *glxWinCreateContext(__GLXscreen *screen,
                                         __GLXconfig *modes,
                                         __GLXcontext *baseShareContext);
-static __GLXdrawable *glxWinCreateDrawable(__GLXscreen *screen,
+static __GLXdrawable *glxWinCreateDrawable(ClientPtr client,
+                                          __GLXscreen *screen,
                                           DrawablePtr pDraw,
-                                          int type,
                                           XID drawId,
+                                          int type,
+                                          XID glxDrawId,
                                           __GLXconfig *conf);
 
 static Bool glxWinRealizeWindow(WindowPtr pWin);
@@ -1026,11 +1028,13 @@ glxWinDrawableDestroy(__GLXdrawable *base)
 }
 
 static __GLXdrawable *
-glxWinCreateDrawable(__GLXscreen *screen,
-                    DrawablePtr pDraw,
-                    int type,
-                    XID drawId,
-                    __GLXconfig *conf)
+glxWinCreateDrawable(ClientPtr client,
+			     __GLXscreen *screen,
+			     DrawablePtr pDraw,
+			     XID drawId,
+			     int type,
+			     XID glxDrawId,
+			     __GLXconfig *conf)
 {
   __GLXWinDrawable *glxPriv;
 
@@ -1039,7 +1043,7 @@ glxWinCreateDrawable(__GLXscreen *screen,
   if (glxPriv == NULL)
       return NULL;
 
-  if(!__glXDrawableInit(&glxPriv->base, screen, pDraw, type, drawId, conf)) {
+  if(!__glXDrawableInit(&glxPriv->base, screen, pDraw, type, glxDrawId, conf)) {
     xfree(glxPriv);
     return NULL;
   }

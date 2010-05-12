@@ -55,6 +55,7 @@ typedef struct _DamageExt {
     DamageReportLevel	level;
     ClientPtr		pClient;
     XID			id;
+    XID			drawable;
 } DamageExtRec, *DamageExtPtr;
 
 #define VERIFY_DAMAGEEXT(pDamageExt, rid, client, mode) { \
