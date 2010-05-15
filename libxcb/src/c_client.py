@@ -448,7 +448,9 @@ def _c_accessor_get_expr(expr, prefix=''):
     '''
     lenexp = _c_accessor_get_length(expr, prefix)
 
-    if expr.op != None:
+    if expr.op == '~':
+        return '(' + '~' + _c_accessor_get_expr(expr.rhs, prefix) + ')'
+    elif expr.op != None:
         return '(' + _c_accessor_get_expr(expr.lhs, prefix) + ' ' + expr.op + ' ' + _c_accessor_get_expr(expr.rhs, prefix) + ')'
     elif expr.bitfield:
         return 'xcb_popcount(' + lenexp + ')'
