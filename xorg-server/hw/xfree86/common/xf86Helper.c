@@ -105,7 +105,7 @@ xf86DeleteDriver(int drvIndex)
 	&& (!xf86DriverHasEntities(xf86DriverList[drvIndex]))) {
 	if (xf86DriverList[drvIndex]->module)
 	    UnloadModule(xf86DriverList[drvIndex]->module);
-	xfree(xf86DriverList[drvIndex]);
+	free(xf86DriverList[drvIndex]);
 	xf86DriverList[drvIndex] = NULL;
     }
 }
@@ -137,7 +137,7 @@ xf86DeleteInputDriver(int drvIndex)
 {
     if (xf86InputDriverList[drvIndex] && xf86InputDriverList[drvIndex]->module)
 	UnloadModule(xf86InputDriverList[drvIndex]->module);
-    xfree(xf86InputDriverList[drvIndex]);
+    free(xf86InputDriverList[drvIndex]);
     xf86InputDriverList[drvIndex] = NULL;
 }
 
@@ -239,11 +239,11 @@ xf86DeleteScreen(int scrnIndex, int flags)
 	pScrn->drv->refCount--;
 
     if (pScrn->privates)
-	xfree(pScrn->privates);
+	free(pScrn->privates);
 
     xf86ClearEntityListForScreen(scrnIndex);
 
-    xfree(pScrn);
+    free(pScrn);
 
     /* Move the other entries down, updating their scrnIndex fields */
 
@@ -285,7 +285,7 @@ xf86AllocateInput(InputDriverPtr drv, int flags)
 {
     InputInfoPtr new, *prev = NULL;
 
-    if (!(new = xcalloc(sizeof(InputInfoRec), 1)))
+    if (!(new = calloc(sizeof(InputInfoRec), 1)))
 	return NULL;
 
     new->drv = drv;
@@ -332,7 +332,7 @@ xf86DeleteInput(InputInfoPtr pInp, int flags)
      * if the driver forgets about it make sure we free it or at least crash
      * with flying colors */
     if (pInp->private)
-	xfree(pInp->private);
+	free(pInp->private);
 
     /* Remove the entry from the list. */
     if (pInp == xf86InputDevs)
@@ -345,7 +345,7 @@ xf86DeleteInput(InputInfoPtr pInp, int flags)
 	    p->next = pInp->next;
 	/* Else the entry wasn't in the xf86InputDevs list (ignore this). */
     }
-    xfree(pInp);
+    free(pInp);
 }
 
 Bool
@@ -1224,7 +1224,7 @@ xf86VDrvMsgVerb(int scrnIndex, MessageType type, int verb, const char *format,
     /* Prefix the scrnIndex name to the format string. */
     if (scrnIndex >= 0 && scrnIndex < xf86NumScreens &&
 	xf86Screens[scrnIndex]->name) {
-	tmpFormat = xalloc(strlen(format) +
+	tmpFormat = malloc(strlen(format) +
 			   strlen(xf86Screens[scrnIndex]->name) +
 			   PREFIX_SIZE + 1);
 	if (!tmpFormat)
@@ -1235,7 +1235,7 @@ xf86VDrvMsgVerb(int scrnIndex, MessageType type, int verb, const char *format,
 
 	strcat(tmpFormat, format);
 	LogVMessageVerb(type, verb, tmpFormat, args);
-	xfree(tmpFormat);
+	free(tmpFormat);
     } else
 	LogVMessageVerb(type, verb, format, args);
 }
@@ -1502,7 +1502,7 @@ xf86MatchDevice(const char *drivername, GDevPtr **sectlist)
     if (sectlist)
 	*sectlist = pgdp;
     else
-	xfree(pgdp);
+	free(pgdp);
     return i;
 }
 
@@ -1697,7 +1697,7 @@ xf86MatchPciInstances(const char *driverName, int vendorID,
      * allow the config file to override this.
      */
     if (allocatedInstances <= 0) {
-	xfree(instances);
+	free(instances);
 	return 0;
     }
 
@@ -1912,7 +1912,7 @@ xf86MatchPciInstances(const char *driverName, int vendorID,
 	    }
 	}
     }
-    xfree(instances);
+    free(instances);
     if (numFound > 0) {
 	*foundEntities = retEntities;
     }
@@ -2206,14 +2206,14 @@ xf86LoadOneModule(char *name, pointer opt)
     if (Name == NULL)
 	return NULL;
     if (*Name == '\0') {
-	xfree(Name);
+	free(Name);
 	return NULL;
     }
 
     mod = LoadModule(Name, NULL, NULL, NULL, opt, NULL, &errmaj, &errmin);
     if (!mod)
 	LoaderErrorMsg(NULL, Name, errmaj, errmin);
-    xfree(Name);
+    free(Name);
     return mod;
 }
 
@@ -2267,7 +2267,7 @@ xf86SetBackingStore(ScreenPtr pScreen)
 	if (xf86GetOptValBool(options, OPTION_BACKING_STORE, &useBS))
 	    from = X_CONFIG;
     }
-    xfree(options);
+    free(options);
     pScreen->backingStoreSupport = useBS ? Always : NotUseful;
     if (serverGeneration == 1)
 	xf86DrvMsg(pScreen->myNum, from, "Backing store %s\n",
@@ -2306,7 +2306,7 @@ xf86SetSilkenMouse (ScreenPtr pScreen)
 	if (xf86GetOptValBool(options, OPTION_SILKEN_MOUSE, &useSM))
 	    from = X_CONFIG;
     }
-    xfree(options);
+    free(options);
     /*
      * XXX quick hack to report correctly for OSs that can't do SilkenMouse
      * yet.  Should handle this differently so that alternate async methods
@@ -2392,13 +2392,13 @@ xf86ConfigPciEntity(ScrnInfoPtr pScrn, int scrnFlag, int entityIndex,
 
     if (!(pEnt->location.type == BUS_PCI)
 	|| !xf86GetPciInfoForEntity(entityIndex)) {
-	xfree(pEnt);
+	free(pEnt);
 	return pScrn;
     }
     if (!pEnt->active) {
 	xf86ConfigPciEntityInactive(pEnt, p_chip, init,  enter,
 				    leave,  private);
-	xfree(pEnt);
+	free(pEnt);
 	return pScrn;
     }
 
@@ -2411,7 +2411,7 @@ xf86ConfigPciEntity(ScrnInfoPtr pScrn, int scrnFlag, int entityIndex,
     if (xf86IsEntityShared(entityIndex)) {
         return pScrn;
     }
-    xfree(pEnt);
+    free(pEnt);
 
     xf86SetEntityFuncs(entityIndex,init,enter,leave,private);
 
@@ -2427,13 +2427,13 @@ xf86ConfigFbEntity(ScrnInfoPtr pScrn, int scrnFlag, int entityIndex,
     if (!pEnt) return pScrn;
 
     if (!(pEnt->location.type == BUS_NONE)) {
-	xfree(pEnt);
+	free(pEnt);
 	return pScrn;
     }
 
     if (!pEnt->active) {
 	xf86ConfigFbEntityInactive(pEnt, init,  enter, leave,  private);
-	xfree(pEnt);
+	free(pEnt);
 	return pScrn;
     }
 
@@ -2461,12 +2461,12 @@ xf86ConfigActivePciEntity(ScrnInfoPtr pScrn, int entityIndex,
     if (!pEnt) return FALSE;
 
     if (!pEnt->active || !(pEnt->location.type == BUS_PCI)) {
-        xfree(pEnt);
+        free(pEnt);
         return FALSE;
     }
     xf86AddEntityToScreen(pScrn,entityIndex);
 
-    xfree(pEnt);
+    free(pEnt);
     if (!xf86SetEntityFuncs(entityIndex,init,enter,leave,private))
         return FALSE;
 
@@ -2511,7 +2511,7 @@ xf86RegisterRootWindowProperty(int ScrnIndex, Atom property, Atom type,
     }
 
     if (!pNewProp) {
-      if ((pNewProp = (RootWinPropPtr)xalloc(sizeof(RootWinProp))) == NULL) {
+      if ((pNewProp = (RootWinPropPtr)malloc(sizeof(RootWinProp))) == NULL) {
 	return(BadAlloc);
       }
       /*
@@ -2521,7 +2521,7 @@ xf86RegisterRootWindowProperty(int ScrnIndex, Atom property, Atom type,
       pNewProp->next = NULL;
     } else {
       if (pNewProp->name)
-	xfree(pNewProp->name);
+	free(pNewProp->name);
       existing = TRUE;
     }
 

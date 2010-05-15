@@ -98,10 +98,10 @@ RootlessUpdateScreenPixmap(ScreenPtr pScreen)
 
     if (s->pixmap_data_size < rowbytes) {
         if (s->pixmap_data != NULL)
-            xfree(s->pixmap_data);
+            free(s->pixmap_data);
 
         s->pixmap_data_size = rowbytes;
-        s->pixmap_data = xalloc(s->pixmap_data_size);
+        s->pixmap_data = malloc(s->pixmap_data_size);
         if (s->pixmap_data == NULL)
             return;
 
@@ -157,12 +157,12 @@ RootlessCloseScreen(int i, ScreenPtr pScreen)
     pScreen->CloseScreen = s->CloseScreen;
 
     if (s->pixmap_data != NULL) {
-        xfree (s->pixmap_data);
+        free(s->pixmap_data);
         s->pixmap_data = NULL;
         s->pixmap_data_size = 0;
     }
 
-    xfree(s);
+    free(s);
     return pScreen->CloseScreen(i, pScreen);
 }
 
@@ -641,7 +641,7 @@ RootlessAllocatePrivates(ScreenPtr pScreen)
     if (!dixRequestPrivate(rootlessGCPrivateKey, sizeof(RootlessGCRec)))
         return FALSE;
 
-    s = xalloc(sizeof(RootlessScreenRec));
+    s = malloc(sizeof(RootlessScreenRec));
     if (! s) return FALSE;
     SETSCREENREC(pScreen, s);
 

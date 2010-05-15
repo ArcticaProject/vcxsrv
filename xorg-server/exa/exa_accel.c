@@ -394,7 +394,7 @@ exaHWCopyNtoN (DrawablePtr    pSrcDrawable,
     exaGetDrawableDeltas (pSrcDrawable, pSrcPixmap, &src_off_x, &src_off_y);
     exaGetDrawableDeltas (pDstDrawable, pDstPixmap, &dst_off_x, &dst_off_y);
 
-    rects = xalloc(nbox * sizeof(xRectangle));
+    rects = malloc(nbox * sizeof(xRectangle));
 
     if (rects) {
 	int i;
@@ -417,7 +417,7 @@ exaHWCopyNtoN (DrawablePtr    pSrcDrawable,
 	    ordering = CT_UNSORTED;
 
 	srcregion  = RECTS_TO_REGION(pScreen, nbox, rects, ordering);
-	xfree(rects);
+	free(rects);
 
 	if (!pGC || !exaGCReadsDestination(pDstDrawable, pGC->planemask,
 					   pGC->fillStyle, pGC->alu,
@@ -626,7 +626,7 @@ exaPolyPoint(DrawablePtr pDrawable, GCPtr pGC, int mode, int npt,
 	return;
     }
 
-    prect = xalloc(sizeof(xRectangle) * npt);
+    prect = malloc(sizeof(xRectangle) * npt);
     for (i = 0; i < npt; i++) {
 	prect[i].x = ppt[i].x;
 	prect[i].y = ppt[i].y;
@@ -638,7 +638,7 @@ exaPolyPoint(DrawablePtr pDrawable, GCPtr pGC, int mode, int npt,
 	prect[i].height = 1;
     }
     pGC->ops->PolyFillRect(pDrawable, pGC, npt, prect);
-    xfree(prect);
+    free(prect);
 }
 
 /**
@@ -667,7 +667,7 @@ exaPolylines(DrawablePtr pDrawable, GCPtr pGC, int mode, int npt,
 	return;
     }
 
-    prect = xalloc(sizeof(xRectangle) * (npt - 1));
+    prect = malloc(sizeof(xRectangle) * (npt - 1));
     x1 = ppt[0].x;
     y1 = ppt[0].y;
     /* If we have any non-horizontal/vertical, fall back. */
@@ -681,7 +681,7 @@ exaPolylines(DrawablePtr pDrawable, GCPtr pGC, int mode, int npt,
 	}
 
 	if (x1 != x2 && y1 != y2) {
-	    xfree(prect);
+	    free(prect);
 	    ExaCheckPolylines(pDrawable, pGC, mode, npt, ppt);
 	    return;
 	}
@@ -705,7 +705,7 @@ exaPolylines(DrawablePtr pDrawable, GCPtr pGC, int mode, int npt,
 	y1 = y2;
     }
     pGC->ops->PolyFillRect(pDrawable, pGC, npt - 1, prect);
-    xfree(prect);
+    free(prect);
 }
 
 /**
@@ -737,7 +737,7 @@ exaPolySegment (DrawablePtr pDrawable, GCPtr pGC, int nseg,
 	}
     }
 
-    prect = xalloc(sizeof(xRectangle) * nseg);
+    prect = malloc(sizeof(xRectangle) * nseg);
     for (i = 0; i < nseg; i++) {
 	if (pSeg[i].x1 < pSeg[i].x2) {
 	    prect[i].x = pSeg[i].x1;
@@ -763,7 +763,7 @@ exaPolySegment (DrawablePtr pDrawable, GCPtr pGC, int nseg,
 	}
     }
     pGC->ops->PolyFillRect(pDrawable, pGC, nseg, prect);
-    xfree(prect);
+    free(prect);
 }
 
 static Bool exaFillRegionSolid (DrawablePtr pDrawable, RegionPtr pRegion,

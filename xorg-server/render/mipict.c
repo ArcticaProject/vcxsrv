@@ -106,7 +106,7 @@ miChangePictureClip (PicturePtr    pPicture,
 	if (!clientClip)
 	    return BadAlloc;
 	clientClipType = CT_REGION;
-	xfree(value);
+	free(value);
 	break;
     }
     (*ps->DestroyPictureClip) (pPicture);

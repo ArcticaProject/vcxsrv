@@ -83,8 +83,8 @@ X_PFX (hook_run) (x_list *lst, void *arg)
         return;
 
     length = X_PFX (list_length) (lst);
-    fun = xalloc (sizeof (x_hook_function *) * length);
-    data = xalloc (sizeof (void *) * length);
+    fun = malloc(sizeof (x_hook_function *) * length);
+    data = malloc(sizeof (void *) * length);
 
     if(!fun || !data) {
         FatalError("Failed to allocate memory in %s\n", __func__);
@@ -102,8 +102,8 @@ X_PFX (hook_run) (x_list *lst, void *arg)
 	(*fun[i]) (arg, data[i]);
     }
     
-    xfree(fun);
-    xfree(data);
+    free(fun);
+    free(data);
 }
 
 X_EXTERN void

@@ -158,7 +158,7 @@ XineramaCloseScreen (int i, ScreenPtr pScreen)
     if (pScreen->myNum == 0)
 	REGION_UNINIT(pScreen, &PanoramiXScreenRegion);
 
-    xfree ((pointer) pScreenPriv);
+    free((pointer) pScreenPriv);
 
     return (*pScreen->CloseScreen) (i, pScreen);
 }
@@ -328,7 +328,7 @@ XineramaDestroyClip(GCPtr pGC)
 int
 XineramaDeleteResource(pointer data, XID id)
 {
-    xfree(data);
+    free(data);
     return 1;
 }
 
@@ -376,7 +376,7 @@ XineramaRegisterConnectionBlockCallback(void (*func)(void))
 {
     XineramaConnectionCallbackList *newlist;
 
-    if(!(newlist = xalloc(sizeof(XineramaConnectionCallbackList))))
+    if(!(newlist = malloc(sizeof(XineramaConnectionCallbackList))))
 	return FALSE;
 
     newlist->next = ConnectionCallbackList;
@@ -474,7 +474,7 @@ void PanoramiXExtensionInit(int argc, char *argv[])
 	 */
 
 	panoramiXdataPtr = (PanoramiXData *) 
-		xcalloc(PanoramiXNumScreens, sizeof(PanoramiXData));
+		calloc(PanoramiXNumScreens, sizeof(PanoramiXData));
 
 	if (!panoramiXdataPtr)
 	    break;
@@ -486,7 +486,7 @@ void PanoramiXExtensionInit(int argc, char *argv[])
 	
 	for (i = 0; i < PanoramiXNumScreens; i++) {
 	   pScreen = screenInfo.screens[i];
-	   pScreenPriv = xalloc(sizeof(PanoramiXScreenRec));
+	   pScreenPriv = malloc(sizeof(PanoramiXScreenRec));
 	   dixSetPrivate(&pScreen->devPrivates, PanoramiXScreenKey,
 			 pScreenPriv);
 	   if(!pScreenPriv) {
@@ -675,8 +675,8 @@ Bool PanoramiXCreateConnectionBlock(void)
     connSetupPrefix.length = bytes_to_int32(length);
 
     for (i = 0; i < PanoramiXNumDepths; i++)
-	xfree(PanoramiXDepths[i].vids);
-    xfree(PanoramiXDepths);
+	free(PanoramiXDepths[i].vids);
+    free(PanoramiXDepths);
     PanoramiXDepths = NULL;
 
     /*
@@ -699,7 +699,7 @@ Bool PanoramiXCreateConnectionBlock(void)
 	tmp = (pointer)ConnectionCallbackList;
 	(*ConnectionCallbackList->func)();
 	ConnectionCallbackList = ConnectionCallbackList->next;
-	xfree(tmp);
+	free(tmp);
     }
 
     return TRUE;
@@ -750,13 +750,13 @@ PanoramiXMaybeAddDepth(DepthPtr pDepth)
 
     j = PanoramiXNumDepths;
     PanoramiXNumDepths++;
-    PanoramiXDepths = xrealloc(PanoramiXDepths,
+    PanoramiXDepths = realloc(PanoramiXDepths,
 	    PanoramiXNumDepths * sizeof(DepthRec));
     PanoramiXDepths[j].depth = pDepth->depth;
     PanoramiXDepths[j].numVids = 0;
     /* XXX suboptimal, should grow these dynamically */
     if(pDepth->numVids)
-	PanoramiXDepths[j].vids = xalloc(sizeof(VisualID) * pDepth->numVids);
+	PanoramiXDepths[j].vids = malloc(sizeof(VisualID) * pDepth->numVids);
     else
 	PanoramiXDepths[j].vids = NULL;
 }
@@ -792,7 +792,7 @@ PanoramiXMaybeAddVisual(VisualPtr pVisual)
     /* found a matching visual on all screens, add it to the subset list */
     j = PanoramiXNumVisuals;
     PanoramiXNumVisuals++;
-    PanoramiXVisuals = xrealloc(PanoramiXVisuals,
+    PanoramiXVisuals = realloc(PanoramiXVisuals,
 	    PanoramiXNumVisuals * sizeof(VisualRec));
 
     memcpy(&PanoramiXVisuals[j], pVisual, sizeof(VisualRec));
@@ -824,11 +824,11 @@ PanoramiXConsolidate(void)
     for (i = 0; i < pScreen->numVisuals; i++)
 	PanoramiXMaybeAddVisual(pVisual++);
 
-    root = xalloc(sizeof(PanoramiXRes));
+    root = malloc(sizeof(PanoramiXRes));
     root->type = XRT_WINDOW;
-    defmap = xalloc(sizeof(PanoramiXRes));
+    defmap = malloc(sizeof(PanoramiXRes));
     defmap->type = XRT_COLORMAP;
-    saver = xalloc(sizeof(PanoramiXRes));
+    saver = malloc(sizeof(PanoramiXRes));
     saver->type = XRT_WINDOW;
 
     for (i =  0; i < PanoramiXNumScreens; i++) {
@@ -893,7 +893,7 @@ static void PanoramiXResetProc(ExtensionEntry* extEntry)
     for (i = 256; i--; )
 	ProcVector[i] = SavedProcVector[i];
 
-    Xfree(panoramiXdataPtr);    
+    free(panoramiXdataPtr);
 }
 
 
@@ -917,7 +917,7 @@ ProcPanoramiXQueryVersion (ClientPtr client)
         swaps(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof (xPanoramiXQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 int
@@ -944,7 +944,7 @@ ProcPanoramiXGetState(ClientPtr client)
 	    swapl (&rep.window, n);
 	}	
 	WriteToClient (client, sizeof (xPanoramiXGetStateReply), (char *) &rep);
-	return client->noClientException;
+	return Success;
 
 }
 
@@ -972,7 +972,7 @@ ProcPanoramiXGetScreenCount(ClientPtr client)
 	    swapl (&rep.window, n);
 	}	
 	WriteToClient (client, sizeof (xPanoramiXGetScreenCountReply), (char *) &rep);
-	return client->noClientException;
+	return Success;
 }
 
 int 
@@ -1008,7 +1008,7 @@ ProcPanoramiXGetScreenSize(ClientPtr client)
 	    swapl (&rep.screen, n);
 	}	
 	WriteToClient (client, sizeof (xPanoramiXGetScreenSizeReply), (char *) &rep);
-	return client->noClientException;
+	return Success;
 }
 
 
@@ -1039,7 +1039,7 @@ ProcXineramaIsActive(ClientPtr client)
 	swapl (&rep.state, n);
     }	
     WriteToClient (client, sizeof (xXineramaIsActiveReply), (char *) &rep);
-    return client->noClientException;
+    return Success;
 }
 
 
@@ -1084,7 +1084,7 @@ ProcXineramaQueryScreens(ClientPtr client)
 	}
     }
 
-    return client->noClientException;
+    return Success;
 }
 
 
@@ -1202,7 +1202,7 @@ XineramaGetImageData(
 
 		if(sizeNeeded > size) {
 		    char *tmpdata = ScratchMem;
-		    ScratchMem = xrealloc(ScratchMem, sizeNeeded);
+		    ScratchMem = realloc(ScratchMem, sizeNeeded);
 		    if(ScratchMem)
 			size = sizeNeeded;
 		    else {
@@ -1277,7 +1277,7 @@ XineramaGetImageData(
     }
 
     if(ScratchMem)
-	xfree(ScratchMem);
+	free(ScratchMem);
 
     REGION_UNINIT(pScreen, &SrcRegion);
     REGION_UNINIT(pScreen, &GrabRegion);

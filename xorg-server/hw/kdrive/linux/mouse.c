@@ -958,7 +958,7 @@ MouseInit (KdPointerInfo *pi)
 
     close(fd);
 
-    km = (Kmouse *) xalloc (sizeof (Kmouse));
+    km = (Kmouse *) malloc(sizeof (Kmouse));
     if (km) {
         km->iob.avail = km->iob.used = 0;
         MouseFirstProtocol(km, pi->protocol ? pi->protocol : "exps/2");
@@ -1016,7 +1016,7 @@ MouseDisable (KdPointerInfo *pi)
 static void
 MouseFini (KdPointerInfo *pi)
 {
-    xfree (pi->driverPrivate);
+    free(pi->driverPrivate);
     pi->driverPrivate = NULL;
 }
 

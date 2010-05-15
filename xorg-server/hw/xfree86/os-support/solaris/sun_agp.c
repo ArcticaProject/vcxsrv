@@ -115,7 +115,7 @@ xf86GetAGPInfo(int screenNum)
 	if (!GARTInit(screenNum))
 		return NULL;
 
-	if ((info = xcalloc(sizeof(AgpInfo), 1)) == NULL) {
+	if ((info = calloc(sizeof(AgpInfo), 1)) == NULL) {
 		xf86DrvMsg(screenNum, X_ERROR,
 		    "xf86GetAGPInfo: Failed to allocate AgpInfo\n");
 		return NULL;

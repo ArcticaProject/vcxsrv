@@ -144,7 +144,7 @@ miTriStrip (CARD8	    op,
     if (npoint < 3)
 	return;
     ntri = npoint - 2;
-    tris = xalloc (ntri * sizeof (xTriangle));
+    tris = malloc(ntri * sizeof (xTriangle));
     if (!tris)
 	return;
     for (tri = tris; npoint >= 3; npoint--, points++, tri++)
@@ -154,7 +154,7 @@ miTriStrip (CARD8	    op,
 	tri->p3 = points[2];
     }
     (*ps->Triangles) (op, pSrc, pDst, maskFormat, xSrc, ySrc, ntri, tris);
-    xfree (tris);
+    free(tris);
 }
 
 void
@@ -176,7 +176,7 @@ miTriFan (CARD8		op,
     if (npoint < 3)
 	return;
     ntri = npoint - 2;
-    tris = xalloc (ntri * sizeof (xTriangle));
+    tris = malloc(ntri * sizeof (xTriangle));
     if (!tris)
 	return;
     first = points++;
@@ -187,5 +187,5 @@ miTriFan (CARD8		op,
 	tri->p3 = points[1];
     }
     (*ps->Triangles) (op, pSrc, pDst, maskFormat, xSrc, ySrc, ntri, tris);
-    xfree (tris);
+    free(tris);
 }

@@ -483,7 +483,7 @@ XAACompositeSrcCopy (PicturePtr pSrc,
 	REGION_UNINIT(pScreen, &region);
 	return;
     }
-    pptSrc = xalloc(sizeof(DDXPointRec) * nbox);
+    pptSrc = malloc(sizeof(DDXPointRec) * nbox);
     if (!pptSrc) {
 	REGION_UNINIT(pScreen, &region);
 	return;
@@ -501,7 +501,7 @@ XAACompositeSrcCopy (PicturePtr pSrc,
     XAADoBitBlt(pSrc->pDrawable, pDst->pDrawable, &infoRec->ScratchGC, &region,
 		pptSrc);
 
-    xfree(pptSrc);
+    free(pptSrc);
     REGION_UNINIT(pScreen, &region);
     return;
 }

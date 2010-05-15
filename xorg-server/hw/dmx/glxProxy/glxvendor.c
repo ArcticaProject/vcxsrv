@@ -242,7 +242,7 @@ int __glXVForwardPipe0WithReply( __GLXclientState *cl, GLbyte *pc )
     _XReply(dpy, (xReply*) &be_reply, 0, False);
     be_buf_size = be_reply.length << 2;
     if (be_buf_size > 0) {
-       be_buf = (char *)Xalloc( be_buf_size );
+       be_buf = (char *)malloc( be_buf_size );
        if (be_buf) {
 	  _XRead(dpy, be_buf, be_buf_size);
        }
@@ -334,7 +334,7 @@ int __glXVForwardAllWithReply( __GLXclientState *cl, GLbyte *pc )
        _XReply(dpy, (xReply*) &be_reply, 0, False);
        be_buf_size = be_reply.length << 2;
        if (be_buf_size > 0) {
-	  be_buf = (char *)Xalloc( be_buf_size );
+	  be_buf = (char *)malloc( be_buf_size );
 	  if (be_buf) {
 	     _XRead(dpy, be_buf, be_buf_size);
 	  }

@@ -442,7 +442,7 @@ XAAPutImage(
 	TheRect.height = h; 
 
 	if(MaxBoxes > (infoRec->PreAllocSize/sizeof(BoxRec))) {
-	    pClipBoxes = xalloc(MaxBoxes * sizeof(BoxRec));
+	    pClipBoxes = malloc(MaxBoxes * sizeof(BoxRec));
 	    if(!pClipBoxes) return;	
 	} else pClipBoxes = (BoxPtr)infoRec->PreAllocMem;
 
@@ -514,7 +514,7 @@ XAAPutImage(
 	}
 
 	if(pClipBoxes != (BoxPtr)infoRec->PreAllocMem)
-	    xfree(pClipBoxes);
+	    free(pClipBoxes);
     } else 
 	XAAFallbackOps.PutImage(pDraw, pGC, depth, x, y, w, h, leftPad, 
 				format, pImage);

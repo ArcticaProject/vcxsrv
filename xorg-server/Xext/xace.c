@@ -274,7 +274,7 @@ XaceCensorImage(
 
 	/* convert region to list-of-rectangles for PolyFillRect */
 
-	pRects = xalloc(nRects * sizeof(xRectangle));
+	pRects = malloc(nRects * sizeof(xRectangle));
 	if (!pRects)
 	{
 	    failed = TRUE;
@@ -326,7 +326,7 @@ XaceCensorImage(
 	     */
 	    bzero(pBuf, (int)(widthBytesLine * h));
 	}
-	if (pRects)     xfree(pRects);
+	if (pRects)     free(pRects);
 	if (pScratchGC) FreeScratchGC(pScratchGC);
 	if (pPix)       FreeScratchPixmapHeader(pPix);
     }

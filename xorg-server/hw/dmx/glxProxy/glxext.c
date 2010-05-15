@@ -191,7 +191,7 @@ void __glXFreeGLXWindow(__glXWindow *pGlxWindow)
             (*pGlxWindow->pScreen->DestroyWindow)(pWindow);
         }
 
-	xfree(pGlxWindow);
+	free(pGlxWindow);
     }
 }
 
@@ -204,8 +204,8 @@ static void WindowGone(__glXWindow *pGlxWindow, XID id)
 void __glXFreeGLXPbuffer(__glXPbuffer *pGlxPbuffer)
 {
     if (!pGlxPbuffer->idExists && !pGlxPbuffer->refcnt) {
-        xfree(pGlxPbuffer->be_xids);
-        xfree(pGlxPbuffer);
+        free(pGlxPbuffer->be_xids);
+        free(pGlxPbuffer);
     }
 }
 

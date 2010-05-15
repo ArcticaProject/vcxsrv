@@ -17,7 +17,7 @@ TDA8425Ptr Detect_tda8425(I2CBusPtr b, I2CSlaveAddr addr, Bool force)
 {
   TDA8425Ptr t;
   
-  t = xcalloc(1, sizeof(TDA8425Rec));
+  t = calloc(1, sizeof(TDA8425Rec));
   if(t == NULL) return NULL;
   t->d.DevName = "TDA8425 BTSC Stereo Audio Processor";
   t->d.SlaveAddr = addr;
@@ -30,14 +30,14 @@ TDA8425Ptr Detect_tda8425(I2CBusPtr b, I2CSlaveAddr addr, Bool force)
   
   if(!force && !I2CProbeAddress(b, addr))
   {
-     xfree(t);
+     free(t);
      return NULL;
   }
   
   /* set default parameters */
   if(!I2CDevInit(&(t->d)))
   {
-     xfree(t);
+     free(t);
      return NULL;
   }
 

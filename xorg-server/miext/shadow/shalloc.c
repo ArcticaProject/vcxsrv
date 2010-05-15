@@ -45,6 +45,6 @@ shadowAlloc (int width, int height, int bpp)
 
     /* Cant use PixmapBytePad -- the structure is probably not initialized yet */
     stride = BitmapBytePad (width * bpp);
-    fb = xalloc (stride * height);
+    fb = malloc(stride * height);
     return fb;
 }

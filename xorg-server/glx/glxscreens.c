@@ -378,7 +378,7 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
     pGlxScreen->numFBConfigs = i;
 
     pGlxScreen->visuals =
-	xcalloc(pGlxScreen->numFBConfigs, sizeof (__GLXconfig *));
+	calloc(pGlxScreen->numFBConfigs, sizeof (__GLXconfig *));
 
     /* First, try to choose featureful FBconfigs for the existing X visuals.
      * Note that if multiple X visuals end up with the same FBconfig being
@@ -440,7 +440,7 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
 
 void __glXScreenDestroy(__GLXscreen *screen)
 {
-    xfree(screen->GLXvendor);
-    xfree(screen->GLXextensions);
-    xfree(screen->GLextensions);
+    free(screen->GLXvendor);
+    free(screen->GLXextensions);
+    free(screen->GLextensions);
 }

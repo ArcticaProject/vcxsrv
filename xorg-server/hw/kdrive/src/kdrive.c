@@ -207,7 +207,7 @@ KdDoSwitchCmd (char *reason)
 {
     if (kdSwitchCmd)
     {
-	char    *command = xalloc (strlen (kdSwitchCmd) +
+	char    *command = malloc(strlen (kdSwitchCmd) +
 				   1 +
 				   strlen (reason) +
 				   1);
@@ -217,7 +217,7 @@ KdDoSwitchCmd (char *reason)
 	strcat (command, " ");
 	strcat (command, reason);
 	system (command);
-	xfree (command);
+	free(command);
     }
 }
 
@@ -699,7 +699,7 @@ KdAllocatePrivates (ScreenPtr pScreen)
     if (kdGeneration != serverGeneration)
 	kdGeneration = serverGeneration;
 
-    pScreenPriv = xcalloc(1, sizeof (*pScreenPriv));
+    pScreenPriv = calloc(1, sizeof (*pScreenPriv));
     if (!pScreenPriv)
 	return FALSE;
     KdSetScreenPriv (pScreen, pScreenPriv);
@@ -788,7 +788,7 @@ KdCloseScreen (int index, ScreenPtr pScreen)
 
     pScreenPriv->screen->pScreen = 0;
 
-    xfree ((pointer) pScreenPriv);
+    free((pointer) pScreenPriv);
     return ret;
 }
 

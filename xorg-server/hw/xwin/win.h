@@ -223,7 +223,7 @@ if (fDebugProcMsg) \
   int iLength; \
   pszTemp = Xprintf (str, ##__VA_ARGS__); \
   MessageBox (NULL, pszTemp, szFunctionName, MB_OK); \
-  xfree (pszTemp); \
+  free(pszTemp); \
 }
 #else
 #define DEBUG_MSG(str,...)

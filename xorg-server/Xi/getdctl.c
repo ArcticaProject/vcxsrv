@@ -281,7 +281,7 @@ ProcXGetDeviceControl(ClientPtr client)
 	return BadValue;
     }
 
-    buf = (char *)xalloc(total_length);
+    buf = (char *)malloc(total_length);
     if (!buf)
 	return BadAlloc;
     savbuf = buf;
@@ -309,6 +309,6 @@ ProcXGetDeviceControl(ClientPtr client)
     rep.length = bytes_to_int32(total_length);
     WriteReplyToClient(client, sizeof(xGetDeviceControlReply), &rep);
     WriteToClient(client, total_length, savbuf);
-    xfree(savbuf);
+    free(savbuf);
     return Success;
 }

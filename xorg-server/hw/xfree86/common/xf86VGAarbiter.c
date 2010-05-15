@@ -178,7 +178,7 @@ xf86VGAarbiterWrapFunctions(void)
         if (!dixRequestPrivate(VGAarbiterGCKey, sizeof(VGAarbiterGCRec)))
             return FALSE;
 
-        if (!(pScreenPriv = xalloc(sizeof(VGAarbiterScreenRec))))
+        if (!(pScreenPriv = malloc(sizeof(VGAarbiterScreenRec))))
             return FALSE;
 
         dixSetPrivate(&pScreen->devPrivates, VGAarbiterScreenKey, pScreenPriv);
@@ -250,7 +250,7 @@ VGAarbiterCloseScreen (int i, ScreenPtr pScreen)
     UNWRAP_SCREEN_INFO(FreeScreen);
     UNWRAP_SPRITE;
 
-    xfree ((pointer) pScreenPriv);
+    free((pointer) pScreenPriv);
     xf86VGAarbiterLock(xf86Screens[i]);
     val = (*pScreen->CloseScreen) (i, pScreen);
     xf86VGAarbiterUnlock(xf86Screens[i]);

@@ -47,8 +47,6 @@ struct _Private {
 typedef struct _PrivateDesc {
     DevPrivateKey key;
     unsigned size;
-    CallbackListPtr initfuncs;
-    CallbackListPtr deletefuncs;
 } PrivateDescRec;
 
 #define PRIV_MAX 256
@@ -102,7 +100,6 @@ pointer *
 dixAllocatePrivate(PrivateRec **privates, const DevPrivateKey key)
 {
     PrivateDescRec *item = findItem(key);
-    PrivateCallbackRec calldata;
     PrivateRec *ptr;
     pointer value;
     int oldsize, newsize;
@@ -115,7 +112,7 @@ dixAllocatePrivate(PrivateRec **privates, const DevPrivateKey key)
 
     /* initialize privates array if necessary */
     if (!*privates) {
-	ptr = xcalloc(newsize, sizeof(*ptr));
+	ptr = calloc(newsize, sizeof(*ptr));
 	if (!ptr)
 	    return NULL;
 	*privates = ptr;
@@ -126,7 +123,7 @@ dixAllocatePrivate(PrivateRec **privates, const DevPrivateKey key)
 
     /* resize privates array if necessary */
     if (*key >= oldsize) {
-	ptr = xrealloc(*privates, newsize * sizeof(*ptr));
+	ptr = realloc(*privates, newsize * sizeof(*ptr));
 	if (!ptr)
 	    return NULL;
 	memset(ptr + oldsize, 0, (newsize - oldsize) * sizeof(*ptr));
@@ -138,15 +135,11 @@ dixAllocatePrivate(PrivateRec **privates, const DevPrivateKey key)
     ptr = *privates + *key;
     ptr->state = 1;
     if (item->size) {
-	value = xcalloc(item->size, 1);
+	value = calloc(item->size, 1);
 	if (!value)
 	    return NULL;
 	ptr->value = value;
     }
-
-    calldata.key = key;
-    calldata.value = &ptr->value;
-    CallCallbacks(&item->initfuncs, &calldata);
 
     return &ptr->value;
 }
@@ -202,47 +195,16 @@ void
 dixFreePrivates(PrivateRec *privates)
 {
     int i;
-    PrivateCallbackRec calldata;
 
     if (privates)
 	for (i = 1; i < privates->state; i++)
 	    if (privates[i].state) {
-		/* call the delete callbacks */
-		calldata.key = items[i].key;
-		calldata.value = &privates[i].value;
-		CallCallbacks(&items[i].deletefuncs, &calldata);
-
 		/* free pre-allocated memory */
 		if (items[i].size)
-		    xfree(privates[i].value);
+		    free(privates[i].value);
 	    }
 
-    xfree(privates);
-}
-
-/*
- * Callback registration
- */
-int
-dixRegisterPrivateInitFunc(const DevPrivateKey key,
-			   CallbackProcPtr callback, pointer data)
-{
-    PrivateDescRec *item = findItem(key);
-    if (!item)
-	return FALSE;
-
-    return AddCallback(&item->initfuncs, callback, data);
-}
-
-int
-dixRegisterPrivateDeleteFunc(const DevPrivateKey key,
-			     CallbackProcPtr callback, pointer data)
-{
-    PrivateDescRec *item = findItem(key);
-    if (!item)
-	return FALSE;
-
-    return AddCallback(&item->deletefuncs, callback, data);
+    free(privates);
 }
 
 /* Table of devPrivates offsets */
@@ -273,7 +235,7 @@ dixRegisterPrivateOffset(RESTYPE type, int offset)
     /* resize offsets table if necessary */
     while (type >= offsetsSize) {
 	unsigned i = offsetsSize * 2 * sizeof(int);
-	offsets = (int *)xrealloc(offsets, i);
+	offsets = (int *)realloc(offsets, i);
 	if (!offsets) {
 	    offsetsSize = 0;
 	    return FALSE;
@@ -304,16 +266,14 @@ dixResetPrivates(void)
     for (i = 1; i < nextPriv; i++) {
 	*items[i].key = 0;
 	items[i].size = 0;
-	DeleteCallbackList(&items[i].initfuncs);
-	DeleteCallbackList(&items[i].deletefuncs);
     }
     nextPriv = 1;
 
     /* reset offsets */
     if (offsets)
-	xfree(offsets);
+	free(offsets);
     offsetsSize = sizeof(offsetDefaults);
-    offsets = xalloc(offsetsSize);
+    offsets = malloc(offsetsSize);
     offsetsSize /= sizeof(int);
     if (!offsets)
 	return FALSE;

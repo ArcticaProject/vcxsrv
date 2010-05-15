@@ -608,7 +608,7 @@ DDCModeFromDetailedTiming(int scrnIndex, struct detailed_timings *timing,
 
     /* perform basic check on the detail timing */
     if (Mode->HSyncEnd > Mode->HTotal || Mode->VSyncEnd > Mode->VTotal) {
-	xfree(Mode);
+	free(Mode);
 	return NULL;
     }
 

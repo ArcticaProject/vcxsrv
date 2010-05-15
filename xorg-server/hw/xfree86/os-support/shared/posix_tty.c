@@ -131,14 +131,14 @@ xf86OpenSerial (pointer options)
 		xf86Msg (X_ERROR,
 			 "xf86OpenSerial: Cannot open device %s\n\t%s.\n",
 			 dev, strerror (errno));
-		xfree(dev);
+		free(dev);
 		return (-1);
 	}
 
 	if (!isatty (fd))
 	{
 		/* Allow non-tty devices to be opened. */
-		xfree(dev);
+		free(dev);
 		return (fd);
 	}
 
@@ -161,7 +161,7 @@ xf86OpenSerial (pointer options)
 	if (xf86SetSerial (fd, options) == -1)
 	{
 		SYSCALL (close (fd));
-		xfree(dev);
+		free(dev);
 		return (-1);
 	}
 
@@ -169,7 +169,7 @@ xf86OpenSerial (pointer options)
 	if (i == -1)
 	{
 		SYSCALL (close (fd));
-		xfree(dev);
+		free(dev);
 		return (-1);
 	}
 	i &= ~O_NONBLOCK;
@@ -177,10 +177,10 @@ xf86OpenSerial (pointer options)
 	if (i == -1)
 	{
 		SYSCALL (close (fd));
-		xfree(dev);
+		free(dev);
 		return (-1);
 	}
-	xfree(dev);
+	free(dev);
 	return (fd);
 }
 

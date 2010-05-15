@@ -365,7 +365,7 @@ winExitDlgProc (HWND hDialog, UINT message,
 	/* Set the number of connected clients */
 	SetWindowText (GetDlgItem (hDialog, IDC_CLIENTS_CONNECTED),
 		       pszConnectedClients);
-	xfree (pszConnectedClients);
+	free(pszConnectedClients);
       }
       return TRUE;
 

@@ -326,7 +326,7 @@ AllocateMotionHistory(DeviceIntPtr pDev)
 {
     int size;
     if (pDev->valuator->motion)
-        xfree(pDev->valuator->motion);
+        free(pDev->valuator->motion);
 
     if (pDev->valuator->numMotionEvents < 1)
         return;
@@ -342,7 +342,7 @@ AllocateMotionHistory(DeviceIntPtr pDev)
 
     size += sizeof(Time);
 
-    pDev->valuator->motion = xcalloc(pDev->valuator->numMotionEvents, size);
+    pDev->valuator->motion = calloc(pDev->valuator->numMotionEvents, size);
     pDev->valuator->first_motion = 0;
     pDev->valuator->last_motion = 0;
     if (!pDev->valuator->motion)
@@ -384,7 +384,7 @@ GetMotionHistory(DeviceIntPtr pDev, xTimecoord **buff, unsigned long start,
     else
         size = (sizeof(INT32) * pDev->valuator->numAxes) + sizeof(Time);
 
-    *buff = xalloc(size * pDev->valuator->numMotionEvents);
+    *buff = malloc(size * pDev->valuator->numMotionEvents);
     if (!(*buff))
         return 0;
     obuff = (char *)*buff;
@@ -959,20 +959,20 @@ InitEventList(int num_events)
     EventListPtr events;
     int i;
 
-    events = (EventListPtr)xcalloc(num_events, sizeof(EventList));
+    events = (EventListPtr)calloc(num_events, sizeof(EventList));
     if (!events)
         return NULL;
 
     for (i = 0; i < num_events; i++)
     {
         events[i].evlen = sizeof(InternalEvent);
-        events[i].event = xcalloc(1, sizeof(InternalEvent));
+        events[i].event = calloc(1, sizeof(InternalEvent));
         if (!events[i].event)
         {
             /* rollback */
             while(i--)
-                xfree(events[i].event);
-            xfree(events);
+                free(events[i].event);
+            free(events);
             events = NULL;
             break;
         }
@@ -993,8 +993,8 @@ FreeEventList(EventListPtr list, int num_events)
     if (!list)
         return;
     while(num_events--)
-        xfree(list[num_events].event);
-    xfree(list);
+        free(list[num_events].event);
+    free(list);
 }
 
 /**

@@ -152,6 +152,10 @@ typedef int		(*DRI2ScheduleWaitMSCProcPtr)(ClientPtr client,
 						      CARD64 target_msc,
 						      CARD64 divisor,
 						      CARD64 remainder);
+
+typedef void		(*DRI2InvalidateProcPtr)(DrawablePtr pDraw,
+						 void *data);
+
 /**
  * Version of the DRI2InfoRec structure defined in this header
  */
@@ -199,7 +203,10 @@ extern _X_EXPORT Bool DRI2Connect(ScreenPtr pScreen,
 extern _X_EXPORT Bool DRI2Authenticate(ScreenPtr pScreen, drm_magic_t magic);
 
 extern _X_EXPORT int DRI2CreateDrawable(ClientPtr client,
-					DrawablePtr pDraw, XID id);
+					DrawablePtr pDraw,
+					XID id,
+					DRI2InvalidateProcPtr invalidate,
+					void *priv);
 
 extern _X_EXPORT void DRI2DestroyDrawable(DrawablePtr pDraw);
 

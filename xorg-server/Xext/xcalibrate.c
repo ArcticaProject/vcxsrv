@@ -90,7 +90,7 @@ ProcXCalibrateQueryVersion (ClientPtr client)
     swaps(&rep.minorVersion, n);
   }
   WriteToClient(client, sizeof (xXCalibrateQueryVersionReply), (char *)&rep);
-  return (client->noClientException);
+  return Success;
 }
 
 static int
@@ -160,7 +160,7 @@ ProcXCalibrateSetRawMode (ClientPtr client)
       swaps (&rep.status, n);
     }
   WriteToClient(client, sizeof (rep), (char *) &rep);
-  return (client->noClientException);
+  return Success;
 }
 
 static int
@@ -200,7 +200,7 @@ ProcXCalibrateScreenToCoord (ClientPtr client)
       swaps (&rep.y, n);
     }
   WriteToClient(client, sizeof (rep), (char *) &rep);
-  return (client->noClientException);
+  return Success;
 }
 
 static int

@@ -1159,7 +1159,7 @@ EnqueueEvent(InternalEvent *ev, DeviceIntPtr device)
 
     eventlen = event->length;
 
-    qe = xalloc(sizeof(QdEventRec) + eventlen);
+    qe = malloc(sizeof(QdEventRec) + eventlen);
     if (!qe)
 	return;
     qe->next = (QdEventPtr)NULL;
@@ -1229,7 +1229,7 @@ PlayReleasedEvents(void)
 	    }
 #endif
 	    (*qe->device->public.processInputProc)(qe->event, qe->device);
-	    xfree(qe);
+	    free(qe);
 	    for (dev = inputInfo.devices; dev && dev->deviceGrab.sync.frozen; dev = dev->next)
 		;
 	    if (!dev)
@@ -2435,7 +2435,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
                     FixUpEventFromWindow(dev, xi2, pWin, child, FALSE);
                     deliveries = DeliverEventsToWindow(dev, pWin, xi2, 1,
                                                        filter, grab);
-                    xfree(xi2);
+                    free(xi2);
                     if (deliveries > 0)
                         goto unwind;
                 } else if (rc != BadMatch)
@@ -2492,7 +2492,7 @@ DeliverDeviceEvents(WindowPtr pWin, InternalEvent *event, GrabPtr grab,
     }
 
 unwind:
-    xfree(xE);
+    free(xE);
     return deliveries;
 }
 
@@ -2633,7 +2633,7 @@ XYToWindow(DeviceIntPtr pDev, int x, int y)
 	    if (pSprite->spriteTraceGood >= pSprite->spriteTraceSize)
 	    {
 		pSprite->spriteTraceSize += 10;
-		pSprite->spriteTrace = xrealloc(pSprite->spriteTrace,
+		pSprite->spriteTrace = realloc(pSprite->spriteTrace,
 		                    pSprite->spriteTraceSize*sizeof(WindowPtr));
 	    }
 	    pSprite->spriteTrace[pSprite->spriteTraceGood++] = pWin;
@@ -2938,7 +2938,7 @@ InitializeSprite(DeviceIntPtr pDev, WindowPtr pWin)
     {
         DeviceIntPtr it;
 
-        pDev->spriteInfo->sprite = (SpritePtr)xcalloc(1, sizeof(SpriteRec));
+        pDev->spriteInfo->sprite = (SpritePtr)calloc(1, sizeof(SpriteRec));
         if (!pDev->spriteInfo->sprite)
             FatalError("InitializeSprite: failed to allocate sprite struct");
 
@@ -2977,7 +2977,7 @@ InitializeSprite(DeviceIntPtr pDev, WindowPtr pWin)
     if (pWin)
     {
 	pCursor = wCursor(pWin);
-	pSprite->spriteTrace = (WindowPtr *)xcalloc(1, 32*sizeof(WindowPtr));
+	pSprite->spriteTrace = (WindowPtr *)calloc(1, 32*sizeof(WindowPtr));
 	if (!pSprite->spriteTrace)
 	    FatalError("Failed to allocate spriteTrace");
 	pSprite->spriteTraceSize = 32;
@@ -3638,13 +3638,13 @@ CheckPassiveGrabsOnWindow(
 	    if (grabinfo->sync.state == FROZEN_NO_EVENT)
 	    {
                 if (!grabinfo->sync.event)
-                    grabinfo->sync.event = xcalloc(1, sizeof(InternalEvent));
+                    grabinfo->sync.event = calloc(1, sizeof(InternalEvent));
                 *grabinfo->sync.event = *event;
 		grabinfo->sync.state = FROZEN_WITH_EVENT;
             }
 
             if (match & (XI_MATCH | XI2_MATCH))
-                xfree(xE); /* on core match xE == &core */
+                free(xE); /* on core match xE == &core */
 	    return TRUE;
 	}
     }
@@ -3813,9 +3813,9 @@ DeliverFocusedEvent(DeviceIntPtr keybd, InternalEvent *event, WindowPtr window)
 
 unwind:
     if (xE)
-        xfree(xE);
+        free(xE);
     if (xi2)
-        xfree(xi2);
+        free(xi2);
     return;
 }
 
@@ -3989,16 +3989,16 @@ DeliverGrabbedEvent(InternalEvent *event, DeviceIntPtr thisDev,
 	    grabinfo->sync.state = FROZEN_WITH_EVENT;
 	    FreezeThaw(thisDev, TRUE);
 	    if (!grabinfo->sync.event)
-		grabinfo->sync.event = xcalloc(1, sizeof(InternalEvent));
+		grabinfo->sync.event = calloc(1, sizeof(InternalEvent));
 	    *grabinfo->sync.event = event->device_event;
 	    break;
 	}
     }
 
     if (xi)
-        xfree(xi);
+        free(xi);
     if (xi2)
-        xfree(xi2);
+        free(xi2);
 }
 
 /* This function is used to set the key pressed or key released state -
@@ -4104,7 +4104,7 @@ OtherClientGone(pointer value, XID id)
 		if (!(pWin->optional->otherClients = other->next))
 		    CheckWindowOptionalNeed (pWin);
 	    }
-	    xfree(other);
+	    free(other);
 	    RecalculateDeliverableEvents(pWin);
 	    return(Success);
 	}
@@ -4176,7 +4176,7 @@ EventSelectForWindow(WindowPtr pWin, ClientPtr client, Mask mask)
 	check = 0;
 	if (!pWin->optional && !MakeWindowOptional (pWin))
 	    return BadAlloc;
-	others = xalloc(sizeof(OtherClients));
+	others = malloc(sizeof(OtherClients));
 	if (!others)
 	    return BadAlloc;
 	others->mask = mask;
@@ -4367,7 +4367,7 @@ DeviceEnterLeaveEvent(
     btlen = bytes_to_int32(btlen);
     len = sizeof(xXIEnterEvent) + btlen * 4;
 
-    event = xcalloc(1, len);
+    event = calloc(1, len);
     event->type         = GenericEvent;
     event->extension    = IReqCode;
     event->evtype       = type;
@@ -4417,7 +4417,7 @@ DeviceEnterLeaveEvent(
     }
 
 out:
-    xfree(event);
+    free(event);
 }
 
 void
@@ -4548,7 +4548,7 @@ SetInputFocus(
         if (depth > focus->traceSize)
         {
 	    focus->traceSize = depth+1;
-	    focus->trace = xrealloc(focus->trace,
+	    focus->trace = realloc(focus->trace,
 				    focus->traceSize * sizeof(WindowPtr));
 	}
 	focus->traceGood = depth;
@@ -5058,7 +5058,7 @@ InitEvents(void)
     while (syncEvents.pending)
     {
 	QdEventPtr next = syncEvents.pending->next;
-	xfree(syncEvents.pending);
+	free(syncEvents.pending);
 	syncEvents.pending = next;
     }
     syncEvents.pendtail = &syncEvents.pending;
@@ -5743,7 +5743,7 @@ WriteEventsToClient(ClientPtr pClient, int count, xEvent *events)
         if (eventlength > swapEventLen)
         {
             swapEventLen = eventlength;
-            swapEvent = Xrealloc(swapEvent, swapEventLen);
+            swapEvent = realloc(swapEvent, swapEventLen);
             if (!swapEvent)
             {
                 FatalError("WriteEventsToClient: Out of memory.\n");

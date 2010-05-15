@@ -968,21 +968,21 @@ vgaHWSaveFonts(ScrnInfoPtr scrninfp, vgaRegPtr save)
     hwp->writeGr(hwp, 0x06, 0x05);	/* set graphics */
 
 #if SAVE_FONT1
-    if (hwp->FontInfo1 || (hwp->FontInfo1 = xalloc(FONT_AMOUNT))) {
+    if (hwp->FontInfo1 || (hwp->FontInfo1 = malloc(FONT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x04);	/* write to plane 2 */
 	hwp->writeGr(hwp, 0x04, 0x02);	/* read plane 2 */
 	slowbcopy_frombus(hwp->Base, hwp->FontInfo1, FONT_AMOUNT);
     }
 #endif /* SAVE_FONT1 */
 #if SAVE_FONT2
-    if (hwp->FontInfo2 || (hwp->FontInfo2 = xalloc(FONT_AMOUNT))) {
+    if (hwp->FontInfo2 || (hwp->FontInfo2 = malloc(FONT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x08);	/* write to plane 3 */
 	hwp->writeGr(hwp, 0x04, 0x03);	/* read plane 3 */
 	slowbcopy_frombus(hwp->Base, hwp->FontInfo2, FONT_AMOUNT);
     }
 #endif /* SAVE_FONT2 */
 #if SAVE_TEXT
-    if (hwp->TextInfo || (hwp->TextInfo = xalloc(2 * TEXT_AMOUNT))) {
+    if (hwp->TextInfo || (hwp->TextInfo = malloc(2 * TEXT_AMOUNT))) {
 	hwp->writeSeq(hwp, 0x02, 0x01);	/* write to plane 0 */
 	hwp->writeGr(hwp, 0x04, 0x00);	/* read plane 0 */
 	slowbcopy_frombus(hwp->Base, hwp->TextInfo, TEXT_AMOUNT);
@@ -1480,7 +1480,7 @@ static void
 vgaHWFreeRegs(vgaRegPtr regp)
 {
     if (regp->CRTC)
-    	xfree (regp->CRTC);
+        free(regp->CRTC);
 
     regp->CRTC =
     regp->Sequencer =
@@ -1504,7 +1504,7 @@ vgaHWAllocRegs(vgaRegPtr regp)
          regp->numAttribute) == 0)
         return FALSE;
 
-    buf = xcalloc(regp->numCRTC +
+    buf = calloc(regp->numCRTC +
     		  regp->numSequencer +
 		  regp->numGraphics +
 		  regp->numAttribute, 1);
@@ -1643,7 +1643,7 @@ vgaHWGetHWRec(ScrnInfoPtr scrp)
 
     if ((!vgaHWAllocDefaultRegs(&VGAHWPTR(scrp)->SavedReg)) ||
     	(!vgaHWAllocDefaultRegs(&VGAHWPTR(scrp)->ModeReg))) {
-        xfree(hwp);
+        free(hwp);
 	return FALSE;
     }
 
@@ -1726,14 +1726,14 @@ vgaHWFreeHWRec(ScrnInfoPtr scrp)
 	if (!hwp)
 	    return;
 
-	xfree(hwp->FontInfo1);
-	xfree(hwp->FontInfo2);
-	xfree(hwp->TextInfo);
+	free(hwp->FontInfo1);
+	free(hwp->FontInfo2);
+	free(hwp->TextInfo);
 
 	vgaHWFreeRegs (&hwp->ModeReg);
 	vgaHWFreeRegs (&hwp->SavedReg);
 
-	xfree(hwp);
+	free(hwp);
 	VGAHWPTRLVAL(scrp) = NULL;
     }
 }
@@ -1975,7 +1975,7 @@ vgaHWddc1SetSpeed(ScrnInfoPtr pScrn, xf86ddcSpeed speed)
 	hwp->writeCrtc(hwp,0x15,save->cr15);
 	hwp->writeCrtc(hwp,0x12,save->cr12);
 	hwp->writeCrtc(hwp,0x03,save->cr03);
-	xfree(save);
+	free(save);
 	hwp->ddc = NULL;
 	break;
     default:

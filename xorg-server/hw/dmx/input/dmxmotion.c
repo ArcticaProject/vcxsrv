@@ -108,7 +108,7 @@ void dmxPointerPutMotionEvent(DeviceIntPtr pDevice,
     int           i;
 
     if (!dmxLocal->history) {
-        dmxLocal->history   = xalloc(sizeof(*dmxLocal->history)
+        dmxLocal->history   = malloc(sizeof(*dmxLocal->history)
                                      * (numAxes + 1)
                                      * DMX_MOTION_SIZE);
         dmxLocal->head      = 0;

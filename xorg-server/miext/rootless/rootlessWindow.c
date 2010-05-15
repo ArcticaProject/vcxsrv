@@ -187,7 +187,7 @@ RootlessDestroyFrame(WindowPtr pWin, RootlessWindowPtr winRec)
     REGION_UNINIT(pScreen, &winRec->damage);
 #endif
 
-    xfree(winRec);
+    free(winRec);
     SETWINREC(pWin, NULL);
 }
 
@@ -421,7 +421,7 @@ RootlessEnsureFrame(WindowPtr pWin)
     if (pWin->drawable.class != InputOutput)
         return NULL;
 
-    winRec = xalloc(sizeof(RootlessWindowRec));
+    winRec = malloc(sizeof(RootlessWindowRec));
 
     if (!winRec)
         return NULL;
@@ -448,7 +448,7 @@ RootlessEnsureFrame(WindowPtr pWin)
                                               pShape))
     {
         RL_DEBUG_MSG("implementation failed to create frame!\n");
-        xfree(winRec);
+        free(winRec);
         SETWINREC(pWin, NULL);
         return NULL;
     }
@@ -984,7 +984,7 @@ StartFrameResize(WindowPtr pWin, Bool gravity,
             copy_rect_width = copy_rect.x2 - copy_rect.x1;
             copy_rect_height = copy_rect.y2 - copy_rect.y1;
             copy_rowbytes = ((copy_rect_width * Bpp) + 31) & ~31;
-            gResizeDeathBits = xalloc(copy_rowbytes
+            gResizeDeathBits = malloc(copy_rowbytes
                                       * copy_rect_height);
 
             if (copy_rect_width * copy_rect_height >
@@ -1028,7 +1028,7 @@ StartFrameResize(WindowPtr pWin, Bool gravity,
 
         RootlessStartDrawing(pWin);
 
-        gResizeDeathBits = xalloc(winRec->bytesPerRow * winRec->height);
+        gResizeDeathBits = malloc(winRec->bytesPerRow * winRec->height);
 
         memcpy(gResizeDeathBits, winRec->pixelData,
                winRec->bytesPerRow * winRec->height);
@@ -1170,7 +1170,7 @@ FinishFrameResize(WindowPtr pWin, Bool gravity, int oldX, int oldY,
     }
 
     if (gResizeDeathBits != NULL) {
-        xfree(gResizeDeathBits);
+        free(gResizeDeathBits);
         gResizeDeathBits = NULL;
     }
 

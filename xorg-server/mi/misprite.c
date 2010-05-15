@@ -298,7 +298,7 @@ miSpriteInitialize (ScreenPtr               pScreen,
     if (!DamageSetup (pScreen))
 	return FALSE;
 
-    pScreenPriv = xalloc (sizeof (miSpriteScreenRec));
+    pScreenPriv = malloc(sizeof (miSpriteScreenRec));
     if (!pScreenPriv)
 	return FALSE;
 
@@ -311,7 +311,7 @@ miSpriteInitialize (ScreenPtr               pScreen,
 
     if (!miPointerInitialize (pScreen, &miSpritePointerFuncs, screenFuncs,TRUE))
     {
-	xfree (pScreenPriv);
+	free(pScreenPriv);
 	return FALSE;
     }
     for (pVisual = pScreen->visuals;
@@ -386,7 +386,7 @@ miSpriteCloseScreen (int i, ScreenPtr pScreen)
 
     DamageDestroy (pScreenPriv->pDamage);
 
-    xfree (pScreenPriv);
+    free(pScreenPriv);
 
     return (*pScreen->CloseScreen) (i, pScreen);
 }
@@ -926,7 +926,7 @@ miSpriteDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
 
     pScreenPriv = dixLookupPrivate(&pScreen->devPrivates, miSpriteScreenKey);
 
-    pCursorInfo = xalloc(sizeof(miCursorInfoRec));
+    pCursorInfo = malloc(sizeof(miCursorInfoRec));
     if (!pCursorInfo)
         return FALSE;
 
@@ -943,7 +943,7 @@ miSpriteDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
     ret = (*pScreenPriv->funcs->DeviceCursorInitialize)(pDev, pScreen);
     if (!ret)
     {
-        xfree(pCursorInfo);
+        free(pCursorInfo);
         pCursorInfo = NULL;
     }
     dixSetPrivate(&pDev->devPrivates, miSpriteDevPrivatesKey, pCursorInfo);

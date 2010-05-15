@@ -159,7 +159,7 @@ void dmxSync(DMXScreenInfo *dmxScreen, Bool now)
              * 2) freed, if it was on a queue (dmxSyncPending != 0), or
              * 3) allocated, if it wasn't on a queue (dmxSyncPending == 0)
              */
-            if (dmxSyncTimer && !dmxSyncPending) xfree(dmxSyncTimer);
+            if (dmxSyncTimer && !dmxSyncPending) free(dmxSyncTimer);
             dmxSyncTimer  = NULL;
             now           = TRUE;
             dmxGeneration = serverGeneration;

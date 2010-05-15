@@ -2448,7 +2448,7 @@ int __glXQueryExtensionsString(__GLXclientState *cl, GLbyte *pc)
     len = (int)be_reply.length;
     numbytes = (int)be_reply.n;
     slop = numbytes * __GLX_SIZE_INT8 & 3;
-    be_buf = (char *)Xalloc(numbytes);
+    be_buf = (char *)malloc(numbytes);
     if (!be_buf) {
         /* Throw data on the floor */
         _XEatData(dpy, len);
@@ -2526,7 +2526,7 @@ int __glXQueryServerString(__GLXclientState *cl, GLbyte *pc)
     len = (int)be_reply.length;
     numbytes = (int)be_reply.n;
     slop = numbytes * __GLX_SIZE_INT8 & 3;
-    be_buf = (char *)Xalloc(numbytes);
+    be_buf = (char *)malloc(numbytes);
     if (!be_buf) {
         /* Throw data on the floor */
         _XEatData(dpy, len);
@@ -2947,7 +2947,7 @@ int __glXCreateWindow(__GLXclientState *cl, GLbyte *pc)
 	return BadAlloc;
     }
 
-    pGlxWindow = (__glXWindow *) xalloc(sizeof(__glXWindow));
+    pGlxWindow = (__glXWindow *) malloc(sizeof(__glXWindow));
     if (!pGlxWindow) {
 	return BadAlloc;
     }
@@ -3016,7 +3016,7 @@ int __glXQueryContext(__GLXclientState *cl, GLbyte *pc)
     reply.n = nProps;
 
     nReplyBytes = reply.length << 2;
-    sendBuf = (int *)xalloc(nReplyBytes);
+    sendBuf = (int *)malloc(nReplyBytes);
     pSendBuf = sendBuf;
     *pSendBuf++ = GLX_FBCONFIG_ID;
     *pSendBuf++ = (int)(ctx->pFBConfig->id);
@@ -3031,7 +3031,7 @@ int __glXQueryContext(__GLXclientState *cl, GLbyte *pc)
         WriteToClient(client, sz_xGLXQueryContextReply, (char *)&reply);
         WriteToClient(client, nReplyBytes, (char *)sendBuf);
     }
-    xfree((char *)sendBuf);
+    free((char *)sendBuf);
 
     return Success;
 }
@@ -3061,7 +3061,7 @@ int __glXQueryContextInfoEXT(__GLXclientState *cl, GLbyte *pc)
     reply.n = nProps;
 
     nReplyBytes = reply.length << 2;
-    sendBuf = (int *)xalloc(nReplyBytes);
+    sendBuf = (int *)malloc(nReplyBytes);
     pSendBuf = sendBuf;
     *pSendBuf++ = GLX_SHARE_CONTEXT_EXT;
     *pSendBuf++ = (int)(ctx->share_id);
@@ -3078,7 +3078,7 @@ int __glXQueryContextInfoEXT(__GLXclientState *cl, GLbyte *pc)
         WriteToClient(client, sz_xGLXQueryContextInfoEXTReply, (char *)&reply);
         WriteToClient(client, nReplyBytes, (char *)sendBuf);
     }
-    xfree((char *)sendBuf);
+    free((char *)sendBuf);
 
     return Success;
 }
@@ -3124,14 +3124,14 @@ int __glXCreatePbuffer(__GLXclientState *cl, GLbyte *pc)
     /*
     ** Create the GLX part of the Pbuffer.
     */
-    pGlxPbuffer = (__glXPbuffer *) xalloc(sizeof(__glXPbuffer));
+    pGlxPbuffer = (__glXPbuffer *) malloc(sizeof(__glXPbuffer));
     if (!pGlxPbuffer) {
         return BadAlloc;
     }
 
-    pGlxPbuffer->be_xids = (XID *) xalloc( sizeof(XID) * screenInfo.numScreens );
+    pGlxPbuffer->be_xids = (XID *) malloc( sizeof(XID) * screenInfo.numScreens );
     if (!pGlxPbuffer->be_xids) {
-        xfree(pGlxPbuffer);
+        free(pGlxPbuffer);
         return BadAlloc;
     }
 
@@ -3380,7 +3380,7 @@ int __glXGetDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 
    if (reply.numAttribs) {
       attribs_size = 2 * reply.numAttribs * __GLX_SIZE_CARD32;
-      attribs = (CARD32 *) Xalloc(attribs_size);
+      attribs = (CARD32 *) malloc(attribs_size);
       if (attribs == NULL) {
 	 UnlockDisplay(dpy);
 	 SyncHandle();

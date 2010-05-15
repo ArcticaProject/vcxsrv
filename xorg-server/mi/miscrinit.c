@@ -166,7 +166,7 @@ miCreateScreenResources(ScreenPtr pScreen)
     {
 	value = pScrInitParms->pbits;
     }
-    xfree(pScreen->devPrivate); /* freeing miScreenInitParmsRec */
+    free(pScreen->devPrivate); /* freeing miScreenInitParmsRec */
     pScreen->devPrivate = value; /* pPixmap or pbits */
     return TRUE;
 }
@@ -180,7 +180,7 @@ miScreenDevPrivateInit(ScreenPtr pScreen, int width, pointer pbits)
      * to the screen, until CreateScreenResources can put them in the
      * screen pixmap.
      */
-    pScrInitParms = xalloc(sizeof(miScreenInitParmsRec));
+    pScrInitParms = malloc(sizeof(miScreenInitParmsRec));
     if (!pScrInitParms)
 	return FALSE;
     pScrInitParms->pbits = pbits;
@@ -246,7 +246,6 @@ miScreenInit(
     }
     /* else CloseScreen */
     /* QueryBestSize, SaveScreen, GetImage, GetSpans */
-    pScreen->PointerNonInterestBox = (PointerNonInterestBoxProcPtr) 0;
     pScreen->SourceValidate = (SourceValidateProcPtr) 0;
     /* CreateWindow, DestroyWindow, PositionWindow, ChangeWindowAttributes */
     /* RealizeWindow, UnrealizeWindow */

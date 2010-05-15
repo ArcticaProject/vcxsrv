@@ -107,12 +107,12 @@ miPolyFillRect(
 	    maxheight = max(maxheight, prect->height);
     }
 
-    pptFirst = xalloc(maxheight * sizeof(DDXPointRec));
-    pwFirst = xalloc(maxheight * sizeof(int));
+    pptFirst = malloc(maxheight * sizeof(DDXPointRec));
+    pwFirst = malloc(maxheight * sizeof(int));
     if(!pptFirst || !pwFirst)
     {
-	if (pwFirst) xfree(pwFirst);
-	if (pptFirst) xfree(pptFirst);
+	if (pwFirst) free(pwFirst);
+	if (pptFirst) free(pptFirst);
 	return;
     }
 
@@ -138,6 +138,6 @@ miPolyFillRect(
 			   1);
 	prect++;
     }
-    xfree(pwFirst);
-    xfree(pptFirst);
+    free(pwFirst);
+    free(pptFirst);
 }

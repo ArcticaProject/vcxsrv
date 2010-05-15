@@ -210,14 +210,14 @@ extern _X_EXPORT void xf86EnableDisableFBAccess(int scrnIndex, Bool enable);
 extern _X_EXPORT void xf86VDrvMsgVerb(int scrnIndex, MessageType type, int verb,
 		     const char *format, va_list args);
 extern _X_EXPORT void xf86DrvMsgVerb(int scrnIndex, MessageType type, int verb,
-		    const char *format, ...) _printf_attribute(4,5);
+		    const char *format, ...) _X_ATTRIBUTE_PRINTF(4,5);
 extern _X_EXPORT void xf86DrvMsg(int scrnIndex, MessageType type, const char *format, ...)
-		_printf_attribute(3,4);
+		_X_ATTRIBUTE_PRINTF(3,4);
 extern _X_EXPORT void xf86MsgVerb(MessageType type, int verb, const char *format, ...)
-		_printf_attribute(3,4);
-extern _X_EXPORT void xf86Msg(MessageType type, const char *format, ...) _printf_attribute(2,3);
-extern _X_EXPORT void xf86ErrorFVerb(int verb, const char *format, ...) _printf_attribute(2,3);
-extern _X_EXPORT void xf86ErrorF(const char *format, ...) _printf_attribute(1,2);
+		_X_ATTRIBUTE_PRINTF(3,4);
+extern _X_EXPORT void xf86Msg(MessageType type, const char *format, ...) _X_ATTRIBUTE_PRINTF(2,3);
+extern _X_EXPORT void xf86ErrorFVerb(int verb, const char *format, ...) _X_ATTRIBUTE_PRINTF(2,3);
+extern _X_EXPORT void xf86ErrorF(const char *format, ...) _X_ATTRIBUTE_PRINTF(1,2);
 extern _X_EXPORT const char *xf86TokenToString(SymTabPtr table, int token);
 extern _X_EXPORT int xf86StringToToken(SymTabPtr table, const char *string);
 extern _X_EXPORT void xf86ShowClocks(ScrnInfoPtr scrp, MessageType from);

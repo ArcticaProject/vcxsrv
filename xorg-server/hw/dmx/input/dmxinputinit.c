@@ -672,7 +672,7 @@ static char *dmxMakeUniqueDeviceName(DMXLocalInputInfoPtr dmxLocal)
     static int           o = 0;
     static unsigned long dmxGeneration = 0;
 #define LEN  32
-    char *               buf = xalloc(LEN);
+    char *               buf = malloc(LEN);
 
     if (dmxGeneration != serverGeneration) {
         k = m = o     = 0;
@@ -776,7 +776,7 @@ static DMXLocalInputInfoPtr dmxLookupLocal(const char *name)
 DMXLocalInputInfoPtr dmxInputCopyLocal(DMXInputInfo *dmxInput,
                                        DMXLocalInputInfoPtr s)
 {
-    DMXLocalInputInfoPtr dmxLocal = xalloc(sizeof(*dmxLocal));
+    DMXLocalInputInfoPtr dmxLocal = malloc(sizeof(*dmxLocal));
     
     if (!dmxLocal)
         dmxLog(dmxFatal, "DMXLocalInputInfoPtr: out of memory\n");
@@ -788,7 +788,7 @@ DMXLocalInputInfoPtr dmxInputCopyLocal(DMXInputInfo *dmxInput,
     dmxLocal->deviceId       = -1;
 
     ++dmxInput->numDevs;
-    dmxInput->devs = xrealloc(dmxInput->devs,
+    dmxInput->devs = realloc(dmxInput->devs,
                               dmxInput->numDevs * sizeof(*dmxInput->devs));
     dmxInput->devs[dmxInput->numDevs-1] = dmxLocal;
     
@@ -1085,13 +1085,13 @@ static void dmxInputFreeLocal(DMXLocalInputInfoRec *local)
     if (local->isCore && local->type == DMX_LOCAL_KEYBOARD)
         dmxLocalCoreKeyboard = NULL;
     if (local->destroy_private) local->destroy_private(local->private);
-    if (local->history)         xfree(local->history);
-    if (local->valuators)       xfree(local->valuators);
-    if (local->deviceName)      xfree(local->deviceName);
+    if (local->history)         free(local->history);
+    if (local->valuators)       free(local->valuators);
+    if (local->deviceName)      free(local->deviceName);
     local->private    = NULL;
     local->history    = NULL;
     local->deviceName = NULL;
-    xfree(local);
+    free(local);
 }
 
 /** Free all of the memory associated with \a dmxInput */
@@ -1101,18 +1101,18 @@ void dmxInputFree(DMXInputInfo *dmxInput)
     
     if (!dmxInput) return;
 
-    if (dmxInput->keycodes) xfree(dmxInput->keycodes);
-    if (dmxInput->symbols)  xfree(dmxInput->symbols);
-    if (dmxInput->geometry) xfree(dmxInput->geometry);
+    if (dmxInput->keycodes) free(dmxInput->keycodes);
+    if (dmxInput->symbols)  free(dmxInput->symbols);
+    if (dmxInput->geometry) free(dmxInput->geometry);
 
     for (i = 0; i < dmxInput->numDevs; i++) {
         dmxInputFreeLocal(dmxInput->devs[i]);
         dmxInput->devs[i] = NULL;
     }
-    xfree(dmxInput->devs);
+    free(dmxInput->devs);
     dmxInput->devs    = NULL;
     dmxInput->numDevs = 0;
-    if (dmxInput->freename) xfree(dmxInput->name);
+    if (dmxInput->freename) free(dmxInput->name);
     dmxInput->name    = NULL;
 }
 

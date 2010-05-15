@@ -332,7 +332,7 @@ ephyrXVPrivNew (void)
 
     EPHYR_LOG ("enter\n") ;
 
-    xv_priv = xcalloc (1, sizeof (EphyrXVPriv)) ;
+    xv_priv = calloc(1, sizeof (EphyrXVPriv)) ;
     if (!xv_priv) {
         EPHYR_LOG_ERROR ("failed to create EphyrXVPriv\n") ;
         goto error ;
@@ -371,9 +371,9 @@ ephyrXVPrivDelete (EphyrXVPriv *a_this)
         ephyrHostXVAdaptorArrayDelete (a_this->host_adaptors) ;
         a_this->host_adaptors = NULL ;
     }
-    xfree (a_this->adaptors) ;
+    free(a_this->adaptors) ;
     a_this->adaptors = NULL ;
-    xfree (a_this) ;
+    free(a_this) ;
     EPHYR_LOG ("leave\n") ;
 }
 
@@ -386,7 +386,7 @@ videoEncodingDup (EphyrHostEncoding *a_encodings,
 
     EPHYR_RETURN_VAL_IF_FAIL (a_encodings && a_num_encodings, NULL) ;
 
-    result = xcalloc (a_num_encodings, sizeof (KdVideoEncodingRec)) ;
+    result = calloc(a_num_encodings, sizeof (KdVideoEncodingRec)) ;
     for (i=0 ; i < a_num_encodings; i++) {
         result[i].id = a_encodings[i].id ;
         result[i].name = strdup (a_encodings[i].name) ;
@@ -407,7 +407,7 @@ portAttributesDup (EphyrHostAttribute *a_encodings,
 
     EPHYR_RETURN_VAL_IF_FAIL (a_encodings && a_num_encodings, NULL) ;
 
-    result = xcalloc (a_num_encodings, sizeof (KdAttributeRec)) ;
+    result = calloc(a_num_encodings, sizeof (KdAttributeRec)) ;
     if (!result) {
         EPHYR_LOG_ERROR ("failed to allocate attributes\n") ;
         return NULL ;
@@ -455,7 +455,7 @@ ephyrXVPrivQueryHostAdaptors (EphyrXVPriv *a_this)
      * copy what we can from adaptors into a_this->adaptors
      */
     if (a_this->num_adaptors) {
-        a_this->adaptors = xcalloc (a_this->num_adaptors,
+        a_this->adaptors = calloc(a_this->num_adaptors,
                                     sizeof (KdVideoAdaptorRec)) ;
         if (!a_this->adaptors) {
             EPHYR_LOG_ERROR ("failed to create internal adaptors\n") ;
@@ -513,7 +513,7 @@ ephyrXVPrivQueryHostAdaptors (EphyrXVPriv *a_this)
                             ephyrHostXVAdaptorGetNbPorts (cur_host_adaptor) ;
         */
         a_this->adaptors[i].pPortPrivates =
-                xcalloc (a_this->adaptors[i].nPorts,
+                calloc(a_this->adaptors[i].nPorts,
                          sizeof (DevUnion) + sizeof (EphyrPortPriv)) ;
         port_priv_offset = a_this->adaptors[i].nPorts;
         for (j=0; j < a_this->adaptors[i].nPorts; j++) {
@@ -656,7 +656,7 @@ ephyrXVPrivRegisterAdaptors (EphyrXVPriv *a_this,
                 KdXVListGenericAdaptors (screen, &registered_adaptors);
 
     num_adaptors = num_registered_adaptors + a_this->num_adaptors ;
-    adaptors = xcalloc (num_adaptors, sizeof (KdVideoAdaptorPtr)) ;
+    adaptors = calloc(num_adaptors, sizeof (KdVideoAdaptorPtr)) ;
     if (!adaptors) {
         EPHYR_LOG_ERROR ("failed to allocate adaptors tab\n") ;
         goto out ;
@@ -673,9 +673,9 @@ ephyrXVPrivRegisterAdaptors (EphyrXVPriv *a_this,
     is_ok = TRUE ;
 
 out:
-    xfree (registered_adaptors) ;
+    free(registered_adaptors) ;
     registered_adaptors = NULL ;
-    xfree (adaptors) ;
+    free(adaptors) ;
     adaptors = NULL ;
 
     EPHYR_LOG ("leave\n") ;

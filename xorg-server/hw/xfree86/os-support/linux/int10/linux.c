@@ -100,7 +100,7 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
     options = xf86HandleInt10Options(xf86Screens[screen],entityIndex);
 
     if (int10skip(options)) {
-	xfree(options);
+	free(options);
 	return NULL;
     }
 
@@ -290,7 +290,7 @@ xf86ExtendedInitInt10(int entityIndex, int Flags)
     dprint(0xc0000, 0x20);
 #endif
 
-    xfree(options);
+    free(options);
     return pInt;
 
 error3:
@@ -308,11 +308,11 @@ error2:
 error1:
     if (vMem)
 	munmap(vMem, SYS_BIOS - V_BIOS);
-    xfree(((linuxInt10Priv*)pInt->private)->alloc);
-    xfree(pInt->private);
+    free(((linuxInt10Priv*)pInt->private)->alloc);
+    free(pInt->private);
 error0:
-    xfree(options);
-    xfree(pInt);
+    free(options);
+    free(pInt);
     return NULL;
 }
 
@@ -399,9 +399,9 @@ xf86FreeInt10(xf86Int10InfoPtr pInt)
     shmctl(((linuxInt10Priv*)pInt->private)->lowMem, IPC_RMID, NULL);
     if (((linuxInt10Priv*)pInt->private)->highMem >= 0)
 	shmctl(((linuxInt10Priv*)pInt->private)->highMem, IPC_RMID, NULL);
-    xfree(((linuxInt10Priv*)pInt->private)->alloc);
-    xfree(pInt->private);
-    xfree(pInt);
+    free(((linuxInt10Priv*)pInt->private)->alloc);
+    free(pInt->private);
+    free(pInt);
 }
 
 void *

@@ -1709,7 +1709,7 @@ extern _X_EXPORT CARD32 XAAReverseBitOrder(CARD32 data);
 	    if(_pLink->pPix == pPix) { \
 		if(_prev) _prev->next = _pLink->next; \
 		else infoRec->OffscreenPixmaps = _pLink->next; \
-		xfree(_pLink); \
+		free(_pLink); \
 		break; \
 	    } \
 	    _prev = _pLink; \

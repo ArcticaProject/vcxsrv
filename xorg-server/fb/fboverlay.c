@@ -348,7 +348,7 @@ fbOverlayFinishScreenInit(ScreenPtr	pScreen,
     VisualID	defaultVisual;
     FbOverlayScrPrivPtr	pScrPriv;
 
-    pScrPriv = xalloc (sizeof (FbOverlayScrPrivRec));
+    pScrPriv = malloc(sizeof (FbOverlayScrPrivRec));
     if (!pScrPriv)
 	return FALSE;
  

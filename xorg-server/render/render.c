@@ -290,7 +290,7 @@ ProcRenderQueryVersion (ClientPtr client)
 	swapl(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xRenderQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static VisualPtr
@@ -375,7 +375,7 @@ ProcRenderQueryPictFormats (ClientPtr client)
 	       ndepth * sizeof (xPictDepth) +
 	       nvisual * sizeof (xPictVisual) +
 	       numSubpixel * sizeof (CARD32));
-    reply = (xRenderQueryPictFormatsReply *) xcalloc (1, rlength);
+    reply = (xRenderQueryPictFormatsReply *) calloc(1, rlength);
     if (!reply)
 	return BadAlloc;
     reply->type = X_Reply;
@@ -512,8 +512,8 @@ ProcRenderQueryPictFormats (ClientPtr client)
 	swapl (&reply->numSubpixel, n);
     }
     WriteToClient(client, rlength, (char *) reply);
-    xfree (reply);
-    return client->noClientException;
+    free(reply);
+    return Success;
 }
 
 static int
@@ -542,7 +542,7 @@ ProcRenderQueryPictIndexValues (ClientPtr client)
     num = pFormat->index.nvalues;
     rlength = (sizeof (xRenderQueryPictIndexValuesReply) + 
 	       num * sizeof(xIndexValue));
-    reply = (xRenderQueryPictIndexValuesReply *) xalloc (rlength);
+    reply = (xRenderQueryPictIndexValuesReply *) malloc(rlength);
     if (!reply)
 	return BadAlloc;
 
@@ -571,8 +571,8 @@ ProcRenderQueryPictIndexValues (ClientPtr client)
     }
 
     WriteToClient(client, rlength, (char *) reply);
-    xfree(reply);
-    return (client->noClientException);
+    free(reply);
+    return Success;
 }
 
 static int
@@ -647,7 +647,6 @@ ProcRenderSetPictureClipRectangles (ClientPtr client)
     REQUEST(xRenderSetPictureClipRectanglesReq);
     PicturePtr	    pPicture;
     int		    nr;
-    int		    result;
 
     REQUEST_AT_LEAST_SIZE(xRenderSetPictureClipRectanglesReq);
     VERIFY_PICTURE (pPicture, stuff->picture, client, DixSetAttrAccess);
@@ -658,13 +657,9 @@ ProcRenderSetPictureClipRectangles (ClientPtr client)
     if (nr & 4)
 	return BadLength;
     nr >>= 3;
-    result = SetPictureClipRects (pPicture, 
+    return SetPictureClipRects (pPicture,
 				  stuff->xOrigin, stuff->yOrigin,
 				  nr, (xRectangle *) &stuff[1]);
-    if (client->noClientException != Success)
-        return(client->noClientException);
-    else
-        return(result);
 }
 
 static int
@@ -677,7 +672,7 @@ ProcRenderFreePicture (ClientPtr client)
 
     VERIFY_PICTURE (pPicture, stuff->picture, client, DixDestroyAccess);
     FreeResource (stuff->picture, RT_NONE);
-    return(client->noClientException);
+    return Success;
 }
 
 static Bool
@@ -772,7 +767,7 @@ ProcRenderTrapezoids (ClientPtr client)
 	CompositeTrapezoids (stuff->op, pSrc, pDst, pFormat,
 			     stuff->xSrc, stuff->ySrc,
 			     ntraps, (xTrapezoid *) &stuff[1]);
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -812,7 +807,7 @@ ProcRenderTriangles (ClientPtr client)
 	CompositeTriangles (stuff->op, pSrc, pDst, pFormat,
 			    stuff->xSrc, stuff->ySrc,
 			    ntris, (xTriangle *) &stuff[1]);
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -852,7 +847,7 @@ ProcRenderTriStrip (ClientPtr client)
 	CompositeTriStrip (stuff->op, pSrc, pDst, pFormat,
 			   stuff->xSrc, stuff->ySrc,
 			   npoints, (xPointFixed *) &stuff[1]);
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -892,7 +887,7 @@ ProcRenderTriFan (ClientPtr client)
 	CompositeTriFan (stuff->op, pSrc, pDst, pFormat,
 			 stuff->xSrc, stuff->ySrc,
 			 npoints, (xPointFixed *) &stuff[1]);
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -984,7 +979,7 @@ ProcRenderReferenceGlyphSet (ClientPtr client)
     glyphSet->refcnt++;
     if (!AddResource (stuff->gsid, GlyphSetType, (pointer)glyphSet))
 	return BadAlloc;
-    return client->noClientException;
+    return Success;
 }
 
 #define NLOCALDELTA	64
@@ -1006,7 +1001,7 @@ ProcRenderFreeGlyphSet (ClientPtr client)
 	return (rc == BadValue) ? RenderErrBase + BadGlyphSet : rc;
     }
     FreeResource (stuff->glyphset, RT_NONE);
-    return client->noClientException;
+    return Success;
 }
 
 typedef struct _GlyphNew {
@@ -1058,7 +1053,7 @@ ProcRenderAddGlyphs (ClientPtr client)
     }
     else
     {
-	glyphsBase = (GlyphNewPtr) Xcalloc (nglyphs * sizeof (GlyphNewRec));
+	glyphsBase = (GlyphNewPtr)calloc(nglyphs, sizeof (GlyphNewRec));
 	if (!glyphsBase)
 	    return BadAlloc;
     }
@@ -1200,8 +1195,8 @@ ProcRenderAddGlyphs (ClientPtr client)
 	AddGlyph (glyphSet, glyphs[i].glyph, glyphs[i].id);
 
     if (glyphsBase != glyphsLocal)
-	Xfree (glyphsBase);
-    return client->noClientException;
+	free(glyphsBase);
+    return Success;
 bail:
     if (pSrc)
 	FreePicture ((pointer) pSrc, 0);
@@ -1209,9 +1204,9 @@ bail:
 	FreeScratchPixmapHeader (pSrcPix);
     for (i = 0; i < nglyphs; i++)
 	if (glyphs[i].glyph && ! glyphs[i].found)
-	    xfree (glyphs[i].glyph);
+	    free(glyphs[i].glyph);
     if (glyphsBase != glyphsLocal)
-	Xfree (glyphsBase);
+	free(glyphsBase);
     return err;
 }
 
@@ -1249,7 +1244,7 @@ ProcRenderFreeGlyphs (ClientPtr client)
 	    return RenderErrBase + BadGlyph;
 	}
     }
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -1335,7 +1330,7 @@ ProcRenderCompositeGlyphs (ClientPtr client)
 	glyphsBase = glyphsLocal;
     else
     {
-	glyphsBase = (GlyphPtr *) xalloc (nglyph * sizeof (GlyphPtr));
+	glyphsBase = (GlyphPtr *) malloc(nglyph * sizeof (GlyphPtr));
 	if (!glyphsBase)
 	    return BadAlloc;
     }
@@ -1343,7 +1338,7 @@ ProcRenderCompositeGlyphs (ClientPtr client)
 	listsBase = listsLocal;
     else
     {
-	listsBase = (GlyphListPtr) xalloc (nlist * sizeof (GlyphListRec));
+	listsBase = (GlyphListPtr) malloc(nlist * sizeof (GlyphListRec));
 	if (!listsBase)
 	    return BadAlloc;
     }
@@ -1366,9 +1361,9 @@ ProcRenderCompositeGlyphs (ClientPtr client)
 		if (rc != Success)
 		{
 		    if (glyphsBase != glyphsLocal)
-			xfree (glyphsBase);
+			free(glyphsBase);
 		    if (listsBase != listsLocal)
-			xfree (listsBase);
+			free(listsBase);
 		    return (rc == BadValue) ? RenderErrBase + BadGlyphSet : rc;
 		}
 	    }
@@ -1422,11 +1417,11 @@ ProcRenderCompositeGlyphs (ClientPtr client)
 		     glyphsBase);
 
     if (glyphsBase != glyphsLocal)
-	xfree (glyphsBase);
+	free(glyphsBase);
     if (listsBase != listsLocal)
-	xfree (listsBase);
+	free(listsBase);
     
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -1457,7 +1452,7 @@ ProcRenderFillRectangles (ClientPtr client)
 		    things,
 		    (xRectangle *) &stuff[1]);
     
-    return client->noClientException;
+    return Success;
 }
 
 static void
@@ -1518,23 +1513,23 @@ ProcRenderCreateCursor (ClientPtr client)
     if ( stuff->x > width 
       || stuff->y > height )
 	return (BadMatch);
-    argbbits = xalloc (width * height * sizeof (CARD32));
+    argbbits = malloc(width * height * sizeof (CARD32));
     if (!argbbits)
 	return (BadAlloc);
     
     stride = BitmapBytePad(width);
     nbytes_mono = stride*height;
-    srcbits = xcalloc(1, nbytes_mono);
+    srcbits = calloc(1, nbytes_mono);
     if (!srcbits)
     {
-	xfree (argbbits);
+	free(argbbits);
 	return (BadAlloc);
     }
-    mskbits = xcalloc(1, nbytes_mono);
+    mskbits = calloc(1, nbytes_mono);
     if (!mskbits)
     {
-	xfree(argbbits);
-	xfree(srcbits);
+	free(argbbits);
+	free(srcbits);
 	return (BadAlloc);
     }
 
@@ -1554,27 +1549,27 @@ ProcRenderCreateCursor (ClientPtr client)
 	pFormat = PictureMatchFormat (pScreen, 32, PICT_a8r8g8b8);
 	if (!pFormat)
 	{
-	    xfree (argbbits);
-	    xfree (srcbits);
-	    xfree (mskbits);
+	    free(argbbits);
+	    free(srcbits);
+	    free(mskbits);
 	    return (BadImplementation);
 	}
 	pPixmap = (*pScreen->CreatePixmap) (pScreen, width, height, 32,
 					    CREATE_PIXMAP_USAGE_SCRATCH);
 	if (!pPixmap)
 	{
-	    xfree (argbbits);
-	    xfree (srcbits);
-	    xfree (mskbits);
+	    free(argbbits);
+	    free(srcbits);
+	    free(mskbits);
 	    return (BadAlloc);
 	}
 	pPicture = CreatePicture (0, &pPixmap->drawable, pFormat, 0, 0, 
 				  client, &error);
 	if (!pPicture)
 	{
-	    xfree (argbbits);
-	    xfree (srcbits);
-	    xfree (mskbits);
+	    free(argbbits);
+	    free(srcbits);
+	    free(mskbits);
 	    return error;
 	}
 	(*pScreen->DestroyPixmap) (pPixmap);
@@ -1658,7 +1653,7 @@ ProcRenderCreateCursor (ClientPtr client)
     }
     else
     {
-	xfree (argbbits);
+	free(argbbits);
 	argbbits = 0;
     }
     
@@ -1682,7 +1677,7 @@ ProcRenderCreateCursor (ClientPtr client)
     if (!AddResource(stuff->cid, RT_CURSOR, (pointer)pCursor))
 	return BadAlloc;
 
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -1690,15 +1685,10 @@ ProcRenderSetPictureTransform (ClientPtr client)
 {
     REQUEST(xRenderSetPictureTransformReq);
     PicturePtr	pPicture;
-    int		result;
 
     REQUEST_SIZE_MATCH(xRenderSetPictureTransformReq);
     VERIFY_PICTURE (pPicture, stuff->picture, client, DixSetAttrAccess);
-    result = SetPictureTransform (pPicture, (PictTransform *) &stuff->transform);
-    if (client->noClientException != Success)
-        return(client->noClientException);
-    else
-        return(result);
+    return SetPictureTransform (pPicture, (PictTransform *) &stuff->transform);
 }
 
 static int
@@ -1735,7 +1725,7 @@ ProcRenderQueryFilters (ClientPtr client)
     }
     len = ((nnames + 1) >> 1) + bytes_to_int32(nbytesName);
     total_bytes = sizeof (xRenderQueryFiltersReply) + (len << 2);
-    reply = (xRenderQueryFiltersReply *) xalloc (total_bytes);
+    reply = (xRenderQueryFiltersReply *) malloc(total_bytes);
     if (!reply)
 	return BadAlloc;
     aliases = (INT16 *) (reply + 1);
@@ -1806,9 +1796,9 @@ ProcRenderQueryFilters (ClientPtr client)
 	swapl(&reply->numFilters, n);
     }
     WriteToClient(client, total_bytes, (char *) reply);
-    xfree (reply);
+    free(reply);
     
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -1847,7 +1837,7 @@ ProcRenderCreateAnimCursor (ClientPtr client)
     if (client->req_len & 1)
 	return BadLength;
     ncursor = (client->req_len - (bytes_to_int32(sizeof(xRenderCreateAnimCursorReq)))) >> 1;
-    cursors = xalloc (ncursor * (sizeof (CursorPtr) + sizeof (CARD32)));
+    cursors = malloc(ncursor * (sizeof (CursorPtr) + sizeof (CARD32)));
     if (!cursors)
 	return BadAlloc;
     deltas = (CARD32 *) (cursors + ncursor);
@@ -1858,7 +1848,7 @@ ProcRenderCreateAnimCursor (ClientPtr client)
 				      RT_CURSOR, client, DixReadAccess);
 	if (ret != Success)
 	{
-	    xfree (cursors);
+	    free(cursors);
 	    return (ret == BadValue) ? BadCursor : ret;
 	}
 	deltas[i] = elt->delay;
@@ -1866,12 +1856,12 @@ ProcRenderCreateAnimCursor (ClientPtr client)
     }
     ret = AnimCursorCreate (cursors, deltas, ncursor, &pCursor, client,
 			    stuff->cid);
-    xfree (cursors);
+    free(cursors);
     if (ret != Success)
 	return ret;
     
     if (AddResource (stuff->cid, RT_CURSOR, (pointer)pCursor))
-	return client->noClientException;
+	return Success;
     return BadAlloc;
 }
 
@@ -1894,7 +1884,7 @@ ProcRenderAddTraps (ClientPtr client)
 	AddTraps (pPicture,
 		  stuff->xOff, stuff->yOff,
 		  ntraps, (xTrap *) &stuff[1]);
-    return client->noClientException;
+    return Success;
 }
 
 static int ProcRenderCreateSolidFill(ClientPtr client)
@@ -2669,7 +2659,7 @@ PanoramiXRenderCreatePicture (ClientPtr client)
 				      XRC_DRAWABLE, client, DixWriteAccess);
     if (result != Success)
 	return (result == BadValue) ? BadDrawable : result;
-    if(!(newPict = (PanoramiXRes *) xalloc(sizeof(PanoramiXRes))))
+    if(!(newPict = (PanoramiXRes *) malloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
     newPict->type = XRT_PICTURE;
     newPict->info[0].id = stuff->pid;
@@ -2695,7 +2685,7 @@ PanoramiXRenderCreatePicture (ClientPtr client)
     if (result == Success)
 	AddResource(newPict->info[0].id, XRT_PICTURE, newPict);
     else 
-	xfree(newPict);
+	free(newPict);
 
     return (result);
 }
@@ -2905,7 +2895,7 @@ PanoramiXRenderFillRectangles (ClientPtr client)
     VERIFY_XIN_PICTURE (dst, stuff->dst, client, DixWriteAccess);
     extra_len = (client->req_len << 2) - sizeof (xRenderFillRectanglesReq);
     if (extra_len &&
-	(extra = (char *) xalloc (extra_len)))
+	(extra = (char *) malloc(extra_len)))
     {
 	memcpy (extra, stuff + 1, extra_len);
 	FOR_NSCREENS_FORWARD(j) {
@@ -2931,7 +2921,7 @@ PanoramiXRenderFillRectangles (ClientPtr client)
 	    result = (*PanoramiXSaveRenderVector[X_RenderFillRectangles]) (client);
 	    if(result != Success) break;
 	}
-	xfree(extra);
+	free(extra);
     }
 
     return result;
@@ -2954,7 +2944,7 @@ PanoramiXRenderTrapezoids(ClientPtr client)
     extra_len = (client->req_len << 2) - sizeof (xRenderTrapezoidsReq);
 
     if (extra_len &&
-	(extra = (char *) xalloc (extra_len))) {
+	(extra = (char *) malloc(extra_len))) {
 	memcpy (extra, stuff + 1, extra_len);
 
 	FOR_NSCREENS_FORWARD(j) {
@@ -2991,7 +2981,7 @@ PanoramiXRenderTrapezoids(ClientPtr client)
 	    if(result != Success) break;
 	}
 	
-        xfree(extra);
+        free(extra);
     }
 
     return result;
@@ -3014,7 +3004,7 @@ PanoramiXRenderTriangles(ClientPtr client)
     extra_len = (client->req_len << 2) - sizeof (xRenderTrianglesReq);
 
     if (extra_len &&
-	(extra = (char *) xalloc (extra_len))) {
+	(extra = (char *) malloc(extra_len))) {
 	memcpy (extra, stuff + 1, extra_len);
 
 	FOR_NSCREENS_FORWARD(j) {
@@ -3047,7 +3037,7 @@ PanoramiXRenderTriangles(ClientPtr client)
 	    if(result != Success) break;
 	}
 	
-        xfree(extra);
+        free(extra);
     }
 
     return result;
@@ -3070,7 +3060,7 @@ PanoramiXRenderTriStrip(ClientPtr client)
     extra_len = (client->req_len << 2) - sizeof (xRenderTriStripReq);
 
     if (extra_len &&
-	(extra = (char *) xalloc (extra_len))) {
+	(extra = (char *) malloc(extra_len))) {
 	memcpy (extra, stuff + 1, extra_len);
 
 	FOR_NSCREENS_FORWARD(j) {
@@ -3099,7 +3089,7 @@ PanoramiXRenderTriStrip(ClientPtr client)
 	    if(result != Success) break;
 	}
 	
-        xfree(extra);
+        free(extra);
     }
 
     return result;
@@ -3122,7 +3112,7 @@ PanoramiXRenderTriFan(ClientPtr client)
     extra_len = (client->req_len << 2) - sizeof (xRenderTriFanReq);
 
     if (extra_len &&
-	(extra = (char *) xalloc (extra_len))) {
+	(extra = (char *) malloc(extra_len))) {
 	memcpy (extra, stuff + 1, extra_len);
 
 	FOR_NSCREENS_FORWARD(j) {
@@ -3151,7 +3141,7 @@ PanoramiXRenderTriFan(ClientPtr client)
 	    if(result != Success) break;
 	}
 	
-        xfree(extra);
+        free(extra);
     }
 
     return result;
@@ -3171,7 +3161,7 @@ PanoramiXRenderAddTraps (ClientPtr client)
     VERIFY_XIN_PICTURE (picture, stuff->picture, client, DixWriteAccess);
     extra_len = (client->req_len << 2) - sizeof (xRenderAddTrapsReq);
     if (extra_len &&
-	(extra = (char *) xalloc (extra_len)))
+	(extra = (char *) malloc(extra_len)))
     {
 	memcpy (extra, stuff + 1, extra_len);
 	x_off = stuff->xOff;
@@ -3188,7 +3178,7 @@ PanoramiXRenderAddTraps (ClientPtr client)
 	    result = (*PanoramiXSaveRenderVector[X_RenderAddTraps]) (client);
 	    if(result != Success) break;
 	}
-	xfree(extra);
+	free(extra);
     }
 
     return result;
@@ -3203,7 +3193,7 @@ PanoramiXRenderCreateSolidFill (ClientPtr client)
 
     REQUEST_AT_LEAST_SIZE(xRenderCreateSolidFillReq);
 
-    if(!(newPict = (PanoramiXRes *) xalloc(sizeof(PanoramiXRes))))
+    if(!(newPict = (PanoramiXRes *) malloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
 
     newPict->type = XRT_PICTURE;
@@ -3222,7 +3212,7 @@ PanoramiXRenderCreateSolidFill (ClientPtr client)
     if (result == Success)
 	AddResource(newPict->info[0].id, XRT_PICTURE, newPict);
     else
-	xfree(newPict);
+	free(newPict);
 
     return result;
 }
@@ -3236,7 +3226,7 @@ PanoramiXRenderCreateLinearGradient (ClientPtr client)
 
     REQUEST_AT_LEAST_SIZE(xRenderCreateLinearGradientReq);
 
-    if(!(newPict = (PanoramiXRes *) xalloc(sizeof(PanoramiXRes))))
+    if(!(newPict = (PanoramiXRes *) malloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
 
     newPict->type = XRT_PICTURE;
@@ -3255,7 +3245,7 @@ PanoramiXRenderCreateLinearGradient (ClientPtr client)
     if (result == Success)
 	AddResource(newPict->info[0].id, XRT_PICTURE, newPict);
     else
-	xfree(newPict);
+	free(newPict);
 
     return result;
 }
@@ -3269,7 +3259,7 @@ PanoramiXRenderCreateRadialGradient (ClientPtr client)
 
     REQUEST_AT_LEAST_SIZE(xRenderCreateRadialGradientReq);
 
-    if(!(newPict = (PanoramiXRes *) xalloc(sizeof(PanoramiXRes))))
+    if(!(newPict = (PanoramiXRes *) malloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
 
     newPict->type = XRT_PICTURE;
@@ -3288,7 +3278,7 @@ PanoramiXRenderCreateRadialGradient (ClientPtr client)
     if (result == Success)
 	AddResource(newPict->info[0].id, XRT_PICTURE, newPict);
     else
-	xfree(newPict);
+	free(newPict);
 
     return result;
 }
@@ -3302,7 +3292,7 @@ PanoramiXRenderCreateConicalGradient (ClientPtr client)
 
     REQUEST_AT_LEAST_SIZE(xRenderCreateConicalGradientReq);
 
-    if(!(newPict = (PanoramiXRes *) xalloc(sizeof(PanoramiXRes))))
+    if(!(newPict = (PanoramiXRes *) malloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
 
     newPict->type = XRT_PICTURE;
@@ -3321,7 +3311,7 @@ PanoramiXRenderCreateConicalGradient (ClientPtr client)
     if (result == Success)
 	AddResource(newPict->info[0].id, XRT_PICTURE, newPict);
     else
-	xfree(newPict);
+	free(newPict);
 
     return result;
 }

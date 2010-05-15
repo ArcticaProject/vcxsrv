@@ -323,12 +323,12 @@ MakeRootTile(WindowPtr pWin)
 	FatalError("could not create root tile");
 
     {
-	CARD32 attributes[2];
+	ChangeGCVal attributes[2];
 
-	attributes[0] = pScreen->whitePixel;
-	attributes[1] = pScreen->blackPixel;
+	attributes[0].val = pScreen->whitePixel;
+	attributes[1].val = pScreen->blackPixel;
 
-	(void)ChangeGC(pGC, GCForeground | GCBackground, attributes);
+	(void)ChangeGC(NullClient, pGC, GCForeground | GCBackground, attributes);
     }
 
    ValidateGC((DrawablePtr)pWin->background.pixmap, pGC);
@@ -359,7 +359,7 @@ CreateRootWindow(ScreenPtr pScreen)
     BoxRec	box;
     PixmapFormatRec *format;
 
-    pWin = xalloc(sizeof(WindowRec));
+    pWin = malloc(sizeof(WindowRec));
     if (!pWin)
 	return FALSE;
 
@@ -386,7 +386,7 @@ CreateRootWindow(ScreenPtr pScreen)
     pWin->parent = NullWindow;
     SetWindowToDefaults(pWin);
 
-    pWin->optional = xalloc (sizeof (WindowOptRec));
+    pWin->optional = malloc(sizeof (WindowOptRec));
     if (!pWin->optional)
         return FALSE;
 
@@ -639,7 +639,7 @@ CreateWindow(Window wid, WindowPtr pParent, int x, int y, unsigned w,
 	return NullWindow;
     }
 
-    pWin = xalloc(sizeof(WindowRec));
+    pWin = malloc(sizeof(WindowRec));
     if (!pWin)
     {
 	*error = BadAlloc;
@@ -670,7 +670,7 @@ CreateWindow(Window wid, WindowPtr pParent, int x, int y, unsigned w,
     {
 	if (!MakeWindowOptional (pWin))
 	{
-	    xfree (pWin);
+	    free(pWin);
 	    *error = BadAlloc;
 	    return NullWindow;
 	}
@@ -685,7 +685,7 @@ CreateWindow(Window wid, WindowPtr pParent, int x, int y, unsigned w,
     *error = XaceHook(XACE_RESOURCE_ACCESS, client, wid, RT_WINDOW, pWin,
 		RT_WINDOW, pWin->parent, DixCreateAccess|DixSetAttrAccess);
     if (*error != Success) {
-	xfree(pWin);
+	free(pWin);
 	return NullWindow;
     }
 
@@ -809,12 +809,12 @@ DisposeWindowOptional (WindowPtr pWin)
                 FreeCursor(pList->cursor, (XID)0);
             pPrev = pList;
             pList = pList->next;
-            xfree(pPrev);
+            free(pPrev);
         }
         pWin->optional->deviceCursors = NULL;
     }
 
-    xfree (pWin->optional);
+    free(pWin->optional);
     pWin->optional = NULL;
 }
 
@@ -884,7 +884,7 @@ CrushTree(WindowPtr pWin)
 	    }
 	    FreeWindowResources(pChild);
 	    dixFreePrivates(pChild->devPrivates);
-	    xfree(pChild);
+	    free(pChild);
 	    if ( (pChild = pSib) )
 		break;
 	    pChild = pParent;
@@ -934,9 +934,9 @@ DeleteWindow(pointer value, XID wid)
 	if (pWin->prevSib)
 	    pWin->prevSib->nextSib = pWin->nextSib;
     }
-    xfree(dixLookupPrivate(&pWin->devPrivates, FocusPrivatesKey));
+    free(dixLookupPrivate(&pWin->devPrivates, FocusPrivatesKey));
     dixFreePrivates(pWin->devPrivates);
-    xfree(pWin);
+    free(pWin);
     return Success;
 }
 
@@ -2996,7 +2996,7 @@ HandleSaveSet(ClientPtr client)
 		MapWindow(pWin, client);
 	}
     }
-    xfree(client->saveSet);
+    free(client->saveSet);
     client->numSaved = 0;
     client->saveSet = (SaveSetElt *)NULL;
 }
@@ -3298,12 +3298,12 @@ TileScreenSaver(int i, int kind)
     cm.height=16;
     cm.xhot=8;
     cm.yhot=8;
-    srcbits = xalloc( BitmapBytePad(32)*16);
-    mskbits = xalloc( BitmapBytePad(32)*16);
+    srcbits = malloc( BitmapBytePad(32)*16);
+    mskbits = malloc( BitmapBytePad(32)*16);
     if (!srcbits || !mskbits)
     {
-	xfree(srcbits);
-	xfree(mskbits);
+	free(srcbits);
+	free(mskbits);
 	cursor = 0;
     }
     else
@@ -3325,8 +3325,8 @@ TileScreenSaver(int i, int kind)
 	}
 	else
 	{
-	    xfree (srcbits);
-	    xfree (mskbits);
+	    free(srcbits);
+	    free(mskbits);
 	}
     }
 
@@ -3456,7 +3456,7 @@ MakeWindowOptional (WindowPtr pWin)
 
     if (pWin->optional)
 	return TRUE;
-    optional = xalloc (sizeof (WindowOptRec));
+    optional = malloc(sizeof (WindowOptRec));
     if (!optional)
 	return FALSE;
     optional->dontPropagateMask = DontPropagateMasks[pWin->dontPropagate];
@@ -3547,7 +3547,7 @@ ChangeWindowDeviceCursor(WindowPtr pWin,
                     /* first item in list */
                     pWin->optional->deviceCursors = pNode->next;
 
-            xfree(pNode);
+            free(pNode);
             goto out;
         }
 
@@ -3559,7 +3559,7 @@ ChangeWindowDeviceCursor(WindowPtr pWin,
         if (!pCursor)
             return Success;
 
-        pNewNode = xalloc(sizeof(DevCursNodeRec));
+        pNewNode = malloc(sizeof(DevCursNodeRec));
         pNewNode->dev = pDev;
         pNewNode->next = pWin->optional->deviceCursors;
         pWin->optional->deviceCursors = pNewNode;
@@ -3743,7 +3743,7 @@ DrawLogo(WindowPtr pWin)
 
 	    querypixels[0] = fore[0].val;
 	    querypixels[1] = pWin->background.pixel;
-	    QueryColors(cmap, 2, querypixels, rgb);
+	    QueryColors(cmap, 2, querypixels, rgb, serverClient);
 	    if ((rgb[0].red == rgb[1].red) &&
 		(rgb[0].green == rgb[1].green) &&
 		(rgb[0].blue == rgb[1].blue)) {
@@ -3763,8 +3763,7 @@ DrawLogo(WindowPtr pWin)
     } else {
 	back[0].val = 0;
 	back[1].val = 0;
-	dixChangeGC(NullClient, pGC, GCTileStipXOrigin|GCTileStipYOrigin,
-		    NULL, back);
+	ChangeGC(NullClient, pGC, GCTileStipXOrigin|GCTileStipYOrigin, back);
 	back[0].val = FillTiled;
 	back[1].ptr = pWin->background.pixmap;
 	bmask = GCFillStyle|GCTile;
@@ -3802,7 +3801,7 @@ DrawLogo(WindowPtr pWin)
     poly[1].x = x + size-d31;	       poly[1].y = y;
     poly[2].x = x + 0;		       poly[2].y = y + size;
     poly[3].x = x + d31;	       poly[3].y = y + size;
-    dixChangeGC(NullClient, pGC, fmask, NULL, fore);
+    ChangeGC(NullClient, pGC, fmask, fore);
     ValidateGC(pDraw, pGC);
     (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
 
@@ -3821,7 +3820,7 @@ DrawLogo(WindowPtr pWin)
     poly[1].x = x + size / 2;			 poly[1].y = y + size/2;
     poly[2].x = x + (size/2)+(d31-(d31/2));	 poly[2].y = y + size/2;
     poly[3].x = x + d31;			 poly[3].y = y + size;
-    dixChangeGC(NullClient, pGC, bmask, NULL, back);
+    ChangeGC(NullClient, pGC, bmask, back);
     ValidateGC(pDraw, pGC);
     (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
 
@@ -3860,7 +3859,7 @@ DrawLogo(WindowPtr pWin)
     poly[1].x = x + size/4;	       poly[1].y = y;
     poly[2].x = x + size;	       poly[2].y = y + size;
     poly[3].x = x + size - size/4;     poly[3].y = y + size;
-    dixChangeGC(NullClient, pGC, fmask, NULL, fore);
+    ChangeGC(NullClient, pGC, fmask, fore);
     ValidateGC(pDraw, pGC);
     (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
 
@@ -3878,7 +3877,7 @@ DrawLogo(WindowPtr pWin)
     poly[1].x = x + size-( thin+gap);  poly[1].y = y;
     poly[2].x = x + thin;	      poly[2].y = y + size;
     poly[3].x = x + thin + gap;	      poly[3].y = y + size;
-    dixChangeGC(NullClient, pGC, bmask, NULL, back);
+    ChangeGC(NullClient, pGC, bmask, back);
     ValidateGC(pDraw, pGC);
     (*pGC->ops->FillPolygon)(pDraw, pGC, Convex, CoordModeOrigin, 4, poly);
 

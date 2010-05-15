@@ -359,7 +359,7 @@ xf86RandRCloseScreen (int index, ScreenPtr pScreen)
     scrp->virtualY = pScreen->height = randrp->virtualY;
     scrp->currentMode = scrp->modes;
     pScreen->CloseScreen = randrp->CloseScreen;
-    xfree (randrp);
+    free(randrp);
     dixSetPrivate(&pScreen->devPrivates, xf86RandRKey, NULL);
     return (*pScreen->CloseScreen) (index, pScreen);
 }
@@ -426,13 +426,13 @@ xf86RandRInit (ScreenPtr    pScreen)
 
     xf86RandRKey = &xf86RandRKeyIndex;
 
-    randrp = xalloc (sizeof (XF86RandRInfoRec));
+    randrp = malloc(sizeof (XF86RandRInfoRec));
     if (!randrp)
 	return FALSE;
 
     if (!RRScreenInit (pScreen))
     {
-	xfree (randrp);
+	free(randrp);
 	return FALSE;
     }
     rp = rrGetScrPriv(pScreen);

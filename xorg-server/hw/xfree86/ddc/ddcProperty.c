@@ -42,7 +42,7 @@ edidMakeAtom(int i, const char *name, CARD8 *data, int size)
     Atom atom;
     unsigned char *atom_data;
 
-    if (!(atom_data = xalloc(size*sizeof(CARD8))))
+    if (!(atom_data = malloc(size*sizeof(CARD8))))
 	return;
 
     atom = MakeAtom(name, strlen(name), TRUE);

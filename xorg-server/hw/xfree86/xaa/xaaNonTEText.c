@@ -291,7 +291,7 @@ PolyGlyphBltAsSingleBitmap (
 
     pitch = (Right - Left + 31) >> 5;
     size = (pitch << 2) * (Bottom - Top);
-    block = xcalloc(1, size);
+    block = calloc(1, size);
 
     topLine = 10000; botLine = -10000;
 
@@ -349,7 +349,7 @@ PolyGlyphBltAsSingleBitmap (
 	nbox--; pbox++;
     }
 
-    xfree(block);
+    free(block);
 }
 
 static void

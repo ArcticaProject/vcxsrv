@@ -186,7 +186,7 @@ XAABitBlt(
     /* Do bit blitting */
     numRects = REGION_NUM_RECTS(&rgnDst);
     if (numRects && width && height) {
-	if(!(pptSrc = (DDXPointPtr)xalloc(numRects *
+	if(!(pptSrc = (DDXPointPtr)malloc(numRects *
 						  sizeof(DDXPointRec)))) {
 	    REGION_UNINIT(pGC->pScreen, &rgnDst);
 	    if (freeSrcClip)
@@ -201,7 +201,7 @@ XAABitBlt(
 	}
 
 	(*doBitBlt) (pSrcDrawable, pDstDrawable, pGC, &rgnDst, pptSrc);
-	xfree(pptSrc);
+	free(pptSrc);
     }
 
     prgnExposed = NULL;

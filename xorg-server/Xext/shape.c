@@ -269,7 +269,7 @@ ProcShapeQueryVersion (ClientPtr client)
 	swaps(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof (xShapeQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 /*****************
@@ -736,7 +736,7 @@ ProcShapeQueryExtents (ClientPtr client)
 	swaps(&rep.heightClipShape, n);
     }
     WriteToClient(client, sizeof (xShapeQueryExtentsReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 /*ARGSUSED*/
@@ -764,7 +764,7 @@ ShapeFreeClient (pointer data, XID id)
 	    	*pHead = pShapeEvent->next;
 	}
     }
-    xfree ((pointer) pShapeEvent);
+    free((pointer) pShapeEvent);
     return 1;
 }
 
@@ -778,9 +778,9 @@ ShapeFreeEvents (pointer data, XID id)
     for (pCur = *pHead; pCur; pCur = pNext) {
 	pNext = pCur->next;
 	FreeResource (pCur->clientResource, ClientType);
-	xfree ((pointer) pCur);
+	free((pointer) pCur);
     }
-    xfree ((pointer) pHead);
+    free((pointer) pHead);
     return 1;
 }
 
@@ -817,7 +817,7 @@ ProcShapeSelectInput (ClientPtr client)
 	}
 
 	/* build the entry */
-    	pNewShapeEvent = xalloc (sizeof (ShapeEventRec));
+	pNewShapeEvent = malloc(sizeof (ShapeEventRec));
     	if (!pNewShapeEvent)
 	    return BadAlloc;
     	pNewShapeEvent->next = 0;
@@ -839,7 +839,7 @@ ProcShapeSelectInput (ClientPtr client)
      	 */
     	if (!pHead)
     	{
-	    pHead = xalloc (sizeof (ShapeEventPtr));
+	    pHead = malloc(sizeof (ShapeEventPtr));
 	    if (!pHead ||
 		!AddResource (pWin->drawable.id, ShapeEventType, (pointer)pHead))
 	    {
@@ -866,7 +866,7 @@ ProcShapeSelectInput (ClientPtr client)
 		    pNewShapeEvent->next = pShapeEvent->next;
 		else
 		    *pHead = pShapeEvent->next;
-		xfree (pShapeEvent);
+		free(pShapeEvent);
 	    }
 	}
 	break;
@@ -996,7 +996,7 @@ ProcShapeInputSelected (ClientPtr client)
 	swapl (&rep.length, n);
     }
     WriteToClient (client, sizeof (xShapeInputSelectedReply), (char *) &rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -1030,7 +1030,7 @@ ProcShapeGetRectangles (ClientPtr client)
     }
     if (!region) {
 	nrects = 1;
-	rects = xalloc (sizeof (xRectangle));
+	rects = malloc(sizeof (xRectangle));
 	if (!rects)
 	    return BadAlloc;
 	switch (stuff->kind) {
@@ -1057,7 +1057,7 @@ ProcShapeGetRectangles (ClientPtr client)
 	BoxPtr box;
 	nrects = REGION_NUM_RECTS(region);
 	box = REGION_RECTS(region);
-	rects = xalloc (nrects * sizeof (xRectangle));
+	rects = malloc(nrects * sizeof (xRectangle));
 	if (!rects && nrects)
 	    return BadAlloc;
 	for (i = 0; i < nrects; i++, box++) {
@@ -1080,8 +1080,8 @@ ProcShapeGetRectangles (ClientPtr client)
     }
     WriteToClient (client, sizeof (rep), (char *) &rep);
     WriteToClient (client, nrects * sizeof (xRectangle), (char *) rects);
-    xfree (rects);
-    return client->noClientException;
+    free(rects);
+    return Success;
 }
 
 static int

@@ -111,7 +111,7 @@ AppendToList(const char *s, const char ***list, int *lines)
 	(*list)[*lines - 1] = newstr;
 	(*list)[*lines] = NULL;
     }
-    xfree(str);
+    free(str);
 }
 
 static void
@@ -121,9 +121,9 @@ FreeList(const char ***list, int *lines)
 
     for (i = 0; i < *lines; i++) {
 	if ((*list)[i])
-	    xfree((*list)[i]);
+	    free((*list)[i]);
     }
-    xfree(*list);
+    free(*list);
     *list = NULL;
     *lines = 0;
 }
@@ -262,7 +262,7 @@ xf86AutoConfig(void)
     AppendToConfig(BUILTIN_LAYOUT_SECTION_POST);
 
     for (p = deviceList; *p; p++) {
-	xfree(*p);
+	free(*p);
     }
 
     xf86MsgVerb(X_DEFAULT, 0,
@@ -374,7 +374,7 @@ matchDriverFromFiles (char** matches, uint16_t match_vendor, uint16_t match_chip
                         while (matches[i]) {
                             i++;
                         }
-                        matches[i] = (char*)xalloc(sizeof(char) * strlen(direntry->d_name) -  3);
+                        matches[i] = (char*)malloc(sizeof(char) * strlen(direntry->d_name) -  3);
                         if (!matches[i]) {
                             xf86Msg(X_ERROR, "Could not allocate space for the module name. Exiting.\n");
                             goto end;
@@ -401,7 +401,7 @@ matchDriverFromFiles (char** matches, uint16_t match_vendor, uint16_t match_chip
         direntry = readdir(idsdir);
     }
  end:
-    xfree(line);
+    free(line);
     closedir(idsdir);
 }
 #endif /* __linux__ */
@@ -534,7 +534,7 @@ copyScreen(confScreenPtr oscreen, GDevPtr odev, int i, char *driver)
         return FALSE;
     memcpy(xf86ConfigLayout.screens[i].screen, oscreen, sizeof(confScreenRec));
 
-    cptr = xcalloc(1, sizeof(GDevRec));
+    cptr = calloc(1, sizeof(GDevRec));
     if (!cptr)
         return FALSE;
     memcpy(cptr, odev, sizeof(GDevRec));
@@ -565,7 +565,7 @@ autoConfigDevice(GDevPtr preconf_device)
     if (preconf_device) {
         ptr = preconf_device;
     } else {
-        ptr = xcalloc(1, sizeof(GDevRec));
+        ptr = calloc(1, sizeof(GDevRec));
         if (!ptr) {
             return NULL;
         }
@@ -620,13 +620,13 @@ autoConfigDevice(GDevPtr preconf_device)
                 xf86ConfigLayout.screens[i+num_matches] = slp[i];
             }
             xf86ConfigLayout.screens[num_screens+num_matches-1].screen = NULL;
-            xfree(slp);
+            free(slp);
         } else {
             /* layout does not have any screens, not much to do */
             ptr->driver = matches[0];
             for (i = 1; matches[i] ; i++) {
                 if (matches[i] != matches[0]) {
-                    xfree(matches[i]);
+                    free(matches[i]);
                 }
             }
         }

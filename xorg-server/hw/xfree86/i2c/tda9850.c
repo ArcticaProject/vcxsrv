@@ -18,7 +18,7 @@ TDA9850Ptr Detect_tda9850(I2CBusPtr b, I2CSlaveAddr addr)
   TDA9850Ptr t;
   I2CByte a;
   
-  t = xcalloc(1, sizeof(TDA9850Rec));
+  t = calloc(1, sizeof(TDA9850Rec));
   if(t == NULL) return NULL;
   switch(addr)
   {
@@ -39,14 +39,14 @@ TDA9850Ptr Detect_tda9850(I2CBusPtr b, I2CSlaveAddr addr)
   
   if(!I2C_WriteRead(&(t->d), NULL, 0, &a, 1))
   {
-     xfree(t);
+     free(t);
      return NULL;
   }
   
   /* set default parameters */
   if(!I2CDevInit(&(t->d)))
   {
-     xfree(t);
+     free(t);
      return NULL;
   }
 

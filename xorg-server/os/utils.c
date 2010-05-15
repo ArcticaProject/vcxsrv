@@ -995,7 +995,7 @@ set_font_authorizations(char **authorizations, int *authlen, pointer client)
 #endif
 
 	len = strlen(hnameptr) + 1;
-	result = xalloc(len + sizeof(AUTHORIZATION_NAME) + 4);
+	result = malloc(len + sizeof(AUTHORIZATION_NAME) + 4);
 
 	p = result;
         *p++ = sizeof(AUTHORIZATION_NAME) >> 8;
@@ -1024,146 +1024,99 @@ set_font_authorizations(char **authorizations, int *authlen, pointer client)
 void *
 Xalloc(unsigned long amount)
 {
-    void *ptr;
+    /*
+     * Xalloc used to return NULL when large amount of memory is requested. In
+     * order to catch the buggy callers this warning has been added, slated to
+     * removal by anyone who touches this code (or just looks at it) in 2011.
+     *
+     * -- Mikhail Gusarov
+     */
+    if ((long)amount <= 0)
+	ErrorF("Warning: Xalloc: "
+	       "requesting unpleasantly large amount of memory: %lu bytes.\n",
+               amount);
 
-    if ((long)amount <= 0) {
-	return NULL;
-    }
-    /* aligned extra on long word boundary */
-    amount = (amount + (sizeof(long) - 1)) & ~(sizeof(long) - 1);
-    ptr = malloc(amount);
-    return ptr;
+    return malloc(amount);
 }
-
-/*****************
- * XNFalloc 
- * "no failure" realloc
- *****************/
 
 void *
 XNFalloc(unsigned long amount)
 {
-    void *ptr;
-
-    if ((long)amount <= 0)
-        return NULL;
-    /* aligned extra on long word boundary */
-    amount = (amount + (sizeof(long) - 1)) & ~(sizeof(long) - 1);
-    ptr = malloc(amount);
+    void *ptr = malloc(amount);
     if (!ptr)
         FatalError("Out of memory");
     return ptr;
 }
 
-/*****************
- * Xcalloc
- *****************/
-
 void *
 Xcalloc(unsigned long amount)
 {
-    void *ret;
-
-    ret = Xalloc (amount);
-    if (ret)
-	bzero (ret, (int) amount);
-    return ret;
+    return calloc(1, amount);
 }
-
-/*****************
- * XNFcalloc
- *****************/
 
 void *
 XNFcalloc(unsigned long amount)
 {
-    void *ret;
-
-    ret = Xalloc (amount);
-    if (ret)
-	bzero (ret, (int) amount);
-    else if ((long)amount > 0)
-        FatalError("Out of memory");
+    void *ret = calloc(1, amount);
+    if (!ret)
+        FatalError("XNFcalloc: Out of memory");
     return ret;
 }
 
-/*****************
- * Xrealloc
- *****************/
-
 void *
-Xrealloc(pointer ptr, unsigned long amount)
+Xrealloc(void *ptr, unsigned long amount)
 {
+    /*
+     * Xrealloc used to return NULL when large amount of memory is requested. In
+     * order to catch the buggy callers this warning has been added, slated to
+     * removal by anyone who touches this code (or just looks at it) in 2011.
+     *
+     * -- Mikhail Gusarov
+     */
     if ((long)amount <= 0)
-    {
-	if (ptr && !amount)
-	    free(ptr);
-	return NULL;
-    }
-    amount = (amount + (sizeof(long) - 1)) & ~(sizeof(long) - 1);
-    if (ptr)
-        ptr = realloc(ptr, amount);
-    else
-	ptr = malloc(amount);
+	ErrorF("Warning: Xrealloc: "
+	       "requesting unpleasantly large amount of memory: %lu bytes.\n",
+               amount);
 
-    return ptr;
+    return realloc(ptr, amount);
 }
-                    
-/*****************
- * XNFrealloc 
- * "no failure" realloc
- *****************/
 
 void *
-XNFrealloc(pointer ptr, unsigned long amount)
+XNFrealloc(void *ptr, unsigned long amount)
 {
-    if ((ptr = Xrealloc(ptr, amount)) == NULL)
-    {
-	if ((long)amount > 0)
-            FatalError( "Out of memory" );
-    }
-    return ptr;
+    void *ret = realloc(ptr, amount);
+    if (!ret)
+	FatalError("XNFrealloc: Out of memory");
+    return ret;
 }
-
-/*****************
- *  Xfree
- *    calls free 
- *****************/    
 
 void
-Xfree(pointer ptr)
+Xfree(void *ptr)
 {
-    if (ptr)
-	free(ptr); 
+    free(ptr);
 }
 
 
 char *
 Xstrdup(const char *s)
 {
-    char *sd;
-
     if (s == NULL)
 	return NULL;
-
-    sd = Xalloc(strlen(s) + 1);
-    if (sd != NULL)
-	strcpy(sd, s);
-    return sd;
+    return strdup(s);
 }
-
 
 char *
 XNFstrdup(const char *s)
 {
-    char *sd;
+    char *ret;
 
     if (s == NULL)
 	return NULL;
 
-    sd = XNFalloc(strlen(s) + 1);
-    strcpy(sd, s);
-    return sd;
+    ret = strdup(s);
+    if (!ret)
+	FatalError("XNFstrdup: Out of memory");
+    return ret;
 }
 
 
@@ -1393,11 +1346,11 @@ Popen(char *command, char *type)
     if ((*type != 'r' && *type != 'w') || type[1])
 	return NULL;
 
-    if ((cur = xalloc(sizeof(struct pid))) == NULL)
+    if ((cur = malloc(sizeof(struct pid))) == NULL)
 	return NULL;
 
     if (pipe(pdes) < 0) {
-	xfree(cur);
+	free(cur);
 	return NULL;
     }
 
@@ -1412,7 +1365,7 @@ Popen(char *command, char *type)
     case -1: 	/* error */
 	close(pdes[0]);
 	close(pdes[1]);
-	xfree(cur);
+	free(cur);
 	if (OsSignal(SIGALRM, old_alarm) == SIG_ERR)
 	  perror("signal");
 	return NULL;
@@ -1479,11 +1432,11 @@ Fopen(char *file, char *type)
     if ((*type != 'r' && *type != 'w') || type[1])
 	return NULL;
 
-    if ((cur = xalloc(sizeof(struct pid))) == NULL)
+    if ((cur = malloc(sizeof(struct pid))) == NULL)
 	return NULL;
 
     if (pipe(pdes) < 0) {
-	xfree(cur);
+	free(cur);
 	return NULL;
     }
 
@@ -1491,7 +1444,7 @@ Fopen(char *file, char *type)
     case -1: 	/* error */
 	close(pdes[0]);
 	close(pdes[1]);
-	xfree(cur);
+	free(cur);
 	return NULL;
     case 0:	/* child */
 	if (setgid(getgid()) == -1)
@@ -1585,7 +1538,7 @@ Pclose(pointer iop)
 	pidlist = cur->next;
     else
 	last->next = cur->next;
-    xfree(cur);
+    free(cur);
 
     /* allow EINTR again */
     OsReleaseSignals ();

@@ -81,10 +81,10 @@ FreeCursorBits(CursorBitsPtr bits)
 {
     if (--bits->refcnt > 0)
 	return;
-    xfree(bits->source);
-    xfree(bits->mask);
+    free(bits->source);
+    free(bits->mask);
 #ifdef ARGB_CURSOR
-    xfree(bits->argb);
+    free(bits->argb);
 #endif
     dixFreePrivates(bits->devPrivates);
     bits->devPrivates = NULL;
@@ -100,9 +100,9 @@ FreeCursorBits(CursorBitsPtr bits)
 	{
 	    *prev = this->next;
 	    CloseFont(this->font, (Font)0);
-	    xfree(this);
+	    free(this);
 	}
-	xfree(bits);
+	free(bits);
     }
 }
 
@@ -130,7 +130,7 @@ FreeCursor(pointer value, XID cid)
     }
     dixFreePrivates(pCurs->devPrivates);
     FreeCursorBits(pCurs->bits);
-    xfree( pCurs);
+    free( pCurs);
     return(Success);
 }
 
@@ -237,11 +237,11 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
     int rc;
 
     *ppCurs = NULL;
-    pCurs = (CursorPtr)xcalloc(sizeof(CursorRec) + sizeof(CursorBits), 1);
+    pCurs = (CursorPtr)calloc(sizeof(CursorRec) + sizeof(CursorBits), 1);
     if (!pCurs)
     {
-	xfree(psrcbits);
-	xfree(pmaskbits);
+	free(psrcbits);
+	free(pmaskbits);
 	return BadAlloc;
     }
     bits = (CursorBitsPtr)((char *)pCurs + sizeof(CursorRec));
@@ -291,7 +291,7 @@ AllocARGBCursor(unsigned char *psrcbits, unsigned char *pmaskbits,
 error:
     dixFreePrivates(pCurs->devPrivates);
     FreeCursorBits(bits);
-    xfree(pCurs);
+    free(pCurs);
 
     return rc;
 }
@@ -339,7 +339,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
     }
     if (pShare)
     {
-	pCurs = (CursorPtr)xcalloc(sizeof(CursorRec), 1);
+	pCurs = (CursorPtr)calloc(sizeof(CursorRec), 1);
 	if (!pCurs)
 	    return BadAlloc;
 	bits = pShare->bits;
@@ -358,7 +358,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 	    unsigned char *mskptr;
 
 	    n = BitmapBytePad(cm.width)*(long)cm.height;
-	    mskptr = mskbits = xalloc(n);
+	    mskptr = mskbits = malloc(n);
 	    if (!mskptr)
 		return BadAlloc;
 	    while (--n >= 0)
@@ -376,13 +376,13 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 	}
 	if ((rc = ServerBitsFromGlyph(sourcefont, sourceChar, &cm, &srcbits)))
 	{
-	    xfree(mskbits);
+	    free(mskbits);
 	    return rc;
 	}
 	if (sourcefont != maskfont)
 	{
 	    pCurs = 
-                (CursorPtr)xcalloc(sizeof(CursorRec) + sizeof(CursorBits), 1);
+                (CursorPtr)calloc(sizeof(CursorRec) + sizeof(CursorBits), 1);
 	    if (pCurs)
 		bits = (CursorBitsPtr)((char *)pCurs + sizeof(CursorRec));
 	    else
@@ -390,17 +390,17 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 	}
 	else
 	{
-	    pCurs = (CursorPtr)xcalloc(sizeof(CursorRec), 1);
+	    pCurs = (CursorPtr)calloc(sizeof(CursorRec), 1);
 	    if (pCurs)
-		bits = (CursorBitsPtr)xcalloc(sizeof(CursorBits), 1);
+		bits = (CursorBitsPtr)calloc(sizeof(CursorBits), 1);
 	    else
 		bits = (CursorBitsPtr)NULL;
 	}
 	if (!bits)
 	{
-	    xfree(pCurs);
-	    xfree(mskbits);
-	    xfree(srcbits);
+	    free(pCurs);
+	    free(mskbits);
+	    free(srcbits);
 	    return BadAlloc;
 	}
 	bits->source = srcbits;
@@ -418,7 +418,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 	else
 	{
 	    bits->refcnt = 1;
-	    pShare = xalloc(sizeof(GlyphShare));
+	    pShare = malloc(sizeof(GlyphShare));
 	    if (!pShare)
 	    {
 		FreeCursorBits(bits);
@@ -469,7 +469,7 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
 error:
     dixFreePrivates(pCurs->devPrivates);
     FreeCursorBits(bits);
-    xfree(pCurs);
+    free(pCurs);
 
     return rc;
 }

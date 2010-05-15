@@ -84,7 +84,7 @@ CreateGrab(
 {
     GrabPtr grab;
 
-    grab = xcalloc(1, sizeof(GrabRec));
+    grab = calloc(1, sizeof(GrabRec));
     if (!grab)
 	return (GrabPtr)NULL;
     grab->resource = FakeClientID(client);
@@ -118,15 +118,15 @@ static void
 FreeGrab(GrabPtr pGrab)
 {
     if (pGrab->modifiersDetail.pMask != NULL)
-	xfree(pGrab->modifiersDetail.pMask);
+	free(pGrab->modifiersDetail.pMask);
 
     if (pGrab->detail.pMask != NULL)
-	xfree(pGrab->detail.pMask);
+	free(pGrab->detail.pMask);
 
     if (pGrab->cursor)
 	FreeCursor(pGrab->cursor, (Cursor)0);
 
-    xfree(pGrab);
+    free(pGrab);
 }
 
 int
@@ -160,7 +160,7 @@ DeleteDetailFromMask(Mask *pDetailMask, unsigned int detail)
     Mask *mask;
     int i;
 
-    mask = xalloc(sizeof(Mask) * MasksPerDetailMask);
+    mask = malloc(sizeof(Mask) * MasksPerDetailMask);
     if (mask)
     {
 	if (pDetailMask)
@@ -435,16 +435,16 @@ DeletePassiveGrabFromList(GrabPtr pMinuendGrab)
 	i++;
     if (!i)
 	return TRUE;
-    deletes = xalloc(i * sizeof(GrabPtr));
-    adds = xalloc(i * sizeof(GrabPtr));
-    updates = xalloc(i * sizeof(Mask **));
-    details = xalloc(i * sizeof(Mask *));
+    deletes = malloc(i * sizeof(GrabPtr));
+    adds = malloc(i * sizeof(GrabPtr));
+    updates = malloc(i * sizeof(Mask **));
+    details = malloc(i * sizeof(Mask *));
     if (!deletes || !adds || !updates || !details)
     {
-	if (details) xfree(details);
-	if (updates) xfree(updates);
-	if (adds) xfree(adds);
-	if (deletes) xfree(deletes);
+	if (details) free(details);
+	if (updates) free(updates);
+	if (adds) free(adds);
+	if (deletes) free(deletes);
 	return FALSE;
     }
 
@@ -532,7 +532,7 @@ DeletePassiveGrabFromList(GrabPtr pMinuendGrab)
 	for (i = 0; i < nadds; i++)
 	    FreeResource(adds[i]->resource, RT_NONE);
 	for (i = 0; i < nups; i++)
-	    xfree(details[i]);
+	    free(details[i]);
     }
     else
     {
@@ -546,14 +546,14 @@ DeletePassiveGrabFromList(GrabPtr pMinuendGrab)
 	}
 	for (i = 0; i < nups; i++)
 	{
-	    xfree(*updates[i]);
+	    free(*updates[i]);
 	    *updates[i] = details[i];
 	}
     }
-    xfree(details);
-    xfree(updates);
-    xfree(adds);
-    xfree(deletes);
+    free(details);
+    free(updates);
+    free(adds);
+    free(deletes);
     return ok;
 
 #undef UPDATE

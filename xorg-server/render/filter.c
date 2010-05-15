@@ -60,18 +60,18 @@ PictureGetFilterId (char *filter, int len, Bool makeit)
 	    return i;
     if (!makeit)
 	return -1;
-    name = xalloc (len + 1);
+    name = malloc(len + 1);
     if (!name)
 	return -1;
     memcpy (name, filter, len);
     name[len] = '\0';
     if (filterNames)
-	names = xrealloc (filterNames, (nfilterNames + 1) * sizeof (char *));
+	names = realloc(filterNames, (nfilterNames + 1) * sizeof (char *));
     else
-	names = xalloc (sizeof (char *));
+	names = malloc(sizeof (char *));
     if (!names)
     {
-	xfree (name);
+	free(name);
 	return -1;
     }
     filterNames = names;
@@ -117,8 +117,8 @@ PictureFreeFilterIds (void)
     int	    i;
 
     for (i = 0; i < nfilterNames; i++)
-	xfree (filterNames[i]);
-    xfree (filterNames);
+	free(filterNames[i]);
+    free(filterNames);
     nfilterNames = 0;
     filterNames = 0;
 }
@@ -144,9 +144,9 @@ PictureAddFilter (ScreenPtr			    pScreen,
 	if (ps->filters[i].id == id)
 	    return -1;
     if (ps->filters)
-	filters = xrealloc (ps->filters, (ps->nfilters + 1) * sizeof (PictFilterRec));
+	filters = realloc(ps->filters, (ps->nfilters + 1) * sizeof (PictFilterRec));
     else
-	filters = xalloc (sizeof (PictFilterRec));
+	filters = malloc(sizeof (PictFilterRec));
     if (!filters)
 	return -1;
     ps->filters = filters;
@@ -177,11 +177,11 @@ PictureSetFilterAlias (ScreenPtr pScreen, char *filter, char *alias)
 	PictFilterAliasPtr  aliases;
 
 	if (ps->filterAliases)
-	    aliases = xrealloc (ps->filterAliases,
+	    aliases = realloc(ps->filterAliases,
 				(ps->nfilterAliases + 1) *
 				sizeof (PictFilterAliasRec));
 	else
-	    aliases = xalloc (sizeof (PictFilterAliasRec));
+	    aliases = malloc(sizeof (PictFilterAliasRec));
 	if (!aliases)
 	    return FALSE;
 	ps->filterAliases = aliases;
@@ -273,8 +273,8 @@ PictureResetFilters (ScreenPtr pScreen)
 {
     PictureScreenPtr    ps = GetPictureScreen(pScreen);
 
-    xfree (ps->filters);
-    xfree (ps->filterAliases);
+    free(ps->filters);
+    free(ps->filterAliases);
     PictureFreeFilterIds ();
 }
 
@@ -335,10 +335,10 @@ SetPicturePictFilter (PicturePtr pPicture, PictFilterPtr pFilter,
 
     if (nparams != pPicture->filter_nparams)
     {
-	xFixed *new_params = xalloc (nparams * sizeof (xFixed));
+	xFixed *new_params = malloc(nparams * sizeof (xFixed));
 	if (!new_params && nparams)
 	    return BadAlloc;
-	xfree (pPicture->filter_params);
+	free(pPicture->filter_params);
 	pPicture->filter_params = new_params;
 	pPicture->filter_nparams = nparams;
     }

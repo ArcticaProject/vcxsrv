@@ -36,6 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * Types
  */
 
+#define COMMAND_LEN 64
+
 /* subject state (clients and devices only) */
 typedef struct {
     security_id_t sid;
@@ -46,7 +48,7 @@ typedef struct {
     security_id_t sel_use_sid;
     security_id_t prp_use_sid;
     struct avc_entry_ref aeref;
-    char *command;
+    char command[COMMAND_LEN];
     int privileged;
 } SELinuxSubjectRec;
 

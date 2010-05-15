@@ -274,7 +274,7 @@ static int dmxProcRenderCreateGlyphSet(ClientPtr client)
 	
 	glyphSet = SecurityLookupIDByType(client, stuff->gsid, GlyphSetType,
 					  DixDestroyAccess);
-	glyphPriv = xalloc(sizeof(dmxGlyphPrivRec));
+	glyphPriv = malloc(sizeof(dmxGlyphPrivRec));
 	if (!glyphPriv) return BadAlloc;
         glyphPriv->glyphSets = NULL;
         MAXSCREENSALLOC_RETURN(glyphPriv->glyphSets, BadAlloc);
@@ -331,7 +331,7 @@ static int dmxProcRenderFreeGlyphSet(ClientPtr client)
 	}
 
         MAXSCREENSFREE(glyphPriv->glyphSets);
-	xfree(glyphPriv);
+	free(glyphPriv);
 	DMX_SET_GLYPH_PRIV(glyphSet, NULL);
     }
 
@@ -369,7 +369,7 @@ static int dmxProcRenderAddGlyphs(ClientPtr client)
 		  sizeof(xRenderAddGlyphsReq) -
 		  (sizeof(CARD32) + sizeof(xGlyphInfo)) * nglyphs);
 
-        gidsCopy = xalloc(sizeof(*gidsCopy) * nglyphs);
+        gidsCopy = malloc(sizeof(*gidsCopy) * nglyphs);
         for (i = 0; i < nglyphs; i++) gidsCopy[i] = gids[i];
 
 	/* FIXME: Will this ever fail? */
@@ -387,7 +387,7 @@ static int dmxProcRenderAddGlyphs(ClientPtr client)
 		dmxSync(dmxScreen, FALSE);
 	    }
 	}
-        xfree(gidsCopy);
+        free(gidsCopy);
     }
 
     return ret;
@@ -411,7 +411,7 @@ static int dmxProcRenderFreeGlyphs(ClientPtr client)
 
 	nglyphs = ((client->req_len << 2) - sizeof(xRenderFreeGlyphsReq)) >> 2;
 	if (nglyphs) {
-            gids    = xalloc(sizeof(*gids) * nglyphs);
+            gids    = malloc(sizeof(*gids) * nglyphs);
             for (i = 0; i < nglyphs; i++)
                 gids[i] = ((CARD32 *)(stuff + 1))[i];
             
@@ -424,7 +424,7 @@ static int dmxProcRenderFreeGlyphs(ClientPtr client)
 		    dmxSync(dmxScreen, FALSE);
 		}
 	    }
-            xfree(gids);
+            free(gids);
 	}
     }
 
@@ -531,13 +531,13 @@ static int dmxProcRenderCompositeGlyphs(ClientPtr client)
 	/* The following only works for Render version > 0.2 */
 
 	/* All of the XGlyphElt* structure sizes are identical */
-	elts = xalloc(nelt * sizeof(XGlyphElt8));
+	elts = malloc(nelt * sizeof(XGlyphElt8));
 	if (!elts)
 	    return BadAlloc;
 
-	glyphs = xalloc(nglyph * size);
+	glyphs = malloc(nglyph * size);
 	if (!glyphs) {
-	    xfree(elts);
+	    free(elts);
 	    return BadAlloc;
 	}
 
@@ -605,8 +605,8 @@ static int dmxProcRenderCompositeGlyphs(ClientPtr client)
 
 	dmxSync(dmxScreen, FALSE);
 
-	xfree(elts);
-	xfree(glyphs);
+	free(elts);
+	free(glyphs);
     }
 
     return ret;
@@ -878,7 +878,7 @@ int dmxChangePictureClip(PicturePtr pPicture, int clipType,
 	    int         nRects;
 
 	    nRects = nBox;
-	    pRects = pRect = xalloc(nRects * sizeof(*pRect));
+	    pRects = pRect = malloc(nRects * sizeof(*pRect));
 
 	    while (nBox--) {
 		pRect->x      = pBox->x1;
@@ -894,7 +894,7 @@ int dmxChangePictureClip(PicturePtr pPicture, int clipType,
 					    0, 0,
 					    pRects,
 					    nRects);
-	    xfree(pRects);
+	    free(pRects);
 	} else {
 	    XRenderSetPictureClipRectangles(dmxScreen->beDisplay,
 					    pPictPriv->pict,

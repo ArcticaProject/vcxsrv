@@ -87,7 +87,7 @@ ProcXIQueryDevice(ClientPtr client)
     }
     else
     {
-        skip = xcalloc(sizeof(Bool), inputInfo.numDevices);
+        skip = calloc(sizeof(Bool), inputInfo.numDevices);
         if (!skip)
             return BadAlloc;
 
@@ -106,7 +106,7 @@ ProcXIQueryDevice(ClientPtr client)
         }
     }
 
-    info = xcalloc(1, len);
+    info = calloc(1, len);
     if (!info)
         return BadAlloc;
 
@@ -155,8 +155,8 @@ ProcXIQueryDevice(ClientPtr client)
 
     WriteReplyToClient(client, sizeof(xXIQueryDeviceReply), &rep);
     WriteToClient(client, rep.length * 4, ptr);
-    xfree(ptr);
-    xfree(skip);
+    free(ptr);
+    free(skip);
     return rc;
 }
 

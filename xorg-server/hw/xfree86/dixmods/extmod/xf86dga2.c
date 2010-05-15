@@ -129,7 +129,7 @@ ProcXDGAQueryVersion(ClientPtr client)
     rep.minorVersion = SERVER_XDGA_MINOR_VERSION;
 
     WriteToClient(client, sizeof(xXDGAQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -166,7 +166,7 @@ ProcXDGAOpenFramebuffer(ClientPtr client)
     if(rep.length)
 	WriteToClient(client, nameSize, deviceName);
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -185,7 +185,7 @@ ProcXDGACloseFramebuffer(ClientPtr client)
 
     DGACloseFramebuffer(stuff->screen);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -210,15 +210,15 @@ ProcXDGAQueryModes(ClientPtr client)
 	rep.number = 0;
 	rep.length = 0;
 	WriteToClient(client, sz_xXDGAQueryModesReply, (char*)&rep);
-	return (client->noClientException);
+	return Success;
     }
 
     if(!(num = DGAGetModes(stuff->screen))) {
 	WriteToClient(client, sz_xXDGAQueryModesReply, (char*)&rep);
-	return (client->noClientException);
+	return Success;
     }
 
-    if(!(mode = (XDGAModePtr)xalloc(num * sizeof(XDGAModeRec))))
+    if(!(mode = (XDGAModePtr)malloc(num * sizeof(XDGAModeRec))))
 	return BadAlloc;
 
     for(i = 0; i < num; i++)
@@ -267,9 +267,9 @@ ProcXDGAQueryModes(ClientPtr client)
 	WriteToClient(client, size, mode[i].name);
     }
 
-    xfree(mode);
+    free(mode);
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -342,7 +342,7 @@ ProcXDGASetMode(ClientPtr client)
 	DGASelectInput(stuff->screen, NULL, 0);
 	DGASetMode(stuff->screen, 0, &mode, &pPix);
 	WriteToClient(client, sz_xXDGASetModeReply, (char*)&rep);
-	return (client->noClientException);
+	return Success;
     }
 
     if(Success != DGASetMode(stuff->screen, stuff->mode, &mode, &pPix))
@@ -397,7 +397,7 @@ ProcXDGASetMode(ClientPtr client)
     WriteToClient(client, sz_xXDGAModeInfo, (char*)(&info));
     WriteToClient(client, size, mode.name);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -415,7 +415,7 @@ ProcXDGASetViewport(ClientPtr client)
 
     DGASetViewport(stuff->screen, stuff->x, stuff->y, stuff->flags);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -435,14 +435,10 @@ ProcXDGAInstallColormap(ClientPtr client)
 
     rc = dixLookupResourceByType((pointer *)&cmap, stuff->cmap, RT_COLORMAP,
 				 client, DixInstallAccess);
-    if (rc == Success) {
-        DGAInstallCmap(cmap);
-        return (client->noClientException);
-    } else {
+    if (rc != Success)
         return (rc == BadValue) ? BadColor : rc;
-    }
-
-    return (client->noClientException);
+    DGAInstallCmap(cmap);
+    return Success;
 }
 
 
@@ -462,7 +458,7 @@ ProcXDGASelectInput(ClientPtr client)
     if(DGA_GETCLIENT(stuff->screen) == client)
 	DGASelectInput(stuff->screen, client, stuff->mask);
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -483,7 +479,7 @@ ProcXDGAFillRectangle(ClientPtr client)
 			stuff->width, stuff->height, stuff->color))
 	return BadMatch;
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -503,7 +499,7 @@ ProcXDGACopyArea(ClientPtr client)
 		stuff->width, stuff->height, stuff->dstx, stuff->dsty))
 	return BadMatch;
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -524,7 +520,7 @@ ProcXDGACopyTransparentArea(ClientPtr client)
 	stuff->width, stuff->height, stuff->dstx, stuff->dsty, stuff->key))
 	return BadMatch;
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -548,7 +544,7 @@ ProcXDGAGetViewportStatus(ClientPtr client)
     rep.status = DGAGetViewportStatus(stuff->screen);
 
     WriteToClient(client, sizeof(xXDGAGetViewportStatusReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -571,7 +567,7 @@ ProcXDGASync(ClientPtr client)
     DGASync(stuff->screen);
 
     WriteToClient(client, sizeof(xXDGASyncReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -583,7 +579,7 @@ ProcXDGASetClientVersion(ClientPtr client)
 
     REQUEST_SIZE_MATCH(xXDGASetClientVersionReq);
     if ((pPriv = DGA_GETPRIV(client)) == NULL) {
-	pPriv = xalloc(sizeof(DGAPrivRec));
+	pPriv = malloc(sizeof(DGAPrivRec));
 	/* XXX Need to look into freeing this */
 	if (!pPriv)
 	    return BadAlloc;
@@ -592,7 +588,7 @@ ProcXDGASetClientVersion(ClientPtr client)
     pPriv->major = stuff->major;
     pPriv->minor = stuff->minor;
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -623,7 +619,7 @@ ProcXDGAChangePixmapMode(ClientPtr client)
     rep.y = y;
     WriteToClient(client, sizeof(xXDGAChangePixmapModeReply), (char *)&rep);
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -649,7 +645,7 @@ ProcXDGACreateColormap(ClientPtr client)
     if(result != Success)
 	return result;
 
-    return (client->noClientException);
+    return Success;
 }
 
 /*
@@ -707,7 +703,7 @@ ProcXF86DGAGetVideoLL(ClientPtr client)
     rep.ram_size = rep.bank_size >> 10;
 
     WriteToClient(client, SIZEOF(xXF86DGAGetVideoLLReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -762,7 +758,7 @@ ProcXF86DGADirectVideo(ClientPtr client)
 	DGA_SETCLIENT(stuff->screen, NULL);
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -793,7 +789,7 @@ ProcXF86DGAGetViewPortSize(ClientPtr client)
     rep.height = mode.viewportHeight;
 
     WriteToClient(client, SIZEOF(xXF86DGAGetViewPortSizeReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -819,7 +815,7 @@ ProcXF86DGASetViewPort(ClientPtr client)
 		!= Success)
 	return DGAErrorBase + XF86DGADirectNotActivated;
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -838,7 +834,7 @@ ProcXF86DGAGetVidPage(ClientPtr client)
     rep.vpage = 0;  /* silently fail */
 
     WriteToClient(client, SIZEOF(xXF86DGAGetVidPageReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -854,7 +850,7 @@ ProcXF86DGASetVidPage(ClientPtr client)
 
     /* silently fail */
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -880,7 +876,7 @@ ProcXF86DGAInstallColormap(ClientPtr client)
 				 client, DixInstallAccess);
     if (rc == Success) {
 	DGAInstallCmap(pcmp);
-        return (client->noClientException);
+        return Success;
     } else {
         return (rc == BadValue) ? BadColor : rc;
     }
@@ -905,7 +901,7 @@ ProcXF86DGAQueryDirectVideo(ClientPtr client)
 	rep.flags = XF86DGADirectPresent;
 
     WriteToClient(client, SIZEOF(xXF86DGAQueryDirectVideoReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -931,7 +927,7 @@ ProcXF86DGAViewPortChanged(ClientPtr client)
     rep.result = 1;
 
     WriteToClient(client, SIZEOF(xXF86DGAViewPortChangedReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 #endif /* DGA_PROTOCOL_OLD_SUPPORT */

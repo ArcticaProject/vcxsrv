@@ -254,7 +254,7 @@ eventToKeyButtonPointer(DeviceEvent *ev, xEvent **xi, int *count)
     num_events = (countValuators(ev, &first) + 5)/6; /* valuator ev */
     num_events++; /* the actual event event */
 
-    *xi = xcalloc(num_events, sizeof(xEvent));
+    *xi = calloc(num_events, sizeof(xEvent));
     if (!(*xi))
     {
         return BadAlloc;
@@ -462,7 +462,7 @@ eventToDeviceChanged(DeviceChangedEvent *dce, xEvent **xi)
         len += sizeof(CARD32) * nkeys; /* keycodes */
     }
 
-    dcce = xcalloc(1, len);
+    dcce = calloc(1, len);
     if (!dcce)
     {
         ErrorF("[Xi] BadAlloc in SendDeviceChangedEvent.\n");
@@ -545,7 +545,7 @@ eventToDeviceEvent(DeviceEvent *ev, xEvent **xi)
     vallen = bytes_to_int32(bits_to_bytes(MAX_VALUATORS));
     len += vallen * 4; /* valuators mask */
 
-    *xi = xcalloc(1, len);
+    *xi = calloc(1, len);
     xde = (xXIDeviceEvent*)*xi;
     xde->type           = GenericEvent;
     xde->extension      = IReqCode;
@@ -612,7 +612,7 @@ eventToRawEvent(RawDeviceEvent *ev, xEvent **xi)
     vallen = bytes_to_int32(bits_to_bytes(MAX_VALUATORS));
     len += vallen * 4; /* valuators mask */
 
-    *xi = xcalloc(1, len);
+    *xi = calloc(1, len);
     raw = (xXIRawEvent*)*xi;
     raw->type           = GenericEvent;
     raw->extension      = IReqCode;

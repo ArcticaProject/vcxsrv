@@ -105,12 +105,12 @@ miFillConvexPoly(
     dy = ymax - ymin + 1;
     if ((count < 3) || (dy < 0))
 	return(TRUE);
-    ptsOut = FirstPoint = xalloc(sizeof(DDXPointRec)*dy);
-    width = FirstWidth = xalloc(sizeof(int) * dy);
+    ptsOut = FirstPoint = malloc(sizeof(DDXPointRec)*dy);
+    width = FirstWidth = malloc(sizeof(int) * dy);
     if(!FirstPoint || !FirstWidth)
     {
-	if (FirstWidth) xfree(FirstWidth);
-	if (FirstPoint) xfree(FirstPoint);
+	if (FirstWidth) free(FirstWidth);
+	if (FirstPoint) free(FirstPoint);
 	return(FALSE);
     }
 
@@ -175,8 +175,8 @@ miFillConvexPoly(
 	/* in case we're called with non-convex polygon */
 	if(i < 0)
         {
-	    xfree(FirstWidth);
-	    xfree(FirstPoint);
+	    free(FirstWidth);
+	    free(FirstPoint);
 	    return(TRUE);
 	}
         while (i-- > 0) 
@@ -210,8 +210,8 @@ miFillConvexPoly(
     (*pgc->ops->FillSpans)(dst, pgc, 
 		      ptsOut-FirstPoint,FirstPoint,FirstWidth,
 		      1);
-    xfree(FirstWidth);
-    xfree(FirstPoint);
+    free(FirstWidth);
+    free(FirstPoint);
     return(TRUE);
 }
 

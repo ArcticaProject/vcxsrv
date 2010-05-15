@@ -173,7 +173,7 @@ ProcXISelectEvents(ClientPtr client)
 
     RecalculateDeliverableEvents(win);
 
-    xfree(types);
+    free(types);
     return Success;
 }
 
@@ -234,7 +234,7 @@ ProcXIGetSelectedEvents(ClientPtr client)
         return Success;
     }
 
-    buffer = xcalloc(MAXDEVICES, sizeof(xXIEventMask) + pad_to_int32(XI2MASKSIZE));
+    buffer = calloc(MAXDEVICES, sizeof(xXIEventMask) + pad_to_int32(XI2MASKSIZE));
     if (!buffer)
         return BadAlloc;
 
@@ -281,7 +281,7 @@ ProcXIGetSelectedEvents(ClientPtr client)
     if (reply.num_masks)
         WriteToClient(client, reply.length * 4, buffer);
 
-    xfree(buffer);
+    free(buffer);
     return Success;
 }
 

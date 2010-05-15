@@ -33,12 +33,12 @@ fbCloseScreen (int index, ScreenPtr pScreen)
     DepthPtr	depths = pScreen->allowedDepths;
 
     for (d = 0; d < pScreen->numDepths; d++)
-	xfree (depths[d].vids);
-    xfree (depths);
-    xfree (pScreen->visuals);
-    xfree (pScreen->devPrivate);
+	free(depths[d].vids);
+    free(depths);
+    free(pScreen->visuals);
+    free(pScreen->devPrivate);
 #ifdef FB_SCREEN_PRIVATE
-    xfree (dixLookupPrivate(&pScreen->devPrivates, fbGetScreenPrivateKey()));
+    free(dixLookupPrivate(&pScreen->devPrivates, fbGetScreenPrivateKey()));
 #endif
     return TRUE;
 }
@@ -229,8 +229,8 @@ fbFinishScreenInit(ScreenPtr	pScreen,
     if (!fbInitVisuals (&visuals, &depths, &nvisuals, &ndepths, &rootdepth,
 			&defaultVisual,((unsigned long)1<<(imagebpp-1)), 8))
     {
-	xfree (visuals);
-	xfree (depths);
+	free(visuals);
+	free(depths);
 	return FALSE;
     }
     if (! miScreenInit(pScreen, pbits, xsize, ysize, dpix, dpiy, width,

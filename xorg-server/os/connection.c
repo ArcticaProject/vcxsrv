@@ -226,7 +226,7 @@ void SetConnectionTranslation(int conn, int client)
             }
             node = &((*node)->next);
         }
-        *node = xalloc(sizeof(struct _ct_node));
+        *node = malloc(sizeof(struct _ct_node));
         (*node)->next = NULL;
         (*node)->key = conn;
         (*node)->value = client;
@@ -244,7 +244,7 @@ void ClearConnectionTranslation(void)
         {
             struct _ct_node *temp = node;
             node = node->next;
-            xfree(temp);
+            free(temp);
         }
     }
 }
@@ -397,7 +397,7 @@ CreateWellKnownSockets(void)
 	}
 	else
 	{
-	    ListenTransFds = xalloc (ListenTransCount * sizeof (int));
+	    ListenTransFds = malloc(ListenTransCount * sizeof (int));
 
 	    for (i = 0; i < ListenTransCount; i++)
 	    {
@@ -679,7 +679,7 @@ ClientAuthorized(ClientPtr client,
 			proto_n, auth_proto, auth_id);
 	    }
 
-	    xfree (from);
+	    free(from);
 	}
 
 	if (auth_id == (XID) ~0L) {
@@ -701,7 +701,7 @@ ClientAuthorized(ClientPtr client,
 	    AuthAudit(client, TRUE, (struct sockaddr *) from, fromlen,
 		      proto_n, auth_proto, auth_id);
 
-	    xfree (from);
+	    free(from);
 	}
     }
     priv->auth_id = auth_id;
@@ -737,7 +737,7 @@ AllocNewConnection (XtransConnInfo trans_conn, int fd, CARD32 conn_time)
 #endif
 	)
 	return NullClient;
-    oc = xalloc(sizeof(OsCommRec));
+    oc = malloc(sizeof(OsCommRec));
     if (!oc)
 	return NullClient;
     oc->trans_conn = trans_conn;
@@ -748,7 +748,7 @@ AllocNewConnection (XtransConnInfo trans_conn, int fd, CARD32 conn_time)
     oc->conn_time = conn_time;
     if (!(client = NextAvailableClient((pointer)oc)))
     {
-	xfree (oc);
+	free(oc);
 	return NullClient;
     }
 #if !defined(WIN32)
@@ -1040,7 +1040,7 @@ CloseDownConnection(ClientPtr client)
 #endif
     CloseDownFileDescriptor(oc);
     FreeOsBuffers(oc);
-    xfree(client->osPrivate);
+    free(client->osPrivate);
     client->osPrivate = (pointer)NULL;
     if (auditTrailLevel > 1)
 	AuditF("client %d disconnected\n", client->index);
@@ -1276,8 +1276,8 @@ void ListenOnOpenFD(int fd, int noxauth) {
         ciptr->flags = ciptr->flags | TRANS_NOXAUTH;
 
     /* Allocate space to store it */
-    ListenTransFds = (int *) xrealloc(ListenTransFds, (ListenTransCount + 1) * sizeof (int));
-    ListenTransConns = (XtransConnInfo *) xrealloc(ListenTransConns, (ListenTransCount + 1) * sizeof (XtransConnInfo));
+    ListenTransFds = (int *) realloc(ListenTransFds, (ListenTransCount + 1) * sizeof (int));
+    ListenTransConns = (XtransConnInfo *) realloc(ListenTransConns, (ListenTransCount + 1) * sizeof (XtransConnInfo));
     
     /* Store it */
     ListenTransConns[ListenTransCount] = ciptr;

@@ -420,7 +420,7 @@ glxWinScreenDestroy(__GLXscreen *screen)
 {
     GLWIN_DEBUG_MSG("glxWinScreenDestroy(%p)", screen);
     __glXScreenDestroy(screen);
-    xfree(screen);
+    free(screen);
 }
 
 static int
@@ -442,7 +442,7 @@ glxLogExtensions(const char *prefix, const char *extensions)
 {
   int length = 0;
   char *strl;
-  char *str = xalloc(strlen(extensions) + 1);
+  char *str = malloc(strlen(extensions) + 1);
 
   if (str == NULL)
     {
@@ -480,7 +480,7 @@ glxLogExtensions(const char *prefix, const char *extensions)
 
   ErrorF("\n");
 
-  xfree(str);
+  free(str);
 }
 
 /* This is called by GlxExtensionInit() asking the GLX provider if it can handle the screen... */
@@ -507,7 +507,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
         return NULL;
       }
 
-    screen = xcalloc(1, sizeof(glxWinScreen));
+    screen = calloc(1, sizeof(glxWinScreen));
 
     if (NULL == screen)
 	return NULL;
@@ -685,7 +685,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
           {
             if (screen->base.GLXextensions != NULL)
               {
-                xfree(screen->base.GLXextensions);
+                free(screen->base.GLXextensions);
               }
 
             screen->base.GLXextensions = xnfalloc(buffer_size);
@@ -702,7 +702,7 @@ glxWinScreenProbe(ScreenPtr pScreen)
       //
       if (screen->has_WGL_ARB_pbuffer && glx_sgi_make_current_read)
         {
-          xfree(screen->base.GLXversion);
+          free(screen->base.GLXversion);
 
           if (screen->has_WGL_ARB_multisample)
             {
@@ -897,7 +897,7 @@ glxWinDrawableDestroy(__GLXdrawable *base)
     }
 
   GLWIN_DEBUG_MSG("glxWinDestroyDrawable");
-  xfree(glxPriv);
+  free(glxPriv);
 }
 
 static __GLXdrawable *
@@ -909,7 +909,7 @@ glxWinCreateDrawable(__GLXscreen *screen,
 {
   __GLXWinDrawable *glxPriv;
 
-  glxPriv = xalloc(sizeof *glxPriv);
+  glxPriv = malloc(sizeof *glxPriv);
 
   if (glxPriv == NULL)
       return NULL;
@@ -917,7 +917,7 @@ glxWinCreateDrawable(__GLXscreen *screen,
   memset(glxPriv, 0, sizeof *glxPriv);
 
   if(!__glXDrawableInit(&glxPriv->base, screen, pDraw, type, drawId, conf)) {
-    xfree(glxPriv);
+    free(glxPriv);
     return NULL;
   }
 
@@ -1517,7 +1517,7 @@ glxWinContextDestroy(__GLXcontext *base)
           gc->ctx = NULL;
         }
 
-      xfree(gc);
+      free(gc);
     }
 }
 
@@ -1535,7 +1535,7 @@ glxWinCreateContext(__GLXscreen *screen,
         glxWinReleaseTexImage
       };
 
-    context = (__GLXWinContext *)xcalloc(1, sizeof(__GLXWinContext));
+    context = (__GLXWinContext *)calloc(1, sizeof(__GLXWinContext));
 
     if (!context)
         return NULL;
@@ -1749,7 +1749,7 @@ glxWinCreateConfigs(HDC hdc, glxWinScreen *screen)
   GLWIN_DEBUG_MSG("DescribePixelFormat says %d possible pixel formats", numConfigs);
 
   /* alloc */
-  result = xalloc(sizeof(GLXWinConfig) * numConfigs);
+  result = malloc(sizeof(GLXWinConfig) * numConfigs);
 
   if (NULL == result)
     {
@@ -1992,7 +1992,7 @@ glxWinCreateConfigsExt(HDC hdc, glxWinScreen *screen)
   GLWIN_DEBUG_MSG("wglGetPixelFormatAttribivARB says %d possible pixel formats", numConfigs);
 
   /* alloc */
-  result = xalloc(sizeof(GLXWinConfig) * numConfigs);
+  result = malloc(sizeof(GLXWinConfig) * numConfigs);
 
   if (NULL == result)
     {

@@ -144,7 +144,7 @@ ProcXIQueryPointer(ClientPtr client)
         rep.buttons_len = bytes_to_int32(bits_to_bytes(pDev->button->numButtons));
         rep.length += rep.buttons_len;
         buttons_size = rep.buttons_len * 4;
-        buttons = xcalloc(1, buttons_size);
+        buttons = calloc(1, buttons_size);
         if (!buttons)
             return BadAlloc;
 
@@ -195,7 +195,7 @@ ProcXIQueryPointer(ClientPtr client)
     if (buttons)
         WriteToClient(client, buttons_size, buttons);
 
-    xfree(buttons);
+    free(buttons);
 
     return Success;
 }

@@ -154,7 +154,7 @@ ProcXGetDeviceMotionEvents(ClientPtr client)
 	WriteToClient(client, length * 4, (char *)coords);
     }
     if (coords)
-	xfree(coords);
+	free(coords);
     return Success;
 }
 

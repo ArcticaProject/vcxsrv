@@ -91,7 +91,7 @@ ProcGEQueryVersion(ClientPtr client)
     }
 
     WriteToClient(client, sizeof(xGEQueryVersionReply), (char*)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 int (*ProcGEVector[GENumberRequests])(ClientPtr) = {

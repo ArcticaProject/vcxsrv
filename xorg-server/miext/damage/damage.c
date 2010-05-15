@@ -1511,7 +1511,7 @@ damageText (DrawablePtr	    pDrawable,
 
     imageblt = (textType == TT_IMAGE8) || (textType == TT_IMAGE16);
 
-    charinfo = xalloc(count * sizeof(CharInfoPtr));
+    charinfo = malloc(count * sizeof(CharInfoPtr));
     if (!charinfo)
 	return x;
 
@@ -1533,7 +1533,7 @@ damageText (DrawablePtr	    pDrawable,
 	    (*pGC->ops->PolyGlyphBlt)(pDrawable, pGC, x, y, n, charinfo,
 				      FONTGLYPHS(pGC->font));
     }
-    xfree(charinfo);
+    free(charinfo);
     return x + w;
 }
 
@@ -1848,7 +1848,7 @@ damageCloseScreen (int i, ScreenPtr pScreen)
     unwrap (pScrPriv, pScreen, CreateGC);
     unwrap (pScrPriv, pScreen, CopyWindow);
     unwrap (pScrPriv, pScreen, CloseScreen);
-    xfree (pScrPriv);
+    free(pScrPriv);
     return (*pScreen->CloseScreen) (i, pScreen);
 }
 
@@ -1890,7 +1890,7 @@ DamageSetup (ScreenPtr pScreen)
     if (!dixRequestPrivate(damageGCPrivateKey, sizeof(DamageGCPrivRec)))
 	return FALSE;
 
-    pScrPriv = xalloc (sizeof (DamageScrPrivRec));
+    pScrPriv = malloc(sizeof (DamageScrPrivRec));
     if (!pScrPriv)
 	return FALSE;
 
@@ -1926,7 +1926,7 @@ DamageCreate (DamageReportFunc  damageReport,
     damageScrPriv(pScreen);
     DamagePtr	pDamage;
 
-    pDamage = xalloc (sizeof (DamageRec));
+    pDamage = malloc(sizeof (DamageRec));
     if (!pDamage)
 	return 0;
     pDamage->pNext = 0;
@@ -2054,7 +2054,7 @@ DamageDestroy (DamagePtr    pDamage)
     pDamage->devPrivates = NULL;
     REGION_UNINIT (pScreen, &pDamage->damage);
     REGION_UNINIT (pScreen, &pDamage->pendingDamage);
-    xfree (pDamage);
+    free(pDamage);
 }
 
 Bool

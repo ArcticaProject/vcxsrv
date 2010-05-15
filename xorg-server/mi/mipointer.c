@@ -63,8 +63,6 @@ static Bool miPointerDisplayCursor(DeviceIntPtr pDev, ScreenPtr pScreen,
                                    CursorPtr pCursor);
 static void miPointerConstrainCursor(DeviceIntPtr pDev, ScreenPtr pScreen,
                                      BoxPtr pBox); 
-static void miPointerPointerNonInterestBox(DeviceIntPtr pDev, 
-                                           ScreenPtr pScreen, BoxPtr pBox);
 static void miPointerCursorLimits(DeviceIntPtr pDev, ScreenPtr pScreen,
                                   CursorPtr pCursor, BoxPtr pHotBox, 
                                   BoxPtr pTopLeftBox);
@@ -88,7 +86,7 @@ miPointerInitialize (ScreenPtr                  pScreen,
 {
     miPointerScreenPtr	pScreenPriv;
 
-    pScreenPriv = xalloc (sizeof (miPointerScreenRec));
+    pScreenPriv = malloc(sizeof (miPointerScreenRec));
     if (!pScreenPriv)
 	return FALSE;
     pScreenPriv->spriteFuncs = spriteFuncs;
@@ -115,7 +113,6 @@ miPointerInitialize (ScreenPtr                  pScreen,
     pScreen->UnrealizeCursor = miPointerUnrealizeCursor;
     pScreen->SetCursorPosition = miPointerSetCursorPosition;
     pScreen->RecolorCursor = miRecolorCursor;
-    pScreen->PointerNonInterestBox = miPointerPointerNonInterestBox;
     pScreen->DeviceCursorInitialize = miPointerDeviceInitialize;
     pScreen->DeviceCursorCleanup = miPointerDeviceCleanup;
 
@@ -154,7 +151,7 @@ miPointerCloseScreen (int index, ScreenPtr pScreen)
 #endif
 
     pScreen->CloseScreen = pScreenPriv->CloseScreen;
-    xfree ((pointer) pScreenPriv);
+    free((pointer) pScreenPriv);
     FreeEventList(events, GetMaximumEventsNum());
     events = NULL;
     return (*pScreen->CloseScreen) (index, pScreen);
@@ -211,15 +208,6 @@ miPointerConstrainCursor (DeviceIntPtr pDev, ScreenPtr pScreen, BoxPtr pBox)
 
 /*ARGSUSED*/
 static void
-miPointerPointerNonInterestBox (DeviceIntPtr    pDev,
-                                ScreenPtr       pScreen,
-                                BoxPtr          pBox)
-{
-    /* until DIX uses this, this will remain a stub */
-}
-
-/*ARGSUSED*/
-static void
 miPointerCursorLimits(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
                       BoxPtr pHotBox, BoxPtr pTopLeftBox)
 {
@@ -252,7 +240,7 @@ miPointerDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
     miPointerPtr pPointer;
     SetupScreen (pScreen);
 
-    pPointer = xalloc(sizeof(miPointerRec));
+    pPointer = malloc(sizeof(miPointerRec));
     if (!pPointer)
         return FALSE;
 
@@ -270,7 +258,7 @@ miPointerDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
 
     if (!((*pScreenPriv->spriteFuncs->DeviceCursorInitialize)(pDev, pScreen)))
     {
-        xfree(pPointer);
+        free(pPointer);
         return FALSE;
     }
 
@@ -290,7 +278,7 @@ miPointerDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
         return;
 
     (*pScreenPriv->spriteFuncs->DeviceCursorCleanup)(pDev, pScreen);
-    xfree(dixLookupPrivate(&pDev->devPrivates, miPointerPrivKey));
+    free(dixLookupPrivate(&pDev->devPrivates, miPointerPrivKey));
     dixSetPrivate(&pDev->devPrivates, miPointerPrivKey, NULL);
 }
 

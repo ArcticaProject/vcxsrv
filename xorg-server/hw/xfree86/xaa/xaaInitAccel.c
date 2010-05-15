@@ -1476,7 +1476,7 @@ XAAInitAccel(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
 	    infoRec->CachePixelGranularity *= 2;
     }
 
-    xfree(options);
+    free(options);
 
     if(!infoRec->CacheTile && infoRec->WritePixmapToCache)
 	infoRec->CacheTile = XAACacheTile;

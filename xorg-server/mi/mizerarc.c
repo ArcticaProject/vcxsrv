@@ -737,7 +737,7 @@ miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
     dospans = (pGC->fillStyle != FillSolid);
     if (dospans)
     {
-	widths = xalloc(sizeof(int) * numPts);
+	widths = malloc(sizeof(int) * numPts);
 	if (!widths)
 	    return;
 	maxw = 0;
@@ -754,12 +754,12 @@ miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 		   (unsigned char *) pGC->dash, (int)pGC->numInDashList,
 		   &dinfo.dashOffsetInit);
     }
-    points = xalloc(sizeof(DDXPointRec) * numPts);
+    points = malloc(sizeof(DDXPointRec) * numPts);
     if (!points)
     {
 	if (dospans)
 	{
-	    xfree(widths);
+	    free(widths);
 	}
 	return;
     }
@@ -803,7 +803,9 @@ miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 	    if ((pGC->fillStyle == FillSolid) ||
 		(pGC->fillStyle == FillStippled))
 	    {
-		DoChangeGC(pGC, GCForeground, (XID *)&pGC->bgPixel, 0);
+		ChangeGCVal gcval;
+		gcval.val = pGC->bgPixel;
+		ChangeGC(NullClient, pGC, GCForeground, &gcval);
 		ValidateGC(pDraw, pGC);
 	    }
 	    pts = &points[numPts >> 1];
@@ -831,14 +833,16 @@ miZeroPolyArc(DrawablePtr pDraw, GCPtr pGC, int narcs, xArc *parcs)
 	    if ((pGC->fillStyle == FillSolid) ||
 		(pGC->fillStyle == FillStippled))
 	    {
-		DoChangeGC(pGC, GCForeground, &fgPixel, 0);
+		ChangeGCVal gcval;
+		gcval.val = fgPixel;
+		ChangeGC(NullClient, pGC, GCForeground, &gcval);
 		ValidateGC(pDraw, pGC);
 	    }
 	}
     }
-    xfree(points);
+    free(points);
     if (dospans)
     {
-	xfree(widths);
+	free(widths);
     }
 }

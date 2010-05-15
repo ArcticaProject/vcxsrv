@@ -783,7 +783,7 @@ exaCloseScreen(int i, ScreenPtr pScreen)
     unwrap(pExaScr, ps, Triangles);
     unwrap(pExaScr, ps, AddTraps);
 
-    xfree (pExaScr);
+    free(pExaScr);
 
     return (*pScreen->CloseScreen) (i, pScreen);
 }
@@ -794,14 +794,14 @@ exaCloseScreen(int i, ScreenPtr pScreen)
  * without breaking ABI between EXA and the drivers.  The driver's
  * responsibility is to check beforehand that the EXA module has a matching
  * major number and sufficient minor.  Drivers are responsible for freeing the
- * driver structure using xfree().
+ * driver structure using free().
  *
  * @return a newly allocated, zero-filled driver structure
  */
 ExaDriverPtr
 exaDriverAlloc(void)
 {
-    return xcalloc(1, sizeof(ExaDriverRec));
+    return calloc(1, sizeof(ExaDriverRec));
 }
 
 /**
@@ -889,7 +889,7 @@ exaDriverInit (ScreenPtr		pScreen,
 
     ps = GetPictureScreenIfSet(pScreen);
 
-    pExaScr = xcalloc (sizeof (ExaScreenPrivRec), 1);
+    pExaScr = calloc(sizeof (ExaScreenPrivRec), 1);
     if (!pExaScr) {
         LogMessage(X_WARNING, "EXA(%d): Failed to allocate screen private\n",
 		   pScreen->myNum);

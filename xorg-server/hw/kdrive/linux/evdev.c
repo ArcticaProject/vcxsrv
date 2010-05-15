@@ -252,7 +252,7 @@ EvdevPtrEnable (KdPointerInfo *pi)
         close (fd);
         return BadMatch;
     }
-    ke = xcalloc (1, sizeof (Kevdev));
+    ke = calloc(1, sizeof (Kevdev));
     if (!ke)
     {
         close (fd);
@@ -264,7 +264,7 @@ EvdevPtrEnable (KdPointerInfo *pi)
                    ke->keybits) < 0)
         {
             perror ("EVIOCGBIT EV_KEY");
-            xfree (ke);
+            free(ke);
             close (fd);
             return BadMatch;
         }
@@ -275,7 +275,7 @@ EvdevPtrEnable (KdPointerInfo *pi)
                        ke->relbits) < 0)
         {
             perror ("EVIOCGBIT EV_REL");
-            xfree (ke);
+            free(ke);
             close (fd);
             return BadMatch;
         }
@@ -291,7 +291,7 @@ EvdevPtrEnable (KdPointerInfo *pi)
                    ke->absbits) < 0)
             {
             perror ("EVIOCGBIT EV_ABS");
-            xfree (ke);
+            free(ke);
             close (fd);
             return BadMatch;
         }
@@ -310,13 +310,13 @@ EvdevPtrEnable (KdPointerInfo *pi)
         }
         if (i <= ke->max_abs)
         {
-            xfree (ke);
+            free(ke);
             close (fd);
             return BadValue;
         }
     }
     if (!KdRegisterFd (fd, EvdevPtrRead, pi)) {
-        xfree (ke);
+        free(ke);
         close (fd);
         return BadAlloc;
     }
@@ -341,7 +341,7 @@ EvdevPtrDisable (KdPointerInfo *pi)
     if (ioctl (ke->fd, EVIOCGRAB, 0) < 0)
         perror ("Ungrabbing evdev mouse device failed");
 
-    xfree (ke);
+    free(ke);
     pi->driverPrivate = 0;
 }
 
@@ -440,14 +440,14 @@ EvdevKbdEnable (KdKeyboardInfo *ki)
         return BadMatch;
     }
 
-    ke = xcalloc (1, sizeof (Kevdev));
+    ke = calloc(1, sizeof (Kevdev));
     if (!ke) {
         close (fd);
         return BadAlloc;
     }
 
     if (!KdRegisterFd (fd, EvdevKbdRead, ki)) {
-        xfree (ke);
+        free(ke);
         close (fd);
         return BadAlloc;
     }
@@ -509,7 +509,7 @@ EvdevKbdDisable (KdKeyboardInfo *ki)
     if (ioctl (ke->fd, EVIOCGRAB, 0) < 0)
         perror ("Ungrabbing evdev keyboard device failed");
 
-    xfree (ke);
+    free(ke);
     ki->driverPrivate = 0;
 }
 

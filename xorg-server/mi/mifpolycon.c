@@ -116,15 +116,15 @@ miFillSppPoly(
     y = ymax - ymin + 1;
     if ((count < 3) || (y <= 0))
 	return;
-    ptsOut = FirstPoint = xalloc(sizeof(DDXPointRec) * y);
-    width = FirstWidth = xalloc(sizeof(int) * y);
-    Marked = xalloc(sizeof(int) * count);
+    ptsOut = FirstPoint = malloc(sizeof(DDXPointRec) * y);
+    width = FirstWidth = malloc(sizeof(int) * y);
+    Marked = malloc(sizeof(int) * count);
 
     if(!ptsOut || !width || !Marked)
     {
-	if (Marked) xfree(Marked);
-	if (width) xfree(width);
-	if (ptsOut) xfree(ptsOut);
+	if (Marked) free(Marked);
+	if (width) free(width);
+	if (ptsOut) free(ptsOut);
 	return;
     }
 
@@ -238,9 +238,9 @@ miFillSppPoly(
     /* Finally, fill the spans we've collected */
     (*pgc->ops->FillSpans)(dst, pgc, 
 		      ptsOut-FirstPoint, FirstPoint, FirstWidth, 1);
-    xfree(Marked);
-    xfree(FirstWidth);
-    xfree(FirstPoint);
+    free(Marked);
+    free(FirstWidth);
+    free(FirstPoint);
 }
 
 

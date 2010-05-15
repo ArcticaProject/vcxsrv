@@ -101,7 +101,7 @@ xnestOpenDisplay(int argc, char *argv[])
   }
   
   xnestNumDefaultColormaps = xnestNumVisuals;
-  xnestDefaultColormaps = (Colormap *)xalloc(xnestNumDefaultColormaps *
+  xnestDefaultColormaps = (Colormap *)malloc(xnestNumDefaultColormaps *
 					     sizeof(Colormap));
   for (i = 0; i < xnestNumDefaultColormaps; i++)
     xnestDefaultColormaps[i] = XCreateColormap(xnestDisplay,
@@ -185,7 +185,7 @@ xnestCloseDisplay(void)
     the display connection.  There is no need to generate extra protocol.
     */
 
-  xfree(xnestDefaultColormaps);
+  free(xnestDefaultColormaps);
   XFree(xnestVisuals);
   XFree(xnestDepths);
   XFree(xnestPixmapFormats);

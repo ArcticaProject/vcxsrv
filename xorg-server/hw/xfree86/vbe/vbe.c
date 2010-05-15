@@ -164,7 +164,7 @@ vbeFree(vbeInfoPtr pVbe)
     /* If we have initalized int10 we ought to free it, too */
     if (pVbe->init_int10) 
 	xf86FreeInt10(pVbe->pInt10);
-    xfree(pVbe);
+    free(pVbe);
     return;
 }
 
@@ -264,7 +264,7 @@ vbeReadEDID(vbeInfoPtr pVbe)
     xf86ProcessOptions(screen, xf86Screens[screen]->options, options);
     xf86GetOptValBool(options, VBEOPT_NOVBE, &novbe);
     xf86GetOptValBool(options, VBEOPT_NODDC, &noddc);
-    xfree(options);
+    free(options);
     if (novbe || noddc) return NULL;
     
     if (!vbeProbeDDC(pVbe)) goto error;
@@ -373,7 +373,7 @@ VBEGetVBEInfo(vbeInfoPtr pVbe)
     if (R16(pVbe->pInt10->ax) != 0x4f)
 	return (NULL);
 
-    block = xcalloc(sizeof(VbeInfoBlock), 1);
+    block = calloc(sizeof(VbeInfoBlock), 1);
     block->VESASignature[0] = ((char*)pVbe->memory)[0];
     block->VESASignature[1] = ((char*)pVbe->memory)[1];
     block->VESASignature[2] = ((char*)pVbe->memory)[2];
@@ -396,7 +396,7 @@ VBEGetVBEInfo(vbeInfoPtr pVbe)
     i = 0;
     while (modes[i] != 0xffff)
 	i++;
-    block->VideoModePtr = xalloc(sizeof(CARD16) * i + 1);
+    block->VideoModePtr = malloc(sizeof(CARD16) * i + 1);
     memcpy(block->VideoModePtr, modes, sizeof(CARD16) * i);
     block->VideoModePtr[i] = 0xffff;
 
@@ -425,14 +425,14 @@ VBEGetVBEInfo(vbeInfoPtr pVbe)
 void
 VBEFreeVBEInfo(VbeInfoBlock *block)
 {
-    xfree(block->OEMStringPtr);
-    xfree(block->VideoModePtr);
+    free(block->OEMStringPtr);
+    free(block->VideoModePtr);
     if (((unsigned)block->VESAVersion >> 8) >= 2) {
-	xfree(block->OemVendorNamePtr);
-	xfree(block->OemProductNamePtr);
-	xfree(block->OemProductRevPtr);
+	free(block->OemVendorNamePtr);
+	free(block->OemProductNamePtr);
+	free(block->OemProductRevPtr);
     }
-    xfree(block);
+    free(block);
 }
 
 Bool
@@ -528,7 +528,7 @@ VBEGetModeInfo(vbeInfoPtr pVbe, int mode)
     if (R16(pVbe->pInt10->ax) != 0x4f)
 	return (NULL);
 
-    block = xcalloc(sizeof(VbeModeInfoBlock), 1);
+    block = calloc(sizeof(VbeModeInfoBlock), 1);
 
     block->ModeAttributes = *(CARD16*)pVbe->memory;
     block->WinAAttributes = ((char*)pVbe->memory)[2];
@@ -598,7 +598,7 @@ VBEGetModeInfo(vbeInfoPtr pVbe, int mode)
 void
 VBEFreeModeInfo(VbeModeInfoBlock *block)
 {
-    xfree(block);
+    free(block);
 }
 
 Bool
@@ -884,7 +884,7 @@ VBESetGetPaletteData(vbeInfoPtr pVbe, Bool set, int first, int num,
     if (set)
 	return (data);
 
-    data = xalloc(num * sizeof(CARD32));
+    data = malloc(num * sizeof(CARD32));
     memcpy(data, pVbe->memory, num * sizeof(CARD32));
 
     return (data);
@@ -918,7 +918,7 @@ VBEGetVBEpmi(vbeInfoPtr pVbe)
     if (R16(pVbe->pInt10->ax) != 0x4f)
 	return (NULL);
 
-    pmi = xalloc(sizeof(VBEpmi));
+    pmi = malloc(sizeof(VBEpmi));
     pmi->seg_tbl = R16(pVbe->pInt10->es);
     pmi->tbl_off = R16(pVbe->pInt10->di);
     pmi->tbl_len = R16(pVbe->pInt10->cx);
@@ -995,7 +995,7 @@ VBEVesaSaveRestore(vbeInfoPtr pVbe, vbeSaveRestorePtr vbe_sr,
 		vbe_sr->stateMode = -1; /* invalidate */
 		/* don't rely on the memory not being touched */
 		if (vbe_sr->pstate == NULL)
-		    vbe_sr->pstate = xalloc(vbe_sr->stateSize);
+		    vbe_sr->pstate = malloc(vbe_sr->stateSize);
 		memcpy(vbe_sr->pstate, vbe_sr->state, vbe_sr->stateSize);
 	    }
 	    ErrorF("VBESaveRestore done with success\n");
@@ -1099,7 +1099,7 @@ VBEInterpretPanelID(int scrnIndex, struct vbePanelID *data)
     pScrn->monitor->vrefresh[0].hi =
 	(float)mode->Clock*1000.0 / (float)mode->HTotal / (float)mode->VTotal;
 
-    xfree(mode);
+    free(mode);
 }
 
 struct vbePanelID *

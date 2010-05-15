@@ -601,8 +601,8 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 	if (strncmp(n, "no", 2) == 0) {
 	    newn = n + 2;
 	} else {
-	    xfree(n);
-	    n = xalloc(strlen(p->name) + 2 + 1);
+	    free(n);
+	    n = malloc(strlen(p->name) + 2 + 1);
 	    if (!n) {
 		p->found = FALSE;
 		return FALSE;
@@ -632,7 +632,7 @@ ParseOptionValue(int scrnIndex, pointer options, OptionInfoPtr p,
 	    }
 	    xf86ErrorFVerb(2, "\n");
 	}
-	xfree(n);
+	free(n);
     } else {
 	p->found = FALSE;
     }
@@ -843,7 +843,7 @@ xf86NormalizeName(const char *s)
     if (s == NULL)
 	return NULL;
 
-    ret = xalloc(strlen(s) + 1);
+    ret = malloc(strlen(s) + 1);
     for (p = s, q = ret; *p != 0; p++) {
 	switch (*p) {
 	case '_':

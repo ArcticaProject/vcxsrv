@@ -157,8 +157,8 @@ static int dmxPropertyCheckOtherServers(DMXScreenInfo *dmxScreen, Atom atom)
                     dmxLogOutputWarning(dmxScreen,
                                         "%s also running on %s\n",
                                         tp.value, dmxScreen->name);
-                    list = xrealloc(list, ++count * sizeof(*list));
-                    list[count-1] = xalloc(tp.nitems + 2);
+                    list = realloc(list, ++count * sizeof(*list));
+                    list[count-1] = malloc(tp.nitems + 2);
                     strncpy(list[count-1], (char *)tp.value, tp.nitems + 1);
                 }
                 XFree(tp.value);
@@ -167,8 +167,8 @@ static int dmxPropertyCheckOtherServers(DMXScreenInfo *dmxScreen, Atom atom)
     }
     XSetErrorHandler(dmxOldHandler);
 
-    for (i = 0; i < count; i++) xfree(list[i]);
-    xfree(list);
+    for (i = 0; i < count; i++) free(list[i]);
+    free(list);
     XFree(tproot.value);
     if (!retcode)
         dmxLogOutput(dmxScreen, "No Xdmx server running on backend\n");

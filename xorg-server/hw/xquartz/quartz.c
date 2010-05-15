@@ -122,7 +122,7 @@ Bool QuartzAddScreen(
     ScreenPtr pScreen)
 {
     // allocate space for private per screen Quartz specific storage
-    QuartzScreenPtr displayInfo = xcalloc(sizeof(QuartzScreenRec), 1);
+    QuartzScreenPtr displayInfo = calloc(sizeof(QuartzScreenRec), 1);
 
     // QUARTZ_PRIV(pScreen) = displayInfo;
     dixSetPrivate(&pScreen->devPrivates, quartzScreenKey, displayInfo);
@@ -279,7 +279,6 @@ void QuartzUpdateScreens(void) {
     pRoot = WindowTable[pScreen->myNum];
     AppleWMSetScreenOrigin(pRoot);
     pScreen->ResizeWindow(pRoot, x - sx, y - sy, width, height, NULL);
-    //pScreen->PaintWindowBackground (pRoot, &pRoot->borderClip,  PW_BACKGROUND);
     miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);
 
     /* <rdar://problem/7770779> pointer events are clipped to old display region after display reconfiguration

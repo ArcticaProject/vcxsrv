@@ -151,12 +151,7 @@ SELinuxLabelClient(ClientPtr client)
 	if (bytes <= 0)
 	    goto finish;
 
-	subj->command = xalloc(bytes);
-	if (!subj->command)
-	    goto finish;
-
-	memcpy(subj->command, path, bytes);
-	subj->command[bytes - 1] = 0;
+	strncpy(subj->command, path, COMMAND_LEN - 1);
     }
 
 finish:
@@ -464,7 +459,7 @@ SELinuxExtension(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 
     /* If this is a new object that needs labeling, do it now */
     /* XXX there should be a separate callback for this */
-    if (obj->sid == unlabeled_sid) {
+    if (obj->sid == NULL) {
 	security_id_t sid;
 
 	serv = dixLookupPrivate(&serverClient->devPrivates, subjectKey);
@@ -809,39 +804,6 @@ SELinuxResourceState(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 }
 
 
-/*
- * DevPrivates Callbacks
- */
-
-static void
-SELinuxSubjectInit(CallbackListPtr *pcbl, pointer unused, pointer calldata)
-{
-    PrivateCallbackRec *rec = calldata;
-    SELinuxSubjectRec *subj = *rec->value;
-
-    subj->sid = unlabeled_sid;
-
-    avc_entry_ref_init(&subj->aeref);
-}
-
-static void
-SELinuxSubjectFree(CallbackListPtr *pcbl, pointer unused, pointer calldata)
-{
-    PrivateCallbackRec *rec = calldata;
-    SELinuxSubjectRec *subj = *rec->value;
-
-    xfree(subj->command);
-}
-
-static void
-SELinuxObjectInit(CallbackListPtr *pcbl, pointer unused, pointer calldata)
-{
-    PrivateCallbackRec *rec = calldata;
-    SELinuxObjectRec *obj = *rec->value;
-
-    obj->sid = unlabeled_sid;
-}
-
 static int netlink_fd;
 
 static void
@@ -953,11 +915,6 @@ SELinuxFlaskInit(void)
                                    NULL);
 
     /* Register callbacks */
-    ret &= dixRegisterPrivateInitFunc(subjectKey, SELinuxSubjectInit, NULL);
-    ret &= dixRegisterPrivateDeleteFunc(subjectKey, SELinuxSubjectFree, NULL);
-    ret &= dixRegisterPrivateInitFunc(objectKey, SELinuxObjectInit, NULL);
-    ret &= dixRegisterPrivateInitFunc(dataKey, SELinuxObjectInit, NULL);
-
     ret &= AddCallback(&ClientStateCallback, SELinuxClientState, NULL);
     ret &= AddCallback(&ResourceStateCallback, SELinuxResourceState, NULL);
 

@@ -532,7 +532,7 @@ Bool glxInitVisuals(int *nvisualp, VisualPtr *visualp,
 
     /* Free the private list created by DDX HW driver */
     if (visualPrivates)
-        xfree(visualPrivates);
+        free(visualPrivates);
     visualPrivates = NULL;
 
     return TRUE;

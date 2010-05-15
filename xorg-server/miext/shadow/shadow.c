@@ -107,7 +107,7 @@ shadowCloseScreen(int i, ScreenPtr pScreen)
 #endif
     if (pBuf->pPixmap)
 	pScreen->DestroyPixmap(pBuf->pPixmap);
-    xfree(pBuf);
+    free(pBuf);
     return pScreen->CloseScreen(i, pScreen);
 }
 
@@ -139,7 +139,7 @@ shadowSetup(ScreenPtr pScreen)
     if (!DamageSetup(pScreen))
 	return FALSE;
 
-    pBuf = xalloc(sizeof(shadowBufRec));
+    pBuf = malloc(sizeof(shadowBufRec));
     if (!pBuf)
 	return FALSE;
 #ifdef BACKWARDS_COMPATIBILITY
@@ -154,7 +154,7 @@ shadowSetup(ScreenPtr pScreen)
 				 TRUE, pScreen, pScreen);
 #endif
     if (!pBuf->pDamage) {
-	xfree(pBuf);
+	free(pBuf);
 	return FALSE;
     }
 

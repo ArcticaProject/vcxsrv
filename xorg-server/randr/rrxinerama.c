@@ -105,7 +105,7 @@ ProcRRXineramaQueryVersion(ClientPtr client)
         swaps(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xPanoramiXQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 int
@@ -143,7 +143,7 @@ ProcRRXineramaGetState(ClientPtr client)
        swapl (&rep.window, n);
     }
     WriteToClient(client, sizeof(xPanoramiXGetStateReply), (char *)&rep);
-    return client->noClientException;
+    return Success;
 }
 
 static Bool
@@ -198,7 +198,7 @@ ProcRRXineramaGetScreenCount(ClientPtr client)
        swapl(&rep.window, n);
     }
     WriteToClient(client, sizeof(xPanoramiXGetScreenCountReply), (char *)&rep);
-    return client->noClientException;
+    return Success;
 }
 
 int
@@ -234,7 +234,7 @@ ProcRRXineramaGetScreenSize(ClientPtr client)
        swapl(&rep.screen, n);
     }
     WriteToClient(client, sizeof(xPanoramiXGetScreenSizeReply), (char *)&rep);
-    return client->noClientException;
+    return Success;
 }
 
 int
@@ -256,7 +256,7 @@ ProcRRXineramaIsActive(ClientPtr client)
 	swapl(&rep.state, n);
     }
     WriteToClient(client, sizeof(xXineramaIsActiveReply), (char *) &rep);
-    return client->noClientException;
+    return Success;
 }
 
 static void
@@ -341,7 +341,7 @@ ProcRRXineramaQueryScreens(ClientPtr client)
 	}
     }
 
-    return client->noClientException;
+    return Success;
 }
 
 static int

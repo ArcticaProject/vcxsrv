@@ -311,7 +311,7 @@ int generate_modkeymap(ClientPtr client, DeviceIntPtr dev,
         }
     }
 
-    modkeymap = xcalloc(max_keys_per_mod * 8, sizeof(KeyCode));
+    modkeymap = calloc(max_keys_per_mod * 8, sizeof(KeyCode));
     if (!modkeymap)
         return BadAlloc;
 

@@ -196,7 +196,7 @@ __glXContextDestroy(__GLXcontext *context)
 static void __glXdirectContextDestroy(__GLXcontext *context)
 {
     __glXContextDestroy(context);
-    xfree(context);
+    free(context);
 }
 
 static __GLXcontext *__glXdirectContextCreate(__GLXscreen *screen,
@@ -205,7 +205,7 @@ static __GLXcontext *__glXdirectContextCreate(__GLXscreen *screen,
 {
     __GLXcontext *context;
 
-    context = xcalloc (1, sizeof (__GLXcontext));
+    context = calloc(1, sizeof (__GLXcontext));
     if (context == NULL)
 	return NULL;
 
@@ -407,9 +407,9 @@ static int AddCurrentContext(__GLXclientState *cl, __GLXcontext *glxc)
     ** Didn't find a free slot, so we'll have to grow the table.
     */
     if (!num) {
-	table = (__GLXcontext **) xalloc(sizeof(__GLXcontext *));
+	table = (__GLXcontext **) malloc(sizeof(__GLXcontext *));
     } else {
-	table = (__GLXcontext **) xrealloc(table,
+	table = (__GLXcontext **) realloc(table,
 					   (num+1)*sizeof(__GLXcontext *));
     }
     table[num] = glxc;
@@ -1527,7 +1527,7 @@ DoQueryContext(__GLXclientState *cl, GLXContextID gcId)
     reply.n = nProps;
 
     nReplyBytes = reply.length << 2;
-    sendBuf = (int *)xalloc((size_t)nReplyBytes);
+    sendBuf = (int *)malloc((size_t)nReplyBytes);
     if (sendBuf == NULL) {
 	return __glXError(GLXBadContext);	/* XXX: Is this correct? */
     }
@@ -1545,7 +1545,7 @@ DoQueryContext(__GLXclientState *cl, GLXContextID gcId)
 	WriteToClient(client, sz_xGLXQueryContextInfoEXTReply, (char *)&reply);
 	WriteToClient(client, nReplyBytes, (char *)sendBuf);
     }
-    xfree((char *)sendBuf);
+    free((char *)sendBuf);
 
     return Success;
 }
@@ -1947,9 +1947,9 @@ int __glXDisp_RenderLarge(__GLXclientState *cl, GLbyte *pc)
 	*/
 	if (cl->largeCmdBufSize < cmdlen) {
 	    if (!cl->largeCmdBuf) {
-		cl->largeCmdBuf = (GLbyte *) xalloc(cmdlen);
+		cl->largeCmdBuf = (GLbyte *) malloc(cmdlen);
 	    } else {
-		cl->largeCmdBuf = (GLbyte *) xrealloc(cl->largeCmdBuf, cmdlen);
+		cl->largeCmdBuf = (GLbyte *) realloc(cl->largeCmdBuf, cmdlen);
 	    }
 	    if (!cl->largeCmdBuf) {
 		return BadAlloc;
@@ -2351,7 +2351,7 @@ int __glXDisp_QueryExtensionsString(__GLXclientState *cl, GLbyte *pc)
     reply.n = n;
 
     /* Allocate buffer to make sure it's a multiple of 4 bytes big.*/
-    buf = (char *) xalloc(length << 2);
+    buf = (char *) malloc(length << 2);
     if (buf == NULL)
         return BadAlloc;
     memcpy(buf, pGlxScreen->GLXextensions, n);
@@ -2363,7 +2363,7 @@ int __glXDisp_QueryExtensionsString(__GLXclientState *cl, GLbyte *pc)
         WriteToClient(client, (int)(length << 2), (char *)buf);
     }
 
-    xfree(buf);
+    free(buf);
     return Success;
 }
 
@@ -2407,7 +2407,7 @@ int __glXDisp_QueryServerString(__GLXclientState *cl, GLbyte *pc)
     reply.length = length;
     reply.n = n;
 
-    buf = (char *) xalloc(length << 2);
+    buf = (char *) malloc(length << 2);
     if (buf == NULL) {
         return BadAlloc;
     }
@@ -2420,7 +2420,7 @@ int __glXDisp_QueryServerString(__GLXclientState *cl, GLbyte *pc)
         WriteToClient(client, (int)(length << 2), buf);
     }
 
-    xfree(buf);
+    free(buf);
     return Success;
 }
 
@@ -2432,7 +2432,7 @@ int __glXDisp_ClientInfo(__GLXclientState *cl, GLbyte *pc)
     cl->GLClientmajorVersion = req->major;
     cl->GLClientminorVersion = req->minor;
     if (cl->GLClientextensions)
-	xfree(cl->GLClientextensions);
+	free(cl->GLClientextensions);
     buf = (const char *)(req+1);
     cl->GLClientextensions = xstrdup(buf);
 

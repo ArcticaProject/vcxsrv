@@ -567,7 +567,7 @@ addInputHandler(int fd, InputHandlerProc proc, pointer data)
     if (fd < 0 || !proc)
 	return NULL;
 
-    ih = xcalloc(sizeof(*ih), 1);
+    ih = calloc(sizeof(*ih), 1);
     if (!ih)
 	return NULL;
 
@@ -616,7 +616,7 @@ removeInputHandler(IHPtr ih)
 	if (ih)
 	    p->next = ih->next;
     }
-    xfree(ih);
+    free(ih);
 }
 
 int

@@ -73,13 +73,13 @@ ephyrCardInit (KdCardInfo *card)
 {
   EphyrPriv	*priv;
   
-  priv = (EphyrPriv *) xalloc (sizeof (EphyrPriv));
+  priv = (EphyrPriv *) malloc(sizeof (EphyrPriv));
   if (!priv)
     return FALSE;
   
   if (!ephyrInitialize (card, priv))
     {
-      xfree (priv);
+      free(priv);
       return FALSE;
     }
   card->driver = priv;
@@ -185,7 +185,7 @@ ephyrScreenInit (KdScreenInfo *screen)
 {
   EphyrScrPriv *scrpriv;
   
-  scrpriv = xcalloc (1, sizeof (EphyrScrPriv));
+  scrpriv = calloc(1, sizeof (EphyrScrPriv));
 
   if (!scrpriv)
     return FALSE;
@@ -195,7 +195,7 @@ ephyrScreenInit (KdScreenInfo *screen)
   if (!ephyrScreenInitialize (screen, scrpriv))
     {
       screen->driver = 0;
-      xfree (scrpriv);
+      free(scrpriv);
       return FALSE;
     }
 
@@ -737,7 +737,7 @@ ephyrScreenFini (KdScreenInfo *screen)
     if (scrpriv->shadow) {
         KdShadowFbFree (screen);
     }
-    xfree(screen->driver);
+    free(screen->driver);
     screen->driver = NULL;
 }
 
@@ -1023,7 +1023,7 @@ void
 ephyrCardFini (KdCardInfo *card)
 {
   EphyrPriv	*priv = card->driver;
-  xfree (priv);
+  free(priv);
 }
 
 void
@@ -1075,11 +1075,11 @@ static Status
 MouseInit (KdPointerInfo *pi)
 {
     pi->driverPrivate = (EphyrPointerPrivate *)
-                         xcalloc(sizeof(EphyrPointerPrivate), 1);
+                         calloc(sizeof(EphyrPointerPrivate), 1);
     ((EphyrPointerPrivate *)pi->driverPrivate)->enabled = FALSE;
     pi->nAxes = 3;
     pi->nButtons = 32;
-    xfree(pi->name);
+    free(pi->name);
     pi->name = strdup("Xephyr virtual mouse");
     ephyrMouse = pi;
     return Success;
@@ -1121,7 +1121,7 @@ static Status
 EphyrKeyboardInit (KdKeyboardInfo *ki)
 {
   ki->driverPrivate = (EphyrKbdPrivate *)
-                       xcalloc(sizeof(EphyrKbdPrivate), 1);
+                       calloc(sizeof(EphyrKbdPrivate), 1);
   hostx_load_keymap();
   if (!ephyrKeySyms.map) {
       ErrorF("Couldn't load keymap from host\n");
@@ -1129,7 +1129,7 @@ EphyrKeyboardInit (KdKeyboardInfo *ki)
   }
   ki->minScanCode = ephyrKeySyms.minKeyCode;
   ki->maxScanCode = ephyrKeySyms.maxKeyCode;
-  xfree(ki->name);
+  free(ki->name);
   ki->name = strdup("Xephyr virtual keyboard");
   ephyrKbd = ki;
   return Success;

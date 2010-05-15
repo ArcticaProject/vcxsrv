@@ -529,7 +529,7 @@ getAllRanges(int *nmr)
 	mro.mo_arg[0] = *nmr;
 	mro.mo_desc = mrd;
 	if (ioctl(devMemFd, MEMRANGE_GET, &mro)) {
-		xfree(mrd);
+		free(mrd);
 		return NULL;
 	}
 	return mrd;
@@ -576,7 +576,7 @@ cleanMTRR()
 #ifdef DEBUG
 	sleep(10);
 #endif
-	xfree(mrd);
+	free(mrd);
 	return TRUE;
 }
 
@@ -594,7 +594,7 @@ freeRangeList(RangePtr range)
 	while (range) {
 		rp = range;
 		range = rp->next;
-		xfree(rp);
+		free(rp);
 	}
 }
 
@@ -679,7 +679,7 @@ findRanges(unsigned long base, unsigned long size, RangePtr *ucp, RangePtr *wcp)
 			*p = rp;
 		}
 	}
-	xfree(mrd);
+	free(mrd);
 }
 
 /*
@@ -886,7 +886,7 @@ NetBSDsetWC(int screenNum, unsigned long base, unsigned long size, Bool enable,
 	n = 1;
 
 	if (i386_set_mtrr(mtrrp, &n) < 0) {
-		xfree(mtrrp);
+		free(mtrrp);
 		return NULL;
 	}
 	return mtrrp;
@@ -903,6 +903,6 @@ NetBSDundoWC(int screenNum, pointer list)
 	n = 1;
 	mtrrp->flags &= ~MTRR_VALID;
 	i386_set_mtrr(mtrrp, &n);
-	xfree(mtrrp);
+	free(mtrrp);
 }
 #endif

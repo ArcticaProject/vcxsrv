@@ -186,7 +186,7 @@ xf86InterpretEDID(int scrnIndex, Uchar *block)
     return (m);
 
  error:
-    xfree(m);
+    free(m);
     return NULL;
 }
 

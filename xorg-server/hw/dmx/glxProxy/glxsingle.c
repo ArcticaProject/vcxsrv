@@ -254,7 +254,7 @@ int __glXForwardPipe0WithReply( __GLXclientState *cl, GLbyte *pc )
     _XReply(dpy, (xReply*) &be_reply, 0, False);
     be_buf_size = be_reply.length << 2;
     if (be_buf_size > 0) {
-       be_buf = (char *)Xalloc( be_buf_size );
+       be_buf = (char *)malloc( be_buf_size );
        if (be_buf) {
 	  _XRead(dpy, be_buf, be_buf_size);
        }
@@ -349,7 +349,7 @@ int __glXForwardAllWithReply( __GLXclientState *cl, GLbyte *pc )
        _XReply(dpy, (xReply*) &be_reply, 0, False);
        be_buf_size = be_reply.length << 2;
        if (be_buf_size > 0) {
-	  be_buf = (char *)Xalloc( be_buf_size );
+	  be_buf = (char *)malloc( be_buf_size );
 	  if (be_buf) {
 	     _XRead(dpy, be_buf, be_buf_size);
 	  }
@@ -801,7 +801,7 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
 
     buf_size = __glReadPixels_size(format,type,width,height, &ebits, &rowsize);
     if (buf_size > 0) {
-       buf = (char *) Xalloc( buf_size );
+       buf = (char *) malloc( buf_size );
        if ( !buf ) {
 	  return( BadAlloc );
        }
@@ -880,7 +880,7 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
 		char *be_buf;
 		int be_buf_size = be_reply.length << 2;
 
-		be_buf = (char *) Xalloc( be_buf_size );
+		be_buf = (char *) malloc( be_buf_size );
 		if (be_buf) {
 		   _XRead(dpy, be_buf, be_buf_size);
 

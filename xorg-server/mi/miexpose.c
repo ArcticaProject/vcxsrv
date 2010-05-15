@@ -297,7 +297,7 @@ miHandleExposures(DrawablePtr pSrcDrawable, DrawablePtr pDstDrawable,
 
 	if (extents)
 	{
-	    /* PaintWindowBackground doesn't clip, so we have to */
+	    /* miPaintWindow doesn't clip, so we have to */
 	    REGION_INTERSECT(pscr, &rgnExposed, &rgnExposed, &pWin->clipList);
 	}
 	miPaintWindow((WindowPtr)pDstDrawable, &rgnExposed, PW_BACKGROUND);
@@ -358,7 +358,7 @@ miSendGraphicsExpose (ClientPtr client, RegionPtr pRgn, XID drawable,
 
 	numRects = REGION_NUM_RECTS(pRgn);
 	pBox = REGION_RECTS(pRgn);
-	if(!(pEvent = xalloc(numRects * sizeof(xEvent))))
+	if(!(pEvent = malloc(numRects * sizeof(xEvent))))
 		return;
 	pe = pEvent;
 
@@ -376,7 +376,7 @@ miSendGraphicsExpose (ClientPtr client, RegionPtr pRgn, XID drawable,
 	}
 	TryClientEvents(client, NULL, pEvent, numRects,
 			    (Mask)0, NoEventMask, NullGrab);
-	xfree(pEvent);
+	free(pEvent);
     }
     else
     {
@@ -402,7 +402,7 @@ miSendExposures( WindowPtr pWin, RegionPtr pRgn, int dx, int dy)
 
     pBox = REGION_RECTS(pRgn);
     numRects = REGION_NUM_RECTS(pRgn);
-    if(!(pEvent = xcalloc(1, numRects * sizeof(xEvent))))
+    if(!(pEvent = calloc(1, numRects * sizeof(xEvent))))
 	return;
 
     for (i=numRects, pe = pEvent; --i >= 0; pe++, pBox++)
@@ -432,7 +432,7 @@ miSendExposures( WindowPtr pWin, RegionPtr pRgn, int dx, int dy)
 	    win = PanoramiXFindIDByScrnum(XRT_WINDOW, 
 			pWin->drawable.id, scrnum);
 	    if(!win) {
-		xfree(pEvent);
+		free(pEvent);
 		return;
 	    }
 	    realWin = win->info[0].id;
@@ -449,7 +449,7 @@ miSendExposures( WindowPtr pWin, RegionPtr pRgn, int dx, int dy)
 
     DeliverEvents(pWin, pEvent, numRects, NullWindow);
 
-    xfree(pEvent);
+    free(pEvent);
 }
 
 void
@@ -497,7 +497,7 @@ miWindowExposures( WindowPtr pWin, RegionPtr prgn, RegionPtr other_exposed)
 		REGION_RESET( pWin->drawable.pScreen, exposures, &box);
 		REGION_UNION( pWin->drawable.pScreen, prgn, prgn, exposures);
 	    }
-	    /* PaintWindowBackground doesn't clip, so we have to */
+	    /* miPaintWindow doesn't clip, so we have to */
 	    REGION_INTERSECT( pWin->drawable.pScreen, prgn, prgn, &pWin->clipList);
 	}
 	if (prgn && !REGION_NIL(prgn))
@@ -646,18 +646,18 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
 	gcmask |= GCFillStyle | GCTile | GCTileStipXOrigin | GCTileStipYOrigin;
     }
 
-    prect = xalloc(REGION_NUM_RECTS(prgn) * sizeof(xRectangle));
+    prect = malloc(REGION_NUM_RECTS(prgn) * sizeof(xRectangle));
     if (!prect)
 	return;
 
     pGC = GetScratchGC(drawable->depth, drawable->pScreen);
     if (!pGC)
     {
-	xfree(prect);
+	free(prect);
 	return;
     }
     
-    dixChangeGC (NullClient, pGC, gcmask, NULL, gcval);
+    ChangeGC (NullClient, pGC, gcmask, gcval);
     ValidateGC (drawable, pGC);
 
     numRects = REGION_NUM_RECTS(prgn);
@@ -671,7 +671,7 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
     }
     prect -= numRects;
     (*pGC->ops->PolyFillRect)(drawable, pGC, numRects, prect);
-    xfree(prect);
+    free(prect);
 
     FreeScratchGC(pGC);
 }
@@ -683,17 +683,18 @@ miPaintWindow(WindowPtr pWin, RegionPtr prgn, int what)
 void
 miClearDrawable(DrawablePtr pDraw, GCPtr pGC)
 {
-    XID fg = pGC->fgPixel;
-    XID bg = pGC->bgPixel;
+    ChangeGCVal fg, bg;
     xRectangle rect;
 
+    fg.val = pGC->fgPixel;
+    bg.val = pGC->bgPixel;
     rect.x = 0;
     rect.y = 0;
     rect.width = pDraw->width;
     rect.height = pDraw->height;
-    DoChangeGC(pGC, GCForeground, &bg, 0);
+    ChangeGC(NullClient, pGC, GCForeground, &bg);
     ValidateGC(pDraw, pGC);
     (*pGC->ops->PolyFillRect)(pDraw, pGC, 1, &rect);
-    DoChangeGC(pGC, GCForeground, &fg, 0);
+    ChangeGC(NullClient, pGC, GCForeground, &fg);
     ValidateGC(pDraw, pGC);
 }

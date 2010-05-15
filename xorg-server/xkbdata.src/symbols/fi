@@ -1,209 +1,186 @@
-// based on a keyboard map from an 'xkb/symbols/fi' file
 //
 // $XKeyboardConfig$
-// $XFree86: xc/programs/xkbcomp/symbols/fi,v 1.9 2003/01/29 17:17:31 dawes Exp $
+//
+// X keyboard maps for Finland
+//
+// SFS 5966 / Kotoistus keymap created by Troy Korjuslommi
+// Classic keymap based on traditional by Marko Myllynen
+// Eliminate deadkeys alternative sent by Linus Torvalds
+//
 
-// Troy Korjuslommi, 
-// Jan  6, 2006
-// May  5, 2006
-// May  6, 2006
-// May 12, 2006
-// Oct 10, 2007
-// Nov 11, 2008
-// Nov 29, 2008
-// Dec 31, 2008
-// Jan 22, 2009
 //
+// Missing from X11/keysymdef.h as of 2010-05-13
 //
-// Jan 22, 2009
-// Submit requests to change all remaining Uxxxx values to named versions
-// in keysymdef.h.
-// ezh      : U0292: LATIN SMALL LETTER EZH
-// Ezh      : U01B7: LATIN CAPITAL LETTER EZH
-// permille : U2030: PER MILLE SIGN
-// 
-// Dec 31, 2008
-// U0326 replaced with dead_belowcomma.
-// 
-// Nov 29, 2008
-// dead_belowcomma has been added to keysymdef.h, so the U0326 can be replaced with
-// it, as long as the version of X11 is built with the new keysymdef.h file.
-// 
-// Nov 11, 2008.
-// (a) Changed <AC10> level 4 from Ooblique to Oslash. The two names are synonyms. Since level 3 is already
-//     specified as oslash, the change adds consistency.
-// (b) The new Finnish keyboard standard (SFS 5966) reserves <AB10> level 4 for U0326, the combining comma below. 
-//     Removed the previous dead_abovedot entry there and replaced it with U0326, which can be replaced
-//     with dead_commabelow if that is added to keysymdef.h.
-// 
-// Oct 10, 2007.
-// -Changed space column 3 to nobreakspace (from space).
-// -Changed UFE63 entries to dead_stroke.
-// 
-// Nov 29, 2006.
-// UFE63 can be changed to dead_stroke starting with version 7.0.7. of the X server.
+// U2030 # PER MILLE SIGN
+// U0292 # LATIN SMALL LETTER EZH
+// U01B7 # LATIN CAPITAL LETTER EZH
 //
-// Dec 05, 2006.
-// Changed instances of NoSymbol in columns 3 and 4 to characters in columns 1 and 2.
-// This fixes a bug where the mappings couldn't be changed (with xmodmap for example).
-// NoSymbol left in other positions, so nothing is output from those key presses.
-//
-// Dec 11, 2006.
-// Changed all Uxxxx values to named versions.
-// If you have problems, check these defines (when compiling X):
-// XK_LATIN9: oe, OE.
-// XK_CURRENCY: EuroSign.
-// XK_LATIN2: caron.
-// XK_LATIN3: idotless.
-// XK_LATIN4: kra, eng, ENG.
-// XK_CAUCASUS: schwa, SCHWA.
-// XK_PUBLISHING: rightdoublequotemark, leftdoublequotemark, singlelowquotemark, doublelowquotemark, emdash,
-//                rightsinglequotemark, leftsinglequotemark, endash.
-// 
-// Unnamed positions: 
-// UFE63: dead_stroke. Will be fixed, once the entry is in keysymdef.h.
-// U0292: LATIN SMALL LETTER EZH. 
-// U01B7: LATIN CAPITAL LETTER EZH.
-// U2030: PER MILLE SIGN.
-//        Comment: XK_MillSign is U+20A5 MILL SIGN. 
-//                 Per mille is a generic term for 1/1000. Mill is 1/1000 of a dollar.
-// 
 
-partial default alphanumeric_keys
+partial alphanumeric_keys default
 xkb_symbols "kotoistus" {
+
+    // Official keymap for Finland based on SFS 5966 standard
+    //
+    // This keymap implements all the functionality of Annex 1
+    // of the standard and additionally defines the following to
+    // allow entering these characters with keyboars without LSGT.
+    //
+    // AE08+4, U+003C : LESS-THAN SIGN     (less)
+    // AE09+4, U+003E : GREATER-THAN SIGN  (greater)
+    // AD08+4, U+007C : VERTICAL LINE      (bar)
+    //
+    // Annex 3 of the standard is implemented in fi_FI.UTF-8/Compose
 
     name[Group1]="Finland";
 
-    key <TLDE> { [  section,         onehalf,          dead_stroke,          NoSymbol             ] };
-    key <AE01> { [  1,               exclam,           NoSymbol,             exclamdown           ] };
-    key <AE02> { [  2,               quotedbl,         at,                   rightdoublequotemark ] };
-    key <AE03> { [  3,               numbersign,       sterling,             guillemotright       ] };
-    key <AE04> { [  4,               currency,         dollar,               guillemotleft        ] };
-    key <AE05> { [  5,               percent,          U2030,                leftdoublequotemark  ] };
-    key <AE06> { [  6,               ampersand,        singlelowquotemark,   doublelowquotemark   ] };
-    key <AE07> { [  7,               slash,            braceleft,            NoSymbol             ] };
-    key <AE08> { [  8,               parenleft,        bracketleft,          less                 ] };
-    key <AE09> { [  9,               parenright,       bracketright,         greater              ] };
-    key <AE10> { [  0,               equal,            braceright,           degree               ] };
-    key <AE11> { [  plus,            question,         backslash,            questiondown         ] };
-    key <AE12> { [  dead_acute,      dead_grave,       dead_cedilla,         dead_ogonek          ] };
-    key <AD01> { [  q,               Q,                q,                    Q                    ] };
-    key <AD02> { [  w,               W,                w,                    W                    ] };
-    key <AD03> { [  e,               E,                EuroSign,             NoSymbol             ] };
-    key <AD04> { [  r,               R,                r,                    R                    ] };
-    key <AD05> { [  t,               T,                thorn,                THORN                ] };
-    key <AD06> { [  y,               Y,                y,                    Y                    ] };
-    key <AD07> { [  u,               U,                u,                    U                    ] };
-    key <AD08> { [  i,               I,                idotless,             bar                  ] };
-    key <AD09> { [  o,               O,                oe,                   OE                   ] };
-    key <AD10> { [  p,               P,                dead_horn,            dead_hook            ] };
-    key <AD11> { [  aring,           Aring,            dead_doubleacute,     dead_abovering       ] };
-    key <AD12> { [  dead_diaeresis,  dead_circumflex,  dead_tilde,           dead_macron          ] };
-    key <AC01> { [  a,               A,                schwa,                SCHWA                ] };
-    key <AC02> { [  s,               S,                ssharp,               NoSymbol             ] };
-    key <AC03> { [  d,               D,                eth,                  ETH                  ] };
-    key <AC04> { [  f,               F,                f,                    F                    ] };
-    key <AC05> { [  g,               G,                g,                    G                    ] };
-    key <AC06> { [  h,               H,                h,                    H                    ] };
-    key <AC07> { [  j,               J,                j,                    J                    ] };
-    key <AC08> { [  k,               K,                kra,                  NoSymbol             ] };
-    key <AC09> { [  l,               L,                dead_stroke,          NoSymbol             ] };
-    key <AC10> { [  odiaeresis,      Odiaeresis,       oslash,               Oslash               ] };
-    key <AC11> { [  adiaeresis,      Adiaeresis,       ae,                   AE                   ] };
-    key <BKSL> { [  apostrophe,      asterisk,         dead_caron,           dead_breve           ] };
-    key <LSGT> { [  less,            greater,          bar,                  NoSymbol             ] };
-    key <AB01> { [  z,               Z,                U0292,                U01B7                ] };
-    key <AB02> { [  x,               X,                multiply,             periodcentered       ] };
-    key <AB03> { [  c,               C,                c,                    C                    ] };
-    key <AB04> { [  v,               V,                v,                    V                    ] };
-    key <AB05> { [  b,               B,                b,                    B                    ] };
-    key <AB06> { [  n,               N,                eng,                  ENG                  ] };
-    key <AB07> { [  m,               M,                mu,                   emdash               ] };
-    key <AB08> { [  comma,           semicolon,        rightsinglequotemark, leftsinglequotemark  ] };
-    key <AB09> { [  period,          colon,            dead_belowdot,        dead_abovedot        ] };
-    key <AB10> { [  minus,           underscore,       endash,               dead_belowcomma      ] };
+    key <TLDE> { [  section,         onehalf,          dead_stroke,           NoSymbol              ] };
+    key <AE01> { [  1,               exclam,           NoSymbol,              exclamdown            ] };
+    key <AE02> { [  2,               quotedbl,         at,                    rightdoublequotemark  ] };
+    key <AE03> { [  3,               numbersign,       sterling,              guillemotright        ] };
+    key <AE04> { [  4,               currency,         dollar,                guillemotleft         ] };
+    key <AE05> { [  5,               percent,          U2030,                 leftdoublequotemark   ] };
+    key <AE06> { [  6,               ampersand,        singlelowquotemark,    doublelowquotemark    ] };
+    key <AE07> { [  7,               slash,            braceleft,             NoSymbol              ] };
+    key <AE08> { [  8,               parenleft,        bracketleft,           less                  ] };
+    key <AE09> { [  9,               parenright,       bracketright,          greater               ] };
+    key <AE10> { [  0,               equal,            braceright,            degree                ] };
+    key <AE11> { [  plus,            question,         backslash,             questiondown          ] };
+    key <AE12> { [  dead_acute,      dead_grave,       dead_cedilla,          dead_ogonek           ] };
+
+    key <AD01> { [  q,               Q,                q,                     Q                     ] };
+    key <AD02> { [  w,               W,                w,                     W                     ] };
+    key <AD03> { [  e,               E,                EuroSign,              NoSymbol              ] };
+    key <AD04> { [  r,               R,                r,                     R                     ] };
+    key <AD05> { [  t,               T,                thorn,                 THORN                 ] };
+    key <AD06> { [  y,               Y,                y,                     Y                     ] };
+    key <AD07> { [  u,               U,                u,                     U                     ] };
+    key <AD08> { [  i,               I,                idotless,              bar                   ] };
+    key <AD09> { [  o,               O,                oe,                    OE                    ] };
+    key <AD10> { [  p,               P,                dead_horn,             dead_hook             ] };
+    key <AD11> { [  aring,           Aring,            dead_doubleacute,      dead_abovering        ] };
+    key <AD12> { [  dead_diaeresis,  dead_circumflex,  dead_tilde,            dead_macron           ] };
+
+    key <AC01> { [  a,               A,                schwa,                 SCHWA                 ] };
+    key <AC02> { [  s,               S,                ssharp,                NoSymbol              ] };
+    key <AC03> { [  d,               D,                eth,                   ETH                   ] };
+    key <AC04> { [  f,               F,                f,                     F                     ] };
+    key <AC05> { [  g,               G,                g,                     G                     ] };
+    key <AC06> { [  h,               H,                h,                     H                     ] };
+    key <AC07> { [  j,               J,                j,                     J                     ] };
+    key <AC08> { [  k,               K,                kra,                   NoSymbol              ] };
+    key <AC09> { [  l,               L,                dead_stroke,           NoSymbol              ] };
+    key <AC10> { [  odiaeresis,      Odiaeresis,       oslash,                Oslash                ] };
+    key <AC11> { [  adiaeresis,      Adiaeresis,       ae,                    AE                    ] };
+    key <BKSL> { [  apostrophe,      asterisk,         dead_caron,            dead_breve            ] };
+
+    key <LSGT> { [  less,            greater,          bar,                   NoSymbol              ] };
+    key <AB01> { [  z,               Z,                U0292,                 U01B7                 ] };
+    key <AB02> { [  x,               X,                multiply,              periodcentered        ] };
+    key <AB03> { [  c,               C,                c,                     C                     ] };
+    key <AB04> { [  v,               V,                v,                     V                     ] };
+    key <AB05> { [  b,               B,                b,                     B                     ] };
+    key <AB06> { [  n,               N,                eng,                   ENG                   ] };
+    key <AB07> { [  m,               M,                mu,                    emdash                ] };
+    key <AB08> { [  comma,           semicolon,        rightsinglequotemark,  leftsinglequotemark   ] };
+    key <AB09> { [  period,          colon,            dead_belowdot,         dead_abovedot         ] };
+    key <AB10> { [  minus,           underscore,       endash,                dead_belowcomma       ] };
 
     include "nbsp(level3)"
-
     include "kpdl(comma)"
-
     include "level3(ralt_switch)"
-
     include "compose(rwin)"
 };
 
-
 partial alphanumeric_keys
 xkb_symbols "classic" {
-    include "latin(type2)"
+
     include "fi(fi)"
 
     name[Group1]="Finland - Classic";
 };
 
-hidden partial alphanumeric_keys
+partial alphanumeric_keys hidden
 xkb_symbols "fi" {
 
-    // a Finnish keyboard with dead key support and all of
-    // ISO-8859-1 and ISO-8859-15 characters available.
+    // Classic Finnish keyboard layout with dead keys support
+    // and all ISO-8859-1 and ISO-8859-15 characters available
 
-    key <TLDE> { [ section,    onehalf,     onequarter,   threequarters	] };
-    key <LSGT> { [    less,    greater,            bar,       brokenbar	] };
-    // AltGr+<SPCE> is pressed accidentally too often after AltGr+<LSGT>,
-    // hence AltGr+<SPCE> produces now space, not nobreakspace.
-    key <SPCE> { [   space,      space,          space,    nobreakspace	] };
-    key <AE01> { [       1,     exclam,     exclamdown,     onesuperior	] };
-    key <AE02> { [       2,   quotedbl,             at,     twosuperior	] };
-    key <AE03> { [     	 3, numbersign,       sterling,   threesuperior	] };
-    key <AE04> { [       4,   currency,         dollar,	           cent	] };
-    key <AE05> { [       5,    percent,       EuroSign,	      masculine	] };
-    key <AE06> { [       6,  ampersand,            yen,     ordfeminine	] };
-    key <AE07> { [       7,      slash,      braceleft,       plusminus	] };
-    key <AE08> { [       8,  parenleft,    bracketleft,   guillemotleft	] };
-    key <AE09> { [       9, parenright,   bracketright,  guillemotright	] };
-    key <AE10> { [       0,      equal,     braceright,          degree	] };
-    key <AB09> { [  period,      colon, periodcentered,         notsign	] };
-    key <AB01> { [       z,          Z,         zcaron,	         Zcaron	] };
-    key <AB02> { [       x,          X,       multiply,	       division	] };
-    key <AB03> { [       c,          C,      copyright,	           cent	] };
-    key <AB05> { [       b,          B,         ssharp,        NoSymbol	] };
-    key <AB06> { [       n,          N,         ntilde,	         Ntilde	] };
-    key <AB07> { [       m,          M,             mu,	       NoSymbol	] };
-    key <AB10> { [   minus, underscore,         hyphen,     dead_macron	] };
-    key <AC02> { [       s,          S,         scaron,          Scaron	] };
-    key <AC03> { [       d,          D,            eth,             ETH	] };
-    key <AD03> { [       e,          E,       EuroSign,            cent	] };
-    key <AD04> { [       r,          R,     registered,        NoSymbol	] };
-    key <AD05> { [       t,          T,          thorn,           THORN	] };
-    key <AD10> { [       p,          P,      paragraph,        NoSymbol	] };
-    key <AC10> { [ odiaeresis, Odiaeresis,      oslash,        Ooblique	] };
-    key <AE11> { [    plus,      question,   backslash,    questiondown	] };
-    key	<AC11> { [ adiaeresis, Adiaeresis,         ae,	             AE	] };
-    key <BKSL> { [ apostrophe,   asterisk ] };
-    key <AD11> { [   aring,         Aring,         oe,		     OE	] };
-    key <AE12> { [ dead_acute, dead_grave ] };
-    key <AD12> { [ dead_diaeresis, dead_circumflex, dead_tilde, dead_caron ] };
+    key <TLDE> { [  section,         onehalf,          onequarter,            threequarters         ] };
+    key <AE01> { [  1,               exclam,           exclamdown,            onesuperior           ] };
+    key <AE02> { [  2,               quotedbl,         at,                    twosuperior           ] };
+    key <AE03> { [  3,               numbersign,       sterling,              threesuperior         ] };
+    key <AE04> { [  4,               currency,         dollar,                cent                  ] };
+    key <AE05> { [  5,               percent,          EuroSign,              masculine             ] };
+    key <AE06> { [  6,               ampersand,        yen,                   ordfeminine           ] };
+    key <AE07> { [  7,               slash,            braceleft,             plusminus             ] };
+    key <AE08> { [  8,               parenleft,        bracketleft,           guillemotleft         ] };
+    key <AE09> { [  9,               parenright,       bracketright,          guillemotright        ] };
+    key <AE10> { [  0,               equal,            braceright,            degree                ] };
+    key <AE11> { [  plus,            question,         backslash,             questiondown          ] };
+    key <AE12> { [  dead_acute,      dead_grave,       dead_cedilla,          dead_ogonek           ] };
 
-    // End alphanumeric section, begin "Keypad"
+    key <AD01> { [  q,               Q,                q,                     Q                     ] };
+    key <AD02> { [  w,               W,                w,                     W                     ] };
+    key <AD03> { [  e,               E,                EuroSign,              cent                  ] };
+    key <AD04> { [  r,               R,                registered,            NoSymbol              ] };
+    key <AD05> { [  t,               T,                thorn,                 THORN                 ] };
+    key <AD06> { [  y,               Y,                y,                     Y                     ] };
+    key <AD07> { [  u,               U,                u,                     U                     ] };
+    key <AD08> { [  i,               I,                idotless,              bar                   ] };
+    key <AD09> { [  o,               O,                o,                     O                     ] };
+    key <AD10> { [  p,               P,                paragraph,             NoSymbol              ] };
+    key <AD11> { [  aring,           Aring,            oe,                    OE                    ] };
+    key <AD12> { [  dead_diaeresis,  dead_circumflex,  dead_tilde,            dead_caron            ] };
+
+    key <AC01> { [  a,               A,                schwa,                 SCHWA                 ] };
+    key <AC02> { [  s,               S,                scaron,                Scaron                ] };
+    key <AC03> { [  d,               D,                eth,                   ETH                   ] };
+    key <AC04> { [  f,               F,                f,                     F                     ] };
+    key <AC05> { [  g,               G,                eng,                   ENG                   ] };
+    key <AC06> { [  h,               H,                h,                     H                     ] };
+    key <AC07> { [  j,               J,                j,                     J                     ] };
+    key <AC08> { [  k,               K,                kra,                   NoSymbol              ] };
+    key <AC09> { [  l,               L,                dead_stroke,           NoSymbol              ] };
+    key <AC10> { [  odiaeresis,      Odiaeresis,       oslash,                Oslash                ] };
+    key <AC11> { [  adiaeresis,      Adiaeresis,       ae,                    AE                    ] };
+    key <BKSL> { [  apostrophe,      asterisk,         dead_caron,            dead_breve            ] };
+
+    key <LSGT> { [  less,            greater,          bar,                   brokenbar             ] };
+    key <AB01> { [  z,               Z,                zcaron,                Zcaron                ] };
+    key <AB02> { [  x,               X,                multiply,              division              ] };
+    key <AB03> { [  c,               C,                copyright,             cent                  ] };
+    key <AB04> { [  v,               V,                v,                     V                     ] };
+    key <AB05> { [  b,               B,                ssharp,                NoSymbol              ] };
+    key <AB06> { [  n,               N,                ntilde,                Ntilde                ] };
+    key <AB07> { [  m,               M,                mu,                    NoSymbol              ] };
+    key <AB08> { [  comma,           semicolon,        dead_cedilla,          dead_ogonek           ] };
+    key <AB09> { [  period,          colon,            periodcentered,        notsign               ] };
+    key <AB10> { [  minus,           underscore,       hyphen,                dead_macron           ] };
+
+    include "nbsp(level4)"
     include "kpdl(comma)"
-    // End "Keypad" section
-
     include "level3(ralt_switch)"
+    include "compose(rwin)"
 };
 
 partial alphanumeric_keys
 xkb_symbols "nodeadkeys" {
-    include "latin(type2)"
-    include "latin(type2_nodeadkeys)"
+
+    // Classic Finnish keyboard layout without dead keys
+
     include "fi(fi)"
 
     name[Group1]="Finland - Classic, eliminate dead keys";
 
-    key <AE12> { [     acute,       grave ] };
-    key <AD12> { [ diaeresis, asciicircum, asciitilde,  caron ] };
-    key <AB10> { [     minus,  underscore,     hyphen, macron ] };
+    key <AE12> { [  acute,           grave,            cedilla,               ogonek                ] };
+    key <AD12> { [  diaeresis,       asciicircum,      asciitilde,            caron                 ] };
+    key <AC09> { [  l,               L,                l,                     L                     ] };
+    key <BKSL> { [  apostrophe,      asterisk,         caron,                 breve                 ] };
+    key <AB08> { [  comma,           semicolon,        cedilla,               ogonek                ] };
+    key <AB10> { [  minus,           underscore,       hyphen,                macron                ] };
 };
 
+partial alphanumeric_keys
 xkb_symbols "smi" {
 
     // Describes the differences between a Norwegian Northern Sami
@@ -213,19 +190,18 @@ xkb_symbols "smi" {
 
     include "no(smi)"
 
-    name[Group1]= "Finland - Northern Saami";
+    name[Group1]="Finland - Northern Saami";
 
-    key <AC10>	{ [odiaeresis, Odiaeresis,       oslash,     Ooblique ]	};
-    key <AC11>	{ [adiaeresis, Adiaeresis,           ae,           AE ]	};
+    key <AC10> { [  odiaeresis,      Odiaeresis,       oslash,                Oslash                ] };
+    key <AC11> { [  adiaeresis,      Adiaeresis,       ae,                    AE                    ] };
 };
 
-// Copied from macintosh_vndr/fi
-partial alphanumeric_keys 
+partial alphanumeric_keys
 xkb_symbols "mac" {
 
-    // Describes the differences between a very simple mac_US
-    // keyboard and a very simple Swedish(Finland) keybaord
+    // Macintosh keyboard for Finland based on Swedish(Macintosh) keyboard
 
     include "se(mac)"
-    name[Group1]= "Finland - Macintosh";
+
+    name[Group1]="Finland - Macintosh";
 };

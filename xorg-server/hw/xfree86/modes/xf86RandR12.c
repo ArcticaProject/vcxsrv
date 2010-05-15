@@ -888,13 +888,13 @@ xf86RandR12Init (ScreenPtr pScreen)
     xf86RandR12Index = AllocateScreenPrivateIndex();
 #endif
 
-    randrp = xalloc (sizeof (XF86RandRInfoRec));
+    randrp = malloc(sizeof (XF86RandRInfoRec));
     if (!randrp)
 	return FALSE;
 
     if (!RRScreenInit(pScreen))
     {
-	xfree (randrp);
+	free(randrp);
 	return FALSE;
     }
     rp = rrGetScrPriv(pScreen);
@@ -1064,7 +1064,7 @@ xf86RandR12CrtcNotify (RRCrtcPtr	randr_crtc)
     DisplayModePtr	mode = &crtc->mode;
     Bool		ret;
 
-    randr_outputs = xalloc(config->num_output * sizeof (RROutputPtr));
+    randr_outputs = malloc(config->num_output * sizeof (RROutputPtr));
     if (!randr_outputs)
 	return FALSE;
     x = crtc->x;
@@ -1101,7 +1101,7 @@ xf86RandR12CrtcNotify (RRCrtcPtr	randr_crtc)
 			rotation, 
 			crtc->transformPresent ? &crtc->transform : NULL,
 			numOutputs, randr_outputs);
-    xfree(randr_outputs);
+    free(randr_outputs);
     return ret;
 }
 
@@ -1158,7 +1158,7 @@ xf86RandR12CrtcSet (ScreenPtr	    pScreen,
     if (!crtc->scrn->vtSema)
 	return FALSE;
 
-    save_crtcs = xalloc(config->num_output * sizeof (xf86CrtcPtr));
+    save_crtcs = malloc(config->num_output * sizeof (xf86CrtcPtr));
     if ((randr_mode != NULL) != crtc->enabled)
 	changed = TRUE;
     else if (randr_mode && !xf86RandRModeMatches (randr_mode, &crtc->mode))
@@ -1222,7 +1222,7 @@ xf86RandR12CrtcSet (ScreenPtr	    pScreen,
 		    xf86OutputPtr	output = config->output[o];
 		    output->crtc = save_crtcs[o];
 		}
-		xfree(save_crtcs);
+		free(save_crtcs);
 		return FALSE;
 	    }
 	    xf86RandR13VerifyPanningArea (crtc, pScreen->width, pScreen->height);
@@ -1243,7 +1243,7 @@ xf86RandR12CrtcSet (ScreenPtr	    pScreen,
 	}
 	xf86DisableUnusedFunctions (pScrn);
     }
-    xfree(save_crtcs);
+    free(save_crtcs);
     return xf86RandR12CrtcNotify (randr_crtc);
 }
 
@@ -1394,7 +1394,7 @@ xf86RROutputSetModes (RROutputPtr randr_output, DisplayModePtr modes)
 	nmode++;
 
     if (nmode) {
-	rrmodes = xalloc (nmode * sizeof (RRModePtr));
+	rrmodes = malloc(nmode * sizeof (RRModePtr));
 	
 	if (!rrmodes)
 	    return FALSE;
@@ -1431,7 +1431,7 @@ xf86RROutputSetModes (RROutputPtr randr_output, DisplayModePtr modes)
     }
     
     ret = RROutputSetModes (randr_output, rrmodes, nmode, npreferred);
-    xfree (rrmodes);
+    free(rrmodes);
     return ret;
 }
 
@@ -1450,8 +1450,8 @@ xf86RandR12SetInfo12 (ScreenPtr pScreen)
     RRCrtcPtr		randr_crtc;
     int			nclone;
     
-    clones = xalloc(config->num_output * sizeof (RROutputPtr));
-    crtcs = xalloc (config->num_crtc * sizeof (RRCrtcPtr));
+    clones = malloc(config->num_output * sizeof (RROutputPtr));
+    crtcs = malloc(config->num_crtc * sizeof (RRCrtcPtr));
     for (o = 0; o < config->num_output; o++)
     {
 	xf86OutputPtr	output = config->output[o];
@@ -1468,8 +1468,8 @@ xf86RandR12SetInfo12 (ScreenPtr pScreen)
 
 	if (!RROutputSetCrtcs (output->randr_output, crtcs, ncrtc))
 	{
-	    xfree (crtcs);
-	    xfree (clones);
+	    free(crtcs);
+	    free(clones);
 	    return FALSE;
 	}
 
@@ -1505,13 +1505,13 @@ xf86RandR12SetInfo12 (ScreenPtr pScreen)
 	}
 	if (!RROutputSetClones (output->randr_output, clones, nclone))
 	{
-	    xfree (crtcs);
-	    xfree (clones);
+	    free(crtcs);
+	    free(clones);
 	    return FALSE;
 	}
     }
-    xfree (crtcs);
-    xfree (clones);
+    free(crtcs);
+    free(clones);
     return TRUE;
 }
 
@@ -1729,7 +1729,7 @@ xf86RandR12ChangeGamma(int scrnIndex, Gamma gamma)
     if (!size)
 	return Success;
 
-    points = xcalloc(size, 3 * sizeof(CARD16));
+    points = calloc(size, 3 * sizeof(CARD16));
     if (!points)
 	return BadAlloc;
 
@@ -1742,7 +1742,7 @@ xf86RandR12ChangeGamma(int scrnIndex, Gamma gamma)
     gamma_to_ramp(gamma.blue, blue, size);
     RRCrtcGammaSet(crtc, red, green, blue);
 
-    xfree(points);
+    free(points);
 
     pScrn->gamma = gamma;
 

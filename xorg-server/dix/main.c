@@ -174,7 +174,7 @@ int main(int argc, char *argv[], char *envp[])
 	    InitProcVectors();
 	    for (i=1; i<MAXCLIENTS; i++)
 		clients[i] = NullClient;
-	    serverClient = xalloc(sizeof(ClientRec));
+	    serverClient = malloc(sizeof(ClientRec));
 	    if (!serverClient)
 		FatalError("couldn't create server client");
 	    InitClient(serverClient, 0, (pointer)NULL);
@@ -314,7 +314,7 @@ int main(int argc, char *argv[], char *envp[])
 	    FreeDefaultStipple(i);
 	    (* screenInfo.screens[i]->CloseScreen)(i, screenInfo.screens[i]);
 	    dixFreePrivates(screenInfo.screens[i]->devPrivates);
-	    xfree(screenInfo.screens[i]);
+	    free(screenInfo.screens[i]);
 	    screenInfo.numScreens = i;
 	}
 	FreeFonts();
@@ -337,7 +337,7 @@ int main(int argc, char *argv[], char *envp[])
 	    break;
 	}
 
-	xfree(ConnectionInfo);
+	free(ConnectionInfo);
 	ConnectionInfo = NULL;
     }
     return(0);

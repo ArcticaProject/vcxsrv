@@ -61,7 +61,7 @@ static int double_size(void *p, unsigned n, unsigned size)
 	n = f = BASE_SIZE * size;
     }
 
-    *ptr = xrealloc(*ptr, n);
+    *ptr = realloc(*ptr, n);
     if (!*ptr) {
 	dixResetRegistry();
 	return FALSE;
@@ -285,20 +285,20 @@ dixResetRegistry(void)
     while (nmajor--) {
 	while (nminor[nmajor])
 	    free(requests[nmajor][--nminor[nmajor]]);
-	xfree(requests[nmajor]);
+	free(requests[nmajor]);
     }
-    xfree(requests);
-    xfree(nminor);
+    free(requests);
+    free(nminor);
 
     while (nevent--)
 	free(events[nevent]);
-    xfree(events);
+    free(events);
 
     while (nerror--)
 	free(errors[nerror]);
-    xfree(errors);
+    free(errors);
 
-    xfree(resources);
+    free(resources);
 
     requests = NULL;
     nminor = NULL;

@@ -127,7 +127,7 @@ createModeFromConfig(const __DRIcoreExtension *core,
     unsigned int attrib, value;
     int i;
 
-    config = xalloc(sizeof *config);
+    config = malloc(sizeof *config);
 
     config->driConfig = driConfig;
 

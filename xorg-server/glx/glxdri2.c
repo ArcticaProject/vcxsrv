@@ -107,7 +107,7 @@ __glXDRIdrawableDestroy(__GLXdrawable *drawable)
 
     __glXDrawableRelease(drawable);
 
-    xfree(private);
+    free(private);
 }
 
 static void
@@ -248,7 +248,7 @@ __glXDRIcontextDestroy(__GLXcontext *baseContext)
 
     (*screen->core->destroyContext)(context->driContext);
     __glXContextDestroy(&context->base);
-    xfree(context);
+    free(context);
 }
 
 static int
@@ -386,7 +386,7 @@ __glXDRIscreenDestroy(__GLXscreen *baseScreen)
 
     __glXScreenDestroy(baseScreen);
 
-    xfree(screen);
+    free(screen);
 }
 
 static __GLXcontext *
@@ -405,7 +405,7 @@ __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
     else
 	driShare = NULL;
 
-    context = xcalloc(1, sizeof *context);
+    context = calloc(1, sizeof *context);
     if (context == NULL)
 	return NULL;
 
@@ -422,11 +422,22 @@ __glXDRIscreenCreateContext(__GLXscreen *baseScreen,
 					  config->driConfig,
 					  driShare, context);
     if (context->driContext == NULL) {
-	    xfree(context);
+	    free(context);
         return NULL;
     }
 
     return &context->base;
+}
+
+static void
+__glXDRIinvalidateBuffers(DrawablePtr pDraw, void *priv)
+{
+#if __DRI2_FLUSH_VERSION >= 3
+    __GLXDRIdrawable *private = priv;
+    __GLXDRIscreen *screen = private->screen;
+
+    (*screen->flush->invalidate)(private->driDrawable);
+#endif
 }
 
 static __GLXdrawable *
@@ -442,14 +453,14 @@ __glXDRIscreenCreateDrawable(ClientPtr client,
     __GLXDRIconfig *config = (__GLXDRIconfig *) glxConfig;
     __GLXDRIdrawable *private;
 
-    private = xcalloc(1, sizeof *private);
+    private = calloc(1, sizeof *private);
     if (private == NULL)
 	return NULL;
 
     private->screen = driScreen;
     if (!__glXDrawableInit(&private->base, screen,
 			   pDraw, type, glxDrawId, glxConfig)) {
-        xfree(private);
+        free(private);
 	return NULL;
     }
 
@@ -459,8 +470,9 @@ __glXDRIscreenCreateDrawable(ClientPtr client,
     private->base.waitGL	= __glXDRIdrawableWaitGL;
     private->base.waitX		= __glXDRIdrawableWaitX;
 
-    if (DRI2CreateDrawable(client, pDraw, drawId)) {
-	    xfree(private);
+    if (DRI2CreateDrawable(client, pDraw, drawId,
+			   __glXDRIinvalidateBuffers, private)) {
+	    free(private);
 	    return NULL;
     }
 
@@ -573,9 +585,18 @@ static const __DRIdri2LoaderExtension loaderExtension = {
     dri2GetBuffersWithFormat,
 };
 
+#ifdef __DRI_USE_INVALIDATE
+static const __DRIuseInvalidateExtension dri2UseInvalidate = {
+   { __DRI_USE_INVALIDATE, __DRI_USE_INVALIDATE_VERSION }
+};
+#endif
+
 static const __DRIextension *loader_extensions[] = {
     &systemTimeExtension.base,
     &loaderExtension.base,
+#ifdef __DRI_USE_INVALIDATE
+    &dri2UseInvalidate,
+#endif
     NULL
 };
 
@@ -676,7 +697,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     const __DRIconfig **driConfigs;
     int i;
 
-    screen = xcalloc(1, sizeof *screen);
+    screen = calloc(1, sizeof *screen);
     if (screen == NULL)
 	return NULL;
 
@@ -759,7 +780,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     buffer_size = __glXGetExtensionString(screen->glx_enable_bits, NULL);
     if (buffer_size > 0) {
 	if (screen->base.GLXextensions != NULL) {
-	    xfree(screen->base.GLXextensions);
+	    free(screen->base.GLXextensions);
 	}
 
 	screen->base.GLXextensions = xnfalloc(buffer_size);
@@ -793,7 +814,7 @@ __glXDRIscreenProbe(ScreenPtr pScreen)
     if (screen->driver)
         dlclose(screen->driver);
 
-    xfree(screen);
+    free(screen);
 
     LogMessage(X_ERROR, "AIGLX: reverting to software rendering\n");
 

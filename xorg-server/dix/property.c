@@ -137,8 +137,8 @@ ProcRotateProperties(ClientPtr client)
         return rc;
 
     atoms = (Atom *) & stuff[1];
-    props = xalloc(stuff->nAtoms * sizeof(PropertyPtr));
-    saved = xalloc(stuff->nAtoms * sizeof(PropertyRec));
+    props = malloc(stuff->nAtoms * sizeof(PropertyPtr));
+    saved = malloc(stuff->nAtoms * sizeof(PropertyRec));
     if (!props || !saved) {
 	rc = BadAlloc;
 	goto out;
@@ -188,8 +188,8 @@ ProcRotateProperties(ClientPtr client)
 	}
     }
 out:
-    xfree(saved);
-    xfree(props);
+    free(saved);
+    free(props);
     return rc;
 }
 
@@ -244,7 +244,7 @@ ProcChangeProperty(ClientPtr client)
     if (err != Success)
 	return err;
     else
-	return client->noClientException;
+	return Success;
 }
 
 int
@@ -269,13 +269,13 @@ dixChangeWindowProperty(ClientPtr pClient, WindowPtr pWin, Atom property,
     {
 	if (!pWin->optional && !MakeWindowOptional (pWin))
 	    return(BadAlloc);
-        pProp = xalloc(sizeof(PropertyRec));
+        pProp = malloc(sizeof(PropertyRec));
 	if (!pProp)
 	    return(BadAlloc);
-        data = xalloc(totalSize);
+        data = malloc(totalSize);
 	if (!data && len)
 	{
-	    xfree(pProp);
+	    free(pProp);
 	    return(BadAlloc);
 	}
         memcpy(data, value, totalSize);
@@ -288,8 +288,8 @@ dixChangeWindowProperty(ClientPtr pClient, WindowPtr pWin, Atom property,
 	rc = XaceHookPropertyAccess(pClient, pWin, &pProp,
 				    DixCreateAccess|DixWriteAccess);
 	if (rc != Success) {
-	    xfree(data);
-	    xfree(pProp);
+	    free(data);
+	    free(pProp);
 	    pClient->errorValue = property;
 	    return rc;
 	}
@@ -313,7 +313,7 @@ dixChangeWindowProperty(ClientPtr pClient, WindowPtr pWin, Atom property,
 
         if (mode == PropModeReplace)
         {
-	    data = xalloc(totalSize);
+	    data = malloc(totalSize);
 	    if (!data && len)
 		return(BadAlloc);
 	    memcpy(data, value, totalSize);
@@ -328,7 +328,7 @@ dixChangeWindowProperty(ClientPtr pClient, WindowPtr pWin, Atom property,
 	}
         else if (mode == PropModeAppend)
         {
-	    data = xalloc((pProp->size + len) * sizeInBytes);
+	    data = malloc((pProp->size + len) * sizeInBytes);
 	    if (!data)
 		return(BadAlloc);
 	    memcpy(data, pProp->data, pProp->size * sizeInBytes);
@@ -338,7 +338,7 @@ dixChangeWindowProperty(ClientPtr pClient, WindowPtr pWin, Atom property,
 	}
         else if (mode == PropModePrepend)
         {
-            data = xalloc(sizeInBytes * (len + pProp->size));
+            data = malloc(sizeInBytes * (len + pProp->size));
 	    if (!data)
 		return(BadAlloc);
             memcpy(data + totalSize, pProp->data, pProp->size * sizeInBytes);
@@ -353,12 +353,12 @@ dixChangeWindowProperty(ClientPtr pClient, WindowPtr pWin, Atom property,
 	if (rc == Success)
 	{
 	    if (savedProp.data != pProp->data)
-		xfree(savedProp.data);
+		free(savedProp.data);
 	}
 	else
 	{
 	    if (savedProp.data != pProp->data)
-		xfree(pProp->data);
+		free(pProp->data);
 	    *pProp = savedProp;
 	    return rc;
 	}
@@ -406,8 +406,8 @@ DeleteProperty(ClientPtr client, WindowPtr pWin, Atom propName)
 
 	deliverPropertyNotifyEvent(pWin, PropertyDelete, pProp->propertyName);
 	dixFreePrivates(pProp->devPrivates);
-	xfree(pProp->data);
-        xfree(pProp);
+	free(pProp->data);
+        free(pProp);
     }
     return rc;
 }
@@ -423,8 +423,8 @@ DeleteAllWindowProperties(WindowPtr pWin)
 	deliverPropertyNotifyEvent(pWin, PropertyDelete, pProp->propertyName);
 	pNextProp = pProp->next;
 	dixFreePrivates(pProp->devPrivates);
-        xfree(pProp->data);
-        xfree(pProp);
+        free(pProp->data);
+        free(pProp);
 	pProp = pNextProp;
     }
 }
@@ -442,7 +442,7 @@ NullPropertyReply(
     reply->propertyType = propertyType;
     reply->format = format;
     WriteReplyToClient(client, sizeof(xGenericReply), reply);
-    return(client->noClientException);
+    return Success;
 }
 
 /*****************
@@ -571,10 +571,10 @@ ProcGetProperty(ClientPtr client)
 	}
 
 	dixFreePrivates(pProp->devPrivates);
-	xfree(pProp->data);
-	xfree(pProp);
+	free(pProp->data);
+	free(pProp);
     }
-    return(client->noClientException);
+    return Success;
 }
 
 int
@@ -595,7 +595,7 @@ ProcListProperties(ClientPtr client)
     for (pProp = wUserProps(pWin); pProp; pProp = pProp->next)
 	numProps++;
 
-    if (numProps && !(pAtoms = xalloc(numProps * sizeof(Atom))))
+    if (numProps && !(pAtoms = malloc(numProps * sizeof(Atom))))
 	return BadAlloc;
 
     numProps = 0;
@@ -619,8 +619,8 @@ ProcListProperties(ClientPtr client)
         client->pSwapReplyFunc = (ReplySwapPtr)Swap32Write;
         WriteSwappedDataToClient(client, numProps * sizeof(Atom), pAtoms);
     }
-    xfree(pAtoms);
-    return(client->noClientException);
+    free(pAtoms);
+    return Success;
 }
 
 int 
@@ -641,9 +641,5 @@ ProcDeleteProperty(ClientPtr client)
 	return (BadAtom);
     }
 
-    result = DeleteProperty(client, pWin, stuff->property);
-    if (client->noClientException != Success)
-	return(client->noClientException);
-    else
-	return(result);
+    return DeleteProperty(client, pWin, stuff->property);
 }

@@ -165,7 +165,7 @@ ShadowFBInit2 (
     if(!dixRequestPrivate(ShadowGCKey, sizeof(ShadowGCRec)))
 	return FALSE;
 
-    if(!(pPriv = (ShadowScreenPtr)xalloc(sizeof(ShadowScreenRec))))
+    if(!(pPriv = (ShadowScreenPtr)malloc(sizeof(ShadowScreenRec))))
 	return FALSE;
 
     dixSetPrivate(&pScreen->devPrivates, ShadowScreenKey, pPriv);
@@ -255,7 +255,7 @@ ShadowCloseScreen (int i, ScreenPtr pScreen)
         ps->Composite = pPriv->Composite;
     }
 
-    xfree((pointer)pPriv);
+    free((pointer)pPriv);
 
     return (*pScreen->CloseScreen) (i, pScreen);
 }
@@ -1010,7 +1010,7 @@ ShadowPolyRectangle(
 	    offset1 = offset2 >> 1;
 	    offset3 = offset2 - offset1;
 
-	    pBoxInit = (BoxPtr)xalloc(nRects * 4 * sizeof(BoxRec));
+	    pBoxInit = (BoxPtr)malloc(nRects * 4 * sizeof(BoxRec));
 	    pbox = pBoxInit;
 
 	    while(nRects--) {
@@ -1061,7 +1061,7 @@ ShadowPolyRectangle(
                 if(pPriv->preRefresh)
                     (*pPriv->preRefresh)(pPriv->pScrn, num, pBoxInit);
             } else {
-                xfree(pBoxInit);
+                free(pBoxInit);
             }                
 	}
     }
@@ -1073,7 +1073,7 @@ ShadowPolyRectangle(
     } else if(num) {
        if(pPriv->postRefresh)
           (*pPriv->postRefresh)(pPriv->pScrn, num, pBoxInit);
-       xfree(pBoxInit);
+       free(pBoxInit);
     }
     
     SHADOW_GC_OP_EPILOGUE(pGC);

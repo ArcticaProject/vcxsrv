@@ -388,7 +388,7 @@ unsigned		changed,tmp;
     nSyms= XkbKeyNumSyms(xkb,key);
     syms= XkbKeySymsPtr(xkb,key);
     if (nSyms>IBUF_SIZE) {
-	interps= xcalloc(nSyms, sizeof(XkbSymInterpretPtr));
+	interps= calloc(nSyms, sizeof(XkbSymInterpretPtr));
 	if (interps==NULL) {
 	    interps= ibuf;
 	    nSyms= IBUF_SIZE;
@@ -422,7 +422,7 @@ unsigned		changed,tmp;
 	pActs= XkbResizeKeyActions(xkb,key,nSyms);
 	if (!pActs) {
             if (nSyms > IBUF_SIZE)
-                xfree(interps);
+                free(interps);
 	    return FALSE;
         }
 	new_vmodmask= 0;
@@ -507,7 +507,7 @@ unsigned		changed,tmp;
 	mc->changed|= changed;
     }
     if (interps!=ibuf)
-	xfree(interps);
+	free(interps);
     return TRUE;
 }
 

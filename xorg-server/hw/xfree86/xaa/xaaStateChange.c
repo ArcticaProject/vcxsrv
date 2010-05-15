@@ -1500,7 +1500,7 @@ XAAInitStateWrap(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
    XAAStateWrapPtr pStatePriv;
    int i = 0;
    
-   if(!(pStatePriv = xalloc(sizeof(XAAStateWrapRec)))) return FALSE;
+   if(!(pStatePriv = malloc(sizeof(XAAStateWrapRec)))) return FALSE;
    dixSetPrivate(&pScreen->devPrivates, XAAStateKey, pStatePriv);
    pStatePriv->RestoreAccelState = infoRec->RestoreAccelState;
    pStatePriv->pScrn = pScrn;

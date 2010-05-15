@@ -737,9 +737,9 @@ LinuxKeyboardInit (KdKeyboardInfo *ki)
     if (!ki)
         return !Success;
 
-    xfree(ki->path);
+    free(ki->path);
     ki->path = strdup("console");
-    xfree(ki->name);
+    free(ki->name);
     ki->name = strdup("Linux console keyboard");
 
     readKernelMapping (ki);

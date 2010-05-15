@@ -111,7 +111,7 @@ InitVelocityData(DeviceVelocityPtr vel)
  */
 void
 FreeVelocityData(DeviceVelocityPtr vel){
-    xfree(vel->tracker);
+    free(vel->tracker);
     SetAccelerationProfile(vel, PROFILE_UNINITIALIZE);
 }
 
@@ -127,7 +127,7 @@ AccelerationDefaultCleanup(DeviceIntPtr dev)
             && dev->valuator->accelScheme.accelData != NULL){
         dev->valuator->accelScheme.AccelSchemeProc = NULL;
         FreeVelocityData(dev->valuator->accelScheme.accelData);
-        xfree(dev->valuator->accelScheme.accelData);
+        free(dev->valuator->accelScheme.accelData);
         dev->valuator->accelScheme.accelData = NULL;
         DeletePredictableAccelerationProperties(dev);
     }
@@ -372,8 +372,8 @@ InitTrackers(DeviceVelocityPtr vel, int ntracker)
 	ErrorF("(dix ptracc) invalid number of trackers\n");
 	return;
     }
-    xfree(vel->tracker);
-    vel->tracker = (MotionTrackerPtr)xalloc(ntracker * sizeof(MotionTracker));
+    free(vel->tracker);
+    vel->tracker = (MotionTrackerPtr)malloc(ntracker * sizeof(MotionTracker));
     memset(vel->tracker, 0, ntracker * sizeof(MotionTracker));
     vel->num_tracker = ntracker;
 }
@@ -954,7 +954,7 @@ SetAccelerationProfile(
 
     if(vel->profile_private != NULL){
         /* Here one could free old profile-private data */
-        xfree(vel->profile_private);
+        free(vel->profile_private);
         vel->profile_private = NULL;
     }
     /* Here one could init profile-private data */

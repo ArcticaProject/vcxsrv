@@ -115,7 +115,7 @@ __GLXconfig *__glXAquaCreateVisualConfigs(int *numConfigsPtr, int screenNumber) 
     if(numConfigsPtr)
         *numConfigsPtr = numConfigs; 
     
-    visualConfigs = xcalloc(sizeof(*visualConfigs), numConfigs);
+    visualConfigs = calloc(sizeof(*visualConfigs), numConfigs);
     
     if(NULL == visualConfigs) {
         ErrorF("xcalloc failure when allocating visualConfigs\n");

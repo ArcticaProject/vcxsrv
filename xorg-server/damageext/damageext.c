@@ -162,7 +162,7 @@ ProcDamageQueryVersion(ClientPtr client)
 	swapl(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xDamageQueryVersionReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -201,7 +201,7 @@ ProcDamageCreate (ClientPtr client)
 	return BadValue;
     }
     
-    pDamageExt = xalloc (sizeof (DamageExtRec));
+    pDamageExt = malloc(sizeof (DamageExtRec));
     if (!pDamageExt)
 	return BadAlloc;
     pDamageExt->id = stuff->damage;
@@ -217,7 +217,7 @@ ProcDamageCreate (ClientPtr client)
 					pDamageExt);
     if (!pDamageExt->pDamage)
     {
-	xfree (pDamageExt);
+	free(pDamageExt);
 	return BadAlloc;
     }
     if (!AddResource (stuff->damage, DamageExtType, (pointer) pDamageExt))
@@ -231,7 +231,7 @@ ProcDamageCreate (ClientPtr client)
 	DamageRegionAppend(pDrawable, pRegion);
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -243,7 +243,7 @@ ProcDamageDestroy (ClientPtr client)
     REQUEST_SIZE_MATCH(xDamageDestroyReq);
     VERIFY_DAMAGEEXT(pDamageExt, stuff->damage, client, DixWriteAccess);
     FreeResource (stuff->damage, RT_NONE);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -276,7 +276,7 @@ ProcDamageSubtract (ClientPtr client)
 	    DamageEmpty (pDamage);
 	}
     }
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -301,7 +301,7 @@ ProcDamageAdd (ClientPtr client)
     DamageRegionAppend(pDrawable, pRegion);
     REGION_TRANSLATE(pScreen, pRegion, -pDrawable->x, -pDrawable->y);
 
-    return (client->noClientException);
+    return Success;
 }
 
 /* Major version controls available requests */
@@ -457,7 +457,7 @@ FreeDamageExt (pointer value, XID did)
 	DamageUnregister (pDamageExt->pDrawable, pDamageExt->pDamage);
 	DamageDestroy (pDamageExt->pDamage);
     }
-    xfree (pDamageExt);
+    free(pDamageExt);
     return Success;
 }
 

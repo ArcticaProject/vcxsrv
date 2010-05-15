@@ -89,8 +89,8 @@ PictureCloseScreen (int index, ScreenPtr pScreen)
 	    (*ps->CloseIndexed) (pScreen, &ps->formats[n]);
     GlyphUninit (pScreen);
     SetPictureScreen(pScreen, 0);
-    xfree (ps->formats);
-    xfree (ps);
+    free(ps->formats);
+    free(ps);
     return ret;
 }
 
@@ -337,7 +337,7 @@ PictureCreateDefaultFormats (ScreenPtr pScreen, int *nformatp)
     }
     
 
-    pFormats = xcalloc (nformats, sizeof (PictFormatRec));
+    pFormats = calloc(nformats, sizeof (PictFormatRec));
     if (!pFormats)
 	return 0;
     for (f = 0; f < nformats; f++)
@@ -638,7 +638,7 @@ PictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
     {
 	if (!AddResource (formats[n].id, PictFormatType, (pointer) (formats+n)))
 	{
-	    xfree (formats);
+	    free(formats);
 	    return FALSE;
 	}
 	if (formats[n].type == PictTypeIndexed)
@@ -669,10 +669,10 @@ PictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
 	}
 	formats[n].format = PICT_FORMAT(0,type,a,r,g,b);
     }
-    ps = (PictureScreenPtr) xalloc (sizeof (PictureScreenRec));
+    ps = (PictureScreenPtr) malloc(sizeof (PictureScreenRec));
     if (!ps)
     {
-	xfree (formats);
+	free(formats);
 	return FALSE;
     }
     SetPictureScreen(pScreen, ps);
@@ -699,8 +699,8 @@ PictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
     {
 	PictureResetFilters (pScreen);
 	SetPictureScreen(pScreen, 0);
-	xfree (formats);
-	xfree (ps);
+	free(formats);
+	free(ps);
 	return FALSE;
     }
 
@@ -753,7 +753,7 @@ CreatePicture (Picture		pid,
     PicturePtr		pPicture;
     PictureScreenPtr	ps = GetPictureScreen(pDrawable->pScreen);
 
-    pPicture = (PicturePtr)xalloc(sizeof(PictureRec));
+    pPicture = (PicturePtr)malloc(sizeof(PictureRec));
     if (!pPicture)
     {
 	*error = BadAlloc;
@@ -874,7 +874,7 @@ static void initGradient(SourcePictPtr pGradient, int stopCount,
         dpos = stopPoints[i];
     }
 
-    pGradient->gradient.stops = xalloc(stopCount*sizeof(PictGradientStop));
+    pGradient->gradient.stops = malloc(stopCount*sizeof(PictGradientStop));
     if (!pGradient->gradient.stops) {
         *error = BadAlloc;
         return;
@@ -896,7 +896,7 @@ static void initGradient(SourcePictPtr pGradient, int stopCount,
 static PicturePtr createSourcePicture(void)
 {
     PicturePtr pPicture;
-    pPicture = (PicturePtr) xalloc(sizeof(PictureRec));
+    pPicture = (PicturePtr) malloc(sizeof(PictureRec));
     pPicture->pDrawable = 0;
     pPicture->pFormat = 0;
     pPicture->pNext = 0;
@@ -918,10 +918,10 @@ CreateSolidPicture (Picture pid, xRenderColor *color, int *error)
     }
 
     pPicture->id = pid;
-    pPicture->pSourcePict = (SourcePictPtr) xalloc(sizeof(PictSolidFill));
+    pPicture->pSourcePict = (SourcePictPtr) malloc(sizeof(PictSolidFill));
     if (!pPicture->pSourcePict) {
         *error = BadAlloc;
-        xfree(pPicture);
+        free(pPicture);
         return 0;
     }
     pPicture->pSourcePict->type = SourcePictTypeSolidFill;
@@ -947,10 +947,10 @@ CreateLinearGradientPicture (Picture pid, xPointFixed *p1, xPointFixed *p2,
     }
 
     pPicture->id = pid;
-    pPicture->pSourcePict = (SourcePictPtr) xalloc(sizeof(PictLinearGradient));
+    pPicture->pSourcePict = (SourcePictPtr) malloc(sizeof(PictLinearGradient));
     if (!pPicture->pSourcePict) {
         *error = BadAlloc;
-        xfree(pPicture);
+        free(pPicture);
         return 0;
     }
 
@@ -960,7 +960,7 @@ CreateLinearGradientPicture (Picture pid, xPointFixed *p1, xPointFixed *p2,
 
     initGradient(pPicture->pSourcePict, nStops, stops, colors, error);
     if (*error) {
-        xfree(pPicture);
+        free(pPicture);
         return 0;
     }
     return pPicture;
@@ -988,10 +988,10 @@ CreateRadialGradientPicture (Picture pid, xPointFixed *inner, xPointFixed *outer
     }
 
     pPicture->id = pid;
-    pPicture->pSourcePict = (SourcePictPtr) xalloc(sizeof(PictRadialGradient));
+    pPicture->pSourcePict = (SourcePictPtr) malloc(sizeof(PictRadialGradient));
     if (!pPicture->pSourcePict) {
         *error = BadAlloc;
-        xfree(pPicture);
+        free(pPicture);
         return 0;
     }
     radial = &pPicture->pSourcePict->radial;
@@ -1012,7 +1012,7 @@ CreateRadialGradientPicture (Picture pid, xPointFixed *inner, xPointFixed *outer
     
     initGradient(pPicture->pSourcePict, nStops, stops, colors, error);
     if (*error) {
-        xfree(pPicture);
+        free(pPicture);
         return 0;
     }
     return pPicture;
@@ -1036,10 +1036,10 @@ CreateConicalGradientPicture (Picture pid, xPointFixed *center, xFixed angle,
     }
 
     pPicture->id = pid;
-    pPicture->pSourcePict = (SourcePictPtr) xalloc(sizeof(PictConicalGradient));
+    pPicture->pSourcePict = (SourcePictPtr) malloc(sizeof(PictConicalGradient));
     if (!pPicture->pSourcePict) {
         *error = BadAlloc;
-        xfree(pPicture);
+        free(pPicture);
         return 0;
     }
 
@@ -1049,7 +1049,7 @@ CreateConicalGradientPicture (Picture pid, xPointFixed *center, xFixed angle,
 
     initGradient(pPicture->pSourcePict, nStops, stops, colors, error);
     if (*error) {
-        xfree(pPicture);
+        free(pPicture);
         return 0;
     }
     return pPicture;
@@ -1385,7 +1385,7 @@ SetPictureTransform (PicturePtr	    pPicture,
     {
 	if (!pPicture->transform)
 	{
-	    pPicture->transform = (PictTransform *) xalloc (sizeof (PictTransform));
+	    pPicture->transform = (PictTransform *) malloc(sizeof (PictTransform));
 	    if (!pPicture->transform)
 		return BadAlloc;
 	}
@@ -1395,7 +1395,7 @@ SetPictureTransform (PicturePtr	    pPicture,
     {
 	if (pPicture->transform)
 	{
-	    xfree (pPicture->transform);
+	    free(pPicture->transform);
 	    pPicture->transform = 0;
 	}
     }
@@ -1527,14 +1527,14 @@ FreePicture (pointer	value,
     if (--pPicture->refcnt == 0)
     {
 	if (pPicture->transform)
-	    xfree (pPicture->transform);
+	    free(pPicture->transform);
 
 	if (pPicture->pSourcePict)
 	{
 	    if (pPicture->pSourcePict->type != SourcePictTypeSolidFill)
-		xfree(pPicture->pSourcePict->linear.stops);
+		free(pPicture->pSourcePict->linear.stops);
 
-	    xfree(pPicture->pSourcePict);
+	    free(pPicture->pSourcePict);
 	}
 
 	if (pPicture->pDrawable)
@@ -1569,7 +1569,7 @@ FreePicture (pointer	value,
             }
         }
 	dixFreePrivates(pPicture->devPrivates);
-	xfree (pPicture);
+	free(pPicture);
     }
     return Success;
 }

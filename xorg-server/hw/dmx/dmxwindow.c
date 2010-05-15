@@ -942,7 +942,7 @@ static void dmxDoSetShape(WindowPtr pWindow)
     if (wBoundingShape(pWindow)) {
 	pBox = REGION_RECTS(wBoundingShape(pWindow));
 	nRect = nBox = REGION_NUM_RECTS(wBoundingShape(pWindow));
-	pRectFirst = pRect = xalloc(nRect * sizeof(*pRect));
+	pRectFirst = pRect = malloc(nRect * sizeof(*pRect));
 	while (nBox--) {
 	    pRect->x      = pBox->x1;
 	    pRect->y      = pBox->y1;
@@ -955,7 +955,7 @@ static void dmxDoSetShape(WindowPtr pWindow)
 				ShapeBounding, 0, 0,
 				pRectFirst, nRect,
 				ShapeSet, YXBanded);
-	xfree(pRectFirst);
+	free(pRectFirst);
     } else {
 	XShapeCombineMask(dmxScreen->beDisplay, pWinPriv->window,
 			  ShapeBounding, 0, 0, None, ShapeSet);
@@ -965,7 +965,7 @@ static void dmxDoSetShape(WindowPtr pWindow)
     if (wClipShape(pWindow)) {
 	pBox = REGION_RECTS(wClipShape(pWindow));
 	nRect = nBox = REGION_NUM_RECTS(wClipShape(pWindow));
-	pRectFirst = pRect = xalloc(nRect * sizeof(*pRect));
+	pRectFirst = pRect = malloc(nRect * sizeof(*pRect));
 	while (nBox--) {
 	    pRect->x      = pBox->x1;
 	    pRect->y      = pBox->y1;
@@ -978,7 +978,7 @@ static void dmxDoSetShape(WindowPtr pWindow)
 				ShapeClip, 0, 0,
 				pRectFirst, nRect,
 				ShapeSet, YXBanded);
-	xfree(pRectFirst);
+	free(pRectFirst);
     } else {
 	XShapeCombineMask(dmxScreen->beDisplay, pWinPriv->window,
 			  ShapeClip, 0, 0, None, ShapeSet);

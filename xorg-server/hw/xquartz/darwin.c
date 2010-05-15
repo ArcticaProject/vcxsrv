@@ -194,7 +194,7 @@ static Bool DarwinScreenInit(int index, ScreenPtr pScreen, int argc, char **argv
     }
 
     // allocate space for private per screen storage
-    dfb = xalloc(sizeof(DarwinFramebufferRec));
+    dfb = malloc(sizeof(DarwinFramebufferRec));
 
     // SCREEN_PRIV(pScreen) = dfb;
     dixSetPrivate(&pScreen->devPrivates, darwinScreenKey, dfb);

@@ -364,7 +364,7 @@ void dmxChangeClip(GCPtr pGC, int type, pointer pvalue, int nrects)
     case CT_REGION:
 	if (dmxScreen->beDisplay) {
 	    nRects = REGION_NUM_RECTS((RegionPtr)pGC->clientClip);
-	    pRects = xalloc(nRects * sizeof(*pRects));
+	    pRects = malloc(nRects * sizeof(*pRects));
 	    pBox   = REGION_RECTS((RegionPtr)pGC->clientClip);
 
 	    for (i = 0; i < nRects; i++) {
@@ -378,7 +378,7 @@ void dmxChangeClip(GCPtr pGC, int type, pointer pvalue, int nrects)
 			       pGC->clipOrg.x, pGC->clipOrg.y,
 			       pRects, nRects, Unsorted);
 
-	    xfree(pRects);
+	    free(pRects);
 	}
 	break;
 

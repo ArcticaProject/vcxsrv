@@ -45,7 +45,7 @@ miColorRects (PicturePtr    pDst,
     ScreenPtr		pScreen = pDst->pDrawable->pScreen;
     CARD32		pixel;
     GCPtr		pGC;
-    CARD32		tmpval[5];
+    ChangeGCVal		tmpval[5];
     RegionPtr		pClip;
     unsigned long	mask;
 
@@ -54,14 +54,14 @@ miColorRects (PicturePtr    pDst,
     pGC = GetScratchGC (pDst->pDrawable->depth, pScreen);
     if (!pGC)
 	return;
-    tmpval[0] = GXcopy;
-    tmpval[1] = pixel;
-    tmpval[2] = pDst->subWindowMode;
+    tmpval[0].val = GXcopy;
+    tmpval[1].val = pixel;
+    tmpval[2].val = pDst->subWindowMode;
     mask = GCFunction | GCForeground | GCSubwindowMode;
     if (pClipPict->clientClipType == CT_REGION)
     {
-	tmpval[3] = pDst->clipOrigin.x - xoff;
-	tmpval[4] = pDst->clipOrigin.y - yoff;
+	tmpval[3].val = pDst->clipOrigin.x - xoff;
+	tmpval[4].val = pDst->clipOrigin.y - yoff;
 	mask |= GCClipXOrigin|GCClipYOrigin;
 	
 	pClip = REGION_CREATE (pScreen, NULL, 1);
@@ -70,7 +70,7 @@ miColorRects (PicturePtr    pDst,
 	(*pGC->funcs->ChangeClip) (pGC, CT_REGION, pClip, 0);
     }
 
-    ChangeGC (pGC, mask, tmpval);
+    ChangeGC (NullClient, pGC, mask, tmpval);
     ValidateGC (pDst->pDrawable, pGC);
     if (xoff || yoff)
     {
@@ -129,7 +129,8 @@ miCompositeRects (CARD8		op,
 	int		error;
 	Pixel		pixel;
 	GCPtr		pGC;
-	CARD32		tmpval[2];
+	ChangeGCVal	gcvals[2];
+	XID		tmpval[1];
 
 	rgbaFormat = PictureMatchFormat (pScreen, 32, PICT_a8r8g8b8);
 	if (!rgbaFormat)
@@ -145,10 +146,10 @@ miCompositeRects (CARD8		op,
 	pGC = GetScratchGC (rgbaFormat->depth, pScreen);
 	if (!pGC)
 	    goto bail3;
-	tmpval[0] = GXcopy;
-	tmpval[1] = pixel;
+	gcvals[0].val = GXcopy;
+	gcvals[1].val = pixel;
 
-	ChangeGC (pGC, GCFunction | GCForeground, tmpval);
+	ChangeGC (NullClient, pGC, GCFunction | GCForeground, gcvals);
 	ValidateGC (&pPixmap->drawable, pGC);
 	one.x = 0;
 	one.y = 0;

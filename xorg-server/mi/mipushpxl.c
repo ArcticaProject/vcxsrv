@@ -123,7 +123,7 @@ miPushPixels(GCPtr pGC, PixmapPtr pBitMap, DrawablePtr pDrawable,
             LONG2CHARSDIFFORDER((MiBits)(-1) >> 1);
 #endif
 
-    pwLineStart = xalloc(BitmapBytePad(dx));
+    pwLineStart = malloc(BitmapBytePad(dx));
     if (!pwLineStart)
 	return;
     ipt = 0;
@@ -262,7 +262,7 @@ miPushPixels(GCPtr pGC, PixmapPtr pBitMap, DrawablePtr pDrawable,
 	    }
 	}
     }
-    xfree(pwLineStart);
+    free(pwLineStart);
     /* Flush any remaining spans */
     if (ipt)
     {

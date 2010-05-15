@@ -192,7 +192,7 @@ ProcAppleWMQueryVersion(
         swapl(&rep.length, n);
     }
     WriteToClient(client, sizeof(xAppleWMQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -229,7 +229,7 @@ WMFreeClient (pointer data, XID id) {
         }
         updateEventMask (pHead);
     }
-    xfree ((pointer) pEvent);
+    free((pointer) pEvent);
     return 1;
 }
 
@@ -242,9 +242,9 @@ WMFreeEvents (pointer data, XID id) {
     for (pCur = *pHead; pCur; pCur = pNext) {
         pNext = pCur->next;
         FreeResource (pCur->clientResource, ClientType);
-        xfree ((pointer) pCur);
+        free((pointer) pCur);
     }
-    xfree ((pointer) pHead);
+    free((pointer) pHead);
     eventMask = 0;
     return 1;
 }
@@ -274,7 +274,7 @@ ProcAppleWMSelectInput (register ClientPtr client)
         }
 
         /* build the entry */
-        pNewEvent = (WMEventPtr) xalloc (sizeof (WMEventRec));
+        pNewEvent = (WMEventPtr) malloc(sizeof (WMEventRec));
         if (!pNewEvent)
             return BadAlloc;
         pNewEvent->next = 0;
@@ -296,7 +296,7 @@ ProcAppleWMSelectInput (register ClientPtr client)
          */
         if (i != Success || !pHead)
         {
-            pHead = (WMEventPtr *) xalloc (sizeof (WMEventPtr));
+            pHead = (WMEventPtr *) malloc(sizeof (WMEventPtr));
             if (!pHead ||
                 !AddResource (eventResource, EventType, (pointer)pHead))
             {
@@ -323,7 +323,7 @@ ProcAppleWMSelectInput (register ClientPtr client)
                     pNewEvent->next = pEvent->next;
                 else
                     *pHead = pEvent->next;
-                xfree (pEvent);
+                free(pEvent);
                 updateEventMask (pHead);
             }
         }
@@ -383,7 +383,7 @@ ProcAppleWMDisableUpdate(
 
     appleWMProcs->DisableUpdate();
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -395,7 +395,7 @@ ProcAppleWMReenableUpdate(
 
     appleWMProcs->EnableUpdate();
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -414,8 +414,8 @@ ProcAppleWMSetWindowMenu(
     REQUEST_AT_LEAST_SIZE(xAppleWMSetWindowMenuReq);
 
     nitems = stuff->nitems;
-    items = xalloc (sizeof (char *) * nitems);
-    shortcuts = xalloc (sizeof (char) * nitems);
+    items = malloc(sizeof (char *) * nitems);
+    shortcuts = malloc(sizeof (char) * nitems);
 
     max_len = (stuff->length << 2) - sizeof(xAppleWMSetWindowMenuReq);
     bytes = (char *) &stuff[1];
@@ -435,7 +435,7 @@ ProcAppleWMSetWindowMenu(
     free(items);
     free(shortcuts);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -447,7 +447,7 @@ ProcAppleWMSetWindowMenuCheck(
 
     REQUEST_SIZE_MATCH(xAppleWMSetWindowMenuCheckReq);
     X11ApplicationSetWindowMenuCheck(stuff->index);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -458,7 +458,7 @@ ProcAppleWMSetFrontProcess(
     REQUEST_SIZE_MATCH(xAppleWMSetFrontProcessReq);
 
     X11ApplicationSetFrontProcess();
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -483,7 +483,7 @@ ProcAppleWMSetWindowLevel(register ClientPtr client)
         return err;
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -502,7 +502,7 @@ ProcAppleWMSendPSN(register ClientPtr client)
         return err;
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -532,7 +532,7 @@ ProcAppleWMAttachTransient(register ClientPtr client)
         return err;
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -545,7 +545,7 @@ ProcAppleWMSetCanQuit(
     REQUEST_SIZE_MATCH(xAppleWMSetCanQuitReq);
 
     X11ApplicationSetCanQuit(stuff->state);
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -581,7 +581,7 @@ ProcAppleWMFrameGetRect(
     rep.h = rr.y2 - rr.y1;
 
     WriteToClient(client, sizeof(xAppleWMFrameGetRectReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -611,7 +611,7 @@ ProcAppleWMFrameHitTest(
     rep.ret = ret;
 
     WriteToClient(client, sizeof(xAppleWMFrameHitTestReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -649,7 +649,7 @@ ProcAppleWMFrameDraw(
         return errno;
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 

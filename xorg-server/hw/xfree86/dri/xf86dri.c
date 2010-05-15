@@ -146,7 +146,7 @@ ProcXF86DRIQueryVersion(
 	swapl(&rep.patchVersion, n);
     }
     WriteToClient(client, sizeof(xXF86DRIQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -185,7 +185,7 @@ ProcXF86DRIQueryDirectRenderingCapable(
 
     WriteToClient(client, 
 	sizeof(xXF86DRIQueryDirectRenderingCapableReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -228,7 +228,7 @@ ProcXF86DRIOpenConnection(
     WriteToClient(client, sizeof(xXF86DRIOpenConnectionReply), (char *)&rep);
     if (rep.busIdStringLength)
 	WriteToClient(client, rep.busIdStringLength, busIdString);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -255,7 +255,7 @@ ProcXF86DRIAuthConnection(
 	rep.authenticated = 0;
     }
     WriteToClient(client, sizeof(xXF86DRIAuthConnectionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -272,7 +272,7 @@ ProcXF86DRICloseConnection(
 
     DRICloseConnection( screenInfo.screens[stuff->screen]);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -311,7 +311,7 @@ ProcXF86DRIGetClientDriverName(
 	WriteToClient(client, 
                       rep.clientDriverNameLength, 
                       clientDriverName);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -343,7 +343,7 @@ ProcXF86DRICreateContext(
     }
 
     WriteToClient(client, sizeof(xXF86DRICreateContextReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -363,7 +363,7 @@ ProcXF86DRIDestroyContext(
 	return BadValue;
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -397,7 +397,7 @@ ProcXF86DRICreateDrawable(
     }
 
     WriteToClient(client, sizeof(xXF86DRICreateDrawableReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -425,7 +425,7 @@ ProcXF86DRIDestroyDrawable(
 	return BadValue;
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -490,7 +490,7 @@ ProcXF86DRIGetDrawableInfo(
 
     if (rep.numClipRects) {
        /* Clip cliprects to screen dimensions (redirected windows) */
-       pClippedRects = xalloc(rep.numClipRects * sizeof(drm_clip_rect_t));
+       pClippedRects = malloc(rep.numClipRects * sizeof(drm_clip_rect_t));
 
        if (pClippedRects) {
 	    ScreenPtr pScreen = screenInfo.screens[stuff->screen];
@@ -524,7 +524,7 @@ ProcXF86DRIGetDrawableInfo(
 	WriteToClient(client,  
 		      sizeof(drm_clip_rect_t) * rep.numClipRects,
 		      (char *)pClippedRects);
-	xfree(pClippedRects);
+	free(pClippedRects);
     }
 
     if (rep.numBackClipRects) {
@@ -533,7 +533,7 @@ ProcXF86DRIGetDrawableInfo(
 		     (char *)pBackClipRects);
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -584,7 +584,7 @@ ProcXF86DRIGetDeviceInfo(
     if (rep.length) {
 	WriteToClient(client, rep.devPrivateSize, (char *)pDevPrivate);
     }
-    return (client->noClientException);
+    return Success;
 }
 
 static int

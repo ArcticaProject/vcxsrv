@@ -212,7 +212,7 @@ xnestChangeClip(GCPtr pGC, int type, pointer pValue, int nRects)
     case CT_REGION:
       nRects = REGION_NUM_RECTS((RegionPtr)pValue);
       size = nRects * sizeof(*pRects);
-      pRects = (XRectangle *) xalloc(size);
+      pRects = (XRectangle *) malloc(size);
       pBox = REGION_RECTS((RegionPtr)pValue);
       for (i = nRects; i-- > 0; ) {
 	pRects[i].x = pBox[i].x1;
@@ -222,7 +222,7 @@ xnestChangeClip(GCPtr pGC, int type, pointer pValue, int nRects)
       }
       XSetClipRectangles(xnestDisplay, xnestGC(pGC), 0, 0,
 			 pRects, nRects, Unsorted);
-      xfree((char *) pRects);
+      free((char *) pRects);
       break;
 
     case CT_PIXMAP:
@@ -279,7 +279,7 @@ xnestChangeClip(GCPtr pGC, int type, pointer pValue, int nRects)
        */
       pGC->clientClip = (pointer) RECTS_TO_REGION(pGC->pScreen, nRects,
 						  (xRectangle *)pValue, type);
-      xfree(pValue);
+      free(pValue);
       pValue = pGC->clientClip;
       type = CT_REGION;
 

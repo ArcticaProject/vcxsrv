@@ -226,7 +226,7 @@ ShmCloseScreen(int i, ScreenPtr pScreen)
     ShmScrPrivateRec *screen_priv = ShmGetScreenPriv(pScreen);
     pScreen->CloseScreen = screen_priv->CloseScreen;
     dixSetPrivate(&pScreen->devPrivates, shmScrPrivateKey, NULL);
-    xfree (screen_priv);
+    free(screen_priv);
     return (*pScreen->CloseScreen) (i, pScreen);
 }
 
@@ -236,7 +236,7 @@ ShmInitScreenPriv(ScreenPtr pScreen)
     ShmScrPrivateRec *screen_priv = ShmGetScreenPriv(pScreen);
     if (!screen_priv)
     {
-	screen_priv = xcalloc (1, sizeof (ShmScrPrivateRec));
+	screen_priv = calloc(1, sizeof (ShmScrPrivateRec));
 	screen_priv->CloseScreen = pScreen->CloseScreen;
 	dixSetPrivate(&pScreen->devPrivates, shmScrPrivateKey, screen_priv);
 	pScreen->CloseScreen = ShmCloseScreen;
@@ -359,7 +359,7 @@ ProcShmQueryVersion(ClientPtr client)
 	swaps(&rep.gid, n);
     }
     WriteToClient(client, sizeof(xShmQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 /*
@@ -454,7 +454,7 @@ ProcShmAttach(ClientPtr client)
     }
     else
     {
-	shmdesc = xalloc(sizeof(ShmDescRec));
+	shmdesc = malloc(sizeof(ShmDescRec));
 	if (!shmdesc)
 	    return BadAlloc;
 	shmdesc->addr = shmat(stuff->shmid, 0,
@@ -462,7 +462,7 @@ ProcShmAttach(ClientPtr client)
 	if ((shmdesc->addr == ((char *)-1)) ||
 	    SHMSTAT(stuff->shmid, &buf))
 	{
-	    xfree(shmdesc);
+	    free(shmdesc);
 	    return BadAccess;
 	}
 
@@ -472,7 +472,7 @@ ProcShmAttach(ClientPtr client)
 
 	if (shm_access(client, &(SHM_PERM(buf)), stuff->readOnly) == -1) {
 	    shmdt(shmdesc->addr);
-	    xfree(shmdesc);
+	    free(shmdesc);
 	    return BadAccess;
 	}
 
@@ -485,7 +485,7 @@ ProcShmAttach(ClientPtr client)
     }
     if (!AddResource(stuff->shmseg, ShmSegType, (pointer)shmdesc))
 	return BadAlloc;
-    return(client->noClientException);
+    return Success;
 }
 
 /*ARGSUSED*/
@@ -502,7 +502,7 @@ ShmDetachSegment(pointer value, /* must conform to DeleteType */
     for (prev = &Shmsegs; *prev != shmdesc; prev = &(*prev)->next)
 	;
     *prev = shmdesc->next;
-    xfree(shmdesc);
+    free(shmdesc);
     return Success;
 }
 
@@ -515,7 +515,7 @@ ProcShmDetach(ClientPtr client)
     REQUEST_SIZE_MATCH(xShmDetachReq);
     VERIFY_SHMSEG(stuff->shmseg, shmdesc, client);
     FreeResource(stuff->shmseg, RT_NONE);
-    return(client->noClientException);
+    return Success;
 }
 
 /*
@@ -601,7 +601,7 @@ ProcPanoramiXShmPutImage(ClientPtr client)
 	    stuff->dstY = orig_y - panoramiXdataPtr[j].y;
 	}
 	result = ProcShmPutImage(client);
-	if(result != client->noClientException) break;
+	if(result != Success) break;
     }
     return(result);
 }
@@ -671,7 +671,7 @@ ProcPanoramiXShmGetImage(ClientPtr client)
 	    return(BadMatch);
     }
 
-    drawables = xcalloc(PanoramiXNumScreens, sizeof(DrawablePtr));
+    drawables = calloc(PanoramiXNumScreens, sizeof(DrawablePtr));
     if(!drawables)
 	return(BadAlloc);
 
@@ -681,7 +681,7 @@ ProcPanoramiXShmGetImage(ClientPtr client)
 			       DixReadAccess);
 	if (rc != Success)
 	{
-	    xfree(drawables);
+	    free(drawables);
 	    return rc;
 	}
     }
@@ -722,7 +722,7 @@ ProcPanoramiXShmGetImage(ClientPtr client)
 	    }
 	}
     }
-    xfree(drawables);
+    free(drawables);
     
     if (client->swapped) {
 	int n;
@@ -733,7 +733,7 @@ ProcPanoramiXShmGetImage(ClientPtr client)
     }
     WriteToClient(client, sizeof(xShmGetImageReply), (char *)&xgi);
 
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -795,7 +795,7 @@ CreatePmap:
 
     VERIFY_SHMSIZE(shmdesc, stuff->offset, size, client);
 
-    if(!(newPix = xalloc(sizeof(PanoramiXRes))))
+    if(!(newPix = malloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
 
     newPix->type = XRT_PIXMAP;
@@ -804,7 +804,7 @@ CreatePmap:
     for(j = 1; j < PanoramiXNumScreens; j++)
 	newPix->info[j].id = FakeClientID(client->index);
 
-    result = (client->noClientException);
+    result = Success;
 
     FOR_NSCREENS(j) {
 	ShmScrPrivateRec *screen_priv;
@@ -836,7 +836,7 @@ CreatePmap:
 	    (*pScreen->DestroyPixmap)(pMap);
 	    FreeResource(newPix->info[j].id, RT_NONE);
 	}
-	xfree(newPix);
+	free(newPix);
     } else 
 	AddResource(stuff->pid, XRT_PIXMAP, newPix);
 
@@ -951,7 +951,7 @@ ProcShmPutImage(ClientPtr client)
 	WriteEventsToClient(client, 1, (xEvent *) &ev);
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -1065,7 +1065,7 @@ ProcShmGetImage(ClientPtr client)
     }
     WriteToClient(client, sizeof(xShmGetImageReply), (char *)&xgi);
 
-    return(client->noClientException);
+    return Success;
 }
 
 static PixmapPtr
@@ -1162,7 +1162,7 @@ CreatePmap:
 	pMap->drawable.id = stuff->pid;
 	if (AddResource(stuff->pid, RT_PIXMAP, (pointer)pMap))
 	{
-	    return(client->noClientException);
+	    return Success;
 	}
 	pDraw->pScreen->DestroyPixmap(pMap);
     }

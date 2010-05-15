@@ -208,14 +208,14 @@ xf86HandleInt10Options(ScrnInfoPtr pScrn, int entityIndex)
 	    configOptions = pEnt->device->options;
 
 	if (configOptions) {
-	    if (!(options = (OptionInfoPtr) xalloc(sizeof(INT10Options))))
+	    if (!(options = (OptionInfoPtr) malloc(sizeof(INT10Options))))
 		return NULL;
 	     
 	    (void)memcpy(options, INT10Options, sizeof(INT10Options));
 	    xf86ProcessOptions(pScrn->scrnIndex, configOptions, options);
 	}
     }
-    xfree(pEnt);
+    free(pEnt);
 
     return options;
 }
@@ -276,7 +276,7 @@ xf86int10GetBiosLocationType(const xf86Int10InfoPtr pInt)
 
     EntityInfoPtr pEnt = xf86GetEntityInfo(pInt->entityIndex);
     location_type = pEnt->location.type;
-    xfree(pEnt);
+    free(pEnt);
 
     return location_type;
 }

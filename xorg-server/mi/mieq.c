@@ -191,7 +191,7 @@ mieqEnqueue(DeviceIntPtr pDev, InternalEvent *e)
     if (evt->evlen < evlen)
     {
         evt->evlen = evlen;
-        evt->event = xrealloc(evt->event, evt->evlen);
+        evt->event = realloc(evt->event, evt->evlen);
         if (!evt->event)
         {
             ErrorF("[mi] Running out of memory. Tossing event.\n");
@@ -440,7 +440,7 @@ mieqProcessInputEvents(void)
         evlen   = e->events->evlen;
         if(evlen > event_size)
           {
-            event = xrealloc(event, evlen);
+            event = realloc(event, evlen);
             event_size = evlen;
           }
 

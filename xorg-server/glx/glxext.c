@@ -205,8 +205,8 @@ GLboolean __glXFreeContext(__GLXcontext *cx)
 {
     if (cx->idExists || cx->isCurrent) return GL_FALSE;
     
-    if (cx->feedbackBuf) xfree(cx->feedbackBuf);
-    if (cx->selectBuf) xfree(cx->selectBuf);
+    if (cx->feedbackBuf) free(cx->feedbackBuf);
+    if (cx->selectBuf) free(cx->selectBuf);
     if (cx == __glXLastContext) {
 	__glXFlushContextCache();
     }
@@ -323,10 +323,10 @@ glxClientCallback (CallbackListPtr	*list,
 	    }
 	}
 
-	if (cl->returnBuf) xfree(cl->returnBuf);
-	if (cl->largeCmdBuf) xfree(cl->largeCmdBuf);
-	if (cl->currentContexts) xfree(cl->currentContexts);
-	if (cl->GLClientextensions) xfree(cl->GLClientextensions);
+	if (cl->returnBuf) free(cl->returnBuf);
+	if (cl->largeCmdBuf) free(cl->largeCmdBuf);
+	if (cl->currentContexts) free(cl->currentContexts);
+	if (cl->GLClientextensions) free(cl->GLClientextensions);
 	break;
 
     default:
@@ -583,7 +583,7 @@ static int __glXDispatch(ClientPtr client)
 	ResetCurrentRequest(client);
 	client->sequence--;
 	IgnoreClient(client);
-	return(client->noClientException);
+	return Success;
     }
 
     /*

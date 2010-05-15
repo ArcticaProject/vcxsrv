@@ -271,7 +271,7 @@ xaaSetupWrapper(ScreenPtr pScreen, XAAInfoRecPtr infoPtr, int depth, SyncFunc *f
     if (!dixRequestPrivate(xaaWrapperGCPrivateKey, sizeof(xaaWrapperGCPrivRec)))
 	return FALSE;
 
-    pScrPriv = (xaaWrapperScrPrivPtr) xalloc (sizeof (xaaWrapperScrPrivRec));
+    pScrPriv = (xaaWrapperScrPrivPtr) malloc(sizeof (xaaWrapperScrPrivRec));
     if (!pScrPriv)
 	return FALSE;
 

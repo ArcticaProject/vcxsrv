@@ -126,7 +126,7 @@ ProcXTestGetVersion(ClientPtr client)
         swaps(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xXTestGetVersionReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -164,7 +164,7 @@ ProcXTestCompareCursor(ClientPtr client)
         swaps(&rep.sequenceNumber, n);
     }
     WriteToClient(client, sizeof(xXTestCompareCursorReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -457,7 +457,7 @@ ProcXTestFakeInput(ClientPtr client)
 
     if (need_ptr_update)
         miPointerUpdateSprite(dev);
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -475,7 +475,7 @@ ProcXTestGrabControl(ClientPtr client)
         MakeClientGrabImpervious(client);
     else
         MakeClientGrabPervious(client);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -637,7 +637,7 @@ int AllocXTestDevice (ClientPtr client, char* name,
 {
     int retval;
     int len = strlen(name);
-    char *xtestname = xcalloc(len + 7, 1 );
+    char *xtestname = calloc(len + 7, 1 );
     char dummy = 1;
 
     strncpy( xtestname, name, len);
@@ -660,7 +660,7 @@ int AllocXTestDevice (ClientPtr client, char* name,
         XIRegisterPropertyHandler(*keybd, DeviceSetXTestProperty, NULL, NULL);
     }
 
-    xfree( xtestname );
+    free( xtestname );
 
     return retval;
 }

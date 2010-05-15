@@ -158,7 +158,7 @@ ProcXIPassiveGrabDevice(ClientPtr client)
     status = CheckGrabValues(client, &param);
 
     modifiers = (uint32_t*)&stuff[1] + stuff->mask_len;
-    modifiers_failed = xcalloc(stuff->num_modifiers, sizeof(xXIGrabModifierInfo));
+    modifiers_failed = calloc(stuff->num_modifiers, sizeof(xXIGrabModifierInfo));
     if (!modifiers_failed)
         return BadAlloc;
 
@@ -204,7 +204,7 @@ ProcXIPassiveGrabDevice(ClientPtr client)
 	client->pSwapReplyFunc = (ReplySwapPtr) Swap32Write;
         WriteSwappedDataToClient(client, rep.num_modifiers * 4, (char*)modifiers_failed);
     }
-    xfree(modifiers_failed);
+    free(modifiers_failed);
     return ret;
 }
 

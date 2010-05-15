@@ -195,7 +195,7 @@ xprAddPseudoramiXScreens(int *x, int *y, int *width, int *height)
         return;
     }
 
-    displayList = xalloc(displayCount * sizeof(CGDirectDisplayID));
+    displayList = malloc(displayCount * sizeof(CGDirectDisplayID));
     if(!displayList)
         FatalError("Unable to allocate memory for list of displays.\n");
     CGGetActiveDisplayList(displayCount, displayList, &displayCount);
@@ -232,7 +232,7 @@ xprAddPseudoramiXScreens(int *x, int *y, int *width, int *height)
                              frame.size.width, frame.size.height);
     }
 
-    xfree(displayList);
+    free(displayList);
 }
 
 /*

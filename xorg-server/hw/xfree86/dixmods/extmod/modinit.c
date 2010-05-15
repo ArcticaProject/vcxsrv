@@ -146,13 +146,13 @@ extmodSetup(pointer module, pointer opts, int *errmaj, int *errmin)
     for (i = 0; extensionModules[i].name != NULL; i++) {
 	if (opts) {
 	    char *s;
-	    s = (char *)xalloc(strlen(extensionModules[i].name) + 5);
+	    s = (char *)malloc(strlen(extensionModules[i].name) + 5);
 	    if (s) {
 		pointer o;
 		strcpy(s, "omit");
 		strcat(s, extensionModules[i].name);
 		o = xf86FindOption(opts, s);
-		xfree(s);
+		free(s);
 		if (o) {
 		    xf86MarkOptionUsed(o);
 		    continue;

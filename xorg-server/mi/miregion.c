@@ -171,8 +171,8 @@ Equipment Corporation.
         ((r1)->y1 <= (r2)->y1) && \
         ((r1)->y2 >= (r2)->y2) )
 
-#define xallocData(n) xalloc(REGION_SZOF(n))
-#define xfreeData(reg) if ((reg)->data && (reg)->data->size) xfree((reg)->data)
+#define xallocData(n) malloc(REGION_SZOF(n))
+#define xfreeData(reg) if ((reg)->data && (reg)->data->size) free((reg)->data)
 
 #define RECTALLOC_BAIL(pReg,n,bail) \
 if (!(pReg)->data || (((pReg)->data->numRects + (n)) > (pReg)->data->size)) \
@@ -209,7 +209,7 @@ if (!(pReg)->data || (((pReg)->data->numRects + (n)) > (pReg)->data->size)) \
 if (((numRects) < ((reg)->data->size >> 1)) && ((reg)->data->size > 50)) \
 {									 \
     RegDataPtr NewData;							 \
-    NewData = (RegDataPtr)xrealloc((reg)->data, REGION_SZOF(numRects));	 \
+    NewData = (RegDataPtr)realloc((reg)->data, REGION_SZOF(numRects));	 \
     if (NewData)							 \
     {									 \
 	NewData->size = (numRects);					 \
@@ -241,7 +241,7 @@ miRegionCreate(BoxPtr rect, int size)
 {
     RegionPtr pReg;
    
-    pReg = (RegionPtr)xalloc(sizeof(RegionRec));
+    pReg = (RegionPtr)malloc(sizeof(RegionRec));
     if (!pReg)
 	return &miBrokenRegion;
 
@@ -255,7 +255,7 @@ miRegionDestroy(RegionPtr pReg)
 {
     pixman_region_fini (pReg);
     if (pReg != &miBrokenRegion)
-	xfree(pReg);
+	free(pReg);
 }
 
 void
@@ -389,7 +389,7 @@ miRectAlloc(RegionPtr pRgn, int n)
 		n = 250;
 	}
 	n += pRgn->data->numRects;
-	data = (RegDataPtr)xrealloc(pRgn->data, REGION_SZOF(n));
+	data = (RegDataPtr)realloc(pRgn->data, REGION_SZOF(n));
 	if (!data)
 	    return miRegionBreak (pRgn);
 	pRgn->data = data;
@@ -797,7 +797,7 @@ miRegionOp(
     }
 
     if (oldData)
-	xfree(oldData);
+	free(oldData);
 
     if (!(numRects = newReg->data->numRects))
     {
@@ -1269,7 +1269,7 @@ miRegionValidate(RegionPtr badreg, Bool *pOverlap)
 
     /* Set up the first region to be the first rectangle in badreg */
     /* Note that step 2 code will never overflow the ri[0].reg rects array */
-    ri = (RegionInfo *) xalloc(4 * sizeof(RegionInfo));
+    ri = (RegionInfo *) malloc(4 * sizeof(RegionInfo));
     if (!ri)
 	return miRegionBreak (badreg);
     sizeRI = 4;
@@ -1333,7 +1333,7 @@ miRegionValidate(RegionPtr badreg, Bool *pOverlap)
 	{
 	    /* Oops, allocate space for new region information */
 	    sizeRI <<= 1;
-	    rit = (RegionInfo *) xrealloc(ri, sizeRI * sizeof(RegionInfo));
+	    rit = (RegionInfo *) realloc(ri, sizeRI * sizeof(RegionInfo));
 	    if (!rit)
 		goto bail;
 	    ri = rit;
@@ -1389,13 +1389,13 @@ NextRect: ;
 	numRI -= half;
     }
     *badreg = ri[0].reg;
-    xfree(ri);
+    free(ri);
     good(badreg);
     return ret;
 bail:
     for (i = 0; i < numRI; i++)
 	xfreeData(&ri[i].reg);
-    xfree (ri);
+    free(ri);
     return miRegionBreak (badreg);
 }
 
@@ -1473,7 +1473,7 @@ miRectsToRegion(int nrects, xRectangle *prect, int ctype)
     }
     else
     {
-	xfree (pData);
+	free(pData);
     }
     return pRgn;
 }

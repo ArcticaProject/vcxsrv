@@ -131,7 +131,7 @@ XAACopyPlaneNtoNColorExpand(
 	h = height = pbox->y2 - pbox->y1;
 	pitch = BitmapBytePad(width);
 
-	if(!(data = xcalloc(height, pitch)))
+	if(!(data = calloc(height, pitch)))
 	   goto ALLOC_FAILED;
 
 	dataPtr = data;
@@ -151,7 +151,7 @@ XAACopyPlaneNtoNColorExpand(
 		pbox->x1, pbox->y1, width, height, data, pitch, 0, 
 		pGC->fgPixel, pGC->bgPixel, pGC->alu, pGC->planemask);
 	
-	xfree(data);
+	free(data);
 
 ALLOC_FAILED:
 
@@ -184,7 +184,7 @@ XAAPushPixelsSolidColorExpansion(
    TheRect.height = dy; 
 
    if(MaxBoxes > (infoRec->PreAllocSize/sizeof(BoxRec))) {
-	pClipBoxes = xalloc(MaxBoxes * sizeof(BoxRec));
+	pClipBoxes = malloc(MaxBoxes * sizeof(BoxRec));
 	if(!pClipBoxes) return;	
    } else pClipBoxes = (BoxPtr)infoRec->PreAllocMem;
 
@@ -203,6 +203,6 @@ XAAPushPixelsSolidColorExpansion(
    }
 
     if(pClipBoxes != (BoxPtr)infoRec->PreAllocMem)
-	xfree(pClipBoxes);
+	free(pClipBoxes);
 }
 

@@ -108,12 +108,12 @@ XAADoBitBlt(
 
 	if (nbox > 1) {
 	    /* keep ordering in each band, reverse order of bands */
-	    pboxNew1 = (BoxPtr)xalloc(sizeof(BoxRec) * nbox);
+	    pboxNew1 = (BoxPtr)malloc(sizeof(BoxRec) * nbox);
 	    if(!pboxNew1)
 		return;
-	    pptNew1 = (DDXPointPtr)xalloc(sizeof(DDXPointRec) * nbox);
+	    pptNew1 = (DDXPointPtr)malloc(sizeof(DDXPointRec) * nbox);
 	    if(!pptNew1) {
-	        xfree(pboxNew1);
+	        free(pboxNew1);
 	        return;
 	    }
 	    pboxBase = pboxNext = pbox+nbox-1;
@@ -145,14 +145,14 @@ XAADoBitBlt(
 
 	if (nbox > 1) {
 	    /* reverse order of rects in each band */
-	    pboxNew2 = (BoxPtr)xalloc(sizeof(BoxRec) * nbox);
-	    pptNew2 = (DDXPointPtr)xalloc(sizeof(DDXPointRec) * nbox);
+	    pboxNew2 = (BoxPtr)malloc(sizeof(BoxRec) * nbox);
+	    pptNew2 = (DDXPointPtr)malloc(sizeof(DDXPointRec) * nbox);
 	    if(!pboxNew2 || !pptNew2) {
-		if (pptNew2) xfree(pptNew2);
-		if (pboxNew2) xfree(pboxNew2);
+		if (pptNew2) free(pptNew2);
+		if (pboxNew2) free(pboxNew2);
 		if (pboxNew1) {
-		    xfree(pptNew1);
-		    xfree(pboxNew1);
+		    free(pptNew1);
+		    free(pboxNew1);
 		}
 	        return;
 	    }
@@ -183,12 +183,12 @@ XAADoBitBlt(
 	xdir, ydir, pGC->alu, pGC->planemask);
  
     if (pboxNew2) {
-	xfree(pptNew2);
-	xfree(pboxNew2);
+	free(pptNew2);
+	free(pboxNew2);
     }
     if (pboxNew1) {
-	xfree(pptNew1);
-	xfree(pboxNew1);
+	free(pptNew1);
+	free(pboxNew1);
     }
 
 }

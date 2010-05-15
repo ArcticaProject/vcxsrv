@@ -50,7 +50,7 @@ static Bool dmxAllocateColormapPrivates(ColormapPtr pColormap)
 {
     dmxColormapPrivPtr   pCmapPriv;
 
-    pCmapPriv = (dmxColormapPrivPtr)xalloc(sizeof(*pCmapPriv));
+    pCmapPriv = (dmxColormapPrivPtr)malloc(sizeof(*pCmapPriv));
     if (!pCmapPriv)
 	return FALSE;
     pCmapPriv->cmap = (Colormap)0;
@@ -133,7 +133,7 @@ void dmxDestroyColormap(ColormapPtr pColormap)
 
     if (dmxScreen->beDisplay)
 	dmxBEFreeColormap(pColormap);
-    xfree(pCmapPriv);
+    free(pCmapPriv);
     DMX_SET_COLORMAP_PRIV(pColormap, NULL);
 
     DMX_UNWRAP(DestroyColormap, dmxScreen, pScreen);
@@ -170,7 +170,7 @@ void dmxStoreColors(ColormapPtr pColormap, int ndef, xColorItem *pdef)
     dmxColormapPrivPtr  pCmapPriv = DMX_GET_COLORMAP_PRIV(pColormap);
 
     if (dmxScreen->beDisplay && (pColormap->pVisual->class & DynamicClass)) {
-        XColor *color = xalloc(sizeof(*color) * ndef);
+        XColor *color = malloc(sizeof(*color) * ndef);
         int    i;
         
         if (color) {
@@ -183,7 +183,7 @@ void dmxStoreColors(ColormapPtr pColormap, int ndef, xColorItem *pdef)
                 color[i].pad   = pdef[i].pad;
             }
             XStoreColors(dmxScreen->beDisplay, pCmapPriv->cmap, color, ndef);
-            xfree(color);
+            free(color);
         } else {                /* xalloc failed, so fallback */
             XColor c;
             for (i = 0; i < ndef; i++) {

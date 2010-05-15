@@ -61,7 +61,7 @@ ProcDPMSGetVersion(ClientPtr client)
 	swaps(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xDPMSGetVersionReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -82,7 +82,7 @@ ProcDPMSCapable(ClientPtr client)
 	swaps(&rep.sequenceNumber, n);
     }
     WriteToClient(client, sizeof(xDPMSCapableReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -108,7 +108,7 @@ ProcDPMSGetTimeouts(ClientPtr client)
 	swaps(&rep.off, n);
     }
     WriteToClient(client, sizeof(xDPMSGetTimeoutsReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -134,7 +134,7 @@ ProcDPMSSetTimeouts(ClientPtr client)
     DPMSOffTime = stuff->off * MILLI_PER_SECOND;
     SetScreenSaverTimer();
 
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -150,7 +150,7 @@ ProcDPMSEnable(ClientPtr client)
 	    SetScreenSaverTimer();
     }
 
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -164,7 +164,7 @@ ProcDPMSDisable(ClientPtr client)
 
     DPMSEnabled = FALSE;
 
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -187,7 +187,7 @@ ProcDPMSForceLevel(ClientPtr client)
 
     DPMSSet(client, stuff->level);
 
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -210,7 +210,7 @@ ProcDPMSInfo(ClientPtr client)
 	swaps(&rep.power_level, n);
     }
     WriteToClient(client, sizeof(xDPMSInfoReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int

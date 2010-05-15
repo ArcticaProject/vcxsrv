@@ -357,7 +357,7 @@ DRIScreenInit(ScreenPtr pScreen, DRIInfoPtr pDRIInfo, int *pDRMFD)
     if (DRIGeneration != serverGeneration)
 	DRIGeneration = serverGeneration;
 
-    pDRIPriv = (DRIScreenPrivPtr) xcalloc(1, sizeof(DRIScreenPrivRec));
+    pDRIPriv = (DRIScreenPrivPtr) calloc(1, sizeof(DRIScreenPrivRec));
     if (!pDRIPriv) {
 	dixSetPrivate(&pScreen->devPrivates, DRIScreenPrivKey, NULL);
         return FALSE;
@@ -534,7 +534,7 @@ DRIScreenInit(ScreenPtr pScreen, DRIInfoPtr pDRIInfo, int *pDRMFD)
 
 	/* allocate memory for hidden context store */
 	pDRIPriv->hiddenContextStore
-	    = (void *)xcalloc(1, pDRIInfo->contextSize);
+	    = (void *)calloc(1, pDRIInfo->contextSize);
 	if (!pDRIPriv->hiddenContextStore) {
 	    DRIDrvMsg(pScreen->myNum, X_ERROR,
 		      "failed to allocate hidden context\n");
@@ -544,11 +544,11 @@ DRIScreenInit(ScreenPtr pScreen, DRIInfoPtr pDRIInfo, int *pDRMFD)
 
 	/* allocate memory for partial 3D context store */
 	pDRIPriv->partial3DContextStore
-	    = (void *)xcalloc(1, pDRIInfo->contextSize);
+	    = (void *)calloc(1, pDRIInfo->contextSize);
 	if (!pDRIPriv->partial3DContextStore) {
 	    DRIDrvMsg(pScreen->myNum, X_ERROR,
 		      "[DRI] failed to allocate partial 3D context\n");
-	    xfree(pDRIPriv->hiddenContextStore);
+	    free(pDRIPriv->hiddenContextStore);
 	    DRIDestroyContextPriv(pDRIContextPriv);
 	    return FALSE;
 	}
@@ -574,9 +574,9 @@ DRIScreenInit(ScreenPtr pScreen, DRIInfoPtr pDRIInfo, int *pDRMFD)
 	    DRIDrvMsg(pScreen->myNum, X_ERROR,
 		      "[drm] failed to setup DRM signal handler\n");
 	    if (pDRIPriv->hiddenContextStore)
-		xfree(pDRIPriv->hiddenContextStore);
+		free(pDRIPriv->hiddenContextStore);
 	    if (pDRIPriv->partial3DContextStore)
-		xfree(pDRIPriv->partial3DContextStore);
+		free(pDRIPriv->partial3DContextStore);
 	    DRIDestroyContextPriv(pDRIContextPriv);
 	    return FALSE;
 	} else {
@@ -757,7 +757,7 @@ DRICloseScreen(ScreenPtr pScreen)
 	    }
 	}
 
-	xfree(pDRIPriv);
+	free(pDRIPriv);
 	dixSetPrivate(&pScreen->devPrivates, DRIScreenPrivKey, NULL);
     }
 }
@@ -907,7 +907,7 @@ DRICreateContextPrivFromHandle(ScreenPtr pScreen,
 
     contextPrivSize = sizeof(DRIContextPrivRec) +
 			    pDRIPriv->pDriverInfo->contextSize;
-    if (!(pDRIContextPriv = xcalloc(1, contextPrivSize))) {
+    if (!(pDRIContextPriv = calloc(1, contextPrivSize))) {
 	return NULL;
     }
     pDRIContextPriv->pContextStore = (void *)(pDRIContextPriv + 1);
@@ -965,7 +965,7 @@ DRIDestroyContextPriv(DRIContextPrivPtr pDRIContextPriv)
                                    while in this thread, but buffers can be
                                    dispatched asynchronously. */
     drmDelContextTag(pDRIPriv->drmFD, pDRIContextPriv->hwContext);
-    xfree(pDRIContextPriv);
+    free(pDRIContextPriv);
     return TRUE;
 }
 
@@ -1182,7 +1182,7 @@ DRIDriverClipNotify(ScreenPtr pScreen)
     DRIScreenPrivPtr pDRIPriv = DRI_SCREEN_PRIV(pScreen);
 
     if (pDRIPriv->pDriverInfo->ClipNotify) {
-	WindowPtr *pDRIWindows = xcalloc(sizeof(WindowPtr), pDRIPriv->nrWindows);
+	WindowPtr *pDRIWindows = calloc(sizeof(WindowPtr), pDRIPriv->nrWindows);
 	DRIInfoPtr pDRIInfo = pDRIPriv->pDriverInfo;
 
 	if (pDRIPriv->nrWindows > 0) {
@@ -1193,7 +1193,7 @@ DRIDriverClipNotify(ScreenPtr pScreen)
 
 	pDRIInfo->ClipNotify(pScreen, pDRIWindows, pDRIPriv->nrWindows);
 
-	xfree(pDRIWindows);
+	free(pDRIWindows);
     }
 }
 
@@ -1254,14 +1254,14 @@ DRICreateDrawable(ScreenPtr pScreen, ClientPtr client, DrawablePtr pDrawable,
 	}
 	else {
 	    /* allocate a DRI Window Private record */
-	    if (!(pDRIDrawablePriv = xalloc(sizeof(DRIDrawablePrivRec)))) {
+	    if (!(pDRIDrawablePriv = malloc(sizeof(DRIDrawablePrivRec)))) {
 		return FALSE;
 	    }
 
 	    /* Only create a drm_drawable_t once */
 	    if (drmCreateDrawable(pDRIPriv->drmFD,
 				  &pDRIDrawablePriv->hwDrawable)) {
-		xfree(pDRIDrawablePriv);
+		free(pDRIDrawablePriv);
 		return FALSE;
 	    }
 
@@ -1330,7 +1330,7 @@ DRIDrawablePrivDestroy(WindowPtr pWin)
 
     drmDestroyDrawable(pDRIPriv->drmFD, pDRIDrawablePriv->hwDrawable);
 
-    xfree(pDRIDrawablePriv);
+    free(pDRIDrawablePriv);
     dixSetPrivate(&pWin->devPrivates, DRIWindowPrivKey, NULL);
 }
 
@@ -1587,7 +1587,7 @@ DRIGetDeviceInfo(ScreenPtr pScreen,
 DRIInfoPtr
 DRICreateInfoRec(void)
 {
-    DRIInfoPtr inforec = (DRIInfoPtr)xcalloc(1, sizeof(DRIInfoRec));
+    DRIInfoPtr inforec = (DRIInfoPtr)calloc(1, sizeof(DRIInfoRec));
     if (!inforec) return NULL;
 
     /* Initialize defaults */
@@ -1613,8 +1613,8 @@ DRICreateInfoRec(void)
 void
 DRIDestroyInfoRec(DRIInfoPtr DRIInfo)
 {
-    if (DRIInfo->busIdString) xfree(DRIInfo->busIdString);
-    xfree((char*)DRIInfo);
+    if (DRIInfo->busIdString) free(DRIInfo->busIdString);
+    free((char*)DRIInfo);
 }
 
 
@@ -2425,7 +2425,7 @@ DRICreatePCIBusID(const struct pci_device * dev)
 {
     char *busID;
 
-    busID = xalloc(20);
+    busID = malloc(20);
     if (busID == NULL)
 	return NULL;
 

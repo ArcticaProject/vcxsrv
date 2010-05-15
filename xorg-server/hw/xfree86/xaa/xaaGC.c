@@ -158,7 +158,7 @@ XAAValidateGC(
 
     /* If our Ops are still the default ones we need to allocate new ones */
     if(pGC->ops == &XAAFallbackOps) {
-	if(!(pGCPriv->XAAOps = xalloc(sizeof(GCOps)))) {	
+	if(!(pGCPriv->XAAOps = malloc(sizeof(GCOps)))) {
 	    pGCPriv->XAAOps = &XAAFallbackOps;
 	    return;
 	}
@@ -241,10 +241,10 @@ XAADestroyGC(GCPtr pGC)
     XAA_GC_FUNC_PROLOGUE (pGC);
      
     if(pGCPriv->XAAOps != &XAAFallbackOps)
-	xfree(pGCPriv->XAAOps);
+	free(pGCPriv->XAAOps);
 
     if(pGCPriv->DashPattern)
-	xfree(pGCPriv->DashPattern);    
+	free(pGCPriv->DashPattern);
 
     (*pGC->funcs->DestroyGC)(pGC);
     XAA_GC_FUNC_EPILOGUE (pGC);

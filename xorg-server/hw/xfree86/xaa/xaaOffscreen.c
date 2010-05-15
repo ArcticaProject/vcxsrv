@@ -79,7 +79,7 @@ XAAMoveInOffscreenPixmaps(ScreenPtr pScreen)
 
 	if(!tmpPix) {
 	    pPriv->offscreenArea = area;
-	    xfree(data);
+	    free(data);
 	    pLink = pLink->next;
 	    continue;
 	}
@@ -90,7 +90,7 @@ XAAMoveInOffscreenPixmaps(ScreenPtr pScreen)
 	(*pGC->ops->CopyArea)((DrawablePtr)tmpPix, (DrawablePtr)pPix, pGC, 
 		0, 0, pPix->drawable.width, pPix->drawable.height, 0, 0);	
 
-	xfree(data);
+	free(data);
 	tmpPix->devPrivate.ptr = NULL;
 
 	FreeScratchGC(pGC);
@@ -132,13 +132,13 @@ XAAMoveOutOffscreenPixmap(PixmapPtr pPix)
     bitsPerPixel = pPix->drawable.bitsPerPixel;
 
     devKind = BitmapBytePad(width * bitsPerPixel);
-    if(!(data = xalloc(devKind * height)))
+    if(!(data = malloc(devKind * height)))
 	FatalError("Out of memory\n");
 
     tmpPix = GetScratchPixmapHeader(pScreen, width, height, 
 		pPix->drawable.depth, bitsPerPixel, devKind, data);
     if(!tmpPix) {
-	xfree(data);
+	free(data);
 	FatalError("Out of memory\n");
     }
 

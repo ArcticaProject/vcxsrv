@@ -83,7 +83,7 @@ ProcXCMiscGetVersion(ClientPtr client)
 	swaps(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xXCMiscGetVersionReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -106,7 +106,7 @@ ProcXCMiscGetXIDRange(ClientPtr client)
 	swapl(&rep.count, n);
     }
     WriteToClient(client, sizeof(xXCMiscGetXIDRangeReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -123,7 +123,7 @@ ProcXCMiscGetXIDList(ClientPtr client)
     if (stuff->count > UINT32_MAX / sizeof(XID))
 	    return BadAlloc;
 
-    pids = (XID *)Xalloc(stuff->count * sizeof(XID));
+    pids = (XID *)malloc(stuff->count * sizeof(XID));
     if (!pids)
     {
 	return BadAlloc;
@@ -144,8 +144,8 @@ ProcXCMiscGetXIDList(ClientPtr client)
     	client->pSwapReplyFunc = (ReplySwapPtr) Swap32Write;
 	WriteSwappedDataToClient(client, count * sizeof(XID), pids);
     }
-    Xfree(pids);
-    return(client->noClientException);
+    free(pids);
+    return Success;
 }
 
 static int

@@ -63,16 +63,16 @@ RROutputCreate (ScreenPtr   pScreen,
     pScrPriv = rrGetScrPriv(pScreen);
 
     if (pScrPriv->numOutputs)
-	outputs = xrealloc (pScrPriv->outputs, 
+	outputs = realloc(pScrPriv->outputs,
 			    (pScrPriv->numOutputs + 1) * sizeof (RROutputPtr));
     else
-	outputs = xalloc (sizeof (RROutputPtr));
+	outputs = malloc(sizeof (RROutputPtr));
     if (!outputs)
 	return FALSE;
 
     pScrPriv->outputs = outputs;
     
-    output = xalloc (sizeof (RROutputRec) + nameLength + 1);
+    output = malloc(sizeof (RROutputRec) + nameLength + 1);
     if (!output)
 	return NULL;
     output->id = FakeClientID (0);
@@ -128,14 +128,14 @@ RROutputSetClones (RROutputPtr  output,
     }
     if (numClones)
     {
-	newClones = xalloc (numClones * sizeof (RROutputPtr));
+	newClones = malloc(numClones * sizeof (RROutputPtr));
 	if (!newClones)
 	    return FALSE;
     }
     else
 	newClones = NULL;
     if (output->clones)
-	xfree (output->clones);
+	free(output->clones);
     memcpy (newClones, clones, numClones * sizeof (RROutputPtr));
     output->clones = newClones;
     output->numClones = numClones;
@@ -167,7 +167,7 @@ RROutputSetModes (RROutputPtr	output,
 
     if (numModes)
     {
-	newModes = xalloc (numModes * sizeof (RRModePtr));
+	newModes = malloc(numModes * sizeof (RRModePtr));
 	if (!newModes)
 	    return FALSE;
     }
@@ -177,7 +177,7 @@ RROutputSetModes (RROutputPtr	output,
     {
 	for (i = 0; i < output->numModes; i++)
 	    RRModeDestroy (output->modes[i]);
-	xfree (output->modes);
+	free(output->modes);
     }
     memcpy (newModes, modes, numModes * sizeof (RRModePtr));
     output->modes = newModes;
@@ -212,10 +212,10 @@ RROutputAddUserMode (RROutputPtr    output,
 	    return BadMatch;
 
     if (output->userModes)
-	newModes = xrealloc (output->userModes,
+	newModes = realloc(output->userModes,
 			     (output->numUserModes + 1) * sizeof (RRModePtr));
     else
-	newModes = xalloc (sizeof (RRModePtr));
+	newModes = malloc(sizeof (RRModePtr));
     if (!newModes)
 	return BadAlloc;
 
@@ -274,14 +274,14 @@ RROutputSetCrtcs (RROutputPtr	output,
     }
     if (numCrtcs)
     {
-	newCrtcs = xalloc (numCrtcs * sizeof (RRCrtcPtr));
+	newCrtcs = malloc(numCrtcs * sizeof (RRCrtcPtr));
 	if (!newCrtcs)
 	    return FALSE;
     }
     else
 	newCrtcs = NULL;
     if (output->crtcs)
-	xfree (output->crtcs);
+	free(output->crtcs);
     memcpy (newCrtcs, crtcs, numCrtcs * sizeof (RRCrtcPtr));
     output->crtcs = newCrtcs;
     output->numCrtcs = numCrtcs;
@@ -398,20 +398,20 @@ RROutputDestroyResource (pointer value, XID pid)
     {
 	for (m = 0; m < output->numModes; m++)
 	    RRModeDestroy (output->modes[m]);
-	xfree (output->modes);
+	free(output->modes);
     }
     
     for (m = 0; m < output->numUserModes; m++)
 	RRModeDestroy (output->userModes[m]);
     if (output->userModes)
-	xfree (output->userModes);
+	free(output->userModes);
 
     if (output->crtcs)
-	xfree (output->crtcs);
+	free(output->crtcs);
     if (output->clones)
-	xfree (output->clones);
+	free(output->clones);
     RRDeleteAllOutputProperties (output);
-    xfree (output);
+    free(output);
     return 1;
 }
 
@@ -474,7 +474,7 @@ ProcRRGetOutputInfo (ClientPtr client)
     if (extraLen)
     {
 	rep.length += bytes_to_int32(extraLen);
-	extra = xalloc (extraLen);
+	extra = malloc(extraLen);
 	if (!extra)
 	    return BadAlloc;
     }
@@ -524,10 +524,10 @@ ProcRRGetOutputInfo (ClientPtr client)
     if (extraLen)
     {
 	WriteToClient (client, extraLen, (char *) extra);
-	xfree (extra);
+	free(extra);
     }
     
-    return client->noClientException;
+    return Success;
 }
 
 static void
@@ -581,7 +581,7 @@ ProcRRSetOutputPrimary(ClientPtr client)
     pScrPriv = rrGetScrPriv(pWin->drawable.pScreen);
     RRSetPrimaryOutput(pWin->drawable.pScreen, pScrPriv, output);
 
-    return client->noClientException;
+    return Success;
 }
 
 int
@@ -617,5 +617,5 @@ ProcRRGetOutputPrimary(ClientPtr client)
 
     WriteToClient(client, sizeof(xRRGetOutputPrimaryReply), &rep);
 
-    return client->noClientException;
+    return Success;
 }

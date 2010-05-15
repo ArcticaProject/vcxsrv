@@ -260,15 +260,15 @@ miInitIndexed (ScreenPtr	pScreen,
 	    pixels[p] = p;
     }
     
-    pIndexed = xalloc (sizeof (miIndexedRec));
+    pIndexed = malloc(sizeof (miIndexedRec));
     if (!pIndexed)
 	return FALSE;
     
     pFormat->index.nvalues = num;
-    pFormat->index.pValues = xalloc (num * sizeof (xIndexValue));
+    pFormat->index.pValues = malloc(num * sizeof (xIndexValue));
     if (!pFormat->index.pValues)
     {
-	xfree (pIndexed);
+	free(pIndexed);
 	return FALSE;
     }
     
@@ -276,7 +276,7 @@ miInitIndexed (ScreenPtr	pScreen,
     /*
      * Build mapping from pixel value to ARGB
      */
-    QueryColors (pColormap, num, pixels, rgb);
+    QueryColors (pColormap, num, pixels, rgb, serverClient);
     for (i = 0; i < num; i++)
     {
 	p = pixels[i];
@@ -324,12 +324,12 @@ miCloseIndexed (ScreenPtr	pScreen,
 {
     if (pFormat->index.devPrivate)
     {
-	xfree (pFormat->index.devPrivate);
+	free(pFormat->index.devPrivate);
 	pFormat->index.devPrivate = 0;
     }
     if (pFormat->index.pValues)
     {
-	xfree (pFormat->index.pValues);
+	free(pFormat->index.pValues);
 	pFormat->index.pValues = 0;
     }
 }

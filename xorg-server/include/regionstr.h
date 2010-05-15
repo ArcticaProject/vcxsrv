@@ -142,7 +142,7 @@ extern _X_EXPORT RegDataRec miBrokenData;
     { \
         (_pReg)->extents = miEmptyBox; \
         if (((_size) > 1) && ((_pReg)->data = \
-                             (RegDataPtr)xalloc(REGION_SZOF(_size)))) \
+                             (RegDataPtr)malloc(REGION_SZOF(_size)))) \
         { \
             (_pReg)->data->size = (_size); \
             (_pReg)->data->numRects = 0; \
@@ -156,7 +156,7 @@ extern _X_EXPORT RegDataRec miBrokenData;
 #define REGION_UNINIT(_pScreen, _pReg) \
 { \
     if ((_pReg)->data && (_pReg)->data->size) { \
-	xfree((_pReg)->data); \
+	free((_pReg)->data); \
 	(_pReg)->data = NULL; \
     } \
 }

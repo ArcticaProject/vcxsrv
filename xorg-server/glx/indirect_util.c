@@ -88,7 +88,7 @@ __glXGetAnswerBuffer( __GLXclientState * cl, size_t required_size,
         intptr_t  temp_buf;
 
         if ( cl->returnBufSize < worst_case_size ) {
-	    void * temp = xrealloc( cl->returnBuf, worst_case_size );
+	    void * temp = realloc( cl->returnBuf, worst_case_size );
 	    
 	    if ( temp == NULL ) {
 	        return NULL;

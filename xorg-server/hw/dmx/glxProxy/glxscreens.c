@@ -135,7 +135,7 @@ static void CalcServerVersionAndExtensions( void )
    /*
     * read extensions strings of all back-end servers
     */
-   be_extensions = (char **)Xalloc( __glXNumActiveScreens * sizeof(char *) );
+   be_extensions = (char **)malloc( __glXNumActiveScreens * sizeof(char *) );
    if (!be_extensions)
       return;
 
@@ -158,7 +158,7 @@ static void CalcServerVersionAndExtensions( void )
       length = (int)reply.length;
       numbytes = (int)reply.n;
       slop = numbytes * __GLX_SIZE_INT8 & 3;
-      be_extensions[s] = (char *)Xalloc(numbytes);
+      be_extensions[s] = (char *)malloc(numbytes);
       if (!be_extensions[s]) {
 	 /* Throw data on the floor */
 	 _XEatData(dpy, length);
@@ -244,7 +244,7 @@ void __glXScreenInit(GLint numscreens)
       // find the set of FBConfigs that are present on all back-end
       // servers - only those configs will be supported
        */
-      __glXFBConfigs = (__GLXFBConfig **)Xalloc( dmxScreen0->numFBConfigs * 
+      __glXFBConfigs = (__GLXFBConfig **)malloc( dmxScreen0->numFBConfigs *
 	                      (numscreens+1) * sizeof(__GLXFBConfig *) );
       __glXNumFBConfigs = 0;
    
@@ -282,7 +282,7 @@ void __glXScreenInit(GLint numscreens)
 	       __glXFBConfigs[ __glXNumFBConfigs * (numscreens+1) + 1 ] = 
 	               &dmxScreen0->fbconfigs[c];
 
-	       proxy_cfg = Xalloc( sizeof(__GLXFBConfig) );
+	       proxy_cfg = malloc( sizeof(__GLXFBConfig) );
 	       memcpy( proxy_cfg, cfg, sizeof(__GLXFBConfig) );
 	       proxy_cfg->id =  FakeClientID(0);
 	       /* visual will be associated later in __glXGetFBConfigs */

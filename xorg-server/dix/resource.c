@@ -204,7 +204,7 @@ CreateNewResourceType(DeleteType deleteFunc, char *name)
 
     if (next & lastResourceClass)
 	return 0;
-    funcs = (DeleteType *)xrealloc(DeleteFuncs,
+    funcs = (DeleteType *)realloc(DeleteFuncs,
 				   (next + 1) * sizeof(DeleteType));
     if (!funcs)
 	return 0;
@@ -252,8 +252,8 @@ InitClientResources(ClientPtr client)
 	lastResourceClass = RC_LASTPREDEF;
 	TypeMask = RC_LASTPREDEF - 1;
 	if (DeleteFuncs)
-	    xfree(DeleteFuncs);
-	DeleteFuncs = xalloc((lastResourceType + 1) * sizeof(DeleteType));
+	    free(DeleteFuncs);
+	DeleteFuncs = malloc((lastResourceType + 1) * sizeof(DeleteType));
 	if (!DeleteFuncs)
 	    return FALSE;
 	DeleteFuncs[RT_NONE & TypeMask] = (DeleteType)NoopDDA;
@@ -268,7 +268,7 @@ InitClientResources(ClientPtr client)
 	DeleteFuncs[RT_PASSIVEGRAB & TypeMask] = DeletePassiveGrab;
     }
     clientTable[i = client->index].resources =
-	xalloc(INITBUCKETS*sizeof(ResourcePtr));
+	malloc(INITBUCKETS*sizeof(ResourcePtr));
     if (!clientTable[i].resources)
 	return FALSE;
     clientTable[i].buckets = INITBUCKETS;
@@ -459,7 +459,7 @@ AddResource(XID id, RESTYPE type, pointer value)
 	(rrec->hashsize < MAXHASHSIZE))
 	RebuildTable(client);
     head = &rrec->resources[Hash(client, id)];
-    res = xalloc(sizeof(ResourceRec));
+    res = malloc(sizeof(ResourceRec));
     if (!res)
     {
 	(*DeleteFuncs[type & TypeMask])(value, id);
@@ -491,13 +491,13 @@ RebuildTable(int client)
      */
 
     j = 2 * clientTable[client].buckets;
-    tails = xalloc(j * sizeof(ResourcePtr *));
+    tails = malloc(j * sizeof(ResourcePtr *));
     if (!tails)
 	return;
-    resources = xalloc(j * sizeof(ResourcePtr));
+    resources = malloc(j * sizeof(ResourcePtr));
     if (!resources)
     {
-	xfree(tails);
+	free(tails);
 	return;
     }
     for (rptr = resources, tptr = tails; --j >= 0; rptr++, tptr++)
@@ -520,9 +520,9 @@ RebuildTable(int client)
 	    *tptr = &res->next;
 	}
     }
-    xfree(tails);
+    free(tails);
     clientTable[client].buckets *= 2;
-    xfree(clientTable[client].resources);
+    free(clientTable[client].resources);
     clientTable[client].resources = resources;
 }
 
@@ -558,7 +558,7 @@ FreeResource(XID id, RESTYPE skipDeleteFuncType)
 
 		if (rtype != skipDeleteFuncType)
 		    (*DeleteFuncs[rtype & TypeMask])(res->value, res->id);
-		xfree(res);
+		free(res);
 		if (*eltptr != elements)
 		    prev = head; /* prev may no longer be valid */
 	    }
@@ -595,7 +595,7 @@ FreeResourceByType(XID id, RESTYPE type, Bool skipFree)
 
 		if (!skipFree)
 		    (*DeleteFuncs[type & TypeMask])(res->value, res->id);
-		xfree(res);
+		free(res);
 		break;
 	    }
 	    else
@@ -762,7 +762,7 @@ FreeClientNeverRetainResources(ClientPtr client)
 
 		elements = *eltptr;
 		(*DeleteFuncs[rtype & TypeMask])(this->value, this->id);
-		xfree(this);
+		free(this);
 		if (*eltptr != elements)
 		    prev = &resources[j]; /* prev may no longer be valid */
 	    }
@@ -816,10 +816,10 @@ FreeClientResources(ClientPtr client)
 	    CallResourceStateCallback(ResourceStateFreeing, this);
 
 	    (*DeleteFuncs[rtype & TypeMask])(this->value, this->id);
-	    xfree(this);
+	    free(this);
 	}
     }
-    xfree(clientTable[client->index].resources);
+    free(clientTable[client->index].resources);
     clientTable[client->index].resources = NULL;
     clientTable[client->index].buckets = 0;
 }

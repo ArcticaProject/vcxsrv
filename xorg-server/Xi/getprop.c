@@ -119,7 +119,7 @@ ProcXGetDeviceDontPropagateList(ClientPtr client)
 				 &count, COUNT);
 	if (count) {
 	    rep.count = count;
-	    buf = (XEventClass *) xalloc(rep.count * sizeof(XEventClass));
+	    buf = (XEventClass *) malloc(rep.count * sizeof(XEventClass));
 	    rep.length = bytes_to_int32(rep.count * sizeof(XEventClass));
 
 	    tbuf = buf;
@@ -134,7 +134,7 @@ ProcXGetDeviceDontPropagateList(ClientPtr client)
     if (count) {
 	client->pSwapReplyFunc = (ReplySwapPtr) Swap32Write;
 	WriteSwappedDataToClient(client, count * sizeof(XEventClass), buf);
-	xfree(buf);
+	free(buf);
     }
     return Success;
 }
