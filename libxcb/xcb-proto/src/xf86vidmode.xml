@@ -161,7 +161,9 @@ authorization from the authors.
 			    <fieldref>vendor_length</fieldref>
 			    <value> 3 </value>
 			</op>
-			<value>0xFFFFFFFC</value>
+			<unop op="~">
+			    <value>3</value>
+			</unop>
 		    </op>
 		    <fieldref>vendor_length</fieldref>
 		</op>
@@ -377,7 +379,9 @@ authorization from the authors.
 			<fieldref>size</fieldref>
 			<value>1</value>
 		    </op>
-		    <value>0xFFFFFFFE</value>
+		    <unop op="~">
+			<value>1</value>
+		    </unop>
 		</op>
 	    </list>
 	    <list type="CARD16" name="green">
@@ -386,7 +390,9 @@ authorization from the authors.
 			<fieldref>size</fieldref>
 			<value>1</value>
 		    </op>
-		    <value>0xFFFFFFFE</value>
+		    <unop op="~">
+			<value>1</value>
+		    </unop>
 		</op>
 	    </list>
 	    <list type="CARD16" name="blue">
@@ -395,7 +401,9 @@ authorization from the authors.
 			<fieldref>size</fieldref>
 			<value>1</value>
 		    </op>
-		    <value>0xFFFFFFFE</value>
+		    <unop op="~">
+			<value>1</value>
+		    </unop>
 		</op>
 	    </list>
 	</reply>
@@ -410,7 +418,9 @@ authorization from the authors.
 		    <fieldref>size</fieldref>
 		    <value>1</value>
 		</op>
-		<value>0xFFFFFFFE</value>
+		<unop op="~">
+		    <value>1</value>
+		</unop>
 	    </op>
 	</list>
 	<list type="CARD16" name="green">
@@ -419,7 +429,9 @@ authorization from the authors.
 		    <fieldref>size</fieldref>
 		    <value>1</value>
 		</op>
-		<value>0xFFFFFFFE</value>
+		<unop op="~">
+		    <value>1</value>
+		</unop>
 	    </op>
 	</list>
 	<list type="CARD16" name="blue">
@@ -428,7 +440,9 @@ authorization from the authors.
 		    <fieldref>size</fieldref>
 		    <value>1</value>
 		</op>
-		<value>0xFFFFFFFE</value>
+		<unop op="~">
+		    <value>1</value>
+		</unop>
 	    </op>
 	</list>
     </request>

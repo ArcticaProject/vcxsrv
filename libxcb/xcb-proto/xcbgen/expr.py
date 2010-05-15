@@ -26,7 +26,7 @@ class Expression(object):
     Represents a mathematical expression for a list length or exprfield.
 
     Public fields:
-    op is the operation (text +,*,/,<<) or None.
+    op is the operation (text +,*,/,<<,~) or None.
     lhs and rhs are the sub-Expressions if op is set.
     lenfield_name is the name of the length field, or None for request lists.
     lenfield is the Field object for the length field, or None.
@@ -75,9 +75,16 @@ class Expression(object):
             if self.lenfield_name == None:
                 self.lenfield_name = self.rhs.lenfield_name
 
+        elif elt.tag == 'unop':
+            # Op field.  Need to recurse.
+            self.op = elt.get('op')
+            self.rhs = Expression(list(elt)[0], parent)
+
+            self.lenfield_name = self.rhs.lenfield_name
+
         elif elt.tag == 'value':
             # Constant expression
-            self.nmemb = int(elt.text)
+            self.nmemb = int(elt.text, 0)
 
         else:
             # Notreached

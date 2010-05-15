@@ -85,6 +85,20 @@ authorization from the authors.
       <list type="char" name="driver_name">
         <fieldref>driver_name_length</fieldref>
       </list>
+      <list type="void" name="alignment_pad">
+	  <op op="-">
+	      <op op="&amp;">
+		  <op op="+">
+		      <fieldref>driver_name_length</fieldref>
+		      <value> 3 </value>
+		  </op>
+		  <unop op="~">
+		      <value>3</value>
+		  </unop>
+	      </op>
+	      <fieldref>driver_name_length</fieldref>
+	  </op>
+      </list>
       <list type="char" name="device_name">
         <fieldref>device_name_length</fieldref>
       </list>
