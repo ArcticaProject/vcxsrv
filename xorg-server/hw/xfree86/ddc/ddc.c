@@ -86,7 +86,7 @@ resort(unsigned char *s_block)
     unsigned char tmp;
 
     s_end = s_block + EDID1_LEN;
-    d_new = xalloc(EDID1_LEN);
+    d_new = malloc(EDID1_LEN);
     if (!d_new) return NULL;
     d_end = d_new + EDID1_LEN;
 
@@ -97,7 +97,7 @@ resort(unsigned char *s_block)
 	*d_ptr = tmp; 
 	if (s_ptr == s_end) s_ptr = s_block;
     }
-    xfree(s_block);
+    free(s_block);
     return (d_new);
 }
 
@@ -134,7 +134,7 @@ GetEDID_DDC1(unsigned int *s_ptr)
     if (s_start==-1) return NULL;
     s_end = s_ptr + NUM;
     s_pos = s_ptr + s_start;
-    d_block=xalloc(EDID1_LEN);
+    d_block=malloc(EDID1_LEN);
     if (!d_block) return NULL;
     d_pos = d_block;
     for (i=0;i<EDID1_LEN;i++) {
@@ -148,7 +148,7 @@ GetEDID_DDC1(unsigned int *s_ptr)
 	s_pos++; if (s_pos == s_end) s_pos=s_ptr;
 	d_pos++;
     }
-    xfree(s_ptr);
+    free(s_ptr);
     if (d_block && DDC_checksum(d_block,EDID1_LEN)) return NULL;
     return (resort(d_block));
 }
@@ -161,7 +161,7 @@ FetchEDID_DDC1(register ScrnInfoPtr pScrn,
     int count = NUM;
     unsigned int *ptr, *xp;
 
-    ptr=xp=xalloc(sizeof(int)*NUM); 
+    ptr=xp=malloc(sizeof(int)*NUM);
 
     if (!ptr)  return NULL;
     do {
@@ -251,7 +251,7 @@ xf86DoEDID_DDC1(
 
     xf86GetOptValBool(options, DDCOPT_NODDC, &noddc);
     xf86GetOptValBool(options, DDCOPT_NODDC1, &noddc1);
-    xfree(options);
+    free(options);
     
     if (noddc || noddc1)
 	return NULL;
@@ -392,7 +392,7 @@ xf86DoEEDID(int scrnIndex, I2CBusPtr pBus, Bool complete)
     Bool noddc = FALSE, noddc2 = FALSE;
     OptionInfoPtr options;
 
-    options = xalloc(sizeof(DDCOptions));
+    options = malloc(sizeof(DDCOptions));
     if (!options)
 	return NULL;
     memcpy(options, DDCOptions, sizeof(DDCOptions));
@@ -400,7 +400,7 @@ xf86DoEEDID(int scrnIndex, I2CBusPtr pBus, Bool complete)
 
     xf86GetOptValBool(options, DDCOPT_NODDC, &noddc);
     xf86GetOptValBool(options, DDCOPT_NODDC2, &noddc2);
-    xfree(options);
+    free(options);
 
     if (noddc || noddc2)
 	return NULL;
@@ -408,7 +408,7 @@ xf86DoEEDID(int scrnIndex, I2CBusPtr pBus, Bool complete)
     if (!(dev = DDC2Init(scrnIndex, pBus)))
 	return NULL;
 
-    EDID_block = xcalloc(1, EDID1_LEN);
+    EDID_block = calloc(1, EDID1_LEN);
     if (!EDID_block)
 	return NULL;
 
@@ -416,7 +416,7 @@ xf86DoEEDID(int scrnIndex, I2CBusPtr pBus, Bool complete)
 	int i, n = EDID_block[0x7e];
 
 	if (complete && n) {
-	    EDID_block = xrealloc(EDID_block, EDID1_LEN * (1+n));
+	    EDID_block = realloc(EDID_block, EDID1_LEN * (1+n));
 
 	    for (i = 0; i < n; i++)
 		DDC2Read(dev, i+1, EDID_block + (EDID1_LEN * (1+i)));
@@ -477,7 +477,7 @@ xf86DoDisplayID(int scrnIndex, I2CBusPtr pBus)
     Bool noddc = FALSE, noddc2 = FALSE;
     OptionInfoPtr options;
 
-    options = xalloc(sizeof(DDCOptions));
+    options = malloc(sizeof(DDCOptions));
     if (!options)
 	return NULL;
     memcpy(options, DDCOptions, sizeof(DDCOptions));
@@ -485,7 +485,7 @@ xf86DoDisplayID(int scrnIndex, I2CBusPtr pBus)
 
     xf86GetOptValBool(options, DDCOPT_NODDC, &noddc);
     xf86GetOptValBool(options, DDCOPT_NODDC2, &noddc2);
-    xfree(options);
+    free(options);
 
     if (noddc || noddc2)
 	return NULL;
@@ -494,7 +494,7 @@ xf86DoDisplayID(int scrnIndex, I2CBusPtr pBus)
 	return NULL;
 
     if ((did = DDC2ReadDisplayID())) {
-	tmp = xcalloc(1, sizeof(*tmp));
+	tmp = calloc(1, sizeof(*tmp));
 	if (!tmp)
 	    return NULL;
 

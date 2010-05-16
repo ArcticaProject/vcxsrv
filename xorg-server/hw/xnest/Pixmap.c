@@ -79,7 +79,7 @@ xnestDestroyPixmap(PixmapPtr pPixmap)
     return TRUE;
   XFreePixmap(xnestDisplay, xnestPixmap(pPixmap));
   dixFreePrivates(pPixmap->devPrivates);
-  xfree(pPixmap);
+  free(pPixmap);
   return TRUE;
 }
 

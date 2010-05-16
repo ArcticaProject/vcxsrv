@@ -129,7 +129,7 @@ cwCreateBackingGC(GCPtr pGC, DrawablePtr pDrawable)
 	return FALSE;
 
     pPriv->serialNumber = 0;
-    pPriv->stateChanges = (1 << (GCLastBit + 1)) - 1;
+    pPriv->stateChanges = GCAllBits;
 
     return TRUE;
 }
@@ -188,7 +188,7 @@ cwValidateGC(GCPtr pGC, unsigned long stateChanges, DrawablePtr pDrawable)
     if (pDrawable->serialNumber != pPriv->serialNumber ||
 	(pPriv->stateChanges & (GCClipXOrigin|GCClipYOrigin|GCClipMask)))
     {
-	XID vals[2];
+	ChangeGCVal vals[2];
 	RegionPtr   pCompositeClip;
 
 	pCompositeClip = REGION_CREATE (pScreen, NULL, 0);
@@ -202,10 +202,10 @@ cwValidateGC(GCPtr pGC, unsigned long stateChanges, DrawablePtr pDrawable)
 	(*pBackingGC->funcs->ChangeClip) (pBackingGC, CT_REGION,
 					  (pointer) pCompositeClip, 0);
 	
-	vals[0] = x_off - pDrawable->x;
-	vals[1] = y_off - pDrawable->y;
-	dixChangeGC(NullClient, pBackingGC,
-		    (GCClipXOrigin | GCClipYOrigin), vals, NULL);
+	vals[0].val = x_off - pDrawable->x;
+	vals[1].val = y_off - pDrawable->y;
+	ChangeGC(NullClient, pBackingGC,
+		    (GCClipXOrigin | GCClipYOrigin), vals);
 
 	pPriv->serialNumber = pDrawable->serialNumber;
 	/*
@@ -223,11 +223,11 @@ cwValidateGC(GCPtr pGC, unsigned long stateChanges, DrawablePtr pDrawable)
     if ((pGC->patOrg.x + x_off) != pBackingGC->patOrg.x ||
 	(pGC->patOrg.y + y_off) != pBackingGC->patOrg.y)
     {
-	XID vals[2];
-	vals[0] = pGC->patOrg.x + x_off;
-	vals[1] = pGC->patOrg.y + y_off;
-	dixChangeGC(NullClient, pBackingGC,
-		    (GCTileStipXOrigin | GCTileStipYOrigin), vals, NULL);
+	ChangeGCVal vals[2];
+	vals[0].val = pGC->patOrg.x + x_off;
+	vals[1].val = pGC->patOrg.y + y_off;
+	ChangeGC(NullClient, pBackingGC,
+		    (GCTileStipXOrigin | GCTileStipYOrigin), vals);
     }
 
     ValidateGC(pBackingDrawable, pBackingGC);
@@ -480,7 +480,7 @@ miInitializeCompositeWrapper(ScreenPtr pScreen)
     if (!dixRequestPrivate(cwGCKey, sizeof(cwGCRec)))
 	return;
 
-    pScreenPriv = xalloc(sizeof(cwScreenRec));
+    pScreenPriv = malloc(sizeof(cwScreenRec));
     if (!pScreenPriv)
 	return;
 
@@ -516,7 +516,7 @@ cwCloseScreen (int i, ScreenPtr pScreen)
     if (ps)
 	cwFiniRender(pScreen);
 
-    xfree((pointer)pScreenPriv);
+    free((pointer)pScreenPriv);
 
     return (*pScreen->CloseScreen)(i, pScreen);
 }

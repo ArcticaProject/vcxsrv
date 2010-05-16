@@ -119,7 +119,7 @@ ProcXQueryDeviceState(ClientPtr client)
 	total_length += (sizeof(xValuatorState) + (v->numAxes * sizeof(int)));
 	num_classes++;
     }
-    buf = (char *)xcalloc(total_length, 1);
+    buf = (char *)calloc(total_length, 1);
     if (!buf)
 	return BadAlloc;
     savbuf = buf;
@@ -169,7 +169,7 @@ ProcXQueryDeviceState(ClientPtr client)
     WriteReplyToClient(client, sizeof(xQueryDeviceStateReply), &rep);
     if (total_length > 0)
 	WriteToClient(client, total_length, savbuf);
-    xfree(savbuf);
+    free(savbuf);
     return Success;
 }
 

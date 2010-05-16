@@ -67,13 +67,13 @@ XisbNew (int fd, ssize_t size)
 {
 	XISBuffer *b;
 
-	b = xalloc (sizeof (XISBuffer));
+	b = malloc(sizeof (XISBuffer));
 	if (!b)
 		return (NULL);
-	b->buf = xalloc ((sizeof (unsigned char) * size));
+	b->buf = malloc((sizeof (unsigned char) * size));
 	if (!b->buf)
 	{
-		xfree (b);
+		free(b);
 		return (NULL);
 	}
 
@@ -89,8 +89,8 @@ XisbNew (int fd, ssize_t size)
 void
 XisbFree (XISBuffer *b)
 {
-	xfree (b->buf);
-	xfree (b);
+	free(b->buf);
+	free(b);
 }
 
 int

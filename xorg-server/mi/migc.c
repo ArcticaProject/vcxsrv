@@ -95,7 +95,7 @@ miChangeClip( GCPtr pGC, int type, pointer pvalue, int nrects)
 	pGC->clientClip = (pointer) RECTS_TO_REGION(pGC->pScreen, nrects,
 						      (xRectangle *) pvalue,
 								    type);
-	xfree(pvalue);
+	free(pvalue);
     }
     pGC->clientClipType = (type != CT_NONE && pGC->clientClip) ? CT_REGION : CT_NONE;
     pGC->stateChanges |= GCClipMask;

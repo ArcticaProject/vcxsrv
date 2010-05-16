@@ -163,7 +163,7 @@ winGenerateAuthorization (void)
 #ifdef XCSECURITY
   /* Allocate structure for additional auth information */
   pAuth = (SecurityAuthorizationPtr) 
-    xalloc (sizeof (SecurityAuthorizationRec));
+    malloc(sizeof (SecurityAuthorizationRec));
   if (!(pAuth))
     {
       ErrorF ("winGenerateAuthorization - Failed allocating "
@@ -199,7 +199,7 @@ winGenerateAuthorization (void)
 
  auth_bailout:
   if (fFreeAuth)
-    xfree (pAuth);
+    free(pAuth);
   
   return FALSE;
 }

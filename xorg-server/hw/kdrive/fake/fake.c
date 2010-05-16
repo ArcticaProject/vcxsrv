@@ -40,13 +40,13 @@ fakeCardInit (KdCardInfo *card)
 {
     FakePriv	*priv;
 
-    priv = (FakePriv *) xalloc (sizeof (FakePriv));
+    priv = (FakePriv *) malloc(sizeof (FakePriv));
     if (!priv)
 	return FALSE;
     
     if (!fakeInitialize (card, priv))
     {
-	xfree (priv);
+	free(priv);
 	return FALSE;
     }
     card->driver = priv;
@@ -121,14 +121,14 @@ fakeScreenInit (KdScreenInfo *screen)
 {
     FakeScrPriv *scrpriv;
 
-    scrpriv = xcalloc (1, sizeof (FakeScrPriv));
+    scrpriv = calloc(1, sizeof (FakeScrPriv));
     if (!scrpriv)
 	return FALSE;
     screen->driver = scrpriv;
     if (!fakeScreenInitialize (screen, scrpriv))
     {
 	screen->driver = 0;
-	xfree (scrpriv);
+	free(scrpriv);
 	return FALSE;
     }
     return TRUE;
@@ -455,7 +455,7 @@ fakeCardFini (KdCardInfo *card)
     FakePriv	*priv = card->driver;
 
     free (priv->base);
-    xfree (priv);
+    free(priv);
 }
 
 void

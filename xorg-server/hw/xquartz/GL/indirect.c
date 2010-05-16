@@ -222,7 +222,7 @@ __glXAquaScreenCreateContext(__GLXscreen *screen,
   
     GLAQUA_DEBUG_MSG("glXAquaScreenCreateContext\n");
     
-    context = xcalloc(1, sizeof (__GLXAquaContext));
+    context = calloc(1, sizeof (__GLXAquaContext));
     
     if (context == NULL)
 	return NULL;
@@ -241,7 +241,7 @@ __glXAquaScreenCreateContext(__GLXscreen *screen,
     context->pixelFormat = makeFormat(conf);
     
     if (!context->pixelFormat) {
-        xfree(context);
+        free(context);
         return NULL;
     }
 
@@ -253,7 +253,7 @@ __glXAquaScreenCreateContext(__GLXscreen *screen,
     if (gl_err != 0) {
 	ErrorF("CGLCreateContext error: %s\n", CGLErrorString(gl_err));
 	CGLDestroyPixelFormat(context->pixelFormat);
-	xfree(context);
+	free(context);
 	return NULL;
     }
     
@@ -286,7 +286,7 @@ static void __glXAquaContextDestroy(__GLXcontext *baseContext) {
       if (context->pixelFormat != NULL)
 	  CGLDestroyPixelFormat(context->pixelFormat);
       
-      xfree(context);
+      free(context);
     }
 }
 
@@ -566,7 +566,7 @@ static void __glXAquaScreenDestroy(__GLXscreen *screen) {
     GLAQUA_DEBUG_MSG("glXAquaScreenDestroy(%p)\n", screen);
     __glXScreenDestroy(screen);
 
-    xfree(screen);
+    free(screen);
 }
 
 /* This is called by __glXInitScreens(). */
@@ -578,7 +578,7 @@ static __GLXscreen * __glXAquaScreenProbe(ScreenPtr pScreen) {
     if (pScreen == NULL) 
 	return NULL;
 
-    screen = xcalloc(1, sizeof *screen);
+    screen = calloc(1, sizeof *screen);
 
     if(NULL == screen)
 	return NULL;
@@ -635,7 +635,7 @@ static void __glXAquaDrawableDestroy(__GLXdrawable *base) {
      *to validate the test, beyond using gdb with print.
      */
 
-    xfree(glxPriv);
+    free(glxPriv);
 }
 
 static __GLXdrawable *
@@ -648,7 +648,7 @@ __glXAquaScreenCreateDrawable(ClientPtr client,
 			      __GLXconfig *conf) {
   __GLXAquaDrawable *glxPriv;
 
-  glxPriv = xalloc(sizeof *glxPriv);
+  glxPriv = malloc(sizeof *glxPriv);
 
   if(glxPriv == NULL)
       return NULL;
@@ -656,7 +656,7 @@ __glXAquaScreenCreateDrawable(ClientPtr client,
   memset(glxPriv, 0, sizeof *glxPriv);
 
   if(!__glXDrawableInit(&glxPriv->base, screen, pDraw, type, glxDrawId, conf)) {
-    xfree(glxPriv);
+    free(glxPriv);
     return NULL;
   }
 

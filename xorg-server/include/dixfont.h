@@ -96,8 +96,7 @@ extern _X_EXPORT int ImageText(ClientPtr /*client*/,
 
 extern _X_EXPORT int SetFontPath(ClientPtr /*client*/,
 		       int /*npaths*/,
-		       unsigned char * /*paths*/,
-		       int * /*error*/);
+		       unsigned char * /*paths*/);
 
 extern _X_EXPORT int SetDefaultFontPath(char * /*path*/);
 

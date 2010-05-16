@@ -62,7 +62,7 @@ compCloseScreen (int index, ScreenPtr pScreen)
     CompScreenPtr   cs = GetCompScreen (pScreen);
     Bool	    ret;
 
-    xfree (cs->alternateVisuals);
+    free(cs->alternateVisuals);
 
     pScreen->CloseScreen = cs->CloseScreen;
     pScreen->BlockHandler = cs->BlockHandler;
@@ -81,7 +81,7 @@ compCloseScreen (int index, ScreenPtr pScreen)
     pScreen->CopyWindow = cs->CopyWindow;
     pScreen->PositionWindow = cs->PositionWindow;
 
-    xfree (cs);
+    free(cs);
     dixSetPrivate(&pScreen->devPrivates, CompScreenPrivateKey, NULL);
     ret = (*pScreen->CloseScreen) (index, pScreen);
 
@@ -202,7 +202,7 @@ compRegisterAlternateVisuals (CompScreenPtr cs, VisualID *vids, int nVisuals)
 {
     VisualID *p;
 
-    p = xrealloc(cs->alternateVisuals,
+    p = realloc(cs->alternateVisuals,
 		 sizeof(VisualID) * (cs->numAlternateVisuals + nVisuals));
     if(p == NULL)
 	return FALSE;
@@ -323,7 +323,7 @@ compScreenInit (ScreenPtr pScreen)
 
     if (GetCompScreen (pScreen))
 	return TRUE;
-    cs = (CompScreenPtr) xalloc (sizeof (CompScreenRec));
+    cs = (CompScreenPtr) malloc(sizeof (CompScreenRec));
     if (!cs)
 	return FALSE;
 
@@ -337,7 +337,7 @@ compScreenInit (ScreenPtr pScreen)
 
     if (!compAddAlternateVisuals (pScreen, cs))
     {
-	xfree (cs);
+	free(cs);
 	return FALSE;
     }
 

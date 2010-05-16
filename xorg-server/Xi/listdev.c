@@ -360,7 +360,7 @@ ProcXListInputDevices(ClientPtr client)
     AddOtherInputDevices();
 
     /* allocate space for saving skip value */
-    skip = xcalloc(sizeof(Bool), inputInfo.numDevices);
+    skip = calloc(sizeof(Bool), inputInfo.numDevices);
     if (!skip)
         return BadAlloc;
 
@@ -386,7 +386,7 @@ ProcXListInputDevices(ClientPtr client)
 
     /* allocate space for reply */
     total_length = numdevs * sizeof(xDeviceInfo) + size + namesize;
-    devbuf = (char *)xcalloc(1, total_length);
+    devbuf = (char *)calloc(1, total_length);
     classbuf = devbuf + (numdevs * sizeof(xDeviceInfo));
     namebuf = classbuf + size;
     savbuf = devbuf;
@@ -411,8 +411,8 @@ ProcXListInputDevices(ClientPtr client)
     rep.length = bytes_to_int32(total_length);
     WriteReplyToClient(client, sizeof(xListInputDevicesReply), &rep);
     WriteToClient(client, total_length, savbuf);
-    xfree(savbuf);
-    xfree(skip);
+    free(savbuf);
+    free(skip);
     return Success;
 }
 

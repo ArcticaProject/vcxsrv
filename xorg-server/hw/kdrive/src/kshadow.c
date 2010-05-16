@@ -36,11 +36,11 @@ KdShadowFbAlloc (KdScreenInfo *screen, Bool rotate)
 
     /* use fb computation for width */
     paddedWidth = ((width * bpp + FB_MASK) >> FB_SHIFT) * sizeof (FbBits);
-    buf = xalloc (paddedWidth * height);
+    buf = malloc(paddedWidth * height);
     if (!buf)
 	return FALSE;
     if (screen->fb.shadow)
-	xfree (screen->fb.frameBuffer);
+	free(screen->fb.frameBuffer);
     screen->fb.shadow = TRUE;
     screen->fb.frameBuffer = buf;
     screen->fb.byteStride = paddedWidth;
@@ -53,7 +53,7 @@ KdShadowFbFree (KdScreenInfo *screen)
 {
     if (screen->fb.shadow)
     {
-	xfree (screen->fb.frameBuffer);
+	free(screen->fb.frameBuffer);
 	screen->fb.frameBuffer = 0;
 	screen->fb.shadow = FALSE;
     }

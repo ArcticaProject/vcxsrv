@@ -4,6 +4,7 @@
 //
 // $XKeyboardConfig$
 // (C) 2002-2004 Soós Péter <sp@osb.hu>
+// (C) 2010 Andras Timar <timar@fsf.hu>
 //
 // Permission is granted to anyone to use, distribute and modify
 // this file in any way, provided that the above copyright notice
@@ -18,6 +19,10 @@
 //             - Fixed abovedot
 //             - Added adiaeresis
 //             - Added EuroSign and cent symbol
+//  2010-04-23 - Added doublelowquotemark
+//             - Added rightdoublequotemark
+//             - Added endash
+//  2010-05-13 - Added ellipsis
 
 
 // Default layout
@@ -421,7 +426,7 @@ xkb_symbols "def_common" {
     key <AB06>  { [            n,            N,        braceright                  ] };
     key <AB07>  { [            m,            M,              less                  ] };
     key <AB08>  { [        comma,     question,         semicolon                  ] };
-    key <AB09>  { [       period,        colon,           greater                  ] };
+    key <AB09>  { [       period,        colon,          ellipsis                  ] };
     key <AB10>  { [        minus,   underscore,          asterisk                  ] };
 
 };

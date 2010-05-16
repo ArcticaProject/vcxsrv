@@ -155,8 +155,8 @@ miZeroLine(
     width = xright - xleft + 1;
     height = ybottom - ytop + 1;
     list_len = (height >= width) ? height : width;
-    pspanInit = xalloc(list_len * sizeof(DDXPointRec));
-    pwidthInit = xalloc(list_len * sizeof(int));
+    pspanInit = malloc(list_len * sizeof(DDXPointRec));
+    pwidthInit = malloc(list_len * sizeof(int));
     if (!pspanInit || !pwidthInit)
 	return;
 
@@ -359,8 +359,8 @@ miZeroLine(
 	(*pGC->ops->FillSpans)(pDraw, pGC, Nspans, pspanInit,
 			       pwidthInit, FALSE);
 
-    xfree(pwidthInit);
-    xfree(pspanInit);
+    free(pwidthInit);
+    free(pspanInit);
 }
 
 void

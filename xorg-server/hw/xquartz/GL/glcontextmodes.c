@@ -53,14 +53,14 @@
 # ifdef XFree86Server
 # include <os.h>
 # include <string.h>
-#  define _mesa_malloc(b) xalloc(b)
-#  define _mesa_free(m)   xfree(m)
+#  define _mesa_malloc(b) malloc(b)
+#  define _mesa_free(m)   free(m)
 #  define _mesa_memset   memset
 # else
 #  include <X11/Xlibint.h>
 #  define _mesa_memset memset
 #  define _mesa_malloc(b) Xmalloc(b)
-#  define _mesa_free(m) Xfree(m)
+#  define _mesa_free(m) free(m)
 # endif /* XFree86Server */
 #endif /* !defined(IN_MINI_GLX) */
 

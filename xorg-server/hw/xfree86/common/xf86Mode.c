@@ -1918,8 +1918,8 @@ xf86DeleteMode(DisplayModePtr *modeList, DisplayModePtr mode)
 	    mode->next->prev = mode->prev;
     }
 
-    xfree(mode->name);
-    xfree(mode);
+    free(mode->name);
+    free(mode);
 }
 
 /*

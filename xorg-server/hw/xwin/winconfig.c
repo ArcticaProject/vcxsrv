@@ -390,10 +390,10 @@ winConfigKeyboard (DeviceIntPtr pDevice)
                   (1000 / g_winInfo.keyboard.rate) < 1) 
             {
               ErrorF ("\"%s\" is not a valid AutoRepeat value", s);
-              xfree(s);
+              free(s);
               return FALSE;
             }
-          xfree(s);
+          free(s);
           winDebug ("AutoRepeat: %ld %ld\n", 
                   g_winInfo.keyboard.delay, g_winInfo.keyboard.rate);
         }

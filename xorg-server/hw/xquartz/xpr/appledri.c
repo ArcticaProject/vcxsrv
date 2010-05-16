@@ -128,7 +128,7 @@ ProcAppleDRIQueryVersion(
         swapl(&rep.length, n);
     }
     WriteToClient(client, sizeof(xAppleDRIQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -159,7 +159,7 @@ ProcAppleDRIQueryDirectRenderingCapable(
 
     WriteToClient(client, 
         sizeof(xAppleDRIQueryDirectRenderingCapableReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -182,7 +182,7 @@ ProcAppleDRIAuthConnection(
         rep.authenticated = 0;
     }
     WriteToClient(client, sizeof(xAppleDRIAuthConnectionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static void surface_notify(
@@ -247,7 +247,7 @@ ProcAppleDRICreateSurface(
     rep.uid = sid;
 
     WriteToClient(client, sizeof(xAppleDRICreateSurfaceReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -271,7 +271,7 @@ ProcAppleDRIDestroySurface(
         return BadValue;
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -323,7 +323,7 @@ ProcAppleDRICreatePixmap(ClientPtr client)
     WriteReplyToClient(client, sizeof(rep), &rep);
     (void)WriteToClient(client, rep.stringLength, path);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -342,7 +342,7 @@ ProcAppleDRIDestroyPixmap(ClientPtr client)
     
     DRIDestroyPixmap(pDrawable);
 
-    return (client->noClientException);
+    return Success;
 }
 
 /* dispatch */

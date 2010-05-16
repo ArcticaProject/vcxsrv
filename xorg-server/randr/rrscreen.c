@@ -249,7 +249,7 @@ ProcRRGetScreenSizeRange (ClientPtr client)
 	swaps(&rep.maxHeight, n);
     }
     WriteToClient(client, sizeof(xRRGetScreenSizeRangeReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 int
@@ -388,10 +388,10 @@ rrGetScreenResources(ClientPtr client, Bool query)
 	extraLen = rep.length << 2;
 	if (extraLen)
 	{
-	    extra = xalloc (extraLen);
+	    extra = malloc(extraLen);
 	    if (!extra)
 	    {
-		xfree (modes);
+		free(modes);
 		return BadAlloc;
 	    }
 	}
@@ -455,7 +455,7 @@ rrGetScreenResources(ClientPtr client, Bool query)
 		    mode->mode.nameLength);
 	    names += mode->mode.nameLength;
 	}
-    	xfree (modes);
+        free(modes);
 	assert (bytes_to_int32((char *) names - (char *) extra) == rep.length);
     }
     
@@ -473,9 +473,9 @@ rrGetScreenResources(ClientPtr client, Bool query)
     if (extraLen)
     {
 	WriteToClient (client, extraLen, (char *) extra);
-	xfree (extra);
+	free(extra);
     }
-    return client->noClientException;
+    return Success;
 }
 
 int
@@ -671,10 +671,10 @@ ProcRRGetScreenInfo (ClientPtr client)
 
 	if (extraLen)
 	{
-	    extra = (CARD8 *) xalloc (extraLen);
+	    extra = (CARD8 *) malloc(extraLen);
 	    if (!extra)
 	    {
-		xfree (pData);
+		free(pData);
 		return BadAlloc;
 	    }
 	}
@@ -720,7 +720,7 @@ ProcRRGetScreenInfo (ClientPtr client)
 		}
 	    }
 	}
-        xfree (pData);
+        free(pData);
 	
 	data8 = (CARD8 *) rates;
 
@@ -743,9 +743,9 @@ ProcRRGetScreenInfo (ClientPtr client)
     if (extraLen)
     {
 	WriteToClient (client, extraLen, (char *) extra);
-	xfree (extra);
+	free(extra);
     }
-    return (client->noClientException);
+    return Success;
 }
 
 int
@@ -836,7 +836,7 @@ ProcRRSetScreenConfig (ClientPtr client)
 	 * Invalid size ID
 	 */
 	client->errorValue = stuff->sizeID;
-	xfree (pData);
+	free(pData);
 	return BadValue;
     }
     pSize = &pData->sizes[stuff->sizeID];
@@ -858,7 +858,7 @@ ProcRRSetScreenConfig (ClientPtr client)
 	 * Invalid rotation
 	 */
 	client->errorValue = stuff->rotation;
-	xfree (pData);
+	free(pData);
 	return BadValue;
     }
 
@@ -868,7 +868,7 @@ ProcRRSetScreenConfig (ClientPtr client)
 	 * requested rotation or reflection not supported by screen
 	 */
 	client->errorValue = stuff->rotation;
-	xfree (pData);
+	free(pData);
 	return BadMatch;
     }
 
@@ -893,7 +893,7 @@ ProcRRSetScreenConfig (ClientPtr client)
 	     * Invalid rate
 	     */
 	    client->errorValue = rate;
-	    xfree (pData);
+	    free(pData);
 	    return BadValue;
 	}
 	mode = pSize->pRates[i].mode;
@@ -959,7 +959,7 @@ ProcRRSetScreenConfig (ClientPtr client)
 sendReply:
     
     if (pData)
-	xfree (pData);
+	free(pData);
 
     rep.type = X_Reply;
     /* rep.status has already been filled in */
@@ -980,7 +980,7 @@ sendReply:
     }
     WriteToClient(client, sizeof(xRRSetScreenConfigReply), (char *)&rep);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static CARD16
@@ -1002,7 +1002,7 @@ RR10CurrentSizeID (ScreenPtr pScreen)
 		    sizeID = (CARD16) i;
 		    break;
 		}
-	    xfree (data);
+	    free(data);
 	}
     }
     return sizeID;

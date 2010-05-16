@@ -124,7 +124,7 @@ DGAInit(
 
     if (!pScreenPriv)
     {
-	if(!(pScreenPriv = (DGAScreenPtr)xalloc(sizeof(DGAScreenRec))))
+	if(!(pScreenPriv = (DGAScreenPtr)malloc(sizeof(DGAScreenRec))))
 	    return FALSE;
 	dixSetPrivate(&pScreen->devPrivates, DGAScreenKey, pScreenPriv);
 	pScreenPriv->CloseScreen = pScreen->CloseScreen;
@@ -235,8 +235,8 @@ FreeMarkedVisuals(ScreenPtr pScreen)
 		prev->next = curr;
 	    else 
 		pScreenPriv->fakedVisuals = curr;
-	    xfree(tmp->pVisual);
-	    xfree(tmp);
+	    free(tmp->pVisual);
+	    free(tmp);
 	} else {
 	    prev = curr;
 	    curr = curr->next;
@@ -263,7 +263,7 @@ DGACloseScreen(int i, ScreenPtr pScreen)
    /* DGAShutdown() should have ensured that no DGA
 	screen were active by here */
 
-   xfree(pScreenPriv);
+   free(pScreenPriv);
 
    return((*pScreen->CloseScreen)(i, pScreen));
 }
@@ -363,7 +363,7 @@ xf86SetDGAMode(
 		else
 		    (*pScreen->DestroyPixmap)(oldPix);
 	    }
-	    xfree(pScreenPriv->current);
+	    free(pScreenPriv->current);
 	    pScreenPriv->current = NULL;
 	    pScrn->vtSema = TRUE;
 	    (*pScreenPriv->funcs->SetMode)(pScrn, NULL);
@@ -391,7 +391,7 @@ xf86SetDGAMode(
    else
 	return BadValue;
 
-   if(!(device = (DGADevicePtr)xalloc(sizeof(DGADeviceRec))))
+   if(!(device = (DGADevicePtr)malloc(sizeof(DGADeviceRec))))
 	return BadAlloc;
 
    if(!pScreenPriv->current) {
@@ -403,7 +403,7 @@ xf86SetDGAMode(
    } 
 
    if(!(*pScreenPriv->funcs->SetMode)(pScrn, pMode)) {
-	xfree(device);
+	free(device);
 	return BadAlloc;
    }
 
@@ -424,7 +424,7 @@ xf86SetDGAMode(
 	    else
 		(*pScreen->DestroyPixmap)(oldPix);
 	}
-	xfree(pScreenPriv->current);
+	free(pScreenPriv->current);
 	pScreenPriv->current = NULL;
    } 
 
@@ -671,7 +671,7 @@ DGACreateColormap(int index, ClientPtr client, int id, int mode, int alloc)
 
    pMode = &(pScreenPriv->modes[mode - 1]);
 
-   if(!(pVisual = xalloc(sizeof(VisualRec))))
+   if(!(pVisual = malloc(sizeof(VisualRec))))
 	return BadAlloc;
 
    pVisual->vid = FakeClientID(0);
@@ -705,8 +705,8 @@ DGACreateColormap(int index, ClientPtr client, int id, int mode, int alloc)
 	pVisual->offsetBlue  = BitsClear(pVisual->blueMask);
    }
 
-   if(!(fvlp = xalloc(sizeof(FakedVisualList)))) {
-	xfree(pVisual);
+   if(!(fvlp = malloc(sizeof(FakedVisualList)))) {
+	free(pVisual);
 	return BadAlloc;
    }
 

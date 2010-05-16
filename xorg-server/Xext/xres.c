@@ -50,7 +50,7 @@ ProcXResQueryVersion (ClientPtr client)
         swaps(&rep.server_minor, n);
     }
     WriteToClient(client, sizeof (xXResQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -63,7 +63,7 @@ ProcXResQueryClients (ClientPtr client)
 
     REQUEST_SIZE_MATCH(xXResQueryClientsReq);
 
-    current_clients = xalloc(currentMaxClients * sizeof(int));
+    current_clients = malloc(currentMaxClients * sizeof(int));
 
     num_clients = 0;
     for(i = 0; i < currentMaxClients; i++) {
@@ -101,9 +101,9 @@ ProcXResQueryClients (ClientPtr client)
         }
     }
 
-    xfree(current_clients);
+    free(current_clients);
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -132,7 +132,7 @@ ProcXResQueryClientResources (ClientPtr client)
         return BadValue;
     }
 
-    counts = xcalloc(lastResourceType + 1, sizeof(int));
+    counts = calloc(lastResourceType + 1, sizeof(int));
 
     FindAllClientResources(clients[clientID], ResFindAllRes, counts);
 
@@ -182,9 +182,9 @@ ProcXResQueryClientResources (ClientPtr client)
         }
     }
 
-    xfree(counts);
+    free(counts);
     
-    return (client->noClientException);
+    return Success;
 }
 
 static unsigned long
@@ -295,7 +295,7 @@ ProcXResQueryClientPixmapBytes (ClientPtr client)
     }
     WriteToClient (client,sizeof(xXResQueryClientPixmapBytesReply),(char*)&rep);
 
-    return (client->noClientException);
+    return Success;
 }
 
 static int

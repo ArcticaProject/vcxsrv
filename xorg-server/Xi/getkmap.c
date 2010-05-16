@@ -133,8 +133,8 @@ ProcXGetDeviceKeyMapping(ClientPtr client)
                              syms->mapWidth * stuff->count * sizeof(KeySym),
                              &syms->map[syms->mapWidth * (stuff->firstKeyCode -
                                                           syms->minKeyCode)]);
-    xfree(syms->map);
-    xfree(syms);
+    free(syms->map);
+    free(syms);
 
     return Success;
 }

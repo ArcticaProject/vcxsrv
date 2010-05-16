@@ -1,3 +1,149 @@
+commit 9ffca704438993516016671e9a7f67c5ca21f142
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Sat May 15 17:43:32 2010 +0200
+
+    xproto 7.0.17
+    
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit 81c3cc1ce1f163de91d33bfa1b335f8b4d309c13
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Mar 28 19:25:52 2010 -0400
+
+    config: update AC_PREREQ statement to 2.60
+    
+    Unrelated to the previous patches, the new value simply reflects
+    the reality that the minimum level for autoconf to configure
+    all x.org modules is 2.60 dated June 2006.
+    
+    ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 1f442cdd1c26fa10e654ef2e957e24c2306abb11
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Mar 28 19:00:31 2010 -0400
+
+    config: remove the pkgconfig pc.in file from EXTRA_DIST
+    
+    Automake always includes it in the tarball.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 1511eb6065c103149b7ce59b4cc0aa538449cf80
+Author: Jeremy Huddleston <jeremyhu@apple.com>
+Date:   Sat Mar 27 19:42:59 2010 -0700
+
+    Add _X_NORETURN macro to signify functions that don't return
+    
+    Signed-off-by: Jeremy Huddleston <jeremyhu@apple.com>
+    Reviewed-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit e7d73aec46f2ebc21e8b80378c3647b69f098b9a
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Mar 27 16:38:27 2010 -0400
+
+    config: remove execute permission on configuration file
+    
+    Introduced in commit 	c879dab58f82f4789f27933c22706c84015f8684
+    "avoid checking for fds_bits on mingw"
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit bf25d06799da98c3df655d8a734fe98c98bf143e
+Author: Alan Coopersmith <alan.coopersmith@sun.com>
+Date:   Fri Jan 15 13:31:40 2010 -0800
+
+    Update Sun license notices to current X.Org standard form
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@sun.com>
+
+commit d02f4b124489016f43478ac2ca2fbb2d0253ba02
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Tue Oct 13 16:51:14 2009 -0500
+
+    xproto: Cygwin GCC does not support visibility attributes
+    
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit ec13f2cc5af936aafc3a483f441c44aa5ed14fe3
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 22 19:24:48 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit 45135e80f1e1f8818159f7d80372a77df0537738
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Nov 16 11:13:30 2009 -0500
+
+    README: file created or updated #24206
+    
+    Contains a set of URLs to freedesktop.org.
+
+commit cdd22487f12f7058404759bd138ada421debc93a
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 19:45:27 2009 -0500
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit b99b992915dd19914c9464d9a96278d2cc2ceeeb
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 18:31:29 2009 -0500
+
+    Makefile.am: INSTALL file is missing or incorrect #24206
+    
+    The standard GNU file on building/installing  tarball is copied
+    using the XORG_INSTALL macro contained in XORG_DEFAULT_OPTIONS
+    Add INSTALL target
+
+commit caea0fd5a966a74465d965ecab89f4829dced157
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Nov 15 18:11:36 2009 -0500
+
+    configure.ac: deploy the new XORG_DEFAULT_OPTIONS #24242
+    
+    This macro aggregate a number of existing macros that sets commmon
+    X.Org components configuration options. It shields the configuration file from
+    future changes.
+
+commit f1b1d45cd955f24a338af098ebd6a181b1454b38
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Nov 14 20:47:09 2009 -0500
+
+    configure.ac: AM_MAINTAINER_MODE missing #24238
+    
+    This turns off maintainer mode build rules in tarballs.
+    Works in conjunction with autogen.sh --enable-maintainer-mode
+
+commit 78947b5a7e0ef934fdce7e1bce734d2cf29639b4
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sat Nov 14 18:26:47 2009 -0500
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit 3ec82cd722407e4dccd6165786d3452f3ab80bea
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Oct 2 10:46:06 2009 +1000
+
+    Add XF86XK_TouchpadToggle
+    
+    Many laptops provide a key to enable or disable the touchpad and the
+    trackstick. On Lenovo T61s, this key is located on Fn + F8.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
 commit 4253e208088d166a8666f673360ef69a3c86f8b0
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Wed Sep 23 17:04:09 2009 -0700

@@ -140,14 +140,14 @@ XkbFreeRMLVOSet(XkbRMLVOSet *rmlvo, Bool freeRMLVO)
     if (!rmlvo)
         return;
 
-    xfree(rmlvo->rules);
-    xfree(rmlvo->model);
-    xfree(rmlvo->layout);
-    xfree(rmlvo->variant);
-    xfree(rmlvo->options);
+    free(rmlvo->rules);
+    free(rmlvo->model);
+    free(rmlvo->layout);
+    free(rmlvo->variant);
+    free(rmlvo->options);
 
     if (freeRMLVO)
-        xfree(rmlvo);
+        free(rmlvo);
     else
         memset(rmlvo, 0, sizeof(XkbRMLVOSet));
 }
@@ -174,7 +174,7 @@ char *			pval;
 	ErrorF("[xkb] Atom error: %s not created\n",_XKB_RF_NAMES_PROP_ATOM);
 	return TRUE;
     }
-    pval= (char*) xalloc(len);
+    pval= (char*) malloc(len);
     if (!pval) {
 	ErrorF("[xkb] Allocation error: %s proprerty not created\n",
 						_XKB_RF_NAMES_PROP_ATOM);
@@ -212,7 +212,7 @@ char *			pval;
     }
     dixChangeWindowProperty(serverClient, WindowTable[0], name, XA_STRING, 8,
 			    PropModeReplace, len, pval, TRUE);
-    xfree(pval);
+    free(pval);
     return TRUE;
 }
 
@@ -220,19 +220,19 @@ static void
 XkbSetRulesUsed(XkbRMLVOSet *rmlvo)
 {
     if (XkbRulesUsed)
-        xfree(XkbRulesUsed);
+        free(XkbRulesUsed);
     XkbRulesUsed= (rmlvo->rules?_XkbDupString(rmlvo->rules):NULL);
     if (XkbModelUsed)
-	xfree(XkbModelUsed);
+	free(XkbModelUsed);
     XkbModelUsed= (rmlvo->model?_XkbDupString(rmlvo->model):NULL);
     if (XkbLayoutUsed)
-	xfree(XkbLayoutUsed);
+	free(XkbLayoutUsed);
     XkbLayoutUsed= (rmlvo->layout?_XkbDupString(rmlvo->layout):NULL);
     if (XkbVariantUsed)
-	xfree(XkbVariantUsed);
+	free(XkbVariantUsed);
     XkbVariantUsed= (rmlvo->variant?_XkbDupString(rmlvo->variant):NULL);
     if (XkbOptionsUsed)
-	xfree(XkbOptionsUsed);
+	free(XkbOptionsUsed);
     XkbOptionsUsed= (rmlvo->options?_XkbDupString(rmlvo->options):NULL);
     if (XkbWantRulesProp)
 	QueueWorkProc(XkbWriteRulesProp,NULL,NULL);
@@ -244,27 +244,27 @@ XkbSetRulesDflts(XkbRMLVOSet *rmlvo)
 {
     if (rmlvo->rules) {
         if (XkbRulesDflt)
-	    xfree(XkbRulesDflt);
+	    free(XkbRulesDflt);
         XkbRulesDflt= _XkbDupString(rmlvo->rules);
     }
     if (rmlvo->model) {
 	if (XkbModelDflt)
-	    xfree(XkbModelDflt);
+	    free(XkbModelDflt);
 	XkbModelDflt= _XkbDupString(rmlvo->model);
     }
     if (rmlvo->layout) {
 	if (XkbLayoutDflt)
-	    xfree(XkbLayoutDflt);
+	    free(XkbLayoutDflt);
 	XkbLayoutDflt= _XkbDupString(rmlvo->layout);
     }
     if (rmlvo->variant) {
 	if (XkbVariantDflt)
-	    xfree(XkbVariantDflt);
+	    free(XkbVariantDflt);
 	XkbVariantDflt= _XkbDupString(rmlvo->variant);
     }
     if (rmlvo->options) {
 	if (XkbOptionsDflt)
-	    xfree(XkbOptionsDflt);
+	    free(XkbOptionsDflt);
 	XkbOptionsDflt= _XkbDupString(rmlvo->options);
     }
     return;
@@ -273,15 +273,15 @@ XkbSetRulesDflts(XkbRMLVOSet *rmlvo)
 void
 XkbDeleteRulesDflts(void)
 {
-    xfree(XkbRulesDflt);
+    free(XkbRulesDflt);
     XkbRulesDflt = NULL;
-    xfree(XkbModelDflt);
+    free(XkbModelDflt);
     XkbModelDflt = NULL;
-    xfree(XkbLayoutDflt);
+    free(XkbLayoutDflt);
     XkbLayoutDflt = NULL;
-    xfree(XkbVariantDflt);
+    free(XkbVariantDflt);
     XkbVariantDflt = NULL;
-    xfree(XkbOptionsDflt);
+    free(XkbOptionsDflt);
     XkbOptionsDflt = NULL;
 
     XkbFreeKeyboard(xkb_cached_map, XkbAllComponentsMask, TRUE);
@@ -515,20 +515,20 @@ InitKeyboardDeviceStruct(DeviceIntPtr dev, XkbRMLVOSet *rmlvo,
     memset(&changes, 0, sizeof(changes));
     XkbSetCauseUnknown(&cause);
 
-    dev->key = xcalloc(1, sizeof(*dev->key));
+    dev->key = calloc(1, sizeof(*dev->key));
     if (!dev->key) {
         ErrorF("XKB: Failed to allocate key class\n");
         return FALSE;
     }
     dev->key->sourceid = dev->id;
 
-    dev->kbdfeed = xcalloc(1, sizeof(*dev->kbdfeed));
+    dev->kbdfeed = calloc(1, sizeof(*dev->kbdfeed));
     if (!dev->kbdfeed) {
         ErrorF("XKB: Failed to allocate key feedback class\n");
         goto unwind_key;
     }
 
-    xkbi = xcalloc(1, sizeof(*xkbi));
+    xkbi = calloc(1, sizeof(*xkbi));
     if (!xkbi) {
         ErrorF("XKB: Failed to allocate XKB info\n");
         goto unwind_kbdfeed;
@@ -620,13 +620,13 @@ InitKeyboardDeviceStruct(DeviceIntPtr dev, XkbRMLVOSet *rmlvo,
 unwind_desc:
     XkbFreeKeyboard(xkb, 0, TRUE);
 unwind_info:
-    xfree(xkbi);
+    free(xkbi);
     dev->key->xkbInfo = NULL;
 unwind_kbdfeed:
-    xfree(dev->kbdfeed);
+    free(dev->kbdfeed);
     dev->kbdfeed = NULL;
 unwind_key:
-    xfree(dev->key);
+    free(dev->key);
     dev->key = NULL;
     return FALSE;
 }
@@ -645,7 +645,7 @@ void
 XkbFreeInfo(XkbSrvInfoPtr xkbi)
 {
     if (xkbi->radioGroups) {
-	xfree(xkbi->radioGroups);
+	free(xkbi->radioGroups);
 	xkbi->radioGroups= NULL;
     }
     if (xkbi->mouseKeyTimer) {
@@ -677,7 +677,7 @@ XkbFreeInfo(XkbSrvInfoPtr xkbi)
 	XkbFreeKeyboard(xkbi->desc,XkbAllComponentsMask,TRUE);
 	xkbi->desc= NULL;
     }
-    xfree(xkbi);
+    free(xkbi);
     return;
 }
 

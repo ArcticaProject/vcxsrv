@@ -781,7 +781,7 @@ RECORDPROTO="recordproto >= 1.13.99.1"
 SCRNSAVERPROTO="scrnsaverproto >= 1.1"
 RESOURCEPROTO="resourceproto"
 DRIPROTO="xf86driproto >= 2.1.0"
-DRI2PROTO="dri2proto >= 2.2"
+DRI2PROTO="dri2proto >= 2.3"
 XINERAMAPROTO="xineramaproto"
 BIGFONTPROTO="xf86bigfontproto >= 1.2.0"
 XCALIBRATEPROTO="xcalibrateproto"
@@ -1704,9 +1704,11 @@ if test "x$XORG" = xyes; then
 	  *)
 	  	XORG_OS="unknown"
 		XORG_OS_SUBDIR="unknown"
-		AC_MSG_ERROR([Your OS is unknown. Xorg currently only supports Linux, \
-		Free/Open/NetBSD, Solaris, and OS X. If you are interested in porting \
-	        Xorg to your platform, please email xorg@lists.freedesktop.org.])
+		AC_MSG_ERROR([m4_text_wrap(m4_join([ ],
+		[Your OS is unknown. Xorg currently only supports Linux,],
+		[Free/Open/Net/DragonFlyBSD, Solaris/OpenSolaris, & GNU Hurd.],
+		[If you are interested in porting Xorg to your platform,],
+		[please email xorg@lists.freedesktop.org.]))])
 		;;
 	esac
 

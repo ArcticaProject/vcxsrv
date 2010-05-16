@@ -156,7 +156,7 @@ winCopyWindowNativeGDI (WindowPtr pWin,
   nbox = REGION_NUM_RECTS(prgnDst);
 
   /* Allocate source points for each box */
-  if(!(pptSrc = (DDXPointPtr )xalloc(nbox * sizeof(DDXPointRec))))
+  if(!(pptSrc = (DDXPointPtr )malloc(nbox * sizeof(DDXPointRec))))
     return;
 
   /* Set an iterator pointer */
@@ -185,7 +185,7 @@ winCopyWindowNativeGDI (WindowPtr pWin,
     }
 
   /* Cleanup the regions, etc. */
-  xfree(pptSrc);
+  free(pptSrc);
   REGION_DESTROY(pWin->drawable.pScreen, prgnDst);
 }
 

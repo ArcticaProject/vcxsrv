@@ -128,7 +128,7 @@ removeMapping(VidMapPtr vp, MappingPtr mp)
 	for (i = 0; i < vp->numMappings; i++) {
 		if (vp->mappings[i] == mp) {
 			found = 1;
-			xfree(vp->mappings[i]);
+			free(vp->mappings[i]);
 		} else if (found) {
 			vp->mappings[i - 1] = vp->mappings[i];
 		}
@@ -156,7 +156,7 @@ checkMtrrOption(VidMapPtr vp)
 					options);
 		if (xf86GetOptValBool(options, OPTION_MTRR, &vp->mtrrEnabled))
 			vp->mtrrFrom = X_CONFIG;
-		xfree(options);
+		free(options);
 		vp->mtrrOptChecked = TRUE;
 	}
 }

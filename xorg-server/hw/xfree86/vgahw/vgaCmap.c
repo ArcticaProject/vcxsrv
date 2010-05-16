@@ -235,9 +235,9 @@ vgaInstallColormap(pmap)
   else
     entries = pmap->pVisual->ColormapEntries;
 
-  ppix = (Pixel *)xalloc( entries * sizeof(Pixel));
-  prgb = (xrgb *)xalloc( entries * sizeof(xrgb));
-  defs = (xColorItem *)xalloc(entries * sizeof(xColorItem));
+  ppix = (Pixel *)malloc( entries * sizeof(Pixel));
+  prgb = (xrgb *)malloc( entries * sizeof(xrgb));
+  defs = (xColorItem *)malloc(entries * sizeof(xColorItem));
 
   if ( oldmap != NOMAPYET)
     WalkTree( pmap->pScreen, TellLostMap, &oldmap->mid);
@@ -246,7 +246,7 @@ vgaInstallColormap(pmap)
 
   for ( i=0; i<entries; i++) ppix[i] = i;
 
-  QueryColors( pmap, entries, ppix, prgb);
+  QueryColors(pmap, entries, ppix, prgb, serverClient);
 
   for ( i=0; i<entries; i++) /* convert xrgbs to xColorItems */
     {
@@ -260,9 +260,9 @@ vgaInstallColormap(pmap)
 
   WalkTree(pmap->pScreen, TellGainedMap, &pmap->mid);
   
-  xfree(ppix);
-  xfree(prgb);
-  xfree(defs);
+  free(ppix);
+  free(prgb);
+  free(defs);
 }
 
 

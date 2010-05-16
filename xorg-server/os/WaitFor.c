@@ -437,7 +437,7 @@ TimerSet(OsTimerPtr timer, int flags, CARD32 millis,
 
     if (!timer)
     {
-	timer = xalloc(sizeof(struct _OsTimerRec));
+	timer = malloc(sizeof(struct _OsTimerRec));
 	if (!timer)
 	    return NULL;
     }
@@ -522,7 +522,7 @@ TimerFree(OsTimerPtr timer)
     if (!timer)
 	return;
     TimerCancel(timer);
-    xfree(timer);
+    free(timer);
 }
 
 void
@@ -542,7 +542,7 @@ TimerInit(void)
     while ((timer = timers))
     {
 	timers = timer->next;
-	xfree(timer);
+	free(timer);
     }
 }
 

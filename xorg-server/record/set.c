@@ -87,7 +87,7 @@ typedef struct {
 static void
 BitVectorDestroySet(RecordSetPtr pSet)
 {
-    xfree(pSet);
+    free(pSet);
 }
 
 static unsigned long
@@ -199,7 +199,7 @@ BitVectorCreateSet(RecordSetInterval *pIntervals, int nIntervals,
     }
     else
     {
-	pbvs = (BitVectorSetPtr)Xcalloc(memsize);
+	pbvs = (BitVectorSetPtr)calloc(1, memsize);
 	if (!pbvs) return NULL;
 	pbvs->baseSet.ops = &BitVectorSetOperations;
     }
@@ -233,7 +233,7 @@ typedef struct {
 static void
 IntervalListDestroySet(RecordSetPtr pSet)
 {
-    xfree(pSet);
+    free(pSet);
 }
 
 static unsigned long
@@ -302,7 +302,7 @@ IntervalListCreateSet(RecordSetInterval *pIntervals, int nIntervals,
 
     if (nIntervals > 0)
     {
-	stackIntervals = (RecordSetInterval *)xalloc(
+	stackIntervals = (RecordSetInterval *)malloc(
 				sizeof(RecordSetInterval) * nIntervals);
 	if (!stackIntervals) return NULL;
 
@@ -353,14 +353,14 @@ IntervalListCreateSet(RecordSetInterval *pIntervals, int nIntervals,
     else
     {
 	prls = (IntervalListSetPtr)
-	    xalloc(sizeof(IntervalListSet) + nIntervals * sizeof(RecordSetInterval));
+	    malloc(sizeof(IntervalListSet) + nIntervals * sizeof(RecordSetInterval));
 	if (!prls) goto bailout;
 	prls->baseSet.ops = &IntervalListSetOperations;
     }
     memcpy(&prls[1], stackIntervals, nIntervals * sizeof(RecordSetInterval));
     prls->nIntervals = nIntervals;
 bailout:
-    if (stackIntervals) xfree(stackIntervals);
+    if (stackIntervals) free(stackIntervals);
     return (RecordSetPtr)prls;
 }
 

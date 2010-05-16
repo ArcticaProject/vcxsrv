@@ -33,7 +33,7 @@ KdCardInfoAdd (KdCardFuncs  *funcs,
 {
     KdCardInfo	*ci, **prev;
 
-    ci = xcalloc (1, sizeof (KdCardInfo));
+    ci = calloc(1, sizeof (KdCardInfo));
     if (!ci)
 	return 0;
     for (prev = &kdCardInfo; *prev; prev = &(*prev)->next);
@@ -66,7 +66,7 @@ KdCardInfoDispose (KdCardInfo *ci)
 	if (*prev == ci)
 	{
 	    *prev = ci->next;
-	    xfree (ci);
+	    free(ci);
 	    break;
 	}
 }
@@ -77,7 +77,7 @@ KdScreenInfoAdd (KdCardInfo *ci)
     KdScreenInfo    *si, **prev;
     int		    n;
 
-    si = xcalloc (1, sizeof (KdScreenInfo));
+    si = calloc(1, sizeof (KdScreenInfo));
     if (!si)
 	return 0;
     for (prev = &ci->screenList, n = 0; *prev; prev = &(*prev)->next, n++);
@@ -98,7 +98,7 @@ KdScreenInfoDispose (KdScreenInfo *si)
 	if (*prev == si)
 	{
 	    *prev = si->next;
-	    xfree (si);
+	    free(si);
 	    if (!ci->screenList)
 		KdCardInfoDispose (ci);
 	    break;
@@ -112,7 +112,7 @@ KdNewPointer (void)
     KdPointerInfo *pi;
     int i;
 
-    pi = (KdPointerInfo *)xcalloc(1, sizeof(KdPointerInfo));
+    pi = (KdPointerInfo *)calloc(1, sizeof(KdPointerInfo));
     if (!pi)
         return NULL;
 
@@ -136,28 +136,28 @@ KdFreePointer(KdPointerInfo *pi)
 {
     InputOption *option, *prev = NULL;
 
-    xfree(pi->name);
-    xfree(pi->path);
+    free(pi->name);
+    free(pi->path);
 
     for (option = pi->options; option; option = option->next) {
-        xfree(prev);
-        xfree(option->key);
-        xfree(option->value);
+        free(prev);
+        free(option->key);
+        free(option->value);
         prev = option;
     }
 
-    xfree(prev);
-    xfree(pi);
+    free(prev);
+    free(pi);
 }
 
 void
 KdFreeKeyboard(KdKeyboardInfo *ki)
 {
-    xfree(ki->name);
-    xfree(ki->path);
-    xfree(ki->xkbRules);
-    xfree(ki->xkbModel);
-    xfree(ki->xkbLayout);
+    free(ki->name);
+    free(ki->path);
+    free(ki->xkbRules);
+    free(ki->xkbModel);
+    free(ki->xkbLayout);
     ki->next = NULL;
-    xfree(ki);
+    free(ki);
 }

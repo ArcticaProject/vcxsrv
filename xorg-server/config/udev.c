@@ -63,7 +63,7 @@ device_added(struct udev_device *udev_device)
     if (!udev_device_get_property_value(udev_device, "ID_INPUT"))
         return;
 
-    options = xcalloc(sizeof(*options), 1);
+    options = calloc(sizeof(*options), 1);
     if (!options)
         return;
 
@@ -141,26 +141,26 @@ device_added(struct udev_device *udev_device)
         goto unwind;
 
     for (; dev; dev = dev->next) {
-        xfree(dev->config_info);
+        free(dev->config_info);
         dev->config_info = xstrdup(config_info);
     }
 
  unwind:
-    xfree(config_info);
+    free(config_info);
     while (!dev && (tmpo = options)) {
         options = tmpo->next;
-        xfree(tmpo->key);
-        xfree(tmpo->value);
-        xfree(tmpo);
+        free(tmpo->key);
+        free(tmpo->value);
+        free(tmpo);
     }
 
     if (attrs.tags) {
         char **tag = attrs.tags;
         while (*tag) {
-            xfree(*tag);
+            free(*tag);
             tag++;
         }
-        xfree(attrs.tags);
+        free(attrs.tags);
     }
 
     return;
@@ -178,7 +178,7 @@ device_removed(struct udev_device *device)
 
     remove_devices("udev", value);
 
-    xfree(value);
+    free(value);
 }
 
 static void

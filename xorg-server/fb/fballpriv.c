@@ -61,7 +61,7 @@ fbAllocatePrivates(ScreenPtr pScreen, DevPrivateKey *pGCKey)
     {
 	FbScreenPrivPtr	pScreenPriv;
 
-	pScreenPriv = (FbScreenPrivPtr) xalloc (sizeof (FbScreenPrivRec));
+	pScreenPriv = (FbScreenPrivPtr) malloc(sizeof (FbScreenPrivRec));
 	if (!pScreenPriv)
 	    return FALSE;
 	dixSetPrivate(&pScreen->devPrivates, fbScreenPrivateKey, pScreenPriv);

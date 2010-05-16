@@ -12,7 +12,7 @@
 
 void *x_sha1_init(void)
 {
-    SHA1_CTX *ctx = xalloc(sizeof(*ctx));
+    SHA1_CTX *ctx = malloc(sizeof(*ctx));
     if (!ctx)
         return NULL;
     SHA1Init(ctx);
@@ -30,7 +30,7 @@ int x_sha1_final(void *ctx, unsigned char result[20])
 {
     SHA1_CTX *sha1_ctx = ctx;
     SHA1Final(result, sha1_ctx);
-    xfree(sha1_ctx);
+    free(sha1_ctx);
     return 1;
 }
 
@@ -40,7 +40,7 @@ int x_sha1_final(void *ctx, unsigned char result[20])
 
 void *x_sha1_init(void)
 {
-    CC_SHA1_CTX *ctx = xalloc(sizeof(*ctx));
+    CC_SHA1_CTX *ctx = malloc(sizeof(*ctx));
     if (!ctx)
         return NULL;
     CC_SHA1_Init(ctx);
@@ -58,7 +58,7 @@ int x_sha1_final(void *ctx, unsigned char result[20])
 {
     CC_SHA1_CTX *sha1_ctx = ctx;
     CC_SHA1_Final(result, sha1_ctx);
-    xfree(sha1_ctx);
+    free(sha1_ctx);
     return 1;
 }
 
@@ -107,7 +107,7 @@ int x_sha1_final(void *ctx, unsigned char result[20])
 
 void *x_sha1_init(void)
 {
-    sha1_ctx *ctx = xalloc(sizeof(*ctx));
+    sha1_ctx *ctx = malloc(sizeof(*ctx));
     if(!ctx)
         return NULL;
     sha1_begin(ctx);
@@ -123,7 +123,7 @@ int x_sha1_update(void *ctx, void *data, int size)
 int x_sha1_final(void *ctx, unsigned char result[20])
 {
     sha1_end(result, ctx);
-    xfree(ctx);
+    free(ctx);
     return 1;
 }
 
@@ -135,12 +135,12 @@ int x_sha1_final(void *ctx, unsigned char result[20])
 void *x_sha1_init(void)
 {
     int ret;
-    SHA_CTX *ctx = xalloc(sizeof(*ctx));
+    SHA_CTX *ctx = malloc(sizeof(*ctx));
     if (!ctx)
         return NULL;
     ret = SHA1_Init(ctx);
     if (!ret) {
-        xfree(ctx);
+        free(ctx);
         return NULL;
     }
     return ctx;
@@ -152,7 +152,7 @@ int x_sha1_update(void *ctx, void *data, int size)
     SHA_CTX *sha_ctx = ctx;
     ret = SHA1_Update(sha_ctx, data, size);
     if (!ret)
-        xfree(sha_ctx);
+        free(sha_ctx);
     return ret;
 }
 
@@ -161,7 +161,7 @@ int x_sha1_final(void *ctx, unsigned char result[20])
     int ret;
     SHA_CTX *sha_ctx = ctx;
     ret = SHA1_Final(result, sha_ctx);
-    xfree(sha_ctx);
+    free(sha_ctx);
     return ret;
 }
 

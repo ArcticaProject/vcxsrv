@@ -157,7 +157,7 @@ TslibInit (KdPointerInfo *pi)
         return !Success;
 
     pi->driverPrivate = (struct TslibPrivate *)
-                        xcalloc(sizeof(struct TslibPrivate), 1);
+                        calloc(sizeof(struct TslibPrivate), 1);
     if (!pi->driverPrivate)
         return !Success;
 
@@ -175,7 +175,7 @@ TslibInit (KdPointerInfo *pi)
 static void
 TslibFini (KdPointerInfo *pi)
 {
-    xfree(pi->driverPrivate);
+    free(pi->driverPrivate);
     pi->driverPrivate = NULL;
 }
 

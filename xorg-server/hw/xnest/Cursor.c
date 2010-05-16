@@ -107,7 +107,7 @@ xnestRealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
   bg_color.green = pCursor->backGreen;
   bg_color.blue = pCursor->backBlue;
 
-  xnestSetCursorPriv(pCursor, pScreen, xalloc(sizeof(xnestPrivCursor)));
+  xnestSetCursorPriv(pCursor, pScreen, malloc(sizeof(xnestPrivCursor)));
   xnestCursor(pCursor, pScreen) = 
     XCreatePixmapCursor(xnestDisplay, source, mask, &fg_color, &bg_color,
 			pCursor->bits->xhot, pCursor->bits->yhot);
@@ -122,7 +122,7 @@ Bool
 xnestUnrealizeCursor(DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor)
 {
   XFreeCursor(xnestDisplay, xnestCursor(pCursor, pScreen));
-  xfree(xnestGetCursorPriv(pCursor, pScreen));
+  free(xnestGetCursorPriv(pCursor, pScreen));
   return True;
 }
 

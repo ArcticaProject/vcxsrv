@@ -183,7 +183,7 @@ static SwapGroupPtr CreateSwapEntry(WindowPtr pWin)
     SwapGroupPtr  pEntry;
 
     /* Allocate new swap group */
-    pEntry = xalloc(sizeof(*pEntry));
+    pEntry = malloc(sizeof(*pEntry));
     if (!pEntry) return NULL;
 
     /* Initialize swap group */
@@ -223,7 +223,7 @@ static void FreeSwapEntry(SwapGroupPtr pEntry)
 
     /* We can free the pEntry entry since it has already been removed
      * from the swap group list and it won't be needed any longer */
-    xfree(pEntry);
+    free(pEntry);
 }
 
 int JoinSwapGroupSGIX(DrawablePtr pDraw, DrawablePtr pMember)
@@ -407,7 +407,7 @@ void SwapBarrierReset(void)
 	     pBarrier;
 	     pBarrier = pNextBarrier) {
 	    pNextBarrier = pBarrier->pNext;
-	    xfree(pBarrier);
+	    free(pBarrier);
 	}
 	SwapBarrierList[i] = NULL;
     }
@@ -422,7 +422,7 @@ static Bool BindSwapGroupToBarrier(GLuint barrier, SwapGroupPtr pSwapGroup)
 {
     SwapBarrierPtr  pBarrier;
 
-    pBarrier = xalloc(sizeof(*pBarrier));
+    pBarrier = malloc(sizeof(*pBarrier));
     if (!pBarrier) return FALSE;
 
     /* Add the swap group to barrier's list */
@@ -448,7 +448,7 @@ static Bool UnbindSwapGroupFromBarrier(GLuint barrier, SwapGroupPtr pSwapGroup)
     else              SwapBarrierList[barrier] = pBarrier->pNext;
 
     /* Free memory */
-    xfree(pBarrier);
+    free(pBarrier);
 
     return TRUE;
 }

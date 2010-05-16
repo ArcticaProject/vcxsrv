@@ -235,7 +235,7 @@ ApplyAccelerationSettings(DeviceIntPtr dev){
                     local->name, scheme);
         }
 
-        xfree(schemeStr);
+        free(schemeStr);
 
         /* process special configuration */
         switch (scheme) {
@@ -612,7 +612,7 @@ MergeInputClasses(IDevPtr idev, InputAttributes *attrs)
 
     /* Apply options to device with InputClass settings preferred. */
     if (classdriver) {
-        xfree(idev->driver);
+        free(idev->driver);
         idev->driver = xstrdup(classdriver);
         if (!idev->driver) {
             xf86Msg(X_ERROR, "Failed to allocate memory while merging "
@@ -762,7 +762,7 @@ NewInputDeviceRequest (InputOption *options, InputAttributes *attrs,
     int rval = Success;
     int is_auto = 0;
 
-    idev = xcalloc(sizeof(*idev), 1);
+    idev = calloc(sizeof(*idev), 1);
     if (!idev)
         return BadAlloc;
 
@@ -844,11 +844,11 @@ unwind:
     if (is_auto && !xf86Info.autoAddDevices)
         xf86Msg(X_INFO, "AutoAddDevices is off - not adding device.\n");
     if(idev->driver)
-        xfree(idev->driver);
+        free(idev->driver);
     if(idev->identifier)
-        xfree(idev->identifier);
+        free(idev->identifier);
     xf86optionListFree(idev->commonOptions);
-    xfree(idev);
+    free(idev);
     return rval;
 }
 
@@ -884,10 +884,10 @@ DeleteInputDeviceRequest(DeviceIntPtr pDev)
 
         if (!(*it)) /* end of list, not in the layout */
         {
-            xfree(idev->driver);
-            xfree(idev->identifier);
+            free(idev->driver);
+            free(idev->identifier);
             xf86optionListFree(idev->commonOptions);
-            xfree(idev);
+            free(idev);
         }
     }
     OsReleaseSignals();

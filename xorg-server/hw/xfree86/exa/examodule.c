@@ -79,8 +79,8 @@ exaXorgCloseScreen (int i, ScreenPtr pScreen)
 
     pScrn->EnableDisableFBAccess = pScreenPriv->SavedEnableDisableFBAccess;
 
-    xfree (pScreenPriv->options);
-    xfree (pScreenPriv);
+    free(pScreenPriv->options);
+    free(pScreenPriv);
 
     return pScreen->CloseScreen (i, pScreen);
 }
@@ -114,7 +114,7 @@ exaDDXDriverInit(ScreenPtr pScreen)
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     ExaXorgScreenPrivPtr pScreenPriv;
 
-    pScreenPriv = xcalloc (1, sizeof(ExaXorgScreenPrivRec));
+    pScreenPriv = calloc(1, sizeof(ExaXorgScreenPrivRec));
     if (pScreenPriv == NULL)
 	return;
 

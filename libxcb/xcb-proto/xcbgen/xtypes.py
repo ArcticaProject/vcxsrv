@@ -131,7 +131,7 @@ class Enum(SimpleType):
             if value.tag == 'value':
                 self.values.append((item.get('name'), value.text))
             elif value.tag == 'bit':
-                self.values.append((item.get('name'), '%u' % (1 << int(value.text))))
+                self.values.append((item.get('name'), '%u' % (1 << int(value.text, 0))))
                 self.bits.append((item.get('name'), value.text))
 
     def resolve(self, module):
@@ -243,7 +243,7 @@ class PadType(Type):
         Type.__init__(self, tcard8.name)
         self.is_pad = True
         self.size = 1
-        self.nmemb = 1 if (elt == None) else int(elt.get('bytes'))
+        self.nmemb = 1 if (elt == None) else int(elt.get('bytes'), 0)
 
     def resolve(self, module):
         self.resolved = True

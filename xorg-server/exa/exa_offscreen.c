@@ -245,7 +245,7 @@ exaOffscreenAlloc (ScreenPtr pScreen, int size, int align,
     /* save extra space in new area */
     if (real_size < area->size)
     {
-	ExaOffscreenArea   *new_area = xalloc (sizeof (ExaOffscreenArea));
+	ExaOffscreenArea   *new_area = malloc(sizeof (ExaOffscreenArea));
 	if (!new_area)
 	    return NULL;
 	new_area->base_offset = area->base_offset;
@@ -408,7 +408,7 @@ ExaOffscreenMerge (ExaScreenPrivPtr pExaScr, ExaOffscreenArea *area)
 	area->next->prev = area;
     else
 	pExaScr->info->offScreenAreas->prev = area;
-    xfree (next);
+    free(next);
 
     pExaScr->numOffscreenAvailable--;
 }
@@ -655,7 +655,7 @@ exaOffscreenInit (ScreenPtr pScreen)
     ExaOffscreenArea *area;
 
     /* Allocate a big free area */
-    area = xalloc (sizeof (ExaOffscreenArea));
+    area = malloc(sizeof (ExaOffscreenArea));
 
     if (!area)
 	return FALSE;
@@ -691,6 +691,6 @@ ExaOffscreenFini (ScreenPtr pScreen)
     while ((area = pExaScr->info->offScreenAreas))
     {
 	pExaScr->info->offScreenAreas = area->next;
-	xfree (area);
+	free(area);
     }
 }

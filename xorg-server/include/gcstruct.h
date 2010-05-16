@@ -59,6 +59,8 @@ SOFTWARE.
 #include "privates.h"
 #include <X11/Xprotostr.h>
 
+#define GCAllBits ((1 << (GCLastBit + 1)) - 1)
+
 /*
  * functions which modify the state of the GC
  */

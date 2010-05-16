@@ -533,7 +533,7 @@ DRIWrapInit(ScreenPtr pScreen) {
     if(!dixRequestPrivate(driWrapScreenKey, sizeof(DRIWrapScreenRec)))
 	return FALSE;
     
-    pScreenPriv = xalloc(sizeof(*pScreenPriv));
+    pScreenPriv = malloc(sizeof(*pScreenPriv));
 
     if(NULL == pScreenPriv)
 	return FALSE;

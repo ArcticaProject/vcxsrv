@@ -138,7 +138,7 @@ xf86SetModeDefaultName(DisplayModePtr mode)
 {
     Bool interlaced = !!(mode->Flags & V_INTERLACE);
 
-    xfree(mode->name);
+    free(mode->name);
 
     mode->name = XNFprintf("%dx%d%s", mode->HDisplay, mode->VDisplay,
 			   interlaced ? "i" : "");
@@ -324,7 +324,7 @@ xf86PrintModeline(int scrnIndex,DisplayModePtr mode)
 		   mode->HSyncStart, mode->HSyncEnd, mode->HTotal,
 		   mode->VDisplay, mode->VSyncStart, mode->VSyncEnd,
 		   mode->VTotal, flags, xf86ModeHSync(mode));
-    xfree(flags);
+    free(flags);
 }
 #endif /* XORG_VERSION_CURRENT <= 7.2.99.2 */
 
@@ -607,13 +607,13 @@ xf86GetConfigModes (XF86ConfModeLinePtr conf_mode)
     
     for (; conf_mode; conf_mode = (XF86ConfModeLinePtr) conf_mode->list.next)
     {
-        mode = xcalloc(1, sizeof(DisplayModeRec));
+        mode = calloc(1, sizeof(DisplayModeRec));
 	if (!mode)
 	    continue;
         mode->name       = xstrdup(conf_mode->ml_identifier);
 	if (!mode->name)
 	{
-	    xfree (mode);
+	    free(mode);
 	    continue;
 	}
 	mode->type       = 0;

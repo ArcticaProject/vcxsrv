@@ -1001,8 +1001,7 @@ default routine is chosen during GC validation.
 
 <p>Note that some pointers to functions that draw to the screen are
 stored in the Screen structure.  They include GetImage(), GetSpans(),
-PaintWindowBackground(), PaintWindowBorder(), CopyWindow() and
-RestoreAreas().
+CopyWindow() and RestoreAreas().
 
 <sect2>Xnest
 

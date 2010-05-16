@@ -1,4 +1,3 @@
-/* $Xorg: Xfuncproto.h,v 1.4 2001/02/09 02:03:22 xorgcvs Exp $ */
 /*
  *
 Copyright 1989, 1991, 1998  The Open Group
@@ -24,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
  *
  */
-/* $XFree86: xc/include/Xfuncproto.h,v 3.4 2001/12/14 19:53:25 dawes Exp $ */
 
 /* Definitions to make function prototypes manageable */
 
@@ -85,7 +83,7 @@ in this Software without prior written authorization from The Open Group.
 # define _X_ATTRIBUTE_PRINTF(x,y)
 #endif /* GNUC >= 4 */
 
-#if defined(__GNUC__) && (__GNUC__ >= 4)
+#if defined(__GNUC__) && (__GNUC__ >= 4) && !defined(__CYGWIN__)
 # define _X_EXPORT      __attribute__((visibility("default")))
 # define _X_HIDDEN      __attribute__((visibility("hidden")))
 # define _X_INTERNAL    __attribute__((visibility("internal")))
@@ -118,5 +116,11 @@ in this Software without prior written authorization from The Open Group.
 #else /* not gcc >= 3.1 */
 # define _X_DEPRECATED
 #endif
+
+#if defined(__GNUC__) && ((__GNUC__ * 100 + __GNUC_MINOR__) >= 205)
+# define _X_NORETURN __attribute((noreturn))
+#else
+# define _X_NORETURN
+#endif /* GNUC  */
 
 #endif /* _XFUNCPROTO_H_ */

@@ -273,7 +273,7 @@ XAAGlyphBltTEColorExpansion(
 			    
 			    if (!fallbackBits) {
 				int fontHeight = Bottom - Top + 1;
-				fallbackBits = xcalloc (glyphWidth * fontHeight, 1);
+				fallbackBits = calloc(glyphWidth * fontHeight, 1);
 				if (!fallbackBits)
 				    return;
 			    }
@@ -300,7 +300,7 @@ XAAGlyphBltTEColorExpansion(
 		fg, bg, rop, planemask);
 
 	    if (fallbackBits)
-		xfree (fallbackBits);
+		free(fallbackBits);
 	}
 
 	nbox--; pbox++;

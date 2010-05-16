@@ -438,7 +438,7 @@ probe_devices_from_device_sections(DriverPtr drvp)
 	    }
 	}
     }
-    xfree(devList);
+    free(devList);
 
     return foundScreen;
 }
@@ -617,8 +617,8 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
     /* Load all modules specified explicitly in the config file */
     if ((modulelist = xf86ModulelistFromConfig(&optionlist))) {
       xf86LoadModules(modulelist, optionlist);
-      xfree(modulelist);
-      xfree(optionlist);
+      free(modulelist);
+      free(optionlist);
     }
 
     /* Load all driver modules specified in the config file */
@@ -634,13 +634,13 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
     }
     if ((modulelist = xf86DriverlistFromConfig())) {
       xf86LoadModules(modulelist, NULL);
-      xfree(modulelist);
+      free(modulelist);
     }
 
     /* Load all input driver modules specified in the config file. */
     if ((modulelist = xf86InputDriverlistFromConfig())) {
       xf86LoadModules(modulelist, NULL);
-      xfree(modulelist);
+      free(modulelist);
     }
 
     /*
@@ -940,7 +940,7 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
       /* This memory needs to stay available until the screen has been
 	 initialized, and we can create the property for real.
       */
-      if ( (VT = xalloc(sizeof(CARD32)))==NULL ) {
+      if ( (VT = malloc(sizeof(CARD32)))==NULL ) {
 	FatalError("Unable to make VT property - out of memory. Exiting...\n");
       }
       *VT = xf86Info.vtno;
@@ -1756,7 +1756,7 @@ xf86LoadModules(char **list, pointer *optlist)
 	    LoaderErrorMsg(NULL, name, errmaj, errmin);
 	    failed = TRUE;
 	}
-	xfree(name);
+	free(name);
     }
     return !failed;
 }

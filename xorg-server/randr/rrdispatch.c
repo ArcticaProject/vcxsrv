@@ -65,7 +65,7 @@ ProcRRQueryVersion (ClientPtr client)
 	swapl(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xRRQueryVersionReply), (char *)&rep);
-    return (client->noClientException);
+    return Success;
 }
 
 static int
@@ -108,7 +108,7 @@ ProcRRSelectInput (ClientPtr client)
 	if (!pRREvent)
 	{
 	    /* build the entry */
-	    pRREvent = (RREventPtr) xalloc (sizeof (RREventRec));
+	    pRREvent = (RREventPtr) malloc(sizeof (RREventRec));
 	    if (!pRREvent)
 		return BadAlloc;
 	    pRREvent->next = 0;
@@ -131,7 +131,7 @@ ProcRRSelectInput (ClientPtr client)
 	     */
 	    if (!pHead)
 	    {
-		pHead = (RREventPtr *) xalloc (sizeof (RREventPtr));
+		pHead = (RREventPtr *) malloc(sizeof (RREventPtr));
 		if (!pHead ||
 		    !AddResource (pWin->drawable.id, RREventType, (pointer)pHead))
 		{
@@ -174,7 +174,7 @@ ProcRRSelectInput (ClientPtr client)
 		    pNewRREvent->next = pRREvent->next;
 		else
 		    *pHead = pRREvent->next;
-		xfree (pRREvent);
+		free(pRREvent);
 	    }
 	}
     }

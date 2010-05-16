@@ -113,7 +113,7 @@ AllocatePixmap(ScreenPtr pScreen, int pixDataSize)
     if (pScreen->totalPixmapSize > ((size_t)-1) - pixDataSize)
 	return NullPixmap;
     
-    pPixmap = xalloc(pScreen->totalPixmapSize + pixDataSize);
+    pPixmap = malloc(pScreen->totalPixmapSize + pixDataSize);
     if (!pPixmap)
 	return NullPixmap;
 

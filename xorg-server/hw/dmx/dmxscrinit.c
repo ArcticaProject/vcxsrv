@@ -393,7 +393,7 @@ void dmxBECloseScreen(ScreenPtr pScreen)
     /* Free resources allocated during initialization (in dmxinit.c) */
     for (i = 0; i < dmxScreen->beNumDefColormaps; i++)
 	XFreeColormap(dmxScreen->beDisplay, dmxScreen->beDefColormaps[i]);
-    xfree(dmxScreen->beDefColormaps);
+    free(dmxScreen->beDefColormaps);
     dmxScreen->beDefColormaps = NULL;
 
 #if 0
@@ -435,7 +435,7 @@ Bool dmxCloseScreen(int idx, ScreenPtr pScreen)
 
     if (dmxShadowFB) {
 	/* Free the shadow framebuffer */
-	xfree(dmxScreen->shadow);
+	free(dmxScreen->shadow);
     } else {
 
 	/* Unwrap Shape functions */

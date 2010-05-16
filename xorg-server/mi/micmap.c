@@ -391,7 +391,7 @@ miClearVisualTypes(void)
 
     while ((v = miVisuals)) {
 	miVisuals = v->next;
-	xfree(v);
+	free(v);
     }
 }
 
@@ -404,7 +404,7 @@ miSetVisualTypesAndMasks(int depth, int visuals, int bitsPerRGB,
     miVisualsPtr   new, *prev, v;
     int		    count;
 
-    new = xalloc (sizeof *new);
+    new = malloc(sizeof *new);
     if (!new)
 	return FALSE;
     if (!redMask || !greenMask || !blueMask)
@@ -545,14 +545,14 @@ miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
 	ndepth++;
 	nvisual += visuals->count;
     }
-    depth = xalloc (ndepth * sizeof (DepthRec));
-    visual = xalloc (nvisual * sizeof (VisualRec));
-    preferredCVCs = xalloc(ndepth * sizeof(int));
+    depth = malloc(ndepth * sizeof (DepthRec));
+    visual = malloc(nvisual * sizeof (VisualRec));
+    preferredCVCs = malloc(ndepth * sizeof(int));
     if (!depth || !visual || !preferredCVCs)
     {
-	xfree (depth);
-	xfree (visual);
-	xfree (preferredCVCs);
+	free(depth);
+	free(visual);
+	free(preferredCVCs);
 	return FALSE;
     }
     *depthp = depth;
@@ -571,9 +571,9 @@ miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
 	vid = NULL;
 	if (nvtype)
 	{
-	    vid = xalloc (nvtype * sizeof (VisualID));
+	    vid = malloc(nvtype * sizeof (VisualID));
 	    if (!vid) {
-		xfree(preferredCVCs);
+		free(preferredCVCs);
 		return FALSE;
 	    }
 	}
@@ -615,7 +615,7 @@ miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
 	    vid++;
 	    visual++;
 	}
-	xfree (visuals);
+	free(visuals);
     }
     miVisuals = NULL;
     visual = *visualp;
@@ -671,7 +671,7 @@ miInitVisuals(VisualPtr *visualp, DepthPtr *depthp, int *nvisualp,
     }
     *rootDepthp = depth[i].depth;
     *defaultVisp = depth[i].vids[j];
-    xfree(preferredCVCs);
+    free(preferredCVCs);
 
     return TRUE;
 }

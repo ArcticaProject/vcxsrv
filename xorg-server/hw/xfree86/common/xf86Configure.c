@@ -163,7 +163,7 @@ bus_sbus_newdev_configure(void *busData, int i)
 	if (promPath) {
 	    DevToConfig[i].GDev.busID = xnfalloc(strlen(promPath) + 6);
 	    sprintf(DevToConfig[i].GDev.busID, "SBUS:%s", promPath);
-	    xfree(promPath);
+	    free(promPath);
 	} else {
 	    DevToConfig[i].GDev.busID = xnfalloc(12);
 	    sprintf(DevToConfig[i].GDev.busID, "SBUS:fb%d",
@@ -399,7 +399,7 @@ configureDeviceSection (int screennum)
 		int len = strlen(ptr->dev_comment) + strlen(prefix) +
 			  strlen(middle) + strlen(suffix) + 1;
 		
-		optname = xalloc(strlen(p->name) + 2 + 1);
+		optname = malloc(strlen(p->name) + 2 + 1);
 		if (!optname)
 		    break;
 		sprintf(optname, "\"%s\"", p->name);
@@ -407,13 +407,13 @@ configureDeviceSection (int screennum)
 		len += max(20, strlen(optname));
 		len += strlen(opttype);
 
-		ptr->dev_comment = xrealloc(ptr->dev_comment, len);
+		ptr->dev_comment = realloc(ptr->dev_comment, len);
 		if (!ptr->dev_comment)
 		    break;
 		p_e = ptr->dev_comment + strlen(ptr->dev_comment);
 		sprintf(p_e, "%s%-20s%s%s%s", prefix, optname, middle,
 			opttype, suffix);
-		xfree(optname);
+		free(optname);
 	    }
     	}
     }
@@ -512,7 +512,7 @@ configureModuleSection (void)
             ptr->mod_load_lst = (XF86LoadPtr)xf86addListItem(
                                 (glp)ptr->mod_load_lst, (glp)module);
     	}
-	xfree(elist);
+	free(elist);
     }
 
     return ptr;
@@ -658,7 +658,7 @@ DoConfigure(void)
     /* Load all the drivers that were found. */
     xf86LoadModules(vlist, NULL);
 
-    xfree(vlist);
+    free(vlist);
 
     for (i = 0; i < xf86NumDrivers; i++) {
 	xorgHWFlags flags;
@@ -807,7 +807,7 @@ DoConfigure(void)
 		}
 	    }
 	}
-	xfree(driverProbed);
+	free(driverProbed);
     }
     
 

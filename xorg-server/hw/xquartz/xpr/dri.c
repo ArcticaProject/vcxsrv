@@ -205,7 +205,7 @@ DRIScreenInit(ScreenPtr pScreen)
     DRIScreenPrivPtr    pDRIPriv;
     int                 i;
 
-    pDRIPriv = (DRIScreenPrivPtr) xcalloc(1, sizeof(DRIScreenPrivRec));
+    pDRIPriv = (DRIScreenPrivPtr) calloc(1, sizeof(DRIScreenPrivRec));
     if (!pDRIPriv) {
 	dixSetPrivate(&pScreen->devPrivates, DRIScreenPrivKey, NULL);
         return FALSE;
@@ -269,7 +269,7 @@ DRICloseScreen(ScreenPtr pScreen)
     DRIScreenPrivPtr pDRIPriv = DRI_SCREEN_PRIV(pScreen);
 
     if (pDRIPriv && pDRIPriv->directRenderingSupport) {
-        xfree(pDRIPriv);
+        free(pDRIPriv);
 	dixSetPrivate(&pScreen->devPrivates, DRIScreenPrivKey, NULL);
     }
 }
@@ -381,7 +381,7 @@ CreateSurfaceForWindow(ScreenPtr pScreen, WindowPtr pWin, xp_window_id *widPtr) 
 	xp_window_changes wc;
 	
 	/* allocate a DRI Window Private record */
-	if (!(pDRIDrawablePriv = xalloc(sizeof(*pDRIDrawablePriv)))) {
+	if (!(pDRIDrawablePriv = malloc(sizeof(*pDRIDrawablePriv)))) {
 	    return NULL;
 	}
 	
@@ -395,7 +395,7 @@ CreateSurfaceForWindow(ScreenPtr pScreen, WindowPtr pWin, xp_window_id *widPtr) 
 	wid = x_cvt_vptr_to_uint(RootlessFrameForWindow(pWin, TRUE));
 
 	if (wid == 0) {
-	    xfree(pDRIDrawablePriv);
+	    free(pDRIDrawablePriv);
 	    return NULL;
 	}
 	
@@ -403,7 +403,7 @@ CreateSurfaceForWindow(ScreenPtr pScreen, WindowPtr pWin, xp_window_id *widPtr) 
 	err = xp_create_surface(wid, &pDRIDrawablePriv->sid);
 
 	if (err != Success) {
-	    xfree(pDRIDrawablePriv);
+	    free(pDRIDrawablePriv);
 	    return NULL;
 	}
 
@@ -414,7 +414,7 @@ CreateSurfaceForWindow(ScreenPtr pScreen, WindowPtr pWin, xp_window_id *widPtr) 
 
 	if (err != Success) {
 	    xp_destroy_surface(pDRIDrawablePriv->sid);
-	    xfree(pDRIDrawablePriv);
+	    free(pDRIDrawablePriv);
 	    return NULL;
 	}
 
@@ -439,7 +439,7 @@ CreateSurfaceForPixmap(ScreenPtr pScreen, PixmapPtr pPix) {
 	xp_error err;
 
 	/* allocate a DRI Window Private record */
-	if (!(pDRIDrawablePriv = xcalloc(1, sizeof(*pDRIDrawablePriv)))) {
+	if (!(pDRIDrawablePriv = calloc(1, sizeof(*pDRIDrawablePriv)))) {
 	    return NULL;
 	}
 	
@@ -454,7 +454,7 @@ CreateSurfaceForPixmap(ScreenPtr pScreen, PixmapPtr pPix) {
 	
 	err = xp_create_surface(0, &pDRIDrawablePriv->sid);
 	if (err != Success) {
-	    xfree(pDRIDrawablePriv);
+	    free(pDRIDrawablePriv);
 	    return NULL;
 	}
 
@@ -519,7 +519,7 @@ DRICreateSurface(ScreenPtr pScreen, Drawable id,
                                     client_id, key);
             if (err != Success) {
                 xp_destroy_surface(pDRIDrawablePriv->sid);
-                xfree(pDRIDrawablePriv);
+                free(pDRIDrawablePriv);
 		
 		/* 
 		 * Now set the dix privates to NULL that were previously set.
@@ -637,7 +637,7 @@ DRIDrawablePrivDelete(pointer pResource, XID id)
     if (pDRIDrawablePriv->notifiers != NULL)
         x_hook_free(pDRIDrawablePriv->notifiers);
 
-    xfree(pDRIDrawablePriv);
+    free(pDRIDrawablePriv);
 
     if (pDrawable->type == DRAWABLE_WINDOW) {
 	dixSetPrivate(&pWin->devPrivates, DRIWindowPrivKey, NULL);
@@ -828,7 +828,7 @@ Bool DRICreatePixmap(ScreenPtr pScreen, Drawable id,
 
     pPix = (PixmapPtr)pDrawable;
 
-    shared = xalloc(sizeof(*shared));
+    shared = malloc(sizeof(*shared));
     if(NULL == shared) {
         FatalError("failed to allocate DRIPixmapBuffer in %s\n", __func__);
     }
@@ -856,7 +856,7 @@ Bool DRICreatePixmap(ScreenPtr pScreen, Drawable id,
                           S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH);
     
     if(-1 == shared->fd) {
-	xfree(shared);
+	free(shared);
         return FALSE;
     }   
     
@@ -866,7 +866,7 @@ Bool DRICreatePixmap(ScreenPtr pScreen, Drawable id,
 	ErrorF("failed to ftruncate (extend) file.");
 	shm_unlink(shared->shmPath);
 	close(shared->fd);
-	xfree(shared);
+	free(shared);
 	return FALSE;
     }
 
@@ -878,7 +878,7 @@ Bool DRICreatePixmap(ScreenPtr pScreen, Drawable id,
 	ErrorF("failed to mmap shared memory.");
 	shm_unlink(shared->shmPath);
 	close(shared->fd);
-	xfree(shared);
+	free(shared);
 	return FALSE;
     }
     
@@ -938,7 +938,7 @@ DRIFreePixmapImp(DrawablePtr pDrawable) {
     close(shared->fd);
     munmap(shared->buffer, shared->length);
     shm_unlink(shared->shmPath);
-    xfree(shared);
+    free(shared);
 
     dixSetPrivate(&pPix->devPrivates, DRIPixmapBufferPrivKey, (pointer)NULL);
 

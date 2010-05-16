@@ -132,7 +132,7 @@ int xcb_parse_display(const char *name, char **host, int *displayp,
     return _xcb_parse_display(name, host, NULL, displayp, screenp);
 }
 
-static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port);
+static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short port);
 static int _xcb_open_unix(char *protocol, const char *file);
 #ifdef DNETCONN
 static int _xcb_open_decnet(const char *host, char *protocol, const unsigned short port);
@@ -141,7 +141,7 @@ static int _xcb_open_decnet(const char *host, char *protocol, const unsigned sho
 static int _xcb_open_abstract(char *protocol, const char *file, size_t filelen);
 #endif
 
-static int _xcb_open(char *host, char *protocol, const int display)
+static int _xcb_open(const char *host, char *protocol, const int display)
 {
     int fd;
     static const char unix_base[] = "/tmp/.X11-unix/X";
@@ -150,14 +150,16 @@ static int _xcb_open(char *host, char *protocol, const int display)
     char *file = NULL;
     int actual_filelen;
 
-    if(*host)
-    {
 #ifdef HAVE_LAUNCHD
         if(strncmp(host, "/tmp/launch", 11) == 0) {
-	    base = host;
-        } else {
+		base = host;
+		host = "";
+		protocol = NULL;
+        }
 #endif
 
+    if(*host || protocol)
+    {
 #ifdef DNETCONN
         /* DECnet displays have two colons, so _xcb_parse_display will have
            left one at the end.  However, an IPv6 address can end with *two*
@@ -178,9 +180,6 @@ static int _xcb_open(char *host, char *protocol, const int display)
                 unsigned short port = X_TCP_PORT + display;
                 return _xcb_open_tcp(host, protocol, port);
             }
-#ifdef HAVE_LAUNCHD
-        }
-#endif
     }
 
     filelen = strlen(base) + 1 + sizeof(display) * 3 + 1;
@@ -190,7 +189,7 @@ static int _xcb_open(char *host, char *protocol, const int display)
 
     /* display specifies Unix socket */
 #ifdef HAVE_LAUNCHD
-    if(base == host)
+    if(strncmp(base, "/tmp/launch", 11) == 0)
         actual_filelen = snprintf(file, filelen, "%s:%d", base, display);
     else
 #endif
@@ -274,7 +273,7 @@ int InitWSA(void)
 #define InitWSA()
 #endif
 
-static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
+static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short port)
 {
     int fd = -1;
     struct addrinfo hints;
@@ -282,8 +281,15 @@ static int _xcb_open_tcp(char *host, char *protocol, const unsigned short port)
     struct addrinfo *results, *addr;
     char *bracket;
 
-    if (protocol && strcmp("tcp",protocol))
+    if (protocol && strcmp("tcp",protocol) && strcmp("inet",protocol)
+#ifdef AF_INET6
+	         && strcmp("inet6",protocol)
+#endif
+	)
         return -1;
+	
+    if (*host == '\0')
+	host = "localhost";
 
     memset(&hints, 0, sizeof(hints));
 #ifdef AI_ADDRCONFIG

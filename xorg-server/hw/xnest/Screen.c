@@ -151,13 +151,13 @@ xnestOpenScreen(int index, ScreenPtr pScreen, int argc, char *argv[])
   if (!dixRequestPrivate(xnestGCPrivateKey, sizeof(xnestPrivGC)))
     return False;
 
-  visuals = (VisualPtr)xalloc(xnestNumVisuals * sizeof(VisualRec));
+  visuals = (VisualPtr)malloc(xnestNumVisuals * sizeof(VisualRec));
   numVisuals = 0;
 
-  depths = (DepthPtr)xalloc(MAXDEPTH * sizeof(DepthRec));
+  depths = (DepthPtr)malloc(MAXDEPTH * sizeof(DepthRec));
   depths[0].depth = 1;
   depths[0].numVids = 0;
-  depths[0].vids = (VisualID *)xalloc(MAXVISUALSPERDEPTH * sizeof(VisualID));
+  depths[0].vids = (VisualID *)malloc(MAXVISUALSPERDEPTH * sizeof(VisualID));
   numDepths = 1;
 
   for (i = 0; i < xnestNumVisuals; i++) {
@@ -203,7 +203,7 @@ xnestOpenScreen(int index, ScreenPtr pScreen, int argc, char *argv[])
       depths[depthIndex].depth = xnestVisuals[i].depth;
       depths[depthIndex].numVids = 0;
       depths[depthIndex].vids = 
-	(VisualID *)xalloc(MAXVISUALSPERDEPTH * sizeof(VisualID));
+	(VisualID *)malloc(MAXVISUALSPERDEPTH * sizeof(VisualID));
       numDepths++;
     }
     if (depths[depthIndex].numVids >= MAXVISUALSPERDEPTH) {
@@ -215,7 +215,7 @@ xnestOpenScreen(int index, ScreenPtr pScreen, int argc, char *argv[])
     
     numVisuals++;
   }
-  visuals = (VisualPtr)xrealloc(visuals, numVisuals * sizeof(VisualRec));
+  visuals = (VisualPtr)realloc(visuals, numVisuals * sizeof(VisualRec));
 
   defaultVisual = visuals[xnestDefaultVisualIndex].vid;
   rootDepth = visuals[xnestDefaultVisualIndex].nplanes;
@@ -260,7 +260,6 @@ xnestOpenScreen(int index, ScreenPtr pScreen, int argc, char *argv[])
   pScreen->SaveScreen = xnestSaveScreen;
   pScreen->GetImage = xnestGetImage;
   pScreen->GetSpans = xnestGetSpans;
-  pScreen->PointerNonInterestBox = NULL;
   pScreen->SourceValidate = NULL;
 
   /* Window Procedures */
@@ -407,10 +406,10 @@ xnestCloseScreen(int index, ScreenPtr pScreen)
   int i;
   
   for (i = 0; i < pScreen->numDepths; i++)
-    xfree(pScreen->allowedDepths[i].vids);
-  xfree(pScreen->allowedDepths);
-  xfree(pScreen->visuals);
-  xfree(pScreen->devPrivate);
+    free(pScreen->allowedDepths[i].vids);
+  free(pScreen->allowedDepths);
+  free(pScreen->visuals);
+  free(pScreen->devPrivate);
 
   /*
     If xnestDoFullGeneration all x resources will be destroyed upon closing

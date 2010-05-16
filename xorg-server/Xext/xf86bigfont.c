@@ -230,7 +230,7 @@ shmalloc(
     if (size < 3500)
 	return (ShmDescPtr) NULL;
 
-    pDesc = xalloc(sizeof(ShmDescRec));
+    pDesc = malloc(sizeof(ShmDescRec));
     if (!pDesc)
 	return (ShmDescPtr) NULL;
 
@@ -239,7 +239,7 @@ shmalloc(
     if (shmid == -1) {
 	ErrorF(XF86BIGFONTNAME " extension: shmget() failed, size = %u, %s\n",
 	       size, strerror(errno));
-	xfree(pDesc);
+	free(pDesc);
 	return (ShmDescPtr) NULL;
     }
 
@@ -247,7 +247,7 @@ shmalloc(
 	ErrorF(XF86BIGFONTNAME " extension: shmat() failed, size = %u, %s\n",
 	       size, strerror(errno));
 	shmctl(shmid, IPC_RMID, (void *) 0);
-	xfree(pDesc);
+	free(pDesc);
 	return (ShmDescPtr) NULL;
     }
 
@@ -276,7 +276,7 @@ shmdealloc(
 
     if (pDesc->next) pDesc->next->prev = pDesc->prev;
     *pDesc->prev = pDesc->next;
-    xfree(pDesc);
+    free(pDesc);
 }
 
 #endif
@@ -368,7 +368,7 @@ ProcXF86BigfontQueryVersion(
     }
     WriteToClient(client,
 		  sizeof(xXF86BigfontQueryVersionReply), (char *)&reply);
-    return client->noClientException;
+    return Success;
 }
 
 static void
@@ -464,7 +464,7 @@ ProcXF86BigfontQueryFont(
 		shmid = pDesc->shmid;
 	    } else {
 #endif
-		pCI = xalloc(nCharInfos * sizeof(xCharInfo));
+		pCI = malloc(nCharInfos * sizeof(xCharInfo));
 		if (!pCI)
 		    return BadAlloc;
 #ifdef HAS_SHM
@@ -526,9 +526,9 @@ ProcXF86BigfontQueryFont(
 	    if (hashModulus > nCharInfos+1)
 		hashModulus = nCharInfos+1;
 
-	    tmp = xalloc((4*nCharInfos+1) * sizeof(CARD16));
+	    tmp = malloc((4*nCharInfos+1) * sizeof(CARD16));
 	    if (!tmp) {
-		if (!pDesc) xfree(pCI);
+		if (!pDesc) free(pCI);
 		return BadAlloc;
 	    }
 	    pIndex2UniqIndex = tmp;
@@ -610,12 +610,12 @@ ProcXF86BigfontQueryFont(
 	      ? nUniqCharInfos * sizeof(xCharInfo)
 	        + (nCharInfos+1)/2 * 2 * sizeof(CARD16)
 	      : 0);
-	xXF86BigfontQueryFontReply* reply = xalloc(rlength);
+	xXF86BigfontQueryFontReply* reply = malloc(rlength);
 	char* p;
 	if (!reply) {
 	    if (nCharInfos > 0) {
-		if (shmid == -1) xfree(pIndex2UniqIndex);
-		if (!pDesc) xfree(pCI);
+		if (shmid == -1) free(pIndex2UniqIndex);
+		if (!pDesc) free(pCI);
 	    }
 	    return BadAlloc;
 	}
@@ -693,12 +693,12 @@ ProcXF86BigfontQueryFont(
 	    }
 	}
 	WriteToClient(client, rlength, (char *)reply);
-	xfree(reply);
+	free(reply);
 	if (nCharInfos > 0) {
-	    if (shmid == -1) xfree(pIndex2UniqIndex);
-	    if (!pDesc) xfree(pCI);
+	    if (shmid == -1) free(pIndex2UniqIndex);
+	    if (!pDesc) free(pCI);
 	}
-	return (client->noClientException);
+	return Success;
     }
 }
 

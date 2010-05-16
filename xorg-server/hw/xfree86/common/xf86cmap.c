@@ -155,17 +155,17 @@ Bool xf86HandleColormaps(
 
     elements = 1 << sigRGBbits;
 
-    if(!(gamma = xalloc(elements * sizeof(LOCO))))
+    if(!(gamma = malloc(elements * sizeof(LOCO))))
     	return FALSE;
 
-    if(!(indices = xalloc(maxColors * sizeof(int)))) {
-	xfree(gamma);
+    if(!(indices = malloc(maxColors * sizeof(int)))) {
+	free(gamma);
 	return FALSE;
     }
       
-    if(!(pScreenPriv = xalloc(sizeof(CMapScreenRec)))) {
-	xfree(gamma);
-	xfree(indices);
+    if(!(pScreenPriv = malloc(sizeof(CMapScreenRec)))) {
+	free(gamma);
+	free(indices);
 	return FALSE;     
     }
 
@@ -261,11 +261,11 @@ CMapAllocateColormapPrivate(ColormapPtr pmap)
     else 
 	numColors = 1 << pmap->pVisual->nplanes; 
 
-    if(!(colors = xalloc(numColors * sizeof(LOCO))))
+    if(!(colors = malloc(numColors * sizeof(LOCO))))
 	return FALSE;
 
-    if(!(pColPriv = xalloc(sizeof(CMapColormapRec)))) {
-	xfree(colors);
+    if(!(pColPriv = malloc(sizeof(CMapColormapRec)))) {
+	free(colors);
 	return FALSE;
     }	
 
@@ -277,7 +277,7 @@ CMapAllocateColormapPrivate(ColormapPtr pmap)
     pColPriv->overscan = -1;
 
     /* add map to list */
-    pLink = xalloc(sizeof(CMapLink));
+    pLink = malloc(sizeof(CMapLink));
     if(pLink) {
 	pLink->cmap = pmap;
 	pLink->next = pScreenPriv->maps;
@@ -316,8 +316,8 @@ CMapDestroyColormap (ColormapPtr cmap)
     CMapLinkPtr prevLink = NULL, pLink = pScreenPriv->maps;
 
     if(pColPriv) {
-	if(pColPriv->colors) xfree(pColPriv->colors);
-	xfree(pColPriv);
+	if(pColPriv->colors) free(pColPriv->colors);
+	free(pColPriv);
     }
    
     /* remove map from list */
@@ -327,7 +327,7 @@ CMapDestroyColormap (ColormapPtr cmap)
 		prevLink->next = pLink->next;
 	   else
 		pScreenPriv->maps = pLink->next;
-	   xfree(pLink);
+	   free(pLink);
 	   break;
 	}
 	prevLink = pLink;
@@ -828,9 +828,9 @@ CMapUnwrapScreen(ScreenPtr pScreen)
     pScrn->SetDGAMode = pScreenPriv->SetDGAMode; 
     pScrn->ChangeGamma = pScreenPriv->ChangeGamma;
 
-    xfree(pScreenPriv->gamma);
-    xfree(pScreenPriv->PreAllocIndices);
-    xfree(pScreenPriv);
+    free(pScreenPriv->gamma);
+    free(pScreenPriv->PreAllocIndices);
+    free(pScreenPriv);
 }
 
 

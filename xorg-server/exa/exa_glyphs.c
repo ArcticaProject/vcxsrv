@@ -128,12 +128,12 @@ exaUnrealizeGlyphCaches(ScreenPtr    pScreen,
 	}
 
 	if (cache->hashEntries) {
-	    xfree(cache->hashEntries);
+	    free(cache->hashEntries);
 	    cache->hashEntries = NULL;
 	}
 	
 	if (cache->glyphs) {
-	    xfree(cache->glyphs);
+	    free(cache->glyphs);
 	    cache->glyphs = NULL;
 	}
 	cache->glyphCount = 0;
@@ -213,8 +213,8 @@ exaRealizeGlyphCaches(ScreenPtr    pScreen,
 
 	cache->picture = pPicture;
 	cache->picture->refcnt++;
-	cache->hashEntries = xalloc(sizeof(int) * cache->hashSize);
-	cache->glyphs = xalloc(sizeof(ExaCachedGlyphRec) * cache->size);
+	cache->hashEntries = malloc(sizeof(int) * cache->hashSize);
+	cache->glyphs = malloc(sizeof(ExaCachedGlyphRec) * cache->size);
 	cache->glyphCount = 0;
 
 	if (!cache->hashEntries || !cache->glyphs)

@@ -58,7 +58,7 @@ KdSetColormap (ScreenPtr pScreen)
     for (i = 0; i < (1 << pScreenPriv->screen->fb.depth); i++)
 	pixels[i] = i;
 
-    QueryColors (pCmap, (1 << pScreenPriv->screen->fb.depth), pixels, colors);
+    QueryColors (pCmap, (1 << pScreenPriv->screen->fb.depth), pixels, colors, serverClient);
 
     for (i = 0; i < (1 << pScreenPriv->screen->fb.depth); i++)
     {

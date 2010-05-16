@@ -135,7 +135,8 @@ extern _X_EXPORT int QueryColors(
     ColormapPtr /*pmap*/,
     int /*count*/,
     Pixel* /*ppixIn*/,
-    xrgb* /*prgbList*/);
+    xrgb* /*prgbList*/,
+    ClientPtr client);
 
 extern _X_EXPORT int FreeClientPixels(
     pointer /*pcr*/,
@@ -173,7 +174,8 @@ extern _X_EXPORT int FreeColors(
 extern _X_EXPORT int StoreColors(
     ColormapPtr /*pmap*/,
     int /*count*/,
-    xColorItem* /*defs*/);
+    xColorItem* /*defs*/,
+    ClientPtr client);
 
 extern _X_EXPORT int IsMapInstalled(
     Colormap /*map*/,

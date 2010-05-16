@@ -224,7 +224,7 @@ SecurityDeleteAuthorization(
 	}
 
     SecurityAudit("revoked authorization ID %d\n", pAuth->id);
-    xfree(pAuth);
+    free(pAuth);
     return Success;
 
 } /* SecurityDeleteAuthorization */
@@ -249,7 +249,7 @@ SecurityDeleteAuthorizationEventClient(
 		prev->next = pEventClient->next;
 	    else
 		pAuth->eventClients = pEventClient->next;
-	    xfree(pEventClient);
+	    free(pEventClient);
 	    return(Success);
 	}
 	prev = pEventClient;
@@ -385,7 +385,7 @@ ProcSecurityQueryVersion(
     }
     (void)WriteToClient(client, SIZEOF(xSecurityQueryVersionReply),
 			(char *)&rep);
-    return (client->noClientException);
+    return Success;
 } /* ProcSecurityQueryVersion */
 
 
@@ -411,7 +411,7 @@ SecurityEventSelectForAuthorization(
 	}
     }
     
-    pEventClient = xalloc(sizeof(OtherClients));
+    pEventClient = malloc(sizeof(OtherClients));
     if (!pEventClient)
 	return BadAlloc;
     pEventClient->mask = mask;
@@ -420,7 +420,7 @@ SecurityEventSelectForAuthorization(
     if (!AddResource(pEventClient->resource, RTEventClient,
 		     (pointer)pAuth))
     {
-	xfree(pEventClient);
+	free(pEventClient);
 	return BadAlloc;
     }
     pAuth->eventClients = pEventClient;
@@ -543,7 +543,7 @@ ProcSecurityGenerateAuthorization(
 
     /* associate additional information with this auth ID */
 
-    pAuth = xalloc(sizeof(SecurityAuthorizationRec));
+    pAuth = malloc(sizeof(SecurityAuthorizationRec));
     if (!pAuth)
     {
 	err = BadAlloc;
@@ -606,16 +606,13 @@ ProcSecurityGenerateAuthorization(
 		  pAuth->group, eventMask);
 
     /* the request succeeded; don't call RemoveAuthorization or free pAuth */
-
-    removeAuth = FALSE;
-    pAuth = NULL;
-    err = client->noClientException;
+    return Success;
 
 bailout:
     if (removeAuth)
 	RemoveAuthorization(stuff->nbytesAuthProto, protoname,
 			    authdata_len, pAuthdata);
-    if (pAuth) xfree(pAuth);
+    if (pAuth) free(pAuth);
     return err;
 
 } /* ProcSecurityGenerateAuthorization */

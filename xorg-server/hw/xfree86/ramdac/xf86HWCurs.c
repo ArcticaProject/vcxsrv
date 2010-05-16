@@ -247,7 +247,7 @@ RealizeCursorInterleave0(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     int words = size / (CUR_BITMAP_SCANLINE_PAD / 4);
 
 
-    if (!(mem = xcalloc(1, size)))
+    if (!(mem = calloc(1, size)))
 	return NULL;
 
     if (pCurs == NullCursor) {
@@ -354,8 +354,8 @@ RealizeCursorInterleave1(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     if (!(mem2 = RealizeCursorInterleave0(infoPtr, pCurs)))
 	return NULL;
 
-    if (!(mem = xcalloc(1, size))) {
-	xfree(mem2);
+    if (!(mem = calloc(1, size))) {
+	free(mem2);
 	return NULL;
     }
 
@@ -379,7 +379,7 @@ RealizeCursorInterleave1(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     }
 
     /* Free the uninterleaved cursor */
-    xfree(mem2);
+    free(mem2);
 
     return mem;
 }
@@ -397,8 +397,8 @@ RealizeCursorInterleave8(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     if (!(mem2 = RealizeCursorInterleave0(infoPtr, pCurs)))
 	return NULL;
 
-    if (!(mem = xcalloc(1, size))) {
-	xfree(mem2);
+    if (!(mem = calloc(1, size))) {
+	free(mem2);
 	return NULL;
     }
 
@@ -414,7 +414,7 @@ RealizeCursorInterleave8(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     }
 
     /* Free the uninterleaved cursor */
-    xfree(mem2);
+    free(mem2);
 
     return mem;
 }
@@ -432,8 +432,8 @@ RealizeCursorInterleave16(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     if (!(mem2 = RealizeCursorInterleave0(infoPtr, pCurs)))
 	return NULL;
 
-    if (!(mem = xcalloc(1, size))) {
-	xfree(mem2);
+    if (!(mem = calloc(1, size))) {
+	free(mem2);
 	return NULL;
     }
 
@@ -449,7 +449,7 @@ RealizeCursorInterleave16(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     }
 
     /* Free the uninterleaved cursor */
-    xfree(mem2);
+    free(mem2);
 
     return mem;
 }
@@ -467,8 +467,8 @@ RealizeCursorInterleave32(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     if (!(mem2 = RealizeCursorInterleave0(infoPtr, pCurs)))
 	return NULL;
 
-    if (!(mem = xcalloc(1, size))) {
-	xfree(mem2);
+    if (!(mem = calloc(1, size))) {
+	free(mem2);
 	return NULL;
     }
 
@@ -484,7 +484,7 @@ RealizeCursorInterleave32(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     }
 
     /* Free the uninterleaved cursor */
-    xfree(mem2);
+    free(mem2);
 
     return mem;
 }
@@ -502,8 +502,8 @@ RealizeCursorInterleave64(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     if (!(mem2 = RealizeCursorInterleave0(infoPtr, pCurs)))
 	return NULL;
 
-    if (!(mem = xcalloc(1, size))) {
-	xfree(mem2);
+    if (!(mem = calloc(1, size))) {
+	free(mem2);
 	return NULL;
     }
 
@@ -521,7 +521,7 @@ RealizeCursorInterleave64(xf86CursorInfoPtr infoPtr, CursorPtr pCurs)
     }
 
     /* Free the uninterleaved cursor */
-    xfree(mem2);
+    free(mem2);
 
     return mem;
 }

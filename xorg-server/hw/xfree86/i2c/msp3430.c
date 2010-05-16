@@ -136,7 +136,7 @@ MSP3430Ptr DetectMSP3430(I2CBusPtr b, I2CSlaveAddr addr)
    CARD8 hardware_version, major_revision, product_code, rom_version;
    Bool supported;
    
-   m = xcalloc(1,sizeof(MSP3430Rec));
+   m = calloc(1,sizeof(MSP3430Rec));
    if(m == NULL)return NULL;
    m->d.DevName = strdup("MSP34xx");
    m->d.SlaveAddr = addr;
@@ -149,8 +149,8 @@ MSP3430Ptr DetectMSP3430(I2CBusPtr b, I2CSlaveAddr addr)
    
    if(!I2C_WriteRead(&(m->d), NULL, 0, &a, 1))
    {
-   	xfree(m->d.DevName);
-   	xfree(m);
+       free(m->d.DevName);
+       free(m);
 	return NULL;
     }
 
@@ -235,14 +235,14 @@ MSP3430Ptr DetectMSP3430(I2CBusPtr b, I2CSlaveAddr addr)
 		MSP_getProductName(m->chip_id), supported?"":" (unsupported)", rom_version, m->chip_id);
 
 	if (!supported) {
-       		xfree(m->d.DevName);
-	   	xfree(m);
-		return NULL;
-	}	
+            free(m->d.DevName);
+            free(m);
+            return NULL;
+	}
    if(!I2CDevInit(&(m->d)))
    {
-       xfree(m->d.DevName);
-       xfree(m);
+       free(m->d.DevName);
+       free(m);
        return NULL;
    }
 

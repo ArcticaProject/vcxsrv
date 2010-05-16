@@ -68,7 +68,7 @@ void XISendDeviceHierarchyEvent(int flags[MAXDEVICES])
     if (!flags)
         return;
 
-    ev = xcalloc(1, sizeof(xXIHierarchyEvent) +
+    ev = calloc(1, sizeof(xXIHierarchyEvent) +
                  MAXDEVICES * sizeof(xXIHierarchyInfo));
     ev->type = GenericEvent;
     ev->extension = IReqCode;
@@ -116,7 +116,7 @@ void XISendDeviceHierarchyEvent(int flags[MAXDEVICES])
 
     dummyDev.id = XIAllDevices;
     SendEventToAllWindows(&dummyDev, (XI_HierarchyChangedMask >> 8), (xEvent*)ev, 1);
-    xfree(ev);
+    free(ev);
 }
 
 
@@ -172,7 +172,7 @@ ProcXIChangeHierarchy(ClientPtr client)
                     char* name;
 
                     SWAPIF(swaps(&c->name_len, n));
-                    name = xcalloc(c->name_len + 1, sizeof(char));
+                    name = calloc(c->name_len + 1, sizeof(char));
                     strncpy(name, (char*)&c[1], c->name_len);
 
 
@@ -181,7 +181,7 @@ ProcXIChangeHierarchy(ClientPtr client)
                                          TRUE);
                     if (rc != Success)
                     {
-                        xfree(name);
+                        free(name);
                         goto unwind;
                     }
 
@@ -194,7 +194,7 @@ ProcXIChangeHierarchy(ClientPtr client)
                     if (rc != Success)
                     {
 
-                        xfree(name);
+                        free(name);
                         goto unwind;
                     }
 
@@ -228,7 +228,7 @@ ProcXIChangeHierarchy(ClientPtr client)
                     flags[XTestptr->id] |= XISlaveAttached;
                     flags[XTestkeybd->id] |= XISlaveAttached;
 
-                    xfree(name);
+                    free(name);
                 }
                 break;
             case XIRemoveMaster:

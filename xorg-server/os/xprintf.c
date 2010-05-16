@@ -61,7 +61,7 @@ Xvprintf(const char *format, va_list va)
     va_end(va2);
 #endif
 
-    ret = (char *)Xalloc(size + 1);
+    ret = (char *)malloc(size + 1);
     if (ret == NULL)
         return NULL;
 
@@ -96,7 +96,7 @@ XNFvprintf(const char *format, va_list va)
     va_end(va2);
 #endif
 
-    ret = (char *)XNFalloc(size + 1);
+    ret = (char *)xnfalloc(size + 1);
     if (ret == NULL)
         return NULL;
 

@@ -1,5 +1,7 @@
 LIBRARY = libxcms
 
+DEFINES += HAVE_CONFIG_H
+
 CSRCS = \
 		  AddDIC.c \
                   AddSF.c \

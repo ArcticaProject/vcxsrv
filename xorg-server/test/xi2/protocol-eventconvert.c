@@ -141,12 +141,12 @@ static void test_XIRawEvent(RawDeviceEvent *in)
 
     test_values_XIRawEvent(in, out, FALSE);
 
-    swapped = xcalloc(1, sizeof(xEvent) + out->length * 4);
+    swapped = calloc(1, sizeof(xEvent) + out->length * 4);
     XI2EventSwap((xGenericEvent*)out, (xGenericEvent*)swapped);
     test_values_XIRawEvent(in, swapped, TRUE);
 
-    xfree(out);
-    xfree(swapped);
+    free(out);
+    free(swapped);
 }
 
 static void test_convert_XIFocusEvent(void)
@@ -400,12 +400,12 @@ static void test_XIDeviceEvent(DeviceEvent *in)
 
     test_values_XIDeviceEvent(in, out, FALSE);
 
-    swapped = xcalloc(1, sizeof(xEvent) + out->length * 4);
+    swapped = calloc(1, sizeof(xEvent) + out->length * 4);
     XI2EventSwap((xGenericEvent*)out, (xGenericEvent*)swapped);
     test_values_XIDeviceEvent(in, swapped, TRUE);
 
-    xfree(out);
-    xfree(swapped);
+    free(out);
+    free(swapped);
 }
 
 static void test_convert_XIDeviceEvent(void)
@@ -756,12 +756,12 @@ static void test_XIDeviceChangedEvent(DeviceChangedEvent *in)
 
     test_values_XIDeviceChangedEvent(in, out, FALSE);
 
-    swapped = xcalloc(1, sizeof(xEvent) + out->length * 4);
+    swapped = calloc(1, sizeof(xEvent) + out->length * 4);
     XI2EventSwap((xGenericEvent*)out, (xGenericEvent*)swapped);
     test_values_XIDeviceChangedEvent(in, swapped, TRUE);
 
-    xfree(out);
-    xfree(swapped);
+    free(out);
+    free(swapped);
 }
 
 static void test_convert_XIDeviceChangedEvent(void)

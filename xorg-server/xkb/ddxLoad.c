@@ -131,7 +131,7 @@ Win32System(const char *cmdline)
 	    LocalFree(buffer);
 	}
 
-	xfree(cmd);
+	free(cmd);
 	return -1;
     }
     /* Wait until child process exits. */
@@ -142,7 +142,7 @@ Win32System(const char *cmdline)
     /* Close process and thread handles. */
     CloseHandle( pi.hProcess );
     CloseHandle( pi.hThread );
-    xfree(cmd);
+    free(cmd);
 
     return dwExitCode;
 }
@@ -186,7 +186,7 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
     char	*buf = NULL, keymap[PATH_MAX], xkm_output_dir[PATH_MAX];
 
     const char	*emptystring = "";
-    const char	*xkbbasedirflag = emptystring;
+    char *xkbbasedirflag = NULL;
     const char	*xkbbindir = emptystring;
     const char	*xkbbindirsep = emptystring;
 
@@ -230,13 +230,11 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 		  xkbbindir, xkbbindirsep,
 		  ( (xkbDebugFlags < 2) ? 1 :
 		    ((xkbDebugFlags > 10) ? 10 : (int)xkbDebugFlags) ),
-		  xkbbasedirflag, xkmfile,
+		  xkbbasedirflag ? xkbbasedirflag : "", xkmfile,
 		  PRE_ERROR_MSG, ERROR_PREFIX, POST_ERROR_MSG1,
 		  xkm_output_dir, keymap);
 
-    if (xkbbasedirflag != emptystring) {
-	xfree(xkbbasedirflag);
-    }
+    free(xkbbasedirflag);
     
 #ifndef WIN32
     out= Popen(buf,"w");
@@ -265,7 +263,7 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
 		nameRtrn[nameRtrnLen-1]= '\0';
 	    }
             if (buf != NULL)
-                xfree (buf);
+                free(buf);
 #ifdef WIN32
         /* remove the temporary file */
         unlink(tmpname);
@@ -289,7 +287,7 @@ XkbDDXCompileKeymapByNames(	XkbDescPtr		xkb,
     if (nameRtrn)
 	nameRtrn[0]= '\0';
     if (buf != NULL)
-        xfree (buf);
+        free(buf);
     return FALSE;
 }
 

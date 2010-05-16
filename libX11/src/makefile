@@ -263,7 +263,7 @@ CSRCS = \
                   xcb_disp.c \
                   xcb_io.c
 
-INCLUDES := xcms xlibi18n xkb $(MHMAKECONF)\X11 $(OBJDIR) $(INCLUDES)
+INCLUDES := . xcms xlibi18n xkb $(MHMAKECONF)\X11 $(OBJDIR) $(INCLUDES)
 
 KEYSYMDEF = $(MHMAKECONF)/X11/keysymdef.h
 

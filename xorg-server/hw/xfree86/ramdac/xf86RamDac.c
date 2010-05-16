@@ -41,7 +41,7 @@ RamDacCreateInfoRec(void)
 {
     RamDacRecPtr infoRec;
 
-    infoRec = xcalloc(1, sizeof(RamDacRec));
+    infoRec = calloc(1, sizeof(RamDacRec));
 
     return infoRec;
 }
@@ -51,7 +51,7 @@ RamDacHelperCreateInfoRec(void)
 {
     RamDacHelperRecPtr infoRec;
 
-    infoRec = xcalloc(1, sizeof(RamDacHelperRec));
+    infoRec = calloc(1, sizeof(RamDacHelperRec));
 
     return infoRec;
 }
@@ -59,13 +59,13 @@ RamDacHelperCreateInfoRec(void)
 void
 RamDacDestroyInfoRec(RamDacRecPtr infoRec)
 {
-    xfree(infoRec);
+    free(infoRec);
 }
 
 void
 RamDacHelperDestroyInfoRec(RamDacHelperRecPtr infoRec)
 {
-    xfree(infoRec);
+    free(infoRec);
 }
 
 Bool
@@ -133,11 +133,11 @@ RamDacFreeRec(ScrnInfoPtr pScrn)
 				(pScrn)->privates[RamDacGetScreenIndex()].ptr);
     
     if (ramdacHWPtr)
-	xfree(ramdacHWPtr);
+	free(ramdacHWPtr);
     ramdacHWPtr = NULL;
 
     if (ramdacScrPtr)
-	xfree(ramdacScrPtr);
+	free(ramdacScrPtr);
     ramdacScrPtr = NULL;
 }
 

@@ -138,7 +138,7 @@ xf86XVRegisterGenericAdaptorDriver(
 ){
   xf86XVInitGenericAdaptorPtr *newdrivers;
 
-  newdrivers = xrealloc(GenDrivers, sizeof(xf86XVInitGenericAdaptorPtr) *
+  newdrivers = realloc(GenDrivers, sizeof(xf86XVInitGenericAdaptorPtr) *
 			(1 + NumGenDrivers));
   if (!newdrivers)
     return 0;
@@ -168,7 +168,7 @@ xf86XVListGenericAdaptors(
 	n = (*GenDrivers[i])(pScrn, &DrivAdap);
 	if (0 == n)
 	    continue;
-	new = xrealloc(*adaptors, sizeof(XF86VideoAdaptorPtr) * (num+n));
+	new = realloc(*adaptors, sizeof(XF86VideoAdaptorPtr) * (num+n));
 	if (NULL == new)
 	    continue;
 	*adaptors = new;
@@ -225,13 +225,13 @@ xf86XVQueryOffscreenImages(
 XF86VideoAdaptorPtr
 xf86XVAllocateVideoAdaptorRec(ScrnInfoPtr pScrn)
 {
-    return xcalloc(1, sizeof(XF86VideoAdaptorRec));
+    return calloc(1, sizeof(XF86VideoAdaptorRec));
 }
 
 void
 xf86XVFreeVideoAdaptorRec(XF86VideoAdaptorPtr ptr)
 {
-    xfree(ptr);
+    free(ptr);
 }
 
 
@@ -267,7 +267,7 @@ xf86XVScreenInit(
      a CloseScreen hook so that we don't have to wrap it.  I'm not
      sure that I appreciate that.  */
 
-  ScreenPriv = xalloc(sizeof(XF86XVScreenRec));
+  ScreenPriv = malloc(sizeof(XF86XVScreenRec));
   pxvs->devPriv.ptr = (pointer)ScreenPriv;
 
   if(!ScreenPriv) return FALSE;
@@ -302,17 +302,17 @@ xf86XVFreeAdaptor(XvAdaptorPtr pAdaptor)
 {
    int i;
 
-   xfree(pAdaptor->name);
+   free(pAdaptor->name);
 
    if(pAdaptor->pEncodings) {
       XvEncodingPtr pEncode = pAdaptor->pEncodings;
 
       for(i = 0; i < pAdaptor->nEncodings; i++, pEncode++)
-	  xfree(pEncode->name);
-      xfree(pAdaptor->pEncodings);
+	  free(pEncode->name);
+      free(pAdaptor->pEncodings);
    }
 
-   xfree(pAdaptor->pFormats);
+   free(pAdaptor->pFormats);
 
    if(pAdaptor->pPorts) {
       XvPortPtr pPort = pAdaptor->pPorts;
@@ -325,22 +325,22 @@ xf86XVFreeAdaptor(XvAdaptorPtr pAdaptor)
 		REGION_DESTROY(pAdaptor->pScreen, pPriv->clientClip);
 	     if(pPriv->pCompositeClip && pPriv->FreeCompositeClip)
 		REGION_DESTROY(pAdaptor->pScreen, pPriv->pCompositeClip);
-	     xfree(pPriv);
+	     free(pPriv);
 	  }
       }
-      xfree(pAdaptor->pPorts);
+      free(pAdaptor->pPorts);
    }
 
    if(pAdaptor->nAttributes) {
       XvAttributePtr pAttribute = pAdaptor->pAttributes;
 
       for(i = 0; i < pAdaptor->nAttributes; i++, pAttribute++)
-	  xfree(pAttribute->name);
-      xfree(pAdaptor->pAttributes);
+	  free(pAttribute->name);
+      free(pAdaptor->pAttributes);
    }
 
-   xfree(pAdaptor->pImages);
-   xfree(pAdaptor->devPriv.ptr);
+   free(pAdaptor->pImages);
+   free(pAdaptor->devPriv.ptr);
 }
 
 static Bool
@@ -374,7 +374,7 @@ xf86XVInitAdaptors(
   pxvs->nAdaptors = 0;
   pxvs->pAdaptors = NULL;
 
-  if(!(pAdaptor = xcalloc(number, sizeof(XvAdaptorRec))))
+  if(!(pAdaptor = calloc(number, sizeof(XvAdaptorRec))))
       return FALSE;
 
   for(pa = pAdaptor, na = 0, numAdaptor = 0; na < number; na++, adaptorPtr++) {
@@ -424,18 +424,18 @@ xf86XVInitAdaptors(
       pa->ddGetPortAttribute = xf86XVGetPortAttribute;
       pa->ddQueryBestSize = xf86XVQueryBestSize;
       pa->ddQueryImageAttributes = xf86XVQueryImageAttributes;
-      if((pa->name = xalloc(strlen(adaptorPtr->name) + 1)))
+      if((pa->name = malloc(strlen(adaptorPtr->name) + 1)))
 	  strcpy(pa->name, adaptorPtr->name);
 
       if(adaptorPtr->nEncodings &&
-	(pEncode = xcalloc(adaptorPtr->nEncodings, sizeof(XvEncodingRec)))) {
+	(pEncode = calloc(adaptorPtr->nEncodings, sizeof(XvEncodingRec)))) {
 
 	for(pe = pEncode, encodingPtr = adaptorPtr->pEncodings, i = 0;
 	    i < adaptorPtr->nEncodings; pe++, i++, encodingPtr++)
 	{
 	    pe->id = encodingPtr->id;
 	    pe->pScreen = pScreen;
-	    if((pe->name = xalloc(strlen(encodingPtr->name) + 1)))
+	    if((pe->name = malloc(strlen(encodingPtr->name) + 1)))
 		strcpy(pe->name, encodingPtr->name);
 	    pe->width = encodingPtr->width;
 	    pe->height = encodingPtr->height;
@@ -447,7 +447,7 @@ xf86XVInitAdaptors(
       }
 
       if(adaptorPtr->nImages &&
-	 (pImage = xcalloc(adaptorPtr->nImages, sizeof(XvImageRec)))) {
+	 (pImage = calloc(adaptorPtr->nImages, sizeof(XvImageRec)))) {
 
 	  for(i = 0, pi = pImage, imagePtr = adaptorPtr->pImages;
 	      i < adaptorPtr->nImages; i++, pi++, imagePtr++)
@@ -480,7 +480,7 @@ xf86XVInitAdaptors(
       }
 
       if(adaptorPtr->nAttributes &&
-	(pAttribute = xcalloc(adaptorPtr->nAttributes, sizeof(XvAttributeRec))))
+	(pAttribute = calloc(adaptorPtr->nAttributes, sizeof(XvAttributeRec))))
       {
 	for(pat = pAttribute, attributePtr = adaptorPtr->pAttributes, i = 0;
 	    i < adaptorPtr->nAttributes; pat++, i++, attributePtr++)
@@ -488,7 +488,7 @@ xf86XVInitAdaptors(
 	    pat->flags = attributePtr->flags;
 	    pat->min_value = attributePtr->min_value;
 	    pat->max_value = attributePtr->max_value;
-	    if((pat->name = xalloc(strlen(attributePtr->name) + 1)))
+	    if((pat->name = malloc(strlen(attributePtr->name) + 1)))
 		strcpy(pat->name, attributePtr->name);
 	}
 	pa->nAttributes = adaptorPtr->nAttributes;
@@ -498,7 +498,7 @@ xf86XVInitAdaptors(
 
       totFormat = adaptorPtr->nFormats;
 
-      if(!(pFormat = xcalloc(totFormat, sizeof(XvFormatRec)))) {
+      if(!(pFormat = calloc(totFormat, sizeof(XvFormatRec)))) {
 	  xf86XVFreeAdaptor(pa);
 	  continue;
       }
@@ -515,7 +515,7 @@ xf86XVInitAdaptors(
 		   if(numFormat >= totFormat) {
 			void *moreSpace;
 			totFormat *= 2;
-			moreSpace = xrealloc(pFormat,
+			moreSpace = realloc(pFormat,
 					     totFormat * sizeof(XvFormatRec));
 			if(!moreSpace) break;
 			pFormat = moreSpace;
@@ -538,7 +538,7 @@ xf86XVInitAdaptors(
 	  continue;
       }
 
-      if(!(adaptorPriv = xcalloc(1, sizeof(XvAdaptorRecPrivate)))) {
+      if(!(adaptorPriv = calloc(1, sizeof(XvAdaptorRecPrivate)))) {
 	  xf86XVFreeAdaptor(pa);
 	  continue;
       }
@@ -558,7 +558,7 @@ xf86XVInitAdaptors(
 
       pa->devPriv.ptr = (pointer)adaptorPriv;
 
-      if(!(pPort = xcalloc(adaptorPtr->nPorts, sizeof(XvPortRec)))) {
+      if(!(pPort = calloc(adaptorPtr->nPorts, sizeof(XvPortRec)))) {
 	  xf86XVFreeAdaptor(pa);
 	  continue;
       }
@@ -568,11 +568,11 @@ xf86XVInitAdaptors(
 	  if(!(pp->id = FakeClientID(0)))
 		continue;
 
-	  if(!(portPriv = xcalloc(1, sizeof(XvPortRecPrivate))))
+	  if(!(portPriv = calloc(1, sizeof(XvPortRecPrivate))))
 		continue;
 
 	  if(!AddResource(pp->id, PortResource, pp)) {
-		xfree(portPriv);
+		free(portPriv);
 		continue;
 	  }
 
@@ -608,7 +608,7 @@ xf86XVInitAdaptors(
       pxvs->nAdaptors = numAdaptor;
       pxvs->pAdaptors = pAdaptor;
   } else {
-     xfree(pAdaptor);
+     free(pAdaptor);
      return FALSE;
   }
 
@@ -976,7 +976,7 @@ xf86XVEnlistPortInWindow(WindowPtr pWin, XvPortRecPrivatePtr portPriv)
    }
 
    if(!winPriv) {
-	winPriv = xcalloc(1, sizeof(XF86XVWindowRec));
+	winPriv = calloc(1, sizeof(XF86XVWindowRec));
 	if(!winPriv) return BadAlloc;
 	winPriv->PortRec = portPriv;
 	winPriv->next = PrivRoot;
@@ -1003,7 +1003,7 @@ xf86XVRemovePortFromWindow(WindowPtr pWin, XvPortRecPrivatePtr portPriv)
 	    else
 		dixSetPrivate(&pWin->devPrivates, XF86XVWindowKey,
 			      winPriv->next);
-	    xfree(winPriv);
+	    free(winPriv);
 	    break;
 	}
 	prevPriv = winPriv;
@@ -1037,7 +1037,7 @@ xf86XVDestroyWindow(WindowPtr pWin)
        FreeGC(WinPriv->pGC, 0);
      }
      WinPriv = WinPriv->next;
-     xfree(tmp);
+     free(tmp);
   }
 
   dixSetPrivate(&pWin->devPrivates, XF86XVWindowKey, NULL);
@@ -1103,7 +1103,7 @@ xf86XVWindowExposures(WindowPtr pWin, RegionPtr reg1, RegionPtr reg2)
 	       pPrev->next = WinPriv->next;
 	    tmp = WinPriv;
 	    WinPriv = WinPriv->next;
-	    xfree(tmp);
+	    free(tmp);
 	    continue;
 	}
 	break;
@@ -1159,7 +1159,7 @@ xf86XVClipNotify(WindowPtr pWin, int dx, int dy)
 	       pPrev->next = WinPriv->next;
 	    tmp = WinPriv;
 	    WinPriv = WinPriv->next;
-	    xfree(tmp);
+	    free(tmp);
 	    continue;
 	}
      }
@@ -1208,8 +1208,8 @@ xf86XVCloseScreen(int i, ScreenPtr pScreen)
        xf86XVFreeAdaptor(pa);
   }
 
-  xfree(pxvs->pAdaptors);
-  xfree(ScreenPriv);
+  free(pxvs->pAdaptors);
+  free(ScreenPriv);
   return TRUE;
 }
 
@@ -1834,7 +1834,6 @@ xf86XVFillKeyHelperDrawable (DrawablePtr pDraw, CARD32 key, RegionPtr clipboxes)
    WindowPtr pWin = (WindowPtr)pDraw;
    XF86XVWindowPtr pPriv = GET_XF86XV_WINDOW(pWin);
    GCPtr pGC = NULL;
-   XID pval[2];
    BoxPtr pbox = REGION_RECTS(clipboxes);
    int i, nbox = REGION_NUM_RECTS(clipboxes);
    xRectangle *rects;
@@ -1846,6 +1845,7 @@ xf86XVFillKeyHelperDrawable (DrawablePtr pDraw, CARD32 key, RegionPtr clipboxes)
 
    if(!pGC) {
        int status;
+       XID pval[2];
        pval[0] = key;
        pval[1] = IncludeInferiors;
        pGC = CreateGC(pDraw, GCForeground | GCSubwindowMode, pval, &status,
@@ -1854,14 +1854,15 @@ xf86XVFillKeyHelperDrawable (DrawablePtr pDraw, CARD32 key, RegionPtr clipboxes)
        ValidateGC(pDraw, pGC);
        if (pPriv) pPriv->pGC = pGC;
    } else if (key != pGC->fgPixel){
-       pval[0] = key;
-       ChangeGC(pGC, GCForeground, pval);
+       ChangeGCVal val;
+       val.val = key;
+       ChangeGC(NullClient, pGC, GCForeground, &val);
        ValidateGC(pDraw, pGC);
    }
 
    REGION_TRANSLATE(pDraw->pScreen, clipboxes, -pDraw->x, -pDraw->y);
 
-   rects = xalloc(nbox * sizeof(xRectangle));
+   rects = malloc(nbox * sizeof(xRectangle));
 
    for(i = 0; i < nbox; i++, pbox++) {
       rects[i].x = pbox->x1;
@@ -1874,14 +1875,14 @@ xf86XVFillKeyHelperDrawable (DrawablePtr pDraw, CARD32 key, RegionPtr clipboxes)
 
    if (!pPriv) FreeGC(pGC, 0);
 
-   xfree(rects);
+   free(rects);
 }
 
 void
 xf86XVFillKeyHelper (ScreenPtr pScreen, CARD32 key, RegionPtr clipboxes)
 {
    DrawablePtr root = &WindowTable[pScreen->myNum]->drawable;
-   XID pval[2];
+   ChangeGCVal pval[2];
    BoxPtr pbox = REGION_RECTS(clipboxes);
    int i, nbox = REGION_NUM_RECTS(clipboxes);
    xRectangle *rects;
@@ -1890,12 +1891,12 @@ xf86XVFillKeyHelper (ScreenPtr pScreen, CARD32 key, RegionPtr clipboxes)
    if(!xf86Screens[pScreen->myNum]->vtSema) return;
 
    gc = GetScratchGC(root->depth, pScreen);
-   pval[0] = key;
-   pval[1] = IncludeInferiors;
-   (void) ChangeGC(gc, GCForeground|GCSubwindowMode, pval);
+   pval[0].val = key;
+   pval[1].val = IncludeInferiors;
+   (void) ChangeGC(NullClient, gc, GCForeground|GCSubwindowMode, pval);
    ValidateGC(root, gc);
 
-   rects = xalloc (nbox * sizeof(xRectangle));
+   rects = malloc(nbox * sizeof(xRectangle));
 
    for(i = 0; i < nbox; i++, pbox++) 
    {
@@ -1907,7 +1908,7 @@ xf86XVFillKeyHelper (ScreenPtr pScreen, CARD32 key, RegionPtr clipboxes)
    
    (*gc->ops->PolyFillRect)(root, gc, nbox, rects);
    
-   xfree (rects);
+   free(rects);
    FreeScratchGC (gc);
 }
 

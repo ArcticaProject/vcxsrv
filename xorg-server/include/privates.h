@@ -94,33 +94,7 @@ extern _X_EXPORT int
 dixSetPrivate(PrivateRec **privates, const DevPrivateKey key, pointer val);
 
 /*
- * Register callbacks to be called on private allocation/freeing.
- * The calldata argument to the callbacks is a PrivateCallbackPtr.
- */
-typedef struct _PrivateCallback {
-    DevPrivateKey key;	/* private registration key */
-    pointer *value;	/* address of private pointer */
-} PrivateCallbackRec;
-
-/*
- * Register a function to be called when dixAllocPrivate successfully associates
- * 'key' with a new PrivateRec.
- */
-extern _X_EXPORT int
-dixRegisterPrivateInitFunc(const DevPrivateKey key, 
-			   CallbackProcPtr callback, pointer userdata);
-
-/*
- * Register a function to be called when dixFreePrivates unassociates 'key' with
- * a PrivateRec.
- */
-extern _X_EXPORT int
-dixRegisterPrivateDeleteFunc(const DevPrivateKey key,
-			     CallbackProcPtr callback, pointer userdata);
-
-/*
- * Unassociates all keys from 'privates', calls the callbacks registered with
- * dixRegisterPrivateDeleteFunc, and frees all private data automatically
+ * Unassociates all keys from 'privates' and frees all private data automatically
  * allocated via dixRequestPrivate.
  */
 extern _X_EXPORT void

@@ -406,7 +406,7 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
 	xf86RotateDestroy (crtc);
 	crtc->transform_in_use = FALSE;
 	if (new_params)
-	    xfree (new_params);
+	    free(new_params);
 	new_params = NULL;
 	new_nparams = 0;
 	new_filter = NULL;
@@ -467,7 +467,7 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
 	if (transform)
 	{
 	    if (transform->nparams) {
-		new_params = xalloc (transform->nparams * sizeof (xFixed));
+		new_params = malloc(transform->nparams * sizeof (xFixed));
 		if (new_params) {
 		    memcpy (new_params, transform->params,
 			    transform->nparams * sizeof (xFixed));
@@ -507,7 +507,7 @@ xf86CrtcRotate (xf86CrtcPtr crtc)
     crtc->f_crtc_to_framebuffer = f_crtc_to_fb;
     crtc->f_framebuffer_to_crtc = f_fb_to_crtc;
     if (crtc->params)
-	xfree (crtc->params);
+	free(crtc->params);
     crtc->params = new_params;
     crtc->nparams = new_nparams;
     crtc->filter = new_filter;

@@ -95,7 +95,7 @@ InitSelections(void)
     while (pSel) {
 	pNextSel = pSel->next;
 	dixFreePrivates(pSel->devPrivates);
-	xfree(pSel);
+	free(pSel);
 	pSel = pNextSel;
     }
 
@@ -198,7 +198,7 @@ ProcSetSelectionOwner(ClientPtr client)
 	/*
 	 * It doesn't exist, so add it...
 	 */
-	pSel = xalloc(sizeof(Selection));
+	pSel = malloc(sizeof(Selection));
 	if (!pSel)
 	    return BadAlloc;
 
@@ -209,7 +209,7 @@ ProcSetSelectionOwner(ClientPtr client)
 	rc = XaceHookSelectionAccess(client, &pSel,
 				     DixCreateAccess|DixSetAttrAccess);
 	if (rc != Success) {
-	    xfree(pSel);
+	    free(pSel);
 	    return rc;
 	}
 
@@ -225,7 +225,7 @@ ProcSetSelectionOwner(ClientPtr client)
     pSel->client = (pWin ? client : NullClient);
 
     CallSelectionCallback(pSel, client, SelectionSetOwner);
-    return client->noClientException;
+    return Success;
 }
 
 int
@@ -257,7 +257,7 @@ ProcGetSelectionOwner(ClientPtr client)
 	return rc;
 
     WriteReplyToClient(client, sizeof(xGetSelectionOwnerReply), &reply);
-    return client->noClientException;
+    return Success;
 }
 
 int
@@ -298,7 +298,7 @@ ProcConvertSelection(ClientPtr client)
 	event.u.selectionRequest.property = stuff->property;
 	if (TryClientEvents(pSel->client, NULL, &event, 1, NoEventMask,
 			    NoEventMask /* CantBeFiltered */, NullGrab))
-	    return client->noClientException;
+	    return Success;
     }
 
     event.u.u.type = SelectionNotify;
@@ -309,5 +309,5 @@ ProcConvertSelection(ClientPtr client)
     event.u.selectionNotify.property = None;
     TryClientEvents(client, NULL, &event, 1, NoEventMask,
 		    NoEventMask /* CantBeFiltered */, NullGrab);
-    return client->noClientException;
+    return Success;
 }

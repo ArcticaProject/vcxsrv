@@ -85,7 +85,7 @@ void DoShowOptions (void) {
 		goto bail;
 	}
 	xf86LoadModules (vlist,0);
-	xfree (vlist);
+	free(vlist);
 	for (i = 0; i < xf86NumDrivers; i++) {
 		if (xf86DriverList[i]->AvailableOptions) {
 			OptionInfoPtr pOption = (OptionInfoPtr)(*xf86DriverList[i]->AvailableOptions)(0,0);
@@ -95,7 +95,7 @@ void DoShowOptions (void) {
 				);
 				continue;                                                       
 			}
-			pSymbol = xalloc (
+			pSymbol = malloc(
 				strlen(xf86DriverList[i]->driverName) + strlen("ModuleData") + 1
 			);
 			strcpy (pSymbol, xf86DriverList[i]->driverName);
@@ -109,7 +109,7 @@ void DoShowOptions (void) {
 				);
 				for (p = pOption; p->name != NULL; p++) {
 					const char *opttype = optionTypeToSting(p->type);
-					char *optname = xalloc(strlen(p->name) + 2 + 1);
+					char *optname = malloc(strlen(p->name) + 2 + 1);
 					if (!optname) {
 						continue;                      
 					}

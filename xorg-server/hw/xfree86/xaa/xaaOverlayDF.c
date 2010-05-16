@@ -173,7 +173,7 @@ XAAInitDualFramebufferOverlay(
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_SCREEN(pScreen);
     XAAOverlayPtr pOverPriv;
 
-    if(!(pOverPriv = xalloc(sizeof(XAAOverlayRec))))
+    if(!(pOverPriv = malloc(sizeof(XAAOverlayRec))))
 	return FALSE;
 
     dixSetPrivate(&pScreen->devPrivates, XAAOverlayKey, pOverPriv);
@@ -350,7 +350,7 @@ XAAOverCopyWindow(
 
     nbox = REGION_NUM_RECTS(&rgnDst);
     if(nbox &&
-	(pptSrc = (DDXPointPtr )xalloc(nbox * sizeof(DDXPointRec)))) {
+	(pptSrc = (DDXPointPtr )malloc(nbox * sizeof(DDXPointRec)))) {
 
 	pbox = REGION_RECTS(&rgnDst);
 	for (i = nbox, ppt = pptSrc; i--; ppt++, pbox++) {
@@ -368,7 +368,7 @@ XAAOverCopyWindow(
         		&(infoRec->ScratchGC), &rgnDst, pptSrc);
 	}
 
-	xfree(pptSrc);
+	free(pptSrc);
     }
 
     REGION_UNINIT(pScreen, &rgnDst);
@@ -380,7 +380,7 @@ XAAOverCopyWindow(
 	REGION_INTERSECT(pScreen, &rgnDst, &rgnDst, prgnSrc);
 	nbox = REGION_NUM_RECTS(&rgnDst);
 	if(nbox &&
-	  (pptSrc = (DDXPointPtr )xalloc(nbox * sizeof(DDXPointRec)))){
+	  (pptSrc = (DDXPointPtr )malloc(nbox * sizeof(DDXPointRec)))){
 
 	    pbox = REGION_RECTS(&rgnDst);
 	    for (i = nbox, ppt = pptSrc; i--; ppt++, pbox++) {
@@ -391,7 +391,7 @@ XAAOverCopyWindow(
 	    SWITCH_DEPTH(pScrn->depth);
 	    XAADoBitBlt((DrawablePtr)pRoot, (DrawablePtr)pRoot,
         		&(infoRec->ScratchGC), &rgnDst, pptSrc);
-	    xfree(pptSrc);
+	    free(pptSrc);
 	}
       }
       REGION_UNINIT(pScreen, &rgnDst);

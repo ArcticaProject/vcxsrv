@@ -194,7 +194,7 @@ ddxGiveUp(void)
     case NORMAL_MEMORY_FB:
 	for (i = 0; i < vfbNumScreens; i++)
 	{
-	    Xfree(vfbScreens[i].pXWDHeader);
+	    free(vfbScreens[i].pXWDHeader);
 	}
 	break;
     }
@@ -290,7 +290,7 @@ ddxProcessArgument(int argc, char *argv[], int i)
 
 	if (vfbNumScreens <= screenNum)
 	{
-	    vfbScreens = xrealloc(vfbScreens, sizeof(*vfbScreens) * (screenNum + 1));
+	    vfbScreens = realloc(vfbScreens, sizeof(*vfbScreens) * (screenNum + 1));
 	    if (!vfbScreens)
 		FatalError("Not enough memory for screen %d\n", screenNum);
 	    for (; vfbNumScreens <= screenNum; ++vfbNumScreens)
@@ -439,13 +439,13 @@ vfbInstallColormap(ColormapPtr pmap)
 	swapcopy32(pXWDHeader->bits_per_rgb, pVisual->bitsPerRGBValue);
 	swapcopy32(pXWDHeader->colormap_entries, pVisual->ColormapEntries);
 
-	ppix = (Pixel *)xalloc(entries * sizeof(Pixel));
-	prgb = (xrgb *)xalloc(entries * sizeof(xrgb));
-	defs = (xColorItem *)xalloc(entries * sizeof(xColorItem));
+	ppix = (Pixel *)malloc(entries * sizeof(Pixel));
+	prgb = (xrgb *)malloc(entries * sizeof(xrgb));
+	defs = (xColorItem *)malloc(entries * sizeof(xColorItem));
 
 	for (i = 0; i < entries; i++)  ppix[i] = i;
 	/* XXX truecolor */
-	QueryColors(pmap, entries, ppix, prgb);
+	QueryColors(pmap, entries, ppix, prgb, serverClient);
 
 	for (i = 0; i < entries; i++) { /* convert xrgbs to xColorItems */
 	    defs[i].pixel = ppix[i] & 0xff; /* change pixel to index */
@@ -456,9 +456,9 @@ vfbInstallColormap(ColormapPtr pmap)
 	}
 	(*pmap->pScreen->StoreColors)(pmap, entries, defs);
 
-	xfree(ppix);
-	xfree(prgb);
-	xfree(defs);
+	free(ppix);
+	free(prgb);
+	free(defs);
     }
 }
 
@@ -682,7 +682,7 @@ vfbAllocateFramebufferMemory(vfbScreenInfoPtr pvfb)
 #endif
 
     case NORMAL_MEMORY_FB:
-	pvfb->pXWDHeader = (XWDFileHeader *)Xalloc(pvfb->sizeInBytes);
+	pvfb->pXWDHeader = (XWDFileHeader *)malloc(pvfb->sizeInBytes);
 	break;
     }
 

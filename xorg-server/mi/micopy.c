@@ -68,7 +68,7 @@ miCopyRegion (DrawablePtr   pSrcDrawable,
 	if (nbox > 1)
 	{
 	    /* keep ordering in each band, reverse order of bands */
-	    pboxNew1 = (BoxPtr)xalloc(sizeof(BoxRec) * nbox);
+	    pboxNew1 = (BoxPtr)malloc(sizeof(BoxRec) * nbox);
 	    if(!pboxNew1)
 		return;
 	    pboxBase = pboxNext = pbox+nbox-1;
@@ -105,11 +105,11 @@ miCopyRegion (DrawablePtr   pSrcDrawable,
 	if (nbox > 1)
 	{
 	    /* reverse order of rects in each band */
-	    pboxNew2 = (BoxPtr)xalloc(sizeof(BoxRec) * nbox);
+	    pboxNew2 = (BoxPtr)malloc(sizeof(BoxRec) * nbox);
 	    if(!pboxNew2)
 	    {
 		if (pboxNew1)
-		    xfree(pboxNew1);
+		    free(pboxNew1);
 		return;
 	    }
 	    pboxBase = pboxNext = pbox;
@@ -144,9 +144,9 @@ miCopyRegion (DrawablePtr   pSrcDrawable,
 		 reverse, upsidedown, bitPlane, closure);
     
     if (pboxNew1)
-	xfree (pboxNew1);
+	free(pboxNew1);
     if (pboxNew2)
-	xfree (pboxNew2);
+	free(pboxNew2);
 }
 
 RegionPtr

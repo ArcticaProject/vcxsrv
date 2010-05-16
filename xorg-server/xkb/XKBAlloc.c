@@ -57,10 +57,10 @@ XkbSymInterpretRec *prev_interpret;
 	if (compat->sym_interpret==NULL)
 	    compat->num_si= 0;
 	prev_interpret = compat->sym_interpret;
-	compat->sym_interpret= xrealloc(compat->sym_interpret,
+	compat->sym_interpret= realloc(compat->sym_interpret,
 					nSI * sizeof(XkbSymInterpretRec));
 	if (compat->sym_interpret==NULL) {
-	    xfree(prev_interpret);
+	    free(prev_interpret);
 	    compat->size_si= compat->num_si= 0;
 	    return BadAlloc;
 	}
@@ -70,13 +70,13 @@ XkbSymInterpretRec *prev_interpret;
 	}
 	return Success;
     }
-   compat= xcalloc(1, sizeof(XkbCompatMapRec));
+   compat= calloc(1, sizeof(XkbCompatMapRec));
     if (compat==NULL)
 	return BadAlloc;
     if (nSI>0) {
-	compat->sym_interpret= xcalloc(nSI, sizeof(XkbSymInterpretRec));
+	compat->sym_interpret= calloc(nSI, sizeof(XkbSymInterpretRec));
 	if (!compat->sym_interpret) {
-	    xfree(compat);
+	    free(compat);
 	    return BadAlloc;
 	}
     }
@@ -102,12 +102,12 @@ register XkbCompatMapPtr compat;
 	bzero((char *)&compat->groups[0],XkbNumKbdGroups*sizeof(XkbModsRec));
     if (which&XkbSymInterpMask) {
 	if ((compat->sym_interpret)&&(compat->size_si>0))
-	    xfree(compat->sym_interpret);
+	    free(compat->sym_interpret);
 	compat->size_si= compat->num_si= 0;
 	compat->sym_interpret= NULL;
     }
     if (freeMap) {
-	xfree(compat);
+	free(compat);
 	xkb->compat= NULL;
     }
     return;
@@ -123,7 +123,7 @@ XkbNamesPtr	names;
     if (xkb==NULL)
 	return BadMatch;
     if (xkb->names==NULL) {
-	xkb->names = xcalloc(1, sizeof(XkbNamesRec));
+	xkb->names = calloc(1, sizeof(XkbNamesRec));
 	if (xkb->names==NULL)
 	    return BadAlloc;
     }
@@ -135,7 +135,7 @@ XkbNamesPtr	names;
 	type= xkb->map->types;
 	for (i=0;i<xkb->map->num_types;i++,type++) {
 	    if (type->level_names==NULL) {
-		type->level_names= xcalloc(type->num_levels, sizeof(Atom));
+		type->level_names= calloc(type->num_levels, sizeof(Atom));
 		if (type->level_names==NULL)
 		    return BadAlloc;
 	    }
@@ -146,24 +146,24 @@ XkbNamesPtr	names;
 	    (!XkbIsLegalKeycode(xkb->max_key_code))||
 	    (xkb->max_key_code<xkb->min_key_code)) 
 	    return BadValue;
-	names->keys= xcalloc((xkb->max_key_code+1), sizeof(XkbKeyNameRec));
+	names->keys= calloc((xkb->max_key_code+1), sizeof(XkbKeyNameRec));
 	if (names->keys==NULL)
 	    return BadAlloc;
     }
     if ((which&XkbKeyAliasesMask)&&(nTotalAliases>0)) {
 	if (names->key_aliases==NULL) {
-	    names->key_aliases= xcalloc(nTotalAliases, sizeof(XkbKeyAliasRec));
+	    names->key_aliases= calloc(nTotalAliases, sizeof(XkbKeyAliasRec));
 	}
 	else if (nTotalAliases>names->num_key_aliases) {
 	    XkbKeyAliasRec *prev_aliases = names->key_aliases;
 
-	    names->key_aliases= xrealloc(names->key_aliases,
+	    names->key_aliases= realloc(names->key_aliases,
 					 nTotalAliases * sizeof(XkbKeyAliasRec));
 	    if (names->key_aliases!=NULL) {
 		memset(&names->key_aliases[names->num_key_aliases], 0,
 			(nTotalAliases - names->num_key_aliases) * sizeof(XkbKeyAliasRec));
 	    } else {
-		xfree(prev_aliases);
+		free(prev_aliases);
 	    }
 	}
 	if (names->key_aliases==NULL) {
@@ -174,18 +174,18 @@ XkbNamesPtr	names;
     }
     if ((which&XkbRGNamesMask)&&(nTotalRG>0)) {
 	if (names->radio_groups==NULL) {
-	    names->radio_groups= xcalloc(nTotalRG, sizeof(Atom));
+	    names->radio_groups= calloc(nTotalRG, sizeof(Atom));
 	}
 	else if (nTotalRG>names->num_rg) {
 	    Atom *prev_radio_groups = names->radio_groups;
 
-	    names->radio_groups= xrealloc(names->radio_groups,
+	    names->radio_groups= realloc(names->radio_groups,
 					  nTotalRG * sizeof(Atom));
 	    if (names->radio_groups!=NULL) {
 		memset(&names->radio_groups[names->num_rg], 0,
 			(nTotalRG - names->num_rg) * sizeof(Atom));
 	    } else {
-		xfree(prev_radio_groups);
+		free(prev_radio_groups);
 	    }
 	}
 	if (names->radio_groups==NULL)
@@ -213,29 +213,29 @@ XkbNamesPtr	names;
 	    type= map->types;
 	    for (i=0;i<map->num_types;i++,type++) {
 		if (type->level_names!=NULL) {
-		    xfree(type->level_names);
+		    free(type->level_names);
 		    type->level_names= NULL;
 		}
 	    }
 	}
     }
     if ((which&XkbKeyNamesMask)&&(names->keys!=NULL)) {
-	xfree(names->keys);
+	free(names->keys);
 	names->keys= NULL;
 	names->num_keys= 0;
     }
     if ((which&XkbKeyAliasesMask)&&(names->key_aliases)){
-	xfree(names->key_aliases);
+	free(names->key_aliases);
 	names->key_aliases=NULL;
 	names->num_key_aliases=0;
     }
     if ((which&XkbRGNamesMask)&&(names->radio_groups)) {
-	xfree(names->radio_groups);
+	free(names->radio_groups);
 	names->radio_groups= NULL;
 	names->num_rg= 0;
     }
     if (freeMap) {
-	xfree(names);
+	free(names);
 	xkb->names= NULL;
     }
     return;
@@ -251,7 +251,7 @@ XkbAllocControls(XkbDescPtr xkb,unsigned which)
 	return BadMatch;
 
     if (xkb->ctrls==NULL) {
-	xkb->ctrls= xcalloc(1, sizeof(XkbControlsRec));
+	xkb->ctrls= calloc(1, sizeof(XkbControlsRec));
 	if (!xkb->ctrls)
 	    return BadAlloc;
     }
@@ -263,7 +263,7 @@ static void
 XkbFreeControls(XkbDescPtr xkb,unsigned which,Bool freeMap)
 {
     if (freeMap && (xkb!=NULL) && (xkb->ctrls!=NULL)) {
-	xfree(xkb->ctrls);
+	free(xkb->ctrls);
 	xkb->ctrls= NULL;
     }
     return;
@@ -277,7 +277,7 @@ XkbAllocIndicatorMaps(XkbDescPtr xkb)
     if (xkb==NULL)
 	return BadMatch;
     if (xkb->indicators==NULL) {
-	xkb->indicators= xcalloc(1, sizeof(XkbIndicatorRec));
+	xkb->indicators= calloc(1, sizeof(XkbIndicatorRec));
 	if (!xkb->indicators)
 	    return BadAlloc;
     }
@@ -288,7 +288,7 @@ static void
 XkbFreeIndicatorMaps(XkbDescPtr xkb)
 {
     if ((xkb!=NULL)&&(xkb->indicators!=NULL)) {
-	xfree(xkb->indicators);
+	free(xkb->indicators);
 	xkb->indicators= NULL;
     }
     return;
@@ -301,7 +301,7 @@ XkbAllocKeyboard(void)
 {
 XkbDescRec *xkb;
 
-    xkb = xcalloc(1, sizeof(XkbDescRec));
+    xkb = calloc(1, sizeof(XkbDescRec));
     if (xkb)
 	xkb->device_spec= XkbUseCoreKbd;
     return xkb;
@@ -332,6 +332,6 @@ XkbFreeKeyboard(XkbDescPtr xkb,unsigned which,Bool freeAll)
     if (which&XkbControlsMask)
 	XkbFreeControls(xkb,XkbAllControlsMask,TRUE);
     if (freeAll)
-	xfree(xkb);
+	free(xkb);
     return;
 }

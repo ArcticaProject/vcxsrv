@@ -182,7 +182,7 @@ mtrr_cull_wc_region(int screenNum, unsigned long base, unsigned long size,
 
 		/* Found an overlapping region. Delete it. */
 		
-		wcr = xalloc(sizeof(*wcr));
+		wcr = malloc(sizeof(*wcr));
 		if (!wcr)
 			return NULL;
 		wcr->sentry.base = gent.base;
@@ -203,7 +203,7 @@ mtrr_cull_wc_region(int screenNum, unsigned long base, unsigned long size,
 			wcreturn = wcr;
 			gent.regnum--;
 		} else {
-			xfree(wcr);
+			free(wcr);
 			xf86DrvMsgVerb(screenNum, X_WARNING, 0,
 				   "Failed to remove MMIO "
 				   "write-combining range (0x%lx,0x%lx)\n",
@@ -263,7 +263,7 @@ mtrr_add_wc_region(int screenNum, unsigned long base, unsigned long size,
 	if (!mtrr_open(from == X_CONFIG ? 0 : 2))
 		return wcreturn;
 
-	*wcr = curwcr = xalloc(sizeof(**wcr));
+	*wcr = curwcr = malloc(sizeof(**wcr));
 	if (!curwcr)
 	    return wcreturn;
 
@@ -313,7 +313,7 @@ mtrr_add_wc_region(int screenNum, unsigned long base, unsigned long size,
 	}
 	else {
 	        *wcr = curwcr->next;
-		xfree(curwcr);
+		free(curwcr);
 		
 		/* Don't complain about the VGA region: MTRR fixed
 		   regions aren't currently supported, but might be in
@@ -339,7 +339,7 @@ mtrr_undo_wc_region(int screenNum, struct mtrr_wc_region *wcr)
 				ioctl(mtrr_fd, MTRRIOC_DEL_ENTRY, &p->sentry);
 			prev = p;
 			p = p->next;
-			xfree(prev);
+			free(prev);
 		}
 	}
 }

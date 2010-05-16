@@ -132,7 +132,7 @@ ProcCompositeQueryVersion (ClientPtr client)
 	swapl(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xCompositeQueryVersionReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 #define VERIFY_WINDOW(pWindow, wid, client, mode)			\
@@ -226,7 +226,7 @@ ProcCompositeCreateRegionFromBorderClip (ClientPtr client)
     if (!AddResource (stuff->region, RegionResType, (pointer) pRegion))
 	return BadAlloc;
 
-    return(client->noClientException);
+    return Success;
 }
 
 static int
@@ -265,7 +265,7 @@ ProcCompositeNameWindowPixmap (ClientPtr client)
     if (!AddResource (stuff->pixmap, RT_PIXMAP, (pointer) pPixmap))
 	return BadAlloc;
 
-    return(client->noClientException);
+    return Success;
 }
 
 
@@ -325,7 +325,7 @@ ProcCompositeGetOverlayWindow (ClientPtr client)
     }
     (void) WriteToClient(client, sz_xCompositeGetOverlayWindowReply, (char *)&rep);
 
-    return client->noClientException;
+    return Success;
 }
 
 static int
@@ -351,7 +351,7 @@ ProcCompositeReleaseOverlayWindow (ClientPtr client)
     /* The delete function will free the client structure */
     FreeResource (pOc->resource, RT_NONE);
 
-    return client->noClientException;
+    return Success;
 }
 
 static int (*ProcCompositeVector[CompositeNumberRequests])(ClientPtr) = {

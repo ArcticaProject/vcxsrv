@@ -461,7 +461,7 @@ BT829Ptr bt829_Detect(I2CBusPtr b, I2CSlaveAddr addr)
   BT829Ptr bt;
   I2CByte a;
 
-  bt = xcalloc(1, sizeof(BT829Rec));
+  bt = calloc(1, sizeof(BT829Rec));
   if(bt == NULL) return NULL;
   bt->d.DevName = strdup("BT829 video decoder");
   bt->d.SlaveAddr = addr;
@@ -482,7 +482,7 @@ BT829Ptr bt829_Detect(I2CBusPtr b, I2CSlaveAddr addr)
   bt->id = btread(bt,IDCODE);
 
   free(bt->d.DevName);
-  bt->d.DevName = xcalloc(200, sizeof(char));
+  bt->d.DevName = calloc(200, sizeof(char));
   switch(BTVERSION){
   	case BT815:
 		sprintf(bt->d.DevName, "bt815a video decoder, revision %d",bt->id & 0xf);

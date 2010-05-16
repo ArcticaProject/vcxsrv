@@ -398,7 +398,7 @@ static void kbdUSBGetMap(DevicePtr pDev, KeySymsPtr pKeySyms, CARD8 *pModMap)
     KeySym        *k, *mapCopy;
     int           i;
 
-    mapCopy = xalloc(sizeof(map));
+    mapCopy = malloc(sizeof(map));
     memcpy(mapCopy, map, sizeof(map));
 
     /* compute the modifier map */

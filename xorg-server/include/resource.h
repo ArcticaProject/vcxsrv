@@ -256,24 +256,24 @@ extern _X_EXPORT pointer SecurityLookupIDByType(
     ClientPtr client,
     XID id,
     RESTYPE rtype,
-    Mask access_mode) X_DEPRECATED;
+    Mask access_mode) _X_DEPRECATED;
 
 /* replaced by dixLookupResourceByClass */
 extern _X_EXPORT pointer SecurityLookupIDByClass(
     ClientPtr client,
     XID id,
     RESTYPE classes,
-    Mask access_mode) X_DEPRECATED;
+    Mask access_mode) _X_DEPRECATED;
 
 /* replaced by dixLookupResourceByType */
 extern _X_EXPORT pointer LookupIDByType(
     XID id,
-    RESTYPE rtype) X_DEPRECATED;
+    RESTYPE rtype) _X_DEPRECATED;
 
 /* replaced by dixLookupResourceByClass */
 extern _X_EXPORT pointer LookupIDByClass(
     XID id,
-    RESTYPE classes) X_DEPRECATED;
+    RESTYPE classes) _X_DEPRECATED;
 
 #endif /* RESOURCE_H */
 

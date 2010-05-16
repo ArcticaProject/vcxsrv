@@ -70,7 +70,7 @@ XkbSetExtension(DeviceIntPtr device, ProcessInputProc proc)
 {
     xkbDeviceInfoPtr xkbPrivPtr;
 
-    xkbPrivPtr = (xkbDeviceInfoPtr) xcalloc(1, sizeof(xkbDeviceInfoRec));
+    xkbPrivPtr = (xkbDeviceInfoPtr) calloc(1, sizeof(xkbDeviceInfoRec));
     if (!xkbPrivPtr)
 	return;
     xkbPrivPtr->unwrapProc = NULL;
@@ -1020,7 +1020,7 @@ register int	i;
 
     if (xkbi->szFilters==0) {
 	xkbi->szFilters = 4;
-	xkbi->filters = xcalloc(xkbi->szFilters, sizeof(XkbFilterRec));
+	xkbi->filters = calloc(xkbi->szFilters, sizeof(XkbFilterRec));
 	/* 6/21/93 (ef) -- XXX! deal with allocation failure */
     }
     for (i=0;i<xkbi->szFilters;i++) {
@@ -1030,7 +1030,7 @@ register int	i;
 	}
     }
     xkbi->szFilters*=2;
-    xkbi->filters= xrealloc(xkbi->filters,
+    xkbi->filters= realloc(xkbi->filters,
                             xkbi->szFilters * sizeof(XkbFilterRec));
     /* 6/21/93 (ef) -- XXX! deal with allocation failure */
     bzero(&xkbi->filters[xkbi->szFilters/2],

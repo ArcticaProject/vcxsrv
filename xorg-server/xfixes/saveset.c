@@ -57,11 +57,7 @@ ProcXFixesChangeSaveSet(ClientPtr client)
     }
     toRoot = (stuff->target == SaveSetRoot);
     map = (stuff->map == SaveSetMap);
-    result = AlterSaveSetForClient(client, pWin, stuff->mode, toRoot, map);
-    if (client->noClientException != Success)
-	return(client->noClientException);
-    else
-	return(result);
+    return AlterSaveSetForClient(client, pWin, stuff->mode, toRoot, map);
 }
 
 int

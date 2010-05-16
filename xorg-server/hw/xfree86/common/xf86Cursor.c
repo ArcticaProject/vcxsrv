@@ -502,7 +502,7 @@ AddEdge(
 	}  
 
 	if(!pEdge) {
-	    if(!(pNew = xalloc(sizeof(xf86EdgeRec))))
+	    if(!(pNew = malloc(sizeof(xf86EdgeRec))))
 		break;
 
 	    pNew->screen = screen;
@@ -519,7 +519,7 @@ AddEdge(
 	    
 	    break;
 	} else if (min < pEdge->start) {
-	    if(!(pNew = xalloc(sizeof(xf86EdgeRec))))
+	    if(!(pNew = malloc(sizeof(xf86EdgeRec))))
 		break;
 
 	    pNew->screen = screen;
@@ -850,10 +850,10 @@ xf86ReconfigureLayout(void)
     for (i = 0; i < MAXSCREENS; i++) {
 	xf86ScreenLayoutPtr sl = &xf86ScreenLayout[i];
 	/* we don't have to zero these, xf86InitOrigins() takes care of that */
-	if (sl->left) xfree(sl->left);
-	if (sl->right) xfree(sl->right);
-	if (sl->up) xfree(sl->up);
-	if (sl->down) xfree(sl->down);
+	if (sl->left) free(sl->left);
+	if (sl->right) free(sl->right);
+	if (sl->up) free(sl->up);
+	if (sl->down) free(sl->down);
     }
 
     xf86InitOrigins();

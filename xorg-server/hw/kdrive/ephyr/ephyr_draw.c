@@ -97,18 +97,17 @@ ephyrPrepareSolid(PixmapPtr pPix, int alu, Pixel pm, Pixel fg)
     KdScreenInfo *screen = pScreenPriv->screen;
     EphyrScrPriv *scrpriv = screen->driver;
     EphyrFakexaPriv *fakexa = scrpriv->fakexa;
-    CARD32 tmpval[3];
+    ChangeGCVal tmpval[3];
 
     ephyrPreparePipelinedAccess(pPix, EXA_PREPARE_DEST);
 
     fakexa->pDst = pPix;
     fakexa->pGC = GetScratchGC(pPix->drawable.depth, pScreen);
 
-    tmpval[0] = alu;
-    tmpval[1] = pm;
-    tmpval[2] = fg;
-    ChangeGC(fakexa->pGC, GCFunction | GCPlaneMask | GCForeground, 
-	     tmpval);
+    tmpval[0].val = alu;
+    tmpval[1].val = pm;
+    tmpval[2].val = fg;
+    ChangeGC(NullClient, fakexa->pGC, GCFunction | GCPlaneMask | GCForeground, tmpval);
 
     ValidateGC(&pPix->drawable, fakexa->pGC);
 
@@ -162,7 +161,7 @@ ephyrPrepareCopy(PixmapPtr pSrc, PixmapPtr pDst, int dx, int dy, int alu,
     KdScreenInfo *screen = pScreenPriv->screen;
     EphyrScrPriv *scrpriv = screen->driver;
     EphyrFakexaPriv *fakexa = scrpriv->fakexa;
-    CARD32 tmpval[2];
+    ChangeGCVal tmpval[2];
 
     ephyrPreparePipelinedAccess(pDst, EXA_PREPARE_DEST);
     ephyrPreparePipelinedAccess(pSrc, EXA_PREPARE_SRC);
@@ -171,9 +170,9 @@ ephyrPrepareCopy(PixmapPtr pSrc, PixmapPtr pDst, int dx, int dy, int alu,
     fakexa->pDst = pDst;
     fakexa->pGC = GetScratchGC(pDst->drawable.depth, pScreen);
 
-    tmpval[0] = alu;
-    tmpval[1] = pm;
-    ChangeGC (fakexa->pGC, GCFunction | GCPlaneMask, tmpval);
+    tmpval[0].val = alu;
+    tmpval[1].val = pm;
+    ChangeGC (NullClient, fakexa->pGC, GCFunction | GCPlaneMask, tmpval);
 
     ValidateGC(&pDst->drawable, fakexa->pGC);
 
@@ -432,13 +431,13 @@ ephyrDrawInit(ScreenPtr pScreen)
     EphyrFakexaPriv *fakexa;
     Bool success;
 
-    fakexa = xcalloc(1, sizeof(*fakexa));
+    fakexa = calloc(1, sizeof(*fakexa));
     if (fakexa == NULL)
 	return FALSE;
 
     fakexa->exa = exaDriverAlloc();
     if (fakexa->exa == NULL) {
-	xfree(fakexa);
+	free(fakexa);
 	return FALSE;
     }
 
@@ -487,8 +486,8 @@ ephyrDrawInit(ScreenPtr pScreen)
 	scrpriv->fakexa = fakexa;
     } else {
 	ErrorF("Failed to initialize EXA\n");
-	xfree(fakexa->exa);
-	xfree(fakexa);
+	free(fakexa->exa);
+	free(fakexa);
     }
 
     return success;

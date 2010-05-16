@@ -76,5 +76,5 @@ ProcBigReqDispatch (ClientPtr client)
 	swapl(&rep.max_request_size, n);
     }
     WriteToClient(client, sizeof(xBigReqEnableReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }

@@ -62,7 +62,7 @@ SELinuxArraySet(SELinuxArrayRec *rec, unsigned key, void *val)
 {
     if (key >= rec->size) {
 	/* Need to increase size of array */
-	rec->array = xrealloc(rec->array, (key + 1) * sizeof(val));
+	rec->array = realloc(rec->array, (key + 1) * sizeof(val));
 	if (!rec->array)
 	    return FALSE;
 	memset(rec->array + rec->size, 0, (key - rec->size + 1) * sizeof(val));
@@ -79,10 +79,10 @@ SELinuxArrayFree(SELinuxArrayRec *rec, int free_elements)
     if (free_elements) {
 	unsigned i = rec->size;
 	while (i)
-	    xfree(rec->array[--i]);
+	    free(rec->array[--i]);
     }
 
-    xfree(rec->array);
+    free(rec->array);
     rec->size = 0;
     rec->array = NULL;
 }
@@ -132,7 +132,7 @@ SELinuxAtomToSID(Atom atom, int prop, SELinuxObjectRec **obj_rtn)
 
     rec = SELinuxArrayGet(&arr_atoms, atom);
     if (!rec) {
-	rec = xcalloc(1, sizeof(SELinuxAtomRec));
+	rec = calloc(1, sizeof(SELinuxAtomRec));
 	if (!rec || !SELinuxArraySet(&arr_atoms, atom, rec))
 	    return BadAlloc;
     }

@@ -147,9 +147,6 @@ typedef struct _RootWinProp {
     pointer			data;
 } RootWinProp, *RootWinPropPtr;
 
-/* private resource types */
-#define ResNoAvoid  ResBios
-
 /* ISC's cc can't handle ~ of UL constants, so explicitly type cast them. */
 #define XLED1   ((unsigned long) 0x00000001)
 #define XLED2   ((unsigned long) 0x00000002)

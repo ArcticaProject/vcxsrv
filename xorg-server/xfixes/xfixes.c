@@ -92,7 +92,7 @@ ProcXFixesQueryVersion(ClientPtr client)
 	swapl(&rep.minorVersion, n);
     }
     WriteToClient(client, sizeof(xXFixesQueryVersionReply), (char *)&rep);
-    return(client->noClientException);
+    return Success;
 }
 
 /* Major version controls available requests */

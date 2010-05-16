@@ -245,7 +245,7 @@ miHandleValidateExposures(WindowPtr pWin)
 	    REGION_UNINIT(pScreen, &val->after.borderExposed);
 	    (*WindowExposures)(pChild, &val->after.exposed, NullRegion);
 	    REGION_UNINIT(pScreen, &val->after.exposed);
-	    xfree(val);
+	    free(val);
 	    pChild->valdata = NULL;
 	    if (pChild->firstChild)
 	    {

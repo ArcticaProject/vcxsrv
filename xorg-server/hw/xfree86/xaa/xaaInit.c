@@ -69,7 +69,7 @@ XAACreateInfoRec(void)
 {
     XAAInfoRecPtr infoRec;
 
-    infoRec = xcalloc(1, sizeof(XAAInfoRec));
+    infoRec = calloc(1, sizeof(XAAInfoRec));
     if(infoRec)
 	infoRec->CachePixelGranularity = -1;
 
@@ -85,12 +85,12 @@ XAADestroyInfoRec(XAAInfoRecPtr infoRec)
 	(*infoRec->ClosePixmapCache)(infoRec->pScrn->pScreen);
    
     if(infoRec->PreAllocMem)
-	xfree(infoRec->PreAllocMem);
+	free(infoRec->PreAllocMem);
 
     if(infoRec->PixmapCachePrivate)
-	xfree(infoRec->PixmapCachePrivate);
+	free(infoRec->PixmapCachePrivate);
 
-    xfree(infoRec);
+    free(infoRec);
 }
 
 
@@ -112,7 +112,7 @@ XAAInit(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
     if (!dixRequestPrivate(XAAPixmapKey, sizeof(XAAPixmapRec)))
 	return FALSE;
 
-    if (!(pScreenPriv = xalloc(sizeof(XAAScreenRec))))
+    if (!(pScreenPriv = malloc(sizeof(XAAScreenRec))))
 	return FALSE;
 
     dixSetPrivate(&pScreen->devPrivates, XAAScreenKey, pScreenPriv);
@@ -181,7 +181,7 @@ XAAInit(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
     if(pScrn->overlayFlags & OVERLAY_8_32_PLANAR)
         XAASetupOverlay8_32Planar(pScreen);
 
-    infoRec->PreAllocMem = xalloc(MAX_PREALLOC_MEM);
+    infoRec->PreAllocMem = malloc(MAX_PREALLOC_MEM);
     if(infoRec->PreAllocMem)
     	infoRec->PreAllocSize = MAX_PREALLOC_MEM;
 
@@ -228,7 +228,7 @@ XAACloseScreen (int i, ScreenPtr pScreen)
 
     /* We leave it up to the client to free the XAAInfoRec */
 
-    xfree ((pointer) pScreenPriv);
+    free((pointer) pScreenPriv);
 
     return (*pScreen->CloseScreen) (i, pScreen);
 }
@@ -372,7 +372,7 @@ XAACreatePixmap(ScreenPtr pScreen, int w, int h, int depth, unsigned usage_hint)
 	    goto BAILOUT;
 	}
 
-        if(!(pLink = xalloc(sizeof(PixmapLink)))) {
+        if(!(pLink = malloc(sizeof(PixmapLink)))) {
             xf86FreeOffscreenArea(area);
 	    goto BAILOUT;
 	}
@@ -382,7 +382,7 @@ XAACreatePixmap(ScreenPtr pScreen, int w, int h, int depth, unsigned usage_hint)
 	XAA_SCREEN_EPILOGUE (pScreen, CreatePixmap, XAACreatePixmap);
 
 	if (!pPix) {
-	    xfree (pLink);
+	    free(pLink);
             xf86FreeOffscreenArea(area);
 	    goto BAILOUT;
 	}
@@ -436,7 +436,7 @@ XAADestroyPixmap(PixmapPtr pPix)
     if(pPix->refcnt == 1) {
         if(pPriv->flags & OFFSCREEN) {
 	    if(pPriv->flags & DGA_PIXMAP)
-	        xfree(pPriv->offscreenArea);
+	        free(pPriv->offscreenArea);
             else {
 	        FBAreaPtr area = pPriv->offscreenArea;
 		PixmapLinkPtr pLink = infoRec->OffscreenPixmaps;
@@ -454,12 +454,12 @@ XAADestroyPixmap(PixmapPtr pPix)
 
 	        xf86FreeOffscreenArea(area);
 	        pPriv->offscreenArea = NULL;
-	        xfree(pLink);
+	        free(pLink);
 	    } 
         }
 
         if(pPriv->freeData) { /* pixmaps that were once in video ram */
-	    xfree(pPix->devPrivate.ptr);
+	    free(pPix->devPrivate.ptr);
 	    pPix->devPrivate.ptr = NULL;
 	}
     }
@@ -551,7 +551,7 @@ XAASetDGAMode(int index, int num, DGADevicePtr devRet)
 	infoRec->UsingPixmapCache = state->UsingPixmapCache;	
 	infoRec->CanDoColor8x8 = state->CanDoColor8x8;	
 	infoRec->CanDoMono8x8 = state->CanDoMono8x8;
-	xfree(infoRec->dgaSaves);
+	free(infoRec->dgaSaves);
 	infoRec->dgaSaves = NULL;
     }
 
@@ -562,7 +562,7 @@ XAASetDGAMode(int index, int num, DGADevicePtr devRet)
 	XAAPixmapPtr pixPriv = XAA_GET_PIXMAP_PRIVATE(devRet->pPix);
 	FBAreaPtr area;
 
-	if((area = xalloc(sizeof(FBArea)))) {
+	if((area = malloc(sizeof(FBArea)))) {
 	    area->pScreen = pScreen;
 	    area->box.x1 = 0;
 	    area->box.x2 = 0;
@@ -577,7 +577,7 @@ XAASetDGAMode(int index, int num, DGADevicePtr devRet)
 	    pixPriv->offscreenArea = area;
 
 	    if(!infoRec->dgaSaves) { /* save pixmap cache state */
-		SavedCacheStatePtr state = xalloc(sizeof(SavedCacheState));
+		SavedCacheStatePtr state = malloc(sizeof(SavedCacheState));
 	
 		state->UsingPixmapCache = infoRec->UsingPixmapCache;	
 		state->CanDoColor8x8 = infoRec->CanDoColor8x8;	

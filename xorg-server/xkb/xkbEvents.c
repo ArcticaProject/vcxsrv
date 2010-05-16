@@ -1041,7 +1041,7 @@ XkbInterestPtr	interest;
 	    return ((interest->resource==id)?interest:NULL);
 	interest = interest->next;
     }
-    interest = xcalloc(1, sizeof(XkbInterestRec));
+    interest = calloc(1, sizeof(XkbInterestRec));
     if (interest) {
 	interest->dev = dev;
 	interest->client = client;
@@ -1085,7 +1085,7 @@ ClientPtr	client = NULL;
 	    autoCtrls= interest->autoCtrls;
 	    autoValues= interest->autoCtrlValues;
 	    client= interest->client;
-	    xfree(interest);
+	    free(interest);
 	    found= TRUE;
 	}
 	while ((!found)&&(interest->next)) {
@@ -1095,7 +1095,7 @@ ClientPtr	client = NULL;
 		autoCtrls= victim->autoCtrls;
 		autoValues= victim->autoCtrlValues;
 		client= victim->client;
-		xfree(victim);
+		free(victim);
 		found= TRUE;
 	    }
 	    interest = interest->next;

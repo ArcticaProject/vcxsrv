@@ -107,7 +107,7 @@ miPolyGlyphBlt(
     int nbyGlyphWidth;		/* bytes per scanline of glyph */
     int nbyPadGlyph;		/* server padded line of glyph */
 
-    XID gcvals[3];
+    ChangeGCVal gcvals[3];
 
     if (pGC->miTranslate)
     {
@@ -134,14 +134,14 @@ miPolyGlyphBlt(
 	return;
     }
 
-    gcvals[0] = GXcopy;
-    gcvals[1] = 1;
-    gcvals[2] = 0;
+    gcvals[0].val = GXcopy;
+    gcvals[1].val = 1;
+    gcvals[2].val = 0;
 
-    DoChangeGC(pGCtmp, GCFunction|GCForeground|GCBackground, gcvals, 0);
+    ChangeGC(NullClient, pGCtmp, GCFunction|GCForeground|GCBackground, gcvals);
 
     nbyLine = BitmapBytePad(width);
-    pbits = xalloc(height*nbyLine);
+    pbits = malloc(height*nbyLine);
     if (!pbits)
     {
 	(*pDrawable->pScreen->DestroyPixmap)(pPixmap);
@@ -192,7 +192,7 @@ miPolyGlyphBlt(
 	x += pci->metrics.characterWidth;
     }
     (*pDrawable->pScreen->DestroyPixmap)(pPixmap);
-    xfree(pbits);
+    free(pbits);
     FreeScratchGC(pGCtmp);
 }
 
@@ -209,7 +209,7 @@ miImageGlyphBlt(
     )
 {
     ExtentInfoRec info;		/* used by QueryGlyphExtents() */
-    XID gcvals[3];
+    ChangeGCVal gcvals[3];
     int oldAlu, oldFS;
     unsigned long	oldFG;
     xRectangle backrect;
@@ -234,25 +234,25 @@ miImageGlyphBlt(
     oldFS = pGC->fillStyle;
 
     /* fill in the background */
-    gcvals[0] = GXcopy;
-    gcvals[1] = pGC->bgPixel;
-    gcvals[2] = FillSolid;
-    DoChangeGC(pGC, GCFunction|GCForeground|GCFillStyle, gcvals, 0);
+    gcvals[0].val = GXcopy;
+    gcvals[1].val = pGC->bgPixel;
+    gcvals[2].val = FillSolid;
+    ChangeGC(NullClient, pGC, GCFunction|GCForeground|GCFillStyle, gcvals);
     ValidateGC(pDrawable, pGC);
     (*pGC->ops->PolyFillRect)(pDrawable, pGC, 1, &backrect);
 
     /* put down the glyphs */
-    gcvals[0] = oldFG;
-    DoChangeGC(pGC, GCForeground, gcvals, 0);
+    gcvals[0].val = oldFG;
+    ChangeGC(NullClient, pGC, GCForeground, gcvals);
     ValidateGC(pDrawable, pGC);
     (*pGC->ops->PolyGlyphBlt)(pDrawable, pGC, x, y, nglyph, ppci,
 			      pglyphBase);
 
     /* put all the toys away when done playing */
-    gcvals[0] = oldAlu;
-    gcvals[1] = oldFG;
-    gcvals[2] = oldFS;
-    DoChangeGC(pGC, GCFunction|GCForeground|GCFillStyle, gcvals, 0);
+    gcvals[0].val = oldAlu;
+    gcvals[1].val = oldFG;
+    gcvals[2].val = oldFS;
+    ChangeGC(NullClient, pGC, GCFunction|GCForeground|GCFillStyle, gcvals);
     ValidateGC(pDrawable, pGC);
 
 }

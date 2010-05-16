@@ -440,7 +440,7 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
                        "(unnamed)");
                 return !Success;
             }
-            xfree(pi->driverPrivate);
+            free(pi->driverPrivate);
             pi->driverPrivate = NULL;
         }
 
@@ -453,12 +453,12 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
             return !Success;
         }
 
-	btn_labels = xcalloc(pi->nButtons, sizeof(Atom));
+	btn_labels = calloc(pi->nButtons, sizeof(Atom));
 	if (!btn_labels)
 	    return BadAlloc;
-	axes_labels = xcalloc(pi->nAxes, sizeof(Atom));
+	axes_labels = calloc(pi->nAxes, sizeof(Atom));
 	if (!axes_labels) {
-	    xfree(btn_labels);
+	    free(btn_labels);
 	    return BadAlloc;
 	}
 
@@ -492,8 +492,8 @@ KdPointerProc(DeviceIntPtr pDevice, int onoff)
 	    (PtrCtrlProcPtr)NoopDDA,
 	    GetMotionHistorySize(), pi->nAxes, axes_labels);
 
-        xfree(btn_labels);
-        xfree(axes_labels);
+        free(btn_labels);
+        free(axes_labels);
 
         if (pi->inputClass == KD_TOUCHSCREEN) {
             InitAbsoluteClassDeviceStruct(pDevice);
@@ -759,7 +759,7 @@ KdKeyboardProc(DeviceIntPtr pDevice, int onoff)
                        "(unnamed)");
                 return !Success;
             }
-            xfree(ki->driverPrivate);
+            free(ki->driverPrivate);
             ki->driverPrivate = NULL;
         }
 
@@ -910,7 +910,7 @@ KdRemoveKeyboardDriver (KdKeyboardDriver *driver)
 KdKeyboardInfo *
 KdNewKeyboard (void)
 {
-    KdKeyboardInfo *ki = xcalloc(sizeof(KdKeyboardInfo), 1);
+    KdKeyboardInfo *ki = calloc(sizeof(KdKeyboardInfo), 1);
     if (!ki)
         return NULL;
 
@@ -938,7 +938,7 @@ KdAddConfigKeyboard (char *keyboard)
     if (!keyboard)
         return Success;
 
-    new = (struct KdConfigDevice *) xcalloc(sizeof(struct KdConfigDevice), 1);
+    new = (struct KdConfigDevice *) calloc(sizeof(struct KdConfigDevice), 1);
     if (!new)
         return BadAlloc;
 
@@ -1006,7 +1006,7 @@ KdAddConfigPointer (char *pointer)
     if (!pointer)
         return Success;
 
-    new = (struct KdConfigDevice *) xcalloc(sizeof(struct KdConfigDevice), 1);
+    new = (struct KdConfigDevice *) calloc(sizeof(struct KdConfigDevice), 1);
     if (!new)
         return BadAlloc;
 
@@ -1076,7 +1076,7 @@ KdGetOptions (InputOption **options, char *string)
     InputOption     *newopt = NULL, **tmpo = NULL;
     int             tam_key = 0;
 
-    newopt = xcalloc(1, sizeof (InputOption));
+    newopt = calloc(1, sizeof (InputOption));
     if (!newopt)
         return FALSE;
 
@@ -1087,7 +1087,7 @@ KdGetOptions (InputOption **options, char *string)
     if (strchr(string, '='))
     {
         tam_key = (strchr(string, '=') - string);
-        newopt->key = (char *)xalloc(tam_key);
+        newopt->key = (char *)malloc(tam_key);
         strncpy(newopt->key, string, tam_key);
         newopt->key[tam_key] = '\0';
         newopt->value = xstrdup(strchr(string, '=') + 1);

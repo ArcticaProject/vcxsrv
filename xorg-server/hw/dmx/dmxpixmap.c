@@ -175,7 +175,7 @@ Bool dmxDestroyPixmap(PixmapPtr pPixmap)
 	}
     }
     dixFreePrivates(pPixmap->devPrivates);
-    xfree(pPixmap);
+    free(pPixmap);
 
 #if 0
     if (pScreen->DestroyPixmap)

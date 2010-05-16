@@ -113,7 +113,7 @@ ProcXGetDeviceModifierMapping(ClientPtr client)
     WriteReplyToClient(client, sizeof(xGetDeviceModifierMappingReply), &rep);
     WriteToClient(client, max_keys_per_mod * 8, (char *) modkeymap);
 
-    xfree(modkeymap);
+    free(modkeymap);
 
     return Success;
 }

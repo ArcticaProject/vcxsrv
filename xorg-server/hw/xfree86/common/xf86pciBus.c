@@ -212,7 +212,7 @@ xf86PciProbe(void)
 
 	xf86ErrorF("\n");
     }
-    xfree(xf86PciVideoInfo);
+    free(xf86PciVideoInfo);
 }
 
 /*
@@ -293,7 +293,7 @@ xf86ParsePciBusString(const char *busID, int *bus, int *device, int *func)
     s = xstrdup(id);
     p = strtok(s, ":");
     if (p == NULL || *p == 0) {
-	xfree(s);
+	free(s);
 	return FALSE;
     }
     d = strpbrk(p, "@");
@@ -301,14 +301,14 @@ xf86ParsePciBusString(const char *busID, int *bus, int *device, int *func)
 	*(d++) = 0;
 	for (i = 0; d[i] != 0; i++) {
 	    if (!isdigit(d[i])) {
-		xfree(s);
+		free(s);
 		return FALSE;
 	    }
 	}
     }
     for (i = 0; p[i] != 0; i++) {
 	if (!isdigit(p[i])) {
-	    xfree(s);
+	    free(s);
 	    return FALSE;
 	}
     }
@@ -317,12 +317,12 @@ xf86ParsePciBusString(const char *busID, int *bus, int *device, int *func)
 	*bus += atoi(d) << 8;
     p = strtok(NULL, ":");
     if (p == NULL || *p == 0) {
-	xfree(s);
+	free(s);
 	return FALSE;
     }
     for (i = 0; p[i] != 0; i++) {
 	if (!isdigit(p[i])) {
-	    xfree(s);
+	    free(s);
 	    return FALSE;
 	}
     }
@@ -330,17 +330,17 @@ xf86ParsePciBusString(const char *busID, int *bus, int *device, int *func)
     *func = 0;
     p = strtok(NULL, ":");
     if (p == NULL || *p == 0) {
-	xfree(s);
+	free(s);
 	return TRUE;
     }
     for (i = 0; p[i] != 0; i++) {
 	if (!isdigit(p[i])) {
-	    xfree(s);
+	    free(s);
 	    return FALSE;
 	}
     }
     *func = atoi(p);
-    xfree(s);
+    free(s);
     return TRUE;
 }
 

@@ -101,7 +101,7 @@ fbDestroyPixmap (PixmapPtr pPixmap)
     if(--pPixmap->refcnt)
 	return TRUE;
     dixFreePrivates(pPixmap->devPrivates);
-    xfree(pPixmap);
+    free(pPixmap);
     return TRUE;
 }
 
@@ -308,7 +308,7 @@ fbPixmapToRegion(PixmapPtr pPix)
 	pReg->extents.y2 = REGION_END(pReg)->y2;
 	if (pReg->data->numRects == 1)
 	{
-	    xfree(pReg->data);
+	    free(pReg->data);
 	    pReg->data = (RegDataPtr)NULL;
 	}
     }

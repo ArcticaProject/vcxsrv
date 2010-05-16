@@ -98,9 +98,9 @@ RRCloseScreen (int i, ScreenPtr pScreen)
     for (j = pScrPriv->numOutputs - 1; j >= 0; j--)
 	RROutputDestroy (pScrPriv->outputs[j]);
     
-    xfree (pScrPriv->crtcs);
-    xfree (pScrPriv->outputs);
-    xfree (pScrPriv);
+    free(pScrPriv->crtcs);
+    free(pScrPriv->outputs);
+    free(pScrPriv);
     RRNScreens -= 1;	/* ok, one fewer screen with RandR running */
     return (*pScreen->CloseScreen) (i, pScreen);    
 }
@@ -225,7 +225,7 @@ Bool RRScreenInit(ScreenPtr pScreen)
     if (!RRInit ())
 	return FALSE;
 
-    pScrPriv = (rrScrPrivPtr) xcalloc (1, sizeof (rrScrPrivRec));
+    pScrPriv = (rrScrPrivPtr) calloc(1, sizeof (rrScrPrivRec));
     if (!pScrPriv)
 	return FALSE;
 
@@ -302,7 +302,7 @@ RRFreeClient (pointer data, XID id)
 	    	*pHead = pRREvent->next;
 	}
     }
-    xfree ((pointer) pRREvent);
+    free((pointer) pRREvent);
     return 1;
 }
 
@@ -316,9 +316,9 @@ RRFreeEvents (pointer data, XID id)
     for (pCur = *pHead; pCur; pCur = pNext) {
 	pNext = pCur->next;
 	FreeResource (pCur->clientResource, RRClientType);
-	xfree ((pointer) pCur);
+	free((pointer) pCur);
     }
-    xfree ((pointer) pHead);
+    free((pointer) pHead);
     return 1;
 }
 

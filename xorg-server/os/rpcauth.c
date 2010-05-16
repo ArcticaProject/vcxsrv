@@ -66,7 +66,7 @@ authdes_ezdecode(const char *inmsg, int len)
     XDR             xdr;
     SVCXPRT         xprt;
 
-    temp_inmsg = xalloc(len);
+    temp_inmsg = malloc(len);
     memmove(temp_inmsg, inmsg, len);
 
     memset((char *)&msg, 0, sizeof(msg));
@@ -79,7 +79,7 @@ authdes_ezdecode(const char *inmsg, int len)
     why = AUTH_FAILED; 
     xdrmem_create(&xdr, temp_inmsg, len, XDR_DECODE);
 
-    if ((r.rq_clntcred = xalloc(MAX_AUTH_BYTES)) == NULL)
+    if ((r.rq_clntcred = malloc(MAX_AUTH_BYTES)) == NULL)
         goto bad1;
     r.rq_xprt = &xprt;
 
@@ -106,7 +106,7 @@ authdes_ezdecode(const char *inmsg, int len)
     return (((struct authdes_cred *) r.rq_clntcred)->adc_fullname.name); 
 
 bad2:
-    xfree(r.rq_clntcred);
+    free(r.rq_clntcred);
 bad1:
     return ((char *)0); /* ((struct authdes_cred *) NULL); */
 }

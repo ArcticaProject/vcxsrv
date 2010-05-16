@@ -98,7 +98,7 @@ StringToBusType(const char* busID, const char **retID)
     s = xstrdup(busID);
     p = strtok(s, ":");
     if (p == NULL || *p == 0) {
-	xfree(s);
+	free(s);
 	return BUS_NONE;
     }
     if (!xf86NameCmp(p, "pci") || !xf86NameCmp(p, "agp"))
@@ -108,7 +108,7 @@ StringToBusType(const char* busID, const char **retID)
     if (ret != BUS_NONE)
 	if (retID)
 	    *retID = busID + strlen(p) + 1;
-    xfree(s);
+    free(s);
     return ret;
 }
 
@@ -295,8 +295,8 @@ xf86ClearEntityListForScreen(int scrnIndex)
 	xf86Entities[entityIndex]->inUse = FALSE;
 	/* disable resource: call the disable function */
     }
-    xfree(pScrn->entityList);
-    xfree(pScrn->entityInstanceList);
+    free(pScrn->entityList);
+    free(pScrn->entityInstanceList);
     pScrn->entityList = NULL;
     pScrn->entityInstanceList = NULL;
 }

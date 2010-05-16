@@ -56,7 +56,7 @@ typedef void (*did_proc)(int scrnIndex, unsigned char *data, void *closure);
 static DisplayModePtr
 modeCalloc(void)
 {
-    return xcalloc(1, sizeof(DisplayModeRec));
+    return calloc(1, sizeof(DisplayModeRec));
 }
 
 /*

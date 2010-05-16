@@ -129,7 +129,7 @@ fbdevHWFreeRec(ScrnInfoPtr pScrn)
 		return;
 	if (FBDEVHWPTR(pScrn) == NULL)
 		return;
-	xfree(FBDEVHWPTR(pScrn));
+	free(FBDEVHWPTR(pScrn));
 	FBDEVHWPTRLVAL(pScrn) = NULL;
 }
 

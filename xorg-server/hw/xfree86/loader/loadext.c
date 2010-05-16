@@ -54,7 +54,7 @@ NewExtensionModule(void)
 	numExtensionModules = 0;
 
     n = numExtensionModules + 1;
-    ExtensionModuleList = xrealloc(ExtensionModuleList,
+    ExtensionModuleList = realloc(ExtensionModuleList,
 				   (n + 1) * sizeof(ExtensionModule));
     if (ExtensionModuleList == NULL) {
 	ExtensionModuleList = save;
@@ -268,7 +268,7 @@ free_nodes(NODE * nodelist)
 
     for (n = nodelist; n;) {
 	nextnode = n->n_next;
-	xfree(n);
+	free(n);
 	n = nextnode;
     }
 }
@@ -379,9 +379,9 @@ tsort(void)
 	    ErrorF("tsort: internal error -- could not find cycle");
     }
     if (cycle_buf)
-	xfree(cycle_buf);
+	free(cycle_buf);
     if (longest_cycle)
-	xfree(longest_cycle);
+	free(longest_cycle);
     if (graph)
 	free_nodes(graph);
 }
@@ -433,7 +433,7 @@ LoaderSortExtensions(void)
     if (graph)
 	free_nodes(graph);
     newList[i].name = NULL;
-    xfree(ExtensionModuleList);
+    free(ExtensionModuleList);
     ExtensionModuleList = newList;
 #ifdef DEBUG
     for (i = 0; ExtensionModuleList[i].name; i++)

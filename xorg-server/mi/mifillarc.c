@@ -546,13 +546,13 @@ miFillEllipseI(
     int *widths;
     int *wids;
 
-    points = xalloc(sizeof(DDXPointRec) * arc->height);
+    points = malloc(sizeof(DDXPointRec) * arc->height);
     if (!points)
 	return;
-    widths = xalloc(sizeof(int) * arc->height);
+    widths = malloc(sizeof(int) * arc->height);
     if (!widths)
     {
-	xfree(points);
+	free(points);
 	return;
     }
     miFillArcSetup(arc, &info);
@@ -570,8 +570,8 @@ miFillEllipseI(
 	ADDSPANS();
     }
     (*pGC->ops->FillSpans)(pDraw, pGC, pts - points, points, widths, FALSE);
-    xfree(widths);
-    xfree(points);
+    free(widths);
+    free(points);
 }
 
 static void
@@ -589,13 +589,13 @@ miFillEllipseD(
     int *widths;
     int *wids;
 
-    points = xalloc(sizeof(DDXPointRec) * arc->height);
+    points = malloc(sizeof(DDXPointRec) * arc->height);
     if (!points)
 	return;
-    widths = xalloc(sizeof(int) * arc->height);
+    widths = malloc(sizeof(int) * arc->height);
     if (!widths)
     {
-	xfree(points);
+	free(points);
 	return;
     }
     miFillArcDSetup(arc, &info);
@@ -613,8 +613,8 @@ miFillEllipseD(
 	ADDSPANS();
     }
     (*pGC->ops->FillSpans)(pDraw, pGC, pts - points, points, widths, FALSE);
-    xfree(widths);
-    xfree(points);
+    free(widths);
+    free(points);
 }
 
 #define ADDSPAN(l,r) \
@@ -661,13 +661,13 @@ miFillArcSliceI(
     slw = arc->height;
     if (slice.flip_top || slice.flip_bot)
 	slw += (arc->height >> 1) + 1;
-    points = xalloc(sizeof(DDXPointRec) * slw);
+    points = malloc(sizeof(DDXPointRec) * slw);
     if (!points)
 	return;
-    widths = xalloc(sizeof(int) * slw);
+    widths = malloc(sizeof(int) * slw);
     if (!widths)
     {
-	xfree(points);
+	free(points);
 	return;
     }
     if (pGC->miTranslate)
@@ -698,8 +698,8 @@ miFillArcSliceI(
 	}
     }
     (*pGC->ops->FillSpans)(pDraw, pGC, pts - points, points, widths, FALSE);
-    xfree(widths);
-    xfree(points);
+    free(widths);
+    free(points);
 }
 
 static void
@@ -725,13 +725,13 @@ miFillArcSliceD(
     slw = arc->height;
     if (slice.flip_top || slice.flip_bot)
 	slw += (arc->height >> 1) + 1;
-    points = xalloc(sizeof(DDXPointRec) * slw);
+    points = malloc(sizeof(DDXPointRec) * slw);
     if (!points)
 	return;
-    widths = xalloc(sizeof(int) * slw);
+    widths = malloc(sizeof(int) * slw);
     if (!widths)
     {
-	xfree(points);
+	free(points);
 	return;
     }
     if (pGC->miTranslate)
@@ -762,8 +762,8 @@ miFillArcSliceD(
 	}
     }
     (*pGC->ops->FillSpans)(pDraw, pGC, pts - points, points, widths, FALSE);
-    xfree(widths);
-    xfree(points);
+    free(widths);
+    free(points);
 }
 
 /* MIPOLYFILLARC -- The public entry for the PolyFillArc request.

@@ -47,7 +47,7 @@ static void fake_init_sprite(DeviceIntPtr dev)
     sprite = dev->spriteInfo->sprite;
 
     sprite->spriteTraceSize = 10;
-    sprite->spriteTrace = xcalloc(sprite->spriteTraceSize, sizeof(WindowPtr));
+    sprite->spriteTrace = calloc(sprite->spriteTraceSize, sizeof(WindowPtr));
     sprite->spriteTraceGood = 1;
     sprite->spriteTrace[0] = &root;
     sprite->hot.x = SPRITE_X;
@@ -132,7 +132,7 @@ void init_window(WindowPtr window, WindowPtr parent, int id)
         window->drawable.height = 200;
     }
     window->parent = parent;
-    window->optional = xcalloc(1, sizeof(WindowOptRec));
+    window->optional = calloc(1, sizeof(WindowOptRec));
     g_assert(window->optional);
 }
 
@@ -152,6 +152,7 @@ void init_simple(void)
     screen.SetCursorPosition = set_cursor_pos;
 
     dixResetPrivates();
+    InitAtoms();
     XInputExtensionInit();
     init_window(&root, NULL, ROOT_WINDOW_ID);
     init_window(&window, &root, CLIENT_WINDOW_ID);

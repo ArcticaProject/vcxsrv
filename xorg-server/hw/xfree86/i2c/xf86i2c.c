@@ -598,7 +598,7 @@ xf86I2CWriteVec(I2CDevPtr d, I2CByte *vec, int nValues)
 I2CDevPtr
 xf86CreateI2CDevRec(void) 
 {
-    return xcalloc(1, sizeof(I2CDevRec));
+    return calloc(1, sizeof(I2CDevRec));
 }
 
 /* Unlink an I2C device. If you got the I2CDevRec from xf86CreateI2CDevRec
@@ -623,7 +623,7 @@ xf86DestroyI2CDevRec(I2CDevPtr d, Bool unalloc)
 		   "I2C device \"%s:%s\" removed.\n",
 		   d->pI2CBus->BusName, d->DevName);
 
-	if (unalloc) xfree(d);
+	if (unalloc) free(d);
     }
 }
 
@@ -695,7 +695,7 @@ xf86CreateI2CBusRec(void)
 {
     I2CBusPtr b;
 
-    b = (I2CBusPtr) xcalloc(1, sizeof(I2CBusRec));
+    b = (I2CBusPtr) calloc(1, sizeof(I2CBusRec));
 
     if (b != NULL) {
 	b->scrnIndex = -1;
@@ -751,7 +751,7 @@ xf86DestroyI2CBusRec(I2CBusPtr b, Bool unalloc, Bool devs_too)
 	xf86DrvMsg(b->scrnIndex, X_INFO, "I2C bus \"%s\" removed.\n",
 		   b->BusName);
 
-	if (unalloc) xfree(b);
+	if (unalloc) free(b);
     }
 }
 

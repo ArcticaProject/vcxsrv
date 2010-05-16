@@ -90,7 +90,7 @@ xf86CrtcCreate (ScrnInfoPtr		scrn,
     xf86CrtcConfigPtr   xf86_config = XF86_CRTC_CONFIG_PTR(scrn);
     xf86CrtcPtr		crtc, *crtcs;
 
-    crtc = xcalloc (sizeof (xf86CrtcRec), 1);
+    crtc = calloc(sizeof (xf86CrtcRec), 1);
     if (!crtc)
 	return NULL;
     crtc->version = XF86_CRTC_VERSION;
@@ -118,20 +118,20 @@ xf86CrtcCreate (ScrnInfoPtr		scrn,
     crtc->gamma_size = 256;
     crtc->gamma_red = malloc(3 * crtc->gamma_size * sizeof (CARD16));
     if (!crtc->gamma_red) {
-	xfree (crtc);
+	free(crtc);
 	return NULL;
     }
     crtc->gamma_green = crtc->gamma_red + crtc->gamma_size;
     crtc->gamma_blue = crtc->gamma_green + crtc->gamma_size;
 
     if (xf86_config->crtc)
-	crtcs = xrealloc (xf86_config->crtc,
+	crtcs = realloc(xf86_config->crtc,
 			  (xf86_config->num_crtc + 1) * sizeof (xf86CrtcPtr));
     else
-	crtcs = xalloc ((xf86_config->num_crtc + 1) * sizeof (xf86CrtcPtr));
+	crtcs = malloc((xf86_config->num_crtc + 1) * sizeof (xf86CrtcPtr));
     if (!crtcs)
     {
-	xfree (crtc);
+	free(crtc);
 	return NULL;
     }
     xf86_config->crtc = crtcs;
@@ -156,9 +156,9 @@ xf86CrtcDestroy (xf86CrtcPtr crtc)
 	    break;
 	}
     if (crtc->params)
-	xfree (crtc->params);
+	free(crtc->params);
     free(crtc->gamma_red);
-    xfree (crtc);
+    free(crtc);
 }
 
 
@@ -381,8 +381,8 @@ done:
     }
 
     if (adjusted_mode->name)
-	    xfree(adjusted_mode->name);
-    xfree(adjusted_mode);
+	    free(adjusted_mode->name);
+    free(adjusted_mode);
 
     if (didLock)
 	crtc->funcs->unlock (crtc);
@@ -479,7 +479,7 @@ xf86OutputSetMonitor (xf86OutputPtr output)
 	return;
 
     if (output->options)
-	xfree (output->options);
+	free(output->options);
 
     output->options = xnfalloc (sizeof (xf86OutputOptions));
     memcpy (output->options, xf86OutputOptions, sizeof (xf86OutputOptions));
@@ -493,7 +493,7 @@ xf86OutputSetMonitor (xf86OutputPtr output)
 	monitor = output->name;
     else
 	xf86MarkOptionUsedByName (output->scrn->options, option_name);
-    xfree (option_name);
+    free(option_name);
     output->conf_monitor = xf86findMonitor (monitor,
 					    xf86configptr->conf_monitor_lst);
     /*
@@ -595,7 +595,7 @@ xf86OutputCreate (ScrnInfoPtr		    scrn,
     else
 	len = 0;
 
-    output = xcalloc (sizeof (xf86OutputRec) + len, 1);
+    output = calloc(sizeof (xf86OutputRec) + len, 1);
     if (!output)
 	return NULL;
     output->scrn = scrn;
@@ -618,20 +618,20 @@ xf86OutputCreate (ScrnInfoPtr		    scrn,
 	xf86OutputSetMonitor (output);
 	if (xf86OutputIgnored (output))
 	{
-	    xfree (output);
+	    free(output);
 	    return FALSE;
 	}
     }
     
     
     if (xf86_config->output)
-	outputs = xrealloc (xf86_config->output,
+	outputs = realloc(xf86_config->output,
 			  (xf86_config->num_output + 1) * sizeof (xf86OutputPtr));
     else
-	outputs = xalloc ((xf86_config->num_output + 1) * sizeof (xf86OutputPtr));
+	outputs = malloc((xf86_config->num_output + 1) * sizeof (xf86OutputPtr));
     if (!outputs)
     {
-	xfree (output);
+	free(output);
 	return NULL;
     }
 
@@ -657,14 +657,14 @@ Bool
 xf86OutputRename (xf86OutputPtr output, const char *name)
 {
     int	    len = strlen(name) + 1;
-    char    *newname = xalloc (len);
+    char    *newname = malloc(len);
     
     if (!newname)
 	return FALSE;	/* so sorry... */
     
     strcpy (newname, name);
     if (output->name && output->name != (char *) (output + 1))
-	xfree (output->name);
+	free(output->name);
     output->name = newname;
     xf86OutputSetMonitor (output);
     if (xf86OutputIgnored (output))
@@ -702,8 +702,8 @@ xf86OutputDestroy (xf86OutputPtr output)
 	    break;
 	}
     if (output->name && output->name != (char *) (output + 1))
-	xfree (output->name);
-    xfree (output);
+	free(output->name);
+    free(output);
 }
 
 /*
@@ -950,7 +950,7 @@ xf86PickCrtcs (ScrnInfoPtr	scrn,
     if (modes[n] == NULL)
 	return best_score;
     
-    crtcs = xalloc (config->num_output * sizeof (xf86CrtcPtr));
+    crtcs = malloc(config->num_output * sizeof (xf86CrtcPtr));
     if (!crtcs)
 	return best_score;
 
@@ -1006,7 +1006,7 @@ xf86PickCrtcs (ScrnInfoPtr	scrn,
 	    memcpy (best_crtcs, crtcs, config->num_output * sizeof (xf86CrtcPtr));
 	}
     }
-    xfree (crtcs);
+    free(crtcs);
     return best_score;
 }
 
@@ -1415,8 +1415,8 @@ xf86SortModes (DisplayModePtr input)
 	if (!strcmp (o->name, n->name) && xf86ModesEqual (o, n))
 	{
 	    o->next = n->next;
-	    xfree (n->name);
-	    xfree (n);
+	    free(n->name);
+	    free(n);
 	    n = o;
 	}
     }
@@ -2101,8 +2101,8 @@ xf86TargetPreferred(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
 		config->num_output * sizeof(DisplayModePtr));
     }
 
-    xfree(preferred);
-    xfree(preferred_match);
+    free(preferred);
+    free(preferred_match);
     return ret;
 }
 
@@ -2157,7 +2157,7 @@ no_aspect_match:
     ret = TRUE;
 
 out:
-    xfree(aspects);
+    free(aspects);
     return ret;
 }
 
@@ -2391,8 +2391,8 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
      */
     if (!xf86InitialOutputPositions (scrn, modes))
     {
-	xfree (crtcs);
-	xfree (modes);
+	free(crtcs);
+	free(modes);
 	return FALSE;
     }
 
@@ -2406,8 +2406,8 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
      */
     if (!xf86PickCrtcs (scrn, crtcs, modes, 0, width, height))
     {
-	xfree (crtcs);
-	xfree (modes);
+	free(crtcs);
+	free(modes);
 	return FALSE;
     }
     
@@ -2494,8 +2494,8 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
     /* Mirror output modes to scrn mode list */
     xf86SetScrnInfoModes (scrn);
     
-    xfree (crtcs);
-    xfree (modes);
+    free(crtcs);
+    free(modes);
     return TRUE;
 }
 
@@ -2934,7 +2934,7 @@ xf86OutputSetEDID (xf86OutputPtr output, xf86MonPtr edid_mon)
 #endif
     
     if (output->MonInfo != NULL)
-	xfree(output->MonInfo);
+	free(output->MonInfo);
     
     output->MonInfo = edid_mon;
 

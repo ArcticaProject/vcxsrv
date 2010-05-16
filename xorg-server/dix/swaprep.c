@@ -99,7 +99,7 @@ CopySwap32Write(ClientPtr pClient, int size, CARD32 *pbuf)
     CARD32 tmpbuf[1];
     
     /* Allocate as big a buffer as we can... */
-    while (!(pbufT = xalloc(bufsize)))
+    while (!(pbufT = malloc(bufsize)))
     {
         bufsize >>= 1;
 	if (bufsize == 4)
@@ -131,7 +131,7 @@ CopySwap32Write(ClientPtr pClient, int size, CARD32 *pbuf)
 	}
 
     if (pbufT != tmpbuf)
-	xfree (pbufT);
+	free(pbufT);
 }
 
 /**
@@ -147,7 +147,7 @@ CopySwap16Write(ClientPtr pClient, int size, short *pbuf)
     short tmpbuf[2];
     
     /* Allocate as big a buffer as we can... */
-    while (!(pbufT = xalloc(bufsize)))
+    while (!(pbufT = malloc(bufsize)))
     {
         bufsize >>= 1;
 	if (bufsize == 4)
@@ -179,7 +179,7 @@ CopySwap16Write(ClientPtr pClient, int size, short *pbuf)
 	}
 
     if (pbufT != tmpbuf)
-	xfree (pbufT);
+	free(pbufT);
 }
 
 
@@ -1262,7 +1262,7 @@ WriteSConnectionInfo(ClientPtr pClient, unsigned long size, char *pInfo)
 {
     char	*pInfoTBase;
 
-    pInfoTBase = xalloc(size);
+    pInfoTBase = malloc(size);
     if (!pInfoTBase)
     {
 	pClient->noClientException = -1;
@@ -1270,7 +1270,7 @@ WriteSConnectionInfo(ClientPtr pClient, unsigned long size, char *pInfo)
     }
     SwapConnSetupInfo(pInfo, pInfoTBase);
     (void)WriteToClient(pClient, (int)size, (char *) pInfoTBase);
-    xfree(pInfoTBase);
+    free(pInfoTBase);
 }
 
 void

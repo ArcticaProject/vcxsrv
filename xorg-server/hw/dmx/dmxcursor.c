@@ -663,7 +663,7 @@ static Bool _dmxRealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
 
     DMXDBG2("_dmxRealizeCursor(%d,%p)\n", pScreen->myNum, pCursor);
 
-    DMX_SET_CURSOR_PRIV(pCursor, pScreen, xalloc(sizeof(*pCursorPriv)));
+    DMX_SET_CURSOR_PRIV(pCursor, pScreen, malloc(sizeof(*pCursorPriv)));
     if (!DMX_GET_CURSOR_PRIV(pCursor, pScreen))
 	return FALSE;
 
@@ -701,7 +701,7 @@ static Bool _dmxUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor)
 
     if (dmxScreen->beDisplay) {
 	if (dmxBEFreeCursor(pScreen, pCursor))
-	    xfree(DMX_GET_CURSOR_PRIV(pCursor, pScreen));
+	    free(DMX_GET_CURSOR_PRIV(pCursor, pScreen));
     }
     DMX_SET_CURSOR_PRIV(pCursor, pScreen, NULL);
 

@@ -52,13 +52,6 @@ Equipment Corporation.
 #define INPUTONLY_LEGAL_MASK (CWWinGravity | CWEventMask | \
                               CWDontPropagate | CWOverrideRedirect | CWCursor )
 
-/* Various of the DIX function interfaces were not designed to allow
- * the client->errorValue to be set on BadValue and other errors.
- * Rather than changing interfaces and breaking untold code we introduce
- * a new global that dispatch can use.
- */
-extern XID clientErrorValue;   /* XXX this is a kludge */
-
 int PanoramiXCreateWindow(ClientPtr client)
 {
     PanoramiXRes *parent, *newWin;
@@ -120,7 +113,7 @@ int PanoramiXCreateWindow(ClientPtr client)
 	}
     }
 
-    if(!(newWin = xalloc(sizeof(PanoramiXRes))))
+    if(!(newWin = malloc(sizeof(PanoramiXRes))))
         return BadAlloc;
 
     newWin->type = XRT_WINDOW;
@@ -160,7 +153,7 @@ int PanoramiXCreateWindow(ClientPtr client)
     if (result == Success)
         AddResource(newWin->info[0].id, XRT_WINDOW, newWin);
     else 
-        xfree(newWin);
+        free(newWin);
 
     return (result);
 }
@@ -579,7 +572,7 @@ int PanoramiXGetGeometry(ClientPtr client)
     }
 
     WriteReplyToClient(client, sizeof(xGetGeometryReply), &rep);
-    return (client->noClientException);
+    return Success;
 }
 
 int PanoramiXTranslateCoords(ClientPtr client)
@@ -649,7 +642,7 @@ int PanoramiXTranslateCoords(ClientPtr client)
     }
 
     WriteReplyToClient(client, sizeof(xTranslateCoordsReply), &rep);
-    return(client->noClientException);
+    return Success;
 }
 
 int PanoramiXCreatePixmap(ClientPtr client)
@@ -666,7 +659,7 @@ int PanoramiXCreatePixmap(ClientPtr client)
     if (result != Success)
 	return (result == BadValue) ? BadDrawable : result;
 
-    if(!(newPix = xalloc(sizeof(PanoramiXRes))))
+    if(!(newPix = malloc(sizeof(PanoramiXRes))))
 	return BadAlloc;
 
     newPix->type = XRT_PIXMAP;
@@ -685,7 +678,7 @@ int PanoramiXCreatePixmap(ClientPtr client)
     if (result == Success)
 	AddResource(newPix->info[0].id, XRT_PIXMAP, newPix);
     else 
-	xfree(newPix);
+	free(newPix);
 
     return (result);
 }
@@ -771,7 +764,7 @@ int PanoramiXCreateGC(ClientPtr client)
 	}
     }
 
-    if(!(newGC = xalloc(sizeof(PanoramiXRes))))
+    if(!(newGC = malloc(sizeof(PanoramiXRes))))
         return BadAlloc;
 
     newGC->type = XRT_GC;
@@ -795,7 +788,7 @@ int PanoramiXCreateGC(ClientPtr client)
     if (result == Success)
         AddResource(newGC->info[0].id, XRT_GC, newGC);
     else 
-        xfree(newGC);
+        free(newGC);
 
     return (result);
 }
@@ -1064,7 +1057,7 @@ int PanoramiXCopyArea(ClientPtr client)
 	}
 
 	pitch = PixmapBytePad(stuff->width, drawables[0]->depth); 
-	if(!(data = xcalloc(1, stuff->height * pitch)))
+	if(!(data = calloc(1, stuff->height * pitch)))
 	    return BadAlloc;
 
 	XineramaGetImageData(drawables, srcx, srcy, 
@@ -1076,7 +1069,7 @@ int PanoramiXCopyArea(ClientPtr client)
 	    VALIDATE_DRAWABLE_AND_GC(dst->info[j].id, pDst, DixWriteAccess);
 	    if(drawables[0]->depth != pDst->depth) {
 		client->errorValue = stuff->dstDrawable;
-		xfree(data);
+		free(data);
 		return (BadMatch);
 	    }
 
@@ -1087,9 +1080,7 @@ int PanoramiXCopyArea(ClientPtr client)
 	    if(dstShared) break;
 	}
 
-	xfree(data);
-
-	result = Success;
+	free(data);
     } else {
 	DrawablePtr pDst = NULL, pSrc = NULL;
 	GCPtr pGC = NULL;
@@ -1157,11 +1148,9 @@ int PanoramiXCopyArea(ClientPtr client)
 		client, &totalReg, stuff->dstDrawable, X_CopyArea, 0);
 	    REGION_UNINIT(pScreen, &totalReg);
 	}
-	
-	result = client->noClientException;
     }
 
-    return (result);
+    return Success;
 }
 
 
@@ -1271,7 +1260,7 @@ int PanoramiXCopyPlane(ClientPtr client)
 	REGION_UNINIT(pScreen, &totalReg);
     }
 
-    return (client->noClientException);
+    return Success;
 }
 
 
@@ -1301,7 +1290,7 @@ int PanoramiXPolyPoint(ClientPtr client)
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
     npoint = bytes_to_int32((client->req_len << 2) - sizeof(xPolyPointReq));
     if (npoint > 0) {
-        origPts = xalloc(npoint * sizeof(xPoint));
+        origPts = malloc(npoint * sizeof(xPoint));
         memcpy((char *) origPts, (char *) &stuff[1], npoint * sizeof(xPoint));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1328,10 +1317,10 @@ int PanoramiXPolyPoint(ClientPtr client)
 	    result = (* SavedProcVector[X_PolyPoint])(client);
 	    if(result != Success) break;
         }
-        xfree(origPts);
+        free(origPts);
         return (result);
     } else
-	return (client->noClientException);
+	return Success;
 }
 
 
@@ -1361,7 +1350,7 @@ int PanoramiXPolyLine(ClientPtr client)
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
     npoint = bytes_to_int32((client->req_len << 2) - sizeof(xPolyLineReq));
     if (npoint > 0){
-        origPts = xalloc(npoint * sizeof(xPoint));
+        origPts = malloc(npoint * sizeof(xPoint));
         memcpy((char *) origPts, (char *) &stuff[1], npoint * sizeof(xPoint));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1388,10 +1377,10 @@ int PanoramiXPolyLine(ClientPtr client)
 	    result = (* SavedProcVector[X_PolyLine])(client);
 	    if(result != Success) break;
         }
-        xfree(origPts);
+        free(origPts);
         return (result);
    } else
-	return (client->noClientException);
+	return Success;
 }
 
 
@@ -1424,7 +1413,7 @@ int PanoramiXPolySegment(ClientPtr client)
     if(nsegs & 4) return BadLength;
     nsegs >>= 3;
     if (nsegs > 0) {
-	origSegs = xalloc(nsegs * sizeof(xSegment));
+	origSegs = malloc(nsegs * sizeof(xSegment));
         memcpy((char *) origSegs, (char *) &stuff[1], nsegs * sizeof(xSegment));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1451,10 +1440,10 @@ int PanoramiXPolySegment(ClientPtr client)
 	    result = (* SavedProcVector[X_PolySegment])(client);
 	    if(result != Success) break;
     	}
-	xfree(origSegs);
+	free(origSegs);
 	return (result);
     } else
-	  return (client->noClientException);
+	  return Success;
 }
 
 
@@ -1487,7 +1476,7 @@ int PanoramiXPolyRectangle(ClientPtr client)
     if(nrects & 4) return BadLength;
     nrects >>= 3;
     if (nrects > 0){
-	origRecs = xalloc(nrects * sizeof(xRectangle));
+	origRecs = malloc(nrects * sizeof(xRectangle));
 	memcpy((char *)origRecs,(char *)&stuff[1],nrects * sizeof(xRectangle));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1513,10 +1502,10 @@ int PanoramiXPolyRectangle(ClientPtr client)
 	    result = (* SavedProcVector[X_PolyRectangle])(client);
 	    if(result != Success) break;
 	}
-	xfree(origRecs);
+	free(origRecs);
 	return (result);
     } else
-       return (client->noClientException);
+       return Success;
 }
 
 
@@ -1549,7 +1538,7 @@ int PanoramiXPolyArc(ClientPtr client)
     if(narcs % sizeof(xArc)) return BadLength;
     narcs /= sizeof(xArc);
     if (narcs > 0){
-	origArcs = xalloc(narcs * sizeof(xArc));
+	origArcs = malloc(narcs * sizeof(xArc));
 	memcpy((char *) origArcs, (char *) &stuff[1], narcs * sizeof(xArc));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1573,10 +1562,10 @@ int PanoramiXPolyArc(ClientPtr client)
 	    result = (* SavedProcVector[X_PolyArc])(client);
 	    if(result != Success) break;
         }
-	xfree(origArcs);
+	free(origArcs);
 	return (result);
     } else
-       return (client->noClientException);
+       return Success;
 }
 
 
@@ -1607,7 +1596,7 @@ int PanoramiXFillPoly(ClientPtr client)
 
     count = bytes_to_int32((client->req_len << 2) - sizeof(xFillPolyReq));
     if (count > 0){
-	locPts = xalloc(count * sizeof(DDXPointRec));
+	locPts = malloc(count * sizeof(DDXPointRec));
 	memcpy((char *)locPts, (char *)&stuff[1], count * sizeof(DDXPointRec));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1634,10 +1623,10 @@ int PanoramiXFillPoly(ClientPtr client)
 	    result = (* SavedProcVector[X_FillPoly])(client);
 	    if(result != Success) break;
 	}
-	xfree(locPts);
+	free(locPts);
 	return (result);
     } else
-       return (client->noClientException);
+       return Success;
 }
 
 
@@ -1670,7 +1659,7 @@ int PanoramiXPolyFillRectangle(ClientPtr client)
     if(things & 4) return BadLength;
     things >>= 3;
     if (things > 0){
-	origRects = xalloc(things * sizeof(xRectangle));
+	origRects = malloc(things * sizeof(xRectangle));
 	memcpy((char*)origRects,(char*)&stuff[1], things * sizeof(xRectangle));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1695,10 +1684,10 @@ int PanoramiXPolyFillRectangle(ClientPtr client)
 	    result = (* SavedProcVector[X_PolyFillRectangle])(client);
 	    if(result != Success) break;
 	}
-	xfree(origRects);
+	free(origRects);
 	return (result);
     } else
-       return (client->noClientException);
+       return Success;
 }
 
 
@@ -1731,7 +1720,7 @@ int PanoramiXPolyFillArc(ClientPtr client)
     if (narcs % sizeof(xArc)) return BadLength;
     narcs /= sizeof(xArc);
     if (narcs > 0) {
-	origArcs = xalloc(narcs * sizeof(xArc));
+	origArcs = malloc(narcs * sizeof(xArc));
 	memcpy((char *) origArcs, (char *)&stuff[1], narcs * sizeof(xArc));
         FOR_NSCREENS_FORWARD(j){
 
@@ -1756,10 +1745,10 @@ int PanoramiXPolyFillArc(ClientPtr client)
 	    result = (* SavedProcVector[X_PolyFillArc])(client);
 	    if(result != Success) break;
 	}
-	xfree(origArcs);
+	free(origArcs);
 	return (result);
     } else
-       return (client->noClientException);
+       return Success;
 }
 
 
@@ -1907,7 +1896,7 @@ int PanoramiXGetImage(ClientPtr client)
 	    linesPerBuf = h;
     }
     length = linesPerBuf * widthBytesLine;
-    if(!(pBuf = xalloc(length)))
+    if(!(pBuf = malloc(length)))
 	return (BadAlloc);
 
     WriteReplyToClient(client, sizeof (xGetImageReply), &xgi);
@@ -1953,8 +1942,8 @@ int PanoramiXGetImage(ClientPtr client)
             }
 	}
     }
-    xfree(pBuf);
-    return (client->noClientException);
+    free(pBuf);
+    return Success;
 }
 
 
@@ -2141,7 +2130,7 @@ int PanoramiXCreateColormap(ClientPtr client)
     if (result != Success)
 	return (result == BadValue) ? BadWindow : result;
 
-    if(!(newCmap = xalloc(sizeof(PanoramiXRes))))
+    if(!(newCmap = malloc(sizeof(PanoramiXRes))))
         return BadAlloc;
 
     newCmap->type = XRT_COLORMAP;
@@ -2161,7 +2150,7 @@ int PanoramiXCreateColormap(ClientPtr client)
     if (result == Success)
         AddResource(newCmap->info[0].id, XRT_COLORMAP, newCmap);
     else 
-        xfree(newCmap);
+        free(newCmap);
 
     return (result);
 }
@@ -2212,7 +2201,7 @@ PanoramiXCopyColormapAndFree(ClientPtr client)
     if (result != Success)
         return (result == BadValue) ? BadColor : result;
 
-    if(!(newCmap = xalloc(sizeof(PanoramiXRes))))
+    if(!(newCmap = malloc(sizeof(PanoramiXRes))))
         return BadAlloc;
 
     newCmap->type = XRT_COLORMAP;
@@ -2230,7 +2219,7 @@ PanoramiXCopyColormapAndFree(ClientPtr client)
     if (result == Success)
         AddResource(newCmap->info[0].id, XRT_COLORMAP, newCmap);
     else 
-        xfree(newCmap);
+        free(newCmap);
 
     return (result);
 }

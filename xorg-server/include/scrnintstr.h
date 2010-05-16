@@ -121,11 +121,6 @@ typedef    void (* GetSpansProcPtr)(
 	int /*nspans*/,
 	char * /*pdstStart*/);
 
-typedef    void (* PointerNonInterestBoxProcPtr)(
-        DeviceIntPtr /*pDev*/,
-	ScreenPtr /*pScreen*/,
-	BoxPtr /*pBox*/);
-
 typedef    void (* SourceValidateProcPtr)(
 	DrawablePtr /*pDrawable*/,
 	int /*x*/,
@@ -172,14 +167,6 @@ typedef    void (* WindowExposuresProcPtr)(
 	WindowPtr /*pWindow*/,
 	RegionPtr /*prgn*/,
 	RegionPtr /*other_exposed*/);
-
-typedef    void (* PaintWindowProcPtr)(
-	WindowPtr /*pWindow*/,
-	RegionPtr /*pRegion*/,
-	int /*what*/);
-
-typedef PaintWindowProcPtr PaintWindowBackgroundProcPtr;
-typedef PaintWindowProcPtr PaintWindowBorderProcPtr;
 
 typedef    void (* CopyWindowProcPtr)(
 	WindowPtr /*pWindow*/,
@@ -493,7 +480,6 @@ typedef struct _Screen {
     SaveScreenProcPtr		SaveScreen;
     GetImageProcPtr		GetImage;
     GetSpansProcPtr		GetSpans;
-    PointerNonInterestBoxProcPtr PointerNonInterestBox;
     SourceValidateProcPtr	SourceValidate;
 
     /* Window Procedures */
@@ -507,8 +493,6 @@ typedef struct _Screen {
     ValidateTreeProcPtr		ValidateTree;
     PostValidateTreeProcPtr	PostValidateTree;
     WindowExposuresProcPtr	WindowExposures;
-    PaintWindowBackgroundProcPtr PaintWindowBackground; /** unused */
-    PaintWindowBorderProcPtr	PaintWindowBorder; /** unused */
     CopyWindowProcPtr		CopyWindow;
     ClearToBackgroundProcPtr	ClearToBackground;
     ClipNotifyProcPtr		ClipNotify;
