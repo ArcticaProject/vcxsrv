@@ -206,6 +206,7 @@
 
 #define XF86XK_Suspend		0x1008FFA7   /* Sleep to RAM                */
 #define XF86XK_Hibernate	0x1008FFA8   /* Sleep to disk               */
+#define XF86XK_TouchpadToggle	0x1008FFA9   /* Toggle between touchpad/trackstick */
 
 /* Keys for special action keys (hot keys) */
 /* Virtual terminals on some operating systems */
