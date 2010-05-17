@@ -90,6 +90,7 @@ Section "VcXsrv (required)"
   File "..\swrast_dri_dbg.dll"
 !ifndef VS2008
   File "msvcr100.dll"
+  File "msvcp100.dll"
   File "msvcr100d.dll"
 !endif
   SetOutPath $INSTDIR\fonts
@@ -243,6 +244,7 @@ Section "Uninstall"
   Delete "$INSTDIR\swrast_dri_dbg.dll"
 !ifndef VS2008
   Delete "$INSTDIR\msvcr100.dll"
+  Delete "$INSTDIR\msvcp100.dll"
   Delete "$INSTDIR\msvcr100d.dll"
 !endif
 
