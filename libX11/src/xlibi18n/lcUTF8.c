@@ -1822,7 +1822,7 @@ iconv_cstombs(XlcConv conv, XPointer *from, int *from_left,
 	      XPointer *to, int *to_left, XPointer *args, int num_args)
 {
     XlcCharSet charset;
-    char *name;
+    const char *name;
     Utf8Conv convptr;
     int i;
     unsigned char const *src;
@@ -1895,7 +1895,7 @@ static XlcConvMethodsRec iconv_cstombs_methods = {
 };
 
 static XlcConv
-open_iconv_cstombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_cstombs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     lazy_init_all_charsets();
     return create_conv(from_lcd, &iconv_cstombs_methods);
@@ -1990,7 +1990,7 @@ static XlcConvMethodsRec iconv_mbstocs_methods = {
 };
 
 static XlcConv
-open_iconv_mbstocs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbstocs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_tocs_conv(from_lcd, &iconv_mbstocs_methods);
 }
@@ -2085,7 +2085,7 @@ static XlcConvMethodsRec iconv_mbtocs_methods = {
 };
 
 static XlcConv
-open_iconv_mbtocs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbtocs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_tocs_conv(from_lcd, &iconv_mbtocs_methods );
 }
@@ -2153,7 +2153,7 @@ static XlcConvMethodsRec iconv_mbstostr_methods = {
 };
 
 static XlcConv
-open_iconv_mbstostr(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbstostr(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_mbstostr_methods);
 }
@@ -2199,7 +2199,7 @@ static XlcConvMethodsRec iconv_strtombs_methods= {
 };
 
 static XlcConv
-open_iconv_strtombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_strtombs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_strtombs_methods);
 }
@@ -2260,7 +2260,7 @@ static XlcConvMethodsRec iconv_mbstowcs_methods = {
 } ;
 
 static XlcConv
-open_iconv_mbstowcs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbstowcs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_mbstowcs_methods);
 }
@@ -2307,7 +2307,7 @@ static XlcConvMethodsRec iconv_wcstombs_methods = {
 } ;
 
 static XlcConv
-open_iconv_wcstombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_wcstombs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_wcstombs_methods);
 }
