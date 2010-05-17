@@ -1450,7 +1450,6 @@ DbeResetProc(ExtensionEntry *extEntry)
 	    if (pDbeScreenPriv->ResetProc)
 		(*pDbeScreenPriv->ResetProc)(pScreen);
 
-	    dixFreePrivates(pDbeScreenPriv->devPrivates);
 	    free(pDbeScreenPriv);
 	}
     }
@@ -1589,8 +1588,7 @@ DbeExtensionInit(void)
 
 	pScreen = screenInfo.screens[i];
 
-	if (!(pDbeScreenPriv =
-              (DbeScreenPrivPtr)calloc(1, sizeof(DbeScreenPrivRec))))
+	if (!(pDbeScreenPriv = malloc (sizeof (DbeScreenPrivRec))))
 	{
             /* If we can not alloc a window or screen private,
              * then free any privates that we already alloc'ed and return
