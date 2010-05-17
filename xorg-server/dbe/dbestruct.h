@@ -217,10 +217,6 @@ typedef struct _DbeScreenPrivRec
 		ScreenPtr /*pScreen*/
 );
 
-    /* Device-specific private information.
-     */
-    PrivateRec	*devPrivates;
-
 } DbeScreenPrivRec, *DbeScreenPrivPtr;
 
 #endif /* DBE_STRUCT_H */
