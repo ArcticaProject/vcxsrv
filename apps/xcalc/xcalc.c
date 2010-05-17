@@ -339,14 +339,7 @@ void Syntax(argc, argv)
  */
 
 /*ARGSUSED*/
-Boolean convert(w, selection, target, type, value, length, format)
-    Widget	w;
-    Atom	*selection;
-    Atom	*target;
-    Atom	*type;
-    XtPointer	*value;
-    unsigned long	*length;
-    int		*format;
+Boolean convert(Widget	w, Atom	*selection, Atom	*target, Atom	*type, XtPointer	*value, unsigned long	*length, int		*format)
 {
     if (*target == XA_STRING)
     {
@@ -364,9 +357,7 @@ Boolean convert(w, selection, target, type, value, length, format)
  * called when xcalc loses ownership of the selection.
  */
 /*ARGSUSED*/
-void lose(w, selection)
-    Widget	w;
-    Atom	*selection;
+void lose(Widget	w, Atom	*selection)
 {
     XawToggleUnsetCurrent(LCD);
 }
@@ -375,10 +366,7 @@ void lose(w, selection)
  * called when some other client got the selection.
  */
 /*ARGSUSED*/
-void done(w, selection, target)
-    Widget	w;
-    Atom	*selection;
-    Atom	*target;
+void done(Widget	w, Atom	*selection, Atom	*target)
 {
     selstr[0] = '\0';
 }

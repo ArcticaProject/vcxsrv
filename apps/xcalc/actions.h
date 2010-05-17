@@ -36,14 +36,14 @@ from the X Consortium.
  */
 
 extern void
-    add(), back(), bell(), clearit(), cosine(), decimal(),
-    degree(), digit(), divide(), e(), enter(), epower(), equal(),
-    exchange(), factorial(), 
-    inverse(), leftParen(), logarithm(), multiply(), naturalLog(),
-    negate(), nop(), off(), pi(), power(), quit(), recall(),
-    reciprocal(), rightParen(), roll(), scientific(), selection(), sine(),
-    square(), squareRoot(), store(), subtract(), sum(),
-    tangent(), tenpower(), XexchangeY();
+    add(Widget,XEvent*,String*,Cardinal*), back(Widget,XEvent*,String*,Cardinal*), bell(Widget,XEvent*,String*,Cardinal*), clearit(Widget,XEvent*,String*,Cardinal*), cosine(Widget,XEvent*,String*,Cardinal*), decimal(Widget,XEvent*,String*,Cardinal*),
+    degree(Widget,XEvent*,String*,Cardinal*), digit(Widget,XEvent*,String*,Cardinal*), divide(Widget,XEvent*,String*,Cardinal*), e(Widget,XEvent*,String*,Cardinal*), enter(Widget,XEvent*,String*,Cardinal*), epower(Widget,XEvent*,String*,Cardinal*), equal(Widget,XEvent*,String*,Cardinal*),
+    exchange(Widget,XEvent*,String*,Cardinal*), factorial(Widget,XEvent*,String*,Cardinal*), 
+    inverse(Widget,XEvent*,String*,Cardinal*), leftParen(Widget,XEvent*,String*,Cardinal*), logarithm(Widget,XEvent*,String*,Cardinal*), multiply(Widget,XEvent*,String*,Cardinal*), naturalLog(Widget,XEvent*,String*,Cardinal*),
+    negate(Widget,XEvent*,String*,Cardinal*), nop(Widget,XEvent*,String*,Cardinal*), off(Widget,XEvent*,String*,Cardinal*), pi(Widget,XEvent*,String*,Cardinal*), power(Widget,XEvent*,String*,Cardinal*), quit(Widget,XEvent*,String*,Cardinal*), recall(Widget,XEvent*,String*,Cardinal*),
+    reciprocal(Widget,XEvent*,String*,Cardinal*), rightParen(Widget,XEvent*,String*,Cardinal*), roll(Widget,XEvent*,String*,Cardinal*), scientific(Widget,XEvent*,String*,Cardinal*), selection(Widget,XEvent*,String*,Cardinal*), sine(Widget,XEvent*,String*,Cardinal*),
+    square(Widget,XEvent*,String*,Cardinal*), squareRoot(Widget,XEvent*,String*,Cardinal*), store(Widget,XEvent*,String*,Cardinal*), subtract(Widget,XEvent*,String*,Cardinal*), sum(Widget,XEvent*,String*,Cardinal*),
+    tangent(Widget,XEvent*,String*,Cardinal*), tenpower(Widget,XEvent*,String*,Cardinal*), XexchangeY(Widget,XEvent*,String*,Cardinal*);
 
 /*
  * 	calculator action table

@@ -1,6 +1,6 @@
 WINAPP = xcalc
 
-DEFINES += XT_NO_SM
+DEFINES += XT_NO_SM IEEE
 
 INCLUDELIBFILES = \
  $(MHMAKECONF)\libXt\src\$(OBJDIR)\libXt.lib \
