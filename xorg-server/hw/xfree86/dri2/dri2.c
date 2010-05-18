@@ -421,22 +421,24 @@ do_get_buffers(DrawablePtr pDraw, int *width, int *height,
     if (need_real_front > 0) {
 	if (allocate_or_reuse_buffer(pDraw, ds, pPriv, DRI2BufferFrontLeft,
 				     front_format, dimensions_match,
-				     &buffers[i++]))
+				     &buffers[i]))
 	    buffers_changed = 1;
 
 	if (buffers[i] == NULL)
 	    goto err_out;
+	i++;
     }
 
     if (need_fake_front > 0) {
 	if (allocate_or_reuse_buffer(pDraw, ds, pPriv, DRI2BufferFakeFrontLeft,
 				     front_format, dimensions_match,
-				     &buffers[i++]))
+				     &buffers[i]))
 	    buffers_changed = 1;
 
 	if (buffers[i] == NULL)
 	    goto err_out;
 
+	i++;
 	have_fake_front = 1;
     }
 
