@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
 
 #include "xcb.h"
@@ -216,6 +217,24 @@ static int _xcb_open(const char *host, char *protocol, const int display)
     return fd;
 }
 
+static int _xcb_socket(int family, int type, int proto)
+{
+    int fd;
+
+#ifdef SOCK_CLOEXEC
+    fd = socket(family, type | SOCK_CLOEXEC, proto);
+    if (fd == -1 && errno == EINVAL)
+#endif
+    {
+	fd = socket(family, type, proto);
+#ifndef _MSC_VER
+	if (fd >= 0)
+	    fcntl(fd, F_SETFD, FD_CLOEXEC);
+#endif
+    }
+    return fd;
+}
+
 #ifdef DNETCONN
 static int _xcb_open_decnet(const char *host, const char *protocol, const unsigned short port)
 {
@@ -238,7 +257,7 @@ static int _xcb_open_decnet(const char *host, const char *protocol, const unsign
         return -1;
     addr.sdn_objnum = 0;
 
-    fd = socket(PF_DECnet, SOCK_STREAM, 0);
+    fd = _xcb_socket(PF_DECnet, SOCK_STREAM, 0);
     if(fd == -1)
         return -1;
 
@@ -324,7 +343,7 @@ static int _xcb_open_tcp(const char *host, char *protocol, const unsigned short 
 
     for(addr = results; addr; addr = addr->ai_next)
     {
-        fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+        fd = _xcb_socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
         if(fd >= 0) {
             char on = 1;
             setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(on));
@@ -353,7 +372,7 @@ static int _xcb_open_unix(char *protocol, const char *file)
 #ifdef HAVE_SOCKADDR_SUN_LEN
     addr.sun_len = SUN_LEN(&addr);
 #endif
-    fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    fd = _xcb_socket(AF_UNIX, SOCK_STREAM, 0);
     if(fd == -1)
         return -1;
     if(connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
@@ -379,7 +398,7 @@ static int _xcb_open_abstract(char *protocol, const char *file, size_t filelen)
 #ifdef HAVE_SOCKADDR_SUN_LEN
     addr.sun_len = 1 + filelen;
 #endif
-    fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    fd = _xcb_socket(AF_UNIX, SOCK_STREAM, 0);
     if (fd == -1)
         return -1;
     if (connect(fd, (struct sockaddr *) &addr, namelen) == -1) {

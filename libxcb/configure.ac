@@ -32,7 +32,7 @@ fi
 AC_SUBST(HTML_CHECK_RESULT)
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XCBPROTO, xcb-proto >= 1.5)
+PKG_CHECK_MODULES(XCBPROTO, xcb-proto >= 1.6)
 NEEDED="pthread-stubs xau >= 0.99.2"
 PKG_CHECK_MODULES(NEEDED, $NEEDED)
 
@@ -121,9 +121,8 @@ AC_PREREQ([2.59c], [], [AC_SUBST([htmldir], [m4_ifset([AC_PACKAGE_TARNAME],
 XCB_CHECK_DOXYGEN()
 
 case $host_os in
-	# darwin has poll() but can't be used to poll character devices
-	# darwin10 (SnowLeopard) should be tested as well once released
-	darwin7*) ;; darwin8*) ;; darwin9*) ;;
+	# darwin has poll() but can't be used to poll character devices (atleast through SnowLeopard)
+	darwin*) ;;
 	*)
 		AC_CHECK_FUNC(poll, [AC_DEFINE(USE_POLL, 1, [poll() function is available])], )
 	;;

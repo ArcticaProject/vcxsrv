@@ -225,8 +225,17 @@ enum; the value is restricted to one of the constants named in the enum.
   defining the set of values included, and a list containing these values.
   value-mask-type gives the type of the bitmask; this must be CARD16 or
   CARD32.  value-mask-name gives the field name of the bitmask, and
-  value-list-name gives the field name of the list of values.
+  value-list-name gives the field name of the list of values. Please use
+  <switch> instead for new protocol definitions.
 
+<switch name="identifier"> switch expression
+    <bitcase> bitcase expression, fields </bitcase> </switch>
+
+  This element represents conditional inclusion of fields. It can be viewed
+  as sequence of multiple ifs: if ( switch expression & bitcase expression )
+  is equal to bitcase expression, bitcase fields are included in structure.
+  It can be used only as the last field of structure. New protocol definitions
+  should prefer to use this instead of <valueparam>.
 
 Expressions
 -----------
@@ -256,3 +265,22 @@ Expressions
 
   The bit element represents a literal bitmask value in an expression.
   The integer must be in the range 0..31, expanding to (1<<n) in C.
+
+<enumref ref="identifier">enum item identifier</enumref>
+
+  This element represents a reference to item of enum.
+
+<unop op="operator">expression</unop>
+
+  This element represents a unary operator, with the op attribute specifying
+  which operator. The only supported operation so far is ~, and its semantic
+  is identical to the corresponding operator in C.
+
+<sumof ref="identifier" />
+
+  This element represents a sumation of the elements of the referenced list.
+
+<popcount>expression</popcount>
+
+  This element represents the number of bits set in the expression.
+

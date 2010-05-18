@@ -55,6 +55,36 @@ authorization from the authors.
     <xsd:attribute name="mask" type="xsd:string" use="optional" />
   </xsd:complexType>
 
+  <!-- case expression -->
+  <xsd:complexType name="caseexpr">
+    <xsd:sequence>
+      <!-- case expression: -->
+      <xsd:group ref="expression" minOccurs="1" maxOccurs="1" />
+      <!-- match -->
+      <xsd:group ref="fields" minOccurs="1" maxOccurs="unbounded" />
+      <xsd:choice>
+        <xsd:element ref="switch" minOccurs="0" maxOccurs="unbounded" />
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- switch expression -->
+  <xsd:complexType name="switchexpr">
+    <xsd:sequence>
+      <!-- switch(expression) -->
+      <xsd:group ref="expression" minOccurs="1" maxOccurs="1" />
+      <xsd:choice>
+        <!-- bitcase expression - bit test -->
+        <xsd:element name="bitcase" type="caseexpr" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:choice>
+      <!-- default: -->
+      <xsd:group ref="fields" minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+  </xsd:complexType>
+
+  <xsd:element name="switch" type="switchexpr" />
+
   <!-- field replaces FIELD, PARAM, and REPLY. -->
   <xsd:element name="field" type="var" />
 
@@ -89,7 +119,40 @@ authorization from the authors.
           </xsd:attribute>
         </xsd:complexType>
       </xsd:element>
+      <xsd:element name="unop">
+         <xsd:complexType>
+            <xsd:sequence>
+              <xsd:group ref="expression" />
+            </xsd:sequence>
+            <xsd:attribute name="op" use="required">
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="~" />
+                </xsd:restriction>
+              </xsd:simpleType>
+            </xsd:attribute>
+         </xsd:complexType>
+      </xsd:element>
       <xsd:element name="fieldref" type="xsd:string" />
+      <xsd:element name="enumref">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="ref" use="required" type="xsd:string" />
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="popcount">
+        <xsd:complexType>
+          <xsd:group ref="expression" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="sumof">
+        <xsd:complexType>
+          <xsd:attribute name="ref" use="required" type="xsd:string" />
+        </xsd:complexType>
+      </xsd:element>
       <xsd:element name="value" type="dec-or-hex-integer" />
       <xsd:element name="bit" type="xsd:integer" />
     </xsd:choice>
@@ -126,7 +189,12 @@ authorization from the authors.
 
   <!-- Type for a structure -->
   <xsd:complexType name="struct">
-    <xsd:group ref="fields" minOccurs="1" maxOccurs="unbounded" />
+    <xsd:sequence>
+      <xsd:group ref="fields" minOccurs="1" maxOccurs="unbounded" />
+      <xsd:choice minOccurs="0" maxOccurs="1">
+        <xsd:element ref="switch" />
+      </xsd:choice>
+    </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string" use="required" />
   </xsd:complexType>
 
@@ -166,12 +234,20 @@ authorization from the authors.
               <xsd:element ref="exprfield" />
               <xsd:element ref="valueparam" />
             </xsd:choice>
+            <xsd:choice minOccurs="0" maxOccurs="1">
+              <xsd:element ref="switch" />
+            </xsd:choice>
             <xsd:element name="reply" minOccurs="0" maxOccurs="1">
               <xsd:complexType>
-                <xsd:choice minOccurs="1" maxOccurs="unbounded">
-                  <xsd:group ref="fields" />
-                  <xsd:element ref="valueparam" />
-                </xsd:choice>
+                <xsd:sequence>
+                  <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                    <xsd:group ref="fields" />
+                    <xsd:element ref="valueparam" />
+                  </xsd:choice>
+                  <xsd:choice minOccurs="0" maxOccurs="1">
+                    <xsd:element ref="switch" />
+                  </xsd:choice>
+                </xsd:sequence>
               </xsd:complexType>
             </xsd:element>
           </xsd:sequence>

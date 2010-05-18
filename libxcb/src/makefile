@@ -10,6 +10,7 @@ DEFINES += PTW32_STATIC_LIB
 XCBPROTO_XCBINCLUDEDIR = ..\xcb-proto\src
 
 XMLFILES := $(notdir $(wildcard $(XCBPROTO_XCBINCLUDEDIR)\*.xml))
+XMLFILES := $(filter-out xkb.xml, $(XMLFILES))
 
 EXTSOURCES := $(XMLFILES:%.xml=%.c)
 CSRCS += $(EXTSOURCES)

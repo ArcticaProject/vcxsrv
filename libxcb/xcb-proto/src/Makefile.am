@@ -21,6 +21,7 @@ xcbinclude_HEADERS = \
 	xfixes.xml \
 	xinerama.xml \
 	xinput.xml \
+	xkb.xml \
 	xprint.xml \
 	xselinux.xml \
 	xtest.xml \
