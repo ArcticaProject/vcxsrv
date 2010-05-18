@@ -3,16 +3,12 @@ features such as image compositing and trapezoid rasterization.
 
 Please submit bugs & patches to the libpixman bugzilla:
 
-       https://bugs.freedesktop.org/enter_bug.cgi?product=pixman
+        https://bugs.freedesktop.org/enter_bug.cgi?product=pixman
 
-All questions regarding this software should be directed to either the 
-Xorg mailing list:
+All questions regarding this software should be directed to the pixman
+mailing list:
 
-       http://lists.freedesktop.org/mailman/listinfo/xorg
-
-or the cairo mailing list:
-
-       http://lists.freedesktop.org/mailman/listinfo/cairo
+        http://lists.freedesktop.org/mailman/listinfo/pixman
 
 The master development code repository can be found at:
 

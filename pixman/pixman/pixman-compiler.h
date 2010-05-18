@@ -77,6 +77,71 @@
 #   define PIXMAN_GET_THREAD_LOCAL(name)				\
     (&name)
 
+#elif defined(__MINGW32__) && !defined(__WIN64)
+
+/* We can't include <windows.h> as it causes carious clashes with
+ * identifiers in pixman, sigh. So just declare the functions we need
+ * here.
+ */
+extern __stdcall long InterlockedCompareExchange(long volatile *, long, long);
+#define InterlockedCompareExchangePointer(d,e,c)			\
+    (void *)InterlockedCompareExchange((long volatile *)(d),(long)(e),(long)(c))
+extern __stdcall int TlsAlloc (void);
+extern __stdcall void *TlsGetValue (unsigned);
+extern __stdcall int TlsSetValue (unsigned, void *);
+extern __stdcall void *CreateMutexA(void *, int, char *);
+extern __stdcall int CloseHandle(void *);
+extern __stdcall unsigned WaitForSingleObject (void *, unsigned);
+extern __stdcall int ReleaseMutex (void *);
+
+#   define PIXMAN_DEFINE_THREAD_LOCAL(type, name)			\
+    static volatile int tls_ ## name ## _initialized = 0;		\
+    static void *tls_ ## name ## _mutex = NULL;				\
+    static unsigned tls_ ## name ## _index;				\
+									\
+    static type *							\
+    tls_ ## name ## _alloc (void)					\
+    {									\
+        type *value = calloc (1, sizeof (type));			\
+        if (value)							\
+            TlsSetValue (tls_ ## name ## _index, value);		\
+        return value;							\
+    }									\
+									\
+    static force_inline type *						\
+    tls_ ## name ## _get (void)						\
+    {									\
+	type *value;							\
+	if (!tls_ ## name ## _initialized)				\
+	{								\
+	    if (!tls_ ## name ## _mutex)				\
+	    {								\
+		void *mutex = CreateMutexA (NULL, 0, NULL);		\
+		if (InterlockedCompareExchangePointer (			\
+			&tls_ ## name ## _mutex, mutex, NULL) != NULL)	\
+		{							\
+		    CloseHandle (mutex);				\
+		}							\
+	    }								\
+	    WaitForSingleObject (tls_ ## name ## _mutex, 0xFFFFFFFF);	\
+	    if (!tls_ ## name ## _initialized)				\
+	    {								\
+		tls_ ## name ## _index = TlsAlloc ();			\
+		tls_ ## name ## _initialized = 1;			\
+	    }								\
+	    ReleaseMutex (tls_ ## name ## _mutex);			\
+	}								\
+	if (tls_ ## name ## _index == 0xFFFFFFFF)			\
+	    return NULL;						\
+	value = TlsGetValue (tls_ ## name ## _index);			\
+	if (!value)							\
+	    value = tls_ ## name ## _alloc ();				\
+	return value;							\
+    }
+
+#   define PIXMAN_GET_THREAD_LOCAL(name)				\
+    tls_ ## name ## _get ()
+
 #elif defined(_MSC_VER)
 
 #   define PIXMAN_DEFINE_THREAD_LOCAL(type, name)			\
@@ -99,16 +164,16 @@
     }									\
 									\
     static type *							\
-    tls_ ## name ## _alloc (key)					\
+    tls_ ## name ## _alloc (void)					\
     {									\
-	type *value = malloc (sizeof (type));				\
+	type *value = calloc (1, sizeof (type));			\
 	if (value)							\
-	    pthread_setspecific (key, value);				\
+	    pthread_setspecific (tls_ ## name ## _key, value);		\
 	return value;							\
     }									\
 									\
     static force_inline type *						\
-    tls_ ## name ## _get (key)						\
+    tls_ ## name ## _get (void)						\
     {									\
 	type *value = NULL;						\
 	if (pthread_once (&tls_ ## name ## _once_control,		\
@@ -116,13 +181,13 @@
 	{								\
 	    value = pthread_getspecific (tls_ ## name ## _key);		\
 	    if (!value)							\
-		value = tls_ ## name ## _alloc (key);			\
+		value = tls_ ## name ## _alloc ();			\
 	}								\
 	return value;							\
     }
 
 #   define PIXMAN_GET_THREAD_LOCAL(name)				\
-    tls_ ## name ## _get (tls_ ## name ## _key)
+    tls_ ## name ## _get ()
 
 #else
 

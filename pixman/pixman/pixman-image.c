@@ -394,8 +394,10 @@ compute_image_info (pixman_image_t *image)
 	    }
 	}
 
-	if (image->common.repeat != PIXMAN_REPEAT_NONE &&
-	    !PIXMAN_FORMAT_A (image->bits.format))
+	if (image->common.repeat != PIXMAN_REPEAT_NONE				&&
+	    !PIXMAN_FORMAT_A (image->bits.format)				&&
+	    PIXMAN_FORMAT_TYPE (image->bits.format) != PIXMAN_TYPE_GRAY		&&
+	    PIXMAN_FORMAT_TYPE (image->bits.format) != PIXMAN_TYPE_COLOR)
 	{
 	    flags |= FAST_PATH_IS_OPAQUE;
 	}
