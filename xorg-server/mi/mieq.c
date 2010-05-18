@@ -381,7 +381,7 @@ mieqProcessDeviceEvent(DeviceIntPtr dev,
         case ET_KeyRelease:
         case ET_ButtonPress:
         case ET_ButtonRelease:
-            if (dev && screen && screen != DequeueScreen(dev) && !handler) {
+            if (dev && screen && dev->spriteInfo->sprite && screen != DequeueScreen(dev) && !handler) {
                 DequeueScreen(dev) = screen;
                 x = event->device_event.root_x;
                 y = event->device_event.root_y;

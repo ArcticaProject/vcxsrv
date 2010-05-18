@@ -2746,6 +2746,9 @@ CheckMotion(DeviceEvent *ev, DeviceIntPtr pDev)
 
     CHECKEVENT(ev);
 
+    if (!pSprite)
+      return FALSE;
+
     prevSpriteWin = pSprite->win;
 
     if (ev && !syncEvents.playingEvents)
@@ -3152,7 +3155,7 @@ NewCurrentScreen(DeviceIntPtr pDev, ScreenPtr newScreen, int x, int y)
 	}
     } else
 #endif
-    if (newScreen != pSprite->hotPhys.pScreen)
+    if (newScreen != pSprite->hotPhys.pScreen && WindowTable[newScreen->myNum])
 	ConfineCursorToWindow(pDev, WindowTable[newScreen->myNum],
                 TRUE, FALSE);
 }

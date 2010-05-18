@@ -928,6 +928,7 @@ ProcessRawEvent(RawDeviceEvent *ev, DeviceIntPtr device)
         }
 
         for (i = 0; i < screenInfo.numScreens; i++)
+          if (WindowTable[i])
             DeliverEventsToWindow(device, WindowTable[i], xi, 1,
                                   GetEventFilter(device, xi), NULL);
         free(xi);
@@ -969,7 +970,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
     {
         kbd = GetPairedDevice(device);
         mouse = device;
-        if (!kbd->key) /* can happen with floating SDs */
+        if (kbd && !kbd->key) /* can happen with floating SDs */
             kbd = NULL;
     } else
     {
@@ -1027,6 +1028,8 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
         case ET_KeyRelease:
         case ET_ProximityIn:
         case ET_ProximityOut:
+            if (!device->spriteInfo->sprite)
+              return;
             GetSpritePosition(device, &rootX, &rootY);
             event->root_x = rootX;
             event->root_y = rootY;

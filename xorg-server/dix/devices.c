@@ -920,6 +920,10 @@ CloseDownDevices(void)
     {
         if (!IsMaster(dev) && dev->u.master)
             dev->u.master = NULL;
+        /* Initialise the sprite and paired members of all devices
+           to avoid crashes in CloseDevice later */
+        dev->spriteInfo->sprite=NULL;
+        dev->spriteInfo->paired=NULL;
     }
 
     CloseDeviceList(&inputInfo.devices);
