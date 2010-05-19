@@ -1391,6 +1391,13 @@ extern Bool _XCopyEventCookie(
         XGenericEventCookie *in,
         XGenericEventCookie *out);
 
+/* lcFile.c */
+
+extern void xlocaledir(
+    char *buf,
+    int buf_len
+);
+
 _XFUNCPROTOEND
 
 #endif /* _XLIBINT_H_ */

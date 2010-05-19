@@ -141,7 +141,7 @@ T}
 XkbAXN_AXKWarningMask	(1<<6)	T{
 AccessX warning notification wanted
 T}
-XkbAXN_AllEventsMask	(0x7f)	T{
+XkbAllAccessXEventsMask	(0x7f)	T{
 All AccessX features notifications wanted
 T}
 .TE

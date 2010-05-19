@@ -594,7 +594,7 @@ _XimDefaultArea(
     if(XGetGeometry(im->core.display, (Drawable)ic->core.focus_window,
 		&root_return, &x_return, &y_return, &width_return,
 		&height_return, &border_width_return, &depth_return)
-		== (Status)NULL) {
+		== (Status)Success) {
 	return True;
     }
     area.x	= 0;
@@ -623,7 +623,7 @@ _XimDefaultColormap(
 	return True;
     }
     if(XGetWindowAttributes(im->core.display, ic->core.client_window,
-					&win_attr) == (Status)NULL) {
+					&win_attr) == (Status)Success) {
 	return True;
     }
 

@@ -54,6 +54,3 @@ doc_includes = \
 include $(top_srcdir)/specs/troffrules.in
 
 EXTRA_DIST += $(doc_includes)
-
-
-

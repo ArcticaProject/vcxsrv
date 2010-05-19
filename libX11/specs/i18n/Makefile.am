@@ -23,8 +23,6 @@
 
 # Based on xc/doc/specs/i18n/Makefile from X11R6.9
 
-doc_sources = Framework.ms LocaleDB.ms Trans.ms 
+doc_sources = Framework.ms LocaleDB.ms Trans.ms
 
 include $(top_srcdir)/specs/troffrules.in
-
-

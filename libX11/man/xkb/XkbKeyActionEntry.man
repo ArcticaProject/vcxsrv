@@ -21,13 +21,13 @@
 .\"
 .TH XkbKeyActionEntry __libmansuffix__ __xorgversion__ "XKB FUNCTIONS"
 .SH NAME
-XkbKeyActionEntry \- Returns the key action corresponding to group grp and shift 
-level lvl from the 
-two-dimensional table of key actions associated with the key corresponding to 
+XkbKeyActionEntry \- Returns a pointer to the key action corresponding to
+group grp and shift level lvl from the two-dimensional table of key actions
+associated with the key corresponding to
 keycode
 .SH SYNOPSIS
 .HP
-.B XkbAction XkbKeyActionEntry
+.B XkbAction * XkbKeyActionEntry
 .BI "(\^XkbDescPtr " "xkb" "\^,"
 .BI "KeyCode " "keycode" "\^,"
 .BI "int " "shift" "\^,"

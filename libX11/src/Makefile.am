@@ -22,7 +22,8 @@ AM_CFLAGS= \
 	$(X11_CFLAGS) \
 	$(BIGFONT_CFLAGS) \
 	$(XDMCP_CFLAGS) \
-	$(XMALLOC_ZERO_CFLAGS)
+	$(XMALLOC_ZERO_CFLAGS) \
+	$(CWARNFLAGS)
 
 #
 # =============================== I18N =============================

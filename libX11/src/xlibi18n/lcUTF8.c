@@ -1822,7 +1822,7 @@ iconv_cstombs(XlcConv conv, XPointer *from, int *from_left,
 	      XPointer *to, int *to_left, XPointer *args, int num_args)
 {
     XlcCharSet charset;
-    const char *name;
+    char const *name;
     Utf8Conv convptr;
     int i;
     unsigned char const *src;
@@ -1866,11 +1866,11 @@ iconv_cstombs(XlcConv conv, XPointer *from, int *from_left,
 
     /* Use stdc iconv to convert widechar -> multibyte */
 
-	count = wctomb(dst, wc);
+	count = wctomb((char *)dst, wc);
 	if (count == 0)
 	    break;
 	if (count == -1) {
-	    count = wctomb(dst, BAD_WCHAR);
+	    count = wctomb((char *)dst, BAD_WCHAR);
 	    if (count == 0)
 		break;
 	    unconv_num++;
@@ -1932,7 +1932,7 @@ iconv_mbstocs(XlcConv conv, XPointer *from, int *from_left,
 
     /* Uses stdc iconv to convert multibyte -> widechar */
 
-	consumed = mbtowc(&wc, src, srcend-src);
+	consumed = mbtowc(&wc, (const char *)src, srcend-src);
 	if (consumed == 0)
 	    break;
 	if (consumed == -1) {
@@ -2028,7 +2028,7 @@ iconv_mbtocs(XlcConv conv, XPointer *from, int *from_left,
 
     /* Uses stdc iconv to convert multibyte -> widechar */
 
-	consumed = mbtowc(&wc, src, srcend-src);
+	consumed = mbtowc(&wc, (const char *)src, srcend-src);
 	if (consumed == 0)
 	    break;
 	if (consumed == -1) {
@@ -2118,7 +2118,7 @@ iconv_mbstostr(XlcConv conv, XPointer *from, int *from_left,
 
     /* Uses stdc iconv to convert multibyte -> widechar */
 
-	consumed = mbtowc(&wc, src, srcend-src);
+	consumed = mbtowc(&wc, (const char *)src, srcend-src);
 	if (consumed == 0)
 	    break;
 	if (dst == dstend)
@@ -2177,7 +2177,7 @@ iconv_strtombs(XlcConv conv, XPointer *from, int *from_left,
     dstend = dst + *to_left;
 
     while (src < srcend) {
-	int count = wctomb(dst, *src);
+	int count = wctomb((char *)dst, *src);
 	if (count < 0)
 	    break;
 	dst += count;

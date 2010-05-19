@@ -44,11 +44,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 
 #define XLC_BUFSIZE 256
 
-extern void xlocaledir(
-    char *buf,
-    int buf_len
-);
-
 extern int _Xmbstowcs(
     wchar_t	*wstr,
     char	*str,

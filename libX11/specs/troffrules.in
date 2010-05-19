@@ -31,13 +31,40 @@ else
 printable_format = .ps
 endif
 
-if BUILD_SPECS
-doc_DATA =	$(doc_sources:.ms=.txt) \
+if ENABLE_SPECS
+if HAVE_GROFF_MS
+spec_DATA =	$(doc_sources:.ms=.txt) \
 		$(doc_sources:.ms=$(printable_format)) \
 		$(doc_sources:.ms=.html)
+specdir = $(docdir)/$(subdir)
+imagesdir = $(specdir)/images
 
-CLEANFILES = $(doc_DATA)
+CLEANFILES = $(spec_DATA)
 MOSTLYCLEANFILES = index.*
+
+# Install html generated images for specs
+install-data-local:
+	test -z "$(imagesdir)" || $(mkdir_p) "$(DESTDIR)$(imagesdir)"
+	@d="$(srcdir)/images/"; \
+	list=`ls $$d`; \
+	for p in $$list; do \
+	  echo " $(INSTALL_DATA) '$$d$$p' '$(DESTDIR)$(imagesdir)/$$p'"; \
+	  $(INSTALL_DATA) "$$d$$p" "$(DESTDIR)$(imagesdir)/$$p"; \
+	done;
+
+uninstall-local:
+	@if test -n $(DESTDIR)$(imagesdir); then \
+	  if test -d $(DESTDIR)$(imagesdir); then \
+	    list=`ls $(DESTDIR)$(imagesdir)`; \
+	    for p in $$list; do \
+	      echo " rm -f '$(DESTDIR)$(imagesdir)/$$p'"; \
+	      rm -f "$(DESTDIR)$(imagesdir)/$$p"; \
+	    done \
+	  fi; \
+	fi;
+
+mostlyclean-local:
+	@rm -fr images
 
 # Pass version string as a troff string for substitution
 GROFF_DEFS = -dxV="$(PACKAGE_STRING)"
@@ -57,9 +84,10 @@ SUFFIXES = .ms .ps .txt .html .pdf
 	 $< 2> index.$@.raw > $@
 
 .ms.html:
-	$(AM_V_GEN) $(GROFF) -Thtml $(GROFF_FLAGS) $< 2> index.$@.raw > $@
+	$(AM_V_GEN) $(GROFF) -Thtml -P-Dimages -P-I$*-image $(GROFF_FLAGS) $< 2> index.$@.raw > $@
 
 .ps.pdf:
 	$(AM_V_GEN) $(PS2PDF) $< $@
 
-endif BUILD_SPECS
+endif HAVE_GROFF_MS
+endif ENABLE_SPECS
