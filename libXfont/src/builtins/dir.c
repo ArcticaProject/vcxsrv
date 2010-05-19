@@ -25,6 +25,9 @@
 #include <config.h>
 #endif
 #include "builtin.h"
+#ifdef _MSC_VER
+#define strdup _strdup
+#endif
 
 static BuiltinDirPtr
 BuiltinDirsDup (const BuiltinDirPtr a_dirs,
