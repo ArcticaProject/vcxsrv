@@ -69,7 +69,6 @@ XChangeKeyboardMapping (
     req->firstKeyCode = first_keycode;
     req->keyCodes = nkeycodes;
     req->keySymsPerKeyCode = keysyms_per_keycode;
-    req->firstKeyCode = first_keycode;
     req->length += nkeycodes * keysyms_per_keycode;
     nbytes = keysyms_per_keycode * nkeycodes * 4;
     Data32 (dpy, (long *)keysyms, nbytes);

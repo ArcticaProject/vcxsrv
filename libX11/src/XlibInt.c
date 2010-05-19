@@ -86,14 +86,6 @@ xthread_t (*_Xthread_self_fn)(void) = NULL;
     (*(d)->lock->push_reader)(d,&(d)->lock->reply_awaiters_tail) : NULL)
 #define QueueEventReaderLock(d) ((d)->lock ? \
     (*(d)->lock->push_reader)(d,&(d)->lock->event_awaiters_tail) : NULL)
-
-#if defined(XTHREADS_WARN) || defined(XTHREADS_FILE_LINE)
-#define InternalLockDisplay(d,wskip) if ((d)->lock) \
-    (*(d)->lock->internal_lock_display)(d,wskip,__FILE__,__LINE__)
-#else
-#define InternalLockDisplay(d,wskip) if ((d)->lock) \
-    (*(d)->lock->internal_lock_display)(d,wskip)
-#endif
 #endif /* !USE_XCB */
 
 #else /* XTHREADS else */
@@ -101,7 +93,6 @@ xthread_t (*_Xthread_self_fn)(void) = NULL;
 #if !USE_XCB
 #define UnlockNextReplyReader(d)
 #define UnlockNextEventReader(d)
-#define InternalLockDisplay(d,wskip)
 #endif /* !USE_XCB */
 
 #endif /* XTHREADS else */
@@ -567,34 +558,49 @@ static int sync_hazard(Display *dpy)
 }
 
 static
-int _XSeqSyncFunction(
+void sync_while_locked(Display *dpy)
+{
+#ifdef XTHREADS
+    if (dpy->lock)
+        (*dpy->lock->user_lock_display)(dpy);
+#endif
+    UnlockDisplay(dpy);
+    SyncHandle();
+    InternalLockDisplay(dpy, /* don't skip user locks */ 0);
+#ifdef XTHREADS
+    if (dpy->lock)
+        (*dpy->lock->user_unlock_display)(dpy);
+#endif
+}
+
+void _XSeqSyncFunction(
     register Display *dpy)
 {
     xGetInputFocusReply rep;
     register xReq *req;
-    int sent_sync = 0;
 
-    LockDisplay(dpy);
     if ((dpy->request - dpy->last_request_read) >= (65535 - BUFSIZE/SIZEOF(xReq))) {
 	GetEmptyReq(GetInputFocus, req);
 	(void) _XReply (dpy, (xReply *)&rep, 0, xTrue);
-	sent_sync = 1;
+	sync_while_locked(dpy);
     } else if (sync_hazard(dpy))
 	_XSetPrivSyncFunction(dpy);
-    UnlockDisplay(dpy);
-    if (sent_sync)
-        SyncHandle();
-    return 0;
 }
 
+/* NOTE: only called if !XTHREADS, or when XInitThreads wasn't called. */
 static int
 _XPrivSyncFunction (Display *dpy)
 {
+#if XTHREADS
+    assert(!dpy->lock_fns);
+#endif
     assert(dpy->synchandler == _XPrivSyncFunction);
     assert((dpy->flags & XlibDisplayPrivSync) != 0);
     dpy->synchandler = dpy->savedsynchandler;
     dpy->savedsynchandler = NULL;
     dpy->flags &= ~XlibDisplayPrivSync;
+    if(dpy->synchandler)
+        dpy->synchandler(dpy);
     _XIDHandler(dpy);
     _XSeqSyncFunction(dpy);
     return 0;
@@ -602,6 +608,10 @@ _XPrivSyncFunction (Display *dpy)
 
 void _XSetPrivSyncFunction(Display *dpy)
 {
+#ifdef XTHREADS
+    if (dpy->lock_fns)
+        return;
+#endif
     if (!(dpy->flags & XlibDisplayPrivSync)) {
 	dpy->savedsynchandler = dpy->synchandler;
 	dpy->synchandler = _XPrivSyncFunction;
@@ -1536,15 +1546,13 @@ _XGetMiscCode(
     }
 }
 
-int
+void
 _XIDHandler(
     register Display *dpy)
 {
     xXCMiscGetXIDRangeReply grep;
     register xXCMiscGetXIDRangeReq *greq;
-    int sent_req = 0;
 
-    LockDisplay(dpy);
     if (dpy->resource_max == dpy->resource_mask + 1) {
 	_XGetMiscCode(dpy);
 	if (dpy->xcmisc_opcode > 0) {
@@ -1559,13 +1567,9 @@ _XIDHandler(
 		    dpy->resource_max += grep.count - 6;
 		dpy->resource_max <<= dpy->resource_shift;
 	    }
-	    sent_req = 1;
+	    sync_while_locked(dpy);
 	}
     }
-    UnlockDisplay(dpy);
-    if (sent_req)
-	SyncHandle();
-    return 0;
 }
 
 /*
@@ -3411,6 +3415,10 @@ void _XData32(
 #if (defined(_POSIX_SOURCE) && !defined(AIXV3) && !defined(__QNX__)) || defined(hpux) || defined(SVR4)
 #define NEED_UTSNAME
 #include <sys/utsname.h>
+#else
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #endif
 
 /*

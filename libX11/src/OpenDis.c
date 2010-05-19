@@ -93,8 +93,8 @@ XOpenDisplay (
 	register Display *dpy;		/* New Display object being created. */
 	register int i;
 	int j, k;			/* random iterator indexes */
-#if !USE_XCB
 	char *display_name;		/* pointer to display name */
+#if !USE_XCB
 	int endian;			/* to determine which endian. */
 	xConnClientPrefix client;	/* client information */
 	int idisplay;			/* display number */
@@ -119,12 +119,13 @@ XOpenDisplay (
 	long setuplength;	/* number of bytes in setup message */
 	long usedbytes = 0;     /* number of bytes we have processed */
 	unsigned long mask;
-       long int conn_buf_size;
-       char *xlib_buffer_size;
+	long int conn_buf_size;
+	char *xlib_buffer_size;
 
 #if !USE_XCB
 	bzero((char *) &client, sizeof(client));
 	bzero((char *) &prefix, sizeof(prefix));
+#endif /* !USE_XCB */
 
 	/*
 	 * If the display specifier string supplied as an argument to this
@@ -140,7 +141,6 @@ XOpenDisplay (
 		/* Display is non-NULL, copy the pointer */
 		display_name = (char *)display;
 	}
-#endif /* !USE_XCB */
 
 /*
  * Set the default error handlers.  This allows the global variables to
@@ -164,10 +164,29 @@ XOpenDisplay (
 
 #if USE_XCB
 	if(!_XConnectXCB(dpy, display, &fullname, &iscreen)) {
+		/* Try falling back on other transports if no transport specified */
+		const char *slash = strrchr(display_name, '/');
+		if(slash == NULL) {
+			const char *protocols[] = {"local", "unix", "tcp", "inet6", "inet", NULL};
+			const char **s;
+			size_t buf_size = strlen(display_name) + 7; // max strlen + 2 (null + /)
+			char *buf = Xmalloc(buf_size * sizeof(char));
+
+			if(buf) {
+				for(s = protocols; buf && *s; s++) {
+					snprintf(buf, buf_size, "%s/%s", *s, display_name);
+					if(_XConnectXCB(dpy, buf, &fullname, &iscreen))
+						goto fallback_success;
+				}
+				Xfree(buf);
+			}
+		}
+
 		dpy->display_name = fullname;
 		OutOfMemory(dpy, NULL);
 		return NULL;
 	}
+fallback_success:
 #else /* !USE_XCB */
 	if ((dpy->trans_conn = _X11TransConnectDisplay (
 					 display_name, &fullname, &idisplay,

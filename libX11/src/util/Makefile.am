@@ -1,7 +1,9 @@
 
 noinst_PROGRAMS=makekeys
 
-makekeys_CFLAGS=$(X11_CFLAGS)
+makekeys_CFLAGS = \
+	$(X11_CFLAGS) \
+	$(CWARNFLAGS)
 
 CC = @CC_FOR_BUILD@
 

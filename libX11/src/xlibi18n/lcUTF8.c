@@ -1822,7 +1822,7 @@ iconv_cstombs(XlcConv conv, XPointer *from, int *from_left,
 	      XPointer *to, int *to_left, XPointer *args, int num_args)
 {
     XlcCharSet charset;
-    char *name;
+    char const *name;
     Utf8Conv convptr;
     int i;
     unsigned char const *src;
@@ -1866,11 +1866,11 @@ iconv_cstombs(XlcConv conv, XPointer *from, int *from_left,
 
     /* Use stdc iconv to convert widechar -> multibyte */
 
-	count = wctomb(dst, wc);
+	count = wctomb((char *)dst, wc);
 	if (count == 0)
 	    break;
 	if (count == -1) {
-	    count = wctomb(dst, BAD_WCHAR);
+	    count = wctomb((char *)dst, BAD_WCHAR);
 	    if (count == 0)
 		break;
 	    unconv_num++;
@@ -1895,7 +1895,7 @@ static XlcConvMethodsRec iconv_cstombs_methods = {
 };
 
 static XlcConv
-open_iconv_cstombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_cstombs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     lazy_init_all_charsets();
     return create_conv(from_lcd, &iconv_cstombs_methods);
@@ -1932,7 +1932,7 @@ iconv_mbstocs(XlcConv conv, XPointer *from, int *from_left,
 
     /* Uses stdc iconv to convert multibyte -> widechar */
 
-	consumed = mbtowc(&wc, src, srcend-src);
+	consumed = mbtowc(&wc, (const char *)src, srcend-src);
 	if (consumed == 0)
 	    break;
 	if (consumed == -1) {
@@ -1990,7 +1990,7 @@ static XlcConvMethodsRec iconv_mbstocs_methods = {
 };
 
 static XlcConv
-open_iconv_mbstocs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbstocs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_tocs_conv(from_lcd, &iconv_mbstocs_methods);
 }
@@ -2028,7 +2028,7 @@ iconv_mbtocs(XlcConv conv, XPointer *from, int *from_left,
 
     /* Uses stdc iconv to convert multibyte -> widechar */
 
-	consumed = mbtowc(&wc, src, srcend-src);
+	consumed = mbtowc(&wc, (const char *)src, srcend-src);
 	if (consumed == 0)
 	    break;
 	if (consumed == -1) {
@@ -2085,7 +2085,7 @@ static XlcConvMethodsRec iconv_mbtocs_methods = {
 };
 
 static XlcConv
-open_iconv_mbtocs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbtocs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_tocs_conv(from_lcd, &iconv_mbtocs_methods );
 }
@@ -2118,7 +2118,7 @@ iconv_mbstostr(XlcConv conv, XPointer *from, int *from_left,
 
     /* Uses stdc iconv to convert multibyte -> widechar */
 
-	consumed = mbtowc(&wc, src, srcend-src);
+	consumed = mbtowc(&wc, (const char *)src, srcend-src);
 	if (consumed == 0)
 	    break;
 	if (dst == dstend)
@@ -2153,7 +2153,7 @@ static XlcConvMethodsRec iconv_mbstostr_methods = {
 };
 
 static XlcConv
-open_iconv_mbstostr(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbstostr(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_mbstostr_methods);
 }
@@ -2177,7 +2177,7 @@ iconv_strtombs(XlcConv conv, XPointer *from, int *from_left,
     dstend = dst + *to_left;
 
     while (src < srcend) {
-	int count = wctomb(dst, *src);
+	int count = wctomb((char *)dst, *src);
 	if (count < 0)
 	    break;
 	dst += count;
@@ -2199,7 +2199,7 @@ static XlcConvMethodsRec iconv_strtombs_methods= {
 };
 
 static XlcConv
-open_iconv_strtombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_strtombs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_strtombs_methods);
 }
@@ -2260,7 +2260,7 @@ static XlcConvMethodsRec iconv_mbstowcs_methods = {
 } ;
 
 static XlcConv
-open_iconv_mbstowcs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_mbstowcs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_mbstowcs_methods);
 }
@@ -2307,7 +2307,7 @@ static XlcConvMethodsRec iconv_wcstombs_methods = {
 } ;
 
 static XlcConv
-open_iconv_wcstombs(XLCd from_lcd, char *from_type, XLCd to_lcd, char *to_type)
+open_iconv_wcstombs(XLCd from_lcd, const char *from_type, XLCd to_lcd, const char *to_type)
 {
     return create_conv(from_lcd, &iconv_wcstombs_methods);
 }

@@ -203,7 +203,7 @@ if MANPAGES
 libman_DATA = $(libman_PRE:man=@LIB_MAN_SUFFIX@) \
 	      $(all_shadows:=.@LIB_MAN_SUFFIX@)
 
-fileman_DATA = $(fileman_PRE:man=@FILE_MAN_SUFFIX@)
+fileman_DATA = $(fileman_PRE:man=@FILE_MAN_SUFFIX@) \
 	       $(file_shadows:=.@FILE_MAN_SUFFIX@)
 endif
 

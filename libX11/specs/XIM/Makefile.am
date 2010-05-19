@@ -26,5 +26,3 @@
 doc_sources = xim.ms
 
 include $(top_srcdir)/specs/troffrules.in
-
-

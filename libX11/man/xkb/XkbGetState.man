@@ -24,7 +24,7 @@
 XkbGetState \-  Obtains the keyboard state 
 .SH SYNOPSIS
 .HP
-.B Bool XkbGetState
+.B Status XkbGetState
 .BI "(\^Display *" "display" "\^,"
 .BI "unsigned int " "device_spec" "\^,"
 .BI "XkbStatePtr " "state_return" "\^);"

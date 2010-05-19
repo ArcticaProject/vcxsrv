@@ -5,6 +5,8 @@ ORDER=modules src
 endif
 SUBDIRS=include $(ORDER) nls man specs
 
+ACLOCAL_AMFLAGS = -I m4
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = x11.pc
 if XCB
@@ -12,8 +14,6 @@ pkgconfig_DATA += x11-xcb.pc
 endif
 
 MAINTAINERCLEANFILES = ChangeLog INSTALL
-EXTRA_DIST=x11.pc.in x11-xcb.pc.in 
-
 DISTCLEANFILES = doltcompile doltlibtool
 
 .PHONY: ChangeLog INSTALL

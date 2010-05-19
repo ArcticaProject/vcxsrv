@@ -202,6 +202,10 @@ If no symbol is defined,
 .ZN XKeycodeToKeysym
 returns
 .ZN NoSymbol .
+.ZN XKeycodeToKeysym
+predates the XKB extension. If you want to lookup a KeySym while
+using XKB you have to use
+.ZN XkbKeycodeToKeysym .
 .LP
 If the specified KeySym is not defined for any KeyCode,
 .ZN XKeysymToKeycode

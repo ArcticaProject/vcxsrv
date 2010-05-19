@@ -1001,3 +1001,9 @@ XRequest.DRI2.3: DRI2CreateDrawable
 XRequest.DRI2.4: DRI2DestroyDrawable
 XRequest.DRI2.5: DRI2GetBuffers
 XRequest.DRI2.6: DRI2CopyRegion
+XRequest.DRI2.7: DRI2GetBuffersWithFormat	
+XRequest.DRI2.8: DRI2SwapBuffers		
+XRequest.DRI2.9: DRI2GetMSC			
+XRequest.DRI2.10: DRI2WaitMSC			
+XRequest.DRI2.11: DRI2WaitSBC			
+XRequest.DRI2.12: DRI2SwapInterval		

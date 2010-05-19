@@ -96,7 +96,7 @@ libman_PRE = \
 	XkbGetCompatMap.man                     \
 	XkbGetControls.man                      \
 	XkbGetControlsChanges.man               \
-	XkbGetDetectableAutorepeat.man          \
+	XkbGetDetectableAutoRepeat.man          \
 	XkbGetDeviceButtonActions.man           \
 	XkbGetDeviceInfo.man                    \
 	XkbGetDeviceInfoChanges.man             \
@@ -189,7 +189,7 @@ libman_PRE = \
 	XkbSetCompatMap.man                     \
 	XkbSetControls.man                      \
 	XkbSetDebuggingFlags.man                \
-	XkbSetDetectableAutorepeat.man          \
+	XkbSetDetectableAutoRepeat.man          \
 	XkbSetDeviceButtonActions.man           \
 	XkbSetDeviceInfo.man                    \
 	XkbSetIgnoreLockMods.man                \

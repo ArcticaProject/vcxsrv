@@ -45,6 +45,7 @@ in this Software without prior written authorization from The Open Group.
 #include <dlfcn.h>
 #endif
 
+#include "Xprivate.h"
 #include "locking.h"
 #ifdef XTHREADS_WARN
 #include <stdio.h>		/* for warn/debug stuff */
@@ -459,6 +460,8 @@ static void _XLockDisplay(
 #endif
     if (dpy->lock->locking_level > 0)
 	_XDisplayLockWait(dpy);
+    _XIDHandler(dpy);
+    _XSeqSyncFunction(dpy);
 }
 
 /*

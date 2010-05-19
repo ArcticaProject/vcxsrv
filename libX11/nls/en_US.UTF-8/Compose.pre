@@ -215,6 +215,7 @@ XCOMM Other symbols
 <Multi_key> <exclam> <question>         : "‽"   U203D # INTERROBANG
 
 <Multi_key> <C> <C> <C> <P>             : "☭"   U262D # HAMMER AND SICKLE
+<Multi_key> <O> <A>                     : "Ⓐ"   U24B6 # CIRCLED LATIN CAPITAL LETTER A
 <Multi_key> <less> <3>                  : "♥"   U2665 # BLACK HEART SUIT
 
 <Multi_key> <colon> <parenright>        : "☺"   U263A # WHITE SMILING FACE

@@ -1,6 +1,10 @@
 /* Copyright (C) 2003-2006 Jamey Sharp, Josh Triplett
  * This file is licensed under the MIT license. See the file COPYING. */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "Xlibint.h"
 #include "Xxcbint.h"
 #include <xcb/xcbext.h>
@@ -63,27 +67,23 @@ int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *scr
 	if(!dpy->xcb)
 		return 0;
 
-#ifdef HAVE_LAUNCHD
-	if(!display || !*display) display = getenv("DISPLAY");
+	if(!xcb_parse_display(display, &host, &n, screenp))
+		return 0;
 
-	if(display && strlen(display)>11 && !strncmp(display, "/tmp/launch", 11)) {
-		/* do nothing -- the magic happens inside of xcb_connect */
-	} else
-#endif
-	{
-		if(!xcb_parse_display(display, &host, &n, screenp))
-			return 0;
-
-		len = strlen(host) + (1 + 20 + 1 + 20 + 1);
-		*fullnamep = Xmalloc(len);
-		if (!*fullnamep) {
-			free(host);
-			return 0;
-		}
-
-		snprintf(*fullnamep, len, "%s:%d.%d", host, n, *screenp);
+	len = strlen(host) + (1 + 20 + 1 + 20 + 1);
+	*fullnamep = Xmalloc(len);
+	if (!*fullnamep) {
 		free(host);
+		return 0;
 	}
+
+#ifdef HAVE_LAUNCHD
+	if(strncmp(host, "/tmp/launch", 11) == 0)
+		snprintf(*fullnamep, len, "%s:%d", host, n);
+	else
+#endif
+		snprintf(*fullnamep, len, "%s:%d.%d", host, n, *screenp);
+	free(host);
 
 	_XLockMutex(_Xglobal_lock);
 	if(xauth.name && xauth.data)
@@ -95,13 +95,14 @@ int _XConnectXCB(Display *dpy, _Xconst char *display, char **fullnamep, int *scr
 	dpy->fd = xcb_get_file_descriptor(c);
 
 	dpy->xcb->connection = c;
-	dpy->xcb->pending_requests_tail = &dpy->xcb->pending_requests;
 	dpy->xcb->next_xid = xcb_generate_id(dpy->xcb->connection);
 
 	dpy->xcb->event_notify = xcondition_malloc();
-	if (!dpy->xcb->event_notify)
+	dpy->xcb->reply_notify = xcondition_malloc();
+	if (!dpy->xcb->event_notify || !dpy->xcb->reply_notify)
 		return 0;
 	xcondition_init(dpy->xcb->event_notify);
+	xcondition_init(dpy->xcb->reply_notify);
 	return !xcb_connection_has_error(c);
 }
 
@@ -116,5 +117,6 @@ void _XFreeX11XCBStructure(Display *dpy)
 		free(tmp);
 	}
 	xcondition_free(dpy->xcb->event_notify);
+	xcondition_free(dpy->xcb->reply_notify);
 	Xfree(dpy->xcb);
 }

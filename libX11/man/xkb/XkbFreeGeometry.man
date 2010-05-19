@@ -71,7 +71,8 @@ are:
     #define   XkbGeomShapesMask          (1<<2)
     #define   XkbGeomSectionsMask        (1<<3)
     #define   XkbGeomDoodadsMask         (1<<4)
-    #define   XkbGeomAllMask             (0x1f)
+    #define   XkbGeomKeyAliasesMask      (1<<5)
+    #define   XkbGeomAllMask             (0x3f)
     
 .fi    
 If 

@@ -359,10 +359,10 @@ Private int _XimCachedFileName (
 
     if (len == 0 || dir [len-1] != '/')
        sprintf (*res, "%s/%c%d_%03x_%08x_%08x", dir, _XimGetMyEndian(),
-		XIM_CACHE_VERSION, sizeof (DefTree), hash, hash2);
+		XIM_CACHE_VERSION, (unsigned int)sizeof (DefTree), hash, hash2);
     else
        sprintf (*res, "%s%c%d_%03x_%08x_%08x", dir, _XimGetMyEndian(),
-		XIM_CACHE_VERSION, sizeof (DefTree), hash, hash2);
+		XIM_CACHE_VERSION, (unsigned int)sizeof (DefTree), hash, hash2);
 
 /* fprintf (stderr, "-> %s\n", *res); */
     if ( (fd = _XOpenFile (*res, O_RDONLY)) == -1)
