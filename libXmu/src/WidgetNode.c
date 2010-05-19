@@ -57,7 +57,7 @@ static void mark_resource_owner(XmuWidgetNode*);
  */
 static char *
 binsearch(char *key, char *base, int nelems, int elemsize,
-	  int compar(_Xconst void*, _Xconst void*))
+	  int (*compar)(_Xconst void*, _Xconst void*))
      /*
       * key		- template of object to find
       * base		- beginning of array

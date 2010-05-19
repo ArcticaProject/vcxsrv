@@ -272,7 +272,7 @@ XmuReadBitmapData(FILE *fstream, unsigned int *width, unsigned int *height,
 
 #if defined(WIN32)
 static int
-access_file(char *path, char *pathbuf, int len_pathbuf, char **pathret)
+access_file(_Xconst char *path, char *pathbuf, int len_pathbuf, char **pathret)
 {
     if (access (path, F_OK) == 0) {
 	if (strlen (path) < len_pathbuf)
@@ -288,7 +288,7 @@ access_file(char *path, char *pathbuf, int len_pathbuf, char **pathret)
 }
 
 static int
-AccessFile(char *path, char *pathbuf, int len_pathbuf, char **pathret)
+AccessFile(_Xconst char *path, char *pathbuf, int len_pathbuf, char **pathret)
 {
 #ifndef MAX_PATH
 #define MAX_PATH 512
@@ -362,7 +362,7 @@ AccessFile(char *path, char *pathbuf, int len_pathbuf, char **pathret)
 }
 
 FILE *
-fopen_file(char *path, char *mode)
+fopen_file(_Xconst char *path, char *mode)
 {
     char buf[MAX_PATH];
     char* bufp;
