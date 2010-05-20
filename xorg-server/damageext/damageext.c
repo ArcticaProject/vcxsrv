@@ -29,7 +29,6 @@
 
 static unsigned char	DamageReqCode;
 static int		DamageEventBase;
-static int		DamageErrorBase;
 static RESTYPE		DamageExtType;
 static RESTYPE		DamageExtWinType;
 
@@ -50,7 +49,6 @@ DamageExtNotify (DamageExtPtr pDamageExt, BoxPtr pBoxes, int nBoxes)
     UpdateCurrentTimeIf ();
     ev.type = DamageEventBase + XDamageNotify;
     ev.level = pDamageExt->level;
-    ev.sequenceNumber = pClient->sequence;
     ev.drawable = pDamageExt->drawable;
     ev.damage = pDamageExt->id;
     ev.timestamp = currentTime.milliseconds;
@@ -69,8 +67,7 @@ DamageExtNotify (DamageExtPtr pDamageExt, BoxPtr pBoxes, int nBoxes)
 	    ev.area.y = pBoxes[i].y1;
 	    ev.area.width = pBoxes[i].x2 - pBoxes[i].x1;
 	    ev.area.height = pBoxes[i].y2 - pBoxes[i].y1;
-	    if (!pClient->clientGone)
-		WriteEventsToClient (pClient, 1, (xEvent *) &ev);
+	    WriteEventsToClient (pClient, 1, (xEvent *) &ev);
 	}
     }
     else
@@ -79,8 +76,7 @@ DamageExtNotify (DamageExtPtr pDamageExt, BoxPtr pBoxes, int nBoxes)
 	ev.area.y = 0;
 	ev.area.width = pDrawable->width;
 	ev.area.height = pDrawable->height;
-	if (!pClient->clientGone)
-	    WriteEventsToClient (pClient, 1, (xEvent *) &ev);
+	WriteEventsToClient (pClient, 1, (xEvent *) &ev);
     }
     /* Composite extension marks clients with manual Subwindows as critical */
     if (pDamageClient->critical > 0)
@@ -518,8 +514,8 @@ DamageExtensionInit(void)
     {
 	DamageReqCode = (unsigned char)extEntry->base;
 	DamageEventBase = extEntry->eventBase;
-	DamageErrorBase = extEntry->errorBase;
 	EventSwapVector[DamageEventBase + XDamageNotify] =
 			(EventSwapPtr) SDamageNotifyEvent;
+	SetResourceTypeErrorValue(DamageExtType, extEntry->errorBase + BadDamage);
     }
 }

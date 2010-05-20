@@ -58,7 +58,6 @@ and Jim Haggerty of Metheus.
 #include "protocol-versions.h"
 
 static RESTYPE RTContext;   /* internal resource type for Record contexts */
-static int RecordErrorBase; /* first Record error number */
 
 /* How many bytes of protocol data to buffer in a context. Don't set to less
  * than 32.
@@ -133,7 +132,7 @@ static int numEnabledRCAPs;
     int rc = dixLookupResourceByType((pointer *)&(_pContext), _contextid, \
                                      RTContext, _client, DixUseAccess); \
     if (rc != Success) \
-	return (rc == BadValue) ? RecordErrorBase + XRecordBadContext : rc; \
+	return rc; \
 }
 
 static int RecordDeleteContext(
@@ -2911,7 +2910,7 @@ RecordExtensionInit(void)
 	DeleteCallback(&ClientStateCallback, RecordAClientStateChange, NULL);
 	return;
     }
-    RecordErrorBase = extentry->errorBase;
+    SetResourceTypeErrorValue(RTContext, extentry->errorBase + XRecordBadContext);
 
 } /* RecordExtensionInit */
 

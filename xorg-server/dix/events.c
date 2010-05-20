@@ -1844,7 +1844,6 @@ int
 TryClientEvents (ClientPtr client, DeviceIntPtr dev, xEvent *pEvents,
                  int count, Mask mask, Mask filter, GrabPtr grab)
 {
-    int i;
     int type;
 
 #ifdef DEBUG_EVENTS
@@ -1911,7 +1910,6 @@ TryClientEvents (ClientPtr client, DeviceIntPtr dev, xEvent *pEvents,
             {
                 xEvent release = *pEvents;
                 release.u.u.type = KeyRelease;
-                release.u.u.sequenceNumber = client->sequence;
                 WriteEventsToClient(client, 1, &release);
 #ifdef DEBUG_EVENTS
                 ErrorF(" (plus fake core release for repeat)");
@@ -1932,7 +1930,6 @@ TryClientEvents (ClientPtr client, DeviceIntPtr dev, xEvent *pEvents,
             {
                 deviceKeyButtonPointer release = *(deviceKeyButtonPointer *)pEvents;
                 release.type = DeviceKeyRelease;
-                release.sequenceNumber = client->sequence;
 #ifdef DEBUG_EVENTS
                 ErrorF(" (plus fake xi1 release for repeat)");
 #endif
@@ -1944,14 +1941,6 @@ TryClientEvents (ClientPtr client, DeviceIntPtr dev, xEvent *pEvents,
 #endif
             }
         }
-    }
-
-    type &= 0177;
-    if (type != KeymapNotify)
-    {
-        /* all extension events must have a sequence number */
-        for (i = 0; i < count; i++)
-            pEvents[i].u.u.sequenceNumber = client->sequence;
     }
 
     if (BitIsOn(criticalEvents, type))
@@ -4714,7 +4703,7 @@ ProcChangeActivePointerGrab(ClientPtr client)
 	if (rc != Success)
 	{
 	    client->errorValue = stuff->cursor;
-	    return (rc == BadValue) ? BadCursor : rc;
+	    return rc;
 	}
     }
 
@@ -4837,7 +4826,7 @@ GrabDevice(ClientPtr client, DeviceIntPtr dev,
 	if (rc != Success)
 	{
 	    client->errorValue = curs;
-	    return (rc == BadValue) ? BadCursor : rc;
+	    return rc;
 	}
 	access_mode |= DixForceAccess;
     }
@@ -5362,7 +5351,7 @@ ProcGrabButton(ClientPtr client)
 	if (rc != Success)
 	{
 	    client->errorValue = stuff->cursor;
-	    return (rc == BadValue) ? BadCursor : rc;
+	    return rc;
 	}
 	access_mode |= DixForceAccess;
     }
@@ -5625,7 +5614,7 @@ ProcRecolorCursor(ClientPtr client)
     if (rc != Success)
     {
 	client->errorValue = stuff->cursor;
-	return (rc == BadValue) ? BadCursor : rc;
+	return rc;
     }
 
     pCursor->foreRed = stuff->foreRed;
@@ -5674,6 +5663,13 @@ WriteEventsToClient(ClientPtr pClient, int count, xEvent *events)
     xEvent    *eventTo, *eventFrom;
     int       i,
               eventlength = sizeof(xEvent);
+
+    if (!pClient || pClient == serverClient || pClient->clientGone)
+	return;
+
+    for (i = 0; i < count; i++)
+	if ((events[i].u.u.type & 0x7f) != KeymapNotify)
+	    events[i].u.u.sequenceNumber = pClient->sequence;
 
     /* Let XKB rewrite the state, as it depends on client preferences. */
     XkbFilterEvents(pClient, count, events);

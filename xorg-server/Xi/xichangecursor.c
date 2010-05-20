@@ -103,7 +103,7 @@ int ProcXIChangeCursor(ClientPtr client)
 	rc = dixLookupResourceByType((pointer *)&pCursor, stuff->cursor,
 				     RT_CURSOR, client, DixUseAccess);
 	if (rc != Success)
-	    return (rc == BadValue) ? BadCursor : rc;
+	    return rc;
     }
 
     ChangeWindowDeviceCursor(pWin, pDev, pCursor);

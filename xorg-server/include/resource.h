@@ -70,7 +70,7 @@ typedef unsigned long RESTYPE;
 #define RC_LASTPREDEF	RC_NEVERRETAIN
 #define RC_ANY		(~(RESTYPE)0)
 
-/* types for Resource routines */
+/* types for Resource routines. When you change one of them, please also update the predefTypes array in resource.c*/
 
 #define RT_WINDOW	((RESTYPE)1|RC_DRAWABLE)
 #define RT_PIXMAP	((RESTYPE)2|RC_DRAWABLE)
@@ -156,6 +156,9 @@ typedef Bool (*FindComplexResType)(
 
 extern _X_EXPORT RESTYPE CreateNewResourceType(
     DeleteType /*deleteFunc*/, char * /*name*/);
+
+extern _X_EXPORT void SetResourceTypeErrorValue(
+    RESTYPE /*type*/, int /*errorValue*/);
 
 extern _X_EXPORT RESTYPE CreateNewResourceClass(void);
 

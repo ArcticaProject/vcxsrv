@@ -519,6 +519,10 @@ void PanoramiXExtensionInit(int argc, char *argv[])
 	    panoramiXGeneration = serverGeneration;
 	    success = TRUE;
 	}
+	SetResourceTypeErrorValue(XRT_WINDOW, BadWindow);
+	SetResourceTypeErrorValue(XRT_PIXMAP, BadPixmap);
+	SetResourceTypeErrorValue(XRT_GC, BadGC);
+	SetResourceTypeErrorValue(XRT_COLORMAP, BadColor);
     }
 
     if (!success) {

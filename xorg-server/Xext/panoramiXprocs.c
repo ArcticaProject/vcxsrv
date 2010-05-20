@@ -74,7 +74,7 @@ int PanoramiXCreateWindow(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&parent, stuff->parent,
 				     XRT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadWindow : result;
+        return result;
 
     if(stuff->class == CopyFromParent)
 	stuff->class = parent->u.win.class;
@@ -89,7 +89,7 @@ int PanoramiXCreateWindow(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&backPix, tmp,
 					     XRT_PIXMAP, client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->mask & CWBorderPixmap) {
@@ -99,7 +99,7 @@ int PanoramiXCreateWindow(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&bordPix, tmp,
 					     XRT_PIXMAP, client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->mask & CWColormap) {
@@ -109,7 +109,7 @@ int PanoramiXCreateWindow(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&cmap, tmp,
 					     XRT_COLORMAP, client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadColor : result;
+		return result;
 	}
     }
 
@@ -179,7 +179,7 @@ int PanoramiXChangeWindowAttributes(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->window,
 				     XRT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadWindow : result;
+        return result;
 
     if((win->u.win.class == InputOnly) && 
        (stuff->valueMask & (~INPUTONLY_LEGAL_MASK)))
@@ -192,7 +192,7 @@ int PanoramiXChangeWindowAttributes(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&backPix, tmp,
 					     XRT_PIXMAP, client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->valueMask & CWBorderPixmap) {
@@ -202,7 +202,7 @@ int PanoramiXChangeWindowAttributes(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&bordPix, tmp,
 					     XRT_PIXMAP, client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->valueMask & CWColormap) {
@@ -212,7 +212,7 @@ int PanoramiXChangeWindowAttributes(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&cmap, tmp,
 					     XRT_COLORMAP, client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadColor : result;
+		return result;
 	}
     }
 
@@ -242,7 +242,7 @@ int PanoramiXDestroyWindow(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->id, XRT_WINDOW,
 				     client, DixDestroyAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->id = win->info[j].id;
@@ -268,7 +268,7 @@ int PanoramiXDestroySubwindows(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->id, XRT_WINDOW,
 				     client, DixDestroyAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->id = win->info[j].id;
@@ -294,7 +294,7 @@ int PanoramiXChangeSaveSet(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->window,
 				     XRT_WINDOW, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->window = win->info[j].id;
@@ -319,12 +319,12 @@ int PanoramiXReparentWindow(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->window,
 				     XRT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     result = dixLookupResourceByType((pointer *)&parent, stuff->parent,
 				     XRT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     x = stuff->x;
     y = stuff->y;
@@ -356,7 +356,7 @@ int PanoramiXMapWindow(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->id,
 				     XRT_WINDOW, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_FORWARD(j) {
 	stuff->id = win->info[j].id;
@@ -379,7 +379,7 @@ int PanoramiXMapSubwindows(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->id,
 				     XRT_WINDOW, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_FORWARD(j) {
 	stuff->id = win->info[j].id;
@@ -402,7 +402,7 @@ int PanoramiXUnmapWindow(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->id,
 				     XRT_WINDOW, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_FORWARD(j) {
 	stuff->id = win->info[j].id;
@@ -425,7 +425,7 @@ int PanoramiXUnmapSubwindows(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->id,
 				     XRT_WINDOW, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_FORWARD(j) {
 	stuff->id = win->info[j].id;
@@ -457,12 +457,12 @@ int PanoramiXConfigureWindow(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&pWin, stuff->window,
 				     RT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     result = dixLookupResourceByType((pointer *)&win, stuff->window,
 				     XRT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     if ((Mask)stuff->mask & CWSibling) {
 	XID tmp;
@@ -471,7 +471,7 @@ int PanoramiXConfigureWindow(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&sib, tmp, XRT_WINDOW,
 					     client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadWindow : result;
+		return result;
 	}
     }
 
@@ -517,7 +517,7 @@ int PanoramiXCirculateWindow(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->window,
 				     XRT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS_FORWARD(j) {
 	stuff->window = win->info[j].id;
@@ -697,7 +697,7 @@ int PanoramiXFreePixmap(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&pix, stuff->id, XRT_PIXMAP,
 				     client, DixDestroyAccess);
     if (result != Success)
-	return (result == BadValue) ? BadPixmap : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->id = pix->info[j].id;
@@ -742,7 +742,7 @@ int PanoramiXCreateGC(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&tile, tmp, XRT_PIXMAP,
 					     client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->mask & GCStipple) {
@@ -751,7 +751,7 @@ int PanoramiXCreateGC(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&stip, tmp, XRT_PIXMAP,
 					     client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->mask & GCClipMask) {
@@ -760,7 +760,7 @@ int PanoramiXCreateGC(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&clip, tmp, XRT_PIXMAP,
 					     client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
 
@@ -813,7 +813,7 @@ int PanoramiXChangeGC(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     if ((Mask)stuff->mask & GCTile) {
 	tile_offset = Ones((Mask)stuff->mask & (GCTile - 1));
@@ -821,7 +821,7 @@ int PanoramiXChangeGC(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&tile, tmp, XRT_PIXMAP,
 					     client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->mask & GCStipple) {
@@ -830,7 +830,7 @@ int PanoramiXChangeGC(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&stip, tmp, XRT_PIXMAP,
 					     client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
     if ((Mask)stuff->mask & GCClipMask) {
@@ -839,7 +839,7 @@ int PanoramiXChangeGC(ClientPtr client)
 	    result = dixLookupResourceByType((pointer *)&clip, tmp, XRT_PIXMAP,
 					     client, DixReadAccess);
 	    if (result != Success)
-		return (result == BadValue) ? BadPixmap : result;
+		return result;
 	}
     }
 
@@ -871,12 +871,12 @@ int PanoramiXCopyGC(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&srcGC, stuff->srcGC, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     result = dixLookupResourceByType((pointer *)&dstGC, stuff->dstGC, XRT_GC,
 				     client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     FOR_NSCREENS(j) {
 	stuff->srcGC = srcGC->info[j].id;
@@ -900,7 +900,7 @@ int PanoramiXSetDashes(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->gc = gc->info[j].id;
@@ -923,7 +923,7 @@ int PanoramiXSetClipRectangles(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->gc = gc->info[j].id;
@@ -946,7 +946,7 @@ int PanoramiXFreeGC(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->id, XRT_GC,
 				     client, DixDestroyAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->id = gc->info[j].id;
@@ -973,7 +973,7 @@ int PanoramiXClearToBackground(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->window,
 				     XRT_WINDOW, client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     x = stuff->x;
     y = stuff->y;
@@ -1033,7 +1033,7 @@ int PanoramiXCopyArea(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     if((dst->type == XRT_WINDOW) && dst->u.win.root)
 	dstIsRoot = TRUE;
@@ -1188,7 +1188,7 @@ int PanoramiXCopyPlane(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				 client, DixReadAccess);
     if (rc != Success)
-	return (rc == BadValue) ? BadGC : rc;
+	return rc;
 
     if((dst->type == XRT_WINDOW) && dst->u.win.root)
 	dstIsRoot = TRUE;
@@ -1285,7 +1285,7 @@ int PanoramiXPolyPoint(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
     npoint = bytes_to_int32((client->req_len << 2) - sizeof(xPolyPointReq));
@@ -1345,7 +1345,7 @@ int PanoramiXPolyLine(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
     npoint = bytes_to_int32((client->req_len << 2) - sizeof(xPolyLineReq));
@@ -1405,7 +1405,7 @@ int PanoramiXPolySegment(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1468,7 +1468,7 @@ int PanoramiXPolyRectangle(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1530,7 +1530,7 @@ int PanoramiXPolyArc(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1590,7 +1590,7 @@ int PanoramiXFillPoly(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1651,7 +1651,7 @@ int PanoramiXPolyFillRectangle(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1712,7 +1712,7 @@ int PanoramiXPolyFillArc(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1772,7 +1772,7 @@ int PanoramiXPutImage(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1973,7 +1973,7 @@ PanoramiXPolyText8(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -2014,7 +2014,7 @@ PanoramiXPolyText16(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -2055,7 +2055,7 @@ int PanoramiXImageText8(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -2096,7 +2096,7 @@ int PanoramiXImageText16(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc, XRT_GC,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadGC : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -2128,7 +2128,7 @@ int PanoramiXCreateColormap(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&win, stuff->window,
 				     XRT_WINDOW, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     if(!(newCmap = malloc(sizeof(PanoramiXRes))))
         return BadAlloc;
@@ -2169,7 +2169,7 @@ int PanoramiXFreeColormap(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->id, XRT_COLORMAP,
 				     client, DixDestroyAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j) {
         stuff->id = cmap->info[j].id;
@@ -2199,7 +2199,7 @@ PanoramiXCopyColormapAndFree(ClientPtr client)
 				     XRT_COLORMAP, client,
 				     DixReadAccess | DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     if(!(newCmap = malloc(sizeof(PanoramiXRes))))
         return BadAlloc;
@@ -2238,7 +2238,7 @@ int PanoramiXInstallColormap(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->id, XRT_COLORMAP,
 				     client, DixReadAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j){
 	stuff->id = cmap->info[j].id;
@@ -2262,7 +2262,7 @@ int PanoramiXUninstallColormap(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->id, XRT_COLORMAP,
 				     client, DixReadAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j) {
 	stuff->id = cmap->info[j].id;
@@ -2286,7 +2286,7 @@ int PanoramiXAllocColor(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->cmap,
 				     XRT_COLORMAP, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j){
 	stuff->cmap = cmap->info[j].id;
@@ -2310,7 +2310,7 @@ int PanoramiXAllocNamedColor(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->cmap,
 				     XRT_COLORMAP, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j){
         stuff->cmap = cmap->info[j].id;
@@ -2334,7 +2334,7 @@ int PanoramiXAllocColorCells(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->cmap,
 				     XRT_COLORMAP, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 	
     FOR_NSCREENS_BACKWARD(j){
 	stuff->cmap = cmap->info[j].id;
@@ -2358,7 +2358,7 @@ int PanoramiXAllocColorPlanes(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->cmap,
 				     XRT_COLORMAP, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 	
     FOR_NSCREENS_BACKWARD(j){
 	stuff->cmap = cmap->info[j].id;
@@ -2383,7 +2383,7 @@ int PanoramiXFreeColors(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->cmap,
 				     XRT_COLORMAP, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j) {
         stuff->cmap = cmap->info[j].id;
@@ -2406,7 +2406,7 @@ int PanoramiXStoreColors(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->cmap,
 				     XRT_COLORMAP, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j){
 	stuff->cmap = cmap->info[j].id;
@@ -2430,7 +2430,7 @@ int PanoramiXStoreNamedColor(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&cmap, stuff->cmap,
 				     XRT_COLORMAP, client, DixWriteAccess);
     if (result != Success)
-        return (result == BadValue) ? BadColor : result;
+        return result;
 
     FOR_NSCREENS_BACKWARD(j){
 	stuff->cmap = cmap->info[j].id;

@@ -158,7 +158,7 @@ static ShmFuncs fbFuncs = {fbShmCreatePixmap, NULL};
     rc = dixLookupResourceByType((pointer *)&(shmdesc), shmseg, ShmSegType, \
                                  client, DixReadAccess); \
     if (rc != Success) \
-	return (rc == BadValue) ? BadShmSegCode : rc; \
+	return rc; \
 }
 
 #define VERIFY_SHMPTR(shmseg,offset,needwrite,shmdesc,client) \
@@ -288,6 +288,7 @@ ShmExtensionInit(INITARGS)
 	ShmReqCode = (unsigned char)extEntry->base;
 	ShmCompletionCode = extEntry->eventBase;
 	BadShmSegCode = extEntry->errorBase;
+	SetResourceTypeErrorValue(ShmSegType, BadShmSegCode);
 	EventSwapVector[ShmCompletionCode] = (EventSwapPtr) SShmCompletionEvent;
     }
 }
@@ -603,7 +604,7 @@ ProcPanoramiXShmPutImage(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc,
 				     XRT_GC, client, DixReadAccess);
     if (result != Success)
-        return (result == BadValue) ? BadGC : result;
+        return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -962,7 +963,6 @@ ProcShmPutImage(ClientPtr client)
 
 	ev.type = ShmCompletionCode;
 	ev.drawable = stuff->drawable;
-	ev.sequenceNumber = client->sequence;
 	ev.minorEvent = X_ShmPutImage;
 	ev.majorEvent = ShmReqCode;
 	ev.shmseg = stuff->shmseg;

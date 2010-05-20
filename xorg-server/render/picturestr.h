@@ -412,7 +412,7 @@ extern _X_EXPORT RESTYPE	GlyphSetType;
     int rc = dixLookupResourceByType((pointer)&(pPicture), pid,\
 	                             PictureType, client, mode);\
     if (rc != Success)\
-	return (rc == BadValue) ? RenderErrBase + BadPicture : rc;\
+	return rc;\
 }
 
 #define VERIFY_ALPHA(pPicture, pid, client, mode) {\

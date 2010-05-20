@@ -54,13 +54,11 @@ xcalibrate_event_hook (int x, int y, int pressure, void *closure)
   xXCalibrateRawTouchscreenEvent	ev;
 
   ev.type = XCalibrateEventBase + X_XCalibrateRawTouchscreen;
-  ev.sequenceNumber = pClient->sequence;
   ev.x = x;
   ev.y = y;
   ev.pressure = pressure;
 
-  if (!pClient->clientGone)
-    WriteEventsToClient (pClient, 1, (xEvent *) &ev);
+  WriteEventsToClient (pClient, 1, (xEvent *) &ev);
 }
 
 static int

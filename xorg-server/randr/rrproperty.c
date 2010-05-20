@@ -29,7 +29,6 @@ DeliverPropertyEvent(WindowPtr pWin, void *value)
 {
     xRROutputPropertyNotifyEvent *event = value;
     RREventPtr *pHead, pRREvent;
-    ClientPtr client;
 
     dixLookupResourceByType((pointer *)&pHead, pWin->drawable.id,
 			    RREventType, serverClient, DixReadAccess);
@@ -38,14 +37,9 @@ DeliverPropertyEvent(WindowPtr pWin, void *value)
 
     for (pRREvent = *pHead; pRREvent; pRREvent = pRREvent->next)
     {
-	client = pRREvent->client;
-	if (client == serverClient || client->clientGone)
-	    continue;
-
 	if (!(pRREvent->mask & RROutputPropertyNotifyMask))
 	    continue;
 
-	event->sequenceNumber = client->sequence;
 	event->window = pRREvent->window->drawable.id;
 	WriteEventsToClient(pRREvent->client, 1, (xEvent *)event);
     }

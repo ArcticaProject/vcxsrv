@@ -153,7 +153,7 @@ ProcXTestCompareCursor(ClientPtr client)
         if (rc != Success)
         {
             client->errorValue = stuff->cursor;
-            return (rc == BadValue) ? BadCursor : rc;
+            return rc;
         }
     }
     rep.type = X_Reply;

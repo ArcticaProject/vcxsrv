@@ -268,6 +268,7 @@ RRModeInit (void)
     RRModeType = CreateNewResourceType (RRModeDestroyResource, "MODE");
     if (!RRModeType)
 	return FALSE;
+    SetResourceTypeErrorValue(RRModeType, RRErrorBase + BadRRMode);
     return TRUE;
 }
 

@@ -264,7 +264,7 @@ SyncInitTrigger(ClientPtr client, SyncTrigger *pTrigger, XSyncCounter counter,
 				counter, RTCounter, client, DixReadAccess)))
 	{
 	    client->errorValue = counter;
-	    return (rc == BadValue) ? SyncErrorBase + XSyncBadCounter : rc;
+	    return rc;
 	}
 	if (pCounter != pTrigger->pCounter)
 	{ /* new counter for trigger */
@@ -372,7 +372,6 @@ SyncSendAlarmNotifyEvents(SyncAlarm *pAlarm)
 
     ane.type = SyncEventBase + XSyncAlarmNotify;
     ane.kind = XSyncAlarmNotify;
-    ane.sequenceNumber = pAlarm->client->sequence;
     ane.alarm = pAlarm->alarm_id;
     if (pTrigger->pCounter)
     {
@@ -390,18 +389,12 @@ SyncSendAlarmNotifyEvents(SyncAlarm *pAlarm)
     ane.state = pAlarm->state;
 
     /* send to owner */
-    if (pAlarm->events && !pAlarm->client->clientGone)
+    if (pAlarm->events)
 	WriteEventsToClient(pAlarm->client, 1, (xEvent *) &ane);
 
     /* send to other interested clients */
     for (pcl = pAlarm->pEventClients; pcl; pcl = pcl->next)
-    {
-	if (!pcl->client->clientGone)
-	{
-	    ane.sequenceNumber = pcl->client->sequence;
-	    WriteEventsToClient(pcl->client, 1, (xEvent *) &ane);
-	}
-    }
+	WriteEventsToClient(pcl->client, 1, (xEvent *) &ane);
 }
 
 
@@ -426,7 +419,6 @@ SyncSendCounterNotifyEvents(ClientPtr client, SyncAwait **ppAwait,
 	SyncTrigger *pTrigger = &(*ppAwait)->trigger;
 	pev->type = SyncEventBase + XSyncCounterNotify;
 	pev->kind = XSyncCounterNotify;
-	pev->sequenceNumber = client->sequence;
 	pev->counter = pTrigger->pCounter->id;
 	pev->wait_value_lo = XSyncValueLow32(pTrigger->test_value);
 	pev->wait_value_hi = XSyncValueHigh32(pTrigger->test_value);
@@ -1340,7 +1332,7 @@ ProcSyncSetCounter(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&pCounter, stuff->cid, RTCounter,
 				 client, DixWriteAccess);
     if (rc != Success)
-	return (rc == BadValue) ? SyncErrorBase + XSyncBadCounter : rc;
+	return rc;
 
     if (IsSystemCounter(pCounter))
     {
@@ -1370,7 +1362,7 @@ ProcSyncChangeCounter(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&pCounter, stuff->cid, RTCounter,
 				 client, DixWriteAccess);
     if (rc != Success)
-	return (rc == BadValue) ? SyncErrorBase + XSyncBadCounter : rc;
+	return rc;
 
     if (IsSystemCounter(pCounter))
     {
@@ -1405,7 +1397,7 @@ ProcSyncDestroyCounter(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&pCounter, stuff->counter, RTCounter,
 				 client, DixDestroyAccess);
     if (rc != Success)
-	return (rc == BadValue) ? SyncErrorBase + XSyncBadCounter : rc;
+	return rc;
 
     if (IsSystemCounter(pCounter))
     {
@@ -1548,7 +1540,7 @@ ProcSyncQueryCounter(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&pCounter, stuff->counter,
 				 RTCounter, client, DixReadAccess);
     if (rc != Success)
-	return (rc == BadValue) ? SyncErrorBase + XSyncBadCounter : rc;
+	return rc;
 
     rep.type = X_Reply;
     rep.length = 0;
@@ -1672,7 +1664,7 @@ ProcSyncChangeAlarm(ClientPtr client)
     status = dixLookupResourceByType((pointer *)&pAlarm, stuff->alarm, RTAlarm,
 				     client, DixWriteAccess);
     if (status != Success)
-	return (status == BadValue) ? SyncErrorBase + XSyncBadAlarm : status;
+	return status;
 
     vmask = stuff->valueMask;
     len = client->req_len - bytes_to_int32(sizeof(xSyncChangeAlarmReq));
@@ -1711,7 +1703,7 @@ ProcSyncQueryAlarm(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&pAlarm, stuff->alarm, RTAlarm,
 				 client, DixReadAccess);
     if (rc != Success)
-	return (rc == BadValue) ? SyncErrorBase + XSyncBadAlarm : rc;
+	return rc;
 
     rep.type = X_Reply;
     rep.length = bytes_to_int32(sizeof(xSyncQueryAlarmReply) - sizeof(xGenericReply));
@@ -1768,7 +1760,7 @@ ProcSyncDestroyAlarm(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&pAlarm, stuff->alarm, RTAlarm,
 				 client, DixDestroyAccess);
     if (rc != Success)
-	return (rc == BadValue) ? SyncErrorBase + XSyncBadAlarm : rc;
+	return rc;
 
     FreeResource(stuff->alarm, RT_NONE);
     return Success;
@@ -2138,6 +2130,9 @@ SyncExtensionInit(void)
     SyncErrorBase = extEntry->errorBase;
     EventSwapVector[SyncEventBase + XSyncCounterNotify] = (EventSwapPtr) SCounterNotifyEvent;
     EventSwapVector[SyncEventBase + XSyncAlarmNotify] = (EventSwapPtr) SAlarmNotifyEvent;
+
+    SetResourceTypeErrorValue(RTCounter, SyncErrorBase + XSyncBadCounter);
+    SetResourceTypeErrorValue(RTAlarm, SyncErrorBase + XSyncBadAlarm);
 
     /*
      * Although SERVERTIME is implemented by the OS layer, we initialise it

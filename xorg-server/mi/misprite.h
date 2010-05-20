@@ -32,76 +32,26 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 */
 
-typedef struct {
-    Bool	(*RealizeCursor)(
-		ScreenPtr /*pScreen*/,
-		CursorPtr /*pCursor*/
-);
-    Bool	(*UnrealizeCursor)(
-		ScreenPtr /*pScreen*/,
-		CursorPtr /*pCursor*/
-);
-    Bool	(*PutUpCursor)(
-                DeviceIntPtr /*pDev*/,
-		ScreenPtr /*pScreen*/,
-		CursorPtr /*pCursor*/,
-		int /*x*/,
-		int /*y*/,
-		unsigned long /*source*/,
-		unsigned long /*mask*/
-);
-    Bool	(*SaveUnderCursor)(
-                DeviceIntPtr /*pDev*/,
-		ScreenPtr /*pScreen*/,
-		int /*x*/,
-		int /*y*/,
-		int /*w*/,
-		int /*h*/
-);
-    Bool	(*RestoreUnderCursor)(
-                DeviceIntPtr /*pDev*/,
-		ScreenPtr /*pScreen*/,
-		int /*x*/,
-		int /*y*/,
-		int /*w*/,
-		int /*h*/
-);
-    Bool	(*MoveCursor)(
-                DeviceIntPtr /*pDev*/,
-		ScreenPtr /*pScreen*/,
-		CursorPtr /*pCursor*/,
-		int /*x*/,
-		int /*y*/,
-		int /*w*/,
-		int /*h*/,
-		int /*dx*/,
-		int /*dy*/,
-		unsigned long /*source*/,
-		unsigned long /*mask*/
-);
-    Bool	(*ChangeSave)(
-                DeviceIntPtr /*pDev*/,
-		ScreenPtr /*pScreen*/,
-		int /*x*/,
-		int /*y*/,
-		int /*w*/,
-		int /*h*/,
-		int /*dx*/,
-		int /*dy*/
-);
-    Bool	(*DeviceCursorInitialize)(
-                DeviceIntPtr /*pDev*/,
-		ScreenPtr /*pScreen*/
-);
-    void	(*DeviceCursorCleanup)(
-                DeviceIntPtr /*pDev*/,
-		ScreenPtr /*pScreen*/
-);
-
-} miSpriteCursorFuncRec, *miSpriteCursorFuncPtr;
-
 extern Bool miSpriteInitialize(
     ScreenPtr /*pScreen*/,
-    miSpriteCursorFuncPtr /*cursorFuncs*/,
     miPointerScreenFuncPtr /*screenFuncs*/
 );
+
+extern Bool miDCRealizeCursor(ScreenPtr pScreen, CursorPtr pCursor);
+extern Bool miDCUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor);
+extern Bool miDCPutUpCursor(DeviceIntPtr pDev, ScreenPtr pScreen,
+                            CursorPtr pCursor, int x, int y,
+                            unsigned long source, unsigned long mask);
+extern Bool miDCSaveUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen,
+                                int x, int y, int w, int h);
+extern Bool miDCRestoreUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen,
+                                   int x, int y, int w, int h);
+extern Bool miDCMoveCursor(DeviceIntPtr pDev, ScreenPtr pScreen,
+                           CursorPtr pCursor, int x, int y,
+                           int w, int h, int dx, int dy,
+                           unsigned long source, unsigned long mask);
+extern Bool miDCChangeSave(DeviceIntPtr pDev, ScreenPtr pScreen,
+                           int x, int y, int w, int h,
+                           int dx, int dy);
+extern Bool miDCDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen);
+extern void miDCDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen);

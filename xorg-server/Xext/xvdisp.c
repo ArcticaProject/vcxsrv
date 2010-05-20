@@ -1025,7 +1025,6 @@ typedef struct _ShmDesc {
 } ShmDescRec, *ShmDescPtr;
 
 extern RESTYPE ShmSegType;
-extern int BadShmSegCode;
 extern int ShmCompletionCode;
 
 static int 
@@ -1077,7 +1076,7 @@ ProcXvShmPutImage(ClientPtr client)
   status = dixLookupResourceByType((pointer *)&shmdesc, stuff->shmseg,
 				   ShmSegType, serverClient, DixReadAccess);
   if (status != Success)
-      return (status == BadValue) ? BadShmSegCode : status;
+      return status;
  
   width = stuff->width;
   height = stuff->height;
@@ -1100,7 +1099,6 @@ ProcXvShmPutImage(ClientPtr client)
 
         ev.type = ShmCompletionCode;
         ev.drawable = stuff->drawable;
-        ev.sequenceNumber = client->sequence;
         ev.minorEvent = xv_ShmPutImage;
         ev.majorEvent = XvReqCode;
         ev.shmseg = stuff->shmseg;
@@ -1616,7 +1614,7 @@ XineramaXvStopVideo(ClientPtr client)
    result = dixLookupResourceByType((pointer *)&port, stuff->port,
 				    XvXRTPort, client, DixReadAccess);
    if (result != Success)
-       return (result == BadValue) ? _XvBadPort : result;
+       return result;
 
    FOR_NSCREENS_BACKWARD(i) {
 	if(port->info[i].id) {
@@ -1641,7 +1639,7 @@ XineramaXvSetPortAttribute(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&port, stuff->port,
 				     XvXRTPort, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? _XvBadPort : result;
+	return result;
 
     FOR_NSCREENS_BACKWARD(i) {
 	if(port->info[i].id) {
@@ -1672,12 +1670,12 @@ XineramaXvShmPutImage(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc,
 				     XRT_GC, client, DixReadAccess);
     if (result != Success)
-        return (result == BadValue) ? BadGC : result;
+        return result;
 
     result = dixLookupResourceByType((pointer *)&port, stuff->port,
 				     XvXRTPort, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? _XvBadPort : result;
+	return result;
  
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1724,12 +1722,12 @@ XineramaXvPutImage(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc,
 				     XRT_GC, client, DixReadAccess);
     if (result != Success)
-        return (result == BadValue) ? BadGC : result;
+        return result;
 
     result = dixLookupResourceByType((pointer *)&port, stuff->port,
 				     XvXRTPort, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? _XvBadPort : result;
+	return result;
  
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1772,12 +1770,12 @@ XineramaXvPutVideo(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc,
 				     XRT_GC, client, DixReadAccess);
     if (result != Success)
-        return (result == BadValue) ? BadGC : result;
+        return result;
 
     result = dixLookupResourceByType((pointer *)&port, stuff->port,
 				     XvXRTPort, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? _XvBadPort : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1820,12 +1818,12 @@ XineramaXvPutStill(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&gc, stuff->gc,
 				     XRT_GC, client, DixReadAccess);
     if (result != Success)
-        return (result == BadValue) ? BadGC : result;
+        return result;
 
     result = dixLookupResourceByType((pointer *)&port, stuff->port,
 				     XvXRTPort, client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? _XvBadPort : result;
+	return result;
 
     isRoot = (draw->type == XRT_WINDOW) && draw->u.win.root;
 
@@ -1911,6 +1909,7 @@ void XineramifyXv(void)
    XvXRTPort = CreateNewResourceType(XineramaDeleteResource, "XvXRTPort");
 
    if (!xvsp0 || !XvXRTPort) return;
+   SetResourceTypeErrorValue(XvXRTPort, _XvBadPort);
 
    for(i = 0; i < xvsp0->nAdaptors; i++) {
       Bool isOverlay;

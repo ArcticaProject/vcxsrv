@@ -187,7 +187,6 @@ __glXdriSwapEvent(ClientPtr client, void *data, int type, CARD64 ust,
 	/* unknown swap completion type */
 	break;
     }
-    wire.sequenceNumber = client->sequence;
     wire.drawable = drawable->drawId;
     wire.ust_hi = ust >> 32;
     wire.ust_lo = ust & 0xffffffff;

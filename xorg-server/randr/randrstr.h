@@ -344,7 +344,7 @@ extern _X_EXPORT RESTYPE RRCrtcType, RRModeType, RROutputType;
 	                                 RROutputType, client, a);\
 	if (rc != Success) {\
 	    client->errorValue = id;\
-	    return (rc == BadValue) ? RRErrorBase + BadRROutput : rc;\
+	    return rc;\
 	}\
     }
 
@@ -354,7 +354,7 @@ extern _X_EXPORT RESTYPE RRCrtcType, RRModeType, RROutputType;
 	                                 RRCrtcType, client, a);\
 	if (rc != Success) {\
 	    client->errorValue = id;\
-	    return (rc == BadValue) ? RRErrorBase + BadRRCrtc : rc;\
+	    return rc;\
 	}\
     }
 
@@ -364,7 +364,7 @@ extern _X_EXPORT RESTYPE RRCrtcType, RRModeType, RROutputType;
 	                                 RRModeType, client, a);\
 	if (rc != Success) {\
 	    client->errorValue = id;\
-	    return (rc == BadValue) ? RRErrorBase + BadRRMode : rc;\
+	    return rc;\
 	}\
     }
 

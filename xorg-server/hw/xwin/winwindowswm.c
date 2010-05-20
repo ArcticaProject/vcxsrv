@@ -300,8 +300,7 @@ winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
     {
       client = pEvent->client;
       winDebug ("winWindowsWMSendEvent - x%08x\n", (int) client);
-      if ((pEvent->mask & mask) == 0
-	  || client == serverClient || client->clientGone)
+      if ((pEvent->mask & mask) == 0)
 	{
 	  continue;
 	}
@@ -315,7 +314,6 @@ winWindowsWMSendEvent (int type, unsigned int mask, int which, int arg,
       se.y = y;
       se.w = w;
       se.h = h;
-      se.sequenceNumber = client->sequence;
       se.time = currentTime.milliseconds;
       WriteEventsToClient (client, 1, (xEvent *) &se);
     }

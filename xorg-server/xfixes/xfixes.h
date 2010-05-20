@@ -37,10 +37,7 @@ extern _X_EXPORT int XFixesErrorBase;
 	int err;							\
 	err = dixLookupResourceByType((pointer *) &pRegion, rid,	\
 				      RegionResType, client, mode);	\
-	if (err == BadValue) {						\
-	    client->errorValue = rid;					\
-	    return XFixesErrorBase + BadRegion;				\
-	} else if (err != Success) {					\
+	if (err != Success) {						\
 	    client->errorValue = rid;					\
 	    return err;							\
 	}								\

@@ -70,6 +70,8 @@ optionTypeToSting(OptionValueType type)
         return "<bool>";
     case OPTV_FREQ:
         return "<freq>";
+    case OPTV_PERCENT:
+        return "<percent>";
     default:
         return "<undef>";
     }

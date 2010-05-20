@@ -51,6 +51,7 @@ typedef enum {
     OPTV_ANYSTR,                /* Any string, including an empty one */
     OPTV_REAL,
     OPTV_BOOLEAN,
+    OPTV_PERCENT,
     OPTV_FREQ
 } OptionValueType;
 
@@ -72,10 +73,12 @@ extern _X_EXPORT int xf86SetIntOption(pointer optlist, const char *name, int def
 extern _X_EXPORT double xf86SetRealOption(pointer optlist, const char *name, double deflt);
 extern _X_EXPORT char *xf86SetStrOption(pointer optlist, const char *name, char *deflt);
 extern _X_EXPORT int xf86SetBoolOption(pointer list, const char *name, int deflt );
+extern _X_EXPORT double xf86SetPercentOption(pointer list, const char *name, double deflt );
 extern _X_EXPORT int xf86CheckIntOption(pointer optlist, const char *name, int deflt);
 extern _X_EXPORT double xf86CheckRealOption(pointer optlist, const char *name, double deflt);
 extern _X_EXPORT char *xf86CheckStrOption(pointer optlist, const char *name, char *deflt);
 extern _X_EXPORT int xf86CheckBoolOption(pointer list, const char *name, int deflt );
+extern _X_EXPORT double xf86CheckPercentOption(pointer list, const char *name, double deflt );
 extern _X_EXPORT pointer xf86AddNewOption(pointer head, const char *name, const char *val );
 extern _X_EXPORT pointer xf86NewOption(char *name, char *value );
 extern _X_EXPORT pointer xf86NextOption(pointer list );
@@ -109,5 +112,6 @@ extern _X_EXPORT char *xf86NormalizeName(const char *s);
 extern _X_EXPORT pointer xf86ReplaceIntOption(pointer optlist,  const char *name, const int val);
 extern _X_EXPORT pointer xf86ReplaceRealOption(pointer optlist,  const char *name, const double val);
 extern _X_EXPORT pointer xf86ReplaceBoolOption(pointer optlist, const char *name, const Bool val);
+extern _X_EXPORT pointer xf86ReplacePercentOption(pointer optlist, const char *name, const double val);
 extern _X_EXPORT pointer xf86ReplaceStrOption(pointer optlist,  const char *name, const char* val);
 #endif

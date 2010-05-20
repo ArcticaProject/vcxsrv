@@ -1281,7 +1281,7 @@ ProcCloseFont(ClientPtr client)
     else
     {
 	client->errorValue = stuff->id;
-        return (rc == BadValue) ? BadFont : rc;
+        return rc;
     }
 }
 
@@ -1494,7 +1494,7 @@ ProcFreePixmap(ClientPtr client)
     else 
     {
 	client->errorValue = stuff->id;
-	return (rc == BadValue) ? BadPixmap : rc;
+	return rc;
     }
 }
 
@@ -2448,7 +2448,7 @@ ProcFreeColormap(ClientPtr client)
     else 
     {
 	client->errorValue = stuff->id;
-	return (rc == BadValue) ? BadColor : rc;
+	return rc;
     }
 }
 
@@ -2469,7 +2469,7 @@ ProcCopyColormapAndFree(ClientPtr client)
     if (rc == Success)
 	return CopyColormapAndFree(mid, pSrcMap, client->index);
     client->errorValue = stuff->srcCmap;
-    return (rc == BadValue) ? BadColor : rc;
+    return rc;
 }
 
 int
@@ -2486,15 +2486,18 @@ ProcInstallColormap(ClientPtr client)
 	goto out;
 
     rc = XaceHook(XACE_SCREEN_ACCESS, client, pcmp->pScreen, DixSetAttrAccess);
-    if (rc != Success)
+    if (rc != Success) {
+	if (rc == BadValue)
+	    rc = BadColor;
 	goto out;
+    }
 
     (*(pcmp->pScreen->InstallColormap)) (pcmp);
     return Success;
 
 out:
     client->errorValue = stuff->id;
-    return (rc == BadValue) ? BadColor : rc;
+    return rc;
 }
 
 int
@@ -2511,8 +2514,11 @@ ProcUninstallColormap(ClientPtr client)
 	goto out;
 
     rc = XaceHook(XACE_SCREEN_ACCESS, client, pcmp->pScreen, DixSetAttrAccess);
-    if (rc != Success)
+    if (rc != Success) {
+	if (rc == BadValue)
+	    rc = BadColor;
 	goto out;
+    }
 
     if(pcmp->mid != pcmp->pScreen->defColormap)
 	(*(pcmp->pScreen->UninstallColormap)) (pcmp);
@@ -2520,7 +2526,7 @@ ProcUninstallColormap(ClientPtr client)
 
 out:
     client->errorValue = stuff->id;
-    return (rc == BadValue) ? BadColor : rc;
+    return rc;
 }
 
 int
@@ -2593,7 +2599,7 @@ ProcAllocColor (ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2639,7 +2645,7 @@ ProcAllocNamedColor (ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2703,7 +2709,7 @@ ProcAllocColorCells (ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2765,7 +2771,7 @@ ProcAllocColorPlanes(ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2792,7 +2798,7 @@ ProcFreeColors(ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2819,7 +2825,7 @@ ProcStoreColors (ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2849,7 +2855,7 @@ ProcStoreNamedColor (ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2896,7 +2902,7 @@ ProcQueryColors(ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 } 
 
@@ -2935,7 +2941,7 @@ ProcLookupColor(ClientPtr client)
     else
     {
         client->errorValue = stuff->cmap;
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 
@@ -2961,7 +2967,7 @@ ProcCreateCursor (ClientPtr client)
 			   DixReadAccess);
     if (rc != Success) {
 	client->errorValue = stuff->source;
-	return (rc == BadValue) ? BadPixmap : rc;
+	return rc;
     }
 
     rc = dixLookupResourceByType((pointer *)&msk, stuff->mask, RT_PIXMAP, client,
@@ -2971,7 +2977,7 @@ ProcCreateCursor (ClientPtr client)
 	if (stuff->mask != None)
 	{
 	    client->errorValue = stuff->mask;
-	    return (rc == BadValue) ? BadPixmap : rc;
+	    return rc;
 	}
     }
     else if (  src->drawable.width != msk->drawable.width
@@ -3072,7 +3078,7 @@ ProcFreeCursor (ClientPtr client)
     else 
     {
 	client->errorValue = stuff->id;
-	return (rc == BadValue) ? BadCursor : rc;
+	return rc;
     }
 }
 
@@ -3782,7 +3788,6 @@ SendErrorToClient(ClientPtr client, unsigned majorCode, unsigned minorCode,
 
     memset(&rep, 0, sizeof(xError));
     rep.type = X_Error;
-    rep.sequenceNumber = client->sequence;
     rep.errorCode = errorCode;
     rep.majorCode = majorCode;
     rep.minorCode = minorCode;

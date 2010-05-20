@@ -147,7 +147,7 @@ ProcXIPassiveGrabDevice(ClientPtr client)
 	if (status != Success)
 	{
 	    client->errorValue = stuff->cursor;
-	    return (status == BadValue) ? BadCursor : status;
+	    return status;
 	}
     }
 

@@ -1115,7 +1115,6 @@ ChangePicture (PicturePtr	pPicture,
 			if (error != Success)
 			{
 			    client->errorValue = pid;
-			    error = (error == BadValue) ? RenderErrBase + BadPicture : error;
 			    break;
 			}
 			if (pAlpha->pDrawable == NULL ||
@@ -1176,7 +1175,6 @@ ChangePicture (PicturePtr	pPicture,
 			if (error != Success)
 			{
 			    client->errorValue = pid;
-			    error = (error == BadValue) ? BadPixmap : error;
 			    break;
 			}
 		    }

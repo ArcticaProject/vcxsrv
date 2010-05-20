@@ -34,5 +34,8 @@
 #define _XF86_PCI_BUS_H
 
 void xf86PciProbe(void);
+Bool xf86PciAddMatchingDev(DriverPtr drvp);
+Bool xf86PciProbeDev(DriverPtr drvp);
+void xf86PciIsolateDevice(char *argument);
 
 #endif /* _XF86_PCI_BUS_H */

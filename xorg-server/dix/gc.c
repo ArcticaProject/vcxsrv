@@ -458,8 +458,6 @@ ChangeGCXIDs(ClientPtr client, GC *pGC, BITS32 mask, CARD32 *pC32)
 	if (rc != Success)
 	{
 	    client->errorValue = vals[offset].val;
-	    if (rc == BadValue)
-		rc = (xidfields[i].type == RT_PIXMAP) ? BadPixmap : BadFont;
 	    return rc;
 	}
     }

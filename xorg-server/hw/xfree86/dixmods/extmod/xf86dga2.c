@@ -436,7 +436,7 @@ ProcXDGAInstallColormap(ClientPtr client)
     rc = dixLookupResourceByType((pointer *)&cmap, stuff->cmap, RT_COLORMAP,
 				 client, DixInstallAccess);
     if (rc != Success)
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     DGAInstallCmap(cmap);
     return Success;
 }
@@ -878,7 +878,7 @@ ProcXF86DGAInstallColormap(ClientPtr client)
 	DGAInstallCmap(pcmp);
         return Success;
     } else {
-        return (rc == BadValue) ? BadColor : rc;
+        return rc;
     }
 }
 

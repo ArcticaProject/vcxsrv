@@ -316,14 +316,14 @@ AllocGlyphCursor(Font source, unsigned sourceChar, Font mask, unsigned maskChar,
     if (rc != Success)
     {
 	client->errorValue = source;
-	return (rc == BadValue) ? BadFont : rc;
+	return rc;
     }
     rc = dixLookupResourceByType((pointer *)&maskfont, mask, RT_FONT, client,
 				 DixUseAccess);
     if (rc != Success && mask != None)
     {
 	client->errorValue = mask;
-	return (rc == BadValue) ? BadFont : rc;
+	return rc;
     }
     if (sourcefont != maskfont)
 	pShare = (GlyphSharePtr)NULL;

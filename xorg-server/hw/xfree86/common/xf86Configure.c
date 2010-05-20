@@ -322,7 +322,7 @@ configureScreenSection (int screennum)
 }
 
 static const char* 
-optionTypeToSting(OptionValueType type)
+optionTypeToString(OptionValueType type)
 {
     switch (type) {
     case OPTV_NONE:
@@ -339,6 +339,8 @@ optionTypeToSting(OptionValueType type)
         return "[<bool>]";
     case OPTV_FREQ:
         return "<freq>";
+    case OPTV_PERCENT:
+        return "<percent>";
     default:
         return "";
     }
@@ -384,7 +386,8 @@ configureDeviceSection (int screennum)
 	    "        ### Available Driver options are:-\n"
 	    "        ### Values: <i>: integer, <f>: float, "
 			"<bool>: \"True\"/\"False\",\n"
-	    "        ### <string>: \"String\", <freq>: \"<f> Hz/kHz/MHz\"\n"
+	    "        ### <string>: \"String\", <freq>: \"<f> Hz/kHz/MHz\",\n"
+	    "        ### <percent>: \"<f>%\"\n"
 	    "        ### [arg]: arg optional\n";
 	ptr->dev_comment = xstrdup(descrip);
 	if (ptr->dev_comment) {
@@ -394,7 +397,7 @@ configureDeviceSection (int screennum)
 		const char *prefix = "        #Option     ";
 		const char *middle = " \t# ";
 		const char *suffix = "\n";
-		const char *opttype = optionTypeToSting(p->type);
+		const char *opttype = optionTypeToString(p->type);
 		char *optname;
 		int len = strlen(ptr->dev_comment) + strlen(prefix) +
 			  strlen(middle) + strlen(suffix) + 1;
@@ -818,7 +821,6 @@ DoConfigure(void)
     }
 
     xf86PostProbe();
-    xf86EntityInit();
 
     for (j = 0; j < xf86NumScreens; j++) {
 	xf86Screens[j]->scrnIndex = j;
@@ -834,7 +836,6 @@ DoConfigure(void)
 
 	ConfiguredMonitor = NULL;
 
-	xf86EnableAccess(xf86Screens[dev2screen[j]]);
 	if ((*xf86Screens[dev2screen[j]]->PreInit)(xf86Screens[dev2screen[j]], 
 						   PROBE_DETECT) &&
 	    ConfiguredMonitor) {
