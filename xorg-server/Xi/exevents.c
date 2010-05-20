@@ -1445,7 +1445,7 @@ GrabButton(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr modifier_device,
 	if (rc != Success)
 	{
 	    client->errorValue = param->cursor;
-	    return (rc == BadValue) ? BadCursor : rc;
+	    return rc;
 	}
 	access_mode |= DixForceAccess;
     }
@@ -1543,7 +1543,7 @@ GrabWindow(ClientPtr client, DeviceIntPtr dev, int type,
 	if (rc != Success)
 	{
 	    client->errorValue = param->cursor;
-	    return (rc == BadValue) ? BadCursor : rc;
+	    return rc;
 	}
 	access_mode |= DixForceAccess;
     }

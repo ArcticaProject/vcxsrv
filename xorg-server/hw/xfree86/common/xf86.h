@@ -64,7 +64,7 @@ extern _X_EXPORT ScrnInfoPtr *xf86Screens;	/* List of pointers to ScrnInfoRecs *
 extern _X_EXPORT const unsigned char byte_reversed[256];
 extern _X_EXPORT Bool pciSlotClaimed;
 extern _X_EXPORT Bool fbSlotClaimed;
-#if defined(__sparc__) || defined(__sparc)
+#if (defined(__sparc__) || defined(__sparc)) && !defined(__OpenBSD__)
 extern _X_EXPORT Bool sbusSlotClaimed;
 #endif
 extern _X_EXPORT confDRIRec xf86ConfigDRI;
@@ -104,7 +104,6 @@ extern _X_EXPORT void xf86FormatPciBusNumber(int busnum, char *buffer);
 extern _X_EXPORT int  xf86GetFbInfoForScreen(int scrnIndex);
 extern _X_EXPORT int xf86ClaimFbSlot(DriverPtr drvp, int chipset, GDevPtr dev, Bool active);
 extern _X_EXPORT int xf86ClaimNoSlot(DriverPtr drvp, int chipset, GDevPtr dev, Bool active);
-extern _X_EXPORT void xf86EnableAccess(ScrnInfoPtr pScrn);
 extern _X_EXPORT Bool xf86IsPrimaryPci(struct pci_device * pPci);
 /* new RAC */
 extern _X_EXPORT Bool xf86DriverHasEntities(DriverPtr drvp);

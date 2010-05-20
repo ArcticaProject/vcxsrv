@@ -119,7 +119,7 @@ ProcXFixesCreateRegionFromBitmap (ClientPtr client)
     if (rc != Success)
     {
 	client->errorValue = stuff->bitmap;
-	return (rc == BadValue) ? BadPixmap : rc;
+	return rc;
     }
     if (pPixmap->drawable.depth != 1)
 	return BadMatch;
@@ -164,7 +164,7 @@ ProcXFixesCreateRegionFromWindow (ClientPtr client)
     if (rc != Success)
     {
 	client->errorValue = stuff->window;
-	return (rc == BadValue) ? BadWindow : rc;
+	return rc;
     }
     switch (stuff->kind) {
     case WindowRegionBounding:
@@ -675,7 +675,7 @@ ProcXFixesSetWindowShapeRegion (ClientPtr client)
     if (rc != Success)
     {
 	client->errorValue = stuff->dest;
-	return (rc == BadValue) ? BadWindow : rc;
+	return rc;
     }
     VERIFY_REGION_OR_NONE(pRegion, stuff->region, client, DixWriteAccess);
     pScreen = pWin->drawable.pScreen;

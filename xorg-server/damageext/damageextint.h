@@ -62,7 +62,7 @@ typedef struct _DamageExt {
     int rc = dixLookupResourceByType((pointer *)&(pDamageExt), rid, \
                                      DamageExtType, client, mode); \
     if (rc != Success) \
-        return (rc == BadValue) ? DamageErrorBase + BadDamage : rc; \
+        return rc; \
 }
 
 void

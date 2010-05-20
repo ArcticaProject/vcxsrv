@@ -102,7 +102,6 @@ XkbSendLegacyMapNotify(DeviceIntPtr kbd, CARD16 xkb_event, CARD16 changed,
         if (!XIShouldNotify(clients[i], kbd))
             continue;
 
-        core_mn.u.u.sequenceNumber = clients[i]->sequence;
         if (keymap_changed) {
             core_mn.u.mappingNotify.request = MappingKeyboard;
 

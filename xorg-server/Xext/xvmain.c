@@ -192,6 +192,7 @@ XvExtensionInit(void)
       EventSwapVector[XvEventBase+XvPortNotify] = 
 	(EventSwapPtr)WriteSwappedPortNotifyEvent;
 
+      SetResourceTypeErrorValue(XvRTPort, _XvBadPort);
       (void)MakeAtom(XvName, strlen(XvName), xTrue);
 
     }
@@ -530,17 +531,12 @@ XvdiSendVideoNotify(XvPortPtr pPort, DrawablePtr pDraw, int reason)
 
   while (pn) 
     {
-      if (pn->client)
-	{
-	  event.u.u.type = XvEventBase + XvVideoNotify;
-	  event.u.u.sequenceNumber = pn->client->sequence;
-	  event.u.videoNotify.time = currentTime.milliseconds;
-	  event.u.videoNotify.drawable = pDraw->id;
-	  event.u.videoNotify.port = pPort->id;
-	  event.u.videoNotify.reason = reason;
-	  TryClientEvents(pn->client, NULL, (xEventPtr)&event, 1,
-                          NoEventMask, NoEventMask, NullGrab);
-	}
+      event.u.u.type = XvEventBase + XvVideoNotify;
+      event.u.videoNotify.time = currentTime.milliseconds;
+      event.u.videoNotify.drawable = pDraw->id;
+      event.u.videoNotify.port = pPort->id;
+      event.u.videoNotify.reason = reason;
+      WriteEventsToClient(pn->client, 1, (xEventPtr)&event);
       pn = pn->next;
     }
 
@@ -562,17 +558,12 @@ XvdiSendPortNotify(
 
   while (pn) 
     {
-      if (pn->client)
-	{
-	  event.u.u.type = XvEventBase + XvPortNotify;
-	  event.u.u.sequenceNumber = pn->client->sequence;
-	  event.u.portNotify.time = currentTime.milliseconds;
-	  event.u.portNotify.port = pPort->id;
-	  event.u.portNotify.attribute = attribute;
-	  event.u.portNotify.value = value;
-	  TryClientEvents(pn->client, NULL, (xEventPtr)&event, 1,
-                          NoEventMask, NoEventMask, NullGrab);
-	}
+      event.u.u.type = XvEventBase + XvPortNotify;
+      event.u.portNotify.time = currentTime.milliseconds;
+      event.u.portNotify.port = pPort->id;
+      event.u.portNotify.attribute = attribute;
+      event.u.portNotify.value = value;
+      WriteEventsToClient(pn->client, 1, (xEventPtr)&event);
       pn = pn->next;
     }
 

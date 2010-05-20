@@ -673,6 +673,18 @@ winSetRealOption (pointer optlist, const char *name, double deflt)
     deflt = o.value.realnum;
   return deflt;
 }
+
+double
+winSetPercentOption (pointer optlist, const char *name, double deflt)
+{
+  OptionInfoRec o;
+
+  o.name = name;
+  o.type = OPTV_PERCENT;
+  if (ParseOptionValue (-1, optlist, &o))
+    deflt = o.value.realnum;
+  return deflt;
+}
 #endif
 
 
@@ -851,6 +863,31 @@ ParseOptionValue (int scrnIndex, pointer options, OptionInfoPtr p)
 	      p->found = FALSE;
 	    }
 	  break;
+	case OPTV_PERCENT:
+	  if (*s == '\0')
+	    {
+	      winDrvMsg (scrnIndex, X_WARNING,
+			 "Option \"%s\" requires a percent value\n",
+			 p->name);
+	      p->found = FALSE;
+	    }
+	  else
+	    {
+	       double percent = strtod (s, &end);
+
+	       if (end != s && winNameCompare (end, "%"))
+		 {
+		   p->found = TRUE;
+		   p->value.realnum = percent;
+		 }
+	       else
+		 {
+		   winDrvMsg (scrnIndex, X_WARNING,
+			      "Option \"%s\" requires a frequency value\n",
+			       p->name);
+		   p->found = FALSE;
+		 }
+	    }
 	case OPTV_FREQ:
 	  if (*s == '\0')
 	    {

@@ -192,22 +192,16 @@ static void surface_notify(
 {
     DRISurfaceNotifyArg *arg = _arg;
     int client_index = (int) x_cvt_vptr_to_uint(data);
-    ClientPtr client;
     xAppleDRINotifyEvent se;
 
     if (client_index < 0 || client_index >= currentMaxClients)
         return;
 
-    client = clients[client_index];
-    if (client == NULL || client == serverClient || client->clientGone)
-        return;
-
     se.type = DRIEventBase + AppleDRISurfaceNotify;
     se.kind = arg->kind;
     se.arg = arg->id;
-    se.sequenceNumber = client->sequence;
     se.time = currentTime.milliseconds;
-    WriteEventsToClient (client, 1, (xEvent *) &se);
+    WriteEventsToClient (clients[client_index], 1, (xEvent *) &se);
 }
 
 static int

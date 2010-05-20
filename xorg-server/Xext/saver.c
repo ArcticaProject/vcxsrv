@@ -480,7 +480,6 @@ SendScreenSaverNotify (ScreenPtr pScreen, int state, Bool forced)
     ScreenSaverEventPtr		pEv;
     unsigned long		mask;
     xScreenSaverNotifyEvent	ev;
-    ClientPtr			client;
     int				kind;
 
     UpdateCurrentTimeIf ();
@@ -499,20 +498,16 @@ SendScreenSaverNotify (ScreenPtr pScreen, int state, Bool forced)
 	kind = ScreenSaverInternal;
     for (pEv = pPriv->events; pEv; pEv = pEv->next)
     {
-	client = pEv->client;
-	if (client->clientGone)
-	    continue;
 	if (!(pEv->mask & mask))
 	    continue;
 	ev.type = ScreenSaverNotify + ScreenSaverEventBase;
 	ev.state = state;
-	ev.sequenceNumber = client->sequence;
 	ev.timestamp = currentTime.milliseconds;
 	ev.root = WindowTable[pScreen->myNum]->drawable.id;
 	ev.window = savedScreenInfo[pScreen->myNum].wid;
 	ev.kind = kind;
 	ev.forced = forced;
-	WriteEventsToClient (client, 1, (xEvent *) &ev);
+	WriteEventsToClient (pEv->client, 1, (xEvent *) &ev);
     }
 }
 
@@ -1048,7 +1043,6 @@ ScreenSaverSetAttributes (ClientPtr client)
 		}
 	        else
 		{
-		    ret = (ret == BadValue) ? BadPixmap : ret;
 		    client->errorValue = pixID;
 		    goto PatchUp;
 		}
@@ -1086,7 +1080,6 @@ ScreenSaverSetAttributes (ClientPtr client)
 		}
     	        else
 		{
-		    ret = (ret == BadValue) ? BadPixmap : ret;
 		    client->errorValue = pixID;
 		    goto PatchUp;
 		}
@@ -1168,7 +1161,6 @@ ScreenSaverSetAttributes (ClientPtr client)
 				    client, DixUseAccess);
 	    if (ret != Success)
 	    {
-		ret = (ret == BadValue) ? BadColor : ret;
 		client->errorValue = cmap;
 		goto PatchUp;
 	    }
@@ -1192,7 +1184,6 @@ ScreenSaverSetAttributes (ClientPtr client)
 					RT_CURSOR, client, DixUseAccess);
 	    	if (ret != Success)
 	    	{
-		    ret = (ret == BadValue) ? BadCursor : ret;
 		    client->errorValue = cursorID;
 		    goto PatchUp;
 	    	}
@@ -1281,7 +1272,7 @@ ProcScreenSaverSetAttributes (ClientPtr client)
 					       XRT_PIXMAP, client,
 					       DixReadAccess);
 	      if (status != Success)
-		  return (status == BadValue) ? BadPixmap : status;
+		  return status;
           }
        }
 
@@ -1293,7 +1284,7 @@ ProcScreenSaverSetAttributes (ClientPtr client)
 					       XRT_PIXMAP, client,
 					       DixReadAccess);
 	      if (status != Success)
-		  return (status == BadValue) ? BadPixmap : status;
+		  return status;
           }
        }
 
@@ -1305,7 +1296,7 @@ ProcScreenSaverSetAttributes (ClientPtr client)
 						XRT_COLORMAP, client,
 						DixReadAccess);
 	       if (status != Success)
-		   return (status == BadValue) ? BadColor : status;
+		   return status;
            }
        }
 

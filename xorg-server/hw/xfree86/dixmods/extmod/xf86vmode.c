@@ -331,7 +331,6 @@ SendXF86VidModeNotify(ScreenPtr pScreen, int state, Bool forced)
     XF86VidModeEventPtr		pEv;
     unsigned long		mask;
     xXF86VidModeNotifyEvent	ev;
-    ClientPtr			client;
     int				kind;
 
     UpdateCurrentTimeIf ();
@@ -343,19 +342,15 @@ SendXF86VidModeNotify(ScreenPtr pScreen, int state, Bool forced)
     kind = XF86VidModeModeChange;
     for (pEv = pPriv->events; pEv; pEv = pEv->next)
     {
-	client = pEv->client;
-	if (client->clientGone)
-	    continue;
 	if (!(pEv->mask & mask))
 	    continue;
 	ev.type = XF86VidModeNotify + XF86VidModeEventBase;
 	ev.state = state;
-	ev.sequenceNumber = client->sequence;
 	ev.timestamp = currentTime.milliseconds;
 	ev.root = WindowTable[pScreen->myNum]->drawable.id;
 	ev.kind = kind;
 	ev.forced = forced;
-	WriteEventsToClient (client, 1, (xEvent *) &ev);
+	WriteEventsToClient (pEv->client, 1, (xEvent *) &ev);
     }
 }
 

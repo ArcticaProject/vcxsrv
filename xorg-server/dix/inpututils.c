@@ -88,7 +88,6 @@ do_butmap_change(DeviceIntPtr dev, CARD8 *map, int len, ClientPtr client)
         if (!XIShouldNotify(clients[i], dev))
             continue;
 
-        core_mn.u.u.sequenceNumber = clients[i]->sequence;
         WriteEventsToClient(clients[i], 1, &core_mn);
     }
 

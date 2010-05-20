@@ -256,6 +256,7 @@ typedef enum
   OPTV_ANYSTR,			/* Any string, including an empty one */
   OPTV_REAL,
   OPTV_BOOLEAN,
+  OPTV_PERCENT,
   OPTV_FREQ
 }
 OptionValueType;
@@ -289,6 +290,7 @@ char *winSetStrOption (pointer optlist, const char *name, char *deflt);
 int winSetBoolOption (pointer optlist, const char *name, int deflt);
 int winSetIntOption (pointer optlist, const char *name, int deflt);
 double winSetRealOption (pointer optlist, const char *name, double deflt);
+double winSetPercentOption (pointer optlist, const char *name, double deflt);
 #ifdef XWIN_XF86CONFIG
 XF86OptionPtr winFindOption (XF86OptionPtr list, const char *name);
 char *winFindOptionValue (XF86OptionPtr list, const char *name);

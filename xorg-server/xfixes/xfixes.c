@@ -259,5 +259,6 @@ XFixesExtensionInit(void)
 	    (EventSwapPtr) SXFixesSelectionNotifyEvent;
 	EventSwapVector[XFixesEventBase + XFixesCursorNotify] =
 	    (EventSwapPtr) SXFixesCursorNotifyEvent;
+	SetResourceTypeErrorValue(RegionResType, XFixesErrorBase + BadRegion);
     }
 }

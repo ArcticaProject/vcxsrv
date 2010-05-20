@@ -2528,6 +2528,7 @@ Next, the higher level functions that most drivers would use.
           OPTV_ANYSTR,  /* Any string, including an empty one */
           OPTV_REAL,
           OPTV_BOOLEAN,
+          OPTV_PERCENT,
           OPTV_FREQ
       } OptionValueType;
 
@@ -2554,6 +2555,11 @@ Next, the higher level functions that most drivers would use.
       is stored in &s.code;freq.freq&e.code;.  When no unit is specified,
       &s.code;freq.units&e.code; is set to &s.code;0&e.code;, and
       &s.code;freq.freq&e.code; is unscaled.
+
+      &s.code;OPTV_PERCENT&e.code; can be used for option values that are
+      specified in percent (e.g. "20%"). These values are a floating point
+      number with a percent sign appended. If the percent sign is missing,
+      the parser will fail to match the value.
 
       Typical usage is to setup an array of
       &s.code;OptionInfoRecs&e.code; with all fields initialised.

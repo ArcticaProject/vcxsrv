@@ -422,12 +422,12 @@ ProcDbeDeallocateBackBufferName(ClientPtr client)
 				 dbeWindowPrivResType, client,
 				 DixDestroyAccess);
     if (rc != Success)
-	return (rc == BadValue) ? dbeErrorBase + DbeBadBuffer : rc;
+	return rc;
 
     rc = dixLookupResourceByType(&val, stuff->buffer, dbeDrawableResType,
 				 client, DixDestroyAccess);
     if (rc != Success)
-	return (rc == BadValue) ? dbeErrorBase + DbeBadBuffer : rc;
+	return rc;
 
     /* Make sure that the id is valid for the window.
      * This is paranoid code since we already looked up the ID by type
@@ -1672,6 +1672,8 @@ DbeExtensionInit(void)
                             DbeResetProc, StandardMinorOpcode);
 
     dbeErrorBase = extEntry->errorBase;
+    SetResourceTypeErrorValue(dbeWindowPrivResType, dbeErrorBase + DbeBadBuffer);
+    SetResourceTypeErrorValue(dbeDrawableResType, dbeErrorBase + DbeBadBuffer);
 
 } /* DbeExtensionInit() */
 

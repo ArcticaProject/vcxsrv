@@ -97,44 +97,6 @@ typedef struct {
 #endif
 } miDCCursorRec, *miDCCursorPtr;
 
-/*
- * sprite/cursor method table
- */
-
-static Bool	miDCRealizeCursor(ScreenPtr pScreen, CursorPtr pCursor);
-static Bool	miDCUnrealizeCursor(ScreenPtr pScreen, CursorPtr pCursor);
-static Bool	miDCPutUpCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
-                                CursorPtr pCursor, int x, int y, 
-                                unsigned long source, unsigned long mask);
-static Bool	miDCSaveUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
-                                    int x, int y,
-				    int w, int h);
-static Bool	miDCRestoreUnderCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
-                                       int x, int y,
-				       int w, int h);
-static Bool	miDCMoveCursor(DeviceIntPtr pDev, ScreenPtr pScreen, 
-                               CursorPtr pCursor, int x, int y, 
-                               int w, int h, int dx, int dy,
-			       unsigned long source, unsigned long mask);
-static Bool	miDCChangeSave(DeviceIntPtr pDev, ScreenPtr pScreen, 
-                               int x, int y, int w, int h,	
-                               int dx, int dy);
-
-static Bool     miDCDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen);
-static void     miDCDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen);
-
-static miSpriteCursorFuncRec miDCFuncs = {
-    miDCRealizeCursor,
-    miDCUnrealizeCursor,
-    miDCPutUpCursor,
-    miDCSaveUnderCursor,
-    miDCRestoreUnderCursor,
-    miDCMoveCursor,
-    miDCChangeSave,
-    miDCDeviceInitialize,
-    miDCDeviceCleanup
-};
-
 Bool
 miDCInitialize (ScreenPtr pScreen, miPointerScreenFuncPtr screenFuncs)
 {
@@ -150,7 +112,7 @@ miDCInitialize (ScreenPtr pScreen, miPointerScreenFuncPtr screenFuncs)
 
     dixSetPrivate(&pScreen->devPrivates, miDCScreenKey, pScreenPriv);
 
-    if (!miSpriteInitialize (pScreen, &miDCFuncs, screenFuncs))
+    if (!miSpriteInitialize (pScreen, screenFuncs))
     {
 	free((pointer) pScreenPriv);
 	return FALSE;
@@ -170,7 +132,7 @@ miDCCloseScreen (int index, ScreenPtr pScreen)
     return (*pScreen->CloseScreen) (index, pScreen);
 }
 
-static Bool
+Bool
 miDCRealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
 {
     if (pCursor->bits->refcnt <= 1)
@@ -329,7 +291,7 @@ miDCRealize (ScreenPtr pScreen, CursorPtr pCursor)
     return pPriv;
 }
 
-static Bool
+Bool
 miDCUnrealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
 {
     miDCCursorPtr   pPriv;
@@ -426,7 +388,7 @@ miDCMakeGC(WindowPtr pWin)
 }
 
 
-static Bool
+Bool
 miDCPutUpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
                  int x, int y, unsigned long source, unsigned long mask)
 {
@@ -471,7 +433,7 @@ miDCPutUpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
     return TRUE;
 }
 
-static Bool
+Bool
 miDCSaveUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
                      int x, int y, int w, int h)
 {
@@ -505,7 +467,7 @@ miDCSaveUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
     return TRUE;
 }
 
-static Bool
+Bool
 miDCRestoreUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
                         int x, int y, int w, int h)
 {
@@ -532,7 +494,7 @@ miDCRestoreUnderCursor (DeviceIntPtr pDev, ScreenPtr pScreen,
     return TRUE;
 }
 
-static Bool
+Bool
 miDCChangeSave (DeviceIntPtr pDev, ScreenPtr pScreen,
                 int x, int y, int w, int h, int dx, int dy)
 {
@@ -665,7 +627,7 @@ miDCChangeSave (DeviceIntPtr pDev, ScreenPtr pScreen,
     return TRUE;
 }
 
-static Bool
+Bool
 miDCMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
                 int x, int y, int w, int h, int dx, int dy,
                 unsigned long source, unsigned long mask)
@@ -764,7 +726,7 @@ miDCMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
     return TRUE;
 }
 
-static Bool
+Bool
 miDCDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
 {
     miDCBufferPtr   pBuffer;
@@ -839,7 +801,7 @@ failure:
     return FALSE;
 }
 
-static void
+void
 miDCDeviceCleanup(DeviceIntPtr pDev, ScreenPtr pScreen)
 {
     miDCBufferPtr   pBuffer;

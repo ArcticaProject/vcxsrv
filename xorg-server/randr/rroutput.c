@@ -337,7 +337,6 @@ RRDeliverOutputEvent(ClientPtr client, WindowPtr pWin, RROutputPtr output)
     
     oe.type = RRNotify + RREventBase;
     oe.subCode = RRNotify_OutputChange;
-    oe.sequenceNumber = client->sequence;
     oe.timestamp = pScrPriv->lastSetTime.milliseconds;
     oe.configTimestamp = pScrPriv->lastConfigTime.milliseconds;
     oe.window = pWin->drawable.id;
@@ -424,6 +423,7 @@ RROutputInit (void)
     RROutputType = CreateNewResourceType (RROutputDestroyResource, "OUTPUT");
     if (!RROutputType)
 	return FALSE;
+    SetResourceTypeErrorValue(RROutputType, RRErrorBase + BadRROutput);
     return TRUE;
 }
 

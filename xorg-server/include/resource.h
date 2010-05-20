@@ -157,6 +157,9 @@ typedef Bool (*FindComplexResType)(
 extern _X_EXPORT RESTYPE CreateNewResourceType(
     DeleteType /*deleteFunc*/, char * /*name*/);
 
+extern _X_EXPORT void SetResourceTypeErrorValue(
+    RESTYPE /*type*/, int /*errorValue*/);
+
 extern _X_EXPORT RESTYPE CreateNewResourceClass(void);
 
 extern _X_EXPORT Bool InitClientResources(

@@ -1238,7 +1238,6 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 					  client, DixUseAccess);
 	    if (err != Success)
 	    {
-		err = (err == BadValue) ? BadFont : err;
 		/* restore pFont and fid for step 4 (described below) */
 		pFont = oldpFont;
 		fid = oldfid;

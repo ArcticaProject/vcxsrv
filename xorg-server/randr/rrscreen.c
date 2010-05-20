@@ -102,13 +102,11 @@ RRDeliverScreenEvent (ClientPtr client, WindowPtr pWin, ScreenPtr pScreen)
     se.type = RRScreenChangeNotify + RREventBase;
     se.rotation = (CARD8) (crtc ? crtc->rotation : RR_Rotate_0);
     se.timestamp = pScrPriv->lastSetTime.milliseconds;
-    se.sequenceNumber = client->sequence;
     se.configTimestamp = pScrPriv->lastConfigTime.milliseconds;
     se.root =  pRoot->drawable.id;
     se.window = pWin->drawable.id;
     se.subpixelOrder = PictureGetSubpixelOrder (pScreen);
 
-    se.sequenceNumber = client->sequence;
     se.sizeID = RR10CurrentSizeID (pScreen);
 
     if (se.rotation & (RR_Rotate_90 | RR_Rotate_270)) {

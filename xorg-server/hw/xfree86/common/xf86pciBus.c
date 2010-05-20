@@ -420,4 +420,164 @@ xf86CheckPciSlot(const struct pci_device *d)
     return TRUE;
 }
 
+#define END_OF_MATCHES(m) \
+    (((m).vendor_id == 0) && ((m).device_id == 0) && ((m).subvendor_id == 0))
 
+Bool
+xf86PciAddMatchingDev(DriverPtr drvp)
+{
+    const struct pci_id_match * const devices = drvp->supported_devices;
+    int j;
+    struct pci_device *pPci;
+    struct pci_device_iterator *iter;
+    int numFound = 0;
+
+
+    iter = pci_id_match_iterator_create(NULL);
+    while ((pPci = pci_device_next(iter)) != NULL) {
+    /* Determine if this device is supported by the driver.  If it is,
+     * add it to the list of devices to configure.
+     */
+    for (j = 0 ; ! END_OF_MATCHES(devices[j]) ; j++) {
+        if ( PCI_ID_COMPARE( devices[j].vendor_id, pPci->vendor_id )
+         && PCI_ID_COMPARE( devices[j].device_id, pPci->device_id )
+         && ((devices[j].device_class_mask & pPci->device_class)
+             == devices[j].device_class) ) {
+        if (xf86CheckPciSlot(pPci)) {
+            GDevPtr pGDev = xf86AddBusDeviceToConfigure(
+                    drvp->driverName, BUS_PCI, pPci, -1);
+            if (pGDev != NULL) {
+            /* After configure pass 1, chipID and chipRev are
+             * treated as over-rides, so clobber them here.
+             */
+            pGDev->chipID = -1;
+            pGDev->chipRev = -1;
+            }
+
+            numFound++;
+        }
+
+        break;
+        }
+    }
+    }
+
+    pci_iterator_destroy(iter);
+
+    return (numFound != 0);
+}
+
+Bool
+xf86PciProbeDev(DriverPtr drvp)
+{
+    int i, j;
+    struct pci_device * pPci;
+    Bool foundScreen = FALSE;
+    const struct pci_id_match * const devices = drvp->supported_devices;
+    GDevPtr *devList;
+    const unsigned numDevs = xf86MatchDevice(drvp->driverName, & devList);
+
+    for ( i = 0 ; i < numDevs ; i++ ) {
+       struct pci_device_iterator *iter;
+       unsigned device_id;
+
+
+       /* Find the pciVideoRec associated with this device section.
+        */
+       iter = pci_id_match_iterator_create(NULL);
+       while ((pPci = pci_device_next(iter)) != NULL) {
+           if (devList[i]->busID && *devList[i]->busID) {
+               if (xf86ComparePciBusString(devList[i]->busID,
+                                           ((pPci->domain << 8)
+                                            | pPci->bus),
+                                           pPci->dev,
+                                           pPci->func)) {
+                   break;
+               }
+           }
+           else if (xf86IsPrimaryPci(pPci)) {
+               break;
+           }
+       }
+
+       pci_iterator_destroy(iter);
+
+       if (pPci == NULL) {
+           continue;
+       }
+       device_id = (devList[i]->chipID > 0)
+         ? devList[i]->chipID : pPci->device_id;
+
+
+       /* Once the pciVideoRec is found, determine if the device is supported
+        * by the driver.  If it is, probe it!
+        */
+       for ( j = 0 ; ! END_OF_MATCHES( devices[j] ) ; j++ ) {
+           if ( PCI_ID_COMPARE( devices[j].vendor_id, pPci->vendor_id )
+                && PCI_ID_COMPARE( devices[j].device_id, device_id )
+                && ((devices[j].device_class_mask & pPci->device_class)
+                     == devices[j].device_class) ) {
+               int  entry;
+
+               /* Allow the same entity to be used more than once for
+                * devices with multiple screens per entity.  This assumes
+                * implicitly that there will be a screen == 0 instance.
+                *
+                * FIXME Need to make sure that two different drivers don't
+                * FIXME claim the same screen > 0 instance.
+                */
+               if ((devList[i]->screen == 0) && !xf86CheckPciSlot(pPci))
+                   continue;
+
+               DebugF("%s: card at %d:%d:%d is claimed by a Device section\n",
+                      drvp->driverName, pPci->bus, pPci->dev, pPci->func);
+
+               /* Allocate an entry in the lists to be returned */
+               entry = xf86ClaimPciSlot(pPci, drvp, device_id,
+                                         devList[i], devList[i]->active);
+
+               if ((entry == -1) && (devList[i]->screen > 0)) {
+                   unsigned k;
+
+                   for (k = 0; k < xf86NumEntities; k++ ) {
+                       EntityPtr pEnt = xf86Entities[k];
+                       if (pEnt->bus.type != BUS_PCI)
+                           continue;
+                       if (pEnt->bus.id.pci == pPci) {
+                           entry = k;
+                           xf86AddDevToEntity(k, devList[i]);
+                           break;
+                       }
+                   }
+               }
+
+               if (entry != -1) {
+                   if ((*drvp->PciProbe)(drvp, entry, pPci,
+                                         devices[j].match_data)) {
+                       foundScreen = TRUE;
+                   } else
+                       xf86UnclaimPciSlot(pPci);
+               }
+
+               break;
+           }
+       }
+    }
+    free(devList);
+
+    return foundScreen;
+}
+
+void
+xf86PciIsolateDevice(char *argument)
+{
+    int bus, device, func;
+
+    if (sscanf(argument, "PCI:%d:%d:%d", &bus, &device, &func) == 3) {
+        xf86IsolateDevice.domain = PCI_DOM_FROM_BUS(bus);
+        xf86IsolateDevice.bus = PCI_BUS_NO_DOMAIN(bus);
+        xf86IsolateDevice.dev = device;
+        xf86IsolateDevice.func = func;
+    } else
+        FatalError("Invalid isolated device specification\n");
+}

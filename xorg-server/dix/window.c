@@ -1056,7 +1056,7 @@ ChangeWindowAttributes(WindowPtr pWin, Mask vmask, XID *vlist, ClientPtr client)
 		}
 		else
 		{
-		    error = (rc == BadValue) ? BadPixmap : rc;
+		    error = rc;
 		    client->errorValue = pixID;
 		    goto PatchUp;
 		}
@@ -1116,7 +1116,7 @@ ChangeWindowAttributes(WindowPtr pWin, Mask vmask, XID *vlist, ClientPtr client)
 	    }
 	    else
 	    {
-		error = (rc == BadValue) ? BadPixmap : rc;
+		error = rc;
 		client->errorValue = pixID;
 		goto PatchUp;
 	    }
@@ -1264,7 +1264,7 @@ ChangeWindowAttributes(WindowPtr pWin, Mask vmask, XID *vlist, ClientPtr client)
 				   client, DixUseAccess);
 	    if (rc != Success)
 	    {
-		error = (rc == BadValue) ? BadColor : rc;
+		error = rc;
 		client->errorValue = cmap;
 		goto PatchUp;
 	    }
@@ -1340,7 +1340,7 @@ ChangeWindowAttributes(WindowPtr pWin, Mask vmask, XID *vlist, ClientPtr client)
 				       RT_CURSOR, client, DixUseAccess);
 		if (rc != Success)
 		{
-		    error = (rc == BadValue) ? BadCursor : rc;
+		    error = rc;
 		    client->errorValue = cursorID;
 		    goto PatchUp;
 		}

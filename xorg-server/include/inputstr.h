@@ -477,6 +477,14 @@ typedef struct _SpriteInfoRec {
     DeviceIntPtr        paired;      /* The paired device. Keyboard if
                                         spriteOwner is TRUE, otherwise the
                                         pointer that owns the sprite. */ 
+
+    /* keep states for animated cursor */
+    struct {
+        CursorPtr       pCursor;
+        ScreenPtr       pScreen;
+        int             elt;
+        CARD32          time;
+    } anim;
 } SpriteInfoRec, *SpriteInfoPtr;
 
 /* device types */

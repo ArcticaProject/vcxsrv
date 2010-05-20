@@ -206,7 +206,7 @@ typedef struct _XvPortRec {
 	int rc = dixLookupResourceByType((pointer *)&(pPort), portID,\
 	                                 XvRTPort, client, mode);\
 	if (rc != Success)\
-	    return (rc == BadValue) ? _XvBadPort : rc;\
+	    return rc;\
     }
 
 typedef struct {

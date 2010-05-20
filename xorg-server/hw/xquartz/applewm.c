@@ -341,7 +341,6 @@ ProcAppleWMSelectInput (register ClientPtr client)
 void
 AppleWMSendEvent (int type, unsigned int mask, int which, int arg) {
     WMEventPtr      *pHead, pEvent;
-    ClientPtr       client;
     xAppleWMNotifyEvent se;
     int             i;
 
@@ -349,18 +348,13 @@ AppleWMSendEvent (int type, unsigned int mask, int which, int arg) {
     if (i != Success || !pHead)
         return;
     for (pEvent = *pHead; pEvent; pEvent = pEvent->next) {
-        client = pEvent->client;
-        if ((pEvent->mask & mask) == 0
-            || client == serverClient || client->clientGone)
-        {
+        if ((pEvent->mask & mask) == 0)
             continue;
-        }
         se.type = type + WMEventBase;
         se.kind = which;
         se.arg = arg;
-        se.sequenceNumber = client->sequence;
         se.time = currentTime.milliseconds;
-        WriteEventsToClient (client, 1, (xEvent *) &se);
+        WriteEventsToClient (pEvent->client, 1, (xEvent *) &se);
     }
 }
 

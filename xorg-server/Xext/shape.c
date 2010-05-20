@@ -360,7 +360,7 @@ ProcPanoramiXShapeRectangles(
     result = dixLookupResourceByType((pointer *)&win, stuff->dest, XRT_WINDOW,
 				     client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS(j) {
 	stuff->dest = win->info[j].id;
@@ -415,7 +415,7 @@ ProcShapeMask (ClientPtr client)
 	rc = dixLookupResourceByType((pointer *)&pPixmap, stuff->src, RT_PIXMAP,
 			       client, DixReadAccess);
         if (rc != Success)
-	    return (rc == BadValue) ? BadPixmap : rc;
+	    return rc;
 	if (pPixmap->drawable.pScreen != pScreen ||
 	    pPixmap->drawable.depth != 1)
 	    return BadMatch;
@@ -459,13 +459,13 @@ ProcPanoramiXShapeMask(
     result = dixLookupResourceByType((pointer *)&win, stuff->dest, XRT_WINDOW,
 				     client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     if(stuff->src != None) {
 	result = dixLookupResourceByType((pointer *)&pmap, stuff->src,
 					 XRT_PIXMAP, client, DixReadAccess);
 	if (result != Success)
-	    return (result == BadValue) ? BadPixmap : result;
+	    return result;
     } else
 	pmap = NULL;
 
@@ -589,12 +589,12 @@ ProcPanoramiXShapeCombine(
     result = dixLookupResourceByType((pointer *)&win, stuff->dest, XRT_WINDOW,
 				     client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     result = dixLookupResourceByType((pointer *)&win2, stuff->src, XRT_WINDOW,
 				     client, DixReadAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS(j) {
 	stuff->dest = win->info[j].id;
@@ -663,7 +663,7 @@ ProcPanoramiXShapeOffset(
     result = dixLookupResourceByType((pointer *)&win, stuff->dest, XRT_WINDOW,
 				     client, DixWriteAccess);
     if (result != Success)
-	return (result == BadValue) ? BadWindow : result;
+	return result;
 
     FOR_NSCREENS(j) {
 	stuff->dest = win->info[j].id;
@@ -885,7 +885,6 @@ void
 SendShapeNotify (WindowPtr pWin, int which)
 {
     ShapeEventPtr	*pHead, pShapeEvent;
-    ClientPtr		client;
     xShapeNotifyEvent	se;
     BoxRec		extents;
     RegionPtr		region;
@@ -940,20 +939,16 @@ SendShapeNotify (WindowPtr pWin, int which)
 	return;
     }
     for (pShapeEvent = *pHead; pShapeEvent; pShapeEvent = pShapeEvent->next) {
-	client = pShapeEvent->client;
-	if (client == serverClient || client->clientGone)
-	    continue;
 	se.type = ShapeNotify + ShapeEventBase;
 	se.kind = which;
 	se.window = pWin->drawable.id;
-	se.sequenceNumber = client->sequence;
 	se.x = extents.x1;
 	se.y = extents.y1;
 	se.width = extents.x2 - extents.x1;
 	se.height = extents.y2 - extents.y1;
 	se.time = currentTime.milliseconds;
 	se.shaped = shaped;
-	WriteEventsToClient (client, 1, (xEvent *) &se);
+	WriteEventsToClient (pShapeEvent->client, 1, (xEvent *) &se);
     }
 }
 

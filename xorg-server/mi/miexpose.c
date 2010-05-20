@@ -374,6 +374,8 @@ miSendGraphicsExpose (ClientPtr client, RegionPtr pRgn, XID drawable,
 	    pe->u.graphicsExposure.majorEvent = major;
 	    pe->u.graphicsExposure.minorEvent = minor;
 	}
+	/* GraphicsExpose is a "critical event", which TryClientEvents
+	 * handles specially. */
 	TryClientEvents(client, NULL, pEvent, numRects,
 			    (Mask)0, NoEventMask, NullGrab);
 	free(pEvent);
@@ -386,8 +388,7 @@ miSendGraphicsExpose (ClientPtr client, RegionPtr pRgn, XID drawable,
 	event.u.noExposure.drawable = drawable;
 	event.u.noExposure.majorEvent = major;
 	event.u.noExposure.minorEvent = minor;
-	TryClientEvents(client, NULL, &event, 1,
-	    (Mask)0, NoEventMask, NullGrab);
+	WriteEventsToClient(client, 1, &event);
     }
 }
 

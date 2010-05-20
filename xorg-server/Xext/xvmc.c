@@ -40,7 +40,6 @@ unsigned long XvMCGeneration = 0;
 
 int XvMCReqCode;
 int XvMCEventBase;
-int XvMCErrorBase;
 
 unsigned long XvMCRTContext;
 unsigned long XvMCRTSurface;
@@ -276,7 +275,7 @@ ProcXvMCDestroyContext(ClientPtr client)
     rc = dixLookupResourceByType(&val, stuff->context_id, XvMCRTContext,
 				 client, DixDestroyAccess);
     if (rc != Success)
-	return (rc == BadValue) ? XvMCBadContext + XvMCErrorBase : rc;
+	return rc;
 
     FreeResource(stuff->context_id, RT_NONE); 
 
@@ -299,7 +298,7 @@ ProcXvMCCreateSurface(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&pContext, stuff->context_id,
 				     XvMCRTContext, client, DixUseAccess);
     if (result != Success)
-        return (result == BadValue) ? XvMCBadContext + XvMCErrorBase : result;
+        return result;
 
     pScreenPriv = XVMC_GET_PRIVATE(pContext->pScreen);
 
@@ -346,7 +345,7 @@ ProcXvMCDestroySurface(ClientPtr client)
     rc = dixLookupResourceByType(&val, stuff->surface_id, XvMCRTSurface,
 				 client, DixDestroyAccess);
     if (rc != Success)
-        return (rc == BadValue) ? XvMCBadSurface + XvMCErrorBase : rc;
+        return rc;
 
     FreeResource(stuff->surface_id, RT_NONE);
 
@@ -371,7 +370,7 @@ ProcXvMCCreateSubpicture(ClientPtr client)
     result = dixLookupResourceByType((pointer *)&pContext, stuff->context_id,
 				     XvMCRTContext, client, DixUseAccess);
     if (result != Success)
-        return (result == BadValue) ? XvMCBadContext + XvMCErrorBase : result;
+        return result;
 
     pScreenPriv = XVMC_GET_PRIVATE(pContext->pScreen);
 
@@ -463,7 +462,7 @@ ProcXvMCDestroySubpicture(ClientPtr client)
     rc = dixLookupResourceByType(&val, stuff->subpicture_id, XvMCRTSubpicture,
 				 client, DixDestroyAccess);
     if (rc != Success)
-        return (rc == BadValue) ? XvMCBadSubpicture + XvMCErrorBase : rc;
+        return rc;
 
     FreeResource(stuff->subpicture_id, RT_NONE);
 
@@ -694,7 +693,9 @@ XvMCExtensionInit(void)
   
    XvMCReqCode = extEntry->base;
    XvMCEventBase = extEntry->eventBase;
-   XvMCErrorBase = extEntry->errorBase;
+   SetResourceTypeErrorValue(XvMCRTContext, extEntry->errorBase + XvMCBadContext);
+   SetResourceTypeErrorValue(XvMCRTSurface, extEntry->errorBase + XvMCBadSurface);
+   SetResourceTypeErrorValue(XvMCRTSubpicture, extEntry->errorBase + XvMCBadSubpicture);
 }
 
 static Bool

@@ -140,10 +140,7 @@ ProcCompositeQueryVersion (ClientPtr client)
 	int err;							\
 	err = dixLookupResourceByType((pointer *) &pWindow, wid,	\
 				      RT_WINDOW, client, mode);		\
-	if (err == BadValue) {						\
-	    client->errorValue = wid;					\
-	    return BadWindow;						\
-	} else if (err != Success) {					\
+	if (err != Success) {						\
 	    client->errorValue = wid;					\
 	    return err;							\
 	}								\
