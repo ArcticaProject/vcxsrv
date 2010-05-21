@@ -455,7 +455,6 @@ typedef struct _Screen {
     short		minInstalledCmaps, maxInstalledCmaps;
     char                backingStoreSupport, saveUnderSupport;
     unsigned long	whitePixel, blackPixel;
-    unsigned long	rgf;	/* array of flags; she's -- HUNGARIAN */
     GCPtr		GCperDepth[MAXFORMATS+1];
 			/* next field is a stipple to use as default in
 			   a GC.  we don't build default tiles of all depths

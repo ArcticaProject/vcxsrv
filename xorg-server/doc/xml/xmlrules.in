@@ -1,0 +1,68 @@
+#
+# Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice (including the next
+# paragraph) shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+#
+
+# This file is included by Makefile.am in subdirectories that have
+# DocBook XML documentation files.
+#
+# No files are automatically distributed or installed by this subset of rules
+# Any files to be distributed or installed would be listed in the including
+# Makefile.am
+
+TXT_FILES  = $(XML_FILES:%.xml=%.txt)
+HTML_FILES = $(XML_FILES:%.xml=%.html)
+PDF_FILES  = $(XML_FILES:%.xml=%.pdf)
+
+BUILT_DOC_FILES =
+
+SUFFIXES = .xml .txt .html .pdf
+
+XML_ENT_DIR = $(abs_top_builddir)/doc/xml
+XMLTO_FLAGS = --searchpath $(XML_ENT_DIR)
+
+if HAVE_XMLTO
+BUILT_DOC_FILES += $(TXT_FILES)
+.xml.txt:
+	@rm -f $@
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) txt $<
+
+BUILT_DOC_FILES += $(HTML_FILES)
+.xml.html:
+	@rm -f $@
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) xhtml-nochunks $<
+
+if HAVE_FOP
+BUILT_DOC_FILES += $(PDF_FILES)
+.xml.pdf:
+	@rm -f $@
+	$(AM_V_GEN)$(XMLTO) $(XMLTO_FLAGS) --with-fop pdf $<
+endif
+
+endif
+
+CLEAN_DOC_FILES = $(TXT_FILES) $(HTML_FILES) $(PDF_FILES)
+
+# All the files we build depend on the entities
+$(BUILT_DOC_FILES): $(XML_ENT_DIR)/xserver.ent
+
+$(XML_ENT_DIR)/xserver.ent:
+	(cd $(XML_ENT_DIR) && $(MAKE) $(AM_MAKEFLAGS) $(@F))

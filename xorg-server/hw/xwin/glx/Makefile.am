@@ -2,6 +2,7 @@ noinst_LTLIBRARIES = libXwinGLX.la
 
 libXwinGLX_la_SOURCES = \
 	winpriv.c \
+	winpriv.h \
 	glwindows.h \
 	glwrap.c \
 	indirect.c \
@@ -44,10 +45,10 @@ wgl.tm:
 	wget http://www.opengl.org/registry/api/wgl.tm
 
 generated_gl_wrappers.c: gen_gl_wrappers.py gl.spec gl.tm
-	./gen_gl_wrappers.py --spec=gl.spec --typemap=gl.tm --dispatch-header=$(top_srcdir)/glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
+	$(srcdir)/gen_gl_wrappers.py --spec=$(srcdir)/gl.spec --typemap=$(srcdir)/gl.tm --dispatch-header=$(top_srcdir)/glx/dispatch.h --staticwrappers >generated_gl_wrappers.c
 
 generated_wgl_wrappers.c: gen_gl_wrappers.py wglext.spec wgl.tm
-	./gen_gl_wrappers.py --spec=wglext.spec --typemap=wgl.tm --prefix=wgl --preresolve >generated_wgl_wrappers.c
+	$(srcdir)/gen_gl_wrappers.py --spec=$(srcdir)/wglext.spec --typemap=$(srcdir)/wgl.tm --prefix=wgl --preresolve >generated_wgl_wrappers.c
 
 wglext.h:
 	wget http://www.opengl.org/registry/api/wglext.h

@@ -1654,6 +1654,14 @@ at startup.  By default, the server will attempt to enable all connected
 monitors.
 (RandR 1.2-supporting drivers only)
 .TP 7
+.BI "Option " "\*qDefaultModes\*q  " \*qbool\*q
+This optional entry specifies whether the server should add supported default
+modes to the list of modes offered on this monitor. By default, the server
+will add default modes; you should only disable this if you can guarantee
+that EDID will be available at all times, or if you have added custom modelines
+which the server can use.
+(RandR 1.2-supporting drivers only)
+.TP 7
 .BI "Option " "\*qMinClock\*q  " \*qfrequency\*q
 This optional entry specifies the minimum dot clock, in kHz, that is supported
 by the monitor.

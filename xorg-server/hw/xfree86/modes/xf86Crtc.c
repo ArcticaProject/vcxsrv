@@ -439,6 +439,7 @@ typedef enum {
     OPTION_ROTATE,
     OPTION_PANNING,
     OPTION_PRIMARY,
+    OPTION_DEFAULT_MODES,
 } OutputOpts;
 
 static OptionInfoRec xf86OutputOptions[] = {
@@ -456,6 +457,7 @@ static OptionInfoRec xf86OutputOptions[] = {
     {OPTION_ROTATE,	    "Rotate",		OPTV_STRING,  {0}, FALSE },
     {OPTION_PANNING,	    "Panning",		OPTV_STRING,  {0}, FALSE },
     {OPTION_PRIMARY,	    "Primary",		OPTV_BOOLEAN, {0}, FALSE },
+    {OPTION_DEFAULT_MODES,  "DefaultModes",	OPTV_BOOLEAN, {0}, FALSE },
     {-1,		    NULL,		OPTV_NONE,    {0}, FALSE },
 };
 
@@ -1560,7 +1562,7 @@ xf86ProbeOutputModes (ScrnInfoPtr scrn, int maxX, int maxY)
 	int		    min_clock = 0;
 	int		    max_clock = 0;
 	double		    clock;
-	Bool                add_default_modes = TRUE;
+	Bool		    add_default_modes = xf86ReturnOptValBool(output->options, OPTION_DEFAULT_MODES, TRUE);
 	Bool		    debug_modes = config->debug_modes ||
 					  xf86Initialising;
 	enum det_monrec_source sync_source = sync_default;

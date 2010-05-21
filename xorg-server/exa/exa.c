@@ -932,8 +932,11 @@ exaDriverInit (ScreenPtr		pScreen,
 
     if (ps) {
 	wrap(pExaScr, ps, Composite, exaComposite);
-	if (pScreenInfo->PrepareComposite)
+	if (pScreenInfo->PrepareComposite) {
 	    wrap(pExaScr, ps, Glyphs, exaGlyphs);
+	} else {
+	    wrap(pExaScr, ps, Glyphs, ExaCheckGlyphs);
+	}
 	wrap(pExaScr, ps, Trapezoids, exaTrapezoids);
 	wrap(pExaScr, ps, Triangles, exaTriangles);
 	wrap(pExaScr, ps, AddTraps, ExaCheckAddTraps);

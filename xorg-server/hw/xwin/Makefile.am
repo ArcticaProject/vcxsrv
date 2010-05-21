@@ -117,7 +117,6 @@ SRCS =	InitInput.c \
 	winms.h \
 	winmultiwindowclass.h \
 	winprefs.h \
-	winpriv.h \
 	winresource.h \
 	winwindow.h \
 	XWin.rc \

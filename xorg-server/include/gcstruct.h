@@ -292,7 +292,8 @@ typedef struct _GC {
     unsigned int	tileIsPixel:1; /* tile is solid pixel */
     unsigned int	fExpose:1;     /* Call exposure handling */
     unsigned int	freeCompClip:1;  /* Free composite clip */
-    unsigned int	unused:14; /* see comment above */
+    unsigned int	scratch_inuse:1; /* is this GC in a pool for reuse? */
+    unsigned int	unused:13; /* see comment above */
     unsigned long	planemask;
     unsigned long	fgPixel;
     unsigned long	bgPixel;

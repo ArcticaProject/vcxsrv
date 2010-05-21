@@ -243,7 +243,6 @@ xnestOpenScreen(int index, ScreenPtr pScreen, int argc, char *argv[])
   pScreen->saveUnderSupport = NotUseful;
   pScreen->whitePixel = xnestWhitePixel;
   pScreen->blackPixel = xnestBlackPixel;
-  /* rgf */
   /* GCperDepth */
   /* PixmapPerDepth */
   pScreen->devPrivate = NULL;
