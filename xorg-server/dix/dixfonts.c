@@ -1173,7 +1173,6 @@ int
 doPolyText(ClientPtr client, PTclosurePtr c)
 {
     FontPtr pFont = c->pGC->font, oldpFont;
-    Font	fid, oldfid;
     int err = Success, lgerr;	/* err is in X error, not font error, space */
     enum { NEVER_SLEPT, START_SLEEP, SLEEPING } client_state = NEVER_SLEPT;
     FontPathElementPtr fpe;
@@ -1221,6 +1220,7 @@ doPolyText(ClientPtr client, PTclosurePtr c)
     {
 	if (*c->pElt == FontChange)
         {
+	    Font fid;
 	    if (c->endReq - c->pElt < FontShiftSize)
 	    {
 		 err = BadLength;
@@ -1228,7 +1228,6 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 	    }
 
 	    oldpFont = pFont;
-	    oldfid = fid;
 
 	    fid =  ((Font)*(c->pElt+4))		/* big-endian */
 		 | ((Font)*(c->pElt+3)) << 8
@@ -1238,9 +1237,8 @@ doPolyText(ClientPtr client, PTclosurePtr c)
 					  client, DixUseAccess);
 	    if (err != Success)
 	    {
-		/* restore pFont and fid for step 4 (described below) */
+		/* restore pFont for step 4 (described below) */
 		pFont = oldpFont;
-		fid = oldfid;
 
 		/* If we're in START_SLEEP mode, the following step
 		   shortens the request...  in the unlikely event that

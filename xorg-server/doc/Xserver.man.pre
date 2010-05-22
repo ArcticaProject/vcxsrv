@@ -100,12 +100,12 @@ specifies a file which contains a collection of authorization records used
 to authenticate access.  See also the \fIxdm\fP(1) and 
 \fIXsecurity\fP(__miscmansuffix__) manual pages.
 .TP 8
-.B \-bs
-disables backing store support on all screens.
-.TP 8
 .B \-br
 sets the default root window to solid black instead of the standard root weave
-pattern.
+pattern.   This is the default unless -retro or -wr is specified.
+.TP 8
+.B \-bs
+disables backing store support on all screens.
 .TP 8
 .B \-c
 turns off key-click.
@@ -117,17 +117,6 @@ sets key-click volume (allowable range: 0-100).
 sets the visual class for the root window of color screens.
 The class numbers are as specified in the X protocol.
 Not obeyed by all servers.
-.ig
-.TP 8
-.B \-config \fIfilename\fP
-reads more options from the given file.  Options in the file may be separated
-by newlines if desired.  If a '#' character appears on a line, all characters
-between it and the next newline are ignored, providing a simple commenting
-facility.  The \fB\-config\fP option itself may appear in the file.
-.BR NOTE :
-This option is disabled when the Xserver is run with an effective uid
-different from the user's real uid.
-..
 .TP 8
 .B \-core
 causes the server to generate a core dump on fatal errors.
@@ -183,6 +172,9 @@ causes all remaining command line arguments to be ignored.
 sets the maximum big request to
 .I size
 MB.
+.TP 8
+.B \-nocursor
+disable the display of the pointer cursor.
 .TP 8
 .B \-nolisten \fItrans-type\fP
 disables a transport type.  For example, TCP/IP connections can be disabled
@@ -584,11 +576,11 @@ Security: \fIXsecurity\fP(__miscmansuffix__), \fIxauth\fP(1), \fIXau\fP(1),
 Starting the server: \fIstartx\fP(1), \fIxdm\fP(1), \fIxinit\fP(1)
 .PP
 Controlling the server once started: \fIxset\fP(1), \fIxsetroot\fP(1),
-\fIxhost\fP(1)
+\fIxhost\fP(1), \fIxinput\fP(1), \fIxrandr\fP(1)
 .PP
 Server-specific man pages:
 \fIXorg\fP(1), \fIXdmx\fP(1), \fIXephyr\fP(1), \fIXnest\fP(1),
-\fIXvfb\fP(1), \fIXDarwin\fP(1), \fIXWin\fP(1).
+\fIXvfb\fP(1), \fIXquartz\fP(1), \fIXWin\fP(1).
 .PP
 Server internal documentation:
 .I "Definition of the Porting Layer for the X v11 Sample Server"
