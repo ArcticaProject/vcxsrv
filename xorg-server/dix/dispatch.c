@@ -3957,7 +3957,6 @@ AddScreen(
        any of the strings pointed to by argv.  They may be passed to
        multiple screens.
     */
-    pScreen->rgf = ~0L;  /* there are no scratch GCs yet*/
     WindowTable[i] = NullWindow;
     screenInfo.screens[i] = pScreen;
     screenInfo.numScreens++;

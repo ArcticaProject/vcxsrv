@@ -22,3 +22,5 @@ EXTRAMANDEFS = -D__default_font_path__="`echo $(COMPILEDDEFAULTFONTPATH) | $(SED
 DEVEL_DOCS = smartsched
 
 EXTRA_DIST = $(DEVEL_DOCS) $(appman_PRE) $(fileman_PRE)
+
+SUBDIRS = xml

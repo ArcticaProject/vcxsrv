@@ -680,6 +680,28 @@ out_no_clip:
     EXA_POST_FALLBACK(pScreen);
 }
 
+/**
+ * Avoid migration ping-pong when using a mask.
+ */
+void
+ExaCheckGlyphs (CARD8	      op,
+		PicturePtr    pSrc,
+		PicturePtr    pDst,
+		PictFormatPtr maskFormat,
+		INT16	      xSrc,
+		INT16	      ySrc,
+		int	      nlist,
+		GlyphListPtr  list,
+		GlyphPtr      *glyphs)
+{
+    ScreenPtr pScreen = pDst->pDrawable->pScreen;
+    EXA_PRE_FALLBACK(pScreen);
+
+    miGlyphs(op, pSrc, pDst, maskFormat, xSrc, ySrc, nlist, list, glyphs);
+
+    EXA_POST_FALLBACK(pScreen);
+}
+
 void
 ExaCheckAddTraps (PicturePtr	pPicture,
 		  INT16		x_off,

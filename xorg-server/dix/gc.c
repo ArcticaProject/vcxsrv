@@ -537,6 +537,9 @@ CreateGC(DrawablePtr pDrawable, BITS32 mask, XID *pval, int *pStatus,
     pGC->stipple = pGC->pScreen->PixmapPerDepth[0];
     pGC->stipple->refcnt++;
 
+    /* this is not a scratch GC */
+    pGC->scratch_inuse = FALSE;
+
     /* security creation/labeling check */
     *pStatus = XaceHook(XACE_RESOURCE_ACCESS, client, gcid, RT_GC, pGC,
 			RT_NONE, NULL, DixCreateAccess|DixSetAttrAccess);
@@ -844,6 +847,9 @@ CreateScratchGC(ScreenPtr pScreen, unsigned depth)
     pGC->lastWinOrg.x = 0;
     pGC->lastWinOrg.y = 0;
 
+    /* scratch GCs in the GCperDepth pool start off unused */
+    pGC->scratch_inuse = FALSE;
+
     pGC->stateChanges = GCAllBits;
     if (!(*pScreen->CreateGC)(pGC))
     {
@@ -864,8 +870,10 @@ FreeGCperDepth(int screenNum)
     ppGC = pScreen->GCperDepth;
 
     for (i = 0; i <= pScreen->numDepths; i++)
+    {
 	(void)FreeGC(ppGC[i], (XID)0);
-    pScreen->rgf = ~0L;
+	ppGC[i] = NULL;
+    }
 }
 
 
@@ -878,7 +886,6 @@ CreateGCperDepth(int screenNum)
     GCPtr *ppGC;
 
     pScreen = screenInfo.screens[screenNum];
-    pScreen->rgf = 0;
     ppGC = pScreen->GCperDepth;
     /* do depth 1 separately because it's not included in list */
     if (!(ppGC[0] = CreateScratchGC(pScreen, 1)))
@@ -1097,12 +1104,11 @@ GetScratchGC(unsigned depth, ScreenPtr pScreen)
     GCPtr pGC;
 
     for (i=0; i<=pScreen->numDepths; i++)
-        if ( pScreen->GCperDepth[i]->depth == depth &&
-	     !(pScreen->rgf & (1L << (i+1)))
-	   )
+    {
+	pGC = pScreen->GCperDepth[i];
+	if (pGC && pGC->depth == depth && !pGC->scratch_inuse)
 	{
-	    pScreen->rgf |= (1L << (i+1));
-            pGC = (pScreen->GCperDepth[i]);
+	    pGC->scratch_inuse = TRUE;
 
 	    pGC->alu = GXcopy;
 	    pGC->planemask = ~0;
@@ -1127,6 +1133,7 @@ GetScratchGC(unsigned depth, ScreenPtr pScreen)
 	    pGC->stateChanges = GCAllBits;
 	    return pGC;
 	}
+    }
     /* if we make it this far, need to roll our own */
     pGC = CreateScratchGC(pScreen, depth);
     if (pGC)
@@ -1142,16 +1149,8 @@ mark it as available.
 void
 FreeScratchGC(GCPtr pGC)
 {
-    ScreenPtr pScreen = pGC->pScreen;
-    int i;
-
-    for (i=0; i<=pScreen->numDepths; i++)
-    {
-        if ( pScreen->GCperDepth[i] == pGC)
-	{
-	    pScreen->rgf &= ~(1L << (i+1));
-	    return;
-	}
-    }
-    (void)FreeGC(pGC, (GContext)0);
+    if (pGC->scratch_inuse)
+	pGC->scratch_inuse = FALSE;
+    else
+	FreeGC(pGC, (GContext)0);
 }

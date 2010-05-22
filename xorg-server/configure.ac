@@ -716,10 +716,9 @@ fi
 
 dnl Handle building documentation
 AM_CONDITIONAL(BUILDDOCS, test "x$BUILDDOCS" = xyes)
-
-dnl Only build sgml docs when linuxdoc is available and
-dnl def.ents has been installed
-XORG_CHECK_LINUXDOC
+XORG_ENABLE_DEVEL_DOCS
+XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_FOP
 
 dnl Handle installing libxf86config
 AM_CONDITIONAL(INSTALL_LIBXF86CONFIG, [test "x$INSTALL_LIBXF86CONFIG" = xyes])
@@ -793,7 +792,7 @@ WINDOWSWMPROTO="windowswmproto"
 APPLEWMPROTO="applewmproto >= 1.4"
 
 dnl Core modules for most extensions, et al.
-REQUIRED_MODULES="[randrproto >= 1.2.99.3] [renderproto >= 0.11] [fixesproto >= 4.1] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xextproto >= 7.0.99.3] [xproto >= 7.0.13] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] fontsproto [inputproto >= 1.9.99.902] [kbproto >= 1.0.3]"
+REQUIRED_MODULES="[randrproto >= 1.2.99.3] [renderproto >= 0.11] [fixesproto >= 4.1] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xextproto >= 7.0.99.3] [xproto >= 7.0.17] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] fontsproto [inputproto >= 1.9.99.902] [kbproto >= 1.0.3]"
 REQUIRED_LIBS="xfont xau [pixman-1 >= 0.15.20]"
 
 dnl List of libraries that require a specific version
@@ -2140,6 +2139,7 @@ AC_TRY_COMPILE([
 
 AC_DEFINE_DIR(PROJECTROOT, prefix, [Overall prefix])
 
+AC_SUBST([RELEASE_DATE])
 BUILD_DATE="`date +'%Y%m%d'`"
 AC_SUBST([BUILD_DATE])
 BUILD_TIME="`date +'1%H%M%S'`"
@@ -2162,6 +2162,8 @@ damageext/Makefile
 dbe/Makefile
 dix/Makefile
 doc/Makefile
+doc/xml/Makefile
+doc/xml/xserver.ent
 fb/Makefile
 record/Makefile
 config/Makefile

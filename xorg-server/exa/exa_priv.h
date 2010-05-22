@@ -509,6 +509,17 @@ ExaCheckComposite (CARD8      op,
 		  CARD16     width,
 		  CARD16     height);
 
+void
+ExaCheckGlyphs (CARD8	      op,
+		PicturePtr    pSrc,
+		PicturePtr    pDst,
+		PictFormatPtr maskFormat,
+		INT16	      xSrc,
+		INT16	      ySrc,
+		int	      nlist,
+		GlyphListPtr  list,
+		GlyphPtr      *glyphs);
+
 /* exa_offscreen.c */
 void
 ExaOffscreenSwapOut (ScreenPtr pScreen);

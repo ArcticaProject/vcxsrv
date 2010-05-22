@@ -19,36 +19,13 @@
 #  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 #  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-SGML_FILES = DESIGN.sgml
+XML_FILES = DESIGN.xml
 
-if BUILD_LINUXDOC
-TXT_FILES  = $(SGML_FILES:%.sgml=%.txt)
-PS_FILES   = $(SGML_FILES:%.sgml=%.ps)
-if BUILD_PDFDOC
-PDF_FILES  = $(SGML_FILES:%.sgml=%.pdf)
+include ../../../../doc/xml/xmlrules.in
+
+if ENABLE_DEVEL_DOCS
+noinst_DATA = $(BUILT_DOC_FILES)
 endif
-HTML_FILES = $(SGML_FILES:%.sgml=%.html)
+CLEANFILES = $(CLEAN_DOC_FILES)
 
-SUFFIXES = .sgml .txt .html .ps .pdf
-
-.sgml.txt:
-	@rm -f $@
-	$(AM_V_GEN)$(MAKE_TEXT) $<
-
-.sgml.ps:
-	@rm -f $@
-	$(AM_V_GEN)$(MAKE_PS) $<
-
-.ps.pdf:
-	@rm -f $@
-	$(AM_V_GEN)$(MAKE_PDF) $<
-
-.sgml.html:
-	@rm -f $@
-	$(AM_V_GEN)$(MAKE_HTML) $<
-
-noinst_DATA = $(TXT_FILES) $(PS_FILES) $(PDF_FILES) $(HTML_FILES)
-CLEANFILES = $(TXT_FILES) $(PS_FILES) $(PDF_FILES) $(HTML_FILES)
-endif
-
-EXTRA_DIST = $(SGML_FILES)
+EXTRA_DIST = $(XML_FILES)
