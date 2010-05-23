@@ -84,7 +84,7 @@ extern _X_EXPORT EventSwapPtr EventSwapVector[128];
 
 extern _X_EXPORT void NotImplemented (	/* FIXME: this may move to another file... */
 	xEvent *,
-	xEvent *);
+	xEvent *) _X_NORETURN;
 
 #define    SetGCVector(pGC, VectorElement, NewRoutineAddress, Atom)    \
     pGC->VectorElement = NewRoutineAddress;

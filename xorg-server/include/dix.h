@@ -300,7 +300,7 @@ extern _X_EXPORT Bool ValidAtom(
 extern _X_EXPORT const char *NameForAtom(
     Atom /*atom*/);
 
-extern _X_EXPORT void AtomError(void);
+extern _X_EXPORT void AtomError(void) _X_NORETURN;
 
 extern _X_EXPORT void FreeAllAtoms(void);
 

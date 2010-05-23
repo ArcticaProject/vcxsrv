@@ -53,7 +53,7 @@ typedef void (*ReplySwapPtr) (
 extern _X_EXPORT void ReplyNotSwappd (
 		ClientPtr	/* pClient */,
 		int		/* size */,
-		void *		/* pbuf */);
+		void *		/* pbuf */) _X_NORETURN;
 
 typedef enum {ClientStateInitial,
 	      ClientStateAuthenticating,

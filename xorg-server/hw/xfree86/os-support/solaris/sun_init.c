@@ -33,8 +33,21 @@
 # include <sys/kd.h>
 #endif
 
+/*
+ * Applications see VT number as consecutive integers starting from 1.
+ * VT number			VT device
+ * -------------------------------------------------------
+ *     1             :          /dev/vt/0 (Alt + Ctrl + F1)
+ *     2             :          /dev/vt/2 (Alt + Ctrl + F2)
+ *     3             :          /dev/vt/3 (Alt + Ctrl + F3)
+ *  ... ...
+ */
+#define	CONSOLE_VTNO	1
+#define	SOL_CONSOLE_DEV	"/dev/console"
+
 static Bool KeepTty = FALSE;
 static Bool Protect0 = FALSE;
+static Bool UseConsole = FALSE;
 #ifdef HAS_USL_VTS
 static int VTnum = -1;
 static int xf86StartVT = -1;
@@ -112,8 +125,30 @@ xf86OpenConsole(void)
 		vtEnabled = 0;
 	    }
 	}
+#endif /*  HAS_USL_VTS */
 
+	if (UseConsole)
+	{
+	    strlcpy(consoleDev, SOL_CONSOLE_DEV, sizeof(consoleDev));
 
+#ifdef HAS_USL_VTS
+	    xf86Info.vtno = CONSOLE_VTNO;
+
+	    if (vtEnabled == 0)
+	    {
+		xf86StartVT = 0;
+	    }
+	    else
+	    {
+		if (ioctl(fd, VT_GETSTATE, &vtinfo) < 0)
+		    FatalError("xf86OpenConsole: Cannot determine current VT\n");
+		xf86StartVT = vtinfo.v_active;
+	    }
+#endif /*  HAS_USL_VTS */
+	    goto OPENCONSOLE;
+	}
+
+#ifdef HAS_USL_VTS
 	if (vtEnabled == 0)
 	{
 	    /* VT not enabled - kernel too old or Sparc platforms
@@ -123,31 +158,30 @@ xf86OpenConsole(void)
 	    xf86StartVT = 0;
 	    xf86Info.vtno = 0;
 	    strlcpy(consoleDev, xf86SolarisFbDev, sizeof(consoleDev));
+	    goto OPENCONSOLE;
+	}
+
+	if (ioctl(fd, VT_GETSTATE, &vtinfo) < 0)
+	    FatalError("xf86OpenConsole: Cannot determine current VT\n");
+
+	xf86StartVT = vtinfo.v_active;
+
+	if (VTnum != -1)
+	{
+	    xf86Info.vtno = VTnum;
+	    from = X_CMDLINE;
 	}
 	else
 	{
-	    if (ioctl(fd, VT_GETSTATE, &vtinfo) < 0)
-		FatalError("xf86OpenConsole: Cannot determine current VT\n");
-
-	    xf86StartVT = vtinfo.v_active;
-
-	    if (VTnum != -1)
+	    if ((ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) ||
+		(xf86Info.vtno == -1))
 	    {
-		xf86Info.vtno = VTnum;
-		from = X_CMDLINE;
+		FatalError("xf86OpenConsole: Cannot find a free VT\n");
 	    }
-	    else
-	    {
-		if ((ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) ||
-		    (xf86Info.vtno == -1))
-		{
-		    FatalError("xf86OpenConsole: Cannot find a free VT\n");
-		}
-	    }
-
-	    xf86Msg(from, "using VT number %d\n\n", xf86Info.vtno);
-	    snprintf(consoleDev, PATH_MAX, "/dev/vt/%d", xf86Info.vtno);
 	}
+
+	xf86Msg(from, "using VT number %d\n\n", xf86Info.vtno);
+	snprintf(consoleDev, PATH_MAX, "/dev/vt/%d", xf86Info.vtno);
 
 	if (fd != -1)
 	{
@@ -156,6 +190,7 @@ xf86OpenConsole(void)
 
 #endif /* HAS_USL_VTS */
 
+OPENCONSOLE:
 	if (!KeepTty)
 	    setpgrp();
 
@@ -163,11 +198,10 @@ xf86OpenConsole(void)
 	    FatalError("xf86OpenConsole: Cannot open %s (%s)\n",
 		       consoleDev, strerror(errno));
 
-#ifdef HAS_USL_VTS
-
-	/* Change ownership of the vt */
+	/* Change ownership of the vt or console */
 	chown(consoleDev, getuid(), getgid());
 
+#ifdef HAS_USL_VTS
 	if (vtEnabled)
 	{
 	    /*
@@ -178,6 +212,13 @@ xf86OpenConsole(void)
 
 	    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
 		xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
+
+#ifdef VT_SET_CONSUSER /* added in snv_139 */
+	    if (strcmp(display, "0") == 0)
+		if (ioctl(xf86Info.consoleFd, VT_SET_CONSUSER) != 0)
+		    xf86Msg(X_WARNING,
+			"xf86OpenConsole: VT_SET_CONSUSER failed\n");
+#endif
 
 	    if (ioctl(xf86Info.consoleFd, VT_GETMODE, &VT) < 0)
 		FatalError("xf86OpenConsole: VT_GETMODE failed\n");
@@ -219,6 +260,13 @@ xf86OpenConsole(void)
 
 	    if (ioctl(xf86Info.consoleFd, VT_WAITACTIVE, xf86Info.vtno) != 0)
 		xf86Msg(X_WARNING, "xf86OpenConsole: VT_WAITACTIVE failed\n");
+
+#ifdef VT_SET_CONSUSER /* added in snv_139 */
+	    if (strcmp(display, "0") == 0)
+		if (ioctl(xf86Info.consoleFd, VT_SET_CONSUSER) != 0)
+		    xf86Msg(X_WARNING,
+			"xf86OpenConsole: VT_SET_CONSUSER failed\n");
+#endif
 
 	    /*
 	     * If the server doesn't have the VT when the reset occurs,
@@ -330,6 +378,15 @@ xf86ProcessArgument(int argc, char **argv, int i)
 	return 1;
     }
 
+    /*
+     * Use /dev/console as the console device.
+     */
+    if (!strcmp(argv[i], "-C"))
+    {
+	UseConsole = TRUE;
+	return 1;
+    }
+
 #ifdef HAS_USL_VTS
 
     if ((argv[i][0] == 'v') && (argv[i][1] == 't'))
@@ -364,4 +421,5 @@ void xf86UseMsg()
     ErrorF("-dev <fb>              Framebuffer device\n");
     ErrorF("-keeptty               Don't detach controlling tty\n");
     ErrorF("                       (for debugging only)\n");
+    ErrorF("-C                     Use /dev/console as the console device\n");
 }
