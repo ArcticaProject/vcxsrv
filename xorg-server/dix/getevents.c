@@ -897,7 +897,7 @@ GetKeyboardValuatorEvents(EventList *events, DeviceIntPtr pDev, int type,
     RawDeviceEvent *raw;
 
     /* refuse events from disabled devices */
-    if (!pDev->enabled)
+    if (!pDev || !pDev->enabled)
         return 0;
 
     if (!events ||!pDev->key || !pDev->focus || !pDev->kbdfeed ||
