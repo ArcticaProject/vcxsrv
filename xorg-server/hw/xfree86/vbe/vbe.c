@@ -17,7 +17,6 @@
 
 #include "xf86.h"
 #include "vbe.h"
-#include <X11/Xarch.h>
 #include <X11/extensions/dpmsconst.h>
 
 #define VERSION(x) VBE_VERSION_MAJOR(x),VBE_VERSION_MINOR(x)

@@ -681,8 +681,6 @@ DoConfigure(void)
 	    xorgHWAccess = FALSE;
     }
 
-    xf86FindPrimaryDevice();
- 
     /* Create XF86Config file structure */
     xf86config = calloc(1, sizeof(XF86ConfigRec));
 

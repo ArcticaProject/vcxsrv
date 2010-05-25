@@ -110,14 +110,10 @@ extern _X_EXPORT  RootWinPropPtr *xf86RegisteredPropertiesTable;
 #ifndef _NO_XF86_PROTOTYPES
 
 /* xf86Bus.c */
-
 extern _X_EXPORT Bool xf86BusConfig(void);
 extern _X_EXPORT void xf86BusProbe(void);
 extern _X_EXPORT void xf86AccessEnter(void);
 extern _X_EXPORT void xf86AccessLeave(void);
-
-extern _X_EXPORT void xf86FindPrimaryDevice(void);
-/* new RAC */
 extern _X_EXPORT void xf86PostProbe(void);
 extern _X_EXPORT void xf86ClearEntityListForScreen(int scrnIndex);
 extern _X_EXPORT void xf86AddDevToEntity(int entityIndex, GDevPtr dev);

@@ -126,7 +126,6 @@
 
 #include <errno.h>
 #include <signal.h>
-#include <X11/Xarch.h>
 #include "compiler.h"
 #include "xf86.h"
 #include "xf86Priv.h"

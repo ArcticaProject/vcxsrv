@@ -338,7 +338,6 @@ typedef struct _DriverRec {
 /* Tolerate prior #include <linux/input.h> */
 #if defined(linux) && defined(_INPUT_H)
 #undef BUS_NONE
-#undef BUS_ISA
 #undef BUS_PCI
 #undef BUS_SBUS
 #undef BUS_last
@@ -346,7 +345,6 @@ typedef struct _DriverRec {
 
 typedef enum {
     BUS_NONE,
-    BUS_ISA,
     BUS_PCI,
     BUS_SBUS,
     BUS_last    /* Keep last */

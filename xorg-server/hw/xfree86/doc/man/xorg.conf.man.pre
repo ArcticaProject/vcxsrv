@@ -2342,8 +2342,7 @@ section for a dual headed configuration with two mice:
 .SH "DRI SECTION"
 This optional section is used to provide some information for the
 Direct Rendering Infrastructure.
-Details about the format of this section
-can be found in the README.DRI document, which is also available on-line at
+Details about the format of this section can be found on-line at
 .IR <http://dri.freedesktop.org/> .
 .SH "VENDOR SECTION"
 The optional

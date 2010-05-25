@@ -46,6 +46,8 @@
 
 #include "xf86xv.h"
 
+#define NO_OUTPUT_DEFAULT_WIDTH 1024
+#define NO_OUTPUT_DEFAULT_HEIGHT 768
 /*
  * Initialize xf86CrtcConfig structure
  */
@@ -1923,7 +1925,7 @@ xf86SetScrnInfoModes (ScrnInfoPtr scrn)
 #endif
 }
 
-static void
+static Bool
 xf86CollectEnabledOutputs(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
 			  Bool *enabled)
 {
@@ -1938,8 +1940,10 @@ xf86CollectEnabledOutputs(ScrnInfoPtr scrn, xf86CrtcConfigPtr config,
 		   "No outputs definitely connected, trying again...\n");
 
 	for (o = 0; o < config->num_output; o++)
-	    enabled[o] = xf86OutputEnabled(config->output[o], FALSE);
+	    any_enabled |= enabled[o] = xf86OutputEnabled(config->output[o], FALSE);
     }
+
+    return any_enabled;
 }
 
 static Bool
@@ -2339,6 +2343,8 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
     Bool		*enabled;
     int			width, height;
     int			i = scrn->scrnIndex;
+    Bool have_outputs = TRUE;
+    Bool ret;
 
     /* Set up the device options */
     config->options = xnfalloc (sizeof (xf86DeviceOptions));
@@ -2364,18 +2370,23 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
     modes = xnfcalloc (config->num_output, sizeof (DisplayModePtr));
     enabled = xnfcalloc (config->num_output, sizeof (Bool));
     
-    xf86CollectEnabledOutputs(scrn, config, enabled);
-
-    if (xf86TargetUserpref(scrn, config, modes, enabled, width, height))
-	xf86DrvMsg(i, X_INFO, "Using user preference for initial modes\n");
-    else if (xf86TargetPreferred(scrn, config, modes, enabled, width, height))
-	xf86DrvMsg(i, X_INFO, "Using exact sizes for initial modes\n");
-    else if (xf86TargetAspect(scrn, config, modes, enabled, width, height))
-	xf86DrvMsg(i, X_INFO, "Using fuzzy aspect match for initial modes\n");
-    else if (xf86TargetFallback(scrn, config, modes, enabled, width, height))
-	xf86DrvMsg(i, X_INFO, "Using sloppy heuristic for initial modes\n");
-    else
-	xf86DrvMsg(i, X_WARNING, "Unable to find initial modes\n");
+    ret = xf86CollectEnabledOutputs(scrn, config, enabled);
+    if (ret == FALSE && canGrow) {
+	xf86DrvMsg(i, X_WARNING, "Unable to find connected outputs - setting %dx%d initial framebuffer\n",
+		   NO_OUTPUT_DEFAULT_WIDTH, NO_OUTPUT_DEFAULT_HEIGHT);
+	have_outputs = FALSE;
+    } else {
+	if (xf86TargetUserpref(scrn, config, modes, enabled, width, height))
+	    xf86DrvMsg(i, X_INFO, "Using user preference for initial modes\n");
+	else if (xf86TargetPreferred(scrn, config, modes, enabled, width, height))
+	    xf86DrvMsg(i, X_INFO, "Using exact sizes for initial modes\n");
+	else if (xf86TargetAspect(scrn, config, modes, enabled, width, height))
+	    xf86DrvMsg(i, X_INFO, "Using fuzzy aspect match for initial modes\n");
+	else if (xf86TargetFallback(scrn, config, modes, enabled, width, height))
+	    xf86DrvMsg(i, X_INFO, "Using sloppy heuristic for initial modes\n");
+	else
+	    xf86DrvMsg(i, X_WARNING, "Unable to find initial modes\n");
+    }
 
     for (o = -1; nextEnabledOutput(config, enabled, &o); ) {
 	if (!modes[o])
@@ -2406,7 +2417,7 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
     /*
      * Assign CRTCs to fit output configuration
      */
-    if (!xf86PickCrtcs (scrn, crtcs, modes, 0, width, height))
+    if (have_outputs && !xf86PickCrtcs (scrn, crtcs, modes, 0, width, height))
     {
 	free(crtcs);
 	free(modes);
@@ -2468,6 +2479,13 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
 	 */
 	xf86DefaultScreenLimits (scrn, &width, &height, canGrow);
     
+	if (have_outputs == FALSE) {
+	    if (width < NO_OUTPUT_DEFAULT_WIDTH && height < NO_OUTPUT_DEFAULT_HEIGHT) {
+		width = NO_OUTPUT_DEFAULT_WIDTH;
+		height = NO_OUTPUT_DEFAULT_HEIGHT;
+	    }
+	}
+
 	scrn->display->virtualX = width;
 	scrn->display->virtualY = height;
     }
@@ -2493,8 +2511,17 @@ xf86InitialConfiguration (ScrnInfoPtr scrn, Bool canGrow)
 			      width, height);
     }
 
-    /* Mirror output modes to scrn mode list */
-    xf86SetScrnInfoModes (scrn);
+    if (have_outputs) {
+	/* Mirror output modes to scrn mode list */
+	xf86SetScrnInfoModes (scrn);
+    } else {
+	/* Clear any existing modes from scrn->modes */
+	while (scrn->modes != NULL)
+	    xf86DeleteMode(&scrn->modes, scrn->modes);
+	scrn->modes = xf86ModesAdd(scrn->modes,
+				   xf86CVTMode(width, height, 60, 0, 0));
+    }
+
     
     free(crtcs);
     free(modes);

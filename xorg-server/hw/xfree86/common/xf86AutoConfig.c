@@ -39,10 +39,10 @@
 #include "xf86Config.h"
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
+#include "xf86pciBus.h"
 #ifdef __sparc__
 # include "xf86sbusBus.h"
 #endif
-#include "dirent.h"
 
 #ifdef sun
 # include <sys/visual_io.h>
@@ -140,102 +140,6 @@ AppendToConfig(const char *s)
     AppendToList(s, &builtinConfig, &builtinLines);
 }
 
-static int
-videoPtrToDriverList(struct pci_device *dev,
-		     char *returnList[], int returnListMax)
-{
-    int i;
-    /* Add more entries here if we ever return more than 4 drivers for
-       any device */
-    char *driverList[5] = { NULL, NULL, NULL, NULL, NULL };
-
-    switch (dev->vendor_id)
-    {
-	/* AMD Geode LX */
-	case 0x1022:
-	    if (dev->device_id == 0x2081)
-		driverList[0] = "geode";
-	    break;
-	/* older Geode products acquired by AMD still carry an NSC vendor_id */
-	case 0x100b:
-	    if (dev->device_id == 0x0030) {
-		/* NSC Geode GX2 specifically */
-		driverList[0] = "geode";
-		/* GX2 support started its life in the NSC tree and was later 
-		   forked by AMD for GEODE so we keep it as a backup */
-		driverList[1] = "nsc";
-	    } else 
-		/* other NSC variant e.g. 0x0104 (SC1400), 0x0504 (SCx200) */
-		driverList[0] = "nsc";
-	    break;
-	/* Cyrix Geode GX1 */
-	case 0x1078:
-	    if (dev->device_id == 0x0104)
-		driverList[0] = "cyrix";
-	    break;
-	case 0x1142:		    driverList[0] = "apm"; break;
-	case 0xedd8:		    driverList[0] = "ark"; break;
-	case 0x1a03:		    driverList[0] = "ast"; break;
-	case 0x1002:		    driverList[0] = "ati"; break;
-	case 0x102c:		    driverList[0] = "chips"; break;
-	case 0x1013:		    driverList[0] = "cirrus"; break;
-	case 0x3d3d:		    driverList[0] = "glint"; break;
-	case 0x105d:		    driverList[0] = "i128"; break;
-	case 0x8086:
-	    if ((dev->device_id == 0x00d1) || (dev->device_id == 0x7800)) {
-		driverList[0] = "i740";
-            } else if (dev->device_id == 0x8108) {
-                break; /* "hooray" for poulsbo */
-	    } else {
-		driverList[0] = "intel";
-	    }
-	    break;
-	case 0x102b:		    driverList[0] = "mga";	break;
-	case 0x10c8:		    driverList[0] = "neomagic"; break;
-	case 0x10de: case 0x12d2:   driverList[0] = "nv";	break;
-	case 0x1106:		    driverList[0] = "openchrome"; break;
-        case 0x1b36:		    driverList[0] = "qxl"; break;
-	case 0x1163:		    driverList[0] = "rendition"; break;
-	case 0x5333:
-	    switch (dev->device_id)
-	    {
-		case 0x88d0: case 0x88d1: case 0x88f0: case 0x8811:
-		case 0x8812: case 0x8814: case 0x8901:
-		    driverList[0] = "s3"; break;
-		case 0x5631: case 0x883d: case 0x8a01: case 0x8a10:
-		case 0x8c01: case 0x8c03: case 0x8904: case 0x8a13:
-		    driverList[0] = "s3virge"; break;
-		default:
-		    driverList[0] = "savage"; break;
-	    }
-	    break;
-	case 0x1039:		    driverList[0] = "sis";	break;
-	case 0x126f:		    driverList[0] = "siliconmotion"; break;
-	case 0x121a:
-	    if (dev->device_id < 0x0003)
-	        driverList[0] = "voodoo";
-	    else
-	        driverList[0] = "tdfx";
-	    break;
-	case 0x1011:		    driverList[0] = "tga"; break;
-	case 0x1023:		    driverList[0] = "trident"; break;
-	case 0x100c:		    driverList[0] = "tseng"; break;
-	case 0x80ee:		    driverList[0] = "vboxvideo"; break;
-	case 0x15ad:		    driverList[0] = "vmware"; break;
-	case 0x18ca:
-	    if (dev->device_id == 0x47)
-		driverList[0] = "xgixp";
-	    else
-		driverList[0] = "xgi";
-	    break;
-	default: break;
-    }
-    for (i = 0; (i < returnListMax) && (driverList[i] != NULL); i++) {
-	returnList[i] = xnfstrdup(driverList[i]);
-    }
-    return i;	/* Number of entries added */
-}
-
 Bool
 xf86AutoConfig(void)
 {
@@ -285,132 +189,9 @@ xf86AutoConfig(void)
     return (ret == CONFIG_OK);
 }
 
-static int
-xchomp(char *line)
-{
-    size_t len = 0;
-
-    if (!line) {
-        return 1;
-    }
-
-    len = strlen(line);
-    if (line[len - 1] == '\n' && len > 0) {
-        line[len - 1] = '\0';
-    }
-    return 0;
-}
-
-#ifdef __linux__
-/* This function is used to provide a workaround for binary drivers that
- * don't export their PCI ID's properly. If distros don't end up using this
- * feature it can and should be removed because the symbol-based resolution
- * scheme should be the primary one */
-static void
-matchDriverFromFiles (char** matches, uint16_t match_vendor, uint16_t match_chip)
-{
-    DIR *idsdir;
-    FILE *fp;
-    struct dirent *direntry;
-    char *line = NULL;
-    size_t len;
-    ssize_t read;
-    char path_name[256], vendor_str[5], chip_str[5];
-    uint16_t vendor, chip;
-    int i, j;
-
-    idsdir = opendir(PCI_TXT_IDS_PATH);
-    if (!idsdir)
-        return;
-
-    xf86Msg(X_INFO, "Scanning %s directory for additional PCI ID's supported by the drivers\n", PCI_TXT_IDS_PATH);
-    direntry = readdir(idsdir);
-    /* Read the directory */
-    while (direntry) {
-        if (direntry->d_name[0] == '.') {
-            direntry = readdir(idsdir);
-            continue;
-        }
-        len = strlen(direntry->d_name);
-        /* A tiny bit of sanity checking. We should probably do better */
-        if (strncmp(&(direntry->d_name[len-4]), ".ids", 4) == 0) {
-            /* We need the full path name to open the file */
-            strncpy(path_name, PCI_TXT_IDS_PATH, 256);
-            strncat(path_name, "/", 1);
-            strncat(path_name, direntry->d_name, (256 - strlen(path_name) - 1));
-            fp = fopen(path_name, "r");
-            if (fp == NULL) {
-                xf86Msg(X_ERROR, "Could not open %s for reading. Exiting.\n", path_name);
-                goto end;
-            }
-            /* Read the file */
-#ifdef __GLIBC__
-            while ((read = getline(&line, &len, fp)) != -1) {
-#else
-            while ((line = fgetln(fp, &len)) != (char *)NULL) {
-#endif /* __GLIBC __ */
-                xchomp(line);
-                if (isdigit(line[0])) {
-                    strncpy(vendor_str, line, 4);
-                    vendor_str[4] = '\0';
-                    vendor = (int)strtol(vendor_str, NULL, 16);
-                    if ((strlen(&line[4])) == 0) {
-                        chip_str[0] = '\0';
-                        chip = -1;
-                    } else {
-                        /* Handle trailing whitespace */
-                        if (isspace(line[4])) {
-                            chip_str[0] = '\0';
-                            chip = -1;
-                        } else {
-                            /* Ok, it's a real ID */
-                            strncpy(chip_str, &line[4], 4);
-                            chip_str[4] = '\0';
-                            chip = (int)strtol(chip_str, NULL, 16);
-                        }
-                    }
-                    if (vendor == match_vendor && chip == match_chip ) {
-                        i = 0;
-                        while (matches[i]) {
-                            i++;
-                        }
-                        matches[i] = (char*)malloc(sizeof(char) * strlen(direntry->d_name) -  3);
-                        if (!matches[i]) {
-                            xf86Msg(X_ERROR, "Could not allocate space for the module name. Exiting.\n");
-                            goto end;
-                        }
-                        /* hack off the .ids suffix. This should guard
-                         * against other problems, but it will end up
-                         * taking off anything after the first '.' */
-                        for (j = 0; j < (strlen(direntry->d_name) - 3) ; j++) {
-                            if (direntry->d_name[j] == '.') {
-                                matches[i][j] = '\0';
-                                break;
-                            } else {
-                                matches[i][j] = direntry->d_name[j];
-                            }
-                        }
-                        xf86Msg(X_INFO, "Matched %s from file name %s\n", matches[i], direntry->d_name);
-                    }
-                } else {
-                    /* TODO Handle driver overrides here */
-                }
-            }
-            fclose(fp);
-        }
-        direntry = readdir(idsdir);
-    }
- end:
-    free(line);
-    closedir(idsdir);
-}
-#endif /* __linux__ */
-
 static void
 listPossibleVideoDrivers(char *matches[], int nmatches)
 {
-    struct pci_device * info = NULL;
-    struct pci_device_iterator *iter;
     int i;
     
     for (i = 0 ; i < nmatches ; i++) {
@@ -476,32 +257,7 @@ listPossibleVideoDrivers(char *matches[], int nmatches)
     }
 #endif
 
-    /* Find the primary device, and get some information about it. */
-    iter = pci_slot_match_iterator_create(NULL);
-    while ((info = pci_device_next(iter)) != NULL) {
-	if (xf86IsPrimaryPci(info)) {
-	    break;
-	}
-    }
-
-    pci_iterator_destroy(iter);
-
-    if (!info) {
-	ErrorF("Primary device is not PCI\n");
-    }
-#ifdef __linux__
-    else {
-	matchDriverFromFiles(matches, info->vendor_id, info->device_id);
-    }
-#endif /* __linux__ */
-
-    for (i = 0; (i < nmatches) && (matches[i]); i++) {
-	/* find end of matches list */
-    }
-
-    if ((info != NULL) && (i < nmatches)) {
-	i += videoPtrToDriverList(info, &(matches[i]), nmatches - i);
-    }
+    xf86PciMatchDriver(matches, nmatches);
 
     /* Fallback to platform default hardware */
     if (i < (nmatches - 1)) {
