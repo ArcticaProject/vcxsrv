@@ -65,7 +65,7 @@ typedef struct vbeControllerInfoBlock {
 #pragma pack(0)
 #endif
 
-#ifndef __GNUC__
+#if !( defined(__GNUC__) || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590)) )
 #define __attribute__(a)
 #endif
 

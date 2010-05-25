@@ -5,5 +5,4 @@ SUBDIRS = man
 endif
 
 EXTRA_DIST = \
-	README.DRI \
-	README.rapidaccess
+	README.modes

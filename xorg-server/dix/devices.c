@@ -463,7 +463,8 @@ ActivateDevice(DeviceIntPtr dev, BOOL sendevent)
 
     /* Initialize memory for sprites. */
     if (IsMaster(dev) && dev->spriteInfo->spriteOwner)
-        pScreen->DeviceCursorInitialize(dev, pScreen);
+        if (!pScreen->DeviceCursorInitialize(dev, pScreen))
+            ret = BadAlloc;
 
     SendDevicePresenceEvent(dev->id, DeviceAdded);
     if (sendevent)

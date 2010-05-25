@@ -551,9 +551,9 @@ InputClassMatches(XF86ConfInputClassPtr iclass, InputAttributes *attrs)
             return FALSE;
 
         for (cur = iclass->match_tag, match = FALSE; *cur && !match; cur++) {
-            const char *tag;
-            for(tag = *attrs->tags; *tag; tag++) {
-                if (!strcmp(tag, *cur)) {
+            char * const *tag;
+            for(tag = attrs->tags; *tag; tag++) {
+                if (!strcmp(*tag, *cur)) {
                     match = TRUE;
                     break;
                 }

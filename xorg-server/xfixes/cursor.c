@@ -58,7 +58,6 @@ static RESTYPE		CursorClientType;
 static RESTYPE		CursorHideCountType;
 static RESTYPE		CursorWindowType;
 static CursorPtr	CursorCurrent[MAXDEVICES];
-static CursorPtr        pInvisibleCursor = NULL;
 
 static int CursorScreenPrivateKeyIndex;
 static DevPrivateKey CursorScreenPrivateKey = &CursorScreenPrivateKeyIndex;
@@ -148,8 +147,7 @@ CursorDisplayCursor (DeviceIntPtr pDev,
 	CursorVisible = EnableCursor;
 
     if (cs->pCursorHideCounts != NULL || !CursorVisible) {
-        ret = ((*pScreen->RealizeCursor)(pDev, pScreen, pInvisibleCursor) &&
-	       (*pScreen->DisplayCursor) (pDev, pScreen, pInvisibleCursor));
+	ret = (*pScreen->DisplayCursor) (pDev, pScreen, NullCursor);
     } else {
 	ret = (*pScreen->DisplayCursor) (pDev, pScreen, pCursor);
     }
@@ -1031,37 +1029,6 @@ CursorFreeWindow (pointer data, XID id)
     return 1;
 }
 
-static CursorPtr
-createInvisibleCursor (void)
-{
-    CursorPtr pCursor;
-    unsigned char *psrcbits, *pmaskbits;
-    CursorMetricRec cm;
-
-    psrcbits = (unsigned char *) calloc(4, 1);
-    pmaskbits = (unsigned char *) calloc(4, 1);
-    if (psrcbits == NULL || pmaskbits == NULL) {
-	return NULL;
-    }
-
-    cm.width = 1;
-    cm.height = 1;
-    cm.xhot = 0;
-    cm.yhot = 0;
-
-    if (AllocARGBCursor(psrcbits, pmaskbits,
-			NULL, &cm,
-			0, 0, 0,
-			0, 0, 0,
-			&pCursor, serverClient, (XID)0) != Success)
-	return NullCursor;
-
-    if (!AddResource(FakeClientID(0), RT_CURSOR, (pointer) pCursor))
-	return NullCursor;
-
-    return pCursor;
-}
-
 Bool
 XFixesCursorInit (void)
 {
@@ -1089,10 +1056,6 @@ XFixesCursorInit (void)
 						"XFixesCursorHideCount");
     CursorWindowType = CreateNewResourceType(CursorFreeWindow,
 					     "XFixesCursorWindow");
-
-    pInvisibleCursor = createInvisibleCursor();
-    if (pInvisibleCursor == NULL)
-	return BadAlloc;
 
     return CursorClientType && CursorHideCountType && CursorWindowType;
 }
