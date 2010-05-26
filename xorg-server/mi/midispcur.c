@@ -141,6 +141,7 @@ miDCRealizeCursor (ScreenPtr pScreen, CursorPtr pCursor)
 }
 
 #ifdef ARGB_CURSOR
+#define EnsurePicture(picture,draw,win) (picture || miDCMakePicture(&picture,draw,win))
 
 static VisualPtr
 miDCGetWindowVisual (WindowPtr pWin)
@@ -413,6 +414,8 @@ miDCPutUpCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
 #ifdef ARGB_CURSOR
     if (pPriv->pPicture)
     {
+	if (!EnsurePicture(pBuffer->pRootPicture, &pWin->drawable, pWin))
+	    return FALSE;
 	CompositePicture (PictOpOver,
 			  pPriv->pPicture,
 			  NULL,
@@ -695,9 +698,8 @@ miDCMoveCursor (DeviceIntPtr pDev, ScreenPtr pScreen, CursorPtr pCursor,
 #ifdef ARGB_CURSOR
     if (pPriv->pPicture)
     {
-	if (!pBuffer->pTempPicture)
-            miDCMakePicture(&pBuffer->pTempPicture, &pTemp->drawable, pWin);
-
+	if (!EnsurePicture(pBuffer->pTempPicture, &pTemp->drawable, pWin))
+	    return FALSE;
 	CompositePicture (PictOpOver,
 			  pPriv->pPicture,
 			  NULL,
@@ -781,10 +783,7 @@ miDCDeviceInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
             goto failure;
 
 #ifdef ARGB_CURSOR
-        miDCMakePicture(&pBuffer->pRootPicture, &pWin->drawable, pWin);
-        if (!pBuffer->pRootPicture)
-            goto failure;
-
+        pBuffer->pRootPicture = NULL;
         pBuffer->pTempPicture = NULL;
 #endif
 

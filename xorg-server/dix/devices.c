@@ -891,7 +891,7 @@ CloseDeviceList(DeviceIntPtr *listHead)
     while (dev != NULL)
     {
         freedIds[dev->id] = TRUE;
-        DeleteInputDeviceRequest(dev);
+        DeleteInputDeviceRequest(dev, DEVICE_REMOVE_ALL);
 
         dev = *listHead;
         while (dev != NULL && freedIds[dev->id])

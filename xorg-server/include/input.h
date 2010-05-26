@@ -62,6 +62,9 @@ SOFTWARE.
 #define DEVICE_OFF	2
 #define DEVICE_CLOSE	3
 
+/* DeleteInputDeviceRequest flags */
+#define DEVICE_REMOVE_ALL    (1 << 0) /* all devices will be removed */
+
 #define POINTER_RELATIVE (1 << 1)
 #define POINTER_ABSOLUTE (1 << 2)
 #define POINTER_ACCELERATE (1 << 3)
@@ -518,6 +521,8 @@ extern int AllocXTestDevice(ClientPtr client,
 extern BOOL IsXTestDevice(DeviceIntPtr dev, DeviceIntPtr master);
 extern DeviceIntPtr GetXTestDevice(DeviceIntPtr master);
 extern void SendDevicePresenceEvent(int deviceid, int type);
+extern _X_EXPORT InputAttributes *DuplicateInputAttributes(InputAttributes *attrs);
+extern _X_EXPORT void FreeInputAttributes(InputAttributes *attrs);
 
 /* misc event helpers */
 extern Mask GetEventFilter(DeviceIntPtr dev, xEvent *event);
@@ -534,7 +539,8 @@ extern _X_EXPORT int NewInputDeviceRequest(
     InputAttributes *attrs,
     DeviceIntPtr *dev);
 extern  _X_EXPORT void DeleteInputDeviceRequest(
-    DeviceIntPtr dev);
+    DeviceIntPtr dev,
+    int flags);
 
 extern _X_EXPORT void DDXRingBell(
     int volume,

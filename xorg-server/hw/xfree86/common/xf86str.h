@@ -406,6 +406,7 @@ typedef struct {
    char *			driver;
    pointer		 	commonOptions;
    pointer			extraOptions;
+   InputAttributes              *attrs;
 } IDevRec, *IDevPtr;
 
 typedef struct {

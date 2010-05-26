@@ -331,3 +331,82 @@ int generate_modkeymap(ClientPtr client, DeviceIntPtr dev,
 
     return Success;
 }
+
+/**
+ * Duplicate the InputAttributes in the most obvious way.
+ * No special memory handling is used to give drivers the maximum
+ * flexibility with the data. Drivers should be able to call realloc on the
+ * product string if needed and perform similar operations.
+ */
+InputAttributes*
+DuplicateInputAttributes(InputAttributes *attrs)
+{
+    InputAttributes *new_attr;
+    int ntags = 0;
+    char **tags, **new_tags;
+
+    if (!attrs)
+        return NULL;
+
+    if (!(new_attr = calloc(1, sizeof(InputAttributes))))
+        goto unwind;
+
+    if (attrs->product && !(new_attr->product = strdup(attrs->product)))
+        goto unwind;
+    if (attrs->vendor && !(new_attr->vendor = strdup(attrs->vendor)))
+        goto unwind;
+    if (attrs->device && !(new_attr->device = strdup(attrs->device)))
+        goto unwind;
+
+    new_attr->flags = attrs->flags;
+
+    if ((tags = attrs->tags))
+    {
+        while(*tags++)
+            ntags++;
+
+        new_attr->tags = calloc(ntags + 1, sizeof(char*));
+        if (!new_attr->tags)
+            goto unwind;
+
+        tags = attrs->tags;
+        new_tags = new_attr->tags;
+
+        while(*tags)
+        {
+            *new_tags = strdup(*tags);
+            if (!*new_tags)
+                goto unwind;
+
+            tags++;
+            new_tags++;
+        }
+    }
+
+    return new_attr;
+
+unwind:
+    FreeInputAttributes(new_attr);
+    return NULL;
+}
+
+void
+FreeInputAttributes(InputAttributes *attrs)
+{
+    char **tags;
+
+    if (!attrs)
+        return;
+
+    free(attrs->product);
+    free(attrs->vendor);
+    free(attrs->device);
+
+    if ((tags = attrs->tags))
+        while(*tags)
+            free(*tags++);
+
+    free(attrs->tags);
+    free(attrs);
+}
+

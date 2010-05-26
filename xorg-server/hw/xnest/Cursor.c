@@ -167,8 +167,7 @@ xnestDeviceCursorInitialize(DeviceIntPtr pDev, ScreenPtr pScreen)
     pScreenPriv = (xnestCursorFuncPtr)
             dixLookupPrivate(&pScreen->devPrivates, xnestCursorScreenKey);
 
-    pScreenPriv->spriteFuncs->DeviceCursorInitialize(pDev, pScreen);
-    return TRUE;
+    return pScreenPriv->spriteFuncs->DeviceCursorInitialize(pDev, pScreen);
 }
 
 void
