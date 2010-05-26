@@ -771,11 +771,112 @@ static void xi_unregister_handlers(void)
 
 }
 
+static void cmp_attr_fields(InputAttributes *attr1,
+                            InputAttributes *attr2)
+{
+    char **tags1, **tags2;
+
+    g_assert(attr1 && attr2);
+    g_assert(attr1 != attr2);
+    g_assert(attr1->flags == attr2->flags);
+
+    if (attr1->product != NULL)
+    {
+        g_assert(attr1->product != attr2->product);
+        g_assert(strcmp(attr1->product, attr2->product) == 0);
+    } else
+        g_assert(attr2->product == NULL);
+
+    if (attr1->vendor != NULL)
+    {
+        g_assert(attr1->vendor != attr2->vendor);
+        g_assert(strcmp(attr1->vendor, attr2->vendor) == 0);
+    } else
+        g_assert(attr2->vendor == NULL);
+
+    if (attr1->device != NULL)
+    {
+        g_assert(attr1->device != attr2->device);
+        g_assert(strcmp(attr1->device, attr2->device) == 0);
+    } else
+        g_assert(attr2->device == NULL);
+
+    tags1 = attr1->tags;
+    tags2 = attr2->tags;
+    if (!tags1)
+    {
+        g_assert(!tags2);
+        return;
+    }
+
+    /* check for identical content, but duplicated */
+    while (*tags1)
+    {
+        g_assert(*tags1 != *tags2);
+        g_assert(strcmp(*tags1, *tags2) == 0);
+        tags1++;
+        tags2++;
+    }
+
+    g_assert(!*tags2);
+
+    /* check for not sharing memory */
+    tags1 = attr1->tags;
+    while (*tags1)
+    {
+        tags2 = attr2->tags;
+        while (*tags2)
+            g_assert(*tags1 != *tags2++);
+
+        tags1++;
+    }
+}
+
+static void dix_input_attributes(void)
+{
+    InputAttributes orig = {0};
+    InputAttributes *new;
+    char *tags[4] = {"tag1", "tag2", "tag2", NULL};
+
+    new = DuplicateInputAttributes(NULL);
+    g_assert(!new);
+
+    new = DuplicateInputAttributes(&orig);
+    g_assert(memcpy(&orig, new, sizeof(InputAttributes)));
+
+    orig.product = "product name";
+    new = DuplicateInputAttributes(&orig);
+    cmp_attr_fields(&orig, new);
+    FreeInputAttributes(new);
+
+    orig.vendor = "vendor name";
+    new = DuplicateInputAttributes(&orig);
+    cmp_attr_fields(&orig, new);
+    FreeInputAttributes(new);
+
+    orig.device = "device path";
+    new = DuplicateInputAttributes(&orig);
+    cmp_attr_fields(&orig, new);
+    FreeInputAttributes(new);
+
+    orig.flags = 0xF0;
+    new = DuplicateInputAttributes(&orig);
+    cmp_attr_fields(&orig, new);
+    FreeInputAttributes(new);
+
+    orig.tags = tags;
+    new = DuplicateInputAttributes(&orig);
+    cmp_attr_fields(&orig, new);
+    FreeInputAttributes(new);
+}
+
+
 int main(int argc, char** argv)
 {
     g_test_init(&argc, &argv,NULL);
     g_test_bug_base("https://bugzilla.freedesktop.org/show_bug.cgi?id=");
 
+    g_test_add_func("/dix/input/attributes", dix_input_attributes);
     g_test_add_func("/dix/input/init-valuators", dix_init_valuators);
     g_test_add_func("/dix/input/event-core-conversion", dix_event_to_core_conversion);
     g_test_add_func("/dix/input/check-grab-values", dix_check_grab_values);
@@ -783,6 +884,7 @@ int main(int argc, char** argv)
     g_test_add_func("/dix/input/grab_matching", dix_grab_matching);
     g_test_add_func("/include/byte_padding_macros", include_byte_padding_macros);
     g_test_add_func("/Xi/xiproperty/register-unregister", xi_unregister_handlers);
+
 
     return g_test_run();
 }

@@ -81,7 +81,7 @@ remove_device(const char *backend, DeviceIntPtr dev)
      * already been removed. */
     OsBlockSignals();
     ProcessInputEvents();
-    DeleteInputDeviceRequest(dev);
+    DeleteInputDeviceRequest(dev, 0);
     OsReleaseSignals();
 }
 

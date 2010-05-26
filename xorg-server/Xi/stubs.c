@@ -241,6 +241,6 @@ NewInputDeviceRequest(InputOption *options, InputAttributes *attrs,
  *
  */
 void
-DeleteInputDeviceRequest(DeviceIntPtr dev)
+DeleteInputDeviceRequest(DeviceIntPtr dev, int flags)
 {
 }

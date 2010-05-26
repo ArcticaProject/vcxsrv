@@ -148,6 +148,7 @@ typedef struct _LocalDeviceRec {
     pointer		    module;
     pointer		    options;
     unsigned int            history_size;
+    InputAttributes         *attrs;
 } LocalDeviceRec, *LocalDevicePtr, InputInfoRec, *InputInfoPtr;
 
 typedef struct _DeviceAssocRec 

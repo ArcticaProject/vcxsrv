@@ -330,6 +330,8 @@ xf86DeleteInput(InputInfoPtr pInp, int flags)
     if (pInp->private)
 	free(pInp->private);
 
+    FreeInputAttributes(pInp->attrs);
+
     /* Remove the entry from the list. */
     if (pInp == xf86InputDevs)
 	xf86InputDevs = pInp->next;

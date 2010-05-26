@@ -226,7 +226,7 @@ remove_device(DBusMessage *message, DBusMessage *reply, DBusError *error)
      * already been removed. */
     OsBlockSignals();
     ProcessInputEvents();
-    DeleteInputDeviceRequest(dev);
+    DeleteInputDeviceRequest(dev, 0);
     OsReleaseSignals();
 
     ret = Success;

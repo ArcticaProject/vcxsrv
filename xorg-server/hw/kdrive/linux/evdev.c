@@ -165,7 +165,7 @@ EvdevPtrRead (int evdevPort, void *closure)
     n = read (evdevPort, &events, NUM_EVENTS * sizeof (struct input_event));
     if (n <= 0) {
         if (errno == ENODEV)
-            DeleteInputDeviceRequest(pi->dixdev);
+            DeleteInputDeviceRequest(pi->dixdev, 0);
         return;
     }
 
@@ -375,7 +375,7 @@ EvdevKbdRead (int evdevPort, void *closure)
     n = read (evdevPort, &events, NUM_EVENTS * sizeof (struct input_event));
     if (n <= 0) {
         if (errno == ENODEV)
-            DeleteInputDeviceRequest(ki->dixdev);
+            DeleteInputDeviceRequest(ki->dixdev, 0);
         return;
     }
 

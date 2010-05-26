@@ -164,6 +164,10 @@ xf86CollectInputOptions(InputInfoPtr pInfo, const char **defaultOpts,
 	else
 	    pInfo->options = tmp;
     }
+
+    if (pInfo->conf_idev && pInfo->conf_idev->attrs) {
+        pInfo->attrs = pInfo->conf_idev->attrs;
+    }
 }
 
 /* Created for new XInput stuff -- essentially extensions to the parser	*/
