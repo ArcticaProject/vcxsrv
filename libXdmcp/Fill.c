@@ -1,7 +1,4 @@
 /*
- * $Xorg: Fill.c,v 1.4 2001/02/09 02:03:48 xorgcvs Exp $
- *
- * 
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -27,8 +24,6 @@ in this Software without prior written authorization from The Open Group.
  * Author:  Keith Packard, MIT X Consortium
  */
 
-/* $XFree86: xc/lib/Xdmcp/Fill.c,v 3.8 2001/07/23 13:15:42 dawes Exp $ */
-
 #ifdef WIN32
 #define _WILLWINSOCK_
 #endif
@@ -39,6 +34,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/X.h>
 #include <X11/Xmd.h>
 #include <X11/Xdmcp.h>
+#include <stdlib.h>
 
 #ifdef STREAMSCONN
 #include <tiuser.h>
@@ -46,11 +42,7 @@ in this Software without prior written authorization from The Open Group.
 #ifdef WIN32
 #include <X11/Xwinsock.h>
 #else
-#ifndef Lynx
 #include <sys/socket.h>
-#else
-#include <socket.h>
-#endif /* !Lynx */
 #endif
 #endif
 
@@ -65,10 +57,10 @@ XdmcpFill (int fd, XdmcpBufferPtr buffer, XdmcpNetaddr from, int *fromlen)
 
     if (buffer->size < XDM_MAX_MSGLEN)
     {
-	newBuf = (BYTE *) Xalloc (XDM_MAX_MSGLEN);
+	newBuf = (BYTE *) malloc(XDM_MAX_MSGLEN);
 	if (newBuf)
 	{
-	    Xfree (buffer->data);
+	    free(buffer->data);
 	    buffer->data = newBuf;
 	    buffer->size = XDM_MAX_MSGLEN;
 	}

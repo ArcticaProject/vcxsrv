@@ -20,13 +20,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Except as contained in this notice, the name of The Open Group shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
- * *
+ *
  * Author:  Keith Packard, MIT X Consortium
  */
 
-#ifdef WIN32
-#define _WILLWINSOCK_
-#endif
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -35,36 +32,71 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/Xmd.h>
 #include <X11/Xdmcp.h>
 
-#ifdef STREAMSCONN
-#include <tiuser.h>
-#else
+static void
+getbits (long data, unsigned char *dst)
+{
+    dst[0] = (data      ) & 0xff;
+    dst[1] = (data >>  8) & 0xff;
+    dst[2] = (data >> 16) & 0xff;
+    dst[3] = (data >> 24) & 0xff;
+}
+
+#define Time_t time_t
+
+#include <stdlib.h>
+
+#if defined(HAVE_LRAND48) && defined(HAVE_SRAND48)
+#define srandom srand48
+#define random lrand48
+#endif
 #ifdef WIN32
-#include <X11/Xwinsock.h>
-#else
-#include <sys/socket.h>
+#include <process.h>
+#define srandom srand
+#define random rand
+#define getpid(x) _getpid(x)
 #endif
-#endif
+
+void
+XdmcpGenerateKey (XdmAuthKeyPtr key)
+{
+    long    lowbits, highbits;
+
+    srandom ((int)getpid() ^ time((Time_t *)0));
+    lowbits = random ();
+    highbits = random ();
+    getbits (lowbits, key->data);
+    getbits (highbits, key->data + 4);
+}
 
 int
-XdmcpFlush (int fd, XdmcpBufferPtr buffer, XdmcpNetaddr to, int tolen)
+XdmcpCompareKeys (const XdmAuthKeyPtr a, const XdmAuthKeyPtr b)
 {
-    int result;
-#ifdef STREAMSCONN
-    struct t_unitdata dataunit;
+    int	i;
 
-    dataunit.addr.buf = to;
-    dataunit.addr.len = tolen;
-    dataunit.opt.len = 0;	/* default options */
-    dataunit.udata.buf = (char *)buffer->data;
-    dataunit.udata.len = buffer->pointer;
-    result = t_sndudata(fd, &dataunit);
-    if (result < 0)
-	return FALSE;
-#else
-    result = sendto (fd, (char *)buffer->data, buffer->pointer, 0,
-		     (struct sockaddr *)to, tolen);
-    if (result != buffer->pointer)
-	return FALSE;
-#endif
+    for (i = 0; i < 8; i++)
+	if (a->data[i] != b->data[i])
+	    return FALSE;
     return TRUE;
+}
+
+void
+XdmcpIncrementKey (XdmAuthKeyPtr key)
+{
+    int	i;
+
+    i = 7;
+    while (++key->data[i] == 0)
+	if (--i < 0)
+	    break;
+}
+
+void
+XdmcpDecrementKey (XdmAuthKeyPtr key)
+{
+    int	i;
+
+    i = 7;
+    while (key->data[i]-- == 0)
+	if (--i < 0)
+	    break;
 }

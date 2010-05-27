@@ -1,8 +1,3 @@
-/*
- * $Xorg: A8Eq.c,v 1.4 2001/02/09 02:03:48 xorgcvs Exp $
- *
- */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

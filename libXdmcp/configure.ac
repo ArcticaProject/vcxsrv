@@ -1,6 +1,4 @@
 dnl 
-dnl  $Id$
-dnl 
 dnl  Copyright © 2003 Keith Packard, Noah Levitt
 dnl 
 dnl  Permission to use, copy, modify, distribute, and sell this software and its
@@ -23,16 +21,18 @@ dnl  PERFORMANCE OF THIS SOFTWARE.
 dnl
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
+AC_PREREQ([2.60])
 AC_INIT(libXdmcp, 1.0.3, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],libXdmcp)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
 AM_CONFIG_HEADER(config.h)
 
-# Require xorg-macros: XORG_WITH_LINT, XORG_CWARNFLAGS, XORG_CHANGELOG
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
 XORG_MACROS_VERSION(1.3)
+XORG_DEFAULT_OPTIONS
 
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -46,10 +46,6 @@ AC_CHECK_FUNCS([srand48 lrand48])
 AC_SEARCH_LIBS([recvfrom],[socket])
 
 PKG_CHECK_MODULES(XDMCP, xproto)
-XORG_DEFAULT_OPTIONS
-XDMCP_CFLAGS="$CWARNFLAGS $XDMCP_CFLAGS"
-AC_SUBST(XDMCP_CFLAGS)
-AC_SUBST(XDMCP_LIBS)
 
 if test -f ${srcdir}/Wraphelp.c; then
 	AC_DEFINE(HASXDMAUTH,1,[Has Wraphelp.c needed for XDM AUTH protocols])
