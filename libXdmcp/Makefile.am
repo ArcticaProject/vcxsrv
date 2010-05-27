@@ -1,50 +1,22 @@
 lib_LTLIBRARIES = libXdmcp.la
 
-AM_CFLAGS=-I${top_srcdir}/include $(XDMCP_CFLAGS)
+AM_CPPFLAGS = -I${top_srcdir}/include
+AM_CFLAGS = \
+	$(XDMCP_CFLAGS) \
+	$(CWARNFLAGS)
+
 libXdmcp_la_LDFLAGS = -version-number 6:0:0 -no-undefined
 libXdmcp_la_LIBADD = $(XDMCP_LIBS)
 libXdmcp_la_SOURCES = \
-	A8Eq.c \
-	AA16.c \
-	AA32.c \
-	AA8.c \
-	Alloc.c \
-	AofA8.c \
-	CA8.c \
-	CmpKey.c \
-	DA16.c \
-	DA32.c \
-	DA8.c \
-	DAofA8.c \
-	DecKey.c \
+	Array.c \
 	Fill.c \
 	Flush.c \
-	GenKey.c \
-	IncKey.c \
-	RA16.c \
-	RA32.c \
-	RA8.c \
-	RAofA8.c \
-	RC16.c \
-	RC32.c \
-	RC8.c \
-	RHead.c \
-	RR.c \
-	RaA16.c \
-	RaA32.c \
-	RaA8.c \
-	RaAoA8.c \
+	Key.c \
+	Read.c \
 	Unwrap.c \
-	WA16.c \
-	WA32.c \
-	WA8.c \
-	WAofA8.c \
-	WC16.c \
-	WC32.c \
-	WC8.c \
-	Whead.c \
 	Wrap.c \
-	Wrap.h
+	Wrap.h \
+	Write.c
 
 if HASXDMAUTH
 nodist_libXdmcp_la_SOURCES = Wraphelp.c
@@ -52,16 +24,14 @@ endif HASXDMAUTH
 
 xdmcpincludedir=$(includedir)/X11
 
-INCLUDES = \
-	-I${top_builddir}/include
-
 xdmcpinclude_HEADERS = \
 	include/X11/Xdmcp.h
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xdmcp.pc
 
-EXTRA_DIST = xdmcp.pc.in autogen.sh Wraphelp.c Wraphelp.README.crypto
+MAINTAINERCLEANFILES = ChangeLog INSTALL
+EXTRA_DIST = autogen.sh Wraphelp.c Wraphelp.README.crypto
 
 if LINT
 ALL_LINT_FLAGS=$(LINT_FLAGS) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -80,13 +50,15 @@ $(LINTLIB): $(libXdmcp_la_SOURCES) $(nodist_libXdmcp_la_SOURCES)
 	$(LINT) -y -oXdmcp -x $(ALL_LINT_FLAGS) $(libXdmcp_la_SOURCES) $(nodist_libXdmcp_la_SOURCES)
 endif MAKE_LINT_LIB
 
-MAINTAINERCLEANFILES=ChangeLog
 
-.PHONY: ChangeLog
+.PHONY: ChangeLog INSTALL
+
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL
 
 CLEANFILES=$(lintlib_DATA)

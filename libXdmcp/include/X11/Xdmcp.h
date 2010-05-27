@@ -1,5 +1,3 @@
-/* $XdotOrg: xc/lib/Xdmcp/Xdmcp.h,v 1.2 2004/04/23 18:43:41 eich Exp $ */
-/* $Xorg: Xdmcp.h,v 1.7 2001/04/13 14:43:00 steve Exp $ */
 /*
  * Copyright 1989 Network Computing Devices, Inc., Mountain View, California.
  *
@@ -14,7 +12,6 @@
  * without express or implied warranty.
  *
  */
-/* $XFree86: xc/lib/Xdmcp/Xdmcp.h,v 3.7 2003/07/09 15:27:29 tsi Exp $ */
 
 #ifndef _XDMCP_H_
 #define _XDMCP_H_
@@ -121,14 +118,14 @@ typedef struct _XdmAuthKey {
 
 typedef char *XdmcpNetaddr;
 
-extern int XdmcpWriteARRAY16(XdmcpBufferPtr buffer, ARRAY16Ptr array);
-extern int XdmcpWriteARRAY32(XdmcpBufferPtr buffer, ARRAY32Ptr array);
-extern int XdmcpWriteARRAY8(XdmcpBufferPtr buffer, ARRAY8Ptr array);
-extern int XdmcpWriteARRAYofARRAY8(XdmcpBufferPtr buffer, ARRAYofARRAY8Ptr array);
+extern int XdmcpWriteARRAY16(XdmcpBufferPtr buffer, const ARRAY16Ptr array);
+extern int XdmcpWriteARRAY32(XdmcpBufferPtr buffer, const ARRAY32Ptr array);
+extern int XdmcpWriteARRAY8(XdmcpBufferPtr buffer, const ARRAY8Ptr array);
+extern int XdmcpWriteARRAYofARRAY8(XdmcpBufferPtr buffer, const ARRAYofARRAY8Ptr array);
 extern int XdmcpWriteCARD16(XdmcpBufferPtr buffer, unsigned value);
 extern int XdmcpWriteCARD32(XdmcpBufferPtr buffer, unsigned value);
 extern int XdmcpWriteCARD8(XdmcpBufferPtr buffer, unsigned value);
-extern int XdmcpWriteHeader(XdmcpBufferPtr  buffer, XdmcpHeaderPtr  header);
+extern int XdmcpWriteHeader(XdmcpBufferPtr  buffer, const XdmcpHeaderPtr  header);
 
 extern int XdmcpFlush(int fd, XdmcpBufferPtr buffer, XdmcpNetaddr to, int tolen);
 
@@ -143,16 +140,16 @@ extern int XdmcpReadHeader(XdmcpBufferPtr buffer, XdmcpHeaderPtr header);
 
 extern int XdmcpFill(int fd, XdmcpBufferPtr buffer, XdmcpNetaddr from, int *fromlen);
 
-extern int XdmcpReadRemaining(XdmcpBufferPtr buffer);
+extern int XdmcpReadRemaining(const XdmcpBufferPtr buffer);
 
 extern void XdmcpDisposeARRAY8(ARRAY8Ptr array);
 extern void XdmcpDisposeARRAY16(ARRAY16Ptr array);
 extern void XdmcpDisposeARRAY32(ARRAY32Ptr array);
 extern void XdmcpDisposeARRAYofARRAY8(ARRAYofARRAY8Ptr array);
 
-extern int XdmcpCopyARRAY8(ARRAY8Ptr src, ARRAY8Ptr dst);
+extern int XdmcpCopyARRAY8(const ARRAY8Ptr src, ARRAY8Ptr dst);
 
-extern int XdmcpARRAY8Equal(ARRAY8Ptr array1, ARRAY8Ptr array2);
+extern int XdmcpARRAY8Equal(const ARRAY8Ptr array1, const ARRAY8Ptr array2);
 
 extern void XdmcpGenerateKey (XdmAuthKeyPtr key);
 extern void XdmcpIncrementKey (XdmAuthKeyPtr key);
@@ -167,13 +164,7 @@ extern void XdmcpUnwrap(unsigned char *input, unsigned char *wrapper, unsigned c
 #define FALSE	0
 #endif
 
-#if !defined(Xalloc) && !defined(xalloc) && !defined(Xrealloc)
-extern void *Xalloc (unsigned long amount);
-extern void *Xrealloc (void *old, unsigned long amount);
-extern void Xfree(void *old);
-#endif
-
-extern int XdmcpCompareKeys (XdmAuthKeyPtr a, XdmAuthKeyPtr b);
+extern int XdmcpCompareKeys (const XdmAuthKeyPtr a, const XdmAuthKeyPtr b);
 
 extern int XdmcpAllocARRAY16 (ARRAY16Ptr array, int length);
 extern int XdmcpAllocARRAY32 (ARRAY32Ptr array, int length);
