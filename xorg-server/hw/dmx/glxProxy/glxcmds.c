@@ -3404,7 +3404,7 @@ int __glXGetDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
       WriteToClient(client, attribs_size, (char *)attribs);
    }
 
-   Xfree(attribs);
+   free(attribs);
 
    return Success;
 }
@@ -3420,11 +3420,6 @@ int __glXChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
    Display *dpy;
    int screen, rc;
    DMXScreenInfo *dmxScreen;
-   char *attrbuf;
-#ifdef PANORAMIX
-    PanoramiXRes *pXinDraw = NULL;
-    PanoramiXRes *pXinReadDraw = NULL;
-#endif
 
    if (drawId != None) {
       rc = dixLookupDrawable(&pDraw, drawId, client, 0, DixSetAttrAccess);
@@ -3491,7 +3486,7 @@ int __glXChangeDrawableAttributes(__GLXclientState *cl, GLbyte *pc)
 
 #ifdef PANORAMIX
        if (!noPanoramiXExtension) {
-	  pXinDraw = (PanoramiXRes *)
+	  PanoramiXRes *pXinDraw = (PanoramiXRes *)
 	     SecurityLookupIDByClass(client, pDraw->id, XRC_DRAWABLE, DixReadAccess);
 	  if (!pXinDraw) {
 	     client->errorValue = drawId;

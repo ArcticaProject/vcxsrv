@@ -296,14 +296,11 @@ xf86int10GetBiosSegment(xf86Int10InfoPtr pInt, void *base)
     unsigned i;
     int cs = ~0;
     int segments[4];
-    const char * format;
 
     segments[0] = MEM_RW(pInt, (0x10 << 2) + 2);
     segments[1] = MEM_RW(pInt, (0x42 << 2) + 2);
     segments[2] = V_BIOS >> 4;
     segments[3] = ~0;
-
-    format = "No V_BIOS found\n";
 
     for (i = 0; segments[i] != ~0; i++) {
 	unsigned char * vbiosMem;
@@ -318,7 +315,7 @@ xf86int10GetBiosSegment(xf86Int10InfoPtr pInt, void *base)
     }
 
     if (segments[i] == ~0) {
-	xf86DrvMsg(pInt->scrnIndex, X_ERROR, format, (unsigned long)cs << 4);
+	xf86DrvMsg(pInt->scrnIndex, X_ERROR, "No V_BIOS found\n");
 	return FALSE;
     }
 

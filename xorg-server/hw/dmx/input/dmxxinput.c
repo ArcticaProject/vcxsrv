@@ -51,63 +51,6 @@
 #include "dmxinputinit.h"
 #include "exevents.h"
 
-/** Change the core keyboard from \a old_dev to \a new_dev.  Currently
- * this is not implemented. */
-int ChangeKeyboardDevice(DeviceIntPtr old_dev, DeviceIntPtr new_dev)
-{
-#if 0
-    DMXLocalInputInfoPtr dmxLocalOld = old_dev->public.devicePrivate;
-    DMXLocalInputInfoPtr dmxLocalNew = new_dev->public.devicePrivate;
-    
-                                /* Switch our notion of core keyboard */
-    dmxLocalOld->isCore         = 0;
-    dmxLocalOld->sendsCore      = dmxLocalOld->savedSendsCore;
-
-    dmxLocalNew->isCore         = 1;
-    dmxLocalNew->savedSendsCore = dmxLocalNew->sendsCore;
-    dmxLocalNew->sendsCore      = 1;
-    dmxLocalCorePointer         = dmxLocalNew;
-
-    RegisterKeyboardDevice(new_dev);
-    RegisterOtherDevice(old_dev);
-    
-    return Success;
-#endif
-    return BadMatch;
-}
-
-/** Change the core pointer from \a old_dev to \a new_dev. */
-int ChangePointerDevice(DeviceIntPtr old_dev,
-                        DeviceIntPtr new_dev,
-                        unsigned char x,
-                        unsigned char y)
-{
-    DMXLocalInputInfoPtr dmxLocalOld = old_dev->public.devicePrivate;
-    DMXLocalInputInfoPtr dmxLocalNew = new_dev->public.devicePrivate;
-    
-    if (x != 0 || y != 1) return BadMatch;
-
-                                /* Make sure the new device can focus */
-    InitFocusClassDeviceStruct(old_dev);
-
-                                /* Switch the motion history buffers */
-    if (dmxLocalOld->savedMotionProc) {
-        old_dev->valuator->numMotionEvents = dmxLocalOld->savedMotionEvents;
-    }
-    dmxLocalNew->savedMotionEvents     = new_dev->valuator->numMotionEvents;
-    new_dev->valuator->numMotionEvents = GetMaximumEventsNum();
-                                /* Switch our notion of core pointer */
-    dmxLocalOld->isCore         = 0;
-    dmxLocalOld->sendsCore      = dmxLocalOld->savedSendsCore;
-
-    dmxLocalNew->isCore         = 1;
-    dmxLocalNew->savedSendsCore = dmxLocalNew->sendsCore;
-    dmxLocalNew->sendsCore      = 1;
-    dmxLocalCorePointer         = dmxLocalNew;
-    
-    return Success;
-}
-
 /** Close the input device.  This is not required by the XINPUT model
  * that DMX uses. */
 void CloseInputDevice (DeviceIntPtr d, ClientPtr client)

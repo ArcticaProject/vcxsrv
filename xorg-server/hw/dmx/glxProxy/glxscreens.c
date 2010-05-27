@@ -204,9 +204,9 @@ static void CalcServerVersionAndExtensions( void )
     * release temporary storage
     */
    for (s=0; s<__glXNumActiveScreens; s++) {
-      if (be_extensions[s]) Xfree(be_extensions[s]); 
+      free(be_extensions[s]);
    }
-   Xfree( be_extensions );
+   free( be_extensions );
 
    if (dmxGLXSwapGroupSupport) {
        if (!denied_extensions ||
@@ -254,7 +254,6 @@ void __glXScreenInit(GLint numscreens)
 	 if (numscreens > 1) {
 	    for (s=1; s<numscreens; s++) {
 	       DMXScreenInfo *dmxScreen = &dmxScreens[s];
-	       __GLXscreenInfo *glxScreen = &__glXActiveScreens[s];
 	  
 	       cfg = FindMatchingFBConfig( &dmxScreen0->fbconfigs[c],
 		                           dmxScreen->fbconfigs, 

@@ -101,7 +101,6 @@ void __glXDispSwap_Color3sv(GLbyte *pc)
 
 void __glXDispSwap_Color3ubv(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
 }
 
 void __glXDispSwap_Color3uiv(GLbyte *pc)
@@ -120,7 +119,6 @@ void __glXDispSwap_Color3usv(GLbyte *pc)
 
 void __glXDispSwap_Color4bv(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
 }
 
 void __glXDispSwap_Color4dv(GLbyte *pc)
@@ -163,7 +161,6 @@ void __glXDispSwap_Color4sv(GLbyte *pc)
 
 void __glXDispSwap_Color4ubv(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
 
 }
 
@@ -185,16 +182,10 @@ void __glXDispSwap_Color4usv(GLbyte *pc)
 
 void __glXDispSwap_EdgeFlagv(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_End(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_Indexdv(GLbyte *pc)
@@ -238,9 +229,6 @@ void __glXDispSwap_Indexsv(GLbyte *pc)
 
 void __glXDispSwap_Normal3bv(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_Normal3dv(GLbyte *pc)
@@ -1203,9 +1191,6 @@ void __glXDispSwap_TexGeniv(GLbyte *pc)
 
 void __glXDispSwap_InitNames(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_LoadName(GLbyte *pc)
@@ -1226,9 +1211,6 @@ void __glXDispSwap_PassThrough(GLbyte *pc)
 
 void __glXDispSwap_PopName(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_PushName(GLbyte *pc)
@@ -1318,16 +1300,10 @@ void __glXDispSwap_StencilMask(GLbyte *pc)
 
 void __glXDispSwap_ColorMask(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_DepthMask(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_IndexMask(GLbyte *pc)
@@ -1365,9 +1341,6 @@ void __glXDispSwap_Enable(GLbyte *pc)
 
 void __glXDispSwap_PopAttrib(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_PushAttrib(GLbyte *pc)
@@ -1698,9 +1671,6 @@ void __glXDispSwap_Frustum(GLbyte *pc)
 
 void __glXDispSwap_LoadIdentity(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_LoadMatrixf(GLbyte *pc)
@@ -1779,16 +1749,10 @@ void __glXDispSwap_Ortho(GLbyte *pc)
 
 void __glXDispSwap_PopMatrix(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_PushMatrix(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_Rotated(GLbyte *pc)
@@ -1974,9 +1938,6 @@ void __glXDispSwap_PrioritizeTextures(GLbyte *pc)
 
 void __glXDispSwap_Indexubv(GLbyte *pc)
 {
-	__GLX_DECLARE_SWAP_VARIABLES;
-
-
 }
 
 void __glXDispSwap_BlendColor(GLbyte *pc)

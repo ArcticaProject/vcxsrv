@@ -288,7 +288,7 @@ int __glXForwardPipe0WithReply( __GLXclientState *cl, GLbyte *pc )
 	  WriteToClient(client, be_buf_size, (char *)be_buf);
     }
 
-    if (be_buf_size > 0) Xfree(be_buf);
+    if (be_buf_size > 0) free(be_buf);
 
     return Success;
 }
@@ -364,7 +364,7 @@ int __glXForwardAllWithReply( __GLXclientState *cl, GLbyte *pc )
        SyncHandle();
 
        if (s > from_screen && be_buf_size > 0) {
-	  Xfree(be_buf);
+	  free(be_buf);
        }
     }
 
@@ -388,7 +388,7 @@ int __glXForwardAllWithReply( __GLXclientState *cl, GLbyte *pc )
 	  WriteToClient(client, be_buf_size, (char *)be_buf);
     }
 
-    if (be_buf_size > 0) Xfree(be_buf);
+    if (be_buf_size > 0) free(be_buf);
 
     return Success;
 }
@@ -750,7 +750,6 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
     GLboolean swapBytes, lsbFirst;
     ClientPtr client = cl->client;
     DrawablePtr pDraw;
-    int error;
     __GLXcontext *glxc;
     int from_screen = 0;
     int to_screen = 0;
@@ -939,12 +938,12 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
 
 		   }
 
-		   Xfree( be_buf );
+		   free( be_buf );
 		}
 		else {
 		   /* Throw data on the floor */
 		   _XEatData(dpy, be_buf_size);
-		   Xfree( buf );
+		   free( buf );
 		   return BadAlloc;
 		}
 	     }
@@ -970,7 +969,7 @@ int __glXDisp_ReadPixels(__GLXclientState *cl, GLbyte *pc)
     WriteToClient(client, sizeof(xGLXReadPixelsReply),(char *)&reply);
     if (buf_size > 0) {
        WriteToClient(client, buf_size, (char *)buf);
-       Xfree( buf );
+       free( buf );
     }
 
     return Success;

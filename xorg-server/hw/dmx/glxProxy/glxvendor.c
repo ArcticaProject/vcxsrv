@@ -272,7 +272,7 @@ int __glXVForwardPipe0WithReply( __GLXclientState *cl, GLbyte *pc )
 	  WriteToClient(client, be_buf_size, (char *)be_buf);
     }
 
-    if (be_buf_size > 0) Xfree(be_buf);
+    if (be_buf_size > 0) free(be_buf);
 
     return Success;
 }
@@ -349,7 +349,7 @@ int __glXVForwardAllWithReply( __GLXclientState *cl, GLbyte *pc )
        SyncHandle();
 
        if (s > from_screen && be_buf_size > 0) {
-	  Xfree(be_buf);
+	  free(be_buf);
        }
     }
 
@@ -369,7 +369,7 @@ int __glXVForwardAllWithReply( __GLXclientState *cl, GLbyte *pc )
 	  WriteToClient(client, be_buf_size, (char *)be_buf);
     }
 
-    if (be_buf_size > 0) Xfree(be_buf);
+    if (be_buf_size > 0) free(be_buf);
 
     return Success;
 }
