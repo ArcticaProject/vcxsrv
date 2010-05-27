@@ -21,27 +21,29 @@ dnl  PERFORMANCE OF THIS SOFTWARE.
 dnl
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
+AC_PREREQ([2.60])
 
 AC_INIT(libfontenc, 1.0.5, [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], libfontenc)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros: XORG_CWARNFLAGS, XORG_CHANGELOG, XORG_WITH_LINT
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.2)
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.3)
+XORG_DEFAULT_OPTIONS
 AM_CONFIG_HEADER(config.h)
 
 # Check for progs
 AC_PROG_CC
 AC_PROG_LIBTOOL
-XORG_CWARNFLAGS
 
-encodingsdir=${libdir}/X11/fonts/encodings
-AC_ARG_WITH(encodingsdir, AC_HELP_STRING([--with-encodingsdir=<pathname>],
-	[Path to font encodings]), [encodingsdir="$withval"])
-ENCODINGSDIR="$encodingsdir"
-AC_SUBST(ENCODINGSDIR)
+# Require X.Org's font util macros 1.1 or later for XORG_FONTROOTDIR
+m4_ifndef([XORG_FONT_MACROS_VERSION],
+	  [m4_fatal([must install X.Org font-util 1.1 or later before running autoconf/autogen])])
+XORG_FONT_MACROS_VERSION(1.1)
+
+XORG_FONTSUBDIR([ENCODINGSDIR], [encodingsdir], [encodings])
 
 # zlib
 
@@ -49,16 +51,11 @@ AC_CHECK_LIB(z, gzclose)
 
 # Check for dependencies
 PKG_CHECK_MODULES(FONTENC, xproto)
-FONTENC_CFLAGS="$CWARNFLAGS $FONTENC_CFLAGS"
-AC_SUBST(FONTENC_CFLAGS)
-AC_SUBST(FONTENC_LIBS)
 
 dnl Allow checking code with lint, sparse, etc.
 XORG_WITH_LINT
 LINT_FLAGS="${LINT_FLAGS} ${FONTENC_CFLAGS}"
 		  
-XORG_RELEASE_VERSION
-XORG_CHANGELOG
 
 AC_OUTPUT([Makefile
 	   src/Makefile

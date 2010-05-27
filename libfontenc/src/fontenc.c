@@ -20,9 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/* $XdotOrg: xc/lib/font/fontfile/fontenc.c,v 1.3 2005/07/03 07:01:00 daniels Exp $ */
-/* $XFree86: xc/lib/font/fontfile/fontenc.c,v 1.15 2003/02/20 03:25:19 dawes Exp $ */
-
 /* Backend-independent encoding code */
 
 #include <string.h>
@@ -31,23 +28,12 @@ THE SOFTWARE.
 #include <strings.h>
 #endif
 
-#ifndef FONTENC_NO_LIBFONT
-
-#include <X11/fonts/fontmisc.h>           /* defines xalloc and friends */
-#include <X11/fonts/fntfilst.h>
-
-#else
-
 #include <stdlib.h>
-#define xalloc(n) malloc(n)
-#define xrealloc(p, n) realloc(p, n)
-#define xfree(p) free(p)
+
 #define FALSE 0
 #define TRUE 1
 #define MAXFONTNAMELEN 1024
 #define MAXFONTFILENAMELEN 1024
-
-#endif /* FONTENC_NO_FONTFILE */
 
 #include <X11/fonts/fontenc.h>
 #include "fontencI.h"
@@ -767,22 +753,21 @@ FontEncLoad(const char *encoding_name, const char *filename)
             char *new_name;
             int numaliases = 0;
             
-            new_name = xalloc(strlen(encoding_name) + 1);
+            new_name = strdup(encoding_name);
             if(new_name == NULL)
                 return NULL;
-            strcpy(new_name, encoding_name);
             if(encoding->aliases) {
                 for(alias = encoding->aliases; *alias; alias++)
                     numaliases++;
             }
-            new_aliases = (char**)xalloc((numaliases+2)*sizeof(char*));
+            new_aliases = malloc((numaliases+2)*sizeof(char*));
             if(new_aliases == NULL) {
-                xfree(new_name);
+                free(new_name);
                 return NULL;
             }
             if(encoding->aliases) {
                 memcpy(new_aliases, encoding->aliases, numaliases*sizeof(char*));
-                xfree(encoding->aliases);
+                free(encoding->aliases);
             }
             new_aliases[numaliases] = new_name;
             new_aliases[numaliases+1] = NULL;
@@ -928,10 +913,8 @@ FontMapReverse(FontMapPtr mapping)
     return reverse;
 
   bail:
-    if(map)
-        xfree(map);
-    if(reverse)
-        xfree(reverse);
+    free(map);
+    free(reverse);
     return NULL;
 }
 
@@ -945,9 +928,8 @@ FontMapReverseFree(FontMapReversePtr delendum)
         return;
 
     for(i = 0; i < FONTENC_SEGMENTS; i++)
-        if(map[i] != NULL)
-            xfree(map[i]);
+	free(map[i]);
 
-    xfree(map);
+    free(map);
     return;
 }

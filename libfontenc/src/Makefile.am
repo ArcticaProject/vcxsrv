@@ -5,13 +5,14 @@ libfontenc_la_SOURCES = \
          fontenc.c \
 	 fontencI.h
 
-AM_CFLAGS = @FONTENC_CFLAGS@
+AM_CFLAGS = \
+	$(FONTENC_CFLAGS) \
+	$(CWARNFLAGS)
 
 FONTENCDIR=@ENCODINGSDIR@
 FONTENCDEFS = -DFONT_ENCODINGS_DIRECTORY=\"$(FONTENCDIR)/encodings.dir\"
 
-INCLUDES = -I$(top_srcdir)/include \
-	   -DFONTENC_NO_LIBFONT $(FONTENCDEFS)
+INCLUDES = -I$(top_srcdir)/include $(FONTENCDEFS)
 
 
 libfontenc_la_LIBADD = @FONTENC_LIBS@
