@@ -57,7 +57,7 @@ in this Software without prior written authorization from The Open Group.
 #include <X11/extensions/ge.h>
 
 /* defined in Xge.c */
-extern Bool 
+extern _X_HIDDEN Bool 
 xgeExtRegister(Display* dpy, int extension, XExtensionHooks* callbacks);
 
 /*

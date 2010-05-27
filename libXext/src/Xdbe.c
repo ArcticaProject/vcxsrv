@@ -184,14 +184,11 @@ XdbeBackBuffer XdbeAllocateBackBufferName(
      */
     DbeCheckExtension (dpy, info, (XdbeBackBuffer)0);
 
-    /* allocate the id */
-    buffer = XAllocID (dpy);
-
     LockDisplay(dpy);
     DbeGetReq(DbeAllocateBackBufferName, req, info);
     req->window = window;
     req->swapAction = (unsigned char)swap_action;
-    req->buffer = buffer;
+    req->buffer = buffer = XAllocID (dpy);
 
     UnlockDisplay (dpy);
     SyncHandle ();
