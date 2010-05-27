@@ -839,7 +839,6 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
     Display              *display;
     int                  num;
     int                  i, j;
-    DMXLocalInputInfoPtr dmxLocal;
     int                  (*handler)(Display *, char *, char *);
 
     if (!(display = XOpenDisplay(dmxInput->name))) return;

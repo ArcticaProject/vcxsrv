@@ -404,7 +404,7 @@ ProcXF86BigfontQueryFont(
     int nCharInfos;
     int shmid;
 #ifdef HAS_SHM
-    ShmDescPtr pDesc;
+    ShmDescPtr pDesc = NULL;
 #else
 #define pDesc 0
 #endif
@@ -449,8 +449,6 @@ ProcXF86BigfontQueryFont(
 #ifdef HAS_SHM
 	if (!badSysCall)
 	    pDesc = (ShmDescPtr) FontGetPrivate(pFont, FontShmdescIndex);
-	else
-	    pDesc = NULL;
 	if (pDesc) {
 	    pCI = (xCharInfo *) pDesc->attach_addr;
 	    if (stuff_flags & XF86Bigfont_FLAGS_Shm)

@@ -262,7 +262,7 @@ ephyrHostXVQueryAdaptors (EphyrHostXVAdaptorArray **a_adaptors)
 
     EPHYR_LOG ("enter\n") ;
 
-    result = Xcalloc (1, sizeof (EphyrHostXVAdaptorArray)) ;
+    result = calloc (1, sizeof (EphyrHostXVAdaptorArray)) ;
     if (!result)
         goto out ;
 
@@ -340,7 +340,7 @@ ephyrHostXVAdaptorGetVideoFormats (const EphyrHostXVAdaptor *a_this,
     EPHYR_RETURN_VAL_IF_FAIL (a_this, NULL) ;
 
     nb_formats = ((XvAdaptorInfo*)a_this)->num_formats ;
-    formats = Xcalloc (nb_formats, sizeof (EphyrHostVideoFormat)) ;
+    formats = calloc (nb_formats, sizeof (EphyrHostVideoFormat)) ;
     for (i=0; i < nb_formats; i++) {
         memset (&visual_info_template, 0, sizeof (visual_info_template)) ;
         visual_info_template.visualid =
@@ -454,7 +454,7 @@ ephyrHostXVQueryEncodings (int a_port_id,
                             &num_encodings,
                             &encoding_info) ;
     if (num_encodings && encoding_info) {
-        encodings = Xcalloc (num_encodings, sizeof (EphyrHostEncoding)) ;
+        encodings = calloc (num_encodings, sizeof (EphyrHostEncoding)) ;
         for (i=0; i<num_encodings; i++) {
             encodings[i].id = encoding_info[i].encoding_id ;
             encodings[i].name = strdup (encoding_info[i].name) ;
