@@ -789,9 +789,8 @@ winTopLevelWindowProc (HWND hwnd, UINT message,
 	  
 	  /* Tell our Window Manager thread to activate the window */
 	  wmMsg.msg = WM_WM_ACTIVATE;
-	  if (fWMMsgInitialized)
-	    if (!pWin || !pWin->overrideRedirect) /* for OOo menus */
-	      winSendMessageToWM (s_pScreenPriv->pWMInfo, &wmMsg);
+	  if (fWMMsgInitialized && pWin->realized && !pWin->overrideRedirect /* for OOo menus */)
+	    winSendMessageToWM (s_pScreenPriv->pWMInfo, &wmMsg);
 	}
       /* Prevent the mouse wheel from stalling when another window is minimized */
       if (HIWORD(wParam) == 0 && LOWORD(wParam) == WA_ACTIVE &&
