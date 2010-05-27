@@ -29,28 +29,8 @@ from The Open Group.
 #ifndef _XAG_H_
 #define _XAG_H_
 
+#include <X11/extensions/ag.h>
 #include <X11/Xfuncproto.h>
-
-#define X_XagQueryVersion		0
-#define X_XagCreate			1
-#define X_XagDestroy			2
-#define X_XagGetAttr			3
-#define X_XagQuery			4
-#define X_XagCreateAssoc		5
-#define X_XagDestroyAssoc		6
-
-#define XagBadAppGroup			0
-#define XagNumberErrors			(XagBadAppGroup + 1)
-
-#define XagNsingleScreen		7
-#define XagNdefaultRoot			1
-#define XagNrootVisual			2
-#define XagNdefaultColormap		3
-#define XagNblackPixel			4
-#define XagNwhitePixel			5
-#define XagNappGroupLeader		6
-
-#ifndef _XAG_SERVER_
 
 #include <stdarg.h>
 
@@ -107,8 +87,6 @@ Status XagDestroyAssociation(
 );
 
 _XFUNCPROTOEND
-
-#endif /* _XAG_SERVER_ */
 
 #endif /* _XAG_H_ */
 

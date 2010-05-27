@@ -32,16 +32,14 @@ in this Software without prior written authorization from The Open Group.
 
 _XFUNCPROTOBEGIN
 
-extern int (*XSetExtensionErrorHandler(
-    int (*handler)(
-		   Display *,
-		   char *,
-		   char *
-		   )
-))(
-		   Display *,
-		   char *,
-		   char *
+typedef int (*XextErrorHandler) (
+    Display *		/* dpy */,
+    _Xconst char*	/* ext_name */,
+    _Xconst char*	/* reason */
+);
+
+extern XextErrorHandler XSetExtensionErrorHandler(
+    XextErrorHandler	/* handler */
 );
 
 extern int XMissingExtension(

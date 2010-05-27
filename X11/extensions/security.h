@@ -32,37 +32,7 @@ from The Open Group.
 #define _XAUTH_STRUCT_ONLY
 #include <X11/Xauth.h>
 
-/* constants that server, library, and application all need */
-
-#define XSecurityNumberEvents		1
-#define XSecurityNumberErrors		2
-#define XSecurityBadAuthorization	0
-#define XSecurityBadAuthorizationProtocol 1
-
-/* trust levels */
-#define XSecurityClientTrusted		0
-#define XSecurityClientUntrusted	1
-
-/* authorization attribute masks */
-#define XSecurityTimeout		(1<<0)
-#define XSecurityTrustLevel		(1<<1)
-#define XSecurityGroup  		(1<<2)
-#define XSecurityEventMask		(1<<3)
-#define XSecurityAllAuthorizationAttributes \
- (XSecurityTimeout | XSecurityTrustLevel | XSecurityGroup | XSecurityEventMask)
-
-/* event masks */
-#define XSecurityAuthorizationRevokedMask (1<<0)
-#define XSecurityAllEventMasks XSecurityAuthorizationRevokedMask
-
-/* event offsets */
-#define XSecurityAuthorizationRevoked 0
-    
-#define XSecurityAuthorizationName	"XC-QUERY-SECURITY-1"
-#define XSecurityAuthorizationNameLen	19
-
-
-#ifndef _SECURITY_SERVER
+#include <X11/extensions/secur.h>
 
 _XFUNCPROTOBEGIN
 
@@ -105,7 +75,5 @@ typedef struct {
     Display *display;	      /* Display the event was read from */
     XSecurityAuthorization auth_id; /* revoked authorization id */
 } XSecurityAuthorizationRevokedEvent;
-
-#endif /* _SECURITY_SERVER */
 
 #endif /* _SECURITY_H */

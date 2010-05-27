@@ -48,6 +48,26 @@ libXt\include\X11\Vendor.h                        X11\Vendor.h
 libXt\include\X11\VendorP.h                       X11\VendorP.h    
 libXt\include\X11\Xtos.h                          X11\Xtos.h       
 
+libXext\include\X11\extensions\dpms.h             X11\extensions\dpms.h
+libXext\include\X11\extensions\extutil.h          X11\extensions\extutil.h
+libXext\include\X11\extensions\lbxbuf.h           X11\extensions\lbxbuf.h
+libXext\include\X11\extensions\lbxbufstr.h        X11\extensions\lbxbufstr.h
+libXext\include\X11\extensions\lbximage.h         X11\extensions\lbximage.h
+libXext\include\X11\extensions\MITMisc.h          X11\extensions\MITMisc.h
+libXext\include\X11\extensions\multibuf.h         X11\extensions\multibuf.h
+libXext\include\X11\extensions\security.h         X11\extensions\security.h
+libXext\include\X11\extensions\shape.h            X11\extensions\shape.h
+libXext\include\X11\extensions\sync.h             X11\extensions\sync.h
+libXext\include\X11\extensions\Xag.h              X11\extensions\Xag.h
+libXext\include\X11\extensions\Xcup.h             X11\extensions\Xcup.h
+libXext\include\X11\extensions\Xdbe.h             X11\extensions\Xdbe.h
+libXext\include\X11\extensions\XEVI.h             X11\extensions\XEVI.h
+libXext\include\X11\extensions\Xext.h             X11\extensions\Xext.h
+libXext\include\X11\extensions\Xge.h              X11\extensions\Xge.h
+libXext\include\X11\extensions\XLbx.h             X11\extensions\XLbx.h
+libXext\include\X11\extensions\XShm.h             X11\extensions\XShm.h
+libXext\include\X11\extensions\xtestext1.h        X11\extensions\xtestext1.h
+
 libXau\include\X11\Xauth.h                        X11\Xauth.h 
 
 libXdmcp\include\X11\Xdmcp.h                      X11\Xdmcp.h

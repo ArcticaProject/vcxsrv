@@ -31,75 +31,18 @@ in this Software without prior written authorization from The Open Group.
 
 #include <X11/Xfuncproto.h>
 
-#define MULTIBUFFER_PROTOCOL_NAME "Multi-Buffering"
+#include <X11/extensions/multibufconst.h>
 
-#define MULTIBUFFER_MAJOR_VERSION	1	/* current version numbers */
-#define MULTIBUFFER_MINOR_VERSION	1	/* has ClearImageBufferArea */
+#if !defined(UNIXCPP) || defined(ANSICPP)
+#define MbufGetReq(name,req,info) GetReq (name, req); \
+	req->reqType = info->codes->major_opcode; \
+	req->mbufReqType = X_##name;
+#else
+#define MbufGetReq(name,req,info) GetReq (name, req); \
+	req->reqType = info->codes->major_opcode; \
+	req->mbufReqType = X_/**/name;
+#endif
 
-#define X_MbufGetBufferVersion		0
-#define X_MbufCreateImageBuffers	1
-#define X_MbufDestroyImageBuffers	2
-#define X_MbufDisplayImageBuffers	3
-#define X_MbufSetMBufferAttributes	4
-#define X_MbufGetMBufferAttributes	5
-#define X_MbufSetBufferAttributes	6
-#define X_MbufGetBufferAttributes	7
-#define X_MbufGetBufferInfo		8
-#define X_MbufCreateStereoWindow	9
-#define X_MbufClearImageBufferArea	10
-
-/*
- * update_action field
- */
-#define MultibufferUpdateActionUndefined	0
-#define MultibufferUpdateActionBackground	1
-#define MultibufferUpdateActionUntouched	2
-#define MultibufferUpdateActionCopied		3
-
-/*
- * update_hint field
- */
-#define MultibufferUpdateHintFrequent		0
-#define MultibufferUpdateHintIntermittent	1
-#define MultibufferUpdateHintStatic		2
-
-/*
- * valuemask fields
- */
-#define MultibufferWindowUpdateHint	(1L << 0)
-#define MultibufferBufferEventMask	(1L << 0)
-
-/*
- * mono vs. stereo and left vs. right
- */
-#define MultibufferModeMono		0
-#define MultibufferModeStereo		1
-#define MultibufferSideMono		0
-#define MultibufferSideLeft	  	1
-#define MultibufferSideRight		2
-
-/*
- * clobber state
- */
-#define MultibufferUnclobbered		0
-#define MultibufferPartiallyClobbered	1
-#define MultibufferFullyClobbered	2
-
-/*
- * event stuff
- */
-#define MultibufferClobberNotifyMask	0x02000000
-#define MultibufferUpdateNotifyMask	0x04000000
-
-#define MultibufferClobberNotify	0
-#define MultibufferUpdateNotify		1
-#define MultibufferNumberEvents		(MultibufferUpdateNotify + 1)
-
-#define MultibufferBadBuffer		0
-#define MultibufferNumberErrors		(MultibufferBadBuffer + 1)
-
-
-#ifndef _MULTIBUF_SERVER_
 /*
  * Extra definitions that will only be needed in the client
  */
@@ -270,48 +213,4 @@ extern void XmbufClearBufferArea(
 
 _XFUNCPROTOEND
 
-#else
-
-#include "scrnintstr.h"
-
-typedef Bool	(* mbInitFunc)();
-
-struct _mbufScreen;		/* declared in multibufst.h */
-
-extern void	RegisterMultibufferInit(
-    ScreenPtr			/* pScreen */,
-    Bool (* /* bufMultibufferInit */)(
-	ScreenPtr		/* pScreen */,
-	struct _mbufScreen *	/* pMBScreen */
-    )
-);
-
-struct xMbufBufferInfo;		/* declared in multibufst.h */
-
-extern void	RegisterDoubleBufferHardware(
-    ScreenPtr			/* pScreen */,
-    int				/* nInfo */,
-    struct xMbufBufferInfo *	/* pInfo */,
-    DevUnion *			/* frameBuffer */,
-    DevUnion			/* selectPlane */,
-    void (* /* CopyBufferBitsFunc */ )(),
-    void (* /* DrawSelectPlaneFunc */ )()
-);
-
-extern int	CreateImageBuffers (
-    WindowPtr			/* pWin */,
-    int				/* nbuf */,
-    XID *			/* ids */,
-    int				/* action */,
-    int				/* hint */
-);
-extern void	DestroyImageBuffers (
-    WindowPtr			/* pWin */
-);
-extern int	DisplayImageBuffers (
-    XID *			/* ids */,
-    int				/* nbuf */
-);
-
-#endif /* _MULTIBUF_SERVER_ */
 #endif /* _MULTIBUF_H_ */

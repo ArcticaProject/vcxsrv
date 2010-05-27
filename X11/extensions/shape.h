@@ -31,34 +31,9 @@ in this Software without prior written authorization from The Open Group.
 #define _SHAPE_H_
 
 #include <X11/Xfuncproto.h>
-
-#define X_ShapeQueryVersion		0
-#define X_ShapeRectangles		1
-#define X_ShapeMask			2
-#define X_ShapeCombine			3
-#define X_ShapeOffset			4
-#define X_ShapeQueryExtents		5
-#define X_ShapeSelectInput		6
-#define X_ShapeInputSelected		7
-#define X_ShapeGetRectangles		8
-
-#define ShapeSet			0
-#define ShapeUnion			1
-#define ShapeIntersect			2
-#define ShapeSubtract			3
-#define ShapeInvert			4
-
-#define ShapeBounding			0
-#define ShapeClip			1
-#define ShapeInput			2
-
-#define ShapeNotifyMask			(1L << 0)
-#define ShapeNotify			0
-
-#define ShapeNumberEvents		(ShapeNotify + 1)
+#include <X11/extensions/shapeconst.h>
 
 #ifndef _SHAPE_SERVER_
-
 #include <X11/Xutil.h>
 
 typedef struct {
@@ -175,6 +150,6 @@ extern XRectangle *XShapeGetRectangles (
 
 _XFUNCPROTOEND
 
-#endif /* _SHAPE_SERVER_ */
+#endif /* !_SHAPE_SERVER_ */
 
 #endif /* _SHAPE_H_ */

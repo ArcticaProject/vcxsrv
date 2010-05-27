@@ -33,23 +33,11 @@ in this Software without prior written authorization from The Open Group.
 #define _XSHM_H_
 
 #include <X11/Xfuncproto.h>
-
-#define X_ShmQueryVersion		0
-#define X_ShmAttach			1
-#define X_ShmDetach			2
-#define X_ShmPutImage			3
-#define X_ShmGetImage			4
-#define X_ShmCreatePixmap		5
-
-#define ShmCompletion			0
-#define ShmNumberEvents			(ShmCompletion + 1)
-
-#define BadShmSeg			0
-#define ShmNumberErrors			(BadShmSeg + 1)
-
-typedef unsigned long ShmSeg;
+#include <X11/extensions/shm.h>
 
 #ifndef _XSHM_SERVER_
+typedef unsigned long ShmSeg;
+
 typedef struct {
     int	type;		    /* of event */
     unsigned long serial;   /* # of last request processed by server */
@@ -145,17 +133,6 @@ Pixmap XShmCreatePixmap(
 );
 
 _XFUNCPROTOEND
-
-#else /* _XSHM_SERVER_ */
-
-#include "screenint.h"
-#include "pixmap.h"
-#include "gc.h"
-
-extern void ShmRegisterFbFuncs(
-    ScreenPtr /* pScreen */
-);
-
-#endif
+#endif /* _XSHM_SERVER_ */
 
 #endif

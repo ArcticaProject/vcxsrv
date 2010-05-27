@@ -35,20 +35,24 @@
 #ifndef XDBE_H
 #define XDBE_H
 
-
-/* INCLUDES */
-
 #include <X11/Xfuncproto.h>
-#include <X11/extensions/Xdbeproto.h>
+#include <X11/extensions/dbe.h>
 
+typedef struct
+{
+    VisualID    visual;    /* one visual ID that supports double-buffering */
+    int         depth;     /* depth of visual in bits                      */
+    int         perflevel; /* performance level of visual                  */
+}
+XdbeVisualInfo;
 
-/* DEFINES */
+typedef struct
+{
+    int                 count;          /* number of items in visual_depth   */
+    XdbeVisualInfo      *visinfo;       /* list of visuals & depths for scrn */
+}
+XdbeScreenVisualInfo;
 
-/* Errors */
-#define XdbeBadBuffer    0
-
-
-/* TYPEDEFS */
 
 typedef Drawable XdbeBackBuffer;
 

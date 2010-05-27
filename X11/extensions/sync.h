@@ -54,89 +54,30 @@ PERFORMANCE OF THIS SOFTWARE.
 #define _SYNC_H_
 
 #include <X11/Xfuncproto.h>
+#include <X11/extensions/syncconst.h>
+
+#ifdef _SYNC_SERVER
+#include <X11/extensions/syncproto.h>
+#else
 
 _XFUNCPROTOBEGIN
-
-#define SYNC_NAME "SYNC"
-
-#define SYNC_MAJOR_VERSION	3
-#define SYNC_MINOR_VERSION	0
-
-#define X_SyncInitialize		0
-#define X_SyncListSystemCounters	1
-#define X_SyncCreateCounter		2
-#define X_SyncSetCounter		3
-#define X_SyncChangeCounter		4
-#define X_SyncQueryCounter              5
-#define X_SyncDestroyCounter		6
-#define X_SyncAwait			7
-#define X_SyncCreateAlarm               8
-#define X_SyncChangeAlarm	        9
-#define X_SyncQueryAlarm	       10
-#define X_SyncDestroyAlarm	       11
-#define X_SyncSetPriority   	       12
-#define X_SyncGetPriority   	       13
-
-#define XSyncCounterNotify              0
-#define XSyncAlarmNotify		1
-#define XSyncAlarmNotifyMask 		(1L << XSyncAlarmNotify)
-
-#define XSyncNumberEvents		2L
-
-#define XSyncBadCounter			0L
-#define XSyncBadAlarm			1L
-#define XSyncNumberErrors		(XSyncBadAlarm + 1)
-
-/*
- * Flags for Alarm Attributes
- */
-#define XSyncCACounter			(1L<<0)
-#define XSyncCAValueType		(1L<<1)
-#define XSyncCAValue			(1L<<2)
-#define XSyncCATestType			(1L<<3)
-#define XSyncCADelta			(1L<<4)
-#define XSyncCAEvents			(1L<<5)
-
-/*
- * Constants for the value_type argument of various requests
- */
-typedef enum {
-    XSyncAbsolute,
-    XSyncRelative
-} XSyncValueType;
-
-/*
- * Alarm Test types
- */
-typedef enum {
-    XSyncPositiveTransition,
-    XSyncNegativeTransition,
-    XSyncPositiveComparison,
-    XSyncNegativeComparison
-} XSyncTestType;
-
-/*
- * Alarm state constants
- */
-typedef enum {
-    XSyncAlarmActive,
-    XSyncAlarmInactive,
-    XSyncAlarmDestroyed
-} XSyncAlarmState;
-
-
-typedef XID XSyncCounter;
-typedef XID XSyncAlarm;
-typedef struct _XSyncValue {
-    int hi;
-    unsigned int lo;
-} XSyncValue;
-
-/*
- *   Macros/functions for manipulating 64 bit values
- */
-
-/* have to put these prototypes before the corresponding macro definitions */
+/* get rid of macros so we can define corresponding functions */
+#undef XSyncIntToValue
+#undef XSyncIntsToValue
+#undef XSyncValueGreaterThan
+#undef XSyncValueLessThan
+#undef XSyncValueGreaterOrEqual
+#undef XSyncValueLessOrEqual
+#undef XSyncValueEqual
+#undef XSyncValueIsNegative
+#undef XSyncValueIsZero
+#undef XSyncValueIsPositive
+#undef XSyncValueLow32
+#undef XSyncValueHigh32
+#undef XSyncValueAdd
+#undef XSyncValueSubtract
+#undef XSyncMaxValue
+#undef XSyncMinValue
 
 extern void XSyncIntToValue(
     XSyncValue* /*pv*/,
@@ -218,72 +159,6 @@ extern void XSyncMinValue(
 
 _XFUNCPROTOEND
 
-/*  The _XSync macros below are for library internal use only.  They exist 
- *  so that if we have to make a fix, we can change it in this one place
- *  and have both the macro and function variants inherit the fix.
- */
-
-#define _XSyncIntToValue(pv, i)     ((pv)->hi=((i<0)?~0:0),(pv)->lo=(i))
-#define _XSyncIntsToValue(pv, l, h) ((pv)->lo = (l), (pv)->hi = (h))
-#define _XSyncValueGreaterThan(a, b)\
-    ((a).hi>(b).hi || ((a).hi==(b).hi && (a).lo>(b).lo))
-#define _XSyncValueLessThan(a, b)\
-    ((a).hi<(b).hi || ((a).hi==(b).hi && (a).lo<(b).lo))
-#define _XSyncValueGreaterOrEqual(a, b)\
-    ((a).hi>(b).hi || ((a).hi==(b).hi && (a).lo>=(b).lo))
-#define _XSyncValueLessOrEqual(a, b)\
-    ((a).hi<(b).hi || ((a).hi==(b).hi && (a).lo<=(b).lo))
-#define _XSyncValueEqual(a, b)	((a).lo==(b).lo && (a).hi==(b).hi)
-#define _XSyncValueIsNegative(v) (((v).hi & 0x80000000) ? 1 : 0)
-#define _XSyncValueIsZero(a)	((a).lo==0 && (a).hi==0)
-#define _XSyncValueIsPositive(v) (((v).hi & 0x80000000) ? 0 : 1)
-#define _XSyncValueLow32(v)	((v).lo)
-#define _XSyncValueHigh32(v)	((v).hi)
-#define _XSyncValueAdd(presult,a,b,poverflow) {\
-	int t = (a).lo;\
-	Bool signa = XSyncValueIsNegative(a);\
-	Bool signb = XSyncValueIsNegative(b);\
-	((presult)->lo = (a).lo + (b).lo);\
-	((presult)->hi = (a).hi + (b).hi);\
-	if (t>(presult)->lo) (presult)->hi++;\
-	*poverflow = ((signa == signb) && !(signa == XSyncValueIsNegative(*presult)));\
-     }
-#define _XSyncValueSubtract(presult,a,b,poverflow) {\
-	int t = (a).lo;\
-	Bool signa = XSyncValueIsNegative(a);\
-	Bool signb = XSyncValueIsNegative(b);\
-	((presult)->lo = (a).lo - (b).lo);\
-	((presult)->hi = (a).hi - (b).hi);\
-	if (t>(presult)->lo) (presult)->hi--;\
-	*poverflow = ((signa == signb) && !(signa == XSyncValueIsNegative(*presult)));\
-     }
-#define _XSyncMaxValue(pv) ((pv)->hi = 0x7fffffff, (pv)->lo = 0xffffffff)
-#define _XSyncMinValue(pv) ((pv)->hi = 0x80000000, (pv)->lo = 0)
-
-/*
- *  These are the publically usable macros.  If you want the function version
- *  of one of these, just #undef the macro to uncover the function.
- *  (This is the same convention that the ANSI C library uses.)
- */
-
-#define XSyncIntToValue(pv, i) _XSyncIntToValue(pv, i)
-#define XSyncIntsToValue(pv, l, h) _XSyncIntsToValue(pv, l, h)
-#define XSyncValueGreaterThan(a, b) _XSyncValueGreaterThan(a, b)
-#define XSyncValueLessThan(a, b) _XSyncValueLessThan(a, b)
-#define XSyncValueGreaterOrEqual(a, b) _XSyncValueGreaterOrEqual(a, b)
-#define XSyncValueLessOrEqual(a, b) _XSyncValueLessOrEqual(a, b)
-#define XSyncValueEqual(a, b) _XSyncValueEqual(a, b)
-#define XSyncValueIsNegative(v) _XSyncValueIsNegative(v)
-#define XSyncValueIsZero(a) _XSyncValueIsZero(a)
-#define XSyncValueIsPositive(v) _XSyncValueIsPositive(v)
-#define XSyncValueLow32(v) _XSyncValueLow32(v)
-#define XSyncValueHigh32(v) _XSyncValueHigh32(v)
-#define XSyncValueAdd(presult,a,b,poverflow) _XSyncValueAdd(presult,a,b,poverflow)
-#define XSyncValueSubtract(presult,a,b,poverflow) _XSyncValueSubtract(presult,a,b,poverflow)
-#define XSyncMaxValue(pv) _XSyncMaxValue(pv)
-#define XSyncMinValue(pv) _XSyncMinValue(pv)
-
-#ifndef _SYNC_SERVER
 
 typedef struct _XSyncSystemCounter {
     char *name;			/* null-terminated name of system counter */
@@ -462,8 +337,8 @@ extern Status XSyncGetPriority(
     int* /*return_priority*/
 );
 
-#endif /* _SYNC_SERVER */
-
 _XFUNCPROTOEND
+
+#endif /* _SYNC_SERVER */
 
 #endif /* _SYNC_H_ */

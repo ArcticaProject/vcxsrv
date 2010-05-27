@@ -56,6 +56,10 @@ PERFORMANCE OF THIS SOFTWARE.
 #include <X11/Xfuncproto.h>
 #include <X11/extensions/syncconst.h>
 
+#ifdef _SYNC_SERVER
+#include <X11/extensions/syncproto.h>
+#else
+
 _XFUNCPROTOBEGIN
 /* get rid of macros so we can define corresponding functions */
 #undef XSyncIntToValue
@@ -334,5 +338,7 @@ extern Status XSyncGetPriority(
 );
 
 _XFUNCPROTOEND
+
+#endif /* _SYNC_SERVER */
 
 #endif /* _SYNC_H_ */

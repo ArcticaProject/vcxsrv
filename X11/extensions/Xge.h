@@ -38,12 +38,15 @@ _XFUNCPROTOBEGIN
 /**
  * Generic Event mask. 
  * To be used whenever a list of masks per extension has to be provided.
+ *
+ * But, don't actually use the CARD{8,16,32} types.  We can't get them them
+ * defined here without polluting the namespace.
  */
 typedef struct {
-    CARD8       extension;
-    CARD8       pad0;
-    CARD16      pad1;
-    CARD32      evmask;
+    unsigned char       extension;
+    unsigned char       pad0;
+    unsigned short      pad1;
+    unsigned int      evmask;
 } XGenericEventMask;
 
 Bool XGEQueryExtension(Display* dpy, int *event_basep, int *err_basep);

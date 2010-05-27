@@ -26,12 +26,8 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef _XEVI_H_
 #define _XEVI_H_
 #include <X11/Xfuncproto.h>
-#define X_EVIQueryVersion		0
-#define X_EVIGetVisualInfo		1
-#define XEVI_TRANSPARENCY_NONE		0
-#define XEVI_TRANSPARENCY_PIXEL		1
-#define XEVI_TRANSPARENCY_MASK		2
-#ifndef _XEVI_SERVER_
+#include <X11/extensions/EVI.h>
+
 typedef struct {
     VisualID		core_visual_id;
     int			screen;
@@ -43,7 +39,9 @@ typedef struct {
     unsigned int	num_colormap_conflicts;
     VisualID*		colormap_conflicts;
 } ExtendedVisualInfo;
+
 _XFUNCPROTOBEGIN
+
 Bool XeviQueryExtension(
     Display*            /* dpy */
 );
@@ -59,6 +57,7 @@ Status XeviGetVisualInfo(
     ExtendedVisualInfo**	/* extendedVisualInfo_return */,
     int*			/* nInfo_return */
 );
+
 _XFUNCPROTOEND
-#endif
+
 #endif

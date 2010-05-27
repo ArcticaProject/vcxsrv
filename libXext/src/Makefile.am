@@ -1,9 +1,11 @@
 lib_LTLIBRARIES=libXext.la
 
-AM_CFLAGS=\
+AM_CPPFLAGS=\
           -I$(top_srcdir)/include \
           -I$(top_srcdir)/include/X11/extensions\
           $(XEXT_CFLAGS) $(MALLOC_ZERO_CFLAGS)
+
+AM_CFLAGS=$(CWARNFLAGS)
 
 libXext_la_LDFLAGS = -version-number $(XEXT_SOREV) -no-undefined
 
