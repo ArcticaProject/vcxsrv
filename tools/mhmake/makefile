@@ -1,9 +1,9 @@
-ifdef VS2010
-MHMAKESLNFILE=mhmakevc10.sln
-BUILDCMD=devenv.com $(MHMAKESLNFILE) /build
-else
+ifdef VS2008
 MHMAKESLNFILE=mhmake.sln
 BUILDCMD=vcbuild $(MHMAKESLNFILE)
+else
+MHMAKESLNFILE=mhmakevc10.sln
+BUILDCMD=devenv.com $(MHMAKESLNFILE) /build
 endif
 
 .PHONY: all mhmake_dbg mhmake cleanthis
