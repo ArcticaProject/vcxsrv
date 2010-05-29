@@ -1,9 +1,9 @@
-ifdef VS2010
-MHMAKESLNFILE=mesavc10.sln
-BUILDCMD=devenv.com $(MHMAKESLNFILE) /build
-else
+ifdef VS2008
 MHMAKESLNFILE=mesa.sln
 BUILDCMD=vcbuild $(MHMAKESLNFILE)
+else
+MHMAKESLNFILE=mesavc10.sln
+BUILDCMD=devenv.com $(MHMAKESLNFILE) /build
 endif
 SLNFILE=
 
