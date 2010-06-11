@@ -18,11 +18,11 @@ partial default alphanumeric_keys
 xkb_symbols "pes" {
     name[Group1]= "Iran";
 
-    include "ir(pes_part_basic)";
-    include "ir(pes_part_ext)";
+    include "ir(pes_part_basic)"
+    include "ir(pes_part_ext)"
 
-    include "nbsp(zwnj2nb3nnb4)";
-    include "level3(ralt_switch)";
+    include "nbsp(zwnj2nb3nnb4)"
+    include "level3(ralt_switch)"
 };
 
 
@@ -30,11 +30,11 @@ partial alphanumeric_keys
 xkb_symbols "pes_keypad" {
     name[Group1]= "Iran - Persian, with Persian Keypad";
 
-    include "ir(pes_part_basic)";
-    include "ir(pes_part_keypad)";
+    include "ir(pes_part_basic)"
+    include "ir(pes_part_keypad)"
 
-    include "nbsp(zwnj2nb3nnb4)";
-    include "level3(ralt_switch)";
+    include "nbsp(zwnj2nb3nnb4)"
+    include "level3(ralt_switch)"
 };
 
 partial hidden alphanumeric_keys
