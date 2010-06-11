@@ -30,12 +30,7 @@ in this Software without prior written authorization from The Open Group.
 #include <config.h>
 #endif
 #include "Xlibint.h"
-#if USE_XCB
 #include "Xxcbint.h"
-#else /* !USE_XCB */
-#include <X11/Xtrans/Xtrans.h>
-#include <X11/extensions/bigreqstr.h>
-#endif /* USE_XCB */
 #include <X11/Xatom.h>
 #include <X11/Xresource.h>
 #include <stdio.h>
@@ -44,21 +39,6 @@ in this Software without prior written authorization from The Open Group.
 #ifdef XKB
 #include "XKBlib.h"
 #endif /* XKB */
-
-#if !USE_XCB
-#ifdef X_NOT_POSIX
-#define Size_t unsigned int
-#else
-#define Size_t size_t
-#endif
-
-#define bignamelen (sizeof(XBigReqExtensionName) - 1)
-
-typedef struct {
-    unsigned long seq;
-    int opcode;
-} _XBigReqState;
-#endif /* !USE_XCB */
 
 #ifdef XTHREADS
 #include "locking.h"
@@ -76,11 +56,7 @@ static xReq _dummy_request = {
 	0, 0, 0
 };
 
-static void OutOfMemory(Display *dpy, char *setup);
-#if !USE_XCB
-static Bool _XBigReqHandler(Display *dpy, xReply *rep, char *buf, int len,
-				XPointer data);
-#endif /* !USE_XCB */
+static void OutOfMemory(Display *dpy);
 
 /*
  * Connects to a server, creates a Display object and returns a pointer to
@@ -94,14 +70,6 @@ XOpenDisplay (
 	register int i;
 	int j, k;			/* random iterator indexes */
 	char *display_name;		/* pointer to display name */
-#if !USE_XCB
-	int endian;			/* to determine which endian. */
-	xConnClientPrefix client;	/* client information */
-	int idisplay;			/* display number */
-	int prefixread = 0;             /* setup prefix already read? */
-	char *conn_auth_name, *conn_auth_data;
-	int conn_auth_namelen, conn_auth_datalen;
-#endif /* !USE_XCB */
 	char *setup = NULL;		/* memory allocated at startup */
 	char *fullname = NULL;		/* expanded name of display */
 	int iscreen;			/* screen number */
@@ -121,11 +89,6 @@ XOpenDisplay (
 	unsigned long mask;
 	long int conn_buf_size;
 	char *xlib_buffer_size;
-
-#if !USE_XCB
-	bzero((char *) &client, sizeof(client));
-	bzero((char *) &prefix, sizeof(prefix));
-#endif /* !USE_XCB */
 
 	/*
 	 * If the display specifier string supplied as an argument to this
@@ -162,7 +125,6 @@ XOpenDisplay (
  * will set fullname to point to the expanded name.
  */
 
-#if USE_XCB
 	if(!_XConnectXCB(dpy, display, &fullname, &iscreen)) {
 		/* Try falling back on other transports if no transport specified */
 		const char *slash = strrchr(display_name, '/');
@@ -183,22 +145,10 @@ XOpenDisplay (
 		}
 
 		dpy->display_name = fullname;
-		OutOfMemory(dpy, NULL);
+		OutOfMemory(dpy);
 		return NULL;
 	}
 fallback_success:
-#else /* !USE_XCB */
-	if ((dpy->trans_conn = _X11TransConnectDisplay (
-					 display_name, &fullname, &idisplay,
-					 &iscreen, &conn_auth_name,
-					 &conn_auth_namelen, &conn_auth_data,
-					 &conn_auth_datalen)) == NULL) {
-		Xfree ((char *) dpy);
-		return(NULL);
-	}
-
-	dpy->fd = _X11TransGetConnectionNumber (dpy->trans_conn);
-#endif /* USE_XCB */
 
 	/* Initialize as much of the display structure as we can.
 	 * Initialize pointers to NULL so that XFreeDisplayStructure will
@@ -274,12 +224,12 @@ fallback_success:
 
 	/* Initialize the display lock */
 	if (InitDisplayLock(dpy) != 0) {
-	        OutOfMemory (dpy, setup);
+	        OutOfMemory (dpy);
 		return(NULL);
 	}
 
 	if (!_XPollfdCacheInit(dpy)) {
-	        OutOfMemory (dpy, setup);
+	        OutOfMemory (dpy);
 		return(NULL);
 	}
 
@@ -305,14 +255,11 @@ fallback_success:
 	    conn_buf_size = XLIBMINBUFSIZE;
 
 	if ((dpy->bufptr = dpy->buffer = Xcalloc(1, conn_buf_size)) == NULL) {
-	    OutOfMemory (dpy, setup);
+	    OutOfMemory (dpy);
 	    return(NULL);
 	}
-	dpy->bufmax = dpy->buffer + conn_buf_size;
-#if USE_XCB
-	dpy->xcb->real_bufmax = dpy->bufmax;
+	dpy->xcb->real_bufmax = dpy->buffer + conn_buf_size;
 	dpy->bufmax = dpy->buffer;
-#endif
 
 	/* Set up the input event queue and input event queue parameters. */
 	dpy->head = dpy->tail = NULL;
@@ -322,68 +269,10 @@ fallback_success:
 	if ((dpy->free_funcs = (_XFreeFuncRec *)Xcalloc(1,
 							sizeof(_XFreeFuncRec)))
 	    == NULL) {
-	    OutOfMemory (dpy, setup);
+	    OutOfMemory (dpy);
 	    return(NULL);
 	}
 
-#if !USE_XCB
-/*
- * The xConnClientPrefix describes the initial connection setup information
- * and is followed by the authorization information.  Sites that are interested
- * in security are strongly encouraged to use an authentication and
- * authorization system such as Kerberos.
- */
-	endian = 1;
-	if (*(char *) &endian)
-	    client.byteOrder = '\154'; /* 'l' */
-	else
-	    client.byteOrder = '\102'; /* 'B' */
-	client.majorVersion = X_PROTOCOL;
-	client.minorVersion = X_PROTOCOL_REVISION;
-	client.nbytesAuthProto = conn_auth_namelen;
-	client.nbytesAuthString = conn_auth_datalen;
-	prefixread = _XSendClientPrefix(dpy, &client,
-					conn_auth_name, conn_auth_data,
-					&prefix);
-	if (prefixread < 0)
-	{
-	    _XDisconnectDisplay (dpy->trans_conn);
-	    Xfree ((char *)dpy);
-	    return(NULL);
-	}
-	if (conn_auth_name) Xfree(conn_auth_name);
-	if (conn_auth_data) Xfree(conn_auth_data);
-/*
- * Now see if connection was accepted...
- */
-	/* these internal functions expect the display to be locked */
-	LockDisplay(dpy);
-
-	if (prefixread == 0)
-	    _XRead (dpy, (char *)&prefix,(long)SIZEOF(xConnSetupPrefix));
-
-	/* an Authenticate reply we weren't expecting? */
-	if (prefix.success != xTrue && prefix.success != xFalse) {
-	    fprintf (stderr,
-      "Xlib: unexpected connection setup reply from server, type %d.\r\n",
-		     prefix.success);
-	    _XDisconnectDisplay (dpy->trans_conn);
-	    Xfree ((char *)dpy);
-	    return(NULL);
-	}
-
-	if (prefix.majorVersion != X_PROTOCOL) {
-	    /* XXX - printing messages marks a bad programming interface */
-	    fprintf (stderr,
-     "Xlib: client uses different protocol version (%d) than server (%d)!\r\n",
-		     X_PROTOCOL, prefix.majorVersion);
-	    _XDisconnectDisplay (dpy->trans_conn);
-	    Xfree ((char *)dpy);
-	    return(NULL);
-	}
-#endif /* !USE_XCB */
-
-#if USE_XCB
 	{
 		const struct xcb_setup_t *xcbsetup = xcb_get_setup(dpy->xcb->connection);
 		memcpy(&prefix, xcbsetup, sizeof(prefix));
@@ -392,38 +281,6 @@ fallback_success:
 		setup += SIZEOF(xConnSetupPrefix);
 		u.setup = (xConnSetup *) setup;
 	}
-#else /* !USE_XCB */
-	setuplength = prefix.length << 2;
-	if ( (u.setup = (xConnSetup *)
-	      (setup =  Xmalloc ((unsigned) setuplength))) == NULL) {
-		_XDisconnectDisplay (dpy->trans_conn);
-		Xfree ((char *)dpy);
-		return(NULL);
-	}
-	_XRead (dpy, (char *)u.setup, setuplength);
-
-/*
- * If the connection was not accepted by the server due to problems,
- * give error message to the user....
- */
-	if (prefix.success != xTrue) {
-		/* XXX - printing messages marks a bad programming interface */
-		fprintf (stderr,
-		      "Xlib: connection to \"%s\" refused by server\r\nXlib: ",
-			 fullname);
-
-		if (prefix.lengthReason > setuplength) {
-		    fprintf (stderr, "Xlib: Broken initial reply: length of reason > length of packet\r\n");
-		}else{
-		    (void) fwrite (u.failure, (Size_t)sizeof(char),
-			       (Size_t)prefix.lengthReason, stderr);
-		    (void) fwrite ("\r\n", sizeof(char), 2, stderr);
-		}
-
-		OutOfMemory(dpy, setup);
-		return (NULL);
-	}
-#endif /* USE_XCB */
 
 /*
  * Check if the reply was long enough to get any information out of it.
@@ -431,7 +288,7 @@ fallback_success:
 	usedbytes = sz_xConnSetup;
 	if (setuplength < usedbytes ) {
 	    fprintf (stderr, "Xlib: Broken initial reply: Too short (%ld)\n", setuplength);
-	    OutOfMemory(dpy, setup);
+	    OutOfMemory(dpy);
 	    return (NULL);
 	}
 
@@ -460,7 +317,7 @@ fallback_success:
 	{
 	    fprintf (stderr, "Xlib: connection to \"%s\" invalid setup\n",
 		     fullname);
-	    OutOfMemory(dpy, setup);
+	    OutOfMemory(dpy);
 	    return (NULL);
 	}
 
@@ -475,13 +332,13 @@ fallback_success:
  */
 	/* Check for a sane vendor string length */
 	if (u.setup->nbytesVendor > 256) {
-	    OutOfMemory(dpy, setup);
+	    OutOfMemory(dpy);
 	    return (NULL);
 	}
 
 	dpy->vendor = (char *) Xmalloc((unsigned) (u.setup->nbytesVendor + 1));
 	if (dpy->vendor == NULL) {
-	    OutOfMemory(dpy, setup);
+	    OutOfMemory(dpy);
 	    return (NULL);
 	}
 	vendorlen = u.setup->nbytesVendor;
@@ -492,7 +349,7 @@ fallback_success:
 	usedbytes += (vendorlen + 3) & ~3;
 	if (setuplength < usedbytes) {
 	    fprintf (stderr, "Xlib: Broken initial reply: Too short (%ld)\n", setuplength);
-	    OutOfMemory(dpy, setup);
+	    OutOfMemory(dpy);
 	    return (NULL);
 	}
 
@@ -509,7 +366,7 @@ fallback_success:
 	    (ScreenFormat *)Xmalloc(
 		(unsigned) (dpy->nformats *sizeof(ScreenFormat)));
 	if (dpy->pixmap_format == NULL) {
-	        OutOfMemory (dpy, setup);
+	        OutOfMemory (dpy);
 		return(NULL);
 	}
 /*
@@ -519,7 +376,7 @@ fallback_success:
 
 	if (setuplength < usedbytes) {
 	    fprintf (stderr, "Xlib: Broken initial reply: Too short (%ld)\n", setuplength);
-	    OutOfMemory (dpy, setup);
+	    OutOfMemory (dpy);
 	    return(NULL);
 	}
 
@@ -538,7 +395,7 @@ fallback_success:
 	dpy->screens =
 	    (Screen *)Xmalloc((unsigned) dpy->nscreens*sizeof(Screen));
 	if (dpy->screens == NULL) {
-	        OutOfMemory (dpy, setup);
+	        OutOfMemory (dpy);
 		return(NULL);
 	}
 
@@ -552,7 +409,7 @@ fallback_success:
 	    usedbytes += sz_xWindowRoot;
 	    if (setuplength < usedbytes) {
 		fprintf (stderr, "Xlib: Broken initial reply: Too short (%ld)\n", setuplength);
-		OutOfMemory (dpy, setup);
+		OutOfMemory (dpy);
 		return(NULL);
 	    }
 
@@ -581,7 +438,7 @@ fallback_success:
 	    sp->depths = (Depth *)Xmalloc(
 			(unsigned)sp->ndepths*sizeof(Depth));
 	    if (sp->depths == NULL) {
-		OutOfMemory (dpy, setup);
+		OutOfMemory (dpy);
 		return(NULL);
 	    }
 	    /*
@@ -593,7 +450,7 @@ fallback_success:
 		usedbytes += sz_xDepth;
 		if (setuplength < usedbytes) {
 		    fprintf (stderr, "Xlib: Broken initial reply: Too short (%ld)\n", setuplength);
-		    OutOfMemory (dpy, setup);
+		    OutOfMemory (dpy);
 		    return(NULL);
 		}
 
@@ -604,7 +461,7 @@ fallback_success:
 		    dp->visuals =
 		      (Visual *)Xmalloc((unsigned)dp->nvisuals*sizeof(Visual));
 		    if (dp->visuals == NULL) {
-			OutOfMemory (dpy, setup);
+			OutOfMemory (dpy);
 			return(NULL);
 		    }
 		    for (k = 0; k < dp->nvisuals; k++) {
@@ -613,7 +470,7 @@ fallback_success:
 			usedbytes += sz_xVisualType;
 			if (setuplength < usedbytes) {
 			    fprintf (stderr, "Xlib: Broken initial reply: Too short (%ld)\n", setuplength);
-			    OutOfMemory (dpy, setup);
+			    OutOfMemory (dpy);
 			    return(NULL);
 			}
 
@@ -646,7 +503,7 @@ fallback_success:
 	    fprintf(stderr, "Xlib: Did not parse entire setup message: "
 	                    "parsed: %ld, message: %ld\n",
 		    usedbytes, setuplength);
-	    OutOfMemory(dpy, setup);
+	    OutOfMemory(dpy);
 	    return(NULL);
 	}
 
@@ -654,30 +511,17 @@ fallback_success:
  * Now start talking to the server to setup all other information...
  */
 
-#if !USE_XCB
-	Xfree (setup);	/* all finished with setup information */
-#endif /* !USE_XCB */
-
 /*
  * Make sure default screen is legal.
  */
 	if (iscreen >= dpy->nscreens) {
-	    OutOfMemory(dpy, (char *) NULL);
+	    OutOfMemory(dpy);
 	    return(NULL);
 	}
 
-#if !USE_XCB
-/*
- * finished calling internal routines, now unlock for external routines
- */
-	UnlockDisplay(dpy);
-#endif /* !USE_XCB */
-
-#if USE_XCB
 	dpy->bigreq_size = xcb_get_maximum_request_length(dpy->xcb->connection);
 	if(dpy->bigreq_size <= dpy->max_request_size)
 		dpy->bigreq_size = 0;
-#endif /* USE_XCB */
 
 /*
  * Set up other stuff clients are always going to use.
@@ -690,7 +534,7 @@ fallback_success:
 	    if ((sp->default_gc = XCreateGC (dpy, sp->root,
 					     GCForeground|GCBackground,
 					     &values)) == NULL) {
-		OutOfMemory(dpy, (char *) NULL);
+		OutOfMemory(dpy);
 		return (NULL);
 	    }
 	}
@@ -708,24 +552,6 @@ fallback_success:
 	{
 	    xGetPropertyReply reply;
 	    xGetPropertyReq *req;
-#if !USE_XCB
-	    _XAsyncHandler async;
-	    _XBigReqState async_state;
-	    xQueryExtensionReq *qreq;
-	    xBigReqEnableReq *breq;
-	    xBigReqEnableReply brep;
-
-	    GetReq(QueryExtension, qreq);
-	    async_state.seq = dpy->request;
-	    async_state.opcode = 0;
-	    async.next = dpy->async_handlers;
-	    async.handler = _XBigReqHandler;
-	    async.data = (XPointer)&async_state;
-	    dpy->async_handlers = &async;
-	    qreq->nbytes = bignamelen;
-	    qreq->length += (bignamelen+3)>>2;
-	    Data(dpy, XBigReqExtensionName, bignamelen);
-#endif /* !USE_XCB */
 
 	    GetReq (GetProperty, req);
 	    req->window = RootWindow(dpy, 0);
@@ -746,16 +572,6 @@ fallback_success:
 		else if (reply.propertyType != None)
 		    _XEatData(dpy, reply.nItems * (reply.format >> 3));
 	    }
-#if !USE_XCB
-	    DeqAsyncHandler(dpy, &async);
-	    if (async_state.opcode) {
-		GetReq(BigReqEnable, breq);
-		breq->reqType = async_state.opcode;
-		breq->brReqType = X_BigReqEnable;
-		if (_XReply(dpy, (xReply *)&brep, 0, xFalse))
-		    dpy->bigreq_size = brep.max_request_size;
-	    }
-#endif /* !USE_XCB */
 	}
 	UnlockDisplay(dpy);
 
@@ -773,35 +589,6 @@ fallback_success:
  */
  	return(dpy);
 }
-
-#if !USE_XCB
-static Bool
-_XBigReqHandler(
-    register Display *dpy,
-    register xReply *rep,
-    char *buf,
-    int len,
-    XPointer data)
-{
-    _XBigReqState *state;
-    xQueryExtensionReply replbuf;
-    xQueryExtensionReply *repl;
-
-    state = (_XBigReqState *)data;
-    if (dpy->last_request_read != state->seq)
-	return False;
-    if (rep->generic.type == X_Error)
-	return True;
-    repl = (xQueryExtensionReply *)
-	_XGetAsyncReply(dpy, (char *)&replbuf, rep, buf, len,
-			(SIZEOF(xQueryExtensionReply) - SIZEOF(xReply)) >> 2,
-			True);
-    if (repl->present)
-	state->opcode = repl->major_opcode;
-    return True;
-}
-#endif /* !USE_XCB */
-
 
 /* XFreeDisplayStructure frees all the storage associated with a
  * Display.  It is used by XOpenDisplay if it runs out of memory,
@@ -938,9 +725,7 @@ void _XFreeDisplayStructure(Display *dpy)
 	if (dpy->filedes)
 	    Xfree (dpy->filedes);
 
-#if USE_XCB
 	_XFreeX11XCBStructure(dpy);
-#endif /* USE_XCB */
 
 	Xfree ((char *)dpy);
 }
@@ -948,16 +733,9 @@ void _XFreeDisplayStructure(Display *dpy)
 /* OutOfMemory is called if malloc fails.  XOpenDisplay returns NULL
    after this returns. */
 
-static void OutOfMemory(Display *dpy, char *setup)
+static void OutOfMemory(Display *dpy)
 {
-#if USE_XCB
     if(dpy->xcb->connection)
 	xcb_disconnect(dpy->xcb->connection);
-#else /* !USE_XCB */
-    _XDisconnectDisplay (dpy->trans_conn);
-#endif /* USE_XCB */
     _XFreeDisplayStructure (dpy);
-#if !USE_XCB
-    if (setup) Xfree (setup);
-#endif /* !USE_XCB */
 }

@@ -84,7 +84,7 @@ SUFFIXES = .ms .ps .txt .html .pdf
 	 $< 2> index.$@.raw > $@
 
 .ms.html:
-	$(AM_V_GEN) $(GROFF) -Thtml -P-Dimages -P-I$*-image $(GROFF_FLAGS) $< 2> index.$@.raw > $@
+	$(AM_V_GEN) $(GROFF) $(GROFF_FLAGS) -Thtml -P-Dimages -P-I$*-image $< 2> index.$@.raw > $@
 
 .ps.pdf:
 	$(AM_V_GEN) $(PS2PDF) $< $@

@@ -305,7 +305,7 @@ The stacking order of the first window in the windows array is unaffected,
 but the other windows in the array are stacked underneath the first window,
 in the order of the array.
 The stacking order of the other windows is not affected.
-For each window in the window array that is not a child of the specified window,
+For each window in the window array that is not a sibling of the first window,
 a
 .ZN BadMatch
 error results.

@@ -3,7 +3,7 @@ XKB_SUBDIRS = xkb
 endif
 SUBDIRS = util xcms xlibi18n $(XKB_SUBDIRS)
 
-lib_LTLIBRARIES=libX11.la
+lib_LTLIBRARIES = libX11.la libX11-xcb.la
 
 BUILT_SOURCES=ks_tables.h
 CLEANFILES=ks_tables.h ks_tables_h
@@ -21,7 +21,6 @@ AM_CPPFLAGS= \
 AM_CFLAGS= \
 	$(X11_CFLAGS) \
 	$(BIGFONT_CFLAGS) \
-	$(XDMCP_CFLAGS) \
 	$(XMALLOC_ZERO_CFLAGS) \
 	$(CWARNFLAGS)
 
@@ -312,6 +311,8 @@ libX11_la_SOURCES = \
                   WMProps.c \
                   WrBitF.c \
                   Xatomtype.h \
+                  xcb_disp.c \
+                  xcb_io.c \
                   Xintatom.h \
                   Xintconn.h \
                   XlibAsync.c \
@@ -320,7 +321,8 @@ libX11_la_SOURCES = \
                   XomGeneric.h \
                   Xresinternal.h \
                   Xrm.c \
-                  XrmI.h
+                  XrmI.h \
+                  Xxcbint.h
 
 #
 # ========================= Extra stuff ============================
@@ -347,21 +349,9 @@ EXTRA_DIST = \
 	udcInf.c \
 	UIThrStubs.c 
 
-if XCB
-libX11_la_SOURCES += \
-                  xcb_disp.c \
-                  xcb_io.c \
-                  Xxcbint.h
-
-lib_LTLIBRARIES += libX11-xcb.la
 libX11_xcb_la_SOURCES = x11_xcb.c Xxcbint.h
 libX11_xcb_la_LDFLAGS = -version-info 1:0:0 -no-undefined
 libX11_xcb_la_LIBADD = libX11.la
-else
-libX11_la_SOURCES += \
-                  ConnDis.c \
-                  x11_trans.c
-endif
 
 #
 # Figure out which sub-libraries to link into Xlib
@@ -385,8 +375,7 @@ libX11_la_LIBADD = \
 	$(USE_I18N_LIBS) \
 	$(USE_XCMS_LIBS) \
 	$(USE_XKB_LIBS) \
-	$(X11_LIBS) \
-	$(XDMCP_LIBS)
+	$(X11_LIBS)
 
 preprocess: $(patsubst %.c,%.ii,$(libX11_la_SOURCES))
 .c.ii:

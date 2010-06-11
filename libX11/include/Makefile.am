@@ -9,14 +9,11 @@ x11include_HEADERS=\
 	X11/Xutil.h \
 	X11/cursorfont.h \
 	X11/Xregion.h \
-	X11/ImUtil.h
+	X11/ImUtil.h \
+	X11/Xlib-xcb.h
 
 nodist_x11include_HEADERS=\
 	X11/XlibConf.h
 
 EXTRA_DIST = \
 	X11/XlibConf.h.in
-
-if XCB
-x11include_HEADERS += X11/Xlib-xcb.h
-endif
