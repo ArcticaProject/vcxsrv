@@ -45,16 +45,11 @@ winScreenInfo * g_ScreenInfo = 0;
 #ifdef HAS_DEVWINDOWS
 int		g_fdMessageQueue = WIN_FD_INVALID;
 #endif
-static int	g_iScreenPrivateKeyIndex;
-DevPrivateKey	g_iScreenPrivateKey = &g_iScreenPrivateKeyIndex;
-static int	g_iCmapPrivateKeyIndex;
-DevPrivateKey	g_iCmapPrivateKey = &g_iCmapPrivateKeyIndex;
-static int	g_iGCPrivateKeyIndex;
-DevPrivateKey	g_iGCPrivateKey = &g_iGCPrivateKeyIndex;
-static int	g_iPixmapPrivateKeyIndex;
-DevPrivateKey	g_iPixmapPrivateKey = &g_iPixmapPrivateKeyIndex;
-static int	g_iWindowPrivateKeyIndex;
-DevPrivateKey	g_iWindowPrivateKey = &g_iWindowPrivateKeyIndex;
+DevPrivateKeyRec g_iScreenPrivateKeyRec;
+DevPrivateKeyRec g_iCmapPrivateKeyRec;
+DevPrivateKeyRec g_iGCPrivateKeyRec;
+DevPrivateKeyRec g_iPixmapPrivateKeyRec;
+DevPrivateKeyRec g_iWindowPrivateKeyRec;
 unsigned long	g_ulServerGeneration = 0;
 DWORD		g_dwEnginesSupported = 0;
 HINSTANCE	g_hInstance = 0;
@@ -131,6 +126,13 @@ Atom			g_atomLastOwnedSelection = None;
 void
 winInitializeGlobals (void)
 {
+  if (!dixRegisterPrivateKey(&g_iScreenPrivateKeyRec, PRIVATE_SCREEN, 0) ||
+      !dixRegisterPrivateKey(&g_iCmapPrivateKeyRec, PRIVATE_COLORMAP, 0) ||
+      !dixRegisterPrivateKey(&g_iGCPrivateKeyRec, PRIVATE_GC, 0) ||
+      !dixRegisterPrivateKey(&g_iPixmapPrivateKeyRec, PRIVATE_PIXMAP, 0) ||
+      !dixRegisterPrivateKey(&g_iWindowPrivateKeyRec, PRIVATE_WINDOW, 0)) {
+      FatalError("cannot register private key");
+  }
   g_dwCurrentThreadID = GetCurrentThreadId ();
   g_hwndKeyboardFocus = NULL;
 #ifdef XWIN_CLIPBOARD

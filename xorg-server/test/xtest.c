@@ -30,6 +30,7 @@
 #include "inputstr.h"
 #include "scrnintstr.h"
 #include "exevents.h"
+#include "xkbsrv.h"
 #include "xserver-properties.h"
 
 #include <glib.h>
@@ -58,6 +59,8 @@ static void xtest_init_devices(void)
     screen.DeviceCursorInitialize = device_cursor_init;
     dixResetPrivates();
     InitAtoms();
+
+    XkbInitPrivates();
 
     /* this also inits the xtest devices */
     InitCoreDevices();

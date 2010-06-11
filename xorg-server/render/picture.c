@@ -42,10 +42,8 @@
 #include "picturestr.h"
 #include "xace.h"
 
-static int PictureScreenPrivateKeyIndex;
-DevPrivateKey PictureScreenPrivateKey = &PictureScreenPrivateKeyIndex;
-static int PictureWindowPrivateKeyIndex;
-DevPrivateKey	PictureWindowPrivateKey = &PictureWindowPrivateKeyIndex;
+DevPrivateKeyRec PictureScreenPrivateKeyRec;
+DevPrivateKeyRec PictureWindowPrivateKeyRec;
 static int	PictureGeneration;
 RESTYPE		PictureType;
 RESTYPE		PictFormatType;
@@ -628,6 +626,12 @@ PictureInit (ScreenPtr pScreen, PictFormatPtr formats, int nformats)
 	    return FALSE;
 	PictureGeneration = serverGeneration;
     }
+    if (!dixRegisterPrivateKey(&PictureScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&PictureWindowPrivateKeyRec, PRIVATE_WINDOW, 0))
+	return FALSE;
+
     if (!formats)
     {
 	formats = PictureCreateDefaultFormats (pScreen, &nformats);
@@ -753,7 +757,7 @@ CreatePicture (Picture		pid,
     PicturePtr		pPicture;
     PictureScreenPtr	ps = GetPictureScreen(pDrawable->pScreen);
 
-    pPicture = (PicturePtr)malloc(sizeof(PictureRec));
+    pPicture = dixAllocateObjectWithPrivates(PictureRec, PRIVATE_PICTURE);
     if (!pPicture)
     {
 	*error = BadAlloc;
@@ -764,7 +768,6 @@ CreatePicture (Picture		pid,
     pPicture->pDrawable = pDrawable;
     pPicture->pFormat = pFormat;
     pPicture->format = pFormat->format | (pDrawable->bitsPerPixel << 24);
-    pPicture->devPrivates = NULL;
 
     /* security creation/labeling check */
     *error = XaceHook(XACE_RESOURCE_ACCESS, client, pid, PictureType, pPicture,
@@ -896,12 +899,11 @@ static void initGradient(SourcePictPtr pGradient, int stopCount,
 static PicturePtr createSourcePicture(void)
 {
     PicturePtr pPicture;
-    pPicture = (PicturePtr) malloc(sizeof(PictureRec));
+    pPicture = dixAllocateObjectWithPrivates(PictureRec, PRIVATE_PICTURE);
     pPicture->pDrawable = 0;
     pPicture->pFormat = 0;
     pPicture->pNext = 0;
     pPicture->format = PICT_a8r8g8b8;
-    pPicture->devPrivates = 0;
 
     SetPictureToDefaults(pPicture);
     return pPicture;
@@ -1298,8 +1300,7 @@ SetPictureClipRects (PicturePtr	pPicture,
     RegionPtr		clientClip;
     int			result;
 
-    clientClip = RECTS_TO_REGION(pScreen,
-				 nRect, rects, CT_UNSORTED);
+    clientClip = RegionFromRects(nRect, rects, CT_UNSORTED);
     if (!clientClip)
 	return BadAlloc;
     result =(*ps->ChangePictureClip) (pPicture, CT_REGION, 
@@ -1329,14 +1330,13 @@ SetPictureClipRegion (PicturePtr    pPicture,
     if (pRegion)
     {
         type = CT_REGION;
-        clientClip = REGION_CREATE (pScreen,
-                                    REGION_EXTENTS(pScreen, pRegion),
-                                    REGION_NUM_RECTS(pRegion));
+        clientClip = RegionCreate(RegionExtents(pRegion),
+                                  RegionNumRects(pRegion));
         if (!clientClip)
             return BadAlloc;
-        if (!REGION_COPY (pSCreen, clientClip, pRegion))
+        if (!RegionCopy(clientClip, pRegion))
         {
-            REGION_DESTROY (pScreen, clientClip);
+            RegionDestroy(clientClip);
             return BadAlloc;
         }
     }
@@ -1462,9 +1462,9 @@ CopyPicture (PicturePtr	pSrc,
 		    RegionPtr clientClip;
 		    RegionPtr srcClientClip = (RegionPtr)pSrc->clientClip;
 
-		    clientClip = REGION_CREATE(pSrc->pDrawable->pScreen,
-			REGION_EXTENTS(pSrc->pDrawable->pScreen, srcClientClip),
-			REGION_NUM_RECTS(srcClientClip));
+		    clientClip = RegionCreate(
+			RegionExtents(srcClientClip),
+			RegionNumRects(srcClientClip));
 		    (*ps->ChangePictureClip)(pDst, CT_REGION, clientClip, 0);
 		}
 		break;
@@ -1524,8 +1524,7 @@ FreePicture (pointer	value,
 
     if (--pPicture->refcnt == 0)
     {
-	if (pPicture->transform)
-	    free(pPicture->transform);
+	free(pPicture->transform);
 
 	if (pPicture->pSourcePict)
 	{
@@ -1566,8 +1565,7 @@ FreePicture (pointer	value,
                 (*pScreen->DestroyPixmap) ((PixmapPtr)pPicture->pDrawable);
             }
         }
-	dixFreePrivates(pPicture->devPrivates);
-	free(pPicture);
+	dixFreeObjectWithPrivates(pPicture, PRIVATE_PICTURE);
     }
     return Success;
 }

@@ -71,7 +71,7 @@ static Bool xf86RandR12CreateScreenResources12 (ScreenPtr pScreen);
 static int xf86RandR12Generation;
 #if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
 
-static int xf86RandR12KeyIndex;
+static DevPrivateKeyRec xf86RandR12KeyRec;
 static DevPrivateKey xf86RandR12Key;
 #define XF86RANDRINFO(p) ((XF86RandRInfoPtr) \
     dixLookupPrivate(&(p)->devPrivates, xf86RandR12Key))
@@ -517,7 +517,7 @@ xf86RandR12SetMode (ScreenPtr	    pScreen,
     int			oldHeight = pScreen->height;
     int			oldmmWidth = pScreen->mmWidth;
     int			oldmmHeight = pScreen->mmHeight;
-    WindowPtr		pRoot = WindowTable[pScreen->myNum];
+    WindowPtr		pRoot = pScreen->root;
     DisplayModePtr      currentMode = NULL;
     Bool 		ret = TRUE;
     PixmapPtr 		pspix = NULL;
@@ -685,7 +685,7 @@ xf86RandR12ScreenSetSize (ScreenPtr	pScreen,
     XF86RandRInfoPtr	randrp = XF86RANDRINFO(pScreen);
     ScrnInfoPtr		pScrn = XF86SCRNINFO(pScreen);
     xf86CrtcConfigPtr	config = XF86_CRTC_CONFIG_PTR(pScrn);
-    WindowPtr		pRoot = WindowTable[pScreen->myNum];
+    WindowPtr		pRoot = pScreen->root;
     PixmapPtr		pScrnPix = (*pScreen->GetScreenPixmap)(pScreen);
     Bool		ret = FALSE;
     int                 c;
@@ -739,7 +739,7 @@ finish:
     if (pRoot && pScrn->vtSema)
 	(*pScrn->EnableDisableFBAccess) (pScreen->myNum, TRUE);
 #if RANDR_12_INTERFACE
-    if (xf86RandR12Key && WindowTable[pScreen->myNum] && ret)
+    if (xf86RandR12Key && pScreen->root && ret)
 	RRScreenSizeNotify (pScreen);
 #endif
     return ret;
@@ -883,7 +883,9 @@ xf86RandR12Init (ScreenPtr pScreen)
 	xf86RandR12Generation = serverGeneration;
 
 #if XORG_VERSION_CURRENT < XORG_VERSION_NUMERIC(7,0,0,0,0)
-    xf86RandR12Key = &xf86RandR12KeyIndex;
+    xf86RandR12Key = &xf86RandR12KeyRec;
+    if (!dixRegisterPrivateKey(&xf86RandR12KeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
 #else
     xf86RandR12Index = AllocateScreenPrivateIndex();
 #endif

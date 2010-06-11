@@ -30,6 +30,7 @@ CSRCS=\
 	privates.c	\
 	property.c	\
 	ptrveloc.c	\
+	region.c	\
 	registry.c	\
 	resource.c	\
 	selection.c	\

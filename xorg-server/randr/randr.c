@@ -54,11 +54,9 @@ static int SProcRRDispatch (ClientPtr pClient);
 int	RREventBase;
 int	RRErrorBase;
 RESTYPE RRClientType, RREventType; /* resource types for event masks */
-static int RRClientPrivateKeyIndex;
-DevPrivateKey RRClientPrivateKey = &RRClientPrivateKeyIndex;
+DevPrivateKeyRec RRClientPrivateKeyRec;
 
-static int rrPrivKeyIndex;
-DevPrivateKey rrPrivKey = &rrPrivKeyIndex;
+DevPrivateKeyRec rrPrivKeyRec;
 
 static void
 RRClientCallback (CallbackListPtr	*list,
@@ -215,6 +213,9 @@ Bool RRInit (void)
 	    return FALSE;
 	RRGeneration = serverGeneration;
     }
+    if (!dixRegisterPrivateKey(&rrPrivKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     return TRUE;
 }
 
@@ -329,9 +330,9 @@ RRExtensionInit (void)
 
     if (RRNScreens == 0) return;
 
-    if (!dixRequestPrivate(RRClientPrivateKey,
-				sizeof (RRClientRec) +
-				screenInfo.numScreens * sizeof (RRTimesRec)))
+    if (!dixRegisterPrivateKey(&RRClientPrivateKeyRec, PRIVATE_CLIENT,
+			       sizeof (RRClientRec) +
+			       screenInfo.numScreens * sizeof (RRTimesRec)))
 	return;
     if (!AddCallback (&ClientStateCallback, RRClientCallback, 0))
 	return;

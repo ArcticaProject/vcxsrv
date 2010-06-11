@@ -139,8 +139,7 @@ RROutputSetClones (RROutputPtr  output,
     }
     else
 	newClones = NULL;
-    if (output->clones)
-	free(output->clones);
+    free(output->clones);
     memcpy (newClones, clones, numClones * sizeof (RROutputPtr));
     output->clones = newClones;
     output->numClones = numClones;
@@ -285,8 +284,7 @@ RROutputSetCrtcs (RROutputPtr	output,
     }
     else
 	newCrtcs = NULL;
-    if (output->crtcs)
-	free(output->crtcs);
+    free(output->crtcs);
     memcpy (newCrtcs, crtcs, numCrtcs * sizeof (RRCrtcPtr));
     output->crtcs = newCrtcs;
     output->numCrtcs = numCrtcs;
@@ -407,13 +405,10 @@ RROutputDestroyResource (pointer value, XID pid)
     
     for (m = 0; m < output->numUserModes; m++)
 	RRModeDestroy (output->userModes[m]);
-    if (output->userModes)
-	free(output->userModes);
+    free(output->userModes);
 
-    if (output->crtcs)
-	free(output->crtcs);
-    if (output->clones)
-	free(output->clones);
+    free(output->crtcs);
+    free(output->clones);
     RRDeleteAllOutputProperties (output);
     free(output);
     return 1;

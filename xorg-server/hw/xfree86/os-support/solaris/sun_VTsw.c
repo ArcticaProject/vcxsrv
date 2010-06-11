@@ -66,7 +66,7 @@ xf86VTAcquire(int sig)
 Bool
 xf86VTSwitchPending(void)
 {
-    return(xf86Info.vtRequestsPending ? TRUE : FALSE);
+    return xf86Info.vtRequestsPending ? TRUE : FALSE;
 }
 
 Bool
@@ -81,7 +81,7 @@ xf86VTSwitchAway(void)
 	if (xf86VTPruneDoor) {
 		xf86VTPruneDoor = 0;
 		ioctl(xf86Info.consoleFd, VT_RELDISP, 1);
-		return (TRUE);
+		return TRUE;
 	}
 
 	vt_door_arg.vt_ev = VT_EV_HOTKEYS;
@@ -94,15 +94,15 @@ xf86VTSwitchAway(void)
 	door_arg.desc_num = 0;
 
 	if ((door_fd = open(VT_DAEMON_DOOR_FILE, O_RDONLY)) < 0)
-		return (FALSE);
+		return FALSE;
 
 	if (door_call(door_fd, &door_arg) != 0) {
 		close(door_fd);
-		return (FALSE);
+		return FALSE;
 	}
 
 	close(door_fd);
-	return (TRUE);
+	return TRUE;
 }
 
 Bool
@@ -111,11 +111,11 @@ xf86VTSwitchTo(void)
 	xf86Info.vtRequestsPending = FALSE;
 	if (ioctl(xf86Info.consoleFd, VT_RELDISP, VT_ACKACQ) < 0)
 	{
-		return(FALSE);
+		return FALSE;
 	}
 	else
 	{
-		return(TRUE);
+		return TRUE;
 	}
 }
 
@@ -125,13 +125,13 @@ xf86VTActivate(int vtno)
 	struct vt_stat state;
 
 	if (ioctl(xf86Info.consoleFd, VT_GETSTATE, &state) < 0)
-		return(FALSE);
+		return FALSE;
 
 	if ((state.v_state & (1 << vtno)) == 0)
-		return(FALSE);
+		return FALSE;
 
 	xf86Info.vtRequestsPending = TRUE;
 	xf86Info.vtPendingNum = vtno;
 
-	return(TRUE);
+	return TRUE;
 }

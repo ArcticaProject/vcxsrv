@@ -27,7 +27,6 @@
 #include <dix-config.h>
 #endif
 
-#define DBUS_API_SUBJECT_TO_CHANGE
 #include <dbus/dbus.h>
 #include <string.h>
 
@@ -184,10 +183,8 @@ unwind:
     while (options) {
         tmpo = options;
         options = options->next;
-        if (tmpo->key)
-            free(tmpo->key);
-        if (tmpo->value)
-            free(tmpo->value);
+        free(tmpo->key);
+        free(tmpo->value);
         free(tmpo);
     }
 

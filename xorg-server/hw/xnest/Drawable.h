@@ -19,7 +19,7 @@ is" without express or implied warranty.
 #include "XNPixmap.h"
 
 #define xnestDrawable(pDrawable) \
-  ((pDrawable)->type == DRAWABLE_WINDOW ? \
+  (WindowDrawable((pDrawable)->type) ?	\
    xnestWindow((WindowPtr)pDrawable) : \
    xnestPixmap((PixmapPtr)pDrawable))
 

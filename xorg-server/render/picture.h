@@ -174,7 +174,6 @@ extern _X_EXPORT int PictureCmapPolicy;
 extern _X_EXPORT int PictureParseCmapPolicy (const char *name);
 
 extern _X_EXPORT int RenderErrBase;
-extern _X_EXPORT DevPrivateKey RenderClientPrivateKey;
 
 /* Fixed point updates from Carl Worth, USC, Information Sciences Institute */
 

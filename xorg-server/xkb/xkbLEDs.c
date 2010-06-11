@@ -166,7 +166,7 @@ XkbStatePtr	state;
 	    }
 	}
     }
-    return (stateChange || ctrlChange);
+    return stateChange || ctrlChange;
 }
 	
 	/*
@@ -263,7 +263,7 @@ unsigned			oldState;
 
     if (ed==NULL) {
 	ed= &my_ed;
-	bzero((char *)ed,sizeof(xkbExtensionDeviceNotify));
+	memset((char *)ed, 0, sizeof(xkbExtensionDeviceNotify));
     }
     else if ((ed->reason&XkbXI_IndicatorsMask)&&
 	     ((ed->ledClass!=sli->class)||(ed->ledID!=sli->id))) {
@@ -273,7 +273,7 @@ unsigned			oldState;
     if ((kbd==dev)&&(sli->flags&XkbSLI_IsDefault)) {
 	if (changes==NULL) {
 	    changes= &my_changes;
-	    bzero((char *)changes,sizeof(XkbChangesRec));
+	    memset((char *)changes, 0, sizeof(XkbChangesRec));
 	}
 	changes->indicators.state_changes|= affected;
     }
@@ -362,8 +362,8 @@ XkbChangesRec			changes;
 xkbExtensionDeviceNotify	ed;
 unsigned 			side_affected;
 
-    bzero((char *)&changes,sizeof(XkbChangesRec));
-    bzero((char *)&ed,sizeof(xkbExtensionDeviceNotify));
+    memset((char *)&changes, 0, sizeof(XkbChangesRec));
+    memset((char *)&ed, 0, sizeof(xkbExtensionDeviceNotify));
     sli= XkbFindSrvLedInfo(dev,XkbDfltXIClass,XkbDfltXIId,0);
     sli->explicitState&= ~affect;
     sli->explicitState|= (affect&values);
@@ -605,8 +605,8 @@ void
 XkbFreeSrvLedInfo(XkbSrvLedInfoPtr sli)
 {
     if ((sli->flags&XkbSLI_IsDefault)==0) {
-	if (sli->maps)	free(sli->maps);
-	if (sli->names)	free(sli->names);
+	free(sli->maps);
+	free(sli->names);
     }
     sli->maps= NULL;
     sli->names= NULL;
@@ -735,7 +735,7 @@ XkbFlushLedEvents(	DeviceIntPtr			dev,
 	if (changes->indicators.state_changes)
 	    XkbDDXUpdateDeviceIndicators(dev,sli,sli->effectiveState);
 	XkbSendNotification(kbd,changes,cause);
-	bzero((char *)changes,sizeof(XkbChangesRec));
+	memset((char *)changes, 0, sizeof(XkbChangesRec));
 
 	if (XkbAX_NeedFeedback(kbd->key->xkbInfo->desc->ctrls, XkbAX_IndicatorFBMask)) {
 		if (sli->effectiveState)
@@ -751,7 +751,7 @@ XkbFlushLedEvents(	DeviceIntPtr			dev,
 		XkbDDXUpdateDeviceIndicators(dev,sli,sli->effectiveState);
 	    XkbSendExtensionDeviceNotify(dev,cause->client,ed);
 	}
-	bzero((char *)ed,sizeof(XkbExtensionDeviceNotify));
+	memset((char *)ed, 0, sizeof(XkbExtensionDeviceNotify));
     }
     return;
 }
@@ -778,7 +778,7 @@ xkbExtensionDeviceNotify	my_ed;
 
     if (ed==NULL) {
 	ed= &my_ed;
-	bzero((char *)ed,sizeof(xkbExtensionDeviceNotify));
+	memset((char *)ed, 0, sizeof(xkbExtensionDeviceNotify));
     }
     else if ((ed->reason&XkbXI_IndicatorsMask)&&
 	     ((ed->ledClass!=sli->class)||(ed->ledID!=sli->id))) {
@@ -788,7 +788,7 @@ xkbExtensionDeviceNotify	my_ed;
     if ((kbd==dev)&&(sli->flags&XkbSLI_IsDefault)) { 
 	if (changes==NULL) {
 	   changes= &my_changes;
-	   bzero((char *)changes,sizeof(XkbChangesRec));
+	   memset((char *)changes, 0, sizeof(XkbChangesRec));
 	}
 	changes->names.changed|= XkbIndicatorNamesMask;
 	changes->names.changed_indicators|= changed_names;
@@ -855,7 +855,7 @@ xkbExtensionDeviceNotify	my_ed;
 
     if (ed==NULL) {
 	ed= &my_ed;
-	bzero((char *)ed,sizeof(xkbExtensionDeviceNotify));
+	memset((char *)ed, 0, sizeof(xkbExtensionDeviceNotify));
     }
     else if ((ed->reason&XkbXI_IndicatorsMask)&&
 	     ((ed->ledClass!=sli->class)||(ed->ledID!=sli->id))) {
@@ -865,7 +865,7 @@ xkbExtensionDeviceNotify	my_ed;
     if ((kbd==dev)&&(sli->flags&XkbSLI_IsDefault)) {
 	if (changes==NULL) {
 	    changes= &my_changes;
-	    bzero((char *)changes,sizeof(XkbChangesRec));
+	    memset((char *)changes, 0, sizeof(XkbChangesRec));
 	}
 	changes->indicators.map_changes|= changed_maps;
     }
@@ -917,7 +917,7 @@ Bool				kb_changed;
 
     if (changes==NULL) {
 	changes= &my_changes;
-	bzero((char *)changes,sizeof(XkbChangesRec));
+	memset((char *)changes, 0, sizeof(XkbChangesRec));
     }
 
     kb_changed= FALSE;
@@ -943,7 +943,7 @@ Bool				kb_changed;
 
     if (ed==NULL) {
 	ed= &my_ed;
-	bzero((char *)ed,sizeof(xkbExtensionDeviceNotify));
+	memset((char *)ed, 0, sizeof(xkbExtensionDeviceNotify));
     }
     else if (affected&&(ed->reason&XkbXI_IndicatorsMask)&&
 	     ((ed->ledClass!=sli->class)||(ed->ledID!=sli->id))) {

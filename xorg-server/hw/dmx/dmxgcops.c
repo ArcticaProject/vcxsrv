@@ -127,16 +127,16 @@ void dmxPutImage(DrawablePtr pDrawable, GCPtr pGC,
 	    box.y1 = y;
 	    box.x2 = x + w;
 	    box.y2 = y + h;
-	    pSubImages = REGION_CREATE(pGC->pScreen, &box, 1);
+	    pSubImages = RegionCreate(&box, 1);
 
-	    pClip = REGION_CREATE(pGC->pScreen, NullBox, 1);
-	    REGION_COPY(pGC->pScreen, pClip, pGC->pCompositeClip);
-	    REGION_TRANSLATE(pGC->pScreen, pClip,
+	    pClip = RegionCreate(NullBox, 1);
+	    RegionCopy(pClip, pGC->pCompositeClip);
+	    RegionTranslate(pClip,
 			     -pDrawable->x, -pDrawable->y);
-	    REGION_INTERSECT(pGC->pScreen, pSubImages, pSubImages, pClip);
+	    RegionIntersect(pSubImages, pSubImages, pClip);
 
-	    nBox = REGION_NUM_RECTS(pSubImages);
-	    pBox = REGION_RECTS(pSubImages);
+	    nBox = RegionNumRects(pSubImages);
+	    pBox = RegionRects(pSubImages);
 
 	    while (nBox--) {
 		XPutImage(dmxScreen->beDisplay, draw, pGCPriv->gc, img,
@@ -148,8 +148,8 @@ void dmxPutImage(DrawablePtr pDrawable, GCPtr pGC,
 			  pBox->y2 - pBox->y1);
 		pBox++;
 	    }
-            REGION_DESTROY(pGC->pScreen, pClip);
-            REGION_DESTROY(pGC->pScreen, pSubImages);
+            RegionDestroy(pClip);
+            RegionDestroy(pSubImages);
 	} else {
 	    XPutImage(dmxScreen->beDisplay, draw, pGCPriv->gc,
 		      img, 0, 0, x, y, w, h);

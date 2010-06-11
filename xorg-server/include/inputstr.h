@@ -49,6 +49,7 @@ SOFTWARE.
 #ifndef INPUTSTRUCT_H
 #define INPUTSTRUCT_H
 
+#include <pixman.h>
 #include "input.h"
 #include "window.h"
 #include "dixstruct.h"
@@ -550,6 +551,12 @@ typedef struct _DeviceIntRec {
         XIPropertyPtr   properties;
         XIPropertyHandlerPtr handlers; /* NULL-terminated */
     } properties;
+
+    /* coordinate transformation matrix for absolute input devices */
+    struct pixman_f_transform transform;
+
+    /* XTest related master device id */
+    int xtest_master_id;
 } DeviceIntRec;
 
 typedef struct {

@@ -365,7 +365,7 @@ miInsertionSort(EdgeTableEntry *AET)
             changed = 1;
         }
     }
-    return(changed);
+    return changed;
 }
 
 /*

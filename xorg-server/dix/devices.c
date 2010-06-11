@@ -77,6 +77,8 @@ SOFTWARE.
 #include <X11/extensions/XI.h>
 #include <X11/extensions/XI2.h>
 #include <X11/extensions/XIproto.h>
+#include <math.h>
+#include <pixman.h>
 #include "exglobals.h"
 #include "exevents.h"
 #include "xiquerydevice.h" /* for SizeDeviceClasses */
@@ -85,11 +87,57 @@ SOFTWARE.
 #include "xserver-properties.h"
 #include "xichangehierarchy.h" /* For XISendDeviceHierarchyEvent */
 
+#ifdef _MSC_VER
+#define isfinite(val) _finite(val)
+#endif
+
 /** @file
  * This file handles input device-related stuff.
  */
 
 static void RecalculateMasterButtons(DeviceIntPtr slave);
+
+static void
+DeviceSetTransform(DeviceIntPtr dev, float *transform)
+{
+    struct pixman_f_transform scale;
+    double sx, sy;
+    int x, y;
+
+    /**
+     * calculate combined transformation matrix:
+     *
+     * M = InvScale * Transform * Scale
+     *
+     * So we can later transform points using M * p
+     *
+     * Where:
+     *  Scale scales coordinates into 0..1 range
+     *  Transform is the user supplied (affine) transform
+     *  InvScale scales coordinates back up into their native range
+     */
+    sx = dev->valuator->axes[0].max_value - dev->valuator->axes[0].min_value;
+    sy = dev->valuator->axes[1].max_value - dev->valuator->axes[1].min_value;
+
+    /* invscale */
+    pixman_f_transform_init_scale(&scale, sx, sy);
+    scale.m[0][2] = dev->valuator->axes[0].min_value;
+    scale.m[1][2] = dev->valuator->axes[1].min_value;
+
+    /* transform */
+    for (y=0; y<3; y++)
+        for (x=0; x<3; x++)
+            dev->transform.m[y][x] = *transform++;
+
+    pixman_f_transform_multiply(&dev->transform, &scale, &dev->transform);
+
+    /* scale */
+    pixman_f_transform_init_scale(&scale, 1.0 / sx, 1.0 / sy);
+    scale.m[0][2] = -dev->valuator->axes[0].min_value / sx;
+    scale.m[1][2] = -dev->valuator->axes[1].min_value / sy;
+
+    pixman_f_transform_multiply(&dev->transform, &dev->transform, &scale);
+}
 
 /**
  * DIX property handler.
@@ -115,6 +163,21 @@ DeviceSetProperty(DeviceIntPtr dev, Atom property, XIPropertyValuePtr prop,
             else if (!(*((CARD8*)prop->data)) && dev->enabled)
                 DisableDevice(dev, TRUE);
         }
+    } else if (property == XIGetKnownProperty(XI_PROP_TRANSFORM))
+    {
+        float *f = (float*)prop->data;
+        int i;
+
+        if (prop->format != 32 || prop->size != 9 ||
+            prop->type != XIGetKnownProperty(XATOM_FLOAT))
+            return BadValue;
+
+        for (i=0; i<9; i++)
+            if (!isfinite(f[i]))
+                return BadValue;
+
+        if (!checkonly)
+            DeviceSetTransform(dev, f);
     }
 
     return Success;
@@ -183,6 +246,7 @@ AddInputDevice(ClientPtr client, DeviceProc deviceProc, Bool autoStart)
     int devid;
     char devind[MAXDEVICES];
     BOOL enabled;
+    float transform[9];
 
     /* Find next available id, 0 and 1 are reserved */
     memset(devind, 0, sizeof(char)*MAXDEVICES);
@@ -195,7 +259,9 @@ AddInputDevice(ClientPtr client, DeviceProc deviceProc, Bool autoStart)
 
     if (devid >= MAXDEVICES)
 	return (DeviceIntPtr)NULL;
-    dev =  calloc(sizeof(DeviceIntRec) + sizeof(SpriteInfoRec), 1);
+    dev =  _dixAllocateObjectWithPrivates(sizeof(DeviceIntRec) + sizeof(SpriteInfoRec),
+					  sizeof(DeviceIntRec) + sizeof(SpriteInfoRec),
+					  offsetof(DeviceIntRec, devPrivates), PRIVATE_DEVICE);
     if (!dev)
 	return (DeviceIntPtr)NULL;
     dev->id = devid;
@@ -234,6 +300,17 @@ AddInputDevice(ClientPtr client, DeviceProc deviceProc, Bool autoStart)
                            XA_INTEGER, 8, PropModeReplace, 1, &enabled,
                            FALSE);
     XISetDevicePropertyDeletable(dev, XIGetKnownProperty(XI_PROP_ENABLED), FALSE);
+
+    /* unity matrix */
+    memset(transform, 0, sizeof(transform));
+    transform[0] = transform[4] = transform[8] = 1.0f;
+
+    XIChangeDeviceProperty(dev, XIGetKnownProperty(XI_PROP_TRANSFORM),
+                           XIGetKnownProperty(XATOM_FLOAT), 32,
+                           PropModeReplace, 9, transform, FALSE);
+    XISetDevicePropertyDeletable(dev, XIGetKnownProperty(XI_PROP_TRANSFORM),
+                                 FALSE);
+
     XIRegisterPropertyHandler(dev, DeviceSetProperty, NULL, NULL);
 
     return dev;
@@ -289,9 +366,9 @@ EnableDevice(DeviceIntPtr dev, BOOL sendevent)
             /* Sprites appear on first root window, so we can hardcode it */
             if (dev->spriteInfo->spriteOwner)
             {
-                InitializeSprite(dev, WindowTable[0]);
+                InitializeSprite(dev, screenInfo.screens[0]->root);
                                                  /* mode doesn't matter */
-                EnterWindow(dev, WindowTable[0], NotifyAncestor);
+                EnterWindow(dev, screenInfo.screens[0]->root, NotifyAncestor);
             }
             else if ((other = NextFreePointerDevice()) == NULL)
             {
@@ -667,8 +744,7 @@ FreeDeviceClass(int type, pointer *class)
         case ButtonClass:
             {
                 ButtonClassPtr *b = (ButtonClassPtr*)class;
-                if ((*b)->xkb_acts)
-                    free((*b)->xkb_acts);
+                free((*b)->xkb_acts);
                 free((*b));
                 break;
             }
@@ -676,8 +752,7 @@ FreeDeviceClass(int type, pointer *class)
             {
                 ValuatorClassPtr *v = (ValuatorClassPtr*)class;
 
-                if ((*v)->motion)
-                    free((*v)->motion);
+                free((*v)->motion);
                 free((*v));
                 break;
             }
@@ -865,8 +940,7 @@ CloseDevice(DeviceIntPtr dev)
     }
 
     free(dev->deviceGrab.sync.event);
-    dixFreePrivates(dev->devPrivates);
-    free(dev);
+    dixFreeObjectWithPrivates(dev, PRIVATE_DEVICE);
 }
 
 /**
@@ -1397,10 +1471,8 @@ InitStringFeedbackClassDeviceStruct (
     feedc->ctrl.symbols_displayed = malloc(sizeof (KeySym) * max_symbols);
     if (!feedc->ctrl.symbols_supported || !feedc->ctrl.symbols_displayed)
     {
-	if (feedc->ctrl.symbols_supported)
-	    free(feedc->ctrl.symbols_supported);
-	if (feedc->ctrl.symbols_displayed)
-	    free(feedc->ctrl.symbols_displayed);
+	free(feedc->ctrl.symbols_supported);
+	free(feedc->ctrl.symbols_displayed);
 	free(feedc);
 	return FALSE;
     }
@@ -1954,7 +2026,7 @@ ProcChangeKeyboardControl (ClientPtr client)
     keyboard = PickKeyboard(client);
 
     for (pDev = inputInfo.devices; pDev; pDev = pDev->next) {
-        if ((pDev == keyboard || (!IsMaster(keyboard) && pDev->u.master == keyboard)) &&
+        if ((pDev == keyboard || (!IsMaster(pDev) && pDev->u.master == keyboard)) &&
             pDev->kbdfeed && pDev->kbdfeed->CtrlProc) {
             ret = XaceHook(XACE_DEVICE_ACCESS, client, pDev, DixManageAccess);
 	    if (ret != Success)
@@ -1963,7 +2035,7 @@ ProcChangeKeyboardControl (ClientPtr client)
     }
 
     for (pDev = inputInfo.devices; pDev; pDev = pDev->next) {
-        if ((pDev == keyboard || (!IsMaster(keyboard) && pDev->u.master == keyboard)) &&
+        if ((pDev == keyboard || (!IsMaster(pDev) && pDev->u.master == keyboard)) &&
             pDev->kbdfeed && pDev->kbdfeed->CtrlProc) {
             ret = DoChangeKeyboardControl(client, pDev, vlist, vmask);
             if (ret != Success)
@@ -2053,11 +2125,11 @@ ProcChangePointerControl(ClientPtr client)
     ctrl = mouse->ptrfeed->ctrl;
     if ((stuff->doAccel != xTrue) && (stuff->doAccel != xFalse)) {
 	client->errorValue = stuff->doAccel;
-	return(BadValue);
+	return BadValue;
     }
     if ((stuff->doThresh != xTrue) && (stuff->doThresh != xFalse)) {
 	client->errorValue = stuff->doThresh;
-	return(BadValue);
+	return BadValue;
     }
     if (stuff->doAccel) {
 	if (stuff->accelNum == -1) {
@@ -2215,8 +2287,7 @@ ProcGetMotionEvents(ClientPtr client)
 	WriteSwappedDataToClient(client, nEvents * sizeof(xTimecoord),
 				 (char *)coords);
     }
-    if (coords)
-	free(coords);
+    free(coords);
     return Success;
 }
 
@@ -2368,7 +2439,7 @@ AttachDevice(ClientPtr client, DeviceIntPtr dev, DeviceIntPtr master)
         if (dev->spriteInfo->sprite)
             currentRoot = dev->spriteInfo->sprite->spriteTrace[0];
         else /* new device auto-set to floating */
-            currentRoot = WindowTable[0];
+            currentRoot = screenInfo.screens[0]->root;
 
         /* we need to init a fake sprite */
         screen = currentRoot->drawable.pScreen;

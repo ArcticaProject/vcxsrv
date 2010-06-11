@@ -118,8 +118,9 @@ routines common to all the X servers in the sample implementation.
     <title>The xorg.conf File</title>
 
     <para>
-The xorg.conf file format is similar to the old format, with the following
-changes:
+The xorg.conf file format is based on the XF86Config format from XFree86 4.4,
+which is in turn similar to the old XFree86 3.x XF86Config format, with the
+following changes:
     </para>
 
     <sect2>

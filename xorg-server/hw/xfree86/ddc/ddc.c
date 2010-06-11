@@ -53,8 +53,8 @@ find_start(unsigned int *ptr)
 	}
     }
     for (i=0;i<9;i++)
-	if (test[i]) return (i+1);
-    return (-1);
+	if (test[i]) return i+1;
+    return -1;
 }
 
 static unsigned char *
@@ -75,8 +75,8 @@ find_header(unsigned char *block)
 	if (i==8) break;
 	ptr++; 
     }
-    if (ptr == end) return (NULL);
-    return (ptr);
+    if (ptr == end) return NULL;
+    return ptr;
 }
 
 static unsigned char *
@@ -98,7 +98,7 @@ resort(unsigned char *s_block)
 	if (s_ptr == s_end) s_ptr = s_block;
     }
     free(s_block);
-    return (d_new);
+    return d_new;
 }
 
 static int
@@ -120,7 +120,7 @@ DDC_checksum(unsigned char *block, int len)
     /* catch the trivial case where all bytes are 0 */
     if (!not_null) return 1;
 
-    return (result&0xFF);
+    return result&0xFF;
 }
 
 static unsigned char *
@@ -169,7 +169,7 @@ FetchEDID_DDC1(register ScrnInfoPtr pScrn,
 	*xp = read_DDC(pScrn);
 	xp++;
     } while(--count);
-    return (ptr);
+    return ptr;
 }
 
 /* test if DDC1  return 0 if not */
@@ -184,7 +184,7 @@ TestDDC1(ScrnInfoPtr pScrn, unsigned int (*read_DDC)(ScrnInfoPtr))
 	/* wait for next retrace */
 	if (old != read_DDC(pScrn)) break;
     } while(count--);
-    return (count);
+    return count;
 }
 
 /* 

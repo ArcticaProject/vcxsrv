@@ -210,8 +210,8 @@ int	(*SProcRenderVector[RenderNumberRequests])(ClientPtr) = {
 };
 
 int	RenderErrBase;
-static int RenderClientPrivateKeyIndex;
-DevPrivateKey RenderClientPrivateKey = &RenderClientPrivateKeyIndex;
+static DevPrivateKeyRec RenderClientPrivateKeyRec;
+#define RenderClientPrivateKey (&RenderClientPrivateKeyRec )
 
 typedef struct _RenderClient {
     int	    major_version;
@@ -246,7 +246,7 @@ RenderExtensionInit (void)
 	return;
     if (!PictureFinishInit ())
 	return;
-    if (!dixRequestPrivate(RenderClientPrivateKey, sizeof(RenderClientRec)))
+    if (!dixRegisterPrivateKey(&RenderClientPrivateKeyRec, PRIVATE_CLIENT, sizeof(RenderClientRec)))
 	return;
     if (!AddCallback (&ClientStateCallback, RenderClientCallback, 0))
 	return;
@@ -852,7 +852,7 @@ ProcRenderTriStrip (ClientPtr client)
 	pFormat = 0;
     npoints = ((client->req_len << 2) - sizeof (xRenderTriStripReq));
     if (npoints & 4)
-	return(BadLength);
+	return BadLength;
     npoints >>= 3;
     if (npoints >= 3)
 	CompositeTriStrip (stuff->op, pSrc, pDst, pFormat,
@@ -892,7 +892,7 @@ ProcRenderTriFan (ClientPtr client)
 	pFormat = 0;
     npoints = ((client->req_len << 2) - sizeof (xRenderTriStripReq));
     if (npoints & 4)
-	return(BadLength);
+	return BadLength;
     npoints >>= 3;
     if (npoints >= 3)
 	CompositeTriFan (stuff->op, pSrc, pDst, pFormat,
@@ -1461,7 +1461,7 @@ ProcRenderFillRectangles (ClientPtr client)
     
     things = (client->req_len << 2) - sizeof(xRenderFillRectanglesReq);
     if (things & 4)
-	return(BadLength);
+	return BadLength;
     things >>= 3;
     
     CompositeRects (stuff->op,
@@ -1530,10 +1530,10 @@ ProcRenderCreateCursor (ClientPtr client)
 	return BadAlloc;
     if ( stuff->x > width 
       || stuff->y > height )
-	return (BadMatch);
+	return BadMatch;
     argbbits = malloc(width * height * sizeof (CARD32));
     if (!argbbits)
-	return (BadAlloc);
+	return BadAlloc;
     
     stride = BitmapBytePad(width);
     nbytes_mono = stride*height;
@@ -1541,14 +1541,14 @@ ProcRenderCreateCursor (ClientPtr client)
     if (!srcbits)
     {
 	free(argbbits);
-	return (BadAlloc);
+	return BadAlloc;
     }
     mskbits = calloc(1, nbytes_mono);
     if (!mskbits)
     {
 	free(argbbits);
 	free(srcbits);
-	return (BadAlloc);
+	return BadAlloc;
     }
 
     if (pSrc->format == PICT_a8r8g8b8)
@@ -1570,7 +1570,7 @@ ProcRenderCreateCursor (ClientPtr client)
 	    free(argbbits);
 	    free(srcbits);
 	    free(mskbits);
-	    return (BadImplementation);
+	    return BadImplementation;
 	}
 	pPixmap = (*pScreen->CreatePixmap) (pScreen, width, height, 32,
 					    CREATE_PIXMAP_USAGE_SCRATCH);
@@ -1579,7 +1579,7 @@ ProcRenderCreateCursor (ClientPtr client)
 	    free(argbbits);
 	    free(srcbits);
 	    free(mskbits);
-	    return (BadAlloc);
+	    return BadAlloc;
 	}
 	pPicture = CreatePicture (0, &pPixmap->drawable, pFormat, 0, 0, 
 				  client, &error);
@@ -2681,7 +2681,7 @@ PanoramiXRenderCreatePicture (ClientPtr client)
     newPict->info[0].id = stuff->pid;
     
     if (refDraw->type == XRT_WINDOW &&
-	stuff->drawable == WindowTable[0]->drawable.id)
+	stuff->drawable == screenInfo.screens[0]->root->drawable.id)
     {
 	newPict->u.pict.root = TRUE;
     }
@@ -2703,7 +2703,7 @@ PanoramiXRenderCreatePicture (ClientPtr client)
     else 
 	free(newPict);
 
-    return (result);
+    return result;
 }
 
 static int
@@ -2723,7 +2723,7 @@ PanoramiXRenderChangePicture (ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 static int
@@ -2743,7 +2743,7 @@ PanoramiXRenderSetPictureClipRectangles (ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 static int
@@ -2763,7 +2763,7 @@ PanoramiXRenderSetPictureTransform (ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 static int
@@ -2783,7 +2783,7 @@ PanoramiXRenderSetPictureFilter (ClientPtr client)
         if(result != Success) break;
     }
 
-    return (result);
+    return result;
 }
 
 static int
@@ -2809,7 +2809,7 @@ PanoramiXRenderFreePicture (ClientPtr client)
     /* Since ProcRenderFreePicture is using FreeResource, it will free
 	our resource for us on the last pass through the loop above */
  
-    return (result);
+    return result;
 }
 
 static int
@@ -2832,22 +2832,22 @@ PanoramiXRenderComposite (ClientPtr client)
 	stuff->src = src->info[j].id;
 	if (src->u.pict.root)
 	{
-	    stuff->xSrc = orig.xSrc - panoramiXdataPtr[j].x;
-	    stuff->ySrc = orig.ySrc - panoramiXdataPtr[j].y;
+	    stuff->xSrc = orig.xSrc - screenInfo.screens[j]->x;
+	    stuff->ySrc = orig.ySrc - screenInfo.screens[j]->y;
 	}
 	stuff->dst = dst->info[j].id;
 	if (dst->u.pict.root)
 	{
-	    stuff->xDst = orig.xDst - panoramiXdataPtr[j].x;
-	    stuff->yDst = orig.yDst - panoramiXdataPtr[j].y;
+	    stuff->xDst = orig.xDst - screenInfo.screens[j]->x;
+	    stuff->yDst = orig.yDst - screenInfo.screens[j]->y;
 	}
 	if (msk)
 	{
 	    stuff->mask = msk->info[j].id;
 	    if (msk->u.pict.root)
 	    {
-		stuff->xMask = orig.xMask - panoramiXdataPtr[j].x;
-		stuff->yMask = orig.yMask - panoramiXdataPtr[j].y;
+		stuff->xMask = orig.xMask - screenInfo.screens[j]->x;
+		stuff->yMask = orig.yMask - screenInfo.screens[j]->y;
 	    }
 	}
 	result = (*PanoramiXSaveRenderVector[X_RenderComposite]) (client);
@@ -2881,14 +2881,14 @@ PanoramiXRenderCompositeGlyphs (ClientPtr client)
 	    stuff->src = src->info[j].id;
 	    if (src->u.pict.root)
 	    {
-		stuff->xSrc = xSrc - panoramiXdataPtr[j].x;
-		stuff->ySrc = ySrc - panoramiXdataPtr[j].y;
+		stuff->xSrc = xSrc - screenInfo.screens[j]->x;
+		stuff->ySrc = ySrc - screenInfo.screens[j]->y;
 	    }
 	    stuff->dst = dst->info[j].id;
 	    if (dst->u.pict.root)
 	    {
-		elt->deltax = origElt.deltax - panoramiXdataPtr[j].x;
-		elt->deltay = origElt.deltay - panoramiXdataPtr[j].y;
+		elt->deltax = origElt.deltax - screenInfo.screens[j]->x;
+		elt->deltay = origElt.deltay - screenInfo.screens[j]->y;
 	    }
 	    result = (*PanoramiXSaveRenderVector[stuff->renderReqType]) (client);
 	    if(result != Success) break;
@@ -2918,8 +2918,8 @@ PanoramiXRenderFillRectangles (ClientPtr client)
 	    if (j) memcpy (stuff + 1, extra, extra_len);
 	    if (dst->u.pict.root)
 	    {
-		int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
 		    xRectangle	*rects = (xRectangle *) (stuff + 1);
@@ -2966,8 +2966,8 @@ PanoramiXRenderTrapezoids(ClientPtr client)
 	FOR_NSCREENS_FORWARD(j) {
 	    if (j) memcpy (stuff + 1, extra, extra_len);
 	    if (dst->u.pict.root) {
-                int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
                     xTrapezoid  *trap = (xTrapezoid *) (stuff + 1);
@@ -3026,8 +3026,8 @@ PanoramiXRenderTriangles(ClientPtr client)
 	FOR_NSCREENS_FORWARD(j) {
 	    if (j) memcpy (stuff + 1, extra, extra_len);
 	    if (dst->u.pict.root) {
-                int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
                     xTriangle  *tri = (xTriangle *) (stuff + 1);
@@ -3082,8 +3082,8 @@ PanoramiXRenderTriStrip(ClientPtr client)
 	FOR_NSCREENS_FORWARD(j) {
 	    if (j) memcpy (stuff + 1, extra, extra_len);
 	    if (dst->u.pict.root) {
-                int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
                     xPointFixed  *fixed = (xPointFixed *) (stuff + 1);
@@ -3134,8 +3134,8 @@ PanoramiXRenderTriFan(ClientPtr client)
 	FOR_NSCREENS_FORWARD(j) {
 	    if (j) memcpy (stuff + 1, extra, extra_len);
 	    if (dst->u.pict.root) {
-                int x_off = panoramiXdataPtr[j].x;
-		int y_off = panoramiXdataPtr[j].y;
+		int x_off = screenInfo.screens[j]->x;
+		int y_off = screenInfo.screens[j]->y;
 
 		if(x_off || y_off) {
                     xPointFixed  *fixed = (xPointFixed *) (stuff + 1);
@@ -3188,8 +3188,8 @@ PanoramiXRenderAddTraps (ClientPtr client)
 	    
 	    if (picture->u.pict.root)
 	    {
-		stuff->xOff = x_off + panoramiXdataPtr[j].x;
-		stuff->yOff = y_off + panoramiXdataPtr[j].y;
+		stuff->xOff = x_off + screenInfo.screens[j]->x;
+		stuff->yOff = y_off + screenInfo.screens[j]->y;
 	    }
 	    result = (*PanoramiXSaveRenderVector[X_RenderAddTraps]) (client);
 	    if(result != Success) break;

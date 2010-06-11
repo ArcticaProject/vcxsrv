@@ -465,7 +465,7 @@ xf86PciAddMatchingDev(DriverPtr drvp)
 
     pci_iterator_destroy(iter);
 
-    return (numFound != 0);
+    return numFound != 0;
 }
 
 Bool
@@ -1294,7 +1294,11 @@ matchDriverFromFiles (char** matches, uint16_t match_vendor, uint16_t match_chip
 }
 #endif /* __linux__ */
 
-void
+/**
+ *  @return The numbers of found devices that match with the current system
+ *  drivers.
+ */
+int
 xf86PciMatchDriver(char* matches[], int nmatches) {
     int i;
     struct pci_device * info = NULL;
@@ -1326,4 +1330,6 @@ xf86PciMatchDriver(char* matches[], int nmatches) {
     if ((info != NULL) && (i < nmatches)) {
 	i += videoPtrToDriverList(info, &(matches[i]), nmatches - i);
     }
+
+    return i;
 }

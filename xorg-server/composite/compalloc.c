@@ -134,7 +134,7 @@ compRedirectWindow (ClientPtr pClient, WindowPtr pWin, int update)
 	    EnableMapUnmapEvents (pWin);
 	}
 
-	REGION_NULL (pScreen, &cw->borderClip);
+	RegionNull(&cw->borderClip);
 	cw->borderClipX = 0;
 	cw->borderClipY = 0;
 	cw->update = CompositeRedirectAutomatic;
@@ -143,6 +143,7 @@ compRedirectWindow (ClientPtr pClient, WindowPtr pWin, int update)
 	cw->oldy = COMP_ORIGIN_INVALID;
 	cw->damageRegistered = FALSE;
 	cw->damaged = FALSE;
+	cw->pOldPixmap = NullPixmap;
 	dixSetPrivate(&pWin->devPrivates, CompWindowPrivateKey, cw);
     }
     ccw->next = cw->clients;
@@ -226,7 +227,7 @@ compFreeClientWindow (WindowPtr pWin, XID id)
 	if (cw->damage)
 	    DamageDestroy (cw->damage);
 	
-	REGION_UNINIT (pScreen, &cw->borderClip);
+	RegionUninit(&cw->borderClip);
     
 	dixSetPrivate(&pWin->devPrivates, CompWindowPrivateKey, NULL);
 	free(cw);
@@ -598,7 +599,7 @@ compFreePixmap (WindowPtr pWin)
      * case correctly.  Unmap adds the window borderClip to the
      * parent exposed area; regions beyond the parent cause crashes
      */
-    REGION_COPY (pScreen, &pWin->borderClip, &cw->borderClip);
+    RegionCopy(&pWin->borderClip, &cw->borderClip);
     pRedirectPixmap = (*pScreen->GetWindowPixmap) (pWin);
     pParentPixmap = (*pScreen->GetWindowPixmap) (pWin->parent);
     pWin->redirectDraw = RedirectDrawNone;

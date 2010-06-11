@@ -185,7 +185,7 @@ winSetupImageVideo (ScreenPtr pScreen)
 
 #if 0
     /* gotta uninit this someplace */
-    REGION_NULL(pScreen, &pPriv->clip);
+    RegionNull(&pPriv->clip);
 #endif
 
 #if 0

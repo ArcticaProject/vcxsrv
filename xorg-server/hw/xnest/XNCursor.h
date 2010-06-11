@@ -21,7 +21,8 @@ typedef struct {
     miPointerSpriteFuncPtr spriteFuncs;
 } xnestCursorFuncRec, *xnestCursorFuncPtr;
 
-extern DevPrivateKey xnestCursorScreenKey;
+extern DevPrivateKeyRec xnestCursorScreenKeyRec;
+#define xnestCursorScreenKey (&xnestCursorScreenKeyRec)
 extern xnestCursorFuncRec xnestCursorFuncs;
 
 typedef struct {

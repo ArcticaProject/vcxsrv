@@ -59,9 +59,9 @@ extern int darwinMainScreenX, darwinMainScreenY;
 
 #ifdef ROOTLESS_GLOBAL_COORDS
 #define SCREEN_TO_GLOBAL_X \
-    (dixScreenOrigins[pScreen->myNum].x + rootlessGlobalOffsetX)
+    (pScreen->x + rootlessGlobalOffsetX)
 #define SCREEN_TO_GLOBAL_Y \
-    (dixScreenOrigins[pScreen->myNum].y + rootlessGlobalOffsetY)
+    (pScreen->y + rootlessGlobalOffsetY)
 #else
 #define SCREEN_TO_GLOBAL_X 0
 #define SCREEN_TO_GLOBAL_Y 0
@@ -115,8 +115,8 @@ void RootlessNativeWindowMoved (WindowPtr pWin) {
     
     if (xp_get_window_bounds (MAKE_WINDOW_ID(winRec->wid), &bounds) != Success) return;
     
-    sx = dixScreenOrigins[pWin->drawable.pScreen->myNum].x + darwinMainScreenX;
-    sy = dixScreenOrigins[pWin->drawable.pScreen->myNum].y + darwinMainScreenY;
+    sx = pWin->drawable.pScreen->x + darwinMainScreenX;
+    sy = pWin->drawable.pScreen->y + darwinMainScreenY;
     
     /* Fake up a ConfigureWindow packet to resize the window to the current bounds. */
     vlist[0] = (INT16) bounds.x1 - sx;
@@ -185,12 +185,10 @@ RootlessCreateWindow(WindowPtr pWin)
 static void
 RootlessDestroyFrame(WindowPtr pWin, RootlessWindowPtr winRec)
 {
-    ScreenPtr pScreen = pWin->drawable.pScreen;
-
-    SCREENREC(pScreen)->imp->DestroyFrame(winRec->wid);
+    SCREENREC(pWin->drawable.pScreen)->imp->DestroyFrame(winRec->wid);
 
 #ifdef ROOTLESS_TRACK_DAMAGE
-    REGION_UNINIT(pScreen, &winRec->damage);
+    RegionUninit(&winRec->damage);
 #endif
 
     free(winRec);
@@ -224,23 +222,15 @@ RootlessDestroyWindow(WindowPtr pWin)
 static Bool
 RootlessGetShape(WindowPtr pWin, RegionPtr pShape)
 {
-    ScreenPtr pScreen = pWin->drawable.pScreen;
-
-    /* 
-     * Avoid a warning.  
-     * REGION_NULL and the other macros don't actually seem to use pScreen.
-     */
-    (void)pScreen; 
-
     if (wBoundingShape(pWin) == NULL)
         return FALSE;
 
     /* wBoundingShape is relative to *inner* origin of window.
        Translate by borderWidth to get the outside-relative position. */
 
-    REGION_NULL(pScreen, pShape);
-    REGION_COPY(pScreen, pShape, wBoundingShape(pWin));
-    REGION_TRANSLATE(pScreen, pShape, pWin->borderWidth, pWin->borderWidth);
+    RegionNull(pShape);
+    RegionCopy(pShape, wBoundingShape(pWin));
+    RegionTranslate(pShape, pWin->borderWidth, pWin->borderWidth);
 
     return TRUE;
 }
@@ -253,7 +243,6 @@ RootlessGetShape(WindowPtr pWin, RegionPtr pShape)
 static void RootlessReshapeFrame(WindowPtr pWin)
 {
     RootlessWindowRec *winRec = WINREC(pWin);
-    ScreenPtr pScreen = pWin->drawable.pScreen;
     RegionRec newShape;
     RegionPtr pShape;
 
@@ -272,7 +261,7 @@ static void RootlessReshapeFrame(WindowPtr pWin)
     RL_DEBUG_MSG("reshaping...");
     if (pShape != NULL) {
         RL_DEBUG_MSG("numrects %d, extents %d %d %d %d ",
-                     REGION_NUM_RECTS(&newShape),
+                     RegionNumRects(&newShape),
                      newShape.extents.x1, newShape.extents.y1,
                      newShape.extents.x2, newShape.extents.y2);
     } else {
@@ -280,10 +269,10 @@ static void RootlessReshapeFrame(WindowPtr pWin)
     }
 #endif
 
-    SCREENREC(pScreen)->imp->ReshapeFrame(winRec->wid, pShape);
+    SCREENREC(pWin->drawable.pScreen)->imp->ReshapeFrame(winRec->wid, pShape);
 
     if (pShape != NULL)
-        REGION_UNINIT(pScreen, &newShape);
+        RegionUninit(&newShape);
 }
 
 
@@ -294,12 +283,12 @@ static void RootlessReshapeFrame(WindowPtr pWin)
  *  shaped when the window is framed.
  */
 void
-RootlessSetShape(WindowPtr pWin)
+RootlessSetShape(WindowPtr pWin, int kind)
 {
     ScreenPtr pScreen = pWin->drawable.pScreen;
 
     SCREEN_UNWRAP(pScreen, SetShape);
-    pScreen->SetShape(pWin);
+    pScreen->SetShape(pWin, kind);
     SCREEN_WRAP(pScreen, SetShape);
 
     RootlessReshapeFrame(pWin);
@@ -361,8 +350,8 @@ RootlessPositionWindow(WindowPtr pWin, int x, int y)
 
 #ifdef ROOTLESS_TRACK_DAMAGE
             // Move damaged region to correspond to new window position
-            if (REGION_NOTEMPTY(pScreen, &winRec->damage)) {
-                REGION_TRANSLATE(pScreen, &winRec->damage,
+            if (RegionNotEmpty(&winRec->damage)) {
+                RegionTranslate(&winRec->damage,
                                  x - bw - winRec->x,
                                  y - bw - winRec->y);
             }
@@ -400,7 +389,7 @@ RootlessInitializeFrame(WindowPtr pWin, RootlessWindowRec *winRec)
     winRec->borderWidth = bw;
 
 #ifdef ROOTLESS_TRACK_DAMAGE
-    REGION_NULL(pScreen, &winRec->damage);
+    RegionNull(&winRec->damage);
 #endif
 }
 
@@ -463,7 +452,7 @@ RootlessEnsureFrame(WindowPtr pWin)
       RootlessFlushWindowColormap(pWin);
 
     if (pShape != NULL)
-        REGION_UNINIT(pScreen, &shape);
+        RegionUninit(&shape);
 
     return winRec;
 }
@@ -679,7 +668,7 @@ RootlessNoCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg,
 
     RL_DEBUG_MSG("ROOTLESSNOCOPYWINDOW ");
 
-    REGION_TRANSLATE(pWin->drawable.pScreen, prgnSrc, -dx, -dy);
+    RegionTranslate(prgnSrc, -dx, -dy);
 }
 
 
@@ -711,9 +700,9 @@ RootlessResizeCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg,
 
     dx = ptOldOrg.x - pWin->drawable.x;
     dy = ptOldOrg.y - pWin->drawable.y;
-    REGION_TRANSLATE(pScreen, prgnSrc, -dx, -dy);
-    REGION_NULL(pScreen, &rgnDst);
-    REGION_INTERSECT(pScreen, &rgnDst, &pWin->borderClip, prgnSrc);
+    RegionTranslate(prgnSrc, -dx, -dy);
+    RegionNull(&rgnDst);
+    RegionIntersect(&rgnDst, &pWin->borderClip, prgnSrc);
 
     if (gResizeDeathCount == 1) {
         /* Simple case, we only have a single source pixmap. */
@@ -730,21 +719,21 @@ RootlessResizeCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg,
            intersect the destination with each source and copy those bits. */
 
         for (i = 0; i < gResizeDeathCount; i++) {
-            REGION_INIT(pScreen, &clip, gResizeDeathBounds + 0, 1);
-            REGION_NULL(pScreen, &clipped);
-            REGION_INTERSECT(pScreen, &rgnDst, &clip, &clipped);
+            RegionInit(&clip, gResizeDeathBounds + 0, 1);
+            RegionNull(&clipped);
+            RegionIntersect(&rgnDst, &clip, &clipped);
 
             fbCopyRegion(&gResizeDeathPix[i]->drawable,
                          &pScreen->GetWindowPixmap(pWin)->drawable, 0,
                          &clipped, dx, dy, fbCopyWindowProc, 0, 0);
 
-            REGION_UNINIT(pScreen, &clipped);
-            REGION_UNINIT(pScreen, &clip);
+            RegionUninit(&clipped);
+            RegionUninit(&clip);
         }
     }
 
     /* Don't update - resize will update everything */
-    REGION_UNINIT(pScreen, &rgnDst);
+    RegionUninit(&rgnDst);
 
     fbValidateDrawable(&pWin->drawable);
 
@@ -774,12 +763,12 @@ RootlessCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
 
     dx = ptOldOrg.x - pWin->drawable.x;
     dy = ptOldOrg.y - pWin->drawable.y;
-    REGION_TRANSLATE(pScreen, prgnSrc, -dx, -dy);
+    RegionTranslate(prgnSrc, -dx, -dy);
 
-    REGION_NULL(pScreen, &rgnDst);
-    REGION_INTERSECT(pScreen, &rgnDst, &pWin->borderClip, prgnSrc);
+    RegionNull(&rgnDst);
+    RegionIntersect(&rgnDst, &pWin->borderClip, prgnSrc);
 
-    extents = REGION_EXTENTS(pScreen, &rgnDst);
+    extents = RegionExtents(&rgnDst);
     area = (extents->x2 - extents->x1) * (extents->y2 - extents->y1);
 
     /* If the area exceeds threshold, use the implementation's
@@ -803,13 +792,13 @@ RootlessCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
         }
 
         /* Move region to window local coords */
-        REGION_TRANSLATE(pScreen, &rgnDst, -winRec->x, -winRec->y);
+        RegionTranslate(&rgnDst, -winRec->x, -winRec->y);
 
         RootlessStopDrawing(pWin, FALSE);
 
         SCREENREC(pScreen)->imp->CopyWindow(winRec->wid,
-                                            REGION_NUM_RECTS(&rgnDst),
-                                            REGION_RECTS(&rgnDst),
+                                            RegionNumRects(&rgnDst),
+                                            RegionRects(&rgnDst),
                                             dx, dy);
     }
     else {
@@ -823,7 +812,7 @@ RootlessCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
     }
 
 out:
-    REGION_UNINIT(pScreen, &rgnDst);
+    RegionUninit(&rgnDst);
     fbValidateDrawable(&pWin->drawable);
 
     SCREEN_WRAP(pScreen, CopyWindow);
@@ -1326,11 +1315,11 @@ RootlessResizeWindow(WindowPtr pWin, int x, int y,
 
         box.x1 = x; box.y1 = y;
         box.x2 = x + w; box.y2 = y + h;
-        REGION_UNINIT(pScreen, &pWin->winSize);
-        REGION_INIT(pScreen, &pWin->winSize, &box, 1);
-        REGION_COPY(pScreen, &pWin->borderSize, &pWin->winSize);
-        REGION_COPY(pScreen, &pWin->clipList, &pWin->winSize);
-        REGION_COPY(pScreen, &pWin->borderClip, &pWin->winSize);
+        RegionUninit(&pWin->winSize);
+        RegionInit(&pWin->winSize, &box, 1);
+        RegionCopy(&pWin->borderSize, &pWin->winSize);
+        RegionCopy(&pWin->clipList, &pWin->winSize);
+        RegionCopy(&pWin->borderClip, &pWin->winSize);
 
         miSendExposures(pWin, &pWin->borderClip,
                         pWin->drawable.x, pWin->drawable.y);        
@@ -1523,7 +1512,7 @@ RootlessOrderAllWindows (void)
     RL_DEBUG_MSG("RootlessOrderAllWindows() ");
     for (i = 0; i < screenInfo.numScreens; i++) {
       if (screenInfo.screens[i] == NULL) continue;
-      pWin = WindowTable[i];
+      pWin = screenInfo.screens[i]->root;
       if (pWin == NULL) continue;
       
       for (pWin = pWin->firstChild; pWin != NULL; pWin = pWin->nextSib) {
@@ -1539,7 +1528,7 @@ void
 RootlessEnableRoot (ScreenPtr pScreen)
 {
     WindowPtr pRoot;
-    pRoot = WindowTable[pScreen->myNum];
+    pRoot = pScreen->root;
     
     RootlessEnsureFrame (pRoot);
     (*pScreen->ClearToBackground) (pRoot, 0, 0, 0, 0, TRUE);
@@ -1552,7 +1541,7 @@ RootlessDisableRoot (ScreenPtr pScreen)
     WindowPtr pRoot;
     RootlessWindowRec *winRec;
 
-    pRoot = WindowTable[pScreen->myNum];
+    pRoot = pScreen->root;
     winRec = WINREC (pRoot);
 
     if (NULL == winRec)
@@ -1578,8 +1567,10 @@ RootlessHideAllWindows (void)
     for (i = 0; i < screenInfo.numScreens; i++)
     {
         pScreen = screenInfo.screens[i];
-        pWin = WindowTable[i];
-        if (pScreen == NULL || pWin == NULL)
+	if (pScreen == NULL)
+	    continue;
+	pWin = pScreen->root;
+	if (pWin == NULL)
             continue;
         
         for (pWin = pWin->firstChild; pWin != NULL; pWin = pWin->nextSib)
@@ -1615,8 +1606,10 @@ RootlessShowAllWindows (void)
     for (i = 0; i < screenInfo.numScreens; i++)
     {
         pScreen = screenInfo.screens[i];
-        pWin = WindowTable[i];
-        if (pScreen == NULL || pWin == NULL)
+	if (pScreen == NULL)
+	    continue;
+	pWin = pScreen->root;
+	if (pWin == NULL)
             continue;
         
         for (pWin = pWin->firstChild; pWin != NULL; pWin = pWin->nextSib)

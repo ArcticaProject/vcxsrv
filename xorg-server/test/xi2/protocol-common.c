@@ -27,6 +27,7 @@
 
 #include <stdint.h>
 #include "extinit.h" /* for XInputExtensionInit */
+#include "exglobals.h"
 #include <glib.h>
 
 #include "protocol-common.h"
@@ -107,7 +108,6 @@ ClientRec init_client(int len, void *data)
     /* we store the privates now and reassign it after the memset. this way
      * we can share them across multiple test runs and don't have to worry
      * about freeing them after each test run. */
-    PrivateRec *privates = client.devPrivates;
 
     client.index = CLIENT_INDEX;
     client.clientAsMask = CLIENT_MASK;
@@ -115,7 +115,7 @@ ClientRec init_client(int len, void *data)
     client.req_len = len;
 
     client.requestBuffer = data;
-    client.devPrivates = privates;
+    dixAllocatePrivates(&client.devPrivates, PRIVATE_CLIENT);
     return client;
 }
 
@@ -136,6 +136,9 @@ void init_window(WindowPtr window, WindowPtr parent, int id)
     g_assert(window->optional);
 }
 
+extern DevPrivateKeyRec miPointerScreenKeyRec;
+extern DevPrivateKeyRec miPointerPrivKeyRec;
+
 /* Needed for the screen setup, otherwise we crash during sprite initialization */
 static Bool device_cursor_init(DeviceIntPtr dev, ScreenPtr screen) { return TRUE; }
 static Bool set_cursor_pos(DeviceIntPtr dev, ScreenPtr screen, int x, int y, Bool event) { return TRUE; }
@@ -153,7 +156,12 @@ void init_simple(void)
 
     dixResetPrivates();
     InitAtoms();
+    XkbInitPrivates();
+    dixRegisterPrivateKey(&XIClientPrivateKeyRec, PRIVATE_CLIENT, sizeof(XIClientRec));
+    dixRegisterPrivateKey(&miPointerScreenKeyRec, PRIVATE_SCREEN, 0);
+    dixRegisterPrivateKey(&miPointerPrivKeyRec, PRIVATE_DEVICE, 0);
     XInputExtensionInit();
+
     init_window(&root, NULL, ROOT_WINDOW_ID);
     init_window(&window, &root, CLIENT_WINDOW_ID);
 

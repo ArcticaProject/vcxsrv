@@ -77,8 +77,8 @@ fbWalkCompositeRegion (CARD8 op,
 				   xMask, yMask, xDst, yDst, width, height))
         return;
     
-    n = REGION_NUM_RECTS (&region);
-    pbox = REGION_RECTS (&region);
+    n = RegionNumRects (&region);
+    pbox = RegionRects (&region);
     while (n--)
     {
 	h = pbox->y2 - pbox->y1;
@@ -138,7 +138,7 @@ fbWalkCompositeRegion (CARD8 op,
 	}
 	pbox++;
     }
-    REGION_UNINIT (pDst->pDrawable->pScreen, &region);
+    RegionUninit(&region);
 }
 
 void

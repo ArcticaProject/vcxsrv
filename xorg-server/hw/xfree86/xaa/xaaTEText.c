@@ -110,7 +110,7 @@ XAAImageText8TEColorExpansion(
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
     unsigned long n;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     (*pGC->font->get_glyphs)(pGC->font, (unsigned long)count, 
@@ -134,7 +134,7 @@ XAAImageText16TEColorExpansion(
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
     unsigned long n;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     (*pGC->font->get_glyphs)(
@@ -169,7 +169,7 @@ XAAImageGlyphBltTEColorExpansion(
 {
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     XAAGlyphBltTEColorExpansion(
@@ -189,7 +189,7 @@ XAAPolyGlyphBltTEColorExpansion(
 {
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     XAAGlyphBltTEColorExpansion(
@@ -229,8 +229,8 @@ XAAGlyphBltTEColorExpansion(
     int skippix, skipglyphs;
     int Left, Right, Top, Bottom;
     int LeftEdge, RightEdge, ytop, ybot;
-    int nbox = REGION_NUM_RECTS(cclip);
-    BoxPtr pbox = REGION_RECTS(cclip);
+    int nbox = RegionNumRects(cclip);
+    BoxPtr pbox = RegionRects(cclip);
     unsigned int **glyphs = NULL; 
     int glyphWidth = FONTMAXBOUNDS(font, characterWidth);
 
@@ -299,8 +299,7 @@ XAAGlyphBltTEColorExpansion(
 		skippix, ytop - Top, glyphs + skipglyphs, glyphWidth, 
 		fg, bg, rop, planemask);
 
-	    if (fallbackBits)
-		free(fallbackBits);
+	    free(fallbackBits);
 	}
 
 	nbox--; pbox++;

@@ -87,7 +87,7 @@ xf86validateConfig (XF86ConfigPtr p)
 	if (!xf86validateLayout (p))
 		return FALSE;
 
-	return (TRUE);
+	return TRUE;
 }
 
 XF86ConfigPtr
@@ -113,7 +113,7 @@ xf86readConfigFile (void)
 			{
 				xf86parseError (QUOTE_MSG, "Section");
 				CLEANUP (ptr);
-				return (NULL);
+				return NULL;
 			}
 			xf86setSection (val.str);
 			if (xf86nameCompare (val.str, "files") == 0)
@@ -232,11 +232,11 @@ xf86readConfigFile (void)
 	}
 
 	if (xf86validateConfig (ptr))
-		return (ptr);
+		return ptr;
 	else
 	{
 		CLEANUP (ptr);
-		return (NULL);
+		return NULL;
 	}
 }
 
@@ -263,10 +263,10 @@ xf86addListItem (GenericListPtr head, GenericListPtr new)
 	if (last)
 	{
 		last->next = new;
-		return (head);
+		return head;
 	}
 	else
-		return (new);
+		return new;
 }
 
 /* 

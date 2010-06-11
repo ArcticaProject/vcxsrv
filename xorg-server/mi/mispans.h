@@ -85,16 +85,6 @@ extern _X_EXPORT void miFreeSpanGroup(
     SpanGroup * /*spanGroup*/
 );
 
-extern _X_EXPORT int miClipSpans(
-    RegionPtr /*prgnDst*/,
-    DDXPointPtr /*ppt*/,
-    int * /*pwidth*/,
-    int /*nspans*/,
-    DDXPointPtr /*pptNew*/,
-    int * /*pwidthNew*/,
-    int /*fSorted*/
-);
-
 /* Rops which must use span groups */
 #define miSpansCarefulRop(rop)	(((rop) & 0xc) == 0x8 || ((rop) & 0x3) == 0x2)
 #define miSpansEasyRop(rop)	(!miSpansCarefulRop(rop))

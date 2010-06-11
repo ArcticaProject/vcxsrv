@@ -46,13 +46,6 @@ Equipment Corporation.
 #include "gcstruct.h"
 
 
-typedef struct _PanoramiXData {
-    int x;
-    int y;
-    int width;
-    int height;
-} PanoramiXData;
-
 typedef struct _PanoramiXInfo {
     XID id ;
 } PanoramiXInfo;

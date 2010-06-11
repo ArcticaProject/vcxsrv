@@ -175,11 +175,11 @@ xf86validateInput (XF86ConfigPtr p)
 	while (input) {
 		if (!input->inp_driver) {
 			xf86validationError (UNDEFINED_INPUTDRIVER_MSG, input->inp_identifier);
-			return (FALSE);
+			return FALSE;
 		}
 		input = input->list.next;
 	}
-	return (TRUE);
+	return TRUE;
 }
 
 XF86ConfInputPtr
@@ -188,11 +188,11 @@ xf86findInput (const char *ident, XF86ConfInputPtr p)
 	while (p)
 	{
 		if (xf86nameCompare (ident, p->inp_identifier) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 
 XF86ConfInputPtr
@@ -201,10 +201,10 @@ xf86findInputByDriver (const char *driver, XF86ConfInputPtr p)
 	while (p)
 	{
 		if (xf86nameCompare (driver, p->inp_driver) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 

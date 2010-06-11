@@ -76,8 +76,8 @@ XAACopyPlane1toNColorExpand(
     DDXPointPtr   pptSrc )
 {
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
-    BoxPtr pbox = REGION_RECTS(rgnDst);
-    int numrects = REGION_NUM_RECTS(rgnDst);
+    BoxPtr pbox = RegionRects(rgnDst);
+    int numrects = RegionNumRects(rgnDst);
     unsigned char *src = ((PixmapPtr)pSrc)->devPrivate.ptr;
     int srcwidth = ((PixmapPtr)pSrc)->devKind; 
     
@@ -101,8 +101,8 @@ XAACopyPlaneNtoNColorExpand(
     DDXPointPtr   pptSrc 
 ){
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
-    BoxPtr pbox = REGION_RECTS(rgnDst);
-    int numrects = REGION_NUM_RECTS(rgnDst);
+    BoxPtr pbox = RegionRects(rgnDst);
+    int numrects = RegionNumRects(rgnDst);
     unsigned char *src = ((PixmapPtr)pSrc)->devPrivate.ptr;
     unsigned char *data, *srcPtr, *dataPtr;
     int srcwidth = ((PixmapPtr)pSrc)->devKind; 
@@ -168,14 +168,14 @@ XAAPushPixelsSolidColorExpansion(
     int xOrg, int yOrg )
 {
    XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
-   int MaxBoxes = REGION_NUM_RECTS(pGC->pCompositeClip);
+   int MaxBoxes = RegionNumRects(pGC->pCompositeClip);
    BoxPtr	pbox, pClipBoxes;
    int		nboxes, srcx, srcy;
    xRectangle TheRect;
    unsigned char *src = pBitMap->devPrivate.ptr;
    int srcwidth = pBitMap->devKind;
 
-   if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+   if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
    TheRect.x = xOrg;

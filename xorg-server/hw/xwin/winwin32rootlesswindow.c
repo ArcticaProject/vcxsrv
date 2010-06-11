@@ -407,7 +407,7 @@ void
 winMWExtWMRestackWindows (ScreenPtr pScreen)
 {
   winScreenPriv(pScreen);
-  WindowPtr pRoot = WindowTable[pScreen->myNum];
+  WindowPtr pRoot = pScreen->root;
   WindowPtr pWin = NULL;
   WindowPtr pWinPrev = NULL;
   win32RootlessWindowPtr pRLWin = NULL;

@@ -318,10 +318,10 @@ xf86findOption (XF86OptionPtr list, const char *name)
 	while (list)
 	{
 		if (xf86nameCompare (list->opt_name, name) == 0)
-			return (list);
+			return list;
 		list = list->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 
 /*
@@ -339,11 +339,11 @@ xf86findOptionValue (XF86OptionPtr list, const char *name)
 	if (p)
 	{
 		if (p->opt_val)
-			return (p->opt_val);
+			return p->opt_val;
 		else
 			return "";
 	}
-	return (NULL);
+	return NULL;
 }
 
 XF86OptionPtr
@@ -361,7 +361,7 @@ xf86optionListCreate( const char **options, int count, int used )
 	if( (count % 2) != 0 )
 	{
 		fprintf( stderr, "xf86optionListCreate: count must be an even number.\n" );
-		return (NULL);
+		return NULL;
 	}
 	for (i = 0; i < count; i += 2)
 	{
@@ -375,7 +375,7 @@ xf86optionListCreate( const char **options, int count, int used )
 		p = addNewOption2 (p, t1, t2, used);
 	}
 
-	return (p);
+	return p;
 }
 
 /* the 2 given lists are merged. If an option with the same name is present in
@@ -425,7 +425,7 @@ xf86optionListMerge (XF86OptionPtr head, XF86OptionPtr tail)
 	} else 
 		head = tail;
 
-	return (head);
+	return head;
 }
 
 char *
@@ -451,9 +451,8 @@ xf86parseOption(XF86OptionPtr head)
 
 	if ((token = xf86getSubToken(&comment)) != STRING) {
 		xf86parseError(BAD_OPTION_MSG, NULL);
-		if (comment)
-			free(comment);
-		return (head);
+		free(comment);
+		return head;
 	}
 
 	name = val.str;
@@ -490,7 +489,7 @@ xf86parseOption(XF86OptionPtr head)
 	if (old == NULL)
 		return ((XF86OptionPtr)xf86addListItem((glp)head, (glp)cnew));
 
-	return (head);
+	return head;
 }
 
 void

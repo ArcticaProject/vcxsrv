@@ -122,7 +122,7 @@ __glXDRIdrawableCopySubBuffer(__GLXdrawable *drawable,
     box.y1 = private->height - y - h;
     box.x2 = x + w;
     box.y2 = private->height - y;
-    REGION_INIT(drawable->pDraw->pScreen, &region, &box, 0);
+    RegionInit(&region, &box, 0);
 
     DRI2CopyRegion(drawable->pDraw, &region,
 		   DRI2BufferFrontLeft, DRI2BufferBackLeft);
@@ -139,7 +139,7 @@ __glXDRIdrawableWaitX(__GLXdrawable *drawable)
     box.y1 = 0;
     box.x2 = private->width;
     box.y2 = private->height;
-    REGION_INIT(drawable->pDraw->pScreen, &region, &box, 0);
+    RegionInit(&region, &box, 0);
 
     DRI2CopyRegion(drawable->pDraw, &region,
 		   DRI2BufferFakeFrontLeft, DRI2BufferFrontLeft);
@@ -156,7 +156,7 @@ __glXDRIdrawableWaitGL(__GLXdrawable *drawable)
     box.y1 = 0;
     box.x2 = private->width;
     box.y2 = private->height;
-    REGION_INIT(drawable->pDraw->pScreen, &region, &box, 0);
+    RegionInit(&region, &box, 0);
 
     DRI2CopyRegion(drawable->pDraw, &region,
 		   DRI2BufferFrontLeft, DRI2BufferFakeFrontLeft);

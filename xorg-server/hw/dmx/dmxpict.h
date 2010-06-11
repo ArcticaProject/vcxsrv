@@ -116,10 +116,6 @@ extern Bool dmxBEFreeGlyphSet(ScreenPtr pScreen, GlyphSetPtr glyphSet);
 extern int dmxBECreatePicture(PicturePtr pPicture);
 extern Bool dmxBEFreePicture(PicturePtr pPicture);
 
-extern DevPrivateKey dmxPictPrivateKey;	/**< Index for picture private data */
-extern DevPrivateKey dmxGlyphSetPrivateKey; /**< Index for glyphset private data */
-
-
 /** Get the picture private data given a picture pointer */
 #define DMX_GET_PICT_PRIV(_pPict)					\
     (dmxPictPrivPtr)dixLookupPrivate(&(_pPict)->devPrivates, dmxPictPrivateKey)

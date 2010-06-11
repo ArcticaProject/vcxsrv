@@ -42,12 +42,12 @@ static int  XAASetDGAMode(int index, int num, DGADevicePtr devRet);
 static void XAAEnableDisableFBAccess (int index, Bool enable);
 static Bool XAAChangeWindowAttributes (WindowPtr pWin, unsigned long mask);
 
-static int XAAScreenKeyIndex;
-static DevPrivateKey XAAScreenKey = &XAAScreenKeyIndex;
-static int XAAGCKeyIndex;
-static DevPrivateKey XAAGCKey = &XAAGCKeyIndex;
-static int XAAPixmapKeyIndex;
-static DevPrivateKey XAAPixmapKey = &XAAPixmapKeyIndex;
+static DevPrivateKeyRec XAAScreenKeyRec;
+#define XAAScreenKey (&XAAScreenKeyRec)
+static DevPrivateKeyRec XAAGCKeyRec;
+#define XAAGCKey (&XAAGCKeyRec)
+static DevPrivateKeyRec XAAPixmapKeyRec;
+#define XAAPixmapKey (&XAAPixmapKeyRec)
 
 DevPrivateKey XAAGetScreenKey(void) {
     return XAAScreenKey;
@@ -84,11 +84,9 @@ XAADestroyInfoRec(XAAInfoRecPtr infoRec)
     if(infoRec->ClosePixmapCache)
 	(*infoRec->ClosePixmapCache)(infoRec->pScrn->pScreen);
    
-    if(infoRec->PreAllocMem)
-	free(infoRec->PreAllocMem);
+    free(infoRec->PreAllocMem);
 
-    if(infoRec->PixmapCachePrivate)
-	free(infoRec->PixmapCachePrivate);
+    free(infoRec->PixmapCachePrivate);
 
     free(infoRec);
 }
@@ -106,10 +104,13 @@ XAAInit(ScreenPtr pScreen, XAAInfoRecPtr infoRec)
     if (!infoRec)
 	return TRUE;
     
-    if (!dixRequestPrivate(XAAGCKey, sizeof(XAAGCRec)))
+    if (!dixRegisterPrivateKey(&XAAGCKeyRec, PRIVATE_GC, sizeof(XAAGCRec)))
 	return FALSE;
 
-    if (!dixRequestPrivate(XAAPixmapKey, sizeof(XAAPixmapRec)))
+    if (!dixRegisterPrivateKey(&XAAPixmapKeyRec, PRIVATE_PIXMAP, sizeof(XAAPixmapRec)))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&XAAScreenKeyRec, PRIVATE_SCREEN, 0))
 	return FALSE;
 
     if (!(pScreenPriv = malloc(sizeof(XAAScreenRec))))

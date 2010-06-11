@@ -801,13 +801,33 @@ static void cmp_attr_fields(InputAttributes *attr1,
     } else
         g_assert(attr2->device == NULL);
 
+    if (attr1->pnp_id != NULL)
+    {
+        g_assert(attr1->pnp_id != attr2->pnp_id);
+        g_assert(strcmp(attr1->pnp_id, attr2->pnp_id) == 0);
+    } else
+        g_assert(attr2->pnp_id == NULL);
+
+    if (attr1->usb_id != NULL)
+    {
+        g_assert(attr1->usb_id != attr2->usb_id);
+        g_assert(strcmp(attr1->usb_id, attr2->usb_id) == 0);
+    } else
+        g_assert(attr2->usb_id == NULL);
+
     tags1 = attr1->tags;
     tags2 = attr2->tags;
+
+    /* if we don't have any tags, skip the tag checking bits */
     if (!tags1)
     {
         g_assert(!tags2);
         return;
     }
+
+    /* Don't lug around empty arrays */
+    g_assert(*tags1);
+    g_assert(*tags2);
 
     /* check for identical content, but duplicated */
     while (*tags1)
@@ -818,6 +838,7 @@ static void cmp_attr_fields(InputAttributes *attr1,
         tags2++;
     }
 
+    /* ensure tags1 and tags2 have the same no of elements */
     g_assert(!*tags2);
 
     /* check for not sharing memory */
@@ -842,7 +863,7 @@ static void dix_input_attributes(void)
     g_assert(!new);
 
     new = DuplicateInputAttributes(&orig);
-    g_assert(memcpy(&orig, new, sizeof(InputAttributes)));
+    g_assert(memcmp(&orig, new, sizeof(InputAttributes)) == 0);
 
     orig.product = "product name";
     new = DuplicateInputAttributes(&orig);
@@ -855,6 +876,16 @@ static void dix_input_attributes(void)
     FreeInputAttributes(new);
 
     orig.device = "device path";
+    new = DuplicateInputAttributes(&orig);
+    cmp_attr_fields(&orig, new);
+    FreeInputAttributes(new);
+
+    orig.pnp_id = "PnPID";
+    new = DuplicateInputAttributes(&orig);
+    cmp_attr_fields(&orig, new);
+    FreeInputAttributes(new);
+
+    orig.usb_id = "USBID";
     new = DuplicateInputAttributes(&orig);
     cmp_attr_fields(&orig, new);
     FreeInputAttributes(new);

@@ -392,6 +392,7 @@ int __glXVForwardPipe0WithReplySwap( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);
@@ -416,6 +417,7 @@ int __glXVForwardPipe0WithReplySwapsv( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);
@@ -440,6 +442,7 @@ int __glXVForwardPipe0WithReplySwapiv( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);
@@ -464,6 +467,7 @@ int __glXVForwardPipe0WithReplySwapdv( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);
@@ -488,6 +492,7 @@ int __glXVForwardAllWithReplySwap( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);
@@ -512,6 +517,7 @@ int __glXVForwardAllWithReplySwapsv( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);
@@ -536,6 +542,7 @@ int __glXVForwardAllWithReplySwapiv( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);
@@ -560,6 +567,7 @@ int __glXVForwardAllWithReplySwapdv( __GLXclientState *cl, GLbyte *pc )
 {
    xGLXVendorPrivateReq *req = (xGLXVendorPrivateReq *)pc;
    __GLX_DECLARE_SWAP_VARIABLES;
+   __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 
    __GLX_SWAP_SHORT(&req->length);
    __GLX_SWAP_INT(&req->vendorCode);

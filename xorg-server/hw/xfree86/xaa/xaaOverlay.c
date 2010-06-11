@@ -54,23 +54,23 @@ XAACopyWindow8_32(
     	return;
     }
 
-    pwinRoot = WindowTable[pScreen->myNum];
+    pwinRoot = pScreen->root;
 
     if(doUnderlay)
 	freeReg = miOverlayCollectUnderlayRegions(pWin, &borderClip);
 
-    REGION_NULL(pScreen, &rgnDst);
+    RegionNull(&rgnDst);
 
     dx = ptOldOrg.x - pWin->drawable.x;
     dy = ptOldOrg.y - pWin->drawable.y;
-    REGION_TRANSLATE(pScreen, prgnSrc, -dx, -dy);
-    REGION_INTERSECT(pScreen, &rgnDst, borderClip, prgnSrc);
+    RegionTranslate(prgnSrc, -dx, -dy);
+    RegionIntersect(&rgnDst, borderClip, prgnSrc);
 
-    pbox = REGION_RECTS(&rgnDst);
-    nbox = REGION_NUM_RECTS(&rgnDst);
+    pbox = RegionRects(&rgnDst);
+    nbox = RegionNumRects(&rgnDst);
     if(!nbox || 
       !(pptSrc = (DDXPointPtr )malloc(nbox * sizeof(DDXPointRec)))) {
-	REGION_UNINIT(pScreen, &rgnDst);
+	RegionUninit(&rgnDst);
 	return;
     }
     ppt = pptSrc;
@@ -88,9 +88,9 @@ XAACopyWindow8_32(
         		&(infoRec->ScratchGC), &rgnDst, pptSrc);
 
     free(pptSrc);
-    REGION_UNINIT(pScreen, &rgnDst);
+    RegionUninit(&rgnDst);
     if(freeReg) 
-	REGION_DESTROY(pScreen, borderClip);
+	RegionDestroy(borderClip);
 }
 
 static void

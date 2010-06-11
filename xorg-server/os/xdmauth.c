@@ -139,7 +139,7 @@ HexToBinary (const char *in, char *out, int len)
 void
 XdmAuthenticationInit (const char *cookie, int cookie_len)
 {
-    bzero (privateKey.data, 8);
+    memset(privateKey.data, 0, 8);
     if (!strncmp (cookie, "0x", 2) || !strncmp (cookie, "0X", 2))
     {
 	if (cookie_len > 2 + 2 * 8)

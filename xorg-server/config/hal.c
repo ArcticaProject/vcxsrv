@@ -129,6 +129,7 @@ static void
 device_added(LibHalContext *hal_ctx, const char *udi)
 {
     char *path = NULL, *driver = NULL, *name = NULL, *config_info = NULL;
+    char *hal_tags, *parent;
     InputOption *options = NULL, *tmpo = NULL;
     InputAttributes attrs = {0};
     DeviceIntPtr dev = NULL;
@@ -164,7 +165,9 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         attrs.product = xstrdup(name);
 
     attrs.vendor = get_prop_string(hal_ctx, udi, "info.vendor");
-    attrs.tags = xstrtokenize(get_prop_string(hal_ctx, udi, "input.tags"), ",");
+    hal_tags = get_prop_string(hal_ctx, udi, "input.tags");
+    attrs.tags = xstrtokenize(hal_tags, ",");
+    free(hal_tags);
 
     if (libhal_device_query_capability(hal_ctx, udi, "input.keys", NULL))
         attrs.flags |= ATTR_KEYBOARD;
@@ -178,6 +181,29 @@ device_added(LibHalContext *hal_ctx, const char *udi)
         attrs.flags |= ATTR_TOUCHPAD;
     if (libhal_device_query_capability(hal_ctx, udi, "input.touchscreen", NULL))
         attrs.flags |= ATTR_TOUCHSCREEN;
+
+    parent = get_prop_string(hal_ctx, udi, "info.parent");
+    if (parent) {
+        int usb_vendor, usb_product;
+
+        attrs.pnp_id = get_prop_string(hal_ctx, parent, "pnp.id");
+
+        /* construct USB ID in lowercase - "0000:ffff" */
+        usb_vendor = libhal_device_get_property_int(hal_ctx, parent,
+                                                    "usb.vendor_id", NULL);
+        LogMessageVerb(X_INFO, 10,
+                       "config/hal: getting usb.vendor_id on %s "
+                       "returned %04x\n", parent, usb_vendor);
+        usb_product = libhal_device_get_property_int(hal_ctx, parent,
+                                                     "usb.product_id", NULL);
+        LogMessageVerb(X_INFO, 10,
+                       "config/hal: getting usb.product_id on %s "
+                       "returned %04x\n", parent, usb_product);
+        if (usb_vendor && usb_product)
+            attrs.usb_id = Xprintf("%04x:%04x", usb_vendor, usb_product);
+
+        free(parent);
+    }
 
     options = calloc(sizeof(*options), 1);
     if (!options){
@@ -251,28 +277,23 @@ device_added(LibHalContext *hal_ctx, const char *udi)
                     {
                         if (!strcasecmp(&tmp[3], "layout"))
                         {
-                            if (xkb_opts.layout)
-                                free(xkb_opts.layout);
+                            free(xkb_opts.layout);
                             xkb_opts.layout = strdup(tmp_val);
                         } else if (!strcasecmp(&tmp[3], "model"))
                         {
-                            if (xkb_opts.model)
-                                free(xkb_opts.model);
+                            free(xkb_opts.model);
                             xkb_opts.model = strdup(tmp_val);
                         } else if (!strcasecmp(&tmp[3], "rules"))
                         {
-                            if (xkb_opts.rules)
-                                free(xkb_opts.rules);
+                            free(xkb_opts.rules);
                             xkb_opts.rules = strdup(tmp_val);
                         } else if (!strcasecmp(&tmp[3], "variant"))
                         {
-                            if (xkb_opts.variant)
-                                free(xkb_opts.variant);
+                            free(xkb_opts.variant);
                             xkb_opts.variant = strdup(tmp_val);
                         } else if (!strcasecmp(&tmp[3], "options"))
                         {
-                            if (xkb_opts.options)
-                                free(xkb_opts.options);
+                            free(xkb_opts.options);
                             xkb_opts.options = strdup(tmp_val);
                         }
                     } else
@@ -289,8 +310,7 @@ device_added(LibHalContext *hal_ctx, const char *udi)
                         (!strcasecmp(&tmp[3], "options")) &&
                         (tmp_val = get_prop_string_array(hal_ctx, udi, psi_key)))
                     {
-                        if (xkb_opts.options)
-                            free(xkb_opts.options);
+                        free(xkb_opts.options);
                         xkb_opts.options = strdup(tmp_val);
                     }
                 }
@@ -366,22 +386,17 @@ device_added(LibHalContext *hal_ctx, const char *udi)
     }
 
     for (; dev; dev = dev->next){
-        if (dev->config_info)
-            free(dev->config_info);
+        free(dev->config_info);
         dev->config_info = xstrdup(config_info);
     }
 
 unwind:
     if (set)
         libhal_free_property_set(set);
-    if (path)
-        free(path);
-    if (driver)
-        free(driver);
-    if (name)
-        free(name);
-    if (config_info)
-        free(config_info);
+    free(path);
+    free(driver);
+    free(name);
+    free(config_info);
     while (!dev && (tmpo = options)) {
         options = tmpo->next;
         free(tmpo->key);
@@ -392,6 +407,8 @@ unwind:
     free(attrs.product);
     free(attrs.vendor);
     free(attrs.device);
+    free(attrs.pnp_id);
+    free(attrs.usb_id);
     if (attrs.tags) {
         char **tag = attrs.tags;
         while (*tag) {
@@ -401,16 +418,11 @@ unwind:
         free(attrs.tags);
     }
 
-    if (xkb_opts.layout)
-        free(xkb_opts.layout);
-    if (xkb_opts.rules)
-        free(xkb_opts.rules);
-    if (xkb_opts.model)
-        free(xkb_opts.model);
-    if (xkb_opts.variant)
-        free(xkb_opts.variant);
-    if (xkb_opts.options)
-        free(xkb_opts.options);
+    free(xkb_opts.layout);
+    free(xkb_opts.rules);
+    free(xkb_opts.model);
+    free(xkb_opts.variant);
+    free(xkb_opts.options);
 
     dbus_error_free(&error);
 
@@ -635,7 +647,7 @@ config_hal_init(void)
     }
 
     /* verbose message */
-    LogMessageVerb(X_INFO,7,"config/hal: initialized");
+    LogMessageVerb(X_INFO,7,"config/hal: initialized\n");
 
     return 1;
 }

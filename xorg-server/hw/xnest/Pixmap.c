@@ -33,8 +33,7 @@ is" without express or implied warranty.
 #include "Screen.h"
 #include "XNPixmap.h"
 
-static int xnestPixmapPrivateKeyIndex;
-DevPrivateKey xnestPixmapPrivateKey = &xnestPixmapPrivateKeyIndex;
+DevPrivateKeyRec xnestPixmapPrivateKeyRec;
 
 PixmapPtr
 xnestCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
@@ -42,7 +41,7 @@ xnestCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
 {
   PixmapPtr pPixmap;
 
-  pPixmap = AllocatePixmap(pScreen, sizeof(xnestPrivPixmap));
+  pPixmap = AllocatePixmap(pScreen, 0);
   if (!pPixmap)
     return NullPixmap;
   pPixmap->drawable.type = DRAWABLE_PIXMAP;
@@ -59,8 +58,6 @@ xnestCreatePixmap(ScreenPtr pScreen, int width, int height, int depth,
   pPixmap->refcnt = 1;
   pPixmap->devKind = PixmapBytePad(width, depth);
   pPixmap->usage_hint = usage_hint;
-  dixSetPrivate(&pPixmap->devPrivates, xnestPixmapPrivateKey,
-		(char *)pPixmap + pScreen->totalPixmapSize);
   if (width && height)
       xnestPixmapPriv(pPixmap)->pixmap = 
 	  XCreatePixmap(xnestDisplay, 
@@ -78,8 +75,7 @@ xnestDestroyPixmap(PixmapPtr pPixmap)
   if(--pPixmap->refcnt)
     return TRUE;
   XFreePixmap(xnestDisplay, xnestPixmap(pPixmap));
-  dixFreePrivates(pPixmap->devPrivates);
-  free(pPixmap);
+  FreePixmap(pPixmap);
   return TRUE;
 }
 
@@ -97,8 +93,8 @@ xnestPixmapToRegion(PixmapPtr pPixmap)
 		     pPixmap->drawable.width, pPixmap->drawable.height,
 		     1, XYPixmap);
   
-  pReg = REGION_CREATE(pPixmap->drawable.pScreen, NULL, 1);
-  pTmpReg = REGION_CREATE(pPixmap->drawable.pScreen, NULL, 1);
+  pReg = RegionCreate(NULL, 1);
+  pTmpReg = RegionCreate(NULL, 1);
   if(!pReg || !pTmpReg) {
       XDestroyImage(ximage);
       return NullRegion;
@@ -118,8 +114,8 @@ xnestPixmapToRegion(PixmapPtr pPixmap)
 	else if (currentPixel == 0L) {
 	  /* right edge */
 	  Box.x2 = x;
-	  REGION_RESET(pPixmap->drawable.pScreen, pTmpReg, &Box);
-	  REGION_APPEND(pPixmap->drawable.pScreen, pReg, pTmpReg);
+	  RegionReset(pTmpReg, &Box);
+	  RegionAppend(pReg, pTmpReg);
 	}
 	previousPixel = currentPixel;
       }
@@ -127,15 +123,15 @@ xnestPixmapToRegion(PixmapPtr pPixmap)
     if (previousPixel != 0L) {
       /* right edge because of the end of pixmap */
       Box.x2 = pPixmap->drawable.width;
-      REGION_RESET(pPixmap->drawable.pScreen, pTmpReg, &Box);
-      REGION_APPEND(pPixmap->drawable.pScreen, pReg, pTmpReg);
+      RegionReset(pTmpReg, &Box);
+      RegionAppend(pReg, pTmpReg);
     }
   }
   
-  REGION_DESTROY(pPixmap->drawable.pScreen, pTmpReg);
+  RegionDestroy(pTmpReg);
   XDestroyImage(ximage);
 
-  REGION_VALIDATE(pPixmap->drawable.pScreen, pReg, &overlap);
+  RegionValidate(pReg, &overlap);
 
-  return(pReg);
+  return pReg;
 }

@@ -46,7 +46,7 @@ typedef struct _xf86RandRInfo {
     Rotation			    rotation;
 } XF86RandRInfoRec, *XF86RandRInfoPtr;
 
-static int xf86RandRKeyIndex;
+static DevPrivateKeyRec xf86RandRKeyRec;
 static DevPrivateKey xf86RandRKey;
 
 #define XF86RANDRINFO(p) ((XF86RandRInfoPtr)dixLookupPrivate(&(p)->devPrivates, xf86RandRKey))
@@ -159,7 +159,7 @@ xf86RandRSetMode (ScreenPtr	    pScreen,
     int			oldmmHeight = pScreen->mmHeight;
     int			oldVirtualX = scrp->virtualX;
     int			oldVirtualY = scrp->virtualY;
-    WindowPtr		pRoot = WindowTable[pScreen->myNum];
+    WindowPtr		pRoot = pScreen->root;
     Bool		ret = TRUE;
 
     if (pRoot && scrp->vtSema)
@@ -424,7 +424,10 @@ xf86RandRInit (ScreenPtr    pScreen)
 	return TRUE;
 #endif
 
-    xf86RandRKey = &xf86RandRKeyIndex;
+    xf86RandRKey = &xf86RandRKeyRec;
+
+    if (!dixRegisterPrivateKey(&xf86RandRKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
 
     randrp = malloc(sizeof (XF86RandRInfoRec));
     if (!randrp)

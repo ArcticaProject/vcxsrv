@@ -123,7 +123,7 @@ AM_CONDITIONAL(SPECIAL_DTRACE_OBJECTS, [test "x$SPECIAL_DTRACE_OBJECTS" = "xyes"
 
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h stdlib.h string.h unistd.h dlfcn.h stropts.h fnmatch.h])
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h unistd.h dlfcn.h stropts.h fnmatch.h sys/utsname.h])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -644,6 +644,7 @@ AC_ARG_ENABLE(vgahw,          AS_HELP_STRING([--enable-vgahw], [Build Xorg with 
 AC_ARG_ENABLE(vbe,            AS_HELP_STRING([--enable-vbe], [Build Xorg with VBE module (default: enabled)]), [VBE=$enableval], [VBE=yes])
 AC_ARG_ENABLE(int10-module,     AS_HELP_STRING([--enable-int10-module], [Build Xorg with int10 module (default: enabled)]), [INT10MODULE=$enableval], [INT10MODULE=yes])
 AC_ARG_ENABLE(windowswm,      AS_HELP_STRING([--enable-windowswm], [Build XWin with WindowsWM extension (default: no)]), [WINDOWSWM=$enableval], [WINDOWSWM=no])
+AC_ARG_ENABLE(libdrm,         AS_HELP_STRING([--enable-libdrm], [Build Xorg with libdrm support (default: enabled)]), [DRM=$enableval],[DRM=yes])
 
 dnl DDXes.
 AC_ARG_ENABLE(xorg,    	      AS_HELP_STRING([--enable-xorg], [Build Xorg server (default: auto)]), [XORG=$enableval], [XORG=auto])
@@ -793,7 +794,7 @@ APPLEWMPROTO="applewmproto >= 1.4"
 
 dnl Core modules for most extensions, et al.
 REQUIRED_MODULES="[randrproto >= 1.2.99.3] [renderproto >= 0.11] [fixesproto >= 4.1] [damageproto >= 1.1] [xcmiscproto >= 1.2.0] [xextproto >= 7.0.99.3] [xproto >= 7.0.17] [xtrans >= 1.2.2] [bigreqsproto >= 1.1.0] fontsproto [inputproto >= 1.9.99.902] [kbproto >= 1.0.3]"
-REQUIRED_LIBS="xfont xau [pixman-1 >= 0.15.20]"
+REQUIRED_LIBS="xfont xau"
 
 dnl List of libraries that require a specific version
 LIBAPPLEWM="applewm >= 1.4"
@@ -808,6 +809,13 @@ LIBPCIACCESS="pciaccess >= 0.8.0"
 LIBGLIB="glib-2.0 >= 2.16"
 LIBUDEV="libudev >= 143"
 LIBSELINUX="libselinux >= 2.0.86"
+LIBDBUS="dbus-1 >= 1.0"
+LIBPIXMAN="pixman-1 >= 0.15.20"
+
+dnl Pixman is always required, but we separate it out so we can link
+dnl specific modules against it
+PKG_CHECK_MODULES(PIXMAN, $LIBPIXMAN)
+REQUIRED_LIBS="$REQUIRED_LIBS $LIBPIXMAN"
 
 if test "x$CONFIG_UDEV" = xyes &&
  { test "x$CONFIG_DBUS_API" = xyes || test "x$CONFIG_HAL" = xyes; }; then
@@ -831,7 +839,7 @@ fi
 dnl HAVE_DBUS is true if we actually have the D-Bus library, whereas
 dnl CONFIG_DBUS_API is true if we want to enable the D-Bus config
 dnl API.
-PKG_CHECK_MODULES(DBUS, dbus-1, [HAVE_DBUS=yes], [HAVE_DBUS=no])
+PKG_CHECK_MODULES(DBUS, $LIBDBUS, [HAVE_DBUS=yes], [HAVE_DBUS=no])
 if test "x$HAVE_DBUS" = xyes; then
 	AC_DEFINE(HAVE_DBUS, 1, [Have D-Bus support])
 fi
@@ -1033,9 +1041,10 @@ esac
 AM_CONDITIONAL(DRI2, test "x$DRI2" = xyes)
 
 if test "x$DRI" = xyes || test "x$DRI2" = xyes; then
-	PKG_CHECK_MODULES([LIBDRM], $LIBDRM)
-	AC_SUBST(LIBDRM_CFLAGS)
-	AC_SUBST(LIBDRM_LIBS)
+	if test "x$DRM" = xyes; then
+		AC_DEFINE(WITH_LIBDRM, 1, [Building with libdrm support])
+		PKG_CHECK_MODULES([LIBDRM], $LIBDRM)
+	fi
 fi
 
 if test "x$DRI2" = xyes; then
@@ -1380,7 +1389,7 @@ if test "x$with_sha1" = xlibmd; then
 	          [Use libmd SHA1 functions])
 	SHA1_LIBS=-lmd
 fi
-AC_CHECK_LIB([sha1], [sha1_begin], [HAVE_LIBSHA1=yes])
+PKG_CHECK_MODULES([LIBSHA1], [libsha1], [HAVE_LIBSHA1=yes], [HAVE_LIBSHA1=no])
 if test "x$with_sha1" = x && test "x$HAVE_LIBSHA1" = xyes; then
    with_sha1=libsha1
 fi

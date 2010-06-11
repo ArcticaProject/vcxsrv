@@ -230,7 +230,7 @@ static int dmxSLFindNext(int *list)
 /** Make one pass over all the screens and return the number updated. */
 static int dmxTryComputeScreenOrigins(int *screensLeft)
 {
-    ScreenPtr       pScreen;
+    ScreenPtr       pScreen, refScreen;
     DMXScreenInfo   *screen;
     int             i, ref;
     int             changed = 0;
@@ -239,54 +239,56 @@ static int dmxTryComputeScreenOrigins(int *screensLeft)
         if (!screensLeft[i])
             continue;
         screen  = &dmxScreens[i];
+        pScreen = screenInfo.screens[i];
         switch (screen->where) {
         case PosAbsolute:
-            dixScreenOrigins[i].x = screen->whereX;
-            dixScreenOrigins[i].y = screen->whereY;
+            pScreen->x = screen->whereX;
+            pScreen->y = screen->whereY;
             ++changed, screensLeft[i] = 0;
             break;
         case PosRelative:
             ref = screen->whereRefScreen;
             if (screensLeft[ref])
                 break;
-            dixScreenOrigins[i].x = dixScreenOrigins[ref].x + screen->whereX;
-            dixScreenOrigins[i].y = dixScreenOrigins[ref].y + screen->whereY;
+            refScreen = screenInfo.screens[ref];
+            pScreen->x = refScreen->x + screen->whereX;
+            pScreen->y = refScreen->y + screen->whereY;
             ++changed, screensLeft[i] = 0;
             break;
         case PosRightOf:
             ref = screen->whereRefScreen;
             if (screensLeft[ref])
                 break;
-            pScreen = screenInfo.screens[ref];
-            dixScreenOrigins[i].x = dixScreenOrigins[ref].x + pScreen->width;
-            dixScreenOrigins[i].y = dixScreenOrigins[ref].y;
+            refScreen = screenInfo.screens[ref];
+            pScreen->x = refScreen->x + refScreen->width;
+            pScreen->y = refScreen->y;
             ++changed, screensLeft[i] = 0;
             break;
         case PosLeftOf:
             ref = screen->whereRefScreen;
             if (screensLeft[ref])
                 break;
-            pScreen = screenInfo.screens[i];
-            dixScreenOrigins[i].x = dixScreenOrigins[ref].x - pScreen->width;
-            dixScreenOrigins[i].y = dixScreenOrigins[ref].y;
+            refScreen = screenInfo.screens[ref];
+            pScreen->x = refScreen->x - pScreen->width;
+            pScreen->y = refScreen->y;
             ++changed, screensLeft[i] = 0;
             break;
         case PosBelow:
             ref = screen->whereRefScreen;
             if (screensLeft[ref])
                 break;
-            pScreen = screenInfo.screens[ref];
-            dixScreenOrigins[i].x = dixScreenOrigins[ref].x;
-            dixScreenOrigins[i].y = dixScreenOrigins[ref].y + pScreen->height;
+            refScreen = screenInfo.screens[ref];
+            pScreen->x = refScreen->x;
+            pScreen->y = refScreen->y + refScreen->height;
             ++changed, screensLeft[i] = 0;
             break;
         case PosAbove:
             ref = screen->whereRefScreen;
             if (screensLeft[ref])
                 break;
-            pScreen = screenInfo.screens[i];
-            dixScreenOrigins[i].x = dixScreenOrigins[ref].x;
-            dixScreenOrigins[i].y = dixScreenOrigins[ref].y - pScreen->height;
+            refScreen = screenInfo.screens[ref];
+            pScreen->x = refScreen->x;
+            pScreen->y = refScreen->y - pScreen->height;
             ++changed, screensLeft[i] = 0;
             break;
         case PosNone:
@@ -298,6 +300,7 @@ static int dmxTryComputeScreenOrigins(int *screensLeft)
 
 static void dmxComputeScreenOrigins(void)
 {
+    ScreenPtr       pScreen;
     int             *screensLeft;
     int             i, ref;
     int             minX, minY;
@@ -313,8 +316,9 @@ static void dmxComputeScreenOrigins(void)
 	     * guarantees that we will eventually terminate.
 	     */
 	    ref                     = dmxScreens[i].whereRefScreen;
-	    dixScreenOrigins[ref].x = dixScreenOrigins[ref].y = 0;
-            screensLeft[ref]        = 0;
+	    pScreen                 = screenInfo.screens[ref];
+	    pScreen->x = pScreen->y = 0;
+	    screensLeft[ref]        = 0;
 	}
     }
     dmxSLFree(screensLeft);
@@ -322,18 +326,18 @@ static void dmxComputeScreenOrigins(void)
 
                                 /* Justify the topmost and leftmost to
                                  * (0,0). */
-    minX = dixScreenOrigins[0].x;
-    minY = dixScreenOrigins[0].y;
+    minX = screenInfo.screens[0]->x;
+    minY = screenInfo.screens[0]->y;
     for (i = 1; i < dmxNumScreens; i++) { /* Compute minX, minY */
-	if (dixScreenOrigins[i].x < minX)
-            minX = dixScreenOrigins[i].x;
-	if (dixScreenOrigins[i].y < minY)
-            minY = dixScreenOrigins[i].y;
+	if (screenInfo.screens[i]->x < minX)
+            minX = screenInfo.screens[i]->x;
+	if (screenInfo.screens[i]->y < minY)
+            minY = screenInfo.screens[i]->y;
     }
     if (minX || minY) {
 	for (i = 0; i < dmxNumScreens; i++) {
-	    dixScreenOrigins[i].x -= minX;
-	    dixScreenOrigins[i].y -= minY;
+	    screenInfo.screens[i]->x -= minX;
+	    screenInfo.screens[i]->y -= minY;
 	}
     }
 }
@@ -398,8 +402,8 @@ void dmxInitOrigins(void)
 
     for (i = 0; i < dmxNumScreens; i++) {
         DMXScreenInfo  *dmxScreen = &dmxScreens[i];
-        dmxScreen->rootXOrigin = dixScreenOrigins[i].x;
-        dmxScreen->rootYOrigin = dixScreenOrigins[i].y;
+        dmxScreen->rootXOrigin = screenInfo.screens[i]->x;
+        dmxScreen->rootYOrigin = screenInfo.screens[i]->y;
     }
 
     dmxReInitOrigins();

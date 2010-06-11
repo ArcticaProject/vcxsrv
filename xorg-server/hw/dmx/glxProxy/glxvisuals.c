@@ -77,11 +77,11 @@ int glxVisualsMatch( __GLXvisualConfig *v1, __GLXvisualConfig *v2 )
 	   (v1->nMultiSampleBuffers == v2->nMultiSampleBuffers) &&
 	   (v1->visualSelectGroup == v2->visualSelectGroup)         ) {
 
-	      return(1);
+	      return 1;
 
       }
 
-      return(0);
+      return 0;
 
 }
 
@@ -93,12 +93,12 @@ VisualID glxMatchGLXVisualInConfigList( __GLXvisualConfig *pGlxVisual, __GLXvisu
 
        if (glxVisualsMatch( pGlxVisual, &configs[i] )) {
 
-	  return( configs[i].vid );
+	  return configs[i].vid;
 
        }
     }
 
-    return(0);
+    return 0;
 }
 
 VisualID glxMatchVisualInConfigList( ScreenPtr pScreen, VisualPtr pVisual, __GLXvisualConfig *configs, int nconfigs )
@@ -109,7 +109,7 @@ VisualID glxMatchVisualInConfigList( ScreenPtr pScreen, VisualPtr pVisual, __GLX
 
     /* check that the glx extension has been initialized */
     if ( !__glXActiveScreens ) 
-       return(0);
+       return 0;
 
     pGlxScreen = &__glXActiveScreens[pScreen->myNum];
     pGlxVisual = pGlxScreen->pGlxVisual;
@@ -124,7 +124,7 @@ VisualID glxMatchVisualInConfigList( ScreenPtr pScreen, VisualPtr pVisual, __GLX
 	/*
 	 * the visual is not supported by glx
 	 */
-        return(0);
+        return 0;
     }
 
     return( glxMatchGLXVisualInConfigList(pGlxVisual, configs, nconfigs) );
@@ -151,12 +151,12 @@ VisualPtr glxMatchVisual( ScreenPtr pScreen, VisualPtr pVisual, ScreenPtr pMatch
 	*/
        for (j=0; j<pMatchScreen->numVisuals; j++) {
 	  if (vid == pMatchScreen->visuals[j].vid) {
-	     return( &pMatchScreen->visuals[j] );
+	     return &pMatchScreen->visuals[j];
 	  }
        }
     }
 
-    return(0);
+    return 0;
 }
 
 void glxSetVisualConfigs(int nconfigs, __GLXvisualConfig *configs,
@@ -198,7 +198,7 @@ static VisualID FindClosestVisual( VisualPtr pVisual, int rootDepth,
 	    while( pdepth[d].vids[v] != vis->vid ) vis++;
 
 	    if (vis->class == pVisual->class) {
-	       return( pdepth[d].vids[v] );
+	       return pdepth[d].vids[v];
 	    }
 	 }
       }
@@ -216,7 +216,7 @@ static VisualID FindClosestVisual( VisualPtr pVisual, int rootDepth,
 	 while( pdepth[d].vids[v] != vis->vid ) vis++;
 
       	 if (vis->class == pVisual->class) {
-	    return( pdepth[d].vids[v] );
+	    return pdepth[d].vids[v];
 	 }
       }
    }
@@ -224,7 +224,7 @@ static VisualID FindClosestVisual( VisualPtr pVisual, int rootDepth,
    /*
     * if not found - just take the first visual
     */
-   return( pdepth[0].vids[0] );
+   return pdepth[0].vids[0];
 }
 
 Bool glxInitVisuals(int *nvisualp, VisualPtr *visualp,
@@ -531,8 +531,7 @@ Bool glxInitVisuals(int *nvisualp, VisualPtr *visualp,
     __glXFree(pNewVisualConfigs);
 
     /* Free the private list created by DDX HW driver */
-    if (visualPrivates)
-        free(visualPrivates);
+    free(visualPrivates);
     visualPrivates = NULL;
 
     return TRUE;

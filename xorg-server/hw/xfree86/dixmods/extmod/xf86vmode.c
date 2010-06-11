@@ -51,8 +51,8 @@ from Kaleb S. KEITHLEY
 #define DEFAULT_XF86VIDMODE_VERBOSITY	3
 
 static int VidModeErrorBase;
-static int VidModeClientPrivateKeyIndex;
-static DevPrivateKey VidModeClientPrivateKey = &VidModeClientPrivateKeyIndex;
+static DevPrivateKeyRec VidModeClientPrivateKeyRec;
+#define VidModeClientPrivateKey (&VidModeClientPrivateKeyRec)
 
 /* This holds the client's version information */
 typedef struct {
@@ -141,8 +141,8 @@ typedef struct _XF86VidModeScreenPrivate {
     Bool		hasWindow;
 } XF86VidModeScreenPrivateRec, *XF86VidModeScreenPrivatePtr;
 
-static int ScreenPrivateKeyIndex;
-static DevPrivateKey ScreenPrivateKey = &ScreenPrivateKeyIndex;
+static DevPrivateKeyRec ScreenPrivateKeyRec;
+#define ScreenPrivateKey (&ScreenPrivateKeyRec)
 
 #define GetScreenPrivate(s) ((ScreenSaverScreenPrivatePtr) \
     dixLookupPrivate(&(s)->devPrivates, ScreenPrivateKey))
@@ -169,6 +169,13 @@ XFree86VidModeExtensionInit(void)
 
     DEBUG_P("XFree86VidModeExtensionInit");
 
+    if (!dixRegisterPrivateKey(&VidModeClientPrivateKeyRec, PRIVATE_CLIENT, 0))
+	return;
+#ifdef XF86VIDMODE_EVENTS
+    if (!dixRegisterPrivateKey(&ScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return;
+#endif
+
 #ifdef XF86VIDMODE_EVENTS
     EventType = CreateNewResourceType(XF86VidModeFreeEvents, "VidModeEvent");
 #endif
@@ -177,9 +184,6 @@ XFree86VidModeExtensionInit(void)
         pScreen = screenInfo.screens[i];
 	if (VidModeExtensionInit(pScreen))
 	    enabled = TRUE;
-#ifdef XF86VIDMODE_EVENTS
-	SetScreenPrivate (pScreen, NULL);
-#endif
     }
     /* This means that the DDX doesn't want the vidmode extension enabled */
     if (!enabled)
@@ -347,7 +351,7 @@ SendXF86VidModeNotify(ScreenPtr pScreen, int state, Bool forced)
 	ev.type = XF86VidModeNotify + XF86VidModeEventBase;
 	ev.state = state;
 	ev.timestamp = currentTime.milliseconds;
-	ev.root = WindowTable[pScreen->myNum]->drawable.id;
+	ev.root = pScreen->root->drawable.id;
 	ev.kind = kind;
 	ev.forced = forced;
 	WriteEventsToClient (pEv->client, 1, (xEvent *) &ev);
@@ -516,7 +520,7 @@ ProcXF86VidModeGetAllModeLines(ClientPtr client)
 
     modecount = VidModeGetNumOfModes(stuff->screen);
     if (modecount < 1)
-      return (VidModeErrorBase + XF86VidModeExtensionDisabled);
+      return VidModeErrorBase + XF86VidModeExtensionDisabled;
 
     if (!VidModeGetFirstModeline(stuff->screen, &mode, &dotClock))
 	return BadValue;
@@ -1098,8 +1102,7 @@ ProcXF86VidModeValidateModeLine(ClientPtr client)
     status = VidModeCheckModeForDriver(stuff->screen, modetmp);
 
 status_reply:
-    if(modetmp)
-      free(modetmp);
+    free(modetmp);
 
     rep.type = X_Reply;
     rep.length = bytes_to_int32(SIZEOF(xXF86VidModeValidateModeLineReply)

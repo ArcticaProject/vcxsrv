@@ -36,8 +36,8 @@
 #include    "gcstruct.h"
 #include    "shadow.h"
 
-static int shadowScrPrivateKeyIndex;
-DevPrivateKey shadowScrPrivateKey = &shadowScrPrivateKeyIndex;
+static DevPrivateKeyRec shadowScrPrivateKeyRec;
+#define shadowScrPrivateKey (&shadowScrPrivateKeyRec)
 
 #define wrap(priv, real, mem) {\
     priv->mem = real->mem; \
@@ -57,7 +57,7 @@ shadowRedisplay(ScreenPtr pScreen)
     if (!pBuf || !pBuf->pDamage || !pBuf->update)
 	return;
     pRegion = DamageRegion(pBuf->pDamage);
-    if (REGION_NOTEMPTY(pScreen, pRegion)) {
+    if (RegionNotEmpty(pRegion)) {
 	(*pBuf->update)(pScreen, pBuf);
 	DamageEmpty(pBuf->pDamage);
     }
@@ -103,7 +103,7 @@ shadowCloseScreen(int i, ScreenPtr pScreen)
     shadowRemove(pScreen, pBuf->pPixmap);
     DamageDestroy(pBuf->pDamage);
 #ifdef BACKWARDS_COMPATIBILITY
-    REGION_UNINIT(pScreen, &pBuf->damage); /* bc */
+    RegionUninit(&pBuf->damage); /* bc */
 #endif
     if (pBuf->pPixmap)
 	pScreen->DestroyPixmap(pBuf->pPixmap);
@@ -121,13 +121,13 @@ shadowReportFunc(DamagePtr pDamage, RegionPtr pRegion, void *closure)
 
     /* Register the damaged region, use DamageReportNone below when we
      * want to break BC below... */
-    REGION_UNION(pScreen, &pDamage->damage, &pDamage->damage, pRegion);
+    RegionUnion(&pDamage->damage, &pDamage->damage, pRegion);
 
     /*
      * BC hack.  In 7.0 and earlier several drivers would inspect the
      * 'damage' member directly, so we have to keep it existing.
      */
-    REGION_COPY(pScreen, &pBuf->damage, pRegion);
+    RegionCopy(&pBuf->damage, pRegion);
 }
 #endif
 
@@ -135,6 +135,9 @@ Bool
 shadowSetup(ScreenPtr pScreen)
 {
     shadowBufPtr pBuf;
+
+    if (!dixRegisterPrivateKey(&shadowScrPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
 
     if (!DamageSetup(pScreen))
 	return FALSE;
@@ -166,7 +169,7 @@ shadowSetup(ScreenPtr pScreen)
     pBuf->closure = 0;
     pBuf->randr = 0;
 #ifdef BACKWARDS_COMPATIBILITY
-    REGION_NULL(pScreen, &pBuf->damage); /* bc */
+    RegionNull(&pBuf->damage); /* bc */
 #endif
 
     dixSetPrivate(&pScreen->devPrivates, shadowScrPrivateKey, pBuf);

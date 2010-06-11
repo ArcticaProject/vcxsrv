@@ -82,7 +82,7 @@ XAAPolyText8NonTEColorExpansion(
  		infoRec->CharInfo);
     }
 
-    return (x + width);
+    return x + width;
 }
 
 
@@ -112,7 +112,7 @@ XAAPolyText16NonTEColorExpansion(
 		infoRec->CharInfo);
     }
 
-    return (x + width);
+    return x + width;
 }
 
 
@@ -128,7 +128,7 @@ XAAImageText8NonTEColorExpansion(
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
     unsigned long n;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     (*pGC->font->get_glyphs)(pGC->font, (unsigned long)count, 
@@ -153,7 +153,7 @@ XAAImageText16NonTEColorExpansion(
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
     unsigned long n;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     (*pGC->font->get_glyphs)(
@@ -188,7 +188,7 @@ XAAImageGlyphBltNonTEColorExpansion(
 ){
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     ImageGlyphBltNonTEColorExpansion(
@@ -208,7 +208,7 @@ XAAPolyGlyphBltNonTEColorExpansion(
 ){
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
     PolyGlyphBltNonTEColorExpansion(
@@ -368,8 +368,8 @@ ImageGlyphBltNonTEColorExpansion(
     int skippix, skipglyph, width, n, i;
     int Left, Right, Top, Bottom;
     int LeftEdge, RightEdge, ytop, ybot;
-    int nbox = REGION_NUM_RECTS(cclip);
-    BoxPtr pbox = REGION_RECTS(cclip);
+    int nbox = RegionNumRects(cclip);
+    BoxPtr pbox = RegionRects(cclip);
     Bool AlreadySetup = FALSE;
 
     width = CollectCharacterInfo(infoRec->GlyphInfo, nglyph, ppci, font);
@@ -405,8 +405,8 @@ ImageGlyphBltNonTEColorExpansion(
 	nbox--; pbox++;
     }
  
-    nbox = REGION_NUM_RECTS(cclip);
-    pbox = REGION_RECTS(cclip);
+    nbox = RegionNumRects(cclip);
+    pbox = RegionRects(cclip);
 
     if(infoRec->WriteBitmap && (nglyph > 1) && 
 			((FONTMAXBOUNDS(font, rightSideBearing) - 
@@ -477,8 +477,8 @@ PolyGlyphBltNonTEColorExpansion(
     int skippix, skipglyph, width, n, i;
     int Left, Right, Top, Bottom;
     int LeftEdge, RightEdge;
-    int nbox = REGION_NUM_RECTS(cclip);
-    BoxPtr pbox = REGION_RECTS(cclip);
+    int nbox = RegionNumRects(cclip);
+    BoxPtr pbox = RegionRects(cclip);
 
     width = CollectCharacterInfo(infoRec->GlyphInfo, nglyph, ppci, font);
 

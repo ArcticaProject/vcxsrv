@@ -5,6 +5,7 @@ sdk_HEADERS = xf86int10.h
 EXTRA_CFLAGS =
 
 libint10_la_LDFLAGS = -avoid-version
+libint10_la_LIBADD = $(PCIACCESS_LIBS)
 
 COMMON_SOURCES = \
 	helper_exec.c \

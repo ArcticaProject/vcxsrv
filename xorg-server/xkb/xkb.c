@@ -557,7 +557,7 @@ ProcXkbGetState(ClientPtr client)
     CHK_KBD_DEVICE(dev, stuff->deviceSpec, client, DixGetAttrAccess);
 
     xkb= &dev->key->xkbInfo->state;
-    bzero(&rep,sizeof(xkbGetStateReply));
+    memset(&rep, 0, sizeof(xkbGetStateReply));
     rep.type= X_Reply;
     rep.sequenceNumber= client->sequence;
     rep.length = 0;
@@ -1429,7 +1429,7 @@ ProcXkbGetMap(ClientPtr client)
     CHK_MASK_LEGAL(0x03,stuff->partial,XkbAllMapComponentsMask);
 
     xkb= dev->key->xkbInfo->desc;
-    bzero(&rep,sizeof(xkbGetMapReply));
+    memset(&rep, 0, sizeof(xkbGetMapReply));
     rep.type= X_Reply;
     rep.sequenceNumber= client->sequence;
     rep.length = (SIZEOF(xkbGetMapReply)-SIZEOF(xGenericReply))>>2;
@@ -2172,7 +2172,7 @@ unsigned	 first,last;
 
     first= req->firstKeyBehavior;
     last= req->firstKeyBehavior+req->nKeyBehaviors-1;
-    bzero(&server->behaviors[first],req->nKeyBehaviors*sizeof(XkbBehavior));
+    memset(&server->behaviors[first], 0, req->nKeyBehaviors*sizeof(XkbBehavior));
     for (i=0;i<req->totalKeyBehaviors;i++) {
 	if ((server->behaviors[wire->key].type&XkbKB_Permanent)==0) {
 	    server->behaviors[wire->key].type= wire->type;
@@ -2190,7 +2190,7 @@ unsigned	 first,last;
         else xkbi->radioGroups= calloc(1, sz);
         if (xkbi->radioGroups) {
              if (xkbi->nRadioGroups)
-                bzero(&xkbi->radioGroups[xkbi->nRadioGroups],
+                 memset(&xkbi->radioGroups[xkbi->nRadioGroups], 0,
                         (maxRG-xkbi->nRadioGroups)*sizeof(XkbRadioGroupRec));
              xkbi->nRadioGroups= maxRG;
         }
@@ -2245,7 +2245,7 @@ CARD8 *			start;
     start= wire;
     first= req->firstKeyExplicit;
     last=  req->firstKeyExplicit+req->nKeyExplicit-1;
-    bzero(&xkb->explicit[first],req->nKeyExplicit);
+    memset(&xkb->explicit[first], 0, req->nKeyExplicit);
     for (i=0;i<req->totalKeyExplicit;i++,wire+= 2) {
 	xkb->explicit[wire[0]]= wire[1];
     }
@@ -2279,7 +2279,7 @@ CARD8 *			start;
     start= wire;
     first= req->firstModMapKey;
     last=  req->firstModMapKey+req->nModMapKeys-1;
-    bzero(&xkb->modmap[first],req->nModMapKeys);
+    memset(&xkb->modmap[first], 0, req->nModMapKeys);
     for (i=0;i<req->totalModMapKeys;i++,wire+= 2) {
 	xkb->modmap[wire[0]]= wire[1];
     }
@@ -2311,7 +2311,7 @@ XkbServerMapPtr		srv = xkbi->desc->server;
 
     first= req->firstVModMapKey;
     last=  req->firstVModMapKey+req->nVModMapKeys-1;
-    bzero(&srv->vmodmap[first],req->nVModMapKeys*sizeof(unsigned short));
+    memset(&srv->vmodmap[first], 0, req->nVModMapKeys*sizeof(unsigned short));
     for (i=0;i<req->totalVModMapKeys;i++,wire++) {
 	srv->vmodmap[wire->key]= wire->vmods;
     }
@@ -2438,7 +2438,7 @@ _XkbSetMap(ClientPtr client, DeviceIntPtr dev, xkbSetMapReq *req, char *values)
     xkb = xkbi->desc;
 
     XkbSetCauseXkbReq(&cause,X_kbSetMap,client);
-    bzero(&change, sizeof(change));
+    memset(&change, 0, sizeof(change));
     sentNKN = FALSE;
     if ((xkb->min_key_code!=req->minKeyCode)||
         (xkb->max_key_code!=req->maxKeyCode)) {
@@ -2851,7 +2851,7 @@ _XkbSetCompatMap(ClientPtr client, DeviceIntPtr dev,
 	XkbEventCauseRec	cause;
 
 	XkbSetCauseXkbReq(&cause,X_kbSetCompatMap,client);
-	bzero(&change,sizeof(XkbChangesRec));
+	memset(&change, 0, sizeof(XkbChangesRec));
 	XkbUpdateActions(dev,xkb->min_key_code,XkbNumKeys(xkb),&change,&check,
 									&cause);
 	if (check)
@@ -3384,8 +3384,8 @@ _XkbSetNamedIndicator(ClientPtr client, DeviceIntPtr dev,
         statec |= ((sli->effectiveState ^ sli->explicitState) & (1 << led));
     }
 
-    bzero((char *)&ed,sizeof(xkbExtensionDeviceNotify));
-    bzero((char *)&changes,sizeof(XkbChangesRec));
+    memset((char *)&ed, 0, sizeof(xkbExtensionDeviceNotify));
+    memset((char *)&changes, 0, sizeof(XkbChangesRec));
     XkbSetCauseXkbReq(&cause,X_kbSetNamedIndicator,client);
     if (namec)
         XkbApplyLedNameChanges(dev,sli,namec,&ed,&changes,&cause);
@@ -4038,7 +4038,7 @@ _XkbSetNames(ClientPtr client, DeviceIntPtr dev, xkbSetNamesReq *stuff)
         return BadAlloc;
     }
 
-    bzero(&nn,sizeof(xkbNamesNotify));
+    memset(&nn, 0, sizeof(xkbNamesNotify));
     nn.changed= stuff->which;
     tmp = (CARD32 *)&stuff[1];
     if (stuff->which&XkbKeycodesNameMask)
@@ -4160,7 +4160,7 @@ _XkbSetNames(ClientPtr client, DeviceIntPtr dev, xkbSetNamesReq *stuff)
                 if (names->indicators[i]!=None)
                     sli->namesPresent|= bit;
             }
-            bzero(&edev,sizeof(xkbExtensionDeviceNotify));
+            memset(&edev, 0, sizeof(xkbExtensionDeviceNotify));
             edev.reason=	XkbXI_IndicatorNamesMask;
             edev.ledClass=	KbdFeedbackClass;
             edev.ledID=		dev->kbdfeed->ctrl.id;
@@ -4478,7 +4478,7 @@ xkbDoodadWireDesc *	doodadWire;
     for (i=0;i<num_doodads;i++,doodad++) {
 	doodadWire= (xkbDoodadWireDesc *)wire;
 	wire= (char *)&doodadWire[1];
-	bzero(doodadWire,SIZEOF(xkbDoodadWireDesc));
+	memset(doodadWire, 0, SIZEOF(xkbDoodadWireDesc));
 	doodadWire->any.name= doodad->any.name;
 	doodadWire->any.type= doodad->any.type;
 	doodadWire->any.priority= doodad->any.priority;
@@ -5290,7 +5290,7 @@ _XkbSetGeometry(ClientPtr client, DeviceIntPtr dev, xkbSetGeometryReq *stuff)
         XkbFreeGeometry(old,XkbGeomAllMask,TRUE);
     if (new_name) {
         xkbNamesNotify	nn;
-        bzero(&nn,sizeof(xkbNamesNotify));
+        memset(&nn, 0, sizeof(xkbNamesNotify));
         nn.changed= XkbGeometryNameMask;
         XkbSendNamesNotify(dev,&nn);
     }
@@ -5497,7 +5497,7 @@ ProcXkbListComponents(ClientPtr client)
 
     status= Success;
     str= (unsigned char *)&stuff[1];
-    bzero(&list,sizeof(XkbSrvListInfoRec));
+    memset(&list, 0, sizeof(XkbSrvListInfoRec));
     list.maxRtrn= stuff->maxNames;
     list.pattern[_XkbListKeycodes]= GetComponentSpec(&str,FALSE,&status);
     list.pattern[_XkbListTypes]= GetComponentSpec(&str,FALSE,&status);
@@ -5516,7 +5516,7 @@ ProcXkbListComponents(ClientPtr client)
 	}
 	return status;
     }
-    bzero(&rep,sizeof(xkbListComponentsReply));
+    memset(&rep, 0, sizeof(xkbListComponentsReply));
     rep.type= X_Reply;
     rep.deviceID = dev->id;
     rep.sequenceNumber = client->sequence;
@@ -5624,7 +5624,7 @@ ProcXkbGetKbdByName(ClientPtr client)
         geom_changed= FALSE;
     }
 
-    bzero(mapFile,PATH_MAX);
+    memset(mapFile, 0, PATH_MAX);
     rep.type= X_Reply;
     rep.deviceID = dev->id;
     rep.sequenceNumber = client->sequence;
@@ -5659,7 +5659,7 @@ ProcXkbGetKbdByName(ClientPtr client)
 	if (stuff->load || 
 		((rep.reported&XkbGBN_SymbolsMask) && (new->compat))) {
 	    XkbChangesRec changes;
-	    bzero(&changes,sizeof(changes));
+	    memset(&changes, 0, sizeof(changes));
 	    XkbUpdateDescActions(new,
 			new->min_key_code,XkbNumKeys(new),
 			&changes);
@@ -6123,7 +6123,7 @@ char *			str;
 	wanted&= ~XkbXI_IndicatorsMask;
 
     nameLen= XkbSizeCountedString(dev->name);
-    bzero((char *)&rep,SIZEOF(xkbGetDeviceInfoReply));
+    memset((char *)&rep, 0, SIZEOF(xkbGetDeviceInfoReply));
     rep.type = X_Reply;
     rep.deviceID= dev->id;
     rep.sequenceNumber = client->sequence;
@@ -6331,8 +6331,8 @@ xkbExtensionDeviceNotify	ed;
 XkbChangesRec			changes;
 DeviceIntPtr			kbd;
 
-    bzero((char *)&ed,sizeof(xkbExtensionDeviceNotify));
-    bzero((char *)&changes,sizeof(XkbChangesRec));
+    memset((char *)&ed, 0, sizeof(xkbExtensionDeviceNotify));
+    memset((char *)&changes, 0, sizeof(XkbChangesRec));
     XkbSetCauseXkbReq(&cause,X_kbSetDeviceInfo,client);
     ledWire= (xkbDeviceLedsWireDesc *)wire;
     for (i=0;i<num;i++) {
@@ -6353,11 +6353,11 @@ DeviceIntPtr			kbd;
 	atomWire= (CARD32 *)&ledWire[1];
 	if (changed&XkbXI_IndicatorNamesMask) {
 	    namec= sli->namesPresent|ledWire->namesPresent;
-	    bzero((char *)sli->names,XkbNumIndicators*sizeof(Atom));
+	    memset((char *)sli->names, 0, XkbNumIndicators*sizeof(Atom));
 	}
 	if (ledWire->namesPresent) {
 	    sli->namesPresent= ledWire->namesPresent;
-	    bzero((char *)sli->names,XkbNumIndicators*sizeof(Atom));
+	    memset((char *)sli->names, 0, XkbNumIndicators*sizeof(Atom));
 	    for (n=0,bit=1;n<XkbNumIndicators;n++,bit<<=1) {
 		if (ledWire->namesPresent&bit) {
 		     sli->names[n]= (Atom)*atomWire;
@@ -6371,7 +6371,7 @@ DeviceIntPtr			kbd;
 	if (changed&XkbXI_IndicatorMapsMask) {
 	    mapc= sli->mapsPresent|ledWire->mapsPresent;
 	    sli->mapsPresent= ledWire->mapsPresent;
-	    bzero((char*)sli->maps,XkbNumIndicators*sizeof(XkbIndicatorMapRec));
+	    memset((char*)sli->maps, 0, XkbNumIndicators*sizeof(XkbIndicatorMapRec));
 	}
 	if (ledWire->mapsPresent) {
 	    for (n=0,bit=1;n<XkbNumIndicators;n++,bit<<=1) {
@@ -6450,7 +6450,7 @@ _XkbSetDeviceInfoCheck(ClientPtr client, DeviceIntPtr dev,
     char                       *wire;
     xkbExtensionDeviceNotify    ed;
 
-    bzero((char *)&ed,SIZEOF(xkbExtensionDeviceNotify));
+    memset((char *)&ed, 0, SIZEOF(xkbExtensionDeviceNotify));
     ed.deviceID=	dev->id;
     wire= (char *)&stuff[1];
     if (stuff->change&XkbXI_ButtonActionsMask) {
@@ -6707,6 +6707,9 @@ XkbExtensionInit(void)
 
     RT_XKBCLIENT = CreateNewResourceType(XkbClientGone, "XkbClient");
     if (!RT_XKBCLIENT)
+	return;
+
+    if (!XkbInitPrivates())
 	return;
 
     if ((extEntry = AddExtension(XkbName, XkbNumberEvents, XkbNumberErrors,

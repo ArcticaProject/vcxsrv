@@ -40,15 +40,14 @@
 #include "globals.h"
 #include "micmap.h"
 
-static int micmapScrPrivateKeyIndex;
-DevPrivateKey micmapScrPrivateKey = &micmapScrPrivateKeyIndex;
+DevPrivateKeyRec micmapScrPrivateKeyRec;
 
 int
 miListInstalledColormaps(ScreenPtr pScreen, Colormap *pmaps)
 {
     if (GetInstalledmiColormap(pScreen)) {
 	*pmaps = GetInstalledmiColormap(pScreen)->mid;
-	return (1);
+	return 1;
     }
     return 0;
 }
@@ -311,6 +310,9 @@ miCreateDefColormap(ScreenPtr pScreen)
     ColormapPtr	cmap;
     int alloctype;
     
+    if (!dixRegisterPrivateKey(&micmapScrPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     for (pVisual = pScreen->visuals;
 	 pVisual->vid != pScreen->rootVisual;
 	 pVisual++)

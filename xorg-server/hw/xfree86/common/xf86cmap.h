@@ -45,6 +45,10 @@ extern _X_EXPORT Bool xf86HandleColormaps(
     unsigned int flags
 );
 
+extern _X_EXPORT Bool xf86ColormapAllocatePrivates(
+    ScrnInfoPtr pScrn
+);
+
 extern _X_EXPORT int
 xf86ChangeGamma(
    ScreenPtr pScreen,

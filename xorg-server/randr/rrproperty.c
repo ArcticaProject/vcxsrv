@@ -53,27 +53,39 @@ static void RRDeliverPropertyEvent(ScreenPtr pScreen, xEvent *event)
 	WalkTree(pScreen, DeliverPropertyEvent, event);
 }
 
+static void
+RRDestroyOutputProperty (RRPropertyPtr prop)
+{
+    free(prop->valid_values);
+    free(prop->current.data);
+    free(prop->pending.data);
+    free(prop);
+}
+
+static void
+RRDeleteProperty(RROutputRec *output, RRPropertyRec *prop)
+{
+    xRROutputPropertyNotifyEvent event;
+    event.type = RREventBase + RRNotify;
+    event.subCode = RRNotify_OutputProperty;
+    event.output = output->id;
+    event.state = PropertyDelete;
+    event.atom = prop->propertyName;
+    event.timestamp = currentTime.milliseconds;
+
+    RRDeliverPropertyEvent(output->pScreen, (xEvent *)&event);
+
+    RRDestroyOutputProperty(prop);
+}
+
 void
-RRDeleteAllOutputProperties (RROutputPtr output)
+RRDeleteAllOutputProperties(RROutputPtr output)
 {
     RRPropertyPtr prop, next;
-    xRROutputPropertyNotifyEvent    event;
 
-    for (prop = output->properties; prop; prop = next)
-    {
+    for (prop = output->properties; prop; prop = next) {
 	next = prop->next;
-	event.type = RREventBase + RRNotify;
-	event.subCode = RRNotify_OutputProperty;
-	event.output = output->id;
-	event.state = PropertyDelete;
-	event.atom = prop->propertyName;
-	event.timestamp = currentTime.milliseconds;
-	RRDeliverPropertyEvent (output->pScreen, (xEvent *)&event);
-	if (prop->current.data)
-	    free(prop->current.data);
-	if (prop->pending.data)
-	    free(prop->pending.data);
-	free(prop);
+        RRDeleteProperty(output, prop);
     }
 }
 
@@ -106,41 +118,17 @@ RRCreateOutputProperty (Atom property)
     return prop;
 }
 
-static void
-RRDestroyOutputProperty (RRPropertyPtr prop)
-{
-    if (prop->valid_values)
-	free(prop->valid_values);
-    if (prop->current.data)
-	free(prop->current.data);
-    if (prop->pending.data)
-	free(prop->pending.data);
-    if (prop->valid_values)
-	free(prop->valid_values);
-    free(prop);
-}
-
 void
-RRDeleteOutputProperty (RROutputPtr output, Atom property)
+RRDeleteOutputProperty(RROutputPtr output, Atom property)
 {
-    RRPropertyPtr	prop, *prev;
-    xRROutputPropertyNotifyEvent    event;
+    RRPropertyRec *prop, **prev;
 
     for (prev = &output->properties; (prop = *prev); prev = &(prop->next))
-	if (prop->propertyName == property)
-	    break;
-    if (prop)
-    {
-	*prev = prop->next;
-	event.type = RREventBase + RRNotify;
-	event.subCode = RRNotify_OutputProperty;
-	event.output = output->id;
-	event.state = PropertyDelete;
-	event.atom = prop->propertyName;
-	event.timestamp = currentTime.milliseconds;
-	RRDeliverPropertyEvent (output->pScreen, (xEvent *)&event);
-	RRDestroyOutputProperty (prop);
-    }
+	if (prop->propertyName == property) {
+            *prev = prop->next;
+            RRDeleteProperty(output, prop);
+            return;
+        }
 }
 
 int
@@ -166,7 +154,7 @@ RRChangeOutputProperty (RROutputPtr output, Atom property, Atom type,
     {
 	prop = RRCreateOutputProperty (property);
 	if (!prop)
-	    return(BadAlloc);
+	    return BadAlloc;
 	add = TRUE;
 	mode = PropModeReplace;
     }
@@ -181,9 +169,9 @@ RRChangeOutputProperty (RROutputPtr output, Atom property, Atom type,
      "PropModeReplace" since they will be written over. */
 
     if ((format != prop_value->format) && (mode != PropModeReplace))
-	return(BadMatch);
+	return BadMatch;
     if ((prop_value->type != type) && (mode != PropModeReplace))
-	return(BadMatch);
+	return BadMatch;
     new_value = *prop_value;
     if (mode == PropModeReplace)
 	total_len = len;
@@ -232,12 +220,10 @@ RRChangeOutputProperty (RROutputPtr output, Atom property, Atom type,
 	    !pScrPriv->rrOutputSetProperty(output->pScreen, output,
 					   prop->propertyName, &new_value))
 	{
-	    if (new_value.data)
-		free(new_value.data);
-	    return (BadValue);
+	    free(new_value.data);
+	    return BadValue;
 	}
-	if (prop_value->data)
-	    free(prop_value->data);
+	free(prop_value->data);
 	*prop_value = new_value;
     }
 
@@ -265,7 +251,7 @@ RRChangeOutputProperty (RROutputPtr output, Atom property, Atom type,
 	event.timestamp = currentTime.milliseconds;
 	RRDeliverPropertyEvent (output->pScreen, (xEvent *)&event);
     }
-    return(Success);
+    return Success;
 }
 
 Bool
@@ -355,10 +341,10 @@ RRConfigureOutputProperty (RROutputPtr output, Atom property,
     {
         prop = RRCreateOutputProperty (property);
 	if (!prop)
-	    return(BadAlloc);
+	    return BadAlloc;
 	add = TRUE;
     } else if (prop->immutable && !immutable)
-	return(BadAccess);
+	return BadAccess;
     
     /*
      * ranges must have even number of values
@@ -378,8 +364,7 @@ RRConfigureOutputProperty (RROutputPtr output, Atom property,
      */
     if (prop->is_pending && !pending)
     {
-	if (prop->pending.data)
-	    free(prop->pending.data);
+	free(prop->pending.data);
 	RRInitOutputPropertyValue (&prop->pending);
     }
 
@@ -387,8 +372,7 @@ RRConfigureOutputProperty (RROutputPtr output, Atom property,
     prop->range = range;
     prop->immutable = immutable;
     prop->num_valid = num_values;
-    if (prop->valid_values)
-	free(prop->valid_values);
+    free(prop->valid_values);
     prop->valid_values = new_values;
 
     if (add) {
@@ -417,7 +401,7 @@ ProcRRListOutputProperties (ClientPtr client)
 	numProps++;
     if (numProps)
         if(!(pAtoms = (Atom *)malloc(numProps * sizeof(Atom))))
-            return(BadAlloc);
+            return BadAlloc;
 
     rep.type = X_Reply;
     rep.length = bytes_to_int32(numProps * sizeof(Atom));
@@ -546,12 +530,12 @@ ProcRRChangeOutputProperty (ClientPtr client)
     if (!ValidAtom(stuff->property))
     {
 	client->errorValue = stuff->property;
-	return(BadAtom);
+	return BadAtom;
     }
     if (!ValidAtom(stuff->type))
     {
 	client->errorValue = stuff->type;
-	return(BadAtom);
+	return BadAtom;
     }
 
     err = RRChangeOutputProperty(output, stuff->property,
@@ -576,7 +560,7 @@ ProcRRDeleteOutputProperty (ClientPtr client)
     if (!ValidAtom(stuff->property))
     {
 	client->errorValue = stuff->property;
-	return (BadAtom);
+	return BadAtom;
     }
 
 
@@ -604,17 +588,17 @@ ProcRRGetOutputProperty (ClientPtr client)
     if (!ValidAtom(stuff->property))
     {
 	client->errorValue = stuff->property;
-	return(BadAtom);
+	return BadAtom;
     }
     if ((stuff->delete != xTrue) && (stuff->delete != xFalse))
     {
 	client->errorValue = stuff->delete;
-	return(BadValue);
+	return BadValue;
     }
     if ((stuff->type != AnyPropertyType) && !ValidAtom(stuff->type))
     {
 	client->errorValue = stuff->type;
-	return(BadAtom);
+	return BadAtom;
     }
 
     for (prev = &output->properties; (prop = *prev); prev = &prop->next)

@@ -162,9 +162,7 @@ winMessageBoxF (const char *pszError, UINT uType, ...)
 	      MB_OK | uType);
 
  winMessageBoxF_Cleanup:
-  if (pszErrorF)
-    free(pszErrorF);
-  if (pszMsgBox)
-    free(pszMsgBox);
+  free(pszErrorF);
+  free(pszMsgBox);
 #undef MESSAGEBOXF
 }

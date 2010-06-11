@@ -36,12 +36,23 @@
 #ifndef MIDBE_H
 #define MIDBE_H
 
+#include "privates.h"
+
 /* EXTERNS */
 
 extern Bool miDbeInit(
     ScreenPtr           pScreen,
     DbeScreenPrivPtr    pDbeScreenPriv
 );
+
+extern DevPrivateKeyRec dbeScreenPrivKeyRec;
+#define dbeScreenPrivKey (&dbeScreenPrivKeyRec)
+
+extern DevPrivateKeyRec dbeWindowPrivKeyRec;
+#define dbeWindowPrivKey (&dbeWindowPrivKeyRec)
+
+extern RESTYPE	dbeDrawableResType;
+extern RESTYPE	dbeWindowPrivResType;
 
 #endif /* MIDBE_H */
 

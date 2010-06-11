@@ -78,8 +78,8 @@ exaPixmapIsDirty (PixmapPtr pPix)
     if (!pExaPixmap->pDamage)
 	return FALSE;
 
-    return REGION_NOTEMPTY (pScreen, DamageRegion(pExaPixmap->pDamage)) ||
-	!REGION_EQUAL(pScreen, &pExaPixmap->validSys, &pExaPixmap->validFB);
+    return RegionNotEmpty(DamageRegion(pExaPixmap->pDamage)) ||
+	!RegionEqual(&pExaPixmap->validSys, &pExaPixmap->validFB);
 }
 
 /**
@@ -123,22 +123,22 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 
     /* Damaged bits are valid in current copy but invalid in other one */
     if (pExaPixmap->use_gpu_copy) {
-	REGION_UNION(pScreen, &pExaPixmap->validFB, &pExaPixmap->validFB,
+	RegionUnion(&pExaPixmap->validFB, &pExaPixmap->validFB,
 		     damage);
-	REGION_SUBTRACT(pScreen, &pExaPixmap->validSys, &pExaPixmap->validSys,
+	RegionSubtract(&pExaPixmap->validSys, &pExaPixmap->validSys,
 			damage);
     } else {
-	REGION_UNION(pScreen, &pExaPixmap->validSys, &pExaPixmap->validSys,
+	RegionUnion(&pExaPixmap->validSys, &pExaPixmap->validSys,
 		     damage);
-	REGION_SUBTRACT(pScreen, &pExaPixmap->validFB, &pExaPixmap->validFB,
+	RegionSubtract(&pExaPixmap->validFB, &pExaPixmap->validFB,
 			damage);
     }
 
-    REGION_EMPTY(pScreen, damage);
+    RegionEmpty(damage);
 
     /* Copy bits valid in source but not in destination */
-    REGION_NULL(pScreen, &CopyReg);
-    REGION_SUBTRACT(pScreen, &CopyReg, pValidSrc, pValidDst);
+    RegionNull(&CopyReg);
+    RegionSubtract(&CopyReg, pValidSrc, pValidDst);
 
     if (migrate->as_dst) {
 	ExaScreenPriv (pPixmap->drawable.pScreen);
@@ -153,7 +153,7 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 	    RegionPtr pending_damage = DamagePendingRegion(pExaPixmap->pDamage);
 
 #if DEBUG_MIGRATE
-	    if (REGION_NIL(pending_damage)) {
+	    if (RegionNil(pending_damage)) {
 		static Bool firsttime = TRUE;
 
 		if (firsttime) {
@@ -167,23 +167,23 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 	     * rects by filling it up to the extents of the union of the
 	     * destination valid region and the pending damage region.
 	     */
-	    if (REGION_NUM_RECTS(pValidDst) > 10) {
+	    if (RegionNumRects(pValidDst) > 10) {
 		BoxRec box;
 		BoxPtr pValidExt, pDamageExt;
 		RegionRec closure;
 
-		pValidExt = REGION_EXTENTS(pScreen, pValidDst);
-		pDamageExt = REGION_EXTENTS(pScreen, pending_damage);
+		pValidExt = RegionExtents(pValidDst);
+		pDamageExt = RegionExtents(pending_damage);
 
 		box.x1 = min(pValidExt->x1, pDamageExt->x1);
 		box.y1 = min(pValidExt->y1, pDamageExt->y1);
 		box.x2 = max(pValidExt->x2, pDamageExt->x2);
 		box.y2 = max(pValidExt->y2, pDamageExt->y2);
 
-		REGION_INIT(pScreen, &closure, &box, 0);
-		REGION_INTERSECT(pScreen, &CopyReg, &CopyReg, &closure);
+		RegionInit(&closure, &box, 0);
+		RegionIntersect(&CopyReg, &CopyReg, &closure);
 	    } else
-		REGION_INTERSECT(pScreen, &CopyReg, &CopyReg, pending_damage);
+		RegionIntersect(&CopyReg, &CopyReg, pending_damage);
 	}
 
 	/* The caller may provide a region to be subtracted from the calculated
@@ -191,17 +191,17 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
 	 * contribute to the result of the operation.
 	 */
 	if (migrate->pReg)
-	    REGION_SUBTRACT(pScreen, &CopyReg, &CopyReg, migrate->pReg);
+	    RegionSubtract(&CopyReg, &CopyReg, migrate->pReg);
     } else {
 	/* The caller may restrict the region to be migrated for source pixmaps
 	 * to what's relevant for the operation.
 	 */
 	if (migrate->pReg)
-	    REGION_INTERSECT(pScreen, &CopyReg, &CopyReg, migrate->pReg);
+	    RegionIntersect(&CopyReg, &CopyReg, migrate->pReg);
     }
 
-    pBox = REGION_RECTS(&CopyReg);
-    nbox = REGION_NUM_RECTS(&CopyReg);
+    pBox = RegionRects(&CopyReg);
+    nbox = RegionNumRects(&CopyReg);
 
     save_use_gpu_copy = pExaPixmap->use_gpu_copy;
     save_pitch = pPixmap->devKind;
@@ -252,13 +252,13 @@ exaCopyDirty(ExaMigrationPtr migrate, RegionPtr pValidDst, RegionPtr pValidSrc,
      * removing parts of it which are also in the destination valid region.
      * Removing anything beyond that would lead to data loss.
      */
-    if (REGION_NUM_RECTS(pValidSrc) > 20)
-	REGION_SUBTRACT(pScreen, pValidSrc, pValidSrc, pValidDst);
+    if (RegionNumRects(pValidSrc) > 20)
+	RegionSubtract(pValidSrc, pValidSrc, pValidDst);
 
     /* The copied bits are now valid in destination */
-    REGION_UNION(pScreen, pValidDst, pValidDst, &CopyReg);
+    RegionUnion(pValidDst, pValidDst, &CopyReg);
 
-    REGION_UNINIT(pScreen, &CopyReg);
+    RegionUninit(&CopyReg);
 
     if (access_prepared)
 	exaFinishAccess(&pPixmap->drawable, fallback_index);
@@ -440,7 +440,7 @@ exaPixmapSave (ScreenPtr pScreen, ExaOffscreenArea *area)
 
     /* Mark all FB bits as invalid, so all valid system bits get copied to FB
      * next time */
-    REGION_EMPTY(pPixmap->drawable.pScreen, &pExaPixmap->validFB);
+    RegionEmpty(&pExaPixmap->validFB);
 }
 
 /**
@@ -531,15 +531,15 @@ exaAssertNotDirty (PixmapPtr pPixmap)
     if (exaPixmapIsPinned(pPixmap) || pExaPixmap->area == NULL)
 	return ret;
 
-    REGION_NULL(pScreen, &ValidReg);
-    REGION_INTERSECT(pScreen, &ValidReg, &pExaPixmap->validFB,
+    RegionNull(&ValidReg);
+    RegionIntersect(&ValidReg, &pExaPixmap->validFB,
 		     &pExaPixmap->validSys);
-    nbox = REGION_NUM_RECTS(&ValidReg);
+    nbox = RegionNumRects(&ValidReg);
 
     if (!nbox)
 	goto out;
 
-    pBox = REGION_RECTS(&ValidReg);
+    pBox = RegionRects(&ValidReg);
 
     dst_pitch = pExaPixmap->sys_pitch;
     src_pitch = pExaPixmap->fb_pitch;
@@ -586,7 +586,7 @@ skip:
     pPixmap->devKind = save_pitch;
 
 out:
-    REGION_UNINIT(pScreen, &ValidReg);
+    RegionUninit(&ValidReg);
     return ret;
 }
 

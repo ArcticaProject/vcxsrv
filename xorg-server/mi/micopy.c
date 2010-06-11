@@ -49,8 +49,8 @@ miCopyRegion (DrawablePtr   pSrcDrawable,
     int		nbox;
     BoxPtr	pboxNew1, pboxNew2, pboxBase, pboxNext, pboxTmp;
     
-    pbox = REGION_RECTS(pDstRegion);
-    nbox = REGION_NUM_RECTS(pDstRegion);
+    pbox = RegionRects(pDstRegion);
+    nbox = RegionNumRects(pDstRegion);
     
     /* XXX we have to err on the side of safety when both are windows,
      * because we don't know if IncludeInferiors is being used.
@@ -108,8 +108,7 @@ miCopyRegion (DrawablePtr   pSrcDrawable,
 	    pboxNew2 = (BoxPtr)malloc(sizeof(BoxRec) * nbox);
 	    if(!pboxNew2)
 	    {
-		if (pboxNew1)
-		    free(pboxNew1);
+		free(pboxNew1);
 		return;
 	    }
 	    pboxBase = pboxNext = pbox;
@@ -143,10 +142,8 @@ miCopyRegion (DrawablePtr   pSrcDrawable,
 		 dx, dy,
 		 reverse, upsidedown, bitPlane, closure);
     
-    if (pboxNew1)
-	free(pboxNew1);
-    if (pboxNew2)
-	free(pboxNew2);
+    free(pboxNew1);
+    free(pboxNew2);
 }
 
 RegionPtr
@@ -209,8 +206,7 @@ miDoCopy (DrawablePtr	pSrcDrawable,
 	     * VT is inactive, make sure the region isn't empty
 	     */
 	    if (!((WindowPtr) pSrcDrawable)->parent &&
-		REGION_NOTEMPTY (pSrcDrawable->pScreen,
-				 &((WindowPtr) pSrcDrawable)->borderClip))
+		RegionNotEmpty(&((WindowPtr) pSrcDrawable)->borderClip))
 	    {
 		/*
 		 * special case bitblt from root window in
@@ -291,9 +287,9 @@ miDoCopy (DrawablePtr	pSrcDrawable,
 	   blown region and call intersect */
 
 	cclip = miGetCompositeClip(pGC);
-        if (REGION_NUM_RECTS(cclip) == 1)
+        if (RegionNumRects(cclip) == 1)
         {
-	    BoxPtr pBox = REGION_RECTS(cclip);
+	    BoxPtr pBox = RegionRects(cclip);
 
 	    if (box_x1 < pBox->x1) box_x1 = pBox->x1;
 	    if (box_x2 > pBox->x2) box_x2 = pBox->x2;
@@ -306,7 +302,7 @@ miDoCopy (DrawablePtr	pSrcDrawable,
     /* Check to see if the region is empty */
     if (box_x1 >= box_x2 || box_y1 >= box_y2)
     {
-	REGION_NULL(pGC->pScreen, &rgnDst);
+	RegionNull(&rgnDst);
     }
     else
     {
@@ -315,25 +311,25 @@ miDoCopy (DrawablePtr	pSrcDrawable,
 	box.y1 = box_y1;
 	box.x2 = box_x2;
 	box.y2 = box_y2;
-	REGION_INIT(pGC->pScreen, &rgnDst, &box, 1);
+	RegionInit(&rgnDst, &box, 1);
     }
     
     /* Clip against complex source if needed */
     if (!fastSrc)
     {
-	REGION_INTERSECT(pGC->pScreen, &rgnDst, &rgnDst, prgnSrcClip);
-	REGION_TRANSLATE(pGC->pScreen, &rgnDst, -dx, -dy);
+	RegionIntersect(&rgnDst, &rgnDst, prgnSrcClip);
+	RegionTranslate(&rgnDst, -dx, -dy);
     }
 
     /* Clip against complex dest if needed */
     if (!fastDst)
     {
-	REGION_INTERSECT(pGC->pScreen, &rgnDst, &rgnDst,
+	RegionIntersect(&rgnDst, &rgnDst,
 			 miGetCompositeClip(pGC));
     }
 
     /* Do bit blitting */
-    numRects = REGION_NUM_RECTS(&rgnDst);
+    numRects = RegionNumRects(&rgnDst);
     if (numRects && widthSrc && heightSrc)
 	miCopyRegion (pSrcDrawable, pDstDrawable, pGC,
 		      &rgnDst, dx, dy, copyProc, bitPlane, closure);
@@ -347,8 +343,8 @@ miDoCopy (DrawablePtr	pSrcDrawable,
 					xOut - pDstDrawable->x,
 					yOut - pDstDrawable->y,
 					(unsigned long) bitPlane);
-    REGION_UNINIT(pGC->pScreen, &rgnDst);
+    RegionUninit(&rgnDst);
     if (freeSrcClip)
-	REGION_DESTROY(pGC->pScreen, prgnSrcClip);
+	RegionDestroy(prgnSrcClip);
     return prgnExposed;
 }

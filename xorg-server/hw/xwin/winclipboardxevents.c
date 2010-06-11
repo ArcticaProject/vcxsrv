@@ -426,8 +426,7 @@ winClipboardFlushXEvents (HWND hwnd,
 	    xtpText.value = NULL;
 	    xtpText.nitems = 0;
 	  }
-	  if (pszConvertData)
-	    free (pszConvertData);
+	  free(pszConvertData);
 	  if (hGlobal && pszGlobalData)
 	    GlobalUnlock (hGlobal);
 	  
@@ -792,10 +791,8 @@ winClipboardFlushXEvents (HWND hwnd,
 	    xtpText.value = NULL;
 	    xtpText.nitems = 0;
 	  }
-	  if (pszConvertData)
-	    free (pszConvertData);
-	  if (pwszUnicodeStr)
-	    free (pwszUnicodeStr);
+	  free(pszConvertData);
+	  free(pwszUnicodeStr);
 	  if (hGlobal && pszGlobalData)
 	    GlobalUnlock (hGlobal);
 	  if (fSetClipboardData && g_fUnicodeSupport)

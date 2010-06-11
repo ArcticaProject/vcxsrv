@@ -78,7 +78,7 @@ RREditConnectionInfo (ScreenPtr pScreen)
 void
 RRSendConfigNotify (ScreenPtr pScreen)
 {
-    WindowPtr	pWin = WindowTable[pScreen->myNum];
+    WindowPtr	pWin = pScreen->root;
     xEvent	event;
 
     event.u.u.type = ConfigureNotify;
@@ -102,7 +102,7 @@ RRDeliverScreenEvent (ClientPtr client, WindowPtr pWin, ScreenPtr pScreen)
     rrScrPriv (pScreen);
     xRRScreenChangeNotifyEvent	se;
     RRCrtcPtr	crtc = pScrPriv->numCrtcs ? pScrPriv->crtcs[0] : NULL;
-    WindowPtr	pRoot = WindowTable[pScreen->myNum];
+    WindowPtr	pRoot = pScreen->root;
     
     se.type = RRScreenChangeNotify + RREventBase;
     se.rotation = (CARD8) (crtc ? crtc->rotation : RR_Rotate_0);
@@ -625,7 +625,7 @@ ProcRRGetScreenInfo (ClientPtr client)
 	rep.setOfRotations = RR_Rotate_0;
 	rep.sequenceNumber = client->sequence;
 	rep.length = 0;
-	rep.root = WindowTable[pWin->drawable.pScreen->myNum]->drawable.id;
+	rep.root = pWin->drawable.pScreen->root->drawable.id;
 	rep.timestamp = currentTime.milliseconds;
 	rep.configTimestamp = currentTime.milliseconds;
 	rep.nSizes = 0;
@@ -654,7 +654,7 @@ ProcRRGetScreenInfo (ClientPtr client)
 	rep.setOfRotations = output->crtc->rotations;
 	rep.sequenceNumber = client->sequence;
 	rep.length = 0;
-	rep.root = WindowTable[pWin->drawable.pScreen->myNum]->drawable.id;
+	rep.root = pWin->drawable.pScreen->root->drawable.id;
 	rep.timestamp = pScrPriv->lastSetTime.milliseconds;
 	rep.configTimestamp = pScrPriv->lastConfigTime.milliseconds;
 	rep.rotation = output->crtc->rotation;
@@ -956,8 +956,7 @@ ProcRRSetScreenConfig (ClientPtr client)
     
 sendReply:
     
-    if (pData)
-	free(pData);
+    free(pData);
 
     rep.type = X_Reply;
     /* rep.status has already been filled in */
@@ -966,7 +965,7 @@ sendReply:
 
     rep.newTimestamp = pScrPriv->lastSetTime.milliseconds;
     rep.newConfigTimestamp = pScrPriv->lastConfigTime.milliseconds;
-    rep.root = WindowTable[pDraw->pScreen->myNum]->drawable.id;
+    rep.root = pDraw->pScreen->root->drawable.id;
 
     if (client->swapped) 
     {

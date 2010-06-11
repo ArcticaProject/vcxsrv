@@ -62,10 +62,6 @@ extern int DeviceValuator;
  * other's memory */
 static EventListPtr xtest_evlist;
 
-/* Used to store if a device is an XTest Virtual device */
-static int XTestDevicePrivateKeyIndex;
-DevPrivateKey XTestDevicePrivateKey = &XTestDevicePrivateKeyIndex;
-
 /**
  * xtestpointer
  * is the virtual pointer for XTest. It is the first slave
@@ -469,7 +465,7 @@ ProcXTestGrabControl(ClientPtr client)
     if ((stuff->impervious != xTrue) && (stuff->impervious != xFalse))
     {
         client->errorValue = stuff->impervious;
-        return(BadValue);
+        return BadValue;
     }
     if (stuff->impervious)
         MakeClientGrabImpervious(client);
@@ -645,8 +641,8 @@ int AllocXTestDevice (ClientPtr client, char* name,
 
     retval = AllocDevicePair( client, xtestname, ptr, keybd, CorePointerProc, CoreKeyboardProc, FALSE);
     if ( retval == Success ){
-        dixSetPrivate(&((*ptr)->devPrivates), XTestDevicePrivateKey, (void *)(intptr_t)master_ptr->id);
-        dixSetPrivate(&((*keybd)->devPrivates), XTestDevicePrivateKey, (void *)(intptr_t)master_keybd->id);
+	(*ptr)->xtest_master_id = master_ptr->id;
+	(*keybd)->xtest_master_id = master_keybd->id;
 
         XIChangeDeviceProperty(*ptr, XIGetKnownProperty(XI_PROP_XTEST_DEVICE),
                 XA_INTEGER, 8, PropModeReplace, 1, &dummy,
@@ -674,23 +670,15 @@ int AllocXTestDevice (ClientPtr client, char* name,
 BOOL
 IsXTestDevice(DeviceIntPtr dev, DeviceIntPtr master)
 {
-    int is_XTest = FALSE;
-    int mid;
-    void *tmp; /* shut up, gcc! */
-
     if (IsMaster(dev))
-        return is_XTest;
-
-    tmp = dixLookupPrivate(&dev->devPrivates, XTestDevicePrivateKey);
-    mid = (intptr_t)tmp;
+        return FALSE;
 
     /* deviceid 0 is reserved for XIAllDevices, non-zero mid means XTest
      * device */
-    if ((!master && mid) ||
-        (master && mid == master->id))
-        is_XTest = TRUE;
+    if (master)
+	return dev->xtest_master_id == master->id;
 
-    return is_XTest;
+    return dev->xtest_master_id != 0;
 }
 
 /**

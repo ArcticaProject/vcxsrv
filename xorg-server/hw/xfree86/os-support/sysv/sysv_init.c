@@ -215,7 +215,7 @@ xf86ProcessArgument(int argc, char *argv[], int i)
 	if (!strcmp(argv[i], "-keeptty"))
 	{
 		KeepTty = TRUE;
-		return(1);
+		return 1;
 	}
 #ifdef SVR4
 	/*
@@ -226,7 +226,7 @@ xf86ProcessArgument(int argc, char *argv[], int i)
 	if (!strcmp(argv[i], "-protect0"))
 	{
 		Protect0 = TRUE;
-		return(1);
+		return 1;
 	}
 #endif
 	if ((argv[i][0] == 'v') && (argv[i][1] == 't'))
@@ -235,11 +235,11 @@ xf86ProcessArgument(int argc, char *argv[], int i)
 		{
 			UseMsg();
 			VTnum = -1;
-			return(0);
+			return 0;
 		}
-		return(1);
+		return 1;
 	}
-	return(0);
+	return 0;
 }
 
 void

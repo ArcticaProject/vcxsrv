@@ -53,8 +53,8 @@ static RESTYPE RTEventClient;
 static CallbackListPtr SecurityValidateGroupCallback = NULL;
 
 /* Private state record */
-static int stateKeyIndex;
-static DevPrivateKey stateKey = &stateKeyIndex;
+static DevPrivateKeyRec stateKeyRec;
+#define stateKey (&stateKeyRec)
 
 /* This is what we store as client security state */
 typedef struct {
@@ -244,7 +244,7 @@ SecurityDeleteAuthorizationEventClient(
 	    else
 		pAuth->eventClients = pEventClient->next;
 	    free(pEventClient);
-	    return(Success);
+	    return Success;
 	}
 	prev = pEventClient;
     }
@@ -606,7 +606,7 @@ bailout:
     if (removeAuth)
 	RemoveAuthorization(stuff->nbytesAuthProto, protoname,
 			    authdata_len, pAuthdata);
-    if (pAuth) free(pAuth);
+    free(pAuth);
     return err;
 
 } /* ProcSecurityGenerateAuthorization */
@@ -807,7 +807,6 @@ SecurityResource(CallbackListPtr *pcbl, pointer unused, pointer calldata)
     Mask allowed = SecurityResourceMask;
 
     subj = dixLookupPrivate(&rec->client->devPrivates, stateKey);
-    obj = dixLookupPrivate(&clients[cid]->devPrivates, stateKey);
 
     /* disable background None for untrusted windows */
     if ((requested & DixCreateAccess) && (rec->rtype == RT_WINDOW))
@@ -833,8 +832,11 @@ SecurityResource(CallbackListPtr *pcbl, pointer unused, pointer calldata)
 	    allowed |= DixReadAccess;
     }
 
-    if (SecurityDoCheck(subj, obj, requested, allowed) == Success)
-	return;
+    if (clients[cid] != NULL) {
+	obj = dixLookupPrivate(&clients[cid]->devPrivates, stateKey);
+	if (SecurityDoCheck(subj, obj, requested, allowed) == Success)
+	    return;
+    }
 
     SecurityAudit("Security: denied client %d access %x to resource 0x%x "
 		  "of client %d on request %s\n", rec->client->index,
@@ -1110,7 +1112,7 @@ SecurityExtensionInit(INITARGS)
     RTEventClient |= RC_NEVERRETAIN;
 
     /* Allocate the private storage */
-    if (!dixRequestPrivate(stateKey, sizeof(SecurityStateRec)))
+    if (!dixRegisterPrivateKey(stateKey, PRIVATE_CLIENT, sizeof(SecurityStateRec)))
 	FatalError("SecurityExtensionSetup: Can't allocate client private.\n");
 
     /* Register callbacks */

@@ -57,7 +57,7 @@ xf86VTSwitchPending()
 {
 #if defined (SYSCONS_SUPPORT) || defined (PCVT_SUPPORT)
 	if (xf86Info.consType == SYSCONS || xf86Info.consType == PCVT) {
-		return(xf86Info.vtRequestsPending ? TRUE : FALSE);
+		return xf86Info.vtRequestsPending ? TRUE : FALSE;
 	}
 #endif
 	return FALSE;
@@ -70,9 +70,9 @@ xf86VTSwitchAway()
 	if (xf86Info.consType == SYSCONS || xf86Info.consType == PCVT) {
 		xf86Info.vtRequestsPending = FALSE;
 		if (ioctl(xf86Info.consoleFd, VT_RELDISP, 1) < 0)
-			return(FALSE);
+			return FALSE;
 		else
-			return(TRUE);
+			return TRUE;
 	}
 #endif
 	return FALSE;
@@ -85,19 +85,19 @@ xf86VTSwitchTo()
 	if (xf86Info.consType == SYSCONS || xf86Info.consType == PCVT) {
 		xf86Info.vtRequestsPending = FALSE;
 		if (ioctl(xf86Info.consoleFd, VT_RELDISP, VT_ACKACQ) < 0)
-			return(FALSE);
+			return FALSE;
 		else
-			return(TRUE);
+			return TRUE;
 	}
 #endif
-	return(TRUE);
+	return TRUE;
 }
 
 Bool
 xf86VTActivate(int vtno)
 {
 	if (ioctl(xf86Info.consoleFd, VT_ACTIVATE, vtno) < 0) {
-		return(FALSE);
+		return FALSE;
 	}
-	return(TRUE);
+	return TRUE;
 }

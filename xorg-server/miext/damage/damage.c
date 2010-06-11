@@ -70,21 +70,21 @@
 
 #define pixmapDamage(pPixmap)		damagePixPriv(pPixmap)
 
-static int damageScrPrivateKeyIndex;
-static DevPrivateKey damageScrPrivateKey = &damageScrPrivateKeyIndex;
-static int damagePixPrivateKeyIndex;
-static DevPrivateKey damagePixPrivateKey = &damagePixPrivateKeyIndex;
-static int damageGCPrivateKeyIndex;
-static DevPrivateKey damageGCPrivateKey = &damageGCPrivateKeyIndex;
-static int damageWinPrivateKeyIndex;
-static DevPrivateKey damageWinPrivateKey = &damageWinPrivateKeyIndex;
+static DevPrivateKeyRec damageScrPrivateKeyRec;
+#define damageScrPrivateKey (&damageScrPrivateKeyRec)
+static DevPrivateKeyRec damagePixPrivateKeyRec;
+#define damagePixPrivateKey (&damagePixPrivateKeyRec)
+static DevPrivateKeyRec damageGCPrivateKeyRec;
+#define damageGCPrivateKey (&damageGCPrivateKeyRec)
+static DevPrivateKeyRec damageWinPrivateKeyRec;
+#define damageWinPrivateKey (&damageWinPrivateKeyRec)
 
 static DamagePtr *
 getDrawableDamageRef (DrawablePtr pDrawable)
 {
     PixmapPtr   pPixmap;
     
-    if (pDrawable->type == DRAWABLE_WINDOW)
+    if (WindowDrawable(pDrawable->type))
     {
 	ScreenPtr   pScreen = pDrawable->pScreen;
 
@@ -129,40 +129,40 @@ damageReportDamage (DamagePtr pDamage, RegionPtr pDamageRegion)
 
     switch (pDamage->damageLevel) {
     case DamageReportRawRegion:
-	REGION_UNION(pScreen, &pDamage->damage, &pDamage->damage,
+	RegionUnion(&pDamage->damage, &pDamage->damage,
 			 pDamageRegion);
 	(*pDamage->damageReport) (pDamage, pDamageRegion, pDamage->closure);
 	break;
     case DamageReportDeltaRegion:
-	REGION_NULL (pScreen, &tmpRegion);
-	REGION_SUBTRACT (pScreen, &tmpRegion, pDamageRegion, &pDamage->damage);
-	if (REGION_NOTEMPTY (pScreen, &tmpRegion)) {
-	    REGION_UNION(pScreen, &pDamage->damage, &pDamage->damage,
+	RegionNull(&tmpRegion);
+	RegionSubtract(&tmpRegion, pDamageRegion, &pDamage->damage);
+	if (RegionNotEmpty(&tmpRegion)) {
+	    RegionUnion(&pDamage->damage, &pDamage->damage,
 			 pDamageRegion);
 	    (*pDamage->damageReport) (pDamage, &tmpRegion, pDamage->closure);
 	}
-	REGION_UNINIT(pScreen, &tmpRegion);
+	RegionUninit(&tmpRegion);
 	break;
     case DamageReportBoundingBox:
-	tmpBox = *REGION_EXTENTS (pScreen, &pDamage->damage);
-	REGION_UNION(pScreen, &pDamage->damage, &pDamage->damage,
+	tmpBox = *RegionExtents(&pDamage->damage);
+	RegionUnion(&pDamage->damage, &pDamage->damage,
 		     pDamageRegion);
-	if (!BOX_SAME (&tmpBox, REGION_EXTENTS (pScreen, &pDamage->damage))) {
+	if (!BOX_SAME (&tmpBox, RegionExtents(&pDamage->damage))) {
 	    (*pDamage->damageReport) (pDamage, &pDamage->damage,
 				      pDamage->closure);
 	}
 	break;
     case DamageReportNonEmpty:
-	was_empty = !REGION_NOTEMPTY(pScreen, &pDamage->damage);
-	REGION_UNION(pScreen, &pDamage->damage, &pDamage->damage,
+	was_empty = !RegionNotEmpty(&pDamage->damage);
+	RegionUnion(&pDamage->damage, &pDamage->damage,
 		     pDamageRegion);
-	if (was_empty && REGION_NOTEMPTY(pScreen, &pDamage->damage)) {
+	if (was_empty && RegionNotEmpty(&pDamage->damage)) {
 	    (*pDamage->damageReport) (pDamage, &pDamage->damage,
 				      pDamage->closure);
 	}
 	break;
     case DamageReportNone:
-	REGION_UNION(pScreen, &pDamage->damage, &pDamage->damage,
+	RegionUnion(&pDamage->damage, &pDamage->damage,
 		     pDamageRegion);
 	break;
     }
@@ -175,30 +175,30 @@ damageReportDamagePostRendering (DamagePtr pDamage, RegionPtr pOldDamage, Region
     RegionRec tmpRegion, newDamage;
     Bool was_empty;
 
-    REGION_UNION(pScreem, &newDamage, pOldDamage, pDamageRegion);
+    RegionUnion(&newDamage, pOldDamage, pDamageRegion);
 
     switch (pDamage->damageLevel) {
     case DamageReportRawRegion:
 	(*pDamage->damageReportPostRendering) (pDamage, pDamageRegion, pDamage->closure);
 	break;
     case DamageReportDeltaRegion:
-	REGION_NULL (pScreen, &tmpRegion);
-	REGION_SUBTRACT (pScreen, &tmpRegion, pDamageRegion, pOldDamage);
-	if (REGION_NOTEMPTY (pScreen, &tmpRegion)) {
+	RegionNull(&tmpRegion);
+	RegionSubtract(&tmpRegion, pDamageRegion, pOldDamage);
+	if (RegionNotEmpty(&tmpRegion)) {
 	    (*pDamage->damageReportPostRendering) (pDamage, &tmpRegion, pDamage->closure);
 	}
-	REGION_UNINIT(pScreen, &tmpRegion);
+	RegionUninit(&tmpRegion);
 	break;
     case DamageReportBoundingBox:
-	tmpBox = *REGION_EXTENTS (pScreen, pOldDamage);
-	if (!BOX_SAME (&tmpBox, REGION_EXTENTS (pScreen, &newDamage))) {
+	tmpBox = *RegionExtents(pOldDamage);
+	if (!BOX_SAME (&tmpBox, RegionExtents(&newDamage))) {
 	    (*pDamage->damageReportPostRendering) (pDamage, &newDamage,
 				      pDamage->closure);
 	}
 	break;
     case DamageReportNonEmpty:
-	was_empty = !REGION_NOTEMPTY(pScreen, pOldDamage);
-	if (was_empty && REGION_NOTEMPTY(pScreen, &newDamage)) {
+	was_empty = !RegionNotEmpty(pOldDamage);
+	if (was_empty && RegionNotEmpty(&newDamage)) {
 	    (*pDamage->damageReportPostRendering) (pDamage, &newDamage,
 				      pDamage->closure);
 	}
@@ -207,7 +207,7 @@ damageReportDamagePostRendering (DamagePtr pDamage, RegionPtr pOldDamage, Region
 	break;
     }
 
-    REGION_UNINIT(pScreen, &newDamage);
+    RegionUninit(&newDamage);
 }
 
 #if DAMAGE_DEBUG_ENABLE
@@ -233,7 +233,7 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
 #endif
 
     /* short circuit for empty regions */
-    if (!REGION_NOTEMPTY(pScreen, pRegion))
+    if (!RegionNotEmpty(pRegion))
 	return;
     
 #ifdef COMPOSITE
@@ -248,7 +248,7 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
 	screen_y = ((PixmapPtr) pDrawable)->screen_y - pDrawable->y;
     }
     if (screen_x || screen_y)
-        REGION_TRANSLATE (pScreen, pRegion, screen_x, screen_y);
+        RegionTranslate(pRegion, screen_x, screen_y);
 #endif
 	
     if (pDrawable->type == DRAWABLE_WINDOW &&
@@ -256,22 +256,22 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
     {
 	if (subWindowMode == ClipByChildren)
 	{
-	    REGION_INTERSECT(pScreen, pRegion, pRegion,
+	    RegionIntersect(pRegion, pRegion,
 			     &((WindowPtr)(pDrawable))->clipList);
 	}
 	else if (subWindowMode == IncludeInferiors)
 	{
 	    RegionPtr pTempRegion =
 		NotClippedByChildren((WindowPtr)(pDrawable));
-	    REGION_INTERSECT(pScreen, pRegion, pRegion, pTempRegion);
-	    REGION_DESTROY(pScreen, pTempRegion);
+	    RegionIntersect(pRegion, pRegion, pTempRegion);
+	    RegionDestroy(pTempRegion);
 	}
 	/* If subWindowMode is set to an invalid value, don't perform
 	 * any drawable-based clipping. */
     }
         
 
-    REGION_NULL (pScreen, &clippedRec);
+    RegionNull(&clippedRec);
     for (; pDamage; pDamage = pNext)
     {
 	pNext = pDamage->pNext;
@@ -300,7 +300,7 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
 	 * Need to move everyone to screen coordinates
 	 * XXX what about off-screen pixmaps with non-zero x/y?
 	 */
-	if (pDamage->pDrawable->type != DRAWABLE_WINDOW)
+	if (!WindowDrawable(pDamage->pDrawable->type))
 	{
 	    draw_x += ((PixmapPtr) pDamage->pDrawable)->screen_x;
 	    draw_y += ((PixmapPtr) pDamage->pDrawable)->screen_y;
@@ -316,7 +316,7 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
 	{
 	    pDamageRegion = &clippedRec;
 	    if (pDamage->pDrawable->type == DRAWABLE_WINDOW) {
-		REGION_INTERSECT (pScreen, pDamageRegion, pRegion,
+		RegionIntersect(pDamageRegion, pRegion,
 		    &((WindowPtr)(pDamage->pDrawable))->borderClip);
 	    } else {
 		BoxRec	box;
@@ -324,14 +324,14 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
 		box.y1 = draw_y;
 		box.x2 = draw_x + pDamage->pDrawable->width;
 		box.y2 = draw_y + pDamage->pDrawable->height;
-		REGION_INIT(pScreen, &pixClip, &box, 1);
-		REGION_INTERSECT (pScreen, pDamageRegion, pRegion, &pixClip);
-		REGION_UNINIT(pScreen, &pixClip);
+		RegionInit(&pixClip, &box, 1);
+		RegionIntersect(pDamageRegion, pRegion, &pixClip);
+		RegionUninit(&pixClip);
 	    }
 	    /*
 	     * Short circuit empty results
 	     */
-	    if (!REGION_NOTEMPTY(pScreen, pDamageRegion))
+	    if (!RegionNotEmpty(pDamageRegion))
 		continue;
 	}
 	
@@ -346,23 +346,23 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
 	 * Move region to target coordinate space
 	 */
 	if (draw_x || draw_y)
-	    REGION_TRANSLATE (pScreen, pDamageRegion, -draw_x, -draw_y);
+	    RegionTranslate(pDamageRegion, -draw_x, -draw_y);
 
 	/* Store damage region if needed after submission. */
 	if (pDamage->reportAfter || pDamage->damageMarker)
-	    REGION_UNION(pScreen, &pDamage->pendingDamage,
+	    RegionUnion(&pDamage->pendingDamage,
 			 &pDamage->pendingDamage, pDamageRegion);
 
 	/* Duplicate current damage if needed. */
 	if (pDamage->damageMarker)
-	    REGION_COPY(pScreen, &pDamage->backupDamage, &pDamage->damage);
+	    RegionCopy(&pDamage->backupDamage, &pDamage->damage);
 
 	/* Report damage now, if desired. */
 	if (!pDamage->reportAfter) {
 	    if (pDamage->damageReport)
 		damageReportDamage (pDamage, pDamageRegion);
 	    else
-		REGION_UNION(pScreen, &pDamage->damage,
+		RegionUnion(&pDamage->damage,
 			 &pDamage->damage, pDamageRegion);
 	}
 
@@ -370,14 +370,14 @@ damageRegionAppend (DrawablePtr pDrawable, RegionPtr pRegion, Bool clip,
 	 * translate original region back
 	 */
 	if (pDamageRegion == pRegion && (draw_x || draw_y))
-	    REGION_TRANSLATE (pScreen, pDamageRegion, draw_x, draw_y);
+	    RegionTranslate(pDamageRegion, draw_x, draw_y);
     }
 #ifdef COMPOSITE
     if (screen_x || screen_y)
-	REGION_TRANSLATE (pScreen, pRegion, -screen_x, -screen_y);
+	RegionTranslate(pRegion, -screen_x, -screen_y);
 #endif
     
-    REGION_UNINIT (pScreen, &clippedRec);
+    RegionUninit(&clippedRec);
 }
 
 static void
@@ -395,14 +395,14 @@ damageRegionProcessPending (DrawablePtr pDrawable)
 	    if (pDamage->damageReport)
 		damageReportDamage (pDamage, &pDamage->pendingDamage);
 	    else
-		REGION_UNION(pScreen, &pDamage->damage, &pDamage->damage,
+		RegionUnion(&pDamage->damage, &pDamage->damage,
 			&pDamage->pendingDamage);
 	}
 
 	if (pDamage->reportAfter || pDamage->damageMarker)
-	    REGION_EMPTY (pScreen, &pDamage->pendingDamage);
+	    RegionEmpty(&pDamage->pendingDamage);
 	if (pDamage->damageMarker)
-	    REGION_EMPTY (pScreen, &pDamage->backupDamage);
+	    RegionEmpty(&pDamage->backupDamage);
     }
     
 }
@@ -418,13 +418,13 @@ damageDamageBox (DrawablePtr pDrawable, BoxPtr pBox, int subWindowMode)
 {
     RegionRec	region;
 
-    REGION_INIT (pDrawable->pScreen, &region, pBox, 1);
+    RegionInit(&region, pBox, 1);
 #if DAMAGE_DEBUG_ENABLE
     _damageRegionAppend (pDrawable, &region, TRUE, subWindowMode, where);
 #else
     damageRegionAppend (pDrawable, &region, TRUE, subWindowMode);
 #endif
-    REGION_UNINIT (pDrawable->pScreen, &region);
+    RegionUninit(&region);
 }
 
 static void damageValidateGC(GCPtr, unsigned long, DrawablePtr);
@@ -593,8 +593,7 @@ damageDestroyClip(GCPtr pGC)
 
 #define checkGCDamage(d,g)	(getDrawableDamage(d) && \
 				 (!g->pCompositeClip ||\
-				  REGION_NOTEMPTY(d->pScreen, \
-						  g->pCompositeClip)))
+				  RegionNotEmpty(g->pCompositeClip)))
 
 #define TRIM_PICTURE_BOX(box, pDst) { \
     BoxPtr extents = &pDst->pCompositeClip->extents;\
@@ -605,7 +604,7 @@ damageDestroyClip(GCPtr pGC)
     }
     
 #define checkPictureDamage(p)	(getDrawableDamage(p->pDrawable) && \
-				 REGION_NOTEMPTY(pScreen, p->pCompositeClip))
+				 RegionNotEmpty(p->pCompositeClip))
 
 static void
 damageComposite (CARD8      op,
@@ -1763,9 +1762,9 @@ damageCopyWindow(WindowPtr	pWindow,
 	 * The region comes in source relative, but the damage occurs
 	 * at the destination location.  Translate back and forth.
 	 */
-	REGION_TRANSLATE (pScreen, prgnSrc, dx, dy);
+	RegionTranslate(prgnSrc, dx, dy);
 	damageRegionAppend (&pWindow->drawable, prgnSrc, FALSE, -1);
-	REGION_TRANSLATE (pScreen, prgnSrc, -dx, -dy);
+	RegionTranslate(prgnSrc, -dx, -dy);
     }
     unwrap (pScrPriv, pScreen, CopyWindow);
     (*pScreen->CopyWindow) (pWindow, ptOldOrg, prgnSrc);
@@ -1884,10 +1883,19 @@ DamageSetup (ScreenPtr pScreen)
 	miDamageCreate, miDamageRegister, miDamageUnregister, miDamageDestroy
     };
 
+    if (!dixRegisterPrivateKey(&damageScrPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     if (dixLookupPrivate(&pScreen->devPrivates, damageScrPrivateKey))
 	return TRUE;
 
-    if (!dixRequestPrivate(damageGCPrivateKey, sizeof(DamageGCPrivRec)))
+    if (!dixRegisterPrivateKey(&damageGCPrivateKeyRec, PRIVATE_GC, sizeof(DamageGCPrivRec)))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&damagePixPrivateKeyRec, PRIVATE_PIXMAP, 0))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&damageWinPrivateKeyRec, PRIVATE_WINDOW, 0))
 	return FALSE;
 
     pScrPriv = malloc(sizeof (DamageScrPrivRec));
@@ -1926,13 +1934,13 @@ DamageCreate (DamageReportFunc  damageReport,
     damageScrPriv(pScreen);
     DamagePtr	pDamage;
 
-    pDamage = malloc(sizeof (DamageRec));
+    pDamage = dixAllocateObjectWithPrivates(DamageRec, PRIVATE_DAMAGE);
     if (!pDamage)
 	return 0;
     pDamage->pNext = 0;
     pDamage->pNextWin = 0;
-    REGION_NULL(pScreen, &pDamage->damage);
-    REGION_NULL(pScreen, &pDamage->pendingDamage);
+    RegionNull(&pDamage->damage);
+    RegionNull(&pDamage->pendingDamage);
     
     pDamage->damageLevel = damageLevel;
     pDamage->isInternal = isInternal;
@@ -1946,7 +1954,6 @@ DamageCreate (DamageReportFunc  damageReport,
     pDamage->damageDestroy = damageDestroy;
     pDamage->damageMarker = NULL;
     pDamage->pScreen = pScreen;
-    pDamage->devPrivates = NULL;
 
     (*pScrPriv->funcs.Create) (pDamage);
 
@@ -2050,11 +2057,9 @@ DamageDestroy (DamagePtr    pDamage)
     if (pDamage->damageDestroy)
 	(*pDamage->damageDestroy) (pDamage, pDamage->closure);
     (*pScrPriv->funcs.Destroy) (pDamage);
-    dixFreePrivates(pDamage->devPrivates);
-    pDamage->devPrivates = NULL;
-    REGION_UNINIT (pScreen, &pDamage->damage);
-    REGION_UNINIT (pScreen, &pDamage->pendingDamage);
-    free(pDamage);
+    RegionUninit(&pDamage->damage);
+    RegionUninit(&pDamage->pendingDamage);
+    dixFreeObjectWithPrivates(pDamage, PRIVATE_DAMAGE);
 }
 
 Bool
@@ -2065,7 +2070,7 @@ DamageSubtract (DamagePtr	    pDamage,
     RegionRec	pixmapClip;
     DrawablePtr	pDrawable = pDamage->pDrawable;
     
-    REGION_SUBTRACT (pDrawable->pScreen, &pDamage->damage, &pDamage->damage, pRegion);
+    RegionSubtract(&pDamage->damage, &pDamage->damage, pRegion);
     if (pDrawable)
     {
 	if (pDrawable->type == DRAWABLE_WINDOW)
@@ -2078,22 +2083,22 @@ DamageSubtract (DamagePtr	    pDamage,
 	    box.y1 = pDrawable->y;
 	    box.x2 = pDrawable->x + pDrawable->width;
 	    box.y2 = pDrawable->y + pDrawable->height;
-	    REGION_INIT (pDrawable->pScreen, &pixmapClip, &box, 1);
+	    RegionInit(&pixmapClip, &box, 1);
 	    pClip = &pixmapClip;
 	}
-	REGION_TRANSLATE (pDrawable->pScreen, &pDamage->damage, pDrawable->x, pDrawable->y);
-	REGION_INTERSECT (pDrawable->pScreen, &pDamage->damage, &pDamage->damage, pClip);
-	REGION_TRANSLATE (pDrawable->pScreen, &pDamage->damage, -pDrawable->x, -pDrawable->y);
+	RegionTranslate(&pDamage->damage, pDrawable->x, pDrawable->y);
+	RegionIntersect(&pDamage->damage, &pDamage->damage, pClip);
+	RegionTranslate(&pDamage->damage, -pDrawable->x, -pDrawable->y);
 	if (pDrawable->type != DRAWABLE_WINDOW)
-	    REGION_UNINIT(pDrawable->pScreen, &pixmapClip);
+	    RegionUninit(&pixmapClip);
     }
-    return REGION_NOTEMPTY (pDrawable->pScreen, &pDamage->damage);
+    return RegionNotEmpty(&pDamage->damage);
 }
 
 void
 DamageEmpty (DamagePtr	    pDamage)
 {
-    REGION_EMPTY (pDamage->pDrawable->pScreen, &pDamage->damage);
+    RegionEmpty(&pDamage->damage);
 }
 
 RegionPtr

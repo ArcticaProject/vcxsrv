@@ -114,7 +114,7 @@ pointer dmxBackendCreatePrivate(DeviceIntPtr pDevice)
  * #dmxBackendCreatePrivate. */
 void dmxBackendDestroyPrivate(pointer private)
 {
-    if (private) free(private);
+    free(private);
 }
 
 static void *dmxBackendTestScreen(DMXScreenInfo *dmxScreen, void *closure)

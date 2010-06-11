@@ -269,7 +269,7 @@ CopySwapValuatorClass(ClientPtr client, ValuatorClassPtr v, char **buf)
 	    *buf += sizeof(xAxisInfo);
 	}
     }
-    return (i);
+    return i;
 }
 
 static void

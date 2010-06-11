@@ -127,13 +127,9 @@ typedef struct _CompScreen {
     UnrealizeWindowProcPtr	UnrealizeWindow;
     ClipNotifyProcPtr		ClipNotify;
     /*
-     * Called from ConfigureWindow, these
-     * three track changes to the offscreen storage
-     * geometry
+     * Called from ConfigureWindow.
      */
-    MoveWindowProcPtr		MoveWindow;
-    ResizeWindowProcPtr		ResizeWindow;
-    ChangeBorderWidthProcPtr	ChangeBorderWidth;
+    ConfigNotifyProcPtr         ConfigNotify;
     /*
      * Reparenting has an effect on Subwindows redirect
      */
@@ -161,9 +157,14 @@ typedef struct _CompScreen {
     
 } CompScreenRec, *CompScreenPtr;
 
-extern DevPrivateKey CompScreenPrivateKey;
-extern DevPrivateKey CompWindowPrivateKey;
-extern DevPrivateKey CompSubwindowsPrivateKey;
+extern DevPrivateKeyRec CompScreenPrivateKeyRec;
+#define CompScreenPrivateKey (&CompScreenPrivateKeyRec)
+
+extern DevPrivateKeyRec CompWindowPrivateKeyRec;
+#define CompWindowPrivateKey (&CompWindowPrivateKeyRec)
+
+extern DevPrivateKeyRec CompSubwindowsPrivateKeyRec;
+#define CompSubwindowsPrivateKey (&CompSubwindowsPrivateKeyRec)
 
 #define GetCompScreen(s) ((CompScreenPtr) \
     dixLookupPrivate(&(s)->devPrivates, CompScreenPrivateKey))
@@ -280,16 +281,6 @@ void
 compClipNotify (WindowPtr pWin, int dx, int dy);
 
 void
-compMoveWindow (WindowPtr pWin, int x, int y, WindowPtr pSib, VTKind kind);
-
-void
-compResizeWindow (WindowPtr pWin, int x, int y,
-		  unsigned int w, unsigned int h, WindowPtr pSib);
-
-void
-compChangeBorderWidth (WindowPtr pWin, unsigned int border_width);
-
-void
 compReparentWindow (WindowPtr pWin, WindowPtr pPriorParent);
 
 Bool
@@ -315,5 +306,9 @@ CompositeRealChildHead (WindowPtr pWin);
 
 int
 DeleteWindowNoInputDevices(pointer value, XID wid);
+
+int
+compConfigNotify(WindowPtr pWin, int x, int y, int w, int h,
+		 int bw, WindowPtr pSib);
 
 #endif /* _COMPINT_H_ */

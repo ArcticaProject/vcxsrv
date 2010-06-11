@@ -658,7 +658,7 @@ vgaHWSaveScreen(ScreenPtr pScreen, int mode)
    if ((pScrn != NULL) && pScrn->vtSema) {
      vgaHWBlankScreen(pScrn, on);
    }
-   return (TRUE);
+   return TRUE;
 }
 
 
@@ -1351,7 +1351,7 @@ vgaHWInit(ScrnInfoPtr scrninfp, DisplayModePtr mode)
     regp->Attribute[19] = 0x00;
     regp->Attribute[20] = 0x00;
 
-    return(TRUE);
+    return TRUE;
 }
 
     /*
@@ -1479,8 +1479,7 @@ vgaHWGetHWRecPrivate(void)
 static void
 vgaHWFreeRegs(vgaRegPtr regp)
 {
-    if (regp->CRTC)
-        free(regp->CRTC);
+    free(regp->CRTC);
 
     regp->CRTC =
     regp->Sequencer =

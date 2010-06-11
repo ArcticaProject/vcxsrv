@@ -804,10 +804,10 @@ XAAPolylinesWideSolid (
     int		    yorg = pDrawable->y;
     Bool	    hardClip = FALSE;
 
-    if(!REGION_NUM_RECTS(pGC->pCompositeClip))
+    if(!RegionNumRects(pGC->pCompositeClip))
 	return;
 
-    if(REGION_NUM_RECTS(pGC->pCompositeClip) != 1) {
+    if(RegionNumRects(pGC->pCompositeClip) != 1) {
 	miWideLine(pDrawable, pGC, mode, npt, pPts);
 	return;
     }

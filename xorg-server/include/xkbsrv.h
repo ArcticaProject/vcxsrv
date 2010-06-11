@@ -275,7 +275,9 @@ typedef struct
 	device->public.realInputProc = oldprocs->realInputProc; \
 	device->unwrapProc = oldprocs->unwrapProc;
 
-extern DevPrivateKey xkbDevicePrivateKey;
+extern _X_EXPORT DevPrivateKeyRec xkbDevicePrivateKeyRec;
+#define xkbDevicePrivateKey (&xkbDevicePrivateKeyRec)
+
 #define XKBDEVICEINFO(dev) ((xkbDeviceInfoPtr)dixLookupPrivate(&(dev)->devPrivates, xkbDevicePrivateKey))
 
 extern void xkbUnwrapProc(DeviceIntPtr, DeviceHandleProc, pointer);
@@ -318,6 +320,8 @@ extern _X_EXPORT int XkbProcessArguments(
     char **			/* argv */,
     int				/* i */
 );
+
+extern _X_EXPORT Bool   XkbInitPrivates(void);
 
 extern _X_EXPORT void	XkbSetExtension(DeviceIntPtr device, ProcessInputProc proc);
 

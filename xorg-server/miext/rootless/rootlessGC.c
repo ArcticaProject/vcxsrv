@@ -1279,7 +1279,7 @@ static int RootlessPolyText8(DrawablePtr dst, GCPtr pGC,
 
     GCOP_WRAP(pGC);
     RL_DEBUG_MSG("polytext8 end\n");
-    return (width + x);
+    return width + x;
 }
 
 static void RootlessImageText16(DrawablePtr dst, GCPtr pGC,

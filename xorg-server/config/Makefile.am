@@ -36,4 +36,4 @@ endif # CONFIG_NEED_DBUS
 
 endif # !CONFIG_UDEV
 
-EXTRA_DIST = xorg-server.conf x11-input.fdi 10-evdev.conf
+EXTRA_DIST = xorg-server.conf x11-input.fdi 10-evdev.conf fdi2iclass.py

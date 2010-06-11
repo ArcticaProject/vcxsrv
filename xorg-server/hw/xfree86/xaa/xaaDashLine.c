@@ -37,8 +37,8 @@ XAAPolyLinesDashed(
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
     XAAGCPtr   pGCPriv = (XAAGCPtr)dixLookupPrivate(&pGC->devPrivates,
 						    XAAGetGCKey());
-    BoxPtr pboxInit = REGION_RECTS(pGC->pCompositeClip);
-    int nboxInit = REGION_NUM_RECTS(pGC->pCompositeClip);
+    BoxPtr pboxInit = RegionRects(pGC->pCompositeClip);
+    int nboxInit = RegionNumRects(pGC->pCompositeClip);
     unsigned int bias = miGetZeroLineBias(pDrawable->pScreen);
     int xorg = pDrawable->x;
     int yorg = pDrawable->y;

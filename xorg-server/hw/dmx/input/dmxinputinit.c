@@ -570,7 +570,7 @@ static void dmxUpdateWindowInformation(DMXInputInfo *dmxInput,
     int i;
 
 #ifdef PANORAMIX
-    if (!noPanoramiXExtension && pWindow && pWindow->parent != WindowTable[0])
+    if (!noPanoramiXExtension && pWindow && pWindow->parent != screenInfo.screens[0]->root)
         return;
 #endif
 #if DMX_WINDOW_DEBUG
@@ -827,7 +827,7 @@ static void dmxPopulateLocal(DMXInputInfo *dmxInput, dmxArg a)
     }
 }
 
-int dmxInputExtensionErrorHandler(Display *dsp, char *name, char *reason)
+int dmxInputExtensionErrorHandler(Display *dsp, _Xconst char *name, _Xconst char *reason)
 {
     return 0;
 }
@@ -839,7 +839,7 @@ static void dmxInputScanForExtensions(DMXInputInfo *dmxInput, int doXI)
     Display              *display;
     int                  num;
     int                  i, j;
-    int                  (*handler)(Display *, char *, char *);
+    XextErrorHandler     handler;
 
     if (!(display = XOpenDisplay(dmxInput->name))) return;
     
@@ -1084,9 +1084,9 @@ static void dmxInputFreeLocal(DMXLocalInputInfoRec *local)
     if (local->isCore && local->type == DMX_LOCAL_KEYBOARD)
         dmxLocalCoreKeyboard = NULL;
     if (local->destroy_private) local->destroy_private(local->private);
-    if (local->history)         free(local->history);
-    if (local->valuators)       free(local->valuators);
-    if (local->deviceName)      free(local->deviceName);
+    free(local->history);
+    free(local->valuators);
+    free(local->deviceName);
     local->private    = NULL;
     local->history    = NULL;
     local->deviceName = NULL;
@@ -1100,9 +1100,9 @@ void dmxInputFree(DMXInputInfo *dmxInput)
     
     if (!dmxInput) return;
 
-    if (dmxInput->keycodes) free(dmxInput->keycodes);
-    if (dmxInput->symbols)  free(dmxInput->symbols);
-    if (dmxInput->geometry) free(dmxInput->geometry);
+    free(dmxInput->keycodes);
+    free(dmxInput->symbols);
+    free(dmxInput->geometry);
 
     for (i = 0; i < dmxInput->numDevs; i++) {
         dmxInputFreeLocal(dmxInput->devs[i]);

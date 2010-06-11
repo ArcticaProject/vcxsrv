@@ -9,7 +9,6 @@
 #include "panoramiX.h"
 
 extern _X_EXPORT int PanoramiXNumScreens;
-extern _X_EXPORT PanoramiXData *panoramiXdataPtr;
 extern _X_EXPORT int PanoramiXPixWidth;
 extern _X_EXPORT int PanoramiXPixHeight;
 
@@ -21,8 +20,6 @@ extern _X_EXPORT Bool XineramaRegisterConnectionBlockCallback(void (*func)(void)
 extern _X_EXPORT int XineramaDeleteResource(pointer, XID);
 
 extern _X_EXPORT void XineramaReinitData(ScreenPtr);
-
-extern _X_EXPORT RegionRec XineramaScreenRegions[MAXSCREENS];
 
 extern _X_EXPORT unsigned long XRC_DRAWABLE;
 extern _X_EXPORT unsigned long XRT_WINDOW;

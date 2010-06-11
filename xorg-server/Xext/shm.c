@@ -143,10 +143,10 @@ int BadShmSegCode;
 RESTYPE ShmSegType;
 static ShmDescPtr Shmsegs;
 static Bool sharedPixmaps;
-static int shmScrPrivateKeyIndex;
-static DevPrivateKey shmScrPrivateKey = &shmScrPrivateKeyIndex;
-static int shmPixmapPrivateIndex;
-static DevPrivateKey shmPixmapPrivate = &shmPixmapPrivateIndex;
+static DevPrivateKeyRec shmScrPrivateKeyRec;
+#define shmScrPrivateKey (&shmScrPrivateKeyRec)
+static DevPrivateKeyRec shmPixmapPrivateKeyRec;
+#define shmPixmapPrivateKey (&shmPixmapPrivateKeyRec)
 static ShmFuncs miFuncs = {NULL, NULL};
 static ShmFuncs fbFuncs = {fbShmCreatePixmap, NULL};
 
@@ -215,7 +215,7 @@ static Bool CheckForShmSyscall(void)
         badSysCall = TRUE;
     }
     signal(SIGSYS, oldHandler);
-    return(!badSysCall);
+    return !badSysCall;
 }
 
 #define MUST_CHECK_FOR_SHM_SYSCALL
@@ -246,6 +246,16 @@ ShmInitScreenPriv(ScreenPtr pScreen)
     return screen_priv;
 }
 
+static Bool
+ShmRegisterPrivates(void)
+{
+    if (!dixRegisterPrivateKey(&shmScrPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+    if (!dixRegisterPrivateKey(&shmPixmapPrivateKeyRec, PRIVATE_PIXMAP, 0))
+	return FALSE;
+    return TRUE;
+}
+
 void
 ShmExtensionInit(INITARGS)
 {
@@ -259,6 +269,9 @@ ShmExtensionInit(INITARGS)
 	return;
     }
 #endif
+
+    if (!ShmRegisterPrivates())
+	return;
 
     sharedPixmaps = xFalse;
     {
@@ -305,6 +318,8 @@ ShmResetProc(ExtensionEntry *extEntry)
 void
 ShmRegisterFuncs(ScreenPtr pScreen, ShmFuncsPtr funcs)
 {
+    if (!ShmRegisterPrivates())
+	return;
     ShmInitScreenPriv(pScreen)->shmFuncs = funcs;
 }
 
@@ -318,7 +333,7 @@ ShmDestroyPixmap (PixmapPtr pPixmap)
     {
 	ShmDescPtr  shmdesc;
 	shmdesc = (ShmDescPtr)dixLookupPrivate(&pPixmap->devPrivates,
-					       shmPixmapPrivate);
+					       shmPixmapPrivateKey);
 	if (shmdesc)
 	    ShmDetachSegment ((pointer) shmdesc, pPixmap->drawable.id);
     }
@@ -458,7 +473,7 @@ ProcShmAttach(ClientPtr client)
     if ((stuff->readOnly != xTrue) && (stuff->readOnly != xFalse))
     {
 	client->errorValue = stuff->readOnly;
-        return(BadValue);
+        return BadValue;
     }
     for (shmdesc = Shmsegs;
 	 shmdesc && (shmdesc->shmid != stuff->shmid);
@@ -617,13 +632,13 @@ ProcPanoramiXShmPutImage(ClientPtr client)
 	stuff->drawable = draw->info[j].id;
 	stuff->gc = gc->info[j].id;
 	if (isRoot) {
-	    stuff->dstX = orig_x - panoramiXdataPtr[j].x;
-	    stuff->dstY = orig_y - panoramiXdataPtr[j].y;
+	    stuff->dstX = orig_x - screenInfo.screens[j]->x;
+	    stuff->dstY = orig_y - screenInfo.screens[j]->y;
 	}
 	result = ProcShmPutImage(client);
 	if(result != Success) break;
     }
-    return(result);
+    return result;
 }
 
 static int 
@@ -645,7 +660,7 @@ ProcPanoramiXShmGetImage(ClientPtr client)
 
     if ((stuff->format != XYPixmap) && (stuff->format != ZPixmap)) {
 	client->errorValue = stuff->format;
-        return(BadValue);
+        return BadValue;
     }
 
     rc = dixLookupResourceByClass((pointer *)&draw, stuff->drawable,
@@ -676,24 +691,24 @@ ProcPanoramiXShmGetImage(ClientPtr client)
       if( /* check for being onscreen */
 	x < 0 || x + w > PanoramiXPixWidth ||
 	y < 0 || y + h > PanoramiXPixHeight )
-	    return(BadMatch);
+	    return BadMatch;
     } else {
       if( /* check for being onscreen */
-	panoramiXdataPtr[0].x + pDraw->x + x < 0 ||
-	panoramiXdataPtr[0].x + pDraw->x + x + w > PanoramiXPixWidth ||
-        panoramiXdataPtr[0].y + pDraw->y + y < 0 ||
-	panoramiXdataPtr[0].y + pDraw->y + y + h > PanoramiXPixHeight ||
+	screenInfo.screens[0]->x + pDraw->x + x < 0 ||
+	screenInfo.screens[0]->x + pDraw->x + x + w > PanoramiXPixWidth ||
+	screenInfo.screens[0]->y + pDraw->y + y < 0 ||
+	screenInfo.screens[0]->y + pDraw->y + y + h > PanoramiXPixHeight ||
 	 /* check for being inside of border */
        	x < - wBorderWidth((WindowPtr)pDraw) ||
 	x + w > wBorderWidth((WindowPtr)pDraw) + (int)pDraw->width ||
 	y < -wBorderWidth((WindowPtr)pDraw) ||
 	y + h > wBorderWidth ((WindowPtr)pDraw) + (int)pDraw->height)
-	    return(BadMatch);
+	    return BadMatch;
     }
 
     drawables = calloc(PanoramiXNumScreens, sizeof(DrawablePtr));
     if(!drawables)
-	return(BadAlloc);
+	return BadAlloc;
 
     drawables[0] = pDraw;
     for(i = 1; i < PanoramiXNumScreens; i++) {
@@ -836,7 +851,7 @@ CreatePmap:
 				shmdesc->addr + stuff->offset);
 
 	if (pMap) {
-	    dixSetPrivate(&pMap->devPrivates, shmPixmapPrivate, shmdesc);
+	    dixSetPrivate(&pMap->devPrivates, shmPixmapPrivateKey, shmdesc);
             shmdesc->refcnt++;
 	    pMap->drawable.serialNumber = NEXT_SERIAL_NUMBER;
 	    pMap->drawable.id = newPix->info[j].id;
@@ -991,7 +1006,7 @@ ProcShmGetImage(ClientPtr client)
     if ((stuff->format != XYPixmap) && (stuff->format != ZPixmap))
     {
 	client->errorValue = stuff->format;
-        return(BadValue);
+        return BadValue;
     }
     rc = dixLookupDrawable(&pDraw, stuff->drawable, client, 0,
 			   DixReadAccess);
@@ -1015,7 +1030,7 @@ ProcShmGetImage(ClientPtr client)
          stuff->y + (int)stuff->height >
 		wBorderWidth((WindowPtr)pDraw) + (int)pDraw->height
         )
-	    return(BadMatch);
+	    return BadMatch;
 	xgi.visual = wVisual(((WindowPtr)pDraw));
     }
     else
@@ -1025,7 +1040,7 @@ ProcShmGetImage(ClientPtr client)
 	    stuff->y < 0 ||
 	    stuff->y+(int)stuff->height > pDraw->height
 	    )
-	    return(BadMatch);
+	    return BadMatch;
 	xgi.visual = None;
     }
     xgi.type = X_Reply;
@@ -1175,7 +1190,7 @@ CreatePmap:
 	    pDraw->pScreen->DestroyPixmap(pMap);
 	    return rc;
 	}
-	dixSetPrivate(&pMap->devPrivates, shmPixmapPrivate, shmdesc);
+	dixSetPrivate(&pMap->devPrivates, shmPixmapPrivateKey, shmdesc);
 	shmdesc->refcnt++;
 	pMap->drawable.serialNumber = NEXT_SERIAL_NUMBER;
 	pMap->drawable.id = stuff->pid;
@@ -1185,7 +1200,7 @@ CreatePmap:
 	}
 	pDraw->pScreen->DestroyPixmap(pMap);
     }
-    return (BadAlloc);
+    return BadAlloc;
 }
 
 static int

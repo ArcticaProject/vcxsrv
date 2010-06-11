@@ -105,8 +105,8 @@ SOFTWARE.
 #endif
 #include "xvdisp.h"
 
-static int XvScreenKeyIndex;
-static DevPrivateKey XvScreenKey = &XvScreenKeyIndex;
+static DevPrivateKeyRec XvScreenKeyRec;
+#define XvScreenKey (&XvScreenKeyRec)
 unsigned long XvExtensionGeneration = 0;
 unsigned long XvScreenGeneration = 0;
 unsigned long XvResourceGeneration = 0;
@@ -155,6 +155,9 @@ void
 XvExtensionInit(void)
 {
   ExtensionEntry *extEntry;
+
+  if (!dixRegisterPrivateKey(&XvScreenKeyRec, PRIVATE_SCREEN, 0))
+      return;
 
   /* LOOK TO SEE IF ANY SCREENS WERE INITIALIZED; IF NOT THEN
      INIT GLOBAL VARIABLES SO THE EXTENSION CAN FUNCTION */
@@ -269,6 +272,9 @@ XvScreenInit(ScreenPtr pScreen)
       XvScreenGeneration = serverGeneration; 
     }
 
+  if (!dixRegisterPrivateKey(&XvScreenKeyRec, PRIVATE_SCREEN, 0))
+      return BadAlloc;
+
   if (dixLookupPrivate(&pScreen->devPrivates, XvScreenKey))
     {
       ErrorF("XvScreenInit: screen devPrivates ptr non-NULL before init\n");
@@ -284,7 +290,6 @@ XvScreenInit(ScreenPtr pScreen)
     }
 
   dixSetPrivate(&pScreen->devPrivates, XvScreenKey, pxvs);
-
   
   pxvs->DestroyPixmap = pScreen->DestroyPixmap;
   pxvs->DestroyWindow = pScreen->DestroyWindow;
@@ -629,7 +634,7 @@ XvdiPutVideo(
 
   pPort->time = currentTime;
 
-  return (Success);
+  return Success;
 
 }
 
@@ -759,7 +764,7 @@ XvdiGetVideo(
 
   pPort->time = currentTime;
 
-  return (Success);
+  return Success;
 
 }
 

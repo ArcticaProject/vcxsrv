@@ -410,10 +410,8 @@ void miFillUniqueSpanGroup(DrawablePtr pDraw, GCPtr pGC, SpanGroup *spanGroup)
 
 	if (!yspans || !ysizes)
 	{
-	    if (yspans)
-		free(yspans);
-	    if (ysizes)
-		free(ysizes);
+	    free(yspans);
+	    free(ysizes);
 	    miDisposeSpanGroup (spanGroup);
 	    return;
 	}
@@ -492,10 +490,8 @@ void miFillUniqueSpanGroup(DrawablePtr pDraw, GCPtr pGC, SpanGroup *spanGroup)
 	    }
 	    free(yspans);
 	    free(ysizes);
-	    if (points)
-		free(points);
-	    if (widths)
-		free(widths);
+	    free(points);
+	    free(widths);
 	    return;
 	}
 	count = 0;

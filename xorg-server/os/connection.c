@@ -190,7 +190,7 @@ struct _ct_node *ct_head[256];
 
 void InitConnectionTranslation(void)
 {
-    bzero(ct_head, sizeof(ct_head));
+    memset(ct_head, 0, sizeof(ct_head));
 }
 
 int GetConnectionTranslation(int conn)
@@ -274,7 +274,7 @@ lookup_trans_conn (int fd)
 		return ListenTransConns[i];
     }
 
-    return (NULL);
+    return NULL;
 }
 
 int

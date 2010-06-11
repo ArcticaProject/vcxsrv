@@ -64,7 +64,7 @@ xf86OSRingBell(int loudness, int pitch, int duration)
     }
 
     lastFreq = 0;
-    bzero(silence, sizeof(silence));
+    memset(silence, 0, sizeof(silence));
 
     audioFD = open(AUDIO_DEVICE, O_WRONLY | O_NONBLOCK);
     if (audioFD == -1) {

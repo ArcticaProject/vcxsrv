@@ -11,8 +11,10 @@ sdk_HEADERS = fb.h fbrop.h fboverlay.h wfbrename.h fbpict.h
 endif
 
 libfb_la_CFLAGS = $(AM_CFLAGS)
+libfb_la_LIBADD = $(PIXMAN_LIBS)
 
 libwfb_la_CFLAGS = $(AM_CFLAGS) -DFB_ACCESS_WRAPPER
+libwfb_la_LIBADD = $(PIXMAN_LIBS)
 
 libfb_la_SOURCES = 	\
 	fb.h		\

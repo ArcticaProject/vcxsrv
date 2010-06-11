@@ -140,10 +140,8 @@ AppleWMSetScreenOrigin(
 {
     int32_t data[2];
 
-    data[0] = (dixScreenOrigins[pWin->drawable.pScreen->myNum].x
-                + darwinMainScreenX);
-    data[1] = (dixScreenOrigins[pWin->drawable.pScreen->myNum].y
-                + darwinMainScreenY);
+    data[0] = pWin->drawable.pScreen->x + darwinMainScreenX;
+    data[1] = pWin->drawable.pScreen->y + darwinMainScreenY;
 
     dixChangeWindowProperty(serverClient, pWin, xa_native_screen_origin(),
 			    XA_INTEGER, 32, PropModeReplace, 2, data, TRUE);

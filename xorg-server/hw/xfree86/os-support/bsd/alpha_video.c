@@ -328,7 +328,7 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 			   "xf86MapVidMem", DEV_MEM, Size, Base, 
 			   strerror(errno));
 	    }
-	    return(base);
+	    return base;
 	}
 		
 	/* else, mmap /dev/vga */
@@ -347,7 +347,7 @@ mapVidMem(int ScreenNum, unsigned long Base, unsigned long Size, int flags)
 	    FatalError("xf86MapVidMem: Could not mmap /dev/vga (%s)\n",
 		       strerror(errno));
 	}
-	return(base);
+	return base;
 }
 
 static void
@@ -370,7 +370,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 
 	checkDevMem(TRUE);
 	if (devMemFd == -1) {
-	    return(-1);
+	    return -1;
 	}
 
 	psize = getpagesize();
@@ -384,7 +384,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 		xf86Msg(X_WARNING, 
 			"xf86ReadBIOS: %s mmap[s=%x,a=%lx,o=%lx] failed (%s)\n",
 			DEV_MEM, Len, Base, Offset, strerror(errno));
-		return(-1);
+		return -1;
 	}
 #ifdef DEBUG
 	xf86MsgVerb(X_INFO, 3, "xf86ReadBIOS: BIOS at 0x%08x has signature 0x%04x\n",
@@ -397,7 +397,7 @@ xf86ReadBIOS(unsigned long Base, unsigned long Offset, unsigned char *Buf,
 		"-> %02x %02x %02x %02x...\n",
 		Base, Offset, Len, Buf[0], Buf[1], Buf[2], Buf[3]);
 #endif
-	return(Len);
+	return Len;
 }
 
 

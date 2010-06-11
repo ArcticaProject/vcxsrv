@@ -24,7 +24,6 @@ CSRCS=miarc.c		\
 	mipolytext.c	\
 	mipolyutil.c	\
 	mipushpxl.c	\
-	miregion.c	\
 	miscrinit.c	\
 	mispans.c	\
 	misprite.c	\

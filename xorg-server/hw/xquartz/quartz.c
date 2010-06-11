@@ -73,8 +73,7 @@ int                     quartzUseAGL = 1;
 int                     quartzEnableKeyEquivalents = 1;
 int                     quartzServerVisible = FALSE;
 int                     quartzServerQuitting = FALSE;
-static int              quartzScreenKeyIndex;
-DevPrivateKey           quartzScreenKey = &quartzScreenKeyIndex;
+DevPrivateKeyRec        quartzScreenKeyRec;
 int                     aquaMenuBarHeight = 0;
 QuartzModeProcsPtr      quartzProcs = NULL;
 const char             *quartzOpenGLBundle = NULL;
@@ -166,6 +165,9 @@ void QuartzInitOutput(
     {
         FatalError("Could not register block and wakeup handlers.");
     }
+
+    if (!dixRegisterPrivateKey(&quartzScreenKeyRec, PRIVATE_SCREEN, 0))
+	FatalError("Failed to alloc quartz screen private.\n");
 
 #if defined(RANDR) && !defined(FAKE_RANDR)
     if(!QuartzRandRInit(pScreen))
@@ -259,8 +261,8 @@ void QuartzUpdateScreens(void) {
     PseudoramiXResetScreens();
     quartzProcs->AddPseudoramiXScreens(&x, &y, &width, &height);
     
-    dixScreenOrigins[pScreen->myNum].x = x;
-    dixScreenOrigins[pScreen->myNum].y = y;
+    pScreen->x = x;
+    pScreen->y = y;
     pScreen->mmWidth = pScreen->mmWidth * ((double) width / pScreen->width);
     pScreen->mmHeight = pScreen->mmHeight * ((double) height / pScreen->height);
     pScreen->width = width;
@@ -269,14 +271,14 @@ void QuartzUpdateScreens(void) {
     DarwinAdjustScreenOrigins(&screenInfo);
     quartzProcs->UpdateScreen(pScreen);
     
-    /* DarwinAdjustScreenOrigins or UpdateScreen may change dixScreenOrigins,
+    /* DarwinAdjustScreenOrigins or UpdateScreen may change pScreen->x/y,
      * so use it rather than x/y
      */
-    sx = dixScreenOrigins[pScreen->myNum].x + darwinMainScreenX;
-    sy = dixScreenOrigins[pScreen->myNum].y + darwinMainScreenY;
+    sx = pScreen->x + darwinMainScreenX;
+    sy = pScreen->y + darwinMainScreenY;
     
     /* Adjust the root window. */
-    pRoot = WindowTable[pScreen->myNum];
+    pRoot = pScreen->root;
     AppleWMSetScreenOrigin(pRoot);
     pScreen->ResizeWindow(pRoot, x - sx, y - sy, width, height, NULL);
     miPaintWindow(pRoot, &pRoot->borderClip,  PW_BACKGROUND);
@@ -292,7 +294,7 @@ void QuartzUpdateScreens(void) {
     inputInfo.pointer->spriteInfo->sprite->physLimits = bounds;
     inputInfo.pointer->spriteInfo->sprite->hotLimits = bounds;
 
-    DEBUG_LOG("Root Window: %dx%d @ (%d, %d) darwinMainScreen (%d, %d) xy (%d, %d) dixScreenOrigins (%d, %d)\n", width, height, x - sx, y - sy, darwinMainScreenX, darwinMainScreenY, x, y, dixScreenOrigins[pScreen->myNum].x, dixScreenOrigins[pScreen->myNum].y);
+    DEBUG_LOG("Root Window: %dx%d @ (%d, %d) darwinMainScreen (%d, %d) xy (%d, %d) dixScreenOrigins (%d, %d)\n", width, height, x - sx, y - sy, darwinMainScreenX, darwinMainScreenY, x, y, pScreen->x, pScreen->y);
 
     /* Send an event for the root reconfigure */
     e.u.u.type = ConfigureNotify;

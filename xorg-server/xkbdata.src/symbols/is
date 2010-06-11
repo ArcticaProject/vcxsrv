@@ -173,14 +173,15 @@ xkb_symbols "mac" {
 
 // Rather it's a simple modification of 5 keys of the US Dvorak layout,
 // it adds Germanic/Icelandic style quotation marks („“), eth (ðÐ), ae
-// (æÆ), endash and emdash (–—) and thorn (þÞ). These keys aren't used in
-// the US version making this IS version a superset of it.
+// (æÆ), endash and emdash (–—), thorn (þÞ), EuroSign (€) and the German
+// Sharp S (ßẞ). These keys aren't used in the US version, making the
+// Icelandic version a superset of it.
 
 // Maybe someone else will make a "full" attempt at an Icelandic layout
 // but I was mostly interested in continuing to type English comfortably
 // as a primary function while being able to type the full Icelandic
 // alphabet as a secondary function.
-//     -- Ævar Arnfjörð Bjarmason <avar@cpan.org>
+//     -- Ævar Arnfjörð Bjarmason <avarab@gmail.com>
 
 // Icelandic Dvorak
 partial alphanumeric_keys 
@@ -188,12 +189,14 @@ xkb_symbols "dvorak" {
     name[Group1]= "Iceland - Dvorak";
 
     include "us(dvorak)"
+    include "eurosign(4)"
 
     key <AD11> { [      slash,  question,    U201e,   U201c   ] };
     key <AC06> { [       d,     D,           eth,     ETH     ] };
     key <AC10> { [       s,     S,           ae,      AE      ] };
     key <AC11> { [   minus,     underscore,  endash,  emdash  ] };
     key <AB10> { [       z,     Z,           thorn,   Thorn   ] };
+    key <AB06> { [       b,     B,           ssharp,  U1E9E   ] };
 
     include "level3(ralt_switch)"
 };

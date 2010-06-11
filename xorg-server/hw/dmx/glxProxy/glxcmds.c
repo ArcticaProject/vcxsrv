@@ -80,7 +80,7 @@ Display *GetBackEndDisplay( __GLXclientState *cl, int s )
    if (! cl->be_displays[s] ) {
       cl->be_displays[s] = XOpenDisplay( DisplayString(dmxScreens[s].beDisplay) );
    }
-   return( cl->be_displays[s] );
+   return cl->be_displays[s];
 }
 
 /*
@@ -628,7 +628,7 @@ int GetCurrentBackEndTag(__GLXclientState *cl, GLXContextTag tag, int s)
       return( cl->be_currentCTag[ (tag-1)*screenInfo.numScreens + s ] );
    }
    else {
-      return( 0 );
+      return 0;
    }
 }
 
@@ -2841,6 +2841,7 @@ int __glXGetFBConfigs(__GLXclientState *cl, GLbyte *pc)
 
 	if (client->swapped) {
 	    __GLX_DECLARE_SWAP_VARIABLES;
+	    __GLX_DECLARE_SWAP_ARRAY_VARIABLES;
 	    __GLX_SWAP_INT_ARRAY((int *)buf, 2*numAttribs);
 	}
 	WriteToClient(client, 2*numAttribs * __GLX_SIZE_CARD32, (char *)buf);

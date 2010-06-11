@@ -60,7 +60,7 @@ static void dmxDoSetShape(WindowPtr pWindow);
 /** Initialize the private area for the window functions. */
 Bool dmxInitWindow(ScreenPtr pScreen)
 {
-    if (!dixRequestPrivate(dmxWinPrivateKey, sizeof(dmxWinPrivRec)))
+    if (!dixRegisterPrivateKey(&dmxWinPrivateKeyRec, PRIVATE_WINDOW, sizeof(dmxWinPrivRec)))
 	return FALSE;
 
     return TRUE;
@@ -940,8 +940,8 @@ static void dmxDoSetShape(WindowPtr pWindow)
 
     /* First, set the bounding shape */
     if (wBoundingShape(pWindow)) {
-	pBox = REGION_RECTS(wBoundingShape(pWindow));
-	nRect = nBox = REGION_NUM_RECTS(wBoundingShape(pWindow));
+	pBox = RegionRects(wBoundingShape(pWindow));
+	nRect = nBox = RegionNumRects(wBoundingShape(pWindow));
 	pRectFirst = pRect = malloc(nRect * sizeof(*pRect));
 	while (nBox--) {
 	    pRect->x      = pBox->x1;
@@ -963,8 +963,8 @@ static void dmxDoSetShape(WindowPtr pWindow)
 
     /* Next, set the clip shape */
     if (wClipShape(pWindow)) {
-	pBox = REGION_RECTS(wClipShape(pWindow));
-	nRect = nBox = REGION_NUM_RECTS(wClipShape(pWindow));
+	pBox = RegionRects(wClipShape(pWindow));
+	nRect = nBox = RegionNumRects(wClipShape(pWindow));
 	pRectFirst = pRect = malloc(nRect * sizeof(*pRect));
 	while (nBox--) {
 	    pRect->x      = pBox->x1;
@@ -991,7 +991,7 @@ static void dmxDoSetShape(WindowPtr pWindow)
 }
 
 /** Set shape of \a pWindow on the back-end server. */
-void dmxSetShape(WindowPtr pWindow)
+void dmxSetShape(WindowPtr pWindow, int kind)
 {
     ScreenPtr       pScreen = pWindow->drawable.pScreen;
     DMXScreenInfo  *dmxScreen = &dmxScreens[pScreen->myNum];
@@ -1000,7 +1000,7 @@ void dmxSetShape(WindowPtr pWindow)
     DMX_UNWRAP(SetShape, dmxScreen, pScreen);
 #if 1
     if (pScreen->SetShape)
-	pScreen->SetShape(pWindow);
+	pScreen->SetShape(pWindow, kind);
 #endif
 
     if (pWinPriv->window) {

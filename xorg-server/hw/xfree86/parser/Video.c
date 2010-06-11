@@ -288,9 +288,9 @@ xf86findVideoAdaptor (const char *ident, XF86ConfVideoAdaptorPtr p)
 	while (p)
 	{
 		if (xf86nameCompare (ident, p->va_identifier) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }

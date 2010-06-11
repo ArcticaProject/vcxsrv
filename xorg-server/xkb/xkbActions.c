@@ -43,8 +43,7 @@ THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "mi.h"
 #define EXTENSION_EVENT_BASE 64
 
-static int xkbDevicePrivateKeyIndex;
-DevPrivateKey xkbDevicePrivateKey = &xkbDevicePrivateKeyIndex;
+DevPrivateKeyRec xkbDevicePrivateKeyRec;
 
 static void XkbFakeDeviceButton(DeviceIntPtr dev,Bool press,int button);
 static void XkbFakePointerMotion(DeviceIntPtr dev, unsigned flags,int x,int y);
@@ -64,6 +63,11 @@ xkbUnwrapProc(DeviceIntPtr device, DeviceHandleProc proc,
 				 backupproc,xkbUnwrapProc);
 }
 
+Bool
+XkbInitPrivates(void)
+{
+    return dixRegisterPrivateKey(&xkbDevicePrivateKeyRec, PRIVATE_DEVICE, 0);
+}
 
 void
 XkbSetExtension(DeviceIntPtr device, ProcessInputProc proc)
@@ -1033,7 +1037,7 @@ register int	i;
     xkbi->filters= realloc(xkbi->filters,
                             xkbi->szFilters * sizeof(XkbFilterRec));
     /* 6/21/93 (ef) -- XXX! deal with allocation failure */
-    bzero(&xkbi->filters[xkbi->szFilters/2],
+    memset(&xkbi->filters[xkbi->szFilters/2], 0,
             (xkbi->szFilters/2)*sizeof(XkbFilterRec));
     return &xkbi->filters[xkbi->szFilters/2];
 }

@@ -96,13 +96,13 @@ IBMramdac640CalculateMNPCForClock(
 		  lowestFreqErr = freqErr;
 		  /* Return if we found an exact match */
 		  if (freqErr == 0)
-		    return (ActualClock);
+		    return ActualClock;
 		}
 	    }
 	}
     }
 
-  return (ActualClock);
+  return ActualClock;
 }
 
 unsigned long
@@ -162,13 +162,13 @@ IBMramdac526CalculateMNPCForClock(
 		  lowestFreqErr = freqErr;
 		  /* Return if we found an exact match */
 		  if (freqErr == 0)
-		    return (ActualClock);
+		    return ActualClock;
 		}
 	    }
 	}
     }
 
-  return (ActualClock);
+  return ActualClock;
 }
 
 void

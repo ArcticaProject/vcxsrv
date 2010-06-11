@@ -377,8 +377,8 @@ static void DarwinPrepareValuators(DeviceIntPtr pDev, int *valuators, ScreenPtr 
                                    float pointer_x, float pointer_y, 
                                    float pressure, float tilt_x, float tilt_y) {
     /* Fix offset between darwin and X screens */
-    pointer_x -= darwinMainScreenX + dixScreenOrigins[screen->myNum].x;
-    pointer_y -= darwinMainScreenY + dixScreenOrigins[screen->myNum].y;
+    pointer_x -= darwinMainScreenX + screen->x;
+    pointer_y -= darwinMainScreenY + screen->y;
 
     if(pointer_x < 0.0)
         pointer_x = 0.0;

@@ -42,8 +42,8 @@ typedef struct _ExaXorgScreenPrivRec {
     OptionInfoPtr		 options;
 } ExaXorgScreenPrivRec, *ExaXorgScreenPrivPtr;
 
-static int exaXorgScreenPrivateKeyIndex;
-static DevPrivateKey exaXorgScreenPrivateKey = &exaXorgScreenPrivateKeyIndex;
+static DevPrivateKeyRec exaXorgScreenPrivateKeyRec;
+#define exaXorgScreenPrivateKey (&exaXorgScreenPrivateKeyRec)
 
 typedef enum {
     EXAOPT_MIGRATION_HEURISTIC,
@@ -113,6 +113,9 @@ exaDDXDriverInit(ScreenPtr pScreen)
     /* Do NOT use XF86SCRNINFO macro here!! */
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     ExaXorgScreenPrivPtr pScreenPriv;
+
+    if (!dixRegisterPrivateKey(&exaXorgScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return;
 
     pScreenPriv = calloc(1, sizeof(ExaXorgScreenPrivRec));
     if (pScreenPriv == NULL)

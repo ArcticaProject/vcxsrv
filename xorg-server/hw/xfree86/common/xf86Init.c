@@ -66,6 +66,7 @@
 #include "xf86Priv.h"
 #include "xf86Config.h"
 #include "xf86_OSlib.h"
+#include "xf86cmap.h"
 #include "xorgVersion.h"
 #include "xf86Build.h"
 #include "mipointer.h"
@@ -202,8 +203,8 @@ xf86PrintBanner(void)
     struct tm t;
     char buf[100];
 
-    bzero(&t, sizeof(t));
-    bzero(buf, sizeof(buf));
+    memset(&t, 0, sizeof(t));
+    memset(buf, 0, sizeof(buf));
     t.tm_mday = BUILD_DATE % 100;
     t.tm_mon = (BUILD_DATE / 100) % 100 - 1;
     t.tm_year = BUILD_DATE / 10000 - 1900;
@@ -293,7 +294,7 @@ xf86CreateRootWindow(WindowPtr pWin)
   }
 
   DebugF("xf86CreateRootWindow() returns %d\n", ret);
-  return (ret);
+  return ret;
 }
 
 
@@ -733,6 +734,15 @@ InitOutput(ScreenInfo *pScreenInfo, int argc, char **argv)
     }
   }
 #endif /* SCO325 */
+
+  for (i = 0; i < xf86NumScreens; i++)
+      if (!xf86ColormapAllocatePrivates(xf86Screens[i]))
+	  FatalError("Cannot register DDX private keys");
+
+  if (!dixRegisterPrivateKey(&xf86ScreenKeyRec, PRIVATE_SCREEN, 0) ||
+      !dixRegisterPrivateKey(&xf86CreateRootWindowKeyRec, PRIVATE_SCREEN, 0) ||
+      !dixRegisterPrivateKey(&xf86PixmapKeyRec, PRIVATE_PIXMAP, 0))
+      FatalError("Cannot register DDX private keys");
 
   for (i = 0; i < xf86NumScreens; i++) {
 	xf86VGAarbiterLock(xf86Screens[i]);

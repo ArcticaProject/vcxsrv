@@ -478,8 +478,7 @@ xf86MatchSbusInstances(const char *driverName, int sbusDevId,
 	    instances[i].claimed = TRUE;
 	    instances[i].dev = dev;
 	}
-	if (promPath)
-	    free(promPath);
+	free(promPath);
     }
 
     DebugF("%s instances found: %d\n", driverName, numClaimedInstances);
@@ -531,7 +530,7 @@ xf86GetSbusInfoForEntity(int entityIndex)
 
     for (psdpp = xf86SbusInfo; *psdpp != NULL; psdpp++) {
 	if (p->bus.id.sbus.fbNum == (*psdpp)->fbNum)
-	    return (*psdpp);
+	    return *psdpp;
     }
     return NULL;
 }

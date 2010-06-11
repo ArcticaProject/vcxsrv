@@ -51,7 +51,7 @@ vgaListInstalledColormaps(pScreen, pmaps)
    * is always a colormap installed */
   
   *pmaps = GetInstalledmiColormap(pScreen)->mid;
-  return(1);
+  return 1;
 }
 
 int
@@ -63,7 +63,7 @@ vgaGetInstalledColormaps(pScreen, pmaps)
    * is always a colormap installed */
   
   *pmaps = GetInstalledmiColormap(pScreen);
-  return(1);
+  return 1;
 }
 
 int vgaCheckColorMap(ColormapPtr pmap)

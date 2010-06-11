@@ -522,7 +522,7 @@ xf86validateScreen (XF86ConfigPtr p)
 			{
 				screen->scrn_monitor = monitor;
 				if (!xf86validateMonitor(p, screen))
-					return (FALSE);
+					return FALSE;
 			}
 		}
 
@@ -535,13 +535,13 @@ xf86validateScreen (XF86ConfigPtr p)
 			if (!adaptor->al_adaptor)
 			{
 				xf86validationError (UNDEFINED_ADAPTOR_MSG, adaptor->al_adaptor_str, screen->scrn_identifier);
-				return (FALSE);
+				return FALSE;
 			}
 			else if (adaptor->al_adaptor->va_fwdref)
 			{
 				xf86validationError (ADAPTOR_REF_TWICE_MSG, adaptor->al_adaptor_str,
 						     adaptor->al_adaptor->va_fwdref);
-				return (FALSE);
+				return FALSE;
 			}
 
 			adaptor->al_adaptor->va_fwdref = strdup(screen->scrn_identifier);
@@ -551,7 +551,7 @@ xf86validateScreen (XF86ConfigPtr p)
 		screen = screen->list.next;
 	}
 
-	return (TRUE);
+	return TRUE;
 }
 
 XF86ConfScreenPtr
@@ -560,10 +560,10 @@ xf86findScreen (const char *ident, XF86ConfScreenPtr p)
 	while (p)
 	{
 		if (xf86nameCompare (ident, p->scrn_identifier) == 0)
-			return (p);
+			return p;
 
 		p = p->list.next;
 	}
-	return (NULL);
+	return NULL;
 }
 

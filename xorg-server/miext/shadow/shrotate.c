@@ -54,8 +54,8 @@ shadowUpdateRotatePacked (ScreenPtr	pScreen,
 {
     RegionPtr	damage = shadowDamage (pBuf);
     PixmapPtr	pShadow = pBuf->pPixmap;
-    int		nbox = REGION_NUM_RECTS (damage);
-    BoxPtr	pbox = REGION_RECTS (damage);
+    int		nbox = RegionNumRects (damage);
+    BoxPtr	pbox = RegionRects (damage);
     FbBits	*shaBits;
     FbStride	shaStride;
     int		shaBpp;

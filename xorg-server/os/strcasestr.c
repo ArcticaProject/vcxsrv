@@ -54,7 +54,7 @@ xstrcasestr(const char *s, const char *find)
                 do {
                         do {
                                 if ((sc = *s++) == 0)
-                                        return (NULL);
+                                        return NULL;
                         } while ((char)tolower((unsigned char)sc) != c);
                 } while (strncasecmp(s, find, len) != 0);
                 s--;

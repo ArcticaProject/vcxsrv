@@ -190,8 +190,8 @@ fbPushImage (DrawablePtr    pDrawable,
     BoxPtr	pbox;
     int		x1, y1, x2, y2;
     
-    for (nbox = REGION_NUM_RECTS (pClip),
-	 pbox = REGION_RECTS(pClip);
+    for (nbox = RegionNumRects (pClip),
+	 pbox = RegionRects(pClip);
 	 nbox--;
 	 pbox++)
     {

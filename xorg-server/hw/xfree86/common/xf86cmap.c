@@ -102,10 +102,11 @@ typedef struct {
   int		overscan;
 } CMapColormapRec, *CMapColormapPtr;
 
-static int CMapScreenKeyIndex;
-static DevPrivateKey CMapScreenKey;
-static int CMapColormapKeyIndex;
-static DevPrivateKey CMapColormapKey = &CMapColormapKeyIndex;
+static DevPrivateKeyRec CMapScreenKeyRec;
+#define CMapScreenKeyRegistered dixPrivateKeyRegistered(&CMapScreenKeyRec)
+#define CMapScreenKey (&CMapScreenKeyRec)
+static DevPrivateKeyRec CMapColormapKeyRec;
+#define CMapColormapKey (&CMapColormapKeyRec)
 
 static void CMapInstallColormap(ColormapPtr);
 static void CMapStoreColors(ColormapPtr, int, xColorItem *);
@@ -128,6 +129,18 @@ static void CMapReinstallMap(ColormapPtr);
 static void CMapUnwrapScreen(ScreenPtr pScreen);
 
 
+Bool xf86ColormapAllocatePrivates(ScrnInfoPtr pScrn)
+{
+    /* If we support a better colormap system, then pretend we succeeded. */
+    if (xf86_crtc_supports_gamma(pScrn))
+	return TRUE;
+    if (!dixRegisterPrivateKey(&CMapScreenKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&CMapColormapKeyRec, PRIVATE_COLORMAP, 0))
+	return FALSE;
+    return TRUE;
+}
 
 Bool xf86HandleColormaps(
     ScreenPtr pScreen,
@@ -151,8 +164,6 @@ Bool xf86HandleColormaps(
     if(!maxColors || !sigRGBbits || !loadPalette)
 	return FALSE;
 
-    CMapScreenKey = &CMapScreenKeyIndex;
-
     elements = 1 << sigRGBbits;
 
     if(!(gamma = malloc(elements * sizeof(LOCO))))
@@ -169,7 +180,7 @@ Bool xf86HandleColormaps(
 	return FALSE;     
     }
 
-    dixSetPrivate(&pScreen->devPrivates, CMapScreenKey, pScreenPriv);
+    dixSetPrivate(&pScreen->devPrivates, &CMapScreenKeyRec, pScreenPriv);
      
     pScreenPriv->CloseScreen = pScreen->CloseScreen;
     pScreenPriv->CreateColormap = pScreen->CreateColormap;
@@ -316,7 +327,7 @@ CMapDestroyColormap (ColormapPtr cmap)
     CMapLinkPtr prevLink = NULL, pLink = pScreenPriv->maps;
 
     if(pColPriv) {
-	if(pColPriv->colors) free(pColPriv->colors);
+	free(pColPriv->colors);
 	free(pColPriv);
     }
    
@@ -900,7 +911,7 @@ CMapChangeGamma(
     CMapLinkPtr pLink;
         
     /* Is this sufficient checking ? */
-    if(CMapScreenKey == NULL)
+    if(!CMapScreenKeyRegistered)
 	return BadImplementation;
 
     pScreenPriv = (CMapScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
@@ -1012,7 +1023,7 @@ xf86ChangeGammaRamp(
 	}
     }
 
-    if(CMapScreenKey == NULL)
+    if(!CMapScreenKeyRegistered)
         return BadImplementation;
 
     pScreenPriv = (CMapScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
@@ -1080,7 +1091,7 @@ xf86GetGammaRampSize(ScreenPtr pScreen)
 	    return crtc->gammaSize;
     }
 
-    if(CMapScreenKey == NULL) return 0;
+    if(!CMapScreenKeyRegistered) return 0;
 
     pScreenPriv = (CMapScreenPtr)dixLookupPrivate(&pScreen->devPrivates,
 						  CMapScreenKey);
@@ -1120,7 +1131,7 @@ xf86GetGammaRamp(
 	}
     }
 
-    if(CMapScreenKey == NULL) 
+    if(!CMapScreenKeyRegistered)
 	return BadImplementation;
 
     pScreenPriv = (CMapScreenPtr)dixLookupPrivate(&pScreen->devPrivates,

@@ -62,9 +62,12 @@ typedef struct {
  * Globals
  */
 
-extern DevPrivateKey subjectKey;
-extern DevPrivateKey objectKey;
-extern DevPrivateKey dataKey;
+extern DevPrivateKeyRec subjectKeyRec;
+#define subjectKey (&subjectKeyRec)
+extern DevPrivateKeyRec objectKeyRec;
+#define objectKey (&objectKeyRec)
+extern DevPrivateKeyRec dataKeyRec;
+#define dataKey (&dataKeyRec)
 
 /*
  * Label functions

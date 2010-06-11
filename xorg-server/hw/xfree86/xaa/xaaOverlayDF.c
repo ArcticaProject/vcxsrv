@@ -151,8 +151,8 @@ typedef struct {
    int (*TiledFillChooser)(GCPtr);
 } XAAOverlayRec, *XAAOverlayPtr;
 
-static int XAAOverlayKeyIndex;
-static DevPrivateKey XAAOverlayKey = &XAAOverlayKeyIndex;
+static DevPrivateKeyRec XAAOverlayKeyRec;
+#define XAAOverlayKey (&XAAOverlayKeyRec)
 
 #define GET_OVERLAY_PRIV(pScreen) \
     (XAAOverlayPtr)dixLookupPrivate(&(pScreen)->devPrivates, XAAOverlayKey)
@@ -172,6 +172,9 @@ XAAInitDualFramebufferOverlay(
     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_SCREEN(pScreen);
     XAAOverlayPtr pOverPriv;
+
+    if (!dixRegisterPrivateKey(&XAAOverlayKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
 
     if(!(pOverPriv = malloc(sizeof(XAAOverlayRec))))
 	return FALSE;
@@ -324,7 +327,7 @@ XAAOverCopyWindow(
     RegionRec rgnDst;
     BoxPtr pbox;
     int i, nbox, dx, dy;
-    WindowPtr pRoot = WindowTable[pScreen->myNum];
+    WindowPtr pRoot = pScreen->root;
 
 
     if (!pScrn->vtSema || !infoRec->ScreenToScreenBitBlt) { 
@@ -341,18 +344,18 @@ XAAOverCopyWindow(
     infoRec->ScratchGC.alu = GXcopy;
     infoRec->ScratchGC.planemask = ~0;
 
-    REGION_NULL(pScreen, &rgnDst);
+    RegionNull(&rgnDst);
 
     dx = ptOldOrg.x - pWin->drawable.x;
     dy = ptOldOrg.y - pWin->drawable.y;
-    REGION_TRANSLATE(pScreen, prgnSrc, -dx, -dy);
-    REGION_INTERSECT(pScreen, &rgnDst, &pWin->borderClip, prgnSrc);
+    RegionTranslate(prgnSrc, -dx, -dy);
+    RegionIntersect(&rgnDst, &pWin->borderClip, prgnSrc);
 
-    nbox = REGION_NUM_RECTS(&rgnDst);
+    nbox = RegionNumRects(&rgnDst);
     if(nbox &&
 	(pptSrc = (DDXPointPtr )malloc(nbox * sizeof(DDXPointRec)))) {
 
-	pbox = REGION_RECTS(&rgnDst);
+	pbox = RegionRects(&rgnDst);
 	for (i = nbox, ppt = pptSrc; i--; ppt++, pbox++) {
 	    ppt->x = pbox->x1 + dx;
 	    ppt->y = pbox->y1 + dy;
@@ -371,18 +374,18 @@ XAAOverCopyWindow(
 	free(pptSrc);
     }
 
-    REGION_UNINIT(pScreen, &rgnDst);
+    RegionUninit(&rgnDst);
 
     if(pWin->drawable.depth == 8) {
-      REGION_NULL(pScreen, &rgnDst);
+      RegionNull(&rgnDst);
       miSegregateChildren(pWin, &rgnDst, pScrn->depth);
-      if(REGION_NOTEMPTY(pScreen, &rgnDst)) {
-	REGION_INTERSECT(pScreen, &rgnDst, &rgnDst, prgnSrc);
-	nbox = REGION_NUM_RECTS(&rgnDst);
+      if(RegionNotEmpty(&rgnDst)) {
+	RegionIntersect(&rgnDst, &rgnDst, prgnSrc);
+	nbox = RegionNumRects(&rgnDst);
 	if(nbox &&
 	  (pptSrc = (DDXPointPtr )malloc(nbox * sizeof(DDXPointRec)))){
 
-	    pbox = REGION_RECTS(&rgnDst);
+	    pbox = RegionRects(&rgnDst);
 	    for (i = nbox, ppt = pptSrc; i--; ppt++, pbox++) {
 		ppt->x = pbox->x1 + dx;
 		ppt->y = pbox->y1 + dy;
@@ -394,7 +397,7 @@ XAAOverCopyWindow(
 	    free(pptSrc);
 	}
       }
-      REGION_UNINIT(pScreen, &rgnDst);
+      RegionUninit(&rgnDst);
     }
 }
 
@@ -409,13 +412,13 @@ XAAOverWindowExposures(
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_SCREEN(pScreen);
 
     if((pWin->drawable.bitsPerPixel != 8) && infoRec->pScrn->vtSema) {
-	if(REGION_NUM_RECTS(pReg) && infoRec->FillSolidRects) {
+	if(RegionNumRects(pReg) && infoRec->FillSolidRects) {
 	    XAAOverlayPtr pOverPriv = GET_OVERLAY_PRIV(pScreen);
 
 	    SWITCH_DEPTH(8);
 	    (*infoRec->FillSolidRects)(infoRec->pScrn, 
 		infoRec->pScrn->colorKey, GXcopy, ~0,
-			REGION_NUM_RECTS(pReg), REGION_RECTS(pReg));
+			RegionNumRects(pReg), RegionRects(pReg));
 	    miWindowExposures(pWin, pReg, pOtherReg);
 	    return;
 	} else if(infoRec->NeedToSync) {

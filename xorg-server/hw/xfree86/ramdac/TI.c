@@ -118,7 +118,7 @@ TIramdacCalculateMNPForClock(
     DebugF( "f_out=%ld f_vco=%.1f n=%d m=%d p=%d\n",
 	    ActualClock, VCO, *rN, *rM, *rP);
 
-    return (ActualClock);
+    return ActualClock;
 }
 
 void

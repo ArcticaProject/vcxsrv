@@ -109,10 +109,10 @@ static Bool findWindowPairFromLocal (WindowPtr a_local,
 
 static unsigned char DRIReqCode = 0;
 
-static int ephyrDRIWindowKeyIndex;
-static DevPrivateKey ephyrDRIWindowKey = &ephyrDRIWindowKeyIndex;
-static int ephyrDRIScreenKeyIndex;
-static DevPrivateKey ephyrDRIScreenKey = &ephyrDRIScreenKeyIndex;
+static DevPrivateKeyRec ephyrDRIWindowKeyRec;
+#define ephyrDRIWindowKey (&ephyrDRIWindowKeyRec)
+static DevPrivateKeyRec ephyrDRIScreenKeyRec;
+#define ephyrDRIScreenKey (&ephyrDRIScreenKeyRec)
 
 #define GET_EPHYR_DRI_WINDOW_PRIV(win) ((EphyrDRIWindowPrivPtr) \
     dixLookupPrivate(&(win)->devPrivates, ephyrDRIWindowKey))
@@ -418,11 +418,11 @@ ephyrDRIClipNotify (WindowPtr a_win,
         EPHYR_LOG_ERROR ("failed to get window pair\n") ;
         goto out ;
     }
-    rects = calloc(REGION_NUM_RECTS (&a_win->clipList),
+    rects = calloc(RegionNumRects (&a_win->clipList),
                      sizeof (EphyrRect)) ;
-    for (i=0; i < REGION_NUM_RECTS (&a_win->clipList); i++) {
+    for (i=0; i < RegionNumRects (&a_win->clipList); i++) {
         memmove (&rects[i],
-                 &REGION_RECTS (&a_win->clipList)[i],
+                 &RegionRects (&a_win->clipList)[i],
                  sizeof (EphyrRect)) ;
         rects[i].x1 -= a_win->drawable.x;
         rects[i].x2 -= a_win->drawable.x;
@@ -436,7 +436,7 @@ ephyrDRIClipNotify (WindowPtr a_win,
     is_ok = hostx_set_window_bounding_rectangles
                                 (pair->remote,
                                  rects,
-                                 REGION_NUM_RECTS (&a_win->clipList)) ;
+                                 RegionNumRects (&a_win->clipList)) ;
     is_ok = TRUE ;
 
 out:
@@ -1168,12 +1168,12 @@ ProcXF86DRIGetDrawableInfo (register ClientPtr client)
         return BadMatch ;
     }
     EPHYR_LOG ("clip list of xephyr gl drawable:\n") ;
-    for (i=0; i < REGION_NUM_RECTS (&window->clipList); i++) {
+    for (i=0; i < RegionNumRects (&window->clipList); i++) {
         EPHYR_LOG ("x1:%d, y1:%d, x2:%d, y2:%d\n",
-                   REGION_RECTS (&window->clipList)[i].x1,
-                   REGION_RECTS (&window->clipList)[i].y1,
-                   REGION_RECTS (&window->clipList)[i].x2,
-                   REGION_RECTS (&window->clipList)[i].y2) ;
+                   RegionRects (&window->clipList)[i].x1,
+                   RegionRects (&window->clipList)[i].y1,
+                   RegionRects (&window->clipList)[i].x2,
+                   RegionRects (&window->clipList)[i].y2) ;
     }
 
     if (!ephyrDRIGetDrawableInfo (stuff->screen,

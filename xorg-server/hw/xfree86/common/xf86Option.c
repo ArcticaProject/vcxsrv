@@ -745,7 +745,7 @@ xf86IsOptionSet(const OptionInfoRec *table, int token)
     OptionInfoPtr p;
 
     p = xf86TokenToOptinfo(table, token);
-    return (p && p->found);
+    return p && p->found;
 }
 
 

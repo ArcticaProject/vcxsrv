@@ -270,7 +270,7 @@ Bool		found;
    l_ndx_present = v_ndx_present = present= 0;
    str= &line->line[1];
    len = remap->number;
-   bzero((char *)remap,sizeof(RemapSpec));
+   memset((char *)remap, 0, sizeof(RemapSpec));
    remap->number = len;
    while ((tok=_XStrtok(str," ",strtok_buf))!=NULL) {
 	found= FALSE;
@@ -412,7 +412,7 @@ Bool 		append = FALSE;
 	DebugF("Illegal line of data ignored\n");
 	return FALSE;
     }
-    bzero((char *)&tmp,sizeof(FileSpec));
+    memset((char *)&tmp, 0, sizeof(FileSpec));
     str= line->line;
     for (nread= 0;(tok=_XStrtok(str," ",strtok_buf))!=NULL;nread++) {
 	str= NULL;
@@ -495,7 +495,7 @@ static Bool
 MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
 {
 
-   bzero((char *)mdefs,sizeof(XkbRF_MultiDefsRec));
+   memset((char *)mdefs, 0, sizeof(XkbRF_MultiDefsRec));
    mdefs->model = defs->model;
    mdefs->options = _XkbDupString(defs->options);
    if (mdefs->options) squeeze_spaces(mdefs->options); 
@@ -553,9 +553,9 @@ MakeMultiDefs(XkbRF_MultiDefsPtr mdefs, XkbRF_VarDefsPtr defs)
 static void
 FreeMultiDefs(XkbRF_MultiDefsPtr defs)
 {
-  if (defs->options) free(defs->options);
-  if (defs->layout[1])  free(defs->layout[1]);
-  if (defs->variant[1])  free(defs->variant[1]);
+  free(defs->options);
+  free(defs->layout[1]);
+  free(defs->variant[1]);
 }
 
 static void
@@ -834,7 +834,7 @@ XkbRF_GetComponents(	XkbRF_RulesPtr		rules,
 
     MakeMultiDefs(&mdefs, defs);
 
-    bzero((char *)names,sizeof(XkbComponentNamesRec));
+    memset((char *)names, 0, sizeof(XkbComponentNamesRec));
     XkbRF_ClearPartialMatches(rules);
     XkbRF_CheckApplyRules(rules, &mdefs, names, XkbRF_Normal);
     XkbRF_ApplyPartialMatches(rules, names);
@@ -876,7 +876,7 @@ XkbRF_AddRule(XkbRF_RulesPtr	rules)
 	DebugF("Allocation failure in XkbRF_AddRule\n");
 	return NULL;
     }
-    bzero((char *)&rules->rules[rules->num_rules],sizeof(XkbRF_RuleRec));
+    memset((char *)&rules->rules[rules->num_rules], 0, sizeof(XkbRF_RuleRec));
     return &rules->rules[rules->num_rules++];
 }
 
@@ -898,7 +898,7 @@ XkbRF_AddGroup(XkbRF_RulesPtr	rules)
 	return NULL;
     }
 
-    bzero((char *)&rules->groups[rules->num_groups],sizeof(XkbRF_GroupRec));
+    memset((char *)&rules->groups[rules->num_groups], 0, sizeof(XkbRF_GroupRec));
     return &rules->groups[rules->num_groups++];
 }
 
@@ -912,20 +912,20 @@ XkbRF_GroupRec  tgroup,*group;
 
     if (!(rules && file))
 	return FALSE;
-    bzero((char *)&remap,sizeof(RemapSpec));
-    bzero((char *)&tgroup,sizeof(XkbRF_GroupRec));
+    memset((char *)&remap, 0, sizeof(RemapSpec));
+    memset((char *)&tgroup, 0, sizeof(XkbRF_GroupRec));
     InitInputLine(&line);
     while (GetInputLine(file,&line,TRUE)) {
 	if (CheckLine(&line,&remap,&trule,&tgroup)) {
             if (tgroup.number) {
 	        if ((group= XkbRF_AddGroup(rules))!=NULL) {
 		    *group= tgroup;
-		    bzero((char *)&tgroup,sizeof(XkbRF_GroupRec));
+		    memset((char *)&tgroup, 0, sizeof(XkbRF_GroupRec));
 	        }
 	    } else {
 	        if ((rule= XkbRF_AddRule(rules))!=NULL) {
 		    *rule= trule;
-		    bzero((char *)&trule,sizeof(XkbRF_RuleRec));
+		    memset((char *)&trule, 0, sizeof(XkbRF_RuleRec));
 	        }
 	    }
 	}
@@ -988,16 +988,16 @@ XkbRF_GroupPtr	group;
 	return;
     if (rules->rules) {
 	for (i=0,rule=rules->rules;i<rules->num_rules;i++,rule++) {
-	    if (rule->model)	free(rule->model);
-	    if (rule->layout)	free(rule->layout);
-	    if (rule->variant)	free(rule->variant);
-	    if (rule->option)	free(rule->option);
-	    if (rule->keycodes)	free(rule->keycodes);
-	    if (rule->symbols)	free(rule->symbols);
-	    if (rule->types)	free(rule->types);
-	    if (rule->compat)	free(rule->compat);
-	    if (rule->geometry)	free(rule->geometry);
-	    bzero((char *)rule,sizeof(XkbRF_RuleRec));
+	    free(rule->model);
+	    free(rule->layout);
+	    free(rule->variant);
+	    free(rule->option);
+	    free(rule->keycodes);
+	    free(rule->symbols);
+	    free(rule->types);
+	    free(rule->compat);
+	    free(rule->geometry);
+	    memset((char *)rule, 0, sizeof(XkbRF_RuleRec));
 	}
 	free(rules->rules);
 	rules->num_rules= rules->sz_rules= 0;
@@ -1006,8 +1006,8 @@ XkbRF_GroupPtr	group;
 
     if (rules->groups) {
 	for (i=0, group=rules->groups;i<rules->num_groups;i++,group++) {
-	    if (group->name)	free(group->name);
-	    if (group->words)	free(group->words);
+	    free(group->name);
+	    free(group->words);
 	}
 	free(rules->groups);
 	rules->num_groups= 0;

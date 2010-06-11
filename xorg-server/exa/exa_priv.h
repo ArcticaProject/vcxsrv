@@ -221,9 +221,13 @@ typedef struct {
     (PixmapWidthPaddingInfo[d].padRoundUp+1)))
 #endif
 
-extern DevPrivateKey exaScreenPrivateKey;
-extern DevPrivateKey exaPixmapPrivateKey;
-extern DevPrivateKey exaGCPrivateKey;
+extern DevPrivateKeyRec exaScreenPrivateKeyRec;
+#define exaScreenPrivateKey (&exaScreenPrivateKeyRec)
+extern DevPrivateKeyRec exaPixmapPrivateKeyRec;
+#define exaPixmapPrivateKey (&exaPixmapPrivateKeyRec)
+extern DevPrivateKeyRec exaGCPrivateKeyRec;
+#define exaGCPrivateKey (&exaGCPrivateKeyRec)
+
 #define ExaGetScreenPriv(s) ((ExaScreenPrivPtr)dixLookupPrivate(&(s)->devPrivates, exaScreenPrivateKey))
 #define ExaScreenPriv(s)	ExaScreenPrivPtr    pExaScr = ExaGetScreenPriv(s)
 

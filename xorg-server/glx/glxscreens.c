@@ -48,8 +48,8 @@
 #include "glxext.h"
 #include "protocol-versions.h"
 
-static int glxScreenPrivateKeyIndex;
-static DevPrivateKey glxScreenPrivateKey = &glxScreenPrivateKeyIndex;
+static DevPrivateKeyRec glxScreenPrivateKeyRec;
+#define glxScreenPrivateKey (&glxScreenPrivateKeyRec)
 
 const char GLServerVersion[] = "1.4";
 static const char GLServerExtensions[] = 
@@ -355,6 +355,9 @@ void __glXScreenInit(__GLXscreen *pGlxScreen, ScreenPtr pScreen)
     __GLXconfig *m;
     __GLXconfig *config;
     int i;
+
+    if (!dixRegisterPrivateKey(&glxScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return;
 
     pGlxScreen->pScreen       = pScreen;
     pGlxScreen->GLextensions  = xstrdup(GLServerExtensions);

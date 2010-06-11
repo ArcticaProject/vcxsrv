@@ -154,7 +154,7 @@ fbPolyPoint (DrawablePtr    pDrawable,
     case 32:    dots = fbDots32; break;
     }
 #endif
-    for (nBox = REGION_NUM_RECTS (pClip), pBox = REGION_RECTS (pClip);
+    for (nBox = RegionNumRects (pClip), pBox = RegionRects (pClip);
 	 nBox--; pBox++)
 	(*dots) (dst, dstStride, dstBpp, pBox, pptInit, nptInit, 
 		 pDrawable->x, pDrawable->y, dstXoff, dstYoff, and, xor);

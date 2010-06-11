@@ -946,8 +946,8 @@ ephyrPutImage (KdScreenInfo *a_info,
                               a_drw_x, a_drw_y, a_drw_w, a_drw_h,
                               a_src_x, a_src_y, a_src_w, a_src_h,
                               a_width, a_height, a_buf,
-                              (EphyrHostBox*)REGION_RECTS (a_clipping_region),
-                              REGION_NUM_RECTS (a_clipping_region))) {
+                              (EphyrHostBox*)RegionRects (a_clipping_region),
+                              RegionNumRects (a_clipping_region))) {
         EPHYR_LOG_ERROR ("EphyrHostXVPutImage() failed\n") ;
         goto out ;
     }
@@ -1025,8 +1025,8 @@ ephyrReputImage (KdScreenInfo *a_info,
                               port_priv->src_w, port_priv->src_h,
                               port_priv->image_width, port_priv->image_height,
                               port_priv->image_buf,
-                              (EphyrHostBox*)REGION_RECTS (a_clipping_region),
-                              REGION_NUM_RECTS (a_clipping_region))) {
+                              (EphyrHostBox*)RegionRects (a_clipping_region),
+                              RegionNumRects (a_clipping_region))) {
         EPHYR_LOG_ERROR ("ephyrHostXVPutImage() failed\n") ;
         goto out ;
     }
@@ -1064,7 +1064,7 @@ ephyrPutVideo (KdScreenInfo *a_info,
     dst_box.y2 = a_drw_y + a_drw_h;
 
     if (!DoSimpleClip (&dst_box,
-                       REGION_EXTENTS (pScreen->pScreen, a_clipping_region),
+                       RegionExtents(a_clipping_region),
                        &clipped_area)) {
         EPHYR_LOG_ERROR ("failed to simple clip\n") ;
         goto out ;
@@ -1115,7 +1115,7 @@ ephyrGetVideo (KdScreenInfo *a_info,
     dst_box.y2 = a_drw_y + a_drw_h;
 
     if (!DoSimpleClip (&dst_box,
-                       REGION_EXTENTS (pScreen->pScreen, a_clipping_region),
+                       RegionExtents(a_clipping_region),
                        &clipped_area)) {
         EPHYR_LOG_ERROR ("failed to simple clip\n") ;
         goto out ;
@@ -1166,7 +1166,7 @@ ephyrPutStill (KdScreenInfo *a_info,
     dst_box.y2 = a_drw_y + a_drw_h;
 
     if (!DoSimpleClip (&dst_box,
-                       REGION_EXTENTS (pScreen->pScreen, a_clipping_region),
+                       RegionExtents(a_clipping_region),
                        &clipped_area)) {
         EPHYR_LOG_ERROR ("failed to simple clip\n") ;
         goto out ;
@@ -1217,7 +1217,7 @@ ephyrGetStill (KdScreenInfo *a_info,
     dst_box.y2 = a_drw_y + a_drw_h;
 
     if (!DoSimpleClip (&dst_box,
-                       REGION_EXTENTS (pScreen->pScreen, a_clipping_region),
+                       RegionExtents(a_clipping_region),
                        &clipped_area)) {
         EPHYR_LOG_ERROR ("failed to simple clip\n") ;
         goto out ;

@@ -139,6 +139,10 @@ extern _X_EXPORT void miPointerSetPosition(
 extern _X_EXPORT void miPointerUpdateSprite(
     DeviceIntPtr pDev);
 
-extern _X_EXPORT DevPrivateKey miPointerScreenKey;
+extern _X_EXPORT DevPrivateKeyRec miPointerPrivKeyRec;
+#define miPointerPrivKey (&miPointerPrivKeyRec)
+
+extern _X_EXPORT DevPrivateKeyRec miPointerScreenKeyRec;
+#define miPointerScreenKey (&miPointerScreenKeyRec)
 
 #endif /* MIPOINTER_H */

@@ -76,11 +76,11 @@ static CursorBits   animCursorBits = {
     empty, empty, 2, 1, 1, 0, 0, 1
 };
 
-static int AnimCurScreenPrivateKeyIndex;
-static DevPrivateKey AnimCurScreenPrivateKey = &AnimCurScreenPrivateKeyIndex;
+static DevPrivateKeyRec AnimCurScreenPrivateKeyRec;
+#define AnimCurScreenPrivateKey (&AnimCurScreenPrivateKeyRec)
 
 #define IsAnimCur(c)	    ((c) && ((c)->bits == &animCursorBits))
-#define GetAnimCur(c)	    ((AnimCurPtr) ((c) + 1))
+#define GetAnimCur(c)	    ((AnimCurPtr) ((((char *)(c) + CURSOR_REC_SIZE))))
 #define GetAnimCurScreen(s) ((AnimCurScreenPtr)dixLookupPrivate(&(s)->devPrivates, AnimCurScreenPrivateKey))
 #define SetAnimCurScreen(s,p) dixSetPrivate(&(s)->devPrivates, AnimCurScreenPrivateKey, p)
 
@@ -322,6 +322,9 @@ AnimCurInit (ScreenPtr pScreen)
 {
     AnimCurScreenPtr    as;
 
+    if (!dixRegisterPrivateKey(&AnimCurScreenPrivateKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
     as = (AnimCurScreenPtr) malloc(sizeof (AnimCurScreenRec));
     if (!as)
 	return FALSE;
@@ -354,11 +357,12 @@ AnimCursorCreate (CursorPtr *cursors, CARD32 *deltas, int ncursor, CursorPtr *pp
 	if (IsAnimCur (cursors[i]))
 	    return BadMatch;
 	
-    pCursor = (CursorPtr) malloc(sizeof (CursorRec) +
-				  sizeof (AnimCurRec) +
-				  ncursor * sizeof (AnimCurElt));
+    pCursor = (CursorPtr) calloc(CURSOR_REC_SIZE +
+				 sizeof (AnimCurRec) +
+				 ncursor * sizeof (AnimCurElt), 1);
     if (!pCursor)
 	return BadAlloc;
+    dixInitPrivates(pCursor, pCursor + 1, PRIVATE_CURSOR);
     pCursor->bits = &animCursorBits;
     pCursor->refcnt = 1;
     
@@ -371,13 +375,12 @@ AnimCursorCreate (CursorPtr *cursors, CARD32 *deltas, int ncursor, CursorPtr *pp
     pCursor->backBlue = cursors[0]->backBlue;
 
     pCursor->id = cid;
-    pCursor->devPrivates = NULL;
 
     /* security creation/labeling check */
     rc = XaceHook(XACE_RESOURCE_ACCESS, client, cid, RT_CURSOR, pCursor,
 		  RT_NONE, NULL, DixCreateAccess);
     if (rc != Success) {
-	dixFreePrivates(pCursor->devPrivates);
+	dixFiniPrivates(pCursor, PRIVATE_CURSOR);
 	free(pCursor);
 	return rc;
     }

@@ -69,8 +69,8 @@ RESTYPE __glXSwapBarrierRes;
 */
 xGLXSingleReply __glXReply;
 
-static int glxClientPrivateKeyIndex;
-static DevPrivateKey glxClientPrivateKey = &glxClientPrivateKeyIndex;
+static DevPrivateKeyRec glxClientPrivateKeyRec;
+#define glxClientPrivateKey (&glxClientPrivateKeyRec)
 
 /*
 ** Client that called into GLX dispatch.
@@ -211,8 +211,8 @@ GLboolean __glXFreeContext(__GLXcontext *cx)
 {
     if (cx->idExists || cx->isCurrent) return GL_FALSE;
     
-    if (cx->feedbackBuf) free(cx->feedbackBuf);
-    if (cx->selectBuf) free(cx->selectBuf);
+    free(cx->feedbackBuf);
+    free(cx->selectBuf);
     if (cx == __glXLastContext) {
 	__glXFlushContextCache();
     }
@@ -329,10 +329,10 @@ glxClientCallback (CallbackListPtr	*list,
 	    }
 	}
 
-	if (cl->returnBuf) free(cl->returnBuf);
-	if (cl->largeCmdBuf) free(cl->largeCmdBuf);
-	if (cl->currentContexts) free(cl->currentContexts);
-	if (cl->GLClientextensions) free(cl->GLClientextensions);
+	free(cl->returnBuf);
+	free(cl->largeCmdBuf);
+	free(cl->currentContexts);
+	free(cl->GLClientextensions);
 	break;
 
     default:
@@ -370,7 +370,7 @@ void GlxExtensionInit(void)
     if (!__glXContextRes || !__glXDrawableRes || !__glXSwapBarrierRes)
 	return;
 
-    if (!dixRequestPrivate(glxClientPrivateKey, sizeof (__GLXclientState)))
+    if (!dixRegisterPrivateKey(&glxClientPrivateKeyRec, PRIVATE_CLIENT, sizeof (__GLXclientState)))
 	return;
     if (!AddCallback (&ClientStateCallback, glxClientCallback, 0))
 	return;

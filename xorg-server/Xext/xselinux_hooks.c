@@ -59,12 +59,9 @@ typedef struct {
 } SELinuxAuditRec;
 
 /* private state keys */
-static int subjectKeyIndex;
-DevPrivateKey subjectKey = &subjectKeyIndex;
-static int objectKeyIndex;
-DevPrivateKey objectKey = &objectKeyIndex;
-static int dataKeyIndex;
-DevPrivateKey dataKey = &dataKeyIndex;
+DevPrivateKeyRec subjectKeyRec;
+DevPrivateKeyRec objectKeyRec;
+DevPrivateKeyRec dataKeyRec;
 
 /* audit file descriptor */
 static int audit_fd;
@@ -896,9 +893,9 @@ SELinuxFlaskInit(void)
 	FatalError("SELinux: Failed to open the system audit log\n");
 
     /* Allocate private storage */
-    if (!dixRequestPrivate(subjectKey, sizeof(SELinuxSubjectRec)) ||
-	!dixRequestPrivate(objectKey, sizeof(SELinuxObjectRec)) ||
-	!dixRequestPrivate(dataKey, sizeof(SELinuxObjectRec)))
+    if (!dixRegisterPrivateKey(subjectKey, PRIVATE_XSELINUX, sizeof(SELinuxSubjectRec)) ||
+	!dixRegisterPrivateKey(objectKey, PRIVATE_XSELINUX, sizeof(SELinuxObjectRec)) ||
+	!dixRegisterPrivateKey(dataKey, PRIVATE_XSELINUX, sizeof(SELinuxObjectRec)))
 	FatalError("SELinux: Failed to allocate private storage.\n");
 
     /* Create atoms for doing window labeling */

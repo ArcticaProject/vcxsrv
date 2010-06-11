@@ -45,6 +45,7 @@ Bool xf86InitHardwareCursor(ScreenPtr pScreen, xf86CursorInfoPtr infoPtr);
 
 CARD32 xf86ReverseBitOrder(CARD32 data);
 
-extern _X_EXPORT DevPrivateKey xf86CursorScreenKey;
+extern _X_EXPORT DevPrivateKeyRec xf86CursorScreenKeyRec;
+#define xf86CursorScreenKey (&xf86CursorScreenKeyRec)
 
 #endif /* _XF86CURSORPRIV_H */

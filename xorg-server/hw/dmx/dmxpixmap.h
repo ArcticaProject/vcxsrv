@@ -57,9 +57,6 @@ extern RegionPtr dmxBitmapToRegion(PixmapPtr pPixmap);
 extern void      dmxBECreatePixmap(PixmapPtr pPixmap);
 extern Bool      dmxBEFreePixmap(PixmapPtr pPixmap);
 
-/** Private index.  \see dmxpicmap.h \see dmxscrinit.c */
-extern DevPrivateKey dmxPixPrivateKey;
-
 /** Get pixmap private pointer. */
 #define DMX_GET_PIXMAP_PRIV(_pPix)					\
     (dmxPixPrivPtr)dixLookupPrivate(&(_pPix)->devPrivates, dmxPixPrivateKey)

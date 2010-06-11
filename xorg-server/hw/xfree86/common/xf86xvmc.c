@@ -55,8 +55,8 @@ typedef struct {
   XvMCAdaptorPtr dixinfo;
 } xf86XvMCScreenRec, *xf86XvMCScreenPtr;
 
-static int XF86XvMCScreenKeyIndex;
-static DevPrivateKey XF86XvMCScreenKey = &XF86XvMCScreenKeyIndex;
+static DevPrivateKeyRec XF86XvMCScreenKeyRec;
+#define XF86XvMCScreenKey (&XF86XvMCScreenKeyRec)
 
 #define XF86XVMC_GET_PRIVATE(pScreen) (xf86XvMCScreenPtr) \
     dixLookupPrivate(&(pScreen)->devPrivates, XF86XvMCScreenKey)
@@ -171,6 +171,9 @@ Bool xf86XvMCScreenInit(
 
    if(!(pAdapt = malloc(sizeof(XvMCAdaptorRec) * num_adaptors)))
 	return FALSE;
+
+   if (!dixRegisterPrivateKey(&XF86XvMCScreenKeyRec, PRIVATE_SCREEN, 0))
+       return FALSE;
 
    if(!(pScreenPriv = malloc(sizeof(xf86XvMCScreenRec)))) {
 	free(pAdapt);

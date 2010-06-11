@@ -195,16 +195,12 @@ void
 CopyKeyClass(DeviceIntPtr device, DeviceIntPtr master)
 {
     KeyClassPtr mk = master->key;
-    KeyClassPtr dk = device->key;
-    int i;
 
     if (device == master)
         return;
 
     mk->sourceid = device->id;
 
-    for (i = 0; i < 8; i++)
-        mk->modifierKeyCount[i] = dk->modifierKeyCount[i];
 
     if (!XkbCopyDeviceKeymap(master, device))
         FatalError("Couldn't pivot keymap from device to core!\n");
@@ -928,8 +924,8 @@ ProcessRawEvent(RawDeviceEvent *ev, DeviceIntPtr device)
         }
 
         for (i = 0; i < screenInfo.numScreens; i++)
-          if (WindowTable[i])
-            DeliverEventsToWindow(device, WindowTable[i], xi, 1,
+          if (screenInfo.screens[i] && screenInfo.screens[i]->root)
+            DeliverEventsToWindow(device, screenInfo.screens[i]->root, xi, 1,
                                   GetEventFilter(device, xi), NULL);
         free(xi);
     }
@@ -1047,7 +1043,7 @@ ProcessOtherEvent(InternalEvent *ev, DeviceIntPtr device)
 
 	/* see comment in EnqueueEvents regarding the next three lines */
 	if (ev->any.type == ET_Motion)
-	    ev->device_event.root = WindowTable[pSprite->hotPhys.pScreen->myNum]->drawable.id;
+	    ev->device_event.root = pSprite->hotPhys.pScreen->root->drawable.id;
 
 	eventinfo.device = device;
 	eventinfo.event = ev;
@@ -1711,7 +1707,7 @@ InputClientGone(WindowPtr pWin, XID id)
     InputClientsPtr other, prev;
 
     if (!wOtherInputMasks(pWin))
-	return (Success);
+	return Success;
     prev = 0;
     for (other = wOtherInputMasks(pWin)->inputClients; other;
 	 other = other->next) {
@@ -1737,7 +1733,7 @@ InputClientGone(WindowPtr pWin, XID id)
 		free(other);
 	    }
 	    RecalculateDeviceDeliverableEvents(pWin);
-	    return (Success);
+	    return Success;
 	}
 	prev = other;
     }
@@ -1838,7 +1834,7 @@ ChangeKeyMapping(ClientPtr client,
     KeyClassPtr k = dev->key;
 
     if (k == NULL)
-	return (BadMatch);
+	return BadMatch;
 
     if (len != (keyCodes * keySymsPerKeyCode))
 	return BadLength;
@@ -1981,7 +1977,7 @@ MaybeSendDeviceMotionNotifyHint(deviceKeyButtonPointer * pEvents, Mask mask)
 	    pEvents->detail = NotifyNormal;
 	}
     }
-    return (0);
+    return 0;
 }
 
 void
@@ -2129,7 +2125,7 @@ SendEventToAllWindows(DeviceIntPtr dev, Mask mask, xEvent * ev, int count)
     WindowPtr pWin, p1;
 
     for (i = 0; i < screenInfo.numScreens; i++) {
-        pWin = WindowTable[i];
+        pWin = screenInfo.screens[i]->root;
         if (!pWin)
             continue;
         DeliverEventsToWindow(dev, pWin, ev, count, mask, NullGrab);

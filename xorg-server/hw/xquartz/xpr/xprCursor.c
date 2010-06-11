@@ -57,12 +57,11 @@ typedef struct {
     miPointerSpriteFuncPtr  spriteFuncs;
 } QuartzCursorScreenRec, *QuartzCursorScreenPtr;
 
-static int darwinCursorScreenKeyIndex;
-static DevPrivateKey darwinCursorScreenKey = &darwinCursorScreenKeyIndex;
+static DevPrivateKeyRec darwinCursorScreenKeyRec;
+#define darwinCursorScreenKey (&darwinCursorScreenKeyRec)
 
 #define CURSOR_PRIV(pScreen) ((QuartzCursorScreenPtr) \
     dixLookupPrivate(&pScreen->devPrivates, darwinCursorScreenKey))
-
 
 static Bool
 load_cursor(CursorPtr src, int screen)
@@ -296,8 +295,8 @@ QuartzWarpCursor(DeviceIntPtr pDev, ScreenPtr pScreen, int x, int y)
     {
         int sx, sy;
 
-        sx = dixScreenOrigins[pScreen->myNum].x + darwinMainScreenX;
-        sy = dixScreenOrigins[pScreen->myNum].y + darwinMainScreenY;
+        sx = pScreen->x + darwinMainScreenX;
+        sy = pScreen->y + darwinMainScreenY;
 
         CGWarpMouseCursorPosition(CGPointMake(sx + x, sy + y));
     }
@@ -359,6 +358,9 @@ QuartzInitCursor(ScreenPtr pScreen)
     /* initialize software cursor handling (always needed as backup) */
     if (!miDCInitialize(pScreen, &quartzScreenFuncsRec))
         return FALSE;
+
+    if (!dixRegisterPrivateKey(&darwinCursorScreenKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
 
     ScreenPriv = calloc(1, sizeof(QuartzCursorScreenRec));
     if (ScreenPriv == NULL)

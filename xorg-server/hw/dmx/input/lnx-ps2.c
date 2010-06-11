@@ -269,7 +269,7 @@ pointer ps2LinuxCreatePrivate(DeviceIntPtr pMouse)
 /** Destroy a private structure. */
 void ps2LinuxDestroyPrivate(pointer priv)
 {
-    if (priv) free(priv);
+    free(priv);
 }
 
 /** Fill the \a info structure with information needed to initialize \a

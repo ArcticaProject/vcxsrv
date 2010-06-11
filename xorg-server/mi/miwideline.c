@@ -721,7 +721,7 @@ miLineArcI (
 	    *--bwids = slw;
 	}
     }
-    return (pGC->lineWidth);
+    return pGC->lineWidth;
 }
 
 #define CLIPSTEPEDGE(edgey,edge,edgeleft) \
@@ -915,7 +915,7 @@ miLineArcD (
 	    *wids++ = xcr - xcl + 1;
 	}
     }
-    return (pts - points);
+    return pts - points;
 }
 
 static int

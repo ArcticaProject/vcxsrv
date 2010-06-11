@@ -91,6 +91,11 @@ FreeScratchPixmapHeader(PixmapPtr pPixmap)
 Bool
 CreateScratchPixmapsForScreen(int scrnum)
 {
+    unsigned int	pixmap_size;
+
+    pixmap_size = sizeof(PixmapRec) + dixPrivatesSize(PRIVATE_PIXMAP);
+    screenInfo.screens[scrnum]->totalPixmapSize = BitmapBytePad(pixmap_size * 8);
+
     /* let it be created on first use */
     screenInfo.screens[scrnum]->pScratchPixmap = NULL;
     return TRUE;
@@ -110,6 +115,8 @@ AllocatePixmap(ScreenPtr pScreen, int pixDataSize)
 {
     PixmapPtr pPixmap;
 
+    assert(pScreen->totalPixmapSize > 0);
+
     if (pScreen->totalPixmapSize > ((size_t)-1) - pixDataSize)
 	return NullPixmap;
     
@@ -117,6 +124,14 @@ AllocatePixmap(ScreenPtr pScreen, int pixDataSize)
     if (!pPixmap)
 	return NullPixmap;
 
-    pPixmap->devPrivates = NULL;
+    dixInitPrivates(pPixmap, pPixmap + 1, PRIVATE_PIXMAP);
     return pPixmap;
+}
+
+/* callable by ddx */
+void
+FreePixmap(PixmapPtr pPixmap)
+{
+    dixFiniPrivates(pPixmap, PRIVATE_PIXMAP);
+    free(pPixmap);
 }

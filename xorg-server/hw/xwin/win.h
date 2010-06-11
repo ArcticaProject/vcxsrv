@@ -596,11 +596,17 @@ extern DWORD			g_dwEvents;
 #ifdef HAS_DEVWINDOWS
 extern int			g_fdMessageQueue;
 #endif
-extern DevPrivateKey		g_iScreenPrivateKey;
-extern DevPrivateKey		g_iCmapPrivateKey;
-extern DevPrivateKey		g_iGCPrivateKey;
-extern DevPrivateKey		g_iPixmapPrivateKey;
-extern DevPrivateKey		g_iWindowPrivateKey;
+extern DevPrivateKeyRec		g_iScreenPrivateKeyRec;
+#define g_iScreenPrivateKey  	(&g_iScreenPrivateKeyRec)
+extern DevPrivateKeyRec		g_iCmapPrivateKeyRec;
+#define g_iCmapPrivateKey 	(&g_iCmapPrivateKeyRec)
+extern DevPrivateKeyRec		g_iGCPrivateKeyRec;
+#define g_iGCPrivateKey 	(&g_iGCPrivateKeyRec)
+extern DevPrivateKeyRec		g_iPixmapPrivateKeyRec;
+#define g_iPixmapPrivateKey 	(&g_iPixmapPrivateKeyRec)
+extern DevPrivateKeyRec		g_iWindowPrivateKeyRec;
+#define g_iWindowPrivateKey 	(&g_iWindowPrivateKeyRec)
+
 extern unsigned long		g_ulServerGeneration;
 extern DWORD			g_dwEnginesSupported;
 extern HINSTANCE		g_hInstance;
@@ -1175,7 +1181,7 @@ Bool
 winMapWindowRootless (WindowPtr pWindow);
 
 void
-winSetShapeRootless (WindowPtr pWindow);
+winSetShapeRootless (WindowPtr pWindow, int kind);
 
 
 /*
@@ -1197,7 +1203,7 @@ void
 winReshapeMultiWindow (WindowPtr pWin);
 
 void
-winSetShapeMultiWindow (WindowPtr pWindow);
+winSetShapeMultiWindow (WindowPtr pWindow, int kind);
 
 void
 winUpdateRgnMultiWindow (WindowPtr pWindow);

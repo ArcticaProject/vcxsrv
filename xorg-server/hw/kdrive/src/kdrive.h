@@ -342,7 +342,9 @@ typedef struct _KdPointerMatrix {
     (PixmapWidthPaddingInfo[d].padRoundUp+1)))
 #endif
 
-extern DevPrivateKey	kdScreenPrivateKey;
+extern DevPrivateKeyRec	kdScreenPrivateKeyRec;
+#define kdScreenPrivateKey (&kdScreenPrivateKeyRec)
+
 extern unsigned long	kdGeneration;
 extern Bool		kdEnabled;
 extern Bool		kdSwitchPending;

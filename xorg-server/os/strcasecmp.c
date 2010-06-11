@@ -42,7 +42,7 @@ xstrcasecmp(const char *str1, const char *str2)
 
     while (tolower(*us1) == tolower(*us2)) {
         if (*us1++ == '\0')
-            return (0);
+            return 0;
         us2++;
     }
 

@@ -243,8 +243,7 @@ XAADestroyGC(GCPtr pGC)
     if(pGCPriv->XAAOps != &XAAFallbackOps)
 	free(pGCPriv->XAAOps);
 
-    if(pGCPriv->DashPattern)
-	free(pGCPriv->DashPattern);
+    free(pGCPriv->DashPattern);
 
     (*pGC->funcs->DestroyGC)(pGC);
     XAA_GC_FUNC_EPILOGUE (pGC);

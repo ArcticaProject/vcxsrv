@@ -95,8 +95,8 @@ XAADoBitBlt(
                ((pSrc->type == DRAWABLE_WINDOW) &&
                 (pDst->type == DRAWABLE_WINDOW)));
 
-    pbox = REGION_RECTS(prgnDst);
-    nbox = REGION_NUM_RECTS(prgnDst);
+    pbox = RegionRects(prgnDst);
+    nbox = RegionNumRects(prgnDst);
 
     pboxNew1 = NULL;
     pptNew1 = NULL;
@@ -148,8 +148,8 @@ XAADoBitBlt(
 	    pboxNew2 = (BoxPtr)malloc(sizeof(BoxRec) * nbox);
 	    pptNew2 = (DDXPointPtr)malloc(sizeof(DDXPointRec) * nbox);
 	    if(!pboxNew2 || !pptNew2) {
-		if (pptNew2) free(pptNew2);
-		if (pboxNew2) free(pboxNew2);
+		free(pptNew2);
+		free(pboxNew2);
 		if (pboxNew1) {
 		    free(pptNew1);
 		    free(pboxNew1);
@@ -204,8 +204,8 @@ XAADoImageWrite(
     int srcwidth;
     unsigned char* psrcBase;			/* start of image */
     unsigned char* srcPntr;			/* index into the image */
-    BoxPtr pbox = REGION_RECTS(prgnDst);
-    int nbox = REGION_NUM_RECTS(prgnDst);
+    BoxPtr pbox = RegionRects(prgnDst);
+    int nbox = RegionNumRects(prgnDst);
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
     int Bpp = pSrc->bitsPerPixel >> 3; 
 
@@ -233,8 +233,8 @@ XAADoImageRead(
     int dstwidth;
     unsigned char* pdstBase;			/* start of image */
     unsigned char* dstPntr;			/* index into the image */
-    BoxPtr pbox = REGION_RECTS(prgnDst);
-    int nbox = REGION_NUM_RECTS(prgnDst);
+    BoxPtr pbox = RegionRects(prgnDst);
+    int nbox = RegionNumRects(prgnDst);
     XAAInfoRecPtr infoRec = GET_XAAINFORECPTR_FROM_GC(pGC);
     int Bpp = pSrc->bitsPerPixel >> 3;  /* wouldn't get here unless both
                                            src and dst have same bpp */

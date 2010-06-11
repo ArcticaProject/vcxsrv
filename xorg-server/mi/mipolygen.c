@@ -90,16 +90,16 @@ miFillGeneralPoly(
     int fixWAET = 0;
 
     if (count < 3)
-	return(TRUE);
+	return TRUE;
 
     if(!(pETEs = malloc(sizeof(EdgeTableEntry) * count)))
-	return(FALSE);
+	return FALSE;
     ptsOut = FirstPoint;
     width = FirstWidth;
     if (!miCreateETandAET(count, ptsIn, &ET, &AET, pETEs, &SLLBlock))
     {
 	free(pETEs);
-	return(FALSE);
+	return FALSE;
     }
     pSLL = ET.scanlines.next;
 
@@ -226,5 +226,5 @@ miFillGeneralPoly(
     (*pgc->ops->FillSpans)(dst, pgc, nPts, FirstPoint, FirstWidth, 1);
     free(pETEs);
     miFreeStorage(SLLBlock.next);
-    return(TRUE);
+    return TRUE;
 }

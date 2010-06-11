@@ -69,12 +69,12 @@ XisbNew (int fd, ssize_t size)
 
 	b = malloc(sizeof (XISBuffer));
 	if (!b)
-		return (NULL);
+		return NULL;
 	b->buf = malloc((sizeof (unsigned char) * size));
 	if (!b->buf)
 	{
 		free(b);
-		return (NULL);
+		return NULL;
 	}
 
 	b->fd = fd;
@@ -83,7 +83,7 @@ XisbNew (int fd, ssize_t size)
 	b->current = 1;	/* force it to be past the end to trigger initial read */
 	b->end = 0;
 	b->buffer_size = size;
-	return (b);
+	return b;
 }
 
 void
@@ -103,7 +103,7 @@ XisbRead (XISBuffer *b)
 		if (b->block_duration >= 0)
 		{
 			if (xf86WaitForInput (b->fd, b->block_duration) < 1)
-				return (-1);
+				return -1;
 		}
 		else
 		{
@@ -119,9 +119,9 @@ XisbRead (XISBuffer *b)
 		switch (ret)
 		{
 			case 0:
-				return (-1); /* timeout */
+				return -1; /* timeout */
 			case -1:
-				return (-2); /* error */
+				return -2; /* error */
 			default:
 				b->end = ret;
 				b->current = 0;
@@ -132,7 +132,7 @@ XisbRead (XISBuffer *b)
 		ErrorF ("read 0x%02x (%c)\n", b->buf[b->current], 
 			isprint(b->buf[b->current])?b->buf[b->current]:'.');
 
-	return (b->buf[b->current++]);
+	return b->buf[b->current++];
 }
 
 /* the only purpose of this function is to provide output tracing */

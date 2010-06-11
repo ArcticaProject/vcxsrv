@@ -40,15 +40,13 @@ in this Software without prior written authorization from The Open Group.
 # include   "dixstruct.h"
 # include   "inputstr.h"
 
-static int miPointerScreenKeyIndex;
-DevPrivateKey miPointerScreenKey = &miPointerScreenKeyIndex;
+DevPrivateKeyRec miPointerScreenKeyRec;
 
 #define GetScreenPrivate(s) ((miPointerScreenPtr) \
     dixLookupPrivate(&(s)->devPrivates, miPointerScreenKey))
 #define SetupScreen(s)	miPointerScreenPtr  pScreenPriv = GetScreenPrivate(s)
 
-static int miPointerPrivKeyIndex;
-static DevPrivateKey miPointerPrivKey = &miPointerPrivKeyIndex;
+DevPrivateKeyRec miPointerPrivKeyRec;
 
 #define MIPOINTER(dev) \
     ((!IsMaster(dev) && !dev->u.master) ? \
@@ -85,6 +83,12 @@ miPointerInitialize (ScreenPtr                  pScreen,
                      Bool                       waitForUpdate)
 {
     miPointerScreenPtr	pScreenPriv;
+
+    if (!dixRegisterPrivateKey(&miPointerScreenKeyRec, PRIVATE_SCREEN, 0))
+	return FALSE;
+
+    if (!dixRegisterPrivateKey(&miPointerPrivKeyRec, PRIVATE_DEVICE, 0))
+	return FALSE;
 
     pScreenPriv = malloc(sizeof (miPointerScreenRec));
     if (!pScreenPriv)

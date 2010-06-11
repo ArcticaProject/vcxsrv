@@ -80,6 +80,10 @@ OF THIS SOFTWARE.
 
 #include <stddef.h>
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
+
 #ifndef MAXSCREENS
 #define MAXSCREENS	16
 #endif

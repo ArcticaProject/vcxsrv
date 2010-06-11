@@ -39,8 +39,7 @@ is" without express or implied warranty.
 #include "Events.h"
 #include "Args.h"
 
-static int xnestWindowPrivateKeyIndex;
-DevPrivateKey xnestWindowPrivateKey = &xnestWindowPrivateKeyIndex;
+DevPrivateKeyRec xnestWindowPrivateKeyRec;
 
 static int
 xnestFindWindowMatch(WindowPtr pWin, pointer ptr)
@@ -135,9 +134,9 @@ xnestCreateWindow(WindowPtr pWin)
   if (pWin->nextSib)
     xnestWindowPriv(pWin->nextSib)->sibling_above = xnestWindow(pWin);
   xnestWindowPriv(pWin)->bounding_shape = 
-    REGION_CREATE(pWin->drawable.pScreen, NULL, 1);
+    RegionCreate(NULL, 1);
   xnestWindowPriv(pWin)->clip_shape = 
-    REGION_CREATE(pWin->drawable.pScreen, NULL, 1);
+    RegionCreate(NULL, 1);
 
   if (!pWin->parent) /* only the root window will have the right colormap */
     xnestSetInstalledColormapWindows(pWin->drawable.pScreen);
@@ -151,10 +150,8 @@ xnestDestroyWindow(WindowPtr pWin)
   if (pWin->nextSib)
     xnestWindowPriv(pWin->nextSib)->sibling_above = 
       xnestWindowPriv(pWin)->sibling_above;
-  REGION_DESTROY(pWin->drawable.pScreen, 
-				xnestWindowPriv(pWin)->bounding_shape);
-  REGION_DESTROY(pWin->drawable.pScreen, 
-				xnestWindowPriv(pWin)->clip_shape);
+  RegionDestroy(xnestWindowPriv(pWin)->bounding_shape);
+  RegionDestroy(xnestWindowPriv(pWin)->clip_shape);
   XDestroyWindow(xnestDisplay, xnestWindow(pWin));
   xnestWindowPriv(pWin)->window = None;
 
@@ -415,7 +412,7 @@ xnestWindowExposures(WindowPtr pWin, RegionPtr pRgn, RegionPtr other_exposed)
 	
     event.xexpose.type = ProcessedExpose;
 	
-    if (RECT_IN_REGION(pWin->drawable.pScreen, pRgn, &Box) != rgnIN)
+    if (RegionContainsRect(pRgn, &Box) != rgnIN)
       XPutBackEvent(xnestDisplay, &event);
   }
   
@@ -423,10 +420,10 @@ xnestWindowExposures(WindowPtr pWin, RegionPtr pRgn, RegionPtr other_exposed)
 }
 
 void
-xnestSetShape(WindowPtr pWin)
+xnestSetShape(WindowPtr pWin, int kind)
 {
   xnestShapeWindow(pWin);
-  miSetShape(pWin);
+  miSetShape(pWin, kind);
 }
 
 static Bool
@@ -439,11 +436,11 @@ xnestRegionEqual(RegionPtr pReg1, RegionPtr pReg2)
 
   if (pReg1 == NullRegion || pReg2 == NullRegion) return False;
 
-  pBox1 = REGION_RECTS(pReg1);
-  n1 = REGION_NUM_RECTS(pReg1);
+  pBox1 = RegionRects(pReg1);
+  n1 = RegionNumRects(pReg1);
 
-  pBox2 = REGION_RECTS(pReg2);
-  n2 = REGION_NUM_RECTS(pReg2);
+  pBox2 = RegionRects(pReg2);
+  n2 = RegionNumRects(pReg2);
 
   if (n1 != n2) return False;
 
@@ -466,13 +463,12 @@ xnestShapeWindow(WindowPtr pWin)
 			wBoundingShape(pWin))) {
     
     if (wBoundingShape(pWin)) {
-      REGION_COPY(pWin->drawable.pScreen, 
-		xnestWindowPriv(pWin)->bounding_shape, wBoundingShape(pWin));
+      RegionCopy(xnestWindowPriv(pWin)->bounding_shape, wBoundingShape(pWin));
       
       reg = XCreateRegion();
-      pBox = REGION_RECTS(xnestWindowPriv(pWin)->bounding_shape);
+      pBox = RegionRects(xnestWindowPriv(pWin)->bounding_shape);
       for (i = 0; 
-	   i < REGION_NUM_RECTS(xnestWindowPriv(pWin)->bounding_shape);
+	   i < RegionNumRects(xnestWindowPriv(pWin)->bounding_shape);
 	   i++) {
         rect.x = pBox[i].x1;
         rect.y = pBox[i].y1;
@@ -485,8 +481,7 @@ xnestShapeWindow(WindowPtr pWin)
       XDestroyRegion(reg);
     }
     else {
-      REGION_EMPTY(pWin->drawable.pScreen, 
-				xnestWindowPriv(pWin)->bounding_shape);
+      RegionEmpty(xnestWindowPriv(pWin)->bounding_shape);
       
       XShapeCombineMask(xnestDisplay, xnestWindow(pWin),
 			ShapeBounding, 0, 0, None, ShapeSet);
@@ -497,13 +492,12 @@ xnestShapeWindow(WindowPtr pWin)
 			wClipShape(pWin))) {
     
     if (wClipShape(pWin)) {
-      REGION_COPY(pWin->drawable.pScreen, 
-			xnestWindowPriv(pWin)->clip_shape, wClipShape(pWin));
+      RegionCopy(xnestWindowPriv(pWin)->clip_shape, wClipShape(pWin));
       
       reg = XCreateRegion();
-      pBox = REGION_RECTS(xnestWindowPriv(pWin)->clip_shape);
+      pBox = RegionRects(xnestWindowPriv(pWin)->clip_shape);
       for (i = 0; 
-	   i < REGION_NUM_RECTS(xnestWindowPriv(pWin)->clip_shape);
+	   i < RegionNumRects(xnestWindowPriv(pWin)->clip_shape);
 	   i++) {
         rect.x = pBox[i].x1;
         rect.y = pBox[i].y1;
@@ -516,8 +510,7 @@ xnestShapeWindow(WindowPtr pWin)
       XDestroyRegion(reg);
     }
     else {
-      REGION_EMPTY(pWin->drawable.pScreen, 
-				     xnestWindowPriv(pWin)->clip_shape);
+      RegionEmpty(xnestWindowPriv(pWin)->clip_shape);
       
       XShapeCombineMask(xnestDisplay, xnestWindow(pWin),
 			ShapeClip, 0, 0, None, ShapeSet);

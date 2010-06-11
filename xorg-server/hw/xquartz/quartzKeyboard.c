@@ -427,20 +427,28 @@ void DarwinKeyboardReloadHandler(void) {
         }
     } pthread_mutex_unlock(&keyInfo_mutex);
 
-    /* Check for system .Xmodmap */
+    /* Modify with xmodmap */
     if (access(xmodmap, F_OK) == 0) {
+        /* Check for system .Xmodmap */
         if (access(sysmodmap, F_OK) == 0) {
-            snprintf (cmd, sizeof(cmd), "%s %s", xmodmap, sysmodmap);
-            X11ApplicationLaunchClient(cmd);
+            if(snprintf (cmd, sizeof(cmd), "%s %s", xmodmap, sysmodmap) < sizeof(cmd)) {
+                X11ApplicationLaunchClient(cmd);
+            } else {
+                ErrorF("X11.app: Unable to create / execute xmodmap command line");
+            }
         }
-    }
-        
-    /* Check for user's local .Xmodmap */
-    if (homedir != NULL) {
-        snprintf (usermodmap, sizeof(usermodmap), "%s/.Xmodmap", homedir);
-        if (access(usermodmap, F_OK) == 0) {
-            snprintf (cmd, sizeof(cmd), "%s %s", xmodmap, usermodmap);
-            X11ApplicationLaunchClient(cmd);
+
+        /* Check for user's local .Xmodmap */
+        if ((homedir != NULL) && (snprintf (usermodmap, sizeof(usermodmap), "%s/.Xmodmap", homedir) < sizeof(usermodmap))) {
+            if (access(usermodmap, F_OK) == 0) {
+                if(snprintf (cmd, sizeof(cmd), "%s %s", xmodmap, usermodmap) < sizeof(cmd)) {
+                    X11ApplicationLaunchClient(cmd);
+                } else {
+                    ErrorF("X11.app: Unable to create / execute xmodmap command line");
+                }
+            }
+        } else {
+            ErrorF("X11.app: Unable to determine path to user's .Xmodmap");
         }
     }
 }

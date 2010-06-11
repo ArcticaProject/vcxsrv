@@ -85,7 +85,7 @@ static GCOps dmxGCOps = {
 /** Initialize the GC on \a pScreen */
 Bool dmxInitGC(ScreenPtr pScreen)
 {
-    if (!dixRequestPrivate(dmxGCPrivateKey, sizeof(dmxGCPrivRec)))
+    if (!dixRegisterPrivateKey(&dmxGCPrivateKeyRec, PRIVATE_GC, sizeof(dmxGCPrivRec)))
             return FALSE;
     return TRUE;
 }
@@ -363,9 +363,9 @@ void dmxChangeClip(GCPtr pGC, int type, pointer pvalue, int nrects)
 
     case CT_REGION:
 	if (dmxScreen->beDisplay) {
-	    nRects = REGION_NUM_RECTS((RegionPtr)pGC->clientClip);
+	    nRects = RegionNumRects((RegionPtr)pGC->clientClip);
 	    pRects = malloc(nRects * sizeof(*pRects));
-	    pBox   = REGION_RECTS((RegionPtr)pGC->clientClip);
+	    pBox   = RegionRects((RegionPtr)pGC->clientClip);
 
 	    for (i = 0; i < nRects; i++) {
 		pRects[i].x      = pBox[i].x1;

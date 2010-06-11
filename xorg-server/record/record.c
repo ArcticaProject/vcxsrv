@@ -43,6 +43,7 @@ and Jim Haggerty of Metheus.
 #include "swaprep.h"
 #include "inputstr.h"
 #include "eventconvert.h"
+#include "scrnintstr.h"
 
 
 #include <stdio.h>
@@ -166,8 +167,8 @@ typedef struct {
     ProcFunctionPtr recordVector[256]; 
 } RecordClientPrivateRec, *RecordClientPrivatePtr;
 
-static int RecordClientPrivateKeyIndex;
-static DevPrivateKey RecordClientPrivateKey = &RecordClientPrivateKeyIndex;
+static DevPrivateKeyRec RecordClientPrivateKeyRec;
+#define RecordClientPrivateKey (&RecordClientPrivateKeyRec)
 
 /*  RecordClientPrivatePtr RecordClientPrivate(ClientPtr)
  *  gets the client private of the given client.  Syntactic sugar.
@@ -755,11 +756,11 @@ RecordSendProtocolEvents(RecordClientsAndProtocolPtr pRCAP,
 		int scr = XineramaGetCursorScreen(inputInfo.pointer);
 		memcpy(&shiftedEvent, pev, sizeof(xEvent));
 		shiftedEvent.u.keyButtonPointer.rootX +=
-		    panoramiXdataPtr[scr].x -
-		    panoramiXdataPtr[0].x;
+		    screenInfo.screens[scr]->x -
+		    screenInfo.screens[0]->x;
 		shiftedEvent.u.keyButtonPointer.rootY +=
-		    panoramiXdataPtr[scr].y -
-		    panoramiXdataPtr[0].y;
+		    screenInfo.screens[scr]->y -
+		    screenInfo.screens[0]->y;
 		pEvToRecord = &shiftedEvent;
 	    }
 #endif /* PANORAMIX */
@@ -1494,7 +1495,7 @@ RecordAllocIntervals(SetInfoPtr psi, int nIntervals)
 			malloc(nIntervals * sizeof(RecordSetInterval));
     if (!psi->intervals)
 	return BadAlloc;
-    bzero(psi->intervals, nIntervals * sizeof(RecordSetInterval));
+    memset(psi->intervals, 0, nIntervals * sizeof(RecordSetInterval));
     psi->size = nIntervals;
     return Success;
 } /* end RecordAllocIntervals */
@@ -1668,7 +1669,7 @@ RecordRegisterClients(RecordContextPtr pContext, ClientPtr client, xRecordRegist
 	err = BadAlloc;
 	goto bailout;
     }
-    bzero(si, sizeof(SetInfoRec) * maxSets);
+    memset(si, 0, sizeof(SetInfoRec) * maxSets);
 
     /* theoretically you must do this because NULL may not be all-bits-zero */
     for (i = 0; i < maxSets; i++)
@@ -1867,8 +1868,7 @@ bailout:
     if (si)
     {
 	for (i = 0; i < maxSets; i++)
-	    if (si[i].intervals)
-		free(si[i].intervals);
+	    free(si[i].intervals);
 	free(si);
     }
     if (pCanonClients && pCanonClients != (XID *)&stuff[1])
@@ -1954,8 +1954,7 @@ ProcRecordCreateContext(ClientPtr client)
 	err = BadAlloc;
     }
 bailout:
-    if (pContext)
-	free(pContext);
+    free(pContext);
     return err;
 } /* ProcRecordCreateContext */
 
@@ -2052,7 +2051,7 @@ RecordAllocRanges(GetContextRangeInfoPtr pri, int nRanges)
 
     pri->pRanges = pNewRange;
     pri->size = newsize;
-    bzero(&pri->pRanges[pri->size - SZINCR], SZINCR * sizeof(xRecordRange));
+    memset(&pri->pRanges[pri->size - SZINCR], 0, SZINCR * sizeof(xRecordRange));
     if (pri->nRanges < nRanges)
 	pri->nRanges = nRanges;
     return Success;
@@ -2351,7 +2350,7 @@ ProcRecordGetContext(ClientPtr client)
 bailout:
     for (i = 0; i < nRCAPs; i++)
     {
-	if (pRangeInfo[i].pRanges) free(pRangeInfo[i].pRanges);
+	free(pRangeInfo[i].pRanges);
     }
     free(pRangeInfo);
     return err;

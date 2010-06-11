@@ -216,7 +216,7 @@ ProcRRXineramaGetScreenSize(ClientPtr client)
 	return rc;
 
     pScreen = pWin->drawable.pScreen;
-    pRoot = WindowTable[pScreen->myNum];
+    pRoot = pScreen->root;
     
     rep.type = X_Reply;
     rep.length = 0;

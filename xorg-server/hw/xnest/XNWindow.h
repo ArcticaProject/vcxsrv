@@ -33,7 +33,8 @@ typedef struct {
   Window window;
 } xnestWindowMatch;
 
-extern DevPrivateKey xnestWindowPrivateKey;
+extern DevPrivateKeyRec xnestWindowPrivateKeyRec;
+#define xnestWindowPrivateKey (&xnestWindowPrivateKeyRec)
 
 #define xnestWindowPriv(pWin) ((xnestPrivWin *) \
     dixLookupPrivate(&(pWin)->devPrivates, xnestWindowPrivateKey))
@@ -66,7 +67,7 @@ void xnestCopyWindow(WindowPtr pWin, xPoint oldOrigin, RegionPtr oldRegion);
 void xnestClipNotify(WindowPtr pWin, int dx, int dy);
 void xnestWindowExposures(WindowPtr pWin, RegionPtr pRgn,
 			  RegionPtr other_exposed);
-void xnestSetShape(WindowPtr pWin);
+void xnestSetShape(WindowPtr pWin, int kind);
 void xnestShapeWindow(WindowPtr pWin);
 
 #endif /* XNESTWINDOW_H */

@@ -641,7 +641,7 @@ static int execute(const char *command) {
 
     execvp (newargv[0], (char * const *) newargv);
     perror ("X11.app: Couldn't exec.");
-    return(1);
+    return 1;
 }
 
 static char *command_from_prefs(const char *key, const char *default_value) {

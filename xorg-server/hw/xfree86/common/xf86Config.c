@@ -163,7 +163,7 @@ xf86GetPathElem(char **pnt)
     **pnt = '\0';
     *pnt += 1;
   }
-  return(p1);
+  return p1;
 }
 
 /*
@@ -239,7 +239,7 @@ xf86ValidateFontPath(char *path)
     strcat(out_pnt, path_elem);
     out_pnt += strlen(path_elem);
   }
-  return(tmp_path);
+  return tmp_path;
 }
 
 
@@ -1252,7 +1252,7 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 
     /* 5. Built-in default. */
     if (!foundPointer && !xf86Info.allowEmptyInput) {
-	bzero(&defPtr, sizeof(defPtr));
+	memset(&defPtr, 0, sizeof(defPtr));
 	defPtr.inp_identifier = strdup("<default pointer>");
 	defPtr.inp_driver = strdup("mouse");
 	confInput = &defPtr;
@@ -1303,7 +1303,7 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
     }
     if (!found && !xf86Info.allowEmptyInput) {
 	xf86Msg(X_INFO, "No default mouse found, adding one\n");
-	bzero(&defPtr, sizeof(defPtr));
+	memset(&defPtr, 0, sizeof(defPtr));
 	defPtr.inp_identifier = strdup("<default pointer>");
 	defPtr.inp_driver = strdup("mouse");
 	confInput = &defPtr;
@@ -1392,7 +1392,7 @@ checkCoreInputDevices(serverLayoutPtr servlayoutp, Bool implicitLayout)
 
     /* 5. Built-in default. */
     if (!foundKeyboard && !xf86Info.allowEmptyInput) {
-	bzero(&defKbd, sizeof(defKbd));
+	memset(&defKbd, 0, sizeof(defKbd));
 	defKbd.inp_identifier = strdup("<default keyboard>");
 	defKbd.inp_driver = strdup("kbd");
 	confInput = &defKbd;
@@ -1851,7 +1851,7 @@ configScreen(confScreenPtr screenp, XF86ConfScreenPtr conf_screen, int scrnum,
     if (!conf_screen->scrn_monitor) {
 	XF86ConfMonitorRec defMon;
 
-	bzero(&defMon, sizeof(defMon));
+	memset(&defMon, 0, sizeof(defMon));
 	defMon.mon_identifier = "<default monitor>";
 	if (!configMonitor(screenp->monitor, &defMon))
 	    return FALSE;
@@ -2330,6 +2330,7 @@ configInput(IDevPtr inputp, XF86ConfInputPtr conf_input, MessageType from)
     inputp->driver = conf_input->inp_driver;
     inputp->commonOptions = conf_input->inp_option_lst;
     inputp->extraOptions = NULL;
+    inputp->attrs = NULL;
 
     return TRUE;
 }

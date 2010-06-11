@@ -43,14 +43,11 @@
 #define CW_ASSERT(x) do {} while (0)
 #endif
 
-static int cwGCKeyIndex;
-DevPrivateKey cwGCKey = &cwGCKeyIndex;
-static int cwScreenKeyIndex;
-DevPrivateKey cwScreenKey = &cwScreenKeyIndex;
-static int cwWindowKeyIndex;
-DevPrivateKey cwWindowKey = &cwWindowKeyIndex;
-static int cwPictureKeyIndex;
-DevPrivateKey cwPictureKey = &cwPictureKeyIndex;
+DevPrivateKeyRec cwGCKeyRec;
+DevPrivateKeyRec cwScreenKeyRec;
+DevPrivateKeyRec cwWindowKeyRec;
+DevPrivateKeyRec cwPictureKeyRec;
+
 extern GCOps cwGCOps;
 
 static Bool
@@ -191,8 +188,8 @@ cwValidateGC(GCPtr pGC, unsigned long stateChanges, DrawablePtr pDrawable)
 	ChangeGCVal vals[2];
 	RegionPtr   pCompositeClip;
 
-	pCompositeClip = REGION_CREATE (pScreen, NULL, 0);
-	REGION_COPY (pScreen, pCompositeClip, pGC->pCompositeClip);
+	pCompositeClip = RegionCreate(NULL, 0);
+	RegionCopy(pCompositeClip, pGC->pCompositeClip);
 
 	/* Either the drawable has changed, or the clip list in the drawable has
 	 * changed.  Copy the new clip list over and set the new translated
@@ -328,7 +325,7 @@ cwCreateGC(GCPtr pGC)
     ScreenPtr	pScreen = pGC->pScreen;
     Bool	ret;
 
-    bzero(pPriv, sizeof(cwGCRec));
+    memset(pPriv, 0, sizeof(cwGCRec));
     SCREEN_PROLOGUE(pScreen, CreateGC);
 
     if ( (ret = (*pScreen->CreateGC)(pGC)) )
@@ -403,7 +400,7 @@ cwCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
 	dx = ptOldOrg.x - pWin->drawable.x;
 	dy = ptOldOrg.y - pWin->drawable.y;
 
-	pExtents = REGION_EXTENTS(pScreen, prgnSrc);
+	pExtents = RegionExtents(prgnSrc);
 
 	pBackingPixmap = (PixmapPtr) cwGetBackingDrawable((DrawablePtr)pWin,
 							  &x_off, &y_off);
@@ -416,15 +413,15 @@ cwCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
 	dst_y = src_y - dy;
 			       
 	/* Translate region (as required by API) */
-	REGION_TRANSLATE(pScreen, prgnSrc, -dx, -dy);
+	RegionTranslate(prgnSrc, -dx, -dy);
 	
 	pGC = GetScratchGC(pBackingPixmap->drawable.depth, pScreen);
 	/*
 	 * Copy region to GC as clip, aligning as dest clip
 	 */
-	pClip = REGION_CREATE (pScreen, NULL, 0);
-	REGION_INTERSECT(pScreen, pClip, &pWin->borderClip, prgnSrc);
-	REGION_TRANSLATE(pScreen, pClip, 
+	pClip = RegionCreate(NULL, 0);
+	RegionIntersect(pClip, &pWin->borderClip, prgnSrc);
+	RegionTranslate(pClip,
 			 -pBackingPixmap->screen_x,
 			 -pBackingPixmap->screen_y);
 	
@@ -477,7 +474,16 @@ miInitializeCompositeWrapper(ScreenPtr pScreen)
     cwScreenPtr pScreenPriv;
     Bool has_render = GetPictureScreenIfSet(pScreen) != NULL;
 
-    if (!dixRequestPrivate(cwGCKey, sizeof(cwGCRec)))
+    if (!dixRegisterPrivateKey(&cwScreenKeyRec, PRIVATE_SCREEN, 0))
+	return;
+
+    if (!dixRegisterPrivateKey(&cwGCKeyRec, PRIVATE_GC, sizeof(cwGCRec)))
+	return;
+
+    if (!dixRegisterPrivateKey(&cwWindowKeyRec, PRIVATE_WINDOW, 0))
+	return;
+
+    if (!dixRegisterPrivateKey(&cwPictureKeyRec, PRIVATE_PICTURE, 0))
 	return;
 
     pScreenPriv = malloc(sizeof(cwScreenRec));

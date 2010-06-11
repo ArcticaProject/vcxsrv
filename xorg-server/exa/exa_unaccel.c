@@ -131,10 +131,10 @@ ExaCheckCopyNtoN (DrawablePtr pSrc, DrawablePtr pDst,  GCPtr pGC,
 	PixmapPtr pPixmap = exaGetDrawablePixmap(pSrc);
 
 	exaGetDrawableDeltas(pSrc, pPixmap, &xoff, &yoff);
-	REGION_INIT(pScreen, &reg, pbox, nbox);
-	REGION_TRANSLATE(pScreen, &reg, xoff + dx, yoff + dy);
+	RegionInit(&reg, pbox, nbox);
+	RegionTranslate(&reg, xoff + dx, yoff + dy);
 	pExaScr->prepare_access_reg(pPixmap, EXA_PREPARE_SRC, &reg);
-	REGION_UNINIT(pScreen, &reg);
+	RegionUninit(&reg);
     } else
 	exaPrepareAccess (pSrc, EXA_PREPARE_SRC);
 
@@ -144,10 +144,10 @@ ExaCheckCopyNtoN (DrawablePtr pSrc, DrawablePtr pDst,  GCPtr pGC,
 	PixmapPtr pPixmap = exaGetDrawablePixmap(pDst);
 
 	exaGetDrawableDeltas(pSrc, pPixmap, &xoff, &yoff);
-	REGION_INIT(pScreen, &reg, pbox, nbox);
-	REGION_TRANSLATE(pScreen, &reg, xoff, yoff);
+	RegionInit(&reg, pbox, nbox);
+	RegionTranslate(&reg, xoff, yoff);
 	pExaScr->prepare_access_reg(pPixmap, EXA_PREPARE_DEST, &reg);
-	REGION_UNINIT(pScreen, &reg);
+	RegionUninit(&reg);
     } else
 	exaPrepareAccess (pDst, EXA_PREPARE_DEST);
 
@@ -188,9 +188,9 @@ ExaFallbackPrepareReg(DrawablePtr pDrawable,
 	box.x2 = box.x1 + width;
 	box.y2 = box.y1 + height;
 
-	REGION_INIT(pScreen, &reg, &box, 1);
+	RegionInit(&reg, &box, 1);
 	pExaScr->prepare_access_reg(pPixmap, index, &reg);
-	REGION_UNINIT(pScreen, &reg);
+	RegionUninit(&reg);
     } else
 	exaPrepareAccess(pDrawable, index);
 }
@@ -382,9 +382,9 @@ ExaCheckCopyWindow(WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
 	int xoff, yoff;
 
 	exaGetDrawableDeltas(&pWin->drawable, pPixmap, &xoff, &yoff);
-	REGION_TRANSLATE(pScreen, prgnSrc, xoff, yoff);
+	RegionTranslate(prgnSrc, xoff, yoff);
 	pExaScr->prepare_access_reg(pPixmap, EXA_PREPARE_SRC, prgnSrc);
-	REGION_TRANSLATE(pScreen, prgnSrc, -xoff, -yoff);
+	RegionTranslate(prgnSrc, -xoff, -yoff);
     } else
 	exaPrepareAccess(pDrawable, EXA_PREPARE_SRC);
 
@@ -458,9 +458,9 @@ ExaSrcValidate(DrawablePtr pDrawable,
     dst = (pExaScr->srcPix == pPix) ? &pExaScr->srcReg :
 	&pExaScr->maskReg;
 
-    REGION_INIT(pScreen, &reg, &box, 1);
-    REGION_UNION(pScreen, dst, dst, &reg);
-    REGION_UNINIT(pScreen, &reg);
+    RegionInit(&reg, &box, 1);
+    RegionUnion(dst, dst, &reg);
+    RegionUninit(&reg);
 
     if (pExaScr->SavedSourceValidate) {
         swap(pExaScr, pScreen, SourceValidate);
@@ -495,30 +495,30 @@ ExaPrepareCompositeReg(ScreenPtr  pScreen,
     Bool ret;
 
 
-    REGION_NULL(pScreen, &region);
+    RegionNull(&region);
 
     if (pSrc->pDrawable) {
 	pSrcPix = exaGetDrawablePixmap(pSrc->pDrawable);
-	REGION_NULL(pScreen, &pExaScr->srcReg);
+	RegionNull(&pExaScr->srcReg);
 	srcReg = &pExaScr->srcReg;
 	pExaScr->srcPix = pSrcPix;
 	if (pSrc != pDst)
-	    REGION_TRANSLATE(pScreen, pSrc->pCompositeClip,
+	    RegionTranslate(pSrc->pCompositeClip,
 			     -pSrc->pDrawable->x,
 			     -pSrc->pDrawable->y);
     }
 
     if (pMask && pMask->pDrawable) {
 	pMaskPix = exaGetDrawablePixmap(pMask->pDrawable);
-	REGION_NULL(pScreen, &pExaScr->maskReg);
+	RegionNull(&pExaScr->maskReg);
 	maskReg = &pExaScr->maskReg;
 	if (pMask != pDst && pMask != pSrc)
-	    REGION_TRANSLATE(pScreen, pMask->pCompositeClip,
+	    RegionTranslate(pMask->pCompositeClip,
 			     -pMask->pDrawable->x,
 			     -pMask->pDrawable->y);
     }
 
-    REGION_TRANSLATE(pScreen, pDst->pCompositeClip,
+    RegionTranslate(pDst->pCompositeClip,
 		     -pDst->pDrawable->x,
 		     -pDst->pDrawable->y);
 
@@ -531,23 +531,23 @@ ExaPrepareCompositeReg(ScreenPtr  pScreen,
 				    width, height);
     swap(pExaScr, pScreen, SourceValidate);
 
-    REGION_TRANSLATE(pScreen, pDst->pCompositeClip,
+    RegionTranslate(pDst->pCompositeClip,
 		     pDst->pDrawable->x,
 		     pDst->pDrawable->y);
     if (pSrc->pDrawable && pSrc != pDst)
-	REGION_TRANSLATE(pScreen, pSrc->pCompositeClip,
+	RegionTranslate(pSrc->pCompositeClip,
 			 pSrc->pDrawable->x,
 			 pSrc->pDrawable->y);
     if (pMask && pMask->pDrawable && pMask != pDst && pMask != pSrc)
-	REGION_TRANSLATE(pScreen, pMask->pCompositeClip,
+	RegionTranslate(pMask->pCompositeClip,
 			 pMask->pDrawable->x,
 			 pMask->pDrawable->y);
 
     if (!ret) {
 	if (srcReg)
-	    REGION_UNINIT(pScreen, srcReg);
+	    RegionUninit(srcReg);
 	if (maskReg)
-	    REGION_UNINIT(pScreen, maskReg);
+	    RegionUninit(maskReg);
 
 	return FALSE;
     }
@@ -577,9 +577,9 @@ ExaPrepareCompositeReg(ScreenPtr  pScreen,
 				    maskReg);
 
     if (srcReg)
-	REGION_UNINIT(pScreen, srcReg);
+	RegionUninit(srcReg);
     if (maskReg)
-	REGION_UNINIT(pScreen, maskReg);
+	RegionUninit(maskReg);
 
     pDstPix = exaGetDrawablePixmap(pDst->pDrawable);
     if (!exaOpReadsDestination(op)) {
@@ -587,7 +587,7 @@ ExaPrepareCompositeReg(ScreenPtr  pScreen,
 	int yoff;
 
 	exaGetDrawableDeltas (pDst->pDrawable, pDstPix, &xoff, &yoff);
-	REGION_TRANSLATE(pScreen, &region, pDst->pDrawable->x + xoff,
+	RegionTranslate(&region, pDst->pDrawable->x + xoff,
 			 pDst->pDrawable->y + yoff);
 	dstReg = &region;
     }
@@ -598,7 +598,7 @@ ExaPrepareCompositeReg(ScreenPtr  pScreen,
 				    dstReg);
     pExaScr->prepare_access_reg(pDstPix, EXA_PREPARE_DEST, dstReg);
 
-    REGION_UNINIT(pScreen, &region);
+    RegionUninit(&region);
     return TRUE;
 }
 

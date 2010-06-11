@@ -90,7 +90,7 @@ int AreFBConfigsMatch( __GLXFBConfig *c1, __GLXFBConfig *c2 )
 	     (c1->maxAlpha == c2->maxAlpha) 
 	   );
 
-   return( match );
+   return match;
 }
 
 __GLXFBConfig *FindMatchingFBConfig( __GLXFBConfig *c, __GLXFBConfig *configs, int nconfigs )
@@ -99,8 +99,8 @@ __GLXFBConfig *FindMatchingFBConfig( __GLXFBConfig *c, __GLXFBConfig *configs, i
 
    for (i=0; i<nconfigs; i++) {
       if ( AreFBConfigsMatch( c, configs + i ) ) 
-	 return( configs + i );
+	 return configs + i;
    }
 
-   return(0);
+   return 0;
 }
